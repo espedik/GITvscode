@@ -1,124 +1,123 @@
-// Generado por inversion-actualizar.ps1 (superalto) el 2026-09-21T14:05:48-06:00 — NO se edita a mano: lo escribe Claude.
+// Generado por inversion-actualizar.ps1 (superalto) el 2026-09-21T14:16:20-06:00 — NO se edita a mano: lo escribe Claude.
 // Es el ÚNICO archivo que cambia al actualizar la apuesta de riesgo súper alto; la plantilla (dashboard.html) lo pinta.
 window.INVERSION_SUPERALTO = {
-  "resumen": "Hoy 21 de septiembre de 2026: Wynn Resorts (WYNN) es la jugada. RSI de 17 — la más sobrevendida del S&P500 —, -38% desde su máximo de $134, pero Q2 fue récord y Macau sigue creciendo. 21 analistas en Strong Buy, target $132 (+58%). Q3 earnings el 5-nov. Stop en $76.",
+  "resumen": "Hoy 21 de septiembre de 2026: Mantengo Wynn Resorts (WYNN). A 83.35 USD, -38% desde su máximo, RSI 17 (la más sobrevendida del S&P 500), recompra de 2,740 mdd completada y 21 analistas en Strong Buy con objetivo 133. Macau castiga de más; apunto al rebote hacia 108.",
   "principal": {
     "empresa": "Wynn Resorts",
     "ticker": "WYNN",
     "bolsa": "NASDAQ",
-    "sector": "Casinos y Entretenimiento",
-    "precio": 83.32,
+    "sector": "Casinos y resorts",
+    "precio": 83.35,
     "moneda": "USD",
     "fechaDato": "2026-09-21",
     "maximo52": 134.72,
     "caidaDesdeMax": -38.1,
-    "porQueCayo": "Macau mostró debilidad de ingresos en jul-ago y el presupuesto del resort UAE subió $600M por tensiones regionales. El mercado ignoró que Q2 fue récord: ingresos $1.86B (beat) y EPS $1.24 vs $0.98 est (+26%). Doble castigo que exagera el riesgo.",
-    "tesis": "La caída de -38% castiga riesgos temporales: Macau creció 21% en Q2 y el resort UAE está confirmado para sep-2027. RSI de 17 con 21 analistas en Strong Buy y consenso de $132 (+58%) crea asimetría clara riesgo/beneficio antes de Q3 earnings el 5-nov.",
+    "porQueCayo": "Débil juego bruto en Macau al inicio de septiembre (-11.5% vs agosto), retraso del resort de Al Marjan (UAE) a sept-2027 con 600 mdd extra de presupuesto y tensión geopolítica en Medio Oriente. Golpeó a todo el sector casinos.",
+    "tesis": "La caída luce exagerada: el negocio crece (Q2 batió, ingresos 1,860 mdd, oleada de mercado masivo en Macau), completó recompra de 2,740 mdd que bajó 28% las acciones y 21 analistas la ven Strong Buy con objetivo 133 (+60%). RSI 17 marca sobreventa extrema; el retraso de UAE es a 2027, no rompe el corto plazo.",
     "catalizadores": [
-      "Q3 earnings 5-nov-2026: tras beat de +26% en Q2 (EPS $1.24 vs $0.98 est), el mercado esperará sorpresa similar.",
-      "Macau GGR oct-nov 2026: recuperación en datos mensuales actúa como catalizador directo de revaluación.",
-      "UAE Wynn Al Marjan Island: noticias de avance de obra o prerregistros refuerzan crecimiento 2027-2030.",
-      "Soporte técnico en $81.35 (mínimo 52-sem) probado varias veces; rebote mecánico esperable desde RSI 17."
+      "Reporte Q3 2026 a inicios de noviembre: se espera fuerza continua en Macau y Las Vegas.",
+      "Rebote técnico desde RSI 17-18, la más sobrevendida del S&P 500 (dato 19-sep-2026).",
+      "Recompra de 2,740 mdd completada; base de acciones -28% apalanca utilidades.",
+      "Normalización del juego bruto en Macau tras la temporada baja de septiembre."
     ],
-    "entrada": "Acumulación en $81-$84 (zona del mínimo de 52 sem). 60% hoy a mercado, 40% restante si cae a $79-$81.",
-    "objetivo": 110,
-    "objetivoPct": 32,
-    "stop": 76,
-    "stopPct": -8.8,
-    "plazo": "2-4 meses (Q3 earnings 5-nov-2026)",
+    "entrada": "Compra escalonada 80-84 USD; suma tramo si toca 78 con RSI bajo 25 y rebote de volumen.",
+    "objetivo": 108,
+    "objetivoPct": 29.6,
+    "stop": 74,
+    "stopPct": -11.2,
+    "plazo": "Semanas a 3-4 meses",
     "riesgos": [
-      "Escalada en Oriente Medio puede retrasar o cancelar UAE; $1B+ ya invertido quedaría en riesgo real.",
-      "Macau puede seguir débil si China se desacelera; el GGR de VIP es muy sensible al ciclo macro.",
-      "Emisión de $900M en notas sénior (sep 2026) eleva apalancamiento en un balance ya pesado.",
-      "Short int. creció 18.5% en una sesión; bears añaden convicción y la acción puede bajar más antes del rebote."
+      "Macau sigue débil o China endurece la regulación del juego y alarga la caída.",
+      "Nuevo retraso o sobrecosto en el resort de UAE (Al Marjan).",
+      "Deterioro macro o menos turismo en Las Vegas presiona los ingresos."
     ],
-    "invalida": "Cierre consecutivo (2 días) bajo $76, o Macau GGR sep-2026 con caída > 10% interanual, o suspensión formal del proyecto UAE.",
+    "invalida": "Cierra bajo 74 USD (debajo del mínimo de 52 sem 81.35) o el Q3 decepciona con guía de Macau a la baja y recorte de objetivos de analistas.",
     "senales": [
       {
-        "t": "RSI (14 días)",
-        "d": "RSI de 17 el 19-sep: más sobrevendida del S&P500 esa semana. Extremo histórico que históricamente precede rebotes de 15%+.",
+        "t": "RSI 14",
+        "d": "17-18, la más sobrevendida del S&P 500 (19-sep-2026). Sobreventa extrema.",
+        "tono": "ok"
+      },
+      {
+        "t": "Analistas",
+        "d": "21 en Strong Buy, 15 compra/2 mantener; objetivo 133.35 USD (+60%).",
         "tono": "ok"
       },
       {
         "t": "Short interest",
-        "d": "9.4% del float en corto (+18.5% en 1 sesión). Borrow 413% disponible: bears convencidos; squeeze técnico improbable por ahora.",
-        "tono": "alerta"
+        "d": "~8.8% del float, 5.87 días para cubrir (31-ago-2026). Moderado.",
+        "tono": "neutro"
       },
       {
-        "t": "Consenso analistas",
-        "d": "21 analistas: Strong Buy. Objetivos: UBS $138, Wolfe $128, Argus $145. Promedio $132.01 (+58%).",
-        "tono": "ok"
-      },
-      {
-        "t": "Fundamentales Q2 2026",
-        "d": "EPS $1.24 vs $0.98 est (+26% beat). Ingresos $1.86B vs $1.83B est. Macau Palace +21% YoY.",
+        "t": "Recompra",
+        "d": "Programa de 2,740 mdd completado; acciones reducidas 28%.",
         "tono": "ok"
       }
     ]
   },
   "alternativas": [
     {
-      "empresa": "Boeing",
-      "ticker": "BA",
-      "precio": 202,
+      "empresa": "The Trade Desk",
+      "ticker": "TTD",
+      "precio": 13.92,
       "moneda": "USD",
-      "caidaDesdeMax": -20.6,
-      "porque": "CEO admitió retrasos en 737 MAX y 787; FCF 2026 bajado a ~$2B. RSI 24. BofA: venta exagerada. Certificación 737 MAX 10 inminente es el catalizador clave.",
-      "porQueNo": "Caída de -21% moderada; historial de sorpresas negativas recientes; deuda alta con producción aún incierta. Menos asimétrico que WYNN."
+      "caidaDesdeMax": -84.8,
+      "porque": "Ad-tech castigada por miedo a la IA y menor crecimiento; cayó de 91 a 14 USD con volumen enorme y sobreventa histórica.",
+      "porQueNo": "Analistas la bajaron a Hold con objetivo 24; caída tan extrema huele a trampa de valor y earnings hasta el 5-nov."
     },
     {
-      "empresa": "The Home Depot",
-      "ticker": "HD",
-      "precio": 299.14,
+      "empresa": "UiPath",
+      "ticker": "PATH",
+      "precio": 13.59,
       "moneda": "USD",
-      "caidaDesdeMax": -28.5,
-      "porque": "Caído -29% por debilidad inmobiliaria. 36 analistas en Buy, target $377 (+26%). Requiere relajación de tasas Fed para activar rebote en ventas de vivienda.",
-      "porQueNo": "No hay catalizador de corto plazo sin baja de tasas; CEO en licencia médica temporal; rebote más lento y macro-dependiente."
+      "caidaDesdeMax": -32,
+      "porque": "Automatización/IA con short interest de 20-38% del float; muy sobrevendida tras earnings, con potencial de squeeze.",
+      "porQueNo": "El reporte ya pasó (3-sep) y decepcionó; sin catalizador cercano y momentum negativo por dudas del negocio de IA."
     }
   ],
   "reglas": [
-    "Compra escalonada: 60% en zona $81-$84 hoy, 40% solo si cae a $78-$80 con volumen decreciente. Nunca promedies si la tesis se invalida.",
-    "Stop-loss obligatorio en $76: si cierra dos días consecutivos bajo ese nivel, vende todo sin excepción ni racionalizaciones.",
-    "Toma parcial de ganancias: vende 40% de la posición si llega a $100 (+20%); deja correr el resto hasta Q3 earnings del 5-nov.",
-    "No promedies a la baja sin catalizador nuevo (dato de Macau o avance UAE): la caída puede continuar si el GGR de oct sigue débil."
+    "Compra en 2-3 tramos; nunca metas los 16,500 MXN de golpe.",
+    "Stop obligatorio en 74 USD; si cierra debajo, vende sin excusas.",
+    "Toma ganancias parciales en 100-108 USD y sube el stop a tu costo.",
+    "No promedies a la baja sin catalizador nuevo (Q3 o datos de Macau)."
   ],
   "fuentes": [
     {
-      "t": "StockAnalysis – WYNN precio, 52-sem, próximos earnings",
+      "t": "StockAnalysis — WYNN precio y rango 52 semanas",
       "u": "https://stockanalysis.com/stocks/wynn/"
     },
     {
-      "t": "CNBC – S&P500 otra semana negativa; WYNN RSI=17 más sobrevendida",
-      "u": "https://www.cnbc.com/2026/09/19/the-sp-500-just-logged-another-losing-week-these-stocks-could-be-due-for-a-bounce.html"
+      "t": "MarketBeat — WYNN fechas de earnings",
+      "u": "https://www.marketbeat.com/stocks/NASDAQ/WYNN/earnings/"
     },
     {
-      "t": "Ad-Hoc News – WYNN en mínimo 52-sem, Macau y UAE concerns",
-      "u": "https://www.ad-hoc-news.de/boerse/news/corporate-news/wynn-resorts-stock-hits-52-week-low-as-macau-and-uae-concerns-weigh/70113182"
+      "t": "Simply Wall St — recompra de 2,740 mdd",
+      "u": "https://simplywall.st/stocks/us/consumer-services/nasdaq-wynn/wynn-resorts/news/what-wynn-resorts-wynns-earnings-jump-and-274-billion-buybac"
     },
     {
-      "t": "Ortex – WYNN shorts surge, análisis de short interest y borrow",
-      "u": "https://ortex.news/articles/162736/wynn-shorts-surge-as-street-stays-bullish"
+      "t": "Ad-hoc News — WYNN mínimo de 52 semanas (Macau/UAE)",
+      "u": "https://www.ad-hoc-news.de/boerse/news/corporate-news/wynn-resorts-stock-hits-52-week-low-as-macau-and-uae-worries-deepen/70117428"
     },
     {
-      "t": "Yahoo Finance – WYNN quote en tiempo real (precio y datos)",
-      "u": "https://finance.yahoo.com/quote/WYNN/"
+      "t": "Yahoo Finance — estimaciones de analistas WYNN",
+      "u": "https://finance.yahoo.com/markets/stocks/articles/wynn-resorts-stock-analyst-estimates-124607942.html"
     },
     {
-      "t": "Wynn Resorts – Q2 2026 earnings press release oficial",
-      "u": "https://investors.wynnresorts.com/news-releases/news-release-details/wynn-resorts-limited-reports-second-quarter-2026-results"
+      "t": "Yahoo Finance — acciones que perdieron 40%+ en 2026 (TTD)",
+      "u": "https://finance.yahoo.com/markets/stocks/articles/10-stocks-lost-over-40-181945525.html"
     },
     {
-      "t": "Yahoo Finance – Boeing selloff exagerado según BofA",
-      "u": "https://finance.yahoo.com/markets/stocks/articles/boeing-selloff-overdone-despite-ceos-162400723.html"
+      "t": "StocksToTrade — caída de UiPath (PATH)",
+      "u": "https://stockstotrade.com/news/uipath-inc-path-news-2026_09_16/"
     }
   ],
   "_meta": {
-    "generado": "2026-09-21T14:05:48-06:00",
-    "modelo": "claude-sonnet-4-6",
-    "tokens": 318733,
-    "salida": 19937,
-    "turnos": 22,
-    "segundos": 419,
-    "costoUsd": 0.9447
+    "generado": "2026-09-21T14:16:20-06:00",
+    "modelo": "claude-opus-4-8",
+    "tokens": 186002,
+    "salida": 8564,
+    "turnos": 12,
+    "segundos": 150,
+    "costoUsd": 0.8756
   }
 };

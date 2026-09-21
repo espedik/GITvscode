@@ -28,9 +28,11 @@
 <script src="datos-maestros.js"></script>
 <!-- Lo que Claude escribe para "Qué invertir hoy" (ver inversion-actualizar.ps1). Si falta, el panel lo dice. -->
 <script src="inversion-hoy.js"></script>
+<script src="inversion-alto.js"></script>
 <script src="inversion-superalto.js"></script>
 <!-- Los prompts van en .js para que la página pueda mostrarlos ("ver el prompt"); el .ps1 lee el mismo texto. -->
 <script src="inversion-prompt.js"></script>
+<script src="inversion-alto-prompt.js"></script>
 <script src="inversion-superalto-prompt.js"></script>
 <script src="ficha.js"></script>
 <!-- Simulacro del examen ISTQB CT-GenAI (paso 6 de la ficha de la meta `istqbgenai`).
@@ -3622,27 +3624,27 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .inv-fuentes a:hover{color:var(--cy);text-decoration:underline}
 .inv-fuentes a::before{content:'↗ ';color:var(--cy)}
 
-/* Riesgo súper alto: la cuarta pestaña. Misma rejilla que las otras tres; lo suyo es la ficha de la
-   empresa (precio, caída, entrada / objetivo / stop) y el reparto fijo del maestro. */
+/* Las apuestas (riesgo alto y súper alto): misma rejilla que las otras pestañas; lo suyo es la ficha de la
+   empresa (precio, caída, entrada / objetivo / stop) y el reparto fijo del maestro. El color viene de --c/--c-rgb. */
 .inv-sa-top{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start;margin-bottom:12px}
 .inv-sa-l .inv-pf-para{font-size:13px;line-height:1.5;color:var(--text2)}
 .inv-sa-l .inv-pf-para b{color:var(--text)}
 .inv-sa-acc{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
-.inv-btn-sa{border-color:rgba(var(--r-rgb),.5);color:var(--r);background:rgba(var(--r-rgb),.1)}
-.inv-btn-sa:hover{background:rgba(var(--r-rgb),.18)}
+.inv-btn-sa{border-color:rgba(var(--c-rgb),.5);color:var(--c);background:rgba(var(--c-rgb),.1)}
+.inv-btn-sa:hover{background:rgba(var(--c-rgb),.18)}
 .inv-sa-fecha{font-size:12.5px;line-height:1.5;color:var(--text2);padding:10px 14px;border-radius:12px;margin-bottom:12px;
-  background:rgba(var(--r-rgb),.07);border:1px solid rgba(var(--r-rgb),.25)}
+  background:rgba(var(--c-rgb),.07);border:1px solid rgba(var(--c-rgb),.25)}
 .inv-sa-fecha b{color:var(--text)}
 .inv-sa-hero{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:12px;align-items:stretch;margin-bottom:10px}
-.inv-sa-emp{border-radius:14px;padding:14px 16px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-left:4px solid var(--r);display:flex;flex-direction:column;justify-content:center;gap:6px}
+.inv-sa-emp{border-radius:14px;padding:14px 16px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-left:4px solid var(--c);display:flex;flex-direction:column;justify-content:center;gap:6px}
 .inv-sa-nombre{font-family:var(--font-title);font-size:clamp(20px,2.2vw,28px);font-weight:700;line-height:1.1;color:var(--text);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.inv-sa-nombre .inv-ac-tk{--a:var(--r);font-size:12px}
+.inv-sa-nombre .inv-ac-tk{--a:var(--c);font-size:12px}
 .inv-sa-bolsa{font-family:var(--font);font-size:11px;font-weight:600;color:var(--text3)}
 .inv-sa-precio{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .inv-sa-precio b{font-family:var(--mono);font-size:24px;font-weight:800;color:var(--text)}
 .inv-sa-precio span{font-size:11px;color:var(--text3)}
-.inv-sa-caida{border-radius:14px;padding:12px 16px;background:rgba(var(--r-rgb),.1);border:1px solid rgba(var(--r-rgb),.3);display:flex;flex-direction:column;justify-content:center;align-items:flex-end;text-align:right}
-.inv-sa-caida b{font-family:var(--mono);font-size:38px;font-weight:800;line-height:1;color:var(--r)}
+.inv-sa-caida{border-radius:14px;padding:12px 16px;background:rgba(var(--c-rgb),.1);border:1px solid rgba(var(--c-rgb),.3);display:flex;flex-direction:column;justify-content:center;align-items:flex-end;text-align:right}
+.inv-sa-caida b{font-family:var(--mono);font-size:38px;font-weight:800;line-height:1;color:var(--c)}
 .inv-sa-caida span{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-top:4px}
 .inv-sa-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .inv-stat-ok{border-color:rgba(var(--g-rgb),.35);background:rgba(var(--g-rgb),.07)}
@@ -4149,7 +4151,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
       <button class="gbm-close" onclick="cerrarGBM()" aria-label="Cerrar">✕</button>
       <div class="inv-head-txt">
         <h2>📈 Qué invertir hoy</h2>
-        <p>Tres perfiles con tus saldos reales de Finanzas. La plantilla es fija; Claude solo rellena la información.</p>
+        <p>Dos perfiles y dos compras a la baja, con tus saldos reales de Finanzas. La plantilla es fija; Claude solo rellena la información.</p>
       </div>
       <div class="inv-head-acc" id="invHeadAcc"></div>
     </div>
@@ -9582,8 +9584,12 @@ function pintarInvertirBtn(){
 // La plantilla (renderGBMPanel y el CSS .inv-*) es fija. Lo que cambia de una semana a otra vive
 // en dos archivos que escribe Claude Code a través de inversion-actualizar.ps1:
 //   · inversion-hoy.js (window.INVERSION_HOY): veredicto, mercado y los perfiles segura / medio / alto.
-//   · inversion-superalto.js (window.INVERSION_SUPERALTO): la apuesta de la pestaña Riesgo súper
-//     alto, con su propio botón — "exclusivamente en riesgo súper alto ahí modificará la información".
+//   · inversion-hoy.js trae solo segura y medio; riesgo alto y súper alto son "apuestas": una sola
+//     empresa a la baja, con la misma regla fija del maestro, la misma plantilla (invApuestaHtml) y
+//     el mismo esquema, pero cada una con su prompt, su archivo y su botón: inversion-alto.js
+//     (window.INVERSION_ALTO, empresas sólidas) e inversion-superalto.js (window.INVERSION_SUPERALTO,
+//     altísimo riesgo). Adán: "exclusivamente en riesgo súper alto ahí modificará la información";
+//     "riesgo alto igualita que el de riesgo súper alto… empresas un poco más confiables".
 // Así una actualización cuesta los tokens de la información y ninguno de la interfaz. Adán,
 // 21-sep-2026: "claude solo se encargará de la información y la plantilla no se modificará
 // visualmente, entonces solo se gastan tokens en información".
@@ -9596,33 +9602,34 @@ function pintarInvertirBtn(){
 // página los muestra ("ver el prompt") y solo puede cargarlos con <script src>.
 const INV_KEY = 'dash-inversion-v1';   // {tab, perfil, monto} — pestaña abierta, perfil elegido, monto al mes
 const INV_PERFILES = [
-  { id:'seguro',    nombre:'Inversión segura',  ico:'🛡️', color:'var(--g)' },
-  { id:'medio',     nombre:'Riesgo medio',      ico:'⚖️', color:'var(--w)' },
-  { id:'alto',      nombre:'Riesgo alto',       ico:'🔥', color:'var(--o)' },
-  { id:'superalto', nombre:'Riesgo súper alto', ico:'🎲', color:'var(--r)' },
+  { id:'seguro',    nombre:'Inversión segura',  ico:'🛡️', color:'var(--g)', rgb:'var(--g-rgb)' },
+  { id:'medio',     nombre:'Riesgo medio',      ico:'⚖️', color:'var(--w)', rgb:'var(--w-rgb)' },
+  { id:'alto',      nombre:'Riesgo alto',       ico:'🔥', color:'var(--o)', rgb:'var(--o-rgb)', apuesta:true },
+  { id:'superalto', nombre:'Riesgo súper alto', ico:'🎲', color:'var(--r)', rgb:'var(--r-rgb)', apuesta:true },
 ];
 const INV_ACTIVO_COLORES = ['var(--cy)', 'var(--p)', 'var(--b)', 'var(--w)', 'var(--o)'];
 // Los dos modos del puente: qué archivo escribe cada uno, qué variable expone y su prompt.
 const INV_MODOS = {
-  perfiles:  { ruta:'actualizar', archivo:'inversion-hoy.js',       variable:'INVERSION_HOY',       prompt:'INVERSION_PROMPT',           promptArchivo:'inversion-prompt.js',           estado:'invEstado',   boton:'invBtnClaude', nombre:'los tres perfiles' },
+  perfiles:  { ruta:'actualizar', archivo:'inversion-hoy.js',       variable:'INVERSION_HOY',       prompt:'INVERSION_PROMPT',           promptArchivo:'inversion-prompt.js',           estado:'invEstado',   boton:'invBtnClaude', nombre:'los perfiles segura y medio' },
+  alto:      { ruta:'alto',       archivo:'inversion-alto.js',      variable:'INVERSION_ALTO',      prompt:'INVERSION_ALTO_PROMPT',      promptArchivo:'inversion-alto-prompt.js',      estado:'invEstadoAlto', boton:'invBtnAlto',   nombre:'la compra a la baja de riesgo alto' },
   superalto: { ruta:'superalto',  archivo:'inversion-superalto.js', variable:'INVERSION_SUPERALTO', prompt:'INVERSION_SUPERALTO_PROMPT', promptArchivo:'inversion-superalto-prompt.js', estado:'invEstadoSA', boton:'invBtnSA',     nombre:'la apuesta de riesgo súper alto' },
 };
 function invPref(){ return rawGet(INV_KEY, {}) || {}; }
 function invPrefSet(patch){ rawSet(INV_KEY, Object.assign(invPref(), patch)); }
 function invDatos(){ const d = window.INVERSION_HOY; return (d && d.perfiles && d.veredicto) ? d : null; }
-function invDatosSA(){ const d = window.INVERSION_SUPERALTO; return (d && d.principal && d.principal.ticker) ? d : null; }
+function invDatosApuesta(modo){ const M = INV_MODOS[modo]; const d = M && window[M.variable]; return (d && d.principal && d.principal.ticker) ? d : null; }
 function invPerfilDef(id){ return INV_PERFILES.find(p => p.id === id) || INV_PERFILES[1]; }
 function invTabActual(){ const p = invPref(); return invPerfilDef(p.tab || p.perfil || 'medio').id; }
 // El monto al mes con el que se calculan los repartos de los tres perfiles: el que Adán escribió;
 // si no, el que Claude ve razonable hoy; si tampoco, el aporte a CETES del día 15 (nunca un número
-// a mano). La pestaña súper alto no lo usa: su monto es fijo y vive en el maestro.
+// a mano). Las apuestas (alto y súper alto) no lo usan: su monto es fijo y vive en el maestro.
 function invMontoMensual(){
   const p = invPref(), d = invDatos();
   if(+p.monto > 0) return +p.monto;
   if(d && +d.veredicto.montoMensual > 0) return +d.veredicto.montoMensual;
   return +_PG().cetesDia15 || 0;
 }
-// La regla fija de Riesgo súper alto, del maestro: al mes, CETES fijos, un % a BTC y el resto a una empresa.
+// La regla fija de las dos apuestas, del maestro: al mes, CETES fijos, un % a BTC y el resto a una empresa.
 function invReglaSA(){
   const P = _PG();
   const mes = +P.especulacionMes || 0, cetes = +P.cetesDia15 || 0, btcPct = +P.especulacionBtcPct || 0;
@@ -9677,12 +9684,13 @@ function invContexto(){
     montoMensualActual: +invPref().monto || null,
   };
 }
-// El contexto de Riesgo súper alto: la regla fija con sus pesos ya calculados, los precios y la
-// apuesta anterior (para que Claude diga si sigue vigente o si hoy hay una mejor).
-function invContextoSA(){
+// El contexto de una apuesta: la regla fija con sus pesos ya calculados, los precios y la apuesta
+// anterior de esa pestaña (para que Claude diga si sigue vigente o si hoy hay una mejor).
+function invContextoApuesta(modo){
   const { F } = pasoInversionHoy();
-  const R = invReglaSA(), hoy = new Date(), ant = invDatosSA();
+  const R = invReglaSA(), hoy = new Date(), ant = invDatosApuesta(modo);
   return {
+    perfil: modo,
     fecha: hoy.toISOString().slice(0, 10),
     hora: hoy.toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' }),
     ciudad: _PG().ciudad || '', broker: 'GBM+', exchangeBtc: 'Bitso',
@@ -9709,11 +9717,11 @@ function invPedirClaude(modo){
     return;
   }
   const btn = document.getElementById(M.boton); if(btn) btn.disabled = true;
-  invEstado(modo, modo === 'superalto'
+  invEstado(modo, modo !== 'perfiles'
     ? '⏳ Se abrió una ventana de PowerShell: Claude está investigando en la web, tarda 3-6 min. Puedes seguir usando el Dashboard.'
     : '⏳ Se abrió una ventana de PowerShell: Claude está pensando, tarda 1-3 min. Puedes seguir usando el Dashboard.', 'wait');
   invEsperar(modo);
-  const ctx = modo === 'superalto' ? invContextoSA() : invContexto();
+  const ctx = modo === 'perfiles' ? invContexto() : invContextoApuesta(modo);
   location.href = 'claudeinv://' + M.ruta + '?ctx=' + invBase64url(JSON.stringify(ctx));
 }
 function invEsperar(modo){
@@ -9746,7 +9754,7 @@ function invEsperar(modo){
 // prompt" y lo que se copia sin protocolo (iPad, otra máquina), con el encargo de dónde guardarlo.
 function invPromptCompleto(modo){
   const M = INV_MODOS[modo];
-  const ctx = modo === 'superalto' ? invContextoSA() : invContexto();
+  const ctx = modo === 'perfiles' ? invContexto() : invContextoApuesta(modo);
   const p = String(window[M.prompt] || ('(no se cargó ' + M.promptArchivo + ')')).trim();
   return p + '\n\nCONTEXTO DE ADÁN (JSON, saldos reales de hoy):\n' + JSON.stringify(ctx);
 }
@@ -9788,7 +9796,7 @@ function invPintarCabecera(d){
   const m = d && d._meta;
   const estado = m ? invMetaTxt(m, 'Claude ·') : (d ? 'Datos de Claude sin fecha' : 'Todavía no le has pedido nada a Claude');
   acc.innerHTML =
-    '<button class="inv-btn-claude" id="invBtnClaude" onclick="invPedirClaude(\'perfiles\')" title="Manda tus saldos reales a Claude Code y reescribe solo los datos de los tres perfiles">🤖 Actualizar con Claude</button>' +
+    '<button class="inv-btn-claude" id="invBtnClaude" onclick="invPedirClaude(\'perfiles\')" title="Manda tus saldos reales a Claude Code y reescribe solo los datos de segura y medio">🤖 Actualizar con Claude</button>' +
     '<div class="inv-estado" id="invEstado">' + esc(estado) + '</div>' +
     '<div class="inv-ayuda"><a onclick="invVerPrompt(\'perfiles\')">ver el prompt</a> · ¿No se abre nada? <a onclick="invAyudaInstalar()">instalar el protocolo</a> · <a onclick="invCopiarContexto(\'perfiles\')">copiar el contexto</a></div>';
 }
@@ -9808,16 +9816,18 @@ function invVeredictoHtml(P, d){
       (privado
         ? '<div class="inv-monto">$••,•••</div>'
         : '<div class="inv-monto"><span>$</span><input id="invMontoInput" type="number" step="100" min="0" value="' + monto + '" onchange="invMontoCambia(this.value)"></div>') +
-      '<small>' + (v && +v.montoMensual > 0 ? 'Claude sugiere ' + money(v.montoMensual) + '. ' : '') + 'Con esto se calcula el reparto de los tres perfiles; edítalo. Riesgo súper alto tiene su propia regla.</small>' +
+      '<small>' + (v && +v.montoMensual > 0 ? 'Claude sugiere ' + money(v.montoMensual) + '. ' : '') + 'Con esto se calcula el reparto de segura y medio; edítalo. Riesgo alto y súper alto tienen su regla fija.</small>' +
     '</div>' +
   '</div>';
 }
 function invTabsHtml(d, tab){
-  const sa = invDatosSA();
   return '<div class="inv-tabs">' + INV_PERFILES.map(p => {
     let sub = '';
-    if(p.id === 'superalto') sub = sa ? '<div class="inv-tab-l"><span>' + esc(sa.principal.ticker) + ' · ' + invNum(sa.principal.caidaDesdeMax, 0) + ' % desde el máximo</span><span class="inv-dots">●●●●●</span></div>'
-                                      : '<div class="inv-tab-l"><span>Una empresa a la baja, investigada hoy</span><span class="inv-dots">●●●●●</span></div>';
+    if(p.apuesta){
+      const sa = invDatosApuesta(p.id), dots = p.id === 'alto' ? '●●●●○' : '●●●●●';
+      sub = sa ? '<div class="inv-tab-l"><span>' + esc(sa.principal.ticker) + ' · ' + invNum(sa.principal.caidaDesdeMax, 0) + ' % desde el máximo</span><span class="inv-dots">' + dots + '</span></div>'
+               : '<div class="inv-tab-l"><span>' + (p.id === 'alto' ? 'Una empresa sólida a la baja, investigada hoy' : 'Una empresa a la baja, investigada hoy') + '</span><span class="inv-dots">' + dots + '</span></div>';
+    }
     else { const pf = d && d.perfiles[p.id]; if(pf) sub = '<div class="inv-tab-l"><span>' + esc(pf.lema) + '</span><span class="inv-dots">' + invDots(pf.riesgo) + '</span></div>'; }
     return '<button class="inv-tab' + (p.id === tab ? ' on' : '') + '" style="--c:' + p.color + '" onclick="invTab(\'' + p.id + '\')">' +
       '<div class="inv-tab-n"><span>' + p.ico + '</span>' + p.nombre + (invPref().perfil === p.id ? ' <span title="Tu perfil elegido">★</span>' : '') + '</div>' + sub +
@@ -9848,7 +9858,7 @@ function invPerfilHtml(d, id){
   const activos = (pf.activos || []).map(a => Object.assign({}, a, { pct: (+a.pct || 0) * 100 / suma }));
   const r = Array.isArray(pf.rendAnual) ? pf.rendAnual : [0, 0];
   const elegido = invPref().perfil === id;
-  return '<div class="inv-perfil" style="--c:' + def.color + '">' +
+  return '<div class="inv-perfil" style="--c:' + def.color + ';--c-rgb:' + def.rgb + '">' +
     '<div class="inv-pf-head">' +
       '<div class="inv-pf-l">' +
         '<div class="inv-pf-lema">' + def.ico + ' <i>' + esc(pf.lema) + '</i></div>' +
@@ -9882,27 +9892,41 @@ function invPerfilHtml(d, id){
     '</div>' +
   '</div>';
 }
-// La pestaña Riesgo súper alto: regla fija del maestro + la apuesta que investigó Claude hoy.
-function invSuperAltoHtml(){
-  const def = invPerfilDef('superalto'), sa = invDatosSA(), R = invReglaSA();
+// Las dos apuestas (riesgo alto y súper alto): regla fija del maestro + la empresa que investigó
+// Claude hoy. Misma plantilla; lo que cambia es el texto de la regla, el botón y el archivo.
+const INV_APUESTA_TXT = {
+  alto: {
+    lema: 'La compra a la baja de hoy', que: 'una sola empresa sólida que hoy está a la baja', como: '(líder de su sector, rentable, capitalización grande) que Claude investiga el día que pulsas el botón. Sin S&P 500, sin QQQ, sin ETFs.',
+    vacio: 'Claude busca en Finviz, TradingView, Yahoo Finance y noticias una empresa sólida —líder, rentable, con balance sano— que hoy esté a la baja por una razón temporal, compara tres y te trae la elegida con entrada, objetivo, stop y por qué.',
+    disc: 'Compra a la baja de una empresa sólida, investigada por Claude el día que pulsaste el botón; los precios cambian a cada minuto y el stop no es opcional. No es asesoría regulada: la decisión y la pérdida posible son tuyas.',
+  },
+  superalto: {
+    lema: 'La apuesta de hoy', que: 'una sola empresa a la baja', como: 'de altísimo riesgo que Claude investiga en sitios de trading el día que pulsas el botón. Sin S&P 500, sin QQQ, sin ETFs.',
+    vacio: 'Claude busca en Finviz, TradingView, Yahoo Finance y noticias una empresa real que hoy esté a la baja con catalizadores para rebotar, compara tres y te trae la elegida con entrada, objetivo, stop y por qué.',
+    disc: 'Especulación de altísimo riesgo investigada por Claude el día que pulsaste el botón; los precios cambian a cada minuto y el stop no es opcional. No es asesoría regulada: la decisión y la pérdida posible son tuyas.',
+  },
+};
+function invApuestaHtml(modo){
+  const def = invPerfilDef(modo), M = INV_MODOS[modo], T = INV_APUESTA_TXT[modo], sa = invDatosApuesta(modo), R = invReglaSA();
   const { F } = pasoInversionHoy();
   const usdMxn = +F.usdMxn || 0, btcUsd = +F.currentBtcPrice || 0;
-  const elegido = invPref().perfil === 'superalto';
+  const elegido = invPref().perfil === modo;
   const m = sa && sa._meta;
   const cabecera =
     '<div class="inv-sa-top">' +
       '<div class="inv-sa-l">' +
-        '<div class="inv-pf-lema">' + def.ico + ' <i>' + (sa ? 'La apuesta de hoy: ' + esc(sa.principal.empresa) : 'La apuesta de hoy') + '</i></div>' +
-        '<div class="inv-pf-para">Regla fija: <b>' + money(R.mes) + '</b> al mes → <b>' + money(R.cetes) + '</b> a CETES (siempre), <b>' + invPct(R.btcPct) + '</b> a Bitcoin (' + money(R.btc) + ') y todo el resto, <b>' + money(R.resto) + ' (' + invPct(R.restoPct) + ')</b>, a <b>una sola empresa a la baja</b> que Claude investiga en sitios de trading el día que pulsas el botón. Sin S&P 500, sin QQQ, sin ETFs.</div>' +
+        '<div class="inv-pf-lema">' + def.ico + ' <i>' + T.lema + (sa ? ': ' + esc(sa.principal.empresa) : '') + '</i></div>' +
+        '<div class="inv-pf-para">Regla fija: <b>' + money(R.mes) + '</b> al mes → <b>' + money(R.cetes) + '</b> a CETES (siempre), <b>' + invPct(R.btcPct) + '</b> a Bitcoin (' + money(R.btc) + ') y todo el resto, <b>' + money(R.resto) + ' (' + invPct(R.restoPct) + ')</b>, a <b>' + T.que + '</b> ' + T.como + '</div>' +
       '</div>' +
       '<div class="inv-sa-acc">' +
-        '<button class="inv-btn-claude inv-btn-sa" id="invBtnSA" onclick="invPedirClaude(\'superalto\')" title="Solo reescribe esta pestaña: Claude investiga hoy qué empresa a la baja comprar">🤖 Investigar hoy</button>' +
-        '<div class="inv-estado" id="invEstadoSA">' + esc(m ? invMetaTxt(m, 'Investigado el') : 'Todavía no has investigado ninguna empresa') + '</div>' +
-        '<div class="inv-ayuda"><a onclick="invVerPrompt(\'superalto\')">ver el prompt que se envía</a> · <a onclick="invCopiarContexto(\'superalto\')">copiar el contexto</a></div>' +
+        '<button class="inv-btn-claude inv-btn-sa" id="' + M.boton + '" onclick="invPedirClaude(\'' + modo + '\')" title="Solo reescribe esta pestaña: Claude investiga hoy qué empresa a la baja comprar">🤖 Investigar hoy</button>' +
+        '<div class="inv-estado" id="' + M.estado + '">' + esc(m ? invMetaTxt(m, 'Investigado el') : 'Todavía no has investigado ninguna empresa') + '</div>' +
+        '<div class="inv-ayuda"><a onclick="invVerPrompt(\'' + modo + '\')">ver el prompt que se envía</a> · <a onclick="invCopiarContexto(\'' + modo + '\')">copiar el contexto</a></div>' +
       '</div>' +
     '</div>';
-  if(!sa) return '<div class="inv-perfil inv-sa" style="--c:' + def.color + '">' + cabecera +
-    '<div class="inv-vacio"><b>Todavía no hay apuesta</b>Pulsa <b style="display:inline;font:inherit">🤖 Investigar hoy</b>: Claude busca en Finviz, TradingView, Yahoo Finance y noticias una empresa real que hoy esté a la baja con catalizadores para rebotar, compara tres y te trae la elegida con entrada, objetivo, stop y por qué. Tarda 3-6 minutos y solo cambia esta pestaña.</div></div>';
+  const estilo = '--c:' + def.color + ';--c-rgb:' + def.rgb;
+  if(!sa) return '<div class="inv-perfil inv-sa" style="' + estilo + '">' + cabecera +
+    '<div class="inv-vacio"><b>Todavía no hay empresa</b>Pulsa <b style="display:inline;font:inherit">🤖 Investigar hoy</b>: ' + T.vacio + ' Tarda 3-6 minutos y solo cambia esta pestaña.</div></div>';
 
   const p = sa.principal, mon = p.moneda || 'USD';
   const precioMxn = mon === 'MXN' ? +p.precio : (+p.precio * usdMxn);
@@ -9912,9 +9936,9 @@ function invSuperAltoHtml(){
   const rep = [
     { n:'CETES', pct:R.cetesPct, monto:R.cetes, d:'fijo, Cetesdirecto', c:'var(--cy)' },
     { n:'Bitcoin', pct:R.btcPct, monto:R.btc, d:(btc ? '≈ ' + btc.toFixed(5) + ' ₿ · Bitso' : 'Bitso'), c:'var(--w)' },
-    { n:esc(p.ticker), pct:R.restoPct, monto:R.resto, d:(acciones ? '≈ ' + invNum(acciones, 1) + ' acciones a ' + pr(p.precio) + (mon === 'USD' && usdMxn ? ' × $' + invNum(usdMxn) : '') : 'GBM+'), c:'var(--r)' },
+    { n:esc(p.ticker), pct:R.restoPct, monto:R.resto, d:(acciones ? '≈ ' + invNum(acciones, 1) + ' acciones a ' + pr(p.precio) + (mon === 'USD' && usdMxn ? ' × $' + invNum(usdMxn) : '') : 'GBM+'), c:def.color },
   ];
-  return '<div class="inv-perfil inv-sa" style="--c:' + def.color + '">' + cabecera +
+  return '<div class="inv-perfil inv-sa" style="' + estilo + '">' + cabecera +
     '<div class="inv-sa-fecha">📅 Investigado el <b>' + esc(invFechaLarga(m && m.generado)) + '</b>' + (p.fechaDato ? ' · precio del <b>' + esc(p.fechaDato) + '</b>' : '') + ' · ' + esc(sa.resumen) + '</div>' +
     '<div class="inv-sa-hero">' +
       '<div class="inv-sa-emp">' +
@@ -9950,13 +9974,13 @@ function invSuperAltoHtml(){
       '<div class="inv-ac-row"><span class="inv-ac-k">A favor</span><span>' + esc(a.porque) + '</span></div>' +
       '<div class="inv-ac-row"><span class="inv-ac-k">Por qué no</span><span>' + esc(a.porQueNo) + '</span></div></div>').join('') + '</div>' +
     (sa.fuentes && sa.fuentes.length ? '<div class="inv-fuentes inv-fuentes-2">' + sa.fuentes.map(f => '<a href="' + esc(f.u) + '" target="_blank" rel="noopener" title="' + esc(f.u) + '">' + esc(f.t) + '</a>').join('') + '</div>' : '') +
-    '<div class="inv-pf-foot">' + invElegirBtn('superalto', elegido) +
-      '<span class="inv-disc">Especulación de altísimo riesgo investigada por Claude el día que pulsaste el botón; los precios cambian a cada minuto y el stop no es opcional. No es asesoría regulada: la decisión y la pérdida posible son tuyas.</span>' +
+    '<div class="inv-pf-foot">' + invElegirBtn(modo, elegido) +
+      '<span class="inv-disc">' + T.disc + '</span>' +
     '</div>' +
   '</div>';
 }
 function invVacioHtml(){
-  return '<div class="inv-vacio"><b>Todavía no hay perfiles</b>Pulsa <b style="display:inline;font:inherit">🤖 Actualizar con Claude</b>: la página manda tus saldos reales y en 1-3 minutos aparecen aquí los tres perfiles con su reparto, su porqué y sus reglas.</div>';
+  return '<div class="inv-vacio"><b>Todavía no hay perfiles</b>Pulsa <b style="display:inline;font:inherit">🤖 Actualizar con Claude</b>: la página manda tus saldos reales y en 1-3 minutos aparecen aquí los perfiles segura y medio con su reparto, su porqué y sus reglas.</div>';
 }
 function invSideHtml(P, d){
   const { inv, ef, metaEf, totalInv, cetes, deudaCara, mon } = P;
@@ -9968,12 +9992,12 @@ function invSideHtml(P, d){
         return '<div class="gbm-row"><span>' + esc(i.name) + '</span><span class="gbm-mono">' + mon(v) + ' · ' + pct + '%</span></div>';
       }).join('')
     : '<div class="gbm-vacio">Todavía no hay inversiones registradas en Finanzas.</div>';
-  const elegido = invPref().perfil, sa = invDatosSA();
+  const elegido = invPref().perfil, defE = elegido && invPerfilDef(elegido);
   let objetivo = '';
-  if(elegido === 'superalto'){
-    const R = invReglaSA();
-    objetivo = '<div class="inv-objetivo" style="--c:' + invPerfilDef('superalto').color + '"><div class="inv-objetivo-t">Tu asignación objetivo</div>' +
-      '<div class="inv-objetivo-n">🎲 Riesgo súper alto · ' + money(R.mes) + ' al mes</div>' +
+  if(defE && defE.apuesta && defE.id === elegido){
+    const R = invReglaSA(), sa = invDatosApuesta(elegido);
+    objetivo = '<div class="inv-objetivo" style="--c:' + defE.color + '"><div class="inv-objetivo-t">Tu asignación objetivo</div>' +
+      '<div class="inv-objetivo-n">' + defE.ico + ' ' + defE.nombre + ' · ' + money(R.mes) + ' al mes</div>' +
       '<div class="inv-objetivo-r">' + invPct(R.cetesPct) + ' CETES · ' + invPct(R.btcPct) + ' BTC · ' + invPct(R.restoPct) + ' ' + (sa ? esc(sa.principal.ticker) : 'la empresa del día') + '</div></div>';
   }else{
     const pfE = elegido && d && d.perfiles[elegido];
@@ -10023,7 +10047,7 @@ function renderGBMPanel(){
   if(!b) return;
   const P = pasoInversionHoy(), d = invDatos(), tab = invTabActual();
   invPintarCabecera(d);
-  const panel = tab === 'superalto' ? invSuperAltoHtml() : (d ? invPerfilHtml(d, tab) : invVacioHtml());
+  const panel = invPerfilDef(tab).apuesta ? invApuestaHtml(tab) : (d ? invPerfilHtml(d, tab) : invVacioHtml());
   b.innerHTML =
     '<div class="inv-main">' + invVeredictoHtml(P, d) + invTabsHtml(d, tab) +
       '<div class="inv-panel" id="invPanel">' + panel + '</div>' +

@@ -1,4 +1,4 @@
-// El prompt de los tres perfiles de "Qué invertir hoy". Vive en un .js y no en un .txt porque la
+// El prompt de los perfiles segura y medio de "Qué invertir hoy" (riesgo alto y súper alto tienen el suyo). Vive en un .js y no en un .txt porque la
 // página lo muestra ("ver el prompt") y desde file:// solo se puede cargar con <script src>;
 // inversion-actualizar.ps1 lee el texto entre los acentos graves. Sin acentos graves ni ${ dentro.
 window.INVERSION_PROMPT = `
@@ -16,11 +16,11 @@ Al final del mensaje va un JSON con sus números reales de hoy (ingresos, fijos,
 BÚSQUEDAS
 Puedes usar WebSearch como máximo 3 veces, solo para: (a) tasa de CETES a 28 días vigente, (b) nivel y tendencia reciente del S&P 500 / VOO, (c) contexto macro o de BTC si hace falta. Si no encuentras la tasa, deja cetesTasa en null y dilo en mercado.resumen. No busques nada más.
 
-LOS TRES PERFILES
+LOS DOS PERFILES (riesgo alto y súper alto NO van aquí: tienen su propio prompt y su propia pestaña)
 - seguro: para dormir tranquilo. Deuda gubernamental (CETES, BONDDIA/fondos de deuda gubernamental en GBM), quizá un pequeño % de ETF muy diversificado. Riesgo 1-2.
 - medio: la asignación que un inversor pasivo mantendría 10 años: ETF indexados (VOO/IVV/VT/VWO o su versión en BMV), CETES como parte defensiva, quizá BTC pequeño. Riesgo 3.
-- alto: crecimiento y volatilidad aceptada: QQQ/tecnología, BTC con peso real, acciones sueltas o small caps. Riesgo 4-5. Sé honesto con las caídas históricas (VOO -34 % en 2020, -25 % en 2022; BTC -77 % en 2022; QQQ -33 % en 2022).
-Reglas para los tres: 2 a 4 activos por perfil; los pct de un perfil suman exactamente 100; todo comprable desde GBM+ o Cetesdirecto; nada de apalancamiento, opciones, cripto distinta de BTC/ETH ni SOFIPOs sin seguro. Cada activo dice DÓNDE se compra, POR QUÉ va en ese perfil, QUÉ VIGILAR y cuál es SU riesgo concreto.
+Sé honesto con las caídas históricas (VOO -34 % en 2020, -25 % en 2022; BTC -77 % en 2022).
+Reglas para los dos: 2 a 4 activos por perfil; los pct de un perfil suman exactamente 100; todo comprable desde GBM+ o Cetesdirecto; nada de apalancamiento, opciones, cripto distinta de BTC/ETH ni SOFIPOs sin seguro. Cada activo dice DÓNDE se compra, POR QUÉ va en ese perfil, QUÉ VIGILAR y cuál es SU riesgo concreto.
 
 VEREDICTO
 veredicto.titulo dice qué hace HOY en una frase (máx. 60 caracteres). veredicto.texto (máx. 320) lo explica con sus números y con el orden del plan. montoMensual es lo que tú ves razonable que destine al mes a invertir HOY con su margen real (si el fondo manda, es el aporte a CETES). cuandoInvertir dice desde cuándo puede pasar al paso 3 y por qué (máx. 140).

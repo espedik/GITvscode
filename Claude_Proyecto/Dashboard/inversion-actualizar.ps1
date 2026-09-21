@@ -1,6 +1,7 @@
 ﻿# inversion-actualizar.ps1 — el puente entre los botones 🤖 del panel "Qué invertir hoy" del
 # Dashboard y Claude Code. Lo lanza Windows cuando la página navega a
-#   claudeinv://actualizar?ctx=…   → los tres perfiles (inversion-hoy.js)
+#   claudeinv://actualizar?ctx=…   → los perfiles segura y medio (inversion-hoy.js)
+#   claudeinv://alto?ctx=…         → la pestaña Riesgo alto (inversion-alto.js)
 #   claudeinv://superalto?ctx=…    → la pestaña Riesgo súper alto (inversion-superalto.js)
 # o a mano con inversion-actualizar.bat (usa el último contexto guardado de ese modo).
 #
@@ -17,7 +18,7 @@
 # Instalar el protocolo una sola vez:  .\inversion-actualizar.ps1 -Instalar   (o el .bat)
 param(
   [string]$Url = '',
-  [ValidateSet('perfiles', 'superalto')] [string]$Modo = 'perfiles',
+  [ValidateSet('perfiles', 'alto', 'superalto')] [string]$Modo = 'perfiles',
   [switch]$Instalar,
   [string]$Modelo = 'opus',
   [string]$Esfuerzo = '',
@@ -59,16 +60,24 @@ if ($Instalar) {
 }
 
 # ── Los dos modos: qué archivos usa cada uno y cómo se llama a Claude ────────────────────────
-if ($Url -match '^claudeinv://([a-z]+)') { if ($Matches[1] -eq 'superalto') { $Modo = 'superalto' } else { $Modo = 'perfiles' } }
+if ($Url -match '^claudeinv://([a-z]+)') { switch ($Matches[1]) { 'superalto' { $Modo = 'superalto' } 'alto' { $Modo = 'alto' } default { $Modo = 'perfiles' } } }
 $MODOS = @{
   perfiles = @{
     prompt = 'inversion-prompt.js'; esquema = 'inversion-esquema.json'; destino = 'inversion-hoy.js'
     variable = 'INVERSION_HOY'; contexto = 'inversion-contexto.json'; web = @('WebSearch'); esfuerzo = 'medium'
     sistema = 'Eres un asesor de inversión personal. Respondes únicamente con la salida estructurada que se te pide, en español de México. No uses ninguna herramienta salvo WebSearch, y como máximo 3 veces.'
-    nombre = 'los tres perfiles'
+    nombre = 'los perfiles segura y medio'
+  }
+  # Las dos apuestas comparten esquema y plantilla; cambian el prompt (empresa sólida contra empresa
+  # de altísimo riesgo) y el archivo que escriben.
+  alto = @{
+    prompt = 'inversion-alto-prompt.js'; esquema = 'inversion-apuesta-esquema.json'; destino = 'inversion-alto.js'
+    variable = 'INVERSION_ALTO'; contexto = 'inversion-alto-contexto.json'; web = @('WebSearch', 'WebFetch'); esfuerzo = 'medium'
+    sistema = 'Eres un analista de acciones de empresas sólidas. Investigas a fondo con WebSearch y WebFetch (entre 6 y 12 búsquedas) antes de responder, y respondes únicamente con la salida estructurada que se te pide, en español de México. Ninguna otra herramienta.'
+    nombre = 'la compra a la baja de riesgo alto'
   }
   superalto = @{
-    prompt = 'inversion-superalto-prompt.js'; esquema = 'inversion-superalto-esquema.json'; destino = 'inversion-superalto.js'
+    prompt = 'inversion-superalto-prompt.js'; esquema = 'inversion-apuesta-esquema.json'; destino = 'inversion-superalto.js'
     variable = 'INVERSION_SUPERALTO'; contexto = 'inversion-superalto-contexto.json'; web = @('WebSearch', 'WebFetch'); esfuerzo = 'medium'   # Adán, 21-sep-2026: "no quiero que se gasten muchos tokens, ponle medium"
     sistema = 'Eres un analista de acciones de alto riesgo. Investigas a fondo con WebSearch y WebFetch (entre 6 y 12 búsquedas) antes de responder, y respondes únicamente con la salida estructurada que se te pide, en español de México. Ninguna otra herramienta.'
     nombre = 'la apuesta de riesgo súper alto'
@@ -110,7 +119,7 @@ Remove-Item Env:CLAUDE_CODE_ENTRYPOINT -ErrorAction SilentlyContinue
 
 # ── 3. Claude ────────────────────────────────────────────────────────────────────────────────
 $web = $M.web; if ($SinBusqueda) { $web = @('') }
-$tarda = 'suele tardar 1-3 minutos'; if ($Modo -eq 'superalto') { $tarda = 'investiga en la web, suele tardar 3-6 minutos' }
+$tarda = 'suele tardar 1-3 minutos'; if ($Modo -ne 'perfiles') { $tarda = 'investiga en la web, suele tardar 3-6 minutos' }
 Write-Host ('⏳ Claude (' + $Modelo + ', ' + $Esfuerzo + ') está pensando en ' + $M.nombre + '… ' + $tarda + '. No cierres esta ventana.')
 $t0 = Get-Date
 # PowerShell 5 no escapa las comillas al pasar argumentos a un .exe; 7.3+ sí. Se escapan a mano
@@ -159,7 +168,7 @@ if ($Modo -eq 'perfiles') {
   foreach ($k in 'veredicto', 'mercado', 'perfiles', 'fuentes') {
     if (-not $datos.PSObject.Properties[$k]) { Fin ('❌ Al JSON le falta "' + $k + '". No toco ' + $M.destino + '.') 1 }
   }
-  foreach ($p in 'seguro', 'medio', 'alto') {
+  foreach ($p in 'seguro', 'medio') {
     $pf = $datos.perfiles.$p
     if (-not $pf) { Fin ('❌ Falta el perfil "' + $p + '".') 1 }
     $suma = 0; foreach ($a in $pf.activos) { $suma += [double]$a.pct }

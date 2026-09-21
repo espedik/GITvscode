@@ -20,7 +20,7 @@ en una página.
 | `DATOS-MAESTROS.md` | Índice del proyecto: catálogo de variables, mapa de apps, cómo se corrige un saldo |
 | `verificar-sincronia.js` | Comprueba que nada se haya vuelto a duplicar. Lo corre un hook al final de cada turno; sale con código 1 si algo falla |
 | `habitos.js` | La pantalla de Hábitos entera: semilla, motor de rachas, migraciones, pintado y estilos |
-| `inversion-hoy.js` · `inversion-superalto.js` · `inversion-prompt.js` · `inversion-superalto-prompt.js` · `inversion-esquema.json` · `inversion-superalto-esquema.json` · `inversion-actualizar.ps1` (+ `.bat`) · `inversion-instalar.bat` | *Qué invertir hoy*: los datos que escribe Claude (perfiles y súper alto), los dos prompts, los dos esquemas de respuesta y el puente que los une (ver su sección) |
+| `inversion-hoy.js` · `inversion-alto.js` · `inversion-superalto.js` · `inversion-prompt.js` · `inversion-alto-prompt.js` · `inversion-superalto-prompt.js` · `inversion-esquema.json` · `inversion-apuesta-esquema.json` · `inversion-actualizar.ps1` (+ `.bat`) · `inversion-instalar.bat` | *Qué invertir hoy*: los datos que escribe Claude (perfiles, riesgo alto y súper alto), los tres prompts, los dos esquemas de respuesta (perfiles; apuestas) y el puente que los une (ver su sección) |
 | `ficha.js` · `ficha.css` | El panel de ficha de producto (`pfAbrirId`, `pfPorNombre`, `.lc-info`) que usan la Lista de Compras y la rutina |
 | `examen-genai.js` · `examen-genai-data.js` (A, 79 preguntas) · `examen-genai-data-b.js` (B, 77) | El simulacro ISTQB CT-GenAI: motor y los dos bancos |
 | `entrevistas-data.js` | Los 41 temas de Python (`ENTREVISTA_TEMAS`, `PY_MOD_LABEL`) que nombra la tarjeta *Hoy aprendes* de Mi Día. Trae también el HTML y el CSS de cada tema (`ENTREVISTA_CONTENT`, `ENTREVISTA_CSS`), que ya no pinta ninguna pantalla. Lo genera `Entrevistas/_generar-datos-dashboard.js`; **no se edita a mano** |
@@ -280,19 +280,20 @@ especie de plantilla… claude solo se encargará de la información y la planti
 visualmente, entonces solo se gastan tokens en información"*.
 
 **La plantilla y los datos van separados.** La plantilla es `renderGBMPanel()` más el CSS `.inv-*`:
-nunca cambia al actualizar. Los datos son dos archivos cargados justo después del maestro, cada
+nunca cambia al actualizar. Los datos son tres archivos cargados justo después del maestro, cada
 uno con su botón 🤖 y su `_meta` (cuándo, qué modelo, tokens, vueltas, segundos):
-`inversion-hoy.js` (`window.INVERSION_HOY`: veredicto, mercado, los perfiles segura / medio / alto
-y las fuentes) e `inversion-superalto.js` (`window.INVERSION_SUPERALTO`: la apuesta de la pestaña
-Riesgo súper alto). Si un archivo falta, su zona lo dice y todo lo demás sigue con lo local.
+`inversion-hoy.js` (`window.INVERSION_HOY`: veredicto, mercado, los perfiles segura y medio y las
+fuentes), `inversion-alto.js` (`window.INVERSION_ALTO`: la compra a la baja de Riesgo alto) e
+`inversion-superalto.js` (`window.INVERSION_SUPERALTO`: la apuesta de Riesgo súper alto). Si un
+archivo falta, su zona lo dice y todo lo demás sigue con lo local.
 
 | Zona | Qué pinta | De dónde |
 |---|---|---|
 | Veredicto | El paso que toca (`pasoInversionHoy()`: fondo → deuda con interés → invertir, mismo color que el botón de Mi Día), el título y el texto de Claude, *desde cuándo* y el **monto al mes** editable | regla local + `veredicto` |
-| Cuatro pestañas | 🛡️ Inversión segura (`--g`), ⚖️ Riesgo medio (`--w`), 🔥 Riesgo alto (`--o`) y 🎲 Riesgo súper alto (`--r`), con lema y riesgo 1-5 en puntos; `invTab()` recuerda la abierta | `perfiles.seguro/medio/alto` · `INVERSION_SUPERALTO` |
+| Cuatro pestañas | 🛡️ Inversión segura (`--g`), ⚖️ Riesgo medio (`--w`), 🔥 Riesgo alto (`--o`) y 🎲 Riesgo súper alto (`--r`), con lema y riesgo 1-5 en puntos; `invTab()` recuerda la abierta. Las dos últimas son *apuestas* (`INV_PERFILES[].apuesta`) | `perfiles.seguro/medio` · `INVERSION_ALTO` · `INVERSION_SUPERALTO` |
 | El perfil | Lema, para quién, resumen; horizonte, rendimiento esperado, riesgo y la caída que hay que aguantar; la barra de reparto y una tarjeta por activo (%, pesos al mes, dónde, por qué, vigilar, riesgo); *Por qué / En contra / Reglas*; *Este mes* y la proyección a 12 meses (anualidad con el rendimiento mín-máx: `invEn12()`) | el perfil + el monto |
-| Riesgo súper alto | `invSuperAltoHtml()`: la regla fija del maestro (`{{especulacionMes}}` al mes → `{{cetesDia15}}` a CETES, `{{especulacionBtcPct}}` % a Bitcoin y todo el resto a **una sola empresa a la baja**, sin índices ni ETFs), su botón *🤖 Investigar hoy* que solo reescribe esta pestaña, *investigado el …* con fecha y hora, la ficha de la empresa (precio, máximo de 52 s, caída, entrada / objetivo / stop con lo que ganarías o perderías en pesos, plazo), por qué cayó, la tesis, catalizadores, el reparto en pesos (≈ acciones y ≈ ₿ al precio de hoy), riesgos, lo que mata la tesis, reglas, señales y las otras dos candidatas que Claude comparó | `invReglaSA()` + `INVERSION_SUPERALTO` |
-| ☆ Usar este perfil | Guarda la asignación objetivo (`invElegirPerfil()`); la barra lateral la muestra y deja de avisar que falta. Con súper alto, muestra la regla fija y el ticker del día | `dash-inversion-v1` |
+| Riesgo alto y Riesgo súper alto | `invApuestaHtml(modo)`, la misma plantilla para las dos: la regla fija del maestro (`{{especulacionMes}}` al mes → `{{cetesDia15}}` a CETES, `{{especulacionBtcPct}}` % a Bitcoin y todo el resto a **una sola empresa a la baja**, sin índices ni ETFs), su botón *🤖 Investigar hoy* que solo reescribe esa pestaña, *investigado el …* con fecha y hora, la ficha de la empresa (precio, máximo de 52 s, caída, entrada / objetivo / stop con lo que ganarías o perderías en pesos, plazo), por qué cayó, la tesis, catalizadores, el reparto en pesos (≈ acciones y ≈ ₿ al precio de hoy), riesgos, lo que mata la tesis, reglas, señales y las otras dos candidatas que Claude comparó. Lo que cambia entre las dos (`INV_APUESTA_TXT`) es el texto de la regla, el color y el prompt: **alto** pide una empresa sólida —líder de su sector, rentable, capitalización mayor a 20,000 M USD— a la baja por una razón temporal (Adán, 21-sep-2026: *"igualita que el de riesgo súper alto con las mismas cifras, pero… empresas un poco más confiables, igual comprar a la baja"*); **súper alto**, una de altísimo riesgo | `invReglaSA()` + `INVERSION_ALTO` / `INVERSION_SUPERALTO` |
+| ☆ Usar este perfil | Guarda la asignación objetivo (`invElegirPerfil()`); la barra lateral la muestra y deja de avisar que falta. Con una apuesta, muestra la regla fija y el ticker del día | `dash-inversion-v1` |
 | Barra lateral | BTC y USD/MXN en vivo (`cargarPreciosGBM()`), la tasa de CETES y el resumen del mercado que trajo Claude, tu situación (fondo, deuda con interés, portafolio), la compra rápida y los enlaces (`GBM_LINKS` + `fuentes`) | local + `mercado` |
 
 Los porcentajes de cada activo se normalizan por si Claude no cerró en 100; el monto al mes es el
@@ -300,15 +301,17 @@ que Adán escribió, si no el que sugirió Claude (`veredicto.montoMensual`), si
 Todas las cantidades propias pasan por `money()`, así el modo privado también las tapa.
 
 **Los botones 🤖.** `invPedirClaude(modo)` arma el contexto y navega a
-`claudeinv://<ruta>?ctx=<base64url>` (`INV_MODOS`: *actualizar* para los tres perfiles, *superalto*
-para la apuesta). El de los perfiles (`invContexto()`) lleva ingresos, fijos, fondo y meta, deudas
-con tasa, inversiones, efectivo, precios, maestría, fase y perfil elegido — unos 500 tokens; el de
-súper alto (`invContextoSA()`) lleva la regla del maestro con sus pesos ya en pesos, los precios y
-la apuesta anterior, para que Claude diga si sigue vigente. Windows abre
+`claudeinv://<ruta>?ctx=<base64url>` (`INV_MODOS`: *actualizar* para segura y medio, *alto* y
+*superalto* para cada apuesta). El de los perfiles (`invContexto()`) lleva ingresos, fijos, fondo y
+meta, deudas con tasa, inversiones, efectivo, precios, maestría, fase y perfil elegido — unos 500
+tokens; el de una apuesta (`invContextoApuesta(modo)`) lleva la regla del maestro con sus pesos ya
+en pesos, los precios y la empresa anterior de esa pestaña, para que Claude diga si sigue vigente.
+Windows abre
 `inversion-actualizar.ps1` (registrado en `HKCU\Software\Classes\claudeinv` por
 `inversion-instalar.bat`, sin administrador), que corre `claude -p` con salida estructurada (el
-esquema de ese modo), solo herramientas de web (búsqueda para los perfiles, limitada a 3 por el
-prompt; búsqueda y lectura de páginas para súper alto, que el prompt obliga a usar entre 6 y 12
+esquema de ese modo: `inversion-esquema.json` para los perfiles, `inversion-apuesta-esquema.json`
+para las dos apuestas), solo herramientas de web (búsqueda para los perfiles, limitada a 3 por el
+prompt; búsqueda y lectura de páginas para las apuestas, que el prompt obliga a usar entre 6 y 12
 veces con esfuerzo medio: Adán, 21-sep-2026, *"no quiero que se gasten muchos tokens"*) y un system prompt corto — 13.7 k tokens de sistema medidos contra 27.6 k
 con el de Claude Code —, valida la respuesta y reescribe el `.js` de ese modo con temporal y
 renombrado, así un fallo deja el anterior intacto. La página no puede
@@ -316,21 +319,26 @@ leer archivos desde `file://`, pero sí recargar un `<script>`: `invEsperar()` l
 y, cuando `_meta.generado` cambia, repinta y avisa con un toast. Sin protocolo (iPad, otra máquina)
 *copiar el contexto* deja en el portapapeles el encargo para pegarlo en cualquier sesión de Claude
 Code; `inversion-actualizar.bat` repite la última petición de los perfiles con el contexto guardado
-en `inversion-contexto.json` (súper alto guarda el suyo en `inversion-superalto-contexto.json`;
-ninguno se sube: son derivados).
+en `inversion-contexto.json` (las apuestas guardan el suyo en `inversion-alto-contexto.json` e
+`inversion-superalto-contexto.json`; ninguno se sube: son derivados). Si Opus responde con su
+límite de sesión, el `.ps1` reintenta una vez con Sonnet y `_meta.modelo` lo deja anotado.
 
 **Ver el prompt.** *ver el prompt* (`invVerPrompt(modo)`) abre `#invPromptOv` con el texto exacto que
 sale hacia Claude: el prompt de ese modo más el contexto de este momento, con su tamaño en
 caracteres y tokens aproximados, y un botón para copiarlo. Por eso los prompts viven en
-`inversion-prompt.js` e `inversion-superalto-prompt.js` (un literal de plantilla en `window.*`) y
+`inversion-prompt.js`, `inversion-alto-prompt.js` e `inversion-superalto-prompt.js` (un literal de
+plantilla en `window.*`) y
 no en un `.txt`: desde `file://` la página solo puede cargarlos con `<script src>`, y el `.ps1` lee
 el mismo texto entre los acentos graves — un dato una sola vez. Dentro no puede haber acentos
 graves ni `${`.
 
-**Qué piden los prompts.** El de los perfiles: respetar el orden fijo del Plan Maestro, usar los
-números del contexto, 2-4 activos por perfil comprables en GBM+ / Cetesdirecto / un exchange para
-BTC, cada uno con dónde, por qué, qué vigilar y su riesgo concreto, y largos máximos por campo para
-que la plantilla no se deforme. El de súper alto (Adán, 21-sep-2026: *"siempre debe ser una empresa
+**Qué piden los prompts.** El de los perfiles (segura y medio): respetar el orden fijo del Plan
+Maestro, usar los números del contexto, 2-4 activos por perfil comprables en GBM+ / Cetesdirecto /
+un exchange para BTC, cada uno con dónde, por qué, qué vigilar y su riesgo concreto, y largos
+máximos por campo para que la plantilla no se deforme. El de riesgo alto: una empresa sólida (líder
+o top 3 de su sector, rentable los últimos 4 trimestres, deuda neta / EBITDA menor a 3, capitalización
+mayor a 20,000 M USD) entre -15 % y -40 % desde su máximo de 52 semanas por una razón temporal, con
+catalizadores para recuperar en 1-6 meses, objetivo +15 a +30 % y stop -10 a -15 %. El de súper alto (Adán, 21-sep-2026: *"siempre debe ser una empresa
 que esté a la baja y así cuando suba ganar dinero… debe investigarlo muy muy bien para que gane
 dinero"*): una sola acción real comprable desde GBM+, caída fuerte desde el máximo de 52 semanas
 por una razón identificable y exagerada, catalizadores fechados para rebotar en semanas o pocos
