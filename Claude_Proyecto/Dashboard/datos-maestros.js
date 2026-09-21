@@ -2987,6 +2987,18 @@ window.CIFRAS = (function () {
         pon('d002', 3900); pon('d003', 283000); pon('d004', 0); pon('d009', 0); pon('d012', 0);
       }
     },
+    {
+      // 2026-09-21 · "lo de Te queda $11,006 esa cifra está mal, ya te había dicho que me quedan
+      // 1200". El riel del Plan Maestro calculaba el saldo desde la nómina y no podía saber lo
+      // que hay de verdad en la cuenta. Ahora la cuenta BBVA (activo líquido ac013) lleva la
+      // FECHA del saldo, y el riel se ancla ahí: ese día vale eso, y de ahí en adelante resta lo
+      // que la agenda tiene previsto. Finanzas pone la fecha sola al editar el activo.
+      flag: '_cuenta20260921',
+      hacer: function (f) {
+        const cta = (f.activos || []).find(a => a.id === 'ac013');
+        if (cta) { cta.value = 1200; cta.fecha = '2026-09-21'; }
+      }
+    },
   ];
 
   /* Las seis compras del 1-sep-2026, en un solo sitio: las usa la migración de arriba para el
@@ -3068,6 +3080,21 @@ window.CIFRAS = (function () {
   const campo  = (id, k) => { const d = deuda(id); return d && d[k] != null ? +d[k] : null; };
   const sum    = arr => arr.reduce((a, d) => a + (+d.balance || 0), 0);
 
+  /* Cuántos pagos quedan de una deuda, con su saldo, tasa y pago de HOY. `remainingMonths` era un
+     número escrito a mano (61 desde enero) que no bajaba con el saldo: al abonar $10,000 al auto
+     seguía diciendo 61. Con tasa, es la fórmula de la anualidad; sin tasa, saldo entre pago. Si el
+     pago no cubre ni el interés no hay fin: null. Lo usan `autoMeses` y el detalle de intereses
+     del Dashboard; `remainingMonths` queda solo como respaldo cuando falta el pago. */
+  function mesesRestantes(d) {
+    if (!d) return null;
+    const B = +d.balance || 0, P = +d.min || 0, r = (+d.rate || 0) / 100 / 12;
+    if (B <= 0) return 0;
+    if (P <= 0) return d.remainingMonths != null ? +d.remainingMonths : null;
+    if (r <= 0) return Math.ceil(B / P);
+    if (P <= B * r) return null;
+    return Math.ceil(-Math.log(1 - r * B / P) / Math.log(1 + r));
+  }
+
   /* ── EL CATÁLOGO ──────────────────────────────────────────────────────────────────────────
      Cada clave dice de dónde sale el número y cómo se escribe (`fmt` por omisión es dinero).
      Los ids (d001, d003…) son los de `debts` en Finanzas.html — el mismo contrato que ya usan
@@ -3078,15 +3105,16 @@ window.CIFRAS = (function () {
     autoTotal:     { v: () => campo('d003', 'total') },
     autoPago:      { v: () => campo('d003', 'min') },
     autoTasa:      { v: () => campo('d003', 'rate'), fmt: 'pct' },
-    autoMeses:     { v: () => campo('d003', 'remainingMonths'), fmt: 'num' },
+    // Meses que quedan, calculados del saldo, la tasa y el pago (ver mesesRestantes).
+    autoMeses:     { dep: ['autoSaldo','autoPago','autoTasa'], v: () => mesesRestantes(deuda('d003')), fmt: 'num' },
     // Derivadas del auto: lo que acabas pagando si solo das el mínimo, y cuánto de eso es
     // interés. Se calculan, no se copian — antes estaban escritas a mano en Coach y se
     // quedaron congeladas en el saldo de hace dos meses.
     autoAPagar:    { dep: ['autoMeses','autoPago'],
-                     v: () => { const m = campo('d003','remainingMonths'), p = campo('d003','min');
+                     v: () => { const m = mesesRestantes(deuda('d003')), p = campo('d003','min');
                                 return m != null && p != null ? m * p : null; } },
     autoInteres:   { dep: ['autoMeses','autoPago','autoSaldo'],
-                     v: () => { const m = campo('d003','remainingMonths'), p = campo('d003','min'),
+                     v: () => { const m = mesesRestantes(deuda('d003')), p = campo('d003','min'),
                                       s = campo('d003','balance');
                                 return m != null && p != null && s != null ? m * p - s : null; } },
     tcBbva:        { v: () => campo('d001', 'balance') },
@@ -3477,6 +3505,7 @@ window.CIFRAS = (function () {
     DEUDAS_SEED: DEUDAS_SEED,
     GASTOS_20260901: GASTOS_20260901,
     MOVIMIENTOS_20260920: MOVIMIENTOS_20260920,
+    mesesRestantes: mesesRestantes,
     BTC_SEED: BTC_SEED,
     // Para que `seedData()` pueda marcarlas como aplicadas: un seed nuevo ya las incluye.
     MIGRACIONES_FLAGS: MIGRACIONES.map(function (m) { return m.flag; }),

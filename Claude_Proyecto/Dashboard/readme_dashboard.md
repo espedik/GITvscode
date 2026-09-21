@@ -270,6 +270,10 @@ apps: manda en Android y escritorio.
 La pantalla 2. Bajo la banda de fase y la ruta de deuda, tres columnas: **el mes, el día que
 toques y la semana a la que pertenece**.
 
+**La banda de fase es un botón**: abre la ventana de las 4 fases (`abrirKpi('fases')`, en
+`kpiDetalle`) con fechas, estado, meta, explicación y el checklist de cada mes leído de
+`coach_checks_v1`. El título del módulo Fase de Mi Día abre la misma ventana.
+
 ### De dónde sale cada cosa
 
 Ningún importe está escrito en el código del tablero:
@@ -316,6 +320,14 @@ cierre y la resta de la columna del día. **El estado en palabras** (`Vas holgad
 `Te vas a pasar`) compara lo que sobra al cerrar el tramo contra lo que cuesta comer una semana;
 `$667/día` es ese sobrante entre los días que quedan. **La línea está escalada al rango del
 tramo, no al cero**: así se ve el escalón del día 15. Los 17 días son botones.
+
+**El saldo real manda sobre el modelo.** La Cuenta BBVA de Finanzas (activo líquido `ac013`) lleva
+la `fecha` de su saldo; si cae dentro del tramo, `ctAnclaReal()` ancla la serie ahí: ese día vale
+lo que hay en la cuenta y de ahí en adelante se resta lo previsto (antes de esa fecha sigue el
+modelo). El estado lo dice (*desde tu saldo real del 21*) y la resta de la columna del día arranca
+en *Saldo real el 21 · Cuenta BBVA*. Adán, 21-sep-2026: *"esa cifra está mal, ya te había dicho
+que me quedan 1200"*. Cuando reporta un saldo, va al maestro como migración con su fecha; si lo
+edita en Finanzas, `saveActivo` pone la fecha sola.
 
 Alturas de la cabecera a 1600×1000: fase 46 px, ruta de deuda 52, riel 77 — **191 en total**, y
 631 para el tablero. El alto del riel lo pone `.cr-hero` (cifra grande en
@@ -956,6 +968,9 @@ recursiva y **en el sitio**, para no romper las referencias que otras partes gua
 - **Un `ReferenceError` dentro de un render no rompe la página**: solo deja ese panel en blanco.
   Se verifica cada slide en navegador.
 - **Un array vacío es truthy**: `.length ?`, no `||`.
+- **Un `{{marcador}}` dentro de una cadena de JS no se sustituye solo**: `cifrarLiterales()` pasa por
+  `PHASES`, `META_DETALLE` y `RUTINA_TASKS`, no por el HTML que arman las funciones. Ahí se escribe
+  `money(metaEf)`; un `{{fondoMeta}}` en un `kpiNota` salió crudo en pantalla.
 
 ---
 

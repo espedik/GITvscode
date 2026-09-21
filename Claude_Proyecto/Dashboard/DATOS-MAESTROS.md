@@ -116,7 +116,7 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 
 | Marcador | Valor hoy | id |
 |---|---|---|
-| `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $283,000 · $315,800 · $6,700 · 12.99% · 61 | `d003` |
+| `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $283,000 · $315,800 · $6,700 · 12.99% · 57 (calculado) | `d003` |
 | `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $900 · $1,500 · 55.7% | `d001` |
 | `{{banamex}}` `{{banamexMin}}` | $3,900 · $810 | `d002` |
 | `{{depto}}` | $0 — "por temas de mi apartamento"; pagada entera el 21-sep-2026 | `d012` |
@@ -126,8 +126,11 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $299,162 · $4,800 · $11,362 | derivadas |
 | `{{minimosDeuda}}` `{{margen}}` | suma de mínimos vivos · lo que sobra al mes | derivadas |
 
-**Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas:
-`{{autoAPagar}}` (meses × pago) y `{{autoInteres}}` (lo que cuesta en puro interés).
+**Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas: `{{autoMeses}}`
+sale de `CIFRAS.mesesRestantes(deuda)` —saldo, tasa y pago de hoy, la fórmula de la anualidad—
+porque el `remainingMonths` del seed (61) no bajaba con el saldo; queda solo como respaldo si
+falta el pago. De ahí `{{autoAPagar}}` (meses × pago) y `{{autoInteres}}` (lo que cuesta en puro
+interés). El detalle de intereses del Dashboard usa la misma función para cualquier crédito a plazo.
 
 **Las dos tarjetas quedaron casi en cero el 19-sep-2026**: Adán vendió todo el Bitcoin ($39,500) y,
 con $4,000 de la cuenta, pagó $38,100 a la BBVA (de $39,000 a $900) y $3,000 a Banamex (de $7,800 a

@@ -532,7 +532,6 @@ select option{background:var(--surface-solid);color:var(--text)}
     <div class="nav-item" onclick="nav('patrimonio')" style="opacity:.35;font-size:12px"><span class="ico" style="font-size:12px">🏛️</span>Patrimonio</div>
     <div class="nav-item" onclick="nav('transactions')" style="opacity:.35;font-size:12px"><span class="ico" style="font-size:12px">💳</span>Transacciones</div>
     <div class="nav-item" onclick="nav('budgets')" style="opacity:.35;font-size:12px"><span class="ico" style="font-size:12px">📋</span>Presupuestos</div>
-    <div class="nav-item" onclick="nav('goals')" style="opacity:.35;font-size:12px"><span class="ico" style="font-size:12px">🎯</span>Metas de Ahorro</div>
   </nav>
   <div class="sb-bottom">
     <button class="btn btn-o" style="width:100%;font-size:12px" onclick="exportData()">⬇️ Exportar JSON</button>
@@ -640,12 +639,6 @@ select option{background:var(--surface-solid);color:var(--text)}
     </section>
 
     <!-- ===== METAS ===== -->
-    <section id="s-goals" class="section">
-      <div class="sh"><h2>🎯 Metas de Ahorro</h2><button class="btn btn-p" onclick="openGoalModal()">+ Nueva meta</button></div>
-      <div class="g3" id="goal-list"></div>
-      <div id="goal-empty" class="card empty" style="display:none"><div class="ico">🎯</div><p>Crea tu primera meta de ahorro.</p></div>
-    </section>
-
     <!-- ===== PLAN DE INVERSIONES ===== -->
     <section id="s-gbm" class="section">
       <div class="sh"><h2>📊 Plan de Inversiones</h2></div>
@@ -801,46 +794,6 @@ select option{background:var(--surface-solid);color:var(--text)}
   </div>
 </div>
 
-<!-- ===== MODAL META ===== -->
-<div class="mo" id="mo-goal">
-  <div class="modal">
-    <div class="modal-h"><div class="modal-title" id="mo-goal-title">Nueva Meta</div><button class="modal-x" onclick="closeMo('mo-goal')">✕</button></div>
-    <div class="fg"><label>Nombre de la meta *</label><input id="g-name" placeholder="Ej. Fondo de emergencia"></div>
-    <div class="fr">
-      <div class="fg"><label>Monto objetivo (MXN) *</label><input type="number" id="g-target" placeholder="0.00" min="0"></div>
-      <div class="fg"><label>Ya ahorrado (MXN)</label><input type="number" id="g-current" placeholder="0.00" min="0"></div>
-    </div>
-    <div class="fr">
-      <div class="fg"><label>Fecha límite</label><input type="date" id="g-date"></div>
-      <div class="fg"><label>Ícono</label>
-        <select id="g-icon">
-          <option value="🏠">🏠 Casa</option><option value="🚗">🚗 Auto</option>
-          <option value="✈️">✈️ Viaje</option><option value="🎓">🎓 Educación</option>
-          <option value="💍">💍 Boda</option><option value="🛡️">🛡️ Fondo emergencia</option>
-          <option value="📱">📱 Tecnología</option><option value="🎯">🎯 General</option>
-          <option value="🏥">🏥 Salud</option><option value="🎁">🎁 Regalo</option>
-        </select>
-      </div>
-    </div>
-    <div class="flex" style="justify-content:flex-end;gap:8px">
-      <button class="btn btn-o" onclick="closeMo('mo-goal')">Cancelar</button>
-      <button class="btn btn-p" onclick="saveGoal()">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== MODAL APORTACIÓN META ===== -->
-<div class="mo" id="mo-contrib">
-  <div class="modal">
-    <div class="modal-h"><div class="modal-title">Agregar Aportación</div><button class="modal-x" onclick="closeMo('mo-contrib')">✕</button></div>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Meta: <strong id="contrib-name"></strong></p>
-    <div class="fg"><label>Monto (MXN) *</label><input type="number" id="contrib-amount" placeholder="0.00" min="0"></div>
-    <div class="flex" style="justify-content:flex-end;gap:8px">
-      <button class="btn btn-o" onclick="closeMo('mo-contrib')">Cancelar</button>
-      <button class="btn btn-s" onclick="saveContrib()">Agregar</button>
-    </div>
-  </div>
-</div>
 
 <!-- ===== MODAL INVERSIÓN ===== -->
 <div class="mo" id="mo-inv">
@@ -924,8 +877,8 @@ const _PG = () => (window.CIFRAS && window.CIFRAS.PROYECTO) || {};
 const _autoMin = () => { const d=(S.debts||[]).find(x=>x.id==='d003'); return (d&&+d.min)||_PG().autoPago||0; };
 const _metaMaestria = () => { const g=(S.goals||[]).find(x=>x.id==='g001'); return (g&&+g.target)||(window.CIFRAS&&CIFRAS.n('maestriaMeta'))||500000; };
 const _metaFondo = () => { const g=(S.goals||[]).find(x=>x.id==='ef-001'); return (g&&+g.target)||10000; };
-let S = { transactions:[], budgets:[], debts:[], goals:[], investments:[], activos:[], btcHistory:[], btcPriceHist:[], currentBtcPrice:0, usdMxn:19.5, btcLastFetch:'', btcHistFetch:'', weeklyLeftover:0, sivaleBalance:0, sivaleLastMonth:'', emergencyFund:0, didiMonthly:0, gbmMonth:'', indicatorHistory:[] };
-let editId = null, confCb = null, payDebtId = null, contribGoalId = null;
+let S = { transactions:[], budgets:[], debts:[], goals:[], investments:[], activos:[], btcHistory:[], btcPriceHist:[], currentBtcPrice:0, usdMxn:19.5, btcLastFetch:'', btcHistFetch:'', weeklyLeftover:0, emergencyFund:0, didiMonthly:0, gbmMonth:'', indicatorHistory:[] };
+let editId = null, confCb = null, payDebtId = null;
 let btcEditId = null, activoEditId = null;
 // La gráfica de BTC se lee en pesos por defecto: es la moneda en la que Adán
 // cobra, paga la renta y decide. El dólar es solo la unidad en que se compra.
@@ -1002,9 +955,9 @@ function toggleTheme(){
 }
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
-const SECS=['dashboard','transactions','budgets','debts','goals','patrimonio','indicators','gbm'];
-const STITLE={dashboard:'📊 Dashboard',transactions:'💳 Transacciones',budgets:'📋 Presupuestos',debts:'🏦 Deudas',goals:'🎯 Metas de Ahorro',patrimonio:'🏛️ Patrimonio Neto',indicators:'📐 Indicadores Financieros',gbm:'📊 Plan de Inversiones'};
-const RENDERS={dashboard:renderDashboard,transactions:renderTx,budgets:renderBudgets,debts:renderDebts,goals:renderGoals,patrimonio:renderPatrimonio,indicators:renderIndicators,gbm:renderGBM};
+const SECS=['dashboard','transactions','budgets','debts','patrimonio','indicators','gbm'];
+const STITLE={dashboard:'📊 Dashboard',transactions:'💳 Transacciones',budgets:'📋 Presupuestos',debts:'🏦 Deudas',patrimonio:'🏛️ Patrimonio Neto',indicators:'📐 Indicadores Financieros',gbm:'📊 Plan de Inversiones'};
+const RENDERS={dashboard:renderDashboard,transactions:renderTx,budgets:renderBudgets,debts:renderDebts,patrimonio:renderPatrimonio,indicators:renderIndicators,gbm:renderGBM};
 
 function nav(s) {
   SECS.forEach(x=>{
@@ -1020,7 +973,7 @@ function nav(s) {
 // ─── MODALS ───────────────────────────────────────────────────────────────────
 function closeMo(id) {
   document.getElementById(id).classList.remove('open');
-  editId=null; payDebtId=null; contribGoalId=null; btcEditId=null; activoEditId=null;
+  editId=null; payDebtId=null; btcEditId=null; activoEditId=null;
 }
 
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') document.querySelectorAll('.mo.open').forEach(m=>m.classList.remove('open')); });
@@ -1344,87 +1297,10 @@ function savePayment() {
   maybeRefreshIndicators();
 }
 
-// ─── GOALS ────────────────────────────────────────────────────────────────────
-function renderGoals() {
-  const list=document.getElementById('goal-list');
-  const empty=document.getElementById('goal-empty');
-  const filteredGoals=(S.goals||[]).filter(g=>g.id!=='g002');
-  if(!filteredGoals.length){list.innerHTML='';empty.style.display='';return;}
-  empty.style.display='none';
-  list.innerHTML=filteredGoals.map(g=>{
-    const pct=g.target>0?Math.min(100,(g.current/g.target)*100):0;
-    const col=pct>=100?'var(--success)':pct>=60?'var(--primary)':'var(--warning)';
-    const rem=Math.max(0,g.target-g.current);
-    const _gd=g.date?new Date(g.date):null;
-    const daysLeft=_gd&&!isNaN(_gd)?Math.max(0,Math.ceil((_gd-new Date())/86400000)):null;
-    return `<div class="card">
-      <div class="flex jb aic">
-        <span style="font-size:30px">${g.icon||'🎯'}</span>
-        <div class="flex gap6">
-          <button class="btn btn-s btn-sm" onclick="openContribModal('${g.id}')">+ Aportar</button>
-          <button class="btn btn-o btn-sm btn-ico" onclick="openGoalModal('${g.id}')">✏️</button>
-          <button class="btn btn-o btn-sm btn-ico" onclick="askDel('meta',()=>delGoal('${g.id}'))">🗑️</button>
-        </div>
-      </div>
-      <div style="font-size:15px;font-weight:700;margin-top:8px">${g.name}</div>
-      <div style="margin-top:10px">
-        <div class="flex jb" style="margin-bottom:5px">
-          <span style="font-size:13px;font-weight:700;color:${col}">${fmt(g.current)}</span>
-          <span class="ts tm">${fmt(g.target)}</span>
-        </div>
-        <div class="pbar" style="height:9px"><div class="pfill" style="width:${pct}%;background:${col}"></div></div>
-      </div>
-      <div class="flex jb" style="margin-top:9px">
-        <span class="ts tm">${pct.toFixed(1)}% alcanzado</span>
-        ${pct>=100?'<span class="badge b-in">✅ ¡Lograda!</span>':`<span class="ts tm">Falta: ${fmt(rem)}</span>`}
-      </div>
-      ${daysLeft!==null?`<div class="ts tm" style="margin-top:4px">📅 ${daysLeft>0?`${daysLeft} días restantes`:'⏰ Fecha vencida'}</div>`:''}
-    </div>`;
-  }).join('');
-}
-
-function openGoalModal(id=null) {
-  editId=id;
-  const g=id?S.goals.find(x=>x.id===id):null;
-  document.getElementById('mo-goal-title').textContent=id?'Editar Meta':'Nueva Meta';
-  document.getElementById('g-name').value=g?.name||'';
-  document.getElementById('g-target').value=g?.target||'';
-  document.getElementById('g-current').value=g?.current||'';
-  document.getElementById('g-date').value=g?.date||'';
-  document.getElementById('g-icon').value=g?.icon||'🎯';
-  document.getElementById('mo-goal').classList.add('open');
-}
-
-function saveGoal() {
-  const name=document.getElementById('g-name').value.trim();
-  const target=parseFloat(document.getElementById('g-target').value)||0;
-  if(!name||!target) return alert('Ingresa nombre y monto objetivo.');
-  const data={name,target,current:parseFloat(document.getElementById('g-current').value)||0,date:document.getElementById('g-date').value,icon:document.getElementById('g-icon').value};
-  if(editId){const i=S.goals.findIndex(g=>g.id===editId);if(i>=0)S.goals[i]={...S.goals[i],...data};}
-  else S.goals.push({id:uid(),...data});
-  save(); closeMo('mo-goal'); renderGoals(); toast('✅ Meta guardada');
-}
-
-function delGoal(id){S.goals=S.goals.filter(g=>g.id!==id);save();renderGoals();toast('🗑️ Eliminado');}
-
-function openContribModal(goalId) {
-  contribGoalId=goalId;
-  const g=S.goals.find(x=>x.id===goalId);
-  document.getElementById('contrib-name').textContent=g?.name||'';
-  document.getElementById('contrib-amount').value='';
-  document.getElementById('mo-contrib').classList.add('open');
-}
-
-function saveContrib() {
-  const amount=parseFloat(document.getElementById('contrib-amount').value);
-  if(!amount) return alert('Ingresa un monto.');
-  const i=S.goals.findIndex(g=>g.id===contribGoalId);
-  if(i>=0) {
-    S.goals[i].current=Math.min(S.goals[i].target, S.goals[i].current+amount);
-    if(contribGoalId==='ef-001') S.emergencyFund=S.goals[i].current;
-  }
-  save(); closeMo('mo-contrib'); renderGoals(); toast('✅ Aportación registrada');
-}
+// La sección «Metas de ahorro» se quitó el 21-sep-2026 (Adán: "la sección de finanzas de metas de
+// ahorro, bórrala"). Los registros `goals` siguen: ef-001 (el fondo, que se edita desde el plan GBM
+// con setEmergencyFund) y g001 (la maestría, cuya meta vive en el maestro) los leen los indicadores,
+// el Dashboard y el Coach.
 
 // ─── INVESTMENTS ──────────────────────────────────────────────────────────────
 function openInvModal(id=null) {
@@ -2287,28 +2163,6 @@ function setWeeklyLeftover(val) {
   S.weeklyLeftover = parseFloat(val) || 0;
   save();
   renderGBM();
-}
-
-function addSivaleMonth() {
-  S.sivaleBalance += 940;
-  S.sivaleLastMonth = nowYM();
-  save();
-  renderDashboard();
-  toast('✅ $940 de Si Vale agregados al saldo');
-}
-
-function undoSivaleMonth() {
-  S.sivaleBalance = Math.max(0, S.sivaleBalance - 940);
-  S.sivaleLastMonth = '';
-  save();
-  renderDashboard();
-  toast('↩️ $940 de Si Vale revertidos');
-}
-
-function setSivaleBalance(val) {
-  S.sivaleBalance = Math.max(0, parseFloat(val) || 0);
-  save();
-  renderDashboard();
 }
 
 function setDidiMonthly(val) {
@@ -3390,27 +3244,6 @@ function renderDashboard() {
           <div style="font-size:24px;font-weight:900;color:var(--primary);margin-top:4px">${fmt(BASE_SALARY)}</div>
           <div style="font-size:10px;color:var(--primary);opacity:.7;margin-top:2px">mensual neto · dos quincenas</div>
         </div>
-        <!-- Si Vale -->
-        <div style="background:rgba(176,110,255,.07);border:1px solid rgba(176,110,255,.2);border-radius:10px;padding:12px 18px;min-width:190px">
-          <div style="font-size:10px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">🎫 Si Vale — saldo acumulado</div>
-          <div style="font-size:24px;font-weight:900;color:var(--purple)">${fmt(S.sivaleBalance)}</div>
-          <div style="font-size:10px;color:var(--purple);opacity:.7;margin-top:2px;margin-bottom:8px">uso personal · +$940/mes</div>
-          <div style="display:flex;gap:5px;margin-bottom:6px">
-            ${S.sivaleLastMonth!==nowYM()?`
-            <button onclick="addSivaleMonth()" style="flex:1;padding:5px 0;background:rgba(176,110,255,.2);color:var(--purple);border:1px solid rgba(176,110,255,.35);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">
-              + Agregar $940 de ${new Date().toLocaleString('es-MX',{month:'long'})}
-            </button>`:`
-            <div style="flex:1;display:flex;align-items:center;justify-content:space-between;background:rgba(176,110,255,.08);border:1px solid rgba(176,110,255,.2);border-radius:6px;padding:4px 8px">
-              <span style="font-size:10px;color:var(--purple)">✓ ${new Date().toLocaleString('es-MX',{month:'long'})} aplicado</span>
-              <button onclick="undoSivaleMonth()" style="padding:2px 7px;background:none;color:var(--warning);border:1px solid rgba(255,217,61,.3);border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit">↩</button>
-            </div>`}
-            <button onclick="setSivaleBalance(0)" style="padding:5px 9px;background:rgba(255,59,107,.1);color:var(--danger);border:1px solid rgba(255,59,107,.25);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">↺ $0</button>
-          </div>
-          <input type="number" value="${S.sivaleBalance||''}" min="0" step="0.01"
-            placeholder="Ajustar saldo..."
-            style="width:100%;padding:6px 9px;border:1px solid rgba(176,110,255,.3);border-radius:7px;font-size:12px;font-weight:700;color:var(--text);background:rgba(176,110,255,.06);outline:none;font-family:inherit"
-            onchange="setSivaleBalance(this.value)">
-        </div>
         <!-- Extras del mes (bonos, honorarios, etc.) -->
         ${extras.length?extras.map(t=>`
         <div style="background:var(--warning-light);border-radius:10px;padding:12px 18px;border:1px solid #fde68a;min-width:150px">
@@ -4370,7 +4203,7 @@ function seedData() {
       {id:'ac010',name:'iPhone 15 Pro Max',      type:'electronico',value:15000,  notes:'Valor estimado de mercado secundario'},
       {id:'ac011',name:'iPhone 12 Mini',         type:'electronico',value:3600,   notes:'Valor estimado de mercado secundario'},
       {id:'ac012',name:'Pantalla 50 pulgadas',   type:'electronico',value:5000,   notes:'TV / pantalla'},
-      {id:'ac013',name:'Cuenta BBVA',            type:'liquido',    value:1200,   notes:'Saldo disponible en cuenta (dicho el 20-sep-2026)'},
+      {id:'ac013',name:'Cuenta BBVA',            type:'liquido',    value:1200,   fecha:'2026-09-21', notes:'Saldo disponible en cuenta'},
       {id:'ac014',name:'Efectivo',               type:'liquido',    value:1600,   notes:'Dinero en efectivo'},
     ],
     // Las operaciones de BTC salen del maestro desde el 2026-09-16 (CIFRAS.BTC_SEED), igual
@@ -4594,6 +4427,9 @@ function saveActivo() {
   const value=parseFloat(document.getElementById('ac-value').value)||0;
   if(!name||!value) return alert('Ingresa nombre y valor.');
   const data={name,type:document.getElementById('ac-type').value,value,notes:document.getElementById('ac-notes').value.trim()};
+  // Un activo líquido es un saldo, y un saldo es de un día: la fecha de hoy viaja con él. El riel
+  // del Plan Maestro (Dashboard) se ancla a la Cuenta BBVA por esa fecha.
+  if(data.type==='liquido') data.fecha=today();
   if(!S.activos) S.activos=[];
   if(activoEditId){const i=S.activos.findIndex(a=>a.id===activoEditId);if(i>=0)S.activos[i]={...S.activos[i],...data};}
   else S.activos.push({id:uid(),...data});

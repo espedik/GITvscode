@@ -7010,7 +7010,7 @@ function renderHeroFase(){
   };
   el.innerHTML=`
     <div class="hp-title">
-      <span>🎯 ${esc(f.tag)}</span>
+      <span role="button" tabindex="0" onclick="abrirKpi('fases')" title="Ver las 4 fases del Plan Maestro" style="cursor:pointer">🎯 ${esc(f.tag)} <span style="font-size:10px;color:var(--text3);font-weight:400">· las 4 fases</span></span>
       <a href="../Coach/Coach.html" class="hp-link">Plan Maestro →</a>
     </div>
     <div style="font-size:12.5px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:10px">${esc(f.title)}</div>
@@ -7788,6 +7788,12 @@ const ctVaATarjeta = arr => (arr||[]).filter(t=>t.credito).reduce((x,t)=>x+(+t.a
 // reinicia ahi. Devuelve el dia a dia con el saldo corriendo, que es lo que dibuja el
 // riel y lo que la columna del dia desglosa. Un solo calculo para las dos.
 function ctTramo(nSel, nDias, mov, ym){
+  /* El saldo REAL de la cuenta, con su fecha (Finanzas → Patrimonio → Cuenta BBVA, `fecha`). El
+     modelo arrastra la nómina día a día y no puede saber lo que hay de verdad; Adán, 21-sep-2026:
+     "esa cifra está mal, ya te había dicho que me quedan 1200". Si la fecha cae dentro de este
+     tramo, ese día vale el saldo real y de ahí en adelante se resta lo previsto. Antes de esa
+     fecha sigue el modelo. Fuera del tramo (o sin fecha) no se ancla nada. */
+  const ancla=ctAnclaReal(ym || ctYM || '', nSel <= 14 ? 1 : 15, nSel <= 14 ? 14 : nDias);
   const com = ctComida();
   const comeDia = com ? Math.round(com.dia) : 0;
   const ini = nSel <= 14 ? 1 : 15;
@@ -7807,7 +7813,8 @@ function ctTramo(nSel, nDias, mov, ym){
     const ext = ctExtras(d, YM, MV, fijosMes, TJ);
     const sal = pag.reduce((x,a)=>x+(+a.monto||0), 0) + comeDia + ctSaleDeCaja(ext);
     const may = pag.slice().sort((a,b)=>(+b.monto||0)-(+a.monto||0))[0];
-    entra += ent; sale += sal; corre += ent - sal;
+    entra += ent; sale += sal;
+    if(ancla && d === ancla.dia) corre = ancla.saldo; else corre += ent - sal;
     serie.push({ d:d, ent:ent, sale:sal, saldo:corre, pagos:pag, extras:ext,
                  col: may ? ctColor(may.t) : '#ef4444',
                  txt: pag.map(a=>a.t.split(' ')[0]).join(', ') });
@@ -7816,11 +7823,21 @@ function ctTramo(nSel, nDias, mov, ym){
   const cierre = serie[serie.length-1].saldo;
   const restan = Math.max(1, fin - nSel);
   // Lo gastado hasta el dia elegido, para la resta de la columna 2.
-  let gastado = 0, entrado = 0;
-  serie.forEach(function(p){ if(p.d <= nSel){ gastado += p.sale; entrado += p.ent; } });
+  let gastado = 0, entrado = 0, desdeAncla = 0;
+  serie.forEach(function(p){ if(p.d <= nSel){ gastado += p.sale; entrado += p.ent; if(ancla && p.d > ancla.dia) desdeAncla += p.sale - p.ent; } });
   return { ini:ini, fin:fin, entra:entra, sale:sale, serie:serie, hoy:hoy, cierre:cierre,
-           comeDia:comeDia, restan:restan, gastado:gastado, entrado:entrado,
+           comeDia:comeDia, restan:restan, gastado:gastado, entrado:entrado, ancla:ancla, desdeAncla:desdeAncla,
            falta: (hoy.saldo - cierre), libreDia: Math.round(cierre/restan) };
+}
+// El activo líquido de la cuenta con fecha, si su fecha cae dentro del tramo [ini, fin] del mes YM.
+function ctAnclaReal(YM, ini, fin){
+  const acts=(D.fin&&D.fin.activos)||[];
+  const cta=acts.find(a=>a.id==='ac013')||acts.find(a=>a.type==='liquido'&&a.fecha&&/bbva|cuenta/i.test(a.name||''));
+  if(!cta||!/^\d{4}-\d{2}-\d{2}$/.test(cta.fecha||'')) return null;
+  if(cta.fecha.slice(0,7)!==YM) return null;
+  const d=+cta.fecha.slice(8,10);
+  if(d<ini||d>fin) return null;
+  return { dia:d, saldo:+cta.value||0, fecha:cta.fecha, nombre:cta.name||'Cuenta' };
 }
 
 function renderCoachTablero(){
@@ -7887,7 +7904,7 @@ function renderCoachTablero(){
         '<i class="cr-punto" style="background:'+estado.c+';box-shadow:0 0 9px '+estado.c+'"></i>'+
         '<span style="font-size:11.5px;font-weight:600;color:var(--text)">'+estado.t+'</span>'+
         '<span style="font-size:10.5px;color:var(--text3)">· te sobran <b class="ct-num'+(privado?' fin-hidden':'')+
-          '" style="color:var(--text2)">'+money(T.libreDia)+'/día</b> hasta el '+T.fin+'</span>'+
+          '" style="color:var(--text2)">'+money(T.libreDia)+'/día</b> hasta el '+T.fin+(T.ancla&&nSel>=T.ancla.dia?' · desde tu saldo real del '+T.ancla.dia:'')+'</span>'+
       '</span>'+
     '</div>'+
 
@@ -8072,11 +8089,20 @@ function renderCoachTablero(){
     '<div style="display:flex;flex-direction:column;gap:7px;padding-top:11px;border-top:1px solid rgba(var(--ov),.09)">'+
       '<span class="ct-lbl">De dónde sale ese saldo</span>'+
       '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
-        '<span style="font-size:11.5px;color:var(--text2)">Entró el '+T.ini+'</span>'+
-        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700;color:var(--g)">+'+money(T.entrado)+'</span></div>'+
-      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
-        '<span style="font-size:11.5px;color:var(--text2)">Salió del '+T.ini+' al '+nSel+'</span>'+
-        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700">−'+money(T.gastado)+'</span></div>'+
+      (T.ancla&&nSel>=T.ancla.dia
+        // Anclado al saldo real: la resta arranca ahí, no en la nómina.
+        ? '<span style="font-size:11.5px;color:var(--text2)">Saldo real el '+T.ancla.dia+' · '+esc(T.ancla.nombre)+' <span style="color:var(--text3)">(Finanzas)</span></span>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700;color:var(--g)">'+money(T.ancla.saldo)+'</span></div>'+
+          (nSel>T.ancla.dia
+            ? '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
+              '<span style="font-size:11.5px;color:var(--text2)">Salió del '+(T.ancla.dia+1)+' al '+nSel+'</span>'+
+              '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700">−'+money(T.desdeAncla)+'</span></div>'
+            : '')
+        : '<span style="font-size:11.5px;color:var(--text2)">Entró el '+T.ini+'</span>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700;color:var(--g)">+'+money(T.entrado)+'</span></div>'+
+          '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
+          '<span style="font-size:11.5px;color:var(--text2)">Salió del '+T.ini+' al '+nSel+'</span>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700">−'+money(T.gastado)+'</span></div>')+
       '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:9px 11px;border-radius:10px;'+
         'background:rgba(var(--cy-rgb),.1);border:1px solid rgba(var(--cy-rgb),.26);margin-top:2px">'+
         '<span style="font-size:12px;font-weight:600">Te queda</span>'+
@@ -8329,7 +8355,11 @@ function renderCoach(){
       <div class="cfb-kpi"><b>${Math.round(pctFase)}%</b><span>transcurrido</span></div>
     </div>`;
   // El párrafo largo de la fase ya no ocupa media pantalla: vive aquí como tooltip.
-  bandaFase.title=explicaTxt;
+  bandaFase.title=explicaTxt+'\n\nClic: ver las 4 fases del plan.';
+  // Toda la banda abre la ventana con las cuatro fases (Adán, 21-sep-2026: "al hacer click en el
+  // recuadro de fase 0 (…) debes mostrarme una ventana con la info de todas las fases").
+  bandaFase.setAttribute('role','button'); bandaFase.setAttribute('tabindex','0');
+  bandaFase.style.cursor='pointer'; bandaFase.onclick=function(){ abrirKpi('fases'); };
 
   // El reparto de tareas ya no vive aquí: lo pinta el tablero, repartidas por la
   // semana que les toca en vez de en tres listas del mismo peso.
@@ -10231,7 +10261,7 @@ function kpiDetalle(id){
         (g.prom>0?kpiBarra('Meses de gastos que te cubre hoy', mesesCubiertos.toFixed(1)+' meses', mesesCubiertos/3*100, mesesCubiertos>=3?V:O,
           'Tu gasto real es de '+money(g.prom)+'/mes (promedio de '+g.meses+' meses cerrados). El estándar es cubrir de 3 a 6.'):'')+
       '</div>'+
-      (g.prom>0&&metaEf<g.prom*3?kpiNota('⚠️ Ojo con la meta: <b>'+money(metaEf)+' no llega a 3 meses</b> de tu gasto real ('+money(g.prom*3)+'). Los {{fondoMeta}} son un buen primer escalón, pero el fondo terminado para ti está más arriba.'):'')+
+      (g.prom>0&&metaEf<g.prom*3?kpiNota('⚠️ Ojo con la meta: <b>'+money(metaEf)+' no llega a 3 meses</b> de tu gasto real ('+money(g.prom*3)+'). Los '+money(metaEf)+' son un buen primer escalón, pero el fondo terminado para ti está más arriba.'):'')+
       kpiSec('🎯 Qué hacer')+
       (falta>0
         ? kpiPaso('Complétalo antes que cualquier otra cosa','Te faltan <b>'+money(falta)+'</b>. A <b>'+money(rec)+' al mes</b> lo cierras en 3 meses. Va antes que invertir y antes que abonos extra a deuda: es lo que evita que un imprevisto te regrese a la tarjeta y deshaga meses de avance.',O)
@@ -10360,7 +10390,7 @@ function kpiDetalle(id){
     const filasDebo=debts.filter(d=>+d.balance>0).sort((a,b)=>b.balance-a.balance)
       .map(d=>({n:esc(d.name),v:+d.balance,c:d.rate>0?R:P,
         d:(d.rate>0?'Tasa '+d.rate+'% · te cuesta '+money(d.balance*(d.rate/100)/12)+'/mes':'Sin interés')+
-          (d.remainingMonths?' · '+d.remainingMonths+' pagos restantes':'')}));
+          ((d.type==='car'||d.type==='loan')&&CIFRAS.mesesRestantes(d)?' · '+CIFRAS.mesesRestantes(d)+' pagos restantes':'')}));
 
     const filasBienes=bienes.sort((a,b)=>(+b.value||0)-(+a.value||0))
       .map(a=>({n:esc(a.name),v:+a.value||0,d:a.notes?esc(a.notes):''}));
@@ -10430,7 +10460,15 @@ function kpiDetalle(id){
         return kpiSec('📆 Tu pago contra tu interés, deuda por deuda')+conPago.map(d=>{
           const im=d.balance*(d.rate/100)/12, pg=+d.min, baja=pg-im;
           const cuota=n=>{ const i=(d.rate/100)/12; return d.balance*i/(1-Math.pow(1+i,-n)); };
-          const meses=+d.remainingMonths||0;
+          // Los meses que quedan salen del saldo, la tasa y el pago de HOY (CIFRAS.mesesRestantes):
+          // el `remainingMonths` escrito a mano decía 61 aunque el saldo bajara.
+          const meses=(d.type==='car'||d.type==='loan')?(CIFRAS.mesesRestantes(d)||0):0;
+          if(d.balance<=pg){
+            // Debe menos que su pago: el próximo la cierra. Aquí no hay ritmo que calcular.
+            return kpiPaso(esc(d.name)+' · un pago más y se acaba',
+              'Debes <b>'+money(d.balance)+'</b> y tu pago programado es '+money(pg)+': el próximo pago la deja en $0. Este mes te cuesta <b>'+money(im)+'</b> de intereses, el último.',
+              'var(--g)');
+          }
 
           if(meses>0){
             // Crédito a plazo: la pregunta útil no es "cuándo acaba" (ya se sabe), sino cuánto
@@ -10456,7 +10494,7 @@ function kpiDetalle(id){
         kpiPaso('Cada abono extra vale doble','Abonar <b>'+money(1000)+'</b> a '+(peor?esc(peor.name):'tu deuda más cara')+' te ahorra <b>'+money(ahorro1k)+' al año</b> de intereses, para siempre. No hay inversión que te dé ese rendimiento garantizado: por eso la deuda cara va antes que invertir.',R)+
         kpiNota('Ordena siempre por <b>tasa</b>, no por saldo. Pagar primero la deuda chica se siente mejor, pero pagar primero la cara cuesta menos dinero.')
         :kpiPaso('Sin intereses ✅','No hay deuda con tasa cobrándote. Todo lo que abones a partir de aquí baja saldo, no intereses.',V))+
-      kpiNota('🏅 Ya bajaste este número una vez de golpe: <b>liquidar la Banamex el 13-ago-2026</b> apagó su parte de intereses para siempre.')};
+      kpiNota('🏅 Ya bajaste este número una vez de golpe: <b>liquidar la Banamex el 13-ago-2026</b> apagó su parte de intereses para siempre; y el <b>19-sep-2026</b> la BBVA bajó de $39,000 a $900 con la venta del Bitcoin, que eran ~$1,800 al mes de interés que ya no pagas.')};
   }
 
   if(id==='invertido'){
@@ -10488,6 +10526,43 @@ function kpiDetalle(id){
       kpiSec('📊 Ordenadas por tasa (la de arriba primero)')+
       '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">Sin deudas registradas. 🎉</div>')+'</div>'+
       kpiNota('Las de tasa 0 (MSI, crédito del coche si aplica) <b>no son urgentes pero sí comprometen tu excedente</b> cada mes. Cuentan para el flujo aunque no para los intereses.')};
+  }
+
+  // Las 4 fases del Plan Maestro, completas: fechas, meta, explicación y el checklist de cada mes
+  // con lo marcado en Coach (coach_checks_v1). Se abre desde la banda de fase del Plan Maestro y
+  // desde el módulo Fase de Mi Día.
+  if(id==='fases'){
+    const hoy=new Date(); hoy.setHours(0,0,0,0);
+    const checks=rawGet('coach_checks_v1',{});
+    const dF=d=>d.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
+    const html=PHASES.map(function(f){
+      const activa=hoy>=f.start&&hoy<=f.end, pasada=hoy>f.end;
+      const total=Math.max(1,(f.end-f.start)/86400000), van=Math.min(total,Math.max(0,(hoy-f.start)/86400000));
+      const pct=Math.round(van/total*100);
+      const color=activa?C:pasada?'var(--text3)':P;
+      const estado=activa?'EN CURSO · '+pct+'% · quedan '+Math.max(0,Math.round(total-van))+' días':pasada?'CERRADA':'DESPUÉS';
+      const meses={};
+      (f.semanas||[]).forEach(function(s){ const k=s.mes||'Durante toda la fase'; (meses[k]=meses[k]||[]).push(s); });
+      const lista=Object.keys(meses).map(function(k){
+        const label=/^\d{4}-\d{2}$/.test(k)?MES_LABEL_FULL[+k.slice(5,7)-1]+' '+k.slice(0,4):k;
+        const items=meses[k], hechas=items.filter(s=>checks[s.id]).length;
+        return '<div class="kpi-linea-top" style="margin-top:8px"><span class="kpi-linea-nom">📅 '+label+'</span>'+
+               '<span class="kpi-linea-val" style="font-size:11px;color:var(--text3)">'+hechas+' / '+items.length+'</span></div>'+
+          items.map(function(s){ const ok=!!checks[s.id];
+            return '<div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.45;padding:4px 0;'+
+                   (ok?'color:var(--text3);text-decoration:line-through':'color:var(--text2)')+'">'+
+                   '<span style="flex:none">'+(ok?'✅':'▢')+'</span><span>'+s.txt+'</span></div>'; }).join('');
+      }).join('');
+      return kpiSec(f.tag+' · '+dF(f.start)+' → '+dF(f.end))+
+        '<div class="kpi-cifra" style="font-size:17px;line-height:1.3;color:'+color+'">'+esc(f.title)+'</div>'+
+        '<div class="kpi-cifra-sub" style="color:'+color+';font-weight:700">'+estado+'</div>'+
+        (activa?'<div class="gbm-bar" style="margin:6px 0 10px"><div class="gbm-bar-f" style="width:'+pct+'%;background:'+color+'"></div></div>':'')+
+        kpiPaso('🎯 Meta de la fase', f.meta||'', color)+
+        kpiNota(f.explica||'')+
+        '<div class="kpi-desglose">'+lista+'</div>';
+    }).join('');
+    return {titulo:'🪙 Las 4 fases del Plan Maestro', sub:'De aquí a $1,000,000 el 01 ene 2030: qué toca en cada tramo, por qué, y lo que ya marcaste en Coach.',
+      html:html+kpiNota('Las casillas se marcan en <b>Coach → Plan Maestro</b> (o desde el calendario de aquí): es la misma lista, `coach_checks_v1`.')};
   }
 
   if(id==='meta2030'){

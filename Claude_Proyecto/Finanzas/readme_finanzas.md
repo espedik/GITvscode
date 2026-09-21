@@ -20,7 +20,7 @@ S = {
   transactions:   [],       // transacciones
   budgets:        [],       // presupuestos
   debts:          [],       // deudas
-  goals:          [],       // metas de ahorro
+  goals:          [],       // ef-001 (fondo) y g001 (maestría); ya no hay pantalla de metas
   investments:    [],       // inversiones
   activos:        [],       // activos físicos y líquidos
   btcHistory:     [],       // compras y ventas de BTC
@@ -30,8 +30,6 @@ S = {
   btcPriceHist:   [],       // [[ts, precioMXN], …] caché del histórico diario de CoinGecko
   btcHistFetch:   '',       // ISO del último fetch del histórico
   weeklyLeftover:  0,       // sobrante semanal manual para GBM
-  sivaleBalance:   0,       // saldo acumulado Si Vale
-  sivaleLastMonth: '',      // YYYY-MM del último mes agregado Si Vale
   emergencyFund:   0,       // fondo de emergencia
   didiMonthly:     0,       // sin uso desde la UI (código muerto, ver abajo)
   gbmMonth:       '',       // YYYY-MM seleccionado en Plan de Inversiones
@@ -39,7 +37,7 @@ S = {
 }
 ```
 
-Globales adicionales: `editId`, `confCb`, `payDebtId`, `contribGoalId`, `btcEditId`, `activoEditId`,
+Globales adicionales: `editId`, `confCb`, `payDebtId`, `btcEditId`, `activoEditId`,
 `btcCur` (MXN|USD, persiste en `localStorage['btc_cur']`), `curType` (expense|income), las
 instancias de Chart (`chCat`, `chBal`, `chBud`, `chInv`, `chGbmInv`, `chBtcPnl`, `chPat`) y `dashMonth`.
 
@@ -67,7 +65,7 @@ instancias de Chart (`chCat`, `chBal`, `chBud`, `chInv`, `chGbmInv`, `chBtcPnl`,
 - **Fondo de emergencia** — meta `ef-001` ("Fondo de emergencia (CETES)"); `EF_TARGET = _metaFondo()`.
   **Son los CETES**, un solo número (`S.emergencyFund`): no hay inversión `type:'cetes'` en
   `investments`, porque los indicadores, el patrimonio y el fondo de la maestría sumaban las dos
-  cosas. Aportar a `ef-001` (`saveContrib`/`setEmergencyFund`) es anotar lo que entró a CETES; el
+  cosas. Anotar lo que hay en CETES es `setEmergencyFund` (bloque de CETES del plan GBM), que sincroniza `ef-001`; el
   bloque de CETES del plan GBM lo dice y muestra el saldo.
 
 ---
@@ -123,7 +121,7 @@ latido y levantamiento.
 `save()`/`load()` (spread sobre `S`, silencia errores), `fmtDate(d)` (`"28 Jun 2026"`),
 `last6Months()`, `toast(msg)`, `killChart(c)` (destruye y devuelve `null`; siempre antes de redibujar).
 
-`nav(s)` activa una de `SECS = dashboard | transactions | budgets | debts | goals | patrimonio |
+`nav(s)` activa una de `SECS = dashboard | transactions | budgets | debts | patrimonio |
 indicators | gbm` (`<section id="s-{s}">`) y llama a `RENDERS[s]()`. `closeMo(id)` cierra un
 modal y resetea los ids de edición; `Escape` y el clic en el backdrop `.mo` cierran.
 `askDel(type, cb)` / `doConf()` / `closeConf()` es el diálogo de confirmación.
@@ -200,15 +198,14 @@ cuenta (30.44 días por mes), y esa misma fecha decide si la cuota entra en el p
 
 ---
 
-## Módulo: Metas de ahorro
+## Las metas, sin pantalla
 
-`renderGoals()` (excluye `g002`, reservada), `openGoalModal`, `saveGoal`, `delGoal` (no afecta
-`ef-001`), `openContribModal(goalId)`, `saveContrib()` (no supera `target`; si es `ef-001`
-también actualiza `S.emergencyFund`).
-
-**Hueco conocido**: `g001` guarda `current` como una sola cifra, sin instrumentos ligados ni
-historial de aportaciones. Para verlo desglosado habría que dar de alta en Inversiones dónde
-está ese dinero.
+La sección «Metas de ahorro» **se quitó** (Adán, 21-sep-2026: *"bórrala"*). Los registros `goals`
+siguen y los leen los indicadores, el Dashboard y el Coach: `ef-001` (el fondo de emergencia, que
+son los CETES; se edita desde el bloque de CETES del plan GBM con `setEmergencyFund`, que la
+sincroniza) y `g001` (la maestría: su `target` vive en el maestro como `{{maestriaMeta}}` y su
+`current` es una foto vieja que ya nadie lee, el fondo se compone en vivo). `init()` sigue creando
+`ef-001` si falta.
 
 ---
 
@@ -242,7 +239,7 @@ lista vertical (`.fx-tl-lista`) generada del **mismo array**. Ningún importe es
 mensualidad del auto aparece en el calendario pero no se descuenta de ninguna semana.
 
 `switchGBMTab(n)` mueve `.on` (antes reescribía `style` con regex y cualquier retoque lo rompía).
-`setWeeklyLeftover`, `addSivaleMonth`/`undoSivaleMonth` (±$940), `setSivaleBalance`, `setGbmMonth`,
+`setWeeklyLeftover`, `setGbmMonth`,
 `setEmergencyFund` (sincroniza `ef-001`), `maybeRefreshIndicators()` (solo si `s-indicators` está
 activa).
 
@@ -359,7 +356,9 @@ auto-fetch del precio BTC si tiene más de 15 minutos y hay historial.
 (`activos` tipo `liquido`), físicos (el resto); 3 KPIs, listas con barras y edición inline, pasivos
 por deuda (solo las vivas cuentan como "obligaciones activas") y dónut `ch-pat`. `openActivoModal`
 (tipos `liquido | vehiculo | electronico | inmueble | joyeria | mueble | otro`), `saveActivo`,
-`delActivo`.
+`delActivo`. **Un activo líquido lleva `fecha`**: `saveActivo` pone la de hoy al guardarlo, porque un
+saldo es de un día; el riel del Plan Maestro (Dashboard) se ancla a la Cuenta BBVA (`ac013`) por esa
+fecha. El recuadro de Si Vale del Dashboard de Finanzas se quitó ("ya no me sirve de nada").
 
 **Es la misma cifra que el medidor "Patrimonio hacia $1M" del Dashboard** (`patrimonioNeto()`: todo
 lo suyo menos las deudas; Adán, 21-sep-2026: *"tengo mis activos y mis deudas y eso no da números
