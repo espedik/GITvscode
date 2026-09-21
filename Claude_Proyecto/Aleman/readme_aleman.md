@@ -1,9 +1,10 @@
 # Aleman/ — referencia
 
-41 lecciones de alemán en HTML, sin backend ni build. Se abren con `file://` y el Dashboard las
-consumió a través de `../Dashboard/aleman-data.js` hasta el 2026-09-02. Desde entonces la
-pantalla de Alemán del Dashboard es vocabulario y Partizip, **y lo carga de aquí**: los
-datos, el diseño y el motor viven en esta carpeta y esa pantalla los refleja.
+41 lecciones de alemán en HTML, sin backend ni build, más el vocabulario y el tema de Partizip.
+Se abren con `file://`. La pantalla de Alemán del Dashboard es vocabulario y Partizip **y lo
+carga de aquí**: los datos, el diseño y el motor viven en esta carpeta y esa pantalla los refleja.
+Las lecciones no se muestran en el Dashboard (su extracción, `../Dashboard/aleman-data.js`, está
+en reposo).
 
 > **Referencia, no diario.** El historial vive en `git log -p -- Claude_Proyecto/Aleman/`.
 > Ver `../../CLAUDE.md` → Regla 3.
@@ -17,7 +18,7 @@ datos, el diseño y el motor viven en esta carpeta y esa pantalla los refleja.
 | **Kapitel 10** | `k10-01`…`k10-06` | Lo que Adán cursa en Cenlex Santo Tomás desde el 25-ago-2026 |
 | A1 | `a1-01`…`a1-15` | Base: saludos, números, artículos, hora, profesiones… |
 | A2 | `a2-01`…`a2-20` | Gramática y vocabulario temático |
-| Apoyo | `index.html`, `gramatica.html`, `vocabulario.html` | Índice y referencia transversal |
+| Apoyo | `index.html`, `principiantes.html`, `gramatica.html`, `vocabulario.html` | Índice, lecciones para principiantes y referencia transversal. La barra de apps del Dashboard enlaza a los cuatro |
 | Compartido | `styles.css`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js` | Estilos y motores |
 | **Vocabulario** | `vocab-datos.js`, `vocab.css`, `vocab.js` | Los datos, el diseño y el motor. Los carga también el Dashboard — ver abajo |
 
@@ -33,7 +34,7 @@ Alemán del Dashboard lo refleja. Cuatro pestañas:
 | 📖 Diccionario | Las 1.516 palabras en tarjetas, agrupadas por subsección |
 | 🗨️ Frases por situación | 60 frases listas para usar, escritas en este archivo |
 | 🎴 Tarjetas | Repaso con `flashcards.js` |
-| 🧩 Partizip I y II | El tema de gramática, en 9 bloques |
+| 🧩 Partizip I y II | El tema de gramática, en 10 bloques |
 
 **Nada de esto está dentro del HTML.** El vocabulario son tres archivos de esta carpeta,
 y los tres los carga también la pantalla de Alemán del Dashboard:
@@ -64,9 +65,8 @@ por eso está arriba del árbol en vez de junto a Verbos.
 ### Las siete familias
 
 Las 37 secciones se agrupan en **siete familias**, y el árbol tiene tres niveles: familia ›
-sección › subsección. Antes eran 37 líneas seguidas y encontrar «Buscar piso» era
-recorrerlas todas; ahora es mirar dentro de «Casa y ciudad». Petición de Adán del
-2026-09-03, después de elegir entre tres maquetas.
+sección › subsección: encontrar «Buscar piso» es mirar dentro de «Casa y ciudad», no
+recorrer 37 líneas. Adán eligió esta maqueta entre tres.
 
 | Familia | Secciones | Palabras |
 |---|---|---|
@@ -79,7 +79,7 @@ recorrerlas todas; ahora es mirar dentro de «Casa y ciudad». Petición de Adá
 | ⚙️ Verbos y adjetivos | Verbos, Adjetivos | 153 |
 
 Viven en `vocab-datos.js`, junto a las secciones, y **las dos pantallas pintan el mismo
-árbol**: el Dashboard dejó de usar tiras de chips el 2026-09-03. El control 21 de
+árbol**. El control 21 de
 `../Dashboard/verificar-sincronia.js` comprueba que cada sección esté en una familia y solo
 una, y que entre todas cubran las 1.516 palabras — una sección que se caiga del reparto no
 da error, simplemente desaparece del índice de las dos pantallas.
@@ -389,10 +389,12 @@ Deutsch).
 
 ---
 
-## Cómo el Dashboard lee estas lecciones
+## `aleman-data.js` — la extracción de las lecciones, en reposo
 
 `_generar-datos-dashboard.js` abre cada lección con Playwright **como página propia** y vuelca su
-contenido real a `../Dashboard/aleman-data.js`.
+contenido real a `../Dashboard/aleman-data.js`. **Hoy ninguna pantalla del Dashboard lo carga**
+(Adán quitó las lecciones de ahí *"de momento"*); el archivo y el generador se quedan por si
+vuelven. Todo lo de abajo aplica solo en ese caso.
 
 ```bash
 NODE_PATH="…/npm-cache/_npx/…/node_modules" node Aleman/_generar-datos-dashboard.js
@@ -420,8 +422,7 @@ modelos resueltos: sin ella, su slide en el Dashboard salía vacío.
 
 1. Crear el HTML siguiendo la estructura de las existentes (`.topic-hero`, `.topic-content`,
    `.card`, `.vocab-table`, `.rule-box`, `.example`).
-2. Añadirla a `FILES` en `_generar-datos-dashboard.js` y a `ALEMAN_TEMAS` en `dashboard.html`
-   (con `kapitel:N` si pertenece a un capítulo en curso).
-3. Añadir su tarjeta en `index.html`.
-4. Regenerar `aleman-data.js`.
-5. Comprobar en el navegador que el slide no sale vacío y que no hay scroll horizontal a 390px.
+2. Añadir su tarjeta en `index.html`.
+3. Comprobar en el navegador que no hay scroll horizontal a 390px.
+4. Solo si las lecciones vuelven al Dashboard: añadirla a `FILES` en
+   `_generar-datos-dashboard.js` y regenerar `aleman-data.js`.

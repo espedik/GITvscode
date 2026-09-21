@@ -8,11 +8,9 @@ hechas a mano. La reparación de aeronaves vive en
 necesitaremos un nombre para eso"*). De cuatro opciones eligió **Heliescala**: nombre propio, corto,
 se entiende solo y se busca fácil.
 
-**Las dos páginas son independientes**: ninguna menciona a la otra ni enlaza con ella (Adán,
-2026-09-17: *"de ambas páginas no pongas lo de que se relacionan"*). Se quitaron la sección puente,
-los enlaces del menú y del pie, la firma *«por Aeroresinas»* de la barra —hoy dice **HECHO A MANO
-EN MÉXICO**— y la frase del hero que se apoyaba en la reparación. En su lugar, el hero se sostiene
-con lo suyo: **cada modelo sale de su propio molde**, y la librea, el número de unidad y la
+**Las dos páginas son independientes**: ninguna menciona a la otra ni enlaza con ella (Adán:
+*"de ambas páginas no pongas lo de que se relacionan"*). No hay sección puente ni enlaces
+cruzados; la barra dice **HECHO A MANO EN MÉXICO** y el hero se sostiene con lo suyo: **cada modelo sale de su propio molde**, y la librea, el número de unidad y la
 matrícula se pintan una por una.
 
 ## Por qué es oscura, y el modo claro
@@ -292,10 +290,10 @@ tarifas) es el mismo valor en los dos idiomas y no se duplica.
 
 ## Idioma: español por defecto, inglés a un toque
 
-**La página abre SIEMPRE en español.** Hasta el 2026-09-17 seguía el idioma del navegador
-(`navigator.language`), así que en un equipo configurado en inglés —el de Adán, por ejemplo— se
-abría en inglés y parecía que no existía la versión en español. El cliente de aquí es mexicano: el
-español es el punto de partida y no se negocia. Lo elegido se guarda en `localStorage`.
+**La página abre SIEMPRE en español**, no en el idioma del navegador (`navigator.language`): en
+un equipo configurado en inglés —el de Adán— se abría en inglés y parecía que no existía la
+versión en español. El cliente de aquí es mexicano: el español es el punto de partida y no se
+negocia. Lo elegido se guarda en `localStorage['heli-idioma']`.
 
 El selector es **un solo botón que dice a qué idioma cambias**, no en cuál estás: en español pone
 *English*, en inglés pone *Español*. El par "ES | EN" obligaba a pensar cuál de los dos estaba

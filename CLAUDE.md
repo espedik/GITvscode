@@ -77,8 +77,10 @@ desincronizada. No me sirve historial acumulado sin sentido, quiero información
 
 Cuando Adán nombra `dashboard.html` (o cualquier `.html` del proyecto) o una de sus pantallas,
 **el primer paso es su readme, nunca el archivo entero**. `readme_dashboard.md` es el mapa:
-describe cada pantalla y pieza con sus ids, clases y funciones. `dashboard.html` pesa 1.28 MB y
-abrirlo a ciegas quema el contexto sin ubicar nada.
+describe cada pantalla y pieza con sus ids, clases y funciones. `dashboard.html` pesa 1.25 MB y
+abrirlo a ciegas quema el contexto sin ubicar nada. **Los readmes son referencia, no diario
+(Regla 3)**: al tocar un `.html` se edita la sección que describe esa pieza, sin fechas ni
+"antes/ahora"; la historia está en git.
 
 1. `grep -n "^#" Dashboard/readme_dashboard.md` → encontrar la sección de lo que se pidió.
 2. `sed -n A,Bp` **solo esa sección** → sacar los nombres (`#metaDetailOverlay`, `calRitmo`, `theme-dia`…).
@@ -105,7 +107,7 @@ estoy refiriendo… rigurosamente debes tener el mapa para saber rápidamente a 
 
 ## Editar los HTML con scripts
 
-Los `.html` de `Claude_Proyecto/` son archivos grandes (`dashboard.html` pasa de 600 KB) con **finales de línea mixtos** — `dashboard.html` tiene 6,097 líneas CRLF y 238 LF sueltas.
+Los `.html` de `Claude_Proyecto/` son archivos grandes (`dashboard.html` pasa de 1.2 MB) con **finales de línea mixtos** — `dashboard.html` tiene ~11 850 líneas CRLF y ~250 LF sueltas. Se ancla por línea, nunca por bloque multilínea.
 
 - Leer y escribir **siempre** con `newline=''` y usar `\r\n` en el texto insertado. Sin eso, Python normaliza el archivo entero y un cambio de 100 líneas produce un diff de 12,000.
 - **Escribir a un temporal y `os.replace` al final.** `open(p,'w')` trunca el archivo *antes* de escribir: si el `write` falla a mitad (un emoji escrito como par subrogado, por ejemplo), el archivo se queda en 0 bytes. Ya pasó una vez con `dashboard.html`.

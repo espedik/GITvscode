@@ -215,12 +215,9 @@ de caso — uno de 2 etapas y otro de 6 no miden lo mismo.
 columnas, 2 bajo 1080 px y 1 bajo 520— y **no depende de cuántas etapas tenga el trabajo**. Son 3 y
 no 4 porque el escenario le cede 346 px al índice: a 4 columnas las fotos se quedaban en 220 px.
 
-Hasta el 2026-09-18 la clase era `etapas n<número de etapas>`, con reglas de CSS solo para `n2`,
-`n3` y `n4`. Al pasar los casos de 8 a 14 aparecieron uno de **5** etapas y otro de **6**: `n5` y
-`n6` no existían, así que caían al `display:grid` pelado —una columna— y sus fotos salían **a todo
-el ancho de la sección**. Y aun con la clase correcta el tamaño dependía del caso: un trabajo de 2
-etapas daba fotos del doble de ancho que uno de 4, con el mismo alto de 250 px. De ahí venía la
-desproporción.
+No se usa una clase por número de etapas (`n2`, `n3`…): un caso con más etapas que las previstas
+caería al `display:grid` pelado y sus fotos saldrían a todo el ancho, y aun con la clase correcta
+el tamaño dependería del caso (2 etapas → fotos del doble de ancho que 4).
 
 Medido: **un solo tamaño en cada ancho** (281×250 a 1600 px, 461×250 a 1000, 385×250 en iPad,
 354×250 en móvil), y **cero trabajos con fotos desiguales**. Una fila incompleta deja huecos, que es
@@ -269,10 +266,6 @@ elegidas viéndolas todas en hojas de contacto y optimizadas: rotadas según EXI
 ancho y JPEG progresivo al 79 % — **13.5 MB en total** frente a los ~45 MB de los originales, que
 no se tocaron. `fotos/LEEME.txt` dice qué es cada una, caso por caso.
 
-Hasta el 2026-09-17 solo había 31, y dos carpetas enteras de originales estaban sin revisar. De
-ahí salieron las cinco secuencias nuevas, la bolsa de vacío, el puenteo eléctrico y las seis
-aeronaves terminadas.
-
 Cada foto lleva **pie**: una reparación abierta no se entiende sola, y el pie es lo que convierte
 la foto en argumento. Todas van con `loading="lazy"`.
 
@@ -309,9 +302,9 @@ por WhatsApp, que es como va a llegar a la mayoría de los clientes.
 
 ## Idioma: español por defecto, inglés a un toque
 
-**La página abre SIEMPRE en español.** Hasta el 2026-09-17 seguía el idioma del navegador, así que
-en un equipo configurado en inglés se abría en inglés y parecía que no existía la versión en
-español. El cliente de aquí es mexicano.
+**La página abre SIEMPRE en español**, no en el idioma del navegador: en un equipo configurado en
+inglés se abría en inglés y parecía que no existía la versión en español. El cliente de aquí es
+mexicano. Lo elegido se guarda en `localStorage['aero-idioma']`.
 
 El selector es **un botón que dice a qué idioma cambias**, no en cuál estás: en español pone
 *English*. Nunca se oculta, tampoco en móvil (ahí queda solo el globo).

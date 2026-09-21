@@ -1,113 +1,129 @@
 # Claude_Proyecto — Mapa maestro
 
-Este documento es el **índice central** de todo lo que vive en `Claude_Proyecto/`: qué apps existen, dónde están sus datos, cómo se relacionan entre sí, y qué hay que tocar cuando se edita algo. Está pensado para leerse **antes** de tocar cualquier archivo — evita tener que releer miles de líneas de HTML/JS para entender cómo encaja todo.
+El índice de todo lo que vive en `Claude_Proyecto/`: qué apps hay, dónde están sus datos y cómo
+se conectan. Se lee **antes** de tocar cualquier archivo. El detalle de cada app está en su
+propio `readme_<app>.md`; **las reglas de trabajo están en [`../CLAUDE.md`](../CLAUDE.md)** y no se
+repiten aquí.
 
-## Propósito de este proyecto (pedido explícito de Adán, 2026-08-07)
+## Propósito
 
-> "Tú existes para hacer la mejor versión de mí, para eso es el dashboard. Mi meta es ser millonario."
+Adán, 2026-08-07: *"Tú existes para hacer la mejor versión de mí, para eso es el dashboard. Mi
+meta es ser millonario."* Todo lo que se construye aquí sirve a esa meta —salud, disciplina,
+habilidades, negocio y dinero— con el objetivo codificado de **$1,000,000 de patrimonio líquido
+para el 01/01/2030** (Plan Maestro de Coach, Mis Metas del Dashboard).
 
-Esta es la instrucción que debe guiar **todo** lo que se construye o cambia aquí, no solo el Dashboard: cada app de este ecosistema (Coach, Finanzas, CuidadoPersonal, Dashboard) existe para ayudar a Adán a convertirse en su mejor versión — salud, disciplina, habilidades, negocio y dinero — con la meta explícita de llegar a **$1,000,000 de patrimonio líquido para el 01/01/2030** (ya codificada como `GOAL` en `Dashboard/dashboard.html → renderMetasSlide()` y como la meta central del Plan Maestro en `Coach/Coach.html`).
+En la práctica: cuando pide algo, se usa **todo lo que el proyecto ya sabe de él** (fases del
+plan, cifras, rutina, salud) para que el resultado lo haga avanzar, y se distingue siempre el dato
+documentado de lo que haría falta que él diga. **Nunca se inventan cifras, fechas ni hechos.**
 
-**Cómo aplica esto en la práctica**: cuando Adán pide una funcionalidad nueva (p. ej. "ponme las cosas importantes del mes"), la expectativa no es solo ejecutar literalmente lo pedido con el mínimo de datos — es usar **todo lo que ya se sabe de él en el resto del proyecto** (fases del Plan Maestro, metas financieras, rutina de salud, etc.) para que el resultado realmente lo ayude a avanzar, y ser explícito sobre qué es dato real documentado en el proyecto vs. qué haría falta que él mismo proporcione (nunca inventar cifras, fechas o hechos que no existan en ningún archivo — eso rompe la confianza en el sistema completo).
-
-**Regla del proyecto (pedida por Adán, 2026-07-29): toda la aplicación (todas las apps de vida/negocio, no las de estudio) debe estar bien referenciada y trazable.**
-- **Cada archivo `.html` tiene su propio `.md`** con la misma información que un futuro Claude necesitaría para modificarlo sin releer todo el código: estructura, modelo de datos (`localStorage`), funciones clave, y referencias cruzadas a otros archivos.
-- **Convención de nombres (pedida por Adán, 2026-07-30):** el `.md` de cada `.html` se llama `readme_{nombrehtml}.md` (ej. `Coach.html` → `readme_coach.md`) para diferenciarlos rápido de un vistazo en el árbol de carpetas. Este `README.md` de la raíz es la única excepción — es el mapa maestro, no el doc de un `.html` específico.
-- **Siempre que se modifique un `.html`, se actualiza su `.md` en el mismo cambio** (no después, no "cuando haya tiempo").
-- Este `README.md` es el mapa de las **ramificaciones** entre archivos — para el detalle interno de cada app, ir a su `.md` propio (enlazado abajo).
+**Trazabilidad**: cada `.html` tiene su `readme_<nombre>.md` (excepción: este `README.md`), que es
+el mapa de esa app —estructura, modelo de datos, funciones clave, referencias cruzadas— y se
+actualiza en el mismo cambio que el `.html`.
 
 ## Qué es esto
 
-Un conjunto de aplicaciones web de una sola página (HTML + CSS + JS, **sin backend, sin build step**), cada una con su propio `localStorage`, que en conjunto forman el "sistema de vida" de Adán: finanzas reales, plan de negocio (Coach), cuidado personal, y un dashboard central que agrega todo. Todo se abre directamente con doble clic (`file://`) — no hace falta servidor.
-
-**Por qué comparten datos entre carpetas sin backend**: todos estos archivos se abren vía `file://`. En ese esquema, el navegador trata todo `file://` como **un solo origen**, así que `localStorage` se comparte entre carpetas — un HTML en `Dashboard/` puede leer perfectamente lo que guardó otro en `CuidadoPersonal/`. Esto es lo que hace posible el Dashboard sin ninguna sincronización explícita, pero también significa que **los nombres de las claves de `localStorage` son un contrato implícito entre archivos** — cambiarlos en un lugar sin avisar a los demás rompe la integración silenciosamente (no da error, simplemente el otro archivo deja de encontrar los datos).
+Apps web de una sola página (HTML + CSS + JS, **sin backend ni build**) que se abren con doble
+clic (`file://`). En ese esquema el navegador trata todo `file://` como **un solo origen**, así que
+**`localStorage` se comparte entre carpetas**: el Dashboard lee lo que guardó cualquier otra app sin
+sincronización. Eso hace que **los nombres de las claves sean un contrato entre archivos**: cambiar
+uno sin avisar rompe la integración en silencio. `<script src="../otra/archivo.js">` también
+funciona desde `file://` (scripts clásicos sí, módulos ES no), y en eso se apoya el maestro.
 
 ## Mapa de carpetas
 
-| Carpeta | HTML | Doc (`.md`) | Qué es | Clave(s) `localStorage` |
-|---|---|---|---|---|
-| `Dashboard/` | `dashboard.html` | [`Dashboard/readme_dashboard.md`](Dashboard/readme_dashboard.md) | Panel central: agrega datos de todas las apps, slide "Mi Día" en vivo; **desde 2026-08-04** también incrusta por `<iframe>` un tema de estudio distinto cada día de `Aleman/` y de `Entrevistas/` (sin leer/escribir su `localStorage`, ver nota abajo) | *(no escribe, solo lee las de las demás)* |
-| `Coach/` | `Coach.html` | [`Coach/readme_coach.md`](Coach/readme_coach.md) | Coach de vida/negocio: Plan Maestro, rutina diaria completa, radar de habilidades, legal | `coach-theme`, `radarp_*` (12), `coach_rutina_v1` |
-| `CuidadoPersonal/` | `cuidadopersonal.html` | [`CuidadoPersonal/readme_cuidadopersonal.md`](CuidadoPersonal/readme_cuidadopersonal.md) | Shell con 7 subtabs: Skincare, Cabello y Dentista nativas; Salud/Ejercicio/Comida/**Vestimenta** (nuevo 2026-08-03) incrustadas por iframe | `skincare_v1`, `cabello_v1`, `dentista_v1` |
-| `CuidadoPersonal/` | `salud.html` | [`CuidadoPersonal/readme_salud.md`](CuidadoPersonal/readme_salud.md) | Cuerpo y bienestar: peso/medidas/composición corporal, exámenes médicos, postura y salud mental — incrustada por iframe en el shell. **Ya no cubre nutrición/alimentación** (se movió a `comida.html` el 2026-08-02) | `misalud_v1` |
-| `CuidadoPersonal/` | `ejercicio.html` | [`CuidadoPersonal/readme_ejercicio.md`](CuidadoPersonal/readme_ejercicio.md) | Rutina de gimnasio completa + sección de deportes explorables — incrustada por iframe en el shell | `mirutina_v1` |
-| `CuidadoPersonal/` | `comida.html` | [`CuidadoPersonal/readme_comida.md`](CuidadoPersonal/readme_comida.md) | Centro de nutrición: recetario (12 desayunos + 12 cenas) y Plan Masa Muscular — incrustada por iframe en el shell. El Registro Diario y el Plan Semanal se quitaron el 2026-09-02; los botones "Registrar" siguen escribiendo en `misalud_v1.alimentos` | `comida_v1` (y **escribe/lee** `misalud_v1.alimentos`/`.metas`, ver nota) |
-| `Finanzas/` | `Finanzas.html` | [`Finanzas/readme_finanzas.md`](Finanzas/readme_finanzas.md) | Finanzas personales reales, plan GBM, BTC, deudas | `finanzasmx_v2` |
-| `Dashboard/` | `datos-maestros.js` | [`Dashboard/DATOS-MAESTROS.md`](Dashboard/DATOS-MAESTROS.md) | **No es una app: es el archivo maestro de variables de todo el proyecto.** Lo cargan Dashboard, Coach y Finanzas. Contiene las constantes (sueldo, renta, empleador, fechas), el seed de las deudas, las migraciones de saldo y las cifras con nombre que la prosa usa como `{{marcadores}}`. **Su `.md` es el índice del proyecto entero — el punto de entrada para leer rápido.** Ver punto 4bis | *(lee y escribe `finanzasmx_v2`)* |
+| Carpeta | Archivo | Readme | Qué es |
+|---|---|---|---|
+| `Dashboard/` | `dashboard.html` | [`readme_dashboard.md`](Dashboard/readme_dashboard.md) | Panel central: 9 pantallas que agregan todo (Mi Día, Plan Maestro, Mis Metas, Habilidades Base, En qué invertir tu tiempo, Lista de Compras, Alemán, Entrevista, Hábitos) |
+| `Dashboard/` | `datos-maestros.js` | [`DATOS-MAESTROS.md`](Dashboard/DATOS-MAESTROS.md) | **No es una app: es la fuente única de variables del proyecto** (constantes, seed de deudas, migraciones, rutina, fases, recetario, rutinas de piel y pelo, suplementos, peso…). Lo cargan Dashboard, Coach, Finanzas y las de CuidadoPersonal. **Su `.md` es el índice del proyecto** |
+| `Dashboard/` | `verificar-sincronia.js` | — | Comprueba que nada esté duplicado ni desincronizado. Sale 1 si falla; un hook lo corre al final de cada turno |
+| `Coach/` | `Coach.html` | [`readme_coach.md`](Coach/readme_coach.md) | Coach de vida y negocio: diagnóstico, Plan Maestro por fases, rutina diaria, aprendizaje, legal, ideas de negocio con cifras |
+| `Finanzas/` | `Finanzas.html` | [`readme_finanzas.md`](Finanzas/readme_finanzas.md) | Finanzas reales: transacciones, deudas, metas, GBM, BTC, indicadores. **Fuente de los saldos** |
+| `CuidadoPersonal/` | `cuidadopersonal.html` | [`readme_cuidadopersonal.md`](CuidadoPersonal/readme_cuidadopersonal.md) | Shell de 8 áreas: Skincare, Cabello, Dentista, Ojos (nativas) y Salud, Ejercicio, Comida, Vestimenta (iframes). Con `embed.js`, `cabecera.js`, `vidrio.css` |
+| `CuidadoPersonal/` | `salud.html` | [`readme_salud.md`](CuidadoPersonal/readme_salud.md) | Cuerpo y bienestar: peso e IMC por edad, chequeo del año, exámenes, postura, mente, suplementos |
+| `CuidadoPersonal/` | `ejercicio.html` | [`readme_ejercicio.md`](CuidadoPersonal/readme_ejercicio.md) | La sesión de hoy con series marcables, cronómetro y progresión; biblioteca de 62 ejercicios; deportes |
+| `CuidadoPersonal/` | `comida.html` | [`readme_comida.md`](CuidadoPersonal/readme_comida.md) | Recetario (12 + 12) con fichas y filtros, y Plan Masa Muscular |
+| `Aleman/` | 41 lecciones, `vocabulario.html`, `vocab-*.js` | [`readme_aleman.md`](Aleman/readme_aleman.md) | Lecciones A1/A2/Kapitel 10 y el vocabulario (1 516 palabras) que el Dashboard carga de aquí |
+| `Entrevistas/` | `entrevistas.html`, `js/` | [`readme_entrevistas.md`](Entrevistas/readme_entrevistas.md) + `CLAUDE.md` | 229 temas de preparación técnica; los 41 de Python viajan al Dashboard por un generador |
+| `Vestimenta/` | `vestimenta.html`, `vestimenta_*.js` | [`readme_vestimenta.md`](Vestimenta/readme_vestimenta.md) | Guía de guardarropa: qué ponerse, colorimetría, qué comprar. Incrustada en el shell |
+| `Aeroresinas/` | `aeroresinas.html`, `dossier.html`, `datos.js` | [`readme_aeroresinas.md`](Aeroresinas/readme_aeroresinas.md) | Web pública del taller de reparación de helicópteros del papá de Adán, con su PDF |
+| `Heliescala/` | `heliescala.html`, `dossier.html`, `datos.js` | [`readme_heliescala.md`](Heliescala/readme_heliescala.md) | Web pública de réplicas en resina, el otro negocio; independiente de Aeroresinas |
+| `Negocio/` | `plantilla-vs-saas.md` | — | Documento de decisión (ago-2026) sobre convertir el ecosistema en producto |
 
-**Fuera de este ecosistema** (no se documentan archivo por archivo aquí, no comparten datos con las apps de arriba):
-- `Aleman/` — 35+ páginas estáticas de estudio de alemán (A1/A2), sin `localStorage`, sin interconexión con el resto. El slide "🇩🇪 Alemán del día" de `Dashboard/dashboard.html` mostró una lección distinta cada día por `<iframe>` entre 2026-08-04 y 2026-08-07; **desde 2026-08-07 extrae el contenido nativo** (sin iframe, texto/tablas propios dentro del slide, con botón "Siguiente lección →" para no esperar al día siguiente), ver `Dashboard/readme_dashboard.md`. Sigue sin compartir `localStorage`, es solo visual.
-- `Entrevistas/` — app de preparación de entrevistas técnicas automotrices (229 temas), con su propio `CLAUDE.md`/`estructura.md`/[`Entrevistas/readme_entrevistas.md`](Entrevistas/readme_entrevistas.md) documentados dentro de esa carpeta; usa `localStorage['theme']` y `['sidebar-collapsed']`, ajenas a las claves de la tabla de arriba. **Desde 2026-08-04**, el slide "💻 Entrevista del día" de `Dashboard/dashboard.html` incrusta por `<iframe>` un tema distinto cada día — a diferencia de Alemán, sin duplicar metadata: lee en vivo el objeto `T` de `Entrevistas/js/core.js` desde dentro del propio iframe (ver `Dashboard/readme_dashboard.md` para la trampa de `const` de nivel superior que esto exigió resolver con `eval` indirecto). Sigue sin compartir `localStorage`.
-- `Vestimenta/` — `vestimenta.html` (**nueva 2026-08-01**, ver [`Vestimenta/readme_vestimenta.md`](Vestimenta/readme_vestimenta.md)): guía de guardarropa y compras (básicos, chaquetas, zapatos, y combos por ocasión — trabajo, casual, ejercicio, bodas, fiestas), con 30 fotos descargadas y curadas en `Vestimenta/images/`. Usa `localStorage['vestimenta_v1']` (propia, checklist de compra) y comparte `coach-theme` solo para el tema visual claro/oscuro. **Desde el 2026-08-03 también se alcanza incrustada por `<iframe>` en `CuidadoPersonal/cuidadopersonal.html` → pestaña 👔 Vestimenta** (además de poder abrirse directo como siempre) — sigue sin compartir datos con el ecosistema, solo cambió cómo se llega a ella.
+Aeroresinas y Heliescala son páginas para clientes: no guardan estado más allá de tema e idioma y
+no dependen del Dashboard; la barra de apps del Dashboard las agrupa aparte.
 
-**Carpetas eliminadas** (ver historial de git para detalle): `Salud/`, `Ejercicio/` (contenido movido a `CuidadoPersonal/`), `Animo/`, `Habitos/`, `Sueno/`, `Tiempo/`, `Vehiculo/`, `Social/`, `Aprendizaje/` (retiradas del proyecto el 2026-07-29 a petición de Adán). El score de aprendizaje/skills del Dashboard y el bloque de habilidad diario de Coach ya no dependen de esta app — siguen vivos como contenido de referencia dentro de `Coach/Coach.html → #aprendizaje` únicamente. **`Proyectos/`** (proyectos personales, tareas, tiempo invertido — clave `proyectos_v1`) se eliminó por completo el 2026-07-30 a petición explícita de Adán ("elimina la carpeta de proyectos y todas las referencias que tengan que ver con esto"); el Dashboard dejó de leer esa clave y se quitaron el panel "Tareas pendientes" y la estadística "Proyectos (semana)" del slide Hero, además de su píldora en la barra superior — ver [`Dashboard/readme_dashboard.md`](Dashboard/readme_dashboard.md).
+## Registro de claves `localStorage`
 
-## Registro maestro de claves `localStorage`
-
-| Clave | Dueña (quien escribe) | Quién más la lee |
+| Clave | La escribe | Quién más la lee |
 |---|---|---|
-| `finanzasmx_v2` | `Finanzas/Finanzas.html` **y `Dashboard/datos-maestros.js`** (las migraciones de saldo, desde 2026-08-24) | `Dashboard/dashboard.html` (deudas/inversiones/patrimonio, en vivo) **y**, desde el 2026-08-02, `Coach/Coach.html` (`#perfil` → tarjeta "📈 Progreso real vs. el inicio de Fase 0", primera vez que este archivo lee datos de otra app) |
-| `misalud_v1` | `CuidadoPersonal/salud.html` (medidas/agua/metas/perfil/exámenes/postura/mental/suplementos) **y** `CuidadoPersonal/comida.html` (**solo** `alimentos[]`, desde 2026-08-02 — CRUD completo del Registro Diario, antes solo escribía un registro puntual vía `registrarReceta()`, ver `CuidadoPersonal/readme_comida.md`) | los dos se leen entre sí (`Dashboard/dashboard.html` dejó de escribir aquí el 2026-08-02, se quitó el botón rápido "+💧" del Hero — ver `Dashboard/readme_dashboard.md`) |
-| `mirutina_v1` | `CuidadoPersonal/ejercicio.html` (solo `rutina`/`ejerciciosCustom`/`fitsiCalendario` desde 2026-08-02 — `sesiones`/`metas` se quitaron del archivo, ver `readme_ejercicio.md` → "Reestructuración") | `Dashboard/dashboard.html` (`D.gym.rutina`, para "qué toca hoy") |
-| `comida_v1` | `CuidadoPersonal/comida.html` | *(nadie más — lista del súper marcada y, desde 2026-08-02, el Plan Semanal — `planSemana`, solo ids de receta por día)* |
-| `skincare_v1` | `CuidadoPersonal/cuidadopersonal.html` | `Dashboard/dashboard.html` |
-| `cabello_v1` | `CuidadoPersonal/cuidadopersonal.html` | `Dashboard/dashboard.html` |
-| `dentista_v1` | `CuidadoPersonal/cuidadopersonal.html` | *(nadie más — perfil dental y fecha de última cita, el Dashboard no la lee todavía)* |
-| `coach_checks_v1` | `Coach/Coach.html` (desde 2026-08-01 — persistencia genérica de todos los checklists `.check-item` fuera de `#rutina-timeline`, ver `Coach/readme_coach.md` → "Persistencia de checklists") **y** `Dashboard/dashboard.html` (desde 2026-08-02, **solo** los ids `sN-M` del checklist semana a semana del slide Coach, vía `toggleFaseCheck()` — ver `Dashboard/readme_dashboard.md`) | los dos se leen entre sí (mismos ids `sN-M` compartidos) |
-| `coach_rutina_v1` | `Coach/Coach.html` **y** `Dashboard/dashboard.html` (desde 2026-08-01, **solo** `completado[hoy]` vía el botón rápido "✅ Marcar hecho" de Mi Día — ver `Dashboard/readme_dashboard.md` → "Acciones rápidas") | ambos se leen entre sí |
-| `dash-settings` | `Dashboard/dashboard.html` | *(nadie más — velocidad de rotación y si recuerda la última pantalla, propia del Dashboard)* |
-| `coach-theme` | Las 7 apps del ecosistema principal (cada una escribe al hacer toggle) | Las mismas 7 la leen al cargar — clave compartida de tema visual claro/oscuro (ver "Convenciones de diseño compartidas"). `Vestimenta/vestimenta.html` también la lee/escribe (fuera del ecosistema, solo por el tema visual) |
-| `vestimenta_v1` | `Vestimenta/vestimenta.html` | *(nadie más — checklist de compra propio, fuera del ecosistema)* |
-| `dash-privado` | `Dashboard/dashboard.html` | *(nadie más — clave propia del Dashboard, no compartida; oculta cifras financieras en su propia pantalla, no afecta a `Finanzas/Finanzas.html`)* |
-| `radarp_{id}` × 12 | `Coach/Coach.html` | *(nadie más — el radar del Dashboard usa sus propios valores base duplicados, no lee estas claves)* |
-| `dash-lista-compras` | `Dashboard/dashboard.html` (nuevo 2026-08-03 — checklist del slide "🛒 Lista de Compras") | *(nadie más — clave propia del Dashboard; el catálogo en sí, `LISTA_COMPRAS`, es una copia duplicada de datos de `comida.html`/`cuidadopersonal.html`/`salud.html`, no una lectura en vivo de `localStorage`, ver "Ramificaciones" #4)* |
-| `dash-logros-v1` | `Dashboard/dashboard.html` (nuevo 2026-08-13 — libreta de hitos cumplidos con su fecha: se graba al detectarlos y **no se borra aunque el dato origen desaparezca**, ver `Dashboard/readme_dashboard.md`) | *(nadie más — clave propia del Dashboard)* |
-| `dash-eventos-mes-v1` | `Dashboard/dashboard.html` (nuevo 2026-08-13 — pendientes por mes del tile "Importante este mes", con checkbox y CRUD completo; `EVENTOS_MES` en el código quedó como semilla de la primera carga, no como fuente de verdad) | *(nadie más — clave propia del Dashboard)* |
-| `metas_checklist_v1` | `Dashboard/dashboard.html` (nuevo 2026-08-09 — checklist real por meta del slide "Mis Metas"; el % de la barra de cada tarjeta se calcula solo de esto, ver `detailPct()`) | *(nadie más — clave propia del Dashboard)* |
-| `habilidades_checklist_v1` | `Dashboard/dashboard.html` (nuevo 2026-08-09 — mismo mecanismo que `metas_checklist_v1`, para las 8 tarjetas del slide "Habilidades Base") | *(nadie más — clave propia del Dashboard, sin fuente de datos automática en ninguna otra app)* |
+| `finanzasmx_v2` | `Finanzas.html` y las migraciones de `datos-maestros.js` | Dashboard (`D.fin`), Coach (progreso real vs. inicio de fase) |
+| `finanzasmx_v2_v` y banderas `finanzasmx_v2_*` | `Finanzas.html`, `datos-maestros.js`, Dashboard | Marcan seed y migraciones ya aplicadas |
+| `misalud_v1` | `salud.html` (todo) y `comida.html` (**solo** `alimentos`) | Dashboard (`D.sal`); los dos se leen entre sí |
+| `mirutina_v1` (+ banderas `mirutina_v1_*`) | `ejercicio.html`; las migraciones también en Dashboard | Dashboard (`D.gym`: rutina y sesiones) |
+| `comida_v1` | `comida.html` (`elegidas`) | nadie |
+| `skincare_v1`, `cabello_v1` | `cuidadopersonal.html` | Dashboard (`D.sk`, `D.ca`, solo el perfil) |
+| `dentista_v1` | `cuidadopersonal.html` | nadie |
+| `coach_rutina_v1` | Coach y Dashboard (`completado[hoy]` desde *Marcar el bloque actual*) | ambos |
+| `coach_checks_v1` | Coach (todos los `.check-item`) y Dashboard (solo los ids `sN-M` del checklist de fase y `mtc7-9`) | ambos |
+| `radarp_<id>` × 12 | Coach | Dashboard (`SK[].val`) |
+| `coach-theme` | Dashboard, Coach, Finanzas, CuidadoPersonal y Vestimenta | Clave compartida de tema claro/oscuro (Entrevistas, Heliescala y Aeroresinas tienen la suya) |
+| `dash-eventos-mes-v1`, `dash-lista-compras`, `dash-lista-tengo`, `dash-logros-v1`, `dash-habitos-v1`, `dash-rail-abierto`, `dash-settings`, `dash-privado`, `metas_checklist_v1`, `habilidades_checklist_v1`, `edad_checklist_v1`, `examen_genai_v1` | Dashboard | nadie |
+| `al_sec_v1`, `al_sub_v1`, `al_fam_v1`, `al_niv_v1`, `al_plg_v1`, `al_vista_v1` | `Aleman/vocab.js` (las dos pantallas de vocabulario) | — |
+| `vestimenta_v1` | Vestimenta | nadie |
+| `theme`, `sidebar-collapsed`, `study-done-v2`, `wayve-visited-v2` | Entrevistas | nadie (fuera del ecosistema) |
+| `heli-tema`, `heli-idioma`, `aero-tema`, `aero-idioma` | Heliescala, Aeroresinas | nadie |
 
-`Dashboard/dashboard.html` es el único archivo que lee prácticamente todo. Desde el 2026-08-01 también **escribe** en 2 claves ajenas (ver punto 3bis abajo) — ya no es 100% de solo lectura. Si agregas una app nueva o una clave nueva, decide explícitamente si el Dashboard debe leerla (`loadAll()`) y actualiza esta tabla.
+Si se añade una app o una clave, decidir explícitamente si el Dashboard debe leerla (`loadAll()`)
+y actualizar esta tabla.
 
-## Ramificaciones — cómo se conectan los archivos entre sí
+## Cómo se conectan
 
-1. **`Dashboard/dashboard.html` agrega todo.** Lee las 6 claves marcadas arriba directamente vía `localStorage.getItem`, sin backend ni API. Cualquier cambio en la *forma* de los datos de una app (agregar/quitar un campo, renombrar un array) puede romper silenciosamente algún cálculo del Dashboard — revisar su `.md` antes de cambiar la forma de `S`/`D` en cualquier app.
-2. **`CuidadoPersonal/cuidadopersonal.html` incrusta cuatro apps enteras por `<iframe>`** (`salud.html`, `ejercicio.html`, `comida.html` y, desde el 2026-08-03, `../Vestimenta/vestimenta.html` — la única que vive fuera de `CuidadoPersonal/`) en vez de fusionar su código, porque comparten (o podrían llegar a compartir) nombres de función/variable globales entre sí y con el shell — concatenarlas rompería todo. El shell y las apps incrustadas comparten `localStorage` por el mismo motivo de origen `file://` compartido (ver arriba) — **excepto Vestimenta**, que solo comparte `coach-theme` (tema visual) y mantiene su propia clave `vestimenta_v1` sin relación con el resto. Detalle en [`readme_cuidadopersonal.md`](CuidadoPersonal/readme_cuidadopersonal.md).
-3. **`CuidadoPersonal/comida.html` escribe en la clave de otra app, no solo en la propia — y desde el 2026-08-02 es dueña de esa funcionalidad, no solo una excepción puntual.** El Registro Diario completo (CRUD: crear/editar/eliminar alimentos) vive en `comida.html` pero opera directo sobre `misalud_v1.alimentos` (la clave de `salud.html`), vía los helpers `readSalud()`/`writeSalud()`; también lo hacen `registrarReceta()` (botón en cada receta) y `registrarRutinaMeal()` (botón en cada comida del Plan Masa Muscular). `salud.html` ya no tiene ninguna UI propia para alimentos — los preserva intactos al guardar (`load()`/`save()` hacen roundtrip vía spread) pero no los edita. Si se cambia la forma de `S.alimentos` en cualquiera de los dos archivos, hay que revisar el otro — ver [`readme_comida.md`](CuidadoPersonal/readme_comida.md) y [`readme_salud.md`](CuidadoPersonal/readme_salud.md).
-3bis. **`Dashboard/dashboard.html` también escribe en claves ajenas, desde el 2026-08-01** (antes era el único archivo 100% de solo lectura de todo el ecosistema) — el botón "✅ Marcar hecho" en Mi Día toca directamente `coach_rutina_v1.completado[hoy]`, y (desde el 2026-08-02) el checklist semana a semana del slide Coach (`toggleFaseCheck(id)`) toca `coach_checks_v1[id]`, usando el mismo helper `rawGet`/`rawSet` que preserva el resto del objeto intacto. Si se cambia la forma de `completado` en `Coach.html`, o los ids `sN-M` de sus checklists de fase, hay que revisar también estas funciones en `dashboard.html` — ver [`Dashboard/readme_dashboard.md`](Dashboard/readme_dashboard.md) → "Acciones rápidas". (La otra acción rápida que existía, el botón "+💧" que escribía `misalud_v1.agua[hoy]`, se quitó el 2026-08-02 junto con esos KPIs del Hero.)
-4. **`Dashboard/dashboard.html` duplica 6 estructuras de datos a mano** (4 desde `Coach/Coach.html`, 1 desde `CuidadoPersonal/ejercicio.html`, 1 desde `CuidadoPersonal/comida.html`+`cuidadopersonal.html`+`salud.html` combinadas): el horario completo de la rutina (`RUTINA_TASKS`, 71 tareas de nivel superior — idénticas entre ambos archivos **salvo los `href` de `k2`/`k5`**, que apuntan al ancla interna en Coach y a la ruta relativa `../Coach/Coach.html#…` en Dashboard), las 4 fechas y prioridades del Plan Maestro (`PHASES`/`fases`), los 12 valores base del radar de habilidades (`SK`), el contenido de las 5 prioridades de aprendizaje (`APRENDIZAJE` en Dashboard ↔ `#aprendizaje` en Coach — primer paso, hábito y recursos de Datos/Ventas/Marketing/Finanzas/IA), el nombre/tipo del programa semanal de gym (`GYM_RUTINA_DEFAULT` en Dashboard ↔ `S.rutina` en `ejercicio.html` — solo como respaldo si Adán nunca abrió esa app en el navegador actual, desde 2026-07-30), y (nuevo 2026-08-03) el catálogo de compras del slide "🛒 Lista de Compras" (`LISTA_COMPRAS` en Dashboard ↔ `RECETAS` de `comida.html` + `SKIN_DB`/`HAIR_DB` de `cuidadopersonal.html` + `SUPP_CATALOG` de `salud.html`). **Estas son las estructuras más sensibles a romperse por edición asimétrica** — el detalle y el comando de verificación exacto viven en [`Dashboard/readme_dashboard.md`](Dashboard/readme_dashboard.md) → "Datos duplicados".
-4bis. **Sí se puede compartir un módulo JS entre estos HTML — está comprobado, y `Dashboard/datos-maestros.js` es el primero.** El punto 4 decía durante meses que la duplicación era inevitable "porque no hay build step". La premisa era falsa: `<script src="../Dashboard/archivo.js">` carga sin problema desde `file://` (los scripts *clásicos* sí; los módulos ES no, que es de donde venía la confusión), y el propio Dashboard ya lo hacía con `aleman-data.js` dentro de su carpeta. Lo único que faltaba era una ruta relativa.
+1. **El Dashboard lee todo y escribe en dos claves ajenas** (`coach_rutina_v1.completado[hoy]` y
+   `coach_checks_v1[id]`, con `rawGet`/`rawSet` que preservan el resto del objeto). Cambiar la
+   *forma* de los datos de una app puede romper un cálculo suyo en silencio: revisar
+   `readme_dashboard.md` antes.
+2. **Toda variable compartida vive en `datos-maestros.js`** —constantes, seed de deudas,
+   migraciones, `RUTINA_TASKS`, `PHASES`, `SK`, `APRENDIZAJE`, `RECETARIO` → `LISTA_COMPRAS`,
+   `RUTINA_PIEL`/`RUTINA_PELO`/`SUPLEMENTOS`, `PESO`, `CHEQUEO`, `BTC_SEED`— y las apps la piden con
+   `CIFRAS.*`. La prosa escribe `{{marcadores}}` que resuelven `CIFRAS.aplicarDOM()` (HTML
+   estático) o `cifrarLiterales()` (constantes JS del Dashboard). `GYM_RUTINA_DEFAULT` del
+   Dashboard es el único respaldo local, sincronizado por el verificador.
+3. **El shell de CuidadoPersonal incrusta cuatro apps por `<iframe>`** (nombres globales que
+   colisionarían) y habla con ellas **por `postMessage`** (`embed.js`): con `file://`
+   `iframe.contentDocument` es `null`.
+4. **`comida.html` escribe en la clave de `salud.html`** (`misalud_v1.alimentos`) con
+   `readSalud()`/`writeSalud()`; Salud la preserva pero no la edita.
+5. **Toda migración de `finanzasmx_v2` y de `mirutina_v1` existe en las dos apps** que la
+   necesitan, con la misma bandera: la primera que Adán abra la aplica. Las de saldo van al
+   maestro, no a cada app. Una deuda que no existió se borra, no se pone en $0.
+6. **Coach, Finanzas y las de CuidadoPersonal enlazan de vuelta al Dashboard** con un botón
+   `.theme-toggle-btn` (🚀) junto al de tema; el Dashboard enlaza a todas desde su barra de apps.
+   Una app nueva necesita las dos cosas.
+7. **Fechas**: Coach, Finanzas y las apps de CuidadoPersonal usan `today() = toISOString().slice(0,10)`
+   (**UTC**: en México el día cambia a las 18:00). El Dashboard usa **fecha local** en lo que
+   escribe él (`hoyLocal()`, `hoyISO()` de `habitos.js`). Al cruzar claves entre apps, tener las
+   dos convenciones presentes.
 
-   Se estrenó el 2026-08-24 con las cifras financieras, a petición de Adán: *"esto no está en todos los indicadores, no quiero que vuelva a pasar, quiero que si cambies uno, se cambien todos... debes hacer que sea como la misma variable en diferentes aplicaciones"*. `Dashboard/datos-maestros.js` concentra tres cosas que antes estaban copiadas:
-   - **El seed de las deudas** — estaba dentro de `seedData()` en `Finanzas.html`, que lo resiembra cada vez que sube `SEED_VER` (van 23): un saldo corregido a mano se perdía en el siguiente reseed.
-   - **Las migraciones de saldo** — había que escribir cada una dos veces, en `Finanzas.html → init()` y como espejo `fix*IfNeeded()` en `dashboard.html`, porque cualquiera de las dos puede ser la primera app que se abra. Ahora corren en el módulo, antes que el JS de la app, y las ve también `Coach.html`, que nunca tuvo migraciones.
-   - **Las cifras de la prosa** — `{{autoSaldo}}`, `{{tcBbva}}`… en vez del número escrito. `CIFRAS.aplicarDOM()` los resuelve en el HTML estático (Coach, Finanzas) y `cifrarLiterales()` en las constantes JS del Dashboard, que se inyectan con `innerHTML` y por eso no bastaba con el DOM.
+## Diseño
 
-   **Las 6 estructuras del punto 4 siguen duplicadas**: mover `RUTINA_TASKS` y compañía es un trabajo aparte, pero ya no hay razón técnica que lo impida — solo trabajo. El camino está abierto y probado.
+Cada app tiene su identidad y todas comparten el tema claro/oscuro por `coach-theme`, Inter para
+el cuerpo y Space Grotesk para las cifras, y el truco **`--ov`** (el triplete RGB de las
+superposiciones, `255,255,255` u `0,0,0`, usado como `rgba(var(--ov),.NN)`) para que bordes y
+hovers se inviertan con el tema. La dirección del override varía: Coach y Finanzas son claras por
+defecto (`[data-theme="dark"]` es el override); Dashboard, CuidadoPersonal, Heliescala y las
+pantallas de Skincare/Cabello son oscuras por defecto (`[data-theme="light"]`).
 
-5. **Coach.html, Finanzas.html y cuidadopersonal.html enlazan de vuelta al Dashboard**, y el Dashboard enlaza a todas ellas desde su barra superior fija (`renderQuickApps()`, ver `Dashboard/readme_dashboard.md`) — ya no desde un slide dedicado. Si se agrega una app nueva, agregarle también el enlace de vuelta y una píldora en esa barra.
-6. **Convención de fecha universal**: toda la aplicación usa `const today = () => new Date().toISOString().slice(0,10)` (UTC) como clave de fecha `'YYYY-MM-DD'` — **no** fecha local. Si algún archivo nuevo usa `getFullYear()/getMonth()/getDate()` en su lugar, sus fechas se van a desalinear con las demás apps cerca de medianoche en horario de CDMX (UTC-6). Ya pasó una vez (rutina de Coach, corregido el 2026-07-29) — verificar siempre contra este patrón.
-
-## Convenciones de diseño compartidas (no todas las apps las usan todas)
-
-- **Paleta oscura común**: `--bg:#05050a/#060614/#08080a` (varía ligeramente por app), acentos `--g` verde `#00e87a`, `--r` rojo `#ff3b6b`/`#ff5c5c`, `--b` azul `#3b82f6`, `--p`/`--pu` morado `#b06eff`, `--w`/`--accent` dorado/amarillo. Tipografía `Inter` (Google Fonts) + `Space Grotesk`/monoespaciada para cifras.
-- **Modo oscuro/claro en las 7 apps del ecosistema principal (2026-07-31)**: todas —Coach, Dashboard, Finanzas, y las 4 de `CuidadoPersonal/` (shell+Skincare+Cabello, Salud, Ejercicio, Comida)— soportan ahora ambos temas con un botón `.theme-toggle-btn` (🌙/☀️) y una **clave de `localStorage` compartida entre todas: `coach-theme`** (`'dark'|'light'`) — cambiar el tema en cualquier app lo cambia en todas las demás la próxima vez que se abran (no hay push en vivo entre pestañas salvo el caso de `cuidadopersonal.html`, que si empuja el tema a sus 3 iframes ya cargados). Detalle técnico y trampas a evitar:
-  - **Dirección del override varía por archivo**: Coach y Finanzas ya eran claros por defecto → `:root` = tema claro, `:root[data-theme="dark"]` = override oscuro. Los otros 5 (Dashboard, Salud, Ejercicio, Comida, shell de CuidadoPersonal) ya eran oscuros por defecto → `:root` = tema oscuro, `:root[data-theme="light"]` = override claro. Antes de copiar un bloque de tema de un archivo a otro, verificar cuál es la base de cada uno.
-  - **Truco `--ov` (overlay)**: la mayoría de los bordes/hovers/divisores sutiles estaban hardcodeados como `rgba(255,255,255,.NN)` (apps oscuras) o `rgba(0,0,0,.NN)` (Coach/Finanzas claras) — un solo tono no sirve para ambos temas. Se centralizó en una variable `--ov` que guarda el triplete RGB sin envolver (`255,255,255` o `0,0,0`), usada como `rgba(var(--ov),.NN)` en todas partes — cambiar `--ov` en el override del tema voltea automáticamente todos los overlays de un jalón. **Los `box-shadow` (profundidad) y los overlays de dimming de modales (`.mo`/`.conf` de fondo) se dejaron deliberadamente en negro fijo en ambos temas** — no se invierten, una sombra/dimming oscuro funciona bien sobre fondo claro u oscuro.
-  - **Chart.js NO entiende `var(--x)`**: los `borderColor`/`backgroundColor`/colores de `grid`/`ticks` de Chart.js se pintan directo a un `<canvas>`, que no resuelve variables CSS — hay que resolverlas en JS con un helper `cssVar(n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim()` (agregado a Dashboard, Salud, Ejercicio y Finanzas) y volver a renderizar la gráfica activa al hacer toggle (cada app llama a su propio render de la sección/slide visible desde `toggleTheme()`). Varias gráficas ya tenían este bug *antes* del modo claro/oscuro (colores de otro tema copiados y pegados, p.ej. grid blanco sobre fondo blanco en Finanzas) — quedaron corregidos como efecto colateral.
-  - **Cuidado con comentarios CSS que contienen `--algo-*/--otro-*`**: la secuencia de caracteres `*/` cierra un comentario CSS aunque esté en medio de una palabra — un comentario que decía `--sk-*/--ca-*` cerró el comentario a la mitad y dejó basura de texto metida en el selector de la siguiente regla, invalidándola silenciosamente (pasó al escribir el override oscuro de Skincare en `cuidadopersonal.html`, detectado solo probando con jsdom). Evitar `*/` dentro de cualquier comentario CSS del proyecto.
-  - Antes de asumir que un archivo *no* soporta ambos temas, revisar su `<style>` por `[data-theme=` — esta nota puede quedar desactualizada si se agrega una app nueva sin el toggle.
-- **Sin decoración genérica de "dashboard de IA" (regla añadida 2026-07-31)**: a partir del rediseño de `Coach.html` (2026-07-18) y confirmado al rediseñar `ejercicio.html`/`salud.html`/`comida.html`/`cuidadopersonal.html` (2026-07-31, "el contenido me gusta pero la interfaz no"), el estándar del proyecto es **sin** `background-image` de manchas radiales detrás del body, **sin** `backdrop-filter: blur` en cards/sidebar/topbar/modal (los fondos van opacos), **sin** texto con gradiente (`-webkit-background-clip:text`) en títulos, y **sin** `box-shadow` de glow de neón en botones/tarjetas activas (`0 0 Npx rgba(color,.3)`) — los botones son de color sólido con un hover que solo sube 1px y usa la sombra estándar. Excepción explícita: `Dashboard/dashboard.html` conserva su concepto deliberado de "screensaver de comando" (manchas de fondo en movimiento, texto con gradiente sutil) porque Adán pidió mantenerlo — ahí solo se pulieron detalles de contraste/espaciado, no se quitó la decoración. Al crear o tocar una app nueva, seguir este estándar salvo que se pida explícitamente lo contrario.
-- **Patrones de UI repetidos**: sidebar fija de 245px con `.nav-item`/`.nav-label` (Salud, Ejercicio, Comida, Finanzas), `.card`/`.card-title`/`.card-val`, `.mo`/`.modal` (modal genérico), `.conf`/`.conf-box` (confirmación de borrado genérica `askDel/doConf/closeConf`), `.toast` (notificación flotante), `.pbar`/`.pfill` (barra de progreso). `CuidadoPersonal/cuidadopersonal.html` usa tabs superiores en vez de sidebar porque aloja 5 apps a la vez.
-- **`uid()`**: `Date.now().toString(36) + Math.random().toString(36).slice(2)` — igual en todas las apps que generan IDs.
-- **Sin dependencias externas más allá de**: Google Fonts (todas), Chart.js 4.4 vía CDN (Salud, Ejercicio, Finanzas — **no** Coach ni CuidadoPersonal-shell, que dibujan sus gráficas/radares a mano en `<canvas>`; tampoco Dashboard desde el 2026-08-07, cuando se quitó su único uso —el radar de habilidades— a favor de barras en HTML/CSS puro, ver `Dashboard/readme_dashboard.md`).
-- **Exportar/Importar JSON**: la mayoría de las apps (Finanzas, Salud, Ejercicio) tienen un botón de exportar respaldo JSON en la barra lateral. Coach, Skincare y Cabello **no** lo tienen todavía.
-
-## Cómo mantener esto al día
-
-Cuando toques cualquier `.html` de la tabla de arriba:
-1. Actualiza su `.md` correspondiente en el mismo cambio (estructura, funciones, modelo de datos si cambió).
-2. Si el cambio afecta una clave de `localStorage` que otro archivo lee (ver "Registro maestro" arriba), actualiza también ese otro archivo y su `.md`.
-3. Si el cambio toca una de las 3 estructuras duplicadas entre Coach y Dashboard (sección "Ramificaciones" #3), replica el cambio en ambos archivos — no hay atajo, hay que copiar a mano.
-3bis. **Cuando cambie un hecho financiero (una deuda liquidada, un saldo, una fecha del plan), no basta con los ítems de checklist.** Hay que barrer también los párrafos introductorios, los hallazgos del diagnóstico de Coach, `PHASES` y `META_DETALLE` del Dashboard, y los avisos de calendario. La forma rápida de no dejar nada: `grep` de las cifras y fechas viejas (ej. `13,372`, `3,868`, `Ene 2027`) sobre `Coach/Coach.html` y `Dashboard/dashboard.html`. Pasó el 2026-08-13: la primera pasada actualizó los checkboxes pero dejó vivos los textos que los rodeaban, y Adán lo detectó.
-4. Si agregas una carpeta/app nueva, agrégala a la tabla "Mapa de carpetas" y al "Registro maestro de claves" de este archivo.
-5. **Toda migración de `finanzasmx_v2` va en las dos apps.** Cuando un dato real de Finanzas cambia (un saldo pagado, una inversión vendida) y se corrige con una migración de bandera en el `init()` de `Finanzas/Finanzas.html`, hay que replicarla en `Dashboard/dashboard.html` con `rawGet`/`rawSet` y **la misma bandera**, llamada antes del primer `loadAll()`. Motivo: Adán normalmente abre el Dashboard primero, y la migración de Finanzas solo corre si abre Finanzas. Ya pasó tres veces — `fixBanamexIfNeeded()` (2026-08-02), `fixPagos20260813IfNeeded()` y `fixMsiBBVA20260813IfNeeded()` (ambas 2026-08-13). La bandera compartida hace que la primera app que arranque aplique el fix y la otra no lo repita. **Si una deuda resulta no existir, se borra del array, no se pone en `$0`** — en $0 aparecería para siempre en el bloque "✅ Liquidadas" de Finanzas como si Adán la hubiera pagado.
+- **Dashboard**: screensaver de comando (manchas animadas, vidrio); lenguaje "consola" en
+  Habilidades Base, Mis Metas y el panel de detalle.
+- **Coach**: consola cian + verde ácido.
+- **Finanzas**: `.fx-*` y el instrumento `.btcx-*`.
+- **CuidadoPersonal**: barra de vidrio + carril de iconos, `vidrio.css` como material único.
+- **Chart.js** solo lo usan Salud y Finanzas, y **no entiende `var(--x)`**: los colores se
+  resuelven con `cssVar(n)` y se repinta la gráfica activa al cambiar de tema. Coach, Ejercicio,
+  Vestimenta y el Dashboard dibujan lo suyo en HTML/SVG/canvas propio.
+- **Nunca `*/` dentro de un comentario CSS**: cierra el comentario y rompe el siguiente selector
+  sin error.
+- Los rediseños se acuerdan en `diseno-<tema>/` (Main + direcciones descartadas) antes de tocar
+  el HTML; Adán elige viendo.
+- Se verifica en navegador con Playwright a **1600 y 390 px** (y 1366/1024 si es layout), en los
+  dos temas, midiendo geometría, desbordes y consola.

@@ -36,7 +36,12 @@ App estática de una sola página (sin build, sin servidor — se abre con doble
 - Cada entrada de contenido dentro de un `*_RICH` tiene su key alineada con un id del objeto `T` en `core.js`.
 - Los archivos `data-*.js` cierran con el comentario `};  // fin NOMBRE_RICH` — útil como ancla de búsqueda al editar.
 
-- **Corrección 2026-08-01**: esta nota decía "el usuario quitó las secciones de Quiz — no las reagregues", pero es falso a la fecha de esta revisión — `quiz-section`/`quiz-card` existen y se usan activamente (54 veces en 6 módulos: `data-istqb.js`, `data-istqb-genai.js`, `data-testing.js`, `data-coding.js`, `data-metod.js`, `data-wayve.js`), con soporte CSS y el helper `toggleQuiz()` de `core.js` funcionando. Es contenido legítimo (exámenes de práctica) — no lo borres asumiendo que está prohibido.
+- Las secciones de **Quiz** (`quiz-section`/`quiz-card`, con `toggleQuiz()` de `core.js`) son
+  contenido legítimo —exámenes de práctica en 6 módulos— y no se borran.
+- `data-devops.js` lleva también los 10 temas de `linux` (no hay `data-linux.js`).
+- `js/data-python-intro.js` → `PY_INTRO`: explicación en español llano de cada tema de Python. **No
+  la carga `entrevistas.html`**; la consume solo `_generar-datos-dashboard.js` para el Dashboard
+  (ver `readme_entrevistas.md`).
 
 ## Al hacer cambios
 

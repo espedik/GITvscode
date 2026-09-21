@@ -32,8 +32,7 @@ En la prosa se escribe un marcador y el módulo lo sustituye al cargar la págin
 `datos-maestros.js` no solo guarda datos: también **la lógica que dos apps tienen que
 compartir**. La primera es `CIFRAS.balanceMeses(hastaYM, n, opts)`, que arma la serie de los
 últimos `n` meses para la gráfica de balance del **Dashboard** (bajo el calendario) y la de
-**Finanzas** (`ch-bal`). Estuvo unas horas duplicada en las dos, hasta que se vio que daban
-cifras distintas del mismo mes.
+**Finanzas** (`ch-bal`): dos copias de la misma lógica daban cifras distintas del mismo mes.
 
 Cada mes se arma en **dos capas**:
 
@@ -130,14 +129,9 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 **Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas:
 `{{autoAPagar}}` (meses × pago) y `{{autoInteres}}` (lo que cuesta en puro interés).
 
-**Las dos tarjetas siguen subiendo.** BBVA: $34,000 (24-ago) → $37,000 (7-sep) → **$39,000**
-(16-sep-2026). Banamex: en $0 desde el 13-ago (Adán pagó los $9,000 completos), volvió a tener
-saldo el 1-sep con cuatro compras de un día —plancha $1,902, dutasterida $1,560, minoxidil $900 y
-mouse $1,623 = $5,985— y de ahí $7,000 (7-sep) → **$7,800** (16-sep). Con la BBVA por encima de
-su mínimo (el 55.7% se come los $1,500), lo que crece es el saldo, no la cuota: `minimosDeuda` y
-`margen` no se mueven; `deudaCara` sí, y hoy va en **$46,800**, más que antes de liquidar la
-Banamex en agosto. Cada subida es una entrada de `MIGRACIONES` (`_gastos20260901`,
-`_tarjetas20260907`, `_deudas20260916`).
+**Las dos tarjetas están subiendo** y cada saldo nuevo que Adán reporta es una entrada de
+`MIGRACIONES`. Con la BBVA por encima de su mínimo (el 55.7% se come los $1,500), lo que crece es
+el saldo, no la cuota: `minimosDeuda` y `margen` no se mueven; `deudaCara` sí.
 
 **La deuda del departamento** (`d012`, $13,000, 16-sep-2026: *"tengo una deuda de 13,000 por
 temas de mi apartamento"*) es `type:'loan'` a 0%: suma en `deudaTotal` (por eso pasa de $349,550 a
@@ -161,18 +155,9 @@ globo de "se mueve dinero" de cada día.
 pintar. Entra en cuanto Adán diga cuánto abona al mes y qué día.
 
 **Un `day` equivocado no mueve ninguna cifra** — `minimosDeuda` y `margen` suman igual — así que
-ningún cálculo lo delata: solo se ve en el calendario, mirando el día. Dos casos, los dos el
-28-ago-2026:
-
-- El del auto estaba en `1` y el calendario metía sus $6,700 junto a la renta.
-  Adán: *"credito automotriz no lo pago el los dias 1 primero"*.
-- El del iPhone estaba en `0`, que para el calendario significa *sin día*: una deuda viva de
-  $494 al mes que **no aparecía en ninguna fecha**. Lo encontró el control 9 del verificador,
-  añadido a raíz del primero.
-
-Por eso el **control 9** exige día a toda deuda con saldo y mínimo, y el **control 10** compara
-esta tabla contra el maestro fila a fila. Documentar un dato que nadie verifica es justo como se
-desincronizó todo lo demás.
+ningún cálculo lo delata: solo se ve en el calendario. `day: 0` significa *sin día* y la deuda
+desaparece de todas las fechas. Por eso el **control 9** exige día a toda deuda con saldo y
+mínimo, y el **control 10** compara esta tabla contra el maestro fila a fila.
 
 ⚠️ **`deudaMsi` no son solo los MSI de tarjeta.** El criterio real es `type === 'other'` con saldo
 vivo, o sea **deuda a 0% de interés**: ahí entra el crédito de AT&T del iPhone, que no es de
@@ -195,7 +180,7 @@ pero el nombre de la variable se queda corto.
 |---|---|---|
 | `{{escuelaAleman}}` | Cenlex Santo Tomás | Clases presenciales desde el 25-ago-2026 |
 | `{{proteinaMeta}}` | 186 | Meta diaria de proteína. La citan la rutina (whey de la noche) y la ficha de whey de Salud |
-| `{{kapitelAleman}}` | 10 | El capítulo que cursa en Cenlex. Filtró el slide de Alemán del Dashboard hasta el 2026-09-02; desde que esa pantalla es vocabulario y Partizip, ya no filtra nada — queda como dato del proyecto |
+| `{{kapitelAleman}}` | 10 | El capítulo que cursa en Cenlex. Dato del proyecto; no filtra ninguna pantalla |
 
 ### La rutina diaria
 
@@ -211,18 +196,12 @@ Devuelve **copia profunda** con los `href` resueltos, para que una app no pueda 
 otra dentro de la misma página. `dias`: 0=domingo…6=sábado. Los bloques con `fijo:true` (ALTEN)
 salen en la línea de tiempo pero no llevan checkbox ni suman al progreso.
 
-Estaba copiada en `dashboard.html` y `Coach.html`, 17.5 KB en cada uno. Era la estructura más
-grande y más tocada de las duplicadas, y llegó a divergir 6 días.
-
 ### Los recursos de las rutas de habilidad
 
 Cada paso de una ruta (`APRENDIZAJE[hab].subs[].r`) y cada habilidad
-(`APRENDIZAJE[hab].recursos`) traen **con qué** hacerlo. Hasta el 2026-09-02 eso era
-una cadena de texto y el bloque «Con qué» pintaba un emoji de libro delante, fuera
-lo que fuera: un podcast, el portal del SAT o el propio calendario de Adán salían
-igual, y ninguno llevaba a ninguna parte.
-
-Ahora cada recurso dice **qué es** y **cómo llegar**:
+(`APRENDIZAJE[hab].recursos`) traen **con qué** hacerlo, y cada recurso dice **qué es** y **cómo
+llegar** (una cadena de texto pintaba un libro delante de todo, fuera podcast o portal, y no
+llevaba a ninguna parte):
 
 | Tipo | Qué lleva | Qué hace el botón |
 |---|---|---|
@@ -233,9 +212,8 @@ Ahora cada recurso dice **qué es** y **cómo llegar**:
 Todos llevan `nota`, que es la frase de por qué ESE recurso para ESE paso.
 
 **El título de un libro no se escribe aquí**: se guarda su `id` y el título y el autor
-salen de BIBLIOTECA. Repetirlo es error declarado en el control 18. Por eso los **16
-libros** que las rutas recomendaban y no estaban en la biblioteca se añadieron con su
-ficha, y entraron también en la lista de la compra: 44 libros pasaron a **60**.
+salen de BIBLIOTECA (repetirlo es error declarado en el control 18). Todo libro que una ruta
+recomiende tiene ficha en la biblioteca y entra en la lista de la compra.
 
 Las **33 URLs se comprobaron cargando cada una**. Dos respondieron 403 a la
 comprobación automática — Wayve y Meta bloquean bots — y se verificaron abriéndolas
@@ -248,12 +226,10 @@ alguien añade un paso en medio — y los repinta.
 
 ### La biblioteca
 
-`BIBLIOTECA` — los **44 libros** en 9 grupos. Como el kit de higiene, hasta el
-2026-09-02 eran cadenas `"Título — Autor"` dentro de `LISTA_COMPRAS`, y ahora cada
-uno es un libro con su ficha:
+`BIBLIOTECA` — los **60 libros** en 9 grupos, cada uno con su ficha:
 
 ```js
-CIFRAS.BIBLIOTECA.todos              // los 44, sin agrupar
+CIFRAS.BIBLIOTECA.todos              // los 60, sin agrupar
 CIFRAS.BIBLIOTECA.porGrupo           // lo que usa la lista de la compra
 CIFRAS.BIBLIOTECA.deTextoCompra(t)   // del renglón al libro
 ```
@@ -337,10 +313,8 @@ en el dashboard.
 
 ### El kit de higiene y el cuidado de los ojos
 
-`KIT_HIGIENE` (34 artículos en 7 grupos) y `CUIDADO_OJOS` (12 en 4). Hasta el
-2026-09-02 esto eran **cadenas de texto sueltas** dentro de `LISTA_COMPRAS`: no
-había ningún objeto detrás, así que no había dónde colgar una ficha. Ahora cada
-artículo es un producto y las dos listas de la compra salen de aquí:
+`KIT_HIGIENE` (34 artículos en 7 grupos) y `CUIDADO_OJOS` (12 en 4). Cada artículo es un
+producto con ficha y las dos listas de la compra salen de aquí:
 
 ```js
 CIFRAS.KIT_HIGIENE.todos            // los 34, sin agrupar
@@ -380,11 +354,9 @@ CIFRAS.RUTINA_PIEL.deTextoCompra(txt) // y de vuelta: del renglón al producto
 | Eucerin Hyaluron-Filler + Epigenetic Noche | PM 3 | 50 ml | ~100 d | $210 |
 | Aztec Secret Indian Healing Clay | opcional | 454 g | ~175 d | $50 |
 
-**Cada producto trae una `ficha`** (2026-09-02). Hasta esa fecha las rutinas sabían
-decir *cómo* se usa cada cosa — eso vive en `am.uso`/`pm.uso`/`uso` y sigue ahí —
-pero no *qué es* ni *por qué sirve*. Ese hueco es la ficha, y la tienen los **68
-artículos de las cinco categorías**: skincare, cabello, suplementos, kit de higiene
-y cuidado de los ojos.
+**Cada producto trae una `ficha`.** *Cómo* se usa vive en `am.uso`/`pm.uso`/`uso`; *qué es* y
+*por qué sirve* es la ficha, y la tienen los artículos de las cinco categorías: skincare,
+cabello, suplementos, kit de higiene y cuidado de los ojos.
 
 | Campo | Qué lleva |
 |---|---|
@@ -444,10 +416,8 @@ API las devuelve con host `thumb.wikimedia.org` y parámetros `utm_` pegados det
 ese host no es fiable y dejó 31 fotos rotas en el dashboard. No se vio al montar las
 hojas de contacto — ahí a veces redirige — sino midiendo con una espera corta.
 
-**El renglón en celular** se rehizo el 2026-09-02: el botón «Qué es» caía a **1 píxel**
-por debajo del cuadro de marcar y alineado con él, así que parecían el mismo control, y
-el nombre se cortaba a media palabra. Ahora el nombre se envuelve, la barra de botones
-se alinea con el NOMBRE (32px) y hay 9px de aire. Los cuatro botones se reparten en dos
+**El renglón en celular**: el nombre se envuelve, la barra de botones se alinea con el NOMBRE
+(32px) y hay 9px de aire, para que «Qué es» no parezca parte del cuadro de marcar. Los cuatro botones se reparten en dos
 filas **a propósito**: con los nombres de tienda completos no caben en una sola ni en un
 iPhone SE — medido, sobran 86px — y dejándolos partirse solos «Ya lo tengo» caía a una
 segunda línea sin relación con nada. Arriba lo que haces con el producto, abajo dónde
@@ -457,9 +427,8 @@ ilegibles.
 Hay **19 siluetas** (`bomba`, `gotero`, `tubo`, `tarro`, `bote`, `botella`, `tela`,
 `pastillas`, `caja`, `polvo`, `sobre`, `bolsa`, `barra`, `cepillo`, `utensilio`,
 `aparato`, `pano`, `gafas`, `gotas`) y viven en `PF_FORMAS`, dentro de
-`dashboard.html`. Cada producto elige la suya con `frasco` — se llamaba `envase`
-hasta el 2026-09-02, pero en `SUPLEMENTOS` ese nombre ya significaba *cuántas
-cápsulas trae el bote*, y un nombre no puede querer decir dos cosas.
+`dashboard.html`. Cada producto elige la suya con `frasco` (no `envase`, que en
+`SUPLEMENTOS` ya significa *cuántas cápsulas trae el bote*).
 
 **Los días y el costo NO se escriben**: salen de `contenido / dosisDia`. Por eso el protector se
 lleva casi la mitad del gasto — dos dedos diarios, que es la dosis correcta, vacían un bote de
@@ -469,11 +438,9 @@ y se editan aquí.
 `LISTA_COMPRAS.skincare` es un **getter sobre esta lista**, no una lista aparte: un producto por
 necesidad y sin alternativas, la misma regla que ya tenía `cabello`.
 
-**Nació el 2026-09-01 de una contradicción real**: los productos estaban escritos a mano en dos
-sitios que no coincidían. `RUTINA_TASKS` aplicaba La Roche-Posay y la guía de Skincare
-recomendaba Isdin; `RUTINA_TASKS` ponía el adapaleno las 7 noches y la guía mandaba alternarlo
-con un BHA que él no usa en ninguna parte. Ningún control miraba texto de productos, así que
-nadie lo vio. Ahora lo vigila el **control 11**.
+Existe porque los productos escritos a mano en dos sitios dejaron de coincidir (una marca en
+`RUTINA_TASKS` y otra en la guía) y ningún control miraba texto de productos. Ahora lo vigila el
+**control 11**.
 
 ### La rutina del cabello
 
@@ -568,9 +535,8 @@ Es lo que evita que el calendario se congele como se congeló la vieja barra de 
 | `CuidadoPersonal/cuidadopersonal.html` | `<script src="../Dashboard/datos-maestros.js">` | Skincare y Cabello: `CIFRAS.RUTINA_PIEL`, `CIFRAS.RUTINA_PELO` y las horas desde `CIFRAS.rutina()` |
 | `CuidadoPersonal/salud.html` | `<script src="../Dashboard/datos-maestros.js">` | `CIFRAS.SUPLEMENTOS` (siembra la lista y el botiquín) y `CIFRAS.CHEQUEO` |
 
-El Dashboard es donde vive el archivo porque es el centro del proyecto, y ahí ya estaban
-`entrevistas-data.js`, y `aleman-data.js`, que guarda las 40 lecciones y ahora mismo no
-lo carga ninguna pantalla. El vocabulario de alemán vive en `Aleman/vocab-datos.js`,
+El Dashboard es donde vive el archivo porque es el centro del proyecto, junto a
+`entrevistas-data.js` y `aleman-data.js` (en reposo). El vocabulario de alemán vive en `Aleman/vocab-datos.js`,
 junto con su diseño (`vocab.css`) y su motor (`vocab.js`), porque la pantalla principal
 del vocabulario es la de esa app y el Dashboard solo la refleja. Ahí viven también las
 **siete familias** en las que se agrupan las 37 secciones, que es lo que pinta el índice
@@ -583,17 +549,14 @@ lateral de las dos pantallas.
 Cuando Adán reporta un saldo nuevo, se añade una entrada a `MIGRACIONES` en `datos-maestros.js`.
 Corre **una sola vez** (bandera propia en localStorage) y nunca revierte un cambio hecho a mano.
 
-Antes había que escribir cada migración **dos veces** —en `Finanzas.html` y como espejo en
-`dashboard.html`— porque cualquiera de las dos puede ser la primera app que se abra. Coach no
-sabía migrar y por eso enseñaba saldos viejos. Ahora se escribe una vez y la ven las tres.
+Se escribe una vez y la ven las tres apps, sea cual sea la primera que se abra.
 
-Las migraciones anteriores a esa fecha (`_banamex9k`, `_pagos20260813`, `_msibbva20260813`,
+Las migraciones anteriores al 2026-08-24 (`_banamex9k`, `_pagos20260813`, `_msibbva20260813`,
 `_ahorro20260817`) siguen en sus archivos: ya corrieron y tienen bandera, son inertes.
 
-Las vivas, en orden: `_gastos20260901` (Banamex vuelve a $5,985 + seis gastos), `_tarjetas20260907`
-(BBVA $37,000, Banamex $7,000), `_deudas20260916` (BBVA $39,000, Banamex $7,800, entra `d012` y la
-venta de BTC `btc004`). Una migración que añade un registro lo hace **por id y solo si falta**:
-así el navegador que arranca en blanco (que ya lo trae del seed) no lo duplica.
+Las vivas están en `MIGRACIONES`, en orden, cada una con la fecha en su nombre. Una migración
+que añade un registro lo hace **por id y solo si falta**: así el navegador que arranca en blanco
+(que ya lo trae del seed) no lo duplica.
 
 ---
 
@@ -604,13 +567,14 @@ así el navegador que arranca en blanco (que ya lo trae del seed) no lo duplica.
 | `Dashboard/` | `dashboard.html` | Panel central, "Mi Día" en vivo, agrega todo | *(solo lee, salvo checks de Coach)* |
 | `Coach/` | `Coach.html` | Plan Maestro, rutina, radar de habilidades | `coach_rutina_v1`, `coach_checks_v1`, `radarp_*` |
 | `Finanzas/` | `Finanzas.html` | Finanzas reales, GBM, BTC, deudas | `finanzasmx_v2` |
-| `CuidadoPersonal/` | `cuidadopersonal.html` + `salud`/`ejercicio`/`comida` | Shell con 7 subtabs | `skincare_v1`, `misalud_v1`, `mirutina_v1`, `comida_v1` |
+| `CuidadoPersonal/` | `cuidadopersonal.html` + `salud`/`ejercicio`/`comida` | Shell de 8 áreas (Skincare, Cabello, Dentista, Ojos nativas; Salud, Ejercicio, Comida, Vestimenta en iframe) | `skincare_v1`, `cabello_v1`, `dentista_v1`, `misalud_v1`, `mirutina_v1`, `comida_v1` |
 | `Vestimenta/` | `vestimenta.html` | Guardarropa y compras | `vestimenta_v1` |
-| `Aleman/` | 35+ páginas | Estudio A1/A2. Aloja el vocabulario entero (`vocab-datos.js` + `vocab.css` + `vocab.js`), que el Dashboard carga | 1.516 palabras en 37 secciones agrupadas en 7 familias + Partizip |
-| `Entrevistas/` | `index.html` + `js/data-*.js` | Prep. técnica automotriz, 229 temas | `theme` |
+| `Aleman/` | 41 lecciones + `vocabulario.html` | Estudio A1/A2/Kapitel 10. Aloja el vocabulario entero (`vocab-datos.js` + `vocab.css` + `vocab.js`), que el Dashboard carga | `al_*_v1` |
+| `Entrevistas/` | `entrevistas.html` + `js/data-*.js` | Prep. técnica automotriz, 229 temas | `theme`, `sidebar-collapsed`, `study-done-v2` |
+| `Aeroresinas/`, `Heliescala/` | `aeroresinas.html`, `heliescala.html` + `dossier.html` | Las dos webs públicas del negocio del papá de Adán | solo tema e idioma |
 
-Detalle por app en su propio `.md` (`readme_dashboard.md`, `readme_finanzas.md`, …). Este índice
-es el punto de entrada; esos son la historia larga de cada cambio.
+Detalle por app en su propio `readme_<app>.md`; el mapa completo de claves y conexiones está en
+[`../README.md`](../README.md).
 
 ---
 
@@ -638,19 +602,12 @@ Cada derivada declara su `dep: [...]` en `CLAVES`. **El grafo no se cree: se mid
 perturba cada constante, observa qué se movió de verdad y lo compara con lo declarado — así una
 dependencia que alguien olvide declarar al añadir una fórmula salta en el momento.
 
-### Y una AFIRMACIÓN tampoco cambia sola (regla del 2026-09-03)
+### Y una AFIRMACIÓN tampoco cambia sola
 
-Las cifras se ajustan solas porque son getters. **Las frases no.** Y una frase envejecida miente
-igual que un número viejo:
-
-> Lo que decían hasta el 3-sep-2026: *"Banamex ya está en $0"*, *"la única deuda cara que queda"*, *"✅ liquidada"*.
-
-El 1-sep-2026 la TC Banamex, liquidada el 13 ago, volvió a tener saldo. `deudaCara` y `margen` se
-movieron solos; **once frases** siguieron diciendo que estaba en $0 — siete en Coach, tres en el
-Dashboard y una en el `.md`. Y la peor no era una frase: en `dashboard.html` el paso "Banamex" de
-la *ruta a deuda cara* se daba por cumplido leyendo la libreta de logros (`!!lgBana || …`), así
-que habría enseñado **"✅ Liquidada 🎉" para siempre**, con la barra al 100% y el paso activo
-saltando a BBVA como si solo quedara una tarjeta cara.
+Las cifras se ajustan solas porque son getters. **Las frases no**, y una frase envejecida miente
+igual que un número viejo: una tarjeta liquidada que vuelve a tener saldo mueve `deudaCara` y
+`margen` solos, pero *"ya está en $0"* y *"✅ liquidada"* se quedan escritos en tres apps, y una
+lógica que dé el hito por cumplido leyendo la libreta de logros lo enseñaría para siempre.
 
 **La regla, y quién la vigila:**
 
@@ -661,9 +618,8 @@ saltando a BBVA como si solo quedara una tarjeta cara.
 | Un logro registrado **no puede tapar el presente**: si el saldo vuelve, el paso se reabre y lo dice con su fecha al lado. | a mano — ver `renderCoach()` en `dashboard.html` |
 | Al añadir una deuda al maestro, añade cómo la nombra la prosa en **`ALIAS_DEUDA`** (`verificar-sincronia.js`). Sin alias, nadie vigila lo que se diga de ella. | — |
 
-Y cuando un saldo se mueve, el aviso de **«cambió una variable maestra»** ya no dice "revisa los
-textos": **lista los archivos** que nombran esa deuda y cuántas veces sale en cada uno. Ese aviso
-genérico es justo lo que hizo que el 1-sep se revisara Coach y no el Dashboard.
+Y cuando un saldo se mueve, el aviso de **«cambió una variable maestra»** **lista los archivos**
+que nombran esa deuda y cuántas veces sale en cada uno: se revisan todos, no solo el primero.
 
 ```
 Dónde se habla de esa deuda — revísalos TODOS, no solo el primero:
@@ -705,17 +661,15 @@ Qué revisa:
 - `GYM_RUTINA_DEFAULT` contra `ejercicio.html`, que sigue siendo un respaldo duplicado.
 - Que las fases y las prioridades del maestro aparezcan en el HTML de Coach.
 - Las cifras que ya tienen variable pero siguen escritas a mano.
-- **Los números del maestro escritos crudos en el código** (sin `$`), que era el punto ciego: así
-  se descubrió que el gimnasio tenía dos precios a la vez en Finanzas. Acepta dos patrones
+- **Los números del maestro escritos crudos en el código** (sin `$`): así es como una app acaba
+  con dos precios del mismo gimnasio a la vez. Acepta dos patrones
   legítimos: `dato || 500000` (fallback, solo se usa si no hay dato) y las asignaciones dentro de
   una migración (`balance = 1708` es una foto histórica, no una copia).
 - **Que el mapa de dependencias declarado coincida con el real**, midiéndolo por perturbación.
 - **Que los valores citados en los `.md`** coincidan con el maestro, con archivo y línea. Este es
   el que faltaba: los getters se recalculan solos, las tablas de la documentación no.
 - Los `{{marcadores}}` que no existan en el catálogo.
-- **La FORMA de los datos, no solo sus importes** (control 9). Los ocho anteriores vigilan que
-  los números coincidan entre sitios; ninguno miraba si el dato tiene sentido en sí mismo. Aquí
-  se exige día de pago a toda deuda con saldo y mínimo, tipos correctos en cada campo, fechas
+- **La FORMA de los datos, no solo sus importes** (control 9): se exige día de pago a toda deuda con saldo y mínimo, tipos correctos en cada campo, fechas
   reales, `balance <= total`, ids únicos, cobros dentro de 1-28, fases sin huecos ni solapes, y
   que las sumas de `PROYECTO` cuadren con sus partes.
 - **La tabla de días de pago del `.md` contra el maestro** (control 10), fila a fila. El control 7
@@ -735,10 +689,6 @@ Qué revisa:
   aparecer en una subtarea de la rutina de la mañana y los de la noche en una de la noche: mover
   el magnesio a la mañana en un sitio y no en el otro no mueve ninguna cifra.
 
-Los dos últimos nacieron el 28-ago-2026, del `day` del auto. Un `day` equivocado no mueve ninguna
-cifra, así que ningún control anterior podía verlo. El 9 encontró de paso un segundo caso que
-llevaba meses: el iPhone, con `day: 0`, no aparecía en ninguna fecha del calendario.
-
 Los valores **no están escritos en el verificador**: los pide al maestro. Tenerlos a mano era el
 mismo fallo que persigue — con `$292,000` en su lista seguía vigilando el saldo viejo.
 
@@ -750,15 +700,11 @@ ignorándose, y entonces el verificador deja de servir.
 **Un hook `Stop` lo corre solo** al final de cada turno, con `--hook`: solo habla cuando encuentra
 un problema. Un verificador que saluda cuando todo está bien se vuelve ruido y se acaba ignorando.
 
-**La primera vez que se corrió encontró 7 textos** de la rutina de cabello mejorados en Coach el
-2026-08-18 (commit `0ef03b4`, *"Explica qué ES una mascarilla capilar"*) que nunca se replicaron
-al Dashboard: 6 días divergentes sin que nadie lo notara.
-
 ---
 
-## Lo que todavía está duplicado
+## Las estructuras que viven aquí
 
-Ya no queda ninguna estructura copiada entre archivos. Las siete viven aquí:
+Ninguna estructura está copiada entre archivos; todas se leen de aquí:
 
 | Estructura | Qué es | Cómo se lee |
 |---|---|---|
@@ -774,9 +720,9 @@ Ya no queda ninguna estructura copiada entre archivos. Las siete viven aquí:
 
 `verificar-sincronia.js` vigila que **ninguna vuelva a incrustarse** en un HTML.
 
-### Los dos casos que no son literal contra literal
+### Lo que no es literal contra literal
 
-No todo era una copia que se pudiera mover, y conviene saber por qué siguen necesitando cuidado:
+Tres casos que no son una copia movida y siguen necesitando cuidado:
 
 - **`GYM_RUTINA_DEFAULT`** es solo el respaldo para un navegador que nunca abrió `ejercicio.html`;
   esa app guarda la rutina real en su propio `localStorage` y gana sobre este literal. El
@@ -785,9 +731,9 @@ No todo era una copia que se pudiera mover, y conviene saber por qué siguen nec
   secciones, no generado desde el literal. Convertirlo exigiría rediseñar esas secciones. El
   verificador comprueba que las fases y las prioridades del maestro aparezcan ahí, y las cifras
   que contienen ya usan `{{marcadores}}`.
-- **`LISTA_COMPRAS`** se armó cruzando `RECETAS` de comida.html, `SKIN_DB`/`HAIR_DB` de
-  cuidadopersonal.html y `SUPP_CATALOG` de salud.html: tres estructuras distintas, así que no se
-  puede derivar en vivo. Vive aquí para tener un solo sitio donde editarlo.
+- **`LISTA_COMPRAS`**: sus siete categorías son **getters** — `comida` sobre `RECETARIO`,
+  `skincare` y `cabello` sobre `RUTINA_PIEL`/`RUTINA_PELO`, `suplementos`, `higiene`, `ojos` y
+  `libros` sobre sus catálogos. Se edita el catálogo, nunca la lista.
 
 ### El recetario
 
@@ -802,12 +748,9 @@ CIFRAS.RECETARIO.porPasillo          // {Verduras:[…], Frutas:[…], …}
 CIFRAS.LISTA_COMPRAS.comida          // === porPasillo
 ```
 
-**`LISTA_COMPRAS.comida` se deriva de aquí.** Hasta el 2026-09-01 el recetario
-vivía en `comida.html` y la lista estaba escrita a mano en este archivo; el
-comentario de ese HTML lo admitía: *"si se agrega o quita una receta, hay que
-replicar el cambio allá a mano"*. Coincidían de casualidad (30 ingredientes, 0
-diferencias medidas) y se rompían al primer cambio. Ahora agregar una receta
-agrega sus ingredientes a la compra sin tocar nada más.
+**`LISTA_COMPRAS.comida` se deriva de aquí**: agregar una receta agrega sus ingredientes a la
+compra sin tocar nada más. Una lista escrita aparte coincidía de casualidad y se rompía al
+primer cambio.
 
 Lo que no entra en una receta: café, picante, cítricos en exceso, chocolate,
 frituras y cebolla/ajo **crudos** (le disparan el reflujo; cocidos sí van), y los
@@ -829,7 +772,7 @@ El **control 18** vigila los 94 recursos de las rutas: que ningún libro apunte 
 
 El **control 17** vigila lo que `pfEnlazar` no puede: que los nombres de la guía dental — la única lista escrita a mano que queda — sigan resolviendo a un producto del kit, y que las tres apps carguen `ficha.css`, `ficha.js` y el hueco `pfFondo`. Comprueba la **etiqueta** `<script src=...>`, no la palabra «ficha.js», que también aparece en un comentario y no carga nada.
 
-El **control 16** hace lo mismo con los 44 libros, aparte porque sus campos son otros, y añade lo que un producto no tiene: año y páginas plausibles, y que la portada sea de Open Library o haya con qué dibujar el libro. Probado rompiendo el maestro de cuatro formas, incluida la que ocurrió de verdad.
+El **control 16** hace lo mismo con los 60 libros, aparte porque sus campos son otros, y añade lo que un producto no tiene: año y páginas plausibles, y que la portada sea de Open Library o haya con qué dibujar el libro. Probado rompiendo el maestro de cuatro formas, incluida la que ocurrió de verdad.
 
 El umbral de longitud va **por campo**: `que`, `hace`, `sirve` y `ojo` tienen que
 explicar algo y se les exigen 20 caracteres; `activo` y `tarda` pueden ser correctos

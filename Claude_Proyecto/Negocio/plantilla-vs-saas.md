@@ -2,6 +2,10 @@
 
 *Documento de decisión, no un plan de implementación. Escrito el 2026-08-15 a petición de Adán: "si quisiera replicar todos mis proyectos para que otras personas puedan usarlo, o crear una super aplicación, ¿debería usar otro stack o qué debería hacer?"*
 
+> Es una foto de esa fecha. Las referencias a líneas de código y a `BASE_SALARY` escrito a mano ya
+> no aplican: desde el 2026-08-24 los importes salen de `Dashboard/datos-maestros.js`. La
+> conclusión (plantilla primero, SaaS después) sigue vigente.
+
 ## Contexto
 
 Adán preguntó qué stack necesitaría para replicar su ecosistema de apps personales (Dashboard, Coach, Finanzas, CuidadoPersonal) y venderlo a otras personas, o convertirlo en una "super app". No sabía si su stack actual (HTML/CSS/JS vanilla, sin backend, `localStorage`) le alcanza o necesita algo distinto. Pidió ayuda para decidir entre rutas antes de comprometerse, con tiempo/costo/riesgo de cada una.

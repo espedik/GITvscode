@@ -19,8 +19,8 @@ Un botón (`cambiarModo('personal'|'empresa')`) alterna dos `<div class="vista-p
 independientes, cada uno con su sidebar y su `<main>`. Solo la sección elegida se muestra
 (`irASeccion(sec, tab, el)`).
 
-- **🪙 Personal**: `#perfil` · `#rutina` · `#aprendizaje` · `#perfil-rico` · `#networking` ·
-  `#marca-personal` · `#legal-personal`
+- **🪙 Personal**: `#perfil` · `#rutina` · `#aprendizaje` · `#perfil-rico` · `#marca-personal` ·
+  `#legal-personal`
 - **🏢 Empresa**: `#posibles-negocios` · `#mas-ideas` · `#crear-empresa` · `#legal`
 
 Tema claro/oscuro con toggle 🌙/☀️, persistido en `coach-theme` y aplicado como `data-theme` en
@@ -30,8 +30,8 @@ Tema claro/oscuro con toggle 🌙/☀️, persistido en `coach-theme` y aplicado
 
 ## El sistema visual: "consola"
 
-Rediseño del 2026-08-30 (*"lo quiero futurista, que me aporte valor, que sea entendible y con las
-secciones bien distribuidas"*). Es el mismo lenguaje que estrenaron Habilidades Base y Mis Metas
+Adán: *"lo quiero futurista, que me aporte valor, que sea entendible y con las secciones bien
+distribuidas"*. Es el mismo lenguaje que estrenaron Habilidades Base y Mis Metas
 en el Dashboard: esquinas rectas de 3 px con brackets de mira, etiquetas en monoespaciada con
 mucho tracking, cifras tabulares y un filete de acento que enciende lo activo.
 
@@ -43,8 +43,7 @@ contenido.
 
 ### La paleta: cian + verde ácido
 
-El oro duró unas horas. Adán: *"ese color se ve muy aburrido o seco, quiero algo que me motive a
-verlo o leer"*. Se le mostraron tres paletas y eligió esta.
+Adán: *"quiero algo que me motive a verlo o leer"*. Eligió esta entre tres paletas.
 
 | | Claro | Oscuro | Para qué |
 |---|---|---|---|
@@ -63,9 +62,8 @@ legible — el mismo criterio que ya se aplicó al verde de la gráfica de BTC e
 **El fondo se enfrió una gota**: `#121212` → `#0b0f13` en oscuro y `#f5f4f0` → `#f2f6f8` en claro.
 Sobre un gris neutro el cian se apaga, y el crema tiraba a cálido y peleaba con él.
 
-**Los 16 `rgba(212,160,0,…)` que estaban escritos a mano** en el CSS pasaron a
-`rgba(var(--acc-rgb),…)`. Ya no hay ningún dorado literal: cambiar de paleta vuelve a ser tocar
-cuatro variables.
+**No hay ningún acento escrito a mano en el CSS**: todo va por `rgba(var(--acc-rgb),…)`, así que
+cambiar de paleta es tocar cuatro variables.
 
 Dos trampas que costaron una pasada cada una, por si vuelve a cambiar la paleta:
 
@@ -187,7 +185,7 @@ Estructura vigente, sin las horas exactas (esas están en el maestro, que es don
 - **Sábado y domingo**: días de ingreso, con dos turnos largos de Didi (mañana y tarde-noche). El
   domingo cierra la semana con finanzas, checkpoint del Plan Maestro y diario, comprimidos al final.
 
-**Duerme entre 5h40 y 6h40**, no las ~7h que este documento afirmó durante un tiempo.
+**Duerme entre 5h40 y 6h40.**
 
 **El bloque de freelance no existe hoy.** Era condicional, ocupaba las franjas que ahora son turnos
 de Didi, y en la práctica estaba vacío. **Hay que volver a crearlo cuando entre el primer peso** de
@@ -234,10 +232,9 @@ Rehacerla necesita fijar antes por qué la TC BBVA está subiendo. Ver
 
 | Sección | Qué es |
 |---|---|
-| `#perfil` | Diagnóstico real: patrimonio, deudas, hallazgos medidos, Plan Maestro por fases y barras de habilidades |
+| `#perfil` | Diagnóstico real: patrimonio, deudas, hallazgos medidos, Plan Maestro por fases y barras de habilidades con el panel de cada una (`showSkillTab`, incluido Networking) |
 | `#aprendizaje` | 5 prioridades (Datos, Ventas, Marketing, Finanzas, IA) con primer paso, hábito y recursos |
 | `#perfil-rico` | Mentalidad y hábitos financieros |
-| `#networking` | Inventario de lo que puede ofrecer, la lista de 20, cómo presentarse |
 | `#marca-personal` | Redes sociales y posicionamiento |
 | `#legal-personal` | Trámites, régimen fiscal, impuestos |
 | `#posibles-negocios` | Las 11 opciones rankeadas contra su perfil real, **con cifras** — ver abajo |
@@ -248,37 +245,16 @@ Las **barras de habilidades** reemplazaron al radar tipo FIFA: mismo componente 
 a todo lo ancho, con el nombre y la descripción visibles y la ponderación explícita. Un radar de 12
 ejes hacía ilegibles las etiquetas y escondía el peso de cada una.
 
----
-
-## `#habilidades-valor` se eliminó (2026-08-30)
-
-Eran 51 KB y 12 guías prácticas de vida (networking, persuasión, modales, fogata, vino,
-coctelería, nudos, mecánica, primeros auxilios…). **Su contenido vive en el Dashboard**, pantalla
-*Habilidades Base* → "Lo que todos deberíamos saber hacer", donde es bastante más profundo:
-23 habilidades con 11-20 pasos cada una, checklist real y barra de avance.
-
-No fue una migración de hoy: se copió el 11-ago-2026 a petición de Adán (*"en coach hay una
-sección de habilidades de valor, añade todo eso en el dashboard"*) y desde entonces esta sección
-era un duplicado más pobre. Hoy se borró el duplicado, después de comprobar término a término qué
-tenía Coach que no estuviera allá. **Cuatro huecos reales**, ya trasladados:
-
-| Habilidad del Dashboard | Lo que faltaba |
-|---|---|
-| `networking` | IPADE como tercera escuela, y que sus conferencias y clases muestra son abiertas o de bajo costo |
-| `relacionarte` | *How to Talk to Anyone* · Leil Lowndes — 92 tácticas concretas |
-| `sacarmejor` | *The 7 Habits* · Stephen Covey — el hábito 5, "busca primero entender" |
-| `coctel` | De qué está hecho cada destilado (agave azul / horno de tierra / el tequila es un tipo de mezcal) y dos clásicos más: Whisky Sour y Mojito |
-
-Lo demás ya estaba, y mejor contado. Los dos enlaces internos que apuntaban aquí ahora van a
-`../Dashboard/dashboard.html#habilidades`; **el Dashboard aprendió a aterrizar por hash** para
-que caigan en la pantalla correcta y no en la primera.
+**Las guías de habilidades de vida no viven aquí**: están en el Dashboard → *Habilidades Base*, que
+es la única fuente (27 fichas con checklist y avance). Los enlaces internos apuntan a
+`../Dashboard/dashboard.html#habilidades` y el Dashboard aterriza por hash en esa pantalla.
 
 ---
 
 ## `#posibles-negocios` — números sobre las 11 opciones
 
-Mismo tratamiento que `#mas-ideas` (2026-08-30), **con una diferencia deliberada: aquí no se
-reescribió nada**. Cada opción ya traía "qué es", "por qué encaja", "primer paso esta semana" y
+Mismo tratamiento que `#mas-ideas`, **con una diferencia deliberada: aquí no se reescribió
+nada**. Cada opción ya traía "qué es", "por qué encaja", "primer paso esta semana" y
 "riesgo principal" escritos contra su perfil real, y eso vale más que cualquier rediseño. Lo que
 faltaba eran las cifras, y se **inyectan** sobre las 11 tarjetas existentes desde `NEGOCIO_NUMS`.
 
@@ -318,11 +294,9 @@ tarjeta oculta no hacía nada visible.
 
 ## `#mas-ideas` — el banco de ideas con números
 
-Rediseño del 2026-08-30 (*"complementa más las ideas y dame números de cómo empezar a invertir y
-hacer las cosas, diseño futurista, entendible y muy visual"*). Eran **20 tarjetas con un párrafo
-cualitativo y cero cifras**: no se podían comparar entre sí ni saber cuál cabe en el dinero que hay.
-
-Ahora se pintan desde **`IDEAS_NEGOCIO`** (literal en el JS, no HTML a mano: la pantalla vive de
+Adán: *"complementa más las ideas y dame números de cómo empezar a invertir y hacer las cosas,
+diseño futurista, entendible y muy visual"*. Veinte ideas sin cifras no se pueden comparar ni
+saber cuál cabe en el dinero que hay, así que se pintan desde **`IDEAS_NEGOCIO`** (literal en el JS, no HTML a mano: la pantalla vive de
 comparar, y 20 fichas escritas a mano no se pueden filtrar ni reordenar). Cada idea trae:
 
 | Campo | Qué es |

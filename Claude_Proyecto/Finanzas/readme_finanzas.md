@@ -1,6 +1,15 @@
-# Finanzas.html — Contexto completo de funciones y estructura
+# Finanzas.html — referencia
 
-App de finanzas personales en un solo archivo HTML (4340 líneas). Usa Chart.js 4.4 para gráficas y localStorage (`finanzasmx_v2`) para persistencia. Todo en MXN.
+App de finanzas personales en un solo archivo HTML (~5 600 líneas, 376 KB). Chart.js 4.4 para
+gráficas, `localStorage['finanzasmx_v2']` para persistencia, todo en MXN. Es **la fuente de los
+saldos** del proyecto: lo que escribe aquí lo leen el Dashboard y Coach.
+
+> Referencia, no diario. Historial en `git log -p -- Claude_Proyecto/Finanzas/Finanzas.html`.
+> Los saldos de hoy no están aquí: están en [`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md).
+
+Carga `../Dashboard/datos-maestros.js` en el `<head>` (no lo necesita para pintar —sus datos
+salen de `S`— pero así la prosa usa los mismos `{{marcadores}}` que las otras apps) y
+`../Dashboard/sin-zoom.js`.
 
 ---
 
@@ -8,1186 +17,440 @@ App de finanzas personales en un solo archivo HTML (4340 líneas). Usa Chart.js 
 
 ```js
 S = {
-  transactions:   [],       // array de transacciones
-  budgets:        [],       // array de presupuestos
-  debts:          [],       // array de deudas
-  goals:          [],       // array de metas de ahorro
-  investments:    [],       // array de inversiones
-  activos:        [],       // array de activos físicos
-  btcHistory:     [],       // historial de compras BTC
+  transactions:   [],       // transacciones
+  budgets:        [],       // presupuestos
+  debts:          [],       // deudas
+  goals:          [],       // metas de ahorro
+  investments:    [],       // inversiones
+  activos:        [],       // activos físicos y líquidos
+  btcHistory:     [],       // compras y ventas de BTC
   currentBtcPrice: 0,       // precio actual BTC en USD
-  usdMxn:         19.5,     // tasa de cambio USD/MXN
-  btcLastFetch:   '',       // ISO timestamp del último fetch de BTC
+  usdMxn:         19.5,     // tipo de cambio de HOY
+  btcLastFetch:   '',       // ISO del último fetch de precio
   btcPriceHist:   [],       // [[ts, precioMXN], …] caché del histórico diario de CoinGecko
-  btcHistFetch:   '',       // ISO timestamp del último fetch del histórico
-  weeklyLeftover:  0,       // sobrante semanal manual para GBM+
-  sivaleBalance:   0,       // saldo acumulado tarjeta Si Vale
+  btcHistFetch:   '',       // ISO del último fetch del histórico
+  weeklyLeftover:  0,       // sobrante semanal manual para GBM
+  sivaleBalance:   0,       // saldo acumulado Si Vale
   sivaleLastMonth: '',      // YYYY-MM del último mes agregado Si Vale
-  emergencyFund:   0,       // saldo del fondo de emergencia BBVA
-  didiMonthly:     0,       // ingreso mensual real de Didi (0 = usar estimado $11,200)
+  emergencyFund:   0,       // fondo de emergencia
+  didiMonthly:     0,       // sin uso desde la UI (código muerto, ver abajo)
   gbmMonth:       '',       // YYYY-MM seleccionado en Plan de Inversiones
+  indicatorHistory: []      // snapshots mensuales de indicadores (ver Indicadores)
 }
 ```
 
-Variables globales adicionales: `editId`, `confCb`, `payDebtId`, `contribGoalId`, `btcEditId`, `activoEditId`, `btcCur` (MXN|USD, moneda de la gráfica de BTC, persiste en `localStorage['btc_cur']`), `curType` (expense|income), instancias de Chart (`chCat`, `chBal`, `chBud`, `chInv`, `chGbmInv`, `chBtcPnl`, `chPat`), `dashMonth`.
+Globales adicionales: `editId`, `confCb`, `payDebtId`, `contribGoalId`, `btcEditId`, `activoEditId`,
+`btcCur` (MXN|USD, persiste en `localStorage['btc_cur']`), `curType` (expense|income), las
+instancias de Chart (`chCat`, `chBal`, `chBud`, `chInv`, `chGbmInv`, `chBtcPnl`, `chPat`) y `dashMonth`.
 
 ---
 
-## Constantes importantes
+## Constantes y de dónde salen los importes
 
-### Categorías (`CATS`)
-- **expense**: Alimentación, Transporte, Hogar/Renta, Salud, Entretenimiento, Educación, Ropa, Servicios, Suscripciones, Restaurantes, Viajes, Deudas, Otros gastos
-- **income**: Salario, Freelance/Honorarios, Inversiones, Renta/Propiedades, Bonos, Regalos, Otros ingresos
-
-### Gastos fijos: ya no se escriben aquí
-
-Salen de `PROYECTO` en [`../Dashboard/datos-maestros.js`](../Dashboard/datos-maestros.js), vía los
-helpers `_PG()`, `_autoMin()` y `_metaFondo()` del principio del `<script>`. `_autoMin()` y
-`_metaFondo()` prefieren el dato **vivo** de `S` y solo caen al maestro si todavía no hay nada
-guardado.
-
-| Concepto | Monto | Cuándo |
-|---|---|---|
-| Salario BBVA | `{{sueldo}}` $41,000 | Quincenal |
-| Renta | `{{renta}}` $11,000 | Día 1 |
-| Crédito Dolphin Mini | `_autoMin()` $6,700 | Día 15 |
-| Servicios | `{{servicios}}` $1,075 | Plan AT&T $650 (día 1), internet (8), gas (bimestral, día 1), luz y agua (1) |
-| Suscripciones | `{{suscripciones}}` $1,080 | Gym Total Pass $650, Claude Code $380, iCloud $50 |
-| CETES | `{{cetesDia15}}` $1,500 | Día 15 |
-| Mínimos de TC | `minimosTC()` | Sale de `S.debts`, no de un número escrito |
-
-**Por qué se movieron (2026-08-25).** Estos importes estaban escritos a mano en **cinco sitios de
-este mismo archivo** —`renderGBM()`, dos cálculos de `_fixedFloor`, el bloque `_gbm*` y la lista
-`fixed` de la proyección— y habían divergido de verdad: al cambiar de gimnasio el 18-ago
-(Fitsi $1,500 → Total Pass $650) se actualizó **solo `renderGBM()`**. Los otros cuatro siguieron
-calculando con $1,500 durante una semana, así que el plan semanal y la proyección mensual daban
-cifras distintas para el mismo mes.
-
-Lo encontró una auditoría de "números crudos" tras un fallo parecido en el verificador. Ahora
-`verificar-sincronia.js` incluye ese control (el nº 5), que busca los valores del maestro escritos
-como número pelado —sin `$`— en el código.
-
-## Gastos fijos hardcodeados (usados en `renderGBM` y `getMonthProjection`)
-| Concepto             | Monto MXN | Semana / Fecha |
-|----------------------|-----------|----------------|
-| Salario BBVA         | $41,000   | Quincenal      |
-| Didi (estimado)      | $11,200   | Ya no forma parte del flujo GBM — ver nota abajo |
-| Renta departamento   | $11,000   | Día 1          |
-| Crédito Dolphin Mini | $6,700    | Día 14         |
-| Celular (datos)      | $600      | Día 15 (Sem 3) |
-| Gym                  | $1,500    | Día 15 (Sem 3) |
-| TC BBVA mínimo       | $1,500    | Día 15 (Sem 3) — ya **no** hardcodeado, sale de `S.debts` (ver abajo) |
-| TC Banamex mínimo    | $0        | Liquidada el 2026-08-13 — desaparece sola del plan |
-| Internet             | $200      | Día 15 (Sem 3) |
-| Gas                  | $179      | Día 15 (Sem 3) |
-| Claude Code          | $380      | Día 15 (Sem 3) |
-| Agua y luz           | $135      | Día 15 (Sem 3) |
-| Limpieza             | $150      | Día 15 (Sem 3) |
-| iCloud               | $50       | Día 15 (Sem 3) |
-| CETES recurrente     | $1,500    | Día 15         |
-| Si Vale (display)    | $940      | Día 1 (no suma al flujo) |
-
-### Meta Maestría
-- **Target**: $500,000 MXN para **01 oct 2027** (verificado 2026-07-29 contra el seed en código — el dato anterior de este documento, $300,000/dic 2027, estaba desactualizado)
-- **ID de meta**: `g001` (o `icon === '🎓'`)
-- **Componentes que cuentan**: Fondo de emergencia + CETES + Acciones/inversiones + BTC en MXN
-- Nota de contexto (ver `../Coach/readme_coach.md` → Plan Maestro): en julio 2026 se decidió pausar nuevas aportaciones a esta meta por 1 año; confirmar contra el `date` real en `S.goals` antes de asumir que sigue vigente tal cual, ya que este tipo de decisión vive en Coach, no en el código de Finanzas.
-
-### WEEKLY_PICKS (actualizar cada lunes pidiendo a Claude)
-```js
-const WEEKLY_PICKS = {
-  semana: '23 Jun 2026',
-  acciones: [
-    { ticker:'MSFT', pct:70, tipo:'conservadora' },  // 70% del sobrante
-    { ticker:'NVDA', pct:30, tipo:'crecimiento'  },  // 30% del sobrante
-  ]
-}
-```
-⚠️ **Desactualizado a la fecha de esta revisión (2026-08-01)** — `semana`/`actualizadoEl` siguen en "23 Jun 2026", ~5-6 semanas atrás. El propio comentario del código pide refrescar esto cada lunes y no se ha hecho; los precios/consensus/upside de MSFT y NVDA que se muestran como "actuales" son de hace más de un mes. No se corrigió en esta revisión porque requiere datos de mercado en vivo (Claude no debe inventar precios de acciones) — pedir explícitamente "actualiza WEEKLY_PICKS con precios de hoy" la próxima vez que se use esta app.
-
-### Fondo de emergencia
-- **Target fijo**: $10,000 MXN (constante `EF_TARGET` en `renderDashboard`)
-- **ID en metas**: `ef-001`
+- **`CATS`** — expense: Alimentación, Transporte, Hogar/Renta, Salud, Entretenimiento, Educación,
+  Ropa, Servicios, Suscripciones, Restaurantes, Viajes, Deudas, Otros gastos · income: Salario,
+  Freelance/Honorarios, Inversiones, Renta/Propiedades, Bonos, Regalos, Otros ingresos.
+  `CCOLORS` da el color de cada una (los mismos hex que `CT_COLOR` del Dashboard).
+- **Los gastos fijos no se escriben aquí.** Salen de `PROYECTO` en `datos-maestros.js` vía
+  `_PG()`, `_autoMin()` y `_metaFondo()`; `BASE_INC = _PG().sueldo` en los tres sitios que lo usan.
+  `_autoMin()` y `_metaFondo()` prefieren el dato **vivo** de `S` y solo caen al maestro si aún no
+  hay nada guardado. Los mínimos de tarjeta salen de `minimosTC()` sobre `S.debts`, nunca de un
+  número escrito. El **control 5** del verificador busca valores del maestro escritos como número
+  pelado en el código. `RECURRENTES` (lo que `loadRecurringForMonth` siembra) también lee de
+  `PROYECTO`.
+- **`WEEKLY_PICKS`** — `{ semana, acciones:[{ticker, pct, tipo}] }`, el reparto del sobrante
+  semanal en GBM. **Se actualiza pidiéndoselo a Claude cada lunes** y solo con precios reales:
+  no se inventan cotizaciones.
+- **Meta Maestría** — `g001` (o `icon === '🎓'`), `target` del propio registro con respaldo en
+  `CIFRAS.n('maestriaMeta')` (`_metaMaestria()`). Cuentan fondo de emergencia + CETES +
+  inversiones + BTC en MXN.
+- **Fondo de emergencia** — meta `ef-001`; `EF_TARGET = _metaFondo()`.
 
 ---
 
 ## El lenguaje visual del Plan de Inversiones
 
-Cinco clases en el `<style>` de la cabecera, compartidas por el plan semanal y la gráfica de BTC.
-Viven como clases y no como `style=""` en cada elemento porque son **el sistema**: si el acento
-cambia, cambia en un sitio. Todos los colores salen del `:root`, así que el tema claro funciona
-sin reglas aparte.
+Cinco clases en el `<style>`, compartidas por el plan semanal y la gráfica de BTC. Viven como
+clases y no como `style=""` porque son **el sistema**; todos los colores salen del `:root`, así
+que el tema claro funciona sin reglas aparte.
 
 | Clase | Qué hace |
 |---|---|
-| `.fx-num` | Space Grotesk con `tabular-nums`: una columna de importes queda alineada aunque cambien los dígitos |
-| `.fx-lbl` | Etiqueta de sección: 9.5 px, `letter-spacing: .14em`, mayúsculas |
+| `.fx-num` | Space Grotesk con `tabular-nums`: una columna de importes queda alineada |
+| `.fx-lbl` | Etiqueta de sección: 9.5 px, `letter-spacing:.14em`, mayúsculas |
 | `.fx-panel` | Panel base con borde y fondo tenue |
-| `.fx-grid` | Rejilla técnica de 64 px como `::before`, enmascarada con un radial para que se desvanezca antes del contenido. Es `::before` para no meter un `<div>` vacío en cada panel |
-| `.fx-edge` | Borde de gradiente cyan→purple: un envoltorio de 1 px de padding con el degradado de fondo y el hijo opaco encima — la única forma de que un borde degradado respete el `border-radius` |
-| `.wk-card` | Tarjeta de semana. Es un `<button>`, así que funciona con teclado |
+| `.fx-grid` | Rejilla técnica de 64 px como `::before`, enmascarada con un radial |
+| `.fx-edge` | Borde de gradiente cyan→purple: envoltorio de 1 px de padding con el hijo opaco encima — la única forma de que un borde degradado respete el `border-radius` |
+| `.wk-card` | Tarjeta de semana; es un `<button>`, funciona con teclado |
 
-**Inter sigue siendo el cuerpo.** Space Grotesk entra solo en cifras y titulares, donde el rasgo
-técnico se nota. La gráfica de BTC pasa la misma familia a Chart.js (`FX_FONT`) para sus ejes y
-el título del tooltip: con el eje en Inter y la tarjeta de al lado en Grotesk, se lee como dos
-gráficas distintas.
+**Inter sigue siendo el cuerpo.** Space Grotesk entra solo en cifras y titulares; la gráfica de
+BTC pasa la misma familia a Chart.js (`FX_FONT`) y a `ctx.font` de los plugins (el canvas no
+hereda CSS).
 
-Las cifras del canvas (las etiquetas de aportación que dibuja `btcAportPlugin`) también usan
-Grotesk, escrito a mano en `ctx.font` porque el canvas no hereda CSS.
+### El instrumento: `.btcx-*`
 
-### El instrumento: las clases `.btcx-*`
-
-La gráfica de BTC es la única pieza de la app que mira un precio vivo, así que tiene una segunda
-capa de lenguaje visual encima de las `.fx-*`: se lee como un instrumento y no como una tarjeta
-más. El acento es un **verde de fósforo** que comparte el RGB de `--success` — es el mismo
-sistema, no un color nuevo; el cian entra solo en el borde y como retícula del cursor.
-
-La paleta vive en `:root` y cada tema la redefine, porque un verde neón legible sobre negro se
-pierde sobre blanco:
+La gráfica de BTC es la única pieza que mira un precio vivo, así que lleva una segunda capa
+encima de `.fx-*`: se lee como un instrumento. El acento es un **verde de fósforo** que comparte
+el RGB de `--success`; el cian entra solo en el borde y en la retícula del cursor. La paleta
+vive en `:root` y cada tema la redefine (un verde neón legible sobre negro se pierde sobre blanco):
 
 | Variable | Claro | Oscuro | Para qué |
 |---|---|---|---|
-| `--btc-rgb` | `0,232,122` | igual | el RGB suelto de todos los `rgba(…)` y de los plugins |
-| `--btc` | `#009c55` | `#00e87a` | el acento legible: texto, iconos, bordes activos |
-| `--btc-hi` | `#00c46a` | `#7dffc4` | el extremo encendido de la rampa (hoy, triángulos, BTC acumulado) |
-| `--btc-lo` | `#00603a` | `#0b8f57` | el extremo apagado (el pasado de la curva) |
-| `--btc-glow` | `.3` | `.62` | cuánto brilla el halo. Sobre blanco un halo fuerte se vuelve niebla |
+| `--btc-rgb` | `0,232,122` | igual | el RGB suelto de los `rgba(…)` y de los plugins |
+| `--btc` | `#009c55` | `#00e87a` | texto, iconos, bordes activos |
+| `--btc-hi` | `#00c46a` | `#7dffc4` | extremo encendido de la rampa (hoy, triángulos) |
+| `--btc-lo` | `#00603a` | `#0b8f57` | extremo apagado (el pasado de la curva) |
+| `--btc-glow` | `.3` | `.62` | intensidad del halo |
 
-El resto de la app **no** cambia: en el dónut de Patrimonio y en el desglose de inversiones BTC
-sigue siendo `#f7931a`, porque ahí es un color categórico que lo separa de las demás partidas.
-
-| Clase | Qué hace |
-|---|---|
-| `.btcx-scope` | Envuelve el bloque entero y define `--bx` (el ámbar de BTC) para los hijos |
-| `.btcx` / `.btcx-in` | Marco: envoltorio de 1 px con borde degradado verde→cian y el panel opaco encima. `.btcx-in::before` son las líneas de barrido (3 px, 1.6%) — no una rejilla, porque dentro del plano ya hay una retícula propia y dos rejillas superpuestas se leen como ruido; `.btcx-in::after` son las cuatro esquinas de mira — ocho gradientes en **un** pseudo-elemento, en vez de cuatro `<span>` vacíos en el DOM |
-| `.btcx-sweep` | Barrido de luz al montar, **una** vez. Un panel que parpadea cada seis segundos deja de leerse a los dos minutos |
-| `.btcx-rail` | Cinta de cabecera con el precio de 1 ₿; `.btcx-live` es el punto que late |
-| `.btcx-tabs` / `.btcx-tab` | Tabs de mes. El estado activo es la clase `.on` (halo + barra de luz), no estilos escritos desde JS |
-| `.btcx-seg` | Selector MXN/USD, mismo patrón `.on` |
-| `.btcx-kpi(s)` | Las seis lecturas. El filete superior toma el color de su cifra con `--kc`, así la fila se escanea por color antes que por texto |
-| `.btcx-ley` / `.btcx-key` / `.btcx-src` | Leyenda y nota de procedencia. `.btcx-src` es `inline-block` a propósito: lleva un `<b>` dentro y en flex ese `<b>` se volvía una columna con su propio hueco |
-
-Hay un bloque `@media(prefers-reduced-motion:reduce)` que apaga el barrido, el latido y el
-levantamiento de las lecturas.
+En el dónut de Patrimonio y en el desglose de inversiones BTC sigue siendo `#f7931a`: ahí es un
+color categórico. Clases: `.btcx-scope` (define `--bx`), `.btcx`/`.btcx-in` (marco con borde
+degradado; `::before` líneas de barrido, `::after` las cuatro esquinas de mira en **un**
+pseudo-elemento), `.btcx-sweep` (barrido de luz al montar, **una** vez), `.btcx-rail` con
+`.btcx-live` (el punto que late), `.btcx-tabs`/`.btcx-tab` y `.btcx-seg` (estado activo `.on`,
+no estilos desde JS), `.btcx-kpi(s)` (el filete superior toma el color de su cifra con `--kc`),
+`.btcx-ley`/`.btcx-key`/`.btcx-src`. `@media(prefers-reduced-motion:reduce)` apaga barrido,
+latido y levantamiento.
 
 ---
 
-## Funciones utilitarias
+## Utilidades, navegación, modales
 
-### `fmt(n)`
-Formatea un número como moneda MXN con `Intl.NumberFormat`. Ej: `fmt(1500)` → `"$1,500.00"`.
+`fmt(n)` (MXN con `Intl.NumberFormat`), `uid()`, `today()` (`YYYY-MM-DD`), `ym(d)`, `nowYM()`,
+`save()`/`load()` (spread sobre `S`, silencia errores), `fmtDate(d)` (`"28 Jun 2026"`),
+`last6Months()`, `toast(msg)`, `killChart(c)` (destruye y devuelve `null`; siempre antes de redibujar).
 
-### `uid()`
-Genera un ID único con `Date.now().toString(36) + Math.random().toString(36)`.
-
-### `today()`
-Retorna la fecha actual en formato `YYYY-MM-DD`.
-
-### `ym(d)`
-Extrae los primeros 7 caracteres de una fecha: `"2026-06-28"` → `"2026-06"`.
-
-### `nowYM()`
-Retorna el mes actual en formato `YYYY-MM`.
-
-### `save()`
-Serializa `S` a JSON y lo guarda en `localStorage[KEY]` (`KEY = 'finanzasmx_v2'`).
-
-### `load()`
-Lee `localStorage[KEY]` y mezcla sobre `S` con spread. Silencia errores.
-
-### `fmtDate(d)`
-Convierte `"2026-06-28"` → `"28 Jun 2026"` en español.
-
-### `last6Months()`
-Retorna array de 6 strings `YYYY-MM` de los últimos 6 meses, del más antiguo al más reciente.
-
-### `toast(msg)`
-Muestra notificación flotante en la esquina inferior derecha durante 2.5 segundos.
-
-### `killChart(c)`
-Llama a `.destroy()` en una instancia de Chart.js y retorna `null`. Se usa antes de redibujar cualquier gráfica.
-
----
-
-## Navegación
-
-### `nav(s)`
-Activa la sección de la app (`dashboard`, `transactions`, `budgets`, `debts`, `goals`, `patrimonio`, `indicators`, `gbm`). Muestra/oculta `<section id="s-{s}">`, marca el nav item activo y llama al renderer correspondiente via `RENDERS[s]()`.
-
----
-
-## Modales
-
-### `closeMo(id)`
-Quita la clase `open` del modal con ese ID y resetea `editId`, `payDebtId`, `contribGoalId`, `btcEditId`, `activoEditId` a `null`.
-
-Eventos globales:
-- `Escape` cierra todos los modales abiertos.
-- Click en el backdrop (`.mo`) cierra el modal.
+`nav(s)` activa una de `SECS = dashboard | transactions | budgets | debts | goals | patrimonio |
+indicators | gbm` (`<section id="s-{s}">`) y llama a `RENDERS[s]()`. `closeMo(id)` cierra un
+modal y resetea los ids de edición; `Escape` y el clic en el backdrop `.mo` cierran.
+`askDel(type, cb)` / `doConf()` / `closeConf()` es el diálogo de confirmación.
 
 ---
 
 ## Módulo: Transacciones
 
-### `getTx()`
-Lee los filtros activos en el DOM (`f-search`, `f-type`, `f-cat`, `f-month`) y retorna el subconjunto de `S.transactions` ordenado por fecha descendente.
+`getTx()` aplica los filtros del DOM (`f-search`, `f-type`, `f-cat`, `f-month`) y devuelve el
+subconjunto ordenado por fecha desc. `renderTx()` pinta la tabla con badges de resumen del filtro.
+`clearF()`. `openTxModal(id)` (fecha de hoy si es nueva), `selType(type)` → `fillCatSel`,
+`saveTx()` (valida, guarda, refresca dashboard e indicadores si están activos), `delTx(id)`.
 
-### `renderTx()`
-Renderiza la tabla de transacciones. Reconstruye el selector de categorías con las categorías presentes. Muestra badges de resumen (ingresos, gastos, balance del filtro activo). Genera filas con botones de editar y eliminar.
+**Convención: si un gasto se pagó con tarjeta de crédito, la tarjeta va en `notes`** (`TC
+Banamex`, `TC BBVA`). No es cosmético: el tablero del Dashboard lee esa nota para decidir si el
+gasto **sale de tu caja ese día** o solo **sube el saldo de la tarjeta**.
 
-### `clearF()`
-Limpia los campos de búsqueda, tipo, categoría y establece el mes en el mes actual. Llama a `renderTx()`.
+| Cómo se anota | Qué hace el tablero |
+|---|---|
+| `notes: 'Compra única — de contado'` | resta del día |
+| `notes: 'TC Banamex — 30 cápsulas'` | **no** resta ese día; sale en "Cargaste a la tarjeta", y lo cobra el mínimo de la tarjeta |
+| `cat: 'Deudas'` + `notes` con la tarjeta | sí resta: es un **pago a** la tarjeta |
 
-### `openTxModal(id=null)`
-Abre el modal `mo-tx`. Si `id` existe, carga los datos de esa transacción para edición. Establece la fecha al día de hoy si es nueva. Enfoca el campo de descripción.
+Sin la nota, una compra a crédito se contaría dos veces: el día de la compra y en el mínimo.
 
-### `selType(type)`
-Cambia `curType` entre `'expense'` e `'income'`. Actualiza visualmente los botones del modal y regenera el select de categorías via `fillCatSel`.
-
-### `fillCatSel(selId, type, selected=null)`
-Rellena el `<select>` con las categorías de `CATS[type]`. Marca como seleccionada la categoría indicada si existe.
-
-### `saveTx()`
-Valida descripción, monto y fecha. Si `editId` existe actualiza; si no, hace push a `S.transactions`. Llama a `save()`, cierra el modal, refresca la tabla, muestra toast y refresca el dashboard/indicadores si están activos.
-
-### `delTx(id)`
-Filtra `S.transactions` eliminando el `id`. Guarda, refresca tabla, refresca dashboard e indicadores si están activos.
+**Los gastos que Adán reporta de golpe** (un lote de compras) van a `datos-maestros.js` una sola
+vez (`CIFRAS.GASTOS_20260901` es el patrón): de ahí los siembra `seedData()` para un navegador en
+blanco y de ahí los aplica una migración **por id, solo si falta**, para el navegador que ya
+tiene datos. `SEED_VER` no se sube por eso: borraría los movimientos capturados a mano. Los
+gastos de productos llevan el nombre exacto del catálogo (`RUTINA_PELO`, etc.) para poder cruzar
+gasto y ficha.
 
 ---
 
 ## Módulo: Presupuestos
 
-### `spentCat(cat, month)`
-Suma el total de gastos de la categoría `cat` en el mes `month` (YYYY-MM) leyendo `S.transactions`.
-
-### `renderBudgets()`
-Renderiza cada presupuesto en `bud-list` con barra de progreso (verde <70%, amarillo <90%, rojo ≥90%) y alerta si está excedido. Llama a `renderBudgetChart()`.
-
-### `renderBudgetChart()`
-Dibuja gráfica de barras comparando gastado vs. límite por categoría en el mes actual. Destruye instancia anterior si existe.
-
-### `openBudgetModal(id=null)`
-Abre `mo-bud`. Si `id` existe, carga datos del presupuesto para edición.
-
-### `saveBudget()`
-Valida que exista un límite. Si es nuevo, verifica que no exista ya un presupuesto para esa categoría. Guarda y refresca.
-
-### `delBudget(id)`
-Elimina presupuesto por `id`, guarda y refresca.
+`spentCat(cat, month)`, `renderBudgets()` (barra verde < 70 %, amarilla < 90 %, roja ≥ 90 %),
+`renderBudgetChart()`, `openBudgetModal(id)`, `saveBudget()` (uno por categoría), `delBudget(id)`.
 
 ---
 
 ## Módulo: Deudas
 
-### Helpers de deuda vigente (2026-08-13)
-Tres funciones de nivel superior que existen para que una deuda liquidada nunca contamine un total:
-- `deudasActivas()` — `S.debts` filtrado por `balance > 0`
-- `minimosVigentes()` — suma de `min` solo de las activas
-- `minimosTC()` — suma de `min` solo de tarjetas de crédito activas; es lo que consume `renderGBM` en vez del viejo `TC_BBVA + TC_BANAMEX` escrito a mano
+**Tres helpers para que una deuda liquidada nunca contamine un total**: `deudasActivas()`
+(`balance > 0`), `minimosVigentes()`, `minimosTC()` (solo tarjetas activas; es lo que consume
+`renderGBM`).
 
-### `renderDebts()`
-Renderiza KPIs (deuda total, pagos mínimos/mes, tasa promedio) y las tarjetas individuales de cada deuda con barra de progreso de pago. Si la deuda tiene `noInterest`, muestra bloque especial de "paga antes del día X".
+`renderDebts()`: los tres KPIs (deuda total, mínimos/mes, tasa promedio) se calculan **solo sobre
+activas**; las de `balance <= 0` van aparte al final en **"✅ Liquidadas"** (sin mínimo ni barra,
+conservando editar/eliminar: la tarjeta sigue existiendo). Con `noInterest`, bloque "paga antes
+del día X". `openDebtModal`, `saveDebt`, `delDebt` (→ `maybeRefreshIndicators()`),
+`openPayModal(debtId)` (prellena el mínimo), `savePayment()` (resta al saldo y crea una
+transacción `expense` en `Deudas`, `"Pago: {nombre}"`).
 
-Los tres KPIs se calculan **solo sobre `deudasActivas()`**: una tarjeta en $0 no exige pago mínimo ni debe promediar su tasa. Las deudas con `balance <= 0` se listan aparte, al final, en un bloque compacto **"✅ Liquidadas — ya no generan pago mensual"** (verde, sin mínimo ni barra de progreso, conservando editar/eliminar). Se conservan en vez de borrarse porque la tarjeta sigue existiendo y Adán puede volver a usarla; el contador del KPI las reporta como `N liquidada(s) ✅`.
+**Cómo se calculan los saldos MSI.** `autoBalance(d, refDate)` solo auto-calcula **MSI a 0 %**
+(`type:'other'`, `rate:0`): `total − meses × cuota`. Tarjetas y crédito con interés son manuales.
+Cuenta cuotas con **`floor`, no `round`**: solo las ya cobradas. El `start` de cada MSI **no es la
+fecha de compra literal**: es la que hace que `autoBalance` reproduzca las cuotas del estado de
+cuenta (30.44 días por mes), y esa misma fecha decide si la cuota entra en el plan semanal
+(`start + totalM`): al elegirla, verificar contra los dos cálculos.
 
-### `openDebtModal(id=null)`
-Abre `mo-debt`. Si `id` existe, carga todos los campos de la deuda.
+**Lo que se sabe de las tarjetas y no está en el código**:
 
-### `saveDebt()`
-Recoge todos los campos del formulario. Actualiza o inserta en `S.debts`. Llama a `maybeRefreshIndicators()`.
-
-### `delDebt(id)`
-Elimina deuda por `id`. Llama a `maybeRefreshIndicators()`.
-
-### `openPayModal(debtId)`
-Abre `mo-pay`. Pre-llena el monto con el pago mínimo de la deuda y la fecha con hoy.
-
-### `savePayment()`
-Resta el monto al saldo de la deuda (`Math.max(0, balance - amount)`). Agrega automáticamente una transacción de tipo `expense` en categoría `Deudas` con descripción `"Pago: {nombre}"`. Guarda, refresca deudas y dashboard.
+- La tasa de `d001` (TC BBVA) es **55.7 %**, implícita: llevó 31 meses pagando $1,500 con el saldo
+  intacto (`1500 × 12 ÷ 32,343 = 55.7 %`). Alimenta el medidor "🔥 Intereses este mes", que avisa
+  de que el mínimo no amortiza. Pendiente confirmar contra el estado de cuenta.
+- `d001` mantiene `total == balance` (el saldo nunca bajó desde 2024; las migraciones de saldo
+  lo aplican a los dos). Si baja de verdad, `total` se queda en el pico y la diferencia son las
+  barras de "pagado real".
+- Una deuda que **nunca existió** se borra del seed, no se pone en $0: en $0 saldría para
+  siempre en "Liquidadas", que es otra afirmación falsa.
+- **Un saldo que solo se escribe en un `.md` no existe**: sin migración en el maestro, las apps
+  siguen con el viejo.
 
 ---
 
 ## Módulo: Metas de ahorro
 
-### `renderGoals()`
-Excluye la meta `g002` (reservada). Muestra todas las otras metas con barra de progreso, porcentaje alcanzado, días restantes y botones para aportar/editar/eliminar.
+`renderGoals()` (excluye `g002`, reservada), `openGoalModal`, `saveGoal`, `delGoal` (no afecta
+`ef-001`), `openContribModal(goalId)`, `saveContrib()` (no supera `target`; si es `ef-001`
+también actualiza `S.emergencyFund`).
 
-### `openGoalModal(id=null)`
-Abre `mo-goal`. Carga datos si existe `id`.
-
-### `saveGoal()`
-Valida nombre y monto objetivo. Guarda o actualiza en `S.goals`.
-
-### `delGoal(id)`
-Filtra `S.goals` eliminando el `id`. No afecta al fondo de emergencia (`ef-001`).
-
-### `openContribModal(goalId)`
-Abre `mo-contrib`. Muestra el nombre de la meta y limpia el campo de monto.
-
-### `saveContrib()`
-Suma la aportación al `current` de la meta sin superar el `target`. Si la meta es `ef-001` también actualiza `S.emergencyFund`.
+**Hueco conocido**: `g001` guarda `current` como una sola cifra, sin instrumentos ligados ni
+historial de aportaciones. Para verlo desglosado habría que dar de alta en Inversiones dónde
+está ese dinero.
 
 ---
 
 ## Módulo: Inversiones
 
-### `openInvModal(id=null)`
-Abre `mo-inv`. Carga datos de la inversión si existe `id`. Tipos disponibles: `cetes`, `fondos`, `acciones`, `crypto`, `inmuebles`, `deuda`, `otro`.
-
-### `saveInv()`
-Valida nombre y capital invertido. Si `value` no se especifica, lo iguala al `invested`. Guarda, cierra modal, refresca GBM si está activo, y llama a `maybeRefreshIndicators()`.
-
-### `delInv(id)`
-Elimina inversión por `id`. Refresca GBM si está activo e indicadores.
+`openInvModal(id)` (tipos `cetes | fondos | acciones | crypto | inmuebles | deuda | otro`),
+`saveInv()` (`value` = `invested` si no se da), `delInv(id)`; los tres refrescan GBM si está
+activo e indicadores.
 
 ---
 
 ## Módulo: Plan de Inversiones (GBM)
 
-### `renderGBM()`
-Función central del módulo. **Fórmulas verificadas contra el código el 2026-08-01** (versión anterior de este documento tenía Didi metido en las 4 semanas — ya no es así, ver nota "Didi ya no es parte de BASE_INC" más abajo). Calcula:
-- `BASE_SALARY = 41000`, `QUINC = Math.round(BASE_SALARY/2) = $20,500` (mitad del salario mensual)
-- `msiActive` = suma de cuotas de deudas a 0% aún vigentes
-- `avgExpTotal` = promedio de gastos reales de los últimos 3 meses reales (no el mes seleccionado)
-- `varPerWeek` = (gastos variables estimados) / 4
-- **Sobrante semanal por semana** (`Math.max(0, ...)` en cada una — nunca negativo):
-  - `w1GBM = QUINC - RENTA - varPerWeek` (el auto **no** se resta aquí — se paga en la semana 2 del saldo ya reservado en BBVA)
-  - `w2GBM = 0` (sin ingreso ni GBM esta semana; el Dolphin Mini se paga del saldo reservado)
-  - `w3GBM = QUINC - CETES_DIA15 - SERVICIOS - SUSCRIPCIONES - TC_MINS - msiActive - varPerWeek`
-  - `w4GBM = 0` (semana libre, sin pagos ni ingresos programados)
-- Tabs de meses: mes actual + 4 meses siguientes (proyección)
-- `efectivoSemana`: usa `S.weeklyLeftover` si > 0, o el estimado automático de la semana actual
-- Distribuye `efectivoSemana` entre las acciones de `WEEKLY_PICKS` según su `pct`
-- Renderiza portafolio actual con KPIs (valor total, capital, P&L, ROI, antigüedad promedio)
-- Proyecciones a 12 meses (sin rendimiento y con +15%)
-- Tabla resumen por tipo de activo
-- Bloque de CETES recurrente
-- Llama a `renderBtcHistory()` al final
+`renderGBM()` calcula, sobre `_PG()`:
 
-#### El plan semanal, tal como se ve
+- `QUINC = round(sueldo/2)`; `msiActive` = cuotas 0 % vigentes; `avgExpTotal` = promedio de gastos
+  reales de los últimos 3 meses; `varPerWeek` = variables estimados / 4.
+- **Sobrante por semana** (`Math.max(0, …)`, nunca negativo):
+  `w1 = QUINC − renta − varPerWeek` · `w2 = 0` (el auto se paga del saldo reservado la semana 1) ·
+  `w3 = QUINC − CETES − servicios − suscripciones − minimosTC() − msiActive − varPerWeek` · `w4 = 0`.
+- Tabs de meses (actual + 4), `efectivoSemana` (= `S.weeklyLeftover` si > 0), reparto entre
+  `WEEKLY_PICKS`, portafolio con KPIs, proyecciones a 12 meses, tabla por tipo, bloque de CETES,
+  y `renderBtcHistory()` al final.
 
-Cuatro tarjetas clicables y el detalle de la elegida, encabezados por una **línea de tiempo del
-mes**. La pregunta que responde el bloque es *por qué unas semanas dan para invertir y otras no*,
-y la línea lo enseña antes de que haya que leer una cifra: la quincena entra los días 1 y 15,
-así que las semanas 2 y 4 se quedan a cero.
+**El plan semanal, tal como se ve**: cuatro `.wk-card` y el detalle de la elegida, encabezados por
+una **línea de tiempo del mes** que responde *por qué unas semanas dan para invertir y otras no*
+antes de leer una cifra. Los eventos (`GRUPOS`) van agrupados por día y alternan arriba y abajo
+del eje (el 14 y el 15 se pisarían). Bajo **760 px** la línea (`.fx-tl`) se oculta y sale una
+lista vertical (`.fx-tl-lista`) generada del **mismo array**. Ningún importe está en el marcado.
+**El bloque dice lo que el modelo no cuenta**: solo reparte la nómina; Didi no entra y la
+mensualidad del auto aparece en el calendario pero no se descuenta de ninguna semana.
 
-Los eventos de la línea (`GRUPOS`) van **agrupados por día** — el 1 lleva quincena y renta a la
-vez — y los grupos alternan arriba y abajo del eje, porque el día 14 y el 15 caen a un 3% de
-distancia y las etiquetas se pisarían. Por debajo de **760 px** la línea horizontal se oculta
-(`.fx-tl`) y aparece una lista vertical (`.fx-tl-lista`) generada del **mismo array**: dos formas,
-un solo origen. Medido a 390 px, donde el día 14 y el 17 quedaban a diez píxeles.
+`switchGBMTab(n)` mueve `.on` (antes reescribía `style` con regex y cualquier retoque lo rompía).
+`setWeeklyLeftover`, `addSivaleMonth`/`undoSivaleMonth` (±$940), `setSivaleBalance`, `setGbmMonth`,
+`setEmergencyFund` (sincroniza `ef-001`), `maybeRefreshIndicators()` (solo si `s-indicators` está
+activa).
 
-Ningún importe está escrito en el marcado: las tarjetas leen `w1GBM`…`w4GBM` y el detalle
-reconstruye entradas y salidas desde las mismas constantes que alimentan esas fórmulas.
-
-**El bloque dice en voz alta lo que el modelo no cuenta**: el plan semanal solo reparte la nómina.
-Los ingresos de Didi no entran, y la mensualidad del auto aparece en el calendario pero no se
-descuenta de ninguna semana. Son ~$4,500 al mes fuera de la cuenta, y ahora se lee en pantalla en
-vez de quedar como una diferencia inexplicable entre el estimado y el banco.
-
-### `switchGBMTab(n)`
-Mueve la clase `.on` entre las cuatro tarjetas y muestra el panel de la semana `n`.
-
-Antes reescribía el atributo `style` de cada botón con cinco expresiones regulares sobre
-`cssText`. Cualquier retoque al estilo del botón rompía el resaltado sin avisar, porque el regex
-dejaba de encontrar lo que buscaba. El estado activo es ahora una clase y esto solo la mueve.
-
-### `setWeeklyLeftover(val)`
-Guarda `S.weeklyLeftover = parseFloat(val) || 0`. Guarda y llama a `renderGBM()`.
-
-### `addSivaleMonth()`
-Suma $940 a `S.sivaleBalance` y establece `S.sivaleLastMonth = nowYM()`. Refresca dashboard.
-
-### `undoSivaleMonth()`
-Resta $940 de `S.sivaleBalance` (mínimo 0) y limpia `S.sivaleLastMonth`. Refresca dashboard.
-
-### `setSivaleBalance(val)`
-Establece `S.sivaleBalance` directamente. Guarda y refresca dashboard.
-
-### `setDidiMonthly(val)`
-Establece `S.didiMonthly`. Valor 0 = usar estimado ($11,200). Guarda y refresca dashboard.
-
-### `setGbmMonth(m)`
-Establece `S.gbmMonth = m` (YYYY-MM). Guarda y llama a `renderGBM()`.
-
-### `setEmergencyFund(val)`
-Establece `S.emergencyFund`. Sincroniza `current` de la meta `ef-001` si existe. Guarda, refresca dashboard e indicadores.
-
-### `maybeRefreshIndicators()`
-Solo llama a `renderIndicators()` si la sección `s-indicators` tiene la clase `active`.
+**Código muerto**: `S.didiMonthly` y `setDidiMonthly()` existen pero ningún botón los llama;
+`BASE_INC` es solo el sueldo y Didi se registra como transacción manual. Borrarlos o reconectarlos
+es una decisión pendiente; hoy no rompe nada.
 
 ---
 
 ## Módulo: Indicadores Financieros
 
-### Snapshots mensuales congelados (`S.indicatorHistory`) — documentado 2026-08-01, existía sin documentar
+`renderIndicators()` calcula 9 indicadores sobre `BASE_INC` (sueldo; Si Vale excluido), activos
+financieros (inversiones + BTC en MXN), líquidos y físicos, y pasivos (suma de `balance`):
 
-Módulo completo (~450 líneas, función `renderIndicators()` en adelante) que **no estaba documentado aquí** pese a ser funcionalidad real y ya construida:
-- `autoSaveCurrentMonthSnapshot()` — cada vez que se abre `#s-indicators`, guarda/sobrescribe automáticamente un snapshot del **mes actual** en `S.indicatorHistory` (array de `{month:'YYYY-MM', score, savedAt, ...indicadores}`). Solo el mes en curso se sobrescribe; los meses ya cerrados quedan congelados.
-- Tabs de navegación: "📊 Mes actual" (en vivo, editable) + un botón 🔒 por cada mes histórico ya guardado.
-- `switchIndMonth(monthOrLive)` — cambia entre la vista en vivo y la vista congelada de un mes pasado.
-- Vista histórica: banner de solo lectura con fecha de guardado y comparación de score "entonces vs. hoy" (↑/↓ puntos) contra el mes actual.
-- Útil para responder "¿mi salud financiera mejoró este trimestre?" con datos reales en vez de memoria — vale la pena que Adán sepa que existe, ya que no hay ningún botón que lo anuncie explícitamente, simplemente aparecen tabs nuevas conforme pasan los meses.
-
-**Desde el 2026-08-30 esta estructura es también el archivo histórico del proyecto entero.** El
-maestro la lee y la expone a las tres apps (`CIFRAS.historia()`, `historiaTabla()`, `comparar()`),
-y le añade un respaldo en git para que no dependa de un solo `localStorage`. La mecánica completa
-está en `Dashboard/DATOS-MAESTROS.md`, sección *El archivo histórico*. Aquí sigue viviendo el dato:
-no se copió a ningún sitio.
-
-### `renderIndicators()`
-Calcula y renderiza 9 indicadores financieros en la sección `ind-body`.
-
-**Inputs:**
-- `BASE_INC = 41000` (corregido 2026-08-01 — el código ya no suma Didi aquí, ver "Didi ya no es parte de BASE_INC" abajo). Si Vale excluido.
-- Activos: financieros (investments + BTC en MXN), líquidos (activos tipo 'liquido'), físicos (resto de activos)
-- Pasivos: suma de `balance` de todas las deudas
-
-**Indicadores calculados:**
 | Indicador | Fórmula | Verde | Amarillo | Rojo |
-|-----------|---------|-------|----------|------|
-| DTI (carga deuda) | Σ mín mensuales / ingreso × 100 | <20% | 20-40% | >40% |
-| Tasa de ahorro | (ingreso - gasto prom.) / ingreso × 100 | >20% | 10-20% | <10% |
-| Fondo emergencia | meses de gastos cubiertos + % de meta | ≥6 meses o 100% | 50-75% | <50% |
-| Deuda vs activos | deuda total / activos × 100 | <30% | 30-60% | >80% |
+|---|---|---|---|---|
+| DTI | Σ mínimos / ingreso × 100 | <20 % | 20-40 % | >40 % |
+| Tasa de ahorro | (ingreso − gasto prom.) / ingreso | >20 % | 10-20 % | <10 % |
+| Fondo emergencia | meses cubiertos + % de meta | ≥6 meses o 100 % | 50-75 % | <50 % |
+| Deuda vs activos | deuda / activos | <30 % | 30-60 % | >80 % |
 | Solvencia | activos / deuda | ≥3x | 1.5-3x | <1x |
 | Multiplicador deuda | deuda / ingreso anual | <1x | 1-2x | >4x |
-| ROI portafolio | (valor - capital) / capital × 100 | >10% | 0-10% | <0% |
-| Inversión vs ingreso anual | activos fin. / ingreso anual | ≥25x (indep.) | ≥1x | <0.5x |
-| Patrimonio neto | activos totales - deudas | >0 | — | <0 |
+| ROI portafolio | (valor − capital) / capital | >10 % | 0-10 % | <0 % |
+| Inversión vs ingreso anual | activos fin. / ingreso anual | ≥25x | ≥1x | <0.5x |
+| Patrimonio neto | activos − deudas | >0 | — | <0 |
 
-**Score financiero** (0-100, con letra A-F):
-- DTI: peso 28%
-- Tasa de ahorro: peso 24%
-- Fondo emergencia: peso 20%
-- Deuda vs activos: peso 16%
-- Solvencia: peso 12%
+**Score 0-100 con letra A-F**: DTI 28 %, ahorro 24 %, fondo 20 %, deuda vs activos 16 %,
+solvencia 12 %. Barra de progreso de la Maestría contra `_metaMaestria()`.
 
-**Progreso Meta Maestría** (barra segmentada):
-`(Fondo emergencia + CETES + Acciones + BTC) / $300,000 × 100`
+**Snapshots mensuales congelados (`S.indicatorHistory`)**: `autoSaveCurrentMonthSnapshot()`
+guarda/sobrescribe al abrir la sección el snapshot del **mes actual** (`{month, score, savedAt,
+…}`); los meses cerrados quedan congelados y aparecen como tabs 🔒 (`switchIndMonth`), con
+comparación "entonces vs. hoy". No hay botón que lo anuncie: aparecen tabs conforme pasan los
+meses. Es el archivo histórico del proyecto y el dato vive solo aquí: por eso el import lo
+fusiona en vez de pisarlo.
 
 ---
 
 ## Módulo: Proyección y Recurrentes
 
-### `getMonthProjection(month)`
-Para meses futuros. `BASE_INC = 41000` (sin sumar Didi). Construye lista de gastos fijos del mes (renta, CETES, gym, servicios, suscripciones, deudas con interés, deudas tipo 'car', y cuotas MSI vigentes). Calcula el promedio de gastos variables de las 3 categorías (`Alimentación`, `Restaurantes`, `Entretenimiento`) de los últimos 3 meses reales. Retorna `{inc, fixedExp, varExp, fixed, varItems, totalExp, balance}`.
-
-### `loadRecurringForMonth(month)`
-Genera transacciones con `notes: '[recurrente]'` para el mes dado:
-- Ingresos: Salario $41,000 y Si Vale $940 (día 1)
-- Gastos fijos: renta, agua, internet, celular, gas, limpieza, gym, Claude, iCloud
-- Deudas con interés y crédito automotriz (día 1)
-- Cuotas MSI vigentes (día 16)
-Si ya existen recurrentes para ese mes, pide confirmación para reemplazar.
-
-### `removeRecurringForMonth(month)`
-Elimina todas las transacciones del mes que tengan `notes === '[recurrente]'`. Pide confirmación.
+`getMonthProjection(month)` (meses futuros): fijos del mes (renta, CETES, gym, servicios,
+suscripciones, deudas con interés, `car`, MSI vigentes) + promedio de variables de Alimentación,
+Restaurantes y Entretenimiento de los últimos 3 meses → `{inc, fixedExp, varExp, fixed, varItems,
+totalExp, balance}`. `loadRecurringForMonth(month)` genera transacciones con `notes:'[recurrente]'`
+(salario y Si Vale el día 1, fijos de `RECURRENTES`, deudas con interés y auto, MSI el 16); pide
+confirmación si ya existen. `removeRecurringForMonth(month)` las borra.
 
 ---
 
 ## Módulo: Dashboard
 
-### `setDashMonth(ym)`
-Establece `dashMonth = ym` y llama a `renderDashboard()`.
+`setDashMonth(ym)` → `renderDashboard()`: tabs de meses (actual → diciembre), banner de
+proyección para meses futuros con cargar/quitar recurrentes, fondo de emergencia inline, 4 KPIs
+(Balance, Ingresos, Gastos, Activos), desglose de ingresos (Salario / Didi / Si Vale / Extras —
+`extras` son ingresos del mes que no son salario ni vale), y llama a `renderInsights` (Patrimonio
+Neto, Dinero Libre, DTI, Tasa de Ahorro), `renderDashCharts`, `renderSpecials`,
+`renderSubscriptions`, `renderRecent` (últimas 7), `renderAlerts` (presupuestos ≥ 70 %).
 
-### `renderDashboard()`
-Función principal del dashboard. Determina si el mes es futuro (`isFuture`) y obtiene proyección si aplica.
+`renderSpecials(freeMonth, refDate)`: **Maestría** (barra segmentada, `monthlyNeeded` para
+llegar a la fecha, 5 escenarios de ahorro con fecha estimada) y **Hoja de Ruta de Deudas** (MSI
+con fecha de liquidación, tarjetas con meses estimados, auto con tip de $1,000 extra; proyección
+`pb(d) = max(0, balance − meses × min)`). `renderSubscriptions`: recurrentes sin fin (de
+`PROYECTO`) y MSI activas (`rate===0 && type==='other' && start`) con urgencia por meses restantes.
 
-**Ingresos base calculados** (corregido 2026-08-01 — ver "Didi ya no es parte de BASE_INC" abajo):
-- `BASE_SALARY = 41000`
-- `BASE_INC = BASE_SALARY` (Si Vale excluido del flujo; Didi ya **no** se suma aquí — se registra como transacción manual de ingreso si ocurre)
-- `extras` = transacciones de ingreso del mes que NO son salario ni vale (ej. PTU, bonos, Didi si se registró manualmente)
+**La gráfica de balance `ch-bal`** toma sus seis puntos de **`CIFRAS.balanceMeses`**, la misma
+función que el tablero del Dashboard, para que las dos pantallas no discrepen; se le pasan
+`S.transactions` y `S.debts` (más frescos que `localStorage`). Si el maestro no cargara, cae al
+cálculo local. Sumar `transactions` a secas dejaba los meses sin registrar en cero.
 
-**Renderiza:**
-- Tabs de meses (mes actual hasta diciembre del año en curso)
-- Banner de proyección para meses futuros con botones de cargar/quitar recurrentes
-- Fondo de emergencia con input inline
-- 4 KPIs: Balance, Ingresos, Gastos, Activos Totales
-- Desglose de ingresos (Salario / Didi / Si Vale / Extras) con inputs inline
-- Llama a: `renderInsights`, `renderDashCharts`, `renderSpecials`, `renderSubscriptions`, `renderRecent`, `renderAlerts`
-
-### `renderInsights(inc, exp)`
-Renderiza 4 tarjetas en `d-insights`: Patrimonio Neto, Dinero Libre/Mes, Carga de Deuda (DTI), Tasa de Ahorro.
-
-### `renderSpecials(freeMonth, refDate)`
-Renderiza 2 paneles en `d-specials`:
-
-**Panel 1 — Maestría en Alemania:**
-- Barra segmentada de activos actuales hacia $300,000
-- Calcula `monthlyNeeded` = monto mensual necesario para llegar en dic 2027
-- 5 escenarios: ahorrar 100%, 70%, mínimo exacto, 50%, 30% del dinero libre
-- Cada escenario muestra fecha estimada de llegada y si es antes/a tiempo/tarde
-
-**Panel 2 — Hoja de Ruta de Deudas:**
-- Cuotas 0% MSI: barra de progreso y fecha de liquidación
-- Tarjetas de crédito con interés: progreso y meses estimados
-- Crédito automotriz: progreso y tip de "paga $1,000 extra para terminar antes"
-- Deudas proyectadas al mes seleccionado usando `pb(d) = Math.max(0, d.balance - monthsFromNow * d.min)`
-
-### `renderDashCharts(mtx)`
-Dibuja 2 gráficas:
-- **`ch-cat`** (donut): gastos del mes actual agrupados por categoría con colores de `CCOLORS`
-- **`ch-bal`** (línea): balance, ingresos y gastos de los últimos 6 meses
-
-### `renderSubscriptions(refDate)`
-Renderiza el panel `d-subs` con 2 columnas:
-- **Recurrentes sin fin**: Claude Code, iCloud, Gym, Internet, Celular, Gas (hardcodeados, ordenados por monto)
-- **Cuotas MSI activas**: lee `S.debts` filtrando `rate===0 && type==='other' && start`, calcula meses restantes con barra de progreso y fecha de término. Urgencia: verde ≤1 mes, amarillo ≤3 meses, azul resto.
-
-### `renderRecent()`
-Muestra las últimas 7 transacciones ordenadas por fecha en `d-recent`.
-
-### `renderAlerts()`
-Filtra presupuestos con ≥70% de uso en el mes actual. Muestra alertas amarillas (70-100%) o rojas (>100%) en `d-alerts`.
-
----
-
-## Módulo: Confirmación
-
-### `askDel(type, cb)`
-Guarda el callback en `confCb` y abre el diálogo `conf` con el tipo indicado.
-
-### `doConf()`
-Ejecuta `confCb()` y llama a `closeConf()`.
-
-### `closeConf()`
-Quita clase `open` del diálogo y resetea `confCb = null`.
+**Alimentación** se modela con su patrón real, y el modal muestra juntos el **promedio medido** y
+el **patrón declarado**: la brecha a la vista es el valor del cambio. El dato medido siempre gana.
+El desglose solo muestra categorías con movimientos.
 
 ---
 
 ## Módulo: Export / Import
 
-### `exportData()`
-Crea un Blob JSON con `S`, genera un enlace de descarga con nombre `finanzas_YYYY-MM-DD.json` y hace clic automático.
-
-### `importData(input)`
-Lee el archivo seleccionado con `FileReader`. Si es JSON válido, pide confirmación y reemplaza todo
-`S`. Resetea el input al terminar.
-
-**Con una excepción: `indicatorHistory` se FUSIONA, no se reemplaza** (2026-08-30). Todo lo demás
-en un import es el estado de hoy y tiene sentido pisarlo; el histórico mensual es lo único que no
-se puede reconstruir después. Restaurar un respaldo de hace tres meses borraba los tres meses que
-el navegador sí tenía. Ahora se cruzan **por `month`** —así no se duplica ninguno— y de cada mes
-repetido gana la foto con `savedAt` más reciente. El resultado es siempre la unión: un import no
-puede quitar meses.
-
-Junto con el rescate de `indicatorHistory` en `seedData()`, son las dos vías por las que se podía
-perder historial y ya no.
+`exportData()` descarga `finanzas_YYYY-MM-DD.json`. `importData(input)` reemplaza `S` tras
+confirmar, **con una excepción: `indicatorHistory` se FUSIONA por `month`** (gana el `savedAt`
+más reciente): el histórico mensual es lo único que no se puede reconstruir, y restaurar un
+respaldo viejo borraba meses que el navegador sí tenía. Un import nunca quita meses.
 
 ---
 
-## Módulo: Seed Data
+## Módulo: Seed Data y migraciones
 
-### `seedData()`
-**La lista de deudas ya no se escribe aquí**: sale de `CIFRAS.DEUDAS_SEED`, en
-`../Dashboard/datos-maestros.js`. Estaba duplicada de hecho —el seed aquí, la prosa en las otras
-apps— y cada subida de `SEED_VER` resembraba estos saldos, así que un saldo corregido a mano se
-perdía en el siguiente reseed si nadie se acordaba de tocar el seed también.
+`seedData()` corre solo si `localStorage['finanzasmx_v2_v'] !== SEED_VER` (hoy `'23'`): **borra**
+`localStorage[KEY]` y siembra 6 meses de transacciones de ejemplo más los lotes reales,
+presupuestos, deudas, metas, inversiones, activos e historial BTC. **Las deudas salen de
+`CIFRAS.DEUDAS_SEED`** y el BTC de `CIFRAS.BTC_SEED` (copia profunda): si el `<script src>` fallara,
+siembra sin deudas y avisa por `console.error`, mejor que sembrar una copia vieja escondida aquí.
+Al terminar marca todas las banderas de migración (las suyas y las del maestro) para que ninguna
+corrección histórica pise un seed más nuevo.
 
-Si el `<script src>` fallara, siembra **sin** deudas y avisa con un `console.error`: mejor eso que
-sembrar con una copia vieja escondida aquí.
+**Bumpear `SEED_VER` es para cambios estructurales**; es demasiado destructivo para "este saldo
+cambió". Para eso, **migraciones puntuales**: un `if` después de `load()` con **bandera propia en
+`localStorage`** (nunca comparación de igualdad con el valor viejo: el saldo pudo moverse por el
+uso normal y la comparación no dispara), que corrige y no vuelve a tocar, así que si Adán paga
+por su cuenta después no se lo revierte. **Las nuevas van a `MIGRACIONES` en
+`datos-maestros.js`**, nunca aquí; las anteriores al 2026-08-24 (`_banamex9k`, `_pagos20260813`,
+`_msibbva20260813`, `_ahorro20260817`) siguen en `init()`, inertes. **Toda migración de
+`finanzasmx_v2` existe en las dos apps** (Dashboard la replica) porque Adán suele abrir el
+Dashboard primero.
 
-**El historial de BTC tampoco se escribe aquí**: sale de `CIFRAS.BTC_SEED` (copia profunda), por
-la misma razón — vivía solo en este seed, o sea en un navegador. Una operación nueva se añade allá
-y llega a un navegador con datos por una migración (por id, solo si falta).
-
-Solo se ejecuta si `localStorage['finanzasmx_v2_v'] !== SEED_VER` (actualmente `'23'`). Borra el estado anterior e inyecta datos de ejemplo con 6 meses de transacciones (ene-jun 2026) más los movimientos sueltos de agosto 2026, presupuestos, deudas reales, metas, inversiones, activos físicos e historial BTC. Incrementar `SEED_VER` para forzar re-seed.
+`init()`: `seedData()` → `load()` → migraciones → crea `ef-001` si falta → `dashMonth = nowYM()` →
+fecha del topbar → `f-month` → listener de resize (`#menuBtn` bajo 640 px) → `renderDashboard()` →
+auto-fetch del precio BTC si tiene más de 15 minutos y hay historial.
 
 ---
 
 ## Módulo: Patrimonio Neto
 
-### `renderPatrimonio()`
-Calcula activos en 3 categorías:
-- **Financieros**: `S.investments` + BTC en MXN (`btcHeld × btcPrice × usdMxn`)
-- **Líquidos**: `S.activos` con `type === 'liquido'`
-- **Físicos**: `S.activos` con `type !== 'liquido'`
+`renderPatrimonio()`: financieros (`investments` + BTC en MXN), líquidos (`activos` tipo
+`liquido`), físicos (el resto); 3 KPIs, listas con barras y edición inline, pasivos por deuda y
+dónut `ch-pat`. `openActivoModal` (tipos `liquido | vehiculo | electronico | inmueble | joyeria |
+mueble | otro`), `saveActivo`, `delActivo`.
 
-Renderiza 3 KPIs, lista de activos financieros con barras de % del total, activos líquidos y físicos con edición inline, resumen de pasivos por deuda, y gráfica donut de distribución (`ch-pat`).
-
-### `openActivoModal(id=null)`
-Abre `mo-activo`. Tipos: `liquido`, `vehiculo`, `electronico`, `inmueble`, `joyeria`, `mueble`, `otro`.
-
-### `saveActivo()`
-Valida nombre y valor. Crea o actualiza en `S.activos`. Llama a `maybeRefreshIndicators()`.
-
-### `delActivo(id)`
-Filtra `S.activos`. Llama a `maybeRefreshIndicators()`.
+Aquí el patrimonio sí suma los físicos. **El del proyecto no**: `patrimonioNeto()` del Dashboard y
+Coach suman `investments + emergencyFund − debts`, porque la meta del millón se mide en dinero
+disponible y el punto de partida histórico se calculó así. Las dos cifras son distintas a propósito.
 
 ---
 
-## Módulo: Bitcoin (BTC)
+## Módulo: Bitcoin
 
-### La gráfica, reescrita el 2026-08-26
+**Un punto por día**, eje temporal lineal en milisegundos, pesos por defecto, y cada aportación
+con su línea vertical y su monto. Lo que eso evita: un eje categórico por compra dibuja el orden
+y no el tiempo; valuar todo el historial al precio de hoy reescribe el pasado; y una aportación
+como punto más no se distingue de una subida de precio.
 
-Adán: *"esta gráfica no me gusta … quiero ver lo que he invertido y cuánto dinero es en el
-transcurso del tiempo pero en pesos mexicanos y muy puntual en el gráfico se vea cuando haga
-aportaciones"*. Lo que estaba mal no era el estilo:
+**Compras y ventas.** Una entrada de `btcHistory` puede ser venta: `tipo:'venta'`, `btc`
+**negativo**, `usd` lo que entró. `btcEsVenta(h)`, `btcCompras(hist)`, `btcVentas(hist)` las
+separan, y la regla es una: **lo aportado y el precio promedio salen solo de las compras; una
+venta resta ₿ y suma a "retirado"**. P&L = `vale hoy + retirado − aportado`. En pantalla: botón
+**− Venta** junto a **+ Compra** (mismo modal, `btcTipoUI()` cambia rótulos y no deja vender más ₿
+de los que hay), fila roja en la tabla, lectura **Ya retirado**, triángulo invertido rojo sobre la
+curva con su marca con signo.
 
-| Tenía | Por qué engañaba |
-|---|---|
-| Un punto por compra, eje X categórico | Los 10 meses de feb→dic medían lo mismo que los 6 de dic→jun. La curva dibujaba el **orden** de las compras, no el tiempo |
-| Todo el historial valuado al precio de HOY | La línea "valor" no fue nunca el valor del portafolio: reescribía el pasado, y subía suave aunque BTC se hubiera desplomado en medio |
-| Dólares | No es la moneda en la que Adán cobra, paga la renta ni decide |
-| Las aportaciones eran un punto más de la curva | No se distinguía "aporté dinero" de "subió el precio" — las dos cosas mueven la línea hacia arriba |
+**El tipo de cambio vive con la compra**: `btcFxDe(h)` = `h.fx` o `S.usdMxn`. Un valor de **hoy**
+(lo que vale, el P&L) se convierte con `fxNow`; lo **aportado** con el fx de su día. Mezclarlos
+hacía que el histórico entero se moviera cada vez que el peso se movía. Las operaciones del
+maestro traen su `fx` y una migración se lo pone a las que ya estaban sin él.
 
-Ahora: **un punto por día**, eje temporal lineal en milisegundos, pesos por defecto, y cada
-aportación con su línea vertical y su monto.
-
-### Las ventas
-
-Desde el 2026-09-16 (la primera: $5,300 MXN el 14-sep, 0.003930 ₿ a $79,000 USD/₿ y 17.072 MXN/USD) una entrada
-de `btcHistory` puede ser una venta: `tipo:'venta'`, `btc` **negativo** (lo que salió) y `usd` lo
-que entró. Tres helpers la separan en todo el módulo — `btcEsVenta(h)`, `btcCompras(hist)`,
-`btcVentas(hist)` — y la regla es una: **lo aportado y el precio promedio salen solo de las
-compras; una venta resta ₿ y suma a "retirado"**. El P&L es `vale hoy + retirado − aportado`;
-sin eso, vender $5,300 se leía como perder $5,300. En pantalla: botón **− Venta** junto a
-**+ Compra** (mismo modal, con un selector de operación que cambia los rótulos y no deja vender
-más ₿ de los que hay), fila roja "VENTA" en la tabla (sin valor actual ni P&L: ya está en pesos),
-lectura **Ya retirado** bajo la gráfica, la pestaña del mes dice `venta −$5,300` si ese mes no
-hubo compras, un triángulo invertido rojo sobre la curva y su marca `−$5,300` con signo.
-
-### `btcSerie()`
-
-Construye la serie diaria desde la primera compra hasta hoy. Devuelve
-`{pts, compras, ventas, t0, tEnd, reales, dias}`; cada `pt` trae
-`{t, btc, aMxn, aUsd, rMxn, rUsd, vMxn, vUsd, pMxn, pUsd}` — `r*` es lo retirado acumulado, que
-no baja la línea de "aportado".
-
-**El precio de cada día** sale de interpolar linealmente entre anclas, de menos a más fiable
-(la última gana si caen el mismo día):
-
-1. el precio que Adán anotó en cada compra (`h.btcPrice`)
-2. el histórico diario real de CoinGecko (`S.btcPriceHist`), si lo trajo el botón 📈
-3. el precio de hoy (`S.currentBtcPrice`)
-
-Con el histórico cargado hay un ancla por día y la interpolación no interviene. Sin él la curva
-entre compras es una recta — una reconstrucción, no un dato — y **la leyenda lo dice**:
-`reales/dias` mide la cobertura y el pie del gráfico cambia de texto según el porcentaje. Una
-curva inventada y una real se dibujan igual de bonitas; solo una de las dos es información.
-
-### `btcFxDe(h)` — el tipo de cambio vive con la compra
-
-`h.fx` si existe, si no `S.usdMxn`. El campo es nuevo (input **Tipo de cambio USD/MXN ese día**
-en `mo-btc`, opcional). Sin él, "cuánto llevo metido en pesos" se recalculaba con el dólar de
-hoy y **el histórico entero se movía solo** cada vez que el peso se movía, aunque Adán no
-hubiera aportado un peso. Desde el 2026-09-16 las cuatro operaciones del maestro lo traen (BCE
-del día: 20.665, 17.980, 17.336 y 17.072) y la migración `_deudas20260916` se lo pone a las
-compras que ya estaban en el navegador sin él: lo aportado son **$52,129 MXN**, fijos.
-
-La regla que se sigue en todo el módulo: **un valor de HOY** (lo que vale, el P&L) se convierte
-con `fxNow`; **lo APORTADO** se convierte con el fx de su día. Mezclarlos era el bug.
-
-### `btcAportPlugin`
-
-Plugin inline de Chart.js (no hay dependencia nueva: `chartjs-plugin-annotation` habría sido
-otro `<script>` de CDN). Dibuja por cada compra una vertical punteada ámbar **que se apaga hacia
-abajo** (así marca el día sin partir la curva en dos) y una etiqueta con el monto, con dos
-esquinas cortadas — la misma geometría que las miras del marco — y un tallo que la cose a su
-vertical. La etiqueta va en el `layout.padding.top` — **fuera** del área de trazado — porque
-dentro chocaba con el triángulo cuando la aportación caía cerca del techo. Si dos etiquetas
-quedan a menos de 64 px, la segunda no se dibuja: encimadas son ilegibles y la vertical sola ya
-marca el día.
-
-### `btcGlowPlugin`, `btcCrossPlugin`, `btcNowPlugin`
-
-Tres plugins inline más, del mismo tamaño y por la misma razón: son diez líneas de canvas cada
-uno y evitan un `<script>` de CDN.
-
-- **`btcGridPlugin`** — la retícula del plano: horizontales punteadas en cada marca del eje Y,
-  verticales más tenues en las del X, marco interior, ejes izquierdo e inferior marcados y las
-  cuatro marcas de esquina. La dibuja el módulo porque **Chart.js 4 no deja puntear las líneas de
-  rejilla**, y una rejilla gris continua al lado de un panel de fósforo verde se lee como de otra
-  aplicación. Va en `beforeDatasetsDraw`: el Filler ya pintó el área, así que la retícula se ve a
-  través de ella y las curvas quedan encima. Ambas escalas llevan `grid:{display:false}`.
-- **`btcGlowPlugin`** — el halo de la curva sale de `ctx.shadowBlur` del propio lienzo; Chart.js
-  no tiene "glow" y un segundo dataset desenfocado debajo costaría el doble de trazado. Entra
-  solo en los datasets 1 y 2 (línea y triángulos): el relleno de área lo pinta el plugin Filler
-  en `beforeDatasetsDraw`, **antes**, así que no se emborrona.
-- **`btcCrossPlugin`** — la retícula del cursor. Va en **cian y continua** a propósito: las
-  verticales ámbar punteadas ya significan "aquí aportaste", y "dónde estoy mirando" no puede
-  parecer lo mismo.
-- **`btcNowPlugin`** — el punto de hoy como faro (dos aros que se apagan hacia fuera). El
-  `layout.padding.right` existe por él: sin ese carril, el aro se recortaba contra el borde.
-
-El canvas no hereda CSS, así que los plugins pintan con dos variables de módulo — `btcAcc` (el
-RGB del verde) y `btcGlow` (la intensidad del halo) — que `renderBtcHistory()` **relee del tema en
-cada render**: sin eso, cambiar de claro a oscuro dejaba la gráfica con el verde del tema
-anterior.
-
-Los degradados (área de ganancia/pérdida y la curva, que va de `--btc-lo` en el pasado a
-`--btc-hi` hoy) se crean con `createLinearGradient` sobre el contexto del canvas justo antes de
-armar la configuración: el `chartArea` todavía no existe en ese momento, así que se usan el alto
-y el ancho reales del contenedor.
-
-### `fetchBtcHistory(auto)`
-Con `auto` (al abrir la app, si el histórico guardado tiene más de un día) va en silencio: sin
-toast ni cambiar el botón. Así la curva es precio real de mercado desde que se abre; el botón 📈
-queda para forzarlo. Se lanza 1,5 s después del precio actual porque CoinGecko limita las
-llamadas por minuto.
-
-`async`. Trae `coins/bitcoin/market_chart?vs_currency=mxn&days=365` y guarda en `S.btcPriceHist`
-**recortado al rango que la gráfica dibuja** (el historial completo son ~100 KB de localStorage
-que no se ven nunca). CoinGecko gratis entrega 365 días hacia atrás; lo anterior sigue
-interpolado. Si falla, toast y la curva se queda reconstruida — nunca se rompe la vista.
-
-### `setBtcCur(c)`
-
-Alterna MXN/USD, lo persiste en `localStorage['btc_cur']` y re-renderiza. El toggle gobierna la
-gráfica, la fila de tarjetas, los tabs por mes y sus paneles. La tabla histórica muestra
-**siempre las dos** monedas (USD arriba, MXN debajo): es el registro, no la vista.
-
-### `renderBtcHistory()`
-
-Renderiza el panel completo de BTC en `btc-history` dentro del Plan de Inversiones.
-
-**KPIs en USD:** `totalBtc` (compras − ventas), `totalUsd` (solo compras), `avgPrice`
-(`totalUsd/btcComprado`), `retUsd` (ventas), `curVal`, `pnl` (`curVal + retUsd − totalUsd`), `pnlPct`.
-
-**KPIs en MXN:** `invMxn` (cada compra a su propio fx), `retMxn`, `valMxn`, `pnlMxn`, `pnlMxnPct`.
-
-**Renderiza:**
-- Inputs inline de precio BTC y tasa USD/MXN + botón "Actualizar precio" (`fetchBtcPrice()`)
-- La gráfica `btc-ch-pnl` en su panel `.btcx`, con su toggle de moneda y el botón 📈 **Precio real**
-- Fila de 6 lecturas (`.btcx-kpi`) bajo la gráfica, en la moneda activa y con la otra como subtítulo
-- Tabs por mes con el P&L de cada período, en la moneda activa
-- Tabla histórica por compra en ambas monedas, con botones editar/eliminar
-
-**La banda de 5 tarjetas en dólares** que estaba arriba se oculta (`display:none`) cuando hay
-precio actual: repetía en dólares lo que la fila bajo la gráfica ya dice en pesos. Sigue en el
-código porque es la única vista cuando **no** hay precio actual y por tanto no hay gráfica.
-
-### `switchBtcTab(key)`
-Muestra el pane del tab `key` ('resumen' o 'YYYY-MM') y oculta los demás. El estado activo es
-solo `classList.toggle('on')`: el halo y la barra de luz viven en `.btcx-tab.on`, no en
-propiedades escritas a mano desde aquí.
-
-### `fetchBtcPrice()`
-`async`. Llama a `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,mxn`. Actualiza `S.currentBtcPrice`, `S.usdMxn` y `S.btcLastFetch`. Refresca BTC history, dashboard, indicadores y patrimonio. Maneja errores con toast.
-
-### `updateBtcPrice(val)`
-Actualiza `S.currentBtcPrice` manualmente (desde input). Refresca todas las vistas afectadas.
-
-### `updateUsdMxn(val)`
-Actualiza `S.usdMxn` manualmente (desde input). Refresca todas las vistas afectadas.
-
-### `openBtcModal(id=null, tipo=null)`
-Abre `mo-btc`. Si `id` existe carga datos para edición (y el selector toma el tipo de esa
-operación); `tipo:'venta'` abre el formulario como venta. `btcTipoUI()` cambia los rótulos
-(*USD recibidos*, *BTC vendido*). El campo de tipo de cambio se prellena con `S.usdMxn`.
-
-### `calcBtc()`
-Calcula automáticamente `btc-received = btc-usd / btc-price-at` cuando el usuario edita los campos.
-
-### `saveBtcPurchase()`
-Valida fecha, USD y precio BTC. Calcula `btc = usd / btcPrice` con 8 decimales — **negativo si es
-venta**, y una venta no puede superar los ₿ que hay. Guarda en `S.btcHistory` **con `fx`** (el del
-formulario, o `S.usdMxn` como respaldo) y con `tipo`.
-
-### `delBtc(id)`
-Filtra `S.btcHistory` y llama a `renderBtcHistory()`.
+- **`btcSerie()`** construye la serie diaria desde la primera compra: `{pts, compras, ventas, t0,
+  tEnd, reales, dias}`, cada `pt` con `{t, btc, aMxn, aUsd, rMxn, rUsd, vMxn, vUsd, pMxn, pUsd}`.
+  El precio de cada día interpola entre anclas, de menos a más fiable: el precio anotado en cada
+  compra → el histórico de CoinGecko (`S.btcPriceHist`) → el precio de hoy. Sin histórico la
+  curva entre compras es una recta, **y la leyenda lo dice** (`reales/dias` mide la cobertura).
+- **Plugins inline** (diez líneas de canvas cada uno, sin `<script>` de CDN): `btcGridPlugin`
+  (retícula punteada; Chart.js 4 no deja puntear la rejilla; en `beforeDatasetsDraw`, ambas
+  escalas con `grid:{display:false}`), `btcAportPlugin` (vertical ámbar que se apaga hacia abajo y
+  etiqueta con esquinas cortadas en `layout.padding.top`, **fuera** del área; si dos quedan a
+  menos de 64 px la segunda no se dibuja), `btcGlowPlugin` (`ctx.shadowBlur` solo en los datasets
+  1 y 2), `btcCrossPlugin` (cursor cian **continuo**: las ámbar punteadas ya significan "aquí
+  aportaste"), `btcNowPlugin` (el punto de hoy como faro; `layout.padding.right` existe por él).
+  Pintan con `btcAcc` y `btcGlow`, que `renderBtcHistory()` **relee del tema en cada render**. Los
+  degradados se crean con `createLinearGradient` sobre el alto y ancho reales del contenedor
+  (el `chartArea` aún no existe).
+- **`fetchBtcHistory(auto)`**: `market_chart?vs_currency=mxn&days=365`, guardado **recortado al
+  rango que la gráfica dibuja**. Con `auto` (al abrir, si el guardado tiene más de un día) va en
+  silencio, 1.5 s después del precio actual (CoinGecko limita por minuto). Si falla, toast y la
+  curva se queda reconstruida.
+- **`renderBtcHistory()`**: inputs de precio y tipo de cambio + `fetchBtcPrice()`, la gráfica
+  `btc-ch-pnl` con toggle MXN/USD (`setBtcCur`, persiste en `btc_cur`) y botón 📈 **Precio
+  real**, seis lecturas `.btcx-kpi` en la moneda activa con la otra de subtítulo, tabs por mes
+  con P&L (`switchBtcTab`) y tabla histórica **siempre en las dos monedas** (es el registro, no la
+  vista). KPIs USD: `totalBtc` (compras − ventas), `totalUsd` (compras), `avgPrice`, `retUsd`,
+  `curVal`, `pnl`, `pnlPct`; MXN: `invMxn` (cada compra a su fx), `retMxn`, `valMxn`, `pnlMxn`.
+  La banda vieja de 5 tarjetas en dólares queda oculta cuando hay precio; es la única vista
+  cuando no lo hay.
+- `openBtcModal(id, tipo)`, `calcBtc()` (`btc = usd / precio`), `saveBtcPurchase()` (8 decimales,
+  negativo si es venta, guarda `fx` y `tipo`), `delBtc(id)`, `updateBtcPrice`, `updateUsdMxn`.
 
 ---
 
-## Inicialización
-
-### `init()`
-Se ejecuta al cargar la página:
-1. Llama a `seedData()` (solo si es primera vez o SEED_VER cambió)
-2. Llama a `load()` para cargar datos de localStorage
-3. **Migraciones puntuales** (ver abajo) — corrigen campos específicos sin tocar el resto de los datos de Adán
-4. Crea meta `ef-001` (fondo de emergencia) si no existe
-5. Establece `dashMonth = nowYM()`
-6. Escribe la fecha actual en el topbar
-7. Establece `f-month` al mes actual en el filtro de transacciones
-8. Configura listener de resize para mostrar/ocultar botón de menú móvil
-9. Llama a `renderDashboard()`
-10. Hace auto-fetch del precio BTC si tiene más de 15 minutos sin actualizarse (y hay historial BTC)
-
-### Migraciones puntuales — corregir un dato real sin bumpear `SEED_VER`
-
-`seedData()` solo re-siembra si `SEED_VER` cambió, y cuando lo hace **borra por completo** `localStorage[KEY]` antes de reinyectar el seed (`localStorage.removeItem(KEY)`) — cualquier transacción, deuda o inversión que Adán haya agregado a mano desde el último seed **se pierde**. Bumpear `SEED_VER` es el mecanismo correcto para cambios estructurales del modelo de datos, pero es demasiado destructivo para una corrección puntual tipo "este saldo ya cambió en la vida real".
-
-Para esos casos, `init()` trae un patrón más seguro: un `if` puntual después de `load()` que busca el registro por `id`, verifica que no se haya aplicado ya, lo corrige, y llama a `save()` — sin tocar nada más del objeto `S`. Ya existía uno (`_maeGoal.target===300000` → `500000`, meta de la Maestría). **Ejemplo nuevo, 2026-08-02** (Adán reportó "Banamex ya solo le debo $9,000, pero vendí todas mis acciones de GBM"):
+## Estructura de datos — ejemplos
 
 ```js
-// Migración 2026-08-02: se vendieron todas las acciones de GBM
-if(S.investments.find(i=>i.id==='i003')){S.investments=S.investments.filter(i=>i.id!=='i003');save();}
-// Migración 2026-08-02b: Banamex a $9,000 real — bandera propia, no comparación de balance
-if(!localStorage.getItem(KEY+'_banamex9k')){
-  const _banamex=S.debts.find(d=>d.id==='d002');
-  if(_banamex){_banamex.balance=9000;save();}
-  localStorage.setItem(KEY+'_banamex9k','1');
-}
-```
-
-`debts[].total` (14349.72) se dejó intacto a propósito — sigue siendo el monto original de la deuda, usado para calcular el % pagado (`1-balance/total`) en Dashboard y en el propio `renderDebts()`. Solo `balance` (lo que falta por pagar hoy) cambió. La inversión `i003` (NVIDIA — GBM+) se eliminó del array por completo, no se puso en `$0`, porque ya no existe esa posición. El seed base (más abajo, dentro de `seedData()`) también se actualizó con estos mismos valores, para que una instalación nueva desde cero ya nazca correcta — pero **sin** bumpear `SEED_VER`, así que no dispara un re-seed destructivo en el navegador donde Adán ya tiene datos reales.
-
-**Por qué la migración de Banamex usa una bandera y no `balance===14349.72` (corregido el mismo día, segunda vuelta)**: la primera versión comparaba el balance contra el valor exacto del seed original. Adán reportó que el Dashboard seguía mostrando ~$17,000 — su balance real ya había cambiado (probablemente por interés acumulado, `rate:10`) y ya no coincidía con `14349.72`, así que la comparación estricta nunca disparaba el fix. La versión con bandera (`KEY+'_banamex9k'` en `localStorage`) corrige el balance a $9,000 **una sola vez, sin importar qué valor tuviera antes**, y no vuelve a tocarlo — así que si Adán paga más adelante y baja de $9,000 por su cuenta, esta migración no se lo revierte en la siguiente carga. Este es el patrón a preferir sobre comparar por igualdad exacta cuando se corrige un dato que pudo haber cambiado por el uso normal de la app entre que se escribió la migración y que el usuario la corrió.
-
-**Segunda migración con este patrón, `_pagos20260813`** (ver la sección fechada al final de este documento): liquidación de la TC Banamex, Boletos Ticketmaster pagados y Apple Watch MSI corregido a 2 cuotas. Igual que la anterior, está **replicada en `Dashboard/dashboard.html`** (`fixPagos20260813IfNeeded()`, bandera compartida) porque Adán normalmente abre el Dashboard antes que Finanzas — regla general: **toda migración de `finanzasmx_v2` tiene que existir en las dos apps**.
-
-Verificado con Playwright: una carga limpia (`localStorage` vacío) usa el seed corregido directamente; un `localStorage` ya sembrado con un balance distinto (simulando el drift real que reportó Adán, ~$17,000) se corrige a $9,000 en la siguiente carga sin perder una transacción manual de prueba agregada aparte; y si después se simula que Adán paga y baja el balance a $5,000 por su cuenta, una recarga posterior **no lo revierte** — confirma que la migración es de un solo uso.
-
----
-
-## Estructura de datos — Ejemplos
-
-### Transacción
-```js
-{ id: 'abc123', type: 'expense', desc: 'Supermercado', amount: 2500,
-  date: '2026-06-05', cat: 'Alimentación', notes: '' }
-```
-
-### Presupuesto
-```js
-{ id: 'b001', cat: 'Alimentación', limit: 3000 }
-```
-
-### Deuda
-```js
-{ id: 'd001', name: 'Tarjeta BBVA', type: 'credit_card',
-  total: 32343.31, balance: 32343.31, rate: 10, min: 1500,
-  day: 11, start: '2024-01-22', noInterest: 0 }
-// type: credit_card | loan | mortgage | car | other
-// rate: 0 = MSI sin intereses
-// noInterest: monto a pagar para no generar intereses
-// remainingMonths: meses restantes (opcional, usado por auto)
-```
-
-### Meta de ahorro
-```js
-{ id: 'g001', name: 'Maestría en Alemania', target: 300000,
-  current: 53740, date: '2027-12-01', icon: '🎓' }
-// id especiales: 'ef-001' = fondo de emergencia, 'g001' = maestría
-```
-
-### Inversión
-```js
-{ id: 'i002', name: 'CETES', type: 'cetes', invested: 3000,
-  value: 3000, date: '2026-04-20', rate: 11 }
-// type: cetes | fondos | acciones | crypto | inmuebles | deuda | otro
-```
-
-### Activo físico
-```js
-{ id: 'ac001', name: 'BYD Dolphin Mini', type: 'vehiculo',
-  value: 415000, notes: 'Precio de compra' }
-// type: liquido | vehiculo | electronico | inmueble | joyeria | mueble | otro
-```
-
-### Compra BTC
-```js
-{ id: 'btc001', date: '2025-02-01', usd: 200,
-  btcPrice: 102007, btc: 0.001960, notes: 'Primera compra' }
+// Transacción
+{ id, type:'expense'|'income', desc, amount, date:'YYYY-MM-DD', cat, notes }
+// Presupuesto
+{ id, cat, limit }
+// Deuda   type: credit_card | loan | mortgage | car | other · rate 0 = MSI · noInterest: monto para no generar intereses
+{ id:'d001', name:'Tarjeta BBVA', type:'credit_card', total, balance, rate, min, day, start, noInterest }
+// Meta    ids especiales: 'ef-001' fondo de emergencia, 'g001' maestría, 'g002' reservada
+{ id, name, target, current, date, icon }
+// Inversión   type: cetes | fondos | acciones | crypto | inmuebles | deuda | otro
+{ id, name, type, invested, value, date, rate }
+// Activo      type: liquido | vehiculo | electronico | inmueble | joyeria | mueble | otro
+{ id, name, type, value, notes }
+// Operación BTC
+{ id, date, usd, btcPrice, btc, fx, tipo:'venta'?, notes }
 ```
 
 ---
 
-## Flujo semanal de inversión (lógica GBM)
+## Modo oscuro/claro · Responsivo · Enlace al Dashboard
 
-**Corregido 2026-08-01** — la versión anterior de este diagrama incluía "Didi semanal" en las 4 semanas; el código real ya no reparte Didi por semana (Didi se registra como transacción manual si ocurre, y ya no alimenta el cálculo de `renderGBM()`):
-
-```
-Semana 1 (días 1-7):
-  IN:  Quincena 1 ($20,500)
-  OUT: Renta ($11,000) + gastos variables
-  → GBM: sobrante → MSFT 70% / NVDA 30%
-
-Semana 2 (días 8-14):
-  IN:  ninguno
-  OUT: Dolphin Mini ($6,700) del saldo reservado en BBVA la semana 1
-  → GBM: $0 (sin ingreso ni sobrante esta semana)
-
-Semana 3 (días 15-21):
-  IN:  Quincena 2 ($20,500)
-  OUT: CETES ($1,500) + Servicios ($1,314) + Suscripciones ($1,930)
-       + TC mínimos ($2,310) + MSI activas + gastos variables
-  → GBM: sobrante → MSFT 70% / NVDA 30%
-
-Semana 4 (días 22-28):
-  IN:  ninguno
-  OUT: ninguno
-  → GBM: $0 (semana libre)
-```
-
-Si `S.weeklyLeftover > 0`, ese monto manual reemplaza el estimado automático en la semana actual.
-
-### Didi ya no es parte de `BASE_INC` ni de `renderGBM()` (código muerto detectado 2026-08-01)
-
-`S.didiMonthly` y `setDidiMonthly(val)` (línea ~283) **siguen existiendo en el código pero ya no los invoca ningún botón del HTML** — verificado con búsqueda exhaustiva. En algún punto se simplificó el flujo de ingresos (`BASE_INC = BASE_SALARY` a secas, sin sumar Didi) y se dejó de repartir Didi entre semanas en `renderGBM()`, pero la función/campo no se borraron. Si Adán vuelve a manejar Didi como ingreso recurrente en vez de transacción manual caso por caso, hay 2 opciones: (a) borrar `S.didiMonthly`/`setDidiMonthly()` por completo si de verdad ya no se usa, o (b) reconectarlo a `BASE_INC` y a `renderGBM()` a propósito. Ahora mismo no rompe nada (simplemente nunca se ejecuta), pero es deuda de código que vale la pena resolver en un sentido o el otro.
+Toggle 🌙/☀️ persistido en **`coach-theme`**, la misma clave que Coach y el Dashboard; se aplica
+como `data-theme` en `<html>` antes de pintar. Se verifica a **1600 y 390 px**: sidebar tras ☰
+bajo 640 px, tablas con scroll interno, KPIs a una columna, nunca scroll horizontal. El enlace al
+Dashboard (`#btnVolverDash`, 🚀) es un botón `.theme-toggle-btn` en `.topbar-actions`, nunca
+flotante.
 
 ---
 
-## Modo oscuro/claro
-
-Toggle 🌙/☀️ en la barra superior, persistido en `coach-theme` — la misma clave que Coach y el
-Dashboard, así que el tema se siente uno solo al saltar entre apps. Se aplica como `data-theme` en
-`<html>` antes de pintar, para que no haya destello claro al cargar en oscuro.
-
-## Responsivo
-
-Verificado a **1600px y 390px** (iPad y iPhone 15 Pro). En móvil el sidebar se colapsa tras el
-botón ☰ (`#menuBtn`, visible bajo 640px), las tablas scrollean dentro de su contenedor y los KPIs
-pasan a una columna. La página nunca scrollea en horizontal.
-
-## Enlace al Dashboard
-
-Botón redondo con 🚀 en `.topbar-actions`, con la clase `.theme-toggle-btn` que ya usan sus
-vecinos — hereda tema y estilos sin CSS nuevo. **No** es un bloque flotante: uno `position:fixed`
-se encimaba sobre "+ Nueva transacción" y no seguía el tema del archivo.
-
----
-
-## Las cifras compartidas y las migraciones
-
-Esta app es la **fuente** de los saldos: los escribe en `finanzasmx_v2`, que leen el Dashboard y
-Coach. Pero el *seed* y las *migraciones* ya no viven aquí, sino en
-[`../Dashboard/datos-maestros.js`](../Dashboard/datos-maestros.js).
-
-Carga ese módulo en el `<head>`. No lo necesita para pintar nada —sus datos salen de `S`— pero así
-cualquier texto nuevo puede usar los mismos `{{marcadores}}` que las otras apps en vez de empezar
-otra copia a mano.
-
-**Las correcciones de saldo nuevas van al módulo**, nunca duplicadas aquí. Las anteriores al
-2026-08-24 (`_banamex9k`, `_pagos20260813`, `_msibbva20260813`, `_ahorro20260817`) siguen en
-`init()`: ya corrieron, tienen su bandera y son inertes.
-
-Detalle en [`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md).
-
----
-
-## La gráfica de balance (`ch-bal`)
-
-Adán, 2026-09-07: *"también el html de finanzas la gráfica está mal, debería estar como la
-que hiciste hace rato"* —por la del Dashboard, bajo el calendario—.
-
-Sumaba `transactions` a secas, así que **los meses sin registrar salían en cero**: la línea de
-ingresos se desplomaba a $0 en julio, agosto y septiembre aunque la nómina hubiera entrado los
-tres meses. Ahora los seis puntos salen de **`CIFRAS.balanceMeses`**, la misma función que usa
-el Dashboard —ver *El balance mensual, compartido* en
-[`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md)—, de modo que las dos
-pantallas no pueden discrepar: se comprobó abriendo las dos en la misma sesión y comparando
-los seis meses uno a uno.
-
-Se le pasan `S.transactions` y `S.debts`, que aquí están más frescos que `localStorage` porque
-esta app los acaba de tocar. Y queda un respaldo: si el maestro no cargara, cae al cálculo de
-siempre en vez de dejar la tarjeta vacía. El resto —Chart.js, los colores, la tensión .4— no
-se tocó.
-
----
-
-## Estado de las deudas
-
-| id | Deuda | Saldo | Nota |
-|---|---|---|---|
-| `d001` | Tarjeta BBVA | **$39,000** ⚠️ | Dato de Adán el 16-sep-2026 ($37,000 el 7-sep, $34,000 el 24-ago). Zanja el pendiente de abajo |
-| `d002` | Tarjeta Banamex | **$7,800** ⚠️ | Se liquidó el 13-ago-2026, volvió a usarse el 1-sep ($5,985) y sigue subiendo ($7,000 el 7-sep) |
-| `d003` | Crédito Automotriz | $293,000 | 12.99%, $6,700/mes — ver nota abajo |
-| `d004` | Apple Watch MSI | $854 | Queda 1 cuota, la del 18 sep 2026 |
-| `d007` | Boletos Ticketmaster | $0 ✅ | Liquidado |
-| `d008` | iPhone 15 MSI | $11,362 | |
-| `d009` | Zap Stylo (MSI BBVA) | $334 | "El de los zapatos" — el único MSI de BBVA vivo |
-| `d010`, `d011` | Merpago, Mercado Pago | $0 ✅ | Liquidados el 24-ago-2026 |
-| `d012` | Deuda del departamento | $13,000 | 16-sep-2026, `loan` a 0%. Sin mínimo ni día hasta que Adán diga cómo la paga |
-
-Deuda total **$365,350** según el maestro, de la que **$46,800 es deuda cara** (las dos tarjetas al 55.7%).
-Los valores vivos están en `finanzasmx_v2`; esta tabla es la foto para orientarse rápido.
-
-### El auto subió $1,000 el 25-ago-2026
-
-De $292,000 a **$293,000**, un día después. En un crédito con pagos mensuales el saldo no sube:
-o el dato del 24 era una estimación, o ese mes cargó interés sin que entrara el abono. **Sin
-confirmar contra el estado de cuenta.** Se registró el número tal cual lo reportó Adán.
-
-Conviene resolverlo junto con lo de la TC BBVA: son los dos saldos que se están moviendo hacia
-arriba, y ambos alimentan las proyecciones del Plan Maestro que siguen sin rehacerse.
-
-`d005` y `d006` **se borraron**, no se pusieron en $0: eran un vuelo y un MSI que nunca existieron
-en el historial real de BBVA. Dejarlos en $0 los mostraría para siempre en "✅ Liquidadas", que es
-una afirmación falsa distinta.
-
----
-
-## La tasa de las tarjetas: 55.7%, y por qué
-
-`d001` tenía `rate:10`, que sobre $32,343 daba $270/mes de intereses. Lo real son ~$1,500.
-
-Lo confirman los registros de este mismo archivo: la deuda llevaba `total == balance == 32,343.31`
-desde el **22-ene-2024** pagando $1,500 al mes. **31 meses, $46,500 pagados, saldo intacto** — eso
-solo pasa si el interés se come el pago completo. Tasa implícita: `1500 × 12 ÷ 32,343.31 = 55.7%`.
-
-⚠️ **Sigue pendiente confirmarlo contra el estado de cuenta**, que trae la tasa y el CAT reales.
-
-Este dato alimenta el medidor "🔥 Intereses este mes", que ahora avisa de que **el pago mínimo no
-amortiza nada**.
-
-### Y ahora la tarjeta está subiendo
-
-El 24-ago-2026 el saldo pasó de $32,343.31 a **$34,000**: **+$1,656.69 en un mes**, que no cuadra
-con pagar $1,500 y quedar en tablas. Dos lecturas, y hay que confirmar cuál es:
-
-- **No se pagó el mínimo ese mes.** El aumento sería puro interés: `1,656.69 ÷ 32,343.31 = 5.12%
-  mensual ≈ 61% anual`, muy cerca del 55.7% estimado más comisiones. Es la que mejor encaja.
-- **Sí se pagó y hubo consumo nuevo.** Para subir eso tras abonar $1,500, el cargo del mes tendría
-  que haber sido ~$3,157: el 9.8% del saldo, demasiado para ser solo interés.
-
-La conclusión operativa es la misma en ambos casos: **esta tarjeta ya no está estancada, está
-creciendo**. Hasta resolverlo, la simulación mes a mes de Coach queda sin rehacer.
-
-### Y el 30-ago-2026 bajó por primera vez
-
-Adán reporta **$32,100**: −$1,900 en seis días. Es la **primera bajada desde enero de 2024**, y por
-eso cambia una regla del modelo:
-
-- Hasta ahora `d001` mantenía la invariante `total == balance`, porque el saldo nunca bajaba: con
-  `total` congelado, las barras de "pagado real" habrían salido **negativas**.
-- Ahora `total` se queda en **$34,000** —el pico— y `balance` baja a $32,100. La diferencia, $1,900,
-  es abono real y es exactamente lo que esas barras deben enseñar. La invariante se rompe a
-  propósito: describía una tarjeta que crecía sola, y dejó de serlo.
-
-$1,900 en un mes con un mínimo de $1,500 significa que se abonó por encima del mínimo, o que hubo
-un pago extra. Sigue pendiente el mismo contraste contra el estado de cuenta.
-
----
-
-## Cómo se calculan los saldos MSI
-
-`autoBalance(d, refDate)` solo auto-calcula **MSI a 0%** (`type:'other'`, `rate:0`): son
-deterministas, `total − meses × cuota`. Las tarjetas y el crédito con interés se quedan manuales,
-porque dependen de pagos reales.
-
-Cuenta las cuotas con **`floor`, no `round`**: solo las YA cobradas. Con `round`, una cuota que aún
-no se cobra (cobra el 18 y hoy es 13) se daba por pagada y el saldo salía una cuota más bajo.
-
-El `start` de cada MSI **no es la fecha de compra literal**: es la que hace que `autoBalance`
-reproduzca exactamente las cuotas del estado de cuenta (30.44 días por mes). Esa misma fecha decide
-si la cuota entra en el plan semanal (`start + totalM`), así que al elegirla hay que verificar
-contra **los dos** cálculos, no solo contra el saldo.
-
----
-
-## Huecos de datos conocidos
-
-No son fallos de la app: es información que no está registrada, y por eso no se puede mostrar.
-
-- **El fondo de la Maestría no está desglosado.** `g001` guarda `current: 53740` como una sola
-  cifra. No hay instrumentos ligados, ni historial de aportaciones, ni cuenta asociada — las únicas
-  entradas de `investments` son CETES y el depósito de renta, que **no** son ese fondo. Para verlo
-  desglosado habría que dar de alta en **Inversiones** dónde está guardado ese dinero.
-- **Los `activos` no cuentan en el patrimonio.** Hay 15 bienes registrados (BYD, PC, teléfonos,
-  PS5, monitores, efectivo, cuenta) por unos **$540,600**, y `patrimonioNeto()` solo suma
-  `investments + emergencyFund − debts`. **Se decidió no cambiar la fórmula**: la meta del millón se
-  mide en dinero disponible, y el punto de partida histórico de −$308,830 se calculó así. El panel
-  muestra los bienes aparte y da la cifra con y sin ellos.
-- **No hay Bitcoin en `investments`.** Adán lo menciona como parte de su portafolio y el panel de
-  inversión lo trata como tal, pero en los datos solo están CETES y el depósito de renta.
-
----
-
-## Alimentación: dato medido contra patrón declarado
-
-El desglose de gastos **no inventa categorías**: muestra solo las que tienen movimientos reales.
-Restaurantes no aparece si no se gastó ahí.
-
-Alimentación se modela con su patrón real en vez de un promedio ciego, y el modal muestra juntos el
-**promedio medido** ($1,766.67) y el **patrón declarado** ($7,110). Esa brecha de $5,343 a la vista
-es el valor del cambio. **La regla de fondo no cambió**: el dato medido siempre le gana al
-declarado.
-
----
-
-
----
-
-## Las seis compras del 1-sep-2026
-
-Adán las reportó el 3-sep, todas del mismo día:
-
-| id | Qué | Importe | Categoría | Cómo se pagó |
-|---|---|---|---|---|
-| `s066` | Tenis Tommy Hilfiger | $1,500 | Ropa | contado |
-| `s067` | Despensa del mes | $1,800 | Alimentación | contado |
-| `s068` | Plancha (Amazon) | $1,902 | Hogar/Renta | **TC Banamex** |
-| `s069` | Avodart (dutasterida 0,5 mg) | $1,560 | Salud | **TC Banamex** |
-| `s070` | Minoxidil 5% NR-11 (Polaris Research) | $900 | Salud | **TC Banamex** |
-| `s071` | Mouse | $1,623 | Otros gastos | **TC Banamex** |
-
-**$9,285 en un día**, de los que **$5,985 fueron a crédito**. Los dos tratamientos llevan el
-nombre exacto del catálogo de `RUTINA_PELO` — "NR 11" es el minoxidil tópico y "dutasteride en
-cápsulas" es el Avodart — para que el gasto y la ficha del producto se puedan cruzar.
-
-
----
-
-## Cómo se anota un gasto pagado con tarjeta
-
-**Convención: si el gasto se pagó con una tarjeta de crédito, la tarjeta se escribe en las notas**
-(`TC Banamex`, `TC BBVA`). No es cosmético — el tablero del Dashboard lee esa nota para decidir si
-el gasto **sale de tu caja ese día** o solo **sube el saldo de la tarjeta**:
-
-| Cómo se anota | Qué hace el tablero |
-|---|---|
-| `notes: 'Compra única — de contado'` | resta del día, como cualquier pago |
-| `notes: 'TC Banamex — 30 cápsulas'` | **no** resta ese día; sale en "Cargaste a la tarjeta el N", y lo cobra el mínimo del día 8 |
-| `cat: 'Deudas'` + `notes` con la tarjeta | sí resta: es un **pago a** la tarjeta, no una compra con ella |
-
-Sin la nota, una compra a crédito se contaría dos veces: el día que se hizo y otra vez en el
-mínimo de la tarjeta. Con ella, el saldo del día es el dinero que de verdad te queda.
-
-Las seis del 1-sep-2026 son el ejemplo: dos de contado ($1,500 + $1,800) y cuatro a Banamex
-($5,985, que es exactamente lo que subió `d002`).
-
-### Lo que se movió solo
-
-La Banamex llevaba en $0 desde el 13-ago y **vuelve a ser deuda cara**:
-
-| Derivada | Antes | Ahora |
-|---|---|---|
-| `deudaCara` | $34,000 | **$39,985** |
-| `deudaTotal` | $339,550 | **$345,535** |
-| `minimosDeuda` | $9,715 | **$10,525** |
-| `margen` | $30,271 | **$29,461** |
-
-Los $810 del mínimo de Banamex llevaban tres semanas fuera de `minimosDeuda` —solo cuentan las
-deudas con saldo vivo— y vuelven a entrar: **el margen baja $810 al mes sin que nadie haya
-tocado un gasto fijo**. Eso es lo que de verdad cuesta la compra a crédito, además del interés.
-
-### Dónde vive
-
-En `CIFRAS.GASTOS_20260901`, en `Dashboard/datos-maestros.js`, **una sola vez**: de ahí las
-siembra el seed de `Finanzas.html` (para un navegador en blanco) y de ahí las aplica la
-migración `_gastos20260901` (para el navegador que ya tiene datos, que es el caso de Adán).
-La migración añade por id y solo si falta, así que ninguna de las dos vías duplica nada.
-
-`SEED_VER` **no se subió**: hacerlo habría borrado los movimientos capturados a mano.
-
-### El precio del Avodart pasó de $1,500 a $1,560
-
-Es el mismo producto de `RUTINA_PELO`, y su `precio` era una referencia de $1,500 tomada de
-cuando lo compró la primera vez. Ahora es lo que pagó de verdad. Sube con él el costo mensual
-del pelo: **$2,805 → $2,865**, porque ese bote dura exactamente un mes.
-
-### El pendiente de `d001`, cerrado el 7-sep-2026
-
-Aquí quedó anotado que la tabla de arriba decía **$32,100** para la TC BBVA —por el abono de
-$1,900 del 30-ago-2026— mientras el maestro seguía dando $34,000, porque ese abono nunca llegó
-al código: no había migración que lo aplicara. El saldo bueno vivía solo en este `.md`.
-
-Lo zanja el dato del **7-sep-2026**: Adán reporta **$37,000**, que es un saldo posterior a los
-dos y los deja obsoletos a la vez. `_tarjetas20260907` lo aplica al `balance` y al `total` —esa
-tarjeta mantiene `total == balance` desde 2024—, así que ya no hay dos cifras compitiendo. Queda
-la lección: **un saldo que solo se escribe en un `.md` no existe**; si no lleva migración, las
-apps siguen con el viejo.
 ## Referencias cruzadas
 
-- [`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md) — índice del proyecto, catálogo de variables
+- [`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md) — catálogo de variables y saldos de hoy
 - [`../Dashboard/readme_dashboard.md`](../Dashboard/readme_dashboard.md) — quién consume estos datos
 - [`../Coach/readme_coach.md`](../Coach/readme_coach.md) — el Plan Maestro que se apoya en ellos
-- `../../CLAUDE.md` — las tres reglas del proyecto
-
----
+- `../../CLAUDE.md` — las reglas del proyecto
 
 ## Verificar un cambio
 
@@ -1195,6 +458,6 @@ apps siguen con el viejo.
 node Dashboard/verificar-sincronia.js      # desde Claude_Proyecto/
 ```
 
-Y en navegador a 1600px y 390px con `file:///`. Para probar migraciones hay que sembrar
+Y en navegador a 1600 y 390 px con `file:///`. Para probar migraciones hay que sembrar
 `finanzasmx_v2` **y** `finanzasmx_v2_v` con el `SEED_VER` actual: sin esa bandera, `seedData()`
-resiembra y lo que se mide es un reseed, no el uso normal.
+resiembra y lo que se mide es un reseed.

@@ -1,6 +1,6 @@
 # vestimenta.html — Mi Guía de Vestimenta
 
-Aplicación web de una sola página (HTML+CSS+JS, sin backend) — guía de guardarropa en tres mitades: **qué me pongo hoy**, **cómo combinarlo** (la matriz de color y las 48 combinaciones que salen de ella) y **qué comprar** (la ruta ordenada por cuántos outfits abre cada prenda, más las fichas con precio y link). **Nueva el 2026-08-01**, pedido explícito de Adán: *"hazme un html y proyecto de vestimenta, debes darme muchas opciones de que comprar, basicos chaquetas, zapatos, y ademas para cada ocacion... busca en alguna web que tenga una buena base de fotos y descargarlas y ponlas en el folder en especifico"*.
+Aplicación web de una sola página (HTML+CSS+JS, sin backend) — guía de guardarropa en tres mitades: **qué me pongo hoy**, **cómo combinarlo** (la matriz de color y las 48 combinaciones que salen de ella) y **qué comprar** (la ruta ordenada por cuántos outfits abre cada prenda, más las fichas con precio y link). Adán: *"hazme un html y proyecto de vestimenta, debes darme muchas opciones de que comprar, basicos chaquetas, zapatos, y ademas para cada ocacion"*.
 
 **Fuera del ecosistema principal** (igual que `Aleman/` y `Entrevistas/`, ver `../README.md` → "Mapa de carpetas") — no comparte datos con Finanzas/Coach/CuidadoPersonal/Dashboard, es una guía de referencia personal independiente.
 
@@ -14,12 +14,11 @@ Aplicación web de una sola página (HTML+CSS+JS, sin backend) — guía de guar
 
 ## Sin fotos, a propósito
 
-**No hay una sola imagen en la app.** Las 35 que había se borraron, con su manifiesto.
-Adán (2026-09-09): *"osea queria que borraras todo y me dieras buenas combinaciones, por
-que lo que tenemos no me gusta nada"*, y antes: *"en vez de buscar imagenes feas por que no
-hay ninguna bonita"*. Dos rondas de sourcing con licencia libre no habían dado un catálogo
-que se viera bien, y para lo que la app tiene que resolver —qué me pongo con qué— la foto
-de una prenda genérica no aporta: lo que decide una combinación es el color.
+**No hay una sola imagen en la app.** Adán: *"quería que borraras todo y me dieras buenas
+combinaciones"*, *"en vez de buscar imágenes feas porque no hay ninguna bonita"*. Dos rondas de
+fotos con licencia libre no dieron un catálogo que se viera bien, y para lo que la app resuelve
+—qué me pongo con qué— la foto de una prenda genérica no aporta: lo que decide una combinación
+es el color.
 
 Lo que sustituye a la foto es el **dibujo**: siluetas SVG rellenas del color real, que se
 cuentan más abajo. En la Colorimetría, que es una tabla, el color sigue yendo en muestra. El fondo carbón de la app
@@ -55,9 +54,8 @@ precios van por tipo de prenda. Sin eso, las cifras de la app parecen sacadas de
 
 ## Mi clóset — el único sitio donde se marca
 
-**31 prendas** en cuatro bloques: 16 playeras, 6 pantalones, 5 capas y 4 zapatos.
-Antes marcar estaba repartido entre las fichas de compra y las casillas de la ruta, y
-completar el clóset obligaba a recorrer cuatro secciones.
+**31 prendas** en cuatro bloques: 16 playeras, 6 pantalones, 5 capas y 4 zapatos. Es el único
+sitio donde se marca; las fichas de compra y la ruta lo leen de aquí.
 
 **Toda la ficha es el botón** y el color ocupa 104px de alto: lo que hay que reconocer
 es el color —se busca «la playera que tengo» mirando, no leyendo— y un cuadrito de 16px
@@ -359,16 +357,21 @@ celdas, cada una con su porqué en el `title`— y con un clóset de siete prend
 sneakers blancos (que están marcados) y bomber negra (que no), en vez de la chamarra de
 mezclilla que sí está marcada pero que la tabla descarta sobre jeans índigo.
 
-## Responsivo — iPad / iPhone 15 Pro (2026-08-03)
+## Responsivo
 
-Ya existían tres breakpoints funcionales de una pasada anterior (`@media(max-width:760px)` apila `.combo-card`, `900px` pone `.fase-grid` a 2 columnas, `640px` saca el sidebar de pantalla con `transform:translateX(-100%)`), así que el trabajo fue completar lo que faltaba, no reconstruir el layout:
+Breakpoints 900 (`.fase-grid` a 2 columnas), 820, 800, 760 (`.combo-card` apilada), 640 (sidebar
+fuera con `translateX(-100%)`), 560 y 480. Tres reglas que importan:
 
-- **Bug real encontrado — el botón ☰ nunca se veía en móvil**: `#menuBtn` (el botón hamburguesa que abre el sidebar cuando está oculto) tenía `style="display:none;border-radius:6px"` puesto **inline** en el HTML, y no existía ningún `@media` que lo reactivara. Resultado: en cualquier pantalla ≤640px el sidebar se escondía (correcto) pero no había forma de volver a abrirlo — navegación completamente inaccesible salvo la pestaña "Inicio" ya activa al cargar. Un `@media(max-width:640px){#menuBtn{display:flex}}` normal **no alcanza** porque un inline `style` le gana a cualquier regla externa sin `!important` — se resolvió con `#menuBtn{display:flex !important}` dentro del media query. Verificado con Playwright: en iPhone 15 Pro (393px) el botón ahora es visible, el click abre `.sidebar.open`, y navegar a otra sección la vuelve a cerrar (ese comportamiento de auto-cierre ya existía en `nav()` de `vestimenta_app.js`, no se tocó JS).
-- **`.main` lleva `min-width:0`**, y esto sí arregló un desbordamiento real: `.main` es flex item de `body` y, sin declararlo, un flex item crece con su contenido en vez de limitarlo. La matriz de colorimetría (mínimo 490px en móvil) empujaba la página **166px** a 390 de ancho en lugar de rodar dentro de su propio scroll. Medido antes y después. Es la misma trampa que las dos rejillas de abajo, un nivel más arriba.
-- **Red de seguridad para la trampa de CSS Grid**: se agregó `.fase-grid > *, .item-grid > * { min-width: 0 }` — no había overflow activo (el `item-grid` usa `repeat(auto-fill,minmax(270px,1fr))`, que ya es responsivo por diseño, y `.combo-card` es flex, no grid), pero se deja la regla como prevención igual que en `Dashboard/Coach` por si se agregan items con texto más largo a futuro.
-- **Breakpoints nuevos 800px / 480px** (los estándar del resto del ecosistema), agregados sin quitar los 760/900/640 existentes: a 800px se reduce el padding de `.content` y `.combo-body` y el tamaño de `.sh h2`; a 480px se compacta aún más (`.content` a 14px de padding, `.item-img` de 210px a 170px de alto, `.topbar` con menos padding lateral).
-- **Verificado con Playwright** en iPad (820×1180) e iPhone 15 Pro (393×852, `isMobile:true, hasTouch:true`): las 9 pestañas, el checklist, el toggle de tema y (en iPhone) la apertura/cierre del sidebar móvil — overflow horizontal (`scrollWidth - clientWidth`) en 0 en todos los casos, cero errores de consola. Capturas en `shots_responsive/vestimenta_*` de la sesión.
-- A 820px (iPad) el sidebar se queda en flujo normal — a esa altura el sidebar fijo de 245px + contenido (`repeat(auto-fill,minmax(270px,1fr))` / combo-card en fila) ya tienen espacio suficiente sin necesidad de convertir el sidebar en overlay, a diferencia de `Entrevistas/` que sí lo necesitó (sidebar de 290px, ver `readme_entrevistas.md`).
+- **`#menuBtn{display:flex !important}`** en el breakpoint de 640: el botón lleva `display:none`
+  inline en el HTML y una regla externa normal no le gana; sin esto el sidebar se escondía en
+  móvil y no había forma de volver a abrirlo. `nav()` lo cierra al navegar.
+- **`.main{min-width:0}`**: es flex item de `body` y sin eso la matriz de colorimetría (mínimo
+  490 px) empujaba la página 166 px a 390 de ancho en vez de rodar en su propio scroll.
+- **`.fase-grid > *, .item-grid > * { min-width: 0 }`** como red para la trampa de CSS Grid.
+
+A 820 px (iPad) el sidebar de 245 px se queda en flujo: el contenido cabe. Se verifica en iPad e
+iPhone 15 Pro: las 9 pestañas, el clóset, el tema y el sidebar móvil, `scrollWidth ===
+clientWidth`, cero errores de consola.
 
 ## Cómo mantener esto al día
 
@@ -382,10 +385,7 @@ Ya existían tres breakpoints funcionales de una pasada anterior (`@media(max-wi
 
 Se abre `vestimenta.html` directamente en cualquier navegador (`file://`), sin instalación ni servidor. Requiere `vestimenta_data.js` y `vestimenta_app.js` en la misma carpeta.
 
-## El enlace al Dashboard vive en la `.topbar` (2026-08-18)
+## El enlace al Dashboard
 
-*"hay botones dashboard que ni si quiera van acorde a la interfaz del html, osea sobre ponen a otros botones y eso esta mal, debe ser parte de la interfaz de todos"*.
-
-El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el botón de tema en pantallas angostas** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón redondo con el 🚀 antes del de tema, con la clase `.theme-toggle-btn` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
-
-Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".
+Un botón redondo con el 🚀 antes del de tema, con la clase `.theme-toggle-btn` que ya usan sus
+vecinos: hereda tema y estilos sin CSS nuevo. Nunca flotante.

@@ -1,509 +1,195 @@
 # ejercicio.html — Mi Rutina: Entrenamiento Semanal
 
-Aplicación web de una sola página (HTML+CSS+JS, sin backend) para planear y consultar una rutina de gimnasio semanal completa, con la biblioteca de ejercicios que la respalda y la ficha real del gimnasio al que va Adán (Fitsi Buenavista). Los datos se guardan en `localStorage` (clave `mirutina_v1`). **Ya no registra entrenamientos en vivo** — ver "Reestructuración 2026-08-02" más abajo.
+App de una sola página (HTML+CSS+JS, sin backend) para **entrenar con la rutina semanal**: la
+sesión de hoy con técnica paso a paso, series marcables con kilos, cronómetro de descanso y
+progresión; la biblioteca de 62 ejercicios que la respalda; y una sección de deportes para
+explorar. Datos en `localStorage['mirutina_v1']`.
 
-**Ubicación actual**: vive en `CuidadoPersonal/ejercicio.html` (movida aquí el 2026-07-29 desde `Ejercicio/ejercicio.html`, sin cambios de código — solo de carpeta; la carpeta `Ejercicio/` ya no existe). Se abre normalmente **incrustada** dentro de `CuidadoPersonal/cuidadopersonal.html` → subtab **🏋️ Ejercicio**, vía `<iframe src="ejercicio.html">`. También puede abrirse directo sin pasar por el shell.
+> Referencia, no diario. Historial en `git log -p -- Claude_Proyecto/CuidadoPersonal/ejercicio.html`.
 
-## Base de datos de ejercicios
+Vive en `CuidadoPersonal/ejercicio.html`. Se abre incrustada en `cuidadopersonal.html` (pestaña
+**Ejercicio**, `<iframe src="ejercicio.html?embed=1">`; `embed.js` calla su carril y cabecera y
+habla con el shell por `postMessage` — ver `readme_cuidadopersonal.md`) o directa. Comparte
+`localStorage` con el resto por origen `file://`.
 
-Trae precargados 57 ejercicios (`EJ_DB`) organizados por músculo (Pecho, Espalda, Hombros, Bíceps, Tríceps, Piernas, Glúteos, Core, Cardio), cada uno con equipo requerido (Barra, Mancuernas, Máquina, Cuerpo, etc.) y tipo (Compuesto/Aislamiento/Cardio). **Desde el 2026-08-03** (ver "Unificación visual de `EJ_DB`" más abajo), **los ejercicios tienen `cue`** (técnica correcta, 1-2 líneas) y **45 de los 57 tienen `img`** (34 desde el 2026-08-03, 11 más agregadas el 2026-08-10 — ver sección dedicada más abajo), todas del mismo estilo consistente de ilustración de línea (familia "Everkinetic" de Wikimedia Commons — `Category:Weight training diagrams`). Los 12 restantes no tienen `img` a propósito — no se encontró un diagrama del mismo estilo para ese ejercicio (o el único candidato encontrado contradecía la técnica ya descrita en su `cue`) y se prefirió dejarlo sin imagen antes que mezclar una foto real, un ícono de otro estilo, o un diagrama que enseñe una forma distinta a la explicada. No hay URLs inventadas. También se pueden agregar ejercicios propios, que se guardan aparte (`S.ejerciciosCustom`) y se combinan con los predefinidos en toda la app (`getAllEj()`). **`e057` "Nadar" (Cardio) se agregó el 2026-08-07**, ver sección dedicada más abajo.
+## Secciones
 
-## Navegación (sidebar propio de este archivo)
+`SECS = ['rutina','biblioteca','deportes']`, títulos en `STITLE`, render en `RENDERS` (Deportes es
+estático, sin render ni `localStorage`). `nav(s)` cambia de sección.
 
-**Reestructurada por completo el 2026-08-02** — ver la sección dedicada más abajo para el detalle de qué cambió y por qué. Estructura actual, 4 secciones:
+| Sección | Qué es |
+|---|---|
+| 🏋️ **Mi Rutina** | La sesión de hoy, los KPIs, el cronómetro y la progresión — abajo |
+| 📚 **Biblioteca** | Los 62 ejercicios de `EJ_DB` + los propios, agrupados por músculo, con filtros por texto, músculo y equipo; agregar y eliminar propios; tocar uno abre su ficha |
+| 🧭 **Deportes para Explorar** | 8 tarjetas `.sport-card` + un bonus a ancho completo (Chessboxing), cada una con foto de Wikimedia, por qué le conviene a Adán, costo aproximado en CDMX, dónde y equipo |
 
-- **🏋️ Mi Rutina** — sección fusionada (antes Dashboard + Mi Rutina eran dos secciones separadas): banner de meta activa, vista de la semana completa como **tira horizontal de 7 días** (`.week-strip`/`.ws-day`) y, debajo, el detalle de ejercicios (`#rutina-semana`, `renderRutinaSemana()`), cada uno con su tarjeta grande `.exd-card` por ejercicio — imagen (cuando existe), número, músculo/equipo, series×reps×descanso, y la técnica (`cue`) en un recuadro destacado. **Los 4 KPIs se eliminaron el 2026-08-07** (ver sección dedicada más abajo) y el clic en un día de la tira **filtra a solo ese día** en vez de hacer scroll entre los 7 completos — ver "Programa por defecto" abajo para el split semanal.
-- **📚 Biblioteca** — catálogo completo de ejercicios agrupado por músculo, con filtros por texto, músculo y equipo; las tarjetas ahora muestran imagen y técnica cuando el ejercicio las tiene. Permite agregar ejercicios propios y eliminarlos.
-- **🏢 Fitsi** (**nuevo el 2026-08-02**) — ficha real del gimnasio de Adán, Fitsi Buenavista. Ver sección dedicada más abajo.
-- **🧭 Deportes para Explorar** (**nuevo el 2026-08-01**, contenido 100% estático, sin `localStorage` ni JS de render — no está en `RENDERS`, solo en `SECS`/`STITLE` para navegación) — pedido explícito de Adán: *"ponme una sección de todos los deportes asequibles que puedo hacer, estaría interesante explorar, pero detállalos y dame toda la info con fotos y por que me gustaría"*. 8 tarjetas `.sport-card` (grid `.sport-grid`, 2 columnas) + 1 tarjeta bonus a ancho completo, cada una con foto real (Wikimedia Commons, mismo criterio de licencia libre que `EJ_DB.img`), descripción, un bloque `.sport-why` con **razón personalizada** (no genérica) ligada a su perfil real, y `.sport-meta` con costo aproximado en CDMX, dónde practicarlo y equipo necesario:
-  1. 🏋️ **Hyrox** — conecta directo con su meta de bucket list ("Hyrox" e "Hyrox internacional", ver `Dashboard/readme_dashboard.md` → slide Mis Metas).
-  2. 🥊 **Boxeo** — cardio para la meta de "bajar panza".
-  3. 🧗 **Escalada deportiva (bouldering)** — paralelismo con su formación en mecatrónica (control/cinemática).
-  4. 🚴 **Ciclismo urbano/de ruta** — afinidad con su perfil de ingeniero automotriz.
-  5. 🏊 **Natación** — bajo impacto articular, complementa el volumen de sentadilla/peso muerto ya en `S.rutina`.
-  6. 🥾 **Senderismo** — económico, compatible con su prioridad actual de liquidar deuda (ver `[[project-millonario-finanzas]]` en memoria).
-  7. 🏓 **Pádel** — networking informal fuera del ámbito automotriz, relevante para sus opciones de negocio paralelo.
-  8. 🤸 **Calistenia en parques** — gratis, extensión directa de las dominadas/fondos que ya hace en su split de brazos/espalda.
-  9. ♟️🥊 **Bonus — Chessboxing** (`.sport-card.bonus`, ancho completo) — intersección literal de dos metas ya en su lista (torneo de ajedrez + boxeo).
+En Deportes, ubicaciones y costos son aproximaciones no verificadas en vivo, **salvo Natación**:
+Adán nada en la alberca semiolímpica de su gimnasio, Fitsi Buenavista, incluida en su membresía.
 
-  Todas las referencias de ubicación (Santa María la Ribera, Parque España/México, Desierto de los Leones, Monkey Bloc, Reforma/Muévete en Bici) y de costo son aproximaciones razonables para CDMX, no verificadas contra una fuente en vivo — si cambian precios/ubicaciones reales, actualizar aquí a mano. **Excepción: la de Natación ya no es una aproximación** — el 2026-08-12 Adán confirmó que nada en la alberca semiolímpica de su propio gimnasio (Fitsi Buenavista), no en la Alberca Olímpica Francisco Márquez de Doctores que se había puesto como estimación; se corrigió ahí y en las otras 3 apps que lo repetían. Las 9 URLs de imagen se verificaron una por una con `curl` (HTTP 200) antes de insertarlas, mismo estándar que `EJ_DB.img`.
+## La biblioteca — `EJ_DB`
 
-## Programa por defecto — a la medida de la meta de Adán (2026-07-30)
+**62 ejercicios** en 9 músculos (`MUSCULOS_ALL`: Pecho 7, Espalda 7, Hombros 6, Bíceps 6, Tríceps 5,
+Piernas 9, Glúteos 4, Core 6, Cardio 12 — incluidos los 5 bloques de natación `e058`-`e062`), cada
+uno con `musculo`, `equipo`, `tipo` (Compuesto/Aislamiento/Cardio) y:
 
-Pedido explícito: *"mi meta es ganar masa muscular de brazos y piernas, bajar panza por que subí de peso ahí"*. El `S.rutina` precargado (antes tenía un **bug real**: la clave `5` estaba duplicada en el objeto — Viernes se sobreescribía y se perdía — corregido en esta reescritura) ahora es un split de 6 días + descanso:
+- **`cue`** — una línea de técnica en español simple, **sin jerga de gym** ("aprieta los hombros
+  hacia atrás y abajo", no "escápulas retraídas"). Es el texto de la tarjeta de la biblioteca y el
+  respaldo si un ejercicio no trajera `pasos` (`ejPasos()` lo parte en frases).
+- **`pasos`** — la técnica en orden, **285 pasos en total, 4 a 5 por ejercicio**, siempre en el
+  mismo orden: cómo te montas → qué aprietas antes de moverte → la fase de trabajo con su punto
+  de parada → la vuelta, con tempo si importa → el detalle que casi todos se saltan.
+- **`error`** — el fallo que se ve siempre en ese movimiento y cómo se nota.
+- **`img`** en **45 de los 62**: ilustraciones de línea de la familia **Everkinetic** de Wikimedia
+  Commons (`Category:Weight training diagrams`), un solo estilo a propósito. Los SVG de Commons a
+  veces se sirven como `text/plain` y Chromium no los pinta en `<img>`: se enlaza la miniatura PNG
+  (`.../thumb/…/960px-Archivo.svg.png`). Los 17 sin imagen **se quedan así a propósito**: no hay
+  diagrama de esa familia (todo el cardio y la natación, Face Pull, Oblicuos, Dead Bug) o el único
+  candidato contradecía la técnica del `cue` (Búlgara con el pie en el piso) o era de otro estilo
+  (Plancha). Ningún diagrama antes que uno inconsistente o incorrecto; no hay URLs inventadas.
 
-| Día | Rutina | Por qué |
-|---|---|---|
-| Lunes | 💪 Brazos A — Fondos (compuesto) + Bíceps + Tríceps (pesado) | Prioridad #1: brazos 2x/semana |
-| Martes | 🦵 Piernas — completa (7 ejercicios) | **Único día de pierna desde el 2026-08-12** — fusiona lo que eran Piernas A y B, sin sentadilla con barra, zancadas, peso muerto ni hip thrust; Hack Squat es el compuesto del día. Ver sección dedicada más abajo |
-| Miércoles | 🏊 Natación — 45 min en 5 bloques de aprendizaje (alberca del Fitsi Buenavista) | Cardio de bajo impacto articular; reemplazó a "Espalda + Hombros + Cardio HIIT" el 2026-08-07 y pasó de "nadar 45 min" a sesión progresiva el 2026-08-12 — ver secciones dedicadas más abajo |
-| Jueves | 💪 Brazos B — Bíceps + Tríceps (volumen, ejercicios distintos al lunes) | Prioridad #1: brazos 2x/semana |
-| Viernes | 🧘 Abdomen — Core + Cardio (5 de core + 25 min elíptica) | **Día nuevo desde el 2026-08-12**, quedó libre al fusionar los 2 días de pierna. Cubre las 3 funciones del abdomen + cardio; el `foco` deja claro que la reducción localizada no existe |
-| Sábado | 🔥 Pecho (tríceps secundario) + Cardio (elíptica 25 min) + Core (rueda abdominal) | Extra frecuencia de brazos + bloque de cardio más largo de la semana contra la panza |
-| Domingo | 😴 Descanso activo (caminata opcional) | Recuperación |
+Los propios van en `S.ejerciciosCustom` y `getAllEj()` los combina con `EJ_DB` en toda la app.
 
-Cada día trae un campo `foco` (texto, se muestra en el banner del detalle) explicando la prioridad de ese día — **reescrito el 2026-08-03** (ver "Ajuste de programación..." más abajo) para que los 7 días, no solo los 2 marcados "prioridad", digan explícitamente qué ejercicios de ese día ayudan a masa en brazos o a bajar panza. **Sobre "bajar panza"**: el banner de `#s-rutina` es honesto — no existe la reducción localizada de grasa; el core de esta rutina define músculo debajo, pero lo que baja grasa de la zona media es déficit calórico sostenido (enlaza a `CuidadoPersonal/salud.html`) + el cardio de miércoles/sábado.
+## La rutina por defecto
+
+A la medida de la meta de Adán: masa en brazos y definir la zona media. `S.rutina` indexado por
+día (0 = domingo):
+
+| Día | Rutina | `tipo` | Ejercicios |
+|---|---|---|---|
+| Lunes | Brazos A — Bíceps + Tríceps | `brazos` | 5: Fondos (compuesto, primero) + Curl con barra, Patada de tríceps, Curl martillo, Pushdown |
+| Martes | Piernas — completa | `piernas` | 6, **todo en máquina o con apoyo**: Hack Squat (el pesado, primero), Prensa, Extensión, Curl femoral, Abducción, Pantorrilla |
+| Miércoles | Natación — aprender a nadar | `cardio` | 4 bloques que suman 45 min, **en el orden en que se aprende**: flotación y respiración 7 · patada con tabla + respirar de lado 4×4 · brazada de crol 3×4 · nado continuo 10 |
+| Jueves | Brazos B — Bíceps + Tríceps | `brazos` | 5, volumen con ejercicios distintos al lunes; Fondos en banco de compuesto |
+| Viernes | Abdomen — Core + Cardio | `core` | Plancha 45 s, Elevación de piernas, Crunch, Dead Bug + 25 min de elíptica |
+| Sábado | Pecho + Cardio + Core | `empuje` | Press banca, Press inclinado, Aperturas + 25 min de elíptica + Plancha (se repite del viernes a propósito) |
+| Domingo | Descanso activo | `descanso` | Caminata 30 min opcional |
+
+Cada día lleva **`foco`**: texto de usuario que explica qué ejercicios de ese día sirven a cuál
+meta. El del viernes dice explícitamente que **la reducción localizada no existe**: los
+abdominales fortalecen el músculo, la grasa baja con déficit calórico + cardio. Ese aviso vive
+una sola vez en `EJ_AVISO` y se pinta en el carril derecho. Los ejercicios retirados por Adán
+(Press francés, Búlgara, Rueda abdominal, Oblicuos con cable, Sentadilla con barra, Zancadas,
+Peso muerto rumano, Hip thrust) siguen en la biblioteca por si los quiere de vuelta.
+
+**Los 7 `foco` y las 7 listas son idénticos carácter por carácter a `GYM_RUTINA_DEFAULT` de
+`Dashboard/dashboard.html`** (el verificador compara los 7 días): las dos apps comparten
+migraciones y clave, y la primera que Adán abra es la que escribe.
 
 ## Modelo de datos — `localStorage['mirutina_v1']`
 
 ```js
 {
-  rutina: {                 // indexado por día: 0=Domingo … 6=Sábado
-    1: { nombre, tipo:'brazos|empuje|halar|piernas|core|fullbody|cardio|descanso', foco:'texto opcional',
-         ejercicios:[{ ejercicioId, series, reps, unidad:'reps|seg|min' (opcional, default reps), descanso:segundosOpcional }] },
-    // ... 0-6
-  },
-  ejerciciosCustom: [{ id, nombre, musculo, equipo, tipo }],
-  fitsiCalendario: { 1:'texto libre', 2:'', ..., 0:'' }  // nuevo 2026-08-02, ver sección Fitsi
+  rutina: { 0..6: { nombre, tipo:'brazos|empuje|halar|piernas|core|fullbody|cardio|descanso', foco,
+                    ejercicios:[{ id, series, reps, unidad:'reps|seg|min', descanso:seg, peso }] } },
+  sesiones: { 'YYYY-MM-DD': { e040: [{ok:true, kg:85}, {ok:false, kg:null}, …] } },  // una posición por serie
+  ejerciciosCustom: [{ id, nombre, musculo, equipo, tipo }]
 }
 ```
-`unidad` y `descanso` son nuevos (2026-07-30) — solo se usan para mostrar el dato correcto en el detalle (p.ej. Plancha son 45 **segundos**, no 45 reps; Elíptica son 25 **minutos**). El modal "Configurar día" (`saveRutina()`) todavía solo edita `series`/`reps` por ejercicio — si se edita un día desde ahí, se pierde el `foco`/`unidad`/`descanso` curados (limitación conocida, no bloqueante).
 
-**`sesiones`** salió del modelo el 2026-08-02 (cuando se quitó el registro en vivo) y **volvió el 2026-09-01** con otra forma, cuando "Mi Rutina" pasó a tener series marcables: `{'YYYY-MM-DD': {ejercicioId: [{ok:true, kg:85}, {ok:false, kg:null}, …]}}` — un objeto por fecha ISO y ejercicio, una posición por serie (ver "Rediseño completo de Mi Rutina" abajo). **El Dashboard lo lee con `gymSesiones()`** (`dashboard.html`), que acepta esta forma y la lista vieja `[{fecha,nombre}]`: hasta el 2026-09-16 Mi Día hacía `.find` directo sobre él y tronaba con `find is not a function` en cuanto aquí se marcaba una serie. Una fecha con al menos una serie `ok:true` cuenta como día entrenado.
+`sesiones` es **lo que de verdad levantó**: de ahí salen racha, volumen, historial y progresión;
+nada se calcula que no esté escrito ahí. Una fecha con al menos una serie `ok:true` cuenta como
+día entrenado.
 
-El horario semanal (`S.rutina`) viene precargado con el programa de 6 días de arriba al primer uso. **`init()` llama a `save()` justo después de `load()` (fix 2026-07-30)** — antes el programa por defecto solo vivía en memoria hasta que el usuario guardaba algo a mano (configurar un día, terminar un entrenamiento o exportar), así que el Dashboard veía `mirutina_v1` vacío (`rutina:{}`) si Adán nunca había interactuado con la app, aunque el programa completo ya estuviera cargado en pantalla. Mismo patrón que ya usaba `salud.html` (guarda perfil/metas por defecto si no hay datos).
+**`load()` hace un merge superficial** (`S={...S,...guardado}`) y por eso normaliza `sesiones` y
+`ejerciciosCustom` después de leer: contra un guardado viejo, una clave nueva del código
+desaparecería. **`init()` llama `save()` después de `load()`**: así el Dashboard ve la rutina
+desde la primera apertura, aunque Adán no haya guardado nada a mano.
 
-## Funcionalidad clave
+`today()` usa `toISOString()` (**UTC**): en México adelanta el día a partir de las 18:00. El
+Dashboard (`habitos.js`) usa fecha local; si se cambia aquí, revisar `gymSesiones()` allá.
 
-- **Rutina por día de la semana**: `S.rutina` es un objeto indexado por día (0=Domingo … 6=Sábado) con nombre, tipo de entrenamiento, `foco` y su lista de ejercicios.
-- **Resumen de la semana calculado del plan, no de sesiones** (`renderResumenSemana()`): días de entreno/descanso, grupos musculares cubiertos y "hoy toca" salen de recorrer `S.rutina` directo — siempre disponibles, sin depender de haber registrado nada.
-- **Subtabs de día + detalle** (`verRutinaDia(d)`, `renderRutinaDetalle()`): estado `rutinaDiaSel` (por defecto, hoy) controla qué día se muestra; cambiar de tab no recarga nada, solo repinta `#rutina-detalle`.
-- **`today()`** usa `new Date().toISOString().slice(0,10)` (UTC) — misma convención que el resto del proyecto.
-- **Exportar datos**: botón en la barra lateral descarga un JSON de respaldo (`rutina_YYYY-MM-DD.json`).
+**El modal ✏️ Editar** (`saveRutina()`) hace `S.rutina[dia]={...S.rutina[dia], nombre, tipo,
+ejercicios}`: el spread conserva `foco` y cualquier campo que el modal no edite. Solo edita
+`series`/`reps` por ejercicio; `unidad`/`descanso` curados se pierden al editar un día
+(limitación conocida).
 
-## Rediseño de interfaz (2026-07-31)
+### Migraciones — por qué existen y cómo se bumpean
 
-Adán pidió explícitamente "el contenido me gusta pero la interfaz no" — rediseño puramente visual, **sin tocar HTML ni JS**, solo los valores del `<style>`. El mismo tratamiento (quitar gradiente/glow) se aplicó también a `salud.html`, `comida.html` y a las partes oscuras/genéricas del shell `cuidadopersonal.html` (ver sus `.md` respectivos — `readme_salud.md`, `readme_comida.md`, `readme_cuidadopersonal.md` → "Rediseño de interfaz del shell"), alineando el look de las 4 apps al lenguaje visual "premium minimalista" que ya se validó en `Coach/Coach.html` (rediseño del 2026-07-18: sin gradientes decorativos, sin glow de neón, tarjetas planas). **Los temas pastel de Skincare/Cabello (`#view-skincare`/`#view-cabello`) no se tocaron** — tuvieron su propio rediseño dedicado el 2026-07-29, ya aprobado, y sus gradientes (`.sk-hero`/`.ca-hero`, botones) son parte intencional de ese tema, no la decoración genérica que se pidió quitar aquí.
+Como el guardado gana sobre el código, un cambio en `S.rutina` **nunca llega solo** a un
+navegador ya usado. Dos funciones entre `load()` y `save()`, con el patrón de Finanzas —bandera
+propia, una sola pasada, **solo tocan un día si sigue siendo exactamente el default anterior**
+(comparado por nombre), nunca uno que Adán personalizó—:
 
-Se quitó, en todo el `<style>`:
-- `background-image` con manchas radiales de color detrás del `body`.
-- `backdrop-filter: blur(...)` en sidebar/topbar/card/modal/confirm (dejaban de tener sentido al volver los fondos opacos).
-- Texto con gradiente (`background: linear-gradient(...); -webkit-background-clip: text`) en `.sb-logo h1` y `.sh h2` — ahora color plano.
-- `box-shadow: 0 0 Npx rgba(...)` (glow de neón) en `.btn-p`/`.btn-g`, `.day-card.today`, `.day-tab.active`, `.modal` — los botones ahora son de color sólido con un `hover` que solo sube 1px y usa la sombra estándar `var(--sh)`.
-- El degradado de dos colores en `.meta-banner` se aplanó a un solo tono.
+- `fixMiercolesNatacionIfNeeded()` — bandera `mirutina_v1_miercoles_natacion`.
+- `fixRutina20260812IfNeeded()` — bandera `mirutina_v1_pierna_abs_natacion_v3`, aplica los días
+  de `RUTINA_DEFAULT_20260812` (copia profunda del default **antes** de que `load()` lo pise).
+  Cada tanda de cambios a la rutina **bumpea la bandera** y acepta como "todavía default" los
+  nombres intermedios que la versión anterior pudo dejar guardados (`Piernas — completa`,
+  `Abdomen — bajar panza`…); si solo comparara contra los de julio, un navegador ya migrado se
+  quedaría congelado.
 
-**Se conservaron sin tocar**: todas las variables de color (`--p`, `--g`, `--b`, `--pu`, `--w`, `--r`) y sus valores — el JS genera decenas de estilos inline con `var(--p)` etc. y con `rgba(255,107,53,...)` literal (color del muscle map, chips, badges), así que cambiar los valores de esas variables sin auditar cada uso hubiera desincronizado el color de las tarjetas generadas por JS del resto de la interfaz. El anillo de foco de inputs (`box-shadow: 0 0 0 3px ...`) se dejó igual — es un patrón funcional/de acento, no la decoración genérica que se pidió quitar. (`.pr-badge`, el degradado de récord personal, se eliminó el 2026-08-02 junto con Progreso — ver "Reestructuración" abajo.)
+**Las dos están replicadas en `dashboard.html`** con las mismas banderas, para el caso en que
+Adán abra el Dashboard sin haber abierto esta app.
 
-Verificado con un smoke test en jsdom (`nav()` a las 6 secciones) sin errores de consola tras el cambio.
+## Mi Rutina — la sesión del día
 
-## Modo oscuro/claro (2026-07-31)
+`renderMiRutina()` pinta el día de hoy (`ejDiaVisto = null`) o el que se abrió desde la tira
+(`ejVerDia(d)`). Deep-link **`?dia=N`** (0 = domingo) desde el Dashboard → `ejVerDia(N)`.
 
-Botón `.theme-toggle-btn` en el topbar. `--surface`/`--surface-2`/`--surface-3` (nuevas) reemplazan los hex sólidos que dejó el rediseño de interfaz de arriba (`#161619`/`#18181c`/`#1b1b20`) para que puedan invertirse por tema; el resto de bordes/hovers usa el truco `--ov` (ver `../README.md`). `TIPO_COL`/`MUSCULO_COL` (colores por tipo de rutina/músculo) se dejaron con hex literal a propósito, igual que `CAT_META` en Dashboard — son categorización visual, no chrome de la interfaz, y ya son colores saturados que funcionan razonablemente en ambos temas. (Chart.js y el helper `cssVar()` que necesitaba para temizar su gráfica se eliminaron el 2026-08-02 junto con Progreso — ya no hay ninguna gráfica en el archivo.)
+1. **Cabecera con 3 KPIs** — racha (`ejRacha`), sesiones de esta semana (`ejSesionesSemana`) y
+   volumen levantado (kg × reps × series de lo marcado) — y la tira de 7 días (`.week-strip` /
+   `.ws-day`, 4 columnas bajo 640 px) con hoy resaltado.
+2. **La sesión** — cada ejercicio (`ejEjercicioHtml`) con su imagen, los pasos numerados, el
+   error en rojo y **una fila por serie con casilla y campo de kg** (`ejToggleSet`, `ejSetKg` →
+   `S.sesiones`). Marcar una serie arranca el cronómetro de descanso con los segundos de ese
+   ejercicio (`ejArrancaCrono`, `ejCrono = {id, fin, total}`). "llevas ~21 min" es una
+   estimación —series marcadas × (descanso + 40 s)—, no un cronómetro de sesión: no hay `t0`
+   guardado, y meterlo en `S.sesiones` rompería los cuatro recorridos por id.
+3. **Carril derecho** — cronómetro, progresión contra la última vez que hizo ese ejercicio
+   (`ejProgresionHtml`, `ejUltimo`), la regla de cuándo subir de peso (`EJ_SUBIR`) y `EJ_AVISO`.
+4. **El resto de la semana**, plegado: una línea por día.
 
-## Fitsi Buenavista — ficha del gimnasio real (nuevo, 2026-08-02)
+**Mientras `ejVirgen()`** (ni una serie marcada ni un kg en ninguna fecha) sale una banda de
+arranque sobre el primer ejercicio que dice qué hacer, y los KPIs en cero llevan `.vacio`
+(opacidad 45 %): un cero apagado se lee como "todavía nada", uno a plena intensidad como un dato
+roto. El campo de kg mide 112 px (104 en móvil) con "anota los kg" / "antes 45 kg" — un
+placeholder truncado no ensancha `scrollWidth`, solo se ve en la captura.
 
-Pedido explícito de Adán: *"agrega una nueva sección llamada Fitsi, este es el gym al que voy, entonces debes buscar en internet el calendario de los eventos que hay en Buenavista"*. Se investigó `fitsi.com.mx/clubes/buenavista` y su página principal antes de escribir nada:
+**`verEjercicio(id)`** abre la ficha completa desde la sesión o la biblioteca: pasos, error, en
+qué día aparece, historial de pesos (`ejHistorial`) y **tres alternativas del mismo músculo** por
+si la máquina está ocupada.
 
-- **Datos verificados y usados tal cual** (`renderFitsi()`, constantes `FITSI_CLASES`/`FITSI_INSTALACIONES`): dirección (Eje 1 Nte. 259, Buenavista, Cuauhtémoc, CDMX), teléfono (55 6535 8823), horario de servicio (L-V 5:00am-12:00am, S-D 7:00am-8:00pm, festivos 7:00am-3:00pm), la lista de 11 clases grupales que ofrece (Fit Step, Zumba, Pilates, Cycling, Strong, Barre, Yoga, Aquafit, Body Pump, Salsa en Línea, Power Jump — 45-50 min c/u), las 10 instalaciones (alberca semiolímpica, vapor, salones, áreas de peso, etc.) y una tabla de referencia de precios de membresía (Shape Up $799/mes, Dorada $1,099/mes, Dorada Plus $1,399/mes, Third Age).
-- **Lo que NO se inventó**: Fitsi no publica en su sitio web un calendario semanal con día/hora exacta por clase (se buscó explícitamente y no existe como contenido indexable — ni en la página del club ni en la principal). En vez de fabricar horarios falsos, la sección trae **"Tu calendario real de clases — captúralo tú"** (`#fitsi-calendario`, `S.fitsiCalendario` por día `0-6`): 7 campos de texto libre, uno por día, que Adán llena a mano con lo que vea en la app de Fitsi o en el pizarrón del club — se guardan solos en `localStorage` (`oninput` → `save()`) para no tener que volver a escribirlo cada vez.
-- Mismo patrón ya usado antes en el proyecto para "no inventar datos que no se pueden verificar en vivo" — ver `Finanzas/readme_finanzas.md` → `WEEKLY_PICKS` (precios de acciones) y `Dashboard/readme_dashboard.md`.
+## Diseño
 
-## Reestructuración 2026-08-02 — se quita el registro en vivo, se fusiona Dashboard+Mi Rutina, entra Fitsi
+Referencia en `diseno-ejercicio/Main.dc.html`; se acordó midiendo **propiedades calculadas** de
+35 pares de elementos mockup → app, no leyendo CSS. Lo que define el look:
 
-Pedido explícito de Adán: *"en ejercicio borra la sección de entrenar hoy, fusiona lo de dashboard y lo de mi rutina, esta nueva debe ser muy completa, elimina lo de progreso e historial, agrega una nueva sección llamada Fitsi"*.
+- **Superficies translúcidas, no opacas**: `--panel` / `--panel2` / `--linea` son velos blancos al
+  4.5 % sobre un fondo casi negro, y por eso se ven las **tres auroras radiales y la rejilla de
+  60 px** del `::before` de `#s-rutina` (`inset:-20px 0`; a `-24px` desbordaba). En claro el velo
+  no se ve, así que ahí son blanco sólido con sombra de 1 px y las auroras a media opacidad.
+- **El ámbar `--am`** (`#ffb15c`; `#c47a12` en claro para 4.5:1) es todo lo que es descanso:
+  cronómetro, su barra, los segundos de cada ejercicio, el KPI de volumen. El naranja `--p` es
+  el acento de la app; el modal usa `.open`.
+- **Space Grotesk** para los números (KPIs, título, series, progresión, cronómetro).
+- Grises neutros (`--text #eef2f7`, `--text2 #9aa6b4`, `--text3 #93a0ae`), `--g-txt:#046e3e`
+  para el verde en claro. Los contrastes se miden componiendo **toda** la pila de capas
+  translúcidas; el estimador de una capa da falsos negativos, y hay combinaciones (número de
+  serie sobre serie marcada) que solo existen con la sesión llena.
+- `.exd-img` lleva fondo `#f2f2f2` fijo: los diagramas son PNG transparentes de línea negra y
+  sobre el gris oscuro del tema se perdían.
+- `TIPO_COL` / `MUSCULO_COL` van con hex literal: categorización visual, no chrome.
 
-| Antes (7 secciones) | Después (4 secciones) |
-|---|---|
-| 📊 Dashboard | fusionada dentro de → |
-| 🗓️ Mi Rutina | 🏋️ **Mi Rutina** (resumen + detalle día por día, una sola pantalla) |
-| 💪 Entrenar Hoy | **eliminada**, sin reemplazo |
-| 📈 Progreso | **eliminada**, sin reemplazo |
-| 📋 Historial | **eliminada**, sin reemplazo |
-| 📚 Biblioteca | 📚 Biblioteca (sin cambios) |
-| — | 🏢 **Fitsi** (nueva) |
-| 🧭 Deportes | 🧭 Deportes (sin cambios) |
+Tema claro/oscuro con `.theme-toggle-btn`; el enlace al Dashboard (`#btnVolverDash`, 🚀) es otro
+botón de esa misma clase, junto al de tema.
 
-**Qué se eliminó y por qué queda huérfano sin reemplazo**: "Entrenar Hoy" era el flujo de registrar series/peso/reps en vivo con cronómetro de descanso (`renderHoy()`, `iniciarWorkout()`, `updateSet()`, `toggleSet()`, `terminarWorkout()`, más todo el módulo de timer — `openTimer()`/`setTimer()`/`pauseTimer()`/`updateTimerDisplay()` y el modal `#mo-timer`). Como "Progreso" (gráfica de peso máximo por sesión, Chart.js) e "Historial" (lista de sesiones con volumen total) **dependían al 100% de las sesiones que generaba ese flujo**, quitar "Entrenar Hoy" las dejaba condenadas a estar siempre vacías — se eliminaron las tres juntas, en vez de dejar dos pantallas muertas. `S.sesiones` salió del modelo de datos (ver "Modelo de datos" arriba); `Chart.js` (el único uso en el archivo) se quitó del `<head>`.
+## Responsivo
 
-**Cómo quedó "Mi Rutina" tras la fusión** (`renderMiRutina()` = `renderResumenSemana()` + `renderRutina()`, ambas en la misma sección `#s-rutina`): los 4 KPIs y el mapa de músculos que antes usaban `S.sesiones` (racha de días, sesiones esta semana vs. meta, músculos trabajados esta semana) se recalcularon para salir **directo del plan semanal** (`S.rutina`) en vez de sesiones registradas — días de entreno/semana, días de descanso, grupos musculares que cubre toda la semana, y qué toca hoy. Esto los hace útiles siempre, no solo si Adán registró algo ese día. La vista de la semana ya no tiene botón "Iniciar" (llevaba a la sección eliminada) — ahora hace clic para saltar al detalle de ese día. El botón "💪 Entrenar" del detalle de día también se quitó por la misma razón.
-
-**Limpieza de código muerto**: además de las funciones/modal ya mencionados, se quitaron `killChart`/`cssVar` (solo los usaba el Chart.js de Progreso), `fmtD` (solo lo usaban Entrenar Hoy/Progreso/Historial), y el CSS `.chart-c`/`.set-row`/`.set-num`/`.set-input`/`.timer-display`/`.pr-badge` (sin ningún uso restante). Verificado con un grep de cada nombre de función/id/clase eliminado contra el archivo completo — cero referencias huérfanas.
-
-**El Dashboard no necesitó ningún cambio**: `Dashboard/dashboard.html` lee `mirutina_v1` con sus propios valores por defecto (`tryParse('mirutina_v1',{rutina:{},sesiones:[],metas:{frecuencia:6}})`), así que aunque `ejercicio.html` ya no escriba `sesiones`/`metas`, el Dashboard simplemente los ve vacíos (como ya pasaba si Adán nunca entrenaba en vivo) sin romperse — verificado con Playwright abriendo `ejercicio.html` y después `Dashboard/dashboard.html` en el mismo contexto, el slide Hero sigue mostrando "hoy toca" correctamente desde `S.rutina`.
-
-## Responsivo — iPad / iPhone 15 Pro (2026-08-03)
-
-Ajuste puramente de CSS (cero cambios de JS, de estructura de datos o de claves de `localStorage`) para que las 4 secciones se vean y funcionen bien en iPad (820×1180) y iPhone 15 Pro (393×852, `isMobile`/`hasTouch`). Verificado con Playwright headless en ambos viewports, en las 4 secciones (Mi Rutina, Biblioteca, Fitsi, Deportes) + el modal "Configurar día" + 3 subtabs de día: `document.documentElement.scrollWidth - clientWidth === 0` en los 8 casos, cero errores de consola. `test_ejercicio.js` (script de la sesión anterior) se corrió después del cambio y sigue en verde — navegación, filtros, el modal y la persistencia del calendario de Fitsi (`fitsiCalendario`) siguen funcionando igual.
-
-El archivo ya traía breakpoints razonables que no se tocaron: `@media(max-width:900px)` (`.g4`/`.g3` a 2 columnas, `.sport-grid` a 1 columna), `@media(max-width:640px)` (sidebar se oculta con `transform:translateX(-100%)` + botón `☰`, `.g4`/`.g3`/`.g2`/`.fr` a 1 columna) y otro `@media(max-width:640px)` propio de `.exd-card` (pasa a columna, imagen a ancho completo). Solo se encontró y corrigió una trampa real:
-
-**Trampa — `.main{flex:1;margin-left:var(--sw)}` sin `min-width:0`**: en iPad (820px) la sección "Mi Rutina" (la única activa por defecto — las secciones inactivas usan `display:none` y no cuentan para el cálculo de tamaño mínimo) desbordaba el viewport por 7px (`scrollWidth 827` vs `clientWidth 820`). Causa: `.main` es el único hijo flex de `body{display:flex}` (`.sidebar` es `position:fixed`, no participa del layout flex); con `flex:1` su `flex-basis` calculado es `0`, pero el **tamaño mínimo automático de un ítem flex es `auto` (= su `min-content`)** si no se fija lo contrario — la misma trampa de CSS Grid mencionada en instrucciones previas del proyecto, pero del lado de Flexbox. Algún contenido de `#s-rutina` (banner de meta con texto largo) empujaba ese mínimo por encima de los 575px disponibles (820 − 245px del sidebar). Fix: se agregó `min-width:0` a la regla ya existente de `.main` (línea ~47 del `<style>`) — no hizo falta una regla nueva al final del `<style>` porque no había conflicto de especificidad con ninguna otra regla `.main`. Confirmado con un script que ubica el elemento cuyo `getBoundingClientRect().right` excede el viewport: antes del fix apuntaba a `.main`/`.topbar`/`.content` (los tres al mismo ancho, 582px); después, cero elementos.
-
-El resto ya pasaba limpio sin tocar nada, por diseño previo del archivo:
-- El "calendario" de Fitsi (`#fitsi-calendario`) **no es un grid de 7 columnas** pese al nombre — es una lista vertical de 7 filas flex (`label` de 70px + `input flex:1`), así que ya se acomoda solo en 393px sin cambios ni breakpoint nuevo.
-- `.muscle-map` (grid fijo de 3 columnas, sin media query propia) se revisó visualmente en 393px y se ve legible tal cual — no se le agregó breakpoint porque no hacía falta.
-- El grid de la Biblioteca usa `grid-template-columns:repeat(auto-fill,minmax(260px,1fr))`, que ya es responsivo por construcción (1 columna en iPhone, 2 en iPad) sin necesidad de media query.
-- El grid inline `style="grid-template-columns:1fr 55px 55px auto"` de la lista de seleccionados del modal "Configurar día" no desborda porque su primera columna ya traía `white-space:nowrap;overflow:hidden` puesto directo en el elemento — eso basta para que el tamaño mínimo automático de ese ítem de grid sea `0` (misma regla del spec que motiva el fix de arriba, aplicada aquí sin querer desde antes de este ajuste).
-
-Screenshots de referencia (iPad y iPhone — Mi Rutina, Fitsi, Deportes, Biblioteca) quedaron en `scratchpad/shots_responsive/ejercicio_*.png` de la sesión de verificación, solo para revisión visual puntual — no se versionan con el proyecto.
-
-## Rediseño de "Mi Rutina" + unificación visual de `EJ_DB` (2026-08-03)
-
-Pedido explícito de Adán: *"en el de ejercicio borra eso de musculos que se hacen en la semana lo de los dias de la semana hazlo horizontal y cuando haga click en los subtabs, se vea toda la informacion, pero acomoda bien esa seccion por que la veo bien descuadrada y sin buen contenido, ademas los ejercicios no explica detalladamente y las imagenes son diferentes estilos, quiero uno solo"*. Cinco cambios, todos dentro de `#s-rutina`:
-
-**1. Se borró la tarjeta "💪 Músculos que cubre tu semana"** (`#d-musculos`, `renderResumenSemana()`) junto con su CSS (`.muscle-map`/`.muscle-cell`, sin otro uso en el archivo). El HTML pasó de `<div class="g2">` con dos tarjetas lado a lado a un solo `#d-semana` a ancho completo.
-
-**2. "🗓️ Esta semana" ahora es una tira horizontal de 7 días** (`.week-strip`/`.ws-day`, grid de 7 columnas que baja a 4 en `max-width:640px`, mismo patrón ya validado por Adán en el slide Hero del Dashboard — `.week-strip`/`.ws-day` de `Dashboard/dashboard.html`, adaptado a las variables de color propias de este archivo). Cada día muestra abreviatura + fecha, un punto de color (o 😴 si es descanso) y el nombre de la rutina; clic salta al detalle de ese día, igual que antes.
-
-**3. Las tarjetas de ejercicio (`.exd-card`) se rediseñaron de raíz.** El problema no era solo la imagen — el layout viejo (imagen fija 110×110px + texto indentado a mano con `margin-left:32px`) dejaba un bloque gris grande y vacío en los ~23 ejercicios sin imagen, y se sentía "descuadrado" incluso en los que sí tenían. Layout nuevo: `.exd-img` (cuando existe) ocupa una columna de 130px a la izquierda; si no hay imagen, esa columna **no se renderiza en absoluto** (nada de ícono genérico flotando en una caja vacía) y el contenido de texto usa el ancho completo. El contenido (`.exd-body`) ya no depende de indentación manual — número + nombre en una fila, badges de músculo/equipo, stats de series/reps/descanso, y la técnica (`cue`) en un recuadro (`.exd-cue`) con fondo propio en vez del texto itálico pequeño de antes, para que tenga peso visual incluso sin imagen. (El tamaño fijo 130×130 con `object-fit:contain` llegó un poco después, ver "Ajuste de programación..." más abajo — la primera versión de este mismo día usaba `object-fit:cover` estirado a la altura completa de la tarjeta, que resultó tener su propio bug.)
-
-**4. Se agregó `cue` a los 18 ejercicios que no lo tenían** (e007, e011, e013, e014, e016, e018, e019, e024, e025, e030, e040, e043, e046, e049, e051, e052, e053, e055) — los 56 ejercicios de `EJ_DB` tienen ahora técnica explicada en 1-2 líneas, mismo tono que los `cue` ya existentes.
-
-**5. Unificación de imágenes — "quiero un solo estilo".** El catálogo mezclaba tres estilos distintos (diagramas de línea simples, fotos reales de gimnasio/personas, e ilustraciones tipo caricatura) más al menos dos errores de datos (`e023` Curl Martillo y `e026` Curl Scott reutilizaban, por accidente, las imágenes de `e021`/`e022` — mostraban el ejercicio equivocado). Se identificó una familia de ilustraciones de línea negra sobre fondo blanco en Wikimedia Commons (archivos con nombre `Nombre-Del-Ejercicio-N.png`/`.svg`, confirmados como del mismo autor/estilo mediante comparación visual directa de varias muestras) y se aplicó como único estándar:
-
-  - **20 ejercicios recibieron imagen nueva o corregida** de esa familia: e001, e002 (corregido — antes usaba por error la versión con mancuerna en vez de barra), e003, e006, e007, e013, e014, e016, e018, e023 (corregido, ya no reutiliza la de e021), e024, e025, e026 (corregido, ya no reutiliza la de e022), e027, e030, e031, e034, e035, e040, e046.
-  - **11 imágenes se quitaron sin reemplazo** (e004, e008, e012, e033, e036, e037, e044, e045, e048, e054, e056) — eran fotos reales o de otro estilo, y tras buscar en Wikimedia Commons no se encontró un diagrama de línea de la misma familia para ese ejercicio específico (búsquedas confirmadas sin resultado válido: prensa de piernas, abducción de cadera, rueda abdominal, elíptica, battle ropes, zancada/sentadilla búlgara — para estas dos últimas sí existe una ilustración de la familia correcta, pero es de un ejercicio combinado "lunge + curl de bíceps" que no es fiel al movimiento real, así que se descartó por inexactitud, no por falta de imagen). Quedan sin imagen a propósito — es preferible ningún diagrama a uno inconsistente o incorrecto.
-  - Los 14 ejercicios que ya tenían imagen de esta misma familia (e005, e009, e015, e017, e021, e022, e028, e029, e032, e038, e039, e041, e042, e047) se dejaron igual.
-
-  **Detalle técnico que costó una vuelta extra**: los archivos `.svg` de Wikimedia Commons, al enlazarse directo (`upload.wikimedia.org/wikipedia/commons/H/HH/Archivo.svg`), a veces se sirven con `content-type: text/plain` en vez de `image/svg+xml` — Chromium entonces no los pinta dentro de un `<img>` (se detectó con Playwright: `Curl Martillo` salía con la caja de imagen vacía pese a que la URL respondía HTTP 200). El archivo ya usaba, para sus SVG previos, el servicio de miniatura PNG de Commons (`.../thumb/H/HH/Archivo.svg/960px-Archivo.svg.png`, que sí sirve `image/png` siempre) — los 9 SVG nuevos de esta unificación (e007, e018, e023, e024, e026, e030, e034, e035, e040) se cambiaron a ese mismo patrón antes de dar el trabajo por terminado. Las 34 URLs finales se verificaron una por una con `curl` (HTTP 200 + `content-type` de imagen) y visualmente con capturas de Playwright.
-
-**Verificación**: sintaxis del `<script>` (`new Function`), Playwright headless — `ejercicio.html` solo y dentro del `<iframe>` de `cuidadopersonal.html` (subtab Ejercicio), clic en varios subtabs de día y en la tira semanal, viewport de escritorio (1280×900) y móvil (390×844) — cero errores de consola en todos los casos.
-
-## Ajuste de programación (contra la meta) + bug de imagen recortada (2026-08-03, mismo día)
-
-Pedido explícito, tras el rediseño de arriba: *"los ejercicios no van acorde a lo que quiero lograr y la interfaz aun se ve mala"*. Se pidió precisión antes de tocar nada — Adán confirmó dos cosas puntuales: (1) *"pues basicamente es masa muscular en brazos y bajar panza, eso no lo estas contemplando, ni me dices que ejercicios me ayudan a eso"*, y (2) el layout general de las tarjetas de ejercicio seguía mal.
-
-**El bug real del layout**: `.exd-img{height:100%}` dentro de un `.exd-card{display:flex}` hace que la columna de imagen se estire a la altura de la tarjeta completa — y esa altura varía según cuánto texto tenga el `cue`. Con `object-fit:cover`, una tarjeta con `cue` largo (card alta y angosta, ej. 130×450px) obligaba al navegador a hacer zoom extremo sobre la ilustración para "cubrir" ese marco tan alto y angosto, recortando la mayor parte de la imagen — se veía como si cada ejercicio tuviera una foto ampliada/recortada distinta, sin relación con el tamaño real del dibujo. Fix: `.exd-img` pasó a tamaño fijo 130×130px (no depende de la altura de la tarjeta) con `object-fit:contain` en vez de `cover` — la ilustración completa siempre cabe dentro de su cuadro, del mismo tamaño en las 34 tarjetas que tienen imagen, sin importar cuánto texto tenga el `cue` al lado. `.exd-card` también pasó de `align-items` por defecto (`stretch`) a `flex-start`, para que la columna de imagen no se estire de más.
-
-**El ajuste de programación real** (`S.rutina[1]`, el lunes — "Brazos A"): era el único día 100% aislamiento (Curl con Barra, Press Francés, Curl Martillo, Extensión en Polea, Plancha) — cero ejercicios compuestos, pese a ser uno de los 2 días marcados como *prioridad* para la meta de masa en brazos. Se agregó **Fondos (Dips)** (`e005`, ya existía en `EJ_DB` sin usarse en ningún día) como primer ejercicio del lunes — compuesto pesado de pecho/tríceps, antes del aislamiento (orden correcto: lo pesado/compuesto primero, con energía fresca) — y se quitó Plancha de ese día (el core ya se cubre martes-indirecto/jueves/sábado, y no aportaba al tema "brazos" de esa sesión). El jueves ("Brazos B") ya tenía un compuesto ligero (Fondos en Banco, `e029`) y no se tocó.
-
-**La parte de "ni me dices qué ejercicios ayudan"**: se reescribió el campo `foco` (texto del banner de cada día) de los 7 días — antes solo los 2 días marcados "prioridad" explicaban su relación con la meta; miércoles y sábado (que tienen los mejores compuestos de la semana — dominadas, remo, press militar, press de banca — y todo el cardio) estaban etiquetados genéricamente como "mantenimiento", sin decir que esos mismos ejercicios también construyen brazos (como músculo secundario) ni que el cardio de esos 2 días es la herramienta real contra "bajar panza". Ahora cada `foco` nombra explícitamente qué ejercicios de ESE día sirven a cuál de las 2 metas, en vez de darlo por sentado solo en el banner general de arriba.
-
-Verificado con Playwright: capturas de escritorio (1400px) del lunes completo (Fondos aparece primero, imagen ya no se ve recortada en ninguna de las 5 tarjetas), miércoles y sábado (banner con el texto nuevo), responsive móvil e incrustado en `cuidadopersonal.html` — sin regresiones, cero errores de consola.
-
-## "Mi Rutina" pasa de un día a la vez a los 7 días completos + fix de imágenes oscuras (2026-08-04)
-
-Dos pedidos explícitos en la misma sesión: *"en ejercicio en modo oscuro algunas imágenes se vuelven más oscuras"* y *"en ejercicio quitar los días de detalle día por día y deja solo el de esta semana y ahí pones los ejercicios dependiendo los días de la semana"*.
-
-**Fix de imágenes oscuras** — `.exd-img` (el recuadro de 130×130px que envuelve el diagrama de cada ejercicio) tenía `background:rgba(var(--ov),.05)`, que en tema oscuro (`--ov:255,255,255`) resulta en un gris casi negro. La mayoría de estos diagramas (Wikimedia Commons, estilo atlas de línea negra) son PNG con **fondo transparente** — sobre un contenedor casi negro, el trazo oscuro del dibujo se perdía casi por completo contra el fondo. Fix: `background:#f2f2f2` fijo (no depende de `--ov`/tema), igual criterio que ya se usó en `Dashboard/dashboard.html` para el fondo de los iframes de Alemán/Entrevistas — estas ilustraciones están pensadas para verse sobre claro siempre, sin importar el tema de la app que las envuelve.
-
-**"Detalle día por día" → los 7 días completos, sin selector.** Antes `#s-rutina` tenía una tira semanal informativa (`#d-semana`) y, debajo, subtabs de un solo día (`.day-tabs`/`.day-tab`, estado `rutinaDiaSel`) que mostraban el detalle de **un día a la vez** en `#rutina-detalle` — había que hacer clic en cada día para ver sus ejercicios. Ahora `renderRutinaSemana()` (reemplaza a `renderRutina()`/`verRutinaDia()`/`renderRutinaDetalle()`, que ya no existen) pinta los `ORDEN_DIAS` completos uno debajo del otro en un solo contenedor `#rutina-semana` — mismo contenido por día que antes (encabezado con tipo/nombre/foco/músculos cubiertos + botón "✏️ Editar" + todas las `.exd-card` con imagen), pero los 7 visibles de corrido, sin clics. `rutinaDiaSel` se eliminó (ya no hay "un día seleccionado"); los clics en la tira semanal (`.ws-day`) ahora llaman a `scrollToRutinaDia(d)`, que hace scroll suave hasta la tarjeta de ese día (`id="rutina-dia-{d}"`, con `scroll-margin-top` para no quedar tapado por el header fijo) en vez de "seleccionarlo". El botón "⚙️ Configurar este día" que vivía suelto en el header de la sección se quitó — cada día ya tiene su propio botón "✏️ Editar" en su tarjeta, tenerlo también arriba era redundante. CSS `.day-tabs`/`.day-tab*` eliminado por completo (sin otro uso en el archivo, verificado con grep).
-
-Verificado con Playwright: los 7 `#rutina-dia-N` presentes y visibles simultáneamente sin necesidad de interacción; `background-color` computado de `.exd-img` en tema oscuro forzado es `rgb(242,242,242)` (antes casi negro); guardar una edición desde el modal sigue refrescando la vista (`renderRutinaSemana()` en vez de `renderRutina()`); cero referencias huérfanas a `rutinaDiaSel`/`verRutinaDia`/`day-tab` (grep completo del archivo); cero errores de consola.
-
-## Fix: `saveRutina()` borraba `foco` al editar un día (2026-08-05)
-
-Encontrado en una auditoría general del ecosistema pedida por Adán ("mejora todos los html, ve funciones o cosas que les falten"), no reportado por él directamente. `saveRutina()` (el único punto de guardado del modal "✏️ Editar") reemplazaba el objeto completo `S.rutina[dia]` con solo `{nombre,tipo,ejercicios}` — el campo `foco` (el texto curado que explica qué ejercicios de ese día sirven a la meta de brazos/panza, reescrito a mano el 2026-08-03) se perdía silenciosamente en cada guardado, sin ningún aviso. Fix de una línea: `S.rutina[dia]={...S.rutina[dia], nombre, tipo, ejercicios}` — el spread del día existente preserva `foco` (y cualquier campo futuro que este modal no edite) automáticamente. Verificado con Playwright: editar y guardar el lunes conserva el mismo `foco` de antes; cero errores de consola.
-
-## Miércoles pasó de "Espalda + Hombros + Cardio" a Natación (2026-08-07)
-
-Pedido desde el Dashboard: *"sé que cada día hago diferentes ejercicios... además de ejercicio agrega lo de nadar, también quiero nadar"*. Antes de tocar la rutina real se le preguntó a Adán dónde encajaba — domingo ya era "descanso activo" y los otros 5 días tienen grupo muscular fijo — y confirmó: **reemplaza el miércoles**, no se agrega como día extra ni reemplaza el descanso del domingo.
-
-- **`EJ_DB` ganó `e057` "Nadar"** (Cardio, equipo "Alberca", secundarios Espalda/Hombros) — no existía ningún ejercicio de natación en la biblioteca; su `cue` recomienda alternar estilos (libre/dorso) para no sobrecargar siempre el mismo hombro, y remite a la tarjeta de Deportes → Natación (línea 23 de arriba) para dónde practicarlo.
-- **`S.rutina[3]`** pasó de `{nombre:'Espalda + Hombros + Cardio', tipo:'halar', ejercicios:[5 ejercicios de fuerza incl. Battle Ropes]}` a `{nombre:'Natación', tipo:'cardio', ejercicios:[{id:'e057', series:1, reps:45, unidad:'min'}]}` — mismo patrón que domingo (`S.rutina[0]`, "Descanso activo"): una sola actividad de tiempo continuo, no series×reps tradicionales. El `foco` del día se reescribió para explicar el cambio y aclarar que el trabajo de espalda/hombros que cubría este día se sigue viendo como secundario en Lunes/Martes/Jueves/Viernes.
-- **El trabajo real de "🔙 Espalda"** (dominadas, remo, press militar) que vivía en este día **no se relocalizó a ningún otro día** — Adán no lo pidió, y los compuestos de Lun/Jue (Brazos) y Mar/Vie (Piernas) ya le dan algo de frecuencia secundaria a espalda/hombros vía los ejercicios que sí la trabajan indirectamente (mismo razonamiento que ya explicaba el `foco` original de este día sobre brazos). Si en el futuro Adán nota que le falta volumen directo de espalda, es una conversación aparte.
-- **Replicado en las 2 estructuras duplicadas ya documentadas** (`Dashboard/dashboard.html → GYM_RUTINA_DEFAULT` y `RUTINA_TASKS.e3` en `Coach.html`/`dashboard.html`) — ver [`../Dashboard/readme_dashboard.md`](../Dashboard/readme_dashboard.md) y [`../Coach/readme_coach.md`](../Coach/readme_coach.md) para el detalle de cada uno. El Hero del Dashboard también ganó una foto real por tipo de ejercicio (`TIPO_FOTO.cardio` reusa la misma foto de Wikimedia ya usada aquí en Deportes → Natación) en vez de un emoji genérico — ver `readme_dashboard.md`.
-- Verificado: `node -e "new Function(...)"` limpio sobre los `<script>` de `ejercicio.html`, `Coach.html` y `dashboard.html`; `RUTINA_TASKS` sigue byte-idéntico entre Coach y Dashboard.
-
-### Migración: el cambio de código no se veía en un navegador ya usado (2026-08-07, mismo día)
-
-Adán reportó que el Dashboard seguía sin mostrar Natación el miércoles. Causa real: `load()` hace un merge **superficial** (`S={...S,...JSON.parse(d)}`) — si ya había un `mirutina_v1` guardado en ese navegador (de cualquier apertura anterior de esta página, incluso antes de este cambio de código), el `rutina` guardado completo **reemplaza** al nuevo `S.rutina` con Natación, no se combinan día por día. Y como `init()` llama `save()` justo después de `load()` sin condición, cada apertura de la página **volvía a persistir el miércoles viejo tal cual**, perpetuando el problema indefinidamente aunque el código ya dijera Natación.
-
-- **`fixMiercolesNatacionIfNeeded()`** (nueva, junto a `load`/`save`) — se llama entre `load()` y `save()` dentro de `init()`. Corrige `S.rutina[3]` **solo si sigue siendo exactamente** `{nombre:'Espalda + Hombros + Cardio'}` (el default viejo, sin tocar) — si Adán ya lo había personalizado a otra cosa, se respeta tal cual. Corre una sola vez por navegador (flag `mirutina_v1_miercoles_natacion` en `localStorage`).
-- **Replicada en `Dashboard/dashboard.html`** (`fixMiercolesNatacionIfNeeded()`, con `rawGet`/`rawSet` sobre `mirutina_v1` en vez de `S`/`save()` directos) — necesario para el caso en que Adán abra el Dashboard sin haber abierto `ejercicio.html` primero en ese navegador, mismo patrón ya usado para el saldo de Banamex en Finanzas (`fixBanamexIfNeeded()`, ver `../Dashboard/readme_dashboard.md`).
-- Verificado con Playwright simulando `localStorage` real con el miércoles viejo — se corrige a Natación con la foto correcta; con el miércoles ya personalizado a otra cosa — se queda intacto.
+Breakpoints 1100 (`.ej-mid` a una columna), 900, 860, 820, 760 y 640 (sidebar como drawer con
+☰, grids a una columna, `.exd-card` en columna). **`.main` lleva `min-width:0`**: es el único hijo
+flex de `body` y sin eso su mínimo automático es `min-content`, que en iPad desbordaba 7 px. Se
+verifica a 1600 y 390 px con geometría real y cero errores de consola.
 
 ## Referencias cruzadas
 
-- Incrustada vía `<iframe>` en [`readme_cuidadopersonal.md`](readme_cuidadopersonal.md) (subtab "Ejercicio"). Comparte `localStorage` con el shell por origen `file://` compartido (ver `readme_cuidadopersonal.md`).
-- El **Dashboard** (`../Dashboard/dashboard.html`) lee `mirutina_v1` desde el 2026-07-30 (`D.gym` en `loadAll()`): `rutina` (qué toca cada día) es lo único con contenido real desde el 2026-08-02 — `sesiones`/`metas` ya no los escribe este archivo (ver "Reestructuración" arriba), así que el Dashboard siempre los ve como sus propios valores por defecto. Se usa en el slide Hero ("JARVIS · Tu semana completa") en la tira de 7 días (qué rutina toca cada día) y en el panel de gym — **desde el 2026-08-07, clic en cualquier día de la tira muestra los ejercicios de ese día en ese panel**, no solo "hoy" (`heroGymDiaSel`/`verHeroGymDia()` en `Dashboard/dashboard.html`, ver `readme_dashboard.md`). Si se edita la forma de `S.rutina` aquí (nombres de campos, estructura), revisar `renderHero()`/`renderHeroGymPanel()` en `Dashboard/dashboard.html`.
-- **Nota histórica (corregida 2026-08-02)**: `salud.html` solía tener su propia sección "💪 Ejercicio" interna (registro ligero de cardio/fuerza para el cálculo de calorías netas del día) — se eliminó por completo el 2026-08-02 (petición explícita de Adán: era redundante con esta app) sin reemplazo, ver `readme_salud.md` → "Reestructuración — nutrición se mudó a Comida". Ya no hay dos trackers de ejercicio en el ecosistema, y desde este mismo día tampoco este archivo registra entrenamientos — solo planea y consulta.
-- Mapa completo del proyecto: [`../README.md`](../README.md).
-
-## "Mi Rutina" — se quitaron los 4 KPIs y el clic en un día ahora filtra en vez de hacer scroll (2026-08-07)
-
-Pedido explícito: *"quita lo de días de entreno, descanso, grupos musculares, hoy toca, quita todo eso y cada vez que dé clic... enséñame todos los ejercicios y esconde los demás"*.
-
-- **`#d-kpis` (las 4 tarjetas — Días de entreno, Descanso, Grupos musculares, Hoy toca) se eliminó del HTML y de `renderResumenSemana()`** — ya no se calcula ni se pinta. `#d-semana` (la tira de 7 días) se queda, es la única forma de navegar entre días ahora.
-- **Clic en un día de `.ws-day` (tira semanal) ya no hace `scrollToRutinaDia()`** (scroll hasta ese día entre los 7 completos) — llama a la nueva `verSoloDia(d)`, que filtra `#rutina-semana` para mostrar **solo** ese día y esconder los otros 6. `rutinaDiaFiltro` (variable de módulo, `null` = los 7 días completos) guarda cuál está activo; el título de la sección (`#rutina-semana-title`) cambia de "🏋️ Ejercicios de la semana" a "🏋️ Ejercicios del `<Día>`", y aparece un botón **"← Ver los 7 días"** (`verTodaLaSemana()`) arriba del día filtrado para volver atrás — sin este botón no habría manera de deshacer el filtro. El día activo en la tira se resalta con `.ws-day.sel` (verde), distinto del borde de "hoy" (`.today`, color de acento).
-- `scrollToRutinaDia()` se eliminó por completo (código muerto, ya no se llama desde ningún lado).
-- Verificado con Playwright: `#d-kpis` ya no existe en el DOM; clic en un día dentro de la tira deja exactamente 1 `div[id^="rutina-dia-"]` visible (antes 7); el botón "← Ver los 7 días" reaparece la lista completa.
-
-## Descripciones de ejercicio sin jerga de gym (2026-08-07)
-
-Adán reportó: *"ahí en dashboard de ejercicio la descripción del ejercicio ni se entiende"*. Se le preguntó a qué se refería exactamente y confirmó: **"Es la jerga técnica de gym"** — palabras como "omóplatos", "femoral", "aislamiento", "supina", "lumbar", "cadencia" no las conoce.
-
-- **Los 57 campos `cue` de `EJ_DB` se reescribieron por completo** en español simple, sin perder ninguna indicación técnica — solo se cambió el vocabulario. Ejemplos de sustituciones: "escápulas retraídas" → "aprieta los hombros hacia atrás y abajo"; "sientes el estiramiento en el femoral" → "debes sentir el estiramiento en la parte de atrás del muslo"; "gira la muñeca (supina)" → "gira la muñeca hacia arriba (palma viendo al techo)"; "zona lumbar" → "espalda baja"; "aísla 100% el bíceps" se conservó pero sin la palabra "aislamiento" en el texto — el campo `tipo:'Aislamiento'/'Compuesto'/'Cardio'` (categoría interna, no se lee como oración) se dejó igual porque no es lo que Adán ve como "descripción".
-- **`EJ_LOOKUP` en `Dashboard/dashboard.html`** (subconjunto de 30 ejercicios usado en el panel de gym del Hero) se reescribió con el mismo criterio y el mismo texto simplificado donde aplica, para no tener dos versiones (una simple, una en jerga) del mismo ejercicio en el ecosistema.
-- Verificado por texto: cero ocurrencias de "omóplat", "supina", "lumbar", "cadencia" en ambos archivos tras el cambio; "femoral" y "aislamiento" solo sobreviven como nombre propio de ejercicio (p.ej. "Curl de Femoral Tumbado") o como categoría interna (`tipo:`), nunca dentro de una instrucción.
-
-## Deep-link `?dia=N` desde el Dashboard (2026-08-08)
-
-Adán reportó un bug real: en el Dashboard (slide "Mi Día · JARVIS"), al hacer clic en un día de la tira de 7 (`#heroWeekStrip`) sí cambiaba el panel "🏋️ Hoy toca" para mostrar los ejercicios de ese día — pero el link "Ver en Ejercicio →" de ese mismo panel siempre abría `ejercicio.html` a secas, sin importar qué día se estaba viendo, así que aterrizaba en la semana completa (o en "hoy") en vez de en el día que Adán acababa de elegir.
-
-- **`init()` ahora lee `?dia=N` de la URL** (`new URLSearchParams(location.search).get('dia')`, `N` = 0-6, mismo `getDay()` de JS que usa el resto del ecosistema — 0=domingo) y, si viene un valor válido, llama `verSoloDia(N)` en vez de `renderMiRutina()` — la misma función que ya usa el clic en la tira semanal interna de esta página (`#d-semana`), así que el comportamiento es idéntico a como si Adán hubiera hecho clic él mismo en ese día: filtra a solo ese día y muestra el botón "← Ver los 7 días" para volver.
-- **`Dashboard/dashboard.html` → `renderHeroGymPanel()`**: el link cambió de `href="../CuidadoPersonal/ejercicio.html"` a `href="../CuidadoPersonal/ejercicio.html?dia=${dow}"`, donde `dow` es la misma variable que ya decide qué día mostrar en el panel (el día clickeado en la tira, o `hoy` si no se ha clickeado ninguno) — no fue necesario ningún estado nuevo, solo pasar el dato que el panel ya tenía.
-- Verificado con Playwright: clic en "Domingo" en la tira del Dashboard → el link del panel queda en `ejercicio.html?dia=0` → al abrirlo, "Mi Rutina" carga directo en "🏋️ Ejercicios del Domingo" con el botón "← Ver los 7 días" visible y el día correcto resaltado en la tira interna; cero errores de consola en ambos archivos.
-
-## 11 fotos más agregadas a `EJ_DB`, investigadas y verificadas una por una (2026-08-10)
-
-Pedido explícito, sobre el Dashboard: *"en ejercicios de gym hay algunas fotos que no existen en el html de ejercicio, entonces si no existen, crealas pero hazlas del mismo estilo en que ya estan, para que quede acorde y todo este lleno"*. De los 23 ejercicios sin `img` (34/57 tenían), se investigó cada uno por separado (agente de búsqueda con WebSearch/WebFetch, sin tocar archivos) buscando específicamente en la misma familia visual ya usada (**Everkinetic**, `Category:Weight training diagrams` de Wikimedia Commons — el origen real de "Bench-press-1.png"/"Squats.svg"/etc., confirmado al investigar) — nunca fotos reales, nunca otro estilo de ilustración.
-
-- **11 encontradas, descargadas y verificadas visualmente antes de usarlas** (no solo "la URL responde 200" — se abrió cada imagen para confirmar que sí es del mismo estilo de línea Y que sí representa el ejercicio correcto): `e004` Aperturas con Mancuerna, `e008` Dominadas, `e010` Jalón al Pecho, `e011` Remo con Mancuerna, `e012` Peso Muerto, `e019` Pájaros (Rear Delt), `e033` Prensa de Piernas, `e036` Zancadas, `e043` Patada de Glúteo en Polea, `e044` Abducción de Cadera, `e048` Rueda Abdominal.
-- **2 candidatas encontradas pero descartadas a propósito**, mismo criterio ya documentado arriba ("antes que mezclar... un diagrama que enseñe una forma distinta a la explicada"):
-  - `e037` Sentadilla Búlgara — el único diagrama de Everkinetic para "split squat con barra" muestra el pie de atrás **apoyado en el piso**, no elevado en un banco. El `cue` de este ejercicio dice explícitamente "Con el pie de atrás apoyado en un banco" — usar esa imagen habría contradicho visualmente la técnica ya descrita, así que se descartó.
-  - `e045` Plancha — sí existe un diagrama de plancha en Commons, pero de una familia visual completamente distinta (ilustración plana a color naranja/amarillo, no línea negra de Everkinetic) — hubiera desentonado exactamente como Adán pidió evitar ("del mismo estilo... para que quede acorde").
-- **10 sin ningún candidato real**: `e020` Face Pull, `e049` Oblicuos con Cable, `e050` Dead Bug, y las 7 de cardio (`e051` Caminata en Cinta, `e052` Correr, `e053` Bicicleta Estática, `e054` Elíptica, `e055` Saltar la Cuerda, `e056` Battle Ropes, `e057` Nadar) — Everkinetic no cubre cardio en absoluto (confirmado revisando la categoría completa), y para los otros 3 solo aparecían fotos reales o sets de íconos genéricos (Noun Project/Tabler) sin relación de estilo. Se quedan sin `img` — no se inventó ni se forzó ninguna.
-- **2 detalles verificados aparte, no obvios a simple vista**: `e011` usa un archivo cuyo nombre en Commons dice "Rear_deltoid_row_dumbbell" pero que al abrirlo muestra exactamente la postura de remo a una mano con rodilla en banco (un remo con mancuerna real, solo mal nombrado en el archivo origen) — se verificó la imagen en sí, no se confió en el nombre del archivo. `e036` (Zancadas, `equipo:'Mancuernas'` en `EJ_DB`) usa el único diagrama de zancadas de Everkinetic, que muestra una barra en vez de mancuernas — la forma del movimiento es idéntica con cualquiera de los 2 implementos, así que se usó de todos modos (a diferencia del caso de `e037`, aquí no hay contradicción de técnica, solo de equipo).
-- Verificado con `curl` (11/11 URLs, HTTP 200, `Content-Type: image/png` o `image/gif`) y con Playwright dentro de la propia app (pestaña 📚 Biblioteca): las 11 imágenes cargan (`naturalWidth`>0, `complete:true`) sin ningún error de consola ni de red — el chequeo inicial mostró 3 en `naturalWidth:0` por el `loading="lazy"` del navegador (Glúteos/Core quedan más abajo en la página), confirmado que cargaban bien en cuanto se hacía scroll hasta ellas.
-
-## Rutina reestructurada: un solo día de pierna, día nuevo de abdomen, y natación como aprendizaje (2026-08-12)
-
-Pedido explícito, textual: *"combina los dias de pierna el a y el b, solo quiero uno, pero quitame el ejercicio de sentadilla con barra, zancadas, peso muerto, hip trust, el otro dia que queda ponme ejercicios para bajar la panza de mi abdomen ya que estoy como que excesivo de pansa y quisiera hacer abs o que ejercicios me recomiendas?"* y *"ademas en natacion tambien ponme una rutina, recuerda que ni se nadar y quiero aprender poco a poco"*.
-
-- **Martes — "Piernas — completa"** (antes "Piernas A — Cuádriceps"): fusiona lo que eran Piernas A y Piernas B en un solo día, sin los 4 ejercicios que Adán pidió quitar (`e032` Sentadilla con Barra, `e036` Zancadas, `e038` Peso Muerto Rumano, `e041` Hip Thrust). El compuesto pesado del día pasó a ser **`e040` Hack Squat** — cumple la misma función que la sentadilla con barra (cuádriceps con carga) pero en máquina, con la espalda apoyada y sin barra encima, así que respeta la petición sin dejar el día sin un movimiento compuesto. Quedan 7 ejercicios porque ahora cubre la pierna completa: 3 de cuádriceps (Hack Squat, Prensa, Extensión), 2 de femoral/glúteo (Curl Femoral, Búlgara), 1 de abductor y 1 de pantorrilla.
-- **Viernes — "Abdomen — Core + Cardio"** (era "Piernas B", que quedó libre al fusionar): 5 ejercicios de core + 25 min de elíptica. Los 5 se eligieron para cubrir las **3 funciones reales del abdomen**, no solo "hacer abdominales": anti-extensión (`e045` Plancha, `e050` Dead Bug), flexión (`e046` Crunch, `e047` Elevación de Piernas) y rotación (`e049` Oblicuos con Cable). El día cambió de `tipo:'piernas'` a `tipo:'core'` (ya existía en `TIPO_COL`/`TIPO_LABEL`, no hizo falta agregarlo aquí).
-  - **El `foco` del día dice explícitamente que la reducción localizada NO existe**: hacer abdominales fortalece el músculo pero no quema la grasa que está encima. La panza baja con déficit calórico (su Registro Diario en `comida.html`) + cardio; los ejercicios son lo que hace que, cuando la grasa baje, sí haya abdomen debajo. Se dejó por escrito a propósito en vez de dejar que el nombre del día prometa algo que el ejercicio solo no puede dar.
-  - **El día se llamó unas horas "Abdomen — bajar panza"** hasta que Adán pidió cambiarlo: *"no pongas literal bajar panza jajaja pon algo mas estetico si alguien lo lee"*. Es un punto válido más allá del gusto — este nombre se ve en el Dashboard, en Coach y en cualquier pantalla que alguien más llegue a ver. Se cambió a **"Abdomen — Core + Cardio"** (consistente con "Pecho + Cardio + Core" del sábado), y de paso se suavizó el resto del lenguaje en las 3 apps: "bajar panza" pasó a "definir la zona media" / "reducir grasa" en el banner de meta de `#s-rutina`, en las tarjetas de Boxeo y Natación de Deportes, en los `foco` del viernes y el sábado, y en la narrativa de visualización de Coach. **Las citas textuales de Adán en comentarios de código y en este README se dejaron como están** — son registro de lo que él pidió, no texto de interfaz.
-  - **La migración tuvo que bumpearse a `_v2`** (`mirutina_v1_pierna_abs_natacion_v2`) y aceptar `"Abdomen — bajar panza"` como nombre-default válido: la versión anterior ya podía haber corrido y dejado ese nombre guardado en localStorage, y con la bandera vieja el nombre nuevo no habría llegado nunca. Por eso ese string sigue apareciendo en el código de las 2 migraciones — es la condición que reconoce el dato viejo, no texto de UI.
-- **Miércoles — "Natación — aprender a nadar"**: antes era una sola línea, `e057` Nadar 45 min, que no le sirve a alguien que todavía no sabe nadar. Ahora son **5 bloques en el orden real en que se aprende**, sumando los mismos 45 min: flotación y respiración (8 min) → patada con tabla (4×3 min) → respiración lateral con tabla (3×3 min) → brazada de crol (3×3 min) → nado continuo (10 min). El `foco` explica que las primeras semanas es normal gastar casi toda la sesión en los primeros bloques, y que conforme avance le quite minutos a los de abajo y se los sume al nado continuo.
-- **5 ejercicios nuevos en `EJ_DB`** (`e058`-`e062`), uno por bloque de esa sesión, cada uno con su `cue` de técnica real: Flotación y respiración, Patada con tabla, Respiración lateral con tabla, Brazada de crol, Nado continuo. Coinciden con las 4 fases de la habilidad "Saber nadar" del Dashboard (Habilidades Base), que se ampliaron el mismo día. Sin `img`, igual que el resto de cardio (Everkinetic no cubre natación — ver sección de imágenes más arriba).
-- **`fixRutina20260812IfNeeded()` — migración one-time, imprescindible**: `load()` hace un merge superficial, así que un `rutina` ya guardado en localStorage gana sobre el default nuevo y estos 3 cambios nunca se aplicarían solos en el navegador de Adán. Mismo patrón exacto que `fixMiercolesNatacionIfNeeded()` (2026-08-07): corre una sola vez (bandera `mirutina_v1_pierna_abs_natacion`), y **solo toca cada día si sigue siendo exactamente el default viejo** (se compara por nombre: "Piernas A — Cuádriceps", "Piernas B — Glúteo + Femoral", "Natación") — si Adán ya lo había personalizado a mano, se respeta y no se pisa. Los datos que aplica vienen de `RUTINA_DEFAULT_20260812`, una copia profunda de los 3 días tomada del default **antes** de que `load()` lo sobrescriba.
-- **Réplica en `Dashboard/dashboard.html`**, que mantiene su copia ligera: `GYM_RUTINA_DEFAULT` (los 3 días), `EJ_LOOKUP` (9 ejercicios nuevos: `e040`, `e046`, `e049`, `e050` y los 5 de natación) y `TIPO_FOTO.core` (foto nueva; sin ella, el día de abdomen caía al `||TIPO_FOTO.descanso` de `renderHero()` y mostraba foto de descanso en un día de entrenamiento). `e032`/`e036`/`e038`/`e041` se dejaron a propósito en `EJ_LOOKUP` aunque ya no se usen: si Adán tuviera una rutina personalizada guardada que todavía los incluya, esa versión tiene prioridad y necesita poder resolver su nombre.
-- Verificado con Node en los 2 archivos: `new Function()` sobre los bloques `<script>` reales sin errores; balance de `{`/`}` del CSS y de `<div>` intacto (ejercicio.html 156/156 y 173/173; dashboard.html 520/520 y 283/283); `EJ_DB` con 62 ejercicios y 0 ids duplicados; **0 ejercicios de la rutina sin entrada en `EJ_DB`/`EJ_LOOKUP`**; **0 de los 4 ejercicios que Adán pidió quitar siguen en la rutina**; 0 tipos de día sin foto ni etiqueta; y `RUTINA_DEFAULT_20260812` resuelve correctamente los 3 días (7, 5 y 6 ejercicios).
+- **Dashboard** lee `mirutina_v1` como `D.gym`: `rutina` para "qué toca" (con `GYM_RUTINA_DEFAULT`
+  como respaldo si nunca se abrió esta app) y `sesiones` con `gymSesiones()`, que acepta esta
+  forma y la lista vieja. `EJ_LOOKUP` allá es el subconjunto de nombres/cues que su panel necesita.
+  Si cambia la forma de `S.rutina` o `S.sesiones`, revisar `renderDiaEntrena()` y `gymSesiones()`.
+- El shell `cuidadopersonal.html` la incrusta; `salud.html` ya no tiene tracker de ejercicio.
+- Mapa completo: [`../README.md`](../README.md).
 
 ## Cómo usarlo
 
-Se abre `CuidadoPersonal/cuidadopersonal.html` (subtab Ejercicio) o directamente `ejercicio.html` en cualquier navegador, sin instalación ni servidor. No hay sincronización entre dispositivos salvo mediante exportación manual del JSON.
-
-## Natación se muda al Fitsi Buenavista, y "🏋️ Hoy toca" ahora explica la sesión (2026-08-12)
-
-Dos correcciones de Adán el mismo día: *"el miercoles voy a natacion en el fitsi de buenavista, cambia eso de la doctores"* y *"y en hoy toca natacion, no es nada explicativo"*.
-
-### Ubicación: era un dato inventado, no uno real
-
-La Alberca Olímpica Francisco Márquez (Doctores) venía de la sección Deportes de `ejercicio.html`, donde se había puesto como **estimación razonable** de dónde podría nadar — nunca fue un dato confirmado (así estaba advertido en este mismo README). Adán aclaró que nada en la **alberca semiolímpica de su propio gimnasio, Fitsi Buenavista**, que ya aparecía en `FITSI_INSTALACIONES` desde el 2026-08-02. Cambiado en las **4 apps que repetían el dato**:
-
-- `CuidadoPersonal/ejercicio.html` — tarjeta de Natación en Deportes (ubicación y costo: pasó de "$20-50/visita en alberca pública" a "Incluido en tu membresía de Fitsi") y el `foco` del miércoles.
-- `Dashboard/dashboard.html` — la tarea `e3` de `RUTINA_TASKS`, la habilidad `nadar` de Habilidades Base, y un comentario de `TIPO_FOTO`.
-- `Coach/Coach.html` — la tarea `e3` de su propia copia de `RUTINA_TASKS`.
-- **No se tocó `Dashboard_prueba_iphone/dashboard.html`**: es una copia congelada (un solo commit, 0 de las funciones de las últimas semanas, no aparece en ningún README) — no es una app viva.
-
-Es un cambio a mejor y no solo de texto: la alberca ya está pagada dentro de su membresía, es el mismo lugar al que va los otros días (cero traslado extra) y Fitsi da clases de Aquafit, que sirven justo para la fase 1 de su progresión. Todo eso quedó dicho en el `foco` del día.
-
-### "Hoy toca" no explicaba nada — y la causa de fondo era peor que un texto faltante
-
-Al revisar el reclamo salieron **2 problemas distintos**:
-
-1. **La migración solo corría en `ejercicio.html`.** `fixRutina20260812IfNeeded()` se había puesto únicamente ahí, pero el Dashboard lee `mirutina_v1` de localStorage y **`D.gym.rutina` siempre gana sobre `GYM_RUTINA_DEFAULT`**. Como Adán normalmente abre el Dashboard y no `ejercicio.html`, seguía viendo el miércoles viejo — *"Natación · Nadar 1×45 min"*, una sola línea — aunque el código ya tuviera los 5 bloques nuevos. Es decir: los cambios de la rutina del turno anterior **no le habían llegado**. Se agregó el espejo exacto de esa migración en `dashboard.html` (mismo nombre de bandera `mirutina_v1_pierna_abs_natacion`, mismas condiciones por nombre exacto, corre antes de `loadAll()`), y de paso cubre también el lunes que estaba desincronizado. Ahora da igual cuál de las 2 apps abra primero.
-2. **El panel nunca pintaba el `foco`.** `renderHeroGymPanel()` solo listaba nombre + series×reps + `cue` por ejercicio. Para un día de fuerza eso alcanza, pero para una sesión de aprendizaje de natación —donde lo que importa es que los bloques van EN ORDEN y que al inicio es normal no llegar al último— una lista suelta no dice nada. Ahora se pinta `rutinaDia.foco` arriba de la lista (`.hp-foco`, con barra de acento, recortado a 5 líneas y el texto completo en `title`).
-   - `foco` ya existía en `S.rutina` de `ejercicio.html` pero **`GYM_RUTINA_DEFAULT` no lo tenía** (es la copia ligera). Se le agregó a los 7 días, para que el panel explique igual venga la rutina de donde venga.
-   - Los `foco` de los 3 días reestructurados se **reescribieron para ser texto de usuario**: traían prosa de changelog ("Reestructurado el 2026-08-12 (pedido de Adán: ...)"), que es justo lo que no debe leerse en la UI ahora que este campo es visible en 2 apps. Esa parte histórica vive en este README, que es su lugar.
-   - Los 7 `foco` quedaron **idénticos carácter por carácter entre `ejercicio.html` y `dashboard.html`**, copiados con un script desde `S.rutina` (la fuente de verdad) en vez de a mano. No es cosmético: las 2 migraciones comparten la bandera `mirutina_v1_pierna_abs_natacion` y escriben en la misma clave de localStorage, así que **la primera app que Adán abra es la que gana** — si los textos difirieran, el contenido del panel dependería de por dónde entró ese día. Verificado con Node (7/7 iguales).
-- Verificado con Node en los 3 archivos tocados: `new Function()` sobre los bloques `<script>` reales sin errores; CSS y `<div>` balanceados (dashboard 521/521 y 284/284, ejercicio 156/156 y 173/173, Coach 438/438 y 1578/1578); los 7 días siguen sincronizados entre `S.rutina` y `GYM_RUTINA_DEFAULT` (nombre y lista de ejercicios); 7/7 días con `foco` en el default; 0 referencias a "Francisco Márquez" en las apps vivas.
-
-## Ajustes finos de la rutina, uno por uno (2026-08-12, misma tarde)
-
-Adán fue pidiendo cambios sueltos mientras revisaba la rutina ya cargada. Todos aplicados en `ejercicio.html` (fuente de verdad) y replicados en `GYM_RUTINA_DEFAULT` de `dashboard.html`:
-
-| Pedido textual | Qué se hizo |
-|---|---|
-| *"quita esto en el dashboard: [el párrafo de foco de natación]"* | Se quitó el render de `foco` del panel "🏋️ Hoy toca" (`.hp-foco` y su CSS). Ver abajo por qué el dato SÍ se conserva. |
-| *"de natacion, solo dejame 4 ejercicios"* | De 5 bloques a 4: `e060` (respiración lateral con tabla) salió y su contenido se **fusionó dentro de `e059`**, que pasó a llamarse "Patada con tabla + respirar de lado" — es donde se practica de verdad, con tabla. Tiempos redistribuidos para seguir sumando 45 min exactos (7 + 4×4 + 3×4 + 10). |
-| *"quita oblicuos con cable en ejercicio del viernes"* | `e049` fuera. El `foco` decía "las 3 funciones del abdomen (… rotación con oblicuos)" — se corrigió a las 2 que quedan (aguantar sin arquearte y flexionar), en vez de dejar una promesa que los ejercicios ya no cumplen. |
-| *"lo del lunes, quita el press frances, dame algo mas facil o intermedio"* | `e027` → **`e030` Patada de Tríceps**: mancuerna, aislamiento ligero, no carga el codo como el Press Francés y perdona mucho más la técnica. Era el único ejercicio de tríceps de la biblioteca que no estaba ya en otro día. Se agregó `e030` a `EJ_LOOKUP`. |
-| *"quita la sentadilla bulgara del martes"* | `e037` fuera. El día quedó en 6 ejercicios y **100% en máquina o con apoyo** — ya no hay nada de equilibrio a una pierna ni barra sobre los hombros; se dijo explícitamente en el `foco`. |
-| *"lo del sabado quita la rueda abdominal y ponme algo de abdomen"* | `e048` → **`e045` Plancha**. Se repite del viernes **a propósito**, y el `foco` lo justifica: el core aguanta bien 2 veces por semana, no necesita equipo y no deja adolorido para el domingo. Las otras opciones de la biblioteca eran `e049` (que él acababa de quitar del viernes) o repetir crunch/elevación de piernas. |
-| *"el curl con barra esta mal la ilustracion"* | Cambiada. La anterior (`Biceps-curl-1.png`) tiene como única descripción en Commons *"an exercise of biceps"* — ni siquiera dice si es barra o mancuerna. La nueva es explícitamente **"Wide Grip Standing Biceps Curl With Barbell"**, de la misma familia visual (Everkinetic, línea negra) que el resto de la biblioteca. Verificada con `curl` (200) y confirmada leyendo su página de Commons, no solo el nombre del archivo. |
-
-### Por qué el panel dejó de mostrar `foco` pero el dato sigue ahí
-
-El `foco` se quitó **solo del render** del Dashboard, no de los datos. `GYM_RUTINA_DEFAULT` lo sigue cargando porque `fixRutina20260812IfNeeded()` escribe esos objetos tal cual en `mirutina_v1`, y **`ejercicio.html` sí muestra el `foco`** en el banner de su detalle, donde hay espacio. Si se omitiera en la copia del Dashboard, abrir el Dashboard antes que `ejercicio.html` **borraría ese texto de la otra app**. Por eso los 7 `foco` deben seguir idénticos carácter por carácter entre los 2 archivos (verificado con Node en cada ronda).
-
-### La migración tuvo que subir a `_v3`
-
-Cada tanda de estos cambios necesitó **bumpear la bandera** (`mirutina_v1_pierna_abs_natacion` → `_v2` → `_v3`) en las 2 apps: una vez que la migración corre, deja su bandera puesta y no vuelve a tocar nada, así que sin bump los cambios nuevos **nunca llegarían al navegador de Adán**. Además, cada versión tuvo que **aceptar como "todavía es el default" los nombres intermedios** que ella misma pudo haber guardado antes (`Piernas — completa`, `Abdomen — bajar panza`, `Abdomen — Core + Cardio`, `Natación — aprender a nadar`) — si solo comparara contra los nombres originales de julio, un navegador ya migrado se quedaría congelado en la versión intermedia. Se extendió también a los días 1 y 6, que antes no estaban cubiertos porque no habían cambiado.
-
-- Verificado con Node en los 2 archivos: sintaxis OK; CSS y `<div>` balanceados (dashboard 520/520 y 283/283, ejercicio 156/156 y 173/173); los 7 días **sincronizados** entre `S.rutina` y `GYM_RUTINA_DEFAULT` (nombre + lista de ejercicios) y los 7 `foco` **idénticos**; **0 ejercicios sin entrada** en `EJ_LOOKUP` ni en `EJ_DB`; **0 de los 5 ejercicios retirados** (`e027`, `e037`, `e048`, `e049`, `e060`) siguen en la rutina — todos se quedaron en la biblioteca por si algún día los quiere de vuelta; bandera `_v3` presente en ambas apps. Las 2 URLs de imagen nuevas responden 200.
-
-## El enlace al Dashboard vive en la `.topbar` (2026-08-18)
-
-*"hay botones dashboard que ni si quiera van acorde a la interfaz del html, osea sobre ponen a otros botones y eso esta mal, debe ser parte de la interfaz de todos"*.
-
-El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el botón de tema en pantallas angostas** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón redondo con el 🚀 antes del de tema, con la clase `.theme-toggle-btn` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
-
-Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".
-## Rediseño completo de "Mi Rutina": técnica explicada, series marcables y progresión de pesos (2026-09-01)
-
-Adán: *"diseñame el html de ejercicio, quiero muy claro, con ejercicios bien
-explicados y manten las imagenes que pusimos, quiero un diseño futurista"*.
-
-**El fallo de fondo no era el diseño, era que la app no servía para entrenar.**
-El campo `peso` existía en los 45 ejercicios de la rutina y valía **0 en todos**:
-había dónde guardar el peso pero ningún sitio donde escribirlo, así que la app
-nunca supo cuánto levanta ni si está progresando. Lo mismo con `descanso`: cada
-ejercicio traía sus segundos y no había cronómetro. Y las descripciones eran una
-línea (`cue`) que decía *qué* es el ejercicio, no *cómo* se hace.
-
-### Lo que se agregó a los datos
-
-- **28 ejercicios de su rutina** llevan ahora `pasos:[...]` (3 a 5 pasos de
-  técnica, en orden, sin jerga) y `error:'...'` (el fallo que se ve siempre en
-  ese movimiento). Los otros 34 de `EJ_DB` siguen con su `cue`, y `ejPasos()`
-  lo parte en frases como respaldo, así que ninguna ficha sale vacía.
-- **`S.sesiones`** — nueva estructura en `localStorage['mirutina_v1']`:
-  `{'2026-09-01': {e040: [{ok:true, kg:85}, {ok:true, kg:85}, …]}}`. Una entrada
-  por día y ejercicio, una posición por serie. De ahí salen la racha, el volumen
-  y el historial; no se calcula nada que no esté escrito ahí.
-- `load()` normaliza `sesiones`, `ejerciciosCustom` y `fitsiCalendario` por
-  separado: el merge superficial perdía las claves nuevas contra datos ya
-  guardados (el mismo bug que hizo invisible el rediseño de salud.html).
-
-### Lo que ve al abrir
-
-Antes los 7 días iban abiertos a la vez y eso daba 7.403 px de scroll. Ahora:
-
-1. **Cabecera con 3 KPIs** — racha, sesiones de esta semana y volumen levantado
-   (kg × reps × series de lo marcado), más una tira de los 7 días donde hoy va
-   resaltado y cualquier otro se abre con un clic.
-2. **La sesión de hoy** — cada ejercicio con su imagen de Wikimedia (las 54 que
-   ya estaban, intactas), los pasos numerados, el error típico en rojo, y una
-   fila por serie con **casilla y campo de kg**. Marcar una serie arranca el
-   cronómetro de descanso con los segundos que ese ejercicio ya traía.
-3. **Carril derecho** — cronómetro, progresión contra la última vez que hizo ese
-   mismo ejercicio, y la regla de cuándo subir de peso.
-4. **El resto de la semana**, plegado: seis líneas, una por día, que se abren
-   sólo si las toca.
-
-`verEjercicio(id)` abre la ficha completa —pasos, error, en qué día de su rutina
-aparece, historial de pesos y tres alternativas del mismo músculo por si la
-máquina está ocupada—. Se abre desde la sesión y desde la biblioteca.
-
-### Detalles que costaron
-
-- `ORDEN_DIAS` desapareció al cortar el bloque viejo de `renderMiRutina()`; sin
-  esa constante no pintaba ningún día.
-- El naranja de este archivo es `--p`, no `--o`, y el modal usa `.open`, no
-  `.show` — copiar de otro HTML de la suite no basta.
-- **Contraste**: `--text3` daba 2.35:1 en oscuro. Subió a `#7a8699` (oscuro) y
-  `#6f7286` (claro), se agregó `--g-txt:#046e3e` para el verde en tema claro, y
-  el texto del cronómetro y el resumen de la sesión pasaron a `--text2` porque
-  sobre el fondo naranja translúcido se quedaban en 4.32:1. Medido componiendo
-  **toda** la pila de capas translúcidas, no sólo la primera: el estimador de una
-  capa da falsos negativos.
-- Verificado a 1600 px y 390 px con geometría real: 6 ejercicios con imagen, 20
-  pasos, 6 errores, 21 series marcables, cronómetro corriendo, ficha con 4 pasos
-  + error + 3 alternativas, y persistencia confirmada tras recargar.
-
-### En cero parecía que no había cambiado nada (mismo día)
-
-Adán, con el rediseño ya delante: *"por que no veo los cambios?"*. **Sí los veía.**
-El mockup que le enseñé tenía la sesión empezada —racha 3, 2/6, 4.2 t y los kg
-anotados— y su app arranca con los tres KPIs en 0 y "Aún no has anotado ningún
-peso". Es el mismo error de presentación que con `salud.html`: enseñar un mockup
-lleno contra una app vacía. La app estaba bien; la pantalla de arranque, no.
-
-- **Banda de arranque** — mientras `ejVirgen()` sea cierta (ni una serie marcada
-  ni un kg escrito en ninguna fecha), sobre el primer ejercicio aparece qué hacer
-  y por qué: la casilla marca la serie y dispara el descanso, el campo de al lado
-  guarda los kilos, y sin ese número no hay progresión que calcular. Desaparece
-  sola en cuanto marca la primera serie.
-- Los KPIs en cero llevan `.vacio` (opacidad 45%): un cero apagado se lee como
-  "todavía nada", un cero a plena intensidad se lee como un dato roto.
-- El campo de kg medía 74 px y **cortaba su propio marcador**: se leía "anotar k"
-  y, con historial, "85 kg la vez pasa". Pasó a 112 px (104 en móvil) y el texto
-  se acortó a "anota los kg". `input.scrollWidth` no detecta esto —un placeholder
-  truncado no ensancha el scroll—, sólo se ve mirando la captura.
-
-### "Hazlo idéntico al diseño" — lo que separaba la app del mockup (mismo día)
-
-Adán, con las dos pestañas abiertas: *"pero hazlo identico con los mismos colores
-y barras que me habias dicho"*. Comparando `diseno-ejercicio/Main.dc.html` con la
-app, la barra del cronómetro y las sparklines **ya estaban** —no se veían porque
-sin historial no hay nada que dibujar—. Lo que faltaba de verdad:
-
-- **El ámbar.** El mockup usa `#ffb15c` para todo lo que es descanso: la etiqueta
-  del cronómetro, su fondo, su barra, los segundos de cada ejercicio y el KPI de
-  volumen. La app usaba el naranja `--p` (#ff6b35) en esos cinco sitios. Entran
-  `--am` / `--am-t` / `--am-l`; en tema claro bajan a `#c47a12` y `#7a4a00`
-  porque el ámbar del mockup —que es sólo oscuro— no aguanta 4.5:1 sobre blanco.
-- **El fondo.** Tres auroras radiales (verde arriba a la izquierda, azul arriba a
-  la derecha, violeta abajo) y una rejilla de 60 px, en un `::before` de
-  `#s-rutina`. En claro las auroras bajan a la mitad de opacidad. `inset` va a
-  `-20px 0`: con `-24px` a los lados el documento desbordaba a lo ancho.
-- **Space Grotesk** para los números —KPIs, título, series, progresión y
-  cronómetro—, añadida a la hoja de Inter que la página ya cargaba.
-- **La tarjeta de aviso** del carril derecho, la que dice que los abdominales no
-  queman la grasa del abdomen. Ese texto ya vivía en la banda de meta de arriba,
-  así que salió de ahí y ahora es `EJ_AVISO`, escrito una sola vez.
-- **"llevas ~21 min"** junto a "2 de 6 hechos": series marcadas × (su descanso +
-  40 s). Es una estimación derivada, no un cronómetro de sesión — no hay ningún
-  `t0` guardado y añadirlo habría metido una clave que no es un id de ejercicio
-  dentro de `S.sesiones`, que se recorre por id en cuatro sitios.
-- El halo verde del día de hoy, y `.ej-set-n` a `--text2`: sobre el verde de una
-  serie marcada, `--text3` daba 3.86:1. Eso sólo se ve **midiendo con la sesión
-  llena** — con la app vacía esa combinación no existe.
-- El marcador volvió a cortarse: "45 kg la vez pasada" no cabe en 112 px. Ahora
-  dice "antes 45 kg".
-
-### Por qué "no era idéntico": las superficies, no los colores (mismo día)
-
-Adán: *"no lo hiciste como me dijiste que lo harias? por que lo haces mal?"*.
-Tenía razón, y yo había estado comparando **leyendo CSS** en lugar de midiendo.
-
-Primero descarté la sospecha obvia: extraje los artboards del canvas publicado y
-los comparé con `diseno-ejercicio/`. Sólo difieren en los finales de línea — el
-diseño de referencia era el correcto. Entonces rendericé `Main.dc.html` en el
-navegador y medí **35 pares de elementos equivalentes** (mockup → app) sobre
-doce propiedades calculadas: **113 diferencias**.
-
-La gorda, la que explicaba la sensación de "no se parece":
-
-> El mockup no usa superficies opacas. Cada tarjeta es un velo blanco al 4,5 %
-> sobre un fondo casi negro, y por eso se ven las auroras a través de todo. La
-> app pintaba `--surface` (#161619 opaco), que las tapaba. El fondo que había
-> añadido el día anterior **existía y no se veía**.
-
-Entran `--panel` / `--panel2` / `--linea` y los usan `.ej-kpi`, `.ej-card`,
-`.ej-d`, `.ej-foco`, `.ej-x`, `.ej-set`, `.ej-tag`, `.ej-paso i` y la barra del
-cronómetro. En tema claro el velo blanco sobre fondo claro no se ve, así que ahí
-se invierte: blanco sólido con una sombra de 1 px.
-
-El resto de las 113:
-
-- Los grises: `--text` `#e8eaf6`→`#eef2f7`, `--text2` `#8892b0`→`#9aa6b4`,
-  `--text3` `#7a8699`→`#93a0ae`. Los de la suite tiran a azul; los del mockup son
-  neutros.
-- `--bg` `#060614`→`#06080c` y `--r` `#ff3b6b`→`#ff5470`.
-- El título a 27 px, el eyebrow a `.16em`, los KPIs a `9px 15px` / 104 px,
-  `.ej-x-r` a 196 px, la casilla a 17 px, el tinte de la etiqueta del día al 16 %
-  y el borde del cronómetro a `rgba(255,177,92,.3)` — le había puesto `--am-l`,
-  que es cuatro veces más tenue.
-
-Quedan 44 diferencias y ninguna es corregible: son el ancho del sidebar (la app
-tiene 245 px que el mockup no dibuja) y textos más largos en la app que en la
-maqueta. `.ej-tag` en claro bajó a 4.34:1 sobre el panel nuevo y sube a `--text2`.
-
-**La lección**: comparar dos diseños leyendo sus hojas de estilo no funciona.
-Renderizar los dos y restar propiedades calculadas encuentra en un minuto lo que
-tres lecturas no vieron.
-
-### "Cómo se hace" pasa de 28 ejercicios a los 62, y de 3 pasos a 5 (2026-09-01)
-
-Adán: *"llena con mejor descripcion el como se hace"*. Dos huecos medidos:
-
-- **34 de los 62 ejercicios no tenían `pasos`.** Su ficha caía al respaldo —el
-  `cue` partido en frases—, que describe *qué* es el ejercicio, no *cómo* se hace.
-  Entre ellos había fundamentales: peso muerto, sentadilla con barra, dominadas,
-  press militar, hip thrust, la rueda abdominal y los cinco de natación.
-- **36 de los que sí tenían se quedaban en tres líneas** (~180 caracteres), casi
-  todos los de brazo, core y cardio.
-
-Ahora los 62 tienen técnica y error propio: **285 pasos, media de 4,6 por
-ejercicio, ninguno por debajo de cuatro.** Todos siguen el mismo orden, que es
-lo que los hace escaneables mientras entrena:
-
-1. cómo te montas (dónde te pones, cómo agarras, cómo ajustas la máquina);
-2. qué aprietas antes de moverte (abdomen, glúteo, omóplatos, mirada);
-3. la fase de trabajo, con el punto de parada explícito;
-4. la vuelta, con el tempo cuando importa ("baja contando dos segundos");
-5. el detalle que casi todos se saltan — el rango real, la respiración, o el
-   ajuste que decide si el ejercicio sirve ("aprieta un segundo arriba: sin esa
-   pausa la pantorrilla no trabaja").
-
-Los `cue` se quedan como están: son el texto de la tarjeta de la biblioteca y el
-respaldo si algún día se añade un ejercicio sin pasos.
-
-Comprobado abriendo **las 62 fichas** en el navegador: entre 4 y 5 pasos cada una,
-las 62 con su error, sin ninguna vacía y sin errores de consola. A 390 px ningún
-paso se corta ni desborda.
+`cuidadopersonal.html` → Ejercicio, o `ejercicio.html` directo. Sin instalación ni servidor. El
+botón de exportar descarga `rutina_YYYY-MM-DD.json`; no hay sincronización entre dispositivos.
