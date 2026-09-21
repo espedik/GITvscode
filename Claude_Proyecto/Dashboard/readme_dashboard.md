@@ -431,6 +431,11 @@ no pise un saldo más nuevo que ella.
 
 ### La semana: el cierre como una resta
 
+**El cierre sale de la misma serie que el riel** (`ctTramo`, anclada al saldo real de la cuenta si
+lo hay; `ctQuincena` solo aporta el reparto de la quincena en semanas). Con el saldo real dentro de
+la semana, la resta arranca en *Saldo real el 21* y solo cuenta lo que sale después; si ese día es
+el último de la semana, la fila de «se va» se omite.
+
 Tres líneas —*arrancaste con* $20,500, *se fue en la semana* −$10,509, *cierras el domingo con*
 $9,991— seguidas de en qué se fue, de mayor a menor, y lo que toca esta semana con su casilla.
 **Cada gasto que cae un día concreto es un botón** que abre ese día (y arrastra calendario y
@@ -572,22 +577,22 @@ plazo.** 0 px de desborde a 1600×950 y 1920×1080; a 1366×768 scroll interno.
 **El dinero real** de BYD y Maestría es una barra continua en `--ac2`, distinta de las marcas de
 paso, con la cifra (`$22,800 pagado`): `METAS_MONEYBAR[x].short`; `.lbl` va en el `title`.
 
-### Las tres adicciones — celular, citas, alcohol
+### Las adicciones — celular y alcohol
 
-`celular`, `citas` y `alcohol` en `META_DETALLE`, **14 pasos cada una**, en su propia fila de
-corto/mediano plazo. **Van juntas a propósito**: son la misma mecánica —una conducta que se repite
-para regular emociones— y se disparan entre sí; cada ficha remite a las otras dos y las tres
-cierran con la misma puerta (Línea de la Vida 800 911 2000, UNAM, CIJ).
+`celular` y `alcohol` en `META_DETALLE`, **14 pasos cada una**, en su propia fila de corto/mediano
+plazo. **Van juntas a propósito**: son la misma mecánica —una conducta que se repite para regular
+emociones— y se disparan entre sí; cada ficha remite a la otra y las dos cierran con la misma
+puerta (Línea de la Vida 800 911 2000, UNAM, CIJ).
 
 Lo citado se verificó con curl el 14-sep-2026: alcoholímetro CDMX (0.4 mg/L, **cero** para
 transporte de pasajeros —Didi—), trago estándar FISAC (13 g; máximo 4 por ocasión y 12 por
 semana), Parr et al. 2014 (síntesis de proteína −24 % con proteína y −37 % con carbohidratos), OMS
-2023 (ningún nivel seguro), AUDIT (8 / 16 / 20), las 40 preguntas de SLAA.
+2023 (ningún nivel seguro), AUDIT (8 / 16 / 20).
 
-**Las fechas están ancladas**: el retiro de 90 días de `citas` cae el **13 de diciembre de 2026**;
-los 30 días de `alcohol` terminan el **14 de octubre**. Si se reescriben las fichas, esas cuentas
-se rehacen. Fotos de Unsplash `photo-1423784346385`, `photo-1603210109305`, `photo-1676629922083`.
-**Coach** las repite como marcadores `mtc7`-`mtc9` en `coach_checks_v1`; el detalle vive solo aquí.
+**Las fechas están ancladas**: los 30 días de `alcohol` terminan el **14 de octubre de 2026**. Si
+se reescriben las fichas, esas cuentas se rehacen. Fotos de Unsplash `photo-1423784346385` y
+`photo-1676629922083`. **Coach** las repite como marcadores `mtc7` y `mtc9` en `coach_checks_v1`;
+el detalle vive solo aquí.
 
 ### El simulacro del ISTQB CT-GenAI
 
@@ -853,8 +858,9 @@ marcas o más, y si hasta el peor pasa del 80 % lo dice en verde. Mira los últi
 
 ### Los hábitos siguen el horario
 
-Los diez de `SEMILLA` salen de `RUTINA_TASKS`: Construir esta app, CT-GenAI, Clase de alemán,
-Gimnasio, Fase 0, Leer 10 páginas, Rutina de la noche, Meditar, Dormir 7 h, Agua 3 litros. Cada
+Los nueve de `SEMILLA` salen de `RUTINA_TASKS`: Construir esta app, Post de Aeroresinas en LinkedIn
+(lun/mié/vie, `flex`, en el hueco del CT-GenAI), Clase de alemán,
+Gimnasio, Fase 0, Leer 10 páginas, Rutina de la noche, Dormir 7 h, Agua 3 litros. Cada
 uno lleva `hora` y **la lista se pinta ordenada por ella** (se ordena una copia; el orden guardado
 es el de creación). La hora se edita en la ficha (`time`).
 
@@ -911,7 +917,7 @@ envuelve la tabla entera y el vertical solo las filas, así la fila de totales s
 pantalla), `marcas` (indexado por **fecha ISO local** — nunca `toISOString()`, que en México
 adelanta el día desde las 18:00), `desde` y `mig`.
 
-Las migraciones van por versión (`MIG = 6`), corren una sola vez y en orden, y **lo que Adán
+Las migraciones van por versión (`MIG = 7`), corren una sola vez y en orden, y **lo que Adán
 editó a mano manda**: un hábito cuyo nombre o anclaje no son los de la semilla anterior solo
 recibe lo nuevo (hora, icono, meta, qué hacer, flex). Los retirados salen de la lista y de su
 historial; los nuevos entran con arranque en hoy. Si el guardado trae `marcas` pero no `def`, el

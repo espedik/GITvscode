@@ -8139,6 +8139,18 @@ function renderCoachTablero(){
   const Qz = ctQuincena(qn, nDias, MOV, ctYM);
   const W = Qz.semanas.filter(function(x){ return x.n === sem; })[0] || Qz.semanas[0];
   const TR = ctTareasSemana(ph, ctYM, sem);
+  // El cierre sale de la MISMA serie que el riel (ctTramo, anclada al saldo real de la cuenta si
+  // lo hay): ctQuincena solo modela desde la nómina y daba otro domingo (Adán, 21-sep-2026:
+  // "cierras el domingo, la cifra está mal"). Con ancla dentro de la semana, la resta arranca
+  // en el saldo real y solo cuenta lo que sale después de ese día.
+  const wSerie = T.serie.filter(function(p){ return p.d >= W.ini && p.d <= W.fin; });
+  const wAncla = (T.ancla && T.ancla.dia >= W.ini && T.ancla.dia <= W.fin) ? T.ancla : null;
+  const wCierre = wSerie.length ? wSerie[wSerie.length-1].saldo : W.saldo;
+  const wSalio = wSerie.filter(function(p){ return !wAncla || p.d > wAncla.dia; }).reduce(function(x,p){ return x + p.sale; }, 0);
+  const wEntro = wSerie.filter(function(p){ return !wAncla || p.d > wAncla.dia; }).reduce(function(x,p){ return x + p.ent; }, 0);
+  // Sin ancla, la primera línea es la nómina si entró esta semana ("Arrancaste con") o lo que
+  // traías si no entró nada ("Traías"), como siempre fue.
+  const wArranque = wAncla ? wAncla.saldo : (wEntro > 0 ? wEntro : wCierre + wSalio);
 
   const wSale = {}, wDia = {};
   const _fmSem = ctFijosMes(nDias, ctYM);
@@ -8172,17 +8184,19 @@ function renderCoachTablero(){
     '<div style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:12px;'+
       'background:rgba(var(--p-rgb,176,110,255),.08);border:1px solid rgba(var(--ov),.12)">'+
       '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
-        '<span style="font-size:11.5px;color:var(--text2)">'+(W.entra>0?'Arrancaste con':'Traías')+'</span>'+
-        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700">'+
-          money(W.entra>0 ? W.entra : (W.saldo - W.mueve))+'</span></div>'+
+        '<span style="font-size:11.5px;color:var(--text2)">'+(wAncla?'Saldo real el '+wAncla.dia:(wEntro>0?'Arrancaste con':'Traías'))+'</span>'+
+        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700'+(wAncla?';color:var(--g)':'')+'">'+
+          money(wArranque)+'</span></div>'+
+      // Con el saldo real del último día de la semana ya no queda nada por salir: esa fila sobra.
+      ((wAncla&&wAncla.dia>=W.fin)?'':
       '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
-        '<span style="font-size:11.5px;color:var(--text2)">Se fue en la semana</span>'+
-        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700;color:var(--r)">−'+money(W.pagos+W.come)+'</span></div>'+
+        '<span style="font-size:11.5px;color:var(--text2)">'+(wAncla?'Se va del '+(wAncla.dia+1)+' al '+W.fin:'Se fue en la semana')+'</span>'+
+        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700;color:var(--r)">−'+money(wSalio)+'</span></div>')+
       '<div style="height:1px;background:rgba(var(--ov),.12)"></div>'+
       '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
         '<span style="font-size:12.5px;font-weight:600">Cierras el domingo con</span>'+
         '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:22px;font-weight:700;line-height:1;color:'+
-          (W.saldo>=0?'var(--p)':'var(--r)')+'">'+money(W.saldo)+'</span></div>'+
+          (wCierre>=0?'var(--p)':'var(--r)')+'">'+money(wCierre)+'</span></div>'+
     '</div>'+
 
     (wConc.length
@@ -9866,7 +9880,9 @@ const META_DETALLE={
       {t:"BMW · Masterprogramm Fastlane",d:"Para maestría con 18+ meses restantes y desempeño sobresaliente — solicitud reportada 1-31 de mayo, inicio en octubre.",href:"https://www.bmwgroup.jobs/de/de/studierende/einstiegs-und-foerderprogramme/masterprogramm-fastlane.html",label:"BMW — Masterprogramm Fastlane"},
       {t:"Revisión en Fase 3",d:"En 2029 toca revisar la decisión con datos reales del negocio: retomarla si el ingreso la sostiene, o posponerla de forma consciente."},
     ]},
-  // ── Las tres adicciones (2026-09-14) ─────────────────────────────────────
+  // ── Las adicciones (2026-09-14) ─────────────────────────────────────
+  // Adán quitó la de las citas el 21-sep-2026 ("quita el botón y meta de dejar la adicción de las
+  // citas"); quedan celular y alcohol.
   // Pedido de Adán: "dejar de ser adicto al celular, dejar adicción por salir con mujeres y
   // dejar la adicción de tomar alcohol... con información muy completa". Van juntas a propósito:
   // las tres son la misma mecánica (una conducta que se repite para regular emociones) y se
@@ -9890,22 +9906,6 @@ const META_DETALLE={
       {t:"Las horas de Didi, con reglas propias",d:"En turno el celular va montado, con Didi y el mapa, <b>y nada más</b>. En semáforos no se abre ninguna otra app: es infracción, con el pasajero atrás se nota, y es el mismo reflejo que estás desarmando. <b>Entre viaje y viaje es donde el impulso llega</b> — ahí la regla es agua, estirar la espalda y bajar la ventana, no scroll. Diez minutos de espera con la pantalla apagada son diez minutos de práctica de la meta."},
       {t:"Cómo saber que vas ganando",d:"Cuatro números cada domingo, con la revisión de la semana, sacados de Tiempo en pantalla:",list:["Horas al día fuera de Didi: <b>menos de 2</b>","Desbloqueos: <b>menos de 40</b>","Primer uso del día: <b>más de 45 minutos</b> después de despertar","Uso después de las 22:30: <b>cero</b>"],href:"https://support.apple.com/es-mx/guide/iphone/iph3dd5f4d1/ios",label:"Ver el informe semanal de Tiempo en pantalla"},
       {t:"Si al mes no se movió, es más que un hábito",d:"Las señales de que hay algo debajo: ansiedad fuerte cuando no lo tienes, lo agarras <b>para no sentir</b> (soledad, estrés del trabajo, las deudas), o las reglas de arriba no aguantan más de dos días seguidos. Ahí ya no es configuración: es lo mismo que trabajan tus otras dos metas de esta fila, y se trabaja igual, con alguien. Gloria Mark (UC Irvine, <i>Attention Span</i>, 2023) midió que la atención promedio frente a una pantalla dura <b>47 segundos</b> y que recuperar el foco tras una interrupción cuesta unos <b>23 minutos</b> — eso es lo que está en juego con el ISTQB y el alemán, no solo el tiempo perdido. El Centro de Servicios Psicológicos “Dr. Guillermo Dávila” de la Facultad de Psicología de la UNAM atiende al público con cuota accesible y tiene programa de adicciones.",href:"https://www.psicologia.unam.mx/centros-de-formacion/",label:"Centros de servicios psicológicos · UNAM"},
-    ]},
-  citas:{titulo:"Dejar la adicción a las citas",frase:"No es dejar de salir: es dejar de necesitar la siguiente cita para sentirte bien.",pasos:[
-      {t:"Nómbralo con precisión",d:"No es “me gustan las mujeres”. Es que <b>salir, ligar, conseguir el siguiente match o la siguiente cita se volvió la forma de sentirte bien</b>, y cuando no la hay, hay vacío. Eso tiene nombre en la clínica —adicción al sexo y al amor, o a la conquista— y se trabaja igual que el alcohol: como una conducta que se repite para regular emociones. Patrick Carnes (<i>Out of the Shadows</i>, 1983), que fue quien la describió, lo dibuja como un ciclo: <b>preocupación → ritual (arreglarse, la app, el bar) → la conducta → culpa o vacío → preocupación otra vez</b>. Ubica en qué punto del ciclo estás cuando lees esto."},
-      {t:"Hazte las 40 preguntas",d:"El autodiagnóstico de SLAA (Adictos al Sexo y al Amor Anónimos): <b>40 preguntas de sí o no</b>. ¿Te sientes ansioso cuando no hay alguien nuevo? ¿Usas la seducción para no sentirte solo? ¿Has prometido parar y no paraste? ¿Has puesto en riesgo dinero, trabajo o salud por una cita? Contéstalo solo y honesto — nadie lo va a ver. El folleto en español <i>¿Adicto al sexo? ¿Adicto al amor?</i> está en la misma página.",href:"https://slaafws.org/40-questions/",label:"Las 40 preguntas · SLAA"},
-      {t:"Saca la cuenta real",d:"Últimos tres meses, en <b>Finanzas</b>, categoría por categoría: bares, cenas, Ubers, regalos, apps de pago, ropa “para salir”. Divide entre 3: ese es el <b>gasto mensual de la adicción</b>. Ponlo al lado de la BBVA, que va en <b>{{tcBbva}}</b> y <b>subiendo</b> mientras el plan decía que bajara. Luego las horas: cada cita son 3-5 horas, más el chat, más el tiempo de pensar en ella. Y el sueño: las salidas terminan a las 2 y el Hyrox se entrena a las 7. Si el gasto en salir es mayor que lo que le abonas de más a la tarjeta, ya sabes qué ha estado financiando qué."},
-      {t:"Qué buscas de verdad ahí",d:"Debajo de la conducta casi siempre hay una de cuatro cosas, y cambia el tratamiento según cuál sea la tuya:",list:["<b>Validación</b> — que alguien te elija te dice que vales. Robert Glover (<i>No More Mr. Nice Guy</i>) le dedica el libro entero: buscar la aprobación de las mujeres para sentirte suficiente","<b>Novedad</b> — la dopamina de la conquista, la más parecida al scroll: el pico está en el “sí”, no en la relación","<b>Evitar la soledad</b> — el sábado en la noche solo se siente insoportable, así que se llena con quien sea","<b>Evitar sentir</b> — el estrés del trabajo, las deudas, la decisión de la maestría: mientras ligas no piensas en eso"],href:"https://drglover.com/",label:"Robert Glover · No More Mr. Nice Guy"},
-      {t:"Escribe tus líneas de fondo",d:"Es el concepto central de SLAA: las <b>bottom lines</b>, conductas concretas que <b>no haces, punto</b>, y que definen tu sobriedad. No es “salir menos”; es una lista específica, escrita y con fecha:",list:["Cero apps de citas: Tinder, Bumble, Hinge <b>borradas y cuentas cerradas</b>, no solo desinstaladas","No ir a bares o antros <b>con intención de ligar</b>","No escribirle a exes ni a “amigas con derechos”","No abrir conversación con desconocidas solo para ver si “hay algo”","No usar Instagram como catálogo (se cruza con tu meta del celular)"]},
-      {t:"90 días de retiro",d:"Los programas de recuperación trabajan con un <b>periodo de abstinencia total antes de cualquier cita</b>, y el estándar son 90 días. No es un castigo: en ese tiempo <b>aparecen las emociones que las citas tapaban</b>, y eso es lo que hay que ver y aguantar. Si empiezas mañana, <b>15 de septiembre, el día 90 cae el 13 de diciembre de 2026</b>. Anótalo en el calendario del Dashboard. El bloque coincide con el <b>Hyrox del 30 de octubre</b> y con el examen ISTQB que ya tienes agendado: no te va a faltar dónde poner la energía."},
-      {t:"La abstinencia se siente como aburrimiento y soledad",d:"Semanas 1 a 3: ansiedad, aburrimiento, el impulso de “solo revisar” si alguien escribió, ganas de reinstalar la app. Dos herramientas para eso. <b>Surfear el impulso</b> (Alan Marlatt): un impulso sube, llega a un pico y <b>baja solo en 15-20 minutos</b> si no lo alimentas — cronométralo la primera vez y verás que es cierto. <b>HALT</b>, la regla de AA: antes de actuar pregúntate si tienes <b>H</b>ambre, enojo (<b>A</b>nger), soledad (<b>L</b>onely) o cansancio (<b>T</b>ired). Casi siempre el impulso es una de esas cuatro disfrazada, y cada una tiene un arreglo que no es una cita."},
-      {t:"Cambia el entorno, no solo la voluntad",d:"Borra las apps (ya está en tus líneas de fondo). <b>Archiva o silencia los chats</b> que son el gancho. Deja de seguir en Instagram las cuentas que alimentan el patrón. Avisa a uno o dos amigos que por tres meses <b>no estás en plan de conocer a nadie</b>, para que no te “presenten” y para que alguien sepa la fecha. Los <b>sábados ya tienes 10 horas de Didi</b> agendadas: es un turno de trabajo, no una salida — y el viernes en la noche, si no hay plan sin alcohol, hay gym, alberca o cama temprano."},
-      {t:"Lo que se libera va a algo",d:"La energía que gastabas en conquistar es exactamente la que piden tus otras metas: el <b>Hyrox</b> (plan de 10 semanas), el <b>ISTQB CT-GenAI</b>, el <b>alemán</b> y el <b>ajedrez presencial</b>. No es un consuelo, es el trato: un hombre ocupado en algo que le importa no necesita que la siguiente cita le diga cuánto vale. Y tu <b>habilidad base de leer a las mujeres</b> no se contradice con esta meta — sirve para <b>elegir bien</b> cuando toque, no para conquistar más."},
-      {t:"Lee en las tardes libres",d:"Cuatro libros, uno cualquiera en las 10 páginas de la noche:",list:["<b>No More Mr. Nice Guy</b> — Robert Glover. La raíz de buscar aprobación en las mujeres, y qué hacer con ella","<b>Maneras de amar</b> (<i>Attached</i>) — Amir Levine y Rachel Heller. Tu estilo de apego explica por qué la persecución engancha más que la relación","<b>Generación dopamina</b> — Anna Lembke. Por qué la novedad engancha y cómo se resetea en 4 semanas","<b>Out of the Shadows</b> — Patrick Carnes. El ciclo adictivo sexual, explicado por quien lo definió"]},
-      {t:"Reuniones: en línea y en CDMX",d:"<b>SLAA</b> (Adictos al Sexo y al Amor Anónimos) tiene grupos en México y reuniones en línea en español: 12 pasos, gratis, anónimo. Ir a <b>una sola reunión y solo escuchar</b>, sin hablar, ya te dice si es tu lugar. La alternativa es <b>SAA</b> (Adictos al Sexo Anónimos), también con material y reuniones en español.",href:"https://slaafws.org/spanish/",label:"SLAA en español · documentos y reuniones"},
-      {t:"Terapia: es lo que más rápido funciona",d:"Terapia cognitivo-conductual o de esquemas con un psicólogo que trabaje <b>adicciones conductuales</b>: 8-12 sesiones ya mueven el patrón, porque atacan la causa del paso 4 y no solo la conducta. Tres puertas en CDMX: el Centro de Servicios Psicológicos “Dr. Guillermo Dávila” de la UNAM (cuota accesible, programa de adicciones), los <b>Centros de Integración Juvenil</b> (atienden adicciones a cualquier edad, no solo a jóvenes, a bajo costo) y la consulta privada.",href:"https://www.gob.mx/salud/cij",label:"Centros de Integración Juvenil"},
-      {t:"Después de los 90 días",d:"Si vuelves a salir con alguien, con reglas que ya no son las de antes:",list:["<b>Sin apps de citas</b> — la gente se conoce en el ajedrez, el gym, el alemán, el trabajo","<b>Una persona a la vez</b>, y que pase una semana entre conocerla y la primera cita","<b>Sin alcohol de por medio</b> — se cruza con tu otra meta y es el disparador número uno","Antes de decir que sí, <b>relee tus líneas de fondo</b> y pregúntate cuál de las cuatro cosas del paso 4 estás buscando"]},
-      {t:"Cómo medir que vas bien",d:"<b>Días sin romper tus líneas de fondo</b> — una cadena, igual que en Hábitos. Dinero en “salir” en Finanzas cerca de $0. Horas de sueño. Y la señal que de verdad importa: <b>un sábado en la noche solo, sin ansiedad</b>. Si recaes, no borra lo aprendido: anota qué lo disparó (HALT), y vuelve al día siguiente sin el “ya que la regué, sigo”. Si después de dos intentos serios no puedes parar solo, la <b>Línea de la Vida (800 911 2000)</b> es gratis, confidencial, 24 horas, y orienta en adicciones y salud mental.",href:"https://www.gob.mx/conasama/articulos/linea-de-la-vida-800-911-2000",label:"Línea de la Vida · 800 911 2000"},
     ]},
   alcohol:{titulo:"Dejar el alcohol",frase:"No es que no puedas beber. Es que ya viste lo que te cuesta y decidiste que no lo vale.",pasos:[
       {t:"Primero, seguridad: depende de cuánto bebes",d:"Si bebes <b>todos los días</b> o en cantidades altas, y al parar unas horas te <b>tiemblan las manos, sudas, tienes ansiedad fuerte o no duermes</b>, no lo cortes de golpe tú solo: la abstinencia del alcohol puede dar convulsiones o <i>delirium tremens</i> y necesita supervisión médica — un médico general puede manejarlo con medicación unos días. Si bebes de fin de semana y social, puedes parar <b>hoy</b> sin riesgo físico. En la duda, la <b>Línea de la Vida: 800 911 2000</b>, gratis, confidencial, 24 horas los 365 días; te orientan y te dicen a dónde ir.",href:"https://www.gob.mx/conasama/articulos/linea-de-la-vida-800-911-2000",label:"Línea de la Vida · CONASAMA"},
@@ -10688,7 +10688,6 @@ function renderMetasSlide(){
     // los días y no de una fecha. Fotos de Unsplash verificadas con curl (200) el mismo día: las
     // manos con el celular a oscuras, el camino que se recorre solo, y la mano que tapa el vaso.
     {id:'celular',ico:'📵',t:'Dejar la adicción al celular',img:'https://images.unsplash.com/photo-1423784346385-c1d4dac9893a?w=800&q=80&auto=format&fit=crop'},
-    {id:'citas',ico:'🧘',t:'Dejar la adicción a las citas',img:'https://images.unsplash.com/photo-1603210109305-39e5ca7a151a?w=800&q=80&auto=format&fit=crop'},
     {id:'alcohol',ico:'🍺',t:'Dejar el alcohol',img:'https://images.unsplash.com/photo-1676629922083-96d147ab81a9?w=800&q=80&auto=format&fit=crop'},
     // 2 metas YA LOGRADAS (2026-08-11, pedido explícito: "en las metas a corto y mediano plazo,
     // no pusiste mi carrera de 11k ni que estaba estudiando aleman" — corrige la omisión de la

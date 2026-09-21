@@ -92,12 +92,15 @@
         'De 23:30 a 00:00: constrúyela, pruébala en el navegador y súbela a GitHub.',
         'Si no cabe en 30 min, pártela. Lo que suba hoy tiene que funcionar.'
       ] },
-    { id:'genai',  nombre:'CT-GenAI · 30 min',      ancla:'Al llegar a ALTEN, antes del correo',         hora:'08:30', color:'#4ade80', ico:'chip',   dow:[1,2,3,4,5],
+    /* Sustituye al CT-GenAI en el mismo hueco (Adán, 21-sep-2026: "quita lo de genAI y en su
+       lugar pon hacer post en LinkedIn de Aeroresinas"). Lunes, miércoles y viernes, con
+       `flex`: tres posts a la semana es un ritmo que se sostiene; se cambia desde la pantalla. */
+    { id:'linkedin', nombre:'Post de Aeroresinas en LinkedIn', ancla:'Al llegar a ALTEN, antes del correo · 20 min', hora:'08:30', color:'#4ade80', ico:'pluma', dow:[1,3,5], flex:true,
       pasos:[
-        'Al llegar a ALTEN, antes de abrir el correo: 30 min con el syllabus o con el simulacro.',
-        'El orden que funciona: examen de muestra primero, después los capítulos que fallaste.',
-        'El simulacro está en Metas → ISTQB CT-GenAI: 40 preguntas, 46 puntos, corte en 30.',
-        'El capítulo 2 (ingeniería de instrucciones) es un tercio del examen: 11 preguntas, 16 puntos.'
+        'Un tema por post: uno de los 14 trabajos de aeroresinas.html, una foto de antes/después o un dato del proceso (material, horas, técnica).',
+        'Foto real + tres líneas: qué se hizo, en qué aeronave (sin nombrar al cliente) y qué problema resolvió.',
+        'Cierra con una puerta: el WhatsApp o el correo de Aeroresinas, o la pregunta que abre conversación.',
+        'Publica desde la página de empresa y comparte desde el perfil de tu papá; responde los comentarios ese mismo día. 20 min y fuera.'
       ] },
     { id:'ale',    nombre:'Clase de alemán',        ancla:'CENLEX · ESCA Santo Tomás, hasta las 18:00',  hora:'17:00', color:'#ffd93d', ico:'habla',  dow:[1,2,3,4,5],
       pasos:[
@@ -121,7 +124,6 @@
     { id:'leer',   nombre:'Leer 10 páginas',        ancla:'En el cierre del día',                        hora:'21:45', color:'#b06eff', ico:'libro',  dow:'todos', rutina:'wd-cierre', sec:'Lectura',
       pasos:['10 páginas es el mínimo para marcarlo; el bloque completo son 30 min.'] },
     { id:'piel',   nombre:'Rutina de la noche',     ancla:'Piel, minoxidil y suplementos',               hora:'22:30', color:'#fb7185', ico:'chispa', dow:'todos', rutina:'wd-pm' },
-    { id:'medi',   nombre:'Meditar · 10 min',       ancla:'Respiración box 4-4-4-4',                     hora:'23:00', color:'#00e87a', ico:'loto',   dow:'todos', rutina:'wd20' },
     { id:'sueno',  nombre:'Dormir 7 h',             ancla:'Apagar pantallas al cerrar la app',           hora:'23:59', color:'#818cf8', ico:'luna',   dow:'todos',
       pasos:[
         'Apaga pantallas en cuanto cierres la app: entre 00:00 y 01:00.',
@@ -144,8 +146,8 @@
      La regla de todas: lo que Adán editó a mano manda. Un hábito se considera
      "suyo" si su nombre o su anclaje no son los que le puso la semilla anterior
      — entonces se le añade solo lo nuevo (la hora) y no se le toca nada más. */
-  const MIG = 6;
-  const RETIRADOS = { 2: ['azucar', 'gasto'], 3: ['pasos'], 4: ['snooze', 'diario'], 5: ['nata'] };
+  const MIG = 7;
+  const RETIRADOS = { 2: ['azucar', 'gasto'], 3: ['pasos'], 4: ['snooze', 'diario'], 5: ['nata'], 7: ['genai', 'medi'] };
   /* Lo que decía la semilla anterior de cada hábito, para saber si Adán lo tocó */
   const PREVIO = {
     gym:   [['Gimnasio', '19:00 · después de comer'], ['Gimnasio', 'Tras el CENLEX · el sábado a las 07:35']],
@@ -153,9 +155,8 @@
     app:   [['Construir esta app', '10 min antes de arrancar · y de 23:30 a 00:00']],
     fase0: [['Fase 0 · 1h15', 'Negocio de tu papá o plantilla GBM']],
     ale:   [['Alemán · 15 min', 'Antes del café'], ['Clase de alemán', 'CENLEX · ESCA Santo Tomás, hasta las 18:00']],
-    genai: [['CT-GenAI · 30 min', 'Antes de abrir el correo'], ['CT-GenAI · 30 min', 'Al llegar a ALTEN, antes del correo']],
+    linkedin: [['Post de Aeroresinas en LinkedIn', 'Al llegar a ALTEN, antes del correo · 20 min']],
     leer:  [['Leer 10 páginas', 'Al acostarme'], ['Leer 10 páginas', 'En el cierre del día']],
-    medi:  [['Meditar · 5 min', '23:10 · tras lavarme los dientes'], ['Meditar · 10 min', 'Respiración box 4-4-4-4']],
     sueno: [['Dormir 7 h', 'Luz fuera a las 23:40'], ['Dormir 7 h', 'Apagar pantallas al cerrar la app']],
     agua:  [['Agua · 3 litros', 'Botella llena al salir'], ['3 litros de agua', 'Botella llena al salir']],
     piel:  [['Skincare noche', 'Después de la ducha'], ['Rutina de la noche', 'Piel, minoxidil y suplementos']]
