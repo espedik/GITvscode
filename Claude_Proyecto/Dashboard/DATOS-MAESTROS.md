@@ -110,6 +110,7 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{servicios}}` | $1,075 | Plan AT&T + internet + gas (la mitad: es bimestral) + luz/agua |
 | `{{suscripciones}}` | $1,080 | Gym + Claude Code + iCloud |
 | `{{cetesDia15}}` | $1,500 | Aporte recurrente a CETES el día 15 |
+| `{{especulacionMes}}` `{{especulacionBtcPct}}` | $20,000 · 10 | La pestaña *Riesgo súper alto* de Qué invertir hoy: al mes, `{{cetesDia15}}` a CETES, ese % a Bitcoin y todo el resto a una sola empresa a la baja que investiga Claude |
 | `{{fijosTotal}}` | $13,155 | Derivada: renta + servicios + suscripciones |
 
 ### Deudas · saldos vivos (`finanzasmx_v2`)

@@ -104,6 +104,11 @@ window.CIFRAS = (function () {
     get suscripciones() { return this.gym + this.claudeCode + this.icloud; },
     get fijosTotal() { return this.renta + this.servicios + this.suscripciones; },
     cetesDia15:     1500,     // aporte recurrente a CETES el día 15
+    // La pestaña "Riesgo súper alto" de Qué invertir hoy (Adán, 21-sep-2026): al mes van
+    // especulacionMes, de los que cetesDia15 son CETES fijos, especulacionBtcPct % a Bitcoin y
+    // TODO el resto a una sola empresa a la baja que investiga Claude.
+    especulacionMes:    20000,
+    especulacionBtcPct: 10,
 
     // ── Cosas suyas que se nombran en varias apps ──
     auto:        'BYD Dolphin Mini',
@@ -3157,6 +3162,8 @@ window.CIFRAS = (function () {
     servicios:     { dep: ['celular','internet','gas','gasCadaMeses','luzAgua'], v: () => PROYECTO.servicios },
     suscripciones: { dep: ['gym','claudeCode','icloud'], v: () => PROYECTO.suscripciones },
     cetesDia15:    { v: () => PROYECTO.cetesDia15 },
+    especulacionMes:    { v: () => PROYECTO.especulacionMes },
+    especulacionBtcPct: { v: () => PROYECTO.especulacionBtcPct, fmt: 'txt' },
     fijosTotal:    { dep: ['renta','servicios','suscripciones'], v: () => PROYECTO.fijosTotal },
     empleador:     { v: () => PROYECTO.empleador,   fmt: 'txt' },
     nombre:        { v: () => PROYECTO.nombre,      fmt: 'txt' },

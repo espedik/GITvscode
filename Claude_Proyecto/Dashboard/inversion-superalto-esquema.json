@@ -1,0 +1,48 @@
+{
+  "$defs": {
+    "senal": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "t": {"type":"string"}, "d": {"type":"string"}, "tono": {"type":"string","enum":["ok","alerta","neutro"]} },
+      "required": ["t","d","tono"]
+    },
+    "alternativa": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "empresa": {"type":"string"}, "ticker": {"type":"string"}, "precio": {"type":"number"},
+        "moneda": {"type":"string"}, "caidaDesdeMax": {"type":"number"},
+        "porque": {"type":"string"}, "porQueNo": {"type":"string"}
+      },
+      "required": ["empresa","ticker","precio","moneda","caidaDesdeMax","porque","porQueNo"]
+    }
+  },
+  "type": "object", "additionalProperties": false,
+  "properties": {
+    "resumen": {"type":"string"},
+    "principal": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "empresa": {"type":"string"}, "ticker": {"type":"string"}, "bolsa": {"type":"string"}, "sector": {"type":"string"},
+        "precio": {"type":"number"}, "moneda": {"type":"string"}, "fechaDato": {"type":"string"},
+        "maximo52": {"type":"number"}, "caidaDesdeMax": {"type":"number"},
+        "porQueCayo": {"type":"string"}, "tesis": {"type":"string"},
+        "catalizadores": {"type":"array","items":{"type":"string"}},
+        "entrada": {"type":"string"},
+        "objetivo": {"type":"number"}, "objetivoPct": {"type":"number"},
+        "stop": {"type":"number"}, "stopPct": {"type":"number"},
+        "plazo": {"type":"string"},
+        "riesgos": {"type":"array","items":{"type":"string"}},
+        "invalida": {"type":"string"},
+        "senales": {"type":"array","items":{"$ref":"#/$defs/senal"}}
+      },
+      "required": ["empresa","ticker","bolsa","sector","precio","moneda","fechaDato","maximo52","caidaDesdeMax","porQueCayo","tesis","catalizadores","entrada","objetivo","objetivoPct","stop","stopPct","plazo","riesgos","invalida","senales"]
+    },
+    "alternativas": {"type":"array","items":{"$ref":"#/$defs/alternativa"}},
+    "reglas": {"type":"array","items":{"type":"string"}},
+    "fuentes": {
+      "type": "array",
+      "items": { "type":"object", "additionalProperties": false,
+        "properties": { "t": {"type":"string"}, "u": {"type":"string"} }, "required": ["t","u"] }
+    }
+  },
+  "required": ["resumen","principal","alternativas","reglas","fuentes"]
+}
