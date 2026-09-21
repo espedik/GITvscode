@@ -46,11 +46,11 @@
 <link rel="stylesheet" href="../Aleman/vocab.css">
 <script src="../Aleman/vocab-datos.js"></script>
 <script src="../Aleman/vocab.js"></script>
-<!-- Contenido real de los 229 temas de Entrevistas/ (ENTREVISTA_TEMAS/ENTREVISTA_CONTENT/
-     ENTREVISTA_CSS), extraído automáticamente por Entrevistas/_generar-datos-dashboard.js — ver
-     "Entrevista del día" en readme_dashboard.md. Es el HTML real de cada tema (ya escrito a mano
-     en Entrevistas/js/data-*.js, no scrapeado de un render), más el CSS de sus propias clases de
-     contenido reescrito con el prefijo .en-content — ya no vive dentro de un <iframe>. -->
+<!-- El catálogo de los 41 temas de Python de Entrevistas/ (ENTREVISTA_TEMAS y PY_MOD_LABEL), que
+     genera Entrevistas/_generar-datos-dashboard.js: la tarjeta «Hoy aprendes» de Mi Día nombra el
+     tema del día y lo abre en la app. El archivo trae también ENTREVISTA_CONTENT y ENTREVISTA_CSS
+     (el HTML y el CSS de cada tema), que ninguna pantalla pinta: la de "Entrevista del día" se
+     quitó del Dashboard y Entrevistas se abre desde su píldora en la barra de apps. -->
 <script src="entrevistas-data.js"></script>
 <!-- La fuente se carga SIN bloquear el pintado (2026-08-23). Antes era un `@import` dentro
      del <style>: el navegador no lo descubría hasta parsear el CSS y, mientras Google no
@@ -98,15 +98,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 /* Las apps van AGRUPADAS y con ancho máximo. Antes se repartían por los 2000px de la
    pantalla y quedaban a un palmo unas de otras. */
 .qa-grupos{display:flex;align-items:center;gap:3px;flex-wrap:wrap;justify-content:center;
-  max-width:1660px;margin:0 auto}
-/* Por debajo del umbral la fila se partiría en dos y taparía el slide (la franja empieza fija a
-   58px): ahí se quedan solo los iconos, con el nombre en el title. Los dos números salen de
-   medir, no de tantear: con las 17 apps de hoy la fila CON nombres necesita 1,632 px, así que el
-   contenedor va a 1,660 y el umbral a 1,690 (el viewport tiene que dar el ancho más el padding).
-   Historial: 15 apps → 1440/1500 · 16 (entra Aeroresinas) → 1560/1580 · 17 (entra Heliescala,
-   2026-09-17) → 1660/1690. Si entra otra app hay que volver a medirlo — `.qa-grupos` con
-   `flex-wrap:nowrap` y `max-width:none` da el ancho real en una línea. */
-@media(max-width:1690px){.qa-name,.qa-stat{display:none}.qa-pill{padding:6px 8px}.qa-grupos{gap:2px}}
+  max-width:1350px;margin:0 auto}
+/* Por debajo del umbral se quedan solo los iconos, con el nombre en el title: la fila con
+   nombres se partiría en dos y taparía el slide (la franja empieza fija a 58px), o se metería
+   debajo de los botones de tema y privacidad (`.qa-acciones`, 91 px pegados a la derecha, fuera
+   del flujo). Los dos números salen de medir, no de tantear: con las 14 apps de hoy la fila CON
+   nombres necesita 1,321 px, así que el contenedor va a 1,350; y como la fila va centrada, deja
+   de pisar los botones a partir de 1,503 px de viewport → umbral en 1,520. Historial: 15 apps →
+   1440/1500 · 16 (entra Aeroresinas) → 1560/1580 · 17 (entra Heliescala) → 1660/1690 · 14
+   (salen Lecciones, Vocabulario y Gramática: el hub de Alemán ya lleva a las tres) → 1350/1520.
+   Si entra o sale otra app hay que volver a medirlo — `.qa-grupos` con `flex-wrap:nowrap` y
+   `max-width:none` da el ancho real en una línea, y el umbral es ese ancho más 2×91 de los
+   botones (la fila centrada reparte el sobrante a los dos lados). */
+@media(max-width:1520px){.qa-name,.qa-stat{display:none}.qa-pill{padding:6px 8px}.qa-grupos{gap:2px}}
 .qa-sep{width:1px;height:20px;background:rgba(var(--ov),.12);margin:0 6px;flex-shrink:0}
 .qa-pill{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:9px;
   background:transparent;border:1px solid transparent;text-decoration:none;color:var(--text2);
@@ -198,7 +202,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .theme-basicas{--ac1:#ff5470;--ac2:#ffb100}
 .theme-lista  {--ac1:#3ddc97;--ac2:#00b8d9}
 .theme-aleman {--ac1:#dd0000;--ac2:#ffce00}
-.theme-entrevista{--ac1:#4f8cff;--ac2:#22d3a8}
 /* Habitos (2026-09-11). Violeta -> rosa: el unico par que quedaba libre entre los 8
    slides. El contenido pinta en verde (--g, lo cumplido) y el ambiente en violeta,
    asi el color del logro no compite con el del fondo. */
@@ -1722,63 +1725,22 @@ button.hp-lec:active{transform:translateY(0)}
   .lc-tab{flex-shrink:0;padding:5px 11px;font-size:11px}
 }
 
-/* ─── ALEMÁN DEL DÍA — tema de idioma que rota una vez al día (2026-08-04) ─ */
-.theme-aleman .slide-inner,.theme-entrevista .slide-inner{justify-content:flex-start}
-/* Clases genéricas ".td-*" (topic-of-the-day) — compartidas por los slides "Alemán del día"
-   y "Entrevista del día": mismo layout (encabezado + tags + iframe grande), solo cambia el
-   color de acento (--ac1/--ac2 del .theme-* del slide) y, en Alemán, el badge de nivel. */
-/* 2026-08-12 — el encabezado pasó de 2 columnas a 2 FILAS. Pedido de Adán con captura: "los
-   botones de la derecha me quitan mucho espacio y eso aprovechalo en el contenido, esto tambien
-   pasa en aleman". Antes `.td-top` era `space-between` con `.td-right` apilando badge, contador
-   y 2 botones en vertical: esa columna se comía ~380px de ancho Y forzaba ~110px de alto (4
-   elementos apilados), dejando el título en una franja angosta y un hueco enorme en medio.
-   Ahora los controles van en una sola fila horizontal arriba (ocupan 1 renglón en vez de 4) y
-   el título + subtítulo quedan debajo a TODO el ancho. Es el mismo cambio para los 2 slides,
-   Alemán y Python, porque comparten estas clases. */
+/* ─── ALEMÁN — el encabezado ".td-*" (topic-of-the-day) ──────────────────────────────────── */
+.theme-aleman .slide-inner{justify-content:flex-start}
+/* Encabezado en 2 FILAS: los controles en una sola fila arriba (`.td-right`) y el título +
+   subtítulo debajo a TODO el ancho. Pedido de Adán con captura: "los botones de la derecha me
+   quitan mucho espacio y eso aprovechalo en el contenido" — la columna de botones a la derecha
+   se comía ~380px de ancho y ~110px de alto. Las clases nacieron compartidas con la pantalla
+   "Entrevista del día", que se quitó del Dashboard; hoy solo las usa Alemán. */
 .td-top{display:flex;flex-direction:column;align-items:stretch;gap:10px}
 .td-right{display:flex;flex-direction:row;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
-/* El contador deja de ser un bloque aparte y se va a la izquierda de la fila, empujando los
-   botones a la derecha — así la fila se llena en vez de quedar todo amontonado en una esquina. */
-.td-right .td-counter{margin-right:auto}
-.td-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.04em;white-space:nowrap;background:rgba(var(--ov),.08);color:var(--ac1);border:1px solid rgba(var(--ov),.14)}
-.td-counter{font-size:11px;color:var(--text3);font-family:var(--mono);white-space:nowrap}
 .td-open{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;background:var(--ac1);color:#06170f;text-decoration:none;font-weight:800;font-size:12px;white-space:nowrap;transition:transform .2s}
 .td-open:hover{transform:translateY(-1px)}
-/* Navegación manual dentro del propio slide (2026-08-07) — "haz que pueda cambiar de leccion
-   siguiente u otro tema siguiente": antes Alemán/Entrevista solo mostraban el tema del día,
-   sin forma de explorar otro sin esperar a mañana o salir del Dashboard. */
-.td-next{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;background:rgba(var(--ov),.08);color:var(--text);border:1px solid rgba(var(--ov),.14);font-weight:800;font-size:12px;white-space:nowrap;cursor:pointer;font-family:inherit;transition:transform .2s,background .2s}
-.td-next:hover{transform:translateY(-1px);background:rgba(var(--ov),.13)}
-/* margin-top bajó de 12px a 4px y el de .td-tags de 14px a 10px (2026-08-12): con el encabezado
-   ya en 2 filas compactas, esos huecos heredados del layout viejo eran espacio regalado que
-   ahora se le queda al contenido. */
+/* margin-top de 4px: con el encabezado en 2 filas compactas, los huecos del layout viejo eran
+   espacio regalado que ahora se le queda al contenido. */
 .td-title{font-size:clamp(22px,2.6vw,34px);font-weight:900;color:var(--text);margin-top:4px}
 .td-sub{font-size:clamp(13px,1.15vw,16px);color:var(--text2);margin-top:4px}
-.td-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.td-tag{padding:5px 12px;border-radius:20px;background:rgba(var(--ov),.06);border:1px solid rgba(var(--ov),.1);font-size:11.5px;font-family:var(--mono);color:var(--text2)}
 @media(max-width:640px){.debt-steps{grid-template-columns:1fr}}
-
-/* ─── ENTREVISTA DEL DÍA — contenido real, nativo, sin iframe (2026-08-07) ────────────────────
-   Mismo tratamiento que "Alemán del día" (pedido explícito: "lo mismo que hiciste en la sección
-   de alemán visualmente y que cambia cada día, hazlo con entrevistas, que se vea muy bien") — el
-   HTML real de cada tema (ENTREVISTA_CONTENT) se pinta directo aquí dentro, ya no en un
-   <iframe>. `.en-content` es el contenedor con scroll; el resto de las ~150 reglas que dan
-   estilo a las tarjetas/tablas/quizzes de adentro vienen inyectadas en runtime desde
-   `ENTREVISTA_CSS` (ver `injectEntrevistaCss()`), no repetidas a mano aquí. */
-.en-content-wrap{position:relative;margin-top:10px;flex:1;min-height:0;display:flex}
-.en-content{flex:1;min-height:0;overflow-y:auto;padding-right:6px}
-/* Aviso de "hay más abajo" (2026-08-07) — Adán señaló el tema "Data Pipeline" como ejemplo de
-   "contenido flojo": en realidad tiene 3 bloques completos (código Python de validación real +
-   runbook día a día), pero solo el primero cabe sin hacer scroll y no había ninguna señal de que
-   faltaba más — se veía como una tarjeta autocontenida y completa, no como el primero de tres.
-   `updateEnScrollHint()` (JS) mide si `#enContent` tiene más contenido debajo del scroll visible
-   y muestra/oculta este aviso — no es un gradiente de desvanecido (el fondo detrás varía, son las
-   manchas animadas del slide, no un color plano) sino una píldora de vidrio como `.mes-tab`, que
-   se ve bien encima de cualquier fondo. */
-.en-scroll-hint{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:6px 16px;border-radius:20px;background:var(--card);border:1px solid var(--card-br);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-size:11px;font-weight:700;color:var(--text2);box-shadow:0 4px 16px rgba(0,0,0,.25);pointer-events:none;opacity:0;transition:opacity .25s}
-.en-scroll-hint.show{opacity:1}
-.en-scroll-hint .arrow{display:inline-block;animation:enHintBounce 1.4s ease-in-out infinite}
-@keyframes enHintBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
 
 /* La pantalla de Alemán fue durante un mes "la lección del día": el contenido real de las
    40 lecciones de `Aleman/`, extraído con Playwright a `Dashboard/aleman-data.js` (327 KB) y
@@ -3771,33 +3733,10 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
     </div>
   </section>
 
-  <!-- 7 · ENTREVISTA TÉCNICA DEL DÍA -->
-  <section class="slide theme-entrevista" data-i="7">
-    <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> 🐍 Python del día</div>
-      <div class="td-top reveal d2">
-        <div>
-          <div class="td-title" id="enTitle">Cargando…</div>
-          <div class="td-sub" id="enSub"></div>
-        </div>
-        <div class="td-right">
-          <span class="td-badge" id="enBadge"></span>
-          <span class="td-counter" id="enCounter"></span>
-          <button class="td-next" onclick="entrevistaSiguiente()" title="Ir al siguiente tema, sin esperar a mañana">Siguiente tema →</button>
-          <a class="td-open" id="enOpen" href="../Entrevistas/entrevistas.html" target="_blank" rel="noopener">↗ Abrir en pestaña nueva</a>
-        </div>
-      </div>
-      <div class="td-tags reveal d3" id="enTags"></div>
-      <div class="en-content-wrap reveal d4">
-        <div class="en-content" id="enContent"></div>
-        <div class="en-scroll-hint" id="enScrollHint"><span class="arrow">↓</span> más contenido — desliza para ver todo</div>
-      </div>
-    </div>
-  </section>
 
-  <!-- 8 · HÁBITOS — la cuadrícula del mes. El slide llega vacío: lo pinta entero
+  <!-- 7 · HÁBITOS — la cuadrícula del mes. El slide llega vacío: lo pinta entero
        habitos.js (window.renderHabitos), que también inyecta su CSS. -->
-  <section class="slide theme-habitos" data-i="8">
+  <section class="slide theme-habitos" data-i="7">
     <!-- El fondo HUD: retícula, dos manchas, la malla en fuga con su horizonte y el
          barrido de líneas. Va aquí y no dentro de #habitosSlide porque .slide-inner
          está limitado a 1400px y el fondo tiene que llegar a los bordes. Las reglas
@@ -6017,37 +5956,13 @@ function alemanPalabraHoy(){
   const V = alVocab(); return V ? V.delDia(diaDelAnio()) : null;
 }
 
-// null = tema del día; tras "Siguiente tema →" queda fijo en la sesión. Alemán tenía el mismo
-// `alemanIdx` cuando era una lección al día; ahora es una pantalla de consulta y no avanza.
+// El tema de Python del día para la tarjeta «Hoy aprendes» de Mi Día: el mismo todo el día y
+// distinto cada día, igual que la palabra de alemán. Se abre en la app de Entrevistas.
 let entrevistaIdx=null;
 function entrevistaTemaHoy(){
   if(typeof ENTREVISTA_TEMAS==='undefined'||!ENTREVISTA_TEMAS.length)return null;
   if(entrevistaIdx===null)entrevistaIdx=diaDelAnio()%ENTREVISTA_TEMAS.length;
   return ENTREVISTA_TEMAS[entrevistaIdx];
-}
-function entrevistaSiguiente(){
-  if(typeof ENTREVISTA_TEMAS==='undefined'||!ENTREVISTA_TEMAS.length)return;
-  entrevistaIdx=((entrevistaIdx===null?diaDelAnio():entrevistaIdx)+1)%ENTREVISTA_TEMAS.length;
-  renderEntrevista();
-  renderHeroAprender();   // el resumen de Mi Día también nombra el tema en curso
-}
-/* El CSS propio de los temas —el de `.en-content`, que `_generar-datos-dashboard.js` extrae de
-   `Entrevistas/styles.css` y guarda en `ENTREVISTA_CSS`— se inyecta UNA sola vez, la primera vez
-   que se pinta un tema. Vive en el `.js` de datos y no aquí a propósito: al regenerar los datos
-   no hay que tocar el Dashboard.
-
-   Esta función se LLAMABA desde la primera línea de `renderEntrevista()` y no existía. Un
-   `ReferenceError` ahí tumba el render entero antes de pintar nada, así que el panel se quedaba
-   en "Cargando…" para siempre y no había forma de abrir Entrevistas desde el Dashboard. No era
-   una regresión: faltaba desde antes del último commit, y no saltaba en consola porque el error
-   muere dentro del render, sin romper el resto de la página. */
-function injectEntrevistaCss(){
-  if(document.getElementById('enCssTemas')) return;
-  if(typeof ENTREVISTA_CSS === 'undefined' || !ENTREVISTA_CSS) return;
-  const s = document.createElement('style');
-  s.id = 'enCssTemas';
-  s.textContent = ENTREVISTA_CSS;
-  document.head.appendChild(s);
 }
 /* La etiqueta legible del módulo, con respaldo. `PY_MOD_LABEL` lo genera
    `_generar-datos-dashboard.js` leyendo el menú de la app; si el .js de datos es anterior
@@ -6055,54 +5970,6 @@ function injectEntrevistaCss(){
 function pyModLabel(mod){
   const L = (typeof PY_MOD_LABEL !== 'undefined' && PY_MOD_LABEL) || {};
   return L[mod] || String(mod||'').toUpperCase();
-}
-let enScrollListenerAttached=false;
-function renderEntrevista(){
-  injectEntrevistaCss();
-  const cont=document.getElementById('enContent');
-  if(cont&&!enScrollListenerAttached){ cont.addEventListener('scroll',updateEnScrollHint); enScrollListenerAttached=true; }
-  const t=entrevistaTemaHoy();
-  if(!t){
-    document.getElementById('enTitle').textContent='Sin datos';
-    document.getElementById('enSub').textContent='';
-    if(cont)cont.innerHTML='<div class="al-loading">No se encontró entrevistas-data.js. Corre Entrevistas/_generar-datos-dashboard.js.</div>';
-    return;
-  }
-  const idx=entrevistaIdx+1;
-  document.getElementById('enTitle').textContent=`${t.icon} ${t.title}`;
-  document.getElementById('enSub').textContent=t.hint||'';
-  // El badge mostraba el id crudo del módulo ("PYFUND", "POO"…). Desde el 2026-08-12 usa la
-  // misma etiqueta legible que la app de Entrevistas pone en su menú, sin el prefijo "Python —"
-  // (que aquí sobra: la pantalla entera ya es de Python).
-  document.getElementById('enBadge').textContent=pyModLabel(t.mod);
-  document.getElementById('enCounter').textContent=`Tema ${idx} de ${ENTREVISTA_TEMAS.length} · cambia cada día`;
-  document.getElementById('enTags').innerHTML=(t.tags||[]).map(tag=>`<span class="td-tag">${tag}</span>`).join('');
-  const html=(typeof ENTREVISTA_CONTENT!=='undefined')?ENTREVISTA_CONTENT[t.id]:null;
-  if(cont)cont.innerHTML=html||'<div class="al-loading">Sin contenido para este tema.</div>';
-  if(cont)cont.scrollTop=0; // el tema cambia todos los días — siempre debe arrancar arriba
-  requestAnimationFrame(updateEnScrollHint); // tras el reflow real del nuevo HTML, no antes
-}
-// Muestra "↓ más contenido" mientras quede algo debajo del área visible de #enContent, y lo
-// oculta al llegar al fondo — ver nota CSS de .en-scroll-hint arriba para el motivo completo.
-function updateEnScrollHint(){
-  const cont=document.getElementById('enContent'), hint=document.getElementById('enScrollHint');
-  if(!cont||!hint)return;
-  const hasMore=cont.scrollHeight-cont.scrollTop-cont.clientHeight>24;
-  hint.classList.toggle('show',hasMore);
-}
-// Helpers de interacción dentro del HTML de cada tema (copiados literal de
-// Entrevistas/js/core.js — el contenido real trae onclick="toggleQuiz(this)" /
-// onclick="switchTab(this,...)" incrustado, así que estas dos funciones deben existir tal cual).
-function toggleQuiz(el){
-  el.classList.toggle('open');
-  el.nextElementSibling.classList.toggle('open');
-}
-function switchTab(btn,panelId,groupClass){
-  const container=btn.closest('.tab-group-'+groupClass);
-  container.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  container.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(panelId)?.classList.add('active');
 }
 
 // ── Frases motivacionales — 87 en total, reescritas con tono de exigencia (2026-08-07, a
@@ -7149,10 +7016,10 @@ function renderHeroFase(){
     </div>`).join('')}${faseDespuesHtml(f)}`;
 }
 
-// ── 🎓 Hoy aprendes — la lección de alemán y el tema de Python del día. Llama a las MISMAS
-//    alemanPalabraHoy()/entrevistaTemaHoy() que pintan sus slides, así que si avanzas con
-//    "Siguiente lección →" allá, esta tarjeta muestra la misma (por eso se repinta desde
-//    entrevistaSiguiente()). Alemán ya no tiene "siguiente": es una pantalla de consulta.
+// ── 🎓 Hoy aprendes — la palabra de alemán y el tema de Python del día. Alemán salta a su
+//    pantalla con irASlide(); Python abre el tema en la app de Entrevistas por su hash (#id),
+//    porque la pantalla "Entrevista del día" ya no existe en el Dashboard. Llama a las mismas
+//    alemanPalabraHoy()/entrevistaTemaHoy() de siempre: el mismo tema todo el día.
 function irASlide(cls){
   const sl = document.querySelector('.slide.' + cls);
   if(sl && typeof goTo === 'function') goTo(+sl.dataset.i);
@@ -7164,9 +7031,11 @@ function renderHeroAprender(){
   const a=(typeof alemanPalabraHoy==='function')?alemanPalabraHoy():null;
   const p=(typeof entrevistaTemaHoy==='function')?entrevistaTemaHoy():null;
   const nPy=(typeof ENTREVISTA_TEMAS!=='undefined')?ENTREVISTA_TEMAS.length:0;
-  const bloque=(cfg)=>`
-    <button type="button" class="hp-lec" onclick="irASlide('${cfg.slide}')"
-            title="Abrir la sección" style="background:${cfg.c}12;border:1px solid ${cfg.c}2e">
+  const bloque=(cfg)=>{
+    const abre=cfg.href?`window.open('${cfg.href}','_blank','noopener')`:`irASlide('${cfg.slide}')`;
+    return `
+    <button type="button" class="hp-lec" onclick="${abre}"
+            title="${cfg.href?'Abrir el tema en la app de Entrevistas':'Abrir la sección'}" style="background:${cfg.c}12;border:1px solid ${cfg.c}2e">
       <div class="hp-lec-top">
         <span style="font-size:12px">${cfg.ico}</span>
         <span class="hp-lec-tag" style="color:${cfg.c}">${esc(cfg.tag)}</span>
@@ -7175,10 +7044,11 @@ function renderHeroAprender(){
       <div class="hp-lec-t">${esc(cfg.t)}</div>
       <div class="hp-lec-d">${esc(cfg.d)}</div>
     </button>`;
+  };
   el.innerHTML=`
     <div class="hp-title"><span>🎓 Hoy aprendes</span></div>
     ${a?bloque({c:'#00e87a',ico:'🇩🇪',slide:'theme-aleman',tag:'Alemán · '+((ALEMAN_VOCAB.cats[a.cat]||{}).label||''),n:'palabra del día',t:(a.art&&a.art!=='-'?a.art+' ':'')+a.de,d:a.es+' — '+a.ex}):''}
-    ${p?bloque({c:'#00e0c0',ico:p.icon||'🐍',slide:'theme-entrevista',tag:'Python · '+pyModLabel(p.mod),n:(entrevistaIdx+1)+' / '+nPy,t:p.title,d:p.hint||''})
+    ${p?bloque({c:'#00e0c0',ico:p.icon||'🐍',href:'../Entrevistas/entrevistas.html#'+p.id,tag:'Python · '+pyModLabel(p.mod),n:(entrevistaIdx+1)+' / '+nPy,t:p.title,d:p.hint||''})
        :'<div class="hp-empty">El catálogo de Python no cargó — revisa entrevistas-data.js.</div>'}${pasoSemanaHtml()}${fichaEnCursoHtml()}`;
 }
 
@@ -9743,11 +9613,9 @@ function renderQuickApps(){
      {k:'pesa',   c:'#f59e0b', n:'Ejercicio', href:CP+'ejercicio', stat:''},
      {k:'olla',   c:'#fb923c', n:'Comida',    href:CP+'comida',    stat:''},
      {k:'camisa', c:'#94a3b8', n:'Vestimenta',href:CP+'vestimenta',stat:''}],
-    // Alemán es un hub con tres partes propias (lecciones A1/A2, vocabulario, gramática).
+    // Alemán entra por su hub (index.html), que ya lleva a lecciones, vocabulario y gramática:
+    // sus tres píldoras propias sobraban aquí.
     [{k:'globo',  c:'#f87171', n:'Alemán',     href:'../Aleman/index.html', stat:''},
-     {k:'birrete',c:'#ea580c', n:'Lecciones',  href:'../Aleman/principiantes.html', stat:''},
-     {k:'libro',  c:'#db2777', n:'Vocabulario',href:'../Aleman/vocabulario.html', stat:''},
-     {k:'letras', c:'#9333ea', n:'Gramática',  href:'../Aleman/gramatica.html', stat:''},
      {k:'code',   c:'#0d9488', n:'Entrevistas',href:'../Entrevistas/entrevistas.html', stat:''}],
     // Grupo propio: no es una app tuya, es el negocio de tu papá. Mezclarla con lo que
     // administras o con lo que estudias confundiría las dos cosas.
@@ -9859,7 +9727,7 @@ const META_DETALLE={
       {t:"ALTEN ya publica remoto",d:"Vacantes reales de tu propia empresa: \"Quality Assurance Test Engineer\" y \"Test and Validation Engineer\" (automotriz, HIL, CANoe/CANape) — tu perfil calza casi exacto.",href:"https://remotive.com/remote-jobs/qa/quality-assurance-test-engineer-2071338",label:"Ejemplo real: QA remoto en ALTEN"},
       {t:"Pregunta primero adentro",d:"Antes de buscar afuera, pregunta directo con tu gerente en ALTEN si existe la opción de días remotos."},
       {t:"Portales directos",d:"Revisa los de Bosch y Continental con el filtro de remoto activado — las bolsas generales no siempre muestran sus vacantes internas."},
-      {t:"Aplica constante",d:"2-3 vacantes remotas por semana aunque no te sientas 100% listo — practicar entrevistas es parte del proceso (tu slide de Entrevista del día)."},
+      {t:"Aplica constante",d:"2-3 vacantes remotas por semana aunque no te sientas 100% listo — practicar entrevistas es parte del proceso (tu app de Entrevistas)."},
     ]},
   byd:{titulo:"Liquidar el BYD Dolphin Mini",frase:"El orden ya está definido: primero la deuda que sí te cobra intereses, después el coche.",pasos:[
       {t:"Paso 1 · Fondo de emergencia",d:"A {{fondoMeta}} — antes de tocar el BYD, esto va primero."},
@@ -11725,7 +11593,7 @@ function renderHabilidadesBase(){
 // existiendo por separado (pintan ids de DOM distintos, todos ahora dentro de la misma <section>),
 // esta solo las llama en secuencia.
 function renderDiaHero(){ renderDia(); renderHero(); }
-const RENDERS=[renderDiaHero,renderCoach,renderMetasSlide,renderHabilidadesBase,renderSkills,renderListaCompras,renderAleman,renderEntrevista,renderHabitos];
+const RENDERS=[renderDiaHero,renderCoach,renderMetasSlide,renderHabilidadesBase,renderSkills,renderListaCompras,renderAleman,renderHabitos];
 // `ico` sigue aquí porque el menú ☰ lo usa; el rail pinta HUD_ICO, que son trazos y no
 // emoji — a 16px la bandera de Alemán se veía como las letras "DE" y la hélice del ADN
 // como una mancha. `corto` es el nombre que cabe en los 198px del rail.
@@ -11737,7 +11605,6 @@ const SLIDE_MENU_META=[
   {ico:'🧠',n:'Habilidades',          corto:'Habilidades'},
   {ico:'🛒',n:'Lista de Compras',     corto:'Lista de compras'},
   {ico:'🇩🇪',n:'Alemán del día',    corto:'Alemán'},
-  {ico:'💻',n:'Entrevista del día', corto:'Entrevistas'},
   {ico:'🔗',n:'Hábitos',            corto:'Hábitos'},
 ];
 const HUD_ICO=[
@@ -11748,7 +11615,6 @@ const HUD_ICO=[
   '<circle cx="7" cy="8" r="2.4"></circle><circle cx="17" cy="7" r="2.4"></circle><circle cx="12" cy="17" r="2.4"></circle><path d="M8.9 9.6l2.2 5M15.3 8.9l-2.3 6"></path>',
   '<path d="M3 5h2.2l2.3 10.5h9.6L19 8H6.2"></path><circle cx="9.5" cy="19" r="1.4"></circle><circle cx="16.5" cy="19" r="1.4"></circle>',
   '<circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"></path>',
-  '<rect x="2.5" y="4" width="19" height="16" rx="2"></rect><path d="M7.5 10l2.2 2.2-2.2 2.2M12 15h4.5"></path>',
   '<path d="M10.5 13.5a3.5 3.5 0 0 0 5 0l3-3a3.5 3.5 0 0 0-5-5l-1 1"></path><path d="M13.5 10.5a3.5 3.5 0 0 0-5 0l-3 3a3.5 3.5 0 0 0 5 5l1-1"></path>'
 ];
 
@@ -11893,15 +11759,18 @@ function renderNavMenu(){
   const contables=tareasHoy.filter(t=>!t.fijo).flatMap(leafItems);
   const doneCount=contables.filter(it=>doneHoy.includes(it.id)).length;
   const ph=activePhase();
+  // Una línea por pantalla, en el mismo orden que SLIDE_MENU_META.
   const stats=[
     contables.length?`${doneCount}/${contables.length} hecho hoy${actual&&!actual.fijo?' · '+actual.txt:''}`:'Sin bloques hoy',
     ph.tag+' — '+ph.title,
     'Corto, mediano y largo plazo',
+    HABILIDADES_BASE.length+' fichas de vida práctica, con video',
     'OVR '+calcOVR(),
     'Comida, skincare, cabello y suplementos',
     (()=>{const v=alemanPalabraHoy();
       return v?`${(v.art&&v.art!=='-'?v.art+' ':'')}${v.de} · ${v.es}`:'Vocabulario';})(),
-    (()=>{const t=entrevistaTemaHoy();return t?t.title:'229 temas técnicos';})(),
+    (()=>{if(!window.HB||typeof HB.hoy!=='function')return 'La cadena del mes';
+      const l=HB.hoy();return `${l.filter(h=>h.estado==='hoyok'||h.estado==='ok').length} de ${l.length} hoy`;})(),
   ];
   document.getElementById('navMenuList').innerHTML=SLIDE_MENU_META.map((it,i)=>`
     <div class="menu-item ${i===cur?'on':''}" onclick="goTo(${i});toggleMenu()">

@@ -1,7 +1,7 @@
 # dashboard.html — referencia
 
 Panel central del proyecto: agrega en vivo los datos de las demás apps y presenta el día, el plan
-y el estudio en **9 pantallas** a pantalla completa.
+y el estudio en **8 pantallas** a pantalla completa.
 
 > **Esto es referencia, no diario.** Describe cómo funciona **hoy**; el historial de cada cambio
 > vive en `git log -p -- Claude_Proyecto/Dashboard/dashboard.html`. Ver `../../CLAUDE.md` → Regla 3.
@@ -22,7 +22,7 @@ en una página.
 | `habitos.js` | La pantalla de Hábitos entera: semilla, motor de rachas, migraciones, pintado y estilos |
 | `ficha.js` · `ficha.css` | El panel de ficha de producto (`pfAbrirId`, `pfPorNombre`, `.lc-info`) que usan la Lista de Compras y la rutina |
 | `examen-genai.js` · `examen-genai-data.js` (A, 79 preguntas) · `examen-genai-data-b.js` (B, 77) | El simulacro ISTQB CT-GenAI: motor y los dos bancos |
-| `entrevistas-data.js` | Los 41 temas, su CSS y `PY_MOD_LABEL`, extraídos de `Entrevistas/` por `Entrevistas/_generar-datos-dashboard.js`. **No se edita a mano** |
+| `entrevistas-data.js` | Los 41 temas de Python (`ENTREVISTA_TEMAS`, `PY_MOD_LABEL`) que nombra la tarjeta *Hoy aprendes* de Mi Día. Trae también el HTML y el CSS de cada tema (`ENTREVISTA_CONTENT`, `ENTREVISTA_CSS`), que ya no pinta ninguna pantalla. Lo genera `Entrevistas/_generar-datos-dashboard.js`; **no se edita a mano** |
 | `sin-zoom.js` | Bloqueo del zoom en táctil. Lo cargan las seis apps |
 | `aleman-data.js` | Las 40 lecciones de alemán (327 KB). **En reposo**: ninguna pantalla lo carga; volver a las lecciones es cargarlo otra vez |
 | `diseno-*/` | Los canvas de cada rediseño: `Main.dc.html` (lo elegido) y las direcciones descartadas al lado |
@@ -65,7 +65,7 @@ y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `
 
 ---
 
-## Las 9 pantallas
+## Las 8 pantallas
 
 Cada una es un `<section class="slide theme-…">` con `data-i`. Rotan solas cada 3 minutos; se
 navega con las flechas, el rail, el menú ☰ o deslizando en táctil. `irASlide(cls)` salta a una
@@ -80,7 +80,6 @@ navega con las flechas, el rail, el menú ☰ o deslizando en táctil. `irASlide
 | `theme-skills` | **En qué invertir tu tiempo** | Radar de 12 habilidades, la ruta y el paso de la semana |
 | `theme-lista` | **Lista de Compras** | 7 categorías; Comida con precios, ticket, costo al mes y proporciones |
 | `theme-aleman` | **Alemán** | Vocabulario por secciones y Partizip I/II, desde `Aleman/vocab-datos.js`. Pantalla de consulta: no avanza sola |
-| `theme-entrevista` | **Entrevista del día** | Un tema técnico al día, con botón *Siguiente →* |
 | `theme-habitos` | **Hábitos** | La cuadrícula del mes con rachas y la ficha de cada hábito |
 
 Cada pantalla se pinta con su entrada en `RENDERS[i]`, que `showSlide(i)` llama al entrar.
@@ -145,7 +144,7 @@ por dentro.
 |---|---|---|
 | **Hábitos de hoy** | Los que tocan hoy con ancla, racha (🔥 desde 3) y `2 de 5`; se marcan aquí mismo | `HB.hoy()` / `HB.toggleHoy()`, la API que expone `habitos.js` — el mismo toggle de la cuadrícula |
 | **Entrenas** | Hoy en grande, los tres días que siguen y la tira de 7 días como chips de foto (`#heroWeekStrip`, 52 px; tocar uno cambia la agenda a ese día) | `renderDiaEntrena()` sobre `D.gym.rutina` o `GYM_RUTINA_DEFAULT`; el ✅ sale de `gymSesiones()`, que normaliza `mirutina_v1.sesiones` (objeto por fecha desde el 1-sep-2026, lista antes) |
-| **Hoy aprendes** | La palabra de alemán y el tema de entrevista (botones que saltan a su slide con `irASlide`), **el paso de la semana** con la portada de su libro y **la ficha de Habilidades Base en curso** con el paso al que se retoma | `alemanPalabraHoy()` / `entrevistaTemaHoy()` —las mismas funciones que pintan los slides—, `pasoSemanaHtml()` con `habFocoActual()`/`habLibro()`, `fichaEnCursoHtml()` con `hbAvance()` |
+| **Hoy aprendes** | La palabra de alemán (salta a su pantalla con `irASlide`) y el tema de Python del día, que abre en la app de Entrevistas por su hash (`entrevistas.html#<id>`) porque el Dashboard ya no tiene pantalla de entrevista; **el paso de la semana** con la portada de su libro y **la ficha de Habilidades Base en curso** con el paso al que se retoma | `alemanPalabraHoy()` / `entrevistaTemaHoy()` (uno de los 41 de `ENTREVISTA_TEMAS`, por `diaDelAnio()`), con la etiqueta de módulo de `pyModLabel()` —`PY_MOD_LABEL` lo emite el generador leyendo el menú de `entrevistas.html`, y cae al id en mayúsculas si el archivo es anterior—; `pasoSemanaHtml()` con `habFocoActual()`/`habLibro()`, `fichaEnCursoHtml()` con `hbAvance()` |
 | **Tu dinero** | Fondo de emergencia, deudas, **los cobros y abonos de los próximos 7 días** y *Invertir hoy · Primero tu fondo →* | `renderHeroDinero()` + `cobrosHtml()` sobre `ctAgenda()` → `CIFRAS.agendaDia`, la misma fuente que el tablero |
 | **Fase** | La fase activa, su barra con la marca de hoy, la prioridad del mes y **Después · Fase 1 desde …** | `renderHeroFase()` + `faseDespuesHtml()` sobre `PHASES` |
 | **Importante este mes** | Los pendientes del mes con pestañas, «+ Nuevo», editar y borrar | `dash-eventos-mes-v1` |
@@ -191,15 +190,15 @@ nueva. Último lote: `_sep20260907`.
 
 ## El rail de control
 
-**Un rail a la izquierda**, cuatro bloques separados por filete: reloj y sync, las **nueve
+**Un rail a la izquierda**, cuatro bloques separados por filete: reloj y sync, las **ocho
 pantallas** con icono de trazo y su nombre, los controles de reproducción con barra de avance, y
 la fila de sistema (menú, pantalla completa, ajustes, ayuda). El activo se marca con fondo y color,
 sin taparse.
 
-**Vive plegado**: una tira de **56 px** con el tirador, las nueve pantallas sin nombre y el play.
+**Vive plegado**: una tira de **56 px** con el tirador, las ocho pantallas sin nombre y el play.
 El tirador lo abre a 198 px con nombres, reloj y ajustes. **Solo el tirador lo cierra**: elegir
 una pantalla no lo pliega (`showSlide` no toca el rail), para poder saltar entre varias seguidas.
-El estado se guarda en `dash-rail-abierto` (`RAIL_KEY`) y sobrevive a la recarga. Los nueve
+El estado se guarda en `dash-rail-abierto` (`RAIL_KEY`) y sobrevive a la recarga. Los ocho
 iconos de 38 px caben a 720 px de alto.
 
 **El hueco sigue al rail**: `--pad-rail` cambia con la clase `rail-on` del `body` (88 px plegado,
@@ -223,16 +222,20 @@ Cada app lleva un **SVG de trazo** de 24×24 (`QA_ICO`), mismo grosor y terminac
 no servían (la bandera de Alemán sale como `DE` en Windows). Colores medidos contra los dos
 fondos: peor contraste 5.43 en oscuro y 1.92 en claro.
 
-**Cuatro grupos** separados por filete fino, 19 píldoras: lo que administras (Coach, Finanzas);
+**Cuatro grupos** separados por filete fino, 14 píldoras: lo que administras (Coach, Finanzas);
 el cuerpo —las ocho pestañas de Cuidado Personal en su orden: Skincare, Cabello, Ojos, Dentista,
-Salud, Ejercicio, Comida, Vestimenta—; lo que estudias (Alemán con Lecciones, Vocabulario y
-Gramática, y Entrevistas); y **el negocio de su papá** (Aeroresinas, Heliescala), que no son apps
-suyas y no van con las otras. Todo HTML que se abre solo tiene su píldora.
+Salud, Ejercicio, Comida, Vestimenta—; lo que estudias (Alemán y Entrevistas: Alemán entra por su
+hub `index.html`, que ya lleva a lecciones, vocabulario y gramática, así que esas tres no tienen
+píldora propia); y **el negocio de su papá** (Aeroresinas, Heliescala), que no son apps suyas y no
+van con las otras. Todo HTML que se abre solo tiene su píldora.
 
-Van en un contenedor con `max-width:1660px`; **por debajo de 1690 px** se quedan solo los iconos
-con el nombre en `title`, porque la fila se partiría en dos y taparía el slide (que empieza fijo a
-58 px). Los dos números salen de medir la fila con nombres (`.qa-grupos` con `flex-wrap:nowrap` y
-`max-width:none`): **si entra otra app, volver a medir**. A 1600 px la barra ya enseña solo iconos.
+Van en un contenedor con `max-width:1350px`; **por debajo de 1520 px** se quedan solo los iconos
+con el nombre en `title`: la fila con nombres se partiría en dos y taparía el slide (que empieza
+fijo a 58 px), o se metería debajo de los botones de tema y privacidad, que van absolutos a la
+derecha (91 px). Los dos números salen de medir la fila con nombres (`.qa-grupos` con
+`flex-wrap:nowrap` y `max-width:none`, 1 321 px hoy) y de sumarle 2×91 para el umbral, porque la
+fila va centrada y reparte el sobrante a los dos lados: **si entra o sale una app, volver a
+medir**. A 1600 px se ven los nombres; a 1366, solo iconos.
 
 **Privacidad y tema van juntos a la derecha**, en el carril `.qa-acciones`, como dos píldoras
 `qa-pill` iguales de 35 px: el ojo (`priv-btn`; tachado y en rojo con las cifras ocultas, con
@@ -775,24 +778,6 @@ Claves: `al_sec_v1`, `al_sub_v1`, `al_fam_v1`, `al_niv_v1`, `al_plg_v1`, `al_vis
 
 ---
 
-## Entrevista del día
-
-`renderEntrevista()` pinta nativo dentro del slide (sin `<iframe>`) uno de los **41 temas** de
-`ENTREVISTA_TEMAS`, con badge de módulo, contador «Tema 1 de 41», tags, contenido y el botón
-*Siguiente tema →*.
-
-- `injectEntrevistaCss()` mete `ENTREVISTA_CSS` —las reglas de `Entrevistas/styles.css` que el
-  generador extrae y prefija con `.en-content`— en un `<style>`, una sola vez.
-- `PY_MOD_LABEL` lo emite el generador leyendo los `m-label` del menú de `entrevistas.html`; si el
-  menú renombra un módulo, el badge se entera al regenerar. `pyModLabel()` tiene respaldo (cae al
-  id en mayúsculas si el archivo es anterior al generador), y la tarjeta de Mi Día usa la misma
-  función.
-
-**Una llamada a algo inexistente no avisa**: un `ReferenceError` dentro de un render deja solo ese
-panel en «Cargando…» sin romper el resto de la página. Por eso se verifica cada slide en navegador
-y no solo con `node --check`.
-
----
 
 ## Hábitos — la cadena que no se rompe
 
