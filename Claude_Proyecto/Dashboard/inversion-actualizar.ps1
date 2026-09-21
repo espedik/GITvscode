@@ -165,7 +165,7 @@ if (-not $datos) {
   try { $datos = $txt | ConvertFrom-Json } catch { Fin ('❌ La respuesta no trae JSON utilizable:' + "`n" + $txt.Substring(0, [Math]::Min(800, $txt.Length))) 1 }
 }
 if ($Modo -eq 'perfiles') {
-  foreach ($k in 'veredicto', 'mercado', 'perfiles', 'fuentes') {
+  foreach ($k in 'mercado', 'perfiles', 'fuentes') {
     if (-not $datos.PSObject.Properties[$k]) { Fin ('❌ Al JSON le falta "' + $k + '". No toco ' + $M.destino + '.') 1 }
   }
   foreach ($p in 'seguro', 'medio') {
@@ -174,7 +174,7 @@ if ($Modo -eq 'perfiles') {
     $suma = 0; foreach ($a in $pf.activos) { $suma += [double]$a.pct }
     if ([Math]::Abs($suma - 100) -gt 1) { Write-Host ('⚠️  Los porcentajes de "' + $p + '" suman ' + $suma + ', no 100. Se guarda igual; la plantilla normaliza.') }
   }
-  $titulo = [string]$datos.veredicto.titulo
+  $titulo = [string]$datos.perfiles.medio.lema + ' · ' + [string]$datos.perfiles.seguro.lema
 } else {
   foreach ($k in 'resumen', 'principal', 'alternativas', 'reglas', 'fuentes') {
     if (-not $datos.PSObject.Properties[$k]) { Fin ('❌ Al JSON le falta "' + $k + '". No toco ' + $M.destino + '.') 1 }

@@ -3519,23 +3519,12 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .inv-side{overflow-y:auto;padding:16px 18px 28px;border-left:1px solid rgba(var(--ov),.08);background:rgba(var(--ov),.025)}
 .inv-side .gbm-sec:first-child{margin-top:0}
 
-/* Veredicto: la regla del Plan Maestro en grande, el texto de Claude debajo, el monto a la derecha. */
-.inv-veredicto{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:18px;align-items:stretch;
-  border-radius:16px;border:1px solid rgba(var(--ov),.1);border-left:4px solid var(--c);
-  background:linear-gradient(90deg,color-mix(in srgb,var(--c) 10%,transparent),transparent 60%);padding:14px 18px;margin-bottom:14px}
-.inv-ver-eyebrow{font-size:9.5px;font-weight:900;letter-spacing:.11em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
-.inv-ver-t{font-family:var(--font-title);font-size:clamp(20px,2.2vw,28px);font-weight:700;line-height:1.1;color:var(--c);margin-bottom:6px}
-.inv-ver-d{font-size:13px;line-height:1.5;color:var(--text2)}
-.inv-ver-d b{color:var(--text)}
-.inv-ver-cuando{margin-top:8px;font-size:11.5px;color:var(--text2);display:flex;gap:6px;align-items:baseline}
-.inv-ver-cuando b{color:var(--text3);font-size:9.5px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;flex-shrink:0}
-.inv-ver-r{display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;border-left:1px solid rgba(var(--ov),.1)}
-.inv-ver-r label{font-size:9.5px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
-.inv-monto{display:flex;align-items:baseline;gap:3px;font-family:var(--mono);font-weight:800;font-size:26px;color:var(--text)}
-.inv-monto input{font:inherit;width:130px;background:transparent;border:none;border-bottom:1px dashed rgba(var(--ov),.3);color:var(--text);padding:0 2px;outline:none}
+/* El monto al mes va en la misma línea del reparto de segura y medio: una cifra editable en mono. */
+.inv-monto{display:inline-flex;align-items:baseline;gap:1px;font-family:var(--mono);font-weight:800;font-size:13px;color:var(--text);text-transform:none;letter-spacing:0}
+.inv-monto input{font:inherit;width:78px;background:transparent;border:none;border-bottom:1px dashed rgba(var(--ov),.35);color:var(--text);padding:0 2px;outline:none}
 .inv-monto input:focus{border-bottom-color:var(--cy)}
 .inv-monto input::-webkit-outer-spin-button,.inv-monto input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.inv-ver-r small{font-size:10px;color:var(--text3);line-height:1.35}
+.inv-sec-nota{font-weight:600;letter-spacing:0;text-transform:none;font-size:10px;color:var(--text3)}
 
 /* Las tres pestañas: cada una es un perfil con su color. */
 .inv-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
@@ -3711,8 +3700,6 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   .inv-card .inv-body{display:block;overflow-y:auto}
   .inv-main,.inv-side{overflow:visible}
   .inv-side{border-left:none;border-top:1px solid rgba(var(--ov),.08)}
-  .inv-veredicto{grid-template-columns:1fr}
-  .inv-ver-r{padding-left:0;border-left:none;padding-top:10px;border-top:1px solid rgba(var(--ov),.1)}
   .inv-activos{grid-template-columns:1fr}
   .inv-pf-stats{grid-template-columns:1fr 1fr}
   .inv-stat.inv-stat-wide{grid-column:1/3}
@@ -9583,7 +9570,7 @@ function pintarInvertirBtn(){
 // ─── "Qué invertir hoy" — la plantilla y los datos van separados ─────────────────────────
 // La plantilla (renderGBMPanel y el CSS .inv-*) es fija. Lo que cambia de una semana a otra vive
 // en dos archivos que escribe Claude Code a través de inversion-actualizar.ps1:
-//   · inversion-hoy.js (window.INVERSION_HOY): veredicto, mercado y los perfiles segura / medio / alto.
+//   · inversion-hoy.js (window.INVERSION_HOY): mercado y los perfiles segura y medio.
 //   · inversion-hoy.js trae solo segura y medio; riesgo alto y súper alto son "apuestas": una sola
 //     empresa a la baja, con la misma regla fija del maestro, la misma plantilla (invApuestaHtml) y
 //     el mismo esquema, pero cada una con su prompt, su archivo y su botón: inversion-alto.js
@@ -9600,6 +9587,9 @@ function pintarInvertirBtn(){
 // invEsperar() lo reinyecta cada 5 s hasta que _meta.generado cambia y entonces se repinta solo.
 // Los prompts viven en inversion-prompt.js e inversion-superalto-prompt.js por lo mismo: la
 // página los muestra ("ver el prompt") y solo puede cargarlos con <script src>.
+// En esta pantalla no aparece nada del fondo de emergencia (Adán, 21-sep-2026: "quita todo lo que
+// tenga que ver con lo del fondo de emergencia"): ni la regla de pasos en grande, ni la barra ni la nota
+// de CETES. La regla sigue viva en el botón de Mi Día (pasoInversionHoy).
 const INV_KEY = 'dash-inversion-v1';   // {tab, perfil, monto} — pestaña abierta, perfil elegido, monto al mes
 const INV_PERFILES = [
   { id:'seguro',    nombre:'Inversión segura',  ico:'🛡️', color:'var(--g)', rgb:'var(--g-rgb)' },
@@ -9616,18 +9606,17 @@ const INV_MODOS = {
 };
 function invPref(){ return rawGet(INV_KEY, {}) || {}; }
 function invPrefSet(patch){ rawSet(INV_KEY, Object.assign(invPref(), patch)); }
-function invDatos(){ const d = window.INVERSION_HOY; return (d && d.perfiles && d.veredicto) ? d : null; }
+function invDatos(){ const d = window.INVERSION_HOY; return (d && d.perfiles) ? d : null; }
 function invDatosApuesta(modo){ const M = INV_MODOS[modo]; const d = M && window[M.variable]; return (d && d.principal && d.principal.ticker) ? d : null; }
 function invPerfilDef(id){ return INV_PERFILES.find(p => p.id === id) || INV_PERFILES[1]; }
 function invTabActual(){ const p = invPref(); return invPerfilDef(p.tab || p.perfil || 'medio').id; }
-// El monto al mes con el que se calculan los repartos de los tres perfiles: el que Adán escribió;
-// si no, el que Claude ve razonable hoy; si tampoco, el aporte a CETES del día 15 (nunca un número
-// a mano). Las apuestas (alto y súper alto) no lo usan: su monto es fijo y vive en el maestro.
+// El monto al mes con el que se calculan los repartos de segura y medio: el que Adán escribió en la
+// línea del reparto; si no, lo que destina al mes según el maestro (nunca un número a mano). Las
+// apuestas (alto y súper alto) no lo usan: su reparto es la regla fija.
 function invMontoMensual(){
-  const p = invPref(), d = invDatos();
+  const p = invPref();
   if(+p.monto > 0) return +p.monto;
-  if(d && +d.veredicto.montoMensual > 0) return +d.veredicto.montoMensual;
-  return +_PG().cetesDia15 || 0;
+  return +_PG().especulacionMes || 0;
 }
 // La regla fija de las dos apuestas, del maestro: al mes, CETES fijos, un % a BTC y el resto a una empresa.
 function invReglaSA(){
@@ -9658,11 +9647,11 @@ function invMetaTxt(m, verbo){
   return verbo + ' ' + invFechaCorta(m.generado) + ' · ' + invModeloCorto(m.modelo) + (m.tokens ? ' · ' + fmt(m.tokens) + ' tokens' : '') + (m.turnos ? ' · ' + m.turnos + ' vueltas' : '') + (m.segundos ? ' · ' + m.segundos + ' s' : '');
 }
 
-// Lo que se le manda a Claude para los tres perfiles: los mismos números que ya pinta el panel,
-// en JSON corto. Nada de leer archivos del lado de Claude — el contexto viaja en el enlace y
-// cuesta ~500 tokens.
+// Lo que se le manda a Claude para segura y medio: los mismos números que ya pinta el panel, en
+// JSON corto. Nada de leer archivos del lado de Claude — el contexto viaja en el enlace y cuesta
+// ~500 tokens. Sin el fondo de emergencia: esta pantalla no lo trata.
 function invContexto(){
-  const { F, inv, ef, metaEf } = pasoInversionHoy();
+  const { F, inv } = pasoInversionHoy();
   const P = _PG(), hoy = new Date();
   const maes = (F.goals || []).find(g => g.id === 'g001');
   const ph = (typeof activePhase === 'function') ? activePhase() : null;
@@ -9672,8 +9661,8 @@ function invContexto(){
     edad: P.nacimiento ? Math.floor((hoy - new Date(P.nacimiento)) / 31557600000) : null,
     ciudad: P.ciudad || '', empleador: P.empleador || '',
     ingresosMes: { sueldo: +P.sueldo || 0, didi: +P.didiMes || 0, siVale: +P.siVale || 0 },
-    fijosMes: Math.round(+P.fijosTotal || 0), cetesDia15: +P.cetesDia15 || 0,
-    fondo: { actual: Math.round(ef), meta: Math.round(metaEf) },
+    fijosMes: Math.round(+P.fijosTotal || 0),
+    montoMes: invMontoMensual(), cetesFijoMes: +P.cetesDia15 || 0,
     deudas: (F.debts || []).filter(d => +d.balance > 0).map(d => ({ nombre: d.name, saldo: Math.round(+d.balance), tasa: +d.rate || 0, minimo: +d.min || 0 })),
     inversiones: inv.map(i => ({ nombre: i.name, tipo: i.type || '', valor: Math.round(+i.value || +i.invested || 0) })),
     efectivo: (F.activos || []).filter(a => a.type === 'liquido' && +a.value > 0).map(a => ({ nombre: a.name, valor: Math.round(+a.value) })),
@@ -9681,7 +9670,6 @@ function invContexto(){
     maestria: maes ? { ahorrado: Math.round(+maes.current || 0), meta: Math.round(+maes.target || 0), inicio: P.maestriaInicio || '' } : null,
     fase: ph ? (ph.tag + ' · ' + ph.title + ' (' + fmtF(ph.start) + ' – ' + fmtF(ph.end) + ')') : '',
     perfilElegido: invPref().perfil || null,
-    montoMensualActual: +invPref().monto || null,
   };
 }
 // El contexto de una apuesta: la regla fija con sus pesos ya calculados, los precios y la apuesta
@@ -9801,24 +9789,11 @@ function invPintarCabecera(d){
     '<div class="inv-ayuda"><a onclick="invVerPrompt(\'perfiles\')">ver el prompt</a> · ¿No se abre nada? <a onclick="invAyudaInstalar()">instalar el protocolo</a> · <a onclick="invCopiarContexto(\'perfiles\')">copiar el contexto</a></div>';
 }
 
-function invVeredictoHtml(P, d){
-  const v = d && d.veredicto;
-  const monto = invMontoMensual();
-  return '<div class="inv-veredicto" style="--c:' + P.color + '">' +
-    '<div class="inv-ver-l">' +
-      '<div class="inv-ver-eyebrow">Qué te toca hoy · la regla de tu Plan Maestro</div>' +
-      '<div class="inv-ver-t">' + esc(P.paso) + '</div>' +
-      '<div class="inv-ver-d">' + (v ? '<b>' + esc(v.titulo) + '.</b> ' + esc(v.texto) : P.detalle) + '</div>' +
-      (v && v.cuandoInvertir ? '<div class="inv-ver-cuando"><b>Desde cuándo</b><span>' + esc(v.cuandoInvertir) + '</span></div>' : '') +
-    '</div>' +
-    '<div class="inv-ver-r">' +
-      '<label>Al mes destino</label>' +
-      (privado
-        ? '<div class="inv-monto">$••,•••</div>'
-        : '<div class="inv-monto"><span>$</span><input id="invMontoInput" type="number" step="100" min="0" value="' + monto + '" onchange="invMontoCambia(this.value)"></div>') +
-      '<small>' + (v && +v.montoMensual > 0 ? 'Claude sugiere ' + money(v.montoMensual) + '. ' : '') + 'Con esto se calcula el reparto de segura y medio; edítalo. Riesgo alto y súper alto tienen su regla fija.</small>' +
-    '</div>' +
-  '</div>';
+// El monto al mes, editable en la misma línea del reparto (con el modo privado se tapa).
+function invMontoHtml(monto){
+  return privado
+    ? '<b>$••,•••</b>'
+    : '<b class="inv-monto"><span>$</span><input id="invMontoInput" type="number" step="100" min="0" value="' + monto + '" onchange="invMontoCambia(this.value)" title="Escribe cuánto destinas al mes; con esto se calcula el reparto"></b>';
 }
 function invTabsHtml(d, tab){
   return '<div class="inv-tabs">' + INV_PERFILES.map(p => {
@@ -9872,7 +9847,7 @@ function invPerfilHtml(d, id){
         '<div class="inv-stat inv-stat-wide"><span>La caída que debes aguantar</span><b class="inv-stat-txt">' + esc(pf.caidaMax) + '</b></div>' +
       '</div>' +
     '</div>' +
-    '<div class="inv-sec">💼 Cómo se reparten tus <b>' + money(monto) + '</b> al mes</div>' +
+    '<div class="inv-sec">💼 Cómo se reparten tus ' + invMontoHtml(monto) + ' al mes <small class="inv-sec-nota">edita la cifra y el reparto se recalcula</small></div>' +
     '<div class="inv-barra">' + activos.map((a, i) => '<i style="--a:' + INV_ACTIVO_COLORES[i % INV_ACTIVO_COLORES.length] + ';width:' + a.pct + '%" title="' + esc(a.nombre) + ' ' + invPct(a.pct) + '"></i>').join('') + '</div>' +
     '<div class="inv-leyenda">' + activos.map((a, i) => '<span style="--a:' + INV_ACTIVO_COLORES[i % INV_ACTIVO_COLORES.length] + '"><i></i>' + esc(a.ticker || a.nombre) + ' <b>' + invPct(a.pct) + '</b></span>').join('') + '</div>' +
     '<div class="inv-activos">' + activos.map((a, i) => invActivoHtml(a, i, monto)).join('') + '</div>' +
@@ -9983,7 +9958,7 @@ function invVacioHtml(){
   return '<div class="inv-vacio"><b>Todavía no hay perfiles</b>Pulsa <b style="display:inline;font:inherit">🤖 Actualizar con Claude</b>: la página manda tus saldos reales y en 1-3 minutos aparecen aquí los perfiles segura y medio con su reparto, su porqué y sus reglas.</div>';
 }
 function invSideHtml(P, d){
-  const { inv, ef, metaEf, totalInv, cetes, deudaCara, mon } = P;
+  const { inv, totalInv, deudaCara, mon } = P;
   const m = d && d.mercado;
   const asignacion = inv.length
     ? inv.map(i => {
@@ -10020,18 +9995,15 @@ function invSideHtml(P, d){
       : '<div class="gbm-nota">El dólar se actualiza una vez al día. <b>VOO no se puede leer desde este archivo</b> — Yahoo y Stooq bloquean la petición; por eso va como link.</div>') +
 
     '<div class="gbm-sec">🎯 Tu situación</div>' +
-    '<div class="gbm-row"><span>Fondo de emergencia</span><span class="gbm-mono">' + mon(ef) + ' / ' + mon(metaEf) + '</span></div>' +
-    '<div class="gbm-bar"><div class="gbm-bar-f" style="width:' + Math.min(100, ef / metaEf * 100) + '%"></div></div>' +
-    '<div class="gbm-row" style="margin-top:6px"><span>Deuda con interés</span><span class="gbm-mono" style="color:' + (deudaCara > 0 ? 'var(--r)' : 'var(--g)') + '">' + mon(deudaCara) + '</span></div>' +
+    '<div class="gbm-row"><span>Deuda con interés</span><span class="gbm-mono" style="color:' + (deudaCara > 0 ? 'var(--r)' : 'var(--g)') + '">' + mon(deudaCara) + '</span></div>' +
     asignacion +
     (totalInv ? '<div class="gbm-row gbm-row-tot"><span>Total invertido</span><span class="gbm-mono">' + mon(totalInv) + '</span></div>' : '') +
-    (cetes ? '<div class="gbm-nota">Tus CETES son el fondo de emergencia: ' + mon(cetes) + '. Tu aporte recurrente es de ' + mon(_PG().cetesDia15 || 0) + ' el día 15, y solo se venden ante un imprevisto.</div>' : '') +
     objetivo +
 
     '<div class="gbm-sec">⏱️ La compra rápida, en 20 minutos</div>' +
     '<ol class="gbm-check">' +
       '<li>Abre GBM+ y mira el saldo disponible (2 min).</li>' +
-      '<li>Compara contra el veredicto: ¿toca fondo, deuda o invertir? (1 min)</li>' +
+      '<li>Abre la pestaña de tu perfil elegido y mira el reparto de hoy (1 min).</li>' +
       '<li>Si toca invertir: ejecuta según tu perfil elegido, el activo más rezagado primero (5 min).</li>' +
       '<li>Regístralo en Finanzas → Plan de Inversiones para que el dashboard quede al día (5 min).</li>' +
       '<li>Cierra la app. <b>No revises precios hasta el próximo lunes</b> — mirar a diario es lo que hace vender en pánico (7 min de sobra).</li>' +
@@ -10049,7 +10021,7 @@ function renderGBMPanel(){
   invPintarCabecera(d);
   const panel = invPerfilDef(tab).apuesta ? invApuestaHtml(tab) : (d ? invPerfilHtml(d, tab) : invVacioHtml());
   b.innerHTML =
-    '<div class="inv-main">' + invVeredictoHtml(P, d) + invTabsHtml(d, tab) +
+    '<div class="inv-main">' + invTabsHtml(d, tab) +
       '<div class="inv-panel" id="invPanel">' + panel + '</div>' +
     '</div>' +
     '<aside class="inv-side">' + invSideHtml(P, d) + '</aside>';

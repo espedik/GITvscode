@@ -1,269 +1,175 @@
-// Generado por inversion-actualizar.ps1 el 2026-09-21T06:40:39-06:00 — NO se edita a mano: lo escribe Claude.
-// Es el ÚNICO archivo que cambia al actualizar; la plantilla (dashboard.html) lo pinta.
+// Generado por inversion-actualizar.ps1 (perfiles) el 2026-09-21T14:41:18-06:00 — NO se edita a mano: lo escribe Claude.
+// Es el ÚNICO archivo que cambia al actualizar los perfiles segura y medio; la plantilla (dashboard.html) lo pinta.
 window.INVERSION_HOY = {
-  "veredicto": {
-    "titulo": "Cierra tu fondo y mata la tarjeta al 55.7%",
-    "texto": "Estás en Fase 0. Tu fondo va en $6,000 de $10,000: te faltan $4,000. Con tus $1,500 quincenales a CETES lo cierras en ~6 semanas. Antes que nada liquida la tarjeta BBVA ($900 al 55.7%): es la fuga más cara que tienes. Todavía no toca invertir en bolsa; tu plan manda: primero fondo completo, luego deudas caras, y hasta entonces el paso 3.",
-    "montoMensual": 3000,
-    "cuandoInvertir": "Cuando el fondo llegue a $10,000 (aprox. noviembre 2026) y la tarjeta esté en cero, pasas al paso 3 e inviertes tu margen."
-  },
   "mercado": {
-    "resumen": "CETES a 28 días subieron a 6.25% anual (subasta del 15-sep): un piso sólido y sin riesgo. El S&P 500 (VOO ~$700) sigue en máximos, +13.6% en 2026, pero tasas altas y aranceles meten volatilidad. Bitcoin consolida cerca de $77-78k, lateral y sin tendencia clara. Buen momento para lo aburrido: fondo y deuda.",
+    "resumen": "CETES a 28 días pagan 6.25% bruto (subasta del 15-sep), ligera alza desde 6.13%. El S&P 500 (VOO ~$698) sigue en máximos, +13.6% en el año y sobre sus medias de 50 y 200 días, aunque el impulso ya depende de utilidades, no de múltiplos. BTC ronda $77-81 mil, ánimo neutral-alcista peleando por recuperar los $80 mil. Buen momento para comprar parejo cada lunes, sin adivinar el techo.",
     "cetesTasa": 6.25,
     "senales": [
       {
-        "t": "CETES 28 días",
-        "d": "Subieron a 6.25% anual; rinde seguro mientras completas tu fondo.",
+        "t": "CETES 28d en 6.25%",
+        "d": "Subió de 6.13% a 6.25% en septiembre; la parte segura rinde bien y sin sustos.",
         "tono": "ok"
       },
       {
-        "t": "S&P 500 (VOO)",
-        "d": "En máximos (~$700), +13.6% en 2026; fuerte pero caro.",
+        "t": "S&P 500 en máximos",
+        "d": "VOO sobre medias de 50 y 200 días, pero caro; entra por partes, no de golpe.",
         "tono": "neutro"
       },
       {
-        "t": "Bitcoin",
-        "d": "Cerca de $77-78k, lateral y sin momentum claro.",
-        "tono": "neutro"
-      },
-      {
-        "t": "Aranceles y tasas",
-        "d": "Nuevos riesgos comerciales y rendimientos altos pueden subir la volatilidad.",
+        "t": "BTC lateral",
+        "d": "Cerca de $80 mil, ánimo neutral. Es tu parte volátil: mantenla chica.",
         "tono": "alerta"
+      },
+      {
+        "t": "Tarifas y tasas altas",
+        "d": "Aranceles y rendimientos del Tesoro elevados pueden subir la volatilidad.",
+        "tono": "neutro"
       }
     ]
   },
   "perfiles": {
     "seguro": {
-      "lema": "Dormir tranquilo, cero sustos",
-      "paraQuien": "Para ti ahora: aún construyes tu fondo y no quieres ver números rojos. Casi todo en deuda del gobierno, con un toque de bolsa.",
-      "horizonte": "Ahora y hasta 2028",
-      "riesgo": 2,
+      "lema": "Dormir tranquilo y sin sustos",
+      "paraQuien": "Para ti si no quieres ver caídas y necesitas el dinero de la maestría de Esslingen líquido y firme para octubre de 2028. Estabilidad por encima de rendimiento.",
+      "horizonte": "1 a 3 años",
+      "riesgo": 1,
       "rendAnual": [
-        5,
-        7
+        5.5,
+        6.5
       ],
-      "caidaMax": "Casi nula. CETES no cae; el 10% en VOO puede bajar 30% en un mal año, pero pesa tan poco que apenas se siente.",
-      "resumen": "70% CETES, 20% fondo de deuda gubernamental y 10% ETF del S&P 500. Rinde ~6% seguro con un toque de bolsa para no perderle a la inflación. Ideal mientras cierras fondo y deudas.",
+      "caidaMax": "Casi nula. CETES y fondos de deuda gubernamental no se desploman; a lo más rinden un poco menos si bajan las tasas.",
+      "resumen": "Tus $20,000 al mes casi todo a CETES en Cetesdirecto más un fondo de deuda gubernamental en GBM+. Rinde ~6% seguro y sirve directo para juntar los $500,000 de la maestría. Con tu margen de ~$31,000 al mes, esta es la ruta que no te quita el sueño.",
       "activos": [
         {
           "nombre": "CETES 28 días",
           "ticker": "CETES",
-          "tipo": "Deuda gob. MXN",
-          "pct": 70,
+          "tipo": "Deuda del gobierno",
+          "pct": 80,
           "donde": "Cetesdirecto",
-          "porque": "Es tu fondo de emergencia: líquido cada 28 días, sin riesgo y hoy al 6.25%. Aquí van tus $1,500 quincenales hasta llegar a $10,000.",
-          "vigilar": "La tasa en cada subasta de Banxico (martes) y reinvertir al vencer.",
-          "riesgo": "Prácticamente cero. El único riesgo real es la inflación si supera la tasa."
+          "porque": "Es lo más seguro de México: le prestas al gobierno a 28 días al 6.25%. Reinviertes cada mes y ese dinero queda listo y líquido para la maestría de 2028.",
+          "vigilar": "La tasa en cada subasta (banxico.org.mx). Si baja mucho, pasa a plazos de 91-182 días.",
+          "riesgo": "Casi cero. El único riesgo real es que la inflación coma parte del rendimiento."
         },
         {
-          "nombre": "BONDDIA",
+          "nombre": "Fondo deuda gubernamental (BONDDIA)",
           "ticker": "BONDDIA",
-          "tipo": "Fondo deuda gob.",
+          "tipo": "Fondo de deuda liquidez",
           "pct": 20,
           "donde": "GBM+",
-          "porque": "Fondo de deuda gubernamental de disponibilidad diaria: rinde parecido a CETES pero lo sacas cualquier día. Buen colchón líquido dentro de GBM.",
-          "vigilar": "La comisión del fondo y que sea 100% deuda gubernamental.",
-          "riesgo": "Muy bajo; solo variaciones diarias mínimas."
-        },
-        {
-          "nombre": "Vanguard S&P 500",
-          "ticker": "VOO",
-          "tipo": "ETF EE. UU.",
-          "pct": 10,
-          "donde": "GBM+",
-          "porque": "Un 10% en las 500 mayores empresas de EE. UU. para que tu dinero crezca por encima de la inflación sin arriesgar el grueso.",
-          "vigilar": "Que sea dinero que no necesites 5+ años y el tipo de cambio USD/MXN.",
-          "riesgo": "Cayó 34% en 2020 y 25% en 2022; aquí pesa poco, casi no lo sientes."
+          "porque": "Da liquidez diaria a tasa parecida a CETES sin amarrar plazo. Útil para el dinero que quieres poder mover rápido dentro de GBM+.",
+          "vigilar": "El rendimiento diario y la comisión anual del fondo; que no se coma la tasa.",
+          "riesgo": "Muy bajo. Deuda del gobierno de corto plazo; puede rendir poco si bajan tasas."
         }
       ],
       "porque": [
-        "Tu fondo aún no está completo: la prioridad es tenerlo seguro y a la mano.",
-        "CETES al 6.25% te paga bien sin exponerte a caídas.",
-        "El 10% en VOO evita que la inflación te gane a largo plazo."
+        "Necesitas los ~$500,000 de la maestría en euros/dólares para 2028.",
+        "A ese plazo no puedes arriesgar el capital en algo que caiga.",
+        "CETES al 6.25% ya te da rendimiento real decente hoy.",
+        "Ya juntaste $53,740; esta ruta lo hace crecer sin sobresaltos."
       ],
       "contra": [
-        "Rinde poco: no hará crecer tu patrimonio rápido.",
-        "Casi todo en pesos: no protege contra una devaluación.",
-        "A 10 años, quedarte aquí te deja dinero sobre la mesa."
+        "No te va a hacer rico: ~6% anual y punto.",
+        "Si la inflación sube, el rendimiento real se achica.",
+        "Te pierdes las subidas fuertes de bolsa a largo plazo."
       ],
       "reglas": [
-        "Compra: $1,500 cada quincena a CETES hasta llegar a $10,000.",
-        "Vende: solo si es emergencia real o para pagar deuda cara.",
-        "Rebalancea: revisa una vez al mes, 20 min los lunes."
+        "Compra: cada lunes metes tu parte a CETES 28d y reinviertes al vencer.",
+        "Vende: solo cuando toque pagar la maestría; antes no lo tocas.",
+        "Rebalancea: revisa la tasa cada mes; si CETES cae fuerte, alarga plazo a 91-182d."
       ],
-      "esteMes": "Mete tus $1,500 quincenales a CETES: te faltan $4,000 para el fondo. En paralelo, liquida la tarjeta BBVA de $900 al 55.7%. No abras VOO todavía; primero fondo lleno."
+      "esteMes": "Abre o revisa Cetesdirecto y programa reinversión automática de CETES 28d. Manda ~$16,000 a CETES y ~$4,000 a BONDDIA en GBM+. Súmalo a tus $1,500 fijos de CETES."
     },
     "medio": {
-      "lema": "El piloto automático de 10 años",
-      "paraQuien": "Para cuando ya tengas fondo y deudas caras controladas. Inversión pasiva que mantienes una década sin voltear a verla.",
+      "lema": "Sembrar 10 años sin mirar",
+      "paraQuien": "Para ti como inversor pasivo que aguanta bajones a cambio de crecer de verdad en 10+ años. Tienes 31; el tiempo juega a tu favor.",
       "horizonte": "10+ años",
       "riesgo": 3,
       "rendAnual": [
         6,
-        11
+        10
       ],
-      "caidaMax": "En un mal año puede bajar 25-30%. Es normal en bolsa; con horizonte largo se recupera.",
-      "resumen": "50% S&P 500, 30% CETES, 15% mundo (VT) y 5% Bitcoin. La cartera que un inversor pasivo mantiene 10 años: crece con la bolsa global y CETES amortigua las caídas.",
+      "caidaMax": "Puede caer 30-35% en un mal año (VOO cayó -34% en 2020 y -25% en 2022). Se recupera con los años si no vendes en pánico.",
+      "resumen": "El clásico del inversor pasivo: mayoría en VOO (S&P 500), CETES como colchón y una pizca de BTC. Tus $20,000 al mes comprando cada lunes 10 años vencen a casi todo. No es para el dinero de la maestría, es para tu patrimonio de largo plazo.",
       "activos": [
         {
-          "nombre": "Vanguard S&P 500",
+          "nombre": "Vanguard S&P 500 ETF",
           "ticker": "VOO",
-          "tipo": "ETF EE. UU.",
-          "pct": 50,
+          "tipo": "ETF de acciones EE.UU.",
+          "pct": 65,
           "donde": "GBM+",
-          "porque": "El corazón de la cartera: 500 empresas de EE. UU. Históricamente 6-10% anual a largo plazo. Simple, barato y diversificado.",
-          "vigilar": "El tipo de cambio USD/MXN y no vender en las caídas.",
-          "riesgo": "-34% en 2020, -25% en 2022; se recuperó en 1-2 años."
+          "porque": "Las 500 empresas más grandes de EE.UU. en un solo boleto. Histórico ~7-10% anual real. Es el núcleo de cualquier cartera pasiva a 10 años.",
+          "vigilar": "No mires el precio semanal. Compra parejo aunque esté en máximos ($698 hoy).",
+          "riesgo": "Volátil: -34% en 2020, -25% en 2022. Solo duele si vendes en la caída."
         },
         {
           "nombre": "CETES 28 días",
           "ticker": "CETES",
-          "tipo": "Deuda gob. MXN",
-          "pct": 30,
+          "tipo": "Deuda del gobierno",
+          "pct": 25,
           "donde": "Cetesdirecto",
-          "porque": "Tu ancla estable al 6.25%. Amortigua cuando la bolsa cae y te da con qué comprar barato al rebalancear.",
-          "vigilar": "La tasa en cada subasta y reinvertir al vencer.",
-          "riesgo": "Casi nulo; solo la inflación."
-        },
-        {
-          "nombre": "Vanguard Total World",
-          "ticker": "VT",
-          "tipo": "ETF global",
-          "pct": 15,
-          "donde": "GBM+",
-          "porque": "Acciones de todo el mundo (Europa, Asia, emergentes) para no depender solo de EE. UU.",
-          "vigilar": "Se solapa con VOO en EE. UU. y el tipo de cambio.",
-          "riesgo": "Similar a VOO; cae en crisis globales."
+          "porque": "Tu ancla estable al 6.25%. Baja el vaivén de la cartera y te da pólvora seca para comprar VOO barato cuando el mercado cae.",
+          "vigilar": "La tasa en cada subasta; si baja mucho pierde atractivo frente al ETF.",
+          "riesgo": "Casi nulo. Su único costo es rendir menos que la bolsa a largo plazo."
         },
         {
           "nombre": "Bitcoin",
           "ticker": "BTC",
-          "tipo": "Cripto",
-          "pct": 5,
-          "donde": "Bitso",
-          "porque": "Un 5% chico en Bitcoin: si sube, ayuda; si se hunde, no te tumba la cartera. Cómpralo en Bitso, no en GBM+.",
-          "vigilar": "Su volatilidad brutal; no pasar del 5%.",
-          "riesgo": "Cayó 77% en 2022. Solo con dinero que aguantes perder."
-        }
-      ],
-      "porque": [
-        "Es la fórmula aburrida que funciona: índices baratos a 10 años.",
-        "CETES al 30% suaviza las caídas y te deja rebalancear.",
-        "VT suma el resto del mundo; BTC agrega chispa controlada."
-      ],
-      "contra": [
-        "Verás caídas de 25-30% y hay que aguantarlas sin vender.",
-        "No le ganarás al mercado; solo lo sigues.",
-        "El 5% de BTC puede irse a la mitad sin avisar."
-      ],
-      "reglas": [
-        "Compra: aporte fijo cada lunes, pase lo que pase con el precio.",
-        "Vende: no vendes por miedo; solo al necesitar el dinero.",
-        "Rebalancea: 1-2 veces al año vuelve a 50/30/15/5."
-      ],
-      "esteMes": "Aún no: primero cierra tu fondo ($4,000) y la tarjeta al 55.7%. Cuando eso esté, arranca con VOO y CETES los lunes. Deja el BTC para el final y en Bitso."
-    },
-    "alto": {
-      "lema": "Crecer fuerte, aguantar sustos",
-      "paraQuien": "Para dinero a 10+ años que no tocarás y con estómago para caídas grandes. Nada de esto es para tu maestría de 2028.",
-      "horizonte": "10+ años",
-      "riesgo": 5,
-      "rendAnual": [
-        8,
-        18
-      ],
-      "caidaMax": "Puede desplomarse 40-50% en un mal año entre tecnología y Bitcoin. Solo si aguantas verlo sin vender.",
-      "resumen": "40% Nasdaq (QQQ), 25% S&P 500, 25% Bitcoin y 10% CETES. Máximo crecimiento y máxima volatilidad. Solo con dinero de largo plazo que no necesites y nervios de acero.",
-      "activos": [
-        {
-          "nombre": "Invesco QQQ",
-          "ticker": "QQQ",
-          "tipo": "ETF tecnología",
-          "pct": 40,
-          "donde": "GBM+",
-          "porque": "Las 100 mayores del Nasdaq: tecnología y crecimiento. Más rendimiento potencial, pero también más golpes.",
-          "vigilar": "Está muy concentrado en tech; el tipo de cambio USD/MXN.",
-          "riesgo": "-33% en 2022. Sube y baja más fuerte que el S&P."
-        },
-        {
-          "nombre": "Vanguard S&P 500",
-          "ticker": "VOO",
-          "tipo": "ETF EE. UU.",
-          "pct": 25,
-          "donde": "GBM+",
-          "porque": "Base más estable dentro del perfil agresivo: las 500 de EE. UU. para no ir todo a tech y cripto.",
-          "vigilar": "El tipo de cambio USD/MXN; no vender en pánico.",
-          "riesgo": "-34% en 2020, -25% en 2022; se recuperó."
-        },
-        {
-          "nombre": "Bitcoin",
-          "ticker": "BTC",
-          "tipo": "Cripto",
-          "pct": 25,
-          "donde": "Bitso",
-          "porque": "Peso real en Bitcoin por su potencial de subida; ~$77k hoy. Cómpralo en Bitso, ya sabes cómo.",
-          "vigilar": "Volatilidad extrema; no rebasar tu tolerancia real.",
-          "riesgo": "Cayó 77% en 2022. Puede repetirse en cualquier ciclo."
-        },
-        {
-          "nombre": "CETES 28 días",
-          "ticker": "CETES",
-          "tipo": "Deuda gob. MXN",
+          "tipo": "Cripto (fuera de GBM+)",
           "pct": 10,
-          "donde": "Cetesdirecto",
-          "porque": "Un ancla mínima al 6.25% para tener liquidez y comprar barato tras las caídas.",
-          "vigilar": "La tasa en subasta y reinvertir al vencer.",
-          "riesgo": "Casi nulo; solo la inflación."
+          "donde": "Bitso",
+          "porque": "Una pizca de alto potencial que no mueve la cartera si sale mal. Ya sabes comprarlo en exchange. 10% es suficiente para notar la subida sin arriesgar el plan.",
+          "vigilar": "Ronda $80 mil. No le metas más del 10% ni promedies a la baja con emoción.",
+          "riesgo": "Brutal: cayó -77% en 2022. Da por hecho que puede caer a la mitad."
         }
       ],
       "porque": [
-        "Tienes 31 y horizonte de 10+ años para aguantar la volatilidad.",
-        "QQQ y BTC ofrecen el mayor potencial de crecimiento.",
-        "Un 10% en CETES te deja pólvora seca para las caídas."
+        "Tienes 31 y 10+ años: el interés compuesto es tu mejor arma.",
+        "VOO indexado le gana a la mayoría de fondos activos a largo plazo.",
+        "CETES te sostiene los nervios en las caídas y te deja comprar barato.",
+        "Comprar cada lunes te quita la tentación de adivinar el mercado."
       ],
       "contra": [
-        "Caídas de 40-50% son posibles y hay que soportarlas enteras.",
-        "El 25% en BTC puede perder tres cuartas partes de su valor.",
-        "Nada aquí sirve para metas a corto plazo como la maestría."
+        "Vas a ver números rojos: prepárate para caídas de 30%+.",
+        "No es dinero para la maestría; ese va en el perfil seguro.",
+        "BTC puede irse a la mitad; solo mete lo que aguantes perder."
       ],
       "reglas": [
-        "Compra: aporte fijo cada lunes; promedia el precio.",
-        "Vende: solo al rebalancear o si cambia tu horizonte.",
-        "Rebalancea: 1-2 veces al año; recorta lo que se disparó."
+        "Compra: cada lunes repartes tu monto en 65/25/10, pase lo que pase.",
+        "Vende: no vendes por miedo; solo rebalanceas o ante meta a 10 años.",
+        "Rebalancea: 1 o 2 veces al año vuelve a 65/25/10; si BTC crece mucho, recórtalo."
       ],
-      "esteMes": "Este perfil no es para hoy. Cierra fondo y tarjeta primero. Y recuerda: el dinero de tu maestría 2028 NO va aquí, va seguro. Esto es solo para largo plazo que no tocas."
+      "esteMes": "En GBM+ compra VOO por ~$13,000 este lunes. Mete ~$5,000 a CETES (además de tus $1,500 fijos) y ~$2,000 a BTC en Bitso. Repite cada lunes sin mirar precios."
     }
   },
   "fuentes": [
     {
-      "t": "CETES hoy — tasas por plazo",
-      "u": "https://cetes.app/cetes-hoy"
+      "t": "Banxico — tasas de valores gubernamentales",
+      "u": "https://www.banxico.org.mx"
     },
     {
-      "t": "Banxico — convocatoria de valores gubernamentales",
-      "u": "https://www.banxico.org.mx/apps/dao-web/4/54/4/convocatoriagubernamental.html"
-    },
-    {
-      "t": "Cetesdirecto — tabla de valores gubernamentales",
+      "t": "Cetesdirecto — CETES 28 días",
       "u": "https://www.cetesdirecto.com/tablas/valores_gubernamentales/cetes.html"
     },
     {
-      "t": "VOO — ficha del ETF (stockanalysis)",
+      "t": "Ficha VOO — Vanguard S&P 500 ETF",
       "u": "https://stockanalysis.com/etf/voo/"
     },
     {
-      "t": "Precio de Bitcoin (Fortune)",
-      "u": "https://fortune.com/article/price-of-bitcoin-09-01-2026/"
+      "t": "GBM+ — plataforma de inversión",
+      "u": "https://www.gbm.com"
+    },
+    {
+      "t": "Bitso — comprar Bitcoin",
+      "u": "https://bitso.com"
     }
   ],
   "_meta": {
-    "generado": "2026-09-21T06:40:39-06:00",
+    "generado": "2026-09-21T14:41:18-06:00",
     "modelo": "claude-opus-4-8",
-    "tokens": 92731,
-    "salida": 11379,
+    "tokens": 77304,
+    "salida": 4359,
     "turnos": 5,
-    "segundos": 152,
-    "costoUsd": 0.6943
+    "segundos": 98,
+    "costoUsd": 0.4709
   }
 };

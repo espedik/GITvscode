@@ -140,30 +140,6 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "veredicto": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "titulo": {
-          "type": "string"
-        },
-        "texto": {
-          "type": "string"
-        },
-        "montoMensual": {
-          "type": "number"
-        },
-        "cuandoInvertir": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "titulo",
-        "texto",
-        "montoMensual",
-        "cuandoInvertir"
-      ]
-    },
     "mercado": {
       "type": "object",
       "additionalProperties": false,
@@ -227,7 +203,6 @@
     }
   },
   "required": [
-    "veredicto",
     "mercado",
     "perfiles",
     "fuentes"
