@@ -47,6 +47,7 @@ funciona desde `file://` (scripts clásicos sí, módulos ES no), y en eso se ap
 | `Vestimenta/` | `vestimenta.html`, `vestimenta_*.js` | [`readme_vestimenta.md`](Vestimenta/readme_vestimenta.md) | Guía de guardarropa: qué ponerse, colorimetría, qué comprar. Incrustada en el shell |
 | `Aeroresinas/` | `aeroresinas.html`, `dossier.html`, `datos.js` | [`readme_aeroresinas.md`](Aeroresinas/readme_aeroresinas.md) | Web pública del taller de reparación de helicópteros del papá de Adán, con su PDF |
 | `Heliescala/` | `heliescala.html`, `dossier.html`, `datos.js` | [`readme_heliescala.md`](Heliescala/readme_heliescala.md) | Web pública de réplicas en resina, el otro negocio; independiente de Aeroresinas |
+| `Posts/` | `posts.html`, `plantillas.js` | [`readme_posts.md`](Posts/readme_posts.md) | Plantillas de publicación (LinkedIn, Facebook, WhatsApp) para las dos empresas: siete pilares por semana, armados con los `datos.js` de Aeroresinas y Heliescala |
 | `Negocio/` | `plantilla-vs-saas.md` | — | Documento de decisión (ago-2026) sobre convertir el ecosistema en producto |
 
 Aeroresinas y Heliescala son páginas para clientes: no guardan estado más allá de tema e idioma y
@@ -72,6 +73,7 @@ no dependen del Dashboard; la barra de apps del Dashboard las agrupa aparte.
 | `vestimenta_v1` | Vestimenta | nadie |
 | `theme`, `sidebar-collapsed`, `study-done-v2`, `wayve-visited-v2` | Entrevistas | nadie (fuera del ecosistema) |
 | `heli-tema`, `heli-idioma`, `aero-tema`, `aero-idioma` | Heliescala, Aeroresinas | nadie |
+| `posts-empresa`, `posts-ediciones-v1`, `posts-publicados-v1` | Posts (pestaña elegida, textos editados, posts marcados como publicados) | nadie |
 
 Si se añade una app o una clave, decidir explícitamente si el Dashboard debe leerla (`loadAll()`)
 y actualizar esta tabla.

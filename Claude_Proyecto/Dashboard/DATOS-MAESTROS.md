@@ -588,6 +588,7 @@ que añade un registro lo hace **por id y solo si falta**: así el navegador que
 | `Aleman/` | 41 lecciones + `vocabulario.html` | Estudio A1/A2/Kapitel 10. Aloja el vocabulario entero (`vocab-datos.js` + `vocab.css` + `vocab.js`), que el Dashboard carga | `al_*_v1` |
 | `Entrevistas/` | `entrevistas.html` + `js/data-*.js` | Prep. técnica automotriz, 229 temas | `theme`, `sidebar-collapsed`, `study-done-v2` |
 | `Aeroresinas/`, `Heliescala/` | `aeroresinas.html`, `heliescala.html` + `dossier.html` | Las dos webs públicas del negocio del papá de Adán | solo tema e idioma |
+| `Posts/` | `posts.html` + `plantillas.js` | Plantillas de LinkedIn para las dos empresas, armadas con los `datos.js` de sus webs (no con el maestro) | `posts-*`, `coach-theme` |
 
 Detalle por app en su propio `readme_<app>.md`; el mapa completo de claves y conexiones está en
 [`../README.md`](../README.md).

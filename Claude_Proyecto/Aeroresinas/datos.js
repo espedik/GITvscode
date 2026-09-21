@@ -17,7 +17,10 @@
         el orden en que ocurrió el trabajo.
    ════════════════════════════════════════════════════════════════════════════ */
 
-const PERFIL = {
+/* `var`, no `const`: Posts/posts.html carga este archivo y el de Heliescala en la misma
+   página, y dos `const PERFIL` en scripts distintos chocan. Con `var` cada uno se guarda en
+   su cajón (AERO, HELI) antes de que el siguiente lo pise. Para la web es indistinto. */
+var PERFIL = {
   nombre:    'José Arturo Martínez Ponce',
   puesto:    'Técnico de mantenimiento de aeronaves',
   ciudad:    'Miguel Hidalgo, Ciudad de México',
@@ -40,7 +43,7 @@ const PERFIL = {
   linkedinEmpTxt: 'Aeroresinas',
 };
 
-const T = {
+var T = {
  es: {
   // ── Barra ──────────────────────────────────────────────────────────────
   marcaSub:'REPARACIÓN ESTRUCTURAL DE HELICÓPTEROS',

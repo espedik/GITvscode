@@ -15,7 +15,7 @@ de eso lo ve un cliente.
 | | Qué tiene |
 |---|---|
 | `aeroresinas.html` | El molde y el CSS de la web. Ni una frase de contenido |
-| `datos.js` | **Todo** el texto, en español e inglés, más la constante `PERFIL`. Lo leen la web **y el dossier** |
+| `datos.js` | **Todo** el texto, en español e inglés, más la constante `PERFIL`. Lo leen la web, **el dossier** y **Posts** (`../Posts/readme_posts.md`), que arma los posts de LinkedIn con él. Por eso `PERFIL` y `T` van con `var`: Posts carga este archivo y el de Heliescala en la misma página, y dos `const PERFIL` chocarían |
 | `dossier.html` | El molde del **PDF**: páginas carta fijas, leídas del mismo `datos.js` |
 | `generar-pdf.js` | Genera `Aeroresinas-dossier.pdf` con Chromium, comprobando antes que ninguna página desborda |
 | `Aeroresinas-dossier.pdf` | **El portafolio para mandar por WhatsApp.** 24 páginas, 11.8 MB |

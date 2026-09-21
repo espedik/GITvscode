@@ -103,16 +103,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   max-width:1350px;margin:0 auto}
 /* Por debajo del umbral se quedan solo los iconos, con el nombre en el title: la fila con
    nombres se partiría en dos y taparía el slide (la franja empieza fija a 58px), o se metería
-   debajo de los botones de tema y privacidad (`.qa-acciones`, 91 px pegados a la derecha, fuera
-   del flujo). Los dos números salen de medir, no de tantear: con las 14 apps de hoy la fila CON
-   nombres necesita 1,321 px, así que el contenedor va a 1,350; y como la fila va centrada, deja
-   de pisar los botones a partir de 1,503 px de viewport → umbral en 1,520. Historial: 15 apps →
-   1440/1500 · 16 (entra Aeroresinas) → 1560/1580 · 17 (entra Heliescala) → 1660/1690 · 14
-   (salen Lecciones, Vocabulario y Gramática: el hub de Alemán ya lleva a las tres) → 1350/1520.
-   Si entra o sale otra app hay que volver a medirlo — `.qa-grupos` con `flex-wrap:nowrap` y
-   `max-width:none` da el ancho real en una línea, y el umbral es ese ancho más 2×91 de los
-   botones (la fila centrada reparte el sobrante a los dos lados). */
-@media(max-width:1520px){.qa-name,.qa-stat{display:none}.qa-pill{padding:6px 8px}.qa-grupos{gap:2px}}
+   debajo de los botones de la derecha (`.qa-acciones`: Posts, tema y privacidad, 115 px más
+   16 del borde = 131, fuera del flujo). Los dos números salen de medir, no de tantear: con las
+   14 apps de hoy la fila CON nombres necesita 1,321 px, así que el contenedor va a 1,350; y
+   como la fila va centrada, deja de pisar los botones a partir de 1,583 px de viewport →
+   umbral en 1,590 (medido: a 1,580 solapaba 2 px; a 1,600 queda un hueco de 8). Historial:
+   15 apps → 1440/1500 · 16 (entra Aeroresinas) → 1560/1580 · 17 (entra Heliescala) →
+   1660/1690 · 14 (salen Lecciones, Vocabulario y Gramática: el hub de Alemán ya lleva a las
+   tres) → 1350/1520 · tercer botón en el carril (Posts) → 1350/1590.
+   Si entra o sale otra app, o un botón del carril, hay que volver a medirlo — `.qa-grupos`
+   con `flex-wrap:nowrap` y `max-width:none` da el ancho real en una línea, y el umbral es ese
+   ancho más 2×131 del carril (la fila centrada reparte el sobrante a los dos lados). */
+@media(max-width:1590px){.qa-name,.qa-stat{display:none}.qa-pill{padding:6px 8px}.qa-grupos{gap:2px}}
 .qa-sep{width:1px;height:20px;background:rgba(var(--ov),.12);margin:0 6px;flex-shrink:0}
 .qa-pill{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:9px;
   background:transparent;border:1px solid transparent;text-decoration:none;color:var(--text2);

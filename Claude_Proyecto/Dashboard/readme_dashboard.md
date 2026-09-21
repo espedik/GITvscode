@@ -231,21 +231,26 @@ hub `index.html`, que ya lleva a lecciones, vocabulario y gramática, así que e
 píldora propia); y **el negocio de su papá** (Aeroresinas, Heliescala), que no son apps suyas y no
 van con las otras. Todo HTML que se abre solo tiene su píldora.
 
-Van en un contenedor con `max-width:1350px`; **por debajo de 1520 px** se quedan solo los iconos
+Van en un contenedor con `max-width:1350px`; **por debajo de 1590 px** se quedan solo los iconos
 con el nombre en `title`: la fila con nombres se partiría en dos y taparía el slide (que empieza
-fijo a 58 px), o se metería debajo de los botones de tema y privacidad, que van absolutos a la
-derecha (91 px). Los dos números salen de medir la fila con nombres (`.qa-grupos` con
-`flex-wrap:nowrap` y `max-width:none`, 1 321 px hoy) y de sumarle 2×91 para el umbral, porque la
-fila va centrada y reparte el sobrante a los dos lados: **si entra o sale una app, volver a
-medir**. A 1600 px se ven los nombres; a 1366, solo iconos.
+fijo a 58 px), o se metería debajo del carril de la derecha, que va absoluto (115 px de píldoras
+más 16 del borde: 131). Los dos números salen de medir la fila con nombres (`.qa-grupos` con
+`flex-wrap:nowrap` y `max-width:none`, 1 321 px hoy) y de sumarle 2×131 para el umbral, porque la
+fila va centrada y reparte el sobrante a los dos lados: **si entra o sale una app, o un botón del
+carril, volver a medir** (medido: a 1 580 solapaba 2 px; a 1 600 queda un hueco de 8). A 1600 px se
+ven los nombres; a 1366, solo iconos.
 
-**Privacidad y tema van juntos a la derecha**, en el carril `.qa-acciones`, como dos píldoras
-`qa-pill` iguales de 35 px: el ojo (`priv-btn`; tachado y en rojo con las cifras ocultas, con
-`title` que dice lo que hace) y el tema, cuyo icono **enseña a dónde vas** (sol en oscuro, luna en
-claro; `luna` y `sol` en `QA_ICO`). `toggleTheme()` repinta la barra entera — el botón contiene un
-`<svg>`, no texto. **Ninguno de los dos se pliega** con `.qa-collapsed`: son controles que se usan
-sin entrar a ninguna pantalla, y en móvil la regla `position:static;order:-1` se aplica al par.
-Bajo la barra corre una línea de acento en degradado que la separa del slide oscuro.
+**Posts, tema y privacidad van juntos a la derecha**, en el carril `.qa-acciones`, como tres
+píldoras `qa-pill` iguales de 35 px: el altavoz (`posts-btn`, un enlace a
+`../Posts/posts.html` — las plantillas de LinkedIn de Aeroresinas y Heliescala, ver
+`../Posts/readme_posts.md`; Adán lo pidió *"en la parte de arriba a la derecha"*), el tema, cuyo
+icono **enseña a dónde vas** (sol en oscuro, luna en claro; `luna`, `sol` y `posts` en `QA_ICO`), y
+el ojo (`priv-btn`; tachado y en rojo con las cifras ocultas, con `title` que dice lo que hace).
+`toggleTheme()` repinta la barra entera — el botón contiene un `<svg>`, no texto. **Ninguno de los
+tres se pliega** con `.qa-collapsed`: el tema y el ojo son controles que se usan sin entrar a
+ninguna pantalla, y el altavoz se queda con ellos para no romper el trío; en móvil la regla
+`position:static;order:-1` se aplica al carril entero. Bajo la barra corre una línea de acento en
+degradado que la separa del slide oscuro.
 
 ---
 

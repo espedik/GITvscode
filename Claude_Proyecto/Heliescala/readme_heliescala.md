@@ -43,7 +43,7 @@ El archivo es **autónomo** —su CSS va dentro— porque algún día tendrá su
 | | Qué tiene |
 |---|---|
 | `heliescala.html` | La vista de la web: CSS, iconos, render, ficha del catálogo, visor, temas |
-| `datos.js` | **Todo** el contenido: `PERFIL`, `PERFIL_EN` y `T` (los dos idiomas, las 26 piezas, las fichas de los modelos, el tabulador de envíos). Lo leen la web **y el catálogo en PDF** |
+| `datos.js` | **Todo** el contenido: `PERFIL`, `PERFIL_EN` y `T` (los dos idiomas, las 26 piezas, las fichas de los modelos, el tabulador de envíos). Lo leen la web, **el catálogo en PDF** y **Posts** (`../Posts/readme_posts.md`), que arma los posts de LinkedIn con él. Por eso las tres van con `var`: Posts carga este archivo y el de Aeroresinas en la misma página, y dos `const PERFIL` chocarían |
 | `dossier.html` | El molde del **PDF**: páginas carta fijas, leídas del mismo `datos.js` |
 | `generar-pdf.js` | Genera `Heliescala-catalogo.pdf` con Chromium, comprobando antes que ninguna página desborda |
 | `Heliescala-catalogo.pdf` | **El catálogo para mandar por WhatsApp.** 15 páginas, 4.8 MB |

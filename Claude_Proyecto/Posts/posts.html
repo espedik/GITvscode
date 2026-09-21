@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Posts — Plantillas para LinkedIn</title>
+<!--
+  POSTS · plantillas de publicación de Aeroresinas y Heliescala.
+
+  Herramienta de Adán, no página pública: arma el post de cada día, lo enseña como lo va a
+  ver LinkedIn y lo deja listo para copiar, abrir LinkedIn con el texto ya escrito, o mandarlo
+  por WhatsApp a un contacto. El contenido vive en plantillas.js y se arma con los datos.js
+  de las dos webs; aquí solo hay molde, CSS y comportamiento. El mapa: readme_posts.md.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"></noscript>
+<style>
+/* ── Tokens: los del Dashboard, más el acento de la empresa activa ─────────────────────── */
+:root{
+  --bg:#05050a; --text:#f4f4f8; --text2:#9a9db3; --text3:#8589a8;
+  --ov:255,255,255; --card:rgba(var(--ov),.05); --br:rgba(var(--ov),.11);
+  --font:'Inter',-apple-system,sans-serif; --mono:'Space Grotesk',monospace; --title:'Fraunces',Georgia,serif;
+  --o-reparar:#6b8cff; --o-vender:#22d3e6; --o-clientes:#00e87a; --o-presencia:#b06eff;
+  --ok:#00e87a; --warn:#ffb63d; --bad:#ff5c5c;
+  /* La tarjeta de LinkedIn, con sus colores de modo oscuro: es lo que va a ver él. */
+  --li-bg:#1b1f23; --li-text:#e9e5df; --li-text2:rgba(255,255,255,.6); --li-br:rgba(255,255,255,.12); --li-azul:#71b7fb;
+}
+:root[data-theme="light"]{
+  --bg:#f2f2f6; --text:#16161a; --text2:#5c5f70; --text3:#63667c;
+  --ov:0,0,0; --card:rgba(255,255,255,.82); --br:rgba(var(--ov),.1);
+  --o-reparar:#1b47ff; --o-vender:#07707c; --o-clientes:#00a758; --o-presencia:#7f4fb8;
+  --ok:#00a758; --warn:#a8790a; --bad:#c81e3a;
+  --li-bg:#ffffff; --li-text:rgba(0,0,0,.9); --li-text2:rgba(0,0,0,.6); --li-br:rgba(0,0,0,.08); --li-azul:#0a66c2;
+}
+/* El acento cambia con la pestaña: el azul de Aeroresinas o el cian de Heliescala, cada uno
+   con la versión que da contraste sobre el fondo del tema (medido en sus propias webs). */
+body[data-empresa="aero"]{--ac:#6b8cff;--ac-rgb:107,140,255}
+body[data-empresa="heli"]{--ac:#22d3e6;--ac-rgb:34,211,230}
+:root[data-theme="light"] body[data-empresa="aero"]{--ac:#1b47ff;--ac-rgb:27,71,255}
+:root[data-theme="light"] body[data-empresa="heli"]{--ac:#07707c;--ac-rgb:7,112,124}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative}
+/* La retícula técnica de las dos webs, y una aurora del color de la empresa arriba a la derecha. */
+body::before{content:'';position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background-image:linear-gradient(rgba(var(--ov),.045) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--ov),.045) 1px,transparent 1px);
+  background-size:44px 44px;mask-image:linear-gradient(180deg,rgba(0,0,0,.9),transparent 80%)}
+body::after{content:'';position:fixed;z-index:-1;pointer-events:none;top:-220px;right:-160px;width:720px;height:620px;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(var(--ac-rgb),.28),transparent 72%);filter:blur(30px);transition:background .5s}
+a{color:inherit}
+button{font-family:inherit;color:inherit;cursor:pointer;border:0;background:none}
+svg.i{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+/* ── Cabecera ─────────────────────────────────────────────────────────────────────────── */
+.top{display:flex;align-items:center;gap:14px;padding:16px clamp(16px,3vw,40px) 0;max-width:1560px;margin:0 auto}
+.volver{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--text3);text-decoration:none;padding:7px 10px;border-radius:9px;border:1px solid transparent}
+.volver:hover{color:var(--text);background:rgba(var(--ov),.06);border-color:var(--br)}
+.top .esp{flex:1}
+.pill-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:36px;padding:0 12px;border-radius:10px;
+  border:1px solid var(--br);background:var(--card);color:var(--text2);font-size:12px;font-weight:600;backdrop-filter:blur(8px)}
+.pill-btn:hover{color:var(--text);border-color:rgba(var(--ov),.22)}
+.pill-btn svg.i{font-size:16px}
+
+.hero{max-width:1560px;margin:0 auto;padding:22px clamp(16px,3vw,40px) 0;display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.hero .ojo{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);display:flex;align-items:center;gap:8px}
+.hero .ojo::before{content:'';width:22px;height:1px;background:var(--ac)}
+.hero h1{font-family:var(--title);font-weight:600;font-size:clamp(28px,3.4vw,42px);line-height:1.05;letter-spacing:-.01em;margin-top:6px}
+.hero h1 em{font-style:italic;color:var(--ac)}
+.hero p{color:var(--text2);font-size:14px;max-width:640px;margin-top:8px}
+
+/* ── Pestañas de empresa ──────────────────────────────────────────────────────────────── */
+.tabs{max-width:1560px;margin:18px auto 0;padding:0 clamp(16px,3vw,40px);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.tab-grupo{display:flex;gap:4px;padding:4px;border-radius:14px;background:rgba(var(--ov),.05);border:1px solid var(--br)}
+.tab{display:flex;align-items:center;gap:10px;padding:9px 16px 9px 12px;border-radius:10px;color:var(--text2);font-weight:600;font-size:14px;
+  transition:background .2s,color .2s}
+.tab svg.i{font-size:22px;stroke-width:1.7}
+.tab small{display:block;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;line-height:1.1;margin-top:2px}
+.tab:hover{color:var(--text);background:rgba(var(--ov),.05)}
+.tab.on{background:rgba(var(--ac-rgb),.16);color:var(--text);box-shadow:inset 0 0 0 1px rgba(var(--ac-rgb),.4)}
+.tab.on svg.i,.tab.on small{color:var(--ac)}
+.tab.on[data-e="aero"] svg.i{color:var(--o-reparar)} .tab.on[data-e="heli"] svg.i{color:var(--o-vender)}
+.objetivos{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-left:auto}
+.objetivos .lbl{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-right:4px}
+.obj{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;border:1px solid var(--br);font-size:11.5px;font-weight:600;color:var(--text2);
+  background:var(--card);transition:all .15s}
+.obj i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.obj:hover{color:var(--text);border-color:rgba(var(--ov),.22)}
+.obj.on{color:var(--text);border-color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent)}
+.obj.mudo{opacity:.35}
+
+/* ── Rejilla principal ─────────────────────────────────────────────────────────────────── */
+.grid{max-width:1560px;margin:20px auto 0;padding:0 clamp(16px,3vw,40px) 40px;display:grid;grid-template-columns:270px minmax(0,1fr) 320px;gap:18px;align-items:start}
+/* Sin esto, la tira horizontal de la semana ensancha su celda y la página entera desplaza a los lados en el teléfono. */
+.grid>*{min-width:0}
+.panel{background:var(--card);border:1px solid var(--br);border-radius:18px;backdrop-filter:blur(10px)}
+.panel-t{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);
+  display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px}
+.panel-t b{color:var(--text2);font-weight:700;letter-spacing:0;text-transform:none;font-family:var(--font);font-size:11px}
+
+/* La semana: siete pilares, uno por día. */
+.semana{padding:0 8px 8px;display:flex;flex-direction:column;gap:3px}
+.dia{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:9px 10px;border-radius:12px;text-align:left;
+  border:1px solid transparent;color:var(--text2);transition:background .15s,border-color .15s;position:relative}
+.dia:hover{background:rgba(var(--ov),.05);color:var(--text)}
+.dia.on{background:rgba(var(--ac-rgb),.12);border-color:rgba(var(--ac-rgb),.35);color:var(--text)}
+.dia.mudo{opacity:.32}
+.dia .abr{font-family:var(--mono);font-weight:700;font-size:15px;width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  background:rgba(var(--ov),.06);color:var(--text3)}
+.dia.on .abr{background:var(--ac);color:#fff}
+:root[data-theme="dark"] .dia.on .abr,:root:not([data-theme="light"]) .dia.on .abr{color:#0b0d14}
+.dia.hoy .abr{box-shadow:0 0 0 2px var(--bg),0 0 0 3.5px var(--ac)}
+.dia .nom{font-size:12.5px;font-weight:600;line-height:1.2}
+.dia .nom small{display:block;font-weight:500;font-size:10.5px;color:var(--text3);margin-top:2px}
+.dia .pts{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.dia .dots{display:flex;gap:3px}
+.dia .dots i{width:6px;height:6px;border-radius:50%;background:var(--c)}
+.dia .hoy-tag{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.1em;color:var(--ac)}
+.dia .pub{color:var(--ok);font-size:12px;line-height:1}
+.dia .n{font-family:var(--mono);font-size:9.5px;color:var(--text3)}
+.semana-pie{padding:10px 16px 14px;font-size:11px;color:var(--text3);border-top:1px solid var(--br);margin-top:6px;line-height:1.45}
+.semana-pie b{color:var(--text2)}
+
+/* ── El centro: el post ────────────────────────────────────────────────────────────────── */
+.centro{display:flex;flex-direction:column;gap:12px;min-width:0}
+.post-cab{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.post-cab .k{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ac)}
+.post-cab h2{font-family:var(--title);font-weight:600;font-size:22px;line-height:1.15;letter-spacing:-.01em;flex:1 1 100%}
+.serie{display:flex;align-items:center;gap:8px;margin-left:auto}
+.serie .pos{font-family:var(--mono);font-size:11px;color:var(--text2);white-space:nowrap}
+.serie .pos b{color:var(--text)}
+.serie .hoy{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;padding:3px 7px;border-radius:6px;background:rgba(var(--ac-rgb),.14);color:var(--ac)}
+.nav-btn{width:32px;height:32px;border-radius:9px;border:1px solid var(--br);background:var(--card);display:inline-flex;align-items:center;justify-content:center;color:var(--text2)}
+.nav-btn:hover:not(:disabled){color:var(--text);border-color:rgba(var(--ov),.25)}
+.nav-btn:disabled{opacity:.3;cursor:default}
+
+/* La tarjeta, como la pinta LinkedIn: tipografía del sistema, avatar redondo, «…ver más». */
+.li{background:var(--li-bg);color:var(--li-text);border:1px solid var(--li-br);border-radius:10px;overflow:hidden;
+  font-family:-apple-system,system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.li-cab{display:flex;gap:10px;padding:14px 16px 6px;align-items:flex-start}
+.li-av{width:48px;height:48px;border-radius:50%;object-fit:cover;object-position:50% 22%;flex-shrink:0;background:rgba(var(--ov),.08)}
+.li-av.ico{display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,var(--ac),color-mix(in srgb,var(--ac) 55%,#000))}
+.li-av.ico svg.i{font-size:26px}
+.li-quien{flex:1;min-width:0}
+.li-nom{font-weight:600;font-size:14px;line-height:1.3;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.li-nom span{font-weight:400;font-size:12px;color:var(--li-text2)}
+.li-tit{font-size:12px;color:var(--li-text2);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.li-meta{font-size:12px;color:var(--li-text2);display:flex;align-items:center;gap:4px;margin-top:1px}
+.li-meta svg.i{font-size:14px;stroke-width:1.6}
+.li-dots{color:var(--li-text2);font-weight:700;letter-spacing:1px;padding:0 4px}
+.li-txt{padding:6px 16px 12px;font-size:14px;line-height:1.43;white-space:pre-wrap;word-wrap:break-word}
+.li-txt .tag{color:var(--li-azul);font-weight:600}
+.li-txt .mas{color:var(--li-text2);font-weight:600;cursor:pointer;white-space:nowrap}
+.li-txt .mas:hover{color:var(--li-azul);text-decoration:underline}
+.li-edit{display:block;width:100%;min-height:360px;resize:vertical;padding:10px 16px 12px;font:inherit;font-size:14px;line-height:1.43;color:inherit;
+  background:rgba(var(--ov),.03);border:0;border-top:1px dashed rgba(var(--ac-rgb),.5);border-bottom:1px dashed rgba(var(--ac-rgb),.5);outline:none}
+.li-fotos{display:grid;gap:2px;background:var(--li-br)}
+.li-fotos.n1{grid-template-columns:1fr} .li-fotos.n2{grid-template-columns:1fr 1fr} .li-fotos.n3,.li-fotos.n4{grid-template-columns:1fr 1fr}
+.li-fotos img{width:100%;height:100%;object-fit:cover;display:block;background:#0b0d14}
+.li-fotos.n1 img{aspect-ratio:1.6;max-height:520px} .li-fotos.n2 img{aspect-ratio:1} .li-fotos.n3 img,.li-fotos.n4 img{aspect-ratio:1.25}
+.li-fotos.n3 img:first-child{grid-column:1/-1;aspect-ratio:2.2}
+.li-fotos .mas-f{position:relative} .li-fotos .mas-f::after{content:attr(data-n);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.55);color:#fff;font-size:26px;font-weight:600}
+.li-pie{display:flex;justify-content:space-around;padding:4px 8px;border-top:1px solid var(--li-br)}
+.li-pie span{display:flex;align-items:center;gap:6px;padding:10px 8px;font-size:13px;font-weight:600;color:var(--li-text2);border-radius:6px}
+.li-pie svg.i{font-size:18px;stroke-width:1.6}
+
+/* Los contadores: el gancho antes del «ver más» y el total. */
+.medidas{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:0 4px;font-family:var(--mono);font-size:11px;color:var(--text3)}
+.medidas b{color:var(--text)}
+.medidas .m{display:flex;align-items:center;gap:6px}
+.medidas .m i{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.medidas .m.warn i{background:var(--warn)} .medidas .m.bad i{background:var(--bad)}
+.medidas .esp{flex:1}
+.medidas .lnk{color:var(--text2);text-decoration:none;font-weight:700;display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:8px;border:1px solid var(--br)}
+.medidas .lnk:hover{color:var(--text);border-color:rgba(var(--ov),.25)}
+.medidas .lnk.on{color:var(--ac);border-color:rgba(var(--ac-rgb),.5);background:rgba(var(--ac-rgb),.1)}
+
+/* ── La ficha del post ─────────────────────────────────────────────────────────────────── */
+.ficha{display:flex;flex-direction:column;position:sticky;top:14px}
+.ficha .sec{padding:12px 16px;border-top:1px solid var(--br)}
+.ficha .sec:first-of-type{border-top:0}
+.ficha h4{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.ficha p{font-size:12.5px;color:var(--text2);line-height:1.5}
+.ficha .objs{display:flex;gap:6px;flex-wrap:wrap}
+.ficha .objs .obj{cursor:default}
+.fotos-sug{display:flex;flex-direction:column;gap:6px}
+.foto-sug{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:10.5px;color:var(--text2);word-break:break-all}
+.foto-sug img{width:56px;height:42px;object-fit:cover;border-radius:7px;background:rgba(var(--ov),.08);flex-shrink:0}
+.foto-sug a{color:var(--text2);text-decoration:none} .foto-sug a:hover{color:var(--ac)}
+.nota{font-size:11.5px;color:var(--text3);margin-top:6px;line-height:1.45}
+.hashtags{display:flex;flex-wrap:wrap;gap:5px}
+.hashtags span{font-size:11.5px;padding:3px 8px;border-radius:6px;background:rgba(var(--ac-rgb),.1);color:var(--ac);font-weight:600}
+.corto{font-size:12.5px;line-height:1.45;color:var(--text2);white-space:pre-wrap;background:rgba(var(--ov),.04);border:1px solid var(--br);border-radius:10px;padding:10px 12px;max-height:180px;overflow:auto}
+.acciones{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:14px 16px 16px;border-top:1px solid var(--br)}
+.acc{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;border-radius:11px;font-size:12.5px;font-weight:700;
+  border:1px solid var(--br);background:rgba(var(--ov),.05);color:var(--text);text-decoration:none;transition:all .15s;white-space:nowrap}
+.acc svg.i{font-size:17px}
+.acc:hover{border-color:rgba(var(--ov),.28);background:rgba(var(--ov),.09)}
+.acc.principal{grid-column:1/-1;background:var(--ac);color:#fff;border-color:transparent}
+:root:not([data-theme="light"]) .acc.principal{color:#0b0d14}
+.acc.principal:hover{filter:brightness(1.08)}
+.acc.li-c{color:#71b7fb} :root[data-theme="light"] .acc.li-c{color:#0a66c2}
+.acc.fb-c{color:#8fb5ff} :root[data-theme="light"] .acc.fb-c{color:#1877f2}
+.acc.wa-c{color:#4ade80} :root[data-theme="light"] .acc.wa-c{color:#128c7e}
+.acc.pub.on{border-color:var(--ok);color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
+.acc.suave{color:var(--text2);font-weight:600}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);opacity:0;pointer-events:none;padding:10px 16px;border-radius:12px;
+  background:var(--text);color:var(--bg);font-size:13px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.35);transition:all .25s;z-index:50;display:flex;align-items:center;gap:8px}
+.toast.on{transform:translate(-50%,0);opacity:1}
+.toast svg.i{font-size:16px;color:var(--ok)}
+
+/* ── Responsivo ────────────────────────────────────────────────────────────────────────── */
+@media(max-width:1180px){
+  .grid{grid-template-columns:minmax(0,1fr) 300px}
+  .panel.semana-p{grid-column:1/-1}
+  .semana{flex-direction:row;overflow-x:auto;padding:0 8px 10px;scrollbar-width:thin}
+  .dia{flex:0 0 auto;grid-template-columns:30px auto;min-width:150px;padding:8px 10px}
+  .dia .pts{display:none}
+  .semana-pie{display:none}
+}
+@media(max-width:800px){
+  .grid{grid-template-columns:1fr;gap:14px;padding-bottom:110px}
+  .ficha{position:static}
+  .hero{gap:10px} .hero p{font-size:13px}
+  .tabs{gap:10px} .objetivos{margin-left:0;width:100%}
+  .tab{padding:8px 12px 8px 10px;font-size:13px}
+  .post-cab h2{font-size:19px}
+  .acciones{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--bg);border-top:1px solid var(--br);padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+    grid-template-columns:repeat(5,1fr);gap:6px}
+  .acc{height:42px;font-size:0;gap:0} .acc svg.i{font-size:19px}
+  .acc.principal{grid-column:auto} .acc.suave{display:none}
+  .li-txt{font-size:13.5px}
+  .li-pie span{font-size:12px;padding:10px 4px;gap:4px}
+}
+@media(max-width:480px){
+  .top{padding-top:12px} .tab small{display:none}
+  .dia{min-width:132px}
+}
+</style>
+<script>
+(function(){
+  // Comparte el tema con el Dashboard, Coach y Finanzas: misma clave, mismo criterio.
+  var saved=localStorage.getItem('coach-theme');
+  var theme=saved||((window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark');
+  document.documentElement.setAttribute('data-theme',theme);
+})();
+</script>
+</head>
+<body data-empresa="aero">
+
+<!-- Los dos datos.js declaran PERFIL y T con `var`: así pueden cargarse los dos en una misma
+     página y quedarse cada uno en su cajón (AERO, HELI) antes de que el siguiente los pise. -->
+<script src="../Dashboard/sin-zoom.js"></script>
+<script src="../Aeroresinas/datos.js"></script>
+<script>var AERO={PERFIL:PERFIL,T:T};</script>
+<script src="../Heliescala/datos.js"></script>
+<script>var HELI={PERFIL:PERFIL,PERFIL_EN:PERFIL_EN,T:T};</script>
+<script src="plantillas.js"></script>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-heli" viewBox="0 0 24 24"><path d="M3 6h18M12 6v3"/><path d="M6 12h9a3 3 0 0 1 3 3v2H8a2 2 0 0 1-2-2z"/><path d="M18 15h3M7 17v3M13 17v3M5 20h10"/></symbol>
+    <symbol id="i-heliesc" viewBox="0 0 24 24"><path d="M4 5h13M10.5 5v2.5"/><path d="M6 10h7a2.5 2.5 0 0 1 2.5 2.5V14H7.5A1.5 1.5 0 0 1 6 12.5z"/><path d="M15.5 12.5H19"/><path d="M10.5 14v3.5M7 21h7M8.5 19.5h4"/></symbol>
+    <symbol id="i-flecha" viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></symbol>
+    <symbol id="i-izq" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+    <symbol id="i-der" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+    <symbol id="i-luna" viewBox="0 0 24 24"><path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5a8.5 8.5 0 1 0 10.8 10.8z"/></symbol>
+    <symbol id="i-sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/></symbol>
+    <symbol id="i-copiar" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-lapiz" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17z"/><path d="M13.5 8.5l3 3"/></symbol>
+    <symbol id="i-deshacer" viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></symbol>
+    <symbol id="i-in" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7v.5M12 17v-4a2.5 2.5 0 0 1 5 0v4M12 10v7"/></symbol>
+    <symbol id="i-fb" viewBox="0 0 24 24"><path d="M15 3h-2.5A4.5 4.5 0 0 0 8 7.5V10H5v4h3v7h4v-7h3l1-4h-4V8a1 1 0 0 1 1-1h2z"/></symbol>
+    <symbol id="i-wa" viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8.5 8.5 0 1 1 8.5 19.2z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1a4 4 0 0 1-2-2l1-1-1-2z"/></symbol>
+    <symbol id="i-globo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"/></symbol>
+    <symbol id="i-like" viewBox="0 0 24 24"><path d="M7 11v9H3v-9zM7 11l4-8a2.5 2.5 0 0 1 2.5 2.5V9h5a2 2 0 0 1 2 2.3l-1.2 7A2 2 0 0 1 17.3 20H7"/></symbol>
+    <symbol id="i-coment" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+    <symbol id="i-repost" viewBox="0 0 24 24"><path d="M17 3l4 4-4 4M21 7H8a4 4 0 0 0-4 4v1M7 21l-4-4 4-4M3 17h13a4 4 0 0 0 4-4v-1"/></symbol>
+    <symbol id="i-enviar" viewBox="0 0 24 24"><path d="M21 3L10 14M21 3l-7 18-4-7-7-4z"/></symbol>
+    <symbol id="i-web" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+    <symbol id="i-post" viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 0 0 1 1h2l8 4V6l-8 4H4a1 1 0 0 0-1 1z"/><path d="M8 14l1.5 5h3l-1.5-5"/><path d="M17.5 9.5a3.5 3.5 0 0 1 0 5"/></symbol>
+  </defs>
+</svg>
+
+<header class="top">
+  <a class="volver" href="../Dashboard/dashboard.html"><svg class="i"><use href="#i-flecha"/></svg> Dashboard</a>
+  <span class="esp"></span>
+  <a class="pill-btn" id="btnWeb" href="#" target="_blank" rel="noopener"><svg class="i"><use href="#i-web"/></svg> <span>Ver la web</span></a>
+  <button class="pill-btn" id="btnTema" onclick="toggleTema()" aria-label="Cambiar tema"><svg class="i"><use href="#i-sol"/></svg></button>
+</header>
+
+<section class="hero">
+  <div>
+    <div class="ojo">Posts · LinkedIn · Facebook · WhatsApp</div>
+    <h1>Un post <em>cada día</em>, ya escrito.</h1>
+    <p>Siete pilares por empresa, uno por día de la semana. Cada uno es una serie que se recorre sola con las semanas del año: el de hoy ya está armado con lo que dicen las dos webs. Cópialo, ajústalo o ábrelo en LinkedIn con el texto puesto.</p>
+  </div>
+</section>
+
+<nav class="tabs">
+  <div class="tab-grupo" id="tabs"></div>
+  <div class="objetivos" id="objetivos"><span class="lbl">Objetivo</span></div>
+</nav>
+
+<main class="grid">
+  <aside class="panel semana-p">
+    <div class="panel-t">La semana <b id="semTit"></b></div>
+    <div class="semana" id="semana"></div>
+    <div class="semana-pie" id="semPie"></div>
+  </aside>
+
+  <section class="centro">
+    <div class="post-cab">
+      <span class="k" id="pDia"></span>
+      <div class="serie">
+        <span class="hoy" id="pHoy" hidden>EL DE HOY</span>
+        <span class="pos" id="pPos"></span>
+        <button class="nav-btn" id="pAnt" onclick="mover(-1)" aria-label="Post anterior de la serie"><svg class="i"><use href="#i-izq"/></svg></button>
+        <button class="nav-btn" id="pSig" onclick="mover(1)" aria-label="Post siguiente de la serie"><svg class="i"><use href="#i-der"/></svg></button>
+      </div>
+      <h2 id="pTit"></h2>
+    </div>
+
+    <article class="li" id="li"></article>
+
+    <div class="medidas" id="medidas"></div>
+  </section>
+
+  <aside class="panel ficha" id="ficha"></aside>
+</main>
+
+<div class="toast" id="toast"><svg class="i"><use href="#i-check"/></svg><span id="toastTxt">Copiado</span></div>
+
+<script>
+/* ── Estado ─────────────────────────────────────────────────────────────────────────────── */
+const KEY_EMP='posts-empresa', KEY_ED='posts-ediciones-v1', KEY_PUB='posts-publicados-v1';
+const LIM_GANCHO=210, LIM_TOTAL=3000;   // lo que enseña LinkedIn antes del «…ver más», y su tope
+const lee=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
+const guarda=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const hoy=new Date();
+const diaHoy=(hoy.getDay()+6)%7;             // 0=lunes … 6=domingo
+function semanaISO(d){const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const n=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-n);const a=new Date(Date.UTC(t.getUTCFullYear(),0,1));return Math.ceil(((t-a)/864e5+1)/7)}
+const SEM=semanaISO(hoy);
+
+const param=new URLSearchParams(location.search).get('empresa');
+let empresa=(param in EMPRESAS)?param:(lee(KEY_EMP,'aero') in EMPRESAS?lee(KEY_EMP,'aero'):'aero');
+let dia=diaHoy;                              // el pilar abierto
+let pos={};                                  // posición dentro de cada serie: 'aero:caso' → índice
+let filtro=null;                             // objetivo elegido, o null
+let editando=false, expandido=false;
+let ediciones=lee(KEY_ED,{}), publicados=lee(KEY_PUB,{});
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const ico=n=>`<svg class="i"><use href="#i-${n}"/></svg>`;
+
+/* ── Qué post toca ──────────────────────────────────────────────────────────────────────── */
+const emp=()=>EMPRESAS[empresa];
+const pilar=()=>emp().semana[dia];
+const serie=()=>pilar().serie();
+const idxHoy=()=>SEM%serie().length;        // el de esta semana dentro de la serie
+function idx(){const k=empresa+':'+pilar().id;return (k in pos)?pos[k]:idxHoy()}
+const post=()=>serie()[idx()];
+const clave=()=>empresa+':'+post().id;
+const texto=()=>(clave() in ediciones)?ediciones[clave()]:post().texto;
+// Versión corta para Facebook o WhatsApp: el gancho y el párrafo del contacto.
+function corto(){
+  const p=texto().split(/\n\s*\n/).filter(x=>!/^#/.test(x.trim()));
+  const cta=p.slice(1).reverse().find(x=>/WhatsApp|wa\.me|\+52/.test(x))||'';
+  return [p[0],cta].filter(Boolean).join('\n\n');
+}
+
+/* ── Pintado ────────────────────────────────────────────────────────────────────────────── */
+function pintarTabs(){
+  $('tabs').innerHTML=Object.entries(EMPRESAS).map(([k,e])=>
+    `<button class="tab${k===empresa?' on':''}" data-e="${k}" onclick="irEmpresa('${k}')">
+       ${ico(k==='aero'?'heli':'heliesc')}<span>${e.nombre}<small>${esc(e.sub)}</small></span></button>`).join('');
+  $('btnWeb').href=emp().web;
+  $('btnTema').innerHTML=ico(document.documentElement.getAttribute('data-theme')==='light'?'luna':'sol');
+  $('btnTema').title=document.documentElement.getAttribute('data-theme')==='light'?'Cambiar a modo oscuro':'Cambiar a modo claro';
+  const usados=new Set(emp().semana.flatMap(p=>p.obj));
+  $('objetivos').innerHTML='<span class="lbl">Objetivo</span>'+Object.entries(OBJETIVOS).map(([k,o])=>
+    `<button class="obj${filtro===k?' on':''}${usados.has(k)?'':' mudo'}" style="--c:${o.c}" onclick="filtrar('${k}')" title="${usados.has(k)?'Ver los días que sirven a este objetivo':'Esta empresa no tiene posts para este objetivo'}"><i></i>${o.n}</button>`).join('');
+}
+function pintarSemana(){
+  $('semTit').textContent=emp().nombre;
+  $('semana').innerHTML=emp().semana.map((p,i)=>{
+    const s=p.serie(), k=empresa+':'+s[SEM%s.length].id;
+    const mudo=filtro&&!p.obj.includes(filtro);
+    return `<button class="dia${i===dia?' on':''}${i===diaHoy?' hoy':''}${mudo?' mudo':''}" onclick="irDia(${i})" title="${esc(p.lema)}">
+      <span class="abr">${DIAS_ABR[i]}</span>
+      <span class="nom">${esc(p.nombre)}<small>${esc(p.lema)}</small></span>
+      <span class="pts">
+        ${i===diaHoy?'<span class="hoy-tag">HOY</span>':''}
+        <span class="dots">${p.obj.map(o=>`<i style="--c:${OBJETIVOS[o].c}" title="${OBJETIVOS[o].n}"></i>`).join('')}</span>
+        ${publicados[k]?`<span class="pub" title="Publicado el ${publicados[k]}">${ico('check')}</span>`:`<span class="n">${s.length}</span>`}
+      </span></button>`}).join('');
+  const total=emp().semana.reduce((n,p)=>n+p.serie().length,0);
+  const hechos=Object.keys(publicados).filter(k=>k.startsWith(empresa+':')).length;
+  $('semPie').innerHTML=`<b>${total} posts</b> en siete series. Semana ${SEM} del año: cada serie avanza sola.<br>Publicados: <b>${hechos}</b>.`;
+}
+function pintarPost(){
+  const p=post(), s=serie(), i=idx(), e=emp(), t=texto();
+  $('pDia').textContent=`${DIAS[dia]} · ${pilar().nombre}`;
+  $('pTit').textContent=p.titulo;
+  $('pPos').innerHTML=`<b>${i+1}</b> de ${s.length}`;
+  $('pHoy').hidden=i!==idxHoy();
+  $('pAnt').disabled=i===0; $('pSig').disabled=i===s.length-1;
+
+  // La tarjeta.
+  const av=empresa==='aero'
+    ?`<img class="li-av" src="${e.autor.foto}" alt="" onerror="sinRetrato(this)">`
+    :`<span class="li-av ico">${ico('heliesc')}</span>`;
+  const fotos=p.fotos||[];
+  const n=Math.min(fotos.length,4);
+  const fotosHtml=n?`<div class="li-fotos n${n}">${fotos.slice(0,n).map((f,k)=>
+      `<div class="${k===3&&fotos.length>4?'mas-f':''}" data-n="+${fotos.length-3}"><img src="${f}" alt="" loading="lazy" onerror="this.parentNode.remove()"></div>`).join('')}</div>`:'';
+  let cuerpo;
+  if(editando){
+    cuerpo=`<textarea class="li-edit" id="editor" spellcheck="true" oninput="editar(this.value)">${esc(t)}</textarea>`;
+  }else{
+    const corte=!expandido&&t.length>LIM_GANCHO;
+    const visible=corte?t.slice(0,LIM_GANCHO).replace(/\s+\S*$/,''):t;
+    cuerpo=`<div class="li-txt">${marcaTags(visible)}${corte?` <span class="mas" onclick="expandido=true;pintarPost()">…ver más</span>`:''}</div>`;
+  }
+  $('li').innerHTML=`
+    <div class="li-cab">${av}
+      <div class="li-quien">
+        <div class="li-nom">${esc(e.autor.nombre)} <span>· 1.º</span></div>
+        <div class="li-tit" title="${esc(e.autor.titular)}">${esc(e.autor.titular)}</div>
+        <div class="li-meta">Ahora · ${ico('globo')}</div>
+      </div><span class="li-dots">···</span></div>
+    ${cuerpo}${fotosHtml}
+    <div class="li-pie"><span>${ico('like')}Recomendar</span><span>${ico('coment')}Comentar</span><span>${ico('repost')}Compartir</span><span>${ico('enviar')}Enviar</span></div>`;
+
+  pintarMedidas();
+  pintarFicha();
+}
+// Si el retrato no carga, el avatar pasa a ser el icono de la empresa.
+function sinRetrato(img){const s=document.createElement('span');s.className='li-av ico';s.innerHTML=ico('heli');img.replaceWith(s)}
+function marcaTags(t){return esc(t).replace(/(^|\s)(#[\p{L}\p{N}_]+)/gu,'$1<span class="tag">$2</span>')}
+function pintarMedidas(){
+  const t=texto(), gancho=(t.split(/\n\s*\n/)[0]||'').length, tot=t.length, editado=clave() in ediciones;
+  const cg=gancho<=LIM_GANCHO?'':(gancho<=LIM_GANCHO*1.3?'warn':'bad'), ct=tot<=LIM_TOTAL?'':'bad';
+  $('medidas').innerHTML=`
+    <span class="m ${cg}"><i></i>Gancho <b>${gancho}</b>/${LIM_GANCHO} antes del «ver más»</span>
+    <span class="m ${ct}"><i></i>Total <b>${tot.toLocaleString('es-MX')}</b>/${LIM_TOTAL.toLocaleString('es-MX')}</span>
+    <span class="m"><i style="background:var(--ac)"></i>${(t.match(/#[\p{L}\p{N}_]+/gu)||[]).length} hashtags</span>
+    <span class="esp"></span>
+    ${editado?`<a class="lnk" href="#" onclick="restaurar();return false" title="Volver al texto de la plantilla">${ico('deshacer')} Restaurar</a>`:''}
+    <a class="lnk${editando?' on':''}" href="#" onclick="toggleEditar();return false">${ico(editando?'check':'lapiz')} ${editando?'Listo':'Editar texto'}</a>`;
+}
+function pintarFicha(){
+  const p=post(), pl=pilar(), e=emp(), k=clave(), pub=publicados[k];
+  const fotos=(p.fotos||[]).map(f=>`<div class="foto-sug"><img src="${f}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><a href="${f}" target="_blank" rel="noopener">${esc(f.replace(/^\.\.\//,''))}</a></div>`).join('');
+  const hs=(texto().match(/#[\p{L}\p{N}_]+/gu)||[]);
+  const hora=dia<5?'Entre semana, de 8 a 10 de la mañana.':'Fin de semana, de 9 a 11 de la mañana.';
+  $('ficha').innerHTML=`
+    <div class="sec"><h4>Objetivo</h4><div class="objs">${pl.obj.map(o=>`<span class="obj on" style="--c:${OBJETIVOS[o].c}"><i></i>${OBJETIVOS[o].n}</span>`).join('')}</div></div>
+    <div class="sec"><h4>Por qué funciona</h4><p>${esc(pl.porque)}</p></div>
+    <div class="sec"><h4>Foto${(p.fotos||[]).length>1?'s':''} sugerida${(p.fotos||[]).length>1?'s':''}</h4><div class="fotos-sug">${fotos||'<p>Sin foto: es un post de texto.</p>'}</div>${p.nota?`<div class="nota">${esc(p.nota)}</div>`:''}</div>
+    <div class="sec"><h4>Hashtags <span style="font-weight:500;letter-spacing:0;text-transform:none">· clic para copiar</span></h4><div class="hashtags" onclick="copiar(${JSON.stringify(hs.join(' '))},'Hashtags copiados')" style="cursor:pointer">${hs.map(h=>`<span>${esc(h)}</span>`).join('')}</div></div>
+    <div class="sec"><h4>Mejor hora</h4><p>${hora} Etiqueta a quien salga en la foto y contesta los comentarios la primera hora.</p></div>
+    <div class="sec"><h4>Versión corta · Facebook y WhatsApp</h4><div class="corto">${esc(corto())}</div></div>
+    <div class="sec"><h4>Dónde publicar</h4><p>${e.enlaces.map(([n,u])=>`<a href="${u}" target="_blank" rel="noopener">${n}</a>`).join(' · ')}</p></div>
+    <div class="acciones">
+      <button class="acc principal" onclick="copiar(texto(),'Post copiado — pégalo en LinkedIn')">${ico('copiar')}<span>Copiar el post</span></button>
+      <a class="acc li-c" href="${linkedinUrl()}" target="_blank" rel="noopener" title="Abre LinkedIn con el texto ya escrito">${ico('in')}<span>LinkedIn</span></a>
+      <a class="acc fb-c" href="https://www.facebook.com/" target="_blank" rel="noopener" onclick="copiar(corto(),'Versión corta copiada — pégala en Facebook')" title="Copia la versión corta y abre Facebook">${ico('fb')}<span>Facebook</span></a>
+      <a class="acc wa-c" href="https://wa.me/?text=${encodeURIComponent(corto())}" target="_blank" rel="noopener" title="Mandar la versión corta a un contacto">${ico('wa')}<span>WhatsApp</span></a>
+      <button class="acc pub${pub?' on':''}" onclick="togglePublicado()" title="${pub?'Publicado el '+pub+' — tocar para desmarcar':'Marcar como publicado'}">${ico('check')}<span>${pub?'Publicado '+pub:'Marcar publicado'}</span></button>
+      <button class="acc suave" onclick="mover(1)" ${idx()===serie().length-1?'disabled':''}>${ico('der')}<span>Siguiente</span></button>
+    </div>`;
+}
+function linkedinUrl(){return 'https://www.linkedin.com/feed/?shareActive=true&text='+encodeURIComponent(texto())}
+function pintar(){pintarTabs();pintarSemana();pintarPost()}
+
+/* ── Acciones ───────────────────────────────────────────────────────────────────────────── */
+function irEmpresa(k){empresa=k;guarda(KEY_EMP,k);document.body.dataset.empresa=k;editando=false;expandido=false;pintar()}
+function irDia(i){dia=i;editando=false;expandido=false;pintar()}
+function mover(d){const s=serie(),i=Math.min(s.length-1,Math.max(0,idx()+d));pos[empresa+':'+pilar().id]=i;editando=false;expandido=false;pintarPost()}
+function filtrar(k){filtro=filtro===k?null:k;pintarTabs();pintarSemana()}
+function toggleEditar(){editando=!editando;expandido=true;pintarPost();if(editando){const e=$('editor');e.focus();e.setSelectionRange(0,0)}}
+function editar(v){if(v===post().texto)delete ediciones[clave()];else ediciones[clave()]=v;guarda(KEY_ED,ediciones);pintarMedidas();
+  // La ficha lleva la versión corta y los enlaces con el texto: se repinta sin tocar el editor.
+  pintarFicha()}
+function restaurar(){delete ediciones[clave()];guarda(KEY_ED,ediciones);editando=false;pintarPost()}
+function togglePublicado(){const k=clave();if(publicados[k])delete publicados[k];else publicados[k]=hoy.toLocaleDateString('es-MX',{day:'numeric',month:'short'});guarda(KEY_PUB,publicados);pintarSemana();pintarFicha();
+  if(publicados[k])aviso('Marcado como publicado')}
+function toggleTema(){const h=document.documentElement,n=h.getAttribute('data-theme')==='light'?'dark':'light';h.setAttribute('data-theme',n);try{localStorage.setItem('coach-theme',n)}catch(e){}pintarTabs()}
+async function copiar(t,msg){
+  try{await navigator.clipboard.writeText(t)}
+  catch(e){const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(_){}ta.remove()}
+  aviso(msg||'Copiado');
+}
+let toastT;
+function aviso(m){$('toastTxt').textContent=m;$('toast').classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>$('toast').classList.remove('on'),1800)}
+document.addEventListener('keydown',e=>{
+  if(editando||e.target.tagName==='TEXTAREA'||e.metaKey||e.ctrlKey)return;
+  if(e.key==='ArrowLeft')mover(-1); else if(e.key==='ArrowRight')mover(1);
+  else if(e.key==='ArrowUp'){e.preventDefault();irDia((dia+6)%7)} else if(e.key==='ArrowDown'){e.preventDefault();irDia((dia+1)%7)}
+});
+
+document.body.dataset.empresa=empresa;
+pintar();
+</script>
+</body>
+</html>

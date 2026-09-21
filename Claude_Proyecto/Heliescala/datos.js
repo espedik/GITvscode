@@ -8,7 +8,10 @@
    PERFIL es lo que se rellena; T son los textos en los dos idiomas; PERFIL_EN
    sobrescribe los tres valores de PERFIL que son texto.
    ══════════════════════════════════════════════════════════════════════════ */
-const PERFIL = {
+/* `var`, no `const`: Posts/posts.html carga este archivo y el de Aeroresinas en la misma
+   página, y dos `const PERFIL` en scripts distintos chocan. Con `var` cada uno se guarda en
+   su cajón (AERO, HELI) antes de que el siguiente lo pise. Para la web es indistinto. */
+var PERFIL = {
   ciudad:  'Ciudad de México',
   escalas: '[1:XX]',                      // único dato que sigue pendiente
   tiempo:  '2 semanas',
@@ -28,13 +31,13 @@ const PERFIL = {
 /* Lo que cambia de idioma. PERFIL es un solo objeto —un dato, un sitio— pero tres
    de sus valores son texto, y en inglés no pueden salir en español. Solo se
    sobrescriben esos. */
-const PERFIL_EN = {
+var PERFIL_EN = {
   ciudad: 'Mexico City',
   tiempo: '2 weeks',
   envio:  'In person or by DHL',
 };
 
-const T = {
+var T = {
  es:{
   marcaSub:'HECHO A MANO EN MÉXICO',
   navCat:'Catálogo', navTuya:'Tu aeronave', navProc:'Cómo se hace', navEnv:'Envíos', navGal:'Galería',
