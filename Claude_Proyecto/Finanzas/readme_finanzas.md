@@ -355,14 +355,17 @@ auto-fetch del precio BTC si tiene más de 15 minutos y hay historial.
 
 ## Módulo: Patrimonio Neto
 
-`renderPatrimonio()`: financieros (`investments` + BTC en MXN), líquidos (`activos` tipo
-`liquido`), físicos (el resto); 3 KPIs, listas con barras y edición inline, pasivos por deuda y
-dónut `ch-pat`. `openActivoModal` (tipos `liquido | vehiculo | electronico | inmueble | joyeria |
-mueble | otro`), `saveActivo`, `delActivo`.
+`renderPatrimonio()`: financieros (`investments` + el fondo de emergencia + BTC en MXN), líquidos
+(`activos` tipo `liquido`), físicos (el resto); 3 KPIs, listas con barras y edición inline, pasivos
+por deuda (solo las vivas cuentan como "obligaciones activas") y dónut `ch-pat`. `openActivoModal`
+(tipos `liquido | vehiculo | electronico | inmueble | joyeria | mueble | otro`), `saveActivo`,
+`delActivo`.
 
-Aquí el patrimonio sí suma los físicos. **El del proyecto no**: `patrimonioNeto()` del Dashboard y
-Coach suman `investments + emergencyFund − debts`, porque la meta del millón se mide en dinero
-disponible y el punto de partida histórico se calculó así. Las dos cifras son distintas a propósito.
+**Es la misma cifra que el medidor "Patrimonio hacia $1M" del Dashboard** (`patrimonioNeto()`: todo
+lo suyo menos las deudas; Adán, 21-sep-2026: *"tengo mis activos y mis deudas y eso no da números
+negativos"*). Coach conserva aparte el **patrimonio líquido** (sin bienes) en "Progreso real",
+comparado contra su foto del 18-jul-2026 (−$308,830); el Dashboard lo enseña como
+`patrimonioLiquido()` dentro del desglose del medidor.
 
 ---
 

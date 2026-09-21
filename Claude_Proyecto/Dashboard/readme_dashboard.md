@@ -531,6 +531,13 @@ verde es lo pagado y lo rojo lo que falta (`fill`/`track` del tile; la pista es 
 el avance de Deuda total se mide sobre lo que nació cada deuda, liquidadas incluidas. Los desgloses
 de esos dos (`kpiDetalle`, `kpiBarra` con `pista`) usan el mismo par y ponen el % junto al saldo.
 
+**Patrimonio hacia $1M** es todo lo suyo menos las deudas (`patrimonioNeto()`: inversiones, fondo,
+Bitcoin a precio de hoy, efectivo y cuenta, y los bienes), la misma cifra que el Patrimonio Neto de
+Finanzas; la barra es el % del millón. El desglose separa lo que tiene, lo que debe y los bienes, y
+dice aparte el líquido sin bienes (`patrimonioLiquido()`), que es el número que se mueve con cada
+abono. El punto de partida con bienes (18-jul-2026, $231,770) solo sirve para decir cuánto ha
+sumado desde entonces.
+
 Clases `.mg-*`; de la familia anterior `.img-goal-*` solo sobreviven `.img-goal-pbar` y `-fill`,
 que usa el overlay de detalle.
 

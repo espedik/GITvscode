@@ -6225,11 +6225,24 @@ function pintarEdadPace(){
 }
 
 // ── FINANZAS derivadas ───────────────────────────────────────────────────
+// Adán, 21-sep-2026: "patrimonio hacia 1M no dice la cifra total exacta porque tengo mis activos y
+// mis deudas y eso no da números negativos". Hasta hoy la fórmula era la congelada del 18-jul-2026
+// —inversiones + fondo − deudas— y salía negativa; ahora cuenta TODO lo suyo: inversiones, fondo
+// (los CETES), Bitcoin a precio de hoy, efectivo y cuenta, y los bienes (coche, gadgets), menos
+// las deudas. Es la misma cifra que el Patrimonio Neto de Finanzas. Lo líquido (sin bienes) lo
+// sigue dando patrimonioLiquido(), que usa el desglose del medidor.
 function patrimonioNeto(){
-  const inv=(D.fin.investments||[]).reduce((s,i)=>s+(i.value||0),0);
+  const inv=(D.fin.investments||[]).reduce((s,i)=>s+(+i.value||+i.invested||0),0);
   const ef=D.fin.emergencyFund||0;
-  const deuda=(D.fin.debts||[]).reduce((s,d)=>s+(d.balance||0),0);
-  return inv+ef-deuda;
+  const activos=(D.fin.activos||[]).reduce((s,a)=>s+(+a.value||0),0);
+  const btc=btcInfo().mxn||0;
+  const deuda=(D.fin.debts||[]).reduce((s,d)=>s+(+d.balance||0),0);
+  return inv+ef+activos+btc-deuda;
+}
+// Sin los bienes: lo que se puede invertir o gastar sin vender nada.
+function patrimonioLiquido(){
+  const bienes=(D.fin.activos||[]).filter(a=>a.type!=='liquido').reduce((s,a)=>s+(+a.value||0),0);
+  return patrimonioNeto()-bienes;
 }
 // ── EL FONDO DE LA MAESTRÍA, COMPUESTO EN VIVO (2026-08-23) ───────────────────
 // Reporte de Adán: "esa suma contiene lo del precio en bitcoin que tengo guardado".
@@ -10315,8 +10328,10 @@ function kpiDetalle(id){
   }
 
   if(id==='patrimonio'){
-    const START=-308830, GOAL=1000000;
-    const avance=pat-START, camino=GOAL-START;
+    // El punto de partida con bienes, la foto del 18-jul-2026 que Coach conserva en #perfil
+    // ("Neto TOTAL (con auto + gadgets)"). Sirve para decir cuánto se ha sumado desde entonces.
+    const START=231770, GOAL=1000000;
+    const avance=pat-START;
     const meses2030=Math.max(1,Math.round((new Date(2030,0,1)-new Date())/(1000*60*60*24*30.4)));
     const ritmo=(GOAL-pat)/meses2030;
 
@@ -10327,23 +10342,18 @@ function kpiDetalle(id){
     const bienes=activos.filter(a=>a.type!=='liquido');
     const totalLiq=liquidos.reduce((a,x)=>a+(+x.value||0),0);
     const totalBienes=bienes.reduce((a,x)=>a+(+x.value||0),0);
-    // 2026-08-23 — dos arreglos aquí. (1) El Bitcoin no salía en ninguna pantalla del
-    // Dashboard aunque es de las piezas más grandes de su dinero. (2) La nota de abajo
-    // presentaba `tieneHoy − deudaTot = pat` como una identidad, y no lo era: `tieneHoy` ya
-    // incluía el efectivo y la cuenta, que `patrimonioNeto()` deja fuera a propósito
-    // (la fórmula se conserva congelada para poder comparar contra el punto de partida del
-    // 18-jul-2026, ver readme_finanzas). Ahora se dice cuál es cada cifra en vez de sumar mal.
+    // El número grande es TODO (patrimonioNeto(): financiero + líquido + bienes − deudas). Aquí
+    // se desglosa en tres listas —lo que tienes, lo que debes, los bienes— y la nota de abajo
+    // enseña la suma tal cual, para que las cifras cuadren a ojo. El Bitcoin va a precio de hoy.
     const btcP=btcInfo();
-    const fuera=totalLiq+btcP.mxn;                // dinero real que la fórmula congelada no cuenta
-    const tieneHoy=totalInv+ef+fuera;
+    const tieneHoy=totalInv+ef+totalLiq+btcP.mxn;  // todo lo financiero y lo líquido, sin bienes
     const escala=Math.max(tieneHoy,deudaTot,1);   // misma escala en las dos listas: comparables
-    const patDisp=pat+fuera;                      // patrimonio disponible de verdad, hoy
-    const patTotal=patDisp+totalBienes;
+    const patLiq=patrimonioLiquido();             // lo que se puede invertir sin vender nada
 
     const filasTengo=[]
       .concat(inv.map(i=>({n:esc(i.name),v:+i.value||+i.invested||0,c:V,d:'Inversión registrada en Finanzas'})))
       .concat(ef>0?[{n:'Fondo de emergencia (CETES)',v:ef,c:W,d:'Tu colchón — no se toca para invertir'}]:[])
-      .concat(btcP.mxn>0?[{n:'Bitcoin',v:btcP.mxn,c:'#f7931a',d:btcP.held.toFixed(6)+' BTC a $'+Math.round(btcP.price).toLocaleString('en-US')+' USD — sube y baja solo, y no entra en la fórmula del número grande'}]:[])
+      .concat(btcP.mxn>0?[{n:'Bitcoin',v:btcP.mxn,c:'#f7931a',d:btcP.held.toFixed(6)+' BTC a $'+Math.round(btcP.price).toLocaleString('en-US')+' USD — sube y baja con el precio de hoy'}]:[])
       .concat(liquidos.map(a=>({n:esc(a.name),v:+a.value||0,c:C,d:'Disponible ya, sin vender nada'})))
       .filter(x=>x.v!==0).sort((a,b)=>b.v-a.v);
 
@@ -10358,7 +10368,7 @@ function kpiDetalle(id){
     return {titulo:'💰 Patrimonio hacia $1M', sub:'Cada peso que suma, cada uno que resta, y a qué ritmo tendrías que ir.',
       html:
       '<div class="kpi-cifra" style="color:'+(pat>=0?V:R)+'">'+money(pat)+'</div>'+
-      '<div class="kpi-cifra-sub">Meta: '+money(GOAL)+' el 01 ene 2030 · llevas <b>'+Math.round(avance/camino*100)+'%</b> del camino desde tu punto de partida</div>'+
+      '<div class="kpi-cifra-sub">Meta: '+money(GOAL)+' el 01 ene 2030 · llevas <b>'+Math.round(pat/GOAL*100)+'%</b> del millón · '+(avance>=0?'+':'−')+money(Math.abs(avance))+' desde el 18 jul 2026 ('+money(START)+' con bienes)</div>'+
 
       kpiSec('🟢 Lo que tienes · '+money(tieneHoy))+
       '<div class="kpi-desglose">'+(filasTengo.length
@@ -10369,16 +10379,15 @@ function kpiDetalle(id){
       '<div class="kpi-desglose">'+(filasDebo.length
         ? filasDebo.map(x=>kpiBarra(x.n, '−'+money(x.v), x.v/escala*100, x.c, x.d)).join('')
         : '<div class="gbm-vacio">Sin deudas vivas. 🎉</div>')+'</div>'+
-      kpiNota('<b>'+money(totalInv+ef)+' − '+money(deudaTot)+' = '+money(pat)+'</b>. El número grande usa la fórmula congelada desde el 18-jul-2026 —inversiones + fondo de emergencia − deudas— para que el avance siga siendo comparable contra el punto de partida de '+money(START)+'. Sale negativo mientras la deuda pese más que el dinero: <b>no es que no avances</b>.')+
-      (fuera>0?kpiNota('➕ Fuera de esa fórmula tienes '+money(fuera)+' que también son dinero tuyo: '+[btcP.mxn>0?'<b>'+money(btcP.mxn)+'</b> en Bitcoin':null,totalLiq>0?'<b>'+money(totalLiq)+'</b> en efectivo y cuenta':null].filter(Boolean).join(' y ')+'. Contándolos, tu patrimonio disponible hoy es <b>'+money(patDisp)+'</b>.'):'')+
+      kpiNota('<b>'+money(tieneHoy)+' + '+money(totalBienes)+' en bienes − '+money(deudaTot)+' = '+money(pat)+'</b>. Cuenta todo lo tuyo: inversiones, el fondo, Bitcoin a precio de hoy, efectivo y cuenta, y los bienes; menos lo que debes. Es la misma cifra que el Patrimonio Neto de Finanzas.')+
 
       (filasBienes.length?
         kpiSec('🚗 Y además tienes en bienes · '+money(totalBienes))+
         '<div class="kpi-desglose">'+filasBienes.slice(0,8).map(x=>kpiBarra(x.n, money(x.v), x.v/Math.max(totalBienes,1)*100, P, x.d)).join('')+'</div>'+
         (filasBienes.length>8?kpiNota('Y '+(filasBienes.length-8)+' cosas más registradas en Finanzas → Activos.'):'')+
-        kpiPaso('Tu patrimonio contando bienes: '+money(patTotal),
-          'Los bienes <b>no entran</b> en el número de arriba, y es a propósito: la meta del millón se mide en <b>dinero</b>, y no vas a vender el coche ni la PC para llegar. Pero ignorarlos da una foto falsa — <b>'+money(totalBienes)+' en cosas tuyas es patrimonio real</b>, aunque no líquido. Las dos cifras son ciertas: '+money(patDisp)+' es lo que tienes disponible, '+money(patTotal)+' es lo que vales hoy.',
-          patTotal>=0?V:O)
+        kpiPaso('Sin contar los bienes: '+money(patLiq),
+          'Los bienes <b>sí entran</b> en el número grande, porque son patrimonio real. Pero no son dinero que puedas invertir: no vas a vender el coche ni la PC para llegar al millón. Sin ellos tienes <b>'+money(patLiq)+'</b>, que es lo que de verdad se mueve con cada abono a deuda o cada peso ahorrado — ese es el número que hay que empujar.',
+          patLiq>=0?V:O)
         :'')+
 
       kpiSec('📈 El ritmo que pide la meta')+
@@ -10523,8 +10532,8 @@ function renderMetasSlide(){
 
   const ef=D.fin.emergencyFund||0;
   const pat=patrimonioNeto();
-  const START=-308830, GOAL=1000000;
-  const patPct=hasFinData()?Math.min(100,Math.max(0,(pat-START)/(GOAL-START)*100)):0;
+  const GOAL=1000000;
+  const patPct=hasFinData()?Math.min(100,Math.max(0,pat/GOAL*100)):0;
 
   // Datos de los 4 medidores nuevos, calculados aquí para no repetir el recorrido en cada tile.
   // El interés inicial usa `total` (el saldo con el que nació cada deuda) y el actual usa
@@ -10550,7 +10559,7 @@ function renderMetasSlide(){
     // La etiqueta lista solo las tarjetas con saldo vivo (ver la nota igual en renderCoach()).
     {ico:'💳',lbl:'Deuda cara'+(deudaCaraBal>0?' ('+[bana.balance>0?'Banamex':null,bbva.balance>0?'BBVA':null].filter(Boolean).join('+')+')':''),val:deudaCaraTieneDatos?money(deudaCaraBal):'Sin datos',pct:deudaCaraTieneDatos?deudaCaraPct:0,sub:deudaCaraTieneDatos?(deudaCaraBal<=0?'100% · Liquidada 🎉':Math.round(deudaCaraPct)+'% pagado de '+money(deudaCaraTot)):'Regístralas en Finanzas',c:'var(--r)',fill:'var(--g)',track:PISTA_ROJA,id:'deudacara'},
     {ico:'🎓',lbl:'Fondo Maestría',val:fmMae.total>0?money(fmMae.total):'Sin datos',pct:maeTgt>0?Math.min(100,fmMae.total/maeTgt*100):0,sub:maeTgt>0?`${Math.round(Math.min(100,fmMae.total/maeTgt*100))}% · Meta: ${money(maeTgt)}${fmMae.btc.mxn>0?` · ${Math.round(fmMae.btc.mxn/fmMae.total*100)}% en BTC`:''}`:'Meta en Finanzas → Metas',c:'var(--cy)',id:'maestria'},
-    {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:Math.round(patPct)+'% · meta $1,000,000 · 01 ene 2030',c:'var(--g)',id:'patrimonio'},
+    {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:Math.round(patPct)+'% del millón · meta 01 ene 2030',c:'var(--g)',id:'patrimonio'},
     // 4 medidores nuevos (2026-08-19, "tambien si puedes agregar mas, hazlo"). Los 4 salen de
     // datos que ya existían en `finanzasmx_v2` y que no se estaban mirando en ninguna pantalla.
     // 2026-08-19 — este medidor era "Ahorro de este mes", pero dependía de tener capturados los

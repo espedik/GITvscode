@@ -4405,7 +4405,10 @@ const ACTIVO_COLORS={liquido:'#00e87a',vehiculo:'#f97316',electronico:'#3b82f6',
 function renderPatrimonio() {
   const _btcHeldPat = (S.btcHistory||[]).reduce((s,h)=>s+(h.btc||0),0);
   const _btcMXNPat  = _btcHeldPat * (S.currentBtcPrice||0) * (S.usdMxn||19.5);
-  const finActivos = S.investments.reduce((s,i)=>s+i.value,0) + _btcMXNPat;
+  // El fondo de emergencia (los CETES) es un activo financiero más: desde el 20-sep-2026 ya no
+  // vive en `investments`, así que hay que sumarlo aquí, como hacen los indicadores.
+  const _fondoPat = S.emergencyFund||0;
+  const finActivos = S.investments.reduce((s,i)=>s+i.value,0) + _btcMXNPat + _fondoPat;
   const liqActivos = (S.activos||[]).filter(a=>a.type==='liquido').reduce((s,a)=>s+a.value,0);
   const fisActivos = (S.activos||[]).filter(a=>a.type!=='liquido').reduce((s,a)=>s+a.value,0);
   const totalActivos = finActivos + liqActivos + fisActivos;
@@ -4423,7 +4426,7 @@ function renderPatrimonio() {
     <div class="card" style="border-left:4px solid var(--danger)">
       <div class="card-title">💳 Total Pasivos (Deudas)</div>
       <div class="card-val tc-err">${fmt(totalPasivos)}</div>
-      <div class="card-sub">${S.debts.length} obligaciones activas</div>
+      <div class="card-sub">${S.debts.filter(d=>d.balance>0).length} obligaciones activas</div>
     </div>
     <div class="card card-hi">
       <div class="card-title">⚖️ Patrimonio Neto</div>
@@ -4433,7 +4436,7 @@ function renderPatrimonio() {
 
   // ── Activos breakdown ──
   const btcPatItem = _btcMXNPat>0 ? [{name:'Bitcoin (BTC)', value:_btcMXNPat, group:'Financiero', color:'#f7931a', icon:'₿'}] : [];
-  const finItems = [...S.investments.map(i=>({name:i.name,value:i.value,group:'Financiero',color:'#00d4ff',icon:'📈'})), ...btcPatItem];
+  const finItems = [...S.investments.map(i=>({name:i.name,value:i.value,group:'Financiero',color:'#00d4ff',icon:'📈'})), ...(_fondoPat>0?[{name:'Fondo de emergencia (CETES)', value:_fondoPat, group:'Financiero', color:'#00e87a', icon:'🛡️'}]:[]), ...btcPatItem];
   const fisItems = (S.activos||[]).map(a=>({...a,group:'Físico',color:ACTIVO_COLORS[a.type]||'#64748b',icon:(ACTIVO_TIPOS[a.type]||'📦').split(' ')[0]}));
   const allItems = [...finItems,...fisItems].sort((a,b)=>b.value-a.value);
 
@@ -4441,9 +4444,9 @@ function renderPatrimonio() {
     <div class="card" style="margin-bottom:14px">
       <div class="card-title" style="margin-bottom:14px">📊 Activos Financieros</div>
       <div style="display:flex;flex-direction:column;gap:6px">
-        ${[...S.investments, ...(_btcMXNPat>0?[{name:'₿ Bitcoin (BTC)', value:_btcMXNPat, _btc:true}]:[])].map(i=>{
+        ${[...S.investments, ...(_fondoPat>0?[{name:'🛡️ Fondo de emergencia (CETES)', value:_fondoPat, _fondo:true}]:[]), ...(_btcMXNPat>0?[{name:'₿ Bitcoin (BTC)', value:_btcMXNPat, _btc:true}]:[])].map(i=>{
           const pct=totalActivos>0?(i.value/totalActivos)*100:0;
-          const col=i._btc?'#f7931a':'var(--primary)';
+          const col=i._btc?'#f7931a':i._fondo?'#00e87a':'var(--primary)';
           const sub=i._btc?`${_btcHeldPat.toFixed(6)} BTC × $${(S.currentBtcPrice||0).toLocaleString('es-MX')} USD × ${(S.usdMxn||19.5)} MXN`:'';
           return `<div style="padding:10px 14px;background:rgba(255,255,255,.04);border-radius:8px;border:1px solid rgba(255,255,255,.07)">
             <div class="flex jb aic" style="margin-bottom:5px">
@@ -4566,9 +4569,9 @@ function renderPatrimonio() {
   const _patInvNames  = S.investments.map(i=>i.name);
   const _patInvVals   = S.investments.map(i=>i.value);
   const _patInvColors = S.investments.map((_,i)=>['#00d4ff','#00e87a','#ffd93d','#b06eff','#ff3b6b'][i%5]);
-  const labels=[..._patInvNames, ...(_btcMXNPat>0?['₿ Bitcoin']:[]), ...(S.activos||[]).map(a=>a.name)];
-  const values=[..._patInvVals,  ...(_btcMXNPat>0?[_btcMXNPat]:[]), ...(S.activos||[]).map(a=>a.value)];
-  const colors=[..._patInvColors,...(_btcMXNPat>0?['#f7931a']:[]),   ...(S.activos||[]).map(a=>ACTIVO_COLORS[a.type]||'#64748b')];
+  const labels=[..._patInvNames, ...(_fondoPat>0?['🛡️ Fondo de emergencia (CETES)']:[]), ...(_btcMXNPat>0?['₿ Bitcoin']:[]), ...(S.activos||[]).map(a=>a.name)];
+  const values=[..._patInvVals,  ...(_fondoPat>0?[_fondoPat]:[]), ...(_btcMXNPat>0?[_btcMXNPat]:[]), ...(S.activos||[]).map(a=>a.value)];
+  const colors=[..._patInvColors, ...(_fondoPat>0?['#00e87a']:[]),...(_btcMXNPat>0?['#f7931a']:[]),   ...(S.activos||[]).map(a=>ACTIVO_COLORS[a.type]||'#64748b')];
   const ctx=document.getElementById('ch-pat');
   if(ctx&&labels.length) chPat=new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data:values,backgroundColor:colors,borderWidth:2,borderColor:cssVar('--surface-solid')}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:10,color:cssVar('--text2'),font:{size:11}}},
