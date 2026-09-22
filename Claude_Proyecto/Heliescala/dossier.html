@@ -96,14 +96,9 @@ b{font-weight:600}
 .replicas.n3{grid-template-columns:1fr 1fr;grid-template-rows:1.25fr 1fr}
 .replicas.n3 .rep:first-child{grid-column:1/-1}
 .replicas.n4{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
-/* Página de familia: sin ficha que poner al lado, las fotos ocupan el ancho y
-   la nota y «la réplica» van abajo. Con 3 piezas, tres columnas; con 4, 2×2. */
-.ficha.fam{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;gap:14px}
-.ficha.fam .replicas.n3{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:1fr}
-.ficha.fam .replicas.n3 .rep:first-child{grid-column:auto}
-.ficha.fam .replicas.n4{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
-.ficha.fam .banda{display:grid;grid-template-columns:minmax(0,1fr) 3in;gap:12px;align-items:stretch}
-.ficha.fam .banda .bloque.rep-b{margin-top:0}
+/* Familias sin modelo confirmado: mismo layout `.ficha` de las fichas de modelo (fotos a la
+   izquierda, `.lado` a la derecha) — lo único distinto es que `.lado` lleva un `.specs` de
+   "LO QUE SABEMOS" en vez de datos de fabricante, y un `.bloque` por pieza en vez de uno. */
 .rep{display:flex;flex-direction:column;border-radius:13px;overflow:hidden;background:#fff;border:1px solid var(--linea);min-height:0}
 .rep .im{flex:1;min-height:0;overflow:hidden;background:#fff}
 .rep .im img{width:100%;height:100%;object-fit:cover}
@@ -217,20 +212,14 @@ const WA = 'https://wa.me/' + PERFIL.whatsapp + '?text=' + encodeURIComponent(t.
    no lo tienen confirmado se reparten en cuatro familias por lo que sí se sabe
    —el nombre que llevan y su operador— sin inventarles ficha. Esto es
    presentación del PDF, no dato: por eso vive aquí y no en datos.js. */
-const ORDEN_MODELOS = ['h145', 'h125', 'bell412', 'panther', 'mi17'];
+const ORDEN_MODELOS = ['h145', 'h125', 'bell412', 'panther', 'mi17', 'puma', 'seaking', 'aw109', 'bell206'];
 const FAMILIAS = [
-  { k: 'puma',      claves: ['fam-sp', 'camo-verde', 'camo-gris'],
-    es: ['Super Puma y Cougar', 'Airbus Helicopters · familia AS332 / H215 / H225'],
-    en: ['Super Puma and Cougar', 'Airbus Helicopters · AS332 / H215 / H225 family'] },
   { k: 'rescate',   claves: ['rescate', 'aessa-mcm', 'aessa-jgh'],
     es: ['Rescate · librea AESSA', 'Tres piezas del mismo operador'],
     en: ['Rescue · AESSA livery', 'Three pieces from the same operator'] },
-  { k: 'bimotores', claves: ['marineone', 'grandnew', 'xaecj', 'fenestron'],
-    es: ['Bimotores corporativos y de Estado', 'Del presidencial de EE. UU. a los ejecutivos con matrícula'],
-    en: ['Corporate and state twins', 'From the US presidential to registered executives'] },
-  { k: 'otros',     claves: ['bell407', 'bell-camo', 'avion'],
-    es: ['Ligeros, gobierno y ala fija', 'Lo que no cabe en las otras familias'],
-    en: ['Light, government and fixed wing', 'What the other families do not hold'] },
+  { k: 'bimotores', claves: ['xaecj', 'fenestron', 'avion'],
+    es: ['Bimotores y ala fija', 'Corporativo, de concepto y transporte militar'],
+    en: ['Twins and fixed wing', 'Corporate, concept and military transport'] },
 ];
 const porClave = Object.fromEntries(t.piezas.map(p => [p[0], p]));
 const grupos = [];
@@ -249,12 +238,14 @@ if(sueltas.length) grupos.push({ tipo: 'familia', k: 'mas', titulo: E ? 'More pi
 const paginas = [];
 const pagina = (html, extra) => paginas.push({ html, extra: extra || '' });
 const pie = (n, total) => '<div class="pie-pg"><span><b>HELIESCALA</b> · ' + esc(t.marcaSub) + '</span><span>' +
+  esc(P.ciudad) + ' · WhatsApp ' + esc(PERFIL.whatsappTxt) + '</span><span>' +
   (E ? 'Page' : 'Página') + ' ' + n + ' / ' + total + '</span></div>';
 const repHtml = p => '<div class="rep"><div class="im"><img src="' + p[2] + '" alt=""></div><div class="tx">' +
   '<div class="t">' + esc(p[1]) + '</div><div class="d">' + p[3] + '</div>' +
   '<div class="tags">' + (p[4] || []).map((x, k) => '<span class="tag' + (k === 0 ? ' acc' : '') + '">' + esc(x) + '</span>').join('') + '</div></div></div>';
 const replicaBloque = () => '<div class="bloque rep-b"><div class="k">' + esc(t.fpRepT) + '</div><div class="v">' + t.fpRepD + '</div>' +
-  '<div class="fila">' + t.fichas.map(f => '<div><div class="kk">' + esc(f[1]) + '</div><div class="vv">' + val(f[2]) + '</div></div>').join('') + '</div></div>';
+  '<div class="fila">' + t.fichas.map(f => '<div><div class="kk">' + esc(f[1]) + '</div><div class="vv">' + val(f[2]) + '</div></div>').join('') + '</div>' +
+  '<a href="' + WA + '" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;padding:9px 12px;border-radius:9px;background:#00c2d4;color:#04141a;font-size:8.6pt;font-weight:600">' + svg('wa', 13) + esc(t.fpCta) + '</a></div>';
 
 // ── 1 · Portada ────────────────────────────────────────────────────────────
 const estrella = porClave['marineone'] || t.piezas[0];
@@ -289,8 +280,8 @@ pagina(`
       g.piezas.map(p => '<a href="#g-' + g.k + '"><span class="n">' + String(t.piezas.indexOf(p) + 1).padStart(2, '0') + '</span><span class="t">' + esc(p[1]) + '</span><span class="p">' + esc((p[4] || [])[0] || '') + '</span></a>').join('') + '</div></div>';
   }).join('')}</div>
   <div class="ix-nota">${E
-    ? 'Tap any piece to go to its page. Five models carry the manufacturer’s data sheet, checked against airbus.com and bellflight.com; the other families show what is known — livery, operator, registration — and say when the exact model is still to be confirmed.'
-    : 'Toca cualquier pieza para ir a su página. Cinco modelos llevan la ficha del fabricante, comprobada en airbus.com y bellflight.com; las otras familias enseñan lo que se sabe —librea, operador, matrícula— y dicen cuándo el modelo exacto está por confirmar.'}</div>`);
+    ? 'Tap any piece to go to its page. Nine models carry a data sheet checked against public technical sources (airbus.com, bellflight.com and the published figures for the Leonardo, Sikorsky and Super Puma types); the two remaining families show what is known — livery, operator, registration — and say when the exact model is still to be confirmed.'
+    : 'Toca cualquier pieza para ir a su página. Nueve modelos llevan una ficha comprobada en fuentes técnicas públicas (airbus.com, bellflight.com y las cifras publicadas de los tipos Leonardo, Sikorsky y Super Puma); las dos familias restantes enseñan lo que se sabe —librea, operador, matrícula— y dicen cuándo el modelo exacto está por confirmar.'}</div>`);
 
 // ── 3 en adelante · Una página por modelo o familia ────────────────────────
 grupos.forEach((g, gi) => {
@@ -311,15 +302,19 @@ grupos.forEach((g, gi) => {
         <div class="num">${E ? 'MODEL' : 'MODELO'} ${gi + 1} / ${grupos.length} · ${n} ${n === 1 ? (E ? 'PIECE' : 'PIEZA') : (E ? 'PIECES' : 'PIEZAS')}</div></div></div>
       <div class="ficha">${izq}${der}</div>`);
   } else {
-    const sinModelo = g.piezas.filter(p => !p[5]).length;
-    const nota = sinModelo ? '<div class="fam-nota"><b>' + (E ? 'What is known, and what is not.' : 'Lo que se sabe, y lo que no.') + '</b> ' +
-        (E ? 'Livery, operator and registration come from the photo. ' : 'La librea, el operador y la matrícula salen de la foto. ') +
-        esc(t.fpPend) + (E ? ' Nothing here is invented: when the workshop confirms it, the piece gets its data sheet.' : ' Aquí no se inventa nada: cuando el taller lo confirme, la pieza tendrá su ficha.') + '</div>' : '<div></div>';
+    const catStr = Array.from(new Set(g.piezas.flatMap(p => p[4] || []))).slice(0, 3).join(' · ');
+    const sabemos = '<div class="specs"><div class="h">' + (E ? 'What we know' : 'Lo que sabemos') + '</div><div class="g">' +
+      '<div class="spec"><div class="k">' + (E ? 'Pieces here' : 'Piezas aquí') + '</div><div class="v">' + n + '</div></div>' +
+      '<div class="spec"><div class="k">' + (E ? 'Category' : 'Categoría') + '</div><div class="v">' + esc(catStr) + '</div></div></div></div>';
+    const piezasBloques = g.piezas.map(p => '<div class="bloque"><div class="k">' + esc(p[1]) + '</div><div class="v">' + p[3] + '</div></div>').join('');
+    const nota = '<div class="fam-nota"><b>' + (E ? 'Exact model: to be confirmed.' : 'Modelo exacto: por confirmar.') + '</b> ' + esc(t.fpPend) +
+        (E ? ' Nothing here is invented: when the workshop confirms it, the piece gets its own data sheet.' : ' Aquí no se inventa nada: cuando el taller lo confirme, la pieza tendrá su propia ficha.') + '</div>';
+    const der = '<div class="lado">' + sabemos + piezasBloques + nota + replicaBloque() + '</div>';
     pagina(`
       <a id="g-${g.k}"></a>
       <div class="cab"><div class="cab-fila"><div><div class="ojo">${esc(g.sub)}</div><h2 class="h2" style="margin-top:6px">${esc(g.titulo)}</h2></div>
         <div class="num">${E ? 'FAMILY' : 'FAMILIA'} ${gi + 1} / ${grupos.length} · ${n} ${E ? 'PIECES' : 'PIEZAS'}</div></div></div>
-      <div class="ficha fam">${izq}<div class="banda">${nota}${replicaBloque()}</div></div>`);
+      <div class="ficha">${izq}${der}</div>`);
   }
 });
 
@@ -334,12 +329,10 @@ pagina(`
   <div class="lista">${t.tuyaLista.map((x, i) => '<div class="it"><span class="n">0' + (i+1) + '</span><span>' + x + '</span></div>').join('')}</div>
   <div class="pedir"><div><div class="t">${esc(t.ctaTuya)}</div><div class="d">${t.conSub}</div></div><a class="b" href="${WA}">${esc(t.formBtn)} →</a></div>`);
 
-// ── Cómo se hace ───────────────────────────────────────────────────────────
+// La página "Cómo se hace" (proceso de taller) NO va en el PDF — Adán, 21-sep-2026: "eso no lo
+// tienen que saber". `gal()` la sigue usando la página de Envíos y Contacto más abajo (fotos del
+// taller), así que se queda aquí aunque la página del proceso ya no exista.
 const gal = a => (t.galeria || []).find(x => x[0].indexOf(a) >= 0);
-pagina(`
-  <div class="cab"><div class="ojo">${esc(t.procN)}</div><h2 class="h2">${esc(t.procT)}</h2><p class="sub">${t.procSub}</p></div>
-  <div class="pasos">${t.pasos.map((p, i) => '<div class="paso"><div class="n">0' + (i+1) + '</div><div><div class="t">' + esc(p[0]) + '</div><div class="d">' + p[1] + '</div></div></div>').join('')}</div>
-  <div class="gal3">${['bruto-1.jpg', 'produccion.jpg', 'flota6.jpg'].map(a => { const g = gal(a); return g ? '<figure class="foto"><img src="' + g[0] + '" alt=""><figcaption class="pie">' + g[1] + '</figcaption></figure>' : ''; }).join('')}</div>`);
 
 // ── Envíos y precio ────────────────────────────────────────────────────────
 pagina(`

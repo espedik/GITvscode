@@ -3,8 +3,15 @@ FOTOS DE HELIESCALA (réplicas en resina) — qué es cada una
 
 42 fotos, ya optimizadas para web. Las originales siguen intactas en
 C:\Users\esped\Desktop\Aeroresinas\ (carpetas `resina`, `resina2`, `resina3` e
-`iCloud Photos (3)`). `resina3` son las de estudio con fondo blanco, y de ahí
-salen las primeras ocho del catálogo.
+`iCloud Photos (3)`). `resina3` son las de estudio con fondo blanco.
+
+OJO CON `resina3`: no son todas suyas. Ahí, junto a fotos reales de sus piezas,
+hay al menos DOS fotos de catálogo de terceros usadas como referencia — un Puma
+boliviano "FAB.780 Jatun Puma" con la marca de agua "CATÁLOGO DE MODELOS
+PREMIUM", y un H145 Airbus con "MODELO DE EXHIBICIÓN" superpuesto. Antes de
+usar cualquier otra foto de esa carpeta, comprobar que no lleve marca de agua ni
+una librea que no sea mexicana/de un cliente real — si la lleva, es referencia,
+no producto, y no va al catálogo.
 
 CATÁLOGO — 26 piezas
   Fondo blanco de estudio:
@@ -18,6 +25,20 @@ CATÁLOGO — 26 piezas
                     OJO: el nombre del archivo dice bell407 pero el modelo NO
                     está confirmado — rotor de dos palas con barra estabilizadora.
   policia-par.jpg   La pareja de la Policía, lista para entregar.
+  fam-mi17.jpg      Mi-17 de la FAM, camuflaje y armamento (antes en un patio;
+                    cambiada el 21-sep-2026 por la toma de estudio de `resina3`).
+  bell-camo.jpg     Ligero militar camuflado, "1301" (antes en un patio; cambiada
+                    el 21-sep-2026, misma sesión que trajo también la "1146").
+  xaecj.jpg         Corporativo XA-ECJ, blanco con grecas verdes y amarillas
+                    (antes en la bodega del taller; cambiada el 21-sep-2026).
+  fam-sp.jpg        Super Puma de la FAM, número 1006 (antes en una repisa de
+                    madera; cambiada el 21-sep-2026).
+  marina-cruz.jpg   Panther de la Marina, sanitario (antes en un patio; cambiada
+                    el 21-sep-2026).
+  fenestron.jpg     Bimotor con fenestrón, azul y blanco (antes en un patio;
+                    cambiada el 21-sep-2026).
+  marineone.jpg     El presidencial de EE. UU. (antes en un patio; cambiada el
+                    21-sep-2026).
 
   Con matrícula legible en la foto:
   xamvr.jpg         Airbus H145 XA-MVR, azul sobre blanco.
@@ -25,25 +46,29 @@ CATÁLOGO — 26 piezas
   aessa-mcm.jpg     Rescate AESSA XA-MCM, rojo y amarillo.
   aessa-jgh.jpg     Rescate AESSA XA-JGH, la segunda de la flota.
   fam-uma.jpg       Fuerza Aérea Mexicana MX-UMA.
-  xaecj.jpg         Corporativo XA-ECJ, blanco con grecas verdes y amarillas.
 
   Militares y de gobierno:
-  marineone.jpg     EL PRESIDENCIAL DE EE. UU., verde y blanco, con
-                    "UNITED STATES OF AMERICA" rotulado en el costado.
-  marineone-2.jpg   El mismo, otro ángulo (reserva, hoy sin usar).
+  marineone-2.jpg   El presidencial de EE. UU., otro ángulo (reserva, hoy sin usar).
   fam-412.jpg       Bell 412 de la FAM, camuflaje gris y blanco.
-  fam-sp.jpg        Super Puma de la FAM, número 1006.
-  fam-mi17.jpg      Mi-17 de la FAM, gris.
   camo-verde.jpg    Super Puma con camuflaje verde y café.
-  camo-gris.jpg     Cougar con camuflaje gris y blanco.
-  marina-cruz.jpg   Panther de la Marina con la cruz roja del servicio sanitario.
+  camo-gris.jpg     Panther con camuflaje gris y blanco.
   policia-2.jpg     Dos unidades de la Policía, Cóndores 01.
-  bell-camo.jpg     Ligero militar con camuflaje y palas de cola rojas y blancas.
 
   Otros:
-  fenestron.jpg     Bimotor con fenestrón, azul y blanco, librea corporativa.
   as350-grande.jpg  Monomotor rojo — de las piezas más grandes que ha hecho.
+                    OJO: revisar que sea réplica y no una fotografía de un AS350
+                    real de Aeroresinas — el encuadre (hangar, piso de losetas)
+                    no se parece al resto del catálogo.
   avion.jpg         BIMOTOR DE ALA FIJA. No todo son helicópteros.
+
+PENDIENTES DE FOTO (2026-09-21) — quedan con la que había, sin fondo blanco,
+porque no se encontró una versión de estudio de esa pieza exacta en las cuatro
+carpetas de origen. Cuando haya fotos nuevas hechas con Gemini, son las primeras
+en reemplazarse: camo-gris.jpg, fam-uma.jpg, fam-412.jpg, policia-2.jpg,
+as350-grande.jpg, avion.jpg, xamvr.jpg, grandnew.jpg, aessa-mcm.jpg,
+aessa-jgh.jpg, rescate.jpg (par AESSA — su versión de estudio es la de dos
+unidades en la sección de arriba, la lista aquí es porque otras piezas de esta
+misma pareja quedaron sin foto de estudio propia).
 
 TU AERONAVE
   policia.jpg       Bell 412 de la Policía con su número de unidad.
@@ -72,6 +97,8 @@ catálogo hace falta la foto aquí y una línea en `T.es.piezas` (y su traducci�
 hay ficha técnica, y la ficha lo dice en vez de inventarla.
 
 LO QUE FALTA Y VALDRÍA LA PENA TENER
+  · Fotos de estudio (fondo blanco) para las once piezas de la lista de
+    pendientes de arriba — es lo primero que resolver cuando haya fotos de Gemini.
   · Una foto con algo al lado que dé escala (una mano, un boli). Con 26 piezas en
     el catálogo sigue sin poderse saber de qué tamaño son.
   · Una réplica junto a la aeronave real que copia. Está a un paso: la XA-MVR

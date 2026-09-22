@@ -46,7 +46,7 @@ El archivo es **autónomo** —su CSS va dentro— porque algún día tendrá su
 | `datos.js` | **Todo** el contenido: `PERFIL`, `PERFIL_EN` y `T` (los dos idiomas, las 26 piezas, las fichas de los modelos, el tabulador de envíos). Lo leen la web, **el catálogo en PDF** y **Posts** (`../Posts/readme_posts.md`), que arma los posts de LinkedIn con él. Por eso las tres van con `var`: Posts carga este archivo y el de Aeroresinas en la misma página, y dos `const PERFIL` chocarían |
 | `dossier.html` | El molde del **PDF**: páginas carta fijas, leídas del mismo `datos.js` |
 | `generar-pdf.js` | Genera `Heliescala-catalogo.pdf` con Chromium, comprobando antes que ninguna página desborda |
-| `Heliescala-catalogo.pdf` | **El catálogo para mandar por WhatsApp.** 15 páginas, 4.8 MB |
+| `Heliescala-catalogo.pdf` | **El catálogo para mandar por WhatsApp.** 16 páginas, 3.5 MB |
 | `qr-whatsapp.svg` | El QR de la última página: abre WhatsApp con el saludo ya escrito |
 | `diseno-catalogo/` | Las tres direcciones del catálogo en PDF (Adán eligió la B) |
 
@@ -62,22 +62,45 @@ ese tipo; a la derecha la **ficha del fabricante** —motor, rotor, peso, capaci
 alcance—, para qué se usa, cómo se reconoce y quién lo vuela en México. Es lo que nadie más tiene:
 los datos comprobados de `T.*.modelos`.
 
-**Las 13 piezas sin modelo confirmado no se inventan una ficha.** Van en cuatro páginas por
-familia —*Super Puma y Cougar*, *Rescate · librea AESSA*, *Bimotores corporativos y de Estado*,
-*Ligeros, gobierno y ala fija*— con las fotos a todo lo ancho, lo que sí se sabe (librea, operador,
-matrícula) y una nota que dice, literalmente, que el modelo exacto está por confirmar con el
-taller. El reparto en familias es presentación del PDF y vive en `dossier.html`, no en los datos.
+**Nueve modelos confirmados, no cinco.** El 21-sep-2026 se sumaron cuatro fichas más, con la
+misma exigencia de fuente pública que las cinco originales (Airbus, Bell): `puma` (AS332 Super
+Puma / H215, airbus.com), `seaking` (Sikorsky VH-3D — «Marine One» no es un modelo, es el
+indicativo de radio de cualquier VH-3D del HMX-1 con el presidente a bordo), `aw109`
+(Leonardo AW109SP Grand New — el nombre va rotulado en el propio fuselaje) y `bell206` (Bell
+206/LongRanger, identificable por el rotor de **solo dos palas** con barra estabilizadora, el
+rasgo que ya traía documentado `bell-camo.jpg`). `camo-gris` se reclasificó de "Cougar" a
+`panther`: es la misma silueta y librea que `marina`/`marina-cruz`, no un Cougar.
 
-Las 15 páginas: portada oscura con el presidencial a sangre, índice, **5 fichas** (H145, H125,
-Bell 412, Panther, Mi-17: 13 piezas), **4 familias** (13 piezas), la réplica de tu aeronave, cómo se
-hace, envíos con el tabulador por zona, y contacto con QR. Todo lo demás es como en Aeroresinas:
-paginación fija, índice con enlaces (comprobado: los 9 destinos resuelven a las páginas 3–11),
-15 marcadores, `wa.me` con el mensaje ya escrito, texto seleccionable, y el generador se niega a
-imprimir si algo desborda. **4.8 MB** — las fotos del catálogo son ligeras.
+**Las 6 piezas que siguen sin modelo confirmado** (`rescate`, `aessa-mcm`, `aessa-jgh`, `xaecj`,
+`fenestron`, `avion`) van en **dos** páginas de familia —*Rescate · librea AESSA*,
+*Bimotores y ala fija*—, con el **mismo layout de dos columnas** que una ficha de modelo: a la
+izquierda las fotos, a la derecha un `.specs` de "Lo que sabemos" (categoría, cuántas piezas) y un
+`.bloque` por pieza con su texto ya más detallado, y al final la nota de que el modelo exacto está
+por confirmar. Adán, 21-sep-2026: *"todos deben tener este formato y un poco más detallado en la
+ficha"*. Nada se inventa: sin datos de fabricante, el bloque describe lo que se ve en la foto
+—librea, operador, matrícula— y lo dice así de claro.
 
-Dos cosas que salieron de mirar las páginas: el índice va **a dos columnas**, porque 26 filas y 9
-cabeceras se pasaban 381 px en una; y en las páginas de familia las fotos ocupan **todo el ancho**
-con la nota abajo, porque una columna lateral repetía el texto que ya llevaba cada foto.
+**La página "Cómo se hace" no va en el PDF.** Adán, 21-sep-2026: *"en el pdf quita la seccion de
+como se hace, eso no lo tienen que saber"*. Sigue en la web (`heliescala.html`, ver "Estructura"
+abajo); en `dossier.html` sencillamente no se llama a esa página. `gal()`, la función que lee sus
+fotos, se queda porque las usan Envíos y Contacto.
+
+**Cada página lleva contacto**, no solo la de Contacto: el pie (`HELIESCALA · HECHO A MANO EN
+MÉXICO` — ciudad — WhatsApp) se repite en las 15 páginas que no son la portada, y la caja "La
+réplica" de cada ficha suma un botón *Encargar esta* que abre WhatsApp con el mensaje ya escrito
+(`t.fpCta`, que la web ya usaba y el PDF no). Adán, 21-sep-2026: *"pon en cada uno los datos de
+contacto e info nuestra"*.
+
+Las 16 páginas: portada oscura con el presidencial a sangre, índice, **9 fichas** (20 piezas),
+**2 familias** (6 piezas), la réplica de tu aeronave, envíos con el tabulador por zona, y contacto
+con QR. Todo lo demás es como en Aeroresinas: paginación fija, índice con enlaces (comprobado: los
+26 destinos resuelven a las páginas 3–13), 11 marcadores, `wa.me` con el mensaje ya escrito, texto
+seleccionable, y el generador se niega a imprimir si algo desborda. **3.5 MB** (3.6 en inglés).
+
+Dos cosas que salieron de mirar las páginas: el índice va **a dos columnas**, porque 26 filas y 11
+cabeceras se pasaban de una; y en las páginas de familia las fotos van a la izquierda con el
+`.specs`/`.bloque` a la derecha, igual que en una ficha de modelo — antes ocupaban todo el ancho
+con la nota abajo, un layout que ya no existe en el CSS.
 
 ```bash
 cd Heliescala
@@ -254,11 +277,24 @@ sin ella nadie sabe que se puede abrir.
 Las **42** de `fotos/` salen de las **321 originales** de Adán (fuera del repo, en
 `C:\Users\esped\Desktop\Aeroresinas\`, carpetas *resina*, *resina2*, *resina3* e *iCloud Photos (3)*),
 optimizadas para web: **5.4 MB en total**. *resina3* son fotos de estudio con fondo blanco —las
-mejores que tiene— y de ahí salen las ocho primeras del catálogo; *resina* y *resina2* aportan los
-militares, el presidencial y las piezas en bruto; *iCloud Photos (3)*, las de matrícula real, la
-producción y la sala de exposición.
+mejores que tiene—; *resina* y *resina2* aportan los militares, el presidencial y las piezas en
+bruto; *iCloud Photos (3)*, las de matrícula real, la producción y la sala de exposición.
 
-`fotos/LEEME.txt` dice qué es cada una.
+**Ojo con *resina3*: no es 100 % fiable.** Adán, 21-sep-2026: *"las imágenes que elegiste son malas la
+mayoría, hay algunas que tienen fondo blanco y son profesionales, esas quiero que uses"* — al
+revisar esa carpeta para encontrarlas aparecieron también dos fotos de catálogo de un tercero
+(un Puma boliviano con la marca de agua "CATÁLOGO DE MODELOS PREMIUM" y un H145 Airbus con
+"MODELO DE EXHIBICIÓN" superpuesto): son referencia, no producto suyo, y no se usaron. Antes de
+tomar cualquier otra foto de ahí, comprobar que no lleve marca de agua.
+
+**Siete piezas cambiaron de foto el 21-sep-2026** (mismo nombre de archivo, contenido nuevo):
+`fam-mi17`, `bell-camo`, `xaecj`, `fam-sp`, `marina-cruz`, `fenestron` y `marineone` pasaron de un
+patio, una bodega o una repisa a la versión de estudio de la misma pieza. **Once quedan
+pendientes** —sin una versión de estudio de esa pieza exacta en ninguna de las cuatro carpetas—
+y las reemplaza cuando existan fotos hechas con Gemini: `camo-gris`, `fam-uma`, `fam-412`,
+`policia-2`, `as350-grande`, `avion`, `xamvr`, `grandnew`, `aessa-mcm`, `aessa-jgh`, `rescate`.
+
+`fotos/LEEME.txt` dice qué es cada una y trae la lista completa de pendientes.
 
 Lo que falta: una con **algo al lado que dé escala** —con 26 piezas sigue sin saberse de qué tamaño
 son— y una **réplica junto a la aeronave real** que copia. Esta segunda está a un paso: la XA-MVR
