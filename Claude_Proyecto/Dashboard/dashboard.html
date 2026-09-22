@@ -134,6 +134,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .qa-name{font-size:11px;font-weight:600;white-space:nowrap}
 .qa-pill:hover .qa-name{font-weight:700}
 .qa-stat{font-family:var(--mono);font-size:9px;color:var(--g);font-weight:700;white-space:nowrap}
+/* El PDF de cada negocio, debajo de su píldora (2026-09-21, Adán: "abajo de cada uno ponme un
+   icono del pdf de cada uno y dame los enlaces"). No sustituye a la píldora: abre el .pdf real
+   en pestaña nueva, y el lector de PDF del navegador ya trae su propio botón de descarga en la
+   barra de herramientas — "cuando esté en el pdf debe haber algo para poder descargar ese pdf"
+   se cumple con eso, sin duplicar un botón aparte. */
+.qa-pill-wrap{display:flex;flex-direction:column;align-items:center}
+.qa-pdf{display:flex;align-items:center;gap:3px;padding:2px 7px 1px;margin-top:-2px;border-radius:6px;
+  font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.03em;color:var(--text3);
+  text-decoration:none;transition:background .15s,color .15s}
+.qa-pdf svg{width:10px;height:10px;stroke-width:2.1;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.qa-pdf:hover{background:rgba(var(--ov),.07);color:var(--text2)}
+@media(max-width:1590px){.qa-pdf span{display:none}.qa-pdf{padding:2px 5px 1px}}
 /* Es una .qa-pill más: mismo trazo, mismo hover, mismo tamaño de icono. Solo cambia que
    va anclada al borde y que no lleva texto — lo que hace lo dice su `title`. */
 /* El ojo y el tema van juntos a la derecha de la barra. Antes el ojo era el
@@ -10316,6 +10328,9 @@ const QA_ICO = {
   // Posts: el mismo helicóptero, más chico, con un bocadillo arriba a la derecha — lo que se
   // publica sobre el negocio. Tercer icono de la familia, para la tercera píldora del grupo.
   posts:  '<path d="M2.5 7.5h11M8 7.5v5"></path><path d="M4 12.5h6a2.5 2.5 0 0 1 2.5 2.5v1.5H5.5A1.5 1.5 0 0 1 4 15z"></path><path d="M12.5 15H15M5.5 16.5v2.5M10.5 16.5v2.5M4 19h8"></path><path d="M15.5 3h5a1.5 1.5 0 0 1 1.5 1.5v4A1.5 1.5 0 0 1 20.5 10h-2l-2.5 2.2V10h-.5A1.5 1.5 0 0 1 14 8.5v-4A1.5 1.5 0 0 1 15.5 3z"></path><path d="M16.5 6.5h3"></path>',
+  // El PDF de Aeroresinas y Heliescala (2026-09-21): la hoja con la esquina doblada y una
+  // flecha bajando — se lee "descargar", no "abrir la web", que es lo que ya dicen heli/heliesc.
+  pdf:    '<path d="M6 2.5h7l5 5V21a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1z"></path><path d="M13 2.5v5h5"></path><path d="M12 11.3v7m0 0-2.6-2.6M12 18.3l2.6-2.6"></path>',
   birrete:'<path d="M2.5 9.5 12 5l9.5 4.5L12 14z"></path><path d="M6.5 11.6v4.2c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.2"></path><path d="M21.5 9.5v5"></path>',
   // El ojo del modo privado: mismo trazo y misma rejilla que los de las apps, para que
   // el botón no se lea como una pieza de otra familia (Adán, 2026-09-01).
@@ -10353,15 +10368,24 @@ function renderQuickApps(){
      {k:'code',   c:'#0d9488', n:'Entrevistas',href:'../Entrevistas/entrevistas.html', stat:''}],
     // Grupo propio: no es una app tuya, es el negocio de tu papá. Mezclarla con lo que
     // administras o con lo que estudias confundiría las dos cosas.
-    [{k:'heli',    c:'#1b47ff', n:'Aeroresinas',href:'../Aeroresinas/aeroresinas.html', stat:'reparación'},
-     {k:'heliesc', c:'#00a4b4', n:'Heliescala', href:'../Heliescala/heliescala.html',   stat:'maquetas'},
+    [{k:'heli',    c:'#1b47ff', n:'Aeroresinas',href:'../Aeroresinas/aeroresinas.html', stat:'reparación',
+      pdf:'../Aeroresinas/Aeroresinas-dossier.pdf'},
+     {k:'heliesc', c:'#00a4b4', n:'Heliescala', href:'../Heliescala/heliescala.html',   stat:'maquetas',
+      pdf:'../Heliescala/Heliescala-catalogo.pdf'},
      // Las plantillas de LinkedIn de las dos: no es una web, es lo que se publica sobre ellas.
+     // No lleva PDF propio: el PDF de cada una ya cuelga de su píldora.
      {k:'posts',   c:'#3b9cff', n:'Posts',      href:'../Posts/posts.html',             stat:'linkedin'}]
   ];
-  const pill = a=>`<a href="${a.href}" class="qa-pill" title="${a.n}">
-    <span class="qa-ico" style="color:${a.c}">${qaSvg(a.k, a.c)}</span>
-    <span class="qa-txt"><span class="qa-name">${a.n}</span>${a.stat?`<span class="qa-stat">${a.stat}</span>`:''}</span>
-  </a>`;
+  const pill = a=>{
+    const enlace=`<a href="${a.href}" class="qa-pill" title="${a.n}">
+      <span class="qa-ico" style="color:${a.c}">${qaSvg(a.k, a.c)}</span>
+      <span class="qa-txt"><span class="qa-name">${a.n}</span>${a.stat?`<span class="qa-stat">${a.stat}</span>`:''}</span>
+    </a>`;
+    if(!a.pdf) return enlace;
+    return `<span class="qa-pill-wrap">${enlace}<a href="${a.pdf}" class="qa-pdf" target="_blank" rel="noopener"
+        title="Abrir el PDF de ${a.n} — el visor del navegador trae su propio botón de descarga">
+        ${qaSvg('pdf','currentColor')}<span>PDF</span></a></span>`;
+  };
   document.getElementById('qaBar').innerHTML=
     `<button class="qa-toggle-btn" onclick="toggleQaBar()" aria-label="Mostrar u ocultar accesos directos" title="Mostrar/ocultar accesos directos">🔗 Apps <span class="qa-toggle-chevron">▾</span></button>`+
     `<div class="qa-grupos">${grupos.map(g=>g.map(pill).join('')).join('<span class="qa-sep"></span>')}</div>`+

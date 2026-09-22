@@ -235,6 +235,15 @@ icono: el helicóptero de perfil (`heli`), sobre el pedestal de vitrina (`helies
 bocadillo (`posts`); Adán, sobre la de Posts: *"debe ser uno parecido pero al lado de estos y
 similar descripción a estos"* — de ahí el subtítulo `linkedin`, como `reparación` y `maquetas`.
 
+**Aeroresinas y Heliescala cuelgan además un enlace a su PDF real** (`qa-pill-wrap` > `.qa-pdf`,
+icono `pdf` en `QA_ICO`), debajo de su píldora — Posts no, porque no tiene PDF propio: el de cada
+negocio ya cuelga de su propia píldora (Adán, 2026-09-21: *"abajo de cada uno ponme un icono del
+pdf de cada uno"*). Abre el `.pdf` en pestaña nueva —`Aeroresinas-dossier.pdf`,
+`Heliescala-catalogo.pdf`—, no la web: el lector de PDF del navegador ya trae su propio botón de
+descarga en la barra de herramientas, así que no hace falta uno aparte para cumplir *"cuando esté
+en el pdf debe haber algo para poder descargar ese pdf"*. Por debajo de 1590 px se queda solo el
+icono, igual que las píldoras de arriba.
+
 Van en un contenedor con `max-width:1430px`; **por debajo de 1590 px** se quedan solo los iconos
 con el nombre en `title`: la fila con nombres se partiría en dos y taparía el slide (que empieza
 fijo a 58 px), o se metería debajo de los botones de tema y privacidad, que van absolutos a la
