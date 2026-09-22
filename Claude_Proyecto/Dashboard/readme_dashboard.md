@@ -654,7 +654,18 @@ lo más grande posible"*). Cada `kpiDetalle` sigue escribiendo su HTML de corrid
 arriba a lo ancho (`.kpi-hero`, cifra hasta 58 px) y cada sección con lo que le sigue en un
 `.kpi-grupo` dentro de `.kpi-cols` (dos columnas CSS que no parten un grupo; una sola sección va a
 una columna, y bajo 1024 px todo a una). Medido en 1600×1000: el fondo ocupa 449 px de alto, el
-patrimonio 842, las 4 fases llenan los 940 y desplazan; sin desbordes en ninguno de los nueve.
+patrimonio 842; sin desbordes en ninguno de los ocho.
+
+**Las 4 fases son la excepción**, con subtabs en vez de las 2 columnas de `.kpi-cols` (Adán,
+21-sep-2026: *"se ve muy amontonado, mejoralo haciendo subtabs para cada fase y explicandolo muy
+bien"*): cada fase vive en su propio `.fases-panel` y solo una se ve a la vez. `.fases-tabs` es un
+solo hijo de `#kpiBody`, así que `kpiAcomodar()` lo mete en un único `.kpi-grupo` a ancho completo
+en vez de partirlo. Los botones (`.fases-tabbtn`, `kpiFaseTab(i)`) llevan el tag y el estado
+(`● EN CURSO` / `✅ CERRADA` / `DESPUÉS`) en el color de la fase, y cada panel repite fechas +
+tareas hechas, la meta, la explicación completa y el checklist por mes. Abre en la fase en curso
+(o la siguiente sin empezar, o la última si el plan ya cerró). Medido en 1600×1000: la tarjeta se
+ajusta al contenido de cada fase (766-940 px de alto); solo la Fase 0 desplaza dentro del panel
+(923 px de contenido en 862 visibles).
 
 **Patrimonio hacia $1M** es todo lo suyo menos las deudas (`patrimonioNeto()`: inversiones, fondo,
 Bitcoin a precio de hoy, efectivo y cuenta, y los bienes), la misma cifra que el Patrimonio Neto de
