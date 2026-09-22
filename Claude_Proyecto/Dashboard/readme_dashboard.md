@@ -274,8 +274,8 @@ apps: manda en Android y escritorio.
 
 Se abre desde el botón *📈 Qué invertir hoy* del módulo **Tu dinero** (`#diaInvertirBtn` →
 `abrirGBM()`), cualquier día de la semana, y ocupa `min(1560px, 96vw)` × `min(960px, 94vh)`
-(`.gbm-card.inv-card`; el modificador existe porque las clases `.gbm-*` las comparte el panel de
-KPIs de Mis Metas, que sigue en 760 px). Adán, 21-sep-2026: *"hazla lo más grande posible… una
+(`.gbm-card.inv-card`; las clases `.gbm-*` las comparte el panel de los medidores de Mis Metas, que
+lleva su propio modificador `.kpi-card`). Adán, 21-sep-2026: *"hazla lo más grande posible… una
 especie de plantilla… claude solo se encargará de la información y la plantilla no se modificará
 visualmente, entonces solo se gastan tokens en información"*.
 
@@ -637,6 +637,15 @@ su línea de detalle, todos. En **Deuda cara** y **Deuda total** la barra es ver
 verde es lo pagado y lo rojo lo que falta (`fill`/`track` del tile; la pista es `--r` al 60 %), y
 el avance de Deuda total se mide sobre lo que nació cada deuda, liquidadas incluidas. Los desgloses
 de esos dos (`kpiDetalle`, `kpiBarra` con `pista`) usan el mismo par y ponen el % junto al saldo.
+
+**El panel de cada medidor es XL** (`.gbm-card.kpi-card`: `min(1560px, 96vw)` de ancho y alto
+automático hasta el 94 %; Adán, 21-sep-2026: *"todas las ventanas iguales a estas debes hacerlas
+lo más grande posible"*). Cada `kpiDetalle` sigue escribiendo su HTML de corrido con `kpiSec`,
+`kpiBarra`, `kpiPaso` y `kpiNota`; `kpiAcomodar()` lo reparte al abrir: `.kpi-cifra` y su sub
+arriba a lo ancho (`.kpi-hero`, cifra hasta 58 px) y cada sección con lo que le sigue en un
+`.kpi-grupo` dentro de `.kpi-cols` (dos columnas CSS que no parten un grupo; una sola sección va a
+una columna, y bajo 1024 px todo a una). Medido en 1600×1000: el fondo ocupa 449 px de alto, el
+patrimonio 842, las 4 fases llenan los 940 y desplazan; sin desbordes en ninguno de los nueve.
 
 **Patrimonio hacia $1M** es todo lo suyo menos las deudas (`patrimonioNeto()`: inversiones, fondo,
 Bitcoin a precio de hoy, efectivo y cuenta, y los bienes), la misma cifra que el Patrimonio Neto de

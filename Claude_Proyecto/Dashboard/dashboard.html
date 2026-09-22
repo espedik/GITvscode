@@ -622,12 +622,38 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   letter-spacing:.04em;color:var(--text3);opacity:0;transition:opacity .15s;margin-top:2px}
 #metasProgreso .tile:hover::after{opacity:.85}
 .kpi-desglose{display:flex;flex-direction:column;gap:9px}
+.kpi-card .kpi-desglose{gap:13px}
 .kpi-linea-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12px}
 .kpi-linea-nom{color:var(--text2);font-weight:700}
 .kpi-linea-val{font-family:var(--mono);font-weight:800;color:var(--text);white-space:nowrap}
 .kpi-linea-nota{font-size:10px;color:var(--text3);margin-top:3px;line-height:1.4}
 .kpi-cifra{font-family:var(--mono);font-size:clamp(22px,3vw,32px);font-weight:900;line-height:1}
 .kpi-cifra-sub{font-size:11px;color:var(--text3);margin-top:4px}
+/* El panel XL (Adán, 21-sep-2026: "todas las ventanas iguales a estas debes hacerlas lo más grande
+   posible"): mismo tamaño que Qué invertir hoy. La cifra va arriba a lo ancho y las secciones se
+   reparten en dos columnas (kpiAcomodar); cada .kpi-grupo no se parte entre columnas. */
+/* Alto automático hasta el 94 %: un medidor con dos secciones no necesita una tarjeta vacía de 940 px. */
+.gbm-card.kpi-card{width:min(1560px,96vw);max-height:94vh;display:flex;flex-direction:column;overflow:hidden}
+.kpi-card .gbm-head{flex-shrink:0}
+.kpi-card .gbm-body{flex:1;min-height:0;overflow-y:auto;padding:20px 28px 32px}
+.kpi-hero{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(var(--ov),.08)}
+.kpi-card .kpi-cifra{font-size:clamp(34px,4vw,58px)}
+.kpi-card .kpi-cifra-sub{font-size:13px;margin-top:0}
+.kpi-cols{columns:2;column-gap:32px}
+.kpi-cols-1{columns:1}
+.kpi-grupo{break-inside:avoid;-webkit-column-break-inside:avoid;page-break-inside:avoid;display:block;margin-bottom:18px}
+.kpi-grupo .gbm-sec{margin-top:0}
+.kpi-card .gbm-sec{font-size:11.5px;margin-bottom:9px}
+.kpi-card .kpi-linea-top{font-size:14px}
+.kpi-card .kpi-linea-nota{font-size:12px}
+.kpi-card .gbm-bar{height:10px;margin-top:7px}
+.kpi-card .gbm-paso{padding:13px 16px}
+.kpi-card .gbm-paso-t{font-size:16px}
+.kpi-card .gbm-paso-d{font-size:14px;line-height:1.5}
+.kpi-card .gbm-nota{font-size:13px;line-height:1.5;padding:10px 13px}
+.kpi-card .gbm-vacio{font-size:13px}
+@media(max-width:1024px){ .kpi-cols{columns:1} }
+@media(max-width:640px){ .gbm-card.kpi-card{width:100%;height:100%;max-height:100%} .kpi-card .gbm-body{padding:12px 14px 28px} .kpi-card .kpi-linea-top,.kpi-card .gbm-paso-d,.kpi-card .gbm-nota{font-size:12.5px} }
 /* Otra vuelta más chico (2026-08-11, pedido explícito: "haz todavia mas pequeñas los
    indicadores de arriba, los 4") — mismo criterio que la ronda anterior: el espacio que se
    libera aquí es el que gana la cuadrícula de fotos de metas de abajo. */
@@ -4120,7 +4146,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 </div>
 <!-- ─── DETALLE DE UN MEDIDOR (2026-08-19) — se abre tocando cualquiera de los 8 de Mis Metas ─── -->
 <div class="gbm-overlay" id="kpiOverlay" onclick="if(event.target===this) cerrarKpi()">
-  <div class="gbm-card">
+  <div class="gbm-card kpi-card">
     <div class="gbm-head">
       <button class="gbm-close" onclick="cerrarKpi()" aria-label="Cerrar">✕</button>
       <h2 id="kpiTitulo">—</h2>
@@ -10880,10 +10906,32 @@ function abrirKpi(id){
   document.getElementById('kpiTitulo').textContent=info.titulo;
   document.getElementById('kpiSubtitulo').textContent=info.sub||'';
   document.getElementById('kpiBody').innerHTML=info.html;
+  kpiAcomodar(document.getElementById('kpiBody'));
   ov.classList.add('open');
   clearInterval(timer);
 }
 function cerrarKpi(){ document.getElementById('kpiOverlay')?.classList.remove('open'); }
+// El panel es XL (Adán, 21-sep-2026: "todas las ventanas iguales a estas debes hacerlas lo más
+// grande posible"): la cifra grande arriba a lo ancho y las secciones repartidas en dos columnas.
+// Cada kpiDetalle sigue escribiendo su HTML de corrido; esto solo lo agrupa: .kpi-cifra y
+// .kpi-cifra-sub al frente, y cada .gbm-sec con lo que le sigue en un .kpi-grupo que no se parte
+// entre columnas. Así los 8 medidores ganan el tamaño sin reescribir ninguno.
+function kpiAcomodar(body){
+  const hijos=[...body.children];
+  const hero=document.createElement('div'); hero.className='kpi-hero';
+  const cols=document.createElement('div'); cols.className='kpi-cols';
+  let grupo=null;
+  hijos.forEach(el=>{
+    if(el.classList.contains('kpi-cifra')||el.classList.contains('kpi-cifra-sub')){ hero.appendChild(el); return; }
+    if(el.classList.contains('gbm-sec')||!grupo){ grupo=document.createElement('div'); grupo.className='kpi-grupo'; cols.appendChild(grupo); }
+    grupo.appendChild(el);
+  });
+  body.innerHTML='';
+  if(hero.children.length) body.appendChild(hero);
+  // Con una sola sección no hay nada que repartir: una columna ancha se lee mejor que dos medias.
+  if(cols.children.length<2) cols.classList.add('kpi-cols-1');
+  body.appendChild(cols);
+}
 
 function kpiDetalle(id){
   const F=D.fin||{}, debts=F.debts||[], inv=F.investments||[];
