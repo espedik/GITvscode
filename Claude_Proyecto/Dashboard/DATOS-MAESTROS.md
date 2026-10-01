@@ -66,6 +66,10 @@ abrió el Dashboard en ese navegador vale 0 y la comida no entra —mejor faltar
 Junto a ella viajan sus piezas, para que nadie las reimplemente: `agendaDia`, `palabras`,
 `norm`, `yaContado`, `esNomina`.
 
+`agendaDia` pone el mínimo de cada deuda en su día, salvo una tarjeta que se paga completa
+(`noInterest`): en su **próximo** pago sale el total para no generar intereses; los meses de
+después siguen con el mínimo, porque esos estados de cuenta todavía no existen.
+
 ---
 
 ## Las dos clases de dato

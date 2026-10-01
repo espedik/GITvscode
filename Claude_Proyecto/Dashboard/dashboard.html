@@ -4758,7 +4758,9 @@ const EVENTOS_MES={
     {ico:"✈️",txt:"Revisar FAMEX 2027"},
   ],
   "2026-10":[
-    {ico:"🪙",txt:"Arranca Fase 1 del Plan Maestro (1 oct) — entran los $2,335/mes que liberan los MSI (el mínimo de Banamex ya no está libre) + primer ingreso real"},
+    {ico:"🪙",txt:"Arranca Fase 1 del Plan Maestro (1 oct) — entran los $2,335/mes que liberan los MSI y el mínimo de Banamex, libre desde que quedó en $0 el 30 sep; la meta es el primer ingreso real"},
+    {ico:"💳",txt:"Pagar la TC BBVA completa antes del día 11 — el total del estado de cuenta, no el mínimo: así no genera intereses"},
+    {ico:"🎯",txt:"Cerrar la Fase 0 por escrito: qué se cumplió (Banamex, liquidada el 30 sep) y qué pasa a la Fase 1 (el fondo de emergencia y la BBVA)"},
   ],
 };
 const MES_LABEL=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
@@ -4808,7 +4810,32 @@ const EVENTOS_NUEVOS = [
       {ico:'\ud83d\udcc4', txt:'Agendar la visa de tu papá'},
       {ico:'\u2708\ufe0f', txt:'Revisar FAMEX 2027'},
   ]},
+  /* 2026-10-01 · Los dos que piden los prompts de Plan Maestro y Coach: el hueco previsto se
+     resuelve antes de que llegue (la BBVA se paga completa el 11) y el plan se revisa contra
+     lo que de verdad pasó (el cierre de la Fase 0). */
+  { flag:'_oct20261001', mes:'2026-10', items:[
+      {ico:'💳', txt:'Pagar la TC BBVA completa antes del día 11 — el total del estado de cuenta, no el mínimo: así no genera intereses'},
+      {ico:'🎯', txt:'Cerrar la Fase 0 por escrito: qué se cumplió (Banamex, liquidada el 30 sep) y qué pasa a la Fase 1 (el fondo de emergencia y la BBVA)'},
+  ]},
 ];
+/* …y los textos que el tiempo dejó mal se corrigen UNA vez, solo si siguen tal cual los
+   sembró el código: si Adán los editó, manda lo suyo. */
+const EVENTOS_CORRIGE = [
+  { flag:'_banamexLibre20261001', mes:'2026-10',
+    de:'Arranca Fase 1 del Plan Maestro (1 oct) — entran los $2,335/mes que liberan los MSI (el mínimo de Banamex ya no está libre) + primer ingreso real',
+    a:'Arranca Fase 1 del Plan Maestro (1 oct) — entran los $2,335/mes que liberan los MSI y el mínimo de Banamex, libre desde que quedó en $0 el 30 sep; la meta es el primer ingreso real' },
+];
+function eventosCorregir(){
+  const st = rawGet(EVENTOS_KEY, null);
+  if(!st) return;
+  let toco = false;
+  EVENTOS_CORRIGE.forEach(function(c){
+    if(localStorage.getItem(EVENTOS_KEY + c.flag)) return;
+    (st[c.mes]||[]).forEach(function(e){ if(e.txt === c.de){ e.txt = c.a; toco = true; } });
+    try{ localStorage.setItem(EVENTOS_KEY + c.flag, '1'); }catch(e){}
+  });
+  if(toco) eventosSave(st);
+}
 function eventosSembrarNuevos(){
   const st = rawGet(EVENTOS_KEY, null);
   if(!st) return;   // sin clave todavía: ya los trae el seed de EVENTOS_MES
@@ -4827,6 +4854,7 @@ function eventosSembrarNuevos(){
   if(toco) eventosSave(st);
 }
 eventosSembrarNuevos();
+eventosCorregir();
 function eventosDe(mes){ return (eventosLoad()[mes]||[]); }
 
 const EV_ICONOS=['🦷','🩺','💊','🎯','🪙','💳','📄','✈️','🏋️','📞','🛒','🎂','🚗','🏠','📌'];
@@ -5239,26 +5267,26 @@ const LISTA_COMPRAS_PRECIOS={
   'Papa':{tipo:'peso',precio:24,unidad:'kg',paso:'1 pza ≈200 g',g:200,monto:5,base:2,real:false},
   'Aguacate':{tipo:'peso',precio:59,unidad:'kg',paso:'1 pza ≈200 g',g:200,monto:12,base:1,real:true},
   // ── Carnes y Pescados ──
-  'Filete de res magro':{tipo:'peso',precio:220,unidad:'kg',paso:'1 filete ≈250 g',monto:55,base:2,real:false},
-  'Filete de tilapia':{tipo:'peso',precio:130,unidad:'kg',paso:'1 filete ≈250 g',monto:33,base:2,real:false,nota:'En tu ticket compraste Filete de Basa, no tilapia (pagaste $55, 1 pieza con descuento) — precio de tilapia investigado aparte.'},
-  'Jamón de pavo':{tipo:'paquete',precio:57,unidad:'paquete 250 g',paso:'1 paquete 250 g',monto:57,base:1,real:true,nota:'Ticket: "Jamón Virginia" — casi siempre es la variante de pavo en súper, pero la etiqueta no lo dice explícito.'},
-  'Pechuga de pollo':{tipo:'paquete',precio:66,unidad:'paquete ≈265 g',paso:'1 paquete ≈265 g',monto:66,base:1,real:true,nota:'Ticket: "Milanesa de Pechuga" — mismo corte, ya fileteado delgado. Se vende por paquete ya pesado, sale a ≈$249/kg.'},
+  'Filete de res magro':{tipo:'peso',precio:220,unidad:'kg',paso:'1 filete ≈250 g',monto:55,base:2,real:false,prot:53},
+  'Filete de tilapia':{tipo:'peso',precio:130,unidad:'kg',paso:'1 filete ≈250 g',monto:33,base:2,real:false,nota:'En tu ticket compraste Filete de Basa, no tilapia (pagaste $55, 1 pieza con descuento) — precio de tilapia investigado aparte.',prot:50},
+  'Jamón de pavo':{tipo:'paquete',precio:57,unidad:'paquete 250 g',paso:'1 paquete 250 g',monto:57,base:1,real:true,nota:'Ticket: "Jamón Virginia" — casi siempre es la variante de pavo en súper, pero la etiqueta no lo dice explícito.',prot:35},
+  'Pechuga de pollo':{tipo:'paquete',precio:66,unidad:'paquete ≈265 g',paso:'1 paquete ≈265 g',monto:66,base:1,real:true,nota:'Ticket: "Milanesa de Pechuga" — mismo corte, ya fileteado delgado. Se vende por paquete ya pesado, sale a ≈$249/kg.',prot:61},
   // ── Lácteos y Huevo ──
-  'Clara de huevo':{tipo:'paquete',precio:45,unidad:'envase 946 ml',paso:'1 envase 946 ml',monto:45,base:0.5,real:false},
-  'Huevo':{tipo:'paquete',precio:29,unidad:'paquete 12 pza',paso:'1 paquete 12 pza',monto:29,base:1,real:true,nota:'Ticket: Bachoco. También se vende suelto por pieza o por kg en mercado — el paquete de 12 sale más barato por huevo.'},
-  'Leche entera':{tipo:'paquete',precio:26,unidad:'L',paso:'1 L',monto:26,base:1,real:false,nota:'En tu ticket compraste Lala Deslactosada, no entera — precio de leche entera investigado aparte.'},
-  'Queso panela':{tipo:'paquete',precio:42,unidad:'paquete ≈400 g',paso:'1 paquete ≈400 g',monto:42,base:0.5,real:true,nota:'Precio con descuento en tu ticket. También se vende por peso en cremería, a ≈$120-140/kg.'},
-  'Yogurt griego natural':{tipo:'paquete',precio:38,unidad:'envase ≈900 g',paso:'1 envase ≈900 g',monto:38,base:0.5,real:false,nota:'En tu ticket compraste Yoplait ($12 c/u) — no es griego. Precio de yogurt griego investigado aparte.'},
+  'Clara de huevo':{tipo:'paquete',precio:45,unidad:'envase 946 ml',paso:'1 envase 946 ml',monto:45,base:0.5,real:false,prot:100},
+  'Huevo':{tipo:'paquete',precio:29,unidad:'paquete 12 pza',paso:'1 paquete 12 pza',monto:29,base:1,real:true,nota:'Ticket: Bachoco. También se vende suelto por pieza o por kg en mercado — el paquete de 12 sale más barato por huevo.',prot:75},
+  'Leche entera':{tipo:'paquete',precio:26,unidad:'L',paso:'1 L',monto:26,base:1,real:false,nota:'En tu ticket compraste Lala Deslactosada, no entera — precio de leche entera investigado aparte.',prot:33},
+  'Queso panela':{tipo:'paquete',precio:42,unidad:'paquete ≈400 g',paso:'1 paquete ≈400 g',monto:42,base:0.5,real:true,nota:'Precio con descuento en tu ticket. También se vende por peso en cremería, a ≈$120-140/kg.',prot:72},
+  'Yogurt griego natural':{tipo:'paquete',precio:38,unidad:'envase ≈900 g',paso:'1 envase ≈900 g',monto:38,base:0.5,real:false,nota:'En tu ticket compraste Yoplait ($12 c/u) — no es griego. Precio de yogurt griego investigado aparte.',prot:80},
   // ── Abarrotes y Despensa ──
   'Aceite de oliva':{tipo:'paquete',precio:150,unidad:'botella 500 ml',paso:'1 botella 500 ml',monto:150,base:0.125,real:false},
-  'Arroz blanco cocido':{tipo:'peso',precio:28,unidad:'kg (crudo)',paso:'1 kg crudo',monto:28,base:0.25,real:false},
-  'Atún en agua':{tipo:'pieza',precio:20,unidad:'lata 140 g',paso:'1 lata 140 g',monto:20,base:1,real:true,nota:'Precio con descuento en tu ticket. En paquete de 4-6 latas sale más barato por lata.'},
-  'Frijoles negros':{tipo:'paquete',precio:24,unidad:'lata 560 g',paso:'1 lata 560 g',monto:24,base:0.5,real:false},
-  'Granola de amaranto':{tipo:'paquete',precio:60,unidad:'bolsa 400 g',paso:'1 bolsa 400 g',monto:60,base:0.33,real:false},
+  'Arroz blanco cocido':{tipo:'peso',precio:28,unidad:'kg (crudo)',paso:'1 kg crudo',monto:28,base:0.25,real:false,prot:70},
+  'Atún en agua':{tipo:'pieza',precio:20,unidad:'lata 140 g',paso:'1 lata 140 g',monto:20,base:1,real:true,nota:'Precio con descuento en tu ticket. En paquete de 4-6 latas sale más barato por lata.',prot:26},
+  'Frijoles negros':{tipo:'paquete',precio:24,unidad:'lata 560 g',paso:'1 lata 560 g',monto:24,base:0.5,real:false,prot:34},
+  'Granola de amaranto':{tipo:'paquete',precio:60,unidad:'bolsa 400 g',paso:'1 bolsa 400 g',monto:60,base:0.33,real:false,prot:40},
   'Miel de abeja':{tipo:'paquete',precio:90,unidad:'frasco 500 g',paso:'1 frasco 500 g',monto:90,base:0.125,real:false},
   // ── Panadería y Tortillas ──
   'Pan integral':{tipo:'paquete',precio:75,unidad:'paquete grande',paso:'1 paquete',monto:75,base:0.5,real:true,nota:'Ticket: "Pan Doble" (Bimbo Doble Fibra) — no dice "integral", pero es el pan de caja más cercano que compraste.'},
-  'Tortilla de maíz':{tipo:'peso',precio:17,unidad:'kg',paso:'½ kg',monto:9,base:2,real:false,nota:'Medio kilo es lo que se pide de una en la tortillería; $8.50 redondeado a $9.'},
+  'Tortilla de maíz':{tipo:'peso',precio:17,unidad:'kg',paso:'½ kg',monto:9,base:2,real:false,nota:'Medio kilo es lo que se pide de una en la tortillería; $8.50 redondeado a $9.',prot:28},
 };
 // Ícono + etiqueta por forma de venta — el punto de la reestructura: que de un vistazo sepas si
 // ese producto lo eliges tú por peso (puedes llevar más o menos), viene en presentación cerrada,
@@ -5595,9 +5623,13 @@ function lcToggleTengo(cat,txt){
 //             semanas no son $150/mes, son ~$81.
 //   gr      — gramos POR SEMANA de cada clase, con el mismo prorrateo. Es lo que mide la barra de
 //             proporciones: lo que comes, no lo que metes al carrito de una vez.
+//   prot    — gramos de PROTEÍNA por semana (`prot` de cada producto, por paso, aproximado), con el
+//             mismo prorrateo; `protMonto` lo que cuestan a la semana los productos que la traen.
+//             Es el indicador del prompt de Lista de Compras: proteína por peso gastado.
 function lcTotalComida(){
   let ticket=0,mensual=0,n=0,piezas=0;
   const porPasillo={}, gr={verduras:0,frutas:0,almidones:0,grasas:0};
+  let prot=0, protMonto=0;
   for(const [pasillo,items] of Object.entries(LISTA_COMPRAS.comida)){
     let sub=0;
     items.forEach(txt=>{
@@ -5610,11 +5642,12 @@ function lcTotalComida(){
       mensual+=imp*(LC_SEM_MES/dura);
       const cl=lcClase(pasillo,txt);
       if(cl&&p.g) gr[cl]+=p.g*q/dura;
+      if(p.prot){ prot+=p.prot*q/dura; protMonto+=imp/dura; }
     });
     if(sub) porPasillo[pasillo]=sub;
   }
   const totG=LC_CLASES.reduce((s,k)=>s+gr[k],0);
-  return {total:ticket,ticket,mensual:Math.round(mensual),n,piezas,porPasillo,gr,totG};
+  return {total:ticket,ticket,mensual:Math.round(mensual),n,piezas,porPasillo,gr,totG,prot,protMonto};
 }
 // Los 4 tramos del medidor, ya con su meta, su desfase y la posición de la marca.
 function lcProporciones(t){
@@ -5776,7 +5809,21 @@ function lcPropHtml(){
     '<div class="lc-prop-bar"><div class="lc-prop-fill">'+tramos+'</div>'+marcas+'</div>'+
     '<div class="lc-prop-grid">'+celdas+'</div>'+
     '<div class="lc-prop-coach">'+coach+sug+'</div>'+
+    lcProteinaHtml(t)+
   '</div>';
+}
+/* La proteína del canasto contra la meta del día (Comida y Lista de Compras comparten la meta del
+   maestro). Cuenta solo la comida de esta lista: la whey va en Suplementos. */
+function lcProteinaHtml(t){
+  const meta=(window.CIFRAS&&CIFRAS.n('proteinaMeta'))||0;
+  if(!t||!(t.prot>0))
+    return '<div class="lc-prop-coach" style="margin-top:8px">🥩 <b>Proteína:</b> marca carnes, lácteos, huevo o atún y aquí verás cuánta te da el canasto al día'+
+      (meta?' contra tu meta de <b>'+meta+' g</b>':'')+'.</div>';
+  const dia=Math.round(t.prot/7), pct=meta?Math.round(dia/meta*100):0;
+  const por100=t.protMonto/t.prot*100;
+  return '<div class="lc-prop-coach" style="margin-top:8px">🥩 <b>Proteína del canasto: ≈'+dia+' g al día</b>'+
+    (meta?' de tu meta de '+meta+' g ('+pct+' %)':'')+' · '+lcM(Math.round(por100))+' por cada 100 g de proteína'+
+    ' <span style="opacity:.7">— aproximado por etiqueta; sin contar la whey</span></div>';
 }
 
 // ── Renglón ──────────────────────────────────────────────────────────────────
@@ -5931,6 +5978,13 @@ function toggleListaItem(id,cat,txt){
 // app y ahora los usan las dos, así que se sacaron a un archivo común en vez de copiarlos.
 // Las 40 lecciones siguen enteras en `Aleman/`, a un clic desde el botón de la cabecera.
 const AL_GRAM = '__partizip';   // la pestaña de gramática, que no es una sección de palabras
+/* Lo que se ve en clase en cada Kapitel del CENLEX, para el atajo del subtítulo (prompt de
+   Alemán: "prioridad al Kapitel actual"). La clave es `kapitelAleman` del maestro; si cambia a
+   uno que no está aquí, el atajo simplemente no sale — mejor nada que temas equivocados. */
+const AL_KAPITEL = {
+  10: [ { t:'Perfekt · Partizip II', sec:AL_GRAM }, { t:'Berufe', sec:'trabajo', sub:'puesto' } ],
+};
+function alVeKapitel(sec, sub){ alSet(sec); if(sub) alSetSub(sub); }
 
 function alVocab(){ return (typeof ALEMAN_VOCAB !== 'undefined') ? ALEMAN_VOCAB : null; }
 
@@ -6162,10 +6216,16 @@ function alPinta(){
 
   // El subtítulo dice QUÉ HAY; dónde estoy lo dicen las migas, que es otra pregunta.
   if(sub){
-    sub.textContent = V.voc.length.toLocaleString('es-ES') + ' palabras · ' +
+    const kap = (window.CIFRAS && CIFRAS.n('kapitelAleman')) || 0;
+    const temas = (AL_KAPITEL[kap] || []).filter(function(x){ return x.sec === AL_GRAM || V.cats[x.sec]; });
+    sub.innerHTML = vocEsc(V.voc.length.toLocaleString('es-ES') + ' palabras · ' +
       Object.keys(V.cats).length + ' secciones en ' + V.familias.length + ' familias · ' +
       Object.keys(V.cats).reduce(function(a, k){
-        return a + Object.keys(V.cats[k].subs || {}).length; }, 0) + ' subsecciones';
+        return a + Object.keys(V.cats[k].subs || {}).length; }, 0) + ' subsecciones') +
+      (temas.length ? ' · <b>Kapitel ' + kap + ' en clase:</b> ' + temas.map(function(x){
+        return '<a role="button" tabindex="0" style="color:inherit;font-weight:700;text-decoration:underline;cursor:pointer" ' +
+          'onclick="alVeKapitel(\'' + x.sec + '\'' + (x.sub ? ',\'' + x.sub + '\'' : '') + ')">' + vocEsc(x.t) + '</a>';
+      }).join(' · ') : '');
   }
 
   if(enGram){
@@ -7061,7 +7121,8 @@ function pintarAgendaDia(tareas, anchor, done, esHoy){
 // overlay de "Qué escuchar".
 function escucharHtml(t){
   if(!/didi/i.test(rtSoloTitulo(t.txt||''))||typeof DIDI_AUDIO==='undefined'||!DIDI_AUDIO.length) return '';
-  const rec=(typeof habRecomendada==='function')?habRecomendada():null;
+  // El foco de la semana, el mismo que encabeza el panel de Qué escuchar.
+  const rec=(typeof habFocoActual==='function')?habFocoActual():null;
   const grupo=(rec&&DIDI_AUDIO.find(g=>g.sk===rec.id))||DIDI_AUDIO[0];
   const it=(grupo.items||[])[0]; if(!it) return '';
   return `<div class="blq-escuchar">🎧<span>Mientras manejas: <b>${esc(it.n)}</b> · ${esc(it.d)}</span><a href="javascript:void(0)" class="hp-link" onclick="abrirDidi()">Qué escuchar →</a></div>`;
@@ -8164,6 +8225,19 @@ function renderCoachTablero(){
   const estado = T.cierre < 0
     ? { t:'Te vas a pasar', c:'var(--r)' }
     : (T.cierre < T.comeDia*7 ? { t:'Vas justo', c:'var(--w)' } : { t:'Vas holgado', c:'var(--g)' });
+  // Si no cierra, no basta con decirlo: el hueco previsto se resuelve antes de que llegue
+  // (prompt de Plan Maestro). Didi no entra en la serie —es variable—, pero sí en el plan: lo
+  // que trae de aquí al cierre del tramo, al ritmo de su promedio mensual.
+  const faltaR = Math.max(0, -T.cierre);
+  const didiR = Math.round(((window.CIFRAS && CIFRAS.n('didiMes')) || 0) * Math.max(0, T.fin - nSel) / 30.4);
+  const hastaR = T.fin >= nDias ? 'al día 1' : 'al '+(T.fin+1);
+  const numR = v => '<b class="ct-num'+(privado?' fin-hidden':'')+'" style="color:var(--text2)">'+money(v)+'</b>';
+  const detalleR = T.cierre < 0
+    ? '· faltan '+numR(faltaR)+' para llegar '+hastaR+(didiR > 0
+        ? (didiR >= faltaR ? ' · Didi trae ≈'+numR(didiR)+': lo cubre si lo apartas'
+                           : ' · Didi trae ≈'+numR(didiR)+': aún faltan '+numR(faltaR - didiR)+', recorta o mueve un pago')
+        : '')
+    : '· te sobran '+numR(T.libreDia)+'/día hasta el '+T.fin;
 
   // La linea del saldo, escalonada: cada dia mantiene su altura hasta el siguiente.
   const RW = 900, RH = 96;
@@ -8194,8 +8268,7 @@ function renderCoachTablero(){
       '<span class="cr-estado">'+
         '<i class="cr-punto" style="background:'+estado.c+';box-shadow:0 0 9px '+estado.c+'"></i>'+
         '<span style="font-size:11.5px;font-weight:600;color:var(--text)">'+estado.t+'</span>'+
-        '<span style="font-size:10.5px;color:var(--text3)">· te sobran <b class="ct-num'+(privado?' fin-hidden':'')+
-          '" style="color:var(--text2)">'+money(T.libreDia)+'/día</b> hasta el '+T.fin+(T.ancla&&nSel>=T.ancla.dia?' · desde tu saldo real del '+T.ancla.dia:'')+'</span>'+
+        '<span style="font-size:10.5px;color:var(--text3)">'+detalleR+(T.ancla&&nSel>=T.ancla.dia?' · desde tu saldo real del '+T.ancla.dia:'')+'</span>'+
       '</span>'+
     '</div>'+
 
@@ -8233,7 +8306,7 @@ function renderCoachTablero(){
       '<span class="ct-lbl">Cierras el '+T.fin+' con</span>'+
       '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:21px;font-weight:700;line-height:1;color:'+
         (T.cierre>=0?'var(--text)':'var(--r)')+'">'+money(T.cierre)+'</span>'+
-      '<span style="font-size:9.5px;color:var(--text3);line-height:1.25">Es lo que te sobra de esta quincena</span>'+
+      '<span style="font-size:9.5px;color:var(--text3);line-height:1.25">'+(T.cierre < 0 ? 'Es lo que te falta para cerrar esta quincena' : 'Es lo que te sobra de esta quincena')+'</span>'+
     '</div>';
 
   // ── Columna 1: elige el día ──
@@ -8859,7 +8932,16 @@ function abrirDidi(){
   const ov=document.getElementById('didiOverlay'), body=document.getElementById('didiBody');
   if(!ov||!body) return;
   const sub=document.getElementById('didiHeadSub');
-  if(sub) sub.textContent='~28h semanales al volante — tu bloque de tiempo más grande, y hasta hoy el único improductivo. Ordenado por tus habilidades más bajas: lo de arriba es lo que más te falta.';
+  /* El orden sigue al foco de la semana (prompt de Qué escuchar: "si la semana es de alemán, el
+     audio también"). Primero la habilidad en foco de En qué invertir tu tiempo; luego las demás,
+     de la más débil a la menos débil; al final las que Adán puso en pausa (PRIORIDAD_EXCLUIDAS,
+     9-ago-2026), marcadas: antes Ventas encabezaba la lista aunque estuviera en pausa. */
+  const focoD = (typeof habFocoActual === 'function' && habFocoActual()) || null;
+  const valD = g => { const s = SK.find(x => x.id === g.sk); return s ? s.val : 999; };
+  const rangoD = g => (focoD && g.sk === focoD.id) ? 0 : (PRIORIDAD_EXCLUIDAS.indexOf(g.sk) !== -1 ? 2 : 1);
+  const ordenD = DIDI_AUDIO.slice().sort((a, b) => rangoD(a) - rangoD(b) || valD(a) - valD(b));
+  if(sub) sub.textContent='~28h semanales al volante — tu bloque de tiempo más grande. Primero lo de tu foco de la semana'+
+    (focoD ? ' ('+focoD.name+')' : '')+'; después, de la habilidad más débil a la menos; lo que está en pausa, al final.';
 
   const slots=`<div class="didi-sec-t">🕐 Qué cabe en cada trayecto</div>
     <div class="didi-note">Tus bloques reales de Didi, tomados de tu rutina. La regla es simple: <b>lo denso va en la mañana y en los turnos largos, lo ligero en los tramos cortos.</b></div>
@@ -8871,13 +8953,15 @@ function abrirDidi(){
       </div>`).join('')}</div>
     </div>`).join('')}`;
 
-  const skills=DIDI_AUDIO.map(g=>{
+  const skills=ordenD.map(g=>{
     const s=SK.find(x=>x.id===g.sk); if(!s) return '';
     const l=skLevel(s.val);
+    const marca = rangoD(g)===0 ? ' <span class="hr-tag" style="color:var(--g)">ESTA SEMANA</span>'
+                : rangoD(g)===2 ? ' <span class="hr-tag">EN PAUSA</span>' : '';
     return `<div class="didi-skill">
       <div class="didi-skill-h">
         <span style="font-size:15px">${s.icon}</span>
-        <span class="didi-skill-n">${s.name}</span>
+        <span class="didi-skill-n">${s.name}${marca}</span>
         <span class="didi-skill-v" style="color:${l.c}">${s.val}/100 · ×${s.w}</span>
       </div>
       <div class="didi-skill-why">${g.why}</div>
@@ -8886,7 +8970,7 @@ function abrirDidi(){
   }).join('');
 
   body.innerHTML=`${slots}
-    <div class="didi-sec-t">🎯 Por habilidad — de la más débil a la menos débil</div>
+    <div class="didi-sec-t">🎯 Por habilidad — primero tu foco de la semana</div>
     <div class="didi-skills">${skills}</div>
     <div class="didi-sec-t">🇲🇽 En español, para cuando el inglés canse</div>
     <div class="didi-note">Los 3 audiolibros son la edición en español de títulos que ya están arriba — mismo contenido, sin traducir de cabeza mientras manejas.</div>
@@ -11503,6 +11587,16 @@ function renderMetasSlide(){
   // —solo en BYD y Maestría— una segunda barra con el dinero real de Finanzas y su cifra.
   // `sm` es la variante angosta de la columna de largo plazo: mismo contenido, tipografía
   // un punto menor.
+  /* El indicador de conducta que pide el prompt de Mis Metas: días seguidos. Sale de la racha
+     del hábito que sostiene la meta (Hábitos → "Cero alcohol"), no de una fecha supuesta. */
+  const META_RACHA = { alcohol: { habito: 'alcohol', txt: 'sin alcohol' } };
+  const metaRachaHtml = id => {
+    const m = META_RACHA[id];
+    if(!m || !window.HB || typeof HB.racha !== 'function') return '';
+    const r = HB.racha(m.habito);
+    if(r === null) return '';
+    return `<span style="margin-left:auto;font-size:10.5px;font-weight:700;color:var(--g);white-space:nowrap" title="La cadena del hábito «Cero alcohol», en Hábitos">🔥 ${r} día${r===1?'':'s'} ${m.txt}</span>`;
+  };
   const metaDeckHtml=(arr,sm,epigrafe)=>`<div class="mg-deck${sm?' mg-deck-sm':''}">${arr.map(i=>{
     const p=pasosMeta(i.id), est=estadoMeta(p);
     const chip=est==='ok'?'LOGRADA':(est==='on'?'EN MARCHA':'SIN EMPEZAR');
@@ -11522,7 +11616,7 @@ function renderMetasSlide(){
         <div class="mg-tt${sm?' mg-tt-sm':''}">${i.ico} ${i.t}</div>
       </div>
       <div class="mg-rail">${marcas}</div>
-      <div class="mg-foot"><span class="mg-steps">${p.hechos}<i>/</i>${p.total}<small>PASOS</small></span></div>
+      <div class="mg-foot"><span class="mg-steps">${p.hechos}<i>/</i>${p.total}<small>PASOS</small></span>${metaRachaHtml(i.id)}</div>
       ${money}
     </div>`;
   }).join('')}</div>`;
@@ -12059,7 +12153,7 @@ const HABILIDAD_DETALLE={
   vino:{titulo:'Catar y servir vino con seguridad, no solo tomarlo',frase:'No se trata de adivinar la cosecha — se trata de saber qué pedir, cómo servirlo y por qué te gusta lo que te gusta.',videos:[{u:"https://www.youtube.com/watch?v=ilqpdDs8r5Q",t:"Vino para principiantes — el curso completo en pódcast",d:"Entra por el episodio 1 y sigue en orden; abajo está el índice para saltar a un tema.",serie:{canal:"https://www.youtube.com/@VinoParaPrincipiantes",nota:"42 episodios indexados aquí. La serie pasa de 52 y sigue: los que no aparecen numerados —26, 28, 29 y del 42 al 49— no se pudieron verificar uno a uno, y están en el canal.",eps:[{n:1,u:"https://www.youtube.com/watch?v=ilqpdDs8r5Q",t:"Introducción al curso"},{n:2,u:"https://www.youtube.com/watch?v=SXQTlNWvsAg",t:"Cómo llevar un diario"},{n:3,u:"https://www.youtube.com/watch?v=Y5DWoo95ML0",t:"Uva Riesling"},{n:4,u:"https://www.youtube.com/watch?v=OV9Jcj9hPxo",t:"Sauvignon Blanc"},{n:5,u:"https://www.youtube.com/watch?v=QLlOPxdaFrg",t:"Chardonnay"},{n:6,u:"https://www.youtube.com/watch?v=4iVIB_yajQc",t:"Pinot Noir"},{n:7,u:"https://www.youtube.com/watch?v=FnPFG1KpdHw",t:"Merlot"},{n:8,u:"https://www.youtube.com/watch?v=fj13ZTQg31o",t:"Cabernet Sauvignon"},{n:9,u:"https://www.youtube.com/watch?v=RJ6EbScODB0",t:"El vino y la salud"},{n:10,u:"https://www.youtube.com/watch?v=QmyiTMDbhMU",t:"Colección y guarda de vinos"},{n:11,u:"https://www.youtube.com/watch?v=cJeJKbAt7dk",t:"Zinfandel y Syrah/Shiraz"},{n:12,u:"https://www.youtube.com/watch?v=Cqd2TaB_GZY",t:"Champagne"},{n:13,u:"https://www.youtube.com/watch?v=NCFBLLUiEO0",t:"Vinos blancos alternativos"},{n:14,u:"https://www.youtube.com/watch?v=lV_Run92sA0",t:"Vinos tintos alternativos"},{n:15,u:"https://www.youtube.com/watch?v=urlKpNqXNjo",t:"Servicio del vino en restaurantes"},{n:16,u:"https://www.youtube.com/watch?v=aHky5VV1Hq0",t:"Vinos blancos de Francia"},{n:17,u:"https://www.youtube.com/watch?v=Kb8tWeidUFU",t:"Vinos blancos de Alemania"},{n:18,u:"https://www.youtube.com/watch?v=cL9nj7nEJso",t:"Vinos blancos italianos"},{n:19,u:"https://www.youtube.com/watch?v=zJcKDlQIRS0",t:"Productores de vino confiables"},{n:20,u:"https://www.youtube.com/watch?v=ju94UMkriyQ",t:"Cata de vinos"},{n:21,u:"https://www.youtube.com/watch?v=CjZb3Zru-V0",t:"Introducción a los vinos de Borgoña"},{n:22,u:"https://www.youtube.com/watch?v=L6SO804X9Vk",t:"Vinos franceses del Ródano"},{n:23,u:"https://www.youtube.com/watch?v=HdFhSkjh6HU",t:"California y sus vinos"},{n:24,u:"https://www.youtube.com/watch?v=73l35KpQzxM",t:"Australia y Nueva Zelanda"},{n:25,u:"https://www.youtube.com/watch?v=zQBAjzLoZGE",t:"Vinos españoles"},{n:27,u:"https://www.youtube.com/watch?v=K1HuOWidwx4",t:"Tintos italianos"},{n:30,u:"https://www.youtube.com/watch?v=3f9B_Mue3k8",t:"Sudáfrica, su historia y sus vinos"},{n:31,u:"https://www.youtube.com/watch?v=trI8_TkJ6a8",t:"Burdeos, Francia"},{n:32,u:"https://www.youtube.com/watch?v=vkwcyJB6LQE",t:"Vinos de Portugal"},{n:33,u:"https://www.youtube.com/watch?v=8AqROYP9vZk",t:"Chile y sus vinos"},{n:34,u:"https://www.youtube.com/watch?v=CIe0GUubCp8",t:"Argentina y sus vinos"},{n:35,u:"https://www.youtube.com/watch?v=5kcEYYvJl-c",t:"Vinos mexicanos"},{n:36,u:"https://www.youtube.com/watch?v=g0D9_vAhePY",t:"Diccionario del vino"},{n:37,u:"https://www.youtube.com/watch?v=9QYXe8tcYGc",t:"El roble en el vino"},{n:38,u:"https://www.youtube.com/watch?v=7RxbfHQBso4",t:"Maridaje de vino y comida"},{n:39,u:"https://www.youtube.com/watch?v=kJzdiedkCuE",t:"Vinos de Estados Unidos"},{n:40,u:"https://www.youtube.com/watch?v=jaeqQBCWu4Y",t:"¿Guardar o tomar?"},{n:41,u:"https://www.youtube.com/watch?v=dIlprcCWww4",t:"Vinos rosados"},{n:44,u:"https://www.youtube.com/watch?v=NEMUZAFQz5Y",t:"Tokaji, vino de Hungría"},{n:50,u:"https://www.youtube.com/watch?v=mKX5vgYl0wM",t:"Uva Syrah / Shiraz"},{n:51,u:"https://www.youtube.com/watch?v=StA_ZIb0nVs",t:"Preguntas y respuestas"},{n:52,u:"https://www.youtube.com/watch?v=0B1iv7renBY",t:"Hugo D’Acosta"}]}}],pasos:[
       {t:'Qué es saber de vino (y qué no)',d:'La meta no es adivinar la añada a ciegas. Es mucho más práctico que eso:',list:['<b>Pedir algo que le va a gustar a la mesa</b> sin depender del mesero ni del precio.','<b>Servirlo bien</b> en tu casa: temperatura, copa, orden.','<b>Saber por qué te gusta lo que te gusta</b>, para poder pedir otro parecido en cualquier lado.','Y una defensa práctica: reconocer un vino picado, que es lo único que de verdad hay que devolver.','⚠️ Error más común: creer que caro es igual a bueno. Por encima de cierto precio pagas escasez y prestigio; en el rango de $200 a $500 pesos está la mejor relación calidad-precio de México.']},
       {t:'Las cinco uvas que resuelven casi todo',d:'Con estas cinco puedes pedir con criterio en cualquier carta:',list:['<b>Cabernet Sauvignon</b> — tinto potente, taninos altos, sabe a frutos negros. Para carne roja y asado. Es la uva de Valle de Guadalupe y de casi todo Chile.','<b>Merlot</b> — tinto más suave y redondo, menos tanino. El tinto fácil de tomar y el mejor para empezar.','<b>Malbec</b> — el argentino: frutal, medio cuerpo, muy amable. Va con casi todo y casi nunca falla en una mesa mixta.','<b>Chardonnay</b> — blanco con cuerpo, a veces con madera (mantequilla, vainilla). Para pollo, pescado graso, pastas con crema.','<b>Sauvignon Blanc</b> — blanco ligero, cítrico, ácido. Para mariscos, ceviche y ensaladas. Es el blanco que rescata una comida mexicana con limón.','Añade una sexta si tomas espumoso: <b>Cava</b> español, que da el 90% de lo que da un champagne a una fracción del precio.']},
-      {t:'Cómo catarlo, en cuatro pasos',d:'Esto es lo que hace la gente que sabe, y lleva treinta segundos. Practícalo con lo que ya tomas:',list:['<b>1. Vista</b> — inclina la copa sobre algo blanco. El color dice la edad: un tinto joven es violáceo en el borde, uno viejo tira a teja; un blanco joven es casi transparente, uno con años es dorado.','<b>2. Olfato</b> — huele <b>antes</b> de girar (los aromas más volátiles), gira la copa y huele otra vez (se abren los demás). El giro no es pose: mete oxígeno y cambia lo que hueles, de verdad.','<b>3. Boca</b> — un trago pequeño y muévelo por toda la boca. Fíjate en tres cosas: <b>acidez</b> (te hace salivar), <b>tanino</b> (te seca las encías, solo en tintos) y <b>cuerpo</b> (si se siente como agua, como leche o como crema).','<b>4. Final</b> — cuántos segundos te dura el sabor después de tragar. Un vino bueno persiste; uno corriente desaparece de inmediato. Es el indicador más honesto de calidad.','<b>No tienes que nombrar frutas.</b> Es la parte que espanta a todo el mundo y la menos importante. Basta con "más ácido que el anterior", "más seco", "más largo".'],img:'https://images.unsplash.com/photo-1657487281555-4bda4fd2bb73?w=2400&q=85&auto=format&fit=crop'},
+      {t:'Cómo catarlo, en cuatro pasos',d:'Esto es lo que hace la gente que sabe, y lleva treinta segundos. Con tu meta de cero alcohol en curso se practica como en una cata profesional larga: <b>se prueba y se escupe, nunca se traga</b> — y la vista y el olfato se entrenan igual con jugo de uva o un té:',list:['<b>1. Vista</b> — inclina la copa sobre algo blanco. El color dice la edad: un tinto joven es violáceo en el borde, uno viejo tira a teja; un blanco joven es casi transparente, uno con años es dorado.','<b>2. Olfato</b> — huele <b>antes</b> de girar (los aromas más volátiles), gira la copa y huele otra vez (se abren los demás). El giro no es pose: mete oxígeno y cambia lo que hueles, de verdad.','<b>3. Boca</b> — un trago pequeño y muévelo por toda la boca. Fíjate en tres cosas: <b>acidez</b> (te hace salivar), <b>tanino</b> (te seca las encías, solo en tintos) y <b>cuerpo</b> (si se siente como agua, como leche o como crema).','<b>4. Final</b> — cuántos segundos te dura el sabor después de escupir. Un vino bueno persiste; uno corriente desaparece de inmediato. Es el indicador más honesto de calidad.','<b>No tienes que nombrar frutas.</b> Es la parte que espanta a todo el mundo y la menos importante. Basta con "más ácido que el anterior", "más seco", "más largo".'],img:'https://images.unsplash.com/photo-1657487281555-4bda4fd2bb73?w=2400&q=85&auto=format&fit=crop'},
       {t:'Las cuatro palabras que necesitas',d:'Con este vocabulario puedes describir cualquier vino y, sobre todo, <b>pedir otro parecido</b>:',list:['<b>Seco / dulce</b> — si tiene azúcar residual. Casi todo el vino de mesa es seco; si alguien dice "me gusta el vino dulce", busca un Moscato o un Lambrusco.','<b>Ácido</b> — la frescura, lo que hace salivar. Alta acidez = refrescante, va bien con comida grasa.','<b>Tanino</b> — la sensación áspera que seca la boca en los tintos. Viene de la piel de la uva y la madera. Alto tanino necesita grasa o proteína al lado.','<b>Cuerpo</b> — el peso en boca: ligero, medio o con cuerpo.','La frase que sirve en cualquier restaurante: <i>"busco un tinto de cuerpo medio, con poco tanino, alrededor de $400"</i>. Con eso, cualquier mesero que sepa te trae algo bueno.']},
       {t:'Temperatura: el error número uno',d:'Es lo que más arruina un vino bueno, y lo que más rápido mejora uno normal:',list:['<b>Los tintos se toman demasiado calientes.</b> "Temperatura ambiente" viene de casas europeas de 18 °C, no de CDMX en mayo. Un tinto a 25° sabe a alcohol y pierde la fruta.','<b>Tinto ligero</b> (Pinot Noir, Beaujolais): 12-14 °C. <b>Tinto con cuerpo</b> (Cabernet, Malbec): 16-18 °C. Un tinto mexicano en verano: <b>20 minutos en el refrigerador antes de servir</b>. Ese solo truco mejora la mitad de los tintos que vas a tomar.','<b>Los blancos se toman demasiado fríos.</b> A 4 °C no sabe a nada. Sácalo del refrigerador <b>15 minutos antes</b>: 8-10 °C es donde aparecen los aromas.','<b>Espumosos</b>: 6-8 °C, bien fríos, esos sí.','Si un vino te sabe plano, antes de culpar al vino, revisa la temperatura.']},
       {t:'La copa y el servicio',d:'Detalles que cambian el resultado más de lo que parece:',list:['<b>Una sola copa sirve para todo</b>: una copa de tinto de tamaño medio con la boca ligeramente cerrada. No necesitas seis tipos.','<b>Sirve un tercio</b>, nunca más de la mitad. El espacio vacío es donde se concentran los aromas — llenar la copa hasta arriba mata el vino.','<b>Tómala por el tallo.</b> La mano calienta el vino y deja huellas en el cristal.','Al servir a otros, <b>gira la botella un cuarto de vuelta al terminar</b> para que no gotee.','Sirve primero a los invitados, tú al final. Y si abriste tú la botella, prueba un sorbo antes para confirmar que no está picado.']},
@@ -12070,7 +12164,7 @@ const HABILIDAD_DETALLE={
       {t:'Pedir vino en un restaurante',d:'El momento que pone nervioso a todo el mundo, resuelto en cuatro pasos:',list:['<b>1.</b> Di tu presupuesto sin decir el número en voz alta: <b>señala un vino de la carta</b> y di <i>"algo por aquí"</i>. Discreto y clarísimo.','<b>2.</b> Describe lo que buscas con las cuatro palabras: seco, ácido, tanino, cuerpo.','<b>3.</b> Cuando te lo traigan, revisa la etiqueta antes de que lo abran — que sea el que pediste, con la añada correcta.','<b>4.</b> Te sirven un sorbo. <b>Ese sorbo no es para decidir si te gusta</b>: es para comprobar que no está defectuoso. Si está bien, asientes.','El segundo vino más barato de la carta es el más pedido del mundo, y por eso muchos restaurantes ponen ahí su peor margen para ti. Pide por descripción, no por posición.']},
       {t:'Reconocer un vino picado',d:'Es lo único que de verdad se devuelve, y hay tres defectos que se identifican sin ser experto:',list:['<b>Corcho (TCA)</b> — huele a cartón mojado, a perro mojado, a sótano. El vino sabe apagado y sin fruta. Es un defecto del corcho, le pasa a cualquier bodega, y se devuelve sin dar explicaciones.','<b>Oxidado</b> — color café o dorado oscuro de más, sabe a nuez o a vinagre suave. La botella llevaba demasiado tiempo abierta o mal guardada.','<b>Avinagrado</b> — huele a vinagre o a quitaesmalte. Inconfundible.','Cómo devolverlo sin drama: <i>"creo que este está con corcho, ¿lo puedes revisar?"</i>. Dejas que el mesero lo huela y él decide. Ningún restaurante serio discute esto.','⚠️ Lo que NO es defecto: cristales en el corcho (son tartratos, inofensivos), un tinto que te resulta seco, o un vino que simplemente no te gustó.']},
       {t:'Guardar y abrir después',d:'Lo práctico para tu casa:',list:['<b>Botellas cerradas</b>: acostadas (el corcho húmedo no deja entrar aire), en oscuridad, temperatura estable y lejos de vibraciones. Encima del refrigerador es el peor lugar de la casa.','<b>Botella abierta</b>: tapa y al refrigerador, incluso los tintos. Aguanta 3-5 días; el frío frena la oxidación y lo sacas 20 minutos antes.','La mayoría del vino que se vende <b>se toma joven</b>. Guardar diez años solo tiene sentido en vinos hechos para eso, que son pocos y caros.','Un truco: si te sobra media botella, congélala en cubos. No sirve para tomar y es oro para cocinar.']},
-      {t:'✅ Ya lo dominas cuando…',d:'Cuatro pruebas prácticas, ninguna de ellas es adivinar añadas:',list:['<b>(1)</b> Pediste vino en un restaurante <b>describiendo lo que querías</b>, no señalando un precio, y acertaste.','<b>(2)</b> Serviste una botella en tu casa a la <b>temperatura correcta</b> y notaste la diferencia contra servirla como estaba.','<b>(3)</b> Puedes decir de un vino si es más o menos <b>ácido, tánico y con cuerpo</b> que otro que tomaste antes.','<b>(4)</b> Identificaste un vino con corcho y lo devolviste <b>sin dudar y sin drama</b>.'],href:'https://www.google.com/search?q=guia+vinos+Valle+de+Guadalupe+Mexico',label:'🍷 Vinos del Valle de Guadalupe'},
+      {t:'✅ Ya lo dominas cuando…',d:'Cuatro pruebas prácticas, ninguna de ellas es adivinar añadas:',list:['<b>(1)</b> Pediste vino en un restaurante <b>describiendo lo que querías</b>, no señalando un precio, y acertaste.','<b>(2)</b> Serviste una botella en tu casa a la <b>temperatura correcta</b> y notaste la diferencia contra servirla como estaba.','<b>(3)</b> Puedes decir de un vino si es más o menos <b>ácido, tánico y con cuerpo</b> que otro que probaste antes.','<b>(4)</b> Identificaste un vino con corcho y lo devolviste <b>sin dudar y sin drama</b>.'],href:'https://www.google.com/search?q=guia+vinos+Valle+de+Guadalupe+Mexico',label:'🍷 Vinos del Valle de Guadalupe'},
     ]},
   coctel:{titulo:'Coctelería — preparar bien 5 clásicos y saber por qué funcionan',frase:'Con dos cocteles bien hechos y una botella decente eres el que sirve en cualquier reunión. Con cinco, ya no necesitas a nadie más.',videos:[{u:"https://www.youtube.com/watch?v=FWvZaT3o3Ps",t:"Curso gratis de coctelería — clase 1",d:"Curso por clases, empieza por técnica y herramienta."},{u:"https://www.youtube.com/watch?v=raLXhzWyLqI",t:"Utensilios que todo bartender debe conocer — curso gratis, parte 1",d:"La herramienta antes que la receta: es donde se decide si el trago sale."}],pasos:[
       {t:'La estructura de todo coctel',d:'No hay que memorizar cien recetas. Casi todos los clásicos son la misma ecuación con distintos ingredientes: <b>fuerte + ácido + dulce</b> (o <b>fuerte + dulce + amargo</b>).',list:['<b>Fuerte</b>: el destilado — tequila, mezcal, ron, ginebra, whisky, vodka.','<b>Ácido</b>: limón o lima. Es lo que hace que un trago sepa vivo en vez de dulce y pesado.','<b>Dulce</b>: jarabe natural, licor (triple sec, curaçao) o azúcar.','<b>Amargo</b> (opcional): bitters, vermut, Campari. Es lo que le da profundidad y hace que sepa "a bar" y no a mezcla casera.','Cuando entiendas la ecuación puedes arreglar cualquier trago sobre la marcha: si sabe plano, le falta ácido; si raspa, le falta dulce; si sabe a jugo, le falta destilado.']},
@@ -12086,7 +12180,7 @@ const HABILIDAD_DETALLE={
       {t:'Dos más para el repertorio · Whisky Sour y Mojito',d:'Con los cinco de arriba ya sirves en cualquier reunión. Estos dos cubren los dos huecos que quedan — el que pide algo fuerte pero fresco, y el de clima caliente:',list:['<b>Whisky Sour</b>: whisky · limón · jarabe natural · clara de huevo (opcional, es lo que da la espuma). Si le pones clara, se agita <b>primero sin hielo</b> unos segundos para montarla, y después con hielo. Es el equilibrio exacto entre fuerte y fresco.','<b>Mojito</b>: ron blanco · hierbabuena · limón · azúcar · soda. La hierbabuena se <b>golpea con la palma</b>, no se machaca: machacada suelta clorofila y amarga el trago.','<b>Regla de oro para beber un destilado derecho</b> (sin mezclar): nunca de un trago, siempre a sorbos pequeños, dejándolo respirar en la boca. Así se aprecia; de un jalón solo se sufre.']},
       {t:'Hielo, cítricos y hierbas',d:'Los tres detalles que más suben el nivel y menos cuestan:',list:['<b>Hielo</b>: hazlo con agua hervida y enfriada, en moldes grandes. Sale más transparente y sabe a nada. El hielo del congelador absorbe olores de la comida — pruébalo solo una vez y lo entenderás.','<b>Cítricos</b>: siempre recién exprimidos, y a temperatura ambiente rinden más. Un limón rodado con la palma antes de cortarlo suelta más jugo.','<b>La cáscara</b> no es decoración: los aceites de la piel son la mitad del aroma. Exprímela sobre el trago, con la piel hacia el líquido, y verás la nube de aceite.','<b>Hierbas</b> (menta, albahaca): se golpean con la palma, <b>no se machacan</b>. Machacar rompe la clorofila y amarga el trago.']},
       {t:'Ser el que sirve',d:'La parte social, que es para lo que de verdad sirve esta habilidad:',list:['<b>Ten dos tragos dominados</b>, no diez a medias. Es infinitamente mejor.','<b>Prepara antes</b>: jarabe hecho, cítricos exprimidos, hielo de sobra, copas en el congelador. La diferencia entre un anfitrión relajado y uno atrapado en la cocina es la preparación de media hora antes.','Pregunta qué le gusta a cada quien en dos ejes: <b>¿dulce o seco?</b> y <b>¿con o sin cítrico?</b> Con eso ya sabes qué servirle.','Ten <b>siempre una opción sin alcohol</b> que esté igual de bien hecha. Un highball de tónica con limón y hierbas bien servido deja a alguien mucho más agradecido que un refresco en vaso de plástico.','⚠️ Error más común: servir demasiado alcohol creyendo que es generosidad. Un trago desbalanceado es peor trago, y el buen anfitrión cuida a sus invitados.']},
-      {t:'Beber con cabeza',d:'Va en la habilidad, no aparte — y con Didi de por medio, más:',list:['<b>Si vas a manejar, no bebes.</b> Punto. En CDMX el alcoholímetro es real y una falta te cuesta el coche que estás pagando y el ingreso de Didi.','Un vaso de agua entre trago y trago. Es lo que más diferencia amanecer bien de amanecer mal, más que lo que tomaste.','<b>Come antes</b>, no después. El alcohol con el estómago vacío entra el doble de rápido.','Un buen coctel se toma <b>despacio</b>: está diseñado para durar. Si te lo acabas en dos minutos, no lo estás tomando, lo estás usando.','Y algo que se cruza con tu habilidad de <i>Recuperarte</i>: el alcohol destruye la fase profunda del sueño. Una noche de copas es una noche de recuperación perdida en el gym.']},
+      {t:'Beber con cabeza',d:'Va en la habilidad, no aparte — y con Didi de por medio, más:',list:['<b>Con tu meta de cero alcohol en curso, esta habilidad se practica sirviendo, no tomando.</b> Cada clásico tiene su versión sin alcohol con la misma técnica —jarabe, ácido, dilución, hielo—: esa es la que pruebas tú.','<b>Si vas a manejar, no bebes.</b> Punto. En CDMX el alcoholímetro es real y una falta te cuesta el coche que estás pagando y el ingreso de Didi.','Un vaso de agua entre trago y trago. Es lo que más diferencia amanecer bien de amanecer mal, más que lo que tomaste.','<b>Come antes</b>, no después. El alcohol con el estómago vacío entra el doble de rápido.','Un buen coctel se toma <b>despacio</b>: está diseñado para durar. Si te lo acabas en dos minutos, no lo estás tomando, lo estás usando.','Y algo que se cruza con tu habilidad de <i>Recuperarte</i>: el alcohol destruye la fase profunda del sueño. Una noche de copas es una noche de recuperación perdida en el gym.']},
       {t:'✅ Ya lo dominas cuando…',d:'Cuatro pruebas concretas:',list:['<b>(1)</b> Haces <b>dos clásicos de memoria</b>, midiendo con jigger, sin buscar la receta.','<b>(2)</b> Sabes decir por qué un trago está desbalanceado —<b>le falta ácido, le sobra dulce, está aguado</b>— y lo corriges en el momento.','<b>(3)</b> Distingues sin dudar cuándo se agita y cuándo se revuelve, y por qué.','<b>(4)</b> Serviste en una reunión sin quedarte atrapado en la cocina, porque tenías todo preparado antes de que llegara el primero.'],img:'https://images.unsplash.com/photo-1756521973702-b7b496adab70?w=2400&q=85&auto=format&fit=crop',href:'https://www.google.com/search?q=IBA+official+cocktails+recetas',label:'🥃 Recetas oficiales IBA'},
     ]},
   nudos:{titulo:'Los 8 nudos que de verdad sirven, cada uno paso a paso',frase:'No necesitas saber 50 nudos — necesitas saber 8 de memoria, y saber cuál usar en cada caso.',videos:[{u:"https://www.youtube.com/watch?v=dLci4Dfp5AI",t:"Nudos marineros fundamentales: ballestrinque, cote, as de guía y cornamusa",d:"Trae exactamente los nudos de esta ficha, en un solo video."},{u:"https://www.youtube.com/watch?v=ig0yz2ocYDg",t:"Nudos náuticos: as de guía y ballestrinque",d:"Los dos que más vas a usar, explicados despacio y por separado."}],pasos:[

@@ -143,8 +143,8 @@ anterior, con guardas `if(!el) return`; se conservan por si vuelve.
 La tarjeta de la derecha, bajo la frase del día y `Semana 37 · día 256`. La pinta
 `pintarBloqueDetalle()`: el bloque de la hora actual o el tocado en la agenda, con sus subtareas
 o la rutina de gym; **Después, 21:00 · Cena ligera** (el que sigue) y, si el bloque es de Didi,
-**Mientras manejas** con el primer audiolibro del grupo de la habilidad que más rinde
-(`DIDI_AUDIO`) y el enlace al overlay *Qué escuchar*. Tope de 34 vh con desplazamiento interno.
+**Mientras manejas** con el primer audiolibro del grupo de la habilidad en foco de la semana
+(`habFocoActual()`, la misma que encabeza el overlay) y el enlace a *Qué escuchar*. Tope de 34 vh con desplazamiento interno.
 
 ### Los seis módulos
 
@@ -195,7 +195,11 @@ la clave, y bumpear la bandera le borraría lo suyo.
 comparando además **por texto** para no duplicar. Un pendiente sembrado así y borrado por Adán no
 vuelve. Los items nuevos van en los DOS sitios (`EVENTOS_MES` para el navegador que arranca de
 cero, `EVENTOS_NUEVOS` para el que ya tiene datos). Para otro lote: una entrada más con bandera
-nueva. Último lote: `_sep20260907`.
+nueva. Último lote: `_oct20261001` (pagar la BBVA completa antes del 11 y cerrar la Fase 0 por escrito).
+
+`EVENTOS_CORRIGE` + `eventosCorregir()` arreglan un texto que el tiempo dejó mal —el aviso de la
+Fase 1 decía que el mínimo de Banamex no estaba libre—: corre una vez por bandera y **solo si el
+pendiente sigue tal cual lo sembró el código**; si Adán lo editó, manda lo suyo.
 
 ---
 
@@ -437,8 +441,14 @@ en *Saldo real el 21 · Cuenta BBVA*. Adán, 21-sep-2026: *"esa cifra está mal,
 que me quedan 1200"*. Cuando reporta un saldo, va al maestro como migración con su fecha; si lo
 edita en Finanzas, `saveActivo` pone la fecha sola.
 
-Alturas de la cabecera a 1600×1000: fase 46 px, ruta de deuda 52, riel 77 — **191 en total**, y
-631 para el tablero. El alto del riel lo pone `.cr-hero` (cifra grande en
+**Cuando la quincena no cierra, el estado da el plan** (prompt de Plan Maestro: el hueco previsto
+se resuelve antes de que llegue): cuánto falta para llegar al 15 (o al día 1), cuánto trae Didi de
+aquí al cierre al ritmo de `didiMes`, y si lo cubre o cuánto falta aún. Didi sigue fuera de la
+serie; solo entra en el plan. Bajo «Cierras el 14 con» la nota dice *te falta* si el cierre es
+negativo. La tarjeta pagada al total cuenta su `noInterest` en su próximo pago (ver `agendaDia`
+en `DATOS-MAESTROS.md`).
+
+Alto del riel a 1600×1000: 118 px con el estado en dos líneas. El alto del riel lo pone `.cr-hero` (cifra grande en
 `clamp(20px,1.95vw,26px)`; `.cr-estado` envuelve a dos líneas con interlineado 1.25). En la ruta,
 el padding inferior de cada paso es el hueco de su barrita (`.crb-b`, absoluta).
 
@@ -714,6 +724,10 @@ paso, con la cifra (`$22,800 pagado`): `METAS_MONEYBAR[x].short`; `.lbl` va en e
 
 ### Las adicciones — celular y alcohol
 
+**Los días sin alcohol salen de Hábitos**, no de una fecha supuesta: el hábito *Cero alcohol*
+(el que la ficha pide) lleva la cadena, y la tarjeta de la meta enseña su racha con
+`HB.racha('alcohol')` (`META_RACHA`, `metaRachaHtml()`).
+
 `celular` y `alcohol` en `META_DETALLE`, **14 pasos cada una**, en su propia fila de corto/mediano
 plazo. **Van juntas a propósito**: son la misma mecánica —una conducta que se repite para regular
 emociones— y se disparan entre sí; cada ficha remite a la otra y las dos cierran con la misma
@@ -892,6 +906,11 @@ checkbox de un clic (marcar Plátano pone 6).
 `dura` se deriva de lo que llevas: 6 plátanos duran una semana y 12 duran dos, así que los dos
 carritos cuestan lo mismo al mes.
 
+**La proteína** (`lcProteinaHtml()`): los productos que la traen declaran `prot` —gramos por
+paso, aproximados por etiqueta— y `lcTotalComida()` la prorratea igual que los gramos. Debajo de
+las proporciones sale ≈ g al día contra `{{proteinaMeta}}` y lo que cuestan 100 g de proteína, sin
+contar la whey (va en Suplementos). Es el indicador del prompt de Lista de Compras.
+
 **Las proporciones.** Los 13 productos frescos viven en tres pasillos y se clasifican en cuatro
 clases con `lcClase()` (`LC_ITEM_CLASE` es la excepción del aguacate, que cuenta como grasa). La
 barra compara el peso del canasto contra `LC_CLASE_META` (**55 / 30 / 10 / 5**), en gramos **por
@@ -938,6 +957,10 @@ siete familias cubran las 37 secciones.
   filtrar (sección desconocida → «Saludos», subsección ajena → `null`): una subsección renombrada
   en `vocab-datos.js` dejaba la pantalla en cero en cada apertura. El filtro de nivel (`al_niv_v1`)
   sí puede dar cero legítimo: el mensaje nombra sección y nivel y trae **Ver todos los niveles**.
+
+- **El atajo del Kapitel** en el subtítulo: lo que se ve en clase en el Kapitel actual
+  (`kapitelAleman` del maestro) según `AL_KAPITEL` —para el 10, Perfekt · Partizip II y Berufe—;
+  cada tema abre su sección con `alVeKapitel()`. Un Kapitel que no esté en la tabla no pinta atajo.
 
 Claves: `al_sec_v1`, `al_sub_v1`, `al_fam_v1`, `al_niv_v1`, `al_plg_v1`, `al_vista_v1`.
 
@@ -1052,7 +1075,7 @@ envuelve la tabla entera y el vertical solo las filas, así la fila de totales s
 pantalla), `marcas` (indexado por **fecha ISO local** — nunca `toISOString()`, que en México
 adelanta el día desde las 18:00), `desde` y `mig`.
 
-Las migraciones van por versión (`MIG = 7`), corren una sola vez y en orden, y **lo que Adán
+Las migraciones van por versión (`MIG = 8`), corren una sola vez y en orden, y **lo que Adán
 editó a mano manda**: un hábito cuyo nombre o anclaje no son los de la semilla anterior solo
 recibe lo nuevo (hora, icono, meta, qué hacer, flex). Los retirados salen de la lista y de su
 historial; los nuevos entran con arranque en hoy. Si el guardado trae `marcas` pero no `def`, el

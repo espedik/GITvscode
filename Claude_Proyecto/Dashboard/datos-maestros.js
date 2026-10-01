@@ -293,7 +293,7 @@ window.CIFRAS = (function () {
     {id:"wd-al-gym",dias:[1,2,3,4,5],hora:"18:00",dur:15,cat:"admin",txt:"🚗 Del CENLEX al gimnasio (~15 min)"},
     {id:"wd09",dias:[1,2,3,4,5],hora:"19:05",cat:"salud",txt:"Ducha rápida post-ejercicio",subtareas:[{id:"wd09a",txt:"Ducha rápida para quitar el sudor del entrenamiento."},{id:"wd09b",txt:"🏊 <b>SOLO MIÉRCOLES, después de nadar:</b> lava el cabello con <b>CeraVe Champú Hidratante sin sulfatos</b>. El cloro se queda en el pelo y lo reseca durante horas — este lavado no es opcional."},{id:"wd09c",txt:"🏊 Miércoles: después del champú, <b>L'Oréal Elvive Reparación Total 5</b> solo de medios a puntas."},{id:"wd09d",txt:"🏊 Truco para el miércoles: <b>moja el pelo con agua limpia ANTES de meterte a la alberca</b>. El pelo mojado absorbe menos cloro, igual que una esponja llena."}]},
     {id:"wd-didi2",dias:[1,2,3,4,5],hora:"19:30",cat:"admin",txt:"🚗 Didi — sesión corta de la noche (hasta ~20:00)"},
-    {id:"wd11",dias:[1,2,3,4,5],hora:"20:00",cat:"profundo",txt:"🎯 Prioridad activa de Fase 0: negocio de tu papá o plantilla GBM — 1h15 de avance real (20:00–21:15)"},
+    {id:"wd11",dias:[1,2,3,4,5],hora:"20:00",cat:"profundo",txt:"🎯 Plan Maestro, Fase 1 — primer ingreso real: negocio de tu papá o plantilla GBM — 1h15 de avance real (20:00–21:15)"},
     {id:"wd14",dias:[1,2,3,4,5],hora:"21:15",cat:"salud",txt:"🍽️ Cena + preparar la comida de mañana",subtareas:[{id:"wd14a",txt:"Cocina un solo platillo para cenar hoy y llevar de comida mañana a ALTEN — ahorra tiempo, sin carbohidratos refinados en la cena",link:{href:"../CuidadoPersonal/comida.html?s=cenas",label:"🍳 Ver cenas"}},{id:"wd14b",txt:"Deja todo empacado y listo junto a la puerta para salir rápido mañana",link:{href:"../CuidadoPersonal/comida.html?s=desayunos",label:"🍳 Ver desayunos"}}]},
     {id:"wd-pm",dias:[1,2,3,4,5],hora:"22:30",cat:"salud",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos",producto:true,subtareas:[{id:"wd17a",sec:"Piel y minoxidil",txt:"Limpiador (doble limpieza si usaste protector solar): CeraVe Limpiador Espumoso (verde) — remueve el bloqueador y el sudor del día"},{id:"wd17b",txt:"Tratamiento con retinoide: Differin Adapaleno 0.1% Gel — controla brotes y mejora la textura"},{id:"wd17c",txt:"Hidratante nocturno: Eucerin Hyaluron-Filler + Epigenetic Noche — repara la piel mientras duermes"},{id:"wd18",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 1 ml con el gotero en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la noche"},{id:"wdSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)"}]},
     {id:"sa-pm",dias:[6],hora:"22:20",cat:"salud",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos",producto:true,subtareas:[{id:"sa13",sec:"Piel y minoxidil",txt:"Skincare PM — limpiador + retinoide + hidratante nocturno"},{id:"sa13b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 1 ml con el gotero en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la noche"},{id:"saSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"saSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)"}]},
@@ -3396,7 +3396,11 @@ window.CIFRAS = (function () {
   }
 
   /* Lo que está PROGRAMADO un día concreto, venga de donde venga: los cobros del calendario y
-     el mínimo de cada deuda que se paga ese día. */
+     el mínimo de cada deuda que se paga ese día.
+     Una tarjeta con `noInterest` se paga COMPLETA (Adán, 30-sep-2026: "ya estoy pagando todo y
+     no me cobran intereses"): en su PRÓXIMO pago sale el total del estado de cuenta, no el
+     mínimo. Los meses de después siguen con el mínimo: esos estados de cuenta aún no existen, y
+     inventarles un total sería peor que quedarse corto. */
   function agendaDia(dia, ym, debts) {
     const out = [];
     const mes = ym || '';
@@ -3411,8 +3415,17 @@ window.CIFRAS = (function () {
       out.push({ t: c.txt, monto: c.monto, entra: !!c.entra });
     });
     const DEU = (debts && debts.length) ? debts : deudas();
+    const hoy = new Date();
+    const proximo = function (d) {      // el mes del próximo pago de esa deuda, 'YYYY-MM'
+      const m = hoy.getDate() <= d.day ? hoy.getMonth() : hoy.getMonth() + 1;
+      const f = new Date(hoy.getFullYear(), m, 1);
+      return f.getFullYear() + '-' + String(f.getMonth() + 1).padStart(2, '0');
+    };
     DEU.forEach(function (d) {
-      if (d.day === dia && +d.balance > 0 && +d.min > 0) out.push({ t: d.name, monto: +d.min, entra: false });
+      if (d.day !== dia || !(+d.balance > 0) || !(+d.min > 0)) return;
+      if (+d.noInterest > 0 && mes === proximo(d))
+        out.push({ t: d.name + ' — pago total, sin intereses', monto: +d.noInterest, entra: false });
+      else out.push({ t: d.name, monto: +d.min, entra: false });
     });
     return out;
   }

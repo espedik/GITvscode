@@ -113,7 +113,7 @@
        foco) en vez de copiarlo aquí. El detalle de cada ejercicio vive en Ejercicio. */
     { id:'gym',    nombre:'Gimnasio',               ancla:'Tras el CENLEX · el sábado a las 07:35',      hora:'18:15', color:'#ff8a3d', ico:'pesa',   dow:[1,2,4,5,6], gym:true,
       pasos:['Series, reps y peso de cada ejercicio: en Ejercicio, en la barra de arriba.'] },
-    { id:'fase0',  nombre:'Fase 0 · 1h15',          ancla:'Negocio de tu papá o plantilla GBM',          hora:'20:00', color:'#8b5cf6', ico:'diana',  dow:[1,2,3,4,5], flex:true,
+    { id:'fase0',  nombre:'Plan Maestro · 1h15',    ancla:'Primer ingreso real: negocio de tu papá o plantilla GBM', hora:'20:00', color:'#8b5cf6', ico:'diana',  dow:[1,2,3,4,5], flex:true,
       pasos:[
         '1h15 de avance en la prioridad activa: el negocio de tu papá o la plantilla GBM.',
         'Antes de empezar, decide qué vas a tener hecho a las 21:15. Una cosa, no tres.',
@@ -138,6 +138,15 @@
         'Litro 2: en ALTEN por la tarde, antes de salir al CENLEX.',
         'Litro 3: entre el gimnasio y la cena.',
         'Marca un litro cada vez que termines la botella: tres toques y el día está.'
+      ] },
+    /* 2026-10-01 · La ficha "Dejar el alcohol" de Mis Metas le pide a Adán un hábito diario
+       "Cero alcohol" —la cadena que no se rompe— y no existía: Mis Metas no tenía con qué
+       contar los días limpios, que es el indicador de su prompt. Su racha es ese conteo. */
+    { id:'alcohol', nombre:'Cero alcohol',          ancla:'Todo el día · si se antoja, agua mineral o té', hora:'', color:'#4ade80', ico:'loto', dow:'todos',
+      pasos:[
+        'Se marca al cerrar el día si no tomaste nada: ni una.',
+        'Si se antoja: agua mineral con limón o un té, y cambia de lugar si hace falta.',
+        'Si recaes, márcalo como fallado y anota qué lo disparó en la ficha de Dejar el alcohol de Mis Metas. Mañana sigue la cadena.'
       ] }
   ];
 
@@ -146,14 +155,14 @@
      La regla de todas: lo que Adán editó a mano manda. Un hábito se considera
      "suyo" si su nombre o su anclaje no son los que le puso la semilla anterior
      — entonces se le añade solo lo nuevo (la hora) y no se le toca nada más. */
-  const MIG = 7;
+  const MIG = 8;
   const RETIRADOS = { 2: ['azucar', 'gasto'], 3: ['pasos'], 4: ['snooze', 'diario'], 5: ['nata'], 7: ['genai', 'medi'] };
   /* Lo que decía la semilla anterior de cada hábito, para saber si Adán lo tocó */
   const PREVIO = {
     gym:   [['Gimnasio', '19:00 · después de comer'], ['Gimnasio', 'Tras el CENLEX · el sábado a las 07:35']],
     nata:  [['Natación', 'Miércoles, 20:00'], ['Natación', 'Alberca del Fitsi Buenavista']],
     app:   [['Construir esta app', '10 min antes de arrancar · y de 23:30 a 00:00']],
-    fase0: [['Fase 0 · 1h15', 'Negocio de tu papá o plantilla GBM']],
+    fase0: [['Fase 0 · 1h15', 'Negocio de tu papá o plantilla GBM'], ['Plan Maestro · 1h15', 'Primer ingreso real: negocio de tu papá o plantilla GBM']],
     ale:   [['Alemán · 15 min', 'Antes del café'], ['Clase de alemán', 'CENLEX · ESCA Santo Tomás, hasta las 18:00']],
     linkedin: [['Post de Aeroresinas en LinkedIn', 'Al llegar a ALTEN, antes del correo · 20 min']],
     leer:  [['Leer 10 páginas', 'Al acostarme'], ['Leer 10 páginas', 'En el cierre del día']],
@@ -1106,6 +1115,13 @@
       });
     },
     toggleHoy: function (id) { cargar(); toggle(id, hoyISO()); },
+    /* La racha de un hábito por su id, o null si no existe: Mis Metas la usa para contar los
+       días seguidos sin alcohol con las marcas reales, no con una fecha supuesta. */
+    racha: function (id) {
+      cargar();
+      const h = S.def.filter(function (x) { return x.id === id; })[0];
+      return h ? racha(h) : null;
+    },
     ico: function (nombre, color, px) { return svgIco(nombre, color, px); },
     mes: function (n) {
       const m = new Date(mesVisto.getFullYear(), mesVisto.getMonth() + n, 1);
