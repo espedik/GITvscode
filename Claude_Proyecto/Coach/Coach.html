@@ -1611,7 +1611,7 @@
             Ya no aplica: al liquidar Banamex tus mínimos vigentes bajaron a <strong class="text-green">$11,028.98/mes</strong>
             y la categoría "Deudas" quedó corregida en $8,200, que <strong>cuadra exacto</strong> con el crédito del auto
             ({{autoPago}}) más el mínimo de BBVA ({{tcBbvaMin}}).</p>
-          <p style="margin-top:8px;"><span class="text-red">Y desde el 1 sep 2026 vuelve a subir</span>: Banamex tiene otra vez saldo ({{banamex}}) y su mínimo de {{banamexMin}} regresa al cálculo. Los mínimos vivos van hoy en <strong>{{minimosDeuda}}</strong>, y "Deudas" en $8,200 ya no los cubre.</p>
+          <p style="margin-top:8px;">Banamex volvió a tener saldo el 1 sep 2026 y <span class="text-green">quedó otra vez en $0 el 30 sep</span>: su mínimo de {{banamexMin}} sale del cálculo. Los mínimos vivos van hoy en <strong>{{minimosDeuda}}</strong>.</p>
           <p style="margin-top:8px;">Pero la fuga no desapareció, se movió: los MSI no se contabilizan en "Deudas" sino
             en <strong>"Suscripciones"</strong>, y ahí van <strong class="text-red">$3,259/mes</strong> ($2,829 de MSI +
             $430 de Claude Code e iCloud) contra un presupuesto de solo $2,000. <strong>Hueco real hoy: $1,259/mes.</strong>
@@ -1655,7 +1655,7 @@
     <!-- CALENDARIO DE DEUDA -->
     <div class="card mb-16" style="margin-bottom:16px;">
       <h3 class="fw-700 mb-12">Calendario real de tu deuda — cuándo se libera cada peso</h3>
-      <p class="fs-13 text-muted mb-12">Actualizado el 13 ago 2026 contra tu estado de cuenta real de BBVA (corte del 22 jul). Dos MSI que aquí figuraban —Vuelo Viva Aerobus y Mercado Libre— <strong>no existen</strong> en tu historial y se eliminaron; en su lugar entraron los 3 que sí aparecen. Buena noticia: <strong class="text-green">4 de tus 5 MSI se liquidan en los próximos 2 meses</strong>. La Banamex se liquidó ese mismo 13 ago, pero <strong class="text-red">volvió a tener saldo el 1 sep 2026</strong> con cuatro compras de un solo día —plancha, dutasterida, minoxidil y mouse, $5,985— y hoy va en {{banamex}}, así que su mínimo de {{banamexMin}} vuelve a pesar en el mes.</p>
+      <p class="fs-13 text-muted mb-12">Actualizado el 13 ago 2026 contra tu estado de cuenta real de BBVA (corte del 22 jul). Dos MSI que aquí figuraban —Vuelo Viva Aerobus y Mercado Libre— <strong>no existen</strong> en tu historial y se eliminaron; en su lugar entraron los 3 que sí aparecen. Buena noticia: <strong class="text-green">4 de tus 5 MSI se liquidan en los próximos 2 meses</strong>. La Banamex se liquidó ese mismo 13 ago, pero <strong class="text-red">volvió a tener saldo el 1 sep 2026</strong> con cuatro compras de un solo día —plancha, dutasterida, minoxidil y mouse, $5,985— y <strong class="text-green">quedó otra vez en $0 el 30 sep 2026</strong>: su mínimo de {{banamexMin}} ya no pesa en el mes.</p>
       <div class="impuesto-row"><span class="imp-nombre text-green">✅ Tarjeta Banamex ($9,000) — LIQUIDADA, saldo en $0</span><span class="imp-fecha text-green">13 ago 2026</span></div>
       <div class="impuesto-row"><span class="imp-nombre text-green">✅ Ticketmaster MSI ($1,260) — LIQUIDADO, última cuota pagada</span><span class="imp-fecha text-green">13 ago 2026</span></div>
       <div class="impuesto-row"><span class="imp-nombre">Merpago*Merca MSI ($597) — última cuota, se liquida</span><span class="imp-fecha">22 ago 2026</span></div>
@@ -1670,9 +1670,9 @@
         Tu carga de MSI cae en escalera: <strong>$2,829/mes hoy → $1,515 en septiembre → $494 en octubre</strong>
         (solo el iPhone). Eso libera <strong class="text-green">$2,335/mes</strong> para octubre, y ya tienes libres
         los <strong class="text-green">{{banamexMin}}/mes</strong> del mínimo de Banamex — <strong class="text-green">$3,145/mes</strong>
-        en total contra como arrancaste Fase 0. <span class="text-red">Ese segundo tramo se perdió el 1 sep 2026</span>:
-        la Banamex volvió a tener saldo ({{banamex}}) y su mínimo dejó de estar libre, así que de los $3,145
-        quedan los $2,335 de MSI.
+        en total contra como arrancaste Fase 0. Ese segundo tramo se perdió el 1 sep 2026, cuando la Banamex volvió a tener saldo,
+        y <span class="text-green">se recuperó el 30 sep 2026</span>: la Banamex quedó otra vez en $0 y su
+        mínimo vuelve a estar libre.
       </p>
       <p class="fs-13" style="line-height:1.7;">
         Ese dinero tiene un solo destino y ya no hay que decidirlo: primero completar el fondo de emergencia
@@ -2414,7 +2414,7 @@
       <div class="fase-item" id="fase0">
         <span class="fase-tag">Fase 0 · 1 ago – 30 sep 2026 (~9 semanas)</span><span class="fase-status" id="faseStatus0">—</span>
         <h4>Cerrar la fuga y arrancar ingreso, no solo pensar</h4>
-        <div class="fase-meta"><span>🎯</span><span><span class="text-green">✅ Banamex liquidada el 13 ago 2026</span> (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep) y <span class="text-green">✅ BBVA de $39,000 a {{tcBbva}} el 19 sep 2026</span> con la venta del Bitcoin. Quedan 2 objetivos financieros, en este orden: <strong>1) fondo de emergencia —los CETES, {{fondo}}— a {{fondoMeta}}</strong>, <strong>2) rematar las dos tarjetas ({{tcBbva}} BBVA + {{banamex}} Banamex)</strong>.</span></div>
+        <div class="fase-meta"><span>🎯</span><span><span class="text-green">✅ Banamex liquidada el 13 ago 2026</span> (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep y quedó otra vez en $0 el 30 sep) y <span class="text-green">✅ BBVA de $39,000 a $900 el 19 sep 2026</span> con la venta del Bitcoin (el 30 sep iba de nuevo en {{tcBbva}}). Quedan 2 objetivos financieros, en este orden: <strong>1) fondo de emergencia —los CETES, {{fondo}}— a {{fondoMeta}}</strong>, <strong>2) dejar la BBVA en $0 ({{tcBbva}})</strong>.</span></div>
         <div class="fase-checklist">
           <!-- El bloque "📅 Julio 2026" desapareció el 2026-08-12 al mover el arranque de la fase
                a agosto: sus 3 tareas (s0-1, s0-2, s0-6) se movieron aquí arriba, conservando sus
@@ -2429,7 +2429,7 @@
             <summary><span>📅 Agosto 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
             <div class="fase-month-body">
               <div class="check-item"><input type="checkbox" id="s0-9"><label for="s0-9"><strong>Prioridad 1 — Fondo de emergencia a {{fondoMeta}}.</strong> Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. <span class="text-muted">(hoy {{fondo}}, en CETES · se alimenta con los {{cetesDia15}} del día 15, la venta de activos y lo de Didi)</span></label></div>
-              <div class="check-item"><input type="checkbox" id="s0-10"><label for="s0-10"><strong>Prioridad 2 — Liquidar las dos tarjetas: BBVA ({{tcBbva}}) y Banamex ({{banamex}}).</strong> El 19 sep 2026 la venta del Bitcoin dejó la BBVA de $39,000 en {{tcBbva}} y abonó $3,000 a Banamex; lo que queda cabe en un par de quincenas. En cuanto el fondo llegue a {{fondoMeta}}, todo excedente va aquí.</label></div>
+              <div class="check-item"><input type="checkbox" id="s0-10"><label for="s0-10"><strong>Prioridad 2 — Liquidar las dos tarjetas: Banamex quedó en $0 el 30 sep 2026; falta la BBVA ({{tcBbva}}).</strong> El 19 sep 2026 la venta del Bitcoin la dejó de $39,000 en $900, pero el 30 sep ya iba otra vez en {{tcBbva}}, a 55.7% anual. En cuanto el fondo llegue a {{fondoMeta}}, todo excedente va aquí.</label></div>
               <div class="check-item"><input type="checkbox" id="s0-4"><label for="s0-4">Sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad) — es la fuente más rápida para completar el fondo de emergencia de la Prioridad 1.</label></div>
               <div class="check-item"><input type="checkbox" id="s0-3"><label for="s0-3">Plantilla Finanzas.html, de principio a fin: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Opción 1</a>).</label></div>
               <div class="check-item"><input type="checkbox" id="s0-2"><label for="s0-2">Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la <a href="#" class="inline-link" onclick="irANegocios('negocio5');return false;">Opción 5</a>.</label></div>
@@ -2441,7 +2441,7 @@
           <details class="fase-month" data-month="2026-09">
             <summary><span>📅 Septiembre 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
             <div class="fase-month-body">
-              <div class="check-item"><input type="checkbox" id="s0-7"><label for="s0-7">Cada peso de ventas/activos va, en orden fijo: <strong>(1)</strong> fondo de emergencia a {{fondoMeta}}, <strong>(2)</strong> resto a las tarjetas, Banamex ({{banamex}}) primero por ser la mayor desde el 19 sep 2026. <span class="text-green">Ese día la venta del Bitcoin dejó la BBVA en {{tcBbva}}</span>: la Fase 0 cierra con dos tarjetas vivas, pero con {{deudaCara}} entre las dos y no $46,800.</label></div>
+              <div class="check-item"><input type="checkbox" id="s0-7"><label for="s0-7">Cada peso de ventas/activos va, en orden fijo: <strong>(1)</strong> fondo de emergencia a {{fondoMeta}}, <strong>(2)</strong> resto a la BBVA ({{tcBbva}}), la única tarjeta con saldo. <span class="text-green">Banamex quedó en $0 el 30 sep 2026</span>: la Fase 0 cierra con una sola tarjeta viva y {{deudaCara}} de deuda cara, no $46,800.</label></div>
             </div>
           </details>
         </div>
@@ -2579,14 +2579,14 @@
       <h3 class="fw-700 mb-12">Próximos 14 días — esto empieza hoy, no "cuando tenga tiempo"</h3>
       <p class="fs-13 text-muted mb-12">Tu patrón es abandonar cuando no ves avance rápido. Estas <span id="pfCount">10</span> acciones son deliberadamente pequeñas y concretas para que en 2 semanas ya tengas evidencia de movimiento real. Las 2 primeras son <strong>las prioridades de Fase 0, en ese orden</strong>.</p>
       <div class="check-item"><input type="checkbox" id="pf11"><label for="pf11"><strong>Prioridad 1:</strong> llevar el fondo de emergencia a {{fondoMeta}} — antes que cualquier abono extra a deuda</label></div>
-      <div class="check-item"><input type="checkbox" id="pf12"><label for="pf12"><strong>Prioridad 2:</strong> con el fondo completo, todo excedente a liquidar la TC BBVA ({{tcBbva}}, la más cara) y después la Banamex ({{banamex}})</label></div>
+      <div class="check-item"><input type="checkbox" id="pf12"><label for="pf12"><strong>Prioridad 2:</strong> con el fondo completo, todo excedente a liquidar la TC BBVA ({{tcBbva}}) — la Banamex ya quedó en $0 el 30 sep 2026</label></div>
       <div class="check-item"><input type="checkbox" id="pf3"><label for="pf3">Hacer inventario de activos físicos ociosos (PS5, Control PS5, monitores extra, iPad) y publicarlos en Marketplace — es lo que financia la Prioridad 1</label></div>
       <div class="check-item"><input type="checkbox" id="pf4"><label for="pf4">Cancelar/evitar cualquier compra nueva a MSI esta quincena</label></div>
       <div class="check-item"><input type="checkbox" id="pf5"><label for="pf5">Revisar las fotos y el material del negocio de tu papá, y ponerle atención real — primer paso de la Opción 5</label></div>
       <div class="check-item"><input type="checkbox" id="pf6"><label for="pf6">Plantilla Finanzas.html completa: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (Opción 1)</label></div>
       <div class="check-item"><input type="checkbox" id="pf1"><label for="pf1">Corregir la categoría "Deudas" del presupuesto en Finanzas.html <span class="text-muted">(✅ 13 ago 2026: quedó en $8,200 reales)</span></label></div>
       <div class="check-item"><input type="checkbox" id="pf8"><label for="pf8">Pausar nuevas aportaciones a "Maestría en Alemania" por 1 año exacto (hasta 18 jul 2027) — sin tocar los {{maestria}} ya ahorrados</label></div>
-      <div class="check-item"><input type="checkbox" id="pf9"><label for="pf9">Todo abono extra va a <strong>BBVA</strong> — es la deuda cara cuya tasa muerde. <span class="text-red">Pero desde el 1 sep 2026 Banamex ya no está en $0</span> ({{banamex}}): vuelve a haber una segunda tarjeta corriendo interés, y liquidarla es barato comparado con dejarla crecer</label></div>
+      <div class="check-item"><input type="checkbox" id="pf9"><label for="pf9">Todo abono extra va a <strong>BBVA</strong> — es la deuda cara cuya tasa muerde. Banamex volvió a tener saldo el 1 sep 2026 y <span class="text-green">quedó otra vez en $0 el 30 sep</span>: que no vuelva a cargarse</label></div>
       <div class="check-item"><input type="checkbox" id="pf10"><label for="pf10">Revisar este apartado completo una vez por semana en tu Revisión Semanal — no dejar que se vuelva un documento que escribiste una vez y ya</label></div>
     </div>
 
@@ -2613,7 +2613,7 @@
           <div class="check-item"><input type="checkbox" id="mtc1"><label for="mtc1">Ir a un torneo de ajedrez</label></div>
           <div class="check-item"><input type="checkbox" id="mtc2"><label for="mtc2">Correr tu primer Hyrox</label></div>
           <div class="check-item"><input type="checkbox" id="mtc3"><label for="mtc3">Liquidar la deuda de Banamex <span class="text-green">(✅ 13 ago 2026 — pagaste los $9,000 completos, 5 meses antes de la meta de ene 2027)</span></label></div>
-          <div class="check-item"><input type="checkbox" id="mtc6"><label for="mtc6">Cancelar la tarjeta Banamex <span class="text-muted">(era la segunda mitad de la meta anterior — sigue pendiente, y desde el 1 sep 2026 hay que liquidar antes los {{banamex}} que volvió a deber)</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mtc6"><label for="mtc6">Cancelar la tarjeta Banamex <span class="text-muted">(era la segunda mitad de la meta anterior — sigue pendiente; desde el 30 sep 2026 ya está en $0 y se puede cancelar)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc4"><label for="mtc4">Liquidar la TC de BBVA <span class="text-muted">(meta recorrida a mar 2027 al liquidar Banamex antes — ya en tu Plan Maestro)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc5"><label for="mtc5">Fondo de emergencia completo a {{fondoMeta}} <span class="text-muted">(meta: sep 2026, Fase 0)</span></label></div>
           <!-- 2026-09-14: las adicciones (celular y alcohol; la de las citas se quitó el 21-sep-2026). Viven con detalle completo (14 pasos cada una) en el Dashboard → Mis Metas; aquí solo el marcador. -->
@@ -2928,7 +2928,7 @@
     <div id="rutina-mi-rutina">
 
       <div class="context-banner">
-        <p><strong>Tu contexto ahora mismo:</strong> estás en <strong>Fase 0</strong> del <a href="#perfil" class="inline-link">Plan Maestro</a> (1 ago – 30 sep 2026). Con Banamex liquidada el 13 ago y <span class="text-red">vuelta a usar el 1 sep</span> ({{banamex}}), las 3 cosas que definen si esta fase se cumple son, en orden: <strong>1)</strong> el fondo de emergencia a {{fondoMeta}}, <strong>2)</strong> los abonos extra a BBVA una vez completo, y <strong>3)</strong> la plantilla Finanzas.html publicada en comunidades de GBM + atención real al negocio de tu papá.
+        <p><strong>Tu contexto ahora mismo:</strong> estás en <strong>Fase 0</strong> del <a href="#perfil" class="inline-link">Plan Maestro</a> (1 ago – 30 sep 2026). Con Banamex liquidada el 13 ago, vuelta a usar el 1 sep y <span class="text-green">otra vez en $0 el 30 sep 2026</span>, las 3 cosas que definen si esta fase se cumple son, en orden: <strong>1)</strong> el fondo de emergencia a {{fondoMeta}}, <strong>2)</strong> los abonos extra a BBVA una vez completo, y <strong>3)</strong> la plantilla Finanzas.html publicada en comunidades de GBM + atención real al negocio de tu papá.
           Horario real confirmado: te levantas <strong>6:40</strong> y arrancas el día con <strong>20 min construyendo este mismo ecosistema</strong>, te bañas a las <strong>7:03</strong>, sales <strong>7:40</strong> ya manejando <strong>Didi con direccionamiento</strong> rumbo a ALTEN (~50 min con el desvío del pasajero), entras <strong>8:30</strong>, comes en tu descanso de las <strong>13:00</strong>, y sales a las <strong>17:00</strong> — la ventana de la mañana solo alcanza para el bloque de la aplicación más higiene/skincare, así que el ejercicio y el bloque de habilidad se movieron a después del trabajo, donde sí hay tiempo. Al salir de ALTEN (<strong>17:00</strong>) manejas Didi ~40 min con un pasajero rumbo a Buenavista, y de ahí entras directo al gym a las <strong>17:40</strong>. Por la noche retomas Didi en una sesión corta hasta ~<strong>20:00</strong>, y de ahí tienes <strong>1h15 seguidas</strong> para tu prioridad activa de Fase 0 (no antes, para no cortar el impulso de manejar), y después preparas la cena y la comida de mañana en una sola sesión. <strong>Dos de tus tres bloques diarios de Didi son trayectos que ya manejabas</strong> —a ALTEN y al gym—, así que casi todo ese ingreso no te cuesta tiempo nuevo. A las <strong>23:30</strong> vuelves a la aplicación hasta las <strong>00:00</strong>, a veces hasta la <strong>01:00</strong> — eso te deja entre <strong>5h40 y 6h40 de sueño</strong>, por debajo de las 7h que la rutina asumía antes. <strong>Skincare y el tratamiento anticaída (minoxidil) están en la rutina al despertar y antes de dormir, todos los días</strong> — el lavado de cabello (Lun/Jue/Sáb) se hace en la ducha de la mañana. El ejercicio y el bloque de habilidad cambian cada día de la semana (tomados de tus 5 prioridades en <a href="#aprendizaje" class="inline-link">Aprendizaje</a>), y el fin de semana tiene su propio horario, sin ALTEN. Usa las pestañas de abajo para ver cualquier día — solo el día de hoy guarda tu avance.
           <em style="color:var(--muted-2)">Los 40 min de Didi a Buenavista y la sesión de la noche son estimados — ajusta las horas si tu tráfico o tus viajes reales varían.</em>
         </p>

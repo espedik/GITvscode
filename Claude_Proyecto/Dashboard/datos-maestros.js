@@ -210,7 +210,8 @@ window.CIFRAS = (function () {
     // pagó $38,100 aquí). `total` se queda en 39,000: ya no hace falta la invariante
     // `total == balance` —era para que el saldo creciente no dejara el "pagado real" en
     // negativo— y así las barras enseñan los $38,100 pagados de verdad.
-    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:900,       rate:55.7,  min:1500, day:11,start:'2024-01-22'},
+    // 2026-09-30: vuelve a $10,000 ("la de bbva le debo 10 mil"); no dijo en qué se cargó.
+    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:10000,       rate:55.7,  min:1500, day:11,start:'2024-01-22'},
     // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. 55.7 es un supuesto tomado de
     // la BBVA, no un dato medido de esta tarjeta.
     // 2026-09-01: VUELVE A TENER SALDO, y con él vuelve a ser deuda cara. Cuatro compras de ese
@@ -223,8 +224,9 @@ window.CIFRAS = (function () {
     // `total == balance` como hubo que hacer con la BBVA.
     // Saldos dichos por Adán: $5,985 (1-sep) → $7,000 (7-sep) → $7,800 (16-sep-2026) →
     // $4,900 (20-sep-2026 → $3,900 el 21-sep: abonó $3,000 de la venta del Bitcoin; los $100 sobre la resta son
-    // intereses o cargos del corte, dicho por él).
-    {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:3900,       rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
+    // intereses o cargos del corte, dicho por él) → $0 (30-sep-2026: "ya no debo nada a mi tarjeta
+    // de crédito de banamex"). Liquidada por segunda vez.
+    {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:0,          rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
     // Saldo reportado por Adán: $299,000 (24-ago) → $292,000 → $293,000 (25-ago-2026) → $283,000 (21-sep-2026).
     {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:283000,    rate:12.99, min:6700, day:15, start:'2026-01-01', remainingMonths:61},
     // Liquidado: la última cuota era la del 18 sep 2026 y Adán la dio por pagada el 21-sep-2026.
@@ -377,19 +379,19 @@ window.CIFRAS = (function () {
      generar desde aquí sin rediseñar la sección, así que sigue a mano: `verificar-sincronia.js`
      compara los títulos y las metas de fase entre este literal y ese HTML. */
   const PHASES = [
-    {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep) y ✅ BBVA de $39,000 a {{tcBbva}} el 19 sep 2026 con la venta del Bitcoin. Quedan 2 objetivos financieros, en este orden: 1) fondo de emergencia —los CETES, {{fondo}}— a {{fondoMeta}}, 2) rematar las dos tarjetas ({{tcBbva}} BBVA + {{banamex}} Banamex).",explica:"Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases. El orden era 1) fondo de emergencia, 2) Banamex, 3) BBVA: el paso 2 se hizo el 13 ago 2026 y el 3 casi entero el 19 sep 2026 (BBVA de $39,000 a {{tcBbva}} con la venta del Bitcoin), así que la prioridad es el fondo de emergencia —que desde sep 2026 son los CETES— y, en cuanto llegue a {{fondoMeta}}, rematar lo que queda en las dos tarjetas. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.",semanas:[
+    {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep y quedó otra vez en $0 el 30 sep) y ✅ BBVA de $39,000 a $900 el 19 sep 2026 con la venta del Bitcoin (el 30 sep iba de nuevo en {{tcBbva}}). Quedan 2 objetivos financieros, en este orden: 1) fondo de emergencia —los CETES, {{fondo}}— a {{fondoMeta}}, 2) dejar la BBVA en $0 ({{tcBbva}}).",explica:"Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases. El orden era 1) fondo de emergencia, 2) Banamex, 3) BBVA: el paso 2 se hizo el 13 ago 2026 y el 3 casi entero el 19 sep 2026 (BBVA de $39,000 a $900 con la venta del Bitcoin; el 30 sep volvió a {{tcBbva}}), así que la prioridad es el fondo de emergencia —que desde sep 2026 son los CETES— y, en cuanto llegue a {{fondoMeta}}, rematar lo que queda en la BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.",semanas:[
       {id:"s0-9",mes:"2026-08",txt:"Prioridad 1 — Fondo de emergencia a {{fondoMeta}}. Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. (hoy {{fondo}}, en CETES)"},
-      {id:"s0-10",mes:"2026-08",txt:"Prioridad 2 — Liquidar las dos tarjetas: BBVA ({{tcBbva}}) y Banamex ({{banamex}}). El 19 sep 2026 la venta del Bitcoin dejó la BBVA de $39,000 en {{tcBbva}} y abonó $3,000 a Banamex; lo que queda cabe en un par de quincenas y deja de pagar 55.7% anual. En cuanto el fondo llegue a {{fondoMeta}}, todo excedente va aquí."},
+      {id:"s0-10",mes:"2026-08",txt:"Prioridad 2 — Liquidar las dos tarjetas: Banamex quedó en $0 el 30 sep 2026; falta la BBVA ({{tcBbva}}). El 19 sep 2026 la venta del Bitcoin la dejó de $39,000 en $900, pero el 30 sep ya iba otra vez en {{tcBbva}}, a 55.7% anual. En cuanto el fondo llegue a {{fondoMeta}}, todo excedente va aquí."},
       {id:"s0-4",mes:"2026-08",txt:"Sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad) — es la fuente más rápida para completar el fondo de emergencia de la Prioridad 1."},
       {id:"s0-3",mes:"2026-08",txt:"Plantilla Finanzas.html, de principio a fin: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (Opción 1)."},
       {id:"s0-2",mes:"2026-08",txt:"Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5."},
       {id:"s0-6",mes:"2026-08",txt:"Pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los {{maestria}} quedan intactos, nueva meta oct 2028."},
       {id:"s0-8",mes:"2026-08",txt:"Liquidar la TC Banamex. (✅ 13 ago 2026 — pagaste los $9,000 completos, no el mínimo, 5 meses antes de la meta)"},
       {id:"s0-1",mes:"2026-08",txt:"Corrige \"Deudas\" en Finanzas.html · cero MSI nuevo. (✅ 13 ago 2026: quedó en $8,200 = auto {{autoPago}} + mínimo BBVA {{tcBbvaMin}})"},
-      {id:"s0-7",mes:"2026-09",txt:"Cada peso de ventas/activos va, en orden fijo: (1) fondo de emergencia a {{fondoMeta}}, (2) resto a las tarjetas, Banamex ({{banamex}}) primero por ser la mayor desde el 19 sep. Este mes cierra la fase."},
+      {id:"s0-7",mes:"2026-09",txt:"Cada peso de ventas/activos va, en orden fijo: (1) fondo de emergencia a {{fondoMeta}}, (2) resto a la BBVA ({{tcBbva}}), la única tarjeta con saldo desde que Banamex quedó en $0 el 30 sep 2026. Este mes cierra la fase."},
     ]},
-    {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Los $3,145/mes liberados entran en acción + primer ingreso real",meta:"Primer contrato freelance o 20+ ventas de la plantilla cobradas. La meta vieja —Banamex liquidada— se cumplió el 13 ago 2026 y BBVA bajó a {{tcBbva}} el 19 sep 2026, así que el objetivo financiero pasa a dejar las dos tarjetas en $0 y no volver a cargarlas.",explica:"Fase 1 (oct 2026 – mar 2027) arranca cuando los $2,335/mes de MSI de gadgets quedan libres, que sumados a los {{banamexMin}} del mínimo de Banamex (en cuanto quede en $0) dan $3,145/mes nuevos. Con las tarjetas casi en cero desde el 19 sep 2026 ({{tcBbva}} BBVA + {{banamex}} Banamex), ese dinero tiene un solo destino: fondo de emergencia —los CETES— a {{fondoMeta}} y todo lo demás a rematar las tarjetas. En paralelo, buscas tu primer ingreso real fuera de ALTEN.",semanas:[
-      {id:"s1-1",mes:"2026-10",txt:"Oct 2026: los $2,335/mes liberados de MSI + los {{banamexMin}} del mínimo de Banamex (en cuanto quede en $0) van, en orden fijo: fondo de emergencia a {{fondoMeta}} → 100% a lo que quede en las tarjetas = $4,645/mes."},
+    {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Los $3,145/mes liberados entran en acción + primer ingreso real",meta:"Primer contrato freelance o 20+ ventas de la plantilla cobradas. La meta vieja —Banamex liquidada— se cumplió el 13 ago 2026 y otra vez el 30 sep 2026; la BBVA va en {{tcBbva}}, así que el objetivo financiero pasa a dejarla en $0 y no volver a cargar ninguna de las dos.",explica:"Fase 1 (oct 2026 – mar 2027) arranca cuando los $2,335/mes de MSI de gadgets quedan libres, que sumados a los {{banamexMin}} del mínimo de Banamex (libres desde que quedó en $0 el 30 sep 2026) dan $3,145/mes nuevos. Con Banamex en $0 y la BBVA en {{tcBbva}}, ese dinero tiene un solo destino: fondo de emergencia —los CETES— a {{fondoMeta}} y todo lo demás a rematar la BBVA. En paralelo, buscas tu primer ingreso real fuera de ALTEN.",semanas:[
+      {id:"s1-1",mes:"2026-10",txt:"Oct 2026: los $2,335/mes liberados de MSI + los {{banamexMin}} del mínimo de Banamex (libres desde el 30 sep 2026) van, en orden fijo: fondo de emergencia a {{fondoMeta}} → 100% a lo que quede en la BBVA = $4,645/mes."},
       {id:"s1-2",cont:true,txt:"Prioridad: cerrar el primer contrato freelance (Opción 2) + 1 post de seguimiento mensual de la plantilla GBM (Opción 1)."},
       {id:"s1-3",mes:"2026-11",txt:"En paralelo: primer post de mentoría pagada (Opción 3) — bajo riesgo, casi sin preparación."},
       {id:"s1-4",cont:true,txt:"Primer peso cobrado en Opción 1-3 → esas horas de Didi se mueven ahí (Opción 6), no antes."},
@@ -3002,6 +3004,16 @@ window.CIFRAS = (function () {
       hacer: function (f) {
         const cta = (f.activos || []).find(a => a.id === 'ac013');
         if (cta) { cta.value = 1200; cta.fecha = '2026-09-21'; }
+      }
+    },
+    {
+      // 2026-09-30 · "ya no debo nada a mi tarjeta de credito de banamex, y la de bbva le debo 10
+      // mil". Solo saldos: no dijo con qué pagó Banamex ni qué se cargó a la BBVA, así que no se
+      // inventan movimientos. Banamex en $0 saca sus $810 de `minimosDeuda` y `margen` sube eso.
+      flag: '_tarjetas20260930',
+      hacer: function (f) {
+        const pon = function (id, saldo) { const d = (f.debts || []).find(x => x.id === id); if (d) d.balance = saldo; };
+        pon('d001', 10000); pon('d002', 0);
       }
     },
   ];

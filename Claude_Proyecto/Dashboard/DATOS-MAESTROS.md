@@ -118,13 +118,13 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | Marcador | Valor hoy | id |
 |---|---|---|
 | `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $283,000 · $315,800 · $6,700 · 12.99% · 57 (calculado) | `d003` |
-| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $900 · $1,500 · 55.7% | `d001` |
-| `{{banamex}}` `{{banamexMin}}` | $3,900 · $810 | `d002` |
+| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $10,000 · $1,500 · 55.7% | `d001` |
+| `{{banamex}}` `{{banamexMin}}` | $0 · $810 — liquidada el 30-sep-2026 | `d002` |
 | `{{depto}}` | $0 — "por temas de mi apartamento"; pagada entera el 21-sep-2026 | `d012` |
 | `{{iphone}}` | $11,362 | `d008` |
 | `{{appleWatch}}` `{{appleWatchCuota}}` | $0 · $854 — liquidado: la última cuota era la del 18 sep 2026 | `d004` |
 | `{{zapStylo}}` `{{zapStyloCuota}}` | $0 · $167 — "el de los zapatos", liquidado el 21-sep-2026 | `d009` |
-| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $299,162 · $4,800 · $11,362 | derivadas |
+| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $304,362 · $10,000 · $11,362 | derivadas |
 | `{{minimosDeuda}}` `{{margen}}` | suma de mínimos vivos · lo que sobra al mes | derivadas |
 
 **Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas: `{{autoMeses}}`
@@ -133,12 +133,12 @@ porque el `remainingMonths` del seed (61) no bajaba con el saldo; queda solo com
 falta el pago. De ahí `{{autoAPagar}}` (meses × pago) y `{{autoInteres}}` (lo que cuesta en puro
 interés). El detalle de intereses del Dashboard usa la misma función para cualquier crédito a plazo.
 
-**Las dos tarjetas quedaron casi en cero el 19-sep-2026**: Adán vendió todo el Bitcoin ($39,500) y,
-con $4,000 de la cuenta, pagó $38,100 a la BBVA (de $39,000 a $900) y $3,000 a Banamex (de $7,800 a
-$4,900; el 21-sep la dejó en $3,900). Cada saldo nuevo que reporta es una entrada de `MIGRACIONES`
-(`_liquidacion20260920` y `_pagos20260921` son las de estos). Los mínimos no cambian mientras haya
-saldo; `deudaCara` bajó de $46,800 a $4,800. En `d001` `total` se queda en $39,000: el "pagado real"
-de las barras de Finanzas son los $38,100.
+**La BBVA debe $10,000; la Banamex quedó liquidada el 30-sep-2026** (Adán: *"ya no debo nada a mi
+tarjeta de crédito de banamex, y la de bbva le debo 10 mil"*). El 19-sep la venta del Bitcoin había
+dejado la BBVA de $39,000 en $900; volvió a subir sin que dijera en qué. Cada saldo nuevo que
+reporta es una entrada de `MIGRACIONES` (la de este es `_tarjetas20260930`). Con Banamex en $0 su
+mínimo de $810 sale de `minimosDeuda` y `margen` sube eso mismo; `deudaCara` es solo la BBVA. En
+`d001` `total` se queda en $39,000: el "pagado real" de las barras de Finanzas sale de ahí.
 
 **El 21-sep-2026 se liquidaron tres de golpe**: el Apple Watch (`d004`, su última cuota era la del
 18 sep), los zapatos (`d009`, el último MSI vivo de la TC BBVA) y la deuda del departamento (`d012`).
