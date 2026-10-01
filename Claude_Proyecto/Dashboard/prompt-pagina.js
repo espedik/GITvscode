@@ -19,8 +19,10 @@
                    al cambiar el ancho (el carril de escritorio y la barra del teléfono son
                    elementos distintos). Sin host visible, va fijo arriba a la izquierda.
 
-   Una página con varias áreas puede definir `window.promptPaginaActiva = () => 'clave'` y el
-   icono enseña la del área abierta (el shell de Cuidado Personal lo hace con sus pestañas).
+   VISTAS. Si el prompt de la página declara `vistas` (pantallas del Dashboard, pestañas de
+   Cuidado Personal, el modo Empresa de Coach), el icono enseña el de la vista abierta: la primera
+   cuyo selector `si` exista en ese momento. La ventana dice de qué vista es y tiene un botón para
+   pasar al prompt general de la página, que rige lo que las vistas comparten.
    Dentro de un iframe del shell (`?embed=1`) no se pinta: el icono es el del shell.
    Nunca sale impreso ni en los PDF (`@media print`).
    ══════════════════════════════════════════════════════════════════════════════════════════ */
@@ -64,6 +66,7 @@
       'box-shadow:0 24px 70px rgba(0,0,0,.35);overflow:hidden;' +
       'font:15px/1.6 Inter,"Segoe UI",system-ui,-apple-system,sans-serif;text-align:left;letter-spacing:normal}' +
     '.pp-panel *{box-sizing:border-box}' +
+    '.pp-panel:focus{outline:none}' +
     '.pp-panel.pp-oscuro{--pp-bg:#0f172a;--pp-tx:#e2e8f0;--pp-mu:#94a3b8;--pp-bd:#1e293b;--pp-ac:#a5b4fc;--pp-ac2:#38bdf8;--pp-sf:#131c31}' +
     '.pp-cab{display:flex;gap:14px;align-items:flex-start;padding:20px 22px 16px;border-bottom:1px solid var(--pp-bd)}' +
     '.pp-cab .pp-ico{flex:0 0 40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;' +
@@ -78,6 +81,7 @@
       'background:var(--pp-sf);color:var(--pp-tx);padding:8px 11px;cursor:pointer;min-height:34px}' +
     '.pp-acc button:hover{border-color:var(--pp-ac)}' +
     '.pp-acc .pp-x{width:34px;padding:0;font-size:18px}' +
+    '.pp-acc .pp-cambia{color:var(--pp-ac2)}' +
     '.pp-cuerpo{overflow-y:auto;padding:6px 22px 20px;-webkit-overflow-scrolling:touch}' +
     '.pp-cuerpo h3{font-size:13px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;color:var(--pp-ac);margin:18px 0 6px}' +
     '.pp-cuerpo p{margin:0 0 8px}' +
@@ -135,10 +139,13 @@
     return (window.CIFRAS && window.CIFRAS.texto) ? window.CIFRAS.texto(s) : s;
   }
 
-  function claveActiva() {
-    try {
-      if (typeof window.promptPaginaActiva === 'function') return window.promptPaginaActiva() || CLAVE;
-    } catch (e) {}
+  // La vista abierta: la primera de `vistas` cuyo selector existe ahora mismo (la pantalla con
+  // `.active`, el panel con `.open`). Sin vistas, o sin ninguna abierta, la página.
+  function claveActiva(P) {
+    var pg = P.paginas[CLAVE], vs = (pg && pg.vistas) || [];
+    for (var i = 0; i < vs.length; i++) {
+      try { if (document.querySelector(vs[i].si)) return vs[i].clave; } catch (e) {}
+    }
     return CLAVE;
   }
 
@@ -179,39 +186,57 @@
     if (ultimoFoco && ultimoFoco.focus) ultimoFoco.focus();
   }
 
-  function abre() {
-    ultimoFoco = document.activeElement;
+  function abre(forzada) {
+    if (!ov || !ov.classList.contains('pp-abierto')) ultimoFoco = document.activeElement;
     var P = window.PROMPTS_PAGINAS;
-    if (!P) { cargar('prompts-paginas.js', function (ok) { if (ok && window.PROMPTS_PAGINAS) abre(); }); return; }
-    var clave = claveActiva();
-    var p = P.paginas[clave];
+    if (!P) { cargar('prompts-paginas.js', function (ok) { if (ok && window.PROMPTS_PAGINAS) abre(forzada); }); return; }
+    var activa = claveActiva(P);
+    var clave = forzada || activa;
+    var p = P.paginas[clave], pagina = P.paginas[CLAVE] || p;
     if (!p) { alert('Esta página no tiene prompt todavía (clave "' + clave + '").'); return; }
+    var esVista = clave !== CLAVE, hayVista = activa !== CLAVE;
     conMaestro(p.prompt + p.proposito, function () {
       var rol = resuelve(p.rol), pro = resuelve(p.proposito), cuerpo = resuelve(p.prompt), comun = resuelve(P.COMUN);
       if (!ov) {
         ov = document.createElement('div');
         ov.className = 'pp-ov';
         ov.addEventListener('click', function (e) { if (e.target === ov) cierra(); });
-        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && ov.classList.contains('pp-abierto')) cierra(); });
+        // En captura y sin propagar: el Esc cierra esta ventana y NO el panel que haya debajo
+        // (Qué invertir hoy, el calendario… tienen su propio Esc).
+        window.addEventListener('keydown', function (e) {
+          if (e.key !== 'Escape' || !ov.classList.contains('pp-abierto')) return;
+          e.preventDefault(); e.stopImmediatePropagation(); cierra();
+        }, true);
         document.body.appendChild(ov);
       }
+      var k = esVista ? 'El prompt de ' + esc(p.titulo) + ' · ' + esc(pagina.titulo)
+                      : 'El prompt de ' + esc(p.titulo) + (hayVista ? ' · general' : '');
+      var cambio = !hayVista ? '' : esVista
+        ? '<button type="button" class="pp-cambia" title="El prompt general de ' + esc(pagina.titulo) + ': rige lo que comparten sus vistas">General</button>'
+        : '<button type="button" class="pp-cambia" title="El prompt de ' + esc(P.paginas[activa].titulo) + '">' + esc(P.paginas[activa].titulo) + '</button>';
+      var pie = esVista
+        ? 'Este prompt gobierna cada cambio de esta vista; lo que comparte con el resto de ' + esc(pagina.titulo) + ' lo rige su prompt general.'
+        : 'Este prompt gobierna cada cambio de la página' + (hayVista ? ' en lo que comparten sus vistas; cada vista tiene el suyo.' : '.');
       ov.innerHTML =
         '<div class="pp-panel' + (fondoOscuro() ? ' pp-oscuro' : '') + '" role="dialog" aria-modal="true" aria-labelledby="pp-rol" tabindex="-1">' +
           '<div class="pp-cab"><div class="pp-ico">' + ICONO + '</div>' +
-            '<div class="pp-tit"><p class="pp-k">El prompt de ' + esc(p.titulo) + '</p>' +
+            '<div class="pp-tit"><p class="pp-k">' + k + '</p>' +
               '<h2 class="pp-rol" id="pp-rol">' + esc(rol) + '</h2>' +
               '<p class="pp-pro">' + enLinea(pro) + '</p></div>' +
-            '<div class="pp-acc"><button type="button" class="pp-copia" title="Copiar el prompt completo">Copiar</button>' +
+            '<div class="pp-acc">' + cambio +
+              '<button type="button" class="pp-copia" title="Copiar el prompt completo">Copiar</button>' +
               '<button type="button" class="pp-x" title="Cerrar (Esc)" aria-label="Cerrar">×</button></div></div>' +
           '<div class="pp-cuerpo">' + pinta(cuerpo) +
             '<div class="pp-comun">' + pinta(comun) + '</div>' +
-            '<p class="pp-pie">Este prompt gobierna cada cambio de la página. Vive en <code>Dashboard/prompts-paginas.js</code> · clave <code>' + esc(clave) + '</code>.</p>' +
+            '<p class="pp-pie">' + pie + ' Vive en <code>Dashboard/prompts-paginas.js</code> · clave <code>' + esc(clave) + '</code>.</p>' +
           '</div></div>';
       panel = ov.firstChild;
       panel.querySelector('.pp-x').onclick = cierra;
       panel.querySelector('.pp-copia').onclick = function () {
         copiar(textoPlano({ rol: rol, proposito: pro, prompt: cuerpo }, comun), this);
       };
+      var bc = panel.querySelector('.pp-cambia');
+      if (bc) bc.onclick = function () { abre(esVista ? CLAVE : activa); };
       ov.classList.add('pp-abierto');
       panel.focus();
     });

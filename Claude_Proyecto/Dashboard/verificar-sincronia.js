@@ -1758,13 +1758,37 @@ const PAGINA_PROMPT = {};          // 'Finanzas/Finanzas.html' → 'finanzas'
     PAGINA_PROMPT[rel] = m[2];
     usadas[m[2]] = (usadas[m[2]] || 0) + 1;
   });
-  claves.forEach(function (k) { if (!usadas[k]) malos.push('  el prompt "' + k + '" no lo carga ninguna página'); });
+  // Las vistas: su clave existe y su selector apunta a algo que la página tiene. Se buscan los
+  // ids, las clases y los data-tab del selector en el HTML de las páginas que usan ese prompt;
+  // un `#gbmOverlay` renombrado dejaría la vista muda sin que nada fallara.
+  let nVistas = 0;
+  claves.forEach(function (k) {
+    const vs = PROMPTS.paginas[k].vistas;
+    if (!vs) return;
+    if (!Array.isArray(vs)) { malos.push('  ' + k + ': `vistas` debe ser una lista'); return; }
+    const html = Object.keys(PAGINA_PROMPT).filter(function (r) { return PAGINA_PROMPT[r] === k; })
+      .map(function (r) { return leer(r); }).join(String.fromCharCode(10));
+    vs.forEach(function (x) {
+      nVistas++;
+      if (!x || typeof x.si !== 'string' || !x.clave) { malos.push('  ' + k + ': una vista sin `si` o sin `clave`'); return; }
+      if (claves.indexOf(x.clave) === -1) { malos.push('  ' + k + ': la vista "' + x.si + '" pide el prompt "' + x.clave + '", que no existe'); return; }
+      usadas[x.clave] = (usadas[x.clave] || 0) + 1;
+      const fichas = (x.si.match(/#[\w-]+/g) || []).map(function (t) { return 'id="' + t.slice(1) + '"'; })
+        .concat((x.si.match(/data-tab="[\w-]+"/g) || []))
+        .concat((x.si.match(/\.[\w-]+/g) || []).filter(function (t) { return ['.active', '.open'].indexOf(t) === -1; })
+          .map(function (t) { return t.slice(1); }));
+      fichas.forEach(function (f) {
+        if (html.indexOf(f) === -1) malos.push('  ' + k + ': la vista "' + x.si + '" busca ' + f + ', que la página no tiene');
+      });
+    });
+  });
+  claves.forEach(function (k) { if (!usadas[k]) malos.push('  el prompt "' + k + '" no lo usa ninguna página ni vista'); });
 
   if (malos.length)
     problemas.push('Páginas sin su prompt, o prompts incompletos (control 24):\n' + malos.slice(0, 15).join('\n'));
   else
     ok.push('Cada página carga su prompt (' + paginas.length + ' páginas, ' + claves.length +
-            ' especialistas; el icono arriba a la izquierda los enseña)');
+            ' especialistas, ' + nVistas + ' vistas con el suyo; el icono arriba a la izquierda los enseña)');
 })();
 
 /* Al cerrar el turno, las páginas tocadas recuerdan qué prompt las gobierna: es la otra mitad de
@@ -1788,8 +1812,11 @@ function promptsDeLoTocado() {
   const L = ['PÁGINAS TOCADAS — cada una se rige por su prompt (Dashboard/prompts-paginas.js)', ''];
   ks.forEach(function (k) {
     const f = porClave[k];
+    const vs = PROMPTS.paginas[k].vistas || [];
     L.push('  ' + k + ' · ' + PROMPTS.paginas[k].rol + ' → ' +
            (f.length > 3 ? f.length + ' páginas' : f.join(', ')));
+    if (vs.length) L.push('      con vistas: cada una tiene su prompt (' +
+           vs.map(function (x) { return x.clave; }).join(', ') + '); se lee el de la vista tocada');
   });
   L.push('', '  ¿El cambio cumple su "Al modificar esta página" y las reglas comunes? Si no, se corrige antes de cerrar.');
   return L.join('\n');

@@ -604,12 +604,18 @@ de la brújula arriba a la izquierda abre su prompt (con **Copiar**, para pegarl
 prompts viven en `prompts-paginas.js`: el especialista, su propósito y cómo se modifica su
 página, más las reglas `COMUN` a todos. Gobiernan cada cambio (`../../CLAUDE.md` → Regla 6).
 
+**Las vistas tienen el suyo.** Una página con pantallas, pestañas o modos de especialidades
+distintas declara `vistas` en su prompt (`{si, clave}`: un selector que solo existe con la vista
+abierta) y el icono enseña el de la vista donde está Adán; la ventana tiene un botón **General**
+para pasar al de la página, que rige lo que las vistas comparten. Secciones de una misma
+especialidad (las de Finanzas, los módulos de Entrevistas) comparten el de su página.
+
 | Clave | Páginas |
 |---|---|
-| `dashboard` | `dashboard.html` |
-| `coach` | `Coach.html` |
+| `dashboard` | `dashboard.html` — general (rail, barra de apps, rotación). Vistas: `midia` · `planmaestro` · `metas` · `basicas` · `skills` · `lista` · `aleman` · `habitos` (las 8 pantallas) y los paneles `invertir` (Qué invertir hoy) y `didi` (Qué escuchar) |
+| `coach` | `Coach.html` — el modo Personal. Vista: `coachempresa` (el modo Empresa) |
 | `finanzas` | `Finanzas.html` |
-| `cuidadopersonal` | `cuidadopersonal.html` — enseña el prompt del área abierta (`promptPaginaActiva`) |
+| `cuidadopersonal` | `cuidadopersonal.html` — general (barra, carril, cabecera). Vistas: `skincare` · `cabello` · `dentista` · `ojos` y las cuatro incrustadas con el de su app |
 | `salud` · `ejercicio` · `comida` | sus tres apps |
 | `vestimenta` | `vestimenta.html` |
 | `aleman` | las 45 páginas de `Aleman/` |
@@ -734,7 +740,8 @@ Qué revisa:
 
 - **Que toda página cargue su prompt** (control 24): la etiqueta de `prompt-pagina.js` con una
   clave que exista en `prompts-paginas.js`, la ruta correcta y `data-publica` en las webs del
-  negocio; y que cada prompt tenga sus campos, su `## Al modificar…` y ningún marcador suelto.
+  negocio; que cada prompt tenga sus campos, su `## Al modificar…` y ningún marcador suelto; y que
+  cada vista pida un prompt que exista y apunte a ids, clases y `data-tab` que su página tiene.
 
 - **Lo mismo para `SUPLEMENTOS`, y además el MOMENTO** (control 13). Los de la mañana tienen que
   aparecer en una subtarea de la rutina de la mañana y los de la noche en una de la noche: mover

@@ -3,7 +3,7 @@
 Coach de vida y negocio: diagnóstico financiero, Plan Maestro hacia $1,000,000 líquido, rutina
 diaria, roadmap de aprendizaje y guía legal/fiscal personal y de empresa.
 
-**Su prompt**: la clave `coach` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
+**Su prompt**: el modo Personal usa la clave `coach` y el modo Empresa la `coachempresa`, ambas de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
 
 Una sola página, sin backend ni dependencias de gráficas — las barras de habilidades son HTML, no
 Chart.js. Único import externo: Google Fonts (Inter + Playfair Display).

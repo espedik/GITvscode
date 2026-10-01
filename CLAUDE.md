@@ -109,6 +109,10 @@ los enseña con el **mismo icono** (una brújula) arriba a la izquierda, que pin
   y esa entrada, más `COMUN`— y el cambio se decide, se escribe y se revisa desde ese rol. Si la
   petición no sirve al propósito de la página, se dice y se propone lo que sí sirve.
 - La clave de cada página está en su etiqueta: `<script src="../Dashboard/prompt-pagina.js" data-pagina="finanzas">`.
+- **Cada vista tiene el suyo**: las pantallas del Dashboard, las pestañas de Cuidado Personal y el
+  modo Empresa de Coach se declaran en `vistas` del prompt de su página. Al modificar una vista
+  manda el prompt de esa vista; al modificar lo que comparten (barra, carril, diseño), el general.
+  Una vista nueva de otra especialidad llega con su prompt.
 - **Toda página nueva** lleva esa etiqueta y, si es de un área nueva, su prompt. El control 24 del
   verificador lo exige; con `--hook` además recuerda, al cerrar el turno, qué prompt gobierna cada
   página tocada.

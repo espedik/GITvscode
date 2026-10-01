@@ -76,16 +76,22 @@ Cada una es un `<section class="slide theme-…">` con `data-i`. Rotan solas cad
 navega con las flechas, el rail, el menú ☰ o deslizando en táctil. `irASlide(cls)` salta a una
 **por su clase** y lee su `data-i`: si se reordenan, los saltos siguen llegando.
 
-| Tema | Pantalla | Qué muestra |
-|---|---|---|
-| `theme-dia` | **Mi Día** | La principal. Agenda del día, el AHORA y seis módulos |
-| `theme-coach` | **Plan Maestro** | Fase activa, ruta de deuda y el tablero mes / día / semana |
-| `theme-metas` | **Mis Metas** | 8 KPIs financieros, franja de instrumentos y 17 metas con estado |
-| `theme-basicas` | **Habilidades Base** | 27 fichas de vida práctica con sus videos. **Única fuente**: la sección equivalente de Coach se eliminó |
-| `theme-skills` | **En qué invertir tu tiempo** | Radar de 12 habilidades, la ruta y el paso de la semana |
-| `theme-lista` | **Lista de Compras** | 7 categorías; Comida con precios, ticket, costo al mes y proporciones |
-| `theme-aleman` | **Alemán** | Vocabulario por secciones y Partizip I/II, desde `Aleman/vocab-datos.js`. Pantalla de consulta: no avanza sola |
-| `theme-habitos` | **Hábitos** | La cuadrícula del mes con rachas y la ficha de cada hábito |
+| Tema | Pantalla | Qué muestra | Prompt |
+|---|---|---|---|
+| `theme-dia` | **Mi Día** | La principal. Agenda del día, el AHORA y seis módulos | `midia` |
+| `theme-coach` | **Plan Maestro** | Fase activa, ruta de deuda y el tablero mes / día / semana | `planmaestro` |
+| `theme-metas` | **Mis Metas** | 8 KPIs financieros, franja de instrumentos y 17 metas con estado | `metas` |
+| `theme-basicas` | **Habilidades Base** | 27 fichas de vida práctica con sus videos. **Única fuente**: la sección equivalente de Coach se eliminó | `basicas` |
+| `theme-skills` | **En qué invertir tu tiempo** | Radar de 12 habilidades, la ruta y el paso de la semana | `skills` |
+| `theme-lista` | **Lista de Compras** | 7 categorías; Comida con precios, ticket, costo al mes y proporciones | `lista` |
+| `theme-aleman` | **Alemán** | Vocabulario por secciones y Partizip I/II, desde `Aleman/vocab-datos.js`. Pantalla de consulta: no avanza sola | `aleman` |
+| `theme-habitos` | **Hábitos** | La cuadrícula del mes con rachas y la ficha de cada hábito | `habitos` |
+
+**Cada pantalla tiene su prompt** (columna de la derecha, en `prompts-paginas.js`): el icono de la
+brújula enseña el de la pantalla activa (`section.slide.theme-….active`), y el de los paneles
+*Qué invertir hoy* (`invertir`) y *Qué escuchar* (`didi`) mientras están abiertos. El prompt
+`dashboard` rige lo común: rail, barra de apps, rotación y diseño. Una pantalla nueva entra con
+su prompt y su línea en `vistas`, o el control 24 lo marca.
 
 Cada pantalla se pinta con su entrada en `RENDERS[i]`, que `showSlide(i)` llama al entrar.
 **Ninguna tiene tope de ancho**: `.slide-inner` no lleva `max-width`, así que usan lo que deja el
