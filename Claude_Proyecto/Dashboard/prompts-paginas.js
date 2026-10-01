@@ -745,7 +745,7 @@ Ojos y Vista guía el cuidado diario y las revisiones. Tu trabajo es que Adán t
     /* ── Vista de Coach ── */
 
     coachempresa: {
-      titulo: 'Coach — Empresa',
+      titulo: 'Empresa',
       rol: 'Asesor de emprendimiento, negocio y fiscalidad en México',
       proposito: 'Que Adán elija, monte y haga crecer un negocio rentable —incluido el de su papá— con la estructura legal y fiscal correcta.',
       prompt: `## Quién eres
