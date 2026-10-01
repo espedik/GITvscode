@@ -210,8 +210,11 @@ window.CIFRAS = (function () {
     // pagó $38,100 aquí). `total` se queda en 39,000: ya no hace falta la invariante
     // `total == balance` —era para que el saldo creciente no dejara el "pagado real" en
     // negativo— y así las barras enseñan los $38,100 pagados de verdad.
-    // 2026-09-30: vuelve a $10,000 ("la de bbva le debo 10 mil"); no dijo en qué se cargó.
-    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:10000,       rate:55.7,  min:1500, day:11,start:'2024-01-22'},
+    // 2026-09-30: vuelve a $10,000 ("la de bbva le debo 10 mil"); no dijo en qué se cargó. Ese
+    // mismo día: "ahorita ya estoy pagando todo y no me cobran intereses" — la paga completa
+    // cada mes. `noInterest` es lo que hay que pagar antes del `day` para no generar intereses;
+    // la `rate` se queda porque es la del producto y vuelve a correr si un mes paga solo el mínimo.
+    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:10000,       rate:55.7,  min:1500, day:11,start:'2024-01-22', noInterest:10000},
     // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. 55.7 es un supuesto tomado de
     // la BBVA, no un dato medido de esta tarjeta.
     // 2026-09-01: VUELVE A TENER SALDO, y con él vuelve a ser deuda cara. Cuatro compras de ese
@@ -381,7 +384,7 @@ window.CIFRAS = (function () {
   const PHASES = [
     {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep y quedó otra vez en $0 el 30 sep) y ✅ BBVA de $39,000 a $900 el 19 sep 2026 con la venta del Bitcoin (el 30 sep iba de nuevo en {{tcBbva}}). Quedan 2 objetivos financieros, en este orden: 1) fondo de emergencia —los CETES, {{fondo}}— a {{fondoMeta}}, 2) dejar la BBVA en $0 ({{tcBbva}}).",explica:"Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases. El orden era 1) fondo de emergencia, 2) Banamex, 3) BBVA: el paso 2 se hizo el 13 ago 2026 y el 3 casi entero el 19 sep 2026 (BBVA de $39,000 a $900 con la venta del Bitcoin; el 30 sep volvió a {{tcBbva}}), así que la prioridad es el fondo de emergencia —que desde sep 2026 son los CETES— y, en cuanto llegue a {{fondoMeta}}, rematar lo que queda en la BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.",semanas:[
       {id:"s0-9",mes:"2026-08",txt:"Prioridad 1 — Fondo de emergencia a {{fondoMeta}}. Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. (hoy {{fondo}}, en CETES)"},
-      {id:"s0-10",mes:"2026-08",txt:"Prioridad 2 — Liquidar las dos tarjetas: Banamex quedó en $0 el 30 sep 2026; falta la BBVA ({{tcBbva}}). El 19 sep 2026 la venta del Bitcoin la dejó de $39,000 en $900, pero el 30 sep ya iba otra vez en {{tcBbva}}, a 55.7% anual. En cuanto el fondo llegue a {{fondoMeta}}, todo excedente va aquí."},
+      {id:"s0-10",mes:"2026-08",txt:"Prioridad 2 — Liquidar las dos tarjetas: Banamex quedó en $0 el 30 sep 2026; falta la BBVA ({{tcBbva}}). El 19 sep 2026 la venta del Bitcoin la dejó de $39,000 en $900, pero el 30 sep ya iba otra vez en {{tcBbva}}; desde ese día la paga completa cada mes y no genera intereses. En cuanto el fondo llegue a {{fondoMeta}}, todo excedente va aquí."},
       {id:"s0-4",mes:"2026-08",txt:"Sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad) — es la fuente más rápida para completar el fondo de emergencia de la Prioridad 1."},
       {id:"s0-3",mes:"2026-08",txt:"Plantilla Finanzas.html, de principio a fin: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (Opción 1)."},
       {id:"s0-2",mes:"2026-08",txt:"Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5."},
@@ -3014,6 +3017,14 @@ window.CIFRAS = (function () {
       hacer: function (f) {
         const pon = function (id, saldo) { const d = (f.debts || []).find(x => x.id === id); if (d) d.balance = saldo; };
         pon('d001', 10000); pon('d002', 0);
+      }
+    },
+    {
+      // 2026-09-30 · "en bbva ahorita ya estoy pagando todo y no me cobran intereses". Va aparte
+      // de `_tarjetas20260930` porque esa pudo correr ya: una bandera puesta no vuelve a correr.
+      flag: '_bbvaSinInteres20260930',
+      hacer: function (f) {
+        const tc = (f.debts || []).find(x => x.id === 'd001'); if (tc) tc.noInterest = 10000;
       }
     },
   ];

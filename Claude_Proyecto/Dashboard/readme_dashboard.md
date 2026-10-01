@@ -615,7 +615,10 @@ la fase que corre **ahora**: proyectar una cuota diaria sobre una fase cerrada s
 
 ### `calRitmoTC()` — la tarjeta
 
-Lee la deuda `d001` de `finanzasmx_v2`; ningún importe está en el código:
+Lee la deuda `d001` de `finanzasmx_v2`; ningún importe está en el código. Si la tarjeta trae
+`noInterest` (Adán la paga completa cada mes), devuelve `totalero` y el bloque sale en verde
+"Sin intereses": el pago, el día límite y el aviso de que la tasa vuelve si paga solo el mínimo.
+Sin `noInterest` hace la cuenta de siempre:
 
 - `interes` = saldo × tasa ÷ 12.
 - `crece` = interés − mínimo. Si sale positivo, **pagando el mínimo el saldo sube**.

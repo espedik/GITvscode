@@ -136,7 +136,10 @@ interés). El detalle de intereses del Dashboard usa la misma función para cual
 **La BBVA debe $10,000; la Banamex quedó liquidada el 30-sep-2026** (Adán: *"ya no debo nada a mi
 tarjeta de crédito de banamex, y la de bbva le debo 10 mil"*). El 19-sep la venta del Bitcoin había
 dejado la BBVA de $39,000 en $900; volvió a subir sin que dijera en qué. Cada saldo nuevo que
-reporta es una entrada de `MIGRACIONES` (la de este es `_tarjetas20260930`). Con Banamex en $0 su
+reporta es una entrada de `MIGRACIONES` (las de este son `_tarjetas20260930` y
+`_bbvaSinInteres20260930`). La BBVA la paga completa cada mes y no genera intereses: lo dice su
+`noInterest` (lo que hay que pagar antes del `day`); la `rate` de 55.7% se queda porque es la del
+producto y vuelve a correr si un mes paga solo el mínimo. Con Banamex en $0 su
 mínimo de $810 sale de `minimosDeuda` y `margen` sube eso mismo; `deudaCara` es solo la BBVA. En
 `d001` `total` se queda en $39,000: el "pagado real" de las barras de Finanzas sale de ahí.
 
