@@ -60,6 +60,9 @@
     piensa:   svg('<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/>'),
     aconseja: svg('<path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.2A8 8 0 1 1 20 12z"/><path d="M8.5 11h7M8.5 14h4.5"/>'),
     modifica: svg('<path d="M12 3l7.5 3v5.4c0 4.6-3.1 8.4-7.5 9.6-4.4-1.2-7.5-5-7.5-9.6V6z"/><path d="M8.8 12.2l2.2 2.2 4.3-4.6"/>'),
+    sinergia: svg('<circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="6" r="2.6"/><circle cx="18" cy="18" r="2.6"/><path d="M8.3 10.8l7.4-3.6M8.3 13.2l7.4 3.6"/>'),
+    mide:     svg('<path d="M4 20h16"/><path d="M7 16v-4M12 16V8M17 16v-7"/>'),
+    vuelve:   svg('<path d="M15 6l-6 6 6 6"/>'),
     extra:    svg('<path d="M5 12h14M12 5v14"/>'),
     copia:    svg('<rect x="8.5" y="8.5" width="11" height="11" rx="2.2"/><path d="M15.5 8.5V6.2A1.7 1.7 0 0 0 13.8 4.5H6.2a1.7 1.7 0 0 0-1.7 1.7v7.6a1.7 1.7 0 0 0 1.7 1.7h2.3"/>'),
     cierra:   svg('<path d="M6 6l12 12M18 6L6 18"/>'),
@@ -172,6 +175,28 @@
     '.pp-sec[data-a="modifica"] .pp-lista li::before{top:13px}' +
 
     /* ── Reglas comunes, plegadas ── */
+    /* El plan que todos sirven: siempre a la vista, es lo que une a los especialistas */
+    '.pp-plan{margin:0 0 18px;padding:16px 20px 18px;border-radius:16px;border:1px solid var(--pp-bd);' +
+      'background:linear-gradient(120deg,rgba(var(--pp-ac-rgb),.06),rgba(var(--pp-ac2-rgb),.04))}' +
+    '.pp-plan .pp-sh{margin-bottom:12px;color:var(--pp-tx)}' +
+    '.pp-plan .pp-sh small{margin-left:10px;font-family:' + F_TXT + ';font-size:12.5px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--pp-mu)}' +
+    '.pp-plan ol{list-style:none;margin:0;padding:0;display:grid;gap:10px 22px;grid-template-columns:repeat(3,minmax(0,1fr));counter-reset:pl}' +
+    '.pp-plan li{position:relative;margin:0;padding:0 0 0 34px;font-size:13.5px;line-height:1.5;color:var(--pp-tx2);counter-increment:pl}' +
+    '.pp-plan li::before{content:counter(pl);position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;' +
+      'display:flex;align-items:center;justify-content:center;font:700 12px/1 ' + F_MONO + ';color:#fff;' +
+      'background:linear-gradient(135deg,#6366f1,#0ea5e9)}' +
+    '.pp-plan li strong{display:block;color:var(--pp-tx);font-weight:700}' +
+    /* Los especialistas nombrados en "Con quién trabajas" son enlaces a su prompt */
+    '.pp-ref{display:inline;padding:0 5px;margin:0 1px;border:0;border-radius:6px;cursor:pointer;font:inherit;font-weight:650;' +
+      'color:var(--pp-ac);background:rgba(var(--pp-ac-rgb),.10);text-decoration:underline;text-decoration-color:rgba(var(--pp-ac-rgb),.35);' +
+      'text-underline-offset:3px}' +
+    '.pp-ref:hover{background:rgba(var(--pp-ac-rgb),.18)}' +
+    '.pp-ref:focus-visible{outline:2px solid var(--pp-ac2);outline-offset:1px}' +
+    '.pp-sec[data-a="sinergia"]{border-color:rgba(var(--pp-ac2-rgb),.30)}' +
+    '.pp-sec[data-a="sinergia"] .pp-sh,.pp-sec[data-a="sinergia"] .pp-sh i{color:var(--pp-ac2)}' +
+    '.pp-sec[data-a="sinergia"] .pp-sh i{background:rgba(var(--pp-ac2-rgb),.12)}' +
+    '.pp-sec[data-a="mide"] .pp-lista li::before{border-radius:2px;width:8px;height:8px;background:var(--pp-ac2)}' +
+    '.pp-bt.pp-vuelve{height:32px;padding:0 12px;font-size:13px}' +
     '.pp-comun{margin-top:18px;border-radius:16px;border:1px dashed var(--pp-bd);background:transparent}' +
     '.pp-comun summary{display:flex;align-items:center;gap:10px;padding:15px 20px;cursor:pointer;list-style:none;' +
       'font:700 11.5px/1.2 ' + F_MONO + ';letter-spacing:.15em;text-transform:uppercase;color:var(--pp-mu)}' +
@@ -196,10 +221,12 @@
       '.pp-cuerpo{padding:16px 14px 20px}' +
       '.pp-cols{grid-template-columns:minmax(0,1fr);gap:12px}.pp-col{display:contents}' +
       '.pp-sec[data-a="piensa"]{order:3}.pp-sec[data-a="aconseja"]{order:4}' +
+      '.pp-sec[data-a="sinergia"]{order:5}.pp-sec[data-a="mide"]{order:6}' +
       '.pp-sec[data-a="modifica"],.pp-sec[data-a="extra"]{margin-top:12px}' +
       '.pp-sec[data-a="modifica"] .pp-lista{columns:1}' +
       '.pp-sec{padding:16px 16px 14px}' +
       '.pp-comun .pp-lista{columns:1}' +
+      '.pp-plan{padding:14px 14px 16px}.pp-plan ol{grid-template-columns:minmax(0,1fr)}' +
     '}' +
     '@media print{.pp-btn,.pp-ov{display:none!important}}';
 
@@ -228,30 +255,54 @@
     if (/^tu mision/.test(n)) return 'mision';
     if (/^como piensas/.test(n)) return 'piensa';
     if (/^como aconsejas/.test(n)) return 'aconseja';
+    if (/^con quien/.test(n)) return 'sinergia';
+    if (/^como sabes/.test(n)) return 'mide';
     if (/^al modificar/.test(n)) return 'modifica';
     return 'extra';
   }
-  function lista(items, numerada) {
+  function lista(items, numerada, deco) {
     if (!items.length) return '';
     return '<ul class="pp-lista' + (numerada ? ' pp-num' : '') + '">' +
-      items.map(function (x) { return '<li>' + enLinea(x) + '</li>'; }).join('') + '</ul>';
+      items.map(function (x) { return '<li>' + (deco || enLinea)(x) + '</li>'; }).join('') + '</ul>';
   }
-  function tarjetas(txt) {
-    var por = { quien: '', mision: '', piensa: '', aconseja: '', modifica: '', extra: '' };
+
+  // En "Con quién trabajas", cada especialista nombrado por su título es un botón que abre su
+  // prompt: la sinergia no solo se lee, se recorre. Distingue mayúsculas a propósito ("Comida"
+  // es la app; "comida", la palabra) y no enlaza el prompt que ya se está viendo.
+  var refs = null;
+  function enlaces(P, propia) {
+    if (!refs) {
+      refs = Object.keys(P.paginas).map(function (k) { return { k: k, t: P.paginas[k].titulo }; })
+        .sort(function (a, b) { return b.t.length - a.t.length; });
+    }
+    var cand = refs.filter(function (r) { return r.k !== propia; });
+    var re = new RegExp('(^|[^\\p{L}])(' + cand.map(function (r) {
+      return r.t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }).join('|') + ')(?![\\p{L}])', 'gu');
+    return function (x) {
+      return enLinea(x).replace(re, function (m, antes, t) {
+        var r = cand.filter(function (c) { return c.t === t; })[0];
+        return antes + '<button type="button" class="pp-ref" data-k="' + r.k + '" title="Ver el prompt de ' + esc(t) + '">' + esc(t) + '</button>';
+      });
+    };
+  }
+
+  function tarjetas(txt, deco) {
+    var por = { quien: '', mision: '', piensa: '', aconseja: '', sinergia: '', mide: '', modifica: '', extra: '' };
     secciones(txt).forEach(function (s) {
       var a = area(s.t);
       var cuenta = s.li.length > 1 && a === 'piensa' ? '<small>' + s.li.length + ' principios</small>' : '';
       var html = '<div class="pp-sec" data-a="' + a + '">' +
         (s.t ? '<h3 class="pp-sh"><i>' + ICO[a] + '</i>' + esc(s.t) + cuenta + '</h3>' : '') +
         s.p.map(function (x) { return '<p>' + enLinea(x) + '</p>'; }).join('') +
-        lista(s.li, a === 'piensa') + '</div>';
+        lista(s.li, a === 'piensa', a === 'sinergia' ? deco : null) + '</div>';
       por[a] += html;
     });
-    // Izquierda: quién eres, la misión y cómo aconseja. Derecha: cómo piensa. Debajo, a lo
-    // ancho, lo que gobierna los cambios. La última tarjeta de cada columna se estira para
-    // que las dos acaben a la misma altura.
-    return '<div class="pp-cols"><div class="pp-col">' + por.quien + por.mision + por.aconseja + '</div>' +
-      '<div class="pp-col">' + por.piensa + '</div></div>' + por.modifica + por.extra;
+    // Izquierda: quién eres, la misión, cómo aconseja y cómo se mide. Derecha: cómo piensa y
+    // con quién trabaja. Debajo, a lo ancho, lo que gobierna los cambios. La última tarjeta de
+    // cada columna se estira para que las dos acaben a la misma altura.
+    return '<div class="pp-cols"><div class="pp-col">' + por.quien + por.mision + por.aconseja + por.mide + '</div>' +
+      '<div class="pp-col">' + por.piensa + por.sinergia + '</div></div>' + por.modifica + por.extra;
   }
 
   function cargar(src, listo) {
@@ -336,18 +387,20 @@
     if (ultimoFoco && ultimoFoco.focus) ultimoFoco.focus();
   }
 
-  function abre(forzada) {
+  // `pila` guarda de dónde se llegó al consultar a otro especialista, para volver.
+  var pila = [];
+  function abre(forzada, consulta) {
     var yaAbierta = !!(ov && ov.classList.contains('pp-abierto'));
-    if (!yaAbierta) ultimoFoco = document.activeElement;
+    if (!yaAbierta) { ultimoFoco = document.activeElement; pila = []; }
     var P = window.PROMPTS_PAGINAS;
-    if (!P) { cargar('prompts-paginas.js', function (ok) { if (ok && window.PROMPTS_PAGINAS) abre(forzada); }); return; }
+    if (!P) { cargar('prompts-paginas.js', function (ok) { if (ok && window.PROMPTS_PAGINAS) abre(forzada, consulta); }); return; }
     pideFuentes();
     var activa = claveActiva(P);
     var clave = forzada || activa;
     var p = P.paginas[clave], pagina = P.paginas[CLAVE] || p;
     if (!p) { alert('Esta página no tiene prompt todavía (clave "' + clave + '").'); return; }
     var esVista = clave !== CLAVE, hayVista = activa !== CLAVE;
-    conMaestro(p.prompt + p.proposito, function () {
+    conMaestro(p.prompt + p.proposito + P.COMUN, function () {
       var rol = resuelve(p.rol), pro = resuelve(p.proposito), cuerpo = resuelve(p.prompt), comun = resuelve(P.COMUN);
       if (!ov) {
         ov = document.createElement('div');
@@ -362,20 +415,38 @@
         document.body.appendChild(ov);
       }
 
-      // Dónde estás: Prompt · Dashboard › Plan Maestro
-      var ruta = '<span class="pp-chip">Prompt</span>' +
-        (hayVista ? esc(pagina.titulo) + ' <span class="pp-sep">›</span> <b>' + esc(esVista ? p.titulo : 'General') + '</b>'
-                  : '<b>' + esc(p.titulo) + '</b>');
-      var selector = !hayVista ? '' :
+      // Dónde estás: Prompt · Dashboard › Plan Maestro (o, en consulta, a quién se consulta)
+      var desde = pila.length ? P.paginas[pila[pila.length - 1]] : null;
+      var ruta = '<span class="pp-chip">Prompt</span>' + (consulta
+        ? 'Consulta <span class="pp-sep">›</span> <b>' + esc(p.titulo) + '</b>'
+        : (hayVista ? esc(pagina.titulo) + ' <span class="pp-sep">›</span> <b>' + esc(esVista ? p.titulo : 'General') + '</b>'
+                    : '<b>' + esc(p.titulo) + '</b>'));
+      var selector = consulta
+        ? '<button type="button" class="pp-bt pp-vuelve" title="Volver al prompt anterior">' + ICO.vuelve + 'Volver a ' + esc(desde ? desde.titulo : pagina.titulo) + '</button>'
+        : !hayVista ? '' :
         '<div class="pp-seg" role="group" aria-label="Qué prompt ver">' +
           '<button type="button" data-k="vista" class="' + (esVista ? 'pp-on' : '') + '" aria-pressed="' + esVista + '">' + esc(P.paginas[activa].titulo) + '</button>' +
           '<button type="button" data-k="general" class="' + (esVista ? '' : 'pp-on') + '" aria-pressed="' + !esVista + '" ' +
             'title="El prompt general de ' + esc(pagina.titulo) + ': rige lo que comparten sus vistas">General</button>' +
         '</div>';
-      var gobierna = esVista
-        ? 'Gobierna cada cambio de esta vista; lo que comparte con el resto de ' + esc(pagina.titulo) + ' lo rige el prompt general.'
-        : 'Gobierna cada cambio de la página' + (hayVista ? ' en lo que comparten sus vistas; cada vista tiene el suyo.' : '.');
-      var nComun = secciones(comun).reduce(function (n, s) { return n + s.li.length; }, 0);
+      var gobierna = consulta
+        ? 'Consulta: este especialista gobierna su propia página; aquí lo ves para coordinarte con él.'
+        : esVista
+          ? 'Gobierna cada cambio de esta vista; lo que comparte con el resto de ' + esc(pagina.titulo) + ' lo rige el prompt general.'
+          : 'Gobierna cada cambio de la página' + (hayVista ? ' en lo que comparten sus vistas; cada vista tiene el suyo.' : '.');
+
+      // COMUN: "El plan que todos sirven" va a la vista; las reglas, plegadas.
+      var plan = null, reglas = [];
+      secciones(comun).forEach(function (s) {
+        if (/^el plan/.test(sinAcentos(s.t))) plan = s; else reglas = reglas.concat(s.li);
+      });
+      var htmlPlan = !plan ? '' :
+        '<div class="pp-plan"><h3 class="pp-sh"><i>' + ICO.mision + '</i>' + esc(plan.t) +
+          '<small>en este orden decide cuando dos especialistas chocan</small></h3>' +
+          '<ol>' + plan.li.map(function (x) {
+            // El nombre va en su línea (strong en bloque): sobra el ":" que lo separa en el texto.
+            return '<li>' + enLinea(x).replace(/<\/strong>\s*:\s*/, '</strong>') + '</li>';
+          }).join('') + '</ol></div>';
 
       ov.innerHTML =
         '<div class="pp-panel' + (fondoOscuro() ? ' pp-oscuro' : '') + (yaAbierta ? '' : ' pp-entra') +
@@ -386,15 +457,16 @@
               '<p class="pp-pro">' + enLinea(pro) + '</p></div>' +
             '<div class="pp-acc">' +
               '<div class="pp-fila">' +
-                '<button type="button" class="pp-bt pp-copia" title="Copiar el prompt completo, con las reglas comunes">' + ICO.copia + 'Copiar prompt</button>' +
+                '<button type="button" class="pp-bt pp-copia" title="Copiar el prompt completo, con el plan y las reglas comunes">' + ICO.copia + 'Copiar prompt</button>' +
                 '<button type="button" class="pp-bt pp-x" title="Cerrar (Esc)" aria-label="Cerrar">' + ICO.cierra + '</button>' +
               '</div>' + selector +
             '</div></div>' +
           '<div class="pp-cuerpo">' +
-            tarjetas(cuerpo) +
+            htmlPlan +
+            tarjetas(cuerpo, enlaces(P, clave)) +
             '<details class="pp-comun"><summary>' + ICO.chev + 'Reglas comunes a todas las páginas' +
-              '<span>' + nComun + ' reglas · van incluidas al copiar</span></summary>' +
-              lista(secciones(comun).reduce(function (a, s) { return a.concat(s.li); }, []), false) +
+              '<span>' + reglas.length + ' reglas · van incluidas al copiar</span></summary>' +
+              lista(reglas, false) +
             '</details>' +
             '<p class="pp-pie"><span>' + gobierna + '</span>' +
               '<span><code>Dashboard/prompts-paginas.js</code> · clave <code>' + esc(clave) + '</code></span></p>' +
@@ -410,6 +482,14 @@
           abre(b.getAttribute('data-k') === 'general' ? CLAVE : activa);
         };
       });
+      Array.prototype.forEach.call(panel.querySelectorAll('.pp-ref'), function (b) {
+        b.onclick = function () { pila.push(clave); abre(b.getAttribute('data-k'), true); };
+      });
+      var bv = panel.querySelector('.pp-vuelve');
+      if (bv) bv.onclick = function () {
+        var atras = pila.pop();
+        abre(atras, pila.length > 0 || (atras !== CLAVE && atras !== activa));
+      };
       ov.classList.add('pp-abierto');
       panel.focus();
     });

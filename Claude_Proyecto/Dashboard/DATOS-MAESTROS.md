@@ -604,6 +604,15 @@ de la brújula arriba a la izquierda abre su prompt (con **Copiar**, para pegarl
 prompts viven en `prompts-paginas.js`: el especialista, su propósito y cómo se modifica su
 página, más las reglas `COMUN` a todos. Gobiernan cada cambio (`../../CLAUDE.md` → Regla 6).
 
+**Cada prompt tiene siete secciones**: Quién eres, Tu misión, Cómo piensas, Cómo aconsejas,
+**Con quién trabajas** (la sinergia: nombra por su título a los especialistas con los que se
+pasa datos y decisiones, y en la ventana cada nombre abre el prompt de ese especialista, con
+**Volver**), **Cómo sabes que funciona** (los indicadores, con datos que ya existen, que dicen
+si la página ayuda) y Al modificar. `COMUN` empieza con **El plan que todos sirven**: seis
+prioridades en orden —salud y seguridad, metas de conducta, el orden del dinero, carrera con
+fecha, el cuerpo, el negocio de su papá— que deciden cuando dos especialistas chocan; la
+ventana lo enseña arriba de todo, en cada prompt.
+
 **Las vistas tienen el suyo.** Una página con pantallas, pestañas o modos de especialidades
 distintas declara `vistas` en su prompt (`{si, clave}`: un selector que solo existe con la vista
 abierta) y el icono enseña el de la vista donde está Adán; la ventana tiene un botón **General**
@@ -740,8 +749,10 @@ Qué revisa:
 
 - **Que toda página cargue su prompt** (control 24): la etiqueta de `prompt-pagina.js` con una
   clave que exista en `prompts-paginas.js`, la ruta correcta y `data-publica` en las webs del
-  negocio; que cada prompt tenga sus campos, su `## Al modificar…` y ningún marcador suelto; y que
-  cada vista pida un prompt que exista y apunte a ids, clases y `data-tab` que su página tiene.
+  negocio; que cada prompt tenga sus campos, su `## Al modificar…`, su `## Cómo sabes que
+  funciona` y un `## Con quién trabajas` que nombre al menos a dos especialistas por su título,
+  y ningún marcador suelto; que `COMUN` abra con el plan; y que cada vista pida un prompt que
+  exista y apunte a ids, clases y `data-tab` que su página tiene.
 
 - **Lo mismo para `SUPLEMENTOS`, y además el MOMENTO** (control 13). Los de la mañana tienen que
   aparecer en una subtarea de la rutina de la mañana y los de la noche en una de la noche: mover

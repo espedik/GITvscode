@@ -1718,6 +1718,14 @@ const PAGINA_PROMPT = {};          // 'Finanzas/Finanzas.html' → 'finanzas'
   } catch (e) { problemas.push('No se puede leer Dashboard/prompts-paginas.js: ' + e.message); return; }
   const claves = Object.keys((PROMPTS && PROMPTS.paginas) || {});
   if (!PROMPTS || !PROMPTS.COMUN) malos.push('  falta COMUN, las reglas que comparten todos');
+  else {
+    if (!/^## El plan que todos sirven/m.test(PROMPTS.COMUN))
+      malos.push('  COMUN debe empezar con "## El plan que todos sirven": el orden que decide entre especialistas');
+    if (global.window && global.window.CIFRAS) {
+      const sueltosC = global.window.CIFRAS.texto(PROMPTS.COMUN).match(/\{\{\w+\}\}/g);
+      if (sueltosC) malos.push('  COMUN: marcadores que el maestro no conoce: ' + sueltosC.join(', '));
+    }
+  }
   claves.forEach(function (k) {
     const p = PROMPTS.paginas[k];
     ['titulo', 'rol', 'proposito', 'prompt'].forEach(function (c) {
@@ -1725,6 +1733,24 @@ const PAGINA_PROMPT = {};          // 'Finanzas/Finanzas.html' → 'finanzas'
     });
     if (typeof p.prompt === 'string' && !/^## Al modificar/m.test(p.prompt))
       malos.push('  ' + k + ': el prompt no dice cómo se modifica su página (falta "## Al modificar…")');
+    // El valor y la sinergia (Adán, 2026-10-01: "que generen valor… y que tenga sinergia con
+    // todo"): cada prompt dice cómo se mide si ayuda y con qué otros especialistas trabaja,
+    // nombrando al menos a dos por su título exacto (es lo que la ventana convierte en enlace).
+    if (typeof p.prompt === 'string') {
+      if (!/^## Cómo sabes que funciona/m.test(p.prompt))
+        malos.push('  ' + k + ': falta "## Cómo sabes que funciona": cómo se mide si la página ayuda');
+      const sin = (p.prompt.split(/^## Con quién trabajas.*$/m)[1] || '').split(/^## /m)[0];
+      if (!sin) malos.push('  ' + k + ': falta "## Con quién trabajas": su sinergia con los demás');
+      else {
+        const otros = claves.filter(function (o) {
+          if (o === k) return false;
+          const t = PROMPTS.paginas[o].titulo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          return new RegExp('(^|[^\\p{L}])' + t + '(?![\\p{L}])', 'u').test(sin);
+        });
+        if (otros.length < 2)
+          malos.push('  ' + k + ': "Con quién trabajas" nombra ' + otros.length + ' especialista(s) por su título; deben ser al menos 2');
+      }
+    }
     if (global.window && global.window.CIFRAS) {
       const sueltos = global.window.CIFRAS.texto([p.rol, p.proposito, p.prompt].join('\n')).match(/\{\{\w+\}\}/g);
       if (sueltos) malos.push('  ' + k + ': marcadores que el maestro no conoce: ' + sueltos.join(', '));

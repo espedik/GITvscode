@@ -117,6 +117,10 @@ los enseña con el **mismo icono** (una brújula) arriba a la izquierda, que pin
   verificador lo exige; con `--hook` además recuerda, al cerrar el turno, qué prompt gobierna cada
   página tocada.
 - Un prompt describe cómo pensar, no los datos de hoy: lo que cambia va con marcadores del maestro.
+- **Todo prompt genera valor y tiene sinergia**: dice *Cómo sabes que funciona* (indicadores con
+  datos que existen) y *Con quién trabajas* (al menos dos especialistas por su título). Cuando dos
+  chocan, decide *El plan que todos sirven* (`COMUN`), en su orden. Un prompt nuevo o cambiado se
+  revisa contra lo que de verdad tiene su página, no contra lo que se supone que tiene.
 
 Adán, 2026-09-30: *"en cada página debe ser un especialista en su área, es decir debes ser el mejor
 en el área, darme buenos consejos, buenas estrategias… esto es el pilar de cada página html,
