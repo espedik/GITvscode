@@ -3027,6 +3027,17 @@ window.CIFRAS = (function () {
         const tc = (f.debts || []).find(x => x.id === 'd001'); if (tc) tc.noInterest = 10000;
       }
     },
+    {
+      // 2026-09-30 · "la quincena del 1 octubre al 15 de octubre, solo tengo 390 para todo ese
+      // periodo, debido a que pagué todo lo que me sobraba a las tarjetas". Es el saldo de la
+      // cuenta para el tramo que arranca el 1-oct, con la nómina y la renta de ese día ya dentro:
+      // el riel del Plan Maestro se ancla ahí y de ahí en adelante resta lo previsto.
+      flag: '_cuenta20261001',
+      hacer: function (f) {
+        const cta = (f.activos || []).find(a => a.id === 'ac013');
+        if (cta) { cta.value = 390; cta.fecha = '2026-10-01'; }
+      }
+    },
   ];
 
   /* Las seis compras del 1-sep-2026, en un solo sitio: las usa la migración de arriba para el
