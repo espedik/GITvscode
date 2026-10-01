@@ -9038,6 +9038,9 @@ function calRitmo(fase){
 // interés mensual del saldo SUPERA al pago mínimo. Pagando el mínimo la deuda
 // sube, y la tarjeta no se liquida nunca — eso no se veía en ninguna pantalla.
 // Por eso el bloque enfrenta las dos cifras antes de proponer cualquier ritmo.
+// Una tarjeta con `noInterest` se paga completa cada mes: su tasa existe pero no corre.
+// Todo cálculo de "intereses al mes" pasa por aquí para no cobrarle un 55.7% que no paga.
+function tasaQueCorre(d){ return +d.noInterest>0 ? 0 : (+d.rate||0); }
 function calRitmoTC(){
   const tc=((D.fin&&D.fin.debts)||[]).find(d=>d.id==='d001');
   if(!tc||!(tc.balance>0)) return null;
@@ -11028,15 +11031,15 @@ function kpiDetalle(id){
   if(id==='deudacara'){
     const filas=deudaCara.map(d=>{
       const pagado=d.total>0?(1-d.balance/d.total)*100:0;
-      const interesMes=d.rate>0?d.balance*(d.rate/100)/12:0;
+      const interesMes=d.balance*(tasaQueCorre(d)/100)/12;
       return kpiBarra(esc(d.name), money(d.balance)+(d.total>0?' · '+Math.round(pagado)+'% pagado':''), pagado, V,
-        'Tasa '+d.rate+'% anual · te cuesta <b>'+money(interesMes)+' al mes</b> solo en intereses'+(d.total>0?' · pagado '+money(d.total-d.balance)+' de '+money(d.total):''), PISTA_R);
+        (tasaQueCorre(d)>0?'Tasa '+d.rate+'% anual · te cuesta <b>'+money(interesMes)+' al mes</b> solo en intereses':'La pagas completa cada mes · <b>sin intereses</b>')+(d.total>0?' · pagado '+money(d.total-d.balance)+' de '+money(d.total):''), PISTA_R);
     }).join('');
-    const interesTotal=deudaCara.reduce((a,d)=>a+d.balance*((d.rate||0)/100)/12,0);
+    const interesTotal=deudaCara.reduce((a,d)=>a+d.balance*(tasaQueCorre(d)/100)/12,0);
     return {titulo:'💳 Deuda cara', sub:'Cada saldo con su tasa, y lo que te cuesta cada mes que sigue vivo.',
       html:
       '<div class="kpi-cifra" style="color:'+R+'">'+money(deudaCaraBal)+'</div>'+
-      '<div class="kpi-cifra-sub">'+deudaCara.length+' deuda'+(deudaCara.length===1?'':'s')+' con interés · <b>'+money(interesTotal)+' al mes</b> solo en intereses</div>'+
+      '<div class="kpi-cifra-sub">'+deudaCara.length+' tarjeta'+(deudaCara.length===1?'':'s')+' con saldo · <b>'+money(interesTotal)+' al mes</b> solo en intereses</div>'+
       kpiSec('📊 Deuda por deuda')+
       '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">Sin deudas con interés registradas. 🎉</div>')+'</div>'+
       (deudaCaraBal>0?
@@ -11144,8 +11147,8 @@ function kpiDetalle(id){
       .filter(x=>x.v!==0).sort((a,b)=>b.v-a.v);
 
     const filasDebo=debts.filter(d=>+d.balance>0).sort((a,b)=>b.balance-a.balance)
-      .map(d=>({n:esc(d.name),v:+d.balance,c:d.rate>0?R:P,
-        d:(d.rate>0?'Tasa '+d.rate+'% · te cuesta '+money(d.balance*(d.rate/100)/12)+'/mes':'Sin interés')+
+      .map(d=>({n:esc(d.name),v:+d.balance,c:tasaQueCorre(d)>0?R:P,
+        d:(tasaQueCorre(d)>0?'Tasa '+d.rate+'% · te cuesta '+money(d.balance*(d.rate/100)/12)+'/mes':(d.rate>0?'La pagas completa cada mes · sin intereses':'Sin interés'))+
           ((d.type==='car'||d.type==='loan')&&CIFRAS.mesesRestantes(d)?' · '+CIFRAS.mesesRestantes(d)+' pagos restantes':'')}));
 
     const filasBienes=bienes.sort((a,b)=>(+b.value||0)-(+a.value||0))
@@ -11182,7 +11185,7 @@ function kpiDetalle(id){
   }
 
   if(id==='intereses'){
-    const conTasa=debts.filter(d=>d.rate>0);
+    const conTasa=debts.filter(d=>tasaQueCorre(d)>0);
     const mesInt=conTasa.reduce((a,d)=>a+(+d.balance||0)*(d.rate/100)/12,0);
     const iniInt=conTasa.reduce((a,d)=>a+(+d.total||+d.balance||0)*(d.rate/100)/12,0);
     const bajada=iniInt>0?(1-mesInt/iniInt)*100:100;
@@ -11384,7 +11387,7 @@ function renderMetasSlide(){
   // Datos de los 4 medidores nuevos, calculados aquí para no repetir el recorrido en cada tile.
   // El interés inicial usa `total` (el saldo con el que nació cada deuda) y el actual usa
   // `balance`: la diferencia es lo que ya se dejó de pagar, y es lo que llena la barra.
-  const conTasa=(D.fin.debts||[]).filter(d=>d.rate>0);
+  const conTasa=(D.fin.debts||[]).filter(d=>tasaQueCorre(d)>0);
   const interesMesKpi=conTasa.reduce((a,d)=>a+(+d.balance||0)*(d.rate/100)/12,0);
   const interesIniKpi=conTasa.reduce((a,d)=>a+(+d.total||+d.balance||0)*(d.rate/100)/12,0);
   const interesPctKpi=interesIniKpi>0?Math.max(0,Math.min(100,(1-interesMesKpi/interesIniKpi)*100)):100;
