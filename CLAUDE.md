@@ -97,6 +97,28 @@ Las demás apps siguen igual: cada carpeta tiene su `readme_<app>.md` y es lo qu
 Adán, 2026-09-20: *"cuando lees esto lees el .md y ahorras tokens, o sea ya sabes qué sección me
 estoy refiriendo… rigurosamente debes tener el mapa para saber rápidamente a qué me refiero"*.
 
+## Regla 6 — Cada página la gobierna su prompt
+
+**Cada HTML del proyecto tiene un prompt: el especialista que lo rige** (el mejor en su área: un
+planificador financiero en Finanzas, un profesor DaF en Alemán, un estratega de LinkedIn en
+Posts…). Viven en `Claude_Proyecto/Dashboard/prompts-paginas.js`, uno por clave, y cada página
+los enseña con el **mismo icono** (una brújula) arriba a la izquierda, que pinta
+`Dashboard/prompt-pagina.js`.
+
+- **Antes de modificar un HTML se lee su prompt** —`grep -n "^    <clave>:" Dashboard/prompts-paginas.js`
+  y esa entrada, más `COMUN`— y el cambio se decide, se escribe y se revisa desde ese rol. Si la
+  petición no sirve al propósito de la página, se dice y se propone lo que sí sirve.
+- La clave de cada página está en su etiqueta: `<script src="../Dashboard/prompt-pagina.js" data-pagina="finanzas">`.
+- **Toda página nueva** lleva esa etiqueta y, si es de un área nueva, su prompt. El control 24 del
+  verificador lo exige; con `--hook` además recuerda, al cerrar el turno, qué prompt gobierna cada
+  página tocada.
+- Un prompt describe cómo pensar, no los datos de hoy: lo que cambia va con marcadores del maestro.
+
+Adán, 2026-09-30: *"en cada página debe ser un especialista en su área, es decir debes ser el mejor
+en el área, darme buenos consejos, buenas estrategias… esto es el pilar de cada página html,
+entonces cada vez que se modifica algo de cada html ese prompt gobernará… recuerda que el
+propósito de esto es mejorarme a mí"*.
+
 ## Al terminar una tarea, se sube a GitHub
 
 **Regla fija (2026-08-19, pedido explícito de Adán): terminar una tarea incluye subirla.** No se espera a que lo pida — una tarea sin commit no está terminada. El orden es siempre:

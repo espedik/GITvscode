@@ -363,5 +363,6 @@ const total = paginas.length;
 document.getElementById('doc').innerHTML = paginas.map((p, i) =>
   '<section class="pg ' + p.extra + '">' + p.html + (p.extra.includes('portada') ? '' : pie(i + 1, total)) + '</section>').join('');
 </script>
+<script src="../Dashboard/prompt-pagina.js" data-pagina="heliescala" data-publica></script>
 </body>
 </html>

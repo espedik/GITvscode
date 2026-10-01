@@ -5,6 +5,8 @@ corta para Facebook y WhatsApp), lo enseña como lo va a ver LinkedIn y lo deja 
 Sirve a cuatro objetivos, y cada pilar de la semana declara a cuáles: **reparar helicópteros**,
 **vender réplicas**, **más clientes** y **presencia en redes**.
 
+**Su prompt**: la clave `posts` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
+
 Adán, 2026-09-21: *"un html para subir post de la página de aeroresinas y heliescala, deben ser
 plantillas de post en linkedin… se separe en 2 tabs por cada empresa y en la empresa en específico
 debe haber plantillas diarias de acuerdo a la información que tenemos"*.

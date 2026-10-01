@@ -4,6 +4,8 @@ La página pública del taller del papá de Adán. No es una herramienta suya: e
 conseguirle clientes, así que no guarda estado, no depende del Dashboard y tiene que abrirse bien
 en el teléfono de un desconocido al que le llegó el enlace por WhatsApp.
 
+**Su prompt**: la clave `aeroresinas` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
+
 Las réplicas en resina son **otro negocio**, con su propia página
 ([`../Heliescala/`](../Heliescala/readme_heliescala.md)), y **son independientes**: ninguna
 menciona a la otra ni enlaza con ella (Adán, 2026-09-17: *"de ambas páginas no pongas lo de que se

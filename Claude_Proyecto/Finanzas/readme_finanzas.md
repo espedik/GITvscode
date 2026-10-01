@@ -4,6 +4,8 @@ App de finanzas personales en un solo archivo HTML (~5 600 líneas, 376 KB). Cha
 gráficas, `localStorage['finanzasmx_v2']` para persistencia, todo en MXN. Es **la fuente de los
 saldos** del proyecto: lo que escribe aquí lo leen el Dashboard y Coach.
 
+**Su prompt**: la clave `finanzas` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
+
 > Referencia, no diario. Historial en `git log -p -- Claude_Proyecto/Finanzas/Finanzas.html`.
 > Los saldos de hoy no están aquí: están en [`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md).
 

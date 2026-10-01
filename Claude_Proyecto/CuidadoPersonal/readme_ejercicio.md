@@ -5,6 +5,8 @@ sesión de hoy con técnica paso a paso, series marcables con kilos, cronómetro
 progresión; la biblioteca de 62 ejercicios que la respalda; y una sección de deportes para
 explorar. Datos en `localStorage['mirutina_v1']`.
 
+**Su prompt**: la clave `ejercicio` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
+
 > Referencia, no diario. Historial en `git log -p -- Claude_Proyecto/CuidadoPersonal/ejercicio.html`.
 
 Vive en `CuidadoPersonal/ejercicio.html`. Se abre incrustada en `cuidadopersonal.html` (pestaña

@@ -6,6 +6,8 @@ carga de aquí**: los datos, el diseño y el motor viven en esta carpeta y esa p
 Las lecciones no se muestran en el Dashboard (su extracción, `../Dashboard/aleman-data.js`, está
 en reposo).
 
+**Su prompt**: la clave `aleman` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
+
 > **Referencia, no diario.** El historial vive en `git log -p -- Claude_Proyecto/Aleman/`.
 > Ver `../../CLAUDE.md` → Regla 3.
 

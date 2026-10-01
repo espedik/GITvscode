@@ -5,6 +5,8 @@ Página "hub" (HTML+CSS+JS, sin backend ni dependencias) con **8 áreas** en una
 y cuatro **apps completas incrustadas** en `<iframe>` —🥗 Salud, 🏋️ Ejercicio, 🍳 Comida,
 👔 Vestimenta (la única fuera de esta carpeta, `../Vestimenta/vestimenta.html`)—.
 
+**Su prompt**: la clave `cuidadopersonal` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
+
 > Referencia, no diario. Historial en `git log -p -- Claude_Proyecto/CuidadoPersonal/`.
 
 Este archivo documenta el shell, sus tres piezas compartidas (`embed.js`, `cabecera.js`,

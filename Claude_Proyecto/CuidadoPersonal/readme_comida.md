@@ -4,6 +4,8 @@ App de una sola página (HTML+CSS+JS, sin backend): el recetario de **12 desayun
 la medida de Adán, con buscador, filtros y la ficha de cada receta; y el **Plan Masa Muscular**.
 Es el centro de nutrición del proyecto: lo que registra aquí lo leen Salud y el Dashboard.
 
+**Su prompt**: la clave `comida` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
+
 > Referencia, no diario. Historial en `git log -p -- Claude_Proyecto/CuidadoPersonal/comida.html`.
 
 Vive en `CuidadoPersonal/comida.html`. Se abre incrustada en `cuidadopersonal.html` (pestaña

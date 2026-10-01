@@ -4,6 +4,8 @@ La segunda mitad del negocio del papá de Adán: réplicas en resina de casi cua
 hechas a mano. La reparación de aeronaves vive en
 [`../Aeroresinas/`](../Aeroresinas/readme_aeroresinas.md), y es **otro negocio**.
 
+**Su prompt**: la clave `heliescala` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
+
 **El nombre se eligió el 2026-09-17**, al partir la empresa en dos (Adán: *"dividiremos la empresa,
 necesitaremos un nombre para eso"*). De cuatro opciones eligió **Heliescala**: nombre propio, corto,
 se entiende solo y se busca fácil.

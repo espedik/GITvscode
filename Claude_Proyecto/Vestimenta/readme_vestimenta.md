@@ -2,6 +2,8 @@
 
 Aplicación web de una sola página (HTML+CSS+JS, sin backend) — guía de guardarropa en tres mitades: **qué me pongo hoy**, **cómo combinarlo** (la matriz de color y las 48 combinaciones que salen de ella) y **qué comprar** (la ruta ordenada por cuántos outfits abre cada prenda, más las fichas con precio y link). Adán: *"hazme un html y proyecto de vestimenta, debes darme muchas opciones de que comprar, basicos chaquetas, zapatos, y ademas para cada ocacion"*.
 
+**Su prompt**: la clave `vestimenta` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
+
 **Fuera del ecosistema principal** (igual que `Aleman/` y `Entrevistas/`, ver `../README.md` → "Mapa de carpetas") — no comparte datos con Finanzas/Coach/CuidadoPersonal/Dashboard, es una guía de referencia personal independiente.
 
 ## Archivos

@@ -16,6 +16,8 @@
    4. Que no haya `{{marcadores}}` fuera del catálogo.
    5. Que los .md sigan siendo referencia y no diario, y que todo el código que citan exista
       (control 23).
+   6. Que toda página cargue el icono de su prompt y que todo prompt esté completo (control 24);
+      con --hook, además, recuerda qué prompt gobierna cada página tocada.
 
    Extrae los literales balanceando corchetes y **saltando strings** — no con regex: los textos
    del proyecto llevan llaves y comillas dentro, y una regex se equivoca.
@@ -1699,6 +1701,100 @@ function impactoDelCambio() {
       fuentes.length + ' fuentes)');
 })();
 
+/* ── 24. Cada página carga su prompt, y cada prompt existe ─────────────────────────────────
+   Adán, 2026-09-30: "en cada página debe ser un especialista en su área… esto es el pilar de
+   cada página html, entonces cada vez que se modifica algo de cada html ese prompt gobernará".
+   Los prompts viven en `Dashboard/prompts-paginas.js` y cada HTML los enseña con el icono de
+   `Dashboard/prompt-pagina.js`. Aquí se exige que TODA página del proyecto lo cargue (salvo las
+   maquetas de `diseno-*`), con una clave que exista, la ruta correcta y `data-publica` en las
+   webs del negocio; y que todo prompt tenga sus cuatro campos, diga cómo se modifica su página
+   y no lleve marcadores que el maestro no conozca. Una página nueva sin prompt sale aquí. */
+let PROMPTS = null;
+const PAGINA_PROMPT = {};          // 'Finanzas/Finanzas.html' → 'finanzas'
+(function () {
+  const malos = [];
+  try {
+    PROMPTS = new Function('window', leer('Dashboard/prompts-paginas.js') + '; return window.PROMPTS_PAGINAS;')({});
+  } catch (e) { problemas.push('No se puede leer Dashboard/prompts-paginas.js: ' + e.message); return; }
+  const claves = Object.keys((PROMPTS && PROMPTS.paginas) || {});
+  if (!PROMPTS || !PROMPTS.COMUN) malos.push('  falta COMUN, las reglas que comparten todos');
+  claves.forEach(function (k) {
+    const p = PROMPTS.paginas[k];
+    ['titulo', 'rol', 'proposito', 'prompt'].forEach(function (c) {
+      if (typeof p[c] !== 'string' || !p[c].trim()) malos.push('  ' + k + ': falta `' + c + '`');
+    });
+    if (typeof p.prompt === 'string' && !/^## Al modificar/m.test(p.prompt))
+      malos.push('  ' + k + ': el prompt no dice cómo se modifica su página (falta "## Al modificar…")');
+    if (global.window && global.window.CIFRAS) {
+      const sueltos = global.window.CIFRAS.texto([p.rol, p.proposito, p.prompt].join('\n')).match(/\{\{\w+\}\}/g);
+      if (sueltos) malos.push('  ' + k + ': marcadores que el maestro no conoce: ' + sueltos.join(', '));
+    }
+  });
+
+  const paginas = [];
+  (function recorre(dir) {
+    fs.readdirSync(path.join(RAIZ, dir), { withFileTypes: true }).forEach(function (e) {
+      if (e.isDirectory()) {
+        if (/^(diseno-|node_modules$|fotos$|\.)/.test(e.name)) return;
+        recorre(dir ? dir + '/' + e.name : e.name);
+      } else if (/\.html$/i.test(e.name) && !/\.PREV\.html$/i.test(e.name)) {
+        paginas.push(dir ? dir + '/' + e.name : e.name);
+      }
+    });
+  })('');
+
+  const usadas = {};
+  paginas.forEach(function (rel) {
+    const h = leer(rel);
+    // Los atributos se leen par a par: un data-host lleva ">" dentro (".topbar > div").
+    const m = h.match(/<script src="([^"]*)prompt-pagina\.js" data-pagina="([a-z]+)"((?:\s+[a-z-]+(?:="[^"]*")?)*)\s*><\/script>/);
+    if (!m) { malos.push('  ' + rel + ' no carga prompt-pagina.js: no tiene icono ni prompt'); return; }
+    const esperada = rel.indexOf('Dashboard/') === 0 ? '' : '../Dashboard/';
+    if (m[1] !== esperada) malos.push('  ' + rel + ' carga el icono desde "' + m[1] + '", debe ser "' + esperada + '"');
+    if (claves.indexOf(m[2]) === -1) malos.push('  ' + rel + ' pide el prompt "' + m[2] + '", que no existe');
+    const publica = /^(Aeroresinas|Heliescala)\//.test(rel);
+    if (publica && m[3].indexOf('data-publica') === -1)
+      malos.push('  ' + rel + ' es web pública y no lleva data-publica: el icono le saldría a un cliente');
+    PAGINA_PROMPT[rel] = m[2];
+    usadas[m[2]] = (usadas[m[2]] || 0) + 1;
+  });
+  claves.forEach(function (k) { if (!usadas[k]) malos.push('  el prompt "' + k + '" no lo carga ninguna página'); });
+
+  if (malos.length)
+    problemas.push('Páginas sin su prompt, o prompts incompletos (control 24):\n' + malos.slice(0, 15).join('\n'));
+  else
+    ok.push('Cada página carga su prompt (' + paginas.length + ' páginas, ' + claves.length +
+            ' especialistas; el icono arriba a la izquierda los enseña)');
+})();
+
+/* Al cerrar el turno, las páginas tocadas recuerdan qué prompt las gobierna: es la otra mitad de
+   la Regla 6 (el prompt se lee ANTES de modificar; aquí se comprueba DESPUÉS que se cumplió). */
+function promptsDeLoTocado() {
+  if (!PROMPTS || !PROMPTS.paginas) return null;
+  const { execSync } = require('child_process');
+  let lista;
+  try {
+    const opt = { cwd: RAIZ, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] };
+    lista = (execSync('git diff --name-only --relative HEAD', opt) + '\n' +
+             execSync('git ls-files --others --exclude-standard', opt)).split(/\r?\n/);
+  } catch (e) { return null; }
+  const porClave = {};
+  lista.forEach(function (rel) {
+    const k = PAGINA_PROMPT[rel.trim()];
+    if (k) (porClave[k] = porClave[k] || []).push(rel.trim());
+  });
+  const ks = Object.keys(porClave);
+  if (!ks.length) return null;
+  const L = ['PÁGINAS TOCADAS — cada una se rige por su prompt (Dashboard/prompts-paginas.js)', ''];
+  ks.forEach(function (k) {
+    const f = porClave[k];
+    L.push('  ' + k + ' · ' + PROMPTS.paginas[k].rol + ' → ' +
+           (f.length > 3 ? f.length + ' páginas' : f.join(', ')));
+  });
+  L.push('', '  ¿El cambio cumple su "Al modificar esta página" y las reglas comunes? Si no, se corrige antes de cerrar.');
+  return L.join('\n');
+}
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];
@@ -1707,6 +1803,8 @@ if (process.argv.indexOf('--hook') !== -1) {
       '\n\nDetalle: node Dashboard/verificar-sincronia.js');
   const imp = impactoDelCambio();
   if (imp) partes.push(imp);
+  const pr = promptsDeLoTocado();
+  if (pr) partes.push(pr);
   if (partes.length) process.stdout.write(JSON.stringify({ systemMessage: partes.join('\n\n────────\n\n') }));
   process.exit(0);   // el hook informa, no bloquea
 }
@@ -1719,5 +1817,7 @@ if (problemas.length) { console.log('\nDESINCRONIZADO'); problemas.forEach(l => 
 else console.log('\nNada desincronizado.');
 const _imp = impactoDelCambio();
 if (_imp) { console.log(''); console.log(_imp); }
+const _pr = promptsDeLoTocado();
+if (_pr) { console.log(''); console.log(_pr); }
 console.log('');
 process.exit(problemas.length ? 1 : 0);

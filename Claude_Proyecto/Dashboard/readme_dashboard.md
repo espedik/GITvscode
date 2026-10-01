@@ -3,6 +3,8 @@
 Panel central del proyecto: agrega en vivo los datos de las demás apps y presenta el día, el plan
 y el estudio en **8 pantallas** a pantalla completa.
 
+**Su prompt**: la clave `dashboard` de [`prompts-paginas.js`](prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
+
 > **Esto es referencia, no diario.** Describe cómo funciona **hoy**; el historial de cada cambio
 > vive en `git log -p -- Claude_Proyecto/Dashboard/dashboard.html`. Ver `../../CLAUDE.md` → Regla 3.
 
@@ -25,6 +27,7 @@ en una página.
 | `examen-genai.js` · `examen-genai-data.js` (A, 79 preguntas) · `examen-genai-data-b.js` (B, 77) | El simulacro ISTQB CT-GenAI: motor y los dos bancos |
 | `entrevistas-data.js` | Los 41 temas de Python (`ENTREVISTA_TEMAS`, `PY_MOD_LABEL`) que nombra la tarjeta *Hoy aprendes* de Mi Día. Trae también el HTML y el CSS de cada tema (`ENTREVISTA_CONTENT`, `ENTREVISTA_CSS`), que ya no pinta ninguna pantalla. Lo genera `Entrevistas/_generar-datos-dashboard.js`; **no se edita a mano** |
 | `sin-zoom.js` | Bloqueo del zoom en táctil. Lo cargan las seis apps |
+| `prompt-pagina.js` · `prompts-paginas.js` | El icono de la brújula que llevan **todas** las páginas del proyecto y los prompts que abre: el especialista que gobierna cada una (ver `DATOS-MAESTROS.md` → *El prompt de cada página*). En el Dashboard va fijo arriba a la izquierda, donde la barra de apps deja la esquina libre |
 | `aleman-data.js` | Las 40 lecciones de alemán (327 KB). **En reposo**: ninguna pantalla lo carga; volver a las lecciones es cargarlo otra vez |
 | `diseno-*/` | Los canvas de cada rediseño: `Main.dc.html` (lo elegido) y las direcciones descartadas al lado |
 | `readme_dashboard.md` | Este archivo |

@@ -597,6 +597,32 @@ que añade un registro lo hace **por id y solo si falta**: así el navegador que
 Detalle por app en su propio `readme_<app>.md`; el mapa completo de claves y conexiones está en
 [`../README.md`](../README.md).
 
+### El prompt de cada página
+
+Cada HTML lleva al final del `<body>` la etiqueta de `prompt-pagina.js` con su clave, y el icono
+de la brújula arriba a la izquierda abre su prompt (con **Copiar**, para pegarlo en Claude). Los
+prompts viven en `prompts-paginas.js`: el especialista, su propósito y cómo se modifica su
+página, más las reglas `COMUN` a todos. Gobiernan cada cambio (`../../CLAUDE.md` → Regla 6).
+
+| Clave | Páginas |
+|---|---|
+| `dashboard` | `dashboard.html` |
+| `coach` | `Coach.html` |
+| `finanzas` | `Finanzas.html` |
+| `cuidadopersonal` | `cuidadopersonal.html` — enseña el prompt del área abierta (`promptPaginaActiva`) |
+| `salud` · `ejercicio` · `comida` | sus tres apps |
+| `vestimenta` | `vestimenta.html` |
+| `aleman` | las 45 páginas de `Aleman/` |
+| `entrevistas` | `entrevistas.html` |
+| `aeroresinas` · `heliescala` | la web y el dossier de cada una, con `data-publica`: el icono solo sale en `file://` o `localhost`, nunca a un cliente |
+| `posts` | `posts.html` |
+
+**Dónde va el icono**: fijo en la esquina si está libre (Dashboard, los dossiers); si la esquina
+tiene logo o botón ☰, la etiqueta lleva `data-host` y el icono entra como primer elemento de esa
+cabecera y la empuja en vez de taparla. En el shell de Cuidado Personal las apps incrustadas no lo
+pintan (`?embed=1`): lo pinta el shell. No sale impreso ni en los PDF. Las maquetas `diseno-*/`
+no lo llevan.
+
 ---
 
 ## Una variable nunca cambia sola
@@ -705,6 +731,10 @@ Qué revisa:
   `RUTINA_PELO.productos[].dias` y las tareas que la ejecutan están repartidas por día, así que
   pueden separarse sin que cambie ninguna cifra. Compara sin distinguir mayúsculas — "mascarilla X" y "Mascarilla X" son el mismo producto — y busca por el nombre completo,
   porque "CeraVe" a secas también casa con el limpiador facial de Skincare.
+
+- **Que toda página cargue su prompt** (control 24): la etiqueta de `prompt-pagina.js` con una
+  clave que exista en `prompts-paginas.js`, la ruta correcta y `data-publica` en las webs del
+  negocio; y que cada prompt tenga sus campos, su `## Al modificar…` y ningún marcador suelto.
 
 - **Lo mismo para `SUPLEMENTOS`, y además el MOMENTO** (control 13). Los de la mañana tienen que
   aparecer en una subtarea de la rutina de la mañana y los de la noche en una de la noche: mover

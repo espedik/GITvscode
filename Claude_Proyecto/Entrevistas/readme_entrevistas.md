@@ -8,6 +8,8 @@ ISTQB (CTFL y CT-GenAI), APIs, IA con API, Claude Code, diseño de sistemas, est
 coding challenges y la preparación de Wayve—, cada uno con notas, tags, quizzes y contenido
 enriquecido.
 
+**Su prompt**: la clave `entrevistas` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
+
 > Referencia, no diario. La estructura de archivos (qué objeto vive en cada `js/data-*.js`, orden
 > de carga, convenciones `*_RICH`) está en [`CLAUDE.md`](CLAUDE.md) de esta carpeta y no se repite
 > aquí. `estructura.md` es un outline temático sin conexión con el código.

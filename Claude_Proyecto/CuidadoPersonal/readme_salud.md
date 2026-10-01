@@ -5,6 +5,8 @@ medidas con la gráfica de IMC por edad, chequeo médico del año, exámenes de 
 postura, salud mental, suplementos y una guía de salud digestiva. **No es la app de nutrición**:
 el registro de comida y el plan de masa muscular viven en [`comida.html`](comida.html).
 
+**Su prompt**: la clave `salud` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
+
 > Referencia, no diario. Historial en `git log -p -- Claude_Proyecto/CuidadoPersonal/salud.html`.
 
 Vive en `CuidadoPersonal/salud.html`. Se abre incrustada en `cuidadopersonal.html` (pestaña
