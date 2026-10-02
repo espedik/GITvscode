@@ -154,7 +154,7 @@ por dentro.
 | Módulo | Qué muestra | Fuente |
 |---|---|---|
 | **Hábitos de hoy** | Los que tocan hoy con ancla, racha (🔥 desde 3) y `2 de 5`; se marcan aquí mismo | `HB.hoy()` / `HB.toggleHoy()`, la API que expone `habitos.js` — el mismo toggle de la cuadrícula |
-| **Entrenas** | El día que se mira —hoy, o el que tocaste en la tira— en grande (si no es hoy, su nombre en verde arriba), **sus ejercicios** con series×reps y peso, en una línea los tres días que siguen y la tira de 7 días como chips de foto (`#heroWeekStrip`, 52 px). El peso es el último que registró Ejercicio (naranja; mismo criterio que su `ejUltimo()`) o el inicial de `EJ_LOOKUP` (gris), solo en kg; un ejercicio con todas sus series hechas ese día va en verde, y tocar su nombre abre su imagen (`verImagenEjercicio`). *Ejercicio →* (`#diaEntrenaLink`) abre el día elegido con `?dia=N`. `.dia-entrena` es `display:contents`: la lista es lo único que cede alto y, si ni así cabe (bajo 1280 px de ancho), desplaza la tarjeta | `renderDiaEntrena()` sobre `D.gym.rutina` o `GYM_RUTINA_DEFAULT`; el ✅ sale de `gymSesiones()`, que normaliza `mirutina_v1.sesiones` (objeto por fecha desde el 1-sep-2026, lista antes) |
+| **Entrenas** | El día que se mira —hoy, o el que tocaste en la tira— en grande (si no es hoy, su nombre en verde arriba), **sus ejercicios** con series×reps y peso, en una línea los tres días que siguen y la tira de 7 días como chips de foto (`#heroWeekStrip`, 52 px). El peso es el último que registró Ejercicio (naranja; mismo criterio que su `ejUltimo()`) o el inicial de `EJ_PESO_INI` (gris), solo en kg; un ejercicio con todas sus series hechas ese día va en verde, y tocar su nombre abre **su ficha** (ver *La ficha de un ejercicio*, abajo). *Ejercicio →* (`#diaEntrenaLink`) abre el día elegido con `?dia=N`. `.dia-entrena` es `display:contents`: la lista es lo único que cede alto y, si ni así cabe (bajo 1280 px de ancho), desplaza la tarjeta | `renderDiaEntrena()` sobre `D.gym.rutina` o `GYM_RUTINA_DEFAULT`; el ✅ sale de `gymSesiones()`, que normaliza `mirutina_v1.sesiones` (objeto por fecha desde el 1-sep-2026, lista antes) |
 | **Hoy aprendes** | La palabra de alemán (salta a su pantalla con `irASlide`) y el tema de Python del día, que abre en la app de Entrevistas por su hash (`entrevistas.html#<id>`) porque el Dashboard ya no tiene pantalla de entrevista; **el paso de la semana** con la portada de su libro y **la ficha de Habilidades Base en curso** con el paso al que se retoma | `alemanPalabraHoy()` / `entrevistaTemaHoy()` (uno de los 41 de `ENTREVISTA_TEMAS`, por `diaDelAnio()`), con la etiqueta de módulo de `pyModLabel()` —`PY_MOD_LABEL` lo emite el generador leyendo el menú de `entrevistas.html`, y cae al id en mayúsculas si el archivo es anterior—; `pasoSemanaHtml()` con `habFocoActual()`/`habLibro()`, `fichaEnCursoHtml()` con `hbAvance()` |
 | **Tu dinero** | Fondo de emergencia, deudas, **los cobros y abonos de los próximos 7 días** y *Invertir hoy · Primero tu fondo →* | `renderHeroDinero()` + `cobrosHtml()` sobre `ctAgenda()` → `CIFRAS.agendaDia`, la misma fuente que el tablero |
 | **Fase** | La fase activa, su barra con la marca de hoy, la prioridad del mes y **Después · Fase 1 desde …** | `renderHeroFase()` + `faseDespuesHtml()` sobre `PHASES` |
@@ -164,6 +164,20 @@ por dentro.
 360 px y los módulos van 2×3; en el celular todo va a una columna (módulos en dos columnas, una
 bajo 600 px). **Al medir Mi Día, la hora importa**: el alto cambia con el bloque actual y los que
 quedan, así que dos medidas a horas distintas no son comparables.
+
+### La ficha de un ejercicio
+
+Tocar un ejercicio —su nombre en **Entrenas**, o su nombre o su foto en la rutina de gym del **AHORA** (`gymBloqueHtml`)— abre
+`verFichaEjercicio(id)`: **la misma ficha que Ejercicio** (`verEjercicio`). Imagen, tipo y equipo, músculo y secundarios, en qué
+días de tu rutina va (y *En tu rutina del jueves va a 4 × 12 reps, con 60 s de descanso*, prefiriendo el día que se mira en la
+tira), **cómo se hace** paso a paso, **el error que se ve siempre**, **tu historial** de pesos (las 6 sesiones más recientes, de
+`gymSesiones()`) y **si está ocupada**: tres alternativas del mismo músculo, que abren su propia ficha. Sin historial, sugiere
+el peso de arranque. *Abrir en Ejercicio →* lleva al día con `?dia=N`. Se cierra con click fuera, Escape o ✕.
+
+**El contenido no vive aquí**: sale de `EJ_DB`, la biblioteca de `CuidadoPersonal/ejercicios-datos.js`, el mismo archivo que
+carga Ejercicio. `ejInfo(id)` la combina con `EJ_PESO_INI` —lo único que es del Dashboard: el peso inicial sugerido— y con los
+ejercicios propios de `mirutina_v1`. El control *biblioteca de ejercicios* del verificador impide que `EJ_DB` vuelva a
+copiarse en un HTML o que `EJ_PESO_INI` vuelva a llevar nombre, imagen o técnica.
 
 ### La rutina
 

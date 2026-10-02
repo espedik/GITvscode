@@ -566,6 +566,10 @@ del vocabulario es la de esa app y el Dashboard solo la refleja. Ahí viven tamb
 **siete familias** en las que se agrupan las 37 secciones, que es lo que pinta el índice
 lateral de las dos pantallas.
 
+La biblioteca de ejercicios (`EJ_DB`: los 62 ejercicios con su imagen, sus pasos y su error típico) vive en
+`CuidadoPersonal/ejercicios-datos.js`, junto a Ejercicio, que es su pantalla principal; el Dashboard la carga para
+abrir la misma ficha desde Mi Día. Del Dashboard es solo el peso inicial sugerido (`EJ_PESO_INI`).
+
 ---
 
 ## Migraciones: cómo se corrige un saldo

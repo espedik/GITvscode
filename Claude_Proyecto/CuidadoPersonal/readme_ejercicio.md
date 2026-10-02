@@ -30,6 +30,10 @@ Adán nada en la alberca semiolímpica de su gimnasio, Fitsi Buenavista, incluid
 
 ## La biblioteca — `EJ_DB`
 
+Vive en **`ejercicios-datos.js`**, junto a esta app, que la carga con `<script src>` antes de su script.
+No está dentro del HTML porque **el Dashboard también la lee**: tocar un ejercicio en Mi Día abre la misma ficha que aquí.
+Se edita solo en ese archivo; el verificador falla si vuelve a declararse en un `.html`.
+
 **62 ejercicios** en 9 músculos (`MUSCULOS_ALL`: Pecho 7, Espalda 7, Hombros 6, Bíceps 6, Tríceps 5,
 Piernas 9, Glúteos 4, Core 6, Cardio 12 — incluidos los 5 bloques de natación `e058`-`e062`), cada
 uno con `musculo`, `equipo`, `tipo` (Compuesto/Aislamiento/Cardio) y:
@@ -42,7 +46,9 @@ uno con `musculo`, `equipo`, `tipo` (Compuesto/Aislamiento/Cardio) y:
   de parada → la vuelta, con tempo si importa → el detalle que casi todos se saltan.
 - **`error`** — el fallo que se ve siempre en ese movimiento y cómo se nota.
 - **`img`** en **45 de los 62**: ilustraciones de línea de la familia **Everkinetic** de Wikimedia
-  Commons (`Category:Weight training diagrams`), un solo estilo a propósito. Los SVG de Commons a
+  Commons (`Category:Weight training diagrams`), un solo estilo a propósito. La excepción es
+  **e041 Hip Thrust**: un diagrama propio en SVG (`data:`), porque el de Commons era el del Glute
+  Bridge, otro ejercicio. Los SVG de Commons a
   veces se sirven como `text/plain` y Chromium no los pinta en `<img>`: se enlaza la miniatura PNG
   (`.../thumb/…/960px-Archivo.svg.png`). Los 17 sin imagen **se quedan así a propósito**: no hay
   diagrama de esa familia (todo el cardio y la natación, Face Pull, Oblicuos, Dead Bug) o el único
@@ -186,7 +192,8 @@ verifica a 1600 y 390 px con geometría real y cero errores de consola.
 
 - **Dashboard** lee `mirutina_v1` como `D.gym`: `rutina` para "qué toca" (con `GYM_RUTINA_DEFAULT`
   como respaldo si nunca se abrió esta app) y `sesiones` con `gymSesiones()`, que acepta esta
-  forma y la lista vieja. `EJ_LOOKUP` allá es el subconjunto de nombres/cues que su panel necesita.
+  forma y la lista vieja. La ficha de un ejercicio la pinta con `EJ_DB` de `ejercicios-datos.js` (`verFichaEjercicio`);
+  allá solo vive el peso inicial sugerido (`EJ_PESO_INI`).
   Si cambia la forma de `S.rutina` o `S.sesiones`, revisar `renderDiaEntrena()` y `gymSesiones()`.
 - El shell `cuidadopersonal.html` la incrusta; `salud.html` ya no tiene tracker de ejercicio.
 - Mapa completo: [`../README.md`](../README.md).

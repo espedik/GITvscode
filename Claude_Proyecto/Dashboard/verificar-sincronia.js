@@ -691,6 +691,41 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   else ok.push('mirutina_v1.sesiones: Ejercicio lo guarda como objeto y el Dashboard lo lee solo por gymSesiones()');
 })();
 
+/* ── La biblioteca de ejercicios: una sola, la de CuidadoPersonal/ejercicios-datos.js ───────────
+   Ejercicio y el Dashboard pintan la misma ficha de cada ejercicio. El Dashboard llevaba una copia
+   a mano (EJ_LOOKUP) a la que se le desincronizaron las 42 técnicas y 4 imágenes. Aquí se vigila
+   que EJ_DB viva solo en su archivo, que las dos páginas lo carguen, que EJ_PESO_INI no vuelva a
+   copiar nombre, imagen o técnica, y que cada ejercicio de GYM_RUTINA_DEFAULT exista en la
+   biblioteca: si no, su ficha no abre. */
+(function bibliotecaEjercicios() {
+  const malos = [];
+  let datos = null;
+  try { datos = leer('CuidadoPersonal/ejercicios-datos.js'); } catch (e) { /* abajo se reporta */ }
+  const DB = datos ? evaluar(literal(datos, 'const EJ_DB = ', '[')) : null;
+  if (!DB) malos.push('     CuidadoPersonal/ejercicios-datos.js no existe o ya no declara `const EJ_DB = [`');
+  const CARGA = [['CuidadoPersonal/ejercicio.html', ejer, '<script src="ejercicios-datos.js"></script>'],
+                 ['Dashboard/dashboard.html', dash, '<script src="../CuidadoPersonal/ejercicios-datos.js"></script>']];
+  for (const [rel, src, tag] of CARGA) {
+    if (/const\s+EJ_DB\s*=/.test(sinComentarios(src))) malos.push('     ' + rel + ' vuelve a declarar EJ_DB — se lee de ejercicios-datos.js');
+    if (src.indexOf(tag) < 0) malos.push('     ' + rel + ' no carga la biblioteca: falta ' + tag);
+  }
+  const PI = evaluar(literal(dash, 'const EJ_PESO_INI=', '{'));
+  if (!PI) malos.push('     dashboard.html: no se pudo leer EJ_PESO_INI');
+  else {
+    const copia = Object.keys(PI).filter(id => Object.keys(PI[id]).some(k => k !== 'pesoIni' && k !== 'porLado'));
+    if (copia.length) malos.push('     EJ_PESO_INI vuelve a copiar campos de la biblioteca en: ' + copia.join(', '));
+  }
+  if (DB) {
+    const ids = new Set(DB.map(x => x.id));
+    const R = evaluar(literal(dash, 'const GYM_RUTINA_DEFAULT=', '{')) || {};
+    const usados = [...new Set(Object.values(R).flatMap(d => (d.ejercicios || []).map(e => e.id)))];
+    const faltan = usados.filter(id => !ids.has(id));
+    if (faltan.length) malos.push('     GYM_RUTINA_DEFAULT usa ejercicios que no están en EJ_DB: ' + faltan.join(', '));
+  }
+  if (malos.length) problemas.push('La biblioteca de ejercicios dejó de ser una sola:\n' + malos.join('\n'));
+  else ok.push('Biblioteca de ejercicios: EJ_DB vive solo en ejercicios-datos.js, la cargan Ejercicio y el Dashboard, y EJ_PESO_INI solo lleva pesos');
+})();
+
 /* ── Impacto de lo que cambió en esta sesión ──────────────────────────────────────────────────
    Si `datos-maestros.js` cambió respecto al último commit, se comparan los valores de entonces
    con los de ahora y se dice qué se movió — incluido lo ARRASTRADO. Es la parte que Adán
