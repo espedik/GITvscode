@@ -2925,18 +2925,34 @@ button.hp-lec:active{transform:translateY(0)}
 .dh-r.viva{color:var(--o)}
 .dh-vacio{font-size:12px;color:var(--text3);padding:6px 0}
 /* Entrenas */
-.dia-entrena{display:flex;flex-direction:column;gap:6px}
+/* `contents`: sus hijos son hijos de la tarjeta, así solo la lista de ejercicios cede alto; si ni así
+   cabe, desplaza la tarjeta (bajo 1280 px de ancho mide 130-150 px). */
+.dia-entrena{display:contents}
 .dia-entrena b{font-family:var(--font-title);font-size:20px;font-weight:600;color:var(--text);line-height:1.1}
 .dia-entrena span{font-size:11.5px;color:var(--text3)}
 .dia-entrena-tile .week-strip{gap:4px;margin-top:auto}
 .dia-entrena-tile .ws-day{height:52px;padding:3px 5px;border-radius:8px;justify-content:flex-end}
-.dia-entrena-sig{display:flex;flex-direction:column;gap:3px;margin-top:2px}
+.dia-entrena-sig{flex:none;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;color:var(--text2)}
 .dia-entrena-sig span{font-size:12px;color:var(--text2)}
-.dia-entrena-sig b{font-family:var(--mono);font-size:10.5px;color:var(--text3);margin-right:6px}
+.dia-entrena-sig b{font-family:var(--mono);font-size:10.5px;color:var(--text3);margin-right:5px}
 .dia-entrena-tile .ws-dname{font-size:8.5px}
 .dia-entrena-tile .ws-ddate,.dia-entrena-tile .ws-gym-lbl{display:none}
 .dia-entrena-tile .ws-gym-badge{font-size:9px}
 .dia-entrena-tile .ws-day.today{border-color:var(--g);box-shadow:0 0 0 1px var(--g)}
+.dia-entrena-sig i{font-style:normal;color:var(--text3);margin:0 6px}
+/* Otro día que no es hoy: su nombre en verde arriba. Sus ejercicios: la lista desplaza por dentro y
+   es lo que cede alto, para que la tira se quede abajo. Gana a `.dia-entrena span` por especificidad. */
+.dia-entrena .de-dia{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g)}
+.de-ex{flex:0 1 auto;min-height:24px;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column}
+.de-ex-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:8px;padding:4px 0;border-bottom:1px solid rgba(var(--ov),.06)}
+.de-ex-row:last-child{border-bottom:none}
+.dia-entrena .de-ex-n{all:unset;cursor:pointer;font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.dia-entrena .de-ex-n:hover{color:var(--ac1)}
+.dia-entrena .de-ex-sr{font-family:var(--mono);font-size:10px;color:var(--text2);white-space:nowrap}
+.de-ex-sr i{font-style:normal;color:var(--text3)}
+.de-ex-sr i.real{color:var(--o);font-weight:700}
+.dia-entrena .de-ex-row.ok .de-ex-n{color:var(--g)}
+.de-ex-row.ok .de-ex-sr{opacity:.6}
 /* Tu dinero lleva dentro el botón de invertir, compacto. */
 .dia-dinero>#heroDineroPanel{display:flex;flex-direction:column;flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin}
 .dia-dinero{overflow:hidden!important}
@@ -3837,10 +3853,10 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
           <div class="grid dia-mods reveal d3" id="miDiaSecundarios">
             <div class="tile" id="diaHabitos"></div>
             <div class="tile dia-entrena-tile">
-              <div class="hp-title"><span>🏋️ Entrenas</span><a href="../CuidadoPersonal/ejercicio.html" class="hp-link">Ejercicio →</a></div>
+              <div class="hp-title"><span>🏋️ Entrenas</span><a href="../CuidadoPersonal/ejercicio.html" class="hp-link" id="diaEntrenaLink">Ejercicio →</a></div>
               <div class="dia-entrena" id="diaEntrenaTxt"></div>
               <!-- La tira de 7 días sigue siendo #heroWeekStrip: renderHero() la pinta y
-                   verDiaSemana() la usa para ver la rutina de otro día en la agenda. -->
+                   verDiaSemana() la usa para ver otro día en la agenda y en esta tarjeta. -->
               <div class="week-strip" id="heroWeekStrip"></div>
             </div>
             <div class="tile" id="heroAprenderPanel"></div>
@@ -7131,24 +7147,62 @@ function escucharHtml(t){
 // antes era una lista [{fecha,nombre}] y ahora es un objeto por fecha ISO {fecha:{ejercicio:[sets]}}.
 // Tres sitios de Mi Día seguían haciendo .find/.some sobre él y tronaban en cuanto Ejercicio
 // había guardado algo ("find is not a function", 2026-09-16). Esto devuelve siempre la lista:
-// una fecha con al menos una serie marcada cuenta como entrenada.
+// una fecha con al menos una serie marcada cuenta como entrenada, y lleva sus `series` ({ejercicio:[{ok,kg}]}).
 function gymSesiones(){
   const s=D.gym&&D.gym.sesiones;
   if(Array.isArray(s)) return s;
   if(s&&typeof s==='object') return Object.keys(s).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)&&
-    Object.values(s[k]||{}).some(a=>Array.isArray(a)&&a.some(x=>x&&x.ok))).map(k=>({fecha:k,nombre:''}));
+    Object.values(s[k]||{}).some(a=>Array.isArray(a)&&a.some(x=>x&&x.ok))).map(k=>({fecha:k,nombre:'',series:s[k]}));
   return [];
 }
-// Entrenas: el día de hoy en grande y el de mañana en chico; la tira de 7 días va debajo.
+// Entrenas: el día que se mira —hoy, o el que tocaste en la tira— con sus ejercicios, y en una
+// línea los tres que le siguen; la tira de 7 días va debajo. verDiaSemana() la repinta al cambiar
+// de día. Cada ejercicio abre su imagen (verImagenEjercicio) y lleva el último peso que registró
+// Ejercicio —como ejUltimo() de allá: el máximo de la sesión más reciente que lo trae— o, si
+// nunca se registró, el inicial de EJ_LOOKUP en gris. Solo kg: aquí no cabe más, las lb están en
+// Ejercicio. Con todas sus series hechas ese día, el ejercicio va en verde.
 function renderDiaEntrena(gymRutina, dowHoy){
   const el=document.getElementById('diaEntrenaTxt'); if(!el) return;
-  const hoy=gymRutina[dowHoy], man=gymRutina[(dowHoy+1)%7];
+  if(!gymRutina) gymRutina=(D.gym.rutina&&Object.keys(D.gym.rutina).length)?D.gym.rutina:GYM_RUTINA_DEFAULT;
+  if(dowHoy==null) dowHoy=new Date().getDay();
+  const dow=diaSemanaSel!==null?diaSemanaSel:dowHoy, esHoy=dow===dowHoy;
+  const fecha=semanaActual()[dow], r=gymRutina[dow];
   const nom=r=>!r?'':(r.tipo==='descanso'?'Descanso':(r.nombre||''));
-  const sesion=gymSesiones().find(s=>s.fecha===today());
+  const corto=r=>nom(r).split(' — ')[0];
+  const sesiones=gymSesiones(), sesion=sesiones.find(s=>s.fecha===fecha), series=(sesion&&sesion.series)||{};
   const DOWL=['dom','lun','mar','mié','jue','vie','sáb'];
-  const sig=[1,2,3].map(k=>({d:(dowHoy+k)%7,r:gymRutina[(dowHoy+k)%7]})).filter(x=>x.r);
-  el.innerHTML=`<b>${sesion?'✅ '+esc(sesion.nombre||'Entrenado'):(hoy&&hoy.tipo==='descanso'?'Hoy descansas':esc(nom(hoy)||'Sin rutina hoy'))}</b>
-    <div class="dia-entrena-sig">${sig.map((x,k)=>`<span><b>${k===0?'mañana':DOWL[x.d]}</b>${esc(nom(x.r))}</span>`).join('')}</div>`;
+  const ultimoKg=id=>{
+    for(const s of sesiones.slice().sort((a,b)=>a.fecha<b.fecha?1:-1)){
+      const k=((s.series||{})[id]||[]).filter(x=>x&&x.kg).map(x=>x.kg);
+      if(k.length) return Math.max(...k);
+    }
+    return null;
+  };
+  const titulo=r&&r.tipo==='descanso'?(esHoy?'Hoy descansas':'Descanso'):(nom(r)||(esHoy?'Sin rutina hoy':'Sin rutina ese día'));
+  // La fecha que se LEE va en hora local; `fecha` (como today() y las claves de Ejercicio) es la
+  // de toISOString, que desde las 18:00 de México ya es la de mañana. Se busca con una y se rotula con la otra.
+  const dLoc=new Date(); dLoc.setDate(dLoc.getDate()-dowHoy+dow);
+  const filas=(r&&Array.isArray(r.ejercicios)?r.ejercicios:[]).map(ej=>{
+    const info=EJ_LOOKUP[ej.id]||null, ini=info&&info.pesoIni, lado=info&&info.porLado?' c/u':'';
+    const n=esc((info&&info.nombre)||ej.nombre||ej.id);
+    const sr=ej.series+'×'+ej.reps+(ej.unidad?' '+ej.unidad:'');
+    const kg=ultimoKg(ej.id);
+    const peso=kg?`${kg} kg${lado}`:(typeof ini==='number'?`${ini} kg${lado}`:(ini==='corporal'?'corporal':''));
+    const ok=(series[ej.id]||[]).filter(x=>x&&x.ok).length>=ej.series;
+    return `<div class="de-ex-row${ok?' ok':''}"${info&&info.cue?` title="${esc(info.cue)}"`:''}>
+      ${info?`<button class="de-ex-n" onclick="verImagenEjercicio('${ej.id}')">${ok?'✓ ':''}${n}</button>`:`<span class="de-ex-n">${ok?'✓ ':''}${n}</span>`}
+      <span class="de-ex-sr">${sr}${peso?` · <i class="${kg?'real':''}">${peso}</i>`:''}</span></div>`;
+  }).join('');
+  // Los tres días que siguen al elegido; "hoy" y "mañana" solo cuando lo son de verdad (n sin
+  // módulo: el sábado sigue con el domingo de la semana que viene, que no es "hoy").
+  const sig=[1,2,3].map(k=>({n:dow+k,r:gymRutina[(dow+k)%7]})).filter(x=>x.r);
+  const lbl=n=>n===dowHoy?'hoy':(n===dowHoy+1?'mañana':DOWL[n%7]);
+  el.innerHTML=`${esHoy?'':`<span class="de-dia">${DIAS_LARGO[dow]} · ${dLoc.getDate()}/${dLoc.getMonth()+1}</span>`}
+    <b>${sesion?'✅ ':''}${esc(titulo)}</b>
+    ${filas?`<div class="de-ex">${filas}</div>`:''}
+    <div class="dia-entrena-sig" title="${esc(sig.map(x=>lbl(x.n)+' '+nom(x.r)).join(' · '))}">${sig.map(x=>`<span><b>${lbl(x.n)}</b>${esc(corto(x.r))}</span>`).join('<i>·</i>')}</div>`;
+  const a=document.getElementById('diaEntrenaLink');
+  if(a) a.href='../CuidadoPersonal/ejercicio.html'+(esHoy?'':'?dia='+dow);
 }
 // Hábitos de hoy: los que tocan hoy según habitos.js (HB.hoy), con su racha, y se marcan aquí
 // mismo — es el mismo toggle que la cuadrícula del slide de Hábitos.
@@ -7303,6 +7357,7 @@ function verDiaSemana(dow){
   diaSemanaSel=(diaSemanaSel===dow)?null:dow; // clic de nuevo en el mismo día → vuelve a "hoy"
   document.querySelectorAll('#heroWeekStrip .ws-day').forEach((el,i)=>el.classList.toggle('sel',diaSemanaSel===i));
   renderDia();
+  renderDiaEntrena();  // la tarjeta Entrenas enseña los ejercicios del día elegido
 }
 // ── 💰 Tu dinero — exactamente los mismos números que el botón "Qué invertir hoy", que salen de
 //    pasoInversionHoy() → finanzasmx_v2. Nada se calcula dos veces ni se escribe a mano aquí: si
