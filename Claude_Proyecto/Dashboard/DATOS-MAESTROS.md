@@ -131,9 +131,9 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{servicios}}` | $1,075 | Plan AT&T + internet + gas (la mitad: es bimestral) + luz/agua |
 | `{{suscripciones}}` | $1,080 | Gym + Claude Code + iCloud |
 | `{{cetesDia15}}` | $1,500 | Aporte recurrente a CETES el día 15 |
-| `{{ahorroDia15}}` | $7,400 | Págate primero, con depa: lo que va a la cuenta de Alemania el día 15, además de los CETES. La quincena del 1 paga la renta y la tarjeta |
+| `{{ahorroDia15}}` | $8,100 | Págate primero, con depa: lo que va a la cuenta de Alemania el día 15, además de los CETES. La quincena del 1 paga la renta y la tarjeta |
 | `{{ahorroDia1Casa}}` | $8,600 | En casa de su familia: lo que va a la cuenta el día 1 |
-| `{{ahorroDia15Casa}}` | $11,300 | En casa: lo que va el día 15. Los tres salen de cuadrar cada quincena contra sus fijos, la comida y el tope de gasto personal (`SUPUESTOS.vida`, `vidaEnCasa`) |
+| `{{ahorroDia15Casa}}` | $11,300 | En casa: lo que va el día 15. Los tres salen de cuadrar cada quincena contra sus fijos, la comida, sus rutinas y el tope de lo demás (`SUPUESTOS.loDemas`, `loDemasEnCasa`) |
 | `{{especulacionMes}}` `{{especulacionBtcPct}}` | $20,000 · 10 | La pestaña *Riesgo súper alto* de Qué invertir hoy: al mes, `{{cetesDia15}}` a CETES, ese % a Bitcoin y todo el resto a una sola empresa a la baja que investiga Claude |
 | `{{fijosTotal}}` | $13,405 | Derivada: renta + servicios + suscripciones |
 
@@ -210,13 +210,14 @@ pero el nombre de la variable se queda corto.
 | `{{salidaTotal}}` | $397,878 — lo que cuesta irse a Alemania, completo (`SALIDA.costos`) | derivada; se mueve con `PROYECTO.eurMxn` |
 | `{{salidaJunio}}` | $254,478 — lo que tiene que estar en la cuenta en junio de 2027: la cuenta bloqueada y la visa | derivada |
 | `{{sperrkonto}}` | $249,984 — la cuenta bloqueada, €11,904 al euro del plan | derivada |
-| `{{ahorroMesDepa}}` | $13,900 — lo que llega a la cuenta de Alemania en un mes con depa: los CETES, lo del 15 y Didi | derivada (`mesTipo(false)`) |
+| `{{ahorroMesDepa}}` | $14,600 — lo que llega a la cuenta de Alemania en un mes con depa: los CETES, lo del 15 y Didi | derivada (`mesTipo(false)`) |
 | `{{ahorroMesCasa}}` | $31,400 — lo mismo en casa de su familia: lo del 1, lo del 15, los CETES y Didi | derivada (`mesTipo(true)`) |
-| `{{gastoPersonalDepa}}` | $8,002 — lo que queda del sueldo con depa tras los fijos, la comida y el ahorro: su gasto personal, tarjeta incluida | derivada |
-| `{{gastoPersonalCasa}}` | $7,176 — lo mismo en casa | derivada |
-| `{{alemaniaMarzo}}` | $141,640 — lo que la proyección espera en la cuenta de Alemania al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
+| `{{gastoPersonalDepa}}` | $8,018 — lo que queda del sueldo con depa tras los fijos, la comida y el ahorro: su gasto personal, tarjeta incluida, con sus rutinas dentro | derivada |
+| `{{gastoPersonalCasa}}` | $7,171 — lo mismo en casa | derivada |
+| `{{cuidadoMes}}` | $4,801 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
+| `{{alemaniaMarzo}}` | $144,440 — lo que la proyección espera en la cuenta de Alemania al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
 | `{{marzoParaJunio}}` | $171,878 — lo que tiene que haber al cerrar la Fase 1 para que junio alcance con el ahorro de abril a junio | derivada |
-| `{{alemaniaJunio}}` | $219,746 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
+| `{{alemaniaJunio}}` | $222,546 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
 | `{{junioVeredicto}}` | «faltan … para la cuenta bloqueada» o «alcanza, con … de margen» (`fmt: 'txt'`) | derivada |
 | `{{salidaVeredicto}}` | «faltan …» o «sobran …»: lo que pide la salida —cuenta bloqueada, reserva del BYD, colchón y la colegiatura del primer semestre— contra la cuenta a fin de agosto (`fmt: 'txt'`) | derivada |
 | `{{mesMillon}}` | jul 2031 — el mes en que la proyección cruza el millón (`fmt: 'mes'`) | derivada de la PROYECCION |
@@ -254,14 +255,14 @@ Adán se va a la maestría de Esslingen en **septiembre de 2027** (`maestriaInic
 **El ahorro sale de lo que se manda, no de una resta.** En México, del sueldo solo llega a la
 cuenta de Alemania lo que se aparta el día que entra cada quincena —los CETES y `ahorroDia15`,
 `ahorroDia1Casa`, `ahorroDia15Casa`, que son cobros del calendario— y de Didi lo que Adán dijo
-que aparta (`didiAlAhorro`). Lo demás del sueldo son los fijos, la comida y el gasto personal,
+que aparta (`didiAlAhorro`). Lo demás del sueldo son los fijos, la comida, sus rutinas y el gasto personal,
 que es lo que queda: `desgloseMes(mes)` lo da renglón por renglón con el `grupo` de cada cobro, y
 `mesTipo(casa)` da un mes tipo de cada etapa —con depa y en casa de su familia— para las tablas
 de las fases. Así el calendario del Dashboard y la proyección no pueden decir cosas distintas, y
 el verificador lo comprueba mes a mes. El aguinaldo paga el seguro del BYD y ALTEN no da
 finiquito: no entran.
 
-Para cambiar un supuesto (el tope de gasto personal, lo que cuesta la vida allá, el Werkstudent,
+Para cambiar un supuesto (el tope de lo demás, la comida de la lista, lo que cuesta la vida allá, el Werkstudent,
 la renta del auto) se edita `SUPUESTOS`; para un costo, `SALIDA.costos`; para lo que se manda cada
 quincena, `PROYECTO.ahorroDia…`. Las fases, los marcadores y Coach se recalculan solos.
 
@@ -796,7 +797,7 @@ Qué revisa:
   leerla del maestro. Es la guardia de la Regla 1.
 - `GYM_RUTINA_DEFAULT` contra `ejercicio.html`, que sigue siendo un respaldo duplicado.
 - Que Coach **genere** las fases del maestro (solo la Fase 0, cerrada, sigue escrita a mano: el control 3 falla si otra fase, sus tareas o sus fechas vuelven a escribirse en Coach) y que las prioridades de `APRENDIZAJE` aparezcan en su HTML.
-- **La salida a Alemania y la proyección**: ids de `SALIDA` únicos y distintos de las tareas de fase, cada pendiente con su mes y cada costo con importe, Coach pintándolas desde el maestro, y la proyección llegando al millón antes del cierre de la última fase. Pasado `rentaHasta`, avisa si la renta sigue contando en los fijos. Cada cobro lleva un `grupo` del desglose; el calendario y la proyección apartan lo mismo cada mes y ningún mes deja el gasto personal en negativo; la meta `g001` que siembra Finanzas es lo que cuesta irse, redondeado. Avisa si un fijo cambia y el ahorro de cada quincena deja de cuadrar con el tope de gasto personal.
+- **La salida a Alemania y la proyección**: ids de `SALIDA` únicos y distintos de las tareas de fase, cada pendiente con su mes y cada costo con importe, Coach pintándolas desde el maestro, y la proyección llegando al millón antes del cierre de la última fase. Pasado `rentaHasta`, avisa si la renta sigue contando en los fijos. Cada cobro lleva un `grupo` del desglose; el calendario y la proyección apartan lo mismo cada mes y ningún mes deja el gasto personal en negativo; la meta `g001` que siembra Finanzas es lo que cuesta irse, redondeado; la comida del plan (`SUPUESTOS.comida`, `comidaEnCasa`) es la que dan la lista de compras y las recetas de desayuno del Dashboard. Avisa si un fijo cambia y el ahorro de cada quincena deja de cuadrar con el tope de gasto personal.
 - Las cifras que ya tienen variable pero siguen escritas a mano.
 - **Los números del maestro escritos crudos en el código** (sin `$`): así es como una app acaba
   con dos precios del mismo gimnasio a la vez. Acepta dos patrones

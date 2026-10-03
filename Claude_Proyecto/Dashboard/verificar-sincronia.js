@@ -819,18 +819,36 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   const metaPlan = Math.ceil(C.n('salidaTotal') / 1000) * 1000;
   if (+metaSeed !== metaPlan)
     malos.push('     Finanzas siembra la meta g001 en $' + metaSeed + ' y lo que cuesta irse, redondeado, es $' + metaPlan + ' (súbelo con una migración)');
+  /* La comida del plan es la de la lista de compras y las recetas del Dashboard. El 3-oct-2026 el
+     plan seguía con $3,500 al mes cuando la lista ya daba $2,783: cada mes de la proyección estaba
+     $717 mal. Se recalcula aquí como lo hace ctComida(): cada producto de los pasillos de comida,
+     `monto × base` a la semana. */
+  try {
+    const objeto = nombre => { const m = dash.match(new RegExp('const ' + nombre + '=(\\{[\\s\\S]*?\\n\\});')); return m ? eval('(' + m[1] + ')') : null; };
+    const LP = objeto('LISTA_COMPRAS_PRECIOS'), RM = objeto('RECETAS_MINI'), LC = C.LISTA_COMPRAS.comida;
+    if (!LP || !RM) malos.push('     no se pudo leer LISTA_COMPRAS_PRECIOS o RECETAS_MINI del Dashboard para comprobar la comida del plan');
+    else {
+      let semana = 0;
+      Object.keys(LC).forEach(p => LC[p].forEach(n => { const x = LP[n]; if (x) semana += (+x.monto || 0) * (+x.base || 0); }));
+      const des = RM.desayuno.map(r => +r.costoAprox || 0).filter(x => x > 0);
+      const comida = Math.round(semana / 7 * 30.4), desayuno = Math.round(des.reduce((a, b) => a + b, 0) / des.length * 30.4);
+      const SU = C.PROYECCION.supuestos;
+      if (SU.comida !== comida) malos.push('     SUPUESTOS.comida es $' + SU.comida + ' y la lista de compras da $' + comida + ' al mes: actualízalo y recalcula el ahorro de cada quincena');
+      if (SU.comidaEnCasa !== desayuno) malos.push('     SUPUESTOS.comidaEnCasa es $' + SU.comidaEnCasa + ' y tus recetas de desayuno dan $' + desayuno + ' al mes');
+    }
+  } catch (e) { malos.push('     la comprobación de la comida falló: ' + e.message); }
   /* Los importes de PROYECTO.ahorroDia15… salieron de cuadrar cada quincena contra los fijos, la
      comida y el tope de gasto personal (SUPUESTOS.vida). Si un fijo cambia, el gasto personal se
      aleja del tope: se avisa para decidir si lo nuevo va al ahorro o al día a día. El margen es lo
      que se pierde al redondear a cientos cada envío. */
   const SUP = C.PROYECCION.supuestos;
-  [[false, SUP.vida], [true, SUP.vidaEnCasa]].forEach(function (e) {
+  [[false, SUP.loDemas], [true, SUP.loDemasEnCasa]].forEach(function (e) {
     const t = C.mesTipo(e[0]), envios = (t.dia1 ? 1 : 0) + (t.dia15 ? 1 : 0), dif = t.g.personal - e[1];
     const etapa = e[0] ? 'en casa' : 'con depa';
     if (dif < 0) avisos.push('El ahorro de cada quincena ' + etapa + ' ya no cabe: tu gasto personal queda en $' + Math.round(t.g.personal) +
-      ', $' + Math.round(-dif) + ' bajo el tope de SUPUESTOS. Baja PROYECTO.ahorroDia… o el tope.');
+      ', $' + Math.round(-dif) + ' bajo el tope de lo demás. Baja PROYECTO.ahorroDia… o el tope.');
     else if (dif >= 100 * Math.max(1, envios)) avisos.push('Con los fijos de hoy, ' + etapa + ' cabe mandar $' + Math.round(dif) +
-      ' más al mes a la cuenta de Alemania (el gasto personal va en $' + Math.round(t.g.personal) + ' y el tope es $' + e[1] + ').');
+      ' más al mes a la cuenta de Alemania (lo demás va en $' + Math.round(t.g.personal) + ' y el tope es $' + e[1] + ').');
   });
   if (malos.length) problemas.push('La salida a Alemania o la proyección dejaron de cuadrar:\n' + malos.join('\n'));
   else ok.push('Salida a Alemania: ' + ids.length + ' pendientes en ' + S.bloques.length + ' temas y ' + S.costos.length +

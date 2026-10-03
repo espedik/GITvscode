@@ -4286,7 +4286,7 @@
         }).join('') + '</tbody></table></div>';
       return '<details class="fase-ahorro"' + (estado(f) === 'active' ? ' open' : '') + '><summary>💰 Tu ahorro en esta fase, renglón por renglón</summary>' +
         '<p class="fs-13 text-muted" style="line-height:1.6;margin:6px 0 8px;">Un mes de cada etapa: lo que entra, lo que sale y lo que llega a la cuenta de Alemania. ' +
-        'Tu gasto personal es lo que queda después de mandar el ahorro; el tablero del Plan Maestro te dice cuánto te toca por día. Debajo, la cuenta mes a mes.</p>' +
+        'Tus rutinas salen de lo que cuestan tus productos de piel, cabello y suplementos; lo demás es lo que queda después de mandar el ahorro, y el tablero del Plan Maestro te dice cuánto te toca por día. Debajo, la cuenta mes a mes.</p>' +
         tipo + meses + '</details>';
     };
     const ultima = F[F.length - 1];
@@ -4453,7 +4453,7 @@
       'del sueldo llega a la cuenta solo lo que mandas —con depa, ' + mx(depa.dia15) + ' el 15; en casa de tu familia, ' + mx(casa.dia1) + ' el 1 y ' + mx(casa.dia15) +
       ' el 15; y ' + mx(depa.cetes) + ' de CETES cada 15— y de Didi lo que apartas: ' + mx(P.didiAhorro) + ' al mes hasta ' + et(P.rentaHasta) + ' y ' + mx(P.didiAhorroMas) +
       ' desde ' + et(P.didiMasDesde) + ', la mitad el último mes. Lo demás del sueldo son los fijos, la comida (' + mx(S.comida) + ' al mes; ' + mx(S.comidaEnCasa) +
-      ' en casa, donde aportas ' + mx(P.aporteCasa) + ') y tu gasto personal (' + mx(depa.g.personal) + ' con depa, ' + mx(casa.g.personal) + ' en casa): el desglose está en cada fase. ' +
+      ' en casa, donde aportas ' + mx(P.aporteCasa) + ') y tu gasto personal (' + mx(depa.g.cuidado + depa.g.personal) + ' con depa, ' + mx(casa.g.cuidado + casa.g.personal) + ' en casa; ' + mx(depa.g.cuidado) + ' son tus rutinas): el desglose está en cada fase. ' +
       'Renta de ' + mx(P.renta) + ' hasta ' + et(P.rentaHasta) + '. El aguinaldo paga el seguro del BYD y ALTEN no da finiquito: no entran. Ventas de lo que no usas en noviembre ' +
       'y diciembre, y el depósito del depa en febrero. El euro a $' + P.eurMxn.toFixed(2) + '. En Esslingen, ' + fmtE(S.alemania.gasto) + ' de gasto al mes, Werkstudent de ' +
       fmtE(S.alemania.werkstudent) + ' netos desde ' + et(S.alemania.werkDesde) + ' y colegiaturas de ' + fmtE(S.alemania.colegiatura) + '; el BYD rentado deja ' + mx(S.byd.rentaNeta) +

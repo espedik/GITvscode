@@ -128,10 +128,10 @@ window.CIFRAS = (function () {
     // entra la quincena, además de los CETES. La BBVA se paga completa el 11 y ahí cae casi todo el
     // gasto personal del mes anterior, así que la quincena del 1 guarda para la tarjeta y la del 15
     // es la que más ahorra; con depa, la del 1 paga además la renta y no manda nada. Salen de
-    // cuadrar cada quincena contra sus fijos, la comida y el gasto personal de SUPUESTOS (`vida`,
-    // `vidaEnCasa`), redondeado a cientos hacia abajo; el verificador avisa si un fijo cambia y
-    // dejan de cuadrar. Lo que queda después de mandarlos es tu gasto personal.
-    ahorroDia15:     7400,    // con depa: del 15 de octubre de 2026 a enero de 2027
+    // cuadrar cada quincena contra sus fijos, la comida, sus rutinas (piel, cabello y suplementos) y
+    // el tope de lo demás de SUPUESTOS (`loDemas`, `loDemasEnCasa`), redondeado a cientos hacia
+    // abajo; el verificador avisa si algo cambia y dejan de cuadrar.
+    ahorroDia15:     8100,    // con depa: del 15 de octubre de 2026 a enero de 2027
     ahorroDia1Casa:  8600,    // en casa de tu familia: de enCasaDesde a ultimoMesMexico
     ahorroDia15Casa: 11300,
     // La pestaña "Riesgo súper alto" de Qué invertir hoy (Adán, 21-sep-2026): al mes van
@@ -461,7 +461,7 @@ window.CIFRAS = (function () {
     ]},
     {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Solicitud enviada y el ahorro en marcha",
      meta:"Al 31 mar 2027: <b>1)</b> la solicitud a {{maestriaEscuela}} enviada completa —el IELTS (6.0) y el pasaporte ya los tienes; faltan las dos cartas de recomendación, el CV y la carta de motivación—; <b>2)</b> el depa entregado a fin de enero y, desde febrero, en casa de tu familia; <b>3)</b> en la cuenta de Alemania, {{marzoParaJunio}} para que junio alcance (tu ritmo solo da {{alemaniaMarzo}}); <b>4)</b> la BBVA pagada completa los seis días 11; <b>5)</b> el ISTQB CT-GenAI aprobado.",
-     explica:"Para irte en septiembre de 2027 todo converge en dos fechas: el 31 mar 2027 cierra la solicitud de Esslingen y en junio necesitas {{salidaJunio}} para la cuenta bloqueada y la visa. Tu ahorro, con tus números: hasta enero, {{ahorroMesDepa}} al mes —el 15 mandas {{ahorroDia15}} y los {{cetesDia15}} de CETES; la quincena del 1 paga la renta y la tarjeta— más {{didiAhorro}} de Didi. Desde febrero, sin renta y en casa de tu familia ({{aporteCasa}} de aporte, y comes en casa), {{ahorroMesCasa}} al mes: {{ahorroDia1Casa}} el 1, {{ahorroDia15Casa}} el 15, los CETES y {{didiAhorroMas}} de Didi. El aguinaldo paga el seguro del BYD y no entra; en octubre, la BBVA de septiembre se come casi todo el ahorro. Con ese ritmo, a fin de junio la cuenta tiene {{alemaniaJunio}}: {{junioVeredicto}}. Ese hueco se cierra en esta fase, no en junio: ventas, Didi de más y tu gasto personal —{{gastoPersonalDepa}} al mes con depa y {{gastoPersonalCasa}} en casa, tarjeta incluida— sin pasarte.",
+     explica:"Para irte en septiembre de 2027 todo converge en dos fechas: el 31 mar 2027 cierra la solicitud de Esslingen y en junio necesitas {{salidaJunio}} para la cuenta bloqueada y la visa. Tu ahorro, con tus números: hasta enero, {{ahorroMesDepa}} al mes —el 15 mandas {{ahorroDia15}} y los {{cetesDia15}} de CETES; la quincena del 1 paga la renta y la tarjeta— más {{didiAhorro}} de Didi. Desde febrero, sin renta y en casa de tu familia ({{aporteCasa}} de aporte, y comes en casa), {{ahorroMesCasa}} al mes: {{ahorroDia1Casa}} el 1, {{ahorroDia15Casa}} el 15, los CETES y {{didiAhorroMas}} de Didi. El aguinaldo paga el seguro del BYD y no entra; en octubre, la BBVA de septiembre se come casi todo el ahorro. Con ese ritmo, a fin de junio la cuenta tiene {{alemaniaJunio}}: {{junioVeredicto}}. Ese hueco se cierra en esta fase, no en junio: ventas, Didi de más y tu gasto personal —{{gastoPersonalDepa}} al mes con depa y {{gastoPersonalCasa}} en casa, tarjeta incluida; {{cuidadoMes}} de eso son tus rutinas de piel, cabello y suplementos— sin pasarte.",
      deja:"Riesgo alto y súper alto en Qué invertir hoy: el dinero de Alemania vive en CETES porque se usa en meses, no en años. Compras a meses. Gastar de la quincena antes de mandar el ahorro. Nuevos frentes de negocio: el de tu papá se queda en piloto automático con los posts y el dossier. Y el depa: a fin de enero se entrega.",
      checkpoint:"31 mar 2027: solicitud enviada y la cuenta de Alemania contra {{marzoParaJunio}}, lo que hace falta para que junio alcance con el ahorro de abril a junio. Si va abajo, la salida se mueve a septiembre de 2028 —la solicitud se repite en noviembre— y el ahorro sigue igual: no se viaja a medias ni con deuda.",
      semanas:[
@@ -691,16 +691,18 @@ window.CIFRAS = (function () {
     // 1 oct 2026: fondo $6,000 + cuenta $390 + efectivo $1,600; el depósito del depa; el crédito
     // del auto con su tasa y su pago; el iPhone de AT&T; la BBVA de septiembre (se paga el 11).
     foto: { efectivo: 7990, deposito: 11250, auto: 283000, autoTasa: 12.99, autoPago: 6700, iphone: 11362, iphonePago: 494, bbva: 10000 },
-    // Comer al mes: ~$115 al día según la lista de compras. En casa de su familia, comida y cena
-    // son de la casa —las cubre el aporte— y él paga su desayuno: ~$16 al día, lo que cuestan en
-    // promedio sus recetas de desayuno.
-    comida: 3500,
-    comidaEnCasa: 500,
-    // El gasto personal con que se cuadró el ahorro de cada quincena (PROYECTO.ahorroDia15…): todo
-    // lo que no es fijo ni comida —la tarjeta, salidas, ropa, el tratamiento del cabello y los
-    // suplementos—. En casa baja: ya no hay cosas del depa.
-    vida: 8000,
-    vidaEnCasa: 7000,
+    // Comer al mes: lo que da la lista de compras del Dashboard ($91.54 al día × 30.4). En casa de
+    // su familia, comida y cena son de la casa —las cubre el aporte— y él paga su desayuno: el
+    // promedio de sus recetas de desayuno ($16.60 al día). El verificador los compara con la lista
+    // y las recetas: si cambian, avisa que hay que actualizarlos aquí.
+    comida: 2783,
+    comidaEnCasa: 505,
+    // El gasto personal tiene dos partes. Sus rutinas —piel, cabello y suplementos— salen de
+    // RUTINA_PIEL, RUTINA_PELO y SUPLEMENTOS (`cuidadoMes`). Lo demás —ropa, salidas, regalos,
+    // compras sueltas, la carga del auto fuera de Didi— no lo ha dicho: es el tope con que se
+    // cuadró el ahorro de cada quincena. En casa baja: ya no hay cosas del depa.
+    loDemas: 3200,
+    loDemasEnCasa: 2200,
     menosAhorro: 0,        // escenario: cuánto MENOS se manda a la cuenta cada mes en México
     // Lo que no es sueldo ni Didi. El aguinaldo paga el seguro del BYD (Adán, 3-oct-2026: "va
     // directo a pagar el seguro de mi byd, no lo consideres") y ALTEN no da finiquito: no entran.
@@ -746,7 +748,8 @@ window.CIFRAS = (function () {
     ['depa', 'Luz, agua, internet y gas'], ['celular', 'Plan de datos'],
     ['suscripciones', 'Gym, Claude Code e iCloud'], ['familia', 'Aporte a tu familia'],
     ['auto', 'BYD, la mensualidad'], ['iphone', 'iPhone'], ['comida', 'Comida'],
-    ['personal', 'Tu gasto personal, tarjeta incluida'], ['ahorro', 'A la cuenta de Alemania'],
+    ['cuidado', 'Tus rutinas: piel, cabello y suplementos'],
+    ['personal', 'Lo demás: ropa, salidas, regalos, compras'], ['ahorro', 'A la cuenta de Alemania'],
   ];
   function desgloseMes(mes, s, opts) {
     s = s || SUPUESTOS; opts = opts || {};
@@ -766,6 +769,10 @@ window.CIFRAS = (function () {
     g.auto = opts.pagoAuto != null ? opts.pagoAuto : f.autoPago;
     g.iphone = opts.pagoIphone != null ? opts.pagoIphone : f.iphonePago;
     g.comida = casa ? s.comidaEnCasa : s.comida;
+    g.cuidado = cuidadoMes();
+    // En el mes tipo el gas va a su promedio ($89.50): cada renglón se redondea al peso y el gasto
+    // personal, que es lo que queda, absorbe la diferencia, para que la tabla sume exacto.
+    if (opts.promedio) GRUPOS_SUELDO.forEach(function (x) { g[x[0]] = Math.round(g[x[0]]); });
     const cetes = g.ahorro - dia1 - dia15;
     g.ahorro -= s.menosAhorro || 0;
     g.personal = g.sueldo - g.ahorro - GRUPOS_SUELDO.reduce(function (a, x) {
@@ -774,6 +781,9 @@ window.CIFRAS = (function () {
     const didi = didiAlAhorro(mes, ultimo);
     return { mes: mes, casa: casa, g: g, cetes: cetes, dia1: dia1, dia15: dia15, didi: didi, ahorro: g.ahorro + didi };
   }
+  // Lo que cuestan al mes sus rutinas de piel, cabello y suplementos: el mismo número que pintan
+  // esas pantallas, leído de sus estructuras.
+  function cuidadoMes() { return RUTINA_PIEL.costoMesTotal + RUTINA_PELO.costoMesTotal + SUPLEMENTOS.costoMesTotal; }
   // El mes tipo de cada etapa: con depa (su último mes) y en casa de su familia (el primero).
   function mesTipo(casa, s) {
     return desgloseMes(casa ? PROYECTO.enCasaDesde : PROYECTO.rentaHasta, s, { promedio: true });
@@ -859,15 +869,9 @@ window.CIFRAS = (function () {
         .reduce(function (a, c) { return a + costoSalida(c, eur); }, 0)),
     };
   }
-  const PROYECCION = { supuestos: SUPUESTOS, meses: proyectar() };
-  PROYECCION.cortes = cortesSalida(PROYECCION.meses);
-  // El patrimonio que espera cada fase al cerrar sale de la proyección; la última, del millón.
-  PHASES.forEach(function (f, i) {
-    if (i === 0) return;
-    if (i === PHASES.length - 1) { f.liquido = 1000000; return; }
-    const r = PROYECCION.meses.filter(function (m) { return m.mes === mesDe(f.end); })[0];
-    if (r) f.liquido = Math.round(r.liquido / 1000) * 1000;
-  });
+  // Se arma al final del módulo, antes de lo que se exporta: el desglose lee las rutinas de piel,
+  // cabello y suplementos (`cuidadoMes`), que se declaran más abajo.
+  const PROYECCION = { supuestos: SUPUESTOS, meses: [], cortes: null };
   /* ── APRENDIZAJE ───────────────────────────────────────────────────────────────────────────
      Las 5 prioridades (Datos, Ventas, Marketing, Finanzas, IA) con diagnóstico, primer paso,
      hábito, el error típico y los recursos. Coach.html tiene lo mismo como HTML en
@@ -3711,11 +3715,13 @@ window.CIFRAS = (function () {
     // Lo que llega a la cuenta de Alemania en un mes tipo, con depa (hasta enero) y en casa.
     ahorroMesDepa:   { dep: ['cetesDia15','ahorroDia15','didiAhorro'], v: () => mesTipo(false).ahorro },
     ahorroMesCasa:   { dep: ['cetesDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorroMas'], v: () => mesTipo(true).ahorro },
-    // Lo que queda del sueldo después de los fijos, la comida y el ahorro: el gasto personal.
+    // Lo que queda del sueldo después de los fijos, la comida y el ahorro: el gasto personal, con
+    // sus rutinas dentro. Las rutinas solas son `cuidadoMes`.
+    cuidadoMes:      { v: () => cuidadoMes() },
     gastoPersonalDepa: { dep: ['sueldoQuinc','renta','servicios','suscripciones','cetesDia15','ahorroDia15'],
-                         v: () => mesTipo(false).g.personal },
+                         v: () => { const t = mesTipo(false); return t.g.cuidado + t.g.personal; } },
     gastoPersonalCasa: { dep: ['sueldoQuinc','celular','suscripciones','aporteCasa','cetesDia15','ahorroDia1Casa','ahorroDia15Casa'],
-                         v: () => mesTipo(true).g.personal },
+                         v: () => { const t = mesTipo(true); return t.g.cuidado + t.g.personal; } },
     // La proyección en los dos cortes: el cierre de la Fase 1 y junio, con su veredicto. La salida
     // pide más en agosto (`salidaVeredicto`). Se calculan cada vez: el verificador las mueve.
     alemaniaMarzo:   { dep: ['cetesDia15','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas'],
@@ -4108,6 +4114,17 @@ window.CIFRAS = (function () {
     const neto = inv + ef + liquidos + bienes + btc - deuda;
     return { neto: neto, liquido: neto - bienes, bienes: bienes, deuda: deuda };
   }
+
+  // La proyección del Plan Maestro (ver PROYECCION, arriba), ya con todo lo que lee declarado.
+  PROYECCION.meses = proyectar();
+  PROYECCION.cortes = cortesSalida(PROYECCION.meses);
+  // El patrimonio que espera cada fase al cerrar sale de la proyección; la última, del millón.
+  PHASES.forEach(function (f, i) {
+    if (i === 0) return;
+    if (i === PHASES.length - 1) { f.liquido = 1000000; return; }
+    const r = PROYECCION.meses.filter(function (m) { return m.mes === mesDe(f.end); })[0];
+    if (r) f.liquido = Math.round(r.liquido / 1000) * 1000;
+  });
 
   return {
     n: n, v: v, texto: texto, aplicarDOM: aplicarDOM, refrescar: refrescar, tabla: tabla,
