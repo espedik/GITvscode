@@ -691,6 +691,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    el pliegue; bajo 1024 px vuelve a una. */
 .fases-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:start}
 @media(max-width:1024px){.fases-cols{grid-template-columns:minmax(0,1fr)}}
+/* El ahorro de la fase, un mes de cada etapa: el mismo desglose que Coach (CIFRAS.mesTipo). */
+.fa-dash{width:100%;border-collapse:collapse;font-size:11.5px;margin:2px 0 4px}
+.fa-dash th,.fa-dash td{padding:4px 6px;border-bottom:1px solid rgba(var(--ov),.08);text-align:right;font-weight:500;white-space:nowrap}
+.fa-dash th:first-child{text-align:left;color:var(--text2);white-space:normal}
+.fa-dash thead th{font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
+.fa-dash tr.tot th,.fa-dash tr.tot td{font-weight:800;color:var(--text)}
+.fa-dash td.ok{color:var(--g)}
 @keyframes fasesIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:640px){.fases-tabnav{gap:6px}.fases-tabbtn{padding:7px 11px}.fases-tabbtn-n{font-size:12px}}
 /* Otra vuelta más chico (2026-08-11, pedido explícito: "haz todavia mas pequeñas los
@@ -3189,6 +3196,8 @@ button.hp-lec:active{transform:translateY(0)}
 .ct-cal .ct-tit{white-space:nowrap;flex-shrink:0}
 .ct-cal .ct-nav{flex-shrink:0}
 .ct-tit{font-family:var(--font-title);font-size:18px;font-weight:700;line-height:1.15}
+.ct-ahorro{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ct-ahorro b{color:var(--g);font-weight:700}
 .ct-lbl{font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--text3)}
 .ct-num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 
@@ -4778,7 +4787,7 @@ const EVENTOS_MES={
     {ico:"✈️",txt:"Revisar FAMEX 2027"},
   ],
   "2026-10":[
-    {ico:"🪙",txt:"Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — IELTS, cartas de recomendación y la solicitud a Esslingen; la BBVA al total cada 11 y el ahorro a la cuenta de Alemania"},
+    {ico:"🪙",txt:"Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — cartas de recomendación y la solicitud a Esslingen; la BBVA al total cada 11 y, cada 15, el ahorro a la cuenta de Alemania"},
     {ico:"💳",txt:"Pagar la TC BBVA completa antes del día 11 — el total del estado de cuenta, no el mínimo: así no genera intereses"},
     {ico:"🎯",txt:"Cerrar la Fase 0 por escrito: qué se cumplió (Banamex, liquidada el 30 sep) y qué pasa a la Fase 1 (el fondo de emergencia y la BBVA)"},
   ],
@@ -4853,6 +4862,10 @@ const EVENTOS_CORRIGE = [
   { flag:'_alemania20261003', mes:'2026-10',
     de:'Arranca la Fase 1 del Plan Maestro (1 oct): blindar la base — el fondo de emergencia completo en diciembre, la BBVA pagada completa cada día 11, el ISTQB CT-GenAI y el primer cliente del negocio de tu papá',
     a:'Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — IELTS, cartas de recomendación y la solicitud a Esslingen; la BBVA al total cada 11 y el ahorro a la cuenta de Alemania' },
+  /* 2026-10-03 · El IELTS (6.0) y el pasaporte ya estaban: el pendiente dejaba el IELTS como tarea. */
+  { flag:'_ahorroReal20261003', mes:'2026-10',
+    de:'Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — IELTS, cartas de recomendación y la solicitud a Esslingen; la BBVA al total cada 11 y el ahorro a la cuenta de Alemania',
+    a:'Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — cartas de recomendación y la solicitud a Esslingen; la BBVA al total cada 11 y, cada 15, el ahorro a la cuenta de Alemania' },
 ];
 function eventosCorregir(){
   const st = rawGet(EVENTOS_KEY, null);
@@ -7517,8 +7530,8 @@ function ctQuincena(q, nDias, mov, ym){
   const ini = q===1 ? 1 : 15;
   const fin = q===1 ? 14 : nDias;
   const COM = ctComida();
-  const comeDia = COM ? COM.dia : 0;
   const YM = ym || ctYM || '';
+  const comeDia = ctComeDe(YM, COM).dia;
   const MV = mov || {};
   const fijosMes = ctFijosMes(nDias, YM);
   let entra = 0, pagos = 0;
@@ -7655,6 +7668,18 @@ function ctComida(){
   return { semana:semana, dia:semana/7, mes:semana*52/12, pasillos:pasillos, tiempos:tiempos };
 }
 
+// Lo que cuesta comer un día de `ym`. En casa de tu familia (de PROYECTO.enCasaDesde al último mes
+// en México) la comida y la cena son de la casa —las cubre el aporte— y tú pagas tu desayuno
+// (Adán, 3-oct-2026: "a mi familia aportaré como 3 mil al mes, pero ahorraré en comida"). La
+// regla vive en el maestro (`comerEnMes`), que la usa también el balance mensual.
+function ctComeDe(ym, com){
+  const C = com || ctComida();
+  const base = C ? C.dia : 0;
+  const P = window.CIFRAS && CIFRAS.PROYECTO;
+  if(!P || !CIFRAS.comerEnMes || !ym) return { dia: base, casa: false };
+  return { dia: CIFRAS.comerEnMes(ym, base), casa: ym >= P.enCasaDesde && ym <= P.ultimoMesMexico };
+}
+
 function ctVerMes(delta){
   const [y, m] = ctYM.split('-').map(Number);
   const d = new Date(y, m - 1 + delta, 1);
@@ -7676,8 +7701,8 @@ function ctColor(t){
   if(/desayuno/i.test(t)) return '#fbbf24';
   if(/cena/i.test(t)) return '#f97316';
   if(/comer|comida/i.test(t)) return '#ef4444';
-  if(/renta/i.test(t)) return '#eab308';
-  if(/cetes/i.test(t)) return '#10b981';
+  if(/renta|familia/i.test(t)) return '#eab308';
+  if(/cetes|ahorro/i.test(t)) return '#10b981';
   if(/gym|total pass/i.test(t)) return '#22c55e';
   if(/iphone|apple|icloud|claude/i.test(t)) return '#14b8a6';
   if(/tarjeta|autom|msi|zap|merpago|mercado/i.test(t)) return '#64748b';
@@ -8070,7 +8095,7 @@ function ctTramo(nSel, nDias, mov, ym){
      fecha sigue el modelo. Fuera del tramo (o sin fecha) no se ancla nada. */
   const ancla=ctAnclaReal(ym || ctYM || '', nSel <= 14 ? 1 : 15, nSel <= 14 ? 14 : nDias);
   const com = ctComida();
-  const comeDia = com ? Math.round(com.dia) : 0;
+  const comeDia = Math.round(ctComeDe(ym || ctYM || '', com).dia);
   const ini = nSel <= 14 ? 1 : 15;
   const fin = nSel <= 14 ? 14 : nDias;
   const YM = ym || ctYM || '';
@@ -8145,14 +8170,19 @@ function renderCoachTablero(){
 
   // El estado en palabras: lo que sobra al cerrar el tramo, medido contra lo que
   // cuesta comer una semana. Sin esto los numeros no dicen si vas bien.
+  // En casa de tu familia comer cuesta tu desayuno, y una semana de eso no es colchón: la vara es
+  // una semana de comer completa, la de la lista de compras.
+  const semanaComer = Math.round(((ctComida()||{}).dia || T.comeDia) * 7);
   const estado = T.cierre < 0
     ? { t:'Te vas a pasar', c:'var(--r)' }
-    : (T.cierre < T.comeDia*7 ? { t:'Vas justo', c:'var(--w)' } : { t:'Vas holgado', c:'var(--g)' });
+    : (T.cierre < semanaComer ? { t:'Vas justo', c:'var(--w)' } : { t:'Vas holgado', c:'var(--g)' });
   // Si no cierra, no basta con decirlo: el hueco previsto se resuelve antes de que llegue
   // (prompt de Plan Maestro). Didi no entra en la serie —es variable—, pero sí en el plan: lo
   // que trae de aquí al cierre del tramo, al ritmo de su promedio mensual.
   const faltaR = Math.max(0, -T.cierre);
-  const didiR = Math.round(((window.CIFRAS && CIFRAS.n('didiMes')) || 0) * Math.max(0, T.fin - nSel) / 30.4);
+  // Lo que Didi aparta para la cuenta de Alemania ese mes (CIFRAS.didiAlAhorro) ya tiene destino.
+  const didiLibre = window.CIFRAS ? Math.max(0, (CIFRAS.n('didiMes') || 0) - (CIFRAS.didiAlAhorro ? CIFRAS.didiAlAhorro(ctYM) : 0)) : 0;
+  const didiR = Math.round(didiLibre * Math.max(0, T.fin - nSel) / 30.4);
   const hastaR = T.fin >= nDias ? 'al día 1' : 'al '+(T.fin+1);
   const numR = v => '<b class="ct-num'+(privado?' fin-hidden':'')+'" style="color:var(--text2)">'+money(v)+'</b>';
   const detalleR = T.cierre < 0
@@ -8254,6 +8284,13 @@ function renderCoachTablero(){
     if(sal > topeDia) topeDia = sal;
   }
   const altoDe = v => Math.max(4, Math.round(v/topeDia*25));
+  // Lo que el plan manda este mes a la cuenta de Alemania: los cobros de ahorro del calendario
+  // (CETES y lo de cada quincena) y lo que aparta Didi. Es la misma cuenta que la proyección de
+  // Coach; fuera del plan (antes de octubre de 2026 o ya en Alemania) no se dice nada.
+  let ahorroMes = 0;
+  for(let d=1; d<=nDias; d++) ctAgenda(d).forEach(function(a){ if(a.ahorro) ahorroMes += (+a.monto||0); });
+  const enPlan = !!(window.CIFRAS && CIFRAS.PROYECCION && ctYM >= CIFRAS.PROYECCION.supuestos.desde && ctYM <= CIFRAS.PROYECTO.ultimoMesMexico);
+  const didiAh = enPlan && CIFRAS.didiAlAhorro ? CIFRAS.didiAlAhorro(ctYM) : 0;
 
   let celdas = '';
   for(let i=0;i<primero;i++) celdas += '<span class="ct-d vacio"></span>';
@@ -8281,6 +8318,7 @@ function renderCoachTablero(){
       '<div style="display:flex;flex-direction:column;gap:2px;min-width:0">'+
         '<span class="ct-lbl">Elige el día</span>'+
         '<span class="ct-tit">'+MESN[M-1]+' '+Y+'</span>'+
+        (enPlan ? '<span class="ct-ahorro" title="Del sueldo '+esc(money(ahorroMes))+' —los CETES y lo de cada quincena— y de Didi '+esc(money(didiAh))+'">A la cuenta de Alemania <b class="ct-num'+(privado?' fin-hidden':'')+'">'+money(ahorroMes + didiAh)+'</b>'+(didiAh ? ' · Didi '+money(didiAh) : '')+'</span>' : '')+
       '</div>'+
       '<span class="ct-nav"><button onclick="ctVerMes(-1)" title="Mes anterior">‹</button>'+
       '<button onclick="ctVerMes(1)" title="Mes siguiente">›</button></span>'+
@@ -8301,7 +8339,7 @@ function renderCoachTablero(){
   // como una resta de tres lineas; y al final los dias de antes, para el contexto.
   const mvSel = MOV[ctSel]||[];
   const gSel = ctGasto(mvSel), iSel = ctIngr(mvSel);
-  const TIEMPOS = (ctComida()||{}).tiempos;
+  const COMEX = ctComeDe(ctYM), TIEMPOS = COMEX.casa ? null : (ctComida()||{}).tiempos;
   const H = T.hoy;
 
   document.getElementById('ctDia').innerHTML =
@@ -8316,7 +8354,7 @@ function renderCoachTablero(){
         ? '<div class="ct-ev"'+(TIEMPOS ? ' title="'+esc(TIEMPOS.map(x=>x.n+' '+money(x.m)).join(' · '))+'"' : '')+'>'+
           '<i style="background:#ef4444"></i>'+
           '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
-          '<span style="font-size:11.5px;font-weight:600">Comer<span style="font-weight:400;color:var(--text3)"> · desayuno, comida y cena</span></span>'+
+          '<span style="font-size:11.5px;font-weight:600">Comer<span style="font-weight:400;color:var(--text3)"> · '+(COMEX.casa ? 'tu desayuno; comida y cena, en casa' : 'desayuno, comida y cena')+'</span></span>'+
           '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;color:var(--text2)">−'+money(comeDia)+'</span></span></div>'
         : '')+
       H.pagos.map(a=>'<div class="ct-ev"><i style="background:'+ctColor(a.t)+'"></i>'+
@@ -10941,6 +10979,37 @@ function kpiBarra(nom, val, pct, color, nota, pista){
          '<div class="gbm-bar"'+(pista?' style="background:'+pista+'"':'')+'><div class="gbm-bar-f" style="width:'+Math.max(0,Math.min(100,pct))+'%;background:'+color+'"></div></div>'+
          (nota?'<div class="kpi-linea-nota">'+nota+'</div>':'')+'</div>';
 }
+// El ahorro de una fase en México, un mes de cada etapa —con depa y en casa de tu familia— y la
+// cuenta de Alemania al cerrar cada mes, con lo que piden junio y la salida. Es el mismo desglose
+// que pinta Coach en cada fase (CIFRAS.mesTipo y la PROYECCION): aquí, compacto.
+function faseAhorroHTML(f){
+  const C=window.CIFRAS;
+  if(!C||!C.PROYECCION||!C.mesTipo) return '';
+  const ym=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+  const filas=C.PROYECCION.meses.filter(m=>m.desglose&&m.mes>=ym(f.start)&&m.mes<=ym(f.end));
+  if(!filas.length) return '';
+  const MC=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'], mc=m=>MC[+m.slice(5,7)-1];
+  const tramo=a=>mc(a[0].mes)+(a.length>1?'–'+mc(a[a.length-1].mes):'');
+  const et=[[false,filas.filter(m=>!m.desglose.casa)],[true,filas.filter(m=>m.desglose.casa)]].filter(e=>e[1].length)
+    .map(e=>({t:(e[0]?'En casa':'Con depa')+' · '+tramo(e[1]),d:C.mesTipo(e[0])}));
+  const G=C.GRUPOS_SUELDO, nom=k=>G.filter(x=>x[0]===k)[0][1];
+  const td=(v,s)=>'<td>'+(v?(s<0?'−':'+')+money(v):'—')+'</td>';
+  const fila=(k,s)=>et.some(e=>e.d.g[k])?'<tr><th>'+nom(k)+'</th>'+et.map(e=>td(e.d.g[k],s)).join('')+'</tr>':'';
+  const K=C.PROYECCION.cortes;
+  const corte=[K.junio,K.salida].filter(c=>filas.some(m=>m.mes===c.mes)).map(c=>
+    (c===K.junio?'En junio la cuenta bloqueada pide ':'A la salida se piden ')+'<b>'+money(c.pide)+'</b>: '+
+    (c.falta>0?'faltan <b style="color:var(--r)">'+money(c.falta)+'</b>':'sobran <b style="color:var(--g)">'+money(-c.falta)+'</b>')+'.').join(' ');
+  return kpiSec('💰 Tu ahorro en esta fase')+
+    '<table class="fa-dash"><thead><tr><th>Un mes</th>'+et.map(e=>'<th>'+e.t+'</th>').join('')+'</tr></thead><tbody>'+
+    G.filter(x=>x[0]!=='personal'&&x[0]!=='ahorro').map(x=>fila(x[0],x[0]==='sueldo'?1:-1)).join('')+
+    '<tr><th>'+nom('personal')+'</th>'+et.map(e=>'<td>−'+money(e.d.g.personal)+'</td>').join('')+'</tr>'+
+    '<tr class="tot"><th>Del sueldo, a la cuenta de Alemania</th>'+et.map(e=>'<td>'+money(e.d.g.ahorro)+'</td>').join('')+'</tr>'+
+    '<tr><th>Didi, a la cuenta de Alemania</th>'+et.map(e=>td(e.d.didi,1)).join('')+'</tr>'+
+    '<tr class="tot"><th>Ahorro del mes</th>'+et.map(e=>'<td class="ok">'+money(e.d.ahorro)+'</td>').join('')+'</tr>'+
+    '</tbody></table>'+
+    kpiNota('La cuenta de Alemania al cerrar cada mes: '+filas.map(m=>mc(m.mes)+' <b>'+money(m.alemania)+'</b>').join(' · ')+'. '+corte+
+      ' El desglose mes a mes está en <b>Coach → Plan Maestro</b>.');
+}
 function kpiSec(t){ return '<div class="gbm-sec">'+t+'</div>'; }
 function kpiNota(t){ return '<div class="gbm-nota">'+t+'</div>'; }
 function kpiPaso(titulo, texto, color){
@@ -11121,8 +11190,8 @@ function kpiDetalle(id){
         :'')+
       (mesesSalida?
         kpiSec('📈 El ritmo que pide la salida')+
-        kpiPaso(mesesSalida+' meses hasta '+fmtF(fMeta),'Para juntar los '+money(falta)+' que faltan, en promedio, <b>'+money(ritmo)+' al mes</b>. El plan no lo saca solo del sueldo: lo junta con el ahorro de cada quincena (unos $22,000 al mes con renta y $37,000 sin renta, desde febrero) más el aguinaldo, lo que vendas, el depósito del depa y el finiquito.',C)+
-        kpiNota('El día de decidir es el <b>'+(window.CIFRAS?CIFRAS.v('decisionMaestria'):'—')+'</b>, con dos datos: la admisión de Esslingen y el dinero de la cuenta bloqueada a mediados de junio. Si falta uno, se reaplica para septiembre de 2028 y el ahorro sigue. La proyección mes a mes y la lista completa de la salida están en <b>Coach → Plan Maestro</b>.')
+        kpiPaso(mesesSalida+' meses hasta '+fmtF(fMeta),'Para juntar los '+money(falta)+' que faltan, en promedio, <b>'+money(ritmo)+' al mes</b>. El plan lo junta con lo que mandas cada quincena y lo que aparta Didi —<b>'+(window.CIFRAS?CIFRAS.v('ahorroMesDepa'):'—')+'</b> al mes hasta enero y <b>'+(window.CIFRAS?CIFRAS.v('ahorroMesCasa'):'—')+'</b> desde febrero, en casa de tu familia—, más lo que vendas y el depósito del depa. El aguinaldo paga el seguro del BYD y no entra.',C)+
+        kpiNota('El día de decidir es el <b>'+(window.CIFRAS?CIFRAS.v('decisionMaestria'):'—')+'</b>, con dos datos: la admisión de Esslingen y el dinero de la cuenta bloqueada en junio —con tu ritmo, '+(window.CIFRAS?CIFRAS.v('junioVeredicto'):'—')+'—. Si falta uno, se reaplica para septiembre de 2028 y el ahorro sigue. La proyección mes a mes y la lista completa de la salida están en <b>Coach → Plan Maestro</b>.')
         :'')};
   }
 
@@ -11340,7 +11409,7 @@ function kpiDetalle(id){
         (activa?'<div class="gbm-bar" style="margin:6px 0 10px"><div class="gbm-bar-f" style="width:'+pct+'%;background:'+color+'"></div></div>':'')+
         '<div class="fases-cols"><div>'+kpiPaso('🎯 Meta de la fase', f.meta||'', color)+
         kpiNota(f.explica||'')+
-        (typeof f.liquido==='number'?kpiNota('📈 Al cierre ('+dF(f.end)+') la trayectoria espera <b>≈ '+(f.liquido<0?'−':'+')+money(Math.abs(f.liquido))+'</b> de patrimonio líquido — hipótesis, no promesa.'):'')+
+        (typeof f.liquido==='number'?kpiNota('📈 Al cierre ('+dF(f.end)+') la trayectoria espera <b>≈ '+(f.liquido<0?'−':'+')+money(Math.abs(f.liquido))+'</b> de patrimonio líquido — hipótesis, no promesa.'):'')+faseAhorroHTML(f)+
         (f.deja?kpiPaso('🚫 Lo que se deja de hacer', f.deja, '#94a3b8'):'')+
         (f.checkpoint?kpiPaso('🚩 Checkpoint', f.checkpoint, '#e0b020'):'')+
         '</div><div>'+kpiSec('🗓️ Checklist de la fase')+

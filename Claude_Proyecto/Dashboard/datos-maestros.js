@@ -69,6 +69,14 @@ window.CIFRAS = (function () {
     sueldo:        41000,     // bruto mensual en ALTEN, quincenal a BBVA
     sueldoQuinc:   20500,
     didiMes:       11200,     // ~$400/día × 28 días, semanal
+    // Lo que Didi pone en la cuenta de Alemania, no lo que factura (Adán, 3-oct-2026): "de octubre
+    // a febrero puedo juntar de Didi 5000 al mes" y "desde febrero empezaré a trabajar más de Didi
+    // y puedo sacar 10,000 cada mes y eso meterlo a ahorro". Lo demás de Didi paga la carga del
+    // auto y lo suyo; el plan no lo cuenta. El último mes en México va la mitad: la segunda
+    // quincena es de empacar y entregar el auto (`didiAlAhorro`).
+    didiAhorro:     5000,     // al mes, de octubre de 2026 a enero de 2027
+    didiAhorroMas: 10000,     // al mes, desde didiMasDesde
+    didiMasDesde: '2027-02',
     siVale:          940,     // vale de despensa
     // Lo que de verdad entra al mes si Didi va como el promedio.
     get ingresoTotal() { return this.sueldo + this.didiMes + this.siVale; },
@@ -79,6 +87,14 @@ window.CIFRAS = (function () {
     // no la cobra (CALENDARIO.cobros → agendaDia) y la proyección la cuenta como ahorro.
     renta:         11250,     // día 1
     rentaHasta:  '2027-01',   // el último mes de renta: el depa se entrega a fin de enero
+    // Desde el mes siguiente vive con su familia (Adán, 3-oct-2026): "a mi familia aportaré como 3
+    // mil al mes, pero ahorraré en comida". El aporte cae el día 1 hasta el último mes en México; la
+    // comida y la cena son de la casa y él paga su desayuno (`SUPUESTOS.comidaEnCasa`).
+    aporteCasa:     3000,
+    get enCasaDesde() { return mesSiguiente(this.rentaHasta); },
+    // El último mes en México, el anterior a la salida: hasta ahí llegan el sueldo de ALTEN, el
+    // ahorro de cada quincena y lo de Didi.
+    get ultimoMesMexico() { const p = this.maestriaInicio.split('-').map(Number); return mesDe(new Date(p[0], p[1] - 2, 1)); },
     // 2026-08-18 cambió de gimnasio: Fitsi ($1,500) → Total Pass ($650), que se cobra el día 17.
     // Son $850/mes menos, $10,200 al año. Este valor llevaba desactualizado aquí mientras
     // Finanzas ya usaba el nuevo en una parte de su código y el viejo en otras tres.
@@ -108,6 +124,16 @@ window.CIFRAS = (function () {
     get suscripciones() { return this.gym + this.claudeCode + this.icloud; },
     get fijosTotal() { return this.renta + this.servicios + this.suscripciones; },
     cetesDia15:     1500,     // aporte recurrente a CETES el día 15
+    // Págate primero (Plan Maestro, Fases 1 y 2): lo que va a la cuenta de Alemania el día que
+    // entra la quincena, además de los CETES. La BBVA se paga completa el 11 y ahí cae casi todo el
+    // gasto personal del mes anterior, así que la quincena del 1 guarda para la tarjeta y la del 15
+    // es la que más ahorra; con depa, la del 1 paga además la renta y no manda nada. Salen de
+    // cuadrar cada quincena contra sus fijos, la comida y el gasto personal de SUPUESTOS (`vida`,
+    // `vidaEnCasa`), redondeado a cientos hacia abajo; el verificador avisa si un fijo cambia y
+    // dejan de cuadrar. Lo que queda después de mandarlos es tu gasto personal.
+    ahorroDia15:     7400,    // con depa: del 15 de octubre de 2026 a enero de 2027
+    ahorroDia1Casa:  8600,    // en casa de tu familia: de enCasaDesde a ultimoMesMexico
+    ahorroDia15Casa: 11300,
     // La pestaña "Riesgo súper alto" de Qué invertir hoy (Adán, 21-sep-2026): al mes van
     // especulacionMes, de los que cetesDia15 son CETES fijos, especulacionBtcPct % a Bitcoin y
     // TODO el resto a una sola empresa a la baja que investiga Claude.
@@ -153,6 +179,9 @@ window.CIFRAS = (function () {
      El DÍA sí vive aquí: hasta el 2026-08-26 solo existía como comentario al lado de la cifra
      ("renta, día 1"), o sea que ninguna app podía leerlo.
 
+     `grupo` dice a qué renglón del desglose del sueldo va cada cobro (`desgloseMes`): sueldo,
+     renta, depa, celular, suscripciones, familia o ahorro. `ahorro: true` es dinero que se aparta
+     —los CETES y el ahorro de cada quincena—: sale de la cuenta pero no es gasto.
      `hitos` — fechas duras que no se pueden sacar de ningún otro dato. Todo lo demás lo
      calcula el Dashboard en vivo y por eso no está escrito aquí: los cierres y arranques de
      fase salen de PHASES, y la última cuota de un MSI sale de `balance / min` sobre las
@@ -161,26 +190,39 @@ window.CIFRAS = (function () {
      Regla al agregar: si una fecha se puede derivar de un dato que ya existe, NO va aquí. */
   const CALENDARIO = {
     cobros: [
-      { dia:  1, txt: 'Renta',    get monto() { return PROYECTO.renta; }, get hasta() { return PROYECTO.rentaHasta; } },
-      { dia:  1, get txt() { return PROYECTO.celularPlan; }, get monto() { return PROYECTO.celular; } },
-      { dia:  1, txt: 'Quincena', get monto() { return PROYECTO.sueldoQuinc; }, entra: true },
+      { dia:  1, txt: 'Renta', grupo: 'renta', get monto() { return PROYECTO.renta; }, get hasta() { return PROYECTO.rentaHasta; } },
+      { dia:  1, get txt() { return PROYECTO.celularPlan; }, grupo: 'celular', get monto() { return PROYECTO.celular; } },
+      { dia:  1, txt: 'Quincena', grupo: 'sueldo', get monto() { return PROYECTO.sueldoQuinc; }, entra: true },
       // El 15, no el 14 (Adán, 2026-08-28). El plan semanal de Finanzas ya la trataba así
       // — la mete en la semana 3 (días 15-21) y deja la semana 2 sin ingreso — pero aquí
       // decía 14, así que el calendario y el plan se contradecían sin que nada lo notara.
-      { dia: 15, txt: 'Quincena', get monto() { return PROYECTO.sueldoQuinc; }, entra: true },
-      { dia: 15, txt: 'CETES',    get monto() { return PROYECTO.cetesDia15; } },
-      { dia: 17, txt: 'Gym',      get monto() { return PROYECTO.gym; } },
+      { dia: 15, txt: 'Quincena', grupo: 'sueldo', get monto() { return PROYECTO.sueldoQuinc; }, entra: true },
+      { dia: 15, txt: 'CETES', grupo: 'ahorro', ahorro: true, get monto() { return PROYECTO.cetesDia15; } },
+      { dia: 17, txt: 'Gym', grupo: 'suscripciones', get monto() { return PROYECTO.gym; } },
       // 2026-08-30 — los seis fijos que el calendario no contemplaba. Sumaban $1,094 al mes
       // saliendo de la cuenta sin que ninguna pantalla los descontara del tramo. Los días
       // los dio Adán; la limpieza se cayó de la lista porque no la paga.
-      { dia:  1, txt: 'Luz y agua', get monto() { return PROYECTO.luzAgua; }, get hasta() { return PROYECTO.rentaHasta; } },
-      { dia:  2, txt: 'Claude Code', get monto() { return PROYECTO.claudeCode; } },
-      { dia:  8, txt: 'Internet',   get monto() { return PROYECTO.internet; }, get hasta() { return PROYECTO.rentaHasta; } },
-      { dia:  8, txt: 'iCloud',     get monto() { return PROYECTO.icloud; } },
+      { dia:  1, txt: 'Luz y agua', grupo: 'depa', get monto() { return PROYECTO.luzAgua; }, get hasta() { return PROYECTO.rentaHasta; } },
+      { dia:  2, txt: 'Claude Code', grupo: 'suscripciones', get monto() { return PROYECTO.claudeCode; } },
+      { dia:  8, txt: 'Internet', grupo: 'depa', get monto() { return PROYECTO.internet; }, get hasta() { return PROYECTO.rentaHasta; } },
+      { dia:  8, txt: 'iCloud', grupo: 'suscripciones', get monto() { return PROYECTO.icloud; } },
       // Luz, agua, internet y gas son del depa: terminan con la renta (`hasta`, rentaHasta).
       // El gas no cae todos los meses: `cada` y `desde` lo dicen, y ctAgenda los respeta.
-      { dia:  1, txt: 'Gas', get monto() { return PROYECTO.gas; },
+      { dia:  1, txt: 'Gas', grupo: 'depa', get monto() { return PROYECTO.gas; },
         get cada() { return PROYECTO.gasCadaMeses; }, get desde() { return PROYECTO.gasDesdeMes; }, get hasta() { return PROYECTO.rentaHasta; } },
+      // Plan Maestro — el ahorro de cada quincena a la cuenta de Alemania (PROYECTO.ahorroDia15…) y
+      // el aporte a la casa. `ahorro: true`: sale de la cuenta del día a día pero sigue siendo tuyo,
+      // así que el balance mensual no lo cuenta como gasto. El 1 de octubre de 2026 ya había pasado.
+      { dia: 15, txt: 'Ahorro → cuenta de Alemania', grupo: 'ahorro', ahorro: true, quincena: true,
+        get monto() { return PROYECTO.ahorroDia15; }, desde: '2026-10', get hasta() { return PROYECTO.rentaHasta; } },
+      { dia:  1, txt: 'Ahorro → cuenta de Alemania', grupo: 'ahorro', ahorro: true, quincena: true,
+        get monto() { return PROYECTO.ahorroDia1Casa; },
+        get desde() { return PROYECTO.enCasaDesde; }, get hasta() { return PROYECTO.ultimoMesMexico; } },
+      { dia: 15, txt: 'Ahorro → cuenta de Alemania', grupo: 'ahorro', ahorro: true, quincena: true,
+        get monto() { return PROYECTO.ahorroDia15Casa; },
+        get desde() { return PROYECTO.enCasaDesde; }, get hasta() { return PROYECTO.ultimoMesMexico; } },
+      { dia:  1, txt: 'Aporte a tu familia', grupo: 'familia', get monto() { return PROYECTO.aporteCasa; },
+        get desde() { return PROYECTO.enCasaDesde; }, get hasta() { return PROYECTO.ultimoMesMexico; } },
     ],
     hitos: [
       { fecha: PROYECTO.maestriaDecision, txt: 'Decisión Maestría',
@@ -418,32 +460,32 @@ window.CIFRAS = (function () {
       {id:"s0-7",mes:"2026-09",txt:"Cada peso de ventas/activos va, en orden fijo: (1) fondo de emergencia a {{fondoMeta}}, (2) resto a la BBVA ({{tcBbva}}), la única tarjeta con saldo desde que Banamex quedó en $0 el 30 sep 2026. Este mes cierra la fase."},
     ]},
     {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Solicitud enviada y el ahorro en marcha",
-     meta:"Al 31 mar 2027: <b>1)</b> la solicitud a {{maestriaEscuela}} enviada completa —IELTS de 6.0 o más, dos cartas de recomendación, CV y carta de motivación—; <b>2)</b> el depa entregado a fin de enero y la renta convertida en ahorro desde febrero; <b>3)</b> {{alemaniaMarzo}} en la cuenta de Alemania, lo que marca la proyección; <b>4)</b> la BBVA pagada completa los seis días 11; <b>5)</b> el ISTQB CT-GenAI aprobado.",
-     explica:"Para irte en septiembre de 2027 todo converge en dos fechas: el 31 mar 2027 cierra la solicitud de Esslingen y a mediados de junio necesitas {{salidaJunio}} para la cuenta bloqueada y la visa. Esta fase prepara las dos. La solicitud se manda en enero, no en marzo. El ahorro arranca ya: con renta, unos $22,000 al mes si la vida diaria cabe en $8,000 (comida aparte); desde febrero, sin renta, unos $37,000. Hoy casi no ahorras —septiembre cerró con la cuenta en $390 y la BBVA volvió a subir en once días—, así que el presupuesto y el tope de tarjeta de esta fase no son opcionales: sin ellos la fecha no llega.",
-     deja:"Riesgo alto y súper alto en Qué invertir hoy: el dinero de Alemania vive en CETES porque se usa en meses, no en años. Compras a meses. Nuevos frentes de negocio: el de tu papá se queda en piloto automático con los posts y el dossier. Y el depa: a fin de enero se entrega.",
-     checkpoint:"31 mar 2027: solicitud enviada y la cuenta de Alemania en la proyección ({{alemaniaMarzo}}). Si vas más de $30,000 abajo, junio no alcanza para la cuenta bloqueada: se recorta la vida diaria ese mismo mes o la salida se mueve a septiembre de 2028 (la solicitud se repite en noviembre).",
+     meta:"Al 31 mar 2027: <b>1)</b> la solicitud a {{maestriaEscuela}} enviada completa —el IELTS (6.0) y el pasaporte ya los tienes; faltan las dos cartas de recomendación, el CV y la carta de motivación—; <b>2)</b> el depa entregado a fin de enero y, desde febrero, en casa de tu familia; <b>3)</b> en la cuenta de Alemania, {{marzoParaJunio}} para que junio alcance (tu ritmo solo da {{alemaniaMarzo}}); <b>4)</b> la BBVA pagada completa los seis días 11; <b>5)</b> el ISTQB CT-GenAI aprobado.",
+     explica:"Para irte en septiembre de 2027 todo converge en dos fechas: el 31 mar 2027 cierra la solicitud de Esslingen y en junio necesitas {{salidaJunio}} para la cuenta bloqueada y la visa. Tu ahorro, con tus números: hasta enero, {{ahorroMesDepa}} al mes —el 15 mandas {{ahorroDia15}} y los {{cetesDia15}} de CETES; la quincena del 1 paga la renta y la tarjeta— más {{didiAhorro}} de Didi. Desde febrero, sin renta y en casa de tu familia ({{aporteCasa}} de aporte, y comes en casa), {{ahorroMesCasa}} al mes: {{ahorroDia1Casa}} el 1, {{ahorroDia15Casa}} el 15, los CETES y {{didiAhorroMas}} de Didi. El aguinaldo paga el seguro del BYD y no entra; en octubre, la BBVA de septiembre se come casi todo el ahorro. Con ese ritmo, a fin de junio la cuenta tiene {{alemaniaJunio}}: {{junioVeredicto}}. Ese hueco se cierra en esta fase, no en junio: ventas, Didi de más y tu gasto personal —{{gastoPersonalDepa}} al mes con depa y {{gastoPersonalCasa}} en casa, tarjeta incluida— sin pasarte.",
+     deja:"Riesgo alto y súper alto en Qué invertir hoy: el dinero de Alemania vive en CETES porque se usa en meses, no en años. Compras a meses. Gastar de la quincena antes de mandar el ahorro. Nuevos frentes de negocio: el de tu papá se queda en piloto automático con los posts y el dossier. Y el depa: a fin de enero se entrega.",
+     checkpoint:"31 mar 2027: solicitud enviada y la cuenta de Alemania contra {{marzoParaJunio}}, lo que hace falta para que junio alcance con el ahorro de abril a junio. Si va abajo, la salida se mueve a septiembre de 2028 —la solicitud se repite en noviembre— y el ahorro sigue igual: no se viaja a medias ni con deuda.",
      semanas:[
       {id:"a1-1",mes:"2026-10",txt:"Paga la BBVA completa el 11 oct. El total, no el mínimo de {{tcBbvaMin}}: la tarjeta queda sin intereses y sin deuda para irte."},
-      {id:"a1-2",mes:"2026-10",txt:"Abre la cuenta de Alemania. CETES aparte del día a día: el día que entra la quincena, el ahorro se va ahí antes de gastar."},
-      {id:"a1-3",mes:"2026-10",txt:"Inscríbete al IELTS Academic. British Council CDMX ($4,850) para fines de noviembre o diciembre; practica desde ya."},
+      {id:"a1-2",mes:"2026-10",txt:"Abre la cuenta de Alemania, CETES aparte del día a día. El 15 de octubre, antes de gastar, manda ahí {{ahorroDia15}}; lo de Didi, cada lunes, hasta juntar {{didiAhorro}} al mes."},
       {id:"a1-4",mes:"2026-10",txt:"Pide las dos cartas de recomendación. Un jefe de Bosch, Continental o ALTEN y un líder técnico o profesor: en inglés y firmadas."},
       {id:"a1-5",mes:"2026-11",txt:"La ventana de Esslingen abre el 4 nov. Arma la solicitud: CV europeo, carta de motivación, título y certificado del IPN."},
       {id:"a1-6",mes:"2026-11",txt:"Vende lo que no usas. PS5 y su control, monitores e iPad: cada venta, a la cuenta de Alemania."},
       {id:"a1-7",mes:"2026-11",txt:"Presenta el ISTQB CT-GenAI. Llega con el simulacro de Mis Metas en 34 de 46 o más, dos veces seguidas: el corte oficial es 30."},
-      {id:"a1-8",mes:"2026-12",txt:"IELTS con 6.0 o más. Si no llega, se repite en enero: el resultado sale en días."},
-      {id:"a1-9",mes:"2026-12",txt:"Aguinaldo y ventas a la cuenta de Alemania. Por ley el aguinaldo llega antes del 20 dic y es de al menos 15 días de sueldo."},
+      {id:"a1-9",mes:"2026-12",txt:"Las ventas, a la cuenta de Alemania el día que cobras. El aguinaldo paga el seguro del BYD: no entra al plan."},
       {id:"a1-10",mes:"2027-01",txt:"Manda la solicitud completa a Esslingen. En enero, no en marzo: cierra el 31 mar y la respuesta llega antes de fin de mayo."},
-      {id:"a1-11",mes:"2027-01",txt:"Entrega el depa a fin de mes. Recupera el depósito: desde febrero, los {{renta}} de la renta son ahorro."},
+      {id:"a1-11",mes:"2027-01",txt:"Entrega el depa a fin de mes y recupera el depósito. Lo que no te llevas a casa de tu familia —muebles, electrodomésticos, cocina— se vende: a la cuenta de Alemania."},
+      {id:"a1-16",mes:"2027-02",txt:"Arranca la vida en casa de tu familia. {{aporteCasa}} a la casa el día 1, {{ahorroDia1Casa}} a la cuenta ese mismo día y {{ahorroDia15Casa}} el 15; Didi sube a {{didiAhorroMas}} al mes y el ahorro llega a {{ahorroMesCasa}}."},
       {id:"a1-12",mes:"2027-03",txt:"Cierra la Fase 1 por escrito. Solicitud, saldo de la cuenta de Alemania contra la proyección, BBVA e ISTQB."},
-      {id:"a1-13",cont:true,txt:"Vida diaria con tope. $8,000 al mes con renta y $7,000 sin renta, comida aparte: lo que sobre, a la cuenta de Alemania."},
+      {id:"a1-13",cont:true,txt:"Págate primero cada quincena. El ahorro sale el día que entra el sueldo, antes de gastar; lo que queda es tu gasto personal, tarjeta incluida, y el tablero del Plan Maestro te dice cuánto te toca por día."},
       {id:"a1-14",cont:true,txt:"Alemán sin pausa en {{escuelaAleman}}. Esslingen pide A2 antes de terminar el 2º semestre: llega con la constancia."},
       {id:"a1-15",cont:true,txt:"Conducta primero: cero alcohol y el celular fuera del cuarto. Llegas a Alemania con la cadena hecha, no a empezarla allá."},
+      {id:"a1-17",cont:true,txt:"Cierra el hueco de junio antes de marzo. Con tu ritmo, {{junioVeredicto}}: cada peso extra de Didi, de ventas o de lo que no gastas va a la cuenta el mismo día."},
     ]},
     {start:new Date(2027,3,1),end:new Date(2027,7,31),tag:"Fase 2",title:"Admisión, visa y salida",
-     meta:"Al 31 ago 2027: <b>1)</b> la admisión de {{maestriaEscuela}}; <b>2)</b> la cuenta bloqueada llena ({{sperrkonto}}) y la visa de estudiante en el pasaporte; <b>3)</b> cuarto en Esslingen con contrato; <b>4)</b> el {{auto}} rentado con contrato, seguro para plataformas, GPS y tu papá como administrador; <b>5)</b> la salud lista: chequeo, dentista, lentes y medicamentos; <b>6)</b> ALTEN cerrado con finiquito y carta de recomendación.",
-     explica:"Cinco meses con un orden que no se salta: admisión → cuenta bloqueada → visa (mínimo de 6 a 8 semanas) → vuelo. La cuenta bloqueada pide €11,904 —{{sperrkonto}} al euro del plan— y es el punto más apretado: a mediados de junio necesitas {{salidaJunio}} en la mano. El auto no se vende: es tu respaldo para trabajar Didi si regresas sin empleo. Mientras estás fuera se renta a un conductor de plataforma: las flotillas cobran de $3,600 a $4,500 a la semana por un Dolphin Mini; un particular cobra unos $3,000, y ya con seguro, GPS y semanas vacías deja unos $7,500 al mes, que pagan sus {{autoPago}}.",
-     deja:"Viajes y compras que no estén en la lista de salida. Didi desde que empiezas a empacar, en agosto. Y nada sin papel: cuarto, auto y finiquito, con contrato.",
-     checkpoint:"15 jun 2027: la admisión en la mano y {{salidaJunio}} en la cuenta. Sin admisión, se reaplica para septiembre de 2028 y el ahorro sigue; sin el dinero, la cuenta bloqueada no se completa y la salida se mueve un año. No se viaja a medias ni con deuda.",
+     meta:"Al 31 ago 2027: <b>1)</b> la admisión de {{maestriaEscuela}}; <b>2)</b> la cuenta bloqueada llena ({{sperrkonto}}) y la visa de estudiante en el pasaporte; <b>3)</b> cuarto en Esslingen con contrato; <b>4)</b> el {{auto}} rentado con contrato, seguro para plataformas, GPS y tu papá como administrador; <b>5)</b> la salud lista: chequeo, dentista, lentes y medicamentos; <b>6)</b> ALTEN cerrado con constancia laboral y carta de recomendación.",
+     explica:"Cinco meses con un orden que no se salta: admisión → cuenta bloqueada → visa (mínimo de 6 a 8 semanas) → vuelo. El ahorro sigue a {{ahorroMesCasa}} al mes; en agosto, la mitad de Didi, que es de empacar. La cuenta bloqueada pide €11,904 —{{sperrkonto}} al euro del plan— y es el punto más apretado: a fin de junio, con tu ritmo, {{junioVeredicto}}. Y a fin de agosto, para irte con la colegiatura del primer semestre, la reserva del BYD y el colchón, {{salidaVeredicto}}. El auto no se vende: es tu respaldo para trabajar Didi si regresas sin empleo. Mientras estás fuera se renta a un conductor de plataforma: las flotillas cobran de $3,600 a $4,500 a la semana por un Dolphin Mini; un particular cobra unos $3,000, y ya con seguro, GPS y semanas vacías deja unos $7,500 al mes, que pagan sus {{autoPago}}.",
+     deja:"Viajes y compras que no estén en la lista de salida. Y nada sin papel: cuarto y auto, con contrato.",
+     checkpoint:"Fin de junio de 2027: la admisión en la mano y {{salidaJunio}} en la cuenta. Sin admisión, se reaplica para septiembre de 2028 y el ahorro sigue; sin el dinero, la cuenta bloqueada no se completa y la salida se mueve un año. No se viaja a medias ni con deuda.",
      semanas:[
       {id:"a2-1",mes:"2027-04",txt:"Declaración anual. Con tus deducciones; si sale saldo a favor, a la cuenta de Alemania."},
       {id:"a2-2",mes:"2027-04",txt:"Goethe-Zertifikat A2 (o telc A2) en México. El requisito de alemán de Esslingen queda cumplido desde el primer día."},
@@ -454,20 +496,21 @@ window.CIFRAS = (function () {
       {id:"a2-7",mes:"2027-06",txt:"Aplica a Werkstudent desde México. Bosch, Mercedes-Benz, Porsche y sus proveedores: 20 h a la semana pagan unos €1,200 al mes."},
       {id:"a2-8",mes:"2027-07",txt:"Renta el BYD con contrato. Seguro para plataformas, GPS con paro de motor, depósito y pago semanal por adelantado; tu papá lo administra."},
       {id:"a2-9",mes:"2027-07",txt:"Compra el vuelo y el seguro de viaje. Salida a fines de agosto; el seguro cubre los primeros 3 meses, como pide la visa."},
-      {id:"a2-10",mes:"2027-08",txt:"Renuncia en {{empleador}} y pide el finiquito por escrito. Aguinaldo y vacaciones proporcionales, constancia laboral y carta en inglés."},
+      {id:"a2-10",mes:"2027-08",txt:"Renuncia en {{empleador}} con el aviso que pida tu contrato. Constancia laboral y carta de recomendación en inglés; el plan no cuenta finiquito."},
       {id:"a2-11",mes:"2027-08",txt:"Cierra México. BBVA en $0, iPhone domiciliado, tu número en un plan barato, poder notarial a tu papá y respaldos en la nube."},
       {id:"a2-12",mes:"2027-08",txt:"Dos maletas. Los documentos originales en la de mano; la ropa gruesa de invierno, mejor allá en octubre."},
-      {id:"a2-13",cont:true,txt:"La cuenta de Alemania manda. Todo lo que entra va primero ahí: el 15 de junio tiene que haber {{salidaJunio}}."},
+      {id:"a2-13",cont:true,txt:"La cuenta de Alemania manda. {{ahorroDia1Casa}} el 1, {{ahorroDia15Casa}} el 15 y lo de Didi van antes que cualquier gasto: a fin de junio tiene que haber {{salidaJunio}}."},
       {id:"a2-14",cont:true,txt:"Terapia antes de irte. Llegas con herramientas y con tu red armada: mexicanos en Stuttgart, los líderes de Bosch que conoces y el buddy de la Hochschule."},
     ]},
     {start:new Date(2027,8,1),end:new Date(2029,1,28),tag:"Fase 3",title:"Esslingen: la maestría que cambia tu sueldo",
      meta:"Al 28 feb 2029: <b>1)</b> el M.Eng. terminado —tres semestres y la tesis en una empresa—; <b>2)</b> Werkstudent desde el segundo o tercer mes, 20 h a la semana; <b>3)</b> alemán A2 certificado antes de terminar el 2º semestre y B1 al final; <b>4)</b> una oferta de trabajo firmada antes de entregar la tesis; <b>5)</b> cero deuda nueva.",
-     explica:"Es la fase en que menos sube el patrimonio, y es a propósito: el fondo compra la palanca más grande del plan. Las cuentas cierran solo con dos supuestos: que el Werkstudent llegue pronto —sin él, el dinero alcanza para unos 12 meses, lo que cubre la cuenta bloqueada— y que el BYD siga rentado. Con los dos, la maestría cuesta casi solo las colegiaturas: tres de €1,900. Al graduarte, el permiso de residencia deja buscar trabajo hasta 18 meses, pero la meta es no necesitarlo: oferta firmada antes de entregar la tesis.",
+     explica:"Es la fase en que menos sube el patrimonio, y es a propósito: el fondo compra la palanca más grande del plan. Las cuentas cierran solo con dos supuestos: que el Werkstudent llegue pronto —sin él, el dinero se acaba al pagar la segunda colegiatura— y que el BYD siga rentado. Con los dos, la maestría cuesta casi solo las colegiaturas: tres de €1,900. Al graduarte, el permiso de residencia deja buscar trabajo hasta 18 meses, pero la meta es no necesitarlo: oferta firmada antes de entregar la tesis.",
      deja:"Gastos fuera del presupuesto en euros, viajes que no paga el Werkstudent y cualquier deuda alemana: ni tarjeta a meses ni préstamo.",
      checkpoint:"Al cerrar el 1er semestre (feb 2028): sin Werkstudent, el plan se ajusta ese mes —más horas en vacaciones, un HiWi en la universidad (no cuenta en el tope de 140 días) o recortar— antes de que el dinero llegue a seis meses de gasto. Sin oferta en enero de 2029, la búsqueda se vuelve de tiempo completo.",
      semanas:[
       {id:"a3-1",mes:"2027-09",txt:"Las primeras dos semanas. Anmeldung (obligatoria en 14 días), inscripción, cuenta, seguro y SIM; después, el permiso de residencia."},
       {id:"a3-2",mes:"2027-09",txt:"Presupuesto en euros. €1,050 al mes: renta, comida, seguro y transporte; lo que pase de ahí se recorta antes de tocar el fondo."},
+      {id:"a3-12",mes:"2027-09",txt:"Pide la exención de colegiatura por talento. Del 1 al 30 de septiembre, con CV, calificaciones y la carta de admisión: si sale, son €1,500 menos cada semestre."},
       {id:"a3-3",mes:"2027-10",txt:"Werkstudent. Si no lo cerraste desde México, este mes: con seis años de HIL y testing eres el perfil que buscan."},
       {id:"a3-4",mes:"2028-02",txt:"Pausa entre semestres: Praktikum o más horas. Cuentan en el tope de 140 días al año; los empleos de la universidad (HiWi) no."},
       {id:"a3-5",mes:"2028-03",txt:"Segunda colegiatura (€1,900) y el A2 certificado, si no lo trajiste. Esslingen lo pide antes de cerrar el 2º semestre."},
@@ -508,7 +551,7 @@ window.CIFRAS = (function () {
      Esslingen: solicitud del 4 nov al 31 mar, respuesta antes de fin de mayo, arranque en
      septiembre, €1,500 por semestre para no europeos, A2 de alemán antes de cerrar el 2º semestre,
      CV y dos recomendaciones (hs-esslingen.de); visa €75 + BLS €39.90, mínimo 6 a 8 semanas
-     (blsinternational.com); IELTS Academic $4,850 (British Council CDMX). Lo demás son
+     (blsinternational.com). El IELTS (6.0) y el pasaporte ya los tiene (Adán, 3-oct-2026). Lo demás son
      estimaciones y lo dicen.
 
      `bloques`: la lista exhaustiva, por tema. `cuando` es el mes (AAAA-MM) o 'cont' (toda la
@@ -516,8 +559,6 @@ window.CIFRAS = (function () {
      (`pintarSalida()`); las tareas de fase son solo los hitos. */
   const SALIDA = {
     costos: [
-      {id:'ielts',       mes:'2026-11', mxn:4850,  gasta:true,  txt:'IELTS Academic, British Council CDMX'},
-      {id:'pasaporte',   mes:'2026-11', mxn:2500,  gasta:true,  txt:'Pasaporte de 6 años, si el tuyo no cubre hasta 2029 (estimado; cuota de la SRE)'},
       {id:'apostillas',  mes:'2026-12', mxn:6000,  gasta:true,  txt:'Apostillas y traducciones: título, certificado y acta (estimado)'},
       {id:'goethe',      mes:'2027-04', mxn:3600,  gasta:true,  txt:'Examen A2 de alemán, Goethe o telc (estimado)'},
       {id:'salud',       mes:'2027-05', mxn:8000,  gasta:true,  txt:'Chequeo, dentista, lentes y medicamentos para 3 meses (estimado)'},
@@ -537,19 +578,18 @@ window.CIFRAS = (function () {
     bloques: [
       {id:'admision', ico:'🎓', titulo:'Admisión en Esslingen', items:[
         {id:'sa-adm-1',  cuando:'2026-10', txt:'Lee los requisitos exactos en el portal de la Esslingen Graduate School (Automotive Systems): idioma, documentos y formato. La ventana abre el 4 nov.'},
-        {id:'sa-adm-2',  cuando:'2026-10', txt:'Inscríbete al IELTS Academic (British Council CDMX, $4,850) para fines de noviembre o diciembre.'},
+        {id:'sa-adm-2',  cuando:'2026-10', txt:'IELTS 6.0 ✅. Revisa la fecha de tu resultado: vale dos años y tiene que seguir vigente al mandar la solicitud (enero) y en la cita de visa (junio).'},
         {id:'sa-adm-3',  cuando:'2026-10', txt:'Pide las dos cartas de recomendación: un jefe de Bosch, Continental o ALTEN y un líder técnico o profesor. En inglés, firmadas y con datos de contacto.'},
         {id:'sa-adm-4',  cuando:'2026-11', txt:'CV en inglés y formato europeo, dos páginas: Ford, Continental, Bosch, Google, ALTEN, el ISTQB y lo que construyes con IA.'},
         {id:'sa-adm-5',  cuando:'2026-11', txt:'Carta de motivación: por qué Automotive Systems en Esslingen, qué traes (seis años de validación y HIL) y qué quieres después (Bosch, Mercedes-Benz, Porsche).'},
         {id:'sa-adm-6',  cuando:'2026-11', txt:'Pide al IPN el título, el certificado total de estudios con promedio y, si lo dan, una constancia de tu lugar en la generación.'},
         {id:'sa-adm-7',  cuando:'2026-12', txt:'Apostilla el título y el certificado —son documentos federales: los apostilla Gobernación— y tradúcelos al inglés con perito si el portal los pide traducidos.'},
-        {id:'sa-adm-8',  cuando:'2026-12', txt:'IELTS presentado con 6.0 o más (o el mínimo que diga el portal). Si no llega, se repite en enero: el resultado sale en días.'},
         {id:'sa-adm-9',  cuando:'2027-01', txt:'Manda la solicitud completa en el portal de la Graduate School. En enero, no en marzo: cierra el 31 mar.'},
         {id:'sa-adm-10', cuando:'2027-05', txt:'La respuesta llega antes de fin de mayo: si es sí, acepta el lugar ese mismo día y pide la carta de admisión para la visa.'},
       ]},
       {id:'visa', ico:'🛂', titulo:'Visa y papeles alemanes', items:[
-        {id:'sa-visa-1', cuando:'2026-10', txt:'Revisa tu pasaporte: la visa pide al menos 1 año de vigencia y 2 hojas libres; que cubra hasta 2029. Si no, renuévalo ya en la SRE.'},
-        {id:'sa-visa-2', cuando:'2027-05', txt:'En cuanto llegue la admisión, abre la cuenta bloqueada (Expatrio, Fintiba o Coracle): €11,904, el monto de 2026 — revisa el vigente.'},
+        {id:'sa-visa-1', cuando:'2026-10', txt:'Pasaporte ✅. Revisa que su vigencia cubra hasta 2029 y que le queden dos hojas libres: la visa pide al menos un año de vigencia.'},
+        {id:'sa-visa-2', cuando:'2027-05', txt:'En cuanto llegue la admisión, abre la cuenta bloqueada (Expatrio, Fintiba o Coracle): €11,904, el monto de 2026. Va atado al BAföG, que tiene una subida anunciada para 2027: revisa el vigente en mayo.'},
         {id:'sa-visa-3', cuando:'2027-05', txt:'Agenda la cita de visa nacional de estudiante con BLS (Embajada de Alemania, CDMX): el trámite tarda mínimo de 6 a 8 semanas.'},
         {id:'sa-visa-4', cuando:'2027-06', txt:'Expediente en dos juegos: formularios firmados, 2 fotos biométricas, pasaporte y copias, admisión, cuenta bloqueada, seguro de viaje e IELTS. Visa €75 ($1,600) y BLS €39.90 ($794).'},
         {id:'sa-visa-5', cuando:'2027-07', txt:'Seguro médico alemán: a los 32 ya no aplica la tarifa de estudiante del seguro público (es hasta los 30). Compara el público voluntario (~€135 al mes) con uno privado para estudiantes (~€100) antes de inscribirte.'},
@@ -558,11 +598,12 @@ window.CIFRAS = (function () {
       ]},
       {id:'dinero', ico:'💶', titulo:'Dinero', items:[
         {id:'sa-din-1', cuando:'2026-10', txt:'Abre la cuenta de Alemania, CETES aparte del día a día: el ahorro se va ahí el día que entra la quincena.'},
-        {id:'sa-din-2', cuando:'2026-10', txt:'Presupuesto de vida diaria: $8,000 al mes con renta y $7,000 sin renta, comida aparte. La tarjeta, con ese tope.'},
+        {id:'sa-din-2', cuando:'2026-10', txt:'Págate primero: el 15, {{ahorroDia15}} a la cuenta de Alemania antes de gastar, y lo de Didi cada lunes. Lo que queda es tu gasto personal, tarjeta incluida: {{gastoPersonalDepa}} al mes.'},
         {id:'sa-din-3', cuando:'2026-11', txt:'Vende lo que no usas: PS5 y su control, monitores, iPad y lo que no hayas tocado en tres meses.'},
-        {id:'sa-din-4', cuando:'2026-12', txt:'El aguinaldo, entero a la cuenta de Alemania.'},
-        {id:'sa-din-5', cuando:'2027-01', txt:'Entrega el depa a fin de enero y recupera el depósito: desde febrero, la renta es ahorro.'},
-        {id:'sa-din-6', cuando:'2027-06', txt:'15 de junio: {{salidaJunio}} en la cuenta, para la cuenta bloqueada y la visa. Es el punto más apretado del plan.'},
+        {id:'sa-din-4', cuando:'2026-12', txt:'El aguinaldo paga el seguro del BYD: no entra al plan.'},
+        {id:'sa-din-5', cuando:'2027-01', txt:'Entrega el depa a fin de enero y recupera el depósito. Lo que no te llevas a casa de tu familia —muebles, electrodomésticos, cocina— se vende: a la cuenta de Alemania.'},
+        {id:'sa-din-10', cuando:'2027-02', txt:'En casa de tu familia: {{aporteCasa}} el día 1 y comes en casa. Lo de la renta se vuelve ahorro: {{ahorroDia1Casa}} el 1 y {{ahorroDia15Casa}} el 15, más {{didiAhorroMas}} de Didi al mes.'},
+        {id:'sa-din-6', cuando:'2027-06', txt:'Junio: {{salidaJunio}} en la cuenta, para la cuenta bloqueada y la visa. Es el punto más apretado del plan.'},
         {id:'sa-din-7', cuando:'2027-08', txt:'Tarjeta sin comisión en el extranjero (Wise o Revolut), y la BBVA en $0 con el pago domiciliado, o cancelada.'},
         {id:'sa-din-8', cuando:'2027-08', txt:'iPhone de AT&T: domicilia lo que quede o liquídalo antes de irte.'},
         {id:'sa-din-9', cuando:'2027-07', txt:'Con un contador: el aviso al SAT si dejas de ser residente fiscal en México y cómo se declara la renta del BYD. Antes de firmar el contrato del auto.'},
@@ -620,7 +661,7 @@ window.CIFRAS = (function () {
         {id:'sa-trab-2', cuando:'2027-04', txt:'Goethe-Zertifikat A2 o telc A2 en México: Esslingen pide A2 antes de terminar el 2º semestre y llegas con él cumplido.'},
         {id:'sa-trab-3', cuando:'2027-06', txt:'Aplica a Werkstudent desde México con la admisión en la mano: Bosch, Mercedes-Benz, Porsche, Vector, ETAS y proveedores. 20 h a la semana pagan unos €1,200 al mes.'},
         {id:'sa-trab-4', cuando:'2027-07', txt:'Constancia laboral y carta de recomendación de ALTEN en inglés: sirven para el Werkstudent y para tu primer empleo allá.'},
-        {id:'sa-trab-5', cuando:'2027-08', txt:'Renuncia con el aviso que pida tu contrato y pide el finiquito por escrito: aguinaldo y vacaciones proporcionales.'},
+        {id:'sa-trab-5', cuando:'2027-08', txt:'Renuncia con el aviso que pida tu contrato y pide por escrito tu constancia laboral. El plan no cuenta finiquito: si te pagan algo de aguinaldo o vacaciones, va al colchón.'},
       ]},
       {id:'mexico', ico:'🇲🇽', titulo:'Lo que se queda en México', items:[
         {id:'sa-mx-1', cuando:'2027-02', txt:'El negocio de tu papá, en sus manos: el dossier, el QR de WhatsApp y las plantillas de Posts para que publique sin ti.'},
@@ -636,25 +677,36 @@ window.CIFRAS = (function () {
   /* ── LA PROYECCIÓN DEL PLAN MAESTRO ──────────────────────────────────────────────────────────
      Mes a mes, del 1 oct 2026 al millón: lo que entra, lo que sale, la cuenta de Alemania (todo el
      efectivo) y el patrimonio líquido (efectivo y depósito, menos el auto, el iPhone y la BBVA).
-     Lo que viene de PROYECTO (sueldo, Didi, renta, servicios…) se lee en vivo; lo demás son los
-     SUPUESTOS de abajo, cada uno con su porqué. La `foto` es el 1 oct 2026 en Finanzas —una foto,
-     como una migración: no se actualiza—, así que la proyección es el PLAN, y Coach la compara
-     contra lo real. `proyectar(cambios)` admite escenarios (ahorrar menos, sin Werkstudent, otro
-     euro); `PROYECCION.meses` es el escenario base. De aquí sale el `liquido` de cada fase. */
+     En México, del sueldo solo llega a la cuenta lo que se manda —los CETES y el ahorro de cada
+     quincena, que son cobros del calendario— y de Didi lo que Adán dijo que aparta; lo demás del
+     sueldo son los fijos, la comida y su gasto personal (`desgloseMes`). Así el plan y el
+     calendario del Dashboard no pueden decir cosas distintas. Lo demás son los SUPUESTOS de abajo,
+     cada uno con su porqué. La `foto` es el 1 oct 2026 en Finanzas —una foto, como una migración:
+     no se actualiza—, así que la proyección es el PLAN, y Coach la compara contra lo real.
+     `proyectar(cambios)` admite escenarios (mandar menos, irse un año después, sin Werkstudent,
+     otro euro); `PROYECCION.meses` es el escenario base y `PROYECCION.cortes`, lo que pide la
+     salida contra lo que hay. De aquí sale el `liquido` de cada fase. */
   const SUPUESTOS = {
     desde: '2026-10', hasta: '2032-12',
     // 1 oct 2026: fondo $6,000 + cuenta $390 + efectivo $1,600; el depósito del depa; el crédito
     // del auto con su tasa y su pago; el iPhone de AT&T; la BBVA de septiembre (se paga el 11).
     foto: { efectivo: 7990, deposito: 11250, auto: 283000, autoTasa: 12.99, autoPago: 6700, iphone: 11362, iphonePago: 494, bbva: 10000 },
-    comida: 3500,          // ~$115 al día: lo que cuesta comer según la lista de compras
-    vida: 8000,            // todo lo demás del día a día con renta: la meta del presupuesto de la Fase 1
-    vidaSinRenta: 7000,    // sin depa propio desde febrero
-    menosAhorro: 0,        // escenario: cuánto menos se ahorra al mes en México
+    // Comer al mes: ~$115 al día según la lista de compras. En casa de su familia, comida y cena
+    // son de la casa —las cubre el aporte— y él paga su desayuno: ~$16 al día, lo que cuestan en
+    // promedio sus recetas de desayuno.
+    comida: 3500,
+    comidaEnCasa: 500,
+    // El gasto personal con que se cuadró el ahorro de cada quincena (PROYECTO.ahorroDia15…): todo
+    // lo que no es fijo ni comida —la tarjeta, salidas, ropa, el tratamiento del cabello y los
+    // suplementos—. En casa baja: ya no hay cosas del depa.
+    vida: 8000,
+    vidaEnCasa: 7000,
+    menosAhorro: 0,        // escenario: cuánto MENOS se manda a la cuenta cada mes en México
+    // Lo que no es sueldo ni Didi. El aguinaldo paga el seguro del BYD (Adán, 3-oct-2026: "va
+    // directo a pagar el seguro de mi byd, no lo consideres") y ALTEN no da finiquito: no entran.
     extras: [
       {mes:'2026-11', txt:'Venta de lo que no usas (1 de 2)', mxn:10000},
       {mes:'2026-12', txt:'Venta de lo que no usas (2 de 2)', mxn:10000},
-      {mes:'2026-12', txt:'Aguinaldo: al menos 15 días de sueldo', mxn:'sueldoQuinc'},
-      {mes:'2027-08', txt:'Finiquito de ALTEN: aguinaldo y vacaciones proporcionales (estimado)', mxn:15000},
     ],
     // En Esslingen, en euros: renta ~€450, comida ~€250, seguro ~€120, celular, libros y algo de
     // vida. Werkstudent: 20 h a la semana pagan ~€1,200 (workingstudentjobs.de, 2026), ~€1,100
@@ -671,62 +723,144 @@ window.CIFRAS = (function () {
   };
   function mesDe(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); }
   function mesSiguiente(ym) { const p = ym.split('-').map(Number); return mesDe(new Date(p[0], p[1], 1)); }
+  function mesMas(ym, k) { const p = ym.split('-').map(Number); return mesDe(new Date(p[0], p[1] - 1 + k, 1)); }
+
+  /* Lo que Didi pone en la cuenta de Alemania en `mes`: didiAhorro hasta enero, didiAhorroMas desde
+     didiMasDesde, la mitad el último mes en México y nada fuera de él. `ultimo` es el último mes en
+     México del escenario (irse un año después lo estira). */
+  function didiAlAhorro(mes, ultimo) {
+    const P = PROYECTO, fin = ultimo || P.ultimoMesMexico;
+    if (mes < SUPUESTOS.desde || mes > fin) return 0;
+    const m = mes >= P.didiMasDesde ? P.didiAhorroMas : P.didiAhorro;
+    return mes === fin ? m / 2 : m;
+  }
+
+  /* El sueldo de un mes en México, renglón por renglón: lo que entra, cada fijo por su `grupo`, el
+     auto y el iPhone, la comida, lo que va a la cuenta de Alemania (los CETES y el ahorro de cada
+     quincena) y lo que queda: tu gasto personal. Los cobros son los del calendario, los mismos que
+     pinta el Dashboard; el auto y el iPhone, las mensualidades de la foto (o lo que la proyección
+     pague ese mes). `promedio`: el mes tipo de su etapa —el gas a su promedio— para las tablas de
+     las fases. `ultimo`: el último mes en México del escenario. */
+  const GRUPOS_SUELDO = [
+    ['sueldo', 'Sueldo de ALTEN, las dos quincenas'], ['renta', 'Renta'],
+    ['depa', 'Luz, agua, internet y gas'], ['celular', 'Plan de datos'],
+    ['suscripciones', 'Gym, Claude Code e iCloud'], ['familia', 'Aporte a tu familia'],
+    ['auto', 'BYD, la mensualidad'], ['iphone', 'iPhone'], ['comida', 'Comida'],
+    ['personal', 'Tu gasto personal, tarjeta incluida'], ['ahorro', 'A la cuenta de Alemania'],
+  ];
+  function desgloseMes(mes, s, opts) {
+    s = s || SUPUESTOS; opts = opts || {};
+    const P = PROYECTO, f = s.foto, ultimo = opts.ultimo || P.ultimoMesMexico;
+    const casa = mes >= P.enCasaDesde;
+    const g = {};
+    GRUPOS_SUELDO.forEach(function (x) { g[x[0]] = 0; });
+    let dia1 = 0, dia15 = 0;
+    CALENDARIO.cobros.forEach(function (c) {
+      // Irse un año después estira lo que dura hasta el último mes en México.
+      const hasta = c.hasta === P.ultimoMesMexico ? ultimo : c.hasta;
+      if (!caeEnMes({ cada: c.cada, desde: c.desde, hasta: hasta }, mes, opts.promedio)) return;
+      const v = opts.promedio && c.cada > 1 ? c.monto / c.cada : c.monto;
+      g[c.grupo] = (g[c.grupo] || 0) + v;
+      if (c.quincena) { if (c.dia < 15) dia1 += v; else dia15 += v; }
+    });
+    g.auto = opts.pagoAuto != null ? opts.pagoAuto : f.autoPago;
+    g.iphone = opts.pagoIphone != null ? opts.pagoIphone : f.iphonePago;
+    g.comida = casa ? s.comidaEnCasa : s.comida;
+    const cetes = g.ahorro - dia1 - dia15;
+    g.ahorro -= s.menosAhorro || 0;
+    g.personal = g.sueldo - g.ahorro - GRUPOS_SUELDO.reduce(function (a, x) {
+      return x[0] === 'sueldo' || x[0] === 'ahorro' || x[0] === 'personal' ? a : a + g[x[0]];
+    }, 0);
+    const didi = didiAlAhorro(mes, ultimo);
+    return { mes: mes, casa: casa, g: g, cetes: cetes, dia1: dia1, dia15: dia15, didi: didi, ahorro: g.ahorro + didi };
+  }
+  // El mes tipo de cada etapa: con depa (su último mes) y en casa de su familia (el primero).
+  function mesTipo(casa, s) {
+    return desgloseMes(casa ? PROYECTO.enCasaDesde : PROYECTO.rentaHasta, s, { promedio: true });
+  }
+
   function proyectar(cambios) {
     const s = Object.assign({}, SUPUESTOS, cambios || {});
-    const P = PROYECTO, eur = s.eurMxn || P.eurMxn, f = s.foto;
-    const salida = P.maestriaInicio.slice(0, 7), devuelve = mesSiguiente(P.rentaHasta);
+    const P = PROYECTO, eur = s.eurMxn || P.eurMxn, f = s.foto, A = s.alemania, T = s.trabajo;
+    // `desfase`: irse N meses después (12 = septiembre de 2028). Mueve la salida, sus costos y todo
+    // lo de Alemania; el ahorro de México sigue hasta el nuevo último mes.
+    const dm = s.desfase || 0;
+    const salida = mesMas(P.maestriaInicio.slice(0, 7), dm), ultimo = mesMas(salida, -1);
+    const werkDesde = mesMas(A.werkDesde, dm), finMaestria = mesMas(A.fin, dm), trabajoDesde = mesMas(T.desde, dm);
+    const semestres = A.semestres.map(function (m) { return mesMas(m, dm); });
+    const costos = SALIDA.costos.map(function (c) { return Object.assign({}, c, { mes: mesMas(c.mes, dm) }); });
+    const devuelve = mesSiguiente(P.rentaHasta);
     let cash = f.efectivo, deposito = f.deposito, auto = f.auto, iphone = f.iphone, bbva = f.bbva;
     const filas = [];
-    const p0 = s.desde.split('-').map(Number);
     for (let k = 0; ; k++) {
-      const mes = mesDe(new Date(p0[0], p0[1] - 1 + k, 1));
+      const mes = mesMas(s.desde, k);
       if (mes > s.hasta) break;
-      const enMexico = mes < salida, enMaestria = !enMexico && mes <= s.alemania.fin;
-      let entra = 0, sale = 0;
+      const enMexico = mes < salida, enMaestria = !enMexico && mes <= finMaestria;
+      let entra = 0, sale = 0, desglose = null;
       const notas = [];
       // El auto: el interés es gasto; el capital baja la deuda (no el patrimonio).
       const interes = auto > 0 ? auto * f.autoTasa / 100 / 12 : 0;
-      const capital = auto > 0 ? Math.min(auto, f.autoPago - interes) : 0;
-      auto -= capital; cash -= capital; sale += interes;
-      const ip = Math.min(iphone, f.iphonePago); iphone -= ip; cash -= ip;
+      const pagoAuto = auto > 0 ? Math.min(auto + interes, f.autoPago) : 0;
+      auto = Math.max(0, auto + interes - pagoAuto);
+      const pagoIphone = Math.min(iphone, f.iphonePago); iphone -= pagoIphone;
       if (enMexico) {
-        const conRenta = mes <= P.rentaHasta;
-        entra += P.sueldo + P.didiMes;
-        sale += (conRenta ? P.renta + P.servicios : P.celular) + P.suscripciones + s.comida +
-                (conRenta ? s.vida : s.vidaSinRenta) + s.menosAhorro;
-        if (mes === s.desde && bbva) { cash -= bbva; bbva = 0; notas.push('la BBVA de septiembre, pagada completa'); }
+        desglose = desgloseMes(mes, s, { pagoAuto: pagoAuto, pagoIphone: pagoIphone, ultimo: ultimo });
+        entra += desglose.g.sueldo + desglose.didi;
+        sale += desglose.g.sueldo - desglose.g.ahorro;
+        if (mes === s.desde && bbva) { sale += bbva; bbva = 0; notas.push('la BBVA de septiembre, pagada completa'); }
         if (mes === devuelve) { cash += deposito; deposito = 0; notas.push('sin renta desde este mes; regresa el depósito del depa'); }
+        if (mes.slice(5) === '12') notas.push('el aguinaldo, al seguro del BYD');
+        if (mes === ultimo) notas.push('Didi, la mitad: la segunda quincena es de empacar');
       } else {
         entra += s.byd.rentaNeta;
+        sale += pagoAuto + pagoIphone;
         if (mes === salida) notas.push('el BYD empieza a rentarse');
         if (enMaestria) {
-          sale += s.alemania.gasto * eur;
-          if (mes >= s.alemania.werkDesde) entra += s.alemania.werkstudent * eur;
-          if (mes === s.alemania.werkDesde && s.alemania.werkstudent) notas.push('primer mes de Werkstudent');
-          if (s.alemania.semestres.indexOf(mes) !== -1) { sale += s.alemania.colegiatura * eur; notas.push('colegiatura del semestre'); }
-        } else if (mes >= s.trabajo.desde) {
-          entra += s.trabajo.neto * eur; sale += s.trabajo.gasto * eur;
-          if (mes === s.trabajo.desde) notas.push('primer sueldo de ingeniero');
+          sale += A.gasto * eur;
+          if (mes >= werkDesde) entra += A.werkstudent * eur;
+          if (mes === werkDesde && A.werkstudent) notas.push('primer mes de Werkstudent');
+          if (semestres.indexOf(mes) !== -1) { sale += A.colegiatura * eur; notas.push('colegiatura del semestre'); }
+        } else if (mes >= trabajoDesde) {
+          entra += T.neto * eur; sale += T.gasto * eur;
+          if (mes === trabajoDesde) notas.push('primer sueldo de ingeniero');
         }
       }
       s.extras.forEach(function (e) {
         if (e.mes !== mes) return;
         entra += typeof e.mxn === 'string' ? P[e.mxn] : e.mxn; notas.push(e.txt);
       });
-      SALIDA.costos.forEach(function (c) {
+      costos.forEach(function (c) {
         if (c.mes !== mes) return;
         if (c.gasta) sale += costoSalida(c, eur);
         notas.push(c.txt.replace(/ \(estimado[^)]*\)$/, ''));
       });
       cash += entra - sale;
       if (!enMexico && cash > 0) cash += cash * s.rendimiento / 12;
-      if (auto <= 0 && capital > 0) notas.push('se termina de pagar el BYD');
+      if (auto <= 0 && pagoAuto > 0) notas.push('se termina de pagar el BYD');
       filas.push({ mes: mes, entra: entra, sale: sale, ahorro: entra - sale, alemania: cash, auto: auto,
-                   liquido: cash + deposito - auto - iphone - bbva, notas: notas });
+                   liquido: cash + deposito - auto - iphone - bbva, notas: notas, desglose: desglose });
     }
     return filas;
   }
+
+  /* Los dos cortes que deciden la salida, con lo que pide cada uno contra lo que la proyección
+     tiene: junio (la cuenta bloqueada; la apertura y la visa ya salieron ese mes) y el último mes
+     en México (la cuenta bloqueada, la reserva del BYD, el colchón y la colegiatura del primer
+     semestre, que se paga al llegar). `falta` > 0 es dinero que el plan todavía no tiene. */
+  function cortesSalida(filas, cambios) {
+    const s = Object.assign({}, SUPUESTOS, cambios || {}), eur = s.eurMxn || PROYECTO.eurMxn, dm = s.desfase || 0;
+    const salida = mesMas(PROYECTO.maestriaInicio.slice(0, 7), dm), ultimo = mesMas(salida, -1);
+    const bloq = SALIDA.costos.filter(function (c) { return c.id === 'bloqueada'; })[0];
+    const tiene = function (m) { const r = filas.filter(function (x) { return x.mes === m; })[0]; return r ? r.alemania : 0; };
+    const corte = function (m, pide) { return { mes: m, pide: pide, tiene: tiene(m), falta: pide - tiene(m) }; };
+    return {
+      junio: corte(mesMas(bloq.mes, dm), costoSalida(bloq, eur)),
+      salida: corte(ultimo, SALIDA.costos.filter(function (c) { return !c.gasta || mesMas(c.mes, dm) > ultimo; })
+        .reduce(function (a, c) { return a + costoSalida(c, eur); }, 0)),
+    };
+  }
   const PROYECCION = { supuestos: SUPUESTOS, meses: proyectar() };
+  PROYECCION.cortes = cortesSalida(PROYECCION.meses);
   // El patrimonio que espera cada fase al cerrar sale de la proyección; la última, del millón.
   PHASES.forEach(function (f, i) {
     if (i === 0) return;
@@ -3367,6 +3501,17 @@ window.CIFRAS = (function () {
         if (g) { g.date = '2027-09-01'; delete g.pausadaHasta; g.target = 406000; }
       }
     },
+    {
+      // 2026-10-03 · Adán ya tiene el IELTS (6.0) y el pasaporte: salen de lo que cuesta irse y la
+      // meta de la maestría baja al total de SALIDA, redondeado ($398,000). Solo si sigue en los
+      // $406,000 de la migración anterior: un objetivo movido a mano no se toca. Finanzas.html la
+      // siembra igual.
+      flag: '_ahorroReal20261003',
+      hacer: function (f) {
+        const g = (f.goals || []).find(x => x.id === 'g001');
+        if (g && g.target === 406000) g.target = 398000;
+      }
+    },
   ];
 
   /* Las seis compras del 1-sep-2026, en un solo sitio: las usa la migración de arriba para el
@@ -3556,9 +3701,37 @@ window.CIFRAS = (function () {
     salidaTotal:   { dep: ['eurMxn'], v: () => SALIDA.costos.reduce((a, c) => a + costoSalida(c), 0) },
     salidaJunio:   { dep: ['eurMxn'], v: () => SALIDA.costos.filter(c => SALIDA.junio.indexOf(c.id) !== -1).reduce((a, c) => a + costoSalida(c), 0) },
     sperrkonto:    { dep: ['eurMxn'], v: () => costoSalida(SALIDA.costos.filter(c => c.id === 'bloqueada')[0]) },
-    // Lo que la proyección espera en la cuenta de Alemania al cerrar la Fase 1 (31 mar 2027).
-    alemaniaMarzo: { dep: ['sueldo','didiMes','sueldoQuinc','renta','servicios','suscripciones'],
-                     v: () => proyectar().filter(f => f.mes === '2027-03')[0].alemania },
+    // ── El ahorro de cada mes en México (el desglose renglón por renglón, en Coach) ──
+    didiAhorro:      { v: () => PROYECTO.didiAhorro },
+    didiAhorroMas:   { v: () => PROYECTO.didiAhorroMas },
+    aporteCasa:      { v: () => PROYECTO.aporteCasa },
+    ahorroDia15:     { v: () => PROYECTO.ahorroDia15 },
+    ahorroDia1Casa:  { v: () => PROYECTO.ahorroDia1Casa },
+    ahorroDia15Casa: { v: () => PROYECTO.ahorroDia15Casa },
+    // Lo que llega a la cuenta de Alemania en un mes tipo, con depa (hasta enero) y en casa.
+    ahorroMesDepa:   { dep: ['cetesDia15','ahorroDia15','didiAhorro'], v: () => mesTipo(false).ahorro },
+    ahorroMesCasa:   { dep: ['cetesDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorroMas'], v: () => mesTipo(true).ahorro },
+    // Lo que queda del sueldo después de los fijos, la comida y el ahorro: el gasto personal.
+    gastoPersonalDepa: { dep: ['sueldoQuinc','renta','servicios','suscripciones','cetesDia15','ahorroDia15'],
+                         v: () => mesTipo(false).g.personal },
+    gastoPersonalCasa: { dep: ['sueldoQuinc','celular','suscripciones','aporteCasa','cetesDia15','ahorroDia1Casa','ahorroDia15Casa'],
+                         v: () => mesTipo(true).g.personal },
+    // La proyección en los dos cortes: el cierre de la Fase 1 y junio, con su veredicto. La salida
+    // pide más en agosto (`salidaVeredicto`). Se calculan cada vez: el verificador las mueve.
+    alemaniaMarzo:   { dep: ['cetesDia15','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas'],
+                       v: () => proyectar().filter(f => f.mes === mesDe(PHASES[1].end))[0].alemania },
+    alemaniaJunio:   { dep: ['cetesDia15','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas','eurMxn'],
+                       v: () => cortesSalida(proyectar()).junio.tiene },
+    junioVeredicto:  { dep: ['cetesDia15','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas','eurMxn'], fmt: 'txt',
+                       v: () => { const c = cortesSalida(proyectar()).junio;
+                         return c.falta > 0 ? 'faltan ' + fmt(c.falta) + ' para la cuenta bloqueada' : 'alcanza, con ' + fmt(-c.falta) + ' de margen'; } },
+    // Lo que tiene que haber al cerrar la Fase 1 para que junio alcance con el ahorro de abril a junio.
+    marzoParaJunio:  { dep: ['cetesDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorroMas','eurMxn'],
+                       v: () => { const F = proyectar(), c = cortesSalida(F).junio;
+                         return F.filter(f => f.mes === mesDe(PHASES[1].end))[0].alemania + c.falta; } },
+    salidaVeredicto: { dep: ['cetesDia15','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas','eurMxn'], fmt: 'txt',
+                       v: () => { const c = cortesSalida(proyectar()).salida;
+                         return c.falta > 0 ? 'faltan ' + fmt(c.falta) : 'sobran ' + fmt(-c.falta); } },
     // El mes en que la proyección cruza el millón (lo mueve sobre todo el euro: el sueldo de allá).
     mesMillon:     { dep: ['eurMxn'], fmt: 'mes',
                      v: () => { const f = proyectar().filter(x => x.liquido >= 1000000)[0]; return f ? new Date(f.mes + '-01T00:00:00') : null; } },
@@ -3752,20 +3925,28 @@ window.CIFRAS = (function () {
      no me cobran intereses"): en su PRÓXIMO pago sale el total del estado de cuenta, no el
      mínimo. Los meses de después siguen con el mínimo: esos estados de cuenta aún no existen, y
      inventarles un total sería peor que quedarse corto. */
+  /* Si un cobro cae en el mes `mes` ('AAAA-MM'). El gas es bimestral: `cada` dice cada cuántos
+     meses y `desde` desde cuál se cuenta. Sin `cada`, `desde` es el primer mes en que cae (el
+     aporte a la casa, desde febrero de 2027) y `hasta` el último (la renta, en enero). Sin esos
+     campos, cae siempre. `promedio`, para un mes tipo: el bimestral cae todos los meses y quien
+     suma lo divide entre `cada`. */
+  function caeEnMes(c, mes, promedio) {
+    if (!mes) return true;
+    if (c.cada > 1 && c.desde) {
+      if (!promedio) {
+        const a0 = c.desde.split('-').map(Number), a1 = mes.split('-').map(Number);
+        if (((a1[0] - a0[0]) * 12 + (a1[1] - a0[1])) % c.cada !== 0) return false;
+      }
+    } else if (c.desde && mes < c.desde) return false;
+    if (c.hasta && mes > c.hasta) return false;
+    return true;
+  }
   function agendaDia(dia, ym, debts) {
     const out = [];
     const mes = ym || '';
     (CALENDARIO.cobros || []).forEach(function (c) {
-      if (c.dia !== dia) return;
-      // Un cobro puede no caer todos los meses: el gas es bimestral. `cada` dice cada cuántos
-      // meses y `desde` desde cuál se cuenta; sin esos campos, cae siempre.
-      if (c.cada > 1 && c.desde && mes) {
-        const a0 = c.desde.split('-').map(Number), a1 = mes.split('-').map(Number);
-        if (((a1[0] - a0[0]) * 12 + (a1[1] - a0[1])) % c.cada !== 0) return;
-      }
-      // `hasta`: el último mes en que cae (la renta termina en enero de 2027).
-      if (c.hasta && mes && mes > c.hasta) return;
-      out.push({ t: c.txt, monto: c.monto, entra: !!c.entra });
+      if (c.dia !== dia || !caeEnMes(c, mes)) return;
+      out.push({ t: c.txt, monto: c.monto, entra: !!c.entra, ahorro: !!c.ahorro });
     });
     const DEU = (debts && debts.length) ? debts : deudas();
     const hoy = new Date();
@@ -3801,6 +3982,12 @@ window.CIFRAS = (function () {
 
   /* La serie de los últimos `n` meses hasta `hastaYM` (incluido). `opts.tx` y `opts.debts`
      permiten pasar los datos ya en memoria —Finanzas los tiene más frescos que localStorage—. */
+  /* Lo que cuesta comer un día de `ym`: lo de la lista de compras (`come`), salvo en casa de su
+     familia, donde paga solo su desayuno (`SUPUESTOS.comidaEnCasa` al mes). */
+  function comerEnMes(ym, come) {
+    const P = PROYECTO;
+    return ym >= P.enCasaDesde && ym <= P.ultimoMesMexico ? SUPUESTOS.comidaEnCasa / 30.4 : come;
+  }
   function balanceMeses(hastaYM, n, opts) {
     const O = opts || {};
     const TX = O.tx || (fin && Array.isArray(fin.transactions) ? fin.transactions : []);
@@ -3837,7 +4024,9 @@ window.CIFRAS = (function () {
           if (!v) return;
           (a.entra ? entradas : fijos).push(a);
           if (a.entra) { inc += v; anota(a.t, v, 'inc', '__entra', true); }
-          else { exp += v; anota(a.t, v, 'exp', a.t, true); }
+          // Lo que se aparta (CETES, el ahorro de cada quincena) se queda en `fijos` para que una
+          // transacción que lo anote no se cuente encima, pero no es gasto.
+          else if (!a.ahorro) { exp += v; anota(a.t, v, 'exp', a.t, true); }
         });
       }
 
@@ -3855,7 +4044,7 @@ window.CIFRAS = (function () {
           pal: ['didi', 'uber', 'viajes'], txCat: 'Freelance/Honorarios' },
         { t: 'Vale de despensa', tipo: 'inc', cat: '__entra', monto: PROYECTO.siVale,
           pal: ['vale', 'sivale'] },
-        { t: 'Comer', tipo: 'exp', cat: 'comida', monto: come * nDias,
+        { t: 'Comer', tipo: 'exp', cat: 'comida', monto: comerEnMes(k, come) * nDias,
           pal: ['comer', 'comida', 'despensa', 'super', 'supermercado', 'mandado', 'alimentacion'] }
       ].filter(function (x) { return +x.monto > 0; });
 
@@ -3923,7 +4112,7 @@ window.CIFRAS = (function () {
   return {
     n: n, v: v, texto: texto, aplicarDOM: aplicarDOM, refrescar: refrescar, tabla: tabla,
     // El balance mensual y sus piezas, para que Dashboard y Finanzas pinten LO MISMO.
-    balanceMeses: balanceMeses, agendaDia: agendaDia,
+    balanceMeses: balanceMeses, agendaDia: agendaDia, caeEnMes: caeEnMes, comerEnMes: comerEnMes,
     palabras: palabras, norm: norm, yaContado: yaContado, esNomina: esNomina,
     comeDia: comeDia, guardarComeDia: guardarComeDia,
     claves: function () { return Object.keys(CLAVES); },
@@ -3944,6 +4133,8 @@ window.CIFRAS = (function () {
     SALIDA: SALIDA,
     PROYECCION: PROYECCION,
     proyectar: proyectar,
+    cortesSalida: cortesSalida, desgloseMes: desgloseMes, mesTipo: mesTipo,
+    didiAlAhorro: didiAlAhorro, GRUPOS_SUELDO: GRUPOS_SUELDO,
     costoSalida: costoSalida,
     APRENDIZAJE: APRENDIZAJE,
     LISTA_COMPRAS: LISTA_COMPRAS,

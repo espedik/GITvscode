@@ -399,7 +399,7 @@ toques y la semana a la que pertenece**.
 
 **La banda de fase es un botón**: abre la ventana de las fases (`abrirKpi('fases')`, en
 `kpiDetalle`) con fechas, estado, meta, explicación y el checklist de cada mes leído de
-`coach_checks_v1`. El título del módulo Fase de Mi Día abre la misma ventana.
+`coach_checks_v1`. En las fases que pasan en México, **💰 Tu ahorro en esta fase** (`faseAhorroHTML`): un mes de cada etapa —con depa y en casa de tu familia— renglón por renglón, la cuenta de Alemania al cerrar cada mes y lo que piden junio y la salida; el mismo desglose que Coach. El título del módulo Fase de Mi Día abre la misma ventana.
 
 ### De dónde sale cada cosa
 
@@ -423,12 +423,16 @@ septiembre; en el presupuesto mensual entra por la mitad, `gasMensual`). El veri
 que **todo gasto fijo de `PROYECTO` con importe caiga algún día de `CALENDARIO.cobros`**: un
 servicio nuevo sin día ya no sale de la cuenta sin que ninguna pantalla lo vea.
 
+Desde octubre de 2026 el calendario trae también **el plan**: el ahorro de cada quincena a la cuenta de Alemania (en verde, `ahorro: true`) y, desde febrero de 2027, el aporte a tu familia del día 1. Salen de la quincena como cualquier cobro, así que lo que el riel dice que te queda ya es tu gasto personal.
+
 ### El mes
 
 Cada celda lleva el importe redondeado a miles (con un decimal: `20.5k`, no `21k`; se oculta bajo
 1180 px), una barra verde por lo que entró y otra roja/ámbar por lo que salió, con altura
 proporcional al día más caro del mes, y borde ámbar cuando cae un pago fijo. Las flechas ‹ ›
 cambian de mes; **al abrir un mes que no es el actual se elige el primer día con movimiento**.
+
+Bajo el nombre del mes, mientras dure el plan en México: **lo que va ese mes a la cuenta de Alemania** —los cobros con `ahorro` del calendario más lo que aparta Didi (`CIFRAS.didiAlAhorro`)—, la misma cuenta que la proyección de Coach.
 
 ### El riel: una sola cifra manda
 
@@ -458,7 +462,7 @@ edita en Finanzas, `saveActivo` pone la fecha sola.
 
 **Cuando la quincena no cierra, el estado da el plan** (prompt de Plan Maestro: el hueco previsto
 se resuelve antes de que llegue): cuánto falta para llegar al 15 (o al día 1), cuánto trae Didi de
-aquí al cierre al ritmo de `didiMes`, y si lo cubre o cuánto falta aún. Didi sigue fuera de la
+aquí al cierre al ritmo de `didiMes` menos lo que ya aparta para la cuenta de Alemania, y si lo cubre o cuánto falta aún. Didi sigue fuera de la
 serie; solo entra en el plan. Bajo «Cierras el 14 con» la nota dice *te falta* si el cierre es
 negativo. La tarjeta pagada al total cuenta su `noInterest` en su próximo pago (ver `agendaDia`
 en `DATOS-MAESTROS.md`).
@@ -590,6 +594,8 @@ plato.
 
 Los tres suman exactamente el gasto diario del tablero. No hay recetas de comida, por eso ese
 tiempo es el resto y no un promedio; si se añaden, se afina solo.
+
+**En casa de tu familia** (de `PROYECTO.enCasaDesde` al último mes en México) la línea dice `Comer · tu desayuno; comida y cena, en casa` y vale `SUPUESTOS.comidaEnCasa` entre 30.4: `ctComeDe(ym)` se lo pide al maestro (`comerEnMes`), y de ahí lo toman el riel, la quincena y la semana.
 
 ### Las tareas de la fase
 
@@ -742,7 +748,7 @@ plazo.** 0 px de desborde a 1600×950 y 1920×1080; a 1366×768 scroll interno.
 **El dinero real** de BYD y Maestría es una barra continua en `--ac2`, distinta de las marcas de
 paso, con la cifra (`$22,800 pagado`): `METAS_MONEYBAR[x].short`; `.lbl` va en el `title`.
 
-**El panel de la Maestría** (`kpiDetalle`, `maestria`) enseña la pausa solo mientras siga vigente (`goal.pausadaHasta`); si no, el ritmo que pide la salida —lo que falta entre los meses que quedan hasta `goal.date`— y el día de decidir (`{{decisionMaestria}}`), con la proyección y la lista de la salida en Coach.
+**El panel de la Maestría** (`kpiDetalle`, `maestria`) enseña la pausa solo mientras siga vigente (`goal.pausadaHasta`); si no, el ritmo que pide la salida —lo que falta entre los meses que quedan hasta `goal.date`—, lo que el plan junta al mes con depa y en casa, y el día de decidir con el veredicto de junio (`junioVeredicto`); la proyección y la lista de la salida están en Coach.
 
 ### Las adicciones — celular y alcohol
 

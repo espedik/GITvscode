@@ -3412,12 +3412,14 @@ function renderSpecials(freeMonth, refDate=new Date()) {
   const scD_date=addM(now,scD_months);
   const scD_diff=diffMonths(scD_date,targetDate);
 
-  // E: Escenario optimista — Didi $10k/mes ahora + sin renta desde feb 2027 ($11k más)
-  const scE_didi=10000;
-  const scE_sinRentaDate=new Date(2027,1,1);
+  // E: el del Plan Maestro — lo que Didi aparta para la cuenta de Alemania (el maestro: didiAhorro
+  // hasta enero, didiAhorroMas desde didiMasDesde) y, desde que dejas el depa (enCasaDesde), la renta.
+  // El aporte a tu familia lo compensa lo que ahorras en comida (Adán, 3-oct-2026).
+  const scE_didi1=+_PG().didiAhorro||0, scE_didi2=+_PG().didiAhorroMas||0;
+  const scE_sinRentaDate=_PG().enCasaDesde?new Date(_PG().enCasaDesde+'-01T12:00:00'):new Date(2027,1,1);
   const scE_p1Months=Math.max(0,Math.round((scE_sinRentaDate-now)/2592000000));
-  const scE_mo1=monthGBMCalc+scE_didi;          // ahora → ene 2027
-  const scE_mo2=monthGBMCalc+scE_didi+_PG().renta;    // feb 2027 en adelante
+  const scE_mo1=monthGBMCalc+scE_didi1;          // ahora → ene 2027
+  const scE_mo2=monthGBMCalc+scE_didi2+_PG().renta;    // feb 2027 en adelante
   const scE_savedP1=Math.min(needed,scE_p1Months*scE_mo1);
   const scE_remainP2=Math.max(0,needed-scE_savedP1);
   const scE_p2Months=scE_remainP2>0?(scE_mo2>0?Math.ceil(scE_remainP2/scE_mo2):999):0;
@@ -3547,8 +3549,8 @@ function renderSpecials(freeMonth, refDate=new Date()) {
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:18px">🚀</span>
               <div>
-                <div style="font-size:12px;font-weight:700;color:var(--text)">Escenario optimista — Didi + Sin renta</div>
-                <div style="font-size:10px;color:var(--text3);margin-top:1px;font-style:italic">⚠️ Supuestos: ingresos Didi constantes + mudanza en feb 2027</div>
+                <div style="font-size:12px;font-weight:700;color:var(--text)">Escenario del plan — Didi y sin renta</div>
+                <div style="font-size:10px;color:var(--text3);margin-top:1px;font-style:italic">⚠️ Supuestos: Didi aparta ${fmt(scE_didi1)} al mes hasta enero y ${fmt(scE_didi2)} desde febrero; el aporte a tu familia lo compensa lo que ahorras en comida</div>
               </div>
             </div>
             <div style="text-align:right;white-space:nowrap">
@@ -3565,7 +3567,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
                 <div style="font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.05em">Fase 1 — Ahora → ene 2027</div>
                 <div style="font-size:11px;color:var(--text2);margin-top:2px">
                   Salario GBM <span style="color:var(--text3)">${fmt(monthGBMCalc)}</span>
-                  + Didi <span style="color:var(--success);font-weight:700">${fmt(scE_didi)}</span>
+                  + Didi <span style="color:var(--success);font-weight:700">${fmt(scE_didi1)}</span>
                 </div>
               </div>
               <div style="font-size:16px;font-weight:800;color:var(--primary)">${fmt(scE_mo1)}<span style="font-size:10px;font-weight:600;color:var(--text3)">/mes</span></div>
@@ -3575,7 +3577,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
                 <div style="font-size:10px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.05em">Fase 2 — Feb 2027 en adelante</div>
                 <div style="font-size:11px;color:var(--text2);margin-top:2px">
                   Salario GBM <span style="color:var(--text3)">${fmt(monthGBMCalc)}</span>
-                  + Didi <span style="color:var(--success);font-weight:700">${fmt(scE_didi)}</span>
+                  + Didi <span style="color:var(--success);font-weight:700">${fmt(scE_didi2)}</span>
                   + Sin renta <span style="color:var(--success);font-weight:700">+${fmt(_PG().renta)}</span>
                 </div>
               </div>
@@ -4182,8 +4184,8 @@ function seedData() {
     debts: (window.CIFRAS && window.CIFRAS.DEUDAS_SEED) || [],
     goals: [
       // Salida a Alemania en sep 2027 (Coach → Plan Maestro): sin pausa, y la meta es lo que cuesta irse —el
-      // total de SALIDA en el maestro, redondeado—. La migración _alemania20261003 hace lo mismo con los datos guardados.
-      {id:'g001',name:'Maestría en Alemania', target:406000, current:53740, date:'2027-09-01',icon:'🎓'},
+      // total de SALIDA en el maestro, redondeado—. Las migraciones _alemania20261003 y _ahorroReal20261003 hacen lo mismo con los datos guardados.
+      {id:'g001',name:'Maestría en Alemania', target:398000, current:53740, date:'2027-09-01',icon:'🎓'},
     ],
     investments: [
       // CETES no va aquí desde el 20-sep-2026: es el fondo de emergencia (`emergencyFund`, meta

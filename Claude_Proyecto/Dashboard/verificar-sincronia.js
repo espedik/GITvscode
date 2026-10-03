@@ -248,7 +248,9 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
     const n = C.n(k);
     if (typeof n === 'number' && Number.isInteger(n) && n >= 1000) VALS[n] = k;
   });
-  const AMBIGUOS = ['1500', '4000'];   // dosis de vitaminas, cuotas de ahorro, precios sueltos
+  // 3000, 5000 y 10000 (el aporte a la casa y lo que aparta Didi) son también tiempos en ms, escalas
+  // de gráficas y precios sueltos: esas variables se vigilan por su marcador, no por su número.
+  const AMBIGUOS = ['1500', '3000', '4000', '5000', '10000'];   // dosis de vitaminas, cuotas de ahorro, precios sueltos
   const hallazgos = [];
   for (const [rel, src] of APPS.concat([['Dashboard/datos-maestros.js', maestro]])) {
     const limpio = sinComentarios(src);
@@ -419,10 +421,10 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   //        limpieza que ni siquiera se paga— sumaban $1,094 al mes que salían de la cuenta
   //        sin que ninguna pantalla los descontara: el tablero daba saldos de más.
   const FIJOS_CON_DIA = ['renta', 'celular', 'internet', 'gas', 'luzAgua', 'gym',
-                         'claudeCode', 'icloud', 'cetesDia15'];
+                         'claudeCode', 'icloud', 'cetesDia15', 'aporteCasa'];
   const textoCobros = (C.CALENDARIO.cobros || []).map(function (c) { return String(c.txt).toLowerCase(); }).join(' | ');
   const APODO = { celular: 'plan de datos', luzAgua: 'luz y agua', cetesDia15: 'cetes',
-                  claudeCode: 'claude code', icloud: 'icloud' };
+                  claudeCode: 'claude code', icloud: 'icloud', aporteCasa: 'aporte a tu familia' };
   FIJOS_CON_DIA.forEach(function (k) {
     if (!(+P[k] > 0)) return;
     const busca = APODO[k] || k.toLowerCase();
@@ -444,6 +446,11 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   (CAL && CAL.cobros || []).forEach(function (c) {
     if (!(c.dia >= 1 && c.dia <= DIA_MAX)) malos.push('     cobro "' + c.txt + '" con día ' + c.dia + ' (fuera de 1-' + DIA_MAX + ')');
     if (typeof c.monto !== 'number' || !isFinite(c.monto)) malos.push('     cobro "' + c.txt + '" sin monto numérico');
+    // El desglose del sueldo (`desgloseMes`) suma cada cobro en su `grupo`: sin uno de la lista, ese
+    // dinero no saldría en ningún renglón y el gasto personal quedaría inflado.
+    const GR = (C.GRUPOS_SUELDO || []).map(g => g[0]);
+    if (GR.indexOf(c.grupo) === -1) malos.push('     cobro "' + c.txt + '" sin `grupo` del desglose (' + GR.join(', ') + ')');
+    if (c.ahorro && c.grupo !== 'ahorro') malos.push('     cobro "' + c.txt + '" con `ahorro: true` fuera del grupo ahorro');
   });
   (CAL && CAL.hitos || []).forEach(function (h) {
     if (!esFecha(h.fecha)) malos.push('     hito "' + h.txt + '" con fecha inválida: ' + h.fecha);
@@ -796,9 +803,41 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   const millon = C.PROYECCION.meses.filter(m => m.liquido >= 1000000)[0];
   if (!millon || millon.mes > fin)
     malos.push('     la proyección no llega al millón antes del cierre de la ' + ultima.tag + ' (' + fin + ')');
+  /* El ahorro que pinta el calendario del Dashboard (los cobros con `ahorro`, más lo que aparta
+     Didi) tiene que ser el que cuenta la proyección, mes a mes: son la misma promesa en dos
+     pantallas. Y ningún mes en México puede dejar el gasto personal en negativo. */
+  C.PROYECCION.meses.filter(m => m.desglose).forEach(function (m) {
+    const p = m.mes.split('-').map(Number), nDias = new Date(p[0], p[1], 0).getDate();
+    let cal = 0;
+    for (let d = 1; d <= nDias; d++) C.agendaDia(d, m.mes, C.DEUDAS_SEED).forEach(a => { if (a.ahorro) cal += +a.monto || 0; });
+    if (Math.abs(cal - m.desglose.g.ahorro) > 0.5)
+      malos.push('     ' + m.mes + ': el calendario aparta $' + Math.round(cal) + ' y la proyección cuenta $' + Math.round(m.desglose.g.ahorro));
+    if (m.desglose.g.personal < 0) malos.push('     ' + m.mes + ': el gasto personal queda en negativo ($' + Math.round(m.desglose.g.personal) + ')');
+  });
+  // La meta de la maestría que siembra Finanzas es lo que cuesta irse, redondeado a miles.
+  const metaSeed = (finz.match(/\{id:'g001'[^}]*target:(\d+)/) || [])[1];
+  const metaPlan = Math.ceil(C.n('salidaTotal') / 1000) * 1000;
+  if (+metaSeed !== metaPlan)
+    malos.push('     Finanzas siembra la meta g001 en $' + metaSeed + ' y lo que cuesta irse, redondeado, es $' + metaPlan + ' (súbelo con una migración)');
+  /* Los importes de PROYECTO.ahorroDia15… salieron de cuadrar cada quincena contra los fijos, la
+     comida y el tope de gasto personal (SUPUESTOS.vida). Si un fijo cambia, el gasto personal se
+     aleja del tope: se avisa para decidir si lo nuevo va al ahorro o al día a día. El margen es lo
+     que se pierde al redondear a cientos cada envío. */
+  const SUP = C.PROYECCION.supuestos;
+  [[false, SUP.vida], [true, SUP.vidaEnCasa]].forEach(function (e) {
+    const t = C.mesTipo(e[0]), envios = (t.dia1 ? 1 : 0) + (t.dia15 ? 1 : 0), dif = t.g.personal - e[1];
+    const etapa = e[0] ? 'en casa' : 'con depa';
+    if (dif < 0) avisos.push('El ahorro de cada quincena ' + etapa + ' ya no cabe: tu gasto personal queda en $' + Math.round(t.g.personal) +
+      ', $' + Math.round(-dif) + ' bajo el tope de SUPUESTOS. Baja PROYECTO.ahorroDia… o el tope.');
+    else if (dif >= 100 * Math.max(1, envios)) avisos.push('Con los fijos de hoy, ' + etapa + ' cabe mandar $' + Math.round(dif) +
+      ' más al mes a la cuenta de Alemania (el gasto personal va en $' + Math.round(t.g.personal) + ' y el tope es $' + e[1] + ').');
+  });
   if (malos.length) problemas.push('La salida a Alemania o la proyección dejaron de cuadrar:\n' + malos.join('\n'));
   else ok.push('Salida a Alemania: ' + ids.length + ' pendientes en ' + S.bloques.length + ' temas y ' + S.costos.length +
-               ' costos; la proyección llega al millón en ' + millon.mes + ', antes del cierre de la ' + ultima.tag);
+               ' costos; el calendario y la proyección apartan lo mismo cada mes; la proyección llega al millón en ' + millon.mes +
+               ', antes del cierre de la ' + ultima.tag + ' (en junio ' + (C.PROYECCION.cortes.junio.falta > 0 ? 'faltan $' : 'sobran $') +
+               Math.abs(Math.round(C.PROYECCION.cortes.junio.falta)).toLocaleString('es-MX') + ', a la salida ' +
+               (C.PROYECCION.cortes.salida.falta > 0 ? 'faltan $' : 'sobran $') + Math.abs(Math.round(C.PROYECCION.cortes.salida.falta)).toLocaleString('es-MX') + ')');
   // La renta tiene fin: pasado `rentaHasta`, los fijos de hoy tienen que dejar de contarla.
   const hoy = new Date(), mesHoy = hoy.getFullYear() + '-' + String(hoy.getMonth() + 1).padStart(2, '0');
   if (C.PROYECTO.rentaHasta && mesHoy > C.PROYECTO.rentaHasta && C.PROYECTO.renta > 0)

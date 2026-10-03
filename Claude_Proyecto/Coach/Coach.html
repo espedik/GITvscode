@@ -674,7 +674,19 @@
     .pr-tabla td.pr-nota { color: var(--muted); font-size: 11px; line-height: 1.45; }
     .pr-tabla tr.pr-salida td { background: var(--accent-soft); }
     .pr-tabla tr.pr-sep td { font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); padding-top: 14px; }
-    .pr-escenarios { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    .pr-tabla tr.pr-corte td { background: rgba(204,0,0,.05); }
+    .pr-tabla tr.fa-tot td { font-weight: 700; border-top: 1px solid var(--border); }
+    .pr-tabla tr.fa-det td { color: var(--muted); font-size: 11px; padding-top: 2px; }
+    .pr-tabla th.pr-n { text-align: right; }
+    .fa-tabla { min-width: 520px; }
+    .fa-meses { min-width: 600px; margin-top: 12px; }
+    .fa-dia { color: var(--muted); font-size: 10.5px; }
+    .fase-ahorro { margin: 2px 0 12px; }
+    .fase-ahorro summary { cursor: pointer; list-style: none; font-size: 12.5px; font-weight: 700; color: var(--green); padding: 6px 0; }
+    .fase-ahorro summary::-webkit-details-marker { display: none; }
+    .fase-ahorro summary::before { content: '▸ '; }
+    .fase-ahorro[open] summary::before { content: '▾ '; }
+    .pr-escenarios { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-top: 14px; }
     @media (max-width: 900px) { .pr-escenarios { grid-template-columns: minmax(0, 1fr); } }
     .pr-esc { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12px; line-height: 1.5; background: var(--surface-2); }
     .pr-esc b { display: block; font-size: 10.5px; font-family: var(--mono); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; }
@@ -1727,20 +1739,23 @@
       <div class="grid-3" style="margin:14px 0;">
         <div class="stat-badge" style="min-width:auto;"><span class="num">{{maestriaInicio}}</span><span>La salida: arranca {{maestriaEscuela}}</span></div>
         <div class="stat-badge" style="min-width:auto;"><span class="num">{{salidaTotal}}</span><span>Lo que cuesta irse — el desglose, abajo</span></div>
-        <div class="stat-badge" style="min-width:auto;"><span class="num text-gold">{{salidaJunio}}</span><span>En la cuenta a mediados de junio: cuenta bloqueada y visa</span></div>
+        <div class="stat-badge" style="min-width:auto;"><span class="num text-gold">{{salidaJunio}}</span><span>En la cuenta en junio: cuenta bloqueada y visa</span></div>
       </div>
 
       <p class="fs-13" style="line-height:1.7;">
-        La pausa de un año terminó: desde ya, todo el ahorro va a la cuenta de Alemania. Desde febrero de
-        2027 ya no pagas renta, y sus {{renta}} al mes se vuelven ahorro. El {{auto}} no se vende: es tu
-        respaldo para trabajar Didi si regresas sin empleo, y mientras estás fuera se renta a un conductor
-        de plataforma y se paga solo.
+        La pausa de un año terminó: desde ya, todo el ahorro va a la cuenta de Alemania —{{ahorroMesDepa}}
+        al mes hasta enero y {{ahorroMesCasa}} desde febrero, en casa de tu familia y con Didi—. Con ese
+        ritmo, a fin de junio {{junioVeredicto}} y a la salida {{salidaVeredicto}}: septiembre de 2027
+        pide cerrar ese hueco con ventas, Didi de más y tu gasto personal. Si al 31 de marzo la cuenta no
+        va en {{marzoParaJunio}}, la salida se mueve a septiembre de 2028, que cierra con margen (los
+        escenarios, arriba). El {{auto}} no se vende: es tu respaldo para trabajar Didi si regresas sin
+        empleo, y mientras estás fuera se renta a un conductor de plataforma y se paga solo.
       </p>
 
       <div class="fase-checkpoint" style="margin-top:14px;">
         <span class="fc-icon">🚩</span>
         <div><strong>{{decisionMaestria}} — el día de decidir</strong>, con dos datos y no con ganas: la admisión de
-          Esslingen (llega antes de fin de mayo) y {{salidaJunio}} en la cuenta para mediados de junio. Si están
+          Esslingen (llega antes de fin de mayo) y {{salidaJunio}} en la cuenta en junio. Si están
           los dos, te vas. Si falta uno, se reaplica para septiembre de 2028 y el ahorro sigue: no se viaja a
           medias ni con deuda.</div>
       </div>
@@ -2501,11 +2516,11 @@
       <h3 class="fw-700 mb-12">Próximos 14 días — esto empieza hoy, no "cuando tenga tiempo"</h3>
       <p class="fs-13 text-muted mb-12">Tu patrón es abandonar cuando no ves avance rápido. Estas <span id="pfCount">10</span> acciones son deliberadamente pequeñas y concretas para que en 2 semanas ya tengas evidencia de movimiento real. Las 2 primeras son <strong>las prioridades de la Fase 1, en ese orden</strong>.</p>
       <div class="check-item"><input type="checkbox" id="pf13"><label for="pf13"><strong>Prioridad 1:</strong> pagar la TC BBVA completa el 11 oct — el total del estado de cuenta, no el mínimo de {{tcBbvaMin}}</label></div>
-      <div class="check-item"><input type="checkbox" id="pf14"><label for="pf14"><strong>Prioridad 2:</strong> abrir la cuenta de Alemania (CETES aparte) y, el 15 oct, antes de gastar, mandar ahí el ahorro de la quincena</label></div>
-      <div class="check-item"><input type="checkbox" id="pf18"><label for="pf18">Inscribirte al IELTS Academic (British Council CDMX, $4,850) para fines de noviembre o diciembre</label></div>
+      <div class="check-item"><input type="checkbox" id="pf14"><label for="pf14"><strong>Prioridad 2:</strong> abrir la cuenta de Alemania (CETES aparte) y, el 15 oct, antes de gastar, mandar ahí {{ahorroDia15}}</label></div>
+      <div class="check-item"><input type="checkbox" id="pf21"><label for="pf21">Revisar la fecha de tu IELTS (6.0): vale dos años y tiene que seguir vigente en enero, al mandar la solicitud, y en junio, en la cita de visa</label></div>
       <div class="check-item"><input type="checkbox" id="pf19"><label for="pf19">Pedir las dos cartas de recomendación para Esslingen (un jefe y un líder técnico o profesor, en inglés)</label></div>
-      <div class="check-item"><input type="checkbox" id="pf20"><label for="pf20">Revisar la vigencia del pasaporte: si no cubre hasta 2029, sacar cita en la SRE</label></div>
-      <div class="check-item"><input type="checkbox" id="pf16"><label for="pf16">Ponerle tope a la BBVA: $8,000 de vida diaria al mes, comida aparte, y apagarla desde la app al llegar</label></div>
+      <div class="check-item"><input type="checkbox" id="pf22"><label for="pf22">Apartar lo de Didi cada lunes: {{didiAhorro}} al mes a la cuenta de Alemania, aparte de lo que gastas en el auto</label></div>
+      <div class="check-item"><input type="checkbox" id="pf16"><label for="pf16">Ponerle tope a la BBVA: tu gasto personal es {{gastoPersonalDepa}} al mes, tarjeta incluida; apagarla desde la app al llegar</label></div>
       <div class="check-item"><input type="checkbox" id="pf3"><label for="pf3">Hacer inventario de lo que no usas (PS5, control, monitores, iPad) y publicarlo en Marketplace: va a la cuenta de Alemania</label></div>
       <div class="check-item"><input type="checkbox" id="pf15"><label for="pf15">Anotar la fecha del examen ISTQB CT-GenAI (agendado con Brightest) y hacer el examen de muestra esta semana</label></div>
       <div class="check-item"><input type="checkbox" id="pf4"><label for="pf4">Cancelar/evitar cualquier compra nueva a MSI esta quincena</label></div>
@@ -4229,6 +4244,51 @@
     const meses = f => Math.round((f.end - f.start) / msDia / 30.44);
     const mx = n => (n < 0 ? '−' : '') + '$' + Math.round(Math.abs(n)).toLocaleString('es-MX');
     const estado = f => hoyPM > f.end ? 'done' : hoyPM >= f.start ? 'active' : 'pending';
+    const ym = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+
+    // El ahorro de la fase, renglón por renglón (CIFRAS.mesTipo y la PROYECCION): un mes de cada
+    // etapa —con depa y en casa de tu familia— y la cuenta de Alemania mes a mes, con los dos
+    // cortes de la salida. Solo las fases que pasan en México.
+    const ahorroFase = f => {
+      const C = window.CIFRAS;
+      if (!C || !C.PROYECCION || !C.mesTipo) return '';
+      const K = C.PROYECCION.cortes, G = C.GRUPOS_SUELDO;
+      const filas = C.PROYECCION.meses.filter(m => m.desglose && m.mes >= ym(f.start) && m.mes <= ym(f.end));
+      if (!filas.length) return '';
+      const mesC = m => MES3[+m.slice(5, 7) - 1].toLowerCase();
+      const tramo = arr => mesC(arr[0].mes) + (arr.length > 1 ? '–' + mesC(arr[arr.length - 1].mes) : '');
+      const etapas = [[false, filas.filter(m => !m.desglose.casa)], [true, filas.filter(m => m.desglose.casa)]]
+        .filter(e => e[1].length).map(e => ({ t: (e[0] ? 'En casa' : 'Con depa') + ' · ' + tramo(e[1]), d: C.mesTipo(e[0]) }));
+      const nombre = k => G.filter(x => x[0] === k)[0][1];
+      const num = (v, signo) => v ? '<td class="pr-n">' + (signo < 0 ? '−' : '+') + mx(v) + '</td>' : '<td class="pr-n text-muted">—</td>';
+      const renglon = (k, signo) => etapas.some(e => e.d.g[k]) ? '<tr><td>' + nombre(k) + '</td>' + etapas.map(e => num(e.d.g[k], signo)).join('') + '</tr>' : '';
+      const tipo = '<div class="pr-wrap"><table class="pr-tabla fa-tabla"><thead><tr><th>Un mes</th>' +
+        etapas.map(e => '<th class="pr-n">' + e.t + '</th>').join('') + '</tr></thead><tbody>' +
+        G.filter(x => x[0] !== 'personal' && x[0] !== 'ahorro').map(x => renglon(x[0], x[0] === 'sueldo' ? 1 : -1)).join('') +
+        '<tr><td>' + nombre('personal') + '</td>' + etapas.map(e => '<td class="pr-n">−' + mx(e.d.g.personal) +
+          '<span class="fa-dia"> · ' + mx(e.d.g.personal / 30.4) + ' al día</span></td>').join('') + '</tr>' +
+        '<tr class="fa-tot"><td>Del sueldo, a la cuenta de Alemania</td>' + etapas.map(e => '<td class="pr-n">' + mx(e.d.g.ahorro) + '</td>').join('') + '</tr>' +
+        '<tr class="fa-det"><td>los CETES el 15 · lo del día 1 · lo del 15</td>' +
+          etapas.map(e => '<td class="pr-n">' + [e.d.cetes, e.d.dia1, e.d.dia15].map(v => v ? mx(v) : '—').join(' · ') + '</td>').join('') + '</tr>' +
+        '<tr><td>Didi, a la cuenta de Alemania</td>' + etapas.map(e => num(e.d.didi, 1)).join('') + '</tr>' +
+        '<tr class="fa-tot"><td>Ahorro del mes</td>' + etapas.map(e => '<td class="pr-n text-green">' + mx(e.d.ahorro) + '</td>').join('') + '</tr>' +
+        '</tbody></table></div>';
+      const meses = '<div class="pr-wrap"><table class="pr-tabla fa-meses"><thead><tr><th>Mes</th><th class="pr-n">Ahorro</th>' +
+        '<th class="pr-n">Cuenta de Alemania</th><th>Qué pasa</th></tr></thead><tbody>' +
+        filas.map(m => {
+          const c = [K.junio, K.salida].filter(x => x.mes === m.mes)[0];
+          const nota = m.notas.join(' · ') + (c ? (m.notas.length ? ' · ' : '') + '<strong class="' + (c.falta > 0 ? 'text-red' : 'text-green') + '">' +
+            (c === K.junio ? 'la cuenta bloqueada pide ' : 'la salida pide ') + mx(c.pide) + ': ' +
+            (c.falta > 0 ? 'faltan ' + mx(c.falta) : 'sobran ' + mx(-c.falta)) + '</strong>' : '');
+          return '<tr' + (c ? ' class="pr-corte"' : '') + '><td>' + MESL[+m.mes.slice(5, 7) - 1] + ' ' + m.mes.slice(0, 4) + '</td>' +
+            '<td class="pr-n ' + (m.ahorro < 0 ? 'text-red' : 'text-green') + '">' + mx(m.ahorro) + '</td>' +
+            '<td class="pr-n"><strong>' + mx(m.alemania) + '</strong></td><td class="pr-nota">' + nota + '</td></tr>';
+        }).join('') + '</tbody></table></div>';
+      return '<details class="fase-ahorro"' + (estado(f) === 'active' ? ' open' : '') + '><summary>💰 Tu ahorro en esta fase, renglón por renglón</summary>' +
+        '<p class="fs-13 text-muted" style="line-height:1.6;margin:6px 0 8px;">Un mes de cada etapa: lo que entra, lo que sale y lo que llega a la cuenta de Alemania. ' +
+        'Tu gasto personal es lo que queda después de mandar el ahorro; el tablero del Plan Maestro te dice cuánto te toca por día. Debajo, la cuenta mes a mes.</p>' +
+        tipo + meses + '</details>';
+    };
     const ultima = F[F.length - 1];
 
     // El stepper: un paso por fase.
@@ -4255,7 +4315,7 @@
       const explica = f.explica ? '<p class="fs-13 text-muted" style="line-height:1.7;margin:0 0 10px;">' + f.explica + '</p>' : '';
       const cuando = est === 'done' ? 'fase cerrada' : 'arranca en ' + MESL[f.start.getMonth()].toLowerCase() + ' ' + f.start.getFullYear();
       const cuerpo = est === 'active' ? lista
-        : '<details class="fase-collapse"><summary>Ver el desglose completo (' + sem.length + ' tareas) — ' + cuando + '</summary>' + explica + lista + '</details>';
+        : '<details class="fase-collapse"><summary>Ver el desglose completo (' + sem.length + ' tareas) — ' + cuando + '</summary>' + explica + ahorroFase(f) + lista + '</details>';
       return '<div class="fase-item" id="fase' + i + '">' +
         '<span class="fase-tag">' + f.tag + ' · ' + dCorta(f.start) + ' – ' + dCorta(f.end) + ' (' + meses(f) + ' meses)</span>' +
         '<span class="fase-status" id="faseStatus' + i + '">—</span>' +
@@ -4264,6 +4324,7 @@
         (est === 'active' ? explica : '') +
         (typeof f.liquido === 'number' ? '<p class="fs-13 text-muted" style="margin:-4px 0 10px;">📈 Al cierre (' + dCorta(f.end) +
           ') la trayectoria espera <strong>≈ ' + (f.liquido > 0 ? '+' : '') + mx(f.liquido) + '</strong> de patrimonio líquido — hipótesis, no promesa.</p>' : '') +
+        (est === 'active' ? ahorroFase(f) : '') +
         (f.deja ? '<div class="fase-meta"><span>🚫</span><span><strong>Lo que se deja:</strong> ' + f.deja + '</span></div>' : '') +
         cuerpo +
         (f.checkpoint ? '<div class="fase-checkpoint"><span class="fc-icon">🚩</span><div><strong>Checkpoint:</strong> ' + f.checkpoint + '</div></div>' : '') +
@@ -4335,57 +4396,70 @@
     const caja = document.getElementById('proyeccionPlan');
     const C = window.CIFRAS;
     if (!caja || !C || !C.PROYECCION) return;
-    const M = C.PROYECCION.meses, S = C.PROYECCION.supuestos, P = C.PROYECTO;
+    const M = C.PROYECCION.meses, S = C.PROYECCION.supuestos, P = C.PROYECTO, K = C.PROYECCION.cortes;
     const mx = n => (n < 0 ? '−' : '') + '$' + Math.round(Math.abs(n)).toLocaleString('es-MX');
     const MES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
     const et = ym => MES[+ym.slice(5, 7) - 1] + ' ' + ym.slice(0, 4);
-    const salida = P.maestriaInicio.slice(0, 7), junio = salida.slice(0, 4) + '-06';
+    const salida = P.maestriaInicio.slice(0, 7);
     const F = C.PHASES[C.PHASES.length - 1].end;
     const finPlan = F.getFullYear() + '-' + String(F.getMonth() + 1).padStart(2, '0');
     const millon = M.filter(m => m.liquido >= 1000000)[0];
     const cortes = S.alemania.semestres.concat([S.alemania.fin]);
     M.forEach(m => { if (m.mes > S.alemania.fin && m.mes <= finPlan && m.mes.slice(5) === '12') cortes.push(m.mes); });
     if (millon) cortes.push(millon.mes);
-    const fila = m => '<tr' + (m.mes === salida ? ' class="pr-salida"' : '') + '><td>' + et(m.mes) + '</td>' +
-      '<td class="pr-n">' + mx(m.entra) + '</td><td class="pr-n">' + mx(m.sale) + '</td>' +
-      '<td class="pr-n ' + (m.ahorro < 0 ? 'text-red' : 'text-green') + '">' + mx(m.ahorro) + '</td>' +
-      '<td class="pr-n"><strong>' + mx(m.alemania) + '</strong></td>' +
-      '<td class="pr-n' + (m.liquido < 0 ? ' text-red' : '') + '">' + mx(m.liquido) + '</td>' +
-      '<td class="pr-nota">' + m.notas.join(' · ') + (m.mes === (millon && millon.mes) ? (m.notas.length ? ' · ' : '') + '<strong>el millón líquido</strong>' : '') + '</td></tr>';
+    // Los dos cortes de la salida —junio y el último mes en México— dicen lo que piden y lo que falta.
+    const veredicto = c => c.falta > 0 ? 'faltan <strong>' + mx(c.falta) + '</strong>' : 'sobran <strong>' + mx(-c.falta) + '</strong>';
+    const fila = m => {
+      const c = [K.junio, K.salida].filter(x => x.mes === m.mes)[0];
+      const nota = m.notas.join(' · ') + (c ? (m.notas.length ? ' · ' : '') + '<span class="' + (c.falta > 0 ? 'text-red' : 'text-green') + '">' +
+        (c === K.junio ? 'la cuenta bloqueada pide ' : 'la salida pide ') + mx(c.pide) + ': ' + veredicto(c) + '</span>' : '') +
+        (m.mes === (millon && millon.mes) ? (m.notas.length ? ' · ' : '') + '<strong>el millón líquido</strong>' : '');
+      return '<tr' + (m.mes === salida ? ' class="pr-salida"' : c ? ' class="pr-corte"' : '') + '><td>' + et(m.mes) + '</td>' +
+        '<td class="pr-n">' + mx(m.entra) + '</td><td class="pr-n">' + mx(m.sale) + '</td>' +
+        '<td class="pr-n ' + (m.ahorro < 0 ? 'text-red' : 'text-green') + '">' + mx(m.ahorro) + '</td>' +
+        '<td class="pr-n"><strong>' + mx(m.alemania) + '</strong></td>' +
+        '<td class="pr-n' + (m.liquido < 0 ? ' text-red' : '') + '">' + mx(m.liquido) + '</td>' +
+        '<td class="pr-nota">' + nota + '</td></tr>';
+    };
     const antes = M.filter(m => m.mes <= salida), despues = M.filter(m => m.mes > salida && cortes.indexOf(m.mes) !== -1);
     const tabla = '<div class="pr-wrap"><table class="pr-tabla"><thead><tr><th>Mes</th><th>Entra</th><th>Sale</th><th>Ahorro</th>' +
       '<th>Cuenta de Alemania</th><th>Patrimonio líquido</th><th>Qué pasa</th></tr></thead><tbody>' +
       antes.map(fila).join('') + '<tr class="pr-sep"><td colspan="7">Después de la salida: los cortes</td></tr>' +
       despues.map(fila).join('') + '</tbody></table></div>';
 
-    // Los escenarios: el dinero de junio (cuenta bloqueada y visa) y el de la maestría.
-    const enJunio = filas => (filas.filter(m => m.mes === junio)[0] || {}).alemania || 0;
-    const pideJunio = eur => C.SALIDA.costos.filter(c => C.SALIDA.junio.indexOf(c.id) !== -1).reduce((a, c) => a + C.costoSalida(c, eur), 0);
-    const base = enJunio(M) - pideJunio();
-    const dMenos = enJunio(C.proyectar({ menosAhorro: 5000 })) - pideJunio();
+    // Los escenarios, con la misma proyección (CIFRAS.proyectar), no a mano: lo que pide junio y
+    // lo que pide la salida.
+    const corre = cambios => { const F2 = C.proyectar(cambios); return { K: C.cortesSalida(F2, cambios), mil: F2.filter(m => m.liquido >= 1000000)[0] }; };
+    const menos = corre({ menosAhorro: -1500 }), tarde = corre({ desfase: 12 }), euro = corre({ eurMxn: 23 });
     const sinW = C.proyectar({ alemania: Object.assign({}, S.alemania, { werkstudent: 0 }) });
     const seAcaba = sinW.filter(m => m.mes >= salida && m.alemania < 0)[0];
-    const dEur = enJunio(C.proyectar({ eurMxn: 23 })) - pideJunio(23);
+    const casa = C.mesTipo(true);
     const esc = (t, ok, txt) => '<div class="pr-esc' + (ok ? '' : ' mal') + '"><b>' + t + '</b>' + txt + '</div>';
     const escenarios = '<div class="pr-escenarios">' +
-      esc('El plan', base >= 0, 'A mediados de junio llegas con <strong>' + mx(base) + '</strong> de margen sobre los ' + mx(pideJunio()) +
-        ' de la cuenta bloqueada y la visa, y el millón llega en <strong>' + (millon ? et(millon.mes) : '—') + '</strong>.') +
-      esc('Ahorras $5,000 menos al mes', dMenos >= 0, dMenos >= 0 ? 'Junio todavía alcanza, con ' + mx(dMenos) + ' de margen.'
-        : 'En junio te faltan <strong>' + mx(-dMenos) + '</strong>: sin la cuenta bloqueada no hay visa y la salida se mueve a 2028.') +
+      esc('El plan, con tus números', K.salida.falta <= 0, 'A fin de junio tienes ' + mx(K.junio.tiene) + ' de los ' + mx(K.junio.pide) +
+        ' de la cuenta bloqueada: ' + veredicto(K.junio) + '. Para irte con la colegiatura, la reserva del BYD y el colchón, en agosto ' + veredicto(K.salida) + '.') +
+      esc('Gastas $1,500 menos al mes', menos.K.salida.falta <= 0, 'Y los mandas a la cuenta: en junio ' + veredicto(menos.K.junio) +
+        ' y en agosto ' + veredicto(menos.K.salida) + '. Ayuda, pero sola no cierra.') +
+      esc('Te vas en septiembre de 2028', tarde.K.salida.falta <= 0, 'Un año más de ' + mx(casa.ahorro) + ' al mes: a la salida ' + veredicto(tarde.K.salida) +
+        ' y el millón llega en <strong>' + (tarde.mil ? et(tarde.mil.mes) : '—') + '</strong> (con septiembre de 2027, ' + (millon ? et(millon.mes) : '—') + ').') +
       esc('Sin Werkstudent', !seAcaba, seAcaba ? 'El dinero se acaba en <strong>' + et(seAcaba.mes) + '</strong>: el Werkstudent no es opcional, paga el 2º y el 3er semestre.'
         : 'El fondo alcanza para toda la maestría.') +
-      esc('El euro a $23', dEur >= 0, dEur >= 0 ? 'Junio alcanza con ' + mx(dEur) + ' de margen.'
-        : 'La cuenta bloqueada sube y en junio faltan <strong>' + mx(-dEur) + '</strong>: por eso el plan usa $' + P.eurMxn.toFixed(2) + ' y no el del día.') +
+      esc('El euro a $23', euro.K.junio.falta <= 0, 'La cuenta bloqueada sube: en junio ' + veredicto(euro.K.junio) + '. Por eso el plan usa $' +
+        P.eurMxn.toFixed(2) + ' y no el del día.') +
       '</div>';
     const fmtE = n => '€' + n.toLocaleString('es-MX');
+    const depa = C.mesTipo(false);
     const supuestos = '<p class="fs-13 text-muted" style="line-height:1.7;margin-top:12px;"><strong>Supuestos</strong> — se cambian en el maestro, no aquí: ' +
-      'sueldo y Didi como hoy hasta agosto de 2027; renta de ' + mx(P.renta) + ' hasta ' + et(P.rentaHasta) + '; comida ' + mx(S.comida) +
-      ' y vida diaria ' + mx(S.vida) + ' al mes (' + mx(S.vidaSinRenta) + ' sin renta); ventas de lo que no usas, aguinaldo y finiquito como extras; el euro a $' +
-      P.eurMxn.toFixed(2) + '. En Esslingen, ' + fmtE(S.alemania.gasto) + ' de gasto al mes, Werkstudent de ' + fmtE(S.alemania.werkstudent) + ' netos desde ' +
-      et(S.alemania.werkDesde) + ' y colegiaturas de ' + fmtE(S.alemania.colegiatura) + '; el BYD rentado deja ' + mx(S.byd.rentaNeta) + ' al mes y paga su mensualidad. ' +
-      'Después, ' + fmtE(S.trabajo.neto) + ' netos y ' + fmtE(S.trabajo.gasto) + ' de gasto al mes, y ' + Math.round(S.rendimiento * 100) + '% anual sobre lo ahorrado ya fuera de México. ' +
-      'Arranca con la foto de Finanzas del 1 oct 2026.</p>';
-    caja.innerHTML = '<p class="fs-13 text-muted mb-12" style="line-height:1.7;">La <strong>cuenta de Alemania</strong> es todo tu efectivo: el fondo, la cuenta y lo que vas juntando —la cuenta bloqueada y la reserva del BYD siguen siendo tuyas—. El <strong>patrimonio líquido</strong> le resta el auto, el iPhone y la BBVA. Es el plan, no la realidad: compáralo cada mes con Finanzas.</p>' +
+      'del sueldo llega a la cuenta solo lo que mandas —con depa, ' + mx(depa.dia15) + ' el 15; en casa de tu familia, ' + mx(casa.dia1) + ' el 1 y ' + mx(casa.dia15) +
+      ' el 15; y ' + mx(depa.cetes) + ' de CETES cada 15— y de Didi lo que apartas: ' + mx(P.didiAhorro) + ' al mes hasta ' + et(P.rentaHasta) + ' y ' + mx(P.didiAhorroMas) +
+      ' desde ' + et(P.didiMasDesde) + ', la mitad el último mes. Lo demás del sueldo son los fijos, la comida (' + mx(S.comida) + ' al mes; ' + mx(S.comidaEnCasa) +
+      ' en casa, donde aportas ' + mx(P.aporteCasa) + ') y tu gasto personal (' + mx(depa.g.personal) + ' con depa, ' + mx(casa.g.personal) + ' en casa): el desglose está en cada fase. ' +
+      'Renta de ' + mx(P.renta) + ' hasta ' + et(P.rentaHasta) + '. El aguinaldo paga el seguro del BYD y ALTEN no da finiquito: no entran. Ventas de lo que no usas en noviembre ' +
+      'y diciembre, y el depósito del depa en febrero. El euro a $' + P.eurMxn.toFixed(2) + '. En Esslingen, ' + fmtE(S.alemania.gasto) + ' de gasto al mes, Werkstudent de ' +
+      fmtE(S.alemania.werkstudent) + ' netos desde ' + et(S.alemania.werkDesde) + ' y colegiaturas de ' + fmtE(S.alemania.colegiatura) + '; el BYD rentado deja ' + mx(S.byd.rentaNeta) +
+      ' al mes y paga su mensualidad. Después, ' + fmtE(S.trabajo.neto) + ' netos y ' + fmtE(S.trabajo.gasto) + ' de gasto al mes, y ' + Math.round(S.rendimiento * 100) +
+      '% anual sobre lo ahorrado ya fuera de México. Arranca con la foto de Finanzas del 1 oct 2026.</p>';
+    caja.innerHTML = '<p class="fs-13 text-muted mb-12" style="line-height:1.7;">La <strong>cuenta de Alemania</strong> es todo tu efectivo: el fondo, la cuenta y lo que vas juntando —la cuenta bloqueada y la reserva del BYD siguen siendo tuyas—. El <strong>ahorro</strong> es lo que llega a ella ese mes, y el <strong>patrimonio líquido</strong> le resta el auto, el iPhone y la BBVA. Es el plan, no la realidad: compáralo cada mes con Finanzas.</p>' +
       tabla + escenarios + supuestos;
   }
 

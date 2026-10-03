@@ -40,6 +40,9 @@ Cada mes se arma en **dos capas**:
    del auto, los servicios y los mínimos de las tarjetas (de `CALENDARIO.cobros` y del
    `day`/`min` de cada deuda), más los tres que van por **total mensual** y no tienen día:
    Didi, el vale y lo que cuesta comer.
+   Lo que se aparta —los CETES y el ahorro de cada quincena, cobros con `ahorro: true`— **no es
+   gasto**: no suma a los gastos, pero se queda en la lista contra la que `yaContado` compara, para
+   que una transacción que lo anote no se cuente encima.
 2. **Lo registrado** — las transacciones que la agenda no conoce. `yaContado` evita el doble
    conteo.
 
@@ -62,6 +65,9 @@ Lo que cuesta comer se **deriva de la lista de compras**, cuyos precios viven en
 calcula y lo deja con `CIFRAS.guardarComeDia()`; Finanzas lo lee con `CIFRAS.comeDia()`. Es
 una **caché de un dato que se calcula en un solo sitio**, no una segunda copia. Si nunca se
 abrió el Dashboard en ese navegador vale 0 y la comida no entra —mejor faltar que inventar—.
+En casa de su familia (de `PROYECTO.enCasaDesde` al último mes en México) comer es solo su
+desayuno: `SUPUESTOS.comidaEnCasa` al mes. Lo decide `comerEnMes(ym, come)`, que usa también el
+tablero del Dashboard.
 
 Junto a ella viajan sus piezas, para que nadie las reimplemente: `agendaDia`, `palabras`,
 `norm`, `yaContado`, `esNomina`.
@@ -69,6 +75,8 @@ Junto a ella viajan sus piezas, para que nadie las reimplemente: `agendaDia`, `p
 `agendaDia` pone el mínimo de cada deuda en su día, salvo una tarjeta que se paga completa
 (`noInterest`): en su **próximo** pago sale el total para no generar intereses; los meses de
 después siguen con el mínimo, porque esos estados de cuenta todavía no existen.
+Si un cobro cae en un mes lo decide `caeEnMes` —`cada`, `desde` y `hasta`; sin `cada`, `desde` es
+el primer mes en que cae—, el mismo predicado que usa el desglose de la proyección.
 
 **El patrimonio, igual: una sola fórmula.** `CIFRAS.patrimonio(fin)` devuelve `neto` (inversiones,
 fondo, activos y Bitcoin a precio de hoy, menos todas las deudas), `liquido` (lo mismo sin los
@@ -112,14 +120,20 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{sueldo}}` | $41,000 | Bruto mensual ALTEN, quincenal a BBVA |
 | `{{sueldoQuinc}}` | $20,500 | |
 | `{{didiMes}}` | $11,200 | ~$400/día × 28, cobro semanal |
+| `{{didiAhorro}}` | $5,000 | Lo que Didi pone en la cuenta de Alemania al mes, de octubre de 2026 a enero de 2027 (dicho por Adán) |
+| `{{didiAhorroMas}}` | $10,000 | Lo mismo desde `PROYECTO.didiMasDesde` (febrero de 2027), cuando trabaja más horas. El último mes en México va la mitad (`didiAlAhorro`) |
 | `{{siVale}}` | $940 | Vale de despensa |
 | `{{ingresoTotal}}` | $53,140 | Derivada: sueldo + Didi + Si Vale |
 | `{{renta}}` | $11,250 | Día 1 · hasta enero de 2027 (`PROYECTO.rentaHasta`): el depa se entrega a fin de mes y desde febrero la renta es ahorro |
+| `{{aporteCasa}}` | $3,000 | Día 1, a su familia, de `PROYECTO.enCasaDesde` (el mes siguiente a `rentaHasta`) a `PROYECTO.ultimoMesMexico`. En casa come ahí y solo paga su desayuno |
 | `{{gym}}` `{{gymNombre}}` | $650 · Total Pass | Día 17 |
 | `{{celular}}` `{{celularPlan}}` | $650 · Plan de datos AT&T | Día 1 |
 | `{{servicios}}` | $1,075 | Plan AT&T + internet + gas (la mitad: es bimestral) + luz/agua |
 | `{{suscripciones}}` | $1,080 | Gym + Claude Code + iCloud |
 | `{{cetesDia15}}` | $1,500 | Aporte recurrente a CETES el día 15 |
+| `{{ahorroDia15}}` | $7,400 | Págate primero, con depa: lo que va a la cuenta de Alemania el día 15, además de los CETES. La quincena del 1 paga la renta y la tarjeta |
+| `{{ahorroDia1Casa}}` | $8,600 | En casa de su familia: lo que va a la cuenta el día 1 |
+| `{{ahorroDia15Casa}}` | $11,300 | En casa: lo que va el día 15. Los tres salen de cuadrar cada quincena contra sus fijos, la comida y el tope de gasto personal (`SUPUESTOS.vida`, `vidaEnCasa`) |
 | `{{especulacionMes}}` `{{especulacionBtcPct}}` | $20,000 · 10 | La pestaña *Riesgo súper alto* de Qué invertir hoy: al mes, `{{cetesDia15}}` a CETES, ese % a Bitcoin y todo el resto a una sola empresa a la baja que investiga Claude |
 | `{{fijosTotal}}` | $13,405 | Derivada: renta + servicios + suscripciones |
 
@@ -193,14 +207,22 @@ pero el nombre de la variable se queda corto.
 | Marcador | Valor hoy | Origen |
 |---|---|---|
 | `{{fondo}}` `{{fondoMeta}}` | $6,000 de $10,000 — son los CETES | vivo |
-| `{{salidaTotal}}` | $405,228 — lo que cuesta irse a Alemania, completo (`SALIDA.costos`) | derivada; se mueve con `PROYECTO.eurMxn` |
-| `{{salidaJunio}}` | $254,478 — lo que tiene que estar en la cuenta a mediados de junio de 2027: la cuenta bloqueada y la visa | derivada |
+| `{{salidaTotal}}` | $397,878 — lo que cuesta irse a Alemania, completo (`SALIDA.costos`) | derivada; se mueve con `PROYECTO.eurMxn` |
+| `{{salidaJunio}}` | $254,478 — lo que tiene que estar en la cuenta en junio de 2027: la cuenta bloqueada y la visa | derivada |
 | `{{sperrkonto}}` | $249,984 — la cuenta bloqueada, €11,904 al euro del plan | derivada |
-| `{{alemaniaMarzo}}` | $182,348 — lo que la proyección espera en la cuenta de Alemania al cerrar la Fase 1 | derivada de la PROYECCION |
-| `{{mesMillon}}` | may 2031 — el mes en que la proyección cruza el millón (`fmt: 'mes'`) | derivada de la PROYECCION |
+| `{{ahorroMesDepa}}` | $13,900 — lo que llega a la cuenta de Alemania en un mes con depa: los CETES, lo del 15 y Didi | derivada (`mesTipo(false)`) |
+| `{{ahorroMesCasa}}` | $31,400 — lo mismo en casa de su familia: lo del 1, lo del 15, los CETES y Didi | derivada (`mesTipo(true)`) |
+| `{{gastoPersonalDepa}}` | $8,002 — lo que queda del sueldo con depa tras los fijos, la comida y el ahorro: su gasto personal, tarjeta incluida | derivada |
+| `{{gastoPersonalCasa}}` | $7,176 — lo mismo en casa | derivada |
+| `{{alemaniaMarzo}}` | $141,640 — lo que la proyección espera en la cuenta de Alemania al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
+| `{{marzoParaJunio}}` | $171,878 — lo que tiene que haber al cerrar la Fase 1 para que junio alcance con el ahorro de abril a junio | derivada |
+| `{{alemaniaJunio}}` | $219,746 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
+| `{{junioVeredicto}}` | «faltan … para la cuenta bloqueada» o «alcanza, con … de margen» (`fmt: 'txt'`) | derivada |
+| `{{salidaVeredicto}}` | «faltan …» o «sobran …»: lo que pide la salida —cuenta bloqueada, reserva del BYD, colchón y la colegiatura del primer semestre— contra la cuenta a fin de agosto (`fmt: 'txt'`) | derivada |
+| `{{mesMillon}}` | jul 2031 — el mes en que la proyección cruza el millón (`fmt: 'mes'`) | derivada de la PROYECCION |
 | `PROYECTO.eurMxn` | 21.0 — el euro para planear; el 2-oct-2026 estaba en $20.46 | constante |
 | `{{cetes}}` | $6,000 — el mismo número que `{{fondo}}` | derivada de `fondo` |
-| `{{maestria}}` `{{maestriaMeta}}` | $53,740 de $406,000 — la meta es lo que cuesta irse (migración `_alemania20261003`) | vivo |
+| `{{maestria}}` `{{maestriaMeta}}` | $53,740 de $398,000 — la meta es lo que cuesta irse (migraciones `_alemania20261003` y `_ahorroReal20261003`) | vivo |
 | `{{maestriaEscuela}}` | Esslingen — Automotive Systems M.Eng. | constante |
 | `{{maestriaInicio}}` `{{decisionMaestria}}` | 1 sep 2027 · 31 may 2027, la decisión (`PROYECTO.maestriaInicio`, `maestriaDecision`) | constantes, con `fmt: 'fecha'` |
 | `{{metaMillon}}` | 31 dic 2031 — el cierre de la última fase del Plan Maestro | derivada de `PHASES` |
@@ -222,13 +244,26 @@ Adán se va a la maestría de Esslingen en **septiembre de 2027** (`maestriaInic
   (`bloques`: admisión, visa, dinero, el BYD, salud física y mental, ropa, tecnología, vivienda,
   trabajo y lo que se queda en México), cada pendiente con su mes. Coach la pinta.
 - **`PROYECCION`**: el plan mes a mes desde la foto de Finanzas del 1 oct 2026 hasta el millón —lo
-  que entra, lo que sale, la cuenta de Alemania (todo el efectivo) y el patrimonio líquido—. Lee en
-  vivo lo que viene de `PROYECTO` y el resto de `SUPUESTOS`, cada uno con su porqué.
-  `CIFRAS.proyectar(cambios)` corre escenarios. De aquí sale el `liquido` de cada fase y los
-  marcadores `{{alemaniaMarzo}}` y `{{mesMillon}}`.
+  que entra, lo que sale, la cuenta de Alemania (todo el efectivo) y el patrimonio líquido—, y
+  `cortes`: lo que piden junio (la cuenta bloqueada) y el último mes en México (la cuenta
+  bloqueada, la reserva del BYD, el colchón y la colegiatura del primer semestre) contra lo que
+  hay. `CIFRAS.proyectar(cambios)` corre escenarios —`menosAhorro`, `desfase: 12` para irse en
+  septiembre de 2028, otro euro, sin Werkstudent— y `CIFRAS.cortesSalida(filas, cambios)` los
+  mide. De aquí salen el `liquido` de cada fase y los marcadores de la salida.
 
-Para cambiar un supuesto (lo que cuesta la vida allá, el Werkstudent, la renta del auto) se edita
-`SUPUESTOS`; para un costo, `SALIDA.costos`. Las fases, los marcadores y Coach se recalculan solos.
+**El ahorro sale de lo que se manda, no de una resta.** En México, del sueldo solo llega a la
+cuenta de Alemania lo que se aparta el día que entra cada quincena —los CETES y `ahorroDia15`,
+`ahorroDia1Casa`, `ahorroDia15Casa`, que son cobros del calendario— y de Didi lo que Adán dijo
+que aparta (`didiAlAhorro`). Lo demás del sueldo son los fijos, la comida y el gasto personal,
+que es lo que queda: `desgloseMes(mes)` lo da renglón por renglón con el `grupo` de cada cobro, y
+`mesTipo(casa)` da un mes tipo de cada etapa —con depa y en casa de su familia— para las tablas
+de las fases. Así el calendario del Dashboard y la proyección no pueden decir cosas distintas, y
+el verificador lo comprueba mes a mes. El aguinaldo paga el seguro del BYD y ALTEN no da
+finiquito: no entran.
+
+Para cambiar un supuesto (el tope de gasto personal, lo que cuesta la vida allá, el Werkstudent,
+la renta del auto) se edita `SUPUESTOS`; para un costo, `SALIDA.costos`; para lo que se manda cada
+quincena, `PROYECTO.ahorroDia…`. Las fases, los marcadores y Coach se recalculan solos.
 
 ### Estudios de alemán · constantes
 
@@ -557,13 +592,13 @@ de ser opcional y de tener `desdeEdad`. `desdeEdad` desactiva un examen hasta es
 desde JS, no es un marcador:
 
 ```js
-CIFRAS.CALENDARIO.cobros   // [{dia, txt, monto, entra?}] — los días fijos del mes
+CIFRAS.CALENDARIO.cobros   // [{dia, txt, grupo, monto, entra?, ahorro?, desde?, hasta?, cada?}] — los días fijos del mes
 CIFRAS.CALENDARIO.hitos    // [{fecha, txt, sub}] — fechas duras que no salen de ningún otro dato
 ```
 
 | | Qué trae | De dónde sale el número |
 |---|---|---|
-| `cobros` | Renta día 1, plan AT&T día 1, quincena días 1 y 15, CETES día 15, gym día 17. Renta, luz y agua, internet y gas llevan `hasta` (`rentaHasta`): son del depa y terminan con él | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí como dato, no como comentario al lado de la cifra: las apps lo leen. |
+| `cobros` | Renta día 1, plan AT&T día 1, quincena días 1 y 15, CETES día 15, gym día 17. Renta, luz y agua, internet y gas llevan `hasta` (`rentaHasta`): son del depa y terminan con él. Y el plan: el ahorro a la cuenta de Alemania el 15 (con depa) y el 1 y el 15 (en casa), con `ahorro: true`, y el aporte a su familia el día 1 desde `enCasaDesde`. `grupo` dice a qué renglón del desglose del sueldo va cada uno | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí como dato, no como comentario al lado de la cifra: las apps lo leen. |
 | `hitos` | Decisión Maestría (31 may 2027) y Salida a Alemania (1 sep 2027) | `PROYECTO.maestriaDecision` y `PROYECTO.maestriaInicio`. |
 
 **Regla al agregar: si una fecha se puede derivar de un dato que ya existe, NO va aquí.** Por eso
@@ -761,7 +796,7 @@ Qué revisa:
   leerla del maestro. Es la guardia de la Regla 1.
 - `GYM_RUTINA_DEFAULT` contra `ejercicio.html`, que sigue siendo un respaldo duplicado.
 - Que Coach **genere** las fases del maestro (solo la Fase 0, cerrada, sigue escrita a mano: el control 3 falla si otra fase, sus tareas o sus fechas vuelven a escribirse en Coach) y que las prioridades de `APRENDIZAJE` aparezcan en su HTML.
-- **La salida a Alemania y la proyección**: ids de `SALIDA` únicos y distintos de las tareas de fase, cada pendiente con su mes y cada costo con importe, Coach pintándolas desde el maestro, y la proyección llegando al millón antes del cierre de la última fase. Pasado `rentaHasta`, avisa si la renta sigue contando en los fijos.
+- **La salida a Alemania y la proyección**: ids de `SALIDA` únicos y distintos de las tareas de fase, cada pendiente con su mes y cada costo con importe, Coach pintándolas desde el maestro, y la proyección llegando al millón antes del cierre de la última fase. Pasado `rentaHasta`, avisa si la renta sigue contando en los fijos. Cada cobro lleva un `grupo` del desglose; el calendario y la proyección apartan lo mismo cada mes y ningún mes deja el gasto personal en negativo; la meta `g001` que siembra Finanzas es lo que cuesta irse, redondeado. Avisa si un fijo cambia y el ahorro de cada quincena deja de cuadrar con el tope de gasto personal.
 - Las cifras que ya tienen variable pero siguen escritas a mano.
 - **Los números del maestro escritos crudos en el código** (sin `$`): así es como una app acaba
   con dos precios del mismo gimnasio a la vez. Acepta dos patrones
@@ -827,7 +862,7 @@ Ninguna estructura está copiada entre archivos; todas se leen de aquí:
 | `BTC_SEED` | Las operaciones de Bitcoin: 3 compras ($2,878 USD = $52,129 MXN al cambio de cada día, 0.032509 ₿) y 2 ventas: 14-sep-2026 ($5,300 MXN = $310.45 USD = 0.003930 ₿ a $79,000 USD/₿, precio dicho por Adán) y 19-sep-2026 (todo lo que quedaba, 0.028579 ₿, por $39,500 MXN = $2,299.51 USD a $80,461 USD/₿ implícito — para pagar la TC BBVA). **Ya no queda Bitcoin.** Cada operación lleva `fx` (BCE del día). Finanzas lo siembra en `btcHistory`; una venta lleva `tipo:'venta'` y `btc` negativo | `CIFRAS.BTC_SEED` |
 | `PHASES` | Las 5 fases del Plan Maestro (la 0 cerrada): fechas, meta, explicación, `deja` (lo que se deja de hacer), `checkpoint` y el checklist por mes; `liquido` lo pone la `PROYECCION`. La última fija la fecha del millón (`{{metaMillon}}`) | `CIFRAS.PHASES` |
 | `SALIDA` | La salida a Alemania: lo que cuesta (`costos`) y todo lo que hay que reunir, por tema (`bloques`) | `CIFRAS.SALIDA`, `CIFRAS.costoSalida(c)` |
-| `PROYECCION` | El plan mes a mes hasta el millón, con sus `supuestos` | `CIFRAS.PROYECCION`, `CIFRAS.proyectar(cambios)` |
+| `PROYECCION` | El plan mes a mes hasta el millón, con sus `supuestos` y los `cortes` de la salida | `CIFRAS.PROYECCION`, `CIFRAS.proyectar(cambios)`, `CIFRAS.cortesSalida()`, `CIFRAS.desgloseMes()`, `CIFRAS.mesTipo()` |
 | `APRENDIZAJE` | 6 prioridades de aprendizaje | `CIFRAS.APRENDIZAJE` |
 | `LISTA_COMPRAS` | Catálogo de compras por pasillos — 7 categorías; `comida` en 7 pasillos, con `Verduras` / `Frutas` / `Almidones y grasas` separados para colorear los frescos por clase y sumar la fruta+verdura por día | `CIFRAS.LISTA_COMPRAS` |
 
