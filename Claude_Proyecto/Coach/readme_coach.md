@@ -334,8 +334,8 @@ otro.
 
 | Pieza | De dónde sale |
 |---|---|
-| `#planStepper` | Un paso por fase, con sus meses (`Oct 26–Mar 27`) |
-| `#fasesPlan` | Cada fase desde la 1: etiqueta con fechas y duración, meta, el patrimonio que espera la trayectoria (`liquido`), **lo que se deja** (`deja`), la explicación, el checklist por mes y el **checkpoint**. La fase en curso enseña su checklist; las demás van plegadas. Las fases que pasan en México llevan **💰 Tu ahorro en esta fase** (`ahorroFase`): un mes de cada etapa —con depa y en casa— renglón por renglón (`CIFRAS.mesTipo`, `GRUPOS_SUELDO`) y la cuenta de Alemania mes a mes con los cortes de la salida (`PROYECCION.cortes`); abierto en la fase en curso |
+| `#planStepper` | Un paso por fase, con sus meses y años completos (`oct 2026 – mar 2027`) |
+| `#fasesPlan` | Cada fase desde la 1: su etiqueta, el título y **las fechas en grande** (`.fase-fechas`: Empieza, Termina, Dura y *quedan 179 días* / *empieza en 6 meses* / *cerrada*), la meta numerada (`metaLista`), el patrimonio que espera la trayectoria (`liquido`), **lo que se deja** (`deja`), la explicación, el checklist por mes y el **checkpoint**. La fase en curso enseña su checklist; las demás van plegadas. Las fases que pasan en México llevan **💰 Tu ahorro en esta fase** (`ahorroFase`): un mes de cada etapa renglón por renglón (`CIFRAS.mesTipo`, `GRUPOS_SUELDO`), **tus rutinas producto por producto con dónde recortar en verde** (`CIFRAS.rutinasDesglose`) y la cuenta de Alemania mes a mes con los cortes de la salida (`PROYECCION.cortes`); abierto en la fase en curso |
 | Estado de cada fase | `COMPLETADA` / `EN CURSO` / `PENDIENTE` por fecha, también la Fase 0 |
 | Días hasta el millón | Del arranque de la primera fase al cierre de la última (`#planDiasRestantes`, `#kpiDiasMeta`) |
 | `#trayectoriaFases` | Una fila por fase con su `liquido`, bajo el punto de partida fijo del 18 jul 2026 |

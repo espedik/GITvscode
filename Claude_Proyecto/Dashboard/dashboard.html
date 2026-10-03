@@ -670,20 +670,56 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .kpi-card .gbm-vacio{font-size:13px}
 @media(max-width:1024px){ .kpi-cols{columns:1} }
 @media(max-width:640px){ .gbm-card.kpi-card{width:100%;height:100%;max-height:100%} .kpi-card .gbm-body{padding:12px 14px 28px} .kpi-card .kpi-linea-top,.kpi-card .gbm-paso-d,.kpi-card .gbm-nota{font-size:12.5px} }
-/* Subtabs de "Las 4 fases del Plan Maestro" (21-sep-2026, pedido explícito: "se ve muy amontonado,
-   mejoralo haciendo subtabs para cada fase") — antes las 4 fases competían por las 2 columnas de
-   .kpi-cols y se cortaban a la mitad sin orden. Ahora cada fase vive en su propio panel y solo una
-   se ve a la vez. .fases-tabs es un solo hijo de #kpiBody: kpiAcomodar lo mete en un único
-   .kpi-grupo a ancho completo (kpi-cols-1) en vez de partirlo entre columnas. */
-.fases-tabnav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid rgba(var(--ov),.08)}
-.fases-tabbtn{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:9px 15px;
-  border-radius:12px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.03);
-  cursor:pointer;font-family:inherit;text-align:left;transition:background .15s,border-color .15s,transform .15s}
-.fases-tabbtn:hover{transform:translateY(-1px);border-color:var(--fc)}
-.fases-tabbtn-n{font-size:13px;font-weight:900;color:var(--text2)}
-.fases-tabbtn-e{font-size:9px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text3)}
-.fases-tabbtn.is-activa{background:color-mix(in srgb,var(--fc) 15%,transparent);border-color:var(--fc)}
-.fases-tabbtn.is-activa .fases-tabbtn-n,.fases-tabbtn.is-activa .fases-tabbtn-e{color:var(--fc)}
+/* Las fases del Plan Maestro (rediseño del 3-oct-2026; Adán: "sé muy claro en las fechas… mejora
+   el diseño de donde me muestras todas las fases"). Arriba, la ruta: cada fase es una estación con
+   su color de calendario (CAL_FASE_COLOR), sus fechas, lo que dura y cómo va. Debajo, una fase a la
+   vez: la cabecera dice en grande cuándo empieza y cuándo termina. .fases-tabs es un solo hijo de
+   #kpiBody: kpiAcomodar lo mete en un único .kpi-grupo a ancho completo. */
+.fz-ruta{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid rgba(var(--ov),.08)}
+.fz-est{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:12px 14px 13px;border-radius:12px;
+  border:1px solid rgba(var(--ov),.1);border-top:4px solid var(--fc);background:rgba(var(--ov),.025);color:var(--text);
+  cursor:pointer;font-family:inherit;text-align:left;transition:border-color .15s,background .15s,transform .15s}
+.fz-est:hover{transform:translateY(-1px);border-color:var(--fc)}
+.fz-est.hecha{opacity:.72}
+.fz-est.is-activa{opacity:1;background:color-mix(in srgb,var(--fc) 11%,transparent);border-color:var(--fc)}
+.fz-est-n{font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:6px}
+.fz-est.is-activa .fz-est-n{color:var(--text)}
+.fz-chip{font-style:normal;font-size:9.5px;font-weight:800;letter-spacing:.08em;padding:2px 6px;border-radius:4px;background:var(--fc);color:#0b0b10}
+.fz-est-t{font-size:12.5px;font-weight:700;line-height:1.3;min-height:2.6em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fz-est-f{font-family:var(--mono);font-size:12.5px;font-weight:800;white-space:nowrap}
+.fz-est-e{font-size:11px;color:var(--text2)}
+.fz-cab{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:12px}
+.fz-cab-izq{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1 1 320px}
+.fz-cab-n{font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--text3)}
+.fz-cab-t{font-family:var(--font-title);font-size:25px;font-weight:700;line-height:1.2}
+.fz-fechas{display:flex;gap:10px;flex-wrap:wrap}
+.fz-fechas>div{display:flex;flex-direction:column;gap:3px;padding:9px 14px;border-radius:10px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.1)}
+.fz-fechas span{font-size:9.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)}
+.fz-fechas b{font-family:var(--mono);font-size:15px;font-weight:800;white-space:nowrap}
+.fz-barra{height:8px;border-radius:8px;background:rgba(var(--ov),.09);overflow:hidden}
+.fz-barra i{display:block;height:100%;background:var(--fc);border-radius:8px}
+.fz-barra-t{font-size:12.5px;color:var(--text2);margin:7px 0 18px}
+.fz-p{font-size:13.5px;line-height:1.62;color:var(--text2);margin:0 0 14px}
+.fz-ol{margin:0 0 16px;padding-left:22px;display:flex;flex-direction:column;gap:7px;font-size:13.5px;line-height:1.5}
+.fz-ol li::marker{font-family:var(--mono);font-weight:800;color:var(--text3)}
+.fz-mes{border:1px solid rgba(var(--ov),.1);border-radius:10px;padding:10px 12px 8px;margin-bottom:10px}
+.fz-mes.hoy{border-color:var(--fc);background:color-mix(in srgb,var(--fc) 7%,transparent)}
+.fz-mes-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.fz-mes-t{font-size:13.5px;font-weight:800;display:flex;align-items:center;gap:6px}
+.fz-mes-s{font-size:11px;color:var(--text3);white-space:nowrap}
+.fz-tarea{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;line-height:1.45;padding:4px 0;color:var(--text2)}
+.fz-tarea.ok{color:var(--text3);text-decoration:line-through}
+@media(max-width:1180px){.fz-ruta{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:12px}.fz-est{flex:0 0 220px;scroll-snap-align:start}}
+@media(max-width:640px){.fz-est{flex-basis:200px}.fz-cab-t{font-size:20px}.fz-fechas{width:100%}.fz-fechas>div{flex:1 1 0;min-width:0;padding:8px 10px}.fz-fechas b{font-size:12.5px;white-space:normal}}
+/* Las rutinas, producto por producto, y dónde recortar (CIFRAS.rutinasDesglose), en verde. */
+.fa-dash tr.grupo th,.fa-dash tr.grupo td{font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);padding-top:11px}
+.fa-recorte{margin:10px 0 16px;padding:12px 14px;border-radius:10px;background:rgba(var(--g-rgb),.08);border:1px solid rgba(var(--g-rgb),.3);border-left:4px solid var(--g)}
+.fa-recorte-t{font-size:13px;font-weight:800;color:var(--g);margin-bottom:7px}
+.fa-recorte ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;font-size:12.5px;line-height:1.5;color:var(--text2)}
+.fa-recorte li b{color:var(--text)}
+.fa-recorte .med{color:var(--w);font-weight:700}
+.fa-recorte .fte{color:var(--text3);font-size:11px}
+.fa-recorte p{margin:9px 0 0;font-size:12.5px;line-height:1.5;color:var(--text)}
 .fases-panel{display:none}
 .fases-panel.is-activa{display:block;animation:fasesIn .2s ease}
 /* Dos columnas dentro de cada fase: lo que la explica a la izquierda y el checklist a la derecha.
@@ -699,7 +735,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .fa-dash tr.tot th,.fa-dash tr.tot td{font-weight:800;color:var(--text)}
 .fa-dash td.ok{color:var(--g)}
 @keyframes fasesIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:640px){.fases-tabnav{gap:6px}.fases-tabbtn{padding:7px 11px}.fases-tabbtn-n{font-size:12px}}
+
 /* Otra vuelta más chico (2026-08-11, pedido explícito: "haz todavia mas pequeñas los
    indicadores de arriba, los 4") — mismo criterio que la ronda anterior: el espacio que se
    libera aquí es el que gana la cuadrícula de fotos de metas de abajo. */
@@ -10982,6 +11018,34 @@ function kpiBarra(nom, val, pct, color, nota, pista){
 // El ahorro de una fase en México, un mes de cada etapa —con depa y en casa de tu familia— y la
 // cuenta de Alemania al cerrar cada mes, con lo que piden junio y la salida. Es el mismo desglose
 // que pinta Coach en cada fase (CIFRAS.mesTipo y la PROYECCION): aquí, compacto.
+// La meta de una fase como lista: "Al 31 mar 2027: <b>1)</b> … <b>2)</b> …" se lee mejor numerada.
+// La fecha del arranque ("Al 31 mar 2027") ya va en el título de la sección; lo demás, tal cual.
+function faseMetaHTML(meta){
+  const partes=String(meta||'').split(/<b>\d+\)<\/b>\s*/);
+  if(partes.length<3) return '<p class="fz-p" style="color:var(--text)">'+meta+'</p>';
+  const intro=partes[0].replace(/^\s*Al [^:]*:\s*/,'').replace(/[:\s]+$/,'');
+  return (intro?'<p class="fz-p">'+intro+'</p>':'')+
+    '<ol class="fz-ol">'+partes.slice(1).map(x=>'<li>'+x.replace(/[;.\s]+$/,'')+'</li>').join('')+'</ol>';
+}
+// Las rutinas producto por producto y, debajo y en verde, dónde recortar (CIFRAS.rutinasDesglose):
+// una recomendación por producto, lo que costaría al mes con la misma dosis y lo que ahorra.
+function faseRutinasHTML(){
+  const C=window.CIFRAS;
+  if(!C||!C.rutinasDesglose) return '';
+  const R=C.rutinasDesglose();
+  const recortes=[].concat.apply([],R.grupos.map(g=>g.items.filter(x=>x.recorte))).sort((a,b)=>b.recorte.ahorro-a.recorte.ahorro);
+  return kpiSec('🧴 Tus rutinas, producto por producto')+
+    '<table class="fa-dash"><thead><tr><th>Producto</th><th>Al mes</th></tr></thead><tbody>'+
+    R.grupos.map(g=>'<tr class="grupo"><th>'+g.grupo+'</th><td>'+money(g.total)+'</td></tr>'+
+      g.items.map(x=>'<tr><th>'+esc(x.n)+'</th><td>'+money(x.mes)+'</td></tr>').join('')).join('')+
+    '<tr class="tot"><th>Total de tus rutinas</th><td>'+money(R.total)+'</td></tr></tbody></table>'+
+    '<div class="fa-recorte"><div class="fa-recorte-t">✂️ Dónde puedes recortar: hasta '+money(R.ahorro)+' al mes más para Alemania</div><ul>'+
+    recortes.map(x=>'<li><b>'+(x.recorte.quitar?'Quita el '+esc(x.n.toLowerCase()):esc(x.n)+' → '+esc(x.recorte.n))+'</b>: '+
+      money(x.mes)+' → '+money(x.recorte.mes)+' al mes, <b>ahorras '+money(x.recorte.ahorro)+'</b>. '+
+      (x.recorte.medico?'<span class="med">Con tu dermatólogo.</span> ':'')+esc(x.recorte.txt)+' <span class="fte">('+esc(x.recorte.fuente)+')</span></li>').join('')+
+    '</ul><p>Sin tocar tus tratamientos ahorras <b>'+money(R.ahorro-R.medico)+'</b> al mes desde ya; los otros '+money(R.medico)+
+    ' los decide tu dermatólogo. Lo que recortes, súmalo a lo que mandas el 15 a la cuenta de Alemania.</p></div>';
+}
 function faseAhorroHTML(f){
   const C=window.CIFRAS;
   if(!C||!C.PROYECCION||!C.mesTipo) return '';
@@ -11007,6 +11071,7 @@ function faseAhorroHTML(f){
     '<tr><th>Didi, a la cuenta de Alemania</th>'+et.map(e=>td(e.d.didi,1)).join('')+'</tr>'+
     '<tr class="tot"><th>Ahorro del mes</th>'+et.map(e=>'<td class="ok">'+money(e.d.ahorro)+'</td>').join('')+'</tr>'+
     '</tbody></table>'+
+    faseRutinasHTML()+
     kpiNota('La cuenta de Alemania al cerrar cada mes: '+filas.map(m=>mc(m.mes)+' <b>'+money(m.alemania)+'</b>').join(' · ')+'. '+corte+
       ' El desglose mes a mes está en <b>Coach → Plan Maestro</b>.');
 }
@@ -11019,9 +11084,16 @@ function kpiPaso(titulo, texto, color){
 }
 // Subtabs de las fases (ver kpiDetalle id==='fases'): alterna qué botón y qué panel llevan
 // is-activa. Sin volver a pintar nada — el HTML de todas las fases ya está en el DOM, solo se oculta.
+// Lleva la estación activa de la ruta a la vista cuando la ruta se desplaza de lado (teléfono y
+// pantallas angostas). Con scrollLeft y no scrollIntoView: el panel no salta en vertical.
+function kpiFaseVer(){
+  const ruta=document.querySelector('.fz-ruta'), act=ruta&&ruta.querySelector('.fz-est.is-activa');
+  if(act&&ruta.scrollWidth>ruta.clientWidth) ruta.scrollLeft=Math.max(0,act.offsetLeft-ruta.offsetLeft-8);
+}
 function kpiFaseTab(i){
-  document.querySelectorAll('.fases-tabbtn').forEach(b=>b.classList.toggle('is-activa',+b.dataset.fase===i));
+  document.querySelectorAll('.fz-est').forEach(b=>b.classList.toggle('is-activa',+b.dataset.fase===i));
   document.querySelectorAll('.fases-panel').forEach(p=>p.classList.toggle('is-activa',+p.dataset.fase===i));
+  kpiFaseVer();
 }
 // Gasto mensual real: promedio de los gastos de los últimos 3 meses cerrados. Se usa para
 // dimensionar el fondo de emergencia contra la realidad y no contra un número redondo.
@@ -11044,6 +11116,8 @@ function abrirKpi(id){
   document.getElementById('kpiBody').innerHTML=info.html;
   kpiAcomodar(document.getElementById('kpiBody'));
   ov.classList.add('open');
+  // La ruta de las fases se desplaza de lado bajo 1180 px: que abra en la fase elegida.
+  if(id==='fases') kpiFaseVer();
   clearInterval(timer);
 }
 function cerrarKpi(){ document.getElementById('kpiOverlay')?.classList.remove('open'); }
@@ -11366,59 +11440,75 @@ function kpiDetalle(id){
       kpiNota('Las de tasa 0 (MSI, crédito del coche si aplica) <b>no son urgentes pero sí comprometen tu excedente</b> cada mes. Cuentan para el flujo aunque no para los intereses.')};
   }
 
-  // Las fases del Plan Maestro, con subtabs: una por fase, para no competir por las 2 columnas
-  // de .kpi-cols (Adán, 21-sep-2026: "se ve muy amontonado, mejoralo haciendo subtabs para cada
-  // fase y explicandolo muy bien"). Cada panel trae fechas, meta, explicación, lo que se deja, el
-  // patrimonio esperado, el checkpoint y el checklist del mes, leído de coach_checks_v1. Se abre desde la banda de fase del Plan Maestro y desde el
-  // módulo Fase de Mi Día. Arranca abierta la fase en curso (o la siguiente, o la última si el
-  // plan ya cerró) — kpiFaseTab() alterna el resto sin volver a pintar nada.
+  // Las fases del Plan Maestro (Adán, 3-oct-2026: "sé muy claro en las fechas… mejora
+  // el diseño de donde me muestras todas las fases"). Arriba, la ruta: una estación por fase con sus
+  // fechas, lo que dura y cómo va. Debajo, la fase elegida: cuándo empieza y termina en grande, la
+  // barra de días, la meta numerada, por qué, tu dinero (con tus rutinas y dónde recortar), lo que
+  // se deja, el checkpoint y las tareas mes por mes, cada mes con sus días. Se abre desde la banda
+  // de fase del Plan Maestro y desde el módulo Fase de Mi Día, en la fase en curso (o la siguiente,
+  // o la última si el plan ya cerró); kpiFaseTab() alterna el resto sin volver a pintar.
   if(id==='fases'){
     const hoy=new Date(); hoy.setHours(0,0,0,0);
     const checks=rawGet('coach_checks_v1',{});
-    const dF=d=>d.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
+    const MC=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    const dC=d=>d.getDate()+' '+MC[d.getMonth()]+' '+d.getFullYear();
+    const dL=d=>d.toLocaleDateString('es-MX',FECHA_LARGA);
+    const dias=(a,b)=>Math.round((b-a)/86400000);
+    const meses=f=>Math.round(dias(f.start,f.end)/30.44);
+    const est=f=>hoy>f.end?'hecha':hoy>=f.start?'curso':'despues';
+    const falta=f=>{ const m=Math.round(dias(hoy,f.start)/30.44);
+      return m<1?'empieza en '+dias(hoy,f.start)+' días':'empieza en '+m+(m===1?' mes':' meses'); };
     let activaIdx=PHASES.findIndex(f=>hoy>=f.start&&hoy<=f.end);
     if(activaIdx<0) activaIdx=PHASES.findIndex(f=>hoy<f.start);
     if(activaIdx<0) activaIdx=PHASES.length-1;
-    const tabs=[], paneles=[];
-    PHASES.forEach(function(f,i){
-      const activa=hoy>=f.start&&hoy<=f.end, pasada=hoy>f.end;
-      const total=Math.max(1,(f.end-f.start)/86400000), van=Math.min(total,Math.max(0,(hoy-f.start)/86400000));
-      const pct=Math.round(van/total*100);
-      const color=activa?C:pasada?'var(--text3)':P;
-      const estado=activa?'EN CURSO · '+pct+'% · quedan '+Math.max(0,Math.round(total-van))+' días':pasada?'CERRADA':'DESPUÉS';
-      const meses={};
-      (f.semanas||[]).forEach(function(s){ const k=s.mes||'Durante toda la fase'; (meses[k]=meses[k]||[]).push(s); });
-      const lista=Object.keys(meses).map(function(k){
-        const label=/^\d{4}-\d{2}$/.test(k)?MES_LABEL_FULL[+k.slice(5,7)-1]+' '+k.slice(0,4):k;
-        const items=meses[k], hechas=items.filter(s=>checks[s.id]).length;
-        return '<div class="kpi-linea-top" style="margin-top:8px"><span class="kpi-linea-nom">📅 '+label+'</span>'+
-               '<span class="kpi-linea-val" style="font-size:11px;color:var(--text3)">'+hechas+' / '+items.length+'</span></div>'+
-          items.map(function(s){ const ok=!!checks[s.id];
-            return '<div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.45;padding:4px 0;'+
-                   (ok?'color:var(--text3);text-decoration:line-through':'color:var(--text2)')+'">'+
-                   '<span style="flex:none">'+(ok?'✅':'▢')+'</span><span>'+s.txt+'</span></div>'; }).join('');
+    const mesHoy=hoy.getFullYear()+'-'+String(hoy.getMonth()+1).padStart(2,'0');
+    const ruta='<div class="fz-ruta" role="tablist">'+PHASES.map(function(f,i){
+      const e=est(f);
+      return '<button type="button" class="fz-est '+e+(i===activaIdx?' is-activa':'')+'" data-fase="'+i+'" onclick="kpiFaseTab('+i+')" style="--fc:'+CAL_FASE_COLOR[i]+'">'+
+        '<span class="fz-est-n">'+f.tag+(e==='curso'?' <em class="fz-chip">HOY</em>':'')+'</span>'+
+        '<span class="fz-est-t">'+esc(f.title)+'</span>'+
+        '<span class="fz-est-f">'+dC(f.start)+' → '+dC(f.end)+'</span>'+
+        '<span class="fz-est-e">'+meses(f)+' meses · '+(e==='hecha'?'✓ cerrada':e==='curso'?'quedan '+dias(hoy,f.end)+' días':falta(f))+'</span></button>';
+    }).join('')+'</div>';
+    const paneles=PHASES.map(function(f,i){
+      const e=est(f), sem=f.semanas||[];
+      const total=dias(f.start,f.end)+1, van=Math.min(total,Math.max(0,dias(f.start,hoy)+1));
+      const pct=e==='hecha'?100:e==='curso'?Math.round(van/total*100):0;
+      const hechasT=sem.filter(s=>checks[s.id]).length;
+      // Las tareas, mes por mes, cada mes con sus días y el de hoy marcado.
+      const grupos={}, orden=[];
+      sem.forEach(function(s){ const k=s.mes||'cont'; if(!grupos[k]){ grupos[k]=[]; orden.push(k); } grupos[k].push(s); });
+      orden.sort((a,b)=>a==='cont'?1:b==='cont'?-1:a.localeCompare(b));
+      const tareas=orden.map(function(k){
+        const items=grupos[k], hechas=items.filter(s=>checks[s.id]).length;
+        let tit, sub;
+        if(k==='cont'){ tit='Durante toda la fase'; sub=dC(f.start)+' → '+dC(f.end); }
+        else { const y=+k.slice(0,4), m=+k.slice(5,7); tit=MES_LABEL_FULL[m-1]+' '+y; sub='del 1 al '+new Date(y,m,0).getDate()+' de '+MES_LABEL_FULL[m-1].toLowerCase(); }
+        return '<div class="fz-mes'+(k===mesHoy?' hoy':'')+'"><div class="fz-mes-h"><span class="fz-mes-t">'+tit+
+          (k===mesHoy?' <em class="fz-chip">ESTE MES</em>':'')+'</span><span class="fz-mes-s">'+sub+' · '+hechas+' de '+items.length+'</span></div>'+
+          items.map(s=>{ const ok=!!checks[s.id];
+            return '<div class="fz-tarea'+(ok?' ok':'')+'"><span style="flex:none">'+(ok?'✅':'▢')+'</span><span>'+s.txt+'</span></div>'; }).join('')+'</div>';
       }).join('');
-      const totalT=(f.semanas||[]).length, hechasT=(f.semanas||[]).filter(s=>checks[s.id]).length;
-      const chip=activa?'● EN CURSO':pasada?'✅ CERRADA':'DESPUÉS';
-      tabs.push('<button class="fases-tabbtn'+(i===activaIdx?' is-activa':'')+'" data-fase="'+i+'" onclick="kpiFaseTab('+i+')" style="--fc:'+color+'">'+
-        '<span class="fases-tabbtn-n">'+f.tag+'</span><span class="fases-tabbtn-e">'+chip+'</span></button>');
-      paneles.push('<div class="fases-panel'+(i===activaIdx?' is-activa':'')+'" data-fase="'+i+'">'+
-        '<div class="kpi-linea-nota">'+dF(f.start)+' → '+dF(f.end)+' · '+hechasT+' / '+totalT+' tareas hechas</div>'+
-        '<div class="kpi-cifra" style="font-size:19px;line-height:1.3;color:'+color+'">'+esc(f.title)+'</div>'+
-        '<div class="kpi-cifra-sub" style="color:'+color+';font-weight:700">'+estado+'</div>'+
-        (activa?'<div class="gbm-bar" style="margin:6px 0 10px"><div class="gbm-bar-f" style="width:'+pct+'%;background:'+color+'"></div></div>':'')+
-        '<div class="fases-cols"><div>'+kpiPaso('🎯 Meta de la fase', f.meta||'', color)+
-        kpiNota(f.explica||'')+
-        (typeof f.liquido==='number'?kpiNota('📈 Al cierre ('+dF(f.end)+') la trayectoria espera <b>≈ '+(f.liquido<0?'−':'+')+money(Math.abs(f.liquido))+'</b> de patrimonio líquido — hipótesis, no promesa.'):'')+faseAhorroHTML(f)+
-        (f.deja?kpiPaso('🚫 Lo que se deja de hacer', f.deja, '#94a3b8'):'')+
-        (f.checkpoint?kpiPaso('🚩 Checkpoint', f.checkpoint, '#e0b020'):'')+
-        '</div><div>'+kpiSec('🗓️ Checklist de la fase')+
-        '<div class="kpi-desglose">'+lista+'</div></div></div></div>');
-    });
-    const html='<div class="fases-tabs"><div class="fases-tabnav" role="tablist">'+tabs.join('')+'</div>'+
-      '<div class="fases-panels">'+paneles.join('')+'</div></div>';
-    return {titulo:'🪙 Las '+PHASES.length+' fases del Plan Maestro', sub:'De aquí a $1,000,000 el '+finDelPlan().toLocaleDateString('es-MX',FECHA_LARGA)+': qué toca en cada tramo, por qué, y lo que ya marcaste en Coach.',
-      html:html+kpiNota('Las casillas se marcan en <b>Coach → Plan Maestro</b> (o desde el calendario de aquí): es la misma lista, `coach_checks_v1`.')};
+      return '<div class="fases-panel'+(i===activaIdx?' is-activa':'')+'" data-fase="'+i+'" style="--fc:'+CAL_FASE_COLOR[i]+'">'+
+        '<div class="fz-cab"><div class="fz-cab-izq"><span class="fz-cab-n">'+f.tag.toUpperCase()+' · '+(e==='hecha'?'CERRADA':e==='curso'?'EN CURSO':'TODAVÍA NO EMPIEZA')+'</span>'+
+          '<span class="fz-cab-t">'+esc(f.title)+'</span></div>'+
+          '<div class="fz-fechas"><div><span>Empieza</span><b>'+dL(f.start)+'</b></div><div><span>Termina</span><b>'+dL(f.end)+'</b></div>'+
+          '<div><span>Dura</span><b>'+meses(f)+' meses</b></div></div></div>'+
+        '<div class="fz-barra"><i style="width:'+pct+'%"></i></div>'+
+        '<div class="fz-barra-t">'+(e==='curso'?'Vas en el día <b>'+van+'</b> de '+total+' · quedan <b>'+dias(hoy,f.end)+' días</b>'
+          :e==='hecha'?'Cerró el '+dL(f.end):'Empieza el '+dL(f.start)+' · '+falta(f))+' · '+hechasT+' de '+sem.length+' tareas hechas</div>'+
+        '<div class="fases-cols"><div>'+
+          kpiSec('🎯 Lo que '+(e==='hecha'?'tenía':'tiene')+' que estar listo el '+dC(f.end))+faseMetaHTML(f.meta)+
+          (f.explica?kpiSec('💡 Por qué esta fase')+'<p class="fz-p">'+f.explica+'</p>':'')+
+          faseAhorroHTML(f)+
+          (typeof f.liquido==='number'?kpiNota('📈 Al cierre ('+dC(f.end)+') la trayectoria espera <b>≈ '+(f.liquido<0?'−':'+')+money(Math.abs(f.liquido))+'</b> de patrimonio líquido — hipótesis, no promesa.'):'')+
+          (f.deja?kpiPaso('🚫 Lo que dejas de hacer', f.deja, '#94a3b8'):'')+
+          (f.checkpoint?kpiPaso('🚩 Checkpoint', f.checkpoint, '#e0b020'):'')+
+        '</div><div>'+kpiSec('🗓️ Las tareas, mes por mes')+tareas+'</div></div></div>';
+    }).join('');
+    return {titulo:'🪙 Las '+PHASES.length+' fases del Plan Maestro', sub:'Del '+dL(PHASES[0].start)+' al '+dL(finDelPlan())+', la fecha del millón: qué toca en cada tramo y cuándo.',
+      html:'<div class="fases-tabs">'+ruta+'<div class="fases-panels">'+paneles+'</div></div>'+
+        kpiNota('Las casillas se marcan en <b>Coach → Plan Maestro</b> (o desde el calendario de aquí): es la misma lista, `coach_checks_v1`.')};
   }
 
   if(id==='meta2030'){

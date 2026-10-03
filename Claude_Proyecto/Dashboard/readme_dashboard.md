@@ -703,19 +703,28 @@ arriba a lo ancho (`.kpi-hero`, cifra hasta 58 px) y cada sección con lo que le
 una columna, y bajo 1024 px todo a una). Medido en 1600×1000: el fondo ocupa 449 px de alto, el
 patrimonio 842; sin desbordes en ninguno de los ocho.
 
-**Las fases son la excepción**, con subtabs en vez de las 2 columnas de `.kpi-cols` (Adán,
-21-sep-2026: *"se ve muy amontonado, mejoralo haciendo subtabs para cada fase y explicandolo muy
-bien"*): cada fase vive en su propio `.fases-panel` y solo una se ve a la vez. `.fases-tabs` es un
-solo hijo de `#kpiBody`, así que `kpiAcomodar()` lo mete en un único `.kpi-grupo` a ancho completo
-en vez de partirlo. Los botones (`.fases-tabbtn`, `kpiFaseTab(i)`) llevan el tag y el estado
-(`● EN CURSO` / `✅ CERRADA` / `DESPUÉS`) en el color de la fase. Cada panel abre con fechas, tareas
-hechas, título y estado, y debajo **dos columnas** (`.fases-cols`, una sola bajo 1024 px): a la
-izquierda la meta, la explicación, el patrimonio que espera la trayectoria (`liquido`), **lo que se
-deja de hacer** (`deja`) y el **checkpoint**; a la derecha el checklist por mes. Abre en la fase en
-curso (o la siguiente sin empezar, o la última si el plan ya cerró). El título cuenta las fases y la
-fecha del millón sale de `finDelPlan()`, el cierre de la última. Medido en 1600×1000 con la tarjeta
-a su tope de 940 px: la Fase 0 cabe (898 px) y las demás desplazan dentro de `#kpiBody` (1,343 /
-1,458 / 1,116 / 874 px de contenido en 862 visibles, Fases 1 a 4).
+**Las fases son la excepción**: en vez de las 2 columnas de `.kpi-cols`, una **ruta** y un panel por
+fase (Adán, 3-oct-2026: *"sé muy claro en las fechas… mejora el diseño
+de donde me muestras todas las fases"*). `.fases-tabs` es un solo hijo de `#kpiBody`, así que
+`kpiAcomodar()` lo mete en un único `.kpi-grupo` a ancho completo.
+
+- **La ruta** (`.fz-ruta`): una estación por fase (`.fz-est`), con el color de la fase en el
+  calendario (`CAL_FASE_COLOR`), el título, el rango de fechas (`1 oct 2026 → 31 mar 2027`), lo que
+  dura y cómo va: *✓ cerrada*, *quedan 179 días* (con el chip HOY) o *empieza en 6 meses*. Bajo
+  1180 px se desplaza de lado y `kpiFaseVer()` la lleva a la fase elegida. `kpiFaseTab(i)` cambia de
+  fase sin volver a pintar.
+- **La cabecera de la fase** (`.fz-cab`): el título y tres casillas —Empieza, Termina y Dura— con las
+  fechas escritas completas, la barra de días y *vas en el día 3 de 182 · quedan 179 días · 0 de 15
+  tareas hechas*.
+- **Debajo, dos columnas** (`.fases-cols`, una sola bajo 1024 px): a la izquierda lo que tiene que
+  estar listo en su fecha —la meta numerada (`faseMetaHTML`)—, por qué, el dinero de la fase
+  (`faseAhorroHTML`, con tus rutinas producto por producto y dónde recortar en verde,
+  `faseRutinasHTML`), el patrimonio que espera la trayectoria (`liquido`), lo que se deja y el
+  checkpoint; a la derecha las tareas mes por mes, cada mes con sus días (*del 1 al 31 de octubre*) y
+  el de hoy marcado.
+
+Abre en la fase en curso (o la siguiente sin empezar, o la última si el plan ya cerró). El subtítulo
+va del arranque del plan a la fecha del millón (`finDelPlan()`).
 
 **Patrimonio hacia $1M** es todo lo suyo menos las deudas (`patrimonioNeto()`, que delega en `CIFRAS.patrimonio()` —la misma fórmula de Coach—: inversiones, fondo,
 Bitcoin a precio de hoy, efectivo y cuenta, y los bienes), la misma cifra que el Patrimonio Neto de

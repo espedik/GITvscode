@@ -215,6 +215,7 @@ pero el nombre de la variable se queda corto.
 | `{{gastoPersonalDepa}}` | $8,018 — lo que queda del sueldo con depa tras los fijos, la comida y el ahorro: su gasto personal, tarjeta incluida, con sus rutinas dentro | derivada |
 | `{{gastoPersonalCasa}}` | $7,171 — lo mismo en casa | derivada |
 | `{{cuidadoMes}}` | $4,801 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
+| `{{recorteRutinas}}` | $2,003 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $1,340 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
 | `{{alemaniaMarzo}}` | $144,440 — lo que la proyección espera en la cuenta de Alemania al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
 | `{{marzoParaJunio}}` | $171,878 — lo que tiene que haber al cerrar la Fase 1 para que junio alcance con el ahorro de abril a junio | derivada |
 | `{{alemaniaJunio}}` | $222,546 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
@@ -265,6 +266,14 @@ finiquito: no entran.
 Para cambiar un supuesto (el tope de lo demás, la comida de la lista, lo que cuesta la vida allá, el Werkstudent,
 la renta del auto) se edita `SUPUESTOS`; para un costo, `SALIDA.costos`; para lo que se manda cada
 quincena, `PROYECTO.ahorroDia…`. Las fases, los marcadores y Coach se recalculan solos.
+
+**Dónde recortar.** Un producto de piel, cabello o suplementos puede llevar un `recorte`: **una**
+recomendación concreta, nunca un menú (Adán, 2026-08-18: *"no me des alternativas, porque si no al
+final no compraré nada"*), con su precio y envase (`contenido` o `envase`, con fuente y fecha) o
+`quitar: true`, y `medico: true` cuando el cambio lo decide su dermatólogo. `rutinasDesglose()`
+calcula cada producto al mes con la fórmula de su rutina y lo que costaría el recorte con la misma
+dosis; Coach (en cada fase en México) y la ventana de fases del Dashboard lo pintan debajo de la
+tabla, en verde. Lo que recorte va a la cuenta de Alemania.
 
 ### Estudios de alemán · constantes
 

@@ -784,6 +784,34 @@ window.CIFRAS = (function () {
   // Lo que cuestan al mes sus rutinas de piel, cabello y suplementos: el mismo número que pintan
   // esas pantallas, leído de sus estructuras.
   function cuidadoMes() { return RUTINA_PIEL.costoMesTotal + RUTINA_PELO.costoMesTotal + SUPLEMENTOS.costoMesTotal; }
+  /* Las rutinas producto por producto, con lo que cuesta cada uno al mes, y dónde recortar: el
+     `recorte` de un producto es UNA recomendación concreta, nunca un menú (Adán, 2026-08-18: "no me
+     des alternativas, porque si no al final no compraré nada"), con lo que costaría al mes con la
+     misma dosis —la fórmula de su rutina, cambiando precio y envase— y lo que ahorra. `medico`: lo
+     decide su dermatólogo (prompt de Cabello). Lo que se ahorra va a la cuenta de Alemania. */
+  function rutinasDesglose() {
+    const grupos = [['Piel', RUTINA_PIEL, RUTINA_PIEL.productos.filter(function (p) { return !p.opcional; })],
+                    ['Cabello', RUTINA_PELO, RUTINA_PELO.productos],
+                    ['Suplementos', SUPLEMENTOS, SUPLEMENTOS.lista]];
+    let total = 0, ahorro = 0, medico = 0;
+    const out = grupos.map(function (g) {
+      const R = g[1];
+      const items = g[2].map(function (p) {
+        const mes = R.costoMes(p);
+        let rec = null;
+        if (p.recorte) {
+          const r = p.recorte, nuevo = r.quitar ? 0 : R.costoMes(Object.assign({}, p, r));
+          rec = { n: r.n || '', quitar: !!r.quitar, medico: !!r.medico, txt: r.txt, fuente: r.fuente, mes: nuevo, ahorro: mes - nuevo };
+          ahorro += mes - nuevo;
+          if (r.medico) medico += mes - nuevo;
+        }
+        total += mes;
+        return { id: p.id, n: p.n, mes: mes, recorte: rec };
+      }).filter(function (x) { return x.mes > 0 || x.recorte; });
+      return { grupo: g[0], total: items.reduce(function (a, x) { return a + x.mes; }, 0), items: items };
+    });
+    return { grupos: out, total: total, ahorro: ahorro, medico: medico };
+  }
   // El mes tipo de cada etapa: con depa (su último mes) y en casa de su familia (el primero).
   function mesTipo(casa, s) {
     return desgloseMes(casa ? PROYECTO.enCasaDesde : PROYECTO.rentaHasta, s, { promedio: true });
@@ -1170,6 +1198,7 @@ window.CIFRAS = (function () {
 
       { id:'spf', cat:'Protector solar', n:'La Roche-Posay Anthelios Oil Free SPF50',
         contenido:50, unidad:'ml', dosisDia:1.25, precio:520, tono:'am',
+        recorte:{ n:'Neutrogena Ultra Sheer FPS 50+ (88 ml)', precio:295, contenido:88, fuente:'Amazon MX, oct 2026', txt:'El mismo FPS 50 de amplio espectro, con acabado seco. El protector no se deja: se cambia de marca.' },
         ayuda:['manchas','arrugas'], clave:true,
         frasco:'tubo', marca:{a:'#ffffff', b:'#0f5fa6'},
         ficha:{
@@ -1201,6 +1230,7 @@ window.CIFRAS = (function () {
 
       { id:'hidratantePM', cat:'Hidratante', n:'Eucerin Hyaluron-Filler + Epigenetic Noche',
         contenido:50, unidad:'ml', dosisDia:0.5, precio:700, tono:'pm',
+        recorte:{ n:'CeraVe Loción Hidratante PM (52 ml)', precio:300, contenido:52, fuente:'Amazon MX, oct 2026', txt:'Ceramidas y niacinamida para reparar la barrera, que es lo que pide el adapaleno de cada noche.' },
         ayuda:['arrugas','sensibilidad'],
         frasco:'tarro', marca:{a:'#f6f7f9', b:'#12305e'},
         ficha:{
@@ -1300,6 +1330,7 @@ window.CIFRAS = (function () {
           ojo:'El d\u00eda que lo dejes, en 3-4 meses vuelves al punto de partida. No es un tratamiento con final: mientras lo quieras conservar, va todos los d\u00edas.'
         },
         contenido:60, unidad:'ml', porUso:1, vecesDia:2, dias:[0,1,2,3,4,5,6], precio:900,
+        recorte:{ n:'Kirkland Minoxidil 5% (6 frascos de 60 ml)', precio:2499, contenido:360, medico:true, fuente:'Sears MX, oct 2026', txt:'La que usabas antes. La NR-11 es más concentrada: cámbiala solo si tu dermatólogo ve que el resultado se sostiene.' },
         tono:'am', clave:true, momento:'seco',
         uso:'<b>1 ml con el gotero</b>, repartido con los dedos <b>directo en el cuero cabelludo</b> seco — no en el pelo. Masajea 30 segundos y lávate las manos. Es <b>loción, no espuma</b>: sí lleva propilenglicol, así que si te pica o te reseca, baja a una dosis al día antes de abandonarlo.' },
 
@@ -1314,6 +1345,7 @@ window.CIFRAS = (function () {
           ojo:'Es un tratamiento de a\u00f1os, no de meses. Dejarlo un trimestre y retomar no reanuda donde ibas: lo que el fol\u00edculo pierde en la pausa no se recupera despu\u00e9s. Lo m\u00e9dico \u2014receta, PSA, efectos\u2014 est\u00e1 abajo, en Antes de empezar.'
         },
         contenido:30, unidad:'cáps', porUso:1, vecesDia:1, dias:[0,1,2,3,4,5,6], precio:1560,
+        recorte:{ n:'Zivata (dutasterida 0.5 mg, genérico)', precio:703, contenido:30, medico:true, fuente:'Benavides, oct 2026', txt:'La misma molécula y la misma dosis. El cambio lo autoriza tu dermatólogo.' },
         tono:'warn', clave:true, momento:'oral', receta:true,
         uso:'<b>Una cápsula al día</b>, con o sin comida, siempre a la misma hora. Actúa <b>por dentro</b> bloqueando la DHT, que es la hormona que encoge el folículo: no sustituye al minoxidil \u2014 uno frena la caída y el otro empuja el crecimiento. Tarda <b>3 a 6 meses</b> en verse, igual que el minoxidil.',
         aviso:'Es <b>medicamento de receta</b> y para la caída se usa fuera de indicación. Dos cosas que tienes que saber: <b>parte tu PSA a la mitad</b> \u2014 mídelo y dile a quien lo interprete que la tomas \u2014 y si aparecen efectos sexuales o bulto/dolor en el pecho, es motivo de consulta, no de aguantarse. Llévala con un médico, no en solitario.' },
@@ -1521,6 +1553,7 @@ window.CIFRAS = (function () {
           tarda:'No se siente nada, y as\u00ed debe ser. Su trabajo es que no pase nada.'
         },
         envase:90, unidad:'tabletas', porDia:1, precio:350, tono:'teal',
+        recorte:{ quitar:true, fuente:'USPSTF, 2022', txt:'La USPSTF no encontró evidencia suficiente de que un multivitamínico prevenga enfermedad en adultos sanos; la vitamina D y el magnesio ya los tomas aparte.' },
         porQue:'Cubre huecos de micronutrientes los días en que la dieta no es perfecta.',
         ojo:'No sustituye comer variado — es un seguro, no la base de la nutrición.' },
 
@@ -1547,6 +1580,7 @@ window.CIFRAS = (function () {
           tarda:'El m\u00fasculo se satura en 3-4 semanas tom\u00e1ndola a diario. El primer par de kilos que subas es agua dentro del m\u00fasculo, no grasa.'
         },
         envase:300, unidad:'g', porDia:5, precio:400, tono:'am', clave:true,
+        recorte:{ n:'Creatina monohidratada B Life, bolsa de 1 kg', precio:717, envase:1000, fuente:'Amazon MX, oct 2026', txt:'La creatina monohidratada es la misma en cualquier marca seria: el ahorro está en el tamaño.' },
         porQue:'El suplemento con más evidencia para fuerza y ganancia de masa muscular.',
         ojo:'No necesita fase de carga, y va <b>todos los días</b>: el efecto es por acumulación. Sube la creatinina en sangre <b>sin daño renal</b> — avisa antes de un perfil renal.' },
 
@@ -1559,6 +1593,7 @@ window.CIFRAS = (function () {
           tarda:'El sue\u00f1o suele mejorar en la primera semana. Los calambres tardan algo m\u00e1s.'
         },
         envase:120, unidad:'cápsulas', porDia:2, precio:400, tono:'pm',
+        recorte:{ n:'Bisglicinato de magnesio B Life (180 cápsulas)', precio:399, envase:180, fuente:'Amazon MX, oct 2026', txt:'La misma forma, glicinato, en un envase más grande.' },
         porQue:'Mejora la calidad del sueño y reduce calambres — complementa lo de Postura y Salud Mental.',
         ojo:'Va de noche por una razón: tomarlo por la mañana desperdicia la mitad de para lo que lo compraste. El glicinato es el mejor tolerado; evita el óxido si tienes estómago sensible.' },
 
@@ -3718,6 +3753,8 @@ window.CIFRAS = (function () {
     // Lo que queda del sueldo después de los fijos, la comida y el ahorro: el gasto personal, con
     // sus rutinas dentro. Las rutinas solas son `cuidadoMes`.
     cuidadoMes:      { v: () => cuidadoMes() },
+    // Lo que se ahorraría al mes con todos los recortes de las rutinas (el detalle, en Coach).
+    recorteRutinas:  { v: () => rutinasDesglose().ahorro },
     gastoPersonalDepa: { dep: ['sueldoQuinc','renta','servicios','suscripciones','cetesDia15','ahorroDia15'],
                          v: () => { const t = mesTipo(false); return t.g.cuidado + t.g.personal; } },
     gastoPersonalCasa: { dep: ['sueldoQuinc','celular','suscripciones','aporteCasa','cetesDia15','ahorroDia1Casa','ahorroDia15Casa'],
@@ -4151,7 +4188,7 @@ window.CIFRAS = (function () {
     PROYECCION: PROYECCION,
     proyectar: proyectar,
     cortesSalida: cortesSalida, desgloseMes: desgloseMes, mesTipo: mesTipo,
-    didiAlAhorro: didiAlAhorro, GRUPOS_SUELDO: GRUPOS_SUELDO,
+    didiAlAhorro: didiAlAhorro, GRUPOS_SUELDO: GRUPOS_SUELDO, rutinasDesglose: rutinasDesglose,
     costoSalida: costoSalida,
     APRENDIZAJE: APRENDIZAJE,
     LISTA_COMPRAS: LISTA_COMPRAS,

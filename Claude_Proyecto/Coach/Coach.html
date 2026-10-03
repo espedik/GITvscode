@@ -686,6 +686,26 @@
     .fase-ahorro summary::-webkit-details-marker { display: none; }
     .fase-ahorro summary::before { content: '▸ '; }
     .fase-ahorro[open] summary::before { content: '▾ '; }
+    /* Las fechas de cada fase, en grande (Adán, 3-oct-2026: "sé muy claro en las fechas"). */
+    .fase-meta-ol { margin: 6px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+    .fase-fechas { display: flex; flex-wrap: wrap; gap: 8px; margin: 2px 0 12px; }
+    .fase-fechas > span { display: flex; flex-direction: column; gap: 2px; padding: 7px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface-2); }
+    .fase-fechas small { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+    .fase-fechas b { font-size: 13.5px; }
+    .fase-fechas .fase-fechas-e { justify-content: center; font-size: 12px; font-weight: 700; color: var(--accent); background: var(--accent-soft); border-color: transparent; }
+    /* Las rutinas producto por producto y dónde recortar (CIFRAS.rutinasDesglose). */
+    .fa-rutinas { margin-top: 12px; }
+    .fa-rutinas summary { cursor: pointer; list-style: none; font-size: 12.5px; font-weight: 700; color: var(--text); padding: 6px 0; }
+    .fa-rutinas summary::-webkit-details-marker { display: none; }
+    .fa-rutinas summary::before { content: '▸ '; }
+    .fa-rutinas[open] summary::before { content: '▾ '; }
+    .pr-tabla tr.fa-grupo td { font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); padding-top: 12px; }
+    .fa-recorte { margin: 10px 0 4px; padding: 12px 14px; border-radius: var(--radius-sm); background: rgba(26,122,76,.07); border: 1px solid rgba(26,122,76,.3); border-left: 4px solid var(--green); }
+    .fa-recorte-t { font-size: 13px; font-weight: 800; color: var(--green); margin-bottom: 7px; }
+    .fa-recorte ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 7px; font-size: 12.5px; line-height: 1.55; }
+    .fa-recorte .med { color: var(--gold); font-weight: 700; }
+    .fa-recorte .fte { color: var(--muted); font-size: 11px; }
+    .fa-recorte p { margin: 9px 0 0; font-size: 12.5px; line-height: 1.55; }
     .pr-escenarios { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-top: 14px; }
     @media (max-width: 900px) { .pr-escenarios { grid-template-columns: minmax(0, 1fr); } }
     .pr-esc { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12px; line-height: 1.5; background: var(--surface-2); }
@@ -4238,12 +4258,25 @@
     const MESL = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
     const dCorta = d => d.getDate() + ' ' + MES3[d.getMonth()].toLowerCase() + ' ' + d.getFullYear();
     const yy = d => String(d.getFullYear()).slice(2);
-    const rango = f => f.start.getFullYear() === f.end.getFullYear()
-      ? MES3[f.start.getMonth()] + '–' + MES3[f.end.getMonth()] + ' ' + yy(f.end)
-      : MES3[f.start.getMonth()] + ' ' + yy(f.start) + '–' + MES3[f.end.getMonth()] + ' ' + yy(f.end);
+    const rango = f => MES3[f.start.getMonth()].toLowerCase() + ' ' + f.start.getFullYear() + ' – ' + MES3[f.end.getMonth()].toLowerCase() + ' ' + f.end.getFullYear();
     const meses = f => Math.round((f.end - f.start) / msDia / 30.44);
     const mx = n => (n < 0 ? '−' : '') + '$' + Math.round(Math.abs(n)).toLocaleString('es-MX');
     const estado = f => hoyPM > f.end ? 'done' : hoyPM >= f.start ? 'active' : 'pending';
+    const dLarga = d => d.getDate() + ' de ' + MESL[d.getMonth()].toLowerCase() + ' de ' + d.getFullYear();
+    // La meta numerada se lee mejor como lista: "Al 31 mar 2027: <b>1)</b> … <b>2)</b> …".
+    const metaLista = f => {
+      const partes = String(f.meta || '').split(/<b>\d+\)<\/b>\s*/);
+      if (partes.length < 3) return f.meta || '';
+      return '<strong>Lo que tiene que estar listo el ' + dLarga(f.end) + ':</strong><ol class="fase-meta-ol">' +
+        partes.slice(1).map(x => '<li>' + x.replace(/[;.\s]+$/, '') + '</li>').join('') + '</ol>';
+    };
+    const cuantoFalta = f => {
+      const e = estado(f);
+      if (e === 'done') return '✓ Cerrada';
+      if (e === 'active') return 'En curso · quedan ' + Math.round((f.end - hoyPM) / msDia) + ' días';
+      const m = Math.round((f.start - hoyPM) / msDia / 30.44);
+      return 'Empieza en ' + m + (m === 1 ? ' mes' : ' meses');
+    };
     const ym = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
 
     // El ahorro de la fase, renglón por renglón (CIFRAS.mesTipo y la PROYECCION): un mes de cada
@@ -4284,10 +4317,25 @@
             '<td class="pr-n ' + (m.ahorro < 0 ? 'text-red' : 'text-green') + '">' + mx(m.ahorro) + '</td>' +
             '<td class="pr-n"><strong>' + mx(m.alemania) + '</strong></td><td class="pr-nota">' + nota + '</td></tr>';
         }).join('') + '</tbody></table></div>';
+      // Tus rutinas producto por producto y, debajo y en verde, dónde recortar: una recomendación por
+      // producto con lo que costaría al mes con la misma dosis (CIFRAS.rutinasDesglose).
+      const RD = C.rutinasDesglose ? C.rutinasDesglose() : null;
+      const recortes = RD ? [].concat.apply([], RD.grupos.map(g => g.items.filter(x => x.recorte))).sort((a, b) => b.recorte.ahorro - a.recorte.ahorro) : [];
+      const rutinas = !RD ? '' : '<details class="fa-rutinas"' + (estado(f) === 'active' ? ' open' : '') + '><summary>🧴 Tus rutinas, producto por producto: ' + mx(RD.total) + ' al mes</summary>' +
+        '<div class="pr-wrap"><table class="pr-tabla fa-tabla"><thead><tr><th>Producto</th><th class="pr-n">Al mes</th></tr></thead><tbody>' +
+        RD.grupos.map(g => '<tr class="fa-grupo"><td>' + g.grupo + '</td><td class="pr-n">' + mx(g.total) + '</td></tr>' +
+          g.items.map(x => '<tr><td>' + x.n + '</td><td class="pr-n">' + mx(x.mes) + '</td></tr>').join('')).join('') +
+        '<tr class="fa-tot"><td>Total de tus rutinas</td><td class="pr-n">' + mx(RD.total) + '</td></tr></tbody></table></div>' +
+        '<div class="fa-recorte"><div class="fa-recorte-t">✂️ Dónde puedes recortar: hasta ' + mx(RD.ahorro) + ' al mes más para Alemania</div><ul>' +
+        recortes.map(x => '<li><b>' + (x.recorte.quitar ? 'Quita el ' + x.n.toLowerCase() : x.n + ' → ' + x.recorte.n) + '</b>: ' + mx(x.mes) + ' → ' + mx(x.recorte.mes) +
+          ' al mes, <b>ahorras ' + mx(x.recorte.ahorro) + '</b>. ' + (x.recorte.medico ? '<span class="med">Con tu dermatólogo.</span> ' : '') + x.recorte.txt +
+          ' <span class="fte">(' + x.recorte.fuente + ')</span></li>').join('') +
+        '</ul><p>Sin tocar tus tratamientos ahorras <b>' + mx(RD.ahorro - RD.medico) + '</b> al mes desde ya; los otros ' + mx(RD.medico) +
+        ' los decide tu dermatólogo. Lo que recortes, súmalo a lo que mandas el 15 a la cuenta de Alemania.</p></div></details>';
       return '<details class="fase-ahorro"' + (estado(f) === 'active' ? ' open' : '') + '><summary>💰 Tu ahorro en esta fase, renglón por renglón</summary>' +
         '<p class="fs-13 text-muted" style="line-height:1.6;margin:6px 0 8px;">Un mes de cada etapa: lo que entra, lo que sale y lo que llega a la cuenta de Alemania. ' +
         'Tus rutinas salen de lo que cuestan tus productos de piel, cabello y suplementos; lo demás es lo que queda después de mandar el ahorro, y el tablero del Plan Maestro te dice cuánto te toca por día. Debajo, la cuenta mes a mes.</p>' +
-        tipo + meses + '</details>';
+        tipo + rutinas + meses + '</details>';
     };
     const ultima = F[F.length - 1];
 
@@ -4317,10 +4365,12 @@
       const cuerpo = est === 'active' ? lista
         : '<details class="fase-collapse"><summary>Ver el desglose completo (' + sem.length + ' tareas) — ' + cuando + '</summary>' + explica + ahorroFase(f) + lista + '</details>';
       return '<div class="fase-item" id="fase' + i + '">' +
-        '<span class="fase-tag">' + f.tag + ' · ' + dCorta(f.start) + ' – ' + dCorta(f.end) + ' (' + meses(f) + ' meses)</span>' +
+        '<span class="fase-tag">' + f.tag + '</span>' +
         '<span class="fase-status" id="faseStatus' + i + '">—</span>' +
         '<h4>' + f.title + '</h4>' +
-        '<div class="fase-meta"><span>🎯</span><span>' + (f.meta || '') + '</span></div>' +
+        '<div class="fase-fechas"><span><small>Empieza</small><b>' + dLarga(f.start) + '</b></span><span><small>Termina</small><b>' + dLarga(f.end) + '</b></span>' +
+          '<span><small>Dura</small><b>' + meses(f) + ' meses</b></span><span class="fase-fechas-e">' + cuantoFalta(f) + '</span></div>' +
+        '<div class="fase-meta"><span>🎯</span><span>' + metaLista(f) + '</span></div>' +
         (est === 'active' ? explica : '') +
         (typeof f.liquido === 'number' ? '<p class="fs-13 text-muted" style="margin:-4px 0 10px;">📈 Al cierre (' + dCorta(f.end) +
           ') la trayectoria espera <strong>≈ ' + (f.liquido > 0 ? '+' : '') + mx(f.liquido) + '</strong> de patrimonio líquido — hipótesis, no promesa.</p>' : '') +
