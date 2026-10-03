@@ -218,16 +218,6 @@ derivadas que antes se calculaban a mano y se quedaban congeladas: `{{autoIntere
 **Esta app no tenía migraciones** y por eso podía mostrar saldos viejos si era la primera pantalla
 del día. Ahora las hereda del módulo, que corre antes que su JS.
 
-### Pendiente: la simulación mes a mes
-
-La cascada de "cuándo te quedas sin deuda cara" (`$0 en mar 2027`, `~$22,500 restantes en oct`) se
-calculó con el saldo viejo **y con una tasa del 10% anual que se sabe equivocada** — la real ronda
-el 55.7%. Los saldos citados ya se actualizaron, pero **las fechas no**: cambiarles la entrada y
-dejarles la salida las volvería falsamente precisas.
-
-Rehacerla necesita fijar antes por qué la TC BBVA está subiendo. Ver
-`../Finanzas/readme_finanzas.md`.
-
 ---
 
 ## Las demás secciones
@@ -351,8 +341,11 @@ otro.
 | `#trayectoriaFases` | Una fila por fase con su `liquido`, bajo el punto de partida fijo del 18 jul 2026 |
 | `#brechaMillon` | Lo que falta para el millón desde el patrimonio líquido de hoy (`CIFRAS.patrimonio()`), los meses que quedan y el margen del mes |
 | `#contextoFase` (Rutina) | La fase en curso con su meta |
+| `#proyeccionPlan` | La proyección de `CIFRAS.PROYECCION`: mes a mes hasta la salida a Alemania y después los cortes (fin de cada semestre, cada diciembre y el mes del millón). Debajo, cuatro escenarios con `CIFRAS.proyectar()` —el plan, ahorrar $5,000 menos al mes, sin Werkstudent y el euro a $23— y los supuestos |
+| Decisión tomada — Alemania | Tarjeta estática con marcadores: la salida (`{{maestriaInicio}}`), lo que cuesta (`{{salidaTotal}}`), lo de junio (`{{salidaJunio}}`) y la regla del día de decidir (`{{decisionMaestria}}`) |
+| `#salidaAlemania` | La lista de `CIFRAS.SALIDA` por tema, en `.salida-bloque` (clase propia: `updateFaseMonthBadges()` trataría cada tema como un mes), con el avance, lo de este mes y lo atrasado en rojo (`actualizarSalida()`), y la tabla de lo que cuesta irse |
 
-Corre **antes** del bucle que restaura `coach_checks_v1`, así que las casillas generadas (`f1-1`…)
+Corre **antes** del bucle que restaura `coach_checks_v1`, así que las casillas generadas (`a1-1`, `sa-adm-1`…)
 se guardan igual que las escritas, y antes de la segunda pasada de `CIFRAS.aplicarDOM()`, que resuelve
 los `{{marcadores}}` del texto. **Una fase se cambia en el maestro**, nunca aquí: el control 3 del
 verificador falla si una fase, sus tareas o sus fechas vuelven a escribirse en este archivo.

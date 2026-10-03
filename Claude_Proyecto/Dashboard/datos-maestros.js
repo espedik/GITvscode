@@ -74,7 +74,11 @@ window.CIFRAS = (function () {
     get ingresoTotal() { return this.sueldo + this.didiMes + this.siVale; },
 
     // ── Gastos fijos ── (renta y gym salían en 3 apps)
-    renta:         11000,     // día 1
+    // Adán, 3-oct-2026: "en febrero de 2027 dejaré de rentar mi departamento y podré ahorrar todo
+    // ese dinero, los 11,250". Hasta `rentaHasta` se paga; desde el mes siguiente el calendario ya
+    // no la cobra (CALENDARIO.cobros → agendaDia) y la proyección la cuenta como ahorro.
+    renta:         11250,     // día 1
+    rentaHasta:  '2027-01',   // el último mes de renta: el depa se entrega a fin de enero
     // 2026-08-18 cambió de gimnasio: Fitsi ($1,500) → Total Pass ($650), que se cobra el día 17.
     // Son $850/mes menos, $10,200 al año. Este valor llevaba desactualizado aquí mientras
     // Finanzas ya usaba el nuevo en una parte de su código y el viejo en otras tres.
@@ -129,9 +133,16 @@ window.CIFRAS = (function () {
     // ── Fechas y metas no financieras ──
     entrevistaWayve: '2026-07-08',          // ver Entrevistas/ → sección Wayve
     maestriaEscuela: 'Esslingen — Automotive Systems M.Eng.',
-    maestriaInicio:  '2028-10-01',
+    // Adán, 3-oct-2026: "de prioridad mejor si me quiero ir en sep del 2027 a Alemania". El
+    // programa arranca en septiembre (hs-esslingen.de): ese mes es la salida.
+    maestriaInicio:  '2027-09-01',
     inicioCenlex:    '2026-08-25',
-    maestriaPausa:   '2027-07-18',          // pausada hasta aquí, decidido en Coach
+    // La respuesta de Esslingen llega "antes de fin de mayo" (hs-esslingen.de) y la cuenta
+    // bloqueada se llena a mediados de junio: ese es el día de decidir la salida, con las dos.
+    maestriaDecision: '2027-05-31',
+    // El euro para planear. El 2-oct-2026 estaba en $20.46 (Infobae); se planea a $21.00 para
+    // que una subida normal (su volatilidad anda en ~7 %) no tumbe la cuenta bloqueada.
+    eurMxn:          21.0,
   };
 
   /* ── EL CALENDARIO ────────────────────────────────────────────────────────────────────────
@@ -150,7 +161,7 @@ window.CIFRAS = (function () {
      Regla al agregar: si una fecha se puede derivar de un dato que ya existe, NO va aquí. */
   const CALENDARIO = {
     cobros: [
-      { dia:  1, txt: 'Renta',    get monto() { return PROYECTO.renta; } },
+      { dia:  1, txt: 'Renta',    get monto() { return PROYECTO.renta; }, get hasta() { return PROYECTO.rentaHasta; } },
       { dia:  1, get txt() { return PROYECTO.celularPlan; }, get monto() { return PROYECTO.celular; } },
       { dia:  1, txt: 'Quincena', get monto() { return PROYECTO.sueldoQuinc; }, entra: true },
       // El 15, no el 14 (Adán, 2026-08-28). El plan semanal de Finanzas ya la trataba así
@@ -162,18 +173,19 @@ window.CIFRAS = (function () {
       // 2026-08-30 — los seis fijos que el calendario no contemplaba. Sumaban $1,094 al mes
       // saliendo de la cuenta sin que ninguna pantalla los descontara del tramo. Los días
       // los dio Adán; la limpieza se cayó de la lista porque no la paga.
-      { dia:  1, txt: 'Luz y agua', get monto() { return PROYECTO.luzAgua; } },
+      { dia:  1, txt: 'Luz y agua', get monto() { return PROYECTO.luzAgua; }, get hasta() { return PROYECTO.rentaHasta; } },
       { dia:  2, txt: 'Claude Code', get monto() { return PROYECTO.claudeCode; } },
-      { dia:  8, txt: 'Internet',   get monto() { return PROYECTO.internet; } },
+      { dia:  8, txt: 'Internet',   get monto() { return PROYECTO.internet; }, get hasta() { return PROYECTO.rentaHasta; } },
       { dia:  8, txt: 'iCloud',     get monto() { return PROYECTO.icloud; } },
+      // Luz, agua, internet y gas son del depa: terminan con la renta (`hasta`, rentaHasta).
       // El gas no cae todos los meses: `cada` y `desde` lo dicen, y ctAgenda los respeta.
       { dia:  1, txt: 'Gas', get monto() { return PROYECTO.gas; },
-        get cada() { return PROYECTO.gasCadaMeses; }, get desde() { return PROYECTO.gasDesdeMes; } },
+        get cada() { return PROYECTO.gasCadaMeses; }, get desde() { return PROYECTO.gasDesdeMes; }, get hasta() { return PROYECTO.rentaHasta; } },
     ],
     hitos: [
-      { fecha: PROYECTO.maestriaPausa,  txt: 'Decisión Maestría',
-        sub: 'Con la regla de la Fase 2: si el ahorro de abril a junio sostiene el ritmo hacia la meta de la maestría —contando la venta del auto—, sigue; si no, el arranque se mueve un año.' },
-      { fecha: PROYECTO.maestriaInicio, txt: 'Arranca la Maestría',
+      { fecha: PROYECTO.maestriaDecision, txt: 'Decisión Maestría',
+        sub: 'Con la admisión de Esslingen y el dinero de la cuenta bloqueada: si están las dos, te vas en septiembre; si falta una, se reaplica para 2028 y el ahorro sigue.' },
+      { fecha: PROYECTO.maestriaInicio, txt: 'Salida a Alemania',
         sub: PROYECTO.maestriaEscuela },
     ],
   };
@@ -375,22 +387,24 @@ window.CIFRAS = (function () {
       {id:'mente',     name:'Mentalidad', full:'Mentalidad & Ejecución',   icon:'🚀', val:85, w:1.0, cat:'personal', desc:'Tu activo más grande. Tolerancia al riesgo alta, resiliencia real ante pérdidas, y ahora mismo estás en el punto de romper años de inacción. Esto es lo que hace que todo lo demás sea entrenable.'},
     ];
   /* ── EL PLAN MAESTRO ───────────────────────────────────────────────────────────────────────
-     Las fases hacia $1,000,000 de patrimonio líquido: fechas ancla, título, meta, explicación y
-     el checklist de cada mes. Cada fase dice además lo que DEJA de hacerse (`deja`), la prueba
-     con la que cierra (`checkpoint`) y el patrimonio líquido que la trayectoria espera al
-     cerrarla (`liquido`: hipótesis redondeada de la proyección del plan, no promesa).
+     Las fases hacia $1,000,000 de patrimonio líquido, con la salida a Alemania en septiembre de
+     2027 en medio: fechas ancla, título, meta, explicación y el checklist de cada mes. Cada fase
+     dice además lo que DEJA de hacerse (`deja`) y la prueba con la que cierra (`checkpoint`);
+     `liquido` —el patrimonio que espera la trayectoria al cerrarla— NO se escribe aquí: lo pone
+     la PROYECCION de abajo, mes a mes, y la última fase lleva el millón.
 
-     Los ids de las tareas son el contrato con `coach_checks_v1[id]`: si se renombra uno, se
-     pierde lo marcado. La Fase 0 (cerrada el 30 sep 2026) conserva sus `sN-M`; las fases que
-     la siguen llevan `fN-M`, ids nuevos para no heredar casillas de tareas que ya no existen.
+     Las tareas de fase son los HITOS; el detalle de la salida (documentos, ropa, salud, el BYD…)
+     vive en SALIDA, más abajo. Los ids son el contrato con `coach_checks_v1[id]`: la Fase 0
+     conserva sus `sN-M` y las demás llevan `aN-M`, nuevos para no heredar casillas de tareas que
+     ya no existen.
 
      Coach pinta la Fase 0 como HTML escrito a mano y GENERA las demás desde aquí
      (`pintarFasesPlan()`), igual que el Dashboard: un solo texto para las dos apps.
 
      Fechas que no son de aquí y que las fases respetan: la Fase 3 arranca el
-     `PROYECTO.maestriaInicio` y la decisión de la maestría (`PROYECTO.maestriaPausa`) cae dentro
-     de la Fase 2 — el control 9 de `verificar-sincronia.js` lo comprueba. La fecha del millón
-     es el cierre de la última fase: el marcador `{{metaMillon}}`. */
+     `PROYECTO.maestriaInicio` y la decisión (`PROYECTO.maestriaDecision`) cae en la fase
+     anterior — el control 9 de `verificar-sincronia.js` lo comprueba. La fecha del millón es el
+     cierre de la última fase: el marcador `{{metaMillon}}`. */
   const PHASES = [
     {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep y quedó otra vez en $0 el 30 sep) y ✅ BBVA de $39,000 a $900 el 19 sep 2026 con la venta del Bitcoin (el 30 sep iba de nuevo en {{tcBbva}}). Quedan 2 objetivos financieros, en este orden: 1) fondo de emergencia —los CETES, {{fondo}}— a {{fondoMeta}}, 2) dejar la BBVA en $0 ({{tcBbva}}).",explica:"Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases. El orden era 1) fondo de emergencia, 2) Banamex, 3) BBVA: el paso 2 se hizo el 13 ago 2026 y el 3 casi entero el 19 sep 2026 (BBVA de $39,000 a $900 con la venta del Bitcoin; el 30 sep volvió a {{tcBbva}}), así que la prioridad es el fondo de emergencia —que desde sep 2026 son los CETES— y, en cuanto llegue a {{fondoMeta}}, rematar lo que queda en la BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.",semanas:[
       {id:"s0-9",mes:"2026-08",txt:"Prioridad 1 — Fondo de emergencia a {{fondoMeta}}. Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. (hoy {{fondo}}, en CETES)"},
@@ -403,82 +417,323 @@ window.CIFRAS = (function () {
       {id:"s0-1",mes:"2026-08",txt:"Corrige \"Deudas\" en Finanzas.html · cero MSI nuevo. (✅ 13 ago 2026: quedó en $8,200 = auto {{autoPago}} + mínimo BBVA {{tcBbvaMin}})"},
       {id:"s0-7",mes:"2026-09",txt:"Cada peso de ventas/activos va, en orden fijo: (1) fondo de emergencia a {{fondoMeta}}, (2) resto a la BBVA ({{tcBbva}}), la única tarjeta con saldo desde que Banamex quedó en $0 el 30 sep 2026. Este mes cierra la fase."},
     ]},
-    {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Blindar la base: que el margen llegue al ahorro",liquido:-150000,
-     meta:"Cuatro entregables al 31 mar 2027: <b>1)</b> el fondo de emergencia —los CETES— en {{fondoMeta}} antes del 31 dic 2026 y en tres meses de fijos y mínimos ({{fondo3m}}) al cierre; <b>2)</b> la BBVA pagada completa los seis días 11 de la fase, cero intereses; <b>3)</b> el ISTQB CT-GenAI aprobado; <b>4)</b> el primer cliente pagado del negocio de tu papá (Aeroresinas o Heliescala).",
-     explica:"Arrancaste la fase el 1 oct 2026 con el patrimonio líquido en ≈ −$285,000 y una contradicción que lo explica casi todo: el margen del mes —lo que queda del ingreso tras fijos y mínimos— es {{margen}}, y aun así septiembre cerró con la cuenta casi en cero y la BBVA volvió a subir en once días. El problema no es cuánto ganas: el margen se gasta con tarjeta antes de llegar al ahorro. Esta fase lo voltea con tres reglas: <b>págate primero</b> (el ahorro sale el día que entra la quincena, no lo que sobre a fin de mes), <b>la tarjeta se paga completa cada día 11 y tiene tope</b>, y <b>lo que no usas se vende</b>. Con eso el fondo llega a {{fondoMeta}} en diciembre —con los {{cetesDia15}} de cada día 15 alcanza— y a tres meses de fijos en marzo, con el aguinaldo y lo que vendas. En paralelo cierras lo que ya está en marcha: el ISTQB CT-GenAI, que ya está agendado, y el primer cliente de un negocio que ya tiene webs, dossier y plantillas de posts; le falta ponerse frente a clientes.",
-     deja:"Ninguna compra a MSI ni crédito nuevo. Nada de riesgo alto ni súper alto en Qué invertir hoy mientras el fondo no esté completo: el orden es fondo → deuda cara → invertir. Y un solo frente de negocio: la plantilla GBM, el freelance y la mentoría de la Fase 0 se pausan; el negocio activo es el de tu papá.",
-     checkpoint:"31 mar 2027: si el fondo no llegó a {{fondoMeta}} o algún día 11 se pagó solo el mínimo, la Fase 2 arranca por el presupuesto y no por la búsqueda de trabajo — el problema sigue siendo el gasto, no el ingreso. Si el negocio no consiguió cliente en seis meses, cambia el canal (LinkedIn directo a operadores y talleres, no solo WhatsApp) antes que el negocio.",
+    {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Solicitud enviada y el ahorro en marcha",
+     meta:"Al 31 mar 2027: <b>1)</b> la solicitud a {{maestriaEscuela}} enviada completa —IELTS de 6.0 o más, dos cartas de recomendación, CV y carta de motivación—; <b>2)</b> el depa entregado a fin de enero y la renta convertida en ahorro desde febrero; <b>3)</b> {{alemaniaMarzo}} en la cuenta de Alemania, lo que marca la proyección; <b>4)</b> la BBVA pagada completa los seis días 11; <b>5)</b> el ISTQB CT-GenAI aprobado.",
+     explica:"Para irte en septiembre de 2027 todo converge en dos fechas: el 31 mar 2027 cierra la solicitud de Esslingen y a mediados de junio necesitas {{salidaJunio}} para la cuenta bloqueada y la visa. Esta fase prepara las dos. La solicitud se manda en enero, no en marzo. El ahorro arranca ya: con renta, unos $22,000 al mes si la vida diaria cabe en $8,000 (comida aparte); desde febrero, sin renta, unos $37,000. Hoy casi no ahorras —septiembre cerró con la cuenta en $390 y la BBVA volvió a subir en once días—, así que el presupuesto y el tope de tarjeta de esta fase no son opcionales: sin ellos la fecha no llega.",
+     deja:"Riesgo alto y súper alto en Qué invertir hoy: el dinero de Alemania vive en CETES porque se usa en meses, no en años. Compras a meses. Nuevos frentes de negocio: el de tu papá se queda en piloto automático con los posts y el dossier. Y el depa: a fin de enero se entrega.",
+     checkpoint:"31 mar 2027: solicitud enviada y la cuenta de Alemania en la proyección ({{alemaniaMarzo}}). Si vas más de $30,000 abajo, junio no alcanza para la cuenta bloqueada: se recorta la vida diaria ese mismo mes o la salida se mueve a septiembre de 2028 (la solicitud se repite en noviembre).",
      semanas:[
-      {id:"f1-1",mes:"2026-10",txt:"Paga la BBVA completa el 11 oct. El total del estado de cuenta, no el mínimo de {{tcBbvaMin}}: así la tarjeta no cobra intereses."},
-      {id:"f1-2",mes:"2026-10",txt:"Ponle tope a la tarjeta. Lo que el riel del Plan Maestro dice que te sobra en la quincena, ni un peso más; al llegar, apágala desde la app de BBVA."},
-      {id:"f1-3",mes:"2026-10",txt:"Anota la fecha del examen ISTQB CT-GenAI. Ya está agendado con Brightest: ponlo en el calendario y haz esta semana el examen de muestra para saber qué te falta."},
-      {id:"f1-4",mes:"2026-10",txt:"Vende lo que no usas. PS5 y su control, monitores e iPad —y lo que no hayas tocado en tres meses—: fotos y precio en Marketplace este mes; cada venta va directo al fondo."},
-      {id:"f1-5",mes:"2026-11",txt:"Presenta el ISTQB CT-GenAI. Llega con el simulacro de Mis Metas en 34 de 46 o más, dos veces seguidas: el corte oficial es 30."},
-      {id:"f1-6",mes:"2026-11",txt:"Negocio de tu papá: 20 contactos con el dossier. Operadores de helicópteros, talleres y escuelas de aviación, por WhatsApp y LinkedIn, con el PDF y el post del día de Posts."},
-      {id:"f1-7",mes:"2026-12",txt:"Fondo de emergencia en {{fondoMeta}}. Llega con el aporte del 15 dic; ese mismo día súbele la meta en Finanzas a {{fondo3m}}, tres meses de fijos y mínimos."},
-      {id:"f1-8",mes:"2026-12",txt:"El aguinaldo va entero al fondo. Por ley llega antes del 20 dic y es de al menos 15 días de sueldo: a CETES, nada de regalos a meses."},
-      {id:"f1-9",mes:"2027-01",txt:"Cuesta de enero sin tarjeta. Revisa en Finanzas lo que gastaste en diciembre y ajusta el tope: enero es el mes que más regresa a la gente al pago mínimo."},
-      {id:"f1-10",mes:"2027-02",txt:"CV y LinkedIn con el ISTQB nuevo. Titular con señal remota y de validación/ADAS: deja listo lo que la Fase 2 va a usar para buscar puesto."},
-      {id:"f1-11",mes:"2027-03",txt:"Cierra la Fase 1 por escrito. Fondo, los seis días 11, el ISTQB y el cliente del negocio: qué se cumplió y qué pasa a la Fase 2."},
-      {id:"f1-12",cont:true,txt:"Págate primero cada quincena. El 1 y el 15, antes de gastar, aparta lo del fondo: lo que sobra a fin de mes no es ahorro, es suerte."},
-      {id:"f1-13",cont:true,txt:"Cero MSI y cero crédito nuevo. Ni una compra a meses en toda la fase: el iPhone ({{iphone}}) es el último crédito de consumo que queda."},
-      {id:"f1-14",cont:true,txt:"Conducta primero: 30 días sin alcohol al 14 oct y el celular fuera del cuarto. Cada recaída cuesta dinero y sueño, y en Didi el límite de alcohol es cero."},
+      {id:"a1-1",mes:"2026-10",txt:"Paga la BBVA completa el 11 oct. El total, no el mínimo de {{tcBbvaMin}}: la tarjeta queda sin intereses y sin deuda para irte."},
+      {id:"a1-2",mes:"2026-10",txt:"Abre la cuenta de Alemania. CETES aparte del día a día: el día que entra la quincena, el ahorro se va ahí antes de gastar."},
+      {id:"a1-3",mes:"2026-10",txt:"Inscríbete al IELTS Academic. British Council CDMX ($4,850) para fines de noviembre o diciembre; practica desde ya."},
+      {id:"a1-4",mes:"2026-10",txt:"Pide las dos cartas de recomendación. Un jefe de Bosch, Continental o ALTEN y un líder técnico o profesor: en inglés y firmadas."},
+      {id:"a1-5",mes:"2026-11",txt:"La ventana de Esslingen abre el 4 nov. Arma la solicitud: CV europeo, carta de motivación, título y certificado del IPN."},
+      {id:"a1-6",mes:"2026-11",txt:"Vende lo que no usas. PS5 y su control, monitores e iPad: cada venta, a la cuenta de Alemania."},
+      {id:"a1-7",mes:"2026-11",txt:"Presenta el ISTQB CT-GenAI. Llega con el simulacro de Mis Metas en 34 de 46 o más, dos veces seguidas: el corte oficial es 30."},
+      {id:"a1-8",mes:"2026-12",txt:"IELTS con 6.0 o más. Si no llega, se repite en enero: el resultado sale en días."},
+      {id:"a1-9",mes:"2026-12",txt:"Aguinaldo y ventas a la cuenta de Alemania. Por ley el aguinaldo llega antes del 20 dic y es de al menos 15 días de sueldo."},
+      {id:"a1-10",mes:"2027-01",txt:"Manda la solicitud completa a Esslingen. En enero, no en marzo: cierra el 31 mar y la respuesta llega antes de fin de mayo."},
+      {id:"a1-11",mes:"2027-01",txt:"Entrega el depa a fin de mes. Recupera el depósito: desde febrero, los {{renta}} de la renta son ahorro."},
+      {id:"a1-12",mes:"2027-03",txt:"Cierra la Fase 1 por escrito. Solicitud, saldo de la cuenta de Alemania contra la proyección, BBVA e ISTQB."},
+      {id:"a1-13",cont:true,txt:"Vida diaria con tope. $8,000 al mes con renta y $7,000 sin renta, comida aparte: lo que sobre, a la cuenta de Alemania."},
+      {id:"a1-14",cont:true,txt:"Alemán sin pausa en {{escuelaAleman}}. Esslingen pide A2 antes de terminar el 2º semestre: llega con la constancia."},
+      {id:"a1-15",cont:true,txt:"Conducta primero: cero alcohol y el celular fuera del cuarto. Llegas a Alemania con la cadena hecha, no a empezarla allá."},
     ]},
-    {start:new Date(2027,3,1),end:new Date(2028,8,30),tag:"Fase 2",title:"Subir el ingreso y fondear Esslingen",liquido:530000,
-     meta:"Al 30 sep 2028: <b>1)</b> un sueldo al menos 25% arriba de {{sueldo}} —puesto nuevo, ascenso o remoto en dólares—; <b>2)</b> la decisión de la maestría tomada con números el {{decisionMaestria}} y, si es sí, la admisión en {{maestriaEscuela}} con IELTS de 6.0 o más; <b>3)</b> el fondo de la maestría en {{maestriaMeta}}, en CETES y no en acciones; <b>4)</b> el {{auto}} resuelto antes de irte: vendido o liquidado.",
-     explica:"La palanca grande del plan es el ingreso, y esta es la fase de moverla con lo que ya construiste: seis años de testing automotriz, el ISTQB Foundation y el CT-GenAI, y un sistema propio hecho con IA que puedes enseñar en una entrevista. Con el fondo completo y la tarjeta sin intereses, el excedente tiene un solo destino: la maestría, que no se paga con deuda. La meta es {{maestriaMeta}} y llevas {{maestria}}, así que el {{decisionMaestria}} se decide con una regla y no con ganas: si el ahorro de abril a junio de 2027 sostiene el ritmo para juntar la meta antes de sep 2028 —contando lo que deje la venta del auto—, sigue; si no, el arranque se mueve un año y las fases se recalculan. El patrimonio líquido cruza cero hacia oct 2027. El auto no viaja contigo: su cuota de {{autoPago}} no se paga desde Alemania, así que se vende antes de irte.",
-     deja:"Didi deja de ser fijo en cuanto el sueldo nuevo cubra lo que aporta: esas horas pasan a IELTS y alemán. Ningún viaje grande ni auto nuevo (Tailandia, Hong Kong y el Cupra esperan a la Fase 4); el lanzamiento de SpaceX cabe solo de contado y sin tocar el fondo de la maestría. Y nada de acciones con dinero que se usa en 2028: horizonte corto, CETES.",
-     checkpoint:"El {{decisionMaestria}}: sí o no a Esslingen con la regla de la fase; si es no, el plan se rehace ese mismo mes con el millón como meta directa —según la proyección del plan, sin maestría llega hacia mediados de 2030—. Al 30 sep 2028, si el fondo no llegó a {{maestriaMeta}}, no se viaja a medias: se pide aplazar la admisión un año y se completa.",
+    {start:new Date(2027,3,1),end:new Date(2027,7,31),tag:"Fase 2",title:"Admisión, visa y salida",
+     meta:"Al 31 ago 2027: <b>1)</b> la admisión de {{maestriaEscuela}}; <b>2)</b> la cuenta bloqueada llena ({{sperrkonto}}) y la visa de estudiante en el pasaporte; <b>3)</b> cuarto en Esslingen con contrato; <b>4)</b> el {{auto}} rentado con contrato, seguro para plataformas, GPS y tu papá como administrador; <b>5)</b> la salud lista: chequeo, dentista, lentes y medicamentos; <b>6)</b> ALTEN cerrado con finiquito y carta de recomendación.",
+     explica:"Cinco meses con un orden que no se salta: admisión → cuenta bloqueada → visa (mínimo de 6 a 8 semanas) → vuelo. La cuenta bloqueada pide €11,904 —{{sperrkonto}} al euro del plan— y es el punto más apretado: a mediados de junio necesitas {{salidaJunio}} en la mano. El auto no se vende: es tu respaldo para trabajar Didi si regresas sin empleo. Mientras estás fuera se renta a un conductor de plataforma: las flotillas cobran de $3,600 a $4,500 a la semana por un Dolphin Mini; un particular cobra unos $3,000, y ya con seguro, GPS y semanas vacías deja unos $7,500 al mes, que pagan sus {{autoPago}}.",
+     deja:"Viajes y compras que no estén en la lista de salida. Didi desde que empiezas a empacar, en agosto. Y nada sin papel: cuarto, auto y finiquito, con contrato.",
+     checkpoint:"15 jun 2027: la admisión en la mano y {{salidaJunio}} en la cuenta. Sin admisión, se reaplica para septiembre de 2028 y el ahorro sigue; sin el dinero, la cuenta bloqueada no se completa y la salida se mueve un año. No se viaja a medias ni con deuda.",
      semanas:[
-      {id:"f2-1",mes:"2027-04",txt:"Arranca la búsqueda de puesto. Tres aplicaciones por semana —remoto, ADAS, validación HIL— y una entrevista simulada en Entrevistas cada semana."},
-      {id:"f2-2",mes:"2027-04",txt:"Declaración anual. Presenta tus deducciones y revisa cómo te retiene Didi; si sale saldo a favor, va al fondo de la maestría."},
-      {id:"f2-3",mes:"2027-04",txt:"El excedente se aparta para la maestría. Todo lo que sobra cada quincena va a CETES para Esslingen; si el {{decisionMaestria}} decides no ir, se vuelve tu inversión."},
-      {id:"f2-4",mes:"2027-07",txt:"Decide la maestría el {{decisionMaestria}}. Ritmo de ahorro de abril a junio por los meses que quedan, más la venta del auto, contra {{maestriaMeta}}: sí o no, por escrito."},
-      {id:"f2-5",mes:"2027-09",txt:"IELTS Academic con 6.0 o más. Lo pide Esslingen y el resultado vale dos años: alcanza para la solicitud de noviembre."},
-      {id:"f2-6",mes:"2027-09",txt:"Constancia de alemán de {{escuelaAleman}}. La maestría es en inglés, pero vivir y trabajar allá pide alemán: el nivel que tengas, certificado."},
-      {id:"f2-7",mes:"2027-11",txt:"Solicitud a {{maestriaEscuela}}. Abre el 4 nov y cierra el 31 mar: mándala completa en noviembre —títulos, kárdex con tu lugar en la generación, IELTS, CV y carta de motivación—."},
-      {id:"f2-8",mes:"2027-12",txt:"El aguinaldo 2027 va al fondo de la maestría. Entero, como el de 2026: es el mes que más empuja la meta."},
-      {id:"f2-9",mes:"2028-05",txt:"Visa de estudiante. Con la admisión, abre la cuenta bloqueada que pide la embajada y agenda la cita; el seguro médico, cotizado completo: la tarifa de estudiante del seguro público alemán es hasta los 30 y llegas con 33."},
-      {id:"f2-10",mes:"2028-07",txt:"Vende el auto. El saldo del crédito ({{autoSaldo}}) se liquida en la venta y lo que quede va al fondo: la cuota de {{autoPago}} no se paga desde Alemania."},
-      {id:"f2-11",mes:"2028-08",txt:"Cierra México con orden. Renuncia en {{empleador}} con el aviso de tu contrato y avisa al arrendador con tiempo: el depósito de renta regresa al fondo."},
-      {id:"f2-12",mes:"2028-09",txt:"Llega a Esslingen antes del {{maestriaInicio}}. Una o dos semanas antes: registro de domicilio, cuenta y seguro antes de la primera clase."},
-      {id:"f2-13",cont:true,txt:"Sueldo +25% o remoto en dólares. Si a los seis meses de buscar no hay oferta, cambia el CV y el canal, no la meta."},
-      {id:"f2-14",cont:true,txt:"Negocio de tu papá: de un cliente a uno al mes. Un trabajo cerrado al mes entre Aeroresinas y Heliescala, con los posts de cada semana."},
-      {id:"f2-15",cont:true,txt:"Cero deuda nueva y la BBVA al total cada 11. Lo que pase del dinero que pide la visa puede ir a capital del auto: rinde {{autoTasa}} seguro y lo recuperas al venderlo."},
+      {id:"a2-1",mes:"2027-04",txt:"Declaración anual. Con tus deducciones; si sale saldo a favor, a la cuenta de Alemania."},
+      {id:"a2-2",mes:"2027-04",txt:"Goethe-Zertifikat A2 (o telc A2) en México. El requisito de alemán de Esslingen queda cumplido desde el primer día."},
+      {id:"a2-3",mes:"2027-05",txt:"Chequeo médico, dentista y lentes. Todo lo pendiente se arregla aquí; la receta de lo que tomes, en inglés y con el genérico."},
+      {id:"a2-4",mes:"2027-05",txt:"La respuesta de Esslingen, antes de fin de mayo. Si es sí: acepta el lugar, pide la carta de admisión y solicita cuarto en el Studierendenwerk Stuttgart ese día."},
+      {id:"a2-5",mes:"2027-06",txt:"Cuenta bloqueada llena. Expatrio, Fintiba o Coracle: con la confirmación se completa el expediente de visa."},
+      {id:"a2-6",mes:"2027-06",txt:"Cita de visa con BLS. Dos juegos de todo: formularios, fotos biométricas, pasaporte, admisión, cuenta bloqueada, seguro de viaje e IELTS. Visa €75 + BLS €39.90."},
+      {id:"a2-7",mes:"2027-06",txt:"Aplica a Werkstudent desde México. Bosch, Mercedes-Benz, Porsche y sus proveedores: 20 h a la semana pagan unos €1,200 al mes."},
+      {id:"a2-8",mes:"2027-07",txt:"Renta el BYD con contrato. Seguro para plataformas, GPS con paro de motor, depósito y pago semanal por adelantado; tu papá lo administra."},
+      {id:"a2-9",mes:"2027-07",txt:"Compra el vuelo y el seguro de viaje. Salida a fines de agosto; el seguro cubre los primeros 3 meses, como pide la visa."},
+      {id:"a2-10",mes:"2027-08",txt:"Renuncia en {{empleador}} y pide el finiquito por escrito. Aguinaldo y vacaciones proporcionales, constancia laboral y carta en inglés."},
+      {id:"a2-11",mes:"2027-08",txt:"Cierra México. BBVA en $0, iPhone domiciliado, tu número en un plan barato, poder notarial a tu papá y respaldos en la nube."},
+      {id:"a2-12",mes:"2027-08",txt:"Dos maletas. Los documentos originales en la de mano; la ropa gruesa de invierno, mejor allá en octubre."},
+      {id:"a2-13",cont:true,txt:"La cuenta de Alemania manda. Todo lo que entra va primero ahí: el 15 de junio tiene que haber {{salidaJunio}}."},
+      {id:"a2-14",cont:true,txt:"Terapia antes de irte. Llegas con herramientas y con tu red armada: mexicanos en Stuttgart, los líderes de Bosch que conoces y el buddy de la Hochschule."},
     ]},
-    {start:new Date(2028,9,1),end:new Date(2030,2,31),tag:"Fase 3",title:"Esslingen: la maestría que cambia tu sueldo",liquido:250000,
-     meta:"Al 31 mar 2030: <b>1)</b> el M.Eng. terminado —tres semestres y la tesis hecha en una empresa—; <b>2)</b> experiencia alemana en el CV: Werkstudent o Praktikum en Bosch, Mercedes-Benz, Porsche o un proveedor; <b>3)</b> una oferta de trabajo firmada antes de entregar la tesis; <b>4)</b> cero deuda nueva y el fondo alcanzando hasta el último mes.",
-     explica:"Es la única fase en que el patrimonio baja, y es a propósito: el fondo se convierte en un título alemán y en experiencia en la industria que mejor paga lo que ya sabes hacer —validación, HIL, ADAS—. Por eso se cuida igual que la deuda: presupuesto fijo en euros cada mes, trabajo de Werkstudent en cuanto la carga del semestre lo permita, y la tesis en una empresa, porque de ahí salen las ofertas. Al graduarte, el permiso de residencia deja buscar trabajo hasta 18 meses, pero la meta es no necesitarlo: oferta firmada antes de entregar la tesis. Tu red ya existe: los líderes de Bosch en Stuttgart con los que trabajaste.",
-     deja:"Cualquier gasto que el presupuesto en euros no tenga previsto: el fondo tiene que durar tres semestres. Y nada pendiente en México: el auto, Didi y el depa se cerraron en la Fase 2.",
-     checkpoint:"Al cerrar el 2º semestre (sep 2029), si el fondo no alcanza para el 3º, más horas de Werkstudent antes que cualquier deuda. Sin oferta en enero de 2030, la búsqueda se vuelve de tiempo completo con el permiso de búsqueda de empleo.",
+    {start:new Date(2027,8,1),end:new Date(2029,1,28),tag:"Fase 3",title:"Esslingen: la maestría que cambia tu sueldo",
+     meta:"Al 28 feb 2029: <b>1)</b> el M.Eng. terminado —tres semestres y la tesis en una empresa—; <b>2)</b> Werkstudent desde el segundo o tercer mes, 20 h a la semana; <b>3)</b> alemán A2 certificado antes de terminar el 2º semestre y B1 al final; <b>4)</b> una oferta de trabajo firmada antes de entregar la tesis; <b>5)</b> cero deuda nueva.",
+     explica:"Es la fase en que menos sube el patrimonio, y es a propósito: el fondo compra la palanca más grande del plan. Las cuentas cierran solo con dos supuestos: que el Werkstudent llegue pronto —sin él, el dinero alcanza para unos 12 meses, lo que cubre la cuenta bloqueada— y que el BYD siga rentado. Con los dos, la maestría cuesta casi solo las colegiaturas: tres de €1,900. Al graduarte, el permiso de residencia deja buscar trabajo hasta 18 meses, pero la meta es no necesitarlo: oferta firmada antes de entregar la tesis.",
+     deja:"Gastos fuera del presupuesto en euros, viajes que no paga el Werkstudent y cualquier deuda alemana: ni tarjeta a meses ni préstamo.",
+     checkpoint:"Al cerrar el 1er semestre (feb 2028): sin Werkstudent, el plan se ajusta ese mes —más horas en vacaciones, un HiWi en la universidad (no cuenta en el tope de 140 días) o recortar— antes de que el dinero llegue a seis meses de gasto. Sin oferta en enero de 2029, la búsqueda se vuelve de tiempo completo.",
      semanas:[
-      {id:"f3-1",mes:"2028-10",txt:"Registro de domicilio en dos semanas. La Anmeldung es obligatoria en 14 días: con ella abres la cuenta y tramitas el permiso de residencia."},
-      {id:"f3-2",mes:"2028-10",txt:"Presupuesto mensual en euros. Renta, seguro, comida y transporte con tope; lo que pase de ahí se recorta antes de tocar el fondo."},
-      {id:"f3-3",mes:"2028-11",txt:"Aplica a Werkstudent desde el primer semestre. Bosch, Mercedes-Benz y Porsche publican vacantes en sus portales: HIL y testing es justo lo que buscan."},
-      {id:"f3-4",mes:"2029-02",txt:"Pausa entre semestres: Praktikum o más horas. Entre febrero y marzo no hay clases: el mejor momento para sumar experiencia e ingreso."},
-      {id:"f3-5",mes:"2029-04",txt:"Alemán a B1 o B2. El trabajo en la región de Stuttgart lo pide aunque la maestría sea en inglés."},
-      {id:"f3-6",mes:"2029-09",txt:"Tesis en empresa. Validación, ADAS o HIL dentro de una empresa, no en la universidad: la tesis es la entrevista de trabajo más larga que vas a tener."},
-      {id:"f3-7",mes:"2030-01",txt:"Busca empleo con el título por salir. Desde enero, con la tesis en curso: la meta es la oferta firmada antes de entregarla."},
-      {id:"f3-8",mes:"2030-03",txt:"Cierra la Fase 3 por escrito. Título, oferta, lo que quedó del fondo y dónde vas a vivir: con eso se fija el ahorro de la Fase 4."},
-      {id:"f3-9",cont:true,txt:"Cero deuda nueva en Alemania. Ni tarjeta a meses ni préstamo: si falta dinero, más horas de Werkstudent."},
-      {id:"f3-10",cont:true,txt:"Activa la red de Bosch en Stuttgart. Escríbeles a los líderes con los que trabajaste en tu asignación: es el atajo a la primera entrevista."},
+      {id:"a3-1",mes:"2027-09",txt:"Las primeras dos semanas. Anmeldung (obligatoria en 14 días), inscripción, cuenta, seguro y SIM; después, el permiso de residencia."},
+      {id:"a3-2",mes:"2027-09",txt:"Presupuesto en euros. €1,050 al mes: renta, comida, seguro y transporte; lo que pase de ahí se recorta antes de tocar el fondo."},
+      {id:"a3-3",mes:"2027-10",txt:"Werkstudent. Si no lo cerraste desde México, este mes: con seis años de HIL y testing eres el perfil que buscan."},
+      {id:"a3-4",mes:"2028-02",txt:"Pausa entre semestres: Praktikum o más horas. Cuentan en el tope de 140 días al año; los empleos de la universidad (HiWi) no."},
+      {id:"a3-5",mes:"2028-03",txt:"Segunda colegiatura (€1,900) y el A2 certificado, si no lo trajiste. Esslingen lo pide antes de cerrar el 2º semestre."},
+      {id:"a3-6",mes:"2028-09",txt:"Tercera colegiatura y tesis en empresa. Validación, ADAS o HIL dentro de una empresa: de ahí salen las ofertas."},
+      {id:"a3-7",mes:"2028-11",txt:"Busca empleo con el título por salir. Aplicaciones desde noviembre: la meta es la oferta antes de entregar la tesis."},
+      {id:"a3-8",mes:"2029-02",txt:"Cierra la Fase 3 por escrito. Título, oferta, cuánto quedó del fondo y dónde vas a vivir."},
+      {id:"a3-9",cont:true,txt:"El BYD rentado, cada mes. Tu papá confirma el pago semanal; si un mes se queda sin rentar, la reserva paga la mensualidad."},
+      {id:"a3-10",cont:true,txt:"Activa la red de Bosch en Stuttgart. Los líderes con los que trabajaste en tu asignación: el atajo a Werkstudent, tesis y empleo."},
+      {id:"a3-11",cont:true,txt:"Salud en el invierno. Luz del día, vitamina D, el deporte de la Hochschule y llamadas fijas con tu familia."},
     ]},
-    {start:new Date(2030,3,1),end:new Date(2032,11,31),tag:"Fase 4",title:"El millón líquido con sueldo de ingeniero",liquido:1000000,
-     meta:"<b>$1,000,000</b> de patrimonio líquido al {{metaMillon}}, con el sueldo del título nuevo. La trayectoria marca ≈ +$500,000 a dic 2030 y ≈ +$850,000 a dic 2031.",
-     explica:"Con el título y un puesto de ingeniero —en Alemania o remoto en euros— el ahorro del mes es el más alto de todo el plan, y la regla es la de la Fase 1: págate primero, el día que entra el sueldo. El millón se invierte para el largo plazo —fondos indexados globales con comisión baja—, no en apuestas; y las metas que esperaron su turno —Tailandia, Hong Kong, el Cupra, el depa— se pagan de contado cuando el patrimonio vaya en su trayectoria, nunca con deuda.",
+    {start:new Date(2029,2,1),end:new Date(2031,11,31),tag:"Fase 4",title:"El millón líquido con sueldo de ingeniero",
+     meta:"<b>$1,000,000</b> de patrimonio líquido al {{metaMillon}}, con el sueldo del título nuevo. La proyección llega en {{mesMillon}}; el crédito del auto, pagado con su propia renta, termina hacia mediados de 2031.",
+     explica:"Con el título y un puesto de ingeniero —en Alemania o remoto en euros— el ahorro del mes es el más alto de todo el plan, y la regla es la de la Fase 1: págate primero, el día que entra el sueldo. El millón se invierte para el largo plazo —fondos indexados globales con comisión baja—, no en apuestas. Las metas que esperaron su turno se pagan de contado cuando el patrimonio vaya en su trayectoria: Tailandia, con las vacaciones de un contrato alemán (de 25 a 30 días en uno típico), Hong Kong, el Cupra y el depa.",
      deja:"Subir el nivel de vida al ritmo del sueldo nuevo: cada aumento va primero al ahorro. Y ningún premio a crédito.",
-     checkpoint:"Cada diciembre, patrimonio líquido contra la trayectoria. Dos revisiones seguidas por debajo: se ajusta el porcentaje de ahorro o la fecha, sin abandonar la meta.",
+     checkpoint:"Cada diciembre, el patrimonio líquido contra la proyección. Dos cortes seguidos por debajo: se ajusta el porcentaje de ahorro o la fecha, sin abandonar la meta.",
      semanas:[
-      {id:"f4-1",mes:"2030-04",txt:"Automatiza el ahorro el día de pago. Un porcentaje fijo del sueldo neto a la inversión el mismo día que entra: empieza en 30% y súbelo con cada aumento."},
-      {id:"f4-2",mes:"2030-06",txt:"Portafolio de largo plazo. Fondos indexados globales con comisión baja; acciones sueltas, si acaso, no más del 10%."},
-      {id:"f4-3",mes:"2030-12",txt:"Primer corte: ≈ +$500,000. Si vas abajo, revisa el porcentaje de ahorro antes que el rendimiento."},
-      {id:"f4-4",mes:"2031-04",txt:"Tailandia, de contado. Abril es temporada seca y el vuelo más barato: el campamento de Mis Metas, pagado sin tocar la inversión."},
-      {id:"f4-5",mes:"2031-12",txt:"Segundo corte: ≈ +$850,000. Si vas en la trayectoria, agenda Hong Kong para 2032, de contado."},
-      {id:"f4-6",mes:"2032-12",txt:"El millón líquido. $1,000,000 de patrimonio líquido: cierra el Plan Maestro y arma el siguiente, con el depa y el Cupra en su orden."},
-      {id:"f4-7",cont:true,txt:"Cada aumento, primero al ahorro. El nivel de vida sube después que el patrimonio, no antes."},
+      {id:"a4-1",mes:"2029-03",txt:"Automatiza el ahorro el día de pago. 30% del neto a la inversión el mismo día; súbelo con cada aumento."},
+      {id:"a4-2",mes:"2029-06",txt:"Portafolio de largo plazo. Fondos indexados globales con comisión baja (en Alemania, un ETF-Sparplan); acciones sueltas, no más del 10%."},
+      {id:"a4-3",mes:"2029-12",txt:"Primer corte de diciembre. Patrimonio líquido contra la proyección del Plan Maestro, en Coach."},
+      {id:"a4-4",mes:"2030-04",txt:"Tailandia, de contado. Abril es temporada seca: el campamento de Mis Metas, con las vacaciones de tu contrato."},
+      {id:"a4-5",mes:"2030-12",txt:"Segundo corte de diciembre. Si vas en la proyección, Hong Kong en 2031, de contado."},
+      {id:"a4-6",mes:"2031-06",txt:"Termina el crédito del BYD. Desde ahí la renta del auto es ingreso entero, o el auto vuelve a ser tuyo si regresas."},
+      {id:"a4-7",mes:"2031-12",txt:"El millón líquido. Cierra el Plan Maestro y arma el siguiente: el depa y el Cupra en su orden."},
+      {id:"a4-8",cont:true,txt:"Cada aumento, primero al ahorro. El nivel de vida sube después que el patrimonio, no antes."},
     ]},
   ];
 
+  /* ── LA SALIDA A ALEMANIA ──────────────────────────────────────────────────────────────────
+     Adán, 3-oct-2026: "contempla que me quiero ir en sep del 2027 a Alemania, contempla todo lo
+     que debo reunir hasta esa fecha: documentos, ropa necesaria, herramientas necesarias, salud
+     física, salud mental, etc. Tú eres mi coach y debes guiarme exhaustivamente al éxito". Y: "el
+     byd no lo venderé… lo rentaré a alguna persona".
+
+     `costos`: lo que cuesta irse, en el mes en que se paga, en pesos (`mxn`) o en euros (`eur`, al
+     `PROYECTO.eurMxn` del plan). `gasta:false` = el dinero se mueve pero sigue siendo suyo (la
+     cuenta bloqueada, la reserva del BYD, el colchón): cuenta para juntar, no baja el patrimonio.
+     Fuentes, revisadas el 3-oct-2026: cuenta bloqueada €11,904 al año (Auswärtiges Amt, 2026);
+     Esslingen: solicitud del 4 nov al 31 mar, respuesta antes de fin de mayo, arranque en
+     septiembre, €1,500 por semestre para no europeos, A2 de alemán antes de cerrar el 2º semestre,
+     CV y dos recomendaciones (hs-esslingen.de); visa €75 + BLS €39.90, mínimo 6 a 8 semanas
+     (blsinternational.com); IELTS Academic $4,850 (British Council CDMX). Lo demás son
+     estimaciones y lo dicen.
+
+     `bloques`: la lista exhaustiva, por tema. `cuando` es el mes (AAAA-MM) o 'cont' (toda la
+     preparación); los ids `sa-*` son el contrato con `coach_checks_v1`. Coach la pinta
+     (`pintarSalida()`); las tareas de fase son solo los hitos. */
+  const SALIDA = {
+    costos: [
+      {id:'ielts',       mes:'2026-11', mxn:4850,  gasta:true,  txt:'IELTS Academic, British Council CDMX'},
+      {id:'pasaporte',   mes:'2026-11', mxn:2500,  gasta:true,  txt:'Pasaporte de 6 años, si el tuyo no cubre hasta 2029 (estimado; cuota de la SRE)'},
+      {id:'apostillas',  mes:'2026-12', mxn:6000,  gasta:true,  txt:'Apostillas y traducciones: título, certificado y acta (estimado)'},
+      {id:'goethe',      mes:'2027-04', mxn:3600,  gasta:true,  txt:'Examen A2 de alemán, Goethe o telc (estimado)'},
+      {id:'salud',       mes:'2027-05', mxn:8000,  gasta:true,  txt:'Chequeo, dentista, lentes y medicamentos para 3 meses (estimado)'},
+      {id:'bloqueada',   mes:'2027-06', eur:11904, gasta:false, txt:'Cuenta bloqueada: €11,904, el monto de 2026'},
+      {id:'apertura',    mes:'2027-06', eur:100,   gasta:true,  txt:'Apertura de la cuenta bloqueada (estimado)'},
+      {id:'visa',        mes:'2027-06', mxn:2394,  gasta:true,  txt:'Visa (€75 = $1,600) y servicio de BLS (€39.90 = $794)'},
+      {id:'seguroViaje', mes:'2027-07', mxn:2500,  gasta:true,  txt:'Seguro de viaje de los primeros 3 meses, lo pide la visa (estimado)'},
+      {id:'vuelo',       mes:'2027-07', mxn:20000, gasta:true,  txt:'Vuelo CDMX → Stuttgart, solo ida (estimado)'},
+      {id:'ropa',        mes:'2027-08', mxn:8000,  gasta:true,  txt:'Ropa de invierno y equipo (estimado)'},
+      {id:'reservaByd',  mes:'2027-08', mxn:13400, gasta:false, txt:'Reserva del BYD: dos mensualidades en CETES'},
+      {id:'vivienda',    mes:'2027-08', eur:1000,  gasta:true,  txt:'Depósito y primera renta en Esslingen (estimado)'},
+      {id:'colegiatura', mes:'2027-09', eur:1900,  gasta:true,  txt:'Colegiatura (€1,500) y cuotas del 1er semestre'},
+      {id:'colchon',     mes:'2027-09', eur:1000,  gasta:false, txt:'Colchón de llegada, fuera de la cuenta bloqueada'},
+    ],
+    // Lo que tiene que estar en la cuenta a mediados de junio: la cuenta bloqueada y la visa.
+    junio: ['bloqueada', 'apertura', 'visa'],
+    bloques: [
+      {id:'admision', ico:'🎓', titulo:'Admisión en Esslingen', items:[
+        {id:'sa-adm-1',  cuando:'2026-10', txt:'Lee los requisitos exactos en el portal de la Esslingen Graduate School (Automotive Systems): idioma, documentos y formato. La ventana abre el 4 nov.'},
+        {id:'sa-adm-2',  cuando:'2026-10', txt:'Inscríbete al IELTS Academic (British Council CDMX, $4,850) para fines de noviembre o diciembre.'},
+        {id:'sa-adm-3',  cuando:'2026-10', txt:'Pide las dos cartas de recomendación: un jefe de Bosch, Continental o ALTEN y un líder técnico o profesor. En inglés, firmadas y con datos de contacto.'},
+        {id:'sa-adm-4',  cuando:'2026-11', txt:'CV en inglés y formato europeo, dos páginas: Ford, Continental, Bosch, Google, ALTEN, el ISTQB y lo que construyes con IA.'},
+        {id:'sa-adm-5',  cuando:'2026-11', txt:'Carta de motivación: por qué Automotive Systems en Esslingen, qué traes (seis años de validación y HIL) y qué quieres después (Bosch, Mercedes-Benz, Porsche).'},
+        {id:'sa-adm-6',  cuando:'2026-11', txt:'Pide al IPN el título, el certificado total de estudios con promedio y, si lo dan, una constancia de tu lugar en la generación.'},
+        {id:'sa-adm-7',  cuando:'2026-12', txt:'Apostilla el título y el certificado —son documentos federales: los apostilla Gobernación— y tradúcelos al inglés con perito si el portal los pide traducidos.'},
+        {id:'sa-adm-8',  cuando:'2026-12', txt:'IELTS presentado con 6.0 o más (o el mínimo que diga el portal). Si no llega, se repite en enero: el resultado sale en días.'},
+        {id:'sa-adm-9',  cuando:'2027-01', txt:'Manda la solicitud completa en el portal de la Graduate School. En enero, no en marzo: cierra el 31 mar.'},
+        {id:'sa-adm-10', cuando:'2027-05', txt:'La respuesta llega antes de fin de mayo: si es sí, acepta el lugar ese mismo día y pide la carta de admisión para la visa.'},
+      ]},
+      {id:'visa', ico:'🛂', titulo:'Visa y papeles alemanes', items:[
+        {id:'sa-visa-1', cuando:'2026-10', txt:'Revisa tu pasaporte: la visa pide al menos 1 año de vigencia y 2 hojas libres; que cubra hasta 2029. Si no, renuévalo ya en la SRE.'},
+        {id:'sa-visa-2', cuando:'2027-05', txt:'En cuanto llegue la admisión, abre la cuenta bloqueada (Expatrio, Fintiba o Coracle): €11,904, el monto de 2026 — revisa el vigente.'},
+        {id:'sa-visa-3', cuando:'2027-05', txt:'Agenda la cita de visa nacional de estudiante con BLS (Embajada de Alemania, CDMX): el trámite tarda mínimo de 6 a 8 semanas.'},
+        {id:'sa-visa-4', cuando:'2027-06', txt:'Expediente en dos juegos: formularios firmados, 2 fotos biométricas, pasaporte y copias, admisión, cuenta bloqueada, seguro de viaje e IELTS. Visa €75 ($1,600) y BLS €39.90 ($794).'},
+        {id:'sa-visa-5', cuando:'2027-07', txt:'Seguro médico alemán: a los 32 ya no aplica la tarifa de estudiante del seguro público (es hasta los 30). Compara el público voluntario (~€135 al mes) con uno privado para estudiantes (~€100) antes de inscribirte.'},
+        {id:'sa-visa-6', cuando:'2027-08', txt:'Al recoger la visa, revisa nombre, fechas y tipo antes de salir de la embajada.'},
+        {id:'sa-visa-7', cuando:'2027-09', txt:'Allá: Anmeldung en 14 días, inscripción en la Hochschule y permiso de residencia en la Ausländerbehörde antes de que venza la visa.'},
+      ]},
+      {id:'dinero', ico:'💶', titulo:'Dinero', items:[
+        {id:'sa-din-1', cuando:'2026-10', txt:'Abre la cuenta de Alemania, CETES aparte del día a día: el ahorro se va ahí el día que entra la quincena.'},
+        {id:'sa-din-2', cuando:'2026-10', txt:'Presupuesto de vida diaria: $8,000 al mes con renta y $7,000 sin renta, comida aparte. La tarjeta, con ese tope.'},
+        {id:'sa-din-3', cuando:'2026-11', txt:'Vende lo que no usas: PS5 y su control, monitores, iPad y lo que no hayas tocado en tres meses.'},
+        {id:'sa-din-4', cuando:'2026-12', txt:'El aguinaldo, entero a la cuenta de Alemania.'},
+        {id:'sa-din-5', cuando:'2027-01', txt:'Entrega el depa a fin de enero y recupera el depósito: desde febrero, la renta es ahorro.'},
+        {id:'sa-din-6', cuando:'2027-06', txt:'15 de junio: {{salidaJunio}} en la cuenta, para la cuenta bloqueada y la visa. Es el punto más apretado del plan.'},
+        {id:'sa-din-7', cuando:'2027-08', txt:'Tarjeta sin comisión en el extranjero (Wise o Revolut), y la BBVA en $0 con el pago domiciliado, o cancelada.'},
+        {id:'sa-din-8', cuando:'2027-08', txt:'iPhone de AT&T: domicilia lo que quede o liquídalo antes de irte.'},
+        {id:'sa-din-9', cuando:'2027-07', txt:'Con un contador: el aviso al SAT si dejas de ser residente fiscal en México y cómo se declara la renta del BYD. Antes de firmar el contrato del auto.'},
+      ]},
+      {id:'byd', ico:'🚗', titulo:'El BYD se queda y se renta', items:[
+        {id:'sa-byd-1', cuando:'2027-05', txt:'Revisa el contrato del crédito y la póliza: que permitan rentarlo y usarlo en plataformas.'},
+        {id:'sa-byd-2', cuando:'2027-06', txt:'Decide cómo: rentarlo tú a un conductor (un particular cobra unos $3,000 a la semana; las flotillas, de $3,600 a $4,500 por un Dolphin Mini) o dejarlo con una flotilla que lo administre.'},
+        {id:'sa-byd-3', cuando:'2027-07', txt:'Seguro para plataformas —el normal no cubre si maneja para Didi o Uber— y GPS con paro de motor.'},
+        {id:'sa-byd-4', cuando:'2027-07', txt:'Contrato por escrito: depósito, pago semanal por adelantado, kilometraje, mantenimiento, multas y qué pasa si no paga.'},
+        {id:'sa-byd-5', cuando:'2027-08', txt:'Tu papá administra: poder notarial para trámites y la cuenta donde entra la renta y sale la mensualidad de {{autoPago}}.'},
+        {id:'sa-byd-6', cuando:'2027-08', txt:'Reserva de dos mensualidades en CETES por si un mes se queda sin rentar.'},
+      ]},
+      {id:'fisica', ico:'🩺', titulo:'Salud física', items:[
+        {id:'sa-sal-1', cuando:'2026-11', txt:'Chequeo general con análisis (biometría hemática, química sanguínea y lípidos): tu línea base antes del cambio.'},
+        {id:'sa-sal-2', cuando:'2027-03', txt:'Dentista: limpieza y todo lo pendiente, aquí. Allá es caro y las citas tardan.'},
+        {id:'sa-sal-3', cuando:'2027-05', txt:'Oftalmólogo: graduación nueva y lentes de repuesto.'},
+        {id:'sa-sal-4', cuando:'2027-06', txt:'Cartilla de vacunación al día (tétanos, sarampión, hepatitis), con una copia en inglés.'},
+        {id:'sa-sal-5', cuando:'2027-07', txt:'Medicamentos que tomes: receta en inglés con el nombre genérico y tres meses de reserva.'},
+        {id:'sa-sal-6', cuando:'cont',    txt:'Gym 5 días y el Hyrox del 30 oct: llegas en forma. Allá, el deporte universitario (Hochschulsport) es barato.'},
+        {id:'sa-sal-7', cuando:'cont',    txt:'Proteína como hasta hoy ({{proteinaMeta}} g al día): cambiar de país no es razón para perder lo ganado.'},
+      ]},
+      {id:'mental', ico:'🧠', titulo:'Salud mental', items:[
+        {id:'sa-men-1', cuando:'2026-11', txt:'Empieza terapia aquí, no allá: mudarte solo a otro país a los 32 es de los cambios más fuertes. Llega con herramientas.'},
+        {id:'sa-men-2', cuando:'cont',    txt:'Cero alcohol también en Alemania: la cerveza es parte de la vida social; ten lista tu respuesta y tu bebida.'},
+        {id:'sa-men-3', cuando:'2027-07', txt:'Tu red antes de llegar: mexicanos en Stuttgart, los líderes de Bosch que conoces y el programa de buddies de la Hochschule.'},
+        {id:'sa-men-4', cuando:'2027-08', txt:'Llamadas fijas con tu familia, con día y hora: lo que se agenda pasa.'},
+        {id:'sa-men-5', cuando:'2027-10', txt:'Invierno: en diciembre hay unas 8 horas de luz. Rutina fija, ejercicio diario, luz del día y revisa tu vitamina D.'},
+        {id:'sa-men-6', cuando:'cont',    txt:'Si te sientes mal: la asesoría psicológica del Studierendenwerk es gratis para estudiantes, y la Telefonseelsorge (0800 111 0 111) atiende las 24 horas.'},
+      ]},
+      {id:'ropa', ico:'🧥', titulo:'Ropa para el invierno alemán', items:[
+        {id:'sa-ropa-1', cuando:'2027-10', txt:'Chamarra de invierno impermeable, para −10 °C: cómprala allá en octubre (Decathlon, TK Maxx), no la cargues.'},
+        {id:'sa-ropa-2', cuando:'2027-10', txt:'Botas impermeables con suela antiderrapante: hay nieve y hielo de diciembre a febrero.'},
+        {id:'sa-ropa-3', cuando:'2027-08', txt:'Dos juegos de ropa térmica, guantes, gorro y bufanda: aquí son baratos.'},
+        {id:'sa-ropa-4', cuando:'2027-08', txt:'Un saco y una camisa para entrevistas de Werkstudent y de empleo.'},
+        {id:'sa-ropa-5', cuando:'2027-08', txt:'Ropa de gym y para correr con frío: térmicos y rompevientos.'},
+        {id:'sa-ropa-6', cuando:'2027-08', txt:'Dos maletas: lo demás se compra allá. Lo que no cabe se vende o se queda en casa de tu familia.'},
+      ]},
+      {id:'tecnologia', ico:'💻', titulo:'Herramientas y tecnología', items:[
+        {id:'sa-tec-1', cuando:'2027-08', txt:'La laptop para la maestría (la Zephyrus sirve) con su cargador; revisa que diga 100-240 V.'},
+        {id:'sa-tec-2', cuando:'2027-08', txt:'Adaptadores de enchufe tipo C/F: Alemania usa 230 V.'},
+        {id:'sa-tec-3', cuando:'2027-08', txt:'Tu número mexicano vivo en un plan barato o de prepago: el banco, el SAT y WhatsApp dependen de él. Allá, una eSIM alemana.'},
+        {id:'sa-tec-4', cuando:'2027-08', txt:'Escaneos de todo (pasaporte, visa, títulos, apostillas, admisión y seguro) en la nube y en una USB.'},
+        {id:'sa-tec-5', cuando:'2027-08', txt:'Gestor de contraseñas y verificación en dos pasos que no dependa de un SMS mexicano.'},
+        {id:'sa-tec-6', cuando:'2027-08', txt:'Licencia de conducir vigente: allá sirve unos meses; pregunta en la Führerscheinstelle cómo se canjea la mexicana.'},
+        {id:'sa-tec-7', cuando:'2027-09', txt:'Transporte: el Deutschland-Semesterticket suele venir con la cuota del semestre; confírmalo en Esslingen.'},
+      ]},
+      {id:'vivienda', ico:'🏠', titulo:'Vivienda y llegada', items:[
+        {id:'sa-viv-1', cuando:'2027-05', txt:'El día de la admisión, solicita cuarto en las residencias del Studierendenwerk Stuttgart: la lista de espera es larga.'},
+        {id:'sa-viv-2', cuando:'2027-06', txt:'Plan B: WG-Gesucht en Esslingen o Stuttgart. Nunca pagues un depósito sin contrato ni sin ver el cuarto en videollamada: hay fraudes.'},
+        {id:'sa-viv-3', cuando:'2027-08', txt:'Pide al arrendador la Wohnungsgeberbestätigung: sin ella no hay Anmeldung.'},
+        {id:'sa-viv-4', cuando:'2027-09', txt:'Primera semana: Anmeldung, inscripción, cuenta, SIM y transporte; la segunda, el permiso de residencia.'},
+      ]},
+      {id:'trabajo', ico:'💼', titulo:'Trabajo', items:[
+        {id:'sa-trab-1', cuando:'2027-02', txt:'LinkedIn en inglés: «Open to Werkstudent · Stuttgart region · from Oct 2027», con el ISTQB y tu experiencia en HIL.'},
+        {id:'sa-trab-2', cuando:'2027-04', txt:'Goethe-Zertifikat A2 o telc A2 en México: Esslingen pide A2 antes de terminar el 2º semestre y llegas con él cumplido.'},
+        {id:'sa-trab-3', cuando:'2027-06', txt:'Aplica a Werkstudent desde México con la admisión en la mano: Bosch, Mercedes-Benz, Porsche, Vector, ETAS y proveedores. 20 h a la semana pagan unos €1,200 al mes.'},
+        {id:'sa-trab-4', cuando:'2027-07', txt:'Constancia laboral y carta de recomendación de ALTEN en inglés: sirven para el Werkstudent y para tu primer empleo allá.'},
+        {id:'sa-trab-5', cuando:'2027-08', txt:'Renuncia con el aviso que pida tu contrato y pide el finiquito por escrito: aguinaldo y vacaciones proporcionales.'},
+      ]},
+      {id:'mexico', ico:'🇲🇽', titulo:'Lo que se queda en México', items:[
+        {id:'sa-mx-1', cuando:'2027-02', txt:'El negocio de tu papá, en sus manos: el dossier, el QR de WhatsApp y las plantillas de Posts para que publique sin ti.'},
+        {id:'sa-mx-2', cuando:'2027-08', txt:'CETES y GBM: entra desde el extranjero y deja beneficiarios registrados.'},
+        {id:'sa-mx-3', cuando:'2027-08', txt:'Cancela el gym ({{gymNombre}}) y revisa qué suscripciones siguen.'},
+        {id:'sa-mx-4', cuando:'2027-08', txt:'Poder notarial a tu papá para el auto y los trámites que no puedas hacer desde allá.'},
+        {id:'sa-mx-5', cuando:'2027-08', txt:'Despedidas sin alcohol: comidas, no fiestas. La cadena no se rompe en la última semana.'},
+      ]},
+    ],
+  };
+  function costoSalida(c, eur) { return (c.mxn || 0) + (c.eur || 0) * (eur || PROYECTO.eurMxn); }
+
+  /* ── LA PROYECCIÓN DEL PLAN MAESTRO ──────────────────────────────────────────────────────────
+     Mes a mes, del 1 oct 2026 al millón: lo que entra, lo que sale, la cuenta de Alemania (todo el
+     efectivo) y el patrimonio líquido (efectivo y depósito, menos el auto, el iPhone y la BBVA).
+     Lo que viene de PROYECTO (sueldo, Didi, renta, servicios…) se lee en vivo; lo demás son los
+     SUPUESTOS de abajo, cada uno con su porqué. La `foto` es el 1 oct 2026 en Finanzas —una foto,
+     como una migración: no se actualiza—, así que la proyección es el PLAN, y Coach la compara
+     contra lo real. `proyectar(cambios)` admite escenarios (ahorrar menos, sin Werkstudent, otro
+     euro); `PROYECCION.meses` es el escenario base. De aquí sale el `liquido` de cada fase. */
+  const SUPUESTOS = {
+    desde: '2026-10', hasta: '2032-12',
+    // 1 oct 2026: fondo $6,000 + cuenta $390 + efectivo $1,600; el depósito del depa; el crédito
+    // del auto con su tasa y su pago; el iPhone de AT&T; la BBVA de septiembre (se paga el 11).
+    foto: { efectivo: 7990, deposito: 11250, auto: 283000, autoTasa: 12.99, autoPago: 6700, iphone: 11362, iphonePago: 494, bbva: 10000 },
+    comida: 3500,          // ~$115 al día: lo que cuesta comer según la lista de compras
+    vida: 8000,            // todo lo demás del día a día con renta: la meta del presupuesto de la Fase 1
+    vidaSinRenta: 7000,    // sin depa propio desde febrero
+    menosAhorro: 0,        // escenario: cuánto menos se ahorra al mes en México
+    extras: [
+      {mes:'2026-11', txt:'Venta de lo que no usas (1 de 2)', mxn:10000},
+      {mes:'2026-12', txt:'Venta de lo que no usas (2 de 2)', mxn:10000},
+      {mes:'2026-12', txt:'Aguinaldo: al menos 15 días de sueldo', mxn:'sueldoQuinc'},
+      {mes:'2027-08', txt:'Finiquito de ALTEN: aguinaldo y vacaciones proporcionales (estimado)', mxn:15000},
+    ],
+    // En Esslingen, en euros: renta ~€450, comida ~€250, seguro ~€120, celular, libros y algo de
+    // vida. Werkstudent: 20 h a la semana pagan ~€1,200 (workingstudentjobs.de, 2026), ~€1,100
+    // netos; se supone desde el tercer mes. Colegiaturas de €1,900 en marzo y septiembre (la
+    // primera va en SALIDA). La maestría son tres semestres: termina en febrero de 2029.
+    alemania: { gasto: 1050, werkstudent: 1100, werkDesde: '2027-11', colegiatura: 1900, semestres: ['2028-03', '2028-09'], fin: '2029-02' },
+    // El BYD rentado: ~$3,000 a la semana menos seguro de plataforma, GPS, mantenimiento y semanas
+    // vacías. Paga su mensualidad y deja un poco.
+    byd: { rentaNeta: 7500 },
+    // Ingeniero recién titulado en la región de Stuttgart: ~€58,000 brutos al año, unos €3,200
+    // netos al mes; la vida allá, ~€1,900.
+    trabajo: { neto: 3200, gasto: 1900, desde: '2029-03' },
+    rendimiento: 0.06,     // CETES o índices sobre lo que se tiene, ya fuera de México (anual)
+  };
+  function mesDe(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); }
+  function mesSiguiente(ym) { const p = ym.split('-').map(Number); return mesDe(new Date(p[0], p[1], 1)); }
+  function proyectar(cambios) {
+    const s = Object.assign({}, SUPUESTOS, cambios || {});
+    const P = PROYECTO, eur = s.eurMxn || P.eurMxn, f = s.foto;
+    const salida = P.maestriaInicio.slice(0, 7), devuelve = mesSiguiente(P.rentaHasta);
+    let cash = f.efectivo, deposito = f.deposito, auto = f.auto, iphone = f.iphone, bbva = f.bbva;
+    const filas = [];
+    const p0 = s.desde.split('-').map(Number);
+    for (let k = 0; ; k++) {
+      const mes = mesDe(new Date(p0[0], p0[1] - 1 + k, 1));
+      if (mes > s.hasta) break;
+      const enMexico = mes < salida, enMaestria = !enMexico && mes <= s.alemania.fin;
+      let entra = 0, sale = 0;
+      const notas = [];
+      // El auto: el interés es gasto; el capital baja la deuda (no el patrimonio).
+      const interes = auto > 0 ? auto * f.autoTasa / 100 / 12 : 0;
+      const capital = auto > 0 ? Math.min(auto, f.autoPago - interes) : 0;
+      auto -= capital; cash -= capital; sale += interes;
+      const ip = Math.min(iphone, f.iphonePago); iphone -= ip; cash -= ip;
+      if (enMexico) {
+        const conRenta = mes <= P.rentaHasta;
+        entra += P.sueldo + P.didiMes;
+        sale += (conRenta ? P.renta + P.servicios : P.celular) + P.suscripciones + s.comida +
+                (conRenta ? s.vida : s.vidaSinRenta) + s.menosAhorro;
+        if (mes === s.desde && bbva) { cash -= bbva; bbva = 0; notas.push('la BBVA de septiembre, pagada completa'); }
+        if (mes === devuelve) { cash += deposito; deposito = 0; notas.push('sin renta desde este mes; regresa el depósito del depa'); }
+      } else {
+        entra += s.byd.rentaNeta;
+        if (mes === salida) notas.push('el BYD empieza a rentarse');
+        if (enMaestria) {
+          sale += s.alemania.gasto * eur;
+          if (mes >= s.alemania.werkDesde) entra += s.alemania.werkstudent * eur;
+          if (mes === s.alemania.werkDesde && s.alemania.werkstudent) notas.push('primer mes de Werkstudent');
+          if (s.alemania.semestres.indexOf(mes) !== -1) { sale += s.alemania.colegiatura * eur; notas.push('colegiatura del semestre'); }
+        } else if (mes >= s.trabajo.desde) {
+          entra += s.trabajo.neto * eur; sale += s.trabajo.gasto * eur;
+          if (mes === s.trabajo.desde) notas.push('primer sueldo de ingeniero');
+        }
+      }
+      s.extras.forEach(function (e) {
+        if (e.mes !== mes) return;
+        entra += typeof e.mxn === 'string' ? P[e.mxn] : e.mxn; notas.push(e.txt);
+      });
+      SALIDA.costos.forEach(function (c) {
+        if (c.mes !== mes) return;
+        if (c.gasta) sale += costoSalida(c, eur);
+        notas.push(c.txt.replace(/ \(estimado[^)]*\)$/, ''));
+      });
+      cash += entra - sale;
+      if (!enMexico && cash > 0) cash += cash * s.rendimiento / 12;
+      if (auto <= 0 && capital > 0) notas.push('se termina de pagar el BYD');
+      filas.push({ mes: mes, entra: entra, sale: sale, ahorro: entra - sale, alemania: cash, auto: auto,
+                   liquido: cash + deposito - auto - iphone - bbva, notas: notas });
+    }
+    return filas;
+  }
+  const PROYECCION = { supuestos: SUPUESTOS, meses: proyectar() };
+  // El patrimonio que espera cada fase al cerrar sale de la proyección; la última, del millón.
+  PHASES.forEach(function (f, i) {
+    if (i === 0) return;
+    if (i === PHASES.length - 1) { f.liquido = 1000000; return; }
+    const r = PROYECCION.meses.filter(function (m) { return m.mes === mesDe(f.end); })[0];
+    if (r) f.liquido = Math.round(r.liquido / 1000) * 1000;
+  });
   /* ── APRENDIZAJE ───────────────────────────────────────────────────────────────────────────
      Las 5 prioridades (Datos, Ventas, Marketing, Finanzas, IA) con diagnóstico, primer paso,
      hábito, el error típico y los recursos. Coach.html tiene lo mismo como HTML en
@@ -3101,6 +3356,17 @@ window.CIFRAS = (function () {
         if (cta) { cta.value = 390; cta.fecha = '2026-10-01'; }
       }
     },
+    {
+      // 2026-10-03 · "de prioridad mejor si me quiero ir en sep del 2027 a Alemania". La meta de
+      // la maestría deja de estar en pausa, se fecha en septiembre de 2027 y su objetivo pasa a
+      // ser lo que cuesta irse: el total de SALIDA al 3-oct-2026, redondeado ($406,000). Si los
+      // costos cambian, la meta se ajusta a mano en Finanzas. Finanzas.html la siembra igual.
+      flag: '_alemania20261003',
+      hacer: function (f) {
+        const g = (f.goals || []).find(x => x.id === 'g001');
+        if (g) { g.date = '2027-09-01'; delete g.pausadaHasta; g.target = 406000; }
+      }
+    },
   ];
 
   /* Las seis compras del 1-sep-2026, en un solo sitio: las usa la migración de arriba para el
@@ -3273,7 +3539,7 @@ window.CIFRAS = (function () {
     proteinaMeta: { v: () => PROYECTO.proteinaMeta, fmt: 'num' },
     maestriaInicio:{ v: () => PROYECTO.maestriaInicio,   fmt: 'fecha' },
     // Las fechas del plan, para escribirlas en prosa sin copiarlas: `fecha` las pinta "18 jul 2027".
-    decisionMaestria: { v: () => PROYECTO.maestriaPausa, fmt: 'fecha' },
+    decisionMaestria: { v: () => PROYECTO.maestriaDecision, fmt: 'fecha' },
     // El millón se fecha con el cierre de la última fase del Plan Maestro.
     metaMillon:    { v: () => PHASES[PHASES.length - 1].end, fmt: 'fecha' },
     // ── Derivadas que cruzan constantes con saldos vivos ──
@@ -3284,10 +3550,18 @@ window.CIFRAS = (function () {
       return PROYECTO.ingresoTotal - PROYECTO.fijosTotal - min;
     } },
     minimosDeuda:  { dep: ['*deudas'], v: () => deudas().filter(d => +d.balance > 0).reduce((a, d) => a + (+d.min || 0), 0) },
-    // El fondo de emergencia completo: tres meses de lo que no se puede dejar de pagar (fijos y
-    // mínimos de deuda). `fondoMeta` es la meta de arranque; esta es la de la Fase 1.
-    fondo3m:       { dep: ['fijosTotal','minimosDeuda'],
-                     v: () => 3 * (PROYECTO.fijosTotal + deudas().filter(d => +d.balance > 0).reduce((a, d) => a + (+d.min || 0), 0)) },
+    // ── La salida a Alemania (SALIDA y la PROYECCION, arriba) ──
+    // Lo que cuesta irse, completo; lo que tiene que estar en la cuenta a mediados de junio (la
+    // cuenta bloqueada y la visa), y la cuenta bloqueada sola. Se mueven con el euro del plan.
+    salidaTotal:   { dep: ['eurMxn'], v: () => SALIDA.costos.reduce((a, c) => a + costoSalida(c), 0) },
+    salidaJunio:   { dep: ['eurMxn'], v: () => SALIDA.costos.filter(c => SALIDA.junio.indexOf(c.id) !== -1).reduce((a, c) => a + costoSalida(c), 0) },
+    sperrkonto:    { dep: ['eurMxn'], v: () => costoSalida(SALIDA.costos.filter(c => c.id === 'bloqueada')[0]) },
+    // Lo que la proyección espera en la cuenta de Alemania al cerrar la Fase 1 (31 mar 2027).
+    alemaniaMarzo: { dep: ['sueldo','didiMes','sueldoQuinc','renta','servicios','suscripciones'],
+                     v: () => proyectar().filter(f => f.mes === '2027-03')[0].alemania },
+    // El mes en que la proyección cruza el millón (lo mueve sobre todo el euro: el sueldo de allá).
+    mesMillon:     { dep: ['eurMxn'], fmt: 'mes',
+                     v: () => { const f = proyectar().filter(x => x.liquido >= 1000000)[0]; return f ? new Date(f.mes + '-01T00:00:00') : null; } },
     // Desde el 20-sep-2026 el fondo de emergencia SON los CETES (Adán: "mi fondo de emergencia
     // van a ser los cetes, de ahí tendré mi fondo de emergencia y cualquier cosa los vendo").
     // Un solo número: `emergencyFund`. Ya no hay inversión CETES aparte que sumar dos veces.
@@ -3342,9 +3616,11 @@ window.CIFRAS = (function () {
   function fmt(num, tipo) {
     if (num == null) return VACIO;
     if (tipo === 'txt') return String(num);        // antes que isNaN: un texto no es un número
-    if (tipo === 'fecha') {                         // Date o 'AAAA-MM-DD' → "1 oct 2028"
+    if (tipo === 'fecha' || tipo === 'mes') {        // Date o 'AAAA-MM-DD' → "1 oct 2028" · mes: "may 2031"
       const d = num instanceof Date ? num : new Date(String(num) + 'T00:00:00');
-      return isNaN(d) ? VACIO : d.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' });
+      if (isNaN(d)) return VACIO;
+      return tipo === 'mes' ? d.toLocaleDateString('es-MX', { month: 'short', year: 'numeric' })
+                            : d.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' });
     }
     if (isNaN(num)) return VACIO;
     if (tipo === 'txt') return String(num);
@@ -3487,6 +3763,8 @@ window.CIFRAS = (function () {
         const a0 = c.desde.split('-').map(Number), a1 = mes.split('-').map(Number);
         if (((a1[0] - a0[0]) * 12 + (a1[1] - a0[1])) % c.cada !== 0) return;
       }
+      // `hasta`: el último mes en que cae (la renta termina en enero de 2027).
+      if (c.hasta && mes && mes > c.hasta) return;
       out.push({ t: c.txt, monto: c.monto, entra: !!c.entra });
     });
     const DEU = (debts && debts.length) ? debts : deudas();
@@ -3663,6 +3941,10 @@ window.CIFRAS = (function () {
     rutina: rutina,
     SK: SK,
     PHASES: PHASES,
+    SALIDA: SALIDA,
+    PROYECCION: PROYECCION,
+    proyectar: proyectar,
+    costoSalida: costoSalida,
     APRENDIZAJE: APRENDIZAJE,
     LISTA_COMPRAS: LISTA_COMPRAS,
     RUTINA_PIEL: RUTINA_PIEL,

@@ -252,12 +252,18 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   const hallazgos = [];
   for (const [rel, src] of APPS.concat([['Dashboard/datos-maestros.js', maestro]])) {
     const limpio = sinComentarios(src);
+    /* En el maestro, SALIDA y los SUPUESTOS de la proyección son DATOS del plan —lo que cuesta
+       irse, la foto del 1 oct 2026— y no copias de una variable: que la foto del auto valga hoy
+       lo mismo que `autoSaldo` es una coincidencia que dura hasta el siguiente pago. */
+    const plan0 = rel === 'Dashboard/datos-maestros.js' ? limpio.indexOf('const SALIDA = {') : -1;
+    const plan1 = plan0 >= 0 ? limpio.indexOf('const PROYECCION =', plan0) : -1;
     for (const [val, k] of Object.entries(VALS)) {
       if (AMBIGUOS.indexOf(val) !== -1) continue;
       const re = new RegExp('(?<![\\$\\d.,])' + val + '(?![\\d.,]|px|%|ms|em)', 'g');
       let m;
       while ((m = re.exec(limpio)) !== null) {
         const antes = limpio.slice(Math.max(0, m.index - 90), m.index);
+        if (plan0 >= 0 && m.index > plan0 && m.index < plan1) continue;                // datos del plan (SALIDA, SUPUESTOS)
         if (/\|\|\s*$/.test(antes)) continue;                                     // fallback legítimo
         if (/(balance|total|current|target|invested|value|emergencyFund)\s*=\s*$/.test(antes)) continue;  // migración
         const ctx = limpio.slice(Math.max(0, m.index - 60), m.index + 40).replace(/\s+/g, ' ');
@@ -444,9 +450,10 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   });
 
   // f) Las fechas sueltas de PROYECTO.
-  ['entrevistaWayve','maestriaInicio','inicioCenlex','maestriaPausa'].forEach(function (k) {
+  ['entrevistaWayve','maestriaInicio','inicioCenlex','maestriaDecision'].forEach(function (k) {
     if (!esFecha(P[k])) malos.push('     PROYECTO.' + k + ' no es una fecha YYYY-MM-DD: ' + P[k]);
   });
+  if (!/^\d{4}-\d{2}$/.test(P.rentaHasta || '')) malos.push('     PROYECTO.rentaHasta no es un mes AAAA-MM: ' + P.rentaHasta);
 
   // g) Las fases no se solapan ni dejan huecos.
   (C.PHASES || []).forEach(function (f, i) {
@@ -466,11 +473,11 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   // La maestría marca dos bordes del plan: una fase arranca el día que empieza y la decisión cae
   // dentro de la fase anterior. Mover PROYECTO.maestriaInicio sin mover las fases sale aquí.
   if (esFecha(P.maestriaInicio) && (C.PHASES || []).length) {
-    const ini = new Date(P.maestriaInicio + 'T00:00:00'), dec = new Date(P.maestriaPausa + 'T00:00:00');
+    const ini = new Date(P.maestriaInicio + 'T00:00:00'), dec = new Date(P.maestriaDecision + 'T00:00:00');
     const k = C.PHASES.findIndex(f => f.start.getTime() === ini.getTime());
     if (k < 0) malos.push('     ninguna fase arranca el ' + P.maestriaInicio + ' (PROYECTO.maestriaInicio)');
     else if (!(k > 0 && dec >= C.PHASES[k - 1].start && dec <= C.PHASES[k - 1].end))
-      malos.push('     la decisión de la maestría (' + P.maestriaPausa + ') no cae en la fase anterior a su arranque');
+      malos.push('     la decisión de la maestría (' + P.maestriaDecision + ') no cae en la fase anterior a su arranque');
   }
 
   if (malos.length) problemas.push('Datos del maestro mal formados:\n' + malos.join('\n'));
@@ -757,6 +764,47 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   else ok.push('Biblioteca de ejercicios: EJ_DB vive solo en ejercicios-datos.js, la cargan Ejercicio y el Dashboard, y EJ_PESO_INI solo lleva pesos');
 })();
 
+/* ── La salida a Alemania y la proyección del Plan Maestro ──────────────────────────────────
+   SALIDA es la lista exhaustiva de lo que hay que reunir antes de septiembre de 2027 y lo que
+   cuesta; la PROYECCION, el plan mes a mes del que salen las metas de cada fase. Se vigila que
+   las casillas no pisen otras (comparten `coach_checks_v1` con las fases y el resto de Coach),
+   que cada cosa tenga mes, que Coach las pinte desde el maestro, y que el plan llegue al millón
+   antes del cierre de la última fase: si no llega, la fecha del plan miente. */
+(function salidaYProyeccion() {
+  if (!global.window || !global.window.CIFRAS) return;
+  const C = global.window.CIFRAS, S = C.SALIDA, malos = [];
+  if (!S || !C.PROYECCION) { problemas.push('El maestro ya no expone SALIDA o PROYECCION'); return; }
+  const ids = S.bloques.flatMap(b => b.items.map(x => x.id));
+  const fases = (C.PHASES || []).flatMap(f => (f.semanas || []).map(s => s.id));
+  const repetidos = ids.filter((id, k) => ids.indexOf(id) !== k || fases.indexOf(id) !== -1);
+  if (repetidos.length) malos.push('     ids de la salida repetidos o iguales a una tarea de fase: ' + repetidos.join(', '));
+  const enCoach = ids.filter(id => coach.indexOf('id="' + id + '"') !== -1);
+  if (enCoach.length) malos.push('     casillas de la salida escritas a mano en Coach (se generan del maestro): ' + enCoach.join(', '));
+  S.bloques.forEach(b => b.items.forEach(x => {
+    if (!/^(\d{4}-\d{2}|cont)$/.test(x.cuando || '')) malos.push('     ' + x.id + ': `cuando` no es un mes AAAA-MM ni "cont"');
+  }));
+  S.costos.forEach(c => {
+    if (!/^\d{4}-\d{2}$/.test(c.mes || '')) malos.push('     costo ' + c.id + ': `mes` no es AAAA-MM');
+    if (!(c.mxn > 0 || c.eur > 0)) malos.push('     costo ' + c.id + ': sin importe');
+  });
+  if (coach.indexOf('function pintarSalida') < 0 || coach.indexOf('id="salidaAlemania"') < 0)
+    malos.push('     Coach ya no pinta la lista de salida (falta pintarSalida o #salidaAlemania)');
+  if (coach.indexOf('function pintarProyeccion') < 0 || coach.indexOf('id="proyeccionPlan"') < 0)
+    malos.push('     Coach ya no pinta la proyección (falta pintarProyeccion o #proyeccionPlan)');
+  const ultima = C.PHASES[C.PHASES.length - 1];
+  const fin = ultima.end.getFullYear() + '-' + String(ultima.end.getMonth() + 1).padStart(2, '0');
+  const millon = C.PROYECCION.meses.filter(m => m.liquido >= 1000000)[0];
+  if (!millon || millon.mes > fin)
+    malos.push('     la proyección no llega al millón antes del cierre de la ' + ultima.tag + ' (' + fin + ')');
+  if (malos.length) problemas.push('La salida a Alemania o la proyección dejaron de cuadrar:\n' + malos.join('\n'));
+  else ok.push('Salida a Alemania: ' + ids.length + ' pendientes en ' + S.bloques.length + ' temas y ' + S.costos.length +
+               ' costos; la proyección llega al millón en ' + millon.mes + ', antes del cierre de la ' + ultima.tag);
+  // La renta tiene fin: pasado `rentaHasta`, los fijos de hoy tienen que dejar de contarla.
+  const hoy = new Date(), mesHoy = hoy.getFullYear() + '-' + String(hoy.getMonth() + 1).padStart(2, '0');
+  if (C.PROYECTO.rentaHasta && mesHoy > C.PROYECTO.rentaHasta && C.PROYECTO.renta > 0)
+    avisos.push('La renta terminó en ' + C.PROYECTO.rentaHasta + ' y PROYECTO.renta sigue en ' + C.PROYECTO.renta +
+                ': ponla en 0 (y los servicios del depa) para que margen y fijos dejen de contarla.');
+})();
 /* ── Impacto de lo que cambió en esta sesión ──────────────────────────────────────────────────
    Si `datos-maestros.js` cambió respecto al último commit, se comparan los valores de entonces
    con los de ahora y se dice qué se movió — incluido lo ARRASTRADO. Es la parte que Adán

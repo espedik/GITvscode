@@ -418,7 +418,7 @@ pantallas que dicen qué se paga un día no pueden discrepar. **Si `D.fin.debts`
 (Finanzas nunca abierto en ese navegador) lee `CIFRAS.DEUDAS_SEED`: los 8 pagos del mes salen
 idénticos con y sin Finanzas.
 
-Los cobros aceptan `cada` y `desde` (el gas es bimestral: aparece en agosto y octubre, no en
+Los cobros aceptan `cada`, `desde` y `hasta` (la renta y los servicios del depa terminan en `rentaHasta`, enero de 2027; el gas es bimestral: aparece en agosto y octubre, no en
 septiembre; en el presupuesto mensual entra por la mitad, `gasMensual`). El verificador comprueba
 que **todo gasto fijo de `PROYECTO` con importe caiga algún día de `CALENDARIO.cobros`**: un
 servicio nuevo sin día ya no sale de la cuenta sin que ninguna pantalla lo vea.
@@ -718,7 +718,7 @@ dice aparte el líquido sin bienes (`patrimonioLiquido()`), que es el número qu
 abono. El punto de partida con bienes (18-jul-2026, $231,770) solo sirve para decir cuánto ha
 sumado desde entonces.
 La meta del millón se fecha con el cierre de la última fase (`finDelPlan()`): el medidor dice
-`meta 31 dic 2032` y el de tiempo se llama `Camino a 2032`, los dos leídos de `PHASES`.
+`meta 31 dic 2031` y el de tiempo se llama `Camino a 2031`, los dos leídos de `PHASES`.
 
 Clases `.mg-*`; de la familia anterior `.img-goal-*` solo sobreviven `.img-goal-pbar` y `-fill`,
 que usa el overlay de detalle.
@@ -741,6 +741,8 @@ plazo.** 0 px de desborde a 1600×950 y 1920×1080; a 1366×768 scroll interno.
 
 **El dinero real** de BYD y Maestría es una barra continua en `--ac2`, distinta de las marcas de
 paso, con la cifra (`$22,800 pagado`): `METAS_MONEYBAR[x].short`; `.lbl` va en el `title`.
+
+**El panel de la Maestría** (`kpiDetalle`, `maestria`) enseña la pausa solo mientras siga vigente (`goal.pausadaHasta`); si no, el ritmo que pide la salida —lo que falta entre los meses que quedan hasta `goal.date`— y el día de decidir (`{{decisionMaestria}}`), con la proyección y la lista de la salida en Coach.
 
 ### Las adicciones — celular y alcohol
 

@@ -4181,7 +4181,9 @@ function seedData() {
     // consola en vez de dejarlo pasar en silencio.
     debts: (window.CIFRAS && window.CIFRAS.DEUDAS_SEED) || [],
     goals: [
-      {id:'g001',name:'Maestría en Alemania', target:500000, current:53740, date:'2028-10-01', pausadaHasta:'2027-07-18',icon:'🎓'},
+      // Salida a Alemania en sep 2027 (Coach → Plan Maestro): sin pausa, y la meta es lo que cuesta irse —el
+      // total de SALIDA en el maestro, redondeado—. La migración _alemania20261003 hace lo mismo con los datos guardados.
+      {id:'g001',name:'Maestría en Alemania', target:406000, current:53740, date:'2027-09-01',icon:'🎓'},
     ],
     investments: [
       // CETES no va aquí desde el 20-sep-2026: es el fondo de emergencia (`emergencyFund`, meta

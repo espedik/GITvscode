@@ -4778,7 +4778,7 @@ const EVENTOS_MES={
     {ico:"✈️",txt:"Revisar FAMEX 2027"},
   ],
   "2026-10":[
-    {ico:"🪙",txt:"Arranca la Fase 1 del Plan Maestro (1 oct): blindar la base — el fondo de emergencia completo en diciembre, la BBVA pagada completa cada día 11, el ISTQB CT-GenAI y el primer cliente del negocio de tu papá"},
+    {ico:"🪙",txt:"Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — IELTS, cartas de recomendación y la solicitud a Esslingen; la BBVA al total cada 11 y el ahorro a la cuenta de Alemania"},
     {ico:"💳",txt:"Pagar la TC BBVA completa antes del día 11 — el total del estado de cuenta, no el mínimo: así no genera intereses"},
     {ico:"🎯",txt:"Cerrar la Fase 0 por escrito: qué se cumplió (Banamex, liquidada el 30 sep) y qué pasa a la Fase 1 (el fondo de emergencia y la BBVA)"},
   ],
@@ -4849,6 +4849,10 @@ const EVENTOS_CORRIGE = [
   { flag:'_fasesNuevas20261003', mes:'2026-10',
     de:'Arranca Fase 1 del Plan Maestro (1 oct) — entran los $2,335/mes que liberan los MSI y el mínimo de Banamex, libre desde que quedó en $0 el 30 sep; la meta es el primer ingreso real',
     a:'Arranca la Fase 1 del Plan Maestro (1 oct): blindar la base — el fondo de emergencia completo en diciembre, la BBVA pagada completa cada día 11, el ISTQB CT-GenAI y el primer cliente del negocio de tu papá' },
+  /* 2026-10-03 · La salida a Alemania se adelantó a septiembre de 2027 y la Fase 1 se redefinió otra vez. */
+  { flag:'_alemania20261003', mes:'2026-10',
+    de:'Arranca la Fase 1 del Plan Maestro (1 oct): blindar la base — el fondo de emergencia completo en diciembre, la BBVA pagada completa cada día 11, el ISTQB CT-GenAI y el primer cliente del negocio de tu papá',
+    a:'Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — IELTS, cartas de recomendación y la solicitud a Esslingen; la BBVA al total cada 11 y el ahorro a la cuenta de Alemania' },
 ];
 function eventosCorregir(){
   const st = rawGet(EVENTOS_KEY, null);
@@ -10526,7 +10530,7 @@ const META_DETALLE={
       {t:"Paso 1 · Fondo de emergencia",d:"A {{fondoMeta}} — antes de tocar el BYD, esto va primero."},
       {t:"Paso 2 · Banamex en $0",d:"La liquidaste el 13 ago 2026 — saldo completo, no el mínimo, 5 meses antes de la meta. Volvió a abrirse el 1 sep 2026 con cuatro compras de un día ($5,985) y <b>la volviste a dejar en $0 el 30 sep 2026</b>. Paso cumplido otra vez: que no vuelva a cargarse."},
       {t:"Paso 3 · BBVA en $0",d:"La única tarjeta con saldo: {{tcBbva}}. Desde el 30 sep 2026 la pagas completa cada mes, así que no genera intereses — Banamex quedó en $0 ese mismo día. Mientras no vuelvas a pagar solo el mínimo de {{tcBbvaMin}}, el BYD se queda en pago mínimo."},
-      {t:"Fase 2 · Se vende antes de irte",d:"El plan vende el auto en jul 2028: el crédito se liquida con la venta y lo que quede va al fondo de la maestría. Su cuota de {{autoPago}} no se paga desde Alemania."},
+      {t:"Fase 2 · Se renta mientras estás en Alemania",d:"No se vende: es tu respaldo para trabajar Didi si regresas sin empleo. Mientras estás fuera se renta a un conductor de plataforma —un particular cobra unos $3,000 a la semana— con contrato, seguro para plataformas, GPS y tu papá como administrador: la renta paga la mensualidad de {{autoPago}}."},
       {t:"Pregunta por pagos extra",d:"A tu crédito del BYD, si permite pagos extraordinarios a capital sin penalización — resuélvelo antes de necesitarlo."},
       {t:"Ingresos extra a capital",d:"Cualquier ingreso extra de Didi o del negocio que no esté ya comprometido va como abono a capital del BYD."},
       {t:"Revisa el saldo cada mes",d:"En Finanzas, junto con tus otras deudas — verlo bajar es lo que sostiene la disciplina de seguir el orden."},
@@ -10540,16 +10544,16 @@ const META_DETALLE={
       {t:"La recompensa de la Fase 4",d:"No un gasto de las fases 0 a 3: el orden es el del plan — fondo, deuda cara, la maestría, y después esto, de contado o con enganche grande."},
     ]},
   empresa:{titulo:"Empresa ya creada",frase:"No empieza con una empresa formal — empieza con decidir qué quieres, después lo legal, después operar.",pasos:[
-      {t:"Fase 1 · Elige el negocio",d:"El plan ya eligió: en la Fase 1 el frente activo es el negocio de tu papá (Opción 5); freelance (Opción 2) y CodeReview (Opción 4) esperan. La Fase 1 valida si tiene tracción real: el primer cliente pagado."},
+      {t:"Fase 1 · Elige el negocio",d:"El plan ya eligió: el negocio de tu papá (Opción 5), en piloto automático mientras preparas la salida, con el dossier y los posts en sus manos. Tu propia empresa espera a la Fase 4, con sueldo estable."},
       {t:"Fase 1 · Elige el tipo",d:"Para empezar solo, con ingresos bajos/medianos, lo normal es persona física con actividad empresarial, no persona moral todavía."},
-      {t:"Fase 2 · Da de alta tu RFC",d:"Con actividad empresarial ante el SAT: trámite gratuito, pide CURP, identificación oficial y comprobante de domicilio, dentro del mes siguiente a iniciar actividad.",href:"https://citas.sat.gob.mx/",label:"Citas SAT"},
-      {t:"Fase 2 · Régimen RESICO",d:"Si tus ingresos anuales no pasan de $3,500,000: tasas de ISR de 1% a 2.5%, mucho más simple que el régimen general."},
-      {t:"Fase 2 · Empieza a facturar",d:"Emite CFDI desde tu primer peso cobrado — obligatorio, y la evidencia de ingresos que un banco te va a pedir después."},
-      {t:"Fase 2 · Si escalas a sociedad",d:"Permiso de denominación, acta constitutiva ante notario e inscripción en el Registro Público de Comercio — o la alternativa en línea y sin costo, la SAS.",href:"https://www.gob.mx/tuempresa/articulos/crea-tu-sociedad-por-acciones",label:"SAS — gob.mx/tuempresa"},
-      {t:"Fase 2 · Ingreso recurrente",d:"De un cliente a uno al mes entre Aeroresinas y Heliescala — la meta de negocio de la Fase 2."},
-      {t:"Fase 2 · Dobla la apuesta",d:"En lo que ya mostró ingreso recurrente, con capital propio y nunca con tarjeta: más contactos y más posts antes que más gasto."},
-      {t:"Fase 2 · Contador cuando crezca",d:"No obligatorio para empezar, pero evita errores de declaración costosos."},
-      {t:"Fase 2 · Tu argumento de venta",d:"Tu experiencia real de testing en Bosch y Continental — pocos emprendedores saben \"probar antes de confiar\" tan bien como tú."},
+      {t:"Fase 4 · Da de alta tu RFC",d:"Con actividad empresarial ante el SAT: trámite gratuito, pide CURP, identificación oficial y comprobante de domicilio, dentro del mes siguiente a iniciar actividad.",href:"https://citas.sat.gob.mx/",label:"Citas SAT"},
+      {t:"Fase 4 · Régimen RESICO",d:"Si tus ingresos anuales no pasan de $3,500,000: tasas de ISR de 1% a 2.5%, mucho más simple que el régimen general."},
+      {t:"Fase 4 · Empieza a facturar",d:"Emite CFDI desde tu primer peso cobrado — obligatorio, y la evidencia de ingresos que un banco te va a pedir después."},
+      {t:"Fase 4 · Si escalas a sociedad",d:"Permiso de denominación, acta constitutiva ante notario e inscripción en el Registro Público de Comercio — o la alternativa en línea y sin costo, la SAS.",href:"https://www.gob.mx/tuempresa/articulos/crea-tu-sociedad-por-acciones",label:"SAS — gob.mx/tuempresa"},
+      {t:"Fase 4 · Ingreso recurrente",d:"Con sueldo estable, un cliente al mes —tu negocio o el de tu papá—: la meta de negocio de la Fase 4."},
+      {t:"Fase 4 · Dobla la apuesta",d:"En lo que ya mostró ingreso recurrente, con capital propio y nunca con tarjeta: más contactos y más posts antes que más gasto."},
+      {t:"Fase 4 · Contador cuando crezca",d:"No obligatorio para empezar, pero evita errores de declaración costosos."},
+      {t:"Fase 4 · Tu argumento de venta",d:"Tu experiencia real de testing en Bosch y Continental — pocos emprendedores saben \"probar antes de confiar\" tan bien como tú."},
     ]},
   depa:{titulo:"Depa en la zona que quieras",frase:"Un depa no se compra con ganas — se compra con historial financiero limpio y patrimonio real.",pasos:[
       {t:"Historial crediticio limpio",d:"Banamex liquidada el 13 ago 2026 — eso ya cuenta. Sostén BBVA a tiempo hasta dejarla en $0 y tendrás justo lo que un banco revisa antes de darte una hipoteca."},
@@ -10569,7 +10573,7 @@ const META_DETALLE={
       {t:"Después de la deuda cara",d:"Planea este viaje para cuando esté resuelta — se disfruta mucho más sin estar pagándola en intereses después."},
       {t:"💸 Lo que cuesta, con números reales",d:"Cotizado el 17-ago-2026. <b>Vuelo redondo CDMX → Bangkok: $16,500-$27,500 MXN</b> en octubre, y <b>abril es el mes más barato (~$11,300)</b>. No hay vuelos directos y el trayecto son ~27 horas con escalas. Presupuesto completo para <b>1 mes de campamento</b>: vuelo ~$22,000 · Santai (entrenamiento 2×/día + alojamiento, ~$665 USD) ~$12,500 · comida ~$5,600 (Tailandia es barato, ~$10 USD/día) · vuelo interno a Chiang Mai o Phuket ~$1,500 · seguro de viaje ~$1,500 · margen para imprevistos ~$5,000. <b>Total: ~$48,000 MXN.</b> Los vuelos se mueven solos: vuelve a cotizar cuando tengas fecha."},
       {t:"📅 Cuánto ahorrar al mes, según cuándo quieras ir",d:"Sobre los ~$48,000: <b>a 24 meses son $2,000/mes</b>, <b>a 18 meses $2,670/mes</b>, <b>a 12 meses $4,000/mes</b>. Guárdalo en una cuenta aparte de tu fondo de emergencia — si vive en la misma cuenta, se gasta. La condición no es la fecha, es que tu deuda cara esté resuelta: pagar 40% de interés mientras ahorras para un viaje es perder dinero dos veces."},
-      {t:"🗓️ La ventana que conviene, y por qué",d:"<b>Apunta a abril.</b> Es el mes más barato para volar (ahorras ~$10,000 solo en el boleto) y cae en temporada seca en Tailandia, antes de las lluvias de mayo. Evita jul-oct: es temporada de monzón y entrenar con esa humedad es otro deporte. Con el Plan Maestro, la ventana es <b>abril de 2031</b>, en la Fase 4: hasta 2028 el excedente fondea Esslingen, y con el sueldo nuevo el viaje se paga de contado."},
+      {t:"🗓️ La ventana que conviene, y por qué",d:"<b>Apunta a abril.</b> Es el mes más barato para volar (ahorras ~$10,000 solo en el boleto) y cae en temporada seca en Tailandia, antes de las lluvias de mayo. Evita jul-oct: es temporada de monzón y entrenar con esa humedad es otro deporte. Con el Plan Maestro, la ventana es <b>abril de 2030</b>, en la Fase 4: ya con sueldo en Alemania, el vuelo es más corto y un contrato típico allá da de 25 a 30 días de vacaciones."},
       {t:"🥊 Las 12 semanas antes del viaje — qué entrenar exactamente",d:"<b>Semanas 1-4:</b> técnica base — postura, guardia, jab/cross, teep (patada frontal) y el clinch, que es lo que más te va a sorprender del Muay Thai. 3 clases/semana. <b>Semanas 5-8:</b> suma condición específica — 6 rounds de 3 min con 1 de descanso, saltar cuerda 15 min diarios (es LA herramienta del Muay Thai, no un calentamiento), y patadas bajas con espinilleras. <b>Semanas 9-12:</b> sparring ligero 2×/semana, obligatorio — si tu primer contacto real es en Tailandia, la vas a pasar mal. En paralelo, todo el bloque: acondiciona las espinillas de forma progresiva (nunca golpeando cosas duras de golpe, eso lesiona) y baja al peso en el que quieras pelear con tiempo, no en la última semana."},
       {t:"🏠 Dónde: los 3 campamentos, comparados",d:"<b>Santai (Chiang Mai)</b> — el más completo para ti: ~$240 USD/semana o ~$665 USD/mes <b>ya con alojamiento incluido</b>, 2 sesiones diarias, y organizan tu primera pelea. Chiang Mai es más barato y más tranquilo que Phuket. <b>Sumalee (Phuket)</b> — 500 THB la clase suelta, 5,000-9,000 THB al mes, con un programa de 12 semanas enfocado a tu primera pelea real. <b>Tiger Muay Thai (Phuket)</b> — el más grande y con más ambiente internacional, organiza peleas amistosas para estudiantes en su evento mensual; es el más caro y el más lleno. Escríbeles por correo antes de reservar y pregunta directo: cuántas semanas necesitan para meterte en una pelea amistosa."},
       {t:"📋 Trámites que se hacen antes de comprar el boleto",d:"Con pasaporte mexicano <b>no necesitas visa para turismo</b> hasta 60 días (verifícalo en la embajada antes de viajar, esto cambia). Tu pasaporte debe tener <b>6 meses de vigencia</b> a partir de la fecha de entrada. Contrata seguro de viaje <b>que cubra deportes de contacto</b> — el seguro normal excluye Muay Thai y ahí está justo el riesgo. Y hazte un chequeo médico antes: los campamentos serios te lo van a pedir para dejarte pelear."},
@@ -10596,7 +10600,7 @@ const META_DETALLE={
       {t:"Starbase, Texas",d:"El mejor punto público es Isla Blanca Park, en South Padre Island, a ~8 km del sitio — no hay centro de visitantes oficial ahí.",href:"https://www.spacelaunchschedule.com/viewing-locations/isla-blanca-park/",label:"Isla Blanca Park"},
       {t:"Cabo Cañaveral",d:"El Kennedy Space Center tiene la vista más cercana a la plataforma, y Space View Park en Titusville es gratis con audio en vivo del control de misión.",href:"https://www.kennedyspacecenter.com/launches-and-events/see-a-launch/launch-viewing-locations/",label:"Kennedy Space Center — dónde ver"},
       {t:"No reserves de más",d:"No compres vuelos ni hospedaje no reembolsable hasta que el lanzamiento tenga estatus \"Go\" confirmado — los scrubs son comunes."},
-      {t:"Ubícala temprano",d:"En la Fase 2, de contado y sin tocar el fondo de la maestría — no hace falta esperar al final: es de los viajes más baratos de la lista."},
+      {t:"Ubícala temprano",d:"En la Fase 4: antes de irte, todo el dinero es de la salida; desde Alemania se combina con un viaje a Estados Unidos, de contado."},
       {t:"Suma contexto técnico",d:"Aprovecha el viaje para visitar también el centro de visitantes/museo espacial de la zona — no es solo turismo."},
     ]},
   maestria:{titulo:"Maestría en Alemania",frase:"La maestría no se canceló — se pausó a propósito, con fecha de regreso ya definida.",pasos:[
@@ -10604,15 +10608,15 @@ const META_DETALLE={
       // en el seed de Finanzas, y ya no era cierta — dos tercios del fondo son Bitcoin, que se
       // mueve solo. Este texto es estático y no puede calcular, así que se manda al medidor
       // que sí lo hace en vivo (ver fondoMaestria()) en lugar de repetir un número congelado.
-      {t:"La decisión ya está tomada",d:"Se pausaron las aportaciones desde julio de 2026 por un año y lo ya ahorrado se queda intacto — nueva meta: octubre de 2028. La cifra exacta de hoy, con su desglose (fondo de emergencia, CETES, depósito de renta y Bitcoin), está en el medidor 🎓 Fondo Maestría de esta misma pantalla."},
-      {t:"Sigue con tu alemán",d:"Ya integrado en tu rutina, slide \"Alemán del día\" — vas a necesitar al menos A2 certificado, algunos programas piden C1."},
-      {t:"Esslingen · Automotive Systems",d:"Maestría en inglés, 3 semestres: licenciatura en Ingeniería Automotriz/Mecánica/Mecatrónica/Eléctrica, mejor 35% de tu generación, inglés IELTS ≥6.0. Solicitud 4 nov-31 mar, inicio en septiembre.",href:"https://www.hs-esslingen.de/en/international/coming-to-esslingen-uas/international-masters-programmes-graduate-school/master-degree-programmes/automotive-systems-meng",label:"Automotive Systems M.Eng. — Esslingen"},
+      {t:"La decisión ya está tomada",d:"Te vas en septiembre de 2027 ({{maestriaInicio}}): la pausa terminó y todo el ahorro va a la cuenta de Alemania. Lo que hay que reunir —{{salidaTotal}}— y la lista completa de papeles, salud, ropa y el auto están en Coach → Plan Maestro; el avance de hoy, en el medidor 🎓 Fondo Maestría de esta pantalla."},
+      {t:"Sigue con tu alemán",d:"Ya integrado en tu rutina, slide \"Alemán del día\". Esslingen pide A2 antes de terminar el 2º semestre: preséntalo en México (Goethe o telc) antes de irte y llegas con el requisito cumplido."},
+      {t:"Esslingen · Automotive Systems",d:"Maestría en inglés, 3 semestres, para ingenieros automotrices, mecánicos, mecatrónicos o eléctricos: prueba de inglés, CV y dos cartas de recomendación. Solicitud del 4 nov al 31 mar en el portal de la Graduate School; respuesta antes de fin de mayo; inicio en septiembre. €1,500 por semestre para quien viene de fuera de la UE.",href:"https://www.hs-esslingen.de/en/international/coming-to-esslingen-uas/international-masters-programmes-graduate-school/master-degree-programmes/automotive-systems-meng",label:"Automotive Systems M.Eng. — Esslingen"},
       {t:"Esslingen conecta directo",d:"Su Industry Advisory Board incluye a Mercedes-Benz, Bosch y Porsche, y tienen la beca \"BMW SpeedUp\" solo para sus estudiantes."},
       {t:"HTW Berlin · alternativa",d:"Maestría \"Future Automotive Technology\" en alemán, C1 mínimo, 4 semestres. Fecha límite reportada ronda mediados de junio — no confirmada al 100%, verifícala directo.",href:"https://future-automotive-technology.htw-berlin.de/",label:"Future Automotive Technology — HTW Berlin"},
       {t:"Bosch · Werkstudent",d:"Hasta 10h/semana en semestre, 35h en vacaciones; también \"Praktikum\" (1 a 6 meses).",href:"https://www.bosch.de/karriere/dein-einstieg/studentinnen-und-studenten/werkstudententaetigkeit/",label:"Bosch — Werkstudent"},
       {t:"Mercedes-Benz · Inspire",d:"Programa graduate rotacional internacional, pide maestría/MBA y máximo 3 años de experiencia.",href:"https://group.mercedes-benz.com/careers/graduates/inspire-journey/",label:"Mercedes-Benz — Inspire"},
       {t:"BMW · Masterprogramm Fastlane",d:"Para maestría con 18+ meses restantes y desempeño sobresaliente — solicitud reportada 1-31 de mayo, inicio en octubre.",href:"https://www.bmwgroup.jobs/de/de/studierende/einstiegs-und-foerderprogramme/masterprogramm-fastlane.html",label:"BMW — Masterprogramm Fastlane"},
-      {t:"La decisión: {{decisionMaestria}}",d:"Con la regla de la Fase 2: si el ahorro de abril a junio de 2027 sostiene el ritmo hacia {{maestriaMeta}} —contando la venta del auto—, sigue y arrancas el {{maestriaInicio}}; si no, el arranque se mueve un año, sin deuda."},
+      {t:"La decisión: {{decisionMaestria}}",d:"Con dos datos: la admisión de Esslingen (llega antes de fin de mayo) y {{salidaJunio}} en la cuenta a mediados de junio, para la cuenta bloqueada y la visa. Si están los dos, te vas el {{maestriaInicio}}; si falta uno, se reaplica para septiembre de 2028 y el ahorro sigue, sin deuda."},
     ]},
   // ── Las adicciones (2026-09-14) ─────────────────────────────────────
   // Adán quitó la de las citas el 21-sep-2026 ("quita el botón y meta de dejar la adicción de las
@@ -11072,8 +11076,8 @@ function kpiDetalle(id){
     const fMeta=goal&&goal.date?new Date(goal.date+'T00:00:00'):null;
     const hoy=new Date();
     const mesesPausa=fReanuda?Math.max(0,Math.round((fReanuda-hoy)/(86400000*30.44))):0;
-    const mesesUtiles=(fReanuda&&fMeta)?Math.max(1,Math.round((fMeta-fReanuda)/(86400000*30.44))):0;
-    const ritmo=mesesUtiles?falta/mesesUtiles:0;
+    const mesesSalida=fMeta?Math.max(1,Math.round((fMeta-hoy)/(86400000*30.44))):0;
+    const ritmo=mesesSalida?falta/mesesSalida:0;
     const fmtF=d=>d?d.toLocaleDateString('es-MX',{month:'long',year:'numeric'}):'—';
     // Cuanto se moveria el fondo si el BTC hace lo que el BTC hace. No es una prediccion: es el
     // tamano del riesgo que ya esta corriendo, medido con su propio saldo.
@@ -11109,13 +11113,16 @@ function kpiDetalle(id){
         kpiBarra('Lo que falta', money(falta), 100-pct, O, 'Es '+(cur>0?(falta/cur).toFixed(1):'—')+' veces lo que llevas')+
       '</div>'+
 
-      kpiSec('⏸️ Por qué ahora no aportas')+
-      kpiPaso('Decisión tomada, no un olvido','Las aportaciones están <b>pausadas hasta '+fmtF(fReanuda)+'</b>'+(mesesPausa?' (faltan '+mesesPausa+' meses)':'')+' y la meta se movió a <b>'+fmtF(fMeta)+'</b>. No sacas nada de aquí: lo único que mueve el saldo mientras tanto es el precio del BTC. La prioridad de este año es fondo de emergencia y deuda cara — ese orden es el que hace posible la maestría después, no el que la retrasa.',C)+
-
-      (mesesUtiles?
-        kpiSec('📈 El ritmo que pediría la meta')+
-        kpiPaso('⚠️ Los números no cuadran con la fecha actual','Al reanudar en '+fmtF(fReanuda)+' quedarían <b>'+mesesUtiles+' meses</b> hasta '+fmtF(fMeta)+'. Para juntar los '+money(falta)+' que faltan habría que ahorrar <b>'+money(ritmo)+' al mes</b>'+(g.prom>0?' — <b>'+(ritmo/g.prom).toFixed(1)+' veces todo lo que gastas en un mes</b> ('+money(g.prom)+'), y eso además de seguir viviendo':' — más de la mitad de todo lo que ganas, y eso sin contar renta, deuda ni comida')+'.','var(--r)')+
-        kpiNota('Esto no significa renunciar: el Plan Maestro ya lo resolvió en la <b>Fase 2</b> — el excedente de cada quincena va a CETES desde abril de 2027, la venta del auto entra al fondo antes de irte y el sueldo sube con el puesto nuevo. El <b>'+fmtF(fReanuda)+'</b> se decide con esa regla: si el ritmo no alcanza, el arranque se mueve un año, sin deuda. Las salidas de respaldo siguen ahí: una maestría más barata o una beca (DAAD) para la parte que falte.')
+      // La pausa solo se enseña si sigue vigente: desde el 3-oct-2026 la meta no está en pausa
+      // (salida a Alemania en sep 2027) y lo que cuenta es el ritmo que pide esa fecha.
+      (fReanuda&&fReanuda>hoy?
+        kpiSec('⏸️ Por qué ahora no aportas')+
+        kpiPaso('Decisión tomada, no un olvido','Las aportaciones están <b>pausadas hasta '+fmtF(fReanuda)+'</b>'+(mesesPausa?' (faltan '+mesesPausa+' meses)':'')+' y la meta es <b>'+fmtF(fMeta)+'</b>.',C)
+        :'')+
+      (mesesSalida?
+        kpiSec('📈 El ritmo que pide la salida')+
+        kpiPaso(mesesSalida+' meses hasta '+fmtF(fMeta),'Para juntar los '+money(falta)+' que faltan, en promedio, <b>'+money(ritmo)+' al mes</b>. El plan no lo saca solo del sueldo: lo junta con el ahorro de cada quincena (unos $22,000 al mes con renta y $37,000 sin renta, desde febrero) más el aguinaldo, lo que vendas, el depósito del depa y el finiquito.',C)+
+        kpiNota('El día de decidir es el <b>'+(window.CIFRAS?CIFRAS.v('decisionMaestria'):'—')+'</b>, con dos datos: la admisión de Esslingen y el dinero de la cuenta bloqueada a mediados de junio. Si falta uno, se reaplica para septiembre de 2028 y el ahorro sigue. La proyección mes a mes y la lista completa de la salida están en <b>Coach → Plan Maestro</b>.')
         :'')};
   }
 

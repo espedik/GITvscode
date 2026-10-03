@@ -114,14 +114,14 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{didiMes}}` | $11,200 | ~$400/día × 28, cobro semanal |
 | `{{siVale}}` | $940 | Vale de despensa |
 | `{{ingresoTotal}}` | $53,140 | Derivada: sueldo + Didi + Si Vale |
-| `{{renta}}` | $11,000 | Día 1 |
+| `{{renta}}` | $11,250 | Día 1 · hasta enero de 2027 (`PROYECTO.rentaHasta`): el depa se entrega a fin de mes y desde febrero la renta es ahorro |
 | `{{gym}}` `{{gymNombre}}` | $650 · Total Pass | Día 17 |
 | `{{celular}}` `{{celularPlan}}` | $650 · Plan de datos AT&T | Día 1 |
 | `{{servicios}}` | $1,075 | Plan AT&T + internet + gas (la mitad: es bimestral) + luz/agua |
 | `{{suscripciones}}` | $1,080 | Gym + Claude Code + iCloud |
 | `{{cetesDia15}}` | $1,500 | Aporte recurrente a CETES el día 15 |
 | `{{especulacionMes}}` `{{especulacionBtcPct}}` | $20,000 · 10 | La pestaña *Riesgo súper alto* de Qué invertir hoy: al mes, `{{cetesDia15}}` a CETES, ese % a Bitcoin y todo el resto a una sola empresa a la baja que investiga Claude |
-| `{{fijosTotal}}` | $13,155 | Derivada: renta + servicios + suscripciones |
+| `{{fijosTotal}}` | $13,405 | Derivada: renta + servicios + suscripciones |
 
 ### Deudas · saldos vivos (`finanzasmx_v2`)
 
@@ -193,12 +193,17 @@ pero el nombre de la variable se queda corto.
 | Marcador | Valor hoy | Origen |
 |---|---|---|
 | `{{fondo}}` `{{fondoMeta}}` | $6,000 de $10,000 — son los CETES | vivo |
-| `{{fondo3m}}` | $65,545 — tres meses de fijos y mínimos: la meta del fondo en la Fase 1 | derivada de `fijosTotal` y `minimosDeuda` |
+| `{{salidaTotal}}` | $405,228 — lo que cuesta irse a Alemania, completo (`SALIDA.costos`) | derivada; se mueve con `PROYECTO.eurMxn` |
+| `{{salidaJunio}}` | $254,478 — lo que tiene que estar en la cuenta a mediados de junio de 2027: la cuenta bloqueada y la visa | derivada |
+| `{{sperrkonto}}` | $249,984 — la cuenta bloqueada, €11,904 al euro del plan | derivada |
+| `{{alemaniaMarzo}}` | $182,348 — lo que la proyección espera en la cuenta de Alemania al cerrar la Fase 1 | derivada de la PROYECCION |
+| `{{mesMillon}}` | may 2031 — el mes en que la proyección cruza el millón (`fmt: 'mes'`) | derivada de la PROYECCION |
+| `PROYECTO.eurMxn` | 21.0 — el euro para planear; el 2-oct-2026 estaba en $20.46 | constante |
 | `{{cetes}}` | $6,000 — el mismo número que `{{fondo}}` | derivada de `fondo` |
-| `{{maestria}}` `{{maestriaMeta}}` | $53,740 de $500,000 | vivo |
+| `{{maestria}}` `{{maestriaMeta}}` | $53,740 de $406,000 — la meta es lo que cuesta irse (migración `_alemania20261003`) | vivo |
 | `{{maestriaEscuela}}` | Esslingen — Automotive Systems M.Eng. | constante |
-| `{{maestriaInicio}}` `{{decisionMaestria}}` | 1 oct 2028 · 18 jul 2027, la decisión (`PROYECTO.maestriaInicio`, `maestriaPausa`) | constantes, con `fmt: 'fecha'` |
-| `{{metaMillon}}` | 31 dic 2032 — el cierre de la última fase del Plan Maestro | derivada de `PHASES` |
+| `{{maestriaInicio}}` `{{decisionMaestria}}` | 1 sep 2027 · 31 may 2027, la decisión (`PROYECTO.maestriaInicio`, `maestriaDecision`) | constantes, con `fmt: 'fecha'` |
+| `{{metaMillon}}` | 31 dic 2031 — el cierre de la última fase del Plan Maestro | derivada de `PHASES` |
 
 **El fondo de emergencia son los CETES** (Adán, 20-sep-2026: *"mi fondo de emergencia van a ser los
 cetes, de ahí tendré mi fondo de emergencia y cualquier cosa los vendo"*). Es **un solo número**,
@@ -206,6 +211,24 @@ cetes, de ahí tendré mi fondo de emergencia y cualquier cosa los vendo"*). Es 
 emergencia (CETES)"); ya no hay una inversión CETES aparte en `investments`, porque las apps sumaban
 las dos cosas en patrimonio y en el fondo de la maestría. El aporte `{{cetesDia15}}` del día 15 es
 el aporte al fondo; una aportación en Finanzas → Metas → ef-001 es lo mismo.
+
+### La salida a Alemania y la proyección
+
+Adán se va a la maestría de Esslingen en **septiembre de 2027** (`maestriaInicio`) y el BYD se queda: se renta a un conductor de plataforma mientras está fuera. Dos estructuras lo sostienen:
+
+- **`SALIDA`**: lo que cuesta irse (`costos`, cada uno en su mes, en pesos o en euros al
+  `PROYECTO.eurMxn`; `gasta:false` es dinero que se mueve pero sigue siendo suyo: la cuenta
+  bloqueada, la reserva del BYD y el colchón) y la lista exhaustiva de lo que hay que reunir
+  (`bloques`: admisión, visa, dinero, el BYD, salud física y mental, ropa, tecnología, vivienda,
+  trabajo y lo que se queda en México), cada pendiente con su mes. Coach la pinta.
+- **`PROYECCION`**: el plan mes a mes desde la foto de Finanzas del 1 oct 2026 hasta el millón —lo
+  que entra, lo que sale, la cuenta de Alemania (todo el efectivo) y el patrimonio líquido—. Lee en
+  vivo lo que viene de `PROYECTO` y el resto de `SUPUESTOS`, cada uno con su porqué.
+  `CIFRAS.proyectar(cambios)` corre escenarios. De aquí sale el `liquido` de cada fase y los
+  marcadores `{{alemaniaMarzo}}` y `{{mesMillon}}`.
+
+Para cambiar un supuesto (lo que cuesta la vida allá, el Werkstudent, la renta del auto) se edita
+`SUPUESTOS`; para un costo, `SALIDA.costos`. Las fases, los marcadores y Coach se recalculan solos.
 
 ### Estudios de alemán · constantes
 
@@ -540,8 +563,8 @@ CIFRAS.CALENDARIO.hitos    // [{fecha, txt, sub}] — fechas duras que no salen 
 
 | | Qué trae | De dónde sale el número |
 |---|---|---|
-| `cobros` | Renta día 1, plan AT&T día 1, quincena días 1 y 15, CETES día 15, gym día 17 | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí como dato, no como comentario al lado de la cifra: las apps lo leen. |
-| `hitos` | Decisión Maestría (18 jul 2027) y arranque de la Maestría (1 oct 2028) | `PROYECTO.maestriaPausa` y `PROYECTO.maestriaInicio`. |
+| `cobros` | Renta día 1, plan AT&T día 1, quincena días 1 y 15, CETES día 15, gym día 17. Renta, luz y agua, internet y gas llevan `hasta` (`rentaHasta`): son del depa y terminan con él | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí como dato, no como comentario al lado de la cifra: las apps lo leen. |
+| `hitos` | Decisión Maestría (31 may 2027) y Salida a Alemania (1 sep 2027) | `PROYECTO.maestriaDecision` y `PROYECTO.maestriaInicio`. |
 
 **Regla al agregar: si una fecha se puede derivar de un dato que ya existe, NO va aquí.** Por eso
 esta lista es corta. El Dashboard calcula en vivo, y no están escritos en ningún lado:
@@ -738,6 +761,7 @@ Qué revisa:
   leerla del maestro. Es la guardia de la Regla 1.
 - `GYM_RUTINA_DEFAULT` contra `ejercicio.html`, que sigue siendo un respaldo duplicado.
 - Que Coach **genere** las fases del maestro (solo la Fase 0, cerrada, sigue escrita a mano: el control 3 falla si otra fase, sus tareas o sus fechas vuelven a escribirse en Coach) y que las prioridades de `APRENDIZAJE` aparezcan en su HTML.
+- **La salida a Alemania y la proyección**: ids de `SALIDA` únicos y distintos de las tareas de fase, cada pendiente con su mes y cada costo con importe, Coach pintándolas desde el maestro, y la proyección llegando al millón antes del cierre de la última fase. Pasado `rentaHasta`, avisa si la renta sigue contando en los fijos.
 - Las cifras que ya tienen variable pero siguen escritas a mano.
 - **Los números del maestro escritos crudos en el código** (sin `$`): así es como una app acaba
   con dos precios del mismo gimnasio a la vez. Acepta dos patrones
@@ -801,7 +825,9 @@ Ninguna estructura está copiada entre archivos; todas se leen de aquí:
 | `SK` | 12 habilidades del radar | `CIFRAS.SK` |
 | `PESO` | Altura (178 cm), meta (80 kg), objetivo y el histórico de pesajes (2: 75 kg el 2-sep-2026, 78 el 13-sep) con IMC derivado. Salud lo siembra en Peso & Medidas en cada carga | `CIFRAS.PESO` |
 | `BTC_SEED` | Las operaciones de Bitcoin: 3 compras ($2,878 USD = $52,129 MXN al cambio de cada día, 0.032509 ₿) y 2 ventas: 14-sep-2026 ($5,300 MXN = $310.45 USD = 0.003930 ₿ a $79,000 USD/₿, precio dicho por Adán) y 19-sep-2026 (todo lo que quedaba, 0.028579 ₿, por $39,500 MXN = $2,299.51 USD a $80,461 USD/₿ implícito — para pagar la TC BBVA). **Ya no queda Bitcoin.** Cada operación lleva `fx` (BCE del día). Finanzas lo siembra en `btcHistory`; una venta lleva `tipo:'venta'` y `btc` negativo | `CIFRAS.BTC_SEED` |
-| `PHASES` | Las 5 fases del Plan Maestro (la 0 cerrada): fechas, meta, explicación, `deja` (lo que se deja de hacer), `checkpoint`, `liquido` (el patrimonio que espera la trayectoria al cerrarla) y el checklist por mes. La última fija la fecha del millón (`{{metaMillon}}`) | `CIFRAS.PHASES` |
+| `PHASES` | Las 5 fases del Plan Maestro (la 0 cerrada): fechas, meta, explicación, `deja` (lo que se deja de hacer), `checkpoint` y el checklist por mes; `liquido` lo pone la `PROYECCION`. La última fija la fecha del millón (`{{metaMillon}}`) | `CIFRAS.PHASES` |
+| `SALIDA` | La salida a Alemania: lo que cuesta (`costos`) y todo lo que hay que reunir, por tema (`bloques`) | `CIFRAS.SALIDA`, `CIFRAS.costoSalida(c)` |
+| `PROYECCION` | El plan mes a mes hasta el millón, con sus `supuestos` | `CIFRAS.PROYECCION`, `CIFRAS.proyectar(cambios)` |
 | `APRENDIZAJE` | 6 prioridades de aprendizaje | `CIFRAS.APRENDIZAJE` |
 | `LISTA_COMPRAS` | Catálogo de compras por pasillos — 7 categorías; `comida` en 7 pasillos, con `Verduras` / `Frutas` / `Almidones y grasas` separados para colorear los frescos por clase y sumar la fruta+verdura por día | `CIFRAS.LISTA_COMPRAS` |
 
@@ -815,7 +841,7 @@ Tres casos que no son una copia movida y siguen necesitando cuidado:
   esa app guarda la rutina real en su propio `localStorage` y gana sobre este literal. El
   verificador compara los 7 días.
 - **Las fases en Coach se generan de aquí** (`pintarFasesPlan()`), igual que en el Dashboard; solo
-  la Fase 0, cerrada, sigue escrita a mano. Las tareas llevan ids `fN-M` (`coach_checks_v1`). **El
+  la Fase 0, cerrada, sigue escrita a mano. Las tareas llevan ids como `a1-1` (`coach_checks_v1`). **El
   texto de `APRENDIZAJE`** sí sigue como HTML a mano en `#aprendizaje`: convertirlo exigiría
   rediseñar esa sección. El verificador comprueba que sus prioridades aparezcan ahí, y las cifras
   que contiene ya usan `{{marcadores}}`.

@@ -648,6 +648,37 @@
     .fase-month.is-future summary { opacity: .72; }
     .fase-month.is-future .fase-month-badge { background: var(--surface-2); color: var(--muted); border: 1px solid var(--border); }
     .fase-month-body { padding: 5px 13px 10px; }
+    /* La lista de salida a Alemania (pintarSalida) y la proyección (pintarProyeccion). Mismo
+       lenguaje que los meses de las fases, con clase propia: updateFaseMonthBadges() e
+       initFaseMonths() recorren .fase-month y tratarían cada tema como un mes. */
+    .salida-avance { display: flex; align-items: center; gap: 12px; margin: 2px 0 14px; font-size: 12.5px; color: var(--muted); }
+    .salida-avance .progress-bar { flex: 1; }
+    .salida-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; align-items: start; }
+    @media (max-width: 900px) { .salida-grid { grid-template-columns: minmax(0, 1fr); } }
+    .salida-bloque { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg); }
+    .salida-bloque summary { cursor: pointer; list-style: none; padding: 10px 13px; display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--surface-2); font-size: 12.5px; font-weight: 800; }
+    .salida-bloque summary::-webkit-details-marker { display: none; }
+    .salida-bloque summary::after { content: '▾'; color: var(--muted); font-size: 10px; margin-left: auto; }
+    .salida-bloque[open] summary::after { content: '▴'; }
+    .salida-bloque.completo summary { background: var(--green-soft); }
+    .salida-bloque-body { padding: 5px 13px 10px; }
+    .salida-cuando { font-family: var(--mono); font-size: 9.5px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .3px; margin-right: 4px; }
+    .salida-cuando.ahora { color: var(--accent); }
+    .salida-cuando.tarde { color: var(--red); }
+    .pr-wrap { overflow-x: auto; }
+    .pr-tabla { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 780px; }
+    .pr-tabla th { text-align: left; font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--border); }
+    .pr-tabla td { padding: 7px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .pr-tabla td:first-child { white-space: nowrap; }
+    .pr-tabla td.pr-n { font-family: var(--mono); text-align: right; white-space: nowrap; }
+    .pr-tabla td.pr-nota { color: var(--muted); font-size: 11px; line-height: 1.45; }
+    .pr-tabla tr.pr-salida td { background: var(--accent-soft); }
+    .pr-tabla tr.pr-sep td { font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); padding-top: 14px; }
+    .pr-escenarios { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    @media (max-width: 900px) { .pr-escenarios { grid-template-columns: minmax(0, 1fr); } }
+    .pr-esc { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12px; line-height: 1.5; background: var(--surface-2); }
+    .pr-esc b { display: block; font-size: 10.5px; font-family: var(--mono); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; }
+    .pr-esc.mal { border-color: rgba(204,0,0,.4); }
 
     /* Fases que todavía no arrancan (2026-08-09) — colapsadas por default, un clic para ver el
        desglose completo. Fase 1/2/3 no tienen semanas con fecha exacta como Fase 0 (son
@@ -1682,48 +1713,43 @@
       </p>
     </div>
 
-    <!-- SIMULACIÓN DE PAGO DE DEUDA -->
-    <div class="card mb-16" style="margin-bottom:16px;">
-      <h3 class="fw-700 mb-12">Simulación mes a mes — cuándo te quedas sin deuda cara</h3>
-      <p class="fs-13 text-muted mb-12">Rehecha el 13 ago 2026: el plan viejo asumía liquidar Banamex hasta <strong>ene 2027</strong> y lo hiciste <strong class="text-green">5 meses antes</strong>, pagando el saldo completo en vez del mínimo. Toda la cascada se recorre. Escenario optimista pero realista: asume que rediriges el 100% del flujo liberado sin fugas y que no vuelves a usar la tarjeta. Incluye el interés del 10% anual sobre el saldo de BBVA.</p>
-      <div class="impuesto-row"><span class="imp-nombre text-green">✅ Banamex liquidada — saldo completo pagado, no el mínimo</span><span class="imp-fecha text-green">13 ago 2026</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">BBVA arranca en {{tcBbva}} · recibe {{tcBbvaMin}} (mínimo) + {{banamexMin}} (mínimo Banamex liberado) = $2,310/mes</span><span class="imp-fecha">Ago 2026</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">Caen Merpago, Mercado Pago y Ticketmaster · BBVA sube a $3,624/mes</span><span class="imp-fecha">Sep 2026</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">Caen Apple Watch y Zap Stylo · BBVA sube a $4,645/mes (~$22,500 restantes)</span><span class="imp-fecha">Oct 2026</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">BBVA liquidada por completo (~6 meses a ese ritmo)</span><span class="imp-fecha text-green">Mar 2027</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">Deuda cara en $0 — $4,645+/mes 100% libre para inversión, Maestría o escalar el negocio</span><span class="imp-fecha text-gold">Abr 2027</span></div>
-      <hr class="divider">
-      <p class="fs-13" style="line-height:1.7;color:var(--muted);">
-        Si esto se cumple, terminarías con la deuda cara liquidada en <strong class="text-green">abr 2027</strong> — <strong class="text-green">4 meses antes</strong> de lo que decía el plan original (ago 2027), y <strong>3 meses antes</strong> de tu fecha de revisión de la Maestría (18 jul 2027). Solo queda el crédito automotriz (normal, a 61 meses) y el iPhone de AT&T hasta jun 2028. Ya no hay decisión de "a cuál deuda primero": BBVA es la única. La variable que puede romper esto es tu patrón de abandono — por eso existe la Cadencia de Revisión más abajo.
-      </p>
+    <!-- LA PROYECCIÓN — la pinta pintarProyeccion() desde CIFRAS.PROYECCION: el plan mes a mes, del
+         1 oct 2026 al millón, con la salida a Alemania en medio, y lo que pasa si algo no sale. -->
+    <div class="card mb-16 span-2" style="margin-bottom:16px;">
+      <h3 class="fw-700 mb-12">📊 Proyección mes a mes — de hoy al millón, con Alemania en medio</h3>
+      <div id="proyeccionPlan"><p class="fs-13 text-muted">La proyección sale del maestro (Dashboard/datos-maestros.js).</p></div>
     </div>
 
     <!-- LA DECISIÓN -->
     <div class="riesgo-box mb-16 span-2" style="margin-bottom:16px;background:rgba(196,125,14,.06);border-color:rgba(196,125,14,.3);">
-      <h3 style="color:var(--gold);">Decisión tomada — Maestría en pausa 1 año</h3>
+      <h3 style="color:var(--gold);">Decisión tomada — Alemania en septiembre de 2027</h3>
 
       <div class="grid-3" style="margin:14px 0;">
-        <div class="stat-badge" style="min-width:auto;"><span class="num">1 año</span><span>18 jul 2026 → 18 jul 2027</span></div>
-        <div class="stat-badge" style="min-width:auto;"><span class="num">{{maestria}}</span><span>Quietos, invertidos, sin tocar</span></div>
-        <div class="stat-badge" style="min-width:auto;"><span class="num text-gold">Oct 2028</span><span>Nueva meta ({{maestriaMeta}})</span></div>
+        <div class="stat-badge" style="min-width:auto;"><span class="num">{{maestriaInicio}}</span><span>La salida: arranca {{maestriaEscuela}}</span></div>
+        <div class="stat-badge" style="min-width:auto;"><span class="num">{{salidaTotal}}</span><span>Lo que cuesta irse — el desglose, abajo</span></div>
+        <div class="stat-badge" style="min-width:auto;"><span class="num text-gold">{{salidaJunio}}</span><span>En la cuenta a mediados de junio: cuenta bloqueada y visa</span></div>
       </div>
 
       <p class="fs-13" style="line-height:1.7;">
-        Pausas nuevas aportaciones a la Maestría en Alemania — no es cancelar el plan, es congelarlo. La meta
-        original (oct. 2027, $500,000) queda oficialmente pospuesta. El 100% de tu excedente nuevo (sueldo + lo que
-        libere el calendario de deuda + lo que genere el negocio) se va a limpiar el balance y financiar el negocio
-        durante las Fases 0-2.
+        La pausa de un año terminó: desde ya, todo el ahorro va a la cuenta de Alemania. Desde febrero de
+        2027 ya no pagas renta, y sus {{renta}} al mes se vuelven ahorro. El {{auto}} no se vende: es tu
+        respaldo para trabajar Didi si regresas sin empleo, y mientras estás fuera se renta a un conductor
+        de plataforma y se paga solo.
       </p>
 
       <div class="fase-checkpoint" style="margin-top:14px;">
         <span class="fc-icon">🚩</span>
-        <div><strong>18 de julio de 2027 — fecha de revisión obligatoria</strong>, no antes, no "cuando se sienta
-          bien". Ese día evalúas con números reales: si el negocio ya genera ingreso, retomas aportaciones con esa
-          nueva fecha objetivo de octubre 2028. Si no genera nada todavía, evalúas si el problema es de tiempo o de
-          vía elegida (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">ver Posibles Negocios</a>)
-          antes de tocar el dinero de Alemania.</div>
+        <div><strong>{{decisionMaestria}} — el día de decidir</strong>, con dos datos y no con ganas: la admisión de
+          Esslingen (llega antes de fin de mayo) y {{salidaJunio}} en la cuenta para mediados de junio. Si están
+          los dos, te vas. Si falta uno, se reaplica para septiembre de 2028 y el ahorro sigue: no se viaja a
+          medias ni con deuda.</div>
       </div>
     </div>
+
+    <!-- LA LISTA DE SALIDA — la pinta pintarSalida() desde CIFRAS.SALIDA: todo lo que hay que reunir
+         antes de septiembre de 2027, por tema y con su mes, y lo que cuesta. Las casillas se guardan en
+         coach_checks_v1 como las demás. -->
+    <div class="card mb-16 span-2" id="salidaAlemania" style="margin-bottom:16px;"></div>
 
     <!-- ─── GRÁFICO DE HABILIDADES ─────────────────────── -->
     <div class="card span-2" id="skillsSection" style="margin-top:20px;">
@@ -2173,7 +2199,7 @@
             <div>
               <div class="concepto-item"><strong>Diversificación real</strong>VOO te da acceso a las 500 empresas más grandes de EE.UU. No necesitas elegir acciones individuales al principio. Un portafolio de VOO + VXUS (internacional) + bonds ya bate al 90% de gestores activos.</div>
               <div class="concepto-item"><strong>❌ Los 3 errores más caros</strong>1) Vender en pánico durante caídas del mercado. 2) Invertir dinero que puedas necesitar en 1-2 años. 3) Seguir tips de "acciones calientes" en redes sociales. Los tres destruyen capital a largo plazo.</div>
-              <div class="concepto-item" style="border:none;"><strong>Tu plan específico</strong>Hasta sep 2028 el ahorro vive en CETES: es el dinero de la maestría y se usa en 2028 —horizonte corto, nada de acciones—. El portafolio de índices (VOO + VXUS) arranca en la Fase 4 con el sueldo nuevo: aportación automática el día de pago, reinversión de dividendos, sin tocarlo y sin vender en correcciones.</div>
+              <div class="concepto-item" style="border:none;"><strong>Tu plan específico</strong>Hasta agosto de 2027 el ahorro vive en CETES: es el dinero de Alemania y se usa en meses —horizonte corto, nada de acciones—. El portafolio de índices arranca en la Fase 4 con el sueldo nuevo (en Alemania, un ETF-Sparplan): aportación automática el día de pago, reinversión de dividendos, sin tocarlo y sin vender en correcciones.</div>
             </div>
           </div>
         </div>
@@ -2450,9 +2476,10 @@
     <!-- CONTINGENCIAS -->
     <div class="card mb-16" style="margin-bottom:16px;">
       <h3 class="fw-700 mb-12">Qué hacer si algo se rompe — contingencias, no improvisación</h3>
-      <div class="fd-item"><span class="fd-icon">⚠️</span><div><h4>Pierdes el contrato de ALTEN/Ford (riesgo real: eres outsourcing, no planta)</h4><p>Por eso el fondo de tres meses ({{fondo3m}}) es lo primero de la Fase 1, no lo último. Con el ISTQB CT-GenAI y el CV de la Fase 1 listos, la búsqueda arranca ese mismo día — y es otra razón para no depender de un solo ingreso.</p></div></div>
+      <div class="fd-item"><span class="fd-icon">⚠️</span><div><h4>Pierdes el contrato de ALTEN/Ford (riesgo real: eres outsourcing, no planta)</h4><p>Por eso el fondo de emergencia de {{fondoMeta}} es lo primero de la cuenta de Alemania: si pasa antes de irte, es tu colchón y la fecha se recalcula. Con el ISTQB CT-GenAI y el CV de la Fase 1 listos, la búsqueda arranca ese mismo día — y es otra razón para no depender de un solo ingreso.</p></div></div>
       <div class="fd-item"><span class="fd-icon">📉</span><div><h4>El negocio de tu papá no consigue cliente en 3 meses (Fase 1)</h4><p>No es que el negocio no sirva — es que el canal no llega. Pasa de WhatsApp a LinkedIn directo a operadores de helicópteros, talleres y escuelas de aviación, con el dossier y un post por semana como prueba. Se cambia el canal antes que el negocio.</p></div></div>
       <div class="fd-item"><span class="fd-icon">🎓</span><div><h4>La maestría no cuadra el {{decisionMaestria}} o no llega la admisión (Fase 2)</h4><p>No se viaja a medias ni con deuda: se mueve el arranque un año y el ahorro sigue en CETES. Si el no es definitivo, el plan se rehace ese mismo mes con el millón como meta directa — sin maestría llega antes. Y el tipo de cambio: el fondo se mide en pesos, la vida allá en euros; revisa el ritmo con el euro de ese mes, no con el de hoy.</p></div></div>
+      <div class="fd-item"><span class="fd-icon">🚗</span><div><h4>El BYD se queda sin rentar o el conductor no paga (Fases 3 y 4)</h4><p>Para eso están la reserva de dos mensualidades y el contrato con depósito y pago semanal por adelantado: tu papá cobra el depósito, recupera el auto con el GPS y busca otro conductor. Si pasa dos veces, el auto pasa a una flotilla que lo administre, aunque deje menos.</p></div></div>
       <div class="fd-item"><span class="fd-icon">🏥</span><div><h4>Imprevisto grande (salud, reparación mayor del auto, etc.)</h4><p>Se paga con el fondo de emergencia, nunca con tarjeta de crédito nueva — eso es exactamente el patrón que este plan existe para romper. Si el fondo no alcanza, se repone antes de retomar el abono extra a deuda.</p></div></div>
     </div>
 
@@ -2474,12 +2501,14 @@
       <h3 class="fw-700 mb-12">Próximos 14 días — esto empieza hoy, no "cuando tenga tiempo"</h3>
       <p class="fs-13 text-muted mb-12">Tu patrón es abandonar cuando no ves avance rápido. Estas <span id="pfCount">10</span> acciones son deliberadamente pequeñas y concretas para que en 2 semanas ya tengas evidencia de movimiento real. Las 2 primeras son <strong>las prioridades de la Fase 1, en ese orden</strong>.</p>
       <div class="check-item"><input type="checkbox" id="pf13"><label for="pf13"><strong>Prioridad 1:</strong> pagar la TC BBVA completa el 11 oct — el total del estado de cuenta, no el mínimo de {{tcBbvaMin}}</label></div>
-      <div class="check-item"><input type="checkbox" id="pf14"><label for="pf14"><strong>Prioridad 2:</strong> el 15 oct, antes de gastar, {{cetesDia15}} a CETES — el fondo ({{fondo}}) llega a {{fondoMeta}} en diciembre solo con esto</label></div>
+      <div class="check-item"><input type="checkbox" id="pf14"><label for="pf14"><strong>Prioridad 2:</strong> abrir la cuenta de Alemania (CETES aparte) y, el 15 oct, antes de gastar, mandar ahí el ahorro de la quincena</label></div>
+      <div class="check-item"><input type="checkbox" id="pf18"><label for="pf18">Inscribirte al IELTS Academic (British Council CDMX, $4,850) para fines de noviembre o diciembre</label></div>
+      <div class="check-item"><input type="checkbox" id="pf19"><label for="pf19">Pedir las dos cartas de recomendación para Esslingen (un jefe y un líder técnico o profesor, en inglés)</label></div>
+      <div class="check-item"><input type="checkbox" id="pf20"><label for="pf20">Revisar la vigencia del pasaporte: si no cubre hasta 2029, sacar cita en la SRE</label></div>
+      <div class="check-item"><input type="checkbox" id="pf16"><label for="pf16">Ponerle tope a la BBVA: $8,000 de vida diaria al mes, comida aparte, y apagarla desde la app al llegar</label></div>
+      <div class="check-item"><input type="checkbox" id="pf3"><label for="pf3">Hacer inventario de lo que no usas (PS5, control, monitores, iPad) y publicarlo en Marketplace: va a la cuenta de Alemania</label></div>
       <div class="check-item"><input type="checkbox" id="pf15"><label for="pf15">Anotar la fecha del examen ISTQB CT-GenAI (agendado con Brightest) y hacer el examen de muestra esta semana</label></div>
-      <div class="check-item"><input type="checkbox" id="pf16"><label for="pf16">Ponerle tope a la BBVA: lo que el riel del Plan Maestro dice que sobra en la quincena, y apagarla desde la app al llegar</label></div>
-      <div class="check-item"><input type="checkbox" id="pf3"><label for="pf3">Hacer inventario de lo que no usas (PS5, control, monitores, iPad) y publicarlo en Marketplace — es lo que completa el fondo de la Fase 1</label></div>
       <div class="check-item"><input type="checkbox" id="pf4"><label for="pf4">Cancelar/evitar cualquier compra nueva a MSI esta quincena</label></div>
-      <div class="check-item"><input type="checkbox" id="pf17"><label for="pf17">Mandar el dossier de Aeroresinas a los primeros 5 contactos y publicar el post del día con Posts</label></div>
       <div class="check-item"><input type="checkbox" id="pf10"><label for="pf10">Revisar este apartado completo una vez por semana en tu Revisión Semanal — no dejar que se vuelva un documento que escribiste una vez y ya</label></div>
     </div>
 
@@ -2508,7 +2537,7 @@
           <div class="check-item"><input type="checkbox" id="mtc3"><label for="mtc3">Liquidar la deuda de Banamex <span class="text-green">(✅ 13 ago 2026 — pagaste los $9,000 completos, 5 meses antes de la meta de ene 2027)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc6"><label for="mtc6">Cancelar la tarjeta Banamex <span class="text-muted">(era la segunda mitad de la meta anterior — sigue pendiente; desde el 30 sep 2026 ya está en $0 y se puede cancelar)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc4"><label for="mtc4">Liquidar la TC de BBVA <span class="text-muted">(meta recorrida a mar 2027 al liquidar Banamex antes — ya en tu Plan Maestro)</span></label></div>
-          <div class="check-item"><input type="checkbox" id="mtc5"><label for="mtc5">Fondo de emergencia completo a {{fondoMeta}} <span class="text-muted">(meta: dic 2026, Fase 1; y a {{fondo3m}} en mar 2027)</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mtc5"><label for="mtc5">Fondo de emergencia completo a {{fondoMeta}} <span class="text-muted">(meta: dic 2026; después, todo a la cuenta de Alemania)</span></label></div>
           <!-- 2026-09-14: las adicciones (celular y alcohol; la de las citas se quitó el 21-sep-2026). Viven con detalle completo (14 pasos cada una) en el Dashboard → Mis Metas; aquí solo el marcador. -->
           <div class="check-item"><input type="checkbox" id="mtc7"><label for="mtc7">Dejar la adicción al celular <span class="text-muted">(cero scroll sin propósito; Didi y el alemán no cuentan — detalle en Dashboard → Mis Metas)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc9"><label for="mtc9">Dejar el alcohol <span class="text-muted">(primera meta 30 días, al Hyrox del 30 oct con 46 limpios; en Didi el límite es cero — detalle en Dashboard → Mis Metas)</span></label></div>
@@ -3521,7 +3550,7 @@
       <h5>Primer paso esta semana — MUY IMPORTANTE</h5>
       <p><strong style="color:var(--red);">Antes de compartir el archivo con nadie:</strong> tu Finanzas.html real tiene tu sueldo, tus deudas exactas y tus montos de inversión escritos directamente en el código. Crea una copia limpia con datos de ejemplo (o un formulario de bienvenida vacío) antes de vender absolutamente nada — esto no es opcional, es proteger tu propia información financiera.</p>
       <h5>Riesgo principal</h5>
-      <p>Vender un producto digital de forma recurrente formalmente requiere factura (mismo trámite fiscal que necesitas para el freelance — ver la Fase 2 del plan). Para las primeras ventas de validación puedes usar un link de pago simple, pero si esto escala, regularízalo pronto.</p>
+      <p>Vender un producto digital de forma recurrente formalmente requiere factura (mismo trámite fiscal que necesitas para el freelance — ver la Fase 4 del plan). Para las primeras ventas de validación puedes usar un link de pago simple, pero si esto escala, regularízalo pronto.</p>
     </div>
 
     <!-- OPCIÓN 2 -->
@@ -3573,7 +3602,7 @@
       <h5>Por qué encaja</h5>
       <p>Es la prueba más fuerte que tienes de que sabes "dirigir IA para construir producto" — ya la construiste una vez con ejemplo real. Combina tu ventaja única: automotriz + IA en producción, algo que casi nadie más tiene junto.</p>
       <h5>Primer paso esta semana</h5>
-      <p>Nada todavía — no entra en el plan actual: hasta la Fase 2 hay un solo frente de negocio, el de tu papá. Anótalo, no lo empieces aún; dispersarte entre 3 cosas a la vez es tu patrón de abandono en acción.</p>
+      <p>Nada todavía — no entra en el plan actual: hasta la Fase 4 hay un solo frente de negocio, el de tu papá, en piloto automático. Anótalo, no lo empieces aún; dispersarte entre 3 cosas a la vez es tu patrón de abandono en acción.</p>
       <h5>Riesgo principal</h5>
       <p>Revisa si ALTEN/Ford tienen propiedad intelectual sobre la herramienta original — si es así, tendrías que reconstruir una versión genérica desde cero fuera de horario laboral, con tus propios ejemplos.</p>
     </div>
@@ -4297,6 +4326,130 @@
       dCorta(activa.start) + ' – ' + dCorta(activa.end) + '): <strong>' + activa.title + '</strong>. ' + activa.meta;
   }
   pintarFasesPlan();
+
+  // ─── LA PROYECCIÓN — de CIFRAS.PROYECCION, el plan mes a mes ──────────────────────────────
+  // Mes a mes hasta la salida a Alemania; después, los cortes que importan (fin de cada semestre,
+  // cada diciembre y el mes del millón). Debajo, los supuestos y cuatro escenarios —qué pasa si
+  // algo no sale— calculados con la misma proyección (CIFRAS.proyectar), no a mano.
+  function pintarProyeccion() {
+    const caja = document.getElementById('proyeccionPlan');
+    const C = window.CIFRAS;
+    if (!caja || !C || !C.PROYECCION) return;
+    const M = C.PROYECCION.meses, S = C.PROYECCION.supuestos, P = C.PROYECTO;
+    const mx = n => (n < 0 ? '−' : '') + '$' + Math.round(Math.abs(n)).toLocaleString('es-MX');
+    const MES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    const et = ym => MES[+ym.slice(5, 7) - 1] + ' ' + ym.slice(0, 4);
+    const salida = P.maestriaInicio.slice(0, 7), junio = salida.slice(0, 4) + '-06';
+    const F = C.PHASES[C.PHASES.length - 1].end;
+    const finPlan = F.getFullYear() + '-' + String(F.getMonth() + 1).padStart(2, '0');
+    const millon = M.filter(m => m.liquido >= 1000000)[0];
+    const cortes = S.alemania.semestres.concat([S.alemania.fin]);
+    M.forEach(m => { if (m.mes > S.alemania.fin && m.mes <= finPlan && m.mes.slice(5) === '12') cortes.push(m.mes); });
+    if (millon) cortes.push(millon.mes);
+    const fila = m => '<tr' + (m.mes === salida ? ' class="pr-salida"' : '') + '><td>' + et(m.mes) + '</td>' +
+      '<td class="pr-n">' + mx(m.entra) + '</td><td class="pr-n">' + mx(m.sale) + '</td>' +
+      '<td class="pr-n ' + (m.ahorro < 0 ? 'text-red' : 'text-green') + '">' + mx(m.ahorro) + '</td>' +
+      '<td class="pr-n"><strong>' + mx(m.alemania) + '</strong></td>' +
+      '<td class="pr-n' + (m.liquido < 0 ? ' text-red' : '') + '">' + mx(m.liquido) + '</td>' +
+      '<td class="pr-nota">' + m.notas.join(' · ') + (m.mes === (millon && millon.mes) ? (m.notas.length ? ' · ' : '') + '<strong>el millón líquido</strong>' : '') + '</td></tr>';
+    const antes = M.filter(m => m.mes <= salida), despues = M.filter(m => m.mes > salida && cortes.indexOf(m.mes) !== -1);
+    const tabla = '<div class="pr-wrap"><table class="pr-tabla"><thead><tr><th>Mes</th><th>Entra</th><th>Sale</th><th>Ahorro</th>' +
+      '<th>Cuenta de Alemania</th><th>Patrimonio líquido</th><th>Qué pasa</th></tr></thead><tbody>' +
+      antes.map(fila).join('') + '<tr class="pr-sep"><td colspan="7">Después de la salida: los cortes</td></tr>' +
+      despues.map(fila).join('') + '</tbody></table></div>';
+
+    // Los escenarios: el dinero de junio (cuenta bloqueada y visa) y el de la maestría.
+    const enJunio = filas => (filas.filter(m => m.mes === junio)[0] || {}).alemania || 0;
+    const pideJunio = eur => C.SALIDA.costos.filter(c => C.SALIDA.junio.indexOf(c.id) !== -1).reduce((a, c) => a + C.costoSalida(c, eur), 0);
+    const base = enJunio(M) - pideJunio();
+    const dMenos = enJunio(C.proyectar({ menosAhorro: 5000 })) - pideJunio();
+    const sinW = C.proyectar({ alemania: Object.assign({}, S.alemania, { werkstudent: 0 }) });
+    const seAcaba = sinW.filter(m => m.mes >= salida && m.alemania < 0)[0];
+    const dEur = enJunio(C.proyectar({ eurMxn: 23 })) - pideJunio(23);
+    const esc = (t, ok, txt) => '<div class="pr-esc' + (ok ? '' : ' mal') + '"><b>' + t + '</b>' + txt + '</div>';
+    const escenarios = '<div class="pr-escenarios">' +
+      esc('El plan', base >= 0, 'A mediados de junio llegas con <strong>' + mx(base) + '</strong> de margen sobre los ' + mx(pideJunio()) +
+        ' de la cuenta bloqueada y la visa, y el millón llega en <strong>' + (millon ? et(millon.mes) : '—') + '</strong>.') +
+      esc('Ahorras $5,000 menos al mes', dMenos >= 0, dMenos >= 0 ? 'Junio todavía alcanza, con ' + mx(dMenos) + ' de margen.'
+        : 'En junio te faltan <strong>' + mx(-dMenos) + '</strong>: sin la cuenta bloqueada no hay visa y la salida se mueve a 2028.') +
+      esc('Sin Werkstudent', !seAcaba, seAcaba ? 'El dinero se acaba en <strong>' + et(seAcaba.mes) + '</strong>: el Werkstudent no es opcional, paga el 2º y el 3er semestre.'
+        : 'El fondo alcanza para toda la maestría.') +
+      esc('El euro a $23', dEur >= 0, dEur >= 0 ? 'Junio alcanza con ' + mx(dEur) + ' de margen.'
+        : 'La cuenta bloqueada sube y en junio faltan <strong>' + mx(-dEur) + '</strong>: por eso el plan usa $' + P.eurMxn.toFixed(2) + ' y no el del día.') +
+      '</div>';
+    const fmtE = n => '€' + n.toLocaleString('es-MX');
+    const supuestos = '<p class="fs-13 text-muted" style="line-height:1.7;margin-top:12px;"><strong>Supuestos</strong> — se cambian en el maestro, no aquí: ' +
+      'sueldo y Didi como hoy hasta agosto de 2027; renta de ' + mx(P.renta) + ' hasta ' + et(P.rentaHasta) + '; comida ' + mx(S.comida) +
+      ' y vida diaria ' + mx(S.vida) + ' al mes (' + mx(S.vidaSinRenta) + ' sin renta); ventas de lo que no usas, aguinaldo y finiquito como extras; el euro a $' +
+      P.eurMxn.toFixed(2) + '. En Esslingen, ' + fmtE(S.alemania.gasto) + ' de gasto al mes, Werkstudent de ' + fmtE(S.alemania.werkstudent) + ' netos desde ' +
+      et(S.alemania.werkDesde) + ' y colegiaturas de ' + fmtE(S.alemania.colegiatura) + '; el BYD rentado deja ' + mx(S.byd.rentaNeta) + ' al mes y paga su mensualidad. ' +
+      'Después, ' + fmtE(S.trabajo.neto) + ' netos y ' + fmtE(S.trabajo.gasto) + ' de gasto al mes, y ' + Math.round(S.rendimiento * 100) + '% anual sobre lo ahorrado ya fuera de México. ' +
+      'Arranca con la foto de Finanzas del 1 oct 2026.</p>';
+    caja.innerHTML = '<p class="fs-13 text-muted mb-12" style="line-height:1.7;">La <strong>cuenta de Alemania</strong> es todo tu efectivo: el fondo, la cuenta y lo que vas juntando —la cuenta bloqueada y la reserva del BYD siguen siendo tuyas—. El <strong>patrimonio líquido</strong> le resta el auto, el iPhone y la BBVA. Es el plan, no la realidad: compáralo cada mes con Finanzas.</p>' +
+      tabla + escenarios + supuestos;
+  }
+
+  // ─── LA LISTA DE SALIDA — de CIFRAS.SALIDA ────────────────────────────────────────────────
+  // Por tema, cada pendiente con su mes; abiertos los temas con algo de este mes o atrasado. Las
+  // casillas se restauran en el bucle de coach_checks_v1 que corre después; el avance se cuenta
+  // al terminar de cargar y con cada cambio.
+  function pintarSalida() {
+    const caja = document.getElementById('salidaAlemania');
+    const C = window.CIFRAS;
+    if (!caja || !C || !C.SALIDA) return;
+    const S = C.SALIDA, P = C.PROYECTO;
+    const mx = n => '$' + Math.round(n).toLocaleString('es-MX');
+    const MES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    const et = ym => ym === 'cont' ? 'siempre' : MES[+ym.slice(5, 7) - 1] + ' ' + ym.slice(2, 4);
+    const h = new Date(), mesHoy = h.getFullYear() + '-' + String(h.getMonth() + 1).padStart(2, '0');
+    const orden = x => x.cuando === 'cont' ? '0000' : x.cuando;
+    const bloques = S.bloques.map(b => {
+      const items = b.items.slice().sort((x, y) => orden(x).localeCompare(orden(y)));
+      const ahora = items.some(x => x.cuando !== 'cont' && x.cuando <= mesHoy);
+      return '<details class="salida-bloque" data-bloque="' + b.id + '"' + (ahora ? ' open' : '') + '><summary><span>' + b.ico + ' ' + b.titulo +
+        '</span><span class="fase-month-badge" data-salida-badge>—</span></summary><div class="salida-bloque-body">' +
+        items.map(x => '<div class="check-item"><input type="checkbox" id="' + x.id + '"><label for="' + x.id + '"><span class="salida-cuando' +
+          (x.cuando === mesHoy ? ' ahora' : '') + '" data-cuando="' + x.cuando + '">' + et(x.cuando) + '</span> ' + x.txt + '</label></div>').join('') +
+        '</div></details>';
+    }).join('');
+    const costos = S.costos.map(c => '<div class="impuesto-row"><span class="imp-nombre">' + et(c.mes) + ' · ' + c.txt +
+      (c.gasta ? '' : ' <span class="text-muted">— sigue siendo tuyo</span>') + '</span><span class="imp-fecha" style="white-space:nowrap">' +
+      mx(C.costoSalida(c)) + '</span></div>').join('');
+    caja.innerHTML = '<h3 class="fw-700 mb-12">🇩🇪 Salida a Alemania — todo lo que hay que reunir antes del ' + C.v('maestriaInicio') + '</h3>' +
+      '<p class="fs-13 text-muted mb-12" style="line-height:1.7;">Papeles, dinero, el auto, tu salud, la ropa y lo que se queda en México, cada cosa con su mes. Lo que dice <strong>siempre</strong> no tiene fecha: se sostiene hasta el día que te vas. Los hitos de cada mes también están en el checklist de su fase, arriba.</p>' +
+      '<div class="salida-avance"><span id="salidaAvanceTxt">—</span><div class="progress-bar"><div class="progress-fill" id="salidaAvanceFill" style="width:0%"></div></div></div>' +
+      '<div class="salida-grid">' + bloques + '</div>' +
+      '<h4 class="fw-700" style="margin:20px 0 6px;">💶 Lo que cuesta irse</h4>' + costos +
+      '<div class="impuesto-row"><span class="imp-nombre"><strong>Total</strong>, al euro del plan ($' + P.eurMxn.toFixed(2) + ')</span>' +
+      '<span class="imp-fecha text-gold" style="white-space:nowrap"><strong>' + C.v('salidaTotal') + '</strong></span></div>';
+    caja.addEventListener('change', actualizarSalida);
+    setTimeout(actualizarSalida, 0);   // después de que el bucle de coach_checks_v1 restaure las casillas
+  }
+  function actualizarSalida() {
+    const caja = document.getElementById('salidaAlemania');
+    if (!caja) return;
+    const h = new Date(), mesHoy = h.getFullYear() + '-' + String(h.getMonth() + 1).padStart(2, '0');
+    let total = 0, hechas = 0, esteMes = 0;
+    caja.querySelectorAll('.salida-bloque').forEach(b => {
+      const cb = b.querySelectorAll('input[type="checkbox"]'), ok = [...cb].filter(x => x.checked).length;
+      total += cb.length; hechas += ok;
+      b.classList.toggle('completo', ok === cb.length);
+      const badge = b.querySelector('[data-salida-badge]');
+      if (badge) badge.textContent = ok + ' / ' + cb.length;
+      b.querySelectorAll('.check-item').forEach(it => {
+        const c = it.querySelector('[data-cuando]'), x = it.querySelector('input');
+        if (!c || !x) return;
+        const cu = c.dataset.cuando;
+        c.classList.toggle('tarde', !x.checked && cu !== 'cont' && cu < mesHoy);
+        if (!x.checked && cu === mesHoy) esteMes++;
+      });
+    });
+    const txt = document.getElementById('salidaAvanceTxt'), fill = document.getElementById('salidaAvanceFill');
+    if (txt) txt.textContent = hechas + ' de ' + total + ' listos' + (esteMes ? ' · ' + esteMes + ' para este mes' : '');
+    if (fill) fill.style.width = (total ? Math.round(hechas / total * 100) : 0) + '%';
+  }
+  pintarProyeccion();
+  pintarSalida();
 
   // ─── PROGRESO REAL vs. punto de partida de Fase 0 (2026-08-02) ───────────
   // Coach.html no leía datos de Finanzas.html hasta ahora — Adán pidió explícitamente
