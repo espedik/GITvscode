@@ -1532,9 +1532,8 @@ button.hp-lec:active{transform:translateY(0)}
       todo inline, y la columna mínima sube a 430px porque ahora sí cabe todo en una línea.
    2. EL CONTADOR CUENTA PIEZAS (2026-08-27, pedido: "las cantidades en comida, maneja mejor por
       pieza, por que no siempre agarro el kg"). Ver `paso`/`base` en LISTA_COMPRAS_PRECIOS.
-   3. VERDURAS, FRUTAS Y ALMIDONES SON PASILLOS DISTINTOS y se miden contra una meta — el bloque
-      `.lc-prop`. Antes los 13 productos vivían en un solo pasillo "Frutas y Verduras" y no había
-      forma de ver que el canasto llevaba casi tanta fruta como verdura.
+   3. VERDURAS, FRUTAS Y ALMIDONES SON PASILLOS DISTINTOS, cada uno con la regla de color de su
+      clase. Sus gramos alimentan el chip de fruta+verdura por día de la barra de totales.
 
    El aire "futurista" no es un degradado encima: es tipografía monoespaciada con cifras
    tabulares, marco de esquinas tipo HUD, medidores segmentados y un barrido lento sobre la barra
@@ -1575,42 +1574,13 @@ button.hp-lec:active{transform:translateY(0)}
 .lc-hud-act{padding:13px 16px;display:flex;align-items:center;margin-left:auto}
 .lc-hud-vacio{padding:14px 18px;font-size:12px;font-weight:600;color:var(--text3)}
 
-/* ── Proporciones: verduras · frutas · almidones · grasas ─────────────────── */
-.lc-prop{border-radius:18px;border:1px solid var(--card-br);background:rgba(var(--ov),.045);
-  padding:14px 18px 16px;margin-bottom:12px;display:flex;flex-direction:column;gap:11px}
-.lc-prop-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.lc-prop-t{font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--text)}
-.lc-prop-sub{font-size:10.5px;font-weight:600;color:var(--text3)}
-.lc-prop-meta-lbl{font-family:var(--mono);font-size:10.5px;font-weight:800;color:var(--text3)}
-.lc-prop-bar{position:relative;height:22px;border-radius:8px;background:rgba(var(--ov),.06);border:1px solid rgba(var(--ov),.09)}
-.lc-prop-fill{position:absolute;inset:0;border-radius:8px;overflow:hidden;display:flex}
-.lc-prop-fill i{height:100%;transition:width .35s cubic-bezier(.22,.61,.36,1)}
-/* Marca de la meta: la línea vertical dice dónde DEBERÍA terminar cada tramo */
-.lc-prop-tick{position:absolute;top:-4px;bottom:-4px;width:1.5px;background:rgba(var(--ov),.45)}
-.lc-prop-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.lc-prop-cell{display:flex;flex-direction:column;gap:2px;padding-left:9px;border-left:2px solid}
-.lc-prop-nom{font-size:9.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--text2)}
-.lc-prop-line{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
-.lc-prop-pct{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:15px;font-weight:800;line-height:1.1}
-.lc-prop-obj{font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--text3)}
-.lc-prop-g{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--text2)}
-.lc-prop-d{font-family:var(--mono);font-size:10px;font-weight:800}
-.lc-prop-coach{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding-top:10px;
-  border-top:1px solid rgba(var(--ov),.08);font-size:11.5px;font-weight:600;color:var(--text2)}
-/* Sugerencia accionable: un clic mete la cantidad de una semana de ese producto */
-.lc-sug{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:9px;cursor:pointer;
-  font-family:inherit;font-size:10px;font-weight:700;border:1px dashed rgba(var(--g-rgb),.42);
-  background:rgba(var(--g-rgb),.07);color:var(--g);transition:background .15s,border-style .15s}
-.lc-sug:hover{background:rgba(var(--g-rgb),.16);border-style:solid}
-.lc-sug b{font-family:var(--mono);font-weight:800;opacity:.75}
-
 /* ── Pasillos ─────────────────────────────────────────────────────────────── */
 .lc-aisle{margin-top:14px}
 .lc-aisle:first-child{margin-top:0}
 .lc-aisle-title{display:flex;align-items:center;gap:9px;font-size:10.5px;font-weight:800;text-transform:uppercase;
   letter-spacing:.08em;color:var(--text);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid rgba(var(--ov),.1)}
-/* La regla de color del pasillo es la MISMA que su tramo en la barra de proporciones: es lo que
-   ata la lista con el medidor sin tener que repetir la leyenda. */
+/* La regla de color del pasillo marca los frescos por clase (verdura, fruta, almidón); el resto
+   de los pasillos la lleva neutra. */
 .lc-aisle-rule{width:3px;height:13px;border-radius:2px;flex-shrink:0;background:rgba(var(--ov),.22)}
 .lc-aisle-ct{font-family:var(--mono);font-size:9.5px;font-weight:800;color:var(--text3)}
 .lc-aisle-sub{margin-left:auto;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:11px;font-weight:800;color:var(--text2)}
@@ -1725,26 +1695,9 @@ button.hp-lec:active{transform:translateY(0)}
   .lc-hud-grow{flex:1 1 100%;border-top:1px solid rgba(var(--ov),.09)}
   .lc-hud-act{flex:1 1 100%;justify-content:flex-end}
 
-  /* El título del slide y las 4 cifras de proporción son lo que empujaba la lista fuera de
-     pantalla. El título baja a 20px y cada cifra se queda solo con su nombre y su %: los gramos
-     y el desfase ya los dice la frase de abajo con todas sus letras, ahí sí eran duplicado. */
+  /* El título del slide baja a 20px para que la lista entre en pantalla. */
   .theme-lista .slide-title{font-size:20px;margin-bottom:8px}
-  .lc-prop{padding:10px 12px 11px;border-radius:14px;gap:7px;margin-bottom:9px}
-  .lc-prop-sub{display:none}
-  .lc-prop-t{font-size:10px;letter-spacing:.1em}
-  .lc-prop-meta-lbl{font-size:9.5px}
-  .lc-prop-bar{height:18px}
-  .lc-prop-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
-  .lc-prop-cell{padding-left:6px}
-  .lc-prop-nom{font-size:8.5px;letter-spacing:.05em}
-  .lc-prop-pct{font-size:13px}
-  .lc-prop-obj{display:none}
-  .lc-prop-cell .lc-prop-line+.lc-prop-line{display:none}
-  .lc-prop-coach{font-size:10.5px;gap:6px;padding-top:8px}
-  .lc-sug{font-size:9.5px;padding:4px 8px}
-  /* Dos sugerencias caben en un renglón; la tercera costaba 30px de alto por poco más. */
-  .lc-sug:nth-of-type(n+3){display:none}
-  /* De la leyenda se quedan los dos puntos de color, que es lo que no se adivina. */
+  /* De la leyenda se quedan las dos primeras frases: el precio es el link y se suma arriba. */
   .lc-price-leyenda span:nth-child(n+3){display:none}
   .lc-hud-act{padding:0 12px 9px}
   .lc-hud-act .lc-clear-btn{padding:5px 12px;font-size:10px}
@@ -5242,8 +5195,10 @@ const LISTA_COMPRAS = window.CIFRAS ? CIFRAS.LISTA_COMPRAS : {};
 //   unidad — texto corto de a qué corresponde ese `precio` ('kg', 'pza', 'paquete 250 g', ...).
 //   paso   — QUÉ suma un "+1" del contador, escrito como lo pides en el súper ('1 pza ≈127 g').
 //   monto  — lo que cuesta UN `paso`. Es lo único que suma el ticket.
-//   g      — gramos de UN `paso`. Solo en frutas / verduras / almidones / grasas: es lo que mide
-//            la barra de proporciones. Ausente en el resto — una lata de atún no entra ahí.
+//   g      — gramos de UN `paso`. Solo en frutas / verduras / almidones / grasas: de ahí sale el
+//            chip de fruta+verdura por día. Ausente en el resto — una lata de atún no entra ahí.
+//   prot   — gramos de proteína de UN `paso`, aproximados por etiqueta. No se pinta: es el dato
+//            con el que se mide la proteína por peso gastado del prompt de Lista de Compras.
 //   base   — cuántos `paso` te comes en UNA semana. Hace dos cosas: marcar la casilla mete esa
 //            cantidad de golpe (un clic = tu semana) y el "Al mes" sabe cuánto dura lo que
 //            llevas — dura = pasos / base, con piso de 1 semana.
@@ -5462,29 +5417,17 @@ function lcAmazonUrl(q){ return 'https://www.amazon.com.mx/s?k='+encodeURICompon
 const LC_RECETA=/\u{1FA7A}/u;
 function lcFarmaciaUrl(q){ return 'https://www.fahorro.com/catalogsearch/result/?q='+encodeURIComponent(q); }
 function lcMercadoLibreUrl(q){ return 'https://listado.mercadolibre.com.mx/'+encodeURIComponent(q.replace(/\s+/g,'-')); }
-// ── Clasificación para la barra de proporciones (2026-08-27) ─────────────────
-// Pedido: "resuelve las proporciones de vegetales, frutas y verduras". El pasillo único
-// "Frutas y Verduras" escondía el problema: 13 productos juntos, sin forma de ver que el canasto
-// llevaba casi tanta fruta como verdura. Ahora son 3 pasillos en `LISTA_COMPRAS.comida` y 4
-// clases que se miden contra una meta.
+// ── Clase de cada producto fresco ────────────────────────────────────────────
+// Verduras, frutas y almidones son tres pasillos de `LISTA_COMPRAS.comida`. La clase colorea la
+// regla de su pasillo y suma los gramos del chip de fruta+verdura por día.
 // La clase sale del PASILLO; `LC_ITEM_CLASE` es la excepción para lo que comparte pasillo pero no
 // función en el plato: el aguacate se compra junto a la papa, pero pesa como grasa, no como
 // almidón.
 const LC_PASILLO_CLASE={'Verduras':'verduras','Frutas':'frutas','Almidones y grasas':'almidones'};
 const LC_ITEM_CLASE={'Aguacate':'grasas'};
 function lcClase(pasillo,txt){ return LC_ITEM_CLASE[txt]||LC_PASILLO_CLASE[pasillo]||null; }
-// `meta` = % del peso del canasto que debería ser de esa clase. 55/30/10/5 es la regla de "más
-// verdura que fruta" del plato saludable, repartida sobre el peso en fresco de la semana. Es un
-// criterio de diseño, NO sale de las metas de salud.html — por eso el bloque lo dice en pantalla.
-// El color de cada clase es el mismo que la regla de su pasillo en la lista: así el medidor y la
-// lista se leen como una sola cosa sin repetir la leyenda.
-const LC_CLASE_META={
-  verduras :{nom:'Verduras' ,col:'var(--g)' ,rgb:'var(--g-rgb)' ,meta:55},
-  frutas   :{nom:'Frutas'   ,col:'var(--o)' ,rgb:'var(--o-rgb)' ,meta:30},
-  almidones:{nom:'Almidones',col:'var(--w)' ,rgb:'var(--w-rgb)' ,meta:10},
-  grasas   :{nom:'Grasas'   ,col:'var(--cy)',rgb:'var(--cy-rgb)',meta:5},
-};
-const LC_CLASES=['verduras','frutas','almidones','grasas'];
+// Color de cada clase: el mismo token que la regla de su pasillo.
+const LC_CLASE_COL={verduras:'var(--g)',frutas:'var(--o)',almidones:'var(--w)'};
 const LC_SEM_MES=4.33; // semanas por mes (52/12), para proyectar el gasto recurrente
 
 function lcM(n){ return '$'+Math.round(n).toLocaleString('es-MX'); }
@@ -5605,17 +5548,6 @@ function lcCambiarQty(cat,txt,delta){
   renderListaCatTabs();
   actualizarLcTotal();
 }
-// Mete de golpe la cantidad de UNA semana. Es lo que hace el checkbox en Comida y lo que hacen
-// los botones de sugerencia del bloque de proporciones.
-function lcLlevarSemana(cat,txt){
-  const id=lcItemId(cat,txt);
-  lcSetQty(id,lcBase(LISTA_COMPRAS_PRECIOS[txt]));
-  const fila=document.getElementById(id+'-row');
-  if(fila) fila.outerHTML=lcItemHtml(cat,txt);
-  renderListaCatTabs();
-  actualizarLcTotal();
-}
-
 // ── "Ya lo tengo" ────────────────────────────────────────────────────────────
 // Son DOS preguntas distintas sobre el mismo producto —"¿lo llevo?" y "¿ya está en mi casa?"—,
 // así que son dos controles y dos claves. Lo que ya tienes no suma al total ni cuenta como
@@ -5638,15 +5570,11 @@ function lcToggleTengo(cat,txt){
 //             cantidad (`lcDura`), no entre un número fijo: 6 plátanos duran una semana y 12 duran
 //             dos, así que los dos carritos cuestan lo mismo al mes. Un aceite de $150 que dura 8
 //             semanas no son $150/mes, son ~$81.
-//   gr      — gramos POR SEMANA de cada clase, con el mismo prorrateo. Es lo que mide la barra de
-//             proporciones: lo que comes, no lo que metes al carrito de una vez.
-//   prot    — gramos de PROTEÍNA por semana (`prot` de cada producto, por paso, aproximado), con el
-//             mismo prorrateo; `protMonto` lo que cuestan a la semana los productos que la traen.
-//             Es el indicador del prompt de Lista de Compras: proteína por peso gastado.
+//   gr      — gramos POR SEMANA de cada clase, con el mismo prorrateo. De ahí sale el chip de
+//             fruta+verdura por día: lo que comes, no lo que metes al carrito de una vez.
 function lcTotalComida(){
   let ticket=0,mensual=0,n=0,piezas=0;
   const porPasillo={}, gr={verduras:0,frutas:0,almidones:0,grasas:0};
-  let prot=0, protMonto=0;
   for(const [pasillo,items] of Object.entries(LISTA_COMPRAS.comida)){
     let sub=0;
     items.forEach(txt=>{
@@ -5659,38 +5587,10 @@ function lcTotalComida(){
       mensual+=imp*(LC_SEM_MES/dura);
       const cl=lcClase(pasillo,txt);
       if(cl&&p.g) gr[cl]+=p.g*q/dura;
-      if(p.prot){ prot+=p.prot*q/dura; protMonto+=imp/dura; }
     });
     if(sub) porPasillo[pasillo]=sub;
   }
-  const totG=LC_CLASES.reduce((s,k)=>s+gr[k],0);
-  return {total:ticket,ticket,mensual:Math.round(mensual),n,piezas,porPasillo,gr,totG,prot,protMonto};
-}
-// Los 4 tramos del medidor, ya con su meta, su desfase y la posición de la marca.
-function lcProporciones(t){
-  let acum=0;
-  return LC_CLASES.map(k=>{
-    const m=LC_CLASE_META[k], g=t.gr[k];
-    const pct=t.totG?g/t.totG*100:0;
-    const objG=t.totG*m.meta/100;
-    acum+=m.meta;
-    return {k,nom:m.nom,col:m.col,rgb:m.rgb,meta:m.meta,tick:acum,g,pct,delta:objG-g};
-  });
-}
-// Productos de esa clase que todavía NO llevas, del más pesado al más ligero: son los que cierran
-// un hueco con menos renglones. Cada uno viene con lo que aporta si te llevas tu semana.
-function lcCandidatos(clase){
-  const out=[];
-  for(const [pasillo,items] of Object.entries(LISTA_COMPRAS.comida))
-    items.forEach(txt=>{
-      if(lcClase(pasillo,txt)!==clase) return;
-      const p=LISTA_COMPRAS_PRECIOS[txt];
-      if(!p||!p.g) return;
-      if(lcQty(lcItemId('comida',txt))) return;
-      const b=lcBase(p);
-      out.push({txt,g:p.g*b,monto:p.monto*b,n:b});
-    });
-  return out.sort((a,b)=>b.g-a.g);
+  return {total:ticket,ticket,mensual:Math.round(mensual),n,piezas,porPasillo,gr};
 }
 function lcTotalItems(cat){
   const data=LISTA_COMPRAS[cat];
@@ -5708,7 +5608,7 @@ function lcHudComidaHtml(){
   const t=lcTotalComida(), tot=lcTotalItems('comida');
   const marco='<i class="lc-brk tl"></i><i class="lc-brk br"></i>';
   if(!t.n) return '<div class="lc-hud" id="lcHud">'+marco+
-    '<div class="lc-hud-vacio">Marca lo que vas a llevar: aquí sale el ticket, lo que cuesta al mes y cómo queda la proporción del canasto. Marcar la casilla mete tu cantidad de una semana; con <b>− +</b> la ajustas pieza por pieza.</div></div>';
+    '<div class="lc-hud-vacio">Marca lo que vas a llevar: aquí sale el ticket y lo que cuesta al mes. Marcar la casilla mete tu cantidad de una semana; con <b>− +</b> la ajustas pieza por pieza.</div></div>';
   const pct=tot?Math.round(t.n/tot*100):0;
   const fyv=(t.gr.verduras+t.gr.frutas)/7;
   return '<div class="lc-hud" id="lcHud">'+marco+
@@ -5775,74 +5675,6 @@ function lcHudCatHtml(cat){
   '</div>';
 }
 
-// ── Bloque de proporciones ───────────────────────────────────────────────────
-function lcPropHtml(){
-  const t=lcTotalComida(), bs=lcProporciones(t);
-  const objTxt=LC_CLASES.map(k=>LC_CLASE_META[k].meta).join(' / ');
-  const tramos=bs.map(b=>'<i style="width:'+(t.totG?b.pct:0)+'%;background:'+b.col+'"></i>').join('');
-  const marcas=bs.slice(0,3).map(b=>'<div class="lc-prop-tick" style="left:'+b.tick+'%"></div>').join('');
-  const celdas=bs.map(b=>{
-    const falta=b.delta>60, sobra=b.delta<-60;
-    const dTxt=!t.totG?'':(falta?'faltan '+lcG(b.delta):(sobra?'sobran '+lcG(-b.delta):'en meta'));
-    const dCol=!t.totG?'var(--text3)':(falta?'var(--o)':(sobra?'var(--text3)':'var(--g)'));
-    return '<div class="lc-prop-cell" style="border-left-color:'+b.col+'">'+
-      '<div class="lc-prop-nom">'+b.nom+'</div>'+
-      '<div class="lc-prop-line"><span class="lc-prop-pct" style="color:'+b.col+'">'+(t.totG?Math.round(b.pct)+'%':'—')+'</span>'+
-        '<span class="lc-prop-obj">meta '+b.meta+'%</span></div>'+
-      '<div class="lc-prop-line"><span class="lc-prop-g">'+lcG(b.g)+'</span>'+
-        '<span class="lc-prop-d" style="color:'+dCol+'">'+dTxt+'</span></div>'+
-    '</div>';
-  }).join('');
-
-  let coach='', sug='';
-  if(!t.totG){
-    coach='Marca frutas y verduras y aquí verás cómo queda la proporción de tu semana.';
-  } else {
-    const hueco=bs.filter(b=>b.delta>60).sort((a,b)=>b.delta-a.delta)[0];
-    if(hueco){
-      let falta=hueco.delta;
-      const cands=lcCandidatos(hueco.k), picks=[];
-      for(const c of cands){
-        if(falta<=0||picks.length>=3) break;
-        picks.push(c); falta-=c.g;
-      }
-      coach='Tu canasto va corto de '+hueco.nom.toLowerCase()+': faltan '+lcG(hueco.delta)+' a la semana para llegar al '+hueco.meta+'%.';
-      if(picks.length) sug=picks.map(c=>'<button class="lc-sug" onclick="lcLlevarSemana(\'comida\',\''+c.txt.replace(/'/g,"\\'")+'\')" '+
-          'title="Mete tu cantidad de una semana: '+c.n+' × '+LISTA_COMPRAS_PRECIOS[c.txt].paso+'">+ '+c.txt+' <b>'+lcG(c.g)+' · '+lcM(c.monto)+'</b></button>').join('');
-      else coach+=' Sube la cantidad de las que ya llevas.';
-    } else {
-      coach='Proporción en meta: más verdura que fruta y el almidón contenido. Así se ve un canasto equilibrado.';
-    }
-  }
-
-  return '<div class="lc-prop" id="lcProp">'+
-    '<div class="lc-prop-head">'+
-      '<div class="lc-prop-head" style="gap:12px;flex:1">'+
-        '<span class="lc-prop-t">Proporción del canasto</span>'+
-        '<span class="lc-prop-sub">gramos por semana, ya prorrateados por lo que dura cada producto</span>'+
-      '</div>'+
-      '<span class="lc-prop-meta-lbl" title="Criterio de diseño, no una meta de salud.html: la regla de «más verdura que fruta» del plato saludable, repartida sobre el peso en fresco.">Meta · '+objTxt+'</span>'+
-    '</div>'+
-    '<div class="lc-prop-bar"><div class="lc-prop-fill">'+tramos+'</div>'+marcas+'</div>'+
-    '<div class="lc-prop-grid">'+celdas+'</div>'+
-    '<div class="lc-prop-coach">'+coach+sug+'</div>'+
-    lcProteinaHtml(t)+
-  '</div>';
-}
-/* La proteína del canasto contra la meta del día (Comida y Lista de Compras comparten la meta del
-   maestro). Cuenta solo la comida de esta lista: la whey va en Suplementos. */
-function lcProteinaHtml(t){
-  const meta=(window.CIFRAS&&CIFRAS.n('proteinaMeta'))||0;
-  if(!t||!(t.prot>0))
-    return '<div class="lc-prop-coach" style="margin-top:8px">🥩 <b>Proteína:</b> marca carnes, lácteos, huevo o atún y aquí verás cuánta te da el canasto al día'+
-      (meta?' contra tu meta de <b>'+meta+' g</b>':'')+'.</div>';
-  const dia=Math.round(t.prot/7), pct=meta?Math.round(dia/meta*100):0;
-  const por100=t.protMonto/t.prot*100;
-  return '<div class="lc-prop-coach" style="margin-top:8px">🥩 <b>Proteína del canasto: ≈'+dia+' g al día</b>'+
-    (meta?' de tu meta de '+meta+' g ('+pct+' %)':'')+' · '+lcM(Math.round(por100))+' por cada 100 g de proteína'+
-    ' <span style="opacity:.7">— aproximado por etiqueta; sin contar la whey</span></div>';
-}
-
 // ── Renglón ──────────────────────────────────────────────────────────────────
 function lcItemHtml(cat,txt){
   const id=lcItemId(cat,txt);
@@ -5894,8 +5726,6 @@ function lcRenderItems(cat,items){
 function actualizarLcTotal(){
   const hud=document.getElementById('lcHud');
   if(hud) hud.outerHTML=(listaCatSel==='comida'?lcHudComidaHtml():lcHudCatHtml(listaCatSel));
-  const prop=document.getElementById('lcProp');
-  if(prop) prop.outerHTML=lcPropHtml();
   if(listaCatSel!=='comida') return;
   // Los subtotales y el "x/y" de cada pasillo se refrescan aquí y no en el render completo:
   // cambiar una cantidad solo repinta su renglón, así que el encabezado se quedaría con la cifra
@@ -5930,15 +5760,9 @@ function renderListaCompras(){
   const data=LISTA_COMPRAS[listaCatSel];
   const esComida=listaCatSel==='comida';
   const hud=esComida?lcHudComidaHtml():lcHudCatHtml(listaCatSel);
-  const prop=esComida?lcPropHtml():'';
-  const leyenda=esComida
-    ? '<div class="lc-price-leyenda">'+
-        '<span><i class="lc-leg-dot" style="background:var(--g)"></i>precio de tu ticket de Walmart</span>'+
-        '<span><i class="lc-leg-dot" style="border:1.5px solid var(--o)"></i>precio estimado</span>'+
-        '<span>la píldora dice qué suma cada <b style="color:var(--text2)">+</b>: una pieza, un paquete, medio kilo</span>'+
-        '<span>marcar la casilla mete tu cantidad de <b style="color:var(--text2)">una semana</b></span>'+
-        '<span>los gramos de lo que se vende por pieza son aproximados</span>'+
-      '</div>'
+  // Comida va sin leyenda: lo que decía (ticket o estimado, qué suma cada +) ya está en el
+  // title de cada píldora.
+  const leyenda=esComida ? ''
     : '<div class="lc-price-leyenda">'+
         '<span><i class="lc-leg-dot" style="border:1.5px solid var(--o)"></i>precio aproximado en cada plataforma — el precio <b style="color:var(--text2)">es el link</b> a esa tienda</span>'+
         '<span>marca lo que vas a llevar y <b style="color:var(--text2)">se va sumando arriba</b></span>'+
@@ -5952,7 +5776,7 @@ function renderListaCompras(){
         // $240 sirve mientras estás ahí parado, no al llegar a la caja.
         const sub=esComida?(lcTotalComida().porPasillo[pasillo]||0):0;
         const cl=esComida?lcClase(pasillo,''):null;
-        const col=cl?LC_CLASE_META[cl].col:'rgba(var(--ov),.22)';
+        const col=cl?LC_CLASE_COL[cl]:'rgba(var(--ov),.22)';
         const slug=lcSlug(pasillo);
         return '<div class="lc-aisle">'+
           '<div class="lc-aisle-title">'+
@@ -5963,7 +5787,7 @@ function renderListaCompras(){
           '<div class="'+gridCls+'">'+lcRenderItems(listaCatSel,items)+'</div>'+
         '</div>';
       }).join('');
-  document.getElementById('listaCompraBody').innerHTML=hud+prop+leyenda+html;
+  document.getElementById('listaCompraBody').innerHTML=hud+leyenda+html;
 }
 function verListaCat(cat){ listaCatSel=cat; renderListaCompras(); }
 // El checkbox pone la cantidad de UNA SEMANA (`base`), no 1: en el súper no llevas un plátano,

@@ -803,7 +803,7 @@ Ninguna estructura está copiada entre archivos; todas se leen de aquí:
 | `BTC_SEED` | Las operaciones de Bitcoin: 3 compras ($2,878 USD = $52,129 MXN al cambio de cada día, 0.032509 ₿) y 2 ventas: 14-sep-2026 ($5,300 MXN = $310.45 USD = 0.003930 ₿ a $79,000 USD/₿, precio dicho por Adán) y 19-sep-2026 (todo lo que quedaba, 0.028579 ₿, por $39,500 MXN = $2,299.51 USD a $80,461 USD/₿ implícito — para pagar la TC BBVA). **Ya no queda Bitcoin.** Cada operación lleva `fx` (BCE del día). Finanzas lo siembra en `btcHistory`; una venta lleva `tipo:'venta'` y `btc` negativo | `CIFRAS.BTC_SEED` |
 | `PHASES` | Las 5 fases del Plan Maestro (la 0 cerrada): fechas, meta, explicación, `deja` (lo que se deja de hacer), `checkpoint`, `liquido` (el patrimonio que espera la trayectoria al cerrarla) y el checklist por mes. La última fija la fecha del millón (`{{metaMillon}}`) | `CIFRAS.PHASES` |
 | `APRENDIZAJE` | 6 prioridades de aprendizaje | `CIFRAS.APRENDIZAJE` |
-| `LISTA_COMPRAS` | Catálogo de compras por pasillos — 7 categorías; `comida` en 7 pasillos, con `Verduras` / `Frutas` / `Almidones y grasas` separados para medir la proporción del canasto | `CIFRAS.LISTA_COMPRAS` |
+| `LISTA_COMPRAS` | Catálogo de compras por pasillos — 7 categorías; `comida` en 7 pasillos, con `Verduras` / `Frutas` / `Almidones y grasas` separados para colorear los frescos por clase y sumar la fruta+verdura por día | `CIFRAS.LISTA_COMPRAS` |
 
 `verificar-sincronia.js` vigila que **ninguna vuelva a incrustarse** en un HTML.
 

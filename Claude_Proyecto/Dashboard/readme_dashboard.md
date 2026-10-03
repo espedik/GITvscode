@@ -83,7 +83,7 @@ navega con las flechas, el rail, el menú ☰ o deslizando en táctil. `irASlide
 | `theme-metas` | **Mis Metas** | 8 KPIs financieros, franja de instrumentos y 17 metas con estado | `metas` |
 | `theme-basicas` | **Habilidades Base** | 27 fichas de vida práctica con sus videos. **Única fuente**: la sección equivalente de Coach se eliminó | `basicas` |
 | `theme-skills` | **En qué invertir tu tiempo** | Radar de 12 habilidades, la ruta y el paso de la semana | `skills` |
-| `theme-lista` | **Lista de Compras** | 7 categorías; Comida con precios, ticket, costo al mes y proporciones | `lista` |
+| `theme-lista` | **Lista de Compras** | 7 categorías; Comida con precios, ticket y costo al mes | `lista` |
 | `theme-aleman` | **Alemán** | Vocabulario por secciones y Partizip I/II, desde `Aleman/vocab-datos.js`. Pantalla de consulta: no avanza sola | `aleman` |
 | `theme-habitos` | **Hábitos** | La cuadrícula del mes con rachas y la ficha de cada hábito | `habitos` |
 
@@ -910,8 +910,8 @@ tarjetas van una bajo otra (la de la ruta con `min-width:0`, sin eso los chips l
 
 ## La Lista de Compras
 
-Siete categorías (`LISTA_CAT_META`), una activa a la vez. **Comida** es la única con precios,
-contador y proporciones; el resto son checklists con dos precios de plataforma. Links de tienda en
+Siete categorías (`LISTA_CAT_META`), una activa a la vez. **Comida** es la única con precios y
+contador; el resto son checklists con dos precios de plataforma. Links de tienda en
 todas: Comida con Walmart Súper + Amazon, el resto Amazon + Mercado Libre.
 
 **El contador cuenta piezas.** Cada producto de `LISTA_COMPRAS_PRECIOS` declara un `paso` —lo que
@@ -926,22 +926,23 @@ checkbox de un clic (marcar Plátano pone 6).
 `dura` se deriva de lo que llevas: 6 plátanos duran una semana y 12 duran dos, así que los dos
 carritos cuestan lo mismo al mes.
 
-**La proteína** (`lcProteinaHtml()`): los productos que la traen declaran `prot` —gramos por
-paso, aproximados por etiqueta— y `lcTotalComida()` la prorratea igual que los gramos. Debajo de
-las proporciones sale ≈ g al día contra `{{proteinaMeta}}` y lo que cuestan 100 g de proteína, sin
-contar la whey (va en Suplementos). Es el indicador del prompt de Lista de Compras.
+**Los frescos por clase.** Verduras, frutas y almidones son tres pasillos; `lcClase()` les da su
+clase (`LC_ITEM_CLASE` es la excepción del aguacate, que cuenta como grasa) y `LC_CLASE_COL` el
+color de la regla del pasillo. `lcTotalComida()` prorratea los gramos de cada uno por semana
+(`g × cantidad / dura`) y de ahí sale el chip de fruta+verdura por día del HUD, contra el mínimo
+de 400 g de la OMS.
 
-**Las proporciones.** Los 13 productos frescos viven en tres pasillos y se clasifican en cuatro
-clases con `lcClase()` (`LC_ITEM_CLASE` es la excepción del aguacate, que cuenta como grasa). La
-barra compara el peso del canasto contra `LC_CLASE_META` (**55 / 30 / 10 / 5**), en gramos **por
-semana** (`g × cantidad / dura`). Cuando una clase queda corta, la frase dice cuántos gramos
-faltan y ofrece los productos que cierran el hueco. Esa meta es un criterio del slide, **no sale
-de `salud.html`**, y la pantalla lo dice.
+**La proteína no se pinta.** Los productos que la traen declaran `prot` —gramos por paso,
+aproximados por etiqueta—: es el dato para medir la proteína por peso gastado que pide el prompt.
+
+**Comida va sin leyenda y sin bloque de proporciones** (Adán: *"en compras quítame todo esto"*):
+debajo del HUD empiezan los pasillos. Lo que decía la leyenda —ticket o estimado, qué suma un
+`+`— está en el `title` de cada píldora. Las demás categorías conservan su `.lc-price-leyenda`.
 
 **El renglón cabe en una línea** —checkbox · nombre · píldora · precio unitario · contador ·
 tiendas · subtotal— y por eso `.lc-grid` pide columnas de 430 px. La píldora lleva punto lleno si
 el precio salió del ticket de Walmart y hueco si es estimado. En celular (`≤760px`) el renglón va
-a dos líneas de 46 px y las cifras de proporción se quedan con nombre y porcentaje.
+a dos líneas de 46 px.
 
 **Dónde se guarda.** `dash-lista-compras` (producto → número de `paso`) y `dash-lista-tengo` (solo
 fuera de Comida). Los `true` de listas anteriores al contador se leen como 1.
