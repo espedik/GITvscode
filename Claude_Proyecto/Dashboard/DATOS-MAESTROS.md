@@ -70,6 +70,12 @@ Junto a ella viajan sus piezas, para que nadie las reimplemente: `agendaDia`, `p
 (`noInterest`): en su **próximo** pago sale el total para no generar intereses; los meses de
 después siguen con el mínimo, porque esos estados de cuenta todavía no existen.
 
+**El patrimonio, igual: una sola fórmula.** `CIFRAS.patrimonio(fin)` devuelve `neto` (inversiones,
+fondo, activos y Bitcoin a precio de hoy, menos todas las deudas), `liquido` (lo mismo sin los
+bienes: es el número del millón), `bienes` y `deuda`. Sin argumento usa el `finanzasmx_v2` que leyó
+el módulo; el Dashboard le pasa el suyo (`patrimonioNeto()`, `patrimonioLiquido()`) y Coach lo usa en
+"Progreso real" y en la brecha del Plan Maestro, así que las dos apps dan el mismo patrimonio.
+
 ---
 
 ## Las dos clases de dato
@@ -187,10 +193,12 @@ pero el nombre de la variable se queda corto.
 | Marcador | Valor hoy | Origen |
 |---|---|---|
 | `{{fondo}}` `{{fondoMeta}}` | $6,000 de $10,000 — son los CETES | vivo |
+| `{{fondo3m}}` | $65,545 — tres meses de fijos y mínimos: la meta del fondo en la Fase 1 | derivada de `fijosTotal` y `minimosDeuda` |
 | `{{cetes}}` | $6,000 — el mismo número que `{{fondo}}` | derivada de `fondo` |
 | `{{maestria}}` `{{maestriaMeta}}` | $53,740 de $500,000 | vivo |
 | `{{maestriaEscuela}}` | Esslingen — Automotive Systems M.Eng. | constante |
-| `{{maestriaInicio}}` | 2028-10-01 (pausada hasta 2027-07-18) | constante |
+| `{{maestriaInicio}}` `{{decisionMaestria}}` | 1 oct 2028 · 18 jul 2027, la decisión (`PROYECTO.maestriaInicio`, `maestriaPausa`) | constantes, con `fmt: 'fecha'` |
+| `{{metaMillon}}` | 31 dic 2032 — el cierre de la última fase del Plan Maestro | derivada de `PHASES` |
 
 **El fondo de emergencia son los CETES** (Adán, 20-sep-2026: *"mi fondo de emergencia van a ser los
 cetes, de ahí tendré mi fondo de emergencia y cualquier cosa los vendo"*). Es **un solo número**,
@@ -729,7 +737,7 @@ Qué revisa:
 - Que **nadie haya vuelto a incrustar** ninguna de las seis estructuras en un HTML en vez de
   leerla del maestro. Es la guardia de la Regla 1.
 - `GYM_RUTINA_DEFAULT` contra `ejercicio.html`, que sigue siendo un respaldo duplicado.
-- Que las fases y las prioridades del maestro aparezcan en el HTML de Coach.
+- Que Coach **genere** las fases del maestro (solo la Fase 0, cerrada, sigue escrita a mano: el control 3 falla si otra fase, sus tareas o sus fechas vuelven a escribirse en Coach) y que las prioridades de `APRENDIZAJE` aparezcan en su HTML.
 - Las cifras que ya tienen variable pero siguen escritas a mano.
 - **Los números del maestro escritos crudos en el código** (sin `$`): así es como una app acaba
   con dos precios del mismo gimnasio a la vez. Acepta dos patrones
@@ -740,7 +748,8 @@ Qué revisa:
   el que faltaba: los getters se recalculan solos, las tablas de la documentación no.
 - Los `{{marcadores}}` que no existan en el catálogo.
 - **La FORMA de los datos, no solo sus importes** (control 9): se exige día de pago a toda deuda con saldo y mínimo, tipos correctos en cada campo, fechas
-  reales, `balance <= total`, ids únicos, cobros dentro de 1-28, fases sin huecos ni solapes, y
+  reales, `balance <= total`, ids únicos, cobros dentro de 1-28, fases sin huecos ni solapes, ids de
+  tarea únicos entre fases, una fase que arranque el `maestriaInicio` con la decisión dentro de la anterior, y
   que las sumas de `PROYECTO` cuadren con sus partes.
 - **La tabla de días de pago del `.md` contra el maestro** (control 10), fila a fila. El control 7
   compara importes y por eso no veía un día: 14 no es una cantidad de dinero.
@@ -792,7 +801,7 @@ Ninguna estructura está copiada entre archivos; todas se leen de aquí:
 | `SK` | 12 habilidades del radar | `CIFRAS.SK` |
 | `PESO` | Altura (178 cm), meta (80 kg), objetivo y el histórico de pesajes (2: 75 kg el 2-sep-2026, 78 el 13-sep) con IMC derivado. Salud lo siembra en Peso & Medidas en cada carga | `CIFRAS.PESO` |
 | `BTC_SEED` | Las operaciones de Bitcoin: 3 compras ($2,878 USD = $52,129 MXN al cambio de cada día, 0.032509 ₿) y 2 ventas: 14-sep-2026 ($5,300 MXN = $310.45 USD = 0.003930 ₿ a $79,000 USD/₿, precio dicho por Adán) y 19-sep-2026 (todo lo que quedaba, 0.028579 ₿, por $39,500 MXN = $2,299.51 USD a $80,461 USD/₿ implícito — para pagar la TC BBVA). **Ya no queda Bitcoin.** Cada operación lleva `fx` (BCE del día). Finanzas lo siembra en `btcHistory`; una venta lleva `tipo:'venta'` y `btc` negativo | `CIFRAS.BTC_SEED` |
-| `PHASES` | 4 fases del Plan Maestro | `CIFRAS.PHASES` |
+| `PHASES` | Las 5 fases del Plan Maestro (la 0 cerrada): fechas, meta, explicación, `deja` (lo que se deja de hacer), `checkpoint`, `liquido` (el patrimonio que espera la trayectoria al cerrarla) y el checklist por mes. La última fija la fecha del millón (`{{metaMillon}}`) | `CIFRAS.PHASES` |
 | `APRENDIZAJE` | 6 prioridades de aprendizaje | `CIFRAS.APRENDIZAJE` |
 | `LISTA_COMPRAS` | Catálogo de compras por pasillos — 7 categorías; `comida` en 7 pasillos, con `Verduras` / `Frutas` / `Almidones y grasas` separados para medir la proporción del canasto | `CIFRAS.LISTA_COMPRAS` |
 
@@ -805,10 +814,11 @@ Tres casos que no son una copia movida y siguen necesitando cuidado:
 - **`GYM_RUTINA_DEFAULT`** es solo el respaldo para un navegador que nunca abrió `ejercicio.html`;
   esa app guarda la rutina real en su propio `localStorage` y gana sobre este literal. El
   verificador compara los 7 días.
-- **El texto de `PHASES` y `APRENDIZAJE` en Coach** está escrito como HTML a mano en sus
-  secciones, no generado desde el literal. Convertirlo exigiría rediseñar esas secciones. El
-  verificador comprueba que las fases y las prioridades del maestro aparezcan ahí, y las cifras
-  que contienen ya usan `{{marcadores}}`.
+- **Las fases en Coach se generan de aquí** (`pintarFasesPlan()`), igual que en el Dashboard; solo
+  la Fase 0, cerrada, sigue escrita a mano. Las tareas llevan ids `fN-M` (`coach_checks_v1`). **El
+  texto de `APRENDIZAJE`** sí sigue como HTML a mano en `#aprendizaje`: convertirlo exigiría
+  rediseñar esa sección. El verificador comprueba que sus prioridades aparezcan ahí, y las cifras
+  que contiene ya usan `{{marcadores}}`.
 - **`LISTA_COMPRAS`**: sus siete categorías son **getters** — `comida` sobre `RECETARIO`,
   `skincare` y `cabello` sobre `RUTINA_PIEL`/`RUTINA_PELO`, `suplementos`, `higiene`, `ojos` y
   `libros` sobre sus catálogos. Se edita el catálogo, nunca la lista.

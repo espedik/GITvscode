@@ -686,6 +686,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .fases-tabbtn.is-activa .fases-tabbtn-n,.fases-tabbtn.is-activa .fases-tabbtn-e{color:var(--fc)}
 .fases-panel{display:none}
 .fases-panel.is-activa{display:block;animation:fasesIn .2s ease}
+/* Dos columnas dentro de cada fase: lo que la explica a la izquierda y el checklist a la derecha.
+   En una sola columna de 1,500 px los renglones se volvían ilegibles y el checklist quedaba bajo
+   el pliegue; bajo 1024 px vuelve a una. */
+.fases-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:start}
+@media(max-width:1024px){.fases-cols{grid-template-columns:minmax(0,1fr)}}
 @keyframes fasesIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:640px){.fases-tabnav{gap:6px}.fases-tabbtn{padding:7px 11px}.fases-tabbtn-n{font-size:12px}}
 /* Otra vuelta más chico (2026-08-11, pedido explícito: "haz todavia mas pequeñas los
@@ -4820,7 +4825,7 @@ const EVENTOS_MES={
     {ico:"✈️",txt:"Revisar FAMEX 2027"},
   ],
   "2026-10":[
-    {ico:"🪙",txt:"Arranca Fase 1 del Plan Maestro (1 oct) — entran los $2,335/mes que liberan los MSI y el mínimo de Banamex, libre desde que quedó en $0 el 30 sep; la meta es el primer ingreso real"},
+    {ico:"🪙",txt:"Arranca la Fase 1 del Plan Maestro (1 oct): blindar la base — el fondo de emergencia completo en diciembre, la BBVA pagada completa cada día 11, el ISTQB CT-GenAI y el primer cliente del negocio de tu papá"},
     {ico:"💳",txt:"Pagar la TC BBVA completa antes del día 11 — el total del estado de cuenta, no el mínimo: así no genera intereses"},
     {ico:"🎯",txt:"Cerrar la Fase 0 por escrito: qué se cumplió (Banamex, liquidada el 30 sep) y qué pasa a la Fase 1 (el fondo de emergencia y la BBVA)"},
   ],
@@ -4886,6 +4891,11 @@ const EVENTOS_CORRIGE = [
   { flag:'_banamexLibre20261001', mes:'2026-10',
     de:'Arranca Fase 1 del Plan Maestro (1 oct) — entran los $2,335/mes que liberan los MSI (el mínimo de Banamex ya no está libre) + primer ingreso real',
     a:'Arranca Fase 1 del Plan Maestro (1 oct) — entran los $2,335/mes que liberan los MSI y el mínimo de Banamex, libre desde que quedó en $0 el 30 sep; la meta es el primer ingreso real' },
+  /* 2026-10-03 · La Fase 1 se redefinió (Coach → Plan Maestro): el pendiente que la anunciaba
+     hablaba de los $2,335/mes de MSI, que ya no son el plan. */
+  { flag:'_fasesNuevas20261003', mes:'2026-10',
+    de:'Arranca Fase 1 del Plan Maestro (1 oct) — entran los $2,335/mes que liberan los MSI y el mínimo de Banamex, libre desde que quedó en $0 el 30 sep; la meta es el primer ingreso real',
+    a:'Arranca la Fase 1 del Plan Maestro (1 oct): blindar la base — el fondo de emergencia completo en diciembre, la BBVA pagada completa cada día 11, el ISTQB CT-GenAI y el primer cliente del negocio de tu papá' },
 ];
 function eventosCorregir(){
   const st = rawGet(EVENTOS_KEY, null);
@@ -6373,12 +6383,12 @@ const FRASES_MOTIVACION=[
   'Si no metes el peso a tu inversión el lunes, te lo vas a gastar sin darte cuenta entre semana. No le des esa oportunidad.',
   'Los números rojos de hoy no son la excusa — son la exigencia. Lo que hagas la próxima semana con ellos es lo único que importa.',
   'Deja de buscar ganar más mientras sigues perdiendo dinero en cosas evitables. Cierra la fuga primero, sin excusas.',
-  '$1,000,000 para 2030 no perdona decisiones chiquitas mal tomadas. Cada una cuenta, y no puedes fallar la mayoría.',
+  '$1,000,000 de patrimonio líquido no perdona decisiones chiquitas mal tomadas. Cada una cuenta, y no puedes fallar la mayoría.',
   'Pagar solo el mínimo del BYD es la salida cómoda. Exígete pagar primero lo que sí te cobra intereses — el BYD puede esperar.',
   'Dudar todo el lunes sin revisar GBM no es cautela, es evasión. Revísala en la mañana y ya.',
   'Prometerte ahorrar mañana es la excusa más vieja del libro. Revisa tus gastos con honestidad hoy, no mañana.',
   'Cada MSI que aceptas por comodidad hoy es una deuda que te vas a exigir pagar después. No la crees.',
-  'Cada gasto innecesario de hoy es dinero que le quitas a tu meta de 2030. Piénsalo antes de sacar la tarjeta.',
+  'Cada gasto innecesario de hoy es dinero que le quitas al millón. Piénsalo antes de sacar la tarjeta.',
   // Negocio / trabajo extra
   'Deja de esperar la versión perfecta — esa nunca sale. Publica la imperfecta hoy, sin más pretextos.',
   '"Algún día lo hago" no cuenta como avance. Exígete la hora real dedicada al negocio de tu papá, hoy.',
@@ -6412,7 +6422,7 @@ const FRASES_MOTIVACION=[
   // Papá / familia
   'Tu papá ya construyó algo con sus manos. Ponerle atención a medias a su negocio no es suficiente — exígete la atención completa.',
   'No tienes excusa para no sentarte a escuchar a tu papá solo porque no estás listo para comprometerte a algo grande. Siéntate igual.',
-  'Postergar la revisión de las fotos del negocio de tu papá es una deuda de tiempo que tu yo de 2030 va a tener que pagar. No la generes.',
+  'Postergar la revisión de las fotos del negocio de tu papá es una deuda de tiempo que tu yo del futuro va a tener que pagar. No la generes.',
   'Dejar de avanzar porque "no tienes toda la solución del negocio de tu papá" es la excusa fácil. Exígete solo el siguiente paso, hoy.',
   // Sueño / hábitos nocturnos
   'Seguir scrolleando en vez de apagar la pantalla a tiempo es robarle una hora de sueño a la versión de ti que mañana sí necesita rendir. No lo hagas.',
@@ -6440,6 +6450,9 @@ function diaDelAnio(){const n=new Date();const ini=new Date(n.getFullYear(),0,0)
 
 // Plan Maestro — vive en datos-maestros.js (fuente única, ver DATOS-MAESTROS.md).
 const PHASES = window.CIFRAS ? CIFRAS.PHASES : [];
+// La fecha del millón: el cierre de la última fase del Plan Maestro (en la prosa del maestro es
+// {{metaMillon}}). Mis Metas y la ventana de fases la leen de aquí en vez de llevar 2030 escrito.
+function finDelPlan(){ return PHASES.length ? PHASES[PHASES.length-1].end : new Date(); }
 function activePhase(){
   const t=new Date(); t.setHours(0,0,0,0);
   return PHASES.find(p=>t>=p.start&&t<=p.end) || PHASES[PHASES.length-1];
@@ -6514,11 +6527,13 @@ function pintarEdadPace(){
   const dias=d=>Math.round((d-hoy)/86400000);
 
   // ── 1. Deadlines reales dentro de esta ventana de edad (de un cumpleaños al siguiente) ──
+  // La decisión de la maestría es un hito del maestro (CALENDARIO.hitos), con su fecha y su regla.
+  const hDec=((window.CIFRAS&&CIFRAS.CALENDARIO.hitos)||[]).find(x=>x.txt==='Decisión Maestría');
   const hitos=[
     {t:`${PHASES[0].tag} cierra`, f:PHASES[0].end, d:PHASES[0].meta},
     {t:`${PHASES[1].tag} cierra`, f:PHASES[1].end, d:PHASES[1].meta},
-    {t:'Decisión Maestría',       f:new Date(2027,6,18), d:'Retomarla con datos reales del negocio, o posponerla otra vez — pero conscientemente.'},
-  ].filter(h=>h.f>hoy&&h.f<=ei.siguienteCumple).sort((a,b)=>a.f-b.f);
+    hDec?{t:hDec.txt, f:new Date(hDec.fecha+'T00:00:00'), d:hDec.sub}:null,
+  ].filter(h=>h&&h.f>hoy&&h.f<=ei.siguienteCumple).sort((a,b)=>a.f-b.f);
 
   // ── 2. Avance MEDIDO (dinero real de Finanzas), no casillas marcadas ──
   const num=v=>typeof v==='number'&&isFinite(v);
@@ -6589,19 +6604,12 @@ function pintarEdadPace(){
 // (los CETES), Bitcoin a precio de hoy, efectivo y cuenta, y los bienes (coche, gadgets), menos
 // las deudas. Es la misma cifra que el Patrimonio Neto de Finanzas. Lo líquido (sin bienes) lo
 // sigue dando patrimonioLiquido(), que usa el desglose del medidor.
-function patrimonioNeto(){
-  const inv=(D.fin.investments||[]).reduce((s,i)=>s+(+i.value||+i.invested||0),0);
-  const ef=D.fin.emergencyFund||0;
-  const activos=(D.fin.activos||[]).reduce((s,a)=>s+(+a.value||0),0);
-  const btc=btcInfo().mxn||0;
-  const deuda=(D.fin.debts||[]).reduce((s,d)=>s+(+d.balance||0),0);
-  return inv+ef+activos+btc-deuda;
-}
+// La fórmula vive en el maestro (CIFRAS.patrimonio): inversiones, fondo, activos y Bitcoin a precio
+// de hoy, menos todas las deudas. Coach usa la misma, así que su "patrimonio líquido hoy" y el de
+// aquí ya no pueden discrepar.
+function patrimonioNeto(){ return window.CIFRAS ? CIFRAS.patrimonio(D.fin).neto : 0; }
 // Sin los bienes: lo que se puede invertir o gastar sin vender nada.
-function patrimonioLiquido(){
-  const bienes=(D.fin.activos||[]).filter(a=>a.type!=='liquido').reduce((s,a)=>s+(+a.value||0),0);
-  return patrimonioNeto()-bienes;
-}
+function patrimonioLiquido(){ return window.CIFRAS ? CIFRAS.patrimonio(D.fin).liquido : 0; }
 // ── EL FONDO DE LA MAESTRÍA, COMPUESTO EN VIVO (2026-08-23) ───────────────────
 // Reporte de Adán: "esa suma contiene lo del precio en bitcoin que tengo guardado".
 // Tenía razón, y el panel decía lo contrario. Hasta hoy el Dashboard leía `goal.current`
@@ -7408,7 +7416,7 @@ function renderHeroFase(){
   };
   el.innerHTML=`
     <div class="hp-title">
-      <span role="button" tabindex="0" onclick="abrirKpi('fases')" title="Ver las 4 fases del Plan Maestro" style="cursor:pointer">🎯 ${esc(f.tag)} <span style="font-size:10px;color:var(--text3);font-weight:400">· las 4 fases</span></span>
+      <span role="button" tabindex="0" onclick="abrirKpi('fases')" title="Ver las ${PHASES.length} fases del Plan Maestro" style="cursor:pointer">🎯 ${esc(f.tag)} <span style="font-size:10px;color:var(--text3);font-weight:400">· las ${PHASES.length} fases</span></span>
       <a href="../Coach/Coach.html" class="hp-link">Plan Maestro →</a>
     </div>
     <div style="font-size:12.5px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:10px">${esc(f.title)}</div>
@@ -9101,7 +9109,7 @@ function cerrarDidi(){document.getElementById('didiOverlay')?.classList.remove('
 const CAL_MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 const CAL_MESES_C=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
 const CAL_DOW=['L','M','M','J','V','S','D'];
-const CAL_FASE_COLOR=['#00e87a','#00e0ff','#e0b020','#ff6bd6'];
+const CAL_FASE_COLOR=['#00e87a','#00e0ff','#e0b020','#ff6bd6','#a78bfa'];  // uno por fase de PHASES
 // Los dos umbrales de los que cuelga TODO el color de esta pantalla.
 const CAL_CRITICO=30, CAL_URGENTE=90;
 let calAnio=new Date().getFullYear(), calMesSel=new Date().getMonth();
@@ -9392,7 +9400,7 @@ function renderCalendario(){
   const esAnioVivo=calAnio===hoy.getFullYear(), esPasado=calAnio<hoy.getFullYear();
   document.getElementById('calYear').textContent=calAnio;
   document.getElementById('calYearBig').textContent=calAnio;
-  // El plan va de 2026 a 2030 — fuera de ese rango no hay nada que mostrar.
+  // El plan va del arranque de la primera fase al cierre de la última — fuera de ese rango no hay nada que mostrar.
   const min=PHASES[0].start.getFullYear(), max=PHASES[PHASES.length-1].end.getFullYear();
   document.getElementById('calPrev').disabled=calAnio<=min;
   document.getElementById('calNext').disabled=calAnio>=max;
@@ -10694,30 +10702,30 @@ const META_DETALLE={
       {t:"Paso 1 · Fondo de emergencia",d:"A {{fondoMeta}} — antes de tocar el BYD, esto va primero."},
       {t:"Paso 2 · Banamex en $0",d:"La liquidaste el 13 ago 2026 — saldo completo, no el mínimo, 5 meses antes de la meta. Volvió a abrirse el 1 sep 2026 con cuatro compras de un día ($5,985) y <b>la volviste a dejar en $0 el 30 sep 2026</b>. Paso cumplido otra vez: que no vuelva a cargarse."},
       {t:"Paso 3 · BBVA en $0",d:"La única tarjeta con saldo: {{tcBbva}}. Desde el 30 sep 2026 la pagas completa cada mes, así que no genera intereses — Banamex quedó en $0 ese mismo día. Mientras no vuelvas a pagar solo el mínimo de {{tcBbvaMin}}, el BYD se queda en pago mínimo."},
-      {t:"Se acelera de verdad",d:"En cuanto BBVA llegue a $0 (abr 2027), todo ese pago se redirige completo al BYD."},
+      {t:"Fase 2 · Se vende antes de irte",d:"El plan vende el auto en jul 2028: el crédito se liquida con la venta y lo que quede va al fondo de la maestría. Su cuota de {{autoPago}} no se paga desde Alemania."},
       {t:"Pregunta por pagos extra",d:"A tu crédito del BYD, si permite pagos extraordinarios a capital sin penalización — resuélvelo antes de necesitarlo."},
       {t:"Ingresos extra a capital",d:"Cualquier ingreso extra de Didi o del negocio que no esté ya comprometido va como abono a capital del BYD."},
       {t:"Revisa el saldo cada mes",d:"En Finanzas, junto con tus otras deudas — verlo bajar es lo que sostiene la disciplina de seguir el orden."},
       {t:"BYD liquidado 🎉",d:"Desde ese momento, ese mismo pago mensual se redirige al fondo del Cupra Formentor (ahora tu meta de largo plazo)."},
     ]},
   cupra:{titulo:"Cupra Formentor",frase:"El Cupra es el premio, no el punto de partida — llega después de la deuda, no antes.",pasos:[
-      {t:"Regla no negociable",d:"Nada de MSI ni crédito nuevo para el Cupra hasta que la deuda cara esté en $0. Van {{deudaCara}} entre las dos tarjetas: la Banamex cayó el 13 ago 2026 y volvió el 1 sep, y BBVA sigue viva."},
+      {t:"Regla no negociable",d:"Nada de MSI ni crédito nuevo para el Cupra hasta que la deuda cara esté en $0. Van {{deudaCara}} en la BBVA; la Banamex quedó en $0 el 30 sep 2026."},
       {t:"Redirige el pago del BYD",d:"Una vez liquidado (ver esa meta), ese mismo monto —ya estás acostumbrado a él— va a un fondo de ahorro específico para el Cupra."},
       {t:"Mínimo financiamiento",d:"Apunta a comprarlo de contado o con enganche grande, una vez tu patrimonio esté cerca de la meta de $1,000,000."},
       {t:"Revisa el precio real",d:"Directo en la página oficial de Cupra México o en tu agencia de confianza, cada 6 meses — el número exacto, no una idea vaga."},
-      {t:"La recompensa de Fase 3",d:"No un gasto de la Fase 0 o 1 — es el mismo orden que ya definiste: deuda cara, luego BYD, luego esto."},
+      {t:"La recompensa de la Fase 4",d:"No un gasto de las fases 0 a 3: el orden es el del plan — fondo, deuda cara, la maestría, y después esto, de contado o con enganche grande."},
     ]},
   empresa:{titulo:"Empresa ya creada",frase:"No empieza con una empresa formal — empieza con decidir qué quieres, después lo legal, después operar.",pasos:[
-      {t:"Fase 1 · Elige el negocio",d:"Freelance/testing (Opción 2), CodeReview productizado (Opción 4), o el negocio de tu papá (Opción 5) — Fase 0-1 del plan es para validar cuál tiene tracción real."},
+      {t:"Fase 1 · Elige el negocio",d:"El plan ya eligió: en la Fase 1 el frente activo es el negocio de tu papá (Opción 5); freelance (Opción 2) y CodeReview (Opción 4) esperan. La Fase 1 valida si tiene tracción real: el primer cliente pagado."},
       {t:"Fase 1 · Elige el tipo",d:"Para empezar solo, con ingresos bajos/medianos, lo normal es persona física con actividad empresarial, no persona moral todavía."},
       {t:"Fase 2 · Da de alta tu RFC",d:"Con actividad empresarial ante el SAT: trámite gratuito, pide CURP, identificación oficial y comprobante de domicilio, dentro del mes siguiente a iniciar actividad.",href:"https://citas.sat.gob.mx/",label:"Citas SAT"},
       {t:"Fase 2 · Régimen RESICO",d:"Si tus ingresos anuales no pasan de $3,500,000: tasas de ISR de 1% a 2.5%, mucho más simple que el régimen general."},
       {t:"Fase 2 · Empieza a facturar",d:"Emite CFDI desde tu primer peso cobrado — obligatorio, y la evidencia de ingresos que un banco te va a pedir después."},
       {t:"Fase 2 · Si escalas a sociedad",d:"Permiso de denominación, acta constitutiva ante notario e inscripción en el Registro Público de Comercio — o la alternativa en línea y sin costo, la SAS.",href:"https://www.gob.mx/tuempresa/articulos/crea-tu-sociedad-por-acciones",label:"SAS — gob.mx/tuempresa"},
-      {t:"Fase 3 · Primer ingreso real",d:"Tu primer contrato freelance cerrado o las primeras ventas/mentorías cobradas."},
-      {t:"Fase 3 · Dobla la apuesta",d:"En la opción que ya mostró ingreso recurrente (Opción 4, CodeReview productizado), con el capital que tendrás tras liquidar BBVA — Banamex ya está en $0 desde el 13 ago 2026."},
-      {t:"Fase 3 · Contador cuando crezca",d:"No obligatorio para empezar, pero evita errores de declaración costosos."},
-      {t:"Fase 3 · Tu argumento de venta",d:"Tu experiencia real de testing en Bosch y Continental — pocos emprendedores saben \"probar antes de confiar\" tan bien como tú."},
+      {t:"Fase 2 · Ingreso recurrente",d:"De un cliente a uno al mes entre Aeroresinas y Heliescala — la meta de negocio de la Fase 2."},
+      {t:"Fase 2 · Dobla la apuesta",d:"En lo que ya mostró ingreso recurrente, con capital propio y nunca con tarjeta: más contactos y más posts antes que más gasto."},
+      {t:"Fase 2 · Contador cuando crezca",d:"No obligatorio para empezar, pero evita errores de declaración costosos."},
+      {t:"Fase 2 · Tu argumento de venta",d:"Tu experiencia real de testing en Bosch y Continental — pocos emprendedores saben \"probar antes de confiar\" tan bien como tú."},
     ]},
   depa:{titulo:"Depa en la zona que quieras",frase:"Un depa no se compra con ganas — se compra con historial financiero limpio y patrimonio real.",pasos:[
       {t:"Historial crediticio limpio",d:"Banamex liquidada el 13 ago 2026 — eso ya cuenta. Sostén BBVA a tiempo hasta dejarla en $0 y tendrás justo lo que un banco revisa antes de darte una hipoteca."},
@@ -10737,7 +10745,7 @@ const META_DETALLE={
       {t:"Después de la deuda cara",d:"Planea este viaje para cuando esté resuelta — se disfruta mucho más sin estar pagándola en intereses después."},
       {t:"💸 Lo que cuesta, con números reales",d:"Cotizado el 17-ago-2026. <b>Vuelo redondo CDMX → Bangkok: $16,500-$27,500 MXN</b> en octubre, y <b>abril es el mes más barato (~$11,300)</b>. No hay vuelos directos y el trayecto son ~27 horas con escalas. Presupuesto completo para <b>1 mes de campamento</b>: vuelo ~$22,000 · Santai (entrenamiento 2×/día + alojamiento, ~$665 USD) ~$12,500 · comida ~$5,600 (Tailandia es barato, ~$10 USD/día) · vuelo interno a Chiang Mai o Phuket ~$1,500 · seguro de viaje ~$1,500 · margen para imprevistos ~$5,000. <b>Total: ~$48,000 MXN.</b> Los vuelos se mueven solos: vuelve a cotizar cuando tengas fecha."},
       {t:"📅 Cuánto ahorrar al mes, según cuándo quieras ir",d:"Sobre los ~$48,000: <b>a 24 meses son $2,000/mes</b>, <b>a 18 meses $2,670/mes</b>, <b>a 12 meses $4,000/mes</b>. Guárdalo en una cuenta aparte de tu fondo de emergencia — si vive en la misma cuenta, se gasta. La condición no es la fecha, es que tu deuda cara esté resuelta: pagar 40% de interés mientras ahorras para un viaje es perder dinero dos veces."},
-      {t:"🗓️ La ventana que conviene, y por qué",d:"<b>Apunta a abril.</b> Es el mes más barato para volar (ahorras ~$10,000 solo en el boleto) y cae en temporada seca en Tailandia, antes de las lluvias de mayo. Evita jul-oct: es temporada de monzón y entrenar con esa humedad es otro deporte. Con tu plan de deuda, la primera ventana realista es <b>abril de 2028</b> — ahorrando $2,000/mes desde que liquides BBVA, llegas con el viaje pagado de contado."},
+      {t:"🗓️ La ventana que conviene, y por qué",d:"<b>Apunta a abril.</b> Es el mes más barato para volar (ahorras ~$10,000 solo en el boleto) y cae en temporada seca en Tailandia, antes de las lluvias de mayo. Evita jul-oct: es temporada de monzón y entrenar con esa humedad es otro deporte. Con el Plan Maestro, la ventana es <b>abril de 2031</b>, en la Fase 4: hasta 2028 el excedente fondea Esslingen, y con el sueldo nuevo el viaje se paga de contado."},
       {t:"🥊 Las 12 semanas antes del viaje — qué entrenar exactamente",d:"<b>Semanas 1-4:</b> técnica base — postura, guardia, jab/cross, teep (patada frontal) y el clinch, que es lo que más te va a sorprender del Muay Thai. 3 clases/semana. <b>Semanas 5-8:</b> suma condición específica — 6 rounds de 3 min con 1 de descanso, saltar cuerda 15 min diarios (es LA herramienta del Muay Thai, no un calentamiento), y patadas bajas con espinilleras. <b>Semanas 9-12:</b> sparring ligero 2×/semana, obligatorio — si tu primer contacto real es en Tailandia, la vas a pasar mal. En paralelo, todo el bloque: acondiciona las espinillas de forma progresiva (nunca golpeando cosas duras de golpe, eso lesiona) y baja al peso en el que quieras pelear con tiempo, no en la última semana."},
       {t:"🏠 Dónde: los 3 campamentos, comparados",d:"<b>Santai (Chiang Mai)</b> — el más completo para ti: ~$240 USD/semana o ~$665 USD/mes <b>ya con alojamiento incluido</b>, 2 sesiones diarias, y organizan tu primera pelea. Chiang Mai es más barato y más tranquilo que Phuket. <b>Sumalee (Phuket)</b> — 500 THB la clase suelta, 5,000-9,000 THB al mes, con un programa de 12 semanas enfocado a tu primera pelea real. <b>Tiger Muay Thai (Phuket)</b> — el más grande y con más ambiente internacional, organiza peleas amistosas para estudiantes en su evento mensual; es el más caro y el más lleno. Escríbeles por correo antes de reservar y pregunta directo: cuántas semanas necesitan para meterte en una pelea amistosa."},
       {t:"📋 Trámites que se hacen antes de comprar el boleto",d:"Con pasaporte mexicano <b>no necesitas visa para turismo</b> hasta 60 días (verifícalo en la embajada antes de viajar, esto cambia). Tu pasaporte debe tener <b>6 meses de vigencia</b> a partir de la fecha de entrada. Contrata seguro de viaje <b>que cubra deportes de contacto</b> — el seguro normal excluye Muay Thai y ahí está justo el riesgo. Y hazte un chequeo médico antes: los campamentos serios te lo van a pedir para dejarte pelear."},
@@ -10745,11 +10753,11 @@ const META_DETALLE={
   hongkong:{titulo:"Rascacielos en Hong Kong",frase:"No necesitas construirlo — necesitas ir a pararte frente a él.",pasos:[
       {t:"Por qué te conecta",d:"Como ingeniero en mecatrónica, ver de cerca el skyline de Hong Kong —de los más densos del mundo en ingeniería estructural— conecta con lo que te apasiona."},
       {t:"Los 2 miradores clásicos",d:"Victoria Peak (el más alto, panorámica completa) y el Sky100 en el ICC (a nivel del rascacielos) — considera ir a los 2."},
-      {t:"Viaje de Fase 3",d:"Una vez el patrimonio esté cerca de $1,000,000 y la deuda cara resuelta, es un premio que se paga de contado."},
+      {t:"Viaje de la Fase 4",d:"Una vez el patrimonio esté cerca de $1,000,000 y la deuda cara resuelta, es un premio que se paga de contado."},
       {t:"Investiga operación en Asia",d:"Si ALTEN u otra empresa automotriz/tecnológica tiene presencia ahí — te da información real para una futura asignación internacional."},
       {t:"Combínalo con otra meta",d:"Un viaje grande a Asia rinde más si cumple dos metas a la vez, si el presupuesto lo permite."},
       {t:"💸 Lo que cuesta, con números reales",d:"Cotizado el 17-ago-2026. <b>Vuelo redondo CDMX → Hong Kong: $31,500-$48,500 MXN</b> según aerolínea y fecha. En destino, un viaje sin lujos ronda <b>$93 USD/día</b>: hostal o hotel económico 250-340 HKD la noche, comer en fondas y restaurantes locales ~67 HKD por comida, y el transporte es de lo mejor y más barato del mundo (12 HKD el viaje sencillo, 500 HKD el pase mensual). Para <b>7 días</b>: vuelo ~$40,000 · hospedaje ~$5,000 · comida ~$5,000 · transporte y miradores ~$3,000. <b>Total: ~$53,000 MXN.</b>"},
-      {t:"📅 Cuánto ahorrar al mes",d:"Sobre los ~$53,000: <b>a 24 meses son $2,210/mes</b>, <b>a 18 meses $2,950/mes</b>, <b>a 12 meses $4,420/mes</b>. Es un viaje de Fase 3 en tu Plan Maestro: se paga de contado, con la deuda cara ya resuelta y el patrimonio encaminado. Si lo pones a meses en una tarjeta, deja de ser un premio y se vuelve otra deuda."},
+      {t:"📅 Cuánto ahorrar al mes",d:"Sobre los ~$53,000: <b>a 24 meses son $2,210/mes</b>, <b>a 18 meses $2,950/mes</b>, <b>a 12 meses $4,420/mes</b>. Es un viaje de la Fase 4 en tu Plan Maestro: se paga de contado, con la deuda cara ya resuelta y el patrimonio encaminado. Si lo pones a meses en una tarjeta, deja de ser un premio y se vuelve otra deuda."},
       {t:"🗓️ Cuándo ir — la temporada importa mucho aquí",d:"<b>Octubre a diciembre es la mejor ventana:</b> temperatura agradable, poca humedad y cielos despejados, que es exactamente lo que necesitas para que el skyline se vea. Evita <b>junio-septiembre</b>: es temporada de tifones y de calor húmedo, y con neblina o lluvia los miradores no sirven de nada — habrás volado 20 horas para ver una nube. Marzo y abril traen niebla frecuente."},
       {t:"🏙️ El itinerario de ingeniería, que es lo que a ti te interesa",d:"<b>Victoria Peak</b> — sube en el Peak Tram (histórico, de 1888) y ve al atardecer para agarrar día y noche en la misma visita. <b>Sky100</b>, en el piso 100 del ICC, el edificio más alto de la ciudad: es la vista <i>desde dentro</i> del rascacielos. <b>Symphony of Lights</b>, el espectáculo nocturno de luces sobre el puerto, gratis, desde el paseo de Tsim Sha Tsui. Y el <b>Star Ferry</b> cruzando el puerto: cuesta centavos y es la mejor vista a nivel del agua de toda la ciudad. Para tu lado técnico: el <b>puente Tsing Ma</b> es de los puentes colgantes con carga ferroviaria más largos del mundo."},
       {t:"🧳 Trámites y logística",d:"Los mexicanos <b>no necesitan visa</b> para Hong Kong hasta 90 días como turista (verifícalo antes, esto cambia). Hong Kong usa <b>dólar hongkonés (HKD)</b>, no yuan. Compra una tarjeta <b>Octopus</b> apenas llegues: sirve para metro, autobús, ferry y hasta tiendas de conveniencia, y te ahorra estar comprando boleto cada vez. El aeropuerto está conectado al centro por el <b>Airport Express</b> en 24 minutos."},
@@ -10764,7 +10772,7 @@ const META_DETALLE={
       {t:"Starbase, Texas",d:"El mejor punto público es Isla Blanca Park, en South Padre Island, a ~8 km del sitio — no hay centro de visitantes oficial ahí.",href:"https://www.spacelaunchschedule.com/viewing-locations/isla-blanca-park/",label:"Isla Blanca Park"},
       {t:"Cabo Cañaveral",d:"El Kennedy Space Center tiene la vista más cercana a la plataforma, y Space View Park en Titusville es gratis con audio en vivo del control de misión.",href:"https://www.kennedyspacecenter.com/launches-and-events/see-a-launch/launch-viewing-locations/",label:"Kennedy Space Center — dónde ver"},
       {t:"No reserves de más",d:"No compres vuelos ni hospedaje no reembolsable hasta que el lanzamiento tenga estatus \"Go\" confirmado — los scrubs son comunes."},
-      {t:"Ubícala temprano",d:"Fase 1 o 2 del plan, no hasta el final — en cuanto tengas el primer ingreso extra estable, ya es un viaje que puedes pagar de contado."},
+      {t:"Ubícala temprano",d:"En la Fase 2, de contado y sin tocar el fondo de la maestría — no hace falta esperar al final: es de los viajes más baratos de la lista."},
       {t:"Suma contexto técnico",d:"Aprovecha el viaje para visitar también el centro de visitantes/museo espacial de la zona — no es solo turismo."},
     ]},
   maestria:{titulo:"Maestría en Alemania",frase:"La maestría no se canceló — se pausó a propósito, con fecha de regreso ya definida.",pasos:[
@@ -10780,7 +10788,7 @@ const META_DETALLE={
       {t:"Bosch · Werkstudent",d:"Hasta 10h/semana en semestre, 35h en vacaciones; también \"Praktikum\" (1 a 6 meses).",href:"https://www.bosch.de/karriere/dein-einstieg/studentinnen-und-studenten/werkstudententaetigkeit/",label:"Bosch — Werkstudent"},
       {t:"Mercedes-Benz · Inspire",d:"Programa graduate rotacional internacional, pide maestría/MBA y máximo 3 años de experiencia.",href:"https://group.mercedes-benz.com/careers/graduates/inspire-journey/",label:"Mercedes-Benz — Inspire"},
       {t:"BMW · Masterprogramm Fastlane",d:"Para maestría con 18+ meses restantes y desempeño sobresaliente — solicitud reportada 1-31 de mayo, inicio en octubre.",href:"https://www.bmwgroup.jobs/de/de/studierende/einstiegs-und-foerderprogramme/masterprogramm-fastlane.html",label:"BMW — Masterprogramm Fastlane"},
-      {t:"Revisión en Fase 3",d:"En 2029 toca revisar la decisión con datos reales del negocio: retomarla si el ingreso la sostiene, o posponerla de forma consciente."},
+      {t:"La decisión: {{decisionMaestria}}",d:"Con la regla de la Fase 2: si el ahorro de abril a junio de 2027 sostiene el ritmo hacia {{maestriaMeta}} —contando la venta del auto—, sigue y arrancas el {{maestriaInicio}}; si no, el arranque se mueve un año, sin deuda."},
     ]},
   // ── Las adicciones (2026-09-14) ─────────────────────────────────────
   // Adán quitó la de las citas el 21-sep-2026 ("quita el botón y meta de dejar la adicción de las
@@ -11112,8 +11120,8 @@ function kpiPaso(titulo, texto, color){
          '<div class="gbm-paso-t" style="color:'+color+'">'+titulo+'</div>'+
          '<div class="gbm-paso-d">'+texto+'</div></div>';
 }
-// Subtabs de las 4 fases (ver kpiDetalle id==='fases'): alterna qué botón y qué panel llevan
-// is-activa. Sin volver a pintar nada — el HTML de las 4 fases ya está en el DOM, solo se oculta.
+// Subtabs de las fases (ver kpiDetalle id==='fases'): alterna qué botón y qué panel llevan
+// is-activa. Sin volver a pintar nada — el HTML de todas las fases ya está en el DOM, solo se oculta.
 function kpiFaseTab(i){
   document.querySelectorAll('.fases-tabbtn').forEach(b=>b.classList.toggle('is-activa',+b.dataset.fase===i));
   document.querySelectorAll('.fases-panel').forEach(p=>p.classList.toggle('is-activa',+p.dataset.fase===i));
@@ -11283,7 +11291,7 @@ function kpiDetalle(id){
       (mesesUtiles?
         kpiSec('📈 El ritmo que pediría la meta')+
         kpiPaso('⚠️ Los números no cuadran con la fecha actual','Al reanudar en '+fmtF(fReanuda)+' quedarían <b>'+mesesUtiles+' meses</b> hasta '+fmtF(fMeta)+'. Para juntar los '+money(falta)+' que faltan habría que ahorrar <b>'+money(ritmo)+' al mes</b>'+(g.prom>0?' — <b>'+(ritmo/g.prom).toFixed(1)+' veces todo lo que gastas en un mes</b> ('+money(g.prom)+'), y eso además de seguir viviendo':' — más de la mitad de todo lo que ganas, y eso sin contar renta, deuda ni comida')+'.','var(--r)')+
-        kpiNota('Esto no significa renunciar: significa que <b>la fecha o el monto tendrán que moverse</b>, y es mejor saberlo hoy que en 2027. Tres salidas reales: correr la meta a 2030, bajar el objetivo a una maestría más barata (o con beca/DAAD), o financiar parte con ingreso nuevo en vez de con ahorro. Decidirlo es tarea de Coach → Plan Maestro, no de este panel.')
+        kpiNota('Esto no significa renunciar: el Plan Maestro ya lo resolvió en la <b>Fase 2</b> — el excedente de cada quincena va a CETES desde abril de 2027, la venta del auto entra al fondo antes de irte y el sueldo sube con el puesto nuevo. El <b>'+fmtF(fReanuda)+'</b> se decide con esa regla: si el ritmo no alcanza, el arranque se mueve un año, sin deuda. Las salidas de respaldo siguen ahí: una maestría más barata o una beca (DAAD) para la parte que falte.')
         :'')};
   }
 
@@ -11292,7 +11300,7 @@ function kpiDetalle(id){
     // ("Neto TOTAL (con auto + gadgets)"). Sirve para decir cuánto se ha sumado desde entonces.
     const START=231770, GOAL=1000000;
     const avance=pat-START;
-    const meses2030=Math.max(1,Math.round((new Date(2030,0,1)-new Date())/(1000*60*60*24*30.4)));
+    const meses2030=Math.max(1,Math.round((finDelPlan()-new Date())/(1000*60*60*24*30.4)));
     const ritmo=(GOAL-pat)/meses2030;
 
     // Cada peso por su nombre (2026-08-19). Antes eran 3 barras agregadas —"Inversiones",
@@ -11328,7 +11336,7 @@ function kpiDetalle(id){
     return {titulo:'💰 Patrimonio hacia $1M', sub:'Cada peso que suma, cada uno que resta, y a qué ritmo tendrías que ir.',
       html:
       '<div class="kpi-cifra" style="color:'+(pat>=0?V:R)+'">'+money(pat)+'</div>'+
-      '<div class="kpi-cifra-sub">Meta: '+money(GOAL)+' el 01 ene 2030 · llevas <b>'+Math.round(pat/GOAL*100)+'%</b> del millón · '+(avance>=0?'+':'−')+money(Math.abs(avance))+' desde el 18 jul 2026 ('+money(START)+' con bienes)</div>'+
+      '<div class="kpi-cifra-sub">Meta: '+money(GOAL)+' el '+finDelPlan().toLocaleDateString('es-MX',FECHA_LARGA)+' · llevas <b>'+Math.round(pat/GOAL*100)+'%</b> del millón · '+(avance>=0?'+':'−')+money(Math.abs(avance))+' desde el 18 jul 2026 ('+money(START)+' con bienes)</div>'+
 
       kpiSec('🟢 Lo que tienes · '+money(tieneHoy))+
       '<div class="kpi-desglose">'+(filasTengo.length
@@ -11458,10 +11466,10 @@ function kpiDetalle(id){
       kpiNota('Las de tasa 0 (MSI, crédito del coche si aplica) <b>no son urgentes pero sí comprometen tu excedente</b> cada mes. Cuentan para el flujo aunque no para los intereses.')};
   }
 
-  // Las 4 fases del Plan Maestro, con subtabs: una por fase, para no competir por las 2 columnas
+  // Las fases del Plan Maestro, con subtabs: una por fase, para no competir por las 2 columnas
   // de .kpi-cols (Adán, 21-sep-2026: "se ve muy amontonado, mejoralo haciendo subtabs para cada
-  // fase y explicandolo muy bien"). Cada panel trae fechas, meta, explicación y el checklist del
-  // mes, leído de coach_checks_v1. Se abre desde la banda de fase del Plan Maestro y desde el
+  // fase y explicandolo muy bien"). Cada panel trae fechas, meta, explicación, lo que se deja, el
+  // patrimonio esperado, el checkpoint y el checklist del mes, leído de coach_checks_v1. Se abre desde la banda de fase del Plan Maestro y desde el
   // módulo Fase de Mi Día. Arranca abierta la fase en curso (o la siguiente, o la última si el
   // plan ya cerró) — kpiFaseTab() alterna el resto sin volver a pintar nada.
   if(id==='fases'){
@@ -11499,26 +11507,29 @@ function kpiDetalle(id){
         '<div class="kpi-cifra" style="font-size:19px;line-height:1.3;color:'+color+'">'+esc(f.title)+'</div>'+
         '<div class="kpi-cifra-sub" style="color:'+color+';font-weight:700">'+estado+'</div>'+
         (activa?'<div class="gbm-bar" style="margin:6px 0 10px"><div class="gbm-bar-f" style="width:'+pct+'%;background:'+color+'"></div></div>':'')+
-        kpiPaso('🎯 Meta de la fase', f.meta||'', color)+
+        '<div class="fases-cols"><div>'+kpiPaso('🎯 Meta de la fase', f.meta||'', color)+
         kpiNota(f.explica||'')+
-        kpiSec('🗓️ Checklist de la fase')+
-        '<div class="kpi-desglose">'+lista+'</div></div>');
+        (typeof f.liquido==='number'?kpiNota('📈 Al cierre ('+dF(f.end)+') la trayectoria espera <b>≈ '+(f.liquido<0?'−':'+')+money(Math.abs(f.liquido))+'</b> de patrimonio líquido — hipótesis, no promesa.'):'')+
+        (f.deja?kpiPaso('🚫 Lo que se deja de hacer', f.deja, '#94a3b8'):'')+
+        (f.checkpoint?kpiPaso('🚩 Checkpoint', f.checkpoint, '#e0b020'):'')+
+        '</div><div>'+kpiSec('🗓️ Checklist de la fase')+
+        '<div class="kpi-desglose">'+lista+'</div></div></div></div>');
     });
     const html='<div class="fases-tabs"><div class="fases-tabnav" role="tablist">'+tabs.join('')+'</div>'+
       '<div class="fases-panels">'+paneles.join('')+'</div></div>';
-    return {titulo:'🪙 Las 4 fases del Plan Maestro', sub:'De aquí a $1,000,000 el 01 ene 2030: qué toca en cada tramo, por qué, y lo que ya marcaste en Coach.',
+    return {titulo:'🪙 Las '+PHASES.length+' fases del Plan Maestro', sub:'De aquí a $1,000,000 el '+finDelPlan().toLocaleDateString('es-MX',FECHA_LARGA)+': qué toca en cada tramo, por qué, y lo que ya marcaste en Coach.',
       html:html+kpiNota('Las casillas se marcan en <b>Coach → Plan Maestro</b> (o desde el calendario de aquí): es la misma lista, `coach_checks_v1`.')};
   }
 
   if(id==='meta2030'){
-    const ini=new Date(2026,6,18), fin=new Date(2030,0,1), hoy=new Date();
+    const ini=new Date(2026,6,18), fin=finDelPlan(), hoy=new Date();
     const total=fin-ini, ido=Math.max(0,hoy-ini);
     const pct=Math.min(100,ido/total*100);
     const dias=Math.max(0,Math.round((fin-hoy)/86400000));
-    return {titulo:'⏳ Camino a 2030', sub:'Cuánto tiempo llevas y cuánto queda para la meta del millón.',
+    return {titulo:'⏳ Camino a '+fin.getFullYear(), sub:'Cuánto tiempo llevas y cuánto queda para la meta del millón.',
       html:
       '<div class="kpi-cifra" style="color:'+P+'">'+dias.toLocaleString('es-MX')+' <span style="font-size:14px;color:var(--text3)">días</span></div>'+
-      '<div class="kpi-cifra-sub">Del 18-jul-2026 al 01-ene-2030 · llevas <b>'+Math.round(pct)+'%</b> del tiempo</div>'+
+      '<div class="kpi-cifra-sub">Del 18-jul-2026 al '+fin.toLocaleDateString('es-MX',FECHA_LARGA)+' · llevas <b>'+Math.round(pct)+'%</b> del tiempo</div>'+
       kpiSec('📊 Tiempo recorrido')+
       '<div class="kpi-desglose">'+kpiBarra('Del plan completo', Math.round(pct)+'%', pct, P,
         'Quedan '+Math.round(dias/30.4)+' meses · '+(dias/365).toFixed(1)+' años')+'</div>'+
@@ -11571,15 +11582,15 @@ function renderMetasSlide(){
   const deudaTotPctKpi=deudaTotIniKpi>0?Math.max(0,Math.min(100,(1-deudaTotKpi/deudaTotIniKpi)*100)):0;
   // En las deudas la barra va verde (pagado) sobre rojo (lo que falta): así se ve el avance.
   const PISTA_ROJA='color-mix(in srgb,var(--r) 60%,transparent)';
-  const diasA2030=Math.max(0,Math.round((new Date(2030,0,1)-new Date())/86400000));
-  const pct2030=Math.min(100,Math.max(0,(new Date()-new Date(2026,6,18))/(new Date(2030,0,1)-new Date(2026,6,18))*100));
+  const diasA2030=Math.max(0,Math.round((finDelPlan()-new Date())/86400000));
+  const pct2030=Math.min(100,Math.max(0,(new Date()-new Date(2026,6,18))/(finDelPlan()-new Date(2026,6,18))*100));
 
   const tiles=[
     {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/metaFondo*100),sub:Math.round(Math.min(100,ef/metaFondo*100))+'% · en CETES · meta '+money(metaFondo),c:'var(--w)',id:'fondo'},
     // La etiqueta lista solo las tarjetas con saldo vivo (ver la nota igual en renderCoach()).
     {ico:'💳',lbl:'Deuda cara'+(deudaCaraBal>0?' ('+[bana.balance>0?'Banamex':null,bbva.balance>0?'BBVA':null].filter(Boolean).join('+')+')':''),val:deudaCaraTieneDatos?money(deudaCaraBal):'Sin datos',pct:deudaCaraTieneDatos?deudaCaraPct:0,sub:deudaCaraTieneDatos?(deudaCaraBal<=0?'100% · Liquidada 🎉':Math.round(deudaCaraPct)+'% pagado de '+money(deudaCaraTot)):'Regístralas en Finanzas',c:'var(--r)',fill:'var(--g)',track:PISTA_ROJA,id:'deudacara'},
     {ico:'🎓',lbl:'Fondo Maestría',val:fmMae.total>0?money(fmMae.total):'Sin datos',pct:maeTgt>0?Math.min(100,fmMae.total/maeTgt*100):0,sub:maeTgt>0?`${Math.round(Math.min(100,fmMae.total/maeTgt*100))}% · Meta: ${money(maeTgt)}${fmMae.btc.mxn>0?` · ${Math.round(fmMae.btc.mxn/fmMae.total*100)}% en BTC`:''}`:'Meta en Finanzas → Metas',c:'var(--cy)',id:'maestria'},
-    {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:Math.round(patPct)+'% del millón · meta 01 ene 2030',c:'var(--g)',id:'patrimonio'},
+    {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:Math.round(patPct)+'% del millón · meta '+finDelPlan().toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'}),c:'var(--g)',id:'patrimonio'},
     // 4 medidores nuevos (2026-08-19, "tambien si puedes agregar mas, hazlo"). Los 4 salen de
     // datos que ya existían en `finanzasmx_v2` y que no se estaban mirando en ninguna pantalla.
     // 2026-08-19 — este medidor era "Ahorro de este mes", pero dependía de tener capturados los
@@ -11589,7 +11600,7 @@ function renderMetasSlide(){
     {ico:'🔥',lbl:'Intereses este mes',val:hasFinData()?money(interesMesKpi):'Sin datos',pct:interesPctKpi,sub:interesMesKpi>0?`${Math.round(interesPctKpi)}% menos que al inicio · ${money(interesMesKpi*12)} al año si no cambia`:(hasFinData()?'Sin deuda con interés 🎉':'Abre Finanzas una vez para cargarlos'),c:'var(--r)',id:'intereses'},
     {ico:'📈',lbl:'Total invertido',val:money(totalInvKpi),pct:totalInvKpi>0?Math.min(100,totalInvKpi/50000*100):0,sub:`${Math.round(totalInvKpi>0?Math.min(100,totalInvKpi/50000*100):0)}% de $50,000 · ${(D.fin.investments||[]).length} instrumento(s)`,c:'var(--cy)',id:'invertido'},
     {ico:'🧾',lbl:'Deuda total',val:hasFinData()?money(deudaTotKpi):'Sin datos',pct:deudaTotPctKpi,sub:deudaTotKpi>0?`${Math.round(deudaTotPctKpi)}% pagado · ${money(deudaCaraBalKpi)} con interés`:(hasFinData()?'Sin deudas vivas 🎉':'Abre Finanzas una vez para cargarlas'),c:'var(--r)',fill:'var(--g)',track:PISTA_ROJA,id:'deudatotal'},
-    {ico:'⏳',lbl:'Camino a 2030',val:diasA2030.toLocaleString('es-MX')+' días',pct:pct2030,sub:`${Math.round(pct2030)}% del plan recorrido`,c:'var(--p)',id:'meta2030'}
+    {ico:'⏳',lbl:'Camino a '+finDelPlan().getFullYear(),val:diasA2030.toLocaleString('es-MX')+' días',pct:pct2030,sub:`${Math.round(pct2030)}% del plan recorrido`,c:'var(--p)',id:'meta2030'}
   ];
   document.getElementById('metasProgreso').innerHTML=tiles.map(x=>`
     <div class="tile" onclick="abrirKpi('${x.id}')" role="button" tabindex="0" title="Ver el desglose de ${x.lbl}">
@@ -12165,7 +12176,7 @@ const HABILIDAD_DETALLE={
       {t:'La deuda cara primero, y por qué',d:'Cualquier tarjeta al 40-60% anual te está costando <b>más de lo que cualquier inversión te va a rendir</b>. Pagarla no es "usar" dinero: es la mejor inversión disponible, y la única con rendimiento garantizado.',list:['Pagar una tarjeta al 45% equivale a una inversión que rinde 45% <b>libre de impuestos y sin riesgo</b>. No existe nada así en el mercado.','El orden correcto: pago mínimo en todas, y todo el excedente a la <b>de mayor tasa</b>. Matemáticamente es lo óptimo (método avalancha).','La variante psicológica (bola de nieve): atacar primero la más chica para ver una desaparecer. Cuesta un poco más en intereses y funciona mejor para mucha gente. Si has abandonado antes, usa esta.','<b>Tu caso</b>: liquidaste Banamex y Ticketmaster cinco meses antes del plan. Eso ya demuestra que puedes — el mismo método aplica a lo que queda.','Una vez liquidada una tarjeta: <b>no la cierres, pero no la uses</b>. Cerrarla puede bajarte el historial; usarla te devuelve al principio.']},
       {t:'Los MSI no son dinero gratis',d:'"Sin intereses" no significa gratis: significa que <b>comprometiste ingreso futuro</b>. El cargo no se siente hoy, y ese es exactamente el problema.',list:['Antes de firmar uno nuevo, revisa <b>cuántos MSI ya traes activos sumados</b> en Finanzas. Es lo que casi nadie hace y donde la gente se atora sin darse cuenta.','La prueba honesta: <b>¿lo comprarías si tuvieras que pagarlo completo hoy?</b> Si la respuesta es no, no lo necesitabas — necesitabas que no doliera.','Cada MSI reduce tu excedente real de los próximos meses. Tres MSI "chicos" pueden comerse la capacidad de ahorro de medio año.','Úsalos solo para algo que ya ibas a comprar con dinero que ya tienes, y en ese caso <b>aparta el total desde el primer mes</b>. Así el MSI es una herramienta y no una trampa.']},
       {t:'Cuándo empezar a invertir (y en qué orden)',d:'Este paso viene al final a propósito: hacer crecer dinero que no administras bien solo amplifica el desorden. El orden, sin saltarse nada:',list:['<b>1.</b> Fondo de emergencia de 3-6 meses en algo líquido.','<b>2.</b> Liquidar toda deuda cara (cualquier cosa por encima del 15-20% anual).','<b>3.</b> Invertir de forma constante y aburrida, todos los meses.','<b>4.</b> Solo entonces, y con una parte pequeña, cosas más volátiles si las entiendes.','Mientras pagas deuda, <b>aprende</b>. Llegar al paso 3 sabiendo dónde poner el dinero es lo que evita el año perdido de todo el que empieza sin saber.','Cada peso que hoy va a la deuda, después va a inversión — <b>sin cambiar tu estilo de vida</b>. Ese es el momento en que el patrimonio empieza a moverse en serio.']},
-      {t:'Interés compuesto: el número que hay que interiorizar',d:'No es un concepto abstracto, es una cuenta que cambia decisiones. Vale la pena que te la sepas:',list:['Invertir <b>$5,000 mensuales al 10% anual da alrededor de $1 millón en 10 años</b> — y <b>más de la mitad de ese resultado es rendimiento</b>, no lo que tú metiste.','El motor no es la cantidad, es el <b>tiempo</b>. Los mismos $5,000 mensuales durante 20 años no dan el doble: dan casi cuatro veces más.','La consecuencia práctica: <b>empezar tarde cuesta muchísimo más que aportar poco</b>. El peor mes para empezar fue el pasado; el segundo peor es el que viene.','Lo mismo funciona en tu contra con la deuda. Una tarjeta al 45% es interés compuesto trabajando contra ti todos los días.','<b>Tu caso</b>: tu meta de $1M para 2030 es exactamente esta cuenta. Ábrela en tu slide de Mis Metas y mira qué aportación mensual la sostiene.']},
+      {t:'Interés compuesto: el número que hay que interiorizar',d:'No es un concepto abstracto, es una cuenta que cambia decisiones. Vale la pena que te la sepas:',list:['Invertir <b>$5,000 mensuales al 10% anual da alrededor de $1 millón en 10 años</b> — y <b>más de la mitad de ese resultado es rendimiento</b>, no lo que tú metiste.','El motor no es la cantidad, es el <b>tiempo</b>. Los mismos $5,000 mensuales durante 20 años no dan el doble: dan casi cuatro veces más.','La consecuencia práctica: <b>empezar tarde cuesta muchísimo más que aportar poco</b>. El peor mes para empezar fue el pasado; el segundo peor es el que viene.','Lo mismo funciona en tu contra con la deuda. Una tarjeta al 45% es interés compuesto trabajando contra ti todos los días.','<b>Tu caso</b>: tu meta de $1M —el cierre del Plan Maestro— es exactamente esta cuenta. Ábrela en tu slide de Mis Metas y mira qué aportación mensual la sostiene.']},
       {t:'Empieza aburrido y barato',d:'Para alguien que empieza, lo que funciona es lo que menos emoción da:',list:['Un <b>ETF indexado amplio</b> (tipo S&P 500) vía GBM y <b>CETES</b> cubren lo esencial. Con esas dos cosas ya estás por delante de la mayoría.','<b>Revisa la comisión de todo lo que compres</b> (el "costo anual" o TER). Un 1% anual suena a nada y se come cerca del <b>20% de tu rendimiento acumulado en 20 años</b>. Es el costo más invisible y más caro que existe.','<b>Aporta el mismo monto cada mes, pase lo que pase</b> (DCA), sin intentar adivinar cuándo está barato. Nadie le atina de forma consistente, y las caídas son justo cuando tu aportación compra más.','Acciones individuales, cripto y trading tienen su lugar, pero <b>después</b> y con una parte pequeña: son donde se pierde el dinero que aún no sabías proteger.','Decide tu asignación <b>una sola vez</b> y escríbela. Una inversión que se re-decide cada semana no es una estrategia, es un estado de ánimo.']},
       {t:'Conoce los instrumentos mexicanos',d:'No puedes repartir entre cosas que no distingues. De cada uno aprende tres datos: <b>plazo, riesgo y cómo se le cobran impuestos</b>.',list:['<b>CETES</b> — deuda del gobierno a 28, 91, 182 o 364 días. Lo más seguro que hay en pesos. En cetesdirecto.com, sin comisión y desde $100.','<b>Bonos M y Udibonos</b> — plazo largo; los Udibonos se ajustan con la inflación, que es lo que protege tu poder de compra.','<b>ETF indexado vía GBM</b> — participación en cientos de empresas de golpe. Riesgo de mercado real a corto plazo, el mejor histórico a largo.','<b>Tu Afore</b> — es inversión aunque no lo parezca, y casi nadie la revisa. Comprueba en qué SIEFORE estás y qué comisión te cobran; cambiarte es gratis y se hace en línea.','<b>Bitcoin</b> — muy volátil. Si lo tienes, que sea una parte pequeña que puedas ver caer 60% sin tocarla.','Fuentes sin nadie vendiéndote nada: <b>Banxico · Educación Financiera</b> y <b>cetesdirecto.com</b>.']},
       {t:'Impuestos: lo que casi nadie te dice',d:'Ignorarlo no es una opción cuando pasas de sueldo a ingresos propios, y es donde más gente tropieza al empezar a facturar:',list:['Tu sueldo en ALTEN ya lleva retención. <b>Didi y el freelance no</b> — ese dinero llega bruto y el impuesto es tuyo.','Si vas a facturar: <b>RESICO</b> para personas físicas con actividad empresarial tiene tasas bajas y es el régimen que más conviene a la mayoría que empieza. Confírmalo con un contador para tu caso.','<b>Aparta el impuesto en cuanto entra el ingreso</b>, en una cuenta distinta. Gastarte dinero que era del SAT es el error clásico del primer año por cuenta propia.','Los intereses de CETES y de la bolsa también pagan; la institución retiene una parte, pero la declaración anual es tuya.','Un contador cuesta menos de lo que te ahorra el primer año. No es un gasto, es parte del costo de generar ingreso propio.']},

@@ -125,7 +125,9 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
    solo el respaldo para un navegador que nunca abrió esa app. */
 (function gym() {
   const A = evaluar(literal(dash, 'const GYM_RUTINA_DEFAULT=', '{'));
-  const B = evaluar(literal(ejer, 'rutina:', '{'));
+  // 'rutina: {' y no 'rutina:': el primero de ese archivo es la regla CSS #s-rutina::before{…},
+  // y con ella el control se quedaba en el aviso de "no se pudo extraer" sin comparar nada.
+  const B = evaluar(literal(ejer, 'rutina: {', '{'));
   if (!A || !B) { avisos.push('GYM_RUTINA_DEFAULT: no se pudo extraer; comprobar a mano'); return; }
   const dias = [0, 1, 2, 3, 4, 5, 6];
   const na = dias.map(d => A[d] && A[d].nombre), nb = dias.map(d => B[d] && B[d].nombre);
@@ -139,13 +141,27 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
    puede generar desde el literal sin rediseñar la sección. Mientras siga así, al menos se
    comprueba que los nombres y las prioridades coincidan. */
 (function planEnCoach() {
+  /* Coach GENERA las fases desde CIFRAS.PHASES (pintarFasesPlan): solo la Fase 0, cerrada el
+     30 sep 2026, sigue escrita a mano. Antes este control pedía que cada fase apareciera escrita
+     en el HTML — y así fue como el texto de Coach y el del maestro se separaron: hablaban de
+     $3,145/mes liberados y de la plantilla GBM mucho después de que el plan cambiara.
+     Ahora vigila lo contrario: que nadie vuelva a escribir a mano una fase que ya vive aquí,
+     ni sus fechas en el JS de Coach. */
   const P = evaluar(literal(maestro, 'const PHASES = [', '['));
   if (P) {
-    const tagsMaestro = P.map(f => f.tag);
-    const tagsCoach = [...coach.matchAll(/class="fase-tag">([^<]+)/g)].map(m => m[1].trim());
-    const faltan = tagsMaestro.filter(t => !tagsCoach.some(c => c.indexOf(t) === 0));
-    if (faltan.length) problemas.push('Fases del maestro que no aparecen en el HTML de Coach: ' + faltan.join(', '));
-    else ok.push('PHASES — las ' + P.length + ' fases aparecen en el HTML de Coach');
+    const malos = [];
+    if (coach.indexOf('function pintarFasesPlan') < 0 || coach.indexOf('id="fasesPlan"') < 0 || coach.indexOf('id="planStepper"') < 0)
+      malos.push('     Coach ya no genera las fases (falta pintarFasesPlan, #fasesPlan o #planStepper)');
+    const escritas = [...coach.matchAll(/class="fase-tag">([^<'+]+)</g)].map(m => m[1].trim());   // sin la plantilla JS del generador
+    const aMano = escritas.filter(t => t.indexOf(P[0].tag) !== 0);
+    if (aMano.length) malos.push('     fases escritas a mano en Coach (se generan del maestro): ' + aMano.join(' | '));
+    if (!escritas.some(t => t.indexOf(P[0].tag) === 0)) malos.push('     la ' + P[0].tag + ' ya no está en el HTML de Coach');
+    const ids = P.slice(1).flatMap(f => (f.semanas || []).map(s => s.id));
+    const copiadas = ids.filter(id => coach.indexOf('id="' + id + '"') >= 0);
+    if (copiadas.length) malos.push('     tareas de fase copiadas en el HTML de Coach: ' + copiadas.join(', '));
+    if (/id:\s*'fase\d'\s*,\s*num:/.test(coach)) malos.push('     Coach vuelve a declarar las fechas de las fases en su JS');
+    if (malos.length) problemas.push('Las fases de Coach dejaron de salir del maestro:\n' + malos.join('\n'));
+    else ok.push('PHASES — Coach genera del maestro las ' + (P.length - 1) + ' fases a partir de la ' + P[1].tag + '; solo la ' + P[0].tag + ' sigue escrita a mano');
   } else problemas.push('PHASES: no se pudo evaluar desde el maestro');
 
   const A = evaluar(literal(maestro, 'const APRENDIZAJE = {', '{'));
@@ -441,6 +457,21 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
       if (hueco > 1) malos.push('     hueco de ' + hueco + ' días entre ' + C.PHASES[i-1].tag + ' y ' + f.tag);
     }
   });
+  const idsFase = (C.PHASES || []).flatMap(f => (f.semanas || []).map(s => s.id));
+  const repetidos = idsFase.filter((id, k) => idsFase.indexOf(id) !== k);
+  if (repetidos.length) malos.push('     ids de tarea repetidos entre fases (pisan coach_checks_v1): ' + repetidos.join(', '));
+  (C.PHASES || []).forEach(function (f) {
+    if (f.liquido != null && typeof f.liquido !== 'number') malos.push('     ' + f.tag + ': `liquido` no es un número');
+  });
+  // La maestría marca dos bordes del plan: una fase arranca el día que empieza y la decisión cae
+  // dentro de la fase anterior. Mover PROYECTO.maestriaInicio sin mover las fases sale aquí.
+  if (esFecha(P.maestriaInicio) && (C.PHASES || []).length) {
+    const ini = new Date(P.maestriaInicio + 'T00:00:00'), dec = new Date(P.maestriaPausa + 'T00:00:00');
+    const k = C.PHASES.findIndex(f => f.start.getTime() === ini.getTime());
+    if (k < 0) malos.push('     ninguna fase arranca el ' + P.maestriaInicio + ' (PROYECTO.maestriaInicio)');
+    else if (!(k > 0 && dec >= C.PHASES[k - 1].start && dec <= C.PHASES[k - 1].end))
+      malos.push('     la decisión de la maestría (' + P.maestriaPausa + ') no cae en la fase anterior a su arranque');
+  }
 
   if (malos.length) problemas.push('Datos del maestro mal formados:\n' + malos.join('\n'));
   else ok.push('Forma de los datos — deudas, cobros, fechas y sumas del maestro son coherentes (' +

@@ -113,9 +113,9 @@
        foco) en vez de copiarlo aquí. El detalle de cada ejercicio vive en Ejercicio. */
     { id:'gym',    nombre:'Gimnasio',               ancla:'Tras el CENLEX · el sábado a las 07:35',      hora:'18:15', color:'#ff8a3d', ico:'pesa',   dow:[1,2,4,5,6], gym:true,
       pasos:['Series, reps y peso de cada ejercicio: en Ejercicio, en la barra de arriba.'] },
-    { id:'fase0',  nombre:'Plan Maestro · 1h15',    ancla:'Primer ingreso real: negocio de tu papá o plantilla GBM', hora:'20:00', color:'#8b5cf6', ico:'diana',  dow:[1,2,3,4,5], flex:true,
+    { id:'fase0',  nombre:'Plan Maestro · 1h15',    ancla:'La tarea de la fase que toca esta semana', hora:'20:00', color:'#8b5cf6', ico:'diana',  dow:[1,2,3,4,5], flex:true,
       pasos:[
-        '1h15 de avance en la prioridad activa: el negocio de tu papá o la plantilla GBM.',
+        '1h15 de avance en la tarea de la fase que toca esta semana: la marca el tablero del Plan Maestro.',
         'Antes de empezar, decide qué vas a tener hecho a las 21:15. Una cosa, no tres.',
         'Sin Didi ni celular en este bloque: es el único hueco de trabajo profundo del día.'
       ] },
@@ -155,20 +155,29 @@
      La regla de todas: lo que Adán editó a mano manda. Un hábito se considera
      "suyo" si su nombre o su anclaje no son los que le puso la semilla anterior
      — entonces se le añade solo lo nuevo (la hora) y no se le toca nada más. */
-  const MIG = 8;
+  const MIG = 9;
   const RETIRADOS = { 2: ['azucar', 'gasto'], 3: ['pasos'], 4: ['snooze', 'diario'], 5: ['nata'], 7: ['genai', 'medi'] };
   /* Lo que decía la semilla anterior de cada hábito, para saber si Adán lo tocó */
   const PREVIO = {
     gym:   [['Gimnasio', '19:00 · después de comer'], ['Gimnasio', 'Tras el CENLEX · el sábado a las 07:35']],
     nata:  [['Natación', 'Miércoles, 20:00'], ['Natación', 'Alberca del Fitsi Buenavista']],
     app:   [['Construir esta app', '10 min antes de arrancar · y de 23:30 a 00:00']],
-    fase0: [['Fase 0 · 1h15', 'Negocio de tu papá o plantilla GBM'], ['Plan Maestro · 1h15', 'Primer ingreso real: negocio de tu papá o plantilla GBM']],
+    fase0: [['Fase 0 · 1h15', 'Negocio de tu papá o plantilla GBM'], ['Plan Maestro · 1h15', 'Primer ingreso real: negocio de tu papá o plantilla GBM'],
+            ['Plan Maestro · 1h15', 'La tarea de la fase que toca esta semana']],
     ale:   [['Alemán · 15 min', 'Antes del café'], ['Clase de alemán', 'CENLEX · ESCA Santo Tomás, hasta las 18:00']],
     linkedin: [['Post de Aeroresinas en LinkedIn', 'Al llegar a ALTEN, antes del correo · 20 min']],
     leer:  [['Leer 10 páginas', 'Al acostarme'], ['Leer 10 páginas', 'En el cierre del día']],
     sueno: [['Dormir 7 h', 'Luz fuera a las 23:40'], ['Dormir 7 h', 'Apagar pantallas al cerrar la app']],
     agua:  [['Agua · 3 litros', 'Botella llena al salir'], ['3 litros de agua', 'Botella llena al salir']],
     piel:  [['Skincare noche', 'Después de la ducha'], ['Rutina de la noche', 'Piel, minoxidil y suplementos']]
+  };
+  /* Los pasos que traía la semilla anterior. La migración 9 (las fases del Plan Maestro se
+     redefinieron el 3 oct 2026) cambia los de `fase0`, que mandaban a la plantilla GBM: solo
+     si siguen tal cual — si Adán los editó, mandan los suyos. */
+  const PASOS_PREVIOS = {
+    fase0: ['1h15 de avance en la prioridad activa: el negocio de tu papá o la plantilla GBM.',
+            'Antes de empezar, decide qué vas a tener hecho a las 21:15. Una cosa, no tres.',
+            'Sin Didi ni celular en este bloque: es el único hueco de trabajo profundo del día.']
   };
   const intacto = function (h) {
     const p = PREVIO[h.id];
@@ -256,6 +265,7 @@
           }
           if (h.hora === undefined) h.hora = sem.hora;
           if (h.pasos === undefined && sem.pasos) h.pasos = sem.pasos.slice();
+          else if (sem.pasos && PASOS_PREVIOS[h.id] && JSON.stringify(h.pasos) === JSON.stringify(PASOS_PREVIOS[h.id])) h.pasos = sem.pasos.slice();
           if (h.rutina === undefined && sem.rutina) { h.rutina = sem.rutina; if (sem.sec) h.sec = sem.sec; }
           if (h.gym === undefined && sem.gym) h.gym = true;
           if (h.flex === undefined && sem.flex) h.flex = true;

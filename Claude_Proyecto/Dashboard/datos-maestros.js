@@ -172,7 +172,7 @@ window.CIFRAS = (function () {
     ],
     hitos: [
       { fecha: PROYECTO.maestriaPausa,  txt: 'Decisión Maestría',
-        sub: 'Retomarla con datos reales del negocio, o posponerla otra vez — pero conscientemente.' },
+        sub: 'Con la regla de la Fase 2: si el ahorro de abril a junio sostiene el ritmo hacia la meta de la maestría —contando la venta del auto—, sigue; si no, el arranque se mueve un año.' },
       { fecha: PROYECTO.maestriaInicio, txt: 'Arranca la Maestría',
         sub: PROYECTO.maestriaEscuela },
     ],
@@ -293,7 +293,7 @@ window.CIFRAS = (function () {
     {id:"wd-al-gym",dias:[1,2,3,4,5],hora:"18:00",dur:15,cat:"admin",txt:"🚗 Del CENLEX al gimnasio (~15 min)"},
     {id:"wd09",dias:[1,2,3,4,5],hora:"19:05",cat:"salud",txt:"Ducha rápida post-ejercicio",subtareas:[{id:"wd09a",txt:"Ducha rápida para quitar el sudor del entrenamiento."},{id:"wd09b",txt:"🏊 <b>SOLO MIÉRCOLES, después de nadar:</b> lava el cabello con <b>CeraVe Champú Hidratante sin sulfatos</b>. El cloro se queda en el pelo y lo reseca durante horas — este lavado no es opcional."},{id:"wd09c",txt:"🏊 Miércoles: después del champú, <b>L'Oréal Elvive Reparación Total 5</b> solo de medios a puntas."},{id:"wd09d",txt:"🏊 Truco para el miércoles: <b>moja el pelo con agua limpia ANTES de meterte a la alberca</b>. El pelo mojado absorbe menos cloro, igual que una esponja llena."}]},
     {id:"wd-didi2",dias:[1,2,3,4,5],hora:"19:30",cat:"admin",txt:"🚗 Didi — sesión corta de la noche (hasta ~20:00)"},
-    {id:"wd11",dias:[1,2,3,4,5],hora:"20:00",cat:"profundo",txt:"🎯 Plan Maestro, Fase 1 — primer ingreso real: negocio de tu papá o plantilla GBM — 1h15 de avance real (20:00–21:15)"},
+    {id:"wd11",dias:[1,2,3,4,5],hora:"20:00",cat:"profundo",txt:"🎯 Plan Maestro — 1h15 en la tarea de la fase que toca esta semana: la marca el tablero (20:00–21:15)"},
     {id:"wd14",dias:[1,2,3,4,5],hora:"21:15",cat:"salud",txt:"🍽️ Cena + preparar la comida de mañana",subtareas:[{id:"wd14a",txt:"Cocina un solo platillo para cenar hoy y llevar de comida mañana a ALTEN — ahorra tiempo, sin carbohidratos refinados en la cena",link:{href:"../CuidadoPersonal/comida.html?s=cenas",label:"🍳 Ver cenas"}},{id:"wd14b",txt:"Deja todo empacado y listo junto a la puerta para salir rápido mañana",link:{href:"../CuidadoPersonal/comida.html?s=desayunos",label:"🍳 Ver desayunos"}}]},
     {id:"wd-pm",dias:[1,2,3,4,5],hora:"22:30",cat:"salud",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos",producto:true,subtareas:[{id:"wd17a",sec:"Piel y minoxidil",txt:"Limpiador (doble limpieza si usaste protector solar): CeraVe Limpiador Espumoso (verde) — remueve el bloqueador y el sudor del día"},{id:"wd17b",txt:"Tratamiento con retinoide: Differin Adapaleno 0.1% Gel — controla brotes y mejora la textura"},{id:"wd17c",txt:"Hidratante nocturno: Eucerin Hyaluron-Filler + Epigenetic Noche — repara la piel mientras duermes"},{id:"wd18",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 1 ml con el gotero en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la noche"},{id:"wdSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)"}]},
     {id:"sa-pm",dias:[6],hora:"22:20",cat:"salud",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos",producto:true,subtareas:[{id:"sa13",sec:"Piel y minoxidil",txt:"Skincare PM — limpiador + retinoide + hidratante nocturno"},{id:"sa13b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 1 ml con el gotero en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la noche"},{id:"saSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"saSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)"}]},
@@ -375,12 +375,22 @@ window.CIFRAS = (function () {
       {id:'mente',     name:'Mentalidad', full:'Mentalidad & Ejecución',   icon:'🚀', val:85, w:1.0, cat:'personal', desc:'Tu activo más grande. Tolerancia al riesgo alta, resiliencia real ante pérdidas, y ahora mismo estás en el punto de romper años de inacción. Esto es lo que hace que todo lo demás sea entrenable.'},
     ];
   /* ── EL PLAN MAESTRO ───────────────────────────────────────────────────────────────────────
-     Las 4 fases hacia $1,000,000 líquido: fechas ancla, título, meta, explicación y el
-     checklist de cada mes. Los ids `sN-M` de las tareas son el contrato con Coach.html, que
-     guarda su estado en `coach_checks_v1[id]` — si se renombra un id aquí, se pierde lo marcado.
-     Coach tiene las mismas fases escritas como HTML en su sección #perfil. Ese texto NO se puede
-     generar desde aquí sin rediseñar la sección, así que sigue a mano: `verificar-sincronia.js`
-     compara los títulos y las metas de fase entre este literal y ese HTML. */
+     Las fases hacia $1,000,000 de patrimonio líquido: fechas ancla, título, meta, explicación y
+     el checklist de cada mes. Cada fase dice además lo que DEJA de hacerse (`deja`), la prueba
+     con la que cierra (`checkpoint`) y el patrimonio líquido que la trayectoria espera al
+     cerrarla (`liquido`: hipótesis redondeada de la proyección del plan, no promesa).
+
+     Los ids de las tareas son el contrato con `coach_checks_v1[id]`: si se renombra uno, se
+     pierde lo marcado. La Fase 0 (cerrada el 30 sep 2026) conserva sus `sN-M`; las fases que
+     la siguen llevan `fN-M`, ids nuevos para no heredar casillas de tareas que ya no existen.
+
+     Coach pinta la Fase 0 como HTML escrito a mano y GENERA las demás desde aquí
+     (`pintarFasesPlan()`), igual que el Dashboard: un solo texto para las dos apps.
+
+     Fechas que no son de aquí y que las fases respetan: la Fase 3 arranca el
+     `PROYECTO.maestriaInicio` y la decisión de la maestría (`PROYECTO.maestriaPausa`) cae dentro
+     de la Fase 2 — el control 9 de `verificar-sincronia.js` lo comprueba. La fecha del millón
+     es el cierre de la última fase: el marcador `{{metaMillon}}`. */
   const PHASES = [
     {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep y quedó otra vez en $0 el 30 sep) y ✅ BBVA de $39,000 a $900 el 19 sep 2026 con la venta del Bitcoin (el 30 sep iba de nuevo en {{tcBbva}}). Quedan 2 objetivos financieros, en este orden: 1) fondo de emergencia —los CETES, {{fondo}}— a {{fondoMeta}}, 2) dejar la BBVA en $0 ({{tcBbva}}).",explica:"Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases. El orden era 1) fondo de emergencia, 2) Banamex, 3) BBVA: el paso 2 se hizo el 13 ago 2026 y el 3 casi entero el 19 sep 2026 (BBVA de $39,000 a $900 con la venta del Bitcoin; el 30 sep volvió a {{tcBbva}}), así que la prioridad es el fondo de emergencia —que desde sep 2026 son los CETES— y, en cuanto llegue a {{fondoMeta}}, rematar lo que queda en la BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.",semanas:[
       {id:"s0-9",mes:"2026-08",txt:"Prioridad 1 — Fondo de emergencia a {{fondoMeta}}. Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. (hoy {{fondo}}, en CETES)"},
@@ -393,26 +403,79 @@ window.CIFRAS = (function () {
       {id:"s0-1",mes:"2026-08",txt:"Corrige \"Deudas\" en Finanzas.html · cero MSI nuevo. (✅ 13 ago 2026: quedó en $8,200 = auto {{autoPago}} + mínimo BBVA {{tcBbvaMin}})"},
       {id:"s0-7",mes:"2026-09",txt:"Cada peso de ventas/activos va, en orden fijo: (1) fondo de emergencia a {{fondoMeta}}, (2) resto a la BBVA ({{tcBbva}}), la única tarjeta con saldo desde que Banamex quedó en $0 el 30 sep 2026. Este mes cierra la fase."},
     ]},
-    {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Los $3,145/mes liberados entran en acción + primer ingreso real",meta:"Primer contrato freelance o 20+ ventas de la plantilla cobradas. La meta vieja —Banamex liquidada— se cumplió el 13 ago 2026 y otra vez el 30 sep 2026; la BBVA va en {{tcBbva}}, así que el objetivo financiero pasa a dejarla en $0 y no volver a cargar ninguna de las dos.",explica:"Fase 1 (oct 2026 – mar 2027) arranca cuando los $2,335/mes de MSI de gadgets quedan libres, que sumados a los {{banamexMin}} del mínimo de Banamex (libres desde que quedó en $0 el 30 sep 2026) dan $3,145/mes nuevos. Con Banamex en $0 y la BBVA en {{tcBbva}}, ese dinero tiene un solo destino: fondo de emergencia —los CETES— a {{fondoMeta}} y todo lo demás a rematar la BBVA. En paralelo, buscas tu primer ingreso real fuera de ALTEN.",semanas:[
-      {id:"s1-1",mes:"2026-10",txt:"Oct 2026: los $2,335/mes liberados de MSI + los {{banamexMin}} del mínimo de Banamex (libres desde el 30 sep 2026) van, en orden fijo: fondo de emergencia a {{fondoMeta}} → 100% a lo que quede en la BBVA = $4,645/mes."},
-      {id:"s1-2",cont:true,txt:"Prioridad: cerrar el primer contrato freelance (Opción 2) + 1 post de seguimiento mensual de la plantilla GBM (Opción 1)."},
-      {id:"s1-3",mes:"2026-11",txt:"En paralelo: primer post de mentoría pagada (Opción 3) — bajo riesgo, casi sin preparación."},
-      {id:"s1-4",cont:true,txt:"Primer peso cobrado en Opción 1-3 → esas horas de Didi se mueven ahí (Opción 6), no antes."},
-      {id:"s1-5",cont:true,txt:"iPhone 15 (crédito AT&T) sigue corriendo ($494/mes) hasta jun 2028 — ya comprometido, no toca tu excedente nuevo."},
-      {id:"s1-6",cont:true,txt:"Foco de habilidad (Radar): sube <strong>Copy</strong> (55→) escribiendo los posts, y <strong>Finanzas</strong> (20→) sosteniendo el presupuesto corregido. Solo estas dos."},
+    {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Blindar la base: que el margen llegue al ahorro",liquido:-150000,
+     meta:"Cuatro entregables al 31 mar 2027: <b>1)</b> el fondo de emergencia —los CETES— en {{fondoMeta}} antes del 31 dic 2026 y en tres meses de fijos y mínimos ({{fondo3m}}) al cierre; <b>2)</b> la BBVA pagada completa los seis días 11 de la fase, cero intereses; <b>3)</b> el ISTQB CT-GenAI aprobado; <b>4)</b> el primer cliente pagado del negocio de tu papá (Aeroresinas o Heliescala).",
+     explica:"Arrancaste la fase el 1 oct 2026 con el patrimonio líquido en ≈ −$285,000 y una contradicción que lo explica casi todo: el margen del mes —lo que queda del ingreso tras fijos y mínimos— es {{margen}}, y aun así septiembre cerró con la cuenta casi en cero y la BBVA volvió a subir en once días. El problema no es cuánto ganas: el margen se gasta con tarjeta antes de llegar al ahorro. Esta fase lo voltea con tres reglas: <b>págate primero</b> (el ahorro sale el día que entra la quincena, no lo que sobre a fin de mes), <b>la tarjeta se paga completa cada día 11 y tiene tope</b>, y <b>lo que no usas se vende</b>. Con eso el fondo llega a {{fondoMeta}} en diciembre —con los {{cetesDia15}} de cada día 15 alcanza— y a tres meses de fijos en marzo, con el aguinaldo y lo que vendas. En paralelo cierras lo que ya está en marcha: el ISTQB CT-GenAI, que ya está agendado, y el primer cliente de un negocio que ya tiene webs, dossier y plantillas de posts; le falta ponerse frente a clientes.",
+     deja:"Ninguna compra a MSI ni crédito nuevo. Nada de riesgo alto ni súper alto en Qué invertir hoy mientras el fondo no esté completo: el orden es fondo → deuda cara → invertir. Y un solo frente de negocio: la plantilla GBM, el freelance y la mentoría de la Fase 0 se pausan; el negocio activo es el de tu papá.",
+     checkpoint:"31 mar 2027: si el fondo no llegó a {{fondoMeta}} o algún día 11 se pagó solo el mínimo, la Fase 2 arranca por el presupuesto y no por la búsqueda de trabajo — el problema sigue siendo el gasto, no el ingreso. Si el negocio no consiguió cliente en seis meses, cambia el canal (LinkedIn directo a operadores y talleres, no solo WhatsApp) antes que el negocio.",
+     semanas:[
+      {id:"f1-1",mes:"2026-10",txt:"Paga la BBVA completa el 11 oct. El total del estado de cuenta, no el mínimo de {{tcBbvaMin}}: así la tarjeta no cobra intereses."},
+      {id:"f1-2",mes:"2026-10",txt:"Ponle tope a la tarjeta. Lo que el riel del Plan Maestro dice que te sobra en la quincena, ni un peso más; al llegar, apágala desde la app de BBVA."},
+      {id:"f1-3",mes:"2026-10",txt:"Anota la fecha del examen ISTQB CT-GenAI. Ya está agendado con Brightest: ponlo en el calendario y haz esta semana el examen de muestra para saber qué te falta."},
+      {id:"f1-4",mes:"2026-10",txt:"Vende lo que no usas. PS5 y su control, monitores e iPad —y lo que no hayas tocado en tres meses—: fotos y precio en Marketplace este mes; cada venta va directo al fondo."},
+      {id:"f1-5",mes:"2026-11",txt:"Presenta el ISTQB CT-GenAI. Llega con el simulacro de Mis Metas en 34 de 46 o más, dos veces seguidas: el corte oficial es 30."},
+      {id:"f1-6",mes:"2026-11",txt:"Negocio de tu papá: 20 contactos con el dossier. Operadores de helicópteros, talleres y escuelas de aviación, por WhatsApp y LinkedIn, con el PDF y el post del día de Posts."},
+      {id:"f1-7",mes:"2026-12",txt:"Fondo de emergencia en {{fondoMeta}}. Llega con el aporte del 15 dic; ese mismo día súbele la meta en Finanzas a {{fondo3m}}, tres meses de fijos y mínimos."},
+      {id:"f1-8",mes:"2026-12",txt:"El aguinaldo va entero al fondo. Por ley llega antes del 20 dic y es de al menos 15 días de sueldo: a CETES, nada de regalos a meses."},
+      {id:"f1-9",mes:"2027-01",txt:"Cuesta de enero sin tarjeta. Revisa en Finanzas lo que gastaste en diciembre y ajusta el tope: enero es el mes que más regresa a la gente al pago mínimo."},
+      {id:"f1-10",mes:"2027-02",txt:"CV y LinkedIn con el ISTQB nuevo. Titular con señal remota y de validación/ADAS: deja listo lo que la Fase 2 va a usar para buscar puesto."},
+      {id:"f1-11",mes:"2027-03",txt:"Cierra la Fase 1 por escrito. Fondo, los seis días 11, el ISTQB y el cliente del negocio: qué se cumplió y qué pasa a la Fase 2."},
+      {id:"f1-12",cont:true,txt:"Págate primero cada quincena. El 1 y el 15, antes de gastar, aparta lo del fondo: lo que sobra a fin de mes no es ahorro, es suerte."},
+      {id:"f1-13",cont:true,txt:"Cero MSI y cero crédito nuevo. Ni una compra a meses en toda la fase: el iPhone ({{iphone}}) es el último crédito de consumo que queda."},
+      {id:"f1-14",cont:true,txt:"Conducta primero: 30 días sin alcohol al 14 oct y el celular fuera del cuarto. Cada recaída cuesta dinero y sueño, y en Didi el límite de alcohol es cero."},
     ]},
-    {start:new Date(2027,3,1),end:new Date(2028,11,31),tag:"Fase 2",title:"Doblar apuesta en lo que mostró tracción",meta:"BBVA liquidada, deuda cara en $0, ingreso extra estable de al menos $10,000–15,000/mes.",explica:"Fase 2 (abr 2027 – dic 2028) es la fase más larga. Con Banamex resuelta desde el 13 ago 2026 y BBVA proyectada a mar 2027, esta fase debería arrancar ya con la deuda cara en $0 — el excedente completo se va a doblar la apuesta en la opción de negocio que ya mostró tracción real, en vez de dispersarte entre varias.",semanas:[
-      {id:"s2-1",mes:"2027-04",txt:"Elige la opción (1, 2 o 3) con ingreso recurrente real y concéntrate ahí — resiste saltar a \"algo mejor\"."},
-      {id:"s2-2",mes:"2027-10",txt:"Con tracción sostenida, arranca la Opción 4 (CodeReview productizado) — único punto del plan que requiere capital, ya disponible tras liquidar BBVA."},
-      {id:"s2-3",cont:true,txt:"Usa IA para construir tu propio sistema de ventas/argumentos — tu fuerza real, en vez de improvisar en vivo."},
-      {id:"s2-4",mes:"2028-06",txt:"Jun 2028: se libera el iPhone de AT&T ($494/mes) — súmalo a inversión, no a gasto nuevo."},
-      {id:"s2-5",cont:true,txt:"Foco de habilidad: sube <strong>Ventas</strong> (15→) y <strong>Marketing</strong> (20→) lo mínimo para vender la Opción 4 sin depender solo de referidos."},
+    {start:new Date(2027,3,1),end:new Date(2028,8,30),tag:"Fase 2",title:"Subir el ingreso y fondear Esslingen",liquido:530000,
+     meta:"Al 30 sep 2028: <b>1)</b> un sueldo al menos 25% arriba de {{sueldo}} —puesto nuevo, ascenso o remoto en dólares—; <b>2)</b> la decisión de la maestría tomada con números el {{decisionMaestria}} y, si es sí, la admisión en {{maestriaEscuela}} con IELTS de 6.0 o más; <b>3)</b> el fondo de la maestría en {{maestriaMeta}}, en CETES y no en acciones; <b>4)</b> el {{auto}} resuelto antes de irte: vendido o liquidado.",
+     explica:"La palanca grande del plan es el ingreso, y esta es la fase de moverla con lo que ya construiste: seis años de testing automotriz, el ISTQB Foundation y el CT-GenAI, y un sistema propio hecho con IA que puedes enseñar en una entrevista. Con el fondo completo y la tarjeta sin intereses, el excedente tiene un solo destino: la maestría, que no se paga con deuda. La meta es {{maestriaMeta}} y llevas {{maestria}}, así que el {{decisionMaestria}} se decide con una regla y no con ganas: si el ahorro de abril a junio de 2027 sostiene el ritmo para juntar la meta antes de sep 2028 —contando lo que deje la venta del auto—, sigue; si no, el arranque se mueve un año y las fases se recalculan. El patrimonio líquido cruza cero hacia oct 2027. El auto no viaja contigo: su cuota de {{autoPago}} no se paga desde Alemania, así que se vende antes de irte.",
+     deja:"Didi deja de ser fijo en cuanto el sueldo nuevo cubra lo que aporta: esas horas pasan a IELTS y alemán. Ningún viaje grande ni auto nuevo (Tailandia, Hong Kong y el Cupra esperan a la Fase 4); el lanzamiento de SpaceX cabe solo de contado y sin tocar el fondo de la maestría. Y nada de acciones con dinero que se usa en 2028: horizonte corto, CETES.",
+     checkpoint:"El {{decisionMaestria}}: sí o no a Esslingen con la regla de la fase; si es no, el plan se rehace ese mismo mes con el millón como meta directa —según la proyección del plan, sin maestría llega hacia mediados de 2030—. Al 30 sep 2028, si el fondo no llegó a {{maestriaMeta}}, no se viaja a medias: se pide aplazar la admisión un año y se completa.",
+     semanas:[
+      {id:"f2-1",mes:"2027-04",txt:"Arranca la búsqueda de puesto. Tres aplicaciones por semana —remoto, ADAS, validación HIL— y una entrevista simulada en Entrevistas cada semana."},
+      {id:"f2-2",mes:"2027-04",txt:"Declaración anual. Presenta tus deducciones y revisa cómo te retiene Didi; si sale saldo a favor, va al fondo de la maestría."},
+      {id:"f2-3",mes:"2027-04",txt:"El excedente se aparta para la maestría. Todo lo que sobra cada quincena va a CETES para Esslingen; si el {{decisionMaestria}} decides no ir, se vuelve tu inversión."},
+      {id:"f2-4",mes:"2027-07",txt:"Decide la maestría el {{decisionMaestria}}. Ritmo de ahorro de abril a junio por los meses que quedan, más la venta del auto, contra {{maestriaMeta}}: sí o no, por escrito."},
+      {id:"f2-5",mes:"2027-09",txt:"IELTS Academic con 6.0 o más. Lo pide Esslingen y el resultado vale dos años: alcanza para la solicitud de noviembre."},
+      {id:"f2-6",mes:"2027-09",txt:"Constancia de alemán de {{escuelaAleman}}. La maestría es en inglés, pero vivir y trabajar allá pide alemán: el nivel que tengas, certificado."},
+      {id:"f2-7",mes:"2027-11",txt:"Solicitud a {{maestriaEscuela}}. Abre el 4 nov y cierra el 31 mar: mándala completa en noviembre —títulos, kárdex con tu lugar en la generación, IELTS, CV y carta de motivación—."},
+      {id:"f2-8",mes:"2027-12",txt:"El aguinaldo 2027 va al fondo de la maestría. Entero, como el de 2026: es el mes que más empuja la meta."},
+      {id:"f2-9",mes:"2028-05",txt:"Visa de estudiante. Con la admisión, abre la cuenta bloqueada que pide la embajada y agenda la cita; el seguro médico, cotizado completo: la tarifa de estudiante del seguro público alemán es hasta los 30 y llegas con 33."},
+      {id:"f2-10",mes:"2028-07",txt:"Vende el auto. El saldo del crédito ({{autoSaldo}}) se liquida en la venta y lo que quede va al fondo: la cuota de {{autoPago}} no se paga desde Alemania."},
+      {id:"f2-11",mes:"2028-08",txt:"Cierra México con orden. Renuncia en {{empleador}} con el aviso de tu contrato y avisa al arrendador con tiempo: el depósito de renta regresa al fondo."},
+      {id:"f2-12",mes:"2028-09",txt:"Llega a Esslingen antes del {{maestriaInicio}}. Una o dos semanas antes: registro de domicilio, cuenta y seguro antes de la primera clase."},
+      {id:"f2-13",cont:true,txt:"Sueldo +25% o remoto en dólares. Si a los seis meses de buscar no hay oferta, cambia el CV y el canal, no la meta."},
+      {id:"f2-14",cont:true,txt:"Negocio de tu papá: de un cliente a uno al mes. Un trabajo cerrado al mes entre Aeroresinas y Heliescala, con los posts de cada semana."},
+      {id:"f2-15",cont:true,txt:"Cero deuda nueva y la BBVA al total cada 11. Lo que pase del dinero que pide la visa puede ir a capital del auto: rinde {{autoTasa}} seguro y lo recuperas al venderlo."},
     ]},
-    {start:new Date(2029,0,1),end:new Date(2030,0,1),tag:"Fase 3",title:"Escalar, cerrar la brecha de $31,540/mes y reevaluar",meta:"Cerrar la distancia final a $1,000,000 líquido con el negocio como fuente principal de excedente.",explica:"Fase 3 (ene 2029 – ene 2030) es el cierre. Con la deuda cara ya en $0 desde la fase anterior, todo el excedente nuevo va directo a cerrar la brecha final hacia $1,000,000 de patrimonio líquido — la meta central de todo el Plan Maestro.",semanas:[
-      {id:"s3-1",mes:"2029-01",txt:"El negocio debe cubrir ya parte real de la brecha. Ingreso extra cercano a cero en 2029 = problema de opción elegida, no de timing — revisa Posibles Negocios."},
-      {id:"s3-2",cont:true,txt:"Todo ingreso adicional va primero a inversión (CETES, fondos indexados, ampliar BTC/acciones) — nunca a consumo nuevo."},
-      {id:"s3-3",cont:true,txt:"La decisión de Maestría (18 jul 2027) ya está tomada: retomarla en oct 2028 con datos reales del negocio, o posponerla de nuevo, conscientemente."},
-      {id:"s3-4",mes:"2029-07",txt:"Reevalúa la meta de $1,000,000 líquido con números reales del negocio y ajusta la fecha si hace falta — sin abandonarlo."},
+    {start:new Date(2028,9,1),end:new Date(2030,2,31),tag:"Fase 3",title:"Esslingen: la maestría que cambia tu sueldo",liquido:250000,
+     meta:"Al 31 mar 2030: <b>1)</b> el M.Eng. terminado —tres semestres y la tesis hecha en una empresa—; <b>2)</b> experiencia alemana en el CV: Werkstudent o Praktikum en Bosch, Mercedes-Benz, Porsche o un proveedor; <b>3)</b> una oferta de trabajo firmada antes de entregar la tesis; <b>4)</b> cero deuda nueva y el fondo alcanzando hasta el último mes.",
+     explica:"Es la única fase en que el patrimonio baja, y es a propósito: el fondo se convierte en un título alemán y en experiencia en la industria que mejor paga lo que ya sabes hacer —validación, HIL, ADAS—. Por eso se cuida igual que la deuda: presupuesto fijo en euros cada mes, trabajo de Werkstudent en cuanto la carga del semestre lo permita, y la tesis en una empresa, porque de ahí salen las ofertas. Al graduarte, el permiso de residencia deja buscar trabajo hasta 18 meses, pero la meta es no necesitarlo: oferta firmada antes de entregar la tesis. Tu red ya existe: los líderes de Bosch en Stuttgart con los que trabajaste.",
+     deja:"Cualquier gasto que el presupuesto en euros no tenga previsto: el fondo tiene que durar tres semestres. Y nada pendiente en México: el auto, Didi y el depa se cerraron en la Fase 2.",
+     checkpoint:"Al cerrar el 2º semestre (sep 2029), si el fondo no alcanza para el 3º, más horas de Werkstudent antes que cualquier deuda. Sin oferta en enero de 2030, la búsqueda se vuelve de tiempo completo con el permiso de búsqueda de empleo.",
+     semanas:[
+      {id:"f3-1",mes:"2028-10",txt:"Registro de domicilio en dos semanas. La Anmeldung es obligatoria en 14 días: con ella abres la cuenta y tramitas el permiso de residencia."},
+      {id:"f3-2",mes:"2028-10",txt:"Presupuesto mensual en euros. Renta, seguro, comida y transporte con tope; lo que pase de ahí se recorta antes de tocar el fondo."},
+      {id:"f3-3",mes:"2028-11",txt:"Aplica a Werkstudent desde el primer semestre. Bosch, Mercedes-Benz y Porsche publican vacantes en sus portales: HIL y testing es justo lo que buscan."},
+      {id:"f3-4",mes:"2029-02",txt:"Pausa entre semestres: Praktikum o más horas. Entre febrero y marzo no hay clases: el mejor momento para sumar experiencia e ingreso."},
+      {id:"f3-5",mes:"2029-04",txt:"Alemán a B1 o B2. El trabajo en la región de Stuttgart lo pide aunque la maestría sea en inglés."},
+      {id:"f3-6",mes:"2029-09",txt:"Tesis en empresa. Validación, ADAS o HIL dentro de una empresa, no en la universidad: la tesis es la entrevista de trabajo más larga que vas a tener."},
+      {id:"f3-7",mes:"2030-01",txt:"Busca empleo con el título por salir. Desde enero, con la tesis en curso: la meta es la oferta firmada antes de entregarla."},
+      {id:"f3-8",mes:"2030-03",txt:"Cierra la Fase 3 por escrito. Título, oferta, lo que quedó del fondo y dónde vas a vivir: con eso se fija el ahorro de la Fase 4."},
+      {id:"f3-9",cont:true,txt:"Cero deuda nueva en Alemania. Ni tarjeta a meses ni préstamo: si falta dinero, más horas de Werkstudent."},
+      {id:"f3-10",cont:true,txt:"Activa la red de Bosch en Stuttgart. Escríbeles a los líderes con los que trabajaste en tu asignación: es el atajo a la primera entrevista."},
+    ]},
+    {start:new Date(2030,3,1),end:new Date(2032,11,31),tag:"Fase 4",title:"El millón líquido con sueldo de ingeniero",liquido:1000000,
+     meta:"<b>$1,000,000</b> de patrimonio líquido al {{metaMillon}}, con el sueldo del título nuevo. La trayectoria marca ≈ +$500,000 a dic 2030 y ≈ +$850,000 a dic 2031.",
+     explica:"Con el título y un puesto de ingeniero —en Alemania o remoto en euros— el ahorro del mes es el más alto de todo el plan, y la regla es la de la Fase 1: págate primero, el día que entra el sueldo. El millón se invierte para el largo plazo —fondos indexados globales con comisión baja—, no en apuestas; y las metas que esperaron su turno —Tailandia, Hong Kong, el Cupra, el depa— se pagan de contado cuando el patrimonio vaya en su trayectoria, nunca con deuda.",
+     deja:"Subir el nivel de vida al ritmo del sueldo nuevo: cada aumento va primero al ahorro. Y ningún premio a crédito.",
+     checkpoint:"Cada diciembre, patrimonio líquido contra la trayectoria. Dos revisiones seguidas por debajo: se ajusta el porcentaje de ahorro o la fecha, sin abandonar la meta.",
+     semanas:[
+      {id:"f4-1",mes:"2030-04",txt:"Automatiza el ahorro el día de pago. Un porcentaje fijo del sueldo neto a la inversión el mismo día que entra: empieza en 30% y súbelo con cada aumento."},
+      {id:"f4-2",mes:"2030-06",txt:"Portafolio de largo plazo. Fondos indexados globales con comisión baja; acciones sueltas, si acaso, no más del 10%."},
+      {id:"f4-3",mes:"2030-12",txt:"Primer corte: ≈ +$500,000. Si vas abajo, revisa el porcentaje de ahorro antes que el rendimiento."},
+      {id:"f4-4",mes:"2031-04",txt:"Tailandia, de contado. Abril es temporada seca y el vuelo más barato: el campamento de Mis Metas, pagado sin tocar la inversión."},
+      {id:"f4-5",mes:"2031-12",txt:"Segundo corte: ≈ +$850,000. Si vas en la trayectoria, agenda Hong Kong para 2032, de contado."},
+      {id:"f4-6",mes:"2032-12",txt:"El millón líquido. $1,000,000 de patrimonio líquido: cierra el Plan Maestro y arma el siguiente, con el depa y el Cupra en su orden."},
+      {id:"f4-7",cont:true,txt:"Cada aumento, primero al ahorro. El nivel de vida sube después que el patrimonio, no antes."},
     ]},
   ];
 
@@ -2052,7 +2115,7 @@ window.CIFRAS = (function () {
           ficha: {
             sobre: 'Hormozi construy\u00f3 y vendi\u00f3 una cadena de gimnasios y luego una empresa de licencias; este libro es su m\u00e9todo para armar una oferta tan buena que el cliente se sienta tonto diciendo que no. No va de vender mejor: va de tener algo distinto que vender.',
             resumen: 'Arranca con una idea inc\u00f3moda: si tienes que convencer mucho, el problema es la oferta, no tu t\u00e9cnica. Propone su <b>ecuaci\u00f3n de valor</b> \u2014 el valor sube con el resultado so\u00f1ado y la probabilidad de lograrlo, y baja con el tiempo que tarda y el esfuerzo que cuesta. Cuatro palancas, y las dos de abajo son las que casi nadie toca. Luego ense\u00f1a a construir la oferta por acumulaci\u00f3n: listar todos los problemas que impiden el resultado, convertir cada uno en una soluci\u00f3n, y empaquetarlas. Cierra con los amplificadores \u2014 escasez, urgencia, bonos y garant\u00edas \u2014 y con por qu\u00e9 una garant\u00eda potente sube las ventas m\u00e1s de lo que cuestan las devoluciones.',
-            porQue: 'Es el libro m\u00e1s pr\u00e1ctico de la lista para tu Fase 0: no necesitas audiencia ni presupuesto para aplicarlo, s\u00f3lo replantear qu\u00e9 vendes y c\u00f3mo lo empaquetas.',
+            porQue: 'Es el libro m\u00e1s pr\u00e1ctico de la lista para tu Fase 1: no necesitas audiencia ni presupuesto para aplicarlo, s\u00f3lo replantear qu\u00e9 vendes y c\u00f3mo lo empaquetas.',
             idea: 'Cuando la oferta es lo bastante buena, la venta deja de ser persuasi\u00f3n y pasa a ser explicaci\u00f3n.',
             cuando: 'Despu\u00e9s de Influence. Es el paso de la teor\u00eda a algo que puedes escribir en una tarde.'
           } },
@@ -2094,7 +2157,7 @@ window.CIFRAS = (function () {
           ficha: {
             sobre: 'La continuaci\u00f3n de $100M Offers. Si aquel resolv\u00eda qu\u00e9 vender, este resuelve c\u00f3mo conseguir que alguien se entere: de d\u00f3nde salen los interesados y c\u00f3mo conseguir m\u00e1s sin gastar m\u00e1s.',
             resumen: 'Ordena todas las formas de captar en cuatro y las llama <b>los cuatro core</b>: gente que ya te conoce a la que contactas uno a uno, gente que ya te conoce a la que publicas contenido, desconocidos a los que contactas en fr\u00edo, y desconocidos a los que llegas con anuncios. Cada una tiene su cap\u00edtulo con vol\u00famenes concretos \u2014 cu\u00e1ntos mensajes al d\u00eda, cu\u00e1ntas publicaciones \u2014 porque su argumento central es que casi todo el mundo falla por hacer demasiado poco, no por hacerlo mal. Luego a\u00f1ade lo que multiplica: clientes que traen clientes, empleados, agencias y afiliados. Termina con un plan de escalado por fases y con la idea de <b>lead magnet</b>: algo gratis y de valor real que da el primer paso.',
-            porQue: 'Es la mitad que falta de $100M Offers. Con una buena oferta y nadie que la vea no pasa nada, y ese es el punto exacto donde se atasca la mayor\u00eda en Fase 0.',
+            porQue: 'Es la mitad que falta de $100M Offers. Con una buena oferta y nadie que la vea no pasa nada, y ese es el punto exacto donde se atasca la mayor\u00eda al buscar su primer cliente.',
             idea: 'El problema casi nunca es el m\u00e9todo de captaci\u00f3n: es el volumen. La mayor\u00eda abandona en el punto en el que apenas empezaba a funcionar.',
             cuando: 'Justo despu\u00e9s de $100M Offers. Los dos son un solo libro partido en dos.'
           } },
@@ -2189,7 +2252,7 @@ window.CIFRAS = (function () {
             resumen: 'Semana a semana: optimizar tarjetas y cr\u00e9dito, abrir las cuentas correctas, arrancar la inversi\u00f3n, hacer un reparto consciente del gasto y automatizar los traspasos para que todo ocurra solo el d\u00eda de la n\u00f3mina. Su idea central es el <b>gasto consciente</b>: en vez de recortar en todo, gasta sin culpa en las dos o tres cosas que de verdad disfrutas y recorta con brutalidad en el resto. Y su argumento contra los consejos de caf\u00e9: preocuparse por cinco euros al d\u00eda distrae de las decisiones grandes \u2014 sueldo, vivienda, inversi\u00f3n \u2014 que mueven cien veces m\u00e1s dinero.',
             porQue: 'Encaja con tu quincena de BBVA y tu semanal de Didi: la automatizaci\u00f3n es lo que evita que el fondo de emergencia dependa de acordarte.',
             idea: 'C\u00e9ntrate en las pocas decisiones grandes en vez de en las cien peque\u00f1as: ah\u00ed est\u00e1 el dinero de verdad.',
-            cuando: 'Ahora mismo. Es el que m\u00e1s rinde estando en Fase 0.'
+            cuando: 'Ahora mismo. Es el que m\u00e1s rinde estando en la Fase 1.'
           } },
         { id: 'millionaireNextDoor', t: 'The Millionaire Next Door', a: 'Thomas Stanley',
           anio: 1996, pags: 258,
@@ -2239,7 +2302,7 @@ window.CIFRAS = (function () {
           ficha: {
             sobre: 'Sof\u00eda Mac\u00edas escribe finanzas personales para M\u00e9xico, y eso es lo que lo separa de casi todo lo dem\u00e1s de la lista: habla de pesos, de CETES, del SAT y del Bur\u00f3 de Cr\u00e9dito, no de 401k ni de Roth IRA.',
             resumen: 'Empieza por el diagn\u00f3stico: sacar todos los n\u00fameros a la mesa, incluidos los gastos hormiga que no aparecen en ning\u00fan presupuesto porque son de cien pesos. Despu\u00e9s el orden de operaciones \u2014 fondo de emergencia antes que nada, deuda cara despu\u00e9s, inversi\u00f3n al final \u2014 y c\u00f3mo montar el fondo con instrumentos que existen aqu\u00ed. Dedica cap\u00edtulos enteros a la deuda mexicana: qu\u00e9 es el CAT, por qu\u00e9 es el \u00fanico n\u00famero que compara tarjetas de verdad, c\u00f3mo funciona el Bur\u00f3 y qu\u00e9 se puede negociar. Cierra con una introducci\u00f3n a inversi\u00f3n en CETES y fondos.',
-            porQue: 'Es el que mejor encaja con tu Fase 0 porque los productos de los que habla son los que t\u00fa puedes contratar. Bogle y Graham te dan el marco; este te dice d\u00f3nde meter el dinero en M\u00e9xico.',
+            porQue: 'Es el que mejor encaja con tu Fase 1 porque los productos de los que habla son los que t\u00fa puedes contratar. Bogle y Graham te dan el marco; este te dice d\u00f3nde meter el dinero en M\u00e9xico.',
             idea: 'El CAT es el \u00fanico n\u00famero que compara dos cr\u00e9ditos de verdad: la tasa a secas esconde comisiones y seguros.',
             cuando: 'Ahora, con el fondo de emergencia por delante. Es el m\u00e1s aplicable de todos a tu situaci\u00f3n.'
           } },
@@ -3208,7 +3271,11 @@ window.CIFRAS = (function () {
     escuelaAleman: { v: () => PROYECTO.escuelaAleman, fmt: 'txt' },
     kapitelAleman: { v: () => PROYECTO.kapitelAleman, fmt: 'num' },
     proteinaMeta: { v: () => PROYECTO.proteinaMeta, fmt: 'num' },
-    maestriaInicio:{ v: () => PROYECTO.maestriaInicio,   fmt: 'txt' },
+    maestriaInicio:{ v: () => PROYECTO.maestriaInicio,   fmt: 'fecha' },
+    // Las fechas del plan, para escribirlas en prosa sin copiarlas: `fecha` las pinta "18 jul 2027".
+    decisionMaestria: { v: () => PROYECTO.maestriaPausa, fmt: 'fecha' },
+    // El millón se fecha con el cierre de la última fase del Plan Maestro.
+    metaMillon:    { v: () => PHASES[PHASES.length - 1].end, fmt: 'fecha' },
     // ── Derivadas que cruzan constantes con saldos vivos ──
     // Lo que queda del sueldo tras los fijos y los mínimos de deuda: el margen real del mes.
     margen:        { dep: ['ingresoTotal','fijosTotal','minimosDeuda'],
@@ -3217,6 +3284,10 @@ window.CIFRAS = (function () {
       return PROYECTO.ingresoTotal - PROYECTO.fijosTotal - min;
     } },
     minimosDeuda:  { dep: ['*deudas'], v: () => deudas().filter(d => +d.balance > 0).reduce((a, d) => a + (+d.min || 0), 0) },
+    // El fondo de emergencia completo: tres meses de lo que no se puede dejar de pagar (fijos y
+    // mínimos de deuda). `fondoMeta` es la meta de arranque; esta es la de la Fase 1.
+    fondo3m:       { dep: ['fijosTotal','minimosDeuda'],
+                     v: () => 3 * (PROYECTO.fijosTotal + deudas().filter(d => +d.balance > 0).reduce((a, d) => a + (+d.min || 0), 0)) },
     // Desde el 20-sep-2026 el fondo de emergencia SON los CETES (Adán: "mi fondo de emergencia
     // van a ser los cetes, de ahí tendré mi fondo de emergencia y cualquier cosa los vendo").
     // Un solo número: `emergencyFund`. Ya no hay inversión CETES aparte que sumar dos veces.
@@ -3271,6 +3342,10 @@ window.CIFRAS = (function () {
   function fmt(num, tipo) {
     if (num == null) return VACIO;
     if (tipo === 'txt') return String(num);        // antes que isNaN: un texto no es un número
+    if (tipo === 'fecha') {                         // Date o 'AAAA-MM-DD' → "1 oct 2028"
+      const d = num instanceof Date ? num : new Date(String(num) + 'T00:00:00');
+      return isNaN(d) ? VACIO : d.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
     if (isNaN(num)) return VACIO;
     if (tipo === 'txt') return String(num);
     if (tipo === 'pct') return (Math.round(num * 100) / 100) + '%';
@@ -3546,6 +3621,27 @@ window.CIFRAS = (function () {
     return out;
   }
 
+  /* ── EL PATRIMONIO — una sola fórmula ──────────────────────────────────────────────────────
+     Neto: inversiones, fondo de emergencia, activos (líquidos y bienes) y Bitcoin a precio de
+     hoy, menos todas las deudas. Líquido: lo mismo sin los bienes (auto, gadgets, muebles), que
+     es lo que cuenta para el millón. Era la cuenta de `patrimonioNeto()` del Dashboard; Coach
+     llevaba otra que dejaba fuera la cuenta, el efectivo y el Bitcoin, y su "patrimonio líquido
+     hoy" salía distinto del mismo número en el Dashboard. `f` es un `finanzasmx_v2` ya leído
+     (el Dashboard pasa el suyo); sin él, el que leyó este módulo. */
+  function patrimonio(f) {
+    const F = f || fin || {};
+    const inv = (F.investments || []).reduce((s, i) => s + (+i.value || +i.invested || 0), 0);
+    const ef = +F.emergencyFund || 0;
+    const act = F.activos || [];
+    const liquidos = act.filter(a => a.type === 'liquido').reduce((s, a) => s + (+a.value || 0), 0);
+    const bienes = act.filter(a => a.type !== 'liquido').reduce((s, a) => s + (+a.value || 0), 0);
+    const btc = (F.btcHistory || []).reduce((s, x) => s + (+x.btc || 0), 0) *
+                (+F.currentBtcPrice || 0) * (+F.usdMxn || 19.5);
+    const deuda = (F.debts || []).reduce((s, d) => s + (+d.balance || 0), 0);
+    const neto = inv + ef + liquidos + bienes + btc - deuda;
+    return { neto: neto, liquido: neto - bienes, bienes: bienes, deuda: deuda };
+  }
+
   return {
     n: n, v: v, texto: texto, aplicarDOM: aplicarDOM, refrescar: refrescar, tabla: tabla,
     // El balance mensual y sus piezas, para que Dashboard y Finanzas pinten LO MISMO.
@@ -3560,6 +3656,7 @@ window.CIFRAS = (function () {
     GASTOS_20260901: GASTOS_20260901,
     MOVIMIENTOS_20260920: MOVIMIENTOS_20260920,
     mesesRestantes: mesesRestantes,
+    patrimonio: patrimonio,
     BTC_SEED: BTC_SEED,
     // Para que `seedData()` pueda marcarlas como aplicadas: un seed nuevo ya las incluye.
     MIGRACIONES_FLAGS: MIGRACIONES.map(function (m) { return m.flag; }),

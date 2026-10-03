@@ -1392,7 +1392,7 @@
       text-transform: uppercase; color: var(--muted-2); }
     .pn-tik { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--acc2);
       margin-bottom: 10px; line-height: 1.5; }
-    /* Cuánto tarda ESTA opción en cerrar la Fase 0. Es la cifra que convierte una lista de
+    /* Cuánto tarda ESTA opción en cerrar la base de la Fase 1. Es la cifra que convierte una lista de
        ideas en una decisión: no "cuánto deja", sino "cuándo me saca de la deuda cara". */
     .pn-fase { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; padding: 8px 12px;
       border-radius: var(--hud); background: rgba(var(--acc2-rgb),.07);
@@ -1516,7 +1516,7 @@
         <div class="stat-badge"><span class="num neg">-$308,830</span><span>Patrimonio líquido al iniciar</span></div>
         <div class="stat-badge"><span class="num neg">$366,137</span><span>Deuda total al iniciar</span></div>
         <div class="stat-badge"><span class="num">$0 / {{fondoMeta}}</span><span>Fondo emergencia al iniciar</span></div>
-        <div class="stat-badge"><span class="num" id="kpiDiasMeta">1,263</span><span>Días hasta 01 ene 2030</span></div>
+        <div class="stat-badge"><span class="num" id="kpiDiasMeta">—</span><span id="kpiDiasMetaLbl">Días hasta el millón</span></div>
       </div>
       <p class="p-quote">"Mi mayor miedo no es fracasar. Es no explotar mi potencial y quedarme estancado y pobre." Este perfil existe para que eso nunca pase.</p>
     </div>
@@ -1641,13 +1641,13 @@
       </div>
 
       <div class="riesgo-box" style="margin-top:14px;">
-        <p class="fs-13" style="line-height:1.7;color:var(--text);">
-          <strong style="color:var(--red);">La brecha matemática que sostiene todo este plan:</strong> para llegar a
-          $1,000,000 de patrimonio líquido el 01/01/2030 necesitas generar <strong>$1,308,830</strong> adicionales en
-          1,263 días — un promedio de <strong>~$31,540/mes</strong> de superávit real. Tu margen actual de sueldo es
-          $1,628/mes. La brecha es <strong>19 veces</strong> tu margen actual. Esto no se cierra ahorrando más fuerte
-          del sueldo — matemáticamente es imposible solo con ALTEN. Se cierra únicamente si el negocio paralelo que
-          vas a construir genera ingreso real. Cada fase de este plan existe en función de esa brecha.
+        <!-- La pinta pintarFasesPlan() con el patrimonio líquido de hoy (CIFRAS.patrimonio) y la
+             fecha del millón (el cierre de la última fase): una brecha escrita a mano se congeló
+             con un margen de $1,628 que ya no existía. -->
+        <p class="fs-13" id="brechaMillon" style="line-height:1.7;color:var(--text);">
+          <strong style="color:var(--red);">La brecha que sostiene todo este plan:</strong> el millón líquido al
+          {{metaMillon}}. Abre <a href="../Finanzas/Finanzas.html" class="inline-link">Finanzas</a> una vez en este
+          navegador para ver cuánto falta y a qué ritmo.
         </p>
       </div>
     </div>
@@ -2173,7 +2173,7 @@
             <div>
               <div class="concepto-item"><strong>Diversificación real</strong>VOO te da acceso a las 500 empresas más grandes de EE.UU. No necesitas elegir acciones individuales al principio. Un portafolio de VOO + VXUS (internacional) + bonds ya bate al 90% de gestores activos.</div>
               <div class="concepto-item"><strong>❌ Los 3 errores más caros</strong>1) Vender en pánico durante caídas del mercado. 2) Invertir dinero que puedas necesitar en 1-2 años. 3) Seguir tips de "acciones calientes" en redes sociales. Los tres destruyen capital a largo plazo.</div>
-              <div class="concepto-item" style="border:none;"><strong>Tu plan específico hasta 2030</strong>$5,500/mes en GBM (mezcla de sueldo + Didi + freelance) con reinversión automática de dividendos. Sin tocarlo. Sin vender en correcciones. En 4 años: ~$350,000 solo de inversiones.</div>
+              <div class="concepto-item" style="border:none;"><strong>Tu plan específico</strong>Hasta sep 2028 el ahorro vive en CETES: es el dinero de la maestría y se usa en 2028 —horizonte corto, nada de acciones—. El portafolio de índices (VOO + VXUS) arranca en la Fase 4 con el sueldo nuevo: aportación automática el día de pago, reinversión de dividendos, sin tocarlo y sin vender en correcciones.</div>
             </div>
           </div>
         </div>
@@ -2278,7 +2278,7 @@
             <div class="concepto-item"><strong>5 min — Journaling matutino</strong>3 preguntas: ¿Qué debo hacer hoy? ¿Qué me está frenando? ¿Qué haría el mejor Adán? Escribe sin censurar. El papel recibe lo que la mente no puede contener sola.</div>
             <div class="concepto-item"><strong>5 min — Afirmaciones en voz alta</strong>2-3 frases propias sobre por qué vale la pena el esfuerzo de hoy. En voz alta, de pie, con intención. El volumen activa circuitos neurales distintos a leer en silencio.</div>
             <div class="concepto-item"><strong>10 min — Meditación o respiración</strong>Box breathing: inhala 4 seg, retén 4 seg, exhala 4 seg, retén 4 seg. Reduce cortisol, activa parasimpático. Wim Hof Method (gratis en YouTube) 3×/semana para energía extrema.</div>
-            <div class="concepto-item" style="border:none;"><strong>Noche — La pregunta más poderosa</strong>Antes de dormir: "¿Actuó hoy como la persona que quiero ser en 2030?" Si la respuesta es no, ¿qué cambiarías? Sin juicio — solo datos para mañana.</div>
+            <div class="concepto-item" style="border:none;"><strong>Noche — La pregunta más poderosa</strong>Antes de dormir: "¿Actuó hoy como la persona que quiero ser al cerrar el Plan Maestro?" Si la respuesta es no, ¿qué cambiarías? Sin juicio — solo datos para mañana.</div>
           </div>
         </div>
       </div>
@@ -2379,14 +2379,11 @@
       <h3 class="fw-700 mb-12">Trayectoria estimada de patrimonio líquido — hipótesis, no promesa</h3>
       <p class="fs-13 text-muted mb-12">Números redondeados a propósito — son un norte para comparar contra la realidad en cada Revisión Mensual, no un pronóstico exacto. Ajústalos con datos reales conforme avances.</p>
       <div class="impuesto-row"><span class="imp-nombre">Punto de partida — 18 jul 2026</span><span class="imp-fecha text-red">-$308,830</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">Dic 2026 — fondo emergencia + venta de activos + MSI redirigido + primeras ventas plantilla GBM</span><span class="imp-fecha text-red">≈ -$270,000</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">Dic 2027 — freelance/mentoría/plantilla con ingreso mensual regular</span><span class="imp-fecha" style="color:#c2410c">≈ -$80,000</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">Dic 2028 — negocio consolidado, deuda cara liquidada</span><span class="imp-fecha text-green">≈ +$250,000</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">01 Ene 2030 — meta</span><span class="imp-fecha text-gold">$1,000,000</span></div>
+      <div id="trayectoriaFases"><!-- una fila por fase, de PHASES[].liquido: pintarFasesPlan() --></div>
       <p class="fs-13 mt-8" style="line-height:1.7;color:var(--muted);">
         Si en una revisión mensual estás muy por debajo de estos números durante 2 meses seguidos, no es motivo de
-        pánico ni de abandono — es la señal exacta para revisar 💡 Posibles Negocios y ajustar de qué opción depende
-        tu ingreso, antes de que el atraso se acumule.
+        pánico ni de abandono — es la señal exacta para revisar la fase en curso: casi siempre es el gasto (la regla
+        de la Fase 1) o el ingreso (la de la Fase 2), y se corrige antes de que el atraso se acumule.
       </p>
     </div>
 
@@ -2401,15 +2398,11 @@
           <div class="progress-bar"><div class="progress-fill" id="planProgressFill" style="width:0%;"></div></div>
           <p id="planPctLabel">calculando…</p>
         </div>
-        <div class="psb-item" style="text-align:right;">Días hasta 01 ene 2030<br><strong id="planDiasRestantes">1,263</strong></div>
+        <div class="psb-item" style="text-align:right;"><span id="planMetaLbl">Días hasta el millón</span><br><strong id="planDiasRestantes">—</strong></div>
       </div>
 
-      <div class="plan-stepper">
-        <a href="#fase0" class="plan-step" id="step0"><div class="ps-num">Fase 0</div><div class="ps-label">Jul–Sep 26</div></a>
-        <a href="#fase1" class="plan-step" id="step1"><div class="ps-num">Fase 1</div><div class="ps-label">Oct 26–Mar 27</div></a>
-        <a href="#fase2" class="plan-step" id="step2"><div class="ps-num">Fase 2</div><div class="ps-label">Abr 27–Dic 28</div></a>
-        <a href="#fase3" class="plan-step" id="step3"><div class="ps-num">Fase 3</div><div class="ps-label">Ene 29–Ene 30</div></a>
-      </div>
+      <!-- Un paso por fase de CIFRAS.PHASES, con sus meses: pintarFasesPlan(). -->
+      <div class="plan-stepper" id="planStepper"></div>
 
       <div class="fase-item" id="fase0">
         <span class="fase-tag">Fase 0 · 1 ago – 30 sep 2026 (~9 semanas)</span><span class="fase-status" id="faseStatus0">—</span>
@@ -2448,116 +2441,18 @@
         <div class="fase-checkpoint"><span class="fc-icon">🚩</span><div><strong>Checkpoint 30 sep 2026:</strong> fondo de emergencia todavía por debajo de {{fondoMeta}}, o plantilla sin publicar → no es falta de tiempo, es tu patrón de abandono otra vez.</div></div>
       </div>
 
-      <div class="fase-item" id="fase1">
-        <span class="fase-tag">Fase 1 · Oct 2026 – Mar 2027 (6 meses)</span><span class="fase-status" id="faseStatus1">—</span>
-        <h4>Los $3,145/mes liberados entran en acción + primer ingreso real</h4>
-        <div class="fase-meta"><span>🎯</span><span>Primer contrato freelance o <strong>20+ ventas</strong> de la plantilla cobradas. <span class="text-green">La meta vieja de esta fase —Banamex liquidada— se cumplió el 13 ago 2026, y BBVA bajó a {{tcBbva}} el 19 sep 2026</span>, así que el objetivo financiero pasa a ser <strong>dejar las dos tarjetas en $0 y no volver a cargarlas</strong>.</span></div>
-        <details class="fase-collapse">
-          <summary>Ver el desglose completo (6 tareas) — arranca en octubre, todavía no es tu mes</summary>
-          <div class="fase-checklist">
-            <details class="fase-month" data-month="2026-10">
-              <summary><span>📅 Octubre 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
-              <div class="fase-month-body">
-                <div class="check-item"><input type="checkbox" id="s1-1"><label for="s1-1">Oct 2026: los $2,335/mes que liberan los MSI van, en orden fijo: fondo de emergencia a {{fondoMeta}} → 100% a la deuda cara. <span class="text-red">Ya no son $4,645</span>: el mínimo de Banamex dejó de estar libre el 1 sep 2026, cuando la tarjeta volvió a tener saldo.</label></div>
-              </div>
-            </details>
-            <details class="fase-month" data-month="2026-11">
-              <summary><span>📅 Noviembre 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
-              <div class="fase-month-body">
-                <div class="check-item"><input type="checkbox" id="s1-3"><label for="s1-3">En paralelo: primer post de mentoría pagada (<a href="#" class="inline-link" onclick="irANegocios('negocio3');return false;">Opción 3</a>) — bajo riesgo, casi sin preparación.</label></div>
-              </div>
-            </details>
-            <details class="fase-month" data-month="cont-1" open>
-              <summary><span>🔁 Durante toda la Fase 1</span><span class="fase-month-badge" data-badge>—</span></summary>
-              <div class="fase-month-body">
-                <div class="check-item"><input type="checkbox" id="s1-2"><label for="s1-2">Prioridad: cerrar el primer contrato freelance (<a href="#" class="inline-link" onclick="irANegocios('negocio2');return false;">Opción 2</a>) + 1 post de seguimiento mensual de la plantilla GBM (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Opción 1</a>).</label></div>
-                <div class="check-item"><input type="checkbox" id="s1-4"><label for="s1-4">Primer peso cobrado en Opción 1-3 → esas horas de DiDi se mueven ahí (<a href="#" class="inline-link" onclick="irANegocios('negocio6');return false;">Opción 6</a>), no antes.</label></div>
-                <div class="check-item"><input type="checkbox" id="s1-5"><label for="s1-5">iPhone 15 (crédito AT&T) sigue corriendo ($494/mes) hasta jun 2028 — ya comprometido, no toca tu excedente nuevo.</label></div>
-                <div class="check-item"><input type="checkbox" id="s1-6"><label for="s1-6">Foco de habilidad (<a href="#skillsSection" class="inline-link">Gráfico de Habilidades</a>): sube <strong>Copy</strong> (55→) escribiendo los posts, y <strong>Finanzas</strong> (20→) sosteniendo el presupuesto corregido. Solo estas dos.</label></div>
-              </div>
-            </details>
-
-          </div>
-        </details>
-        <div class="fase-checkpoint"><span class="fc-icon">🚩</span><div><strong>Checkpoint 31 mar 2027:</strong> cero contratos, cero ventas y cero avance de mentoría tras 6 meses → problema de canal, no de esfuerzo. Cambia de distribución (ej. LinkedIn outreach a leads de Tier 2) antes de soltar la vía completa.</div></div>
-      </div>
-
-      <div class="fase-item" id="fase2">
-        <span class="fase-tag">Fase 2 · Abr 2027 – Dic 2028 (21 meses)</span><span class="fase-status" id="faseStatus2">—</span>
-        <h4>Doblar apuesta en lo que mostró tracción</h4>
-        <div class="fase-meta"><span>🎯</span><span>BBVA liquidada, deuda cara en <strong>$0</strong>, ingreso extra estable de al menos <strong>$10,000-15,000/mes</strong>.</span></div>
-        <details class="fase-collapse">
-          <summary>Ver el desglose completo (5 tareas) — arranca en abril 2027, todavía falta</summary>
-          <div class="fase-checklist">
-            <details class="fase-month" data-month="2027-04">
-              <summary><span>📅 Abril 2027</span><span class="fase-month-badge" data-badge>—</span></summary>
-              <div class="fase-month-body">
-                <div class="check-item"><input type="checkbox" id="s2-1"><label for="s2-1">Elige la opción (1, 2 o 3) con ingreso recurrente real y concéntrate ahí — resiste saltar a "algo mejor".</label></div>
-              </div>
-            </details>
-            <details class="fase-month" data-month="2027-10">
-              <summary><span>📅 Octubre 2027</span><span class="fase-month-badge" data-badge>—</span></summary>
-              <div class="fase-month-body">
-                <div class="check-item"><input type="checkbox" id="s2-2"><label for="s2-2">Con tracción sostenida, arranca la <a href="#" class="inline-link" onclick="irANegocios('negocio4');return false;">Opción 4</a> (CodeReview productizado) — único punto del plan que requiere capital, ya disponible tras liquidar Banamex/BBVA.</label></div>
-              </div>
-            </details>
-            <details class="fase-month" data-month="2028-06">
-              <summary><span>📅 Junio 2028</span><span class="fase-month-badge" data-badge>—</span></summary>
-              <div class="fase-month-body">
-                <div class="check-item"><input type="checkbox" id="s2-4"><label for="s2-4">Jun 2028: se libera el iPhone de AT&T ($494/mes) — súmalo a inversión, no a gasto nuevo.</label></div>
-              </div>
-            </details>
-            <details class="fase-month" data-month="cont-2" open>
-              <summary><span>🔁 Durante toda la Fase 2</span><span class="fase-month-badge" data-badge>—</span></summary>
-              <div class="fase-month-body">
-                <div class="check-item"><input type="checkbox" id="s2-3"><label for="s2-3">Usa IA para construir tu propio sistema de ventas/argumentos — tu fuerza real, en vez de improvisar en vivo.</label></div>
-                <div class="check-item"><input type="checkbox" id="s2-5"><label for="s2-5">Foco de habilidad: sube <strong>Ventas</strong> (15→) y <strong>Marketing</strong> (20→) lo mínimo para vender la Opción 4 sin depender solo de referidos.</label></div>
-              </div>
-            </details>
-
-          </div>
-        </details>
-        <div class="fase-checkpoint"><span class="fc-icon">🚩</span><div><strong>Checkpoint dic 2028:</strong> compara patrimonio líquido real contra la trayectoria estimada (≈+$250,000). Muy por debajo → la Fase 3 arranca con plan de contingencia, no con el plan original intacto.</div></div>
-      </div>
-
-      <div class="fase-item" id="fase3">
-        <span class="fase-tag">Fase 3 · Ene 2029 – 01 Ene 2030 (12 meses)</span><span class="fase-status" id="faseStatus3">—</span>
-        <h4>Escalar, cerrar la brecha de $31,540/mes y reevaluar</h4>
-        <div class="fase-meta"><span>🎯</span><span>Cerrar la distancia final a <strong>$1,000,000</strong> líquido con el negocio como fuente principal de excedente.</span></div>
-        <details class="fase-collapse">
-          <summary>Ver el desglose completo (4 tareas) — arranca en enero 2029, todavía falta</summary>
-          <div class="fase-checklist">
-            <details class="fase-month" data-month="2029-01">
-              <summary><span>📅 Enero 2029</span><span class="fase-month-badge" data-badge>—</span></summary>
-              <div class="fase-month-body">
-                <div class="check-item"><input type="checkbox" id="s3-1"><label for="s3-1">El negocio debe cubrir ya parte real de la brecha. Ingreso extra cercano a cero en 2029 = problema de opción elegida, no de timing — revisa <a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Posibles Negocios</a>.</label></div>
-              </div>
-            </details>
-            <details class="fase-month" data-month="2029-07">
-              <summary><span>📅 Julio 2029</span><span class="fase-month-badge" data-badge>—</span></summary>
-              <div class="fase-month-body">
-                <div class="check-item"><input type="checkbox" id="s3-4"><label for="s3-4">Reevalúa la meta de $1,000,000 líquido con números reales del negocio y ajusta la fecha si hace falta — sin abandonarlo.</label></div>
-              </div>
-            </details>
-            <details class="fase-month" data-month="cont-3" open>
-              <summary><span>🔁 Durante toda la Fase 3</span><span class="fase-month-badge" data-badge>—</span></summary>
-              <div class="fase-month-body">
-                <div class="check-item"><input type="checkbox" id="s3-2"><label for="s3-2">Todo ingreso adicional va primero a inversión (CETES, fondos indexados, ampliar BTC/acciones) — nunca a consumo nuevo.</label></div>
-                <div class="check-item"><input type="checkbox" id="s3-3"><label for="s3-3">La decisión de Maestría (18 jul 2027) ya está tomada: retomarla en oct 2028 con datos reales del negocio, o posponerla de nuevo, conscientemente.</label></div>
-              </div>
-            </details>
-
-          </div>
-        </details>
-      </div>
+      <!-- De la Fase 1 en adelante, las fases se GENERAN desde CIFRAS.PHASES (pintarFasesPlan,
+           en el script): el mismo texto que pinta la ventana de fases del Dashboard. La Fase 0,
+           cerrada el 30 sep 2026, se queda arriba como la escribió el plan. -->
+      <div id="fasesPlan"></div>
     </div>
 
     <!-- CONTINGENCIAS -->
     <div class="card mb-16" style="margin-bottom:16px;">
       <h3 class="fw-700 mb-12">Qué hacer si algo se rompe — contingencias, no improvisación</h3>
-      <div class="fd-item"><span class="fd-icon">⚠️</span><div><h4>Pierdes el contrato de ALTEN/Ford (riesgo real: eres outsourcing, no planta)</h4><p>Por eso el fondo de emergencia de {{fondoMeta}} es lo primero del plan, no lo último. Si ya tienes freelance/mentoría activos, ese ingreso se vuelve tu colchón mientras buscas el siguiente puesto — otra razón para no depender 100% de un solo cliente/vía.</p></div></div>
-      <div class="fd-item"><span class="fd-icon">📉</span><div><h4>0 de 5 ex-colegas responden en 8 semanas (Fase 0-1)</h4><p>No es que el freelance no funcione — es que el canal de "solo referidos cálidos" se agotó rápido. Pivotea a outreach directo en LinkedIn a leads de Tier 2/3, con tu portafolio real (los frameworks que construiste en Bosch/Continental) como prueba.</p></div></div>
-      <div class="fd-item"><span class="fd-icon">🛒</span><div><h4>La plantilla GBM no vende nada el primer mes</h4><p>Antes de asumir que el producto está mal, prueba: otro precio (más bajo para validar volumen), otro mensaje/hook, y una comunidad distinta. Un producto de $150 MXN necesita muy poco volumen para justificar el esfuerzo — no lo abandones tras un solo intento.</p></div></div>
+      <div class="fd-item"><span class="fd-icon">⚠️</span><div><h4>Pierdes el contrato de ALTEN/Ford (riesgo real: eres outsourcing, no planta)</h4><p>Por eso el fondo de tres meses ({{fondo3m}}) es lo primero de la Fase 1, no lo último. Con el ISTQB CT-GenAI y el CV de la Fase 1 listos, la búsqueda arranca ese mismo día — y es otra razón para no depender de un solo ingreso.</p></div></div>
+      <div class="fd-item"><span class="fd-icon">📉</span><div><h4>El negocio de tu papá no consigue cliente en 3 meses (Fase 1)</h4><p>No es que el negocio no sirva — es que el canal no llega. Pasa de WhatsApp a LinkedIn directo a operadores de helicópteros, talleres y escuelas de aviación, con el dossier y un post por semana como prueba. Se cambia el canal antes que el negocio.</p></div></div>
+      <div class="fd-item"><span class="fd-icon">🎓</span><div><h4>La maestría no cuadra el {{decisionMaestria}} o no llega la admisión (Fase 2)</h4><p>No se viaja a medias ni con deuda: se mueve el arranque un año y el ahorro sigue en CETES. Si el no es definitivo, el plan se rehace ese mismo mes con el millón como meta directa — sin maestría llega antes. Y el tipo de cambio: el fondo se mide en pesos, la vida allá en euros; revisa el ritmo con el euro de ese mes, no con el de hoy.</p></div></div>
       <div class="fd-item"><span class="fd-icon">🏥</span><div><h4>Imprevisto grande (salud, reparación mayor del auto, etc.)</h4><p>Se paga con el fondo de emergencia, nunca con tarjeta de crédito nueva — eso es exactamente el patrón que este plan existe para romper. Si el fondo no alcanza, se repone antes de retomar el abono extra a deuda.</p></div></div>
     </div>
 
@@ -2567,7 +2462,7 @@
       <div class="fd-item"><span class="fd-icon">📓</span><div><h4>Semanal (Revisión Semanal)</h4><p>¿Cumpliste los bloques de tiempo asignados al negocio? ¿Hubo algún contacto/venta nueva? ¿Algo se fue a MSI otra vez?</p></div></div>
       <div class="fd-item"><span class="fd-icon">📅</span><div><h4>Mensual (Revisión Mensual)</h4><p>Patrimonio líquido actualizado vs. la trayectoria estimada de este plan. Saldo del fondo de emergencia. Ingreso extra generado ese mes, por opción.</p></div></div>
       <div class="fd-item"><span class="fd-icon">🗓️</span><div><h4>Trimestral</h4><p>Decisión consciente de go/no-go por opción de negocio. Ajuste del foco de habilidad en el 📊 Gráfico de Habilidades — ¿subió lo que tocaba subir esta fase?</p></div></div>
-      <div class="fd-item"><span class="fd-icon">🚩</span><div><h4>Fechas fijas que no se mueven</h4><p>18 jul 2027 (decisión Maestría), dic 2028 (checkpoint de negocio consolidado), 01 ene 2030 (meta final). Estas tres van también en tu 🗓️ Revisión Anual.</p></div></div>
+      <div class="fd-item"><span class="fd-icon">🚩</span><div><h4>Fechas fijas que no se mueven</h4><p>{{decisionMaestria}} (decisión Maestría), {{maestriaInicio}} (arranca Esslingen) y {{metaMillon}} (el millón líquido). Estas tres van también en tu 🗓️ Revisión Anual.</p></div></div>
     </div>
 
     <!-- PRÓXIMOS 14 DÍAS -->
@@ -2577,16 +2472,14 @@
          que se rompe sola. -->
     <div class="card span-2" id="pf14dias">
       <h3 class="fw-700 mb-12">Próximos 14 días — esto empieza hoy, no "cuando tenga tiempo"</h3>
-      <p class="fs-13 text-muted mb-12">Tu patrón es abandonar cuando no ves avance rápido. Estas <span id="pfCount">10</span> acciones son deliberadamente pequeñas y concretas para que en 2 semanas ya tengas evidencia de movimiento real. Las 2 primeras son <strong>las prioridades de Fase 0, en ese orden</strong>.</p>
-      <div class="check-item"><input type="checkbox" id="pf11"><label for="pf11"><strong>Prioridad 1:</strong> llevar el fondo de emergencia a {{fondoMeta}} — antes que cualquier abono extra a deuda</label></div>
-      <div class="check-item"><input type="checkbox" id="pf12"><label for="pf12"><strong>Prioridad 2:</strong> con el fondo completo, todo excedente a liquidar la TC BBVA ({{tcBbva}}) — la Banamex ya quedó en $0 el 30 sep 2026</label></div>
-      <div class="check-item"><input type="checkbox" id="pf3"><label for="pf3">Hacer inventario de activos físicos ociosos (PS5, Control PS5, monitores extra, iPad) y publicarlos en Marketplace — es lo que financia la Prioridad 1</label></div>
+      <p class="fs-13 text-muted mb-12">Tu patrón es abandonar cuando no ves avance rápido. Estas <span id="pfCount">10</span> acciones son deliberadamente pequeñas y concretas para que en 2 semanas ya tengas evidencia de movimiento real. Las 2 primeras son <strong>las prioridades de la Fase 1, en ese orden</strong>.</p>
+      <div class="check-item"><input type="checkbox" id="pf13"><label for="pf13"><strong>Prioridad 1:</strong> pagar la TC BBVA completa el 11 oct — el total del estado de cuenta, no el mínimo de {{tcBbvaMin}}</label></div>
+      <div class="check-item"><input type="checkbox" id="pf14"><label for="pf14"><strong>Prioridad 2:</strong> el 15 oct, antes de gastar, {{cetesDia15}} a CETES — el fondo ({{fondo}}) llega a {{fondoMeta}} en diciembre solo con esto</label></div>
+      <div class="check-item"><input type="checkbox" id="pf15"><label for="pf15">Anotar la fecha del examen ISTQB CT-GenAI (agendado con Brightest) y hacer el examen de muestra esta semana</label></div>
+      <div class="check-item"><input type="checkbox" id="pf16"><label for="pf16">Ponerle tope a la BBVA: lo que el riel del Plan Maestro dice que sobra en la quincena, y apagarla desde la app al llegar</label></div>
+      <div class="check-item"><input type="checkbox" id="pf3"><label for="pf3">Hacer inventario de lo que no usas (PS5, control, monitores, iPad) y publicarlo en Marketplace — es lo que completa el fondo de la Fase 1</label></div>
       <div class="check-item"><input type="checkbox" id="pf4"><label for="pf4">Cancelar/evitar cualquier compra nueva a MSI esta quincena</label></div>
-      <div class="check-item"><input type="checkbox" id="pf5"><label for="pf5">Revisar las fotos y el material del negocio de tu papá, y ponerle atención real — primer paso de la Opción 5</label></div>
-      <div class="check-item"><input type="checkbox" id="pf6"><label for="pf6">Plantilla Finanzas.html completa: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (Opción 1)</label></div>
-      <div class="check-item"><input type="checkbox" id="pf1"><label for="pf1">Corregir la categoría "Deudas" del presupuesto en Finanzas.html <span class="text-muted">(✅ 13 ago 2026: quedó en $8,200 reales)</span></label></div>
-      <div class="check-item"><input type="checkbox" id="pf8"><label for="pf8">Pausar nuevas aportaciones a "Maestría en Alemania" por 1 año exacto (hasta 18 jul 2027) — sin tocar los {{maestria}} ya ahorrados</label></div>
-      <div class="check-item"><input type="checkbox" id="pf9"><label for="pf9">Todo abono extra va a <strong>BBVA</strong> — es la deuda cara cuya tasa muerde. Banamex volvió a tener saldo el 1 sep 2026 y <span class="text-green">quedó otra vez en $0 el 30 sep</span>: que no vuelva a cargarse</label></div>
+      <div class="check-item"><input type="checkbox" id="pf17"><label for="pf17">Mandar el dossier de Aeroresinas a los primeros 5 contactos y publicar el post del día con Posts</label></div>
       <div class="check-item"><input type="checkbox" id="pf10"><label for="pf10">Revisar este apartado completo una vez por semana en tu Revisión Semanal — no dejar que se vuelva un documento que escribiste una vez y ya</label></div>
     </div>
 
@@ -2615,7 +2508,7 @@
           <div class="check-item"><input type="checkbox" id="mtc3"><label for="mtc3">Liquidar la deuda de Banamex <span class="text-green">(✅ 13 ago 2026 — pagaste los $9,000 completos, 5 meses antes de la meta de ene 2027)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc6"><label for="mtc6">Cancelar la tarjeta Banamex <span class="text-muted">(era la segunda mitad de la meta anterior — sigue pendiente; desde el 30 sep 2026 ya está en $0 y se puede cancelar)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc4"><label for="mtc4">Liquidar la TC de BBVA <span class="text-muted">(meta recorrida a mar 2027 al liquidar Banamex antes — ya en tu Plan Maestro)</span></label></div>
-          <div class="check-item"><input type="checkbox" id="mtc5"><label for="mtc5">Fondo de emergencia completo a {{fondoMeta}} <span class="text-muted">(meta: sep 2026, Fase 0)</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mtc5"><label for="mtc5">Fondo de emergencia completo a {{fondoMeta}} <span class="text-muted">(meta: dic 2026, Fase 1; y a {{fondo3m}} en mar 2027)</span></label></div>
           <!-- 2026-09-14: las adicciones (celular y alcohol; la de las citas se quitó el 21-sep-2026). Viven con detalle completo (14 pasos cada una) en el Dashboard → Mis Metas; aquí solo el marcador. -->
           <div class="check-item"><input type="checkbox" id="mtc7"><label for="mtc7">Dejar la adicción al celular <span class="text-muted">(cero scroll sin propósito; Didi y el alemán no cuentan — detalle en Dashboard → Mis Metas)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc9"><label for="mtc9">Dejar el alcohol <span class="text-muted">(primera meta 30 días, al Hyrox del 30 oct con 46 limpios; en Didi el límite es cero — detalle en Dashboard → Mis Metas)</span></label></div>
@@ -2636,8 +2529,8 @@
 
         <div class="card">
           <h4 class="fw-700 mb-12">🏔️ Largo plazo</h4>
-          <p class="fs-13 text-muted mb-12">Hacia 2030 — la meta central de todo este plan.</p>
-          <div class="check-item"><input type="checkbox" id="mtl1"><label for="mtl1">Ser millonario ($1,000,000 de patrimonio líquido) con la empresa ya creada <span class="text-muted">(meta central del Plan Maestro, 01/01/2030 — ver <a href="#" class="inline-link" onclick="cambiarModo('empresa');return false;">Coach Empresa</a>)</span></label></div>
+          <p class="fs-13 text-muted mb-12">Hacia el {{metaMillon}} — la meta central de todo este plan.</p>
+          <div class="check-item"><input type="checkbox" id="mtl1"><label for="mtl1">Ser millonario ($1,000,000 de patrimonio líquido) con la empresa ya creada <span class="text-muted">(meta central del Plan Maestro, {{metaMillon}} — ver <a href="#" class="inline-link" onclick="cambiarModo('empresa');return false;">Coach Empresa</a>)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtl2"><label for="mtl2">Comprar un departamento en la zona que quieras</label></div>
         </div>
 
@@ -2647,7 +2540,7 @@
           <div class="check-item"><input type="checkbox" id="mte1"><label for="mte1">Pelear en Tailandia (Muay Thai)</label></div>
           <div class="check-item"><input type="checkbox" id="mte2"><label for="mte2">Hospedarte en un rascacielos en Hong Kong</label></div>
           <div class="check-item"><input type="checkbox" id="mte3"><label for="mte3">Ver un lanzamiento de SpaceX</label></div>
-          <div class="check-item"><input type="checkbox" id="mte4"><label for="mte4">Retomar la Maestría en Alemania <span class="text-muted">(fecha de revisión ya fijada: 18 jul 2027)</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mte4"><label for="mte4">Maestría en Alemania <span class="text-muted">(se decide el {{decisionMaestria}} con la regla de la Fase 2; arranca el {{maestriaInicio}})</span></label></div>
           <div class="check-item"><input type="checkbox" id="mte5"><label for="mte5">Correr un Hyrox internacional, fuera de México</label></div>
         </div>
 
@@ -2670,7 +2563,7 @@
 
     <div id="perfil-dan-prime" class="subtab-panel">
       <div class="card mb-16" style="margin-bottom:16px;">
-        <h3 class="fw-700 mb-12">⚡ Adán Prime — quién eres el 01 de enero de 2030</h3>
+        <h3 class="fw-700 mb-12">⚡ Adán Prime — quién eres el {{metaMillon}}</h3>
         <p class="fs-13" style="line-height:1.7;color:var(--muted);">No es un personaje inventado ni una fantasía genérica de "mejor versión de ti" — es literalmente tú, en la fecha exacta de tu <a href="#perfil" class="inline-link">Plan Maestro</a>, si cada pieza que ya tienes documentada en esta app (metas, fases, radar de habilidades) sale como está planeado. Está construido 100% con tus propios números y metas reales, no con aspiraciones vagas. Úsalo como el norte concreto contra el que comparas cada Revisión Mensual — no para sentirte mal por lo que falta, sino para saber exactamente qué pieza mover después.</p>
       </div>
 
@@ -2705,7 +2598,7 @@
 
         <div class="card">
           <h4 class="fw-700 mb-12">🎯 Experiencias — tu bucket list, tachada</h4>
-          <p class="fs-13 mb-8" style="line-height:1.7;">Jugaste tu torneo de ajedrez. Tu alemán pasó de A2 a conversación real, e Inglés de B2 a C1 — el multiplicador de todo lo demás. La decisión de la Maestría en Alemania (retomada oct 2028 con datos reales del negocio, o pospuesta a propósito) ya se tomó con información, no por miedo.</p>
+          <p class="fs-13 mb-8" style="line-height:1.7;">Jugaste tu torneo de ajedrez. Tu alemán pasó de A2 a conversación real, e Inglés de B2 a C1 — el multiplicador de todo lo demás. Terminaste la maestría en {{maestriaEscuela}} y trabajas con ese título: la decisión del {{decisionMaestria}} se tomó con números, no por miedo.</p>
           <div style="display:flex;flex-wrap:wrap;gap:6px;"><span style="display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(var(--acc-rgb),.12);color:var(--accent);">🏆 Torneo de ajedrez</span> <span style="display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(var(--acc-rgb),.12);color:var(--accent);">🇩🇪 Alemán conversacional</span> <span style="display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(var(--acc-rgb),.12);color:var(--accent);">🌐 Inglés C1</span> <span style="display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(var(--acc-rgb),.12);color:var(--accent);">🏋️ Hyrox internacional en camino</span></div>
         </div>
 
@@ -2928,8 +2821,8 @@
     <div id="rutina-mi-rutina">
 
       <div class="context-banner">
-        <p><strong>Tu contexto ahora mismo:</strong> estás en <strong>Fase 0</strong> del <a href="#perfil" class="inline-link">Plan Maestro</a> (1 ago – 30 sep 2026). Con Banamex liquidada el 13 ago, vuelta a usar el 1 sep y <span class="text-green">otra vez en $0 el 30 sep 2026</span>, las 3 cosas que definen si esta fase se cumple son, en orden: <strong>1)</strong> el fondo de emergencia a {{fondoMeta}}, <strong>2)</strong> los abonos extra a BBVA una vez completo, y <strong>3)</strong> la plantilla Finanzas.html publicada en comunidades de GBM + atención real al negocio de tu papá.
-          Horario real confirmado: te levantas <strong>6:40</strong> y arrancas el día con <strong>20 min construyendo este mismo ecosistema</strong>, te bañas a las <strong>7:03</strong>, sales <strong>7:40</strong> ya manejando <strong>Didi con direccionamiento</strong> rumbo a ALTEN (~50 min con el desvío del pasajero), entras <strong>8:30</strong>, comes en tu descanso de las <strong>13:00</strong>, y sales a las <strong>17:00</strong> — la ventana de la mañana solo alcanza para el bloque de la aplicación más higiene/skincare, así que el ejercicio y el bloque de habilidad se movieron a después del trabajo, donde sí hay tiempo. Al salir de ALTEN (<strong>17:00</strong>) manejas Didi ~40 min con un pasajero rumbo a Buenavista, y de ahí entras directo al gym a las <strong>17:40</strong>. Por la noche retomas Didi en una sesión corta hasta ~<strong>20:00</strong>, y de ahí tienes <strong>1h15 seguidas</strong> para tu prioridad activa de Fase 0 (no antes, para no cortar el impulso de manejar), y después preparas la cena y la comida de mañana en una sola sesión. <strong>Dos de tus tres bloques diarios de Didi son trayectos que ya manejabas</strong> —a ALTEN y al gym—, así que casi todo ese ingreso no te cuesta tiempo nuevo. A las <strong>23:30</strong> vuelves a la aplicación hasta las <strong>00:00</strong>, a veces hasta la <strong>01:00</strong> — eso te deja entre <strong>5h40 y 6h40 de sueño</strong>, por debajo de las 7h que la rutina asumía antes. <strong>Skincare y el tratamiento anticaída (minoxidil) están en la rutina al despertar y antes de dormir, todos los días</strong> — el lavado de cabello (Lun/Jue/Sáb) se hace en la ducha de la mañana. El ejercicio y el bloque de habilidad cambian cada día de la semana (tomados de tus 5 prioridades en <a href="#aprendizaje" class="inline-link">Aprendizaje</a>), y el fin de semana tiene su propio horario, sin ALTEN. Usa las pestañas de abajo para ver cualquier día — solo el día de hoy guarda tu avance.
+        <p><strong>Tu contexto ahora mismo:</strong> <span id="contextoFase">estás en el <a href="#perfil" class="inline-link">Plan Maestro</a>.</span>
+          Horario real confirmado: te levantas <strong>6:40</strong> y arrancas el día con <strong>20 min construyendo este mismo ecosistema</strong>, te bañas a las <strong>7:03</strong>, sales <strong>7:40</strong> ya manejando <strong>Didi con direccionamiento</strong> rumbo a ALTEN (~50 min con el desvío del pasajero), entras <strong>8:30</strong>, comes en tu descanso de las <strong>13:00</strong>, y sales a las <strong>17:00</strong> — la ventana de la mañana solo alcanza para el bloque de la aplicación más higiene/skincare, así que el ejercicio y el bloque de habilidad se movieron a después del trabajo, donde sí hay tiempo. Al salir de ALTEN (<strong>17:00</strong>) manejas Didi ~40 min con un pasajero rumbo a Buenavista, y de ahí entras directo al gym a las <strong>17:40</strong>. Por la noche retomas Didi en una sesión corta hasta ~<strong>20:00</strong>, y de ahí tienes <strong>1h15 seguidas</strong> para la prioridad activa de tu fase (no antes, para no cortar el impulso de manejar), y después preparas la cena y la comida de mañana en una sola sesión. <strong>Dos de tus tres bloques diarios de Didi son trayectos que ya manejabas</strong> —a ALTEN y al gym—, así que casi todo ese ingreso no te cuesta tiempo nuevo. A las <strong>23:30</strong> vuelves a la aplicación hasta las <strong>00:00</strong>, a veces hasta la <strong>01:00</strong> — eso te deja entre <strong>5h40 y 6h40 de sueño</strong>, por debajo de las 7h que la rutina asumía antes. <strong>Skincare y el tratamiento anticaída (minoxidil) están en la rutina al despertar y antes de dormir, todos los días</strong> — el lavado de cabello (Lun/Jue/Sáb) se hace en la ducha de la mañana. El ejercicio y el bloque de habilidad cambian cada día de la semana (tomados de tus 5 prioridades en <a href="#aprendizaje" class="inline-link">Aprendizaje</a>), y el fin de semana tiene su propio horario, sin ALTEN. Usa las pestañas de abajo para ver cualquier día — solo el día de hoy guarda tu avance.
           <em style="color:var(--muted-2)">Los 40 min de Didi a Buenavista y la sesión de la noche son estimados — ajusta las horas si tu tráfico o tus viajes reales varían.</em>
         </p>
       </div>
@@ -2979,7 +2872,7 @@
         <h3 class="fw-700 mb-12">💊 Suplementación</h3>
         <p class="fs-13 text-muted" style="line-height:1.7;">
           Ya integrado en tu <a href="#rutina" class="inline-link">Rutina</a> — bloque de AM (Vitamina D3, Multivitamínico, Omega 3, Creatina) y bloque de PM (Magnesio, Proteína Whey si no llegaste a tu meta de proteína). Detalle de dosis y momento en <a href="../CuidadoPersonal/salud.html?tab=suplementos" class="inline-link" target="_blank">Mi Salud → Suplementos</a>.
-          Decidiste priorizarlo ya, antes de que el fondo de emergencia llegue a {{fondoMeta}} (ver Mi Perfil Real) — para no descarrilar Fase 0, cómpralos de uno en uno conforme se te terminen, no los 6 de golpe.
+          Decidiste priorizarlo ya, antes de que el fondo de emergencia llegue a {{fondoMeta}} (ver Mi Perfil Real) — para no descarrilar el fondo de la fase en curso, cómpralos de uno en uno conforme se te terminen, no los 6 de golpe.
         </p>
       </div>
 
@@ -3238,7 +3131,7 @@
         </button>
         <div class="subhab-body">
           <p class="fs-13 subhab-q">Es el motor de todo. Y lo que lo mueve no es la tasa, es el <b>tiempo</b>: cada año que pospones cuesta más que cualquier punto extra de rendimiento.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Haz el cálculo una vez con tus números reales, no con ejemplos de libro: lo que puedes aportar al mes, un rendimiento conservador (8-10% anual nominal en México) y los años hasta 2030. Repítelo restando un año de aportaciones y compara — ver esa diferencia en pesos es lo que hace que ya no te saltes un mes.</p>
+          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Haz el cálculo una vez con tus números reales, no con ejemplos de libro: lo que puedes aportar al mes, un rendimiento conservador (8-10% anual nominal en México) y los años hasta el {{metaMillon}}. Repítelo restando un año de aportaciones y compara — ver esa diferencia en pesos es lo que hace que ya no te saltes un mes.</p>
           <div class="subhab-r">📚 The Little Book of Common Sense Investing — John C. Bogle (corto y va directo al punto)</div>
         </div>
       </div>
@@ -3268,7 +3161,7 @@
         </button>
         <div class="subhab-body">
           <p class="fs-13 subhab-q">El rendimiento no lo controlas; el costo sí. Un 1% anual de comisión, sostenido 20 años, se come cerca de una quinta parte de lo que habrías acumulado.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> De cada instrumento busca tres costos: <b>comisión de administración</b> (anual, el que más pesa), <b>comisión por operación</b> y el <b>spread</b> de compra-venta si es en dólares o cripto. Compara el mismo índice en dos casas antes de comprarlo: la diferencia entre 0.03% y 1.5% anual es la diferencia entre llegar y no llegar al millón en 2030.</p>
+          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> De cada instrumento busca tres costos: <b>comisión de administración</b> (anual, el que más pesa), <b>comisión por operación</b> y el <b>spread</b> de compra-venta si es en dólares o cripto. Compara el mismo índice en dos casas antes de comprarlo: la diferencia entre 0.03% y 1.5% anual es la diferencia entre llegar y no llegar al millón a tiempo.</p>
           <div class="subhab-r">📚 A Random Walk Down Wall Street — Burton Malkiel (por qué los costos predicen mejor que las estrellas de un fondo)</div>
         </div>
       </div>
@@ -3379,7 +3272,7 @@
 
     <div class="card">
       <h3 class="fw-700 mb-12">🪞 Comparación honesta contra tu situación actual</h3>
-      <p class="fs-13 mb-8" style="line-height:1.7;"><strong style="color:var(--green);">Ya tienes:</strong> disciplina de rutina real (ver tu <a href="#rutina" class="inline-link">Rutina</a> completa), horizonte largo definido (Plan Maestro a 2030, no un "hazte rico rápido"), y el primer ingrediente del camino real — ya identificaste que necesitas ser dueño de algo (tus <a href="#" class="inline-link" onclick="cambiarModo('empresa');return false;">Posibles Negocios</a>), no solo vivir del sueldo.</p>
+      <p class="fs-13 mb-8" style="line-height:1.7;"><strong style="color:var(--green);">Ya tienes:</strong> disciplina de rutina real (ver tu <a href="#rutina" class="inline-link">Rutina</a> completa), horizonte largo definido (Plan Maestro al {{metaMillon}}, no un "hazte rico rápido"), y el primer ingrediente del camino real — ya identificaste que necesitas ser dueño de algo (tus <a href="#" class="inline-link" onclick="cambiarModo('empresa');return false;">Posibles Negocios</a>), no solo vivir del sueldo.</p>
       <p class="fs-13 mb-8" style="line-height:1.7;"><strong style="color:var(--red);">Todavía te falta:</strong> el patrón de gasto (tu diagnóstico ya documentó fugas en MSI de gadgets/consumo — justo el "pasivo que aparenta" que este perfil evita), y una red de pares construyendo negocio real (hoy tu red es casi toda de colegas empleados, no de otros dueños de negocio — ver <a href="../Dashboard/dashboard.html#habilidades" class="inline-link">🤝 Hacer networking de verdad</a> para empezar a cambiar esto).</p>
       <hr class="divider">
       <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Recursos</h4>
@@ -3628,7 +3521,7 @@
       <h5>Primer paso esta semana — MUY IMPORTANTE</h5>
       <p><strong style="color:var(--red);">Antes de compartir el archivo con nadie:</strong> tu Finanzas.html real tiene tu sueldo, tus deudas exactas y tus montos de inversión escritos directamente en el código. Crea una copia limpia con datos de ejemplo (o un formulario de bienvenida vacío) antes de vender absolutamente nada — esto no es opcional, es proteger tu propia información financiera.</p>
       <h5>Riesgo principal</h5>
-      <p>Vender un producto digital de forma recurrente formalmente requiere factura (mismo trámite fiscal que necesitas para el freelance — ver Fase 0 del plan). Para las primeras ventas de validación puedes usar un link de pago simple, pero si esto escala, regularízalo pronto.</p>
+      <p>Vender un producto digital de forma recurrente formalmente requiere factura (mismo trámite fiscal que necesitas para el freelance — ver la Fase 2 del plan). Para las primeras ventas de validación puedes usar un link de pago simple, pero si esto escala, regularízalo pronto.</p>
     </div>
 
     <!-- OPCIÓN 2 -->
@@ -3680,7 +3573,7 @@
       <h5>Por qué encaja</h5>
       <p>Es la prueba más fuerte que tienes de que sabes "dirigir IA para construir producto" — ya la construiste una vez con ejemplo real. Combina tu ventaja única: automotriz + IA en producción, algo que casi nadie más tiene junto.</p>
       <h5>Primer paso esta semana</h5>
-      <p>Nada todavía — este es el proyecto de la Fase 2, no de la Fase 0. Anótalo, no lo empieces aún; dispersarte entre 3 cosas a la vez es tu patrón de abandono en acción.</p>
+      <p>Nada todavía — no entra en el plan actual: hasta la Fase 2 hay un solo frente de negocio, el de tu papá. Anótalo, no lo empieces aún; dispersarte entre 3 cosas a la vez es tu patrón de abandono en acción.</p>
       <h5>Riesgo principal</h5>
       <p>Revisa si ALTEN/Ford tienen propiedad intelectual sobre la herramienta original — si es así, tendrías que reconstruir una versión genérica desde cero fuera de horario laboral, con tus propios ejemplos.</p>
     </div>
@@ -3731,7 +3624,7 @@
       <h5>Por qué encaja</h5>
       <p>Combinación que casi nadie tiene: experiencia real de planta reparando este equipo + tu formación de Mecatrónica en automatización industrial, PLCs, neumática/hidráulica y control + tu capacidad de dirigir IA para construir herramientas de monitoreo. No es teoría — ya trabajaste con estas máquinas.</p>
       <h5>Primer paso esta semana</h5>
-      <p>Nada todavía — a diferencia de las Opciones 1-2, aquí no tienes ni un contacto cálido confirmado hoy. Es Fase 2-3, no Fase 0. Cuando llegue el momento: contacta a algún excompañero o supervisor de aquel primer trabajo para preguntar qué problemas de automatización siguen sin resolver ahí.</p>
+      <p>Nada todavía — a diferencia de las Opciones 1-2, aquí no tienes ni un contacto cálido confirmado hoy. No entra en el plan actual: el único frente de negocio es el de tu papá. Cuando llegue el momento: contacta a algún excompañero o supervisor de aquel primer trabajo para preguntar qué problemas de automatización siguen sin resolver ahí.</p>
       <h5>Riesgo principal</h5>
       <p>Misma trampa que la Opción 5 (aeroespacial): no construyas nada hasta validar un dolor real y un cliente dispuesto a pagar. Sin eso, es una idea bonita, no un negocio.</p>
     </div>
@@ -3767,7 +3660,7 @@
       <h5>Por qué encaja</h5>
       <p>Es la misma habilidad que ya probaste en la Opción 4 (CodeReview en ALTEN, con Claude Code): diseñar el flujo, dirigir a la IA con el ejemplo correcto, y validar que el resultado sea confiable — solo que aquí el cliente ya no es un equipo de software, es cualquier empresa mediana con procesos repetitivos y sin equipo interno de IA/automatización. n8n al ser open source mantiene el costo de infraestructura por cliente bajo, y una vez que tengas 2-3 flujos reutilizables (ej. "clasificador de correos", "extractor de datos de factura"), cada cliente nuevo cuesta menos tiempo que el anterior.</p>
       <h5>Primer paso esta semana</h5>
-      <p>Nada todavía si sigues en Fase 0 — mismo criterio que la Opción 4, dispersarte entre proyectos a la vez es tu patrón de abandono. Anótalo. Cuando llegue el momento: arma 1 automatización de demo con datos ficticios (por ejemplo, un flujo que lee correos de "contacto", los clasifica con Claude por tipo de solicitud y genera un resumen en una hoja de cálculo) para tener algo tangible que mostrar antes de ofrecerlo a nadie.</p>
+      <p>Nada todavía mientras el plan tenga un solo frente de negocio (el de tu papá) — mismo criterio que la Opción 4, dispersarte entre proyectos a la vez es tu patrón de abandono. Anótalo. Cuando llegue el momento: arma 1 automatización de demo con datos ficticios (por ejemplo, un flujo que lee correos de "contacto", los clasifica con Claude por tipo de solicitud y genera un resumen en una hoja de cálculo) para tener algo tangible que mostrar antes de ofrecerlo a nadie.</p>
       <h5>Riesgo principal</h5>
       <p>Vender automatización con IA a una empresa mediana es venta consultiva — ciclos de decisión de semanas o meses, no días como las Opciones 1-3. No la trates como la apuesta de primer ingreso rápido: es complemento de mediano plazo, igual que la Opción 4.</p>
     </div>
@@ -3792,7 +3685,7 @@
       <h5>Los 3 supuestos que hay que verificar ANTES de escribir la campaña</h5>
       <p><strong>1. ¿Kickstarter admite creadores desde México?</strong> La plataforma exige que el creador cumpla requisitos de país, identificación y cuenta bancaria para recibir el dinero. Esto cambia con el tiempo y es lo primero que hay que confirmar en su página de requisitos — si la respuesta es no, la idea no muere, cambia de plataforma (ver abajo).</p>
       <p><strong>2. ¿Kickstarter es el lugar correcto para software?</strong> Su público busca sobre todo objetos, juegos y obra creativa; el software compite en desventaja porque no hay nada que enviar en una caja. Y el modelo es <strong>todo o nada</strong>: si no alcanzas la meta, no recibes un peso, y habrás gastado semanas en video, arte y campaña.</p>
-      <p><strong>3. ¿Alguien más lo quiere?</strong> Este es el supuesto que de verdad importa. El ecosistema está hecho a tu medida —tu deuda, tu rutina de Didi, tu meta de 2030—, y eso es justo lo que lo hace bueno para ti y difícil de vender tal cual. Antes de una campaña necesitas <strong>gente que no seas tú pidiéndolo</strong>.</p>
+      <p><strong>3. ¿Alguien más lo quiere?</strong> Este es el supuesto que de verdad importa. El ecosistema está hecho a tu medida —tu deuda, tu rutina de Didi, tu meta del millón—, y eso es justo lo que lo hace bueno para ti y difícil de vender tal cual. Antes de una campaña necesitas <strong>gente que no seas tú pidiéndolo</strong>.</p>
 
       <h5>Primer paso esta semana — barato y sin campaña</h5>
       <p>No abras Kickstarter todavía. Haz la prueba que cuesta cero: cuando publiques la plantilla de Finanzas.html (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Opción 1</a>), <strong>agrega una línea al final del post</strong>: "estoy construyendo la versión completa —rutina, metas, hábitos y finanzas en una sola app—, déjame tu correo si la quieres probar". Si juntas correos reales, tienes validación y además la lista de gente a la que le avisarías el día del lanzamiento. Si nadie deja su correo, acabas de ahorrarte 3 meses.</p>
@@ -3910,7 +3803,7 @@
         <div class="check-item"><input type="checkbox" id="og2"><label for="og2">2.</label><input type="text" placeholder="Comunidad · fecha · ventas" style="flex:1;"></div>
         <div class="check-item"><input type="checkbox" id="og3"><label for="og3">3.</label><input type="text" placeholder="Comunidad · fecha · ventas" style="flex:1;"></div>
       </div>
-      <p class="fs-13 text-muted mt-8">Checkpoint de Fase 0-1 en tu Plan Maestro: si a las 8 semanas esto sigue vacío, es la señal de cambiar de canal, no de esperar más.</p>
+      <p class="fs-13 text-muted mt-8">Checkpoint de la Fase 1 en tu Plan Maestro: si a las 8 semanas esto sigue vacío, es la señal de cambiar de canal, no de esperar más.</p>
     </div>
 
   </section>
@@ -4283,61 +4176,127 @@
     }, 30);
   }
 
-  // ─── PLAN MAESTRO — fase activa, progreso y días reales (recalculado con la fecha de hoy) ───
-  (function () {
-    // 1 ago 2026 — corregido el 2026-08-12 a petición de Adán ("el dashboard de fase 0 y coach,
-    // que no empiece de julio, debe empezar en agosto"). Antes era el 18 jul 2026. De aquí salen
-    // los días transcurridos/restantes y el % del Plan Maestro hacia el 01 ene 2030, así que este
-    // es el único lugar donde se define el arranque real del plan en esta app.
-    const inicio = new Date(2026, 7, 1);    // 1 ago 2026
-    const meta   = new Date(2030, 0, 1);    // 01 ene 2030
-    const hoyPM  = new Date(); hoyPM.setHours(0, 0, 0, 0);
+  // ─── PLAN MAESTRO — las fases salen de CIFRAS.PHASES ──────────────────────────────────────
+  // La Fase 0 (cerrada el 30 sep 2026) sigue arriba como HTML escrito a mano; de la Fase 1 en
+  // adelante el bloque se GENERA aquí desde el maestro, igual que la ventana de fases del
+  // Dashboard: un solo texto para las dos apps (CLAUDE.md, Regla 1). También salen de PHASES el
+  // stepper, el estado de cada fase, los días hasta el millón (el cierre de la última fase), la
+  // trayectoria (`liquido` de cada fase), la brecha y el contexto de la Rutina.
+  // Corre ANTES del bucle que restaura coach_checks_v1, así que las casillas generadas se
+  // guardan y se restauran igual que las escritas; y antes de la segunda pasada de
+  // CIFRAS.aplicarDOM(), que resuelve los {{marcadores}} del texto de las fases.
+  function pintarFasesPlan() {
+    const F = (window.CIFRAS && CIFRAS.PHASES) || [];
+    if (!F.length) return;
+    const hoyPM = new Date(); hoyPM.setHours(0, 0, 0, 0);
     const msDia = 86400000;
-    const diasTotales       = Math.round((meta - inicio) / msDia);
-    const diasTranscurridos = Math.min(diasTotales, Math.max(0, Math.round((hoyPM - inicio) / msDia)));
-    const diasRestantes     = Math.max(0, Math.round((meta - hoyPM) / msDia));
-    const pct = Math.min(100, Math.max(0, Math.round(diasTranscurridos / diasTotales * 100)));
+    const MES3 = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const MESL = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const dCorta = d => d.getDate() + ' ' + MES3[d.getMonth()].toLowerCase() + ' ' + d.getFullYear();
+    const yy = d => String(d.getFullYear()).slice(2);
+    const rango = f => f.start.getFullYear() === f.end.getFullYear()
+      ? MES3[f.start.getMonth()] + '–' + MES3[f.end.getMonth()] + ' ' + yy(f.end)
+      : MES3[f.start.getMonth()] + ' ' + yy(f.start) + '–' + MES3[f.end.getMonth()] + ' ' + yy(f.end);
+    const meses = f => Math.round((f.end - f.start) / msDia / 30.44);
+    const mx = n => (n < 0 ? '−' : '') + '$' + Math.round(Math.abs(n)).toLocaleString('es-MX');
+    const estado = f => hoyPM > f.end ? 'done' : hoyPM >= f.start ? 'active' : 'pending';
+    const ultima = F[F.length - 1];
 
-    const kpiDias = document.getElementById('kpiDiasMeta');
-    if (kpiDias) kpiDias.textContent = diasRestantes.toLocaleString('es-MX');
+    // El stepper: un paso por fase.
+    const st = document.getElementById('planStepper');
+    if (st) st.innerHTML = F.map((f, i) => '<a href="#fase' + i + '" class="plan-step" id="step' + i + '">' +
+      '<div class="ps-num">' + f.tag + '</div><div class="ps-label">' + rango(f) + '</div></a>').join('');
 
-    const fases = [
-      { id: 'fase0', num: 0, ini: new Date(2026, 7, 1),  fin: new Date(2026, 8, 30) },
-      { id: 'fase1', num: 1, ini: new Date(2026, 9, 1),  fin: new Date(2027, 2, 31) },
-      { id: 'fase2', num: 2, ini: new Date(2027, 3, 1),  fin: new Date(2028, 11, 31) },
-      { id: 'fase3', num: 3, ini: new Date(2029, 0, 1),  fin: new Date(2030, 0, 1) },
-    ];
+    // Las fases de la 1 en adelante. La activa enseña su checklist; las demás, plegado.
+    const caja = document.getElementById('fasesPlan');
+    if (caja) caja.innerHTML = F.map((f, i) => {
+      if (i === 0) return '';
+      const est = estado(f), sem = f.semanas || [];
+      const grupos = {}, orden = [];
+      sem.forEach(s => { const k = s.mes || 'cont'; if (!grupos[k]) { grupos[k] = []; orden.push(k); } grupos[k].push(s); });
+      orden.sort((x, y) => x === 'cont' ? 1 : y === 'cont' ? -1 : x.localeCompare(y));
+      const item = s => '<div class="check-item"><input type="checkbox" id="' + s.id + '"><label for="' + s.id + '">' + s.txt + '</label></div>';
+      const lista = '<div class="fase-checklist">' + orden.map(k => {
+        const cont = k === 'cont';
+        const tit = cont ? '🔁 Durante toda la ' + f.tag : '📅 ' + MESL[+k.slice(5, 7) - 1] + ' ' + k.slice(0, 4);
+        return '<details class="fase-month" data-month="' + (cont ? 'cont-' + i : k) + '"' + (cont ? ' open' : '') + '>' +
+          '<summary><span>' + tit + '</span><span class="fase-month-badge" data-badge>—</span></summary>' +
+          '<div class="fase-month-body">' + grupos[k].map(item).join('') + '</div></details>';
+      }).join('') + '</div>';
+      const explica = f.explica ? '<p class="fs-13 text-muted" style="line-height:1.7;margin:0 0 10px;">' + f.explica + '</p>' : '';
+      const cuando = est === 'done' ? 'fase cerrada' : 'arranca en ' + MESL[f.start.getMonth()].toLowerCase() + ' ' + f.start.getFullYear();
+      const cuerpo = est === 'active' ? lista
+        : '<details class="fase-collapse"><summary>Ver el desglose completo (' + sem.length + ' tareas) — ' + cuando + '</summary>' + explica + lista + '</details>';
+      return '<div class="fase-item" id="fase' + i + '">' +
+        '<span class="fase-tag">' + f.tag + ' · ' + dCorta(f.start) + ' – ' + dCorta(f.end) + ' (' + meses(f) + ' meses)</span>' +
+        '<span class="fase-status" id="faseStatus' + i + '">—</span>' +
+        '<h4>' + f.title + '</h4>' +
+        '<div class="fase-meta"><span>🎯</span><span>' + (f.meta || '') + '</span></div>' +
+        (est === 'active' ? explica : '') +
+        (typeof f.liquido === 'number' ? '<p class="fs-13 text-muted" style="margin:-4px 0 10px;">📈 Al cierre (' + dCorta(f.end) +
+          ') la trayectoria espera <strong>≈ ' + (f.liquido > 0 ? '+' : '') + mx(f.liquido) + '</strong> de patrimonio líquido — hipótesis, no promesa.</p>' : '') +
+        (f.deja ? '<div class="fase-meta"><span>🚫</span><span><strong>Lo que se deja:</strong> ' + f.deja + '</span></div>' : '') +
+        cuerpo +
+        (f.checkpoint ? '<div class="fase-checkpoint"><span class="fc-icon">🚩</span><div><strong>Checkpoint:</strong> ' + f.checkpoint + '</div></div>' : '') +
+        '</div>';
+    }).join('');
 
-    let faseActivaLabel = '—';
-    fases.forEach(f => {
-      const item   = document.getElementById(f.id);
-      const status = document.getElementById('faseStatus' + f.num);
-      const step   = document.getElementById('step' + f.num);
-      let estado;
-      if (hoyPM > f.fin) estado = 'done';
-      else if (hoyPM >= f.ini) estado = 'active';
-      else estado = 'pending';
-
-      if (estado === 'active') faseActivaLabel = 'Fase ' + f.num;
-      if (item) item.classList.add('is-' + estado);
-      if (step && estado !== 'pending') step.classList.add(estado);
-      if (status) {
-        status.textContent = estado === 'done' ? 'COMPLETADA' : estado === 'active' ? 'EN CURSO' : 'PENDIENTE';
-        status.classList.add(estado);
-      }
+    // Estado de cada fase (la 0 escrita a mano y las generadas) y la fase activa.
+    let activa = null;
+    F.forEach((f, i) => {
+      const e = estado(f);
+      if (e === 'active') activa = f;
+      const item = document.getElementById('fase' + i), status = document.getElementById('faseStatus' + i), step = document.getElementById('step' + i);
+      if (item) item.classList.add('is-' + e);
+      if (step && e !== 'pending') step.classList.add(e);
+      if (status) { status.textContent = e === 'done' ? 'COMPLETADA' : e === 'active' ? 'EN CURSO' : 'PENDIENTE'; status.classList.add(e); }
     });
 
-    const elHoy = document.getElementById('planHoy');
-    if (elHoy) elHoy.textContent = hoyPM.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
-    const elFase = document.getElementById('planFaseActiva');
-    if (elFase) elFase.textContent = faseActivaLabel;
-    const elDias = document.getElementById('planDiasRestantes');
-    if (elDias) elDias.textContent = diasRestantes.toLocaleString('es-MX');
+    // El plan va del arranque de la primera fase al cierre de la última: la fecha del millón.
+    const inicio = F[0].start, meta = ultima.end;
+    const diasTotales = Math.round((meta - inicio) / msDia);
+    const diasTranscurridos = Math.min(diasTotales, Math.max(0, Math.round((hoyPM - inicio) / msDia)));
+    const diasRestantes = Math.max(0, Math.round((meta - hoyPM) / msDia));
+    const pct = Math.min(100, Math.max(0, Math.round(diasTranscurridos / diasTotales * 100)));
+    const set = (id, t) => { const el = document.getElementById(id); if (el) el.textContent = t; };
+    set('kpiDiasMeta', diasRestantes.toLocaleString('es-MX'));
+    set('kpiDiasMetaLbl', 'Días hasta el millón · ' + dCorta(meta));
+    set('planMetaLbl', 'Días hasta el ' + dCorta(meta));
+    set('planDiasRestantes', diasRestantes.toLocaleString('es-MX'));
+    set('planHoy', hoyPM.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' }));
+    set('planFaseActiva', activa ? activa.tag : '—');
+    set('planPctLabel', pct + '% del tiempo total transcurrido');
     const fill = document.getElementById('planProgressFill');
     if (fill) fill.style.width = pct + '%';
-    const pctLabel = document.getElementById('planPctLabel');
-    if (pctLabel) pctLabel.textContent = pct + '% del tiempo total transcurrido';
-  })();
+
+    // La trayectoria: una fila por fase con su `liquido`.
+    const tray = document.getElementById('trayectoriaFases');
+    if (tray) tray.innerHTML = F.filter(f => typeof f.liquido === 'number').map(f => {
+      const cls = f.liquido >= 1000000 ? 'text-gold' : f.liquido < 0 ? 'text-red' : 'text-green';
+      return '<div class="impuesto-row"><span class="imp-nombre">' + dCorta(f.end) + ' — cierre de la ' + f.tag + ': ' + f.title + '</span>' +
+        '<span class="imp-fecha ' + cls + '" style="white-space:nowrap">' + (f.liquido >= 1000000 ? '' : '≈ ' + (f.liquido > 0 ? '+' : '')) + mx(f.liquido) + '</span></div>';
+    }).join('');
+
+    // La brecha: lo que falta para el millón, al ritmo que pide la fecha.
+    const br = document.getElementById('brechaMillon');
+    const P = window.CIFRAS && CIFRAS.datos ? CIFRAS.patrimonio() : null;
+    if (br && P) {
+      const falta = 1000000 - P.liquido;
+      const mesesQ = Math.max(1, Math.round((meta - hoyPM) / msDia / 30.44));
+      br.innerHTML = '<strong style="color:var(--red);">La brecha que sostiene todo este plan:</strong> tu patrimonio líquido hoy es <strong>' +
+        mx(P.liquido) + '</strong>; para el millón al ' + dCorta(meta) + ' faltan <strong>' + mx(falta) + '</strong> en ' + mesesQ +
+        ' meses — <strong>~' + mx(falta / mesesQ) + '/mes</strong> de patrimonio nuevo (pagar deuda cuenta igual que ahorrar). ' +
+        'Tu margen del mes es <strong>' + CIFRAS.v('margen') + '</strong>, pero hoy casi no llega al ahorro: por eso el plan tiene dos palancas, en orden — ' +
+        'que el margen se vuelva ahorro (Fase 1) y que el sueldo suba (Fases 2 y 3: puesto nuevo y la maestría). En la Fase 3 el patrimonio baja a propósito; ' +
+        'la trayectoria de abajo ya lo cuenta.';
+    }
+
+    // La Rutina dice en qué fase estás, con su meta: no se vuelve a quedar en la Fase 0.
+    const ctx = document.getElementById('contextoFase');
+    if (ctx && activa) ctx.innerHTML = 'estás en la <strong>' + activa.tag + '</strong> del <a href="#perfil" class="inline-link">Plan Maestro</a> (' +
+      dCorta(activa.start) + ' – ' + dCorta(activa.end) + '): <strong>' + activa.title + '</strong>. ' + activa.meta;
+  }
+  pintarFasesPlan();
 
   // ─── PROGRESO REAL vs. punto de partida de Fase 0 (2026-08-02) ───────────
   // Coach.html no leía datos de Finanzas.html hasta ahora — Adán pidió explícitamente
@@ -4360,8 +4319,8 @@
     const deudaCaraInicial = 46693; // Banamex $14,349.72 + BBVA $32,343.31 — medido el 18 jul 2026, la foto previa al arranque de Fase 0 (1 ago 2026)
     const deudaCaraHoy     = (bana ? bana.balance : 0) + (bbva ? bbva.balance : 0);
     const deudaTotalHoy    = fin.debts.reduce((s, d) => s + (d.balance || 0), 0);
-    const invValue         = (fin.investments || []).reduce((s, i) => s + (i.value || 0), 0);
-    const patrimonioHoy    = invValue + (fin.emergencyFund || 0) - deudaTotalHoy;
+    // La fórmula del maestro (CIFRAS.patrimonio): la misma del Dashboard, con cuenta, efectivo y BTC.
+    const patrimonioHoy    = window.CIFRAS ? CIFRAS.patrimonio(fin).liquido : -deudaTotalHoy;
     const fmtN = n => (n < 0 ? '-$' : '$') + Math.round(Math.abs(n)).toLocaleString('es-MX');
     const items = [
       { lbl: 'Deuda cara hoy (Banamex+BBVA)', hoy: deudaCaraHoy,  inicial: deudaCaraInicial, bajarEsMejor: true },
@@ -4910,7 +4869,7 @@
 
      LO QUE SÍ ES DATO DURO es la franja de capital: sale de `finanzasmx_v2` a través del
      maestro, y contesta la pregunta que ninguna lista de ideas contesta — cuánto puedes
-     invertir HOY sin romper tu propia Fase 0 (fondo de emergencia primero, después la TC BBVA
+     invertir HOY sin romper tu propia Fase 1 (fondo de emergencia primero, después la TC BBVA
      al 55.7%). Con la deuda cara viva, la respuesta honesta es "casi nada", y por eso las tres
      ideas de arranque en cero salen marcadas.
 
@@ -4976,7 +4935,7 @@
    d:"Si ya tienes el espacio, el capital de arranque es prácticamente cero y el ingreso es mensual desde el primer mes. La mejor relación esfuerzo/retorno de toda la lista.",
    inv:[0, 5000],tik:"$1,500–3,500 mensuales por cajón",sem:[1, 3],rec:"Inmediata · no hay inversión que recuperar",hrs:[1, 2],
    arr:["Señalización y numeración de cajones · $500–1,500", "Contrato simple por escrito · plantilla gratuita", "Seguro de responsabilidad civil (recomendado) · $2,000–4,000 al año"],
-   nota:"✅ Es la única de la lista que puedes arrancar SIN romper tu Fase 0, porque no compite por el dinero del fondo de emergencia ni del abono a la TC BBVA."},
+   nota:"✅ Es la única de la lista que puedes arrancar SIN romper tu Fase 1, porque no compite por el dinero del fondo de emergencia ni del abono a la TC BBVA."},
   {id:"airbnb",ico:"🏠",cat:"nocon",enc:"medio",t:"Airbnb de cuarto o departamento",
    d:"Ingreso mensual muy por encima de una renta tradicional, a cambio de operación constante: limpieza, mensajes y reposición entre huéspedes.",
    inv:[15000, 60000],tik:"$8,000–20,000 mensuales brutos",sem:[3, 6],rec:"4–8 meses",hrs:[4, 8],
@@ -4996,7 +4955,7 @@
    d:"La versión con menos capital de todas, y la que te enseña a vender sin arriesgar dinero: empiezas vendiendo lo que ya tienes en casa.",
    inv:[0, 15000],tik:"50–150% de margen por pieza",sem:[1, 1],rec:"Inmediata si arrancas con lo tuyo",hrs:[5, 10],
    arr:["Lo que ya no usas en casa · $0", "Después, capital rotativo · $3,000–15,000", "Báscula, empaque y cuenta de vendedor"],
-   nota:"✅ Arranca en cero y se cruza con tu Fase 0: tu propio plan ya dice \"sube a Marketplace tus activos ociosos\" para completar el fondo de emergencia. Es la misma acción, y aquí además aprendes el músculo de vender."},
+   nota:"✅ Arranca en cero y se cruza con tu Fase 1: tu propio plan ya dice \"sube a Marketplace tus activos ociosos\" para completar el fondo de emergencia. Es la misma acción, y aquí además aprendes el músculo de vender."},
   {id:"junk",ico:"🗑️",cat:"nocon",enc:"bajo",t:"Retiro de muebles y escombro (junk removal)",
    d:"Te pagan por llevarte lo que estorba, y parte de lo retirado se revende aparte. Doble ingreso por el mismo viaje.",
    inv:[10000, 25000],tik:"$800–2,500 por servicio",sem:[2, 4],rec:"3–6 meses",hrs:[8, 14],
@@ -5032,7 +4991,7 @@
      creado dos verdades en la misma pantalla.
 
      `mes` es el ingreso mensual realista SI la opción funciona, y es lo que alimenta el
-     cálculo de "cierra tu Fase 0 en N meses" contra lo que de verdad debe. La Opción 5
+     cálculo de "cierra la base de tu Fase 1 en N meses" contra lo que de verdad debe. La Opción 5
      (aeroespacial) va con `null` a propósito: no hay datos, y fingir un rango habría sido
      peor que decir qué hay que preguntar. */
   const NEGOCIO_NUMS = {
@@ -5081,7 +5040,7 @@
     const C = window.CIFRAS;
     const n = k => (C && typeof C.n === 'function') ? C.n(k) : null;
 
-    // Lo que hay que cubrir para cerrar la Fase 0: el hueco del fondo más la deuda cara.
+    // Lo que hay que cubrir para cerrar la base de la Fase 1: el hueco del fondo más la deuda cara.
     const fondo = n('fondo'), meta = n('fondoMeta'), cara = n('deudaCara');
     const objetivo = (meta != null && fondo != null && cara != null)
       ? Math.max(0, meta - fondo) + cara : null;
@@ -5120,7 +5079,7 @@
             ' a tu tarifa de freelance de ' + mx(c.tarifa) + '/h. No es dejar de ganar: es cambiar el precio de tu hora.</span></div>'
           : '';
       } else if (ms) {
-        fase = '<div class="pn-fase"><b>' + ms + ' meses</b><span>en cerrar tu Fase 0 (' + mx(objetivo) +
+        fase = '<div class="pn-fase"><b>' + ms + ' meses</b><span>en cerrar la base de tu Fase 1 (' + mx(objetivo) +
                ' entre fondo y TC BBVA) si esta opción funciona a su ingreso medio</span></div>';
       } else {
         fase = '<div class="pn-fase nd"><b>—</b><span>' + x.eq + '</span></div>';
@@ -5214,7 +5173,7 @@
         // El plazo se calcula con el margen ÍNTEGRO, y se dice así: es el suelo optimista, no
         // una previsión. Con la mitad del margen es el doble de meses, y eso ya lo hace el lector.
         const meses = margen > 0 ? Math.ceil(((faltaFondo || 0) + cara) / margen) : null;
-        ver = 'Tu Fase 0 dice: <b>fondo de emergencia primero, después la TC BBVA</b> (' + mx(cara) +
+        ver = 'Tu Fase 1 dice: <b>fondo de emergencia primero, después la TC BBVA</b> (' + mx(cara) +
               ' al 55.7% anual). Abonar ahí es un <b>rendimiento del 55.7% garantizado y sin ' +
               'riesgo</b>; casi ninguna idea de esta lista lo iguala, y las que en papel lo superan ' +
               'no descuentan la probabilidad de que no funcionen. Así que <b>el capital disponible ' +

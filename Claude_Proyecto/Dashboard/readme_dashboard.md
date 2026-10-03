@@ -212,7 +212,8 @@ cero, `EVENTOS_NUEVOS` para el que ya tiene datos). Para otro lote: una entrada 
 nueva. Último lote: `_oct20261001` (pagar la BBVA completa antes del 11 y cerrar la Fase 0 por escrito).
 
 `EVENTOS_CORRIGE` + `eventosCorregir()` arreglan un texto que el tiempo dejó mal —el aviso de la
-Fase 1 decía que el mínimo de Banamex no estaba libre—: corre una vez por bandera y **solo si el
+Fase 1 decía que el mínimo de Banamex no estaba libre, y el que anunciaba la Fase 1 con los MSI
+cuando las fases se redefinieron (`_fasesNuevas20261003`)—: corre una vez por bandera y **solo si el
 pendiente sigue tal cual lo sembró el código**; si Adán lo editó, manda lo suyo.
 
 ---
@@ -396,7 +397,7 @@ tokens procesados (11.4 k de salida), medido; las búsquedas son el grueso, y el
 La pantalla 2. Bajo la banda de fase y la ruta de deuda, tres columnas: **el mes, el día que
 toques y la semana a la que pertenece**.
 
-**La banda de fase es un botón**: abre la ventana de las 4 fases (`abrirKpi('fases')`, en
+**La banda de fase es un botón**: abre la ventana de las fases (`abrirKpi('fases')`, en
 `kpiDetalle`) con fechas, estado, meta, explicación y el checklist de cada mes leído de
 `coach_checks_v1`. El título del módulo Fase de Mi Día abre la misma ventana.
 
@@ -696,23 +697,28 @@ arriba a lo ancho (`.kpi-hero`, cifra hasta 58 px) y cada sección con lo que le
 una columna, y bajo 1024 px todo a una). Medido en 1600×1000: el fondo ocupa 449 px de alto, el
 patrimonio 842; sin desbordes en ninguno de los ocho.
 
-**Las 4 fases son la excepción**, con subtabs en vez de las 2 columnas de `.kpi-cols` (Adán,
+**Las fases son la excepción**, con subtabs en vez de las 2 columnas de `.kpi-cols` (Adán,
 21-sep-2026: *"se ve muy amontonado, mejoralo haciendo subtabs para cada fase y explicandolo muy
 bien"*): cada fase vive en su propio `.fases-panel` y solo una se ve a la vez. `.fases-tabs` es un
 solo hijo de `#kpiBody`, así que `kpiAcomodar()` lo mete en un único `.kpi-grupo` a ancho completo
 en vez de partirlo. Los botones (`.fases-tabbtn`, `kpiFaseTab(i)`) llevan el tag y el estado
-(`● EN CURSO` / `✅ CERRADA` / `DESPUÉS`) en el color de la fase, y cada panel repite fechas +
-tareas hechas, la meta, la explicación completa y el checklist por mes. Abre en la fase en curso
-(o la siguiente sin empezar, o la última si el plan ya cerró). Medido en 1600×1000: la tarjeta se
-ajusta al contenido de cada fase (766-940 px de alto); solo la Fase 0 desplaza dentro del panel
-(923 px de contenido en 862 visibles).
+(`● EN CURSO` / `✅ CERRADA` / `DESPUÉS`) en el color de la fase. Cada panel abre con fechas, tareas
+hechas, título y estado, y debajo **dos columnas** (`.fases-cols`, una sola bajo 1024 px): a la
+izquierda la meta, la explicación, el patrimonio que espera la trayectoria (`liquido`), **lo que se
+deja de hacer** (`deja`) y el **checkpoint**; a la derecha el checklist por mes. Abre en la fase en
+curso (o la siguiente sin empezar, o la última si el plan ya cerró). El título cuenta las fases y la
+fecha del millón sale de `finDelPlan()`, el cierre de la última. Medido en 1600×1000 con la tarjeta
+a su tope de 940 px: la Fase 0 cabe (898 px) y las demás desplazan dentro de `#kpiBody` (1,343 /
+1,458 / 1,116 / 874 px de contenido en 862 visibles, Fases 1 a 4).
 
-**Patrimonio hacia $1M** es todo lo suyo menos las deudas (`patrimonioNeto()`: inversiones, fondo,
+**Patrimonio hacia $1M** es todo lo suyo menos las deudas (`patrimonioNeto()`, que delega en `CIFRAS.patrimonio()` —la misma fórmula de Coach—: inversiones, fondo,
 Bitcoin a precio de hoy, efectivo y cuenta, y los bienes), la misma cifra que el Patrimonio Neto de
 Finanzas; la barra es el % del millón. El desglose separa lo que tiene, lo que debe y los bienes, y
 dice aparte el líquido sin bienes (`patrimonioLiquido()`), que es el número que se mueve con cada
 abono. El punto de partida con bienes (18-jul-2026, $231,770) solo sirve para decir cuánto ha
 sumado desde entonces.
+La meta del millón se fecha con el cierre de la última fase (`finDelPlan()`): el medidor dice
+`meta 31 dic 2032` y el de tiempo se llama `Camino a 2032`, los dos leídos de `PHASES`.
 
 Clases `.mg-*`; de la familia anterior `.img-goal-*` solo sobreviven `.img-goal-pbar` y `-fill`,
 que usa el overlay de detalle.
@@ -1032,12 +1038,12 @@ marcas o más, y si hasta el peor pasa del 80 % lo dice en verde. Mira los últi
 
 Los nueve de `SEMILLA` salen de `RUTINA_TASKS`: Construir esta app, Post de Aeroresinas en LinkedIn
 (lun/mié/vie, `flex`, en el hueco del CT-GenAI), Clase de alemán,
-Gimnasio, Fase 0, Leer 10 páginas, Rutina de la noche, Dormir 7 h, Agua 3 litros. Cada
+Gimnasio, Plan Maestro · 1h15, Leer 10 páginas, Rutina de la noche, Dormir 7 h, Agua 3 litros. Cada
 uno lleva `hora` y **la lista se pinta ordenada por ella** (se ordena una copia; el orden guardado
 es el de creación). La hora se edita en la ficha (`time`).
 
-**`flex:true`**: toca ciertos días pero **se puede marcar cualquier día** (Construir esta app y
-Fase 0 son de lunes a viernes y a veces se hacen en fin de semana). Un día que no toca sin marcar
+**`flex:true`**: toca ciertos días pero **se puede marcar cualquier día** (Construir esta app y el
+Plan Maestro son de lunes a viernes y a veces se hacen en fin de semana). Un día que no toca sin marcar
 sigue neutro; marcado es un **extra** que suma a racha, % y lectura vertical. En la cuadrícula la
 celda lleva punteado cian; en el pie el hábito sale como chip "extra". **Los días anteriores al
 arranque también se pueden marcar** en cualquier hábito (historial que Adán recuerda). `tocable()`

@@ -180,7 +180,7 @@ Estructura vigente, sin las horas exactas (esas están en el maestro, que es don
 - **Lun–Vie**: despertar → construir esta aplicación → ducha (con o sin lavado de cabello según el
   día) → skincare y minoxidil AM → **Didi con direccionamiento camino a ALTEN** → jornada en ALTEN
   (con la compra de comida en el descanso) → Didi corta de la tarde → gimnasio → bloque de
-  habilidad (Mar/Jue/Vie) → Didi de la noche → prioridad activa de Fase 0 → cena y preparar la
+  habilidad (Mar/Jue/Vie) → Didi de la noche → el bloque del Plan Maestro (1h15 en la tarea de la fase que toca) → cena y preparar la
   comida de mañana → lectura → diario → skincare y minoxidil PM → planear mañana → meditación →
   segundo bloque de la aplicación → dormir.
 - **Lunes**, además: revisión de la Bolsa GBM por la mañana. Solo invierte al inicio de semana.
@@ -189,10 +189,10 @@ Estructura vigente, sin las horas exactas (esas están en el maestro, que es don
 
 **Duerme entre 5h40 y 6h40.**
 
-**El bloque de freelance no existe hoy.** Era condicional, ocupaba las franjas que ahora son turnos
-de Didi, y en la práctica estaba vacío. **Hay que volver a crearlo cuando entre el primer peso** de
-las Opciones 1-3: ese es el momento que marca `s1-4` del Plan Maestro para mover horas de Didi al
-negocio.
+**El bloque de freelance no existe hoy.** Era condicional, ocupaba las franjas que hoy son turnos
+de Didi, y en la práctica estaba vacío. El plan tiene un solo frente de negocio —el de su papá— y
+**Didi deja de ser fijo en la Fase 2**, cuando el sueldo nuevo cubra lo que aporta: esas horas pasan
+a IELTS y alemán para la maestría.
 
 ---
 
@@ -275,7 +275,7 @@ habría creado dos verdades en la misma pantalla.
 
 ### Las dos cifras calculadas
 
-- **"Cierra tu Fase 0 en N meses"** — contra lo que de verdad debe (hueco del fondo + deuda cara,
+- **"Cierra la base de tu Fase 1 en N meses"** — contra lo que de verdad debe (hueco del fondo + deuda cara,
   del maestro) al ingreso medio de esa opción. Convierte la lista en una decisión: no "cuánto
   deja", sino "cuándo me saca de la deuda cara".
 - **La Opción 6 (dejar DiDi) no genera ingreso: convierte horas.** Su ficha calcula lo que valen
@@ -324,7 +324,7 @@ Está escrito en el aviso de arriba en vez de fingir una precisión que no tiene
 ### La franja de capital sí es dato duro
 
 Sale de `finanzasmx_v2` por el maestro y contesta lo que ninguna lista de ideas contesta: **cuánto
-se puede invertir HOY sin romper la Fase 0**. Con la TC BBVA viva al 55.7%, abonar ahí es un
+se puede invertir HOY sin romper la Fase 1**. Con la TC BBVA viva al 55.7%, abonar ahí es un
 rendimiento garantizado y sin riesgo que casi ninguna idea de la lista iguala — así que la
 respuesta honesta es `$0`, y las ideas de **arranque en $0** salen marcadas porque son las únicas
 que no compiten por ese dinero.
@@ -334,6 +334,33 @@ dedicas la mitad"): es el suelo optimista, no una previsión.
 
 ---
 
+## El Plan Maestro de `#perfil` — sale del maestro
+
+Las fases **no están escritas aquí**: `pintarFasesPlan()` las genera de `CIFRAS.PHASES` al cargar,
+con el mismo texto que pinta la ventana de fases del Dashboard. Solo la **Fase 0** (cerrada el 30 sep
+2026) sigue como HTML a mano, con sus casillas `s0-*`. Mientras las fases vivieron escritas en los dos
+sitios, Coach siguió hablando de los $3,145/mes liberados y de la plantilla GBM cuando el plan ya era
+otro.
+
+| Pieza | De dónde sale |
+|---|---|
+| `#planStepper` | Un paso por fase, con sus meses (`Oct 26–Mar 27`) |
+| `#fasesPlan` | Cada fase desde la 1: etiqueta con fechas y duración, meta, el patrimonio que espera la trayectoria (`liquido`), **lo que se deja** (`deja`), la explicación, el checklist por mes y el **checkpoint**. La fase en curso enseña su checklist; las demás van plegadas |
+| Estado de cada fase | `COMPLETADA` / `EN CURSO` / `PENDIENTE` por fecha, también la Fase 0 |
+| Días hasta el millón | Del arranque de la primera fase al cierre de la última (`#planDiasRestantes`, `#kpiDiasMeta`) |
+| `#trayectoriaFases` | Una fila por fase con su `liquido`, bajo el punto de partida fijo del 18 jul 2026 |
+| `#brechaMillon` | Lo que falta para el millón desde el patrimonio líquido de hoy (`CIFRAS.patrimonio()`), los meses que quedan y el margen del mes |
+| `#contextoFase` (Rutina) | La fase en curso con su meta |
+
+Corre **antes** del bucle que restaura `coach_checks_v1`, así que las casillas generadas (`f1-1`…)
+se guardan igual que las escritas, y antes de la segunda pasada de `CIFRAS.aplicarDOM()`, que resuelve
+los `{{marcadores}}` del texto. **Una fase se cambia en el maestro**, nunca aquí: el control 3 del
+verificador falla si una fase, sus tareas o sus fechas vuelven a escribirse en este archivo.
+
+"Progreso real" calcula el patrimonio líquido con la misma fórmula que el Dashboard
+(`CIFRAS.patrimonio`), con la cuenta, el efectivo y el Bitcoin incluidos.
+
+---
 ## Estructuras compartidas
 
 `SK` —las 12 habilidades del radar— **ya no se declara aquí**: se lee con `CIFRAS.SK`. Esta app
@@ -342,11 +369,11 @@ versión que se movió al maestro; el Dashboard usa solo los campos que pinta.
 
 Los overrides que Adán ajusta a mano siguen en `radarp_{id}` y ganan sobre el `val` del maestro.
 
-**Lo que sigue a mano** es el *texto* de las fases del Plan Maestro y de las prioridades de
-aprendizaje: en esta app están escritos como HTML en `#perfil` y `#aprendizaje`, no generados
-desde el literal, y convertirlos exigiría rediseñar esas secciones. Las cifras que contienen ya
-usan `{{marcadores}}`, y `verificar-sincronia.js` comprueba que las fases y prioridades del
-maestro aparezcan aquí.
+**Lo que sigue a mano** es el *texto* de las prioridades de aprendizaje: está escrito como HTML en
+`#aprendizaje`, no generado desde el literal, y convertirlo exigiría rediseñar esa sección. Las
+cifras que contiene ya usan `{{marcadores}}`, y `verificar-sincronia.js` comprueba que las
+prioridades del maestro aparezcan aquí. Las fases del Plan Maestro **no** van a mano: ver la
+sección de arriba.
 
 ---
 
