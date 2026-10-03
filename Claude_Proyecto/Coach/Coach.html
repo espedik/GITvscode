@@ -879,6 +879,32 @@
     }
     .subhab-q { margin: 5px 0 0; line-height: 1.6; color: var(--muted); }
     .subhab-c { margin: 6px 0 0; line-height: 1.7; }
+    /* ─── El aprendizaje, generado del maestro (3-oct-2026) ───
+       Las 12 habilidades con el criterio de su prompt: el foco del plan con fechas arriba y, por
+       habilidad, el nivel con su evidencia, por qué ahora, el paso de la semana, con qué se
+       demuestra, dónde se practica y la ruta paso a paso. */
+    .apr-plan { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-top: 6px; }
+    .apr-tramo { display: flex; flex-direction: column; gap: 4px; padding: 11px 13px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface-2); font-size: 12.5px; line-height: 1.45; }
+    .apr-tramo b { font-size: 14px; }
+    .apr-tramo-f { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); }
+    .apr-tramo.hoy { border-color: var(--green); background: var(--green-soft); }
+    .apr-card { margin-bottom: 14px; }
+    .apr-card > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .apr-card > summary::-webkit-details-marker { display: none; }
+    .apr-card.foco { border-color: var(--green); }
+    .apr-card.pausa { opacity: .8; }
+    .apr-ico { font-size: 20px; }
+    .apr-n { font-size: 15px; font-weight: 700; flex: 1; min-width: 160px; }
+    .apr-v { font-family: var(--mono); font-weight: 700; font-size: 13px; color: var(--muted); }
+    .apr-tag { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; padding: 3px 9px; border-radius: 20px; background: var(--surface-2); color: var(--muted); }
+    .apr-tag.foco { background: var(--green-soft); color: var(--green); }
+    .apr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-bottom: 6px; }
+    .apr-grid > div { padding: 10px 12px; border-radius: var(--radius-sm); background: var(--surface-2); border: 1px solid var(--border); }
+    .apr-grid > div.foco { background: var(--green-soft); border-color: transparent; }
+    .apr-grid p { margin: 4px 0 0; font-size: 12.5px; line-height: 1.55; }
+    .apr-l { font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); }
+    .apr-ruta-t { color: var(--accent); margin: 14px 0 8px; font-size: 12px; }
+    .apr-rec { margin-top: 7px; }
     .subhab-r {
       margin-top: 7px; font-size: 12px; font-weight: 600;
       color: var(--accent); line-height: 1.5;
@@ -2971,322 +2997,9 @@
        4. TRACKER DE HÁBITOS
   ══════════════════════════════════════════ -->
   <section id="aprendizaje">
-    <h2 class="section-title" data-num="03">📚 Aprendizaje — Ataca tus 6 debilidades</h2>
-    <p class="fs-13 text-muted mb-12">El nivel real de tus 12 habilidades y el roadmap 0→100 completo de cada una viven en el radar de <a href="#perfil" class="inline-link">Mi Perfil Real</a>. Esto es el plan de ataque concreto para tus 6 prioridades reales — por qué está baja específicamente en tu caso (no un texto genérico), el primer paso de esta semana, cómo profundizar en las semanas 2-4, el hábito que lo sostiene, el error más común que la aleja, y los recursos exactos. Ninguna está iniciada todavía.</p>
-
-    <div class="card" style="margin-bottom:16px;">
-      <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px;">
-        <input type="checkbox" id="cu1" style="margin-top:4px; width:16px; height:16px; accent-color:var(--accent); flex-shrink:0;">
-        <div style="flex:1;">
-          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:10px;">
-            <h3 class="fw-700" style="font-size:15px;">📊 Datos / Análisis</h3>
-            <span class="fs-13 text-muted" style="font-family:var(--mono); font-weight:700; flex-shrink:0;">15/100</span>
-          </div>
-          <div class="progress-bar" style="margin:8px 0;"><div class="progress-fill" style="width:15%;"></div></div>
-          <p class="fs-13 text-muted">Tu skill más baja. Baja prioridad de dominarla tú mismo a fondo — mejor delegar a IA que invertir mucho tiempo aquí, pero sí necesitas el mínimo para no depender de nadie para leer tus propios números.</p>
-        </div>
-        <span class="tag pendiente" style="flex-shrink:0;">Sin iniciar</span>
-      </div>
-
-      <p class="fs-13 mb-4" style="margin-top:10px;"><strong style="color:var(--accent);">🎯 Primer paso esta semana:</strong> completa los módulos de Python y Pandas en Kaggle Learn (2-3h, gratis) y arma un dashboard simple de tus propios gastos en Google Looker Studio.</p>
-      <p class="fs-13 mb-12"><strong style="color:var(--accent);">🔁 Hábito recomendado:</strong> 10 min/día de SQL en SQLZoo o LeetCode SQL durante 30 días seguidos — se domina por repetición corta, no por sesiones largas esporádicas.</p>
-
-      <hr class="divider">
-      <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Recursos</h4>
-      <div class="recurso-item"><span class="recurso-tipo r-curso">Curso</span><div><strong>Kaggle Learn</strong> — cursos cortos gratis de Python, Pandas, SQL y visualización. Empieza aquí.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-curso">Curso</span><div><strong>Google Data Analytics Certificate</strong> (Coursera) — gratis con audit, el más reconocido para entrar al mercado de datos.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Storytelling with Data</strong> — Cole Nussbaumer Knaflic · cómo comunicar lo que ya sabes analizar.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Tool</span><div><strong>Google Looker Studio</strong> — gratis, arma tu primer dashboard real con tus propios datos financieros.</div></div>
-    </div>
-
-    <div class="card" style="margin-bottom:16px;">
-      <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px;">
-        <input type="checkbox" id="cu2" style="margin-top:4px; width:16px; height:16px; accent-color:var(--accent); flex-shrink:0;">
-        <div style="flex:1;">
-          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:10px;">
-            <h3 class="fw-700" style="font-size:15px;">🤝 Ventas / Negociación</h3>
-            <span class="fs-13 text-muted" style="font-family:var(--mono); font-weight:700; flex-shrink:0;">15/100</span>
-          </div>
-          <div class="progress-bar" style="margin:8px 0;"><div class="progress-fill" style="width:15%;"></div></div>
-          <p class="fs-13 text-muted">Toda riqueza empieza con una venta. El ingeniero que no sabe vender = empleado; el que sabe = emprendedor. Sin esta skill, el techo de ingresos de cualquier negocio propio (Opción 1 o 2) queda bajo.</p>
-        </div>
-        <span class="tag pendiente" style="flex-shrink:0;">Sin iniciar</span>
-      </div>
-
-      <p class="fs-13 mb-4" style="margin-top:10px;"><strong style="color:var(--accent);">🎯 Primer paso esta semana:</strong> lee el capítulo 1 de "Influence" (reciprocidad) y úsalo en el mensaje de venta que ya tienes listo en <a href="#plantillas-mensajes" class="inline-link">Plantillas de mensajes</a>: personalízalo con tu precio de lanzamiento ($99 MXN) y publícalo en 1 comunidad real de GBM/inversión.</p>
-      <p class="fs-13 mb-4"><strong style="color:var(--accent);">📆 Semanas 2-4:</strong> arma un embudo simple de 3 columnas (Contactado / Respondió / Cerró) para la plantilla Finanzas.html y llénalo con 5 conversaciones reales por semana — sin medirlo, no vas a saber si estás mejorando o solo ocupado.</p>
-      <p class="fs-13 mb-4"><strong style="color:var(--accent);">🔁 Hábito recomendado:</strong> 5 mensajes personalizados/día a prospectos, más follow-up de contactos anteriores en los días 1-3-7-14-30.</p>
-      <p class="fs-13 mb-12"><strong style="color:var(--accent);">⚠️ Error común:</strong> rendirte después de un "no" o un silencio. La mayoría de las ventas B2B cierran entre el 3er y 5to contacto, no en el primero — el follow-up es la venta, no un extra opcional.</p>
-
-      <hr class="divider">
-      <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Recursos</h4>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Influence</strong> — Robert Cialdini · empieza aquí, los 6 principios de persuasión.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>$100M Offers</strong> — Alex Hormozi · cómo hacer una oferta irresistible.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Never Split the Difference</strong> — Chris Voss · negociación del ex-negociador del FBI, funciona en cualquier contexto.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-yt">YouTube</span><div><strong>Alex Hormozi</strong> — canal gratis, vale más que muchos cursos pagados.</div></div>
-    </div>
-
-    <div class="card" style="margin-bottom:16px;">
-      <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px;">
-        <input type="checkbox" id="cu3" style="margin-top:4px; width:16px; height:16px; accent-color:var(--accent); flex-shrink:0;">
-        <div style="flex:1;">
-          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:10px;">
-            <h3 class="fw-700" style="font-size:15px;">📣 Marketing Digital</h3>
-            <span class="fs-13 text-muted" style="font-family:var(--mono); font-weight:700; flex-shrink:0;">20/100</span>
-          </div>
-          <div class="progress-bar" style="margin:8px 0;"><div class="progress-fill" style="width:20%;"></div></div>
-          <p class="fs-13 text-muted">Relevante sobre todo para vender la plantilla GBM (Opción 1). Sin marketing, el mejor producto muere en silencio — Google Digital Garage es gratis y es el punto de partida.</p>
-        </div>
-        <span class="tag pendiente" style="flex-shrink:0;">Sin iniciar</span>
-      </div>
-
-      <p class="fs-13 mb-4" style="margin-top:10px;"><strong style="color:var(--accent);">🎯 Primer paso esta semana:</strong> termina el módulo de fundamentos de Google Digital Garage y publica tu primer post de valor en LinkedIn sobre la plantilla Finanzas.html.</p>
-      <p class="fs-13 mb-4"><strong style="color:var(--accent);">📆 Semanas 2-4:</strong> publica 4 semanas seguidas (1 post/semana mínimo) y anota views/comentarios/DMs de cada uno en una nota simple — al final del mes vas a saber qué formato (texto, carrusel, caso real) te funcionó mejor, en vez de seguir adivinando.</p>
-      <p class="fs-13 mb-4"><strong style="color:var(--accent);">🔁 Hábito recomendado:</strong> 3 publicaciones/semana en LinkedIn con contenido de valor — lunes, miércoles y viernes.</p>
-      <p class="fs-13 mb-12"><strong style="color:var(--accent);">⚠️ Error común:</strong> perfeccionar el post en vez de publicarlo. La versión imperfecta que sí sale hoy vale más que la perfecta que nunca sale — puedes editar/mejorar el siguiente con lo que aprendas de este.</p>
-
-      <hr class="divider">
-      <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Recursos</h4>
-      <div class="recurso-item"><span class="recurso-tipo r-curso">Curso</span><div><strong>Google Digital Garage</strong> — gratis, certificado por Google, empieza aquí.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-curso">Curso</span><div><strong>HubSpot Academy</strong> — gratis, inbound marketing, email y SEO.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-curso">Curso</span><div><strong>Meta Blueprint</strong> — gratis, aprende Meta Ads directo de Facebook antes de gastar dinero en ads.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>$100M Leads</strong> — Alex Hormozi · cómo generar leads que sí quieren comprarte.</div></div>
-    </div>
-
-    <div class="card" style="margin-bottom:16px;">
-      <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px;">
-        <input type="checkbox" id="cu4" style="margin-top:4px; width:16px; height:16px; accent-color:var(--accent); flex-shrink:0;">
-        <div style="flex:1;">
-          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:10px;">
-            <h3 class="fw-700" style="font-size:15px;">💰 Finanzas personales</h3>
-            <span class="fs-13 text-muted" style="font-family:var(--mono); font-weight:700; flex-shrink:0;">20/100</span>
-          </div>
-          <div class="progress-bar" style="margin:8px 0;"><div class="progress-fill" style="width:20%;"></div></div>
-          <p class="fs-13 text-muted">La debilidad más cara — literalmente en intereses pagados. Prioridad real: aplicar un sistema, no solo leer sobre finanzas.</p>
-        </div>
-        <span class="tag pendiente" style="flex-shrink:0;">Sin iniciar</span>
-      </div>
-
-      <h4 style="color:var(--accent); margin:14px 0 8px; font-size:12px;">🧩 Las 7 habilidades de finanzas que debes dominar — una por una</h4>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">1</span><span class="subhab-t">Saber a dónde se va tu dinero</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q">Es la base de todo lo demás. Sin el dato real, cualquier presupuesto es una suposición y cualquier recorte es adivinar.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Registra <b>30 días seguidos</b>, cada gasto el mismo día en que ocurre — no el domingo de memoria, porque ahí ya perdiste los chicos, que son justo los que no ves. Cinco categorías bastan: fijos, comida, transporte, deuda y gusto. Al día 30 ordénalas de mayor a menor y mira solo las tres primeras: ahí está el 80% de lo que puedes mover. Tu app de <b>Finanzas</b> ya hace esto, no necesitas otra herramienta.</p>
-          <div class="subhab-r">📚 Pequeño Cerdo Capitalista — Sofía Macías (los capítulos de gastos hormiga; es de México, habla de pesos y de CETES, no de 401k)</div>
-        </div>
-      </div>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">2</span><span class="subhab-t">Presupuestar sobre ingreso variable</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q">Tu ingreso no es uno: ALTEN es fijo y Didi cambia cada semana. Presupuestar sobre el promedio es lo que hace que un mes flojo te descuadre.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Presupuesta sobre el <b>mínimo de tus últimos 3 meses</b>, nunca sobre el promedio ni sobre el mejor mes. Lo que entre por encima de ese mínimo no es para gastar: va al fondo, a la deuda o a inversión, en ese orden. Págate un "sueldo" fijo cada mes desde lo que junta Didi, en vez de gastar lo que va entrando.</p>
-          <div class="subhab-r">📚 Profit First — Mike Michalowicz (el método de repartir el ingreso en cuentas separadas antes de gastarlo)</div>
-        </div>
-      </div>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">3</span><span class="subhab-t">Dimensionar el fondo de emergencia</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q">No es un número redondo que suena bien: son <b>3 a 6 meses de tus gastos fijos</b>. Sin él, cualquier imprevisto vuelve a la tarjeta y deshace el avance de meses.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Suma tus fijos reales de un mes (renta, comida, transporte, gym, suscripciones) y multiplica por 3. Ese es tu piso; por 6 es tu techo. Tu meta actual son <b>{{fondoMeta}}</b> y llevas {{fondo}} — compara ese {{fondoMeta}} contra el número que te dé la suma y ajústalo si sale corto. Guárdalo donde puedas sacarlo en 24-48 h: CETES a 28 días o una cuenta de ahorro, nunca en algo que pueda valer menos el día que lo necesites.</p>
-          <div class="subhab-r">📚 The Simple Path to Wealth — JL Collins (capítulo del fondo y por qué va antes que invertir)</div>
-        </div>
-      </div>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">4</span><span class="subhab-t">Calcular el costo real de la deuda</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q">La tasa que anuncian no es lo que pagas. El CAT sí, porque mete comisiones y seguros. Sin ese número no puedes comparar dos créditos ni saber si un MSI te conviene.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Aprende a leer el <b>CAT</b> de cada estado de cuenta y ordena tus deudas por tasa, de mayor a menor: eso es el <b>método avalancha</b> y es el que menos intereses te cuesta (la bola de nieve, de menor a mayor saldo, solo gana en motivación). Antes de un MSI, calcula qué porcentaje de tu excedente mensual te compromete y por cuántos meses: un MSI no es dinero gratis, es un pago fijo que ya vendiste.</p>
-          <div class="subhab-r">📚 Pequeño Cerdo Capitalista — Sofía Macías (deuda y CAT explicados con productos mexicanos)</div>
-        </div>
-      </div>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">5</span><span class="subhab-t">Leer tu propio balance</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q">Flujo (lo que entra y sale cada mes) y patrimonio (lo que tienes menos lo que debes) son dos cosas distintas. Puedes tener buen flujo y patrimonio negativo, que es donde estabas hace un año.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Una vez al mes anota <b>activos − pasivos</b>: efectivo + fondo + inversiones + valor del BYD, menos lo que reste de deuda. Ese número, no tu quincena, es el que tiene que subir todos los meses rumbo al millón. El Dashboard ya lo calcula en <b>patrimonio neto</b>: tu trabajo es mirarlo una vez al mes, no cada día.</p>
-          <div class="subhab-r">📚 The Millionaire Next Door — Thomas J. Stanley (por qué el patrimonio y el ingreso no son lo mismo)</div>
-        </div>
-      </div>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">6</span><span class="subhab-t">Entender tus impuestos</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q">Lo que ganas fuera de la nómina tiene reglas propias. No saberlas cuesta dinero de dos formas: multas, y deducciones que dejas en la mesa.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Aprende primero tres cosas concretas: qué régimen te corresponde por lo que ganas fuera de ALTEN, qué gastos son deducibles para una persona física (salud, colegiaturas, intereses de crédito hipotecario) y cuándo cae la declaración anual. Empieza por leer tu propia constancia de situación fiscal en el portal del SAT antes que cualquier guía: ahí ya está tu situación real.</p>
-          <div class="subhab-r">📚 Portal del SAT · Guía de Personas Físicas (gratis y es la fuente, no una interpretación)</div>
-        </div>
-      </div>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">7</span><span class="subhab-t">Decidir con la cabeza fría</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q">Casi ninguna mala decisión de dinero viene por no saber matemáticas. Viene por decidir cansado, con prisa o comparándote.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Ponle una regla mecánica a lo que te cuesta: <b>72 horas</b> entre querer algo de más de $2,000 y comprarlo. Si a las 72 h sigues queriéndolo, cómpralo sin culpa. Y escribe la razón de cada decisión grande antes de tomarla — al releerla en 6 meses aprendes más de ti que de cualquier libro.</p>
-          <div class="subhab-r">📚 Psicología del Dinero — Morgan Housel (18 historias cortas; se lee en una semana)</div>
-        </div>
-      </div>
-
-      <hr class="divider">
-      <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Recursos</h4>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>I Will Teach You to Be Rich</strong> — Ramit Sethi · sistema automatizado en 6 semanas, el más accionable.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-app">App</span><div><strong>YNAB (You Need A Budget)</strong> — la mejor app de presupuesto, ROI casi inmediato.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>The Millionaire Next Door</strong> — Thomas Stanley · destruye mitos sobre cómo se ve la riqueza real.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Psicología del Dinero</strong> — Morgan Housel · el mayor riesgo es no entender tu propio comportamiento con el dinero.</div></div>
-    </div>
-
-    <div class="card" style="margin-bottom:16px;">
-      <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px;">
-        <input type="checkbox" id="cu5" style="margin-top:4px; width:16px; height:16px; accent-color:var(--accent); flex-shrink:0;">
-        <div style="flex:1;">
-          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:10px;">
-            <h3 class="fw-700" style="font-size:15px;">🤖 IA aplicada a proyectos propios</h3>
-            <span class="fs-13 text-muted" style="font-family:var(--mono); font-weight:700; flex-shrink:0;">30/100</span>
-          </div>
-          <div class="progress-bar" style="margin:8px 0;"><div class="progress-fill" style="width:30%;"></div></div>
-          <p class="fs-13 text-muted">Te sientes principiante, pero ya validaste IA generativa para Google y usas Claude Code a diario en producción — el hueco real no es técnico, es que nunca lo has aplicado a un proyecto tuyo, solo al trabajo de otros.</p>
-        </div>
-        <span class="tag pendiente" style="flex-shrink:0;">Sin iniciar</span>
-      </div>
-
-      <p class="fs-13 mb-4" style="margin-top:10px;"><strong style="color:var(--accent);">🎯 Primer paso esta semana:</strong> construye una primera automatización simple en n8n.io conectando un formulario a Google Sheets — menos de 1 hora.</p>
-      <p class="fs-13 mb-4"><strong style="color:var(--accent);">📆 Semanas 2-4:</strong> aplica esa misma automatización a un problema real tuyo (ej. capturar leads de la plantilla Finanzas.html sin revisar mensajes a mano) — la diferencia entre "saber IA" y "usar IA" es tenerla resolviendo algo tuyo, no un ejercicio de práctica.</p>
-      <p class="fs-13 mb-4"><strong style="color:var(--accent);">🔁 Hábito recomendado:</strong> 1 bloque de 30 min/semana para construir (no solo leer) un mini-proyecto de IA aplicado a tus opciones de negocio.</p>
-      <p class="fs-13 mb-12"><strong style="color:var(--accent);">⚠️ Error común:</strong> quedarte en el modo "leer sobre IA" indefinidamente. Ya tienes más base real que la mayoría (Visión Artificial, Sistemas Neurodifusos en tu carrera) — te falta construir, no aprender más teoría.</p>
-
-      <hr class="divider">
-      <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Recursos</h4>
-      <div class="recurso-item"><span class="recurso-tipo r-curso">Curso</span><div><strong>DeepLearning.AI</strong> (Andrew Ng) — "Prompt Engineering for Developers", gratis en Coursera.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-curso">Curso</span><div><strong>Fast.ai</strong> — el mejor curso de deep learning del mundo, gratis, enfoque top-down.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Tool</span><div><strong>n8n.io</strong> — automatización sin código, ideal para venderla como servicio a PYMES.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Tool</span><div><strong>Cursor IDE</strong> — el editor más productivo con IA integrada, tu velocidad de código se duplica en 2 semanas.</div></div>
-    </div>
-
-    <div class="card">
-      <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px;">
-        <input type="checkbox" id="cu6" style="margin-top:4px; width:16px; height:16px; accent-color:var(--accent); flex-shrink:0;">
-        <div style="flex:1;">
-          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:10px;">
-            <h3 class="fw-700" style="font-size:15px;">📈 Inversión en Mercados</h3>
-            <span class="fs-13 text-muted" style="font-family:var(--mono); font-weight:700; flex-shrink:0;">25/100</span>
-          </div>
-          <div class="progress-bar" style="margin:8px 0;"><div class="progress-fill" style="width:25%;"></div></div>
-          <p class="fs-13 text-muted">Ya diste el primer paso real (CETES, BTC, acciones en GBM) — la mayoría de la gente nunca llega ahí. Lo que falta no es empezar, es estructura: decides monto e instrumento cada lunes sobre la marcha, en vez de seguir una asignación ya definida.</p>
-        </div>
-        <span class="tag pendiente" style="flex-shrink:0;">Sin iniciar</span>
-      </div>
-
-      <h4 style="color:var(--accent); margin:14px 0 8px; font-size:12px;">🧩 Las 9 habilidades de inversión que debes dominar — una por una</h4>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">1</span><span class="subhab-t">Interés compuesto y horizonte</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q">Es el motor de todo. Y lo que lo mueve no es la tasa, es el <b>tiempo</b>: cada año que pospones cuesta más que cualquier punto extra de rendimiento.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Haz el cálculo una vez con tus números reales, no con ejemplos de libro: lo que puedes aportar al mes, un rendimiento conservador (8-10% anual nominal en México) y los años hasta el {{metaMillon}}. Repítelo restando un año de aportaciones y compara — ver esa diferencia en pesos es lo que hace que ya no te saltes un mes.</p>
-          <div class="subhab-r">📚 The Little Book of Common Sense Investing — John C. Bogle (corto y va directo al punto)</div>
-        </div>
-      </div>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">2</span><span class="subhab-t">Escribir tu asignación objetivo</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q"><b>Esta es la que te falta</b>, y es la razón real de que cada lunes decidas desde cero. Una asignación es un reparto en porcentajes, escrito una sola vez, que decide por ti cuando el mercado te esté gritando.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Define <b>tres porcentajes que sumen 100</b>: renta fija (CETES), índice global o S&P 500, y una porción chica de riesgo alto (BTC). Escríbelos con fecha en un solo renglón y guárdalos. La regla que evita el error clásico: en lo volátil no pongas más de lo que puedas ver caer un 50% sin tocarlo. Cada compra del lunes deja de ser una decisión y pasa a ser rellenar el porcentaje que quedó abajo.</p>
-          <div class="subhab-r">📚 The Bogleheads’ Guide to Investing (capítulo de asset allocation) · Pequeño Cerdo Capitalista: Inversiones — Sofía Macías</div>
-        </div>
-      </div>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">3</span><span class="subhab-t">Conocer los instrumentos mexicanos</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q">No puedes repartir entre cosas que no distingues. En México tienes acceso directo a más de lo que parece, y cada instrumento tiene un para qué distinto.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Aprende de cada uno tres datos: <b>plazo, riesgo y cómo se le cobran impuestos</b>. Empieza por los que ya usas — CETES a 28 días (cetesdirecto, sin comisión), un índice como VOO vía GBM, y BTC — y añade solo lo que entiendas: Bonos M, Udibonos si te preocupa la inflación, y tu Afore, que es inversión aunque no lo parezca y casi nadie revisa.</p>
-          <div class="subhab-r">📚 Banxico · Educación financiera y cetesdirecto.com (fuentes oficiales, sin nadie vendiéndote nada)</div>
-        </div>
-      </div>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">4</span><span class="subhab-t">Ver las comisiones antes que el rendimiento</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q">El rendimiento no lo controlas; el costo sí. Un 1% anual de comisión, sostenido 20 años, se come cerca de una quinta parte de lo que habrías acumulado.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> De cada instrumento busca tres costos: <b>comisión de administración</b> (anual, el que más pesa), <b>comisión por operación</b> y el <b>spread</b> de compra-venta si es en dólares o cripto. Compara el mismo índice en dos casas antes de comprarlo: la diferencia entre 0.03% y 1.5% anual es la diferencia entre llegar y no llegar al millón a tiempo.</p>
-          <div class="subhab-r">📚 A Random Walk Down Wall Street — Burton Malkiel (por qué los costos predicen mejor que las estrellas de un fondo)</div>
-        </div>
-      </div>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">5</span><span class="subhab-t">Aportar periódicamente y automatizarlo</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q">Aportar lo mismo cada periodo (DCA) compra más barato cuando el mercado cae y menos caro cuando sube, sin que tengas que adivinar. Y quita la decisión de en medio.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Fija un <b>monto y un día</b> — tú ya tienes el bloque de GBM de los lunes y los $1,500 a CETES el día 15. Súbelo cuando suba tu ingreso, nunca lo bajes por cómo se vea el mercado. La prueba de que funciona es aburrida a propósito: 12 meses seguidos sin saltarte uno.</p>
-          <div class="subhab-r">📚 The Simple Path to Wealth — JL Collins</div>
-        </div>
-      </div>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">6</span><span class="subhab-t">Rebalancear una vez al año</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q">Con el tiempo, lo que sube se lleva más peso del que le asignaste y tu cartera termina siendo más arriesgada de lo que decidiste.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Una vez al año, o cuando algo se desvíe más de <b>5 puntos</b> de su porcentaje, vuelve a los números que escribiste. Lo más fácil: no vendas nada, dirige las aportaciones nuevas a lo que quedó abajo hasta emparejar. Rebalancear obliga a vender caro y comprar barato, que es justo lo contrario de lo que pide el instinto.</p>
-          <div class="subhab-r">📚 The Bogleheads’ Guide to Investing</div>
-        </div>
-      </div>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">7</span><span class="subhab-t">Saber qué impuestos pagas al invertir</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q">El rendimiento que ves no es el que te queda. En México hay retención sobre intereses y un ISR distinto para ganancias de bolsa y para cripto.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Aprende cómo tributa cada cosa que tienes: la retención anual sobre el capital en instrumentos de deuda, el <b>10% sobre la ganancia</b> en enajenación de acciones en bolsa, y que la ganancia por cripto se acumula a tus demás ingresos. Guarda tus constancias anuales de GBM y cetesdirecto en la misma carpeta desde ahora: en abril valen oro.</p>
-          <div class="subhab-r">📚 Portal del SAT · Constancias de tus instituciones financieras</div>
-        </div>
-      </div>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">8</span><span class="subhab-t">Aguantar sin vender</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q">La diferencia entre lo que rinde un fondo y lo que gana la gente que lo tiene se explica casi entera por comprar arriba y vender abajo. Es la habilidad que más dinero vale y la única que no se estudia, se entrena.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Escribe <b>hoy</b>, con el mercado tranquilo, qué vas a hacer si tu cartera cae 30% — y déjalo junto a la asignación. En la caída no se decide, se ejecuta lo que ya está escrito. Regla de higiene: revisa precios una vez por semana, en tu bloque del lunes, y no vuelvas a abrir la app hasta el siguiente.</p>
-          <div class="subhab-r">📚 Psicología del Dinero — Morgan Housel · El Inversor Inteligente — Benjamin Graham (los capítulos 8 y 20, que son los que Buffett señala)</div>
-        </div>
-      </div>
-      <div class="subhab">
-        <button class="subhab-h" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
-          <span class="subhab-n">9</span><span class="subhab-t">Saber cuándo NO invertir</span><span class="subhab-caret">▾</span>
-        </button>
-        <div class="subhab-body">
-          <p class="fs-13 subhab-q">Invertir con deuda cara viva o sin fondo de emergencia no es ser agresivo, es perder dinero con más pasos.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Ordena siempre igual: <b>1) fondo de emergencia completo · 2) deuda con tasa alta a cero · 3) invertir</b>. Ninguna tasa de rendimiento razonable le gana a una tarjeta. Tu panel de "Qué invertir hoy" ya aplica esta regla a tu saldo real cada vez que lo abres — la habilidad es respetarla cuando el mercado esté subiendo y dé comezón saltarse un paso.</p>
-          <div class="subhab-r">📚 I Will Teach You to Be Rich — Ramit Sethi (el orden de operaciones, capítulos 1 a 4)</div>
-        </div>
-      </div>
-
-      <hr class="divider">
-      <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Recursos</h4>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>The Intelligent Investor</strong> — Benjamin Graham · el libro base de inversión en valor, aplicable a cualquier mercado.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>The Little Book of Common Sense Investing</strong> — John Bogle · por qué los fondos indexados (como tu VOO) le ganan a casi todos los que intentan adivinar el mercado.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>A Random Walk Down Wall Street</strong> — Burton Malkiel · clásico sobre por qué la consistencia le gana al timing perfecto.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>One Up On Wall Street</strong> — Peter Lynch · cómo evaluar una inversión con lo que ya observas en tu día a día, sin ser experto de tiempo completo.</div></div>
-    </div>
+    <h2 class="section-title" data-num="03">📚 Aprendizaje — tus 12 habilidades, con foco y fechas</h2>
+    <p class="fs-13 text-muted mb-12">Una habilidad en foco a la vez, con su paso de la semana y lo que la demuestra; las demás, en mantenimiento. Cada una dice en qué nivel estás y por qué, por qué importa ahora y su ruta paso a paso. Sale del maestro: el radar de <a href="#perfil" class="inline-link">Mi Perfil Real</a> la enseña de un vistazo y el Dashboard → Habilidades te lleva paso a paso.</p>
+    <div id="aprendizajePlan"><p class="fs-13 text-muted">Las rutas salen del maestro (Dashboard/datos-maestros.js).</p></div>
   </section>
 
   <section id="perfil-rico">
@@ -4513,6 +4226,62 @@
       tabla + escenarios + supuestos;
   }
 
+  // ─── EL APRENDIZAJE — de CIFRAS.SK, HAB_FOCO y APRENDIZAJE ────────────────────────────────
+  // Las 12 habilidades con el criterio de su prompt (En qué invertir tu tiempo): arriba el foco
+  // del plan con sus fechas; después cada habilidad —el foco de hoy primero, luego los siguientes
+  // focos, el mantenimiento por retorno y al final las de pausa— con su nivel y la evidencia, por
+  // qué ahora, el paso de la semana con horas, con qué se demuestra, dónde se practica y su ruta.
+  // Antes era HTML a mano con 6 habilidades y niveles viejos (Datos en 15 cuando el radar decía 55).
+  function pintarAprendizaje() {
+    const caja = document.getElementById('aprendizajePlan');
+    const C = window.CIFRAS;
+    if (!caja || !C || !C.SK || !C.APRENDIZAJE) return;
+    const habs = C.SK, A = C.APRENDIZAJE, F = C.HAB_FOCO || [];
+    const T = s => (C.texto ? C.texto(String(s || '')) : String(s || ''));
+    const MES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    const m = ym => MES[+ym.slice(5, 7) - 1] + ' ' + ym.slice(0, 4);
+    const tramoTxt = t => t.desde === t.hasta ? m(t.desde) : m(t.desde) + ' – ' + m(t.hasta);
+    const hoy = new Date(), ymHoy = hoy.getFullYear() + '-' + String(hoy.getMonth() + 1).padStart(2, '0');
+    let k = F.findIndex(t => ymHoy >= t.desde && ymHoy <= t.hasta);
+    if (k < 0) k = F.findIndex(t => ymHoy < t.desde);
+    const actual = k >= 0 ? F[k] : null;
+    const sk = id => habs.find(s => s.id === id) || { name: id, icon: '' };
+    const retorno = s => Math.round(s.w * (100 - s.val));
+    const enPlan = F.map(t => t.id);
+    const grupo = s => s.pausa ? 3 : actual && s.id === actual.id ? 0 : enPlan.indexOf(s.id) >= 0 ? 1 : 2;
+    const orden = habs.slice().sort((a, b) => grupo(a) - grupo(b) ||
+      (grupo(a) === 1 ? enPlan.indexOf(a.id) - enPlan.indexOf(b.id) : retorno(b) - retorno(a)));
+    const plan = '<div class="apr-plan">' + F.map(t => '<div class="apr-tramo' + (actual && t.id === actual.id ? ' hoy' : '') + '">' +
+      '<span class="apr-tramo-f">' + tramoTxt(t) + (actual && t.id === actual.id ? ' · hoy' : '') + '</span>' +
+      '<b>' + sk(t.id).icon + ' ' + sk(t.id).name + '</b><span>' + t.horas + ' h a la semana · ' + t.entregable + '</span></div>').join('') + '</div>' +
+      (actual ? '<p class="fs-13 text-muted" style="margin:10px 0 18px;line-height:1.6;"><strong>Hoy el foco es ' + sk(actual.id).name + '.</strong> ' + actual.cambio + '</p>' : '');
+    const tarjeta = s => {
+      const a = A[s.id] || {}, t = F.find(x => x.id === s.id), esFoco = !!(actual && actual.id === s.id);
+      const tag = s.pausa ? '<span class="apr-tag">En pausa</span>'
+        : esFoco ? '<span class="apr-tag foco">Foco · ' + tramoTxt(t) + '</span>'
+        : t ? '<span class="apr-tag">Foco ' + tramoTxt(t) + '</span>' : '<span class="apr-tag">Mantenimiento</span>';
+      const semana = esFoco ? '<b>' + t.horas + ' h a la semana:</b> ' + t.semana
+        : (s.mant ? (s.mant.h ? '<b>' + s.mant.h + ' h a la semana:</b> ' : '') + s.mant.txt : '');
+      const caja = (l, txt, cls) => txt ? '<div' + (cls ? ' class="' + cls + '"' : '') + '><span class="apr-l">' + l + '</span><p>' + txt + '</p></div>' : '';
+      const pasos = (a.subs || []).map((p, i) => '<div class="subhab"><button class="subhab-h" onclick="this.parentElement.classList.toggle(\'open\')" aria-expanded="false">' +
+        '<span class="subhab-n">' + (i + 1) + '</span><span class="subhab-t">' + p.n + '</span><span class="subhab-caret">▾</span></button>' +
+        '<div class="subhab-body">' + (p.q ? '<p class="fs-13 subhab-q">' + T(p.q) + '</p>' : '') +
+        '<p class="fs-13 subhab-c"><strong>Qué hacer:</strong> ' + T(p.c) + '</p>' +
+        (p.r && typeof pfRecursosHtml === 'function' ? '<div class="apr-rec">' + pfRecursosHtml(p.r) + '</div>' : '') + '</div></div>').join('');
+      return '<details class="card apr-card' + (esFoco ? ' foco' : '') + (s.pausa ? ' pausa' : '') + '" id="apr-' + s.id + '"' + (esFoco ? ' open' : '') + '>' +
+        '<summary><span class="apr-ico">' + s.icon + '</span><span class="apr-n">' + (s.full || s.name) + '</span>' + tag +
+          '<span class="apr-v">' + s.val + '/100</span></summary>' +
+        '<div class="progress-bar" style="margin:10px 0;"><div class="progress-fill" style="width:' + s.val + '%;"></div></div>' +
+        '<p class="fs-13" style="line-height:1.65;margin:0 0 12px;">' + (s.desc || '') + '</p>' +
+        '<div class="apr-grid">' + caja('Por qué ahora', s.porQue) + caja('Esta semana', semana, esFoco ? 'foco' : '') +
+          caja('Se demuestra con', s.prueba) + caja('Se practica en', s.practica) + '</div>' +
+        '<h4 class="apr-ruta-t">🧩 La ruta · ' + (a.subs || []).length + ' pasos, en orden de impacto</h4>' + pasos +
+        (a.recursos && a.recursos.length && typeof pfRecursosHtml === 'function'
+          ? '<h4 class="apr-ruta-t">📚 Para toda la habilidad</h4><div class="apr-rec">' + pfRecursosHtml(a.recursos) + '</div>' : '') +
+        '</details>';
+    };
+    caja.innerHTML = plan + orden.map(tarjeta).join('');
+  }
   // ─── LA LISTA DE SALIDA — de CIFRAS.SALIDA ────────────────────────────────────────────────
   // Por tema, cada pendiente con su mes; abiertos los temas con algo de este mes o atrasado. Las
   // casillas se restauran en el bucle de coach_checks_v1 que corre después; el avance se cuenta
@@ -4574,6 +4343,7 @@
   }
   pintarProyeccion();
   pintarSalida();
+  pintarAprendizaje();
 
   // ─── PROGRESO REAL vs. punto de partida de Fase 0 (2026-08-02) ───────────
   // Coach.html no leía datos de Finanzas.html hasta ahora — Adán pidió explícitamente
@@ -5706,41 +5476,6 @@
 })();
 </script>
 
-<script>
-// Los recursos de las rutas de habilidad. En el HTML de esta página hay 16
-// escritos a mano, todos con un emoji de libro delante fuera lo que fueran: un
-// podcast, el portal del SAT o el propio calendario de Adán salían igual, y
-// ninguno llevaba a ningún sitio.
-//
-// Ahora salen de `APRENDIZAJE`: se busca cada paso por su NOMBRE — el que está
-// en el `subhab-t` de al lado — y se repinta con `pfRecursosHtml`, el mismo que
-// usa el dashboard. Por nombre y no por orden: hoy coinciden, pero añadir un
-// paso en medio desplazaría todos los demás sin que nada avisara.
-(function recursosDeLaRuta(){
-  const A = window.CIFRAS && window.CIFRAS.APRENDIZAJE;
-  if(!A || typeof pfRecursosHtml !== 'function') return;
-  // Índice: nombre del paso -> sus recursos.
-  const porNombre = {};
-  const norm = function(x){ return String(x).toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,''); };
-  Object.keys(A).forEach(function(h){
-    (A[h].subs || []).forEach(function(p){ if(p.n && p.r) porNombre[norm(p.n)] = p.r; });
-  });
-  let puestos = 0, sinDato = [];
-  document.querySelectorAll('.subhab-r').forEach(function(el){
-    const caja = el.closest('.subhab') || el.parentElement.parentElement;
-    const t = caja && caja.querySelector('.subhab-t');
-    const r = t && porNombre[norm(t.textContent)];
-    if(!r){ sinDato.push(t ? t.textContent.trim() : '?'); return; }
-    el.innerHTML = pfRecursosHtml(r);
-    el.classList.add('subhab-r-vivo');
-    puestos++;
-  });
-  if(sinDato.length)
-    console.warn('Pasos cuyo recurso no está en APRENDIZAJE (' + sinDato.length + '): ' +
-                 sinDato.join(' | '));
-})();
-</script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="coach" data-host=".modo-switch"></script>
 </body>
 </html>

@@ -164,13 +164,34 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
     else ok.push('PHASES — Coach genera del maestro las ' + (P.length - 1) + ' fases a partir de la ' + P[1].tag + '; solo la ' + P[0].tag + ' sigue escrita a mano');
   } else problemas.push('PHASES: no se pudo evaluar desde el maestro');
 
+  /* El aprendizaje también se genera (pintarAprendizaje, 3-oct-2026): antes eran 6 tarjetas a mano
+     con niveles viejos. Se vigila que siga generado, que ninguna ruta vuelva a escribirse a mano y
+     que las 12 tengan lo que pide su prompt —nivel con evidencia, por qué ahora, con qué se
+     demuestra, el paso de la semana y dónde se practica— y su ruta paso a paso. El plan de foco
+     (HAB_FOCO) nombra habilidades que existen y sus tramos van en orden sin pisarse. */
   const A = evaluar(literal(maestro, 'const APRENDIZAJE = {', '{'));
-  if (A) {
-    const claves = Object.keys(A);
-    const faltan = claves.filter(k => coach.toLowerCase().indexOf(k.toLowerCase()) < 0);
-    if (faltan.length) avisos.push('Prioridades de APRENDIZAJE que no se nombran en Coach: ' + faltan.join(', '));
-    else ok.push('APRENDIZAJE — las ' + claves.length + ' prioridades se nombran en Coach');
-  } else problemas.push('APRENDIZAJE: no se pudo evaluar desde el maestro');
+  const SKm = evaluar(literal(maestro, 'const SK = [', '['));
+  const FOCO = evaluar(literal(maestro, 'const HAB_FOCO = [', '['));
+  if (A && SKm && FOCO) {
+    const malos = [];
+    if (coach.indexOf('function pintarAprendizaje') < 0 || coach.indexOf('id="aprendizajePlan"') < 0)
+      malos.push('     Coach ya no genera el aprendizaje (falta pintarAprendizaje o #aprendizajePlan)');
+    const aMano = (coach.match(/<span class="subhab-t">[^<'+]+<\/span>/g) || []).length;
+    if (aMano) malos.push('     ' + aMano + ' pasos de ruta escritos a mano en Coach (salen de APRENDIZAJE)');
+    SKm.forEach(function (s) {
+      ['desc', 'porQue', 'prueba', 'practica'].forEach(function (k) { if (!s[k]) malos.push('     ' + s.id + ': le falta `' + k + '`'); });
+      if (!s.mant || !s.mant.txt) malos.push('     ' + s.id + ': le falta `mant`, el paso de la semana en mantenimiento');
+      if (!A[s.id] || !(A[s.id].subs || []).length) malos.push('     ' + s.id + ': sin ruta paso a paso en APRENDIZAJE');
+    });
+    FOCO.forEach(function (t, i) {
+      if (!SKm.some(s => s.id === t.id)) malos.push('     HAB_FOCO: "' + t.id + '" no es una habilidad');
+      if (!(t.desde <= t.hasta)) malos.push('     HAB_FOCO: el tramo de ' + t.id + ' termina antes de empezar');
+      if (i && !(FOCO[i - 1].hasta < t.desde)) malos.push('     HAB_FOCO: el tramo de ' + t.id + ' pisa al anterior');
+      if (!t.horas || !t.semana || !t.entregable || !t.cambio) malos.push('     HAB_FOCO: al tramo de ' + t.id + ' le falta horas, semana, entregable o cambio');
+    });
+    if (malos.length) problemas.push('El aprendizaje dejó de salir del maestro o de cumplir su prompt:\n' + malos.join('\n'));
+    else ok.push('APRENDIZAJE — Coach genera del maestro las ' + SKm.length + ' habilidades, todas con su evidencia, su prueba y su ruta paso a paso; el plan de foco tiene ' + FOCO.length + ' tramos en orden');
+  } else problemas.push('APRENDIZAJE, SK o HAB_FOCO: no se pudieron evaluar desde el maestro');
 })();
 
 /* ── 4. Cifras que ya tienen variable pero siguen escritas a mano ───────────────────────────── */

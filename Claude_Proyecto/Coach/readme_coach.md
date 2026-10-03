@@ -225,7 +225,7 @@ del día. Ahora las hereda del módulo, que corre antes que su JS.
 | Sección | Qué es |
 |---|---|
 | `#perfil` | Diagnóstico real: patrimonio, deudas, hallazgos medidos, Plan Maestro por fases y barras de habilidades con el panel de cada una (`showSkillTab`, incluido Networking) |
-| `#aprendizaje` | 5 prioridades (Datos, Ventas, Marketing, Finanzas, IA) con primer paso, hábito y recursos |
+| `#aprendizaje` | Las 12 habilidades, generadas del maestro (`pintarAprendizaje`, en `#aprendizajePlan`): arriba el plan de foco (`CIFRAS.HAB_FOCO`) con sus fechas y el tramo de hoy; después cada habilidad —el foco primero, luego los siguientes focos, el mantenimiento por retorno y las de pausa— con su nivel y la evidencia, por qué ahora, el paso de la semana con horas, con qué se demuestra, dónde se practica y su ruta paso a paso con sus recursos (`pfRecursosHtml`) |
 | `#perfil-rico` | Mentalidad y hábitos financieros |
 | `#marca-personal` | Redes sociales y posicionamiento |
 | `#legal-personal` | Trámites, régimen fiscal, impuestos |
@@ -362,11 +362,10 @@ versión que se movió al maestro; el Dashboard usa solo los campos que pinta.
 
 Los overrides que Adán ajusta a mano siguen en `radarp_{id}` y ganan sobre el `val` del maestro.
 
-**Lo que sigue a mano** es el *texto* de las prioridades de aprendizaje: está escrito como HTML en
-`#aprendizaje`, no generado desde el literal, y convertirlo exigiría rediseñar esa sección. Las
-cifras que contiene ya usan `{{marcadores}}`, y `verificar-sincronia.js` comprueba que las
-prioridades del maestro aparezcan aquí. Las fases del Plan Maestro **no** van a mano: ver la
-sección de arriba.
+**El aprendizaje tampoco va a mano**: `pintarAprendizaje()` lo genera de `CIFRAS.SK`,
+`CIFRAS.HAB_FOCO` y `CIFRAS.APRENDIZAJE`, igual que las fases, así que los niveles, el foco y las
+rutas son los mismos que enseña el Dashboard. `verificar-sincronia.js` vigila que siga generado,
+que ninguna ruta se escriba a mano y que cada habilidad traiga lo que pide su prompt.
 
 ---
 

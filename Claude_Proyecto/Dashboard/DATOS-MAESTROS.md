@@ -316,14 +316,12 @@ Todos llevan `nota`, que es la frase de por qué ESE recurso para ESE paso.
 salen de BIBLIOTECA (repetirlo es error declarado en el control 18). Todo libro que una ruta
 recomiende tiene ficha en la biblioteca y entra en la lista de la compra.
 
-Las **33 URLs se comprobaron cargando cada una**. Dos respondieron 403 a la
+Las URLs se comprobaron cargando cada una (las de la ISTQB, Esslingen, pytest y SQLZoo, el 3-oct-2026). Dos respondieron 403 a la
 comprobación automática — Wayve y Meta bloquean bots — y se verificaron abriéndolas
 en un navegador de verdad.
 
-El pintado es `pfRecursoHtml`, en `ficha.js`, y lo usan el dashboard y Coach. Coach
-tampoco reescribe sus 16 recursos: un script los busca en `APRENDIZAJE` **por el
-nombre del paso** — no por orden, que hoy coincide pero se desplazaría entero si
-alguien añade un paso en medio — y los repinta.
+El pintado es `pfRecursoHtml`, en `ficha.js`, y lo usan el Dashboard (la pantalla de Habilidades)
+y Coach, que genera sus rutas de `APRENDIZAJE` con `pintarAprendizaje()`.
 
 ### La biblioteca
 
@@ -867,7 +865,8 @@ Ninguna estructura está copiada entre archivos; todas se leen de aquí:
 | `GASTOS_20260901` | Las seis compras del 1-sep-2026 — las siembra Finanzas.html y las aplica la migración `_gastos20260901` | `CIFRAS.GASTOS_20260901` |
 | `MOVIMIENTOS_20260920` | Los tres movimientos del 19-sep-2026 — la venta de todo el Bitcoin ($39,500), el pago a la TC BBVA ($38,100) y el abono a Banamex ($3,000). Los pagos se llaman como la deuda para que `yaContado` los empareje con el mínimo previsto del mes. Los siembra Finanzas.html y los aplica `_liquidacion20260920` | `CIFRAS.MOVIMIENTOS_20260920` |
 | `RUTINA_TASKS` | 58 bloques del horario | `CIFRAS.rutina(base)` |
-| `SK` | 12 habilidades del radar | `CIFRAS.SK` |
+| `SK` | 12 habilidades del radar: nivel con su evidencia (`desc`), peso por impacto en carrera y patrimonio con el plan de hoy (`w`), `porQue`, `prueba`, `mant` (el paso de la semana fuera del foco, con horas), `practica` y `pausa` | `CIFRAS.SK` |
+| `HAB_FOCO` | El foco de las habilidades, una a la vez y con fechas, alineado al Plan Maestro: cada tramo con horas, el paso de la semana, el entregable y cuándo cambia | `CIFRAS.HAB_FOCO` |
 | `PESO` | Altura (178 cm), meta (80 kg), objetivo y el histórico de pesajes (2: 75 kg el 2-sep-2026, 78 el 13-sep) con IMC derivado. Salud lo siembra en Peso & Medidas en cada carga | `CIFRAS.PESO` |
 | `BTC_SEED` | Las operaciones de Bitcoin: 3 compras ($2,878 USD = $52,129 MXN al cambio de cada día, 0.032509 ₿) y 2 ventas: 14-sep-2026 ($5,300 MXN = $310.45 USD = 0.003930 ₿ a $79,000 USD/₿, precio dicho por Adán) y 19-sep-2026 (todo lo que quedaba, 0.028579 ₿, por $39,500 MXN = $2,299.51 USD a $80,461 USD/₿ implícito — para pagar la TC BBVA). **Ya no queda Bitcoin.** Cada operación lleva `fx` (BCE del día). Finanzas lo siembra en `btcHistory`; una venta lleva `tipo:'venta'` y `btc` negativo | `CIFRAS.BTC_SEED` |
 | `PHASES` | Las 5 fases del Plan Maestro (la 0 cerrada): fechas, meta, explicación, `deja` (lo que se deja de hacer), `checkpoint` y el checklist por mes; `liquido` lo pone la `PROYECCION`. La última fija la fecha del millón (`{{metaMillon}}`) | `CIFRAS.PHASES` |

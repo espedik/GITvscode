@@ -2029,6 +2029,19 @@ button.hp-lec:active{transform:translateY(0)}
 .hf-lvl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 9px;border-radius:20px}
 .hf-why{font-size:10px;padding:4px 9px;border-radius:20px;background:rgba(var(--ov),.06);color:var(--text2)}
 .hf-why b{color:var(--text);font-weight:700}
+/* El plan de la habilidad abierta (prompt de En qué invertir tu tiempo, 3-oct-2026): cuándo es su
+   foco y cuándo cambia, y arriba de la lectura por qué ahora, el paso de la semana y con qué se
+   demuestra. */
+.hf-cambio{font-size:11.5px;line-height:1.45;color:var(--text2);margin-top:2px}
+.hf-cambio b{color:var(--text)}
+.hf-planes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.hf-pl{display:flex;flex-direction:column;gap:5px;padding:11px 13px;border-radius:10px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.08)}
+.hf-pl p{margin:0;font-size:13px;line-height:1.5;color:var(--text2)}
+.hf-pl p b{color:var(--text)}
+.hf-pl.foco{background:rgba(var(--g-rgb),.08);border-color:rgba(var(--g-rgb),.3)}
+.hf-donde{font-size:12px;color:var(--text3)}
+.hf-donde b{color:var(--text2)}
+@media(max-width:1180px){.hf-planes{grid-template-columns:minmax(0,1fr)}}
 .hf-ruta-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .hf-ruta-n{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--g)}
 .hf-ruta-b{height:4px;border-radius:2px;background:rgba(var(--ov),.07);overflow:hidden;margin-top:-8px}
@@ -8801,7 +8814,7 @@ const PRIORIDAD_N = 2; // cuántas prioridades mostrar en el Dashboard (las N m�
 // 12 de #habRank, esto solo afecta qué se destaca como prioridad accionable. Desde el rediseño
 // "Foco" (2026-08-23) esa lista además las marca EN PAUSA: encabezan el retorno, y verlas
 // apagadas explica por qué no son la habilidad de la semana.
-const PRIORIDAD_EXCLUIDAS = ['ventas', 'marketing'];
+const PRIORIDAD_EXCLUIDAS = SK.filter(s => s.pausa).map(s => s.id);
 // ─── QUÉ ESCUCHAR EN DIDI (2026-08-15) ────────────────────────────────────────
 // Pedido: "cuando maneje en didi ponga podcast, audiolibros, usar youtube premium en un
 // audicular y mientras manejo puedo escuchar infinidad de libro... pon que hacer en didi
@@ -10223,14 +10236,29 @@ function habPasos(id){
   ];
 }
 
-// Las candidatas al foco se eligen igual que antes (las PRIORIDAD_N más bajas de las que no
-// están en PRIORIDAD_EXCLUIDAS), para no tocar la decisión del 2026-08-09 de dejar Ventas y
-// Marketing fuera. Lo único nuevo es que entre esas dos manda el retorno, no el valor.
+// El foco sale del plan (CIFRAS.HAB_FOCO; prompt de En qué invertir tu tiempo, 3-oct-2026: "una
+// habilidad en foco a la vez; las demás, en mantenimiento"): el tramo de hoy y el siguiente son las
+// candidatas, y el de hoy es el que se recomienda. Si el plan ya terminó, manda el retorno.
+function habPlanHoy(){
+  const P = (window.CIFRAS && CIFRAS.HAB_FOCO) || [];
+  const h = new Date(), ym = h.getFullYear() + '-' + String(h.getMonth() + 1).padStart(2, '0');
+  let i = P.findIndex(t => ym >= t.desde && ym <= t.hasta);
+  if(i < 0) i = P.findIndex(t => ym < t.desde);
+  return { tramo: i >= 0 ? P[i] : null, siguiente: i >= 0 ? (P[i + 1] || null) : null, todos: P };
+}
 function habCandidatas(){
+  const h = habPlanHoy();
+  const plan = [h.tramo, h.siguiente].filter(Boolean).map(t => SK.find(s => s.id === t.id)).filter(Boolean);
+  if(plan.length) return plan;
   return Object.keys(APRENDIZAJE).filter(id => !PRIORIDAD_EXCLUIDAS.includes(id))
     .map(id => SK.find(s => s.id === id)).filter(Boolean)
-    .sort((a, b) => a.val - b.val).slice(0, PRIORIDAD_N)
-    .sort((a, b) => skRetorno(b) - skRetorno(a));
+    .sort((a, b) => skRetorno(b) - skRetorno(a)).slice(0, PRIORIDAD_N);
+}
+// Cuándo es el foco de una habilidad en el plan, en palabras: "de dic 2026 a ene 2027".
+function habTramoTxt(t){
+  const MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const m = ym => MC[+ym.slice(5, 7) - 1] + ' ' + ym.slice(0, 4);
+  return t.desde === t.hasta ? m(t.desde) : 'de ' + m(t.desde) + ' a ' + m(t.hasta);
 }
 // Mirar una ruta y elegir el foco de la semana son cosas distintas: se puede
 // abrir CUALQUIERA que tenga ruta, aunque esté en pausa o fuera del top de
@@ -10276,6 +10304,21 @@ function renderSkills(){
   const st = habFocoLoad();
   let i = st.paso[foco.id] || 0; if(i < 0 || i >= pasos.length) i = 0;
   const p = pasos[i], l = skLevel(foco.val), esTop = cand[0].id === foco.id;
+  // El plan de la habilidad abierta: si es el foco de hoy, cuándo es su tramo y cómo va la semana.
+  const H = habPlanHoy(), tramoF = H.todos.find(t => t.id === foco.id) || null;
+  const enFoco = !!(H.tramo && H.tramo.id === foco.id);
+  const planTxt = foco.pausa ? 'en <b>pausa</b> por decisión tuya'
+    : enFoco ? 'el <b>foco</b> del plan' : tramoF ? 'en mantenimiento hasta su foco' : 'en <b>mantenimiento</b>';
+  const semanaTxt = enFoco ? `<b>${tramoF.horas} h</b> a la semana: ${tramoF.semana}`
+    : (foco.mant ? (foco.mant.h ? `<b>${foco.mant.h} h</b> a la semana: ` : '') + foco.mant.txt : '');
+  const pruebaTxt = foco.prueba || (tramoF ? tramoF.entregable : '');
+  const planes = (foco.porQue || semanaTxt || pruebaTxt) ? `
+    <div class="hf-planes">
+      ${foco.porQue ? `<div class="hf-pl"><span class="hab-lbl">Por qué ahora</span><p>${foco.porQue}</p></div>` : ''}
+      ${semanaTxt ? `<div class="hf-pl${enFoco ? ' foco' : ''}"><span class="hab-lbl"${enFoco ? ' style="color:var(--g)"' : ''}>Esta semana</span><p>${semanaTxt}</p></div>` : ''}
+      ${pruebaTxt ? `<div class="hf-pl"><span class="hab-lbl">Se demuestra con</span><p>${pruebaTxt}</p></div>` : ''}
+    </div>
+    ${foco.practica ? `<div class="hf-donde">Se practica en <b>${foco.practica}</b>.</div>` : ''}` : '';
 
   // ── Cabecera: el nivel general. La frase promete una cifra concreta, así que se calcula con
   // calcOVRcon() en vez de estimarse; y la comparación con la otra candidata solo se escribe si
@@ -10304,10 +10347,9 @@ function renderSkills(){
     <div class="hf-chips">
       <span class="hf-chip">${(habRecomendada()||{}).id === foco.id ? 'Esta semana' : 'Su ruta'}</span>
       <span class="hf-lvl" style="background:${l.c}22;color:${l.c}">${l.l}</span>
-      <span class="hf-why">${esTop
-        ? 'la que <b>más rinde</b> de las activas'
-        : `rinde <b>${skRetorno(foco)}</b> · la que más rinde es ${cand[0].name}`}</span>
+      <span class="hf-why">${planTxt}</span>
     </div>
+    ${tramoF ? `<div class="hf-cambio">${enFoco ? '<b>Foco ' + habTramoTxt(tramoF) + '.</b> ' + tramoF.cambio : 'Su foco en el plan: <b>' + habTramoTxt(tramoF) + '</b>.'}</div>` : ''}
     <div class="hab-hair"></div>
     <div class="hf-ruta-h"><span class="hab-lbl">La ruta</span><span class="hf-ruta-n">${i + 1} / ${pasos.length}</span></div>
     <div class="hf-ruta-b"><i style="width:${Math.round((i + 1) / pasos.length * 100)}%"></i></div>
@@ -10352,6 +10394,7 @@ function renderSkills(){
   document.getElementById('habFoco').innerHTML = `
     <div class="hf-n"><span class="hab-lbl">Paso ${String(i + 1).padStart(2, '0')} de ${pasos.length}</span><i></i><span class="hab-lbl">${foco.name}</span></div>
     <div class="hf-lectura">
+    ${planes}
     <div class="hf-h1">${p.n}</div>
     ${p.q ? `<div class="hf-qw"><i></i><div class="hf-blk"><span class="hab-lbl" style="color:var(--g)">Por qué este paso</span><div class="hf-q">${p.q}</div></div></div>` : ''}
     <div class="hf-blk"><span class="hab-lbl" style="color:var(--cy)">Qué hacer</span><div class="hf-c">${p.c}</div></div>
@@ -10376,7 +10419,7 @@ function renderSkills(){
     <div class="hr-head"><span class="hab-lbl">Lo que sabes de cada una</span><span class="hr-sub">de arriba abajo, dónde rinde más una hora</span></div>
     <div class="hr-rows">${orden.map((s, j) => {
       const lv = skLevel(s.val);
-      const pausa = PRIORIDAD_EXCLUIDAS.includes(s.id), esFoco = s.id === foco.id;
+      const pausa = PRIORIDAD_EXCLUIDAS.includes(s.id), esFoco = !!(H.tramo && H.tramo.id === s.id);
       const conRuta = habPasos(s.id).length > 0;
       const abierta = abiertaId === s.id;
       return `<div class="hr-row${pausa ? ' pausa' : ''}${esFoco ? ' foco' : ''}${conRuta ? ' abrible' : ''}${abierta ? ' abierta' : ''}"${
@@ -10388,12 +10431,12 @@ function renderSkills(){
             <span class="hr-name">${s.name}</span>
             <span style="display:flex;align-items:baseline;gap:7px;flex-shrink:0">
               ${pausa ? '<span class="hr-tag">EN PAUSA</span>' : ''}
-              ${esFoco ? '<span class="hr-tag" style="color:var(--g)">ESTA SEMANA</span>' : ''}
+              ${esFoco ? '<span class="hr-tag" style="color:var(--g)">FOCO</span>' : ''}
               <span class="hr-v">${s.val}</span></span>
           </div>
           <div class="hr-bar">
             <div class="hr-fill" style="width:${s.val}%;background:${lv.c}"></div>
-            ${esFoco ? `<i class="hr-meta" style="left:${metaFoco}%"></i>` : ''}
+            ${s.id === foco.id ? `<i class="hr-meta" style="left:${metaFoco}%"></i>` : ''}
           </div>
         </div>
       </div>`;
@@ -10404,8 +10447,9 @@ function renderSkills(){
       <span><i style="background:#84cc16"></i>Avanzado</span>
       <span><i style="width:2px;height:9px;background:rgba(var(--ov),.42)"></i>Meta de la semana</span>
     </div>
-    <div class="hr-nota">La barra es <b>lo que ya sabes</b>. El orden es dónde una hora rinde más,
-      que no es lo mismo: ${orden[0].name} va primera porque pesa ×${orden[0].w} y está casi a cero.</div>`;
+    <div class="hr-nota">La barra es <b>lo que ya sabes</b>. El orden es dónde una hora rinde más —el peso es el impacto en tu carrera
+      y tu patrimonio con el plan de Alemania—: ${orden[0].name} va primera porque pesa ×${orden[0].w} y está casi a cero.
+      ${H.tramo ? `El foco lo pone el plan: <b>${(SK.find(s => s.id === H.tramo.id) || {}).name}</b> ${habTramoTxt(H.tramo)}.` : ''}</div>`;
 }
 
 // ── BARRA SUPERIOR — acceso directo a los demás proyectos (persistente, no rota) ─
@@ -12989,7 +13033,7 @@ fixMsiBBVA20260813IfNeeded();
 // corrió dentro del módulo; este refresco es por las que siguen viviendo aquí.)
 // EDAD_DETALLE copia el `meta` de cada fase al cargar, ANTES de que PHASES pase por aquí: sin
 // esta llamada, el panel de Tu año enseñaba «{{fondoMeta}}» a la vista.
-if(window.CIFRAS){ CIFRAS.refrescar(); cifrarLiterales(PHASES); cifrarLiterales(META_DETALLE); cifrarLiterales(EDAD_DETALLE); }
+if(window.CIFRAS){ CIFRAS.refrescar(); cifrarLiterales(PHASES); cifrarLiterales(META_DETALLE); cifrarLiterales(EDAD_DETALLE); cifrarLiterales(APRENDIZAJE); }
 fixMiercolesNatacionIfNeeded();
 fixRutina20260812IfNeeded();
 seedMetasLogradasIfNeeded();

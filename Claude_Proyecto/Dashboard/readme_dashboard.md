@@ -903,7 +903,7 @@ Tu año.
 (`#didiStrip`). Diseño de `diseno-tiempo/`.
 
 **La cabecera es una fila** (91 px): eyebrow y título a 36 px; a la derecha el nivel general
-(`46 /100`, su barra y *"llevar Inversión de 25 a 40 lo sube a 48"*, calculado con `calcOVRcon()`).
+(`50 /100`, su barra y *"llevar IA de 45 a 55 lo sube a 51"*, calculado con `calcOVRcon()`).
 El cuerpo ocupa los 741 px restantes a 1600×1000 (`flex:1` sobre `.slide-inner`, que aquí no se
 centra); la lectura se detiene en 80 caracteres en monitores anchos.
 
@@ -911,13 +911,22 @@ centra); la lectura se detiene en 80 caracteres en monitores anchos.
 
 | Tarjeta | Qué lleva |
 |---|---|
-| **La ruta** | La habilidad abierta con icono, nivel y peso; chips *Esta semana* / nivel / *la que más rinde*; los pasos como **línea de tiempo**. Abajo, *Cambiar a …* y *Ajustar en Coach* |
-| **El paso** | `Paso 01 de 9` · título en Fraunces 44 px · **Por qué este paso** · **Qué hacer** · **Con qué**: el libro con su portada de la biblioteca, autor, páginas, nota y *Qué es* (abre la ficha) · el **estante** con los libros de la ruta · pie con *Al cerrarlo sigue…* y **Siguiente paso** |
-| **Lo que sabes** | Las 12 ordenadas por retorno y medidas por nivel (Ventas y Marketing apagadas por `PRIORIDAD_EXCLUIDAS`), leyenda, nota y el rato al volante |
+| **La ruta** | La habilidad abierta con icono, nivel y peso; chips *Esta semana* / nivel / su papel en el plan (*el foco del plan*, *en mantenimiento*, *en pausa*) y, si tiene tramo de foco, cuándo y cuándo cambia (`.hf-cambio`); los pasos como **línea de tiempo**. Abajo, *Cambiar a …* (el siguiente foco del plan) y *Ajustar en Coach* |
+| **El paso** | `Paso 01 de 9` · arriba, el plan de la habilidad (`.hf-planes`): **Por qué ahora** (`porQue`), **Esta semana** con horas (el tramo de foco, o `mant` si está en mantenimiento) y **Se demuestra con** (`prueba`), y dónde se practica · título en Fraunces 44 px · **Por qué este paso** · **Qué hacer** · **Con qué**: el libro con su portada de la biblioteca, autor, páginas, nota y *Qué es* (abre la ficha) · el **estante** con los libros de la ruta · pie con *Al cerrarlo sigue…* y **Siguiente paso** |
+| **Lo que sabes** | Las 12 ordenadas por retorno —peso por lo que falta; el peso es el impacto en carrera y patrimonio con el plan de Alemania— y medidas por nivel; *FOCO* en la del tramo de hoy y *EN PAUSA* en las de `pausa` (`PRIORIDAD_EXCLUIDAS` sale de ahí). Leyenda, nota y el rato al volante |
 
 **La lectura desplaza por dentro** (`.hf-lectura`) y estante y pie se quedan a la vista. Un
 recurso que no es libro sale con `pfRecursoHtml()`; el estante solo aparece con dos libros o más,
-y las rutas de formato viejo (IA, Datos…) no lo tienen porque no traen `r` por paso.
+y las doce rutas van paso a paso con su `r` (`habPasos` todavía sabe leer el formato viejo).
+
+**El foco lo pone el plan** (prompt de la página: *una habilidad en foco a la vez; las demás, en
+mantenimiento*). `CIFRAS.HAB_FOCO` es una lista de tramos —IA de oct a nov 2026 (el CT-GenAI),
+Inglés de dic 2026 a ene 2027 (la solicitud a Esslingen), Código de feb a may 2027 (el proyecto
+para el Werkstudent) y Networking de jun a ago 2027— con horas, el paso de la semana, el
+entregable y cuándo cambia. `habPlanHoy()` da el tramo de hoy y el siguiente; `habCandidatas()`
+son esos dos (si el plan ya terminó, manda el retorno). Adán puede abrir cualquier otra ruta y se
+recuerda en `dash_habfoco_v1`. Los `{{marcadores}}` de las rutas se resuelven al cargar
+(`cifrarLiterales(APRENDIZAJE)`).
 
 **Tamaños.** Bajo 940 px de alto bajan un escalón y el estante se pliega; bajo 1180 px de ancho
 las columnas son 236 · fluida · 300; en el celular la ruta es una tira de números de 46 px y las
