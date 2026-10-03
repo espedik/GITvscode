@@ -158,7 +158,7 @@ La cifra del hero dice **26 y no "30+"**. El 30+ era una estimación mía y era 
 las dos páginas que no venía de un dato comprobable; 26 son las piezas que se pueden contar en la
 pantalla.
 
-Para añadir un modelo hacen falta dos cosas: la foto en `fotos/` y una línea en `T.es.piezas` de
+Para añadir un modelo hacen falta dos cosas: la foto en su carpeta de `fotos/` y una línea en `T.es.piezas` de
 `datos.js` (con su traducción en `T.en.piezas`). Sale en la web y en el PDF a la vez; en el PDF cae
 en la ficha de su modelo si lo tiene, o en «Más piezas» si no encaja en ninguna familia. Cada línea es `[clave, nombre, foto, texto, etiquetas, modelo]`:
 la primera etiqueta se pinta en cian y `modelo` es la clave de su ficha (ver abajo).
@@ -278,25 +278,33 @@ sin ella nadie sabe que se puede abrir.
 
 Las **42** de `fotos/` salen de las **321 originales** de Adán (fuera del repo, en
 `C:\Users\esped\Desktop\Aeroresinas\`, carpetas *resina*, *resina2*, *resina3* e *iCloud Photos (3)*),
-optimizadas para web: **5.4 MB en total**. *resina3* son fotos de estudio con fondo blanco —las
-mejores que tiene—; *resina* y *resina2* aportan los militares, el presidencial y las piezas en
-bruto; *iCloud Photos (3)*, las de matrícula real, la producción y la sala de exposición.
+optimizadas para web: **5.4 MB en total**. Van en tres carpetas, según lo que falta hacer (Adán,
+3-oct-2026: *"sepáralas por carpetas… para saber cuáles fotos me faltan hacer con IA, porque todo lo
+de Heliescala tenga las mejores imágenes"*):
 
-**Ojo con *resina3*: no es 100 % fiable.** Adán, 21-sep-2026: *"las imágenes que elegiste son malas la
-mayoría, hay algunas que tienen fondo blanco y son profesionales, esas quiero que uses"* — al
-revisar esa carpeta para encontrarlas aparecieron también dos fotos de catálogo de un tercero
-(un Puma boliviano con la marca de agua "CATÁLOGO DE MODELOS PREMIUM" y un H145 Airbus con
-"MODELO DE EXHIBICIÓN" superpuesto): son referencia, no producto suyo, y no se usaron. Antes de
-tomar cualquier otra foto de ahí, comprobar que no lleve marca de agua.
+| Carpeta | Qué hay | Fotos |
+|---|---|---|
+| `fondo-blanco/` | Estudio con fondo blanco, las hechas con IA: **las mejores**. También `hero.jpg` y `og.jpg` | 17 |
+| `sin-fondo-blanco/` | Piezas todavía en un patio, una mesa o un hangar: **las que faltan hacer con IA**. 14 están en uso —`xamvr`, `grandnew`, `aessa-mcm`, `aessa-jgh`, `fam-uma`, `fam-412`, `camo-verde`, `camo-gris`, `policia-2`, `policia-par`, `as350-grande`, `avion`, `policia` y `personalizado`— y 3 son de reserva | 17 |
+| `taller/` | El taller, la producción, las piezas en bruto y la sala de exposición. **No se rehacen con IA**: son la prueba de que las piezas existen y se hacen aquí, y una versión generada sería inventar evidencia (prompt de la página: *nunca se inventan clientes, reseñas ni cifras*) | 8 |
 
-**Siete piezas cambiaron de foto el 21-sep-2026** (mismo nombre de archivo, contenido nuevo):
-`fam-mi17`, `bell-camo`, `xaecj`, `fam-sp`, `marina-cruz`, `fenestron` y `marineone` pasaron de un
-patio, una bodega o una repisa a la versión de estudio de la misma pieza. **Once quedan
-pendientes** —sin una versión de estudio de esa pieza exacta en ninguna de las cuatro carpetas—
-y las reemplaza cuando existan fotos hechas con Gemini: `camo-gris`, `fam-uma`, `fam-412`,
-`policia-2`, `as350-grande`, `avion`, `xamvr`, `grandnew`, `aessa-mcm`, `aessa-jgh`, `rescate`.
+La separación se midió, no se supuso: en las 17 de `fondo-blanco/` el borde de la foto es blanco en
+84 % a 100 %; en las demás, en 19 % o menos. Para pasar una pieza a su versión de IA se guarda con
+el mismo nombre en `fondo-blanco/` y se cambia su ruta en `datos.js`, `heliescala.html`,
+`dossier.html` y `../Posts/plantillas.js` (que las lee con `hf()`).
 
-`fotos/LEEME.txt` dice qué es cada una y trae la lista completa de pendientes.
+**Ojo con *resina3*: no es 100 % fiable.** Ahí aparecieron dos fotos de catálogo de un tercero —un
+Puma boliviano con la marca de agua "CATÁLOGO DE MODELOS PREMIUM" y un H145 Airbus con "MODELO DE
+EXHIBICIÓN" superpuesto—: son referencia, no producto suyo. **`fondo-blanco/h145-airbus.jpg` lleva
+ese mismo texto** abajo a la derecha y es la pieza «Airbus H145 · exhibición» del catálogo: hay que
+confirmar que es suya antes de seguir usándola. Antes de tomar cualquier otra foto de *resina3*,
+comprobar que no lleve marca de agua.
+
+Lo que falta: una con **algo al lado que dé escala** —con 26 piezas sigue sin saberse de qué tamaño
+son— y una **réplica junto a la aeronave real** que copia. Esta segunda está a un paso: la XA-MVR
+existe como réplica y la aeronave real está fotografiada; falta una sola foto con las dos juntas.
+
+`fotos/LEEME.txt` dice qué es cada una, carpeta por carpeta.
 
 Lo que falta: una con **algo al lado que dé escala** —con 26 piezas sigue sin saberse de qué tamaño
 son— y una **réplica junto a la aeronave real** que copia. Esta segunda está a un paso: la XA-MVR

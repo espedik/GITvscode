@@ -1,9 +1,22 @@
 FOTOS DE HELIESCALA (réplicas en resina) — qué es cada una
 ══════════════════════════════════════════════════════════════════════════════
 
-42 fotos, ya optimizadas para web. Las originales siguen intactas en
-C:\Users\esped\Desktop\Aeroresinas\ (carpetas `resina`, `resina2`, `resina3` e
-`iCloud Photos (3)`). `resina3` son las de estudio con fondo blanco.
+42 fotos, ya optimizadas para web, en tres carpetas según lo que falta hacer.
+Las originales siguen intactas en C:\Users\esped\Desktop\Aeroresinas\ (carpetas
+`resina`, `resina2`, `resina3` e `iCloud Photos (3)`).
+
+  fondo-blanco/       17  Estudio con fondo blanco, las hechas con IA: las mejores.
+  sin-fondo-blanco/   17  Piezas todavía en un patio, una mesa o un hangar: LAS
+                          QUE FALTAN HACER CON IA.
+  taller/              8  El taller, la producción, las piezas en bruto y la sala
+                          de exposición. NO se rehacen con IA: son la prueba de
+                          que las piezas existen y se hacen aquí; una versión
+                          generada sería inventar evidencia.
+
+Para cambiar una foto por su versión de IA: guárdala con el MISMO nombre en
+`fondo-blanco/`, borra la de `sin-fondo-blanco/` y cambia su ruta
+(`fotos/sin-fondo-blanco/x.jpg` → `fotos/fondo-blanco/x.jpg`) en datos.js,
+heliescala.html, dossier.html y ../Posts/plantillas.js.
 
 OJO CON `resina3`: no son todas suyas. Ahí, junto a fotos reales de sus piezas,
 hay al menos DOS fotos de catálogo de terceros usadas como referencia — un Puma
@@ -13,33 +26,31 @@ usar cualquier otra foto de esa carpeta, comprobar que no lleve marca de agua ni
 una librea que no sea mexicana/de un cliente real — si la lleva, es referencia,
 no producto, y no va al catálogo.
 
-CATÁLOGO — 26 piezas
-  Fondo blanco de estudio:
+FONDO-BLANCO/ — 17
   h145.jpg          Airbus H145, librea blanca y negra.
-  h145-airbus.jpg   H145 azul Airbus, versión de exhibición.
+  h145-airbus.jpg   H145 azul Airbus, versión de exhibición. OJO: lleva el
+                    texto "MODELO DE EXHIBICIÓN" abajo a la derecha, como la foto
+                    de catálogo de un tercero que apareció en `resina3`. Confirmar
+                    que es una pieza suya antes de seguir usándola.
   sgm.jpg           AS350 / H125 rojo de servicios médicos.
   mi17.jpg          Mi-17 gris.
   marina.jpg        Tres Panther en librea de la Marina.
+  marina-cruz.jpg   Panther de la Marina, sanitario.
   rescate.jpg       Par de rescate con flotadores, librea AESSA.
   bell407.jpg       Dos unidades del gobierno de SLP, matrícula XC-PSI.
                     OJO: el nombre del archivo dice bell407 pero el modelo NO
                     está confirmado — rotor de dos palas con barra estabilizadora.
-  policia-par.jpg   La pareja de la Policía, lista para entregar.
-  fam-mi17.jpg      Mi-17 de la FAM, camuflaje y armamento (antes en un patio;
-                    cambiada el 21-sep-2026 por la toma de estudio de `resina3`).
-  bell-camo.jpg     Ligero militar camuflado, "1301" (antes en un patio; cambiada
-                    el 21-sep-2026, misma sesión que trajo también la "1146").
-  xaecj.jpg         Corporativo XA-ECJ, blanco con grecas verdes y amarillas
-                    (antes en la bodega del taller; cambiada el 21-sep-2026).
-  fam-sp.jpg        Super Puma de la FAM, número 1006 (antes en una repisa de
-                    madera; cambiada el 21-sep-2026).
-  marina-cruz.jpg   Panther de la Marina, sanitario (antes en un patio; cambiada
-                    el 21-sep-2026).
-  fenestron.jpg     Bimotor con fenestrón, azul y blanco (antes en un patio;
-                    cambiada el 21-sep-2026).
-  marineone.jpg     El presidencial de EE. UU. (antes en un patio; cambiada el
-                    21-sep-2026).
+  fam-mi17.jpg      Mi-17 de la FAM, camuflaje y armamento.
+  bell-camo.jpg     Ligero militar camuflado, "1301".
+  xaecj.jpg         Corporativo XA-ECJ, blanco con grecas verdes y amarillas.
+  fam-sp.jpg        Super Puma de la FAM, número 1006.
+  fenestron.jpg     Bimotor con fenestrón, azul y blanco.
+  marineone.jpg     El presidencial de EE. UU.
+  trio.jpg          Tres piezas juntas del mismo lote.
+  hero.jpg          Tres piezas terminadas (la del encabezado).
+  og.jpg            1200x630 — la miniatura que sale en WhatsApp.
 
+SIN-FONDO-BLANCO/ — 17: las que faltan hacer con IA (14 en uso, 3 de reserva)
   Con matrícula legible en la foto:
   xamvr.jpg         Airbus H145 XA-MVR, azul sobre blanco.
   grandnew.jpg      AgustaWestland Grand New XB-HFY, plata metálico.
@@ -48,11 +59,12 @@ CATÁLOGO — 26 piezas
   fam-uma.jpg       Fuerza Aérea Mexicana MX-UMA.
 
   Militares y de gobierno:
-  marineone-2.jpg   El presidencial de EE. UU., otro ángulo (reserva, hoy sin usar).
   fam-412.jpg       Bell 412 de la FAM, camuflaje gris y blanco.
   camo-verde.jpg    Super Puma con camuflaje verde y café.
   camo-gris.jpg     Panther con camuflaje gris y blanco.
   policia-2.jpg     Dos unidades de la Policía, Cóndores 01.
+  policia-par.jpg   La pareja de la Policía, lista para entregar (sobre una mesa
+                    del taller, no en estudio).
 
   Otros:
   as350-grande.jpg  Monomotor rojo — de las piezas más grandes que ha hecho.
@@ -61,46 +73,37 @@ CATÁLOGO — 26 piezas
                     no se parece al resto del catálogo.
   avion.jpg         BIMOTOR DE ALA FIJA. No todo son helicópteros.
 
-PENDIENTES DE FOTO (2026-09-21) — quedan con la que había, sin fondo blanco,
-porque no se encontró una versión de estudio de esa pieza exacta en las cuatro
-carpetas de origen. Cuando haya fotos nuevas hechas con Gemini, son las primeras
-en reemplazarse: camo-gris.jpg, fam-uma.jpg, fam-412.jpg, policia-2.jpg,
-as350-grande.jpg, avion.jpg, xamvr.jpg, grandnew.jpg, aessa-mcm.jpg,
-aessa-jgh.jpg, rescate.jpg (par AESSA — su versión de estudio es la de dos
-unidades en la sección de arriba, la lista aquí es porque otras piezas de esta
-misma pareja quedaron sin foto de estudio propia).
-
-TU AERONAVE
+  Tu aeronave:
   policia.jpg       Bell 412 de la Policía con su número de unidad.
   personalizado.jpg Pieza con PLACA EN LA BASE con el nombre del dueño. Es la que
-                    prueba esa sección entera.
+                    prueba esa sección entera: la versión de IA tiene que
+                    conservar la placa y el nombre legibles.
 
-GALERÍA, TALLER Y EXHIBICIÓN
+  Reserva, hoy sin usar:
+  fam-puma.jpg      Puma gris sobre una mesa con mantel, al aire libre.
+  fam.jpg           FAM con matrícula.
+  marineone-2.jpg   El presidencial de EE. UU., otro ángulo.
+
+TALLER/ — 8, se quedan reales
   museo.jpg         PIEZAS SUYAS EN UNA SALA DE EXPOSICIÓN, sobre pedestal.
   produccion.jpg    La mesa de producción: fuselajes en imprimación.
   fila.jpg          Un lote completo, cada modelo en su etapa.
   flota6.jpg        SEIS IGUALES: un pedido de flota con el mismo camuflaje.
   bruto-1.jpg       Pieza recién salida del molde, sin lijar ni pintar.
   bruto-2.jpg       Fuselaje y cola por separado, con lija y pegamento.
-  trio.jpg          Tres piezas juntas del mismo lote.
   flota.jpg         Fuselajes en fila durante la producción.
   taller.jpg        Piezas fundidas esperando montaje y pintura.
 
-  hero.jpg          Tres piezas terminadas (la del encabezado).
-  fam.jpg           FAM con matrícula (reserva, hoy sin usar).
-  og.jpg            1200x630 — la miniatura que sale en WhatsApp.
-
-Para cambiar una: deja el archivo con el MISMO nombre. Para AÑADIR un modelo al
-catálogo hace falta la foto aquí y una línea en `T.es.piezas` (y su traducción en
-`T.en.piezas`) dentro de datos.js, que leen la web y el PDF. Cada línea es
-[clave, nombre, foto, texto, etiquetas, modelo]: `modelo` vacío significa que no
-hay ficha técnica, y la ficha lo dice en vez de inventarla.
+Para AÑADIR un modelo al catálogo hace falta la foto en su carpeta y una línea en
+`T.es.piezas` (y su traducción en `T.en.piezas`) dentro de datos.js, que leen la
+web, el PDF y Posts. Cada línea es [clave, nombre, foto, texto, etiquetas,
+modelo]: `modelo` vacío significa que no hay ficha técnica, y la ficha lo dice
+en vez de inventarla.
 
 LO QUE FALTA Y VALDRÍA LA PENA TENER
-  · Fotos de estudio (fondo blanco) para las once piezas de la lista de
-    pendientes de arriba — es lo primero que resolver cuando haya fotos de Gemini.
+  · Las 14 fotos en uso de `sin-fondo-blanco/`, hechas con IA y con fondo blanco.
   · Una foto con algo al lado que dé escala (una mano, un boli). Con 26 piezas en
     el catálogo sigue sin poderse saber de qué tamaño son.
   · Una réplica junto a la aeronave real que copia. Está a un paso: la XA-MVR
-    existe como réplica (xamvr.jpg) y la aeronave real está fotografiada. Falta
-    una sola foto con las dos juntas, y es la que vende sola.
+    existe como réplica (sin-fondo-blanco/xamvr.jpg) y la aeronave real está
+    fotografiada. Falta una sola foto con las dos juntas, y es la que vende sola.

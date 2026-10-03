@@ -262,7 +262,7 @@ const SEMANA_HELI = [
     serie: () => Object.entries(H.modelos).map(([k, m]) => {
       const pieza = H.piezas.find(p => p[5] === k);
       const spec = Object.entries(m.sp).map(([c, v]) => `${H.fpSpec[c]}: ${limpia(v)}`).join(' · ');
-      return { id: 'ficha-' + k, titulo: `${m.fab} ${m.n}`, fotos: [hf(pieza ? pieza[2] : 'fotos/hero.jpg')],
+      return { id: 'ficha-' + k, titulo: `${m.fab} ${m.n}`, fotos: [hf(pieza ? pieza[2] : 'fotos/fondo-blanco/hero.jpg')],
         texto: parrafos(
           `${m.n}: cómo se reconoce, y por qué lo hago en resina.`,
           limpia(m.r),
@@ -278,35 +278,35 @@ const SEMANA_HELI = [
     obj: ['vender', 'clientes'],
     porque: 'La sección que vende no es el catálogo: es SU aeronave, con sus colores, su número y su matrícula. Regalo de retiro, reconocimiento, pieza de recepción, obsequio a un cliente.',
     serie: () => [
-      { id: 'tuya-retiro', titulo: 'Regalo de retiro', fotos: [hf('fotos/personalizado.jpg')],
+      { id: 'tuya-retiro', titulo: 'Regalo de retiro', fotos: [hf('fotos/sin-fondo-blanco/personalizado.jpg')],
         texto: parrafos(
           'Un regalo de retiro que no se guarda en un cajón.',
           `El helicóptero que voló durante años, con sus colores, su número de unidad y su matrícula, y una placa en la base con su nombre. ${limpia(H.tuyaOjo)}.`,
           'Cómo se pide:\n' + listaTuya,
           ctaHeli,
           tags([...TH, 'RegaloDeRetiro', 'Pilotos'])) },
-      { id: 'tuya-recon', titulo: 'Reconocimiento a un piloto o a una tripulación', fotos: [hf('fotos/policia.jpg')],
+      { id: 'tuya-recon', titulo: 'Reconocimiento a un piloto o a una tripulación', fotos: [hf('fotos/sin-fondo-blanco/policia.jpg')],
         texto: parrafos(
           'Para reconocer a un piloto o a una tripulación: su propia aeronave, en la mano.',
           limpia(H.tuyaSub),
           limpia(H.piePolicia),
           ctaHeli,
           tags([...TH, 'Pilotos', 'Aviación'])) },
-      { id: 'tuya-recep', titulo: 'Pieza de recepción', fotos: [hf('fotos/xamvr.jpg')],
+      { id: 'tuya-recep', titulo: 'Pieza de recepción', fotos: [hf('fotos/sin-fondo-blanco/xamvr.jpg')],
         texto: parrafos(
           'La aeronave de tu operación, en la recepción.',
           limpia(H.tuyaSub),
           'Cómo se pide:\n' + listaTuya,
           ctaHeli,
           tags([...TH, 'Operadores', 'Aviación'])) },
-      { id: 'tuya-cliente', titulo: 'Obsequio a un cliente', fotos: [hf('fotos/grandnew.jpg')],
+      { id: 'tuya-cliente', titulo: 'Obsequio a un cliente', fotos: [hf('fotos/sin-fondo-blanco/grandnew.jpg')],
         texto: parrafos(
           'Un obsequio que un cliente de aviación no olvida: su aeronave, con su matrícula.',
           limpia(H.tuyaSub),
           limpia(H.pieFam),
           ctaHeli,
           tags([...TH, 'Aviación'])) },
-      { id: 'tuya-flota', titulo: 'Una flota completa, todas iguales', fotos: [hf('fotos/flota6.jpg')],
+      { id: 'tuya-flota', titulo: 'Una flota completa, todas iguales', fotos: [hf('fotos/taller/flota6.jpg')],
         texto: parrafos(
           'Una pieza o una flota completa, todas iguales.',
           limpia(H.galeria[3][1]),
@@ -321,7 +321,7 @@ const SEMANA_HELI = [
     serie: () => [
       ...H.pasos.map(([t, d], i) => ({
         id: 'proc-' + i, titulo: `Paso ${i + 1}: ${t}`,
-        fotos: [hf(['fotos/taller.jpg', 'fotos/produccion.jpg', 'fotos/bruto-2.jpg', 'fotos/policia.jpg'][i])],
+        fotos: [hf(['fotos/taller/taller.jpg', 'fotos/taller/produccion.jpg', 'fotos/taller/bruto-2.jpg', 'fotos/sin-fondo-blanco/policia.jpg'][i])],
         texto: parrafos(
           `Paso ${i + 1} de ${H.pasos.length} — ${t}.`,
           limpia(d),
@@ -338,27 +338,27 @@ const SEMANA_HELI = [
     obj: ['vender'],
     porque: 'El viernes se pide el encargo: cuánto cuesta, cuánto tarda, cómo llega. Un cliente que ya vio cuatro días de piezas necesita saber cómo se pide una.',
     serie: () => [
-      { id: 'enc-precio', titulo: `Desde ${HP.desde}: cómo se cotiza`, fotos: [hf('fotos/hero.jpg')],
+      { id: 'enc-precio', titulo: `Desde ${HP.desde}: cómo se cotiza`, fotos: [hf('fotos/fondo-blanco/hero.jpg')],
         texto: parrafos(
           '¿Cuánto cuesta una réplica? Depende de tres cosas: el modelo, el tamaño y cuánta decoración lleva.',
           sub(H.fichasNota, HP),
           'Con el modelo y una foto de la librea te digo tiempo y precio.',
           `WhatsApp: ${HP.whatsappTxt}.`,
           tags([...TH, 'Maquetas'])) },
-      { id: 'enc-entrega', titulo: 'Entrega en persona, sin costo', fotos: [hf('fotos/trio.jpg')],
+      { id: 'enc-entrega', titulo: 'Entrega en persona, sin costo', fotos: [hf('fotos/fondo-blanco/trio.jpg')],
         texto: parrafos(
           `En la ${H.envZonas[0][2].replace(' · ', ' y el ')}, te la entrego en persona. ${H.envZonas[0][3]}.`,
           limpia(H.envNota),
           ctaHeli,
           tags([...TH, 'CDMX'])) },
-      { id: 'enc-dhl', titulo: 'Envíos a todo el país', fotos: [hf('fotos/produccion.jpg')],
+      { id: 'enc-dhl', titulo: 'Envíos a todo el país', fotos: [hf('fotos/taller/produccion.jpg')],
         texto: parrafos(
           'Al resto del país va por DHL: embalada en caja rígida y con su número de guía.',
           `Cuatro zonas: ${H.envZonas.map(z => z[1]).join(' · ')}.`,
           limpia(H.envNota),
           ctaHeli,
           tags([...TH, 'Envíos', 'México'])) },
-      { id: 'enc-tiempo', titulo: `${HP.tiempo} por pieza`, fotos: [hf('fotos/fila.jpg')],
+      { id: 'enc-tiempo', titulo: `${HP.tiempo} por pieza`, fotos: [hf('fotos/taller/fila.jpg')],
         texto: parrafos(
           `${HP.tiempo}: lo que tarda una réplica desde que se confirma el encargo.`,
           limpia(H.pasos[0][1]),
@@ -393,13 +393,13 @@ const SEMANA_HELI = [
     obj: ['clientes', 'presencia'],
     porque: 'Pedir a la red: que etiqueten a un piloto, a quien se retira, al operador. Una etiqueta es la forma más barata de llegar a un cliente nuevo, y el domingo es cuando la gente está en el teléfono.',
     serie: () => [
-      { id: 'redh-piloto', titulo: '¿Vuelas o operas un helicóptero?', fotos: [hf('fotos/policia.jpg')],
+      { id: 'redh-piloto', titulo: '¿Vuelas o operas un helicóptero?', fotos: [hf('fotos/sin-fondo-blanco/policia.jpg')],
         texto: parrafos(
           '¿Vuelas o operas un helicóptero? Etiqueta a quien debería tener el suyo en resina.',
           limpia(H.tuyaSub),
           ctaHeli,
           tags([...TH, 'Pilotos', 'Aviación'])) },
-      { id: 'redh-retiro', titulo: '¿Alguien de tu equipo se retira este año?', fotos: [hf('fotos/personalizado.jpg')],
+      { id: 'redh-retiro', titulo: '¿Alguien de tu equipo se retira este año?', fotos: [hf('fotos/sin-fondo-blanco/personalizado.jpg')],
         texto: parrafos(
           '¿Alguien de tu equipo se retira de volar este año? Su aeronave, con su matrícula y una placa con su nombre.',
           limpia(H.pieFam),
@@ -419,7 +419,7 @@ const SEMANA_HELI = [
           'El catálogo no se limita a aeronaves mexicanas: Airbus, Bell, Agusta, Mil y hasta un avión.',
           ctaHeli,
           tags([...TH, 'Aviación'])) },
-      { id: 'redh-operadores', titulo: 'Para operadores: su flota, en la recepción', fotos: [hf('fotos/flota6.jpg'), hf('fotos/fila.jpg')],
+      { id: 'redh-operadores', titulo: 'Para operadores: su flota, en la recepción', fotos: [hf('fotos/taller/flota6.jpg'), hf('fotos/taller/fila.jpg')],
         texto: parrafos(
           'Para operadores y dependencias: la flota completa, en la recepción.',
           limpia(H.galeria[3][1]),
