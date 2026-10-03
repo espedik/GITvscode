@@ -1174,6 +1174,25 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .hp-fase-bar{position:relative;height:5px;border-radius:3px;background:rgba(var(--ov),.09)}
 .hp-fase-f{height:100%;border-radius:3px}
 .hp-fase-hoy{position:absolute;top:-4px;width:2px;height:13px;background:var(--text);border-radius:2px}
+/* El módulo Fase de Mi Día responde tres preguntas del día: qué toca de la fase (las tareas del
+   mes con su casilla y su fecha), cuánto y cuándo va a la cuenta de Alemania, y qué sigue. Cada
+   sección es UN hijo del tile: el tile es flex en columna con gap, y fila por fila sumaba 6 px. */
+.hpf-t{font-size:12.5px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:6px}
+.hpf-dias{display:flex;justify-content:space-between;gap:6px;font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:6px}
+.hpf-dias .w{color:var(--w);font-weight:700;text-align:center}
+.hpf-sec{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin:4px 0 2px}
+.hpf-tar{display:flex;gap:7px;align-items:flex-start;padding:4px 0;font-size:11.5px;line-height:1.35;color:var(--text2);cursor:pointer}
+.hpf-tar input{margin:2px 0 0;flex-shrink:0;accent-color:var(--g);width:13px;height:13px;cursor:pointer}
+.hpf-tar span{flex:1;min-width:0}
+.hpf-tar.ok span{color:var(--text3);text-decoration:line-through}
+.hpf-din{display:flex;gap:7px;align-items:baseline;padding:3px 0;font-size:11.5px;line-height:1.35;color:var(--text2)}
+.hpf-din b{color:var(--text);white-space:nowrap;font-family:var(--mono);font-size:10.5px}
+.hpf-din span{flex:1;min-width:0}
+.hpf-din span strong{color:var(--text)}
+.hpf-tar em,.hpf-din em{font-style:normal;font-family:var(--mono);font-size:9.5px;color:var(--text3);white-space:nowrap;padding-top:1px}
+.hpf-tar em.pronto,.hpf-din em.pronto{color:var(--w);font-weight:700}
+.hpf-din em.mal{color:var(--r);font-weight:700}
+.hpf-din em.bien{color:var(--g);font-weight:700}
 .hp-mini{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-top:1px solid rgba(var(--ov),.07);
   font-size:10.5px;color:var(--text2);line-height:1.4}
 .hp-mini-n{font-family:var(--mono);font-size:9px;font-weight:700;flex-shrink:0;padding-top:2px}
@@ -7279,50 +7298,120 @@ function renderHeroDinero(){
       : '<div class="hp-empty">Registra tus deudas en Finanzas para verlas aquí.</div>'}${cobrosHtml(mon)}`;
 }
 
-// ── 🎯 La fase del Plan Maestro — la misma activePhase() que usa el slide de Coach. Lo que aporta
-//    aquí es la POSICIÓN de hoy dentro de la fase: un porcentaje solo no dice si vas tarde.
+// ── 🎯 La fase del Plan Maestro — la misma activePhase() que usa el slide de Coach (Adán: "aquí
+//    muéstrame info mucho más valiosa"). Responde tres preguntas del día, todo leído del maestro y
+//    de coach_checks_v1:
+//  · Qué toca: las tareas del mes con su casilla —se marcan aquí mismo, el mismo registro que el
+//    tablero y Coach— y, si el texto trae su día dentro del mes ("el 11 oct"), cuánto falta.
+//  · El dinero de Alemania: el próximo lunes de Didi, el próximo envío del calendario (los cobros
+//    con `ahorro`) y la cifra que decide la fase: sus cortes de PROYECCION o, en la Fase 1,
+//    marzoParaJunio contra alemaniaMarzo.
+//  · Qué sigue: la primera tarea pendiente de un mes que viene, o el hito del calendario.
 function renderHeroFase(){
   const el=document.getElementById('heroFasePanel'); if(!el) return;
   const f=activePhase();
-  const hoy=new Date(); hoy.setHours(0,0,0,0);
-  const total=Math.max(1,(f.end-f.start)/86400000);
-  const van=Math.min(total, Math.max(0,(hoy-f.start)/86400000));
+  const DIA=86400000, hoy=new Date(); hoy.setHours(0,0,0,0);
+  const total=Math.round((f.end-f.start)/DIA)+1;
+  const van=Math.min(total, Math.max(0, Math.round((hoy-f.start)/DIA)+1));
   const pct=van/total*100;
-  const faltan=Math.max(0, Math.round(total-van));
-  const dm={day:'numeric',month:'short'};
-  // Las tareas salen de PHASES[].semanas filtradas por el mes en curso — la misma fuente que el
-  // detalle del calendario, no una lista aparte que habría que mantener sincronizada a mano.
-  const mesId=`${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}`;
-  let items=(f.semanas||[]).filter(s=>s.mes===mesId);
-  if(!items.length) items=(f.semanas||[]);
-  items=items.slice(0,2);
-  // El texto de `semanas` viene largo y con HTML (son párrafos completos en el slide de Coach):
-  // aquí solo cabe la primera frase, así que se corta en el primer punto o a 92 caracteres.
+  const faltan=Math.max(0, Math.round((f.end-hoy)/DIA));
+  const MC=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const dC=d=>d.getDate()+' '+MC[d.getMonth()];
+  const ymDe=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+  const nDias=d=>Math.round((d-hoy)/DIA);
+  const enDias=d=>{ const n=nDias(d); return n===0?'hoy':n===1?'mañana':'en '+n+' días'; };
+  const checks=rawGet('coach_checks_v1',{});
+  // El texto de `semanas` viene largo y con HTML: aquí va la primera frase.
   const corto=s=>{
-    const plano=String(s).replace(/<[^>]*>/g,'').trim();
+    const plano=String(s).replace(/<[^>]*>/g,'').replace(/\u2705/g,'').trim();
     const p=plano.indexOf('. ');
-    const t=(p>0&&p<100)?plano.slice(0,p+1):plano;
-    return esc(t.length>92?t.slice(0,91).trimEnd()+'…':t);
+    const t=(p>0&&p<110)?plano.slice(0,p+1):plano;
+    return esc(t.length>110?t.slice(0,109).trimEnd()+'…':t);
   };
-  el.innerHTML=`
-    <div class="hp-title">
-      <span role="button" tabindex="0" onclick="abrirKpi('fases')" title="Ver las ${PHASES.length} fases del Plan Maestro" style="cursor:pointer">🎯 ${esc(f.tag)} <span style="font-size:10px;color:var(--text3);font-weight:400">· las ${PHASES.length} fases</span></span>
-      <a href="../Coach/Coach.html" class="hp-link">Plan Maestro →</a>
-    </div>
-    <div style="font-size:12.5px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:10px">${esc(f.title)}</div>
-    <div class="hp-fase-bar" style="margin-bottom:5px">
-      <div class="hp-fase-f" style="width:${pct.toFixed(1)}%;background:var(--w)"></div>
-      <div class="hp-fase-hoy" style="left:${pct.toFixed(1)}%"></div>
-    </div>
-    <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--text3);margin-bottom:6px">
-      <span>${f.start.toLocaleDateString('es-MX',dm)}</span>
-      <span style="color:var(--w);font-weight:700">${faltan>0?'quedan '+faltan+' día'+(faltan===1?'':'s'):'última jornada'}</span>
-      <span>${f.end.toLocaleDateString('es-MX',dm)}</span>
-    </div>
-    ${items.map((s,i)=>`<div class="hp-mini">
-      <span class="hp-mini-n" style="color:${i===0?'var(--o)':'var(--text3)'}">0${i+1}</span>
-      <span>${corto(s.txt)}</span>
-    </div>`).join('')}${faseDespuesHtml(f)}`;
+  // El día que trae escrito una tarea ("el 11 oct", "el 15 de octubre"), solo si cae en su mes:
+  // "cierra el 31 mar" dentro de una tarea de enero es un plazo, no el día de hacerla.
+  const MESES={ene:0,feb:1,mar:2,abr:3,may:4,jun:5,jul:6,ago:7,sep:8,oct:9,nov:10,dic:11};
+  const fechaDe=s=>{
+    if(!s.mes) return null;
+    const re=/\b(\d{1,2})(?: de)? (ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)[a-z]*\b/gi;
+    const plano=String(s.txt).replace(/<[^>]*>/g,''), mes=+s.mes.slice(5)-1;
+    let m;
+    while((m=re.exec(plano))) if(MESES[m[2].toLowerCase()]===mes) return new Date(+s.mes.slice(0,4), mes, +m[1]);
+    return null;
+  };
+  const porFecha=(a,b)=>(fechaDe(a)||9e15)-(fechaDe(b)||9e15);
+  const mesId=ymDe(hoy);
+  const C=window.CIFRAS||{};
+
+  // ── Qué toca: las del mes, pendientes primero y por fecha; si el mes no trae, las de siempre.
+  let delMes=(f.semanas||[]).filter(s=>s.mes===mesId), titMes='Este mes';
+  if(!delMes.length){ delMes=(f.semanas||[]).filter(s=>s.cont).slice(0,3); titMes='Toda la fase'; }
+  const orden=delMes.slice().sort((a,b)=>(ctHecha(a,checks)-ctHecha(b,checks))||porFecha(a,b));
+  const nHechas=delMes.filter(s=>ctHecha(s,checks)).length;
+  const tareas=orden.map(s=>{
+    const ok=ctHecha(s,checks), fd=ok?null:fechaDe(s);
+    const em=fd&&nDias(fd)>=0?`<em class="${nDias(fd)<=3?'pronto':''}">${enDias(fd)}</em>`:'';
+    return `<label class="hpf-tar${ok?' ok':''}" title="${esc(String(s.txt).replace(/<[^>]*>/g,''))}"><input type="checkbox"${ok?' checked':''} onchange="faseHoyMarca('${s.id}',this.checked)"><span>${corto(s.txt)}</span>${em}</label>`;
+  }).join('');
+
+  // ── El dinero de Alemania.
+  const din=[];
+  const didiMes=C.didiAlAhorro?C.didiAlAhorro(mesId):0;
+  if(didiMes>0){
+    const lun=new Date(hoy); lun.setDate(hoy.getDate()+(8-hoy.getDay())%7);
+    din.push(`<div class="hpf-din"><b>lun ${dC(lun)}</b><span><strong>${money(Math.round(didiMes*12/52))}</strong> de Didi a la cuenta</span><em class="${nDias(lun)<=1?'pronto':''}">${enDias(lun)}</em></div>`);
+  }
+  let envio=null;
+  const finMx=(C.PROYECTO&&C.PROYECTO.ultimoMesMexico)||'9999-12';
+  for(let k=0;k<45&&!envio;k++){
+    const d=new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate()+k); if(ymDe(d)>finMx) break;
+    const ah=(ctAgenda(d.getDate(),ymDe(d))||[]).filter(x=>x.ahorro);
+    if(ah.length){
+      const suma=xs=>xs.reduce((t,x)=>t+(+x.monto||0),0);
+      envio={d:d, cuenta:suma(ah.filter(x=>!/cetes/i.test(x.t))), cetes:suma(ah.filter(x=>/cetes/i.test(x.t)))};
+    }
+  }
+  if(envio){
+    const qu=[envio.cuenta?`<strong>${money(envio.cuenta)}</strong> a la cuenta`:'', envio.cetes?`${money(envio.cetes)} a CETES`:''].filter(Boolean).join(' y ');
+    din.push(`<div class="hpf-din"><b>${dC(envio.d)}</b><span>${qu}, antes de gastar</span><em class="${nDias(envio.d)<=3?'pronto':''}">${enDias(envio.d)}</em></div>`);
+  }
+  const K=(C.PROYECCION&&C.PROYECCION.cortes)||{}, iY=ymDe(f.start), fY=ymDe(f.end);
+  const cortes=[['junio','la cuenta bloqueada'],['salida','la salida']].filter(([k])=>K[k]&&K[k].mes>=iY&&K[k].mes<=fY);
+  cortes.forEach(([k,qu])=>{
+    const c=K[k], m=+c.mes.slice(5)-1;
+    din.push(`<div class="hpf-din"><b>${MC[m]} ${c.mes.slice(0,4)}</b><span>${qu} pide <strong>${money(c.pide)}</strong></span><em class="${c.falta>0?'mal':'bien'}">${c.falta>0?'faltan '+money(c.falta):'sobran '+money(-c.falta)}</em></div>`);
+  });
+  if(!cortes.length&&f===PHASES[1]&&C.n){
+    const meta=C.n('marzoParaJunio'), ritmo=C.n('alemaniaMarzo');
+    if(meta!=null&&ritmo!=null) din.push(`<div class="hpf-din"><b>${dC(f.end)}</b><span><strong>${money(meta)}</strong> para que junio alcance</span><em class="${ritmo<meta?'mal':'bien'}">tu ritmo: ${money(ritmo)}</em></div>`);
+  }
+
+  // ── Qué sigue: la primera pendiente de un mes que viene; sin ella, el hito más cercano.
+  const sig=(f.semanas||[]).filter(s=>s.mes&&s.mes>mesId&&!ctHecha(s,checks)).sort((a,b)=>a.mes.localeCompare(b.mes)||porFecha(a,b))[0];
+  let sigHtml='';
+  if(sig){
+    const fd=fechaDe(sig), m=+sig.mes.slice(5)-1;
+    sigHtml=`<div class="hpf-din"><b>${fd?dC(fd):MC[m]+' '+sig.mes.slice(0,4)}</b><span>${corto(sig.txt)}</span>${fd?`<em>${enDias(fd)}</em>`:''}</div>`;
+  } else {
+    const h=((C.CALENDARIO||{}).hitos||[]).map(h=>({d:new Date(h.fecha+'T00:00:00'),t:h.txt})).filter(h=>h.d>=hoy).sort((a,b)=>a.d-b.d)[0];
+    if(h) sigHtml=`<div class="hpf-din"><b>${dC(h.d)}</b><span>${esc(h.t)}</span><em>${enDias(h.d)}</em></div>`;
+  }
+
+  el.innerHTML=`<div class="hp-title"><span role="button" tabindex="0" onclick="abrirKpi('fases')" title="Ver las ${PHASES.length} fases del Plan Maestro" style="cursor:pointer">🎯 ${esc(f.tag)} <span style="font-size:10px;color:var(--text3);font-weight:400">· las ${PHASES.length} fases</span></span><a href="../Coach/Coach.html" class="hp-link">Plan Maestro →</a></div>
+    <div><div class="hpf-t">${esc(f.title)}</div>
+      <div class="hp-fase-bar"><div class="hp-fase-f" style="width:${pct.toFixed(1)}%;background:var(--w)"></div><div class="hp-fase-hoy" style="left:${pct.toFixed(1)}%"></div></div>
+      <div class="hpf-dias"><span>${dC(f.start)}</span><span class="w">día ${van} de ${total} · ${faltan>0?'quedan '+faltan:'último día'}</span><span>${dC(f.end)}</span></div></div>
+    ${tareas?`<div><div class="hpf-sec"><span>${titMes}</span><span>${nHechas} de ${delMes.length}</span></div>${tareas}</div>`:''}
+    ${din.length?`<div><div class="hpf-sec"><span>El dinero de Alemania</span></div>${din.join('')}</div>`:''}
+    ${sigHtml?`<div><div class="hpf-sec"><span>Lo que sigue</span></div>${sigHtml}</div>`:''}
+    ${faltan<=30?faseDespuesHtml(f):''}`;
+}
+// Marcar una tarea desde Mi Día: guarda en coach_checks_v1 como el tablero, con la semana de hoy
+// (toggleFaseCheck también repinta el tablero), y repinta el módulo.
+function faseHoyMarca(id, estado){
+  const h=new Date();
+  toggleFaseCheck(id, estado, h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'#'+ctSemDe(h.getDate()));
+  renderHeroFase();
 }
 
 // ── 🎓 Hoy aprendes — la palabra de alemán y el tema de Python del día. Alemán salta a su
@@ -8755,7 +8844,7 @@ function renderCoach(){
 }
 // Checklist semana a semana de "Qué hacer en esta fase" — comparte coach_checks_v1 con
 // Coach.html (mismos ids sN-M), igual patrón de escritura cruzada que quickMarkDone().
-function toggleFaseCheck(id, estado){
+function toggleFaseCheck(id, estado, semana){
   const checks=rawGet('coach_checks_v1',{});
   // `estado` lo manda la casilla que se tocó. Sin él se busca por id, pero eso falla
   // cuando la misma tarea tiene dos casillas en pantalla (la de "te toca" y la del
@@ -8766,9 +8855,10 @@ function toggleFaseCheck(id, estado){
   // Se guarda en qué semana se cerró, no un simple true: así la tarea no desaparece de
   // "Te toca esta semana" en cuanto la marcas (Adán, 2026-08-30: "no quiero que se
   // borren las cosas que hagan click en ya hecho"). Un `true` de antes sigue contando
-  // como hecha — solo que sin semana, así que no reaparece en la lista.
+  // como hecha — solo que sin semana, así que no reaparece en la lista. `semana` la fija quien
+  // llama: Mi Día marca en la semana de hoy aunque el tablero tenga abierto otro mes.
   if(cb&&cb.checked){
-    checks[id] = (ctYM && ctSel) ? (ctYM + '#' + ctSemDe(+ctSel.slice(8))) : true;
+    checks[id] = semana || ((ctYM && ctSel) ? (ctYM + '#' + ctSemDe(+ctSel.slice(8))) : true);
   } else delete checks[id];
   rawSet('coach_checks_v1',checks);
   // Sin esto, el contador "X/Y" de la pestaña del mes y el aviso de "N pendientes" se quedaban

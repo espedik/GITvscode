@@ -60,7 +60,8 @@ Todas comparten origen porque se abren con `file://`.
 
 **Escribe en claves ajenas en dos sitios** — la excepción a que sea de solo lectura:
 `coach_rutina_v1.completado[hoy]` (*Marcar el bloque actual* de Mi Día) y `coach_checks_v1[id]`
-(checklist de fase). Usa `rawGet`/`rawSet`, que preservan el resto del objeto. Si Coach cambia la
+(checklist de fase: el tablero y el módulo Fase de Mi Día, los dos por `toggleFaseCheck`). Usa
+`rawGet`/`rawSet`, que preservan el resto del objeto. Si Coach cambia la
 forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-eventos-mes-v1` (pendientes del mes), `dash-lista-compras`
@@ -157,7 +158,7 @@ por dentro.
 | **Entrenas** | El día que se mira —hoy, o el que tocaste en la tira— en grande (si no es hoy, su nombre en verde arriba), **sus ejercicios** con series×reps y peso, en una línea los tres días que siguen y la tira de 7 días como chips de foto (`#heroWeekStrip`, 52 px). El peso es el último que registró Ejercicio (naranja; mismo criterio que su `ejUltimo()`) o el inicial de `EJ_PESO_INI` (gris), solo en kg; un ejercicio con todas sus series hechas ese día va en verde, y tocar su nombre abre **su ficha** (ver *La ficha de un ejercicio*, abajo). *Ejercicio →* (`#diaEntrenaLink`) abre el día elegido con `?dia=N`. `.dia-entrena` es `display:contents`: la lista es lo único que cede alto y, si ni así cabe (bajo 1280 px de ancho), desplaza la tarjeta | `renderDiaEntrena()` sobre `D.gym.rutina` o `GYM_RUTINA_DEFAULT`; el ✅ sale de `gymSesiones()`, que normaliza `mirutina_v1.sesiones` (objeto por fecha desde el 1-sep-2026, lista antes) |
 | **Hoy aprendes** | La palabra de alemán (salta a su pantalla con `irASlide`) y el tema de Python del día, que abre en la app de Entrevistas por su hash (`entrevistas.html#<id>`) porque el Dashboard ya no tiene pantalla de entrevista; **el paso de la semana** con la portada de su libro y **la ficha de Habilidades Base en curso** con el paso al que se retoma | `alemanPalabraHoy()` / `entrevistaTemaHoy()` (uno de los 41 de `ENTREVISTA_TEMAS`, por `diaDelAnio()`), con la etiqueta de módulo de `pyModLabel()` —`PY_MOD_LABEL` lo emite el generador leyendo el menú de `entrevistas.html`, y cae al id en mayúsculas si el archivo es anterior—; `pasoSemanaHtml()` con `habFocoActual()`/`habLibro()`, `fichaEnCursoHtml()` con `hbAvance()` |
 | **Tu dinero** | Fondo de emergencia, deudas, **los cobros y abonos de los próximos 7 días** y *Invertir hoy · Primero tu fondo →* | `renderHeroDinero()` + `cobrosHtml()` sobre `ctAgenda()` → `CIFRAS.agendaDia`, la misma fuente que el tablero |
-| **Fase** | La fase activa, su barra con la marca de hoy, la prioridad del mes y **Después · Fase 1 desde …** | `renderHeroFase()` + `faseDespuesHtml()` sobre `PHASES` |
+| **Fase** | Responde qué toca de la fase, cuánto va a la cuenta de Alemania y qué sigue. La fase activa con su barra (*día 3 de 182 · quedan 179*). **Este mes**: las tareas del mes, pendientes primero, con casilla —se marcan aquí mismo— y *en 8 días* cuando el texto trae su día dentro del mes (*"cierra el 31 mar"* en una tarea de enero es un plazo, no el día de hacerla); el texto completo, al pasar el ratón; si el mes no trae tareas, las de toda la fase. **El dinero de Alemania**: el próximo lunes de Didi (`didiAlAhorro` × 12/52), el próximo envío del calendario —hasta el último mes en México— y la cifra que decide la fase: sus cortes de junio y la salida con lo que falta, o en la Fase 1 `marzoParaJunio` contra `alemaniaMarzo`. **Lo que sigue**: la primera pendiente de un mes que viene o, sin ella, el hito más cercano. **Después · Fase N** solo en el último mes de la fase | `renderHeroFase()` sobre `PHASES`, `ctAgenda()`, los `cortes` de `PROYECCION` y `CALENDARIO.hitos`; la casilla llama a `faseHoyMarca()`, que guarda con `toggleFaseCheck` en la semana de hoy; `faseDespuesHtml()` |
 | **Importante este mes** | Los pendientes del mes con pestañas, «+ Nuevo», editar y borrar | `dash-eventos-mes-v1` |
 
 **Tamaños.** Bajo 940 px de alto el AHORA baja a 30 vh; bajo 1280 px de ancho la agenda mide
@@ -604,7 +605,8 @@ marcada **no desaparezca**, `toggleFaseCheck` guarda **en qué semana se cerró*
 la lista añade detrás las que llevan su marca: casilla puesta, texto tachado (`span:not(.ct-tar-chip)`,
 para que el chip `P1` no se vuelva gris) y en verde. El tope de filas va sobre las pendientes, no
 sobre la lista entera. Un `true` de los de antes cuenta como hecha, pero al no tener semana no
-reaparece.
+reaparece. La semana la puede fijar quien llama (`toggleFaseCheck(id, estado, semana)`): el
+módulo Fase de Mi Día marca siempre en la semana de hoy, aunque el tablero tenga abierto otro mes.
 
 **`8 ya hechas` es un botón** que despliega la lista: con casilla lo que se marcó desde aquí
 (`checks[id]`, se puede desmarcar); con ✓ y sin casilla lo que trae ✅ escrito en `PHASES` y los
