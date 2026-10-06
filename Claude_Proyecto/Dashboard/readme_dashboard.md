@@ -1001,13 +1001,16 @@ aproximados por etiqueta—: es el dato para medir la proteína por peso gastado
 debajo del HUD empiezan los pasillos. Lo que decía la leyenda —ticket o estimado, qué suma un
 `+`— está en el `title` de cada píldora. Las demás categorías conservan su `.lc-price-leyenda`.
 
-**Comida va por columnas** (Adán: *"lo de comida, ordénalo por columnas, se ve muy mal así"*): cada
-pasillo es un bloque con sus productos uno debajo de otro, y `.lc-aisles` reparte los pasillos en
-tantas columnas de 440 px como quepan (`columns:auto 440px`), parejas de alto y sin partir un pasillo
-(`break-inside:avoid`). Medido: 4 columnas a 2282 px, 3 a 1600, 2 a 1366 y 1 en iPad y celular, sin
-nombres cortados ni renglones desbordados. Las demás categorías no llevan `.lc-aisles`: sus pasillos
-van a todo lo ancho. En todas, los renglones de un pasillo son una sola columna
-(`.lc-grid.lc-grid-1col`).
+**Comida y el Kit de Higiene van por columnas** (Adán: *"lo de comida, ordénalo por columnas, se ve
+muy mal así"* y *"igual en kit de higiene"*): cada pasillo es un bloque con sus productos uno debajo
+de otro, y `.lc-aisles` reparte los pasillos en tantas columnas como quepan, parejas de alto y sin
+partir un pasillo (`break-inside:avoid`). `LC_COLUMNAS` dice qué categorías van así: Comida en
+columnas de 440 px; el kit, con `ancho`, en columnas de 540 px (`.lc-ancho`) y con el nombre en
+hasta dos renglones en vez de cortado, porque sus nombres son frases y su renglón lleva dos tiendas
+y *Ya lo tengo*. Medido: Comida da 4 columnas a 2282 px, 3 a 1600 y 2 a 1366; el kit, 3 a 2282 y 2 a
+1600 y 1366; los dos, una en iPad y celular, sin desborde. Las demás categorías no llevan
+`.lc-aisles`: sus pasillos van a todo lo ancho. En todas, los renglones de un pasillo son una sola
+columna (`.lc-grid.lc-grid-1col`).
 
 **El renglón cabe en una línea** —checkbox · nombre · píldora · precio unitario · contador ·
 tiendas · subtotal— en los 440 px de una columna. La píldora lleva punto lleno si el precio salió

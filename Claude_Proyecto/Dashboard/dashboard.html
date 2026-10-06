@@ -1708,6 +1708,15 @@ button.hp-lec:active{transform:translateY(0)}
    columnas. En el celular queda una. */
 .lc-aisles{columns:auto 440px;column-gap:32px}
 .lc-aisles .lc-aisle{break-inside:avoid;margin:0 0 18px}
+/* El Kit de Higiene, igual (Adán: "igual en kit de higiene"), pero sus nombres son frases
+   —"Botellas de viaje rellenables 100 ml (set de 4, aptas para equipaje de mano)"— y su renglón
+   lleva dos tiendas y "Ya lo tengo": columnas de 540 px y el nombre baja a un segundo renglón en vez
+   de cortarse con puntos suspensivos. */
+.lc-aisles.lc-ancho{columns:auto 540px}
+.lc-aisles.lc-ancho .lc-item{align-items:flex-start}
+.lc-aisles.lc-ancho .lc-item input[type="checkbox"]{margin-top:1px}
+.lc-aisles.lc-ancho .lc-item label.lc-item-txt{white-space:normal;overflow:visible;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .lc-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(var(--ov),.05)}
 .lc-item:hover{background:rgba(var(--ov),.025)}
 /* `display:contents` en escritorio (todo en la misma línea flex) y contenedor real en celular,
@@ -5956,6 +5965,9 @@ function vaciarListaCat(cat){
   renderListaCompras();
 }
 
+// Las categorías que van por columnas de pasillos (`.lc-aisles`); las demás, a todo lo ancho.
+// `ancho`: columnas de 540 px con el nombre en dos renglones, para los nombres que son frases.
+const LC_COLUMNAS={ comida:{ancho:false}, higiene:{ancho:true} };
 function renderListaCompras(){
   renderListaCatTabs();
   const data=LISTA_COMPRAS[listaCatSel];
@@ -5988,7 +6000,8 @@ function renderListaCompras(){
           '<div class="'+gridCls+'">'+lcRenderItems(listaCatSel,items)+'</div>'+
         '</div>';
       }).join('');
-  document.getElementById('listaCompraBody').innerHTML=hud+leyenda+(esComida&&!Array.isArray(data)?'<div class="lc-aisles">'+html+'</div>':html);
+  const cols=!Array.isArray(data)&&LC_COLUMNAS[listaCatSel];
+  document.getElementById('listaCompraBody').innerHTML=hud+leyenda+(cols?'<div class="lc-aisles'+(cols.ancho?' lc-ancho':'')+'">'+html+'</div>':html);
 }
 function verListaCat(cat){ listaCatSel=cat; renderListaCompras(); }
 // El checkbox pone la cantidad de UNA SEMANA (`base`), no 1: en el súper no llevas un plátano,
