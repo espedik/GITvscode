@@ -307,9 +307,12 @@ existe como réplica y la aeronave real está fotografiada; falta una sola foto 
 **La web solo enseña fotos con IA y fondo blanco** (Adán: *"aquí solo deja imágenes con IA fondo
 blanco… si no están así, deja como una nota que debemos hacerla con IA, pero así bien notorio"*).
 Al pintar, `marcarSinIA()` cambia cada foto que no sea de `fotos/fondo-blanco/` por un aviso a
-rayas amarillas y negras (`.falta-ia`): **📸 Falta hacer esta foto con IA**, *fondo blanco* y el
-archivo del que se parte; la ficha de una pieza hace lo mismo (`#fp-falta`). Las del taller dicen
-además *a partir de la foto real del taller*: rehacerlas es limpiar la foto, no inventar la
+rayas amarillas y negras (`.falta-ia`): **📸 Falta hacer esta foto con IA · fondo blanco** y, debajo,
+**la original en chico con su enlace directo** (`.fia-orig`; Adán: *"deja la imagen original en
+pequeño para que sepa cuál es o pon el link directo en donde se encuentra"*): un chip con la
+miniatura y la ruta que abre el archivo en otra pestaña. No entra al visor (`img:not(.fia-mini)`)
+ni abre la ficha de la pieza. La ficha hace lo mismo (`#fp-falta`). Las del taller dicen *La
+original del taller · rehazla a partir de ella*: rehacerlas es limpiar la foto, no inventar la
 producción. Medido: el hero, 14 de las 26 piezas del catálogo y una de la galería tienen foto; van
 23 avisos —12 en el catálogo, 2 en *tu aeronave*, 1 en el taller y 8 en la galería—. Los datos no
 se tocan: el catálogo en PDF y Posts siguen con sus fotos, y en cuanto una foto pasa a

@@ -294,8 +294,20 @@ body.sin-scroll{overflow:hidden}
   gap:9px;padding:16px;text-align:center;background:repeating-linear-gradient(-45deg,#ffd400 0 18px,#111 18px 36px)}
 .falta-ia b{display:block;max-width:100%;padding:9px 13px;background:#ffd400;color:#111;border:3px solid #111;
   font-size:15px;font-weight:900;line-height:1.2;letter-spacing:.03em;text-transform:uppercase;box-shadow:0 4px 0 #111}
-.falta-ia span{display:block;max-width:100%;padding:4px 9px;background:#111;color:#ffd400;
-  font-family:ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;overflow-wrap:anywhere}
+/* Debajo, la original en chico y su enlace directo (Adán: "deja la imagen original en pequeño para
+   que sepa cuál es o pon el link directo en donde se encuentra"): un solo chip que abre el archivo
+   en otra pestaña. No entra al visor ni abre la ficha de la pieza. */
+.fia-orig{display:flex;align-items:center;gap:10px;max-width:100%;padding:5px 11px 5px 5px;background:#111;
+  color:#ffd400;text-decoration:none;border:2px solid #111;text-align:left}
+.fia-orig:hover,.fia-orig:focus-visible{outline:3px solid #fff;outline-offset:1px}
+/* Con la especificidad de sobra: `.pieza .im img`, `.foto img` y `.fichap-im img` estiran sus fotos
+   a todo el recuadro, y la miniatura no debe heredarlo. */
+.falta-ia .fia-orig img.fia-mini{width:64px;height:48px;max-width:none;flex:none;object-fit:cover;padding:0;
+  border:2px solid #ffd400;background:#fff;display:block;cursor:pointer}
+.fia-orig span{min-width:0;font-family:ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;
+  line-height:1.3;overflow-wrap:anywhere}
+.fia-orig span i{display:block;font-style:normal;color:#fff;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase}
+.fichap-im .falta-ia .fia-orig img.fia-mini{width:110px;height:82px}
 .fichap-cu{display:flex;flex-direction:column;gap:16px;padding:32px;overflow-y:auto}
 .fichap-x{position:absolute;top:14px;right:14px;z-index:3;width:38px;height:38px;border-radius:11px;
   border:1px solid var(--linea);background:rgba(8,12,22,.75);color:var(--tinta);cursor:pointer;
@@ -669,12 +681,14 @@ function avisoIA(src, id){
   const f = String(src || '').replace(/^.*?fotos\//, 'fotos/');
   const taller = f.indexOf('fotos/taller/') === 0;
   return '<div class="falta-ia"' + (id ? ' id="' + id + '"' : '') + ' role="img" aria-label="Falta hacer esta foto con IA">' +
-    '<b>📸 Falta hacer esta foto con IA</b><span>Fondo blanco' + (taller ? ', a partir de la foto real del taller' : '') +
-    ' · ' + f + '</span></div>';
+    '<b>📸 Falta hacer esta foto con IA · fondo blanco</b>' +
+    '<a class="fia-orig" href="' + f + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Abrir la foto original">' +
+    '<img class="fia-mini" src="' + f + '" alt="La original" loading="lazy">' +
+    '<span><i>' + (taller ? 'La original del taller · rehazla a partir de ella' : 'La original') + '</i>' + f + ' ↗</span></a></div>';
 }
 function marcarSinIA(){
   document.querySelectorAll('img').forEach(function(im){
-    if(im.id === 'visor-img' || im.id === 'fp-img') return;
+    if(im.id === 'visor-img' || im.id === 'fp-img' || im.closest('.falta-ia')) return;
     const src = im.getAttribute('src');
     if(!src || esFotoIA(src)) return;
     im.insertAdjacentHTML('afterend', avisoIA(src));
@@ -752,7 +766,7 @@ function pinta(){
 let visorFotos = [], visorI = -1;
 
 function visorLista(){
-  return [].slice.call(document.querySelectorAll('.foto img'));
+  return [].slice.call(document.querySelectorAll('.foto img:not(.fia-mini)'));
 }
 function visorPie(img){
   const fig = img.closest('figure');
@@ -794,7 +808,7 @@ function cerrarVisor(){
   visorI = -1;
 }
 document.addEventListener('click', function(e){
-  const img = e.target.closest && e.target.closest('.foto img');
+  const img = e.target.closest && e.target.closest('.foto img:not(.fia-mini)');
   if(!img) return;
   e.preventDefault();
   abrirVisor(visorLista().indexOf(img));
