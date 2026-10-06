@@ -416,8 +416,7 @@ function renderHoy() {
     <div class="hy-pasos">
       ${ruta.map((p, i) => `<label class="hy-paso">
         <span class="hy-paso-n">${String(closetColor() + i + 1).padStart(2, '0')}</span>
-        <span class="hy-sw">${prendaSvg(p.tipo === 'p' ? 'pantalon' : 'playera',
-          p.hex, 26, p.n)}</span>
+        <span class="hy-sw">${prendaMuestra(p.hex, p.n, 26)}</span>
         <span class="hy-paso-t">${p.n}
           <em>${p.tipo === 'p' ? 'PANTALÓN' : 'PLAYERA'}</em></span>
         <span class="hy-gana">+${p.gana}</span>
@@ -461,7 +460,7 @@ function fichaColor(tipo, pr, max) {
     <b>${c.p}</b></div>`).join('');
 
   return `<div class="pc${tengo ? ' tengo' : ''}${cero ? ' cero' : ''}">
-    <div class="pc-sw">${siluetaDe(tipo, pr, tipo === 'p' ? 86 : 96)}
+    <div class="pc-sw">${prendaMuestra(pr.hex, pr.n)}
       ${abre === max && max > 0 ? '<span class="pc-top">Va con todos</span>' : ''}
       ${tengo ? '<span class="pc-ok">Ya la tienes</span>' : ''}
     </div>
@@ -553,7 +552,7 @@ function fichaCapa(it, reglas, tipoTxt) {
   const tengo = S.marcados.indexOf(it.item) >= 0;
   const cat = CATALOGO[it.item];
   return `<div class="pc${tengo ? ' tengo' : ''}${ok.length ? '' : ' cero'}">
-    <div class="pc-sw">${prendaSvg('capa', it.hex, 96, it.n)}
+    <div class="pc-sw">${prendaMuestra(it.hex, it.n)}
       ${tengo ? '<span class="pc-ok">Ya la tienes</span>' : ''}
     </div>
     <div class="pc-b">
@@ -658,42 +657,12 @@ function figuraSvg(playera, pantalon, zapato, ancho, etiqueta) {
     '" role="img" aria-label="' + cmEsc(etiqueta || '') + '">' + trazos + '</svg>';
 }
 
-// Las prendas sueltas. `d` son los trazos con relleno y `det` los de detalle, sin él:
-// la cinturilla del pantalón y la abertura de la chamarra, que es lo que las distingue
-// de una playera cuando se ven a 30px.
-const SIL_PRENDA = {
-  playera:  { w: 120, h: 112,
-    d: ['M42,10 L18,22 L26,45 L36,40 L36,104 L84,104 L84,40 L94,45 L102,22 L78,10 Q60,27 42,10 Z'],
-    det: ['M42,10 Q60,27 78,10'] },
-  pantalon: { w: 120, h: 132,
-    d: ['M32,8 L88,8 L85,126 L66,126 L60,64 L54,126 L35,126 Z'],
-    det: ['M32,21 L88,21'] },
-  capa:     { w: 120, h: 122,
-    d: ['M42,10 L14,24 L20,50 L30,45 L30,114 L90,114 L90,45 L100,50 L106,24 L78,10 Q60,26 42,10 Z'],
-    det: ['M60,26 L60,114'] },
-  zapato:   { w: 140, h: 72,
-    d: ['M18,54 L18,41 Q18,29 30,25 L56,15 Q64,11 71,16 L84,27 L106,32 Q122,36 122,49 L122,54 Z',
-        'M13,54 L127,54 L127,62 Q127,66 123,66 L17,66 Q13,66 13,62 Z'],
-    det: [] },
-};
-
-function prendaSvg(tipo, hex, ancho, etiqueta) {
-  const s = SIL_PRENDA[tipo];
-  if (!s) return '';
-  const alto = Math.round(ancho * s.h / s.w);
-  const rell = s.d.map(function (d) { return '<path d="' + d + '" fill="' + hex + '"></path>'; }).join('');
-  const det = s.det.map(function (d) { return '<path class="s-det" d="' + d + '"></path>'; }).join('');
-  return '<svg class="sil" viewBox="0 0 ' + s.w + ' ' + s.h + '" width="' + ancho +
-    '" height="' + alto + '" role="img" aria-label="' + cmEsc(etiqueta || '') + '">' +
-    rell + det + '</svg>';
-}
-
-// Qué silueta le toca a cada cosa del clóset.
-function siluetaDe(tipo, pr, ancho) {
-  if (tipo === 'p') return prendaSvg('pantalon', pr.hex, ancho, pr.n);
-  if (tipo === 't') return prendaSvg('playera', pr.hex, ancho, pr.n);
-  if (tipo === 'capa') return prendaSvg('capa', pr.hex, ancho, pr.n);
-  return prendaSvg('zapato', pr.hex, ancho, pr.n);
+// Una prenda suelta es su color y nada más (Adán, 6-oct-2026: "en vez de usar iconos de playeras
+// o pantalones, solo pon el color"): una muestra que llena su recuadro en el clóset y en las
+// fichas. `lado` es para donde no hay recuadro —la ruta de compra—: ahí es un cuadrado.
+function prendaMuestra(hex, etiqueta, lado) {
+  return '<span class="sw" role="img" aria-label="' + cmEsc(etiqueta || '') + '" style="background:' + hex +
+    (lado ? ';width:' + lado + 'px;height:' + lado + 'px' : '') + '"></span>';
 }
 
 // ─── MI CLÓSET ───────────────────────────────────────────────────────────────
@@ -711,8 +680,7 @@ function bloqueCloset(titulo, items, tipo) {
     const fn = tipo === 'x'
       ? `toggleCheck('${it.item}'); document.getElementById('content-root').innerHTML = RENDERS[secActual]();`
       : `toggleColor('${tipo}','${it.id}')`;
-    const sil = siluetaDe(tipo === 'x' ? (COLORIMETRIA.capas.indexOf(it) >= 0 ? 'capa' : 'z') : tipo,
-                          it, tipo === 'x' && COLORIMETRIA.calzado.indexOf(it) >= 0 ? 92 : 74);
+    const sil = prendaMuestra(it.hex, it.n);
     return `<button type="button" class="mc${tengo ? ' tengo' : ''}" onclick="${fn}">
       <span class="mc-sw">${sil}
         ${tengo ? `<span class="mc-tick">
@@ -779,8 +747,7 @@ function renderQueComprar() {
     <div class="hy-pasos">
       ${ruta.map((p, i) => `<label class="hy-paso">
         <span class="hy-paso-n">${String(i + 1).padStart(2, '0')}</span>
-        <span class="hy-sw">${prendaSvg(p.tipo === 'p' ? 'pantalon' : 'playera',
-          p.hex, 26, p.n)}</span>
+        <span class="hy-sw">${prendaMuestra(p.hex, p.n, 26)}</span>
         <span class="hy-paso-t">${cmEsc(p.n)}
           <em>${p.tipo === 'p' ? 'PANTALÓN' : 'PLAYERA'}</em></span>
         <span class="hy-gana">+${p.gana}</span>
