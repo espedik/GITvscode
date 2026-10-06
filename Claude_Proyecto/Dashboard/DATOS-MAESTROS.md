@@ -77,7 +77,7 @@ Junto a ella viajan sus piezas, para que nadie las reimplemente: `agendaDia`, `p
 después siguen con el mínimo, porque esos estados de cuenta todavía no existen. **La BBVA con plan
 de pago no lleva ninguno de los dos**: desde `PROYECTO.bbvaFecha` la pintan los abonos de
 `planBbva` —el día 1 y el 15, lo que sobra de la quincena (y el envío a GBM de ese día baja en lo
-mismo); el día de pago, el mínimo que completa Didi—, con `tarjeta: true` y `de`. Lo que Didi aparta
+mismo); el día de pago, lo que pide el estado de cuenta, que paga Didi—, con `tarjeta: true` y `de`. Lo que Didi aparta
 cada lunes no pasa por el calendario.
 Si un cobro cae en un mes lo decide `caeEnMes` —`cada`, `desde` y `hasta`; sin `cada`, `desde` es
 el primer mes en que cae—, el mismo predicado que usa el desglose de la proyección.
@@ -168,7 +168,7 @@ dinero sobrante para la quincena; actualmente debo 15,000 a bbva"*). La Banamex 
 30-sep-2026. El 19-sep la venta del Bitcoin había dejado la BBVA de $39,000 en $900; el 30-sep iba
 en $10,000 y la pagaba completa; el 5-oct, en $15,000, ya sin con qué pagarla el 11. Cada saldo
 nuevo que reporta es una entrada de `MIGRACIONES` (la de este es `_bbva20261005`, que además pone
-`noInterest` en 0: la tasa de 55.7% corre). Con Banamex en $0 su mínimo de $810 sale de
+`noInterest` en 0 para que el 11 no pida el total). **No paga intereses**: cada mes cubre lo que pide el estado de cuenta para no generarlos (Adán, 6-oct-2026: *"bbva no va cobrar intereses, eso déjalo en 0"*); `PROYECTO.bbvaSinIntereses` se lo dice al plan y a `tasaQueCorre` del Dashboard, y la tasa de 55.7% se queda como la del producto. Con Banamex en $0 su mínimo de $810 sale de
 `minimosDeuda` y `margen` sube eso mismo; `deudaCara` es solo la BBVA. En `d001` `total` se queda
 en $39,000: el "pagado real" de las barras de Finanzas sale de ahí.
 
@@ -176,10 +176,10 @@ en $39,000: el "pagado real" de las barras de Finanzas sale de ahí.
 desglose del sueldo (`desgloseMes`, renglón `tarjeta`) y la proyección. Arranca del saldo de `d001`
 en DEUDAS_SEED el día `PROYECTO.bbvaFecha`. La deuda cara va primero (prompt del Plan Maestro): lo
 que cada quincena manda a GBM y lo que Didi aparta cada lunes van a la tarjeta hasta dejarla en
-cero, y el día de pago se completa el mínimo con lo de Didi. El interés corre por día a la tasa más
-IVA; cada abono lo paga primero, así el último no deja centavos. Con los números de hoy: el 11 de
-octubre el mínimo ($1,500), $1,154 de Didi los lunes 12, 19 y 26, $7,200 el 15 y $2,200 el 1 de
-noviembre; queda en cero el `{{bbvaCero}}` (2 nov 2026) con `{{bbvaIntereses}}` ($377) de
+cero, y el día de pago se cubre, con lo de Didi, lo que pide el estado de cuenta. Con `bbvaSinIntereses` no corre interés; sin él correría por día a la tasa más
+IVA y cada abono lo pagaría primero, así el último no deja centavos. Con los números de hoy: el 11 de
+octubre $1,500 (lo que el plan cuenta para ese pago), $1,154 de Didi los lunes 12, 19 y 26, $7,200 el 15 y $2,200 el 1 de
+noviembre; queda en cero el `{{bbvaCero}}` (2 nov 2026) con `{{bbvaIntereses}}` ($0) de
 intereses. Desde ahí, lo que pague con la tarjeta se paga en la misma quincena, dentro de su gasto
 personal.
 
@@ -232,11 +232,11 @@ pero el nombre de la variable se queda corto.
 | `{{gastoPersonalCasa}}` | $7,471 — lo mismo en casa | derivada |
 | `{{cuidadoMes}}` | $4,801 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
 | `{{recorteRutinas}}` | $2,003 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $1,340 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
-| `{{alemaniaMarzo}}` | $135,463 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
+| `{{alemaniaMarzo}}` | $135,840 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
 | `{{marzoParaJunio}}` | $172,778 — lo que tiene que haber al cerrar la Fase 1 para que junio alcance con el ahorro de abril a junio | derivada |
-| `{{alemaniaJunio}}` | $212,669 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
+| `{{alemaniaJunio}}` | $213,046 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
 | `{{bbvaCero}}` | 2 nov 2026 — el día que la BBVA queda en cero con `planBbva` (`fmt: 'fecha'`) | derivada |
-| `{{bbvaIntereses}}` | $377 — lo que cuesta en intereses llegar a cero quincena a quincena | derivada |
+| `{{bbvaIntereses}}` | $0 — lo que costaría en intereses llegar a cero; en 0 con `PROYECTO.bbvaSinIntereses` | derivada |
 | `{{junioVeredicto}}` | «faltan … para la cuenta bloqueada» o «alcanza, con … de margen» (`fmt: 'txt'`) | derivada |
 | `{{salidaVeredicto}}` | «faltan …» o «sobran …»: lo que pide la salida —cuenta bloqueada, reserva del BYD, colchón y la colegiatura del primer semestre— contra la cuenta a fin de agosto (`fmt: 'txt'`) | derivada |
 | `{{mesMillon}}` | ago 2031 — el mes en que la proyección cruza el millón (`fmt: 'mes'`) | derivada de la PROYECCION |

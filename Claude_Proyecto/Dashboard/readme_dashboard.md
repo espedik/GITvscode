@@ -424,7 +424,7 @@ septiembre; en el presupuesto mensual entra por la mitad, `gasMensual`). El veri
 que **todo gasto fijo de `PROYECTO` con importe caiga algún día de `CALENDARIO.cobros`**: un
 servicio nuevo sin día ya no sale de la cuenta sin que ninguna pantalla lo vea.
 
-Desde octubre de 2026 el calendario trae también **el plan**: el ahorro de cada quincena a GBM (en verde, `ahorro: true`) y, desde febrero de 2027, el aporte a tu familia del día 1. Salen de la quincena como cualquier cobro, así que lo que el riel dice que te queda ya es tu gasto personal. **Mientras la BBVA tenga saldo**, lo que sobra de la quincena va a ella: el día 1 y el 15 sale *Tarjeta BBVA — lo que sobra de la quincena* y el envío a GBM de ese día baja en lo mismo; el día de pago, *el mínimo, con lo de Didi*. Ya no se pinta el total de la tarjeta el día 11 (Adán: *"me estás diciendo de pagar mi tarjeta pero ni tengo dinero… eso debe ser cada quincena"*).
+Desde octubre de 2026 el calendario trae también **el plan**: el ahorro de cada quincena a GBM (en verde, `ahorro: true`) y, desde febrero de 2027, el aporte a tu familia del día 1. Salen de la quincena como cualquier cobro, así que lo que el riel dice que te queda ya es tu gasto personal. **Mientras la BBVA tenga saldo**, lo que sobra de la quincena va a ella: el día 1 y el 15 sale *Tarjeta BBVA — lo que sobra de la quincena* y el envío a GBM de ese día baja en lo mismo; el día de pago, *el pago del 11, con lo de Didi* —lo que pide el estado de cuenta para no generar intereses—. Ya no se pinta el total de la tarjeta el día 11 (Adán: *"me estás diciendo de pagar mi tarjeta pero ni tengo dinero… eso debe ser cada quincena"*).
 
 ### El mes
 
@@ -463,7 +463,7 @@ edita en Finanzas, `saveActivo` pone la fecha sola.
 
 **Cuando la quincena no cierra, el estado da el plan** (prompt de Plan Maestro: el hueco previsto
 se resuelve antes de que llegue): cuánto falta para llegar al 15 (o al día 1), cuánto trae Didi de
-aquí al cierre al ritmo de `didiMes` menos lo que ya aparta, más —si el mínimo de la BBVA cae en el tramo— lo que Didi aparta para él, porque la serie ya lo resta; y si lo cubre o cuánto falta aún. Didi sigue fuera de la
+aquí al cierre al ritmo de `didiMes` menos lo que ya aparta, más —si el pago del 11 de la BBVA cae en el tramo— lo que Didi aparta para él, porque la serie ya lo resta; y si lo cubre o cuánto falta aún. Didi sigue fuera de la
 serie; solo entra en el plan. Bajo «Cierras el 14 con» la nota dice *te falta* si el cierre es
 negativo. La BBVA con plan sale con sus abonos de `planBbva`, no con su mínimo ni su total (ver
 `agendaDia` en `DATOS-MAESTROS.md`).
@@ -701,10 +701,11 @@ de esos dos (`kpiDetalle`, `kpiBarra` con `pista`) usan el mismo par y ponen el 
 
 **Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se
 paga completa cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle y en
-los desgloses de Deuda cara y Patrimonio, que la marcan "sin intereses". La BBVA ya no lo lleva: su
-tasa corre, y en Deuda cara y Deuda total dice además su plan (`bbvaPlanTxt()`: *quincena a
-quincena, en cero el 2 nov con $377 de intereses*). Sigue sumando en Deuda cara porque es saldo de
-tarjeta.
+los desgloses de Deuda cara y Patrimonio, que la marcan "sin intereses". La BBVA ya no lleva
+`noInterest`, pero tampoco paga intereses: Adán cubre cada mes lo que pide el estado de cuenta para
+no generarlos (`CIFRAS.PROYECTO.bbvaSinIntereses`), así que su tasa tampoco corre y en Deuda cara y
+Deuda total dice cuándo quedará en cero (`bbvaPlanTxt()`: *quincena a quincena, en cero el 2 nov, sin intereses*).
+Sigue sumando en Deuda cara porque es saldo de tarjeta.
 **El panel de cada medidor es XL** (`.gbm-card.kpi-card`: `min(1560px, 96vw)` de ancho y alto
 automático hasta el 94 %; Adán, 21-sep-2026: *"todas las ventanas iguales a estas debes hacerlas
 lo más grande posible"*). Cada `kpiDetalle` sigue escribiendo su HTML de corrido con `kpiSec`,

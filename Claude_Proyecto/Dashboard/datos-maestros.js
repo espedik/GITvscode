@@ -140,6 +140,10 @@ window.CIFRAS = (function () {
     ahorroDia15Casa: 9000,
     // El día del saldo de la BBVA que dijo Adán (`d001` en DEUDAS_SEED): de aquí arranca su plan.
     bbvaFecha: '2026-10-05',
+    // Y no cobra intereses (Adán, 6-oct-2026: "bbva no va cobrar intereses, eso déjalo en 0, por
+    // que pagaré para no pagar intereses a la tarjeta"): cada mes cubre lo que pide el estado de
+    // cuenta para no generarlos. `planBbva` no les suma nada y el Dashboard no se los cuenta.
+    bbvaSinIntereses: true,
     // La pestaña "Riesgo súper alto" de Qué invertir hoy (Adán, 21-sep-2026): al mes van
     // especulacionMes, de los que cetesDia15 son CETES fijos, especulacionBtcPct % a Bitcoin y
     // TODO el resto a una sola empresa a la baja que investiga Claude.
@@ -274,8 +278,8 @@ window.CIFRAS = (function () {
     // negativo— y así las barras enseñan los $38,100 pagados de verdad.
     // 2026-09-30: vuelve a $10,000 ("la de bbva le debo 10 mil") y la pagaba completa cada mes. El
     // 5-oct-2026 debe $15,000 y no le alcanza para pagarla el 11 ("me estás diciendo de pagar mi
-    // tarjeta pero ni tengo dinero"): `noInterest` queda en 0 —la tasa corre— y se paga quincena a
-    // quincena con `planBbva`, desde `PROYECTO.bbvaFecha`.
+    // tarjeta pero ni tengo dinero"): `noInterest` queda en 0 —el 11 ya no pide el total— y se paga quincena a
+    // quincena con `planBbva`, desde `PROYECTO.bbvaFecha`, sin intereses (`bbvaSinIntereses`).
     {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:15000,       rate:55.7,  min:1500, day:11,start:'2024-01-22', noInterest:0},
     // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. 55.7 es un supuesto tomado de
     // la BBVA, no un dato medido de esta tarjeta.
@@ -484,11 +488,11 @@ window.CIFRAS = (function () {
     ]},
     {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Solicitud enviada y el ahorro en marcha",
      meta:"Al 31 mar 2027: <b>1)</b> la solicitud a {{maestriaEscuela}} enviada completa —el IELTS (6.0) y el pasaporte ya los tienes; faltan las dos cartas de recomendación, el CV y la carta de motivación—; <b>2)</b> el depa entregado a fin de enero y, desde febrero, en casa de tu familia; <b>3)</b> en GBM, {{marzoParaJunio}} para que junio alcance (tu ritmo solo da {{alemaniaMarzo}}); <b>4)</b> la BBVA en cero desde el {{bbvaCero}} y, desde ahí, lo que pagues con ella saldado en la misma quincena: ni un peso de interés; <b>5)</b> el ISTQB CT-GenAI aprobado.",
-     explica:"Para irte en septiembre de 2027 todo converge en dos fechas: el 31 mar 2027 cierra la solicitud de Esslingen y en junio necesitas {{salidaJunio}} para la cuenta bloqueada y la visa. Primero la BBVA: debes {{tcBbva}} y no se paga de golpe el 11. Lo que sobra de cada quincena y lo de Didi de cada lunes van a la tarjeta hasta dejarla en cero el {{bbvaCero}} —cuesta {{bbvaIntereses}} de intereses—; el 11 de octubre, solo el mínimo, con lo de Didi. Después, todo a GBM. Cada quincena se sostiene sola: hasta enero mandas {{ahorroDia1}} el 1 y {{ahorroDia15}} el 15, {{ahorroMesDepa}} al mes con los {{didiAhorro}} de Didi; desde febrero, sin renta y en casa de tu familia ({{aporteCasa}} de aporte, y comes en casa), {{ahorroDia1Casa}} el 1 y {{ahorroDia15Casa}} el 15: {{ahorroMesCasa}} al mes con los {{didiAhorroMas}} de Didi. El aguinaldo paga el seguro del BYD y no entra. Con ese ritmo, a fin de junio GBM tiene {{alemaniaJunio}}: {{junioVeredicto}}. Ese hueco se cierra en esta fase, no en junio: ventas, Didi de más y tu gasto personal —{{gastoPersonalDepa}} al mes con depa y {{gastoPersonalCasa}} en casa; {{cuidadoMes}} de eso son tus rutinas de piel, cabello y suplementos— sin pasarte. Invertido, sí, pero lo de la cuenta bloqueada no se juega: a menos de un año de usarlo, en GBM va en un fondo de deuda de corto plazo, no en acciones; una caída de la bolsa en mayo no da tiempo de recuperarse.",
+     explica:"Para irte en septiembre de 2027 todo converge en dos fechas: el 31 mar 2027 cierra la solicitud de Esslingen y en junio necesitas {{salidaJunio}} para la cuenta bloqueada y la visa. Primero la BBVA: debes {{tcBbva}} y no se paga de golpe el 11. Lo que sobra de cada quincena y lo de Didi de cada lunes van a la tarjeta hasta dejarla en cero el {{bbvaCero}}, sin intereses: el 11 de octubre pagas, con lo de Didi, lo que pide el estado de cuenta para no generarlos. Después, todo a GBM. Cada quincena se sostiene sola: hasta enero mandas {{ahorroDia1}} el 1 y {{ahorroDia15}} el 15, {{ahorroMesDepa}} al mes con los {{didiAhorro}} de Didi; desde febrero, sin renta y en casa de tu familia ({{aporteCasa}} de aporte, y comes en casa), {{ahorroDia1Casa}} el 1 y {{ahorroDia15Casa}} el 15: {{ahorroMesCasa}} al mes con los {{didiAhorroMas}} de Didi. El aguinaldo paga el seguro del BYD y no entra. Con ese ritmo, a fin de junio GBM tiene {{alemaniaJunio}}: {{junioVeredicto}}. Ese hueco se cierra en esta fase, no en junio: ventas, Didi de más y tu gasto personal —{{gastoPersonalDepa}} al mes con depa y {{gastoPersonalCasa}} en casa; {{cuidadoMes}} de eso son tus rutinas de piel, cabello y suplementos— sin pasarte. Invertido, sí, pero lo de la cuenta bloqueada no se juega: a menos de un año de usarlo, en GBM va en un fondo de deuda de corto plazo, no en acciones; una caída de la bolsa en mayo no da tiempo de recuperarse.",
      deja:"Riesgo alto y súper alto en Qué invertir hoy: el dinero de Alemania vive en GBM, en un fondo de deuda de corto plazo, porque se usa en meses, no en años. Compras a meses. Gastar de la quincena antes de mandar el ahorro. Nuevos frentes de negocio: el de tu papá se queda en piloto automático con los posts y el dossier. Y el depa: a fin de enero se entrega.",
      checkpoint:"31 mar 2027: solicitud enviada y GBM contra {{marzoParaJunio}}, lo que hace falta para que junio alcance con el ahorro de abril a junio. Si va abajo, la salida se mueve a septiembre de 2028 —la solicitud se repite en noviembre— y el ahorro sigue igual: no se viaja a medias ni con deuda.",
      semanas:[
-      {id:"a1-1",mes:"2026-10",txt:"Deja la BBVA en cero quincena a quincena. El 11 oct, el mínimo de {{tcBbvaMin}} con lo de Didi; el 15 oct, los {{ahorroDia15}} de la quincena van a la tarjeta y no a GBM; cada lunes, lo de Didi, y el 1 nov, {{ahorroDia1}}: quedará en cero el {{bbvaCero}}. Desde ahí, lo que pagues con ella lo pagas en la misma quincena."},
+      {id:"a1-1",mes:"2026-10",txt:"Deja la BBVA en cero quincena a quincena. El 11 oct, con lo de Didi, lo que pide el estado de cuenta para no generar intereses (el plan cuenta {{tcBbvaMin}}); el 15 oct, los {{ahorroDia15}} de la quincena van a la tarjeta y no a GBM; cada lunes, lo de Didi, y el 1 nov, {{ahorroDia1}}: quedará en cero el {{bbvaCero}}. Desde ahí, lo que pagues con ella lo pagas en la misma quincena."},
       {id:"a1-2",mes:"2026-10",txt:"Abre tu cuenta de GBM para Alemania, aparte del día a día. En cuanto la BBVA quede en cero, lo que sobra de cada quincena va ahí el día que entra el sueldo —{{ahorroDia1}} el 1 y {{ahorroDia15}} el 15— y lo de Didi cada lunes, hasta juntar {{didiAhorro}} al mes."},
       {id:"a1-4",mes:"2026-10",txt:"Pide las dos cartas de recomendación. Un jefe de Bosch, Continental o ALTEN y un líder técnico o profesor: en inglés y firmadas."},
       {id:"a1-5",mes:"2026-11",txt:"La ventana de Esslingen abre el 4 nov. Arma la solicitud: CV europeo, carta de motivación, título y certificado del IPN."},
@@ -765,7 +769,7 @@ window.CIFRAS = (function () {
      debo 15,000 a bbva"). Ya no se paga de golpe el 11: la deuda cara va primero (prompt del Plan
      Maestro), así que lo que cada quincena manda a GBM y lo que Didi aparta cada lunes van a la
      tarjeta hasta dejarla en cero, y el día de pago se completa al menos el mínimo con lo de Didi.
-     Arranca del saldo de `d001` en DEUDAS_SEED el día `PROYECTO.bbvaFecha`; el interés corre por día
+     Arranca del saldo de `d001` en DEUDAS_SEED el día `PROYECTO.bbvaFecha`; salvo con `PROYECTO.bbvaSinIntereses`, el interés corre por día
      a la tasa de la tarjeta más IVA, se carga el día de pago y, al llegar a cero, lo que quedaba va
      con el abono siguiente. Devuelve cada abono con su fecha y de dónde sale (`quincena`, `didi` o
      `minimo`), el día que queda en cero, lo que cuesta en intereses y el saldo al cerrar cada mes.
@@ -774,7 +778,7 @@ window.CIFRAS = (function () {
     const P = PROYECTO, tc = DEUDAS_SEED.filter(function (d) { return d.id === 'd001'; })[0];
     const out = { abonos: [], fin: null, intereses: 0, saldoMes: {}, desde: P.bbvaFecha || null };
     if (!tc || !(+tc.balance > 0) || !P.bbvaFecha) return out;
-    const diario = (+tc.rate || 0) / 100 * 1.16 / 365, min = +tc.min || 0, diaPago = +tc.day || 0;
+    const diario = P.bbvaSinIntereses ? 0 : (+tc.rate || 0) / 100 * 1.16 / 365, min = +tc.min || 0, diaPago = +tc.day || 0;
     const p = P.bbvaFecha.split('-').map(Number), d = new Date(p[0], p[1] - 1, p[2]);
     // `acum` es el interés que corre y todavía no se carga: cada abono lo paga primero, así el
     // último deja la tarjeta en cero de verdad y no un residuo de centavos para la quincena siguiente.
@@ -3946,7 +3950,7 @@ window.CIFRAS = (function () {
     },
     {
       // 2026-10-05 · "actualmente debo 15,000 a bbva… eso debe ser cada quincena". El saldo nuevo, y
-      // ya no se paga completa: `noInterest` en 0 para que su tasa corra y el 11 no pida el total.
+      // ya no se paga completa: `noInterest` en 0 para que el 11 no pida el total.
       flag: '_bbva20261005',
       hacer: function (f) {
         const tc = (f.debts || []).find(x => x.id === 'd001'); if (tc) { tc.balance = 15000; tc.noInterest = 0; }
@@ -4407,7 +4411,7 @@ window.CIFRAS = (function () {
       out.push({ t: c.txt, monto: monto, entra: !!c.entra, ahorro: !!c.ahorro });
     });
     tarjeta.forEach(function (a) {
-      out.push({ t: a.de === 'minimo' ? 'Tarjeta BBVA — el mínimo, con lo de Didi' : 'Tarjeta BBVA — lo que sobra de la quincena',
+      out.push({ t: a.de === 'minimo' ? 'Tarjeta BBVA — el pago del ' + dia + ', con lo de Didi' : 'Tarjeta BBVA — lo que sobra de la quincena',
                  monto: a.monto, entra: false, tarjeta: true, de: a.de });
     });
     const DEU = (debts && debts.length) ? debts : deudas();
