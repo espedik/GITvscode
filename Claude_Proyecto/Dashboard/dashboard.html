@@ -3035,23 +3035,32 @@ button.hp-lec:active{transform:translateY(0)}
 .hp-paso-t{font-size:12.5px;font-weight:700;color:var(--text);line-height:1.25}
 .hp-paso-d{font-size:11px;color:var(--text3);line-height:1.35;margin-top:2px}
 .hp-paso:hover .hp-paso-t{color:var(--cy)}
-/* Hábitos de hoy */
-.dh-hd{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
-.dh-hd .mono{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3)}
+/* Hábitos de hoy. Caben todos sin desplazar (Adán: "haz más pequeñas las letras para que quepan
+   todos los hábitos sin hacer scroll down"): letra chica con el ancla debajo y, si ni así cabe la
+   lista, `.compacto` pone el ancla en la misma línea que el nombre —completa en el `title`—.
+   renderDiaHabitos() lo decide midiendo la lista, así que se adapta al alto de cada pantalla. */
+.dh-hd{display:flex;align-items:baseline;justify-content:space-between;gap:8px;line-height:1}
+.dh-hd .mono{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text3)}
 .dh-hd .mono b{color:var(--g)}
 .dh-list{flex:1;min-height:0;display:flex;flex-direction:column}
-.dh-row{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:10px;align-items:center;padding:5px 0;border-top:1px solid rgba(var(--ov),.07);
+.dh-row{display:grid;grid-template-columns:18px minmax(0,1fr) auto;gap:8px;align-items:center;padding:2px 0;border-top:1px solid rgba(var(--ov),.07);
   background:none;border-left:none;border-right:none;border-bottom:none;width:100%;text-align:left;font-family:inherit;cursor:pointer;color:inherit}
 .dh-row:first-child{border-top:none}
-.dh-c{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(var(--ov),.22);display:flex;align-items:center;justify-content:center;color:#05050a;font-size:11px;transition:background .15s,border-color .15s}
+.dh-c{width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(var(--ov),.22);display:flex;align-items:center;justify-content:center;color:#05050a;font-size:10px;transition:background .15s,border-color .15s}
 .dh-row.ok .dh-c{background:var(--g);border-color:var(--g)}
 .dh-row.no .dh-c{border-color:var(--r)}
-.dh-n{font-size:12.5px;font-weight:600;color:var(--text);line-height:1.2}
+.dh-t{min-width:0}
+.dh-n{font-size:11.5px;font-weight:600;color:var(--text);line-height:1.2}
 .dh-row.ok .dh-n{color:var(--text3);text-decoration:line-through}
-.dh-a{display:block;font-size:10px;color:var(--text3);font-weight:500;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dh-r{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--text3);white-space:nowrap}
+.dh-a{display:block;font-size:9.5px;line-height:1.2;color:var(--text3);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dh-r{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text3);white-space:nowrap}
 .dh-r.viva{color:var(--o)}
 .dh-vacio{font-size:12px;color:var(--text3);padding:6px 0}
+/* En una línea: primero el nombre, y el ancla detrás hasta donde alcance. */
+.dh-list.compacto .dh-row{padding:1px 0}
+.dh-list.compacto .dh-t{display:flex;align-items:baseline;gap:6px;white-space:nowrap}
+.dh-list.compacto .dh-n{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.dh-list.compacto .dh-a{flex:1 1 0;min-width:0}
 /* Entrenas */
 /* `contents`: sus hijos son hijos de la tarjeta, así solo la lista de ejercicios cede alto; si ni así
    cabe, desplaza la tarjeta (bajo 1280 px de ancho mide 130-150 px). */
@@ -7186,11 +7195,18 @@ function renderDiaHabitos(){
       const ok=h.estado==='hoyok'||h.estado==='ok';
       return `<button class="dh-row${ok?' ok':''}" onclick="HB.toggleHoy('${h.id}');renderDiaHabitos()" title="${esc(h.nombre)} — ${esc(h.ancla||'')}">
         <span class="dh-c">${ok?'✓':HB.ico(h.ico,h.color,13)}</span>
-        <span><span class="dh-n">${esc(h.nombre)}</span>${h.ancla?`<span class="dh-a">${esc(h.ancla)}</span>`:''}</span>
+        <span class="dh-t"><span class="dh-n">${esc(h.nombre)}</span>${h.ancla?`<span class="dh-a">${esc(h.ancla)}</span>`:''}</span>
         <span class="dh-r${h.racha>=3?' viva':''}">${h.racha>=3?'🔥 ':''}${h.racha}</span>
       </button>`;
     }).join(''):'<div class="dh-vacio">Hoy no toca ningún hábito.</div>'}</div>`;
+  // Que quepan todos sin desplazar: si con el ancla debajo la lista no cabe, va en la misma línea.
+  // Con la lista oculta (otra pantalla) no se mide: se vuelve a pintar al regresar a Mi Día.
+  const L=el.querySelector('.dh-list');
+  if(L&&L.clientHeight>0&&L.scrollHeight>L.clientHeight+1) L.classList.add('compacto');
 }
+// Al cambiar el alto de la ventana cambia lo que cabe: se vuelve a decidir.
+let _dhResize=0;
+addEventListener('resize',()=>{ clearTimeout(_dhResize); _dhResize=setTimeout(renderDiaHabitos,150); });
 // Los cobros y abonos de los próximos 7 días, de CIFRAS.agendaDia — la misma fuente que el
 // calendario del Plan Maestro, para que las dos pantallas no puedan discrepar.
 function cobrosHtml(mon){
