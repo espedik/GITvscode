@@ -1001,10 +1001,18 @@ aproximados por etiqueta—: es el dato para medir la proteína por peso gastado
 debajo del HUD empiezan los pasillos. Lo que decía la leyenda —ticket o estimado, qué suma un
 `+`— está en el `title` de cada píldora. Las demás categorías conservan su `.lc-price-leyenda`.
 
+**Comida va por columnas** (Adán: *"lo de comida, ordénalo por columnas, se ve muy mal así"*): cada
+pasillo es un bloque con sus productos uno debajo de otro, y `.lc-aisles` reparte los pasillos en
+tantas columnas de 440 px como quepan (`columns:auto 440px`), parejas de alto y sin partir un pasillo
+(`break-inside:avoid`). Medido: 4 columnas a 2282 px, 3 a 1600, 2 a 1366 y 1 en iPad y celular, sin
+nombres cortados ni renglones desbordados. Las demás categorías no llevan `.lc-aisles`: sus pasillos
+van a todo lo ancho. En todas, los renglones de un pasillo son una sola columna
+(`.lc-grid.lc-grid-1col`).
+
 **El renglón cabe en una línea** —checkbox · nombre · píldora · precio unitario · contador ·
-tiendas · subtotal— y por eso `.lc-grid` pide columnas de 430 px. La píldora lleva punto lleno si
-el precio salió del ticket de Walmart y hueco si es estimado. En celular (`≤760px`) el renglón va
-a dos líneas de 46 px.
+tiendas · subtotal— en los 440 px de una columna. La píldora lleva punto lleno si el precio salió
+del ticket de Walmart y hueco si es estimado. En celular (`≤760px`) el renglón va a dos líneas de
+46 px.
 
 **Dónde se guarda.** `dash-lista-compras` (producto → número de `paso`) y `dash-lista-tengo` (solo
 fuera de Comida). Los `true` de listas anteriores al contador se leen como 1.

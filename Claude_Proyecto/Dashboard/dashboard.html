@@ -1698,11 +1698,16 @@ button.hp-lec:active{transform:translateY(0)}
 /* 430px es el ancho medido en que el renglón completo entra en una línea. Escritorio da 2
    columnas, iPad 2, celular 1. (Antes eran 340px SIN los links, que iban en otro renglón.) */
 .lc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(430px,1fr));gap:0 26px}
-/* Fuera de Comida, UNA sola columna (2026-08-29, pedido de Adán: "no se ve nada"). Ahí los
-   nombres son líneas enteras —"Exfoliante (BHA/AHA) — The Ordinary Ácido Salicílico 2% o..."— y
-   con tres columnas se comían en puntos suspensivos. Comida sí se queda en varias: ahí el
-   producto es una palabra ("Cebolla") y lo que importa es ver el canasto entero de un vistazo. */
-.lc-grid-1col{grid-template-columns:1fr}
+/* Los renglones de un pasillo van uno debajo de otro (`.lc-grid-1col`). Fuera de Comida los nombres
+   son líneas enteras —"Exfoliante (BHA/AHA) — The Ordinary Ácido Salicílico 2% o..."— y en varias
+   columnas se comían en puntos suspensivos. */
+.lc-grid.lc-grid-1col{grid-template-columns:1fr}
+/* Comida, por columnas (Adán: "lo de comida, ordénalo por columnas, se ve muy mal así"): cada
+   pasillo es un bloque con sus productos en lista, y los pasillos se reparten en tantas columnas de
+   440 px como quepan —3 a 1600 px, 4 a 2000— con el alto parejo. Un pasillo no se parte entre dos
+   columnas. En el celular queda una. */
+.lc-aisles{columns:auto 440px;column-gap:32px}
+.lc-aisles .lc-aisle{break-inside:avoid;margin:0 0 18px}
 .lc-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(var(--ov),.05)}
 .lc-item:hover{background:rgba(var(--ov),.025)}
 /* `display:contents` en escritorio (todo en la misma línea flex) y contenedor real en celular,
@@ -5964,7 +5969,7 @@ function renderListaCompras(){
         '<span>marca lo que vas a llevar y <b style="color:var(--text2)">se va sumando arriba</b></span>'+
         '<span><b style="color:var(--text2)">"Ya lo tengo"</b> lo saca del total y de los pendientes, sin borrarlo de la lista</span>'+
       '</div>';
-  const gridCls=esComida?'lc-grid':'lc-grid lc-grid-1col';
+  const gridCls='lc-grid lc-grid-1col';
   const html=Array.isArray(data)
     ? '<div class="'+gridCls+'">'+lcRenderItems(listaCatSel,data)+'</div>'
     : Object.entries(data).map(([pasillo,items])=>{
@@ -5983,7 +5988,7 @@ function renderListaCompras(){
           '<div class="'+gridCls+'">'+lcRenderItems(listaCatSel,items)+'</div>'+
         '</div>';
       }).join('');
-  document.getElementById('listaCompraBody').innerHTML=hud+leyenda+html;
+  document.getElementById('listaCompraBody').innerHTML=hud+leyenda+(esComida&&!Array.isArray(data)?'<div class="lc-aisles">'+html+'</div>':html);
 }
 function verListaCat(cat){ listaCatSel=cat; renderListaCompras(); }
 // El checkbox pone la cantidad de UNA SEMANA (`base`), no 1: en el súper no llevas un plátano,
