@@ -334,12 +334,11 @@ const DIAS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábad
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto',
                'septiembre','octubre','noviembre','diciembre'];
 
-// El zapato de la figura sale de las reglas, no de la ocasión: si ninguno está en verde
-// con ese pantalón, va sin zapato antes que con uno que la tabla desaconseja.
-function torreHtml(c, ancho) {
+// El zapato del conjunto sale de las reglas, no de la ocasión: si ninguno está en verde
+// con ese pantalón, va sin franja de zapato antes que con uno que la tabla desaconseja.
+function torreHtml(c) {
   const z = elegir(COLORIMETRIA.calzado, COLORIMETRIA.reglasZapato, c.p.id);
-  return `<div class="hy-torre">${figuraSvg(c.t.hex, c.p.hex, z ? z.x.hex : null, ancho,
-    c.t.n + ' con ' + c.p.n)}</div>`;
+  return `<div class="hy-torre">${conjuntoHtml(c.t.hex, c.p.hex, z ? z.x.hex : null, c.t.n + ' con ' + c.p.n)}</div>`;
 }
 
 function renderHoy() {
@@ -373,7 +372,7 @@ function renderHoy() {
             <div class="hy-dato">${o.ocs.map(x => x.n).join(' · ') || '—'}</div></div>
         </div>
       </div>
-      ${torreHtml(o, 176)}
+      ${torreHtml(o)}
     </div>`
   : `
     <div class="hy-h hy-vacio">
@@ -391,7 +390,7 @@ function renderHoy() {
     <div class="hy-lbl" style="color:var(--text3);margin:26px 0 14px">Otras que ya puedes armar</div>
     <div class="hy-alts">
       ${alt.map(c => `<div class="hy-alt">
-        ${torreHtml(c, 44)}
+        ${torreHtml(c)}
         <div style="min-width:0">
           <div class="hy-alt-n">${c.t.n}<br>+ ${c.p.n}</div>
           <div class="hy-alt-o">${c.ocs.map(x => x.n).join(' · ') || '—'}</div>
@@ -618,43 +617,17 @@ function renderReglas() {
   </div>`;
 }
 
-// ─── LAS SILUETAS ────────────────────────────────────────────────────────────
-// Dos dibujos y una regla para elegir cuál: la FIGURA donde hay una combinación —Hoy y
-// las 48 tarjetas—, y la PRENDA SUELTA donde hay una sola prenda —Mi clóset, las fichas
-// de compra, la ruta—. Un muñeco con solo la playera puesta y el resto en blanco se ve
-// mal, y una prenda suelta no dice nada de cómo queda el conjunto.
-//
-// El contorno lleva `vector-effect:non-scaling-stroke` (en el CSS): la línea mide 1,5px
-// reales lo mismo a 212px que a 30. Sin eso, la silueta pequeña se convierte en una
-// mancha de tinta y la grande en un dibujo desvaído.
-
-// La figura, canon de ocho cabezas sobre un viewBox de 200×640: cabeza 22-96, hombros
-// 127, cintura 286, entrepierna 372, tobillo 580, suelo 602. El orden de los trazos ES
-// el orden de pintado: las piernas y los brazos van antes que la ropa para que la ropa
-// los tape, y el cuello antes que la playera para que el escote lo corte.
-const SIL_FIG = [
-  ['piel', 'M70,300 L66,470 L70,586 L92,586 L94,470 L98,340 L102,340 L106,470 L108,586 L130,586 L134,470 L130,300 Z'],
-  ['piel', 'M28,190 L23,252 L21,262 C20,272 25,280 33,280 C41,280 46,273 45,264 L43,254 L49,195 Z'],
-  ['piel', 'M172,190 L177,252 L179,262 C180,272 175,280 167,280 C159,280 154,273 155,264 L157,254 L151,195 Z'],
-  ['piel', 'M87,84 L82,162 L118,162 L113,84 Z'],
-  ['pant', 'M60,286 C58,320 62,352 64,392 L66,580 L94,580 L100,372 L106,580 L134,580 L136,392 C138,352 142,320 140,286 Z'],
-  ['play', 'M74,109 L32,127 L19,186 L55,197 L59,169 L63,292 L137,292 L141,169 L145,197 L181,186 L168,127 L126,109 C122,114 112,122 100,122 C88,122 78,114 74,109 Z'],
-  ['piel', 'M100,22 C118,22 130,37 130,57 C130,78 117,96 100,96 C83,96 70,78 70,57 C70,37 82,22 100,22 Z'],
-  ['pelo', 'M70,58 C70,32 83,19 100,19 C117,19 130,32 130,58 C130,47 123,40 114,37 C106,44 94,44 86,37 C77,40 70,47 70,58 Z'],
-  ['zap',  'M68,572 L92,572 L92,592 C92,599 87,602 81,602 L58,602 C52,602 49,599 50,594 C51,589 56,587 61,585 Z'],
-  ['zap',  'M108,572 L132,572 L139,585 C144,587 149,589 150,594 C151,599 148,602 142,602 L119,602 C113,602 108,599 108,592 Z'],
-];
-
-function figuraSvg(playera, pantalon, zapato, ancho, etiqueta) {
-  const alto = Math.round(ancho * 640 / 200);
-  const col = { play: playera || '#f6f6f4', pant: pantalon || '#f6f6f4', zap: zapato || '#f6f6f4' };
-  const trazos = SIL_FIG.map(function (t) {
-    if (t[0] === 'piel') return '<path class="s-piel" d="' + t[1] + '"></path>';
-    if (t[0] === 'pelo') return '<path class="s-pelo" d="' + t[1] + '"></path>';
-    return '<path d="' + t[1] + '" fill="' + col[t[0]] + '"></path>';
-  }).join('');
-  return '<svg class="sil" viewBox="0 0 200 640" width="' + ancho + '" height="' + alto +
-    '" role="img" aria-label="' + cmEsc(etiqueta || '') + '">' + trazos + '</svg>';
+// ─── EL COLOR, SIN DIBUJO ────────────────────────────────────────────────────
+// Ni fotos ni siluetas (Adán, 6-oct-2026: "en vez de usar iconos de playeras o pantalones, solo
+// pon el color", y de la figura de Hoy: "también esto"). Una prenda es su muestra de color; una
+// combinación, sus colores apilados como se ven puestos: la playera arriba, el pantalón debajo
+// con el doble de alto —ocupa el doble del cuerpo, así que pesa el doble en lo que se ve de
+// lejos— y el zapato en una franja al pie. El tamaño lo pone el recuadro que lo contiene.
+function conjuntoHtml(playera, pantalon, zapato, etiqueta) {
+  return '<div class="cj" role="img" aria-label="' + cmEsc(etiqueta || '') + '">' +
+    '<span class="cj-t" style="background:' + playera + '"></span>' +
+    '<span class="cj-p" style="background:' + pantalon + '"></span>' +
+    (zapato ? '<span class="cj-z" style="background:' + zapato + '"></span>' : '') + '</div>';
 }
 
 // Una prenda suelta es su color y nada más (Adán, 6-oct-2026: "en vez de usar iconos de playeras
@@ -844,8 +817,7 @@ function combCard(c) {
     `<span class="cb-oc" title="${o.nota.replace(/"/g, '&quot;')}">${o.ico} ${o.n} · ${o.zapato}</span>`).join('');
   const z = elegir(COLORIMETRIA.calzado, COLORIMETRIA.reglasZapato, c.p.id);
   return `<div class="cb">
-    <div class="cb-color">${figuraSvg(c.t.hex, c.p.hex, z ? z.x.hex : null, 62,
-      c.t.n + ' con ' + c.p.n)}</div>
+    <div class="cb-color">${conjuntoHtml(c.t.hex, c.p.hex, z ? z.x.hex : null, c.t.n + ' con ' + c.p.n)}</div>
     <div class="cb-body">
       <div class="cb-n">${c.t.n} <span>+</span> ${c.p.n}</div>
       <div class="cb-por">${c.porque}</div>

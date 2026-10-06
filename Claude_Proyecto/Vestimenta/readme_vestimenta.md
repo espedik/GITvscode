@@ -22,11 +22,11 @@ fotos con licencia libre no dieron un catálogo que se viera bien, y para lo que
 —qué me pongo con qué— la foto de una prenda genérica no aporta: lo que decide una combinación
 es el color.
 
-Lo que sustituye a la foto es **el color**. Una prenda sola es una muestra de su color, sin dibujo
-(Adán: *"en vez de usar iconos de playeras o pantalones, solo pon el color"*); el único dibujo es
-la **figura** de Hoy y Combinaciones, que enseña el conjunto puesto. En la Colorimetría, que es una
-tabla, el color también va en muestra. El fondo carbón de la app ayuda — un color de tela se lee
-mucho mejor sobre carbón que sobre blanco.
+Lo que sustituye a la foto es **el color**, sin dibujo (Adán: *"en vez de usar iconos de playeras
+o pantalones, solo pon el color"*, y de la figura de Hoy: *"también esto"*). Una prenda sola es una
+muestra de su color; una combinación, sus colores apilados como se ven puestos. En la
+Colorimetría, que es una tabla, el color también va en muestra. El fondo carbón de la app ayuda —
+un color de tela se lee mucho mejor sobre carbón que sobre blanco.
 
 Las fichas de compra (Básicos, Chaquetas, Zapatos, Accesorios) siguen ahí **con sus precios
 y sus links verificados uno por uno**, ya como texto. Eso no se tocó: es la parte que sí
@@ -248,39 +248,27 @@ cuenta solo sobre los 25 items comprables; el clóset de color lo cuenta la cabe
 
 **Excepción intencional**: el botón de tema (🌙/☀️) sí usa la clave compartida `coach-theme` (ver `../README.md` → "Convenciones de diseño compartidas") para que el tema visual se sincronice con el resto de apps que Adán ya usa — es solo una preferencia visual, no dato personal, así que no rompe el aislamiento de datos del resto de la app.
 
-## La figura y la muestra — una regla
+## El color, sin dibujo — la muestra y el conjunto
 
-**No hay fotos.** Lo que se enseña depende de qué se está enseñando:
+**No hay fotos ni siluetas.** Lo que se enseña depende de qué se está enseñando:
 
-| Dónde | Qué | Por qué |
+| Dónde | Qué | Cómo |
 | --- | --- | --- |
-| Hoy · Combinaciones | **Figura**: silueta SVG del cuerpo con las prendas puestas, rellenas de su color | Se enseña una COMBINACIÓN, y lo que hay que juzgar es el conjunto |
-| Mi clóset · fichas · ruta de compra | **Muestra de color** (`prendaMuestra`, `.sw`) | Se enseña UNA prenda, y lo que la distingue es su color: el dibujo de una playera o un pantalón no añadía nada |
+| Mi clóset · fichas · ruta de compra | **Muestra** de UNA prenda (`prendaMuestra`, `.sw`) | Su color llena el recuadro de la ficha (`.mc-sw .sw`, `.pc-sw .sw`); en la ruta es un cuadrado de 26 px con borde |
+| Hoy · Combinaciones | **Conjunto** de una combinación (`conjuntoHtml`, `.cj`) | Los colores apilados como se ven puestos: la playera arriba, el pantalón debajo con el doble de alto y el zapato en una franja al pie |
 
-La muestra llena el recuadro de la ficha del clóset y de las fichas de compra
-(`.mc-sw .sw`, `.pc-sw .sw`); en la ruta de compra es un cuadrado de 26 px con borde. Lleva una
-línea interior fina para que el blanco y el crema no se pierdan contra el papel.
+**El pantalón pesa el doble.** En el cuerpo ocupa el doble que la playera, así que el color de
+abajo pesa el doble en lo que se ve de lejos: por eso `.cj-p` es `flex:2` contra el `flex:1` de
+`.cj-t`. El conjunto toma el tamaño de su recuadro: en Hoy llena la columna derecha (mínimo 300
+px de alto), en las otras que ya puedes armar es una torre de 40×92 y en Combinaciones la franja
+de arriba de cada tarjeta, de 118 px.
 
-La figura va sobre **canon de ocho cabezas** en un viewBox de 200×640 —cabeza 22-96,
-hombros 127, cintura 286, entrepierna 372, tobillo 580— y enseña algo que una muestra suelta
-no puede: **el pantalón ocupa el doble que la playera**, así que el color de abajo pesa el
-doble en lo que se ve de lejos.
+Cada bloque lleva una línea interior fina para que el blanco y el crema no se pierdan contra el
+papel.
 
-**El orden de los trazos ES el orden de pintado**, y por eso `SIL_FIG` es una lista y no
-un objeto: las piernas y los brazos van antes que la ropa para que la ropa los tape, y el
-cuello antes que la playera para que el escote lo corte. Con el cuello después asomaba un
-trapecio por encima de la camiseta.
-
-**`vector-effect: non-scaling-stroke`** mantiene la línea de la figura a 1,5px REALES sea
-cual sea su tamaño: sin eso, la figura pequeña se convierte en una mancha de tinta y la
-grande en un dibujo desvaído.
-
-**La piel va del color del papel** (`--surface-2`), no de un tono de piel: en «Cero» el
-único color de la pantalla es el de la prenda — y además habría que elegir cuál.
-
-El **zapato de la figura** sale de `reglasZapato`, igual que el que se nombra en el texto:
-si ninguno está en verde con ese pantalón, la figura va descalza antes que con uno que la
-propia tabla desaconseja.
+El **zapato del conjunto** sale de `reglasZapato`, igual que el que se nombra en el texto: si
+ninguno está en verde con ese pantalón, va sin franja de zapato antes que con uno que la propia
+tabla desaconseja.
 
 ## Sistema de diseño — «Cero»
 
