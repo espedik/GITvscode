@@ -735,6 +735,53 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .fa-dash tr.tot th,.fa-dash tr.tot td{font-weight:800;color:var(--text)}
 .fa-dash td.ok{color:var(--g)}
 @keyframes fasesIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+/* La ventana de las fases, a pantalla casi completa y con la letra más grande (Adán: "haz más
+   grande la ventana de Las 5 fases del Plan Maestro"). abrirKpi pone .kpi-fases en el overlay
+   solo para 'fases': los otros siete medidores siguen con el panel XL. En el celular el panel
+   ya va a pantalla completa y se queda como está. */
+@media(min-width:641px){
+  #kpiOverlay.kpi-fases{padding:12px}
+  #kpiOverlay.kpi-fases .gbm-card.kpi-card{width:100%;height:100%;max-height:100%}
+  /* La brújula del prompt va fija arriba a la izquierda y por encima de todo: con la ventana a
+     12 px del borde caía sobre su esquina. Mientras está abierta se oculta; al cerrar vuelve. */
+  body:has(#kpiOverlay.kpi-fases.open) .pp-btn{visibility:hidden}
+  .kpi-fases .gbm-head{padding:20px 30px 16px}
+  .kpi-fases .gbm-head h2{font-size:26px}
+  .kpi-fases .gbm-head p{font-size:14px}
+  .kpi-fases .gbm-close{top:18px;right:20px;width:36px;height:36px;font-size:16px}
+  .kpi-fases .kpi-card .gbm-body{padding:24px 36px 40px}
+  .kpi-fases .fz-ruta{gap:14px;margin-bottom:26px;padding-bottom:22px}
+  .kpi-fases .fz-est{padding:15px 18px 16px;gap:7px}
+  .kpi-fases .fz-est-n{font-size:12.5px}
+  .kpi-fases .fz-chip{font-size:10.5px}
+  .kpi-fases .fz-est-t,.kpi-fases .fz-est-f{font-size:15px}
+  .kpi-fases .fz-est-e{font-size:13px}
+  .kpi-fases .fz-cab{margin-bottom:16px}
+  .kpi-fases .fz-cab-n{font-size:13px}
+  .kpi-fases .fz-cab-t{font-size:34px}
+  .kpi-fases .fz-fechas>div{padding:11px 18px}
+  .kpi-fases .fz-fechas span{font-size:11px}
+  .kpi-fases .fz-fechas b{font-size:19px}
+  .kpi-fases .fz-barra{height:11px}
+  .kpi-fases .fz-barra-t{font-size:15px;margin:9px 0 24px}
+  .kpi-fases .fases-cols{gap:34px}
+  .kpi-fases .kpi-card .gbm-sec{font-size:13.5px;margin-bottom:12px}
+  .kpi-fases .fz-p,.kpi-fases .fz-ol{font-size:16px;line-height:1.62}
+  .kpi-fases .fz-ol{gap:9px}
+  .kpi-fases .fz-mes{padding:13px 16px 11px;margin-bottom:12px}
+  .kpi-fases .fz-mes-t{font-size:16px}
+  .kpi-fases .fz-mes-s{font-size:13px}
+  .kpi-fases .fz-tarea{font-size:15px;line-height:1.5;padding:5px 0}
+  .kpi-fases .fa-dash{font-size:14px}
+  .kpi-fases .fa-dash th,.kpi-fases .fa-dash td{padding:6px 8px}
+  .kpi-fases .fa-dash thead th,.kpi-fases .fa-dash tr.grupo th,.kpi-fases .fa-dash tr.grupo td{font-size:11px}
+  .kpi-fases .fa-recorte-t{font-size:15px}
+  .kpi-fases .fa-recorte ul,.kpi-fases .fa-recorte p{font-size:14.5px}
+  .kpi-fases .fa-recorte .fte{font-size:12.5px}
+  .kpi-fases .kpi-card .gbm-paso-t{font-size:17px}
+  .kpi-fases .kpi-card .gbm-paso-d,.kpi-fases .kpi-card .gbm-nota{font-size:15px}
+}
+@media(min-width:641px) and (max-width:1180px){.kpi-fases .fz-est{flex-basis:260px}}
 
 /* Otra vuelta más chico (2026-08-11, pedido explícito: "haz todavia mas pequeñas los
    indicadores de arriba, los 4") — mismo criterio que la ronda anterior: el espacio que se
@@ -11249,6 +11296,7 @@ function abrirKpi(id){
   document.getElementById('kpiSubtitulo').textContent=info.sub||'';
   document.getElementById('kpiBody').innerHTML=info.html;
   kpiAcomodar(document.getElementById('kpiBody'));
+  ov.classList.toggle('kpi-fases', id==='fases');
   ov.classList.add('open');
   // La ruta de las fases se desplaza de lado bajo 1180 px: que abra en la fase elegida.
   if(id==='fases') kpiFaseVer();

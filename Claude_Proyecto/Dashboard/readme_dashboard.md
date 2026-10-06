@@ -708,7 +708,12 @@ patrimonio 842; sin desbordes en ninguno de los ocho.
 **Las fases son la excepción**: en vez de las 2 columnas de `.kpi-cols`, una **ruta** y un panel por
 fase (Adán, 3-oct-2026: *"sé muy claro en las fechas… mejora el diseño
 de donde me muestras todas las fases"*). `.fases-tabs` es un solo hijo de `#kpiBody`, así que
-`kpiAcomodar()` lo mete en un único `.kpi-grupo` a ancho completo.
+`kpiAcomodar()` lo mete en un único `.kpi-grupo` a ancho completo. Y es **la más grande**: `abrirKpi`
+pone `.kpi-fases` en el overlay solo para ella (Adán: *"haz más grande la ventana de Las 5 fases del
+Plan Maestro"*), y desde 641 px la ventana va a 12 px del borde —99 % × 98 % en 1600×1000, 1576×976
+px— con la letra de las fases más grande: tareas y textos a 15–16 px, la fase a 34 px, la tabla del
+ahorro a 14 px. Mientras está abierta se oculta la brújula del prompt (`.pp-btn`), que si no cae
+sobre su esquina. Los otros siete medidores siguen con el panel XL.
 
 - **La ruta** (`.fz-ruta`): una estación por fase (`.fz-est`), con el color de la fase en el
   calendario (`CAL_FASE_COLOR`), el título, el rango de fechas (`1 oct 2026 → 31 mar 2027`), lo que
