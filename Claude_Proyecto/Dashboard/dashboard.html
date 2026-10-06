@@ -2999,6 +2999,26 @@ button.hp-lec:active{transform:translateY(0)}
 .dia-ahora .blq-txt{font-size:clamp(22px,2.2vw,32px);line-height:1.08;letter-spacing:-.012em}
 .dia-ahora .blq-acciones{margin-top:12px}
 .dia-ahora .blq-btn{height:38px;padding:0 16px;border-radius:10px;font-size:12.5px}
+/* El AHORA sin desplazar (Adán: "aquí no quiero hacer scroll down, ponlo como en 2 columnas y que
+   se vea muy bien"): el título corto con su detalle al lado, y las subtareas y la rutina de gym en
+   dos columnas. Las secciones fluyen de una columna a otra para que queden parejas, pero un
+   encabezado nunca se queda solo al pie de una. En el celular vuelve a una columna. */
+.dia-ahora .blq-txt{display:flex;align-items:baseline;flex-wrap:wrap;column-gap:14px;row-gap:2px;margin-bottom:2px}
+.blq-det{font-family:var(--font);font-size:13.5px;font-weight:500;letter-spacing:0;line-height:1.35;color:var(--text3)}
+@media(min-width:901px){
+  .dia-ahora .rt2-sub{display:block;columns:2;column-gap:30px;margin-top:6px}
+  .dia-ahora .rt2-sub-item{break-inside:avoid;margin-bottom:3px;padding:2px 8px;line-height:1.3}
+  .dia-ahora .rt2-sec{break-inside:avoid;break-after:avoid;margin:7px 0 3px}
+  .dia-ahora .rt2-sec:first-child{margin-top:0}
+  .dia-ahora .gym-lista{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7px 18px;margin-top:8px}
+  .dia-ahora .gym-ej{padding:6px 9px}
+  .dia-ahora .gym-img{width:46px;height:46px}
+  .dia-ahora .gym-ej-cue{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:11px;line-height:1.35;margin-top:1px}
+  .dia-ahora .blq-acciones{margin-top:10px}
+  .dia-ahora .rt2-sub-prodrow .lc-info{padding:1px 7px}
+  .dia-ahora .blq-txt{font-size:clamp(20px,2vw,30px)}
+  .dia-ahora .blq-head{margin-bottom:6px}
+}
 .blq-sig{font-size:12.5px;color:var(--text3);text-align:right;min-width:0}
 .blq-sig b{color:var(--text2);font-weight:700}
 /* Mientras manejas: solo cuando el bloque abierto es de Didi. El catálogo entero sigue en el
@@ -3111,6 +3131,26 @@ button.hp-lec:active{transform:translateY(0)}
   .dia-ahora .blq-txt{font-size:clamp(20px,2vw,26px)}
   .dia-reloj{font-size:28px}
   .ag-row{padding:5px 8px}
+}
+/* Si aun en dos columnas el bloque no cabe (pantallas bajas, o el gym con sus seis ejercicios),
+   pintarBloqueDetalle() le pone `.apretado`: el "Qué es" queda en su icono, las filas más juntas y
+   la indicación de cada ejercicio en una línea —completa en su ficha—. */
+@media(min-width:901px){
+  .dia-ahora.apretado .rt2-sub-item{padding:1px 8px;margin-bottom:2px}
+  .dia-ahora.apretado .rt2-sub-prodrow{gap:6px}
+  .dia-ahora.apretado .rt2-sub-prodrow .lc-info{font-size:0;gap:0;padding:2px 4px}
+  .dia-ahora.apretado .rt2-sec{margin:5px 0 2px}
+  .dia-ahora.apretado .gym-lista{gap:5px 18px;margin-top:6px}
+  .dia-ahora.apretado .gym-ej{padding:5px 9px;align-items:center}
+  .dia-ahora.apretado .gym-img{width:40px;height:40px}
+  .dia-ahora.apretado .gym-ej-cue{-webkit-line-clamp:1}
+  .dia-ahora.apretado .blq-acciones{margin-top:8px}
+  .dia-ahora.apretado .blq-btn,.dia-ahora.apretado .blq-nav{height:32px}
+}
+/* En pantallas bajas el AHORA tiene 30 vh para dejarle alto a los módulos; si ni apretado cabe,
+   recupera el 34 vh de las pantallas altas: los módulos ceden unos 30 px y ya desplazan por dentro. */
+@media(min-width:901px) and (max-height:940px){
+  .dia-ahora.apretado{max-height:34vh}
 }
 @media(max-width:1280px){
   .dia-b{grid-template-columns:360px minmax(0,1fr)}
@@ -6933,6 +6973,10 @@ function pintarBloqueDetalle(tareas, anchor, done, esHoy){
   el.style.boxShadow=`0 10px 40px rgba(0,0,0,.35), -3px 0 20px ${acento}30`;
   el.style.background=esAhora?'rgba(0,232,122,.05)':'';
 
+  // El título es el corto (el de la agenda) y lo que el completo dice después del guion va al lado,
+  // en gris: "🚿 Rutina de la mañana · ducha, cabello, piel y suplementos". Sin guion no hay detalle.
+  const completo=rtSoloTitulo(tituloBloque(t,dowB)), guion=completo.indexOf(' — ');
+  const detalle=guion>0?completo.slice(guion+3):'';
   const pill=(bg,col,br,txt)=>`<span class="rt2-cat" style="background:${bg};color:${col};border-color:${br}">${txt}</span>`;
   el.innerHTML=`
     <div class="blq-head">
@@ -6945,7 +6989,7 @@ function pintarBloqueDetalle(tareas, anchor, done, esHoy){
       ${hecho?pill('rgba(0,232,122,.16)','var(--g)','rgba(0,232,122,.4)','✅ Hecho'):''}
       ${t.fijo?pill('rgba(var(--ov),.06)','var(--text3)','rgba(var(--ov),.14)','🔒 Bloque fijo'):''}
     </div>
-    <div class="blq-txt">${tituloBloque(t,diaSemanaSel!==null?diaSemanaSel:new Date().getDay())}</div>
+    <div class="blq-txt">${esc(tituloCorto(t,dowB))}${detalle?`<span class="blq-det">${esc(detalle)}</span>`:''}</div>
     ${t.gym?gymBloqueHtml(diaSemanaSel!==null?diaSemanaSel:new Date().getDay())
            :((!t.fijo&&t.subtareas)?subtareasHtml(leaves,done,t.producto):'')}
     ${t.fijo?'<div class="blq-nota">Este bloque no se marca: es horario fijo.</div>':''}
@@ -6953,11 +6997,15 @@ function pintarBloqueDetalle(tareas, anchor, done, esHoy){
     <div class="blq-acciones">
       ${t.fijo?'':`<button class="blq-btn${hecho?' off':''}" onclick="marcarBloque('${t.id}')">${hecho?'↩️ Desmarcar':'✅ Marcar hecho'}</button>`}
       ${(!esAhora&&esHoy&&anchor)?'<button class="blq-btn off" onclick="volverABloqueAhora()">● Volver a ahora</button>':''}
-      <span class="blq-sig" style="flex:1">${sig?`Después, <b>${sig.hora} · ${esc(rtSoloTitulo(tituloBloque(sig,dowB)))}</b>`:'Es el último bloque del día'}</span>
+      <span class="blq-sig" style="flex:1">${sig?`Después, <b>${sig.hora} · ${esc(tituloCorto(sig,dowB))}</b>`:'Es el último bloque del día'}</span>
       <span class="blq-dur">${i+1} de ${tareas.length}</span>
       <button class="blq-nav" onclick="tocarBloque('${tareas[Math.max(0,i-1)].id}')" ${i===0?'disabled':''} aria-label="Bloque anterior">‹</button>
       <button class="blq-nav" onclick="tocarBloque('${tareas[Math.min(tareas.length-1,i+1)].id}')" ${i===tareas.length-1?'disabled':''} aria-label="Bloque siguiente">›</button>
     </div>`;
+  // Que quepa sin desplazar (Adán: "aquí no quiero hacer scroll down"): si en dos columnas aún no
+  // cabe, un escalón más apretado. Con la tarjeta oculta (otra pantalla) no se mide.
+  el.classList.remove('apretado');
+  if(el.clientHeight>0&&el.scrollHeight>el.clientHeight+1) el.classList.add('apretado');
 }
 
 // La rutina de gym dentro del panel: los mismos ejercicios, series, pesos y consejos que el panel
@@ -7220,9 +7268,9 @@ function renderDiaHabitos(){
   const L=el.querySelector('.dh-list');
   if(L&&L.clientHeight>0&&L.scrollHeight>L.clientHeight+1) L.classList.add('compacto');
 }
-// Al cambiar el alto de la ventana cambia lo que cabe: se vuelve a decidir.
+// Al cambiar el tamaño de la ventana cambia lo que cabe: los hábitos y el AHORA se vuelven a decidir.
 let _dhResize=0;
-addEventListener('resize',()=>{ clearTimeout(_dhResize); _dhResize=setTimeout(renderDiaHabitos,150); });
+addEventListener('resize',()=>{ clearTimeout(_dhResize); _dhResize=setTimeout(()=>{ renderDiaHabitos(); if(typeof renderDia==='function') renderDia(); },150); });
 // Los cobros y abonos de los próximos 7 días, de CIFRAS.agendaDia — la misma fuente que el
 // calendario del Plan Maestro, para que las dos pantallas no puedan discrepar.
 function cobrosHtml(mon){

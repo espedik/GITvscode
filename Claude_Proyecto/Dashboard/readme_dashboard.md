@@ -149,9 +149,21 @@ anterior, con guardas `if(!el) return`; se conservan por si vuelve.
 
 La tarjeta de la derecha, bajo la frase del día y `Semana 37 · día 256`. La pinta
 `pintarBloqueDetalle()`: el bloque de la hora actual o el tocado en la agenda, con sus subtareas
-o la rutina de gym; **Después, 21:00 · Cena ligera** (el que sigue) y, si el bloque es de Didi,
-**Mientras manejas** con el primer audiolibro del grupo de la habilidad en foco de la semana
-(`habFocoActual()`, la misma que encabeza el overlay) y el enlace a *Qué escuchar*. Tope de 34 vh con desplazamiento interno.
+o la rutina de gym; **Después, 21:00 · Cena ligera** (el que sigue, con su título corto) y, si el
+bloque es de Didi, **Mientras manejas** con el primer audiolibro del grupo de la habilidad en foco
+de la semana (`habFocoActual()`, la misma que encabeza el overlay) y el enlace a *Qué escuchar*.
+
+**Cabe sin desplazar** (Adán: *"aquí no quiero hacer scroll down, ponlo como en 2 columnas y que se
+vea muy bien"*). El título es el corto (`tituloCorto`) y lo que el completo dice después del guion
+va al lado en gris (`.blq-det`: *Rutina de la mañana · ducha, cabello, piel y suplementos*). Las
+subtareas van en **dos columnas** (`columns:2`): fluyen de una a otra para quedar parejas y un
+encabezado de sección nunca se queda solo al pie; la rutina de gym, en una rejilla de dos. Si ni
+así cabe, `pintarBloqueDetalle()` le pone **`.apretado`**: el *Qué es* queda en su icono, las filas
+más juntas y la indicación de cada ejercicio en una línea; en pantallas de 940 px de alto o menos,
+además, recupera el tope de 34 vh. Se vuelve a decidir al cambiar el tamaño de la ventana. En el
+celular va en una columna y sin tope. Medido con la rutina de la mañana (11 productos) y Piernas (6
+ejercicios): caben a 1920×1080, 1707×960, 1600×1000, 1536×864 y 1440×900; a 1366×768 todavía
+desplaza 15–29 px.
 
 ### Los seis módulos
 
@@ -167,7 +179,7 @@ por dentro.
 | **Fase** | Responde qué toca de la fase, cuánto va a la BBVA y a GBM, y qué sigue. La fase activa con su barra (*día 3 de 182 · quedan 179*). **Este mes**: las tareas del mes, pendientes primero, con casilla —se marcan aquí mismo— y *en 8 días* cuando el texto trae su día dentro del mes (*"cierra el 31 mar"* en una tarea de enero es un plazo, no el día de hacerla); el texto completo, al pasar el ratón; si el mes no trae tareas, las de toda la fase. **El dinero de Alemania**: el próximo lunes de Didi (`didiAlAhorro` × 12/52) —a la BBVA, para el mínimo de su día de pago o a GBM, según `planBbva`—, el próximo envío del calendario —a la BBVA o a GBM, hasta el último mes en México—, el día que la BBVA queda en cero con lo que cuesta en intereses y la cifra que decide la fase: sus cortes de junio y la salida con lo que falta, o en la Fase 1 `marzoParaJunio` contra `alemaniaMarzo`. **Lo que sigue**: la primera pendiente de un mes que viene o, sin ella, el hito más cercano. **Después · Fase N** solo en el último mes de la fase | `renderHeroFase()` sobre `PHASES`, `ctAgenda()`, los `cortes` de `PROYECCION` y `CALENDARIO.hitos`; la casilla llama a `faseHoyMarca()`, que guarda con `toggleFaseCheck` en la semana de hoy; `faseDespuesHtml()` |
 | **Importante este mes** | Los pendientes del mes con pestañas, «+ Nuevo», editar y borrar | `dash-eventos-mes-v1` |
 
-**Tamaños.** Bajo 940 px de alto el AHORA baja a 30 vh; bajo 1280 px de ancho la agenda mide
+**Tamaños.** Bajo 940 px de alto el AHORA baja a 30 vh (34 si va `.apretado`); bajo 1280 px de ancho la agenda mide
 360 px y los módulos van 2×3; en el celular todo va a una columna (módulos en dos columnas, una
 bajo 600 px). **Al medir Mi Día, la hora importa**: el alto cambia con el bloque actual y los que
 quedan, así que dos medidas a horas distintas no son comparables.
