@@ -235,6 +235,8 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
     'a 12 meses $4,000/mes',                       // cuota de ahorro, no el saldo del fondo
     'Precio: $10,000 setup',                       // precio de un servicio del catálogo de negocios
     'original (oct. 2027, $500,000)',              // foto histórica: la meta ANTES de reagendarse
+    '$15,000–',                                    // rangos de costos del catálogo de negocios de Coach, no la BBVA
+    'más que $15,000 parados',                     // el ejemplo de rotación de ese mismo catálogo
   ];
   let total = 0;
   const filas = [];
@@ -271,7 +273,7 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   });
   // 3000, 5000 y 10000 (el aporte a la casa y lo que aparta Didi) son también tiempos en ms, escalas
   // de gráficas y precios sueltos: esas variables se vigilan por su marcador, no por su número.
-  const AMBIGUOS = ['1500', '3000', '4000', '5000', '10000'];   // dosis de vitaminas, cuotas de ahorro, precios sueltos
+  const AMBIGUOS = ['1500', '3000', '4000', '5000', '10000', '15000'];   // dosis de vitaminas, cuotas de ahorro, precios sueltos, la inversión de los negocios de Coach
   const hallazgos = [];
   for (const [rel, src] of APPS.concat([['Dashboard/datos-maestros.js', maestro]])) {
     const limpio = sinComentarios(src);
@@ -858,18 +860,34 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
       if (SU.comidaEnCasa !== desayuno) malos.push('     SUPUESTOS.comidaEnCasa es $' + SU.comidaEnCasa + ' y tus recetas de desayuno dan $' + desayuno + ' al mes');
     }
   } catch (e) { malos.push('     la comprobación de la comida falló: ' + e.message); }
-  /* Los importes de PROYECTO.ahorroDia15… salieron de cuadrar cada quincena contra los fijos, la
-     comida y el tope de gasto personal (SUPUESTOS.vida). Si un fijo cambia, el gasto personal se
-     aleja del tope: se avisa para decidir si lo nuevo va al ahorro o al día a día. El margen es lo
-     que se pierde al redondear a cientos cada envío. */
-  const SUP = C.PROYECCION.supuestos;
-  [[false, SUP.loDemas], [true, SUP.loDemasEnCasa]].forEach(function (e) {
-    const t = C.mesTipo(e[0]), envios = (t.dia1 ? 1 : 0) + (t.dia15 ? 1 : 0), dif = t.g.personal - e[1];
-    const etapa = e[0] ? 'en casa' : 'con depa';
-    if (dif < 0) avisos.push('El ahorro de cada quincena ' + etapa + ' ya no cabe: tu gasto personal queda en $' + Math.round(t.g.personal) +
-      ', $' + Math.round(-dif) + ' bajo el tope de lo demás. Baja PROYECTO.ahorroDia… o el tope.');
-    else if (dif >= 100 * Math.max(1, envios)) avisos.push('Con los fijos de hoy, ' + etapa + ' cabe mandar $' + Math.round(dif) +
-      ' más al mes a la cuenta de Alemania (lo demás va en $' + Math.round(t.g.personal) + ' y el tope es $' + e[1] + ').');
+  /* Cada quincena se sostiene sola (Adán, 5-oct-2026: "eso debe ser cada quincena y deja dinero
+     sobrante para la quincena"). En cada quincena de cada mes en México: el sueldo, menos los fijos
+     de sus días, la comida de sus días y su parte del gasto personal —las rutinas y el tope de lo
+     demás, por día— tiene que alcanzar para lo que manda ese día a GBM o a la BBVA. Si no alcanza es
+     un problema; si en el peor mes de su etapa sobran $100 o más, se avisa que cabe mandar más. El
+     mínimo de la BBVA que se paga con Didi no cuenta: no sale del sueldo. */
+  const SUP = C.PROYECCION.supuestos, peor = {};
+  C.PROYECCION.meses.filter(m => m.desglose).forEach(function (m) {
+    const p = m.mes.split('-').map(Number), nDias = new Date(p[0], p[1], 0).getDate(), casa = m.desglose.casa;
+    const come = C.comerEnMes(m.mes, SUP.comida / 30.4);
+    const pers = (C.n('cuidadoMes') + (casa ? SUP.loDemasEnCasa : SUP.loDemas)) / nDias;
+    [[1, 14], [15, nDias]].forEach(function (q) {
+      let libre = -(come + pers) * (q[1] - q[0] + 1), envio = 0;
+      for (let d = q[0]; d <= q[1]; d++) C.agendaDia(d, m.mes, C.DEUDAS_SEED).forEach(function (x) {
+        if (x.entra) libre += +x.monto || 0;
+        else if (x.ahorro || (x.tarjeta && x.de === 'quincena')) envio += +x.monto || 0;
+        else if (!x.tarjeta) libre -= +x.monto || 0;
+      });
+      if (!(envio > 0)) return;
+      const sobra = libre - envio, clave = (casa ? 'en casa' : 'con depa') + ', el día ' + q[0];
+      if (sobra < 0) malos.push('     ' + m.mes + ', quincena del ' + q[0] + ': manda $' + Math.round(envio) + ' y solo le quedan $' +
+                                Math.round(libre) + ' después de fijos, comida y su gasto. Baja PROYECTO.ahorroDia… o el tope de lo demás');
+      if (!(clave in peor) || sobra < peor[clave]) peor[clave] = sobra;
+    });
+  });
+  Object.keys(peor).forEach(function (k) {
+    if (peor[k] >= 100) avisos.push('Cada quincena ' + k + ' cabe mandar $' + Math.floor(peor[k] / 100) * 100 +
+      ' más a GBM sin quitarle a su gasto (en el peor mes de su etapa le sobran $' + Math.round(peor[k]) + ').');
   });
   if (malos.length) problemas.push('La salida a Alemania o la proyección dejaron de cuadrar:\n' + malos.join('\n'));
   else ok.push('Salida a Alemania: ' + ids.length + ' pendientes en ' + S.bloques.length + ' temas y ' + S.costos.length +

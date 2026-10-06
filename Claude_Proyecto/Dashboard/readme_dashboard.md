@@ -158,7 +158,7 @@ por dentro.
 | **Entrenas** | El día que se mira —hoy, o el que tocaste en la tira— en grande (si no es hoy, su nombre en verde arriba), **sus ejercicios** con series×reps y peso, en una línea los tres días que siguen y la tira de 7 días como chips de foto (`#heroWeekStrip`, 52 px). El peso es el último que registró Ejercicio (naranja; mismo criterio que su `ejUltimo()`) o el inicial de `EJ_PESO_INI` (gris), solo en kg; un ejercicio con todas sus series hechas ese día va en verde, y tocar su nombre abre **su ficha** (ver *La ficha de un ejercicio*, abajo). *Ejercicio →* (`#diaEntrenaLink`) abre el día elegido con `?dia=N`. `.dia-entrena` es `display:contents`: la lista es lo único que cede alto y, si ni así cabe (bajo 1280 px de ancho), desplaza la tarjeta | `renderDiaEntrena()` sobre `D.gym.rutina` o `GYM_RUTINA_DEFAULT`; el ✅ sale de `gymSesiones()`, que normaliza `mirutina_v1.sesiones` (objeto por fecha desde el 1-sep-2026, lista antes) |
 | **Hoy aprendes** | La palabra de alemán (salta a su pantalla con `irASlide`) y el tema de Python del día, que abre en la app de Entrevistas por su hash (`entrevistas.html#<id>`) porque el Dashboard ya no tiene pantalla de entrevista; **el paso de la semana** con la portada de su libro y **la ficha de Habilidades Base en curso** con el paso al que se retoma | `alemanPalabraHoy()` / `entrevistaTemaHoy()` (uno de los 41 de `ENTREVISTA_TEMAS`, por `diaDelAnio()`), con la etiqueta de módulo de `pyModLabel()` —`PY_MOD_LABEL` lo emite el generador leyendo el menú de `entrevistas.html`, y cae al id en mayúsculas si el archivo es anterior—; `pasoSemanaHtml()` con `habFocoActual()`/`habLibro()`, `fichaEnCursoHtml()` con `hbAvance()` |
 | **Tu dinero** | Fondo de emergencia, deudas, **los cobros y abonos de los próximos 7 días** y *Invertir hoy · Primero tu fondo →* | `renderHeroDinero()` + `cobrosHtml()` sobre `ctAgenda()` → `CIFRAS.agendaDia`, la misma fuente que el tablero |
-| **Fase** | Responde qué toca de la fase, cuánto va a la cuenta de Alemania y qué sigue. La fase activa con su barra (*día 3 de 182 · quedan 179*). **Este mes**: las tareas del mes, pendientes primero, con casilla —se marcan aquí mismo— y *en 8 días* cuando el texto trae su día dentro del mes (*"cierra el 31 mar"* en una tarea de enero es un plazo, no el día de hacerla); el texto completo, al pasar el ratón; si el mes no trae tareas, las de toda la fase. **El dinero de Alemania**: el próximo lunes de Didi (`didiAlAhorro` × 12/52), el próximo envío del calendario —hasta el último mes en México— y la cifra que decide la fase: sus cortes de junio y la salida con lo que falta, o en la Fase 1 `marzoParaJunio` contra `alemaniaMarzo`. **Lo que sigue**: la primera pendiente de un mes que viene o, sin ella, el hito más cercano. **Después · Fase N** solo en el último mes de la fase | `renderHeroFase()` sobre `PHASES`, `ctAgenda()`, los `cortes` de `PROYECCION` y `CALENDARIO.hitos`; la casilla llama a `faseHoyMarca()`, que guarda con `toggleFaseCheck` en la semana de hoy; `faseDespuesHtml()` |
+| **Fase** | Responde qué toca de la fase, cuánto va a la BBVA y a GBM, y qué sigue. La fase activa con su barra (*día 3 de 182 · quedan 179*). **Este mes**: las tareas del mes, pendientes primero, con casilla —se marcan aquí mismo— y *en 8 días* cuando el texto trae su día dentro del mes (*"cierra el 31 mar"* en una tarea de enero es un plazo, no el día de hacerla); el texto completo, al pasar el ratón; si el mes no trae tareas, las de toda la fase. **El dinero de Alemania**: el próximo lunes de Didi (`didiAlAhorro` × 12/52) —a la BBVA, para el mínimo de su día de pago o a GBM, según `planBbva`—, el próximo envío del calendario —a la BBVA o a GBM, hasta el último mes en México—, el día que la BBVA queda en cero con lo que cuesta en intereses y la cifra que decide la fase: sus cortes de junio y la salida con lo que falta, o en la Fase 1 `marzoParaJunio` contra `alemaniaMarzo`. **Lo que sigue**: la primera pendiente de un mes que viene o, sin ella, el hito más cercano. **Después · Fase N** solo en el último mes de la fase | `renderHeroFase()` sobre `PHASES`, `ctAgenda()`, los `cortes` de `PROYECCION` y `CALENDARIO.hitos`; la casilla llama a `faseHoyMarca()`, que guarda con `toggleFaseCheck` en la semana de hoy; `faseDespuesHtml()` |
 | **Importante este mes** | Los pendientes del mes con pestañas, «+ Nuevo», editar y borrar | `dash-eventos-mes-v1` |
 
 **Tamaños.** Bajo 940 px de alto el AHORA baja a 30 vh; bajo 1280 px de ancho la agenda mide
@@ -400,7 +400,7 @@ toques y la semana a la que pertenece**.
 
 **La banda de fase es un botón**: abre la ventana de las fases (`abrirKpi('fases')`, en
 `kpiDetalle`) con fechas, estado, meta, explicación y el checklist de cada mes leído de
-`coach_checks_v1`. En las fases que pasan en México, **💰 Tu ahorro en esta fase** (`faseAhorroHTML`): un mes de cada etapa —con depa y en casa de tu familia— renglón por renglón, la cuenta de Alemania al cerrar cada mes y lo que piden junio y la salida; el mismo desglose que Coach. El título del módulo Fase de Mi Día abre la misma ventana.
+`coach_checks_v1`. En las fases que pasan en México, **💰 Tu ahorro en esta fase** (`faseAhorroHTML`): un mes de cada etapa —con depa y en casa de tu familia— renglón por renglón, GBM al cerrar cada mes y lo que piden junio y la salida; el mismo desglose que Coach. El título del módulo Fase de Mi Día abre la misma ventana.
 
 ### De dónde sale cada cosa
 
@@ -410,7 +410,7 @@ Ningún importe está escrito en el código del tablero:
 |---|---|
 | Gasto e ingreso de cada día | `finanzasmx_v2.transactions`, agrupadas por fecha en `ctMovs(ym)` |
 | Color de cada categoría | `CT_COLOR`, los mismos hex que `CCOLORS` de Finanzas |
-| Pagos programados de un día | `CIFRAS.CALENDARIO.cobros` + el `day` de cada deuda viva (`ctAgenda`) |
+| Pagos programados de un día | `CIFRAS.CALENDARIO.cobros` + el `day` de cada deuda viva + los abonos de la BBVA de `CIFRAS.planBbva` (`ctAgenda`) |
 | Tareas y fase | `PHASES`, con su estado en `coach_checks_v1` |
 | Costo de comer, por día | `LISTA_COMPRAS_PRECIOS` × `CIFRAS.LISTA_COMPRAS.comida` (`ctComida`) |
 
@@ -424,7 +424,7 @@ septiembre; en el presupuesto mensual entra por la mitad, `gasMensual`). El veri
 que **todo gasto fijo de `PROYECTO` con importe caiga algún día de `CALENDARIO.cobros`**: un
 servicio nuevo sin día ya no sale de la cuenta sin que ninguna pantalla lo vea.
 
-Desde octubre de 2026 el calendario trae también **el plan**: el ahorro de cada quincena a la cuenta de Alemania (en verde, `ahorro: true`) y, desde febrero de 2027, el aporte a tu familia del día 1. Salen de la quincena como cualquier cobro, así que lo que el riel dice que te queda ya es tu gasto personal.
+Desde octubre de 2026 el calendario trae también **el plan**: el ahorro de cada quincena a GBM (en verde, `ahorro: true`) y, desde febrero de 2027, el aporte a tu familia del día 1. Salen de la quincena como cualquier cobro, así que lo que el riel dice que te queda ya es tu gasto personal. **Mientras la BBVA tenga saldo**, lo que sobra de la quincena va a ella: el día 1 y el 15 sale *Tarjeta BBVA — lo que sobra de la quincena* y el envío a GBM de ese día baja en lo mismo; el día de pago, *el mínimo, con lo de Didi*. Ya no se pinta el total de la tarjeta el día 11 (Adán: *"me estás diciendo de pagar mi tarjeta pero ni tengo dinero… eso debe ser cada quincena"*).
 
 ### El mes
 
@@ -433,7 +433,7 @@ Cada celda lleva el importe redondeado a miles (con un decimal: `20.5k`, no `21k
 proporcional al día más caro del mes, y borde ámbar cuando cae un pago fijo. Las flechas ‹ ›
 cambian de mes; **al abrir un mes que no es el actual se elige el primer día con movimiento**.
 
-Bajo el nombre del mes, mientras dure el plan en México: **lo que va ese mes a la cuenta de Alemania** —los cobros con `ahorro` del calendario más lo que aparta Didi (`CIFRAS.didiAlAhorro`)—, la misma cuenta que la proyección de Coach.
+Bajo el nombre del mes, mientras dure el plan en México: **a dónde va el dinero ese mes**. Con la BBVA en su plan, *A la BBVA* —todo lo que le toca ese mes: de las quincenas, de Didi y el mínimo— y, si pasa de $100, *a GBM*; después, *A GBM* —los cobros con `ahorro` del calendario más lo que Didi aparta, de `desgloseMes`— y *Didi*. Es la misma cuenta que la proyección de Coach.
 
 ### El riel: una sola cifra manda
 
@@ -463,10 +463,10 @@ edita en Finanzas, `saveActivo` pone la fecha sola.
 
 **Cuando la quincena no cierra, el estado da el plan** (prompt de Plan Maestro: el hueco previsto
 se resuelve antes de que llegue): cuánto falta para llegar al 15 (o al día 1), cuánto trae Didi de
-aquí al cierre al ritmo de `didiMes` menos lo que ya aparta para la cuenta de Alemania, y si lo cubre o cuánto falta aún. Didi sigue fuera de la
+aquí al cierre al ritmo de `didiMes` menos lo que ya aparta, más —si el mínimo de la BBVA cae en el tramo— lo que Didi aparta para él, porque la serie ya lo resta; y si lo cubre o cuánto falta aún. Didi sigue fuera de la
 serie; solo entra en el plan. Bajo «Cierras el 14 con» la nota dice *te falta* si el cierre es
-negativo. La tarjeta pagada al total cuenta su `noInterest` en su próximo pago (ver `agendaDia`
-en `DATOS-MAESTROS.md`).
+negativo. La BBVA con plan sale con sus abonos de `planBbva`, no con su mínimo ni su total (ver
+`agendaDia` en `DATOS-MAESTROS.md`).
 
 Alto del riel a 1600×1000: 118 px con el estado en dos líneas. El alto del riel lo pone `.cr-hero` (cifra grande en
 `clamp(20px,1.95vw,26px)`; `.cr-estado` envuelve a dos líneas con interlineado 1.25). En la ruta,
@@ -616,6 +616,10 @@ propio estado: `toggleFaseCheck(id, this.checked)`.
 
 ### La ruta de deuda y la libreta de logros
 
+Los pasos van en su orden —fondo, Banamex, BBVA— y uno solo está activo: el primero sin terminar,
+salvo **mientras corre el plan de la BBVA**, que la vuelve el paso activo y dice *$15,000 · en cero
+el 2 nov*. El fondo se queda en lo que tiene: el ahorro de cada quincena ya no va a CETES.
+
 La libreta (`dash-logros-v1`) graba un hito con su fecha y no lo borra aunque el dato de origen
 desaparezca (*"debes tener los registros siempre porque si no sentiré que no logro nada"*). Pero
 **un saldo vivo reabre el paso**: en `renderCoach()`,
@@ -657,10 +661,13 @@ la fase que corre **ahora**: proyectar una cuota diaria sobre una fase cerrada s
 
 ### `calRitmoTC()` — la tarjeta
 
-Lee la deuda `d001` de `finanzasmx_v2`; ningún importe está en el código. Si la tarjeta trae
-`noInterest` (Adán la paga completa cada mes), devuelve `totalero` y el bloque sale en verde
-"Sin intereses": el pago, el día límite y el aviso de que la tasa vuelve si paga solo el mínimo.
-Sin `noInterest` hace la cuenta de siempre:
+Lee la deuda `d001` de `finanzasmx_v2`; ningún importe está en el código. **Mientras corre el plan de
+pago** (`bbvaPlan()`, que lee `CIFRAS.planBbva` hasta el día que queda en cero) devuelve `plan` y el
+bloque sale en naranja, *Quincena a quincena*: el día que queda en cero, lo que cuesta en intereses
+y los cuatro abonos que siguen; un ritmo a 12 meses contradiría al calendario. Si la tarjeta trae
+`noInterest` (se paga completa cada mes), devuelve `totalero` y el bloque sale en verde "Sin
+intereses": el pago, el día límite y el aviso de que la tasa vuelve si paga solo el mínimo. Sin
+plan ni `noInterest` hace la cuenta de siempre:
 
 - `interes` = saldo × tasa ÷ 12.
 - `crece` = interés − mínimo. Si sale positivo, **pagando el mínimo el saldo sube**.
@@ -692,10 +699,12 @@ verde es lo pagado y lo rojo lo que falta (`fill`/`track` del tile; la pista es 
 el avance de Deuda total se mide sobre lo que nació cada deuda, liquidadas incluidas. Los desgloses
 de esos dos (`kpiDetalle`, `kpiBarra` con `pista`) usan el mismo par y ponen el % junto al saldo.
 
-**Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (la TC BBVA, que
-Adán paga completa cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su
-detalle y en los desgloses de Deuda cara y Patrimonio, que la marcan "sin intereses". Sigue
-sumando en Deuda cara porque es saldo de tarjeta.
+**Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se
+paga completa cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle y en
+los desgloses de Deuda cara y Patrimonio, que la marcan "sin intereses". La BBVA ya no lo lleva: su
+tasa corre, y en Deuda cara y Deuda total dice además su plan (`bbvaPlanTxt()`: *quincena a
+quincena, en cero el 2 nov con $377 de intereses*). Sigue sumando en Deuda cara porque es saldo de
+tarjeta.
 **El panel de cada medidor es XL** (`.gbm-card.kpi-card`: `min(1560px, 96vw)` de ancho y alto
 automático hasta el 94 %; Adán, 21-sep-2026: *"todas las ventanas iguales a estas debes hacerlas
 lo más grande posible"*). Cada `kpiDetalle` sigue escribiendo su HTML de corrido con `kpiSec`,

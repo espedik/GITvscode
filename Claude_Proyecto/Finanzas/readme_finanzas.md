@@ -69,6 +69,10 @@ instancias de Chart (`chCat`, `chBal`, `chBud`, `chInv`, `chGbmInv`, `chBtcPnl`,
   `investments`, porque los indicadores, el patrimonio y el fondo de la maestría sumaban las dos
   cosas. Anotar lo que hay en CETES es `setEmergencyFund` (bloque de CETES del plan GBM), que sincroniza `ef-001`; el
   bloque de CETES del plan GBM lo dice y muestra el saldo.
+  **Ya no recibe aporte**: el ahorro de cada quincena va a GBM (Adán, 5-oct-2026: *"el ahorro no se
+  irá a cetes, se irá a gbm"*), así que `cetesDia15` vale 0 y, con eso, el plan semanal, el
+  calendario del mes, la lista de fijos y el escenario B dejan de enseñar un apartado de CETES; el
+  bloque de CETES solo dice cuánto hay en el fondo y a dónde va el ahorro.
 
 ---
 

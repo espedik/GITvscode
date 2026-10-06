@@ -69,7 +69,7 @@ window.CIFRAS = (function () {
     sueldo:        41000,     // bruto mensual en ALTEN, quincenal a BBVA
     sueldoQuinc:   20500,
     didiMes:       11200,     // ~$400/día × 28 días, semanal
-    // Lo que Didi pone en la cuenta de Alemania, no lo que factura (Adán, 3-oct-2026): "de octubre
+    // Lo que Didi pone en GBM, no lo que factura (Adán, 3-oct-2026): "de octubre
     // a febrero puedo juntar de Didi 5000 al mes" y "desde febrero empezaré a trabajar más de Didi
     // y puedo sacar 10,000 cada mes y eso meterlo a ahorro". Lo demás de Didi paga la carga del
     // auto y lo suyo; el plan no lo cuenta. El último mes en México va la mitad: la segunda
@@ -123,17 +123,23 @@ window.CIFRAS = (function () {
     get servicios() { return this.celular + this.internet + this.gasMensual + this.luzAgua; },
     get suscripciones() { return this.gym + this.claudeCode + this.icloud; },
     get fijosTotal() { return this.renta + this.servicios + this.suscripciones; },
-    cetesDia15:     1500,     // aporte recurrente a CETES el día 15
-    // Págate primero (Plan Maestro, Fases 1 y 2): lo que va a la cuenta de Alemania el día que
-    // entra la quincena, además de los CETES. La BBVA se paga completa el 11 y ahí cae casi todo el
-    // gasto personal del mes anterior, así que la quincena del 1 guarda para la tarjeta y la del 15
-    // es la que más ahorra; con depa, la del 1 paga además la renta y no manda nada. Salen de
-    // cuadrar cada quincena contra sus fijos, la comida, sus rutinas (piel, cabello y suplementos) y
-    // el tope de lo demás de SUPUESTOS (`loDemas`, `loDemasEnCasa`), redondeado a cientos hacia
-    // abajo; el verificador avisa si algo cambia y dejan de cuadrar.
-    ahorroDia15:     8100,    // con depa: del 15 de octubre de 2026 a enero de 2027
-    ahorroDia1Casa:  8600,    // en casa de tu familia: de enCasaDesde a ultimoMesMexico
-    ahorroDia15Casa: 11300,
+    // El ahorro ya no va a CETES: va todo a GBM (Adán, 5-oct-2026: "el ahorro no se irá a cetes,
+    // se irá a gbm, lo invertiré todo"). Queda en 0 porque Finanzas y Qué invertir hoy lo leen; los
+    // CETES que ya tiene siguen siendo su fondo de emergencia.
+    cetesDia15:        0,
+    // Págate primero (Plan Maestro, Fases 1 y 2): lo que sale a GBM el día que entra cada quincena.
+    // Cada quincena se sostiene sola (Adán, 5-oct-2026: "eso debe ser cada quincena y deja dinero
+    // sobrante para la quincena"): su sueldo menos los fijos que caen en sus días, la comida de sus
+    // días y su parte del gasto personal —sus rutinas y el tope de lo demás de SUPUESTOS, repartidos
+    // por día—, redondeado a cientos hacia abajo con el peor mes de cada etapa. Ninguna quincena
+    // vive del sobrante de la otra y la tarjeta ya no se paga de golpe el 11: mientras la BBVA tenga
+    // saldo, estos envíos van primero a ella (`planBbva`). El verificador avisa si dejan de caber.
+    ahorroDia1:      2200,    // con depa: de noviembre de 2026 a enero de 2027
+    ahorroDia15:     7200,    // con depa: del 15 de octubre de 2026 a enero de 2027
+    ahorroDia1Casa: 12100,    // en casa de tu familia: de enCasaDesde a ultimoMesMexico
+    ahorroDia15Casa: 9000,
+    // El día del saldo de la BBVA que dijo Adán (`d001` en DEUDAS_SEED): de aquí arranca su plan.
+    bbvaFecha: '2026-10-05',
     // La pestaña "Riesgo súper alto" de Qué invertir hoy (Adán, 21-sep-2026): al mes van
     // especulacionMes, de los que cetesDia15 son CETES fijos, especulacionBtcPct % a Bitcoin y
     // TODO el resto a una sola empresa a la baja que investiga Claude.
@@ -181,7 +187,7 @@ window.CIFRAS = (function () {
 
      `grupo` dice a qué renglón del desglose del sueldo va cada cobro (`desgloseMes`): sueldo,
      renta, depa, celular, suscripciones, familia o ahorro. `ahorro: true` es dinero que se aparta
-     —los CETES y el ahorro de cada quincena—: sale de la cuenta pero no es gasto.
+     —el ahorro de cada quincena—: sale de la cuenta pero no es gasto.
      `hitos` — fechas duras que no se pueden sacar de ningún otro dato. Todo lo demás lo
      calcula el Dashboard en vivo y por eso no está escrito aquí: los cierres y arranques de
      fase salen de PHASES, y la última cuota de un MSI sale de `balance / min` sobre las
@@ -197,7 +203,6 @@ window.CIFRAS = (function () {
       // — la mete en la semana 3 (días 15-21) y deja la semana 2 sin ingreso — pero aquí
       // decía 14, así que el calendario y el plan se contradecían sin que nada lo notara.
       { dia: 15, txt: 'Quincena', grupo: 'sueldo', get monto() { return PROYECTO.sueldoQuinc; }, entra: true },
-      { dia: 15, txt: 'CETES', grupo: 'ahorro', ahorro: true, get monto() { return PROYECTO.cetesDia15; } },
       { dia: 17, txt: 'Gym', grupo: 'suscripciones', get monto() { return PROYECTO.gym; } },
       // 2026-08-30 — los seis fijos que el calendario no contemplaba. Sumaban $1,094 al mes
       // saliendo de la cuenta sin que ninguna pantalla los descontara del tramo. Los días
@@ -210,15 +215,18 @@ window.CIFRAS = (function () {
       // El gas no cae todos los meses: `cada` y `desde` lo dicen, y ctAgenda los respeta.
       { dia:  1, txt: 'Gas', grupo: 'depa', get monto() { return PROYECTO.gas; },
         get cada() { return PROYECTO.gasCadaMeses; }, get desde() { return PROYECTO.gasDesdeMes; }, get hasta() { return PROYECTO.rentaHasta; } },
-      // Plan Maestro — el ahorro de cada quincena a la cuenta de Alemania (PROYECTO.ahorroDia15…) y
-      // el aporte a la casa. `ahorro: true`: sale de la cuenta del día a día pero sigue siendo tuyo,
-      // así que el balance mensual no lo cuenta como gasto. El 1 de octubre de 2026 ya había pasado.
-      { dia: 15, txt: 'Ahorro → cuenta de Alemania', grupo: 'ahorro', ahorro: true, quincena: true,
+      // Plan Maestro — el ahorro de cada quincena a GBM (PROYECTO.ahorroDia1…) y el aporte a la casa.
+      // `ahorro: true`: sale de la cuenta del día a día pero sigue siendo tuyo, así que el balance
+      // mensual no lo cuenta como gasto. Mientras la BBVA tenga saldo, lo de ese día va primero a
+      // ella: `agendaDia` lo parte con `planBbva`. El 1 de octubre de 2026 ya había pasado.
+      { dia:  1, txt: 'Ahorro → GBM', grupo: 'ahorro', ahorro: true, quincena: true,
+        get monto() { return PROYECTO.ahorroDia1; }, desde: '2026-11', get hasta() { return PROYECTO.rentaHasta; } },
+      { dia: 15, txt: 'Ahorro → GBM', grupo: 'ahorro', ahorro: true, quincena: true,
         get monto() { return PROYECTO.ahorroDia15; }, desde: '2026-10', get hasta() { return PROYECTO.rentaHasta; } },
-      { dia:  1, txt: 'Ahorro → cuenta de Alemania', grupo: 'ahorro', ahorro: true, quincena: true,
+      { dia:  1, txt: 'Ahorro → GBM', grupo: 'ahorro', ahorro: true, quincena: true,
         get monto() { return PROYECTO.ahorroDia1Casa; },
         get desde() { return PROYECTO.enCasaDesde; }, get hasta() { return PROYECTO.ultimoMesMexico; } },
-      { dia: 15, txt: 'Ahorro → cuenta de Alemania', grupo: 'ahorro', ahorro: true, quincena: true,
+      { dia: 15, txt: 'Ahorro → GBM', grupo: 'ahorro', ahorro: true, quincena: true,
         get monto() { return PROYECTO.ahorroDia15Casa; },
         get desde() { return PROYECTO.enCasaDesde; }, get hasta() { return PROYECTO.ultimoMesMexico; } },
       { dia:  1, txt: 'Aporte a tu familia', grupo: 'familia', get monto() { return PROYECTO.aporteCasa; },
@@ -264,11 +272,11 @@ window.CIFRAS = (function () {
     // pagó $38,100 aquí). `total` se queda en 39,000: ya no hace falta la invariante
     // `total == balance` —era para que el saldo creciente no dejara el "pagado real" en
     // negativo— y así las barras enseñan los $38,100 pagados de verdad.
-    // 2026-09-30: vuelve a $10,000 ("la de bbva le debo 10 mil"); no dijo en qué se cargó. Ese
-    // mismo día: "ahorita ya estoy pagando todo y no me cobran intereses" — la paga completa
-    // cada mes. `noInterest` es lo que hay que pagar antes del `day` para no generar intereses;
-    // la `rate` se queda porque es la del producto y vuelve a correr si un mes paga solo el mínimo.
-    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:10000,       rate:55.7,  min:1500, day:11,start:'2024-01-22', noInterest:10000},
+    // 2026-09-30: vuelve a $10,000 ("la de bbva le debo 10 mil") y la pagaba completa cada mes. El
+    // 5-oct-2026 debe $15,000 y no le alcanza para pagarla el 11 ("me estás diciendo de pagar mi
+    // tarjeta pero ni tengo dinero"): `noInterest` queda en 0 —la tasa corre— y se paga quincena a
+    // quincena con `planBbva`, desde `PROYECTO.bbvaFecha`.
+    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:15000,       rate:55.7,  min:1500, day:11,start:'2024-01-22', noInterest:0},
     // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. 55.7 es un supuesto tomado de
     // la BBVA, no un dato medido de esta tarjeta.
     // 2026-09-01: VUELVE A TENER SALDO, y con él vuelve a ser deuda cara. Cuatro compras de ese
@@ -419,7 +427,7 @@ window.CIFRAS = (function () {
      Los overrides que Adán ajusta a mano viven en localStorage (`radarp_{id}`) y ganan sobre el
      `val` de aquí; esto es el punto de partida. */
   const SK = [
-    { id: 'ventas', name: 'Ventas', full: 'Ventas & Negociación', icon: '🤝', val: 15, w: 1, cat: 'negocios', pausa: true, desc: 'Estás en 15: no has vendido en frío ni sostenido un precio frente a un extraño. Lo que sí sabes: negociar tu propio sueldo al cambiar de empresa —Ford, Continental, Bosch—.', porQue: 'En pausa por decisión tuya (9 de agosto de 2026): no se vende sin una oferta terminada. Lo que sí rinde ahora es negociar —el sueldo del Werkstudent y el primero en Alemania— y vender lo que no usas para la cuenta de Alemania.', prueba: 'Lo que no usas, vendido a su precio en noviembre y diciembre, y el sueldo del Werkstudent negociado.', mant: { h: 0, txt: 'En pausa: solo las ventas de Marketplace de esta fase.' }, practica: 'Posts y el modo Empresa de Coach' },
+    { id: 'ventas', name: 'Ventas', full: 'Ventas & Negociación', icon: '🤝', val: 15, w: 1, cat: 'negocios', pausa: true, desc: 'Estás en 15: no has vendido en frío ni sostenido un precio frente a un extraño. Lo que sí sabes: negociar tu propio sueldo al cambiar de empresa —Ford, Continental, Bosch—.', porQue: 'En pausa por decisión tuya (9 de agosto de 2026): no se vende sin una oferta terminada. Lo que sí rinde ahora es negociar —el sueldo del Werkstudent y el primero en Alemania— y vender lo que no usas para GBM.', prueba: 'Lo que no usas, vendido a su precio en noviembre y diciembre, y el sueldo del Werkstudent negociado.', mant: { h: 0, txt: 'En pausa: solo las ventas de Marketplace de esta fase.' }, practica: 'Posts y el modo Empresa de Coach' },
     { id: 'copy', name: 'Copy', full: 'Copywriting & Persuasión', icon: '✍️', val: 55, w: 0.8, cat: 'negocios', desc: 'Estás en 55: generas ganchos e ideas con facilidad y con IA los multiplicas, pero todavía no tienes un texto publicado con resultados medidos.', porQue: 'Tu carta de motivación, tu perfil de LinkedIn y tus correos a reclutadores son copy: una promesa clara por texto es lo que hace que alguien te conteste.', prueba: 'Tu perfil de LinkedIn en inglés listo para Werkstudent (febrero de 2027) y la carta de motivación de Esslingen.', mant: { h: 0.5, txt: 'Media hora: reescribe un texto tuyo —un correo, tu titular— con una sola promesa y léelo en voz alta.' }, practica: 'Posts y el modo Empresa de Coach' },
     { id: 'marketing', name: 'Marketing', full: 'Marketing Digital', icon: '📣', val: 20, w: 0.6, cat: 'negocios', pausa: true, desc: 'Estás en 20: tienes ideas —Marketplace, posts— pero ninguna campaña ejecutada y medida.', porQue: 'En pausa por decisión tuya (9 de agosto de 2026) y por el plan: el negocio de tu papá va en piloto automático con los posts y el dossier. Se retoma en la Fase 4, con sueldo estable.', prueba: 'Los posts del negocio de tu papá programados para que él publique sin ti, antes de febrero de 2027.', mant: { h: 0, txt: 'En pausa: solo dejar listos los posts del negocio de tu papá.' }, practica: 'Posts, Aeroresinas y Heliescala' },
     { id: 'network', name: 'Networking', full: 'Networking & Relaciones', icon: '🔗', val: 55, w: 1.3, cat: 'negocios', desc: 'Estás en 55: tienes red real —Ford, Continental, Bosch y Google, y líderes de Bosch en Stuttgart con mexicanos expatriados ahí—, pero no la cultivas con intención: no hay lista, ni seguimiento, ni un bloque fijo.', porQue: 'En Alemania el Werkstudent y el primer empleo llegan más por recomendación que por portal. Y este mes salen de tu red las dos cartas de recomendación para Esslingen.', prueba: 'Las dos cartas de recomendación firmadas (noviembre de 2026) y, antes de irte, tres conversaciones con gente de Bosch o de sus proveedores en Stuttgart.', mant: { h: 1, txt: 'Una hora: tres mensajes de reactivación sin pedir nada y un seguimiento.' }, practica: 'Coach (tu marca personal) y Habilidades Base (las fichas sociales)' },
@@ -427,8 +435,8 @@ window.CIFRAS = (function () {
     { id: 'codigo', name: 'Código', full: 'Programación & Software', icon: '💻', val: 60, w: 1.3, cat: 'tecnico', desc: 'Estás en 60: lees y diriges código con soltura y con IA ejecutas lo que quieres, pero escribirlo desde cero —lo que piden los retos técnicos— todavía es lento. La Mecatrónica del IPN te dio microcontroladores, PLC y control: no partes de cero.', porQue: 'Los Werkstudent de validación, HIL y ADAS en Bosch, Mercedes-Benz y Porsche piden Python para automatizar pruebas. Un proyecto que se pueda enseñar vale más que un curso terminado.', prueba: 'Un repositorio público de pruebas automatizadas en Python (pytest) sobre un sistema simulado, con README en inglés, antes de junio de 2027.', mant: { h: 1, txt: 'Una hora: un ejercicio de Python escrito sin IA y comparado después con lo que te propone la IA.' }, practica: 'Entrevistas (los temas de código y de Python)' },
     { id: 'ia', name: 'IA', full: 'IA & Automatización', icon: '🤖', val: 45, w: 1.3, cat: 'tecnico', desc: 'Estás en 45, no en 30: validaste IA generativa para Google, usas Claude Code a diario en producción y armaste con agentes este sistema de apps. Lo que falta es lo que otro pueda comprobar: un certificado y una pieza de pruebas con IA que se pueda enseñar.', porQue: 'Es tu diferencial en el mercado al que vas: un ingeniero de validación que sabe probar sistemas con IA y usar IA para probar. El CT-GenAI tiene fecha —noviembre— y entra en tu CV para Esslingen y en cada aplicación a Werkstudent.', prueba: 'El ISTQB CT-GenAI aprobado en noviembre de 2026 y, después, un repositorio con pruebas generadas con IA y revisadas por ti.', mant: { h: 1, txt: 'Una hora: un experimento de IA en tu trabajo o en este sistema, anotado en una línea —qué probaste y qué salió—.' }, practica: 'Mis Metas (el simulacro del CT-GenAI) y Entrevistas (los temas de IA)' },
     { id: 'datos', name: 'Datos', full: 'Análisis de Datos', icon: '📊', val: 55, w: 1, cat: 'tecnico', desc: 'Estás en 55 y la evidencia lo sostiene: lees un problema de datos, analizas resultados de pruebas y armaste los tableros de este sistema. Te falta soltura en Python y pandas para no depender de Excel.', porQue: 'En validación cada prueba deja datos: quien los analiza en Python encuentra la falla antes que nadie. En la maestría y en la tesis lo vas a necesitar.', prueba: 'Un cuaderno de pandas con el análisis de tus gastos o de tus pruebas, publicado junto a tu proyecto de código (mayo de 2027).', mant: { h: 1, txt: 'Una hora: un módulo de Kaggle Learn con tus propios datos, no con los del ejemplo.' }, practica: 'Entrevistas (los temas de datos) y Finanzas (tus propios datos)' },
-    { id: 'inversion', name: 'Inversión', full: 'Inversión en Mercados', icon: '📈', val: 25, w: 1, cat: 'finanzas', desc: 'Estás en 25: abriste CETES y compraste acciones y Bitcoin —que vendiste para pagar la tarjeta—. Sabes empezar; te falta el sistema: una asignación escrita y aportes automáticos.', porQue: 'Hoy el dinero de Alemania vive en CETES porque se usa en meses, no en años. La inversión de largo plazo arranca con el sueldo de ingeniero (Fase 4): aprender ahora cuesta poco y te ahorra los errores caros de después.', prueba: 'Tu política de inversión en una página —asignación, aportes y qué haces si el mercado cae 30%— antes de tu primer sueldo en Alemania.', mant: { h: 0.5, txt: 'Media hora en el coche: un capítulo en audio de The Simple Path to Wealth o de Bogleheads.' }, practica: 'Qué invertir hoy y Finanzas' },
-    { id: 'finanzas', name: 'Finanzas', full: 'Finanzas Personales', icon: '💰', val: 20, w: 1.5, cat: 'finanzas', desc: 'Estás en 20 por los hechos: septiembre cerró con la cuenta en $390 y la BBVA subió $9,100 en diez días. Lo que sí hiciste: liquidaste Banamex y pagas la BBVA completa. Lo que sube el número es un mes cerrado dentro del presupuesto.', porQue: 'Es la habilidad que decide si te vas en 2027: cada peso que se te va de más sale de la cuenta de Alemania. No se estudia: se practica cada día con el tablero del Plan Maestro.', prueba: 'Tres meses seguidos —noviembre, diciembre y enero— con el ahorro mandado el día que entra la quincena y tu gasto personal dentro del tope.', mant: { h: 1, txt: 'Diez minutos al día: anota cada gasto en Finanzas y mira el riel del Plan Maestro. El 1 y el 15, el ahorro antes de gastar.' }, practica: 'Finanzas, el tablero del Plan Maestro y Qué invertir hoy' },
+    { id: 'inversion', name: 'Inversión', full: 'Inversión en Mercados', icon: '📈', val: 25, w: 1, cat: 'finanzas', desc: 'Estás en 25: abriste CETES y compraste acciones y Bitcoin —que vendiste para pagar la tarjeta—. Sabes empezar; te falta el sistema: una asignación escrita y aportes automáticos.', porQue: 'Hoy el dinero de Alemania vive en GBM, en un fondo de deuda de corto plazo, porque se usa en meses, no en años. La inversión de largo plazo arranca con el sueldo de ingeniero (Fase 4): aprender ahora cuesta poco y te ahorra los errores caros de después.', prueba: 'Tu política de inversión en una página —asignación, aportes y qué haces si el mercado cae 30%— antes de tu primer sueldo en Alemania.', mant: { h: 0.5, txt: 'Media hora en el coche: un capítulo en audio de The Simple Path to Wealth o de Bogleheads.' }, practica: 'Qué invertir hoy y Finanzas' },
+    { id: 'finanzas', name: 'Finanzas', full: 'Finanzas Personales', icon: '💰', val: 20, w: 1.5, cat: 'finanzas', desc: 'Estás en 20 por los hechos: septiembre cerró con la cuenta en $390 y la BBVA subió $9,100 en diez días. Lo que sí hiciste: liquidaste Banamex y pagas la BBVA completa. Lo que sube el número es un mes cerrado dentro del presupuesto.', porQue: 'Es la habilidad que decide si te vas en 2027: cada peso que se te va de más sale de GBM. No se estudia: se practica cada día con el tablero del Plan Maestro.', prueba: 'Tres meses seguidos —noviembre, diciembre y enero— con el ahorro mandado el día que entra la quincena y tu gasto personal dentro del tope.', mant: { h: 1, txt: 'Diez minutos al día: anota cada gasto en Finanzas y mira el riel del Plan Maestro. El 1 y el 15, el ahorro antes de gastar.' }, practica: 'Finanzas, el tablero del Plan Maestro y Qué invertir hoy' },
     { id: 'ingles', name: 'Inglés', full: 'Inglés / Idioma Global', icon: '🌐', val: 80, w: 1.3, cat: 'personal', desc: 'Estás en 80: tienes el IELTS en 6.0 (B2) y lees y escribes inglés técnico todos los días. El hueco está al hablar sin preparar —una entrevista, defender un proyecto—, que es justo lo que viene en la maestría y con el Werkstudent.', porQue: 'La maestría es en inglés y las entrevistas de Werkstudent y de trabajo en Stuttgart también. Pasar de 80 a 90 al hablar es la diferencia entre pasar una entrevista y quedarte en la lista de espera.', prueba: 'La solicitud a Esslingen en inglés —CV europeo y carta de motivación— enviada en enero de 2027, y dos simulacros de entrevista grabados.', mant: { h: 1, txt: 'Una hora: un simulacro de entrevista grabado de diez minutos. En el coche, repite frases en voz alta.' }, practica: 'Entrevistas (los simulacros) y la solicitud a Esslingen (Coach → Plan Maestro)' },
     { id: 'mente', name: 'Mentalidad', full: 'Mentalidad & Ejecución', icon: '🚀', val: 85, w: 1, cat: 'personal', desc: 'Estás en 85: tolerancia al riesgo alta y resiliencia probada —vendiste todo el Bitcoin para pagar la tarjeta y rehiciste el plan dos veces sin abandonarlo—. Lo que la baja son tus dos metas de conducta: el alcohol y el celular.', porQue: 'Mudarte solo a otro país a los 32 es de los cambios más fuertes: llegar con hábitos firmes y con herramientas es lo que te sostiene en el primer invierno.', prueba: 'La cadena de cero alcohol y del celular fuera del cuarto en Hábitos, y la revisión de cada domingo, escrita.', mant: { h: 0.5, txt: 'Media hora el domingo: la revisión de la semana por escrito —qué salió, qué no y qué cambias—.' }, practica: 'Hábitos, Mis Metas (alcohol y celular) y Salud' },
   ];
@@ -463,9 +471,9 @@ window.CIFRAS = (function () {
      anterior — el control 9 de `verificar-sincronia.js` lo comprueba. La fecha del millón es el
      cierre de la última fase: el marcador `{{metaMillon}}`. */
   const PHASES = [
-    {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep y quedó otra vez en $0 el 30 sep) y ✅ BBVA de $39,000 a $900 el 19 sep 2026 con la venta del Bitcoin (el 30 sep iba de nuevo en {{tcBbva}}). Quedan 2 objetivos financieros, en este orden: 1) fondo de emergencia —los CETES, {{fondo}}— a {{fondoMeta}}, 2) dejar la BBVA en $0 ({{tcBbva}}).",explica:"Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases. El orden era 1) fondo de emergencia, 2) Banamex, 3) BBVA: el paso 2 se hizo el 13 ago 2026 y el 3 casi entero el 19 sep 2026 (BBVA de $39,000 a $900 con la venta del Bitcoin; el 30 sep volvió a {{tcBbva}}), así que la prioridad es el fondo de emergencia —que desde sep 2026 son los CETES— y, en cuanto llegue a {{fondoMeta}}, rematar lo que queda en la BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.",semanas:[
+    {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep y quedó otra vez en $0 el 30 sep) y ✅ BBVA de $39,000 a $900 el 19 sep 2026 con la venta del Bitcoin (el 30 sep iba de nuevo en $10,000; el 5 oct, en {{tcBbva}}). Quedan 2 objetivos financieros, en este orden: 1) fondo de emergencia —los CETES, {{fondo}}— a {{fondoMeta}}, 2) dejar la BBVA en $0 ({{tcBbva}}).",explica:"Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases. El orden era 1) fondo de emergencia, 2) Banamex, 3) BBVA: el paso 2 se hizo el 13 ago 2026 y el 3 casi entero el 19 sep 2026 (BBVA de $39,000 a $900 con la venta del Bitcoin; el 30 sep volvió a $10,000), así que la prioridad es el fondo de emergencia —que desde sep 2026 son los CETES— y, en cuanto llegue a {{fondoMeta}}, rematar lo que queda en la BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.",semanas:[
       {id:"s0-9",mes:"2026-08",txt:"Prioridad 1 — Fondo de emergencia a {{fondoMeta}}. Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. (hoy {{fondo}}, en CETES)"},
-      {id:"s0-10",mes:"2026-08",txt:"Prioridad 2 — Liquidar las dos tarjetas: Banamex quedó en $0 el 30 sep 2026; falta la BBVA ({{tcBbva}}). El 19 sep 2026 la venta del Bitcoin la dejó de $39,000 en $900, pero el 30 sep ya iba otra vez en {{tcBbva}}; desde ese día la paga completa cada mes y no genera intereses. En cuanto el fondo llegue a {{fondoMeta}}, todo excedente va aquí."},
+      {id:"s0-10",mes:"2026-08",txt:"Prioridad 2 — Liquidar las dos tarjetas: Banamex quedó en $0 el 30 sep 2026; falta la BBVA ({{tcBbva}}). El 19 sep 2026 la venta del Bitcoin la dejó de $39,000 en $900, pero el 30 sep ya iba otra vez en $10,000 y el 5 oct en {{tcBbva}}: desde ahí se paga quincena a quincena (Fase 1). En cuanto el fondo llegue a {{fondoMeta}}, todo excedente va aquí."},
       {id:"s0-4",mes:"2026-08",txt:"Sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad) — es la fuente más rápida para completar el fondo de emergencia de la Prioridad 1."},
       {id:"s0-3",mes:"2026-08",txt:"Plantilla Finanzas.html, de principio a fin: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (Opción 1)."},
       {id:"s0-2",mes:"2026-08",txt:"Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5."},
@@ -475,23 +483,23 @@ window.CIFRAS = (function () {
       {id:"s0-7",mes:"2026-09",txt:"Cada peso de ventas/activos va, en orden fijo: (1) fondo de emergencia a {{fondoMeta}}, (2) resto a la BBVA ({{tcBbva}}), la única tarjeta con saldo desde que Banamex quedó en $0 el 30 sep 2026. Este mes cierra la fase."},
     ]},
     {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Solicitud enviada y el ahorro en marcha",
-     meta:"Al 31 mar 2027: <b>1)</b> la solicitud a {{maestriaEscuela}} enviada completa —el IELTS (6.0) y el pasaporte ya los tienes; faltan las dos cartas de recomendación, el CV y la carta de motivación—; <b>2)</b> el depa entregado a fin de enero y, desde febrero, en casa de tu familia; <b>3)</b> en la cuenta de Alemania, {{marzoParaJunio}} para que junio alcance (tu ritmo solo da {{alemaniaMarzo}}); <b>4)</b> la BBVA pagada completa los seis días 11; <b>5)</b> el ISTQB CT-GenAI aprobado.",
-     explica:"Para irte en septiembre de 2027 todo converge en dos fechas: el 31 mar 2027 cierra la solicitud de Esslingen y en junio necesitas {{salidaJunio}} para la cuenta bloqueada y la visa. Tu ahorro, con tus números: hasta enero, {{ahorroMesDepa}} al mes —el 15 mandas {{ahorroDia15}} y los {{cetesDia15}} de CETES; la quincena del 1 paga la renta y la tarjeta— más {{didiAhorro}} de Didi. Desde febrero, sin renta y en casa de tu familia ({{aporteCasa}} de aporte, y comes en casa), {{ahorroMesCasa}} al mes: {{ahorroDia1Casa}} el 1, {{ahorroDia15Casa}} el 15, los CETES y {{didiAhorroMas}} de Didi. El aguinaldo paga el seguro del BYD y no entra; en octubre, la BBVA de septiembre se come casi todo el ahorro. Con ese ritmo, a fin de junio la cuenta tiene {{alemaniaJunio}}: {{junioVeredicto}}. Ese hueco se cierra en esta fase, no en junio: ventas, Didi de más y tu gasto personal —{{gastoPersonalDepa}} al mes con depa y {{gastoPersonalCasa}} en casa, tarjeta incluida; {{cuidadoMes}} de eso son tus rutinas de piel, cabello y suplementos— sin pasarte.",
-     deja:"Riesgo alto y súper alto en Qué invertir hoy: el dinero de Alemania vive en CETES porque se usa en meses, no en años. Compras a meses. Gastar de la quincena antes de mandar el ahorro. Nuevos frentes de negocio: el de tu papá se queda en piloto automático con los posts y el dossier. Y el depa: a fin de enero se entrega.",
-     checkpoint:"31 mar 2027: solicitud enviada y la cuenta de Alemania contra {{marzoParaJunio}}, lo que hace falta para que junio alcance con el ahorro de abril a junio. Si va abajo, la salida se mueve a septiembre de 2028 —la solicitud se repite en noviembre— y el ahorro sigue igual: no se viaja a medias ni con deuda.",
+     meta:"Al 31 mar 2027: <b>1)</b> la solicitud a {{maestriaEscuela}} enviada completa —el IELTS (6.0) y el pasaporte ya los tienes; faltan las dos cartas de recomendación, el CV y la carta de motivación—; <b>2)</b> el depa entregado a fin de enero y, desde febrero, en casa de tu familia; <b>3)</b> en GBM, {{marzoParaJunio}} para que junio alcance (tu ritmo solo da {{alemaniaMarzo}}); <b>4)</b> la BBVA en cero desde el {{bbvaCero}} y, desde ahí, lo que pagues con ella saldado en la misma quincena: ni un peso de interés; <b>5)</b> el ISTQB CT-GenAI aprobado.",
+     explica:"Para irte en septiembre de 2027 todo converge en dos fechas: el 31 mar 2027 cierra la solicitud de Esslingen y en junio necesitas {{salidaJunio}} para la cuenta bloqueada y la visa. Primero la BBVA: debes {{tcBbva}} y no se paga de golpe el 11. Lo que sobra de cada quincena y lo de Didi de cada lunes van a la tarjeta hasta dejarla en cero el {{bbvaCero}} —cuesta {{bbvaIntereses}} de intereses—; el 11 de octubre, solo el mínimo, con lo de Didi. Después, todo a GBM. Cada quincena se sostiene sola: hasta enero mandas {{ahorroDia1}} el 1 y {{ahorroDia15}} el 15, {{ahorroMesDepa}} al mes con los {{didiAhorro}} de Didi; desde febrero, sin renta y en casa de tu familia ({{aporteCasa}} de aporte, y comes en casa), {{ahorroDia1Casa}} el 1 y {{ahorroDia15Casa}} el 15: {{ahorroMesCasa}} al mes con los {{didiAhorroMas}} de Didi. El aguinaldo paga el seguro del BYD y no entra. Con ese ritmo, a fin de junio GBM tiene {{alemaniaJunio}}: {{junioVeredicto}}. Ese hueco se cierra en esta fase, no en junio: ventas, Didi de más y tu gasto personal —{{gastoPersonalDepa}} al mes con depa y {{gastoPersonalCasa}} en casa; {{cuidadoMes}} de eso son tus rutinas de piel, cabello y suplementos— sin pasarte. Invertido, sí, pero lo de la cuenta bloqueada no se juega: a menos de un año de usarlo, en GBM va en un fondo de deuda de corto plazo, no en acciones; una caída de la bolsa en mayo no da tiempo de recuperarse.",
+     deja:"Riesgo alto y súper alto en Qué invertir hoy: el dinero de Alemania vive en GBM, en un fondo de deuda de corto plazo, porque se usa en meses, no en años. Compras a meses. Gastar de la quincena antes de mandar el ahorro. Nuevos frentes de negocio: el de tu papá se queda en piloto automático con los posts y el dossier. Y el depa: a fin de enero se entrega.",
+     checkpoint:"31 mar 2027: solicitud enviada y GBM contra {{marzoParaJunio}}, lo que hace falta para que junio alcance con el ahorro de abril a junio. Si va abajo, la salida se mueve a septiembre de 2028 —la solicitud se repite en noviembre— y el ahorro sigue igual: no se viaja a medias ni con deuda.",
      semanas:[
-      {id:"a1-1",mes:"2026-10",txt:"Paga la BBVA completa el 11 oct. El total, no el mínimo de {{tcBbvaMin}}: la tarjeta queda sin intereses y sin deuda para irte."},
-      {id:"a1-2",mes:"2026-10",txt:"Abre la cuenta de Alemania, CETES aparte del día a día. El 15 de octubre, antes de gastar, manda ahí {{ahorroDia15}}; lo de Didi, cada lunes, hasta juntar {{didiAhorro}} al mes."},
+      {id:"a1-1",mes:"2026-10",txt:"Deja la BBVA en cero quincena a quincena. El 11 oct, el mínimo de {{tcBbvaMin}} con lo de Didi; el 15 oct, los {{ahorroDia15}} de la quincena van a la tarjeta y no a GBM; cada lunes, lo de Didi, y el 1 nov, {{ahorroDia1}}: quedará en cero el {{bbvaCero}}. Desde ahí, lo que pagues con ella lo pagas en la misma quincena."},
+      {id:"a1-2",mes:"2026-10",txt:"Abre tu cuenta de GBM para Alemania, aparte del día a día. En cuanto la BBVA quede en cero, lo que sobra de cada quincena va ahí el día que entra el sueldo —{{ahorroDia1}} el 1 y {{ahorroDia15}} el 15— y lo de Didi cada lunes, hasta juntar {{didiAhorro}} al mes."},
       {id:"a1-4",mes:"2026-10",txt:"Pide las dos cartas de recomendación. Un jefe de Bosch, Continental o ALTEN y un líder técnico o profesor: en inglés y firmadas."},
       {id:"a1-5",mes:"2026-11",txt:"La ventana de Esslingen abre el 4 nov. Arma la solicitud: CV europeo, carta de motivación, título y certificado del IPN."},
-      {id:"a1-6",mes:"2026-11",txt:"Vende lo que no usas. PS5 y su control, monitores e iPad: cada venta, a la cuenta de Alemania."},
+      {id:"a1-6",mes:"2026-11",txt:"Vende lo que no usas. PS5 y su control, monitores e iPad: cada venta, a GBM."},
       {id:"a1-7",mes:"2026-11",txt:"Presenta el ISTQB CT-GenAI. Llega con el simulacro de Mis Metas en 34 de 46 o más, dos veces seguidas: el corte oficial es 30."},
-      {id:"a1-9",mes:"2026-12",txt:"Las ventas, a la cuenta de Alemania el día que cobras. El aguinaldo paga el seguro del BYD: no entra al plan."},
+      {id:"a1-9",mes:"2026-12",txt:"Las ventas, a GBM el día que cobras. El aguinaldo paga el seguro del BYD: no entra al plan."},
       {id:"a1-10",mes:"2027-01",txt:"Manda la solicitud completa a Esslingen. En enero, no en marzo: cierra el 31 mar y la respuesta llega antes de fin de mayo."},
-      {id:"a1-11",mes:"2027-01",txt:"Entrega el depa a fin de mes y recupera el depósito. Lo que no te llevas a casa de tu familia —muebles, electrodomésticos, cocina— se vende: a la cuenta de Alemania."},
-      {id:"a1-16",mes:"2027-02",txt:"Arranca la vida en casa de tu familia. {{aporteCasa}} a la casa el día 1, {{ahorroDia1Casa}} a la cuenta ese mismo día y {{ahorroDia15Casa}} el 15; Didi sube a {{didiAhorroMas}} al mes y el ahorro llega a {{ahorroMesCasa}}."},
-      {id:"a1-12",mes:"2027-03",txt:"Cierra la Fase 1 por escrito. Solicitud, saldo de la cuenta de Alemania contra la proyección, BBVA e ISTQB."},
-      {id:"a1-13",cont:true,txt:"Págate primero cada quincena. El ahorro sale el día que entra el sueldo, antes de gastar; lo que queda es tu gasto personal, tarjeta incluida, y el tablero del Plan Maestro te dice cuánto te toca por día."},
+      {id:"a1-11",mes:"2027-01",txt:"Entrega el depa a fin de mes y recupera el depósito. Lo que no te llevas a casa de tu familia —muebles, electrodomésticos, cocina— se vende: a GBM."},
+      {id:"a1-16",mes:"2027-02",txt:"Arranca la vida en casa de tu familia. {{aporteCasa}} a la casa el día 1, {{ahorroDia1Casa}} a GBM ese mismo día y {{ahorroDia15Casa}} el 15; Didi sube a {{didiAhorroMas}} al mes y el ahorro llega a {{ahorroMesCasa}}."},
+      {id:"a1-12",mes:"2027-03",txt:"Cierra la Fase 1 por escrito. Solicitud, saldo de GBM contra la proyección, BBVA e ISTQB."},
+      {id:"a1-13",cont:true,txt:"Págate primero cada quincena. El ahorro sale el día que entra el sueldo, antes de gastar; lo que queda es tu gasto personal de esa quincena —lo que pagues con tarjeta, saldado en la misma quincena— y el tablero del Plan Maestro te dice cuánto te toca por día."},
       {id:"a1-14",cont:true,txt:"Alemán sin pausa en {{escuelaAleman}}. Esslingen pide A2 antes de terminar el 2º semestre: llega con la constancia."},
       {id:"a1-15",cont:true,txt:"Conducta primero: cero alcohol y el celular fuera del cuarto. Llegas a Alemania con la cadena hecha, no a empezarla allá."},
       {id:"a1-17",cont:true,txt:"Cierra el hueco de junio antes de marzo. Con tu ritmo, {{junioVeredicto}}: cada peso extra de Didi, de ventas o de lo que no gastas va a la cuenta el mismo día."},
@@ -502,7 +510,7 @@ window.CIFRAS = (function () {
      deja:"Viajes y compras que no estén en la lista de salida. Y nada sin papel: cuarto y auto, con contrato.",
      checkpoint:"Fin de junio de 2027: la admisión en la mano y {{salidaJunio}} en la cuenta. Sin admisión, se reaplica para septiembre de 2028 y el ahorro sigue; sin el dinero, la cuenta bloqueada no se completa y la salida se mueve un año. No se viaja a medias ni con deuda.",
      semanas:[
-      {id:"a2-1",mes:"2027-04",txt:"Declaración anual. Con tus deducciones; si sale saldo a favor, a la cuenta de Alemania."},
+      {id:"a2-1",mes:"2027-04",txt:"Declaración anual. Con tus deducciones; si sale saldo a favor, a GBM."},
       {id:"a2-2",mes:"2027-04",txt:"Goethe-Zertifikat A2 (o telc A2) en México. El requisito de alemán de Esslingen queda cumplido desde el primer día."},
       {id:"a2-3",mes:"2027-05",txt:"Chequeo médico, dentista y lentes. Todo lo pendiente se arregla aquí; la receta de lo que tomes, en inglés y con el genérico."},
       {id:"a2-4",mes:"2027-05",txt:"La respuesta de Esslingen, antes de fin de mayo. Si es sí: acepta el lugar, pide la carta de admisión y solicita cuarto en el Studierendenwerk Stuttgart ese día."},
@@ -514,7 +522,7 @@ window.CIFRAS = (function () {
       {id:"a2-10",mes:"2027-08",txt:"Renuncia en {{empleador}} con el aviso que pida tu contrato. Constancia laboral y carta de recomendación en inglés; el plan no cuenta finiquito."},
       {id:"a2-11",mes:"2027-08",txt:"Cierra México. BBVA en $0, iPhone domiciliado, tu número en un plan barato, poder notarial a tu papá y respaldos en la nube."},
       {id:"a2-12",mes:"2027-08",txt:"Dos maletas. Los documentos originales en la de mano; la ropa gruesa de invierno, mejor allá en octubre."},
-      {id:"a2-13",cont:true,txt:"La cuenta de Alemania manda. {{ahorroDia1Casa}} el 1, {{ahorroDia15Casa}} el 15 y lo de Didi van antes que cualquier gasto: a fin de junio tiene que haber {{salidaJunio}}."},
+      {id:"a2-13",cont:true,txt:"GBM va primero. {{ahorroDia1Casa}} el 1, {{ahorroDia15Casa}} el 15 y lo de Didi van antes que cualquier gasto: a fin de junio tiene que haber {{salidaJunio}}."},
       {id:"a2-14",cont:true,txt:"Terapia antes de irte. Llegas con herramientas y con tu red armada: mexicanos en Stuttgart, los líderes de Bosch que conoces y el buddy de la Hochschule."},
     ]},
     {start:new Date(2027,8,1),end:new Date(2029,1,28),tag:"Fase 3",title:"Esslingen: la maestría que cambia tu sueldo",
@@ -612,12 +620,12 @@ window.CIFRAS = (function () {
         {id:'sa-visa-7', cuando:'2027-09', txt:'Allá: Anmeldung en 14 días, inscripción en la Hochschule y permiso de residencia en la Ausländerbehörde antes de que venza la visa.'},
       ]},
       {id:'dinero', ico:'💶', titulo:'Dinero', items:[
-        {id:'sa-din-1', cuando:'2026-10', txt:'Abre la cuenta de Alemania, CETES aparte del día a día: el ahorro se va ahí el día que entra la quincena.'},
-        {id:'sa-din-2', cuando:'2026-10', txt:'Págate primero: el 15, {{ahorroDia15}} a la cuenta de Alemania antes de gastar, y lo de Didi cada lunes. Lo que queda es tu gasto personal, tarjeta incluida: {{gastoPersonalDepa}} al mes.'},
+        {id:'sa-din-1', cuando:'2026-10', txt:'Abre tu cuenta de GBM para Alemania, aparte del día a día: el ahorro se va ahí el día que entra la quincena, en cuanto la BBVA quede en cero.'},
+        {id:'sa-din-2', cuando:'2026-10', txt:'Págate primero, cada quincena: {{ahorroDia1}} el 1 y {{ahorroDia15}} el 15 —a la BBVA hasta el {{bbvaCero}}, después a GBM— y lo de Didi cada lunes. Lo que queda es tu gasto personal de esa quincena, {{gastoPersonalDepa}} al mes, y lo que pagues con tarjeta se paga en la misma quincena.'},
         {id:'sa-din-3', cuando:'2026-11', txt:'Vende lo que no usas: PS5 y su control, monitores, iPad y lo que no hayas tocado en tres meses.'},
         {id:'sa-din-4', cuando:'2026-12', txt:'El aguinaldo paga el seguro del BYD: no entra al plan.'},
-        {id:'sa-din-5', cuando:'2027-01', txt:'Entrega el depa a fin de enero y recupera el depósito. Lo que no te llevas a casa de tu familia —muebles, electrodomésticos, cocina— se vende: a la cuenta de Alemania.'},
-        {id:'sa-din-10', cuando:'2027-02', txt:'En casa de tu familia: {{aporteCasa}} el día 1 y comes en casa. Lo de la renta se vuelve ahorro: {{ahorroDia1Casa}} el 1 y {{ahorroDia15Casa}} el 15, más {{didiAhorroMas}} de Didi al mes.'},
+        {id:'sa-din-5', cuando:'2027-01', txt:'Entrega el depa a fin de enero y recupera el depósito. Lo que no te llevas a casa de tu familia —muebles, electrodomésticos, cocina— se vende: a GBM.'},
+        {id:'sa-din-10', cuando:'2027-02', txt:'En casa de tu familia: {{aporteCasa}} el día 1 y comes en casa. Lo de la renta se vuelve ahorro: {{ahorroDia1Casa}} el 1 y {{ahorroDia15Casa}} el 15 a GBM, más {{didiAhorroMas}} de Didi al mes.'},
         {id:'sa-din-6', cuando:'2027-06', txt:'Junio: {{salidaJunio}} en la cuenta, para la cuenta bloqueada y la visa. Es el punto más apretado del plan.'},
         {id:'sa-din-7', cuando:'2027-08', txt:'Tarjeta sin comisión en el extranjero (Wise o Revolut), y la BBVA en $0 con el pago domiciliado, o cancelada.'},
         {id:'sa-din-8', cuando:'2027-08', txt:'iPhone de AT&T: domicilia lo que quede o liquídalo antes de irte.'},
@@ -690,9 +698,9 @@ window.CIFRAS = (function () {
   function costoSalida(c, eur) { return (c.mxn || 0) + (c.eur || 0) * (eur || PROYECTO.eurMxn); }
 
   /* ── LA PROYECCIÓN DEL PLAN MAESTRO ──────────────────────────────────────────────────────────
-     Mes a mes, del 1 oct 2026 al millón: lo que entra, lo que sale, la cuenta de Alemania (todo el
+     Mes a mes, del 1 oct 2026 al millón: lo que entra, lo que sale, GBM (todo el
      efectivo) y el patrimonio líquido (efectivo y depósito, menos el auto, el iPhone y la BBVA).
-     En México, del sueldo solo llega a la cuenta lo que se manda —los CETES y el ahorro de cada
+     En México, del sueldo solo llega a la cuenta lo que se manda —el ahorro de cada
      quincena, que son cobros del calendario— y de Didi lo que Adán dijo que aparta; lo demás del
      sueldo son los fijos, la comida y su gasto personal (`desgloseMes`). Así el plan y el
      calendario del Dashboard no pueden decir cosas distintas. Lo demás son los SUPUESTOS de abajo,
@@ -704,8 +712,8 @@ window.CIFRAS = (function () {
   const SUPUESTOS = {
     desde: '2026-10', hasta: '2032-12',
     // 1 oct 2026: fondo $6,000 + cuenta $390 + efectivo $1,600; el depósito del depa; el crédito
-    // del auto con su tasa y su pago; el iPhone de AT&T; la BBVA de septiembre (se paga el 11).
-    foto: { efectivo: 7990, deposito: 11250, auto: 283000, autoTasa: 12.99, autoPago: 6700, iphone: 11362, iphonePago: 494, bbva: 10000 },
+    // del auto con su tasa y su pago; el iPhone de AT&T. La BBVA no va aquí: la lleva `planBbva`.
+    foto: { efectivo: 7990, deposito: 11250, auto: 283000, autoTasa: 12.99, autoPago: 6700, iphone: 11362, iphonePago: 494 },
     // Comer al mes: lo que da la lista de compras del Dashboard ($91.54 al día × 30.4). En casa de
     // su familia, comida y cena son de la casa —las cubre el aporte— y él paga su desayuno: el
     // promedio de sus recetas de desayuno ($16.60 al día). El verificador los compara con la lista
@@ -742,7 +750,7 @@ window.CIFRAS = (function () {
   function mesSiguiente(ym) { const p = ym.split('-').map(Number); return mesDe(new Date(p[0], p[1], 1)); }
   function mesMas(ym, k) { const p = ym.split('-').map(Number); return mesDe(new Date(p[0], p[1] - 1 + k, 1)); }
 
-  /* Lo que Didi pone en la cuenta de Alemania en `mes`: didiAhorro hasta enero, didiAhorroMas desde
+  /* Lo que Didi pone en GBM en `mes`: didiAhorro hasta enero, didiAhorroMas desde
      didiMasDesde, la mitad el último mes en México y nada fuera de él. `ultimo` es el último mes en
      México del escenario (irse un año después lo estira). */
   function didiAlAhorro(mes, ultimo) {
@@ -752,8 +760,56 @@ window.CIFRAS = (function () {
     return mes === fin ? m / 2 : m;
   }
 
+  /* La BBVA, quincena a quincena (Adán, 5-oct-2026: "me estás diciendo de pagar mi tarjeta pero ni
+     tengo dinero… eso debe ser cada quincena y deja dinero sobrante para la quincena; actualmente
+     debo 15,000 a bbva"). Ya no se paga de golpe el 11: la deuda cara va primero (prompt del Plan
+     Maestro), así que lo que cada quincena manda a GBM y lo que Didi aparta cada lunes van a la
+     tarjeta hasta dejarla en cero, y el día de pago se completa al menos el mínimo con lo de Didi.
+     Arranca del saldo de `d001` en DEUDAS_SEED el día `PROYECTO.bbvaFecha`; el interés corre por día
+     a la tasa de la tarjeta más IVA, se carga el día de pago y, al llegar a cero, lo que quedaba va
+     con el abono siguiente. Devuelve cada abono con su fecha y de dónde sale (`quincena`, `didi` o
+     `minimo`), el día que queda en cero, lo que cuesta en intereses y el saldo al cerrar cada mes.
+     Lo leen `agendaDia` (el calendario), `desgloseMes` y `proyectar`: una sola cuenta. */
+  function planBbva() {
+    const P = PROYECTO, tc = DEUDAS_SEED.filter(function (d) { return d.id === 'd001'; })[0];
+    const out = { abonos: [], fin: null, intereses: 0, saldoMes: {}, desde: P.bbvaFecha || null };
+    if (!tc || !(+tc.balance > 0) || !P.bbvaFecha) return out;
+    const diario = (+tc.rate || 0) / 100 * 1.16 / 365, min = +tc.min || 0, diaPago = +tc.day || 0;
+    const p = P.bbvaFecha.split('-').map(Number), d = new Date(p[0], p[1] - 1, p[2]);
+    // `acum` es el interés que corre y todavía no se carga: cada abono lo paga primero, así el
+    // último deja la tarjeta en cero de verdad y no un residuo de centavos para la quincena siguiente.
+    let saldo = +tc.balance, acum = 0, ciclo = 0;
+    const abona = function (monto, de) {
+      const x = Math.round(Math.min(saldo + acum, monto) * 100) / 100;
+      if (!(x >= 1)) return;
+      const aInteres = Math.min(acum, x);
+      acum -= aInteres; saldo -= x - aInteres; ciclo += x;
+      out.abonos.push({ fecha: mesDe(d) + '-' + String(d.getDate()).padStart(2, '0'), monto: x, de: de });
+    };
+    for (let k = 0; k < 730; k++, d.setDate(d.getDate() + 1)) {
+      const ym = mesDe(d), dia = d.getDate();
+      if (k > 0) { const i = saldo * diario; acum += i; out.intereses += i; }
+      if (dia === diaPago) {
+        saldo += acum; acum = 0;
+        if (k > 0 && ciclo < min) abona(min - ciclo, 'minimo');
+        ciclo = 0;
+      }
+      if (k > 0 && d.getDay() === 1) abona(didiAlAhorro(ym) * 12 / 52, 'didi');
+      if (dia === 1 || dia === 15) abona(envioQuincena(dia, ym), 'quincena');
+      out.saldoMes[ym] = saldo + acum;
+      if (saldo + acum < 1) { out.fin = new Date(d.getFullYear(), d.getMonth(), d.getDate()); out.saldoMes[ym] = 0; break; }
+    }
+    return out;
+  }
+  // Lo que un día de quincena manda a GBM según el calendario, antes de que la tarjeta tome su parte.
+  function envioQuincena(dia, ym) {
+    return CALENDARIO.cobros.reduce(function (a, c) {
+      return a + (c.quincena && c.ahorro && c.dia === dia && caeEnMes(c, ym) ? +c.monto || 0 : 0);
+    }, 0);
+  }
+
   /* El sueldo de un mes en México, renglón por renglón: lo que entra, cada fijo por su `grupo`, el
-     auto y el iPhone, la comida, lo que va a la cuenta de Alemania (los CETES y el ahorro de cada
+     auto y el iPhone, la comida, lo que va a GBM (el ahorro de cada
      quincena) y lo que queda: tu gasto personal. Los cobros son los del calendario, los mismos que
      pinta el Dashboard; el auto y el iPhone, las mensualidades de la foto (o lo que la proyección
      pague ese mes). `promedio`: el mes tipo de su etapa —el gas a su promedio— para las tablas de
@@ -764,7 +820,8 @@ window.CIFRAS = (function () {
     ['suscripciones', 'Gym, Claude Code e iCloud'], ['familia', 'Aporte a tu familia'],
     ['auto', 'BYD, la mensualidad'], ['iphone', 'iPhone'], ['comida', 'Comida'],
     ['cuidado', 'Tus rutinas: piel, cabello y suplementos'],
-    ['personal', 'Lo demás: ropa, salidas, regalos, compras'], ['ahorro', 'A la cuenta de Alemania'],
+    ['personal', 'Lo demás: ropa, salidas, regalos, compras'], ['tarjeta', 'La BBVA, hasta dejarla en cero'],
+    ['ahorro', 'A GBM, el ahorro para Alemania'],
   ];
   function desgloseMes(mes, s, opts) {
     s = s || SUPUESTOS; opts = opts || {};
@@ -788,12 +845,21 @@ window.CIFRAS = (function () {
     // En el mes tipo el gas va a su promedio ($89.50): cada renglón se redondea al peso y el gasto
     // personal, que es lo que queda, absorbe la diferencia, para que la tabla sume exacto.
     if (opts.promedio) GRUPOS_SUELDO.forEach(function (x) { g[x[0]] = Math.round(g[x[0]]); });
+    // La BBVA con plan: lo que se lleva de cada quincena sale del ahorro de ese mes y va en su
+    // propio renglón; lo que se lleva de Didi (los lunes y el mínimo del día de pago), de Didi.
+    let deDidi = 0;
+    planBbva().abonos.forEach(function (a) {
+      if (a.fecha.slice(0, 7) !== mes) return;
+      if (a.de !== 'quincena') { deDidi += a.monto; return; }
+      g.tarjeta += a.monto; g.ahorro -= a.monto;
+      if (+a.fecha.slice(8) < 15) dia1 -= a.monto; else dia15 -= a.monto;
+    });
     const cetes = g.ahorro - dia1 - dia15;
     g.ahorro -= s.menosAhorro || 0;
     g.personal = g.sueldo - g.ahorro - GRUPOS_SUELDO.reduce(function (a, x) {
       return x[0] === 'sueldo' || x[0] === 'ahorro' || x[0] === 'personal' ? a : a + g[x[0]];
     }, 0);
-    const didi = didiAlAhorro(mes, ultimo);
+    const didi = didiAlAhorro(mes, ultimo) - deDidi;
     return { mes: mes, casa: casa, g: g, cetes: cetes, dia1: dia1, dia15: dia15, didi: didi, ahorro: g.ahorro + didi };
   }
   // Lo que cuestan al mes sus rutinas de piel, cabello y suplementos: el mismo número que pintan
@@ -803,7 +869,7 @@ window.CIFRAS = (function () {
      `recorte` de un producto es UNA recomendación concreta, nunca un menú (Adán, 2026-08-18: "no me
      des alternativas, porque si no al final no compraré nada"), con lo que costaría al mes con la
      misma dosis —la fórmula de su rutina, cambiando precio y envase— y lo que ahorra. `medico`: lo
-     decide su dermatólogo (prompt de Cabello). Lo que se ahorra va a la cuenta de Alemania. */
+     decide su dermatólogo (prompt de Cabello). Lo que se ahorra va a GBM. */
   function rutinasDesglose() {
     const grupos = [['Piel', RUTINA_PIEL, RUTINA_PIEL.productos.filter(function (p) { return !p.opcional; })],
                     ['Cabello', RUTINA_PELO, RUTINA_PELO.productos],
@@ -843,7 +909,8 @@ window.CIFRAS = (function () {
     const semestres = A.semestres.map(function (m) { return mesMas(m, dm); });
     const costos = SALIDA.costos.map(function (c) { return Object.assign({}, c, { mes: mesMas(c.mes, dm) }); });
     const devuelve = mesSiguiente(P.rentaHasta);
-    let cash = f.efectivo, deposito = f.deposito, auto = f.auto, iphone = f.iphone, bbva = f.bbva;
+    let cash = f.efectivo, deposito = f.deposito, auto = f.auto, iphone = f.iphone;
+    const B = planBbva();
     const filas = [];
     for (let k = 0; ; k++) {
       const mes = mesMas(s.desde, k);
@@ -860,7 +927,7 @@ window.CIFRAS = (function () {
         desglose = desgloseMes(mes, s, { pagoAuto: pagoAuto, pagoIphone: pagoIphone, ultimo: ultimo });
         entra += desglose.g.sueldo + desglose.didi;
         sale += desglose.g.sueldo - desglose.g.ahorro;
-        if (mes === s.desde && bbva) { sale += bbva; bbva = 0; notas.push('la BBVA de septiembre, pagada completa'); }
+        if (desglose.g.tarjeta > 0) notas.push(B.fin && mesDe(B.fin) === mes ? 'la BBVA queda en cero el ' + B.fin.getDate() : 'lo que sobra de cada quincena, a la BBVA');
         if (mes === devuelve) { cash += deposito; deposito = 0; notas.push('sin renta desde este mes; regresa el depósito del depa'); }
         if (mes.slice(5) === '12') notas.push('el aguinaldo, al seguro del BYD');
         if (mes === ultimo) notas.push('Didi, la mitad: la segunda quincena es de empacar');
@@ -891,7 +958,7 @@ window.CIFRAS = (function () {
       if (!enMexico && cash > 0) cash += cash * s.rendimiento / 12;
       if (auto <= 0 && pagoAuto > 0) notas.push('se termina de pagar el BYD');
       filas.push({ mes: mes, entra: entra, sale: sale, ahorro: entra - sale, alemania: cash, auto: auto,
-                   liquido: cash + deposito - auto - iphone - bbva, notas: notas, desglose: desglose });
+                   liquido: cash + deposito - auto - iphone - (B.saldoMes[mes] || 0), notas: notas, desglose: desglose });
     }
     return filas;
   }
@@ -1106,7 +1173,7 @@ window.CIFRAS = (function () {
       subs: [
         { n: 'Págate primero',
           q: 'El ahorro que sale el día que entra el dinero es el único que sobrevive al mes. Todo lo que ahorres es para Alemania.',
-          c: 'El 15 —y desde febrero también el 1—, lo que va a la cuenta de Alemania sale en cuanto entra la quincena, antes de pagar o comprar nada. Lo que queda es lo que puedes gastar: el riel del Plan Maestro te dice cuánto al día.',
+          c: 'El 15 —y desde febrero también el 1—, lo que va a GBM sale en cuanto entra la quincena, antes de pagar o comprar nada. Lo que queda es lo que puedes gastar: el riel del Plan Maestro te dice cuánto al día.',
           r: [
             { t: 'libro', id: 'iWillTeach' },
           ] },
@@ -1118,7 +1185,7 @@ window.CIFRAS = (function () {
           ] },
         { n: 'Presupuestar sobre ingreso variable',
           q: 'Tu ingreso no es uno: ALTEN es fijo y Didi cambia cada semana. Presupuestar sobre el promedio es lo que hace que un mes flojo te descuadre.',
-          c: 'Presupuesta sobre el <b>mínimo de tus últimos 3 meses</b>, nunca sobre el promedio ni sobre el mejor mes. Lo que entre por encima de ese mínimo no es para gastar: va a la cuenta de Alemania el mismo día. Con Didi, aparta cada lunes lo de la semana antes de tocarlo.',
+          c: 'Presupuesta sobre el <b>mínimo de tus últimos 3 meses</b>, nunca sobre el promedio ni sobre el mejor mes. Lo que entre por encima de ese mínimo no es para gastar: va a GBM el mismo día. Con Didi, aparta cada lunes lo de la semana antes de tocarlo.',
           r: [
             { t: 'libro', id: 'profitFirst', nota: 'el método de repartir el ingreso en cuentas separadas antes de gastarlo' },
           ] },
@@ -1135,7 +1202,7 @@ window.CIFRAS = (function () {
             { t: 'libro', id: 'cerdo', nota: 'deuda y CAT explicados con productos mexicanos' },
           ] },
         { n: 'El colchón dentro de la cuenta',
-          q: 'Todo tu ahorro va a la cuenta de Alemania, pero no todo se puede gastar en la salida: una parte es el colchón que evita volver a la tarjeta ante un imprevisto.',
+          q: 'Todo tu ahorro va a GBM, pero no todo se puede gastar en la salida: una parte es el colchón que evita volver a la tarjeta ante un imprevisto.',
           c: 'Dentro de la cuenta, un mes de tus fijos ({{fijosTotal}}) no se toca para nada que no sea una emergencia de verdad: el auto, la salud, un gasto que no podías prever. Guárdalo en CETES de 28 días: se saca en 24 a 48 horas y no vale menos el día que lo necesites.',
           r: [
             { t: 'libro', id: 'simplePath' },
@@ -1390,7 +1457,7 @@ window.CIFRAS = (function () {
     ventas: {
       subs: [
         { n: 'Vender lo que no usas a su precio',
-          q: 'Es la venta que hoy sí rinde: cada peso va a la cuenta de Alemania.',
+          q: 'Es la venta que hoy sí rinde: cada peso va a GBM.',
           c: 'Fotos con luz de día, el precio de tres anuncios iguales y un 10% arriba para tener margen al negociar. Contesta en menos de una hora: en Marketplace vende el primero que contesta.',
           r: [
             { t: 'libro', id: 'neverSplit' },
@@ -3877,6 +3944,14 @@ window.CIFRAS = (function () {
         if (g && g.target === 406000) g.target = 398000;
       }
     },
+    {
+      // 2026-10-05 · "actualmente debo 15,000 a bbva… eso debe ser cada quincena". El saldo nuevo, y
+      // ya no se paga completa: `noInterest` en 0 para que su tasa corra y el 11 no pida el total.
+      flag: '_bbva20261005',
+      hacer: function (f) {
+        const tc = (f.debts || []).find(x => x.id === 'd001'); if (tc) { tc.balance = 15000; tc.noInterest = 0; }
+      }
+    },
   ];
 
   /* Las seis compras del 1-sep-2026, en un solo sitio: las usa la migración de arriba para el
@@ -4070,35 +4145,39 @@ window.CIFRAS = (function () {
     didiAhorro:      { v: () => PROYECTO.didiAhorro },
     didiAhorroMas:   { v: () => PROYECTO.didiAhorroMas },
     aporteCasa:      { v: () => PROYECTO.aporteCasa },
+    ahorroDia1:      { v: () => PROYECTO.ahorroDia1 },
     ahorroDia15:     { v: () => PROYECTO.ahorroDia15 },
     ahorroDia1Casa:  { v: () => PROYECTO.ahorroDia1Casa },
     ahorroDia15Casa: { v: () => PROYECTO.ahorroDia15Casa },
-    // Lo que llega a la cuenta de Alemania en un mes tipo, con depa (hasta enero) y en casa.
-    ahorroMesDepa:   { dep: ['cetesDia15','ahorroDia15','didiAhorro'], v: () => mesTipo(false).ahorro },
-    ahorroMesCasa:   { dep: ['cetesDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorroMas'], v: () => mesTipo(true).ahorro },
+    // La BBVA, quincena a quincena: el día que queda en cero y lo que cuesta en intereses.
+    bbvaCero:        { fmt: 'fecha', v: () => planBbva().fin },
+    bbvaIntereses:   { v: () => Math.round(planBbva().intereses) },
+    // Lo que llega a GBM en un mes tipo, con depa (hasta enero) y en casa.
+    ahorroMesDepa:   { dep: ['ahorroDia1','ahorroDia15','didiAhorro'], v: () => mesTipo(false).ahorro },
+    ahorroMesCasa:   { dep: ['ahorroDia1Casa','ahorroDia15Casa','didiAhorroMas'], v: () => mesTipo(true).ahorro },
     // Lo que queda del sueldo después de los fijos, la comida y el ahorro: el gasto personal, con
     // sus rutinas dentro. Las rutinas solas son `cuidadoMes`.
     cuidadoMes:      { v: () => cuidadoMes() },
     // Lo que se ahorraría al mes con todos los recortes de las rutinas (el detalle, en Coach).
     recorteRutinas:  { v: () => rutinasDesglose().ahorro },
-    gastoPersonalDepa: { dep: ['sueldoQuinc','renta','servicios','suscripciones','cetesDia15','ahorroDia15'],
+    gastoPersonalDepa: { dep: ['sueldoQuinc','renta','servicios','suscripciones','ahorroDia1','ahorroDia15'],
                          v: () => { const t = mesTipo(false); return t.g.cuidado + t.g.personal; } },
-    gastoPersonalCasa: { dep: ['sueldoQuinc','celular','suscripciones','aporteCasa','cetesDia15','ahorroDia1Casa','ahorroDia15Casa'],
+    gastoPersonalCasa: { dep: ['sueldoQuinc','celular','suscripciones','aporteCasa','ahorroDia1Casa','ahorroDia15Casa'],
                          v: () => { const t = mesTipo(true); return t.g.cuidado + t.g.personal; } },
     // La proyección en los dos cortes: el cierre de la Fase 1 y junio, con su veredicto. La salida
     // pide más en agosto (`salidaVeredicto`). Se calculan cada vez: el verificador las mueve.
-    alemaniaMarzo:   { dep: ['cetesDia15','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas'],
+    alemaniaMarzo:   { dep: ['ahorroDia1','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas'],
                        v: () => proyectar().filter(f => f.mes === mesDe(PHASES[1].end))[0].alemania },
-    alemaniaJunio:   { dep: ['cetesDia15','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas','eurMxn'],
+    alemaniaJunio:   { dep: ['ahorroDia1','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas','eurMxn'],
                        v: () => cortesSalida(proyectar()).junio.tiene },
-    junioVeredicto:  { dep: ['cetesDia15','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas','eurMxn'], fmt: 'txt',
+    junioVeredicto:  { dep: ['ahorroDia1','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas','eurMxn'], fmt: 'txt',
                        v: () => { const c = cortesSalida(proyectar()).junio;
                          return c.falta > 0 ? 'faltan ' + fmt(c.falta) + ' para la cuenta bloqueada' : 'alcanza, con ' + fmt(-c.falta) + ' de margen'; } },
     // Lo que tiene que haber al cerrar la Fase 1 para que junio alcance con el ahorro de abril a junio.
-    marzoParaJunio:  { dep: ['cetesDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorroMas','eurMxn'],
+    marzoParaJunio:  { dep: ['ahorroDia1Casa','ahorroDia15Casa','didiAhorroMas','eurMxn'],
                        v: () => { const F = proyectar(), c = cortesSalida(F).junio;
                          return F.filter(f => f.mes === mesDe(PHASES[1].end))[0].alemania + c.falta; } },
-    salidaVeredicto: { dep: ['cetesDia15','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas','eurMxn'], fmt: 'txt',
+    salidaVeredicto: { dep: ['ahorroDia1','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas','eurMxn'], fmt: 'txt',
                        v: () => { const c = cortesSalida(proyectar()).salida;
                          return c.falta > 0 ? 'faltan ' + fmt(c.falta) : 'sobran ' + fmt(-c.falta); } },
     // El mes en que la proyección cruza el millón (lo mueve sobre todo el euro: el sueldo de allá).
@@ -4313,9 +4392,23 @@ window.CIFRAS = (function () {
   function agendaDia(dia, ym, debts) {
     const out = [];
     const mes = ym || '';
+    // La BBVA con plan de pago (`planBbva`): lo que le toca ese día sale del envío a GBM de la
+    // quincena —o, el día de pago, de lo de Didi para completar el mínimo— y su pago genérico, el
+    // mínimo o el total, deja de pintarse. Lo de Didi de cada lunes no pasa por aquí: Didi no está
+    // en el calendario.
+    const B = mes ? planBbva() : null, fecha = mes + '-' + String(dia).padStart(2, '0');
+    const tarjeta = B ? B.abonos.filter(function (a) { return a.fecha === fecha && a.de !== 'didi'; }) : [];
+    let resta = tarjeta.reduce(function (s, a) { return s + (a.de === 'quincena' ? a.monto : 0); }, 0);
     (CALENDARIO.cobros || []).forEach(function (c) {
       if (c.dia !== dia || !caeEnMes(c, mes)) return;
-      out.push({ t: c.txt, monto: c.monto, entra: !!c.entra, ahorro: !!c.ahorro });
+      let monto = c.monto;
+      if (c.quincena && c.ahorro && resta > 0) { const x = Math.min(resta, monto); monto -= x; resta -= x; }
+      if (c.ahorro && !(monto > 0)) return;
+      out.push({ t: c.txt, monto: monto, entra: !!c.entra, ahorro: !!c.ahorro });
+    });
+    tarjeta.forEach(function (a) {
+      out.push({ t: a.de === 'minimo' ? 'Tarjeta BBVA — el mínimo, con lo de Didi' : 'Tarjeta BBVA — lo que sobra de la quincena',
+                 monto: a.monto, entra: false, tarjeta: true, de: a.de });
     });
     const DEU = (debts && debts.length) ? debts : deudas();
     const hoy = new Date();
@@ -4326,6 +4419,7 @@ window.CIFRAS = (function () {
     };
     DEU.forEach(function (d) {
       if (d.day !== dia || !(+d.balance > 0) || !(+d.min > 0)) return;
+      if (d.id === 'd001' && B && B.desde && fecha >= B.desde) return;     // la paga el plan
       if (+d.noInterest > 0 && mes === proximo(d))
         out.push({ t: d.name + ' — pago total, sin intereses', monto: +d.noInterest, entra: false });
       else out.push({ t: d.name, monto: +d.min, entra: false });
@@ -4393,7 +4487,7 @@ window.CIFRAS = (function () {
           if (!v) return;
           (a.entra ? entradas : fijos).push(a);
           if (a.entra) { inc += v; anota(a.t, v, 'inc', '__entra', true); }
-          // Lo que se aparta (CETES, el ahorro de cada quincena) se queda en `fijos` para que una
+          // Lo que se aparta (el ahorro de cada quincena) se queda en `fijos` para que una
           // transacción que lo anote no se cuente encima, pero no es gasto.
           else if (!a.ahorro) { exp += v; anota(a.t, v, 'exp', a.t, true); }
         });
@@ -4492,7 +4586,7 @@ window.CIFRAS = (function () {
   return {
     n: n, v: v, texto: texto, aplicarDOM: aplicarDOM, refrescar: refrescar, tabla: tabla,
     // El balance mensual y sus piezas, para que Dashboard y Finanzas pinten LO MISMO.
-    balanceMeses: balanceMeses, agendaDia: agendaDia, caeEnMes: caeEnMes, comerEnMes: comerEnMes,
+    balanceMeses: balanceMeses, agendaDia: agendaDia, caeEnMes: caeEnMes, comerEnMes: comerEnMes, planBbva: planBbva,
     palabras: palabras, norm: norm, yaContado: yaContado, esNomina: esNomina,
     comeDia: comeDia, guardarComeDia: guardarComeDia,
     claves: function () { return Object.keys(CLAVES); },

@@ -1555,11 +1555,11 @@ function renderGBM() {
           <div style="font-size:26px;font-weight:900;color:var(--primary);letter-spacing:-.5px">${fmt(monthGBM)}</div>
           <div style="font-size:10px;color:rgba(0,212,255,.5);margin-top:3px">acciones USA · GBM+</div>
         </div>
-        <div style="flex:1;min-width:130px;padding:18px 22px;border-right:1px solid rgba(255,255,255,.06)">
+        ${CETES_DIA15>0?`<div style="flex:1;min-width:130px;padding:18px 22px;border-right:1px solid rgba(255,255,255,.06)">
           <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">CETES día 15</div>
           <div style="font-size:26px;font-weight:900;color:var(--success);letter-spacing:-.5px">${fmt(CETES_DIA15)}</div>
           <div style="font-size:10px;color:rgba(0,232,122,.5);margin-top:3px">ahorro recurrente · ~11% anual</div>
-        </div>
+        </div>`:''}
         <div style="flex:1;min-width:130px;padding:18px 22px;background:rgba(0,212,255,.05)">
           <div style="font-size:10px;font-weight:600;color:rgba(0,212,255,.6);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Esta semana — Sem ${cw}</div>
           <div style="font-size:26px;font-weight:900;color:#00d4ff;letter-spacing:-.5px">${fmt(efectivoSemana)}</div>
@@ -1657,7 +1657,7 @@ function renderGBM() {
           aviso:'Semana sin ingreso de nómina: la mensualidad del auto sale del saldo que quedó reservado. El plan no aparta nada para la bolsa esta semana, y no es un error — es que no hay de dónde.' },
         { n:3, dias:'15 al 21',
           ins:  [{l:'Quincena 2 · '+(_PG().bancoSueldo||'BBVA'), a:QUINC}],
-          outs: [{l:'CETES · día 15', a:CETES_DIA15},
+          outs: [...(CETES_DIA15>0?[{l:'CETES · día 15', a:CETES_DIA15}]:[]),
                  {l:'Plan de datos celular', a:SVC_CELULAR},
                  {l:'Internet', a:SVC_INTERNET},
                  {l:'Gas', a:SVC_GAS},
@@ -1689,7 +1689,7 @@ function renderGBM() {
                    {t:'Renta',      a:-RENTA, c:'var(--danger)'}]},
         {d:14, ev:[{t:AUTO_N,       a:-AUTO, c:'var(--danger)'}]},
         {d:15, ev:[{t:'Quincena 2', a:QUINC, c:'var(--success)'},
-                   {t:'CETES',      a:-CETES_DIA15, c:'var(--primary)'}]},
+                   ...(CETES_DIA15>0?[{t:'CETES', a:-CETES_DIA15, c:'var(--primary)'}]:[])]},
         {d:17, ev:[{t:_PG().gymNombre||'Gimnasio', a:-SUB_GYM, c:'var(--danger)'}]},
       ];
 
@@ -1751,7 +1751,7 @@ function renderGBM() {
           <div style="display:flex;gap:18px;flex-wrap:wrap;padding-top:2px">
             <span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:var(--success)"></span><span style="font-size:11px;color:var(--text3)">Entra dinero</span></span>
             <span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:var(--danger)"></span><span style="font-size:11px;color:var(--text3)">Sale dinero</span></span>
-            <span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:var(--primary)"></span><span style="font-size:11px;color:var(--text3)">Se aparta a CETES</span></span>
+            ${CETES_DIA15>0?`<span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:var(--primary)"></span><span style="font-size:11px;color:var(--text3)">Se aparta a CETES</span></span>`:''}
             ${isCurrentM?`<span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:8px;border-radius:4px;background:rgba(0,212,255,.16);border:1px solid rgba(0,212,255,.35)"></span><span style="font-size:11px;color:var(--text3)">Semana en curso</span></span>`:''}
           </div>
 
@@ -2107,8 +2107,8 @@ function renderGBM() {
       </div>
     </div>`}
 
-    <!-- CETES -->
-    <div class="card" style="margin-bottom:20px;border-color:rgba(0,232,122,.2);background:rgba(0,232,122,.03)">
+    <!-- CETES: con aporte, el plan del 15; sin él, solo el fondo que ya tiene -->
+    ${CETES_DIA15>0?`<div class="card" style="margin-bottom:20px;border-color:rgba(0,232,122,.2);background:rgba(0,232,122,.03)">
       <div class="card-title" style="color:var(--success);margin-bottom:12px">🏛️ CETES — tu fondo de emergencia</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
         <div style="flex:1;min-width:150px;background:rgba(0,232,122,.08);border-radius:8px;padding:14px;text-align:center">
@@ -2123,7 +2123,11 @@ function renderGBM() {
           <div>🛡️ <strong>Función:</strong> Es el fondo de emergencia (desde sep 2026): hoy <strong>${fmt(S.emergencyFund||0)}</strong> de ${fmt(_metaFondo())}. Solo se vende ante un imprevisto; nunca se mueve a acciones.</div>
         </div>
       </div>
-    </div>
+    </div>`:`
+    <div class="card" style="margin-bottom:20px;border-color:rgba(0,232,122,.2);background:rgba(0,232,122,.03)">
+      <div class="card-title" style="color:var(--success);margin-bottom:8px">🏛️ CETES — tu fondo de emergencia</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.7">Hoy <strong>${fmt(S.emergencyFund||0)}</strong> de ${fmt(_metaFondo())}. Ya no recibe aporte: desde el 5 oct de 2026 lo que sobra de cada quincena va primero a la BBVA y, en cuanto quede en cero, a GBM (Plan Maestro). Solo se vende ante un imprevisto.</div>
+    </div>`}
     `;
 
   // Gráfica de distribución del portafolio
@@ -2875,7 +2879,7 @@ function getMonthProjection(month) {
   const _pg = _PG();
   const fixed = [
     {desc:'Renta departamento',      amount:_pg.renta,      cat:'Hogar/Renta'},
-    {desc:'CETES ahorro recurrente', amount:_pg.cetesDia15, cat:'Inversiones'},
+    ...(_pg.cetesDia15>0?[{desc:'CETES ahorro recurrente', amount:_pg.cetesDia15, cat:'Inversiones'}]:[]),
     {desc:'Gym '+(_pg.gymNombre||''), amount:_pg.gym,       cat:'Salud'},
     {desc:'Plan de datos celular',   amount:_pg.celular,    cat:'Servicios'},
     {desc:'Internet',                amount:_pg.internet,   cat:'Servicios'},
@@ -3412,7 +3416,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
   const scD_date=addM(now,scD_months);
   const scD_diff=diffMonths(scD_date,targetDate);
 
-  // E: el del Plan Maestro — lo que Didi aparta para la cuenta de Alemania (el maestro: didiAhorro
+  // E: el del Plan Maestro — lo que Didi aparta para GBM (el maestro: didiAhorro
   // hasta enero, didiAhorroMas desde didiMasDesde) y, desde que dejas el depa (enCasaDesde), la renta.
   // El aporte a tu familia lo compensa lo que ahorras en comida (Adán, 3-oct-2026).
   const scE_didi1=+_PG().didiAhorro||0, scE_didi2=+_PG().didiAhorroMas||0;
@@ -3539,7 +3543,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
       </div>
       <div style="display:flex;flex-direction:column;gap:6px">
         ${scRow('📈','Tu plan GBM mensual (sobrante real calculado)',scA_mo,scA_months,scA_date,scA_diff)}
-        ${scRow('💰','Plan GBM + CETES combinados (ahorro total)',scB_mo,scB_months,scB_date,scB_diff)}
+        ${_gbmCETES>0?scRow('💰','Plan GBM + CETES combinados (ahorro total)',scB_mo,scB_months,scB_date,scB_diff):''}
         ${scRow('🎯',`Mínimo necesario para llegar en ${targetLabel}`,scC_mo,scC_months,targetDate,0)}
         ${scRow('💡','Si reduces gastos variables 20%',scD_mo,scD_months,scD_date,scD_diff)}
         <!-- Escenario E expandido -->

@@ -1222,7 +1222,7 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .hp-fase-f{height:100%;border-radius:3px}
 .hp-fase-hoy{position:absolute;top:-4px;width:2px;height:13px;background:var(--text);border-radius:2px}
 /* El módulo Fase de Mi Día responde tres preguntas del día: qué toca de la fase (las tareas del
-   mes con su casilla y su fecha), cuánto y cuándo va a la cuenta de Alemania, y qué sigue. Cada
+   mes con su casilla y su fecha), cuánto y cuándo va a GBM, y qué sigue. Cada
    sección es UN hijo del tile: el tile es flex en columna con gap, y fila por fila sumaba 6 px. */
 .hpf-t{font-size:12.5px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:6px}
 .hpf-dias{display:flex;justify-content:space-between;gap:6px;font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:6px}
@@ -4902,8 +4902,8 @@ const EVENTOS_MES={
     {ico:"✈️",txt:"Revisar FAMEX 2027"},
   ],
   "2026-10":[
-    {ico:"🪙",txt:"Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — cartas de recomendación y la solicitud a Esslingen; la BBVA al total cada 11 y, cada 15, el ahorro a la cuenta de Alemania"},
-    {ico:"💳",txt:"Pagar la TC BBVA completa antes del día 11 — el total del estado de cuenta, no el mínimo: así no genera intereses"},
+    {ico:"🪙",txt:"Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — cartas de recomendación y la solicitud a Esslingen; la BBVA quincena a quincena hasta dejarla en cero y, después, todo el ahorro a GBM"},
+    {ico:"💳",txt:"Pagar la TC BBVA quincena a quincena, no de golpe el 11: el 11 solo el mínimo, con lo de Didi; el 1 y el 15, lo que sobra de la quincena, y los lunes, lo de Didi, hasta dejarla en cero"},
     {ico:"🎯",txt:"Cerrar la Fase 0 por escrito: qué se cumplió (Banamex, liquidada el 30 sep) y qué pasa a la Fase 1 (el fondo de emergencia y la BBVA)"},
   ],
 };
@@ -4958,7 +4958,7 @@ const EVENTOS_NUEVOS = [
      resuelve antes de que llegue (la BBVA se paga completa el 11) y el plan se revisa contra
      lo que de verdad pasó (el cierre de la Fase 0). */
   { flag:'_oct20261001', mes:'2026-10', items:[
-      {ico:'💳', txt:'Pagar la TC BBVA completa antes del día 11 — el total del estado de cuenta, no el mínimo: así no genera intereses'},
+      {ico:'💳', txt:'Pagar la TC BBVA quincena a quincena, no de golpe el 11: el 11 solo el mínimo, con lo de Didi; el 1 y el 15, lo que sobra de la quincena, y los lunes, lo de Didi, hasta dejarla en cero'},
       {ico:'🎯', txt:'Cerrar la Fase 0 por escrito: qué se cumplió (Banamex, liquidada el 30 sep) y qué pasa a la Fase 1 (el fondo de emergencia y la BBVA)'},
   ]},
 ];
@@ -4981,6 +4981,14 @@ const EVENTOS_CORRIGE = [
   { flag:'_ahorroReal20261003', mes:'2026-10',
     de:'Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — IELTS, cartas de recomendación y la solicitud a Esslingen; la BBVA al total cada 11 y el ahorro a la cuenta de Alemania',
     a:'Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — cartas de recomendación y la solicitud a Esslingen; la BBVA al total cada 11 y, cada 15, el ahorro a la cuenta de Alemania' },
+  /* 2026-10-05 · La BBVA ya no se paga completa el 11 (Adán: "me estás diciendo de pagar mi tarjeta
+     pero ni tengo dinero… eso debe ser cada quincena") y el ahorro va a GBM, no a CETES. */
+  { flag:'_bbvaFase20261005', mes:'2026-10',
+    de:'Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — cartas de recomendación y la solicitud a Esslingen; la BBVA al total cada 11 y, cada 15, el ahorro a la cuenta de Alemania',
+    a:'Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — cartas de recomendación y la solicitud a Esslingen; la BBVA quincena a quincena hasta dejarla en cero y, después, todo el ahorro a GBM' },
+  { flag:'_bbvaPago20261005', mes:'2026-10',
+    de:'Pagar la TC BBVA completa antes del día 11 — el total del estado de cuenta, no el mínimo: así no genera intereses',
+    a:'Pagar la TC BBVA quincena a quincena, no de golpe el 11: el 11 solo el mínimo, con lo de Didi; el 1 y el 15, lo que sobra de la quincena, y los lunes, lo de Didi, hasta dejarla en cero' },
 ];
 function eventosCorregir(){
   const st = rawGet(EVENTOS_KEY, null);
@@ -7401,27 +7409,37 @@ function renderHeroFase(){
     return `<label class="hpf-tar${ok?' ok':''}" title="${esc(String(s.txt).replace(/<[^>]*>/g,''))}"><input type="checkbox"${ok?' checked':''} onchange="faseHoyMarca('${s.id}',this.checked)"><span>${corto(s.txt)}</span>${em}</label>`;
   }).join('');
 
-  // ── El dinero de Alemania.
+  // ── El dinero de Alemania. Mientras la BBVA tenga saldo, lo de Didi de cada lunes y lo que sobra
+  //    de cada quincena van a ella (CIFRAS.planBbva); después, a GBM.
   const din=[];
+  const B=C.planBbva?C.planBbva():{abonos:[],fin:null,intereses:0};
+  const isoDe=d=>ymDe(d)+'-'+String(d.getDate()).padStart(2,'0');
   const didiMes=C.didiAlAhorro?C.didiAlAhorro(mesId):0;
   if(didiMes>0){
     const lun=new Date(hoy); lun.setDate(hoy.getDate()+(8-hoy.getDay())%7);
-    din.push(`<div class="hpf-din"><b>lun ${dC(lun)}</b><span><strong>${money(Math.round(didiMes*12/52))}</strong> de Didi a la cuenta</span><em class="${nDias(lun)<=1?'pronto':''}">${enDias(lun)}</em></div>`);
+    // Ese lunes, lo de Didi va a la BBVA si el plan lo dice; si cae antes del día de pago, junta el mínimo.
+    const aBbva=B.abonos.filter(a=>a.fecha===isoDe(lun)&&a.de==='didi')[0];
+    const enSiete=new Date(lun); enSiete.setDate(lun.getDate()+7);
+    const minimo=!aBbva&&B.abonos.filter(a=>a.de==='minimo'&&a.fecha>=isoDe(lun)&&a.fecha<isoDe(enSiete))[0];
+    const destino=aBbva?'a la BBVA':minimo?'para el mínimo de la BBVA del '+(+minimo.fecha.slice(8)):'a GBM';
+    din.push(`<div class="hpf-din"><b>lun ${dC(lun)}</b><span><strong>${money(aBbva?aBbva.monto:Math.round(didiMes*12/52))}</strong> de Didi ${destino}</span><em class="${nDias(lun)<=1?'pronto':''}">${enDias(lun)}</em></div>`);
   }
   let envio=null;
   const finMx=(C.PROYECTO&&C.PROYECTO.ultimoMesMexico)||'9999-12';
   for(let k=0;k<45&&!envio;k++){
     const d=new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate()+k); if(ymDe(d)>finMx) break;
-    const ah=(ctAgenda(d.getDate(),ymDe(d))||[]).filter(x=>x.ahorro);
-    if(ah.length){
+    const it=(ctAgenda(d.getDate(),ymDe(d))||[]).filter(x=>x.ahorro||x.tarjeta);
+    if(it.length){
       const suma=xs=>xs.reduce((t,x)=>t+(+x.monto||0),0);
-      envio={d:d, cuenta:suma(ah.filter(x=>!/cetes/i.test(x.t))), cetes:suma(ah.filter(x=>/cetes/i.test(x.t)))};
+      envio={d:d, gbm:suma(it.filter(x=>x.ahorro)), bbva:suma(it.filter(x=>x.tarjeta)), minimo:it.some(x=>x.de==='minimo')};
     }
   }
   if(envio){
-    const qu=[envio.cuenta?`<strong>${money(envio.cuenta)}</strong> a la cuenta`:'', envio.cetes?`${money(envio.cetes)} a CETES`:''].filter(Boolean).join(' y ');
-    din.push(`<div class="hpf-din"><b>${dC(envio.d)}</b><span>${qu}, antes de gastar</span><em class="${nDias(envio.d)<=3?'pronto':''}">${enDias(envio.d)}</em></div>`);
+    const qu=[envio.bbva?`<strong>${money(envio.bbva)}</strong> a la BBVA${envio.minimo?', el mínimo, con lo de Didi':''}`:'',
+              envio.gbm?(envio.bbva?money(envio.gbm):`<strong>${money(envio.gbm)}</strong>`)+' a GBM':''].filter(Boolean).join(' y ');
+    din.push(`<div class="hpf-din"><b>${dC(envio.d)}</b><span>${qu}${envio.minimo?'':', antes de gastar'}</span><em class="${nDias(envio.d)<=3?'pronto':''}">${enDias(envio.d)}</em></div>`);
   }
+  if(B.fin&&B.fin>=hoy) din.push(`<div class="hpf-din"><b>${dC(B.fin)}</b><span>la BBVA queda en <strong>cero</strong>, con ${money(Math.round(B.intereses))} de intereses</span><em>${enDias(B.fin)}</em></div>`);
   const K=(C.PROYECCION&&C.PROYECCION.cortes)||{}, iY=ymDe(f.start), fY=ymDe(f.end);
   const cortes=[['junio','la cuenta bloqueada'],['salida','la salida']].filter(([k])=>K[k]&&K[k].mes>=iY&&K[k].mes<=fY);
   cortes.forEach(([k,qu])=>{
@@ -8365,9 +8383,15 @@ function renderCoachTablero(){
   // (prompt de Plan Maestro). Didi no entra en la serie —es variable—, pero sí en el plan: lo
   // que trae de aquí al cierre del tramo, al ritmo de su promedio mensual.
   const faltaR = Math.max(0, -T.cierre);
-  // Lo que Didi aparta para la cuenta de Alemania ese mes (CIFRAS.didiAlAhorro) ya tiene destino.
+  // Lo que Didi aparta para GBM ese mes (CIFRAS.didiAlAhorro) ya tiene destino.
   const didiLibre = window.CIFRAS ? Math.max(0, (CIFRAS.n('didiMes') || 0) - (CIFRAS.didiAlAhorro ? CIFRAS.didiAlAhorro(ctYM) : 0)) : 0;
-  const didiR = Math.round(didiLibre * Math.max(0, T.fin - nSel) / 30.4);
+  // El mínimo de la BBVA del plan lo paga lo que Didi aparta (CIFRAS.planBbva): si cae en este
+  // tramo, la serie ya lo resta, así que ese dinero de Didi también cuenta para cubrir el hueco.
+  const iniR = nSel <= 14 ? 1 : 15;
+  const minDidi = window.CIFRAS && CIFRAS.planBbva ? CIFRAS.planBbva().abonos.filter(function(a){
+    return a.de === 'minimo' && a.fecha.slice(0,7) === ctYM && +a.fecha.slice(8) >= iniR && +a.fecha.slice(8) <= T.fin;
+  }).reduce(function(s,a){ return s + a.monto; }, 0) : 0;
+  const didiR = Math.round(didiLibre * Math.max(0, T.fin - nSel) / 30.4 + minDidi);
   const hastaR = T.fin >= nDias ? 'al día 1' : 'al '+(T.fin+1);
   const numR = v => '<b class="ct-num'+(privado?' fin-hidden':'')+'" style="color:var(--text2)">'+money(v)+'</b>';
   const detalleR = T.cierre < 0
@@ -8469,13 +8493,15 @@ function renderCoachTablero(){
     if(sal > topeDia) topeDia = sal;
   }
   const altoDe = v => Math.max(4, Math.round(v/topeDia*25));
-  // Lo que el plan manda este mes a la cuenta de Alemania: los cobros de ahorro del calendario
-  // (CETES y lo de cada quincena) y lo que aparta Didi. Es la misma cuenta que la proyección de
-  // Coach; fuera del plan (antes de octubre de 2026 o ya en Alemania) no se dice nada.
+  // Lo que el plan manda este mes a GBM —los cobros de ahorro del calendario y lo que aparta Didi—
+  // y, mientras la BBVA tenga saldo, lo que va a ella (CIFRAS.planBbva: de la quincena, de Didi y el
+  // mínimo). Es la misma cuenta que la proyección de Coach; fuera del plan (antes de octubre de 2026
+  // o ya en Alemania) no se dice nada.
   let ahorroMes = 0;
   for(let d=1; d<=nDias; d++) ctAgenda(d).forEach(function(a){ if(a.ahorro) ahorroMes += (+a.monto||0); });
   const enPlan = !!(window.CIFRAS && CIFRAS.PROYECCION && ctYM >= CIFRAS.PROYECCION.supuestos.desde && ctYM <= CIFRAS.PROYECTO.ultimoMesMexico);
-  const didiAh = enPlan && CIFRAS.didiAlAhorro ? CIFRAS.didiAlAhorro(ctYM) : 0;
+  const didiAh = enPlan && CIFRAS.desgloseMes ? Math.max(0, CIFRAS.desgloseMes(ctYM).didi) : 0;
+  const bbvaMes = enPlan && CIFRAS.planBbva ? CIFRAS.planBbva().abonos.filter(a=>a.fecha.slice(0,7)===ctYM).reduce((s,a)=>s+a.monto,0) : 0;
 
   let celdas = '';
   for(let i=0;i<primero;i++) celdas += '<span class="ct-d vacio"></span>';
@@ -8503,7 +8529,7 @@ function renderCoachTablero(){
       '<div style="display:flex;flex-direction:column;gap:2px;min-width:0">'+
         '<span class="ct-lbl">Elige el día</span>'+
         '<span class="ct-tit">'+MESN[M-1]+' '+Y+'</span>'+
-        (enPlan ? '<span class="ct-ahorro" title="Del sueldo '+esc(money(ahorroMes))+' —los CETES y lo de cada quincena— y de Didi '+esc(money(didiAh))+'">A la cuenta de Alemania <b class="ct-num'+(privado?' fin-hidden':'')+'">'+money(ahorroMes + didiAh)+'</b>'+(didiAh ? ' · Didi '+money(didiAh) : '')+'</span>' : '')+
+        (enPlan ? (bbvaMes ? '<span class="ct-ahorro" title="Lo que sobra de cada quincena y lo de Didi van primero a la BBVA hasta dejarla en cero; lo que queda, a GBM">A la BBVA <b class="ct-num'+(privado?' fin-hidden':'')+'">'+money(bbvaMes)+'</b>'+(ahorroMes + didiAh >= 100 ? ' · a GBM '+money(ahorroMes + didiAh) : '')+'</span>' : '<span class="ct-ahorro" title="Del sueldo '+esc(money(ahorroMes))+' —lo de cada quincena— y de Didi '+esc(money(didiAh))+'">A GBM <b class="ct-num'+(privado?' fin-hidden':'')+'">'+money(ahorroMes + didiAh)+'</b>'+(didiAh ? ' · Didi '+money(didiAh) : '')+'</span>') : '')+
       '</div>'+
       '<span class="ct-nav"><button onclick="ctVerMes(-1)" title="Mes anterior">‹</button>'+
       '<button onclick="ctVerMes(1)" title="Mes siguiente">›</button></span>'+
@@ -8827,13 +8853,15 @@ function renderCoach(){
     {n:2,ico:'💳',lbl:'Banamex',done:banaDone,pct:banaPct,
      txt:banaDone?liq('banamex-liquidada'):banaVuelve?otraVez(bana,'banamex-liquidada'):(bana.found?money(bana.balance)+' restante':'Sin datos en Finanzas')},
     {n:3,ico:'💳',lbl:'BBVA TC',done:bbvaDone,pct:bbvaPct,
-     txt:bbvaDone?liq('bbva-liquidada'):bbvaVuelve?otraVez(bbva,'bbva-liquidada'):(bbva.found?money(bbva.balance)+' restante':'Sin datos en Finanzas')},
+     txt:bbvaDone?liq('bbva-liquidada'):bbvaVuelve?otraVez(bbva,'bbva-liquidada'):(bbva.found?money(bbva.balance)+(bbvaPlan()?' · en cero el '+bbvaPlan().fin.toLocaleDateString('es-MX',{day:'numeric',month:'short'}):' restante'):'Sin datos en Finanzas')},
   ];
   // Un solo paso activo: el primero sin terminar. Antes cada paso calculaba su propio `activo`
   // encadenado al anterior (`efDone&&!banaDone`), y al quedar Banamex liquidada con el fondo
   // todavía en $0 se encendían DOS a la vez — fondo de emergencia y BBVA — que es justo lo que
   // Adán pidió corregir el 2026-08-13: la prioridad es el fondo, y BBVA entra después.
-  const _iActivo=steps.findIndex(s=>!s.done);
+  // El plan de la BBVA manda mientras corre (Adán, 5-oct-2026: la tarjeta, quincena a quincena): el
+  // fondo se queda en lo que tiene y lo que sobra de cada quincena va a la tarjeta antes que a GBM.
+  const _iActivo=(!bbvaDone&&bbvaPlan())?2:steps.findIndex(s=>!s.done);
   steps.forEach((s,i)=>{ s.activo=(i===_iActivo); });
   // ── Banda 2: la ruta de deuda. Los tres pasos ocupan lo mismo a propósito: son hitos de una
   //    secuencia, no magnitudes comparables entre sí.
@@ -9272,9 +9300,25 @@ function calRitmo(fase){
 // Una tarjeta con `noInterest` se paga completa cada mes: su tasa existe pero no corre.
 // Todo cálculo de "intereses al mes" pasa por aquí para no cobrarle un 55.7% que no paga.
 function tasaQueCorre(d){ return +d.noInterest>0 ? 0 : (+d.rate||0); }
+// El plan de la BBVA (CIFRAS.planBbva), mientras corra: lo que sobra de cada quincena y lo de Didi
+// de cada lunes van a ella hasta dejarla en cero. Lo leen el calendario del año, los medidores de
+// deuda y la ruta de deuda del tablero, para que ninguno proponga otro ritmo.
+function bbvaPlan(){
+  const B=window.CIFRAS&&CIFRAS.planBbva?CIFRAS.planBbva():null;
+  const hoy=new Date(); hoy.setHours(0,0,0,0);
+  return B&&B.fin&&B.fin>=hoy?B:null;
+}
+function bbvaPlanTxt(){
+  const B=bbvaPlan(); if(!B) return '';
+  return 'quincena a quincena, en cero el '+B.fin.toLocaleDateString('es-MX',{day:'numeric',month:'short'})+' con '+money(Math.round(B.intereses))+' de intereses';
+}
 function calRitmoTC(){
   const tc=((D.fin&&D.fin.debts)||[]).find(d=>d.id==='d001');
   if(!tc||!(tc.balance>0)) return null;
+  // Con el plan de pago quincena a quincena manda el plan: un ritmo a 12 meses contradiría al calendario.
+  const B=bbvaPlan();
+  if(B) return {plan:true, nombre:tc.name||'Tarjeta BBVA', saldo:tc.balance, fin:B.fin, intereses:Math.round(B.intereses),
+    abonos:B.abonos, dia:+tc.day||0, min:+tc.min||0};
   // Con `noInterest` la paga completa cada mes: la tasa no corre y no hay ritmo que proponer.
   if(+tc.noInterest>0) return {totalero:true, nombre:tc.name||'Tarjeta BBVA', saldo:tc.balance,
     pago:+tc.noInterest, dia:+tc.day||0, tasa:+tc.rate||0, min:+tc.min||0};
@@ -9647,7 +9691,15 @@ function renderCalendario(){
       // fondo abierto es lo que viene después, y con el fondo cerrado ya es EL
       // objetivo. Lo que cambia es el encabezado, no la cuenta.
       const t=calRitmoTC();
-      if(t&&t.totalero){
+      if(t&&t.plan){
+        const hoyIso=new Date().toISOString().slice(0,10), prox=t.abonos.filter(x=>x.fecha>=hoyIso).slice(0,4);
+        const dCorto=iso=>{ const p=iso.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]).toLocaleDateString('es-MX',{day:'numeric',month:'short'}); };
+        h+='<div class="cal-med" style="border-color:rgba(var(--o-rgb),.28);background:linear-gradient(140deg,rgba(var(--o-rgb),.1),transparent 75%)">'+
+          '<div class="cal-med-h"><span class="cal-med-k" style="color:var(--o)">Quincena a quincena · '+esc(t.nombre)+'</span>'+
+            '<span class="cal-med-d" style="color:var(--o)">'+money(t.saldo)+'</span></div>'+
+          '<div class="cal-med-s">Queda en cero el <b>'+t.fin.toLocaleDateString('es-MX',{day:'numeric',month:'long'})+'</b>, con <b>'+money(t.intereses)+'</b> de intereses: lo que sobra de cada quincena y lo de Didi de cada lunes van a ella antes que a GBM, y el día '+t.dia+' basta el mínimo de <b>'+money(t.min)+'</b>.'+
+            (prox.length?' Lo que sigue: '+prox.map(x=>dCorto(x.fecha)+' <b>'+money(x.monto)+'</b>').join(' · ')+'.':'')+'</div></div>';
+      }else if(t&&t.totalero){
         h+='<div class="cal-med" style="border-color:rgba(var(--g-rgb),.28);background:linear-gradient(140deg,rgba(var(--g-rgb),.1),transparent 75%)">'+
           '<div class="cal-med-h"><span class="cal-med-k" style="color:var(--g)">Sin intereses · '+esc(t.nombre)+'</span>'+
             '<span class="cal-med-d" style="color:var(--g)">'+money(t.saldo)+'</span></div>'+
@@ -10863,7 +10915,7 @@ const META_DETALLE={
       // en el seed de Finanzas, y ya no era cierta — dos tercios del fondo son Bitcoin, que se
       // mueve solo. Este texto es estático y no puede calcular, así que se manda al medidor
       // que sí lo hace en vivo (ver fondoMaestria()) en lugar de repetir un número congelado.
-      {t:"La decisión ya está tomada",d:"Te vas en septiembre de 2027 ({{maestriaInicio}}): la pausa terminó y todo el ahorro va a la cuenta de Alemania. Lo que hay que reunir —{{salidaTotal}}— y la lista completa de papeles, salud, ropa y el auto están en Coach → Plan Maestro; el avance de hoy, en el medidor 🎓 Fondo Maestría de esta pantalla."},
+      {t:"La decisión ya está tomada",d:"Te vas en septiembre de 2027 ({{maestriaInicio}}): la pausa terminó y todo el ahorro va a GBM. Lo que hay que reunir —{{salidaTotal}}— y la lista completa de papeles, salud, ropa y el auto están en Coach → Plan Maestro; el avance de hoy, en el medidor 🎓 Fondo Maestría de esta pantalla."},
       {t:"Sigue con tu alemán",d:"Ya integrado en tu rutina, slide \"Alemán del día\". Esslingen pide A2 antes de terminar el 2º semestre: preséntalo en México (Goethe o telc) antes de irte y llegas con el requisito cumplido."},
       {t:"Esslingen · Automotive Systems",d:"Maestría en inglés, 3 semestres, para ingenieros automotrices, mecánicos, mecatrónicos o eléctricos: prueba de inglés, CV y dos cartas de recomendación. Solicitud del 4 nov al 31 mar en el portal de la Graduate School; respuesta antes de fin de mayo; inicio en septiembre. €1,500 por semestre para quien viene de fuera de la UE.",href:"https://www.hs-esslingen.de/en/international/coming-to-esslingen-uas/international-masters-programmes-graduate-school/master-degree-programmes/automotive-systems-meng",label:"Automotive Systems M.Eng. — Esslingen"},
       {t:"Esslingen conecta directo",d:"Su Industry Advisory Board incluye a Mercedes-Benz, Bosch y Porsche, y tienen la beca \"BMW SpeedUp\" solo para sus estudiantes."},
@@ -11197,7 +11249,7 @@ function kpiBarra(nom, val, pct, color, nota, pista){
          (nota?'<div class="kpi-linea-nota">'+nota+'</div>':'')+'</div>';
 }
 // El ahorro de una fase en México, un mes de cada etapa —con depa y en casa de tu familia— y la
-// cuenta de Alemania al cerrar cada mes, con lo que piden junio y la salida. Es el mismo desglose
+// GBM al cerrar cada mes, con lo que piden junio y la salida. Es el mismo desglose
 // que pinta Coach en cada fase (CIFRAS.mesTipo y la PROYECCION): aquí, compacto.
 // La meta de una fase como lista: "Al 31 mar 2027: <b>1)</b> … <b>2)</b> …" se lee mejor numerada.
 // La fecha del arranque ("Al 31 mar 2027") ya va en el título de la sección; lo demás, tal cual.
@@ -11225,7 +11277,7 @@ function faseRutinasHTML(){
       money(x.mes)+' → '+money(x.recorte.mes)+' al mes, <b>ahorras '+money(x.recorte.ahorro)+'</b>. '+
       (x.recorte.medico?'<span class="med">Con tu dermatólogo.</span> ':'')+esc(x.recorte.txt)+' <span class="fte">('+esc(x.recorte.fuente)+')</span></li>').join('')+
     '</ul><p>Sin tocar tus tratamientos ahorras <b>'+money(R.ahorro-R.medico)+'</b> al mes desde ya; los otros '+money(R.medico)+
-    ' los decide tu dermatólogo. Lo que recortes, súmalo a lo que mandas el 15 a la cuenta de Alemania.</p></div>';
+    ' los decide tu dermatólogo. Lo que recortes, súmalo a lo que mandas a GBM cada quincena.</p></div>';
 }
 function faseAhorroHTML(f){
   const C=window.CIFRAS;
@@ -11244,16 +11296,20 @@ function faseAhorroHTML(f){
   const corte=[K.junio,K.salida].filter(c=>filas.some(m=>m.mes===c.mes)).map(c=>
     (c===K.junio?'En junio la cuenta bloqueada pide ':'A la salida se piden ')+'<b>'+money(c.pide)+'</b>: '+
     (c.falta>0?'faltan <b style="color:var(--r)">'+money(c.falta)+'</b>':'sobran <b style="color:var(--g)">'+money(-c.falta)+'</b>')+'.').join(' ');
+  // La BBVA va antes que GBM: si su plan cae en esta fase, se dice cuándo queda en cero.
+  const B=C.planBbva?C.planBbva():null;
+  const bbvaNota=B&&B.fin&&filas.some(m=>m.mes===ym(B.fin))?'Antes que GBM, la BBVA: lo que sobra de cada quincena y lo de Didi de cada lunes van a ella hasta el <b>'+
+    B.fin.getDate()+' '+mc(ym(B.fin))+'</b> ('+money(Math.round(B.intereses))+' de intereses); por eso octubre casi no ahorra. ':'';
   return kpiSec('💰 Tu ahorro en esta fase')+
     '<table class="fa-dash"><thead><tr><th>Un mes</th>'+et.map(e=>'<th>'+e.t+'</th>').join('')+'</tr></thead><tbody>'+
     G.filter(x=>x[0]!=='personal'&&x[0]!=='ahorro').map(x=>fila(x[0],x[0]==='sueldo'?1:-1)).join('')+
     '<tr><th>'+nom('personal')+'</th>'+et.map(e=>'<td>−'+money(e.d.g.personal)+'</td>').join('')+'</tr>'+
-    '<tr class="tot"><th>Del sueldo, a la cuenta de Alemania</th>'+et.map(e=>'<td>'+money(e.d.g.ahorro)+'</td>').join('')+'</tr>'+
-    '<tr><th>Didi, a la cuenta de Alemania</th>'+et.map(e=>td(e.d.didi,1)).join('')+'</tr>'+
+    '<tr class="tot"><th>Del sueldo, a GBM</th>'+et.map(e=>'<td>'+money(e.d.g.ahorro)+'</td>').join('')+'</tr>'+
+    '<tr><th>Didi, a GBM</th>'+et.map(e=>td(e.d.didi,1)).join('')+'</tr>'+
     '<tr class="tot"><th>Ahorro del mes</th>'+et.map(e=>'<td class="ok">'+money(e.d.ahorro)+'</td>').join('')+'</tr>'+
     '</tbody></table>'+
     faseRutinasHTML()+
-    kpiNota('La cuenta de Alemania al cerrar cada mes: '+filas.map(m=>mc(m.mes)+' <b>'+money(m.alemania)+'</b>').join(' · ')+'. '+corte+
+    kpiNota(bbvaNota+'GBM al cerrar cada mes: '+filas.map(m=>mc(m.mes)+' <b>'+money(m.alemania)+'</b>').join(' · ')+'. '+corte+
       ' El desglose mes a mes está en <b>Coach → Plan Maestro</b>.');
 }
 function kpiSec(t){ return '<div class="gbm-sec">'+t+'</div>'; }
@@ -11365,7 +11421,7 @@ function kpiDetalle(id){
       const pagado=d.total>0?(1-d.balance/d.total)*100:0;
       const interesMes=d.balance*(tasaQueCorre(d)/100)/12;
       return kpiBarra(esc(d.name), money(d.balance)+(d.total>0?' · '+Math.round(pagado)+'% pagado':''), pagado, V,
-        (tasaQueCorre(d)>0?'Tasa '+d.rate+'% anual · te cuesta <b>'+money(interesMes)+' al mes</b> solo en intereses':'La pagas completa cada mes · <b>sin intereses</b>')+(d.total>0?' · pagado '+money(d.total-d.balance)+' de '+money(d.total):''), PISTA_R);
+        (tasaQueCorre(d)>0?'Tasa '+d.rate+'% anual · te cuesta <b>'+money(interesMes)+' al mes</b> solo en intereses'+(d.id==='d001'&&bbvaPlan()?' · '+bbvaPlanTxt():''):'La pagas completa cada mes · <b>sin intereses</b>')+(d.total>0?' · pagado '+money(d.total-d.balance)+' de '+money(d.total):''), PISTA_R);
     }).join('');
     const interesTotal=deudaCara.reduce((a,d)=>a+d.balance*(tasaQueCorre(d)/100)/12,0);
     return {titulo:'💳 Deuda cara', sub:'Cada saldo con su tasa, y lo que te cuesta cada mes que sigue vivo.',
@@ -11483,7 +11539,7 @@ function kpiDetalle(id){
 
     const filasDebo=debts.filter(d=>+d.balance>0).sort((a,b)=>b.balance-a.balance)
       .map(d=>({n:esc(d.name),v:+d.balance,c:tasaQueCorre(d)>0?R:P,
-        d:(tasaQueCorre(d)>0?'Tasa '+d.rate+'% · te cuesta '+money(d.balance*(d.rate/100)/12)+'/mes':(d.rate>0?'La pagas completa cada mes · sin intereses':'Sin interés'))+
+        d:(tasaQueCorre(d)>0?'Tasa '+d.rate+'% · te cuesta '+money(d.balance*(d.rate/100)/12)+'/mes'+(d.id==='d001'&&bbvaPlan()?' · '+bbvaPlanTxt():''):(d.rate>0?'La pagas completa cada mes · sin intereses':'Sin interés'))+
           ((d.type==='car'||d.type==='loan')&&CIFRAS.mesesRestantes(d)?' · '+CIFRAS.mesesRestantes(d)+' pagos restantes':'')}));
 
     const filasBienes=bienes.sort((a,b)=>(+b.value||0)-(+a.value||0))

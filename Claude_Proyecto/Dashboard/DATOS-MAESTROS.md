@@ -40,7 +40,7 @@ Cada mes se arma en **dos capas**:
    del auto, los servicios y los mínimos de las tarjetas (de `CALENDARIO.cobros` y del
    `day`/`min` de cada deuda), más los tres que van por **total mensual** y no tienen día:
    Didi, el vale y lo que cuesta comer.
-   Lo que se aparta —los CETES y el ahorro de cada quincena, cobros con `ahorro: true`— **no es
+   Lo que se aparta —el ahorro de cada quincena, cobros con `ahorro: true`— **no es
    gasto**: no suma a los gastos, pero se queda en la lista contra la que `yaContado` compara, para
    que una transacción que lo anote no se cuente encima.
 2. **Lo registrado** — las transacciones que la agenda no conoce. `yaContado` evita el doble
@@ -74,7 +74,11 @@ Junto a ella viajan sus piezas, para que nadie las reimplemente: `agendaDia`, `p
 
 `agendaDia` pone el mínimo de cada deuda en su día, salvo una tarjeta que se paga completa
 (`noInterest`): en su **próximo** pago sale el total para no generar intereses; los meses de
-después siguen con el mínimo, porque esos estados de cuenta todavía no existen.
+después siguen con el mínimo, porque esos estados de cuenta todavía no existen. **La BBVA con plan
+de pago no lleva ninguno de los dos**: desde `PROYECTO.bbvaFecha` la pintan los abonos de
+`planBbva` —el día 1 y el 15, lo que sobra de la quincena (y el envío a GBM de ese día baja en lo
+mismo); el día de pago, el mínimo que completa Didi—, con `tarjeta: true` y `de`. Lo que Didi aparta
+cada lunes no pasa por el calendario.
 Si un cobro cae en un mes lo decide `caeEnMes` —`cada`, `desde` y `hasta`; sin `cada`, `desde` es
 el primer mes en que cae—, el mismo predicado que usa el desglose de la proyección.
 
@@ -120,7 +124,7 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{sueldo}}` | $41,000 | Bruto mensual ALTEN, quincenal a BBVA |
 | `{{sueldoQuinc}}` | $20,500 | |
 | `{{didiMes}}` | $11,200 | ~$400/día × 28, cobro semanal |
-| `{{didiAhorro}}` | $5,000 | Lo que Didi pone en la cuenta de Alemania al mes, de octubre de 2026 a enero de 2027 (dicho por Adán) |
+| `{{didiAhorro}}` | $5,000 | Lo que Didi aparta al mes —a la BBVA mientras tenga saldo, después a GBM—, de octubre de 2026 a enero de 2027 (dicho por Adán) |
 | `{{didiAhorroMas}}` | $10,000 | Lo mismo desde `PROYECTO.didiMasDesde` (febrero de 2027), cuando trabaja más horas. El último mes en México va la mitad (`didiAlAhorro`) |
 | `{{siVale}}` | $940 | Vale de despensa |
 | `{{ingresoTotal}}` | $53,140 | Derivada: sueldo + Didi + Si Vale |
@@ -130,11 +134,12 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{celular}}` `{{celularPlan}}` | $650 · Plan de datos AT&T | Día 1 |
 | `{{servicios}}` | $1,075 | Plan AT&T + internet + gas (la mitad: es bimestral) + luz/agua |
 | `{{suscripciones}}` | $1,080 | Gym + Claude Code + iCloud |
-| `{{cetesDia15}}` | $1,500 | Aporte recurrente a CETES el día 15 |
-| `{{ahorroDia15}}` | $8,100 | Págate primero, con depa: lo que va a la cuenta de Alemania el día 15, además de los CETES. La quincena del 1 paga la renta y la tarjeta |
-| `{{ahorroDia1Casa}}` | $8,600 | En casa de su familia: lo que va a la cuenta el día 1 |
-| `{{ahorroDia15Casa}}` | $11,300 | En casa: lo que va el día 15. Los tres salen de cuadrar cada quincena contra sus fijos, la comida, sus rutinas y el tope de lo demás (`SUPUESTOS.loDemas`, `loDemasEnCasa`) |
-| `{{especulacionMes}}` `{{especulacionBtcPct}}` | $20,000 · 10 | La pestaña *Riesgo súper alto* de Qué invertir hoy: al mes, `{{cetesDia15}}` a CETES, ese % a Bitcoin y todo el resto a una sola empresa a la baja que investiga Claude |
+| `{{cetesDia15}}` | $0 | El aporte a CETES del día 15. En 0: el ahorro va todo a GBM (Adán, 5-oct-2026: *"el ahorro no se irá a cetes, se irá a gbm, lo invertiré todo"*). Los CETES que ya tiene siguen siendo su fondo de emergencia |
+| `{{ahorroDia1}}` | $2,200 | Págate primero, con depa: lo que va a GBM el día 1, desde noviembre de 2026 |
+| `{{ahorroDia15}}` | $7,200 | Lo mismo el día 15, con depa |
+| `{{ahorroDia1Casa}}` | $12,100 | En casa de su familia: lo que va a GBM el día 1 |
+| `{{ahorroDia15Casa}}` | $9,000 | En casa: lo que va el día 15. Cada quincena se sostiene sola (Adán: *"eso debe ser cada quincena y deja dinero sobrante para la quincena"*): su sueldo menos los fijos de sus días, la comida de sus días y su parte del gasto personal —sus rutinas y el tope de lo demás (`SUPUESTOS.loDemas`, `loDemasEnCasa`) repartidos por día—, redondeado a cientos hacia abajo con el peor mes de cada etapa. Mientras la BBVA tenga saldo, los cuatro van primero a ella (`planBbva`) |
+| `{{especulacionMes}}` `{{especulacionBtcPct}}` | $20,000 · 10 | La pestaña *Riesgo súper alto* de Qué invertir hoy: al mes, `{{cetesDia15}}` a CETES (hoy nada), ese % a Bitcoin y todo el resto a una sola empresa a la baja que investiga Claude |
 | `{{fijosTotal}}` | $13,405 | Derivada: renta + servicios + suscripciones |
 
 ### Deudas · saldos vivos (`finanzasmx_v2`)
@@ -142,13 +147,13 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | Marcador | Valor hoy | id |
 |---|---|---|
 | `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $283,000 · $315,800 · $6,700 · 12.99% · 57 (calculado) | `d003` |
-| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $10,000 · $1,500 · 55.7% | `d001` |
+| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $15,000 · $1,500 · 55.7% | `d001` |
 | `{{banamex}}` `{{banamexMin}}` | $0 · $810 — liquidada el 30-sep-2026 | `d002` |
 | `{{depto}}` | $0 — "por temas de mi apartamento"; pagada entera el 21-sep-2026 | `d012` |
 | `{{iphone}}` | $11,362 | `d008` |
 | `{{appleWatch}}` `{{appleWatchCuota}}` | $0 · $854 — liquidado: la última cuota era la del 18 sep 2026 | `d004` |
 | `{{zapStylo}}` `{{zapStyloCuota}}` | $0 · $167 — "el de los zapatos", liquidado el 21-sep-2026 | `d009` |
-| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $304,362 · $10,000 · $11,362 | derivadas |
+| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $309,362 · $15,000 · $11,362 | derivadas |
 | `{{minimosDeuda}}` `{{margen}}` | suma de mínimos vivos · lo que sobra al mes | derivadas |
 
 **Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas: `{{autoMeses}}`
@@ -157,15 +162,26 @@ porque el `remainingMonths` del seed (61) no bajaba con el saldo; queda solo com
 falta el pago. De ahí `{{autoAPagar}}` (meses × pago) y `{{autoInteres}}` (lo que cuesta en puro
 interés). El detalle de intereses del Dashboard usa la misma función para cualquier crédito a plazo.
 
-**La BBVA debe $10,000; la Banamex quedó liquidada el 30-sep-2026** (Adán: *"ya no debo nada a mi
-tarjeta de crédito de banamex, y la de bbva le debo 10 mil"*). El 19-sep la venta del Bitcoin había
-dejado la BBVA de $39,000 en $900; volvió a subir sin que dijera en qué. Cada saldo nuevo que
-reporta es una entrada de `MIGRACIONES` (las de este son `_tarjetas20260930` y
-`_bbvaSinInteres20260930`). La BBVA la paga completa cada mes y no genera intereses: lo dice su
-`noInterest` (lo que hay que pagar antes del `day`); la `rate` de 55.7% se queda porque es la del
-producto y vuelve a correr si un mes paga solo el mínimo. Con Banamex en $0 su
-mínimo de $810 sale de `minimosDeuda` y `margen` sube eso mismo; `deudaCara` es solo la BBVA. En
-`d001` `total` se queda en $39,000: el "pagado real" de las barras de Finanzas sale de ahí.
+**La BBVA debe $15,000 desde el 5-oct-2026 y se paga quincena a quincena** (Adán: *"me estás
+diciendo de pagar mi tarjeta pero ni tengo dinero, eso está mal, eso debe ser cada quincena y deja
+dinero sobrante para la quincena; actualmente debo 15,000 a bbva"*). La Banamex quedó liquidada el
+30-sep-2026. El 19-sep la venta del Bitcoin había dejado la BBVA de $39,000 en $900; el 30-sep iba
+en $10,000 y la pagaba completa; el 5-oct, en $15,000, ya sin con qué pagarla el 11. Cada saldo
+nuevo que reporta es una entrada de `MIGRACIONES` (la de este es `_bbva20261005`, que además pone
+`noInterest` en 0: la tasa de 55.7% corre). Con Banamex en $0 su mínimo de $810 sale de
+`minimosDeuda` y `margen` sube eso mismo; `deudaCara` es solo la BBVA. En `d001` `total` se queda
+en $39,000: el "pagado real" de las barras de Finanzas sale de ahí.
+
+**`planBbva()`** es el plan de pago, y la única cuenta: lo leen el calendario (`agendaDia`), el
+desglose del sueldo (`desgloseMes`, renglón `tarjeta`) y la proyección. Arranca del saldo de `d001`
+en DEUDAS_SEED el día `PROYECTO.bbvaFecha`. La deuda cara va primero (prompt del Plan Maestro): lo
+que cada quincena manda a GBM y lo que Didi aparta cada lunes van a la tarjeta hasta dejarla en
+cero, y el día de pago se completa el mínimo con lo de Didi. El interés corre por día a la tasa más
+IVA; cada abono lo paga primero, así el último no deja centavos. Con los números de hoy: el 11 de
+octubre el mínimo ($1,500), $1,154 de Didi los lunes 12, 19 y 26, $7,200 el 15 y $2,200 el 1 de
+noviembre; queda en cero el `{{bbvaCero}}` (2 nov 2026) con `{{bbvaIntereses}}` ($377) de
+intereses. Desde ahí, lo que pague con la tarjeta se paga en la misma quincena, dentro de su gasto
+personal.
 
 **El 21-sep-2026 se liquidaron tres de golpe**: el Apple Watch (`d004`, su última cuota era la del
 18 sep), los zapatos (`d009`, el último MSI vivo de la TC BBVA) y la deuda del departamento (`d012`).
@@ -210,18 +226,20 @@ pero el nombre de la variable se queda corto.
 | `{{salidaTotal}}` | $397,878 — lo que cuesta irse a Alemania, completo (`SALIDA.costos`) | derivada; se mueve con `PROYECTO.eurMxn` |
 | `{{salidaJunio}}` | $254,478 — lo que tiene que estar en la cuenta en junio de 2027: la cuenta bloqueada y la visa | derivada |
 | `{{sperrkonto}}` | $249,984 — la cuenta bloqueada, €11,904 al euro del plan | derivada |
-| `{{ahorroMesDepa}}` | $14,600 — lo que llega a la cuenta de Alemania en un mes con depa: los CETES, lo del 15 y Didi | derivada (`mesTipo(false)`) |
-| `{{ahorroMesCasa}}` | $31,400 — lo mismo en casa de su familia: lo del 1, lo del 15, los CETES y Didi | derivada (`mesTipo(true)`) |
-| `{{gastoPersonalDepa}}` | $8,018 — lo que queda del sueldo con depa tras los fijos, la comida y el ahorro: su gasto personal, tarjeta incluida, con sus rutinas dentro | derivada |
-| `{{gastoPersonalCasa}}` | $7,171 — lo mismo en casa | derivada |
+| `{{ahorroMesDepa}}` | $14,400 — lo que llega a GBM en un mes con depa: lo del 1, lo del 15 y Didi | derivada (`mesTipo(false)`) |
+| `{{ahorroMesCasa}}` | $31,100 — lo mismo en casa de su familia: lo del 1, lo del 15 y Didi | derivada (`mesTipo(true)`) |
+| `{{gastoPersonalDepa}}` | $8,218 — lo que queda del sueldo con depa tras los fijos, la comida y el ahorro: su gasto personal, con sus rutinas dentro; lo que pague con tarjeta, saldado en la misma quincena | derivada |
+| `{{gastoPersonalCasa}}` | $7,471 — lo mismo en casa | derivada |
 | `{{cuidadoMes}}` | $4,801 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
 | `{{recorteRutinas}}` | $2,003 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $1,340 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
-| `{{alemaniaMarzo}}` | $144,440 — lo que la proyección espera en la cuenta de Alemania al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
-| `{{marzoParaJunio}}` | $171,878 — lo que tiene que haber al cerrar la Fase 1 para que junio alcance con el ahorro de abril a junio | derivada |
-| `{{alemaniaJunio}}` | $222,546 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
+| `{{alemaniaMarzo}}` | $135,463 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
+| `{{marzoParaJunio}}` | $172,778 — lo que tiene que haber al cerrar la Fase 1 para que junio alcance con el ahorro de abril a junio | derivada |
+| `{{alemaniaJunio}}` | $212,669 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
+| `{{bbvaCero}}` | 2 nov 2026 — el día que la BBVA queda en cero con `planBbva` (`fmt: 'fecha'`) | derivada |
+| `{{bbvaIntereses}}` | $377 — lo que cuesta en intereses llegar a cero quincena a quincena | derivada |
 | `{{junioVeredicto}}` | «faltan … para la cuenta bloqueada» o «alcanza, con … de margen» (`fmt: 'txt'`) | derivada |
 | `{{salidaVeredicto}}` | «faltan …» o «sobran …»: lo que pide la salida —cuenta bloqueada, reserva del BYD, colchón y la colegiatura del primer semestre— contra la cuenta a fin de agosto (`fmt: 'txt'`) | derivada |
-| `{{mesMillon}}` | jul 2031 — el mes en que la proyección cruza el millón (`fmt: 'mes'`) | derivada de la PROYECCION |
+| `{{mesMillon}}` | ago 2031 — el mes en que la proyección cruza el millón (`fmt: 'mes'`) | derivada de la PROYECCION |
 | `PROYECTO.eurMxn` | 21.0 — el euro para planear; el 2-oct-2026 estaba en $20.46 | constante |
 | `{{cetes}}` | $6,000 — el mismo número que `{{fondo}}` | derivada de `fondo` |
 | `{{maestria}}` `{{maestriaMeta}}` | $53,740 de $398,000 — la meta es lo que cuesta irse (migraciones `_alemania20261003` y `_ahorroReal20261003`) | vivo |
@@ -233,8 +251,9 @@ pero el nombre de la variable se queda corto.
 cetes, de ahí tendré mi fondo de emergencia y cualquier cosa los vendo"*). Es **un solo número**,
 `emergencyFund` en `finanzasmx_v2` (y `current` de la meta `ef-001`, que se llama "Fondo de
 emergencia (CETES)"); ya no hay una inversión CETES aparte en `investments`, porque las apps sumaban
-las dos cosas en patrimonio y en el fondo de la maestría. El aporte `{{cetesDia15}}` del día 15 es
-el aporte al fondo; una aportación en Finanzas → Metas → ef-001 es lo mismo.
+las dos cosas en patrimonio y en el fondo de la maestría. **Ya no recibe aporte**: el ahorro de cada
+quincena va a GBM (`{{cetesDia15}}` en $0) y el fondo se queda en lo que tiene; una aportación en
+Finanzas → Metas → ef-001 sigue siendo la forma de subirlo.
 
 ### La salida a Alemania y la proyección
 
@@ -246,16 +265,17 @@ Adán se va a la maestría de Esslingen en **septiembre de 2027** (`maestriaInic
   (`bloques`: admisión, visa, dinero, el BYD, salud física y mental, ropa, tecnología, vivienda,
   trabajo y lo que se queda en México), cada pendiente con su mes. Coach la pinta.
 - **`PROYECCION`**: el plan mes a mes desde la foto de Finanzas del 1 oct 2026 hasta el millón —lo
-  que entra, lo que sale, la cuenta de Alemania (todo el efectivo) y el patrimonio líquido—, y
+  que entra, lo que sale, GBM (todo el efectivo) y el patrimonio líquido—, y
   `cortes`: lo que piden junio (la cuenta bloqueada) y el último mes en México (la cuenta
   bloqueada, la reserva del BYD, el colchón y la colegiatura del primer semestre) contra lo que
   hay. `CIFRAS.proyectar(cambios)` corre escenarios —`menosAhorro`, `desfase: 12` para irse en
   septiembre de 2028, otro euro, sin Werkstudent— y `CIFRAS.cortesSalida(filas, cambios)` los
   mide. De aquí salen el `liquido` de cada fase y los marcadores de la salida.
 
-**El ahorro sale de lo que se manda, no de una resta.** En México, del sueldo solo llega a la
-cuenta de Alemania lo que se aparta el día que entra cada quincena —los CETES y `ahorroDia15`,
-`ahorroDia1Casa`, `ahorroDia15Casa`, que son cobros del calendario— y de Didi lo que Adán dijo
+**El ahorro sale de lo que se manda, no de una resta.** En México, del sueldo solo llega a GBM lo
+que se aparta el día que entra cada quincena —`ahorroDia1`, `ahorroDia15`, `ahorroDia1Casa` y
+`ahorroDia15Casa`, que son cobros del calendario, menos lo que se lleva la BBVA mientras tenga
+saldo— y de Didi lo que Adán dijo
 que aparta (`didiAlAhorro`). Lo demás del sueldo son los fijos, la comida, sus rutinas y el gasto personal,
 que es lo que queda: `desgloseMes(mes)` lo da renglón por renglón con el `grupo` de cada cobro, y
 `mesTipo(casa)` da un mes tipo de cada etapa —con depa y en casa de su familia— para las tablas
@@ -273,7 +293,7 @@ final no compraré nada"*), con su precio y envase (`contenido` o `envase`, con 
 `quitar: true`, y `medico: true` cuando el cambio lo decide su dermatólogo. `rutinasDesglose()`
 calcula cada producto al mes con la fórmula de su rutina y lo que costaría el recorte con la misma
 dosis; Coach (en cada fase en México) y la ventana de fases del Dashboard lo pintan debajo de la
-tabla, en verde. Lo que recorte va a la cuenta de Alemania.
+tabla, en verde. Lo que recorte va a GBM.
 
 ### Estudios de alemán · constantes
 
@@ -606,7 +626,7 @@ CIFRAS.CALENDARIO.hitos    // [{fecha, txt, sub}] — fechas duras que no salen 
 
 | | Qué trae | De dónde sale el número |
 |---|---|---|
-| `cobros` | Renta día 1, plan AT&T día 1, quincena días 1 y 15, CETES día 15, gym día 17. Renta, luz y agua, internet y gas llevan `hasta` (`rentaHasta`): son del depa y terminan con él. Y el plan: el ahorro a la cuenta de Alemania el 15 (con depa) y el 1 y el 15 (en casa), con `ahorro: true`, y el aporte a su familia el día 1 desde `enCasaDesde`. `grupo` dice a qué renglón del desglose del sueldo va cada uno | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí como dato, no como comentario al lado de la cifra: las apps lo leen. |
+| `cobros` | Renta día 1, plan AT&T día 1, quincena días 1 y 15, gym día 17. Renta, luz y agua, internet y gas llevan `hasta` (`rentaHasta`): son del depa y terminan con él. Y el plan: el ahorro a GBM el 1 y el 15 (con depa, el del 1 desde noviembre), con `ahorro: true`, y el aporte a su familia el día 1 desde `enCasaDesde`. `grupo` dice a qué renglón del desglose del sueldo va cada uno | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí como dato, no como comentario al lado de la cifra: las apps lo leen. |
 | `hitos` | Decisión Maestría (31 may 2027) y Salida a Alemania (1 sep 2027) | `PROYECTO.maestriaDecision` y `PROYECTO.maestriaInicio`. |
 
 **Regla al agregar: si una fecha se puede derivar de un dato que ya existe, NO va aquí.** Por eso
