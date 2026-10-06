@@ -711,9 +711,10 @@ de donde me muestras todas las fases"*). `.fases-tabs` es un solo hijo de `#kpiB
 `kpiAcomodar()` lo mete en un único `.kpi-grupo` a ancho completo. Y es **la más grande**: `abrirKpi`
 pone `.kpi-fases` en el overlay solo para ella (Adán: *"haz más grande la ventana de Las 5 fases del
 Plan Maestro"*), y desde 641 px la ventana va a 12 px del borde —99 % × 98 % en 1600×1000, 1576×976
-px— con la letra de las fases más grande: tareas y textos a 15–16 px, la fase a 34 px, la tabla del
-ahorro a 14 px. Mientras está abierta se oculta la brújula del prompt (`.pp-btn`), que si no cae
-sobre su esquina. Los otros siete medidores siguen con el panel XL.
+px—. La letra va solo un punto arriba del panel XL (Adán: *"la letra hazla más pequeña para que se
+vea mejor"*): tareas a 13.5 px, textos a 14, la fase a 27 y la tabla del ahorro a 12.5; en 1600×1000
+caben tres meses de tareas sin desplazarse. Mientras está abierta se oculta la brújula del prompt
+(`.pp-btn`), que si no cae sobre su esquina. Los otros siete medidores siguen con el panel XL.
 
 - **La ruta** (`.fz-ruta`): una estación por fase (`.fz-est`), con el color de la fase en el
   calendario (`CAL_FASE_COLOR`), el título, el rango de fechas (`1 oct 2026 → 31 mar 2027`), lo que
