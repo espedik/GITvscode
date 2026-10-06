@@ -255,10 +255,10 @@ producción y de la sala de exposición iban recortadas dentro de sus tarjetas.
 
 **El catálogo queda fuera a propósito**: tocar una pieza abre su ficha técnica, y dos cosas
 distintas con el mismo clic confunden. El visor es para el hero, "tu aeronave", el taller y la
-galería — 13 fotos.
+galería, y abre solo fotos: mientras falten las de IA (ver *Las fotos*), son 2 —el hero y una de la galería—.
 
 **Cualquier foto de la página se abre a pantalla completa con un clic**, y se ve **entera**
-(`contain`, sin recorte). Se recorren las 13 con las flechas del teclado o los botones, se cierra
+(`contain`, sin recorte). Se recorren con las flechas del teclado o los botones, se cierra
 con Esc, con la ✕ o con un clic fuera, y al cerrar **el scroll vuelve a la foto que estabas
 mirando** — sin eso, cerrar en la etapa 5 de un trabajo te dejaba arriba del todo.
 
@@ -304,11 +304,18 @@ Lo que falta: una con **algo al lado que dé escala** —con 26 piezas sigue sin
 son— y una **réplica junto a la aeronave real** que copia. Esta segunda está a un paso: la XA-MVR
 existe como réplica y la aeronave real está fotografiada; falta una sola foto con las dos juntas.
 
-`fotos/LEEME.txt` dice qué es cada una, carpeta por carpeta.
+**La web solo enseña fotos con IA y fondo blanco** (Adán: *"aquí solo deja imágenes con IA fondo
+blanco… si no están así, deja como una nota que debemos hacerla con IA, pero así bien notorio"*).
+Al pintar, `marcarSinIA()` cambia cada foto que no sea de `fotos/fondo-blanco/` por un aviso a
+rayas amarillas y negras (`.falta-ia`): **📸 Falta hacer esta foto con IA**, *fondo blanco* y el
+archivo del que se parte; la ficha de una pieza hace lo mismo (`#fp-falta`). Las del taller dicen
+además *a partir de la foto real del taller*: rehacerlas es limpiar la foto, no inventar la
+producción. Medido: el hero, 14 de las 26 piezas del catálogo y una de la galería tienen foto; van
+23 avisos —12 en el catálogo, 2 en *tu aeronave*, 1 en el taller y 8 en la galería—. Los datos no
+se tocan: el catálogo en PDF y Posts siguen con sus fotos, y en cuanto una foto pasa a
+`fondo-blanco/` (y su ruta en `datos.js`) el aviso se quita solo.
 
-Lo que falta: una con **algo al lado que dé escala** —con 26 piezas sigue sin saberse de qué tamaño
-son— y una **réplica junto a la aeronave real** que copia. Esta segunda está a un paso: la XA-MVR
-existe como réplica y la aeronave real está fotografiada; falta una sola foto con las dos juntas.
+`fotos/LEEME.txt` dice qué es cada una, carpeta por carpeta.
 
 ## Lo que hay que rellenar — `PERFIL`
 
