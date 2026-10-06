@@ -316,6 +316,10 @@ CIFRAS.rutina('../Coach/Coach.html')    // Dashboard: tiene que salir de su arch
 Devuelve **copia profunda** con los `href` resueltos, para que una app no pueda contaminar a la
 otra dentro de la misma página. `dias`: 0=domingo…6=sábado. Los bloques con `fijo:true` (ALTEN)
 salen en la línea de tiempo pero no llevan checkbox ni suman al progreso.
+Cada bloque lleva dos títulos: `txt`, el completo (el AHORA del Dashboard y Coach), y `corto`, el de
+la agenda de Mi Día —«🚗 Didi rumbo a ALTEN» en vez de «Didi con direccionamiento — camino a ALTEN
+(~50 min…)»—, sin horas dentro: la hora de inicio y fin la pone la agenda. Los de ejercicio toman
+el corto del nombre de la rutina real (`tituloCorto` en el Dashboard).
 
 ### Los recursos de las rutas de habilidad
 

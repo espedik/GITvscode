@@ -122,10 +122,16 @@ es un `Set` en memoria y `agFrAuto` recuerda si ya decidiste tú. **No va a `loc
 estado de sesión, no un dato. Si abres las tres, cada una se reparte el alto y desplaza por
 dentro, así que la agenda **nunca crece más allá del panel**.
 
-Dentro, una fila por bloque de `RUTINA_TASKS`: hora al margen, color de categoría en el punto,
-duración, **el bloque en curso en verde con los minutos que le quedan**, los hechos apagados y
-tachados; el título ocupa dos líneas (tres en el actual). La pinta `pintarAgendaDia()` desde
-`renderDia()` con `finDeBloque`, `rtDur`, `leafItems` y `tituloBloque`.
+Dentro, una fila por bloque de `RUTINA_TASKS`: **la hora de inicio y la de fin** al margen
+(`06:40 – 06:43`), color de categoría en el punto, **el título corto** y la duración (Adán:
+*"simplifica todos los títulos de mañana, tarde y noche y pon claramente la hora de inicio y fin de
+cada actividad"*). El título es el `corto` del maestro (`tituloCorto`; los de ejercicio, el nombre
+de la rutina real hasta el guion); el completo va en el `title` de la fila y en el AHORA. El fin
+sale de `finDeBloque` con el bloque que sigue **en el día**, no en la franja —el gym de las 18:15
+termina a las 19:00, que ya es de la noche—, y el último (dormir) termina cuando arranca el día
+siguiente. **El bloque en curso va en verde con los minutos que le quedan**, los hechos apagados y
+tachados. La pinta `pintarAgendaDia()` desde `renderDia()` con `finDeBloque`, `rtDur`,
+`leafItems`, `tituloBloque` y `tituloCorto`.
 
 Arriba: la fecha, el reloj en grande (abre el calendario del año) y el resumen
 `0 de 21 bloques hechos · quedan 4h 50m`; abajo, **Marcar el bloque actual** (`quickMarkDone()`) y
@@ -133,8 +139,8 @@ Arriba: la fecha, el reloj en grande (abre el calendario del año) y el resumen
 un día de la tira de 7** (`verDiaSemana`) cambia la agenda y la tarjeta Entrenas a ese día; tocarlo otra vez vuelve a hoy. La fila activa se trae a la
 vista con `scrollIntoView`.
 
-Medido a 1600 px con 23 bloques: 11 filas visibles, 3 títulos cortados, sin desplazamiento
-(731 de 731 px); en iPad 0 títulos cortados.
+Medido a 1600 px y a 390 px con las tres franjas abiertas: ningún título cortado ni fila desbordada
+en martes (23 bloques), sábado (13) y domingo (14).
 
 `pintarCintaDia()`, `centrarFichaActiva()` y `cintaScroll()` son **código muerto** de la cinta
 anterior, con guardas `if(!el) return`; se conservan por si vuelve.

@@ -2956,10 +2956,13 @@ button.hp-lec:active{transform:translateY(0)}
 .ag-fr-pts .pt.fijo{background:rgba(var(--ov),.32);border-radius:1px;width:5px;height:5px}
 .ag-fr-pts .txt{font-size:11px;color:var(--text3)}
 .ag-fr-body{min-height:0;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column;gap:2px;padding:0 8px 9px}
-.ag-row{display:grid;grid-template-columns:42px 9px minmax(0,1fr) auto;gap:9px;align-items:flex-start;padding:7px 7px;border-radius:9px;
+.ag-row{display:grid;grid-template-columns:auto 9px minmax(0,1fr) auto;gap:9px;align-items:flex-start;padding:7px 7px;border-radius:9px;
   border:1px solid transparent;background:none;width:100%;text-align:left;font-family:inherit;color:inherit;cursor:pointer;transition:background .13s}
 .ag-row:hover{background:rgba(var(--ov),.05)}
-.ag-h{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3);padding-top:1px}
+/* La hora de inicio y la de fin, en la misma línea (Adán: "pon claramente la hora de inicio y fin
+   de cada actividad"). El fin es el de `finDeBloque`: su duración o el arranque del siguiente. */
+.ag-h{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3);padding-top:1px;white-space:nowrap;min-width:84px}
+.ag-h i{font-style:normal;margin:0 3px;opacity:.55}
 .ag-p{width:9px;height:9px;border-radius:50%;background:rgba(var(--ov),.15);margin-top:4px}
 /* Dos líneas en vez de una cortada: 17 de 23 títulos no se leían enteros. */
 .ag-t{font-size:12.5px;font-weight:600;color:var(--text2);line-height:1.34;overflow:hidden;
@@ -6713,6 +6716,17 @@ function tituloBloque(t,dow){
   if(r.tipo==='descanso') return '😴 Descanso activo — caminata ligera opcional, sin gimnasio';
   return (r.nombre?('🏋️ '+r.nombre):t.txt);
 }
+// El título de la agenda (Adán: "simplifica todos los títulos de mañana, tarde y noche"): el `corto`
+// del maestro; los de ejercicio, el nombre de la rutina real hasta el guion, igual que tituloBloque.
+// El completo sigue en el AHORA y en el `title` de la fila.
+function tituloCorto(t,dow){
+  if(t.gym){
+    const r=gymDelDia(dow);
+    if(r&&r.tipo==='descanso') return 'Descanso activo';
+    if(r&&r.nombre) return '🏋️ '+String(r.nombre).split(' — ')[0];
+  }
+  return t.corto||rtSoloTitulo(tituloBloque(t,dow));
+}
 
 // `cintaSel` guarda qué bloque estás mirando. En null sigue al bloque ACTUAL, que es lo que
 // quieres casi siempre; en cuanto tocas otro se queda ahí hasta que pulses "Volver a ahora" o
@@ -7058,20 +7072,22 @@ function pintarAgendaDia(tareas, anchor, done, esHoy){
   }
   let hechos=0;
   const filaHtml=(t,i,arr)=>{
-    const sig=arr[i+1];
+    // El fin sale del bloque que sigue en el DÍA, no en la franja: el gym de las 18:15 termina con
+    // el de las 19:00, que ya es de la noche. El último (dormir) termina cuando arranca el siguiente día.
+    const sig=tareas[tareas.indexOf(t)+1]||(rutinaTareasDelDia((dow+1)%7)||[])[0]||null;
     const meta=CAT_META[t.cat]||{ico:'•',label:t.cat,c:'#565a72'};
     const hecho=!t.fijo&&leafItems(t).every(it=>done.includes(it.id));
     const esAncla=anchor&&t.id===anchor.id;
     const sel=cintaSel?t.id===cintaSel:esAncla;
     const esAhora=esHoy&&esAncla;
     const f=finDeBloque(t,sig);
-    const titulo=rtSoloTitulo(tituloBloque(t,dow));
+    const titulo=rtSoloTitulo(tituloBloque(t,dow)), corto=tituloCorto(t,dow);
     const faltan=esAhora&&f?Math.max(0,minutosDe(f)-ahoraMin):0;
     return `<button class="ag-row${esAhora?' ahora':(sel?' sel':'')}${hecho?' hecho':''}" onclick="tocarBloque('${t.id}')"
-      title="${esc(t.hora+' · '+meta.label+' · '+titulo)}">
-      <span class="ag-h">${t.hora}</span>
+      title="${esc(t.hora+(f?' – '+f:'')+' · '+meta.label+' · '+titulo)}">
+      <span class="ag-h">${t.hora}${f?`<i>–</i>${f}`:''}</span>
       <span class="ag-p" style="${esAhora?'':`background:${meta.c}`}"></span>
-      <span><span class="ag-t">${esc(titulo)}</span>${faltan>0?`<span class="ag-falta">faltan ${faltan>=60?Math.floor(faltan/60)+'h '+(faltan%60)+'m':faltan+' min'}</span>`:''}</span>
+      <span><span class="ag-t">${esc(corto)}</span>${faltan>0?`<span class="ag-falta">faltan ${faltan>=60?Math.floor(faltan/60)+'h '+(faltan%60)+'m':faltan+' min'}</span>`:''}</span>
       <span class="ag-d">${f?rtDur(t.hora,f):'—'}</span>
     </button>`;
   };
