@@ -1303,6 +1303,11 @@
       transition: all .16s; }
     .cc-idx a:hover { color: var(--acc2); border-color: rgba(var(--acc2-rgb),.5);
       background: rgba(var(--acc2-rgb),.1); }
+    /* El índice filtra (Adán: "cuando haga clic en estos subtabs, solamente muéstrame la info de
+       ese subtab, ninguna más"): la pestaña elegida se enciende y lo demás de la sección se
+       oculta con `.cc-oculto`; "Todo" la devuelve entera. */
+    .cc-idx a.on { color: var(--bg); border-color: var(--acc2); background: var(--acc2); }
+    .cc-oculto { display: none !important; }
 
     /* ─── Tarjetas: esquinas rectas y un filete de acento que se enciende ── */
     .card, .riesgo-box, .moat-box, .negocio-card { border-radius: var(--hud); }
@@ -4187,7 +4192,7 @@
     };
     const antes = M.filter(m => m.mes <= salida), despues = M.filter(m => m.mes > salida && cortes.indexOf(m.mes) !== -1);
     const tabla = '<div class="pr-wrap"><table class="pr-tabla"><thead><tr><th>Mes</th><th>Entra</th><th>Sale</th><th>Ahorro</th>' +
-      '<th>Cuenta de Alemania</th><th>Patrimonio líquido</th><th>Qué pasa</th></tr></thead><tbody>' +
+      '<th>GBM</th><th>Patrimonio líquido</th><th>Qué pasa</th></tr></thead><tbody>' +
       antes.map(fila).join('') + '<tr class="pr-sep"><td colspan="7">Después de la salida: los cortes</td></tr>' +
       despues.map(fila).join('') + '</tbody></table></div>';
 
@@ -5373,14 +5378,47 @@
 
     /* El índice. Se arma de los <h3> VISIBLES, así que en `#perfil` lista los de la pestaña
        abierta y no los de las otras tres. Los <h3> sin id reciben uno estable a partir de su
-       posición, para poder anclarlos sin tocar el HTML. */
+       posición, para poder anclarlos sin tocar el HTML.
+
+       Cada entrada es una pestaña que FILTRA (Adán: "cuando haga clic en estos subtabs,
+       solamente muéstrame la info de ese subtab, ninguna más"): deja a la vista el bloque de ese
+       <h3> —el contenedor más grande que no tiene otro <h3> del índice— y oculta todo lo demás
+       de la sección con `.cc-oculto`. "Todo", la primera, la devuelve entera. Lo que oculta el
+       filtro sigue contando para el índice; cambiar de sección o de pestaña de arriba lo quita. */
+    const contDe = sec => sec.querySelector(':scope .subtab-panel.active') || sec;
+    function titulosDe(sec){
+      const cont = contDe(sec);
+      return Array.from(cont.querySelectorAll('h3')).filter(h => {
+        const t = (h.textContent || '').trim();
+        return t.length > 2 && t.length < 70 && (visible(h) || !!h.closest('.cc-oculto'));
+      });
+    }
+    function quitaFiltro(sec){
+      if (!sec) return;
+      sec.querySelectorAll('.cc-oculto').forEach(e => e.classList.remove('cc-oculto'));
+      sec.dataset.ccSel = '';
+    }
+    function filtra(sec, id){
+      quitaFiltro(sec);
+      const cont = contDe(sec), h = id ? document.getElementById(id) : null;
+      if (h && cont.contains(h)) {
+        const otros = titulosDe(sec).filter(x => x !== h);
+        let n = h;
+        while (n.parentElement && n.parentElement !== cont && !otros.some(o => n.parentElement.contains(o))) n = n.parentElement;
+        for (; n && n !== cont && n.parentElement; n = n.parentElement) {
+          Array.from(n.parentElement.children).forEach(s => {
+            if (s !== n && !s.matches('.cc-idx, .subtab-nav, .cc-bay, h2.section-title, script, style')) s.classList.add('cc-oculto');
+          });
+        }
+        sec.dataset.ccSel = id;
+      }
+      const idx = sec.querySelector(':scope > .cc-idx');
+      if (idx) idx.querySelectorAll('a').forEach(x => x.classList.toggle('on', (x.dataset.h || '') === (sec.dataset.ccSel || '')));
+    }
     function indice(sec){
       let idx = sec.querySelector(':scope > .cc-idx');
-      const h3 = Array.from(sec.querySelectorAll('h3')).filter(h => {
-        const t = (h.textContent || '').trim();
-        return t.length > 2 && t.length < 70 && visible(h);
-      });
-      if (h3.length < 6) { if (idx) idx.remove(); return; }
+      const h3 = titulosDe(sec);
+      if (h3.length < 6) { if (idx) idx.remove(); quitaFiltro(sec); return; }
       if (!idx) {
         idx = document.createElement('nav');
         idx.className = 'cc-idx';
@@ -5393,14 +5431,22 @@
                  || sec.querySelector(':scope > h2.section-title');
         if (!ref) return;
         ref.insertAdjacentElement('afterend', idx);
+        idx.addEventListener('click', function (e) {
+          const x = e.target.closest('a'); if (!x) return;
+          e.preventDefault();
+          filtra(sec, x.dataset.h || '');
+          sec.scrollIntoView({ block: 'start' });
+        });
       }
-      idx.innerHTML = h3.map(function (h, k) {
-        if (!h.id) h.id = sec.id + '-h' + k;
-        h.style.scrollMarginTop = '116px';
-        const t = (h.textContent || '').trim().replace(/\s+/g, ' ');
-        return '<a href="#' + h.id + '" title="' + t.replace(/"/g, '') + '">' +
-               (t.length > 26 ? t.slice(0, 24) + '…' : t) + '</a>';
-      }).join('');
+      const sel = sec.dataset.ccSel || '';
+      idx.innerHTML = '<a href="#' + sec.id + '" data-h=""' + (sel ? '' : ' class="on"') + ' title="Toda la sección">Todo</a>' +
+        h3.map(function (h, k) {
+          if (!h.id) h.id = sec.id + '-h' + k;
+          h.style.scrollMarginTop = '116px';
+          const t = (h.textContent || '').trim().replace(/\s+/g, ' ');
+          return '<a href="#' + h.id + '" data-h="' + h.id + '"' + (sel === h.id ? ' class="on"' : '') + ' title="' + t.replace(/"/g, '') + '">' +
+                 (t.length > 26 ? t.slice(0, 24) + '…' : t) + '</a>';
+        }).join('');
     }
 
     let pendiente = null;
@@ -5428,7 +5474,11 @@
     ['irASeccion', 'showSubtab', 'cambiarModo'].forEach(function (fn) {
       const orig = window[fn];
       if (typeof orig !== 'function') return;
-      window[fn] = function () { const r = orig.apply(this, arguments); repintar(); return r; };
+      window[fn] = function () {
+        // irASeccion(sección, …) y showSubtab(sección, …): la sección llega primero.
+        if (fn !== 'cambiarModo') quitaFiltro(document.getElementById(arguments[0]));
+        const r = orig.apply(this, arguments); repintar(); return r;
+      };
     });
 
     pintar();

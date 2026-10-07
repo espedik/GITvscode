@@ -85,12 +85,20 @@ medias o intacta sin recorrerla entera. Los datos ya estaban en `coach_checks_v1
 |---|---|---|
 | `.cc-bay` | bajo el título de cada sección con casillas | `6 / 53`, una marca por casilla real y el % |
 | `.cc-cnt` | en el sidebar, junto a cada enlace | el mismo conteo, para comparar secciones sin entrar |
-| `.cc-idx` | en las secciones con 6+ bloques | sus propios `<h3>` como anclas pegajosas |
+| `.cc-idx` | en las secciones con 6+ bloques | sus propios `<h3>` como pestañas pegajosas que **filtran**: tocar una deja solo su bloque |
 
 Las tres se **generan en JS**, no se escriben en el HTML, así que siguen funcionando cuando se
 añada una casilla o un bloque nuevo. Se recalculan al marcar cualquier casilla y al cambiar de
 sección, de pestaña o de modo.
 
+**El índice filtra** (Adán: *"cuando haga clic en estos subtabs, solamente muéstrame la info de ese
+subtab, ninguna más"*). La primera pestaña es **Todo**; cualquier otra deja a la vista el bloque de su
+`<h3>` —el contenedor más grande que no lleva otro `<h3>` del índice— y oculta lo demás de la sección
+con `.cc-oculto` (`filtra()`), sin tocar el título, la franja ni las pestañas de arriba. La elegida
+se enciende y sobrevive a repintar: marcar una casilla rearma el índice contando también lo que el
+filtro ocultó (`titulosDe()`). Cambiar de sección o de pestaña de arriba lo quita (`quitaFiltro()`
+en el envoltorio de `irASeccion` y `showSubtab`). Medido en `#perfil` (17 bloques): cada pestaña
+deja un solo `<h3>` visible, Todo los 19.
 **Se envuelven `irASeccion`, `showSubtab` y `cambiarModo`** en vez de escuchar el clic:
 `irANegocios()` y varios enlaces internos saltan de sección sin pasar por el sidebar, y con un
 listener de clic esas rutas se quedaban sin índice.
