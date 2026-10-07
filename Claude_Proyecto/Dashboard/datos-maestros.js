@@ -760,6 +760,24 @@ window.CIFRAS = (function () {
     // netos al mes; la vida allá, ~€1,900.
     trabajo: { neto: 3200, gasto: 1900, desde: '2029-03' },
     rendimiento: 0.06,     // CETES o índices sobre lo que se tiene, ya fuera de México (anual)
+    // De dónde sale cada supuesto, en una frase: Coach lo enseña junto a su valor en la
+    // proyección. Lo que se afirma como hecho lleva su fuente.
+    porque: {
+      foto:        'La foto de Finanzas del 1 oct 2026: el fondo, la cuenta y el efectivo; el depósito del depa; el crédito del auto con su tasa y su pago, y el iPhone de AT&T. La BBVA la lleva su plan quincena a quincena.',
+      quincenas:   'Cada quincena se sostiene sola: su sueldo menos los fijos de sus días, la comida y su parte del gasto personal; el resto va a GBM el día que entra.',
+      didi:        'Lo que Adán dijo que aparta (3 oct 2026): de octubre a enero, y más desde febrero, cuando maneja más; el resto de Didi paga la carga del auto y lo suyo.',
+      casa:        'Adán (3 oct 2026): el depa se entrega a fin de enero y desde febrero vive con su familia: aporta cada mes, y comida y cena son de la casa.',
+      comida:      'La lista de compras del Dashboard, al día por 30.4. En casa de su familia comida y cena las cubre el aporte; él paga su desayuno, el promedio de sus recetas.',
+      loDemas:     'Ropa, salidas, regalos, compras sueltas y la carga del auto fuera de Didi: el tope con que se cuadró el ahorro de cada quincena. En casa baja: ya no hay cosas del depa.',
+      extras:      'Lo que no usas, vendido en noviembre y diciembre. El aguinaldo paga el seguro del BYD (Adán, 3 oct 2026) y ALTEN no da finiquito: no entran.',
+      eurMxn:      'El 2 oct 2026 estaba en $20.46 (Infobae); se planea más alto para que una subida normal —su volatilidad anda en 7%— no tumbe la cuenta bloqueada.',
+      gasto:       'Renta de un cuarto ~€450, comida ~€250, seguro médico ~€120, celular, libros y algo de vida.',
+      werkstudent: '20 horas a la semana pagan ~€1,200 (workingstudentjobs.de, 2026), unos €1,100 netos; se supone desde el tercer mes.',
+      colegiatura: '€1,500 por semestre para quien viene de fuera de la UE, más las cuotas (hs-esslingen.de): la primera va en la salida, las otras dos en marzo y septiembre.',
+      byd:         'Un particular cobra ~$3,000 a la semana; menos el seguro de plataforma, el GPS, el mantenimiento y las semanas vacías. Paga su mensualidad y deja un poco.',
+      trabajo:     'Ingeniero recién titulado en la región de Stuttgart: ~€58,000 brutos al año, unos €3,200 netos al mes; la vida allá, ~€1,900.',
+      rendimiento: 'CETES o fondos indexados sobre lo ahorrado, ya fuera de México. En México el plan no cuenta rendimiento: es la parte conservadora.',
+    },
   };
   function mesDe(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); }
   function mesSiguiente(ym) { const p = ym.split('-').map(Number); return mesDe(new Date(p[0], p[1], 1)); }
@@ -926,6 +944,8 @@ window.CIFRAS = (function () {
     const devuelve = mesSiguiente(P.rentaHasta);
     let cash = f.efectivo, deposito = f.deposito, auto = f.auto, iphone = f.iphone;
     const B = planBbva();
+    const grupo = function (k) { return GRUPOS_SUELDO.filter(function (x) { return x[0] === k; })[0][1]; };
+    const eu = function (n) { return '€' + n.toLocaleString('es-MX'); };
     const filas = [];
     for (let k = 0; ; k++) {
       const mes = mesMas(s.desde, k);
@@ -933,6 +953,12 @@ window.CIFRAS = (function () {
       const enMexico = mes < salida, enMaestria = !enMexico && mes <= finMaestria;
       let entra = 0, sale = 0, desglose = null;
       const notas = [];
+      /* El detalle del mes, para que Coach lo enseñe renglón por renglón: `partes` son los renglones
+         que forman `entra` (positivos) y `sale` (negativos) —suman exacto—, y `aparte`, lo que se
+         mueve sin dejar de ser suyo (la cuenta bloqueada, la reserva del BYD, el colchón, el
+         depósito del depa): no es gasto y sigue en la columna GBM. */
+      const partes = [], aparte = [];
+      const pon = function (t, mxn, extra) { if (mxn) partes.push(Object.assign({ t: t, mxn: mxn }, extra || {})); };
       // El auto: el interés es gasto; el capital baja la deuda (no el patrimonio).
       const interes = auto > 0 ? auto * f.autoTasa / 100 / 12 : 0;
       const pagoAuto = auto > 0 ? Math.min(auto + interes, f.autoPago) : 0;
@@ -942,40 +968,58 @@ window.CIFRAS = (function () {
         desglose = desgloseMes(mes, s, { pagoAuto: pagoAuto, pagoIphone: pagoIphone, ultimo: ultimo });
         entra += desglose.g.sueldo + desglose.didi;
         sale += desglose.g.sueldo - desglose.g.ahorro;
+        // De Didi llega lo que apartas menos lo que se lleva la BBVA mientras tenga saldo.
+        pon(grupo('sueldo'), desglose.g.sueldo);
+        pon('Didi, lo que llega a GBM', desglose.didi, { aparta: didiAlAhorro(mes, ultimo) });
+        GRUPOS_SUELDO.forEach(function (x) { if (x[0] !== 'sueldo' && x[0] !== 'ahorro') pon(x[1], -desglose.g[x[0]]); });
         if (desglose.g.tarjeta > 0) notas.push(B.fin && mesDe(B.fin) === mes ? 'la BBVA queda en cero el ' + B.fin.getDate() : 'lo que sobra de cada quincena, a la BBVA');
-        if (mes === devuelve) { cash += deposito; deposito = 0; notas.push('sin renta desde este mes; regresa el depósito del depa'); }
+        if (mes === devuelve) {
+          cash += deposito; aparte.push({ t: 'Regresa el depósito del depa', mxn: deposito });
+          deposito = 0; notas.push('sin renta desde este mes; regresa el depósito del depa');
+        }
         if (mes.slice(5) === '12') notas.push('el aguinaldo, al seguro del BYD');
         if (mes === ultimo) notas.push('Didi, la mitad: la segunda quincena es de empacar');
       } else {
-        entra += s.byd.rentaNeta;
-        sale += pagoAuto + pagoIphone;
+        entra += s.byd.rentaNeta; pon('Renta del ' + P.auto + ', neta', s.byd.rentaNeta);
+        sale += pagoAuto + pagoIphone; pon(grupo('auto'), -pagoAuto); pon(grupo('iphone'), -pagoIphone);
         if (mes === salida) notas.push('el BYD empieza a rentarse');
         if (enMaestria) {
-          sale += A.gasto * eur;
-          if (mes >= werkDesde) entra += A.werkstudent * eur;
+          sale += A.gasto * eur; pon('Vida en Esslingen (' + eu(A.gasto) + ')', -A.gasto * eur);
+          if (mes >= werkDesde) { entra += A.werkstudent * eur; pon('Werkstudent (' + eu(A.werkstudent) + ' netos)', A.werkstudent * eur); }
           if (mes === werkDesde && A.werkstudent) notas.push('primer mes de Werkstudent');
-          if (semestres.indexOf(mes) !== -1) { sale += A.colegiatura * eur; notas.push('colegiatura del semestre'); }
+          if (semestres.indexOf(mes) !== -1) {
+            sale += A.colegiatura * eur; pon('Colegiatura del semestre (' + eu(A.colegiatura) + ')', -A.colegiatura * eur);
+            notas.push('colegiatura del semestre');
+          }
         } else if (mes >= trabajoDesde) {
-          entra += T.neto * eur; sale += T.gasto * eur;
+          entra += T.neto * eur; pon('Sueldo de ingeniero (' + eu(T.neto) + ' netos)', T.neto * eur);
+          sale += T.gasto * eur; pon('Vida en Alemania (' + eu(T.gasto) + ')', -T.gasto * eur);
           if (mes === trabajoDesde) notas.push('primer sueldo de ingeniero');
         }
       }
       s.extras.forEach(function (e) {
         if (e.mes !== mes) return;
-        entra += typeof e.mxn === 'string' ? P[e.mxn] : e.mxn; notas.push(e.txt);
+        const x = typeof e.mxn === 'string' ? P[e.mxn] : e.mxn;
+        entra += x; pon(e.txt, x); notas.push(e.txt);
       });
       // El ingreso nuevo del escenario (`extraMes`): a GBM cada mes en México desde `extraDesde`.
-      if (enMexico && s.extraMes && mes >= s.extraDesde) { entra += s.extraMes; notas.push('ingreso nuevo'); }
+      if (enMexico && s.extraMes && mes >= s.extraDesde) { entra += s.extraMes; pon('Ingreso nuevo', s.extraMes); notas.push('ingreso nuevo'); }
       costos.forEach(function (c) {
         if (c.mes !== mes) return;
-        if (c.gasta) sale += costoSalida(c, eur);
-        notas.push(c.txt.replace(/ \(estimado[^)]*\)$/, ''));
+        const x = costoSalida(c, eur), t = c.txt.replace(/ \(estimado[^)]*\)$/, '');
+        if (c.gasta) { sale += x; pon(t, -x, { salida: true }); } else aparte.push({ t: t, mxn: x });
+        notas.push(t);
       });
       cash += entra - sale;
-      if (!enMexico && cash > 0) cash += cash * s.rendimiento / 12;
+      // Lo que ganan las inversiones ya fuera de México; en México el plan no cuenta rendimiento.
+      const rend = !enMexico && cash > 0 ? cash * s.rendimiento / 12 : 0;
+      cash += rend;
       if (auto <= 0 && pagoAuto > 0) notas.push('se termina de pagar el BYD');
+      const bbva = B.saldoMes[mes] || 0;
       filas.push({ mes: mes, entra: entra, sale: sale, ahorro: entra - sale, alemania: cash, auto: auto,
-                   liquido: cash + deposito - auto - iphone - (B.saldoMes[mes] || 0), notas: notas, desglose: desglose });
+                   iphone: iphone, deposito: deposito, bbva: bbva, rendimiento: rend,
+                   liquido: cash + deposito - auto - iphone - bbva, notas: notas, desglose: desglose,
+                   partes: partes, aparte: aparte });
     }
     return filas;
   }

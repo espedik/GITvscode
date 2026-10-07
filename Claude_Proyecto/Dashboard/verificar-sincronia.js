@@ -222,7 +222,8 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   SEGUIR.forEach(k => {
     if (AMBIGUAS.indexOf(k) !== -1) return;
     const v = CIFRAS.v(k);
-    if (v && v.charAt(0) === '$') VARS[v.slice(1)] = k;     // "$293,000" → "293,000"
+    // "$0" es el saldo de cualquier deuda pagada: por su cifra no se puede saber de cuál habla.
+    if (v && v.charAt(0) === '$' && v !== '$0') VARS[v.slice(1)] = k;     // "$293,000" → "293,000"
   });
 
   /* Coincidencias numéricas que NO son la variable. Van con su razón: un aviso que nunca se

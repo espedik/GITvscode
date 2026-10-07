@@ -275,6 +275,11 @@ Adán se va a la maestría de Esslingen en **septiembre de 2027** (`maestriaInic
   hay. `CIFRAS.proyectar(cambios)` corre escenarios —`menosAhorro`, `extraMes` (un ingreso nuevo al mes desde `extraDesde`), `desfase: 12` para irse en
   septiembre de 2028, otro euro, sin Werkstudent— y `CIFRAS.cortesSalida(filas, cambios)` los
   mide. De aquí salen el `liquido` de cada fase y los marcadores de la salida.
+  Cada mes guarda además su detalle: `partes` —los renglones que forman `entra` (positivos) y
+  `sale` (negativos), y suman exacto—, `aparte` —lo que se mueve sin dejar de ser suyo: la cuenta
+  bloqueada, la reserva del BYD, el colchón y el depósito del depa—, `rendimiento`, y lo que
+  queda de cada deuda (`auto`, `iphone`, `bbva`) y del depósito. `SUPUESTOS.porque` dice de dónde
+  sale cada supuesto, en una frase con su fuente. Coach los enseña mes por mes.
 
 **El ahorro sale de lo que se manda, no de una resta.** En México, del sueldo solo llega a GBM lo
 que se aparta el día que entra cada quincena —`ahorroDia1`, `ahorroDia15`, `ahorroDia1Casa` y
