@@ -85,11 +85,20 @@ medias o intacta sin recorrerla entera. Los datos ya estaban en `coach_checks_v1
 |---|---|---|
 | `.cc-bay` | bajo el título de cada sección con casillas | `6 / 53`, una marca por casilla real y el % |
 | `.cc-cnt` | en el sidebar, junto a cada enlace | el mismo conteo, para comparar secciones sin entrar |
-| `.cc-idx` | en las secciones con 6+ bloques | sus propios `<h3>` como pestañas pegajosas que **filtran**: tocar una deja solo su bloque |
+| `.cc-idx` | en las secciones con 6+ bloques | sus propios `<h3>` como pestañas que **filtran**: tocar una deja solo su bloque. **Todas a la vista**: bajan de línea (a 1600 px son tres filas, a 1920 dos) y son pegajosas en pantallas anchas; bajo 900 px no se pegan, porque en varias líneas taparían media pantalla |
 
 Las tres se **generan en JS**, no se escriben en el HTML, así que siguen funcionando cuando se
 añada una casilla o un bloque nuevo. Se recalculan al marcar cualquier casilla y al cambiar de
 sección, de pestaña o de modo.
+
+**Cada bloque tiene su pestaña, con su nombre corto** (Adán: *"no veo todos los subtabs"*). El índice
+era una sola fila con la barra de scroll oculta —con el ratón no se podía recorrer: a 1600 px
+quedaban 12 de 17 fuera— y dejaba fuera los `<h3>` de 70 letras o más ("Cadencia de revisión",
+cinco opciones de Posibles Negocios). Ahora entran todos, y la pestaña dice el nombre del bloque
+sin su subtítulo —lo que va antes de " — ", " (" o ": ", hasta 50 letras (`etiqueta()`)— o el que
+el `<h3>` pida con `data-idx` (la decisión de Alemania, la salida y las once opciones de negocio).
+El título completo queda en el `title`. Las pestañas van en la letra del texto, no en la
+monoespaciada en mayúsculas: en varias líneas, esa hacía cada pestaña un 30% más ancha.
 
 **El índice filtra** (Adán: *"cuando haga clic en estos subtabs, solamente muéstrame la info de ese
 subtab, ninguna más"*). La primera pestaña es **Todo**; cualquier otra deja a la vista el bloque de su
@@ -111,7 +120,7 @@ todas daría un avance que no corresponde a lo que hay delante.
 
 ### La distribución
 
-`main` pasó de **1080 a 1280 px** — en un monitor de 1600 se desperdiciaban 400. Y el índice es lo
+`main` ocupa **todo el ancho** de la pantalla (Adán: *"no abarca todo el ancho de la pantalla"*): con el tope de 1280 px quedaban 388 px vacíos a la derecha en un monitor de 1920. Las pestañas de arriba (`.subtab-nav`) también bajan de línea en vez de esconderse. Y el índice es lo
 que arregla el problema real: `#perfil` mide **10,700 px** y hasta ahora solo se podía recorrer a
 ciegas hacia abajo.
 

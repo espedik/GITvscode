@@ -446,7 +446,7 @@
       gap: 6px;
       border-bottom: 1px solid var(--border);
       margin-bottom: 22px;
-      overflow-x: auto;
+      flex-wrap: wrap;
       scrollbar-width: none;
     }
     .subtab-btn {
@@ -551,8 +551,9 @@
     }
     .perfil-hero > * { position: relative; }
     .hero-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+    .hero-top > div:first-child { flex: 1 1 420px; min-width: 0; }
     .p-nombre { font-family: var(--font-serif); font-size: 30px; font-weight: 800; letter-spacing: -.3px; color: var(--text); }
-    .p-sub { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.7; max-width: 640px; }
+    .p-sub { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.7; }
     .p-today { font-family: var(--mono); font-size: 12px; color: var(--muted); white-space: nowrap; padding-top: 4px; }
     .hero-kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-top: 24px; }
     .hero-kpis > * { min-width: 0; }
@@ -1250,8 +1251,9 @@
     .cc-cnt.full { color: var(--green); background: var(--green-soft);
       border-color: rgba(52,211,153,.3); }
 
-    /* ─── Más ancho: 1080 px dejaban 400 muertos en un monitor de 1600 ─── */
-    main { max-width: 1280px; }
+    /* ─── Todo el ancho de la pantalla (Adán: "no abarca todo el ancho de la pantalla"): con el
+       tope de 1280 px quedaban 388 px vacíos a la derecha en un monitor de 1920. ─── */
+    main { max-width: none; }
 
     /* ─── Cabecera de sección: pasa a leerse como el encabezado de un instrumento ── */
     h2.section-title { font-family: var(--font); font-size: 22px; letter-spacing: -.2px;
@@ -1291,14 +1293,18 @@
     /* `#perfil` mide 10,700 px. Sin esto solo se puede recorrer a ciegas hacia abajo. Se
        genera de los <h3> visibles (se rehace al cambiar de pestaña) y es pegajoso, así que
        sigue disponible en cualquier punto del scroll. */
-    .cc-idx { position: sticky; top: 64px; z-index: 40; display: flex; gap: 6px;
-      overflow-x: auto; padding: 8px 0 10px; margin-bottom: 16px;
+    /* Todas las pestañas a la vista (Adán: "no veo todos los subtabs"): bajan de línea en vez
+       de esconderse en una fila con la barra de scroll oculta, que con el ratón no se podía
+       recorrer —a 1600 px quedaban 12 de 17 fuera—. En pantallas angostas deja de ser pegajoso:
+       en varias líneas taparía media pantalla. */
+    .cc-idx { position: sticky; top: 64px; z-index: 40; display: flex; gap: 5px;
+      flex-wrap: wrap; padding: 8px 0 10px; margin-bottom: 16px;
       background: var(--bg); border-bottom: 1px solid rgba(var(--acc-rgb),.12);
       scrollbar-width: none; }
     .cc-idx::-webkit-scrollbar { display: none; }
-    .cc-idx a { flex-shrink: 0; font-family: var(--mono); font-size: 10px; font-weight: 700;
-      letter-spacing: .09em; text-transform: uppercase; text-decoration: none;
-      color: var(--muted); padding: 5px 11px; border-radius: var(--hud);
+    .cc-idx a { flex-shrink: 0; font-family: var(--font); font-size: 11.5px; font-weight: 600;
+      letter-spacing: 0; line-height: 1.35; text-decoration: none;
+      color: var(--muted); padding: 3px 9px; border-radius: var(--hud);
       border: 1px solid rgba(var(--acc-rgb),.14); background: rgba(var(--acc-rgb),.04);
       transition: all .16s; }
     .cc-idx a:hover { color: var(--acc2); border-color: rgba(var(--acc2-rgb),.5);
@@ -1376,7 +1382,7 @@
     @media (max-width: 900px) {
       .cc-bay { gap: 12px; padding: 10px 14px; }
       .cc-rail { order: 3; flex-basis: 100%; }
-      .cc-idx { top: 0; }
+      .cc-idx { position: static; }
     }
     @media (prefers-reduced-motion: reduce) {
       .card:hover, .riesgo-box:hover, .moat-box:hover, .negocio-card:hover { transform: none; }
@@ -1770,7 +1776,7 @@
 
     <!-- LA DECISIÓN -->
     <div class="riesgo-box mb-16 span-2" style="margin-bottom:16px;background:rgba(196,125,14,.06);border-color:rgba(196,125,14,.3);">
-      <h3 style="color:var(--gold);">Decisión tomada — Alemania en septiembre de 2027, con números</h3>
+      <h3 style="color:var(--gold);" data-idx="La decisión: Alemania">Decisión tomada — Alemania en septiembre de 2027, con números</h3>
 
       <div class="grid-3" style="margin:14px 0;">
         <div class="stat-badge" style="min-width:auto;"><span class="num">{{maestriaInicio}}</span><span>La salida: arranca {{maestriaEscuela}}</span></div>
@@ -3291,7 +3297,7 @@
     <!-- OPCIÓN 1 -->
     <div class="negocio-card pick" id="negocio1">
       <div class="negocio-rank">⭐ Empieza aquí — la más rápida a primer ingreso</div>
-      <h3>1. Vender tu plantilla de Finanzas.html en comunidades de GBM</h3>
+      <h3 data-idx="1. Plantilla de Finanzas">1. Vender tu plantilla de Finanzas.html en comunidades de GBM</h3>
       <div class="grid-3" style="margin-bottom:10px;">
         <div class="stat-badge"><span style="color:#c2410c">Bajo-Medio</span><span>Requiere ventas</span></div>
         <div class="stat-badge"><span class="text-green">1-3 semanas</span><span>A primer ingreso</span></div>
@@ -3309,7 +3315,7 @@
     <!-- OPCIÓN 2 -->
     <div class="negocio-card pick" id="negocio2">
       <div class="negocio-rank">⭐ Empieza aquí — mejor techo de ingreso por hora</div>
-      <h3>2. Freelance de automatización de pruebas automotrices (noches/fines de semana)</h3>
+      <h3 data-idx="2. Freelance de automatización">2. Freelance de automatización de pruebas automotrices (noches/fines de semana)</h3>
       <div class="grid-3" style="margin-bottom:10px;">
         <div class="stat-badge"><span class="text-green">Bajo</span><span>Requiere ventas</span></div>
         <div class="stat-badge"><span class="text-green">4-8 semanas</span><span>A primer ingreso</span></div>
@@ -3327,7 +3333,7 @@
     <!-- OPCIÓN 3 -->
     <div class="negocio-card" id="negocio3">
       <div class="negocio-rank">En paralelo, desde la semana 1</div>
-      <h3>3. Mentoría paga para ingenieros junior en testing automotriz</h3>
+      <h3 data-idx="3. Mentoría paga">3. Mentoría paga para ingenieros junior en testing automotriz</h3>
       <div class="grid-3" style="margin-bottom:10px;">
         <div class="stat-badge"><span class="text-green">Bajo-Medio</span><span>Requiere ventas</span></div>
         <div class="stat-badge"><span class="text-green">2-4 semanas</span><span>A primer ingreso</span></div>
@@ -3345,7 +3351,7 @@
     <!-- OPCIÓN 4 -->
     <div class="negocio-card" id="negocio4">
       <div class="negocio-rank">Apuesta de mediano plazo, en paralelo</div>
-      <h3>4. Versión productizada de tu herramienta "CodeReview" (IA + revisión de código embebido)</h3>
+      <h3 data-idx="4. CodeReview como producto">4. Versión productizada de tu herramienta "CodeReview" (IA + revisión de código embebido)</h3>
       <div class="grid-3" style="margin-bottom:10px;">
         <div class="stat-badge"><span style="color:#c2410c">Medio</span><span>Requiere ventas</span></div>
         <div class="stat-badge"><span class="text-red">3-6 meses</span><span>A primer ingreso</span></div>
@@ -3387,7 +3393,7 @@
     <!-- OPCIÓN 6 -->
     <div class="negocio-card" id="negocio6">
       <div class="negocio-rank">No es un negocio nuevo — es una corrección</div>
-      <h3>6. Dejar de manejar DiDi y redirigir esas horas a las Opciones 1-2</h3>
+      <h3 data-idx="6. Horas de Didi a las Opciones 1-2">6. Dejar de manejar DiDi y redirigir esas horas a las Opciones 1-2</h3>
       <p><strong>El problema real:</strong> un ingeniero senior de automatización freelance cobra aproximadamente $300-600 MXN/hora en México (o $25-45 USD/hora remoto ≈ $490-880 MXN/hora usando tu inglés B2), mientras que DiDi deja netos aproximados de $80-120 MXN/hora después de gasolina y desgaste del auto. Estás cambiando tu hora más valiosa por tu hora menos valiosa — y además desgastando el mismo BYD que te cuesta {{autoInteres}} de interés, para generar el ingreso más bajo posible con tu tiempo.</p>
       <h5>Acción concreta</h5>
       <p>En cuanto las Opciones 1 o 2 tengan tu primer peso cobrado, esas horas de DiDi se mueven ahí. No antes — no dejes DiDi sin tener ya el reemplazo generando, porque eso rompería tu único colchón de efectivo actual.</p>
@@ -3396,7 +3402,7 @@
     <!-- OPCIÓN 7 -->
     <div class="negocio-card" id="negocio7">
       <div class="negocio-rank">Apuesta de nicho — validar antes de construir</div>
-      <h3>7. Automatización/mantenimiento predictivo para manufactura regulada (farmacéutica, alimentos)</h3>
+      <h3 data-idx="7. Mantenimiento predictivo">7. Automatización/mantenimiento predictivo para manufactura regulada (farmacéutica, alimentos)</h3>
       <div class="grid-3" style="margin-bottom:10px;">
         <div class="stat-badge"><span style="color:#c2410c">Medio</span><span>Requiere ventas</span></div>
         <div class="stat-badge"><span class="text-red">Incierto</span><span>A primer ingreso</span></div>
@@ -3414,7 +3420,7 @@
     <!-- OPCIÓN 8 -->
     <div class="negocio-card" id="negocio8">
       <div class="negocio-rank">Apuesta de mediano plazo — apalanca tu red en Alemania</div>
-      <h3>8. Freelance/consultoría con tu red activa de Bosch en Stuttgart</h3>
+      <h3 data-idx="8. Consultoría con tu red de Bosch">8. Freelance/consultoría con tu red activa de Bosch en Stuttgart</h3>
       <div class="grid-3" style="margin-bottom:10px;">
         <div class="stat-badge"><span class="text-green">Bajo</span><span>Requiere ventas</span></div>
         <div class="stat-badge"><span style="color:#c2410c">Medio</span><span>A primer ingreso</span></div>
@@ -3432,7 +3438,7 @@
     <!-- OPCIÓN 9 -->
     <div class="negocio-card" id="negocio9">
       <div class="negocio-rank">Apuesta de mediano plazo, en paralelo — mismo patrón que la Opción 4</div>
-      <h3>9. Automatizaciones con Claude + n8n para empresas medianas</h3>
+      <h3 data-idx="9. Claude + n8n para empresas">9. Automatizaciones con Claude + n8n para empresas medianas</h3>
       <div class="grid-3" style="margin-bottom:10px;">
         <div class="stat-badge"><span style="color:#c2410c">Medio</span><span>Requiere ventas</span></div>
         <div class="stat-badge"><span class="text-red">2-4 meses</span><span>A primer ingreso</span></div>
@@ -3454,7 +3460,7 @@
          supuestos que pueden matar la idea antes de invertir una sola hora en la campaña. -->
     <div class="negocio-card" id="negocio10">
       <div class="negocio-rank">Idea propia — verifica 3 cosas antes de invertirle una hora</div>
-      <h3>10. Llevar este mismo ecosistema (Dashboard + Coach + Finanzas) a Kickstarter</h3>
+      <h3 data-idx="10. Este ecosistema en Kickstarter">10. Llevar este mismo ecosistema (Dashboard + Coach + Finanzas) a Kickstarter</h3>
       <div class="negocio-stats">
         <div class="stat-badge"><span style="color:#c2410c">Alto</span><span>Requiere marketing</span></div>
         <div class="stat-badge"><span style="color:#c2410c">3-6 meses</span><span>A primer ingreso</span></div>
@@ -3487,7 +3493,7 @@
          el "primer paso" no es buscar cliente, es construir el rig para ti mismo. -->
     <div class="negocio-card" id="negocio11">
       <div class="negocio-rank">Infraestructura primero, negocio después — habilita las Opciones 2 y 8</div>
-      <h3>11. Laboratorio remoto: acceso y manipulación física de bancos de prueba automotrices</h3>
+      <h3 data-idx="11. Laboratorio remoto">11. Laboratorio remoto: acceso y manipulación física de bancos de prueba automotrices</h3>
       <div class="negocio-stats">
         <div class="stat-badge"><span class="text-green">Bajo</span><span>Requiere ventas</span></div>
         <div class="stat-badge"><span class="text-red">6+ meses</span><span>A primer ingreso</span></div>
@@ -4320,7 +4326,7 @@
     const costos = S.costos.map(c => '<div class="impuesto-row"><span class="imp-nombre">' + et(c.mes) + ' · ' + c.txt +
       (c.gasta ? '' : ' <span class="text-muted">— sigue siendo tuyo</span>') + '</span><span class="imp-fecha" style="white-space:nowrap">' +
       mx(C.costoSalida(c)) + '</span></div>').join('');
-    caja.innerHTML = '<h3 class="fw-700 mb-12">🇩🇪 Salida a Alemania — todo lo que hay que reunir antes del ' + C.v('maestriaInicio') + '</h3>' +
+    caja.innerHTML = '<h3 class="fw-700 mb-12" data-idx="Salida a Alemania">🇩🇪 Salida a Alemania — todo lo que hay que reunir antes del ' + C.v('maestriaInicio') + '</h3>' +
       '<p class="fs-13 text-muted mb-12" style="line-height:1.7;">Papeles, dinero, el auto, tu salud, la ropa y lo que se queda en México, cada cosa con su mes. Lo que dice <strong>siempre</strong> no tiene fecha: se sostiene hasta el día que te vas. Los hitos de cada mes también están en el checklist de su fase, arriba.</p>' +
       '<div class="salida-avance"><span id="salidaAvanceTxt">—</span><div class="progress-bar"><div class="progress-fill" id="salidaAvanceFill" style="width:0%"></div></div></div>' +
       '<div class="salida-grid">' + bloques + '</div>' +
@@ -5426,8 +5432,18 @@
       const cont = contDe(sec);
       return Array.from(cont.querySelectorAll('h3')).filter(h => {
         const t = (h.textContent || '').trim();
-        return t.length > 2 && t.length < 70 && (visible(h) || !!h.closest('.cc-oculto'));
+        return t.length > 2 && (visible(h) || !!h.closest('.cc-oculto'));
       });
+    }
+    /* El nombre de la pestaña: el del bloque sin su subtítulo —lo que va antes de " — ", " (" o
+       ": "— o el que el <h3> pida con `data-idx`. El título completo queda en el `title`. Antes
+       se cortaba a 24 letras ("CALENDARIO REAL DE TU DE…") y los títulos de 70 o más ni
+       entraban: "Cadencia de revisión" y cinco opciones de Posibles Negocios no tenían pestaña. */
+    function etiqueta(h, t){
+      if (h.dataset.idx) return h.dataset.idx;
+      let e = t.split(/ — | \(|: /)[0].trim();
+      if (e.length < 4) e = t;
+      return e.length > 50 ? e.slice(0, 48).trim() + '…' : e;
     }
     function quitaFiltro(sec){
       if (!sec) return;
@@ -5481,7 +5497,7 @@
           h.style.scrollMarginTop = '116px';
           const t = (h.textContent || '').trim().replace(/\s+/g, ' ');
           return '<a href="#' + h.id + '" data-h="' + h.id + '"' + (sel === h.id ? ' class="on"' : '') + ' title="' + t.replace(/"/g, '') + '">' +
-                 (t.length > 26 ? t.slice(0, 24) + '…' : t) + '</a>';
+                 etiqueta(h, t) + '</a>';
         }).join('');
     }
 
