@@ -233,7 +233,11 @@ pero el nombre de la variable se queda corto.
 | `{{cuidadoMes}}` | $4,801 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
 | `{{recorteRutinas}}` | $2,003 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $1,340 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
 | `{{alemaniaMarzo}}` | $135,840 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
-| `{{marzoParaJunio}}` | $172,778 — lo que tiene que haber al cerrar la Fase 1 para que junio alcance con el ahorro de abril a junio | derivada |
+| `{{salidaAgosto}}` | $324,284 — lo que pide la salida completa en agosto de 2027: la cuenta bloqueada, la reserva del BYD, el colchón y la colegiatura del primer semestre (`cortes.salida.pide`) | derivada; se mueve con `PROYECTO.eurMxn` |
+| `{{extraSalida}}` | $10,554 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
+| `{{marzoParaSalida}}` | $188,609 — lo que tendría GBM al cerrar la Fase 1 con ese ingreso nuevo: el punto de control del 31 de marzo | derivada |
+| `{{mayoParaSalida}}` | $260,317 — lo mismo el día de decidir (`PROYECTO.maestriaDecision`) | derivada |
+| `{{salida2028}}` | «sobran …» o «faltan …»: la salida completa si se mueve a septiembre de 2028 (`desfase: 12`, `fmt: 'txt'`) | derivada |
 | `{{alemaniaJunio}}` | $213,046 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
 | `{{bbvaCero}}` | 2 nov 2026 — el día que la BBVA queda en cero con `planBbva` (`fmt: 'fecha'`) | derivada |
 | `{{bbvaIntereses}}` | $0 — lo que costaría en intereses llegar a cero; en 0 con `PROYECTO.bbvaSinIntereses` | derivada |
@@ -253,7 +257,7 @@ cetes, de ahí tendré mi fondo de emergencia y cualquier cosa los vendo"*). Es 
 emergencia (CETES)"); ya no hay una inversión CETES aparte en `investments`, porque las apps sumaban
 las dos cosas en patrimonio y en el fondo de la maestría. **Ya no recibe aporte**: el ahorro de cada
 quincena va a GBM (`{{cetesDia15}}` en $0) y el fondo se queda en lo que tiene; una aportación en
-Finanzas → Metas → ef-001 sigue siendo la forma de subirlo.
+Finanzas → Metas → ef-001 sigue siendo la forma de subirlo. Hasta la salida, el colchón del plan son los CETES más GBM: lo que le falta a `ef-001` lo cubre la primera quincena que llega a GBM.
 
 ### La salida a Alemania y la proyección
 
@@ -268,7 +272,7 @@ Adán se va a la maestría de Esslingen en **septiembre de 2027** (`maestriaInic
   que entra, lo que sale, GBM (todo el efectivo) y el patrimonio líquido—, y
   `cortes`: lo que piden junio (la cuenta bloqueada) y el último mes en México (la cuenta
   bloqueada, la reserva del BYD, el colchón y la colegiatura del primer semestre) contra lo que
-  hay. `CIFRAS.proyectar(cambios)` corre escenarios —`menosAhorro`, `desfase: 12` para irse en
+  hay. `CIFRAS.proyectar(cambios)` corre escenarios —`menosAhorro`, `extraMes` (un ingreso nuevo al mes desde `extraDesde`), `desfase: 12` para irse en
   septiembre de 2028, otro euro, sin Werkstudent— y `CIFRAS.cortesSalida(filas, cambios)` los
   mide. De aquí salen el `liquido` de cada fase y los marcadores de la salida.
 
@@ -283,6 +287,13 @@ de las fases. Así el calendario del Dashboard y la proyección no pueden decir 
 el verificador lo comprueba mes a mes. El aguinaldo paga el seguro del BYD y ALTEN no da
 finiquito: no entran.
 
+**La salida se mide completa.** Los dos puntos de control del plan —el cierre de la Fase 1
+(`{{marzoParaSalida}}`) y el día de decidir (`{{mayoParaSalida}}`)— comparan GBM contra lo que pide
+agosto, no solo contra la cuenta bloqueada de junio: con un ritmo que alcance junio y no agosto, la
+salida se haría a medias. Lo que falta se dice como ingreso nuevo al mes (`{{extraSalida}}`), porque
+los recortes de las rutinas (`{{recorteRutinas}}`) y las ventas ya contadas no llegan; sin ese
+ingreso, la fecha que el ahorro sí paga es septiembre de 2028 (`{{salida2028}}`). `salidaConIngreso()`
+reparte el hueco de agosto entre los meses que quedan en México y corre la proyección con él.
 Para cambiar un supuesto (el tope de lo demás, la comida de la lista, lo que cuesta la vida allá, el Werkstudent,
 la renta del auto) se edita `SUPUESTOS`; para un costo, `SALIDA.costos`; para lo que se manda cada
 quincena, `PROYECTO.ahorroDia…`. Las fases, los marcadores y Coach se recalculan solos.

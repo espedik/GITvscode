@@ -195,12 +195,13 @@ Estructura vigente, sin las horas exactas (esas están en el maestro, que es don
 - **Sábado y domingo**: días de ingreso, con dos turnos largos de Didi (mañana y tarde-noche). El
   domingo cierra la semana con finanzas, checkpoint del Plan Maestro y diario, comprimidos al final.
 
-**Duerme entre 5h40 y 6h40.**
+**Duerme entre 5h40 y 6h40.** La tarjeta *La matemática de tu tiempo libre* cuenta de la rutina las horas de la semana (`pintarTiempoLibre()`): el bloque del Plan Maestro, el alemán y Didi. No hay horas para el negocio, y lo dice.
 
 **El bloque de freelance no existe hoy.** Era condicional, ocupaba las franjas que hoy son turnos
-de Didi, y en la práctica estaba vacío. El plan tiene un solo frente de negocio —el de su papá— y
-**Didi deja de ser fijo en la Fase 2**, cuando el sueldo nuevo cubra lo que aporta: esas horas pasan
-a IELTS y alemán para la maestría.
+de Didi, y en la práctica estaba vacío. El plan tiene un solo frente de negocio —el de su papá, en
+piloto automático— y **Didi sigue hasta la salida** (la mitad el último mes): es parte del ahorro. Si
+la palanca de ingreso de la Fase 1 es freelance, se cambian horas de Didi por horas facturables. El
+bloque del martes (`k2`) es para negociar ese ingreso: su caso con números y su guion.
 
 ---
 
@@ -216,12 +217,12 @@ esta app carga en el `<head>`. En el HTML se escribe un marcador y el módulo lo
 Se resuelven con `CIFRAS.aplicarDOM()`, que recorre los nodos de texto. Hay **una segunda llamada
 al final del `<script>`**: los inits de arriba (`updateFaseMonthBadges()` y compañía) repintan
 trozos del DOM, y un marcador que reapareciera ahí se quedaría a la vista. Es idempotente, así que
-repetirla no cuesta nada.
+repetirla no cuesta nada. La línea de tiempo de la Rutina se pinta en `DOMContentLoaded`, después de esa pasada, y por eso `renderRutinaTimeline()` resuelve los suyos.
 
-Diez cifras usan marcadores hoy, en cuatro sitios: el hallazgo del costo del auto, la tabla de
-"cuándo se libera cada deuda", la simulación mes a mes y los checklists de fase. Incluyen
-derivadas que antes se calculaban a mano y se quedaban congeladas: `{{autoInteres}}`,
-`{{autoAPagar}}`.
+Los marcadores están en toda la prosa del plan: los hallazgos, el calendario de la deuda, la decisión
+de Alemania, los supuestos, las contingencias, las metas y los checklists de fase. Incluyen derivadas
+que antes se escribían a mano y se quedaban congeladas, como lo que cuesta el auto en interés
+(`{{autoInteres}}`) o el ingreso nuevo que pide la salida (`{{extraSalida}}`).
 
 **Esta app no tenía migraciones** y por eso podía mostrar saldos viejos si era la primera pantalla
 del día. Ahora las hereda del módulo, que corre antes que su JS.
@@ -273,9 +274,9 @@ habría creado dos verdades en la misma pantalla.
 
 ### Las dos cifras calculadas
 
-- **"Cierra la base de tu Fase 1 en N meses"** — contra lo que de verdad debe (hueco del fondo + deuda cara,
-  del maestro) al ingreso medio de esa opción. Convierte la lista en una decisión: no "cuánto
-  deja", sino "cuándo me saca de la deuda cara".
+- **"N meses en cerrar el hueco de la salida a Alemania"** — contra lo que le falta a la salida
+  completa de agosto (`PROYECCION.cortes`) al ingreso medio de esa opción. Convierte la lista en una
+  decisión: no "cuánto deja", sino "si paga septiembre de 2027".
 - **La Opción 6 (dejar DiDi) no genera ingreso: convierte horas.** Su ficha calcula lo que valen
   esas mismas 60 horas al mes a su propia tarifa de freelance en vez de repetir el argumento
   cualitativo que ya estaba en la prosa.
@@ -322,10 +323,11 @@ Está escrito en el aviso de arriba en vez de fingir una precisión que no tiene
 ### La franja de capital sí es dato duro
 
 Sale de `finanzasmx_v2` por el maestro y contesta lo que ninguna lista de ideas contesta: **cuánto
-se puede invertir HOY sin romper la Fase 1**. Con la TC BBVA viva al 55.7%, abonar ahí es un
-rendimiento garantizado y sin riesgo que casi ninguna idea de la lista iguala — así que la
-respuesta honesta es `$0`, y las ideas de **arranque en $0** salen marcadas porque son las únicas
-que no compiten por ese dinero.
+se puede invertir HOY sin romper el plan**. Hasta la última fase el dinero tiene destino —la BBVA,
+la salida a Alemania y la maestría—, así que la respuesta honesta es `$0`, y las ideas de **arranque
+en $0** salen marcadas porque son las únicas que no compiten por ese dinero. Desde la última fase, si
+quedan fondo o deuda cara pendientes, van primero: una tarjeta con saldo cobra más de lo que rinde
+casi cualquier idea. Por lo mismo, la primera cifra de la franja es el ahorro del mes del plan (`ahorroMesDepa` o `ahorroMesCasa`) hasta la última fase, y el margen del sueldo (`margen`) después: antes, un margen libre sería un número que no existe.
 
 El plazo para liberar capital se calcula con el **margen íntegro** y se dice así ("el doble si le
 dedicas la mitad"): es el suelo optimista, no una previsión.
@@ -347,10 +349,10 @@ otro.
 | Estado de cada fase | `COMPLETADA` / `EN CURSO` / `PENDIENTE` por fecha, también la Fase 0 |
 | Días hasta el millón | Del arranque de la primera fase al cierre de la última (`#planDiasRestantes`, `#kpiDiasMeta`) |
 | `#trayectoriaFases` | Una fila por fase con su `liquido`, bajo el punto de partida fijo del 18 jul 2026 |
-| `#brechaMillon` | Lo que falta para el millón desde el patrimonio líquido de hoy (`CIFRAS.patrimonio()`), los meses que quedan y el margen del mes |
+| `#brechaMillon` | Lo que falta para el millón desde el patrimonio líquido de hoy (`CIFRAS.patrimonio()`), los meses que quedan y las dos palancas del plan: el ahorro de cada quincena (`ahorroMesDepa`, `ahorroMesCasa`) y el ingreso (`extraSalida`), con el mes del millón (`mesMillon`) |
 | `#contextoFase` (Rutina) | La fase en curso con su meta |
-| `#proyeccionPlan` | La proyección de `CIFRAS.PROYECCION`: mes a mes hasta la salida a Alemania y después los cortes (fin de cada semestre, cada diciembre y el mes del millón); junio y el último mes en México dicen lo que piden y lo que falta. Debajo, cinco escenarios con `CIFRAS.proyectar()` y `CIFRAS.cortesSalida()` —el plan, gastar $1,500 menos al mes, irse en septiembre de 2028 (`desfase: 12`), sin Werkstudent y el euro a $23— y los supuestos |
-| Decisión tomada — Alemania | Tarjeta estática con marcadores: la salida (`maestriaInicio`), lo que cuesta (`salidaTotal`), lo de junio (`salidaJunio`), el día que la BBVA queda en cero (`bbvaCero`), el ahorro del mes con depa y en casa, los veredictos de junio y de la salida, lo que hace falta al 31 de marzo (`marzoParaJunio`) y la regla del día de decidir (`decisionMaestria`) |
+| `#proyeccionPlan` | La proyección de `CIFRAS.PROYECCION`: mes a mes hasta la salida a Alemania y después los cortes (fin de cada semestre, cada diciembre y el mes del millón); junio y el último mes en México dicen lo que piden y lo que falta. Debajo, seis escenarios con `CIFRAS.proyectar()` y `CIFRAS.cortesSalida()` —el plan, con el ingreso nuevo (`extraMes` = `extraSalida`), gastar $1,500 menos al mes, irse en septiembre de 2028 (`desfase: 12`), sin Werkstudent y el euro a $23— y los supuestos |
+| Decisión tomada — Alemania | Tarjeta estática con marcadores: la salida (`maestriaInicio`), lo que pide en agosto (`salidaAgosto`), el ingreso nuevo que falta (`extraSalida`), el día que la BBVA queda en cero (`bbvaCero`), el ahorro del mes con depa y en casa, los veredictos de junio y de la salida, lo que tendría GBM con el ingreso nuevo el 31 de marzo (`marzoParaSalida`) y el día de decidir (`mayoParaSalida`, `decisionMaestria`), y septiembre de 2028 como la fecha que el ahorro sí paga (`salida2028`) |
 | `#salidaAlemania` | La lista de `CIFRAS.SALIDA` por tema, en `.salida-bloque` (clase propia: `updateFaseMonthBadges()` trataría cada tema como un mes), con el avance, lo de este mes y lo atrasado en rojo (`actualizarSalida()`), y la tabla de lo que cuesta irse |
 
 Corre **antes** del bucle que restaura `coach_checks_v1`, así que las casillas generadas (`a1-1`, `sa-adm-1`…)
