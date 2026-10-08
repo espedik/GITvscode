@@ -66,7 +66,9 @@ Script de Node **sin dependencias**: ejecuta `js/core.js` + los `js/data-*.js` e
 
 **Lo que el Dashboard usa hoy** es la tarjeta *Hoy aprendes* de Mi Día: nombra el tema de Python
 del día (`ENTREVISTA_TEMAS[diaDelAnio() % total]`, con la etiqueta de `PY_MOD_LABEL`) y lo abre
-aquí por hash (`entrevistas.html#<id>`). La pantalla "Entrevista del día", que pintaba
+aquí por hash (`entrevistas.html#<id>`); de `study-done-v2` saca cuántos llevas
+estudiados o si el de hoy ya está —si cambia su forma (`{id: true}`), hay que revisar
+`pythonHoyHtml()` del Dashboard—. La pantalla "Entrevista del día", que pintaba
 `ENTREVISTA_CONTENT` con `ENTREVISTA_CSS`, se quitó del Dashboard; el generador los sigue
 emitiendo, en reposo, y volver a pintarlos es solo volver a leerlos.
 

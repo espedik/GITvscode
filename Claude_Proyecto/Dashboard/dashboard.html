@@ -1167,12 +1167,11 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .rt2-sub-txt{font-weight:700;color:var(--text)}
 .rt2-sub-done{opacity:.55;text-decoration:line-through;border-left-color:var(--text3)}
 
-/* ─── Filas compactas ícono+texto (tile "Importante este mes", Mi Día) ─── */
+/* ─── Filas compactas ícono+texto (los ingredientes de las recetas) ─── */
 .ds-row{display:flex;align-items:baseline;gap:8px;font-size:12px;padding:3px 0}
 .ds-row+.ds-row{border-top:1px solid rgba(var(--ov),.06)}
 .ds-hora{font-family:var(--mono);color:var(--text2);flex-shrink:0}
 .ds-txt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2)}
-.ds-empty{color:var(--text3);font-size:14px}
 
 
 /* ─── HERO — semana completa (tira de 7 días + 2 paneles detallados) — compactado el 2026-08-08
@@ -1255,7 +1254,6 @@ button.hp-lec:active{transform:translateY(0)}
 .hp-lec-tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 .hp-lec-n{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--text3)}
 .hp-lec-t{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:2px}
-.hp-lec-d{font-size:10px;color:var(--text3);line-height:1.4}
 
 /* ─── La fila de 4 tarjetas de Mi Día ─── (2026-08-23)
    Sobreescribe .grid/.g4 SOLO aquí, porque las reglas generales rompían el reparto en 4:
@@ -1576,29 +1574,6 @@ button.hp-lec:active{transform:translateY(0)}
 .mes-tab.done:not(.active){border-color:rgba(0,232,122,.4);color:var(--g)}
 .mes-tab.done:not(.active).has-items::after{display:none}
 
-/* ─── Pendientes del mes: CRUD (2026-08-13) ───────────────────────────────────
-   Filas con checkbox + acciones de editar/borrar. Las acciones viven siempre en el DOM (no
-   aparecen solo en :hover) porque el Dashboard también se usa en pantalla táctil, donde no hay
-   hover: se atenúan al 45% y suben a 100% al pasar el cursor o al enfocar con teclado. */
-.ev-row{display:flex;align-items:flex-start;gap:6px;padding:4px 0;font-size:12px}
-.ev-row+.ev-row{border-top:1px solid rgba(var(--ov),.06)}
-.ev-check{background:none;border:0;padding:0;margin:0;cursor:pointer;font-size:14px;line-height:1.25;color:var(--text2);flex-shrink:0;font-family:inherit}
-.ev-check:hover{color:var(--ac1)}
-.ev-ico{flex-shrink:0;line-height:1.35}
-.ev-txt{flex:1;min-width:0;color:var(--text2);line-height:1.35;word-break:break-word}
-.ev-row.ev-done .ev-txt{text-decoration:line-through;opacity:.5}
-.ev-row.ev-done .ev-check{color:var(--g)}
-.ev-acts{display:flex;gap:2px;flex-shrink:0;opacity:.45;transition:opacity .15s}
-.ev-row:hover .ev-acts,.ev-acts:focus-within{opacity:1}
-.ev-act{background:none;border:0;padding:0 2px;cursor:pointer;font-size:11px;line-height:1.3;font-family:inherit}
-.ev-act:hover{transform:scale(1.15)}
-.ev-resumen{margin-top:6px;padding-top:5px;border-top:1px solid rgba(var(--ov),.08);font-size:10px;color:var(--text3)}
-
-.mes-nav{padding:3px 7px;border-radius:14px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.05);color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;line-height:1;transition:all .2s}
-.mes-nav:hover{background:rgba(var(--ov),.12);color:var(--text)}
-.mes-nav-add{border-color:rgba(0,232,122,.4);color:var(--g);font-size:10px;padding:3px 9px;white-space:nowrap}
-/* La fila de pestañas nunca envuelve; si no cabe, se desliza. Barra de scroll oculta porque en
-   una tira de 5 botones estorba más de lo que informa — las flechas ‹ › ya dicen que hay más. */
 /* Tira de logros bajo la ruta de deuda (2026-08-13) — `grid-column:1/-1` para que ocupe el ancho
    completo de la fila de 3 pasos en vez de meterse como una cuarta columna. */
 .logros-tira{grid-column:1/-1;margin-top:10px;padding-top:9px;border-top:1px solid rgba(var(--ov),.1)}
@@ -1607,25 +1582,6 @@ button.hp-lec:active{transform:translateY(0)}
 .logro-txt{flex:1;min-width:0}
 .logro-fecha{font-family:var(--mono);font-size:9.5px;color:var(--text3);white-space:nowrap}
 
-.mes-tabs-row{scrollbar-width:none;-ms-overflow-style:none}
-.mes-tabs-row::-webkit-scrollbar{display:none}
-.mes-tabs-row>*{flex-shrink:0}
-.mes-nav-add:hover{background:rgba(0,232,122,.15)}
-
-.ev-editor{margin-top:6px;padding:8px;border-radius:9px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.14)}
-.ev-editor-row{display:flex;gap:6px}
-.ev-ico-input,.ev-txt-input{border-radius:7px;border:1px solid rgba(var(--ov),.18);background:rgba(var(--ov),.06);color:var(--text);font-family:inherit;font-size:12px;padding:5px 7px}
-.ev-ico-input{width:44px;text-align:center;flex-shrink:0}
-.ev-txt-input{flex:1;min-width:0}
-.ev-ico-input:focus,.ev-txt-input:focus{outline:none;border-color:var(--ac1)}
-.ev-ico-picker{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px}
-.ev-ico-op{background:rgba(var(--ov),.06);border:1px solid rgba(var(--ov),.12);border-radius:6px;cursor:pointer;font-size:13px;line-height:1;padding:3px 4px;font-family:inherit}
-.ev-ico-op:hover{background:rgba(var(--ov),.16);transform:scale(1.1)}
-.ev-editor-btns{display:flex;gap:6px;margin-top:7px}
-.ev-btn{border-radius:7px;border:1px solid rgba(var(--ov),.18);background:rgba(var(--ov),.06);color:var(--text2);font-family:inherit;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer}
-.ev-btn:hover{background:rgba(var(--ov),.14);color:var(--text)}
-.ev-btn-ok{border-color:rgba(0,232,122,.45);color:var(--g)}
-.ev-btn-ok:hover{background:rgba(0,232,122,.16)}
 /* ═══ LISTA DE COMPRAS — rediseño 2026-08-27 ══════════════════════════════════
    Pedido de Adán: "mejora el diseño de dashboard de compras, quiero algo futurista y moderno
    y algo que me ayude a precios, links, cantidades, suma, checklist, resuelve las proporciones
@@ -3041,7 +2997,7 @@ button.hp-lec:active{transform:translateY(0)}
   background:rgba(var(--cy-rgb),.07);border:1px solid rgba(var(--cy-rgb),.2);font-size:12.5px;color:var(--text2);line-height:1.4}
 .blq-escuchar b{color:var(--text)}
 .blq-escuchar .hp-link{margin-left:auto;flex-shrink:0;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase}
-/* Los seis módulos: 3×2, iguales, y cada uno desplaza por dentro. */
+/* Los cinco módulos: 3×2 y Hoy aprendes ocupa la tercera columna entera. Cada uno desplaza por dentro. */
 .dia-mods{flex:1;min-height:0;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:14px}
 #miDiaSecundarios{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 #miDiaSecundarios>.tile{border-radius:16px;padding:14px 16px 12px;min-height:0;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column;gap:6px}
@@ -3053,9 +3009,6 @@ button.hp-lec:active{transform:translateY(0)}
 #miDiaSecundarios .hp-lec-top{margin-bottom:3px}
 #miDiaSecundarios .hp-lec-t{font-size:12px}
 #heroAprenderPanel .hp-sub{padding-top:7px;gap:3px}
-/* Sin la línea de detalle de cada lección: con el paso de la semana y la ficha en curso debajo
-   no cabía, y el detalle está a un toque en su pantalla. */
-#miDiaSecundarios .hp-lec-d{display:none}
 /* Los apartados nuevos al pie de un módulo: filete arriba y etiqueta en mono. */
 .hp-sub{margin-top:auto;padding-top:9px;border-top:1px solid rgba(var(--ov),.09);display:flex;flex-direction:column;gap:4px}
 .hp-sub-lbl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);display:flex;justify-content:space-between;gap:8px}
@@ -3072,6 +3025,62 @@ button.hp-lec:active{transform:translateY(0)}
 .hp-paso-t{font-size:12.5px;font-weight:700;color:var(--text);line-height:1.25}
 .hp-paso-d{font-size:11px;color:var(--text3);line-height:1.35;margin-top:2px}
 .hp-paso:hover .hp-paso-t{color:var(--cy)}
+/* ─── Hoy aprendes: la tercera columna entera de Mi Día ───
+   Ocupa las dos filas de la rejilla (bajo 1280 px, la primera columna de la segunda y la tercera;
+   en el teléfono va sola). Cada tarjeta lleva su color en `--c`, un token del tema: contrasta
+   igual en claro y en oscuro. */
+#heroAprenderPanel{grid-row:span 2}
+@media(max-width:600px){#heroAprenderPanel{grid-row:auto}}
+#heroAprenderPanel .hp-lec{--c:var(--g);margin-bottom:0;padding:7px 10px;
+  background:color-mix(in srgb,var(--c) 6%,transparent);border:1px solid color-mix(in srgb,var(--c) 24%,transparent)}
+#heroAprenderPanel .hp-lec-top{margin-bottom:3px}
+#heroAprenderPanel .hp-lec-tag{color:var(--c)}
+#heroAprenderPanel .hp-lec-t{font-size:13.5px;line-height:1.3;margin-bottom:0}
+#heroAprenderPanel .hp-sub{margin-top:0}
+/* La bandera de Alemania en CSS: el emoji se pinta como las letras "DE" en Windows. */
+.flag-de{display:inline-block;width:14px;height:9px;border-radius:2px;flex-shrink:0;
+  background:linear-gradient(#000 0 33.4%,#dd0000 33.4% 66.7%,#ffce00 66.7%);box-shadow:0 0 0 1px rgba(var(--ov),.16)}
+.ha-m{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--text3);margin-left:7px;white-space:nowrap}
+.ha-es{font-size:12px;color:var(--text2);line-height:1.4;margin-top:1px}
+.ha-ex{font-size:11.5px;font-style:italic;color:var(--text);line-height:1.45;margin-top:3px}
+.ha-ex span{font-style:normal;color:var(--text3)}
+.ha-uso{font-size:10.5px;color:var(--text3);line-height:1.4;margin-top:4px}
+.ha-uso b{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text2)}
+.ha-flecha{color:var(--text3);font-weight:400}
+.ha-aux.ist{color:var(--o)}
+.ha-aux.hat{color:var(--b)}
+.ha-2l{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ha-ok{color:var(--g)}
+/* La pregunta del ISTQB: en la columna, dos líneas y el estado; se contesta en su panel, que
+   lleva el marcador de la semana (.ha-pie). */
+.ha-q-t{font-size:12px;font-weight:600;color:var(--text);line-height:1.42}
+.ha-pie{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:6px;font-family:var(--mono);font-size:9.5px;color:var(--text3)}
+.ha-pie b{color:var(--text2)}
+.ha-pie b.ok{color:var(--g)}
+.ha-pie b.bajo{color:var(--w)}
+.ha-q-ir{color:var(--c)}
+.ha-mal{color:var(--r)}
+#istqbOverlay{--c:var(--p)}
+#istqbOverlay .ha-q-t{font-size:15px;line-height:1.55}
+.ha-ops{display:flex;flex-direction:column;gap:7px;margin-top:14px}
+.ha-op{display:grid;grid-template-columns:16px minmax(0,1fr);gap:9px;align-items:baseline;width:100%;text-align:left;
+  padding:9px 12px;border-radius:10px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.03);
+  color:var(--text2);font:inherit;font-size:13px;line-height:1.45;cursor:pointer;transition:border-color .15s,background .15s}
+.ha-op>b{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.ha-op:not(:disabled):hover{border-color:var(--c);color:var(--text)}
+.ha-op:disabled{cursor:default}
+.ha-op.ok{border-color:var(--g);background:rgba(var(--g-rgb),.1);color:var(--text)}
+.ha-op.ok>b{color:var(--g)}
+.ha-op.mal{border-color:var(--r);background:rgba(var(--r-rgb),.08);color:var(--text)}
+.ha-op.mal>b{color:var(--r)}
+.ha-op.apagada{opacity:.5}
+.ha-res{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:14px;font-size:13.5px;font-weight:800}
+.ha-res.ok{color:var(--g)}
+.ha-res.mal{color:var(--r)}
+.ha-res span{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--text3)}
+.ha-why{font-size:13px;color:var(--text2);line-height:1.55;margin-top:6px}
+.ha-why b{color:var(--text)}
+#istqbOverlay .ha-pie{margin-top:16px;padding-top:12px;border-top:1px solid rgba(var(--ov),.08);font-size:11px}
 /* Hábitos de hoy. Caben todos sin desplazar (Adán: "haz más pequeñas las letras para que quepan
    todos los hábitos sin hacer scroll down"): letra chica con el ancla debajo y, si ni así cabe la
    lista, `.compacto` pone el ancla en la misma línea que el nombre —completa en el `title`—.
@@ -4065,16 +4074,6 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
                       title="Qué invertir hoy — precios en vivo y tus saldos reales de Finanzas"></button>
             </div>
             <div class="tile" id="heroFasePanel"></div>
-            <div class="tile dia-mes">
-              <div class="hp-title">
-                <span>🗓️ Importante este mes</span>
-                <span id="mesAddBtn"></span>
-              </div>
-              <!-- nowrap + scroll horizontal en vez de flex-wrap: en columnas angostas las 3
-                   pestañas más las flechas se partían en 2 líneas. -->
-              <div id="mesTabs" class="mes-tabs-row" style="display:flex;gap:4px;flex-wrap:nowrap;align-items:center;margin-top:5px;overflow-x:auto"></div>
-              <div style="margin-top:5px;display:flex;flex-direction:column;flex:1;min-height:0;overflow-y:auto" id="mesEventos">—</div>
-            </div>
           </div>
         </div>
       </div>
@@ -4395,6 +4394,18 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
       <p id="kpiSubtitulo"></p>
     </div>
     <div class="gbm-body" id="kpiBody"></div>
+  </div>
+</div>
+
+<!-- ─── LA PREGUNTA DEL ISTQB CT-GenAI DEL DÍA — se abre desde Hoy aprendes, en Mi Día ─── -->
+<div class="gbm-overlay" id="istqbOverlay" onclick="if(event.target===this) cerrarIstqb()">
+  <div class="gbm-card">
+    <div class="gbm-head">
+      <button class="gbm-close" onclick="cerrarIstqb()" aria-label="Cerrar">✕</button>
+      <h2>La pregunta del día · ISTQB CT-GenAI</h2>
+      <p id="istqbSub"></p>
+    </div>
+    <div class="gbm-body" id="istqbBody"></div>
   </div>
 </div>
 
@@ -4944,274 +4955,9 @@ function rutinaAhoraSiguiente(){
   const {actual,siguiente}=tareaActivaEnHora(tareasHoy,horaAhora());
   return {tareasHoy, actual, siguiente};
 }
-// Lista compacta del tile "🔜 Siguiente" — ya no solo la próxima tarea, sino
-// varias por venir hoy, en texto chico para que quepan sin agrandar el tile.
-// ── "🗓️ Importante este mes" (tile de Mi Día, antes mostraba las próximas tareas del día) ──
-// Mezcla 2 fuentes, ambas reales, ninguna inventada:
-//  1) Pendientes que Adán dio explícitamente (dentista, embajada, gastritis) — no existen en
-//     ningún otro módulo (Dentista/Salud no tienen estos datos capturados), es texto a mano.
-//  2) Hitos derivados de PHASES de este mismo archivo (fechas de inicio/fin de cada Fase del
-//     Plan Maestro, ya reales y ya usadas en el slide Coach) — para que el mes no se vea vacío
-//     cuando sí hay algo real y ya documentado que mostrar, sin inventar nada nuevo.
-// Mismo patrón que LISTA_COMPRAS/GYM_RUTINA_DEFAULT — hay que seguir agregando a mano conforme
-// surjan más pendientes reales; no se actualiza sola.
-const EVENTOS_MES={
-  "2026-08":[
-    {ico:"🦷",txt:"Ir al dentista"},
-    {ico:"🇺🇸",txt:"Agendar cita para tu papá en la embajada de USA"},
-    {ico:"🏋️",txt:"Cancelar la membresía de Fitsi — ya estás con Total Pass ($650, día 17)"},
-  ],
-  "2026-09":[
-    {ico:"🩺",txt:"Ir al doctor por la gastritis"},
-    {ico:"🎯",txt:"Vence Fase 0 del Plan Maestro (30 sep) — revisa el fondo de emergencia (los CETES) y remata las DOS tarjetas (BBVA y Banamex, con poco saldo desde el 19 sep gracias a la venta del Bitcoin)"},
-    {ico:"📄",txt:"Agendar la visa de tu papá"},
-    {ico:"✈️",txt:"Revisar FAMEX 2027"},
-  ],
-  "2026-10":[
-    {ico:"🪙",txt:"Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — cartas de recomendación y la solicitud a Esslingen; la BBVA quincena a quincena hasta dejarla en cero y, después, todo el ahorro a GBM"},
-    {ico:"💳",txt:"Pagar la TC BBVA quincena a quincena, no de golpe el 11: el 11, con lo de Didi, lo que pide el estado de cuenta para no generar intereses; el 1 y el 15, lo que sobra de la quincena, y los lunes, lo de Didi, hasta dejarla en cero"},
-    {ico:"🎯",txt:"Cerrar la Fase 0 por escrito: qué se cumplió (Banamex, liquidada el 30 sep) y qué pasa a la Fase 1 (el fondo de emergencia y la BBVA)"},
-  ],
-};
-const MES_LABEL=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+// Utilidades que usa el resto del archivo: el nombre de cada mes y el escape de HTML.
 const MES_LABEL_FULL=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-function mesLabelFull(ym){ const [y,m]=ym.split('-').map(Number); return MES_LABEL_FULL[m-1]+' '+y; }
-function mesKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
-
-// ─── Pendientes del mes: CRUD real con persistencia (2026-08-13) ─────────────
-// Petición de Adán: "pon check boxes en cada uno, además dame la habilidad de poner tareas
-// nuevas, borrar tareas, editar, etc. para todos los meses, debo poder hacer muchas cosas aquí".
-//
-// EVENTOS_MES (arriba) pasa de ser LA lista a ser solo la SEMILLA: se copia una sola vez a
-// `dash-eventos-mes-v1` y desde ese momento el localStorage es la fuente de verdad. Es la única
-// forma de que borrar un pendiente signifique algo — si el código siguiera mandando, cualquier
-// cosa que Adán borrara reaparecería en la siguiente carga. Consecuencia a tener presente: si
-// más adelante se agrega un evento nuevo a EVENTOS_MES en el código, NO va a aparecer solo en su
-// navegador; hay que decírselo para que lo capture él, o bumpear la bandera de siembra.
-const EVENTOS_KEY='dash-eventos-mes-v1';
-function evUid(){ return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function eventosLoad(){
-  const st=rawGet(EVENTOS_KEY,null);
-  if(st) return st;
-  // Primera vez en este navegador: sembrar desde EVENTOS_MES conservando el orden.
-  const seed={};
-  Object.keys(EVENTOS_MES).forEach(k=>{ seed[k]=EVENTOS_MES[k].map(e=>({id:evUid(),ico:e.ico,txt:e.txt,done:false})); });
-  rawSet(EVENTOS_KEY,seed);
-  return seed;
-}
-function eventosSave(st){ rawSet(EVENTOS_KEY,st); }
-
-/* PENDIENTES QUE SE AÑADEN DESPUÉS. Lo de arriba avisa del problema: desde la primera carga
-   manda el localStorage, así que meter una línea más en EVENTOS_MES no llega a un navegador
-   que ya tiene la clave —y bumpear la bandera de siembra borraría lo que Adán haya capturado
-   a mano—.
-
-   Esto lo resuelve como las migraciones de Finanzas: cada lote lleva su bandera y corre UNA
-   sola vez. Si después los borra, no vuelven —la bandera ya está puesta—, que es justo lo que
-   se le prometió cuando pidió poder borrar.
-
-   Se comparan por TEXTO además de por bandera, por si el mismo pendiente ya estaba escrito:
-   dos «Agendar la visa de tu papá» seguidos serían peor que ninguno.
-
-   PARA AÑADIR OTRO LOTE: una entrada más aquí, con bandera nueva. */
-const EVENTOS_NUEVOS = [
-  { flag:'_sep20260907', mes:'2026-09', items:[
-      {ico:'\ud83d\udcc4', txt:'Agendar la visa de tu papá'},
-      {ico:'\u2708\ufe0f', txt:'Revisar FAMEX 2027'},
-  ]},
-  /* 2026-10-01 · Los dos que piden los prompts de Plan Maestro y Coach: el hueco previsto se
-     resuelve antes de que llegue (la BBVA se paga completa el 11) y el plan se revisa contra
-     lo que de verdad pasó (el cierre de la Fase 0). */
-  { flag:'_oct20261001', mes:'2026-10', items:[
-      {ico:'💳', txt:'Pagar la TC BBVA quincena a quincena, no de golpe el 11: el 11, con lo de Didi, lo que pide el estado de cuenta para no generar intereses; el 1 y el 15, lo que sobra de la quincena, y los lunes, lo de Didi, hasta dejarla en cero'},
-      {ico:'🎯', txt:'Cerrar la Fase 0 por escrito: qué se cumplió (Banamex, liquidada el 30 sep) y qué pasa a la Fase 1 (el fondo de emergencia y la BBVA)'},
-  ]},
-];
-/* …y los textos que el tiempo dejó mal se corrigen UNA vez, solo si siguen tal cual los
-   sembró el código: si Adán los editó, manda lo suyo. */
-const EVENTOS_CORRIGE = [
-  { flag:'_banamexLibre20261001', mes:'2026-10',
-    de:'Arranca Fase 1 del Plan Maestro (1 oct) — entran los $2,335/mes que liberan los MSI (el mínimo de Banamex ya no está libre) + primer ingreso real',
-    a:'Arranca Fase 1 del Plan Maestro (1 oct) — entran los $2,335/mes que liberan los MSI y el mínimo de Banamex, libre desde que quedó en $0 el 30 sep; la meta es el primer ingreso real' },
-  /* 2026-10-03 · La Fase 1 se redefinió (Coach → Plan Maestro): el pendiente que la anunciaba
-     hablaba de los $2,335/mes de MSI, que ya no son el plan. */
-  { flag:'_fasesNuevas20261003', mes:'2026-10',
-    de:'Arranca Fase 1 del Plan Maestro (1 oct) — entran los $2,335/mes que liberan los MSI y el mínimo de Banamex, libre desde que quedó en $0 el 30 sep; la meta es el primer ingreso real',
-    a:'Arranca la Fase 1 del Plan Maestro (1 oct): blindar la base — el fondo de emergencia completo en diciembre, la BBVA pagada completa cada día 11, el ISTQB CT-GenAI y el primer cliente del negocio de tu papá' },
-  /* 2026-10-03 · La salida a Alemania se adelantó a septiembre de 2027 y la Fase 1 se redefinió otra vez. */
-  { flag:'_alemania20261003', mes:'2026-10',
-    de:'Arranca la Fase 1 del Plan Maestro (1 oct): blindar la base — el fondo de emergencia completo en diciembre, la BBVA pagada completa cada día 11, el ISTQB CT-GenAI y el primer cliente del negocio de tu papá',
-    a:'Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — IELTS, cartas de recomendación y la solicitud a Esslingen; la BBVA al total cada 11 y el ahorro a la cuenta de Alemania' },
-  /* 2026-10-03 · El IELTS (6.0) y el pasaporte ya estaban: el pendiente dejaba el IELTS como tarea. */
-  { flag:'_ahorroReal20261003', mes:'2026-10',
-    de:'Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — IELTS, cartas de recomendación y la solicitud a Esslingen; la BBVA al total cada 11 y el ahorro a la cuenta de Alemania',
-    a:'Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — cartas de recomendación y la solicitud a Esslingen; la BBVA al total cada 11 y, cada 15, el ahorro a la cuenta de Alemania' },
-  /* 2026-10-05 · La BBVA ya no se paga completa el 11 (Adán: "me estás diciendo de pagar mi tarjeta
-     pero ni tengo dinero… eso debe ser cada quincena") y el ahorro va a GBM, no a CETES. */
-  { flag:'_bbvaFase20261005', mes:'2026-10',
-    de:'Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — cartas de recomendación y la solicitud a Esslingen; la BBVA al total cada 11 y, cada 15, el ahorro a la cuenta de Alemania',
-    a:'Arranca la Fase 1 del Plan Maestro (1 oct): rumbo a Alemania en sep 2027 — cartas de recomendación y la solicitud a Esslingen; la BBVA quincena a quincena hasta dejarla en cero y, después, todo el ahorro a GBM' },
-  { flag:'_bbvaPago20261005', mes:'2026-10',
-    de:'Pagar la TC BBVA completa antes del día 11 — el total del estado de cuenta, no el mínimo: así no genera intereses',
-    a:'Pagar la TC BBVA quincena a quincena, no de golpe el 11: el 11 solo el mínimo, con lo de Didi; el 1 y el 15, lo que sobra de la quincena, y los lunes, lo de Didi, hasta dejarla en cero' },
-  /* 2026-10-06 · "bbva no va cobrar intereses… pagaré para no pagar intereses a la tarjeta". */
-  { flag:'_bbvaSinInt20261006', mes:'2026-10',
-    de:'Pagar la TC BBVA quincena a quincena, no de golpe el 11: el 11 solo el mínimo, con lo de Didi; el 1 y el 15, lo que sobra de la quincena, y los lunes, lo de Didi, hasta dejarla en cero',
-    a:'Pagar la TC BBVA quincena a quincena, no de golpe el 11: el 11, con lo de Didi, lo que pide el estado de cuenta para no generar intereses; el 1 y el 15, lo que sobra de la quincena, y los lunes, lo de Didi, hasta dejarla en cero' },
-];
-function eventosCorregir(){
-  const st = rawGet(EVENTOS_KEY, null);
-  if(!st) return;
-  let toco = false;
-  EVENTOS_CORRIGE.forEach(function(c){
-    if(localStorage.getItem(EVENTOS_KEY + c.flag)) return;
-    (st[c.mes]||[]).forEach(function(e){ if(e.txt === c.de){ e.txt = c.a; toco = true; } });
-    try{ localStorage.setItem(EVENTOS_KEY + c.flag, '1'); }catch(e){}
-  });
-  if(toco) eventosSave(st);
-}
-function eventosSembrarNuevos(){
-  const st = rawGet(EVENTOS_KEY, null);
-  if(!st) return;   // sin clave todavía: ya los trae el seed de EVENTOS_MES
-  let toco = false;
-  EVENTOS_NUEVOS.forEach(function(lote){
-    if(localStorage.getItem(EVENTOS_KEY + lote.flag)) return;
-    const arr = st[lote.mes] = st[lote.mes] || [];
-    lote.items.forEach(function(it){
-      const ya = arr.some(function(e){
-        return String(e.txt||'').trim().toLowerCase() === it.txt.trim().toLowerCase();
-      });
-      if(!ya){ arr.push({id:evUid(), ico:it.ico, txt:it.txt, done:false}); toco = true; }
-    });
-    try{ localStorage.setItem(EVENTOS_KEY + lote.flag, '1'); }catch(e){}
-  });
-  if(toco) eventosSave(st);
-}
-eventosSembrarNuevos();
-eventosCorregir();
-function eventosDe(mes){ return (eventosLoad()[mes]||[]); }
-
-const EV_ICONOS=['🦷','🩺','💊','🎯','🪙','💳','📄','✈️','🏋️','📞','🛒','🎂','🚗','🏠','📌'];
-// 3 pestañas visibles, no 4: medido con Playwright, en esta columna (~262px útiles) las 4 más las
-// flechas ‹ › envolvían a una segunda línea. El límite dejó de importar cuando se agregó la
-// navegación — con las flechas se llega a CUALQUIER mes, así que ver 3 a la vez no quita alcance.
-const MESES_VISIBLES=3;
-let mesSel=mesKey(new Date());
-let mesOffset=0;          // 0 = la ventana de 4 pestañas arranca en el mes actual
-let evEditId=null;        // id del pendiente que se está editando ('nuevo' = alta)
-
-// La rotación automática de slides tiene que parar mientras Adán escribe, o el Dashboard le
-// cambia de pantalla a media frase. Se para el intervalo y la barra de progreso a mano en vez de
-// tocar `playing`, para no confundir el botón ▶/⏸ del HUD: al cerrar el editor, restartTimer()
-// devuelve todo al estado que el botón ya indicaba.
-function pausarRotacionPorEdicion(){
-  clearInterval(timer);
-  const f=document.getElementById('hudProgressFill');
-  if(f){ f.classList.remove('anim'); f.style.transition='none'; f.style.width='0%'; }
-}
-
-function mesesVisibles(n){
-  const hoy=new Date();
-  return Array.from({length:n||6},(_,i)=>{
-    const d=new Date(hoy.getFullYear(),hoy.getMonth()+i+mesOffset,1);
-    return {key:mesKey(d),label:MES_LABEL[d.getMonth()]+(d.getFullYear()!==hoy.getFullYear()?" '"+String(d.getFullYear()).slice(2):'')};
-  });
-}
-function moverMeses(delta){
-  mesOffset+=delta;
-  // Si el mes seleccionado se sale de la ventana, seleccionar el primero de la nueva — así nunca
-  // queda una lista visible que no corresponde a ninguna pestaña marcada.
-  const vis=mesesVisibles(MESES_VISIBLES).map(m=>m.key);
-  if(!vis.includes(mesSel)) mesSel=vis[0];
-  evEditId=null; renderEventosMes();
-}
-function verMesEventos(key){ mesSel=key; evEditId=null; renderEventosMes(); }
-
-function evToggle(id){
-  const st=eventosLoad(); const arr=st[mesSel]||[];
-  const it=arr.find(e=>e.id===id); if(!it) return;
-  it.done=!it.done; eventosSave(st); renderEventosMes();
-}
-function evEditar(id){ evEditId=id; pausarRotacionPorEdicion(); renderEventosMes(); }
-function evCancelar(){ evEditId=null; renderEventosMes(); restartTimer(); }
-function evBorrar(id){
-  const st=eventosLoad(); const arr=st[mesSel]||[];
-  const it=arr.find(e=>e.id===id); if(!it) return;
-  if(!confirm(`¿Borrar "${it.txt}"?`)) return;
-  st[mesSel]=arr.filter(e=>e.id!==id);
-  if(!st[mesSel].length) delete st[mesSel];
-  eventosSave(st); evEditId=null; renderEventosMes(); toast('🗑️ Pendiente borrado');
-}
-function evGuardar(){
-  const txt=(document.getElementById('evTxt')||{}).value;
-  const ico=((document.getElementById('evIco')||{}).value||'📌').trim()||'📌';
-  if(!txt||!txt.trim()) return alert('Escribe de qué se trata el pendiente.');
-  const st=eventosLoad();
-  if(evEditId==='nuevo'){
-    (st[mesSel]=st[mesSel]||[]).push({id:evUid(),ico,txt:txt.trim(),done:false});
-    toast('✅ Pendiente agregado');
-  } else {
-    const it=(st[mesSel]||[]).find(e=>e.id===evEditId);
-    if(it){ it.ico=ico; it.txt=txt.trim(); toast('✅ Pendiente actualizado'); }
-  }
-  eventosSave(st); evEditId=null; renderEventosMes(); restartTimer();
-}
-function evNuevo(){ evEditId='nuevo'; pausarRotacionPorEdicion(); renderEventosMes(); }
-function evPickIco(ico){ const i=document.getElementById('evIco'); if(i){ i.value=ico; i.focus(); } }
-// Enter guarda, Escape cancela — en una tarjeta chica el teclado es más rápido que apuntar al ✓.
-function evKey(e){ if(e.key==='Enter'){e.preventDefault();evGuardar();} else if(e.key==='Escape'){e.preventDefault();evCancelar();} }
-
-function evEditorHTML(it){
-  return `
-  <div class="ev-editor">
-    <div class="ev-editor-row">
-      <input id="evIco" class="ev-ico-input" maxlength="4" value="${esc(it?it.ico:'📌')}" aria-label="Ícono">
-      <input id="evTxt" class="ev-txt-input" placeholder="¿Qué tienes que hacer este mes?" value="${esc(it?it.txt:'')}" onkeydown="evKey(event)" aria-label="Pendiente">
-    </div>
-    <div class="ev-ico-picker">${EV_ICONOS.map(i=>`<button type="button" class="ev-ico-op" onclick="evPickIco('${i}')">${i}</button>`).join('')}</div>
-    <div class="ev-editor-btns">
-      <button type="button" class="ev-btn ev-btn-ok" onclick="evGuardar()">✓ Guardar</button>
-      <button type="button" class="ev-btn" onclick="evCancelar()">Cancelar</button>
-    </div>
-  </div>`;
-}
-
-function renderEventosMes(){
-  const meses=mesesVisibles(MESES_VISIBLES);
-  const store=eventosLoad();
-  document.getElementById('mesTabs').innerHTML=
-    `<button class="mes-nav" onclick="moverMeses(-1)" title="Meses anteriores">‹</button>`
-    + meses.map(m=>{
-        const arr=store[m.key]||[];
-        const pend=arr.filter(e=>!e.done).length;
-        return `<button class="mes-tab${m.key===mesSel?' active':''}${arr.length?' has-items':''}${arr.length&&pend===0?' done':''}" onclick="verMesEventos('${m.key}')">${m.label}${pend?`<span class="lc-tab-pct">${pend}</span>`:''}</button>`;
-      }).join('')
-    + `<button class="mes-nav" onclick="moverMeses(1)" title="Meses siguientes">›</button>`
-    + (mesOffset!==0?`<button class="mes-nav" onclick="moverMeses(${-mesOffset})" title="Volver al mes actual">hoy</button>`:'');
-  document.getElementById('mesAddBtn').innerHTML=
-    `<button class="mes-nav mes-nav-add" onclick="evNuevo()" title="Agregar pendiente a ${esc(mesLabelFull(mesSel))}">+ Nuevo</button>`;
-
-  const eventos=store[mesSel]||[];
-  const hechas=eventos.filter(e=>e.done).length;
-  const filas=eventos.map(e=> e.id===evEditId ? evEditorHTML(e) : `
-    <div class="ev-row${e.done?' ev-done':''}">
-      <button type="button" class="ev-check" onclick="evToggle('${e.id}')" title="${e.done?'Marcar como pendiente':'Marcar como hecho'}">${e.done?'☑':'☐'}</button>
-      <span class="ev-ico">${esc(e.ico)}</span>
-      <span class="ev-txt">${esc(e.txt)}</span>
-      <span class="ev-acts">
-        <button type="button" class="ev-act" onclick="evEditar('${e.id}')" title="Editar">✏️</button>
-        <button type="button" class="ev-act" onclick="evBorrar('${e.id}')" title="Borrar">🗑️</button>
-      </span>
-    </div>`).join('');
-
-  document.getElementById('mesEventos').innerHTML=
-    (eventos.length?filas:(evEditId==='nuevo'?'':`<div class="ds-empty" style="font-size:12px">Sin pendientes en ${esc(mesLabelFull(mesSel))} — toca <b>+</b> para agregar uno.</div>`))
-    + (evEditId==='nuevo'?evEditorHTML(null):'')
-    + (eventos.length?`<div class="ev-resumen">${eventos.length-hechas} pendiente${eventos.length-hechas===1?'':'s'}${hechas?` · ${hechas} hecha${hechas===1?'':'s'}`:''} en ${esc(mesLabelFull(mesSel))}</div>`:'');
-
-  const inp=document.getElementById('evTxt'); if(inp) inp.focus();
-}
 
 // Semana calendario (Domingo→Sábado), misma convención que ejercicio.html → renderDashboard()
 function semanaActual(){const hoy=new Date();const dow=hoy.getDay();return Array.from({length:7},(_,i)=>{const d=new Date(hoy);d.setDate(d.getDate()-dow+i);return d.toISOString().slice(0,10);});}
@@ -6357,9 +6103,32 @@ function alemanPalabraHoy(){
 // se queda sin poder cambiar de pantalla.
 function renderAleman(){ alPinta(); }
 
-// La palabra del día, para el resumen de Mi Día: la misma todo el día y distinta cada día.
-function alemanPalabraHoy(){
-  const V = alVocab(); return V ? V.delDia(diaDelAnio()) : null;
+// El verbo del día para el Perfekt, lo que se ve en clase en el Kapitel 10: uno de los que traen
+// su Partizip II y su auxiliar en vocab-datos.js (`conj` y `aux`), el mismo todo el día.
+function alemanVerboHoy(){
+  const V = alVocab(); if(!V) return null;
+  const vs = V.voc.filter(function(w){ return w.conj && w.aux; });
+  return vs.length ? vs[diaDelAnio() % vs.length] : null;
+}
+
+// ¿haben o sein? La regla de ESE verbo, del bloque «¿haben o sein?» del Partizip (`habenSein` en
+// vocab-datos.js): si el verbo es uno de sus ejemplos, su fila —con los verbos si son pocos, como
+// «los tres sueltos»—; si no, la general de su auxiliar. Sin el bloque no hay regla: mejor
+// ninguna que una inventada.
+function alPerfektRegla(w){
+  const V = alVocab();
+  const s = V && V.partizip && (V.partizip.secciones || []).find(function(x){ return x.id === 'habenSein'; });
+  const filas = (s && s.lista) || [];
+  const verbos = function(f){ return String(f[1]).split(',').map(function(x){ return x.trim(); }); };
+  const suya = filas.find(function(f){ return verbos(f).indexOf(w.de) >= 0; });
+  if(suya) return suya[0].replace(/^(sein|haben) — /, 'Con $1: ') +
+    (verbos(suya).length <= 3 ? ' (' + verbos(suya).join(', ') + ')' : '');
+  if(w.aux === 'ist'){
+    const sein = filas.filter(function(f){ return /^sein — /.test(f[0]); }).slice(0, 2);
+    return sein.length ? 'Con sein: ' + sein.map(function(f){ return f[0].replace(/^sein — /, ''); }).join(' o ') : '';
+  }
+  const haben = filas.find(function(f){ return /^haben — /.test(f[0]); });
+  return haben ? haben[0].replace(/^haben — /, 'Con haben: ') + ', ' + haben[1] : '';
 }
 
 // El tema de Python del día para la tarjeta «Hoy aprendes» de Mi Día: el mismo todo el día y
@@ -6707,7 +6476,6 @@ function renderDia(){
   // con las 2 pantallas fusionadas, la línea de tiempo de abajo queda a la vista en el mismo
   // slide, con la tarjeta "ahora" ya resaltada (.rt2-now) y sus subtareas completas — mostrarlas
   // dos veces solo quitaba espacio vertical sin aportar nada nuevo.
-  renderEventosMes();
   pintarInvertirBtn();
 
   // Línea de tiempo — hoy en tiempo real, o el día elegido en la tira semanal del Hero.
@@ -7581,40 +7349,164 @@ function faseHoyMarca(id, estado){
   renderHeroFase();
 }
 
-// ── 🎓 Hoy aprendes — la palabra de alemán y el tema de Python del día. Alemán salta a su
-//    pantalla con irASlide(); Python abre el tema en la app de Entrevistas por su hash (#id),
-//    porque la pantalla "Entrevista del día" ya no existe en el Dashboard. Llama a las mismas
-//    alemanPalabraHoy()/entrevistaTemaHoy() de siempre: el mismo tema todo el día.
+// ── 🎓 Hoy aprendes — la tercera columna entera de Mi Día: lo que se estudia hoy, en el orden
+//    del plan («carrera con fecha»). El alemán de la clase (la palabra del día y el verbo del día
+//    en Perfekt), el tema de Python, la pregunta del ISTQB CT-GenAI, el paso de la semana y la
+//    ficha de Habilidades Base en curso. Lo de cada día es el mismo todo el día (diaDelAnio()).
+//    Cada tarjeta lleva a su pantalla —Python abre la app de Entrevistas por su hash (#id)— y la
+//    pregunta del ISTQB se contesta aquí mismo.
 function irASlide(cls){
   const sl = document.querySelector('.slide.' + cls);
   if(sl && typeof goTo === 'function') goTo(+sl.dataset.i);
 }
+// La pantalla de Alemán abierta donde vive la tarjeta: la sección de la palabra o el Partizip.
+// Es el mismo salto que el atajo del Kapitel (`alVeKapitel`).
+function hoyAlAleman(sec, sub){
+  if(typeof alVeKapitel === 'function') alVeKapitel(sec, sub || null);
+  irASlide('theme-aleman');
+}
+
+// El alemán de hoy: la palabra —el artículo en el color de su género, como en la app, con su
+// plural, el ejemplo y el fallo típico— y el verbo en Perfekt con su regla de haben o sein. La
+// bandera va en CSS (`.flag-de`): el emoji se pinta como las letras "DE" en Windows.
+function alemanHoyHtml(){
+  const V = (typeof alVocab === 'function') ? alVocab() : null; if(!V) return '';
+  const a = alemanPalabraHoy(), v = alemanVerboHoy();
+  const kap = (window.CIFRAS && CIFRAS.n('kapitelAleman')) || 0;
+  const enClase = (AL_KAPITEL[kap] || []).some(x => x.sec === AL_GRAM);
+  const bandera = '<span class="flag-de" aria-hidden="true"></span>';
+  let h = '';
+  if(a){
+    const art = (a.art || '-').split('/')[0].trim();
+    const col = (typeof VOC_COLOR !== 'undefined' && VOC_COLOR[art]) || 'var(--text3)';
+    const artHtml = art && art !== '-' ? `<span style="color:${col}">${esc(art === 'pl.' ? 'die' : a.art)}</span> ` : '';
+    const pl = a.pl && a.pl !== '-' ? `<span class="ha-m">pl. die ${esc(a.pl)}</span>`
+             : (art === 'pl.' ? '<span class="ha-m">solo plural</span>' : '');
+    h += `<button type="button" class="hp-lec" onclick="hoyAlAleman('${a.cat}'${a.sub ? `,'${a.sub}'` : ''})" title="Abrir su sección en Alemán">
+      <div class="hp-lec-top">${bandera}<span class="hp-lec-tag">Alemán · ${esc((V.cats[a.cat] || {}).label || '')}</span><span class="hp-lec-n">palabra del día</span></div>
+      <div class="hp-lec-t">${artHtml}${esc(a.de)}${pl}</div>
+      <div class="ha-es">${esc(a.es)}</div>
+      ${a.ex ? `<div class="ha-ex">${esc(a.ex)}${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</div>` : ''}
+      ${a.uso ? `<div class="ha-uso"><b>Uso</b> · ${esc(a.uso)}</div>` : ''}
+    </button>`;
+  }
+  if(v){
+    const f = String(v.conj).split('·').map(s => s.trim());
+    const aux = v.aux === 'ist' ? 'ist' : 'hat';
+    const regla = alPerfektRegla(v);
+    h += `<button type="button" class="hp-lec" onclick="hoyAlAleman('${AL_GRAM}')" title="Abrir el Partizip en Alemán">
+      <div class="hp-lec-top">${bandera}<span class="hp-lec-tag">${enClase ? `Perfekt · Kapitel ${kap} en clase` : 'Alemán · Perfekt'}</span><span class="hp-lec-n">verbo del día</span></div>
+      <div class="hp-lec-t">${esc(v.de)} <span class="ha-flecha">→</span> <span class="ha-aux ${aux}">${aux}</span> ${esc(f[f.length - 1])}</div>
+      <div class="ha-es">${esc(v.es)}${f.length >= 3 ? `<span class="ha-m">${esc(f[0])} · ${esc(f[1])}</span>` : ''}</div>
+      ${regla ? `<div class="ha-uso">${esc(regla)}</div>` : ''}
+    </button>`;
+  }
+  return h;
+}
+
+// El tema de Python del día, con su explicación de una línea. A la derecha, lo que lleva
+// estudiado: lo marca la app de Entrevistas en `study-done-v2` ({id: true}).
+function pythonHoyHtml(){
+  const p = (typeof entrevistaTemaHoy === 'function') ? entrevistaTemaHoy() : null;
+  if(!p) return '<div class="hp-empty">El catálogo de Python no cargó — revisa entrevistas-data.js.</div>';
+  const hechos = rawGet('study-done-v2', {}) || {};
+  const n = ENTREVISTA_TEMAS.filter(t => hechos[t.id]).length;
+  return `<button type="button" class="hp-lec" style="--c:var(--cy)" onclick="window.open('../Entrevistas/entrevistas.html#${p.id}','_blank','noopener')" title="Abrir el tema en la app de Entrevistas">
+      <div class="hp-lec-top"><span style="font-size:12px">${p.icon || '🐍'}</span><span class="hp-lec-tag">Python · ${esc(pyModLabel(p.mod))}</span><span class="hp-lec-n">${hechos[p.id] ? '<b class="ha-ok">✓ estudiado</b>' : `${n} de ${ENTREVISTA_TEMAS.length} estudiados`}</span></div>
+      <div class="hp-lec-t">${esc(p.title)}</div>
+      ${p.hint ? `<div class="ha-es ha-2l">${esc(p.hint)}</div>` : ''}
+    </button>`;
+}
+
+// La pregunta del ISTQB CT-GenAI del día: una de los dos bancos del simulacro (los mismos que usa
+// examen-genai.js), la misma todo el día. El salto entre días es coprimo con el tamaño del banco:
+// recorre todas antes de repetir y cada día cae en otro capítulo. En la columna va un avance de
+// dos líneas; se contesta en su panel (#istqbOverlay), una vez —la primera respuesta es la que
+// cuenta, como en el examen—, y se guarda por fecha en `dash-aprende-v1`.
+const APRENDE_KEY = 'dash-aprende-v1';
+function istqbBanco(){
+  const A = window.EXAMEN_GENAI, B = window.EXAMEN_GENAI_B;
+  return ((A && A.banco) || []).concat((B && B.banco) || []);
+}
+function istqbPreguntaHoy(){
+  const b = istqbBanco(); if(!b.length) return null;
+  const mcd = (x, y) => y ? mcd(y, x % y) : x;
+  let salto = 37; while(mcd(salto, b.length) !== 1) salto++;
+  return b[(diaDelAnio() * salto) % b.length];
+}
+function istqbRespuestas(){ return (rawGet(APRENDE_KEY, {}) || {}).istqb || {}; }
+function istqbHoy(q){ const r = istqbRespuestas()[hoyLocal()]; return r && r.id === q.id ? r : null; }
+function istqbResponder(i){
+  const q = istqbPreguntaHoy(); if(!q || istqbHoy(q)) return;
+  const st = rawGet(APRENDE_KEY, {}) || {};
+  const r = st.istqb = st.istqb || {};
+  r[hoyLocal()] = { id: q.id, e: i, ok: i === q.r };
+  // Lo que pide la racha y poco más: los últimos 120 días.
+  Object.keys(r).sort().slice(0, -120).forEach(x => delete r[x]);
+  rawSet(APRENDE_KEY, st);
+  istqbPintar();
+  renderHeroAprender();
+}
+// Cómo vas, en una línea: lo contestado en los últimos 7 días y el último simulacro completo.
+function istqbMarcador(){
+  const r = istqbRespuestas(); let n = 0, ok = 0;
+  for(let i = 0; i < 7; i++){
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    if(r[k]){ n++; if(r[k].ok) ok++; }
+  }
+  const X = window.EXAMEN_GENAI || {}, corte = (X.meta && X.meta.corte) || 0;
+  const u = ((rawGet('examen_genai_v1', {}) || {}).intentos || []).slice(-1)[0];
+  return [n ? `7 días: <b>${ok} de ${n}</b>` : '',
+          u ? `simulacro <b class="${u.pts >= corte ? 'ok' : 'bajo'}" title="El corte es ${corte} de ${u.max}">${u.pts}/${u.max}</b>` : '']
+    .filter(Boolean).join(' · ');
+}
+// En la columna: la pregunta en dos líneas y, arriba a la derecha, si ya la contestaste. Tocarla
+// abre el panel, que lleva además el marcador de la semana.
+function istqbHtml(){
+  const q = istqbPreguntaHoy(); if(!q) return '';
+  const hecha = istqbHoy(q);
+  const estado = !hecha ? '<b class="ha-q-ir">Responder →</b>'
+    : hecha.ok ? '<b class="ha-ok">✓ correcta</b>' : `<b class="ha-mal">✗ era la ${'ABCD'[q.r]}</b>`;
+  return `<button type="button" class="hp-lec" style="--c:var(--p)" onclick="abrirIstqb()" title="Contestar la pregunta del día">
+      <div class="hp-lec-top"><span style="font-size:12px">🧪</span><span class="hp-lec-tag">ISTQB CT-GenAI · Cap. ${q.cap} · ${esc(q.k)}</span><span class="hp-lec-n">${estado}</span></div>
+      <div class="ha-q-t ha-2l">${q.q}</div>
+    </button>`;
+}
+// El panel: la pregunta y sus cuatro opciones. Contestada, la buena en verde y la tuya en rojo si
+// fallaste, con el porqué del programa y la sección del syllabus donde se comprueba.
+function istqbPintar(){
+  const q = istqbPreguntaHoy(), b = document.getElementById('istqbBody'); if(!q || !b) return;
+  const X = window.EXAMEN_GENAI || {}, hecha = istqbHoy(q), LET = 'ABCD';
+  document.getElementById('istqbSub').textContent =
+    `Capítulo ${q.cap} · ${(X.capitulos || {})[q.cap] || ''} · ${q.k} · ${q.pts} ${q.pts === 1 ? 'punto' : 'puntos'}`;
+  const ops = q.o.map((o, i) => {
+    const cls = !hecha ? '' : i === q.r ? ' ok' : i === hecha.e ? ' mal' : ' apagada';
+    return `<button type="button" class="ha-op${cls}"${hecha ? ' disabled' : ` onclick="istqbResponder(${i})"`}><b>${LET[i]}</b><span>${o}</span></button>`;
+  }).join('');
+  b.innerHTML = `<div class="ha-q-t">${q.q}</div>
+    <div class="ha-ops">${ops}</div>
+    ${hecha ? `<div class="ha-res ${hecha.ok ? 'ok' : 'mal'}">${hecha.ok ? '✓ Correcta' : '✗ Era la ' + LET[q.r]}<span>syllabus ${esc(q.ref)}</span></div>
+    <div class="ha-why">${q.why}</div>` : ''}
+    <div class="ha-pie"><span>${istqbMarcador()}</span><a href="javascript:void(0)" class="hp-link" onclick="istqbAlSimulacro()">Simulacro completo →</a></div>`;
+}
+// Mientras está abierto, Mi Día no rota: la rotación vuelve al cerrarlo.
+function abrirIstqb(){
+  const ov = document.getElementById('istqbOverlay'); if(!ov || !istqbPreguntaHoy()) return;
+  istqbPintar(); ov.classList.add('open'); clearInterval(timer);
+}
+function cerrarIstqb(){
+  const ov = document.getElementById('istqbOverlay');
+  if(ov && ov.classList.contains('open')){ ov.classList.remove('open'); restartTimer(); }
+}
+function istqbAlSimulacro(){
+  document.getElementById('istqbOverlay')?.classList.remove('open');
+  if(typeof abrirExamenGenAI === 'function') abrirExamenGenAI();
+}
 
 function renderHeroAprender(){
-  const el=document.getElementById('heroAprenderPanel'); if(!el) return;
-  // Antes era la lección del día; desde que la pantalla es de vocabulario, la palabra.
-  const a=(typeof alemanPalabraHoy==='function')?alemanPalabraHoy():null;
-  const p=(typeof entrevistaTemaHoy==='function')?entrevistaTemaHoy():null;
-  const nPy=(typeof ENTREVISTA_TEMAS!=='undefined')?ENTREVISTA_TEMAS.length:0;
-  const bloque=(cfg)=>{
-    const abre=cfg.href?`window.open('${cfg.href}','_blank','noopener')`:`irASlide('${cfg.slide}')`;
-    return `
-    <button type="button" class="hp-lec" onclick="${abre}"
-            title="${cfg.href?'Abrir el tema en la app de Entrevistas':'Abrir la sección'}" style="background:${cfg.c}12;border:1px solid ${cfg.c}2e">
-      <div class="hp-lec-top">
-        <span style="font-size:12px">${cfg.ico}</span>
-        <span class="hp-lec-tag" style="color:${cfg.c}">${esc(cfg.tag)}</span>
-        <span class="hp-lec-n">${cfg.n}</span>
-      </div>
-      <div class="hp-lec-t">${esc(cfg.t)}</div>
-      <div class="hp-lec-d">${esc(cfg.d)}</div>
-    </button>`;
-  };
-  el.innerHTML=`
-    <div class="hp-title"><span>🎓 Hoy aprendes</span></div>
-    ${a?bloque({c:'#00e87a',ico:'🇩🇪',slide:'theme-aleman',tag:'Alemán · '+((ALEMAN_VOCAB.cats[a.cat]||{}).label||''),n:'palabra del día',t:(a.art&&a.art!=='-'?a.art+' ':'')+a.de,d:a.es+' — '+a.ex}):''}
-    ${p?bloque({c:'#00e0c0',ico:p.icon||'🐍',href:'../Entrevistas/entrevistas.html#'+p.id,tag:'Python · '+pyModLabel(p.mod),n:(entrevistaIdx+1)+' / '+nPy,t:p.title,d:p.hint||''})
-       :'<div class="hp-empty">El catálogo de Python no cargó — revisa entrevistas-data.js.</div>'}${pasoSemanaHtml()}${fichaEnCursoHtml()}`;
+  const el = document.getElementById('heroAprenderPanel'); if(!el) return;
+  el.innerHTML = `<div class="hp-title"><span>🎓 Hoy aprendes</span></div>${alemanHoyHtml()}${pythonHoyHtml()}${istqbHtml()}${pasoSemanaHtml()}${fichaEnCursoHtml()}`;
 }
 
 function renderHeroGymPanel(){
@@ -9598,7 +9490,6 @@ function calEngancharTip(){
 
 function renderCalendario(){
   const hoy=calHoy();
-  const eventos=rawGet(EVENTOS_KEY,{})||{};
   const checks=rawGet('coach_checks_v1',{})||{};
   const esAnioVivo=calAnio===hoy.getFullYear(), esPasado=calAnio<hoy.getFullYear();
   document.getElementById('calYear').textContent=calAnio;
@@ -9727,8 +9618,7 @@ function renderCalendario(){
     // El pie dice lo único que importa del mes: cuánto trabajo tuyo sigue abierto y
     // cuánto falta para su próximo hito.
     const abiertas=fi>=0?(PHASES[fi].semanas||[]).filter(s=>s.mes===key&&!checks[s.id]).length:0;
-    const pends=(eventos[key]||[]).filter(e=>!e.done).length;
-    const sinCerrar=abiertas+pends;
+    const sinCerrar=abiertas;
     const delMes=deadlines.filter(x=>x.f.getMonth()===m&&calDias(x.f)>=0).map(x=>calDias(x.f)).sort((a,b)=>a-b);
     const u=delMes.length?calUrgencia(delMes[0]):null;
     const quema=esPasado?100:!esAnioVivo?0:idoMes?100:ahora?Math.round(hoy.getDate()/dias*100):0;
@@ -9858,16 +9748,6 @@ function renderCalendario(){
          '<div class="cal-vacio">Este mes no arranca nada nuevo — sostienes lo de la '+f.tag+'.</div>';
     }
   }
-
-  // Los pendientes que él mismo capturó en "Importante este mes".
-  const evs=eventos[key]||[];
-  const evAbiertos=evs.filter(e=>!e.done);
-  h+='<div class="cal-sec">Tus pendientes · '+evAbiertos.length+'</div>';
-  h+=evs.length
-    ? evs.map(e=>'<div class="cal-item'+(e.done?' done':'')+'">'+
-        '<span class="cal-item-ico" style="text-align:center;line-height:13px">'+(e.done?'':(e.ico||'·'))+'</span>'+
-        '<div>'+esc(e.txt)+'</div></div>').join('')
-    : '<div class="cal-vacio">Sin pendientes capturados. Se agregan desde “Importante este mes”, en Mi Día.</div>';
 
   // Los cobros fijos del mes, para que el calendario también sirva para el dinero.
   const cf=calCobrosDelMes();
@@ -13224,6 +13104,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&document.getElementById('didiOverlay').classList.contains('open')){ cerrarDidi(); return; }
   if(e.key==='Escape'&&document.getElementById('calOverlay').classList.contains('open')){ cerrarCalendario(); return; }
   if(e.key==='Escape'&&document.getElementById('gbmOverlay').classList.contains('open')){ cerrarGBM(); return; }
+  if(e.key==='Escape'&&document.getElementById('istqbOverlay').classList.contains('open')){ cerrarIstqb(); return; }
   if(e.key==='ArrowRight') nextSlide();
   if(e.key==='ArrowLeft') prevSlide();
   if(e.key===' '){e.preventDefault();togglePlay();}

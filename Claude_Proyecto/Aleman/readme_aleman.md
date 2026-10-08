@@ -51,6 +51,12 @@ y los tres los carga también la pantalla de Alemán del Dashboard:
 la barra de género de 4px a 12px en `vocab.css`, sin tocar ningún HTML, la sube en las dos.
 Los controles 19 y 20 de `../Dashboard/verificar-sincronia.js` vigilan que siga siendo así.
 
+**Mi Día también lee `vocab-datos.js`.** La tarjeta *Hoy aprendes* del Dashboard toma la palabra del día
+(`delDia`), el verbo del día entre los que traen `conj` y `aux`, y su regla de haben o sein del bloque
+`habenSein` del Partizip: cada fila es `'sein — …'` o `'haben — …'` seguida de sus verbos de ejemplo
+separados por comas. Si ese bloque cambia de forma, la regla deja de salir —no se inventa— y hay que
+revisar `alPerfektRegla()` en el Dashboard.
+
 ### Subsecciones y qué lleva cada palabra
 
 Las 37 secciones se reparten en **188 subsecciones** — Comida tiene *Frutas y verduras*,

@@ -55,6 +55,7 @@ deja en el objeto `D`:
 | `mirutina_v1` | `ejercicio.html` | `gym` | Rutina y sesiones del gimnasio |
 | `radarp_<id>` | `Coach.html` | `SK[].val` | Nivel de cada una de las 12 habilidades |
 | `coach_checks_v1` | `Coach.html` | *(con `rawGet`)* | Checklist de la fase |
+| `study-done-v2` | `entrevistas.html` | *(con `rawGet`)* | Los temas de Python ya estudiados, para *Hoy aprendes* |
 
 Todas comparten origen porque se abren con `file://`.
 
@@ -64,7 +65,7 @@ Todas comparten origen porque se abren con `file://`.
 `rawGet`/`rawSet`, que preservan el resto del objeto. Si Coach cambia la
 forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
-**Claves propias** del Dashboard: `dash-eventos-mes-v1` (pendientes del mes), `dash-lista-compras`
+**Claves propias** del Dashboard: `dash-aprende-v1` (la pregunta del ISTQB de cada día), `dash-lista-compras`
 y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `dash-rail-abierto`,
 `habilidades_checklist_v1`, `examen_genai_v1`, `dash-inversion-v1` (pestaña, perfil elegido y monto de *Qué
 invertir hoy*), y las `al_*_v1` de Alemán.
@@ -79,7 +80,7 @@ navega con las flechas, el rail, el menú ☰ o deslizando en táctil. `irASlide
 
 | Tema | Pantalla | Qué muestra | Prompt |
 |---|---|---|---|
-| `theme-dia` | **Mi Día** | La principal. Agenda del día, el AHORA y seis módulos | `midia` |
+| `theme-dia` | **Mi Día** | La principal. Agenda del día, el AHORA y cinco módulos | `midia` |
 | `theme-coach` | **Plan Maestro** | Fase activa, ruta de deuda y el tablero mes / día / semana | `planmaestro` |
 | `theme-metas` | **Mis Metas** | 8 KPIs financieros, franja de instrumentos y 17 metas con estado | `metas` |
 | `theme-basicas` | **Habilidades Base** | 27 fichas de vida práctica con sus videos. **Única fuente**: la sección equivalente de Coach se eliminó | `basicas` |
@@ -165,24 +166,39 @@ celular va en una columna y sin tope. Medido con la rutina de la mañana (11 pro
 ejercicios): caben a 1920×1080, 1707×960, 1600×1000, 1536×864 y 1440×900; a 1366×768 todavía
 desplaza 15–29 px.
 
-### Los seis módulos
+### Los cinco módulos
 
 Rejilla 3×2 que toma lo que queda de alto (325×308 px cada uno a 1600×1000); cada módulo desplaza
-por dentro.
+por dentro. **Hoy aprendes ocupa la tercera columna entera** (`grid-row: span 2`).
 
 | Módulo | Qué muestra | Fuente |
 |---|---|---|
 | **Hábitos de hoy** | Los que tocan hoy con ancla, racha (🔥 desde 3) y `2 de 5`; se marcan aquí mismo. **Caben todos sin desplazar**: letra chica (11.5 px el nombre, 9.5 px el ancla) con el ancla debajo y, si la lista no cabe así, `.compacto` pone el ancla en la misma línea, cortada con `…` y completa en el `title`. `renderDiaHabitos()` lo decide midiendo la lista, también al cambiar el tamaño de la ventana. Medido con 9 hábitos: a 1920×1080 en dos líneas; a 1600×1000, 1536×864 y 1440×900 en una (20 px por fila); a 1366×768 todavía queda uno abajo | `HB.hoy()` / `HB.toggleHoy()`, la API que expone `habitos.js` — el mismo toggle de la cuadrícula |
 | **Entrenas** | El día que se mira —hoy, o el que tocaste en la tira— en grande (si no es hoy, su nombre en verde arriba), **sus ejercicios** con series×reps y peso, en una línea los tres días que siguen y la tira de 7 días como chips de foto (`#heroWeekStrip`, 52 px). El peso es el último que registró Ejercicio (naranja; mismo criterio que su `ejUltimo()`) o el inicial de `EJ_PESO_INI` (gris), solo en kg; un ejercicio con todas sus series hechas ese día va en verde, y tocar su nombre abre **su ficha** (ver *La ficha de un ejercicio*, abajo). *Ejercicio →* (`#diaEntrenaLink`) abre el día elegido con `?dia=N`. `.dia-entrena` es `display:contents`: la lista es lo único que cede alto y, si ni así cabe (bajo 1280 px de ancho), desplaza la tarjeta | `renderDiaEntrena()` sobre `D.gym.rutina` o `GYM_RUTINA_DEFAULT`; el ✅ sale de `gymSesiones()`, que normaliza `mirutina_v1.sesiones` (objeto por fecha desde el 1-sep-2026, lista antes) |
-| **Hoy aprendes** | La palabra de alemán (salta a su pantalla con `irASlide`) y el tema de Python del día, que abre en la app de Entrevistas por su hash (`entrevistas.html#<id>`) porque el Dashboard ya no tiene pantalla de entrevista; **el paso de la semana** con la portada de su libro y **la ficha de Habilidades Base en curso** con el paso al que se retoma | `alemanPalabraHoy()` / `entrevistaTemaHoy()` (uno de los 41 de `ENTREVISTA_TEMAS`, por `diaDelAnio()`), con la etiqueta de módulo de `pyModLabel()` —`PY_MOD_LABEL` lo emite el generador leyendo el menú de `entrevistas.html`, y cae al id en mayúsculas si el archivo es anterior—; `pasoSemanaHtml()` con `habFocoActual()`/`habLibro()`, `fichaEnCursoHtml()` con `hbAvance()` |
+| **Hoy aprendes** | Lo que se estudia hoy, de arriba abajo por el orden del plan. **La palabra de alemán** con el artículo en el color de su género (el `VOC_COLOR` de la app), el plural, el ejemplo con su traducción y el `uso` si lo trae: abre su sección en Alemán. **El verbo del día en Perfekt** (*brauchen → hat gebraucht*), lo que se ve en clase en el Kapitel 10, con su regla de haben o sein: abre el Partizip. **El tema de Python** con su explicación y cuántos llevas estudiados (*✓ estudiado* si es el de hoy), que abre en la app de Entrevistas por su hash (`entrevistas.html#<id>`). **La pregunta del ISTQB CT-GenAI** en dos líneas, que se contesta en su panel (abajo). **El paso de la semana** con la portada de su libro y **la ficha de Habilidades Base en curso** con el paso al que se retoma. La bandera es CSS (`.flag-de`): el emoji 🇩🇪 sale como «DE» en Windows. Medido: a 1600×1000 mide 325×572 y cabe entero; a 1920×1080, 421×665 y cabe; a 1440×900 desplaza 122 px por dentro | `alemanHoyHtml()` con `alemanPalabraHoy()`, `alemanVerboHoy()` (los verbos que traen `conj` y `aux`) y `alPerfektRegla()` (el bloque `habenSein` del Partizip); `pythonHoyHtml()` con `entrevistaTemaHoy()` (uno de los 41 de `ENTREVISTA_TEMAS`), `pyModLabel()` y `study-done-v2`; `istqbHtml()`; `pasoSemanaHtml()` con `habFocoActual()`/`habLibro()` y `fichaEnCursoHtml()` con `hbAvance()`. Lo de cada día sale de `diaDelAnio()` |
 | **Tu dinero** | Fondo de emergencia, deudas, **los cobros y abonos de los próximos 7 días** y *Invertir hoy · Primero tu fondo →* | `renderHeroDinero()` + `cobrosHtml()` sobre `ctAgenda()` → `CIFRAS.agendaDia`, la misma fuente que el tablero |
 | **Fase** | Responde qué toca de la fase, cuánto va a la BBVA y a GBM, y qué sigue. La fase activa con su barra (*día 3 de 182 · quedan 179*). **Este mes**: las tareas del mes, pendientes primero, con casilla —se marcan aquí mismo— y *en 8 días* cuando el texto trae su día dentro del mes (*"cierra el 31 mar"* en una tarea de enero es un plazo, no el día de hacerla); el texto completo, al pasar el ratón; si el mes no trae tareas, las de toda la fase. **El dinero de Alemania**: el próximo lunes de Didi (`didiAlAhorro` × 12/52) —a la BBVA, para el mínimo de su día de pago o a GBM, según `planBbva`—, el próximo envío del calendario —a la BBVA o a GBM, hasta el último mes en México—, el día que la BBVA queda en cero con lo que cuesta en intereses y la cifra que decide la fase: sus cortes de junio y la salida con lo que falta, o en la Fase 1 `marzoParaSalida` contra `alemaniaMarzo`, con el ingreso nuevo que pide (`extraSalida`). **Lo que sigue**: la primera pendiente de un mes que viene o, sin ella, el hito más cercano. **Después · Fase N** solo en el último mes de la fase | `renderHeroFase()` sobre `PHASES`, `ctAgenda()`, los `cortes` de `PROYECCION` y `CALENDARIO.hitos`; la casilla llama a `faseHoyMarca()`, que guarda con `toggleFaseCheck` en la semana de hoy; `faseDespuesHtml()` |
-| **Importante este mes** | Los pendientes del mes con pestañas, «+ Nuevo», editar y borrar | `dash-eventos-mes-v1` |
 
 **Tamaños.** Bajo 940 px de alto el AHORA baja a 30 vh (34 si va `.apretado`); bajo 1280 px de ancho la agenda mide
-360 px y los módulos van 2×3; en el celular todo va a una columna (módulos en dos columnas, una
+360 px y los módulos van 2×3 (Hoy aprendes, en la primera columna de la segunda y la tercera fila); en el celular todo va a una columna (módulos en dos columnas, una
 bajo 600 px). **Al medir Mi Día, la hora importa**: el alto cambia con el bloque actual y los que
 quedan, así que dos medidas a horas distintas no son comparables.
+
+### La pregunta del ISTQB del día
+
+Una de las 156 preguntas de los dos bancos del simulacro (`EXAMEN_GENAI` y `EXAMEN_GENAI_B`, los mismos
+de Mis Metas), la misma todo el día: `istqbPreguntaHoy()` avanza por el banco con un salto coprimo con
+su tamaño, así que recorre todas antes de repetir y cada día cae en otro capítulo. En la columna va la
+pregunta en dos líneas y, arriba a la derecha, *Responder →* o el resultado. Tocarla abre
+`#istqbOverlay` (`abrirIstqb()`): enunciado y cuatro opciones; al contestar, la buena en verde, la
+tuya en rojo si fallaste, el porqué del programa y la sección del syllabus. **Se contesta una vez**: la
+primera respuesta es la que cuenta, como en el examen. Abajo, lo contestado en los últimos 7 días y el
+último simulacro de `examen_genai_v1`, en ámbar si quedó bajo el corte; *Simulacro completo →*
+(`istqbAlSimulacro()`) abre el examen entero. Mientras el panel está abierto Mi Día no rota; se cierra
+con ✕, clic fuera o Escape.
+
+Las respuestas viven en `dash-aprende-v1` como `{istqb: {fecha: {id, e, ok}}}`, con la fecha local
+(`hoyLocal()`), y se quedan los últimos 120 días.
 
 ### La ficha de un ejercicio
 
@@ -217,23 +233,6 @@ gana el más largo. Segundo intento por aproximación con `pfPorNombre()` (norma
 prefijo: "Omega 3" contra "Omega 3 (aceite de pescado)") sobre lo de antes del guion largo, lo de
 después de los dos puntos y el primer `<b>`. Se muestra el nombre del maestro. Las subtareas que
 no nombran un producto se quedan como están.
-
-### Añadir un pendiente desde el código
-
-Como Adán crea y borra pendientes, **manda `localStorage`** (`dash-eventos-mes-v1`) y `EVENTOS_MES`
-solo siembra la primera vez: una línea nueva en `EVENTOS_MES` no llega a un navegador que ya tiene
-la clave, y bumpear la bandera le borraría lo suyo.
-
-`EVENTOS_NUEVOS` + `eventosSembrarNuevos()`: **cada lote lleva su bandera y corre una sola vez**,
-comparando además **por texto** para no duplicar. Un pendiente sembrado así y borrado por Adán no
-vuelve. Los items nuevos van en los DOS sitios (`EVENTOS_MES` para el navegador que arranca de
-cero, `EVENTOS_NUEVOS` para el que ya tiene datos). Para otro lote: una entrada más con bandera
-nueva. Último lote: `_oct20261001` (pagar la BBVA completa antes del 11 y cerrar la Fase 0 por escrito).
-
-`EVENTOS_CORRIGE` + `eventosCorregir()` arreglan un texto que el tiempo dejó mal —el aviso de la
-Fase 1 decía que el mínimo de Banamex no estaba libre, y el que anunciaba la Fase 1 con los MSI
-cuando las fases se redefinieron (`_fasesNuevas20261003`)—: corre una vez por bandera y **solo si el
-pendiente sigue tal cual lo sembró el código**; si Adán lo editó, manda lo suyo.
 
 ---
 
