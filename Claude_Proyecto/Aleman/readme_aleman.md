@@ -52,10 +52,8 @@ la barra de género de 4px a 12px en `vocab.css`, sin tocar ningún HTML, la sub
 Los controles 19 y 20 de `../Dashboard/verificar-sincronia.js` vigilan que siga siendo así.
 
 **Mi Día también lee `vocab-datos.js`.** La tarjeta *Hoy aprendes* del Dashboard toma la palabra del día
-—cada palabra una vez por vuelta, con la rotación del Dashboard—, el verbo del día entre los que traen `conj` y `aux`, y, cuando va con sein, su regla del bloque
-`habenSein` del Partizip: cada fila es `'sein — …'` o `'haben — …'` seguida de sus verbos de ejemplo
-separados por comas. Si ese bloque cambia de forma, la regla deja de salir —no se inventa— y hay que
-revisar `alPerfektRegla()` en el Dashboard.
+—cada palabra una vez por vuelta, con la rotación del Dashboard— y, si es un verbo, su Perfekt con
+`aux` y la última forma de `conj` (*ist zurückgekommen*).
 
 ### Subsecciones y qué lleva cada palabra
 

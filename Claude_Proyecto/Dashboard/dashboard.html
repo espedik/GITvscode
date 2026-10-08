@@ -3037,18 +3037,23 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .ap-abrir>span{display:block}
 .ap-abrir>.ap-2l{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .ap-abrir:hover .ap-de,.ap-abrir:hover .ap-t,.ap-abrir:hover .ap-q{color:var(--c)}
+.ap-cuerpo{display:flex;flex-direction:column;gap:3px;padding-top:2px}
+.ap-cuerpo>span{display:block}
+.ap-cuerpo>.ap-1l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ap-oir{color:inherit;text-decoration:none}
+.ap-oir span{color:var(--c);font-size:.85em}
+.ap-oir:hover{color:var(--c)}
+.ap-nota .ap-oir{color:var(--text2);font-weight:600}
+.ap-hora{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--c)}
 .ap-de{font-family:var(--font-title);font-size:20px;font-weight:600;line-height:1.2;letter-spacing:-.01em;color:var(--text)}
 .ap-t{font-size:14.5px;font-weight:700;line-height:1.3;color:var(--text)}
 .ap-q{font-size:12.5px;font-weight:600;line-height:1.42;color:var(--text)}
 .ap-es{font-size:12.5px;line-height:1.38;color:var(--text2)}
 .ap-m{font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:7px;white-space:nowrap}
-.ap-chip{display:inline-block;margin-left:5px;padding:0 6px;border-radius:5px;border:1px solid rgba(var(--ov),.14);
-  font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.05em;color:var(--w);white-space:nowrap;vertical-align:1px}
 .ap-ex{font-size:12px;font-style:italic;line-height:1.45;color:var(--text)}
 .ap-ex span{font-style:normal;color:var(--text3)}
 .ap-nota{font-size:11px;line-height:1.4;color:var(--text3)}
 .ap-nota b{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text2)}
-.ap-flecha{font-weight:400;color:var(--text3)}
 .ap-aux.hat{color:var(--b)}
 .ap-aux.ist{color:var(--o)}
 /* Tu avance: lo que avanza contigo y no con el calendario. Ocupa todo el alto que le queda a la
@@ -3057,10 +3062,10 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
    detalle, con tantas líneas como quepan (`apAjustarAvance()`). */
 .ap-avance{flex:1 0 auto;display:flex;flex-direction:column;padding-top:10px}
 .ap-lbl{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
-.ap-av{flex:1 1 0;min-height:58px;display:flex;align-items:stretch;gap:12px;width:100%;padding:9px 0;border:0;
+.ap-av{flex:1 1 0;min-height:50px;display:flex;align-items:stretch;gap:12px;width:100%;padding:9px 0;border:0;
   background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
 .ap-av+.ap-av{border-top:1px solid rgba(var(--ov),.09)}
-.ap-av-img{flex:none;align-self:stretch;width:auto;height:auto;aspect-ratio:2/3;min-width:44px;max-width:38%;min-height:52px;
+.ap-av-img{flex:none;align-self:stretch;width:auto;height:auto;aspect-ratio:2/3;min-width:40px;max-width:38%;min-height:44px;
   border-radius:8px;object-fit:cover;background:color-mix(in srgb,var(--c) 14%,transparent);box-shadow:0 4px 12px rgba(0,0,0,.2)}
 .ap-av-img.libro{object-position:top}
 .ap-av-ico{display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:none}
@@ -6150,35 +6155,6 @@ function alemanPalabraHoy(){
 // se queda sin poder cambiar de pantalla.
 function renderAleman(){ alPinta(); }
 
-// El verbo del día para el Perfekt, lo que se ve en clase en el Kapitel 10: uno de los que traen
-// su Partizip II y su auxiliar en vocab-datos.js (`conj` y `aux`).
-function alemanVerbos(){
-  return alemanPalabras().filter(function(w){ return w.conj && w.aux; });
-}
-function alemanVerboHoy(){
-  const vs = alemanVerbos(); return vs.length ? vs[aprendeIndice('verbo', vs.length)] : null;
-}
-
-// ¿haben o sein? La regla de ESE verbo, del bloque «¿haben o sein?» del Partizip (`habenSein` en
-// vocab-datos.js): si el verbo es uno de sus ejemplos, su fila —con los verbos si son pocos, como
-// «los tres sueltos»—; si no, la general de su auxiliar. Sin el bloque no hay regla: mejor
-// ninguna que una inventada.
-function alPerfektRegla(w){
-  const V = alVocab();
-  const s = V && V.partizip && (V.partizip.secciones || []).find(function(x){ return x.id === 'habenSein'; });
-  const filas = (s && s.lista) || [];
-  const verbos = function(f){ return String(f[1]).split(',').map(function(x){ return x.trim(); }); };
-  const suya = filas.find(function(f){ return verbos(f).indexOf(w.de) >= 0; });
-  if(suya) return suya[0].replace(/^(sein|haben) — /, 'Con $1: ') +
-    (verbos(suya).length <= 3 ? ' (' + verbos(suya).join(', ') + ')' : '');
-  if(w.aux === 'ist'){
-    const sein = filas.filter(function(f){ return /^sein — /.test(f[0]); }).slice(0, 2);
-    return sein.length ? 'Con sein: ' + sein.map(function(f){ return f[0].replace(/^sein — /, ''); }).join(' o ') : '';
-  }
-  const haben = filas.find(function(f){ return /^haben — /.test(f[0]); });
-  return haben ? haben[0].replace(/^haben — /, 'Con haben: ') + ', ' + haben[1] : '';
-}
-
 // El tema de Python del día: el de la rotación, saltando los que ya marcaste como estudiados en
 // Entrevistas (`study-done-v2`). Se fija al primer vistazo del día, así que si lo estudias hoy se
 // queda con su ✓ en vez de saltar al siguiente.
@@ -7012,15 +6988,16 @@ function pintarAgendaDia(tareas, anchor, done, esHoy){
   const act=el.querySelector('.ag-row.ahora, .ag-row.sel');
   if(act&&act.scrollIntoView) act.scrollIntoView({block:'nearest'});
 }
-// Mientras manejas: el primer audiolibro del grupo de la habilidad que más rinde (DIDI_AUDIO ya
-// va en ese orden), solo cuando el bloque abierto es de Didi. El catálogo entero está en el
-// overlay de "Qué escuchar".
+// Mientras manejas: lo mismo que «Al volante» en Hoy aprendes (`didiHoy()`). Entre semana, el
+// audiolibro en el primer bloque de Didi y el podcast del día en los demás; el fin de semana, el
+// audiolibro. Solo cuando el bloque abierto es de Didi; el catálogo entero está en «Qué escuchar».
+// Un bloque de Didi es el que EMPIEZA por «Didi» (🚗 Didi…): «descanso antes del segundo bloque de
+// Didi» también la nombra y no es manejar.
+function esDidi(t){ return /^[^a-z0-9]*didi\b/i.test(rtSoloTitulo((t && t.txt) || '')); }
 function escucharHtml(t){
-  if(!/didi/i.test(rtSoloTitulo(t.txt||''))||typeof DIDI_AUDIO==='undefined'||!DIDI_AUDIO.length) return '';
-  // El foco de la semana, el mismo que encabeza el panel de Qué escuchar.
-  const rec=(typeof habFocoActual==='function')?habFocoActual():null;
-  const grupo=(rec&&DIDI_AUDIO.find(g=>g.sk===rec.id))||DIDI_AUDIO[0];
-  const it=(grupo.items||[])[0]; if(!it) return '';
+  if(!esDidi(t)) return '';
+  const d=(typeof didiHoy==='function')?didiHoy():null; if(!d||!d.libro) return '';
+  const it=(!d.finde&&d.pod&&d.horas.length&&t.hora!==d.horas[0])?d.pod.it:d.libro.it;
   return `<div class="blq-escuchar">🎧<span>Mientras manejas: <b>${esc(it.n)}</b> · ${esc(it.d)}</span><a href="javascript:void(0)" class="hp-link" onclick="abrirDidi()">Qué escuchar →</a></div>`;
 }
 // `mirutina_v1.sesiones` cambió de forma el 2026-09-01, cuando Ejercicio pasó a registrar series:
@@ -7453,7 +7430,7 @@ function hoyAlAleman(sec, sub){
 //    año, de 1 516 palabras solo salían las primeras 366, y en el mismo orden cada año. A
 //    medianoche `tickClock()` repinta Mi Día aunque el Dashboard siga abierto.
 const APRENDE_KEY = 'dash-aprende-v1';
-const APRENDE_SALTO = { de: 97, verbo: 13, py: 7, istqb: 37 };
+const APRENDE_SALTO = { de: 97, libro: 1, pod: 1, py: 7, istqb: 37 };
 function diaCorrido(d){
   d = d || new Date();
   return Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - new Date(2024, 0, 1)) / 864e5);
@@ -7477,12 +7454,12 @@ function aprendeIndice(slot, n){
   const h = aprendeHoy().h;
   return (h[slot] != null && h[slot] < n) ? h[slot] : aprendeRotacion(slot, n, diaCorrido());
 }
-// ↻ — otro distinto del que ves, al azar; en Python y en el ISTQB, uno que no hayas hecho. Se queda
+// ↻ — otro distinto del que ves, al azar (en «Al volante», otro audiolibro); en Python y en el ISTQB, uno que no hayas hecho. Se queda
 // hasta mañana.
 function aprendeOtra(slot){
   let n = 0, actual = null, libre = () => true;
   if(slot === 'de') n = alemanPalabras().length;
-  else if(slot === 'verbo') n = alemanVerbos().length;
+  else if(slot === 'escuchar'){ const d = didiHoy(); if(!d || !d.libro) return; n = d.libros.length; actual = d.libros.indexOf(d.libro); }
   else if(slot === 'py'){
     const p = entrevistaTemaHoy(); if(!p) return;
     const hechos = rawGet('study-done-v2', {}) || {};
@@ -7503,13 +7480,17 @@ function aprendeOtra(slot){
   renderHeroAprender();
   if(slot === 'istqb' && document.getElementById('istqbOverlay')?.classList.contains('open')) istqbPintar();
 }
-// Tocar un renglón lo abre donde se estudia. La palabra y el verbo cuentan como hechos al abrirlos;
+// Lo hecho hoy: la palabra cuenta al abrirla y «Al volante» al tocar lo que vas a escuchar;
 // Python, al marcarlo estudiado en Entrevistas, y el ISTQB, al contestarlo.
-function aprendeAbrir(slot){
+function aprendeVisto(slot){
   const { st, h } = aprendeHoy();
-  h.vistos = h.vistos || {}; h.vistos[slot] = 1; aprendeGuarda(st, h);
+  h.vistos = h.vistos || {};
+  if(!h.vistos[slot]){ h.vistos[slot] = 1; aprendeGuarda(st, h); }
+}
+// Tocar un renglón lo abre donde se estudia.
+function aprendeAbrir(slot){
+  aprendeVisto(slot);
   if(slot === 'de'){ const a = alemanPalabraHoy(); if(a) hoyAlAleman(a.cat, a.sub); }
-  else if(slot === 'verbo') hoyAlAleman(AL_GRAM);
   else if(slot === 'py'){ const p = entrevistaTemaHoy(); if(p) window.open('../Entrevistas/entrevistas.html#' + p.id, '_blank', 'noopener'); }
 }
 
@@ -7525,49 +7506,75 @@ function apFila(o){
     </div>`;
 }
 
-// El alemán de hoy: la palabra —el artículo en el color de su género, como en la app, con su
-// plural, el ejemplo y el fallo típico— y el verbo en Perfekt con su regla de haben o sein. La
-// bandera va en CSS (`.flag-de`): el emoji se pinta como las letras "DE" en Windows.
+// El alemán de hoy, un solo renglón: la palabra —el artículo en el color de su género, como en la
+// app, con su plural o, si es verbo, su Perfekt (lo que se ve en clase en el Kapitel 10)—, el ejemplo y
+// el fallo típico. La bandera va en CSS (`.flag-de`): el emoji se pinta como las letras "DE" en Windows.
 function alemanHoyHtml(vistos){
   const V = (typeof alVocab === 'function') ? alVocab() : null; if(!V) return '';
-  const a = alemanPalabraHoy(), v = alemanVerboHoy();
-  const kap = (window.CIFRAS && CIFRAS.n('kapitelAleman')) || 0;
-  const enClase = (AL_KAPITEL[kap] || []).some(x => x.sec === AL_GRAM);
-  let h = '';
-  if(a){
-    const art = (a.art || '-').split('/')[0].trim();
-    const col = (typeof VOC_COLOR !== 'undefined' && VOC_COLOR[art]) || 'var(--text3)';
-    const artHtml = art && art !== '-' ? `<span style="color:${col}">${esc(art === 'pl.' ? 'die' : a.art)}</span> ` : '';
-    const pl = a.pl && a.pl !== '-' ? `<span class="ap-m">pl. die ${esc(a.pl)}</span>`
-             : (art === 'pl.' ? '<span class="ap-m">solo plural</span>' : '');
-    const frase = a.tipo === 'frase';
-    // Un ejemplo que repite la frase tal cual no enseña nada nuevo: se omite.
-    const sinPunto = s => String(s || '').replace(/[.!?¡¿]+$/, '').trim().toLowerCase();
-    const ex = a.ex && sinPunto(a.ex) !== sinPunto(a.de) ? a.ex : '';
-    h += apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA,
-      mat: `Alemán · ${esc((V.cats[a.cat] || {}).label || '')}`,
-      estado: apEstado(vistos.de, frase ? 'frase del día' : 'palabra del día', '✓ vista'),
-      otra: frase ? 'Otra frase' : 'Otra palabra', abrir: "aprendeAbrir('de')", titulo: 'Abrir su sección en Alemán',
-      cuerpo: `<span class="ap-de">${artHtml}${esc(a.de)}</span>
-        <span class="ap-es">${esc(a.es)}${pl}</span>
-        ${ex ? `<span class="ap-ex">${esc(ex)}${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</span>` : ''}
-        ${a.uso ? `<span class="ap-nota"><b>Uso</b> · ${esc(a.uso)}</span>` : ''}` });
-  }
-  if(v){
-    const f = String(v.conj).split('·').map(s => s.trim());
-    const aux = v.aux === 'ist' ? 'ist' : 'hat';
-    // La regla, solo con sein: es la excepción que hay que aprenderse. La de haben («todo lo
-    // demás») saldría en casi nueve de cada diez verbos sin decir nada que el «hat» no diga ya.
-    const regla = aux === 'ist' ? alPerfektRegla(v) : '';
-    h += apFila({ slot: 'verbo', c: 'var(--g)', marca: AP_BANDERA,
-      mat: enClase ? `Perfekt · Kapitel ${kap} en clase` : 'Alemán · Perfekt',
-      estado: apEstado(vistos.verbo, 'verbo del día', '✓ visto'),
-      otra: 'Otro verbo', abrir: "aprendeAbrir('verbo')", titulo: 'Abrir el Partizip en Alemán',
-      cuerpo: `<span class="ap-t">${esc(v.de)} <span class="ap-flecha">→</span> <span class="ap-aux ${aux}">${aux}</span> ${esc(f[f.length - 1])}</span>
-        <span class="ap-es">${esc(v.es)}${f.length >= 3 ? `<span class="ap-m">${esc(f[0])} · ${esc(f[1])}</span>` : ''}${v.tag ? `<span class="ap-chip">${esc(v.tag)}</span>` : ''}</span>
-        ${regla ? `<span class="ap-nota">${esc(regla)}</span>` : ''}` });
-  }
-  return h;
+  const a = alemanPalabraHoy(); if(!a) return '';
+  const art = (a.art || '-').split('/')[0].trim();
+  const col = (typeof VOC_COLOR !== 'undefined' && VOC_COLOR[art]) || 'var(--text3)';
+  const artHtml = art && art !== '-' ? `<span style="color:${col}">${esc(art === 'pl.' ? 'die' : a.art)}</span> ` : '';
+  const pl = a.pl && a.pl !== '-' ? `<span class="ap-m">pl. die ${esc(a.pl)}</span>`
+           : (art === 'pl.' ? '<span class="ap-m">solo plural</span>' : '');
+  const f = a.conj && a.aux ? String(a.conj).split('·').map(s => s.trim()) : null;
+  const aux = a.aux === 'ist' ? 'ist' : 'hat';
+  const perf = f ? `<span class="ap-m">Perfekt · <span class="ap-aux ${aux}">${aux}</span> ${esc(f[f.length - 1])}</span>` : '';
+  const frase = a.tipo === 'frase';
+  // Un ejemplo que repite la frase tal cual no enseña nada nuevo: se omite.
+  const sinPunto = s => String(s || '').replace(/[.!?¡¿]+$/, '').trim().toLowerCase();
+  const ex = a.ex && sinPunto(a.ex) !== sinPunto(a.de) ? a.ex : '';
+  return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA,
+    mat: `Alemán · ${esc((V.cats[a.cat] || {}).label || '')}`,
+    estado: apEstado(vistos.de, frase ? 'frase del día' : 'palabra del día', '✓ vista'),
+    otra: frase ? 'Otra frase' : 'Otra palabra', abrir: "aprendeAbrir('de')", titulo: 'Abrir su sección en Alemán',
+    cuerpo: `<span class="ap-de">${artHtml}${esc(a.de)}</span>
+      <span class="ap-es">${esc(a.es)}${pl}${perf}</span>
+      ${ex ? `<span class="ap-ex">${esc(ex)}${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</span>` : ''}
+      ${a.uso ? `<span class="ap-nota"><b>Uso</b> · ${esc(a.uso)}</span>` : ''}` });
+}
+
+// ── Al volante: qué escuchar hoy en Didi, del catálogo de «Qué escuchar» (`DIDI_AUDIO`) en el orden
+//    de su panel —el foco de la semana primero; lo que está en pausa, fuera—. El audiolibro es el de
+//    la semana: un libro dura de 6 a 9 h y no se cambia a diario. Entre semana va en el trayecto de la
+//    mañana y el podcast del día, corto, en el de la noche; el fin de semana, el libro va en los
+//    turnos largos y un podcast largo (`largo`) en el otro. Las horas salen de la rutina.
+function didiHoy(){
+  if(typeof DIDI_AUDIO === 'undefined' || !DIDI_AUDIO.length) return null;
+  const foco = didiFoco();
+  const grupos = didiGruposOrden().filter(g => didiRango(g, foco) < 2);
+  const delFoco = grupos.find(g => didiRango(g, foco) === 0);
+  const de = (gs, ok) => gs.flatMap(g => g.items.filter(ok).map(it => ({ it, g })));
+  const elegir = ok => { const f = delFoco ? de([delFoco], ok) : []; return f.length ? f : de(grupos, ok); };
+  const finde = [0, 6].indexOf(new Date().getDay()) !== -1;
+  const libros = elegir(it => it.tipo === 'audio');
+  const pods = elegir(it => it.tipo !== 'audio' && !!it.largo === finde);
+  const k = diaCorrido(), h = aprendeHoy().h;
+  const libro = libros.length ? libros[(h.escuchar != null && h.escuchar < libros.length) ? h.escuchar : aprendeRotacion('libro', libros.length, Math.floor(k / 7))] : null;
+  const pod = pods.length ? pods[aprendeRotacion('pod', pods.length, k)] : null;
+  const horas = (typeof rutinaTareasHoy === 'function' ? rutinaTareasHoy() : [])
+    .filter(esDidi).map(t => t.hora);
+  return { libros, libro, pod, finde, horas };
+}
+// El renglón: el audiolibro con su hora y por qué, y el podcast del día. Los títulos abren la
+// búsqueda en Spotify (y cuentan como hecho); «Qué escuchar» abre el catálogo entero.
+function escucharHoyHtml(vistos){
+  const d = didiHoy(); if(!d || !d.libro) return '';
+  const { libro, pod, finde, horas } = d;
+  const sk = SK.find(s => s.id === libro.g.sk);
+  const cuando = finde ? (horas.length ? horas.join(' y ') : 'los turnos largos') : (horas[0] || 'la mañana');
+  const cuandoPod = finde ? 'el otro turno' : (horas.slice(1).join(' y ') || 'la noche');
+  const oir = x => `<a class="ap-oir" href="${didiSpo(x.q)}" target="_blank" rel="noopener" onclick="aprendeVisto('escuchar');setTimeout(renderHeroAprender,60)" title="Buscarlo en Spotify">${esc(x.n)}<span aria-hidden="true">&nbsp;↗</span></a>`;
+  const estado = vistos.escuchar ? '<span class="ap-estado ok">✓ escuchando</span>'
+    : '<button type="button" class="ap-estado ir" onclick="abrirDidi()">Qué escuchar</button>';
+  return `<div class="ap-fila" style="--c:var(--o)">
+      <div class="ap-top">${AP_PUNTO}<span class="ap-mat">Al volante · ${esc(sk ? sk.name : '')}</span>${estado}<button type="button" class="ap-otra" onclick="aprendeOtra('escuchar')" title="Otro audiolibro" aria-label="Otro audiolibro">${AP_OTRA}</button></div>
+      <div class="ap-cuerpo">
+        <span class="ap-t">${oir(libro.it)}</span>
+        <span class="ap-es ap-1l"><b class="ap-hora">${esc(cuando)}</b> · audiolibro de la semana — ${esc(libro.it.d)}</span>
+        ${pod ? `<span class="ap-nota"><b class="ap-hora">${esc(cuandoPod)}</b> · ${DIDI_TAG[pod.it.tipo].l.toLowerCase()}: ${oir(pod.it)}</span>` : ''}
+      </div>
+    </div>`;
 }
 
 // El tema de Python, con su explicación de una línea. Cuenta como hecho cuando lo marcas estudiado
@@ -7677,16 +7684,16 @@ function renderHeroAprender(){
   const vistos = aprendeHoy().h.vistos || {};
   const p = entrevistaTemaHoy(), q = istqbPreguntaHoy();
   const estudiados = rawGet('study-done-v2', {}) || {};
-  // Lo hecho hoy, en el orden de la lista: la palabra y el verbo al abrirlos, Python al marcarlo
+  // Lo hecho hoy, en el orden de la lista: la palabra al abrirla, «Al volante» al tocar qué escuchar, Python al marcarlo
   // estudiado, el ISTQB al contestar una.
-  const hechos = [!!vistos.de, !!vistos.verbo, !!(p && estudiados[p.id]), !!(q && (istqbRespuestas()[hoyLocal()] || []).length)];
-  const color = ['var(--g)', 'var(--g)', 'var(--cy)', 'var(--p)'];
+  const hechos = [!!vistos.de, !!vistos.escuchar, !!(p && estudiados[p.id]), !!(q && (istqbRespuestas()[hoyLocal()] || []).length)];
+  const color = ['var(--g)', 'var(--o)', 'var(--cy)', 'var(--p)'];
   const d = new Date();
   const fecha = `${DIAS_CORTOS[d.getDay()].toLowerCase()} ${d.getDate()} ${MES_LABEL_FULL[d.getMonth()].slice(0, 3).toLowerCase()}`;
   const avance = pasoSemanaHtml() + fichaEnCursoHtml();
   el.innerHTML = `<div class="hp-title"><span>🎓 Hoy aprendes</span><span class="ap-fecha">${fecha} · <b>${hechos.filter(Boolean).length} de 4</b></span></div>
-    <div class="ap-barra" title="La palabra y el verbo cuentan al abrirlos; Python, al marcarlo estudiado; el ISTQB, al contestarlo">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
-    <div class="ap-lista">${alemanHoyHtml(vistos)}${pythonHoyHtml()}${istqbHtml()}</div>
+    <div class="ap-barra" title="La palabra cuenta al abrirla; «Al volante», al tocar qué escuchar; Python, al marcarlo estudiado; el ISTQB, al contestarlo">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
+    <div class="ap-lista">${alemanHoyHtml(vistos)}${escucharHoyHtml(vistos)}${pythonHoyHtml()}${istqbHtml()}</div>
     ${avance ? `<div class="ap-avance"><span class="ap-lbl">Tu avance</span>${avance}</div>` : ''}`;
   apAjustarAvance();
 }
@@ -9196,6 +9203,8 @@ const DIDI_SLOTS=[
 
 // Ordenado por prioridad real = el valor de SK de menor a mayor, ponderado. Ventas primero
 // porque es 15/100 con peso ×1.5: la combinación más urgente de las 12.
+// `largo:true`: podcasts de una hora o más. Van a los turnos largos del fin de semana, no a los
+// tramos cortos; «Al volante» de Hoy aprendes los reparte así.
 const DIDI_AUDIO=[
   {sk:'ventas', why:'Tu habilidad más baja, y la que más rinde este año: negociar tu ingreso decide si te vas en septiembre de 2027. Una hora escuchando ventas rinde más que una hora en cualquier otra de las 12 — y es escuchar, no vender: no rompe la regla de no contactar prospectos sin oferta lista.', items:[
     {tipo:'audio', n:'Influence — Robert Cialdini', d:'Los 6 principios de persuasión. El más citado del tema y el más fácil de seguir manejando: son historias, no teoría.', q:'Influence Robert Cialdini'},
@@ -9218,10 +9227,10 @@ const DIDI_AUDIO=[
     {tipo:'audio', n:'The Little Book of Common Sense Investing — John Bogle', d:'EMPIEZA POR ESTE: es corto (~5h), y su tesis —índices de bajo costo— es exactamente tu VOO de los lunes.', q:'Little Book of Common Sense Investing John Bogle'},
     {tipo:'audio', n:'A Random Walk Down Wall Street — Burton Malkiel', d:'Por qué casi nadie le gana al mercado de forma sostenida. Refuerza la disciplina de la asignación fija.', q:'A Random Walk Down Wall Street Malkiel'},
     {tipo:'audio', n:'One Up On Wall Street — Peter Lynch', d:'El más entretenido de los tres, lleno de anécdotas. Buen premio después de los otros dos.', q:'One Up On Wall Street Peter Lynch'},
-    {tipo:'pod', n:'We Study Billionaires — The Investor\'s Podcast', d:'Episodios largos (1h+). Encaja en los turnos de fin de semana, no en los trayectos cortos.', q:'We Study Billionaires investors podcast'},
+    {tipo:'pod', largo:true, n:'We Study Billionaires — The Investor\'s Podcast', d:'Episodios largos (1h+). Encaja en los turnos de fin de semana, no en los trayectos cortos.', q:'We Study Billionaires investors podcast'},
   ]},
   {sk:'ia', why:'30/100 — aunque tu práctica real de IA es construir esta aplicación dos veces al día. Lo que falta es contexto amplio, y eso sí se absorbe escuchando.', items:[
-    {tipo:'pod', n:'Lex Fridman Podcast', d:'Entrevistas de 2-3h con investigadores de IA. Hechas para los turnos largos del fin de semana.', q:'Lex Fridman Podcast'},
+    {tipo:'pod', largo:true, n:'Lex Fridman Podcast', d:'Entrevistas de 2-3h con investigadores de IA. Hechas para los turnos largos del fin de semana.', q:'Lex Fridman Podcast'},
     {tipo:'pod', n:'The AI Daily Brief', d:'Resumen diario de ~15 min. Cabe entero en el trayecto al gym y te mantiene al día sin esfuerzo.', q:'The AI Daily Brief podcast'},
     {tipo:'yt', n:'DeepLearning.AI', d:'Ya estaba en tus recursos de IA. Las charlas y paneles funcionan bien en audio; los cursos con código no.', q:'DeepLearning AI'},
   ]},
@@ -9279,6 +9288,16 @@ function renderDidiStrip(){
     <button class="didi-strip-btn" onclick="abrirDidi()">🚗 Qué escuchar →</button>`;
 }
 
+// El orden del catálogo, el mismo en el panel y en «Al volante»: primero la habilidad en foco de
+// En qué invertir tu tiempo; luego las demás, de la más débil a la menos; al final las que están en
+// pausa (`PRIORIDAD_EXCLUIDAS`), que «Al volante» deja fuera.
+function didiFoco(){ return (typeof habFocoActual === 'function' && habFocoActual()) || null; }
+function didiRango(g, foco){ return (foco && g.sk === foco.id) ? 0 : (PRIORIDAD_EXCLUIDAS.indexOf(g.sk) !== -1 ? 2 : 1); }
+function didiGruposOrden(){
+  const foco = didiFoco(), val = g => { const s = SK.find(x => x.id === g.sk); return s ? s.val : 999; };
+  return DIDI_AUDIO.slice().sort((a, b) => didiRango(a, foco) - didiRango(b, foco) || val(a) - val(b));
+}
+
 function abrirDidi(){
   const ov=document.getElementById('didiOverlay'), body=document.getElementById('didiBody');
   if(!ov||!body) return;
@@ -9287,10 +9306,9 @@ function abrirDidi(){
      audio también"). Primero la habilidad en foco de En qué invertir tu tiempo; luego las demás,
      de la más débil a la menos débil; al final las que Adán puso en pausa (PRIORIDAD_EXCLUIDAS,
      9-ago-2026), marcadas: antes Ventas encabezaba la lista aunque estuviera en pausa. */
-  const focoD = (typeof habFocoActual === 'function' && habFocoActual()) || null;
-  const valD = g => { const s = SK.find(x => x.id === g.sk); return s ? s.val : 999; };
-  const rangoD = g => (focoD && g.sk === focoD.id) ? 0 : (PRIORIDAD_EXCLUIDAS.indexOf(g.sk) !== -1 ? 2 : 1);
-  const ordenD = DIDI_AUDIO.slice().sort((a, b) => rangoD(a) - rangoD(b) || valD(a) - valD(b));
+  const focoD = didiFoco();
+  const rangoD = g => didiRango(g, focoD);
+  const ordenD = didiGruposOrden();
   if(sub) sub.textContent='~28h semanales al volante — tu bloque de tiempo más grande. Primero lo de tu foco de la semana'+
     (focoD ? ' ('+focoD.name+')' : '')+'; después, de la habilidad más débil a la menos; lo que está en pausa, al final.';
 
