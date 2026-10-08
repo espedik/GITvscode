@@ -1242,18 +1242,6 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .hp-mini{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-top:1px solid rgba(var(--ov),.07);
   font-size:10.5px;color:var(--text2);line-height:1.4}
 .hp-mini-n{font-family:var(--mono);font-size:9px;font-weight:700;flex-shrink:0;padding-top:2px}
-.hp-lec{padding:9px 11px;border-radius:11px;margin-bottom:8px}
-/* La tarjeta lleva a su slide (Adán, 2026-08-30: "aqui si hago click deberia mandarme
-   al dashboard de esa seccion"). Botón de verdad, para que responda al teclado. */
-button.hp-lec{display:block;width:100%;text-align:left;font-family:inherit;cursor:pointer;
-  transition:transform .15s,filter .15s}
-button.hp-lec:hover{transform:translateY(-1px);filter:brightness(1.25)}
-button.hp-lec:active{transform:translateY(0)}
-.hp-lec:last-child{margin-bottom:0}
-.hp-lec-top{display:flex;align-items:center;gap:7px;margin-bottom:5px}
-.hp-lec-tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
-.hp-lec-n{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--text3)}
-.hp-lec-t{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:2px}
 
 /* ─── La fila de 4 tarjetas de Mi Día ─── (2026-08-23)
    Sobreescribe .grid/.g4 SOLO aquí, porque las reglas generales rompían el reparto en 4:
@@ -3005,10 +2993,6 @@ button.hp-lec:active{transform:translateY(0)}
 #miDiaSecundarios .hp-title span:first-child{display:flex;align-items:center;gap:6px}
 #miDiaSecundarios .hp-row{font-size:12.5px;padding:5px 0}
 #miDiaSecundarios .hp-cifra{font-size:clamp(22px,2vw,28px)}
-#miDiaSecundarios .hp-lec{padding:6px 9px;margin-bottom:5px}
-#miDiaSecundarios .hp-lec-top{margin-bottom:3px}
-#miDiaSecundarios .hp-lec-t{font-size:12px}
-#heroAprenderPanel .hp-sub{padding-top:7px;gap:3px}
 /* Los apartados nuevos al pie de un módulo: filete arriba y etiqueta en mono. */
 .hp-sub{margin-top:auto;padding-top:9px;border-top:1px solid rgba(var(--ov),.09);display:flex;flex-direction:column;gap:4px}
 .hp-sub-lbl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);display:flex;justify-content:space-between;gap:8px}
@@ -3019,49 +3003,79 @@ button.hp-lec:active{transform:translateY(0)}
 .hp-cobro b{color:var(--text);font-weight:600}
 .hp-cobro .m{font-family:var(--mono);font-weight:700;color:var(--text);white-space:nowrap}
 .hp-cobro .m.entra{color:var(--g)}
-.hp-paso{display:grid;grid-template-columns:32px minmax(0,1fr);gap:9px;align-items:center;width:100%;text-align:left;font-family:inherit;cursor:pointer;
-  background:none;border:none;padding:0;color:inherit}
-.hp-paso img{width:32px;height:46px;object-fit:cover;border-radius:3px;box-shadow:0 5px 12px rgba(0,0,0,.25);background:rgba(var(--ov),.08)}
-.hp-paso-t{font-size:12.5px;font-weight:700;color:var(--text);line-height:1.25}
-.hp-paso-d{font-size:11px;color:var(--text3);line-height:1.35;margin-top:2px}
-.hp-paso:hover .hp-paso-t{color:var(--cy)}
-/* ─── Hoy aprendes: la tercera columna entera de Mi Día ───
-   Ocupa las dos filas de la rejilla (bajo 1280 px, la primera columna de la segunda y la tercera;
-   en el teléfono va sola). Cada tarjeta lleva su color en `--c`, un token del tema: contrasta
-   igual en claro y en oscuro. */
+/* ─── Hoy aprendes: la tercera columna entera de Mi Día (diseño: diseno-hoyaprendes/, Main) ───
+   Una lista con filetes, no cajas dentro de la caja: cada renglón tiene la misma anatomía —la
+   materia arriba, lo que aprendes en grande, el detalle en gris— y `--c` es el color de su
+   materia, un token del tema. Ocupa las dos filas de la rejilla (bajo 1280 px, la primera columna
+   de la segunda y la tercera; en el teléfono va sola). */
 #heroAprenderPanel{grid-row:span 2}
 @media(max-width:600px){#heroAprenderPanel{grid-row:auto}}
-#heroAprenderPanel .hp-lec{--c:var(--g);margin-bottom:0;padding:7px 10px;
-  background:color-mix(in srgb,var(--c) 6%,transparent);border:1px solid color-mix(in srgb,var(--c) 24%,transparent)}
-#heroAprenderPanel .hp-lec-top{margin-bottom:3px}
-#heroAprenderPanel .hp-lec-tag{color:var(--c)}
-#heroAprenderPanel .hp-lec-t{font-size:13.5px;line-height:1.3;margin-bottom:0}
-#heroAprenderPanel .hp-sub{margin-top:0}
+#miDiaSecundarios>#heroAprenderPanel{gap:0}
+.ap-fecha{font-family:var(--mono);font-size:10.5px;letter-spacing:0;text-transform:none;color:var(--text3);white-space:nowrap}
+.ap-fecha b{color:var(--text);font-weight:700}
+.ap-barra{display:flex;gap:4px;margin:4px 0 8px}
+.ap-barra i{flex:1 1 0;height:4px;border-radius:2px;background:rgba(var(--ov),.1)}
+.ap-barra i.on{background:var(--c)}
+.ap-fila{display:flex;flex-direction:column;gap:2px;padding:6px 0 8px;border-top:1px solid rgba(var(--ov),.09)}
+.ap-lista>.ap-fila:last-child{border-bottom:1px solid rgba(var(--ov),.09)}
+.ap-top{display:flex;align-items:center;gap:7px}
+.ap-punto{width:7px;height:7px;margin:0 3.5px;border-radius:50%;flex-shrink:0;background:var(--c)}
+.ap-mat{flex:1;min-width:0;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--c);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ap-estado{font-family:var(--mono);font-size:9.5px;color:var(--text3);white-space:nowrap}
+.ap-estado.ok{color:var(--g)}
+.ap-estado.mal{color:var(--r)}
+button.ap-estado.ir{font-weight:700;padding:3px 9px;border-radius:99px;border:0;cursor:pointer;
+  background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--c)}
+button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)}
+.ap-otra{width:22px;height:22px;padding:0;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;
+  border:1px solid rgba(var(--ov),.1);background:transparent;color:var(--text3);cursor:pointer;transition:color .15s,border-color .15s}
+.ap-otra:hover{color:var(--c);border-color:var(--c)}
+.ap-otra svg{width:12px;height:12px}
+.ap-abrir{display:flex;flex-direction:column;gap:3px;width:100%;padding:2px 0 0;border:0;background:none;color:inherit;font:inherit;
+  text-align:left;cursor:pointer}
+.ap-abrir>span{display:block}
+.ap-abrir>.ap-2l{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ap-abrir:hover .ap-de,.ap-abrir:hover .ap-t,.ap-abrir:hover .ap-q{color:var(--c)}
+.ap-de{font-family:var(--font-title);font-size:20px;font-weight:600;line-height:1.2;letter-spacing:-.01em;color:var(--text)}
+.ap-t{font-size:14.5px;font-weight:700;line-height:1.3;color:var(--text)}
+.ap-q{font-size:12.5px;font-weight:600;line-height:1.42;color:var(--text)}
+.ap-es{font-size:12.5px;line-height:1.38;color:var(--text2)}
+.ap-m{font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:7px;white-space:nowrap}
+.ap-chip{display:inline-block;margin-left:5px;padding:0 6px;border-radius:5px;border:1px solid rgba(var(--ov),.14);
+  font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.05em;color:var(--w);white-space:nowrap;vertical-align:1px}
+.ap-ex{font-size:12px;font-style:italic;line-height:1.45;color:var(--text)}
+.ap-ex span{font-style:normal;color:var(--text3)}
+.ap-nota{font-size:11px;line-height:1.4;color:var(--text3)}
+.ap-nota b{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text2)}
+.ap-flecha{font-weight:400;color:var(--text3)}
+.ap-aux.hat{color:var(--b)}
+.ap-aux.ist{color:var(--o)}
+/* Lo que avanza contigo, abajo y aparte de lo del día. */
+.ap-avance{margin-top:auto;display:flex;flex-direction:column;gap:8px;padding-top:10px}
+.ap-lbl{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
+.ap-paso,.ap-ficha{width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.ap-paso{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:center}
+.ap-paso img,.ap-paso-ico{width:28px;height:40px;border-radius:3px;object-fit:cover;background:rgba(var(--ov),.08)}
+.ap-paso img{box-shadow:0 4px 10px rgba(0,0,0,.25)}
+.ap-paso-ico{display:flex;align-items:center;justify-content:center;font-size:15px}
+.ap-col{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ap-ficha{display:flex;flex-direction:column;gap:5px}
+.ap-ficha>span{display:block}
+.ap-ficha>.ap-ficha-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ap-t2{font-size:12.5px;font-weight:700;line-height:1.3;color:var(--text)}
+.ap-sub{font-size:11px;line-height:1.35;color:var(--text3)}
+.ap-n{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--g)}
+.ap-mini{height:3px;border-radius:2px;background:rgba(var(--ov),.1)}
+.ap-mini i{display:block;height:100%;border-radius:2px;background:var(--g)}
+.ap-paso:hover .ap-t2,.ap-ficha:hover .ap-t2{color:var(--cy)}
 /* La bandera de Alemania en CSS: el emoji se pinta como las letras "DE" en Windows. */
 .flag-de{display:inline-block;width:14px;height:9px;border-radius:2px;flex-shrink:0;
   background:linear-gradient(#000 0 33.4%,#dd0000 33.4% 66.7%,#ffce00 66.7%);box-shadow:0 0 0 1px rgba(var(--ov),.16)}
-.ha-m{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--text3);margin-left:7px;white-space:nowrap}
-.ha-es{font-size:12px;color:var(--text2);line-height:1.4;margin-top:1px}
-.ha-ex{font-size:11.5px;font-style:italic;color:var(--text);line-height:1.45;margin-top:3px}
-.ha-ex span{font-style:normal;color:var(--text3)}
-.ha-uso{font-size:10.5px;color:var(--text3);line-height:1.4;margin-top:4px}
-.ha-uso b{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text2)}
-.ha-flecha{color:var(--text3);font-weight:400}
-.ha-aux.ist{color:var(--o)}
-.ha-aux.hat{color:var(--b)}
-.ha-2l{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ha-ok{color:var(--g)}
-/* La pregunta del ISTQB: en la columna, dos líneas y el estado; se contesta en su panel, que
-   lleva el marcador de la semana (.ha-pie). */
-.ha-q-t{font-size:12px;font-weight:600;color:var(--text);line-height:1.42}
-.ha-pie{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:6px;font-family:var(--mono);font-size:9.5px;color:var(--text3)}
-.ha-pie b{color:var(--text2)}
-.ha-pie b.ok{color:var(--g)}
-.ha-pie b.bajo{color:var(--w)}
-.ha-q-ir{color:var(--c)}
-.ha-mal{color:var(--r)}
+/* La pregunta del ISTQB, en su panel (#istqbOverlay): se contesta tocando una opción, la primera
+   respuesta es la que cuenta, y al pie va el marcador de la semana. */
 #istqbOverlay{--c:var(--p)}
-#istqbOverlay .ha-q-t{font-size:15px;line-height:1.55}
+.ha-q-t{font-size:15px;font-weight:600;color:var(--text);line-height:1.55}
 .ha-ops{display:flex;flex-direction:column;gap:7px;margin-top:14px}
 .ha-op{display:grid;grid-template-columns:16px minmax(0,1fr);gap:9px;align-items:baseline;width:100%;text-align:left;
   padding:9px 12px;border-radius:10px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.03);
@@ -3080,7 +3094,14 @@ button.hp-lec:active{transform:translateY(0)}
 .ha-res span{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--text3)}
 .ha-why{font-size:13px;color:var(--text2);line-height:1.55;margin-top:6px}
 .ha-why b{color:var(--text)}
-#istqbOverlay .ha-pie{margin-top:16px;padding-top:12px;border-top:1px solid rgba(var(--ov),.08);font-size:11px}
+.ha-pie{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px 14px;margin-top:16px;padding-top:12px;
+  border-top:1px solid rgba(var(--ov),.08);font-family:var(--mono);font-size:11px;color:var(--text3)}
+.ha-pie b{color:var(--text2)}
+.ha-pie b.ok{color:var(--g)}
+.ha-pie b.bajo{color:var(--w)}
+.ha-pie-acc{display:flex;align-items:baseline;gap:16px}
+.ha-otra{border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--c);cursor:pointer}
+.ha-otra:hover{text-decoration:underline}
 /* Hábitos de hoy. Caben todos sin desplazar (Adán: "haz más pequeñas las letras para que quepan
    todos los hábitos sin hacer scroll down"): letra chica con el ancla debajo y, si ni así cabe la
    lista, `.compacto` pone el ancla en la misma línea que el nombre —completa en el `title`—.
@@ -6093,9 +6114,22 @@ function alPinta(){
   alCuentaVistas();
 }
 
-// La palabra del día, para el resumen de Mi Día: la misma todo el día y distinta cada día.
+// Las palabras, cada una una vez: 18 están en dos secciones (laufen, en Deporte y en Movimiento) y
+// la rotación las sacaría dos veces por vuelta. El vocabulario no cambia mientras la página está
+// abierta, así que se calcula una sola vez.
+let _alPalabras = null;
+function alemanPalabras(){
+  const V = alVocab(); if(!V) return [];
+  if(!_alPalabras){
+    const ya = new Set();
+    _alPalabras = V.voc.filter(function(w){ if(ya.has(w.de)) return false; ya.add(w.de); return true; });
+  }
+  return _alPalabras;
+}
+// La palabra (o frase) del día, para Hoy aprendes y el menú: la de la rotación de hoy —ver
+// `aprendeIndice()`— o la que pediste con ↻.
 function alemanPalabraHoy(){
-  const V = alVocab(); return V ? V.delDia(diaDelAnio()) : null;
+  const ps = alemanPalabras(); return ps.length ? ps[aprendeIndice('de', ps.length)] : null;
 }
 
 // Lo que llama el motor de pantallas cuando toca la de Alemán. `RENDERS` la nombra por
@@ -6104,11 +6138,12 @@ function alemanPalabraHoy(){
 function renderAleman(){ alPinta(); }
 
 // El verbo del día para el Perfekt, lo que se ve en clase en el Kapitel 10: uno de los que traen
-// su Partizip II y su auxiliar en vocab-datos.js (`conj` y `aux`), el mismo todo el día.
+// su Partizip II y su auxiliar en vocab-datos.js (`conj` y `aux`).
+function alemanVerbos(){
+  return alemanPalabras().filter(function(w){ return w.conj && w.aux; });
+}
 function alemanVerboHoy(){
-  const V = alVocab(); if(!V) return null;
-  const vs = V.voc.filter(function(w){ return w.conj && w.aux; });
-  return vs.length ? vs[diaDelAnio() % vs.length] : null;
+  const vs = alemanVerbos(); return vs.length ? vs[aprendeIndice('verbo', vs.length)] : null;
 }
 
 // ¿haben o sein? La regla de ESE verbo, del bloque «¿haben o sein?» del Partizip (`habenSein` en
@@ -6131,13 +6166,19 @@ function alPerfektRegla(w){
   return haben ? haben[0].replace(/^haben — /, 'Con haben: ') + ', ' + haben[1] : '';
 }
 
-// El tema de Python del día para la tarjeta «Hoy aprendes» de Mi Día: el mismo todo el día y
-// distinto cada día, igual que la palabra de alemán. Se abre en la app de Entrevistas.
-let entrevistaIdx=null;
+// El tema de Python del día: el de la rotación, saltando los que ya marcaste como estudiados en
+// Entrevistas (`study-done-v2`). Se fija al primer vistazo del día, así que si lo estudias hoy se
+// queda con su ✓ en vez de saltar al siguiente.
 function entrevistaTemaHoy(){
-  if(typeof ENTREVISTA_TEMAS==='undefined'||!ENTREVISTA_TEMAS.length)return null;
-  if(entrevistaIdx===null)entrevistaIdx=diaDelAnio()%ENTREVISTA_TEMAS.length;
-  return ENTREVISTA_TEMAS[entrevistaIdx];
+  if(typeof ENTREVISTA_TEMAS === 'undefined' || !ENTREVISTA_TEMAS.length) return null;
+  const T = ENTREVISTA_TEMAS, n = T.length, { st, h } = aprendeHoy();
+  if(h.py == null || h.py >= n){
+    const hechos = rawGet('study-done-v2', {}) || {}, k = diaCorrido();
+    let j = 0; while(j < n && hechos[T[aprendeRotacion('py', n, k + j)].id]) j++;
+    h.py = aprendeRotacion('py', n, k + (j < n ? j : 0));
+    aprendeGuarda(st, h);
+  }
+  return T[h.py];
 }
 /* La etiqueta legible del módulo, con respaldo. `PY_MOD_LABEL` lo genera
    `_generar-datos-dashboard.js` leyendo el menú de la app; si el .js de datos es anterior
@@ -7079,8 +7120,10 @@ function faseDespuesHtml(f){
   const dm={day:'numeric',month:'long'};
   return `<div class="hp-sub"><div class="hp-sub-lbl"><span>Después · ${esc(nx.tag)}</span><span>desde el ${nx.start.toLocaleDateString('es-MX',dm)}</span></div><div class="hp-sub-t">${esc(nx.title)}</div></div>`;
 }
-// El paso de la semana (la habilidad del foco de "En qué invertir tu tiempo") con la portada
-// de su libro; tocarlo lleva a esa pantalla.
+// Lo que avanza contigo y no con el calendario —cambia al avanzar en su pantalla—: el paso de la
+// semana (la habilidad del foco de «En qué invertir tu tiempo») con la portada de su libro, y la
+// ficha de Habilidades Base en curso, la empezada más cerca de terminar (mismo criterio que
+// «SIGUIENTE» en esa pantalla), con el paso al que se retoma.
 function pasoSemanaHtml(){
   if(typeof habFocoActual!=='function') return '';
   const foco=habFocoActual(); if(!foco) return '';
@@ -7089,15 +7132,12 @@ function pasoSemanaHtml(){
   const p=pasos[i];
   const r=(Array.isArray(p.r)?p.r:[]).find(x=>x&&x.t==='libro');
   const lib=r?habLibro(r.id):null;
-  return `<div class="hp-sub"><div class="hp-sub-lbl">El paso de la semana · ${esc(foco.name)}</div>
-    <button class="hp-paso" onclick="irASlide('theme-skills')" title="Abrir En qué invertir tu tiempo">
-      ${lib?`<img src="${lib.portada||''}" alt="" loading="lazy">`:`<span style="width:36px;height:52px;border-radius:3px;background:rgba(var(--ov),.06);display:flex;align-items:center;justify-content:center;font-size:18px">${foco.icon}</span>`}
-      <span><span class="hp-paso-t">${String(i+1).padStart(2,'0')} · ${esc(p.n)}</span>
-      <span class="hp-paso-d">${lib?`con <i>${esc(lib.t)}</i>`:`paso ${i+1} de ${pasos.length}`}</span></span>
-    </button></div>`;
+  return `<button type="button" class="ap-paso" onclick="irASlide('theme-skills')" title="Abrir En qué invertir tu tiempo${lib?` · con ${esc(lib.t)}`:''}">
+      ${lib?`<img src="${lib.portada||''}" alt="" loading="lazy">`:`<span class="ap-paso-ico">${foco.icon}</span>`}
+      <span class="ap-col"><span class="ap-t2">${String(i+1).padStart(2,'0')} · ${esc(p.n)}</span>
+      <span class="ap-sub">${esc(foco.name)} · paso de la semana, ${i+1} de ${pasos.length}</span></span>
+    </button>`;
 }
-// La ficha de Habilidades Base en curso: la empezada que está más cerca de terminar (mismo
-// criterio que "SIGUIENTE" en esa pantalla), con el paso al que se retoma.
 function fichaEnCursoHtml(){
   if(typeof HABILIDADES_BASE==='undefined'||typeof hbAvance!=='function') return '';
   const av=HABILIDADES_BASE.map(h=>Object.assign({h},hbAvance(h.id)));
@@ -7107,11 +7147,12 @@ function fichaEnCursoHtml(){
   const info=HABILIDAD_DETALLE[sig.h.id]; const store=(rawGet('habilidades_checklist_v1',{})[sig.h.id])||{};
   const k=info?info.pasos.findIndex((_,j)=>!store[j]):-1;
   const paso=k>=0?info.pasos[k]:null;
-  return `<div class="hp-sub"><div class="hp-sub-lbl"><span>Ficha en curso · Habilidades base</span><span style="color:var(--g)">${sig.hechos} / ${sig.total}</span></div>
-    <button class="hp-paso" style="grid-template-columns:minmax(0,1fr)" onclick="abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')" title="Abrir la ficha">
-      <span><span class="hp-paso-t">${sig.h.ico} ${esc(sig.h.t)}</span>
-      <span class="hp-paso-d">${paso?`sigue el paso ${k+1} · ${esc(mdLimpiaTitulo(paso.t))}`:'ficha completa'}</span></span>
-    </button></div>`;
+  const pct=sig.total?Math.round(sig.hechos/sig.total*100):0;
+  return `<button type="button" class="ap-ficha" onclick="abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')" title="Abrir la ficha de Habilidades Base">
+      <span class="ap-ficha-top"><span class="ap-t2">${esc(sig.h.t)}</span><span class="ap-n">${sig.hechos}/${sig.total}</span></span>
+      <span class="ap-mini"><i style="width:${pct}%"></i></span>
+      <span class="ap-sub">${paso?`Sigue el paso ${k+1} · ${esc(mdLimpiaTitulo(paso.t))}`:'Ficha completa'}</span>
+    </button>`;
 }
 // Semana ISO del año, para la esquina de la frase.
 function semanaISO(d){
@@ -7349,98 +7390,186 @@ function faseHoyMarca(id, estado){
   renderHeroFase();
 }
 
-// ── 🎓 Hoy aprendes — la tercera columna entera de Mi Día: lo que se estudia hoy, en el orden
-//    del plan («carrera con fecha»). El alemán de la clase (la palabra del día y el verbo del día
-//    en Perfekt), el tema de Python, la pregunta del ISTQB CT-GenAI, el paso de la semana y la
-//    ficha de Habilidades Base en curso. Lo de cada día es el mismo todo el día (diaDelAnio()).
-//    Cada tarjeta lleva a su pantalla —Python abre la app de Entrevistas por su hash (#id)— y la
-//    pregunta del ISTQB se contesta aquí mismo.
+// ── 🎓 Hoy aprendes — la tercera columna entera de Mi Día (diseño: diseno-hoyaprendes/, Main).
+//    Una lista, no cajas: arriba lo de cada día —la palabra y el verbo de alemán, el tema de Python
+//    y la pregunta del ISTQB— con una barra que se llena al hacerlo; abajo, lo que avanza contigo.
+//    Tocar un renglón lo abre donde se estudia —Python, en la app de Entrevistas por su hash (#id)—
+//    y ↻ pide otro.
 function irASlide(cls){
   const sl = document.querySelector('.slide.' + cls);
   if(sl && typeof goTo === 'function') goTo(+sl.dataset.i);
 }
-// La pantalla de Alemán abierta donde vive la tarjeta: la sección de la palabra o el Partizip.
+// La pantalla de Alemán abierta donde vive el renglón: la sección de la palabra o el Partizip.
 // Es el mismo salto que el atajo del Kapitel (`alVeKapitel`).
 function hoyAlAleman(sec, sub){
   if(typeof alVeKapitel === 'function') alVeKapitel(sec, sub || null);
   irASlide('theme-aleman');
 }
 
+// ── Que siempre cambie. Cada catálogo avanza un puesto por día con su propio salto, coprimo con
+//    su tamaño: recorre todo antes de repetir y dos días seguidos caen lejos —otra sección, otro
+//    capítulo, otro módulo—. El día es corrido, en hora local, desde el 1-ene-2024: con el día del
+//    año, de 1 516 palabras solo salían las primeras 366, y en el mismo orden cada año. A
+//    medianoche `tickClock()` repinta Mi Día aunque el Dashboard siga abierto.
+const APRENDE_KEY = 'dash-aprende-v1';
+const APRENDE_SALTO = { de: 97, verbo: 13, py: 7, istqb: 37 };
+function diaCorrido(d){
+  d = d || new Date();
+  return Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - new Date(2024, 0, 1)) / 864e5);
+}
+function aprendeRotacion(slot, n, k){
+  const mcd = (x, y) => y ? mcd(y, x % y) : x;
+  let s = APRENDE_SALTO[slot] || 1; while(mcd(s, n) !== 1) s++;
+  return ((k * s) % n + n) % n;
+}
+// Lo de hoy vive en `dash-aprende-v1.hoy`: lo que pediste con ↻, el tema de Python fijado al
+// primer vistazo y lo que ya abriste. Con otra fecha se empieza en limpio.
+function aprendeHoy(){
+  const st = rawGet(APRENDE_KEY, {}) || {};
+  const h = st.hoy && st.hoy.fecha === hoyLocal() ? st.hoy : { fecha: hoyLocal(), vistos: {} };
+  return { st, h };
+}
+function aprendeGuarda(st, h){ st.hoy = h; rawSet(APRENDE_KEY, st); }
+// El puesto de hoy en un catálogo de n: el que pediste con ↻ o, si no, el de la rotación.
+function aprendeIndice(slot, n){
+  if(!n) return 0;
+  const h = aprendeHoy().h;
+  return (h[slot] != null && h[slot] < n) ? h[slot] : aprendeRotacion(slot, n, diaCorrido());
+}
+// ↻ — otro distinto del que ves, al azar; en Python y en el ISTQB, uno que no hayas hecho. Se queda
+// hasta mañana.
+function aprendeOtra(slot){
+  let n = 0, actual = null, libre = () => true;
+  if(slot === 'de') n = alemanPalabras().length;
+  else if(slot === 'verbo') n = alemanVerbos().length;
+  else if(slot === 'py'){
+    const p = entrevistaTemaHoy(); if(!p) return;
+    const hechos = rawGet('study-done-v2', {}) || {};
+    n = ENTREVISTA_TEMAS.length; actual = ENTREVISTA_TEMAS.indexOf(p);
+    libre = j => !hechos[ENTREVISTA_TEMAS[j].id];
+  } else if(slot === 'istqb'){
+    const b = istqbBanco(), ya = istqbYaContestadas();
+    n = b.length; libre = j => !ya.has(b[j].id);
+  }
+  if(n < 2) return;
+  if(actual === null) actual = aprendeIndice(slot, n);
+  let opciones = [];
+  for(let j = 0; j < n; j++) if(j !== actual && libre(j)) opciones.push(j);
+  if(!opciones.length) for(let j = 0; j < n; j++) if(j !== actual) opciones.push(j);
+  const { st, h } = aprendeHoy();
+  h[slot] = opciones[Math.floor(Math.random() * opciones.length)];
+  aprendeGuarda(st, h);
+  renderHeroAprender();
+  if(slot === 'istqb' && document.getElementById('istqbOverlay')?.classList.contains('open')) istqbPintar();
+}
+// Tocar un renglón lo abre donde se estudia. La palabra y el verbo cuentan como hechos al abrirlos;
+// Python, al marcarlo estudiado en Entrevistas, y el ISTQB, al contestarlo.
+function aprendeAbrir(slot){
+  const { st, h } = aprendeHoy();
+  h.vistos = h.vistos || {}; h.vistos[slot] = 1; aprendeGuarda(st, h);
+  if(slot === 'de'){ const a = alemanPalabraHoy(); if(a) hoyAlAleman(a.cat, a.sub); }
+  else if(slot === 'verbo') hoyAlAleman(AL_GRAM);
+  else if(slot === 'py'){ const p = entrevistaTemaHoy(); if(p) window.open('../Entrevistas/entrevistas.html#' + p.id, '_blank', 'noopener'); }
+}
+
+// Un renglón: la materia con su marca, el estado y ↻; debajo, el botón que lo abre.
+const AP_OTRA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>';
+const AP_BANDERA = '<span class="flag-de" aria-hidden="true"></span>';
+const AP_PUNTO = '<span class="ap-punto" aria-hidden="true"></span>';
+function apEstado(hecho, txt, ok){ return `<span class="ap-estado${hecho ? ' ok' : ''}">${hecho ? ok : txt}</span>`; }
+function apFila(o){
+  return `<div class="ap-fila" style="--c:${o.c}">
+      <div class="ap-top">${o.marca}<span class="ap-mat">${o.mat}</span>${o.estado}<button type="button" class="ap-otra" onclick="aprendeOtra('${o.slot}')" title="${o.otra}" aria-label="${o.otra}">${AP_OTRA}</button></div>
+      <button type="button" class="ap-abrir" onclick="${o.abrir}" title="${o.titulo}">${o.cuerpo}</button>
+    </div>`;
+}
+
 // El alemán de hoy: la palabra —el artículo en el color de su género, como en la app, con su
 // plural, el ejemplo y el fallo típico— y el verbo en Perfekt con su regla de haben o sein. La
 // bandera va en CSS (`.flag-de`): el emoji se pinta como las letras "DE" en Windows.
-function alemanHoyHtml(){
+function alemanHoyHtml(vistos){
   const V = (typeof alVocab === 'function') ? alVocab() : null; if(!V) return '';
   const a = alemanPalabraHoy(), v = alemanVerboHoy();
   const kap = (window.CIFRAS && CIFRAS.n('kapitelAleman')) || 0;
   const enClase = (AL_KAPITEL[kap] || []).some(x => x.sec === AL_GRAM);
-  const bandera = '<span class="flag-de" aria-hidden="true"></span>';
   let h = '';
   if(a){
     const art = (a.art || '-').split('/')[0].trim();
     const col = (typeof VOC_COLOR !== 'undefined' && VOC_COLOR[art]) || 'var(--text3)';
     const artHtml = art && art !== '-' ? `<span style="color:${col}">${esc(art === 'pl.' ? 'die' : a.art)}</span> ` : '';
-    const pl = a.pl && a.pl !== '-' ? `<span class="ha-m">pl. die ${esc(a.pl)}</span>`
-             : (art === 'pl.' ? '<span class="ha-m">solo plural</span>' : '');
-    h += `<button type="button" class="hp-lec" onclick="hoyAlAleman('${a.cat}'${a.sub ? `,'${a.sub}'` : ''})" title="Abrir su sección en Alemán">
-      <div class="hp-lec-top">${bandera}<span class="hp-lec-tag">Alemán · ${esc((V.cats[a.cat] || {}).label || '')}</span><span class="hp-lec-n">palabra del día</span></div>
-      <div class="hp-lec-t">${artHtml}${esc(a.de)}${pl}</div>
-      <div class="ha-es">${esc(a.es)}</div>
-      ${a.ex ? `<div class="ha-ex">${esc(a.ex)}${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</div>` : ''}
-      ${a.uso ? `<div class="ha-uso"><b>Uso</b> · ${esc(a.uso)}</div>` : ''}
-    </button>`;
+    const pl = a.pl && a.pl !== '-' ? `<span class="ap-m">pl. die ${esc(a.pl)}</span>`
+             : (art === 'pl.' ? '<span class="ap-m">solo plural</span>' : '');
+    const frase = a.tipo === 'frase';
+    // Un ejemplo que repite la frase tal cual no enseña nada nuevo: se omite.
+    const sinPunto = s => String(s || '').replace(/[.!?¡¿]+$/, '').trim().toLowerCase();
+    const ex = a.ex && sinPunto(a.ex) !== sinPunto(a.de) ? a.ex : '';
+    h += apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA,
+      mat: `Alemán · ${esc((V.cats[a.cat] || {}).label || '')}`,
+      estado: apEstado(vistos.de, frase ? 'frase del día' : 'palabra del día', '✓ vista'),
+      otra: frase ? 'Otra frase' : 'Otra palabra', abrir: "aprendeAbrir('de')", titulo: 'Abrir su sección en Alemán',
+      cuerpo: `<span class="ap-de">${artHtml}${esc(a.de)}</span>
+        <span class="ap-es">${esc(a.es)}${pl}</span>
+        ${ex ? `<span class="ap-ex">${esc(ex)}${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</span>` : ''}
+        ${a.uso ? `<span class="ap-nota"><b>Uso</b> · ${esc(a.uso)}</span>` : ''}` });
   }
   if(v){
     const f = String(v.conj).split('·').map(s => s.trim());
     const aux = v.aux === 'ist' ? 'ist' : 'hat';
-    const regla = alPerfektRegla(v);
-    h += `<button type="button" class="hp-lec" onclick="hoyAlAleman('${AL_GRAM}')" title="Abrir el Partizip en Alemán">
-      <div class="hp-lec-top">${bandera}<span class="hp-lec-tag">${enClase ? `Perfekt · Kapitel ${kap} en clase` : 'Alemán · Perfekt'}</span><span class="hp-lec-n">verbo del día</span></div>
-      <div class="hp-lec-t">${esc(v.de)} <span class="ha-flecha">→</span> <span class="ha-aux ${aux}">${aux}</span> ${esc(f[f.length - 1])}</div>
-      <div class="ha-es">${esc(v.es)}${f.length >= 3 ? `<span class="ha-m">${esc(f[0])} · ${esc(f[1])}</span>` : ''}</div>
-      ${regla ? `<div class="ha-uso">${esc(regla)}</div>` : ''}
-    </button>`;
+    // La regla, solo con sein: es la excepción que hay que aprenderse. La de haben («todo lo
+    // demás») saldría en casi nueve de cada diez verbos sin decir nada que el «hat» no diga ya.
+    const regla = aux === 'ist' ? alPerfektRegla(v) : '';
+    h += apFila({ slot: 'verbo', c: 'var(--g)', marca: AP_BANDERA,
+      mat: enClase ? `Perfekt · Kapitel ${kap} en clase` : 'Alemán · Perfekt',
+      estado: apEstado(vistos.verbo, 'verbo del día', '✓ visto'),
+      otra: 'Otro verbo', abrir: "aprendeAbrir('verbo')", titulo: 'Abrir el Partizip en Alemán',
+      cuerpo: `<span class="ap-t">${esc(v.de)} <span class="ap-flecha">→</span> <span class="ap-aux ${aux}">${aux}</span> ${esc(f[f.length - 1])}</span>
+        <span class="ap-es">${esc(v.es)}${f.length >= 3 ? `<span class="ap-m">${esc(f[0])} · ${esc(f[1])}</span>` : ''}${v.tag ? `<span class="ap-chip">${esc(v.tag)}</span>` : ''}</span>
+        ${regla ? `<span class="ap-nota">${esc(regla)}</span>` : ''}` });
   }
   return h;
 }
 
-// El tema de Python del día, con su explicación de una línea. A la derecha, lo que lleva
-// estudiado: lo marca la app de Entrevistas en `study-done-v2` ({id: true}).
+// El tema de Python, con su explicación de una línea. Cuenta como hecho cuando lo marcas estudiado
+// en Entrevistas (`study-done-v2`, {id: true}).
 function pythonHoyHtml(){
-  const p = (typeof entrevistaTemaHoy === 'function') ? entrevistaTemaHoy() : null;
+  const p = entrevistaTemaHoy();
   if(!p) return '<div class="hp-empty">El catálogo de Python no cargó — revisa entrevistas-data.js.</div>';
   const hechos = rawGet('study-done-v2', {}) || {};
   const n = ENTREVISTA_TEMAS.filter(t => hechos[t.id]).length;
-  return `<button type="button" class="hp-lec" style="--c:var(--cy)" onclick="window.open('../Entrevistas/entrevistas.html#${p.id}','_blank','noopener')" title="Abrir el tema en la app de Entrevistas">
-      <div class="hp-lec-top"><span style="font-size:12px">${p.icon || '🐍'}</span><span class="hp-lec-tag">Python · ${esc(pyModLabel(p.mod))}</span><span class="hp-lec-n">${hechos[p.id] ? '<b class="ha-ok">✓ estudiado</b>' : `${n} de ${ENTREVISTA_TEMAS.length} estudiados`}</span></div>
-      <div class="hp-lec-t">${esc(p.title)}</div>
-      ${p.hint ? `<div class="ha-es ha-2l">${esc(p.hint)}</div>` : ''}
-    </button>`;
+  return apFila({ slot: 'py', c: 'var(--cy)', marca: AP_PUNTO, mat: `Python · ${esc(pyModLabel(p.mod))}`,
+    estado: apEstado(!!hechos[p.id], 'tema del día', '✓ estudiado'), otra: 'Otro tema', abrir: "aprendeAbrir('py')",
+    titulo: `Abrir el tema en la app de Entrevistas · llevas ${n} de ${ENTREVISTA_TEMAS.length} estudiados`,
+    cuerpo: `<span class="ap-t">${esc(p.title)}</span>${p.hint ? `<span class="ap-es ap-2l">${esc(p.hint)}</span>` : ''}` });
 }
 
-// La pregunta del ISTQB CT-GenAI del día: una de los dos bancos del simulacro (los mismos que usa
-// examen-genai.js), la misma todo el día. El salto entre días es coprimo con el tamaño del banco:
-// recorre todas antes de repetir y cada día cae en otro capítulo. En la columna va un avance de
-// dos líneas; se contesta en su panel (#istqbOverlay), una vez —la primera respuesta es la que
-// cuenta, como en el examen—, y se guarda por fecha en `dash-aprende-v1`.
-const APRENDE_KEY = 'dash-aprende-v1';
+// La pregunta del ISTQB CT-GenAI: una de los dos bancos del simulacro (los mismos que usa
+// examen-genai.js). En la columna va en dos líneas; se contesta en su panel (#istqbOverlay) —la
+// primera respuesta es la que cuenta, como en el examen— y ↻ u «Otra pregunta» traen una que no
+// hayas contestado. Las respuestas: `istqb` = {fecha: [{id, e, ok}, …]}; una fecha con un objeto
+// suelto es del primer formato y se lee igual.
 function istqbBanco(){
   const A = window.EXAMEN_GENAI, B = window.EXAMEN_GENAI_B;
   return ((A && A.banco) || []).concat((B && B.banco) || []);
 }
 function istqbPreguntaHoy(){
-  const b = istqbBanco(); if(!b.length) return null;
-  const mcd = (x, y) => y ? mcd(y, x % y) : x;
-  let salto = 37; while(mcd(salto, b.length) !== 1) salto++;
-  return b[(diaDelAnio() * salto) % b.length];
+  const b = istqbBanco(); return b.length ? b[aprendeIndice('istqb', b.length)] : null;
 }
-function istqbRespuestas(){ return (rawGet(APRENDE_KEY, {}) || {}).istqb || {}; }
-function istqbHoy(q){ const r = istqbRespuestas()[hoyLocal()]; return r && r.id === q.id ? r : null; }
+function istqbRespuestas(){
+  const r = (rawGet(APRENDE_KEY, {}) || {}).istqb || {}, out = {};
+  for(const k in r) out[k] = Array.isArray(r[k]) ? r[k] : [r[k]];
+  return out;
+}
+function istqbHoy(q){ return (istqbRespuestas()[hoyLocal()] || []).find(x => x && x.id === q.id) || null; }
+function istqbYaContestadas(){
+  const r = istqbRespuestas(), s = new Set();
+  for(const k in r) r[k].forEach(x => { if(x) s.add(x.id); });
+  return s;
+}
 function istqbResponder(i){
   const q = istqbPreguntaHoy(); if(!q || istqbHoy(q)) return;
   const st = rawGet(APRENDE_KEY, {}) || {};
-  const r = st.istqb = st.istqb || {};
-  r[hoyLocal()] = { id: q.id, e: i, ok: i === q.r };
+  const r = st.istqb = st.istqb || {}, k = hoyLocal();
+  r[k] = (Array.isArray(r[k]) ? r[k] : r[k] ? [r[k]] : []).concat([{ id: q.id, e: i, ok: i === q.r }]);
   // Lo que pide la racha y poco más: los últimos 120 días.
   Object.keys(r).sort().slice(0, -120).forEach(x => delete r[x]);
   rawSet(APRENDE_KEY, st);
@@ -7453,7 +7582,7 @@ function istqbMarcador(){
   for(let i = 0; i < 7; i++){
     const d = new Date(); d.setDate(d.getDate() - i);
     const k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-    if(r[k]){ n++; if(r[k].ok) ok++; }
+    (r[k] || []).forEach(x => { if(x){ n++; if(x.ok) ok++; } });
   }
   const X = window.EXAMEN_GENAI || {}, corte = (X.meta && X.meta.corte) || 0;
   const u = ((rawGet('examen_genai_v1', {}) || {}).intentos || []).slice(-1)[0];
@@ -7461,20 +7590,18 @@ function istqbMarcador(){
           u ? `simulacro <b class="${u.pts >= corte ? 'ok' : 'bajo'}" title="El corte es ${corte} de ${u.max}">${u.pts}/${u.max}</b>` : '']
     .filter(Boolean).join(' · ');
 }
-// En la columna: la pregunta en dos líneas y, arriba a la derecha, si ya la contestaste. Tocarla
-// abre el panel, que lleva además el marcador de la semana.
+// En la columna: la pregunta en dos líneas y, arriba, «Responder» o el resultado.
 function istqbHtml(){
   const q = istqbPreguntaHoy(); if(!q) return '';
   const hecha = istqbHoy(q);
-  const estado = !hecha ? '<b class="ha-q-ir">Responder →</b>'
-    : hecha.ok ? '<b class="ha-ok">✓ correcta</b>' : `<b class="ha-mal">✗ era la ${'ABCD'[q.r]}</b>`;
-  return `<button type="button" class="hp-lec" style="--c:var(--p)" onclick="abrirIstqb()" title="Contestar la pregunta del día">
-      <div class="hp-lec-top"><span style="font-size:12px">🧪</span><span class="hp-lec-tag">ISTQB CT-GenAI · Cap. ${q.cap} · ${esc(q.k)}</span><span class="hp-lec-n">${estado}</span></div>
-      <div class="ha-q-t ha-2l">${q.q}</div>
-    </button>`;
+  const estado = !hecha ? '<button type="button" class="ap-estado ir" onclick="abrirIstqb()">Responder</button>'
+    : `<span class="ap-estado ${hecha.ok ? 'ok' : 'mal'}">${hecha.ok ? '✓ correcta' : '✗ era la ' + 'ABCD'[q.r]}</span>`;
+  return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, mat: `ISTQB CT-GenAI · Cap. ${q.cap} · ${esc(q.k)}`,
+    estado, otra: 'Otra pregunta', abrir: 'abrirIstqb()', titulo: 'Contestar la pregunta del día',
+    cuerpo: `<span class="ap-q ap-2l">${q.q}</span>` });
 }
 // El panel: la pregunta y sus cuatro opciones. Contestada, la buena en verde y la tuya en rojo si
-// fallaste, con el porqué del programa y la sección del syllabus donde se comprueba.
+// fallaste, con el porqué del programa, la sección del syllabus y «Otra pregunta».
 function istqbPintar(){
   const q = istqbPreguntaHoy(), b = document.getElementById('istqbBody'); if(!q || !b) return;
   const X = window.EXAMEN_GENAI || {}, hecha = istqbHoy(q), LET = 'ABCD';
@@ -7488,7 +7615,7 @@ function istqbPintar(){
     <div class="ha-ops">${ops}</div>
     ${hecha ? `<div class="ha-res ${hecha.ok ? 'ok' : 'mal'}">${hecha.ok ? '✓ Correcta' : '✗ Era la ' + LET[q.r]}<span>syllabus ${esc(q.ref)}</span></div>
     <div class="ha-why">${q.why}</div>` : ''}
-    <div class="ha-pie"><span>${istqbMarcador()}</span><a href="javascript:void(0)" class="hp-link" onclick="istqbAlSimulacro()">Simulacro completo →</a></div>`;
+    <div class="ha-pie"><span>${istqbMarcador()}</span><span class="ha-pie-acc">${hecha ? `<button type="button" class="ha-otra" onclick="aprendeOtra('istqb')">Otra pregunta →</button>` : ''}<a href="javascript:void(0)" class="hp-link" onclick="istqbAlSimulacro()">Simulacro completo →</a></span></div>`;
 }
 // Mientras está abierto, Mi Día no rota: la rotación vuelve al cerrarlo.
 function abrirIstqb(){
@@ -7506,7 +7633,20 @@ function istqbAlSimulacro(){
 
 function renderHeroAprender(){
   const el = document.getElementById('heroAprenderPanel'); if(!el) return;
-  el.innerHTML = `<div class="hp-title"><span>🎓 Hoy aprendes</span></div>${alemanHoyHtml()}${pythonHoyHtml()}${istqbHtml()}${pasoSemanaHtml()}${fichaEnCursoHtml()}`;
+  const vistos = aprendeHoy().h.vistos || {};
+  const p = entrevistaTemaHoy(), q = istqbPreguntaHoy();
+  const estudiados = rawGet('study-done-v2', {}) || {};
+  // Lo hecho hoy, en el orden de la lista: la palabra y el verbo al abrirlos, Python al marcarlo
+  // estudiado, el ISTQB al contestar una.
+  const hechos = [!!vistos.de, !!vistos.verbo, !!(p && estudiados[p.id]), !!(q && (istqbRespuestas()[hoyLocal()] || []).length)];
+  const color = ['var(--g)', 'var(--g)', 'var(--cy)', 'var(--p)'];
+  const d = new Date();
+  const fecha = `${DIAS_CORTOS[d.getDay()].toLowerCase()} ${d.getDate()} ${MES_LABEL_FULL[d.getMonth()].slice(0, 3).toLowerCase()}`;
+  const avance = pasoSemanaHtml() + fichaEnCursoHtml();
+  el.innerHTML = `<div class="hp-title"><span>🎓 Hoy aprendes</span><span class="ap-fecha">${fecha} · <b>${hechos.filter(Boolean).length} de 4</b></span></div>
+    <div class="ap-barra" title="La palabra y el verbo cuentan al abrirlos; Python, al marcarlo estudiado; el ISTQB, al contestarlo">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
+    <div class="ap-lista">${alemanHoyHtml(vistos)}${pythonHoyHtml()}${istqbHtml()}</div>
+    ${avance ? `<div class="ap-avance"><span class="ap-lbl">Tu avance</span>${avance}</div>` : ''}`;
 }
 
 function renderHeroGymPanel(){
@@ -13174,6 +13314,9 @@ function tickClock(){
   const hd=document.getElementById('heroDate'); if(hd) hd.textContent=n.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   const sy=document.getElementById('hudSync'); if(sy){const s=Math.round((Date.now()-lastSync)/1000);sy.textContent='· sync hace '+(s<60?s+'s':Math.round(s/60)+'m');}
   const dc=document.getElementById('diaClock'); if(dc) dc.textContent=`${hh}:${mm}`;
+  // Lo del día cambia a medianoche aunque el Dashboard siga abierto y Mi Día no rote.
+  const diaN=diaCorrido(n);
+  if(_diaPintado!==diaN){ const antes=_diaPintado; _diaPintado=diaN; if(antes!==undefined&&typeof renderDiaHero==='function') renderDiaHero(); }
   // El panel del bloque NO se repinta cada segundo (2026-08-23). Antes sí, porque solo mostraba
   // el bloque activo; ahora puede estar mostrando el tramo que tocaste en la cinta, y repintarlo
   // te lo quitaría de debajo del cursor 60 veces por minuto. Se repinta solo cuando el bloque
@@ -13191,6 +13334,7 @@ function tickClock(){
   }
 }
 let _ultimoBloqueActivo;
+let _diaPintado;
 
 // Desliza la línea verde de "ahora" sobre la cinta sin volver a pintarla: la cinta guarda su
 // rango en data-ini/data-fin al construirse.

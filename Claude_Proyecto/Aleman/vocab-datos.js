@@ -2347,10 +2347,6 @@ const ALEMAN_VOCAB = {
       return { id: id, label: subs[id], n: self.cuantas(cat, id) };
     });
   },
-  // La palabra del día: la misma todo el día, distinta cada día, sin guardar nada.
-  delDia: function (dia) {
-    return this.voc[(dia || 0) % this.voc.length];
-  },
 };
 
 if (typeof module !== 'undefined' && module.exports) module.exports = ALEMAN_VOCAB;

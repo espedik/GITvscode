@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Hoy aprendes — una a la vez</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&amp;family=Space+Grotesk:wght@500;600;700&amp;family=Fraunces:opsz,wght@9..144,600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#00e0c0}a:hover{color:#5cf2dc}
+</style>
+</helmet>
+
+<div style="width: 325px; height: 572px; box-sizing: border-box; padding: 16px 16px 14px; border-radius: 16px; background: {{c.fondo}}; border: 1px solid {{c.marco}}; color: {{c.text}}; font-family: 'Inter', system-ui, sans-serif; display: flex; flex-direction: column; gap: 12px; overflow: hidden;">
+
+  <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+    <span style="font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: {{c.text3}};">Hoy aprendes</span>
+    <span style="font-family: 'Space Grotesk', monospace; font-size: 10.5px; color: {{c.text3}};">mié 7 oct</span>
+  </div>
+
+  <!-- Las cuatro de hoy: la activa, rellena con su color -->
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px;">
+    <sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+      <button type="button" onClick="{{t.ir}}" style="height: 28px; padding: 0 4px; border-radius: 99px; border: 1px solid {{t.borde}}; background: {{t.fondo}}; color: {{t.color}}; font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; cursor: pointer; white-space: nowrap;">{{t.nombre}}</button>
+    </sc-for>
+  </div>
+
+  <!-- La tarjeta grande -->
+  <div style="flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; padding: 16px 16px 14px; border-radius: 14px; background: {{c.panel}}; border: 1px solid {{c.linea}};">
+    <span style="font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: {{acento}};">{{etiqueta}}</span>
+
+    <sc-if value="{{es0}}" hint-placeholder-val="{{true}}">
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 600; line-height: 1.15; letter-spacing: -0.015em;">Wo finde ich…?</div>
+        <div style="font-size: 15px; line-height: 1.35; color: {{c.text2}};">¿Dónde encuentro…?</div>
+        <div style="font-size: 13px; font-style: italic; line-height: 1.5;">Entschuldigung, wo finde ich Reis? <span style="font-style: normal; color: {{c.text3}};">— Disculpe, ¿dónde encuentro el arroz?</span></div>
+      </div>
+    </sc-if>
+    <sc-if value="{{es1}}" hint-placeholder-val="{{false}}">
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="font-size: 26px; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em;">schmecken<br><span style="font-weight: 400; color: {{c.text3}};">→</span> <span style="color: {{c.b}};">hat</span> geschmeckt</div>
+        <div style="font-size: 15px; line-height: 1.35; color: {{c.text2}};">saber (a) / gustar <span style="font-family: 'Space Grotesk', monospace; font-size: 11px; color: {{c.text3}};">schmeckt · schmeckte</span></div>
+      </div>
+    </sc-if>
+    <sc-if value="{{es2}}" hint-placeholder-val="{{false}}">
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="font-size: 23px; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em;">Clases Abstractas (ABC)</div>
+        <div style="font-size: 14px; line-height: 1.5; color: {{c.text2}};">Una clase que no se puede usar directamente y que obliga a sus hijas a implementar ciertos métodos.</div>
+        <div style="font-family: 'Space Grotesk', monospace; font-size: 10.5px; color: {{c.text3}};">ABCMeta · @abstractmethod · Interface</div>
+      </div>
+    </sc-if>
+    <sc-if value="{{es3}}" hint-placeholder-val="{{false}}">
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-size: 16px; font-weight: 600; line-height: 1.45;">Los modelos de visión y lenguaje son un subconjunto de los MLG multimodales. ¿Qué tareas realizan según el programa?</div>
+        <span style="align-self: flex-start; font-family: 'Space Grotesk', monospace; font-size: 11px; font-weight: 700; padding: 7px 14px; border-radius: 99px; background: {{c.pSuave}}; color: {{c.p}};">Responder →</span>
+      </div>
+    </sc-if>
+
+    <!-- Cuándo cambia sola -->
+    <div style="margin-top: auto; display: flex; align-items: center; gap: 10px;">
+      <div style="flex: 1; height: 3px; border-radius: 2px; background: {{c.vacio}};"><div style="width: {{avance}}; height: 100%; border-radius: 2px; background: {{acento}};"></div></div>
+      <span style="font-family: 'Space Grotesk', monospace; font-size: 9.5px; color: {{c.text3}}; white-space: nowrap;">{{falta}}</span>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 6px;">
+    <span style="font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: {{c.text3}};">Tu avance</span>
+    <div style="display: flex; justify-content: space-between; gap: 8px; font-size: 12px; line-height: 1.35;"><span style="font-weight: 700;">05 · La pregunta que abre puertas</span><span style="font-family: 'Space Grotesk', monospace; font-size: 10.5px; color: {{c.text3}};">5/6</span></div>
+    <div style="display: flex; justify-content: space-between; gap: 8px; font-size: 12px; line-height: 1.35;"><span style="font-weight: 700;">Manejar todo tipo de vehículos</span><span style="font-family: 'Space Grotesk', monospace; font-size: 10.5px; color: {{c.g}};">6/11</span></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"tema":{"editor":"enum","options":["oscuro","claro"],"default":"oscuro"},"rotar":{"editor":"boolean","default":true},"$preview":{"width":325,"height":572}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: 0, t: 0 };
+  }
+  componentDidMount() {
+    this.reloj = setInterval(() => {
+      if (this.props.rotar === false) return;
+      this.setState(st => st.t >= 7 ? { tab: (st.tab + 1) % 4, t: 0 } : { t: st.t + 1 });
+    }, 1000);
+  }
+  componentWillUnmount() { clearInterval(this.reloj); }
+  renderVals() {
+    const oscuro = (this.props.tema ?? 'oscuro') === 'oscuro';
+    const c = oscuro ? {
+      fondo: 'linear-gradient(180deg, #13241f 0%, #133a2c 60%, #133e2e 100%)', marco: 'rgba(255,255,255,0.10)', panel: 'rgba(255,255,255,0.04)',
+      text: '#f4f4f8', text2: '#9a9db3', text3: '#8589a8', linea: 'rgba(255,255,255,0.09)', vacio: 'rgba(255,255,255,0.10)',
+      g: '#00e87a', cy: '#00e0c0', p: '#b06eff', pSuave: 'rgba(176,110,255,0.16)', b: '#60a5fa', sobre: '#06170f'
+    } : {
+      fondo: 'linear-gradient(180deg, #f7f9fa 0%, #fbfbfc 60%, #fdfdfe 100%)', marco: 'rgba(0,0,0,0.08)', panel: 'rgba(0,0,0,0.025)',
+      text: '#16161a', text2: '#5c5f70', text3: '#63667c', linea: 'rgba(0,0,0,0.08)', vacio: 'rgba(0,0,0,0.08)',
+      g: '#00a758', cy: '#047a6b', p: '#7f4fb8', pSuave: 'rgba(127,79,184,0.12)', b: '#2563eb', sobre: '#ffffff'
+    };
+    const T = [
+      { nombre: 'Alemán', color: c.g, etiqueta: 'Alemán · En el súper · frase del día' },
+      { nombre: 'Perfekt', color: c.g, etiqueta: 'Perfekt · Kapitel 10 en clase' },
+      { nombre: 'Python', color: c.cy, etiqueta: 'Python · POO · tema del día' },
+      { nombre: 'ISTQB', color: c.p, etiqueta: 'ISTQB CT-GenAI · Cap. 1 · K2' }
+    ];
+    const tab = this.state.tab;
+    const tabs = T.map((x, i) => ({
+      nombre: x.nombre,
+      fondo: i === tab ? x.color : 'transparent',
+      borde: i === tab ? x.color : c.linea,
+      color: i === tab ? c.sobre : c.text2,
+      ir: () => this.setState({ tab: i, t: 0 })
+    }));
+    const quedan = 8 - this.state.t;
+    return {
+      c, tabs, etiqueta: T[tab].etiqueta, acento: T[tab].color,
+      es0: tab === 0, es1: tab === 1, es2: tab === 2, es3: tab === 3,
+      avance: ((this.state.t + 1) / 8 * 100).toFixed(1) + '%',
+      falta: this.props.rotar === false ? 'quieta' : 'cambia en ' + quedan + ' s'
+    };
+  }
+}
+</script>
+</body>
+</html>

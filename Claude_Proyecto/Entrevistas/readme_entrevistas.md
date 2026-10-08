@@ -65,7 +65,7 @@ Script de Node **sin dependencias**: ejecuta `js/core.js` + los `js/data-*.js` e
 `ENTREVISTA_CONTENT`, `ENTREVISTA_CSS`, `PY_MOD_LABEL`). **Es de solo lectura sobre esta carpeta.**
 
 **Lo que el Dashboard usa hoy** es la tarjeta *Hoy aprendes* de Mi Día: nombra el tema de Python
-del día (`ENTREVISTA_TEMAS[diaDelAnio() % total]`, con la etiqueta de `PY_MOD_LABEL`) y lo abre
+del día (`entrevistaTemaHoy()`: la rotación diaria, saltando los que ya estudiaste, con la etiqueta de `PY_MOD_LABEL`) y lo abre
 aquí por hash (`entrevistas.html#<id>`); de `study-done-v2` saca cuántos llevas
 estudiados o si el de hoy ya está —si cambia su forma (`{id: true}`), hay que revisar
 `pythonHoyHtml()` del Dashboard—. La pantalla "Entrevista del día", que pintaba
@@ -78,8 +78,8 @@ contenido `RICH` o viceversa, y si algún tema de Python se queda sin explicaci�
 
 - **Solo viaja Python**: `MODULOS_DASHBOARD = ['pyfund','poo','testing','pycheat']` — **41 temas**
   (13 + 7 + 20 + 1), los que la propia app agrupa bajo ese nombre en su menú. Filtrar en origen
-  deja el archivo en ~1 MB en vez de 2.5 y el Dashboard no necesita lógica: recibe 41 y rota con
-  `diaDelAnio() % total`. Para incluir otro módulo, añadir su id y volver a correr. `testing` es
+  deja el archivo en ~1 MB en vez de 2.5 y el Dashboard no necesita lógica: recibe 41 y los rota
+  (`aprendeRotacion()`, ver *Que siempre cambie* en `readme_dashboard.md`). Para incluir otro módulo, añadir su id y volver a correr. `testing` es
   Python de verdad (unittest, pytest, mock, fixtures, coverage), no testing genérico.
 - **`PY_MOD_LABEL`** sale de los `m-label` del menú de `entrevistas.html`, sin el prefijo
   "Python —": la tarjeta ya dice que es Python.

@@ -307,8 +307,7 @@ fondos: el activo se marca en negrita con una flecha naranja.
 pantalla sin desplazar: qué me pongo, qué más puedo armar, qué compro.
 
 **El outfit del día** es el mismo todo el día y distinto cada día: `outfitDelDia()`
-indexa las combinaciones disponibles por el día del año, el mismo criterio que la
-palabra del día del Dashboard. No es aleatorio.
+indexa las combinaciones disponibles por el día del año. No es aleatorio.
 
 **`S.color` es la lista de lo que ya tienes, en color.** Existe porque el catálogo solo
 conoce cuatro de las 22 prendas de la colorimetría (playera blanca, negra, jeans azul y

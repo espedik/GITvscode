@@ -1,0 +1,91 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-08T04:20:00Z"
+  },
+  "title": "Hoy aprendes · rediseño",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 325,
+      "h": 572,
+      "title": "Main · Una lista, no cuatro cajas",
+      "is_interactive": true,
+      "radius": 16
+    },
+    "DireccionB.dc.html": {
+      "x": 405,
+      "y": 0,
+      "w": 325,
+      "h": 572,
+      "title": "B · Una a la vez",
+      "is_interactive": true,
+      "radius": 16
+    },
+    "DireccionC.dc.html": {
+      "x": 810,
+      "y": 0,
+      "w": 325,
+      "h": 572,
+      "title": "C · Lo mínimo",
+      "radius": 16
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "DireccionB.dc.html",
+    "DireccionC.dc.html"
+  ],
+  "notes": {
+    "titulo": {
+      "x": 0,
+      "y": -300,
+      "text": "Hoy aprendes — la columna de 325 px que estudias cada día",
+      "kind": "title1",
+      "maxW": 1135
+    },
+    "problema": {
+      "x": -460,
+      "y": 0,
+      "w": 380,
+      "text": "MEDIDO EN EL DASHBOARD DE HOY (miércoles 7, 1600×1000)\n\n· La columna mide 325×572 y lleva cuatro tarjetas con marco y fondo de color dentro de otra tarjeta: compiten entre sí y ninguna manda.\n· Lo que aprendes (la palabra, el verbo, el tema) va a 12–13.5 px; las etiquetas, a 9 px.\n· El paso de la semana y la ficha hablan otro idioma visual: filete arriba y sin caja.\n· Nada dice qué ya hiciste hoy.\n· El contenido no siempre cambiaba: el tema de Python se quedaba fijo hasta recargar, y de 1 516 palabras solo salían las primeras 366, con la misma secuencia cada año.",
+      "color": "red"
+    },
+    "cambia": {
+      "x": 1215,
+      "y": 0,
+      "w": 380,
+      "text": "QUE SIEMPRE CAMBIE — vale para las tres\n\n· Cuenta días corridos, no el día del año: las 1 498 palabras distintas, los 205 verbos, los 41 temas de Python y las 156 preguntas se recorren enteros antes de repetir uno. Simulado en el navegador: 400 días seguidos, ninguno igual al anterior.\n· Cada día salta de sección: del súper a la casa, a la ciudad, al trabajo.\n· A medianoche se repinta sola, aunque el Dashboard siga abierto.\n· Python salta los temas que ya marcaste como estudiados.\n· ↻ pide otro en cualquier momento; lo que pidas se queda hasta mañana.",
+      "color": "teal"
+    },
+    "n-main": {
+      "x": 0,
+      "y": 652,
+      "w": 325,
+      "text": "MAIN — recomendada, ya en el Dashboard.\n\nUna sola superficie con filetes: cada renglón tiene la misma anatomía —la materia arriba, lo que aprendes en grande, el detalle en gris—. Lo de cada día arriba; lo que avanza contigo, abajo. La barra se llena al hacer cada cosa. La regla del Perfekt sale solo con sein, la excepción. Prueba ↻ y el ajuste «hechos».",
+      "color": "green"
+    },
+    "n-b": {
+      "x": 405,
+      "y": 652,
+      "w": 325,
+      "text": "B — una a la vez.\n\nUna tarjeta grande que rota sola cada 8 s entre Alemán, Perfekt, Python e ISTQB: cambia mientras la miras y se lee a dos metros. En contra: tres de cuatro cosas quedan ocultas en cada momento.",
+      "color": "blue"
+    },
+    "n-c": {
+      "x": 810,
+      "y": 652,
+      "w": 325,
+      "text": "C — lo mínimo.\n\nSeis renglones de dos líneas, sin etiquetas ni ejemplos: lo que aprendes y su traducción. Se lee de un vistazo. En contra: el ejemplo, la regla de haben o sein y el porqué de la pregunta quedan a un toque.",
+      "color": "purple"
+    }
+  },
+  "designSystems": [],
+  "artifact": "https://claude.ai/artifact/CEVJvzy9Gg8nVEsuoCfTQg"
+}

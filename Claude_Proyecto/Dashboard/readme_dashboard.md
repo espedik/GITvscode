@@ -175,7 +175,7 @@ por dentro. **Hoy aprendes ocupa la tercera columna entera** (`grid-row: span 2`
 |---|---|---|
 | **Hábitos de hoy** | Los que tocan hoy con ancla, racha (🔥 desde 3) y `2 de 5`; se marcan aquí mismo. **Caben todos sin desplazar**: letra chica (11.5 px el nombre, 9.5 px el ancla) con el ancla debajo y, si la lista no cabe así, `.compacto` pone el ancla en la misma línea, cortada con `…` y completa en el `title`. `renderDiaHabitos()` lo decide midiendo la lista, también al cambiar el tamaño de la ventana. Medido con 9 hábitos: a 1920×1080 en dos líneas; a 1600×1000, 1536×864 y 1440×900 en una (20 px por fila); a 1366×768 todavía queda uno abajo | `HB.hoy()` / `HB.toggleHoy()`, la API que expone `habitos.js` — el mismo toggle de la cuadrícula |
 | **Entrenas** | El día que se mira —hoy, o el que tocaste en la tira— en grande (si no es hoy, su nombre en verde arriba), **sus ejercicios** con series×reps y peso, en una línea los tres días que siguen y la tira de 7 días como chips de foto (`#heroWeekStrip`, 52 px). El peso es el último que registró Ejercicio (naranja; mismo criterio que su `ejUltimo()`) o el inicial de `EJ_PESO_INI` (gris), solo en kg; un ejercicio con todas sus series hechas ese día va en verde, y tocar su nombre abre **su ficha** (ver *La ficha de un ejercicio*, abajo). *Ejercicio →* (`#diaEntrenaLink`) abre el día elegido con `?dia=N`. `.dia-entrena` es `display:contents`: la lista es lo único que cede alto y, si ni así cabe (bajo 1280 px de ancho), desplaza la tarjeta | `renderDiaEntrena()` sobre `D.gym.rutina` o `GYM_RUTINA_DEFAULT`; el ✅ sale de `gymSesiones()`, que normaliza `mirutina_v1.sesiones` (objeto por fecha desde el 1-sep-2026, lista antes) |
-| **Hoy aprendes** | Lo que se estudia hoy, de arriba abajo por el orden del plan. **La palabra de alemán** con el artículo en el color de su género (el `VOC_COLOR` de la app), el plural, el ejemplo con su traducción y el `uso` si lo trae: abre su sección en Alemán. **El verbo del día en Perfekt** (*brauchen → hat gebraucht*), lo que se ve en clase en el Kapitel 10, con su regla de haben o sein: abre el Partizip. **El tema de Python** con su explicación y cuántos llevas estudiados (*✓ estudiado* si es el de hoy), que abre en la app de Entrevistas por su hash (`entrevistas.html#<id>`). **La pregunta del ISTQB CT-GenAI** en dos líneas, que se contesta en su panel (abajo). **El paso de la semana** con la portada de su libro y **la ficha de Habilidades Base en curso** con el paso al que se retoma. La bandera es CSS (`.flag-de`): el emoji 🇩🇪 sale como «DE» en Windows. Medido: a 1600×1000 mide 325×572 y cabe entero; a 1920×1080, 421×665 y cabe; a 1440×900 desplaza 122 px por dentro | `alemanHoyHtml()` con `alemanPalabraHoy()`, `alemanVerboHoy()` (los verbos que traen `conj` y `aux`) y `alPerfektRegla()` (el bloque `habenSein` del Partizip); `pythonHoyHtml()` con `entrevistaTemaHoy()` (uno de los 41 de `ENTREVISTA_TEMAS`), `pyModLabel()` y `study-done-v2`; `istqbHtml()`; `pasoSemanaHtml()` con `habFocoActual()`/`habLibro()` y `fichaEnCursoHtml()` con `hbAvance()`. Lo de cada día sale de `diaDelAnio()` |
+| **Hoy aprendes** | **Una lista, no cajas** (la dirección Main de `diseno-hoyaprendes/`). Arriba, la fecha, `N de 4` y una barra de cuatro tramos que se llena con lo hecho hoy: la palabra y el verbo al abrirlos, Python al marcarlo estudiado en Entrevistas, el ISTQB al contestarlo. Cuatro renglones con la misma anatomía —la materia y su estado arriba, con ↻; lo que aprendes en grande; el detalle en gris—: **la palabra o frase de alemán** con el artículo en el color de su género (`VOC_COLOR`), el plural, el ejemplo traducido (se omite si repite la frase) y el `uso`; **el verbo del día en Perfekt** (*schmecken → hat geschmeckt*) con sus formas, su etiqueta (*sin ge-*, *irregular*) y la regla de haben o sein **solo cuando va con sein**, que es la excepción; **el tema de Python** con su explicación; **la pregunta del ISTQB** en dos líneas, con *Responder*. Abajo, **Tu avance**: el paso de la semana con la portada de su libro y la ficha de Habilidades Base en curso con su barra; esos dos cambian al avanzar en su pantalla. Tocar un renglón lo abre donde se estudia: la sección de la palabra, el Partizip, `entrevistas.html#<id>` o el panel del ISTQB. La bandera es CSS (`.flag-de`): el emoji 🇩🇪 sale como «DE» en Windows. Medido a 1600×1000 con la columna de 572 y de 616 px —cambia con el bloque en curso—: cabe entera; a 1920×1080, 421×694; a 1440×900 desplaza 40 px por dentro | `renderHeroAprender()` con `alemanHoyHtml()`, `pythonHoyHtml()` e `istqbHtml()` —los tres por `apFila()`—, `pasoSemanaHtml()` y `fichaEnCursoHtml()`; lo de cada día, de `alemanPalabraHoy()`, `alemanVerboHoy()`, `entrevistaTemaHoy()` e `istqbPreguntaHoy()` (abajo, *Que siempre cambie*) |
 | **Tu dinero** | Fondo de emergencia, deudas, **los cobros y abonos de los próximos 7 días** y *Invertir hoy · Primero tu fondo →* | `renderHeroDinero()` + `cobrosHtml()` sobre `ctAgenda()` → `CIFRAS.agendaDia`, la misma fuente que el tablero |
 | **Fase** | Responde qué toca de la fase, cuánto va a la BBVA y a GBM, y qué sigue. La fase activa con su barra (*día 3 de 182 · quedan 179*). **Este mes**: las tareas del mes, pendientes primero, con casilla —se marcan aquí mismo— y *en 8 días* cuando el texto trae su día dentro del mes (*"cierra el 31 mar"* en una tarea de enero es un plazo, no el día de hacerla); el texto completo, al pasar el ratón; si el mes no trae tareas, las de toda la fase. **El dinero de Alemania**: el próximo lunes de Didi (`didiAlAhorro` × 12/52) —a la BBVA, para el mínimo de su día de pago o a GBM, según `planBbva`—, el próximo envío del calendario —a la BBVA o a GBM, hasta el último mes en México—, el día que la BBVA queda en cero con lo que cuesta en intereses y la cifra que decide la fase: sus cortes de junio y la salida con lo que falta, o en la Fase 1 `marzoParaSalida` contra `alemaniaMarzo`, con el ingreso nuevo que pide (`extraSalida`). **Lo que sigue**: la primera pendiente de un mes que viene o, sin ella, el hito más cercano. **Después · Fase N** solo en el último mes de la fase | `renderHeroFase()` sobre `PHASES`, `ctAgenda()`, los `cortes` de `PROYECCION` y `CALENDARIO.hitos`; la casilla llama a `faseHoyMarca()`, que guarda con `toggleFaseCheck` en la semana de hoy; `faseDespuesHtml()` |
 
@@ -184,21 +184,45 @@ por dentro. **Hoy aprendes ocupa la tercera columna entera** (`grid-row: span 2`
 bajo 600 px). **Al medir Mi Día, la hora importa**: el alto cambia con el bloque actual y los que
 quedan, así que dos medidas a horas distintas no son comparables.
 
+### Que siempre cambie
+
+Lo de cada día sale de una rotación, no del día del año, que se reinicia cada enero: con él, de las
+1 516 palabras solo saldrían las primeras 366, y en el mismo orden cada año. `diaCorrido()` cuenta
+días en hora local desde el 1-ene-2024 y `aprendeRotacion()` avanza cada catálogo con su propio salto,
+coprimo con su tamaño (`APRENDE_SALTO`): recorre todo antes de repetir y dos días seguidos caen lejos
+—otra sección, otro capítulo, otro módulo—.
+
+- **Sin repetidos**: `alemanPalabras()` deja una vez cada palabra (18 están en dos secciones): 1 498
+  distintas, y de ahí salen los 205 verbos con `conj` y `aux`.
+- **Python** salta los temas que ya marcaste como estudiados y fija el del día al primer vistazo: si
+  lo estudias hoy, se queda con su ✓ en vez de saltar al siguiente.
+- **↻** (`aprendeOtra()`) trae otro al azar, distinto del que ves —en Python y en el ISTQB, uno que no
+  hayas hecho— y se queda hasta mañana.
+- **A medianoche** `tickClock()` repinta Mi Día (`renderDiaHero()`) aunque el Dashboard siga abierto y
+  sin rotar.
+- Lo de hoy vive en `dash-aprende-v1` → `hoy`: la fecha, lo que pediste con ↻, el tema de Python fijado
+  y lo que ya abriste. Con otra fecha se empieza en limpio.
+
+Medido en el navegador con la fecha simulada, 400 días seguidos: ningún día repite el anterior en
+ninguno de los cuatro; en su primera vuelta salen 400 palabras distintas, 205 de 205 verbos, 41 de 41
+temas y 156 de 156 preguntas; la palabra cae en la misma sección que la víspera 3 de 399 días, y el
+1 de enero la rotación sigue sin reiniciarse.
+
 ### La pregunta del ISTQB del día
 
 Una de las 156 preguntas de los dos bancos del simulacro (`EXAMEN_GENAI` y `EXAMEN_GENAI_B`, los mismos
-de Mis Metas), la misma todo el día: `istqbPreguntaHoy()` avanza por el banco con un salto coprimo con
-su tamaño, así que recorre todas antes de repetir y cada día cae en otro capítulo. En la columna va la
-pregunta en dos líneas y, arriba a la derecha, *Responder →* o el resultado. Tocarla abre
-`#istqbOverlay` (`abrirIstqb()`): enunciado y cuatro opciones; al contestar, la buena en verde, la
-tuya en rojo si fallaste, el porqué del programa y la sección del syllabus. **Se contesta una vez**: la
-primera respuesta es la que cuenta, como en el examen. Abajo, lo contestado en los últimos 7 días y el
-último simulacro de `examen_genai_v1`, en ámbar si quedó bajo el corte; *Simulacro completo →*
+de Mis Metas), la de la rotación de hoy. En la columna va en dos líneas con *Responder*, o el resultado
+cuando ya la contestaste. Tocarla abre `#istqbOverlay` (`abrirIstqb()`): enunciado y cuatro opciones; al
+contestar, la buena en verde, la tuya en rojo si fallaste, el porqué del programa y la sección del
+syllabus. **Cada pregunta se contesta una vez**: la primera respuesta es la que cuenta, como en el examen;
+después, *Otra pregunta →* (o ↻) trae una que no hayas contestado. Al pie, lo contestado en los últimos
+7 días y el último simulacro de `examen_genai_v1`, en ámbar si quedó bajo el corte; *Simulacro completo →*
 (`istqbAlSimulacro()`) abre el examen entero. Mientras el panel está abierto Mi Día no rota; se cierra
 con ✕, clic fuera o Escape.
 
-Las respuestas viven en `dash-aprende-v1` como `{istqb: {fecha: {id, e, ok}}}`, con la fecha local
-(`hoyLocal()`), y se quedan los últimos 120 días.
+Las respuestas viven en `dash-aprende-v1` → `istqb`, una lista por fecha local (`hoyLocal()`) de
+`{id, e, ok}`; una fecha con un objeto suelto es del primer formato y se lee igual. Se quedan los
+últimos 120 días.
 
 ### La ficha de un ejercicio
 
