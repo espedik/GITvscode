@@ -3051,24 +3051,37 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .ap-flecha{font-weight:400;color:var(--text3)}
 .ap-aux.hat{color:var(--b)}
 .ap-aux.ist{color:var(--o)}
-/* Lo que avanza contigo, abajo y aparte de lo del día. */
-.ap-avance{margin-top:auto;display:flex;flex-direction:column;gap:8px;padding-top:10px}
+/* Tu avance: lo que avanza contigo y no con el calendario. Ocupa todo el alto que le queda a la
+   columna y lo reparte entre sus dos renglones, con la misma anatomía: la imagen a toda la altura,
+   la materia con su cuenta, el título, un tramo por paso —lleno lo hecho, marcado el que sigue— y el
+   detalle, con tantas líneas como quepan (`apAjustarAvance()`). */
+.ap-avance{flex:1 0 auto;display:flex;flex-direction:column;padding-top:10px}
 .ap-lbl{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
-.ap-paso,.ap-ficha{width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
-.ap-paso{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:center}
-.ap-paso img,.ap-paso-ico{width:28px;height:40px;border-radius:3px;object-fit:cover;background:rgba(var(--ov),.08)}
-.ap-paso img{box-shadow:0 4px 10px rgba(0,0,0,.25)}
-.ap-paso-ico{display:flex;align-items:center;justify-content:center;font-size:15px}
-.ap-col{display:flex;flex-direction:column;gap:2px;min-width:0}
-.ap-ficha{display:flex;flex-direction:column;gap:5px}
-.ap-ficha>span{display:block}
-.ap-ficha>.ap-ficha-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.ap-t2{font-size:12.5px;font-weight:700;line-height:1.3;color:var(--text)}
-.ap-sub{font-size:11px;line-height:1.35;color:var(--text3)}
-.ap-n{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--g)}
-.ap-mini{height:3px;border-radius:2px;background:rgba(var(--ov),.1)}
-.ap-mini i{display:block;height:100%;border-radius:2px;background:var(--g)}
-.ap-paso:hover .ap-t2,.ap-ficha:hover .ap-t2{color:var(--cy)}
+.ap-av{flex:1 1 0;min-height:58px;display:flex;align-items:stretch;gap:12px;width:100%;padding:9px 0;border:0;
+  background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.ap-av+.ap-av{border-top:1px solid rgba(var(--ov),.09)}
+.ap-av-img{flex:none;align-self:stretch;width:auto;height:auto;aspect-ratio:2/3;min-width:44px;max-width:38%;min-height:52px;
+  border-radius:8px;object-fit:cover;background:color-mix(in srgb,var(--c) 14%,transparent);box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.ap-av-img.libro{object-position:top}
+.ap-av-ico{display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:none}
+.ap-av-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.ap-av-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.ap-av-mat{min-width:0;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--c);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ap-av-n{flex:none;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--c)}
+.ap-av-t{font-size:13.5px;font-weight:700;line-height:1.3;color:var(--text)}
+.ap-av:hover .ap-av-t{color:var(--c)}
+.ap-seg{display:flex;gap:3px;margin:2px 0}
+.ap-seg i{flex:1 1 0;height:4px;border-radius:2px;background:rgba(var(--ov),.1)}
+.ap-seg i.ok{background:var(--c)}
+.ap-seg i.ya{background:color-mix(in srgb,var(--c) 30%,transparent);box-shadow:inset 0 0 0 1px var(--c)}
+/* El detalle no empuja el alto de la columna: va encima de su caja y la caja es lo que sobra. */
+.ap-av-cuerpo{flex:1 1 0;min-height:0;position:relative}
+.ap-av-txt{position:absolute;inset:0;overflow:hidden;font-size:11.5px;line-height:1.45;color:var(--text2);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.ap-av-txt b{color:var(--text);font-weight:700}
+.ap-av-k{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text);margin-right:3px}
+@media(max-width:900px){.ap-avance,.ap-av,.ap-av-cuerpo{flex:none}.ap-av-img{aspect-ratio:auto;width:64px;max-width:none}.ap-av-txt{position:static;-webkit-line-clamp:4}}
 /* La bandera de Alemania en CSS: el emoji se pinta como las letras "DE" en Windows. */
 .flag-de{display:inline-block;width:14px;height:9px;border-radius:2px;flex-shrink:0;
   background:linear-gradient(#000 0 33.4%,#dd0000 33.4% 66.7%,#ffce00 66.7%);box-shadow:0 0 0 1px rgba(var(--ov),.16)}
@@ -7097,7 +7110,7 @@ function renderDiaHabitos(){
 }
 // Al cambiar el tamaño de la ventana cambia lo que cabe: los hábitos y el AHORA se vuelven a decidir.
 let _dhResize=0;
-addEventListener('resize',()=>{ clearTimeout(_dhResize); _dhResize=setTimeout(()=>{ renderDiaHabitos(); if(typeof renderDia==='function') renderDia(); },150); });
+addEventListener('resize',()=>{ clearTimeout(_dhResize); _dhResize=setTimeout(()=>{ renderDiaHabitos(); if(typeof renderDia==='function') renderDia(); if(typeof apAjustarAvance==='function') apAjustarAvance(); },150); });
 // Los cobros y abonos de los próximos 7 días, de CIFRAS.agendaDia — la misma fuente que el
 // calendario del Plan Maestro, para que las dos pantallas no puedan discrepar.
 function cobrosHtml(mon){
@@ -7120,10 +7133,15 @@ function faseDespuesHtml(f){
   const dm={day:'numeric',month:'long'};
   return `<div class="hp-sub"><div class="hp-sub-lbl"><span>Después · ${esc(nx.tag)}</span><span>desde el ${nx.start.toLocaleDateString('es-MX',dm)}</span></div><div class="hp-sub-t">${esc(nx.title)}</div></div>`;
 }
-// Lo que avanza contigo y no con el calendario —cambia al avanzar en su pantalla—: el paso de la
-// semana (la habilidad del foco de «En qué invertir tu tiempo») con la portada de su libro, y la
-// ficha de Habilidades Base en curso, la empezada más cerca de terminar (mismo criterio que
-// «SIGUIENTE» en esa pantalla), con el paso al que se retoma.
+// Tu avance: lo que avanza contigo y no con el calendario —cambia al avanzar en su pantalla—.
+// El paso de la semana (la habilidad del foco de «En qué invertir tu tiempo») con la portada de su
+// libro, su «Qué hacer», su porqué y el paso que viene; y la ficha de Habilidades Base en curso, la empezada más cerca de
+// terminar (mismo criterio que «SIGUIENTE» en esa pantalla), con su foto y lo que dice el
+// paso que sigue. Un tramo por paso: lleno lo hecho, marcado el que toca.
+function apTramos(n, hecho, toca){
+  let h = ''; for(let j = 0; j < n; j++) h += `<i class="${hecho(j) ? 'ok' : j === toca ? 'ya' : ''}"></i>`;
+  return `<span class="ap-seg">${h}</span>`;
+}
 function pasoSemanaHtml(){
   if(typeof habFocoActual!=='function') return '';
   const foco=habFocoActual(); if(!foco) return '';
@@ -7132,10 +7150,14 @@ function pasoSemanaHtml(){
   const p=pasos[i];
   const r=(Array.isArray(p.r)?p.r:[]).find(x=>x&&x.t==='libro');
   const lib=r?habLibro(r.id):null;
-  return `<button type="button" class="ap-paso" onclick="irASlide('theme-skills')" title="Abrir En qué invertir tu tiempo${lib?` · con ${esc(lib.t)}`:''}">
-      ${lib?`<img src="${lib.portada||''}" alt="" loading="lazy">`:`<span class="ap-paso-ico">${foco.icon}</span>`}
-      <span class="ap-col"><span class="ap-t2">${String(i+1).padStart(2,'0')} · ${esc(p.n)}</span>
-      <span class="ap-sub">${esc(foco.name)} · paso de la semana, ${i+1} de ${pasos.length}</span></span>
+  return `<button type="button" class="ap-av" style="--c:var(--w)" onclick="irASlide('theme-skills')" title="Abrir En qué invertir tu tiempo${lib?` · con ${habAttr(lib.t)}`:''}">
+      ${lib?`<img class="ap-av-img libro" src="${lib.portada||''}" alt="" loading="lazy">`:`<span class="ap-av-img ap-av-ico">${foco.icon}</span>`}
+      <span class="ap-av-col">
+        <span class="ap-av-top"><span class="ap-av-mat">${esc(foco.name)} · esta semana</span><span class="ap-av-n">${i+1}/${pasos.length}</span></span>
+        <span class="ap-av-t">${esc(p.n)}</span>
+        ${apTramos(pasos.length, j=>j<i, i)}
+        <span class="ap-av-cuerpo"><span class="ap-av-txt"><b class="ap-av-k">Qué hacer</b> ${p.c||''}${p.q?` <b class="ap-av-k">Por qué</b> ${p.q}`:''}${lib?` <b class="ap-av-k">Con</b> <i>${esc(lib.t)}</i>${r.nota?`, ${esc(r.nota)}`:''}.`:''}${pasos[i+1]?` <b class="ap-av-k">Después</b> ${esc(pasos[i+1].n)}.`:''}</span></span>
+      </span>
     </button>`;
 }
 function fichaEnCursoHtml(){
@@ -7147,12 +7169,31 @@ function fichaEnCursoHtml(){
   const info=HABILIDAD_DETALLE[sig.h.id]; const store=(rawGet('habilidades_checklist_v1',{})[sig.h.id])||{};
   const k=info?info.pasos.findIndex((_,j)=>!store[j]):-1;
   const paso=k>=0?info.pasos[k]:null;
-  const pct=sig.total?Math.round(sig.hechos/sig.total*100):0;
-  return `<button type="button" class="ap-ficha" onclick="abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')" title="Abrir la ficha de Habilidades Base">
-      <span class="ap-ficha-top"><span class="ap-t2">${esc(sig.h.t)}</span><span class="ap-n">${sig.hechos}/${sig.total}</span></span>
-      <span class="ap-mini"><i style="width:${pct}%"></i></span>
-      <span class="ap-sub">${paso?`Sigue el paso ${k+1} · ${esc(mdLimpiaTitulo(paso.t))}`:'Ficha completa'}</span>
+  // La foto viene a 2400 px para el panel de detalle; aquí basta una de 320.
+  const foto=String(sig.h.img||'').replace(/([?&]w=)\d+/,(_,a)=>a+'320').replace(/([?&]q=)\d+/,(_,a)=>a+'70');
+  // Lo que dice el paso que sigue: su entrada y los puntos de su lista, en el orden de la ficha.
+  const consejo=paso?[paso.d].concat(paso.list||[]).filter(Boolean).join(' · ').replace(': · ',': '):'';
+  return `<button type="button" class="ap-av" style="--c:var(--b)" onclick="abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')" title="Abrir la ficha de Habilidades Base">
+      <img class="ap-av-img" src="${foto}" alt="" loading="lazy">
+      <span class="ap-av-col">
+        <span class="ap-av-top"><span class="ap-av-mat">Habilidades base</span><span class="ap-av-n">${sig.hechos}/${sig.total}</span></span>
+        <span class="ap-av-t">${esc(sig.h.t)}</span>
+        ${info?apTramos(info.pasos.length, j=>!!store[j], k):''}
+        <span class="ap-av-cuerpo"><span class="ap-av-txt">${paso?`<b class="ap-av-k">Paso ${k+1} · ${esc(mdLimpiaTitulo(paso.t))}</b> ${consejo}`:'Ficha completa: repásala cuando quieras.'}</span></span>
+      </span>
     </button>`;
+}
+// El detalle de cada renglón llena su caja: tantas líneas como quepan, con «…» en la última. Se
+// mide al pintar y al cambiar el tamaño de la ventana; en el teléfono va en el flujo, con 4.
+function apAjustarAvance(){
+  document.querySelectorAll('#heroAprenderPanel .ap-av-cuerpo').forEach(caja => {
+    const t = caja.firstElementChild; if(!t) return;
+    if(getComputedStyle(t).position !== 'absolute'){ t.style.webkitLineClamp = ''; t.style.visibility = ''; return; }
+    const lh = parseFloat(getComputedStyle(t).lineHeight) || 16;
+    const n = Math.floor((caja.clientHeight + 2) / lh);
+    t.style.visibility = n < 1 ? 'hidden' : '';
+    t.style.webkitLineClamp = String(Math.max(1, n));
+  });
 }
 // Semana ISO del año, para la esquina de la frase.
 function semanaISO(d){
@@ -7647,6 +7688,7 @@ function renderHeroAprender(){
     <div class="ap-barra" title="La palabra y el verbo cuentan al abrirlos; Python, al marcarlo estudiado; el ISTQB, al contestarlo">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
     <div class="ap-lista">${alemanHoyHtml(vistos)}${pythonHoyHtml()}${istqbHtml()}</div>
     ${avance ? `<div class="ap-avance"><span class="ap-lbl">Tu avance</span>${avance}</div>` : ''}`;
+  apAjustarAvance();
 }
 
 function renderHeroGymPanel(){
