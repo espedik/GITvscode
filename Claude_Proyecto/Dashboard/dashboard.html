@@ -3023,9 +3023,10 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   background:rgba(var(--cy-rgb),.07);border:1px solid rgba(var(--cy-rgb),.2);font-size:12.5px;color:var(--text2);line-height:1.4}
 .blq-escuchar b{color:var(--text)}
 .blq-escuchar .hp-link{margin-left:auto;flex-shrink:0;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase}
-/* Los cinco módulos: 3×2 y Hoy aprendes ocupa la tercera columna entera. Cada uno desplaza por dentro. */
-.dia-mods{flex:1;min-height:0;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:14px}
-#miDiaSecundarios{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+/* Los módulos: a la izquierda Hábitos de hoy, Entrenas y, al pie, Qué invertir hoy; a la derecha,
+   Hoy aprendes en los dos tercios que quedan, a todo lo alto. Cada uno desplaza por dentro. */
+.dia-mods{flex:1;min-height:0;grid-template-columns:minmax(0,1fr) minmax(0,2fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr) auto;gap:14px}
+#miDiaSecundarios{grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:14px}
 #miDiaSecundarios>.tile{border-radius:16px;padding:14px 16px 12px;min-height:0;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column;gap:6px}
 #miDiaSecundarios .hp-title{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--text3);margin-bottom:4px}
 #miDiaSecundarios .hp-title span:first-child{display:flex;align-items:center;gap:6px}
@@ -3041,14 +3042,36 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .hp-cobro b{color:var(--text);font-weight:600}
 .hp-cobro .m{font-family:var(--mono);font-weight:700;color:var(--text);white-space:nowrap}
 .hp-cobro .m.entra{color:var(--g)}
-/* ─── Hoy aprendes: la tercera columna entera de Mi Día (diseño: diseno-hoyaprendes/, Main) ───
+/* ─── Hoy aprendes: los dos tercios de la derecha de Mi Día (diseño: diseno-hoyaprendes/, Main) ───
    Una lista con filetes, no cajas dentro de la caja: cada renglón tiene la misma anatomía —la
    materia arriba, lo que aprendes en grande, el detalle en gris— y `--c` es el color de su
-   materia, un token del tema. Ocupa las dos filas de la rejilla (bajo 1280 px, la primera columna
-   de la segunda y la tercera; en el teléfono va sola). */
-#heroAprenderPanel{grid-row:span 2}
-@media(max-width:600px){#heroAprenderPanel{grid-row:auto}}
+   materia, un token del tema. Ocupa la segunda columna a todo lo alto; bajo 900 px va a todo lo
+   ancho, debajo de los demás. */
+#heroAprenderPanel{grid-column:2;grid-row:1/-1;container-type:inline-size}
+@media(max-width:900px){#heroAprenderPanel,#miDiaSecundarios>.dia-invertir{grid-column:1/-1;grid-row:auto}}
 #miDiaSecundarios>#heroAprenderPanel{gap:0}
+/* A lo ancho (Adán: "todo el espacio que queda, expande lo de hoy aprendes"), se acomoda a su propio
+   ancho: desde 560 px los cuatro renglones van en 2×2; desde 900 px, además, los dos de Tu avance van
+   lado a lado, con la imagen en su proporción arriba y el detalle a todo el alto. Más angosto —el
+   teléfono— sigue siendo la lista de siempre. */
+/* Con el id delante: las reglas de cada pieza van más abajo y, a igual peso, ganarían. */
+@container (min-width:560px){
+  #heroAprenderPanel .ap-lista{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:26px}
+  #heroAprenderPanel .ap-lista>.ap-fila:nth-last-child(-n+2){border-bottom:1px solid rgba(var(--ov),.09)}
+}
+@container (min-width:900px){
+  #heroAprenderPanel .ap-avance{flex:1 1 0;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto minmax(0,1fr)}
+  #heroAprenderPanel .ap-avance>.ap-lbl{grid-column:1/-1}
+  #heroAprenderPanel .ap-av{flex-direction:column;gap:10px;min-height:0}
+  #heroAprenderPanel .ap-av:first-of-type{padding-right:24px}
+  #heroAprenderPanel .ap-av+.ap-av{border-top:0;border-left:1px solid rgba(var(--ov),.09);padding-left:24px}
+  /* La imagen arriba, a todo el ancho de su tarjeta (de la portada se ve su parte de arriba), y el
+     detalle debajo, a todo el ancho y el alto que quedan: líneas legibles y sin aire bajo la imagen. */
+  #heroAprenderPanel .ap-av-img{align-self:stretch;width:100%;max-width:none;height:clamp(150px,22vh,320px);aspect-ratio:auto;flex:none}
+  #heroAprenderPanel .ap-av-col{flex:1;min-height:0}
+  #heroAprenderPanel .ap-av-t{font-size:15px}
+  #heroAprenderPanel .ap-av-txt{font-size:12.5px;line-height:1.5}
+}
 .ap-fecha{font-family:var(--mono);font-size:10.5px;letter-spacing:0;text-transform:none;color:var(--text3);white-space:nowrap}
 .ap-fecha b{color:var(--text);font-weight:700}
 .ap-barra{display:flex;gap:4px;margin:4px 0 8px}
@@ -3213,7 +3236,29 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .de-ex-sr i.real{color:var(--o);font-weight:700}
 .dia-entrena .de-ex-row.ok .de-ex-n{color:var(--g)}
 .de-ex-row.ok .de-ex-sr{opacity:.6}
-/* Tu dinero lleva dentro el botón de invertir, compacto. */
+/* En pantallas altas (la de Adán, 2560×1440) Hábitos y Entrenas miden casi 500 px de alto: se usan.
+   Hábitos sube la letra y el aire de cada renglón; Entrenas enseña bajo cada ejercicio su indicación
+   (la misma del `title`) y agranda la tira de días. Con menos de 440 px de alto, como siempre. El
+   contenedor mide su alto solo con la rejilla de escritorio: en el teléfono el alto es el contenido. */
+@media(min-width:901px){#diaHabitos,.dia-entrena-tile{container-type:size}}
+.de-ex-cue{display:none;grid-column:1/-1;font-size:11px;line-height:1.35;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@container (min-height:440px){
+  .de-ex-cue{display:block}
+  .dia-entrena-tile .ws-day{height:92px}
+  .dh-row{padding:7px 0}
+  .dh-n{font-size:13px}
+  .dh-a{font-size:11px}
+}
+/* Qué invertir hoy, en su propio módulo: al pie de la primera columna, bajo Entrenas. Dos renglones:
+   la etiqueta con «Abrir →» y el paso de hoy con su porqué, cortado a una línea; las cifras completas
+   viven en el panel que abre. */
+#miDiaSecundarios>.dia-invertir{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"lbl lbl" "paso sub";
+  align-items:baseline;column-gap:10px;row-gap:4px;border-radius:16px;padding:10px 16px 11px;box-shadow:none}
+#miDiaSecundarios>.dia-invertir:hover{transform:translateY(-1px);box-shadow:none}
+.dia-invertir .inv-btn-lbl{grid-area:lbl}
+.dia-invertir .inv-btn-paso{grid-area:paso;font-size:14.5px;margin-top:0;white-space:nowrap}
+.dia-invertir .inv-btn-sub{grid-area:sub;-webkit-line-clamp:1;font-size:11px}
+/* Tu dinero (fuera de Mi Día; ver renderHero) llevaba dentro el botón de invertir, compacto. */
 .dia-dinero>#heroDineroPanel{display:flex;flex-direction:column;flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin}
 .dia-dinero{overflow:hidden!important}
 .dia-dinero .inv-btn{flex:none;margin-top:8px;border-radius:12px;padding:9px 12px;box-shadow:none;backdrop-filter:none;
@@ -3254,7 +3299,6 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 }
 @media(max-width:1280px){
   .dia-b{grid-template-columns:360px minmax(0,1fr)}
-  .dia-mods,#miDiaSecundarios{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr))}
 }
 /* Teléfono y tablet en vertical: la agenda arriba (a su altura), y todo a una columna. */
 @media(max-width:900px){
@@ -3269,7 +3313,9 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   #miDiaSecundarios>.tile{overflow:visible}
   .dh-list{flex:none}
 }
-@media(max-width:600px){.dia-mods,#miDiaSecundarios{grid-template-columns:1fr}}
+/* minmax(0,…) y no 1fr: con 1fr la columna crecía hasta lo que mide el ancla más larga de un hábito
+   (sin cortes de línea) y los módulos se salían de la pantalla, recortados a la derecha. */
+@media(max-width:600px){.dia-mods,#miDiaSecundarios{grid-template-columns:minmax(0,1fr)}}
 
 /* ─── CALENDARIO DEL AÑO — rediseño "de presión" (2026-08-26) ─────────────────
    Pedido de Adán: "dame un diseño que me aporte mucho más a la fecha de mis metas y
@@ -4141,16 +4187,13 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
                    verDiaSemana() la usa para ver otro día en la agenda y en esta tarjeta. -->
               <div class="week-strip" id="heroWeekStrip"></div>
             </div>
+            <!-- Qué invertir hoy, solo. Tu dinero y la fase salieron de Mi Día (Adán: "solo déjame lo
+                 de invertir hoy, déjame esa función"). pintarInvertirBtn() lo pinta con el paso que
+                 toca hoy —"primero tu fondo" / "abona a tu deuda" / "hoy sí inviertes"— y su porqué;
+                 el detalle, con las cifras, en el panel que abre. -->
+            <button class="inv-btn dia-invertir" id="diaInvertirBtn" onclick="abrirGBM()"
+                    title="Qué invertir hoy — precios en vivo y tus saldos reales de Finanzas"></button>
             <div class="tile" id="heroAprenderPanel"></div>
-            <div class="tile dia-dinero">
-              <div id="heroDineroPanel"></div>
-              <!-- Se pinta en pintarInvertirBtn() con el paso que toca hoy, no con texto fijo: el
-                   botón adelanta la respuesta ("primero tu fondo" / "abona a tu deuda" / "hoy sí
-                   inviertes") sin obligar a abrir el panel para saberla. -->
-              <button class="inv-btn" id="diaInvertirBtn" onclick="abrirGBM()"
-                      title="Qué invertir hoy — precios en vivo y tus saldos reales de Finanzas"></button>
-            </div>
-            <div class="tile" id="heroFasePanel"></div>
           </div>
         </div>
       </div>
@@ -7089,7 +7132,7 @@ function renderDiaEntrena(gymRutina, dowHoy){
     const ok=(series[ej.id]||[]).filter(x=>x&&x.ok).length>=ej.series;
     return `<div class="de-ex-row${ok?' ok':''}"${info&&info.cue?` title="${esc(info.cue)}"`:''}>
       ${info?`<button class="de-ex-n" onclick="verFichaEjercicio('${ej.id}')">${ok?'✓ ':''}${n}</button>`:`<span class="de-ex-n">${ok?'✓ ':''}${n}</span>`}
-      <span class="de-ex-sr">${sr}${peso?` · <i class="${kg?'real':''}">${peso}</i>`:''}</span></div>`;
+      <span class="de-ex-sr">${sr}${peso?` · <i class="${kg?'real':''}">${peso}</i>`:''}</span>${info&&info.cue?`<span class="de-ex-cue">${esc(info.cue)}</span>`:''}</div>`;
   }).join('');
   // Los tres días que siguen al elegido; "hoy" y "mañana" solo cuando lo son de verdad (n sin
   // módulo: el sábado sigue con el domingo de la semana que viene, que no es "hoy").
@@ -7174,7 +7217,7 @@ function pasoSemanaHtml(){
         <span class="ap-av-top"><span class="ap-av-mat">${esc(foco.name)} · esta semana</span><span class="ap-av-n">${i+1}/${pasos.length}</span></span>
         <span class="ap-av-t">${esc(p.n)}</span>
         ${apTramos(pasos.length, j=>j<i, i)}
-        <span class="ap-av-cuerpo"><span class="ap-av-txt"><b class="ap-av-k">Qué hacer</b> ${p.c||''}${p.q?` <b class="ap-av-k">Por qué</b> ${p.q}`:''}${lib?` <b class="ap-av-k">Con</b> <i>${esc(lib.t)}</i>${r.nota?`, ${esc(r.nota)}`:''}.`:''}${pasos[i+1]?` <b class="ap-av-k">Después</b> ${esc(pasos[i+1].n)}.`:''}</span></span>
+        <span class="ap-av-cuerpo"><span class="ap-av-txt"><b class="ap-av-k">Qué hacer</b> ${p.c||''}${p.q?` <b class="ap-av-k">Por qué</b> ${p.q}`:''}${lib?` <b class="ap-av-k">Con</b> <i>${esc(lib.t)}</i>${r.nota?`, ${esc(r.nota)}`:''}.`:''}${pasos[i+1]?` <b class="ap-av-k">Después</b> ${esc(pasos[i+1].n)}.`:''}${lib&&lib.ficha&&lib.ficha.idea?` <b class="ap-av-k">La idea</b> ${lib.ficha.idea}`:''}${lib&&lib.ficha&&lib.ficha.resumen?` <b class="ap-av-k">Lo que dice</b> ${lib.ficha.resumen}`:''}${lib&&lib.ficha&&lib.ficha.porQue?` <b class="ap-av-k">Por qué este libro</b> ${lib.ficha.porQue}`:''}</span></span>
       </span>
     </button>`;
 }
@@ -7191,13 +7234,16 @@ function fichaEnCursoHtml(){
   const foto=String(sig.h.img||'').replace(/([?&]w=)\d+/,(_,a)=>a+'320').replace(/([?&]q=)\d+/,(_,a)=>a+'70');
   // Lo que dice el paso que sigue: su entrada y los puntos de su lista, en el orden de la ficha.
   const consejo=paso?[paso.d].concat(paso.list||[]).filter(Boolean).join(' · ').replace(': · ',': '):'';
+  // Y los tres pendientes que vienen, al final: solo se ven donde sobra alto (apAjustarAvance()).
+  const luego=paso?info.pasos.map((q,j)=>({q,j})).filter(x=>x.j>k&&!store[x.j]).slice(0,3)
+    .map(x=>` <b class="ap-av-k">Luego · Paso ${x.j+1} · ${esc(mdLimpiaTitulo(x.q.t))}</b> ${[x.q.d].concat(x.q.list||[]).filter(Boolean).join(' · ').replace(': · ',': ')}`).join(''):'';
   return `<button type="button" class="ap-av" style="--c:var(--b)" onclick="abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')" title="Abrir la ficha de Habilidades Base">
       <img class="ap-av-img" src="${foto}" alt="" loading="lazy">
       <span class="ap-av-col">
         <span class="ap-av-top"><span class="ap-av-mat">Habilidades base</span><span class="ap-av-n">${sig.hechos}/${sig.total}</span></span>
         <span class="ap-av-t">${esc(sig.h.t)}</span>
         ${info?apTramos(info.pasos.length, j=>!!store[j], k):''}
-        <span class="ap-av-cuerpo"><span class="ap-av-txt">${paso?`<b class="ap-av-k">Paso ${k+1} · ${esc(mdLimpiaTitulo(paso.t))}</b> ${consejo}`:'Ficha completa: repásala cuando quieras.'}</span></span>
+        <span class="ap-av-cuerpo"><span class="ap-av-txt">${paso?`<b class="ap-av-k">Paso ${k+1} · ${esc(mdLimpiaTitulo(paso.t))}</b> ${consejo}${luego}`:'Ficha completa: repásala cuando quieras.'}</span></span>
       </span>
     </button>`;
 }
@@ -7267,11 +7313,12 @@ function renderHero(){
     </div>`;
   }).join('');
 
-  // Las 3 tarjetas nuevas de la fila de abajo (2026-08-23). renderHeroGymPanel()/renderHeroNutri()
-  // ya no se llaman desde aquí: sus tiles salieron de esta pantalla. Las funciones siguen en el
-  // archivo, con su guarda `if(!el)return`, para poder devolverlas sin reescribirlas.
-  renderHeroDinero();
-  renderHeroFase();
+  // Los módulos de abajo. renderHeroGymPanel()/renderHeroNutri() ya no se llaman desde aquí: sus
+  // tiles salieron de esta pantalla (2026-08-23). Tampoco renderHeroDinero() ni renderHeroFase():
+  // Tu dinero y la fase salieron el 8-oct-2026 (Adán: "todo eso ya está en la otra página de
+  // Coach y se repite info"); de Tu dinero se quedó solo Qué invertir hoy, que pinta
+  // pintarInvertirBtn(). Las funciones siguen en el archivo, con su guarda `if(!el)return`, para
+  // poder devolverlas sin reescribirlas.
   renderHeroAprender();
   renderDiaEntrena(gymRutina, dowHoy);
   renderDiaHabitos();
