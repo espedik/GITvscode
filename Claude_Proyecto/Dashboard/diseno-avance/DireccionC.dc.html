@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Tu avance — lo mínimo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Space+Grotesk:wght@500;700&amp;family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2563eb}a:hover{color:#1d4ed8}
+</style>
+</helmet>
+
+<div style="width: {{dim.w}}px; height: {{dim.h}}px; box-sizing: border-box; display: flex; flex-direction: column; background: {{c.fondo}}; border-top: 1px solid {{c.linea}}; color: {{c.text}}; font-family: 'Inter', system-ui, sans-serif; overflow: hidden;">
+
+  <div style="flex: none; padding: 10px 0 0; font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: {{c.text3}};">Tu avance</div>
+
+  <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr);">
+
+    <!-- El paso de la semana: una frase -->
+    <section style="min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 14px; padding: 10px 24px 0 0;">
+      <div style="flex: none; display: flex; gap: 12px; align-items: stretch;">
+        <sc-if value="{{s.conLibro}}" hint-placeholder-val="{{true}}">
+          <img src="{{s.img}}" alt="Portada de {{s.libroT}}" style="flex: none; width: {{dim.tw}}px; height: {{dim.th}}px; border-radius: 8px; object-fit: cover; object-position: top; box-shadow: 0 4px 12px rgba(0,0,0,0.18);">
+        </sc-if>
+        <sc-if value="{{s.sinLibro}}" hint-placeholder-val="{{false}}">
+          <div style="flex: none; width: {{dim.tw}}px; height: {{dim.th}}px; border-radius: 8px; background: {{c.wSuave}}; color: {{c.w}}; display: flex; align-items: center; justify-content: center;">
+            <sc-if value="{{s.icRed}}" hint-placeholder-val="{{true}}"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="M8.6 13.5l6.8 4"></path><path d="M15.4 6.5l-6.8 4"></path></svg></sc-if>
+            <sc-if value="{{s.icChip}}" hint-placeholder-val="{{false}}"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"></rect><path d="M9.5 9.5h5v5h-5z"></path><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"></path></svg></sc-if>
+            <sc-if value="{{s.icCode}}" hint-placeholder-val="{{false}}"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 18l6-6-6-6"></path><path d="M8 6l-6 6 6 6"></path></svg></sc-if>
+          </div>
+        </sc-if>
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px;">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+            <span style="min-width: 0; font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: {{c.w}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{s.mat}} · esta semana</span>
+            <span style="flex: none; font-family: 'Space Grotesk', monospace; font-size: 10.5px; font-weight: 700; color: {{c.w}};">{{s.n}}/{{s.tot}}</span>
+          </div>
+          <div style="font-size: 15.5px; font-weight: 700; line-height: 1.28; color: {{c.text}}; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;">{{s.titulo}}</div>
+          <div style="display: flex; gap: 3px; padding: 2px 0;">
+            <sc-for list="{{s.tramos}}" as="tr" hint-placeholder-count="6"><span style="flex: 1 1 0; height: 4px; border-radius: 2px; background: {{tr.bg}}; box-shadow: {{tr.sh}};"></span></sc-for>
+          </div>
+          <div style="margin-top: 2px; display: flex; align-items: center; gap: 7px; min-width: 0; font-size: 12px; line-height: 1.35; color: {{c.text2}};">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; color: {{c.text3}};"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+            <span style="min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{s.sigTxt}}</span>
+          </div>
+        </div>
+      </div>
+      <div style="flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 10px;">
+        <div style="font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; line-height: 1.38; letter-spacing: -0.005em; color: {{c.text}}; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6; overflow: hidden;"><sc-for list="{{s.frase}}" as="sg" hint-placeholder-count="2"><sc-if value="{{sg.n}}" hint-placeholder-val="{{true}}"><span>{{sg.t}}</span></sc-if><sc-if value="{{sg.b}}" hint-placeholder-val="{{false}}"><b style="font-weight: 600; background: {{c.wMarca}}; padding: 0 3px; border-radius: 4px;">{{sg.t}}</b></sc-if><sc-if value="{{sg.i}}" hint-placeholder-val="{{false}}"><i>{{sg.t}}</i></sc-if></sc-for></div>
+        <div style="margin-top: auto; display: flex; align-items: center; gap: 6px; font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: {{c.w}};">Ver el paso completo<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></div>
+      </div>
+    </section>
+
+    <!-- La ficha: solo el nombre de cada punto -->
+    <section style="min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 14px; padding: 10px 0 0 24px; border-left: 1px solid {{c.linea}};">
+      <div style="flex: none; display: flex; gap: 12px; align-items: stretch;">
+        <img src="{{f.img}}" alt="" style="flex: none; width: {{dim.tw}}px; height: {{dim.th}}px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.18);">
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px;">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+            <span style="min-width: 0; font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: {{c.b}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Habilidades base</span>
+            <span style="flex: none; font-family: 'Space Grotesk', monospace; font-size: 10.5px; font-weight: 700; color: {{c.b}};">{{f.hechos}}/{{f.tot}}</span>
+          </div>
+          <div style="font-size: 15.5px; font-weight: 700; line-height: 1.28; color: {{c.text}}; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;">{{f.titulo}}</div>
+          <div style="display: flex; gap: 3px; padding: 2px 0;">
+            <sc-for list="{{f.tramos}}" as="tr" hint-placeholder-count="11"><span style="flex: 1 1 0; height: 4px; border-radius: 2px; background: {{tr.bg}}; box-shadow: {{tr.sh}};"></span></sc-for>
+          </div>
+          <div style="margin-top: 2px; display: flex; align-items: center; gap: 7px; min-width: 0; font-size: 12px; line-height: 1.35; color: {{c.text2}};">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; color: {{c.text3}};"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+            <span style="min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Después: <b style="font-weight: 600; color: {{c.text}};">{{f.sigN}}</b></span>
+          </div>
+        </div>
+      </div>
+      <div style="flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 7px;">
+        <div style="font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.12em; line-height: 1.45; text-transform: uppercase; color: {{c.b}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{f.paso}}</div>
+        <sc-for list="{{f.nombres}}" as="nm" hint-placeholder-count="5">
+          <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+            <span style="flex: none; width: 6px; height: 6px; border-radius: 1.5px; background: {{c.b}};"></span>
+            <span style="min-width: 0; font-size: 14px; font-weight: 600; line-height: 1.45; color: {{c.text}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{nm.t}}</span>
+          </div>
+        </sc-for>
+        <div style="margin-top: auto; display: flex; align-items: center; gap: 6px; font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: {{c.b}};">Abrir la ficha<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></div>
+      </div>
+    </section>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"tema":{"editor":"enum","options":["claro","oscuro"],"default":"claro","section":"Vista"},"semana":{"editor":"enum","options":["Networking 5/6","IA 1/5","Código 2/6","Networking 6/6"],"default":"Networking 5/6","section":"Contenido"},"ficha":{"editor":"enum","options":["Manejar · paso 7","Primeros auxilios · paso 3","Coctelería · paso 5","Networking · paso 1"],"default":"Manejar · paso 7","section":"Contenido"},"ancho":{"editor":null,"default":895},"alto":{"editor":null,"default":442},"$preview":{"width":895,"height":442}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const oscuro = (this.props.tema ?? 'claro') === 'oscuro';
+    const c = oscuro ? {
+      fondo: '#101017', text: '#f4f4f8', text2: '#9a9db3', text3: '#8589a8', linea: 'rgba(255,255,255,0.09)', vacio: 'rgba(255,255,255,0.1)',
+      w: '#ffd93d', wSuave: 'rgba(255,217,61,0.12)', wMarca: 'rgba(255,217,61,0.22)', wTenue: 'rgba(255,217,61,0.3)',
+      b: '#3b82f6', bTenue: 'rgba(59,130,246,0.3)'
+    } : {
+      fondo: '#fcfcfd', text: '#16161a', text2: '#5c5f70', text3: '#63667c', linea: 'rgba(0,0,0,0.09)', vacio: 'rgba(0,0,0,0.1)',
+      w: '#a8790a', wSuave: 'rgba(168,121,10,0.12)', wMarca: 'rgba(168,121,10,0.17)', wTenue: 'rgba(168,121,10,0.3)',
+      b: '#2563eb', bTenue: 'rgba(37,99,235,0.3)'
+    };
+
+    const S = [
+      { mat: 'Networking', n: 5, tot: 6, titulo: 'La pregunta que abre puertas', ic: 'red', libro: { t: 'Designing Your Life', img: '/_blob/dd7c75218e5566d7054c039c2637b667' },
+        c: 'A quien ya trabaja donde tú quieres, pregúntale: <b>"¿qué te habría gustado saber antes de entrar?"</b>. Casi nadie se niega y casi todos contestan algo que no sale en ninguna oferta.',
+        sig: 'Una hora al mes, en el calendario' },
+      { mat: 'IA', n: 1, tot: 5, titulo: 'El syllabus, capítulo por capítulo', ic: 'chip', libro: null,
+        c: 'Una sesión por capítulo, empezando por el 2: léelo y escribe sin mirar sus cinco ideas en una tarjeta. Al cerrar, contesta las preguntas de ese capítulo en el simulacro.',
+        sig: 'El simulacro como termómetro' },
+      { mat: 'Código', n: 2, tot: 6, titulo: 'Tests antes que features', ic: 'code', libro: { t: 'Working Effectively with Legacy Code', img: '/_blob/dc360ec1525cac90e8b432a7009e44ed' },
+        c: 'En tu próximo cambio en ALTEN, escribe la prueba <b>antes</b> del arreglo. Una sola vez, para sentir la diferencia.',
+        sig: 'pytest de verdad' },
+      { mat: 'Networking', n: 6, tot: 6, titulo: 'Una hora al mes, en el calendario', ic: 'red', libro: null,
+        c: 'Un bloque de una hora al mes para revisar la lista, escribir a tres personas y añadir a los nuevos que conociste. Una hora al mes sostiene una red.',
+        sig: '' }
+    ];
+
+    const F = [
+      { titulo: 'Manejar todo tipo de vehículos', img: '/_blob/45b5ed153ec21c58b50fc4825c841573', tot: 11, k: 7, pasoT: 'Derrapes y emergencias', sig: 'Otros vehículos',
+        list: ['<b>Derrape trasero</b> (la cola se va): mira hacia donde quieres ir.', '<b>Derrape frontal</b> (no gira, sigue de frente): suelta el acelerador.', '<b>Frenada de emergencia con ABS</b>: pisa a fondo y no sueltes.', 'Puedes frenar y girar a la vez con ABS. Ese es todo el punto del sistema.', '<b>Se te van los frenos</b>: bombea, reduce marchas.'] },
+      { titulo: 'Primeros auxilios básicos', img: '/_blob/4e5900cdf9cad662c37fc79bcddf5ca3', tot: 12, k: 3, pasoT: 'Fase 1 — RCP (reanimación cardiopulmonar), adulto: la maniobra que más vidas salva', sig: 'Fase 2 — Atragantamiento (maniobra de Heimlich)',
+        list: ['Verifica primero: da palmadas firmes en el hombro.', 'Grita pidiendo ayuda y señala a una persona específica: "tú, llama al 911".', 'Posición de manos: talón de una mano en el centro del pecho.', 'Comprime fuerte y rápido: 5-6 cm de profundidad.', 'Ciclo 30:2 — 30 compresiones seguidas, luego 2 respiraciones.', 'Si llega un DEA (desfibrilador): enciéndelo y sigue las instrucciones.', 'No te detengas hasta que: la persona reaccione o llegue ayuda.', 'Error más común en RCP: comprimir demasiado suave.'] },
+      { titulo: 'Coctelería básica', img: '/_blob/3ac25655782bdf1dc7addf63690a2eca', tot: 15, k: 5, pasoT: 'Clásico 1 · Margarita', sig: 'Clásico 2 · Old Fashioned',
+        list: ['<b>Plantilla</b>: 60 ml de tequila blanco · 30 ml de limón · 20 ml de triple sec.', 'Agitar con hielo 15 segundos y colar en copa fría, con media orilla de sal.', 'Usa <b>tequila 100% de agave blanco</b>; un tequila mixto arruina el trago.', 'El limón <b>tiene que ser recién exprimido</b>. El embotellado sabe a metal.', 'Variante fácil: cambia el tequila por <b>mezcal</b>.'] },
+      { titulo: 'Hacer networking de verdad', img: '/_blob/ad475102ba703cabe1255d59a5094d02', tot: 20, k: 1, pasoT: 'Qué es y qué no es', sig: 'El mito del extrovertido',
+        list: ['Mil personas que te vieron una vez valen menos que <b>veinte que te deben un favor de verdad</b>.', 'Se siente raro al principio porque inviertes en algo que no da resultado inmediato.', 'La medida no es cuántos contactos tienes, es <b>a cuántos podrías escribirles mañana</b>.'] }
+    ];
+
+    const SEM = ['Networking 5/6', 'IA 1/5', 'Código 2/6', 'Networking 6/6'];
+    const FIC = ['Manejar · paso 7', 'Primeros auxilios · paso 3', 'Coctelería · paso 5', 'Networking · paso 1'];
+    const iS = Math.max(0, SEM.indexOf(this.props.semana ?? SEM[0]));
+    const iF = Math.max(0, FIC.indexOf(this.props.ficha ?? FIC[0]));
+    const W = Math.max(480, Number(this.props.ancho ?? 895) || 895);
+    const H = Math.max(240, Number(this.props.alto ?? 442) || 442);
+    const th = Math.round(Math.min(180, Math.max(64, (H - 32) * 0.27)));
+    const tw = Math.round(th * 2 / 3);
+
+    const limpia = t => String(t || '').replace(/<[^>]+>/g, '');
+    const segs = html => {
+      const src = String(html || ''), out = [], re = /<(b|i)>([\s\S]*?)<\/\1>/g;
+      let last = 0, m;
+      while ((m = re.exec(src))) {
+        if (m.index > last) out.push({ t: limpia(src.slice(last, m.index)), n: true, b: false, i: false });
+        out.push({ t: limpia(m[2]), n: false, b: m[1] === 'b', i: m[1] === 'i' });
+        last = re.lastIndex;
+      }
+      if (last < src.length) out.push({ t: limpia(src.slice(last)), n: true, b: false, i: false });
+      return out;
+    };
+    // La primera frase de Qué hacer; y de cada punto, su nombre (o su primera frase si no lo tiene).
+    const primera = html => { const k = html.indexOf('. '); return k > 0 ? html.slice(0, k + 1) : html; };
+    const nombre = raw => {
+      const mb = raw.match(/^<b>([\s\S]*?)<\/b>/);
+      if (mb) return limpia(mb[1]);
+      const mc = raw.match(/^((?:[^<:—.]|:(?=\S)){3,60}?)(:\s|\s—\s)/);
+      if (mc) return mc[1];
+      return limpia(primera(raw));
+    };
+    const tramos = (n, hechos, toca, col, tenue) => Array.from({ length: n }, (_, j) =>
+      j < hechos ? { bg: col, sh: 'none' } : j === toca ? { bg: tenue, sh: 'inset 0 0 0 1px ' + col } : { bg: c.vacio, sh: 'none' });
+
+    const s0 = S[iS], L = s0.libro;
+    const s = {
+      mat: s0.mat, n: s0.n, tot: s0.tot, titulo: s0.titulo,
+      conLibro: !!L, sinLibro: !L, img: L ? L.img : '', libroT: L ? L.t : '',
+      icRed: s0.ic === 'red', icChip: s0.ic === 'chip', icCode: s0.ic === 'code',
+      sigTxt: s0.sig ? 'Después: ' + s0.sig : 'Último paso de la ruta',
+      tramos: tramos(s0.tot, s0.n - 1, s0.n - 1, c.w, c.wTenue),
+      frase: segs(primera(s0.c))
+    };
+    const f0 = F[iF];
+    const f = {
+      titulo: f0.titulo, img: f0.img, hechos: f0.k - 1, tot: f0.tot,
+      tramos: tramos(f0.tot, f0.k - 1, f0.k - 1, c.b, c.bTenue),
+      paso: 'Paso ' + f0.k + ' · ' + f0.pasoT,
+      sigN: 'Paso ' + (f0.k + 1) + ' · ' + f0.sig,
+      nombres: f0.list.map(x => ({ t: nombre(x) }))
+    };
+    return { c, dim: { w: W, h: H, th, tw }, s, f };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Tu avance — cada cosa en su lugar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Space+Grotesk:wght@500;700&amp;family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2563eb}a:hover{color:#1d4ed8}
+</style>
+</helmet>
+
+<div style="width: {{dim.w}}px; height: {{dim.h}}px; box-sizing: border-box; display: flex; flex-direction: column; background: {{c.fondo}}; border-top: 1px solid {{c.linea}}; color: {{c.text}}; font-family: 'Inter', system-ui, sans-serif; overflow: hidden;">
+
+  <div style="flex: none; padding: 10px 0 0; font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: {{c.text3}};">Tu avance</div>
+
+  <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr);">
+
+    <!-- El paso de la semana -->
+    <section style="min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 10px; padding: 10px 24px 0 0;">
+      <div style="flex: none; display: flex; gap: 12px; align-items: stretch;">
+        <sc-if value="{{s.conLibro}}" hint-placeholder-val="{{true}}">
+          <img src="{{s.img}}" alt="Portada de {{s.libroT}}" style="flex: none; width: {{dim.tw}}px; height: {{dim.th}}px; border-radius: 8px; object-fit: cover; object-position: top; box-shadow: 0 4px 12px rgba(0,0,0,0.18);">
+        </sc-if>
+        <sc-if value="{{s.sinLibro}}" hint-placeholder-val="{{false}}">
+          <div style="flex: none; width: {{dim.tw}}px; height: {{dim.th}}px; border-radius: 8px; background: {{c.wSuave}}; color: {{c.w}}; display: flex; align-items: center; justify-content: center;">
+            <sc-if value="{{s.icRed}}" hint-placeholder-val="{{true}}"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="M8.6 13.5l6.8 4"></path><path d="M15.4 6.5l-6.8 4"></path></svg></sc-if>
+            <sc-if value="{{s.icChip}}" hint-placeholder-val="{{false}}"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"></rect><path d="M9.5 9.5h5v5h-5z"></path><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"></path></svg></sc-if>
+            <sc-if value="{{s.icCode}}" hint-placeholder-val="{{false}}"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 18l6-6-6-6"></path><path d="M8 6l-6 6 6 6"></path></svg></sc-if>
+          </div>
+        </sc-if>
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px;">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+            <span style="min-width: 0; font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: {{c.w}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{s.mat}} · esta semana</span>
+            <span style="flex: none; font-family: 'Space Grotesk', monospace; font-size: 10.5px; font-weight: 700; color: {{c.w}};">{{s.n}}/{{s.tot}}</span>
+          </div>
+          <div style="font-size: 15.5px; font-weight: 700; line-height: 1.28; color: {{c.text}}; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;">{{s.titulo}}</div>
+          <div style="display: flex; gap: 3px; padding: 2px 0;">
+            <sc-for list="{{s.tramos}}" as="tr" hint-placeholder-count="6"><span style="flex: 1 1 0; height: 4px; border-radius: 2px; background: {{tr.bg}}; box-shadow: {{tr.sh}};"></span></sc-for>
+          </div>
+          <div style="margin-top: 2px; display: flex; flex-direction: column; gap: 4px; font-size: 12px; line-height: 1.35; color: {{c.text2}};">
+            <sc-if value="{{s.conLibro}}" hint-placeholder-val="{{true}}">
+              <div style="display: flex; align-items: center; gap: 7px; min-width: 0;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; color: {{c.text3}};"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                <span style="min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Con <i style="color: {{c.text}};">{{s.libroT}}</i>{{s.libroNota}}</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{s.conSig}}" hint-placeholder-val="{{true}}">
+              <div style="display: flex; align-items: center; gap: 7px; min-width: 0;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; color: {{c.text3}};"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+                <span style="min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Después: <b style="font-weight: 600; color: {{c.text}};">{{s.sigN}}</b></span>
+              </div>
+            </sc-if>
+            <sc-if value="{{s.esUltimo}}" hint-placeholder-val="{{false}}">
+              <div style="display: flex; align-items: center; gap: 7px; min-width: 0;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; color: {{c.text3}};"><path d="M5 21V4"></path><path d="M5 4h11l-2 4 2 4H5"></path></svg>
+                <span style="min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Último paso de la ruta</span>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lo que hay que hacer: bloques en orden de importancia; lo que no cabe se va completo -->
+      <div style="flex: 1; min-height: 0; position: relative;">
+        <div style="position: absolute; inset: 0; column-width: 270px; column-gap: 24px; column-fill: auto; overflow: hidden;">
+          <div style="break-inside: avoid; padding: 0 0 11px;">
+            <div style="margin-bottom: 3px; font-family: 'Space Grotesk', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{c.text3}};">Qué hacer</div>
+            <div style="font-size: 13.5px; line-height: 1.5; color: {{c.text}};"><sc-for list="{{s.cSegs}}" as="sg" hint-placeholder-count="3"><sc-if value="{{sg.n}}" hint-placeholder-val="{{true}}"><span>{{sg.t}}</span></sc-if><sc-if value="{{sg.b}}" hint-placeholder-val="{{false}}"><b style="font-weight: 700; color: {{c.text}}; background: {{c.wMarca}}; padding: 0 2px; border-radius: 3px;">{{sg.t}}</b></sc-if><sc-if value="{{sg.i}}" hint-placeholder-val="{{false}}"><i>{{sg.t}}</i></sc-if></sc-for></div>
+          </div>
+          <div style="break-inside: avoid; padding: 0 0 11px;">
+            <div style="margin-bottom: 3px; font-family: 'Space Grotesk', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{c.text3}};">Por qué</div>
+            <div style="font-size: 12.5px; line-height: 1.5; color: {{c.text2}};"><sc-for list="{{s.qSegs}}" as="sg" hint-placeholder-count="1"><sc-if value="{{sg.n}}" hint-placeholder-val="{{true}}"><span>{{sg.t}}</span></sc-if><sc-if value="{{sg.b}}" hint-placeholder-val="{{false}}"><b style="font-weight: 700; color: {{c.text}};">{{sg.t}}</b></sc-if><sc-if value="{{sg.i}}" hint-placeholder-val="{{false}}"><i>{{sg.t}}</i></sc-if></sc-for></div>
+          </div>
+          <sc-if value="{{s.conLibro}}" hint-placeholder-val="{{true}}">
+            <div style="break-inside: avoid; padding: 0 0 11px;">
+              <div style="margin-bottom: 3px; font-family: 'Space Grotesk', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{c.text3}};">La idea del libro</div>
+              <div style="font-family: 'Fraunces', Georgia, serif; font-size: 14.5px; font-weight: 500; line-height: 1.42; color: {{c.text}};">{{s.idea}}</div>
+            </div>
+          </sc-if>
+          <div style="break-inside: avoid; padding: 0 0 11px;">
+            <div style="margin-bottom: 4px; font-family: 'Space Grotesk', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{c.text3}};">La ruta · {{s.tot}} pasos</div>
+            <sc-for list="{{s.ruta}}" as="r" hint-placeholder-count="6">
+              <div style="display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 12px; line-height: 1.6;">
+                <sc-if value="{{r.hecho}}" hint-placeholder-val="{{true}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; color: {{c.text3}};"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg><span style="min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: {{c.text3}};">{{r.t}}</span></sc-if>
+                <sc-if value="{{r.ahora}}" hint-placeholder-val="{{false}}"><span style="flex: none; width: 11px; height: 11px; display: inline-flex; align-items: center; justify-content: center;"><span style="width: 7px; height: 7px; border-radius: 50%; background: {{c.w}};"></span></span><span style="min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; color: {{c.text}};">{{r.t}}</span></sc-if>
+                <sc-if value="{{r.falta}}" hint-placeholder-val="{{false}}"><span style="flex: none; width: 11px; height: 11px; display: inline-flex; align-items: center; justify-content: center;"><span style="width: 6px; height: 6px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px {{c.text3}};"></span></span><span style="min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: {{c.text2}};">{{r.t}}</span></sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{s.conSig}}" hint-placeholder-val="{{true}}">
+            <div style="break-inside: avoid; padding: 0 0 11px;">
+              <div style="margin-bottom: 3px; font-family: 'Space Grotesk', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{c.text3}};">Lo que viene</div>
+              <div style="font-size: 12.5px; line-height: 1.5; color: {{c.text2}};"><b style="font-weight: 700; color: {{c.text}};">{{s.sigN}}.</b> <sc-for list="{{s.sigSegs}}" as="sg" hint-placeholder-count="2"><sc-if value="{{sg.n}}" hint-placeholder-val="{{true}}"><span>{{sg.t}}</span></sc-if><sc-if value="{{sg.b}}" hint-placeholder-val="{{false}}"><b style="font-weight: 700; color: {{c.text}};">{{sg.t}}</b></sc-if><sc-if value="{{sg.i}}" hint-placeholder-val="{{false}}"><i>{{sg.t}}</i></sc-if></sc-for></div>
+            </div>
+          </sc-if>
+          <sc-if value="{{s.conLibro}}" hint-placeholder-val="{{true}}">
+            <div style="break-inside: avoid; padding: 0 0 11px;">
+              <div style="margin-bottom: 3px; font-family: 'Space Grotesk', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{c.text3}};">Lo que dice</div>
+              <div style="font-size: 12.5px; line-height: 1.5; color: {{c.text2}};"><sc-for list="{{s.resSegs}}" as="sg" hint-placeholder-count="3"><sc-if value="{{sg.n}}" hint-placeholder-val="{{true}}"><span>{{sg.t}}</span></sc-if><sc-if value="{{sg.b}}" hint-placeholder-val="{{false}}"><b style="font-weight: 700; color: {{c.text}};">{{sg.t}}</b></sc-if><sc-if value="{{sg.i}}" hint-placeholder-val="{{false}}"><i>{{sg.t}}</i></sc-if></sc-for></div>
+            </div>
+            <div style="break-inside: avoid; padding: 0 0 11px;">
+              <div style="margin-bottom: 3px; font-family: 'Space Grotesk', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{c.text3}};">Por qué este libro</div>
+              <div style="font-size: 12.5px; line-height: 1.5; color: {{c.text2}};">{{s.porQue}}</div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </section>
+
+    <!-- La ficha de Habilidades Base en curso -->
+    <section style="min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 10px; padding: 10px 0 0 24px; border-left: 1px solid {{c.linea}};">
+      <div style="flex: none; display: flex; gap: 12px; align-items: stretch;">
+        <img src="{{f.img}}" alt="" style="flex: none; width: {{dim.tw}}px; height: {{dim.th}}px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.18);">
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px;">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+            <span style="min-width: 0; font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: {{c.b}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Habilidades base</span>
+            <span style="flex: none; font-family: 'Space Grotesk', monospace; font-size: 10.5px; font-weight: 700; color: {{c.b}};">{{f.hechos}}/{{f.tot}}</span>
+          </div>
+          <div style="font-size: 15.5px; font-weight: 700; line-height: 1.28; color: {{c.text}}; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;">{{f.titulo}}</div>
+          <div style="display: flex; gap: 3px; padding: 2px 0;">
+            <sc-for list="{{f.tramos}}" as="tr" hint-placeholder-count="11"><span style="flex: 1 1 0; height: 4px; border-radius: 2px; background: {{tr.bg}}; box-shadow: {{tr.sh}};"></span></sc-for>
+          </div>
+          <div style="margin-top: 2px; display: flex; align-items: center; gap: 7px; min-width: 0; font-size: 12px; line-height: 1.35; color: {{c.text2}};">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; color: {{c.text3}};"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+            <span style="min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Después: <b style="font-weight: 600; color: {{c.text}};">{{f.sigN}}</b></span>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex: 1; min-height: 0; position: relative;">
+        <div style="position: absolute; inset: 0; column-width: 270px; column-gap: 24px; column-fill: auto; overflow: hidden;">
+          <div style="break-inside: avoid; padding: 0 0 10px;">
+            <div style="margin-bottom: 3px; font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.12em; line-height: 1.45; text-transform: uppercase; color: {{c.b}}; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;">{{f.paso}}</div>
+            <div style="font-size: 12.5px; line-height: 1.5; color: {{c.text2}}; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;"><sc-for list="{{f.dSegs}}" as="sg" hint-placeholder-count="1"><sc-if value="{{sg.n}}" hint-placeholder-val="{{true}}"><span>{{sg.t}}</span></sc-if><sc-if value="{{sg.b}}" hint-placeholder-val="{{false}}"><b style="font-weight: 700; color: {{c.text}};">{{sg.t}}</b></sc-if><sc-if value="{{sg.i}}" hint-placeholder-val="{{false}}"><i>{{sg.t}}</i></sc-if></sc-for></div>
+          </div>
+          <sc-for list="{{f.puntos}}" as="pt" hint-placeholder-count="4">
+            <div style="break-inside: avoid; display: flex; gap: 9px; padding: 0 0 9px;">
+              <span style="flex: none; width: 5px; height: 5px; margin-top: 7px; border-radius: 1.5px; background: {{c.b}};"></span>
+              <div style="min-width: 0; font-size: 12.5px; line-height: 1.5; color: {{c.text2}}; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;"><sc-if value="{{pt.conLead}}" hint-placeholder-val="{{true}}"><b style="font-weight: 700; color: {{c.text}};">{{pt.lead}}</b></sc-if><sc-for list="{{pt.segs}}" as="sg" hint-placeholder-count="2"><sc-if value="{{sg.n}}" hint-placeholder-val="{{true}}"><span>{{sg.t}}</span></sc-if><sc-if value="{{sg.b}}" hint-placeholder-val="{{false}}"><b style="font-weight: 600; color: {{c.text}};">{{sg.t}}</b></sc-if><sc-if value="{{sg.i}}" hint-placeholder-val="{{false}}"><i>{{sg.t}}</i></sc-if></sc-for></div>
+            </div>
+          </sc-for>
+          <div style="break-inside: avoid; padding: 2px 0 11px;">
+            <div style="margin-bottom: 3px; font-family: 'Space Grotesk', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{c.text3}};">Lo que viene · Paso {{f.proxN}}</div>
+            <div style="font-size: 12.5px; line-height: 1.5; color: {{c.text2}};"><b style="font-weight: 700; color: {{c.text}};">{{f.proxT}}.</b> {{f.proxNombres}}</div>
+          </div>
+          <div style="break-inside: avoid; padding: 0;">
+            <div style="margin-bottom: 3px; font-family: 'Space Grotesk', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{c.text3}};">Más adelante</div>
+            <sc-for list="{{f.luego}}" as="l" hint-placeholder-count="2"><div style="font-size: 12px; line-height: 1.6; color: {{c.text2}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{l.t}}</div></sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"tema":{"editor":"enum","options":["claro","oscuro"],"default":"claro","section":"Vista"},"semana":{"editor":"enum","options":["Networking 5/6","IA 1/5","Código 2/6","Networking 6/6"],"default":"Networking 5/6","section":"Contenido"},"ficha":{"editor":"enum","options":["Manejar · paso 7","Primeros auxilios · paso 3","Coctelería · paso 5","Networking · paso 1"],"default":"Manejar · paso 7","section":"Contenido"},"ancho":{"editor":null,"default":895},"alto":{"editor":null,"default":442},"$preview":{"width":895,"height":442}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const oscuro = (this.props.tema ?? 'claro') === 'oscuro';
+    // Los tokens del Dashboard (dashboard.html, :root y [data-theme="light"]).
+    const c = oscuro ? {
+      fondo: '#101017', text: '#f4f4f8', text2: '#9a9db3', text3: '#8589a8', linea: 'rgba(255,255,255,0.09)', vacio: 'rgba(255,255,255,0.1)',
+      w: '#ffd93d', wSuave: 'rgba(255,217,61,0.12)', wMarca: 'rgba(255,217,61,0.22)', wTenue: 'rgba(255,217,61,0.3)',
+      b: '#3b82f6', bTenue: 'rgba(59,130,246,0.3)'
+    } : {
+      fondo: '#fcfcfd', text: '#16161a', text2: '#5c5f70', text3: '#63667c', linea: 'rgba(0,0,0,0.09)', vacio: 'rgba(0,0,0,0.1)',
+      w: '#a8790a', wSuave: 'rgba(168,121,10,0.12)', wMarca: 'rgba(168,121,10,0.17)', wTenue: 'rgba(168,121,10,0.3)',
+      b: '#2563eb', bTenue: 'rgba(37,99,235,0.3)'
+    };
+
+    // Pasos reales de «En qué invertir tu tiempo» (CIFRAS.APRENDIZAJE) con su libro de la biblioteca.
+    const RED = ['Tu red real, en una hoja', 'Las cartas de recomendación, ya', 'Reactivar sin pedir nada', 'Stuttgart antes de llegar', 'La pregunta que abre puertas', 'Una hora al mes, en el calendario'];
+    const S = [
+      { mat: 'Networking', n: 5, tot: 6, titulo: 'La pregunta que abre puertas', ic: 'red',
+        c: 'A quien ya trabaja donde tú quieres, pregúntale: <b>"¿qué te habría gustado saber antes de entrar?"</b>. Casi nadie se niega y casi todos contestan algo que no sale en ninguna oferta. Úsalo con dos personas antes de tu primera entrevista de Werkstudent.',
+        q: 'Con el Werkstudent y la maestría por delante, la conversación informal vale más que la formal.',
+        libro: { t: 'Designing Your Life', autor: 'Burnett y Evans', img: '/_blob/dd7c75218e5566d7054c039c2637b667', nota: 'capítulo de entrevistas de prototipo',
+          idea: 'No decidas tu carrera en abstracto: construye un prototipo pequeño y mira qué se siente. Prototipar es más barato que equivocarse.',
+          resumen: 'La idea de fondo: una carrera no se planifica, se prototipa. En vez de decidir en abstracto qué quieres ser, construyes versiones pequeñas y baratas de esa vida y ves qué pasa. De ahí salen sus herramientas: el <b>diario de buen tiempo</b>, para registrar qué actividades te dan energía y cuáles te la quitan; los <b>tres planes de cinco años</b>, deliberadamente distintos, para romper la idea de que hay un solo camino correcto; y las <b>entrevistas de prototipo</b> — hablar con gente que ya hace lo que te interesa, no para pedir trabajo sino para saber cómo es de verdad.',
+          porQue: 'Las entrevistas de prototipo son la forma menos incómoda de hacer networking que existe: no pides nada, preguntas.' },
+        ruta: RED },
+      { mat: 'IA', n: 1, tot: 5, titulo: 'El syllabus, capítulo por capítulo', ic: 'chip',
+        c: 'Una sesión por capítulo, empezando por el 2: léelo y escribe sin mirar sus cinco ideas en una tarjeta. Al cerrar, contesta las preguntas de ese capítulo en el simulacro; lo que falles abre la sesión siguiente.',
+        q: 'El examen pregunta el syllabus, no tu experiencia: hay que contestar con sus palabras. Son cinco capítulos y el 2 —ingeniería de instrucciones— vale 16 de los 46 puntos.',
+        libro: null,
+        ruta: ['El syllabus, capítulo por capítulo', 'El simulacro como termómetro', 'Una prueba con IA que puedas enseñar', 'Automatiza una tarea tuya', 'Lo que no se le delega a la IA'] },
+      { mat: 'Código', n: 2, tot: 6, titulo: 'Tests antes que features', ic: 'code',
+        c: 'En tu próximo cambio en ALTEN, escribe la prueba <b>antes</b> del arreglo. Una sola vez, para sentir la diferencia: la prueba te obliga a decir qué esperas, y eso es la mitad del diseño hecho.',
+        q: 'En automotive, el código sin test no llega a producción. Es lo que más separa a un junior de un senior en una revisión.',
+        libro: { t: 'Working Effectively with Legacy Code', autor: 'Michael Feathers', img: '/_blob/dc360ec1525cac90e8b432a7009e44ed', nota: '',
+          idea: 'Código heredado es código sin pruebas, aunque lo escribieras tú la semana pasada.',
+          resumen: 'El problema que resuelve es circular: para cambiar código con seguridad necesitas pruebas, pero para poder probarlo tienes que cambiarlo. Su respuesta son las <b>costuras</b>: puntos donde se puede alterar el comportamiento sin editar el código en ese sitio, y que permiten meter una prueba alrededor de lo que vas a tocar.',
+          porQue: 'Es el más realista de los cuatro de Programación: en ALTEN vas a tocar mucho más código existente que código nuevo.' },
+        ruta: ['Qué te pide el puesto que quieres', 'Tests antes que features', 'pytest de verdad', 'Un proyecto que se pueda enseñar', 'Leer código ajeno a propósito', 'Media hora diaria, no seis el domingo'] },
+      { mat: 'Networking', n: 6, tot: 6, titulo: 'Una hora al mes, en el calendario', ic: 'red',
+        c: 'Un bloque de una hora al mes para revisar la lista, escribir a tres personas y añadir a los nuevos que conociste. Una hora al mes sostiene una red; cero horas la disuelve en un año.',
+        q: 'El hábito: sin bloque fijo, esto se cae en dos semanas.',
+        libro: null,
+        ruta: RED }
+    ];
+
+    // Fichas reales de Habilidades Base (HABILIDAD_DETALLE): el paso que sigue y los que vienen.
+    const F = [
+      { titulo: 'Manejar todo tipo de vehículos', img: '/_blob/45b5ed153ec21c58b50fc4825c841573', tot: 11, k: 7, pasoT: 'Derrapes y emergencias',
+        d: 'Qué hacer en los tres segundos donde se decide todo:',
+        list: [
+          '<b>Derrape trasero</b> (la cola se va): mira <b>hacia donde quieres ir</b> y gira el volante en esa dirección — contravolante. Las manos siguen a la mirada, así que la mirada es la instrucción.',
+          '<b>Derrape frontal</b> (no gira, sigue de frente): suelta el acelerador y <b>reduce el ángulo del volante</b>. Girar más empeora todo.',
+          '<b>Frenada de emergencia con ABS</b>: pisa a fondo y no sueltes. El pedal va a vibrar y a hacer ruido — <b>eso es normal</b>, es el ABS trabajando. Mucha gente suelta por el susto justo cuando más necesita frenar.',
+          'Puedes frenar y girar a la vez con ABS. Ese es todo el punto del sistema.',
+          '<b>Se te van los frenos</b>: bombea, reduce marchas, y usa el freno de mano <b>despacio</b>, tirando de a poco. Si hay que chocar, contra algo que ceda y en ángulo, nunca de frente.'
+        ],
+        luego: ['Otros vehículos', 'Qué revisar y cada cuándo', 'Si tienes un accidente'] },
+      { titulo: 'Primeros auxilios básicos', img: '/_blob/4e5900cdf9cad662c37fc79bcddf5ca3', tot: 12, k: 3, pasoT: 'Fase 1 — RCP (reanimación cardiopulmonar), adulto: la maniobra que más vidas salva',
+        d: 'Se usa cuando la persona no responde y no respira con normalidad (o solo jadea) — sin confirmar esto primero, no se hace RCP a alguien que sí respira.',
+        list: [
+          'Verifica primero: da palmadas firmes en el hombro y grita "¿estás bien?" — si no responde, revisa 5-10 segundos si el pecho sube y baja de forma normal (un jadeo ocasional y espaciado NO cuenta como respirar, es una señal de paro).',
+          'Grita pidiendo ayuda y señala a una persona específica: "tú, de la playera roja, llama al 911 y busca un DEA" — señalar a alguien en concreto evita que todos duden pensando que alguien más ya lo está haciendo.',
+          'Posición de manos: talón de una mano en el centro del pecho (mitad inferior del esternón), la otra mano encima entrelazando los dedos, brazos completamente rectos y hombros justo arriba de las manos — la fuerza sale del peso de tu cuerpo cayendo, no de los brazos empujando.',
+          'Comprime fuerte y rápido: 5-6 cm de profundidad, a un ritmo de 100-120 compresiones por minuto (el ritmo de "Stayin\' Alive" o "Sabor a Mí") — deja que el pecho suba por completo entre cada compresión, no te recargues encima entre una y otra.',
+          'Ciclo 30:2 — 30 compresiones seguidas, luego 2 respiraciones de rescate (inclina la cabeza hacia atrás levantando la barbilla, tapa la nariz, sella tu boca sobre la suya y sopla 1 segundo viendo que el pecho se levante) — si no sabes o no quieres dar respiraciones, las compresiones continuas solas ya salvan vidas, nunca te detengas solo por eso.',
+          'Si llega un DEA (desfibrilador): enciéndelo y sigue las instrucciones de voz al pie de la letra — el aparato analiza el ritmo del corazón solo y decide si debe dar una descarga, es prácticamente imposible usarlo mal.',
+          'No te detengas hasta que: la persona reaccione (se mueva, respire normal, abra los ojos), llegue personal médico que te releve, o tú ya no puedas seguir físicamente — si hay alguien más contigo, cambien de compresor cada 2 minutos, el cansancio baja la calidad de las compresiones antes de que lo notes tú mismo.',
+          'Error más común en RCP: comprimir demasiado suave por miedo a lastimar. En un adulto se comprime <b>5-6 cm de profundidad</b> — es más fuerte de lo que la gente cree, y las costillas pueden tronar. Una costilla rota se arregla; un paro sin RCP no.'
+        ],
+        luego: ['Fase 2 — Atragantamiento (maniobra de Heimlich): consciente, tú mismo solo, y bebés', 'Fase 3 — Hemorragias graves: control de sangrado que no para', 'Fase 4 — Quemaduras: el tratamiento correcto según el grado'] },
+      { titulo: 'Coctelería básica', img: '/_blob/3ac25655782bdf1dc7addf63690a2eca', tot: 15, k: 5, pasoT: 'Clásico 1 · Margarita',
+        d: 'El que más te sirve en México, y el más maltratado por las mezclas preparadas.',
+        list: [
+          '<b>Plantilla</b>: 60 ml de tequila blanco · 30 ml de limón recién exprimido · 20 ml de triple sec (Cointreau si puedes).',
+          'Agitar con hielo 15 segundos y colar en copa fría, con o sin sal en la mitad del borde — <b>media orilla</b>, para que quien no quiera sal pueda beber del otro lado.',
+          'Usa <b>tequila 100% de agave blanco</b>; un tequila mixto arruina el trago y es de donde vienen las malas resacas.',
+          'El limón <b>tiene que ser recién exprimido</b>. El embotellado sabe a metal y es la razón número uno por la que un margarita casero sabe mal.',
+          'Variante fácil: cambia el tequila por <b>mezcal</b> y tienes otro trago completamente distinto, ahumado, que impresiona sin trabajo extra.'
+        ],
+        luego: ['Clásico 2 · Old Fashioned', 'Clásico 3 · Negroni', 'Clásico 4 · Daiquiri'] },
+      { titulo: 'Hacer networking de verdad', img: '/_blob/ad475102ba703cabe1255d59a5094d02', tot: 20, k: 1, pasoT: 'Qué es y qué no es',
+        d: 'Keith Ferrazzi lo resume en <b>Never Eat Alone</b>: <i>"no hagas networking cuando necesites algo — para entonces ya es tarde"</i>. Networking no es coleccionar contactos ni repartir tarjetas: es construir <b>relaciones donde las dos partes ganan</b>, empezando por lo que tú das.',
+        list: [
+          'Mil personas que te vieron una vez valen menos que <b>veinte que te deben un favor de verdad</b>.',
+          'Se siente raro al principio porque inviertes en algo que no da resultado inmediato. Esa incomodidad es la señal de que lo estás haciendo bien: si diera resultado hoy, sería vender, no construir.',
+          'La medida no es cuántos contactos tienes, es <b>a cuántos podrías escribirles mañana sin que les pareciera raro</b>. Cuéntalos ahora mismo. Ese número es tu punto de partida real.'
+        ],
+        luego: ['El mito del extrovertido', 'La fuerza de los vínculos débiles', 'Dar antes de pedir — pero con criterio'] }
+    ];
+
+    // «Lo que viene»: el Qué hacer del paso siguiente y los nombres de los puntos del paso que sigue en la ficha.
+    const SIG = [
+      'Un bloque de una hora al mes para revisar la lista, escribir a tres personas y añadir a los nuevos que conociste. Una hora al mes sostiene una red; cero horas la disuelve en un año.',
+      'Un simulacro completo cada domingo, con reloj. Presentas cuando saques <b>34 de 46 o más dos veces seguidas</b> (el corte es 30). Cada pregunta fallada va a una lista con su sección del syllabus.',
+      'Escribe pruebas con pytest para una función de control —un PID o la lógica de un frenado de emergencia simulado—: casos normales, límites y fallos, y que corran solas en cada commit con GitHub Actions.',
+      ''
+    ];
+    const PROX = [
+      'Moto · Camioneta / SUV · Con remolque · Estándar en pendiente · Alemania',
+      'Confirma que es real · Persona consciente de pie · Si tú mismo te atragantas y estás solo · Embarazada o persona con obesidad importante · Bebé menor de 1 año · Si la persona pierde el conocimiento · Error más común en atragantamiento',
+      'Plantilla · Se revuelve · El paso que casi nadie hace y lo cambia todo · Error más común',
+      'Estrategia de introvertido que funciona · Error más común'
+    ];
+
+    const SEM = ['Networking 5/6', 'IA 1/5', 'Código 2/6', 'Networking 6/6'];
+    const FIC = ['Manejar · paso 7', 'Primeros auxilios · paso 3', 'Coctelería · paso 5', 'Networking · paso 1'];
+    const iS = Math.max(0, SEM.indexOf(this.props.semana ?? SEM[0]));
+    const iF = Math.max(0, FIC.indexOf(this.props.ficha ?? FIC[0]));
+    const W = Math.max(480, Number(this.props.ancho ?? 895) || 895);
+    const H = Math.max(240, Number(this.props.alto ?? 442) || 442);
+    // La imagen crece con la tarjeta: el 27 % de su alto, entre 64 y 180 px, en 2:3 como la portada.
+    const th = Math.round(Math.min(180, Math.max(64, (H - 32) * 0.27)));
+    const tw = Math.round(th * 2 / 3);
+
+    // El texto trae <b> e <i>: se parte en trozos para pintarlos sin innerHTML.
+    const limpia = t => String(t || '').replace(/<[^>]+>/g, '');
+    const segs = html => {
+      const src = String(html || ''), out = [], re = /<(b|i)>([\s\S]*?)<\/\1>/g;
+      let last = 0, m;
+      while ((m = re.exec(src))) {
+        if (m.index > last) out.push({ t: limpia(src.slice(last, m.index)), n: true, b: false, i: false });
+        out.push({ t: limpia(m[2]), n: false, b: m[1] === 'b', i: m[1] === 'i' });
+        last = re.lastIndex;
+      }
+      if (last < src.length) out.push({ t: limpia(src.slice(last)), n: true, b: false, i: false });
+      return out;
+    };
+    // Un punto de la ficha: si empieza con su nombre (en negritas, o antes de «:» o « — »), ese nombre va primero.
+    const punto = raw => {
+      const h = String(raw);
+      const mb = h.match(/^<b>([\s\S]*?)<\/b>/);
+      if (mb) return { conLead: true, lead: limpia(mb[1]), segs: segs(h.slice(mb[0].length)) };
+      const mc = h.match(/^((?:[^<:—.]|:(?=\S)){3,60}?)(:\s|\s—\s)/);
+      if (mc) return { conLead: true, lead: mc[1], segs: segs(h.slice(mc[1].length)) };
+      return { conLead: false, lead: '', segs: segs(h) };
+    };
+    const tramos = (n, hechos, toca, col, tenue) => Array.from({ length: n }, (_, j) =>
+      j < hechos ? { bg: col, sh: 'none' } : j === toca ? { bg: tenue, sh: 'inset 0 0 0 1px ' + col } : { bg: c.vacio, sh: 'none' });
+
+    const s0 = S[iS], L = s0.libro;
+    const s = {
+      mat: s0.mat, n: s0.n, tot: s0.tot, titulo: s0.titulo,
+      conLibro: !!L, sinLibro: !L, img: L ? L.img : '', libroT: L ? L.t : '',
+      libroNota: L ? (L.nota ? ', ' + L.nota : ' · ' + L.autor) : '',
+      icRed: s0.ic === 'red', icChip: s0.ic === 'chip', icCode: s0.ic === 'code',
+      conSig: s0.n < s0.tot, esUltimo: s0.n >= s0.tot, sigN: s0.n < s0.tot ? s0.ruta[s0.n] : '',
+      tramos: tramos(s0.tot, s0.n - 1, s0.n - 1, c.w, c.wTenue),
+      cSegs: segs(s0.c), qSegs: segs(s0.q),
+      idea: L ? L.idea : '', resSegs: L ? segs(L.resumen) : [], porQue: L ? L.porQue : '',
+      ruta: s0.ruta.map((t, j) => ({ t: (j + 1) + ' · ' + t, hecho: j < s0.n - 1, ahora: j === s0.n - 1, falta: j > s0.n - 1 })),
+      sigSegs: segs(SIG[iS] || '')
+    };
+
+    const f0 = F[iF];
+    const f = {
+      titulo: f0.titulo, img: f0.img, hechos: f0.k - 1, tot: f0.tot,
+      tramos: tramos(f0.tot, f0.k - 1, f0.k - 1, c.b, c.bTenue),
+      paso: 'Paso ' + f0.k + ' · ' + f0.pasoT,
+      dSegs: segs(f0.d),
+      puntos: f0.list.map(punto),
+      sigN: 'Paso ' + (f0.k + 1) + ' · ' + f0.luego[0],
+      luego: f0.luego.slice(1).map((t, j) => ({ t: (f0.k + 2 + j) + ' · ' + t })),
+      proxN: f0.k + 1, proxT: f0.luego[0], proxNombres: PROX[iF]
+    };
+
+    return { c, dim: { w: W, h: H, th, tw }, s, f };
+  }
+}
+</script>
+</body>
+</html>

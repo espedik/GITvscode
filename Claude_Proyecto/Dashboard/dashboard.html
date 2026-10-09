@@ -3047,30 +3047,16 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    materia arriba, lo que aprendes en grande, el detalle en gris— y `--c` es el color de su
    materia, un token del tema. Ocupa la segunda columna a todo lo alto; bajo 900 px va a todo lo
    ancho, debajo de los demás. */
-#heroAprenderPanel{grid-column:2;grid-row:1/-1;container-type:inline-size}
+#heroAprenderPanel{grid-column:2;grid-row:1/-1;container:aprende / inline-size}
 @media(max-width:900px){#heroAprenderPanel,#miDiaSecundarios>.dia-invertir{grid-column:1/-1;grid-row:auto}}
 #miDiaSecundarios>#heroAprenderPanel{gap:0}
 /* A lo ancho (Adán: "todo el espacio que queda, expande lo de hoy aprendes"), se acomoda a su propio
-   ancho: desde 560 px los cuatro renglones van en 2×2; desde 900 px, además, los dos de Tu avance van
-   lado a lado, con la imagen en su proporción arriba y el detalle a todo el alto. Más angosto —el
-   teléfono— sigue siendo la lista de siempre. */
+   ancho: desde 560 px los cuatro renglones van en 2×2 y, debajo, las dos tarjetas de Tu avance, lado
+   a lado en esas mismas dos columnas. Más angosto —el teléfono— sigue siendo la lista de siempre. */
 /* Con el id delante: las reglas de cada pieza van más abajo y, a igual peso, ganarían. */
 @container (min-width:560px){
   #heroAprenderPanel .ap-lista{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:26px}
   #heroAprenderPanel .ap-lista>.ap-fila:nth-last-child(-n+2){border-bottom:1px solid rgba(var(--ov),.09)}
-}
-@container (min-width:900px){
-  #heroAprenderPanel .ap-avance{flex:1 1 0;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto minmax(0,1fr)}
-  #heroAprenderPanel .ap-avance>.ap-lbl{grid-column:1/-1}
-  #heroAprenderPanel .ap-av{flex-direction:column;gap:10px;min-height:0}
-  #heroAprenderPanel .ap-av:first-of-type{padding-right:24px}
-  #heroAprenderPanel .ap-av+.ap-av{border-top:0;border-left:1px solid rgba(var(--ov),.09);padding-left:24px}
-  /* La imagen arriba, a todo el ancho de su tarjeta (de la portada se ve su parte de arriba), y el
-     detalle debajo, a todo el ancho y el alto que quedan: líneas legibles y sin aire bajo la imagen. */
-  #heroAprenderPanel .ap-av-img{align-self:stretch;width:100%;max-width:none;height:clamp(150px,22vh,320px);aspect-ratio:auto;flex:none}
-  #heroAprenderPanel .ap-av-col{flex:1;min-height:0}
-  #heroAprenderPanel .ap-av-t{font-size:15px}
-  #heroAprenderPanel .ap-av-txt{font-size:12.5px;line-height:1.5}
 }
 .ap-fecha{font-family:var(--mono);font-size:10.5px;letter-spacing:0;text-transform:none;color:var(--text3);white-space:nowrap}
 .ap-fecha b{color:var(--text);font-weight:700}
@@ -3117,37 +3103,107 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .ap-nota b{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text2)}
 .ap-aux.hat{color:var(--b)}
 .ap-aux.ist{color:var(--o)}
-/* Tu avance: lo que avanza contigo y no con el calendario. Ocupa todo el alto que le queda a la
-   columna y lo reparte entre sus dos renglones, con la misma anatomía: la imagen a toda la altura,
-   la materia con su cuenta, el título, un tramo por paso —lleno lo hecho, marcado el que sigue— y el
-   detalle, con tantas líneas como quepan (`apAjustarAvance()`). */
-.ap-avance{flex:1 0 auto;display:flex;flex-direction:column;padding-top:10px}
+/* Tu avance (diseño: diseno-avance/, Main): lo que avanza contigo y no con el calendario. Dos
+   tarjetas con la misma anatomía. En la cabecera, dónde vas: la imagen (portada o foto, en 2:3), la
+   materia con su cuenta, el título, un tramo por paso —lleno lo hecho, marcado el que toca— y lo que
+   sigue. En el cuerpo, lo que hay que hacer, en bloques con su etiqueta encima y en orden de
+   importancia: lo que haces, en negro y a 13.5 px; lo de apoyo, en gris (Adán: "el texto está muy
+   amontonado y no se distingue nada"). En escritorio el cuerpo es un multicolumna de alto fijo
+   —columnas de unos 270 px, ~50 caracteres por línea— y lo que no cabe se quita completo
+   (`apAjustarAvance()`). */
+.ap-avance{display:flex;flex-direction:column;gap:12px;padding-top:10px}
 .ap-lbl{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
-.ap-av{flex:1 1 0;min-height:50px;display:flex;align-items:stretch;gap:12px;width:100%;padding:9px 0;border:0;
+.ap-av{display:flex;flex-direction:column;gap:10px;width:100%;min-width:0;padding:0;border:0;
   background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
-.ap-av+.ap-av{border-top:1px solid rgba(var(--ov),.09)}
-.ap-av-img{flex:none;align-self:stretch;width:auto;height:auto;aspect-ratio:2/3;min-width:40px;max-width:38%;min-height:44px;
-  border-radius:8px;object-fit:cover;background:color-mix(in srgb,var(--c) 14%,transparent);box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.ap-av+.ap-av{border-top:1px solid rgba(var(--ov),.09);padding-top:12px}
+.ap-av-cab{flex:none;display:flex;gap:12px;align-items:stretch;min-width:0}
+.ap-av-img{flex:none;width:auto;height:96px;aspect-ratio:2/3;border-radius:8px;object-fit:cover;
+  background:color-mix(in srgb,var(--c) 14%,transparent);box-shadow:0 4px 12px rgba(0,0,0,.18)}
 .ap-av-img.libro{object-position:top}
-.ap-av-ico{display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:none}
-.ap-av-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.ap-av-ico{display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:none}
+.ap-av-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
 .ap-av-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .ap-av-mat{min-width:0;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
   color:var(--c);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ap-av-n{flex:none;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--c)}
-.ap-av-t{font-size:13.5px;font-weight:700;line-height:1.3;color:var(--text)}
+.ap-av-t{font-size:15.5px;font-weight:700;line-height:1.28;color:var(--text);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
 .ap-av:hover .ap-av-t{color:var(--c)}
 .ap-seg{display:flex;gap:3px;margin:2px 0}
 .ap-seg i{flex:1 1 0;height:4px;border-radius:2px;background:rgba(var(--ov),.1)}
 .ap-seg i.ok{background:var(--c)}
 .ap-seg i.ya{background:color-mix(in srgb,var(--c) 30%,transparent);box-shadow:inset 0 0 0 1px var(--c)}
-/* El detalle no empuja el alto de la columna: va encima de su caja y la caja es lo que sobra. */
-.ap-av-cuerpo{flex:1 1 0;min-height:0;position:relative}
-.ap-av-txt{position:absolute;inset:0;overflow:hidden;font-size:11.5px;line-height:1.45;color:var(--text2);
-  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
-.ap-av-txt b{color:var(--text);font-weight:700}
-.ap-av-k{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text);margin-right:3px}
-@media(max-width:900px){.ap-avance,.ap-av,.ap-av-cuerpo{flex:none}.ap-av-img{aspect-ratio:auto;width:64px;max-width:none}.ap-av-txt{position:static;-webkit-line-clamp:4}}
+/* Bajo los tramos, lo que sigue: el libro con que se hace y el paso que viene. */
+.ap-av-meta{margin-top:2px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.ap-av-m{display:flex;align-items:center;gap:7px;min-width:0;font-size:12px;line-height:1.35;color:var(--text2)}
+.ap-av-m svg{flex:none;width:13px;height:13px;color:var(--text3)}
+.ap-av-m>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ap-av-m i{color:var(--text)}
+.ap-av-m b{font-weight:600;color:var(--text)}
+/* El cuerpo: bloques que no se parten entre columnas, con la etiqueta encima. */
+.ap-av-cuerpo,.ap-av-cols{display:block;min-width:0}
+.ap-bq{display:block;break-inside:avoid;padding-bottom:11px}
+.ap-bq-k{display:block;margin-bottom:3px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text3)}
+.ap-bq-t{display:block;font-size:12.5px;line-height:1.5;color:var(--text2)}
+.ap-bq-t b{font-weight:700;color:var(--text)}
+.ap-bq-hacer .ap-bq-t{font-size:13.5px;color:var(--text)}
+/* La frase clave del paso, marcada como con resaltador en el color de su materia. */
+.ap-bq-hacer .ap-bq-t b{background:color-mix(in srgb,var(--c) 17%,transparent);padding:0 2px;border-radius:3px;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+.ap-bq-idea{display:block;font-family:var(--font-title);font-size:14.5px;font-weight:500;line-height:1.42;color:var(--text)}
+.ap-bq-k.ap-bq-paso{color:var(--c);font-size:9.5px;letter-spacing:.12em;line-height:1.45;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.ap-bq-intro{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+/* Un renglón por punto de la ficha, con su nombre primero; tres líneas como mucho. */
+.ap-pt{display:flex;gap:9px;break-inside:avoid;padding-bottom:9px}
+.ap-pt::before{content:'';flex:none;width:5px;height:5px;margin-top:7px;border-radius:1.5px;background:var(--c)}
+.ap-pt-t{min-width:0;font-size:12.5px;line-height:1.5;color:var(--text2);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.ap-pt-t b{font-weight:600;color:var(--text)}
+.ap-pt-t>b:first-child{font-weight:700}
+/* Lo que se recorta para que quepa: con «…» en su última línea. */
+.ap-corta{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
+/* Si todo cabe y sobra alto, los puntos de la ficha y su entrada van enteros. */
+.ap-holgado .ap-pt-t,.ap-holgado .ap-bq-intro{-webkit-line-clamp:unset}
+/* La ruta del foco: lo hecho, el de ahora y lo que falta. */
+.ap-ruta{display:flex;align-items:center;gap:8px;min-width:0;font-size:12px;line-height:1.6;color:var(--text2)}
+.ap-ruta>i{flex:none;width:11px;height:11px;display:inline-flex;align-items:center;justify-content:center}
+.ap-ruta>i::before{content:'';width:6px;height:6px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--text3)}
+.ap-ruta>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ap-ruta svg{width:11px;height:11px}
+.ap-ruta.ok{color:var(--text3)}
+.ap-ruta.ok>i::before{display:none}
+.ap-ruta.ya{color:var(--text);font-weight:600}
+.ap-ruta.ya>i::before{width:7px;height:7px;box-shadow:none;background:var(--c)}
+.ap-luego{display:block;font-size:12px;line-height:1.6;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* En el teléfono el cuerpo va en el flujo: lo de apoyo se queda en su pantalla y la ficha enseña tres puntos. */
+.ap-opc,.ap-av-cols>.ap-pt:nth-child(n+5){display:none}
+/* Desde 560 px de ancho, las dos tarjetas lado a lado, en las dos columnas de los renglones de arriba. */
+@container aprende (min-width:560px){
+  #heroAprenderPanel .ap-avance{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:0;row-gap:10px}
+  #heroAprenderPanel .ap-avance>.ap-lbl{grid-column:1/-1}
+  #heroAprenderPanel .ap-av:first-of-type{padding-right:24px}
+  #heroAprenderPanel .ap-av+.ap-av{border-top:0;padding-top:0;border-left:1px solid rgba(var(--ov),.09);padding-left:24px}
+}
+/* En escritorio, Tu avance toma el alto que le queda a la columna (240 px como mínimo; con menos, la
+   columna desplaza) y cada tarjeta lo usa entero: la imagen, el 27 % de su alto (180 px como mucho); el cuerpo es
+   un multicolumna de alto fijo. */
+@media(min-width:901px){
+  #heroAprenderPanel .ap-avance{flex:1 0 0;min-height:240px;display:grid;grid-template-columns:minmax(0,1fr);
+    grid-template-rows:auto repeat(2,minmax(0,1fr));gap:10px}
+  #heroAprenderPanel .ap-av{min-height:0;overflow:hidden;container:avtarjeta / size}
+  #heroAprenderPanel .ap-av-img{height:clamp(64px,27cqh,180px)}
+  #heroAprenderPanel .ap-av-cuerpo{flex:1 1 0;min-height:0;position:relative}
+  #heroAprenderPanel .ap-av-cols{position:absolute;inset:0;overflow:hidden;column-width:270px;column-gap:24px;column-fill:auto}
+  /* Si todo cabe, las columnas se reparten el contenido en vez de dejar la última vacía. */
+  #heroAprenderPanel .ap-av-cols.ap-holgado{column-fill:balance}
+  #heroAprenderPanel .ap-av-cols>.ap-opc{display:block}
+  #heroAprenderPanel .ap-av-cols>.ap-pt{display:flex}
+  @container aprende (min-width:560px){
+    #heroAprenderPanel .ap-avance{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto minmax(0,1fr);gap:10px 0}
+  }
+}
 /* La bandera de Alemania en CSS: el emoji se pinta como las letras "DE" en Windows. */
 .flag-de{display:inline-block;width:14px;height:9px;border-radius:2px;flex-shrink:0;
   background:linear-gradient(#000 0 33.4%,#dd0000 33.4% 66.7%,#ffce00 66.7%);box-shadow:0 0 0 1px rgba(var(--ov),.16)}
@@ -7194,31 +7250,71 @@ function faseDespuesHtml(f){
   const dm={day:'numeric',month:'long'};
   return `<div class="hp-sub"><div class="hp-sub-lbl"><span>Después · ${esc(nx.tag)}</span><span>desde el ${nx.start.toLocaleDateString('es-MX',dm)}</span></div><div class="hp-sub-t">${esc(nx.title)}</div></div>`;
 }
-// Tu avance: lo que avanza contigo y no con el calendario —cambia al avanzar en su pantalla—.
-// El paso de la semana (la habilidad del foco de «En qué invertir tu tiempo») con la portada de su
-// libro, su «Qué hacer», su porqué y el paso que viene; y la ficha de Habilidades Base en curso, la empezada más cerca de
-// terminar (mismo criterio que «SIGUIENTE» en esa pantalla), con su foto y lo que dice el
-// paso que sigue. Un tramo por paso: lleno lo hecho, marcado el que toca.
+// Tu avance (diseño: diseno-avance/, Main): lo que avanza contigo y no con el calendario —cambia al
+// avanzar en su pantalla—. El paso de la semana (la habilidad del foco de «En qué invertir tu tiempo»)
+// con la portada de su libro, y la ficha de Habilidades Base en curso, la empezada más cerca de
+// terminar (mismo criterio que «SIGUIENTE» en esa pantalla), con su foto. Las dos con la misma
+// anatomía: en la cabecera, dónde vas y lo que sigue; en el cuerpo, bloques en orden de importancia.
+// Un tramo por paso: lleno lo hecho, marcado el que toca.
 function apTramos(n, hecho, toca){
   let h = ''; for(let j = 0; j < n; j++) h += `<i class="${hecho(j) ? 'ok' : j === toca ? 'ya' : ''}"></i>`;
   return `<span class="ap-seg">${h}</span>`;
+}
+const AP_ICO = {
+  libro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+  sigue: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>',
+  meta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/></svg>',
+  hecho: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+};
+function apMeta(ico, html){ return `<span class="ap-av-m">${AP_ICO[ico]}<span>${html}</span></span>`; }
+// Un bloque del cuerpo: la etiqueta encima y lo suyo debajo. `.ap-opc` es lo de apoyo, que solo sale
+// donde sobra alto; `.ap-cl` marca el texto que apAjustarAvance() puede recortar.
+function apBloque(k, cuerpo, cls){ return `<span class="ap-bq${cls ? ' ' + cls : ''}"><span class="ap-bq-k">${k}</span>${cuerpo}</span>`; }
+// El nombre de un punto de la ficha: lo que va en negritas al empezar o, si no, lo que va antes de «:» o
+// de « — » (hasta 60 caracteres; «Ciclo 30:2 — …» también cuenta). Sin nombre, ''.
+const AP_RE_NOMBRE = /^((?:[^<:—.]|:(?=\S)){3,60}?)(?=:\s|\s—\s)/;
+function apNombre(html){
+  const h = mdLimpiaTitulo(html), b = h.match(/^<b>([\s\S]*?)<\/b>/);
+  if(b) return b[1].replace(/<[^>]+>/g, '');
+  const m = h.match(AP_RE_NOMBRE); return m ? m[1] : '';
+}
+// Un punto de la ficha, con su nombre primero y en negritas.
+function apPunto(html){
+  let h = mdLimpiaTitulo(html);
+  if(!/^<b>/.test(h)){ const m = h.match(AP_RE_NOMBRE); if(m) h = `<b>${m[1]}</b>` + h.slice(m[1].length); }
+  return `<span class="ap-pt"><span class="ap-pt-t ap-cl">${h}</span></span>`;
 }
 function pasoSemanaHtml(){
   if(typeof habFocoActual!=='function') return '';
   const foco=habFocoActual(); if(!foco) return '';
   const pasos=habPasos(foco.id); if(!pasos.length) return '';
   const st=habFocoLoad(); let i=st.paso[foco.id]||0; if(i<0||i>=pasos.length) i=0;
-  const p=pasos[i];
+  const p=pasos[i], sig=pasos[i+1];
   const r=(Array.isArray(p.r)?p.r:[]).find(x=>x&&x.t==='libro');
-  const lib=r?habLibro(r.id):null;
+  const lib=r?habLibro(r.id):null, fi=(lib&&lib.ficha)||{};
+  const meta=(lib?apMeta('libro',`Con <i>${esc(lib.t)}</i>${r.nota?`, ${esc(r.nota)}`:lib.a?` · ${esc(lib.a)}`:''}`):'')
+    +(sig?apMeta('sigue',`Después: <b>${esc(sig.n)}</b>`):apMeta('meta','Último paso de la ruta'));
+  const ruta=pasos.map((x,j)=>`<span class="ap-ruta${j<i?' ok':j===i?' ya':''}"><i>${j<i?AP_ICO.hecho:''}</i><span>${j+1} · ${esc(x.n)}</span></span>`).join('');
+  const cuerpo=[
+    p.c?apBloque('Qué hacer',`<span class="ap-bq-t ap-cl">${p.c}</span>`,'ap-bq-hacer'):'',
+    p.q?apBloque('Por qué',`<span class="ap-bq-t ap-cl">${p.q}</span>`):'',
+    fi.idea?apBloque('La idea del libro',`<span class="ap-bq-idea ap-cl">${fi.idea}</span>`,'ap-opc'):'',
+    apBloque(`La ruta · ${pasos.length} pasos`,ruta,'ap-opc'),
+    sig&&sig.c?apBloque('Lo que viene',`<span class="ap-bq-t ap-cl"><b>${esc(sig.n)}.</b> ${sig.c}</span>`,'ap-opc'):'',
+    fi.resumen?apBloque('Lo que dice',`<span class="ap-bq-t ap-cl">${fi.resumen}</span>`,'ap-opc'):'',
+    fi.porQue?apBloque('Por qué este libro',`<span class="ap-bq-t ap-cl">${fi.porQue}</span>`,'ap-opc'):''
+  ].join('');
   return `<button type="button" class="ap-av" style="--c:var(--w)" onclick="irASlide('theme-skills')" title="Abrir En qué invertir tu tiempo${lib?` · con ${habAttr(lib.t)}`:''}">
-      ${lib?`<img class="ap-av-img libro" src="${lib.portada||''}" alt="" loading="lazy">`:`<span class="ap-av-img ap-av-ico">${foco.icon}</span>`}
-      <span class="ap-av-col">
-        <span class="ap-av-top"><span class="ap-av-mat">${esc(foco.name)} · esta semana</span><span class="ap-av-n">${i+1}/${pasos.length}</span></span>
-        <span class="ap-av-t">${esc(p.n)}</span>
-        ${apTramos(pasos.length, j=>j<i, i)}
-        <span class="ap-av-cuerpo"><span class="ap-av-txt"><b class="ap-av-k">Qué hacer</b> ${p.c||''}${p.q?` <b class="ap-av-k">Por qué</b> ${p.q}`:''}${lib?` <b class="ap-av-k">Con</b> <i>${esc(lib.t)}</i>${r.nota?`, ${esc(r.nota)}`:''}.`:''}${pasos[i+1]?` <b class="ap-av-k">Después</b> ${esc(pasos[i+1].n)}.`:''}${lib&&lib.ficha&&lib.ficha.idea?` <b class="ap-av-k">La idea</b> ${lib.ficha.idea}`:''}${lib&&lib.ficha&&lib.ficha.resumen?` <b class="ap-av-k">Lo que dice</b> ${lib.ficha.resumen}`:''}${lib&&lib.ficha&&lib.ficha.porQue?` <b class="ap-av-k">Por qué este libro</b> ${lib.ficha.porQue}`:''}</span></span>
+      <span class="ap-av-cab">
+        ${lib?`<img class="ap-av-img libro" src="${lib.portada||''}" alt="" loading="lazy">`:`<span class="ap-av-img ap-av-ico">${foco.icon}</span>`}
+        <span class="ap-av-col">
+          <span class="ap-av-top"><span class="ap-av-mat">${esc(foco.name)} · esta semana</span><span class="ap-av-n">${i+1}/${pasos.length}</span></span>
+          <span class="ap-av-t">${esc(p.n)}</span>
+          ${apTramos(pasos.length, j=>j<i, i)}
+          <span class="ap-av-meta">${meta}</span>
+        </span>
       </span>
+      <span class="ap-av-cuerpo"><span class="ap-av-cols">${cuerpo}</span></span>
     </button>`;
 }
 function fichaEnCursoHtml(){
@@ -7232,32 +7328,79 @@ function fichaEnCursoHtml(){
   const paso=k>=0?info.pasos[k]:null;
   // La foto viene a 2400 px para el panel de detalle; aquí basta una de 320.
   const foto=String(sig.h.img||'').replace(/([?&]w=)\d+/,(_,a)=>a+'320').replace(/([?&]q=)\d+/,(_,a)=>a+'70');
-  // Lo que dice el paso que sigue: su entrada y los puntos de su lista, en el orden de la ficha.
-  const consejo=paso?[paso.d].concat(paso.list||[]).filter(Boolean).join(' · ').replace(': · ',': '):'';
-  // Y los tres pendientes que vienen, al final: solo se ven donde sobra alto (apAjustarAvance()).
-  const luego=paso?info.pasos.map((q,j)=>({q,j})).filter(x=>x.j>k&&!store[x.j]).slice(0,3)
-    .map(x=>` <b class="ap-av-k">Luego · Paso ${x.j+1} · ${esc(mdLimpiaTitulo(x.q.t))}</b> ${[x.q.d].concat(x.q.list||[]).filter(Boolean).join(' · ').replace(': · ',': ')}`).join(''):'';
+  // Los pendientes que vienen: el primero en la cabecera y los dos siguientes al final del cuerpo.
+  const luego=paso?info.pasos.map((q,j)=>({q,j})).filter(x=>x.j>k&&!store[x.j]).slice(0,3):[];
+  const titulo=x=>`Paso ${x.j+1} · ${esc(mdLimpiaTitulo(x.q.t))}`;
+  const prox=luego[0]?{t:luego[0].q.t,d:luego[0].q.d,nombres:(luego[0].q.list||[]).map(apNombre).filter(Boolean)}:null;
+  const meta=!paso?apMeta('meta','Ficha completa')
+    :luego[0]?apMeta('sigue',`Después: <b>${titulo(luego[0])}</b>`):apMeta('meta','Último paso de la ficha');
+  const cuerpo=paso
+    ?`<span class="ap-bq"><span class="ap-bq-k ap-bq-paso">${titulo({q:paso,j:k})}</span>${paso.d?`<span class="ap-bq-t ap-bq-intro">${paso.d}</span>`:''}</span>`
+      +(paso.list||[]).map(apPunto).join('')
+      +(prox?apBloque(`Lo que viene · Paso ${luego[0].j+1}`,`<span class="ap-bq-t ap-cl"><b>${esc(mdLimpiaTitulo(prox.t))}.</b> ${prox.nombres.length>1?prox.nombres.map(esc).join(' · '):(prox.d||'')}</span>`,'ap-opc'):'')
+      +(luego.length>1?apBloque('Más adelante',luego.slice(1).map(x=>`<span class="ap-luego">${x.j+1} · ${esc(mdLimpiaTitulo(x.q.t))}</span>`).join(''),'ap-opc'):'')
+    :apBloque('Ficha completa','<span class="ap-bq-t">Repásala cuando quieras: la tienes entera.</span>');
   return `<button type="button" class="ap-av" style="--c:var(--b)" onclick="abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')" title="Abrir la ficha de Habilidades Base">
-      <img class="ap-av-img" src="${foto}" alt="" loading="lazy">
-      <span class="ap-av-col">
-        <span class="ap-av-top"><span class="ap-av-mat">Habilidades base</span><span class="ap-av-n">${sig.hechos}/${sig.total}</span></span>
-        <span class="ap-av-t">${esc(sig.h.t)}</span>
-        ${info?apTramos(info.pasos.length, j=>!!store[j], k):''}
-        <span class="ap-av-cuerpo"><span class="ap-av-txt">${paso?`<b class="ap-av-k">Paso ${k+1} · ${esc(mdLimpiaTitulo(paso.t))}</b> ${consejo}${luego}`:'Ficha completa: repásala cuando quieras.'}</span></span>
+      <span class="ap-av-cab">
+        <img class="ap-av-img" src="${foto}" alt="" loading="lazy">
+        <span class="ap-av-col">
+          <span class="ap-av-top"><span class="ap-av-mat">Habilidades base</span><span class="ap-av-n">${sig.hechos}/${sig.total}</span></span>
+          <span class="ap-av-t">${esc(sig.h.t)}</span>
+          ${info?apTramos(info.pasos.length, j=>!!store[j], k):''}
+          <span class="ap-av-meta">${meta}</span>
+        </span>
       </span>
+      <span class="ap-av-cuerpo"><span class="ap-av-cols">${cuerpo}</span></span>
     </button>`;
 }
-// El detalle de cada renglón llena su caja: tantas líneas como quepan, con «…» en la última. Se
-// mide al pintar y al cambiar el tamaño de la ventana; en el teléfono va en el flujo, con 4.
+// El cuerpo de cada tarjeta es un multicolumna de alto fijo: lo que no cabe cae en columnas que no se
+// ven. Para que nada quede a medias, el primer bloque que no cabe entero se recorta a las líneas que
+// le quedan —con «…»— o, si es una lista, se acorta; los que siguen se quitan, y si ni así cabe se
+// quita también. Si todo cabe, los puntos de la ficha prueban a ir enteros. Se mide al pintar, al
+// cambiar el tamaño de la ventana y cada vez que termina de cargar una fuente; en el teléfono el
+// cuerpo va en el flujo y no se toca.
 function apAjustarAvance(){
-  document.querySelectorAll('#heroAprenderPanel .ap-av-cuerpo').forEach(caja => {
-    const t = caja.firstElementChild; if(!t) return;
-    if(getComputedStyle(t).position !== 'absolute'){ t.style.webkitLineClamp = ''; t.style.visibility = ''; return; }
-    const lh = parseFloat(getComputedStyle(t).lineHeight) || 16;
-    const n = Math.floor((caja.clientHeight + 2) / lh);
-    t.style.visibility = n < 1 ? 'hidden' : '';
-    t.style.webkitLineClamp = String(Math.max(1, n));
+  document.querySelectorAll('#heroAprenderPanel .ap-av-cols').forEach(cols => {
+    const bloques = [...cols.children];
+    cols.classList.remove('ap-holgado');
+    bloques.forEach(b => {
+      b.style.display = '';
+      b.querySelectorAll('.ap-cl').forEach(t => { t.style.webkitLineClamp = ''; t.classList.remove('ap-corta'); });
+      b.querySelectorAll('.ap-ruta,.ap-luego').forEach(x => { x.style.display = ''; });
+    });
+    if(getComputedStyle(cols).position !== 'absolute' || !cols.clientHeight) return;
+    const caja = cols.getBoundingClientRect();
+    const cabe = b => { const rs = [...b.getClientRects()].filter(r => r.width > 0 && r.height > 0);
+      return rs.length > 0 && rs.every(r => r.right <= caja.right + 1 && r.bottom <= caja.bottom + 1); };
+    const visible = b => getComputedStyle(b).display !== 'none';
+    const i = bloques.findIndex(b => visible(b) && !cabe(b));
+    if(i < 0){
+      cols.classList.add('ap-holgado');
+      if(!bloques.every(b => !visible(b) || cabe(b))) cols.classList.remove('ap-holgado');
+      return;
+    }
+    const b = bloques[i], t = b.querySelector('.ap-cl');
+    let ok = false;
+    if(t){
+      const lh = parseFloat(getComputedStyle(t).lineHeight) || 18;
+      const lineas = Math.round([...t.getClientRects()].reduce((s, r) => s + r.height, 0) / lh);
+      const min = t.classList.contains('ap-pt-t') ? 1 : 2;
+      t.classList.add('ap-corta');
+      for(let n = lineas - 1; n >= min && !ok; n--){ t.style.webkitLineClamp = String(n); ok = cabe(b); }
+      if(!ok){ t.style.webkitLineClamp = ''; t.classList.remove('ap-corta'); }
+    } else {
+      // Una lista (la ruta, lo que viene): primero se van los pasos hechos y luego los del final; quedan dos como mínimo.
+      const items = [...b.querySelectorAll('.ap-ruta,.ap-luego')];
+      const orden = items.filter(x => x.classList.contains('ok')).concat(items.filter(x => !x.classList.contains('ok')).reverse());
+      for(let q = 0; q < orden.length && items.length - q > 2 && !ok; q++){ orden[q].style.display = 'none'; ok = cabe(b); }
+      if(!ok) items.forEach(x => { x.style.display = ''; });
+    }
+    for(let k = ok ? i + 1 : i; k < bloques.length; k++) bloques[k].style.display = 'none';
   });
+}
+if(document.fonts){
+  if(document.fonts.ready) document.fonts.ready.then(() => apAjustarAvance());
+  document.fonts.addEventListener('loadingdone', () => apAjustarAvance());
 }
 // Semana ISO del año, para la esquina de la frase.
 function semanaISO(d){

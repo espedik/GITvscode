@@ -1,0 +1,118 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-09T22:30:00Z"
+  },
+  "title": "Tu avance · rediseño",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 895,
+      "h": 442,
+      "title": "Main · Cada cosa en su lugar"
+    },
+    "DireccionB.dc.html": {
+      "x": 975,
+      "y": 0,
+      "w": 895,
+      "h": 442,
+      "title": "B · Una cosa a la vez",
+      "is_interactive": true
+    },
+    "DireccionC.dc.html": {
+      "x": 1950,
+      "y": 0,
+      "w": 895,
+      "h": 442,
+      "title": "C · Lo mínimo"
+    },
+    "VarSinLibro.dc.html": {
+      "x": 0,
+      "y": 1000,
+      "w": 895,
+      "h": 442,
+      "title": "Main · IA 1/5 (sin libro) y Primeros auxilios"
+    },
+    "VarUltimo.dc.html": {
+      "x": 975,
+      "y": 1000,
+      "w": 895,
+      "h": 442,
+      "title": "Main · Networking 6/6 (último paso) y una ficha que empieza"
+    },
+    "Var1600.dc.html": {
+      "x": 1950,
+      "y": 1000,
+      "w": 626,
+      "h": 363,
+      "title": "Main a 1600 px · Código 2/6 y Coctelería"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "DireccionB.dc.html",
+    "DireccionC.dc.html",
+    "VarSinLibro.dc.html",
+    "VarUltimo.dc.html",
+    "Var1600.dc.html"
+  ],
+  "notes": {
+    "titulo": {
+      "x": 0,
+      "y": -300,
+      "text": "Tu avance — el paso de la semana y la ficha en curso",
+      "kind": "title1",
+      "maxW": 2845
+    },
+    "problema": {
+      "x": -520,
+      "y": 0,
+      "w": 440,
+      "text": "LO QUE PASA HOY, MEDIDO EN TU PANTALLA (2560 al 125 % = 2048 px de ancho)\n\n· Cada renglón mide 895 × 210 y el texto corre en una sola columna de 755 px: unos 125 caracteres por línea, cuando lo cómodo son 60–75.\n· Todo va a 11.5 px y en gris: lo que tienes que hacer pesa lo mismo que el resumen del libro.\n· Siete etiquetas dentro del mismo párrafo (Qué hacer, Por qué, Con, Después, La idea, Lo que dice, Por qué este libro): la vista no tiene dónde descansar.\n· En la ficha, los puntos van pegados con «·» en vez de uno debajo del otro.\n· La última línea sale cortada a la mitad.",
+      "color": "red"
+    },
+    "n-main": {
+      "x": 0,
+      "y": 482,
+      "w": 895,
+      "text": "MAIN — recomendada, ya en el Dashboard.\n\nDos tarjetas lado a lado, alineadas con las dos columnas de arriba. En la cabecera de cada una, dónde vas: la imagen, el paso, los tramos, el libro y lo que sigue. Abajo, lo que hay que hacer, en bloques con su etiqueta encima: a 13.5 px y en negro lo que haces, en gris lo de apoyo. La frase clave del paso va marcada. Si la tarjeta es ancha, el texto se parte en columnas de unos 50 caracteres.",
+      "color": "green"
+    },
+    "n-b": {
+      "x": 975,
+      "y": 482,
+      "w": 895,
+      "text": "B — una cosa a la vez.\n\nLa misma cabecera, pero abajo se ve un solo bloque, en grande (15.5 px): Qué hacer, Por qué o El libro con pestañas, y los puntos de la ficha uno por uno con ‹ ›. Se lee de lejos. En contra: lo demás queda a un toque.",
+      "color": "blue"
+    },
+    "n-c": {
+      "x": 1950,
+      "y": 482,
+      "w": 895,
+      "text": "C — lo mínimo.\n\nDel paso, solo la primera frase de Qué hacer, grande; de la ficha, solo el nombre de cada punto. Lo demás se abre al tocar la tarjeta. En contra: es la que más aire deja en tu pantalla.",
+      "color": "purple"
+    },
+    "titulo2": {
+      "x": 0,
+      "y": 760,
+      "text": "El mismo Main, con otros pasos y otras fichas",
+      "kind": "title1",
+      "maxW": 2576
+    },
+    "cambia": {
+      "x": -520,
+      "y": 1000,
+      "w": 440,
+      "text": "LO QUE VES CAMBIA CON LO QUE TOCA\n\nNada de esto está escrito para esta semana: cada tarjeta se arma con el paso y la ficha que tengas en curso.\n· Con libro: la portada, «Con …» y la idea del libro. Sin libro: el icono de la habilidad y, en su lugar, la ruta completa.\n· En el último paso, «Último paso de la ruta» en lugar de «Después».\n· La ficha enseña el paso que sigue, un renglón por punto; si un punto empieza con su nombre en negritas, ese nombre va primero.\n· Lo que no cabe se quita completo, del menos importante al más: nunca una línea a la mitad.\n\nEn Tweaks cambias Semana y Ficha por otros pasos reales.",
+      "color": "teal"
+    }
+  },
+  "designSystems": [],
+  "artifact": "https://claude.ai/artifact/BeVN962ToFRZSti7GZKZAt"
+}
