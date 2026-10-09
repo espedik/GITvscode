@@ -1,0 +1,83 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-08T05:30:00Z"
+  },
+  "title": "Qué escuchar · rediseño",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 2200,
+      "h": 1350,
+      "title": "Main · Esta semana, tus trayectos y el catálogo",
+      "is_interactive": true,
+      "radius": 20
+    },
+    "DireccionB.dc.html": {
+      "x": 2280,
+      "y": 0,
+      "w": 2200,
+      "h": 1350,
+      "title": "B · Por trayecto",
+      "radius": 20
+    },
+    "DireccionC.dc.html": {
+      "x": 4560,
+      "y": 0,
+      "w": 2200,
+      "h": 1350,
+      "title": "C · Lo mínimo",
+      "radius": 20
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "DireccionB.dc.html",
+    "DireccionC.dc.html"
+  ],
+  "notes": {
+    "titulo": {
+      "x": 0,
+      "y": -320,
+      "text": "Qué escuchar mientras manejas — el panel a 2200 × 1350, el tamaño que tendrá en tu pantalla de 2560 × 1440",
+      "kind": "title1",
+      "maxW": 6760
+    },
+    "problema": {
+      "x": -600,
+      "y": 0,
+      "w": 520,
+      "text": "MEDIDO EN EL DASHBOARD DE HOY (2560 × 1440)\n\n· El panel mide 1100 px de ancho en una pantalla de 2560 y aun así esconde 533 px: hay que desplazar para ver el español y las reglas.\n· Los trayectos estaban copiados a mano y se quedaron atrás: decía 17:00 al gym y 19:20; tu rutina hoy es 07:40 y 19:30.\n· Los porqués llevaban la calificación escrita: IA decía 30/100 y estás en 45.\n· Promete «primero tu foco (Networking)» y no había ni un audio de Networking.\n· No había nada de alemán, que es lo primero que pide el prompt de esta sección.\n· Nada decía qué poner ESTA semana: el catálogo empezaba sin respuesta.",
+      "color": "red"
+    },
+    "n-main": {
+      "x": 0,
+      "y": 1430,
+      "w": 680,
+      "text": "MAIN — recomendada, se implementa en el Dashboard.\n\nArriba, la respuesta: el audiolibro de la semana (el de tu paso de Networking), el podcast de hoy y tu alemán, con sus enlaces. A la izquierda, tus trayectos sacados de la rutina, con el total de horas, y las reglas al volante. A la derecha, el catálogo en tarjetas, en el orden de tu plan: el foco primero; lo que está en pausa, plegado al final.",
+      "color": "green"
+    },
+    "n-b": {
+      "x": 2280,
+      "y": 1430,
+      "w": 680,
+      "text": "B — por trayecto.\n\nTres columnas, una por momento: la mañana de entre semana, la noche y el fin de semana. Cada audio cae donde cabe por su duración, con su habilidad como etiqueta. A favor: abres el panel justo antes de manejar y ves solo lo que toca. En contra: la misma habilidad queda repartida en tres columnas.",
+      "color": "blue"
+    },
+    "n-c": {
+      "x": 4560,
+      "y": 1430,
+      "w": 680,
+      "text": "C — lo mínimo.\n\nLas tres respuestas de la semana en grande y el resto del catálogo en una lista de una línea por audio, sin porqués. A favor: se decide en dos segundos. En contra: el porqué de cada recurso queda fuera.",
+      "color": "purple"
+    }
+  },
+  "designSystems": [],
+  "artifact": "https://claude.ai/artifact/LhMhhRz1DKsb2z6HmeJv6w"
+}

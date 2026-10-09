@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Qué escuchar — lo mínimo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;family=Fraunces:opsz,wght@9..144,600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#00e0c0;text-decoration:none}a:hover{color:#5cf2dc;text-decoration:underline}
+</style>
+</helmet>
+
+<div style="width: 2200px; height: 1350px; box-sizing: border-box; border-radius: 20px; background: {{c.fondo}}; border: 1px solid {{c.marco}}; color: {{c.text}}; font-family: 'Inter', system-ui, sans-serif; display: flex; flex-direction: column; gap: 40px; padding: 40px 64px; overflow: hidden;">
+
+  <header style="display: flex; align-items: baseline; gap: 20px;">
+    <h1 style="margin: 0; flex: 1; font-size: 30px; font-weight: 800;">Qué escuchar mientras manejas</h1>
+    <span style="font-family: 'Space Grotesk', monospace; font-size: 15px; color: {{c.text3}};">27 h 30 a la semana</span>
+    <button type="button" aria-label="Cerrar" style="width: 44px; height: 44px; border-radius: 50%; border: 0; background: {{c.chip}}; color: {{c.text}}; font-size: 18px; cursor: pointer;">✕</button>
+  </header>
+
+  <!-- Las tres respuestas, y nada más arriba -->
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px;">
+    <sc-for list="{{tres}}" as="x" hint-placeholder-count="3">
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <span style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: {{x.color}};">{{x.cuando}}</span>
+        <span style="font-family: 'Fraunces', Georgia, serif; font-size: 40px; font-weight: 600; line-height: 1.1;">{{x.t}}</span>
+        <span style="font-size: 16px; color: {{c.text3}};">{{x.a}}</span>
+        <a href="{{x.spo}}" style="align-self: flex-start; margin-top: 6px; padding: 10px 18px; border-radius: 12px; background: {{x.color}}; color: {{c.sobre}}; font-size: 15px; font-weight: 800;">Escuchar en Spotify ↗</a>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="height: 1px; background: {{c.linea}};"></div>
+
+  <!-- Todo lo demás, una línea por audio -->
+  <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 64px; align-content: start;">
+    <sc-for list="{{resto}}" as="it" hint-placeholder-count="20">
+      <div style="display: grid; grid-template-columns: 96px minmax(0, 1fr) 150px 84px; gap: 14px; align-items: baseline; padding: 11px 0; border-bottom: 1px solid {{c.linea}};">
+        <span style="font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; color: {{it.tagColor}};">{{it.tag}}</span>
+        <span style="font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{it.t}} <span style="font-weight: 400; color: {{c.text3}};">{{it.a}}</span></span>
+        <span style="font-size: 13px; color: {{c.text3}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{it.sk}}</span>
+        <a href="{{it.spo}}" style="font-size: 13px; font-weight: 700; text-align: right;">Spotify ↗</a>
+      </div>
+    </sc-for>
+  </div>
+
+  <p style="margin: 0; font-size: 14px; color: {{c.text3}};">Solo audio, nunca video · con pasajero, baja el volumen · lo que valga la pena, anótalo al estacionarte.</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"tema":{"editor":"enum","options":["oscuro","claro"],"default":"oscuro"},"$preview":{"width":2200,"height":1350}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const D = {"foco": "Networking", "total": "27 h 30", "semana": {"libro": {"t": "Designing Your Life", "a": "Bill Burnett y Dave Evans", "tipo": "audio", "d": "El libro de tu paso de la semana: su capítulo de entrevistas de prototipo es «la pregunta que abre puertas». 6 h 18 min, leído por sus autores.", "largo": true, "cuando": "L–V 07:40 · y los turnos del fin de semana", "dur": "6 h 18 min"}, "hoy": {"t": "DeepLearning.AI", "a": "", "tipo": "yt", "d": "Las charlas y los paneles funcionan bien en audio; los cursos con código, no.", "largo": false, "cuando": "Hoy · 19:30 · 30 min"}, "aleman": {"t": "Slow German", "a": "Annik Rubens", "tipo": "pod", "d": "Alemán hablado despacio, de A1 a B2, con la transcripción en su página. Episodios cortos.", "largo": false, "cuando": "Alemán · 15–20 min"}}, "viajes": [{"dia": "Lunes a viernes", "tramos": [{"hora": "07:40", "dur": "50 min", "que": "Un capítulo del audiolibro: vas fresco, aquí va lo denso"}, {"hora": "19:30", "dur": "30 min", "que": "Un podcast corto o tu alemán"}]}, {"dia": "Sábado", "tramos": [{"hora": "09:15", "dur": "4 h 45", "que": "El audiolibro de la semana"}, {"hora": "17:00", "dur": "5 h", "que": "Un podcast largo, o termina el libro"}]}, {"dia": "Domingo", "tramos": [{"hora": "09:15", "dur": "4 h 45", "que": "El audiolibro de la semana"}, {"hora": "14:40", "dur": "6 h 20", "que": "Un podcast largo, o empieza el siguiente"}]}], "grupos": [{"nombre": "Networking", "val": 55, "color": "#fb923c", "nivel": "MEDIO", "why": "Tu foco de la semana. Son los tres libros de tu ruta: escucharlos al volante adelanta el paso sin quitarle una hora al día.", "items": [{"t": "Designing Your Life", "a": "Bill Burnett y Dave Evans", "tipo": "audio", "d": "El libro de tu paso de la semana: su capítulo de entrevistas de prototipo es «la pregunta que abre puertas». 6 h 18 min, leído por sus autores.", "largo": true}, {"t": "Never Eat Alone", "a": "Keith Ferrazzi", "tipo": "audio", "d": "El método para tener la red antes de necesitarla: el primer paso de tu ruta. 11 h 11 min.", "largo": true}, {"t": "Give and Take", "a": "Adam Grant", "tipo": "audio", "d": "Por qué los que dan primero terminan con mejores redes: reactivar sin pedir nada. 11 h 50 min; en español es «Dar y recibir».", "largo": true}], "foco": true}, {"nombre": "Finanzas", "val": 20, "color": "#ef4444", "nivel": "PRINCIPIANTE", "why": "Tu diagnóstico dice que el hueco no es de conocimiento sino de hábito: revisas gastos de forma reactiva. Estos tres atacan justo eso.", "items": [{"t": "I Will Teach You to Be Rich", "a": "Ramit Sethi", "tipo": "audio", "d": "Sistema de automatización de finanzas personales. Es el primer recurso que ya tenías listado en Finanzas.", "largo": true}, {"t": "Psicología del Dinero", "a": "Morgan Housel", "tipo": "audio", "d": "Por qué la gente toma malas decisiones con dinero aunque sepa la teoría. Hay edición en español.", "largo": true}, {"t": "The Millionaire Next Door", "a": "Thomas Stanley", "tipo": "audio", "d": "El patrimonio real se construye con gasto bajo, no con ingreso alto. Antídoto directo al error de los MSI.", "largo": true}, {"t": "I Will Teach You To Be Rich", "a": "Ramit Sethi", "tipo": "pod", "d": "Sesiones reales con parejas y sus finanzas. Escuchar los errores ajenos pega más que la teoría.", "largo": false}]}, {"nombre": "Inversión", "val": 25, "color": "#ef4444", "nivel": "PRINCIPIANTE", "why": "Ya invertiste en CETES, BTC y GBM — lo que falta es criterio para no decidir cada lunes desde cero. Estos tres te dan el marco.", "items": [{"t": "The Little Book of Common Sense Investing", "a": "John Bogle", "tipo": "audio", "d": "EMPIEZA POR ESTE: es corto (~5h), y su tesis —índices de bajo costo— es exactamente tu VOO de los lunes.", "largo": true}, {"t": "A Random Walk Down Wall Street", "a": "Burton Malkiel", "tipo": "audio", "d": "Por qué casi nadie le gana al mercado de forma sostenida. Refuerza la disciplina de la asignación fija.", "largo": true}, {"t": "One Up On Wall Street", "a": "Peter Lynch", "tipo": "audio", "d": "El más entretenido de los tres, lleno de anécdotas. Buen premio después de los otros dos.", "largo": true}, {"t": "We Study Billionaires", "a": "The Investor's Podcast", "tipo": "pod", "d": "Episodios largos (1h+). Encaja en los turnos de fin de semana, no en los trayectos cortos.", "largo": true}]}, {"nombre": "IA", "val": 45, "color": "#f87171", "nivel": "BÁSICO", "why": "Tu práctica real de IA es construir esta aplicación dos veces al día; lo que falta es contexto amplio, y eso sí se absorbe escuchando.", "items": [{"t": "Lex Fridman Podcast", "a": "", "tipo": "pod", "d": "Entrevistas de 2-3h con investigadores de IA. Hechas para los turnos largos del fin de semana.", "largo": true}, {"t": "The AI Daily Brief", "a": "", "tipo": "pod", "d": "Resumen diario de ~15 min. Cabe entero en el trayecto al gym y te mantiene al día sin esfuerzo.", "largo": false}, {"t": "DeepLearning.AI", "a": "", "tipo": "yt", "d": "Ya estaba en tus recursos de IA. Las charlas y paneles funcionan bien en audio; los cursos con código no.", "largo": false}]}, {"nombre": "Alemán", "val": null, "color": "#00e87a", "nivel": "KAPITEL 10", "why": "Para la maestría: quince minutos al día, un poco por encima de tu nivel, caben en el tramo de la noche.", "items": [{"t": "Slow German", "a": "Annik Rubens", "tipo": "pod", "d": "Alemán hablado despacio, de A1 a B2, con la transcripción en su página. Episodios cortos.", "largo": false}, {"t": "Coffee Break German", "a": "", "tipo": "pod", "d": "Un profesor nativo y un alumno; cada temporada sube un nivel, de principiante a intermedio alto. 15–20 min.", "largo": false}, {"t": "Easy German Podcast", "a": "Manuel y Cari", "tipo": "pod", "d": "Conversación en alemán real, de intermedio en adelante: un poco por encima de tu nivel, que es donde se aprende. ~35 min.", "largo": false}], "aleman": true}], "espanol": [{"t": "Psicología del Dinero", "a": "Morgan Housel", "tipo": "audio", "d": "El de Finanzas, en su edición en español. Si solo escuchas uno de esta lista, que sea este: es el más fácil de seguir sin cuaderno.", "largo": true}, {"t": "Influencia", "a": "Robert Cialdini", "tipo": "audio", "d": "El de Ventas (tu 15/100) en español. Los 6 principios pierden poco en la traducción porque son historias.", "largo": true}, {"t": "Padre Rico, Padre Pobre", "a": "Robert Kiyosaki", "tipo": "audio", "d": "Discutido y simplificado, pero es el que instala la distinción activo/pasivo — la misma que separa tu deuda del BYD de tu portafolio en GBM.", "largo": true}, {"t": "Libros para Emprendedores", "a": "Luis Ramos", "tipo": "pod", "d": "Resúmenes de un libro de negocios por episodio. La forma más rápida de cubrir mucho terreno mientras manejas.", "largo": false}, {"t": "Cracks Podcast", "a": "Oso Trava", "tipo": "pod", "d": "Entrevistas a emprendedores, mexicano. Contexto de negocio en México, que es donde vas a vender.", "largo": false}, {"t": "Dementes", "a": "Diego Barrazas", "tipo": "pod", "d": "Historias de fundadores mexicanos contadas largo. Encaja en los turnos de fin de semana.", "largo": false}, {"t": "Tengo un Plan", "a": "Sergio Beguería y Juan Domínguez", "tipo": "pod", "d": "Finanzas personales e inversión en español, sin jerga. El complemento natural de tu bloque de GBM de los lunes.", "largo": false}, {"t": "Whitepaper", "a": "Jorge Combe", "tipo": "pod", "d": "Negocios y tecnología en México. Útil para Marketing e IA sin cambiar de idioma.", "largo": false}], "pausa": [{"nombre": "Ventas", "val": 15, "color": "#ef4444", "nivel": "PRINCIPIANTE", "why": "Tu habilidad más baja, y la que más rinde este año: negociar tu ingreso decide si te vas en septiembre de 2027. Una hora escuchando ventas rinde más que una hora en cualquier otra de las 12 — y es escuchar, no vender: no rompe la regla de no contactar prospectos sin oferta lista.", "items": [{"t": "Influence", "a": "Robert Cialdini", "tipo": "audio", "d": "Los 6 principios de persuasión. El más citado del tema y el más fácil de seguir manejando: son historias, no teoría.", "largo": true}, {"t": "$100M Offers", "a": "Alex Hormozi", "tipo": "audio", "d": "Cómo armar una oferta que sea difícil de rechazar: tu caso para el aumento es una oferta, y el negocio de la Fase 4 también.", "largo": true}, {"t": "Never Split the Difference", "a": "Chris Voss", "tipo": "audio", "d": "Negociación por un ex-negociador de rehenes del FBI: el libro para pedir el aumento o el puesto mejor pagado de este año, y después tu sueldo en euros.", "largo": true}, {"t": "The Game", "a": "Alex Hormozi", "tipo": "pod", "d": "Episodios de 10-40 min, sin relleno. Ideal para los trayectos cortos.", "largo": false}, {"t": "Alex Hormozi (canal)", "a": "", "tipo": "yt", "d": "Ya estaba en tus recursos de Ventas. Con YouTube Premium se reproduce en segundo plano con la pantalla apagada.", "largo": false}]}, {"nombre": "Marketing", "val": 20, "color": "#ef4444", "nivel": "PRINCIPIANTE", "why": "No está en tus 2 prioridades del Dashboard (la decisión de no empujar ventas sin producto sigue en pie), pero escuchar sí es gratis.", "items": [{"t": "$100M Leads", "a": "Alex Hormozi", "tipo": "audio", "d": "Cómo conseguir que gente desconocida se interese. La secuela de $100M Offers, ya estaba en tus recursos.", "largo": true}, {"t": "Marketing School", "a": "Neil Patel & Eric Siu", "tipo": "pod", "d": "Episodios de ~10 min. Perfecto para el tramo del gym cuando no quieres empezar algo largo.", "largo": false}]}], "reglas": [{"b": "Tu inglés está en 80/100.", "t": "Escuchar en inglés te paga doble: la habilidad y el idioma de la maestría. La traducción, solo cuando canse."}, {"b": "Con pasajero, baja el volumen o pausa.", "t": "Tu calificación en Didi es parte del ingreso."}, {"b": "Solo audio, nunca video.", "t": "YouTube Premium suena con la pantalla apagada. The Intelligent Investor no va al volante: tablas y notas al pie."}, {"b": "Nada de notas manejando.", "t": "Lo que valga la pena, anótalo al estacionarte."}]};
+    const oscuro = (this.props.tema ?? 'oscuro') === 'oscuro';
+    const c = oscuro ? {
+      fondo: 'linear-gradient(180deg, #121c1b 0%, #0f1918 100%)', marco: 'rgba(255,255,255,0.10)',
+      text: '#f4f4f8', text3: '#8589a8', linea: 'rgba(255,255,255,0.08)', chip: 'rgba(255,255,255,0.07)', sobre: '#04201c',
+      cy: '#00e0c0', g: '#00e87a', w: '#ffd93d', audio: '#c4b5fd', pod: '#67e8f9', yt: '#fca5a5'
+    } : {
+      fondo: 'linear-gradient(180deg, #fbfbfc 0%, #f6f7f9 100%)', marco: 'rgba(0,0,0,0.08)',
+      text: '#16161a', text3: '#63667c', linea: 'rgba(0,0,0,0.08)', chip: 'rgba(0,0,0,0.05)', sobre: '#ffffff',
+      cy: '#047a6b', g: '#00a758', w: '#8a6a00', audio: '#6d28d9', pod: '#0e7490', yt: '#b91c1c'
+    };
+    const TAG = { audio: ['AUDIOLIBRO', c.audio], pod: ['PODCAST', c.pod], yt: ['YOUTUBE', c.yt] };
+    const q = s => encodeURIComponent(s);
+    const spo = it => 'https://open.spotify.com/search/' + q(it.t + ' ' + it.a);
+    const s = D.semana;
+    const tres = [
+      Object.assign({}, s.libro, { cuando: 'Audiolibro de la semana', color: c.cy, spo: spo(s.libro) }),
+      Object.assign({}, s.hoy, { cuando: s.hoy.cuando, color: c.w, spo: spo(s.hoy) }),
+      Object.assign({}, s.aleman, { cuando: s.aleman.cuando, color: c.g, spo: spo(s.aleman) })
+    ];
+    const ya = tres.map(x => x.t);
+    const resto = [];
+    D.grupos.forEach(g => g.items.forEach(it => { if (ya.indexOf(it.t) === -1) resto.push(Object.assign({}, it, { sk: g.nombre })); }));
+    D.espanol.forEach(it => resto.push(Object.assign({}, it, { sk: 'En español' })));
+    return {
+      c, tres,
+      resto: resto.map(it => Object.assign({}, it, { tag: TAG[it.tipo][0], tagColor: TAG[it.tipo][1], spo: spo(it) }))
+    };
+  }
+}
+</script>
+</body>
+</html>
