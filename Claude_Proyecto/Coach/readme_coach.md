@@ -115,7 +115,7 @@ listener de clic esas rutas se quedaban sin índice.
 El riel de marcas se sustituye por **una sola barra continua a partir de 60 casillas**: por debajo
 de 2 px por marca el riel se lee como una barra lisa y fingiría una precisión que no tiene.
 
-Solo cuenta lo **visible**: en `#perfil` las cuatro pestañas viven en el DOM a la vez, y contarlas
+Solo cuenta lo **visible**: en `#perfil` las cinco pestañas viven en el DOM a la vez, y contarlas
 todas daría un avance que no corresponde a lo que hay delante.
 
 ### La distribución
@@ -138,6 +138,7 @@ sidebar en el mismo gesto.
 | `coach_rutina_v1` | `{completado: {'YYYY-MM-DD': [id, …]}}` (ids de `RUTINA_TASKS`) | Progreso diario de la rutina |
 | `coach_checks_v1` | `{[id]: true}` (ids de los `.check-item`) | **Todos** los demás checklists del archivo |
 | `radarp_{skillId}` | entero 0-100, 12 claves | Overrides del radar. Sin override se usa el valor base de `SK` |
+| `dash-habitos-v1` | La de Hábitos, en el Dashboard (`habitos.js`) | **Solo se lee**: la cuenta de «Cero alcohol» de *Tu referente* (`refRacha()`). Coach no escribe en ella |
 
 Ids del radar: `ventas, copy, marketing, network, liderazgo, codigo, ia, datos, inversion,
 finanzas, ingles, mente`.
@@ -242,7 +243,7 @@ del día. Ahora las hereda del módulo, que corre antes que su JS.
 
 | Sección | Qué es |
 |---|---|
-| `#perfil` | Diagnóstico real: patrimonio, deudas, hallazgos medidos, Plan Maestro por fases y barras de habilidades con el panel de cada una (`showSkillTab`, incluido Networking) |
+| `#perfil` | Diagnóstico real: patrimonio, deudas, hallazgos medidos, Plan Maestro por fases y barras de habilidades con el panel de cada una (`showSkillTab`, incluido Networking). Cinco pestañas: Diagnóstico & Plan, Metas, Adán Prime, **Tu referente** (ver abajo) y CV |
 | `#aprendizaje` | Las 12 habilidades, generadas del maestro (`pintarAprendizaje`, en `#aprendizajePlan`): arriba el plan de foco (`CIFRAS.HAB_FOCO`) con sus fechas y el tramo de hoy; después cada habilidad —el foco primero, luego los siguientes focos, el mantenimiento por retorno y las de pausa— con su nivel y la evidencia, por qué ahora, el paso de la semana con horas, con qué se demuestra, dónde se practica y su ruta paso a paso con sus recursos (`pfRecursosHtml`) |
 | `#perfil-rico` | Mentalidad y hábitos financieros |
 | `#marca-personal` | Redes sociales y posicionamiento |
@@ -371,6 +372,48 @@ verificador falla si una fase, sus tareas o sus fechas vuelven a escribirse en e
 
 "Progreso real" calcula el patrimonio líquido con la misma fórmula que el Dashboard
 (`CIFRAS.patrimonio`), con la cuenta, el efectivo y el Bitcoin incluidos.
+
+---
+
+## `#perfil-referente` — Tu referente
+
+La pestaña **🔭 Tu referente** de *Mi Perfil Real* (Adán: *"quiero tener de ejemplo a alguien y ver
+cuál es el gran diferenciador que a los 31 dijo ya no quiero la misma vida"*). El referente es
+**Rich Roll**: abogado alcohólico que a los 31, en 1998, entró 100 días a tratamiento y no volvió a
+beber; a los 42 fue 11.º en el Ultraman y a los 46 sacó su pódcast. Comparte con Adán lo que
+importa —una carrera dentro de instituciones grandes, la meta del alcohol, la edad del «ya no»— y
+su diferenciador es el contrario exacto del patrón de Adán: siguió más de 10 años sin recompensa.
+
+| Bloque (`<h3>` con `data-idx`, en el índice) | Qué lleva |
+|---|---|
+| Quién es | El resumen, la cita de 1998 y cuatro cifras: 31, 100, los años sobrio y 200 M+ |
+| Por qué él | `.ref-vs`: cinco aspectos, Rich a los 31 contra Adán hoy, con marcadores del maestro |
+| Su historia | `.ref-hitos`: nueve hitos en 3×3, con 1998 encendido |
+| Su rutina | `.ref-dia`: los cinco pasos de su día, su comida y la versión de Adán |
+| Sus hábitos | `.ref-habs`: nueve hábitos, cada uno con su «Para ti» |
+| El diferenciador | Tres razones y dos pistas en la misma escala de edad (`#refPistas`): sus más de 10 años sin medalla contra el plan de Adán hasta el `{{metaMillon}}` |
+| Lo que no le copias | Saltar sin colchón, esperar a tocar fondo, su deporte y su dieta, hacerlo solo |
+| Lo que te toca copiar | Seis casillas con fecha, de `ref-c1` a `ref-c6` (se guardan en `coach_checks_v1`), y la decisión de la pestaña |
+| Fuentes | De dónde sale cada dato, con su enlace |
+
+Cada bloque es una fila a todo lo ancho con su rejilla por dentro (3×3, cinco pasos, dos o tres
+columnas), así que ninguno espera a otro más alto y no quedan huecos a ningún ancho. En el
+teléfono todo baja a una columna y las etiquetas de las pistas dejan solo su parte corta.
+
+**Lo que cambia con el día lo pinta `pintarReferente()`**, al cargar y al volver a la pestaña del
+navegador: la edad de Rich y sus años sobrio, la de Adán (`PROYECTO.nacimiento`), las fechas de las
+casillas (hoy, mañana, el domingo, el fin de mes), las pistas y el plazo hasta el millón (el cierre
+de la última fase de `PHASES`).
+
+**La cuenta de «Cero alcohol» se lee de Hábitos** (`dash-habitos-v1`), sin escribir nada: el primer
+hábito con "alcohol" en el nombre, con la misma regla de racha que `habitos.js` (`refRacha()`). Dice
+cuántos días lleva Adán y qué día cae el 100 —los de Rich en Oregon—; si el hábito no existe, que lo
+cree hoy; y si esos 100 días pasan por diciembre, que tenga su respuesta lista antes de la primera
+posada. Si `habitos.js` cambia la forma de `def` o de `marcas`, se revisa `refRacha()`.
+
+Los enlaces a Hábitos y a Mis Metas abren el Dashboard en esa pantalla (`dashboard.html#habitos` y
+`#metas`). Al imprimir el CV, la pestaña se oculta como las demás. La historia es fija: cambiar
+de referente es reescribir el panel, no tocar datos.
 
 ---
 ## Estructuras compartidas

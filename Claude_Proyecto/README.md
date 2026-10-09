@@ -68,7 +68,8 @@ no dependen del Dashboard; la barra de apps del Dashboard las agrupa aparte.
 | `coach_checks_v1` | Coach (todos los `.check-item`) y Dashboard (solo los ids `sN-M` del checklist de fase y `mtc7`…`mtc9`) | ambos |
 | `radarp_<id>` × 12 | Coach | Dashboard (`SK[].val`) |
 | `coach-theme` | Dashboard, Coach, Finanzas, CuidadoPersonal y Vestimenta | Clave compartida de tema claro/oscuro (Entrevistas, Heliescala y Aeroresinas tienen la suya) |
-| `dash-aprende-v1`, `dash-lista-compras`, `dash-lista-tengo`, `dash-logros-v1`, `dash-habitos-v1`, `dash-rail-abierto`, `dash-settings`, `dash-privado`, `metas_checklist_v1`, `habilidades_checklist_v1`, `edad_checklist_v1`, `examen_genai_v1` | Dashboard | nadie |
+| `dash-aprende-v1`, `dash-lista-compras`, `dash-lista-tengo`, `dash-logros-v1`, `dash-rail-abierto`, `dash-settings`, `dash-privado`, `metas_checklist_v1`, `habilidades_checklist_v1`, `edad_checklist_v1`, `examen_genai_v1` | Dashboard | nadie |
+| `dash-habitos-v1` | Dashboard (`habitos.js`) | Coach, solo lectura: la cuenta de «Cero alcohol» de *Tu referente* (`refRacha()`) |
 | `al_sec_v1`, `al_sub_v1`, `al_fam_v1`, `al_niv_v1`, `al_plg_v1`, `al_vista_v1` | `Aleman/vocab.js` (las dos pantallas de vocabulario) | — |
 | `vestimenta_v1` | Vestimenta | nadie |
 | `theme`, `sidebar-collapsed`, `study-done-v2`, `wayve-visited-v2` | Entrevistas | Dashboard lee `study-done-v2` (*Hoy aprendes*: cuántos temas de Python llevas); las demás, nadie |

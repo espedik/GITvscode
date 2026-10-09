@@ -13572,7 +13572,8 @@ if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-th
 // a `theme-basicas`, y adivinarlo por prefijo no funciona.
 (function abrirPorHash(){
   const MAPA={dia:'dia',plan:'coach',metas:'metas',habilidades:'basicas',skills:'skills',
-              compras:'lista',aleman:'aleman',entrevista:'entrevista'};
+              compras:'lista',aleman:'aleman',entrevista:'entrevista',
+              habitos:'habitos'};
   const h=(location.hash||'').replace('#','').toLowerCase();
   const tema=MAPA[h];
   if(!tema) return;

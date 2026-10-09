@@ -1225,6 +1225,11 @@ envuelve la tabla entera y el vertical solo las filas, así la fila de totales s
 pantalla), `marcas` (indexado por **fecha ISO local** — nunca `toISOString()`, que en México
 adelanta el día desde las 18:00), `desde` y `mig`.
 
+**Coach también la lee**, sin escribir: la pestaña *Tu referente* cuenta los días del hábito con
+"alcohol" en el nombre con la misma regla de racha (`refRacha()` en Coach.html). Un cambio de forma
+de `def` o de `marcas` se revisa también allá. Desde Coach se llega a esta pantalla con
+`dashboard.html#habitos`.
+
 Las migraciones van por versión (`MIG = 8`), corren una sola vez y en orden, y **lo que Adán
 editó a mano manda**: un hábito cuyo nombre o anclaje no son los de la semilla anterior solo
 recibe lo nuevo (hora, icono, meta, qué hacer, flex). Los retirados salen de la lista y de su

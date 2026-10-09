@@ -1204,7 +1204,7 @@
       section { display: none !important; }
       #perfil { display: block !important; margin-bottom: 0; }
       #perfil > h2.section-title { display: none !important; }
-      #perfil-diagnostico, #perfil-metas, #perfil-dan-prime { display: none !important; }
+      #perfil-diagnostico, #perfil-metas, #perfil-dan-prime, #perfil-referente { display: none !important; }
       #perfil-cv { display: block !important; }
 
       /* Contenido plano, una sola columna — así un ATS lee el texto en el
@@ -1590,6 +1590,162 @@
 /* Los recursos de la ruta los pinta `pfRecursosHtml` (../Dashboard/ficha.js) y
    cada uno trae su propia caja, así que el contenedor se queda sin la suya. */
 .subhab-r.subhab-r-vivo{background:none;border:none;padding:0;color:inherit}
+    /* ─── Tu referente (#perfil-referente) ──────────────────────────────────
+       Alguien que a los 31 dijo «ya no» y cambió de vida: quién es, por qué él, su historia,
+       su rutina, sus hábitos, el diferenciador y lo que Adán copia con fecha. Cada bloque es
+       una fila a todo lo ancho con su rejilla por dentro —3×3, cinco pasos, dos o tres
+       columnas según cuántas piezas trae—, así que ninguna tarjeta espera a otra más alta y
+       no quedan huecos a ningún ancho. Las etiquetas van en la monoespaciada de la consola,
+       la estructura en cian y las cifras y lo de Adán en lima, como en el resto de Coach. */
+    .ref-hero { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 16px 34px; align-items: center; }
+    .ref-hero > h3, .ref-kpis { grid-column: 1 / -1; }
+    .ref-nombre { font-size: 36px; font-weight: 800; letter-spacing: -.02em; line-height: 1.05;
+      margin: 2px 0 8px; }
+    .ref-sub { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--muted); line-height: 1.7; margin-bottom: 14px; }
+    .ref-hero-txt > p:not(.ref-nombre):not(.ref-sub) { font-size: 13.5px; line-height: 1.75; }
+    .ref-linea { margin-top: 14px; padding: 11px 15px; border-radius: var(--hud);
+      background: rgba(var(--acc2-rgb), .08); border: 1px solid rgba(var(--acc2-rgb), .28); }
+    .ref-cita { margin: 0; padding: 20px 24px; border-left: 3px solid var(--accent);
+      border-radius: 0 var(--hud) var(--hud) 0; background: rgba(var(--acc-rgb), .06);
+      font-size: 17px; line-height: 1.6; font-style: italic; color: var(--text); }
+    .ref-cita footer { margin-top: 12px; font-style: normal; font-family: var(--mono);
+      font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+    .ref-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .ref-kpis .stat-badge { min-width: 0; }
+    .ref-intro { font-size: 13px; line-height: 1.7; color: var(--muted); margin: 10px 0 16px; }
+    /* Las etiquetas en línea: "El diferenciador…", "Su comida", "Para ti", "La decisión…". */
+    .ref-linea b, .ref-nota b, .ref-tuyo b, .ref-decision b { font-family: var(--mono);
+      font-size: 9.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--acc2); margin-right: 8px; }
+
+    /* Por qué él: tres columnas (aspecto, Rich, tú); en el teléfono, una, con su etiqueta. */
+    .ref-vs { display: grid; grid-template-columns: 170px minmax(0, 1fr) minmax(0, 1fr);
+      border: 1px solid var(--border); border-radius: var(--hud); overflow: hidden; }
+    .ref-vs > div { padding: 12px 16px; font-size: 12.5px; line-height: 1.65;
+      border-top: 1px solid var(--border); }
+    .ref-vs > .ref-vs-h { border-top: none; font-family: var(--mono); font-size: 9.5px;
+      font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+      background: rgba(var(--acc-rgb), .05); }
+    .ref-vs > .ref-vs-q { font-family: var(--mono); font-size: 10px; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+    .ref-vs > .ref-vs-tu { background: rgba(var(--acc2-rgb), .05); }
+    .ref-vs > .ref-vs-h.ref-vs-tu { color: var(--acc2); background: rgba(var(--acc2-rgb), .09); }
+
+    /* Su historia: nueve hitos en 3×3; el de los 31, encendido. */
+    .ref-hitos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;
+      margin-top: 14px; }
+    .ref-hito { padding: 14px 16px 16px; border: 1px solid var(--border);
+      border-radius: var(--hud); }
+    .ref-hito h4 { font-size: 14px; font-weight: 800; margin: 6px 0; }
+    .ref-hito p { font-size: 12.5px; line-height: 1.7; color: var(--muted); }
+    .ref-hito.clave { border-color: rgba(var(--acc-rgb), .55); background: rgba(var(--acc-rgb), .07);
+      box-shadow: inset 3px 0 0 var(--accent); }
+    .ref-hito.clave h4 { color: var(--accent); }
+
+    /* Su rutina: cinco pasos sobre un riel; en el teléfono, el riel baja en vertical. */
+    .ref-dia { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 4px 0 16px; }
+    .ref-paso { position: relative; padding: 24px 18px 0 0; }
+    .ref-paso::before { content: ''; position: absolute; top: 5px; left: 0; right: 0; height: 2px;
+      background: rgba(var(--acc-rgb), .3); }
+    .ref-paso::after { content: ''; position: absolute; top: 0; left: 0; width: 12px; height: 12px;
+      box-sizing: border-box; border-radius: 50%; background: var(--surface);
+      border: 2px solid var(--accent); }
+    .ref-paso-h { display: block; font-family: var(--mono); font-size: 15px; font-weight: 700;
+      color: var(--acc2); font-variant-numeric: tabular-nums; }
+    .ref-paso b { display: block; font-size: 13.5px; margin: 4px 0; }
+    .ref-paso p { font-size: 12.5px; line-height: 1.65; color: var(--muted); }
+    .ref-nota { font-size: 12.5px; line-height: 1.7; padding: 11px 15px; border-radius: var(--hud);
+      border: 1px solid var(--border); margin-top: 10px; }
+    .ref-tuyo-l { background: rgba(var(--acc2-rgb), .06); border-color: rgba(var(--acc2-rgb), .25); }
+
+    /* Sus hábitos: nueve fichas en 3×3, cada una con lo que le toca a Adán al pie. */
+    .ref-habs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;
+      margin-top: 14px; }
+    .ref-hab { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px;
+      border: 1px solid var(--border); border-radius: var(--hud); }
+    .ref-hab h4 { font-size: 13.5px; font-weight: 800; }
+    .ref-hab p { font-size: 12.5px; line-height: 1.65; color: var(--muted); flex: 1; }
+    .ref-tuyo { font-size: 12px; line-height: 1.6; padding-top: 8px;
+      border-top: 1px dashed rgba(var(--acc2-rgb), .35); }
+
+    /* El diferenciador: tres razones y las dos pistas en la misma escala de edad. */
+    .ref-dif { border-color: rgba(var(--acc2-rgb), .4); }
+    .ref-dif-lead { font-size: 15px; line-height: 1.65; margin: 10px 0 16px; }
+    .ref-tres { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .ref-tres > div { padding: 15px 17px; border-radius: var(--hud);
+      background: rgba(var(--acc2-rgb), .06); border: 1px solid rgba(var(--acc2-rgb), .22); }
+    .ref-tres i { display: block; font-style: normal; font-family: var(--mono); font-size: 22px;
+      font-weight: 700; color: var(--acc2); line-height: 1; margin-bottom: 8px; }
+    .ref-tres h4 { font-size: 14.5px; font-weight: 800; margin-bottom: 6px; }
+    .ref-tres p { font-size: 12.5px; line-height: 1.65; color: var(--muted); }
+    .ref-pistas { display: grid; gap: 6px; margin: 22px 0 4px; }
+    .ref-pista { display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: center;
+      gap: 12px; }
+    .ref-pista-n { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--muted); }
+    .ref-riel { position: relative; height: 30px; border-radius: var(--hud);
+      background: rgba(var(--acc-rgb), .05); border: 1px solid var(--border); overflow: hidden; }
+    .ref-tramo { position: absolute; top: 0; bottom: 0; display: block; line-height: 28px;
+      padding: 0 10px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+      font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .06em; }
+    .ref-tramo.espera { color: var(--muted); background: repeating-linear-gradient(135deg,
+      rgba(var(--acc-rgb), .13) 0 6px, rgba(var(--acc-rgb), .04) 6px 12px); }
+    .ref-tramo.fruto { color: var(--accent); background: rgba(var(--acc-rgb), .2); }
+    .ref-tramo.plan { color: var(--acc2); background: rgba(var(--acc2-rgb), .24); }
+    .ref-tramo em { font-style: normal; }
+    .ref-edades { position: relative; height: 15px; margin: 0 0 8px 108px; font-family: var(--mono);
+      font-size: 9.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .ref-edades span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
+    .ref-edades span.ini { transform: none; }
+    .ref-edades span.fin { transform: translateX(-100%); }
+    .ref-dif-pie { font-size: 13px; line-height: 1.7; margin-top: 8px; }
+
+    .ref-no { margin: 0; padding-left: 18px; columns: 2 380px; column-gap: 32px; }
+    .ref-no li { font-size: 12.5px; line-height: 1.65; margin-bottom: 8px; break-inside: avoid; }
+
+    /* Lo que te toca copiar: seis casillas en dos columnas (tres en pantallas muy anchas). */
+    .ref-plan { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; }
+    .ref-plan .check-item:last-child { border-bottom: 1px solid rgba(var(--acc-rgb),.07); }
+    .ref-plan .check-item label { font-size: 13px; line-height: 1.55; }
+    .ref-plan .check-item small { display: block; margin-top: 4px; font-size: 12px; line-height: 1.6;
+      color: var(--muted); }
+    .ref-decision { margin-top: 14px; padding: 12px 16px; border-radius: var(--hud); font-size: 13px;
+      line-height: 1.65; background: rgba(var(--acc2-rgb), .07); border: 1px solid rgba(var(--acc2-rgb), .3); }
+
+    .ref-fuentes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 32px;
+      margin: 12px 0 14px; padding-left: 18px; }
+    .ref-fuentes li { font-size: 12.5px; line-height: 1.6; color: var(--muted); }
+
+    @media (min-width: 1900px) {
+      .ref-plan, .ref-fuentes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 1100px) {
+      .ref-hero { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 760px) {
+      .ref-nombre { font-size: 30px; }
+      .ref-cita { font-size: 15px; padding: 16px 18px; }
+      .ref-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .ref-vs { grid-template-columns: minmax(0, 1fr); }
+      .ref-vs > .ref-vs-h { display: none; }
+      .ref-vs > .ref-vs-q { background: rgba(var(--acc-rgb), .06); }
+      .ref-vs > div[data-q] { border-top: none; padding-top: 4px; }
+      .ref-vs > div[data-q]::before { content: attr(data-q); display: block; font-family: var(--mono);
+        font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+        color: var(--muted); margin-bottom: 2px; }
+      .ref-vs > div.ref-vs-tu[data-q]::before { color: var(--acc2); }
+      .ref-hitos, .ref-habs, .ref-tres, .ref-plan, .ref-fuentes { grid-template-columns: minmax(0, 1fr); }
+      .ref-dia { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+      .ref-paso { padding: 0 0 16px 24px; }
+      .ref-paso::before { top: 0; bottom: 0; left: 5px; right: auto; width: 2px; height: auto; }
+      .ref-paso:last-child::before { bottom: auto; height: 12px; }
+      .ref-pista { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+      .ref-tramo { padding: 0 6px; letter-spacing: 0; }
+      .ref-tramo em { display: none; }
+      .ref-edades { margin-left: 0; }
+    }
 </style>
   <script>
     (function () {
@@ -1639,6 +1795,7 @@
       <div class="sb-subitems">
         <a class="sb-sublink" href="#perfil" data-sec="perfil" data-tab="metas" onclick="irASeccion('perfil','metas',this);return false;">🎯 Metas</a>
         <a class="sb-sublink" href="#perfil" data-sec="perfil" data-tab="dan-prime" onclick="irASeccion('perfil','dan-prime',this);return false;">⚡ Adán Prime</a>
+        <a class="sb-sublink" href="#perfil" data-sec="perfil" data-tab="referente" onclick="irASeccion('perfil','referente',this);return false;">🔭 Tu referente</a>
         <a class="sb-sublink" href="#perfil" data-sec="perfil" data-tab="cv" onclick="irASeccion('perfil','cv',this);return false;">📄 CV Completo</a>
       </div>
     </div>
@@ -1678,6 +1835,7 @@
       <button class="subtab-btn active" onclick="showSubtab('perfil','diagnostico',this)">Diagnóstico & Plan</button>
       <button class="subtab-btn" onclick="showSubtab('perfil','metas',this)">🎯 Metas</button>
       <button class="subtab-btn" onclick="showSubtab('perfil','dan-prime',this)">⚡ Adán Prime</button>
+      <button class="subtab-btn" onclick="showSubtab('perfil','referente',this)">🔭 Tu referente</button>
       <button class="subtab-btn" onclick="showSubtab('perfil','cv',this)">CV Completo</button>
     </div>
 
@@ -2789,6 +2947,193 @@
         <p class="fs-13 mb-8" style="line-height:1.7;">La tarjeta <a href="#perfil" class="inline-link">"📈 Progreso real vs. el inicio de Fase 0"</a> de arriba ya mide esto en vivo, con tus números reales de Finanzas — no hace falta repetirlo aquí. Lo que sí vale la pena nombrar: la distancia entre hoy y Adán Prime no se cierra con una decisión grande, se cierra con la misma <a href="#rutina" class="inline-link">Rutina</a> diaria de siempre, sostenida sin el patrón de abandono — eso es literalmente todo el plan. La pieza de este mes: decidir tu palanca de ingreso y, el 15 de noviembre, el primer envío a GBM después de la BBVA.</p>
       </div>
     </div>
+
+    <div id="perfil-referente" class="subtab-panel">
+      <!-- Tu referente. Adán: "quiero tener de ejemplo a alguien y ver cuál es el gran
+           diferenciador que a los 31 dijo ya no quiero la misma vida". La historia sale de las
+           Fuentes del final; lo que cambia con el día (edades, años sobrio, las dos pistas, las
+           fechas de "Lo que te toca copiar" y la cuenta de alcohol de Hábitos) lo pinta
+           pintarReferente(). Cada bloque es una fila a todo lo ancho: ninguno espera a otro. -->
+      <div class="card mb-16 ref-hero">
+        <h3 id="ref-quien" data-idx="Quién es">🔭 Tu referente — alguien que a los 31 dijo «ya no»</h3>
+        <div class="ref-hero-txt">
+          <p class="ref-nombre">Rich Roll</p>
+          <p class="ref-sub">Nadador de Stanford · abogado por Cornell · sobrio desde 1998 · ultraatleta, autor y conductor de pódcast · <span data-ref="edadRich">—</span> años</p>
+          <p>A los 31 bebía desde la mañana y manejaba al despacho de traje. Ese año, 1998, entró 100 días a un centro de tratamiento en Oregon y no ha vuelto a beber. A los 39 se ahogaba a media escalera; a los 42 fue 11.º general en el Mundial de Ultraman, en Hawái; a los 46 sacó un pódcast que hoy pasa de 200 millones de descargas. No era un gurú: era un abogado con una adicción, y su cambio está documentado con fechas.</p>
+          <p class="ref-linea"><b>El diferenciador, en una línea</b> No negoció con el alcohol —cero, y con ayuda— y siguió apareciendo más de 10 años sin ver recompensa.</p>
+        </div>
+        <blockquote class="ref-cita">
+          «Desperté crudo… y fue ese momento de darme cuenta: ya tuve suficiente, no puedo seguir viviendo así.»
+          <footer>Rich Roll, sobre una mañana de 1998 · The Tim Ferriss Show, 2022</footer>
+        </blockquote>
+        <div class="ref-kpis">
+          <div class="stat-badge"><span class="num">31</span><span>Su edad al decir «ya no»</span></div>
+          <div class="stat-badge"><span class="num">100</span><span>Días en tratamiento</span></div>
+          <div class="stat-badge"><span class="num text-green" data-ref="sobrio">—</span><span>Años sobrio, desde 1998</span></div>
+          <div class="stat-badge"><span class="num">200 M+</span><span>Descargas de su pódcast</span></div>
+        </div>
+      </div>
+
+      <div class="card mb-16">
+        <h3 id="ref-espejo" data-idx="Por qué él">🪞 Por qué él — tu misma película a los 31</h3>
+        <p class="ref-intro">Su punto de partida se parece al tuyo en lo que importa: una carrera respetable dentro de instituciones grandes, una conducta que se lo comía por dentro y la edad exacta en que decidió.</p>
+        <div class="ref-vs">
+          <div class="ref-vs-h"></div>
+          <div class="ref-vs-h">Rich a los 31 · 1998</div>
+          <div class="ref-vs-h ref-vs-tu">Tú hoy · <span data-ref="edadAdan">—</span> años</div>
+
+          <div class="ref-vs-q">Dónde estaba</div>
+          <div data-q="Rich">Abogado corporativo —después, de la industria del entretenimiento—, con Stanford y Cornell detrás. Eligió el Derecho «como reacción a la presión social y familiar», no por interés.</div>
+          <div data-q="Tú" class="ref-vs-tu">Ingeniero de pruebas con 6 años en Ford, Continental, Bosch, Google y {{empleador}}. Lo escribiste tú: «toda mi vida adulta la construí dentro de estructuras grandes y estables».</div>
+
+          <div class="ref-vs-q">Lo que lo frenaba</div>
+          <div data-q="Rich">El alcohol, desde la universidad. «A los 31 no era raro tomarme un vodka tonic en la regadera y manejar al despacho, de traje, con una lata de cerveza entre las piernas.»</div>
+          <div data-q="Tú" class="ref-vs-tu">Tus dos metas de conducta: el alcohol y el celular. Y manejas Didi, donde el límite de alcohol es cero.</div>
+
+          <div class="ref-vs-q">Lo que tenía a favor</div>
+          <div data-q="Rich">Disciplina de atleta: nadó en el equipo de Stanford, de los que ganan campeonatos nacionales. El talento nunca fue su problema.</div>
+          <div data-q="Tú" class="ref-vs-tu">En Bosch te eligieron líder del equipo de México y te mandaron 4 meses a Stuttgart. Tampoco es el tuyo.</div>
+
+          <div class="ref-vs-q">Su patrón</div>
+          <div data-q="Rich">«Lo único que me ha hecho cambiar es el dolor.» Necesitó tocar fondo dos veces: a los 31 y a los 39.</div>
+          <div data-q="Tú" class="ref-vs-tu">«Cuando no veo recompensa, abandono o cambio de rumbo.» También es tuyo: está en tu Diagnóstico.</div>
+
+          <div class="ref-vs-q">El dinero</div>
+          <div data-q="Rich">Dejó el despacho corporativo con 2 o 3 meses de ahorro. Tras la crisis de 2008 vinieron años de «desmantelamiento financiero completo».</div>
+          <div data-q="Tú" class="ref-vs-tu">Tu salto es la maestría en {{maestriaEscuela}} ({{maestriaInicio}}), y el plan no te deja saltar con 2 o 3 meses: junta {{salidaTotal}} antes de irte.</div>
+        </div>
+      </div>
+
+      <div class="card mb-16">
+        <h3 id="ref-historia" data-idx="Su historia">📜 Su historia — de la regadera con vodka al Ultraman</h3>
+        <div class="ref-hitos">
+          <div class="ref-hito">
+            <span class="historia-tag">Años 80 · Stanford</span>
+            <h4>Nadador de élite… y la primera copa</h4>
+            <p>Entra al equipo de natación de Stanford, uno de los que ganan campeonatos nacionales. El alcohol le quita la ansiedad social y, después del primer año, «las drogas y el alcohol destruyeron mi carrera de nadador».</p>
+          </div>
+          <div class="ref-hito">
+            <span class="historia-tag">Años 90 · Cornell y el despacho</span>
+            <h4>Abogado por presión, no por vocación</h4>
+            <p>Estudia Derecho en Cornell y entra a un despacho corporativo: eligió la carrera «como reacción a la presión social y familiar». Por fuera, éxito; por dentro, un alcoholismo que no dejaba de crecer.</p>
+          </div>
+          <div class="ref-hito clave">
+            <span class="historia-tag">1998 · 31 años</span>
+            <h4>El «ya no»: 100 días en Oregon</h4>
+            <p>Una mañana, crudo, entiende que no puede seguir así. Su psiquiatra lo empuja a tratamiento y, tras una última recaída, acepta. Le dicen que su caso es de los que «solo vemos en bebedores de toda la vida, de sesenta años». Ahí aprende, por primera vez, a ser honesto. No ha vuelto a beber.</p>
+          </div>
+          <div class="ref-hito">
+            <span class="historia-tag">≈ 2000 · 33 años</span>
+            <h4>Renuncia sin red</h4>
+            <p>Con año y medio sobrio deja el despacho corporativo, sin otro trabajo y con 2 o 3 meses de ahorro, y sigue de abogado por su cuenta casi diez años más. Sobrio, sí; sano y con rumbo, todavía no.</p>
+          </div>
+          <div class="ref-hito">
+            <span class="historia-tag">Oct 2006 · 39 años</span>
+            <h4>La escalera</h4>
+            <p>En vísperas de cumplir 40, con unos 23 kg de más, se queda sin aire a media escalera y cree que le va a dar un infarto. Prueba jugos y dietas, y llega a la comida vegetal «como último recurso». Por sus 40, su esposa le regala una bici.</p>
+          </div>
+          <div class="ref-hito">
+            <span class="historia-tag">2008 · 42 años</span>
+            <h4>11.º en el Ultraman</h4>
+            <p>Mundial de Ultraman, en Hawái: 10 km nadando, 421 km en bici y 84 km corriendo, en tres días. Termina 11.º general y, al año siguiente, 6.º. Men's Fitness lo pone entre los «25 hombres más en forma del mundo».</p>
+          </div>
+          <div class="ref-hito">
+            <span class="historia-tag">2010 · 43 años</span>
+            <h4>EPIC5</h4>
+            <p>Con Jason Lester, cinco triatlones de distancia Ironman en cinco islas de Hawái, en menos de una semana.</p>
+          </div>
+          <div class="ref-hito">
+            <span class="historia-tag">2012 · 45 y 46 años</span>
+            <h4>El libro y el pódcast</h4>
+            <p>Publica Finding Ultra y entra a las listas de más vendidos. El 27 de noviembre sale el episodio 1 de su pódcast, grabado con su esposa, Julie Piatt. Mientras tanto, años en que le costaba «poner comida en la mesa».</p>
+          </div>
+          <div class="ref-hito">
+            <span class="historia-tag">Hoy · <span data-ref="edadRich">—</span> años</span>
+            <h4><span data-ref="sobrio">—</span> años sobrio</h4>
+            <p>Más de 200 millones de descargas y una vida elegida por él, no por la presión de nadie. A los 52 lo resumió así: «sé que esto apenas empieza».</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-16">
+        <h3 id="ref-rutina" data-idx="Su rutina">⏰ Su rutina — un día normal de Rich</h3>
+        <p class="ref-intro">Lo que él mismo contó en The Tim Ferriss Show (2022) y en The New Daily (2017). Las horas son las suyas.</p>
+        <div class="ref-dia">
+          <div class="ref-paso"><span class="ref-paso-h">21:00</span><b>A la cama</b><p>Ocho horas sin negociar: «soy muy protector de mi sueño».</p></div>
+          <div class="ref-paso"><span class="ref-paso-h">5:00–6:00</span><b>Despierta</b><p>Ya con sus ocho horas completas.</p></div>
+          <div class="ref-paso"><span class="ref-paso-h">Primeras horas</span><b>Mente primero</b><p>Meditación, diario, escritura y proyectos creativos. Sin juntas ni llamadas.</p></div>
+          <div class="ref-paso"><span class="ref-paso-h">Después</span><b>Entrena</b><p>Antes de empezar la jornada. Casi todo en zona 2, suave y largo; antes de una carrera, hasta 25 h a la semana.</p></div>
+          <div class="ref-paso"><span class="ref-paso-h">El resto del día</span><b>Trabaja</b><p>El pódcast, los libros y la familia, con lo que lo sostiene ya hecho.</p></div>
+        </div>
+        <p class="ref-nota"><b>Su comida</b> 100 % vegetal desde 2007. Antes de entrenar, un batido verde: kale, espinaca, acelga, betabel, moras, plátano y semillas de chía, linaza y cáñamo. En las salidas largas en bici: agua de coco, plátano, dátiles y crema de almendra.</p>
+        <p class="ref-nota ref-tuyo-l"><b>Tu versión</b> Ya tienes «Dormir 7 h» y «Rutina de la noche» en Hábitos y tu día armado en <a href="#rutina" class="inline-link" onclick="irASeccion('rutina',null,document.querySelector('#sidebar-personal [data-sec=rutina]'));return false;">Rutina Diaria</a>. Lo que te falta copiar es el orden: lo que te sostiene va antes que el trabajo, y el celular no entra en la primera hora.</p>
+      </div>
+
+      <div class="card mb-16">
+        <h3 id="ref-habitos" data-idx="Sus hábitos">🧱 Sus hábitos — lo que sostiene todo lo demás</h3>
+        <div class="ref-habs">
+          <div class="ref-hab"><h4>Cero, no «menos»</h4><p>Desde 1998 no bebe nada. No probó a moderar: cortó de raíz y lo sostiene hace <span data-ref="sobrio">—</span> años.</p><div class="ref-tuyo"><b>Para ti</b>Tu meta ya lo dice: el límite es cero, también en Didi.</div></div>
+          <div class="ref-hab"><h4>El ánimo sigue a la acción</h4><p>Lo que le dijo su padrino al salir: no puedes pensar tu camino hasta el estado de ánimo que buscas; solo la acción lo dispara.</p><div class="ref-tuyo"><b>Para ti</b>Los días sin ganas, la versión de 2 minutos de cada hábito: hacerla cuenta.</div></div>
+          <div class="ref-hab"><h4>Pedir ayuda</h4><p>Psiquiatra, centro de tratamiento, padrino. «Ahí aprendí, por primera vez, a ser honesto. Aprendí a ser vulnerable.»</p><div class="ref-tuyo"><b>Para ti</b>Tu meta del alcohol trae las puertas: AA, los CIJ y tu médico.</div></div>
+          <div class="ref-hab"><h4>Dos pasos adelante</h4><p>«Los ladrillos se ponen solo dos pasos delante de ti, y no te dejan ver todo el camino.» No esperó el plan perfecto para empezar.</p><div class="ref-tuyo"><b>Para ti</b>El Plan Maestro ya existe: toca el ladrillo de esta quincena.</div></div>
+          <div class="ref-hab"><h4>El juego largo</h4><p>Entrena casi todo en zona 2: las ganancias se notan a los 6 meses y el beneficio completo tarda más de 2 años. «Tienes que jugar el juego largo.»</p><div class="ref-tuyo"><b>Para ti</b>Tu millón también es de juego largo: llega el {{metaMillon}}, no este año.</div></div>
+          <div class="ref-hab"><h4>Proteger el sueño</h4><p>«Soy muy protector de mi sueño»: a la cama hacia las 21:00 para dormir 8 horas, antes que cualquier pendiente.</p><div class="ref-tuyo"><b>Para ti</b>«Dormir 7 h» ya está en tus Hábitos: es la regla, no el premio.</div></div>
+          <div class="ref-hab"><h4>Mañanas sin ruido</h4><p>Meditación, diario y escritura antes de cualquier junta o llamada. La práctica que más le sirve: «anclarte al presente».</p><div class="ref-tuyo"><b>Para ti</b>La primera hora, sin celular: es tu otra meta.</div></div>
+          <div class="ref-hab"><h4>Ensayar por partes</h4><p>Antes de cada carrera simulaba el 70, el 80 y el 90 % de la distancia. El día de la prueba, nada era la primera vez.</p><div class="ref-tuyo"><b>Para ti</b>Antes del Hyrox, cada estación practicada al menos una vez.</div></div>
+          <div class="ref-hab"><h4>Contarlo en público</h4><p>Su libro y su pódcast son su historia sin filtro: «la vulnerabilidad no es cobardía, sino valentía». Su recuperación es su marca.</p><div class="ref-tuyo"><b>Para ti</b>Tu marca personal es prueba pública: lo que construyes, publicado.</div></div>
+        </div>
+      </div>
+
+      <div class="card mb-16 ref-dif">
+        <h3 id="ref-diferenciador" data-idx="El diferenciador">💡 El gran diferenciador — no fue el «ya no», fue lo que vino después</h3>
+        <p class="ref-dif-lead">Mucha gente dice «ya no» a los 31 y a las tres semanas vuelve a lo mismo. Lo que separa a Rich son tres cosas, y las tres se ven en sus fechas:</p>
+        <div class="ref-tres">
+          <div><i>01</i><h4>No negoció</h4><p>No intentó «beber menos»: cero, desde 1998. Y no lo hizo a pura voluntad —esa ya le había fallado—: psiquiatra, 100 días internado y un padrino. Cerró la puerta y pidió que se la cuidaran.</p></div>
+          <div><i>02</i><h4>Actuó sin ganas</h4><p>Su padrino le enseñó que «el ánimo sigue a la acción»: al estado que buscas no se llega pensando, se llega haciendo. Y no esperó a ver el plan completo: «los ladrillos se ponen solo dos pasos delante de ti».</p></div>
+          <div><i>03</i><h4>Aguantó sin recompensa</h4><p>Entre el «ya no» y su primera medalla pasaron más de 10 años de sobriedad sin aplausos; después del libro, años de apuros para poner comida en la mesa. No cambió de rumbo: el resultado llegó cuando ya llevaba una década construyendo.</p></div>
+        </div>
+        <div class="ref-pistas" id="refPistas"><!-- pintarReferente(): las dos pistas en la misma escala de edad --></div>
+        <p class="ref-dif-pie" id="refDifPie"></p>
+      </div>
+
+      <div class="riesgo-box mb-16" style="margin-bottom:16px;">
+        <h3 id="ref-nocopia" data-idx="Lo que no le copias">⚠️ Lo que no le copias</h3>
+        <ul class="ref-no">
+          <li><b>Saltar con 2 o 3 meses de ahorro.</b> A él le costó años de apuros para «poner comida en la mesa». Tu salida va con el colchón y la cuenta bloqueada que pide el plan, no antes.</li>
+          <li><b>Esperar a tocar fondo.</b> Él necesitó un centro de tratamiento a los 31 y una escalera a los 39. Tú ya tienes las dos metas escritas: no esperes tu escalera.</li>
+          <li><b>Su deporte y su dieta.</b> El ultrafondo de 25 h por semana y la comida 100 % vegetal son su camino, no tu meta: la tuya es el Hyrox, el gym 5 días y {{proteinaMeta}} g de proteína al día.</li>
+          <li><b>Hacerlo solo.</b> Ni él lo hizo así: psiquiatra, 100 días acompañado y un padrino. La voluntad a solas es justo lo que le falló antes de 1998.</li>
+        </ul>
+      </div>
+
+      <div class="card mb-16">
+        <h3 id="ref-plan" data-idx="Lo que te toca copiar">✅ Lo que te toca copiar — con fecha</h3>
+        <p class="ref-intro">No su vida: su método. Cada casilla se guarda, y las fechas se calculan al abrir.</p>
+        <div class="ref-plan">
+          <div class="check-item"><input type="checkbox" id="ref-c1"><label for="ref-c1"><b>Hoy, <span data-ref="hoy">—</span>:</b> lleva la cuenta de «Cero alcohol» en <a href="../Dashboard/dashboard.html#habitos" class="inline-link">Hábitos</a>. <small id="refAlcohol"></small></label></div>
+          <div class="check-item"><input type="checkbox" id="ref-c2"><label for="ref-c2"><b>A más tardar el <span data-ref="domingo">—</span>:</b> elige quién te sostiene. <small>Rich tuvo psiquiatra, 100 días acompañado y un padrino. Escribe a quién le cuentas la meta y a quién llamas un viernes difícil; si quieres más, el paso «Si necesitas más que voluntad» de tu meta en <a href="../Dashboard/dashboard.html#metas" class="inline-link">Mis Metas</a> trae AA y los CIJ.</small></label></div>
+          <div class="check-item"><input type="checkbox" id="ref-c3"><label for="ref-c3"><b>Desde mañana, <span data-ref="manana">—</span>:</b> la primera hora, sin celular. <small>Sus mañanas son de meditación y escritura, sin juntas ni llamadas. El celular duerme fuera del cuarto —tu meta del celular— y la primera hora es tuya.</small></label></div>
+          <div class="check-item"><input type="checkbox" id="ref-c4"><label for="ref-c4"><b>Esta noche:</b> a la cama a tu hora. <small>Él se acuesta hacia las 21:00 para dormir sus 8 horas. La tuya está en tu <a href="#rutina" class="inline-link" onclick="irASeccion('rutina',null,document.querySelector('#sidebar-personal [data-sec=rutina]'));return false;">Rutina Diaria</a> y en «Dormir 7 h»: esta noche, sin celular en la cama.</small></label></div>
+          <div class="check-item"><input type="checkbox" id="ref-c5"><label for="ref-c5"><b>Esta semana, el primer día sin ganas:</b> la versión de 2 minutos. <small>«El ánimo sigue a la acción»: Rich no esperaba las ganas. Cada hábito tiene su versión mínima; hazla, márcala y la cadena sigue.</small></label></div>
+          <div class="check-item"><input type="checkbox" id="ref-c6"><label for="ref-c6"><b>El <span data-ref="finMes">—</span>, en tu Revisión Mensual:</b> cambia el plan con números, no con ganas. <small>Rich pasó más de 10 años sin medalla y no cambió de rumbo. Tu regla ya existe: el plan se ajusta en la Revisión Mensual, con GBM contra la proyección, y solo si vas abajo dos meses seguidos.</small></label></div>
+        </div>
+        <p class="ref-decision"><b>La decisión de esta pestaña</b> El alcohol en cero no se renegocia: ni el día del Hyrox, ni en Navidad, ni en Alemania. Como Rich desde 1998.</p>
+      </div>
+
+      <div class="card">
+        <h3 id="ref-fuentes" data-idx="Fuentes">📚 Fuentes — de dónde sale cada dato</h3>
+        <ul class="ref-fuentes">
+          <li><a href="https://tim.blog/2022/01/07/rich-roll-transcript/" target="_blank" rel="noopener" class="inline-link">The Tim Ferriss Show #561</a> (2022, transcripción). El «ya no» de 1998, los 100 días en Oregon, el Derecho por presión, el desmantelamiento financiero, su horario y «el ánimo sigue a la acción».</li>
+          <li><a href="https://nextbigideaclub.com/magazine/conversation-how-rich-roll-overcame-addiction-to-become-a-world-class-endurance-athlete/16025/" target="_blank" rel="noopener" class="inline-link">Next Big Idea Club</a>, entrevista. Stanford, el vodka en la regadera, la renuncia con 2 o 3 meses de ahorro, la bici de los 40 y los ensayos al 70, 80 y 90 %.</li>
+          <li><a href="https://www.goodmorningamerica.com/wellness/story/life-changing-moment-turned-couch-potato-dad-vegan-48778804" target="_blank" rel="noopener" class="inline-link">Good Morning America</a> (julio de 2017). La escalera, los 23 kg de más y el 11.º lugar en el Ultraman de 2008.</li>
+          <li><a href="https://www.richroll.com/bio/" target="_blank" rel="noopener" class="inline-link">richroll.com</a>, su biografía. Ultraman 2008 y 2009, EPIC5 (2010), Men's Fitness y Finding Ultra (2012).</li>
+          <li><a href="https://richroll.com/podcast/rich-roll-podcast-001-julie-piatt/" target="_blank" rel="noopener" class="inline-link">Rich Roll Podcast, episodio 001</a> (27 nov 2012), con Julie Piatt.</li>
+          <li><a href="https://thenewdaily.com.au/life/eat-drink/2017/03/25/rich-roll-diet" target="_blank" rel="noopener" class="inline-link">The New Daily</a> (marzo de 2017). Su comida y las 25 h de entrenamiento a la semana antes de una carrera.</li>
+        </ul>
+        <p class="ref-intro" style="margin-bottom:0;">Para ir a fondo: su libro <b>Finding Ultra</b> (2012) cuenta todo esto en primera persona, y su pódcast está en Spotify, Apple Podcasts y YouTube.</p>
+      </div>
+    </div>
+    <!-- fin perfil-referente -->
 
     <div id="perfil-cv" class="subtab-panel">
       <div class="btn-row no-print" style="margin-bottom:14px;">
@@ -4245,6 +4590,140 @@
   }
   pintarFasesPlan();
 
+  // ─── TU REFERENTE — lo vivo de #perfil-referente ──────────────────────────────────────────
+  // La historia de Rich Roll es fija (sale de las Fuentes de la pestaña). Lo que cambia con el
+  // día se pinta aquí: su edad y sus años sobrio, la tuya, las dos pistas en la misma escala de
+  // edad (sus más de 10 años sin medalla contra tu plan hasta el millón), las fechas de "Lo que
+  // te toca copiar" y la cuenta de «Cero alcohol».
+  //
+  // Esa cuenta se LEE de `dash-habitos-v1` (Hábitos, en el Dashboard) y aquí no se escribe nada:
+  // el primer hábito con "alcohol" en el nombre, con la misma regla de racha que habitos.js —los
+  // días que no tocan y los anteriores al arranque no la rompen, y hoy sin marcar todavía no es
+  // un fallo—. Si habitos.js cambia la forma de `def` o de `marcas`, esto es lo que se revisa.
+  function refRacha(S, h) {
+    const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    const meta = h.meta > 1 ? h.meta : 1;
+    const hecho = f => {
+      const v = S.marcas && S.marcas[f] && S.marcas[f][h.id];
+      return (typeof v === 'number' ? v : (v ? 1 : 0)) >= meta;
+    };
+    const toca = d => h.dow === 'todos' || (Array.isArray(h.dow) && h.dow.indexOf(d.getDay()) >= 0);
+    const arranque = h.desde || S.desde || '';
+    const d = new Date(), hoy = iso(d);
+    let n = 0;
+    for (let i = 0; i < 400; i++, d.setDate(d.getDate() - 1)) {
+      const f = iso(d), ok = hecho(f);
+      if (!toca(d)) { if (h.flex && ok) n++; continue; }
+      if (arranque && f < arranque) { if (ok) n++; continue; }
+      if (ok) { n++; continue; }
+      if (f === hoy) continue;
+      break;
+    }
+    return { n: n, hoyOk: hecho(hoy) };
+  }
+  function pintarReferente() {
+    const panel = document.getElementById('perfil-referente');
+    if (!panel) return;
+    const DIAS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+    const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    const mas = (d, n) => { const x = new Date(d.getTime()); x.setDate(x.getDate() + n); return x; };
+    const fecha = d => DIAS[d.getDay()] + ' ' + d.getDate() + ' ' + MESES[d.getMonth()] +
+      (d.getFullYear() !== hoy.getFullYear() ? ' ' + d.getFullYear() : '');
+    const edad = (nac, en) => {
+      const p = nac.split('-').map(Number);
+      let e = en.getFullYear() - p[0];
+      if (en.getMonth() + 1 < p[1] || (en.getMonth() + 1 === p[1] && en.getDate() < p[2])) e--;
+      return e;
+    };
+    const pon = (k, v) => panel.querySelectorAll('[data-ref="' + k + '"]').forEach(el => { el.textContent = v; });
+
+    // Rich nació el 20 oct 1966 y está sobrio desde 1998.
+    const edadRich = edad('1966-10-20', hoy);
+    pon('edadRich', edadRich);
+    pon('sobrio', hoy.getFullYear() - 1998);
+    pon('hoy', fecha(hoy));
+    pon('manana', fecha(mas(hoy, 1)));
+    pon('domingo', fecha(mas(hoy, (7 - hoy.getDay()) % 7)));
+    pon('finMes', fecha(new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0)));
+
+    // Tu edad y la del millón, del maestro: el nacimiento y el cierre de la última fase.
+    const C = window.CIFRAS;
+    const nac = C && C.PROYECTO && C.PROYECTO.nacimiento;
+    const fases = C && C.PHASES;
+    const meta = fases && fases.length ? fases[fases.length - 1].end : null;
+    if (nac) pon('edadAdan', edad(nac, hoy));
+
+    // Las dos pistas: de los 31 a la edad de Rich hoy, en la misma escala.
+    const pistas = document.getElementById('refPistas');
+    const pie = document.getElementById('refDifPie');
+    if (pistas && nac && meta) {
+      const tope = Math.max(edadRich, 43);
+      const x = a => Math.max(0, Math.min(100, (a - 31) / (tope - 31) * 100));
+      const yo = edad(nac, hoy), yoMeta = edad(nac, meta);
+      let meses = (meta.getFullYear() - hoy.getFullYear()) * 12 + meta.getMonth() - hoy.getMonth() - (meta.getDate() < hoy.getDate() ? 1 : 0);
+      meses = Math.max(0, meses);
+      const a = Math.floor(meses / 12), m = meses % 12;
+      const plazo = (a ? a + (a === 1 ? ' año' : ' años') : '') + (a && m ? ' y ' : '') + (m ? m + (m === 1 ? ' mes' : ' meses') : '') || 'este mes';
+      // `corto` es lo que cabe en el teléfono; el resto de la etiqueta va en <em> y se esconde ahí.
+      const tramo = (cls, de, a2, txt, corto) => '<span class="ref-tramo ' + cls + '" style="left:' + x(de).toFixed(2) + '%;width:' + (x(a2) - x(de)).toFixed(2) + '%" title="' + txt + '">' +
+        (corto && txt.indexOf(corto) === 0 && txt !== corto ? corto + '<em>' + txt.slice(corto.length) + '</em>' : txt) + '</span>';
+      const marca = (a2, cls) => '<span class="' + (cls || '') + '" style="left:' + x(a2).toFixed(2) + '%">' + a2 + '</span>';
+      pistas.innerHTML =
+        '<div class="ref-pista"><span class="ref-pista-n">Rich</span><div class="ref-riel">' +
+          tramo('espera', 31, 42, '+10 años sin medalla', '+10 años') + tramo('fruto', 42, tope, 'Ultraman · libro · pódcast') + '</div></div>' +
+        '<div class="ref-edades">' + marca(31, 'ini') + marca(42) + marca(tope, 'fin') + '</div>' +
+        '<div class="ref-pista"><span class="ref-pista-n">Tú</span><div class="ref-riel">' +
+          tramo('plan', yo, yoMeta, plazo, plazo.split(' y ')[0]) + '</div></div>' +
+        '<div class="ref-edades">' + marca(yo, yo === 31 ? 'ini' : '') + marca(yoMeta) + '</div>';
+      if (pie) pie.innerHTML = 'El tercer punto es tu patrón al revés. Tú escribiste «cuando no veo recompensa, abandono o cambio de rumbo»; ' +
+        'tu plan entero —<b>' + plazo + '</b>, hasta el <b>' + C.v('metaMillon') + '</b>, a los ' + yoMeta + '— dura menos de lo que Rich pasó sobrio sin una medalla: ' +
+        'él llegó a la primera a los 42, tú llegas a la meta a los ' + yoMeta + '.';
+    }
+
+    // La cuenta de «Cero alcohol», de Hábitos.
+    const caja = document.getElementById('refAlcohol');
+    if (!caja) return;
+    let S = null;
+    try { S = JSON.parse(localStorage.getItem('dash-habitos-v1') || 'null'); } catch (e) { S = null; }
+    const def = S && Array.isArray(S.def) ? S.def : null;
+    const h = def ? def.filter(x => x && /alcohol/i.test(x.nombre || ''))[0] : null;
+    const oregon = ' —los que Rich pasó en Oregon— ';
+    let txt, d100 = null;
+    if (!def) {
+      txt = 'Este navegador todavía no tiene tus Hábitos: ábrelos y cuenta desde tu último día sin alcohol. Tu día 100' + oregon + 'es la primera meta grande.';
+    } else if (!h) {
+      d100 = mas(hoy, 99);
+      txt = 'Todavía no está en Hábitos: créalo hoy, como pide tu meta. Contando desde hoy, tu día 100' + oregon + 'cae el <b>' + fecha(d100) + '</b>.';
+    } else {
+      const r = refRacha(S, h);
+      const diaHoy = r.hoyOk ? r.n : r.n + 1;
+      if (r.n >= 100) {
+        txt = 'Llevas <b>' + r.n + ' días</b>: ya pasaste los 100 de Rich en Oregon. El siguiente hito, el año, cae el <b>' + fecha(mas(hoy, 365 - diaHoy)) + '</b>.';
+      } else if (r.n > 0) {
+        d100 = mas(hoy, 100 - diaHoy);
+        txt = 'Llevas <b>' + r.n + (r.n === 1 ? ' día' : ' días') + '</b>' + (r.hoyOk ? '' : ' (hoy, sin marcar todavía)') + '. Tu día 100' + oregon + 'cae el <b>' + fecha(d100) + '</b>: anótalo.';
+      } else {
+        d100 = mas(hoy, 99);
+        txt = 'Tu cadena está en 0. Si hoy la marcas, tu día 100' + oregon + 'cae el <b>' + fecha(d100) + '</b>.';
+      }
+    }
+    // Si esos 100 días pasan por diciembre (del 1 al Año Nuevo), que el plan llegue antes que
+    // la primera posada; y si ya estás en esas fechas, que lo diga.
+    if (d100) {
+      const y = hoy.getMonth() === 0 ? hoy.getFullYear() - 1 : hoy.getFullYear();
+      let ini = new Date(y, 11, 1), fin = new Date(y + 1, 0, 1);
+      if (fin < hoy) { ini = new Date(y + 1, 11, 1); fin = new Date(y + 2, 0, 1); }
+      if (d100 >= ini) txt += hoy < ini
+        ? ' Esos 100 días pasan por diciembre: ten tu respuesta y tu bebida listas antes de la primera posada.'
+        : ' Estás en temporada de posadas: ten tu respuesta y tu bebida listas en cada fiesta.';
+    }
+    caja.innerHTML = txt;
+  }
+  pintarReferente();
+  // Al volver a la pestaña del navegador (marcaste el día en Hábitos, o pasó la medianoche).
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) pintarReferente(); });
+
   // ─── LA PROYECCIÓN — de CIFRAS.PROYECCION, el plan mes a mes ──────────────────────────────
   // Adán: "le falta mucha más información, detallada mucho más". Arriba, las cifras que deciden
   // (este mes contra Finanzas, lo que juntas hasta la salida, lo que pide la salida, lo que pone
@@ -5640,8 +6119,8 @@
     'use strict';
     const secs = () => document.querySelectorAll('main > section[id]');
 
-    // Solo lo que el usuario puede ver: en `#perfil` las cuatro pestañas viven en el DOM a la
-    // vez, y contar las cuatro daría un avance que no corresponde a lo que tiene delante.
+    // Solo lo que el usuario puede ver: en `#perfil` las cinco pestañas viven en el DOM a la
+    // vez, y contar las cinco daría un avance que no corresponde a lo que tiene delante.
     const visible = el => !!(el.offsetParent || el.getClientRects().length);
 
     function avance(sec){
@@ -5709,7 +6188,7 @@
     }
 
     /* El índice. Se arma de los <h3> VISIBLES, así que en `#perfil` lista los de la pestaña
-       abierta y no los de las otras tres. Los <h3> sin id reciben uno estable a partir de su
+       abierta y no los de las demás. Los <h3> sin id reciben uno estable a partir de su
        posición, para poder anclarlos sin tocar el HTML.
 
        Cada entrada es una pestaña que FILTRA (Adán: "cuando haga clic en estos subtabs,
