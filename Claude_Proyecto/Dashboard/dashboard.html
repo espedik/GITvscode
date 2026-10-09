@@ -3023,7 +3023,7 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   background:rgba(var(--cy-rgb),.07);border:1px solid rgba(var(--cy-rgb),.2);font-size:12.5px;color:var(--text2);line-height:1.4}
 .blq-escuchar b{color:var(--text)}
 .blq-escuchar .hp-link{margin-left:auto;flex-shrink:0;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase}
-/* Los módulos: a la izquierda Hábitos de hoy, Entrenas y, al pie, Qué invertir hoy; a la derecha,
+/* Los módulos: a la izquierda Entrenas, Hábitos de hoy y, al pie, Qué invertir hoy; a la derecha,
    Hoy aprendes en los dos tercios que quedan, a todo lo alto. Cada uno desplaza por dentro. */
 .dia-mods{flex:1;min-height:0;grid-template-columns:minmax(0,1fr) minmax(0,2fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr) auto;gap:14px}
 #miDiaSecundarios{grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:14px}
@@ -3236,7 +3236,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .de-ex-sr i.real{color:var(--o);font-weight:700}
 .dia-entrena .de-ex-row.ok .de-ex-n{color:var(--g)}
 .de-ex-row.ok .de-ex-sr{opacity:.6}
-/* En pantallas altas (la de Adán, 2560×1440) Hábitos y Entrenas miden casi 500 px de alto: se usan.
+/* En pantallas altas (la de Adán, 2560×1440) Entrenas y Hábitos miden casi 500 px de alto: se usan.
    Hábitos sube la letra y el aire de cada renglón; Entrenas enseña bajo cada ejercicio su indicación
    (la misma del `title`) y agranda la tira de días. Con menos de 440 px de alto, como siempre. El
    contenedor mide su alto solo con la rejilla de escritorio: en el teléfono el alto es el contenido. */
@@ -3249,7 +3249,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   .dh-n{font-size:13px}
   .dh-a{font-size:11px}
 }
-/* Qué invertir hoy, en su propio módulo: al pie de la primera columna, bajo Entrenas. Dos renglones:
+/* Qué invertir hoy, en su propio módulo: al pie de la primera columna, bajo Hábitos. Dos renglones:
    la etiqueta con «Abrir →» y el paso de hoy con su porqué, cortado a una línea; las cifras completas
    viven en el panel que abre. */
 #miDiaSecundarios>.dia-invertir{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"lbl lbl" "paso sub";
@@ -4179,7 +4179,6 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
                la agenda. -->
           <div class="tile now-hero dia-ahora reveal d2" id="diaAhoraTile"></div>
           <div class="grid dia-mods reveal d3" id="miDiaSecundarios">
-            <div class="tile" id="diaHabitos"></div>
             <div class="tile dia-entrena-tile">
               <div class="hp-title"><span>🏋️ Entrenas</span><a href="../CuidadoPersonal/ejercicio.html" class="hp-link" id="diaEntrenaLink">Ejercicio →</a></div>
               <div class="dia-entrena" id="diaEntrenaTxt"></div>
@@ -4187,6 +4186,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
                    verDiaSemana() la usa para ver otro día en la agenda y en esta tarjeta. -->
               <div class="week-strip" id="heroWeekStrip"></div>
             </div>
+            <div class="tile" id="diaHabitos"></div>
             <!-- Qué invertir hoy, solo. Tu dinero y la fase salieron de Mi Día (Adán: "solo déjame lo
                  de invertir hoy, déjame esa función"). pintarInvertirBtn() lo pinta con el paso que
                  toca hoy —"primero tu fondo" / "abona a tu deuda" / "hoy sí inviertes"— y su porqué;
