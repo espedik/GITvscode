@@ -1701,6 +1701,32 @@
     .ref-edades span.ini { transform: none; }
     .ref-edades span.fin { transform: translateX(-100%); }
     .ref-dif-pie { font-size: 13px; line-height: 1.7; margin-top: 8px; }
+    /* La etiqueta de un tramo se acomoda a su ancho: lo corto (<b>) y el resto (<em>) son piezas
+       que bajan a una segunda línea que no se ve cuando no caben. El separador de ancho cero
+       ocupa la primera, así que si ni lo corto cabe, el tramo se queda sin etiqueta en vez de
+       enseñar media palabra. */
+    .ref-tl { display: flex; flex-wrap: wrap; height: 28px; overflow: hidden; }
+    .ref-tl::before { content: ''; width: 0; height: 28px; }
+    .ref-tl > b, .ref-tl > em { font: inherit; white-space: pre; }
+    .ref-tramo.obra { color: var(--text); background: rgba(var(--acc-rgb), .34); }
+
+    /* Los dos referentes: uno a la vista. El elegido se enciende como una pestaña. */
+    .ref-elige { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;
+      margin-bottom: 16px; }
+    .ref-elige-b { display: flex; align-items: center; gap: 14px; padding: 14px 18px; text-align: left;
+      border: 1px solid var(--border); border-radius: var(--hud); background: var(--surface);
+      color: var(--text); font: inherit; cursor: pointer; transition: border-color .16s, background .16s; }
+    .ref-elige-b:hover { border-color: rgba(var(--acc-rgb), .45); }
+    .ref-elige-b.on { border-color: rgba(var(--acc-rgb), .7); background: rgba(var(--acc-rgb), .08);
+      box-shadow: inset 3px 0 0 var(--accent); }
+    .ref-elige-b i { flex-shrink: 0; width: 42px; height: 42px; border-radius: 50%; display: grid;
+      place-items: center; font-style: normal; font-family: var(--mono); font-size: 13px; font-weight: 700;
+      letter-spacing: .04em; color: var(--accent); border: 1.5px solid rgba(var(--acc-rgb), .5); }
+    .ref-elige-b.on i { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+    .ref-elige-b b { display: block; font-size: 16px; font-weight: 800; }
+    .ref-elige-b small { display: block; margin-top: 3px; font-family: var(--mono); font-size: 9.5px;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    .ref-persona[hidden] { display: none !important; }
 
     .ref-no { margin: 0; padding-left: 18px; columns: 2 380px; column-gap: 32px; }
     .ref-no li { font-size: 12.5px; line-height: 1.65; margin-bottom: 8px; break-inside: avoid; }
@@ -1743,7 +1769,11 @@
       .ref-paso:last-child::before { bottom: auto; height: 12px; }
       .ref-pista { grid-template-columns: minmax(0, 1fr); gap: 4px; }
       .ref-tramo { padding: 0 6px; letter-spacing: 0; }
-      .ref-tramo em { display: none; }
+      .ref-elige { gap: 8px; }
+      .ref-elige-b { padding: 10px 12px; gap: 10px; }
+      .ref-elige-b i { width: 34px; height: 34px; font-size: 11px; }
+      .ref-elige-b b { font-size: 14.5px; }
+      .ref-elige-b small { font-size: 8.5px; letter-spacing: .05em; }
       .ref-edades { margin-left: 0; }
     }
 </style>
@@ -1795,7 +1825,7 @@
       <div class="sb-subitems">
         <a class="sb-sublink" href="#perfil" data-sec="perfil" data-tab="metas" onclick="irASeccion('perfil','metas',this);return false;">🎯 Metas</a>
         <a class="sb-sublink" href="#perfil" data-sec="perfil" data-tab="dan-prime" onclick="irASeccion('perfil','dan-prime',this);return false;">⚡ Adán Prime</a>
-        <a class="sb-sublink" href="#perfil" data-sec="perfil" data-tab="referente" onclick="irASeccion('perfil','referente',this);return false;">🔭 Tu referente</a>
+        <a class="sb-sublink" href="#perfil" data-sec="perfil" data-tab="referente" onclick="irASeccion('perfil','referente',this);return false;">🔭 Tus referentes</a>
         <a class="sb-sublink" href="#perfil" data-sec="perfil" data-tab="cv" onclick="irASeccion('perfil','cv',this);return false;">📄 CV Completo</a>
       </div>
     </div>
@@ -1835,7 +1865,7 @@
       <button class="subtab-btn active" onclick="showSubtab('perfil','diagnostico',this)">Diagnóstico & Plan</button>
       <button class="subtab-btn" onclick="showSubtab('perfil','metas',this)">🎯 Metas</button>
       <button class="subtab-btn" onclick="showSubtab('perfil','dan-prime',this)">⚡ Adán Prime</button>
-      <button class="subtab-btn" onclick="showSubtab('perfil','referente',this)">🔭 Tu referente</button>
+      <button class="subtab-btn" onclick="showSubtab('perfil','referente',this)">🔭 Tus referentes</button>
       <button class="subtab-btn" onclick="showSubtab('perfil','cv',this)">CV Completo</button>
     </div>
 
@@ -2949,188 +2979,383 @@
     </div>
 
     <div id="perfil-referente" class="subtab-panel">
-      <!-- Tu referente. Adán: "quiero tener de ejemplo a alguien y ver cuál es el gran
-           diferenciador que a los 31 dijo ya no quiero la misma vida". La historia sale de las
-           Fuentes del final; lo que cambia con el día (edades, años sobrio, las dos pistas, las
-           fechas de "Lo que te toca copiar" y la cuenta de alcohol de Hábitos) lo pinta
-           pintarReferente(). Cada bloque es una fila a todo lo ancho: ninguno espera a otro. -->
-      <div class="card mb-16 ref-hero">
-        <h3 id="ref-quien" data-idx="Quién es">🔭 Tu referente — alguien que a los 31 dijo «ya no»</h3>
-        <div class="ref-hero-txt">
-          <p class="ref-nombre">Rich Roll</p>
-          <p class="ref-sub">Nadador de Stanford · abogado por Cornell · sobrio desde 1998 · ultraatleta, autor y conductor de pódcast · <span data-ref="edadRich">—</span> años</p>
-          <p>A los 31 bebía desde la mañana y manejaba al despacho de traje. Ese año, 1998, entró 100 días a un centro de tratamiento en Oregon y no ha vuelto a beber. A los 39 se ahogaba a media escalera; a los 42 fue 11.º general en el Mundial de Ultraman, en Hawái; a los 46 sacó un pódcast que hoy pasa de 200 millones de descargas. No era un gurú: era un abogado con una adicción, y su cambio está documentado con fechas.</p>
-          <p class="ref-linea"><b>El diferenciador, en una línea</b> No negoció con el alcohol —cero, y con ayuda— y siguió apareciendo más de 10 años sin ver recompensa.</p>
+      <!-- Tus referentes. Adán: "quiero tener de ejemplo a alguien y ver cuál es el gran
+           diferenciador que a los 31 dijo ya no quiero la misma vida", y después "agrégalo como
+           segundo referente". Dos personas y una a la vista (refElegir): Rich Roll, que a los 31
+           dejó el alcohol, y Jan Koum, que a los 31 dejó Yahoo. Las dos traen los mismos nueve
+           bloques, así que el índice de arriba dice lo mismo con cualquiera. Lo que cambia con el
+           día lo pinta pintarReferente(). Cada bloque es una fila a todo lo ancho. -->
+      <div class="ref-elige" role="tablist" aria-label="Elige a tu referente">
+        <button type="button" class="ref-elige-b on" data-persona="rich" role="tab" aria-selected="true" onclick="refElegir('rich')">
+          <i>RR</i><span><b>Rich Roll</b><small>A los 31 dejó el alcohol · tu meta de conducta</small></span>
+        </button>
+        <button type="button" class="ref-elige-b" data-persona="koum" role="tab" aria-selected="false" onclick="refElegir('koum')">
+          <i>JK</i><span><b>Jan Koum</b><small>A los 31 dejó Yahoo · tu carrera de tester</small></span>
+        </button>
+      </div>
+      <div class="ref-persona" data-persona="rich">
+        <div class="card mb-16 ref-hero">
+          <h3 id="ref-quien" data-idx="Quién es">🔭 Referente 1 — el abogado que a los 31 dijo «ya no» al alcohol</h3>
+          <div class="ref-hero-txt">
+            <p class="ref-nombre">Rich Roll</p>
+            <p class="ref-sub">Nadador de Stanford · abogado por Cornell · sobrio desde 1998 · ultraatleta, autor y conductor de pódcast · <span data-ref="edadRich">—</span> años</p>
+            <p>A los 31 bebía desde la mañana y manejaba al despacho de traje. Ese año, 1998, entró 100 días a un centro de tratamiento en Oregon y no ha vuelto a beber. A los 39 se ahogaba a media escalera; a los 42 fue 11.º general en el Mundial de Ultraman, en Hawái; a los 46 sacó un pódcast que hoy pasa de 200 millones de descargas. No era un gurú: era un abogado con una adicción, y su cambio está documentado con fechas.</p>
+            <p class="ref-linea"><b>El diferenciador, en una línea</b> No negoció con el alcohol —cero, y con ayuda— y siguió apareciendo más de 10 años sin ver recompensa.</p>
+          </div>
+          <blockquote class="ref-cita">
+            «Desperté crudo… y fue ese momento de darme cuenta: ya tuve suficiente, no puedo seguir viviendo así.»
+            <footer>Rich Roll, sobre una mañana de 1998 · The Tim Ferriss Show, 2022</footer>
+          </blockquote>
+          <div class="ref-kpis">
+            <div class="stat-badge"><span class="num">31</span><span>Su edad al decir «ya no»</span></div>
+            <div class="stat-badge"><span class="num">100</span><span>Días en tratamiento</span></div>
+            <div class="stat-badge"><span class="num text-green" data-ref="sobrio">—</span><span>Años sobrio, desde 1998</span></div>
+            <div class="stat-badge"><span class="num">200 M+</span><span>Descargas de su pódcast</span></div>
+          </div>
         </div>
-        <blockquote class="ref-cita">
-          «Desperté crudo… y fue ese momento de darme cuenta: ya tuve suficiente, no puedo seguir viviendo así.»
-          <footer>Rich Roll, sobre una mañana de 1998 · The Tim Ferriss Show, 2022</footer>
-        </blockquote>
-        <div class="ref-kpis">
-          <div class="stat-badge"><span class="num">31</span><span>Su edad al decir «ya no»</span></div>
-          <div class="stat-badge"><span class="num">100</span><span>Días en tratamiento</span></div>
-          <div class="stat-badge"><span class="num text-green" data-ref="sobrio">—</span><span>Años sobrio, desde 1998</span></div>
-          <div class="stat-badge"><span class="num">200 M+</span><span>Descargas de su pódcast</span></div>
+
+        <div class="card mb-16">
+          <h3 id="ref-espejo" data-idx="Por qué él">🪞 Por qué él — tu misma película a los 31</h3>
+          <p class="ref-intro">Su punto de partida se parece al tuyo en lo que importa: una carrera respetable dentro de instituciones grandes, una conducta que se lo comía por dentro y la edad exacta en que decidió.</p>
+          <div class="ref-vs">
+            <div class="ref-vs-h"></div>
+            <div class="ref-vs-h">Rich a los 31 · 1998</div>
+            <div class="ref-vs-h ref-vs-tu">Tú hoy · <span data-ref="edadAdan">—</span> años</div>
+
+            <div class="ref-vs-q">Dónde estaba</div>
+            <div data-q="Rich">Abogado corporativo —después, de la industria del entretenimiento—, con Stanford y Cornell detrás. Eligió el Derecho «como reacción a la presión social y familiar», no por interés.</div>
+            <div data-q="Tú" class="ref-vs-tu">Ingeniero de pruebas con 6 años en Ford, Continental, Bosch, Google y {{empleador}}. Lo escribiste tú: «toda mi vida adulta la construí dentro de estructuras grandes y estables».</div>
+
+            <div class="ref-vs-q">Lo que lo frenaba</div>
+            <div data-q="Rich">El alcohol, desde la universidad. «A los 31 no era raro tomarme un vodka tonic en la regadera y manejar al despacho, de traje, con una lata de cerveza entre las piernas.»</div>
+            <div data-q="Tú" class="ref-vs-tu">Tus dos metas de conducta: el alcohol y el celular. Y manejas Didi, donde el límite de alcohol es cero.</div>
+
+            <div class="ref-vs-q">Lo que tenía a favor</div>
+            <div data-q="Rich">Disciplina de atleta: nadó en el equipo de Stanford, de los que ganan campeonatos nacionales. El talento nunca fue su problema.</div>
+            <div data-q="Tú" class="ref-vs-tu">En Bosch te eligieron líder del equipo de México y te mandaron 4 meses a Stuttgart. Tampoco es el tuyo.</div>
+
+            <div class="ref-vs-q">Su patrón</div>
+            <div data-q="Rich">«Lo único que me ha hecho cambiar es el dolor.» Necesitó tocar fondo dos veces: a los 31 y a los 39.</div>
+            <div data-q="Tú" class="ref-vs-tu">«Cuando no veo recompensa, abandono o cambio de rumbo.» También es tuyo: está en tu Diagnóstico.</div>
+
+            <div class="ref-vs-q">El dinero</div>
+            <div data-q="Rich">Dejó el despacho corporativo con 2 o 3 meses de ahorro. Tras la crisis de 2008 vinieron años de «desmantelamiento financiero completo».</div>
+            <div data-q="Tú" class="ref-vs-tu">Tu salto es la maestría en {{maestriaEscuela}} ({{maestriaInicio}}), y el plan no te deja saltar con 2 o 3 meses: junta {{salidaTotal}} antes de irte.</div>
+          </div>
+        </div>
+
+        <div class="card mb-16">
+          <h3 id="ref-historia" data-idx="Su historia">📜 Su historia — de la regadera con vodka al Ultraman</h3>
+          <div class="ref-hitos">
+            <div class="ref-hito">
+              <span class="historia-tag">Años 80 · Stanford</span>
+              <h4>Nadador de élite… y la primera copa</h4>
+              <p>Entra al equipo de natación de Stanford, uno de los que ganan campeonatos nacionales. El alcohol le quita la ansiedad social y, después del primer año, «las drogas y el alcohol destruyeron mi carrera de nadador».</p>
+            </div>
+            <div class="ref-hito">
+              <span class="historia-tag">Años 90 · Cornell y el despacho</span>
+              <h4>Abogado por presión, no por vocación</h4>
+              <p>Estudia Derecho en Cornell y entra a un despacho corporativo: eligió la carrera «como reacción a la presión social y familiar». Por fuera, éxito; por dentro, un alcoholismo que no dejaba de crecer.</p>
+            </div>
+            <div class="ref-hito clave">
+              <span class="historia-tag">1998 · 31 años</span>
+              <h4>El «ya no»: 100 días en Oregon</h4>
+              <p>Una mañana, crudo, entiende que no puede seguir así. Su psiquiatra lo empuja a tratamiento y, tras una última recaída, acepta. Le dicen que su caso es de los que «solo vemos en bebedores de toda la vida, de sesenta años». Ahí aprende, por primera vez, a ser honesto. No ha vuelto a beber.</p>
+            </div>
+            <div class="ref-hito">
+              <span class="historia-tag">≈ 2000 · 33 años</span>
+              <h4>Renuncia sin red</h4>
+              <p>Con año y medio sobrio deja el despacho corporativo, sin otro trabajo y con 2 o 3 meses de ahorro, y sigue de abogado por su cuenta casi diez años más. Sobrio, sí; sano y con rumbo, todavía no.</p>
+            </div>
+            <div class="ref-hito">
+              <span class="historia-tag">Oct 2006 · 39 años</span>
+              <h4>La escalera</h4>
+              <p>En vísperas de cumplir 40, con unos 23 kg de más, se queda sin aire a media escalera y cree que le va a dar un infarto. Prueba jugos y dietas, y llega a la comida vegetal «como último recurso». Por sus 40, su esposa le regala una bici.</p>
+            </div>
+            <div class="ref-hito">
+              <span class="historia-tag">2008 · 42 años</span>
+              <h4>11.º en el Ultraman</h4>
+              <p>Mundial de Ultraman, en Hawái: 10 km nadando, 421 km en bici y 84 km corriendo, en tres días. Termina 11.º general y, al año siguiente, 6.º. Men's Fitness lo pone entre los «25 hombres más en forma del mundo».</p>
+            </div>
+            <div class="ref-hito">
+              <span class="historia-tag">2010 · 43 años</span>
+              <h4>EPIC5</h4>
+              <p>Con Jason Lester, cinco triatlones de distancia Ironman en cinco islas de Hawái, en menos de una semana.</p>
+            </div>
+            <div class="ref-hito">
+              <span class="historia-tag">2012 · 45 y 46 años</span>
+              <h4>El libro y el pódcast</h4>
+              <p>Publica Finding Ultra y entra a las listas de más vendidos. El 27 de noviembre sale el episodio 1 de su pódcast, grabado con su esposa, Julie Piatt. Mientras tanto, años en que le costaba «poner comida en la mesa».</p>
+            </div>
+            <div class="ref-hito">
+              <span class="historia-tag">Hoy · <span data-ref="edadRich">—</span> años</span>
+              <h4><span data-ref="sobrio">—</span> años sobrio</h4>
+              <p>Más de 200 millones de descargas y una vida elegida por él, no por la presión de nadie. A los 52 lo resumió así: «sé que esto apenas empieza».</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-16">
+          <h3 id="ref-rutina" data-idx="Su rutina">⏰ Su rutina — un día normal de Rich</h3>
+          <p class="ref-intro">Lo que él mismo contó en The Tim Ferriss Show (2022) y en The New Daily (2017). Las horas son las suyas.</p>
+          <div class="ref-dia">
+            <div class="ref-paso"><span class="ref-paso-h">21:00</span><b>A la cama</b><p>Ocho horas sin negociar: «soy muy protector de mi sueño».</p></div>
+            <div class="ref-paso"><span class="ref-paso-h">5:00–6:00</span><b>Despierta</b><p>Ya con sus ocho horas completas.</p></div>
+            <div class="ref-paso"><span class="ref-paso-h">Primeras horas</span><b>Mente primero</b><p>Meditación, diario, escritura y proyectos creativos. Sin juntas ni llamadas.</p></div>
+            <div class="ref-paso"><span class="ref-paso-h">Después</span><b>Entrena</b><p>Antes de empezar la jornada. Casi todo en zona 2, suave y largo; antes de una carrera, hasta 25 h a la semana.</p></div>
+            <div class="ref-paso"><span class="ref-paso-h">El resto del día</span><b>Trabaja</b><p>El pódcast, los libros y la familia, con lo que lo sostiene ya hecho.</p></div>
+          </div>
+          <p class="ref-nota"><b>Su comida</b> 100 % vegetal desde 2007. Antes de entrenar, un batido verde: kale, espinaca, acelga, betabel, moras, plátano y semillas de chía, linaza y cáñamo. En las salidas largas en bici: agua de coco, plátano, dátiles y crema de almendra.</p>
+          <p class="ref-nota ref-tuyo-l"><b>Tu versión</b> Ya tienes «Dormir 7 h» y «Rutina de la noche» en Hábitos y tu día armado en <a href="#rutina" class="inline-link" onclick="irASeccion('rutina',null,document.querySelector('#sidebar-personal [data-sec=rutina]'));return false;">Rutina Diaria</a>. Lo que te falta copiar es el orden: lo que te sostiene va antes que el trabajo, y el celular no entra en la primera hora.</p>
+        </div>
+
+        <div class="card mb-16">
+          <h3 id="ref-habitos" data-idx="Sus hábitos">🧱 Sus hábitos — lo que sostiene todo lo demás</h3>
+          <div class="ref-habs">
+            <div class="ref-hab"><h4>Cero, no «menos»</h4><p>Desde 1998 no bebe nada. No probó a moderar: cortó de raíz y lo sostiene hace <span data-ref="sobrio">—</span> años.</p><div class="ref-tuyo"><b>Para ti</b>Tu meta ya lo dice: el límite es cero, también en Didi.</div></div>
+            <div class="ref-hab"><h4>El ánimo sigue a la acción</h4><p>Lo que le dijo su padrino al salir: no puedes pensar tu camino hasta el estado de ánimo que buscas; solo la acción lo dispara.</p><div class="ref-tuyo"><b>Para ti</b>Los días sin ganas, la versión de 2 minutos de cada hábito: hacerla cuenta.</div></div>
+            <div class="ref-hab"><h4>Pedir ayuda</h4><p>Psiquiatra, centro de tratamiento, padrino. «Ahí aprendí, por primera vez, a ser honesto. Aprendí a ser vulnerable.»</p><div class="ref-tuyo"><b>Para ti</b>Tu meta del alcohol trae las puertas: AA, los CIJ y tu médico.</div></div>
+            <div class="ref-hab"><h4>Dos pasos adelante</h4><p>«Los ladrillos se ponen solo dos pasos delante de ti, y no te dejan ver todo el camino.» No esperó el plan perfecto para empezar.</p><div class="ref-tuyo"><b>Para ti</b>El Plan Maestro ya existe: toca el ladrillo de esta quincena.</div></div>
+            <div class="ref-hab"><h4>El juego largo</h4><p>Entrena casi todo en zona 2: las ganancias se notan a los 6 meses y el beneficio completo tarda más de 2 años. «Tienes que jugar el juego largo.»</p><div class="ref-tuyo"><b>Para ti</b>Tu millón también es de juego largo: llega el {{metaMillon}}, no este año.</div></div>
+            <div class="ref-hab"><h4>Proteger el sueño</h4><p>«Soy muy protector de mi sueño»: a la cama hacia las 21:00 para dormir 8 horas, antes que cualquier pendiente.</p><div class="ref-tuyo"><b>Para ti</b>«Dormir 7 h» ya está en tus Hábitos: es la regla, no el premio.</div></div>
+            <div class="ref-hab"><h4>Mañanas sin ruido</h4><p>Meditación, diario y escritura antes de cualquier junta o llamada. La práctica que más le sirve: «anclarte al presente».</p><div class="ref-tuyo"><b>Para ti</b>La primera hora, sin celular: es tu otra meta.</div></div>
+            <div class="ref-hab"><h4>Ensayar por partes</h4><p>Antes de cada carrera simulaba el 70, el 80 y el 90 % de la distancia. El día de la prueba, nada era la primera vez.</p><div class="ref-tuyo"><b>Para ti</b>Antes del Hyrox, cada estación practicada al menos una vez.</div></div>
+            <div class="ref-hab"><h4>Contarlo en público</h4><p>Su libro y su pódcast son su historia sin filtro: «la vulnerabilidad no es cobardía, sino valentía». Su recuperación es su marca.</p><div class="ref-tuyo"><b>Para ti</b>Tu marca personal es prueba pública: lo que construyes, publicado.</div></div>
+          </div>
+        </div>
+
+        <div class="card mb-16 ref-dif">
+          <h3 id="ref-diferenciador" data-idx="El diferenciador">💡 El gran diferenciador — no fue el «ya no», fue lo que vino después</h3>
+          <p class="ref-dif-lead">Mucha gente dice «ya no» a los 31 y a las tres semanas vuelve a lo mismo. Lo que separa a Rich son tres cosas, y las tres se ven en sus fechas:</p>
+          <div class="ref-tres">
+            <div><i>01</i><h4>No negoció</h4><p>No intentó «beber menos»: cero, desde 1998. Y no lo hizo a pura voluntad —esa ya le había fallado—: psiquiatra, 100 días internado y un padrino. Cerró la puerta y pidió que se la cuidaran.</p></div>
+            <div><i>02</i><h4>Actuó sin ganas</h4><p>Su padrino le enseñó que «el ánimo sigue a la acción»: al estado que buscas no se llega pensando, se llega haciendo. Y no esperó a ver el plan completo: «los ladrillos se ponen solo dos pasos delante de ti».</p></div>
+            <div><i>03</i><h4>Aguantó sin recompensa</h4><p>Entre el «ya no» y su primera medalla pasaron más de 10 años de sobriedad sin aplausos; después del libro, años de apuros para poner comida en la mesa. No cambió de rumbo: el resultado llegó cuando ya llevaba una década construyendo.</p></div>
+          </div>
+          <div class="ref-pistas" id="refPistas"><!-- pintarReferente(): las dos pistas en la misma escala de edad --></div>
+          <p class="ref-dif-pie" id="refDifPie"></p>
+        </div>
+
+        <div class="riesgo-box mb-16" style="margin-bottom:16px;">
+          <h3 id="ref-nocopia" data-idx="Lo que no le copias">⚠️ Lo que no le copias</h3>
+          <ul class="ref-no">
+            <li><b>Saltar con 2 o 3 meses de ahorro.</b> A él le costó años de apuros para «poner comida en la mesa». Tu salida va con el colchón y la cuenta bloqueada que pide el plan, no antes.</li>
+            <li><b>Esperar a tocar fondo.</b> Él necesitó un centro de tratamiento a los 31 y una escalera a los 39. Tú ya tienes las dos metas escritas: no esperes tu escalera.</li>
+            <li><b>Su deporte y su dieta.</b> El ultrafondo de 25 h por semana y la comida 100 % vegetal son su camino, no tu meta: la tuya es el Hyrox, el gym 5 días y {{proteinaMeta}} g de proteína al día.</li>
+            <li><b>Hacerlo solo.</b> Ni él lo hizo así: psiquiatra, 100 días acompañado y un padrino. La voluntad a solas es justo lo que le falló antes de 1998.</li>
+          </ul>
+        </div>
+
+        <div class="card mb-16">
+          <h3 id="ref-plan" data-idx="Lo que te toca copiar">✅ Lo que te toca copiar — con fecha</h3>
+          <p class="ref-intro">No su vida: su método. Cada casilla se guarda, y las fechas se calculan al abrir.</p>
+          <div class="ref-plan">
+            <div class="check-item"><input type="checkbox" id="ref-c1"><label for="ref-c1"><b>Hoy, <span data-ref="hoy">—</span>:</b> lleva la cuenta de «Cero alcohol» en <a href="../Dashboard/dashboard.html#habitos" class="inline-link">Hábitos</a>. <small id="refAlcohol"></small></label></div>
+            <div class="check-item"><input type="checkbox" id="ref-c2"><label for="ref-c2"><b>A más tardar el <span data-ref="domingo">—</span>:</b> elige quién te sostiene. <small>Rich tuvo psiquiatra, 100 días acompañado y un padrino. Escribe a quién le cuentas la meta y a quién llamas un viernes difícil; si quieres más, el paso «Si necesitas más que voluntad» de tu meta en <a href="../Dashboard/dashboard.html#metas" class="inline-link">Mis Metas</a> trae AA y los CIJ.</small></label></div>
+            <div class="check-item"><input type="checkbox" id="ref-c3"><label for="ref-c3"><b>Desde mañana, <span data-ref="manana">—</span>:</b> la primera hora, sin celular. <small>Sus mañanas son de meditación y escritura, sin juntas ni llamadas. El celular duerme fuera del cuarto —tu meta del celular— y la primera hora es tuya.</small></label></div>
+            <div class="check-item"><input type="checkbox" id="ref-c4"><label for="ref-c4"><b>Esta noche:</b> a la cama a tu hora. <small>Él se acuesta hacia las 21:00 para dormir sus 8 horas. La tuya está en tu <a href="#rutina" class="inline-link" onclick="irASeccion('rutina',null,document.querySelector('#sidebar-personal [data-sec=rutina]'));return false;">Rutina Diaria</a> y en «Dormir 7 h»: esta noche, sin celular en la cama.</small></label></div>
+            <div class="check-item"><input type="checkbox" id="ref-c5"><label for="ref-c5"><b>Esta semana, el primer día sin ganas:</b> la versión de 2 minutos. <small>«El ánimo sigue a la acción»: Rich no esperaba las ganas. Cada hábito tiene su versión mínima; hazla, márcala y la cadena sigue.</small></label></div>
+            <div class="check-item"><input type="checkbox" id="ref-c6"><label for="ref-c6"><b>El <span data-ref="finMes">—</span>, en tu Revisión Mensual:</b> cambia el plan con números, no con ganas. <small>Rich pasó más de 10 años sin medalla y no cambió de rumbo. Tu regla ya existe: el plan se ajusta en la Revisión Mensual, con GBM contra la proyección, y solo si vas abajo dos meses seguidos.</small></label></div>
+          </div>
+          <p class="ref-decision"><b>La decisión de esta pestaña</b> El alcohol en cero no se renegocia: ni el día del Hyrox, ni en Navidad, ni en Alemania. Como Rich desde 1998.</p>
+        </div>
+
+        <div class="card">
+          <h3 id="ref-fuentes" data-idx="Fuentes">📚 Fuentes — de dónde sale cada dato</h3>
+          <ul class="ref-fuentes">
+            <li><a href="https://tim.blog/2022/01/07/rich-roll-transcript/" target="_blank" rel="noopener" class="inline-link">The Tim Ferriss Show #561</a> (2022, transcripción). El «ya no» de 1998, los 100 días en Oregon, el Derecho por presión, el desmantelamiento financiero, su horario y «el ánimo sigue a la acción».</li>
+            <li><a href="https://nextbigideaclub.com/magazine/conversation-how-rich-roll-overcame-addiction-to-become-a-world-class-endurance-athlete/16025/" target="_blank" rel="noopener" class="inline-link">Next Big Idea Club</a>, entrevista. Stanford, el vodka en la regadera, la renuncia con 2 o 3 meses de ahorro, la bici de los 40 y los ensayos al 70, 80 y 90 %.</li>
+            <li><a href="https://www.goodmorningamerica.com/wellness/story/life-changing-moment-turned-couch-potato-dad-vegan-48778804" target="_blank" rel="noopener" class="inline-link">Good Morning America</a> (julio de 2017). La escalera, los 23 kg de más y el 11.º lugar en el Ultraman de 2008.</li>
+            <li><a href="https://www.richroll.com/bio/" target="_blank" rel="noopener" class="inline-link">richroll.com</a>, su biografía. Ultraman 2008 y 2009, EPIC5 (2010), Men's Fitness y Finding Ultra (2012).</li>
+            <li><a href="https://richroll.com/podcast/rich-roll-podcast-001-julie-piatt/" target="_blank" rel="noopener" class="inline-link">Rich Roll Podcast, episodio 001</a> (27 nov 2012), con Julie Piatt.</li>
+            <li><a href="https://thenewdaily.com.au/life/eat-drink/2017/03/25/rich-roll-diet" target="_blank" rel="noopener" class="inline-link">The New Daily</a> (marzo de 2017). Su comida y las 25 h de entrenamiento a la semana antes de una carrera.</li>
+          </ul>
+          <p class="ref-intro" style="margin-bottom:0;">Para ir a fondo: su libro <b>Finding Ultra</b> (2012) cuenta todo esto en primera persona, y su pódcast está en Spotify, Apple Podcasts y YouTube.</p>
         </div>
       </div>
 
-      <div class="card mb-16">
-        <h3 id="ref-espejo" data-idx="Por qué él">🪞 Por qué él — tu misma película a los 31</h3>
-        <p class="ref-intro">Su punto de partida se parece al tuyo en lo que importa: una carrera respetable dentro de instituciones grandes, una conducta que se lo comía por dentro y la edad exacta en que decidió.</p>
-        <div class="ref-vs">
-          <div class="ref-vs-h"></div>
-          <div class="ref-vs-h">Rich a los 31 · 1998</div>
-          <div class="ref-vs-h ref-vs-tu">Tú hoy · <span data-ref="edadAdan">—</span> años</div>
-
-          <div class="ref-vs-q">Dónde estaba</div>
-          <div data-q="Rich">Abogado corporativo —después, de la industria del entretenimiento—, con Stanford y Cornell detrás. Eligió el Derecho «como reacción a la presión social y familiar», no por interés.</div>
-          <div data-q="Tú" class="ref-vs-tu">Ingeniero de pruebas con 6 años en Ford, Continental, Bosch, Google y {{empleador}}. Lo escribiste tú: «toda mi vida adulta la construí dentro de estructuras grandes y estables».</div>
-
-          <div class="ref-vs-q">Lo que lo frenaba</div>
-          <div data-q="Rich">El alcohol, desde la universidad. «A los 31 no era raro tomarme un vodka tonic en la regadera y manejar al despacho, de traje, con una lata de cerveza entre las piernas.»</div>
-          <div data-q="Tú" class="ref-vs-tu">Tus dos metas de conducta: el alcohol y el celular. Y manejas Didi, donde el límite de alcohol es cero.</div>
-
-          <div class="ref-vs-q">Lo que tenía a favor</div>
-          <div data-q="Rich">Disciplina de atleta: nadó en el equipo de Stanford, de los que ganan campeonatos nacionales. El talento nunca fue su problema.</div>
-          <div data-q="Tú" class="ref-vs-tu">En Bosch te eligieron líder del equipo de México y te mandaron 4 meses a Stuttgart. Tampoco es el tuyo.</div>
-
-          <div class="ref-vs-q">Su patrón</div>
-          <div data-q="Rich">«Lo único que me ha hecho cambiar es el dolor.» Necesitó tocar fondo dos veces: a los 31 y a los 39.</div>
-          <div data-q="Tú" class="ref-vs-tu">«Cuando no veo recompensa, abandono o cambio de rumbo.» También es tuyo: está en tu Diagnóstico.</div>
-
-          <div class="ref-vs-q">El dinero</div>
-          <div data-q="Rich">Dejó el despacho corporativo con 2 o 3 meses de ahorro. Tras la crisis de 2008 vinieron años de «desmantelamiento financiero completo».</div>
-          <div data-q="Tú" class="ref-vs-tu">Tu salto es la maestría en {{maestriaEscuela}} ({{maestriaInicio}}), y el plan no te deja saltar con 2 o 3 meses: junta {{salidaTotal}} antes de irte.</div>
-        </div>
-      </div>
-
-      <div class="card mb-16">
-        <h3 id="ref-historia" data-idx="Su historia">📜 Su historia — de la regadera con vodka al Ultraman</h3>
-        <div class="ref-hitos">
-          <div class="ref-hito">
-            <span class="historia-tag">Años 80 · Stanford</span>
-            <h4>Nadador de élite… y la primera copa</h4>
-            <p>Entra al equipo de natación de Stanford, uno de los que ganan campeonatos nacionales. El alcohol le quita la ansiedad social y, después del primer año, «las drogas y el alcohol destruyeron mi carrera de nadador».</p>
+      <div class="ref-persona" data-persona="koum" hidden>
+        <div class="card mb-16 ref-hero">
+          <h3 id="koum-quien" data-idx="Quién es">🔭 Referente 2 — el tester que a los 31 dejó de ser empleado</h3>
+          <div class="ref-hero-txt">
+            <p class="ref-nombre">Jan Koum</p>
+            <p class="ref-sub">Inmigrante ucraniano · tester de seguridad · nueve años en Yahoo · cofundador de WhatsApp · <span data-ref="edadKoum">—</span> años</p>
+            <p>Llegó a California a los 16, con su mamá y su abuela; vivieron de cupones de comida mientras él barría un supermercado. Aprendió redes con manuales usados, entró a Yahoo por un contrato de pruebas y se quedó nueve años. A los 31, en 2007, renunció; Facebook lo rechazó, y a los 33 registró WhatsApp. A los 37 se la vendió a Facebook por 19 mil millones de dólares, y firmó en la puerta de la oficina donde hacía fila por los cupones.</p>
+            <p class="ref-linea"><b>El diferenciador, en una línea</b> Saltó con colchón, hizo una sola cosa y no la soltó en el mes en que quiso rendirse.</p>
           </div>
-          <div class="ref-hito">
-            <span class="historia-tag">Años 90 · Cornell y el despacho</span>
-            <h4>Abogado por presión, no por vocación</h4>
-            <p>Estudia Derecho en Cornell y entra a un despacho corporativo: eligió la carrera «como reacción a la presión social y familiar». Por fuera, éxito; por dentro, un alcoholismo que no dejaba de crecer.</p>
-          </div>
-          <div class="ref-hito clave">
-            <span class="historia-tag">1998 · 31 años</span>
-            <h4>El «ya no»: 100 días en Oregon</h4>
-            <p>Una mañana, crudo, entiende que no puede seguir así. Su psiquiatra lo empuja a tratamiento y, tras una última recaída, acepta. Le dicen que su caso es de los que «solo vemos en bebedores de toda la vida, de sesenta años». Ahí aprende, por primera vez, a ser honesto. No ha vuelto a beber.</p>
-          </div>
-          <div class="ref-hito">
-            <span class="historia-tag">≈ 2000 · 33 años</span>
-            <h4>Renuncia sin red</h4>
-            <p>Con año y medio sobrio deja el despacho corporativo, sin otro trabajo y con 2 o 3 meses de ahorro, y sigue de abogado por su cuenta casi diez años más. Sobrio, sí; sano y con rumbo, todavía no.</p>
-          </div>
-          <div class="ref-hito">
-            <span class="historia-tag">Oct 2006 · 39 años</span>
-            <h4>La escalera</h4>
-            <p>En vísperas de cumplir 40, con unos 23 kg de más, se queda sin aire a media escalera y cree que le va a dar un infarto. Prueba jugos y dietas, y llega a la comida vegetal «como último recurso». Por sus 40, su esposa le regala una bici.</p>
-          </div>
-          <div class="ref-hito">
-            <span class="historia-tag">2008 · 42 años</span>
-            <h4>11.º en el Ultraman</h4>
-            <p>Mundial de Ultraman, en Hawái: 10 km nadando, 421 km en bici y 84 km corriendo, en tres días. Termina 11.º general y, al año siguiente, 6.º. Men's Fitness lo pone entre los «25 hombres más en forma del mundo».</p>
-          </div>
-          <div class="ref-hito">
-            <span class="historia-tag">2010 · 43 años</span>
-            <h4>EPIC5</h4>
-            <p>Con Jason Lester, cinco triatlones de distancia Ironman en cinco islas de Hawái, en menos de una semana.</p>
-          </div>
-          <div class="ref-hito">
-            <span class="historia-tag">2012 · 45 y 46 años</span>
-            <h4>El libro y el pódcast</h4>
-            <p>Publica Finding Ultra y entra a las listas de más vendidos. El 27 de noviembre sale el episodio 1 de su pódcast, grabado con su esposa, Julie Piatt. Mientras tanto, años en que le costaba «poner comida en la mesa».</p>
-          </div>
-          <div class="ref-hito">
-            <span class="historia-tag">Hoy · <span data-ref="edadRich">—</span> años</span>
-            <h4><span data-ref="sobrio">—</span> años sobrio</h4>
-            <p>Más de 200 millones de descargas y una vida elegida por él, no por la presión de nadie. A los 52 lo resumió así: «sé que esto apenas empieza».</p>
+          <blockquote class="ref-cita">
+            «Serías un idiota si lo dejas ahora. Dale unos meses más.»
+            <footer>Brian Acton a Jan Koum, en 2009, cuando WhatsApp se caía y él pensaba buscar trabajo · Forbes, 2014</footer>
+          </blockquote>
+          <div class="ref-kpis">
+            <div class="stat-badge"><span class="num">31</span><span>Su edad al dejar Yahoo</span></div>
+            <div class="stat-badge"><span class="num">400 mil</span><span>Dólares de colchón al saltar</span></div>
+            <div class="stat-badge"><span class="num">32</span><span>Ingenieros para 450 M de usuarios</span></div>
+            <div class="stat-badge"><span class="num text-green">19 mil M</span><span>Dólares: la venta, a los 37</span></div>
           </div>
         </div>
-      </div>
 
-      <div class="card mb-16">
-        <h3 id="ref-rutina" data-idx="Su rutina">⏰ Su rutina — un día normal de Rich</h3>
-        <p class="ref-intro">Lo que él mismo contó en The Tim Ferriss Show (2022) y en The New Daily (2017). Las horas son las suyas.</p>
-        <div class="ref-dia">
-          <div class="ref-paso"><span class="ref-paso-h">21:00</span><b>A la cama</b><p>Ocho horas sin negociar: «soy muy protector de mi sueño».</p></div>
-          <div class="ref-paso"><span class="ref-paso-h">5:00–6:00</span><b>Despierta</b><p>Ya con sus ocho horas completas.</p></div>
-          <div class="ref-paso"><span class="ref-paso-h">Primeras horas</span><b>Mente primero</b><p>Meditación, diario, escritura y proyectos creativos. Sin juntas ni llamadas.</p></div>
-          <div class="ref-paso"><span class="ref-paso-h">Después</span><b>Entrena</b><p>Antes de empezar la jornada. Casi todo en zona 2, suave y largo; antes de una carrera, hasta 25 h a la semana.</p></div>
-          <div class="ref-paso"><span class="ref-paso-h">El resto del día</span><b>Trabaja</b><p>El pódcast, los libros y la familia, con lo que lo sostiene ya hecho.</p></div>
+        <div class="card mb-16">
+          <h3 id="koum-espejo" data-idx="Por qué él">🪞 Por qué él — tu oficio, tu edad y tu siguiente paso</h3>
+          <p class="ref-intro">Rich comparte tu meta del alcohol; Koum, tu carrera: empezó probando sistemas, pasó casi una década dentro de una empresa enorme y a los 31 se fue con dinero ahorrado y sin el plan completo.</p>
+          <div class="ref-vs">
+            <div class="ref-vs-h"></div>
+            <div class="ref-vs-h">Koum a los 31 · 2007</div>
+            <div class="ref-vs-h ref-vs-tu">Tú hoy · <span data-ref="edadAdan">—</span> años</div>
+
+            <div class="ref-vs-q">Dónde estaba</div>
+            <div data-q="Koum">Ingeniero de infraestructura en Yahoo, nueve años. Había entrado probando seguridad para Ernst &amp; Young; sus últimos tres años en Yahoo los resumió en LinkedIn con tres palabras: «Did some work».</div>
+            <div data-q="Tú" class="ref-vs-tu">Ingeniero de pruebas con 6 años en Ford, Continental, Bosch, Google y {{empleador}}. También empezaste probando.</div>
+
+            <div class="ref-vs-q">De dónde venía</div>
+            <div data-q="Koum">De un pueblo cerca de Kiev, de una casa sin agua caliente. A los 16 llegó a California sin nada: cupones de comida y un trabajo barriendo un supermercado.</div>
+            <div data-q="Tú" class="ref-vs-tu">Mecatrónica en el IPN y, de recién egresado, reparando maquinaria farmacéutica. El {{maestriaInicio}} el que emigra eres tú, con el alemán todavía en curso.</div>
+
+            <div class="ref-vs-q">Lo que lo cansaba</div>
+            <div data-q="Koum">«Brian y yo pasamos, entre los dos, 20 años en Yahoo trabajando duro para que el sitio funcionara. Y sí, trabajando duro para vender anuncios, porque eso hacía Yahoo.»</div>
+            <div data-q="Tú" class="ref-vs-tu">También lo escribiste tú: «mi mayor miedo no es fracasar; es no explotar mi potencial y quedarme estancado y pobre».</div>
+
+            <div class="ref-vs-q">Su patrón</div>
+            <div data-q="Koum">Estuvo a punto de abandonar: las primeras versiones de WhatsApp se caían y pensó en buscar trabajo.</div>
+            <div data-q="Tú" class="ref-vs-tu">«Cuando no veo recompensa, abandono o cambio de rumbo.» Él estuvo a una conversación de hacer lo mismo.</div>
+
+            <div class="ref-vs-q">La red</div>
+            <div data-q="Koum">Brian Acton, su compañero en Yahoo, lo convenció de seguir, juntó 250 mil dólares de cinco excompañeros y se volvió su socio.</div>
+            <div data-q="Tú" class="ref-vs-tu">Tus contactos de Bosch en Stuttgart y los mexicanos que viven allá: «una red internacional real que hoy casi no estoy usando».</div>
+
+            <div class="ref-vs-q">El dinero</div>
+            <div data-q="Koum">Renunció con unos 400 mil dólares que traía de Yahoo y vivió de ellos mientras buscaba qué construir.</div>
+            <div data-q="Tú" class="ref-vs-tu">Tu salto es la maestría en {{maestriaEscuela}}, y el plan junta {{salidaTotal}} antes de irte: el mismo orden, el colchón primero.</div>
+          </div>
         </div>
-        <p class="ref-nota"><b>Su comida</b> 100 % vegetal desde 2007. Antes de entrenar, un batido verde: kale, espinaca, acelga, betabel, moras, plátano y semillas de chía, linaza y cáñamo. En las salidas largas en bici: agua de coco, plátano, dátiles y crema de almendra.</p>
-        <p class="ref-nota ref-tuyo-l"><b>Tu versión</b> Ya tienes «Dormir 7 h» y «Rutina de la noche» en Hábitos y tu día armado en <a href="#rutina" class="inline-link" onclick="irASeccion('rutina',null,document.querySelector('#sidebar-personal [data-sec=rutina]'));return false;">Rutina Diaria</a>. Lo que te falta copiar es el orden: lo que te sostiene va antes que el trabajo, y el celular no entra en la primera hora.</p>
-      </div>
 
-      <div class="card mb-16">
-        <h3 id="ref-habitos" data-idx="Sus hábitos">🧱 Sus hábitos — lo que sostiene todo lo demás</h3>
-        <div class="ref-habs">
-          <div class="ref-hab"><h4>Cero, no «menos»</h4><p>Desde 1998 no bebe nada. No probó a moderar: cortó de raíz y lo sostiene hace <span data-ref="sobrio">—</span> años.</p><div class="ref-tuyo"><b>Para ti</b>Tu meta ya lo dice: el límite es cero, también en Didi.</div></div>
-          <div class="ref-hab"><h4>El ánimo sigue a la acción</h4><p>Lo que le dijo su padrino al salir: no puedes pensar tu camino hasta el estado de ánimo que buscas; solo la acción lo dispara.</p><div class="ref-tuyo"><b>Para ti</b>Los días sin ganas, la versión de 2 minutos de cada hábito: hacerla cuenta.</div></div>
-          <div class="ref-hab"><h4>Pedir ayuda</h4><p>Psiquiatra, centro de tratamiento, padrino. «Ahí aprendí, por primera vez, a ser honesto. Aprendí a ser vulnerable.»</p><div class="ref-tuyo"><b>Para ti</b>Tu meta del alcohol trae las puertas: AA, los CIJ y tu médico.</div></div>
-          <div class="ref-hab"><h4>Dos pasos adelante</h4><p>«Los ladrillos se ponen solo dos pasos delante de ti, y no te dejan ver todo el camino.» No esperó el plan perfecto para empezar.</p><div class="ref-tuyo"><b>Para ti</b>El Plan Maestro ya existe: toca el ladrillo de esta quincena.</div></div>
-          <div class="ref-hab"><h4>El juego largo</h4><p>Entrena casi todo en zona 2: las ganancias se notan a los 6 meses y el beneficio completo tarda más de 2 años. «Tienes que jugar el juego largo.»</p><div class="ref-tuyo"><b>Para ti</b>Tu millón también es de juego largo: llega el {{metaMillon}}, no este año.</div></div>
-          <div class="ref-hab"><h4>Proteger el sueño</h4><p>«Soy muy protector de mi sueño»: a la cama hacia las 21:00 para dormir 8 horas, antes que cualquier pendiente.</p><div class="ref-tuyo"><b>Para ti</b>«Dormir 7 h» ya está en tus Hábitos: es la regla, no el premio.</div></div>
-          <div class="ref-hab"><h4>Mañanas sin ruido</h4><p>Meditación, diario y escritura antes de cualquier junta o llamada. La práctica que más le sirve: «anclarte al presente».</p><div class="ref-tuyo"><b>Para ti</b>La primera hora, sin celular: es tu otra meta.</div></div>
-          <div class="ref-hab"><h4>Ensayar por partes</h4><p>Antes de cada carrera simulaba el 70, el 80 y el 90 % de la distancia. El día de la prueba, nada era la primera vez.</p><div class="ref-tuyo"><b>Para ti</b>Antes del Hyrox, cada estación practicada al menos una vez.</div></div>
-          <div class="ref-hab"><h4>Contarlo en público</h4><p>Su libro y su pódcast son su historia sin filtro: «la vulnerabilidad no es cobardía, sino valentía». Su recuperación es su marca.</p><div class="ref-tuyo"><b>Para ti</b>Tu marca personal es prueba pública: lo que construyes, publicado.</div></div>
+        <div class="card mb-16">
+          <h3 id="koum-historia" data-idx="Su historia">📜 Su historia — de los cupones de comida a WhatsApp</h3>
+          <div class="ref-hitos">
+            <div class="ref-hito">
+              <span class="historia-tag">1976–1992 · Ucrania</span>
+              <h4>Una casa sin agua caliente</h4>
+              <p>Nace el 24 de febrero de 1976 en Kiev y crece en un pueblo cercano. En su casa casi no se habla por teléfono, por miedo a que el Estado escuche; su mamá cortaba con un «esta no es una conversación para el teléfono; te cuento en persona».</p>
+            </div>
+            <div class="ref-hito">
+              <span class="historia-tag">1992 · 16 años</span>
+              <h4>California, con cupones de comida</h4>
+              <p>Llega a Mountain View con su mamá y su abuela, huyendo de un ambiente político y antisemita tenso. Viven en un departamento de dos recámaras con ayuda del gobierno; ella cuida niños y él barre un supermercado. Su papá, que se quedó en Ucrania, muere en 1997.</p>
+            </div>
+            <div class="ref-hito">
+              <span class="historia-tag">Años 90 · 18 a 21 años</span>
+              <h4>Aprende solo</h4>
+              <p>No tiene computadora hasta los 19. Compra manuales de redes, los lee completos y los devuelve a la tienda. En 1996 entra a w00w00, un grupo de seguridad informática, y estudia en la Universidad Estatal de San José.</p>
+            </div>
+            <div class="ref-hito">
+              <span class="historia-tag">1997 · 21 años</span>
+              <h4>De tester a Yahoo</h4>
+              <p>Probando seguridad para Ernst &amp; Young revisa el sistema de anuncios de Yahoo y conoce a Brian Acton. Entra a Yahoo como ingeniero de infraestructura; a las dos semanas se cae un servidor y David Filo, el cofundador, le llama: ¿qué hace en clase? Deja la universidad.</p>
+            </div>
+            <div class="ref-hito">
+              <span class="historia-tag">1997–2007 · nueve años</span>
+              <h4>El empleado</h4>
+              <p>Nueve años de infraestructura en Yahoo: que el sitio no se caiga. Su mamá muere de cáncer en 2000. Sus últimos tres años los resume en LinkedIn con «Did some work».</p>
+            </div>
+            <div class="ref-hito clave">
+              <span class="historia-tag">Sep 2007 · 31 años</span>
+              <h4>El «ya no»: renuncia a Yahoo</h4>
+              <p>Deja Yahoo junto con Acton y se toma un año: viaja por Sudamérica y juega ultimate frisbee. Los dos piden trabajo en Facebook y los rechazan. Vive de unos 400 mil dólares que trae de Yahoo.</p>
+            </div>
+            <div class="ref-hito">
+              <span class="historia-tag">Feb 2009 · 33 años</span>
+              <h4>WhatsApp, el día de su cumpleaños</h4>
+              <p>En enero compra un iPhone y ve que la App Store va a crear una industria nueva; las pláticas son en casa de su amigo Alex Fishman. El 24 de febrero, el día que cumple 33, registra WhatsApp en California.</p>
+            </div>
+            <div class="ref-hito">
+              <span class="historia-tag">2009 · 33 años</span>
+              <h4>Casi lo deja</h4>
+              <p>Las primeras versiones se caen y piensa en buscar trabajo; Acton le pide unos meses más. En junio la usan apenas unos amigos de Fishman; llegan las notificaciones push, la app se vuelve mensajería y en agosto ya tiene 250 mil usuarios activos.</p>
+            </div>
+            <div class="ref-hito">
+              <span class="historia-tag">Feb 2014 · 37 años</span>
+              <h4>La firma en la puerta</h4>
+              <p>Con 450 millones de usuarios, 32 ingenieros y cero en marketing, Facebook compra WhatsApp por 19 mil millones de dólares. Firma en la puerta del edificio donde hacía fila con su mamá por cupones de comida. En 2018 deja Facebook.</p>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="card mb-16 ref-dif">
-        <h3 id="ref-diferenciador" data-idx="El diferenciador">💡 El gran diferenciador — no fue el «ya no», fue lo que vino después</h3>
-        <p class="ref-dif-lead">Mucha gente dice «ya no» a los 31 y a las tres semanas vuelve a lo mismo. Lo que separa a Rich son tres cosas, y las tres se ven en sus fechas:</p>
-        <div class="ref-tres">
-          <div><i>01</i><h4>No negoció</h4><p>No intentó «beber menos»: cero, desde 1998. Y no lo hizo a pura voluntad —esa ya le había fallado—: psiquiatra, 100 días internado y un padrino. Cerró la puerta y pidió que se la cuidaran.</p></div>
-          <div><i>02</i><h4>Actuó sin ganas</h4><p>Su padrino le enseñó que «el ánimo sigue a la acción»: al estado que buscas no se llega pensando, se llega haciendo. Y no esperó a ver el plan completo: «los ladrillos se ponen solo dos pasos delante de ti».</p></div>
-          <div><i>03</i><h4>Aguantó sin recompensa</h4><p>Entre el «ya no» y su primera medalla pasaron más de 10 años de sobriedad sin aplausos; después del libro, años de apuros para poner comida en la mesa. No cambió de rumbo: el resultado llegó cuando ya llevaba una década construyendo.</p></div>
+        <div class="card mb-16">
+          <h3 id="koum-rutina" data-idx="Cómo trabajaba">⏰ Cómo trabajaba — su horario no está documentado; su método, sí</h3>
+          <p class="ref-intro">Koum casi no da entrevistas y nunca contó un horario como el de Rich. Lo que sí consta —en su blog de WhatsApp, en Forbes y en Sequoia— es cómo trabajaba.</p>
+          <div class="ref-dia">
+            <div class="ref-paso"><span class="ref-paso-h">Aprender</span><b>El manual completo</b><p>Compraba manuales de redes, los leía de principio a fin y los devolvía. Sin computadora propia hasta los 19.</p></div>
+            <div class="ref-paso"><span class="ref-paso-h">Probar</span><b>Buscar dónde falla</b><p>Su oficio era la seguridad: encontrar el punto débil de un sistema. Por esa puerta entró a Yahoo.</p></div>
+            <div class="ref-paso"><span class="ref-paso-h">Sostener</span><b>Que no se caiga</b><p>Nueve años de infraestructura en Yahoo. Por un servidor caído dejó la universidad.</p></div>
+            <div class="ref-paso"><span class="ref-paso-h">Enfocar</span><b>Tres «no» en el escritorio</b><p>«¡Sin anuncios! ¡Sin juegos! ¡Sin trucos!»: la nota que Acton le pegó. Sus ingenieros arreglaban errores en vez de minar datos.</p></div>
+            <div class="ref-paso"><span class="ref-paso-h">Callar</span><b>Sin ruido</b><p>Sin letrero en la oficina, cero en marketing y casi sin prensa: el tiempo iba al producto.</p></div>
+          </div>
+          <p class="ref-nota ref-tuyo-l"><b>Tu versión</b> Tu oficio ya es el suyo: probar y encontrar dónde falla un sistema. Lo que le copias es el enfoque: un frente a la vez —el de la fase en curso de tu Plan Maestro— y terminarlo antes de abrir otro.</p>
         </div>
-        <div class="ref-pistas" id="refPistas"><!-- pintarReferente(): las dos pistas en la misma escala de edad --></div>
-        <p class="ref-dif-pie" id="refDifPie"></p>
-      </div>
 
-      <div class="riesgo-box mb-16" style="margin-bottom:16px;">
-        <h3 id="ref-nocopia" data-idx="Lo que no le copias">⚠️ Lo que no le copias</h3>
-        <ul class="ref-no">
-          <li><b>Saltar con 2 o 3 meses de ahorro.</b> A él le costó años de apuros para «poner comida en la mesa». Tu salida va con el colchón y la cuenta bloqueada que pide el plan, no antes.</li>
-          <li><b>Esperar a tocar fondo.</b> Él necesitó un centro de tratamiento a los 31 y una escalera a los 39. Tú ya tienes las dos metas escritas: no esperes tu escalera.</li>
-          <li><b>Su deporte y su dieta.</b> El ultrafondo de 25 h por semana y la comida 100 % vegetal son su camino, no tu meta: la tuya es el Hyrox, el gym 5 días y {{proteinaMeta}} g de proteína al día.</li>
-          <li><b>Hacerlo solo.</b> Ni él lo hizo así: psiquiatra, 100 días acompañado y un padrino. La voluntad a solas es justo lo que le falló antes de 1998.</li>
-        </ul>
-      </div>
-
-      <div class="card mb-16">
-        <h3 id="ref-plan" data-idx="Lo que te toca copiar">✅ Lo que te toca copiar — con fecha</h3>
-        <p class="ref-intro">No su vida: su método. Cada casilla se guarda, y las fechas se calculan al abrir.</p>
-        <div class="ref-plan">
-          <div class="check-item"><input type="checkbox" id="ref-c1"><label for="ref-c1"><b>Hoy, <span data-ref="hoy">—</span>:</b> lleva la cuenta de «Cero alcohol» en <a href="../Dashboard/dashboard.html#habitos" class="inline-link">Hábitos</a>. <small id="refAlcohol"></small></label></div>
-          <div class="check-item"><input type="checkbox" id="ref-c2"><label for="ref-c2"><b>A más tardar el <span data-ref="domingo">—</span>:</b> elige quién te sostiene. <small>Rich tuvo psiquiatra, 100 días acompañado y un padrino. Escribe a quién le cuentas la meta y a quién llamas un viernes difícil; si quieres más, el paso «Si necesitas más que voluntad» de tu meta en <a href="../Dashboard/dashboard.html#metas" class="inline-link">Mis Metas</a> trae AA y los CIJ.</small></label></div>
-          <div class="check-item"><input type="checkbox" id="ref-c3"><label for="ref-c3"><b>Desde mañana, <span data-ref="manana">—</span>:</b> la primera hora, sin celular. <small>Sus mañanas son de meditación y escritura, sin juntas ni llamadas. El celular duerme fuera del cuarto —tu meta del celular— y la primera hora es tuya.</small></label></div>
-          <div class="check-item"><input type="checkbox" id="ref-c4"><label for="ref-c4"><b>Esta noche:</b> a la cama a tu hora. <small>Él se acuesta hacia las 21:00 para dormir sus 8 horas. La tuya está en tu <a href="#rutina" class="inline-link" onclick="irASeccion('rutina',null,document.querySelector('#sidebar-personal [data-sec=rutina]'));return false;">Rutina Diaria</a> y en «Dormir 7 h»: esta noche, sin celular en la cama.</small></label></div>
-          <div class="check-item"><input type="checkbox" id="ref-c5"><label for="ref-c5"><b>Esta semana, el primer día sin ganas:</b> la versión de 2 minutos. <small>«El ánimo sigue a la acción»: Rich no esperaba las ganas. Cada hábito tiene su versión mínima; hazla, márcala y la cadena sigue.</small></label></div>
-          <div class="check-item"><input type="checkbox" id="ref-c6"><label for="ref-c6"><b>El <span data-ref="finMes">—</span>, en tu Revisión Mensual:</b> cambia el plan con números, no con ganas. <small>Rich pasó más de 10 años sin medalla y no cambió de rumbo. Tu regla ya existe: el plan se ajusta en la Revisión Mensual, con GBM contra la proyección, y solo si vas abajo dos meses seguidos.</small></label></div>
+        <div class="card mb-16">
+          <h3 id="koum-habitos" data-idx="Sus hábitos">🧱 Sus hábitos — lo que sostiene todo lo demás</h3>
+          <div class="ref-habs">
+            <div class="ref-hab"><h4>Aprender solo</h4><p>Sin computadora hasta los 19 y sin dinero para cursos: manuales usados, leídos completos y devueltos.</p><div class="ref-tuyo"><b>Para ti</b>El ISTQB y el alemán, capítulo completo antes de pasar al siguiente.</div></div>
+            <div class="ref-hab"><h4>Tres «no» por escrito</h4><p>«¡Sin anuncios! ¡Sin juegos! ¡Sin trucos!», pegado en su escritorio. Decidir qué no se hace pesa más que la lista de pendientes.</p><div class="ref-tuyo"><b>Para ti</b>Los tuyos ya existen: nada a meses, cero alcohol, ningún negocio nuevo antes de la Fase 4.</div></div>
+            <div class="ref-hab"><h4>Colchón antes del salto</h4><p>Renunció con unos 400 mil dólares ahorrados y pudo pasar más de un año sin sueldo buscando qué construir.</p><div class="ref-tuyo"><b>Para ti</b>Tu salto pide {{salidaTotal}}; el plan lo junta quincena a quincena.</div></div>
+            <div class="ref-hab"><h4>Preguntar antes de rendirse</h4><p>Cuando quiso dejar WhatsApp, lo habló con Acton y le hizo caso: unos meses más.</p><div class="ref-tuyo"><b>Para ti</b>Antes de abandonar algo, háblalo con alguien que vea tus números.</div></div>
+            <div class="ref-hab"><h4>La red de confianza</h4><p>Su socio venía de Yahoo, igual que los cinco que pusieron los primeros 250 mil dólares: gente que ya lo había visto trabajar.</p><div class="ref-tuyo"><b>Para ti</b>Tu red de Bosch ya te vio trabajar: escríbele.</div></div>
+            <div class="ref-hab"><h4>Que funcione siempre</h4><p>«Nadie despierta emocionado por ver más anuncios»: sus ingenieros arreglaban errores y pulían detalles para que el mensaje llegara.</p><div class="ref-tuyo"><b>Para ti</b>Es tu oficio de tester: tu marca es que lo tuyo no falla.</div></div>
+            <div class="ref-hab"><h4>Vivir igual</h4><p>Tras la venta: «sigo viviendo en el mismo lugar. Tengo los mismos amigos… Después del trato con Facebook, el 90 % de mi vida no cambió».</p><div class="ref-tuyo"><b>Para ti</b>Tu gasto personal tiene su número en el plan, {{gastoPersonalDepa}} al mes: que un aumento no lo mueva.</div></div>
+            <div class="ref-hab"><h4>Un rechazo no es un veredicto</h4><p>Facebook los rechazó a los dos en 2007; siete años después les compró WhatsApp por 19 mil millones.</p><div class="ref-tuyo"><b>Para ti</b>Esslingen y las empresas alemanas van a decir algunos «no»: cuéntalos, no te los creas.</div></div>
+            <div class="ref-hab"><h4>Producto, no ruido</h4><p>Sin letrero en la puerta y cero en marketing: 450 millones de usuarios llegaron porque la app funcionaba.</p><div class="ref-tuyo"><b>Para ti</b>Muestra lo hecho, no lo que harás: tu marca personal es prueba pública.</div></div>
+          </div>
         </div>
-        <p class="ref-decision"><b>La decisión de esta pestaña</b> El alcohol en cero no se renegocia: ni el día del Hyrox, ni en Navidad, ni en Alemania. Como Rich desde 1998.</p>
-      </div>
 
-      <div class="card">
-        <h3 id="ref-fuentes" data-idx="Fuentes">📚 Fuentes — de dónde sale cada dato</h3>
-        <ul class="ref-fuentes">
-          <li><a href="https://tim.blog/2022/01/07/rich-roll-transcript/" target="_blank" rel="noopener" class="inline-link">The Tim Ferriss Show #561</a> (2022, transcripción). El «ya no» de 1998, los 100 días en Oregon, el Derecho por presión, el desmantelamiento financiero, su horario y «el ánimo sigue a la acción».</li>
-          <li><a href="https://nextbigideaclub.com/magazine/conversation-how-rich-roll-overcame-addiction-to-become-a-world-class-endurance-athlete/16025/" target="_blank" rel="noopener" class="inline-link">Next Big Idea Club</a>, entrevista. Stanford, el vodka en la regadera, la renuncia con 2 o 3 meses de ahorro, la bici de los 40 y los ensayos al 70, 80 y 90 %.</li>
-          <li><a href="https://www.goodmorningamerica.com/wellness/story/life-changing-moment-turned-couch-potato-dad-vegan-48778804" target="_blank" rel="noopener" class="inline-link">Good Morning America</a> (julio de 2017). La escalera, los 23 kg de más y el 11.º lugar en el Ultraman de 2008.</li>
-          <li><a href="https://www.richroll.com/bio/" target="_blank" rel="noopener" class="inline-link">richroll.com</a>, su biografía. Ultraman 2008 y 2009, EPIC5 (2010), Men's Fitness y Finding Ultra (2012).</li>
-          <li><a href="https://richroll.com/podcast/rich-roll-podcast-001-julie-piatt/" target="_blank" rel="noopener" class="inline-link">Rich Roll Podcast, episodio 001</a> (27 nov 2012), con Julie Piatt.</li>
-          <li><a href="https://thenewdaily.com.au/life/eat-drink/2017/03/25/rich-roll-diet" target="_blank" rel="noopener" class="inline-link">The New Daily</a> (marzo de 2017). Su comida y las 25 h de entrenamiento a la semana antes de una carrera.</li>
-        </ul>
-        <p class="ref-intro" style="margin-bottom:0;">Para ir a fondo: su libro <b>Finding Ultra</b> (2012) cuenta todo esto en primera persona, y su pódcast está en Spotify, Apple Podcasts y YouTube.</p>
+        <div class="card mb-16 ref-dif">
+          <h3 id="koum-diferenciador" data-idx="El diferenciador">💡 El gran diferenciador — renunció a los 31, pero no fue eso lo que lo hizo</h3>
+          <p class="ref-dif-lead">Renunciar a los 31 no lo distingue: después también pidió trabajo —en Facebook, y lo rechazaron—. Lo que lo separa son tres cosas, y las tres se ven en sus fechas:</p>
+          <div class="ref-tres">
+            <div><i>01</i><h4>Saltó con colchón</h4><p>Nueve años en Yahoo le dejaron unos 400 mil dólares. Con eso pudo viajar, ser rechazado y pasar más de un año sin sueldo sin aceptar el primer trabajo que saliera.</p></div>
+            <div><i>02</i><h4>No soltó en el peor mes</h4><p>En 2009 la app se caía, casi nadie la usaba y quiso buscar trabajo. Lo habló con quien lo conocía, escuchó «unos meses más» y se quedó. Ese junio llegaron las notificaciones push; en agosto, 250 mil usuarios.</p></div>
+            <div><i>03</i><h4>Hizo una sola cosa</h4><p>Sin anuncios, sin juegos, sin trucos: que el mensaje llegue. Con 32 ingenieros y cero en marketing llegó a 450 millones de usuarios.</p></div>
+          </div>
+          <div class="ref-pistas" id="koumPistas"><!-- pintarReferente(): las dos pistas en la misma escala de edad --></div>
+          <p class="ref-dif-pie" id="koumDifPie"></p>
+        </div>
+
+        <div class="riesgo-box mb-16" style="margin-bottom:16px;">
+          <h3 id="koum-nocopia" data-idx="Lo que no le copias">⚠️ Lo que no le copias</h3>
+          <ul class="ref-no">
+            <li><b>Dejar la escuela por el trabajo.</b> A él le funcionó con Yahoo encima. Tu título ya lo tienes, y la maestría en {{maestriaEscuela}} es la apuesta del plan: no se cambia por una urgencia.</li>
+            <li><b>El año sabático.</b> Él viajó con 400 mil dólares en la cuenta. Tu dinero de estos meses ya tiene destino: la deuda, el colchón y la cuenta bloqueada.</li>
+            <li><b>Apostarlo todo a una app.</b> Tu plan no abre negocios nuevos hasta la Fase 4: primero la deuda, el colchón y la maestría.</li>
+            <li><b>Esconderte.</b> Él huyó de la prensa porque el producto hablaba solo. A ti, en Alemania, todavía no te conoce nadie: tu marca personal es mostrar lo que construyes.</li>
+          </ul>
+        </div>
+
+        <div class="card mb-16">
+          <h3 id="koum-plan" data-idx="Lo que te toca copiar">✅ Lo que te toca copiar — con fecha</h3>
+          <p class="ref-intro">De Koum no se copia la app: se copia cómo saltó y por qué no soltó. Cada casilla se guarda, y las fechas se calculan al abrir.</p>
+          <div class="ref-plan">
+            <div class="check-item"><input type="checkbox" id="koum-c1"><label for="koum-c1"><b>Hoy, <span data-ref="hoy">—</span>:</b> escribe tus tres «no» y pégalos donde trabajas. <small>A Koum se los pegaron en el escritorio: «¡Sin anuncios! ¡Sin juegos! ¡Sin trucos!». Los tuyos ya están en tu plan: nada a meses, cero alcohol y ningún negocio nuevo antes de la Fase 4.</small></label></div>
+            <div class="check-item"><input type="checkbox" id="koum-c2"><label for="koum-c2"><b>A más tardar el <span data-ref="viernes">—</span>:</b> escríbele a uno de tus contactos de Stuttgart. <small>WhatsApp arrancó con 250 mil dólares de cinco excompañeros de Yahoo: gente que ya lo había visto trabajar. Un mensaje corto: qué haces hoy y que llegas a {{maestriaEscuela}} el {{maestriaInicio}}.</small></label></div>
+            <div class="check-item"><input type="checkbox" id="koum-c3"><label for="koum-c3"><b>A más tardar el <span data-ref="domingo">—</span>:</b> un capítulo completo de tu ISTQB o de tu alemán. <small>Koum aprendió redes con manuales que leía completos antes de devolverlos. Un capítulo entero, con sus ejercicios, vale más que tres a medias.</small></label></div>
+            <div class="check-item"><input type="checkbox" id="koum-c4"><label for="koum-c4"><b>El <span data-ref="ahorro">—</span>, día de ahorro:</b> lo que toca a GBM sale primero. <small>Koum pudo renunciar porque tenía con qué: nueve años de ahorro. Tu colchón para Alemania se arma igual, quincena a quincena, antes de gastar.</small></label></div>
+            <div class="check-item"><input type="checkbox" id="koum-c5"><label for="koum-c5"><b>Antes del <span data-ref="finMes">—</span>:</b> pregunta en {{empleador}} por Alemania. <small>Koum entró a Yahoo por la puerta de las pruebas: un contrato de Ernst &amp; Young. Pregúntale a tu gerente si {{empleador}} tiene proyectos o vacantes en Alemania para cuando llegues.</small></label></div>
+            <div class="check-item"><input type="checkbox" id="koum-c6"><label for="koum-c6"><b>Hasta el <span data-ref="cierreFase">—</span>, cierre de la fase:</b> nada se suelta sin hablarlo antes. <small>Koum quiso dejar WhatsApp en su peor mes; lo habló con Acton y se quedó. Si algo te tienta a abandonar —el ahorro, el alemán, el gym—, háblalo con alguien que vea tus números y decide al cierre de la fase, no en un mal día.</small></label></div>
+          </div>
+          <p class="ref-decision"><b>La decisión de esta pestaña</b> Nada se abandona en un mes sin resultados: se habla con alguien y se decide al cierre de la fase. Como Koum en 2009.</p>
+        </div>
+
+        <div class="card">
+          <h3 id="koum-fuentes" data-idx="Fuentes">📚 Fuentes — de dónde sale cada dato</h3>
+          <ul class="ref-fuentes">
+            <li><a href="https://en.wikipedia.org/wiki/Jan_Koum" target="_blank" rel="noopener" class="inline-link">Wikipedia: Jan Koum</a>. Las fechas: su nacimiento, 1992, Ernst &amp; Young, Yahoo, la salida de 2007, el registro de WhatsApp y 2018.</li>
+            <li><a href="https://en.wikipedia.org/wiki/WhatsApp" target="_blank" rel="noopener" class="inline-link">Wikipedia: WhatsApp</a>. Las caídas de 2009 y los «unos meses más» de Acton, las notificaciones push, los 250 mil usuarios y la inversión semilla.</li>
+            <li><a href="https://longreads.com/2014/02/20/from-facebook-reject-to-purchased-by-facebook-for-19-billion/" target="_blank" rel="noopener" class="inline-link">Longreads</a>, con el extracto de Forbes (2014). Los 400 mil dólares, el rechazo de Facebook y el «Did some work».</li>
+            <li><a href="https://jweekly.com/2014/02/28/from-ukrainian-village-to-silicon-valley-billionaire/" target="_blank" rel="noopener" class="inline-link">J. Weekly</a> (febrero de 2014). La casa sin agua caliente, los cupones de comida, el supermercado y la firma en la puerta.</li>
+            <li>El blog de WhatsApp: <a href="https://blog.whatsapp.com/why-we-don-t-sell-ads" target="_blank" rel="noopener" class="inline-link">«Why we don't sell ads»</a> (18 jun 2012) y <a href="https://blog.whatsapp.com/setting-the-record-straight" target="_blank" rel="noopener" class="inline-link">«Setting the record straight»</a> (17 mar 2014). Sus palabras sobre Yahoo y los anuncios, y la frase de su mamá.</li>
+            <li><a href="https://sequoiacap.com/article/four-numbers-that-explain/" target="_blank" rel="noopener" class="inline-link">Sequoia Capital</a> (19 feb 2014): 450 millones de usuarios, 32 ingenieros y cero en marketing. Y <a href="https://om.co/2017/04/25/a-rare-interview-with-whatsapps-cofounder-jan-koum/" target="_blank" rel="noopener" class="inline-link">Om Malik</a> (2017): «el 90 % de mi vida no cambió».</li>
+          </ul>
+          <p class="ref-intro" style="margin-bottom:0;">La frase completa de Acton y la llamada de David Filo vienen del perfil que Forbes publicó en febrero de 2014, firmado por Parmy Olson.</p>
+        </div>
       </div>
     </div>
     <!-- fin perfil-referente -->
@@ -4590,11 +4815,11 @@
   }
   pintarFasesPlan();
 
-  // ─── TU REFERENTE — lo vivo de #perfil-referente ──────────────────────────────────────────
-  // La historia de Rich Roll es fija (sale de las Fuentes de la pestaña). Lo que cambia con el
-  // día se pinta aquí: su edad y sus años sobrio, la tuya, las dos pistas en la misma escala de
-  // edad (sus más de 10 años sin medalla contra tu plan hasta el millón), las fechas de "Lo que
-  // te toca copiar" y la cuenta de «Cero alcohol».
+  // ─── TUS REFERENTES — lo vivo de #perfil-referente ────────────────────────────────────────
+  // Dos personas que a los 31 dijeron «ya no»: Rich Roll (el alcohol) y Jan Koum (Yahoo). Sus
+  // historias son fijas (salen de las Fuentes de cada una). Lo que cambia con el día se pinta
+  // aquí: las edades y los años sobrio de Rich, la tuya, las pistas en la misma escala de edad,
+  // las fechas de "Lo que te toca copiar" y la cuenta de «Cero alcohol».
   //
   // Esa cuenta se LEE de `dash-habitos-v1` (Hábitos, en el Dashboard) y aquí no se escribe nada:
   // el primer hábito con "alcohol" en el nombre, con la misma regla de racha que habitos.js —los
@@ -4621,6 +4846,33 @@
     }
     return { n: n, hoyOk: hecho(hoy) };
   }
+
+  // Cuál de los dos se ve. `coach_referente` recuerda la elección en este navegador: es comodidad,
+  // no dato de seguimiento, así que no viaja en el respaldo. Al cambiar, showSubtab (envuelta por
+  // la consola) quita el filtro y rearma el índice con los nueve bloques del elegido.
+  function refMostrar(p) {
+    const panel = document.getElementById('perfil-referente');
+    if (!panel) return;
+    if (!panel.querySelector('.ref-persona[data-persona="' + p + '"]')) p = 'rich';
+    panel.querySelectorAll('.ref-persona').forEach(el => { el.hidden = el.dataset.persona !== p; });
+    panel.querySelectorAll('.ref-elige-b').forEach(b => {
+      const on = b.dataset.persona === p;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+  }
+  window.refElegir = function (p) {
+    refMostrar(p);
+    try { localStorage.setItem('coach_referente', p); } catch (e) {}
+    const btn = document.querySelector('#perfil .subtab-btn[onclick*="\'referente\'"]');
+    if (typeof window.showSubtab === 'function') window.showSubtab('perfil', 'referente', btn);
+  };
+  (function () {
+    let p = null;
+    try { p = localStorage.getItem('coach_referente'); } catch (e) {}
+    refMostrar(p || 'rich');
+  })();
+
   function pintarReferente() {
     const panel = document.getElementById('perfil-referente');
     if (!panel) return;
@@ -4638,47 +4890,69 @@
     };
     const pon = (k, v) => panel.querySelectorAll('[data-ref="' + k + '"]').forEach(el => { el.textContent = v; });
 
-    // Rich nació el 20 oct 1966 y está sobrio desde 1998.
-    const edadRich = edad('1966-10-20', hoy);
+    // Rich nació el 20 oct 1966 y está sobrio desde 1998; Koum nació el 24 feb 1976.
+    const edadRich = edad('1966-10-20', hoy), edadKoum = edad('1976-02-24', hoy);
     pon('edadRich', edadRich);
+    pon('edadKoum', edadKoum);
     pon('sobrio', hoy.getFullYear() - 1998);
     pon('hoy', fecha(hoy));
     pon('manana', fecha(mas(hoy, 1)));
+    pon('viernes', fecha(mas(hoy, (12 - hoy.getDay()) % 7)));
     pon('domingo', fecha(mas(hoy, (7 - hoy.getDay()) % 7)));
     pon('finMes', fecha(new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0)));
+    // El día de ahorro del plan: el 1 o el 15, el que llegue primero (hoy cuenta).
+    const dia = hoy.getDate();
+    pon('ahorro', fecha(dia === 1 || dia === 15 ? hoy :
+      dia < 15 ? new Date(hoy.getFullYear(), hoy.getMonth(), 15) : new Date(hoy.getFullYear(), hoy.getMonth() + 1, 1)));
 
-    // Tu edad y la del millón, del maestro: el nacimiento y el cierre de la última fase.
+    // Del maestro: tu nacimiento, el cierre de la fase en curso y el de la última (el millón).
     const C = window.CIFRAS;
     const nac = C && C.PROYECTO && C.PROYECTO.nacimiento;
-    const fases = C && C.PHASES;
-    const meta = fases && fases.length ? fases[fases.length - 1].end : null;
+    const fases = (C && C.PHASES) || [];
+    const meta = fases.length ? fases[fases.length - 1].end : null;
+    const enCurso = fases.filter(f => f.end >= hoy).sort((a, b) => a.end - b.end)[0];
+    if (enCurso) pon('cierreFase', fecha(enCurso.end));
     if (nac) pon('edadAdan', edad(nac, hoy));
 
-    // Las dos pistas: de los 31 a la edad de Rich hoy, en la misma escala.
-    const pistas = document.getElementById('refPistas');
-    const pie = document.getElementById('refDifPie');
-    if (pistas && nac && meta) {
-      const tope = Math.max(edadRich, 43);
-      const x = a => Math.max(0, Math.min(100, (a - 31) / (tope - 31) * 100));
+    // Las pistas: de los 31 a la edad de hoy del referente, con la tuya en la misma escala. La
+    // etiqueta de cada tramo va en dos piezas, <b>corto</b><em>resto</em>: se ve entera, solo
+    // lo corto o nada, según lo que quepa en el tramo (.ref-tl).
+    if (nac && meta) {
       const yo = edad(nac, hoy), yoMeta = edad(nac, meta);
       let meses = (meta.getFullYear() - hoy.getFullYear()) * 12 + meta.getMonth() - hoy.getMonth() - (meta.getDate() < hoy.getDate() ? 1 : 0);
       meses = Math.max(0, meses);
       const a = Math.floor(meses / 12), m = meses % 12;
       const plazo = (a ? a + (a === 1 ? ' año' : ' años') : '') + (a && m ? ' y ' : '') + (m ? m + (m === 1 ? ' mes' : ' meses') : '') || 'este mes';
-      // `corto` es lo que cabe en el teléfono; el resto de la etiqueta va en <em> y se esconde ahí.
-      const tramo = (cls, de, a2, txt, corto) => '<span class="ref-tramo ' + cls + '" style="left:' + x(de).toFixed(2) + '%;width:' + (x(a2) - x(de)).toFixed(2) + '%" title="' + txt + '">' +
-        (corto && txt.indexOf(corto) === 0 && txt !== corto ? corto + '<em>' + txt.slice(corto.length) + '</em>' : txt) + '</span>';
-      const marca = (a2, cls) => '<span class="' + (cls || '') + '" style="left:' + x(a2).toFixed(2) + '%">' + a2 + '</span>';
-      pistas.innerHTML =
-        '<div class="ref-pista"><span class="ref-pista-n">Rich</span><div class="ref-riel">' +
-          tramo('espera', 31, 42, '+10 años sin medalla', '+10 años') + tramo('fruto', 42, tope, 'Ultraman · libro · pódcast') + '</div></div>' +
-        '<div class="ref-edades">' + marca(31, 'ini') + marca(42) + marca(tope, 'fin') + '</div>' +
-        '<div class="ref-pista"><span class="ref-pista-n">Tú</span><div class="ref-riel">' +
-          tramo('plan', yo, yoMeta, plazo, plazo.split(' y ')[0]) + '</div></div>' +
-        '<div class="ref-edades">' + marca(yo, yo === 31 ? 'ini' : '') + marca(yoMeta) + '</div>';
-      if (pie) pie.innerHTML = 'El tercer punto es tu patrón al revés. Tú escribiste «cuando no veo recompensa, abandono o cambio de rumbo»; ' +
+      const pistas = (id, nombre, tope, tramos, edades) => {
+        const caja = document.getElementById(id);
+        if (!caja) return;
+        const x = e => Math.max(0, Math.min(100, (e - 31) / (tope - 31) * 100));
+        const tramo = (cls, de, a2, txt, corto) => {
+          const partes = corto && txt.indexOf(corto) === 0 && txt !== corto;
+          return '<span class="ref-tramo ' + cls + '" style="left:' + x(de).toFixed(2) + '%;width:' + (x(a2) - x(de)).toFixed(2) + '%" title="' + txt + '"><span class="ref-tl"><b>' +
+            (partes ? corto + '</b><em>' + txt.slice(corto.length) + '</em>' : txt + '</b>') + '</span></span>';
+        };
+        const marcas = lista => lista.map((e, k) => '<span class="' + (k === 0 && e === 31 ? 'ini' : k === lista.length - 1 && e === tope ? 'fin' : '') + '" style="left:' + x(e).toFixed(2) + '%">' + e + '</span>').join('');
+        const fila = (n, html, lista) => '<div class="ref-pista"><span class="ref-pista-n">' + n + '</span><div class="ref-riel">' + html + '</div></div>' +
+          '<div class="ref-edades">' + marcas(lista) + '</div>';
+        caja.innerHTML = fila(nombre, tramos.map(t => tramo.apply(null, t)).join(''), edades) +
+          fila('Tú', tramo('plan', yo, yoMeta, plazo, plazo.split(' y ')[0]), [yo, yoMeta]);
+      };
+      const topeR = Math.max(edadRich, 43), topeK = Math.max(edadKoum, 38);
+      pistas('refPistas', 'Rich', topeR,
+        [['espera', 31, 42, '+10 años sin medalla', '+10 años'], ['fruto', 42, topeR, 'Ultraman · libro · pódcast']],
+        [31, 42, topeR]);
+      pistas('koumPistas', 'Koum', topeK,
+        [['espera', 31, 33, 'Sin sueldo: viaje y rechazo', 'Sin sueldo'], ['obra', 33, 37, 'WhatsApp: de 0 a 450 millones', 'WhatsApp'],
+         ['fruto', 37, topeK, 'La venta y lo que siguió', 'La venta']],
+        [31, 33, 37, topeK]);
+      const pie = (id, html) => { const e = document.getElementById(id); if (e) e.innerHTML = html; };
+      pie('refDifPie', 'El tercer punto es tu patrón al revés. Tú escribiste «cuando no veo recompensa, abandono o cambio de rumbo»; ' +
         'tu plan entero —<b>' + plazo + '</b>, hasta el <b>' + C.v('metaMillon') + '</b>, a los ' + yoMeta + '— dura menos de lo que Rich pasó sobrio sin una medalla: ' +
-        'él llegó a la primera a los 42, tú llegas a la meta a los ' + yoMeta + '.';
+        'él llegó a la primera a los 42, tú llegas a la meta a los ' + yoMeta + '.');
+      pie('koumDifPie', 'El segundo punto es tu patrón al revés. Tú escribiste «cuando no veo recompensa, abandono o cambio de rumbo»; él tuvo ese mismo impulso ' +
+        'a los 33 y lo frenó una conversación. De la renuncia a la venta tardó más de seis años; tu plan entero dura <b>' + plazo + '</b>, hasta el <b>' +
+        C.v('metaMillon') + '</b>, a los ' + yoMeta + ': menos que él.');
     }
 
     // La cuenta de «Cero alcohol», de Hábitos.

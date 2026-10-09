@@ -1225,7 +1225,7 @@ envuelve la tabla entera y el vertical solo las filas, así la fila de totales s
 pantalla), `marcas` (indexado por **fecha ISO local** — nunca `toISOString()`, que en México
 adelanta el día desde las 18:00), `desde` y `mig`.
 
-**Coach también la lee**, sin escribir: la pestaña *Tu referente* cuenta los días del hábito con
+**Coach también la lee**, sin escribir: la pestaña *Tus referentes* cuenta los días del hábito con
 "alcohol" en el nombre con la misma regla de racha (`refRacha()` en Coach.html). Un cambio de forma
 de `def` o de `marcas` se revisa también allá. Desde Coach se llega a esta pantalla con
 `dashboard.html#habitos`.
