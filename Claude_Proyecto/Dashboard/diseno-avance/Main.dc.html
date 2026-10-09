@@ -25,6 +25,13 @@ a{color:#2563eb}a:hover{color:#1d4ed8}
 
     <!-- El paso de la semana -->
     <section style="min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 10px; padding: 10px 24px 0 0;">
+      <div style="flex: none; display: flex; align-items: center; gap: 8px; min-width: 0;">
+        <span style="flex: 1; min-width: 0; font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: {{c.w}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{s.mat}} · {{s.etiqueta}}</span>
+        <span style="flex: none; font-family: 'Space Grotesk', monospace; font-size: 10.5px; font-weight: 700; color: {{c.w}};">{{s.n}}/{{s.tot}}</span>
+        <sc-if value="{{s.propia}}" hint-placeholder-val="{{false}}"><button type="button" aria-label="Volver a la recomendada" title="Volver a la recomendada" onClick="{{volverS}}" style="flex: none; width: 22px; height: 22px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 7px; border: 1px solid {{c.borde}}; background: transparent; color: {{c.text2}}; cursor: pointer;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.4"></path><path d="M3 4v5h5"></path></svg></button></sc-if>
+        <button type="button" aria-label="Habilidad anterior" title="La anterior" onClick="{{antS}}" style="flex: none; width: 22px; height: 22px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 7px; border: 1px solid {{c.borde}}; background: transparent; color: {{c.text2}}; cursor: pointer;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
+        <button type="button" aria-label="Siguiente habilidad" title="¿No te convence? Pasa a otra" onClick="{{sigS}}" style="flex: none; height: 22px; padding: 0 5px 0 8px; display: inline-flex; align-items: center; gap: 3px; border-radius: 7px; border: 1px solid {{c.borde}}; background: transparent; color: {{c.text2}}; font-family: 'Space Grotesk', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;">Siguiente<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></button>
+      </div>
       <div style="flex: none; display: flex; gap: 12px; align-items: stretch;">
         <sc-if value="{{s.conLibro}}" hint-placeholder-val="{{true}}">
           <img src="{{s.img}}" alt="Portada de {{s.libroT}}" style="flex: none; width: {{dim.tw}}px; height: {{dim.th}}px; border-radius: 8px; object-fit: cover; object-position: top; box-shadow: 0 4px 12px rgba(0,0,0,0.18);">
@@ -37,10 +44,6 @@ a{color:#2563eb}a:hover{color:#1d4ed8}
           </div>
         </sc-if>
         <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px;">
-          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
-            <span style="min-width: 0; font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: {{c.w}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{s.mat}} · esta semana</span>
-            <span style="flex: none; font-family: 'Space Grotesk', monospace; font-size: 10.5px; font-weight: 700; color: {{c.w}};">{{s.n}}/{{s.tot}}</span>
-          </div>
           <div style="font-size: 15.5px; font-weight: 700; line-height: 1.28; color: {{c.text}}; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;">{{s.titulo}}</div>
           <div style="display: flex; gap: 3px; padding: 2px 0;">
             <sc-for list="{{s.tramos}}" as="tr" hint-placeholder-count="6"><span style="flex: 1 1 0; height: 4px; border-radius: 2px; background: {{tr.bg}}; box-shadow: {{tr.sh}};"></span></sc-for>
@@ -117,13 +120,16 @@ a{color:#2563eb}a:hover{color:#1d4ed8}
 
     <!-- La ficha de Habilidades Base en curso -->
     <section style="min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 10px; padding: 10px 0 0 24px; border-left: 1px solid {{c.linea}};">
+      <div style="flex: none; display: flex; align-items: center; gap: 8px; min-width: 0;">
+        <span style="flex: 1; min-width: 0; font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: {{c.b}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{f.etiqueta}}</span>
+        <span style="flex: none; font-family: 'Space Grotesk', monospace; font-size: 10.5px; font-weight: 700; color: {{c.b}};">{{f.hechos}}/{{f.tot}}</span>
+        <sc-if value="{{f.propia}}" hint-placeholder-val="{{false}}"><button type="button" aria-label="Volver a la recomendada" title="Volver a la recomendada" onClick="{{volverF}}" style="flex: none; width: 22px; height: 22px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 7px; border: 1px solid {{c.borde}}; background: transparent; color: {{c.text2}}; cursor: pointer;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.4"></path><path d="M3 4v5h5"></path></svg></button></sc-if>
+        <button type="button" aria-label="Ficha anterior" title="La anterior" onClick="{{antF}}" style="flex: none; width: 22px; height: 22px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 7px; border: 1px solid {{c.borde}}; background: transparent; color: {{c.text2}}; cursor: pointer;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
+        <button type="button" aria-label="Siguiente ficha" title="¿No te convence? Pasa a otra" onClick="{{sigF}}" style="flex: none; height: 22px; padding: 0 5px 0 8px; display: inline-flex; align-items: center; gap: 3px; border-radius: 7px; border: 1px solid {{c.borde}}; background: transparent; color: {{c.text2}}; font-family: 'Space Grotesk', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;">Siguiente<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></button>
+      </div>
       <div style="flex: none; display: flex; gap: 12px; align-items: stretch;">
         <img src="{{f.img}}" alt="" style="flex: none; width: {{dim.tw}}px; height: {{dim.th}}px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.18);">
         <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px;">
-          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
-            <span style="min-width: 0; font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: {{c.b}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Habilidades base</span>
-            <span style="flex: none; font-family: 'Space Grotesk', monospace; font-size: 10.5px; font-weight: 700; color: {{c.b}};">{{f.hechos}}/{{f.tot}}</span>
-          </div>
           <div style="font-size: 15.5px; font-weight: 700; line-height: 1.28; color: {{c.text}}; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;">{{f.titulo}}</div>
           <div style="display: flex; gap: 3px; padding: 2px 0;">
             <sc-for list="{{f.tramos}}" as="tr" hint-placeholder-count="11"><span style="flex: 1 1 0; height: 4px; border-radius: 2px; background: {{tr.bg}}; box-shadow: {{tr.sh}};"></span></sc-for>
@@ -168,11 +174,11 @@ class Component extends DCLogic {
     const oscuro = (this.props.tema ?? 'claro') === 'oscuro';
     // Los tokens del Dashboard (dashboard.html, :root y [data-theme="light"]).
     const c = oscuro ? {
-      fondo: '#101017', text: '#f4f4f8', text2: '#9a9db3', text3: '#8589a8', linea: 'rgba(255,255,255,0.09)', vacio: 'rgba(255,255,255,0.1)',
+      fondo: '#101017', text: '#f4f4f8', text2: '#9a9db3', text3: '#8589a8', linea: 'rgba(255,255,255,0.09)', vacio: 'rgba(255,255,255,0.1)', borde: 'rgba(255,255,255,0.12)',
       w: '#ffd93d', wSuave: 'rgba(255,217,61,0.12)', wMarca: 'rgba(255,217,61,0.22)', wTenue: 'rgba(255,217,61,0.3)',
       b: '#3b82f6', bTenue: 'rgba(59,130,246,0.3)'
     } : {
-      fondo: '#fcfcfd', text: '#16161a', text2: '#5c5f70', text3: '#63667c', linea: 'rgba(0,0,0,0.09)', vacio: 'rgba(0,0,0,0.1)',
+      fondo: '#fcfcfd', text: '#16161a', text2: '#5c5f70', text3: '#63667c', linea: 'rgba(0,0,0,0.09)', vacio: 'rgba(0,0,0,0.1)', borde: 'rgba(0,0,0,0.12)',
       w: '#a8790a', wSuave: 'rgba(168,121,10,0.12)', wMarca: 'rgba(168,121,10,0.17)', wTenue: 'rgba(168,121,10,0.3)',
       b: '#2563eb', bTenue: 'rgba(37,99,235,0.3)'
     };
@@ -269,8 +275,12 @@ class Component extends DCLogic {
 
     const SEM = ['Networking 5/6', 'IA 1/5', 'Código 2/6', 'Networking 6/6'];
     const FIC = ['Manejar · paso 7', 'Primeros auxilios · paso 3', 'Coctelería · paso 5', 'Networking · paso 1'];
-    const iS = Math.max(0, SEM.indexOf(this.props.semana ?? SEM[0]));
-    const iF = Math.max(0, FIC.indexOf(this.props.ficha ?? FIC[0]));
+    // «Siguiente», «‹» y «↺» se mueven desde el ejemplo que llega por props, como en el Dashboard desde la recomendada.
+    const st = this.state || {}, oS = st.oS || 0, oF = st.oF || 0;
+    const iS0 = Math.max(0, SEM.indexOf(this.props.semana ?? SEM[0]));
+    const iF0 = Math.max(0, FIC.indexOf(this.props.ficha ?? FIC[0]));
+    const iS = (((iS0 + oS) % S.length) + S.length) % S.length;
+    const iF = (((iF0 + oF) % F.length) + F.length) % F.length;
     const W = Math.max(480, Number(this.props.ancho ?? 895) || 895);
     const H = Math.max(240, Number(this.props.alto ?? 442) || 442);
     // La imagen crece con la tarjeta: el 27 % de su alto, entre 64 y 180 px, en 2:3 como la portada.
@@ -305,6 +315,7 @@ class Component extends DCLogic {
     const s0 = S[iS], L = s0.libro;
     const s = {
       mat: s0.mat, n: s0.n, tot: s0.tot, titulo: s0.titulo,
+      propia: iS !== iS0, etiqueta: iS !== iS0 ? 'elegida por ti' : 'esta semana',
       conLibro: !!L, sinLibro: !L, img: L ? L.img : '', libroT: L ? L.t : '',
       libroNota: L ? (L.nota ? ', ' + L.nota : ' · ' + L.autor) : '',
       icRed: s0.ic === 'red', icChip: s0.ic === 'chip', icCode: s0.ic === 'code',
@@ -319,6 +330,7 @@ class Component extends DCLogic {
     const f0 = F[iF];
     const f = {
       titulo: f0.titulo, img: f0.img, hechos: f0.k - 1, tot: f0.tot,
+      propia: iF !== iF0, etiqueta: iF !== iF0 ? 'Habilidades base · elegida por ti' : 'Habilidades base',
       tramos: tramos(f0.tot, f0.k - 1, f0.k - 1, c.b, c.bTenue),
       paso: 'Paso ' + f0.k + ' · ' + f0.pasoT,
       dSegs: segs(f0.d),
@@ -328,7 +340,11 @@ class Component extends DCLogic {
       proxN: f0.k + 1, proxT: f0.luego[0], proxNombres: PROX[iF]
     };
 
-    return { c, dim: { w: W, h: H, th, tw }, s, f };
+    return {
+      c, dim: { w: W, h: H, th, tw }, s, f,
+      sigS: () => this.setState({ oS: oS + 1 }), antS: () => this.setState({ oS: oS - 1 }), volverS: () => this.setState({ oS: 0 }),
+      sigF: () => this.setState({ oF: oF + 1 }), antF: () => this.setState({ oF: oF - 1 }), volverF: () => this.setState({ oF: 0 })
+    };
   }
 }
 </script>

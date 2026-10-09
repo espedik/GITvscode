@@ -3113,7 +3113,8 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
    (`apAjustarAvance()`). */
 .ap-avance{display:flex;flex-direction:column;gap:12px;padding-top:10px}
 .ap-lbl{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
-.ap-av{display:flex;flex-direction:column;gap:10px;width:100%;min-width:0;padding:0;border:0;
+.ap-av{display:flex;flex-direction:column;gap:8px;min-width:0}
+.ap-av-ir{display:flex;flex-direction:column;gap:10px;width:100%;min-width:0;padding:0;border:0;
   background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
 .ap-av+.ap-av{border-top:1px solid rgba(var(--ov),.09);padding-top:12px}
 .ap-av-cab{flex:none;display:flex;gap:12px;align-items:stretch;min-width:0}
@@ -3122,13 +3123,20 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .ap-av-img.libro{object-position:top}
 .ap-av-ico{display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:none}
 .ap-av-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
-.ap-av-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
-.ap-av-mat{min-width:0;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+.ap-av-top{flex:none;display:flex;align-items:center;gap:8px;min-width:0}
+.ap-av-mat{flex:1;min-width:0;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
   color:var(--c);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ap-av-n{flex:none;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--c)}
 .ap-av-t{font-size:15.5px;font-weight:700;line-height:1.28;color:var(--text);
   display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
-.ap-av:hover .ap-av-t{color:var(--c)}
+.ap-av-ir:hover .ap-av-t{color:var(--c)}
+/* «‹» y «Siguiente ›»: si lo que te recomienda no te convence, pasas a otra opción (`apSiguiente()`). */
+.ap-av-ant,.ap-av-sig{flex:none;height:22px;display:inline-flex;align-items:center;justify-content:center;gap:3px;border-radius:7px;
+  border:1px solid rgba(var(--ov),.12);background:transparent;color:var(--text2);cursor:pointer;transition:color .15s,border-color .15s}
+.ap-av-ant{width:22px;padding:0}
+.ap-av-sig{padding:0 5px 0 8px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.ap-av-ant:hover,.ap-av-sig:hover{color:var(--c);border-color:var(--c)}
+.ap-av-ant svg,.ap-av-sig svg{width:12px;height:12px}
 .ap-seg{display:flex;gap:3px;margin:2px 0}
 .ap-seg i{flex:1 1 0;height:4px;border-radius:2px;background:rgba(var(--ov),.1)}
 .ap-seg i.ok{background:var(--c)}
@@ -3193,6 +3201,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   #heroAprenderPanel .ap-avance{flex:1 0 0;min-height:240px;display:grid;grid-template-columns:minmax(0,1fr);
     grid-template-rows:auto repeat(2,minmax(0,1fr));gap:10px}
   #heroAprenderPanel .ap-av{min-height:0;overflow:hidden;container:avtarjeta / size}
+  #heroAprenderPanel .ap-av-ir{flex:1 1 0;min-height:0}
   #heroAprenderPanel .ap-av-img{height:clamp(64px,27cqh,180px)}
   #heroAprenderPanel .ap-av-cuerpo{flex:1 1 0;min-height:0;position:relative}
   #heroAprenderPanel .ap-av-cols{position:absolute;inset:0;overflow:hidden;column-width:270px;column-gap:24px;column-fill:auto}
@@ -7264,9 +7273,42 @@ const AP_ICO = {
   libro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
   sigue: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>',
   meta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/></svg>',
-  hecho: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+  hecho: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  ant: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>',
+  sig: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>',
+  volver: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.4"/><path d="M3 4v5h5"/></svg>'
 };
 function apMeta(ico, html){ return `<span class="ap-av-m">${AP_ICO[ico]}<span>${html}</span></span>`; }
+// El renglón de arriba de cada tarjeta: la materia, su cuenta y «‹» / «Siguiente ›», fuera del botón que
+// abre la pantalla (un botón no puede ir dentro de otro). Si lo que se ve no es lo recomendado, «↺»
+// vuelve a ello; `rec` es su nombre.
+function apTop(cual, mat, n, otra, rec){
+  return `<span class="ap-av-top"><span class="ap-av-mat">${mat}</span><span class="ap-av-n">${n}</span>`
+    + (rec ? `<button type="button" class="ap-av-ant" data-ap="${cual}" data-d="0" onclick="apSiguiente('${cual}',0)" title="Volver a la recomendada: ${rec}" aria-label="Volver a la recomendada: ${rec}">${AP_ICO.volver}</button>` : '')
+    + `<button type="button" class="ap-av-ant" data-ap="${cual}" data-d="-1" onclick="apSiguiente('${cual}',-1)" title="La anterior" aria-label="${otra} anterior">${AP_ICO.ant}</button>`
+    + `<button type="button" class="ap-av-sig" data-ap="${cual}" data-d="1" onclick="apSiguiente('${cual}',1)" title="¿No te convence? Pasa a otra" aria-label="Siguiente ${otra.toLowerCase()}">Siguiente${AP_ICO.sig}</button></span>`;
+}
+// «Siguiente» (d = 1), «‹» (d = −1) y «↺» (d = 0) en Tu avance: si no te convence lo que te recomienda,
+// pasas a otra opción, y la elección se queda. El paso recorre habConRuta() y cambia la habilidad abierta
+// de «En qué invertir tu tiempo», la misma que usan esa pantalla y «Al volante»; la ficha recorre
+// hbEnCurso().lista y se guarda en `dash-avance-v1`. Volver a la recomendada borra la elección y manda
+// otra vez el criterio.
+function apSiguiente(cual, d){
+  if(cual === 'paso'){
+    const lista = habConRuta(), f = habFocoActual(); if(!lista.length || !f) return;
+    const i = Math.max(0, lista.findIndex(s => s.id === f.id));
+    habFocoSet(d ? lista[(i + d + lista.length) % lista.length].id : '');
+  } else {
+    const ec = hbEnCurso(), lista = ec.lista; if(!lista.length) return;
+    const i = Math.max(0, lista.findIndex(x => ec.actual && x.h.id === ec.actual.h.id));
+    const otra = lista[(i + d + lista.length) % lista.length];
+    rawSet(HB_ELEGIDA_KEY, !d || otra === ec.recomendada ? {} : { ficha: otra.h.id });
+    if(typeof renderHabilidadesBase === 'function') renderHabilidadesBase();
+  }
+  renderHeroAprender();
+  const b = document.querySelector(`#heroAprenderPanel [data-ap="${cual}"][data-d="${d || 1}"]`);
+  if(b) b.focus({ preventScroll: true });
+}
 // Un bloque del cuerpo: la etiqueta encima y lo suyo debajo. `.ap-opc` es lo de apoyo, que solo sale
 // donde sobra alto; `.ap-cl` marca el texto que apAjustarAvance() puede recortar.
 function apBloque(k, cuerpo, cls){ return `<span class="ap-bq${cls ? ' ' + cls : ''}"><span class="ap-bq-k">${k}</span>${cuerpo}</span>`; }
@@ -7304,25 +7346,26 @@ function pasoSemanaHtml(){
     fi.resumen?apBloque('Lo que dice',`<span class="ap-bq-t ap-cl">${fi.resumen}</span>`,'ap-opc'):'',
     fi.porQue?apBloque('Por qué este libro',`<span class="ap-bq-t ap-cl">${fi.porQue}</span>`,'ap-opc'):''
   ].join('');
-  return `<button type="button" class="ap-av" style="--c:var(--w)" onclick="irASlide('theme-skills')" title="Abrir En qué invertir tu tiempo${lib?` · con ${habAttr(lib.t)}`:''}">
-      <span class="ap-av-cab">
-        ${lib?`<img class="ap-av-img libro" src="${lib.portada||''}" alt="" loading="lazy">`:`<span class="ap-av-img ap-av-ico">${foco.icon}</span>`}
-        <span class="ap-av-col">
-          <span class="ap-av-top"><span class="ap-av-mat">${esc(foco.name)} · esta semana</span><span class="ap-av-n">${i+1}/${pasos.length}</span></span>
-          <span class="ap-av-t">${esc(p.n)}</span>
-          ${apTramos(pasos.length, j=>j<i, i)}
-          <span class="ap-av-meta">${meta}</span>
+  const rec=habRecomendada(), propia=!!rec&&rec.id!==foco.id;
+  return `<div class="ap-av" style="--c:var(--w)">
+      ${apTop('paso', `${esc(foco.name)} · ${propia?'elegida por ti':'esta semana'}`, `${i+1}/${pasos.length}`, 'Habilidad', propia?esc(rec.name):'')}
+      <button type="button" class="ap-av-ir" onclick="irASlide('theme-skills')" title="Abrir En qué invertir tu tiempo${lib?` · con ${habAttr(lib.t)}`:''}">
+        <span class="ap-av-cab">
+          ${lib?`<img class="ap-av-img libro" src="${lib.portada||''}" alt="" loading="lazy">`:`<span class="ap-av-img ap-av-ico">${foco.icon}</span>`}
+          <span class="ap-av-col">
+            <span class="ap-av-t">${esc(p.n)}</span>
+            ${apTramos(pasos.length, j=>j<i, i)}
+            <span class="ap-av-meta">${meta}</span>
+          </span>
         </span>
-      </span>
-      <span class="ap-av-cuerpo"><span class="ap-av-cols">${cuerpo}</span></span>
-    </button>`;
+        <span class="ap-av-cuerpo"><span class="ap-av-cols">${cuerpo}</span></span>
+      </button>
+    </div>`;
 }
 function fichaEnCursoHtml(){
   if(typeof HABILIDADES_BASE==='undefined'||typeof hbAvance!=='function') return '';
-  const av=HABILIDADES_BASE.map(h=>Object.assign({h},hbAvance(h.id)));
-  let sig=null,mejor=-1;
-  av.forEach(x=>{ if(x.hechos>0&&x.hechos<x.total&&x.pct>mejor){mejor=x.pct;sig=x;} });
-  if(!sig) sig=av[0]; if(!sig) return '';
+  const ec=hbEnCurso(), sig=ec.actual; if(!sig) return '';
+  const propia=!!ec.recomendada&&sig.h.id!==ec.recomendada.h.id;
   const info=HABILIDAD_DETALLE[sig.h.id]; const store=(rawGet('habilidades_checklist_v1',{})[sig.h.id])||{};
   const k=info?info.pasos.findIndex((_,j)=>!store[j]):-1;
   const paso=k>=0?info.pasos[k]:null;
@@ -7340,18 +7383,20 @@ function fichaEnCursoHtml(){
       +(prox?apBloque(`Lo que viene · Paso ${luego[0].j+1}`,`<span class="ap-bq-t ap-cl"><b>${esc(mdLimpiaTitulo(prox.t))}.</b> ${prox.nombres.length>1?prox.nombres.map(esc).join(' · '):(prox.d||'')}</span>`,'ap-opc'):'')
       +(luego.length>1?apBloque('Más adelante',luego.slice(1).map(x=>`<span class="ap-luego">${x.j+1} · ${esc(mdLimpiaTitulo(x.q.t))}</span>`).join(''),'ap-opc'):'')
     :apBloque('Ficha completa','<span class="ap-bq-t">Repásala cuando quieras: la tienes entera.</span>');
-  return `<button type="button" class="ap-av" style="--c:var(--b)" onclick="abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')" title="Abrir la ficha de Habilidades Base">
-      <span class="ap-av-cab">
-        <img class="ap-av-img" src="${foto}" alt="" loading="lazy">
-        <span class="ap-av-col">
-          <span class="ap-av-top"><span class="ap-av-mat">Habilidades base</span><span class="ap-av-n">${sig.hechos}/${sig.total}</span></span>
-          <span class="ap-av-t">${esc(sig.h.t)}</span>
-          ${info?apTramos(info.pasos.length, j=>!!store[j], k):''}
-          <span class="ap-av-meta">${meta}</span>
+  return `<div class="ap-av" style="--c:var(--b)">
+      ${apTop('ficha', `Habilidades base${propia?' · elegida por ti':''}`, `${sig.hechos}/${sig.total}`, 'Ficha', propia?habAttr(ec.recomendada.h.t):'')}
+      <button type="button" class="ap-av-ir" onclick="abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')" title="Abrir la ficha de Habilidades Base">
+        <span class="ap-av-cab">
+          <img class="ap-av-img" src="${foto}" alt="" loading="lazy">
+          <span class="ap-av-col">
+            <span class="ap-av-t">${esc(sig.h.t)}</span>
+            ${info?apTramos(info.pasos.length, j=>!!store[j], k):''}
+            <span class="ap-av-meta">${meta}</span>
+          </span>
         </span>
-      </span>
-      <span class="ap-av-cuerpo"><span class="ap-av-cols">${cuerpo}</span></span>
-    </button>`;
+        <span class="ap-av-cuerpo"><span class="ap-av-cols">${cuerpo}</span></span>
+      </button>
+    </div>`;
 }
 // El cuerpo de cada tarjeta es un multicolumna de alto fijo: lo que no cabe cae en columnas que no se
 // ven. Para que nada quede a medias, el primer bloque que no cabe entero se recorta a las líneas que
@@ -10967,6 +11012,12 @@ function habFocoActual(){
 }
 // La que el sistema recomienda esta semana, que no tiene por qué ser la abierta.
 function habRecomendada(){ const c = habCandidatas(); return c.length ? c[0] : null; }
+// Las habilidades con ruta en el orden que recorre «Siguiente» en Tu avance (Mi Día): primero las del
+// plan (la de esta semana y la que sigue) y después las demás, por retorno.
+function habConRuta(){
+  const plan = habCandidatas().filter(s => habPasos(s.id).length);
+  return plan.concat(SK.filter(s => habPasos(s.id).length && !plan.includes(s)).sort((a, b) => skRetorno(b) - skRetorno(a)));
+}
 function habFocoSet(id){ const st = habFocoLoad(); st.skill = id; habFocoSave(st); renderSkills(); }
 function habPasoSet(i){
   const f = habFocoActual(); if(!f) return;
@@ -13331,6 +13382,20 @@ function hbAvance(id){
   const hechos=info.pasos.filter((_,i)=>store[i]).length;
   return {hechos,total,pct:Math.round(hechos/total*100)};
 }
+// La ficha en curso, la misma en las dos pantallas que la nombran —«SIGUIENTE» aquí y Tu avance en
+// Mi Día—: la que Adán eligió con «Siguiente» en Tu avance (`dash-avance-v1`), mientras siga a medias o
+// sin empezar; si no, la empezada más cerca de terminar —cerrar algo que ya llevas a medias motiva más
+// que abrir otra—, y sin ninguna empezada, la primera del temario. `lista` es ese orden, el que
+// recorre «Siguiente»; las terminadas no entran.
+const HB_ELEGIDA_KEY = 'dash-avance-v1';
+function hbEnCurso(){
+  const av = HABILIDADES_BASE.map(h => Object.assign({ h }, hbAvance(h.id)));
+  const abiertas = av.filter(x => x.total && x.hechos < x.total);
+  const lista = abiertas.filter(x => x.hechos > 0).sort((a, b) => b.pct - a.pct).concat(abiertas.filter(x => x.hechos === 0));
+  const elegida = (rawGet(HB_ELEGIDA_KEY, {}) || {}).ficha;
+  const recomendada = lista[0] || av[0] || null;
+  return { lista, recomendada, actual: lista.find(x => x.h.id === elegida) || recomendada };
+}
 function renderHabilidadesBase(){
   const av=HABILIDADES_BASE.map(h=>Object.assign({h},hbAvance(h.id)));
   const sumHechos=av.reduce((a,x)=>a+x.hechos,0), sumTotal=av.reduce((a,x)=>a+x.total,0);
@@ -13340,13 +13405,10 @@ function renderHabilidadesBase(){
   const sinEmpezar=av.filter(x=>x.hechos===0).length;
   const estado=x=>(x.total&&x.hechos===x.total)?'ok':(x.hechos===0?'zero':'');
 
-  // "SIGUIENTE" = la habilidad EMPEZADA que está más cerca de terminar. Cerrar algo que ya
-  // llevas a medias motiva más que abrir una novena habilidad en 1 paso, y con 27 fichas hace
-  // falta un punto de entrada o la pantalla se vuelve un catálogo. Si no hay ninguna empezada
-  // (navegador nuevo), marca la primera del temario para que nunca se quede sin marcar.
-  let sig=null,mejor=-1;
-  av.forEach(x=>{ if(x.hechos>0&&x.hechos<x.total&&x.pct>mejor){mejor=x.pct;sig=x.h.id;} });
-  if(!sig&&av.length) sig=av[0].h.id;
+  // "SIGUIENTE" = la ficha en curso de hbEnCurso(), la misma que enseña Tu avance en Mi Día: la que
+  // eligió ahí con «Siguiente» o, si no, la empezada más cerca de terminar. Con 27 fichas hace falta un
+  // punto de entrada o la pantalla se vuelve un catálogo.
+  const sig=((hbEnCurso().actual||{}).h||{}).id||null;
 
   const eq=av.map(x=>`<i class="${estado(x)}" style="height:${Math.round(18+x.pct*0.82)}%" title="${x.h.t} — ${x.pct}%"></i>`).join('');
   document.getElementById('hbBay').innerHTML=`

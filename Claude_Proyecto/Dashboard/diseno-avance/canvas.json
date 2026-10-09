@@ -15,7 +15,8 @@
       "y": 0,
       "w": 895,
       "h": 442,
-      "title": "Main · Cada cosa en su lugar"
+      "title": "Main · Cada cosa en su lugar",
+      "is_interactive": true
     },
     "DireccionB.dc.html": {
       "x": 975,
@@ -37,21 +38,24 @@
       "y": 1000,
       "w": 895,
       "h": 442,
-      "title": "Main · IA 1/5 (sin libro) y Primeros auxilios"
+      "title": "Main · IA 1/5 (sin libro) y Primeros auxilios",
+      "is_interactive": true
     },
     "VarUltimo.dc.html": {
       "x": 975,
       "y": 1000,
       "w": 895,
       "h": 442,
-      "title": "Main · Networking 6/6 (último paso) y una ficha que empieza"
+      "title": "Main · Networking 6/6 (último paso) y una ficha que empieza",
+      "is_interactive": true
     },
     "Var1600.dc.html": {
       "x": 1950,
       "y": 1000,
       "w": 626,
       "h": 363,
-      "title": "Main a 1600 px · Código 2/6 y Coctelería"
+      "title": "Main a 1600 px · Código 2/6 y Coctelería",
+      "is_interactive": true
     }
   },
   "order": [
@@ -81,7 +85,7 @@
       "x": 0,
       "y": 482,
       "w": 895,
-      "text": "MAIN — recomendada, ya en el Dashboard.\n\nDos tarjetas lado a lado, alineadas con las dos columnas de arriba. En la cabecera de cada una, dónde vas: la imagen, el paso, los tramos, el libro y lo que sigue. Abajo, lo que hay que hacer, en bloques con su etiqueta encima: a 13.5 px y en negro lo que haces, en gris lo de apoyo. La frase clave del paso va marcada. Si la tarjeta es ancha, el texto se parte en columnas de unos 50 caracteres.",
+      "text": "MAIN — recomendada, ya en el Dashboard.\n\nDos tarjetas lado a lado, alineadas con las dos columnas de arriba. En la cabecera de cada una, dónde vas: la imagen, el paso, los tramos, el libro y lo que sigue. Abajo, lo que hay que hacer, en bloques con su etiqueta encima: a 13.5 px y en negro lo que haces, en gris lo de apoyo. La frase clave del paso va marcada. Si la tarjeta es ancha, el texto se parte en columnas de unos 50 caracteres. Arriba de cada una, «‹» y «Siguiente ›» pasan a otra opción si la recomendada no te convence, y «↺» vuelve a ella: pruébalos en Play.",
       "color": "green"
     },
     "n-b": {
