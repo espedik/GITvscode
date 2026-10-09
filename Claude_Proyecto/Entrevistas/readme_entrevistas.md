@@ -78,8 +78,8 @@ contenido `RICH` o viceversa, y si algún tema de Python se queda sin explicaci�
 
 - **Solo viaja Python**: `MODULOS_DASHBOARD = ['pyfund','poo','testing','pycheat']` — **41 temas**
   (13 + 7 + 20 + 1), los que la propia app agrupa bajo ese nombre en su menú. Filtrar en origen
-  deja el archivo en ~1 MB en vez de 2.5 y el Dashboard no necesita lógica: recibe 41 y los rota
-  (`aprendeRotacion()`, ver *Que siempre cambie* en `readme_dashboard.md`). Para incluir otro módulo, añadir su id y volver a correr. `testing` es
+  deja el archivo en ~1 MB en vez de 2.5 y el Dashboard no necesita lógica: recibe 41 y los ordena
+  como dice Coach —Testing primero, con pytest antes que unittest— (`aprendeOrdenPython()`, ver *Lo decide Coach* en `readme_dashboard.md`). Para incluir otro módulo, añadir su id y volver a correr. `testing` es
   Python de verdad (unittest, pytest, mock, fixtures, coverage), no testing genérico.
 - **`PY_MOD_LABEL`** sale de los `m-label` del menú de `entrevistas.html`, sin el prefijo
   "Python —": la tarjeta ya dice que es Python.

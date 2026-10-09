@@ -584,6 +584,7 @@ Mi Día es la pantalla que más se usa: la agenda en franjas de mañana, tarde y
 - Hábitos te da las anclas y recibe los checks de lo que se cumple.
 - Plan Maestro pone la tarea de la fase; Ejercicio, la sesión; Comida, qué cocinar; Skincare y Cabello, sus rutinas; Alemán, la clase.
 - Qué invertir hoy y Qué escuchar se abren desde aquí: el dinero y las horas de Didi también son parte del día.
+- Coach decide lo que estudias en Hoy aprendes: el orden sale de sus metas con fecha, de la fase del Plan Maestro, del foco de habilidades y del nivel de cada una.
 
 ## Cómo sabes que funciona
 - Bloques del día cumplidos sobre los planeados.
@@ -593,7 +594,8 @@ Mi Día es la pantalla que más se usa: la agenda en franjas de mañana, tarde y
 ## Al modificar esta pantalla
 - Lo primero que se ve es el AHORA; todo lo demás compite por atención y tiene que ganársela.
 - La agenda sale de la rutina y del calendario del maestro: no se escriben horas a mano.
-- Cada módulo nuevo responde a una pregunta del día; si no, va a otra pantalla.`
+- Cada módulo nuevo responde a una pregunta del día; si no, va a otra pantalla.
+- Hoy aprendes nunca elige al azar: cada renglón sigue el orden de Coach y «Cómo lo decide Coach» enseña su porqué. Una regla nueva entra en ese orden y en ese panel.`
     },
 
     planmaestro: {

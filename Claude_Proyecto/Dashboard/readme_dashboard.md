@@ -65,8 +65,8 @@ Todas comparten origen porque se abren con `file://`.
 `rawGet`/`rawSet`, que preservan el resto del objeto. Si Coach cambia la
 forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
-**Claves propias** del Dashboard: `dash-aprende-v1` (la pregunta del ISTQB de cada día), `dash-lista-compras`
-y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `dash-rail-abierto`, `dash-avance-v1` (la ficha que eligió con «Siguiente» en *Tu avance*), `dash_habfoco_v1` (la ruta abierta en *En qué invertir tu tiempo* y el paso de cada una),
+**Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
+y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `dash-rail-abierto`, `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Tu avance*), `dash_habfoco_v1` (la ruta abierta en *En qué invertir tu tiempo* y el paso de cada una),
 `habilidades_checklist_v1`, `examen_genai_v1`, `dash-inversion-v1` (pestaña, perfil elegido y monto de *Qué
 invertir hoy*), y las `al_*_v1` de Alemán.
 
@@ -182,7 +182,7 @@ repite info, solo déjame lo de invertir hoy"*): sus cifras viven en Coach y en 
 |---|---|---|
 | **Entrenas** | El día que se mira —hoy, o el que tocaste en la tira— en grande (si no es hoy, su nombre en verde arriba), **sus ejercicios** con series×reps y peso, en una línea los tres días que siguen y la tira de 7 días como chips de foto (`#heroWeekStrip`, 52 px). El peso es el último que registró Ejercicio (naranja; mismo criterio que su `ejUltimo()`) o el inicial de `EJ_PESO_INI` (gris), solo en kg; un ejercicio con todas sus series hechas ese día va en verde, y tocar su nombre abre **su ficha** (ver *La ficha de un ejercicio*, abajo). *Ejercicio →* (`#diaEntrenaLink`) abre el día elegido con `?dia=N`. `.dia-entrena` es `display:contents`: la lista es lo único que cede alto y, si ni así cabe (bajo 1280 px de ancho), desplaza la tarjeta. Con 440 px de alto o más, bajo cada ejercicio va su indicación (`.de-ex-cue`, la misma de su `title`) y la tira crece a 92 px | `renderDiaEntrena()` sobre `D.gym.rutina` o `GYM_RUTINA_DEFAULT`; el ✅ sale de `gymSesiones()`, que normaliza `mirutina_v1.sesiones` (objeto por fecha desde el 1-sep-2026, lista antes) |
 | **Hábitos de hoy** | Los que tocan hoy con ancla, racha (🔥 desde 3) y `2 de 5`; se marcan aquí mismo. **Caben todos sin desplazar**: letra chica (11.5 px el nombre, 9.5 px el ancla) con el ancla debajo y, si la lista no cabe así, `.compacto` pone el ancla en la misma línea, cortada con `…` y completa en el `title`. `renderDiaHabitos()` lo decide midiendo la lista, también al cambiar el tamaño de la ventana. Medido con 9 hábitos: a 1920×1080 en dos líneas; a 1600×1000, 1536×864 y 1440×900 en una (20 px por fila); a 1366×768 todavía queda uno abajo. Con 440 px de alto o más (a 2560×1440 mide unos 490) la letra y el aire de cada renglón suben (`@container`) | `HB.hoy()` / `HB.toggleHoy()`, la API que expone `habitos.js` — el mismo toggle de la cuadrícula |
-| **Hoy aprendes** | **Una lista, no cajas** (la dirección Main de `diseno-hoyaprendes/`). Arriba, la fecha, `N de 4` y una barra de cuatro tramos que se llena con lo hecho hoy: la palabra al abrirla, *Al volante* al tocar lo que vas a escuchar, Python al marcarlo estudiado en Entrevistas y el ISTQB al contestarlo. Cuatro renglones con la misma anatomía —la materia y su estado arriba, con ↻; lo que aprendes en grande; el detalle en gris—: **la palabra o frase de alemán**, un solo renglón, con el artículo en el color de su género (`VOC_COLOR`), el plural o, si es verbo, su Perfekt (*Perfekt · ist zurückgekommen*), el ejemplo traducido (se omite si repite la frase) y el `uso`; **Al volante**, qué escuchar hoy en Didi desde el catálogo de *Qué escuchar*: el audiolibro de la semana con la hora del trayecto y por qué, y el podcast del día —en el fin de semana, uno largo para el otro turno—; los títulos abren la búsqueda en Spotify y *Qué escuchar* abre el panel; **el tema de Python** con su explicación; **la pregunta del ISTQB** en dos líneas, con *Responder*. **Se acomoda a su propio ancho** (es el contenedor `aprende`): desde 560 px los cuatro renglones van en 2×2 y las dos tarjetas de *Tu avance*, lado a lado en esas mismas dos columnas; más angosto, una debajo de la otra. Abajo, **Tu avance** (la dirección Main de `diseno-avance/`; Adán: *"el texto está muy amontonado y no se distingue nada"*), que **ocupa todo el alto que le queda** (240 px como mínimo): dos tarjetas con la misma anatomía. **Arriba, la materia con su cuenta y «‹» / «Siguiente ›»** (`apSiguiente()`; Adán: *"si no me gusta alguna de las que me recomiendas, pon un botón como que siguiente"*): pasas a otra opción y la elección se queda; mientras no sea la recomendada, la materia dice *elegida por ti* y «↺» vuelve a ella. El paso recorre las habilidades con ruta —primero las del plan, después por retorno (`habConRuta()`)— y cambia la habilidad abierta de *En qué invertir tu tiempo*, la misma que usan esa pantalla y *Al volante*; la ficha recorre las de Habilidades Base a medias o sin empezar (`hbEnCurso()`) y se guarda en `dash-avance-v1`, que también decide «SIGUIENTE» en esa pantalla. **En la cabecera, dónde vas**: la imagen en 2:3 (el 27 % del alto de la tarjeta, entre 64 y 180 px), el título, un tramo por paso —lleno lo hecho, marcado el que toca— y lo que sigue (*Con* el libro, *Después:* el paso siguiente o *Último paso*). **En el cuerpo, lo que hay que hacer**, en bloques con su etiqueta encima y en orden de importancia —lo que haces, en negro a 13.5 px; lo de apoyo, en gris a 12.5—: **el paso de la semana** con *Qué hacer* (su frase en negritas va marcada como con resaltador), *Por qué*, *La idea del libro*, *La ruta*, *Lo que viene* (el Qué hacer del paso siguiente), *Lo que dice* y *Por qué este libro*; **la ficha de Habilidades Base en curso** con el paso que sigue y su entrada, un renglón por punto con su nombre primero (`apPunto()`: lo que va en negritas al empezar o antes de «:» o « — »), de tres líneas como mucho, *Lo que viene* (el paso siguiente con los nombres de sus puntos) y *Más adelante*. En escritorio el cuerpo es un multicolumna de alto fijo —columnas de unos 270 px, ~50 caracteres por línea—: lo que no cabe se quita completo, el primer bloque que no cabe se recorta a las líneas que le quedan con «…» (si es una lista, se acorta: la ruta suelta primero lo hecho) y, si todo cabe, los puntos van enteros y las columnas se reparten el contenido (`apAjustarAvance()`, al pintar, al cambiar el tamaño de la ventana y al terminar de cargar cada fuente). En el teléfono el cuerpo va en el flujo: Qué hacer y Por qué, y tres puntos. Medido con Networking 5/6 y la ficha de manejar en el paso 7: a 2048×1040 —la pantalla de Adán, 2560 al 125 %— cada tarjeta mide 447 px de ancho y enseña Qué hacer, Por qué y La idea del libro, y la entrada con cuatro o cinco puntos; a 1600×1000, Qué hacer y tres puntos; a 2560×1440 entra todo, en dos columnas. A 1600, 1920, 2048, 2560 y 390 px ningún bloque queda a medias. Cambian al avanzar en su pantalla. Tocar un renglón lo abre donde se estudia: la sección de la palabra, `entrevistas.html#<id>` o el panel del ISTQB. La bandera es CSS (`.flag-de`): el emoji 🇩🇪 sale como «DE» en Windows. A 1600×1000, 1920×1080 y 2560×1440 no desplaza; a 1280×800, 119 px | `renderHeroAprender()` con `alemanHoyHtml()`, `escucharHoyHtml()`, `pythonHoyHtml()` e `istqbHtml()` —los de alemán, Python e ISTQB por `apFila()`—, `pasoSemanaHtml()` y `fichaEnCursoHtml()`; lo de cada día, de `alemanPalabraHoy()`, `didiHoy()`, `entrevistaTemaHoy()` e `istqbPreguntaHoy()` (abajo, *Que siempre cambie*) |
+| **Hoy aprendes** | **Una lista, no cajas** (la dirección Main de `diseno-hoyaprendes/`), **y lo decide Coach**: cada renglón sale del orden de su plan, nunca del azar, y junto al título **«Cómo lo decide Coach»** (`abrirComoDecide()`) abre el panel con lo que manda y el porqué de lo de hoy (abajo, *Lo decide Coach*). Arriba, la fecha, `N de 4` y una barra de cuatro tramos que se llena con lo hecho hoy: la palabra al abrirla, *Al volante* al tocar lo que vas a escuchar, Python al marcarlo estudiado en Entrevistas y el ISTQB al contestarlo. Cuatro renglones con la misma anatomía —la materia y su estado arriba, con ↻; lo que aprendes en grande; el detalle en gris—: **la palabra o frase de alemán**, un solo renglón, con el artículo en el color de su género (`VOC_COLOR`), el plural o, si es verbo, su Perfekt (*Perfekt · ist zurückgekommen*), el ejemplo traducido (se omite si repite la frase) y el `uso`; **Al volante**, qué escuchar hoy en Didi desde el catálogo de *Qué escuchar*: el audiolibro de la semana con la hora del trayecto y por qué, y el podcast del día —en el fin de semana, uno largo para el otro turno—; los títulos abren la búsqueda en Spotify y *Qué escuchar* abre el panel; **el tema de Python** con su explicación; **la pregunta del ISTQB** en dos líneas, con *Responder*. **Se acomoda a su propio ancho** (es el contenedor `aprende`): desde 560 px los cuatro renglones van en 2×2 y las dos tarjetas de *Tu avance*, lado a lado en esas mismas dos columnas; más angosto, una debajo de la otra. Abajo, **Tu avance** (la dirección Main de `diseno-avance/`; Adán: *"el texto está muy amontonado y no se distingue nada"*), que **ocupa todo el alto que le queda** (240 px como mínimo): dos tarjetas con la misma anatomía. **Arriba, la materia con su cuenta y «‹» / «Siguiente ›»** (`apSiguiente()`; Adán: *"si no me gusta alguna de las que me recomiendas, pon un botón como que siguiente"*): pasas a otra opción y la elección se queda; mientras no sea la recomendada, la materia dice *elegida por ti* y «↺» vuelve a ella. El paso es el foco del plan de Coach (`aprendeFoco()`) y «Siguiente» recorre las habilidades con ruta —primero las del plan, después por retorno (`habConRuta()`)— sin tocar la ruta abierta en *En qué invertir tu tiempo*; *Al volante* sigue ese foco. La ficha es la primera del orden de Coach (`hbEnCurso()`, `HB_PLAN`) y «Siguiente» la recorre. Las dos elecciones se guardan en `dash-avance-v1`, que también decide «SIGUIENTE» en Habilidades Base. **En la cabecera, dónde vas**: la imagen en 2:3 (el 27 % del alto de la tarjeta, entre 64 y 180 px), el título, un tramo por paso —lleno lo hecho, marcado el que toca— y lo que sigue (*Con* el libro, *Después:* el paso siguiente o *Último paso*); la ficha lleva además *Por qué*, para qué te sirve en el plan de Coach (`hbPlan()`). **En el cuerpo, lo que hay que hacer**, en bloques con su etiqueta encima y en orden de importancia —lo que haces, en negro a 13.5 px; lo de apoyo, en gris a 12.5—: **el paso de la semana** con *Qué hacer* (su frase en negritas va marcada como con resaltador), *Por qué*, *La idea del libro*, *La ruta*, *Lo que viene* (el Qué hacer del paso siguiente), *Lo que dice* y *Por qué este libro*; **la ficha de Habilidades Base en curso** con el paso que sigue y su entrada, un renglón por punto con su nombre primero (`apPunto()`: lo que va en negritas al empezar o antes de «:» o « — »), de tres líneas como mucho, *Lo que viene* (el paso siguiente con los nombres de sus puntos) y *Más adelante*. En escritorio el cuerpo es un multicolumna de alto fijo —columnas de unos 270 px, ~50 caracteres por línea—: lo que no cabe se quita completo, el primer bloque que no cabe se recorta a las líneas que le quedan con «…» (si es una lista, se acorta: la ruta suelta primero lo hecho) y, si todo cabe, los puntos van enteros y las columnas se reparten el contenido (`apAjustarAvance()`, al pintar, al cambiar el tamaño de la ventana y al terminar de cargar cada fuente). En el teléfono el cuerpo va en el flujo: Qué hacer y Por qué, y tres puntos. Medido con Networking 5/6 y la ficha de manejar en el paso 7: a 2048×1040 —la pantalla de Adán, 2560 al 125 %— cada tarjeta mide 447 px de ancho y enseña Qué hacer, Por qué y La idea del libro, y la entrada con cuatro o cinco puntos; a 1600×1000, Qué hacer y tres puntos; a 2560×1440 entra todo, en dos columnas. A 1600, 1920, 2048, 2560 y 390 px ningún bloque queda a medias. Cambian al avanzar en su pantalla. Tocar un renglón lo abre donde se estudia: la sección de la palabra, `entrevistas.html#<id>` o el panel del ISTQB. La bandera es CSS (`.flag-de`): el emoji 🇩🇪 sale como «DE» en Windows. A 1600×1000, 1920×1080 y 2560×1440 no desplaza; a 1280×800, 119 px | `renderHeroAprender()` con `alemanHoyHtml()`, `escucharHoyHtml()`, `pythonHoyHtml()` e `istqbHtml()` —los de alemán, Python e ISTQB por `apFila()`—, `pasoSemanaHtml()` y `fichaEnCursoHtml()`; lo de cada día, de `alemanPalabraHoy()`, `didiHoy()`, `entrevistaTemaHoy()` e `istqbPreguntaHoy()` (abajo, *Lo decide Coach*) |
 | **Qué invertir hoy** | Al pie de la primera columna: el paso que toca hoy —*Primero tu fondo*, *Abona a tu deuda* o *Hoy sí inviertes*— en su color, con su porqué en una línea y *Abrir →*. Tocarlo abre el panel completo | `pintarInvertirBtn()` sobre `pasoInversionHoy()`, la misma regla que el panel; `#diaInvertirBtn` → `abrirGBM()` |
 
 **Tamaños.** Bajo 940 px de alto el AHORA baja a 30 vh (34 si va `.apretado`); bajo 1280 px de ancho la agenda mide 360 px y los módulos siguen en sus dos columnas;
@@ -190,43 +190,51 @@ bajo 900 px, Entrenas y Hábitos van lado a lado y, debajo, a todo lo ancho, Qu�
 **Al medir Mi Día, la hora importa**: el alto cambia con el bloque actual y los que
 quedan, así que dos medidas a horas distintas no son comparables.
 
-### Que siempre cambie
+### Lo decide Coach
 
-Lo de cada día sale de una rotación, no del día del año, que se reinicia cada enero: con él, de las
-1 516 palabras solo saldrían las primeras 366, y en el mismo orden cada año. `diaCorrido()` cuenta
-días en hora local desde el 1-ene-2024 y `aprendeRotacion()` avanza cada catálogo con su propio salto,
-coprimo con su tamaño (`APRENDE_SALTO`): recorre todo antes de repetir y dos días seguidos caen lejos
-—otra sección, otro capítulo, otro módulo—.
+Adán: *"toda esa sección de hoy aprendes debe regirse por coach… pon de prioridad eso que deseo lograr y
+lo que está planeando coach y subir mis habilidades, pero no quiero que quede al aire"*. Cada renglón
+tiene un **orden con su porqué**, sacado del plan de Coach —las metas con fecha de la fase en curso
+(`PHASES`), el foco de habilidades (`CIFRAS.HAB_FOCO`) y el nivel de cada una (`SK`)—, y cada día toca
+**el primero de ese orden que todavía no haya salido**. ↻ (`aprendeOtra()`) y «Siguiente» pasan al que
+sigue: nada sale al azar.
 
-- **Sin repetidos**: `alemanPalabras()` deja una vez cada palabra (18 están en dos secciones): 1 498
-  distintas.
-- **Al volante** sigue el orden del panel de *Qué escuchar* (`didiGruposOrden()`: el foco de la semana
-  primero; lo que está en pausa, fuera). El audiolibro es el del paso de la semana si su libro está en
-  el catálogo; si no, cambia cada lunes —un libro dura de 6 a 9 h—. El podcast cambia cada día, entre
-  los cortos entre semana y los de una hora o más (`largo`) el fin de semana.
-- **Python** salta los temas que ya marcaste como estudiados y fija el del día al primer vistazo: si
-  lo estudias hoy, se queda con su ✓ en vez de saltar al siguiente.
-- **↻** (`aprendeOtra()`) trae otro al azar, distinto del que ves —en Python y en el ISTQB, uno que no
-  hayas hecho— y se queda hasta mañana.
-- **A medianoche** `tickClock()` repinta Mi Día (`renderDiaHero()`) aunque el Dashboard siga abierto y
-  sin rotar.
-- Lo de hoy vive en `dash-aprende-v1` → `hoy`: la fecha, lo que pediste con ↻, el tema de Python fijado
-  y lo que ya abriste. Con otra fecha se empieza en limpio.
+| Renglón | El orden de Coach | Dónde |
+|---|---|---|
+| **Alemán** | El nivel de la etapa —A2, el que pide Esslingen, hasta que empieza la Fase 2; desde ahí, B1— y, dentro, lo que vas a necesitar primero al llegar (`AL_COACH_TEMAS`: trámites, piso, dinero, salud, teléfono, ciudad, súper), luego la casa, la escuela y el trabajo; lo demás, al final | `aprendeOrdenAleman()`, `aprendeEtapaAleman()` |
+| **Al volante** | El foco de Hoy aprendes (`aprendeFoco()`: el del plan o el que eligió en Tu avance), luego el siguiente foco del plan y las demás por retorno; lo que está en pausa no entra. Si el foco tiene menos de dos opciones, se completa con lo que sigue. El audiolibro es el del paso de la semana si está en el catálogo o el siguiente cada lunes; el podcast, el siguiente cada día | `didiHoy()`, `didiGruposOrden()` |
+| **Python** | Testing primero —la prueba de Código es un repositorio de pytest y los Werkstudent de validación lo piden—, con lo central de pytest antes que unittest (`PY_COACH_TESTING`); con el foco en IA, abre la generación de pruebas con IA. Después los fundamentos y la POO. Lo estudiado en Entrevistas no sale | `aprendeOrdenPython()` |
+| **ISTQB** | El capítulo con más puntos en juego —lo que vale en el examen (`EXAMEN_GENAI.blueprint`: el 2 vale 16 de 46) por lo que falta de acierto ahí; con menos de tres respuestas cuenta la mitad— y, dentro, las de 2 puntos. Las contestadas no vuelven | `aprendeOrdenIstqb()`, `istqbEnJuego()` |
+| **Paso de la semana** | El foco del plan para hoy (`habRecomendada()`), paso a paso | `aprendeFoco()` |
+| **Habilidades Base** | `HB_PLAN`: lo que pide la Fase 1 (Networking por las cartas de recomendación, Persuadir por la palanca de ingreso, Dinero), lo de antes de irte, lo de Alemania y lo demás; vino, coctelería y citas esperan mientras dure la meta de alcohol. El grupo se mueve con la fase (`hbRango()`) y, a igual grupo, va primero la ya empezada | `hbEnCurso()` |
 
-Medido en el navegador con la fecha simulada, 400 días seguidos: ningún día repite el anterior; en
-su primera vuelta salen 400 palabras distintas, 41 de 41 temas y 156 de 156 preguntas; la palabra cae
-en la misma sección que la víspera 3 de 399 días, y el 1 de enero la rotación sigue sin reiniciarse.
-En cuatro semanas, el audiolibro cambió solo los lunes y el podcast de entre semana nunca repitió el
-del día anterior.
+- **Sin repetir**: lo que salió vive en `dash-aprende-v1` → `salio`. La palabra y el tema de Python no
+  vuelven hasta recorrer su orden entero; una pregunta del ISTQB sin contestar vuelve a la semana
+  (`APRENDE_MEMORIA`), porque su capítulo sigue siendo el que más puntos tiene en juego.
+- **Fijo en el día**: lo de hoy se fija al primer vistazo (`hoy.fijo`); si lo estudias o lo contestas, se
+  queda con su ✓. Con otra fecha se empieza en limpio.
+- **A medianoche** `tickClock()` repinta Mi Día (`renderDiaHero()`) aunque el Dashboard siga abierto.
+
+**«Cómo lo decide Coach»** (`#comoDecideOverlay`, `comoDecideHtml()`): arriba, lo que manda y en qué
+orden —tus metas con fecha (`CD_METAS`: ids de tareas de la Fase 1, con su mes y tachadas si ya están en
+`coach_checks_v1`), el plan (la fase y el foco con su entregable) y las cinco habilidades con más
+retorno—; abajo, renglón por renglón, lo de hoy con su regla, la tabla de capítulos del ISTQB y lo que
+sigue en Habilidades Base. Sale de las mismas funciones que eligen. Mientras está abierto Mi Día no rota y
+la brújula del prompt se oculta; se cierra con ✕, clic fuera o Escape.
+
+Medido con la fecha simulada, 40 días seguidos desde el 10 de octubre de 2026 sin estudiar ni contestar
+nada: 40 palabras y 40 temas distintos, ninguno igual al del día anterior; el ISTQB, del capítulo 2 y
+nunca la pregunta de la víspera; el podcast, nunca el del día anterior, y el audiolibro cambia los
+lunes. El 2 de abril de 2027 (Fase 2) la palabra pasa al B1 y el foco a Código.
 
 ### La pregunta del ISTQB del día
 
 Una de las 156 preguntas de los dos bancos del simulacro (`EXAMEN_GENAI` y `EXAMEN_GENAI_B`, los mismos
-de Mis Metas), la de la rotación de hoy. En la columna va en dos líneas con *Responder*, o el resultado
+de Mis Metas), la primera del orden de Coach que no hayas contestado (*Lo decide Coach*). En la columna va en dos líneas con *Responder*, o el resultado
 cuando ya la contestaste. Tocarla abre `#istqbOverlay` (`abrirIstqb()`): enunciado y cuatro opciones; al
 contestar, la buena en verde, la tuya en rojo si fallaste, el porqué del programa y la sección del
 syllabus. **Cada pregunta se contesta una vez**: la primera respuesta es la que cuenta, como en el examen;
-después, *Otra pregunta →* (o ↻) trae una que no hayas contestado. Al pie, lo contestado en los últimos
+después, *Siguiente pregunta →* (o ↻) trae la siguiente del orden. Al pie, lo contestado en los últimos
 7 días y el último simulacro de `examen_genai_v1`, en ámbar si quedó bajo el corte; *Simulacro completo →*
 (`istqbAlSimulacro()`) abre el examen entero. Mientras el panel está abierto Mi Día no rota; se cierra
 con ✕, clic fuera o Escape.
@@ -902,7 +910,8 @@ Cada ficha lleva `✅ Ya lo dominas cuando…` con criterios comprobables, `⚠�
 
 **«SIGUIENTE» marca la ficha en curso de `hbEnCurso()`**, la misma que enseña *Tu avance* en Mi Día:
 la que Adán eligió ahí con «Siguiente» (`dash-avance-v1`) mientras siga a medias o sin empezar; si
-no, la empezada más cerca de terminar y, sin ninguna empezada, la primera del temario.
+no, la primera del orden de Coach (`HB_PLAN`: lo que pide la fase en curso, lo de antes de irte, lo de
+Alemania y lo demás) y, a igual grupo, la ya empezada.
 
 - **Citas en CDMX** (`citas`): la única atada a una ciudad, a propósito. Diez pasos, siete son
   listas de lugares (30 en total). **Cada lugar enlaza a una BÚSQUEDA de Google Maps por nombre**
@@ -998,8 +1007,9 @@ mantenimiento*). `CIFRAS.HAB_FOCO` es una lista de tramos —IA de oct a nov 202
 Inglés de dic 2026 a ene 2027 (la solicitud a Esslingen), Código de feb a may 2027 (el proyecto
 para el Werkstudent) y Networking de jun a ago 2027— con horas, el paso de la semana, el
 entregable y cuándo cambia. `habPlanHoy()` da el tramo de hoy y el siguiente; `habCandidatas()`
-son esos dos (si el plan ya terminó, manda el retorno). Adán puede abrir cualquier otra ruta —aquí o con «Siguiente» en *Tu avance* de Mi Día, que recorre `habConRuta()`— y se
-recuerda en `dash_habfoco_v1`. Los `{{marcadores}}` de las rutas se resuelven al cargar
+son esos dos (si el plan ya terminó, manda el retorno). Adán puede abrir cualquier otra ruta y se
+recuerda en `dash_habfoco_v1`. Mi Día no la sigue: *Tu avance* y *Al volante* van con el foco del plan
+(`aprendeFoco()`) o con lo que eligió ahí con «Siguiente». Los `{{marcadores}}` de las rutas se resuelven al cargar
 (`cifrarLiterales(APRENDIZAJE)`).
 
 **Tamaños.** Bajo 940 px de alto bajan un escalón y el estante se pliega; bajo 1180 px de ancho
@@ -1023,11 +1033,11 @@ una columna, con el título a todo lo ancho y las dos cifras debajo.
 |---|---|
 | **Esta semana**, arriba | `didiSemanaHtml()`: el audiolibro de la semana —el del paso de la semana cuando su libro está en el catálogo (`didiLibroDelPaso()`), con la portada de la biblioteca (`habLibro()`)—, el episodio de hoy y el alemán de hoy (`didiAlemanHoy()`), con Spotify, Apple y YouTube. Es lo mismo que dice *Al volante* (`didiHoy()`) |
 | **Tus trayectos**, a la izquierda | `didiViajes()`: los bloques de la rutina que empiezan por «Didi» (`esDidi()`) con su duración hasta el bloque siguiente, los días iguales juntos, qué cabe en cada trayecto y el total de la semana (27 h 30, el mismo de la franja). Debajo, las reglas al volante, con el nivel de inglés vivo de `SK` |
-| **El catálogo**, a la derecha | En el orden del plan (`didiGruposOrden()`): el foco de la semana con su marca, luego de la habilidad más débil a la menos, después el alemán (`DIDI_ALEMAN`) y el español (`DIDI_ESPANOL`). Columnas que se reparten la altura; cada audio con su tipo, *largo* o *corto*, su porqué y dónde escucharlo (`didiItemHtml()`, `didiLinks()`). Lo que está en pausa va plegado al final (`.dd-pausa`) |
+| **El catálogo**, a la derecha | En el orden de Coach (`didiGruposOrden()`): el foco de Hoy aprendes (`aprendeFoco()`) con su marca, luego el siguiente foco del plan y las demás por retorno (`skRetorno()`), después el alemán (`DIDI_ALEMAN`) y el español (`DIDI_ESPANOL`). Columnas que se reparten la altura; cada audio con su tipo, *largo* o *corto*, su porqué y dónde escucharlo (`didiItemHtml()`, `didiLinks()`). Lo que está en pausa va plegado al final (`.dd-pausa`) |
 
 **Los datos.** `DIDI_AUDIO` agrupa por habilidad y cada audiolibro apunta a su ficha de la biblioteca
 (`lib`), de donde sale la portada; `largo:true` marca los podcasts de una hora o más. Los porqués no
-llevan la calificación escrita: la tarjeta la lee viva de `SK`. El foco (Networking) trae los tres
+llevan la calificación escrita: la tarjeta la lee viva de `SK`. Networking trae los tres
 libros de su ruta y el alemán, tres podcasts para quien aprende: nivel y duración comprobados, como
 pide el prompt. Los enlaces son búsquedas, no episodios, para que no caduquen.
 

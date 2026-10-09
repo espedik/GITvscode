@@ -3219,6 +3219,46 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 /* La pregunta del ISTQB, en su panel (#istqbOverlay): se contesta tocando una opción, la primera
    respuesta es la que cuenta, y al pie va el marcador de la semana. */
 #istqbOverlay{--c:var(--p)}
+/* «Cómo lo decide Coach»: el botón junto al título de Hoy aprendes y su panel (#comoDecideOverlay) — lo
+   que manda, en orden, y renglón por renglón lo de hoy con su regla (`comoDecideHtml()`). */
+.ap-como{display:inline-flex;align-items:center;gap:5px;height:20px;margin-left:6px;padding:0 8px 0 7px;border-radius:99px;
+  border:1px solid rgba(var(--ov),.14);background:transparent;color:var(--text2);font-family:var(--mono);font-size:9px;
+  font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:color .15s,border-color .15s}
+.ap-como:hover{color:var(--cy);border-color:var(--cy)}
+.ap-como svg{width:11px;height:11px}
+.ap-como{white-space:nowrap}
+/* En el teléfono el título y el botón van en una línea y la fecha baja a la siguiente. */
+#heroAprenderPanel .hp-title{flex-wrap:wrap;row-gap:6px}
+#heroAprenderPanel .hp-title>span:first-child{white-space:nowrap}
+/* La brújula del prompt va fija arriba a la izquierda, por encima de todo: con el panel a pantalla
+   completa en el teléfono tapaba el título. Mientras está abierto se oculta; al cerrar vuelve. */
+body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
+#comoDecideOverlay{--c:var(--cy)}
+.gbm-card.cd-card{width:min(880px,100%)}
+.cd-capa{padding:11px 14px 9px;margin-bottom:9px;border-radius:12px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.08)}
+.cd-capa-k{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-family:var(--mono);font-size:9.5px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
+.cd-capa-k b{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;
+  background:color-mix(in srgb,var(--c) 16%,transparent);font-size:10px;letter-spacing:0}
+.cd-li{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:4px 0;font-size:12.5px;line-height:1.45;color:var(--text2)}
+.cd-li+.cd-li{border-top:1px solid rgba(var(--ov),.06)}
+.cd-li b{color:var(--text);font-weight:650}
+.cd-li.ok>span:first-child{text-decoration:line-through;opacity:.6}
+.cd-cuando{flex:none;font-family:var(--mono);font-size:10.5px;color:var(--text3);white-space:nowrap}
+.cd-fila{display:grid;grid-template-columns:140px minmax(0,1fr);gap:4px 18px;padding:12px 0;border-top:1px solid rgba(var(--ov),.08)}
+.cd-fila-k{padding-top:3px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--fc)}
+.cd-fila-c{min-width:0}
+.cd-hoy{font-size:14.5px;font-weight:700;line-height:1.35;color:var(--text)}
+.cd-hoy span{font-size:12px;font-weight:500;color:var(--text3);margin-left:4px}
+.cd-regla{margin-top:3px;font-size:12.5px;line-height:1.55;color:var(--text2)}
+.cd-regla b{color:var(--text);font-weight:650}
+.cd-caps{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.cd-cap{padding:4px 9px;border-radius:8px;font-family:var(--mono);font-size:10.5px;color:var(--text2);background:rgba(var(--ov),.05)}
+.cd-cap b{color:var(--text)}
+.cd-cap.on{background:color-mix(in srgb,var(--fc) 16%,transparent);color:var(--text)}
+.cd-pie{margin-top:6px;padding-top:12px;border-top:1px solid rgba(var(--ov),.08);font-size:12px;line-height:1.5;color:var(--text3)}
+.cd-pie b{color:var(--text2)}
+@media(max-width:700px){.cd-fila{grid-template-columns:minmax(0,1fr)}.cd-li{flex-direction:column;gap:2px}}
 .ha-q-t{font-size:15px;font-weight:600;color:var(--text);line-height:1.55}
 .ha-ops{display:flex;flex-direction:column;gap:7px;margin-top:14px}
 .ha-op{display:grid;grid-template-columns:16px minmax(0,1fr);gap:9px;align-items:baseline;width:100%;text-align:left;
@@ -4591,6 +4631,18 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
       <p id="istqbSub"></p>
     </div>
     <div class="gbm-body" id="istqbBody"></div>
+  </div>
+</div>
+
+<!-- Cómo lo decide Coach: lo que manda en Hoy aprendes y el porqué de lo de hoy (abrirComoDecide()). -->
+<div class="gbm-overlay" id="comoDecideOverlay" onclick="if(event.target===this) cerrarComoDecide()">
+  <div class="gbm-card cd-card">
+    <div class="gbm-head">
+      <button class="gbm-close" onclick="cerrarComoDecide()" aria-label="Cerrar">✕</button>
+      <h2>Cómo lo decide Coach</h2>
+      <p>Hoy aprendes sigue tu plan, no el azar: cada renglón tiene un orden con su porqué.</p>
+    </div>
+    <div class="gbm-body" id="comoDecideBody"></div>
   </div>
 </div>
 
@@ -6293,31 +6345,19 @@ function alemanPalabras(){
   }
   return _alPalabras;
 }
-// La palabra (o frase) del día, para Hoy aprendes y el menú: la de la rotación de hoy —ver
-// `aprendeIndice()`— o la que pediste con ↻.
-function alemanPalabraHoy(){
-  const ps = alemanPalabras(); return ps.length ? ps[aprendeIndice('de', ps.length)] : null;
-}
+// La palabra (o frase) del día, para Hoy aprendes y el menú: la primera del orden de Coach que no haya
+// salido —ver `aprendeOrdenAleman()`— o la que pediste con ↻.
+function alemanPalabraHoy(){ return aprendeDelDia('de'); }
 
 // Lo que llama el motor de pantallas cuando toca la de Alemán. `RENDERS` la nombra por
 // referencia y se evalúa al cargar: si no existe, el array revienta y el dashboard entero
 // se queda sin poder cambiar de pantalla.
 function renderAleman(){ alPinta(); }
 
-// El tema de Python del día: el de la rotación, saltando los que ya marcaste como estudiados en
-// Entrevistas (`study-done-v2`). Se fija al primer vistazo del día, así que si lo estudias hoy se
-// queda con su ✓ en vez de saltar al siguiente.
-function entrevistaTemaHoy(){
-  if(typeof ENTREVISTA_TEMAS === 'undefined' || !ENTREVISTA_TEMAS.length) return null;
-  const T = ENTREVISTA_TEMAS, n = T.length, { st, h } = aprendeHoy();
-  if(h.py == null || h.py >= n){
-    const hechos = rawGet('study-done-v2', {}) || {}, k = diaCorrido();
-    let j = 0; while(j < n && hechos[T[aprendeRotacion('py', n, k + j)].id]) j++;
-    h.py = aprendeRotacion('py', n, k + (j < n ? j : 0));
-    aprendeGuarda(st, h);
-  }
-  return T[h.py];
-}
+// El tema de Python del día: el primero del orden de Coach que no hayas estudiado en Entrevistas
+// (`study-done-v2`) —ver `aprendeOrdenPython()`—. Se fija al primer vistazo del día, así que si lo
+// estudias hoy se queda con su ✓ en vez de saltar al siguiente.
+function entrevistaTemaHoy(){ return aprendeDelDia('py'); }
 /* La etiqueta legible del módulo, con respaldo. `PY_MOD_LABEL` lo genera
    `_generar-datos-dashboard.js` leyendo el menú de la app; si el .js de datos es anterior
    a eso, se cae al id en mayúsculas en vez de reventar — que es justo lo que pasó. */
@@ -7260,9 +7300,9 @@ function faseDespuesHtml(f){
   return `<div class="hp-sub"><div class="hp-sub-lbl"><span>Después · ${esc(nx.tag)}</span><span>desde el ${nx.start.toLocaleDateString('es-MX',dm)}</span></div><div class="hp-sub-t">${esc(nx.title)}</div></div>`;
 }
 // Tu avance (diseño: diseno-avance/, Main): lo que avanza contigo y no con el calendario —cambia al
-// avanzar en su pantalla—. El paso de la semana (la habilidad del foco de «En qué invertir tu tiempo»)
-// con la portada de su libro, y la ficha de Habilidades Base en curso, la empezada más cerca de
-// terminar (mismo criterio que «SIGUIENTE» en esa pantalla), con su foto. Las dos con la misma
+// avanzar en su pantalla—. El paso de la semana (el foco del plan de Coach, `aprendeFoco()`) con la
+// portada de su libro, y la ficha de Habilidades Base en curso (`hbEnCurso()`: el orden de Coach, el
+// mismo que marca «SIGUIENTE» en esa pantalla), con su foto. Las dos con la misma
 // anatomía: en la cabecera, dónde vas y lo que sigue; en el cuerpo, bloques en orden de importancia.
 // Un tramo por paso: lleno lo hecho, marcado el que toca.
 function apTramos(n, hecho, toca){
@@ -7276,7 +7316,8 @@ const AP_ICO = {
   hecho: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
   ant: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>',
   sig: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>',
-  volver: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.4"/><path d="M3 4v5h5"/></svg>'
+  volver: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.4"/><path d="M3 4v5h5"/></svg>',
+  porque: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg>'
 };
 function apMeta(ico, html){ return `<span class="ap-av-m">${AP_ICO[ico]}<span>${html}</span></span>`; }
 // El renglón de arriba de cada tarjeta: la materia, su cuenta y «‹» / «Siguiente ›», fuera del botón que
@@ -7288,23 +7329,23 @@ function apTop(cual, mat, n, otra, rec){
     + `<button type="button" class="ap-av-ant" data-ap="${cual}" data-d="-1" onclick="apSiguiente('${cual}',-1)" title="La anterior" aria-label="${otra} anterior">${AP_ICO.ant}</button>`
     + `<button type="button" class="ap-av-sig" data-ap="${cual}" data-d="1" onclick="apSiguiente('${cual}',1)" title="¿No te convence? Pasa a otra" aria-label="Siguiente ${otra.toLowerCase()}">Siguiente${AP_ICO.sig}</button></span>`;
 }
-// «Siguiente» (d = 1), «‹» (d = −1) y «↺» (d = 0) en Tu avance: si no te convence lo que te recomienda,
-// pasas a otra opción, y la elección se queda. El paso recorre habConRuta() y cambia la habilidad abierta
-// de «En qué invertir tu tiempo», la misma que usan esa pantalla y «Al volante»; la ficha recorre
-// hbEnCurso().lista y se guarda en `dash-avance-v1`. Volver a la recomendada borra la elección y manda
-// otra vez el criterio.
+// «Siguiente» (d = 1), «‹» (d = −1) y «↺» (d = 0) en Tu avance: si no te convence lo que te recomienda
+// Coach, pasas a otra opción, y la elección se queda en `dash-avance-v1`. El paso recorre habConRuta()
+// —primero las del plan, después por retorno— y la ficha, hbEnCurso().lista; volver a la recomendada
+// borra la elección y manda otra vez el plan. La ruta abierta en En qué invertir tu tiempo no cambia.
 function apSiguiente(cual, d){
+  const st = rawGet(AVANCE_KEY, {}) || {};
   if(cual === 'paso'){
-    const lista = habConRuta(), f = habFocoActual(); if(!lista.length || !f) return;
-    const i = Math.max(0, lista.findIndex(s => s.id === f.id));
-    habFocoSet(d ? lista[(i + d + lista.length) % lista.length].id : '');
+    const lista = habConRuta(), f = aprendeFoco(), rec = habRecomendada(); if(!lista.length || !f) return;
+    const i = Math.max(0, lista.findIndex(s => s.id === f.id)), otra = d ? lista[(i + d + lista.length) % lista.length] : null;
+    if(!otra || (rec && otra.id === rec.id)) delete st.paso; else st.paso = otra.id;
   } else {
     const ec = hbEnCurso(), lista = ec.lista; if(!lista.length) return;
-    const i = Math.max(0, lista.findIndex(x => ec.actual && x.h.id === ec.actual.h.id));
-    const otra = lista[(i + d + lista.length) % lista.length];
-    rawSet(HB_ELEGIDA_KEY, !d || otra === ec.recomendada ? {} : { ficha: otra.h.id });
-    if(typeof renderHabilidadesBase === 'function') renderHabilidadesBase();
+    const i = Math.max(0, lista.findIndex(x => ec.actual && x.h.id === ec.actual.h.id)), otra = lista[(i + d + lista.length) % lista.length];
+    if(!d || otra === ec.recomendada) delete st.ficha; else st.ficha = otra.h.id;
   }
+  rawSet(AVANCE_KEY, st);
+  if(cual === 'ficha' && typeof renderHabilidadesBase === 'function') renderHabilidadesBase();
   renderHeroAprender();
   const b = document.querySelector(`#heroAprenderPanel [data-ap="${cual}"][data-d="${d || 1}"]`);
   if(b) b.focus({ preventScroll: true });
@@ -7328,7 +7369,7 @@ function apPunto(html){
 }
 function pasoSemanaHtml(){
   if(typeof habFocoActual!=='function') return '';
-  const foco=habFocoActual(); if(!foco) return '';
+  const foco=aprendeFoco(); if(!foco) return '';
   const pasos=habPasos(foco.id); if(!pasos.length) return '';
   const st=habFocoLoad(); let i=st.paso[foco.id]||0; if(i<0||i>=pasos.length) i=0;
   const p=pasos[i], sig=pasos[i+1];
@@ -7375,8 +7416,10 @@ function fichaEnCursoHtml(){
   const luego=paso?info.pasos.map((q,j)=>({q,j})).filter(x=>x.j>k&&!store[x.j]).slice(0,3):[];
   const titulo=x=>`Paso ${x.j+1} · ${esc(mdLimpiaTitulo(x.q.t))}`;
   const prox=luego[0]?{t:luego[0].q.t,d:luego[0].q.d,nombres:(luego[0].q.list||[]).map(apNombre).filter(Boolean)}:null;
-  const meta=!paso?apMeta('meta','Ficha completa')
-    :luego[0]?apMeta('sigue',`Después: <b>${titulo(luego[0])}</b>`):apMeta('meta','Último paso de la ficha');
+  // Por qué te toca, según el plan de Coach (HB_PLAN), y lo que sigue.
+  const meta=apMeta('porque',`Por qué: ${esc(hbPlan(sig.h.id).para)}`)
+    +(!paso?apMeta('meta','Ficha completa')
+    :luego[0]?apMeta('sigue',`Después: <b>${titulo(luego[0])}</b>`):apMeta('meta','Último paso de la ficha'));
   const cuerpo=paso
     ?`<span class="ap-bq"><span class="ap-bq-k ap-bq-paso">${titulo({q:paso,j:k})}</span>${paso.d?`<span class="ap-bq-t ap-bq-intro">${paso.d}</span>`:''}</span>`
       +(paso.list||[]).map(apPunto).join('')
@@ -7700,61 +7743,148 @@ function hoyAlAleman(sec, sub){
   irASlide('theme-aleman');
 }
 
-// ── Que siempre cambie. Cada catálogo avanza un puesto por día con su propio salto, coprimo con
-//    su tamaño: recorre todo antes de repetir y dos días seguidos caen lejos —otra sección, otro
-//    capítulo, otro módulo—. El día es corrido, en hora local, desde el 1-ene-2024: con el día del
-//    año, de 1 516 palabras solo salían las primeras 366, y en el mismo orden cada año. A
-//    medianoche `tickClock()` repinta Mi Día aunque el Dashboard siga abierto.
+// ── Hoy aprendes lo decide Coach, no el azar. Adán, 2026-10-09: "toda esa sección de hoy aprendes debe
+//    regirse por coach… pon de prioridad eso que deseo lograr y lo que está planeando coach y subir mis
+//    habilidades, pero no quiero que quede al aire porque si no dejas mi vida al azar". Cada renglón
+//    tiene un orden con su porqué, sacado del plan de Coach —las metas con fecha de la fase en curso
+//    (`PHASES`), el foco de habilidades (`CIFRAS.HAB_FOCO`) y tu nivel (`SK`)—: cada día toca el primero
+//    de ese orden que todavía no haya salido, y ↻ / «Siguiente» pasan al que sigue, nunca a uno al azar.
+//    «Cómo lo decide Coach» (`abrirComoDecide()`) enseña el orden y el porqué de lo de hoy. A medianoche
+//    `tickClock()` repinta Mi Día aunque el Dashboard siga abierto.
 const APRENDE_KEY = 'dash-aprende-v1';
-const APRENDE_SALTO = { de: 97, libro: 1, pod: 1, aleman: 1, py: 7, istqb: 37 };
 function diaCorrido(d){
   d = d || new Date();
   return Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - new Date(2024, 0, 1)) / 864e5);
 }
-function aprendeRotacion(slot, n, k){
-  const mcd = (x, y) => y ? mcd(y, x % y) : x;
-  let s = APRENDE_SALTO[slot] || 1; while(mcd(s, n) !== 1) s++;
-  return ((k * s) % n + n) % n;
-}
-// Lo de hoy vive en `dash-aprende-v1.hoy`: lo que pediste con ↻, el tema de Python fijado al
-// primer vistazo y lo que ya abriste. Con otra fecha se empieza en limpio.
+// Lo de hoy vive en `dash-aprende-v1.hoy`: lo fijado al primer vistazo de cada renglón (`fijo`), el
+// audiolibro que pediste con ↻ y lo que ya abriste. Con otra fecha se empieza en limpio. Lo que ya salió
+// en cada renglón vive en `salio`, para no repetirlo hasta recorrer su orden.
 function aprendeHoy(){
   const st = rawGet(APRENDE_KEY, {}) || {};
   const h = st.hoy && st.hoy.fecha === hoyLocal() ? st.hoy : { fecha: hoyLocal(), vistos: {} };
   return { st, h };
 }
 function aprendeGuarda(st, h){ st.hoy = h; rawSet(APRENDE_KEY, st); }
-// El puesto de hoy en un catálogo de n: el que pediste con ↻ o, si no, el de la rotación.
-function aprendeIndice(slot, n){
-  if(!n) return 0;
-  const h = aprendeHoy().h;
-  return (h[slot] != null && h[slot] < n) ? h[slot] : aprendeRotacion(slot, n, diaCorrido());
+// Cuánto recuerda cada renglón lo que ya salió: la palabra y el tema de Python no se repiten hasta
+// recorrer su orden entero; una pregunta del ISTQB que no contestaste vuelve a la semana, porque su
+// capítulo sigue siendo el que más puntos tiene en juego.
+const APRENDE_MEMORIA = { de: Infinity, py: Infinity, istqb: 7 };
+// Los órdenes de Coach de cada renglón, con lo que cuenta como hecho en cada uno.
+function aprendeOrdenDe(slot){
+  if(slot === 'de') return { orden: aprendeOrdenAleman(), id: w => w.de, libre: () => true };
+  if(slot === 'py'){
+    const hechos = rawGet('study-done-v2', {}) || {};
+    return { orden: aprendeOrdenPython(), id: t => t.id, libre: t => !hechos[t.id] };
+  }
+  if(slot === 'istqb'){ const ya = istqbYaContestadas(); return { orden: aprendeOrdenIstqb(), id: q => q.id, libre: q => !ya.has(q.id) }; }
+  return null;
 }
-// ↻ — otro distinto del que ves, al azar (en «Al volante», otro audiolibro); en Python y en el ISTQB, uno que no hayas hecho. Se queda
+// El primero del orden que siga libre, no haya salido hace poco y no sea `salvo`; lo apunta como
+// salido (al final, si ya había salido). Si ya salió todo, empieza otra vuelta.
+function aprendePrimero(st, slot, o, salvo){
+  st.salio = st.salio || {};
+  const lista = st.salio[slot] || [], ya = new Set(lista.slice(-(APRENDE_MEMORIA[slot] || Infinity)));
+  let x = o.orden.find(e => o.libre(e) && !ya.has(o.id(e)) && o.id(e) !== salvo);
+  if(!x){ st.salio[slot] = []; x = o.orden.find(e => o.libre(e) && o.id(e) !== salvo) || o.orden.find(e => o.id(e) !== salvo) || o.orden[0]; }
+  if(x){
+    const s = st.salio[slot] = st.salio[slot] || [];
+    const k = s.indexOf(o.id(x)); if(k >= 0) s.splice(k, 1); s.push(o.id(x));
+    if(s.length > 2000) s.splice(0, s.length - 2000);
+  }
+  return x || null;
+}
+// Lo de hoy en un renglón: lo fijado al primer vistazo del día o, si no, el primero de su orden. Si lo
+// estudias o lo contestas hoy, se queda con su ✓ en vez de saltar al siguiente.
+function aprendeDelDia(slot){
+  const o = aprendeOrdenDe(slot); if(!o || !o.orden.length) return null;
+  const { st, h } = aprendeHoy(), fijo = (h.fijo || {})[slot];
+  if(fijo != null){ const x = o.orden.find(e => o.id(e) === fijo); if(x) return x; }
+  const x = aprendePrimero(st, slot, o, null); if(!x) return null;
+  h.fijo = Object.assign({}, h.fijo, { [slot]: o.id(x) });
+  aprendeGuarda(st, h);
+  return x;
+}
+// ↻ — el siguiente en el orden de Coach (en «Al volante», el siguiente audiolibro del foco). Se queda
 // hasta mañana.
 function aprendeOtra(slot){
-  let n = 0, actual = null, libre = () => true;
-  if(slot === 'de') n = alemanPalabras().length;
-  else if(slot === 'escuchar'){ const d = didiHoy(); if(!d || !d.libro) return; n = d.libros.length; actual = d.libros.indexOf(d.libro); }
-  else if(slot === 'py'){
-    const p = entrevistaTemaHoy(); if(!p) return;
-    const hechos = rawGet('study-done-v2', {}) || {};
-    n = ENTREVISTA_TEMAS.length; actual = ENTREVISTA_TEMAS.indexOf(p);
-    libre = j => !hechos[ENTREVISTA_TEMAS[j].id];
-  } else if(slot === 'istqb'){
-    const b = istqbBanco(), ya = istqbYaContestadas();
-    n = b.length; libre = j => !ya.has(b[j].id);
-  }
-  if(n < 2) return;
-  if(actual === null) actual = aprendeIndice(slot, n);
-  let opciones = [];
-  for(let j = 0; j < n; j++) if(j !== actual && libre(j)) opciones.push(j);
-  if(!opciones.length) for(let j = 0; j < n; j++) if(j !== actual) opciones.push(j);
   const { st, h } = aprendeHoy();
-  h[slot] = opciones[Math.floor(Math.random() * opciones.length)];
+  if(slot === 'escuchar'){
+    const d = didiHoy(); if(!d || !d.libro || d.libros.length < 2) return;
+    h.escuchar = (d.libros.indexOf(d.libro) + 1) % d.libros.length;
+  } else {
+    const o = aprendeOrdenDe(slot); if(!o || o.orden.length < 2) return;
+    const x = aprendePrimero(st, slot, o, (h.fijo || {})[slot]); if(!x) return;
+    h.fijo = Object.assign({}, h.fijo, { [slot]: o.id(x) });
+  }
   aprendeGuarda(st, h);
   renderHeroAprender();
   if(slot === 'istqb' && document.getElementById('istqbOverlay')?.classList.contains('open')) istqbPintar();
+}
+// El foco de Hoy aprendes —el paso de la semana de Tu avance y «Al volante»—: el del plan de Coach para
+// hoy (`habRecomendada()`, el tramo de `CIFRAS.HAB_FOCO`) o el que eligió con «Siguiente» en Tu avance
+// (`dash-avance-v1.paso`). La ruta abierta en En qué invertir tu tiempo es para mirarla: no lo cambia.
+function aprendeFoco(){
+  const id = (rawGet(AVANCE_KEY, {}) || {}).paso;
+  const s = id ? SK.find(x => x.id === id && habPasos(x.id).length) : null;
+  return s || habRecomendada() || (typeof habFocoActual === 'function' ? habFocoActual() : null);
+}
+// Alemán, en el orden de Coach. La meta: el A2 que pide Esslingen —hasta que empieza la Fase 2 del Plan
+// Maestro— y después el B1 de la maestría y del trabajo. Primero las palabras del nivel de la etapa y,
+// dentro, lo que vas a necesitar primero al llegar —trámites, piso, dinero, salud, teléfono, ciudad,
+// súper—, luego la casa, la escuela y el trabajo; lo demás, al final y en el orden de la app.
+const AL_COACH_TEMAS = ['tramites', 'piso', 'dinero', 'salud', 'telefono', 'ciudad', 'super', 'casa', 'escuela', 'trabajo', 'oficina',
+  'mostrador', 'comida', 'compras', 'tienda', 'restaurante', 'servicios', 'coche'];
+function aprendeEtapaAleman(){
+  const f2 = PHASES.find(f => f.tag === 'Fase 2'), b1 = !!f2 && new Date() >= f2.start;
+  return { nivel: b1 ? 'B1' : 'A2', orden: b1 ? ['B1', 'A2', 'A1'] : ['A2', 'A1', 'B1'], hasta: f2 ? f2.start : null };
+}
+let _alOrden = null;
+function aprendeOrdenAleman(){
+  const e = aprendeEtapaAleman(), ps = alemanPalabras();
+  if(_alOrden && _alOrden.nivel === e.nivel && _alOrden.n === ps.length) return _alOrden.lista;
+  const tema = c => { const k = AL_COACH_TEMAS.indexOf(c); return k < 0 ? AL_COACH_TEMAS.length : k; };
+  const niv = n => { const k = e.orden.indexOf(n); return k < 0 ? 9 : k; };
+  const lista = ps.map((w, i) => ({ w, i }))
+    .sort((a, b) => niv(a.w.niv) - niv(b.w.niv) || tema(a.w.cat) - tema(b.w.cat) || a.i - b.i).map(x => x.w);
+  _alOrden = { nivel: e.nivel, n: ps.length, lista };
+  return lista;
+}
+// Python, en el orden de Coach. Tu prueba de Código es un repositorio público de pytest y los Werkstudent
+// de validación, HIL y ADAS piden Python para automatizar pruebas: Testing primero, con lo central de
+// pytest antes que unittest; mientras el foco del plan es IA, abre la generación de pruebas con IA.
+// Después los fundamentos —los retos técnicos de las entrevistas— y la POO. Lo estudiado no sale.
+const PY_COACH_MODULOS = ['testing', 'pyfund', 'poo', 'pycheat'];
+const PY_COACH_TESTING = [/^IA Test/i, /^pytest/i, /^Fixtures/i, /parametrize/i, /^Assert en pytest/i, /^Marks/i, /^conftest/i, /^Mock/i,
+  /^Coverage/i, /^GitHub Actions/i, /^API Testing/i, /^Reportes/i, /^Faker/i];
+function aprendeOrdenPython(){
+  if(typeof ENTREVISTA_TEMAS === 'undefined') return [];
+  const ia = (aprendeFoco() || {}).id === 'ia';
+  const mod = t => { const k = PY_COACH_MODULOS.indexOf(t.mod); return k < 0 ? 9 : k; };
+  const sub = t => { let k = PY_COACH_TESTING.findIndex(re => re.test(t.title)); if(k === 0 && !ia) k = 7.5; return k < 0 ? 99 : k; };
+  return ENTREVISTA_TEMAS.map((t, i) => ({ t, i })).sort((a, b) => mod(a.t) - mod(b.t) || sub(a.t) - sub(b.t) || a.i - b.i).map(x => x.t);
+}
+// El ISTQB, en el orden de Coach. El CT-GenAI se presenta en la Fase 1 y el examen pesa por capítulos
+// (`EXAMEN_GENAI.blueprint`): primero el capítulo con más puntos en juego —lo que vale en el examen por lo
+// que te falta de acierto ahí; con menos de tres respuestas cuenta la mitad— y, dentro, las preguntas de
+// 2 puntos (K3) antes que las de 1. Las que contestas no vuelven.
+function istqbPuntosCap(){
+  const p = {};
+  ((window.EXAMEN_GENAI || {}).blueprint || []).forEach(b => {
+    const c = parseInt(String(b.lo).replace(/^\D+/, ''), 10); if(c) p[c] = (p[c] || 0) + (b.pts || 1) * (b.n || 1);
+  });
+  return p;
+}
+function istqbAciertoCap(){
+  const cap = {}; istqbBanco().forEach(q => { cap[q.id] = +q.cap; });
+  const r = istqbRespuestas(), a = {};
+  for(const k in r) r[k].forEach(x => { const c = x && cap[x.id]; if(!c) return; a[c] = a[c] || { n: 0, ok: 0 }; a[c].n++; if(x.ok) a[c].ok++; });
+  return a;
+}
+function istqbEnJuego(c, pts, ac){ const a = ac[c]; return (pts[c] || 0) * (1 - (a && a.n >= 3 ? a.ok / a.n : 0.5)); }
+function aprendeOrdenIstqb(){
+  const pts = istqbPuntosCap(), ac = istqbAciertoCap();
+  return istqbBanco().map((q, i) => ({ q, i, j: istqbEnJuego(+q.cap, pts, ac) }))
+    .sort((a, b) => b.j - a.j || (b.q.pts || 1) - (a.q.pts || 1) || a.i - b.i).map(x => x.q);
 }
 // Lo hecho hoy: la palabra cuenta al abrirla y «Al volante» al tocar lo que vas a escuchar;
 // Python, al marcarlo estudiado en Entrevistas, y el ISTQB, al contestarlo.
@@ -7803,7 +7933,7 @@ function alemanHoyHtml(vistos){
   return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA,
     mat: `Alemán · ${esc((V.cats[a.cat] || {}).label || '')}`,
     estado: apEstado(vistos.de, frase ? 'frase del día' : 'palabra del día', '✓ vista'),
-    otra: frase ? 'Otra frase' : 'Otra palabra', abrir: "aprendeAbrir('de')", titulo: 'Abrir su sección en Alemán',
+    otra: frase ? 'La siguiente frase, en el orden de Coach' : 'La siguiente palabra, en el orden de Coach', abrir: "aprendeAbrir('de')", titulo: 'Abrir su sección en Alemán',
     cuerpo: `<span class="ap-de">${artHtml}${esc(a.de)}</span>
       <span class="ap-es">${esc(a.es)}${pl}${perf}</span>
       ${ex ? `<span class="ap-ex">${esc(ex)}${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</span>` : ''}
@@ -7821,15 +7951,17 @@ function didiHoy(){
   const grupos = didiGruposOrden().filter(g => didiRango(g, foco) < 2);
   const delFoco = grupos.find(g => didiRango(g, foco) === 0);
   const de = (gs, ok) => gs.flatMap(g => g.items.filter(ok).map(it => ({ it, g })));
-  const elegir = ok => { const f = delFoco ? de([delFoco], ok) : []; return f.length ? f : de(grupos, ok); };
+  // Del foco primero; si el foco tiene menos de dos, se completa con los grupos que siguen en el orden de
+  // Coach, para que nada salga dos días seguidos (un solo podcast largo se repetía sábado y domingo).
+  const elegir = ok => { const f = delFoco ? de([delFoco], ok) : []; return f.length >= 2 ? f : f.concat(de(grupos.filter(g => g !== delFoco), ok)); };
   const finde = [0, 6].indexOf(new Date().getDay()) !== -1;
   const libros = elegir(it => it.tipo === 'audio');
   const pods = elegir(it => it.tipo !== 'audio' && !!it.largo === finde);
   const k = diaCorrido(), h = aprendeHoy().h;
   const delPaso = didiLibroDelPaso(), iPaso = delPaso ? libros.findIndex(x => x.it.lib === delPaso) : -1;
   const libro = libros.length ? libros[(h.escuchar != null && h.escuchar < libros.length) ? h.escuchar
-    : iPaso >= 0 ? iPaso : aprendeRotacion('libro', libros.length, Math.floor(k / 7))] : null;
-  const pod = pods.length ? pods[aprendeRotacion('pod', pods.length, k)] : null;
+    : iPaso >= 0 ? iPaso : Math.floor(k / 7) % libros.length] : null;
+  const pod = pods.length ? pods[k % pods.length] : null;
   const horas = (typeof rutinaTareasHoy === 'function' ? rutinaTareasHoy() : [])
     .filter(esDidi).map(t => t.hora);
   return { libros, libro, pod, finde, horas };
@@ -7846,7 +7978,7 @@ function escucharHoyHtml(vistos){
   const estado = vistos.escuchar ? '<span class="ap-estado ok">✓ escuchando</span>'
     : '<button type="button" class="ap-estado ir" onclick="abrirDidi()">Qué escuchar</button>';
   return `<div class="ap-fila" style="--c:var(--o)">
-      <div class="ap-top">${AP_PUNTO}<span class="ap-mat">Al volante · ${esc(sk ? sk.name : '')}</span>${estado}<button type="button" class="ap-otra" onclick="aprendeOtra('escuchar')" title="Otro audiolibro" aria-label="Otro audiolibro">${AP_OTRA}</button></div>
+      <div class="ap-top">${AP_PUNTO}<span class="ap-mat">Al volante · ${esc(sk ? sk.name : '')}</span>${estado}<button type="button" class="ap-otra" onclick="aprendeOtra('escuchar')" title="El siguiente audiolibro del foco" aria-label="El siguiente audiolibro del foco">${AP_OTRA}</button></div>
       <div class="ap-cuerpo">
         <span class="ap-t">${oir(libro.it)}</span>
         <span class="ap-es ap-1l"><b class="ap-hora">${esc(cuando)}</b> · audiolibro de la semana — ${esc(libro.it.d)}</span>
@@ -7863,7 +7995,7 @@ function pythonHoyHtml(){
   const hechos = rawGet('study-done-v2', {}) || {};
   const n = ENTREVISTA_TEMAS.filter(t => hechos[t.id]).length;
   return apFila({ slot: 'py', c: 'var(--cy)', marca: AP_PUNTO, mat: `Python · ${esc(pyModLabel(p.mod))}`,
-    estado: apEstado(!!hechos[p.id], 'tema del día', '✓ estudiado'), otra: 'Otro tema', abrir: "aprendeAbrir('py')",
+    estado: apEstado(!!hechos[p.id], 'tema del día', '✓ estudiado'), otra: 'El siguiente tema, en el orden de Coach', abrir: "aprendeAbrir('py')",
     titulo: `Abrir el tema en la app de Entrevistas · llevas ${n} de ${ENTREVISTA_TEMAS.length} estudiados`,
     cuerpo: `<span class="ap-t">${esc(p.title)}</span>${p.hint ? `<span class="ap-es ap-2l">${esc(p.hint)}</span>` : ''}` });
 }
@@ -7877,9 +8009,8 @@ function istqbBanco(){
   const A = window.EXAMEN_GENAI, B = window.EXAMEN_GENAI_B;
   return ((A && A.banco) || []).concat((B && B.banco) || []);
 }
-function istqbPreguntaHoy(){
-  const b = istqbBanco(); return b.length ? b[aprendeIndice('istqb', b.length)] : null;
-}
+// La de hoy: la primera del orden de Coach que no hayas contestado —ver `aprendeOrdenIstqb()`—.
+function istqbPreguntaHoy(){ return aprendeDelDia('istqb'); }
 function istqbRespuestas(){
   const r = (rawGet(APRENDE_KEY, {}) || {}).istqb || {}, out = {};
   for(const k in r) out[k] = Array.isArray(r[k]) ? r[k] : [r[k]];
@@ -7923,7 +8054,7 @@ function istqbHtml(){
   const estado = !hecha ? '<button type="button" class="ap-estado ir" onclick="abrirIstqb()">Responder</button>'
     : `<span class="ap-estado ${hecha.ok ? 'ok' : 'mal'}">${hecha.ok ? '✓ correcta' : '✗ era la ' + 'ABCD'[q.r]}</span>`;
   return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, mat: `ISTQB CT-GenAI · Cap. ${q.cap} · ${esc(q.k)}`,
-    estado, otra: 'Otra pregunta', abrir: 'abrirIstqb()', titulo: 'Contestar la pregunta del día',
+    estado, otra: 'La siguiente pregunta, en el orden de Coach', abrir: 'abrirIstqb()', titulo: 'Contestar la pregunta del día',
     cuerpo: `<span class="ap-q ap-2l">${q.q}</span>` });
 }
 // El panel: la pregunta y sus cuatro opciones. Contestada, la buena en verde y la tuya en rojo si
@@ -7941,7 +8072,7 @@ function istqbPintar(){
     <div class="ha-ops">${ops}</div>
     ${hecha ? `<div class="ha-res ${hecha.ok ? 'ok' : 'mal'}">${hecha.ok ? '✓ Correcta' : '✗ Era la ' + LET[q.r]}<span>syllabus ${esc(q.ref)}</span></div>
     <div class="ha-why">${q.why}</div>` : ''}
-    <div class="ha-pie"><span>${istqbMarcador()}</span><span class="ha-pie-acc">${hecha ? `<button type="button" class="ha-otra" onclick="aprendeOtra('istqb')">Otra pregunta →</button>` : ''}<a href="javascript:void(0)" class="hp-link" onclick="istqbAlSimulacro()">Simulacro completo →</a></span></div>`;
+    <div class="ha-pie"><span>${istqbMarcador()}</span><span class="ha-pie-acc">${hecha ? `<button type="button" class="ha-otra" onclick="aprendeOtra('istqb')">Siguiente pregunta →</button>` : ''}<a href="javascript:void(0)" class="hp-link" onclick="istqbAlSimulacro()">Simulacro completo →</a></span></div>`;
 }
 // Mientras está abierto, Mi Día no rota: la rotación vuelve al cerrarlo.
 function abrirIstqb(){
@@ -7957,6 +8088,117 @@ function istqbAlSimulacro(){
   if(typeof abrirExamenGenAI === 'function') abrirExamenGenAI();
 }
 
+// ── Cómo lo decide Coach (#comoDecideOverlay). El botón junto a «Hoy aprendes» (Adán: "pon lo que definirá
+//    coach para esto en un botón que muestre cómo estás definiendo esto"). Arriba, lo que manda y en qué
+//    orden: tus metas con fecha —las tareas de la Fase 1 a las que sirve lo que estudias—, el plan de
+//    Coach —la fase y el foco de habilidades— y subir tus habilidades —nivel × peso, `skRetorno()`—.
+//    Abajo, renglón por renglón, lo de hoy y su regla. Todo sale de las mismas funciones que eligen: si
+//    una regla cambia, el panel cambia con ella. Las metas son ids de tareas de `PHASES`: el mes y si ya
+//    está hecha (`coach_checks_v1`) salen de ahí.
+const CD_METAS = [
+  { id: 'a1-7',  t: 'Aprobar el ISTQB CT-GenAI',        para: 'la pregunta del ISTQB, el paso de la semana, «Al volante» y Python' },
+  { id: 'a1-4',  t: 'Las dos cartas de recomendación',  para: 'la ficha de Networking' },
+  { id: 'a1-18', t: 'Subir tu ingreso desde noviembre', para: 'la ficha de Persuadir' },
+  { id: 'a1-10', t: 'Mandar la solicitud a Esslingen',  para: 'el foco de Inglés, después del ISTQB' },
+  { id: 'a1-14', t: 'Alemán A2, el que pide Esslingen', para: 'la palabra del día' }
+];
+function cdMes(ym){
+  const p = String(ym || '').split('-').map(Number);
+  return p[1] ? MES_LABEL_FULL[p[1] - 1].slice(0, 3).toLowerCase() + ' ' + p[0] : '';
+}
+function cdFecha(d){ return d ? MES_LABEL_FULL[d.getMonth()].slice(0, 3).toLowerCase() + ' ' + d.getFullYear() : ''; }
+function cdTarea(id){ for(const f of PHASES) for(const s of (f.semanas || [])) if(s.id === id) return { s, f }; return null; }
+function comoDecideHtml(){
+  const hoy = new Date(), checks = rawGet('coach_checks_v1', {}) || {};
+  const fase = PHASES.find(f => hoy >= f.start && hoy <= f.end), plan = habPlanHoy(), etapa = aprendeEtapaAleman();
+  const skN = id => (SK.find(s => s.id === id) || {}).name || id;
+  const li = (txt, cuando, ok) => `<div class="cd-li${ok ? ' ok' : ''}"><span>${txt}</span>${cuando ? `<span class="cd-cuando">${cuando}</span>` : ''}</div>`;
+
+  // 1 · Tus metas con fecha: lo que estudias sirve a estas tareas de la fase en curso.
+  const metas = CD_METAS.map(m => {
+    const x = cdTarea(m.id); if(!x) return '';
+    const cuando = x.s.mes ? cdMes(x.s.mes) : (m.id === 'a1-14' && etapa.hasta ? 'hasta ' + cdFecha(etapa.hasta) : x.f.tag);
+    return li(`<b>${m.t}</b> → ${m.para}`, cuando, !!checks[m.id]);
+  }).join('') + li('<b>Salida a Alemania</b> → lo que vas a necesitar al llegar', esc(CIFRAS.texto('{{maestriaInicio}}')));
+
+  // 2 · El plan de Coach: la fase en curso y el foco de habilidades.
+  const t = plan.tramo, sig = plan.siguiente;
+  const planHtml = (fase ? li(`<b>${esc(fase.tag)}</b> · ${esc(fase.title)}`, `${cdFecha(fase.start)} – ${cdFecha(fase.end)}`) : '')
+    + (t ? li(`<b>Foco: ${esc(skN(t.id))}</b>, ${t.horas} h a la semana. ${esc(t.semana)} Entregable: <b>${esc(t.entregable)}</b>`, `${cdMes(t.desde)} – ${cdMes(t.hasta)}`) : '')
+    + (sig ? li(`Después: <b>${esc(skN(sig.id))}</b> — ${esc(sig.entregable)}`, cdMes(sig.desde)) : '');
+
+  // 3 · Subir tus habilidades: las que más mueven tu nivel por hora (peso × lo que les falta), sin las de pausa.
+  const habs = SK.filter(s => !s.pausa).map(s => ({ s, r: skRetorno(s) })).sort((a, b) => b.r - a.r).slice(0, 5)
+    .map(x => li(`<b>${esc(x.s.name)}</b> · nivel ${x.s.val}, peso ×${x.s.w}`, `retorno ${x.r}`)).join('');
+
+  // Renglón por renglón.
+  const filas = [], foco = aprendeFoco(), rec = habRecomendada();
+  const w = alemanPalabraHoy(), V = (typeof alVocab === 'function') ? alVocab() : null;
+  if(w && V){
+    const salio = new Set((((rawGet(APRENDE_KEY, {}) || {}).salio || {}).de) || []);
+    const delNivel = alemanPalabras().filter(x => x.niv === etapa.nivel), van = delNivel.filter(x => salio.has(x.de)).length;
+    const temas = AL_COACH_TEMAS.slice(0, 7).map(c => (V.cats[c] || {}).label || c).join(', ').toLowerCase();
+    filas.push({ k: 'Alemán', c: 'var(--g)', hoy: `${w.art && w.art !== '-' && w.art !== 'pl.' ? esc(w.art) + ' ' : ''}${esc(w.de)} <span>${esc((V.cats[w.cat] || {}).label || w.cat)} · ${esc(w.niv || '')}</span>`,
+      regla: `Primero el <b>${etapa.nivel}</b>${etapa.nivel === 'A2' ? `, el certificado que pide Esslingen, hasta la Fase 2 (${cdFecha(etapa.hasta)})` : ', el de la maestría y el trabajo'}. Dentro, lo que vas a necesitar primero al llegar —${esc(temas)}—, luego la casa, la escuela y el trabajo, y lo demás al final. Cada día, la siguiente que no haya salido: van <b>${van} de ${delNivel.length}</b> del ${etapa.nivel}.` });
+  }
+  const d = didiHoy();
+  if(d && d.libro){
+    const skDe = it => SK.find(s => s.id === (it && it.g && it.g.sk)) || {}, delPaso = didiLibroDelPaso();
+    const delFoco = it => !!foco && it.g && it.g.sk === foco.id, nombre = it => `<b>${esc(skDe(it).name || '')}</b>`;
+    const rLibro = delPaso && d.libro.it.lib === delPaso ? 'El audiolibro es el libro del paso de la semana.'
+      : delFoco(d.libro) ? 'El audiolibro, el siguiente del foco cada lunes.'
+      : `${foco ? esc(foco.name) : 'El foco'} no tiene audiolibros en el catálogo: va el de ${nombre(d.libro)}, la habilidad que sigue por retorno, uno por semana.`;
+    const rPod = !d.pod ? '' : (delFoco(d.pod) ? 'El podcast, el siguiente del foco cada día' : `El podcast, de ${nombre(d.pod)}`) + ' (los de una hora o más, el fin de semana).';
+    filas.push({ k: 'Al volante', c: 'var(--o)', hoy: `${esc(d.libro.it.n)}${d.pod ? ` <span>· ${esc(d.pod.it.n)}</span>` : ''}`,
+      regla: `Primero lo del foco${foco ? ` (<b>${esc(foco.name)}</b>)` : ''}, luego el siguiente foco del plan y las habilidades con más retorno; lo que Coach tiene en pausa no entra. ${rLibro} ${rPod}` });
+  }
+  const p = entrevistaTemaHoy();
+  if(p){
+    const hechos = rawGet('study-done-v2', {}) || {}, n = ENTREVISTA_TEMAS.filter(x => hechos[x.id]).length, cod = SK.find(s => s.id === 'codigo');
+    filas.push({ k: 'Python', c: 'var(--cy)', hoy: `${esc(p.title)} <span>${esc(pyModLabel(p.mod))}</span>`,
+      regla: `Testing primero, con lo central de pytest antes que unittest. Tu prueba de Código en Coach: <b>${esc(cod ? cod.prueba : '')}</b> ${foco && foco.id === 'ia' ? 'Con el foco en IA, abre la generación de pruebas con IA. ' : ''}Después los fundamentos y la POO. Lo que estudias no vuelve: llevas <b>${n} de ${ENTREVISTA_TEMAS.length}</b>.` });
+  }
+  const q = istqbPreguntaHoy();
+  if(q){
+    const pts = istqbPuntosCap(), ac = istqbAciertoCap(), X = window.EXAMEN_GENAI || {}, ex = cdTarea('a1-7');
+    const caps = Object.keys(pts).map(Number).sort((a, b) => istqbEnJuego(b, pts, ac) - istqbEnJuego(a, pts, ac));
+    const tabla = caps.map(c => { const a = ac[c];
+      return `<span class="cd-cap${c === +q.cap ? ' on' : ''}"><b>Cap. ${c}</b> ${pts[c]} pts · ${a && a.n ? `${a.ok} de ${a.n}` : 'sin respuestas'} · ${istqbEnJuego(c, pts, ac).toFixed(1)} en juego</span>`; }).join('');
+    filas.push({ k: 'ISTQB', c: 'var(--p)', hoy: `Capítulo ${esc(q.cap)} · ${esc(q.lo || '')} <span>${q.pts > 1 ? q.pts + ' puntos' : '1 punto'}</span>`,
+      regla: `El examen va en ${ex && ex.s.mes ? cdMes(ex.s.mes) : 'la Fase 1'}${X.meta ? ` (${X.meta.preguntas} preguntas; el corte es ${X.meta.corte} de ${X.meta.puntos})` : ''}. Primero el capítulo con más puntos en juego —lo que vale en el examen por lo que te falta de acierto ahí; con menos de tres respuestas cuenta la mitad— y, dentro, las de 2 puntos. Las que contestas no vuelven.`,
+      extra: `<div class="cd-caps">${tabla}</div>` });
+  }
+  if(foco){
+    const pasos = habPasos(foco.id), st = habFocoLoad(); let i = st.paso[foco.id] || 0; if(i < 0 || i >= pasos.length) i = 0;
+    filas.push({ k: 'Paso de la semana', c: 'var(--w)', hoy: `${esc(foco.name)} · ${esc(pasos[i] ? pasos[i].n : '')} <span>paso ${i + 1} de ${pasos.length}</span>`,
+      regla: rec && rec.id !== foco.id ? `Lo elegiste tú con «Siguiente». El de Coach es <b>${esc(rec.name)}</b>: «↺» en la tarjeta vuelve a él.`
+        : `El foco del plan para hoy${t ? `, de ${cdMes(t.desde)} a ${cdMes(t.hasta)}` : ''}: su ruta, paso a paso, al ritmo que la avanzas en En qué invertir tu tiempo. ${t ? esc(t.cambio) : ''}` });
+  }
+  const ec = hbEnCurso();
+  if(ec.actual){
+    const x = ec.actual, propia = ec.recomendada && x.h.id !== ec.recomendada.h.id;
+    const luego = ec.lista.filter(y => y !== x).slice(0, 3).map(y => esc(y.h.t)).join(' · ');
+    filas.push({ k: 'Habilidades Base', c: 'var(--b)', hoy: `${esc(x.h.t)} <span>${x.hechos} de ${x.total} pasos</span>`,
+      regla: `${propia ? `La elegiste tú con «Siguiente»; la de Coach es <b>${esc(ec.recomendada.h.t)}</b>. ` : ''}<b>Por qué:</b> ${esc(hbPlan(x.h.id).para)} El orden: primero lo que pide la fase en curso, luego lo de antes de irte, lo de Alemania y lo demás; a igual prioridad, la que ya empezaste. Lo que choca con tu meta de alcohol espera al final.${luego ? ` Después: ${luego}.` : ''}` });
+  }
+
+  return `<div class="cd-capa"><div class="cd-capa-k"><b>1</b>Tus metas con fecha</div>${metas}</div>
+    <div class="cd-capa"><div class="cd-capa-k"><b>2</b>El plan de Coach</div>${planHtml}</div>
+    <div class="cd-capa"><div class="cd-capa-k"><b>3</b>Subir tus habilidades</div>${habs}</div>
+    <div class="gbm-sec">Renglón por renglón, lo de hoy</div>
+    ${filas.map(r => `<div class="cd-fila" style="--fc:${r.c}"><div class="cd-fila-k">${r.k}</div><div class="cd-fila-c"><div class="cd-hoy">${r.hoy}</div><div class="cd-regla">${r.regla}</div>${r.extra || ''}</div></div>`).join('')}
+    <div class="cd-pie">«Siguiente» y ↻ siguen este mismo orden, nunca el azar. Lo que cambias tú queda marcado como <b>elegida por ti</b> y «↺» vuelve a lo de Coach. Las metas, las fases, el foco y los niveles se cambian en Coach; este panel los lee de ahí.</div>`;
+}
+// Mientras está abierto, Mi Día no rota: la rotación vuelve al cerrarlo.
+function abrirComoDecide(){
+  const ov = document.getElementById('comoDecideOverlay'), b = document.getElementById('comoDecideBody'); if(!ov || !b) return;
+  b.innerHTML = comoDecideHtml(); ov.classList.add('open'); clearInterval(timer);
+}
+function cerrarComoDecide(){
+  const ov = document.getElementById('comoDecideOverlay');
+  if(ov && ov.classList.contains('open')){ ov.classList.remove('open'); restartTimer(); }
+}
+
 function renderHeroAprender(){
   const el = document.getElementById('heroAprenderPanel'); if(!el) return;
   const vistos = aprendeHoy().h.vistos || {};
@@ -7969,7 +8211,7 @@ function renderHeroAprender(){
   const d = new Date();
   const fecha = `${DIAS_CORTOS[d.getDay()].toLowerCase()} ${d.getDate()} ${MES_LABEL_FULL[d.getMonth()].slice(0, 3).toLowerCase()}`;
   const avance = pasoSemanaHtml() + fichaEnCursoHtml();
-  el.innerHTML = `<div class="hp-title"><span>🎓 Hoy aprendes</span><span class="ap-fecha">${fecha} · <b>${hechos.filter(Boolean).length} de 4</b></span></div>
+  el.innerHTML = `<div class="hp-title"><span>🎓 Hoy aprendes<button type="button" class="ap-como" onclick="abrirComoDecide()" title="El orden de Coach y el porqué de lo de hoy">${AP_ICO.porque}Cómo lo decide Coach</button></span><span class="ap-fecha">${fecha} · <b>${hechos.filter(Boolean).length} de 4</b></span></div>
     <div class="ap-barra" title="La palabra cuenta al abrirla; «Al volante», al tocar qué escuchar; Python, al marcarlo estudiado; el ISTQB, al contestarlo">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
     <div class="ap-lista">${alemanHoyHtml(vistos)}${escucharHoyHtml(vistos)}${pythonHoyHtml()}${istqbHtml()}</div>
     ${avance ? `<div class="ap-avance"><span class="ap-lbl">Tu avance</span>${avance}</div>` : ''}`;
@@ -9561,14 +9803,16 @@ function renderDidiStrip(){
     <button class="didi-strip-btn" onclick="abrirDidi()">🚗 Qué escuchar →</button>`;
 }
 
-// El orden del catálogo, el mismo en el panel y en «Al volante»: primero la habilidad en foco de
-// En qué invertir tu tiempo; luego las demás, de la más débil a la menos; al final las que están en
-// pausa (`PRIORIDAD_EXCLUIDAS`), que «Al volante» deja fuera.
-function didiFoco(){ return (typeof habFocoActual === 'function' && habFocoActual()) || null; }
+// El orden del catálogo, el mismo en el panel y en «Al volante»: primero el foco de Hoy aprendes —el del
+// plan de Coach o el que eligió en Tu avance (`aprendeFoco()`)—; luego el siguiente foco del plan y las demás,
+// por retorno (`skRetorno()`: lo que más sube tu nivel por hora); al final las que están en pausa
+// (`PRIORIDAD_EXCLUIDAS`), que «Al volante» deja fuera.
+function didiFoco(){ return (typeof aprendeFoco === 'function' && aprendeFoco()) || null; }
 function didiRango(g, foco){ return (foco && g.sk === foco.id) ? 0 : (PRIORIDAD_EXCLUIDAS.indexOf(g.sk) !== -1 ? 2 : 1); }
 function didiGruposOrden(){
-  const foco = didiFoco(), val = g => { const s = SK.find(x => x.id === g.sk); return s ? s.val : 999; };
-  return DIDI_AUDIO.slice().sort((a, b) => didiRango(a, foco) - didiRango(b, foco) || val(a) - val(b));
+  const foco = didiFoco(), sig = (habPlanHoy().siguiente || {}).id;
+  const peso = g => { if(sig && g.sk === sig) return 1e6; const s = SK.find(x => x.id === g.sk); return s ? skRetorno(s) : -1; };
+  return DIDI_AUDIO.slice().sort((a, b) => didiRango(a, foco) - didiRango(b, foco) || peso(b) - peso(a));
 }
 
 // Los trayectos de Didi salen de la rutina (RUTINA_TASKS): cada bloque que empieza por «Didi»
@@ -9612,7 +9856,7 @@ function didiLibroDelPaso(){
 }
 // El alemán de hoy: uno de DIDI_ALEMAN, distinto cada día.
 function didiAlemanHoy(){
-  return (typeof DIDI_ALEMAN !== 'undefined' && DIDI_ALEMAN.length) ? DIDI_ALEMAN[aprendeRotacion('aleman', DIDI_ALEMAN.length, diaCorrido())] : null;
+  return (typeof DIDI_ALEMAN !== 'undefined' && DIDI_ALEMAN.length) ? DIDI_ALEMAN[diaCorrido() % DIDI_ALEMAN.length] : null;
 }
 // Una tarjeta del catálogo. Las de las 12 habilidades llevan su nivel vivo de SK; el foco, su marca.
 function didiGrupoHtml(g, foco){
@@ -13382,17 +13626,53 @@ function hbAvance(id){
   const hechos=info.pasos.filter((_,i)=>store[i]).length;
   return {hechos,total,pct:Math.round(hechos/total*100)};
 }
-// La ficha en curso, la misma en las dos pantallas que la nombran —«SIGUIENTE» aquí y Tu avance en
-// Mi Día—: la que Adán eligió con «Siguiente» en Tu avance (`dash-avance-v1`), mientras siga a medias o
-// sin empezar; si no, la empezada más cerca de terminar —cerrar algo que ya llevas a medias motiva más
-// que abrir otra—, y sin ninguna empezada, la primera del temario. `lista` es ese orden, el que
-// recorre «Siguiente»; las terminadas no entran.
-const HB_ELEGIDA_KEY = 'dash-avance-v1';
+// Para qué te sirve cada ficha de Habilidades Base en el plan de Coach, y cuándo: `ahora`, lo que pide la
+// Fase 1 (las cartas de recomendación, la palanca de ingreso, el dinero); `antes`, lo de antes de irte;
+// `alemania`, lo de vivir allá, y lo que choca con tu meta de alcohol espera al final (`espera`). Una
+// ficha que no está aquí no tiene fecha en el plan y va después. Dentro de cada grupo manda el orden de
+// esta lista. El grupo se mueve con la fase en curso (`hbRango()`): pasada la Fase 1, lo de `ahora` queda
+// como lo de antes de irte, y desde la Fase 2 lo de Alemania sube con él.
+const HB_PLAN = {
+  networking:   { cuando: 'ahora',    para: 'Las dos cartas de recomendación para Esslingen salen de tu red, y en Alemania el Werkstudent llega por recomendación.' },
+  persuadir:    { cuando: 'ahora',    para: 'Es la palanca de ingreso de la Fase 1: pedir el aumento con números es negociar, y el ingreso nuevo decide si te vas en 2027.' },
+  dinero:       { cuando: 'ahora',    para: 'Finanzas es la habilidad que decide si te vas en 2027: se practica cada quincena con el Plan Maestro.' },
+  manejar:      { cuando: 'antes',    para: 'El BYD es tu ingreso de Didi hasta irte, y en Alemania se maneja estándar.' },
+  recuperar:    { cuando: 'antes',    para: 'Dormir bien sostiene el estudio del CT-GenAI, el Hyrox y tus metas de conducta.' },
+  decirno:      { cuando: 'antes',    para: 'Cada sí de más sale del ahorro o de tus horas de estudio: protege la quincena y el foco.' },
+  mecanica:     { cuando: 'antes',    para: 'El coche te da de comer hasta la salida y después se renta: cuidarlo es dinero.' },
+  caracter:     { cuando: 'antes',    para: 'Mudarte solo a otro país pide decidir rápido y sostenerte sin tu red de siempre.' },
+  cocinar:      { cuando: 'alemania', para: 'En Esslingen comes de lo que cocinas: es tu presupuesto de estudiante.' },
+  reparaciones: { cuando: 'alemania', para: 'Tu cuarto en Esslingen: colgar, arreglar una fuga o un contacto sin pagarle a nadie.' },
+  auxilios:     { cuando: 'alemania', para: 'Vas a vivir solo y lejos de tu familia.' },
+  relacionarte: { cuando: 'alemania', para: 'La maestría y el Werkstudent también se ganan en el trato de cada día.' },
+  sacarmejor:   { cuando: 'alemania', para: 'Los proyectos en equipo de la maestría, liderando como en Bosch.' },
+  leerpersonas: { cuando: 'alemania', para: 'Entrevistas y equipos nuevos, en otro idioma y otra cultura.' },
+  vino:         { cuando: 'espera',   para: 'Saber de anfitrión: espera mientras dure tu meta de alcohol.' },
+  coctel:       { cuando: 'espera',   para: 'Saber de anfitrión: espera mientras dure tu meta de alcohol.' },
+  citas:        { cuando: 'espera',   para: 'Lleva copas entre sus pasos: espera mientras dure tu meta de alcohol.' }
+};
+function hbPlan(id){ return HB_PLAN[id] || { cuando: 'despues', para: 'No tiene fecha en el plan de Coach: va después de lo que sí la tiene.' }; }
+// El grupo de una ficha según la fase en curso: 0 lo de esta fase, 1 lo de antes de irte, 2 lo de
+// Alemania, 3 lo demás y 4 lo que espera.
+function hbRango(id){
+  const hoy = new Date(), f = PHASES.find(x => hoy >= x.start && hoy <= x.end) || PHASES.find(x => hoy < x.start);
+  const n = f ? (parseInt(String(f.tag).replace(/\D+/g, ''), 10) || 1) : 4, c = hbPlan(id).cuando;
+  if(c === 'ahora') return n <= 1 ? 0 : 1;
+  if(c === 'antes') return n <= 2 ? 1 : 3;
+  if(c === 'alemania') return n >= 2 ? 1 : 2;
+  return c === 'espera' ? 4 : 3;
+}
+// La ficha en curso, la misma en las dos pantallas que la nombran —«SIGUIENTE» aquí y Tu avance en Mi
+// Día—: la que eligió con «Siguiente» en Tu avance (`dash-avance-v1.ficha`), mientras siga a medias o sin
+// empezar; si no, la primera del orden de Coach (HB_PLAN). A igual grupo, la ya empezada y, entre dos
+// empezadas, la más avanzada. `lista` es ese orden, el que recorre «Siguiente»; las terminadas no entran.
+const AVANCE_KEY = 'dash-avance-v1';
 function hbEnCurso(){
   const av = HABILIDADES_BASE.map(h => Object.assign({ h }, hbAvance(h.id)));
-  const abiertas = av.filter(x => x.total && x.hechos < x.total);
-  const lista = abiertas.filter(x => x.hechos > 0).sort((a, b) => b.pct - a.pct).concat(abiertas.filter(x => x.hechos === 0));
-  const elegida = (rawGet(HB_ELEGIDA_KEY, {}) || {}).ficha;
+  const plan = Object.keys(HB_PLAN), orden = x => { const k = plan.indexOf(x.h.id); return k < 0 ? plan.length : k; };
+  const lista = av.map((x, i) => Object.assign(x, { i, rango: hbRango(x.h.id) })).filter(x => x.total && x.hechos < x.total)
+    .sort((a, b) => a.rango - b.rango || (b.hechos > 0) - (a.hechos > 0) || b.pct - a.pct || orden(a) - orden(b) || a.i - b.i);
+  const elegida = (rawGet(AVANCE_KEY, {}) || {}).ficha;
   const recomendada = lista[0] || av[0] || null;
   return { lista, recomendada, actual: lista.find(x => x.h.id === elegida) || recomendada };
 }
@@ -13406,8 +13686,8 @@ function renderHabilidadesBase(){
   const estado=x=>(x.total&&x.hechos===x.total)?'ok':(x.hechos===0?'zero':'');
 
   // "SIGUIENTE" = la ficha en curso de hbEnCurso(), la misma que enseña Tu avance en Mi Día: la que
-  // eligió ahí con «Siguiente» o, si no, la empezada más cerca de terminar. Con 27 fichas hace falta un
-  // punto de entrada o la pantalla se vuelve un catálogo.
+  // eligió ahí con «Siguiente» o, si no, la primera del orden de Coach (HB_PLAN). Con 27 fichas hace
+  // falta un punto de entrada o la pantalla se vuelve un catálogo.
   const sig=((hbEnCurso().actual||{}).h||{}).id||null;
 
   const eq=av.map(x=>`<i class="${estado(x)}" style="height:${Math.round(18+x.pct*0.82)}%" title="${x.h.t} — ${x.pct}%"></i>`).join('');
@@ -13684,6 +13964,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&document.getElementById('calOverlay').classList.contains('open')){ cerrarCalendario(); return; }
   if(e.key==='Escape'&&document.getElementById('gbmOverlay').classList.contains('open')){ cerrarGBM(); return; }
   if(e.key==='Escape'&&document.getElementById('istqbOverlay').classList.contains('open')){ cerrarIstqb(); return; }
+  if(e.key==='Escape'&&document.getElementById('comoDecideOverlay').classList.contains('open')){ cerrarComoDecide(); return; }
   if(e.key==='ArrowRight') nextSlide();
   if(e.key==='ArrowLeft') prevSlide();
   if(e.key===' '){e.preventDefault();togglePlay();}
