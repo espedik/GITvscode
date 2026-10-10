@@ -1212,44 +1212,65 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .inv-btn-sub{font-size:10.5px;color:var(--text2);line-height:1.35;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
-/* Subtareas (2026-08-07, resaltadas a petición de Adán: "ni se ven", "de otro estilo, color") —
-   cada una es su propia tarjetita (fondo + borde), no solo texto suelto en itálica, para que se
-   note de un vistazo que hay una lista debajo del título. Dentro de cada una, si el texto trae
-   un " — " (producto/ítem seguido de la instrucción, patrón usado en todas las subtareas de
-   skincare/cabello/ejercicio: "Producto: Marca — qué hacer con él"), se pinta la primera parte
-   (el producto/ítem) en un color de acento y la segunda (la acción) en el color de texto
-   secundario — ambos colores ya están definidos para tema claro Y oscuro (`--cy`/`--text2` en
-   :root arriba), así se ve bien en los dos sin reglas extra por tema.  */
-/* Subtareas más chicas que la tarea principal (2026-08-08, pedido explícito: "los subtask de las
-   rutinas, debes hacerlas mas pequeñas y la tarea principal el tamaño esta bien") — font-size,
-   padding y gaps reducidos; .rt2-txt (tarea principal, arriba en el CSS) no se tocó. */
-/* Cabecera de grupo dentro de un bloque: el nombre y una línea que llega hasta el borde. */
-.rt2-sec{display:flex;align-items:center;gap:9px;margin:11px 0 5px;
-  font-size:9.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--text3)}
-.rt2-sec:first-child{margin-top:2px}
-.rt2-sec::after{content:'';flex:1;height:1px;background:rgba(var(--ov),.14)}
-.rt2-sub{margin-top:4px;display:flex;flex-direction:column;gap:3px}
-.rt2-sub-item{display:flex;align-items:flex-start;gap:7px;font-size:12px;line-height:1.45;
-  background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.09);border-left:2px solid var(--cy);
-  border-radius:6px;padding:4px 7px}
-.rt2-sub-check{flex-shrink:0;margin-top:2px;font-size:10px}
-.rt2-sub-prod{font-weight:800;color:var(--cy)}
-/* El renglón de un producto en la rutina: nombre y botón "Qué es", nada más (2026-09-03).
-   El botón es el MISMO de la lista de la compra (.lc-info, en ficha.css) — no una copia con
-   otro estilo: si cambia ahí, cambia aquí. Solo se ajusta el tamaño, que en un renglón de
-   12px se ve enorme con el padding de la lista. */
-.rt2-sub-prodrow{display:inline-flex;align-items:center;gap:9px;flex-wrap:wrap}
-.rt2-sub-prodrow .lc-info{padding:2px 8px;font-size:9px;border-radius:6px}
-.rt2-sub-prodrow .lc-info svg{width:10px;height:10px}
-/* Variante <a> — solo en los pasos de skincare/cabello marcados `producto:true` en RUTINA_TASKS
-   (ver subtareasHtml()), enlaza a una búsqueda de Mercado Libre. text-decoration:none por default,
-   como el resto de los links del archivo (.hp-link) — el 🛒 al final ya avisa que es clicable. */
-a.rt2-sub-prod{text-decoration:none;cursor:pointer}
-a.rt2-sub-prod:hover{text-decoration:underline}
-.rt2-sub-dash{color:var(--text3)}
-.rt2-sub-action{color:var(--text2)}
-.rt2-sub-txt{font-weight:700;color:var(--text)}
-.rt2-sub-done{opacity:.55;text-decoration:line-through;border-left-color:var(--text3)}
+/* Los pasos de un bloque (`pasosHtml()`), en el AHORA. Una columna por sección —Ducha y cabello, Piel y
+   minoxidil, Suplementos— con su línea divisora y su cuenta; sin secciones, una sola lista. Cada paso es un
+   renglón que se palomea al tocarlo: el círculo, la imagen, el nombre y, debajo, en gris y más chico, lo que
+   hay que saber en ese momento. Sin tarjetitas ni borde de color: en el tema claro su fondo desaparecía y
+   solo quedaba el borde cian, como un paréntesis. Más chicos que el título del bloque (Adán: "los subtask de
+   las rutinas, debes hacerlas más pequeñas y la tarea principal el tamaño está bien"). */
+.rp{display:grid;grid-template-columns:repeat(var(--n,1),minmax(0,1fr));gap:4px 30px;margin-top:8px}
+.rp-col{min-width:0;display:flex;flex-direction:column;grid-column:span var(--c,1)}
+/* Una sección con muchos pasos toma dos columnas y sus pasos fluyen de una a otra. */
+.rp-pasos{columns:var(--c,1);column-gap:30px}
+.rp-pasos>.rp-paso{break-inside:avoid}
+.rp-sec{display:flex;align-items:baseline;gap:8px;padding-bottom:5px;margin-bottom:3px;border-bottom:1px solid rgba(var(--ov),.12);
+  font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.rp-sec b{margin-left:auto;font-weight:700;letter-spacing:.04em;color:var(--text2)}
+.rp-paso{display:flex;align-items:center;gap:10px;min-width:0;padding:3px 6px;margin:0 -6px;border-radius:10px;cursor:pointer;
+  transition:background .15s}
+.rp-paso:hover{background:rgba(var(--ov),.05)}
+.rp-paso:focus-visible{outline:2px solid var(--g);outline-offset:-2px}
+.rp-check{flex:none;width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(var(--ov),.3);display:grid;place-items:center;
+  color:transparent;transition:background .15s,border-color .15s}
+.rp-check svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.rp-paso:hover .rp-check{border-color:var(--g)}
+.rp-paso.hecho .rp-check{background:var(--g);border-color:var(--g);color:#fff}
+/* La imagen: la foto del producto o, sin foto, su envase dibujado (`pfEnvaseSvg()`, el de su ficha);
+   «Skincare AM / PM» junta los de ese momento. Una nota lleva su icono en gris y un aviso, en ámbar. */
+.rp-img{flex:none;width:32px;height:32px;border-radius:8px;overflow:hidden;display:grid;place-items:center;
+  background:#fff;box-shadow:0 0 0 1px rgba(var(--ov),.1)}
+.rp-img img{width:100%;height:100%;object-fit:cover}
+.rp-img .pf-env{width:auto;height:28px;filter:none}
+.rp-img .pf-orig{display:none}
+.rp-img.multi{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;padding:2px}
+.rp-img.multi>span{min-width:0;min-height:0;display:grid;place-items:center;overflow:hidden;border-radius:3px}
+.rp-img.multi .pf-env{height:13px}
+.rp-img.ico{background:rgba(var(--ov),.06);box-shadow:none;color:var(--text3)}
+.rp-img.ico svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.rp-paso.aviso .rp-img.ico{background:color-mix(in srgb,var(--w) 17%,transparent);color:var(--w)}
+.rp-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.rp-n{font-size:13px;font-weight:600;line-height:1.25;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rp-m{font-size:11.5px;line-height:1.25;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Una nota o un aviso es la frase misma, en dos líneas como mucho; lo que va tras « — », en gris. */
+.rp-paso.nota .rp-n,.rp-paso.aviso .rp-n{white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+  font-size:12.5px;font-weight:500;line-height:1.32}
+.rp-n .rp-det{color:var(--text3)}
+.rp-paso.hecho .rp-n{color:var(--text3);text-decoration:line-through;text-decoration-color:rgba(var(--ov),.35)}
+.rp-paso.hecho .rp-img{opacity:.5}
+/* «Qué es», el mismo botón de la lista de la compra (`.lc-info`, en ficha.css), a la derecha y en voz baja. */
+.rp .lc-info{flex:none;padding:3px 8px;font-size:9.5px;border-radius:7px;opacity:.75;transition:opacity .15s,background .15s}
+.rp-paso:hover .lc-info{opacity:1}
+.rp .lc-info svg{width:10px;height:10px}
+/* Sin secciones, una sola lista: en escritorio, en dos columnas. */
+.rp.lista{display:block;margin-top:8px}
+@media(min-width:901px){.rp.lista{columns:2;column-gap:30px}.rp.lista .rp-paso{break-inside:avoid}}
+@media(max-width:900px){.rp{grid-template-columns:minmax(0,1fr);row-gap:12px}.rp .rp-col{--c:1!important}}
+/* Cuántos pasos llevas del bloque, en su cabecera, con su barra. */
+.rp-avance{margin-left:auto;display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;color:var(--text3);
+  white-space:nowrap}
+.rp-avance b{color:var(--text);font-weight:700}
+.rp-avance i{display:block;width:72px;height:4px;border-radius:2px;background:rgba(var(--ov),.12);overflow:hidden}
+.rp-avance i span{display:block;height:100%;border-radius:2px;background:var(--g)}
 
 /* ─── Filas compactas ícono+texto (los ingredientes de las recetas) ─── */
 .ds-row{display:flex;align-items:baseline;gap:8px;font-size:12px;padding:3px 0}
@@ -3061,32 +3082,36 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .dia-topbar .hero-frase .txt::before{content:'“'}.dia-topbar .hero-frase .txt::after{content:'”'}
 .dia-sem{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);white-space:nowrap}
 /* El AHORA: tarjeta propia, sin el tope de 44vh de antes; lo largo (subtareas, gym) desplaza dentro. */
-.dia-ahora{flex:none;padding:18px 24px 16px!important;max-height:34vh;overflow-y:auto;scrollbar-width:thin;border-left-width:3px}
+.dia-ahora{flex:none;padding:18px 24px 16px!important;max-height:34vh;overflow-y:auto;scrollbar-width:thin;border-left-width:3px;container:ahora / inline-size}
 .dia-ahora .blq-head{gap:10px;margin-bottom:8px}
 .dia-ahora .blq-head .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.16em}
 .dia-ahora .blq-txt{font-size:clamp(22px,2.2vw,32px);line-height:1.08;letter-spacing:-.012em}
 .dia-ahora .blq-acciones{margin-top:12px}
 .dia-ahora .blq-btn{height:38px;padding:0 16px;border-radius:10px;font-size:12.5px}
 /* El AHORA sin desplazar (Adán: "aquí no quiero hacer scroll down, ponlo como en 2 columnas y que
-   se vea muy bien"): el título corto con su detalle al lado, y las subtareas y la rutina de gym en
-   dos columnas. Las secciones fluyen de una columna a otra para que queden parejas, pero un
-   encabezado nunca se queda solo al pie de una. En el celular vuelve a una columna. */
+   se vea muy bien"): el título corto con su detalle al lado; los pasos, una columna por sección
+   (`pasosHtml()`), y la rutina de gym, en dos columnas. En el celular, todo a una columna. Es contenedor
+   (`ahora`): en uno angosto de escritorio, cada paso enseña su nombre y lo de abajo se queda en su ficha; en el
+   teléfono, que no tiene tope de alto, el nombre va en dos líneas y lo de abajo se ve. */
 .dia-ahora .blq-txt{display:flex;align-items:baseline;flex-wrap:wrap;column-gap:14px;row-gap:2px;margin-bottom:2px}
 .blq-det{font-family:var(--font);font-size:13.5px;font-weight:500;letter-spacing:0;line-height:1.35;color:var(--text3)}
 @media(min-width:901px){
-  .dia-ahora .rt2-sub{display:block;columns:2;column-gap:30px;margin-top:6px}
-  .dia-ahora .rt2-sub-item{break-inside:avoid;margin-bottom:3px;padding:2px 8px;line-height:1.3}
-  .dia-ahora .rt2-sec{break-inside:avoid;break-after:avoid;margin:7px 0 3px}
-  .dia-ahora .rt2-sec:first-child{margin-top:0}
   .dia-ahora .gym-lista{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7px 18px;margin-top:8px}
   .dia-ahora .gym-ej{padding:6px 9px}
   .dia-ahora .gym-img{width:46px;height:46px}
   .dia-ahora .gym-ej-cue{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:11px;line-height:1.35;margin-top:1px}
   .dia-ahora .blq-acciones{margin-top:10px}
-  .dia-ahora .rt2-sub-prodrow .lc-info{padding:1px 7px}
   .dia-ahora .blq-txt{font-size:clamp(20px,2vw,30px)}
   .dia-ahora .blq-head{margin-bottom:6px}
 }
+@media(min-width:901px){
+  @container ahora (max-width:1000px){
+    .rp-m{display:none}
+    .rp .lc-info{font-size:0;gap:0;padding:3px 5px}
+  }
+}
+@media(max-width:900px){.rp-paso:not(.nota):not(.aviso) .rp-n{white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}}
+@media(min-height:1000px){.dia-ahora{max-height:max(34vh,372px)}}
 .blq-sig{font-size:12.5px;color:var(--text3);text-align:right;min-width:0}
 .blq-sig b{color:var(--text2);font-weight:700}
 /* Mientras manejas: solo cuando el bloque abierto es de Didi. El catálogo entero sigue en el
@@ -3273,7 +3298,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   }
 }
 /* En escritorio la rejilla toma el alto que le queda a la columna y las seis tarjetas miden lo mismo
-   (104 px de alto como mínimo en 2×3 y 230 en 3×2; con menos, la columna desplaza). La foto crece con
+   (104 px de alto como mínimo en 2×3 y 200 en 3×2; con menos, la columna desplaza). La foto crece con
    la tarjeta y apAjustar() quita del texto lo que no cabe. */
 @media(min-width:901px){
   @container aprende (min-width:440px){
@@ -3285,7 +3310,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
     #heroAprenderPanel .ap-c-txt .ap-cl:not(.l2):not(.l3){-webkit-line-clamp:unset}
   }
   @container aprende (min-width:760px){
-    #heroAprenderPanel .ap-seis{grid-template-rows:repeat(2,minmax(230px,1fr))}
+    #heroAprenderPanel .ap-seis{grid-template-rows:repeat(2,minmax(200px,1fr))}
     #heroAprenderPanel .ap-c-foto,#heroAprenderPanel .ap-c-foto.libro{width:100%;height:clamp(84px,34cqh,220px);aspect-ratio:auto}
     @container apcarta (min-height:440px){
       #heroAprenderPanel .ap-c-foto,#heroAprenderPanel .ap-c-foto.libro{height:clamp(84px,40cqh,240px)}
@@ -3470,13 +3495,21 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
   .ag-row{padding:5px 8px}
 }
 /* Si aun en dos columnas el bloque no cabe (pantallas bajas, o el gym con sus seis ejercicios),
-   pintarBloqueDetalle() le pone `.apretado`: el "Qué es" queda en su icono, las filas más juntas y
+   pintarBloqueDetalle() le pone `.apretado`: el "Qué es" queda en su icono, cada paso en una línea —con la imagen más chica y sin la de abajo— y
    la indicación de cada ejercicio en una línea —completa en su ficha—. */
 @media(min-width:901px){
-  .dia-ahora.apretado .rt2-sub-item{padding:1px 8px;margin-bottom:2px}
-  .dia-ahora.apretado .rt2-sub-prodrow{gap:6px}
-  .dia-ahora.apretado .rt2-sub-prodrow .lc-info{font-size:0;gap:0;padding:2px 4px}
-  .dia-ahora.apretado .rt2-sec{margin:5px 0 2px}
+  .dia-ahora.apretado .rp{margin-top:4px}
+  .dia-ahora.apretado .rp-paso{padding:1px 6px;gap:7px}
+  .dia-ahora.apretado .rp-img{width:20px;height:20px;border-radius:5px}
+  .dia-ahora.apretado .rp-img .pf-env{height:18px}
+  .dia-ahora.apretado .rp-img.multi{padding:1px}
+  .dia-ahora.apretado .rp-img.multi .pf-env{height:8px}
+  .dia-ahora.apretado .rp-img.ico svg{width:13px;height:13px}
+  .dia-ahora.apretado .rp-check{width:15px;height:15px}
+  .dia-ahora.apretado .rp-m{display:none}
+  .dia-ahora.apretado .rp-paso.nota .rp-n,.dia-ahora.apretado .rp-paso.aviso .rp-n{-webkit-line-clamp:1}
+  .dia-ahora.apretado .rp .lc-info{font-size:0;gap:0;padding:2px 4px}
+  .dia-ahora.apretado .rp-sec{padding-bottom:2px;margin-bottom:2px}
   .dia-ahora.apretado .gym-lista{gap:5px 18px;margin-top:6px}
   .dia-ahora.apretado .gym-ej{padding:5px 9px;align-items:center}
   .dia-ahora.apretado .gym-img{width:40px;height:40px}
@@ -5219,50 +5252,123 @@ function rtProducto(txt){
 }
 const RT_ICO_INFO = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/>'+
                     '<path d="M12 11v5M12 7.6v.1"/></svg>';
-// Pinta la lista de subtareas de un bloque.
+// Los pasos de un bloque, en el AHORA (Adán: "en rutina de la mañana aquí no se ve bien, quiero que mejores el
+// diseño de esta tarjeta, también la rutina de noche"). Cada sección (`sec`: Ducha y cabello, Piel y minoxidil,
+// Suplementos) es una columna, en el orden en que se hacen, con su cuenta y su línea divisora (Adán: "pon una
+// línea divisora para los 3, esto para todos los bloques"); un bloque sin secciones es una sola lista. Cada paso
+// se palomea al tocarlo (`marcarPaso()`).
 //
-// En los bloques de producto (`t.producto` en RUTINA_TASKS: skincare, cabello y suplementos) el
-// renglón es **solo el nombre del producto y el botón "Qué es"**, el mismo de la lista de la
-// compra. Adán, 2026-09-03: *"no tienen el botón de qué es (igual que en compras hazlo) y quita
-// la descripción que tienes ahí y además el nombre no es nada claro, solo pon el nombre simple,
-// no pongas el link para comprar el producto"*.
-//
-// Antes el renglón decía "Limpiador (doble limpieza si usaste protector solar): CeraVe Limpiador
-// Espumoso (verde) 🛒 — remueve el bloqueador y el sudor del día": el nombre real iba enterrado
-// tras dos puntos, con una descripción detrás y un enlace a Mercado Libre encima. Ahora dice
-// "CeraVe Limpiador Espumoso (verde)" y un botón. El cómo se aplica, para qué sirve y cuánto
-// dura no se pierde: está en la ficha, que es donde se lee entero y no de reojo.
-//
-// Las subtareas que NO nombran un producto ("Deja secar al aire…", "Revisa las puntas…") siguen
-// igual: son la rutina, no un artículo.
-//
-// `sec` en una subtarea abre un grupo: se dibuja una cabecera con línea divisora antes de ella
-// (2026-08-23, pedido: "pon una linea divisora para los 3, esto para todos los bloques"). Es
-// general: un bloque cuyas subtareas no traen `sec` se pinta igual que siempre, sin divisiones.
-function subtareasHtml(leaves,doneHoy,esProducto){
-  let secActual=null;
-  return `<div class="rt2-sub">${leaves.map(it=>{
-    let cabecera='';
-    if(it.sec&&it.sec!==secActual){
-      secActual=it.sec;
-      cabecera=`<div class="rt2-sec"><span>${esc(it.sec)}</span></div>`;
-    }
-    const done=doneHoy.includes(it.id);
-    const prod=esProducto?rtProducto(it.txt):null;
-    let body;
-    if(prod){
-      const btn=prod.p.ficha
-        ? `<button class="lc-info" onclick="event.stopPropagation();pfAbrirId('${prod.cat}','${prod.p.id}')" title="Qué es, para qué sirve y cómo se usa">${RT_ICO_INFO}Qué es</button>`
-        : '';
-      body=`<span class="rt2-sub-prodrow"><span class="rt2-sub-prod">${esc(prod.n)}</span>${btn}</span>`;
+// En los bloques de producto (`t.producto`: las rutinas de piel, pelo y suplementos) el renglón es el nombre
+// simple del producto, con su foto o su envase dibujado, y el botón «Qué es», el mismo de la lista de la compra
+// (Adán: "el botón de qué es (igual que en compras hazlo)… solo pon el nombre simple, no pongas el link para
+// comprar el producto"). Debajo, en gris, solo lo que hay que saber en ese momento (`rpMeta()`). Lo que no es un
+// producto va como nota o, si empieza con ⚠️ o manda un NO, como aviso, en ámbar: «⚠️ Si hoy hay caspa, Darrow en
+// lugar del Pilexil» es una condición, no un paso más. «Skincare AM» y «Skincare PM» juntan los productos de piel
+// de ese momento (`am` / `pm` de RUTINA_PIEL).
+const RP_ICO = {
+  hecho: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  nota: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.2M12 7.7v.1"/></svg>',
+  aviso: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4L3 19.5h18z"/><path d="M12 10v4.4M12 17.1v.1"/></svg>'
+};
+// La foto en chico: Open Beauty Facts y Wikimedia sirven versiones de 200 y de 120 px.
+function rpFotoChica(u){ return String(u || '').replace(/\.full\.jpg$/, '.200.jpg').replace(/\/\d+px-([^/]+)$/, '/120px-$1'); }
+// La imagen de un producto: su foto o, si no tiene o no carga, su envase dibujado (`pfSinFoto()`, de la ficha).
+function rpImgProd(cat, p){
+  if(p.foto) return `<img src="${rpFotoChica(p.foto)}" alt="" loading="lazy" data-pf="${p.id}" data-pf-cat="${cat}" onerror="pfSinFoto(this)">`;
+  const m = p.marca || {};
+  return p.frasco && typeof pfEnvaseSvg === 'function' ? pfEnvaseSvg(p.frasco, m.a || '#f4f2ee', m.b || '#8a5a2b') : '';
+}
+// Lo que hay que saber de un producto en ese paso, en una línea: lo que la frase dice antes del nombre, hasta
+// los dos puntos («Hoy no lleva champú», «Ya seco», «Protector solar») o, si empieza por el nombre, lo que va
+// justo después —la dosis o el cómo—: «1 ml con el gotero…», «2000-4000 UI, con algo de grasa…».
+function rpMeta(plano, prod){
+  const k = plano.indexOf(prod.n);
+  if(k > 0){
+    const antes = plano.slice(0, k), dp = antes.indexOf(':');
+    const lead = (dp >= 0 ? antes.slice(0, dp) : antes).replace(/[\s,;:—–-]+$/, '').trim();
+    if(lead) return lead;
+  }
+  const resto = (k >= 0 ? plano.slice(k + prod.n.length) : (plano.split(' — ')[1] || '')).replace(/^[\s.:,]+/, '').replace(/^—\s*/, '');
+  const corte = resto.search(/\s—\s|\.(\s|$)/), dato = (corte >= 0 ? resto.slice(0, corte) : resto).trim();
+  if(dato) return dato;
+  const p = prod.p;
+  return p.dosis ? p.dosis + (p.cuando ? ' · ' + p.cuando : '') : (p.cat || '');
+}
+// Un paso: el círculo, la imagen (solo en las rutinas de producto), lo que dice y, si nombra un producto, «Qué es».
+function rpPaso(t, it, hecho){
+  const plano = String(it.txt || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  let clase = 'nota', img = `<span class="rp-img ico">${RP_ICO.nota}</span>`, nombre = '', meta = '', prod = null;
+  const sk = t.producto ? plano.match(/^Skincare (AM|PM)\b/) : null;
+  if(sk){
+    const mom = sk[1].toLowerCase(), o = pfFuente('skincare');
+    const ps = ((o && o.productos) || []).filter(p => p[mom]).sort((x, y) => x[mom].orden - y[mom].orden).slice(0, 4);
+    clase = 'prod';
+    img = `<span class="rp-img multi">${ps.map(p => `<span>${rpImgProd('skincare', p)}</span>`).join('')}</span>`;
+    nombre = esc('Skincare ' + sk[1]);
+    meta = esc((plano.split(' — ')[1] || '').replace(/\s*\([^)]*\)\s*$/, ''));
+  } else {
+    const aviso = /^⚠/.test(plano);
+    prod = t.producto ? rtProducto(it.txt) : null;
+    if(prod && !aviso){
+      clase = 'prod';
+      img = `<span class="rp-img">${rpImgProd(prod.cat, prod.p)}</span>`;
+      nombre = esc(prod.n);
+      meta = esc(rpMeta(plano, prod));
     } else {
-      const m=it.txt.match(/^(.+?)\s+—\s+(.+)$/s);
-      body=m
-        ? `<span class="rt2-sub-prod">${m[1]}</span><span class="rt2-sub-dash"> — </span><span class="rt2-sub-action">${m[2]}</span>`
-        : `<span class="rt2-sub-txt">${it.txt}</span>`;
+      if(aviso || (t.producto && /\bNO\b/.test(plano))){ clase = 'aviso'; img = `<span class="rp-img ico">${RP_ICO.aviso}</span>`; }
+      const txt = plano.replace(/^⚠️?\s*/, ''), g = txt.indexOf(' — ');
+      nombre = g > 0 ? `${esc(txt.slice(0, g))}<span class="rp-det"> — ${esc(txt.slice(g + 3))}</span>` : esc(txt);
     }
-    return cabecera+`<div class="rt2-sub-item${done?' rt2-sub-done':''}"><span class="rt2-sub-check">${done?'✅':'▫️'}</span><span>${body}</span></div>`;
+  }
+  if(!t.producto) img = '';
+  const info = prod && prod.p.ficha
+    ? `<button type="button" class="lc-info" onclick="event.stopPropagation();pfAbrirId('${prod.cat}','${prod.p.id}')" title="Qué es, para qué sirve y cómo se usa">${RT_ICO_INFO}Qué es</button>` : '';
+  return `<div class="rp-paso ${clase}${hecho ? ' hecho' : ''}" data-paso="${it.id}" role="checkbox" aria-checked="${hecho}" tabindex="0" title="${esc(plano)}" onclick="marcarPaso('${t.id}','${it.id}')" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();marcarPaso('${t.id}','${it.id}')}"><span class="rp-check">${RP_ICO.hecho}</span>${img}<span class="rp-txt"><span class="rp-n">${nombre}</span>${meta ? `<span class="rp-m">${meta}</span>` : ''}</span>${info}</div>`;
+}
+// Tres columnas: cada sección toma una y, si sobran, la que tiene más pasos por columna toma otra —mientras
+// le queden pasos para llenarla—. Así la rutina de la noche (cuatro de piel, dos suplementos) va en dos filas
+// y no en cuatro, y las columnas miden lo mismo en todas las rutinas.
+function pasosHtml(t, leaves, done){
+  const grupos = [];
+  leaves.forEach(it => {
+    if(!grupos.length || (it.sec && it.sec !== grupos[grupos.length - 1].sec)) grupos.push({ sec: it.sec || '', items: [] });
+    grupos[grupos.length - 1].items.push(it);
+  });
+  const paso = it => rpPaso(t, it, done.includes(it.id));
+  if(grupos.length === 1 && !grupos[0].sec) return `<div class="rp lista">${leaves.map(paso).join('')}</div>`;
+  const cols = grupos.map(() => 1);
+  for(let libres = 3 - grupos.length; libres > 0; libres--){
+    let k = -1;
+    grupos.forEach((g, i) => { if(g.items.length > cols[i] && (k < 0 || g.items.length / cols[i] > grupos[k].items.length / cols[k])) k = i; });
+    if(k < 0) break;
+    cols[k]++;
+  }
+  return `<div class="rp" style="--n:${Math.min(cols.reduce((s, c) => s + c, 0), 3)}">${grupos.map((g, i) => {
+    const n = g.items.filter(it => done.includes(it.id)).length;
+    return `<div class="rp-col" style="--c:${cols[i]}">${g.sec ? `<div class="rp-sec"><span>${esc(g.sec)}</span><b>${n}/${g.items.length}</b></div>` : ''}<div class="rp-pasos">${g.items.map(paso).join('')}</div></div>`;
   }).join('')}</div>`;
+}
+// Cuántos pasos llevas del bloque, en su cabecera.
+function pasosAvanceHtml(t, leaves, done){
+  if(t.fijo || t.gym || !t.subtareas || leaves.length < 2) return '';
+  const n = leaves.filter(it => done.includes(it.id)).length;
+  return `<span class="rp-avance" title="Pasos hechos de este bloque"><i><span style="width:${Math.round(n / leaves.length * 100)}%"></span></i><b>${n}</b> de ${leaves.length} pasos</span>`;
+}
+// Palomear un paso: el mismo `coach_rutina_v1.completado[fecha]` que marca Coach paso por paso; el día es el que
+// se mira en la tira de la semana, como en marcarBloque(). Con el último, el bloque queda hecho.
+function marcarPaso(id, paso){
+  const t = RUTINA_TASKS.find(x => x.id === id); if(!t || t.fijo) return;
+  const raw = rawGet('coach_rutina_v1', { completado: {} }); raw.completado = raw.completado || {};
+  const dowHoy = new Date().getDay(), dia = diaSemanaSel !== null ? diaSemanaSel : dowHoy;
+  const fecha = dia === dowHoy ? today() : semanaActual()[dia];
+  const s = new Set(raw.completado[fecha] || []);
+  if(s.has(paso)) s.delete(paso); else s.add(paso);
+  raw.completado[fecha] = [...s];
+  rawSet('coach_rutina_v1', raw);
+  loadAll();
+  renderDia();
+  const el = document.querySelector(`#diaAhoraTile [data-paso="${paso}"]`); if(el) el.focus({ preventScroll: true });
+  if(s.has(paso) && leafItems(t).every(x => s.has(x.id))) toast('✅ ' + tituloCorto(t, dia) + ': completo');
 }
 function horaAhora(){ const n=new Date(); return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); }
 // Separada de rutinaAhoraSiguiente() el 2026-08-09 para poder calcular "qué tarea toca a esta
@@ -7076,10 +7182,11 @@ function pintarBloqueDetalle(tareas, anchor, done, esHoy){
         return f?`${t.hora} – ${f} · ${rtDur(t.hora,f)}`:`${t.hora} · último del día`; })()}</span>
       ${hecho?pill('rgba(0,232,122,.16)','var(--g)','rgba(0,232,122,.4)','✅ Hecho'):''}
       ${t.fijo?pill('rgba(var(--ov),.06)','var(--text3)','rgba(var(--ov),.14)','🔒 Bloque fijo'):''}
+      ${pasosAvanceHtml(t,leaves,done)}
     </div>
     <div class="blq-txt">${esc(tituloCorto(t,dowB))}${detalle?`<span class="blq-det">${esc(detalle)}</span>`:''}</div>
     ${t.gym?gymBloqueHtml(diaSemanaSel!==null?diaSemanaSel:new Date().getDay())
-           :((!t.fijo&&t.subtareas)?subtareasHtml(leaves,done,t.producto):'')}
+           :((!t.fijo&&t.subtareas)?pasosHtml(t,leaves,done):'')}
     ${t.fijo?'<div class="blq-nota">Este bloque no se marca: es horario fijo.</div>':''}
     ${escucharHtml(t)}
     <div class="blq-acciones">
@@ -7834,18 +7941,14 @@ function aprendeLuego(slot, n){
   for(const e of o.orden){ if(out.length >= n) break; if(o.libre(e) && !ya.has(o.id(e)) && o.id(e) !== fijo) out.push(e); }
   return out;
 }
-// ↻ — el siguiente en el orden de Coach (en «Al volante», el siguiente audiolibro del foco). Se queda
-// hasta mañana.
+// ↻ — el siguiente en el orden de Coach. Lo de cada día se queda hasta mañana; el audiolibro de «Al volante»,
+// toda la semana (`didiOtroLibro()`).
 function aprendeOtra(slot){
+  if(slot === 'escuchar'){ didiOtroLibro(); renderHeroAprender(); return; }
   const { st, h } = aprendeHoy();
-  if(slot === 'escuchar'){
-    const d = didiHoy(); if(!d || !d.libro || d.libros.length < 2) return;
-    h.escuchar = (d.libros.indexOf(d.libro) + 1) % d.libros.length;
-  } else {
-    const o = aprendeOrdenDe(slot); if(!o || o.orden.length < 2) return;
-    const x = aprendePrimero(st, slot, o, (h.fijo || {})[slot]); if(!x) return;
-    h.fijo = Object.assign({}, h.fijo, { [slot]: o.id(x) });
-  }
+  const o = aprendeOrdenDe(slot); if(!o || o.orden.length < 2) return;
+  const x = aprendePrimero(st, slot, o, (h.fijo || {})[slot]); if(!x) return;
+  h.fijo = Object.assign({}, h.fijo, { [slot]: o.id(x) });
   aprendeGuarda(st, h);
   renderHeroAprender();
   if(slot === 'istqb' && document.getElementById('istqbOverlay')?.classList.contains('open')) istqbPintar();
@@ -8004,14 +8107,15 @@ function aprendeAbrir(slot){
 // Una tarjeta de Hoy aprendes: la foto —tocarla abre lo mismo que el texto—, la materia con su marca, su
 // estado y sus controles, y lo que aprendes (`o.txt`) en bloques en orden de importancia. `.ap-opc` es lo
 // de apoyo, que solo sale donde la tarjeta tiene alto fijo, y `.ap-cl`, el texto que apAjustar() puede
-// recortar. Sin `o.abrir` el texto no es un botón: lleva enlaces dentro.
+// recortar. Sin `o.abrir` el texto no es un botón: lleva enlaces dentro. Si una foto no carga, queda el fondo
+// del color de su materia en vez del icono de imagen rota.
 const AP_OTRA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>';
 const AP_BANDERA = '<span class="flag-de" aria-hidden="true"></span>';
 const AP_PUNTO = '<span class="ap-punto" aria-hidden="true"></span>';
 function apEstado(hecho, txt, ok){ return `<span class="ap-estado${hecho ? ' ok' : ''}">${hecho ? ok : txt}</span>`; }
 function apFotoC(f){
-  return (f.libro ? `<img class="ap-c-fondo" src="${f.u}" alt="" loading="lazy">` : '')
-    + `<img class="ap-c-img" src="${f.u}" alt="" loading="lazy" title="${habAttr(f.c)}">`;
+  return (f.libro ? `<img class="ap-c-fondo" src="${f.u}" alt="" loading="lazy" onerror="this.style.display='none'">` : '')
+    + `<img class="ap-c-img" src="${f.u}" alt="" loading="lazy" title="${habAttr(f.c)}" onerror="this.style.display='none'">`;
 }
 function apTarjeta(o){
   const txt = `<span class="ap-c-txt">${o.txt}</span>`;
@@ -8081,14 +8185,51 @@ function didiHoy(){
   const finde = [0, 6].indexOf(new Date().getDay()) !== -1;
   const libros = elegir(it => it.tipo === 'audio');
   const pods = elegir(it => it.tipo !== 'audio' && !!it.largo === finde);
-  const k = diaCorrido(), h = aprendeHoy().h;
-  const delPaso = didiLibroDelPaso(), iPaso = delPaso ? libros.findIndex(x => x.it.lib === delPaso) : -1;
-  const libro = libros.length ? libros[(h.escuchar != null && h.escuchar < libros.length) ? h.escuchar
-    : iPaso >= 0 ? iPaso : Math.floor(k / 7) % libros.length] : null;
+  const k = diaCorrido(), libro = didiLibroSemana(libros);
   const pod = pods.length ? pods[k % pods.length] : null;
   const horas = (typeof rutinaTareasHoy === 'function' ? rutinaTareasHoy() : [])
     .filter(esDidi).map(t => t.hora);
   return { libros, libro, pod, finde, horas };
+}
+// El audiolibro de la semana, de lunes a domingo: un libro dura de 6 a 9 horas. Se decide el primer día que lo
+// ves en la semana y se queda hasta el lunes aunque el orden de Coach cambie a media semana: el del paso de la
+// semana si su libro está en el catálogo (`didiLibroDelPaso()`) y, si no, el primero del orden de Coach que
+// todavía no te haya tocado —lo que ya salió vive en `dash-aprende-v1.salio.audio`—. ↻ pasa al siguiente de ese
+// orden y también se queda toda la semana (`didiOtroLibro()`).
+const didiId = x => x.it.lib || x.it.n;
+function didiSemanaN(){ return Math.floor(diaCorrido() / 7); }
+function didiTodos(){
+  return DIDI_AUDIO.filter(g => PRIORIDAD_EXCLUIDAS.indexOf(g.sk) === -1).flatMap(g => g.items.filter(it => it.tipo === 'audio').map(it => ({ it, g })));
+}
+function didiFijaLibro(st, x){
+  st.salio = st.salio || {};
+  st.salio.audio = (st.salio.audio || []).filter(id => id !== didiId(x)).concat(didiId(x)).slice(-200);
+  st.semana = { n: didiSemanaN(), libro: didiId(x) };
+  rawSet(APRENDE_KEY, st);
+  return x;
+}
+function didiLibroSemana(libros){
+  if(!libros.length) return null;
+  const st = rawGet(APRENDE_KEY, {}) || {}, sem = st.semana;
+  if(sem && sem.n === didiSemanaN()){
+    const x = libros.find(y => didiId(y) === sem.libro) || didiTodos().find(y => didiId(y) === sem.libro);
+    if(x) return x;
+  }
+  const delPaso = didiLibroDelPaso(), ya = new Set((st.salio || {}).audio || []);
+  let x = delPaso ? libros.find(y => y.it.lib === delPaso) : null;
+  if(!x){ x = libros.find(y => !ya.has(didiId(y))); if(!x){ (st.salio = st.salio || {}).audio = []; x = libros[0]; } }
+  return didiFijaLibro(st, x);
+}
+function didiOtroLibro(){
+  const d = didiHoy(); if(!d || !d.libro || d.libros.length < 2) return;
+  const st = rawGet(APRENDE_KEY, {}) || {}, ya = new Set((st.salio || {}).audio || []);
+  const k = d.libros.findIndex(y => didiId(y) === didiId(d.libro)), resto = d.libros.slice(k + 1).concat(d.libros.slice(0, Math.max(k, 0)));
+  didiFijaLibro(st, resto.find(y => !ya.has(didiId(y))) || resto[0]);
+}
+// Lo que sigue: los que todavía no te han tocado, en el orden de Coach.
+function didiLibrosLuego(d, n){
+  const ya = new Set((((rawGet(APRENDE_KEY, {}) || {}).salio || {}).audio) || []);
+  return d.libros.filter(y => didiId(y) !== didiId(d.libro) && !ya.has(didiId(y))).slice(0, n);
 }
 // El renglón: el audiolibro con su hora y por qué, y el podcast del día. Los títulos abren la
 // búsqueda en Spotify (y cuentan como hecho); «Qué escuchar» abre el catálogo entero.
@@ -8108,8 +8249,7 @@ function escucharHoyHtml(vistos){
       <span class="ap-es ap-1l"><b class="ap-hora">${esc(cuando)}</b> · audiolibro de la semana</span>
       ${pod ? `<span class="ap-nota ap-cl l2" data-min="1"><b class="ap-hora">${esc(cuandoPod)}</b> · ${DIDI_TAG[pod.it.tipo].l.toLowerCase()}: ${oir(pod.it)}</span>` : ''}
       ${libro.it.d ? `<span class="ap-es ap-cl ap-opc">${esc(libro.it.d)}</span>` : ''}
-      ${apLuego([1, 2].map(j => d.libros[(d.libros.indexOf(libro) + j) % d.libros.length]).filter((x, j, a) => x !== libro && a.indexOf(x) === j)
-        .map(x => `<b>${esc(x.it.n)}</b>${x.it.d ? ` · ${esc(x.it.d)}` : ''}`))}` });
+      ${apLuego(didiLibrosLuego(d, 2).map(x => `<b>${esc(x.it.n)}</b>${x.it.d ? ` · ${esc(x.it.d)}` : ''}`))}` });
 }
 
 // El tema de Python, con su explicación de una línea. Cuenta como hecho cuando lo marcas estudiado
@@ -8280,9 +8420,9 @@ function comoDecideHtml(){
   if(d && d.libro){
     const skDe = it => SK.find(s => s.id === (it && it.g && it.g.sk)) || {}, delPaso = didiLibroDelPaso();
     const delFoco = it => !!foco && it.g && it.g.sk === foco.id, nombre = it => `<b>${esc(skDe(it).name || '')}</b>`;
-    const rLibro = delPaso && d.libro.it.lib === delPaso ? 'El audiolibro es el libro del paso de la semana.'
-      : delFoco(d.libro) ? 'El audiolibro, el siguiente del foco cada lunes.'
-      : `${foco ? esc(foco.name) : 'El foco'} no tiene audiolibros en el catálogo: va el de ${nombre(d.libro)}, la habilidad que sigue por retorno, uno por semana.`;
+    const rLibro = delPaso && d.libro.it.lib === delPaso ? 'El audiolibro es el libro del paso de la semana y se queda hasta el lunes.'
+      : delFoco(d.libro) ? 'El audiolibro, el siguiente del foco que no hayas escuchado: se decide el lunes y se queda toda la semana.'
+      : `${foco ? esc(foco.name) : 'El foco'} no tiene audiolibros en el catálogo: va el de ${nombre(d.libro)}, lo primero del orden de Coach que todavía no te ha tocado. Uno por semana: se decide el lunes y no cambia hasta el siguiente.`;
     const rPod = !d.pod ? '' : (delFoco(d.pod) ? 'El podcast, el siguiente del foco cada día' : `El podcast, de ${nombre(d.pod)}`) + ' (los de una hora o más, el fin de semana).';
     filas.push({ k: 'Al volante', c: 'var(--o)', foto: apFotoLibro(d.libro.it.lib, d.libro.g.sk), hoy: `${esc(d.libro.it.n)}${d.pod ? ` <span>· ${esc(d.pod.it.n)}</span>` : ''}`,
       regla: `Primero lo del foco${foco ? ` (<b>${esc(foco.name)}</b>)` : ''}, luego el siguiente foco del plan y las habilidades con más retorno; lo que Coach tiene en pausa no entra. ${rLibro} ${rPod}` });
