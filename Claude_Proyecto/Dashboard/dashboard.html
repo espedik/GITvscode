@@ -3114,181 +3114,182 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .hp-cobro b{color:var(--text);font-weight:600}
 .hp-cobro .m{font-family:var(--mono);font-weight:700;color:var(--text);white-space:nowrap}
 .hp-cobro .m.entra{color:var(--g)}
-/* ─── Hoy aprendes: los dos tercios de la derecha de Mi Día (diseño: diseno-hoyaprendes/, Main) ───
-   Una lista con filetes, no cajas dentro de la caja: cada renglón tiene la misma anatomía —la
-   materia arriba, lo que aprendes en grande, el detalle en gris— y `--c` es el color de su
-   materia, un token del tema. Ocupa la segunda columna a todo lo alto; bajo 900 px va a todo lo
-   ancho, debajo de los demás. */
+/* ─── Hoy aprendes: los dos tercios de la derecha de Mi Día ───
+   Seis partes iguales (Adán: "estos 6 quiero que los dividas en partes iguales… con info resumida
+   pero importante"): la palabra de alemán, Al volante, Python, el ISTQB, el paso de la semana y la
+   ficha de Habilidades Base. Las seis con la misma anatomía —la foto, la materia con su estado y sus
+   controles, y lo que aprendes en bloques en orden de importancia— y `--c`, el color de su materia, un
+   token del tema. Sin cajas: las separa el aire. Ocupa la segunda columna a todo lo alto; bajo 900 px
+   va a todo lo ancho, debajo de los demás. */
 #heroAprenderPanel{grid-column:2;grid-row:1/-1;container:aprende / inline-size}
 @media(max-width:900px){#heroAprenderPanel,#miDiaSecundarios>.dia-invertir{grid-column:1/-1;grid-row:auto}}
 #miDiaSecundarios>#heroAprenderPanel{gap:0}
-/* A lo ancho (Adán: "todo el espacio que queda, expande lo de hoy aprendes"), se acomoda a su propio
-   ancho: desde 560 px los cuatro renglones van en 2×2 y, debajo, las dos tarjetas de Tu avance, lado
-   a lado en esas mismas dos columnas. Más angosto —el teléfono— sigue siendo la lista de siempre. */
-/* Con el id delante: las reglas de cada pieza van más abajo y, a igual peso, ganarían. */
-@container (min-width:560px){
-  #heroAprenderPanel .ap-lista{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:26px}
-  #heroAprenderPanel .ap-lista>.ap-fila:nth-last-child(-n+2){border-bottom:1px solid rgba(var(--ov),.09)}
-}
 .ap-fecha{font-family:var(--mono);font-size:10.5px;letter-spacing:0;text-transform:none;color:var(--text3);white-space:nowrap}
 .ap-fecha b{color:var(--text);font-weight:700}
-.ap-barra{display:flex;gap:4px;margin:4px 0 8px}
+.ap-barra{display:flex;gap:4px;margin:4px 0 12px}
 .ap-barra i{flex:1 1 0;height:4px;border-radius:2px;background:rgba(var(--ov),.1)}
 .ap-barra i.on{background:var(--c)}
-.ap-fila{display:flex;flex-direction:column;gap:2px;padding:6px 0 8px;border-top:1px solid rgba(var(--ov),.09)}
-/* Con foto (todos los renglones): la foto a la izquierda, a lo alto del renglón; un libro, en su 2:3. */
-.ap-fila.con-foto{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;row-gap:2px;align-items:start}
-.ap-fila.con-foto>.ap-img{grid-row:1/span 2;width:64px;height:64px;margin-top:3px;border-radius:10px;object-fit:cover;
-  background:color-mix(in srgb,var(--c) 14%,transparent);box-shadow:0 3px 10px rgba(0,0,0,.14)}
-.ap-fila.con-foto>.ap-img.libro{width:44px;object-position:top}
-.ap-fila.con-foto>.ap-top,.ap-fila.con-foto>.ap-abrir,.ap-fila.con-foto>.ap-cuerpo{grid-column:2}
-.ap-lista>.ap-fila:last-child{border-bottom:1px solid rgba(var(--ov),.09)}
-.ap-top{display:flex;align-items:center;gap:7px}
+/* La rejilla se acomoda a su propio ancho (es el contenedor `aprende`): una columna en el teléfono;
+   desde 440 px, 2×3, y desde 760, 3×2. Con el id delante: las reglas de cada pieza van más abajo y, a
+   igual peso, ganarían. */
+.ap-seis{display:flex;flex-direction:column;gap:16px}
+@container aprende (min-width:440px){
+  #heroAprenderPanel .ap-seis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 20px}
+}
+@container aprende (min-width:760px){
+  #heroAprenderPanel .ap-seis{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 22px}
+}
+/* La tarjeta, de lado (teléfono y 2×3): la materia arriba, a todo lo ancho; debajo, la foto —un libro,
+   en su 2:3— y el texto. */
+.ap-c{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);
+  grid-template-areas:"top top" "foto txt";gap:8px 12px;min-width:0;container:apcarta / inline-size}
+.ap-c-top{grid-area:top;display:flex;align-items:center;gap:7px;min-width:0;min-height:22px}
+.ap-c-ctl{flex:none;display:flex;align-items:center;gap:4px}
+.ap-c-foto{grid-area:foto;align-self:start;position:relative;display:block;width:76px;height:76px;padding:0;border:0;
+  border-radius:10px;overflow:hidden;cursor:pointer;background:color-mix(in srgb,var(--c) 14%,transparent);
+  box-shadow:0 3px 10px rgba(0,0,0,.14)}
+.ap-c-foto.libro{width:54px;height:81px}
+.ap-c-img{display:block;width:100%;height:100%;object-fit:cover}
+.ap-c-foto.libro .ap-c-img{object-position:top}
+.ap-c-fondo{display:none}
+.ap-c-ico{display:flex;align-items:center;justify-content:center;font-size:28px}
+.ap-c-ir{grid-area:txt;display:flex;flex-direction:column;min-width:0;min-height:0;padding:0;border:0;background:none;
+  color:inherit;font:inherit;text-align:left}
+button.ap-c-ir{cursor:pointer}
+button.ap-c-ir:hover .ap-de,button.ap-c-ir:hover .ap-t,button.ap-c-ir:hover .ap-q{color:var(--c)}
+.ap-c-txt{display:flex;flex-direction:column;gap:5px;min-width:0}
+.ap-c-txt>*{flex:none;min-width:0}
+/* El texto que se puede recortar (`.ap-cl`), por líneas y con «…»: tres como mucho; dos los títulos,
+   las notas y los puntos (`.l2`). En escritorio el párrafo no tiene tope —salvo `.l3`—: lo pone apAjustar(). */
+.ap-c-txt .ap-cl{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.ap-c-txt .ap-cl.l2{-webkit-line-clamp:2}
+.ap-c-txt .ap-cl.l3{-webkit-line-clamp:3}
+/* Lo de apoyo (`.ap-opc`) solo sale donde la tarjeta tiene alto fijo; en el teléfono, no. */
+@media(max-width:900px){.ap-c-txt .ap-opc{display:none}}
+@media(min-width:901px){@container aprende (max-width:439.98px){.ap-c-txt .ap-opc{display:none}}}
+/* Arriba de cada tarjeta: la materia con su marca, el estado o la cuenta, y los controles. */
 .ap-punto{width:7px;height:7px;margin:0 3.5px;border-radius:50%;flex-shrink:0;background:var(--c)}
 .ap-mat{flex:1;min-width:0;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
   color:var(--c);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ap-estado{font-family:var(--mono);font-size:9.5px;color:var(--text3);white-space:nowrap}
+.ap-estado{flex:none;font-family:var(--mono);font-size:9.5px;color:var(--text3);white-space:nowrap}
 .ap-estado.ok{color:var(--g)}
 .ap-estado.mal{color:var(--r)}
 button.ap-estado.ir{font-weight:700;padding:3px 9px;border-radius:99px;border:0;cursor:pointer;
   background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--c)}
 button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)}
-.ap-otra{width:22px;height:22px;padding:0;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;
-  border:1px solid rgba(var(--ov),.1);background:transparent;color:var(--text3);cursor:pointer;transition:color .15s,border-color .15s}
-.ap-otra:hover{color:var(--c);border-color:var(--c)}
-.ap-otra svg{width:12px;height:12px}
-.ap-abrir{display:flex;flex-direction:column;gap:3px;width:100%;padding:2px 0 0;border:0;background:none;color:inherit;font:inherit;
-  text-align:left;cursor:pointer}
-.ap-abrir>span{display:block}
-.ap-abrir>.ap-2l{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ap-abrir:hover .ap-de,.ap-abrir:hover .ap-t,.ap-abrir:hover .ap-q{color:var(--c)}
-.ap-cuerpo{display:flex;flex-direction:column;gap:3px;padding-top:2px}
-.ap-cuerpo>span{display:block}
-.ap-cuerpo>.ap-1l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ap-av-n{flex:none;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--c)}
+/* ↻ trae el siguiente en el orden de Coach; «‹» y «Siguiente ›», otra opción si lo que te recomienda no
+   te convence (`apSiguiente()`), y «↺» vuelve a la recomendada. */
+.ap-otra,.ap-av-ant,.ap-av-sig{flex:none;height:22px;display:inline-flex;align-items:center;justify-content:center;gap:3px;
+  border-radius:7px;border:1px solid rgba(var(--ov),.12);background:transparent;color:var(--text2);cursor:pointer;
+  transition:color .15s,border-color .15s}
+.ap-otra,.ap-av-ant{width:22px;padding:0}
+.ap-av-sig{padding:0 5px 0 8px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.ap-otra:hover,.ap-av-ant:hover,.ap-av-sig:hover{color:var(--c);border-color:var(--c)}
+.ap-otra svg,.ap-av-ant svg,.ap-av-sig svg{width:12px;height:12px}
+/* Lo que aprendes: lo grande arriba y el detalle en gris. */
+.ap-de{font-family:var(--font-title);font-size:20px;font-weight:600;line-height:1.2;letter-spacing:-.01em;color:var(--text)}
+.ap-t{font-size:14.5px;font-weight:700;line-height:1.32;color:var(--text)}
+.ap-q{font-size:12.5px;font-weight:500;line-height:1.45;color:var(--text)}
+.ap-es{font-size:12.5px;line-height:1.42;color:var(--text2)}
+.ap-1l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ap-m{font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:7px;white-space:nowrap}
+.ap-ex{font-size:12px;font-style:italic;line-height:1.45;color:var(--text)}
+.ap-ex span{font-style:normal;color:var(--text3)}
+.ap-nota{font-size:11px;line-height:1.45;color:var(--text3)}
+.ap-nota b{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text2)}
+.ap-aux.hat{color:var(--b)}
+.ap-aux.ist{color:var(--o)}
 .ap-oir{color:inherit;text-decoration:none}
 .ap-oir span{color:var(--c);font-size:.85em}
 .ap-oir:hover{color:var(--c)}
 .ap-nota .ap-oir{color:var(--text2);font-weight:600}
 .ap-hora{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--c)}
-.ap-de{font-family:var(--font-title);font-size:20px;font-weight:600;line-height:1.2;letter-spacing:-.01em;color:var(--text)}
-.ap-t{font-size:14.5px;font-weight:700;line-height:1.3;color:var(--text)}
-.ap-q{font-size:12.5px;font-weight:600;line-height:1.42;color:var(--text)}
-.ap-es{font-size:12.5px;line-height:1.38;color:var(--text2)}
-.ap-m{font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:7px;white-space:nowrap}
-.ap-ex{font-size:12px;font-style:italic;line-height:1.45;color:var(--text)}
-.ap-ex span{font-style:normal;color:var(--text3)}
-.ap-nota{font-size:11px;line-height:1.4;color:var(--text3)}
-.ap-nota b{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text2)}
-.ap-aux.hat{color:var(--b)}
-.ap-aux.ist{color:var(--o)}
-/* Tu avance (diseño: diseno-avance/, Main): lo que avanza contigo y no con el calendario. Dos
-   tarjetas con la misma anatomía. En la cabecera, dónde vas: la imagen (portada o foto, en 2:3), la
-   materia con su cuenta, el título, un tramo por paso —lleno lo hecho, marcado el que toca— y lo que
-   sigue. En el cuerpo, lo que hay que hacer, en bloques con su etiqueta encima y en orden de
-   importancia: lo que haces, en negro y a 13.5 px; lo de apoyo, en gris (Adán: "el texto está muy
-   amontonado y no se distingue nada"). En escritorio el cuerpo es un multicolumna de alto fijo
-   —columnas de unos 270 px, ~50 caracteres por línea— y lo que no cabe se quita completo
-   (`apAjustarAvance()`). */
-.ap-avance{display:flex;flex-direction:column;gap:12px;padding-top:10px}
-.ap-lbl{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
-.ap-av{display:flex;flex-direction:column;gap:8px;min-width:0}
-.ap-av-ir{display:flex;flex-direction:column;gap:10px;width:100%;min-width:0;padding:0;border:0;
-  background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
-.ap-av+.ap-av{border-top:1px solid rgba(var(--ov),.09);padding-top:12px}
-.ap-av-cab{flex:none;display:flex;gap:12px;align-items:stretch;min-width:0}
-.ap-av-img{flex:none;width:auto;height:96px;aspect-ratio:2/3;border-radius:8px;object-fit:cover;
-  background:color-mix(in srgb,var(--c) 14%,transparent);box-shadow:0 4px 12px rgba(0,0,0,.18)}
-.ap-av-img.libro{object-position:top}
-.ap-av-ico{display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:none}
-.ap-av-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
-.ap-av-top{flex:none;display:flex;align-items:center;gap:8px;min-width:0}
-.ap-av-mat{flex:1;min-width:0;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--c);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ap-av-n{flex:none;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--c)}
-.ap-av-t{font-size:15.5px;font-weight:700;line-height:1.28;color:var(--text);
-  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
-.ap-av-ir:hover .ap-av-t{color:var(--c)}
-/* «‹» y «Siguiente ›»: si lo que te recomienda no te convence, pasas a otra opción (`apSiguiente()`). */
-.ap-av-ant,.ap-av-sig{flex:none;height:22px;display:inline-flex;align-items:center;justify-content:center;gap:3px;border-radius:7px;
-  border:1px solid rgba(var(--ov),.12);background:transparent;color:var(--text2);cursor:pointer;transition:color .15s,border-color .15s}
-.ap-av-ant{width:22px;padding:0}
-.ap-av-sig{padding:0 5px 0 8px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
-.ap-av-ant:hover,.ap-av-sig:hover{color:var(--c);border-color:var(--c)}
-.ap-av-ant svg,.ap-av-sig svg{width:12px;height:12px}
-.ap-seg{display:flex;gap:3px;margin:2px 0}
+/* Cómo vas, en una línea: lo que llevas de Python, lo que vale la pregunta y tu marcador del ISTQB. */
+.ap-dato{font-size:11px;line-height:1.45;color:var(--text3)}
+.ap-dato b{font-weight:700;color:var(--text2)}
+.ap-dato b.ok{color:var(--g)}
+.ap-dato b.bajo{color:var(--w)}
+/* Python: las palabras clave del tema, en una línea (las que no caben se van enteras). */
+.ap-tags{display:flex;flex-wrap:wrap;gap:4px;max-height:19px;overflow:hidden}
+.ap-tags i{font-style:normal;font-family:var(--mono);font-size:10px;line-height:19px;padding:0 7px;border-radius:99px;
+  white-space:nowrap;background:color-mix(in srgb,var(--c) 12%,transparent);color:var(--text2)}
+/* El ISTQB sin contestar: las cuatro opciones, una línea cada una. */
+.ap-ops{display:flex;flex-direction:column;gap:1px}
+.ap-op{display:flex;gap:7px;min-width:0;font-size:12px;line-height:1.5;color:var(--text2)}
+.ap-op b{flex:none;font-family:var(--mono);font-size:10.5px;color:var(--c)}
+.ap-op>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* El paso y la ficha: un tramo por paso —lleno lo hecho, marcado el que toca—, lo que haces y lo que sigue. */
+.ap-seg{display:flex;gap:3px;margin:2px 0 3px}
 .ap-seg i{flex:1 1 0;height:4px;border-radius:2px;background:rgba(var(--ov),.1)}
 .ap-seg i.ok{background:var(--c)}
 .ap-seg i.ya{background:color-mix(in srgb,var(--c) 30%,transparent);box-shadow:inset 0 0 0 1px var(--c)}
-/* Bajo los tramos, lo que sigue: el libro con que se hace y el paso que viene. */
-.ap-av-meta{margin-top:2px;display:flex;flex-direction:column;gap:4px;min-width:0}
-.ap-av-m{display:flex;align-items:center;gap:7px;min-width:0;font-size:12px;line-height:1.35;color:var(--text2)}
+.ap-av-m{display:flex;align-items:center;gap:7px;min-width:0;font-size:12px;line-height:1.4;color:var(--text2)}
 .ap-av-m svg{flex:none;width:13px;height:13px;color:var(--text3)}
 .ap-av-m>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ap-av-m i{color:var(--text)}
 .ap-av-m b{font-weight:600;color:var(--text)}
-/* El cuerpo: bloques que no se parten entre columnas, con la etiqueta encima. */
-.ap-av-cuerpo,.ap-av-cols{display:block;min-width:0}
-.ap-bq{display:block;break-inside:avoid;padding-bottom:11px}
-.ap-bq-k{display:block;margin-bottom:3px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--text3)}
-.ap-bq-t{display:block;font-size:12.5px;line-height:1.5;color:var(--text2)}
-.ap-bq-t b{font-weight:700;color:var(--text)}
-.ap-bq-hacer .ap-bq-t{font-size:13.5px;color:var(--text)}
+.ap-bq{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ap-bq-k{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ap-bq-k.ap-bq-paso{color:var(--c)}
+.ap-hacer{font-size:13px;line-height:1.5;color:var(--text)}
 /* La frase clave del paso, marcada como con resaltador en el color de su materia. */
-.ap-bq-hacer .ap-bq-t b{background:color-mix(in srgb,var(--c) 17%,transparent);padding:0 2px;border-radius:3px;
+.ap-hacer b{background:color-mix(in srgb,var(--c) 17%,transparent);padding:0 2px;border-radius:3px;
   -webkit-box-decoration-break:clone;box-decoration-break:clone}
-.ap-bq-idea{display:block;font-family:var(--font-title);font-size:14.5px;font-weight:500;line-height:1.42;color:var(--text)}
-.ap-bq-k.ap-bq-paso{color:var(--c);font-size:9.5px;letter-spacing:.12em;line-height:1.45;
-  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
-.ap-bq-intro{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
-/* Un renglón por punto de la ficha, con su nombre primero; tres líneas como mucho. */
-.ap-pt{display:flex;gap:9px;break-inside:avoid;padding-bottom:9px}
+.ap-bq-t{font-size:12.5px;line-height:1.5;color:var(--text2)}
+.ap-bq-t b{font-weight:700;color:var(--text)}
+.ap-bq-idea{font-family:var(--font-title);font-size:14px;font-weight:500;line-height:1.42;color:var(--text)}
+/* Un renglón por punto de la ficha, con su nombre primero. */
+.ap-pt{display:flex;gap:9px;min-width:0}
 .ap-pt::before{content:'';flex:none;width:5px;height:5px;margin-top:7px;border-radius:1.5px;background:var(--c)}
-.ap-pt-t{min-width:0;font-size:12.5px;line-height:1.5;color:var(--text2);
-  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.ap-pt-t{min-width:0;font-size:12.5px;line-height:1.5;color:var(--text2)}
 .ap-pt-t b{font-weight:600;color:var(--text)}
 .ap-pt-t>b:first-child{font-weight:700}
-/* Lo que se recorta para que quepa: con «…» en su última línea. */
-.ap-corta{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
-/* Si todo cabe y sobra alto, los puntos de la ficha y su entrada van enteros. */
-.ap-holgado .ap-pt-t,.ap-holgado .ap-bq-intro{-webkit-line-clamp:unset}
-/* La ruta del foco: lo hecho, el de ahora y lo que falta. */
-.ap-ruta{display:flex;align-items:center;gap:8px;min-width:0;font-size:12px;line-height:1.6;color:var(--text2)}
-.ap-ruta>i{flex:none;width:11px;height:11px;display:inline-flex;align-items:center;justify-content:center}
-.ap-ruta>i::before{content:'';width:6px;height:6px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--text3)}
-.ap-ruta>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ap-ruta svg{width:11px;height:11px}
-.ap-ruta.ok{color:var(--text3)}
-.ap-ruta.ok>i::before{display:none}
-.ap-ruta.ya{color:var(--text);font-weight:600}
-.ap-ruta.ya>i::before{width:7px;height:7px;box-shadow:none;background:var(--c)}
-.ap-luego{display:block;font-size:12px;line-height:1.6;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* En el teléfono el cuerpo va en el flujo: lo de apoyo se queda en su pantalla y la ficha enseña tres puntos. */
-.ap-opc,.ap-av-cols>.ap-pt:nth-child(n+5){display:none}
-/* Desde 560 px de ancho, las dos tarjetas lado a lado, en las dos columnas de los renglones de arriba. */
-@container aprende (min-width:560px){
-  #heroAprenderPanel .ap-avance{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:0;row-gap:10px}
-  #heroAprenderPanel .ap-avance>.ap-lbl{grid-column:1/-1}
-  #heroAprenderPanel .ap-av:first-of-type{padding-right:24px}
-  #heroAprenderPanel .ap-av+.ap-av{border-top:0;padding-top:0;border-left:1px solid rgba(var(--ov),.09);padding-left:24px}
+/* Lo que sigue en el orden de Coach, un renglón cada uno (solo donde sobra alto). */
+.ap-sig{display:block;min-width:0;font-size:12px;line-height:1.45;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ap-sig::before{content:'→';margin-right:7px;color:var(--text3)}
+.ap-sig b{font-weight:600;color:var(--text)}
+/* Desde 760 px, 3×2: la foto arriba, a todo lo ancho —un libro, en su 2:3 sobre su propia portada
+   desenfocada— y los controles encima de ella, arriba a la derecha. */
+@container aprende (min-width:760px){
+  #heroAprenderPanel .ap-c{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr);
+    grid-template-areas:"foto" "top" "txt";row-gap:9px}
+  #heroAprenderPanel .ap-c-foto{width:100%;height:120px;border-radius:12px;box-shadow:none}
+  #heroAprenderPanel .ap-c-foto.libro{display:flex;align-items:center;justify-content:center}
+  #heroAprenderPanel .ap-c-foto.libro .ap-c-fondo{display:block;position:absolute;inset:-14%;width:128%;height:128%;
+    object-fit:cover;filter:blur(16px) saturate(1.3);opacity:.9}
+  #heroAprenderPanel .ap-c-foto.libro .ap-c-img{position:relative;width:auto;height:84%;aspect-ratio:2/3;border-radius:4px;
+    box-shadow:0 6px 18px rgba(0,0,0,.35)}
+  #heroAprenderPanel .ap-c-ctl{position:absolute;top:8px;right:8px;z-index:1}
+  #heroAprenderPanel .ap-c-ctl>button{border-color:transparent;background:var(--bar);color:var(--text);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 }
-/* En escritorio, Tu avance toma el alto que le queda a la columna (240 px como mínimo; con menos, la
-   columna desplaza) y cada tarjeta lo usa entero: la imagen, el 27 % de su alto (180 px como mucho); el cuerpo es
-   un multicolumna de alto fijo. */
+/* En una tarjeta de lado angosta (menos de 280 px: la 2×3 de las pantallas de 1280 a 1440), «Siguiente»
+   se queda en su flecha; lo dice al pasar el ratón. */
+@container aprende (max-width:759.98px){
+  @container apcarta (max-width:279.98px){
+    #heroAprenderPanel .ap-av-sig{width:22px;padding:0;gap:0;font-size:0}
+  }
+}
+/* En escritorio la rejilla toma el alto que le queda a la columna y las seis tarjetas miden lo mismo
+   (104 px de alto como mínimo en 2×3 y 230 en 3×2; con menos, la columna desplaza). La foto crece con
+   la tarjeta y apAjustar() quita del texto lo que no cabe. */
 @media(min-width:901px){
-  #heroAprenderPanel .ap-avance{flex:1 0 0;min-height:240px;display:grid;grid-template-columns:minmax(0,1fr);
-    grid-template-rows:auto repeat(2,minmax(0,1fr));gap:10px}
-  #heroAprenderPanel .ap-av{min-height:0;overflow:hidden;container:avtarjeta / size}
-  #heroAprenderPanel .ap-av-ir{flex:1 1 0;min-height:0}
-  #heroAprenderPanel .ap-av-img{height:clamp(64px,27cqh,180px)}
-  #heroAprenderPanel .ap-av-cuerpo{flex:1 1 0;min-height:0;position:relative}
-  #heroAprenderPanel .ap-av-cols{position:absolute;inset:0;overflow:hidden;column-width:270px;column-gap:24px;column-fill:auto}
-  /* Si todo cabe, las columnas se reparten el contenido en vez de dejar la última vacía. */
-  #heroAprenderPanel .ap-av-cols.ap-holgado{column-fill:balance}
-  #heroAprenderPanel .ap-av-cols>.ap-opc{display:block}
-  #heroAprenderPanel .ap-av-cols>.ap-pt{display:flex}
-  @container aprende (min-width:560px){
-    #heroAprenderPanel .ap-avance{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto minmax(0,1fr);gap:10px 0}
+  @container aprende (min-width:440px){
+    #heroAprenderPanel .ap-seis{flex:1 0 0;min-height:0;grid-template-rows:repeat(3,minmax(104px,1fr))}
+    #heroAprenderPanel .ap-c{min-height:0;container:apcarta / size}
+    #heroAprenderPanel .ap-c-foto{width:clamp(44px,42cqh,108px);height:auto;aspect-ratio:1}
+    #heroAprenderPanel .ap-c-foto.libro{width:clamp(34px,28cqh,72px);aspect-ratio:2/3}
+    #heroAprenderPanel .ap-c-txt{flex:1 1 0;min-height:0;overflow:hidden}
+    #heroAprenderPanel .ap-c-txt .ap-cl:not(.l2):not(.l3){-webkit-line-clamp:unset}
+  }
+  @container aprende (min-width:760px){
+    #heroAprenderPanel .ap-seis{grid-template-rows:repeat(2,minmax(230px,1fr))}
+    #heroAprenderPanel .ap-c-foto,#heroAprenderPanel .ap-c-foto.libro{width:100%;height:clamp(84px,34cqh,220px);aspect-ratio:auto}
+    @container apcarta (min-height:440px){
+      #heroAprenderPanel .ap-c-foto,#heroAprenderPanel .ap-c-foto.libro{height:clamp(84px,40cqh,240px)}
+    }
   }
 }
 /* La bandera de Alemania en CSS: el emoji se pinta como las letras "DE" en Windows. */
@@ -3298,7 +3299,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
    respuesta es la que cuenta, y al pie va el marcador de la semana. */
 #istqbOverlay{--c:var(--p)}
 /* «Cómo lo decide Coach»: el botón junto al título de Hoy aprendes y su panel (#comoDecideOverlay) — lo
-   que manda, en orden, y renglón por renglón lo de hoy con su regla (`comoDecideHtml()`). */
+   que manda, en orden, y tarjeta por tarjeta lo de hoy con su regla (`comoDecideHtml()`). */
 .ap-como{display:inline-flex;align-items:center;gap:5px;height:20px;margin-left:6px;padding:0 8px 0 7px;border-radius:99px;
   border:1px solid rgba(var(--ov),.14);background:transparent;color:var(--text2);font-family:var(--mono);font-size:9px;
   font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:color .15s,border-color .15s}
@@ -4722,7 +4723,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
     <div class="gbm-head">
       <button class="gbm-close" onclick="cerrarComoDecide()" aria-label="Cerrar">✕</button>
       <h2>Cómo lo decide Coach</h2>
-      <p>Hoy aprendes sigue tu plan, no el azar: cada renglón tiene un orden con su porqué.</p>
+      <p>Hoy aprendes sigue tu plan, no el azar: cada tarjeta tiene un orden con su porqué.</p>
     </div>
     <div class="gbm-body" id="comoDecideBody"></div>
   </div>
@@ -7358,7 +7359,7 @@ function renderDiaHabitos(){
 }
 // Al cambiar el tamaño de la ventana cambia lo que cabe: los hábitos y el AHORA se vuelven a decidir.
 let _dhResize=0;
-addEventListener('resize',()=>{ clearTimeout(_dhResize); _dhResize=setTimeout(()=>{ renderDiaHabitos(); if(typeof renderDia==='function') renderDia(); if(typeof apAjustarAvance==='function') apAjustarAvance(); },150); });
+addEventListener('resize',()=>{ clearTimeout(_dhResize); _dhResize=setTimeout(()=>{ renderDiaHabitos(); if(typeof renderDia==='function') renderDia(); if(typeof apAjustar==='function') apAjustar(); },150); });
 // Los cobros y abonos de los próximos 7 días, de CIFRAS.agendaDia — la misma fuente que el
 // calendario del Plan Maestro, para que las dos pantallas no puedan discrepar.
 function cobrosHtml(mon){
@@ -7381,12 +7382,10 @@ function faseDespuesHtml(f){
   const dm={day:'numeric',month:'long'};
   return `<div class="hp-sub"><div class="hp-sub-lbl"><span>Después · ${esc(nx.tag)}</span><span>desde el ${nx.start.toLocaleDateString('es-MX',dm)}</span></div><div class="hp-sub-t">${esc(nx.title)}</div></div>`;
 }
-// Tu avance (diseño: diseno-avance/, Main): lo que avanza contigo y no con el calendario —cambia al
-// avanzar en su pantalla—. El paso de la semana (el foco del plan de Coach, `aprendeFoco()`) con la
-// portada de su libro, y la ficha de Habilidades Base en curso (`hbEnCurso()`: el orden de Coach, el
-// mismo que marca «SIGUIENTE» en esa pantalla), con su foto. Las dos con la misma
-// anatomía: en la cabecera, dónde vas y lo que sigue; en el cuerpo, bloques en orden de importancia.
-// Un tramo por paso: lleno lo hecho, marcado el que toca.
+// El paso de la semana y la ficha en curso: lo que avanza contigo y no con el calendario —cambia al
+// avanzar en su pantalla—. El paso es el foco del plan de Coach (`aprendeFoco()`), con la portada de su
+// libro; la ficha, la de Habilidades Base en curso (`hbEnCurso()`: el orden de Coach, el mismo que marca
+// «SIGUIENTE» en esa pantalla), con su foto. Un tramo por paso: lleno lo hecho, marcado el que toca.
 function apTramos(n, hecho, toca){
   let h = ''; for(let j = 0; j < n; j++) h += `<i class="${hecho(j) ? 'ok' : j === toca ? 'ya' : ''}"></i>`;
   return `<span class="ap-seg">${h}</span>`;
@@ -7401,20 +7400,18 @@ const AP_ICO = {
   volver: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.4"/><path d="M3 4v5h5"/></svg>',
   porque: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg>'
 };
-function apMeta(ico, html){ return `<span class="ap-av-m">${AP_ICO[ico]}<span>${html}</span></span>`; }
-// El renglón de arriba de cada tarjeta: la materia, su cuenta y «‹» / «Siguiente ›», fuera del botón que
-// abre la pantalla (un botón no puede ir dentro de otro). Si lo que se ve no es lo recomendado, «↺»
-// vuelve a ello; `rec` es su nombre.
-function apTop(cual, mat, n, otra, rec){
-  return `<span class="ap-av-top"><span class="ap-av-mat">${mat}</span><span class="ap-av-n">${n}</span>`
-    + (rec ? `<button type="button" class="ap-av-ant" data-ap="${cual}" data-d="0" onclick="apSiguiente('${cual}',0)" title="Volver a la recomendada: ${rec}" aria-label="Volver a la recomendada: ${rec}">${AP_ICO.volver}</button>` : '')
+function apMeta(ico, html, cls){ return `<span class="ap-av-m${cls ? ' ' + cls : ''}">${AP_ICO[ico]}<span>${html}</span></span>`; }
+// «↺», «‹» y «Siguiente ›» del paso y de la ficha, fuera del botón que abre la pantalla (un botón no puede
+// ir dentro de otro). Si lo que se ve no es lo recomendado, «↺» vuelve a ello; `rec` es su nombre.
+function apCtl(cual, otra, rec){
+  return (rec ? `<button type="button" class="ap-av-ant" data-ap="${cual}" data-d="0" onclick="apSiguiente('${cual}',0)" title="Volver a la recomendada: ${rec}" aria-label="Volver a la recomendada: ${rec}">${AP_ICO.volver}</button>` : '')
     + `<button type="button" class="ap-av-ant" data-ap="${cual}" data-d="-1" onclick="apSiguiente('${cual}',-1)" title="La anterior" aria-label="${otra} anterior">${AP_ICO.ant}</button>`
-    + `<button type="button" class="ap-av-sig" data-ap="${cual}" data-d="1" onclick="apSiguiente('${cual}',1)" title="¿No te convence? Pasa a otra" aria-label="Siguiente ${otra.toLowerCase()}">Siguiente${AP_ICO.sig}</button></span>`;
+    + `<button type="button" class="ap-av-sig" data-ap="${cual}" data-d="1" onclick="apSiguiente('${cual}',1)" title="¿No te convence? Pasa a otra" aria-label="Siguiente ${otra.toLowerCase()}">Siguiente${AP_ICO.sig}</button>`;
 }
-// «Siguiente» (d = 1), «‹» (d = −1) y «↺» (d = 0) en Tu avance: si no te convence lo que te recomienda
-// Coach, pasas a otra opción, y la elección se queda en `dash-avance-v1`. El paso recorre habConRuta()
-// —primero las del plan, después por retorno— y la ficha, hbEnCurso().lista; volver a la recomendada
-// borra la elección y manda otra vez el plan. La ruta abierta en En qué invertir tu tiempo no cambia.
+// «Siguiente» (d = 1), «‹» (d = −1) y «↺» (d = 0) en el paso y la ficha: si no te convence lo que te
+// recomienda Coach, pasas a otra opción, y la elección se queda en `dash-avance-v1`. El paso recorre
+// habConRuta() —primero las del plan, después por retorno— y la ficha, hbEnCurso().lista; volver a la
+// recomendada borra la elección y manda otra vez el plan. La ruta abierta en En qué invertir tu tiempo no cambia.
 function apSiguiente(cual, d){
   const st = rawGet(AVANCE_KEY, {}) || {};
   if(cual === 'paso'){
@@ -7432,23 +7429,18 @@ function apSiguiente(cual, d){
   const b = document.querySelector(`#heroAprenderPanel [data-ap="${cual}"][data-d="${d || 1}"]`);
   if(b) b.focus({ preventScroll: true });
 }
-// Un bloque del cuerpo: la etiqueta encima y lo suyo debajo. `.ap-opc` es lo de apoyo, que solo sale
-// donde sobra alto; `.ap-cl` marca el texto que apAjustarAvance() puede recortar.
+// Un bloque del texto: la etiqueta encima y lo suyo debajo.
 function apBloque(k, cuerpo, cls){ return `<span class="ap-bq${cls ? ' ' + cls : ''}"><span class="ap-bq-k">${k}</span>${cuerpo}</span>`; }
-// El nombre de un punto de la ficha: lo que va en negritas al empezar o, si no, lo que va antes de «:» o
-// de « — » (hasta 60 caracteres; «Ciclo 30:2 — …» también cuenta). Sin nombre, ''.
+// Un punto de la ficha, con su nombre primero y en negritas: lo que va en negritas al empezar o, si no, lo
+// que va antes de «:» o de « — » (hasta 60 caracteres; «Ciclo 30:2 — …» también cuenta).
 const AP_RE_NOMBRE = /^((?:[^<:—.]|:(?=\S)){3,60}?)(?=:\s|\s—\s)/;
-function apNombre(html){
-  const h = mdLimpiaTitulo(html), b = h.match(/^<b>([\s\S]*?)<\/b>/);
-  if(b) return b[1].replace(/<[^>]+>/g, '');
-  const m = h.match(AP_RE_NOMBRE); return m ? m[1] : '';
-}
-// Un punto de la ficha, con su nombre primero y en negritas.
-function apPunto(html){
+function apPunto(html, cls){
   let h = mdLimpiaTitulo(html);
   if(!/^<b>/.test(h)){ const m = h.match(AP_RE_NOMBRE); if(m) h = `<b>${m[1]}</b>` + h.slice(m[1].length); }
-  return `<span class="ap-pt"><span class="ap-pt-t ap-cl">${h}</span></span>`;
+  return `<span class="ap-pt${cls ? ' ' + cls : ''}"><span class="ap-pt-t ap-cl l2" data-min="1">${h}</span></span>`;
 }
+// El paso de la semana, resumido: el paso con su ruta en tramos, qué hacer y lo que sigue; donde sobra
+// alto, el libro, el porqué y la idea del libro. Tocarlo abre En qué invertir tu tiempo.
 function pasoSemanaHtml(){
   if(typeof habFocoActual!=='function') return '';
   const foco=aprendeFoco(); if(!foco) return '';
@@ -7457,34 +7449,21 @@ function pasoSemanaHtml(){
   const p=pasos[i], sig=pasos[i+1];
   const r=(Array.isArray(p.r)?p.r:[]).find(x=>x&&x.t==='libro');
   const lib=r?habLibro(r.id):null, fi=(lib&&lib.ficha)||{};
-  const meta=(lib?apMeta('libro',`Con <i>${esc(lib.t)}</i>${r.nota?`, ${esc(r.nota)}`:lib.a?` · ${esc(lib.a)}`:''}`):'')
-    +(sig?apMeta('sigue',`Después: <b>${esc(sig.n)}</b>`):apMeta('meta','Último paso de la ruta'));
-  const ruta=pasos.map((x,j)=>`<span class="ap-ruta${j<i?' ok':j===i?' ya':''}"><i>${j<i?AP_ICO.hecho:''}</i><span>${j+1} · ${esc(x.n)}</span></span>`).join('');
-  const cuerpo=[
-    p.c?apBloque('Qué hacer',`<span class="ap-bq-t ap-cl">${p.c}</span>`,'ap-bq-hacer'):'',
-    p.q?apBloque('Por qué',`<span class="ap-bq-t ap-cl">${p.q}</span>`):'',
-    fi.idea?apBloque('La idea del libro',`<span class="ap-bq-idea ap-cl">${fi.idea}</span>`,'ap-opc'):'',
-    apBloque(`La ruta · ${pasos.length} pasos`,ruta,'ap-opc'),
-    sig&&sig.c?apBloque('Lo que viene',`<span class="ap-bq-t ap-cl"><b>${esc(sig.n)}.</b> ${sig.c}</span>`,'ap-opc'):'',
-    fi.resumen?apBloque('Lo que dice',`<span class="ap-bq-t ap-cl">${fi.resumen}</span>`,'ap-opc'):'',
-    fi.porQue?apBloque('Por qué este libro',`<span class="ap-bq-t ap-cl">${fi.porQue}</span>`,'ap-opc'):''
-  ].join('');
   const rec=habRecomendada(), propia=!!rec&&rec.id!==foco.id;
-  return `<div class="ap-av" style="--c:var(--w)">
-      ${apTop('paso', `${esc(foco.name)} · ${propia?'elegida por ti':'esta semana'}`, `${i+1}/${pasos.length}`, 'Habilidad', propia?esc(rec.name):'')}
-      <button type="button" class="ap-av-ir" onclick="irASlide('theme-skills')" title="Abrir En qué invertir tu tiempo${lib?` · con ${habAttr(lib.t)}`:''}">
-        <span class="ap-av-cab">
-          ${lib?`<img class="ap-av-img libro" src="${lib.portada||''}" alt="" loading="lazy">`:(apFotoSk(foco.id)?apImg(apFotoSk(foco.id),'ap-av-img'):`<span class="ap-av-img ap-av-ico">${foco.icon}</span>`)}
-          <span class="ap-av-col">
-            <span class="ap-av-t">${esc(p.n)}</span>
-            ${apTramos(pasos.length, j=>j<i, i)}
-            <span class="ap-av-meta">${meta}</span>
-          </span>
-        </span>
-        <span class="ap-av-cuerpo"><span class="ap-av-cols">${cuerpo}</span></span>
-      </button>
-    </div>`;
+  const txt=`<span class="ap-t ap-cl l2" data-min="1">${esc(p.n)}</span>`
+    +apTramos(pasos.length, j=>j<i, i)
+    +(p.c?apBloque('Qué hacer',`<span class="ap-hacer ap-cl">${p.c}</span>`):'')
+    +(sig?apMeta('sigue',`Después: <b>${esc(sig.n)}</b>`):apMeta('meta','Último paso de la ruta'))
+    +(lib?apMeta('libro',`Con <i>${esc(lib.t)}</i>${r.nota?`, ${esc(r.nota)}`:lib.a?` · ${esc(lib.a)}`:''}`,'ap-opc'):'')
+    +(p.q?apBloque('Por qué',`<span class="ap-bq-t ap-cl">${p.q}</span>`,'ap-opc'):'')
+    +(fi.idea?apBloque('La idea del libro',`<span class="ap-bq-idea ap-cl">${fi.idea}</span>`,'ap-opc'):'');
+  return apTarjeta({ c:'var(--w)', mat:`${esc(foco.name)} · ${propia?'elegida por ti':'esta semana'}`,
+    estado:`<span class="ap-av-n">${i+1}/${pasos.length}</span>`, ctl:apCtl('paso','Habilidad',propia?esc(rec.name):''),
+    foto:apFotoLibro(r&&r.id, foco.id), ico:foco.icon, abrir:"irASlide('theme-skills')",
+    titulo:`Abrir En qué invertir tu tiempo${lib?` · con ${habAttr(lib.t)}`:''}`, txt });
 }
+// La ficha de Habilidades Base en curso, resumida: el paso que toca con su entrada, por qué te toca según
+// el plan de Coach (`hbPlan()`) y lo que sigue; donde sobra alto, los puntos del paso, un renglón cada uno.
 function fichaEnCursoHtml(){
   if(typeof HABILIDADES_BASE==='undefined'||typeof hbAvance!=='function') return '';
   const ec=hbEnCurso(), sig=ec.actual; if(!sig) return '';
@@ -7492,85 +7471,44 @@ function fichaEnCursoHtml(){
   const info=HABILIDAD_DETALLE[sig.h.id]; const store=(rawGet('habilidades_checklist_v1',{})[sig.h.id])||{};
   const k=info?info.pasos.findIndex((_,j)=>!store[j]):-1;
   const paso=k>=0?info.pasos[k]:null;
-  // La foto viene a 2400 px para el panel de detalle; aquí basta una de 320.
-  const foto=String(sig.h.img||'').replace(/([?&]w=)\d+/,(_,a)=>a+'320').replace(/([?&]q=)\d+/,(_,a)=>a+'70');
-  // Los pendientes que vienen: el primero en la cabecera y los dos siguientes al final del cuerpo.
-  const luego=paso?info.pasos.map((q,j)=>({q,j})).filter(x=>x.j>k&&!store[x.j]).slice(0,3):[];
+  const luego=paso?info.pasos.map((q,j)=>({q,j})).find(x=>x.j>k&&!store[x.j]):null;
   const titulo=x=>`Paso ${x.j+1} · ${esc(mdLimpiaTitulo(x.q.t))}`;
-  const prox=luego[0]?{t:luego[0].q.t,d:luego[0].q.d,nombres:(luego[0].q.list||[]).map(apNombre).filter(Boolean)}:null;
-  // Por qué te toca, según el plan de Coach (HB_PLAN), y lo que sigue.
-  const meta=apMeta('porque',`Por qué: ${esc(hbPlan(sig.h.id).para)}`)
-    +(!paso?apMeta('meta','Ficha completa')
-    :luego[0]?apMeta('sigue',`Después: <b>${titulo(luego[0])}</b>`):apMeta('meta','Último paso de la ficha'));
-  const cuerpo=paso
-    ?`<span class="ap-bq"><span class="ap-bq-k ap-bq-paso">${titulo({q:paso,j:k})}</span>${paso.d?`<span class="ap-bq-t ap-bq-intro">${paso.d}</span>`:''}</span>`
-      +(paso.list||[]).map(apPunto).join('')
-      +(prox?apBloque(`Lo que viene · Paso ${luego[0].j+1}`,`<span class="ap-bq-t ap-cl"><b>${esc(mdLimpiaTitulo(prox.t))}.</b> ${prox.nombres.length>1?prox.nombres.map(esc).join(' · '):(prox.d||'')}</span>`,'ap-opc'):'')
-      +(luego.length>1?apBloque('Más adelante',luego.slice(1).map(x=>`<span class="ap-luego">${x.j+1} · ${esc(mdLimpiaTitulo(x.q.t))}</span>`).join(''),'ap-opc'):'')
-    :apBloque('Ficha completa','<span class="ap-bq-t">Repásala cuando quieras: la tienes entera.</span>');
-  return `<div class="ap-av" style="--c:var(--b)">
-      ${apTop('ficha', `Habilidades base${propia?' · elegida por ti':''}`, `${sig.hechos}/${sig.total}`, 'Ficha', propia?habAttr(ec.recomendada.h.t):'')}
-      <button type="button" class="ap-av-ir" onclick="abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')" title="Abrir la ficha de Habilidades Base">
-        <span class="ap-av-cab">
-          <img class="ap-av-img" src="${foto}" alt="" loading="lazy">
-          <span class="ap-av-col">
-            <span class="ap-av-t">${esc(sig.h.t)}</span>
-            ${info?apTramos(info.pasos.length, j=>!!store[j], k):''}
-            <span class="ap-av-meta">${meta}</span>
-          </span>
-        </span>
-        <span class="ap-av-cuerpo"><span class="ap-av-cols">${cuerpo}</span></span>
-      </button>
-    </div>`;
+  const txt=`<span class="ap-t ap-cl l2" data-min="1">${esc(sig.h.t)}</span>`
+    +(info?apTramos(info.pasos.length, j=>!!store[j], k):'')
+    +(paso?`<span class="ap-bq"><span class="ap-bq-k ap-bq-paso">${titulo({q:paso,j:k})}</span>${paso.d?`<span class="ap-bq-t ap-cl l3">${paso.d}</span>`:''}</span>`
+      :apBloque('Ficha completa','<span class="ap-bq-t">Repásala cuando quieras: la tienes entera.</span>'))
+    +apMeta('porque',`Por qué: ${esc(hbPlan(sig.h.id).para)}`)
+    +(!paso?'':luego?apMeta('sigue',`Después: <b>${titulo(luego)}</b>`):apMeta('meta','Último paso de la ficha'))
+    +(paso?(paso.list||[]).map(x=>apPunto(x,'ap-opc')).join(''):'');
+  return apTarjeta({ c:'var(--b)', mat:`Habilidades base${propia?' · elegida por ti':''}`,
+    estado:`<span class="ap-av-n">${sig.hechos}/${sig.total}</span>`, ctl:apCtl('ficha','Ficha',propia?habAttr(ec.recomendada.h.t):''),
+    foto:apFotoHb(sig.h), abrir:`abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')`, titulo:'Abrir la ficha de Habilidades Base', txt });
 }
-// El cuerpo de cada tarjeta es un multicolumna de alto fijo: lo que no cabe cae en columnas que no se
-// ven. Para que nada quede a medias, el primer bloque que no cabe entero se recorta a las líneas que
-// le quedan —con «…»— o, si es una lista, se acorta; los que siguen se quitan, y si ni así cabe se
-// quita también. Si todo cabe, los puntos de la ficha prueban a ir enteros. Se mide al pintar, al
-// cambiar el tamaño de la ventana y cada vez que termina de cargar una fuente; en el teléfono el
-// cuerpo va en el flujo y no se toca.
-function apAjustarAvance(){
-  document.querySelectorAll('#heroAprenderPanel .ap-av-cols').forEach(cols => {
-    const bloques = [...cols.children];
-    cols.classList.remove('ap-holgado');
-    bloques.forEach(b => {
-      b.style.display = '';
-      b.querySelectorAll('.ap-cl').forEach(t => { t.style.webkitLineClamp = ''; t.classList.remove('ap-corta'); });
-      b.querySelectorAll('.ap-ruta,.ap-luego').forEach(x => { x.style.display = ''; });
-    });
-    if(getComputedStyle(cols).position !== 'absolute' || !cols.clientHeight) return;
-    const caja = cols.getBoundingClientRect();
-    const cabe = b => { const rs = [...b.getClientRects()].filter(r => r.width > 0 && r.height > 0);
-      return rs.length > 0 && rs.every(r => r.right <= caja.right + 1 && r.bottom <= caja.bottom + 1); };
-    const visible = b => getComputedStyle(b).display !== 'none';
-    const i = bloques.findIndex(b => visible(b) && !cabe(b));
-    if(i < 0){
-      cols.classList.add('ap-holgado');
-      if(!bloques.every(b => !visible(b) || cabe(b))) cols.classList.remove('ap-holgado');
-      return;
-    }
-    const b = bloques[i], t = b.querySelector('.ap-cl');
+// En escritorio cada tarjeta tiene alto fijo: lo que no cabe se quita completo y el primer bloque que no
+// cabe entero se recorta a las líneas que le quedan, con «…» —nunca a media línea—. Los bloques van en
+// orden de importancia, así que lo que se va es lo de apoyo. Se mide al pintar, al cambiar el tamaño de
+// la ventana y cada vez que termina de cargar una fuente; en el teléfono el texto va en el flujo y no se toca.
+function apAjustar(){
+  document.querySelectorAll('#heroAprenderPanel .ap-c-txt').forEach(caja => {
+    const bloques = [...caja.children], clDe = b => b.matches('.ap-cl') ? b : b.querySelector('.ap-cl');
+    bloques.forEach(b => { b.style.display = ''; const t = clDe(b); if(t) t.style.webkitLineClamp = ''; });
+    if(getComputedStyle(caja).overflowY !== 'hidden' || !caja.clientHeight) return;
+    const fondo = caja.getBoundingClientRect().bottom + 1, cabe = b => b.getBoundingClientRect().bottom <= fondo;
+    const i = bloques.findIndex(b => getComputedStyle(b).display !== 'none' && !cabe(b));
+    if(i < 0) return;
+    const b = bloques[i], t = clDe(b);
     let ok = false;
     if(t){
-      const lh = parseFloat(getComputedStyle(t).lineHeight) || 18;
-      const lineas = Math.round([...t.getClientRects()].reduce((s, r) => s + r.height, 0) / lh);
-      const min = t.classList.contains('ap-pt-t') ? 1 : 2;
-      t.classList.add('ap-corta');
-      for(let n = lineas - 1; n >= min && !ok; n--){ t.style.webkitLineClamp = String(n); ok = cabe(b); }
-      if(!ok){ t.style.webkitLineClamp = ''; t.classList.remove('ap-corta'); }
-    } else {
-      // Una lista (la ruta, lo que viene): primero se van los pasos hechos y luego los del final; quedan dos como mínimo.
-      const items = [...b.querySelectorAll('.ap-ruta,.ap-luego')];
-      const orden = items.filter(x => x.classList.contains('ok')).concat(items.filter(x => !x.classList.contains('ok')).reverse());
-      for(let q = 0; q < orden.length && items.length - q > 2 && !ok; q++){ orden[q].style.display = 'none'; ok = cabe(b); }
-      if(!ok) items.forEach(x => { x.style.display = ''; });
+      const lh = parseFloat(getComputedStyle(t).lineHeight) || 18, min = +(t.dataset.min || 2);
+      for(let n = Math.round(t.getBoundingClientRect().height / lh) - 1; n >= min && !ok; n--){ t.style.webkitLineClamp = String(n); ok = cabe(b); }
+      if(!ok) t.style.webkitLineClamp = '';
     }
     for(let k = ok ? i + 1 : i; k < bloques.length; k++) bloques[k].style.display = 'none';
   });
 }
 if(document.fonts){
-  if(document.fonts.ready) document.fonts.ready.then(() => apAjustarAvance());
-  document.fonts.addEventListener('loadingdone', () => apAjustarAvance());
+  if(document.fonts.ready) document.fonts.ready.then(() => apAjustar());
+  document.fonts.addEventListener('loadingdone', () => apAjustar());
 }
 // Semana ISO del año, para la esquina de la frase.
 function semanaISO(d){
@@ -7886,6 +7824,16 @@ function aprendeDelDia(slot){
   aprendeGuarda(st, h);
   return x;
 }
+// Lo que sigue en el orden de Coach después de lo de hoy, sin apuntarlo como salido: los `n` primeros que
+// sigan libres y no hayan salido. Es lo que traerán ↻ y los días que vienen.
+function aprendeLuego(slot, n){
+  const o = aprendeOrdenDe(slot); if(!o) return [];
+  const { st, h } = aprendeHoy(), fijo = (h.fijo || {})[slot];
+  const ya = new Set(((st.salio || {})[slot] || []).slice(-(APRENDE_MEMORIA[slot] || Infinity)));
+  const out = [];
+  for(const e of o.orden){ if(out.length >= n) break; if(o.libre(e) && !ya.has(o.id(e)) && o.id(e) !== fijo) out.push(e); }
+  return out;
+}
 // ↻ — el siguiente en el orden de Coach (en «Al volante», el siguiente audiolibro del foco). Se queda
 // hasta mañana.
 function aprendeOtra(slot){
@@ -7902,8 +7850,8 @@ function aprendeOtra(slot){
   renderHeroAprender();
   if(slot === 'istqb' && document.getElementById('istqbOverlay')?.classList.contains('open')) istqbPintar();
 }
-// El foco de Hoy aprendes —el paso de la semana de Tu avance y «Al volante»—: el del plan de Coach para
-// hoy (`habRecomendada()`, el tramo de `CIFRAS.HAB_FOCO`) o el que eligió con «Siguiente» en Tu avance
+// El foco de Hoy aprendes —el paso de la semana y «Al volante»—: el del plan de Coach para
+// hoy (`habRecomendada()`, el tramo de `CIFRAS.HAB_FOCO`) o el que eligió con «Siguiente» en su tarjeta
 // (`dash-avance-v1.paso`). La ruta abierta en En qué invertir tu tiempo es para mirarla: no lo cambia.
 function aprendeFoco(){
   const id = (rawGet(AVANCE_KEY, {}) || {}).paso;
@@ -8053,16 +8001,35 @@ function aprendeAbrir(slot){
   else if(slot === 'py'){ const p = entrevistaTemaHoy(); if(p) window.open('../Entrevistas/entrevistas.html#' + p.id, '_blank', 'noopener'); }
 }
 
-// Un renglón: la materia con su marca, el estado y ↻; debajo, el botón que lo abre.
+// Una tarjeta de Hoy aprendes: la foto —tocarla abre lo mismo que el texto—, la materia con su marca, su
+// estado y sus controles, y lo que aprendes (`o.txt`) en bloques en orden de importancia. `.ap-opc` es lo
+// de apoyo, que solo sale donde la tarjeta tiene alto fijo, y `.ap-cl`, el texto que apAjustar() puede
+// recortar. Sin `o.abrir` el texto no es un botón: lleva enlaces dentro.
 const AP_OTRA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>';
 const AP_BANDERA = '<span class="flag-de" aria-hidden="true"></span>';
 const AP_PUNTO = '<span class="ap-punto" aria-hidden="true"></span>';
 function apEstado(hecho, txt, ok){ return `<span class="ap-estado${hecho ? ' ok' : ''}">${hecho ? ok : txt}</span>`; }
-function apFila(o){
-  return `<div class="ap-fila${o.foto ? ' con-foto' : ''}" style="--c:${o.c}">${o.foto ? apImg(o.foto, 'ap-img') : ''}
-      <div class="ap-top">${o.marca}<span class="ap-mat">${o.mat}</span>${o.estado}<button type="button" class="ap-otra" onclick="aprendeOtra('${o.slot}')" title="${o.otra}" aria-label="${o.otra}">${AP_OTRA}</button></div>
-      <button type="button" class="ap-abrir" onclick="${o.abrir}" title="${o.titulo}">${o.cuerpo}</button>
+function apFotoC(f){
+  return (f.libro ? `<img class="ap-c-fondo" src="${f.u}" alt="" loading="lazy">` : '')
+    + `<img class="ap-c-img" src="${f.u}" alt="" loading="lazy" title="${habAttr(f.c)}">`;
+}
+function apTarjeta(o){
+  const txt = `<span class="ap-c-txt">${o.txt}</span>`;
+  return `<div class="ap-c" style="--c:${o.c}">
+      <div class="ap-c-top">${o.marca || AP_PUNTO}<span class="ap-mat">${o.mat}</span>${o.estado || ''}<span class="ap-c-ctl">${o.ctl || ''}</span></div>
+      <button type="button" class="ap-c-foto${o.foto && o.foto.libro ? ' libro' : ''}" onclick="${o.abrirFoto || o.abrir}" title="${o.titulo}" tabindex="-1" aria-hidden="true">${o.foto ? apFotoC(o.foto) : `<span class="ap-c-img ap-c-ico">${o.ico || ''}</span>`}</button>
+      ${o.abrir ? `<button type="button" class="ap-c-ir" onclick="${o.abrir}" title="${o.titulo}">${txt}</button>` : `<div class="ap-c-ir">${txt}</div>`}
     </div>`;
+}
+// ↻: el siguiente en el orden de Coach.
+function apOtraBtn(slot, otra){ return `<button type="button" class="ap-otra" onclick="aprendeOtra('${slot}')" title="${otra}" aria-label="${otra}">${AP_OTRA}</button>`; }
+// Lo de hoy en alemán, Python y el ISTQB: su tarjeta con ↻.
+function apFila(o){ return apTarjeta(Object.assign({ ctl: apOtraBtn(o.slot, o.otra) }, o)); }
+// «Lo que sigue»: la etiqueta con el primero y, debajo, los demás, un renglón cada uno —bloques aparte,
+// para que apAjustar() quite enteros los que no caben—. Es lo de apoyo: solo sale donde sobra alto.
+function apLuego(items){
+  return items.map((x, i) => i ? `<span class="ap-sig ap-opc">${x}</span>`
+    : `<span class="ap-bq ap-opc"><span class="ap-bq-k">Lo que sigue</span><span class="ap-sig">${x}</span></span>`).join('');
 }
 
 // El alemán de hoy, un solo renglón: la palabra —el artículo en el color de su género, como en la
@@ -8083,14 +8050,18 @@ function alemanHoyHtml(vistos){
   // Un ejemplo que repite la frase tal cual no enseña nada nuevo: se omite.
   const sinPunto = s => String(s || '').replace(/[.!?¡¿]+$/, '').trim().toLowerCase();
   const ex = a.ex && sinPunto(a.ex) !== sinPunto(a.de) ? a.ex : '';
+  const etapa = aprendeEtapaAleman(), salio = new Set((((rawGet(APRENDE_KEY, {}) || {}).salio || {}).de) || []);
+  const delNivel = alemanPalabras().filter(x => x.niv === etapa.nivel), van = delNivel.filter(x => salio.has(x.de)).length;
   return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA, foto: apFotoAleman(a),
     mat: `Alemán · ${esc((V.cats[a.cat] || {}).label || '')}`,
     estado: apEstado(vistos.de, frase ? 'frase del día' : 'palabra del día', '✓ vista'),
     otra: frase ? 'La siguiente frase, en el orden de Coach' : 'La siguiente palabra, en el orden de Coach', abrir: "aprendeAbrir('de')", titulo: 'Abrir su sección en Alemán',
-    cuerpo: `<span class="ap-de">${artHtml}${esc(a.de)}</span>
+    txt: `<span class="ap-de ap-cl l2" data-min="1">${artHtml}${esc(a.de)}</span>
       <span class="ap-es">${esc(a.es)}${pl}${perf}</span>
-      ${ex ? `<span class="ap-ex">${esc(ex)}${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</span>` : ''}
-      ${a.uso ? `<span class="ap-nota"><b>Uso</b> · ${esc(a.uso)}</span>` : ''}` });
+      ${ex ? `<span class="ap-ex ap-cl">${esc(ex)}${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</span>` : ''}
+      ${a.uso ? `<span class="ap-nota ap-cl l2 ap-opc" data-min="1"><b>Uso</b> · ${esc(a.uso)}</span>` : ''}
+      <span class="ap-dato ap-1l ap-opc">${etapa.nivel === 'A2' ? 'A2, el que pide Esslingen' : etapa.nivel} · han salido <b>${van} de ${delNivel.length}</b></span>
+      ${apLuego(aprendeLuego('de', 3).map(w => `<b>${w.art && w.art !== '-' ? esc(w.art === 'pl.' ? 'die' : w.art) + ' ' : ''}${esc(w.de)}</b> · ${esc(w.es)}`))}` });
 }
 
 // ── Al volante: qué escuchar hoy en Didi, del catálogo de «Qué escuchar» (`DIDI_AUDIO`) en el orden
@@ -8130,14 +8101,15 @@ function escucharHoyHtml(vistos){
   const oir = x => `<a class="ap-oir" href="${didiSpo(x.q)}" target="_blank" rel="noopener" onclick="aprendeVisto('escuchar');setTimeout(renderHeroAprender,60)" title="Buscarlo en Spotify">${esc(x.n)}<span aria-hidden="true">&nbsp;↗</span></a>`;
   const estado = vistos.escuchar ? '<span class="ap-estado ok">✓ escuchando</span>'
     : '<button type="button" class="ap-estado ir" onclick="abrirDidi()">Qué escuchar</button>';
-  return `<div class="ap-fila con-foto" style="--c:var(--o)">${apImg(apFotoLibro(libro.it.lib, libro.g.sk), 'ap-img')}
-      <div class="ap-top">${AP_PUNTO}<span class="ap-mat">Al volante · ${esc(sk ? sk.name : '')}</span>${estado}<button type="button" class="ap-otra" onclick="aprendeOtra('escuchar')" title="El siguiente audiolibro del foco" aria-label="El siguiente audiolibro del foco">${AP_OTRA}</button></div>
-      <div class="ap-cuerpo">
-        <span class="ap-t">${oir(libro.it)}</span>
-        <span class="ap-es ap-1l"><b class="ap-hora">${esc(cuando)}</b> · audiolibro de la semana — ${esc(libro.it.d)}</span>
-        ${pod ? `<span class="ap-nota"><b class="ap-hora">${esc(cuandoPod)}</b> · ${DIDI_TAG[pod.it.tipo].l.toLowerCase()}: ${oir(pod.it)}</span>` : ''}
-      </div>
-    </div>`;
+  return apTarjeta({ c: 'var(--o)', mat: `Al volante · ${esc(sk ? sk.name : '')}`, estado,
+    ctl: apOtraBtn('escuchar', 'El siguiente audiolibro del foco'), foto: apFotoLibro(libro.it.lib, libro.g.sk),
+    abrirFoto: 'abrirDidi()', titulo: 'Abrir Qué escuchar',
+    txt: `<span class="ap-t ap-cl l2" data-min="1">${oir(libro.it)}</span>
+      <span class="ap-es ap-1l"><b class="ap-hora">${esc(cuando)}</b> · audiolibro de la semana</span>
+      ${pod ? `<span class="ap-nota ap-cl l2" data-min="1"><b class="ap-hora">${esc(cuandoPod)}</b> · ${DIDI_TAG[pod.it.tipo].l.toLowerCase()}: ${oir(pod.it)}</span>` : ''}
+      ${libro.it.d ? `<span class="ap-es ap-cl ap-opc">${esc(libro.it.d)}</span>` : ''}
+      ${apLuego([1, 2].map(j => d.libros[(d.libros.indexOf(libro) + j) % d.libros.length]).filter((x, j, a) => x !== libro && a.indexOf(x) === j)
+        .map(x => `<b>${esc(x.it.n)}</b>${x.it.d ? ` · ${esc(x.it.d)}` : ''}`))}` });
 }
 
 // El tema de Python, con su explicación de una línea. Cuenta como hecho cuando lo marcas estudiado
@@ -8150,7 +8122,11 @@ function pythonHoyHtml(){
   return apFila({ slot: 'py', c: 'var(--cy)', marca: AP_PUNTO, foto: apFoto('py-' + p.mod) || apFotoSk('codigo'), mat: `Python · ${esc(pyModLabel(p.mod))}`,
     estado: apEstado(!!hechos[p.id], 'tema del día', '✓ estudiado'), otra: 'El siguiente tema, en el orden de Coach', abrir: "aprendeAbrir('py')",
     titulo: `Abrir el tema en la app de Entrevistas · llevas ${n} de ${ENTREVISTA_TEMAS.length} estudiados`,
-    cuerpo: `<span class="ap-t">${esc(p.title)}</span>${p.hint ? `<span class="ap-es ap-2l">${esc(p.hint)}</span>` : ''}` });
+    txt: `<span class="ap-t ap-cl l2" data-min="1">${esc(p.title)}</span>
+      ${p.hint ? `<span class="ap-es ap-cl">${esc(p.hint)}</span>` : ''}
+      ${(p.tags || []).length ? `<span class="ap-tags ap-opc">${p.tags.map(t => `<i>${esc(t)}</i>`).join('')}</span>` : ''}
+      <span class="ap-dato ap-1l ap-opc">Llevas <b>${n} de ${ENTREVISTA_TEMAS.length}</b> temas estudiados en Entrevistas</span>
+      ${apLuego(aprendeLuego('py', 3).map(t => `<b>${esc(t.title)}</b>${t.hint ? ` · ${esc(t.hint)}` : ''}`))}` });
 }
 
 // La pregunta del ISTQB CT-GenAI: una de los dos bancos del simulacro (los mismos que usa
@@ -8200,15 +8176,19 @@ function istqbMarcador(){
           u ? `simulacro <b class="${u.pts >= corte ? 'ok' : 'bajo'}" title="El corte es ${corte} de ${u.max}">${u.pts}/${u.max}</b>` : '']
     .filter(Boolean).join(' · ');
 }
-// En la columna: la pregunta en dos líneas y, arriba, «Responder» o el resultado.
+// En su tarjeta: la pregunta, lo que vale y cómo vas; arriba, «Responder» o el resultado y, donde sobra alto, las opciones o el porqué.
 function istqbHtml(){
   const q = istqbPreguntaHoy(); if(!q) return '';
   const hecha = istqbHoy(q);
   const estado = !hecha ? '<button type="button" class="ap-estado ir" onclick="abrirIstqb()">Responder</button>'
     : `<span class="ap-estado ${hecha.ok ? 'ok' : 'mal'}">${hecha.ok ? '✓ correcta' : '✗ era la ' + 'ABCD'[q.r]}</span>`;
-  return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), mat: `ISTQB CT-GenAI · Cap. ${q.cap} · ${esc(q.k)}`,
+  const dato = [esc(q.k || ''), (q.pts || 1) === 1 ? '<b>1 punto</b>' : `<b>${q.pts} puntos</b>`, istqbMarcador()].filter(Boolean).join(' · ');
+  return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), mat: `ISTQB CT-GenAI · Cap. ${q.cap}`,
     estado, otra: 'La siguiente pregunta, en el orden de Coach', abrir: 'abrirIstqb()', titulo: 'Contestar la pregunta del día',
-    cuerpo: `<span class="ap-q ap-2l">${q.q}</span>` });
+    txt: `<span class="ap-q ap-cl">${q.q}</span>
+      <span class="ap-dato ap-1l">${dato}</span>
+      ${hecha ? (q.why ? `<span class="ap-es ap-cl ap-opc">${q.why}</span>` : '')
+        : `<span class="ap-ops ap-opc">${q.o.map((o, i) => `<span class="ap-op"><b>${'ABCD'[i]}</b><span>${o}</span></span>`).join('')}</span>`}` });
 }
 // El panel: la pregunta y sus cuatro opciones. Contestada, la buena en verde y la tuya en rojo si
 // fallaste, con el porqué del programa, la sección del syllabus y «Otra pregunta».
@@ -8286,7 +8266,7 @@ function comoDecideHtml(){
   const habs = SK.filter(s => !s.pausa).map(s => ({ s, r: skRetorno(s) })).sort((a, b) => b.r - a.r).slice(0, 5)
     .map(x => li(`<b>${esc(x.s.name)}</b> · nivel ${x.s.val}, peso ×${x.s.w}`, `retorno ${x.r}`, false, apFotoSk(x.s.id))).join('');
 
-  // Renglón por renglón.
+  // Tarjeta por tarjeta.
   const filas = [], foco = aprendeFoco(), rec = habRecomendada();
   const w = alemanPalabraHoy(), V = (typeof alVocab === 'function') ? alVocab() : null;
   if(w && V){
@@ -8343,7 +8323,7 @@ function comoDecideHtml(){
       <div class="cd-capa"><div class="cd-capa-k"><b>2</b>El plan de Coach</div>${planHtml}</div>
       <div class="cd-capa"><div class="cd-capa-k"><b>3</b>Subir tus habilidades</div>${habs}</div>
     </div>
-    <div class="gbm-sec">Renglón por renglón, lo de hoy</div>
+    <div class="gbm-sec">Tarjeta por tarjeta, lo de hoy</div>
     <div class="cd-filas">${filas.map(r => `<div class="cd-fila" style="--fc:${r.c}">${apImg(r.foto, 'cd-foto')}<div class="cd-fila-c"><div class="cd-fila-k">${r.k}</div><div class="cd-hoy">${r.hoy}</div><div class="cd-regla">${r.regla}</div>${r.extra || ''}</div></div>`).join('')}</div>
     <div class="cd-pie">«Siguiente» y ↻ siguen este mismo orden, nunca el azar. Lo que cambias tú queda marcado como <b>elegida por ti</b> y «↺» vuelve a lo de Coach. Las metas, las fases, el foco y los niveles se cambian en Coach; este panel los lee de ahí.</div>`;
 }
@@ -8368,12 +8348,10 @@ function renderHeroAprender(){
   const color = ['var(--g)', 'var(--o)', 'var(--cy)', 'var(--p)'];
   const d = new Date();
   const fecha = `${DIAS_CORTOS[d.getDay()].toLowerCase()} ${d.getDate()} ${MES_LABEL_FULL[d.getMonth()].slice(0, 3).toLowerCase()}`;
-  const avance = pasoSemanaHtml() + fichaEnCursoHtml();
   el.innerHTML = `<div class="hp-title"><span>🎓 Hoy aprendes<button type="button" class="ap-como" onclick="abrirComoDecide()" title="El orden de Coach y el porqué de lo de hoy">${AP_ICO.porque}Cómo lo decide Coach</button></span><span class="ap-fecha">${fecha} · <b>${hechos.filter(Boolean).length} de 4</b></span></div>
     <div class="ap-barra" title="La palabra cuenta al abrirla; «Al volante», al tocar qué escuchar; Python, al marcarlo estudiado; el ISTQB, al contestarlo">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
-    <div class="ap-lista">${alemanHoyHtml(vistos)}${escucharHoyHtml(vistos)}${pythonHoyHtml()}${istqbHtml()}</div>
-    ${avance ? `<div class="ap-avance"><span class="ap-lbl">Tu avance</span>${avance}</div>` : ''}`;
-  apAjustarAvance();
+    <div class="ap-seis">${alemanHoyHtml(vistos)}${escucharHoyHtml(vistos)}${pythonHoyHtml()}${istqbHtml()}${pasoSemanaHtml()}${fichaEnCursoHtml()}</div>`;
+  apAjustar();
 }
 
 function renderHeroGymPanel(){
@@ -9962,7 +9940,7 @@ function renderDidiStrip(){
 }
 
 // El orden del catálogo, el mismo en el panel y en «Al volante»: primero el foco de Hoy aprendes —el del
-// plan de Coach o el que eligió en Tu avance (`aprendeFoco()`)—; luego el siguiente foco del plan y las demás,
+// plan de Coach o el que eligió en el paso de la semana (`aprendeFoco()`)—; luego el siguiente foco del plan y las demás,
 // por retorno (`skRetorno()`: lo que más sube tu nivel por hora); al final las que están en pausa
 // (`PRIORIDAD_EXCLUIDAS`), que «Al volante» deja fuera.
 function didiFoco(){ return (typeof aprendeFoco === 'function' && aprendeFoco()) || null; }
@@ -11415,7 +11393,7 @@ function habFocoActual(){
 }
 // La que el sistema recomienda esta semana, que no tiene por qué ser la abierta.
 function habRecomendada(){ const c = habCandidatas(); return c.length ? c[0] : null; }
-// Las habilidades con ruta en el orden que recorre «Siguiente» en Tu avance (Mi Día): primero las del
+// Las habilidades con ruta en el orden que recorre «Siguiente» en el paso de la semana (Mi Día): primero las del
 // plan (la de esta semana y la que sigue) y después las demás, por retorno.
 function habConRuta(){
   const plan = habCandidatas().filter(s => habPasos(s.id).length);
@@ -13924,8 +13902,8 @@ function hbRango(id){
   if(c === 'alemania') return n >= 2 ? 1 : 2;
   return c === 'espera' ? 4 : 3;
 }
-// La ficha en curso, la misma en las dos pantallas que la nombran —«SIGUIENTE» aquí y Tu avance en Mi
-// Día—: la que eligió con «Siguiente» en Tu avance (`dash-avance-v1.ficha`), mientras siga a medias o sin
+// La ficha en curso, la misma en las dos pantallas que la nombran —«SIGUIENTE» aquí y Hoy aprendes en Mi
+// Día—: la que eligió con «Siguiente» en Hoy aprendes (`dash-avance-v1.ficha`), mientras siga a medias o sin
 // empezar; si no, la primera del orden de Coach (HB_PLAN). A igual grupo, la ya empezada y, entre dos
 // empezadas, la más avanzada. `lista` es ese orden, el que recorre «Siguiente»; las terminadas no entran.
 const AVANCE_KEY = 'dash-avance-v1';
@@ -13947,7 +13925,7 @@ function renderHabilidadesBase(){
   const sinEmpezar=av.filter(x=>x.hechos===0).length;
   const estado=x=>(x.total&&x.hechos===x.total)?'ok':(x.hechos===0?'zero':'');
 
-  // "SIGUIENTE" = la ficha en curso de hbEnCurso(), la misma que enseña Tu avance en Mi Día: la que
+  // "SIGUIENTE" = la ficha en curso de hbEnCurso(), la misma que enseña Hoy aprendes en Mi Día: la que
   // eligió ahí con «Siguiente» o, si no, la primera del orden de Coach (HB_PLAN). Con 27 fichas hace
   // falta un punto de entrada o la pantalla se vuelve un catálogo.
   const sig=((hbEnCurso().actual||{}).h||{}).id||null;
