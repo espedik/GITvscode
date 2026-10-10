@@ -26,10 +26,13 @@
    Dentro de un iframe del shell (`?embed=1`) no se pinta: el icono es el del shell.
    Nunca sale impreso ni en los PDF (`@media print`).
 
-   LA VENTANA (Adán, 2026-09-30: "mejora su diseño y además que sea más ancha"). Hasta 1240 px
-   de ancho, y el prompt no va de corrido: cada `## sección` cae en su tarjeta — Quién eres, Tu
-   misión y Cómo aconsejas a la izquierda; Cómo piensas, numerado, a la derecha; y Al modificar
-   debajo, a todo lo ancho y resaltada, porque es la que gobierna los cambios. Las reglas comunes
+   LA VENTANA (Adán, 2026-09-30: "mejora su diseño y además que sea más ancha"; y el 2026-10-09:
+   "todas las ventanas de los prompts hazlas más anchas a los lados"). Hasta 1720 px de ancho
+   —en su pantalla de 2048 px deja ~160 px a cada lado—, y el prompt no va de corrido: cada
+   `## sección` cae en su tarjeta — Quién eres, Tu misión y Cómo aconsejas a la izquierda; Cómo
+   piensas, numerado, a la derecha; y Al modificar
+   debajo, a todo lo ancho y resaltada, porque es la que gobierna los cambios. El plan que todos
+   sirven va en una fila de seis desde 1560 px (en tres por dos, abajo de eso). Las reglas comunes
    van plegadas al final: son las mismas en todas las páginas y se copian igual.
    Bajo 860 px, una columna.
    ══════════════════════════════════════════════════════════════════════════════════════════ */
@@ -93,7 +96,7 @@
     '.pp-ov.pp-abierto{display:flex}' +
     '.pp-panel{--pp-bg:#ffffff;--pp-sf:#f6f7fb;--pp-bd:#e5e8f0;--pp-tx:#131826;--pp-tx2:#434c63;--pp-mu:#687089;' +
       '--pp-ac:#4f46e5;--pp-ac2:#0369a1;--pp-ac-rgb:79,70,229;--pp-ac2-rgb:3,105,161;' +
-      'position:relative;width:min(1240px,100%);max-height:min(92vh,1060px);display:flex;flex-direction:column;' +
+      'position:relative;width:min(1720px,100%);max-height:min(92vh,1060px);display:flex;flex-direction:column;' +
       'border-radius:22px;background:var(--pp-bg);color:var(--pp-tx);border:1px solid var(--pp-bd);' +
       'box-shadow:0 30px 90px rgba(0,0,0,.38),0 2px 8px rgba(0,0,0,.12);overflow:hidden;' +
       'font:15px/1.6 ' + F_TXT + ';text-align:left;letter-spacing:normal;-webkit-font-smoothing:antialiased}' +
@@ -145,7 +148,8 @@
     '.pp-cuerpo{overflow-y:auto;padding:26px 34px 30px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}' +
     '.pp-cols{display:grid;gap:18px;grid-template-columns:minmax(0,1.04fr) minmax(0,1fr);align-items:stretch}' +
     '.pp-col{display:flex;flex-direction:column;gap:18px;min-width:0}' +
-    '.pp-col>.pp-sec:last-child{flex:1}' +
+    '.pp-col>.pp-sec{flex:1 1 auto}' +
+    '.pp-cols.pp-mide{align-items:start}.pp-cols.pp-mide .pp-col>.pp-sec{flex:none}' +
     '.pp-sec{min-width:0;padding:20px 22px 18px;border-radius:16px;background:var(--pp-sf);border:1px solid var(--pp-bd)}' +
     '.pp-sec[data-a="modifica"],.pp-sec[data-a="extra"]{margin-top:18px}' +
     '.pp-sec[data-a="modifica"]{background:linear-gradient(160deg,rgba(var(--pp-ac-rgb),.10),rgba(var(--pp-ac2-rgb),.05));' +
@@ -209,6 +213,7 @@
     '.pp-comun .pp-lista li::before,.pp-comun .pp-lista li:first-child::before{top:14px}' +
     '.pp-pie{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:space-between;margin:18px 2px 0;font-size:12.5px;color:var(--pp-mu)}' +
     '.pp-pie code{font:600 12px/1.4 ' + F_MONO + ';color:var(--pp-tx2)}' +
+    '@media (min-width:1560px){.pp-plan ol{grid-template-columns:repeat(6,minmax(0,1fr))}}' +
 
     /* ── Teléfono y ventanas angostas ── */
     '@media (max-width:860px){' +
@@ -287,6 +292,24 @@
     };
   }
 
+  // Las dos columnas terminan a la misma altura porque las tarjetas de la más corta se estiran: lo
+  // que sobra se reparte entre todas, no en un solo bloque vacío (Adán: sin huecos). Al abrir se
+  // prueba además pasar a la otra columna la última tarjeta de la más alta (Cómo sabes que funciona
+  // a la derecha, o Con quién trabajas a la izquierda) y se queda el reparto de menor diferencia.
+  function equilibra(panel) {
+    var cols = panel.querySelectorAll('.pp-col'), caja = panel.querySelector('.pp-cols');
+    if (cols.length !== 2 || getComputedStyle(cols[0]).display === 'contents') return;
+    caja.classList.add('pp-mide');
+    var dif = function () { return cols[0].offsetHeight - cols[1].offsetHeight; };
+    var d = dif(), alta = d > 0 ? cols[0] : cols[1], baja = d > 0 ? cols[1] : cols[0];
+    var ultima = alta.lastElementChild;
+    if (ultima && alta.children.length > 1 && ultima.getAttribute('data-a') !== 'piensa') {
+      baja.appendChild(ultima);
+      if (Math.abs(dif()) >= Math.abs(d)) alta.appendChild(ultima);
+    }
+    caja.classList.remove('pp-mide');
+  }
+
   function tarjetas(txt, deco) {
     var por = { quien: '', mision: '', piensa: '', aconseja: '', sinergia: '', mide: '', modifica: '', extra: '' };
     secciones(txt).forEach(function (s) {
@@ -299,8 +322,8 @@
       por[a] += html;
     });
     // Izquierda: quién eres, la misión, cómo aconseja y cómo se mide. Derecha: cómo piensa y
-    // con quién trabaja. Debajo, a lo ancho, lo que gobierna los cambios. La última tarjeta de
-    // cada columna se estira para que las dos acaben a la misma altura.
+    // con quién trabaja. Debajo, a lo ancho, lo que gobierna los cambios. Las tarjetas de la
+    // columna más corta se estiran para que las dos acaben a la misma altura (ver equilibra).
     return '<div class="pp-cols"><div class="pp-col">' + por.quien + por.mision + por.aconseja + por.mide + '</div>' +
       '<div class="pp-col">' + por.piensa + por.sinergia + '</div></div>' + por.modifica + por.extra;
   }
@@ -491,6 +514,7 @@
         abre(atras, pila.length > 0 || (atras !== CLAVE && atras !== activa));
       };
       ov.classList.add('pp-abierto');
+      equilibra(panel);
       panel.focus();
     });
   }
