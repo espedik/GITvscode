@@ -460,7 +460,7 @@ window.CIFRAS = (function () {
   ];
   /* ── EL PLAN MAESTRO ───────────────────────────────────────────────────────────────────────
      Las fases hacia $1,000,000 de patrimonio líquido, con la salida a Alemania en septiembre de
-     2027 en medio: fechas ancla, título, meta, explicación y el checklist de cada mes. Cada fase
+     2027 en medio: fechas ancla, título, meta, el porqué (`razones`) y el checklist de cada mes. Cada fase
      dice además lo que DEJA de hacerse (`deja`) y la prueba con la que cierra (`checkpoint`);
      `liquido` —el patrimonio que espera la trayectoria al cerrarla— NO se escribe aquí: lo pone
      la PROYECCION de abajo, mes a mes, y la última fase lleva el millón.
@@ -478,7 +478,15 @@ window.CIFRAS = (function () {
      anterior — el control 9 de `verificar-sincronia.js` lo comprueba. La fecha del millón es el
      cierre de la última fase: el marcador `{{metaMillon}}`. */
   const PHASES = [
-    {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"Cerró el 30 sep 2026. ✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep y quedó otra vez en $0 el 30 sep) y ✅ BBVA de $39,000 a $900 el 19 sep 2026 con la venta del Bitcoin. Lo que no cerró pasó a la Fase 1 con otro orden: la BBVA volvió a subir en diez días y ahora se paga quincena a quincena, y el fondo de emergencia son los CETES ({{fondo}}) más lo que entre a GBM: pasa de {{fondoMeta}} con la primera quincena que llegue ahí.",explica:"Fase 0 fue el arranque del plan (1 ago – 30 sep 2026, ~9 semanas): cerrar la fuga de dinero y sentar las bases. Cumplió lo grande —Banamex en $0 y la BBVA de $39,000 a $900 con la venta del Bitcoin—, pero la tarjeta volvió a subir en diez días: mientras se pague con la quincena siguiente, se vuelve a llenar. Por eso la Fase 1 cambió el orden: primero la BBVA, quincena a quincena y sin intereses; después, todo a GBM. Dos decisiones de esta fase se cerraron el 3 oct 2026: la pausa de la maestría terminó —la salida es en septiembre de 2027— y la plantilla para comunidades de GBM salió del plan: hasta la Fase 4, el único negocio es el de tu papá, en piloto automático.",semanas:[
+    {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"Cerró el 30 sep 2026. ✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep y quedó otra vez en $0 el 30 sep) y ✅ BBVA de $39,000 a $900 el 19 sep 2026 con la venta del Bitcoin. Lo que no cerró pasó a la Fase 1 con otro orden: la BBVA volvió a subir en diez días y ahora se paga quincena a quincena, y el fondo de emergencia son los CETES ({{fondo}}) más lo que entre a GBM: pasa de {{fondoMeta}} con la primera quincena que llegue ahí.",
+     razones:[
+      {tipo:"lema",d:"Fase 0 fue el arranque del plan: cerrar la fuga de dinero y sentar las bases."},
+      {tipo:"logro",t:"Cumplió lo grande",foto:"fase-tarjeta-cortada",cifras:[{v:"$0",l:"Banamex, otra vez en cero el 30 sep 2026"},{v:"$900",l:"la BBVA el 19 sep 2026, desde $39,000"}],d:"Banamex quedó en $0 el 30 sep 2026 y la BBVA bajó de $39,000 a $900 el 19 sep, con la venta del Bitcoin."},
+      {tipo:"riesgo",t:"Pero la tarjeta volvió a subir",foto:"fase-tarjeta",cifras:[{v:"10 días",l:"lo que tardó en volver a llenarse"}],d:"en diez días, porque mientras se pague con la quincena siguiente se vuelve a llenar."},
+      {tipo:"paso",t:"Por eso la Fase 1 cambió el orden",foto:"fase-alcancia",cifras:[{v:"1 · BBVA",l:"quincena a quincena, sin intereses"},{v:"2 · GBM",l:"todo lo demás"}],d:"primero la BBVA, quincena a quincena y sin intereses; después, todo a GBM."},
+      {tipo:"regla",t:"Dos decisiones, cerradas el 3 oct 2026",foto:"meta-esslingen",cifras:[{v:"Sep 2027",l:"la salida: terminó la pausa de la maestría"},{v:"1 negocio",l:"el de tu papá, en piloto automático"}],d:"la pausa de la maestría terminó —la salida es en septiembre de 2027— y la plantilla para comunidades de GBM salió del plan: hasta la Fase 4, el único negocio es el de tu papá, en piloto automático."},
+     ],
+     semanas:[
       {id:"s0-9",mes:"2026-08",txt:"Prioridad 1 — Fondo de emergencia a {{fondoMeta}}. Se quedó en los CETES ({{fondo}}): desde el 5 oct 2026 ya no recibe aporte aparte, y lo que le falta lo pone la primera quincena que llegue a GBM, después del {{bbvaCero}}."},
       {id:"s0-10",mes:"2026-08",txt:"Prioridad 2 — Liquidar las dos tarjetas. Banamex quedó en $0 el 30 sep 2026; la BBVA bajó a $900 el 19 sep con la venta del Bitcoin y volvió a subir: la Fase 1 la paga quincena a quincena, sin intereses."},
       {id:"s0-4",mes:"2026-08",txt:"Sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad). Pasó a la Fase 1: se venden en noviembre y diciembre, y cada venta va a GBM."},
@@ -491,7 +499,18 @@ window.CIFRAS = (function () {
     ]},
     {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Solicitud enviada y el ahorro en marcha",
      meta:"Al 31 mar 2027: <b>1)</b> la solicitud a {{maestriaEscuela}} enviada completa —el IELTS (6.0) y el pasaporte ya los tienes; faltan las dos cartas de recomendación, el CV y la carta de motivación—; <b>2)</b> el depa entregado a fin de enero y, desde febrero, en casa de tu familia; <b>3)</b> la BBVA en cero desde el {{bbvaCero}} y, desde ahí, lo que pagues con ella saldado en la misma quincena: ni un peso de interés; <b>4)</b> el ISTQB CT-GenAI aprobado; <b>5)</b> la fecha de salida decidida con el saldo de GBM: {{marzoParaSalida}} sostiene septiembre de 2027 —tu ritmo da {{alemaniaMarzo}} y la diferencia es el ingreso nuevo, {{extraSalida}} al mes desde noviembre—; con menos, te vas en septiembre de 2028, con todo pagado.",
-     explica:"Para irte en septiembre de 2027 todo converge en tres fechas: el 31 mar 2027 cierra la solicitud de Esslingen; en junio, la cuenta bloqueada y la visa piden {{salidaJunio}}, y en agosto la salida completa —con la colegiatura del primer semestre, la reserva del BYD y el colchón— pide {{salidaAgosto}} en la cuenta. Primero la BBVA: debes {{tcBbva}} y no se paga de golpe el 11. Lo que sobra de cada quincena y lo de Didi de cada lunes van a la tarjeta hasta dejarla en cero el {{bbvaCero}}, sin intereses: el 11 de octubre pagas, con lo de Didi, lo que pide el estado de cuenta para no generarlos. Después, todo a GBM. Cada quincena se sostiene sola: hasta enero mandas {{ahorroDia1}} el 1 y {{ahorroDia15}} el 15, {{ahorroMesDepa}} al mes con los {{didiAhorro}} de Didi; desde febrero, sin renta y en casa de tu familia ({{aporteCasa}} de aporte, y comes en casa), {{ahorroDia1Casa}} el 1 y {{ahorroDia15Casa}} el 15: {{ahorroMesCasa}} al mes con los {{didiAhorroMas}} de Didi. El aguinaldo paga el seguro del BYD y no entra. Con ese ritmo, en junio {{junioVeredicto}} y en agosto {{salidaVeredicto}}. Recortar no lo cierra: tus rutinas pueden dar {{recorteRutinas}} al mes y las ventas ya están contadas. Lo cierra el ingreso: unos {{extraSalida}} más al mes, de noviembre a agosto —un aumento, un puesto mejor pagado o freelance de pruebas en lugar de horas de Didi—, y con él GBM llega a {{marzoParaSalida}} el 31 de marzo. Si no llega, la fecha que tu ahorro sí paga es septiembre de 2028 (a la salida, {{salida2028}}), con el mismo ahorro de cada quincena. Invertido, sí, pero lo de la cuenta bloqueada no se juega: a menos de un año de usarlo, en GBM va en un fondo de deuda de corto plazo, no en acciones; una caída de la bolsa en mayo no da tiempo de recuperarse.",
+     razones:[
+      {tipo:"ruta",t:"Para irte en septiembre de 2027 todo converge en tres fechas",d:"el 31 mar 2027 cierra la solicitud de Esslingen; en junio, la cuenta bloqueada y la visa piden {{salidaJunio}}, y en agosto la salida completa —con la colegiatura del primer semestre, la reserva del BYD y el colchón— pide {{salidaAgosto}} en la cuenta.",
+       hitos:[{f:"31 mar 2027",t:"Cierra la solicitud de Esslingen",s:"completa: CV, carta de motivación y las dos de recomendación",foto:"meta-esslingen"},
+              {f:"Junio 2027",t:"La cuenta bloqueada y la visa",v:"{{salidaJunio}}",s:"en la cuenta a mediados de mes",foto:"de-dinero"},
+              {f:"Agosto 2027",t:"La salida completa",v:"{{salidaAgosto}}",s:"con la colegiatura del 1er semestre, la reserva del BYD y el colchón",foto:"fase-avion"}]},
+      {tipo:"paso",t:"Primero la BBVA",foto:"fase-tarjeta",cifras:[{v:"{{tcBbva}}",l:"lo que debes"},{v:"{{bbvaCero}}",l:"en cero, sin intereses"}],d:"debes {{tcBbva}} y no se paga de golpe el 11. Lo que sobra de cada quincena y lo de Didi de cada lunes van a la tarjeta hasta dejarla en cero el {{bbvaCero}}, sin intereses: el 11 de octubre pagas, con lo de Didi, lo que pide el estado de cuenta para no generarlos."},
+      {tipo:"paso",t:"Después, todo a GBM",foto:"fase-alcancia",cifras:[{v:"{{ahorroMesDepa}}",l:"al mes, hasta enero"},{v:"{{ahorroMesCasa}}",l:"al mes, desde febrero"}],d:"cada quincena se sostiene sola. Hasta enero mandas {{ahorroDia1}} el 1 y {{ahorroDia15}} el 15, más {{didiAhorro}} de Didi; desde febrero, sin renta y en casa de tu familia ({{aporteCasa}} de aporte, y comes en casa), {{ahorroDia1Casa}} el 1 y {{ahorroDia15Casa}} el 15, más {{didiAhorroMas}} de Didi. El aguinaldo paga el seguro del BYD y no entra."},
+      {tipo:"riesgo",t:"Con ese ritmo",foto:"sk-inversion",cifras:[{v:"{{junioCorto}}",l:"en junio, para la cuenta bloqueada"},{v:"{{salidaVeredicto}}",l:"en agosto, para la salida completa"}],d:"en junio {{junioVeredicto}} y en agosto {{salidaVeredicto}}, aun mandando cada quincena completa y lo de Didi cada lunes."},
+      {tipo:"palanca",t:"Lo cierra el ingreso, no el recorte",foto:"istqb-5",cifras:[{v:"{{recorteRutinas}}",l:"lo que dan tus rutinas al mes",tono:"gris"},{v:"+{{extraSalida}}",l:"de ingreso nuevo al mes, de noviembre a agosto"},{v:"{{marzoParaSalida}}",l:"en GBM el 31 de marzo, con él"}],d:"tus rutinas pueden dar {{recorteRutinas}} al mes y las ventas ya están contadas. Hacen falta unos {{extraSalida}} más al mes, de noviembre a agosto —un aumento, un puesto mejor pagado o freelance de pruebas en lugar de horas de Didi—, y con ellos GBM llega a {{marzoParaSalida}} el 31 de marzo."},
+      {tipo:"planb",t:"Si no llega",foto:"fase-calendario",cifras:[{v:"Sep 2028",l:"la fecha que tu ahorro sí paga"},{v:"{{salida2028}}",l:"a la salida, con el mismo ahorro"}],d:"la fecha que tu ahorro sí paga es septiembre de 2028 (a la salida, {{salida2028}}), con el mismo ahorro de cada quincena."},
+      {tipo:"regla",t:"Invertido, sí, pero sin jugarlo",foto:"fase-caja",d:"lo de la cuenta bloqueada se usa en menos de un año, así que en GBM va en un fondo de deuda de corto plazo, no en acciones: una caída de la bolsa en mayo no da tiempo de recuperarse."},
+     ],
      deja:"Riesgo alto y súper alto en Qué invertir hoy: el dinero de Alemania vive en GBM, en un fondo de deuda de corto plazo, porque se usa en meses, no en años. Compras a meses. Gastar de la quincena antes de mandar el ahorro. Abonos extra al BYD: cada peso extra va a la salida. Nuevos frentes de negocio: el de tu papá se queda en piloto automático con los posts y el dossier. Y el depa: a fin de enero se entrega.",
      checkpoint:"31 mar 2027: solicitud enviada y GBM contra {{marzoParaSalida}}, lo que hace falta para pagar la salida completa en agosto si el ingreso nuevo sigue hasta allá. Si llega, sigue septiembre de 2027 y se decide el {{decisionMaestria}}. Si no, la salida se mueve a septiembre de 2028 —la solicitud se repite en noviembre, ya armada— y el ahorro sigue igual: no se viaja a medias ni con deuda.",
      semanas:[
@@ -514,7 +533,17 @@ window.CIFRAS = (function () {
     ]},
     {start:new Date(2027,3,1),end:new Date(2027,7,31),tag:"Fase 2",title:"Admisión, visa y salida",
      meta:"Al 31 ago 2027: <b>1)</b> la admisión de {{maestriaEscuela}}; <b>2)</b> la cuenta bloqueada llena ({{sperrkonto}}) y la visa de estudiante en el pasaporte; <b>3)</b> cuarto en Esslingen con contrato; <b>4)</b> el {{auto}} rentado con contrato, seguro para plataformas, GPS y tu papá como administrador; <b>5)</b> la salud lista: chequeo, dentista, lentes y medicamentos; <b>6)</b> {{empleador}} cerrado con constancia laboral y carta de recomendación.",
-     explica:"Cinco meses con un orden que no se salta: admisión → cuenta bloqueada → visa (mínimo de 6 a 8 semanas) → vuelo. El ahorro sigue a {{ahorroMesCasa}} al mes, más el ingreso nuevo; en agosto, la mitad de Didi, que es de empacar. La cuenta bloqueada pide €11,904 —{{sperrkonto}} al euro del plan— y es el punto más apretado: con tu ritmo, en junio {{junioVeredicto}}, y en agosto, para irte con la colegiatura del primer semestre, la reserva del BYD y el colchón, {{salidaVeredicto}}. Con el ingreso nuevo, el {{decisionMaestria}} GBM tiene {{mayoParaSalida}} y alcanza para las dos. El auto no se vende: es tu respaldo para trabajar Didi si regresas sin empleo. Mientras estás fuera se renta a un conductor de plataforma: las flotillas cobran de $3,600 a $4,500 a la semana por un Dolphin Mini; un particular cobra unos $3,000, y ya con seguro, GPS y semanas vacías deja unos $7,500 al mes, que pagan sus {{autoPago}}.",
+     razones:[
+      {tipo:"ruta",une:"→",t:"Cinco meses con un orden que no se salta",d:"admisión → cuenta bloqueada → visa (mínimo de 6 a 8 semanas) → vuelo.",
+       hitos:[{t:"La admisión",s:"la respuesta de Esslingen llega antes de fin de mayo",foto:"meta-esslingen"},
+              {t:"La cuenta bloqueada",v:"{{sperrkontoEur}}",s:"{{sperrkonto}} al euro del plan",foto:"de-dinero"},
+              {t:"La visa",v:"6 a 8 semanas",s:"como mínimo, con la cuenta ya llena",foto:"fase-visa"},
+              {t:"El vuelo",s:"para empezar el {{maestriaInicio}}",foto:"fase-avion"}]},
+      {tipo:"paso",t:"El ahorro sigue",foto:"fase-alcancia",cifras:[{v:"{{ahorroMesCasa}}",l:"al mes, más el ingreso nuevo"}],d:"a {{ahorroMesCasa}} al mes, más el ingreso nuevo; en agosto, la mitad de Didi, que es de empacar."},
+      {tipo:"riesgo",t:"La cuenta bloqueada es el punto más apretado",foto:"sk-inversion",cifras:[{v:"{{junioCorto}}",l:"en junio, con tu ritmo"},{v:"{{salidaVeredicto}}",l:"en agosto, para irte completo"}],d:"pide {{sperrkontoEur}} ({{sperrkonto}} al euro del plan). Con tu ritmo, en junio {{junioVeredicto}}, y en agosto, para irte con la colegiatura del primer semestre, la reserva del BYD y el colchón, {{salidaVeredicto}}."},
+      {tipo:"palanca",t:"Con el ingreso nuevo alcanza para las dos",foto:"meta-salida",cifras:[{v:"{{mayoParaSalida}}",l:"en GBM el {{decisionMaestria}}, el día de decidir"}],d:"el {{decisionMaestria}} GBM tiene {{mayoParaSalida}}, que llenan la cuenta bloqueada en junio y pagan la salida completa en agosto."},
+      {tipo:"paso",t:"El auto no se vende",foto:"fase-auto",cifras:[{v:"{{bydRenta}}",l:"al mes, rentado y neto"},{v:"{{autoPago}}",l:"su mensualidad"}],d:"es tu respaldo para trabajar Didi si regresas sin empleo. Mientras estás fuera se renta a un conductor de plataforma: las flotillas cobran de $3,600 a $4,500 a la semana por un Dolphin Mini; un particular, unos $3,000, y ya con seguro, GPS y semanas vacías deja unos {{bydRenta}} al mes, que pagan sus {{autoPago}}."},
+     ],
      deja:"Viajes y compras que no estén en la lista de salida. Y nada sin papel: cuarto y auto, con contrato.",
      checkpoint:"{{decisionMaestria}}, el día de decidir: la admisión en la mano y {{mayoParaSalida}} en GBM —lo que llena la cuenta bloqueada en junio y deja pagada la salida completa en agosto—. Si están las dos, te vas. Sin admisión, se reaplica para septiembre de 2028; sin el dinero, la salida se mueve un año y el ahorro sigue. No se viaja a medias ni con deuda.",
      semanas:[
@@ -535,7 +564,14 @@ window.CIFRAS = (function () {
     ]},
     {start:new Date(2027,8,1),end:new Date(2029,1,28),tag:"Fase 3",title:"Esslingen: la maestría que cambia tu sueldo",
      meta:"Al 28 feb 2029: <b>1)</b> el M.Eng. terminado —tres semestres y la tesis en una empresa—; <b>2)</b> Werkstudent desde el segundo o tercer mes, 20 h a la semana; <b>3)</b> alemán A2 certificado antes de terminar el 2º semestre y B1 al final; <b>4)</b> una oferta de trabajo firmada antes de entregar la tesis; <b>5)</b> cero deuda nueva.",
-     explica:"Es la fase en que menos sube el patrimonio, y es a propósito: el fondo compra la palanca más grande del plan. Las cuentas cierran solo con dos supuestos: que el Werkstudent llegue pronto —sin él, el dinero no alcanza para las tres colegiaturas— y que el BYD siga rentado. Con los dos, la maestría cuesta casi solo las colegiaturas: tres de €1,900. Al graduarte, el permiso de residencia deja buscar trabajo hasta 18 meses, pero la meta es no necesitarlo: oferta firmada antes de entregar la tesis.",
+     razones:[
+      {tipo:"lema",d:"Es la fase en que menos sube el patrimonio, y es a propósito: el fondo compra la palanca más grande del plan."},
+      {tipo:"ruta",une:"+",t:"Las cuentas cierran solo con dos supuestos",d:"que el Werkstudent llegue pronto —sin él, el dinero no alcanza para las tres colegiaturas— y que el BYD siga rentado.",
+       hitos:[{t:"El Werkstudent, pronto",v:"{{werkstudentEur}}",s:"netos al mes por 20 h a la semana, desde el tercer mes",foto:"de-f-trabajo"},
+              {t:"El BYD, rentado",v:"{{bydRenta}}",s:"netos al mes, que pagan su mensualidad",foto:"fase-auto"}]},
+      {tipo:"paso",t:"Con los dos, la maestría cuesta casi solo las colegiaturas",foto:"meta-salida",cifras:[{v:"3 × {{colegiaturaEur}}",l:"en tres semestres"}],d:"tres de {{colegiaturaEur}}, una por semestre: la primera va en la salida y las otras dos, en marzo y septiembre de 2028."},
+      {tipo:"palanca",t:"Al graduarte",foto:"fase-graduacion",cifras:[{v:"18 meses",l:"de permiso para buscar trabajo"}],d:"el permiso de residencia deja buscar trabajo hasta 18 meses, pero la meta es no necesitarlo: oferta firmada antes de entregar la tesis."},
+     ],
      deja:"Gastos fuera del presupuesto en euros, viajes que no paga el Werkstudent y cualquier deuda alemana: ni tarjeta a meses ni préstamo.",
      checkpoint:"Al cerrar el 1er semestre (feb 2028): sin Werkstudent, el plan se ajusta ese mes —más horas en vacaciones, un HiWi en la universidad (no cuenta en el tope de 140 días) o recortar— antes de que el dinero llegue a seis meses de gasto. Sin oferta en enero de 2029, la búsqueda se vuelve de tiempo completo.",
      semanas:[
@@ -554,7 +590,16 @@ window.CIFRAS = (function () {
     ]},
     {start:new Date(2029,2,1),end:new Date(2031,11,31),tag:"Fase 4",title:"El millón líquido con sueldo de ingeniero",
      meta:"<b>$1,000,000</b> de patrimonio líquido al {{metaMillon}}, con el sueldo del título nuevo. La proyección llega en {{mesMillon}}; el crédito del auto, pagado con su propia renta, termina hacia mediados de 2031.",
-     explica:"Con el título y un puesto de ingeniero —en Alemania o remoto en euros— el ahorro del mes es el más alto de todo el plan, y la regla es la de la Fase 1: págate primero, el día que entra el sueldo. El millón se invierte para el largo plazo —fondos indexados globales con comisión baja—, no en apuestas. Las metas que esperaron su turno se pagan de contado cuando el patrimonio vaya en su trayectoria: Tailandia, con las vacaciones de un contrato alemán (de 25 a 30 días en uno típico), Hong Kong, el Cupra y el depa.",
+     razones:[
+      {tipo:"lema",d:"Con el título y un puesto de ingeniero —en Alemania o remoto en euros— el ahorro del mes es el más alto de todo el plan."},
+      {tipo:"paso",t:"Págate primero",foto:"fase-alcancia",cifras:[{v:"30%",l:"del neto, a la inversión el día de pago"}],d:"es la regla de la Fase 1, con el 30% del neto a la inversión el día que entra el sueldo y antes de gastar."},
+      {tipo:"regla",t:"El millón, para el largo plazo",foto:"sk-datos",d:"se invierte en fondos indexados globales con comisión baja, no en apuestas."},
+      {tipo:"ruta",t:"Las metas que esperaron su turno se pagan de contado",d:"cuando el patrimonio vaya en su trayectoria. Primero Tailandia, con las vacaciones de un contrato alemán (de 25 a 30 días en uno típico); después Hong Kong, y al cerrar el plan, el Cupra y el depa.",
+       hitos:[{f:"Abr 2030",t:"Tailandia",s:"con las vacaciones de un contrato alemán: de 25 a 30 días",foto:"fase-tailandia"},
+              {f:"2031",t:"Hong Kong",s:"si el corte de 2030 va en la proyección",foto:"fase-hongkong"},
+              {t:"El Cupra",s:"al cerrar el plan, con el millón",foto:"fase-cupra"},
+              {t:"El depa",s:"al cerrar el plan, en su orden",foto:"fase-depa"}]},
+     ],
      deja:"Subir el nivel de vida al ritmo del sueldo nuevo: cada aumento va primero al ahorro. Y ningún premio a crédito.",
      checkpoint:"Cada diciembre, el patrimonio líquido contra la proyección. Dos cortes seguidos por debajo: se ajusta el porcentaje de ahorro o la fecha, sin abandonar la meta.",
      semanas:[
@@ -568,6 +613,15 @@ window.CIFRAS = (function () {
       {id:"a4-8",cont:true,txt:"Cada aumento, primero al ahorro. El nivel de vida sube después que el patrimonio, no antes."},
     ]},
   ];
+  // «Por qué esta fase», en bloques (`razones`) que el Dashboard pinta como tarjetas: `lema` (la
+  // frase que manda), `ruta` (sus `hitos` con fecha, cifra y foto; `une` dice si van en orden →
+  // o si son condiciones +), `paso`, `riesgo`, `palanca`, `planb`, `regla` y `logro`, cada uno con
+  // su título `t`, sus `cifras` grandes y su frase `d`. La `foto` es un archivo de
+  // Dashboard/fotos-aprende. Unidos en orden dan el párrafo `explica`, que leen Coach y el título
+  // de la banda de fase: un solo texto para las dos apps.
+  PHASES.forEach(function (f) {
+    if (f.razones) f.explica = f.razones.map(function (b) { return b.t ? b.t + ': ' + b.d : b.d; }).join(' ');
+  });
 
   /* ── LA SALIDA A ALEMANIA ──────────────────────────────────────────────────────────────────
      Adán, 3-oct-2026: "contempla que me quiero ir en sep del 2027 a Alemania, contempla todo lo
@@ -4214,6 +4268,12 @@ window.CIFRAS = (function () {
     salidaTotal:   { dep: ['eurMxn'], v: () => SALIDA.costos.reduce((a, c) => a + costoSalida(c), 0) },
     salidaJunio:   { dep: ['eurMxn'], v: () => SALIDA.costos.filter(c => SALIDA.junio.indexOf(c.id) !== -1).reduce((a, c) => a + costoSalida(c), 0) },
     sperrkonto:    { dep: ['eurMxn'], v: () => costoSalida(SALIDA.costos.filter(c => c.id === 'bloqueada')[0]) },
+    // En euros, como los pide Alemania: la cuenta bloqueada, la colegiatura de cada semestre y lo
+    // que deja el Werkstudent al mes (SUPUESTOS.alemania); y lo que deja el BYD rentado, neto.
+    sperrkontoEur: { fmt: 'txt', v: () => '€' + SALIDA.costos.filter(c => c.id === 'bloqueada')[0].eur.toLocaleString('es-MX') },
+    colegiaturaEur: { fmt: 'txt', v: () => '€' + SUPUESTOS.alemania.colegiatura.toLocaleString('es-MX') },
+    werkstudentEur: { fmt: 'txt', v: () => '€' + SUPUESTOS.alemania.werkstudent.toLocaleString('es-MX') },
+    bydRenta:      { v: () => SUPUESTOS.byd.rentaNeta },
     // ── El ahorro de cada mes en México (el desglose renglón por renglón, en Coach) ──
     didiAhorro:      { v: () => PROYECTO.didiAhorro },
     didiAhorroMas:   { v: () => PROYECTO.didiAhorroMas },
@@ -4246,6 +4306,10 @@ window.CIFRAS = (function () {
     junioVeredicto:  { dep: ['ahorroDia1','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas','eurMxn'], fmt: 'txt',
                        v: () => { const c = cortesSalida(proyectar()).junio;
                          return c.falta > 0 ? 'faltan ' + fmt(c.falta) + ' para la cuenta bloqueada' : 'alcanza, con ' + fmt(-c.falta) + ' de margen'; } },
+    // Lo mismo en corto, para una cifra grande: «faltan …» o «sobran …».
+    junioCorto:      { dep: ['ahorroDia1','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas','eurMxn'], fmt: 'txt',
+                       v: () => { const c = cortesSalida(proyectar()).junio;
+                         return c.falta > 0 ? 'faltan ' + fmt(c.falta) : 'sobran ' + fmt(-c.falta); } },
     salidaVeredicto: { dep: ['ahorroDia1','ahorroDia15','ahorroDia1Casa','ahorroDia15Casa','didiAhorro','didiAhorroMas','eurMxn'], fmt: 'txt',
                        v: () => { const c = cortesSalida(proyectar()).salida;
                          return c.falta > 0 ? 'faltan ' + fmt(c.falta) : 'sobran ' + fmt(-c.falta); } },

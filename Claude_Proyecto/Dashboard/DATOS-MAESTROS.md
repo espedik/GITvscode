@@ -226,6 +226,8 @@ pero el nombre de la variable se queda corto.
 | `{{salidaTotal}}` | $397,878 — lo que cuesta irse a Alemania, completo (`SALIDA.costos`) | derivada; se mueve con `PROYECTO.eurMxn` |
 | `{{salidaJunio}}` | $254,478 — lo que tiene que estar en la cuenta en junio de 2027: la cuenta bloqueada y la visa | derivada |
 | `{{sperrkonto}}` | $249,984 — la cuenta bloqueada, €11,904 al euro del plan | derivada |
+| `{{sperrkontoEur}}` `{{colegiaturaEur}}` `{{werkstudentEur}}` | €11,904 · €1,900 · €1,100 — en euros, como los pide Alemania: la cuenta bloqueada (`SALIDA.costos`), la colegiatura de cada semestre y lo que deja el Werkstudent al mes, neto (`SUPUESTOS.alemania`) (`fmt: 'txt'`) | constantes |
+| `{{bydRenta}}` | $7,500 — lo que deja el BYD rentado al mes, neto (`SUPUESTOS.byd.rentaNeta`) | constante |
 | `{{ahorroMesDepa}}` | $14,400 — lo que llega a GBM en un mes con depa: lo del 1, lo del 15 y Didi | derivada (`mesTipo(false)`) |
 | `{{ahorroMesCasa}}` | $31,100 — lo mismo en casa de su familia: lo del 1, lo del 15 y Didi | derivada (`mesTipo(true)`) |
 | `{{gastoPersonalDepa}}` | $8,218 — lo que queda del sueldo con depa tras los fijos, la comida y el ahorro: su gasto personal, con sus rutinas dentro; lo que pague con tarjeta, saldado en la misma quincena | derivada |
@@ -242,6 +244,7 @@ pero el nombre de la variable se queda corto.
 | `{{bbvaCero}}` | 2 nov 2026 — el día que la BBVA queda en cero con `planBbva` (`fmt: 'fecha'`) | derivada |
 | `{{bbvaIntereses}}` | $0 — lo que costaría en intereses llegar a cero; en 0 con `PROYECTO.bbvaSinIntereses` | derivada |
 | `{{junioVeredicto}}` | «faltan … para la cuenta bloqueada» o «alcanza, con … de margen» (`fmt: 'txt'`) | derivada |
+| `{{junioCorto}}` | «faltan …» o «sobran …»: lo mismo en corto, para la cifra grande de las tarjetas de las fases (`fmt: 'txt'`) | derivada |
 | `{{salidaVeredicto}}` | «faltan …» o «sobran …»: lo que pide la salida —cuenta bloqueada, reserva del BYD, colchón y la colegiatura del primer semestre— contra la cuenta a fin de agosto (`fmt: 'txt'`) | derivada |
 | `{{mesMillon}}` | ago 2031 — el mes en que la proyección cruza el millón (`fmt: 'mes'`) | derivada de la PROYECCION |
 | `PROYECTO.eurMxn` | 21.0 — el euro para planear; el 2-oct-2026 estaba en $20.46 | constante |
@@ -909,7 +912,7 @@ Ninguna estructura está copiada entre archivos; todas se leen de aquí:
 | `HAB_FOCO` | El foco de las habilidades, una a la vez y con fechas, alineado al Plan Maestro: cada tramo con horas, el paso de la semana, el entregable y cuándo cambia | `CIFRAS.HAB_FOCO` |
 | `PESO` | Altura (178 cm), meta (80 kg), objetivo y el histórico de pesajes (2: 75 kg el 2-sep-2026, 78 el 13-sep) con IMC derivado. Salud lo siembra en Peso & Medidas en cada carga | `CIFRAS.PESO` |
 | `BTC_SEED` | Las operaciones de Bitcoin: 3 compras ($2,878 USD = $52,129 MXN al cambio de cada día, 0.032509 ₿) y 2 ventas: 14-sep-2026 ($5,300 MXN = $310.45 USD = 0.003930 ₿ a $79,000 USD/₿, precio dicho por Adán) y 19-sep-2026 (todo lo que quedaba, 0.028579 ₿, por $39,500 MXN = $2,299.51 USD a $80,461 USD/₿ implícito — para pagar la TC BBVA). **Ya no queda Bitcoin.** Cada operación lleva `fx` (BCE del día). Finanzas lo siembra en `btcHistory`; una venta lleva `tipo:'venta'` y `btc` negativo | `CIFRAS.BTC_SEED` |
-| `PHASES` | Las 5 fases del Plan Maestro (la 0 cerrada): fechas, meta, explicación, `deja` (lo que se deja de hacer), `checkpoint` y el checklist por mes; `liquido` lo pone la `PROYECCION`. La última fija la fecha del millón (`{{metaMillon}}`) | `CIFRAS.PHASES` |
+| `PHASES` | Las 5 fases del Plan Maestro (la 0 cerrada): fechas, meta, el porqué en bloques (`razones`: `lema`, `ruta` con sus `hitos`, `paso`, `riesgo`, `palanca`, `planb`, `regla` y `logro`, cada uno con título, `cifras`, frase y `foto`; unidos dan el párrafo `explica` que lee Coach), `deja` (lo que se deja de hacer), `checkpoint` y el checklist por mes; `liquido` lo pone la `PROYECCION`. La última fija la fecha del millón (`{{metaMillon}}`) | `CIFRAS.PHASES` |
 | `SALIDA` | La salida a Alemania: lo que cuesta (`costos`) y todo lo que hay que reunir, por tema (`bloques`) | `CIFRAS.SALIDA`, `CIFRAS.costoSalida(c)` |
 | `PROYECCION` | El plan mes a mes hasta el millón, con sus `supuestos` y los `cortes` de la salida | `CIFRAS.PROYECCION`, `CIFRAS.proyectar(cambios)`, `CIFRAS.cortesSalida()`, `CIFRAS.desgloseMes()`, `CIFRAS.mesTipo()` |
 | `APRENDIZAJE` | 6 prioridades de aprendizaje | `CIFRAS.APRENDIZAJE` |

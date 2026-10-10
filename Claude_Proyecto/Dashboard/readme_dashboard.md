@@ -29,7 +29,7 @@ en una página.
 | `sin-zoom.js` | Bloqueo del zoom en táctil. Lo cargan las seis apps |
 | `prompt-pagina.js` · `prompts-paginas.js` | El icono de la brújula que llevan **todas** las páginas del proyecto y los prompts que abre: el especialista que gobierna cada una (ver `DATOS-MAESTROS.md` → *El prompt de cada página*). En el Dashboard va fijo arriba a la izquierda, donde la barra de apps deja la esquina libre |
 | `aleman-data.js` | Las 40 lecciones de alemán (327 KB). **En reposo**: ninguna pantalla lo carga; volver a las lecciones es cargarlo otra vez |
-| `fotos-aprende/` | Las 32 fotos de *Hoy aprendes* (480 px, de Openverse: StockSnap, Flickr y Rawpixel); su crédito va en `AP_FOTOS` y sale en el `title` de cada una |
+| `fotos-aprende/` | Las 45 fotos de *Hoy aprendes* y, las `fase-*` (13), de *Por qué esta fase* (480 px, de Openverse: StockSnap, Flickr y Rawpixel); su crédito va en `AP_FOTOS` y sale en el `title` de cada una |
 | `diseno-*/` | Los canvas de cada rediseño: `Main.dc.html` (lo elegido) y las direcciones descartadas al lado |
 | `readme_dashboard.md` | Este archivo |
 
@@ -460,8 +460,8 @@ La pantalla 2. Bajo la banda de fase y la ruta de deuda, tres columnas: **el mes
 toques y la semana a la que pertenece**.
 
 **La banda de fase es un botón**: abre la ventana de las fases (`abrirKpi('fases')`, en
-`kpiDetalle`) con fechas, estado, meta, explicación y el checklist de cada mes leído de
-`coach_checks_v1`. En las fases que pasan en México, **💰 Tu ahorro en esta fase** (`faseAhorroHTML`): un mes de cada etapa —con depa y en casa de tu familia— renglón por renglón, GBM al cerrar cada mes y lo que piden junio y la salida —en la Fase 1, el 31 de marzo contra la salida completa (`marzoParaSalida`)—; el mismo desglose que Coach. El título del módulo Fase de Mi Día abre la misma ventana.
+`kpiDetalle`) con fechas, estado, meta, el porqué en tarjetas, el checkpoint y el checklist de cada mes leído de
+`coach_checks_v1`. En las fases que pasan en México, **💰 Tu ahorro en esta fase** (`faseAhorroHTML`): un mes de cada etapa —con depa y en casa de tu familia— renglón por renglón y GBM al cerrar cada mes en barras contra lo que piden junio y la salida —en la Fase 1, el 31 de marzo contra la salida completa (`marzoParaSalida`)—; el mismo desglose que Coach. El título del módulo Fase de Mi Día abre la misma ventana.
 
 ### De dónde sale cada cosa
 
@@ -795,12 +795,28 @@ caben tres meses de tareas sin desplazarse. Mientras está abierta se oculta la 
 - **La cabecera de la fase** (`.fz-cab`): el título y tres casillas —Empieza, Termina y Dura— con las
   fechas escritas completas, la barra de días y *vas en el día 3 de 182 · quedan 179 días · 0 de 15
   tareas hechas*.
-- **Debajo, dos columnas** (`.fases-cols`, una sola bajo 1024 px): a la izquierda lo que tiene que
-  estar listo en su fecha —la meta numerada (`faseMetaHTML`)—, por qué, el dinero de la fase
-  (`faseAhorroHTML`, con tus rutinas producto por producto y dónde recortar en verde,
-  `faseRutinasHTML`), el patrimonio que espera la trayectoria (`liquido`), lo que se deja y el
-  checkpoint; a la derecha las tareas mes por mes, cada mes con sus días (*del 1 al 31 de octubre*) y
-  el de hoy marcado.
+- **Debajo, dos columnas** (`.fases-cols`, una sola bajo 1024 px): a la izquierda, en este orden, lo
+  que tiene que estar listo en su fecha —la meta numerada (`faseMetaHTML`)—, el porqué, el
+  checkpoint, lo que se deja y el dinero de la fase; a la derecha las tareas mes por mes, cada mes con
+  sus días (*del 1 al 31 de octubre*) y el de hoy marcado.
+- **💡 Por qué esta fase** (`faseRazonesHTML`) pinta los bloques `razones` de la fase en el maestro
+  (Adán, sobre el párrafo que había: *"esto no está bien diseñado, hazlo mejor visualmente e
+  impactante"*). Arriba, la frase que manda (`.fzr-lema`, en Fraunces con la raya del color de la
+  fase); luego la ruta de fotos (`.fzr-ruta`): las tres fechas de la Fase 1 con lo que piden, el orden
+  admisión → cuenta bloqueada → visa → vuelo de la Fase 2, los dos supuestos de la Fase 3 sumados con
+  +, las metas de la Fase 4; y las tarjetas de dos en dos (`.fzr-card`): foto, qué es (*Paso 1*, *El
+  riesgo*, *Lo que lo cierra*, *Plan B*, *La regla*, *Lo logrado*), el título, las cifras grandes con
+  su etiqueta y la frase. El riesgo va en rojo, lo que lo cierra en verde, el plan B en ámbar y la
+  regla en azul; una cifra «faltan…» sale roja y una «sobran…» verde, así que el color sigue al dato.
+- **🚩 Checkpoint** (`faseCheckHTML`): lo de antes de los dos puntos es el cuándo, en su casilla; la
+  primera frase, la prueba; las que siguen, sus salidas (*Si llega…* en verde, *Si no…* o *Sin…* en
+  rojo). **🚫 Lo que dejas de hacer** (`faseDejaHTML`): una frase por renglón, con lo de antes de los
+  dos puntos en negritas.
+- **El dinero de la fase** (`faseAhorroHTML`, en las fases que pasan en México): la tabla de un mes de
+  cada etapa; **📊 GBM al cerrar cada mes** en barras (`.fzg`), con la línea roja de lo que pide cada
+  corte que cae en la fase —junio, la salida completa y, al cerrar la Fase 1, `marzoParaSalida`— y
+  debajo lo que falta o lo que sobra; tus rutinas producto por producto con dónde recortar en verde
+  (`faseRutinasHTML`), y el patrimonio que espera la trayectoria (`liquido`).
 
 Abre en la fase en curso (o la siguiente sin empezar, o la última si el plan ya cerró). El subtítulo
 va del arranque del plan a la fecha del millón (`finDelPlan()`).

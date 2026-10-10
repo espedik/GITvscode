@@ -782,6 +782,90 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   .kpi-fases .kpi-card .gbm-paso-d,.kpi-fases .kpi-card .gbm-nota{font-size:13.5px}
 }
 @media(min-width:641px) and (max-width:1180px){.kpi-fases .fz-est{flex-basis:260px}}
+/* «Por qué esta fase» (faseRazonesHTML): la frase que manda, la ruta con sus fotos y las tarjetas
+   con cifras grandes, de dos en dos; el checkpoint con su fecha y sus dos salidas, lo que se deja en
+   renglones, y GBM mes a mes en barras contra lo que pide cada corte. Adán, sobre el párrafo de antes:
+   "esto no está bien diseñado, hazlo mejor visualmente e impactante". */
+.fzr{display:flex;flex-direction:column;gap:14px;margin:2px 0 24px}
+.fzr-lema{font-family:var(--font-title);font-size:21px;font-weight:700;line-height:1.32;color:var(--text);padding:1px 0 1px 14px;border-left:4px solid var(--fc)}
+.fzr-rt{font-size:15.5px;font-weight:800;line-height:1.3;color:var(--text);margin:4px 0 -4px}
+.fzr-ruta{display:flex;align-items:stretch;gap:12px}
+.fzr-hito{flex:1 1 0;min-width:0;display:flex;flex-direction:column;border-radius:13px;border:1px solid rgba(var(--ov),.1);background:rgba(var(--ov),.03)}
+.fzr-hito-img{position:relative;aspect-ratio:16/9;max-height:150px;border-radius:12px 12px 0 0;background:rgba(var(--ov),.06)}
+.fzr-hito-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;border-radius:12px 12px 0 0}
+.fzr-hito-img::after{content:'';position:absolute;inset:0;border-radius:12px 12px 0 0;background:linear-gradient(180deg,transparent 52%,rgba(0,0,0,.42));pointer-events:none}
+.fzr-hito-img em{position:absolute;left:10px;bottom:9px;z-index:1;font-style:normal;font-family:var(--mono);font-size:12.5px;font-weight:800;padding:3px 8px;border-radius:6px;background:var(--fc);color:#0b0b10;white-space:nowrap}
+.fzr-une{position:absolute;left:-19px;top:50%;transform:translateY(-50%);z-index:2;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:900;background:var(--fc);color:#0b0b10;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.fzr-hito-t{padding:10px 12px 0;font-size:14px;font-weight:800;line-height:1.3;color:var(--text)}
+.fzr-hito-v{padding:3px 12px 0;font-family:var(--mono);font-size:21px;font-weight:800;line-height:1.2;color:color-mix(in srgb,var(--fc) 70%,var(--text))}
+.fzr-hito-s{padding:3px 12px 0;font-size:12px;line-height:1.4;color:var(--text2)}
+.fzr-hito>:last-child{padding-bottom:12px}
+.fzr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fzr-card.ancha{grid-column:1/-1}
+.fzr-card.ancha .fzr-fw{flex-basis:170px}
+.fzr-card.ancha .fzr-cs{gap:6px 34px}
+.fzr-card{--tc:var(--fc);display:flex;min-width:0;border-radius:14px;overflow:hidden;border:1px solid color-mix(in srgb,var(--tc) 38%,transparent);background:color-mix(in srgb,var(--tc) 7%,transparent)}
+.fzr-card.ok{--tc:var(--g)}
+.fzr-card.mal{--tc:var(--r)}
+.fzr-card.aviso{--tc:var(--w)}
+.fzr-card.regla{--tc:var(--b)}
+.fzr-fw{position:relative;flex:0 0 clamp(80px,5.2vw,104px);background:rgba(var(--ov),.06)}
+.fzr-fw img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+/* En la tira angosta de la tarjeta, la foto de las tarjetas se centra en ellas y no en la blusa. */
+.fzr-fw img[src$="fase-tarjeta.jpg"]{object-position:30% 50%}
+.fzr-card-c{flex:1;min-width:0;padding:12px 15px 13px;display:flex;flex-direction:column;gap:5px}
+.fzr-k{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:color-mix(in srgb,var(--tc) 72%,var(--text))}
+.fzr-k i{font-style:normal;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;background:var(--tc);color:#0b0b10;font-family:var(--mono);font-size:11px;letter-spacing:0}
+.fzr-t{font-size:16px;font-weight:800;line-height:1.25;color:var(--text)}
+.fzr-cs{display:flex;flex-wrap:wrap;gap:6px 22px;margin:3px 0 2px}
+.fzr-c{display:flex;flex-direction:column;gap:1px;min-width:118px;max-width:100%}
+.fzr-c b{font-family:var(--mono);font-size:22px;font-weight:800;line-height:1.15;color:color-mix(in srgb,var(--tc) 72%,var(--text));white-space:nowrap}
+.fzr-c.mal b{color:var(--r)}
+.fzr-c.ok b{color:var(--g)}
+.fzr-c.gris b{color:var(--text3)}
+.fzr-c span{width:0;min-width:100%;font-size:11.5px;line-height:1.3;color:var(--text3)}
+.fzr-c:only-child span{width:auto}
+.fzr-d{margin:2px 0 0;font-size:13px;line-height:1.55;color:var(--text2)}
+.fzk{display:flex;flex-direction:column;gap:11px;margin:0 0 22px;padding:14px 16px;border-radius:14px;border:1px solid color-mix(in srgb,var(--w) 45%,transparent);background:color-mix(in srgb,var(--w) 8%,transparent)}
+.fzk-cab{display:flex;gap:14px;align-items:flex-start}
+.fzk-cuando{flex:none;max-width:230px;font-family:var(--mono);font-size:16px;font-weight:800;line-height:1.25;padding:7px 11px;border-radius:9px;color:var(--text);background:color-mix(in srgb,var(--w) 24%,transparent);border:1px solid color-mix(in srgb,var(--w) 55%,transparent)}
+.fzk-prueba{font-size:14.5px;font-weight:700;line-height:1.45;color:var(--text);padding-top:2px}
+.fzk-ramas{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px}
+.fzk-r{font-size:13px;line-height:1.5;color:var(--text2);padding:9px 12px;border-radius:10px;background:rgba(var(--ov),.04);border-left:3px solid rgba(var(--ov),.25)}
+.fzk-r.ok{border-left-color:var(--g);background:color-mix(in srgb,var(--g) 8%,transparent)}
+.fzk-r.mal{border-left-color:var(--r);background:color-mix(in srgb,var(--r) 7%,transparent)}
+.fzd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 22px}
+.fzd-i{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:11px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.09)}
+.fzd-i:last-child:nth-child(odd){grid-column:1/-1}
+.fzd-x{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:900;color:var(--r);background:color-mix(in srgb,var(--r) 14%,transparent)}
+.fzd-i b{display:block;font-size:13.5px;line-height:1.35;color:var(--text)}
+.fzd-i span{display:block;font-size:12.5px;line-height:1.45;color:var(--text2);margin-top:2px}
+.fzg{display:flex;align-items:stretch;gap:8px;height:184px;margin:2px 0 8px}
+.fzg-col{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px}
+.fzg-bar{position:relative;flex:1;width:100%;display:flex;align-items:flex-end;justify-content:center;border-bottom:1px solid rgba(var(--ov),.14)}
+.fzg-bar b{position:relative;display:block;width:62%;max-width:64px;min-height:3px;border-radius:7px 7px 2px 2px;background:var(--fc)}
+.fzg-bar b em{position:absolute;left:50%;bottom:100%;transform:translateX(-50%);margin-bottom:3px;font-style:normal;font-family:var(--mono);font-size:11.5px;font-weight:800;white-space:nowrap;color:var(--text)}
+.fzg-pide{position:absolute;left:3%;right:3%;height:0;border-top:2px dashed var(--r);z-index:1}
+.fzg-pide span{position:absolute;right:0;bottom:3px;font-family:var(--mono);font-size:11px;font-weight:800;color:var(--r);white-space:nowrap}
+.fzg-m{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text3)}
+.fzg-f{font-size:10.5px;font-weight:800;white-space:nowrap}
+.fzg-f.mal{color:var(--r)}
+.fzg-f.ok{color:var(--g)}
+@media(max-width:640px){
+  .fzr-lema{font-size:18px}
+  .fzr-ruta{flex-wrap:wrap;gap:10px}
+  .fzr-hito{flex:1 1 calc(50% - 5px)}
+  .fzr-une{display:none}
+  .fzr-grid,.fzd{grid-template-columns:minmax(0,1fr)}
+  .fzr-fw,.fzr-card.ancha .fzr-fw{flex-basis:84px}
+  .fzr-c b{font-size:19px}
+  .fzk-cab{flex-direction:column;gap:8px}
+  .fzg{gap:4px}
+  .fzg-bar b em,.fzg-pide span{font-size:9.5px}
+  .fzg-f{font-size:9px;white-space:normal;text-align:center}
+  /* También en el celular la brújula del prompt se oculta con la ventana de fases abierta: tapaba su título. */
+  body:has(#kpiOverlay.kpi-fases.open) .pp-btn{visibility:hidden}
+}
 
 /* Otra vuelta más chico (2026-08-11, pedido explícito: "haz todavia mas pequeñas los
    indicadores de arriba, los 4") — mismo criterio que la ronda anterior: el espacio que se
@@ -7899,7 +7983,20 @@ const AP_FOTOS = {
   'sk-ia': "Alex Knight · Stocksnap · CC0 1.0",
   'sk-ingles': "Kai Oberhäuser · Stocksnap · CC0 1.0",
   'sk-inversion': "50Fish · Stocksnap · CC0 1.0",
-  'sk-marketing': "userpilot1 · Flickr · BY 2.0"
+  'sk-marketing': "userpilot1 · Flickr · BY 2.0",
+  'fase-alcancia': "raisin_raisin · Flickr · BY 2.0",
+  'fase-auto': "Negative Space · Stocksnap · CC0 1.0",
+  'fase-avion': "Suhyeon Choi · Stocksnap · CC0 1.0",
+  'fase-caja': "Leeroy · Stocksnap · CC0 1.0",
+  'fase-calendario': "Brooke Lark · Stocksnap · CC0 1.0",
+  'fase-cupra': "RL GNZLZ · Flickr · BY-SA 2.0",
+  'fase-depa': "Kristin Hardwick · Stocksnap · CC0 1.0",
+  'fase-graduacion': "Candace McDaniel · Stocksnap · CC0 1.0",
+  'fase-hongkong': "u07ch · Flickr · BY 2.0",
+  'fase-tailandia': "Phillie Casablanca · Flickr · BY 2.0",
+  'fase-tarjeta': "Finder.com · Flickr · BY 2.0",
+  'fase-tarjeta-cortada': "Plusea · Flickr · BY 2.0",
+  'fase-visa': "Blueground Images · Flickr · BY 2.0"
 };
 const AP_FOTO_HB = { network: 'networking', ventas: 'persuadir', liderazgo: 'sacarmejor', finanzas: 'dinero', mente: 'meditar' };
 function apFoto(clave){ return AP_FOTOS[clave] ? { u: 'fotos-aprende/' + clave + '.jpg', c: 'Foto: ' + AP_FOTOS[clave] } : null; }
@@ -12139,6 +12236,75 @@ function kpiBarra(nom, val, pct, color, nota, pista){
 // que pinta Coach en cada fase (CIFRAS.mesTipo y la PROYECCION): aquí, compacto.
 // La meta de una fase como lista: "Al 31 mar 2027: <b>1)</b> … <b>2)</b> …" se lee mejor numerada.
 // La fecha del arranque ("Al 31 mar 2027") ya va en el título de la sección; lo demás, tal cual.
+// «Por qué esta fase», con los bloques de CIFRAS.PHASES[].razones: la frase que manda (`lema`), la
+// ruta con sus fotos (`hitos`; `une` los encadena → o los suma +) y las tarjetas —foto, qué es, el
+// título, las cifras grandes y la frase—, de dos en dos. Una cifra «faltan…» sale en rojo y una
+// «sobran…» en verde. Adán: "esto no está bien diseñado, hazlo mejor visualmente e impactante".
+const FZR_TONO={logro:'ok',riesgo:'mal',palanca:'ok',planb:'aviso',regla:'regla'};
+const FZR_ETQ={paso:'Paso',logro:'Lo logrado',riesgo:'El riesgo',palanca:'Lo que lo cierra',planb:'Plan B',regla:'La regla'};
+function fzCap(t){ t=String(t||''); return t.charAt(0).toUpperCase()+t.slice(1); }
+function faseRazonesHTML(f){
+  const R=f.razones||[];
+  if(!R.length) return f.explica?'<p class="fz-p">'+f.explica+'</p>':'';
+  const img=k=>apImg(apFoto(k),'fzr-img');
+  const cifra=c=>{ const v=String(c.v);
+    return '<div class="fzr-c'+(c.tono==='gris'?' gris':/^faltan/.test(v)?' mal':/^sobran/.test(v)?' ok':'')+'"><b>'+v+'</b><span>'+c.l+'</span></div>'; };
+  let n=0, grupo=[], out='';
+  const tarjeta=(b,ancha)=>{ const num=b.tipo==='paso'?++n:0;
+    return '<div class="fzr-card '+(FZR_TONO[b.tipo]||'paso')+(ancha?' ancha':'')+'"><div class="fzr-fw">'+img(b.foto)+'</div><div class="fzr-card-c">'+
+      '<div class="fzr-k">'+(num?'<i>'+num+'</i>':'')+(FZR_ETQ[b.tipo]||'')+'</div>'+
+      '<div class="fzr-t">'+b.t+'</div>'+
+      ((b.cifras||[]).length?'<div class="fzr-cs">'+b.cifras.map(cifra).join('')+'</div>':'')+
+      '<p class="fzr-d">'+fzCap(b.d)+'</p></div></div>'; };
+  // De dos en dos; la de tres cifras va a todo lo ancho y, si deja sola a la de antes, esa también:
+  // así no queda un hueco y el orden se respeta.
+  const soltar=()=>{
+    if(!grupo.length) return;
+    const filas=[]; let suelta=null;
+    grupo.forEach(function(b){
+      if((b.cifras||[]).length>2){ if(suelta) filas.push([suelta,true]); suelta=null; filas.push([b,true]); }
+      else if(suelta){ filas.push([suelta,false],[b,false]); suelta=null; }
+      else suelta=b;
+    });
+    if(suelta) filas.push([suelta,true]);
+    out+='<div class="fzr-grid">'+filas.map(x=>tarjeta(x[0],x[1])).join('')+'</div>'; grupo=[];
+  };
+  R.forEach(function(b,i){
+    if(b.tipo==='lema'){ soltar(); out+='<div class="fzr-lema">'+b.d+'</div>'; return; }
+    if(b.tipo==='ruta'){
+      soltar();
+      const une=b.une||'';
+      out+=(i===0?'<div class="fzr-lema">'+b.t+'</div>':'<div class="fzr-rt">'+b.t+'</div>')+
+        '<div class="fzr-ruta">'+(b.hitos||[]).map((h,j)=>'<div class="fzr-hito"><div class="fzr-hito-img">'+img(h.foto)+
+          (h.f?'<em>'+h.f+'</em>':'')+(j&&une?'<span class="fzr-une">'+une+'</span>':'')+'</div>'+
+          '<div class="fzr-hito-t">'+h.t+'</div>'+(h.v?'<div class="fzr-hito-v">'+h.v+'</div>':'')+
+          (h.s?'<div class="fzr-hito-s">'+fzCap(h.s)+'</div>':'')+'</div>').join('')+'</div>';
+      return;
+    }
+    grupo.push(b);
+  });
+  soltar();
+  return '<div class="fzr">'+out+'</div>';
+}
+// El checkpoint: lo de antes de los dos puntos es el cuándo; la primera frase, la prueba; las que
+// siguen, sus salidas —«Si…» en verde, «Si no…» o «Sin…» en rojo—.
+function faseCheckHTML(t){
+  const fr=String(t||'').split(/(?<=\.)\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/);
+  const prim=fr.shift()||'', k=prim.indexOf(':');
+  const cuando=k>0&&k<60?prim.slice(0,k):'', prueba=cuando?prim.slice(k+1).trim():prim;
+  const rama=x=>/^(Si no\b|Sin )/.test(x)?' mal':/^Si /.test(x)?' ok':'';
+  return kpiSec('🚩 Checkpoint')+'<div class="fzk"><div class="fzk-cab">'+(cuando?'<div class="fzk-cuando">'+cuando+'</div>':'')+
+    '<div class="fzk-prueba">'+fzCap(prueba)+'</div></div>'+
+    (fr.length?'<div class="fzk-ramas">'+fr.map(x=>'<div class="fzk-r'+rama(x)+'">'+x+'</div>').join('')+'</div>':'')+'</div>';
+}
+// Lo que se deja de hacer, una frase por renglón: lo de antes de los dos puntos manda.
+function faseDejaHTML(t){
+  const fr=String(t||'').split(/(?<=\.)\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/).map(x=>x.replace(/^Y\s+/,'').trim()).filter(Boolean);
+  return kpiSec('🚫 Lo que dejas de hacer')+'<div class="fzd">'+fr.map(function(x){
+    const k=x.indexOf(':'), cab=k>0&&k<80?x.slice(0,k):x.replace(/\.$/,''), resto=k>0&&k<80?x.slice(k+1).trim():'';
+    return '<div class="fzd-i"><span class="fzd-x">✕</span><div><b>'+fzCap(cab)+'</b>'+(resto?'<span>'+fzCap(resto)+'</span>':'')+'</div></div>';
+  }).join('')+'</div>';
+}
 function faseMetaHTML(meta){
   const partes=String(meta||'').split(/<b>\d+\)<\/b>\s*/);
   if(partes.length<3) return '<p class="fz-p" style="color:var(--text)">'+meta+'</p>';
@@ -12178,18 +12344,27 @@ function faseAhorroHTML(f){
   const G=C.GRUPOS_SUELDO, nom=k=>G.filter(x=>x[0]===k)[0][1];
   const td=(v,s)=>'<td>'+(v?(s<0?'−':'+')+money(v):'—')+'</td>';
   const fila=(k,s)=>et.some(e=>e.d.g[k])?'<tr><th>'+nom(k)+'</th>'+et.map(e=>td(e.d.g[k],s)).join('')+'</tr>':'';
-  const K=C.PROYECCION.cortes;
-  const corte=[K.junio,K.salida].filter(c=>filas.some(m=>m.mes===c.mes)).map(c=>
-    (c===K.junio?'En junio la cuenta bloqueada pide ':'A la salida se piden ')+'<b>'+money(c.pide)+'</b>: '+
-    (c.falta>0?'faltan <b style="color:var(--r)">'+money(c.falta)+'</b>':'sobran <b style="color:var(--g)">'+money(-c.falta)+'</b>')+'.').join(' ');
-  // En la Fase 1 no cae ningún corte: lo que la decide es el 31 de marzo, contra la salida completa.
-  const marzo=f===PHASES[1]&&C.n?C.n('marzoParaSalida'):null;
-  const notaMarzo=marzo!=null?' Al cerrar la fase, para irte completo en septiembre de 2027, GBM tiene que ir en <b>'+money(marzo)+'</b>; tu ritmo da <b>'+C.v('alemaniaMarzo')+
-    '</b> y la diferencia es el ingreso nuevo, <b>'+C.v('extraSalida')+'</b> al mes. Sin él, la salida es septiembre de 2028 (a la salida, '+C.v('salida2028')+').':'';
   // La BBVA va antes que GBM: si su plan cae en esta fase, se dice cuándo queda en cero.
   const B=C.planBbva?C.planBbva():null;
   const bbvaNota=B&&B.fin&&filas.some(m=>m.mes===ym(B.fin))?'Antes que GBM, la BBVA: lo que sobra de cada quincena y lo de Didi de cada lunes van a ella hasta el <b>'+
     B.fin.getDate()+' '+mc(ym(B.fin))+'</b>'+(B.intereses>=1?' ('+money(Math.round(B.intereses))+' de intereses)':', sin intereses')+'; por eso octubre casi no ahorra. ':'';
+  // GBM al cerrar cada mes, en barras, y la línea de lo que pide cada corte que cae en la fase:
+  // junio (la cuenta bloqueada), la salida completa y, al cerrar la Fase 1, irte completo en
+  // septiembre de 2027 (marzoParaSalida). Bajo cada corte, lo que falta o lo que sobra.
+  const K=C.PROYECCION.cortes, metas={};
+  [K.junio,K.salida].forEach(c=>{ if(filas.some(m=>m.mes===c.mes)) metas[c.mes]={pide:c.pide,falta:c.falta,t:c===K.junio?'la cuenta bloqueada':'la salida completa'}; });
+  const marzo=f===PHASES[1]&&C.n?C.n('marzoParaSalida'):null;
+  if(marzo!=null){ const u=filas[filas.length-1]; metas[u.mes]={pide:marzo,falta:marzo-u.alemania,t:'para irte completo en septiembre'}; }
+  const tope=Math.max.apply(null,filas.map(m=>m.alemania).concat(Object.keys(metas).map(k=>metas[k].pide)))*1.16;
+  const alto=x=>(Math.max(0,x)/tope*100).toFixed(1)+'%';
+  const barras='<div class="fzg">'+filas.map(function(m){ const mt=metas[m.mes];
+    return '<div class="fzg-col"><div class="fzg-bar">'+
+      (mt?'<i class="fzg-pide" style="bottom:'+alto(mt.pide)+'" title="Lo que pide '+mt.t+'"><span>'+money(mt.pide)+'</span></i>':'')+
+      '<b style="height:'+alto(m.alemania)+'"><em>'+money(m.alemania)+'</em></b></div>'+
+      '<span class="fzg-m">'+mc(m.mes)+'</span>'+
+      (mt?'<span class="fzg-f '+(mt.falta>0?'mal':'ok')+'">'+(mt.falta>0?'faltan ':'sobran ')+money(Math.abs(mt.falta))+'</span>':'')+'</div>';
+  }).join('')+'</div>';
+  const quePide=Object.keys(metas).sort().map(k=>mc(k)+', '+metas[k].t).join(' · ');
   return kpiSec('💰 Tu ahorro en esta fase')+
     '<table class="fa-dash"><thead><tr><th>Un mes</th>'+et.map(e=>'<th>'+e.t+'</th>').join('')+'</tr></thead><tbody>'+
     G.filter(x=>x[0]!=='personal'&&x[0]!=='ahorro').map(x=>fila(x[0],x[0]==='sueldo'?1:-1)).join('')+
@@ -12198,9 +12373,10 @@ function faseAhorroHTML(f){
     '<tr><th>Didi, a GBM</th>'+et.map(e=>td(e.d.didi,1)).join('')+'</tr>'+
     '<tr class="tot"><th>Ahorro del mes</th>'+et.map(e=>'<td class="ok">'+money(e.d.ahorro)+'</td>').join('')+'</tr>'+
     '</tbody></table>'+
-    faseRutinasHTML()+
-    kpiNota(bbvaNota+'GBM al cerrar cada mes: '+filas.map(m=>mc(m.mes)+' <b>'+money(m.alemania)+'</b>').join(' · ')+'. '+corte+notaMarzo+
-      ' El desglose mes a mes está en <b>Coach → Plan Maestro</b>.');
+    kpiSec('📊 GBM al cerrar cada mes')+barras+
+    kpiNota(bbvaNota+'Las barras son lo que tiene GBM al cerrar cada mes con tu ritmo'+(quePide?'; la línea roja, lo que pide cada corte ('+quePide+')':'')+
+      '. El desglose mes a mes está en <b>Coach → Plan Maestro</b>.')+
+    faseRutinasHTML();
 }
 function kpiSec(t){ return '<div class="gbm-sec">'+t+'</div>'; }
 function kpiNota(t){ return '<div class="gbm-nota">'+t+'</div>'; }
@@ -12627,11 +12803,11 @@ function kpiDetalle(id){
           :e==='hecha'?'Cerró el '+dL(f.end):'Empieza el '+dL(f.start)+' · '+falta(f))+' · '+hechasT+' de '+sem.length+' tareas hechas</div>'+
         '<div class="fases-cols"><div>'+
           kpiSec('🎯 Lo que '+(e==='hecha'?'tenía':'tiene')+' que estar listo el '+dC(f.end))+faseMetaHTML(f.meta)+
-          (f.explica?kpiSec('💡 Por qué esta fase')+'<p class="fz-p">'+f.explica+'</p>':'')+
+          (f.razones||f.explica?kpiSec('💡 Por qué esta fase')+faseRazonesHTML(f):'')+
+          (f.checkpoint?faseCheckHTML(f.checkpoint):'')+
+          (f.deja?faseDejaHTML(f.deja):'')+
           faseAhorroHTML(f)+
           (typeof f.liquido==='number'?kpiNota('📈 Al cierre ('+dC(f.end)+') la trayectoria espera <b>≈ '+(f.liquido<0?'−':'+')+money(Math.abs(f.liquido))+'</b> de patrimonio líquido — hipótesis, no promesa.'):'')+
-          (f.deja?kpiPaso('🚫 Lo que dejas de hacer', f.deja, '#94a3b8'):'')+
-          (f.checkpoint?kpiPaso('🚩 Checkpoint', f.checkpoint, '#e0b020'):'')+
         '</div><div>'+kpiSec('🗓️ Las tareas, mes por mes')+tareas+'</div></div></div>';
     }).join('');
     return {titulo:'🪙 Las '+PHASES.length+' fases del Plan Maestro', sub:'Del '+dL(PHASES[0].start)+' al '+dL(finDelPlan())+', la fecha del millón: qué toca en cada tramo y cuándo.',
