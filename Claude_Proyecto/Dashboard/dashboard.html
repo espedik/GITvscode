@@ -3064,6 +3064,12 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .ap-barra i{flex:1 1 0;height:4px;border-radius:2px;background:rgba(var(--ov),.1)}
 .ap-barra i.on{background:var(--c)}
 .ap-fila{display:flex;flex-direction:column;gap:2px;padding:6px 0 8px;border-top:1px solid rgba(var(--ov),.09)}
+/* Con foto (todos los renglones): la foto a la izquierda, a lo alto del renglón; un libro, en su 2:3. */
+.ap-fila.con-foto{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;row-gap:2px;align-items:start}
+.ap-fila.con-foto>.ap-img{grid-row:1/span 2;width:64px;height:64px;margin-top:3px;border-radius:10px;object-fit:cover;
+  background:color-mix(in srgb,var(--c) 14%,transparent);box-shadow:0 3px 10px rgba(0,0,0,.14)}
+.ap-fila.con-foto>.ap-img.libro{width:44px;object-position:top}
+.ap-fila.con-foto>.ap-top,.ap-fila.con-foto>.ap-abrir,.ap-fila.con-foto>.ap-cuerpo{grid-column:2}
 .ap-lista>.ap-fila:last-child{border-bottom:1px solid rgba(var(--ov),.09)}
 .ap-top{display:flex;align-items:center;gap:7px}
 .ap-punto{width:7px;height:7px;margin:0 3.5px;border-radius:50%;flex-shrink:0;background:var(--c)}
@@ -3234,19 +3240,26 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
    completa en el teléfono tapaba el título. Mientras está abierto se oculta; al cerrar vuelve. */
 body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 #comoDecideOverlay{--c:var(--cy)}
-.gbm-card.cd-card{width:min(880px,100%)}
-.cd-capa{padding:11px 14px 9px;margin-bottom:9px;border-radius:12px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.08)}
+.gbm-card.cd-card{width:min(1680px,96vw)}
+.cd-capas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:start;margin-bottom:8px}
+.cd-capa{padding:11px 14px 9px;border-radius:12px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.08)}
 .cd-capa-k{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-family:var(--mono);font-size:9.5px;font-weight:700;
   letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
 .cd-capa-k b{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;
   background:color-mix(in srgb,var(--c) 16%,transparent);font-size:10px;letter-spacing:0}
-.cd-li{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:4px 0;font-size:12.5px;line-height:1.45;color:var(--text2)}
+.cd-li{display:flex;align-items:center;gap:11px;padding:4px 0;font-size:12.5px;line-height:1.45;color:var(--text2)}
 .cd-li+.cd-li{border-top:1px solid rgba(var(--ov),.06)}
 .cd-li b{color:var(--text);font-weight:650}
+.cd-li-t{flex:1;min-width:0}
+.cd-mini{flex:none;width:36px;height:36px;border-radius:8px;object-fit:cover;background:rgba(var(--ov),.06)}
+.cd-mini.libro{width:26px;object-position:top}
 .cd-li.ok>span:first-child{text-decoration:line-through;opacity:.6}
 .cd-cuando{flex:none;font-family:var(--mono);font-size:10.5px;color:var(--text3);white-space:nowrap}
-.cd-fila{display:grid;grid-template-columns:140px minmax(0,1fr);gap:4px 18px;padding:12px 0;border-top:1px solid rgba(var(--ov),.08)}
-.cd-fila-k{padding-top:3px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--fc)}
+.cd-filas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}
+.cd-fila{display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-top:1px solid rgba(var(--ov),.08)}
+.cd-foto{flex:none;width:104px;height:104px;border-radius:12px;object-fit:cover;box-shadow:0 4px 14px rgba(0,0,0,.16)}
+.cd-foto.libro{width:70px;object-position:top}
+.cd-fila-k{margin-bottom:4px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--fc)}
 .cd-fila-c{min-width:0}
 .cd-hoy{font-size:14.5px;font-weight:700;line-height:1.35;color:var(--text)}
 .cd-hoy span{font-size:12px;font-weight:500;color:var(--text3);margin-left:4px}
@@ -3258,7 +3271,8 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 .cd-cap.on{background:color-mix(in srgb,var(--fc) 16%,transparent);color:var(--text)}
 .cd-pie{margin-top:6px;padding-top:12px;border-top:1px solid rgba(var(--ov),.08);font-size:12px;line-height:1.5;color:var(--text3)}
 .cd-pie b{color:var(--text2)}
-@media(max-width:700px){.cd-fila{grid-template-columns:minmax(0,1fr)}.cd-li{flex-direction:column;gap:2px}}
+@media(max-width:1180px){.cd-capas,.cd-filas{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:700px){.cd-foto{width:72px;height:72px}.cd-foto.libro{width:48px}.cd-li{flex-wrap:wrap}.cd-cuando{flex-basis:100%;padding-left:47px}}
 .ha-q-t{font-size:15px;font-weight:600;color:var(--text);line-height:1.55}
 .ha-ops{display:flex;flex-direction:column;gap:7px;margin-top:14px}
 .ha-op{display:grid;grid-template-columns:16px minmax(0,1fr);gap:9px;align-items:baseline;width:100%;text-align:left;
@@ -7392,7 +7406,7 @@ function pasoSemanaHtml(){
       ${apTop('paso', `${esc(foco.name)} · ${propia?'elegida por ti':'esta semana'}`, `${i+1}/${pasos.length}`, 'Habilidad', propia?esc(rec.name):'')}
       <button type="button" class="ap-av-ir" onclick="irASlide('theme-skills')" title="Abrir En qué invertir tu tiempo${lib?` · con ${habAttr(lib.t)}`:''}">
         <span class="ap-av-cab">
-          ${lib?`<img class="ap-av-img libro" src="${lib.portada||''}" alt="" loading="lazy">`:`<span class="ap-av-img ap-av-ico">${foco.icon}</span>`}
+          ${lib?`<img class="ap-av-img libro" src="${lib.portada||''}" alt="" loading="lazy">`:(apFotoSk(foco.id)?apImg(apFotoSk(foco.id),'ap-av-img'):`<span class="ap-av-img ap-av-ico">${foco.icon}</span>`)}
           <span class="ap-av-col">
             <span class="ap-av-t">${esc(p.n)}</span>
             ${apTramos(pasos.length, j=>j<i, i)}
@@ -7863,6 +7877,64 @@ function aprendeOrdenPython(){
   const sub = t => { let k = PY_COACH_TESTING.findIndex(re => re.test(t.title)); if(k === 0 && !ia) k = 7.5; return k < 0 ? 99 : k; };
   return ENTREVISTA_TEMAS.map((t, i) => ({ t, i })).sort((a, b) => mod(a.t) - mod(b.t) || sub(a.t) - sub(b.t) || a.i - b.i).map(x => x.t);
 }
+// ── Las fotos de Hoy aprendes. Adán: "todo quiero que tenga imágenes, no dejes nada vacío y menos con
+//    solo iconos". Viven en `fotos-aprende/` —reducidas a 480 px, de Openverse (StockSnap y Flickr), con
+//    su crédito en el `title`— y cada renglón lleva la de lo que enseña: la palabra, la de su tema o, si
+//    no tiene, la de su familia; Python, la de su módulo; el ISTQB, la de su capítulo; una habilidad sin
+//    libro, la suya. Networking, Ventas, Liderazgo, Finanzas y Mentalidad usan la de su ficha de
+//    Habilidades Base, y un audiolibro, su portada de la biblioteca.
+const AP_FOTOS = {
+  'de-ciudad': "Jorge Franganillo · Flickr · BY 2.0",
+  'de-dinero': "Martin Vorel · Stocksnap · CC0 1.0",
+  'de-f-basico': "Autor desconocido · Rawpixel · CC0 1.0",
+  'de-f-casa': "Simon Rae · Stocksnap · CC0 1.0",
+  'de-f-comer': "Autor desconocido · Rawpixel · CC0 1.0",
+  'de-f-libre': "Joshua Earle · Stocksnap · CC0 1.0",
+  'de-f-personas': "Nathan Dumlao · Stocksnap · CC0 1.0",
+  'de-f-trabajo': "Startup Stock Photos · Stocksnap · CC0 1.0",
+  'de-f-trans': "Rosmarie Voegtli · Flickr · BY 2.0",
+  'de-piso': "WDnet Studio · Stocksnap · CC0 1.0",
+  'de-salud': "Jorge Franganillo · Flickr · BY 2.0",
+  'de-super': "Ryan McGuire · Stocksnap · CC0 1.0",
+  'de-telefono': "7C0 · Flickr · BY 2.0",
+  'de-tramites': "Châu Thông Phan · Stocksnap · CC0 1.0",
+  'istqb-1': "HD Wallpapers · Stocksnap · CC0 1.0",
+  'istqb-2': "Bench Accounting · Stocksnap · CC0 1.0",
+  'istqb-3': "testsdintrusion.com · Flickr · BY-ND 2.0",
+  'istqb-4': "Christina Morillo · Stocksnap · CC0 1.0",
+  'istqb-5': "Startup Stock Photos · Stocksnap · CC0 1.0",
+  'meta-esslingen': "Jorge Franganillo · Flickr · BY 2.0",
+  'meta-salida': "Jorge Franganillo · Flickr · BY 2.0",
+  'py-poo': "Christina Morillo · Stocksnap · CC0 1.0",
+  'py-pycheat': "Helder da Rocha · Flickr · BY-SA 2.0",
+  'py-pyfund': "Tirza van Dijk · Stocksnap · CC0 1.0",
+  'py-testing': "One Idea LLC · Stocksnap · CC0 1.0",
+  'sk-codigo': "Negative Space · Stocksnap · CC0 1.0",
+  'sk-copy': "Aaron Burden · Stocksnap · CC0 1.0",
+  'sk-datos': "Negative Space · Stocksnap · CC0 1.0",
+  'sk-ia': "Alex Knight · Stocksnap · CC0 1.0",
+  'sk-ingles': "Kai Oberhäuser · Stocksnap · CC0 1.0",
+  'sk-inversion': "50Fish · Stocksnap · CC0 1.0",
+  'sk-marketing': "userpilot1 · Flickr · BY 2.0"
+};
+const AP_FOTO_HB = { network: 'networking', ventas: 'persuadir', liderazgo: 'sacarmejor', finanzas: 'dinero', mente: 'meditar' };
+function apFoto(clave){ return AP_FOTOS[clave] ? { u: 'fotos-aprende/' + clave + '.jpg', c: 'Foto: ' + AP_FOTOS[clave] } : null; }
+function apFotoHb(h){
+  if(!h || !h.img) return null;
+  const u = String(h.img).replace(/([?&]w=)\d+/, (_, a) => a + '480').replace(/([?&]q=)\d+/, (_, a) => a + '70');
+  return { u, c: 'Foto de la ficha «' + h.t + '» de Habilidades Base' };
+}
+function apFotoSk(id){ return apFoto('sk-' + id) || apFotoHb(HABILIDADES_BASE.find(h => h.id === AP_FOTO_HB[id])); }
+function apFotoAleman(w){
+  const V = (typeof alVocab === 'function') ? alVocab() : null, fam = V && (V.familias || []).find(f => (f.cats || []).includes(w.cat));
+  return apFoto('de-' + w.cat) || (fam && apFoto('de-f-' + fam.id)) || apFoto('de-f-basico');
+}
+// La portada del libro de la biblioteca o, si no la hay, la foto de la habilidad.
+function apFotoLibro(libId, sk){
+  const L = libId ? habLibro(libId) : null;
+  return L && L.portada ? { u: L.portada, c: 'Portada de «' + L.t + '»', libro: true } : apFotoSk(sk);
+}
+function apImg(f, cls){ return f ? `<img class="${cls}${f.libro ? ' libro' : ''}" src="${f.u}" alt="" loading="lazy" title="${habAttr(f.c)}">` : ''; }
 // El ISTQB, en el orden de Coach. El CT-GenAI se presenta en la Fase 1 y el examen pesa por capítulos
 // (`EXAMEN_GENAI.blueprint`): primero el capítulo con más puntos en juego —lo que vale en el examen por lo
 // que te falta de acierto ahí; con menos de tres respuestas cuenta la mitad— y, dentro, las preguntas de
@@ -7906,7 +7978,7 @@ const AP_BANDERA = '<span class="flag-de" aria-hidden="true"></span>';
 const AP_PUNTO = '<span class="ap-punto" aria-hidden="true"></span>';
 function apEstado(hecho, txt, ok){ return `<span class="ap-estado${hecho ? ' ok' : ''}">${hecho ? ok : txt}</span>`; }
 function apFila(o){
-  return `<div class="ap-fila" style="--c:${o.c}">
+  return `<div class="ap-fila${o.foto ? ' con-foto' : ''}" style="--c:${o.c}">${o.foto ? apImg(o.foto, 'ap-img') : ''}
       <div class="ap-top">${o.marca}<span class="ap-mat">${o.mat}</span>${o.estado}<button type="button" class="ap-otra" onclick="aprendeOtra('${o.slot}')" title="${o.otra}" aria-label="${o.otra}">${AP_OTRA}</button></div>
       <button type="button" class="ap-abrir" onclick="${o.abrir}" title="${o.titulo}">${o.cuerpo}</button>
     </div>`;
@@ -7930,7 +8002,7 @@ function alemanHoyHtml(vistos){
   // Un ejemplo que repite la frase tal cual no enseña nada nuevo: se omite.
   const sinPunto = s => String(s || '').replace(/[.!?¡¿]+$/, '').trim().toLowerCase();
   const ex = a.ex && sinPunto(a.ex) !== sinPunto(a.de) ? a.ex : '';
-  return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA,
+  return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA, foto: apFotoAleman(a),
     mat: `Alemán · ${esc((V.cats[a.cat] || {}).label || '')}`,
     estado: apEstado(vistos.de, frase ? 'frase del día' : 'palabra del día', '✓ vista'),
     otra: frase ? 'La siguiente frase, en el orden de Coach' : 'La siguiente palabra, en el orden de Coach', abrir: "aprendeAbrir('de')", titulo: 'Abrir su sección en Alemán',
@@ -7977,7 +8049,7 @@ function escucharHoyHtml(vistos){
   const oir = x => `<a class="ap-oir" href="${didiSpo(x.q)}" target="_blank" rel="noopener" onclick="aprendeVisto('escuchar');setTimeout(renderHeroAprender,60)" title="Buscarlo en Spotify">${esc(x.n)}<span aria-hidden="true">&nbsp;↗</span></a>`;
   const estado = vistos.escuchar ? '<span class="ap-estado ok">✓ escuchando</span>'
     : '<button type="button" class="ap-estado ir" onclick="abrirDidi()">Qué escuchar</button>';
-  return `<div class="ap-fila" style="--c:var(--o)">
+  return `<div class="ap-fila con-foto" style="--c:var(--o)">${apImg(apFotoLibro(libro.it.lib, libro.g.sk), 'ap-img')}
       <div class="ap-top">${AP_PUNTO}<span class="ap-mat">Al volante · ${esc(sk ? sk.name : '')}</span>${estado}<button type="button" class="ap-otra" onclick="aprendeOtra('escuchar')" title="El siguiente audiolibro del foco" aria-label="El siguiente audiolibro del foco">${AP_OTRA}</button></div>
       <div class="ap-cuerpo">
         <span class="ap-t">${oir(libro.it)}</span>
@@ -7994,7 +8066,7 @@ function pythonHoyHtml(){
   if(!p) return '<div class="hp-empty">El catálogo de Python no cargó — revisa entrevistas-data.js.</div>';
   const hechos = rawGet('study-done-v2', {}) || {};
   const n = ENTREVISTA_TEMAS.filter(t => hechos[t.id]).length;
-  return apFila({ slot: 'py', c: 'var(--cy)', marca: AP_PUNTO, mat: `Python · ${esc(pyModLabel(p.mod))}`,
+  return apFila({ slot: 'py', c: 'var(--cy)', marca: AP_PUNTO, foto: apFoto('py-' + p.mod) || apFotoSk('codigo'), mat: `Python · ${esc(pyModLabel(p.mod))}`,
     estado: apEstado(!!hechos[p.id], 'tema del día', '✓ estudiado'), otra: 'El siguiente tema, en el orden de Coach', abrir: "aprendeAbrir('py')",
     titulo: `Abrir el tema en la app de Entrevistas · llevas ${n} de ${ENTREVISTA_TEMAS.length} estudiados`,
     cuerpo: `<span class="ap-t">${esc(p.title)}</span>${p.hint ? `<span class="ap-es ap-2l">${esc(p.hint)}</span>` : ''}` });
@@ -8053,7 +8125,7 @@ function istqbHtml(){
   const hecha = istqbHoy(q);
   const estado = !hecha ? '<button type="button" class="ap-estado ir" onclick="abrirIstqb()">Responder</button>'
     : `<span class="ap-estado ${hecha.ok ? 'ok' : 'mal'}">${hecha.ok ? '✓ correcta' : '✗ era la ' + 'ABCD'[q.r]}</span>`;
-  return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, mat: `ISTQB CT-GenAI · Cap. ${q.cap} · ${esc(q.k)}`,
+  return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), mat: `ISTQB CT-GenAI · Cap. ${q.cap} · ${esc(q.k)}`,
     estado, otra: 'La siguiente pregunta, en el orden de Coach', abrir: 'abrirIstqb()', titulo: 'Contestar la pregunta del día',
     cuerpo: `<span class="ap-q ap-2l">${q.q}</span>` });
 }
@@ -8112,24 +8184,26 @@ function comoDecideHtml(){
   const hoy = new Date(), checks = rawGet('coach_checks_v1', {}) || {};
   const fase = PHASES.find(f => hoy >= f.start && hoy <= f.end), plan = habPlanHoy(), etapa = aprendeEtapaAleman();
   const skN = id => (SK.find(s => s.id === id) || {}).name || id;
-  const li = (txt, cuando, ok) => `<div class="cd-li${ok ? ' ok' : ''}"><span>${txt}</span>${cuando ? `<span class="cd-cuando">${cuando}</span>` : ''}</div>`;
+  const li = (txt, cuando, ok, foto) => `<div class="cd-li${ok ? ' ok' : ''}">${apImg(foto, 'cd-mini')}<span class="cd-li-t">${txt}</span>${cuando ? `<span class="cd-cuando">${cuando}</span>` : ''}</div>`;
+  const hb = id => HABILIDADES_BASE.find(h => h.id === id);
+  const FOTO_META = { 'a1-7': apFoto('istqb-1'), 'a1-4': apFotoHb(hb('networking')), 'a1-18': apFotoHb(hb('persuadir')), 'a1-10': apFoto('meta-esslingen'), 'a1-14': apFoto('de-f-basico') };
 
   // 1 · Tus metas con fecha: lo que estudias sirve a estas tareas de la fase en curso.
   const metas = CD_METAS.map(m => {
     const x = cdTarea(m.id); if(!x) return '';
     const cuando = x.s.mes ? cdMes(x.s.mes) : (m.id === 'a1-14' && etapa.hasta ? 'hasta ' + cdFecha(etapa.hasta) : x.f.tag);
-    return li(`<b>${m.t}</b> → ${m.para}`, cuando, !!checks[m.id]);
-  }).join('') + li('<b>Salida a Alemania</b> → lo que vas a necesitar al llegar', esc(CIFRAS.texto('{{maestriaInicio}}')));
+    return li(`<b>${m.t}</b> → ${m.para}`, cuando, !!checks[m.id], FOTO_META[m.id]);
+  }).join('') + li('<b>Salida a Alemania</b> → lo que vas a necesitar al llegar', esc(CIFRAS.texto('{{maestriaInicio}}')), false, apFoto('meta-salida'));
 
   // 2 · El plan de Coach: la fase en curso y el foco de habilidades.
   const t = plan.tramo, sig = plan.siguiente;
-  const planHtml = (fase ? li(`<b>${esc(fase.tag)}</b> · ${esc(fase.title)}`, `${cdFecha(fase.start)} – ${cdFecha(fase.end)}`) : '')
-    + (t ? li(`<b>Foco: ${esc(skN(t.id))}</b>, ${t.horas} h a la semana. ${esc(t.semana)} Entregable: <b>${esc(t.entregable)}</b>`, `${cdMes(t.desde)} – ${cdMes(t.hasta)}`) : '')
-    + (sig ? li(`Después: <b>${esc(skN(sig.id))}</b> — ${esc(sig.entregable)}`, cdMes(sig.desde)) : '');
+  const planHtml = (fase ? li(`<b>${esc(fase.tag)}</b> · ${esc(fase.title)}`, `${cdFecha(fase.start)} – ${cdFecha(fase.end)}`, false, apFoto('de-dinero')) : '')
+    + (t ? li(`<b>Foco: ${esc(skN(t.id))}</b>, ${t.horas} h a la semana. ${esc(t.semana)} Entregable: <b>${esc(t.entregable)}</b>`, `${cdMes(t.desde)} – ${cdMes(t.hasta)}`, false, apFotoSk(t.id)) : '')
+    + (sig ? li(`Después: <b>${esc(skN(sig.id))}</b> — ${esc(sig.entregable)}`, cdMes(sig.desde), false, apFotoSk(sig.id)) : '');
 
   // 3 · Subir tus habilidades: las que más mueven tu nivel por hora (peso × lo que les falta), sin las de pausa.
   const habs = SK.filter(s => !s.pausa).map(s => ({ s, r: skRetorno(s) })).sort((a, b) => b.r - a.r).slice(0, 5)
-    .map(x => li(`<b>${esc(x.s.name)}</b> · nivel ${x.s.val}, peso ×${x.s.w}`, `retorno ${x.r}`)).join('');
+    .map(x => li(`<b>${esc(x.s.name)}</b> · nivel ${x.s.val}, peso ×${x.s.w}`, `retorno ${x.r}`, false, apFotoSk(x.s.id))).join('');
 
   // Renglón por renglón.
   const filas = [], foco = aprendeFoco(), rec = habRecomendada();
@@ -8138,7 +8212,7 @@ function comoDecideHtml(){
     const salio = new Set((((rawGet(APRENDE_KEY, {}) || {}).salio || {}).de) || []);
     const delNivel = alemanPalabras().filter(x => x.niv === etapa.nivel), van = delNivel.filter(x => salio.has(x.de)).length;
     const temas = AL_COACH_TEMAS.slice(0, 7).map(c => (V.cats[c] || {}).label || c).join(', ').toLowerCase();
-    filas.push({ k: 'Alemán', c: 'var(--g)', hoy: `${w.art && w.art !== '-' && w.art !== 'pl.' ? esc(w.art) + ' ' : ''}${esc(w.de)} <span>${esc((V.cats[w.cat] || {}).label || w.cat)} · ${esc(w.niv || '')}</span>`,
+    filas.push({ k: 'Alemán', c: 'var(--g)', foto: apFotoAleman(w), hoy: `${w.art && w.art !== '-' && w.art !== 'pl.' ? esc(w.art) + ' ' : ''}${esc(w.de)} <span>${esc((V.cats[w.cat] || {}).label || w.cat)} · ${esc(w.niv || '')}</span>`,
       regla: `Primero el <b>${etapa.nivel}</b>${etapa.nivel === 'A2' ? `, el certificado que pide Esslingen, hasta la Fase 2 (${cdFecha(etapa.hasta)})` : ', el de la maestría y el trabajo'}. Dentro, lo que vas a necesitar primero al llegar —${esc(temas)}—, luego la casa, la escuela y el trabajo, y lo demás al final. Cada día, la siguiente que no haya salido: van <b>${van} de ${delNivel.length}</b> del ${etapa.nivel}.` });
   }
   const d = didiHoy();
@@ -8149,13 +8223,13 @@ function comoDecideHtml(){
       : delFoco(d.libro) ? 'El audiolibro, el siguiente del foco cada lunes.'
       : `${foco ? esc(foco.name) : 'El foco'} no tiene audiolibros en el catálogo: va el de ${nombre(d.libro)}, la habilidad que sigue por retorno, uno por semana.`;
     const rPod = !d.pod ? '' : (delFoco(d.pod) ? 'El podcast, el siguiente del foco cada día' : `El podcast, de ${nombre(d.pod)}`) + ' (los de una hora o más, el fin de semana).';
-    filas.push({ k: 'Al volante', c: 'var(--o)', hoy: `${esc(d.libro.it.n)}${d.pod ? ` <span>· ${esc(d.pod.it.n)}</span>` : ''}`,
+    filas.push({ k: 'Al volante', c: 'var(--o)', foto: apFotoLibro(d.libro.it.lib, d.libro.g.sk), hoy: `${esc(d.libro.it.n)}${d.pod ? ` <span>· ${esc(d.pod.it.n)}</span>` : ''}`,
       regla: `Primero lo del foco${foco ? ` (<b>${esc(foco.name)}</b>)` : ''}, luego el siguiente foco del plan y las habilidades con más retorno; lo que Coach tiene en pausa no entra. ${rLibro} ${rPod}` });
   }
   const p = entrevistaTemaHoy();
   if(p){
     const hechos = rawGet('study-done-v2', {}) || {}, n = ENTREVISTA_TEMAS.filter(x => hechos[x.id]).length, cod = SK.find(s => s.id === 'codigo');
-    filas.push({ k: 'Python', c: 'var(--cy)', hoy: `${esc(p.title)} <span>${esc(pyModLabel(p.mod))}</span>`,
+    filas.push({ k: 'Python', c: 'var(--cy)', foto: apFoto('py-' + p.mod) || apFotoSk('codigo'), hoy: `${esc(p.title)} <span>${esc(pyModLabel(p.mod))}</span>`,
       regla: `Testing primero, con lo central de pytest antes que unittest. Tu prueba de Código en Coach: <b>${esc(cod ? cod.prueba : '')}</b> ${foco && foco.id === 'ia' ? 'Con el foco en IA, abre la generación de pruebas con IA. ' : ''}Después los fundamentos y la POO. Lo que estudias no vuelve: llevas <b>${n} de ${ENTREVISTA_TEMAS.length}</b>.` });
   }
   const q = istqbPreguntaHoy();
@@ -8164,13 +8238,14 @@ function comoDecideHtml(){
     const caps = Object.keys(pts).map(Number).sort((a, b) => istqbEnJuego(b, pts, ac) - istqbEnJuego(a, pts, ac));
     const tabla = caps.map(c => { const a = ac[c];
       return `<span class="cd-cap${c === +q.cap ? ' on' : ''}"><b>Cap. ${c}</b> ${pts[c]} pts · ${a && a.n ? `${a.ok} de ${a.n}` : 'sin respuestas'} · ${istqbEnJuego(c, pts, ac).toFixed(1)} en juego</span>`; }).join('');
-    filas.push({ k: 'ISTQB', c: 'var(--p)', hoy: `Capítulo ${esc(q.cap)} · ${esc(q.lo || '')} <span>${q.pts > 1 ? q.pts + ' puntos' : '1 punto'}</span>`,
+    filas.push({ k: 'ISTQB', c: 'var(--p)', foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), hoy: `Capítulo ${esc(q.cap)} · ${esc(q.lo || '')} <span>${q.pts > 1 ? q.pts + ' puntos' : '1 punto'}</span>`,
       regla: `El examen va en ${ex && ex.s.mes ? cdMes(ex.s.mes) : 'la Fase 1'}${X.meta ? ` (${X.meta.preguntas} preguntas; el corte es ${X.meta.corte} de ${X.meta.puntos})` : ''}. Primero el capítulo con más puntos en juego —lo que vale en el examen por lo que te falta de acierto ahí; con menos de tres respuestas cuenta la mitad— y, dentro, las de 2 puntos. Las que contestas no vuelven.`,
       extra: `<div class="cd-caps">${tabla}</div>` });
   }
   if(foco){
     const pasos = habPasos(foco.id), st = habFocoLoad(); let i = st.paso[foco.id] || 0; if(i < 0 || i >= pasos.length) i = 0;
-    filas.push({ k: 'Paso de la semana', c: 'var(--w)', hoy: `${esc(foco.name)} · ${esc(pasos[i] ? pasos[i].n : '')} <span>paso ${i + 1} de ${pasos.length}</span>`,
+    const libP = pasos[i] && (Array.isArray(pasos[i].r) ? pasos[i].r : []).find(x => x && x.t === 'libro');
+    filas.push({ k: 'Paso de la semana', c: 'var(--w)', foto: apFotoLibro(libP && libP.id, foco.id), hoy: `${esc(foco.name)} · ${esc(pasos[i] ? pasos[i].n : '')} <span>paso ${i + 1} de ${pasos.length}</span>`,
       regla: rec && rec.id !== foco.id ? `Lo elegiste tú con «Siguiente». El de Coach es <b>${esc(rec.name)}</b>: «↺» en la tarjeta vuelve a él.`
         : `El foco del plan para hoy${t ? `, de ${cdMes(t.desde)} a ${cdMes(t.hasta)}` : ''}: su ruta, paso a paso, al ritmo que la avanzas en En qué invertir tu tiempo. ${t ? esc(t.cambio) : ''}` });
   }
@@ -8178,15 +8253,17 @@ function comoDecideHtml(){
   if(ec.actual){
     const x = ec.actual, propia = ec.recomendada && x.h.id !== ec.recomendada.h.id;
     const luego = ec.lista.filter(y => y !== x).slice(0, 3).map(y => esc(y.h.t)).join(' · ');
-    filas.push({ k: 'Habilidades Base', c: 'var(--b)', hoy: `${esc(x.h.t)} <span>${x.hechos} de ${x.total} pasos</span>`,
+    filas.push({ k: 'Habilidades Base', c: 'var(--b)', foto: apFotoHb(x.h), hoy: `${esc(x.h.t)} <span>${x.hechos} de ${x.total} pasos</span>`,
       regla: `${propia ? `La elegiste tú con «Siguiente»; la de Coach es <b>${esc(ec.recomendada.h.t)}</b>. ` : ''}<b>Por qué:</b> ${esc(hbPlan(x.h.id).para)} El orden: primero lo que pide la fase en curso, luego lo de antes de irte, lo de Alemania y lo demás; a igual prioridad, la que ya empezaste. Lo que choca con tu meta de alcohol espera al final.${luego ? ` Después: ${luego}.` : ''}` });
   }
 
-  return `<div class="cd-capa"><div class="cd-capa-k"><b>1</b>Tus metas con fecha</div>${metas}</div>
-    <div class="cd-capa"><div class="cd-capa-k"><b>2</b>El plan de Coach</div>${planHtml}</div>
-    <div class="cd-capa"><div class="cd-capa-k"><b>3</b>Subir tus habilidades</div>${habs}</div>
+  return `<div class="cd-capas">
+      <div class="cd-capa"><div class="cd-capa-k"><b>1</b>Tus metas con fecha</div>${metas}</div>
+      <div class="cd-capa"><div class="cd-capa-k"><b>2</b>El plan de Coach</div>${planHtml}</div>
+      <div class="cd-capa"><div class="cd-capa-k"><b>3</b>Subir tus habilidades</div>${habs}</div>
+    </div>
     <div class="gbm-sec">Renglón por renglón, lo de hoy</div>
-    ${filas.map(r => `<div class="cd-fila" style="--fc:${r.c}"><div class="cd-fila-k">${r.k}</div><div class="cd-fila-c"><div class="cd-hoy">${r.hoy}</div><div class="cd-regla">${r.regla}</div>${r.extra || ''}</div></div>`).join('')}
+    <div class="cd-filas">${filas.map(r => `<div class="cd-fila" style="--fc:${r.c}">${apImg(r.foto, 'cd-foto')}<div class="cd-fila-c"><div class="cd-fila-k">${r.k}</div><div class="cd-hoy">${r.hoy}</div><div class="cd-regla">${r.regla}</div>${r.extra || ''}</div></div>`).join('')}</div>
     <div class="cd-pie">«Siguiente» y ↻ siguen este mismo orden, nunca el azar. Lo que cambias tú queda marcado como <b>elegida por ti</b> y «↺» vuelve a lo de Coach. Las metas, las fases, el foco y los niveles se cambian en Coach; este panel los lee de ahí.</div>`;
 }
 // Mientras está abierto, Mi Día no rota: la rotación vuelve al cerrarlo.
