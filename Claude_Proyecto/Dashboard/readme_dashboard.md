@@ -407,8 +407,8 @@ sobre `pasoInversionHoy()`).
 **Los botones 🤖.** `invPedirClaude(modo)` arma el contexto y navega a
 `claudeinv://<ruta>?ctx=<base64url>` (`INV_MODOS`: *actualizar* para segura y medio, *alto* y
 *superalto* para cada apuesta). El de los perfiles (`invContexto()`) lleva ingresos, fijos, monto al
-mes, aporte fijo a CETES, deudas con tasa, inversiones, efectivo, precios, maestría, fase y perfil
-elegido — unos 500 tokens; el de una apuesta (`invContextoApuesta(modo)`) lleva la regla del maestro con sus pesos ya
+mes, aporte fijo a CETES, deudas con tasa, inversiones, efectivo, precios, la maestría (siempre con su
+fecha de inicio, del maestro: el prompt no la escribe), fase y perfil elegido — unos 500 tokens; el de una apuesta (`invContextoApuesta(modo)`) lleva la regla del maestro con sus pesos ya
 en pesos, los precios y la empresa anterior de esa pestaña, para que Claude diga si sigue vigente.
 Windows abre
 `inversion-actualizar.ps1` (registrado en `HKCU\Software\Classes\claudeinv` por

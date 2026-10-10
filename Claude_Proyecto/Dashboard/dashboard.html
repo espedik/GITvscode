@@ -10888,7 +10888,8 @@ function invContexto(){
     inversiones: inv.map(i => ({ nombre: i.name, tipo: i.type || '', valor: Math.round(+i.value || +i.invested || 0) })),
     efectivo: (F.activos || []).filter(a => a.type === 'liquido' && +a.value > 0).map(a => ({ nombre: a.name, valor: Math.round(+a.value) })),
     precios: { btcUsd: +F.currentBtcPrice || null, usdMxn: +F.usdMxn || null },
-    maestria: maes ? { ahorrado: Math.round(+maes.current || 0), meta: Math.round(+maes.target || 0), inicio: P.maestriaInicio || '' } : null,
+    // La fecha de la maestría va siempre, del maestro: el prompt de los perfiles la lee de aquí.
+    maestria: Object.assign({ inicio: P.maestriaInicio || '' }, maes ? { ahorrado: Math.round(+maes.current || 0), meta: Math.round(+maes.target || 0) } : {}),
     fase: ph ? (ph.tag + ' · ' + ph.title + ' (' + fmtF(ph.start) + ' – ' + fmtF(ph.end) + ')') : '',
     perfilElegido: invPref().perfil || null,
   };

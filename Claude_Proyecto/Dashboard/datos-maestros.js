@@ -330,7 +330,7 @@ window.CIFRAS = (function () {
   ];
 
   /* ── LA RUTINA DIARIA ─────────────────────────────────────────────────────────────────────
-     El horario completo: 58 bloques con sus subtareas. Estaba COPIADO en dashboard.html y en
+     El horario completo: 57 bloques con sus subtareas. Estaba COPIADO en dashboard.html y en
      Coach.html, 17.5 KB en cada uno, y era la estructura más grande y más tocada de las que
      había que mantener a mano en dos sitios. El 2026-08-24 se detectó que llevaban 6 días
      divergentes: 7 textos de la rutina de cabello mejorados solo en Coach.
@@ -381,7 +381,6 @@ window.CIFRAS = (function () {
     {id:"e4",dias:[4],gym:true,hora:"18:15",cat:"salud",corto:"🏋️ Brazos B",txt:"🏋️ Ejercicio: Brazos B — bíceps + tríceps"},
     {id:"k4",dias:[4],hora:"19:00",cat:"aprender",corto:"💰 Finanzas",txt:"💰 Finanzas: 30 min — categoriza los gastos de la semana y revisa cuánto bajó la deuda",link:{href:"../Finanzas/Finanzas.html",label:"💰 Abrir Finanzas"}},
     {id:"e5",dias:[5],gym:true,hora:"18:15",cat:"salud",corto:"🏋️ Abdomen",txt:"🏋️ Ejercicio: Abdomen — core + cardio"},
-    {id:"k5",dias:[5],hora:"19:00",cat:"creativo",corto:"📣 Post de GBM",txt:"📣 GBM: personaliza el post de venta ya escrito (precio/fecha) y publícalo en 1 comunidad real de inversión",link:{href:"#plantillas-mensajes",label:"Ver mensaje ya escrito"}},
     {id:"sa01",dias:[6],hora:"07:00",cat:"salud",corto:"Despertar",txt:"Despertar (sin alarma agresiva)"},
     {id:"sa03",dias:[6],hora:"07:18",cat:"salud",corto:"🍳 Desayuno",txt:"🍳 Preparar y desayunar tranquilo",link:{href:"../CuidadoPersonal/comida.html?s=desayunos",label:"Ver desayunos"}},
     {id:"sa04",dias:[6],gym:true,hora:"07:35",cat:"salud",corto:"🏋️ Pecho + cardio",txt:"🏋️ Ejercicio: Pecho + cardio + core"},
@@ -454,7 +453,7 @@ window.CIFRAS = (function () {
      la semana, el entregable que lo demuestra y cuándo y por qué cambia el foco. El Dashboard
      recomienda el tramo de hoy; Adán puede abrir cualquier otra ruta. */
   const HAB_FOCO = [
-    { id: 'ia', desde: '2026-10', hasta: '2026-11', horas: 5, semana: 'Dos sesiones del syllabus y el simulacro del domingo, con reloj.', entregable: 'El ISTQB CT-GenAI aprobado.', cambio: 'Al aprobar el CT-GenAI —o el 30 de noviembre— el foco pasa a Inglés: la solicitud a Esslingen.' },
+    { id: 'ia', desde: '2026-10', hasta: '2026-11', horas: 4, semana: 'Dos sesiones del syllabus, martes y jueves, y el simulacro del viernes, con reloj: las tres en el bloque de la noche del Plan Maestro. El domingo es de Didi.', entregable: 'El ISTQB CT-GenAI aprobado.', cambio: 'Al aprobar el CT-GenAI —o el 30 de noviembre— el foco pasa a Inglés: la solicitud a Esslingen.' },
     { id: 'ingles', desde: '2026-12', hasta: '2027-01', horas: 4, semana: 'Un borrador de la carta de motivación y un simulacro de entrevista grabado.', entregable: 'La solicitud a Esslingen enviada, en inglés.', cambio: 'Con la solicitud enviada, el foco pasa a Código: el proyecto para el Werkstudent.' },
     { id: 'codigo', desde: '2027-02', hasta: '2027-05', horas: 4, semana: 'Media hora diaria en tu proyecto, un commit por sesión.', entregable: 'Tu repositorio de pruebas en Python, público.', cambio: 'Con el proyecto publicado, el foco pasa a Networking: el Werkstudent se busca desde junio.' },
     { id: 'network', desde: '2027-06', hasta: '2027-08', horas: 2, semana: 'Cinco aplicaciones a Werkstudent y tres mensajes a tu red de Stuttgart.', entregable: 'Tres conversaciones en Stuttgart y tus aplicaciones enviadas.', cambio: 'En Alemania manda la maestría: el foco lo decide el semestre.' },
@@ -1073,7 +1072,7 @@ window.CIFRAS = (function () {
           ] },
         { n: 'El simulacro como termómetro',
           q: 'Saber que sabes no es lo mismo que contestar con reloj. El simulacro te dice cuándo estás listo; tu sensación, no.',
-          c: 'Un simulacro completo cada domingo, con reloj. Presentas cuando saques <b>34 de 46 o más dos veces seguidas</b> (el corte es 30). Cada pregunta fallada va a una lista con su sección del syllabus.',
+          c: 'Un simulacro completo cada viernes, con reloj, en el bloque de la noche del Plan Maestro. Presentas cuando saques <b>34 de 46 o más dos veces seguidas</b> (el corte es 30). Cada pregunta fallada va a una lista con su sección del syllabus.',
           r: [
             { t: 'propio', n: 'El simulacro de Mis Metas', nota: '40 preguntas y 46 puntos sacados del programa de estudio oficial' },
           ] },

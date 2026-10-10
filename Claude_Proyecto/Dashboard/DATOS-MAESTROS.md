@@ -321,7 +321,7 @@ tabla, en verde. Lo que recorte va a GBM.
 
 ### La rutina diaria
 
-`RUTINA_TASKS` — **58 bloques** con sus subtareas: el horario completo de los 7 días. No es un
+`RUTINA_TASKS` — **57 bloques** con sus subtareas: el horario completo de los 7 días. No es un
 marcador, se pide desde JS:
 
 ```js
@@ -904,7 +904,7 @@ Ninguna estructura está copiada entre archivos; todas se leen de aquí:
 | `DEUDAS_SEED` | Punto de partida de las deudas | `CIFRAS.DEUDAS_SEED` |
 | `GASTOS_20260901` | Las seis compras del 1-sep-2026 — las siembra Finanzas.html y las aplica la migración `_gastos20260901` | `CIFRAS.GASTOS_20260901` |
 | `MOVIMIENTOS_20260920` | Los tres movimientos del 19-sep-2026 — la venta de todo el Bitcoin ($39,500), el pago a la TC BBVA ($38,100) y el abono a Banamex ($3,000). Los pagos se llaman como la deuda para que `yaContado` los empareje con el mínimo previsto del mes. Los siembra Finanzas.html y los aplica `_liquidacion20260920` | `CIFRAS.MOVIMIENTOS_20260920` |
-| `RUTINA_TASKS` | 58 bloques del horario | `CIFRAS.rutina(base)` |
+| `RUTINA_TASKS` | 57 bloques del horario | `CIFRAS.rutina(base)` |
 | `SK` | 12 habilidades del radar: nivel con su evidencia (`desc`), peso por impacto en carrera y patrimonio con el plan de hoy (`w`), `porQue`, `prueba`, `mant` (el paso de la semana fuera del foco, con horas), `practica` y `pausa` | `CIFRAS.SK` |
 | `HAB_FOCO` | El foco de las habilidades, una a la vez y con fechas, alineado al Plan Maestro: cada tramo con horas, el paso de la semana, el entregable y cuándo cambia | `CIFRAS.HAB_FOCO` |
 | `PESO` | Altura (178 cm), meta (80 kg), objetivo y el histórico de pesajes (2: 75 kg el 2-sep-2026, 78 el 13-sep) con IMC derivado. Salud lo siembra en Peso & Medidas en cada carga | `CIFRAS.PESO` |
