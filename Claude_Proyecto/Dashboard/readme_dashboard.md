@@ -981,27 +981,32 @@ Tu año.
 
 ---
 
-## En qué invertir tu tiempo — "mesa de estudio"
+## En qué invertir tu tiempo — "mesa de estudio" con el plan a la vista
 
-`renderSkills()` pinta en `#habOvr`, `#habRuta`, `#habFoco`, `#habRank` y la franja de Didi
-(`#didiStrip`). Diseño de `diseno-tiempo/`.
+`renderSkills()` pinta en `#habOvr`, `#habRuta`, `#habFoco` y `#habRank`. Adán: *"llena con más
+información la sección… hay secciones que ni siquiera me aportan nada y están muy separadas o
+divididas… deben ser cosas que me aporten a mis metas"*. Gobierna el prompt `skills`: el paso de la
+semana con horas y entregable, cuándo cambia el foco y por qué, y sus tres indicadores. Todo lleva foto
+(`apFotoSk()`, la misma de *Hoy aprendes*).
 
-**La cabecera es una fila** (91 px): eyebrow y título a 36 px; a la derecha el nivel general
-(`50 /100`, su barra y *"llevar IA de 45 a 55 lo sube a 51"*, calculado con `calcOVRcon()`).
-El cuerpo ocupa los 741 px restantes a 1600×1000 (`flex:1` sobre `.slide-inner`, que aquí no se
-centra); la lectura se detiene en 80 caracteres en monitores anchos.
+**Arriba, los tres indicadores del prompt** (`#habOvr`), junto al título: el **nivel general** (`50 /100`,
+su barra y *"llevar IA de 45 a 55 lo sube a 51"*, con `calcOVRcon()`); **el entregable del foco** —el del
+tramo de hoy, los días que le quedan (`habDiasA()`) y, si es el CT-GenAI, cómo vas en los simulacros contra
+la meta de la tarea de la Fase 1 (`habSimTxt()`: «34 de 46 dos veces seguidas»; si no, los pasos de su
+ruta)—, y **tu semana de estudio** (`habSemana()`): las horas del foco más el mantenimiento de las demás
+(`mant.h`, sin las de pausa) y el rato al volante, que abre *Qué escuchar*. Bajo 1500 px van en su propia fila.
 
-**Tres tarjetas a toda la altura**, columnas 250 · fluida · 330 px (la del paso, 828 px a 1600):
+**Abajo, tres columnas** (22 % · fluida · 24 %):
 
-| Tarjeta | Qué lleva |
+| Columna | Qué lleva |
 |---|---|
-| **La ruta** | La habilidad abierta con icono, nivel y peso; chips *Esta semana* / nivel / su papel en el plan (*el foco del plan*, *en mantenimiento*, *en pausa*) y, si tiene tramo de foco, cuándo y cuándo cambia (`.hf-cambio`); los pasos como **línea de tiempo**. Abajo, *Cambiar a …* (el siguiente foco del plan) y *Ajustar en Coach* |
-| **El paso** | `Paso 01 de 9` · arriba, el plan de la habilidad (`.hf-planes`): **Por qué ahora** (`porQue`), **Esta semana** con horas (el tramo de foco, o `mant` si está en mantenimiento) y **Se demuestra con** (`prueba`), y dónde se practica · título en Fraunces 44 px · **Por qué este paso** · **Qué hacer** · **Con qué**: el libro con su portada de la biblioteca, autor, páginas, nota y *Qué es* (abre la ficha) · el **estante** con los libros de la ruta · pie con *Al cerrarlo sigue…* y **Siguiente paso** |
-| **Lo que sabes** | Las 12 ordenadas por retorno —peso por lo que falta; el peso es el impacto en carrera y patrimonio con el plan de Alemania— y medidas por nivel; *FOCO* en la del tramo de hoy y *EN PAUSA* en las de `pausa` (`PRIORIDAD_EXCLUIDAS` sale de ahí). Leyenda, nota y el rato al volante |
+| **El plan de foco** (`#habRuta`) | Un tramo de `CIFRAS.HAB_FOCO` por habilidad, a toda la altura: foto, fechas, horas a la semana, entregable, qué hacer cada semana, el avance de su ruta y, el de hoy, *Ahora · N días* y cuándo cambia. Tocar uno abre su ruta. Al pie, qué pasa después del último tramo. *Ajustar en Coach →* |
+| **El paso** (`#habFoco`) | La ruta abierta: su foto, nivel, peso y retorno, y sus pasos en círculos (lo hecho, el de ahora). Si no es el foco de hoy, un aviso con *Volver al foco →*. A la izquierda la lectura: el paso en Fraunces, **Por qué este paso**, **Qué hacer**, **Con qué** (el libro con su portada y *Qué es*, o el recurso con `pfRecursoHtml()`), el estante con los libros de la ruta y **Lo que viene** (el paso siguiente y lo que pide). Al lado (`.hf-lado`): **Esta semana** (las horas del tramo o el mantenimiento), **Se demuestra con** (`prueba`), **Por qué esta habilidad** (`porQue`), **Dónde estás** (`desc`, la evidencia del nivel) y **Dónde se practica**. Pie con *‹ Anterior* y *Siguiente paso ›* |
+| **Tus 12 habilidades** (`#habRank`) | Ordenadas por retorno —peso por lo que falta: dónde una hora sube más tu nivel— y medidas por nivel; cada una con su foto, *FOCO* o *EN PAUSA* y **lo que toca esta semana**: el foco, sus horas de tramo; las demás, su `mant`. La marca es el siguiente nivel de la que tienes abierta |
 
-**La lectura desplaza por dentro** (`.hf-lectura`) y estante y pie se quedan a la vista. Un
-recurso que no es libro sale con `pfRecursoHtml()`; el estante solo aparece con dos libros o más,
-y las doce rutas van paso a paso con su `r` (`habPasos` todavía sabe leer el formato viejo).
+La lectura y el lado desplazan por dentro; a 2048×1040 —la pantalla de Adán— no desplaza nada. Un
+recurso que no es libro sale con `pfRecursoHtml()`; el estante solo aparece con dos libros o más, y las
+doce rutas van paso a paso con su `r` (`habPasos` todavía sabe leer el formato viejo).
 
 **El foco lo pone el plan** (prompt de la página: *una habilidad en foco a la vez; las demás, en
 mantenimiento*). `CIFRAS.HAB_FOCO` es una lista de tramos —IA de oct a nov 2026 (el CT-GenAI),
@@ -1013,15 +1018,15 @@ recuerda en `dash_habfoco_v1`. Mi Día no la sigue: *Tu avance* y *Al volante* v
 (`aprendeFoco()`) o con lo que eligió ahí con «Siguiente». Los `{{marcadores}}` de las rutas se resuelven al cargar
 (`cifrarLiterales(APRENDIZAJE)`).
 
-**Tamaños.** Bajo 940 px de alto bajan un escalón y el estante se pliega; bajo 1180 px de ancho
-las columnas son 236 · fluida · 300; en el celular la ruta es una tira de números de 46 px y las
-tarjetas van una bajo otra (la de la ruta con `min-width:0`, sin eso los chips la estiraban).
+**Tamaños.** Hasta 1050 px de alto, el texto de cada tramo va a una línea; bajo 940 px la lectura baja un
+escalón y el estante se pliega; bajo 1280 px de ancho las columnas son 260 · fluida · 290 y el plan de la
+habilidad pasa debajo de la lectura; en el celular todo va en una columna y en el flujo.
 
 ---
 
 ## Qué escuchar mientras manejas
 
-El panel que abren la franja de Didi (`#didiStrip`), el AHORA en un bloque de Didi y *Al volante* de
+El panel que abren *Tu semana de estudio* en *En qué invertir tu tiempo*, el AHORA en un bloque de Didi y *Al volante* de
 Hoy aprendes (`abrirDidi()`). Lo gobierna el prompt `didi`; su diseño es la dirección Main de
 `diseno-escuchar/`.
 
