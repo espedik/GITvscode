@@ -252,6 +252,7 @@ pero el nombre de la variable se queda corto.
 | `{{maestria}}` `{{maestriaMeta}}` | $53,740 de $398,000 — la meta es lo que cuesta irse (migraciones `_alemania20261003` y `_ahorroReal20261003`) | vivo |
 | `{{maestriaEscuela}}` | Esslingen — Automotive Systems M.Eng. | constante |
 | `{{maestriaInicio}}` `{{decisionMaestria}}` | 1 sep 2027 · 31 may 2027, la decisión (`PROYECTO.maestriaInicio`, `maestriaDecision`) | constantes, con `fmt: 'fecha'` |
+| `{{hyroxSede}}` `{{hyroxFecha}}` | HYROX Guadalajara · 20 mar 2027, el primer Hyrox (`PROYECTO.hyroxSede`, `hyroxFecha`). Lo leen Mis Metas, la lista de salida y Coach | constantes |
 | `{{metaMillon}}` | 31 dic 2031 — el cierre de la última fase del Plan Maestro | derivada de `PHASES` |
 
 **El fondo de emergencia son los CETES** (Adán, 20-sep-2026: *"mi fondo de emergencia van a ser los

@@ -257,7 +257,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .tile-glow{box-shadow:0 10px 40px rgba(0,0,0,.35),0 0 0 1px rgba(var(--ov),.02),inset 0 1px 0 rgba(var(--ov),.06)}
 .grid{display:grid;gap:clamp(12px,1.4vw,20px)}
 .g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g6{grid-template-columns:repeat(6,1fr)}
-.g-metas{grid-template-columns:1.7fr 1fr}
+.g-metas{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr)}
 /* Fila secundaria de Mi Día — "Hoy toca" (gym, columna del medio) más ancho que "Importante
    este mes"/"Ideas para hoy" a los lados (2026-08-09, pedido explícito: los de los lados más
    chicos de ancho, el espacio ganado para el de ejercicio). Responsivo en @media(max-width:1024px)
@@ -289,7 +289,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .md-eps-all:hover{text-decoration:underline}
 
 @media(max-width:1024px){#miDiaSecundarios{max-height:none!important;flex:none!important}}
-@media(max-width:900px){.g-metas{grid-template-columns:1fr}}
+@media(max-width:900px){.g-metas{grid-template-columns:minmax(0,1fr)}}
 
 /* ═══ PANTALLA 2 · MIS METAS — "panel de trayectoria" (2026-08-30) ═══════════════════════
    Rediseño pedido por Adán: "la sección de corto, mediano y largo plazo, dame un diseño
@@ -374,7 +374,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .mg-age-n{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--text3);white-space:nowrap}
 
 /* ─── Las dos columnas ───────────────────────────────────────────────── */
-.mg-col{display:flex;flex-direction:column;min-height:0;gap:7px}
+.mg-col{display:flex;flex-direction:column;min-height:0;min-width:0;gap:7px}
 .mg-col-hd{display:flex;align-items:center;gap:8px;flex-shrink:0;padding-bottom:6px;
   border-bottom:1px solid rgba(var(--ov),.1)}
 .mg-col-t{font-family:var(--mono);font-size:clamp(9px,.85vw,11px);font-weight:700;
@@ -391,19 +391,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    A tres caben las 8 en tres filas, y la ficha sigue siendo más ancha que las de largo
    plazo, que es lo que se pidió el 2026-08-11 ("que esten mas grandes las fotos de metas a
    mediano y corto plazo"). */
-.mg-deck{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);
-  grid-auto-rows:minmax(78px,1fr);gap:clamp(7px,.7vw,10px);overflow-y:auto;
+.mg-deck{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-auto-rows:minmax(126px,1fr);gap:clamp(7px,.7vw,10px);overflow-y:auto;
   /* El padding inferior no es decorativo: con filas `1fr` el redondeo deja 1px de desborde y
      el conteo de pasos de la última fila quedaba pegado al borde del slide. */
   padding:0 2px 4px 0}
-.mg-deck-sm{grid-template-columns:repeat(2,1fr);grid-auto-rows:minmax(76px,1fr)}
+.mg-deck-sm{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(122px,1fr)}
 /* Una ficha suelta en la última fila de largo plazo llena el ancho, para no dejar un hueco. */
 .mg-deck-sm>.mg-card:last-child:nth-child(odd){grid-column:1/-1}
 
 /* ─── La ficha ───────────────────────────────────────────────────────── */
 /* `--mgc` es EL indicativo: el color del estado tiñe el chip, las marcas de paso, el número
    y el borde de la foto. Una sola variable por ficha en vez de cuatro colores repetidos. */
-.mg-card{--mgc:var(--text3);display:flex;flex-direction:column;gap:4px;min-height:0}
+.mg-card{--mgc:var(--text3);display:flex;flex-direction:column;gap:4px;min-height:0;min-width:0}
 .mg-card.on{--mgc:var(--ac1)}
 .mg-card.ok{--mgc:var(--g)}
 .mg-ph{position:relative;flex:1;min-height:0;overflow:hidden;border-radius:3px;cursor:pointer;
@@ -446,6 +446,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .mg-steps{color:var(--mgc)}
 .mg-steps i{font-style:normal;color:var(--text3);margin:0 2px}
 .mg-steps small{color:var(--text3);font-weight:500;letter-spacing:.1em;margin-left:3px}
+/* El plan en la ficha (META_PLAN): la fecha con el resultado medible, y lo que sigue con su día —en cian si
+   es esta semana, en rojo si se pasó—. Un renglón cada uno; el texto completo va en el `title`. */
+.mg-ph{min-height:58px}
+.mg-pl{display:flex;flex-direction:column;gap:1px;flex-shrink:0;min-width:0}
+.mg-pl-l{display:block;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-size:clamp(10px,.62vw,11.5px);line-height:1.4;color:var(--text2)}
+.mg-pl-l b{display:inline-block;min-width:6.6em;margin-right:6px;font-family:var(--mono);font-size:.8em;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
+.mg-pl-sig b{color:var(--text3)}
+.mg-pl-sig.pronto b,.mg-pl-f.pronto{color:var(--cy)}
+.mg-pl-sig.tarde b,.mg-pl-f.tarde{color:var(--r)}
+.mg-pl-f{font-weight:600;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 /* El dinero real de BYD y Maestría: barra continua y en el color secundario del slide, para
    que no se confunda con las marcas de paso — son dos avances distintos de la misma meta. */
 .mg-money{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-top:1px}
@@ -459,7 +471,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   .mg-bay-row{flex-wrap:wrap;gap:10px}
   .mg-eqw{order:3;flex-basis:100%}
   .mg-d{display:none}
-  .mg-deck{grid-template-columns:repeat(2,1fr)}
+  .mg-deck{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 /* ═══ PANTALLA 4 · HABILIDADES BASE — "consola táctica" (2026-08-23) ═══════════════════════
    Rediseño elegido por Adán entre 4 direcciones que se le mostraron renderizadas (consola
@@ -2665,6 +2677,60 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .md-sig span:last-child{font-size:12.5px;font-weight:600;line-height:1.4}
 .md-avance-nota{font-size:12px;line-height:1.55;color:var(--text3)}
 .md-hair{border-top:1px solid rgba(var(--ov),.09)}
+/* «Tu plan» (META_PLAN, `mdPintarPlan()`): arriba el resultado, la fecha y lo siguiente; el sistema de la
+   semana; los pasos con fecha, que se palomean en su renglón; y cómo sabes que vas bien. En esta vista no hay
+   «Marcar como dominado» ni puntos: eso es del temario. */
+.md-plan-on .md-btn-marcar,.md-plan-on .md-dots{visibility:hidden}
+.md-ix-plan .md-ix-n{background:rgba(var(--w-rgb),.18);color:var(--w);font-size:9px}
+.md-ix-plan.on .md-ix-n{background:var(--cy);color:#05050a}
+.md-ix-plan .md-ix-t small{display:block;margin-top:2px;font-size:11px;font-weight:500;color:var(--text3)}
+.md-ix-h{margin:8px 0 2px;padding:12px 10px 4px;border-top:1px solid rgba(var(--ov),.09);font-family:var(--mono);font-size:9.5px;
+  font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
+.mp{display:flex;flex-direction:column;gap:24px}
+.mp-top{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.75fr) minmax(0,1.3fr);gap:12px}
+.mp-box{display:flex;flex-direction:column;gap:7px;padding:14px 16px;border-radius:6px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.09)}
+.mp-box b{font-size:15.5px;line-height:1.4;color:var(--text);font-weight:700}
+.mp-res b{font-family:var(--font-title);font-size:19px;font-weight:600;line-height:1.3}
+.mp-box small{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3)}
+.mp-box small.tarde{color:var(--r)}
+.mp-sig{background:rgba(var(--cy-rgb),.06);border-color:rgba(var(--cy-rgb),.28)}
+.mp-sig.pronto small{color:var(--cy)}
+.mp-sig.tarde{background:rgba(var(--r-rgb),.06);border-color:rgba(var(--r-rgb),.34)}
+.mp-sig.tarde small{color:var(--r)}
+.mp-sig.hecho{background:rgba(var(--g-rgb),.07);border-color:rgba(var(--g-rgb),.3)}
+.mp-pausa{padding:12px 16px;border-radius:6px;font-size:14.5px;line-height:1.6;color:var(--text2);border:1px dashed rgba(var(--ov),.22)}
+.mp-pausa b{color:var(--text)}
+.mp-sec{display:flex;flex-direction:column}
+.mp-sec-hd{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding-bottom:8px;border-bottom:1px solid rgba(var(--ov),.1)}
+.mp-sec-hd small{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--text3)}
+.mp-sis{display:grid;grid-template-columns:200px minmax(0,1fr);gap:18px;padding:11px 0;border-bottom:1px solid rgba(var(--ov),.06)}
+.mp-sis-c{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--cy);padding-top:2px}
+.mp-sis-q{font-size:14.5px;line-height:1.55;color:var(--text2)}
+.mp-paso{display:grid;grid-template-columns:22px 118px minmax(0,1fr) auto;gap:14px;align-items:baseline;width:100%;text-align:left;cursor:pointer;
+  padding:11px 8px;border:0;border-bottom:1px solid rgba(var(--ov),.06);background:none;font-family:inherit;transition:background .15s}
+.mp-paso:hover{background:rgba(var(--ov),.04)}
+.mp-chk{width:20px;height:20px;border-radius:5px;border:1.5px solid rgba(var(--ov),.32);display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;align-self:center}
+.mp-f{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--text3);white-space:nowrap}
+.mp-t{font-size:14.5px;line-height:1.5;color:var(--text)}
+.mp-t i{margin-left:8px;font-style:normal;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--w);white-space:nowrap}
+.mp-c{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3);white-space:nowrap}
+.mp-paso.pronto .mp-c,.mp-paso.pronto .mp-f{color:var(--cy)}
+.mp-paso.tarde .mp-c,.mp-paso.tarde .mp-f{color:var(--r)}
+.mp-paso.tarde .mp-chk{border-color:var(--r)}
+.mp-paso.hecho .mp-chk{background:var(--g);border-color:var(--g);color:#05050a}
+.mp-paso.hecho .mp-t{color:var(--text3);text-decoration:line-through;text-decoration-color:rgba(var(--ov),.35)}
+.mp-paso.hecho .mp-c{color:var(--g)}
+.mp-dos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+@media(max-width:760px){
+  .mp-top{grid-template-columns:minmax(0,1fr)}
+  .mp-sis{grid-template-columns:minmax(0,1fr);gap:3px}
+  .mp-paso{grid-template-columns:22px minmax(0,1fr) auto;row-gap:3px}
+  .mp-chk{grid-row:1/3}
+  .mp-f{grid-column:2;grid-row:1}
+  .mp-c{grid-column:3;grid-row:1}
+  .mp-t{grid-column:2/-1;grid-row:2}
+}
 /* Barra de dinero real (metas BYD y Maestría, ver METAS_MONEYBAR) y el bloque de Tu año: de solo
    lectura, en Recursos porque acompañan a la ficha entera. */
 .meta-detail-moneybar{padding:12px 14px;background:linear-gradient(135deg,rgba(var(--cy-rgb),.08),rgba(var(--cy-rgb),.01));border:1px solid rgba(var(--cy-rgb),.18);border-radius:5px}
@@ -2724,6 +2790,7 @@ body.rail-on{--pad-rail:max(6vw,230px)}
   .md-indice{flex:none;border-right:none;border-bottom:1px solid rgba(var(--ov),.1)}
   .md-col-hd{padding:12px 16px 8px}
   .md-indice-list{flex:none;flex-direction:row;overflow-x:auto;overflow-y:hidden;gap:6px;padding:0 16px 12px;scrollbar-width:none}
+  .md-ix-h{display:none}   /* en la tira el plan ya va primero: su etiqueta sobra */
   .md-indice-list::-webkit-scrollbar{display:none}
   .md-ix{width:auto;flex:none;max-width:210px;grid-template-columns:22px minmax(0,1fr);gap:7px;align-items:center;padding:5px 11px 5px 6px;
     border-color:rgba(var(--ov),.1);background:rgba(var(--ov),.03)}
@@ -12027,13 +12094,13 @@ const META_DETALLE={
       {t:"Entrena Sled Push/Pull",d:"Inclinación agresiva (~45°), pasos cortos y potentes sin detenerte, esfuerzo al 85% (no sprint) — el calzado con buen agarre importa más aquí que en otra estación."},
       {t:"Entrena Wall Balls",d:"La última estación, con las piernas cansadas: sentadilla profunda, espalda recta, lanza a la altura correcta y recibe en sentadilla — la técnica evita repeticiones no válidas."},
       {t:"Tu base ya existe",d:"Fuerza cuatro días, intervalos el miércoles y cardio largo el viernes — cambia el viernes por intervalos de carrera (6-8×400 m), empezando 8-10 semanas antes del evento."},
-      {t:"Fecha confirmada",d:"HYROX Ciudad de México: 30 oct al 1 nov de 2026, Centro Banamex (Hipódromo de las Américas) — el costo no salió confirmado en la búsqueda, revísalo en el registro oficial.",href:"https://mexico.hyrox.com/event/hyrox-mexico-city-season-26-27-glbt3x",label:"Registro oficial HYROX CDMX"},
-      {t:"Sedes alternas",d:"Si prefieres o se te pasó CDMX: Dallas, TX (18-22 nov 2026) y Chicago, IL (11-15 feb 2027), ya confirmadas en Norteamérica."},
+      {t:"La fecha: {{hyroxSede}}",d:"Del <b>19 al 21 de marzo de 2027</b> en Expo Guadalajara, confirmado en hyrox.com el 11 de octubre de 2026. Tu día es el <b>sábado {{hyroxFecha}}</b>: el domingo es de Didi. La venta de boletos todavía no abre; pide el aviso en su página. El de Ciudad de México (29 oct–1 nov 2026) quedó a tres semanas de tu rutina nueva, sin el bloque de carrera: no da tiempo de llegar preparado.",href:"https://hyrox.com/event/hyrox-guadalajara/",label:"HYROX Guadalajara · hyrox.com"},
+      {t:"Si Guadalajara no se puede",d:"Monterrey es del 16 al 18 de abril de 2027, en Av. Fundidora 501 (hyrox.com), pero ya cae en la Fase 2, que no lleva viajes fuera de la lista de salida. HYROX nació en Alemania: allá hay carreras cada temporada, y la de allá puede ser la segunda."},
       {t:"Últimas 2 semanas",d:"Baja el peso en brazos/piernas y prioriza el descanso — llegar fresco importa más que un último entrenamiento fuerte."},
-      {t:"💸 Costo de inscripción y cómo registrarte",d:"El registro se hace en <b>mexico.hyrox.com</b>, evento \"HYROX Ciudad de México\". El precio de atleta <b>no está publicado</b> en las páginas de referencia — hay que verlo en el registro oficial, y sube por oleadas: entre más te tardes, más caro. Lo que sí está confirmado: la <b>entrada de espectador cuesta $250 MXN</b>, por si vas a llevar a alguien. Regístrate en cuanto abran las inscripciones, no en las últimas semanas."},
-      {t:"📍 Dónde y cuándo, exacto",d:"<b>30 de octubre al 1 de noviembre de 2026</b>, en el <b>Centro Banamex</b> — Av. del Conscripto 311, Lomas de Sotelo, 11610, CDMX. Está a ~20 min de tu casa manejando y es la misma zona del Hipódromo de las Américas. Elige tu día con cuidado: el <b>viernes 30</b> suele estar menos saturado y el <b>domingo 1</b> es el de más ambiente. Si eliges sábado, ojo con tus turnos de Didi: ese día tienes 10h agendadas."},
-      {t:"📅 Cuenta regresiva desde hoy",d:"Del 17 de agosto al 30 de octubre son <b>~10 semanas</b>, que es justo la ventana de preparación que recomienda tu propio plan (8-10 semanas de intervalos antes del evento). Si vas a correrlo este año, <b>el bloque de carrera empieza ya</b>: 6-8×400m los sábados, sumados a lo que ya haces. Si prefieres llegar mejor preparado, la siguiente opción en Norteamérica es <b>Chicago, 11-15 feb 2027</b>."},
-      {t:"🗓️ Plan de 10 semanas para llegar a la meta",d:"Del 18 de agosto al 30 de octubre hay exactamente 10 semanas — la ventana que tu propio plan pide. <b>Semanas 1-3:</b> suma 1 día de carrera a lo que ya haces, 6×400 m con 90 s de descanso, y aprende la técnica de las 3 estaciones que nunca has hecho (SkiErg, trineo, wall balls) sin buscar peso todavía. <b>Semanas 4-6:</b> mete el trabajo específico — 4 rondas de \"1 km + 1 estación\" seguidas, que es lo que de verdad se siente el día del evento; el error de todos es entrenar carrera y fuerza por separado y llegar sin saber cómo se sienten juntas. <b>Semanas 7-8:</b> 2 simulacros parciales de 4 estaciones al peso real de Men Open. <b>Semana 9:</b> un simulacro completo, cronometrado, para tener tu tiempo de referencia. <b>Semana 10:</b> bajas todo a la mitad y descansas.",href:"https://hyrox.com/training/",label:"Planes oficiales de entrenamiento HYROX"},
+      {t:"💸 Costo de inscripción y cómo registrarte",d:"El registro se hace en <b>hyrox.com</b>, evento «HYROX Guadalajara». El precio de atleta <b>todavía no está publicado</b> —la venta no ha abierto— y sube por oleadas: entre más te tardes, más caro. Pide el aviso de venta y compra en la primera. El transporte y el hotel salen de tu gasto personal de la quincena, nunca del ahorro de GBM."},
+      {t:"📍 Dónde y cuándo, exacto",d:"<b>19 al 21 de marzo de 2027</b>, en <b>Expo Guadalajara</b> — Av. Mariano Otero 1499, Verde Valle, 44550 Guadalajara, Jal. El horario de cada categoría sale cerca de la fecha: elige la ola del <b>sábado</b> si Men Open corre ese día, y regresa esa misma noche."},
+      {t:"📅 Cuenta regresiva",d:"Del 11 de octubre de 2026 al {{hyroxFecha}} son <b>23 semanas</b>: 12 de base con tu rutina nueva —fuerza, intervalos el miércoles y cardio largo el viernes— y 11 de bloque específico desde el 4 de enero. Cada paso, con su fecha, está en <b>Tu plan</b>, arriba del temario."},
+      {t:"🗓️ Las 11 semanas del bloque específico",d:"Del 4 de enero al día de la carrera. <b>Semanas 1-3:</b> el viernes deja el cardio largo por 6×400 m con 90 s de descanso, y aprendes la técnica de las 3 estaciones que nunca has hecho (SkiErg, trineo, wall balls) sin buscar peso. <b>Semanas 4-5:</b> 4 rondas de «1 km + 1 estación» seguidas —el error de todos es entrenar carrera y fuerza por separado— y, el sábado 6 de febrero, el medio Hyrox de prueba. <b>Semanas 6-8:</b> parciales al peso de Men Open y, el sábado 27 de febrero, el Hyrox completo de práctica. <b>Semana 9:</b> lo mismo, sin subir. <b>Semanas 10-11:</b> desde el 8 de marzo, todo a la mitad: llegas fresco.",href:"https://hyrox.com/training/",label:"Planes oficiales de entrenamiento HYROX"},
       {t:"📅 Ver todas las fechas en México y registrarte",d:"El listado oficial con todos los eventos de México, sus fechas y el estado de las inscripciones. Los precios suben por oleadas conforme se llena, así que registrarse temprano cuesta menos. Aquí también aparecen las sedes nuevas cuando se anuncian — es la página que hay que revisar, no una fecha copiada en este dashboard que puede quedar vieja.",href:"https://mexico.hyrox.com/",label:"HYROX México — todos los eventos y registro"},
       {t:"⏱️ Qué tiempo apuntar en tu primera",d:"Un debutante de Men Open que llega entrenado suele terminar entre <b>1h20 y 1h40</b>. La mediana global de la categoría ronda 1h30. Para una primera vez, la meta correcta no es un tiempo: es <b>terminar sin caminar los últimos 2 km</b> y sin repeticiones anuladas en wall balls. El tiempo lo persigues en la segunda.",href:"https://hyroxdatalab.com/",label:"Ver tiempos reales por estación y categoría"},
     ]},
@@ -12176,7 +12243,7 @@ const META_DETALLE={
       {t:"Lo que le hace a tus otras metas",d:"Todo lo que entrenas compite con esto:",list:["<b>Hyrox.</b> Parr y colegas (<i>PLOS ONE</i>, 2014) midieron que beber después de entrenar reduce la síntesis de proteína muscular <b>24% aunque comas proteína</b>, y 37% si solo comes carbohidratos. Una noche de copas es el entrenamiento del día medio tirado","<b>Sueño.</b> Te duerme rápido, pero rompe el REM de la segunda mitad de la noche y te despierta a las 4. Tu hábito “Dormir 7 h” cuenta horas, no calidad","<b>Peso.</b> 7 kcal por gramo: cuatro cervezas son ~600 kcal, más lo que se come a esa hora. Tus registros de peso lo van a enseñar en un mes","<b>Alemán, ajedrez, ISTQB.</b> La resaca es un día perdido, y la del sábado es el domingo entero"],href:"https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0088384",label:"Parr et al. 2014 · alcohol y síntesis de proteína"},
       {t:"Lo que cuesta en dinero",d:"Saca de <b>Finanzas</b> lo que gastaste en bares, alcohol de súper y salidas los últimos 3 meses, y divídelo entre 3. Ese número mensual, puesto <b>extra a la BBVA</b> ({{tcBbva}}), la deja en $0 antes. La cuenta que más duele: <b>cada $1,000 al mes en copas son $12,000 al año</b> que no bajan la deuda ({{deudaCara}} en tarjeta). El alcohol es el único gasto que te cobra dos veces: la copa y el interés de la copa."},
       {t:"Didi y el alcoholímetro: cero",d:"CDMX: <b>0.4 mg/L</b> de aire espirado (0.8 g/L en sangre) = <b>arresto de 20 a 36 horas</b> en el Torito, <b>inconmutable</b> —no se paga ni lo cumple otro—, más multa y puntos de licencia. Para <b>conductores de transporte de pasajeros el límite es cero</b>. Un solo positivo un viernes te cuesta el fin de semana de Didi, la cuenta y posiblemente el trabajo en ALTEN. Y no hace falta el operativo: con el pasajero atrás, “una sola” ya es un riesgo que no puedes pagar.",href:"https://web.didiglobal.com/mx/articulos/limite-de-alcohol-para-conducir-en-mexico/",label:"Límite de alcohol para conducir · Didi México"},
-      {t:"Ponle fecha y cuenta los días",d:"Empieza un día <b>concreto</b> —mañana, no “el lunes”— y cuenta. Dos formas, usa las dos: la app <b>I Am Sober</b> (gratis: contador de días, dinero y calorías que no gastaste, y los motivos que escribiste el día 1, que es lo que relees el día 12) y un <b>hábito nuevo en tu app de Hábitos: “Cero alcohol”</b>, diario, cadena que no se rompe. Primera meta: <b>30 días</b> — si empiezas el 15 de septiembre, el día 30 es el <b>14 de octubre</b>, y al Hyrox llegas con 46 días limpios. Luego 90. Luego el año.",href:"https://iamsober.com/",label:"I Am Sober · contador de días"},
+      {t:"Ponle fecha y cuenta los días",d:"Empieza un día <b>concreto</b> —mañana, no “el lunes”— y cuenta. Dos formas, usa las dos: la app <b>I Am Sober</b> (gratis: contador de días, dinero y calorías que no gastaste, y los motivos que escribiste el día 1, que es lo que relees el día 12) y un <b>hábito nuevo en tu app de Hábitos: “Cero alcohol”</b>, diario, cadena que no se rompe. Primera meta: <b>30 días</b> — si empiezas el 15 de septiembre, el día 30 es el <b>14 de octubre</b>. Luego 90 —tu plan te dice qué día—. Luego el año.",href:"https://iamsober.com/",label:"I Am Sober · contador de días"},
       {t:"Las primeras 4 semanas: qué esperar",d:"Para que no te agarre de sorpresa y lo confundas con “no está funcionando”:",list:["<b>Semana 1.</b> Duermes peor y estás irritable — es el rebote, y pasa. Antojo fuerte de azúcar: es normal, el cuerpo busca lo que el alcohol le daba","<b>Semana 2.</b> El sueño mejora de golpe, baja la hinchazón de la cara y las manos, y despiertas sin la boca seca","<b>Semanas 3-4.</b> Energía estable, piel, presión arterial, ánimo más parejo, y la primera vez que ves bajar el peso sin cambiar nada más","<b>Después del mes.</b> Lembke: ~4 semanas es lo que tarda el sistema de recompensa en reajustarse; antes de eso todo se siente plano. No es que no funcione: es la balanza volviendo al centro"]},
       {t:"Cambia el guion social",d:"Ten la respuesta lista <b>antes</b> de que pregunten: <i>“Estoy en preparación para el Hyrox, no estoy tomando”</i> — es verdad y nadie discute con eso. Pide <b>agua mineral con limón o cerveza sin alcohol desde el primer round</b>: el primer trago es el que abre la puerta, el quinto solo la cruza. Y las primeras semanas, menos bar y más cosas donde no se bebe: ajedrez presencial, alberca, gym, la clase de alemán. Los amigos que solo existen con alcohol de por medio te van a enseñar algo en este mes."},
       {t:"Los disparadores que te conocen",d:"Mapea los tuyos, por escrito: viernes después del trabajo, después de una cita, fiesta familiar, ver el partido, una semana mala de deudas. Para cada uno, <b>un plan concreto de qué haces en su lugar</b>. Y la conexión que importa: <b>esta meta y la de las citas se disparan la una a la otra</b> — el alcohol baja la guardia para lo segundo y lo segundo pone alcohol enfrente. Dejarlas juntas es más fácil que por separado, porque le quitas al ciclo sus dos patas a la vez."},
@@ -12193,6 +12260,406 @@ const META_DETALLE={
 };
 // Barra de dinero real (BYD y Maestría) — se recalcula en cada renderMetasSlide() con datos reales
 // de Finanzas y la usa abrirMetaDetalle() para pintarla también dentro del overlay de detalle.
+// ── El plan de cada meta. Adán, 10-oct-2026: "las metas, corto, mediano y largo, no me ayudan a nada, no me
+//    das la suficiente información para ejecutar estos planes". El prompt de Mis Metas manda: meta = resultado
+//    medible + fecha + sistema, y toda meta activa tiene un siguiente paso con fecha. META_DETALLE es lo que hay
+//    que saber; META_PLAN es lo que hay que HACER:
+//      meta     el resultado, medible
+//      fecha    'AAAA-MM-DD' o 'AAAA-MM' · {clave} del maestro · {tarea} de PHASES · {fase, inicio} · {racha, dias, si}
+//      pausa    la meta espera su turno hasta `desde`: lo que no cabe en la semana se pausa con fecha, no se abandona
+//      sistema  [{c: cuándo, q: qué}], en los bloques que ya tiene tu rutina (CIFRAS.rutina())
+//      pasos    [{f, t}] o {tarea}. Se palomean en `metas_plan_v1`; los {tarea} son la MISMA casilla del Plan Maestro
+//               (`coach_checks_v1`), con la fecha y el texto de PHASES: no se copia nada
+//      vas      cómo sabes que vas bien · si: qué haces si te atrasas
+//    Revisado el 11-oct-2026: HYROX en hyrox.com (Guadalajara 19–21 mar 2027, Monterrey 16–18 abr 2027, CDMX
+//    29 oct–1 nov 2026), y los capítulos y objetivos del CT-GenAI en `EXAMEN_GENAI.objetivos`.
+const META_PLAN={
+  istqbgenai:{
+    meta:'Aprobar el CT-GenAI con 30 de 46 puntos o más (el corte oficial, 65 %)',
+    fecha:{tarea:'a1-7'},
+    sistema:[
+      {c:'Lun · Mié · Jue · 20:00–20:45',q:'Los primeros 45 minutos del bloque del Plan Maestro: un objetivo GenAI-x.y.z del syllabus. Lo lees y escribes en una línea qué pide saber.'},
+      {c:'Diario',q:'La pregunta del ISTQB en Hoy aprendes: contéstala antes de ver el porqué y lee la cita del syllabus.'},
+      {c:'Sábado · 15:30–16:30',q:'Desde el 19 de diciembre, un simulacro completo de 60 minutos, en el tiempo libre antes del Didi de la tarde.'}
+    ],
+    pasos:[
+      {f:'2026-10-13',t:'Confirma con Brightest el día y la hora exactos de tu examen y apúntalos en tu calendario.'},
+      {f:'2026-10-17',t:'El examen de muestra A oficial (40 preguntas, 60 minutos), sin estudiar antes: tu punto de partida. Anota los puntos por capítulo.'},
+      {f:'2026-10-24',t:'Capítulo 1 leído — Introducción a la IA generativa: 6 objetivos.'},
+      {f:'2026-11-14',t:'Capítulo 2 leído — Ingeniería de prompts: 10 objetivos y 16 de los 46 puntos, el que más pesa.'},
+      {f:'2026-11-28',t:'Capítulo 3 leído — Gestión de riesgos: 9 objetivos.'},
+      {f:'2026-12-05',t:'Capítulo 4 leído — Infraestructura impulsada por los LLM: 5 objetivos.'},
+      {f:'2026-12-12',t:'Capítulo 5 leído — Despliegue e integración: 7 objetivos.'},
+      {f:'2026-12-19',t:'Simulacro A completo. Lo que salga bajo el 65 % en el desglose por capítulo, a releer.'},
+      {f:'2027-01-02',t:'Simulacro B completo.'},
+      {f:'2027-01-09',t:'Simulacro Mezcla: 34 de 46 o más.'},
+      {f:'2027-01-16',t:'Simulacro Mezcla otra vez: 34 o más, el segundo seguido.'},
+      {tarea:'a1-7'}
+    ],
+    vas:'El examen de muestra A del 17 de octubre es tu línea de partida. Vas bien si cada simulacro sube y los dos de enero pasan de 34 de 46; en el día a día, si aciertas 7 de cada 10 preguntas de Hoy aprendes.',
+    si:'Si el 16 de enero sigues bajo 30, pide a Brightest cambiar la fecha antes de presentarlo a ciegas: mejor febrero aprobado que enero reprobado. No más tarde: la solicitud de Esslingen de febrero lo quiere en tu CV.'
+  },
+  hyrox:{
+    meta:'Terminar tu primer HYROX (Men Open, individual) corriendo los 8 km: sin caminar los últimos dos',
+    fecha:{clave:'hyroxFecha'},
+    sistema:[
+      {c:'Mié · 18:15',q:'Los intervalos de tu rutina (bici, cuerdas y elíptica): el motor del Hyrox.'},
+      {c:'Vie · 18:15',q:'Cardio largo y core. Desde el 4 de enero, carrera con estaciones: 1 km corriendo y una estación, repetido.'},
+      {c:'Lun · Mar · Jue · Sáb',q:'La fuerza de tu rutina: de ahí salen el trineo, las zancadas y los wall balls.'}
+    ],
+    pasos:[
+      {f:'2026-10-12',t:'Pide el aviso de venta de {{hyroxSede}} en hyrox.com (todavía no abre): la primera oleada es la más barata.'},
+      {f:'2026-10-17',t:'Tu prueba de partida, en el gym del sábado: 5 km corriendo, cronometrados. Anota el tiempo.'},
+      {f:'2026-11',t:'Compra tu boleto Men Open en cuanto abra la venta, en la ola del sábado {{hyroxFecha}} si tu categoría corre ese día.'},
+      {f:'2027-01-04',t:'Arranca el bloque específico de 11 semanas: el viernes pasa a carrera con estaciones.'},
+      {f:'2027-01-15',t:'Reserva el transporte: ida el viernes y regreso el sábado {{hyroxFecha}} en la noche. El domingo es de Didi.'},
+      {f:'2027-02-06',t:'Medio Hyrox de prueba en el gym: 4 rondas de 1 km y una estación, cronometrado.'},
+      {f:'2027-02-27',t:'Hyrox completo de práctica: 8 rondas de 1 km y una estación. Los 8 km sin caminar.'},
+      {f:'2027-03-08',t:'Descarga: el volumen a la mitad y nada pesado. Llegar fresco vale más que un último entrenamiento.'},
+      {f:{clave:'hyroxFecha'},t:'{{hyroxSede}}. Corres los 8 km.'}
+    ],
+    vas:'Tu 5 km del 17 de octubre es la línea de partida: vas bien si en febrero lo corres 2 minutos más rápido y el medio Hyrox del 6 de febrero lo terminas sin caminar.',
+    si:'Si el 27 de febrero caminas en la práctica, la fecha no se mueve: corres a ritmo de plática y la meta es terminar.'
+  },
+  ajedrez:{
+    meta:'Jugar tu primer torneo presencial completo: todas las rondas, sin abandonar',
+    fecha:'2026-12-19',
+    sistema:[
+      {c:'Lun a vie · 23:10–23:30',q:'15 minutos de puzzles en Lichess, en tu tiempo libre: el rato que el celular ya no se lleva.'},
+      {c:'Sábado · 15:30–16:30',q:'Dos partidas rápidas (15+10) en línea, y revisas la que perdiste: dónde se rompió el plan.'}
+    ],
+    pasos:[
+      {f:'2026-10-12',t:'Abre tu cuenta en Lichess y resuelve 20 puzzles: anota tu rating de puzzles de partida.'},
+      {f:'2026-10-24',t:'Un sábado en un club presencial (Mercenarios, en la Del Valle, o Cuauhtémoc, en la Tabacalera): juega contra gente.'},
+      {f:'2026-10-31',t:'Elige tu torneo en chess-results.com (filtro México) o en la Federación: un rápido de un solo día, en sábado. Inscríbete y paga.'},
+      {f:'2026-11-28',t:'Un torneo en línea en Lichess (un Arena), para entrenar el reloj.'},
+      {f:'2026-12-19',t:'Tu torneo. Todas las rondas, ganes o pierdas.'},
+      {f:'2026-12-26',t:'Revisa tus partidas del torneo, una por una: dónde se rompió el plan.'}
+    ],
+    vas:'Tu rating de puzzles sube de lo que anotaste el 12 de octubre, y juegas tus dos partidas cada sábado.',
+    si:'Si el 31 de octubre no hay uno en sábado de aquí a diciembre, el primero de enero que lo sea: lo que no se mueve es inscribirte con fecha. Uno en domingo no: el domingo es de Didi.'
+  },
+  remoto:{
+    meta:'Una oferta firmada para trabajar remoto que pague más que hoy: es la palanca de ingreso que pide la salida',
+    fecha:{fase:'Fase 1'},
+    sistema:[
+      {c:'Mar · 19:00–19:30',q:'«Negociar tu ingreso», de tu rutina: dos aplicaciones remotas a la semana, con el CV en inglés.'},
+      {c:'Sábado · 14:40',q:'En la revisión semanal: cuántas aplicaciones, respuestas y entrevistas llevas.'}
+    ],
+    pasos:[
+      {tarea:'a1-18'},
+      {f:'2026-10-13',t:'LinkedIn: el titular con «QA/Test Engineer · Automotive · HIL · Remote · GMT-6» y tus logros con números.'},
+      {f:'2026-10-20',t:'Pregunta a tu gerente de ALTEN por días remotos y por el aumento, con números: lo que haces en Ford.'},
+      {f:'2026-10-27',t:'CV en inglés de una página: HIL/SIL, CANoe, Ford, Bosch y Continental, con resultados medibles.'},
+      {f:'2026-11-03',t:'Las primeras dos aplicaciones remotas: las vacantes de ALTEN, Wellfound, GetOnBoard o We Work Remotely.'},
+      {f:'2026-12',t:'Tu primera entrevista. La preparas con tu app de Entrevistas.'},
+      {f:'2027-01',t:'El CT-GenAI aprobado, a tu CV y a LinkedIn el mismo día.'},
+      {f:{fase:'Fase 1'},t:'La oferta firmada: se mide al cerrar la Fase 1, en el Plan Maestro.'}
+    ],
+    vas:'Dos aplicaciones cada semana, todas las semanas, y al menos una entrevista al mes desde diciembre. Seis semanas sin entrevistas dicen que el problema es el CV, no tú: reescríbelo.',
+    si:'Si al cierre de la Fase 1 no hay oferta, la palanca no espera: el aumento en ALTEN o freelance de pruebas en vez de horas de Didi, después de revisar tu contrato.'
+  },
+  byd:{
+    meta:'Liquidar el crédito del BYD con su propia renta, sin abonos que le quiten a la salida',
+    fecha:{tarea:'a4-6'},
+    sistema:[
+      {c:'Cada mes',q:'La mensualidad puntual y sin abonos extra: hasta irte, lo que sobra va a la salida.'},
+      {c:'Día 1 · Finanzas',q:'Revisa el saldo del crédito junto con tus otras deudas.'}
+    ],
+    pasos:[
+      {tarea:'a1-1'},
+      {f:'2026-10-31',t:'Pregunta a tu financiera, por escrito, si el crédito acepta pagos a capital sin penalización y si permite rentarlo para plataformas.'},
+      {tarea:'a2-8'},
+      {tarea:'a4-6'}
+    ],
+    vas:'El saldo baja cada mes lo que dice tu tabla de amortización, y desde julio de 2027 la renta paga la mensualidad completa.',
+    si:'Si un mes no se renta, la reserva del BYD paga la mensualidad. Abonar a capital es de la Fase 4, con sueldo de ingeniero.'
+  },
+  maestria:{
+    meta:'Empezar el M.Eng. Automotive Systems en Esslingen con la salida pagada completa',
+    fecha:{clave:'maestriaInicio'},
+    sistema:[
+      {c:'Lun a vie · 17:00–18:00',q:'Alemán en el CENLEX: Esslingen pide el A2.'},
+      {c:'Lun a vie · 20:00–21:15',q:'El bloque del Plan Maestro: la tarea de la fase que toca esta semana.'},
+      {c:'Día 1 y día 15',q:'El ahorro a GBM el día que entra el sueldo, antes de gastar.'}
+    ],
+    pasos:[{tarea:'a1-4'},{tarea:'a1-5'},{tarea:'a1-10'},{tarea:'a1-12'},{tarea:'a2-2'},{tarea:'a2-4'},{tarea:'a2-5'},{tarea:'a2-6'},{tarea:'a2-9'},{tarea:'a3-1'}],
+    vas:'El 31 de marzo, GBM contra {{marzoParaSalida}}; el {{decisionMaestria}}, la admisión en la mano y {{mayoParaSalida}} en GBM.',
+    si:'Si el dinero no llega, la fecha que tu ahorro sí paga es septiembre de 2028, con todo pagado.'
+  },
+  celular:{
+    meta:'20 minutos al día o menos de consumo (redes, video y noticias) y el celular fuera del cuarto todas las noches',
+    fecha:'2026-11-10',
+    sistema:[
+      {c:'Cada noche · 22:30',q:'El celular se carga en la cocina; el Apple Watch es tu despertador.'},
+      {c:'Sábado · 14:40',q:'En la revisión semanal, Tiempo en pantalla: horas al día, desbloqueos y a qué hora lo abriste primero.'},
+      {c:'En Didi',q:'Montado, con Didi y el mapa, y nada más.'}
+    ],
+    pasos:[
+      {f:'2026-10-12',t:'Anota tus tres números de la semana pasada en Tiempo en pantalla: horas al día, desbloqueos y la primera vez que lo abriste.'},
+      {f:'2026-10-12',t:'Borra Instagram, TikTok, X y YouTube del teléfono; notificaciones solo de personas; escala de grises con triple clic.'},
+      {f:'2026-10-12',t:'Tiempo de inactividad de 22:30 a 7:00 y límite de 20 minutos para lo que quede de consumo. Empiezan los 30 días de limpieza.'},
+      {f:'2026-10-17',t:'Primera revisión del sábado: tus números contra los de partida.'},
+      {f:'2026-10-31',t:'Tercera semana: si un día rompiste la regla, qué lo disparó y qué cambias en el entorno.'},
+      {f:'2026-11-10',t:'Día 30: reintroduce solo lo que aporte algo concreto, cada app con su regla escrita (qué, cuándo y cuánto).'},
+      {f:'2026-12-12',t:'Un mes después: si los números volvieron a subir, es la señal de la ficha para pedir ayuda.'}
+    ],
+    vas:'Cada sábado: el consumo bajo 20 minutos al día, menos desbloqueos que en tu semana de partida y la primera hora del día sin celular.',
+    si:'Una recaída se analiza, no se castiga: qué la disparó (soledad, estrés, las deudas) y qué cambias en el entorno. Si las reglas no aguantan dos días seguidos, la ficha trae dónde pedir ayuda.'
+  },
+  alcohol:{
+    meta:'90 días seguidos sin alcohol, contados por la cadena de «Cero alcohol» en Hábitos',
+    fecha:{racha:'alcohol',dias:90,si:'2026-12-13'},
+    sistema:[
+      {c:'Cada noche',q:'Palomea «Cero alcohol» en Hábitos: la cadena es la meta.'},
+      {c:'Viernes y fiestas',q:'Agua mineral con limón o cerveza sin alcohol desde la primera ronda, y tu frase lista: «estoy preparando el Hyrox».'},
+      {c:'Sábado · 14:40',q:'En la revisión semanal: los días, el dinero que no se fue en alcohol y cómo dormiste.'}
+    ],
+    pasos:[
+      {f:'2026-10-14',t:'Día 30 de la cadena: hazte otra vez el AUDIT (10 preguntas) y compáralo con el primero.'},
+      {f:'2026-10-24',t:'Escribe tus disparadores (viernes, citas, fiestas, partidos, una semana mala de deudas) y, para cada uno, qué haces en su lugar.'},
+      {f:'2026-10-30',t:'El fin de semana de Halloween: llegas con tu bebida y tu frase, y te vas a la hora que decidiste antes.'},
+      {f:'2026-12-12',t:'Posadas, Navidad y Año Nuevo: un plan escrito para cada noche, antes de que llegue la primera.'}
+    ],
+    vas:'La cadena de Hábitos sigue, el gasto en alcohol en Finanzas es $0 y duermes mejor.',
+    si:'Si se rompe la cadena, se analiza, no se castiga: qué la disparó, qué cambias, y vuelve a empezar al día siguiente. Si al parar te tiemblan las manos o no duermes, la ficha dice a dónde ir antes de seguir solo.'
+  },
+  empresa:{
+    meta:'Tu empresa facturando: un cliente al mes, recurrente',
+    fecha:{fase:'Fase 4'},
+    pausa:true, desde:{fase:'Fase 4',inicio:true},
+    sistema:[{c:'Hasta la Fase 4',q:'Ninguno: no se abren frentes de negocio nuevos. El negocio de tu papá sigue en piloto automático.'}],
+    pasos:[
+      {f:'2027-08',t:'Antes de irte, el dossier y los posts del negocio de tu papá, en sus manos.'},
+      {f:{fase:'Fase 4',inicio:true},t:'Da de alta tu RFC con actividad empresarial y entra a RESICO.'},
+      {f:'2029-06',t:'Tu primer cliente, facturado con CFDI.'}
+    ],
+    vas:'En la Fase 4: un cliente al mes, cada mes.',
+    si:'Si no llega, doblas la apuesta en lo que ya mostró ingreso, con capital propio y nunca con tarjeta.'
+  },
+  depa:{
+    meta:'Tu depa en la zona que elijas, con un crédito chico y tu historial limpio',
+    fecha:{tarea:'a4-7'},
+    pausa:true, desde:{tarea:'a4-7'},
+    sistema:[{c:'Hasta el millón',q:'Lo único que le toca hoy: pagar todo a tiempo. Tu historial es lo que el banco revisa.'}],
+    pasos:[
+      {tarea:'a1-1'},
+      {f:'2031-06',t:'Investiga dos o tres zonas reales: el precio por metro cuadrado anotado, no una idea.'},
+      {tarea:'a4-7'}
+    ],
+    vas:'Cero pagos atrasados en tu historial y el patrimonio en su trayectoria hacia el millón.',
+    si:'Si el corte de diciembre va bajo la proyección, el depa espera: va después del millón, no antes.'
+  },
+  tailandia:{
+    meta:'Pelear una pelea amistosa de Muay Thai en un campamento de Tailandia',
+    fecha:{tarea:'a4-4'},
+    pausa:true, desde:'2030-01-01',
+    sistema:[{c:'Hasta enero de 2030',q:'Tu condición la construye hoy el Hyrox. Las 12 semanas de Muay Thai empiezan en enero de 2030.'}],
+    pasos:[
+      {tarea:'a4-3'},
+      {f:'2030-01',t:'Compra el vuelo de abril, el mes más barato, y reserva el campamento: Santai, en Chiang Mai, con alojamiento.'},
+      {f:'2030-01',t:'Empiezan las 12 semanas antes del viaje: tres clases de Muay Thai a la semana.'},
+      {tarea:'a4-4'}
+    ],
+    vas:'El corte de diciembre de 2029 va en la proyección del millón: el viaje se paga de contado.',
+    si:'Si el corte va abajo, el viaje se mueve un año. A crédito, nunca.'
+  },
+  hongkong:{
+    meta:'Ver el skyline de Hong Kong desde Victoria Peak y desde el Sky100',
+    fecha:'2031-11',
+    pausa:true, desde:'2031-01-01',
+    sistema:[{c:'Hasta 2031',q:'Nada: es un viaje de la Fase 4, de contado. Octubre a diciembre es la temporada de cielo despejado.'}],
+    pasos:[
+      {tarea:'a4-5'},
+      {f:'2031-08',t:'Compra el vuelo para noviembre y, en línea, el Peak Tram con el Sky Terrace y la entrada al Sky100.'},
+      {f:'2031-11',t:'Hong Kong.'}
+    ],
+    vas:'El corte de diciembre de 2030 va en la proyección.',
+    si:'Si no va, se mueve un año, de contado.'
+  },
+  spacex:{
+    meta:'Ver en vivo un lanzamiento de SpaceX desde Cabo Cañaveral o Starbase',
+    fecha:'2029-10',
+    pausa:true, desde:{fase:'Fase 4',inicio:true},
+    sistema:[{c:'Hasta la Fase 4',q:'Nada: antes de irte, todo el dinero es de la salida. Desde Alemania se combina con un viaje a Estados Unidos.'}],
+    pasos:[
+      {f:'2029-06',t:'Sigue el calendario de lanzamientos y elige uno en Florida para el otoño.'},
+      {f:'2029-09',t:'Con el estatus «Go», vuelo con cambio o reembolsable: nada no reembolsable antes.'},
+      {f:'2029-10',t:'El lanzamiento, desde Space View Park en Titusville: gratis, con el audio del control de misión.'}
+    ],
+    vas:'Va en el primer año de la Fase 4, de contado.',
+    si:'Los lanzamientos se posponen seguido: si se cae, el siguiente de la misma ventana.'
+  },
+  cupra:{
+    meta:'El Cupra Formentor, de contado o con un enganche grande',
+    fecha:{tarea:'a4-7'},
+    pausa:true, desde:{tarea:'a4-6'},
+    sistema:[{c:'Hasta que termine el BYD',q:'Ni meses sin intereses ni crédito nuevo. Cuando el BYD quede pagado, su mensualidad va al fondo del Cupra.'}],
+    pasos:[
+      {tarea:'a4-6'},
+      {f:'2031-07',t:'La mensualidad del BYD, el mismo monto, a un fondo aparte para el Cupra.'},
+      {tarea:'a4-7'}
+    ],
+    vas:'El millón líquido en su fecha: el Cupra va después, no antes.',
+    si:'Si el millón se atrasa, el Cupra también. A crédito, nunca.'
+  }
+};
+const MP_MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'], MP_DIA=['dom','lun','mar','mié','jue','vie','sáb'];
+function mpHoy(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
+// Una fecha del plan → {d, mes}. Si la fecha es solo de mes, `d` es su último día (hasta ahí está a tiempo).
+function mpFecha(f){
+  if(!f) return null;
+  if(typeof f==='string'){
+    const p=f.split('-').map(Number);
+    return p.length>2?{d:new Date(p[0],p[1]-1,p[2]),mes:false}:{d:new Date(p[0],p[1],0),mes:true};
+  }
+  if(f.clave){ const v=window.CIFRAS&&CIFRAS.PROYECTO&&CIFRAS.PROYECTO[f.clave]; return v?mpFecha(String(v)):null; }
+  if(f.tarea){ const x=cdTarea(f.tarea); return x&&x.s.mes?mpFecha(x.s.mes):null; }
+  if(f.fase){
+    const ph=PHASES.find(p=>p.tag===f.fase); if(!ph) return null;
+    const d=new Date(f.inicio?ph.start:ph.end); d.setHours(0,0,0,0); return {d,mes:false};
+  }
+  if(f.racha){
+    // Los días que faltan salen de la cadena del hábito, no de una fecha supuesta: si se rompe, la meta se mueve.
+    const r=(window.HB&&typeof HB.racha==='function')?HB.racha(f.racha):null;
+    if(r===null||r===undefined) return f.si?mpFecha(f.si):null;
+    const d=mpHoy(); d.setDate(d.getDate()+Math.max(0,f.dias-r)); return {d,mes:false};
+  }
+  return null;
+}
+function mpFechaTxt(x,conDia){
+  if(!x) return '';
+  const y=x.d.getFullYear(), otroAnio=y!==new Date().getFullYear();
+  if(x.mes) return MP_MES[x.d.getMonth()]+' '+y;
+  return (conDia||!otroAnio?MP_DIA[x.d.getDay()]+' ':'')+x.d.getDate()+' '+MP_MES[x.d.getMonth()]+(otroAnio?' '+y:'');
+}
+// Cuánto falta, en la unidad que se entiende: días hasta dos semanas, semanas hasta tres meses, después meses.
+// `est`: tarde (se pasó), hoy, pronto (esta semana o este mes) o luego.
+function mpFalta(x){
+  if(!x) return {txt:'',est:''};
+  const hoy=mpHoy();
+  if(x.mes){
+    const m=(x.d.getFullYear()-hoy.getFullYear())*12+x.d.getMonth()-hoy.getMonth();
+    if(m<0) return {txt:'era para '+MP_MES[x.d.getMonth()],est:'tarde'};
+    if(m===0) return {txt:'este mes',est:'pronto'};
+    return {txt:m===1?'el mes que entra':(m<24?'en '+m+' meses':'en '+Math.round(m/12)+' años'),est:'luego'};
+  }
+  const dias=Math.round((x.d-hoy)/864e5);
+  if(dias<0) return {txt:dias===-1?'era ayer':'hace '+(-dias)+' días',est:'tarde'};
+  if(dias===0) return {txt:'hoy',est:'hoy'};
+  if(dias===1) return {txt:'mañana',est:'pronto'};
+  if(dias<=14) return {txt:'en '+dias+' días',est:dias<=7?'pronto':'luego'};
+  if(dias<=91) return {txt:'en '+Math.round(dias/7)+' semanas',est:'luego'};
+  const m=Math.round(dias/30.44);
+  return {txt:m<24?'en '+m+' meses':'en '+Math.round(dias/365)+' años',est:'luego'};
+}
+// La tarea del Plan Maestro, en corto: su primera frase, y la segunda si la primera es solo un título
+// («Cierra la Fase 1 por escrito.» dice qué, la siguiente dice con qué).
+function mpPrimeraFrase(s){
+  const fr=String(s||'').split(/(?<=[.!?])\s+/);
+  return fr[0].length<40&&fr[1]?fr[0]+' '+fr[1]:fr[0];
+}
+// El plan de una meta, ya resuelto: cada paso con su fecha, su estado y si está hecho; lo siguiente, y la pausa.
+function metaPlan(id){
+  const P=META_PLAN[id]; if(!P) return null;
+  const st=(rawGet('metas_plan_v1',{})||{})[id]||{}, checks=rawGet('coach_checks_v1',{})||{};
+  const pasos=P.pasos.map((p,k)=>{
+    const x=p.tarea?cdTarea(p.tarea):null;
+    const t=p.tarea?(x?mpPrimeraFrase(window.CIFRAS?CIFRAS.texto(x.s.txt):x.s.txt):p.tarea):p.t;
+    const f=mpFecha(p.tarea?{tarea:p.tarea}:p.f), fa=mpFalta(f), hecho=p.tarea?!!checks[p.tarea]:!!st[k];
+    return {k,t,f,fTxt:mpFechaTxt(f),cuando:fa.txt,est:hecho?'hecho':fa.est,hecho,tarea:p.tarea||null};
+  });
+  const hechos=pasos.filter(p=>p.hecho).length, fecha=mpFecha(P.fecha), desde=P.pausa?mpFecha(P.desde):null;
+  return {P,pasos,hechos,total:pasos.length,sig:pasos.find(p=>!p.hecho)||null,fecha,fechaTxt:mpFechaTxt(fecha),
+    falta:mpFalta(fecha),pausa:!!(desde&&desde.d>mpHoy()&&hechos<pasos.length),desdeTxt:mpFechaTxt(desde)};
+}
+// Palomear un paso del plan. Los que son tareas del Plan Maestro se marcan en su casilla de siempre
+// (`coach_checks_v1`, con la semana de hoy, como Mi Día), así que el tablero y Coach los ven igual.
+function toggleMetaPlan(id,k){
+  const p=META_PLAN[id]&&META_PLAN[id].pasos[k]; if(!p) return;
+  if(p.tarea){
+    const checks=rawGet('coach_checks_v1',{})||{}, h=new Date();
+    toggleFaseCheck(p.tarea,!checks[p.tarea],h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'#'+ctSemDe(h.getDate()));
+  } else {
+    const st=rawGet('metas_plan_v1',{})||{};
+    st[id]=st[id]||{};
+    if(st[id][k]) delete st[id][k]; else st[id][k]=true;
+    rawSet('metas_plan_v1',st);
+  }
+  mdPintar();
+  renderMetasSlide();
+}
+// En el temario, la entrada del plan va primero; lo de META_DETALLE queda debajo, como lo que hay que saber.
+function mdIxPlan(on){
+  const mp=mdEstado.dict===META_DETALLE?metaPlan(mdEstado.id):null; if(!mp) return '';
+  return `<button class="md-ix md-ix-plan${on?' on':''}${mp.hechos===mp.total?' hecho':''}" onclick="mdIr(-1)">
+      <span class="md-ix-n">▶</span><span class="md-ix-t">Tu plan, con fechas<small>${mp.hechos} de ${mp.total} pasos${mp.sig?' · sigue el '+esc(mp.sig.fTxt):''}</small></span>
+    </button><div class="md-ix-h">Lo que necesitas saber</div>`;
+}
+// El panel en la vista del plan: el resultado, la fecha y lo siguiente; el sistema de la semana; los pasos con
+// fecha, que se palomean ahí mismo; cómo sabes que vas bien y qué haces si te atrasas.
+function mdPintarPlan(){
+  const id=mdEstado.id, info=META_DETALLE[id], mp=metaPlan(id); if(!info||!mp) return;
+  const P=mp.P, pct=mp.total?Math.round(mp.hechos/mp.total*100):0;
+  const ov=document.getElementById('metaDetailOverlay'); if(ov) ov.classList.add('md-plan-on');
+  document.getElementById('metaDetailBarFill').style.width=pct+'%';
+  document.getElementById('metaDetailBarNum').innerHTML=`${mp.hechos}<small>/ ${mp.total}</small>`;
+  document.getElementById('metaDetailProgLbl').textContent=`Pasos del plan · ${pct} %`;
+  const mb=mdEstado.money;
+  document.getElementById('metaDetailMoneybar').innerHTML=mb?`
+    <div class="meta-detail-moneybar">
+      <div class="meta-detail-moneybar-row"><span class="meta-detail-bar-ico">💰</span><span class="meta-detail-bar-lbl">${mb.lbl}</span><b>${mb.pct}%</b></div>
+      <div class="img-goal-pbar"><div class="img-goal-pbar-fill" style="width:${mb.pct}%;background:var(--cy)"></div></div>
+    </div>`:'';
+  document.getElementById('metaDetailVideo').innerHTML='';
+  const tarde=mp.pasos.filter(p=>p.est==='tarde').length;
+  document.getElementById('metaDetailAvance').innerHTML=`
+    ${mb?'<div class="md-hair"></div>':''}
+    <div class="md-rec-hd"><span class="md-lbl">Tu plan</span></div>
+    <div class="md-avance">
+      <div><b class="ok">${mp.hechos}</b><span class="md-lbl">Hechos</span></div>
+      <div><b${tarde?' style="color:var(--r)"':''}>${tarde||mp.total-mp.hechos}</b><span class="md-lbl">${tarde?'Atrasados':'Pendientes'}</span></div>
+    </div>
+    <div class="md-avance-nota">${mp.pausa?`En pausa hasta <b>${esc(mp.desdeTxt)}</b>: lo que no cabe en la semana se pausa con fecha, no se abandona.`
+      :(mp.sig?`Lo siguiente es para el <b>${esc(mp.sig.fTxt)}</b> (${esc(mp.sig.cuando)}). Los pasos marcados <b>Plan Maestro</b> son la misma casilla del tablero.`:'Todos los pasos del plan están hechos.')}</div>`;
+  document.getElementById('metaDetailIndiceN').textContent=`${info.pasos.length} ${info.pasos.length===1?'paso':'pasos'}`;
+  document.getElementById('metaDetailIndice').innerHTML=mdIxPlan(true)+info.pasos.map((x,k)=>{
+    const h=!!((rawGet(mdEstado.storeKey,{})[id]||{})[k]);
+    return `<button class="md-ix${h?' hecho':''}" onclick="mdIr(${k})"><span class="md-ix-n">${h?'✓':(k+1)}</span><span class="md-ix-t">${esc(mdLimpiaTitulo(x.t))}</span></button>`;
+  }).join('');
+  const clase=p=>p.est==='hoy'?'pronto':p.est;
+  const sig=mp.sig;
+  const cuerpo=document.getElementById('metaDetailSteps');
+  cuerpo.innerHTML=`
+    <div class="mp">
+      <div class="mp-top">
+        <div class="mp-box mp-res"><span class="md-lbl">El resultado</span><b>${esc(P.meta)}</b></div>
+        <div class="mp-box"><span class="md-lbl">La fecha</span><b>${esc(mpFechaTxt(mp.fecha,true))}</b><small class="${mp.falta.est==='tarde'&&mp.hechos<mp.total?'tarde':''}">${esc(mp.falta.txt)}</small></div>
+        <div class="mp-box mp-sig ${sig?clase(sig):'hecho'}"><span class="md-lbl">${mp.pausa?'Cuando le toque':'Lo siguiente'}</span><b>${sig?esc(sig.t):'Todo hecho'}</b><small>${sig?esc(sig.fTxt+' · '+sig.cuando):''}</small></div>
+      </div>
+      ${mp.pausa?`<div class="mp-pausa"><b>En pausa hasta ${esc(mp.desdeTxt)}.</b> ${esc(P.sistema[0].q)}</div>`:''}
+      ${mp.pausa?'':`<div class="mp-sec">
+        <div class="mp-sec-hd"><span class="md-lbl">Tu sistema, cada semana</span><small>en los bloques de tu rutina</small></div>
+        ${P.sistema.map(s=>`<div class="mp-sis"><span class="mp-sis-c">${esc(s.c)}</span><span class="mp-sis-q">${esc(s.q)}</span></div>`).join('')}
+      </div>`}
+      <div class="mp-sec">
+        <div class="mp-sec-hd"><span class="md-lbl">Los pasos, con fecha</span><small>${mp.hechos} de ${mp.total} hechos</small></div>
+        ${mp.pasos.map(p=>`<button type="button" class="mp-paso ${clase(p)}" onclick="toggleMetaPlan('${id}',${p.k})" aria-pressed="${p.hecho}">
+          <span class="mp-chk">${p.hecho?'✓':''}</span><span class="mp-f">${esc(p.fTxt)}</span>
+          <span class="mp-t">${esc(p.t)}${p.tarea?'<i>Plan Maestro</i>':''}</span><span class="mp-c">${p.hecho?'hecho':esc(p.cuando)}</span>
+        </button>`).join('')}
+      </div>
+      <div class="mp-dos">
+        <div class="md-tucaso"><div class="md-tucaso-lbl">Cómo sabes que vas bien</div><div class="md-tucaso-txt">${esc(P.vas)}</div></div>
+        <div class="md-tucaso aviso"><div class="md-tucaso-lbl">${MD_SVG_AVISO}Si te atrasas</div><div class="md-tucaso-txt">${esc(P.si)}</div></div>
+      </div>
+    </div>`;
+  cuerpo.scrollTop=0;
+  document.getElementById('metaDetailDots').innerHTML='';
+  const navs=document.querySelectorAll('.md-acciones .md-nav');
+  if(navs[0]) navs[0].disabled=true;
+  if(navs[1]) navs[1].disabled=!info.pasos.length;
+}
 let METAS_MONEYBAR={};
 // Compartido entre Mis Metas y Habilidades Base — % de la barra ya no se fija a mano (ver historial:
 // antes existía setImgProgreso(), un clic tipo seek-bar), se calcula solo de lo marcado en el
@@ -12222,7 +12689,8 @@ function pintarDetailOverlay(dataDict,storeKey,id,toggleFnName,moneyInfo){
   if(mdEstado.id!==id){
     const st=(rawGet(storeKey,{})[id])||{};
     const primero=info.pasos.findIndex((_,k)=>!st[k]);
-    mdEstado.i=primero<0?0:primero;
+    // Una meta con plan abre en él (META_PLAN): lo primero es qué hacer y cuándo, no el temario.
+    mdEstado.i=(dataDict===META_DETALLE&&META_PLAN[id])?-1:(primero<0?0:primero);
   }
   mdEstado.dict=dataDict; mdEstado.storeKey=storeKey; mdEstado.id=id; mdEstado.toggle=toggleFnName;
   mdEstado.money=moneyInfo||null;
@@ -12243,6 +12711,9 @@ const MD_SVG_AVISO='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" 
 function mdPintar(){
   const {dict,storeKey,id}=mdEstado;
   const info=dict&&dict[id]; if(!info) return;
+  const conPlan=dict===META_DETALLE&&!!META_PLAN[id];
+  if(conPlan&&mdEstado.i<0){ mdPintarPlan(); return; }
+  document.getElementById('metaDetailOverlay').classList.remove('md-plan-on');
   const pasos=info.pasos, total=pasos.length;
   const store=(rawGet(storeKey,{})[id])||{};
   const done=pasos.filter((_,k)=>store[k]).length;
@@ -12307,7 +12778,7 @@ function mdPintar(){
   // ── TEMARIO ───────────────────────────────────────────────────────────────
   const iSep=pasos.findIndex((x,k)=>k>0&&mdEsCierre(x.t));
   document.getElementById('metaDetailIndiceN').textContent=`${total} ${total===1?'paso':'pasos'}`;
-  document.getElementById('metaDetailIndice').innerHTML=pasos.map((x,k)=>{
+  document.getElementById('metaDetailIndice').innerHTML=mdIxPlan(false)+pasos.map((x,k)=>{
     const h=!!store[k];
     return `${k===iSep?'<div class="md-ix-sep"></div>':''}<button class="md-ix${k===i?' on':''}${h?' hecho':''}" onclick="mdIr(${k})">
       <span class="md-ix-n">${h?'✓':(k+1)}</span><span class="md-ix-t">${esc(mdLimpiaTitulo(x.t))}</span>
@@ -12367,7 +12838,7 @@ function mdPintar(){
   // En pantallas angostas la frase completa no cabe junto a ‹ › y salía cortada.
   document.getElementById('metaDetailMarcarTxt').textContent=hecho?'Dominado':(innerWidth<=600?'Marcar':'Marcar como dominado');
   const navs=document.querySelectorAll('.md-acciones .md-nav');
-  if(navs[0]) navs[0].disabled=(i===0);
+  if(navs[0]) navs[0].disabled=(i===0&&!conPlan);   // con plan, «Anterior» desde el paso 1 vuelve a él
   if(navs[1]) navs[1].disabled=(i===total-1);
 }
 addEventListener('resize',()=>{
@@ -12376,13 +12847,15 @@ addEventListener('resize',()=>{
 });
 function mdIr(k){
   const info=mdEstado.dict&&mdEstado.dict[mdEstado.id]; if(!info) return;
-  mdEstado.i=Math.max(0,Math.min(info.pasos.length-1,k));
+  const min=(mdEstado.dict===META_DETALLE&&META_PLAN[mdEstado.id])?-1:0;   // -1 = la vista «Tu plan»
+  mdEstado.i=Math.max(min,Math.min(info.pasos.length-1,k));
   mdPintar();
 }
 // Marcar usa la MISMA función de siempre (toggleMetaChecklist / toggleHabilidadChecklist /
 // toggleEdadChecklist), que guarda en localStorage y repinta la tarjeta de atrás. Se la llama por
 // nombre porque cada tipo de detalle tiene la suya.
 function mdMarcar(){
+  if(mdEstado.i<0) return;   // en «Tu plan» cada paso se palomea en su renglón
   const fn=window[mdEstado.toggle];
   if(typeof fn==='function') fn(mdEstado.id,mdEstado.i);
 }
@@ -13194,6 +13667,9 @@ function renderMetasSlide(){
   // Esto devuelve las tres cifras y es lo que alimenta tanto las marcas de la ficha como el
   // avance del conjunto en la franja de instrumentos.
   const pasosMeta=id=>{
+    // Con plan (META_PLAN), los pasos que cuentan son los del plan: lo que se hace, con fecha.
+    const mp=metaPlan(id);
+    if(mp) return {hechos:mp.hechos,total:mp.total,pct:mp.total?Math.round(mp.hechos/mp.total*100):0};
     const info=META_DETALLE[id];
     const total=(info&&info.pasos&&info.pasos.length)||0;
     if(!total) return {hechos:0,total:0,pct:0};
@@ -13223,8 +13699,16 @@ function renderMetasSlide(){
     return `<span style="margin-left:auto;font-size:10.5px;font-weight:700;color:var(--g);white-space:nowrap" title="La cadena del hábito «Cero alcohol», en Hábitos">🔥 ${r} día${r===1?'':'s'} ${m.txt}</span>`;
   };
   const metaDeckHtml=(arr,sm,epigrafe)=>`<div class="mg-deck${sm?' mg-deck-sm':''}">${arr.map(i=>{
-    const p=pasosMeta(i.id), est=estadoMeta(p);
-    const chip=est==='ok'?'LOGRADA':(est==='on'?'EN MARCHA':'SIN EMPEZAR');
+    const p=pasosMeta(i.id), est=estadoMeta(p), mp=metaPlan(i.id);
+    const chip=est==='ok'?'LOGRADA':(mp&&mp.pausa?'EN PAUSA':(est==='on'?'EN MARCHA':'SIN EMPEZAR'));
+    // El plan en dos renglones: la fecha con el resultado medible, y lo que sigue (o hasta cuándo espera).
+    const urg=x=>x.est==='hoy'?'pronto':x.est;
+    const plan=mp?`<div class="mg-pl">
+        <div class="mg-pl-l" title="${esc(mp.P.meta)} · ${esc(mp.fechaTxt)}"><b>${esc(mp.fechaTxt)}</b>${esc(mp.P.meta)}</div>
+        <div class="mg-pl-l mg-pl-sig ${!mp.pausa&&mp.sig?urg(mp.sig):''}" title="${mp.sig?esc(mp.sig.t):''}"><b>${mp.pausa?'Pausa':'Sigue'}</b>${
+          mp.pausa?'hasta '+esc(mp.desdeTxt)+' · '+esc(mp.P.sistema[0].q):(mp.sig?esc(mp.sig.t):'Todo hecho')}</div>
+      </div>`:'';
+    const cuando=mp&&mp.sig&&!mp.pausa?`<span class="mg-pl-f ${urg(mp.sig)}">${esc(mp.sig.fTxt)} · ${esc(mp.sig.cuando)}</span>`:'';
     // Una meta sin pasos registrados (no debería pasar) dibuja una marca apagada en vez de
     // un riel vacío, que se leería como un fallo de pintado.
     const marcas=p.total
@@ -13241,7 +13725,8 @@ function renderMetasSlide(){
         <div class="mg-tt${sm?' mg-tt-sm':''}">${i.ico} ${i.t}</div>
       </div>
       <div class="mg-rail">${marcas}</div>
-      <div class="mg-foot"><span class="mg-steps">${p.hechos}<i>/</i>${p.total}<small>PASOS</small></span>${metaRachaHtml(i.id)}</div>
+      ${plan}
+      <div class="mg-foot"><span class="mg-steps">${p.hechos}<i>/</i>${p.total}<small>PASOS</small></span>${cuando}${metaRachaHtml(i.id)}</div>
       ${money}
     </div>`;
   }).join('')}</div>`;
@@ -14597,7 +15082,7 @@ fixMsiBBVA20260813IfNeeded();
 // corrió dentro del módulo; este refresco es por las que siguen viviendo aquí.)
 // EDAD_DETALLE copia el `meta` de cada fase al cargar, ANTES de que PHASES pase por aquí: sin
 // esta llamada, el panel de Tu año enseñaba «{{fondoMeta}}» a la vista.
-if(window.CIFRAS){ CIFRAS.refrescar(); cifrarLiterales(PHASES); cifrarLiterales(META_DETALLE); cifrarLiterales(EDAD_DETALLE); cifrarLiterales(APRENDIZAJE); }
+if(window.CIFRAS){ CIFRAS.refrescar(); cifrarLiterales(PHASES); cifrarLiterales(META_DETALLE); cifrarLiterales(META_PLAN); cifrarLiterales(EDAD_DETALLE); cifrarLiterales(APRENDIZAJE); }
 fixMiercolesNatacionIfNeeded();
 fixRutina20260812IfNeeded();
 fixRutina20261010IfNeeded();

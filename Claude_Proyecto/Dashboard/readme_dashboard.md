@@ -68,7 +68,7 @@ forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
 y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la ruta abierta en *En qué invertir tu tiempo* y el paso de cada una),
-`habilidades_checklist_v1`, `examen_genai_v1`, `dash-inversion-v1` (pestaña, perfil elegido y monto de *Qué
+`habilidades_checklist_v1`, `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-inversion-v1` (pestaña, perfil elegido y monto de *Qué
 invertir hoy*), y las `al_*_v1` de Alemán.
 
 ---
@@ -866,21 +866,57 @@ La meta del millón se fecha con el cierre de la última fase (`finDelPlan()`): 
 Clases `.mg-*`; de la familia anterior `.img-goal-*` solo sobreviven `.img-goal-pbar` y `-fill`,
 que usa el overlay de detalle.
 
-**El indicador es una marca por paso real** del checklist (`META_DETALLE`) y el conteo
-(`4 / 9 PASOS`), no un porcentaje: un 33 % no dice si faltan dos pasos o diez. **Tres estados**
-con su color en una sola variable por ficha (`--mgc`), que tiñe chip, marcas, conteo y borde:
+**Cada meta tiene un plan que se ejecuta** (`META_PLAN`; Adán: *"las metas, corto, mediano y largo,
+no me ayudan a nada, no me das la suficiente información para ejecutar estos planes"*). Lo pide el
+prompt de Mis Metas: resultado medible + fecha + sistema, y un siguiente paso con fecha. Por meta:
+`meta` (el resultado), `fecha`, `sistema` (cuándo y qué, en bloques que ya tiene la rutina:
+gym 18:15, *Negociar tu ingreso* el martes 19:00, el Plan Maestro 20:00, el tiempo libre de las
+23:10, la revisión del sábado 14:40; nunca el domingo, que es de Didi), `pasos` con fecha, `vas`
+(cómo sabes que vas bien) y `si` (qué haces si te atrasas). Las fechas no se copian: `{tarea}` toma
+fecha y texto de `PHASES` (y se palomea en la MISMA casilla del Plan Maestro, `coach_checks_v1`,
+con la semana de hoy), `{clave}` lee el maestro (`maestriaInicio`, `hyroxFecha`), `{fase}` el
+inicio o el cierre de una fase, y `{racha}` cuenta desde la cadena de Hábitos (los 90 días sin
+alcohol se mueven si se rompe). Los demás pasos se guardan en `metas_plan_v1`. `metaPlan(id)` lo
+resuelve todo: el estado de cada paso (`mpFalta`: hoy, esta semana, más adelante o atrasado) y lo
+siguiente. Las metas de la Fase 4 (empresa, depa, Tailandia, Hong Kong, SpaceX, Cupra) van
+**en pausa** con su fecha de arranque (`pausa`, `desde`): lo que no cabe en la semana se pausa con
+fecha, no se abandona. Las dos logradas (11K y Básico 5) no llevan plan.
+
+**La ficha** dice, bajo la foto, la fecha de la meta con el resultado y lo que sigue (`.mg-pl`,
+un renglón cada uno; el texto completo en el `title`), y al pie los pasos y el día de lo siguiente,
+en cian si es esta semana y en rojo si se pasó. **El indicador es una marca por paso del plan** y
+el conteo (`4 / 9 PASOS`); en las logradas, los de `META_DETALLE`. Las columnas de la rejilla son
+`minmax(0,…)`: con `1fr` el texto de una línea ensanchaba la columna y sacaba de la pantalla la de
+largo plazo. **Cuatro estados** con su color en una sola variable por ficha (`--mgc`), que tiñe
+chip, marcas, conteo y borde:
 
 | Estado | Clase | Color | Cuándo |
 |---|---|---|---|
 | LOGRADA | `.mg-card.ok` | `--g` verde | todos los pasos marcados |
 | EN MARCHA | `.mg-card.on` | `--ac1` ámbar | al menos uno |
+| EN PAUSA | *(ninguna)* | `--text3` | su plan arranca después de hoy |
 | SIN EMPEZAR | *(ninguna)* | `--text3` | ninguno |
+
+**El panel de una meta abre en «Tu plan»** (`mdPintarPlan()`, `mdEstado.i = -1`): arriba el
+resultado, la fecha y lo siguiente; *Tu sistema, cada semana*; *Los pasos, con fecha*, que se
+palomean en su renglón (`toggleMetaPlan`), con la etiqueta *Plan Maestro* en los que son tareas
+de fase; y *Cómo sabes que vas bien* / *Si te atrasas*. En el temario va primero (`mdIxPlan`) y
+debajo *Lo que necesitas saber*, los pasos de `META_DETALLE`, que se siguen marcando como
+dominados; *Anterior* desde el paso 1 vuelve al plan. En esa vista no hay *Marcar como dominado*
+ni puntos (`.md-plan-on`). Habilidades Base y la barra de edad usan el mismo panel sin plan.
+Medido a 2048×1040, 1366×768 y 390: 0 px de desborde; el panel desplaza su columna central.
+
+**El Hyrox** es `{{hyroxSede}}` el `{{hyroxFecha}}` (Guadalajara, 19–21 mar 2027, en hyrox.com):
+el de CDMX (29 oct–1 nov 2026) quedó a tres semanas de la rutina nueva, y Monterrey (16–18 abr
+2027) cae en la Fase 2, que no lleva viajes. La fecha vive en el maestro; la leen el plan, la
+lista de salida y Coach.
 
 **La franja de instrumentos** (`#metasBay`) trae el avance del conjunto **en pasos**, no
 promediando porcentajes (promediar daba el mismo peso a una meta de 1 paso que al Hyrox de 15),
-el ecualizador de las 17 metas con piso del 20 % y los tres conteos; la regla de edad va dentro,
-separada por filete. **Tres columnas en corto/mediano (11 fichas, cuatro filas), dos en largo
-plazo.** 0 px de desborde a 1600×950 y 1920×1080; a 1366×768 scroll interno.
+el ecualizador de las 16 metas con piso del 20 % y los tres conteos; la regla de edad va dentro,
+separada por filete. **Tres columnas en corto/mediano (10 fichas, cuatro filas), dos en largo
+plazo.** Con los dos renglones del plan, la columna de corto/mediano desplaza 85 px a 2048×1040
+(la última fila es la de las logradas).
 
 **El dinero real** de BYD y Maestría es una barra continua en `--ac2`, distinta de las marcas de
 paso, con la cifra (`$22,800 pagado`): `METAS_MONEYBAR[x].short`; `.lbl` va en el `title`.

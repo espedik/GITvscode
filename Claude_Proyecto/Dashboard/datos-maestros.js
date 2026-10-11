@@ -176,6 +176,12 @@ window.CIFRAS = (function () {
     // La respuesta de Esslingen llega "antes de fin de mayo" (hs-esslingen.de) y la cuenta
     // bloqueada se llena a mediados de junio: ese es el día de decidir la salida, con las dos.
     maestriaDecision: '2027-05-31',
+    // El primer Hyrox. El de CDMX (29 oct–1 nov 2026) quedó a tres semanas de la rutina nueva, sin el
+    // bloque de carrera; el siguiente en México que cae en la Fase 1 es Guadalajara, del 19 al 21 de
+    // marzo de 2027 en Expo Guadalajara (hyrox.com, revisado el 11-oct-2026). El sábado es el día:
+    // el domingo es de Didi. Monterrey (16–18 abr 2027) ya cae en la Fase 2, sin viajes.
+    hyroxSede:       'HYROX Guadalajara',
+    hyroxFecha:      '2027-03-20',
     // El euro para planear. El 2-oct-2026 estaba en $20.46 (Infobae); se planea a $21.00 para
     // que una subida normal (su volatilidad anda en ~7 %) no tumbe la cuenta bloqueada.
     eurMxn:          21.0,
@@ -708,7 +714,7 @@ window.CIFRAS = (function () {
         {id:'sa-sal-3', cuando:'2027-05', txt:'Oftalmólogo: graduación nueva y lentes de repuesto.'},
         {id:'sa-sal-4', cuando:'2027-06', txt:'Cartilla de vacunación al día (tétanos, sarampión, hepatitis), con una copia en inglés.'},
         {id:'sa-sal-5', cuando:'2027-07', txt:'Medicamentos que tomes: receta en inglés con el nombre genérico y tres meses de reserva.'},
-        {id:'sa-sal-6', cuando:'cont',    txt:'Gym 5 días y el Hyrox del 30 oct: llegas en forma. Allá, el deporte universitario (Hochschulsport) es barato.'},
+        {id:'sa-sal-6', cuando:'cont',    txt:'Gym seis días y tu primer Hyrox —{{hyroxSede}}, el {{hyroxFecha}}—: llegas en forma. Allá, el deporte universitario (Hochschulsport) es barato.'},
         {id:'sa-sal-7', cuando:'cont',    txt:'Proteína como hasta hoy ({{proteinaMeta}} g al día): cambiar de país no es razón para perder lo ganado.'},
       ]},
       {id:'mental', ico:'🧠', titulo:'Salud mental', items:[
@@ -4253,6 +4259,8 @@ window.CIFRAS = (function () {
     maestriaInicio:{ v: () => PROYECTO.maestriaInicio,   fmt: 'fecha' },
     // Las fechas del plan, para escribirlas en prosa sin copiarlas: `fecha` las pinta "18 jul 2027".
     decisionMaestria: { v: () => PROYECTO.maestriaDecision, fmt: 'fecha' },
+    hyroxSede:     { v: () => PROYECTO.hyroxSede,  fmt: 'txt' },
+    hyroxFecha:    { v: () => PROYECTO.hyroxFecha, fmt: 'fecha' },
     // El millón se fecha con el cierre de la última fase del Plan Maestro.
     metaMillon:    { v: () => PHASES[PHASES.length - 1].end, fmt: 'fecha' },
     // ── Derivadas que cruzan constantes con saldos vivos ──
