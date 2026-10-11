@@ -137,7 +137,7 @@ filas, la noche del pelo (2 pasos) frente al día (9) dejaba media pantalla en b
 2. **Las dos rutinas lado a lado**, con insignia de estado (`COMPLETA`, `2 DE 3`, `A LAS 22:30`)
    y las horas de `CIFRAS.rutina()` (cambian entre semana, sábado y domingo). Cada paso se
    marca con un clic y alimenta racha y semana. Los tiempos de espera van como **banda debajo
-   del paso**: 20 minutos entre la doble limpieza y el adapaleno; **4 horas** tras el minoxidil
+   del paso**: 20 minutos entre la limpieza y el adapaleno; **4 horas** tras el minoxidil
    (mojarse antes arrastra la dosis). En el pelo, la de día agrupa ducha → pelo húmedo → cuero
    seco → **la pastilla** (`PE_MOMENTOS`; el Avodart es lo único que no se aplica en el pelo y
    tiene momento propio, con un `aviso` que no cuenta como paso: receta, fuera de indicación,

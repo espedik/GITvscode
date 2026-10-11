@@ -2431,7 +2431,7 @@ function pePasosDelDia(){
   const funda=prod('funda');
   const noche=[];
   if(mnx) noche.push({id:'minoxPM',dosis:1,n:mnx.n,cat:'Dosis 2 de '+mnx.vecesDia,
-    t:'<b>Segunda dosis.</b> Misma técnica: cuero seco, 1 ml con el gotero, masaje de 30 segundos y manos lavadas. <b>Después de esta dosis ya no te mojes el pelo</b> — si vas a bañarte de noche, báñate antes.',
+    t:'<b>Segunda dosis.</b> Misma técnica: cuero seco, 5 atomizaciones (1 ml), masaje de 30 segundos y manos lavadas. Espera al menos 30 minutos antes de acostarte, para que no se quede en la almohada, y <b>ya no te mojes el pelo</b> —si vas a bañarte de noche, báñate antes.',
     clave:'Son dos dosis, no una',ayuda:['caida']});
   if(funda) noche.push({id:'funda',n:funda.n,cat:funda.cat,t:funda.uso,ayuda:['resequedad']});
   if(noche.length) G.push({m:peMomento('noche'),pasos:noche});

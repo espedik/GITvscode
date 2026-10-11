@@ -232,8 +232,8 @@ pero el nombre de la variable se queda corto.
 | `{{ahorroMesCasa}}` | $31,100 — lo mismo en casa de su familia: lo del 1, lo del 15 y Didi | derivada (`mesTipo(true)`) |
 | `{{gastoPersonalDepa}}` | $8,218 — lo que queda del sueldo con depa tras los fijos, la comida y el ahorro: su gasto personal, con sus rutinas dentro; lo que pague con tarjeta, saldado en la misma quincena | derivada |
 | `{{gastoPersonalCasa}}` | $7,471 — lo mismo en casa | derivada |
-| `{{cuidadoMes}}` | $4,801 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
-| `{{recorteRutinas}}` | $2,003 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $1,340 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
+| `{{cuidadoMes}}` | $4,678 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
+| `{{recorteRutinas}}` | $1,880 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $857 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
 | `{{alemaniaMarzo}}` | $135,840 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
 | `{{salidaAgosto}}` | $324,284 — lo que pide la salida completa en agosto de 2027: la cuenta bloqueada, la reserva del BYD, el colchón y la colegiatura del primer semestre (`cortes.salida.pide`) | derivada; se mueve con `PROYECTO.eurMxn` |
 | `{{extraSalida}}` | $10,554 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
@@ -481,7 +481,7 @@ lo que hace falta para saber cuánto dura un bote y cuánto cuesta al mes. Se pi
 CIFRAS.RUTINA_PIEL.pasos('am')        // [{orden, n, cat, uso, min, esperaDespues, ...}]
 CIFRAS.RUTINA_PIEL.duracionDias(p)    // contenido / dosisDia
 CIFRAS.RUTINA_PIEL.costoMes(p)        // precio / duracion * 30
-CIFRAS.RUTINA_PIEL.costoMesTotal      // $806 hoy, sin contar la mascarilla
+CIFRAS.RUTINA_PIEL.costoMesTotal      // $683 hoy, sin contar la mascarilla
 CIFRAS.RUTINA_PIEL.textoCompra(p)     // el renglón tal cual sale en la compra
 CIFRAS.RUTINA_PIEL.deTextoCompra(txt) // y de vuelta: del renglón al producto
 ```
@@ -492,7 +492,7 @@ CIFRAS.RUTINA_PIEL.deTextoCompra(txt) // y de vuelta: del renglón al producto
 | The Ordinary Niacinamida 10% + Zinc 1% | AM 2 | 30 ml | ~200 d | $35 |
 | La Roche-Posay Anthelios Oil Free SPF50 | AM 3 | 50 ml | ~40 d | **$390** |
 | Differin Adapaleno 0.1% Gel | PM 2 | 45 g | ~180 d | $72 |
-| Eucerin Hyaluron-Filler + Epigenetic Noche | PM 3 | 50 ml | ~100 d | $210 |
+| CeraVe Loción Hidratante Facial PM | PM 3 | 52 ml | ~104 d | $87 |
 | Aztec Secret Indian Healing Clay | opcional | 454 g | ~175 d | $50 |
 
 **Cada producto trae una `ficha`.** *Cómo* se usa vive en `am.uso`/`pm.uso`/`uso`; *qué es* y
