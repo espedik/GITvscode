@@ -67,7 +67,7 @@ Todas comparten origen porque se abren con `file://`.
 forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
-y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `dash-rail-abierto`, `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la ruta abierta en *En qué invertir tu tiempo* y el paso de cada una),
+y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la ruta abierta en *En qué invertir tu tiempo* y el paso de cada una),
 `habilidades_checklist_v1`, `examen_genai_v1`, `dash-inversion-v1` (pestaña, perfil elegido y monto de *Qué
 invertir hoy*), y las `al_*_v1` de Alemán.
 
@@ -146,6 +146,13 @@ en martes (23 bloques), sábado (13) y domingo (14).
 
 `pintarCintaDia()`, `centrarFichaActiva()` y `cintaScroll()` son **código muerto** de la cinta
 anterior, con guardas `if(!el) return`; se conservan por si vuelve.
+
+**Se oculta a la izquierda**, como el rail (Adán: *"la sección donde viene mi horario día a día igual hazla
+que se oculte a la izquierda"*): el tirador de arriba a la derecha (`toggleAgenda()`) la pliega a una tira de
+64 px con la hora, un punto por bloque en sus tres franjas —verde si está hecho, con anillo el de ahora; tocarlo
+abre ese bloque en el AHORA— y el ✓ del bloque actual (`pintarAgendaMini()`). La derecha gana 356 px: a
+2048×1040, Hoy aprendes pasa de 927 a 1164 px de ancho. Se queda como la dejaste (`dash-agenda-oculta`) y, al
+cambiar de ancho, el AHORA, los hábitos y Hoy aprendes se vuelven a medir. En el teléfono no se pliega.
 
 ### El AHORA
 

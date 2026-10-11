@@ -3018,6 +3018,49 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .dia-agenda-res{font-size:11.5px;color:var(--text3)}
 .dia-agenda-res b{color:var(--g);font-family:var(--mono)}
 .dia-agenda-l{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column;gap:7px;padding:0 2px}
+/* La agenda se oculta a la izquierda, como el rail (Adán: "la sección donde viene mi horario día a día igual
+   hazla que se oculte a la izquierda"): el tirador la pliega a una tira de 64 px con la hora, un punto por
+   bloque en sus tres franjas —verde si está hecho, con anillo el de ahora; tocarlo abre ese bloque en el
+   AHORA— y el ✓ del bloque actual. La derecha gana esos 356 px. Se queda como la dejaste (`dash-agenda-oculta`).
+   En el teléfono la agenda va arriba y no se pliega. */
+.dia-b{transition:grid-template-columns .28s ease}
+.dia-agenda{position:relative}
+.dia-ag-tir{position:absolute;top:13px;right:12px;z-index:2;display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  height:26px;padding:0 9px 0 6px;border-radius:8px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.04);
+  color:var(--text3);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  cursor:pointer;transition:color .15s,background .15s}
+.dia-ag-tir:hover{color:var(--text);background:rgba(var(--ov),.09)}
+.dia-ag-tir svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;
+  transition:transform .2s}
+.dia-ag-mini{display:none}
+@media(max-width:1280px){.dia-ag-tir{width:28px;padding:0}.dia-ag-tir span{display:none}}
+@media(max-width:900px){.dia-ag-tir{display:none}}
+@media(min-width:901px){
+  .dia-b.ag-oculta{grid-template-columns:64px minmax(0,1fr)}
+  .dia-b.ag-oculta .dia-agenda{padding:12px 6px;align-items:center;gap:12px}
+  .dia-b.ag-oculta .dia-agenda>:not(.dia-ag-tir):not(.dia-ag-mini){display:none!important}
+  .dia-b.ag-oculta .dia-ag-tir{position:static;flex:none;width:40px;height:32px;padding:0}
+  .dia-b.ag-oculta .dia-ag-tir span{display:none}
+  .dia-b.ag-oculta .dia-ag-tir svg{transform:rotate(180deg)}
+  .dia-b.ag-oculta .dia-ag-mini{display:flex;flex-direction:column;align-items:center;gap:12px;flex:1;min-height:0;width:100%}
+}
+.agm-hora{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);cursor:pointer}
+.agm-frs{flex:1;min-height:0;width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;overflow-y:auto;scrollbar-width:none}
+.agm-fr{display:flex;flex-direction:column;align-items:center;gap:6px}
+.agm-k{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--text3)}
+.agm-fr.viva .agm-k{color:var(--g)}
+.agm-pt{width:13px;height:13px;flex:none;padding:0;border-radius:50%;border:1.5px solid rgba(var(--ov),.28);background:transparent;cursor:pointer;
+  transition:transform .12s}
+.agm-pt:hover{transform:scale(1.25)}
+.agm-pt.ok{background:var(--g);border-color:var(--g)}
+.agm-pt.fijo{border-radius:3px;border-style:dashed}
+.agm-pt.sel{border-color:var(--text)}
+.agm-pt.ahora{border-color:var(--g);box-shadow:0 0 0 3px rgba(var(--g-rgb),.25)}
+.agm-n{font-family:var(--mono);font-size:11px;color:var(--text3);white-space:nowrap}
+.agm-n b{color:var(--g)}
+.agm-ok{flex:none;width:40px;height:34px;border-radius:10px;border:1px solid rgba(var(--g-rgb),.4);background:rgba(var(--g-rgb),.14);
+  color:var(--g);font-size:15px;font-weight:800;cursor:pointer}
+.agm-ok:hover{background:rgba(var(--g-rgb),.24)}
 /* ── Las tres franjas ──────────────────────────────────────────────────────
    Una franja cerrada ocupa 52 px y cuenta lo mismo que ocupaban sus 8 filas:
    cuántos bloques son y cuáles cerraste. La abierta es la única que crece. */
@@ -4379,6 +4422,9 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 
         <!-- LA AGENDA DEL DÍA -->
         <div class="tile dia-agenda reveal d1">
+          <button class="dia-ag-tir" id="agTirador" onclick="toggleAgenda()" title="Ocultar la agenda a la izquierda"
+                  aria-label="Ocultar o mostrar la agenda del día" aria-expanded="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg><span>Ocultar</span></button>
           <div class="dia-agenda-hd">
             <div class="dia-quien" onclick="abrirCalendario()" title="Ver el calendario del año y qué toca cada mes" role="button" tabindex="0">
               <div class="eyebrow" style="margin-bottom:0"><span class="dot"></span> Mi Día · <span id="diaFecha">—</span></div>
@@ -4392,6 +4438,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
             <button class="hf-btn primario" onclick="quickMarkDone()">✓ Marcar el bloque actual</button>
             <a class="hf-btn" href="../Coach/Coach.html#rutina">Coach →</a>
           </div>
+          <div class="dia-ag-mini" id="diaAgendaMini"></div>
         </div>
 
         <!-- LO DEMÁS -->
@@ -7363,9 +7410,31 @@ function pintarAgendaDia(tareas, anchor, done, esHoy){
   const marcables=tareas.filter(t=>!t.fijo).length;
   const faltaMin=esHoy?Math.max(0,fin-ahoraMin):0;
   if(res) res.innerHTML=`<b>${hechos}</b> de ${marcables} bloques hechos${esHoy?' · '+(faltaMin>0?'quedan '+Math.floor(faltaMin/60)+'h '+(faltaMin%60)+'m':'día cerrado'):' · '+DIAS_LARGO[dow]}`;
+  pintarAgendaMini(tareas, anchor, done, esHoy, hechos, marcables);
   // La fila activa a la vista: dentro de una franja abierta también puede quedar fuera.
   const act=el.querySelector('.ag-row.ahora, .ag-row.sel');
   if(act&&act.scrollIntoView) act.scrollIntoView({block:'nearest'});
+}
+// La agenda plegada: la hora, un punto por bloque en sus tres franjas y el ✓ del bloque actual. Tocar un
+// punto abre ese bloque en el AHORA, como tocar su fila.
+function pintarAgendaMini(tareas, anchor, done, esHoy, hechos, marcables){
+  const el = document.getElementById('diaAgendaMini'); if(!el) return;
+  const dow = diaSemanaSel !== null ? diaSemanaSel : new Date().getDay();
+  const selId = cintaSel || (anchor ? anchor.id : null), kSel = selId ? (tareas.find(t => t.id === selId) || {}).hora : null;
+  const frs = AG_FRANJAS.map(fr => {
+    const dentro = tareas.filter(t => agFranjaDe(t.hora) === fr.k); if(!dentro.length) return '';
+    const viva = esHoy && kSel && agFranjaDe(kSel) === fr.k;
+    const pts = dentro.map(t => {
+      const ok = !t.fijo && leafItems(t).every(it => done.includes(it.id));
+      const cls = (t.fijo ? ' fijo' : '') + (ok ? ' ok' : '') + (esHoy && anchor && t.id === anchor.id ? ' ahora' : (t.id === selId ? ' sel' : ''));
+      return `<button type="button" class="agm-pt${cls}" onclick="tocarBloque('${t.id}')" title="${esc(t.hora + ' · ' + tituloCorto(t, dow))}" aria-label="${esc(t.hora + ' · ' + tituloCorto(t, dow))}"></button>`;
+    }).join('');
+    return `<div class="agm-fr${viva ? ' viva' : ''}"><span class="agm-k" title="${esc(fr.n)}">${fr.n.charAt(0)}</span>${pts}</div>`;
+  }).join('');
+  el.innerHTML = `<span class="agm-hora" id="diaClockMini" onclick="abrirCalendario()" title="Ver el calendario del año">${horaAhora()}</span>
+    <div class="agm-frs">${frs}</div>
+    <span class="agm-n" title="Bloques hechos ${esHoy ? 'hoy' : 'ese día'}"><b>${hechos}</b>/${marcables}</span>
+    <button type="button" class="agm-ok" onclick="quickMarkDone()" title="Marcar el bloque actual" aria-label="Marcar el bloque actual">✓</button>`;
 }
 // Mientras manejas: lo mismo que «Al volante» en Hoy aprendes (`didiHoy()`). Entre semana, el
 // audiolibro en el primer bloque de Didi y el podcast del día en los demás; el fin de semana, el
@@ -14212,6 +14281,22 @@ function toggleRail(){
   rawSet(RAIL_KEY, abierto);
 }
 function restauraRail(){ pintaRail(rawGet(RAIL_KEY, false)===true); }
+// La agenda del día se pliega a la izquierda con su tirador y se queda como la dejaste. Al cambiar de ancho, la
+// derecha se vuelve a medir (el AHORA, los hábitos y Hoy aprendes) al terminar la transición.
+const AG_OCULTA_KEY = 'dash-agenda-oculta';
+function pintaAgendaOculta(oculta){
+  const b = document.querySelector('.dia-b'), t = document.getElementById('agTirador'); if(!b) return;
+  b.classList.toggle('ag-oculta', oculta);
+  if(t){ t.setAttribute('aria-expanded', String(!oculta)); t.title = oculta ? 'Mostrar la agenda' : 'Ocultar la agenda a la izquierda'; }
+}
+function toggleAgenda(){
+  const b = document.querySelector('.dia-b'); if(!b) return;
+  const oculta = !b.classList.contains('ag-oculta');
+  pintaAgendaOculta(oculta);
+  rawSet(AG_OCULTA_KEY, oculta);
+  setTimeout(() => window.dispatchEvent(new Event('resize')), 320);
+}
+function restauraAgenda(){ pintaAgendaOculta(rawGet(AG_OCULTA_KEY, false) === true); }
 
 function showSlide(i){
   i=Math.min(Math.max(0,i),N-1);
@@ -14414,6 +14499,7 @@ function tickClock(){
   const hd=document.getElementById('heroDate'); if(hd) hd.textContent=n.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   const sy=document.getElementById('hudSync'); if(sy){const s=Math.round((Date.now()-lastSync)/1000);sy.textContent='· sync hace '+(s<60?s+'s':Math.round(s/60)+'m');}
   const dc=document.getElementById('diaClock'); if(dc) dc.textContent=`${hh}:${mm}`;
+  const dcm=document.getElementById('diaClockMini'); if(dcm) dcm.textContent=`${hh}:${mm}`;
   // Lo del día cambia a medianoche aunque el Dashboard siga abierto y Mi Día no rote.
   const diaN=diaCorrido(n);
   if(_diaPintado!==diaN){ const antes=_diaPintado; _diaPintado=diaN; if(antes!==undefined&&typeof renderDiaHero==='function') renderDiaHero(); }
@@ -14454,6 +14540,7 @@ setInterval(tickClock,1000);
 buildDots();
 buildHudNav();
 restauraRail();   // el rail arranca plegado salvo que se dejara abierto
+restauraAgenda(); // y la agenda, como la dejaste
 const _settings=loadSettings();
 fixTasaTCIfNeeded(); fixBanamexIfNeeded();
 fixPagos20260813IfNeeded();
