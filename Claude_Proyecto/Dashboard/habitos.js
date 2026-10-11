@@ -12,8 +12,8 @@
    LAS TRES DECISIONES DE DISEÑO QUE HAY QUE RESPETAR AL TOCAR ESTO:
 
    1. CUATRO ESTADOS, NO DOS. Hecho, fallé, NO TOCABA y futuro (más `pre`,
-      abajo). Natación es solo los miércoles: un martes en blanco no es un
-      fallo. `estado()` es donde vive esa distinción y es el corazón del módulo.
+      abajo). Un hábito que no toca un día —el gimnasio no toca el domingo— no
+      falla ese día. `estado()` es donde vive esa distinción y es el corazón del módulo.
 
    2. EL ANCLAJE VIVE JUNTO AL NOMBRE. "23:10, después de lavarme los dientes"
       es lo que hace que el hábito ocurra, así que va en la fila.

@@ -131,7 +131,7 @@ filas, la noche del pelo (2 pasos) frente al día (9) dejaba media pantalla en b
    (`plVerDia`/`peVerDia`, `peDiaVisto` = null es hoy): los pasos de otro día van en gris,
    `.solo-lectura` y no se marcan —marcar el sábado el martes guardaría el hecho en la fecha de
    hoy—, con *← volver a hoy*. En el pelo la tira **cambia** (Pilexil unos días, CeraVe y
-   mascarilla el sábado, solo agua otros, "+ CeraVe al nadar" el miércoles); en la piel **no
+   mascarilla el sábado, solo acondicionador los demás); en la piel **no
    cambia ni un día**, y esa es la información: por eso cada columna muestra su conteo (`2 DE 2`).
    Bajo 920 px las 7 columnas pasan a 7 tiras de una línea.
 2. **Las dos rutinas lado a lado**, con insignia de estado (`COMPLETA`, `2 DE 3`, `A LAS 22:30`)

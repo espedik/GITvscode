@@ -26,7 +26,7 @@ estático, sin render ni `localStorage`). `nav(s)` cambia de sección.
 | 🧭 **Deportes para Explorar** | 8 tarjetas `.sport-card` + un bonus a ancho completo (Chessboxing), cada una con foto de Wikimedia, por qué le conviene a Adán, costo aproximado en CDMX, dónde y equipo |
 
 En Deportes, ubicaciones y costos son aproximaciones no verificadas en vivo, **salvo Natación**:
-Adán nada en la alberca semiolímpica de su gimnasio, Fitsi Buenavista, incluida en su membresía.
+su gimnasio, Fitsi Buenavista, tiene alberca semiolímpica incluida en la membresía.
 
 ## La biblioteca — `EJ_DB`
 
@@ -59,25 +59,31 @@ Los propios van en `S.ejerciciosCustom` y `getAllEj()` los combina con `EJ_DB` e
 
 ## La rutina por defecto
 
-A la medida de la meta de Adán: masa en brazos y definir la zona media. `S.rutina` indexado por
-día (0 = domingo):
+A la medida de las tres metas de Adán (2026-10-10: *"miércoles de natación ya no existe, redefine mi
+rutina sabiendo lo que quiero lograr: mejor condición física, bajar grasa en panza, aumentar masa
+muscular en brazos"*). `S.rutina` indexado por día (0 = domingo); entre semana caben 50 minutos
+(18:15–19:05, tras el CENLEX) y el sábado 60:
 
 | Día | Rutina | `tipo` | Ejercicios |
 |---|---|---|---|
-| Lunes | Brazos A — Bíceps + Tríceps | `brazos` | 5: Fondos (compuesto, primero) + Curl con barra, Patada de tríceps, Curl martillo, Pushdown |
-| Martes | Piernas — completa | `piernas` | 6, **todo en máquina o con apoyo**: Hack Squat (el pesado, primero), Prensa, Extensión, Curl femoral, Abducción, Pantorrilla |
-| Miércoles | Natación — aprender a nadar | `cardio` | 4 bloques que suman 45 min, **en el orden en que se aprende**: flotación y respiración 7 · patada con tabla + respirar de lado 4×4 · brazada de crol 3×4 · nado continuo 10 |
-| Jueves | Brazos B — Bíceps + Tríceps | `brazos` | 5, volumen con ejercicios distintos al lunes; Fondos en banco de compuesto |
-| Viernes | Abdomen — Core + Cardio | `core` | Plancha 45 s, Elevación de piernas, Crunch, Dead Bug + 25 min de elíptica |
-| Sábado | Pecho + Cardio + Core | `empuje` | Press banca, Press inclinado, Aperturas + 25 min de elíptica + Plancha (se repite del viernes a propósito) |
+| Lunes | Espalda + Bíceps | `halar` | Jalón al Pecho 4×10, Remo en Polea Baja 3×10, Curl con Barra 4×8 (el pesado), Curl Martillo 3×12, Face Pull 3×15 |
+| Martes | Piernas + Core | `piernas` | **Todo en máquina o con apoyo**: Hack Squat 4×10 (primero), Prensa, Curl Femoral, Extensión, Pantorrilla y Plancha 3×45 s |
+| Miércoles | Condición — Intervalos | `cardio` | Bici 8×(1 min fuerte / 1 min suave) tras 5 min suaves, Battle Ropes 5×30 s, Elíptica 12 min a ritmo de conversación, Dead Bug 3×10. Bajo impacto |
+| Jueves | Pecho + Hombro + Tríceps | `empuje` | Fondos 4×8 (el compuesto), Press de Hombros con Mancuernas 3×10, Elevaciones Laterales 3×15, Pushdown 4×12, Extensión sobre Cabeza 3×12 |
+| Viernes | Cardio largo + Core | `core` | Correr suave 30 min (cinta inclinada si la rodilla molesta), Elevación de Piernas, Crunch, Plancha |
+| Sábado | Brazos + Pecho | `brazos` | Press de Banca 4×8, Curl Scott, Patada de Tríceps, Curl con Mancuerna, Fondos en Banco, Elíptica 15 min |
 | Domingo | Descanso activo | `descanso` | Caminata 30 min opcional |
 
-Cada día lleva **`foco`**: texto de usuario que explica qué ejercicios de ese día sirven a cuál
-meta. El del viernes dice explícitamente que **la reducción localizada no existe**: los
-abdominales fortalecen el músculo, la grasa baja con déficit calórico + cardio. Ese aviso vive
-una sola vez en `EJ_AVISO` y se pinta en el carril derecho. Los ejercicios retirados por Adán
-(Press francés, Búlgara, Rueda abdominal, Oblicuos con cable, Sentadilla con barra, Zancadas,
-Peso muerto rumano, Hip thrust) siguen en la biblioteca por si los quiere de vuelta.
+**El brazo trabaja tres veces por semana** —13 series directas de bíceps (lunes y sábado) y 13 de
+tríceps (jueves y sábado), más lo que suman jalón, remo, fondos y press— y **la espalda**, que la
+rutina no tenía, compensa tanto empuje. La condición sale de los intervalos del miércoles y el cardio
+largo del viernes; la grasa de la panza, del déficit en la comida más ese cardio. Cada día lleva
+**`foco`**: texto de usuario que explica qué sirve a cuál meta. El del viernes dice que **la
+reducción localizada no existe**: los abdominales fortalecen el músculo, la grasa baja con déficit
+calórico + cardio. Ese aviso vive una sola vez en `EJ_AVISO` y se pinta en el carril derecho. Los
+ejercicios retirados por Adán (Press francés, Búlgara, Rueda abdominal, Oblicuos con cable,
+Sentadilla con barra, Zancadas, Peso muerto rumano, Hip thrust) y los cinco de natación siguen en la
+biblioteca por si los quiere de vuelta.
 
 **Los 7 `foco` y las 7 listas son idénticos carácter por carácter a `GYM_RUTINA_DEFAULT` de
 `Dashboard/dashboard.html`** (el verificador compara los 7 días): las dos apps comparten
@@ -119,6 +125,9 @@ propia, una sola pasada, **solo tocan un día si sigue siendo exactamente el def
 (comparado por nombre), nunca uno que Adán personalizó—:
 
 - `fixMiercolesNatacionIfNeeded()` — bandera `mirutina_v1_miercoles_natacion`.
+- `fixRutina20261010IfNeeded()` — bandera `mirutina_v1_semana_20261010`: la semana de condición,
+  espalda y brazo. Aplica los días de `RUTINA_DEFAULT_20261010` a los que sigan llamándose como un
+  default anterior (`RUTINA_PREVIOS_20261010`, todos los nombres de antes).
 - `fixRutina20260812IfNeeded()` — bandera `mirutina_v1_pierna_abs_natacion_v3`, aplica los días
   de `RUTINA_DEFAULT_20260812` (copia profunda del default **antes** de que `load()` lo pise).
   Cada tanda de cambios a la rutina **bumpea la bandera** y acepta como "todavía default" los

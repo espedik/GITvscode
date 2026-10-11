@@ -5094,6 +5094,20 @@ function fixRutina20260812IfNeeded(){
   }
   localStorage.setItem('mirutina_v1_pierna_abs_natacion_v3','1');
 }
+// Espejo de fixRutina20261010IfNeeded() de ejercicio.html, con la misma bandera: la semana nueva llega a un
+// navegador que ya tenía la rutina guardada, solo en los días que siguen siendo un default anterior.
+const RUTINA_PREVIOS_20261010={1:['Brazos A — Bíceps + Tríceps'],2:['Piernas — completa','Piernas A — Cuádriceps'],3:['Natación — aprender a nadar','Natación','Espalda + Hombros + Cardio'],4:['Brazos B — Bíceps + Tríceps'],5:['Abdomen — Core + Cardio','Abdomen — bajar panza','Piernas B — Glúteo + Femoral'],6:['Pecho + Cardio + Core']};
+function fixRutina20261010IfNeeded(){
+  if(localStorage.getItem('mirutina_v1_semana_20261010')) return;
+  const gym=rawGet('mirutina_v1', null);
+  if(gym&&gym.rutina){
+    Object.keys(RUTINA_PREVIOS_20261010).forEach(d=>{
+      if(gym.rutina[d]&&RUTINA_PREVIOS_20261010[d].includes(gym.rutina[d].nombre)) gym.rutina[d]=JSON.parse(JSON.stringify(GYM_RUTINA_DEFAULT[d]));
+    });
+    rawSet('mirutina_v1', gym);
+  }
+  localStorage.setItem('mirutina_v1_semana_20261010','1');
+}
 // Siembra las 2 metas "ya logradas" de cortoMediano (ipn11k, aleman5) al 100% desde la primera
 // carga de este navegador (2026-08-11) — mismo patrón que fixBanamexIfNeeded()/
 // fixMiercolesNatacionIfNeeded(): corre una sola vez (bandera propia en localStorage) y nunca
@@ -5448,7 +5462,10 @@ const TIPO_FOTO={
   brazos:'https://images.unsplash.com/photo-1598268030450-7a476f602bf6?w=400&q=70&auto=format&fit=crop',
   piernas:'https://images.unsplash.com/photo-1770664612843-b44e26070024?w=400&q=70&auto=format&fit=crop',
   empuje:'https://images.unsplash.com/photo-1690731033723-ad718c6e585a?w=400&q=70&auto=format&fit=crop',
-  cardio:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/US_Navy_110520-N-CD297-071_Aviation_Ordnanceman_2nd_Class_Selemani_Johnson_swims_in_the_100-meter_Freestyle_event_as_a_member_of_Team_Navy-Coast_Gu.jpg/500px-US_Navy_110520-N-CD297-071_Aviation_Ordnanceman_2nd_Class_Selemani_Johnson_swims_in_the_100-meter_Freestyle_event_as_a_member_of_Team_Navy-Coast_Gu.jpg',
+  // halar y cardio, a 480 px en fotos-aprende/: «Lat pulldown» de sportsandsocial (Flickr) y «Battling ropes»
+  // de stroopsmma (Wikimedia Commons), las dos CC BY 2.0. El miércoles ya no es natación: son intervalos.
+  halar:'fotos-aprende/gym-halar.jpg',
+  cardio:'fotos-aprende/gym-intervalos.jpg',
   // `core` (2026-08-12) — el viernes dejó de ser "Piernas B" y ahora es el día de abdomen, con
   // tipo:'core'; sin esta entrada la tira de 7 días caía al `||TIPO_FOTO.descanso` del final y
   // mostraba la foto de descanso en un día de entrenamiento.
@@ -5466,28 +5483,46 @@ const TIPO_FOTO={
 // omitiera aquí, abrir el Dashboard antes que ejercicio.html borraría ese texto de la otra app.
 // Por eso los 7 `foco` deben quedar idénticos a los de S.rutina, carácter por carácter.
 const GYM_RUTINA_DEFAULT={
-  // Corregido el 2026-08-12 — este día llevaba desincronizado desde antes: aquí empezaba con
-  // Curl con Barra y cerraba con Plancha, cuando el día real en ejercicio.html empieza con Fondos
-  // (e005, el compuesto pesado del día) y no lleva Plancha. Se detectó al comparar los 7 días de
-  // los 2 archivos con Node durante la reestructura de la rutina; ahora coinciden exactamente.
-  1:{nombre:'Brazos A — Bíceps + Tríceps',tipo:'brazos',
-     foco:'Prioridad: masa en brazos. Empiezas con Fondos (compuesto pesado, tríceps+pecho) antes que el aislamiento — el compuesto construye más masa total que solo curls, y hacerlo primero (con energía fresca) es cuando más rinde. El tríceps se aísla con Patada y Pushdown, los 2 más fáciles de hacer bien: no cargan el codo como el Press Francés y perdonan mucho más la técnica.',
-     ejercicios:[{id:'e005',series:4,reps:8,descanso:90},{id:'e021',series:4,reps:9,descanso:90},{id:'e030',series:3,reps:12,descanso:60},{id:'e023',series:3,reps:12,descanso:60},{id:'e028',series:3,reps:12,descanso:60}]},
-  2:{nombre:'Piernas — completa',tipo:'piernas',
-     foco:'Tu único día de pierna, así que cubre todo: 3 de cuádriceps, 1 de femoral, 1 de glúteo/abductor y 1 de pantorrilla. El Hack Squat es el pesado del día — hazlo primero, con energía fresca. Es sentadilla con carga pero en máquina, con la espalda apoyada y sin barra encima. Todo el día es en máquina o con apoyo: nada de equilibrio a una pierna ni barra sobre los hombros.',
-     ejercicios:[{id:'e040',series:4,reps:10,descanso:120},{id:'e033',series:4,reps:12,descanso:90},{id:'e034',series:3,reps:15,descanso:60},{id:'e035',series:3,reps:12,descanso:60},{id:'e044',series:3,reps:15,descanso:45},{id:'e039',series:4,reps:20,descanso:45}]},
-  3:{nombre:'Natación — aprender a nadar',tipo:'cardio',
-     foco:'Sesión de aprendizaje en la alberca semiolímpica del Fitsi Buenavista (tu mismo gimnasio, ya incluida en tu membresía), en el orden real en que se aprende a nadar: primero perderle el miedo al agua y respirar, luego piernas y respiración de lado, luego brazos, y al final todo junto. Son 4 bloques de 45 min en total y van EN ORDEN. Las primeras semanas es normal que casi toda la sesión se te vaya en los 2 primeros y apenas toques el nado continuo — eso no es atraso, es el plan. Conforme te salga, le quitas minutos a los de arriba y se los sumas al último, hasta que en unos meses el día sea puro nadar. Toca el nombre de cada bloque para ver la técnica. Cuando puedas, toma 3-4 clases con instructor al inicio: acorta meses de avance y corrige errores que solo no vas a notar — Fitsi también da Aquafit, que sirve para agarrar confianza en el agua.',
-     ejercicios:[{id:'e058',series:1,reps:7,unidad:'min',descanso:60},{id:'e059',series:4,reps:4,unidad:'min',descanso:60},{id:'e061',series:3,reps:4,unidad:'min',descanso:60},{id:'e062',series:1,reps:10,unidad:'min',descanso:0}]},
-  4:{nombre:'Brazos B — Bíceps + Tríceps',tipo:'brazos',
-     foco:'Prioridad: masa en brazos. Volumen, ejercicios distintos al lunes — Fondos en Banco de compuesto (más ligero que los Fondos del lunes) antes del aislamiento.',
-     ejercicios:[{id:'e022',series:4,reps:12,descanso:60},{id:'e031',series:4,reps:12,descanso:60},{id:'e026',series:3,reps:10,descanso:60},{id:'e029',series:3,reps:15,descanso:60},{id:'e047',series:3,reps:15,descanso:45}]},
-  5:{nombre:'Abdomen — Core + Cardio',tipo:'core',
-     foco:'4 ejercicios de core + 25 min de elíptica al final. Cubren las 2 funciones que más se notan: aguantar sin arquearte (plancha y dead bug) y flexionar (crunch y elevación de piernas). IMPORTANTE para que esto sirva de verdad: NO existe la reducción localizada — hacer abdominales fortalece el músculo, pero no quema la grasa que está encima. La grasa de la zona media baja con déficit calórico sostenido (tu Registro Diario en comida.html) + cardio; estos ejercicios son los que hacen que, cuando esa grasa baje, sí haya un abdomen marcado debajo.',
-     ejercicios:[{id:'e045',series:3,reps:45,unidad:'seg',descanso:45},{id:'e047',series:3,reps:15,descanso:45},{id:'e046',series:3,reps:20,descanso:45},{id:'e050',series:3,reps:10,descanso:45},{id:'e054',series:1,reps:25,unidad:'min',descanso:0}]},
-  6:{nombre:'Pecho + Cardio + Core',tipo:'empuje',
-     foco:'El press de banca/inclinado también trabaja tríceps como secundario, extra frecuencia de brazos. Pero el foco real de hoy es la definición de la zona media: 25 min de elíptica (tu bloque de cardio más largo de la semana) + plancha para cerrar — junto con la natación del miércoles, son tus 2 bloques de cardio más largos de la semana. La plancha se repite del viernes a propósito: el core aguanta bien entrenarse 2 veces por semana, no necesita equipo y no te deja adolorido para el domingo.',
-     ejercicios:[{id:'e001',series:4,reps:8,descanso:120},{id:'e002',series:3,reps:10,descanso:90},{id:'e004',series:3,reps:12,descanso:60},{id:'e054',series:1,reps:25,unidad:'min',descanso:0},{id:'e045',series:3,reps:45,unidad:'seg',descanso:45}]},
+  // La semana (Adán, 2026-10-10: "miércoles de natación ya no existe, redefine mi rutina sabiendo lo que quiero
+  // lograr: mejor condición física, bajar grasa en panza, aumentar masa muscular en brazos"): brazo tres veces —espalda
+  // y bíceps el lunes, empuje y tríceps el jueves, brazos el sábado—, la espalda que faltaba, pierna una vez, intervalos
+  // de bajo impacto el miércoles y cardio largo el viernes. Idéntica a la de ejercicio.html (el verificador compara).
+  1:{nombre:'Espalda + Bíceps',tipo:'halar',
+
+     foco:'Brazo con base. El jalón y el remo también trabajan el bíceps y ponen la espalda que tu rutina no tenía: sin ella, tanto press y tanto fondo te cierran los hombros hacia delante. El Curl con Barra es el pesado del día —ya mueves 18 kg—: cuando completes las 4×8 limpias, súbele. Face Pull al final, para el hombro.',
+
+     ejercicios:[{id:'e010',series:4,reps:10,descanso:90},{id:'e013',series:3,reps:10,descanso:90},{id:'e021',series:4,reps:8,descanso:90},{id:'e023',series:3,reps:12,descanso:60},{id:'e020',series:3,reps:15,descanso:45}]},
+
+  2:{nombre:'Piernas + Core',tipo:'piernas',
+
+     foco:'Tu único día de pierna, todo en máquina o con apoyo: nada de barra sobre los hombros ni de equilibrio a una pierna. El Hack Squat va primero, con energía fresca. La pierna es tu músculo más grande: entrenarla fuerte es lo que más gasta de la semana y la base de la condición. Cierra con plancha: el core que aguanta es el que cuida tu espalda.',
+
+     ejercicios:[{id:'e040',series:4,reps:10,descanso:120},{id:'e033',series:3,reps:12,descanso:90},{id:'e035',series:3,reps:12,descanso:60},{id:'e034',series:3,reps:15,descanso:60},{id:'e039',series:3,reps:15,descanso:45},{id:'e045',series:3,reps:45,unidad:'seg',descanso:45}]},
+
+  3:{nombre:'Condición — Intervalos',tipo:'cardio',
+
+     foco:'Reemplaza a la natación. La condición sube con intervalos: 5 minutos suaves de bici y luego 8 rondas de 1 minuto fuerte —tan fuerte que no puedas hablar— por 1 minuto suave. Después, cuerdas en ráfagas de 30 segundos, 12 minutos de elíptica a ritmo de conversación y dead bug. Todo de bajo impacto, sin castigar rodilla ni espalda. Es lo que te prepara para un Hyrox o un round.',
+
+     ejercicios:[{id:'e053',series:8,reps:1,unidad:'min',descanso:60},{id:'e056',series:5,reps:30,unidad:'seg',descanso:30},{id:'e054',series:1,reps:12,unidad:'min',descanso:0},{id:'e050',series:3,reps:10,descanso:45}]},
+
+  4:{nombre:'Pecho + Hombro + Tríceps',tipo:'empuje',
+
+     foco:'El otro lado del brazo: el tríceps son dos tercios de su grosor. Fondos primero —el compuesto pesado, pecho y tríceps— y después hombro. El tríceps se aísla con Pushdown —ya mueves 22.5 kg— y con la Extensión sobre Cabeza, que lo trabaja estirado, que es como más crece.',
+
+     ejercicios:[{id:'e005',series:4,reps:8,descanso:90},{id:'e016',series:3,reps:10,descanso:90},{id:'e017',series:3,reps:15,descanso:45},{id:'e028',series:4,reps:12,descanso:60},{id:'e031',series:3,reps:12,descanso:60}]},
+
+  5:{nombre:'Cardio largo + Core',tipo:'core',
+
+     foco:'Treinta minutos a ritmo de conversación —corriendo suave, o en cinta inclinada si la rodilla molesta— y tres de core. La grasa de la panza no baja con abdominales: baja con déficit en la comida y con cardio sostenido, y el abdomen se ve cuando baja la capa de encima. El core fuerte sí sirve: sostiene la espalda en cada levantamiento.',
+
+     ejercicios:[{id:'e052',series:1,reps:30,unidad:'min',descanso:0},{id:'e047',series:3,reps:15,descanso:45},{id:'e046',series:3,reps:20,descanso:45},{id:'e045',series:3,reps:45,unidad:'seg',descanso:45}]},
+
+  6:{nombre:'Brazos + Pecho',tipo:'brazos',
+
+     foco:'Tu día largo, 60 minutos: press de banca para fuerza y luego bíceps y tríceps alternados, con ejercicios distintos a los del lunes y el jueves para trabajarlos desde otro ángulo. Cierra con 15 minutos de elíptica. Con este día el brazo trabaja tres veces por semana —13 series de bíceps y 13 de tríceps—, la frecuencia que más lo hace crecer.',
+
+     ejercicios:[{id:'e001',series:4,reps:8,descanso:120},{id:'e026',series:3,reps:10,descanso:60},{id:'e030',series:3,reps:12,descanso:60},{id:'e022',series:3,reps:12,descanso:60},{id:'e029',series:3,reps:15,descanso:45},{id:'e054',series:1,reps:15,unidad:'min',descanso:0}]},
+
   0:{nombre:'Descanso activo',tipo:'descanso',foco:'Recuperación — caminata ligera opcional, sin gimnasio. El músculo crece hoy, no en el gym.',ejercicios:[{id:'e051',series:1,reps:30,unidad:'min',descanso:0}]}
 };
 
@@ -6633,7 +6668,7 @@ const FRASES_MOTIVACION=[
   'Un día bien comido no compensa nada. Exígete semanas completas, sin una sola excepción.',
   'Cada vaso de agua que no tomas, cada serie que recortas, no se nota hoy — se nota en un año, y para entonces ya es tarde para reclamarte.',
   'Quítate la idea de que dormir menos es aguantar más. Sin tus horas completas, todo lo demás que haces rinde menos.',
-  'Saltarte la natación del miércoles no es "solo un cardio menos" — es una rodilla y una espalda que vas a seguir desgastando sin necesidad.',
+  'Saltarte los intervalos del miércoles no es "solo un cardio menos": es la condición que te va a faltar en el último kilómetro.',
   'Cancelar por cansancio es la salida fácil. El entrenamiento que de verdad te define es el que haces cansado, no el que te saltas por estarlo.',
   'No busques el mes perfecto de gym. Exígete algo más simple y no negociable: nunca dos entrenamientos seguidos fallados.',
   // Finanzas / deuda
@@ -11979,7 +12014,7 @@ const META_DETALLE={
       {t:"Entrena el SkiErg",d:"Caderas altas, agarre suave, exhala fuerte en cada jalón — practica intervalos largos y cortos para sostener el ritmo después de correr."},
       {t:"Entrena Sled Push/Pull",d:"Inclinación agresiva (~45°), pasos cortos y potentes sin detenerte, esfuerzo al 85% (no sprint) — el calzado con buen agarre importa más aquí que en otra estación."},
       {t:"Entrena Wall Balls",d:"La última estación, con las piernas cansadas: sentadilla profunda, espalda recta, lanza a la altura correcta y recibe en sentadilla — la técnica evita repeticiones no válidas."},
-      {t:"Tu base ya existe",d:"Fuerza 2×/semana, natación miércoles y cardio sábado — agrega intervalos de carrera (6-8×400m) al sábado, empezando 8-10 semanas antes del evento."},
+      {t:"Tu base ya existe",d:"Fuerza cuatro días, intervalos el miércoles y cardio largo el viernes — cambia el viernes por intervalos de carrera (6-8×400 m), empezando 8-10 semanas antes del evento."},
       {t:"Fecha confirmada",d:"HYROX Ciudad de México: 30 oct al 1 nov de 2026, Centro Banamex (Hipódromo de las Américas) — el costo no salió confirmado en la búsqueda, revísalo en el registro oficial.",href:"https://mexico.hyrox.com/event/hyrox-mexico-city-season-26-27-glbt3x",label:"Registro oficial HYROX CDMX"},
       {t:"Sedes alternas",d:"Si prefieres o se te pasó CDMX: Dallas, TX (18-22 nov 2026) y Chicago, IL (11-15 feb 2027), ya confirmadas en Norteamérica."},
       {t:"Últimas 2 semanas",d:"Baja el peso en brazos/piernas y prioriza el descanso — llegar fresco importa más que un último entrenamiento fuerte."},
@@ -12041,7 +12076,7 @@ const META_DETALLE={
     ]},
   tailandia:{titulo:"Pelear en Tailandia",frase:"La pelea en Tailandia empieza en un gimnasio de box en CDMX, no en el avión.",pasos:[
       {t:"Empieza ya en CDMX",d:"Ya tienes el boxeo identificado en tu sección de Deportes — 2-3 clases por semana en un gimnasio de box o Muay Thai."},
-      {t:"Súmale resistencia",d:"Tu base ya existe (fuerza, natación, cardio) — agrega resistencia específica de box (rounds de 3 min, sparring ligero) antes del viaje."},
+      {t:"Súmale resistencia",d:"Tu base ya existe (fuerza, intervalos y cardio largo) — agrega resistencia específica de box (rounds de 3 min, sparring ligero) antes del viaje."},
       {t:"Tiger Muay Thai",d:"Campamento real en Phuket, de los más grandes, recibe extranjeros todo el año — organiza peleas amistosas para estudiantes en su evento mensual.",href:"https://www.tigermuaythai.com/",label:"Tiger Muay Thai"},
       {t:"Sumalee Boxing Gym",d:"Otra opción real en Phuket — clase suelta 500 THB, mensual 5,000-9,000 THB, con programa de 12 semanas para tu primera pelea real.",href:"https://sumaleeboxinggym.com/",label:"Sumalee Boxing Gym"},
       {t:"Santai Muay Thai",d:"Campamento real en Chiang Mai — semanal desde ~$240 USD, mensual ~$665 USD, entrenamiento 2×/día y alojamiento, ayudan a organizar tu primera pelea.",href:"https://muay-thai-santai.com/",label:"Santai Muay Thai"},
@@ -14553,6 +14588,7 @@ fixMsiBBVA20260813IfNeeded();
 if(window.CIFRAS){ CIFRAS.refrescar(); cifrarLiterales(PHASES); cifrarLiterales(META_DETALLE); cifrarLiterales(EDAD_DETALLE); cifrarLiterales(APRENDIZAJE); }
 fixMiercolesNatacionIfNeeded();
 fixRutina20260812IfNeeded();
+fixRutina20261010IfNeeded();
 seedMetasLogradasIfNeeded();
 seedTengoViajeIfNeeded();
 seedLogros20260813IfNeeded();

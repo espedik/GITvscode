@@ -608,8 +608,8 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   });
 
   // Los días de cada champú, contra las tareas de la MAÑANA que lo nombran. Los
-  // `diasCondicionales` quedan fuera: el CeraVe del miércoles no va en la ducha de la mañana
-  // sino al salir de la alberca, en otra tarea que corre de lunes a viernes.
+  // `diasCondicionales` quedan fuera: son los días en que el champú depende de algo y va en
+  // otra tarea, no en la ducha de la mañana.
   RP.productos.filter(function (p) { return p.champu && p.dias.length; }).forEach(function (p) {
     const corto = p.n.toLowerCase();
     const dias = {};

@@ -232,7 +232,7 @@ pero el nombre de la variable se queda corto.
 | `{{ahorroMesCasa}}` | $31,100 — lo mismo en casa de su familia: lo del 1, lo del 15 y Didi | derivada (`mesTipo(true)`) |
 | `{{gastoPersonalDepa}}` | $8,218 — lo que queda del sueldo con depa tras los fijos, la comida y el ahorro: su gasto personal, con sus rutinas dentro; lo que pague con tarjeta, saldado en la misma quincena | derivada |
 | `{{gastoPersonalCasa}}` | $7,471 — lo mismo en casa | derivada |
-| `{{cuidadoMes}}` | $4,678 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
+| `{{cuidadoMes}}` | $4,624 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
 | `{{recorteRutinas}}` | $1,880 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $857 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
 | `{{alemaniaMarzo}}` | $135,840 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
 | `{{salidaAgosto}}` | $324,284 — lo que pide la salida completa en agosto de 2027: la cuenta bloqueada, la reserva del BYD, el colchón y la colegiatura del primer semestre (`cortes.salida.pide`) | derivada; se mueve con `PROYECTO.eurMxn` |
@@ -591,23 +591,24 @@ toca cada día vive aquí y en ningún otro sitio. Se pide desde JS:
 ```js
 CIFRAS.RUTINA_PELO.dia(2)             // martes -> {champu, condicional, nota, mascarilla, ...}
 CIFRAS.RUTINA_PELO.duracionDias(p)    // contenido / (usos por semana / 7)
-CIFRAS.RUTINA_PELO.costoMesTotal      // $2,865 hoy — el NR-11 y el Avodart son $2,460
+CIFRAS.RUTINA_PELO.costoMesTotal      // $2,811 hoy — el NR-11 y el Avodart son $2,460
 ```
 
 | Producto | Cuándo | Tamaño | Dura | Al mes |
 |---|---|---|---|---|
-| Minoxidil 5% en ESPUMA (Kirkland) | todos los días, **2 veces** | 60 g | ~30 d | **$233** |
+| Minoxidil 5% NR-11 (Polaris Research) | todos los días, **2 veces** (5 atomizaciones = 1 ml) | 60 ml | ~30 d | **$900** |
+| Avodart (dutasterida 0,5 mg) | todos los días, una cápsula | 30 cápsulas | ~30 d | **$1,560** |
 | Pilexil Anticaída 300 ml | lunes y jueves | 300 ml | ~88 d | $153 |
-| CeraVe Champú Hidratante sin sulfatos | sábado, y miércoles al nadar | 355 ml | ~83 d | $108 |
+| CeraVe Champú Hidratante sin sulfatos | sábado | 355 ml | ~166 d | $54 |
 | Darrow Doctar (alquitrán) | solo si hay caspa activa | 200 ml | — | — |
 | L'Oréal Elvive Reparación Total 5 | todos menos sábado | 680 ml | ~53 d | $68 |
 | Mascarilla L'Oréal Elvive Total Repair 5 | sábado | 300 ml | ~105 d | $37 |
 | Moroccanoil Treatment Light | cuando lo note áspero | 100 ml | ~700 d | $39 |
 | Funda de almohada de satín | una sola vez | — | — | — |
 
-`dias` es **0=domingo…6=sábado**, y `diasCondicionales` marca los que dependen de algo: el
-CeraVe del miércoles no va en la ducha de la mañana sino al salir de la alberca. El control 12
-lo tiene en cuenta al comparar días.
+`dias` es **0=domingo…6=sábado**, y `diasCondicionales` marca los que dependen de algo y van en
+otra tarea, no en la ducha de la mañana; hoy ningún champú lo usa. El control 12 lo tiene en
+cuenta al comparar días.
 
 `LISTA_COMPRAS.cabello` es un **getter sobre esta lista**, con los días incluidos, más los 2
 tratamientos de receta al final — que no son de mostrador y no forman parte de la rutina.

@@ -490,8 +490,8 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
     <!-- MI RUTINA — fusión de Dashboard + Mi Rutina (2026-08-02) -->
     <section id="s-rutina" class="section active">
       <div class="card meta-banner" style="margin-bottom:16px">
-        <div style="font-size:13px;font-weight:800;color:var(--p);margin-bottom:4px">🎯 Tu meta: masa en brazos y piernas, definir la zona media</div>
-        <div class="ts" style="color:var(--text2);line-height:1.6">Por eso brazos y piernas se entrenan <strong style="color:var(--text)">2 veces por semana</strong> cada uno (Lun/Jue y Mar/Vie) — el resto se mantiene 1x/semana para no perder desarrollo.</div>
+        <div style="font-size:13px;font-weight:800;color:var(--p);margin-bottom:4px">🎯 Tu meta: más condición, menos grasa en la panza y más brazo</div>
+        <div class="ts" style="color:var(--text2);line-height:1.6">Por eso el brazo se entrena <strong style="color:var(--text)">3 veces por semana</strong> (lunes, jueves y sábado), la condición dos —intervalos el miércoles y cardio largo el viernes— y la pierna una, para mantenerla.</div>
       </div>
 
       <div id="d-hoy"></div>
@@ -778,18 +778,18 @@ const KEY = 'mirutina_v1';
 // varias veces para apoyar la pérdida de grasa (sin prometer reducción localizada — ver banner).
 let S = {
   rutina: {
-    1:{nombre:'Brazos A — Bíceps + Tríceps',tipo:'brazos',foco:'Prioridad: masa en brazos. Empiezas con Fondos (compuesto pesado, tríceps+pecho) antes que el aislamiento — el compuesto construye más masa total que solo curls, y hacerlo primero (con energía fresca) es cuando más rinde. El tríceps se aísla con Patada y Pushdown, los 2 más fáciles de hacer bien: no cargan el codo como el Press Francés y perdonan mucho más la técnica.',
-       ejercicios:[{id:'e005',series:4,reps:8,peso:0,descanso:90},{id:'e021',series:4,reps:9,peso:0,descanso:90},{id:'e030',series:3,reps:12,peso:0,descanso:60},{id:'e023',series:3,reps:12,peso:0,descanso:60},{id:'e028',series:3,reps:12,peso:0,descanso:60}]},
-    2:{nombre:'Piernas — completa',tipo:'piernas',foco:'Tu único día de pierna, así que cubre todo: 3 de cuádriceps, 1 de femoral, 1 de glúteo/abductor y 1 de pantorrilla. El Hack Squat es el pesado del día — hazlo primero, con energía fresca. Es sentadilla con carga pero en máquina, con la espalda apoyada y sin barra encima. Todo el día es en máquina o con apoyo: nada de equilibrio a una pierna ni barra sobre los hombros.',
-       ejercicios:[{id:'e040',series:4,reps:10,peso:0,descanso:120},{id:'e033',series:4,reps:12,peso:0,descanso:90},{id:'e034',series:3,reps:15,peso:0,descanso:60},{id:'e035',series:3,reps:12,peso:0,descanso:60},{id:'e044',series:3,reps:15,peso:0,descanso:45},{id:'e039',series:4,reps:20,peso:0,descanso:45}]},
-    3:{nombre:'Natación — aprender a nadar',tipo:'cardio',foco:'Sesión de aprendizaje en la alberca semiolímpica del Fitsi Buenavista (tu mismo gimnasio, ya incluida en tu membresía), en el orden real en que se aprende a nadar: primero perderle el miedo al agua y respirar, luego piernas y respiración de lado, luego brazos, y al final todo junto. Son 4 bloques de 45 min en total y van EN ORDEN. Las primeras semanas es normal que casi toda la sesión se te vaya en los 2 primeros y apenas toques el nado continuo — eso no es atraso, es el plan. Conforme te salga, le quitas minutos a los de arriba y se los sumas al último, hasta que en unos meses el día sea puro nadar. Toca el nombre de cada bloque para ver la técnica. Cuando puedas, toma 3-4 clases con instructor al inicio: acorta meses de avance y corrige errores que solo no vas a notar — Fitsi también da Aquafit, que sirve para agarrar confianza en el agua.',
-       ejercicios:[{id:'e058',series:1,reps:7,unidad:'min',peso:0,descanso:60},{id:'e059',series:4,reps:4,unidad:'min',peso:0,descanso:60},{id:'e061',series:3,reps:4,unidad:'min',peso:0,descanso:60},{id:'e062',series:1,reps:10,unidad:'min',peso:0,descanso:0}]},
-    4:{nombre:'Brazos B — Bíceps + Tríceps',tipo:'brazos',foco:'Prioridad: masa en brazos. Volumen, ejercicios distintos al lunes — Fondos en Banco de compuesto (más ligero que los Fondos del lunes) antes del aislamiento.',
-       ejercicios:[{id:'e022',series:4,reps:12,peso:0,descanso:60},{id:'e031',series:4,reps:12,peso:0,descanso:60},{id:'e026',series:3,reps:10,peso:0,descanso:60},{id:'e029',series:3,reps:15,peso:0,descanso:60},{id:'e047',series:3,reps:15,peso:0,descanso:45}]},
-    5:{nombre:'Abdomen — Core + Cardio',tipo:'core',foco:'4 ejercicios de core + 25 min de elíptica al final. Cubren las 2 funciones que más se notan: aguantar sin arquearte (plancha y dead bug) y flexionar (crunch y elevación de piernas). IMPORTANTE para que esto sirva de verdad: NO existe la reducción localizada — hacer abdominales fortalece el músculo, pero no quema la grasa que está encima. La grasa de la zona media baja con déficit calórico sostenido (tu Registro Diario en comida.html) + cardio; estos ejercicios son los que hacen que, cuando esa grasa baje, sí haya un abdomen marcado debajo.',
-       ejercicios:[{id:'e045',series:3,reps:45,unidad:'seg',peso:0,descanso:45},{id:'e047',series:3,reps:15,peso:0,descanso:45},{id:'e046',series:3,reps:20,peso:0,descanso:45},{id:'e050',series:3,reps:10,peso:0,descanso:45},{id:'e054',series:1,reps:25,unidad:'min',peso:0,descanso:0}]},
-    6:{nombre:'Pecho + Cardio + Core',tipo:'empuje',foco:'El press de banca/inclinado también trabaja tríceps como secundario, extra frecuencia de brazos. Pero el foco real de hoy es la definición de la zona media: 25 min de elíptica (tu bloque de cardio más largo de la semana) + plancha para cerrar — junto con la natación del miércoles, son tus 2 bloques de cardio más largos de la semana. La plancha se repite del viernes a propósito: el core aguanta bien entrenarse 2 veces por semana, no necesita equipo y no te deja adolorido para el domingo.',
-       ejercicios:[{id:'e001',series:4,reps:8,peso:0,descanso:120},{id:'e002',series:3,reps:10,peso:0,descanso:90},{id:'e004',series:3,reps:12,peso:0,descanso:60},{id:'e054',series:1,reps:25,unidad:'min',peso:0,descanso:0},{id:'e045',series:3,reps:45,unidad:'seg',peso:0,descanso:45}]},
+    1:{nombre:'Espalda + Bíceps',tipo:'halar',foco:'Brazo con base. El jalón y el remo también trabajan el bíceps y ponen la espalda que tu rutina no tenía: sin ella, tanto press y tanto fondo te cierran los hombros hacia delante. El Curl con Barra es el pesado del día —ya mueves 18 kg—: cuando completes las 4×8 limpias, súbele. Face Pull al final, para el hombro.',
+       ejercicios:[{id:'e010',series:4,reps:10,peso:0,descanso:90},{id:'e013',series:3,reps:10,peso:0,descanso:90},{id:'e021',series:4,reps:8,peso:0,descanso:90},{id:'e023',series:3,reps:12,peso:0,descanso:60},{id:'e020',series:3,reps:15,peso:0,descanso:45}]},
+    2:{nombre:'Piernas + Core',tipo:'piernas',foco:'Tu único día de pierna, todo en máquina o con apoyo: nada de barra sobre los hombros ni de equilibrio a una pierna. El Hack Squat va primero, con energía fresca. La pierna es tu músculo más grande: entrenarla fuerte es lo que más gasta de la semana y la base de la condición. Cierra con plancha: el core que aguanta es el que cuida tu espalda.',
+       ejercicios:[{id:'e040',series:4,reps:10,peso:0,descanso:120},{id:'e033',series:3,reps:12,peso:0,descanso:90},{id:'e035',series:3,reps:12,peso:0,descanso:60},{id:'e034',series:3,reps:15,peso:0,descanso:60},{id:'e039',series:3,reps:15,peso:0,descanso:45},{id:'e045',series:3,reps:45,unidad:'seg',peso:0,descanso:45}]},
+    3:{nombre:'Condición — Intervalos',tipo:'cardio',foco:'Reemplaza a la natación. La condición sube con intervalos: 5 minutos suaves de bici y luego 8 rondas de 1 minuto fuerte —tan fuerte que no puedas hablar— por 1 minuto suave. Después, cuerdas en ráfagas de 30 segundos, 12 minutos de elíptica a ritmo de conversación y dead bug. Todo de bajo impacto, sin castigar rodilla ni espalda. Es lo que te prepara para un Hyrox o un round.',
+       ejercicios:[{id:'e053',series:8,reps:1,unidad:'min',peso:0,descanso:60},{id:'e056',series:5,reps:30,unidad:'seg',peso:0,descanso:30},{id:'e054',series:1,reps:12,unidad:'min',peso:0,descanso:0},{id:'e050',series:3,reps:10,peso:0,descanso:45}]},
+    4:{nombre:'Pecho + Hombro + Tríceps',tipo:'empuje',foco:'El otro lado del brazo: el tríceps son dos tercios de su grosor. Fondos primero —el compuesto pesado, pecho y tríceps— y después hombro. El tríceps se aísla con Pushdown —ya mueves 22.5 kg— y con la Extensión sobre Cabeza, que lo trabaja estirado, que es como más crece.',
+       ejercicios:[{id:'e005',series:4,reps:8,peso:0,descanso:90},{id:'e016',series:3,reps:10,peso:0,descanso:90},{id:'e017',series:3,reps:15,peso:0,descanso:45},{id:'e028',series:4,reps:12,peso:0,descanso:60},{id:'e031',series:3,reps:12,peso:0,descanso:60}]},
+    5:{nombre:'Cardio largo + Core',tipo:'core',foco:'Treinta minutos a ritmo de conversación —corriendo suave, o en cinta inclinada si la rodilla molesta— y tres de core. La grasa de la panza no baja con abdominales: baja con déficit en la comida y con cardio sostenido, y el abdomen se ve cuando baja la capa de encima. El core fuerte sí sirve: sostiene la espalda en cada levantamiento.',
+       ejercicios:[{id:'e052',series:1,reps:30,unidad:'min',peso:0,descanso:0},{id:'e047',series:3,reps:15,peso:0,descanso:45},{id:'e046',series:3,reps:20,peso:0,descanso:45},{id:'e045',series:3,reps:45,unidad:'seg',peso:0,descanso:45}]},
+    6:{nombre:'Brazos + Pecho',tipo:'brazos',foco:'Tu día largo, 60 minutos: press de banca para fuerza y luego bíceps y tríceps alternados, con ejercicios distintos a los del lunes y el jueves para trabajarlos desde otro ángulo. Cierra con 15 minutos de elíptica. Con este día el brazo trabaja tres veces por semana —13 series de bíceps y 13 de tríceps—, la frecuencia que más lo hace crecer.',
+       ejercicios:[{id:'e001',series:4,reps:8,peso:0,descanso:120},{id:'e026',series:3,reps:10,peso:0,descanso:60},{id:'e030',series:3,reps:12,peso:0,descanso:60},{id:'e022',series:3,reps:12,peso:0,descanso:60},{id:'e029',series:3,reps:15,peso:0,descanso:45},{id:'e054',series:1,reps:15,unidad:'min',peso:0,descanso:0}]},
     0:{nombre:'Descanso activo',tipo:'descanso',foco:'Recuperación — caminata ligera opcional, sin gimnasio. El músculo crece hoy, no en el gym.',ejercicios:[{id:'e051',series:1,reps:30,unidad:'min',peso:0,descanso:0}]},
   },
   // Lo que de verdad levantaste, por día y por ejercicio:
@@ -803,6 +803,8 @@ let S = {
 // load() lo sobrescriba con lo que hubiera guardado en localStorage — es lo que usa
 // fixRutina20260812IfNeeded() para aplicar el cambio a un navegador que ya tenía la rutina vieja.
 const RUTINA_DEFAULT_20260812=JSON.parse(JSON.stringify({1:S.rutina[1],2:S.rutina[2],3:S.rutina[3],5:S.rutina[5],6:S.rutina[6]}));
+// La semana de 2026-10-10, tomada del default de arriba antes de load(): la usa fixRutina20261010IfNeeded().
+const RUTINA_DEFAULT_20261010=JSON.parse(JSON.stringify({1:S.rutina[1],2:S.rutina[2],3:S.rutina[3],4:S.rutina[4],5:S.rutina[5],6:S.rutina[6]}));
 let editId=null, confCb=null;
 let rutinaDiaEditing=null, rutinaEjsSeleccionados=[];
 
@@ -853,6 +855,18 @@ function fixRutina20260812IfNeeded(){
   if(esDefault(3,['Natación','Natación — aprender a nadar'])) S.rutina[3]=JSON.parse(JSON.stringify(RUTINA_DEFAULT_20260812[3]));
   if(esDefault(6,['Pecho + Cardio + Core'])) S.rutina[6]=JSON.parse(JSON.stringify(RUTINA_DEFAULT_20260812[6]));
   localStorage.setItem('mirutina_v1_pierna_abs_natacion_v3','1');
+}
+// La semana nueva (Adán, 2026-10-10: "miércoles de natación ya no existe, redefine mi rutina sabiendo lo que quiero
+// lograr: mejor condición física, bajar grasa en panza, aumentar masa muscular en brazos"). Mismo patrón que las de
+// arriba: una sola pasada y solo los días que siguen siendo un default anterior, por nombre; uno que Adán
+// personalizó no se toca. Está igual en dashboard.html, con la misma bandera.
+const RUTINA_PREVIOS_20261010={1:['Brazos A — Bíceps + Tríceps'],2:['Piernas — completa','Piernas A — Cuádriceps'],3:['Natación — aprender a nadar','Natación','Espalda + Hombros + Cardio'],4:['Brazos B — Bíceps + Tríceps'],5:['Abdomen — Core + Cardio','Abdomen — bajar panza','Piernas B — Glúteo + Femoral'],6:['Pecho + Cardio + Core']};
+function fixRutina20261010IfNeeded(){
+  if(localStorage.getItem('mirutina_v1_semana_20261010')) return;
+  if(S.rutina) Object.keys(RUTINA_PREVIOS_20261010).forEach(d=>{
+    if(S.rutina[d]&&RUTINA_PREVIOS_20261010[d].includes(S.rutina[d].nombre)) S.rutina[d]=JSON.parse(JSON.stringify(RUTINA_DEFAULT_20261010[d]));
+  });
+  localStorage.setItem('mirutina_v1_semana_20261010','1');
 }
 const getAllEj = () => [...EJ_DB, ...(S.ejerciciosCustom||[])];
 const findEj = id => getAllEj().find(e=>e.id===id);
@@ -1071,7 +1085,7 @@ function ejDiasDesde(iso){
 // Lo que esta rutina no puede hacer. Vivia repetido en la banda de meta de arriba.
 const EJ_AVISO='Los abdominales <b>no queman la grasa del abdomen</b>. La reducci\u00f3n localizada '+
   'no existe: el core te da fuerza y postura, pero la panza se va con el <b>d\u00e9ficit cal\u00f3rico</b> '+
-  'y el cardio de mi\u00e9rcoles y s\u00e1bado \u2014 eso se registra en '+
+  'y el cardio de mi\u00e9rcoles y viernes \u2014 eso se registra en '+
   '<a href="../CuidadoPersonal/cuidadopersonal.html?tab=salud">Cuidado de la Salud</a>.';
 const EJ_SUBIR=[
   'Si completas <b>todas las series al tope de reps</b> con buena forma, la siguiente sesi\u00f3n sube.',
@@ -1401,6 +1415,7 @@ function init() {
   load();
   fixMiercolesNatacionIfNeeded();
   fixRutina20260812IfNeeded();
+  fixRutina20261010IfNeeded();
   save(); // persiste la rutina semanal por defecto en localStorage desde la primera apertura,
           // igual que salud.html — si no, el Dashboard no puede leer "qué toca hoy" hasta que
           // el usuario guarde algo a mano (configurar día, registrar entrenamiento o exportar).
