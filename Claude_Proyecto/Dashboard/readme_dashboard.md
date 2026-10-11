@@ -1056,8 +1056,8 @@ recurso que no es libro sale con `pfRecursoHtml()`; el estante solo aparece con 
 doce rutas van paso a paso con su `r` (`habPasos` todavía sabe leer el formato viejo).
 
 **El foco lo pone el plan** (prompt de la página: *una habilidad en foco a la vez; las demás, en
-mantenimiento*). `CIFRAS.HAB_FOCO` es una lista de tramos —IA de oct a nov 2026 (el CT-GenAI),
-Inglés de dic 2026 a ene 2027 (la solicitud a Esslingen), Código de feb a may 2027 (el proyecto
+mantenimiento*). `CIFRAS.HAB_FOCO` es una lista de tramos —IA de oct 2026 a ene 2027 (el CT-GenAI, que se presenta en
+enero), Inglés de feb a mar 2027 (la solicitud a Esslingen, que cierra el 31 de marzo), Código de abr a may 2027 (el proyecto
 para el Werkstudent) y Networking de jun a ago 2027— con horas, el paso de la semana, el
 entregable y cuándo cambia. `habPlanHoy()` da el tramo de hoy y el siguiente; `habCandidatas()`
 son esos dos (si el plan ya terminó, manda el retorno). Adán puede abrir cualquier otra ruta y se
