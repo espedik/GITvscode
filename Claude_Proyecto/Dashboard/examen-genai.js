@@ -95,6 +95,20 @@
     return String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
   };
 
+  /* La cita textual del syllabus que sostiene la respuesta, con el objetivo que evalúa la pregunta. Un
+     examen guardado antes de que hubiera citas las toma del banco por su id. */
+  function citaHtml(q) {
+    const b = bancoDe('AB').find(x => x.id === q.id) || {};
+    const cita = (q.cita && q.cita.length ? q.cita : b.cita) || [];
+    const obj = (D().objetivos || {})[q.lo] || (D().objetivos || {})[b.lo];
+    if (!cita.length && !obj) return '';
+    return `<div class="xg-cita">
+      ${obj ? `<div class="xg-cita-lo"><b>${esc(b.lo || q.lo)}</b> ${esc(obj)}</div>` : ''}
+      ${cita.length ? `<div class="xg-cita-k">Lo que dice el syllabus</div>${cita.map(f => `<p>${esc(f)}</p>`).join('')}
+      <div class="xg-cita-de">${esc(D().meta.citaDe || '')}</div>` : ''}
+    </div>`;
+  }
+
   /* ── Armar un examen conforme al blueprint ──────────────────────────── */
   function armar(minutos, set) {
     const d = D();
@@ -107,7 +121,7 @@
         const ops = barajar(q.o);
         preguntas.push({
           id: q.id, cap: q.cap, lo: q.lo, k: q.k, pts: q.pts,
-          q: q.q, o: ops, r: ops.indexOf(correcta), why: q.why, ref: q.ref
+          q: q.q, o: ops, r: ops.indexOf(correcta), why: q.why, ref: q.ref, cita: q.cita || []
         });
       });
     });
@@ -270,9 +284,9 @@
           <thead><tr><th>Capítulo</th><th>Preguntas</th><th>Puntos</th></tr></thead>
           <tbody>
             <tr><td>1 · Introducción a la IA generativa</td><td class="xg-num">7</td><td class="xg-num">7</td></tr>
-            <tr><td>2 · Ingeniería de instrucciones</td><td class="xg-num">11</td><td class="xg-num">16</td></tr>
+            <tr><td>2 · Ingeniería de prompts</td><td class="xg-num">11</td><td class="xg-num">16</td></tr>
             <tr><td>3 · Gestión de riesgos</td><td class="xg-num">10</td><td class="xg-num">11</td></tr>
-            <tr><td>4 · Infraestructura impulsada por MLG</td><td class="xg-num">5</td><td class="xg-num">5</td></tr>
+            <tr><td>4 · Infraestructura impulsada por los LLM</td><td class="xg-num">5</td><td class="xg-num">5</td></tr>
             <tr><td>5 · Despliegue e integración</td><td class="xg-num">7</td><td class="xg-num">7</td></tr>
           </tbody>
         </table>
@@ -457,6 +471,7 @@
         <div class="xg-rops">${ops}</div>
         <div class="xg-why"><b>Por qué:</b> ${q.why}
           <span class="xg-ref">Syllabus, sección ${esc(q.ref)}</span></div>
+        ${citaHtml(q)}
       </div>`;
     }).join('');
 
@@ -854,6 +869,15 @@ body.xg-abierto{overflow:hidden}
   font-size:13px;line-height:1.65;color:var(--text2)}
 .xg-why b{color:var(--text)}
 .xg-ref{display:block;margin-top:8px;font-family:var(--mono);font-size:10.5px;color:var(--text3)}
+.xg-cita{margin:10px 0 0;padding:11px 14px 10px;border-left:3px solid var(--p);border-radius:0 11px 11px 0;
+  background:rgba(var(--ov),.035)}
+.xg-cita-lo{margin-bottom:8px;font-size:12px;line-height:1.5;color:var(--text3)}
+.xg-cita-lo b{margin-right:4px;font-family:var(--mono);font-size:10.5px;color:var(--p)}
+.xg-cita-k{margin-bottom:5px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--p)}
+.xg-cita p{margin:0;font-size:12.5px;line-height:1.6;color:var(--text)}
+.xg-cita p+p{margin-top:5px}
+.xg-cita-de{margin-top:7px;font-family:var(--mono);font-size:9.5px;color:var(--text3)}
 
 .xg-toast{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:5;
   padding:11px 19px;border-radius:12px;font-size:13px;font-weight:600;color:var(--bg);

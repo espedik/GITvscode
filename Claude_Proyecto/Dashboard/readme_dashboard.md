@@ -254,9 +254,11 @@ lunes. El 2 de abril de 2027 (Fase 2) la palabra pasa al B1 y el foco a Código.
 
 Una de las 156 preguntas de los dos bancos del simulacro (`EXAMEN_GENAI` y `EXAMEN_GENAI_B`, los mismos
 de Mis Metas), la primera del orden de Coach que no hayas contestado (*Lo decide Coach*). En la columna va en dos líneas con *Responder*, o el resultado
-cuando ya la contestaste. Tocarla abre `#istqbOverlay` (`abrirIstqb()`): enunciado y cuatro opciones; al
-contestar, la buena en verde, la tuya en rojo si fallaste, el porqué del programa y la sección del
-syllabus. **Cada pregunta se contesta una vez**: la primera respuesta es la que cuenta, como en el examen;
+cuando ya la contestaste. Tocarla abre `#istqbOverlay` (`abrirIstqb()`): arriba, el objetivo del programa que
+evalúa con su enunciado textual (`EXAMEN_GENAI.objetivos`: *GenAI-2.2.1 Aplicar la IA generativa a las tareas
+de análisis de prueba*), el enunciado y cuatro opciones; al contestar, la buena en verde, la tuya en rojo si
+fallaste, el porqué y **lo que dice el syllabus**: las frases textuales que sostienen la respuesta (`q.cita`),
+con la sección y el crédito (`meta.citaDe`). **Cada pregunta se contesta una vez**: la primera respuesta es la que cuenta, como en el examen;
 después, *Siguiente pregunta →* (o ↻) trae la siguiente del orden. Al pie, lo contestado en los últimos
 7 días y el último simulacro de `examen_genai_v1`, en ámbar si quedó bajo el corte; *Simulacro completo →*
 (`istqbAlSimulacro()`) abre el examen entero. Mientras el panel está abierto Mi Día no rota; se cierra
@@ -911,16 +913,22 @@ el detalle vive solo aquí.
 La meta `istqbgenai` trae en su paso 6 un **examen de verdad**: 40 preguntas, 46 puntos, reloj y
 entrega automática. Vive en `examen-genai.js` + los dos bancos.
 
-**Nada inventado**: las preguntas se responden desde el *Programa de estudio ES V01.01* (CT-GenAI
-V1.0, 25-jul-2025) y cada una guarda en `ref` la sección del syllabus. El reparto sigue las *Exam
-Structure Tables v1.0*:
+**Nada inventado**: las preguntas se responden desde el *Programa de Estudios CT-GenAI v1.0* en
+español para Latinoamérica (25-jul-2025), con sus mismos términos —prompt, LLM, SLM, tokens, scripts,
+testware, y los nombres exactos de cada lista y tabla—. Cada pregunta guarda en `ref` la sección y en
+`cita` las frases **textuales** del programa que la sostienen, comprobadas contra el PDF (las de tabla,
+celda por celda: *Nombre — descripción*, *Ejemplo: …*); `objetivos` trae el enunciado de los 37
+objetivos de aprendizaje. Las citas son reproducción parcial con su procedencia, como permite el aviso
+de copyright del programa (el repositorio es público). La traducción LATAM tiene un error en 3.2.2: la
+fila de la *manipulación de las solicitudes* repite la de la exfiltración; el porqué de 3.2.2c lo avisa.
+El reparto sigue las *Exam Structure Tables v1.0*:
 
 | Capítulo | Preguntas | Puntos |
 |---|---|---|
 | 1 · Introducción a la IA generativa | 7 | 7 |
-| 2 · Ingeniería de instrucciones | 11 | 16 |
+| 2 · Ingeniería de prompts | 11 | 16 |
 | 3 · Gestión de riesgos | 10 | 11 |
-| 4 · Infraestructura impulsada por MLG | 5 | 5 |
+| 4 · Infraestructura impulsada por los LLM | 5 | 5 |
 | 5 · Despliegue e integración | 7 | 7 |
 
 Las 6 K3 valen 2 puntos, las 34 K1/K2 valen 1; corte oficial 30 (65 %). Reloj de 75 minutos (los
@@ -931,7 +939,8 @@ muestra A y B de ISTQB— y **Mezcla** (156). 0 enunciados y 0 respuestas correc
 bancos, ids sin solape. Cada intento recorre el blueprint objetivo por objetivo, elige variantes
 al azar y baraja preguntas y opciones (300 exámenes simulados: 300 combinaciones distintas).
 **Durante el examen solo se ve número y valor**; capítulo, objetivo y nivel K se guardan para la
-revisión.
+revisión, que pone bajo cada porqué el objetivo y la cita (`citaHtml()`; un examen guardado antes de que
+hubiera citas las toma del banco por su id).
 
 **Es una capa propia** (`#xg-overlay`, clases `.xg-*`) porque `mdPintar()` repinta el cuerpo del
 panel entero al cambiar de paso y un examen incrustado perdería el DOM y el temporizador. Usa las
