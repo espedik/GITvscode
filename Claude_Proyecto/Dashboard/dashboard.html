@@ -8522,7 +8522,9 @@ function istqbPintar(){
     return `<button type="button" class="ha-op${cls}"${hecha ? ' disabled' : ` onclick="istqbResponder(${i})"`}><b>${LET[i]}</b><span>${o}</span></button>`;
   }).join('');
   const obj = (X.objetivos || {})[q.lo];
-  b.innerHTML = `${obj ? `<div class="ha-lo"><b>${esc(q.lo)}</b>${esc(obj)}</div>` : ''}<div class="ha-q-t">${q.q}</div>
+  // Bajo el objetivo, la sección del syllabus como enlace al PDF en su página, desde antes de contestar.
+  const secs = window.ctGenaiSeccion ? ctGenaiSeccion(q) : '';
+  b.innerHTML = `${obj || secs ? `<div class="ha-lo">${obj ? `<b>${esc(q.lo)}</b>${esc(obj)}` : ''}${secs}</div>` : ''}<div class="ha-q-t">${q.q}</div>
     <div class="ha-ops">${ops}</div>
     ${hecha ? `<div class="ha-res ${hecha.ok ? 'ok' : 'mal'}">${hecha.ok ? '✓ Correcta' : '✗ Era la ' + LET[q.r]}<span>syllabus ${esc(q.ref)}</span></div>
     <div class="ha-why">${q.why}</div>

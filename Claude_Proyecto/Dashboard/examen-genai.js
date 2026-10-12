@@ -168,9 +168,21 @@
 .sy-det p{display:flex;gap:10px;margin:7px 0 0;font-size:12.5px;line-height:1.6;color:var(--text2)}
 .sy-det p i{flex:none;width:30px;font-style:normal;font-family:var(--mono);font-size:10px;color:var(--text3);padding-top:2px}
 .sy-det mark{background:rgba(255,214,0,.32);color:var(--text);border-radius:2px;padding:0 1px}
-.sy-de{margin-top:9px;font-family:var(--mono);font-size:9.5px;color:var(--text3)}`;
+.sy-de{margin-top:9px;font-family:var(--mono);font-size:9.5px;color:var(--text3)}
+.sy-links{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:5px}
+.sy-link{font-size:12px;font-weight:700;color:var(--p);text-decoration:none;border-bottom:1px dotted currentColor}
+.sy-link:hover{border-bottom-style:solid}`;
   (function () { const st = document.createElement('style'); st.textContent = SY_CSS; document.head.appendChild(st); })();
   window.ctGenaiFuente = fuenteHtml;
+  /* La sección (o secciones) de una pregunta como enlace al PDF en la página donde empieza. Va desde antes de
+     contestar: no revela la respuesta, es la misma sección que nombra el objetivo GenAI-x.y.z. */
+  window.ctGenaiSeccion = function (q) {
+    const d = D() || {}, sec = d.secciones || {}, loc = window.CT_GENAI_SYLLABUS;
+    const base = (loc && loc.pdf) || (d.meta && d.meta.syllabusUrl) || '';
+    const links = String(q.ref || '').split('·').map(s => s.trim()).filter(r => sec[r]).map(r =>
+      `<a class="sy-link" href="${base}#page=${sec[r].pag}" target="_blank" rel="noopener" title="Abrir el syllabus en la página ${sec[r].pag}">§ ${esc(r)} ${esc(sec[r].t)} · pág. ${sec[r].pag} ↗</a>`).join('');
+    return links ? `<span class="sy-links">${links}</span>` : '';
+  };
 
   /* ── Armar un examen conforme al blueprint ──────────────────────────── */
   function armar(minutos, set) {

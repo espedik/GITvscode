@@ -257,7 +257,7 @@ Una de las 156 preguntas de los dos bancos del simulacro (`EXAMEN_GENAI` y `EXAM
 de Mis Metas), la primera del orden de Coach que no hayas contestado (*Lo decide Coach*). En la columna va en dos líneas con *Responder*, o el resultado
 cuando ya la contestaste. Tocarla abre `#istqbOverlay` (`abrirIstqb()`): arriba, el objetivo del programa que
 evalúa con su enunciado textual (`EXAMEN_GENAI.objetivos`: *GenAI-2.2.1 Aplicar la IA generativa a las tareas
-de análisis de prueba*), el enunciado y cuatro opciones; al contestar, la buena en verde, la tuya en rojo si
+de análisis de prueba*) y bajo él la sección como enlace al PDF en su página (`ctGenaiSeccion`, desde antes de contestar: no revela la respuesta), el enunciado y cuatro opciones; al contestar, la buena en verde, la tuya en rojo si
 fallaste, el porqué y **lo que dice el syllabus** (`ctGenaiFuente`, el mismo bloque que la revisión del
 simulacro): la sección con su número, título y página; cada frase textual que sostiene la respuesta
 (`q.cita`) con la página exacta del PDF (`q.pag`), que lo abre ahí; *Abrir el syllabus en la página N*; y,
