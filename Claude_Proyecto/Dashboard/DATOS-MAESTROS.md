@@ -679,11 +679,11 @@ Es lo que evita que el calendario se congele como se congeló la vieja barra de 
 | `CuidadoPersonal/salud.html` | `<script src="../Dashboard/datos-maestros.js">` | `CIFRAS.SUPLEMENTOS` (siembra la lista y el botiquín) y `CIFRAS.CHEQUEO` |
 
 El Dashboard es donde vive el archivo porque es el centro del proyecto, junto a
-`entrevistas-data.js` y `aleman-data.js` (en reposo). El vocabulario de alemán vive en `Aleman/vocab-datos.js`,
-junto con su diseño (`vocab.css`) y su motor (`vocab.js`), porque la pantalla principal
-del vocabulario es la de esa app y el Dashboard solo la refleja. Ahí viven también las
-**siete familias** en las que se agrupan las 37 secciones, que es lo que pinta el índice
-lateral de las dos pantallas.
+`entrevistas-data.js`. El vocabulario de alemán vive en `Aleman/vocab-datos.js`, junto con su
+diseño (`vocab.css`) y su motor (`vocab.js`): lo pinta `vocabulario.html`, y el Dashboard —que no
+tiene pantalla de alemán— solo lee los datos para la palabra del día de Mi Día. Ahí viven también las
+**siete familias** en las que se agrupan las 37 secciones, que es lo que pinta el índice lateral
+del vocabulario.
 
 La biblioteca de ejercicios (`EJ_DB`: los 62 ejercicios con su imagen, sus pasos y su error típico) vive en
 `CuidadoPersonal/ejercicios-datos.js`, junto a Ejercicio, que es su pantalla principal; el Dashboard la carga para
@@ -748,7 +748,7 @@ especialidad (las de Finanzas, los módulos de Entrevistas) comparten el de su p
 
 | Clave | Páginas |
 |---|---|
-| `dashboard` | `dashboard.html` — general (rail, barra de apps, rotación). Vistas: `midia` · `planmaestro` · `metas` · `basicas` · `skills` · `lista` · `aleman` · `habitos` (las 8 pantallas) y los paneles `invertir` (Qué invertir hoy) y `didi` (Qué escuchar) |
+| `dashboard` | `dashboard.html` — general (rail, barra de apps, rotación). Vistas: `midia` · `planmaestro` · `metas` · `basicas` · `skills` · `lista` · `habitos` (las 7 pantallas) y los paneles `invertir` (Qué invertir hoy) y `didi` (Qué escuchar) |
 | `coach` | `Coach.html` — el modo Personal. Vista: `coachempresa` (el modo Empresa) |
 | `finanzas` | `Finanzas.html` |
 | `cuidadopersonal` | `cuidadopersonal.html` — general (barra, carril, cabecera). Vistas: `skincare` · `cabello` · `dentista` · `ojos` y las cuatro incrustadas con el de su app |

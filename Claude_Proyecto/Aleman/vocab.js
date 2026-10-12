@@ -2,11 +2,10 @@
 // EL VOCABULARIO DE ALEMÁN — el motor, escrito una sola vez
 // ═══════════════════════════════════════════════════════════════════════════
 //
-// Lo cargan `Aleman/vocabulario.html` (donde Adán trabaja el vocabulario) y la pantalla
-// de Alemán del Dashboard (que lo refleja). Antes había 9 funciones en un lado y 8 en el
-// otro haciendo lo mismo con nombres distintos, así que un arreglo en una no llegaba a
-// la otra. Petición del 2026-09-02: *"quiero un solo diseño, no lo quiero duplicado,
-// entonces el principal es el html de aleman"*.
+// Lo carga `Aleman/vocabulario.html`, donde Adán estudia y trabaja el vocabulario. El
+// Dashboard ya no pinta vocabulario: solo lee `vocab-datos.js` para la palabra del día de
+// Mi Día. Algunas opciones (`op.fnVer`, el contenedor que se desplaza) nacieron para la
+// pantalla que tuvo el Dashboard y se quedan como opciones del motor.
 //
 // LO QUE EXPORTA
 //   vocSeccionesHtml(cats, activa, op)  la tira de secciones

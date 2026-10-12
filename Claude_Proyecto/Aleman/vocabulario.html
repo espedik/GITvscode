@@ -9,8 +9,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap"></noscript>
 <link rel="stylesheet" href="styles.css">
-<!-- El diseño del vocabulario, escrito una vez: lo carga también la pantalla de
-     Alemán del Dashboard. Aquí abajo solo se le pasan los tokens de esta app. -->
+<!-- El diseño del vocabulario, escrito una vez en vocab.css. Aquí abajo solo se le pasan
+     los tokens de esta app. -->
 <link rel="stylesheet" href="vocab.css">
 <style>
 /* ── VOCAB PAGE ── */
@@ -63,7 +63,7 @@
 .results-count{font-size:12px;color:#6e6e6e}
 
 /* ── EL VOCABULARIO ──────────────────────────────────────────────────
-   El diseño está en `vocab.css` y lo comparte con el Dashboard. Lo de aquí son los
+   El diseño está en `vocab.css`, el del motor del vocabulario. Lo de aquí son los
    tokens de ESTA app — casi todos coinciden con los valores por defecto de `vocab.css`,
    que se escribieron mirando esta pantalla, así que solo hace falta lo que se sale. */
 .v-vocab{
@@ -290,8 +290,8 @@ mark{background:rgba(204,0,0,.15);color:var(--red);border-radius:3px;padding:0 2
 </div>
 
 <!-- ═══════════ PANEL: PARTIZIP I Y II ═══════════ -->
-<!-- El texto sale de `ALEMAN_VOCAB.partizip`, el mismo archivo que trae las palabras y
-     el mismo que pinta el Dashboard: está escrito una sola vez. -->
+<!-- El texto sale de `ALEMAN_VOCAB.partizip`, el mismo archivo que trae las palabras:
+     está escrito una sola vez. -->
 <div class="voc-panel v-vocab" id="panel-pz">
   <div class="pz-wrap" id="pz-wrap"></div>
 </div>
@@ -436,7 +436,7 @@ mark{background:rgba(204,0,0,.15);color:var(--red);border-radius:3px;padding:0 2
 <script src="vocab.js"></script>
 <script src="flashcards.js"></script>
 <script>
-// El vocabulario lo pinta `vocab.js`, que comparte con el Dashboard. Aquí queda lo que
+// El vocabulario lo pinta `vocab.js`, el motor del vocabulario. Aquí queda lo que
 // solo es de esta página: las pestañas, el modo estudio, las flashcards y los contadores.
 const VOC = ALEMAN_VOCAB.voc;
 const CATS = ALEMAN_VOCAB.cats;
@@ -478,6 +478,18 @@ function init() {
   Object.entries(CATS).forEach(([k,v]) => {
     cffc.innerHTML += `<button class="cat-btn" onclick="setCatFc('${k}')">${v.icon} ${v.label}</button>`;
   });
+
+  // Un enlace a una sección (`vocabulario.html#cat=tramites&sub=formulario`, el que abre la palabra del día
+  // de Mi Día en el Dashboard) abre ahí, con todos los niveles para que la palabra esté a la vista.
+  const h = new URLSearchParams((location.hash || '').slice(1)), cat = h.get('cat');
+  if (cat && CATS[cat]) {
+    const sub = h.get('sub');
+    F.cat = cat;
+    F.sub = (sub && (CATS[cat].subs || {})[sub]) ? sub : null;
+    F.fam = null;
+    F.niv = 'all';
+    guarda();
+  }
 
   render();
 }

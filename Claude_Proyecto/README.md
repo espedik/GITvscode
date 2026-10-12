@@ -33,7 +33,7 @@ funciona desde `file://` (scripts clásicos sí, módulos ES no), y en eso se ap
 
 | Carpeta | Archivo | Readme | Qué es |
 |---|---|---|---|
-| `Dashboard/` | `dashboard.html` | [`readme_dashboard.md`](Dashboard/readme_dashboard.md) | Panel central: 9 pantallas que agregan todo (Mi Día, Plan Maestro, Mis Metas, Habilidades Base, En qué invertir tu tiempo, Lista de Compras, Alemán, Entrevista, Hábitos) |
+| `Dashboard/` | `dashboard.html` | [`readme_dashboard.md`](Dashboard/readme_dashboard.md) | Panel central: 7 pantallas que agregan todo (Mi Día, Plan Maestro, Mis Metas, Habilidades Base, En qué invertir tu tiempo, Lista de Compras, Hábitos) |
 | `Dashboard/` | `datos-maestros.js` | [`DATOS-MAESTROS.md`](Dashboard/DATOS-MAESTROS.md) | **No es una app: es la fuente única de variables del proyecto** (constantes, seed de deudas, migraciones, rutina, fases, recetario, rutinas de piel y pelo, suplementos, peso…). Lo cargan Dashboard, Coach, Finanzas y las de CuidadoPersonal. **Su `.md` es el índice del proyecto** |
 | `Dashboard/` | `verificar-sincronia.js` | — | Comprueba que nada esté duplicado ni desincronizado. Sale 1 si falla; un hook lo corre al final de cada turno |
 | `Coach/` | `Coach.html` | [`readme_coach.md`](Coach/readme_coach.md) | Coach de vida y negocio: diagnóstico, Plan Maestro por fases, rutina diaria, aprendizaje, legal, ideas de negocio con cifras |
@@ -42,7 +42,7 @@ funciona desde `file://` (scripts clásicos sí, módulos ES no), y en eso se ap
 | `CuidadoPersonal/` | `salud.html` | [`readme_salud.md`](CuidadoPersonal/readme_salud.md) | Cuerpo y bienestar: peso e IMC por edad, chequeo del año, exámenes, postura, mente, suplementos |
 | `CuidadoPersonal/` | `ejercicio.html` | [`readme_ejercicio.md`](CuidadoPersonal/readme_ejercicio.md) | La sesión de hoy con series marcables, cronómetro y progresión; biblioteca de 62 ejercicios; deportes |
 | `CuidadoPersonal/` | `comida.html` | [`readme_comida.md`](CuidadoPersonal/readme_comida.md) | Recetario (12 + 12) con fichas y filtros, y Plan Masa Muscular |
-| `Aleman/` | 41 lecciones, `vocabulario.html`, `vocab-*.js` | [`readme_aleman.md`](Aleman/readme_aleman.md) | Lecciones A1/A2/Kapitel 10 y el vocabulario (1 516 palabras) que el Dashboard carga de aquí |
+| `Aleman/` | 41 lecciones, `vocabulario.html`, `vocab-*.js` | [`readme_aleman.md`](Aleman/readme_aleman.md) | Lecciones A1/A2/Kapitel 10 y el vocabulario (1 516 palabras); Mi Día lee de aquí la palabra del día |
 | `Entrevistas/` | `entrevistas.html`, `js/` | [`readme_entrevistas.md`](Entrevistas/readme_entrevistas.md) + `CLAUDE.md` | 229 temas de preparación técnica; los 41 de Python viajan al Dashboard por un generador |
 | `Vestimenta/` | `vestimenta.html`, `vestimenta_*.js` | [`readme_vestimenta.md`](Vestimenta/readme_vestimenta.md) | Guía de guardarropa: qué ponerse, colorimetría, qué comprar. Incrustada en el shell |
 | `Aeroresinas/` | `aeroresinas.html`, `dossier.html`, `datos.js` | [`readme_aeroresinas.md`](Aeroresinas/readme_aeroresinas.md) | Web pública del taller de reparación de helicópteros del papá de Adán, con su PDF |
@@ -69,9 +69,9 @@ no dependen del Dashboard; la barra de apps del Dashboard las agrupa aparte.
 | `radarp_<id>` × 12 | Coach | Dashboard (`SK[].val`) |
 | `coach_referente` | Coach (qué referente se ve en *Tus referentes*) | nadie |
 | `coach-theme` | Dashboard, Coach, Finanzas, CuidadoPersonal y Vestimenta | Clave compartida de tema claro/oscuro (Entrevistas, Heliescala y Aeroresinas tienen la suya) |
-| `dash-aprende-v1`, `dash-lista-compras`, `dash-lista-tengo`, `dash-logros-v1`, `dash-rail-abierto`, `dash-settings`, `dash-privado`, `metas_checklist_v1`, `habilidades_checklist_v1`, `edad_checklist_v1`, `examen_genai_v1` | Dashboard | nadie |
+| `dash-aprende-v1`, `dash-lista-compras`, `dash-lista-tengo`, `dash-logros-v1`, `dash-rail-abierto`, `dash-settings`, `dash-privado`, `metas_checklist_v1`, `metas_plan_v1`, `dash-agenda-oculta`, `habilidades_checklist_v1`, `edad_checklist_v1`, `examen_genai_v1` | Dashboard | nadie |
 | `dash-habitos-v1` | Dashboard (`habitos.js`) | Coach, solo lectura: la cuenta de «Cero alcohol» de *Tus referentes* (`refRacha()`) |
-| `al_sec_v1`, `al_sub_v1`, `al_fam_v1`, `al_niv_v1`, `al_plg_v1`, `al_vista_v1` | `Aleman/vocab.js` (las dos pantallas de vocabulario) | — |
+| `voc_estado_v1` | Alemán (`vocabulario.html`: la sección, la subsección y los filtros donde te quedaste) | nadie |
 | `vestimenta_v1` | Vestimenta | nadie |
 | `theme`, `sidebar-collapsed`, `study-done-v2`, `wayve-visited-v2` | Entrevistas | Dashboard lee `study-done-v2` (*Hoy aprendes*: cuántos temas de Python llevas); las demás, nadie |
 | `heli-tema`, `heli-idioma`, `aero-tema`, `aero-idioma` | Heliescala, Aeroresinas | nadie |

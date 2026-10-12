@@ -2,11 +2,9 @@
    EL VOCABULARIO DE ALEMÁN — el diseño, escrito una sola vez
    ════════════════════════════════════════════════════════════════════════════
 
-   Lo cargan DOS pantallas: `Aleman/vocabulario.html`, que es donde Adán trabaja el
-   vocabulario, y la pantalla de Alemán del Dashboard, que lo refleja. Antes cada una
-   tenía su copia — 6.900 caracteres de CSS por lado — y un retoque en una no llegaba
-   a la otra. Petición del 2026-09-02: *"quiero un solo diseño, no lo quiero duplicado,
-   entonces el principal es el html de aleman"*.
+   Lo carga `Aleman/vocabulario.html`, que es donde Adán estudia y trabaja el vocabulario.
+   El Dashboard ya no tiene pantalla de vocabulario —Adán no quiere la información de
+   alemán repetida—: solo lee `vocab-datos.js` para la palabra del día de Mi Día.
 
    CÓMO SE USA: la app que lo carga define los tokens `--v-*` en el contenedor donde
    viva el vocabulario. Todos tienen valor por defecto (el de la app de Alemán), así

@@ -1425,10 +1425,9 @@ function impactoDelCambio() {
 })();
 
 // ── 19. El vocabulario de alemán, en un solo sitio ───────────────────────────
-// Las 479 palabras las pintan DOS pantallas: `Aleman/vocabulario.html`, que es donde
-// nacieron, y la de Alemán del dashboard. Hasta el 2026-09-02 cada una tuvo su propia
-// copia. Ahora las dos cargan `Dashboard/aleman-vocab.js` y este control está para que
-// no vuelvan a separarse — y para cazar los emoji partidos, que fue un fallo real: el
+// Las palabras viven en `Aleman/vocab-datos.js`. Las pinta `Aleman/vocabulario.html` y Mi Día
+// del Dashboard toma de ahí la palabra del día; los dos CARGAN el archivo, ninguno lo copia.
+// Este control está para que no vuelvan a separarse — y para cazar los emoji partidos, que fue un fallo real: el
 // generador escapó 1F44B como \\u1f44 + 'b' y las 21 secciones sacaron un carácter
 // griego por icono.
 (function () {
@@ -1492,8 +1491,8 @@ function impactoDelCambio() {
   if ((V.partizip.secciones || []).length < 9)
     malos.push('  Partizip trae ' + (V.partizip.secciones || []).length + ' bloques; había 9');
 
-  // Y las dos pantallas lo cargan en vez de copiarlo. El archivo vive en Aleman/
-  // desde el 2026-09-03: es donde Adán trabaja el vocabulario.
+  // Y los dos lo cargan en vez de copiarlo. El archivo vive en Aleman/: es donde Adán
+  // trabaja el vocabulario.
   [['Aleman', 'vocabulario.html', 'vocab-datos.js'],
    ['Dashboard', 'dashboard.html', '../Aleman/vocab-datos.js']].forEach(function (a) {
     const rel = a[0] + '/' + a[1];
@@ -1515,7 +1514,7 @@ function impactoDelCambio() {
   else
     ok.push('Vocabulario de alemán en un solo sitio (' + V.voc.length + ' palabras en ' +
             cats.length + ' secciones y ' + nSubs + ' subsecciones, más ' +
-            V.partizip.secciones.length + ' bloques de Partizip, en las 2 pantallas)');
+            V.partizip.secciones.length + ' bloques de Partizip; lo leen vocabulario.html y la palabra del día de Mi Día)');
 })();
 
 // ── 20. El diseño del vocabulario, en un solo sitio ────────────────────────
@@ -1524,10 +1523,11 @@ function impactoDelCambio() {
 // y un retoque en una no llegaba a la otra. Adán: *"quiero un solo diseño, no lo quiero
 // duplicado, entonces el principal es el html de aleman"*.
 //
-// Ahora está en `Aleman/vocab.css` + `Aleman/vocab.js`, que cargan las dos. Lo que este
-// control vigila es que sigan cargándolo y que ninguna se ponga a reescribirlo por su
-// cuenta: la señal de que eso ha pasado es una regla `.v-*` o una función `voc*` escrita
-// dentro de un HTML.
+// Ahora está en `Aleman/vocab.css` + `Aleman/vocab.js`, que carga `vocabulario.html`. El
+// Dashboard ya no tiene pantalla de vocabulario (Adán no quiere la información de alemán
+// repetida), así que no los carga; lo que este control vigila es que vocabulario.html los
+// siga cargando y que nadie se ponga a reescribirlos por su cuenta: la señal de que eso ha
+// pasado es una regla `.v-*` o una función `voc*` escrita dentro de un HTML.
 (function () {
   const malos = [];
   const CSS = 'Aleman/vocab.css', JS = 'Aleman/vocab.js';
@@ -1547,17 +1547,18 @@ function impactoDelCambio() {
   if (clases.length < 15) malos.push('  vocab.css define solo ' + clases.length + ' clases; eran más de 15');
   if (funcs.length < 8) malos.push('  vocab.js define solo ' + funcs.length + ' funciones; eran más de 8');
 
-  [['Aleman', 'vocabulario.html', 'vocab.css', 'vocab.js'],
-   ['Dashboard', 'dashboard.html', '../Aleman/vocab.css', '../Aleman/vocab.js']].forEach(function (a) {
+  // `carga`: la que pinta el vocabulario tiene que cargarlo; el Dashboard, solo no copiarlo.
+  [['Aleman', 'vocabulario.html', 'vocab.css', 'vocab.js', true],
+   ['Dashboard', 'dashboard.html', '../Aleman/vocab.css', '../Aleman/vocab.js', false]].forEach(function (a) {
     const rel = a[0] + '/' + a[1];
     let h;
     try { h = leer(rel); } catch (e) { malos.push('  no se puede leer ' + rel); return; }
 
-    // Que lo carguen. Se busca la ETIQUETA y no el nombre: los dos archivos nombran
-    // vocab.css en un comentario, y buscar el texto dejaba pasar un <link> borrado.
-    if (h.indexOf('<link rel="stylesheet" href="' + a[2] + '">') === -1)
+    // Que lo cargue. Se busca la ETIQUETA y no el nombre: el archivo nombra vocab.css en
+    // un comentario, y buscar el texto dejaba pasar un <link> borrado.
+    if (a[4] && h.indexOf('<link rel="stylesheet" href="' + a[2] + '">') === -1)
       malos.push('  ' + rel + ' no carga ' + a[2] + ' con un <link>');
-    if (h.indexOf('<script src="' + a[3] + '"></script>') === -1)
+    if (a[4] && h.indexOf('<script src="' + a[3] + '"></script>') === -1)
       malos.push('  ' + rel + ' no carga ' + a[3] + ' con un <script src>');
 
     // Y que no lo reescriban. Solo se mira dentro del <style> y de los <script> en
@@ -1581,7 +1582,7 @@ function impactoDelCambio() {
     problemas.push('El diseño del vocabulario se está duplicando:\n' + malos.slice(0, 10).join('\n'));
   else
     ok.push('Diseño del vocabulario en un solo sitio (' + clases.length + ' clases en vocab.css y ' +
-            funcs.length + ' funciones en vocab.js, cargados por las 2 pantallas)');
+            funcs.length + ' funciones en vocab.js; los carga vocabulario.html y nadie los copia)');
 })();
 
 // ── 21. Las familias cubren las 37 secciones, y cada una una sola vez ────────

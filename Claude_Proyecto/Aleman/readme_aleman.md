@@ -1,10 +1,9 @@
 # Aleman/ — referencia
 
 41 lecciones de alemán en HTML, sin backend ni build, más el vocabulario y el tema de Partizip.
-Se abren con `file://`. La pantalla de Alemán del Dashboard es vocabulario y Partizip **y lo
-carga de aquí**: los datos, el diseño y el motor viven en esta carpeta y esa pantalla los refleja.
-Las lecciones no se muestran en el Dashboard (su extracción, `../Dashboard/aleman-data.js`, está
-en reposo).
+Se abren con `file://`. **El Dashboard no tiene pantalla de alemán** (Adán no quiere la
+información repetida): el alemán se estudia aquí. Mi Día solo lee de esta carpeta la palabra del día
+(`vocab-datos.js`) y, al tocarla, abre `vocabulario.html` en su sección.
 
 **Su prompt**: la clave `aleman` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
 
@@ -22,14 +21,13 @@ en reposo).
 | A2 | `a2-01`…`a2-20` | Gramática y vocabulario temático |
 | Apoyo | `index.html`, `principiantes.html`, `gramatica.html`, `vocabulario.html` | Índice, lecciones para principiantes y referencia transversal. La barra de apps del Dashboard enlaza a los cuatro |
 | Compartido | `styles.css`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js` | Estilos y motores |
-| **Vocabulario** | `vocab-datos.js`, `vocab.css`, `vocab.js` | Los datos, el diseño y el motor. Los carga también el Dashboard — ver abajo |
+| **Vocabulario** | `vocab-datos.js`, `vocab.css`, `vocab.js` | Los datos, el diseño y el motor de `vocabulario.html`. Mi Día lee los datos — ver abajo |
 
 ---
 
 ## `vocabulario.html` — donde se trabaja el vocabulario
 
-Es la pantalla principal del vocabulario: **aquí se añade y se corrige**, y la pantalla de
-Alemán del Dashboard lo refleja. Cuatro pestañas:
+Es la pantalla del vocabulario: **aquí se estudia, se añade y se corrige**. Cuatro pestañas:
 
 | Pestaña | Qué es |
 |---|---|
@@ -38,8 +36,7 @@ Alemán del Dashboard lo refleja. Cuatro pestañas:
 | 🎴 Tarjetas | Repaso con `flashcards.js` |
 | 🧩 Partizip I y II | El tema de gramática, en 10 bloques |
 
-**Nada de esto está dentro del HTML.** El vocabulario son tres archivos de esta carpeta,
-y los tres los carga también la pantalla de Alemán del Dashboard:
+**Nada de esto está dentro del HTML.** El vocabulario son tres archivos de esta carpeta:
 
 | Archivo | Qué es | Cuándo se toca |
 |---|---|---|
@@ -47,13 +44,14 @@ y los tres los carga también la pantalla de Alemán del Dashboard:
 | `vocab.css` | El diseño: la tarjeta, la rejilla, el árbol de secciones, el Partizip | Al cambiar cómo se ve |
 | `vocab.js` | El motor: filtrar, agrupar y pintar | Al cambiar cómo se comporta |
 
-**Un cambio en cualquiera de los tres llega a las dos pantallas.** Está comprobado: subir
-la barra de género de 4px a 12px en `vocab.css`, sin tocar ningún HTML, la sube en las dos.
-Los controles 19 y 20 de `../Dashboard/verificar-sincronia.js` vigilan que siga siendo así.
+Los controles 19 y 20 de `../Dashboard/verificar-sincronia.js` vigilan que nadie los copie:
+`vocabulario.html` carga los tres y el Dashboard solo lee `vocab-datos.js`.
 
-**Mi Día también lee `vocab-datos.js`.** La tarjeta *Hoy aprendes* del Dashboard toma la palabra del día
-—cada palabra una vez por vuelta, con la rotación del Dashboard— y, si es un verbo, su Perfekt con
-`aux` y la última forma de `conj` (*ist zurückgekommen*).
+**Mi Día lee `vocab-datos.js`.** La tarjeta *Hoy aprendes* del Dashboard toma la palabra del día
+—cada palabra una vez por vuelta, en el orden de Coach— y, si es un verbo, su Perfekt con `aux` y la
+última forma de `conj` (*ist zurückgekommen*). Tocarla abre esta página en su sección:
+`vocabulario.html#cat=tramites&sub=formulario` abre en *Trámites › Formularios*, con todos los
+niveles para que la palabra esté a la vista (y lo guarda en `voc_estado_v1`, como cualquier visita).
 
 ### Subsecciones y qué lleva cada palabra
 
@@ -206,9 +204,8 @@ reglas son que `cat` exista en `cats` y que ninguna sección quede vacía; el co
 
 ### Cómo se ajusta el aspecto en cada pantalla
 
-`vocab.css` trae **tokens `--v-*`** con valor por defecto (el de esta app). La pantalla que
-lo carga redefine solo lo que cambia, en el contenedor del vocabulario: aquí `.v-vocab`, y
-en el Dashboard `.al-fondo`, que tiene modo oscuro y fondo translúcido. La estructura y los
+`vocab.css` trae **tokens `--v-*`** con valor por defecto (el de esta app). Esta página
+redefine solo lo que cambia, en el contenedor del vocabulario (`.v-vocab`). La estructura y los
 tamaños no se tocan desde fuera — eso es lo que hace que sea un solo diseño.
 
 Dos tokens que parecen uno: `--v-acento` se usa de **fondo**, con letras blancas encima, y
@@ -217,9 +214,9 @@ tablas en 3.8:1.
 
 **Los colores que dependen del tema se DERIVAN del color del texto**, no llevan un valor
 fijo: `color-mix(in srgb, <color> 55%, var(--v-txt))` se oscurece en el tema claro y se
-aclara en el oscuro, así que un solo valor sirve para las dos pantallas y nadie tiene que
+aclara en el oscuro, así que un solo valor sirve en los dos temas y nadie tiene que
 acordarse de redefinirlo. Con valores fijos, la píldora de `das` daba 1.88:1 sobre su
-propio fondo y la línea técnica del Dashboard en modo oscuro, 1.08:1.
+propio fondo.
 
 **Por qué tarjetas y no una tabla.** La tabla mostraba **9 palabras** de 1.516 a 1600px y en el
 teléfono escondía tres de sus cinco columnas para caber. La rejilla muestra 25 y no esconde
@@ -395,40 +392,9 @@ Deutsch).
 
 ---
 
-## `aleman-data.js` — la extracción de las lecciones, en reposo
-
-`_generar-datos-dashboard.js` abre cada lección con Playwright **como página propia** y vuelca su
-contenido real a `../Dashboard/aleman-data.js`. **Hoy ninguna pantalla del Dashboard lo carga**
-(Adán quitó las lecciones de ahí *"de momento"*); el archivo y el generador se quedan por si
-vuelven. Todo lo de abajo aplica solo en ese caso.
-
-```bash
-NODE_PATH="…/npm-cache/_npx/…/node_modules" node Aleman/_generar-datos-dashboard.js
-```
-
-**Correrlo cada vez que se añada, quite o edite una lección.** No corre en el navegador de Adán:
-es una herramienta de desarrollo.
-
-Existe porque el Dashboard **no puede** leer estas lecciones en vivo — Chrome bloquea tanto
-`iframe.contentDocument` como `fetch()` entre dos documentos `file://` distintos.
-
-### `data-dashboard="no"`
-
-Una tarjeta con ese atributo queda fuera de la extracción. Se usa en las tarjetas de ejercicios:
-se generan por JS y, volcadas a texto, salen como una lista suelta de números y opciones sin
-sentido. El ejercicio se hace **en** la lección, donde es interactivo; el Dashboard muestra la
-teoría, las tablas y los ejemplos, que sí se leen de un vistazo.
-
-Por eso `k10-03` —que es casi todo ejercicios— lleva además una tarjeta de resumen con los cuatro
-modelos resueltos: sin ella, su slide en el Dashboard salía vacío.
-
----
-
 ## Añadir una lección
 
 1. Crear el HTML siguiendo la estructura de las existentes (`.topic-hero`, `.topic-content`,
    `.card`, `.vocab-table`, `.rule-box`, `.example`).
 2. Añadir su tarjeta en `index.html`.
 3. Comprobar en el navegador que no hay scroll horizontal a 390px.
-4. Solo si las lecciones vuelven al Dashboard: añadirla a `FILES` en
-   `_generar-datos-dashboard.js` y regenerar `aleman-data.js`.

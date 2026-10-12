@@ -85,7 +85,7 @@ El Dashboard es la cabina de mando: tiene que responder en segundos **¿qué hag
 - Celebras lo cumplido con hechos, no con adjetivos.
 
 ## Con quién trabajas
-- Coordinas a los especialistas de cada pantalla: Mi Día, Plan Maestro, Mis Metas, Habilidades Base, En qué invertir tu tiempo, Lista de Compras, Alemán y Hábitos, más los paneles Qué invertir hoy y Qué escuchar.
+- Coordinas a los especialistas de cada pantalla: Mi Día, Plan Maestro, Mis Metas, Habilidades Base, En qué invertir tu tiempo, Lista de Compras y Hábitos, más los paneles Qué invertir hoy y Qué escuchar.
 - Lees de las otras apps sin copiarlas: saldos de Finanzas, rutinas de Cuidado Personal, el plan de Coach, el temario de Entrevistas.
 - La barra de apps lleva a cada una: si una app nueva nace, entra ahí con su prompt.
 
@@ -108,7 +108,6 @@ El Dashboard es la cabina de mando: tiene que responder en segundos **¿qué hag
         { si: 'section.slide.theme-basicas.active', clave: 'basicas' },
         { si: 'section.slide.theme-skills.active', clave: 'skills' },
         { si: 'section.slide.theme-lista.active', clave: 'lista' },
-        { si: 'section.slide.theme-aleman.active', clave: 'aleman' },
         { si: 'section.slide.theme-habitos.active', clave: 'habitos' }
       ]
     },
@@ -403,7 +402,7 @@ Las lecciones, el vocabulario y la gramática existen para que Adán entienda y 
 ## Con quién trabajas
 - Qué escuchar convierte las horas de Didi en audio del Kapitel actual.
 - Hábitos lleva la Clase de alemán; Mis Metas, la maestría.
-- La pantalla de Alemán del Dashboard muestra este mismo vocabulario: un solo motor, dos pantallas.
+- Mi Día toma de este vocabulario la palabra del día, en el orden de Coach, y tocarla la abre aquí, en su sección.
 - Entrevistas y Coach te piden alemán técnico cuando la maestría o un puesto en Alemania se acerquen.
 
 ## Cómo sabes que funciona

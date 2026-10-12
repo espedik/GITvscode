@@ -1,7 +1,7 @@
-// El vocabulario de alemán. Vive aquí, en la app de Alemán, porque esta es la
-// pantalla donde Adán trabaja el vocabulario; la de Alemán del Dashboard lo refleja.
-// Las dos cargan este archivo: copiarlo en las dos era garantizar que corregir una
-// palabra en un sitio dejara el otro mintiendo.
+// El vocabulario de alemán. Vive aquí, en la app de Alemán, porque `vocabulario.html` es
+// la pantalla donde Adán estudia y trabaja el vocabulario. El Dashboard lee este mismo
+// archivo para la palabra del día de Mi Día —no tiene copia ni pantalla propia—: corregir
+// una palabra aquí la corrige en los dos sitios.
 //
 //   cats  las 37 secciones, con su etiqueta, su emoji y sus SUBsecciones
 //   voc   las 1516 palabras

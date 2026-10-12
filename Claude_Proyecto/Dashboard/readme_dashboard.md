@@ -1,7 +1,7 @@
 # dashboard.html — referencia
 
 Panel central del proyecto: agrega en vivo los datos de las demás apps y presenta el día, el plan
-y el estudio en **8 pantallas** a pantalla completa.
+y el estudio en **7 pantallas** a pantalla completa.
 
 **Su prompt**: la clave `dashboard` de [`prompts-paginas.js`](prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
 
@@ -29,17 +29,17 @@ en una página.
 | `entrevistas-data.js` | Los 41 temas de Python (`ENTREVISTA_TEMAS`, `PY_MOD_LABEL`) que nombra la tarjeta *Hoy aprendes* de Mi Día. Trae también el HTML y el CSS de cada tema (`ENTREVISTA_CONTENT`, `ENTREVISTA_CSS`), que ya no pinta ninguna pantalla. Lo genera `Entrevistas/_generar-datos-dashboard.js`; **no se edita a mano** |
 | `sin-zoom.js` | Bloqueo del zoom en táctil. Lo cargan las seis apps |
 | `prompt-pagina.js` · `prompts-paginas.js` | El icono de la brújula que llevan **todas** las páginas del proyecto y los prompts que abre: el especialista que gobierna cada una (ver `DATOS-MAESTROS.md` → *El prompt de cada página*). En el Dashboard va fijo arriba a la izquierda, donde la barra de apps deja la esquina libre |
-| `aleman-data.js` | Las 40 lecciones de alemán (327 KB). **En reposo**: ninguna pantalla lo carga; volver a las lecciones es cargarlo otra vez |
 | `fotos-aprende/` | Las 45 fotos de *Hoy aprendes* y, las `fase-*` (13), de *Por qué esta fase* (480 px, de Openverse: StockSnap, Flickr y Rawpixel); su crédito va en `AP_FOTOS` y sale en el `title` de cada una |
 | `diseno-*/` | Los canvas de cada rediseño: `Main.dc.html` (lo elegido) y las direcciones descartadas al lado |
 | `readme_dashboard.md` | Este archivo |
 
-El vocabulario de alemán **no vive aquí**: `Aleman/vocab-datos.js`, `vocab.css` y `vocab.js` se
-cargan con `../`. Se abre con `file://`, sin servidor ni build; los `<script src="…">` clásicos
+El alemán **no vive aquí**: el Dashboard no tiene pantalla de alemán (Adán: *"elimina la sección de
+alemán todo todo, porque está repetida la info de alemán"*); se estudia en la app de Alemán. Mi Día
+solo lee `../Aleman/vocab-datos.js` —los datos de su pantalla de vocabulario— para la palabra del día. Se abre con `file://`, sin servidor ni build; los `<script src="…">` clásicos
 cargan con normalidad (los módulos ES no), y es lo que permite compartir archivos entre carpetas.
 
 Orden de carga: `sin-zoom.js` → `datos-maestros.js` → `ficha.js` → `habitos.js` → los tres del
-examen → `../Aleman/vocab-datos.js` → `../Aleman/vocab.js` → `entrevistas-data.js`.
+examen → `../Aleman/vocab-datos.js` → `entrevistas-data.js`.
 
 ---
 
@@ -70,11 +70,11 @@ forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
 y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la ruta abierta en *En qué invertir tu tiempo* y el paso de cada una),
 `habilidades_checklist_v1`, `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-inversion-v1` (pestaña, perfil elegido y monto de *Qué
-invertir hoy*), y las `al_*_v1` de Alemán.
+invertir hoy*).
 
 ---
 
-## Las 8 pantallas
+## Las 7 pantallas
 
 Cada una es un `<section class="slide theme-…">` con `data-i`. Rotan solas cada 3 minutos; se
 navega con las flechas, el rail, el menú ☰ o deslizando en táctil. `irASlide(cls)` salta a una
@@ -88,7 +88,6 @@ navega con las flechas, el rail, el menú ☰ o deslizando en táctil. `irASlide
 | `theme-basicas` | **Habilidades Base** | 27 fichas de vida práctica con sus videos. **Única fuente**: la sección equivalente de Coach se eliminó | `basicas` |
 | `theme-skills` | **En qué invertir tu tiempo** | Radar de 12 habilidades, la ruta y el paso de la semana | `skills` |
 | `theme-lista` | **Lista de Compras** | 7 categorías; Comida con precios, ticket y costo al mes | `lista` |
-| `theme-aleman` | **Alemán** | Vocabulario por secciones y Partizip I/II, desde `Aleman/vocab-datos.js`. Pantalla de consulta: no avanza sola | `aleman` |
 | `theme-habitos` | **Hábitos** | La cuadrícula del mes con rachas y la ficha de cada hábito | `habitos` |
 
 **Cada pantalla tiene su prompt** (columna de la derecha, en `prompts-paginas.js`): el icono de la
@@ -203,7 +202,7 @@ repite info, solo déjame lo de invertir hoy"*): sus cifras viven en Coach y en 
 |---|---|---|
 | **Entrenas** | El día que se mira —hoy, o el que tocaste en la tira— en grande (si no es hoy, su nombre en verde arriba), **sus ejercicios** con series×reps y peso, en una línea los tres días que siguen y la tira de 7 días como chips de foto (`#heroWeekStrip`, 52 px). El peso es el último que registró Ejercicio (naranja; mismo criterio que su `ejUltimo()`) o el inicial de `EJ_PESO_INI` (gris), solo en kg; un ejercicio con todas sus series hechas ese día va en verde, y tocar su nombre abre **su ficha** (ver *La ficha de un ejercicio*, abajo). *Ejercicio →* (`#diaEntrenaLink`) abre el día elegido con `?dia=N`. `.dia-entrena` es `display:contents`: la lista es lo único que cede alto y, si ni así cabe (bajo 1280 px de ancho), desplaza la tarjeta. Con 440 px de alto o más, bajo cada ejercicio va su indicación (`.de-ex-cue`, la misma de su `title`) y la tira crece a 92 px | `renderDiaEntrena()` sobre `D.gym.rutina` o `GYM_RUTINA_DEFAULT`; el ✅ sale de `gymSesiones()`, que normaliza `mirutina_v1.sesiones` (objeto por fecha desde el 1-sep-2026, lista antes) |
 | **Hábitos de hoy** | Los que tocan hoy con ancla, racha (🔥 desde 3) y `2 de 5`; se marcan aquí mismo. **Caben todos sin desplazar**: letra chica (11.5 px el nombre, 9.5 px el ancla) con el ancla debajo y, si la lista no cabe así, `.compacto` pone el ancla en la misma línea, cortada con `…` y completa en el `title`. `renderDiaHabitos()` lo decide midiendo la lista, también al cambiar el tamaño de la ventana. Medido con 9 hábitos: a 1920×1080 en dos líneas; a 1600×1000, 1536×864 y 1440×900 en una (20 px por fila); a 1366×768 todavía queda uno abajo. Con 440 px de alto o más (a 2560×1440 mide unos 490) la letra y el aire de cada renglón suben (`@container`) | `HB.hoy()` / `HB.toggleHoy()`, la API que expone `habitos.js` — el mismo toggle de la cuadrícula |
-| **Hoy aprendes** | **Seis partes iguales** (Adán: *"estos 6 quiero que los dividas en partes iguales en el diseño de esta sección y que se vea bien, con info resumida pero importante"*): la palabra de alemán, *Al volante*, Python, la pregunta del ISTQB, el paso de la semana y la ficha de Habilidades Base, cada una en su tarjeta (`apTarjeta()`) con la misma anatomía —la foto, la materia con su estado y sus controles, y lo que aprendes en bloques en orden de importancia— y sin cajas: las separa el aire. **Lo decide Coach**: cada tarjeta sale del orden de su plan, nunca del azar, y junto al título **«Cómo lo decide Coach»** (`abrirComoDecide()`) abre el panel con lo que manda y el porqué de lo de hoy (abajo, *Lo decide Coach*). **Todo lleva foto** (Adán: *"todo quiero que tenga imágenes, no dejes nada vacío y menos con solo iconos"*): la palabra, la de su tema o su familia (`apFotoAleman()`); Python, la de su módulo; el ISTQB, la de su capítulo; *Al volante* y el paso, la portada del libro (`apFotoLibro()`) o, sin libro, la de su habilidad (`apFotoSk()`; Networking, Ventas, Liderazgo, Finanzas y Mentalidad usan la de su ficha de Habilidades Base), y la ficha, la suya. Arriba, la fecha, `N de 4` y una barra de cuatro tramos que se llena con lo hecho hoy: la palabra al abrirla, *Al volante* al tocar lo que vas a escuchar, Python al marcarlo estudiado en Entrevistas y el ISTQB al contestarlo. **La rejilla se acomoda a su propio ancho** (es el contenedor `aprende`): desde 760 px, 3×2, con la foto arriba a todo lo ancho —un libro, en su 2:3 sobre su propia portada desenfocada— y los controles encima de ella; desde 440 px, 2×3, con la foto a la izquierda (en una tarjeta de menos de 280 px, «Siguiente» se queda en su flecha); más angosto, una columna. **Lo que dice cada una, resumido**: **la palabra o frase de alemán**, con el artículo en el color de su género (`VOC_COLOR`), el plural o, si es verbo, su Perfekt, el ejemplo traducido (se omite si repite la frase), el `uso` y cuánto ha salido del nivel de la etapa (*A2, el que pide Esslingen · han salido 1 de 556*); **Al volante**, el audiolibro de la semana con la hora del trayecto, el podcast del otro turno y de qué trata el libro —los títulos abren la búsqueda en Spotify; la foto y *Qué escuchar*, el panel—; **Python**, el tema con su explicación, sus palabras clave y cuántos llevas; **el ISTQB**, la pregunta con *Responder*, lo que vale (*K3 · 2 puntos*), tu marcador de 7 días y, sin contestar, las cuatro opciones o, contestada, el porqué; **el paso de la semana** (`aprendeFoco()`), un tramo por paso, *Qué hacer* (su frase en negritas, como con resaltador), *Después*, el libro, *Por qué* y *La idea del libro*; **la ficha en curso** (`hbEnCurso()`), un tramo por paso, el paso que toca con su entrada en tres líneas, *Por qué* te toca según el plan de Coach (`hbPlan()`), *Después* y sus puntos, un renglón cada uno con su nombre primero (`apPunto()`). Alemán, *Al volante* y Python cierran con **«Lo que sigue»**: lo que traerán ↻ y los días que vienen (`aprendeLuego()`; los audiolibros, `didiLibrosLuego()`). Las cuatro del día llevan ↻ (`aprendeOtra()`); el paso y la ficha, **«‹» / «Siguiente ›»** (`apSiguiente()`; Adán: *"si no me gusta alguna de las que me recomiendas, pon un botón como que siguiente"*): pasas a otra opción y la elección se queda; mientras no sea la recomendada, la materia dice *elegida por ti* y «↺» vuelve a ella. El paso recorre las habilidades con ruta —primero las del plan, después por retorno (`habConRuta()`)— sin tocar la ruta abierta en *En qué invertir tu tiempo*; *Al volante* sigue ese foco. Las dos elecciones se guardan en `dash-avance-v1`, que también decide «SIGUIENTE» en Habilidades Base. **En escritorio las seis miden lo mismo** y toman el alto que le queda a la columna (104 px como mínimo en 2×3 y 200 en 3×2 —así caben mientras el AHORA enseña una rutina—; con menos, desplaza); en 3×2 la foto es el 34 % del alto de la tarjeta (el 40 % en una tarjeta de 440 px de alto o más) y lo de apoyo (`.ap-opc`) solo sale en escritorio. `apAjustar()` quita lo que no cabe entero y recorta el primer bloque que no cabe a las líneas que le quedan, con «…» —nunca a media línea—, al pintar, al cambiar el tamaño de la ventana y al terminar de cargar cada fuente; en el teléfono el texto va en el flujo, con su tope de líneas. Medido: a 2048×1040 —la pantalla de Adán, 2560 al 125 %— cada tarjeta mide 284×306 y enseña lo esencial de cada una; a 1920×1080, 258×325; a 2560×1440, 386×498, con «Lo que sigue» y las opciones del ISTQB; a 1600×1000, 303×175 en 2×3; a 1440×900, 254×146; a 1366×768, 231×105, y a 1280×800, 223×116, con la materia, la foto y el título. En ninguno desplaza la columna; a 390 px va en una columna sin desbordes. Tocar una tarjeta la abre donde se estudia: la sección de la palabra, `entrevistas.html#<id>`, el panel del ISTQB, *En qué invertir tu tiempo* o la ficha. La bandera es CSS (`.flag-de`): el emoji 🇩🇪 sale como «DE» en Windows | `renderHeroAprender()` con `alemanHoyHtml()`, `escucharHoyHtml()`, `pythonHoyHtml()`, `istqbHtml()`, `pasoSemanaHtml()` y `fichaEnCursoHtml()`, todas por `apTarjeta()` —las del día, por `apFila()`, que le pone ↻—; lo de cada día, de `alemanPalabraHoy()`, `didiHoy()`, `entrevistaTemaHoy()` e `istqbPreguntaHoy()` (abajo, *Lo decide Coach*) |
+| **Hoy aprendes** | **Seis partes iguales** (Adán: *"estos 6 quiero que los dividas en partes iguales en el diseño de esta sección y que se vea bien, con info resumida pero importante"*): la palabra de alemán, *Al volante*, Python, la pregunta del ISTQB, el paso de la semana y la ficha de Habilidades Base, cada una en su tarjeta (`apTarjeta()`) con la misma anatomía —la foto, la materia con su estado y sus controles, y lo que aprendes en bloques en orden de importancia— y sin cajas: las separa el aire. **Lo decide Coach**: cada tarjeta sale del orden de su plan, nunca del azar, y junto al título **«Cómo lo decide Coach»** (`abrirComoDecide()`) abre el panel con lo que manda y el porqué de lo de hoy (abajo, *Lo decide Coach*). **Todo lleva foto** (Adán: *"todo quiero que tenga imágenes, no dejes nada vacío y menos con solo iconos"*): la palabra, la de su tema o su familia (`apFotoAleman()`); Python, la de su módulo; el ISTQB, la de su capítulo; *Al volante* y el paso, la portada del libro (`apFotoLibro()`) o, sin libro, la de su habilidad (`apFotoSk()`; Networking, Ventas, Liderazgo, Finanzas y Mentalidad usan la de su ficha de Habilidades Base), y la ficha, la suya. Arriba, la fecha, `N de 4` y una barra de cuatro tramos que se llena con lo hecho hoy: la palabra al abrirla, *Al volante* al tocar lo que vas a escuchar, Python al marcarlo estudiado en Entrevistas y el ISTQB al contestarlo. **La rejilla se acomoda a su propio ancho** (es el contenedor `aprende`): desde 760 px, 3×2, con la foto arriba a todo lo ancho —un libro, en su 2:3 sobre su propia portada desenfocada— y los controles encima de ella; desde 440 px, 2×3, con la foto a la izquierda (en una tarjeta de menos de 280 px, «Siguiente» se queda en su flecha); más angosto, una columna. **Lo que dice cada una, resumido**: **la palabra o frase de alemán**, con su artículo y el plural o, si es verbo, su Perfekt, el ejemplo traducido (se omite si repite la frase), el `uso` y cuánto ha salido del nivel de la etapa (*A2, el que pide Esslingen · han salido 1 de 556*); **Al volante**, el audiolibro de la semana con la hora del trayecto, el podcast del otro turno y de qué trata el libro —los títulos abren la búsqueda en Spotify; la foto y *Qué escuchar*, el panel—; **Python**, el tema con su explicación, sus palabras clave y cuántos llevas; **el ISTQB**, la pregunta con *Responder*, lo que vale (*K3 · 2 puntos*), tu marcador de 7 días y, sin contestar, las cuatro opciones o, contestada, el porqué; **el paso de la semana** (`aprendeFoco()`), un tramo por paso, *Qué hacer* (su frase en negritas, como con resaltador), *Después*, el libro, *Por qué* y *La idea del libro*; **la ficha en curso** (`hbEnCurso()`), un tramo por paso, el paso que toca con su entrada en tres líneas, *Por qué* te toca según el plan de Coach (`hbPlan()`), *Después* y sus puntos, un renglón cada uno con su nombre primero (`apPunto()`). Alemán, *Al volante* y Python cierran con **«Lo que sigue»**: lo que traerán ↻ y los días que vienen (`aprendeLuego()`; los audiolibros, `didiLibrosLuego()`). Las cuatro del día llevan ↻ (`aprendeOtra()`); el paso y la ficha, **«‹» / «Siguiente ›»** (`apSiguiente()`; Adán: *"si no me gusta alguna de las que me recomiendas, pon un botón como que siguiente"*): pasas a otra opción y la elección se queda; mientras no sea la recomendada, la materia dice *elegida por ti* y «↺» vuelve a ella. El paso recorre las habilidades con ruta —primero las del plan, después por retorno (`habConRuta()`)— sin tocar la ruta abierta en *En qué invertir tu tiempo*; *Al volante* sigue ese foco. Las dos elecciones se guardan en `dash-avance-v1`, que también decide «SIGUIENTE» en Habilidades Base. **En escritorio las seis miden lo mismo** y toman el alto que le queda a la columna (104 px como mínimo en 2×3 y 200 en 3×2 —así caben mientras el AHORA enseña una rutina—; con menos, desplaza); en 3×2 la foto es el 34 % del alto de la tarjeta (el 40 % en una tarjeta de 440 px de alto o más) y lo de apoyo (`.ap-opc`) solo sale en escritorio. `apAjustar()` quita lo que no cabe entero y recorta el primer bloque que no cabe a las líneas que le quedan, con «…» —nunca a media línea—, al pintar, al cambiar el tamaño de la ventana y al terminar de cargar cada fuente; en el teléfono el texto va en el flujo, con su tope de líneas. Medido: a 2048×1040 —la pantalla de Adán, 2560 al 125 %— cada tarjeta mide 284×306 y enseña lo esencial de cada una; a 1920×1080, 258×325; a 2560×1440, 386×498, con «Lo que sigue» y las opciones del ISTQB; a 1600×1000, 303×175 en 2×3; a 1440×900, 254×146; a 1366×768, 231×105, y a 1280×800, 223×116, con la materia, la foto y el título. En ninguno desplaza la columna; a 390 px va en una columna sin desbordes. Tocar una tarjeta la abre donde se estudia: la sección de la palabra en el vocabulario de la app de Alemán (`hoyAlAleman()`, que abre `vocabulario.html#cat=…&sub=…`), `entrevistas.html#<id>`, el panel del ISTQB, *En qué invertir tu tiempo* o la ficha. La bandera es CSS (`.flag-de`): el emoji 🇩🇪 sale como «DE» en Windows | `renderHeroAprender()` con `alemanHoyHtml()`, `escucharHoyHtml()`, `pythonHoyHtml()`, `istqbHtml()`, `pasoSemanaHtml()` y `fichaEnCursoHtml()`, todas por `apTarjeta()` —las del día, por `apFila()`, que le pone ↻—; lo de cada día, de `alemanPalabraHoy()`, `didiHoy()`, `entrevistaTemaHoy()` e `istqbPreguntaHoy()` (abajo, *Lo decide Coach*) |
 | **Qué invertir hoy** | Al pie de la primera columna: el paso que toca hoy —*Primero tu fondo*, *Abona a tu deuda* o *Hoy sí inviertes*— en su color, con su porqué en una línea y *Abrir →*. Tocarlo abre el panel completo | `pintarInvertirBtn()` sobre `pasoInversionHoy()`, la misma regla que el panel; `#diaInvertirBtn` → `abrirGBM()` |
 
 **Tamaños.** Bajo 940 px de alto el AHORA baja a 30 vh (34 si va `.apretado`) y desde 1000 px puede llegar a 372 px; bajo 1280 px de ancho la agenda mide 360 px y los módulos siguen en sus dos columnas;
@@ -327,7 +326,7 @@ pantallas** con icono de trazo y su nombre, los controles de reproducción con b
 la fila de sistema (menú, pantalla completa, ajustes, ayuda). El activo se marca con fondo y color,
 sin taparse.
 
-**Vive plegado**: una tira de **56 px** con el tirador, las ocho pantallas sin nombre y el play.
+**Vive plegado**: una tira de **56 px** con el tirador, las siete pantallas sin nombre y el play.
 El tirador lo abre a 198 px con nombres, reloj y ajustes. **Solo el tirador lo cierra**: elegir
 una pantalla no lo pliega (`showSlide` no toca el rail), para poder saltar entre varias seguidas.
 El estado se guarda en `dash-rail-abierto` (`RAIL_KEY`) y sobrevive a la recarga. Los ocho
@@ -1204,45 +1203,6 @@ del ticket de Walmart y hueco si es estimado. En celular (`≤760px`) el rengló
 fuera de Comida). Los `true` de listas anteriores al contador se leen como 1.
 
 ---
-
-## Alemán
-
-**1 516 palabras en 37 secciones y 188 subsecciones**, agrupadas en **siete familias**, y
-**Partizip I y II en 10 bloques**. Todo viene de `Aleman/vocab-datos.js` (`ALEMAN_VOCAB`), se
-dibuja con `Aleman/vocab.css` y lo mueve `Aleman/vocab.js`: **la pantalla principal es
-`Aleman/vocabulario.html`** y esta la refleja (*"quiero un solo diseño, no lo quiero duplicado"*).
-Lo que hay y cómo funciona lo cuenta `Aleman/readme_aleman.md`; aquí solo lo propio del Dashboard.
-Los controles 19 y 20 del verificador vigilan que ni datos ni diseño se dupliquen, y el 21 que las
-siete familias cubran las 37 secciones.
-
-**Lo propio de esta pantalla**:
-
-- Los **tokens `--v-*`** en `.al-fondo`: el slide lleva `v-vocab al-fondo` —la primera trae los
-  valores por defecto del motor, la segunda los cambia— porque aquí el fondo es translúcido sobre
-  las manchas animadas y tiene modo oscuro. `--v-txt-inv` («lo que se lee encima de `--v-txt`»)
-  vale `var(--bg)`: sin él, los botones rellenos (nivel activo, subsección elegida) daban 1.01:1.
-- El interruptor **Modo estudio** (`alSetVista`, guardado en `al_vista_v1`) y el marcador
-  «3 de 9 vistas», que **se cuenta del DOM**: cualquier repintado vuelve a tapar todas y un
-  contador aparte mentiría. En la gramática no hay marcador.
-- El **índice lateral** (238 px) se pliega a un **carril de 52 px** con la gramática y las siete
-  familias; la rejilla da cinco columnas en los dos casos. Las subsecciones pasan a una tira
-  encima (`vocSubsHtml`). Estado en `al_plg_v1`. El árbol, el carril y la tira **se pintan
-  siempre** y el CSS decide cuál se ve (`.al-cuerpo:not(.plegado) .al-subs{display:none}` y
-  gemelas): plegar es cambiar una clase, no repintar 1 516 palabras. Bajo 900 px el índice va
-  arriba (tope `26vh`) y el carril es una tira horizontal.
-- **La pantalla no puede quedarse muda.** `alPinta` sanea `al_sec_v1` / `al_sub_v1` antes de
-  filtrar (sección desconocida → «Saludos», subsección ajena → `null`): una subsección renombrada
-  en `vocab-datos.js` dejaba la pantalla en cero en cada apertura. El filtro de nivel (`al_niv_v1`)
-  sí puede dar cero legítimo: el mensaje nombra sección y nivel y trae **Ver todos los niveles**.
-
-- **El atajo del Kapitel** en el subtítulo: lo que se ve en clase en el Kapitel actual
-  (`kapitelAleman` del maestro) según `AL_KAPITEL` —para el 10, Perfekt · Partizip II y Berufe—;
-  cada tema abre su sección con `alVeKapitel()`. Un Kapitel que no esté en la tabla no pinta atajo.
-
-Claves: `al_sec_v1`, `al_sub_v1`, `al_fam_v1`, `al_niv_v1`, `al_plg_v1`, `al_vista_v1`.
-
----
-
 
 ## Hábitos — la cadena que no se rompe
 

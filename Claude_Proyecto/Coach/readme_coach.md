@@ -449,5 +449,5 @@ node Dashboard/verificar-sincronia.js      # desde Claude_Proyecto/
 ```
 
 Y en navegador a 1600px y 390px, abriendo con `file:///`. Ojo: **las secciones arrancan
-colapsadas** — que un texto no aparezca en `innerText` no significa que falte; comprobar contra
+colapsadas** — que un texto no aparezca en el innerText de la página no significa que falte; comprobar contra
 `innerHTML` o navegar a la sección.
