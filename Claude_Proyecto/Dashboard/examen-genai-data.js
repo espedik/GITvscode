@@ -49,6 +49,11 @@
      why  la justificación, incluido por qué fallan las otras
      ref  sección del syllabus donde se comprueba
      cita las frases textuales del syllabus que sostienen la respuesta
+     pag  la página del PDF oficial donde está cada frase de `cita`
+     pag  la página del PDF oficial donde está cada frase de `cita`
+     pag  la página del PDF oficial donde está cada frase de `cita`
+     pag  la página del PDF oficial donde está cada frase de `cita`
+     pag  la página del PDF oficial donde está cada frase de `cita`
 
    `objetivos` trae, para cada objetivo de aprendizaje, su enunciado textual
    del programa: lo que el examen pide saber hacer con ese tema.
@@ -68,6 +73,7 @@ window.EXAMEN_GENAI = (function () {
     minutosExtra: 75,     // +25% por presentar en idioma no nativo
     syllabus: 'Programa de Estudios CT-GenAI v1.0 en español (LATAM, 25 jul 2025)',
     citaDe: 'Programa de Estudios CT-GenAI v1.0 (LATAM) · © ISTQB®',
+    syllabusUrl: 'https://www.gasq.org/files/content/gasq/downloads/certification/ISTQB%20Syllabi/CT-GenAI%20-%20Syllabus%20v1.0%20LA-ES.pdf',
     requisito: 'ISTQB® Certified Tester Foundation Level (CTFL)'
   };
 
@@ -168,6 +174,59 @@ window.EXAMEN_GENAI = (function () {
     'GenAI-5.2.3': 'Reconocer cómo cambian los procesos y las responsabilidades de las pruebas dentro de una organización de pruebas al adoptar la IA generativa para las pruebas'
   };
 
+  /* Cada sección del programa: su título y la página del PDF donde empieza (las citas llevan la suya en `pag`) */
+  const secciones = {
+    '1.1.1': { t: 'Espectro de la IA: IA simbólica, aprendizaje automático clásico, aprendizaje profundo e IA generativa', pag: 14 },
+    '1.1.2': { t: 'Conceptos básicos de la IA generativa y los grandes modelos de lenguaje (LLM)', pag: 14 },
+    '1.1.3': { t: 'LLM fundacionales, ajustados por instrucciones y de razonamiento', pag: 16 },
+    '1.1.4': { t: 'Los LLM multimodales y modelos de visión y lenguaje', pag: 16 },
+    '1.2': { t: 'Aprovechamiento de la IA generativa en las pruebas de software: Principios fundamentales', pag: 17 },
+    '1.2.1': { t: 'Capacidades clave de los LLM para las tareas de prueba', pag: 17 },
+    '1.2.2': { t: 'Chatbots con IA y aplicaciones de prueba impulsadas por los LLM para las pruebas de software', pag: 18 },
+    '2.1': { t: 'Desarrollo eficaz de prompts', pag: 21 },
+    '2.1.1': { t: 'Estructura de los prompts para la IA generativa en las pruebas de software', pag: 21 },
+    '2.1.2': { t: 'Técnicas fundamentales de prompting para las pruebas de software', pag: 22 },
+    '2.1.3': { t: 'Prompt de sistema y prompt de usuario', pag: 23 },
+    '2.2': { t: 'Aplicación de técnicas de ingeniería de prompts a las tareas de prueba de software', pag: 24 },
+    '2.2.1': { t: 'Análisis de prueba con la IA generativa', pag: 24 },
+    '2.2.2': { t: 'Diseño de pruebas e implementación de pruebas con la IA generativa', pag: 25 },
+    '2.2.3': { t: 'Pruebas de regresión automatizadas con la IA generativa', pag: 27 },
+    '2.2.4': { t: 'Monitoreo de pruebas y control de pruebas con la IA generativa', pag: 28 },
+    '2.2.5': { t: 'Elección de técnicas de prompts para las pruebas de software', pag: 30 },
+    '2.3': { t: 'Evaluar los resultados de la IA generativa y afinar los prompts para las tareas de prueba de software', pag: 31 },
+    '2.3.1': { t: 'Métricas para evaluar los resultados de la IA generativa en las tareas de prueba', pag: 31 },
+    '2.3.2': { t: 'Técnicas para evaluar y afinar iterativamente los prompts', pag: 32 },
+    '3.1': { t: 'Alucinaciones, errores de razonamiento y sesgos', pag: 35 },
+    '3.1.1': { t: 'Alucinaciones, errores de razonamiento y sesgos en la IA generativa', pag: 35 },
+    '3.1.2': { t: 'Identificación de alucinaciones, errores de razonamiento y sesgos en los resultados de los LLM', pag: 35 },
+    '3.1.3': { t: 'Técnicas de mitigación de las alucinaciones de la IA generativa, los errores de razonamiento y los sesgos en las tareas de prueba de software', pag: 37 },
+    '3.1.4': { t: 'Mitigación del comportamiento no determinista de los LLM', pag: 37 },
+    '3.2': { t: 'Privacidad de datos y riesgos de seguridad de la IA generativa en las pruebas de software', pag: 38 },
+    '3.2.1': { t: 'Riesgos de privacidad y seguridad de datos asociados con el uso de la IA generativa', pag: 38 },
+    '3.2.2': { t: 'Privacidad de datos y vulnerabilidades en la IA generativa para los procesos y las herramientas de prueba', pag: 39 },
+    '3.2.3': { t: 'Estrategias de mitigación para proteger la privacidad de los datos y mejorar la seguridad en las pruebas con la IA generativa', pag: 39 },
+    '3.3': { t: 'Consumo de energía e impacto ambiental de la IA generativa en las pruebas de software', pag: 40 },
+    '3.3.1': { t: 'El impacto del uso de la IA generativa en el consumo de energía y las emisiones de CO₂', pag: 41 },
+    '3.4': { t: 'Regulaciones, estándares y marcos de trabajo de las mejores prácticas de la IA', pag: 42 },
+    '3.4.1': { t: 'Regulaciones, estándares y marcos de trabajo de la IA relevantes para la IA generativa en las pruebas de software', pag: 42 },
+    '4.1': { t: 'Enfoques arquitectónicos para la infraestructura de pruebas impulsada por los LLM', pag: 44 },
+    '4.1.1': { t: 'Componentes arquitectónicos clave y conceptos de la infraestructura de pruebas impulsada por los LLM', pag: 44 },
+    '4.1.2': { t: 'Generación aumentada por recuperación (RAG)', pag: 45 },
+    '4.1.3': { t: 'El papel de los agentes impulsados por los LLM en la automatización de los procesos de prueba', pag: 46 },
+    '4.2': { t: 'Ajuste fino y las LLMOps: puesta en marcha de la IA generativa para las pruebas de software', pag: 46 },
+    '4.2.1': { t: 'Ajuste fino de los LLM para las tareas de prueba', pag: 47 },
+    '4.2.2': { t: 'Las LLMOps al desplegar y gestionar los LLM para las pruebas de software', pag: 48 },
+    '5.1': { t: 'Hoja de ruta para la adopción de la IA generativa en las pruebas de software', pag: 49 },
+    '5.1.1': { t: 'Riesgos de la IA en la sombra (shadow AI)', pag: 50 },
+    '5.1.2': { t: 'Aspectos clave de una estrategia de la IA generativa en las pruebas de software', pag: 50 },
+    '5.1.3': { t: 'Selección de los LLM o pequeños modelos de lenguaje (SLM) para las tareas de prueba de software', pag: 51 },
+    '5.1.4': { t: 'Fases al adoptar la IA generativa en las pruebas de software', pag: 51 },
+    '5.2': { t: 'Gestionar el cambio al adoptar la IA generativa para las pruebas de software', pag: 52 },
+    '5.2.1': { t: 'Habilidades y conocimientos esenciales para realizar las pruebas con la IA generativa', pag: 52 },
+    '5.2.2': { t: 'Desarrollo de capacidades en la IA generativa en los equipos de prueba', pag: 52 },
+    '5.2.3': { t: 'Evolución de los procesos de prueba en las organizaciones con pruebas potenciadas por la IA', pag: 53 }
+  };
+
   /* ══════════════════════════════════════════════════════════════════════
      CAPÍTULO 1 — Introducción a la IA generativa (7 preguntas, 7 puntos)
      ══════════════════════════════════════════════════════════════════════ */
@@ -186,7 +245,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'La IA simbólica utiliza un sistema basado en reglas para imitar la toma de decisiones humanas.',
         'Esencialmente, la IA simbólica representa el conocimiento utilizando símbolos y reglas lógicas.'
-      ] },
+      ],
+      pag: [14, 14] },
 
     { id: '1.1.1b', cap: 1, lo: 'GenAI-1.1.1', k: 'K1', pts: 1,
       q: 'Un equipo quiere categorizar defectos y predecir problemas del software con un enfoque basado en datos que exige preparación de datos, selección de características y entrenamiento del modelo. ¿A qué tipo de IA corresponde esa descripción?',
@@ -200,7 +260,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '1.1.1',
       cita: [
         'El aprendizaje automático clásico es un enfoque basado en datos que requiere la preparación de datos, selección de características y el entrenamiento de modelos, y se puede utilizar para tareas como la categorización de defectos y la predicción de problemas de software.'
-      ] },
+      ],
+      pag: [14] },
 
     { id: '1.1.2a', cap: 1, lo: 'GenAI-1.1.2', k: 'K2', pts: 1,
       q: '¿Qué son las <b>incrustaciones</b> (embeddings) en un modelo de lenguaje grande?',
@@ -215,7 +276,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Las incrustaciones son representaciones numéricas de tokens que codifican sus relaciones semánticas, sintácticas y contextuales en un formato adecuado para su procesamiento por modelos de la IA generativa.',
         'Cada token se transforma en un vector en un espacio de alta dimensión, capturando información matizada sobre su significado y uso.'
-      ] },
+      ],
+      pag: [15, 15] },
 
     { id: '1.1.2b', cap: 1, lo: 'GenAI-1.1.2', k: 'K2', pts: 1,
       q: 'Un probador va a analizar registros de prueba muy extensos y compara dos modelos idénticos salvo por el tamaño de su ventana de contexto. ¿Qué debe esperar del modelo con la <b>ventana de contexto más grande</b>?',
@@ -230,7 +292,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Una ventana de contexto más grande permite que el modelo mantenga la coherencia en pasajes más largos, por ejemplo, al analizar registros de pruebas grandes.',
         'Sin embargo, aumentar el número de tokens en la ventana de contexto también aumenta la complejidad computacional y el tiempo de procesamiento necesarios para que el modelo funcione de manera efectiva.'
-      ] },
+      ],
+      pag: [15, 15] },
 
     { id: '1.1.2c', cap: 1, lo: 'GenAI-1.1.2', k: 'K2', pts: 1,
       q: 'Un probador envía tres veces el mismo prompt al mismo LLM y obtiene tres casos de prueba distintos. ¿Cuál es la explicación correcta según el programa de estudios?',
@@ -245,7 +308,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Los LLM exhiben un comportamiento no determinista principalmente debido a la naturaleza probabilística de sus mecanismos de inferencia y configuraciones de hiperparámetros.',
         'Esta aleatoriedad inherente puede conducir a variaciones en los resultados incluso cuando la misma entrada se proporciona varias veces.'
-      ] },
+      ],
+      pag: [15, 15] },
 
     { id: '1.1.3a', cap: 1, lo: 'GenAI-1.1.3', k: 'K2', pts: 1,
       q: '¿Qué distingue a un <b>LLM de razonamiento</b> de un LLM ajustado por instrucciones?',
@@ -259,7 +323,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '1.1.3',
       cita: [
         'Los modelos de razonamiento amplían los modelos ajustados finamente por instrucciones al enfatizar las habilidades cognitivas estructuradas, como la inferencia lógica, la resolución de problemas de varios pasos y el razonamiento en cadena de pensamiento.'
-      ] },
+      ],
+      pag: [16] },
 
     { id: '1.1.3b', cap: 1, lo: 'GenAI-1.1.3', k: 'K2', pts: 1,
       q: '¿Cómo se obtiene un <b>LLM ajustado por instrucciones</b> y para qué sirve ese ajuste?',
@@ -274,7 +339,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Derivados de los modelos fundacionales, los LLM ajustados por instrucciones se ajustan utilizando conjuntos de datos que combinan los prompts con las respuestas esperadas.',
         'Esta etapa mejora su alineación con las instrucciones humanas, mejorando la usabilidad en aplicaciones del mundo real.'
-      ] },
+      ],
+      pag: [16, 16] },
 
     { id: '1.1.4a', cap: 1, lo: 'GenAI-1.1.4', k: 'K2', pts: 1,
       q: 'En un LLM multimodal, ¿cómo se tratan las imágenes antes de que el modelo transformador las procese?',
@@ -288,7 +354,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '1.1.4',
       cita: [
         'Para manejar varias modalidades, la tokenización se adapta para cada tipo de datos, por ejemplo, las imágenes se convierten en incrustaciones utilizando modelos de lenguaje de visión antes de procesarse en el modelo de transformador.'
-      ] },
+      ],
+      pag: [16] },
 
     { id: '1.1.4b', cap: 1, lo: 'GenAI-1.1.4', k: 'K2', pts: 1,
       q: '¿Qué oportunidad concreta ofrecen a las pruebas de software los LLM aumentados con modelos de visión y lenguaje?',
@@ -303,7 +370,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'La capacidad permite a los probadores identificar discrepancias entre los resultados esperados y los elementos visuales reales en una captura de pantalla.',
         'Además, los LLM aumentados con modelos de visión y lenguaje pueden generar casos de prueba ricos y realistas que incorporan datos textuales y señales visuales, lo que aumenta la cobertura general.'
-      ] },
+      ],
+      pag: [16, 17] },
 
     { id: '1.2.1a', cap: 1, lo: 'GenAI-1.2.1', k: 'K2', pts: 1,
       q: 'Un LLM ayuda al equipo a generar los <b>resultados esperados</b> de un conjunto de casos de prueba. ¿A cuál de las capacidades clave de los LLM para tareas de prueba corresponde?',
@@ -317,7 +385,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '1.2.1',
       cita: [
         'Generación de oráculos de prueba: los LLM pueden ayudar a generar los resultados esperados.'
-      ] },
+      ],
+      pag: [17] },
 
     { id: '1.2.1b', cap: 1, lo: 'GenAI-1.2.1', k: 'K2', pts: 1,
       q: 'El equipo pasa las historias de usuario por un LLM y este señala ambigüedades e inconsistencias, y propone preguntas para llevar a la reunión con las partes interesadas. ¿Qué capacidad clave se está usando?',
@@ -332,7 +401,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Análisis y mejora de requisitos: los LLM pueden ayudar a analizar los requisitos y otros elementos de la base de la prueba, identificando ambigüedades, inconsistencias o información faltante.',
         'Pueden generar preguntas significativas para ayudar a aclarar los requisitos durante las discusiones con las partes interesadas.'
-      ] },
+      ],
+      pag: [17, 17] },
 
     { id: '1.2.2a', cap: 1, lo: 'GenAI-1.2.2', k: 'K2', pts: 1,
       q: '¿Qué caracteriza a las <b>aplicaciones de prueba basadas en LLM</b> frente a los chatbot con IA?',
@@ -347,7 +417,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Las aplicaciones de prueba impulsadas por los LLM, por el contrario, implican la integración de las capacidades de los LLM a través de las API para realizar tareas de prueba bien definidas y, a menudo, automatizadas.',
         'Estas aplicaciones ofrecen una mayor personalización y escalabilidad, lo que permite a las organizaciones y los proveedores de herramientas integrar la IA generativa en los marcos de trabajo de prueba existentes.'
-      ] },
+      ],
+      pag: [18, 18] },
 
     { id: '1.2.2b', cap: 1, lo: 'GenAI-1.2.2', k: 'K2', pts: 1,
       q: 'Una probadora necesita aclarar rápidamente conceptos de prueba y explorar de forma dinámica requisitos y posibles casos de prueba, refinando las respuestas de forma iterativa. ¿Qué modelo de interacción con IA generativa encaja mejor y por qué?',
@@ -362,7 +433,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Estos chatbots con IA son especialmente beneficiosos en escenarios que requieren retroalimentación rápida, aclaración de conceptos de prueba o exploración dinámica de requisitos y posibles casos de prueba.',
         'A través de técnicas como el encadenamiento de prompts, los probadores pueden refinar iterativamente los resultados, lo que hace que los chatbots sean particularmente efectivos para tareas rutinarias, pruebas exploratorias e incluso la incorporación de nuevos probadores al proporcionar un acceso rápido a los conocimientos y las prácticas de prueba.'
-      ] },
+      ],
+      pag: [18, 18] },
 
   /* ══════════════════════════════════════════════════════════════════════
      CAPÍTULO 2 — Ingeniería de prompts (11 preguntas, 16 puntos)
@@ -380,7 +452,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '2.1.1',
       cita: [
         'Formato de salida: Las especificaciones de salida denotan el formato, la estructura o las características esperadas de la respuesta.'
-      ] },
+      ],
+      pag: [21] },
 
     { id: '2.1.1b', cap: 2, lo: 'GenAI-2.1.1', k: 'K2', pts: 1,
       q: '¿Cuáles son los <b>seis componentes</b> que suele incluir un prompt estructurado para las pruebas de software?',
@@ -394,7 +467,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '2.1.1',
       cita: [
         'Estos prompts siguen un formato estructurado que consta de seis componentes clave: rol, contexto, instrucciones, datos de entrada, restricciones y formato de salida.'
-      ] },
+      ],
+      pag: [22] },
 
     { id: '2.1.1c', cap: 2, lo: 'GenAI-2.1.1', k: 'K2', pts: 1,
       q: 'Un prompt empieza así: <i>«Actúa como ingeniero de automatización de pruebas con experiencia en marcos basados en palabras clave»</i>. ¿Qué componente es y para qué sirve?',
@@ -409,7 +483,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Rol: El rol define la perspectiva o persona que debe tomar el modelo de la IA generativa al generar una respuesta.',
         'Especificar el rol ayuda al LLM a determinar sus responsabilidades y adoptar un tono o enfoque apropiado, como actuar como probador, director de pruebas o ingeniero de automatización de pruebas.'
-      ] },
+      ],
+      pag: [21, 21] },
 
     { id: '2.1.2a', cap: 2, lo: 'GenAI-2.1.2', k: 'K2', pts: 1,
       q: '¿En qué consiste el <b>meta-prompting</b>?',
@@ -424,7 +499,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Meta-prompting aprovecha la capacidad de la IA para generar o refinar sus propios prompts.',
         'En un ciclo iterativo, el LLM puede generar prompts que pueden ser evaluados y refinados por el probador.'
-      ] },
+      ],
+      pag: [22, 22] },
 
     { id: '2.1.2b', cap: 2, lo: 'GenAI-2.1.2', k: 'K2', pts: 1,
       q: '¿Cuál es la diferencia entre prompting <b>sin ejemplos</b>, <b>con un ejemplo</b> y <b>con pocos ejemplos</b>?',
@@ -439,7 +515,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Si bien el prompt sin ejemplos se basa en el conocimiento preexistente del modelo para generar una respuesta, el prompt con un solo ejemplo proporciona un ejemplo para demostrar el resultado deseado para una entrada dada.',
         'Los prompts con pocos ejemplos contienen más de un ejemplo (unos pocos) para consolidar aún más el comportamiento de respuesta deseado del modelo.'
-      ] },
+      ],
+      pag: [22, 22] },
 
     { id: '2.1.3a', cap: 2, lo: 'GenAI-2.1.3', k: 'K2', pts: 1,
       q: '¿Cuál de estas afirmaciones sobre el <b>prompt de sistema</b> es correcta?',
@@ -455,7 +532,8 @@ window.EXAMEN_GENAI = (function () {
         'Un prompt de sistema actúa como un conjunto de comandos predefinido que define el comportamiento, la personalidad y los parámetros operativos del LLM.',
         'El prompt de sistema se mantiene constante durante toda la sesión de interacción y establece el marco fundamental de cómo debe responder el LLM.',
         'El prompt de sistema suele ser definido por el desarrollador o probador, para guiar el comportamiento general del LLM, y no es visible o editable por el usuario del chatbot en la mayoría de las interfaces.'
-      ] },
+      ],
+      pag: [23, 23, 23] },
 
     { id: '2.1.3b', cap: 2, lo: 'GenAI-2.1.3', k: 'K2', pts: 1,
       q: 'Un equipo quiere que su asistente responda siempre con lenguaje formal, de forma concisa y alineado con las prácticas ISTQB, en todas las conversaciones de sus probadores. ¿Dónde debe fijarse esa configuración y por qué?',
@@ -470,7 +548,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'El prompt de sistema establece las reglas para toda la conversación.',
         'El prompt de sistema se mantiene constante durante toda la sesión de interacción y establece el marco fundamental de cómo debe responder el LLM.'
-      ] },
+      ],
+      pag: [23, 23] },
 
     { id: '2.2.1a', cap: 2, lo: 'GenAI-2.2.1', k: 'K3', pts: 2,
       q: 'Faltan dos semanas para la entrega y hay 60 historias de usuario por probar. El equipo dispone de datos históricos de defectos, sabe que el módulo de pagos está sujeto a cumplimiento normativo y necesita decidir dónde concentrar el esfuerzo. ¿Qué tarea de <b>análisis de prueba</b> con IA generativa aplica a esta situación?',
@@ -485,7 +564,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Priorizar las condiciones de prueba en función del nivel de riesgo: con información sobre la probabilidad del riesgo y el impacto del riesgo de la falla para cada condición de prueba, un LLM puede ayudar a priorizar el esfuerzo de prueba.',
         'Al considerar aspectos como el cumplimiento regulatorio, las características orientadas al usuario (por ejemplo, la funcionalidad de inicio de sesión o el procesamiento de pagos) y los datos históricos de defectos, el LLM puede recomendar niveles de prioridad.'
-      ] },
+      ],
+      pag: [24, 24] },
 
     { id: '2.2.1b', cap: 2, lo: 'GenAI-2.2.1', k: 'K3', pts: 2,
       q: 'Tras cerrar el diseño de pruebas, la jefa de proyecto teme que algún requisito haya quedado sin probar en un producto con requisitos complejos. ¿Cómo puede ayudar la IA generativa en el análisis de prueba?',
@@ -499,7 +579,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '2.2.1',
       cita: [
         'Soporte al análisis de cobertura: al mapear los requisitos y las historias de usuario para probar las condiciones, un LLM puede realizar un análisis de cobertura para determinar si todos los aspectos de la base de prueba están cubiertos.'
-      ] },
+      ],
+      pag: [24] },
 
     { id: '2.2.2a', cap: 2, lo: 'GenAI-2.2.2', k: 'K3', pts: 2,
       q: 'El equipo necesita datos que se parezcan a los de producción para probar un módulo de facturación, pero la base real contiene información personal de clientes y no puede salir del entorno productivo. ¿Qué tarea de diseño e implementación de prueba con IA generativa resuelve el problema?',
@@ -513,7 +594,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '2.2.2',
       cita: [
         'Síntesis de datos de prueba: la IA generativa puede crear datos de prueba sintéticos representativos que preserven la privacidad de los datos y que se asemejen a los datos de producción, cubriendo situaciones extremas y condiciones de prueba variadas.'
-      ] },
+      ],
+      pag: [26] },
 
     { id: '2.2.2b', cap: 2, lo: 'GenAI-2.2.2', k: 'K3', pts: 2,
       q: 'Un equipo tiene casos de prueba manuales bien estructurados y quiere convertirlos en scripts ejecutables para su marco de automatización, y poder ampliarlos cuando cambien los requisitos. ¿Qué puede hacer la IA generativa?',
@@ -528,7 +610,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Generación automatizada de scripts de prueba: la IA generativa puede generar procedimientos de prueba manuales y scripts de prueba automatizados a partir de casos de prueba estructurados, interpretando los pasos de prueba y traduciéndolos en código compatible con varios marcos de trabajo de automatización de pruebas.',
         'Estos scripts de prueba se pueden actualizar o ampliar en función de los nuevos requisitos.'
-      ] },
+      ],
+      pag: [26, 26] },
 
     { id: '2.2.3a', cap: 2, lo: 'GenAI-2.2.3', k: 'K3', pts: 2,
       q: 'La suite de regresión de interfaz gráfica falla cada sprint porque los localizadores cambian y las interacciones se modifican, aunque la funcionalidad sigue correcta. ¿Qué aplicación de IA generativa ataca directamente ese problema?',
@@ -543,7 +626,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Pruebas autorreparables y pruebas adaptativas: la IA generativa se puede utilizar para ajustar automáticamente los scripts de prueba para manejar cambios menores en la interfaz de usuario o la API, evitando fallas innecesarias de pequeñas modificaciones y asegurando que los conjuntos de pruebas permanezcan estables a lo largo del tiempo.',
         'La IA generativa puede adaptar automáticamente los scripts de prueba para manejar cambios como localizadores dinámicos e interacciones modificadas, reduciendo la necesidad de intervención manual.'
-      ] },
+      ],
+      pag: [27, 28] },
 
     { id: '2.2.3b', cap: 2, lo: 'GenAI-2.2.3', k: 'K3', pts: 2,
       q: 'Un cambio importante entra en la rama principal y la suite de regresión completa tarda ocho horas, tiempo que la ventana de integración continua no permite. ¿Qué uso de IA generativa es el adecuado?',
@@ -557,7 +641,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '2.2.3',
       cita: [
         'Análisis de impacto y optimización de pruebas: la IA generativa se puede utilizar para analizar los cambios de código con el fin de identificar áreas de alto riesgo, lo que permite realizar pruebas de regresión específicas donde más se necesita.'
-      ] },
+      ],
+      pag: [27] },
 
     { id: '2.2.4a', cap: 2, lo: 'GenAI-2.2.4', k: 'K3', pts: 2,
       q: 'La dirección, que no es técnica, pide visibilidad semanal del avance de la prueba sin tener que leer los informes de la herramienta de gestión. ¿Qué tarea de monitoreo con IA generativa encaja?',
@@ -571,7 +656,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '2.2.4',
       cita: [
         'Mejora en la visualización de las métricas de prueba y los informes de prueba: la IA generativa puede ayudar en la creación de tableros de control dinámicos y resúmenes en lenguaje natural, asegurando que todas las partes interesadas tengan acceso a las métricas relevantes.'
-      ] },
+      ],
+      pag: [29] },
 
     { id: '2.2.4b', cap: 2, lo: 'GenAI-2.2.4', k: 'K3', pts: 2,
       q: 'A mitad de iteración, el análisis de tendencias detecta que la densidad de defectos de un módulo se dispara y que el avance va por debajo del plan. El equipo debe reaccionar. ¿Qué tarea de IA generativa corresponde a esa reacción?',
@@ -585,7 +671,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '2.2.4',
       cita: [
         'Control de pruebas: la IA generativa puede ayudar con el control de pruebas al proporcionar información para volver a priorizar las pruebas, ajustar los cronogramas de las pruebas y reasignar los recursos según sea necesario.'
-      ] },
+      ],
+      pag: [29] },
 
     { id: '2.2.5a', cap: 2, lo: 'GenAI-2.2.5', k: 'K3', pts: 2,
       q: 'Un equipo genera cada sprint decenas de escenarios en formato Gherkin y necesita que todos salgan con exactamente la misma estructura «dado-cuando-entonces». ¿Qué técnica de prompting es la más adecuada?',
@@ -599,7 +686,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '2.2.5',
       cita: [
         'Prompts con pocos ejemplos — Tareas de formato de salida repetitivas o específicas o restringidas: Proporciona ejemplos a la IA generativa para la generación repetitiva con un patrón específico, por ejemplo, en casos de prueba al estilo Gherkin (por ejemplo, basados en escenarios), pruebas basadas en palabras clave o informes de prueba con un formato de salida específico.'
-      ] },
+      ],
+      pag: [30] },
 
     { id: '2.2.5b', cap: 2, lo: 'GenAI-2.2.5', k: 'K3', pts: 2,
       q: 'Hay que analizar una historia de usuario compleja: primero detectar ambigüedades, luego evaluar la capacidad de prueba y por último la integridad de los criterios de aceptación, revisando el resultado en cada etapa antes de seguir. ¿Qué técnica corresponde?',
@@ -614,7 +702,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'El encadenamiento de prompts implica dividir una tarea en una serie de pasos intermedios (prompts múltiples).',
         'El resultado de cada paso se comprueba y refina manual o automáticamente antes de pasar al siguiente paso.'
-      ] },
+      ],
+      pag: [22, 22] },
 
     { id: '2.2.5c', cap: 2, lo: 'GenAI-2.2.5', k: 'K3', pts: 2,
       q: 'Una probadora se enfrenta a una tarea nueva —detección de anomalías en informes de prueba— y no sabe cómo redactar un prompt eficaz. ¿Qué técnica le recomienda el programa, y puede combinarse con otras?',
@@ -628,7 +717,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '2.2.5',
       cita: [
         'Incluso es posible utilizar múltiples técnicas para un solo caso de uso. Por ejemplo, los meta-prompt se pueden usar para crear un prompt inicial. Esta indicación generada puede contener ejemplos que deben adaptarse y mejorarse (prompts con pocos ejemplos). Por último, puede ser útil dividir la tarea en subtareas más pequeñas para permitir la validación de los pasos intermedios (encadenamiento de prompts).'
-      ] },
+      ],
+      pag: [30] },
 
     { id: '2.3.1a', cap: 2, lo: 'GenAI-2.3.1', k: 'K2', pts: 1,
       q: 'Se quiere medir <b>en qué grado los casos de prueba generados cubren la partición de equivalencia válida e inválida</b> de una clase de datos. ¿Qué métrica de evaluación de resultados de IA generativa es?',
@@ -643,7 +733,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Recuperación — Mide la capacidad de un modelo para identificar todas las instancias relevantes dentro de un conjunto de datos.',
         'Ejemplo: El grado en que los casos de prueba generados cubren las particiones de equivalencia válidas e inválidas de una clase de datos.'
-      ] },
+      ],
+      pag: [31, 31] },
 
     { id: '2.3.1b', cap: 2, lo: 'GenAI-2.3.1', k: 'K2', pts: 1,
       q: 'Un equipo mide qué proporción de los scripts de prueba generados se ejecutan sin errores de sintaxis ni problemas de formato en un entorno que funciona correctamente. Además, ¿qué precaución exige el programa al usar métricas con IA generativa?',
@@ -658,7 +749,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Tasa de éxito de ejecución — Mide la proporción de casos de prueba generados o scripts de prueba que se pueden ejecutar con éxito.',
         'Dada la naturaleza no determinista de la IA generativa, las métricas deben basarse en datos estadísticamente relevantes.'
-      ] },
+      ],
+      pag: [31, 31] },
 
     { id: '2.3.2a', cap: 2, lo: 'GenAI-2.3.2', k: 'K2', pts: 1,
       q: 'Un equipo crea tres redacciones distintas del mismo prompt y compara cuál produce mejores resultados según métricas definidas de antemano. ¿Qué técnica de refinamiento de prompts está aplicando?',
@@ -672,7 +764,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '2.3.2',
       cita: [
         'Pruebas A/B de prompts: cree múltiples versiones de prompts y evalúe qué versión produce mejores resultados en función de las métricas predefinidas.'
-      ] },
+      ],
+      pag: [32] },
 
     { id: '2.3.2b', cap: 2, lo: 'GenAI-2.3.2', k: 'K2', pts: 1,
       q: 'Sobre el ajuste de la longitud y la especificidad de los prompts, ¿qué afirma el programa de estudios?',
@@ -688,7 +781,8 @@ window.EXAMEN_GENAI = (function () {
         'Ajustar la longitud y la especificidad del prompt: experimente con diferentes longitudes y niveles de detalle del prompt.',
         'A veces, agregar más contexto puede mejorar la calidad de la respuesta.',
         'En otros casos, los prompts más cortos pueden producir una mejor generalización.'
-      ] },
+      ],
+      pag: [32, 32, 32] },
 
   /* ══════════════════════════════════════════════════════════════════════
      CAPÍTULO 3 — Gestión de riesgos (10 preguntas, 11 puntos)
@@ -706,7 +800,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '3.1.1',
       cita: [
         'Los errores de razonamiento ocurren cuando los LLM malinterpretan las estructuras lógicas, como las relaciones de causa y efecto, la lógica condicional o los procesos de resolución de problemas paso a paso, lo que lleva a conclusiones incorrectas.'
-      ] },
+      ],
+      pag: [35] },
 
     { id: '3.1.1b', cap: 3, lo: 'GenAI-3.1.1', k: 'K1', pts: 1,
       q: 'Según el programa de estudios, ¿de dónde provienen los <b>sesgos</b> de un LLM y cómo se manifiestan en las pruebas de software?',
@@ -721,7 +816,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Los sesgos de los LLM (Gallegos 2024) provienen de los datos sobre los que se entrenó el modelo.',
         'En las pruebas de software, los sesgos pueden influir en las respuestas de los LLM cuando, por ejemplo, se generan datos de prueba o se refinan los criterios de aceptación para los casos de prueba.'
-      ] },
+      ],
+      pag: [35, 35] },
 
     { id: '3.1.2a', cap: 3, lo: 'GenAI-3.1.2', k: 'K3', pts: 2,
       q: 'Un LLM devuelve una lista de casos de prueba para una historia de usuario. Al revisarla, la probadora ve que tres de ellos verifican un criterio de aceptación que no aparece en ninguna parte de la historia ni de la documentación. ¿Qué problema ha identificado y cómo lo confirma?',
@@ -735,7 +831,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '3.1.2 · 3.1.1',
       cita: [
         'Verificación cruzada: compare los resultados generados por la IA con la documentación existente, los requisitos y el comportamiento conocido del sistema.'
-      ] },
+      ],
+      pag: [35] },
 
     { id: '3.1.2b', cap: 3, lo: 'GenAI-3.1.2', k: 'K3', pts: 2,
       q: 'Se pide a un LLM que priorice un conjunto de pruebas teniendo en cuenta dependencias entre casos y estimaciones de esfuerzo. La lista devuelta coloca un caso antes que otro del que depende, y los totales de esfuerzo no cuadran. ¿Qué problema es y qué técnica de detección aplica?',
@@ -750,7 +847,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'La planificación de las pruebas y la priorización de los casos de prueba son ejemplos de tareas de prueba que requieren razonamiento lógico y donde los LLM pueden cometer errores de razonamiento.',
         'Validación lógica: Evaluar el flujo lógico (por ejemplo, la consistencia, la coherencia y el razonamiento estructurado dentro del texto generado) del contenido generado por la IA en cuanto a la coherencia y la capacidad de ser correcto a través de ciclos de revisión.'
-      ] },
+      ],
+      pag: [35, 36] },
 
     { id: '3.1.2c', cap: 3, lo: 'GenAI-3.1.2', k: 'K3', pts: 2,
       q: 'Al revisar un lote de testware generado por la IA generativa, el equipo observa que las pruebas no funcionales aparecen sistemáticamente infrarrepresentadas frente a las funcionales. ¿Qué problema refleja y a qué categoría de detección pertenece?',
@@ -764,7 +862,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '3.1.2',
       cita: [
         'Evaluar los sesgos relacionados con los tipos de prueba, como las pruebas no funcionales subrepresentadas en el resultado generado del LLM.'
-      ] },
+      ],
+      pag: [36] },
 
     { id: '3.1.3a', cap: 3, lo: 'GenAI-3.1.3', k: 'K2', pts: 1,
       q: '¿Cuál de las siguientes <b>NO</b> es una técnica de mitigación de alucinaciones, errores de razonamiento y sesgos según el programa de estudios?',
@@ -778,7 +877,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '3.1.3 · 3.1.4',
       cita: [
         'Ajustar la configuración de los parámetros de temperatura del LLM: bajar la temperatura durante la generación de las respuestas (inferencia) reduce la distribución de probabilidad, reduciendo la aleatoriedad y dando como resultado resultados más consistentes.'
-      ] },
+      ],
+      pag: [37] },
 
     { id: '3.1.3b', cap: 3, lo: 'GenAI-3.1.3', k: 'K2', pts: 1,
       q: '¿Cuándo son más probables las alucinaciones, los errores de razonamiento y los sesgos, y qué dos técnicas complementarias remite el programa al capítulo 4?',
@@ -793,7 +893,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Es más probable que estos problemas ocurran cuando los prompts no están diseñados correctamente (consulte el Capítulo 2) o cuando faltan datos de entrada contextuales relevantes para una tarea de prueba determinada.',
         'El capítulo 4 presenta dos técnicas complementarias para mejorar los resultados de los LLM: generación aumentada por recuperación (RAG) y el ajuste fino.'
-      ] },
+      ],
+      pag: [37, 37] },
 
     { id: '3.1.4a', cap: 3, lo: 'GenAI-3.1.4', k: 'K1', pts: 1,
       q: '¿Qué estrategias recoge el programa para reducir la variabilidad del comportamiento no determinista de los LLM?',
@@ -809,7 +910,8 @@ window.EXAMEN_GENAI = (function () {
         'Si bien no se puede garantizar la reproducibilidad completa, ciertas estrategias pueden ayudar a reducir la variabilidad:',
         'Ajustar la configuración de los parámetros de temperatura del LLM: bajar la temperatura durante la generación de las respuestas (inferencia) reduce la distribución de probabilidad, reduciendo la aleatoriedad y dando como resultado resultados más consistentes.',
         'Configuración de semillas aleatorias: algunas implementaciones de los LLM permiten establecer un valor de semilla para el generador de números aleatorios, asegurando que se use la misma secuencia pseudoaleatoria (es decir, valores aleatorios deterministas), lo que mejora la reproducibilidad.'
-      ] },
+      ],
+      pag: [37, 37, 37] },
 
     { id: '3.1.4b', cap: 3, lo: 'GenAI-3.1.4', k: 'K1', pts: 1,
       q: '¿Qué efecto secundario tiene bajar el parámetro de temperatura de un LLM?',
@@ -823,7 +925,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '3.1.4',
       cita: [
         'Sin embargo, esto también limitará la creatividad y la diversidad en las respuestas, haciendo que los resultados sean más repetitivos o demasiado deterministas.'
-      ] },
+      ],
+      pag: [37] },
 
     { id: '3.2.1a', cap: 3, lo: 'GenAI-3.2.1', k: 'K2', pts: 1,
       q: 'Un equipo pega registros de producción con datos de clientes en una herramienta de IA generativa comercial para que los analice. ¿Qué riesgo de privacidad describe mejor la situación?',
@@ -838,7 +941,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Falta de control sobre el uso de datos: las herramientas la IA generativa pueden almacenar y procesar datos confidenciales sin el consentimiento o control explícito del usuario.',
         'Esto puede dar lugar a un posible uso indebido o acceso no autorizado.'
-      ] },
+      ],
+      pag: [38, 38] },
 
     { id: '3.2.1b', cap: 3, lo: 'GenAI-3.2.1', k: 'K2', pts: 1,
       q: '¿Cuál de los siguientes es un riesgo de <b>seguridad</b> específico que el programa asocia a probar con IA generativa?',
@@ -852,7 +956,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '3.2.1',
       cita: [
         'La Infraestructura de pruebas impulsada por los LLM puede ser vulnerable a ataques de seguridad, como violaciones de datos o acceso no autorizado.'
-      ] },
+      ],
+      pag: [38] },
 
     { id: '3.2.2a', cap: 3, lo: 'GenAI-3.2.2', k: 'K2', pts: 1,
       q: 'Un atacante envía prompts extraordinariamente largos para superar la ventana de contexto del LLM y sobrecargar su memoria, con la esperanza de que revele fragmentos de sus datos de entrenamiento. ¿Qué vector de ataque es?',
@@ -867,7 +972,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Exfiltración de datos (también fuga de datos) — Envío de prompts diseñados para extraer datos de entrenamiento confidenciales.',
         'Ejemplo: Exceder la ventana de contexto del LLM con prompts largos para sobrecargar la memoria de la IA podría llevarla a revelar fragmentos aleatorios de sus datos de entrenamiento y exponer potencialmente información confidencial.'
-      ] },
+      ],
+      pag: [39, 39] },
 
     { id: '3.2.2b', cap: 3, lo: 'GenAI-3.2.2', k: 'K2', pts: 1,
       q: 'Alguien introduce evaluaciones falsas al calificar los resultados de un informe de prueba generado por IA, con la intención de degradar el comportamiento futuro del modelo. ¿Qué vector de ataque describe el programa para este caso?',
@@ -882,7 +988,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Envenenamiento de datos (también contaminación de datos) — Manipular los datos de entrenamiento.',
         'Ejemplo: Proporcionar evaluaciones falsas al calificar los resultados de un informe de prueba generado por la IA.'
-      ] },
+      ],
+      pag: [39, 39] },
 
     { id: '3.2.2c', cap: 3, lo: 'GenAI-3.2.2', k: 'K2', pts: 1,
       q: 'Se introducen imágenes que arrastran a la IA a un contexto distinto del real, provocando alucinaciones sobre los criterios de aceptación. ¿Qué vector de ataque es, y qué ejemplo da el programa de <b>generación de código malicioso</b>?',
@@ -897,7 +1004,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Generación de código malicioso — Manipular un LLM para generar puertas traseras (por ejemplo, llamadas a comandos externos) durante el uso.',
         'Ejemplo: Generación de código para abrir un canal de comunicación con una IP específica y maliciosa.'
-      ] },
+      ],
+      pag: [39, 39] },
 
     { id: '3.2.3a', cap: 3, lo: 'GenAI-3.2.3', k: 'K2', pts: 1,
       q: '¿Qué afirma el programa sobre la relación entre el GDPR y el uso de IA generativa?',
@@ -911,7 +1019,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '3.2.3',
       cita: [
         'Las regulaciones de protección de datos como GDPR no restringen las aplicaciones de la IA generativa explícitamente, pero proporcionan salvaguardas que pueden limitar lo que se puede hacer, particularmente con respecto a la legalidad y las limitaciones en los fines de recopilación, procesamiento y almacenamiento de datos.'
-      ] },
+      ],
+      pag: [39] },
 
     { id: '3.2.3b', cap: 3, lo: 'GenAI-3.2.3', k: 'K2', pts: 1,
       q: 'Una organización con requisitos altos de confidencialidad quiere usar IA generativa en pruebas. ¿Qué recoge el programa entre las estrategias de mitigación?',
@@ -925,7 +1034,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '3.2.3',
       cita: [
         'Elección de un entorno seguro y operativo: dependiendo del nivel de confidencialidad requerido, las organizaciones pueden optar por diferentes soluciones seguras: utilizar una oferta comercial segura de un proveedor de LLM, operar el LLM en una nube segura o instalar el LLM en la infraestructura de la organización.'
-      ] },
+      ],
+      pag: [40] },
 
     { id: '3.3.1a', cap: 3, lo: 'GenAI-3.3.1', k: 'K2', pts: 1,
       q: '¿Qué comparación concreta usa el programa para ilustrar el consumo energético de las tareas de IA generativa?',
@@ -939,7 +1049,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '3.3.1',
       cita: [
         'Por ejemplo, generar una sola imagen utilizando un modelo de IA potente puede consumir tanta energía como cargar completamente un teléfono inteligente, mientras que generar texto consume solo un pequeño porcentaje de la carga de un teléfono inteligente (Heikkilä 2023)'
-      ] },
+      ],
+      pag: [41] },
 
     { id: '3.3.1b', cap: 3, lo: 'GenAI-3.3.1', k: 'K2', pts: 1,
       q: '¿Qué buena práctica señala el programa como fundamental para mitigar el impacto medioambiental de IA generativa en las pruebas de software?',
@@ -953,7 +1064,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '3.3.1 · 5.2.1',
       cita: [
         'Adoptar las mejores prácticas, como limitar las interacciones innecesarias de los modelos, es fundamental para mitigar los riesgos ambientales que plantea la IA generativa.'
-      ] },
+      ],
+      pag: [41] },
 
     { id: '3.4.1a', cap: 3, lo: 'GenAI-3.4.1', k: 'K1', pts: 1,
       q: '¿Qué norma especifica los requisitos para <b>gestionar los sistemas de IA dentro de una organización</b>?',
@@ -967,7 +1079,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '3.4.1',
       cita: [
         'ISO/IEC 42001:2023 Tecnología de la información – Sistema de gestión de inteligencia artificial (Tipo: Estándar) — Especifica los requisitos para gestionar los sistemas de IA dentro de una organización.'
-      ] },
+      ],
+      pag: [42] },
 
     { id: '3.4.1b', cap: 3, lo: 'GenAI-3.4.1', k: 'K1', pts: 1,
       q: '¿Cuál de estas correspondencias entre norma o marco y su descripción es <b>correcta</b>?',
@@ -982,7 +1095,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Ley de IA de la Unión Europea (Tipo: Reglamento) — Establece un marco de trabajo jurídico que aborda los riesgos de la IA, clasificando las aplicaciones por su nivel de riesgo.',
         'Aplicación en las pruebas: Exige el cumplimiento en materia de transparencia, rendición de cuentas y mitigación de sesgos para la IA generativa utilizada en las pruebas.'
-      ] },
+      ],
+      pag: [42, 42] },
 
   /* ══════════════════════════════════════════════════════════════════════
      CAPÍTULO 4 — Infraestructura impulsada por los LLM (5 preguntas, 5 puntos)
@@ -1000,7 +1114,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '4.1.1',
       cita: [
         'El back-end procesa la entrada del usuario y gestiona funciones críticas como la autenticación, la recuperación de datos, la preparación de prompts y la interacción con el LLM.'
-      ] },
+      ],
+      pag: [44] },
 
     { id: '4.1.1b', cap: 4, lo: 'GenAI-4.1.1', k: 'K2', pts: 1,
       q: '¿En qué se diferencia una infraestructura de prueba impulsada por LLM del modelo cliente-servidor tradicional?',
@@ -1015,7 +1130,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Esta arquitectura va más allá de un modelo cliente-servidor tradicional al incorporar componentes de procesamiento inteligentes, como los LLM y back-ends de múltiples fuentes: 1.',
         'El LLM no es solo un servidor, sino un componente de procesamiento inteligente que interpreta y razona en función del testware.'
-      ] },
+      ],
+      pag: [44, 44] },
 
     { id: '4.1.2a', cap: 4, lo: 'GenAI-4.1.2', k: 'K2', pts: 1,
       q: '¿Cómo funciona la <b>generación aumentada por recuperación</b> (RAG) al procesar el prompt de un usuario?',
@@ -1031,7 +1147,8 @@ window.EXAMEN_GENAI = (function () {
         'En la fase de procesamiento de prompts del usuario, un sistema RAG funciona a través de un proceso de dos pasos:',
         'Recuperación: Dada una consulta de usuario, el sistema recupera información relevante de las bases de datos vectoriales creadas previamente.',
         'Generación: La información recuperada se envía al LLM, que genera una respuesta que combina su conocimiento existente con los datos recién adquiridos, lo que resulta en un resultado más exacto y adecuado al contexto.'
-      ] },
+      ],
+      pag: [45, 45, 45] },
 
     { id: '4.1.2b', cap: 4, lo: 'GenAI-4.1.2', k: 'K2', pts: 1,
       q: 'Durante el <b>preprocesamiento</b> de un sistema RAG, ¿qué se hace con los documentos grandes y por qué?',
@@ -1046,7 +1163,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Durante el preprocesamiento, los documentos grandes se dividen en fragmentos más pequeños (por ejemplo, 256-512 tokens) para garantizar la recuperación enfocada y la compatibilidad con la ventana de contexto del modelo.',
         'Cada fragmento se limpia, procesa y codifica en un vector de alta dimensión (incrustación) utilizando modelos preentrenados.'
-      ] },
+      ],
+      pag: [45, 45] },
 
     { id: '4.1.3a', cap: 4, lo: 'GenAI-4.1.3', k: 'K2', pts: 1,
       q: '¿Qué diferencia principal establece el programa entre un <b>agente impulsado por LLM</b> y un bot de conversación tradicional?',
@@ -1061,7 +1179,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'A diferencia de los chatbots con IA tradicionales que se centran únicamente en las interacciones pregunta-respuesta, los agentes impulsados por los LLM pueden realizar tareas o "actuar" invocando un conjunto predefinido de funciones, comúnmente denominadas "herramientas"',
         'Esta capacidad les permite interactuar y manipular sistemas externos, lo que los hace muy versátiles en la ejecución de tareas.'
-      ] },
+      ],
+      pag: [46, 46] },
 
     { id: '4.1.3b', cap: 4, lo: 'GenAI-4.1.3', k: 'K2', pts: 1,
       q: 'Varios agentes con funciones especializadas se comunican y coordinan para resolver un problema de prueba complejo. ¿Cómo se llama ese esfuerzo coordinado y en qué se diferencia un agente semiautónomo de uno autónomo?',
@@ -1077,7 +1196,8 @@ window.EXAMEN_GENAI = (function () {
         'Este esfuerzo coordinado entre múltiples agentes de IA se conoce como "orquestación"',
         'Los agentes semiautónomos realizan tareas con supervisión humana periódica para asegurar que el resultado cumpla con los objetivos definidos por el usuario.',
         'Los agentes autónomos operan de forma independiente, realizando tareas con una intervención humana mínima utilizando reglas predefinidas, aprendizaje por refuerzo y ciclos de retroalimentación adaptativa.'
-      ] },
+      ],
+      pag: [46, 46, 46] },
 
     { id: '4.2.1a', cap: 4, lo: 'GenAI-4.2.1', k: 'K2', pts: 1,
       q: '¿Cuál de los siguientes es un <b>reto</b> del ajuste fino de un modelo de IA generativa para las pruebas de software?',
@@ -1091,7 +1211,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '4.2.1',
       cita: [
         'Mitigar el sobreajuste (el modelo se vuelve demasiado especializado para los datos de entrenamiento, lo que afecta negativamente su rendimiento en datos nuevos e invisibles) para mantener la generalización en diferentes escenarios.'
-      ] },
+      ],
+      pag: [47] },
 
     { id: '4.2.1b', cap: 4, lo: 'GenAI-4.2.1', k: 'K2', pts: 1,
       q: 'Una organización quiere que el modelo genere casos de prueba a partir de sus historias de usuario siguiendo su formato y su terminología internos, con el menor costo de recursos posible. ¿Qué plantea el programa?',
@@ -1105,7 +1226,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '4.2.1',
       cita: [
         'Al ajustar un SLM, se pueden lograr niveles de rendimiento más altos para tareas específicas sin la misma sobrecarga computacional requerida para los LLM.'
-      ] },
+      ],
+      pag: [47] },
 
     { id: '4.2.2a', cap: 4, lo: 'GenAI-4.2.2', k: 'K2', pts: 1,
       q: '¿Qué son las <b>operaciones del modelo de lenguaje grande</b> (LLMOps)?',
@@ -1119,7 +1241,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '4.2.2',
       cita: [
         'Las LLMOps se refieren al conjunto de prácticas, herramientas y procesos diseñados para agilizar el desarrollo, el despliegue y el mantenimiento de los LLM en entornos de producción (Sinha 2024)'
-      ] },
+      ],
+      pag: [48] },
 
     { id: '4.2.2b', cap: 4, lo: 'GenAI-4.2.2', k: 'K2', pts: 1,
       q: 'Sobre los tres enfoques para usar IA generativa en los procesos de prueba de una organización —chatbot con IA, herramienta de prueba con capacidades de IA generativa y desarrollo interno—, ¿qué afirma el programa?',
@@ -1134,7 +1257,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Estos enfoques no son mutuamente excluyentes, ya que una organización podría utilizar un chatbot con IA para algunas tareas mientras desarrolla herramientas personalizadas para otras.',
         'Además, pueden incorporar tecnologías adicionales, como RAG y ajuste fino de los LLM/SLM, para mejorar la efectividad y adaptabilidad de los procesos de prueba con la IA generativa.'
-      ] },
+      ],
+      pag: [48, 48] },
 
   /* ══════════════════════════════════════════════════════════════════════
      CAPÍTULO 5 — Despliegue e integración (7 preguntas, 7 puntos)
@@ -1155,7 +1279,8 @@ window.EXAMEN_GENAI = (function () {
         'Debilidades en la seguridad de la información y la privacidad de los datos: Las herramientas personales de IA pueden carecer de una seguridad sólida, lo que puede dar lugar a posibles violaciones de datos.',
         'Cumplimiento y problemas regulatorios: el uso de herramientas de IA no aprobadas puede llevar al incumplimiento de los estándares y regulaciones de la industria (consulte la Sección 3.4.1), lo que puede tener consecuencias legales.',
         'Propiedad intelectual difusa: el uso de herramientas de IA con acuerdos de licencia poco claros puede exponer a los usuarios de los LLM a disputas de propiedad intelectual, especialmente si los datos con derechos de autor se procesan sin la autorización adecuada.'
-      ] },
+      ],
+      pag: [50, 50, 50, 50] },
 
     { id: '5.1.1b', cap: 5, lo: 'GenAI-5.1.1', k: 'K1', pts: 1,
       q: '¿Qué recomienda el programa para que una organización de prueba evite el riesgo de IA en la sombra?',
@@ -1169,7 +1294,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '5.1.1',
       cita: [
         'Una estrategia y pasos para integrar e implementar la IA generativa pueden ayudar a las organizaciones de prueba a evitar el riesgo de la IA en la sombra.'
-      ] },
+      ],
+      pag: [50] },
 
     { id: '5.1.2a', cap: 5, lo: 'GenAI-5.1.2', k: 'K2', pts: 1,
       q: 'Al definir una estrategia de IA generativa para las pruebas de software, ¿qué debe incluirse entre las directrices de proceso para asegurar el cumplimiento normativo y ético?',
@@ -1183,7 +1309,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '5.1.2',
       cita: [
         'Para garantizar el cumplimiento de los estándares reglamentarios y el cumplimiento de las pautas éticas, las organizaciones deben establecer pautas de proceso para el uso de la IA generativa, incluidas las reglas para el uso de datos confidenciales, las obligaciones de transparencia (por ejemplo, lo que se generó utilizando la IA generativa) y los controles de calidad con revisión del testware generado.'
-      ] },
+      ],
+      pag: [50] },
 
     { id: '5.1.2b', cap: 5, lo: 'GenAI-5.1.2', k: 'K2', pts: 1,
       q: '¿Qué papel juega la calidad de los datos de entrada en una estrategia de IA generativa para la prueba?',
@@ -1198,7 +1325,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'La calidad de los datos juega un papel fundamental, ya que la efectividad de las pruebas impulsadas por los LLM depende de los datos de entrada precisos y relevantes, protegidos por procedimientos de seguridad sólidos.',
         'Por lo tanto, mantener datos de entrada de alta calidad es clave para lograr resultados en los que se pueda confiar que sean correctos.'
-      ] },
+      ],
+      pag: [50, 50] },
 
     { id: '5.1.3a', cap: 5, lo: 'GenAI-5.1.3', k: 'K2', pts: 1,
       q: '¿Cuáles son los criterios clave que el programa propone para <b>seleccionar un LLM o SLM</b> para tareas de prueba de software?',
@@ -1216,7 +1344,8 @@ window.EXAMEN_GENAI = (function () {
         'Potencial de ajuste fino:',
         'Costo recurrente:',
         'Comunidad y soporte:'
-      ] },
+      ],
+      pag: [51, 51, 51, 51, 51] },
 
     { id: '5.1.3b', cap: 5, lo: 'GenAI-5.1.3', k: 'K2', pts: 1,
       q: '¿Qué advierte el programa sobre los puntos de referencia (benchmarks) disponibles para elegir un LLM/SLM?',
@@ -1230,7 +1359,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '5.1.3',
       cita: [
         'Si bien hay muchos puntos de referencia disponibles para evaluar los LLM/SLM para las tareas como el procesamiento del lenguaje natural, la generación de código o el análisis de imágenes, solo unos pocos se centran específicamente en las tareas de prueba de software (Wenhan 2024)'
-      ] },
+      ],
+      pag: [51] },
 
     { id: '5.1.4a', cap: 5, lo: 'GenAI-5.1.4', k: 'K1', pts: 1,
       q: '¿Cuáles son las tres fases clave de la adopción de IA generativa en una organización de prueba, en orden?',
@@ -1247,7 +1377,8 @@ window.EXAMEN_GENAI = (function () {
         '1. Descubrimiento: La primera fase se centra en la sensibilización y el desarrollo de capacidades.',
         '2. Inicio y definición del uso: Una vez que se establece la comprensión básica, la segunda fase se centra en identificar y priorizar casos de uso prácticos para la IA generativa en las pruebas de software.',
         '3. Uso e iteración: en esta fase avanzada, las organizaciones integran completamente la IA generativa en sus procesos de prueba.'
-      ] },
+      ],
+      pag: [51, 51, 51, 52] },
 
     { id: '5.1.4b', cap: 5, lo: 'GenAI-5.1.4', k: 'K1', pts: 1,
       q: '¿Deben recorrerse secuencialmente las fases de adopción de IA generativa, y qué preocupación inicial señala el programa?',
@@ -1262,7 +1393,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'Estas fases pueden ejecutarse en paralelo para diferentes casos de uso.',
         'También es importante reconocer y abordar las preocupaciones tempranas, como el temor a la pérdida de puestos de trabajo, que puede afectar a la adopción y a la moral del equipo.'
-      ] },
+      ],
+      pag: [52, 52] },
 
     { id: '5.2.1a', cap: 5, lo: 'GenAI-5.2.1', k: 'K2', pts: 1,
       q: '¿Qué habilidades y conocimientos considera esenciales el programa para que un probador trabaje eficazmente con IA generativa?',
@@ -1276,7 +1408,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '5.2.1',
       cita: [
         'La integración exitosa de la IA generativa en las pruebas requiere dominar las técnicas de ingeniería de prompts, comprender las ventanas de contexto del modelo y desarrollar métodos de revisión de pruebas.'
-      ] },
+      ],
+      pag: [52] },
 
     { id: '5.2.1b', cap: 5, lo: 'GenAI-5.2.1', k: 'K2', pts: 1,
       q: 'Entre los conocimientos esenciales del probador que usa IA generativa, ¿qué incluye el programa respecto al <b>impacto medioambiental</b>?',
@@ -1290,7 +1423,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '5.2.1 · 3.3.1',
       cita: [
         'Las consideraciones medioambientales incluyen la optimización de la selección de modelos y los patrones de uso para reducir los gastos generales computacionales, la selección de modelos de tamaño adecuado para las tareas de prueba y el equilibrio de los beneficios de la automatización de la IA generativa con el impacto en el costo y el consumo de energía.'
-      ] },
+      ],
+      pag: [52] },
 
     { id: '5.2.2a', cap: 5, lo: 'GenAI-5.2.2', k: 'K1', pts: 1,
       q: '¿Qué estrategias recoge el programa para desarrollar capacidades de IA generativa dentro de un equipo de prueba?',
@@ -1305,7 +1439,8 @@ window.EXAMEN_GENAI = (function () {
       cita: [
         'La capacitación se centra en el desarrollo de habilidades prácticas a través de ejercicios guiados, aprendizaje entre pares y la integración gradual de la IA en las tareas de prueba diarias.',
         'Esto incluye practicar con varios LLM/SLM, seguir rutas de aprendizaje estructuradas y desarrollar gradualmente conocimientos mediante el intercambio dentro de la organización.'
-      ] },
+      ],
+      pag: [52, 52] },
 
     { id: '5.2.2b', cap: 5, lo: 'GenAI-5.2.2', k: 'K1', pts: 1,
       q: '¿Qué es un <b>patrón de prompt</b> según el programa de estudios?',
@@ -1319,7 +1454,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '5.2.2',
       cita: [
         'Un patrón de prompts es una plantilla reutilizable para elaborar prompts efectivos para guiar a la IA generativa hacia resultados consistentes y confiables.'
-      ] },
+      ],
+      pag: [52] },
 
     { id: '5.2.3a', cap: 5, lo: 'GenAI-5.2.3', k: 'K1', pts: 1,
       q: '¿Cómo evoluciona el rol del probador en una organización de prueba asistida por IA?',
@@ -1333,7 +1469,8 @@ window.EXAMEN_GENAI = (function () {
       ref: '5.2.3',
       cita: [
         'Los probadores evolucionan de especialistas en diseño y ejecución de pruebas a especialistas en pruebas asistidas por la IA, combinando su experiencia en técnicas de prueba con habilidades para guiar y verificar el testware generado por la IA.'
-      ] },
+      ],
+      pag: [53] },
 
     { id: '5.2.3b', cap: 5, lo: 'GenAI-5.2.3', k: 'K1', pts: 1,
       q: '¿Qué nuevas responsabilidades asume el <b>director de pruebas</b> al adoptar IA generativa?',
@@ -1347,8 +1484,9 @@ window.EXAMEN_GENAI = (function () {
       ref: '5.2.3',
       cita: [
         'Las responsabilidades de los directores de pruebas se actualizan para incluir el desarrollo de una estrategia de pruebas basada en la IA, la gestión de riesgos basada en la IA y el monitoreo y el control de los procesos de prueba basados en la IA.'
-      ] }
+      ],
+      pag: [53] }
   ];
 
-  return { meta: meta, blueprint: blueprint, capitulos: capitulos, objetivos: objetivos, banco: banco };
+  return { meta: meta, blueprint: blueprint, capitulos: capitulos, objetivos: objetivos, secciones: secciones, banco: banco };
 })();

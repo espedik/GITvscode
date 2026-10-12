@@ -95,19 +95,82 @@
     return String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
   };
 
-  /* La cita textual del syllabus que sostiene la respuesta, con el objetivo que evalúa la pregunta. Un
-     examen guardado antes de que hubiera citas las toma del banco por su id. */
-  function citaHtml(q) {
-    const b = bancoDe('AB').find(x => x.id === q.id) || {};
+  /* ── De dónde sale cada pregunta, en el syllabus ─────────────────────────────────────────────────
+     Lo usan la revisión del simulacro y la pregunta del día de Mi Día (`window.ctGenaiFuente`). Por cada
+     sección citada: su número, su título y la página del PDF donde empieza (`EXAMEN_GENAI.secciones`); cada
+     frase de `cita` con su página (`pag`), que abre el PDF justo ahí; y, si está la copia local del programa
+     (`syllabus/ct-genai-syllabus.js`, fuera de git porque su aviso de derechos solo permite reproducirlo en
+     parte y para uso privado), la sección completa con lo citado resaltado. Sin copia local, el botón abre el
+     PDF oficial de gasq.org en la misma página. Un examen guardado antes de que hubiera citas las toma del
+     banco por su id. */
+  function resalta(t, cita) {
+    let h = esc(t);
+    cita.forEach(f => {
+      [f].concat(f.split(/ — |^Ejemplo: |^Aplicación en las pruebas: /)).forEach(x => {
+        x = String(x || '').trim().replace(/[.:]$/, '');
+        if (x.length < 20) return;
+        const e = esc(x), i = h.indexOf(e);
+        if (i >= 0 && h.lastIndexOf('<mark>', i) <= h.lastIndexOf('</mark>', i)) h = h.slice(0, i) + '<mark>' + e + '</mark>' + h.slice(i + e.length);
+      });
+    });
+    return h;
+  }
+  function fuenteHtml(q, opc) {
+    const d = D() || {}, b = bancoDe('AB').find(x => x.id === q.id) || {};
     const cita = (q.cita && q.cita.length ? q.cita : b.cita) || [];
-    const obj = (D().objetivos || {})[q.lo] || (D().objetivos || {})[b.lo];
+    const pag = (q.pag && q.pag.length ? q.pag : b.pag) || [];
+    const lo = b.lo || q.lo, obj = (opc && opc.sinObjetivo) ? '' : (d.objetivos || {})[lo];
+    const refs = String(b.ref || q.ref || '').split('·').map(s => s.trim()).filter(Boolean);
+    const sec = d.secciones || {}, loc = window.CT_GENAI_SYLLABUS;
+    const pdf = n => ((loc && loc.pdf) || (d.meta && d.meta.syllabusUrl) || '') + '#page=' + n;
     if (!cita.length && !obj) return '';
-    return `<div class="xg-cita">
-      ${obj ? `<div class="xg-cita-lo"><b>${esc(b.lo || q.lo)}</b> ${esc(obj)}</div>` : ''}
-      ${cita.length ? `<div class="xg-cita-k">Lo que dice el syllabus</div>${cita.map(f => `<p>${esc(f)}</p>`).join('')}
-      <div class="xg-cita-de">${esc(D().meta.citaDe || '')}</div>` : ''}
+    const cab = refs.map(r => `<span class="sy-sec"><b>§ ${esc(r)}</b>${sec[r] ? ` ${esc(sec[r].t)}<i>pág. ${sec[r].pag}</i>` : ''}</span>`).join('');
+    const frases = cita.map((f, i) => `<p class="sy-f"><span>${esc(f)}</span>${pag[i]
+      ? `<a class="sy-pag" href="${pdf(pag[i])}" target="_blank" rel="noopener" title="Abrir el syllabus en la página ${pag[i]}">pág. ${pag[i]}</a>` : ''}</p>`).join('');
+    const completa = (loc && loc.secciones) ? refs.filter(r => loc.secciones[r]).map(r => {
+      const s = loc.secciones[r];
+      return `<details class="sy-det"><summary>Leer la sección ${esc(r)} completa, con lo citado resaltado</summary>${
+        s.parrafos.map(x => `<p><i>${x.p}</i><span>${resalta(x.t, cita)}</span></p>`).join('')}</details>`;
+    }).join('') : '';
+    const p0 = pag[0] || (sec[refs[0]] || {}).pag;
+    return `<div class="sy">
+      ${obj ? `<div class="sy-lo"><b>${esc(lo)}</b> ${esc(obj)}</div>` : ''}
+      <div class="sy-k">Lo que dice el syllabus</div>
+      <div class="sy-cab">${cab}</div>
+      ${frases}
+      <div class="sy-acc">${p0 ? `<a class="sy-btn" href="${pdf(p0)}" target="_blank" rel="noopener">Abrir el syllabus en la página ${p0} ↗</a>` : ''}${
+        loc ? '' : '<span class="sy-nota">Con la copia local del programa (Dashboard/syllabus) aquí también se lee la sección completa.</span>'}</div>
+      ${completa}
+      <div class="sy-de">${esc((d.meta && d.meta.citaDe) || '')}</div>
     </div>`;
   }
+  const SY_CSS = `
+.sy{margin:12px 0 0;padding:12px 15px 11px;border-left:3px solid var(--p);border-radius:0 11px 11px 0;background:rgba(var(--ov),.035)}
+.sy-lo{margin-bottom:9px;font-size:12px;line-height:1.5;color:var(--text3)}
+.sy-lo b{margin-right:4px;font-family:var(--mono);font-size:10.5px;color:var(--p)}
+.sy-k{margin-bottom:6px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--p)}
+.sy-cab{display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
+.sy-sec{font-size:12.5px;font-weight:600;line-height:1.45;color:var(--text)}
+.sy-sec b{margin-right:6px;font-family:var(--mono);font-size:11px;color:var(--p)}
+.sy-sec i{margin-left:8px;font-style:normal;font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--text3)}
+.sy-f{display:flex;align-items:baseline;gap:10px;margin:0;font-size:12.5px;line-height:1.6;color:var(--text)}
+.sy-f+.sy-f{margin-top:5px}
+.sy-f span{flex:1;min-width:0}
+.sy-pag{flex:none;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--p);text-decoration:none;white-space:nowrap;
+  padding:1px 6px;border-radius:4px;border:1px solid rgba(var(--ov),.16)}
+.sy-pag:hover{background:rgba(var(--ov),.08)}
+.sy-acc{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:10px}
+.sy-btn{font-size:12px;font-weight:700;color:var(--p);text-decoration:none;padding:6px 11px;border-radius:7px;border:1px solid rgba(var(--ov),.18)}
+.sy-btn:hover{background:rgba(var(--ov),.08)}
+.sy-nota{font-size:11px;color:var(--text3)}
+.sy-det{margin-top:10px;border-top:1px solid rgba(var(--ov),.1);padding-top:8px}
+.sy-det summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--text2)}
+.sy-det p{display:flex;gap:10px;margin:7px 0 0;font-size:12.5px;line-height:1.6;color:var(--text2)}
+.sy-det p i{flex:none;width:30px;font-style:normal;font-family:var(--mono);font-size:10px;color:var(--text3);padding-top:2px}
+.sy-det mark{background:rgba(255,214,0,.32);color:var(--text);border-radius:2px;padding:0 1px}
+.sy-de{margin-top:9px;font-family:var(--mono);font-size:9.5px;color:var(--text3)}`;
+  (function () { const st = document.createElement('style'); st.textContent = SY_CSS; document.head.appendChild(st); })();
+  window.ctGenaiFuente = fuenteHtml;
 
   /* ── Armar un examen conforme al blueprint ──────────────────────────── */
   function armar(minutos, set) {
@@ -121,7 +184,7 @@
         const ops = barajar(q.o);
         preguntas.push({
           id: q.id, cap: q.cap, lo: q.lo, k: q.k, pts: q.pts,
-          q: q.q, o: ops, r: ops.indexOf(correcta), why: q.why, ref: q.ref, cita: q.cita || []
+          q: q.q, o: ops, r: ops.indexOf(correcta), why: q.why, ref: q.ref, cita: q.cita || [], pag: q.pag || []
         });
       });
     });
@@ -471,7 +534,7 @@
         <div class="xg-rops">${ops}</div>
         <div class="xg-why"><b>Por qué:</b> ${q.why}
           <span class="xg-ref">Syllabus, sección ${esc(q.ref)}</span></div>
-        ${citaHtml(q)}
+        ${fuenteHtml(q)}
       </div>`;
     }).join('');
 
@@ -869,15 +932,6 @@ body.xg-abierto{overflow:hidden}
   font-size:13px;line-height:1.65;color:var(--text2)}
 .xg-why b{color:var(--text)}
 .xg-ref{display:block;margin-top:8px;font-family:var(--mono);font-size:10.5px;color:var(--text3)}
-.xg-cita{margin:10px 0 0;padding:11px 14px 10px;border-left:3px solid var(--p);border-radius:0 11px 11px 0;
-  background:rgba(var(--ov),.035)}
-.xg-cita-lo{margin-bottom:8px;font-size:12px;line-height:1.5;color:var(--text3)}
-.xg-cita-lo b{margin-right:4px;font-family:var(--mono);font-size:10.5px;color:var(--p)}
-.xg-cita-k{margin-bottom:5px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--p)}
-.xg-cita p{margin:0;font-size:12.5px;line-height:1.6;color:var(--text)}
-.xg-cita p+p{margin-top:5px}
-.xg-cita-de{margin-top:7px;font-family:var(--mono);font-size:9.5px;color:var(--text3)}
 
 .xg-toast{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:5;
   padding:11px 19px;border-radius:12px;font-size:13px;font-weight:600;color:var(--bg);

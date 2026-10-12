@@ -48,6 +48,9 @@
 <script src="habitos.js"></script>
 <script src="examen-genai-data.js"></script>
 <script src="examen-genai-data-b.js"></script>
+<!-- Copia LOCAL del syllabus CT-GenAI (fuera de git: su aviso de derechos solo permite reproducirlo en parte y para
+     uso privado). Si no está, las preguntas enlazan el PDF oficial en la página de cada cita. -->
+<script src="syllabus/ct-genai-syllabus.js" onerror="this.remove()"></script>
 <script src="examen-genai.js"></script>
 <!-- El vocabulario: los datos, el diseño y el motor. Los tres viven en Aleman/,
      que es donde Adán trabaja el vocabulario; esta pantalla lo refleja. -->
@@ -3503,12 +3506,8 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 /* El objetivo de aprendizaje que evalúa la pregunta, con su enunciado textual del programa. */
 .ha-lo{margin:-2px 0 12px;font-size:12px;line-height:1.5;color:var(--text3)}
 .ha-lo b{margin-right:6px;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--c)}
-/* Al contestar: lo que dice el syllabus, tal cual (una frase por renglón) y de dónde sale. */
-.ha-cita{margin-top:12px;padding:10px 14px 9px;border-left:3px solid var(--c);border-radius:0 10px 10px 0;background:rgba(var(--ov),.035)}
-.ha-cita-k{margin-bottom:5px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--c)}
-.ha-cita p{margin:0;font-size:12.5px;line-height:1.55;color:var(--text)}
-.ha-cita p+p{margin-top:5px}
-.ha-cita-de{margin-top:7px;font-family:var(--mono);font-size:9.5px;color:var(--text3)}
+/* Al contestar, «Lo que dice el syllabus» lo pinta `ctGenaiFuente()` (examen-genai.js, clases `.sy-*`): el mismo
+   bloque que la revisión del simulacro. */
 .ha-pie{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px 14px;margin-top:16px;padding-top:12px;
   border-top:1px solid rgba(var(--ov),.08);font-family:var(--mono);font-size:11px;color:var(--text3)}
 .ha-pie b{color:var(--text2)}
@@ -8511,7 +8510,8 @@ function istqbHtml(){
 }
 // El panel: el objetivo del programa que evalúa (`EXAMEN_GENAI.objetivos`), la pregunta y sus cuatro
 // opciones. Contestada, la buena en verde y la tuya en rojo si fallaste, con el porqué, lo que dice el
-// syllabus tal cual (`q.cita`, frases textuales del programa LATAM) y «Siguiente pregunta».
+// syllabus (`ctGenaiFuente`: sección, título y página de cada frase de `q.cita`, el PDF abierto en esa página y,
+// con la copia local, la sección completa) y «Siguiente pregunta».
 function istqbPintar(){
   const q = istqbPreguntaHoy(), b = document.getElementById('istqbBody'); if(!q || !b) return;
   const X = window.EXAMEN_GENAI || {}, hecha = istqbHoy(q), LET = 'ABCD';
@@ -8521,12 +8521,12 @@ function istqbPintar(){
     const cls = !hecha ? '' : i === q.r ? ' ok' : i === hecha.e ? ' mal' : ' apagada';
     return `<button type="button" class="ha-op${cls}"${hecha ? ' disabled' : ` onclick="istqbResponder(${i})"`}><b>${LET[i]}</b><span>${o}</span></button>`;
   }).join('');
-  const obj = (X.objetivos || {})[q.lo], cita = q.cita || [];
+  const obj = (X.objetivos || {})[q.lo];
   b.innerHTML = `${obj ? `<div class="ha-lo"><b>${esc(q.lo)}</b>${esc(obj)}</div>` : ''}<div class="ha-q-t">${q.q}</div>
     <div class="ha-ops">${ops}</div>
     ${hecha ? `<div class="ha-res ${hecha.ok ? 'ok' : 'mal'}">${hecha.ok ? '✓ Correcta' : '✗ Era la ' + LET[q.r]}<span>syllabus ${esc(q.ref)}</span></div>
     <div class="ha-why">${q.why}</div>
-    ${cita.length ? `<div class="ha-cita"><div class="ha-cita-k">Lo que dice el syllabus · ${esc(q.ref)}</div>${cita.map(f => `<p>${esc(f)}</p>`).join('')}<div class="ha-cita-de">${esc((X.meta && X.meta.citaDe) || '')}</div></div>` : ''}` : ''}
+    ${window.ctGenaiFuente ? ctGenaiFuente(q, { sinObjetivo: true }) : ''}` : ''}
     <div class="ha-pie"><span>${istqbMarcador()}</span><span class="ha-pie-acc">${hecha ? `<button type="button" class="ha-otra" onclick="aprendeOtra('istqb')">Siguiente pregunta →</button>` : ''}<a href="javascript:void(0)" class="hp-link" onclick="istqbAlSimulacro()">Simulacro completo →</a></span></div>`;
 }
 // Mientras está abierto, Mi Día no rota: la rotación vuelve al cerrarlo.

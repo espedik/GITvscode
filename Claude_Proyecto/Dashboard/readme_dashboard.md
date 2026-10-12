@@ -25,6 +25,7 @@ en una página.
 | `inversion-hoy.js` · `inversion-alto.js` · `inversion-superalto.js` · `inversion-prompt.js` · `inversion-alto-prompt.js` · `inversion-superalto-prompt.js` · `inversion-esquema.json` · `inversion-apuesta-esquema.json` · `inversion-actualizar.ps1` (+ `.bat`) · `inversion-instalar.bat` | *Qué invertir hoy*: los datos que escribe Claude (perfiles, riesgo alto y súper alto), los tres prompts, los dos esquemas de respuesta (perfiles; apuestas) y el puente que los une (ver su sección) |
 | `ficha.js` · `ficha.css` | El panel de ficha de producto (`pfAbrirId`, `pfPorNombre`, `.lc-info`) que usan la Lista de Compras y la rutina |
 | `examen-genai.js` · `examen-genai-data.js` (A, 79 preguntas) · `examen-genai-data-b.js` (B, 77) | El simulacro ISTQB CT-GenAI: motor y los dos bancos |
+| `syllabus/` (**fuera de git**) | La copia local del syllabus CT-GenAI LATAM: el PDF y `ct-genai-syllabus.js`, el texto de cada sección con su página. Su aviso de derechos solo permite reproducirlo en parte y para uso privado, así que no va al repositorio público (`.gitignore`) |
 | `entrevistas-data.js` | Los 41 temas de Python (`ENTREVISTA_TEMAS`, `PY_MOD_LABEL`) que nombra la tarjeta *Hoy aprendes* de Mi Día. Trae también el HTML y el CSS de cada tema (`ENTREVISTA_CONTENT`, `ENTREVISTA_CSS`), que ya no pinta ninguna pantalla. Lo genera `Entrevistas/_generar-datos-dashboard.js`; **no se edita a mano** |
 | `sin-zoom.js` | Bloqueo del zoom en táctil. Lo cargan las seis apps |
 | `prompt-pagina.js` · `prompts-paginas.js` | El icono de la brújula que llevan **todas** las páginas del proyecto y los prompts que abre: el especialista que gobierna cada una (ver `DATOS-MAESTROS.md` → *El prompt de cada página*). En el Dashboard va fijo arriba a la izquierda, donde la barra de apps deja la esquina libre |
@@ -257,8 +258,11 @@ de Mis Metas), la primera del orden de Coach que no hayas contestado (*Lo decide
 cuando ya la contestaste. Tocarla abre `#istqbOverlay` (`abrirIstqb()`): arriba, el objetivo del programa que
 evalúa con su enunciado textual (`EXAMEN_GENAI.objetivos`: *GenAI-2.2.1 Aplicar la IA generativa a las tareas
 de análisis de prueba*), el enunciado y cuatro opciones; al contestar, la buena en verde, la tuya en rojo si
-fallaste, el porqué y **lo que dice el syllabus**: las frases textuales que sostienen la respuesta (`q.cita`),
-con la sección y el crédito (`meta.citaDe`). **Cada pregunta se contesta una vez**: la primera respuesta es la que cuenta, como en el examen;
+fallaste, el porqué y **lo que dice el syllabus** (`ctGenaiFuente`, el mismo bloque que la revisión del
+simulacro): la sección con su número, título y página; cada frase textual que sostiene la respuesta
+(`q.cita`) con la página exacta del PDF (`q.pag`), que lo abre ahí; *Abrir el syllabus en la página N*; y,
+con la copia local, *Leer la sección completa*, párrafo por párrafo con su página y lo citado resaltado.
+**Cada pregunta se contesta una vez**: la primera respuesta es la que cuenta, como en el examen;
 después, *Siguiente pregunta →* (o ↻) trae la siguiente del orden. Al pie, lo contestado en los últimos
 7 días y el último simulacro de `examen_genai_v1`, en ámbar si quedó bajo el corte; *Simulacro completo →*
 (`istqbAlSimulacro()`) abre el examen entero. Mientras el panel está abierto Mi Día no rota; se cierra
@@ -954,8 +958,12 @@ español para Latinoamérica (25-jul-2025), con sus mismos términos —prompt, 
 testware, y los nombres exactos de cada lista y tabla—. Cada pregunta guarda en `ref` la sección y en
 `cita` las frases **textuales** del programa que la sostienen, comprobadas contra el PDF (las de tabla,
 celda por celda: *Nombre — descripción*, *Ejemplo: …*); `objetivos` trae el enunciado de los 37
-objetivos de aprendizaje. Las citas son reproducción parcial con su procedencia, como permite el aviso
-de copyright del programa (el repositorio es público). La traducción LATAM tiene un error en 3.2.2: la
+objetivos de aprendizaje; `pag`, la página del PDF de cada frase citada, y `secciones`, el título y la página
+donde empieza cada una de las 49 secciones (salen del PDF: las 248 frases se encontraron literales). Las citas son
+reproducción parcial con su procedencia, como permite el aviso de copyright del programa (el repositorio es
+público): el PDF y el texto completo de cada sección viven solo en la copia local `syllabus/`, que el dashboard
+carga si está (`CT_GENAI_SYLLABUS`). Sin ella, las páginas y el botón abren el PDF oficial de gasq.org
+(`meta.syllabusUrl`) en la misma página. La traducción LATAM tiene un error en 3.2.2: la
 fila de la *manipulación de las solicitudes* repite la de la exfiltración; el porqué de 3.2.2c lo avisa.
 El reparto sigue las *Exam Structure Tables v1.0*:
 
@@ -975,8 +983,8 @@ muestra A y B de ISTQB— y **Mezcla** (156). 0 enunciados y 0 respuestas correc
 bancos, ids sin solape. Cada intento recorre el blueprint objetivo por objetivo, elige variantes
 al azar y baraja preguntas y opciones (300 exámenes simulados: 300 combinaciones distintas).
 **Durante el examen solo se ve número y valor**; capítulo, objetivo y nivel K se guardan para la
-revisión, que pone bajo cada porqué el objetivo y la cita (`citaHtml()`; un examen guardado antes de que
-hubiera citas las toma del banco por su id).
+revisión, que pone bajo cada porqué el objetivo y lo que dice el syllabus (`fuenteHtml()`, publicado como
+`ctGenaiFuente`; un examen guardado antes de que hubiera citas las toma del banco por su id).
 
 **Es una capa propia** (`#xg-overlay`, clases `.xg-*`) porque `mdPintar()` repinta el cuerpo del
 panel entero al cambiar de paso y un examen incrustado perdería el DOM y el temporizador. Usa las
