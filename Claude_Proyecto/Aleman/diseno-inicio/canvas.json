@@ -1,0 +1,83 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-12T02:40:00Z"
+  },
+  "title": "Alemán — inicio",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 3560,
+      "title": "Main · Escritorio de estudio",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "DireccionB.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 1820,
+      "title": "B · La ruta",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "DireccionC.dc.html": {
+      "x": 3040,
+      "y": 0,
+      "w": 1440,
+      "h": 2360,
+      "title": "C · Índice mínimo",
+      "expand": "fill"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "DireccionB.dc.html",
+    "DireccionC.dc.html"
+  ],
+  "notes": {
+    "titulo": {
+      "x": 0,
+      "y": -760,
+      "text": "Inicio de la app de Alemán — tres direcciones",
+      "kind": "title1",
+      "maxW": 4480
+    },
+    "notaMain": {
+      "x": 0,
+      "y": -480,
+      "w": 640,
+      "maxH": 330,
+      "size": "m",
+      "fill": "orange",
+      "text": "MAIN — Escritorio de estudio (la que se implementa)\n\nProblema: la primera pantalla es un anuncio («Aprende Deutsch desde cero») con cifras viejas —dice 480+ palabras y son 1.516— y una barra de progreso que siempre marca 0 %. Lo que cursas queda debajo del pliegue y cada tarjeta lleva un emoji.\n\nPropuesta: arriba, la lección que te toca con tu progreso real y un repaso de 5 minutos; luego el Kapitel 10, la consulta (vocabulario, gramática, principiantes) y A2 y A1 con una foto por lección.\n\nContra: la página es más alta; A1 queda al fondo.\n\nEl progreso de este dibujo es de ejemplo: la página lee el tuyo de los ejercicios del Kapitel 10."
+    },
+    "notaB": {
+      "x": 1520,
+      "y": -480,
+      "w": 640,
+      "maxH": 330,
+      "size": "m",
+      "fill": "blue",
+      "text": "B — La ruta\n\nLos niveles como estaciones de un camino: Principiantes → A1 → Kapitel 10 (estás aquí) → A2. Tocas una estación y debajo salen sus lecciones.\n\nPor qué: ver dónde estás y cuánto falta motiva más que una lista.\n\nContra: cada lección queda a dos toques y la consulta (vocabulario, gramática) se esconde en la barra."
+    },
+    "notaC": {
+      "x": 3040,
+      "y": -480,
+      "w": 640,
+      "maxH": 330,
+      "size": "m",
+      "fill": "green",
+      "text": "C — Índice mínimo\n\nSin portada ni tarjetas grandes: los niveles en una columna a la izquierda y, a la derecha, listas de una línea con miniatura y progreso. Todo cabe en dos pantallas.\n\nPor qué: es lo más rápido para ir directo a una lección.\n\nContra: menos invitante; las fotos son pequeñas y no hay repaso sugerido."
+    }
+  },
+  "designSystems": [],
+  "artifact": "https://claude.ai/artifact/6M8UG3tSjKWNXDS7CbxuSQ"
+}

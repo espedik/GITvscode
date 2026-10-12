@@ -19,7 +19,7 @@
    como no se aprende. Con corrección inmediata, el error se ve en el momento en que se comete.
 
    El progreso se guarda en localStorage (`aleman_k10_v1`) para no perder lo hecho al recargar y
-   para que el Dashboard pueda leer cuánto se ha practicado.
+   para que el inicio de la app (index.html) enseñe cuánto llevas de cada lección.
 
    Sin dependencias, sin build. Se carga con <script src="k10-interactivo.js">.
    ══════════════════════════════════════════════════════════════════════════════════════════ */
@@ -30,10 +30,16 @@
   function cargar() {
     try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
   }
+  // La fecha LOCAL ('AAAA-MM-DD'): con toISOString, que es UTC, practicar a las 19:00 en México
+  // quedaba guardado como mañana, y el inicio decía «hoy» o «ayer» con un día de error.
+  function hoy() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
   function guardar(id, hechos, total) {
     try {
       const d = cargar();
-      d[id] = { hechos: hechos, total: total, fecha: new Date().toISOString().slice(0, 10) };
+      d[id] = { hechos: hechos, total: total, fecha: hoy() };
       localStorage.setItem(KEY, JSON.stringify(d));
     } catch (e) { /* modo privado: el ejercicio sigue funcionando, solo no se recuerda */ }
   }

@@ -45,6 +45,8 @@
   pre,code{max-width:100%;overflow-x:auto}
   img,video,canvas{max-width:100%;height:auto}
 }
+/* Los temas se abren por enlace desde el inicio (index.html): que la barra fija no tape el título. */
+.content-full[id]{scroll-margin-top:76px}
 </style>
 </head>
 <body>
@@ -80,7 +82,7 @@
 <div class="container">
 
 <!-- ══ 1. ALFABETO ══════════════════════════════════════════════════════ -->
-<div class="content-full">
+<div class="content-full" id="alfabeto">
   <div class="card">
     <h3><span>🔤</span> El alfabeto alemán</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:16px">El alemán usa el mismo alfabeto latino (26 letras) más 4 caracteres especiales. La mayoría suenan igual que en español, con algunas excepciones clave.</p>
@@ -124,7 +126,7 @@
 </div>
 
 <!-- ══ 2. PRONUNCIACIÓN ═════════════════════════════════════════════════ -->
-<div class="content-full">
+<div class="content-full" id="pronunciacion">
   <div class="card">
     <h3><span>🔊</span> Pronunciación — Reglas clave</h3>
     <table class="vocab-table">
@@ -153,7 +155,7 @@
 </div>
 
 <!-- ══ 3. ARTÍCULOS ═════════════════════════════════════════════════════ -->
-<div class="content-full">
+<div class="content-full" id="articulos">
   <div class="card card-gold">
     <h3><span>📌</span> Los artículos — der, die, das</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:16px">En alemán, <strong>todos los sustantivos tienen género</strong>: masculino, femenino o neutro. No hay reglas perfectas para saberlo — hay que aprenderlos de memoria con el artículo.</p>
@@ -197,7 +199,7 @@
 </div>
 
 <!-- ══ 4. PRONOMBRES PERSONALES ═════════════════════════════════════════ -->
-<div class="content-full">
+<div class="content-full" id="pronombres">
   <div class="card">
     <h3><span>👤</span> Pronombres personales</h3>
     <table class="vocab-table pronoun-table">
@@ -220,7 +222,7 @@
 </div>
 
 <!-- ══ 5. SEIN Y HABEN ══════════════════════════════════════════════════ -->
-<div class="content-full">
+<div class="content-full" id="sein-haben">
   <div class="card">
     <h3><span>⚙️</span> Los verbos más importantes: sein (ser/estar) y haben (tener)</h3>
     <div class="conj-grid">
@@ -257,7 +259,7 @@
 </div>
 
 <!-- ══ 6. VERBOS REGULARES ══════════════════════════════════════════════ -->
-<div class="content-full">
+<div class="content-full" id="presente">
   <div class="card">
     <h3><span>📐</span> Conjugar verbos regulares en presente</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px">La mayoría de los verbos en alemán son regulares. Se conjuga así: quita el <strong>-en</strong> del infinitivo y agrega la terminación correcta.</p>
@@ -280,7 +282,7 @@
 </div>
 
 <!-- ══ 7. ORDEN DE PALABRAS ═════════════════════════════════════════════ -->
-<div class="content-full">
+<div class="content-full" id="orden">
   <div class="card card-red">
     <h3><span>📏</span> Orden de las palabras en alemán</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:16px">La regla más importante del alemán: el <strong>verbo conjugado siempre ocupa la posición 2</strong>. No importa qué pongamos primero — el verbo siempre es el elemento número 2.</p>
@@ -333,7 +335,7 @@
 </div>
 
 <!-- ══ 8. PREGUNTAS BÁSICAS ═════════════════════════════════════════════ -->
-<div class="content-full">
+<div class="content-full" id="w-fragen">
   <div class="card">
     <h3><span>❓</span> Palabras de pregunta — W-Fragen</h3>
     <table class="vocab-table">
@@ -355,7 +357,7 @@
 </div>
 
 <!-- ══ 9. NEGACIÓN ══════════════════════════════════════════════════════ -->
-<div class="content-full">
+<div class="content-full" id="negacion">
   <div class="card">
     <h3><span>🚫</span> Cómo decir NO en alemán</h3>
     <table class="vocab-table">

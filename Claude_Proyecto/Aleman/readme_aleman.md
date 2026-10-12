@@ -19,9 +19,53 @@ información repetida): el alemán se estudia aquí. Mi Día solo lee de esta ca
 | **Kapitel 10** | `k10-01`…`k10-06` | Lo que Adán cursa en Cenlex Santo Tomás desde el 25-ago-2026 |
 | A1 | `a1-01`…`a1-15` | Base: saludos, números, artículos, hora, profesiones… |
 | A2 | `a2-01`…`a2-20` | Gramática y vocabulario temático |
-| Apoyo | `index.html`, `principiantes.html`, `gramatica.html`, `vocabulario.html` | Índice, lecciones para principiantes y referencia transversal. La barra de apps del Dashboard enlaza a los cuatro |
+| Apoyo | `index.html`, `principiantes.html`, `gramatica.html`, `vocabulario.html` | El inicio (ver abajo), lo básico para principiantes y la referencia transversal. La barra de apps del Dashboard enlaza a los cuatro |
+| Fotos | `fotos/` | Una por lección y por caja de consulta del inicio, con su crédito |
 | Compartido | `styles.css`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js` | Estilos y motores |
 | **Vocabulario** | `vocab-datos.js`, `vocab.css`, `vocab.js` | Los datos, el diseño y el motor de `vocabulario.html`. Mi Día lee los datos — ver abajo |
+
+---
+
+## `index.html` — el inicio
+
+La puerta de la app. Arriba, **lo que toca hoy**: la lección del Kapitel 10 que sigue, con su
+progreso, y un **repaso de 5 minutos** —tarjetas, dictado, minitest, frases y la tabla de casos—,
+cada uno con su enlace directo. Debajo, el Kapitel 10 en el orden en que conviene estudiarlo
+(01 → 06 → 02 → 03 → 04 → 05), **Para consultar** (el vocabulario por familias, la gramática y
+principiantes, cada tema con su enlace) y A2 y A1. Tiene su propio diseño: no carga `styles.css`,
+que sigue siendo el de las lecciones. El lienzo del rediseño está en `diseno-inicio/`: Main es lo
+implementado; B (la ruta) y C (el índice mínimo) son las alternativas.
+
+**El progreso es real.** Sale de `aleman_k10_v1`, que escribe `k10-interactivo.js`: un ejercicio
+cuenta como completo cuando tiene todos sus reactivos bien. Cada tarjeta del Kapitel 10 lleva en
+`data-bloques` la lista de sus ejercicios, porque desde `file://` el inicio no puede abrir las otras
+páginas para contarlos; un `k10Conjugar` guarda una entrada por verbo y va como `id:n`. El control
+25 de `../Dashboard/verificar-sincronia.js` compara esa lista con cada página y comprueba que el
+inicio enlace las 41 lecciones y que cada foto exista y lleve su crédito.
+
+| Caso | Qué enseña la tarjeta de arriba |
+|---|---|
+| Hay una lección empezada | La que practicaste por última vez: *Sigue donde te quedaste* |
+| Ninguna a medias, alguna terminada | La primera sin terminar, en el orden del Kapitel |
+| Navegador en blanco | `k10-01`: *Empieza el Kapitel 10* |
+| Todo completo | El minitest de `k10-03`, para no perderlo |
+
+Debajo dice cuándo fue el último ejercicio del Kapitel 10 y, si pasaron más de dos días, lo marca en
+rojo: es el indicador del prompt (*sin huecos de más de dos días*). Solo cuenta los ejercicios del
+Kapitel 10, que son lo único que guarda su fecha.
+
+**Nada va escrito a mano.** Las cifras del vocabulario (palabras, secciones, subsecciones y cada
+familia) se cuentan de `vocab-datos.js`; el nombre de la escuela es `{{escuelaAleman}}`, del maestro,
+y el número de lecciones del pie se cuenta en la página.
+
+**Las fotos** viven en `fotos/`: de Openverse (StockSnap y Flickr), a 800 px las grandes y a 360 las
+miniaturas, cada una con su autor y su licencia en el `title`. Una por lección y de lo que enseña: las
+matrioskas para el comparativo, el gato en la caja para las preposiciones, el gafete «Hi, my name
+is» para *sein*.
+
+**Enlaces directos**: `vocabulario.html#tab=cards` (o `situ`, `pz`) abre esa pestaña,
+`vocabulario.html#cat=…` una sección, y `gramatica.html#…` y `principiantes.html#…` su tema (las nueve
+secciones de principiantes llevan id).
 
 ---
 
@@ -52,6 +96,7 @@ Los controles 19 y 20 de `../Dashboard/verificar-sincronia.js` vigilan que nadie
 última forma de `conj` (*ist zurückgekommen*). Tocarla abre esta página en su sección:
 `vocabulario.html#cat=tramites&sub=formulario` abre en *Trámites › Formularios*, con todos los
 niveles para que la palabra esté a la vista (y lo guarda en `voc_estado_v1`, como cualquier visita).
+Y `#tab=cards`, `#tab=situ` o `#tab=pz` abre esa pestaña: los usa el repaso del inicio.
 
 ### Subsecciones y qué lleva cada palabra
 
@@ -373,7 +418,9 @@ Decisiones que cambian cómo se usan:
   acierto real no debe marcarse como error por cómo está configurado el teclado.
 - **El rojo tarda en aparecer**: solo se marca error tras 4 letras. A mitad de palabra todavía no es
   un fallo, y pintarlo rojo desde la primera letra desanima.
-- El progreso se guarda en `localStorage['aleman_k10_v1']`; `k10Progreso()` lo devuelve sumado.
+- El progreso se guarda en `localStorage['aleman_k10_v1']`, con la fecha local (con la UTC, practicar
+  de noche en México quedaba como mañana); `k10Progreso()` lo devuelve sumado y el inicio lo enseña
+  por lección.
 
 ### Audio en alemán
 

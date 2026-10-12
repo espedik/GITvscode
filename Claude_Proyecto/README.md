@@ -42,7 +42,7 @@ funciona desde `file://` (scripts clásicos sí, módulos ES no), y en eso se ap
 | `CuidadoPersonal/` | `salud.html` | [`readme_salud.md`](CuidadoPersonal/readme_salud.md) | Cuerpo y bienestar: peso e IMC por edad, chequeo del año, exámenes, postura, mente, suplementos |
 | `CuidadoPersonal/` | `ejercicio.html` | [`readme_ejercicio.md`](CuidadoPersonal/readme_ejercicio.md) | La sesión de hoy con series marcables, cronómetro y progresión; biblioteca de 62 ejercicios; deportes |
 | `CuidadoPersonal/` | `comida.html` | [`readme_comida.md`](CuidadoPersonal/readme_comida.md) | Recetario (12 + 12) con fichas y filtros, y Plan Masa Muscular |
-| `Aleman/` | 41 lecciones, `vocabulario.html`, `vocab-*.js` | [`readme_aleman.md`](Aleman/readme_aleman.md) | Lecciones A1/A2/Kapitel 10 y el vocabulario (1 516 palabras); Mi Día lee de aquí la palabra del día |
+| `Aleman/` | `index.html` (el inicio), 41 lecciones, `vocabulario.html`, `vocab-*.js` | [`readme_aleman.md`](Aleman/readme_aleman.md) | Lecciones A1/A2/Kapitel 10 y el vocabulario (1 516 palabras); el inicio enseña tu progreso del Kapitel 10 y Mi Día lee de aquí la palabra del día |
 | `Entrevistas/` | `entrevistas.html`, `js/` | [`readme_entrevistas.md`](Entrevistas/readme_entrevistas.md) + `CLAUDE.md` | 229 temas de preparación técnica; los 41 de Python viajan al Dashboard por un generador |
 | `Vestimenta/` | `vestimenta.html`, `vestimenta_*.js` | [`readme_vestimenta.md`](Vestimenta/readme_vestimenta.md) | Guía de guardarropa: qué ponerse, colorimetría, qué comprar. Incrustada en el shell |
 | `Aeroresinas/` | `aeroresinas.html`, `dossier.html`, `datos.js` | [`readme_aeroresinas.md`](Aeroresinas/readme_aeroresinas.md) | Web pública del taller de reparación de helicópteros del papá de Adán, con su PDF |
@@ -72,6 +72,7 @@ no dependen del Dashboard; la barra de apps del Dashboard las agrupa aparte.
 | `dash-aprende-v1`, `dash-lista-compras`, `dash-lista-tengo`, `dash-logros-v1`, `dash-rail-abierto`, `dash-settings`, `dash-privado`, `metas_checklist_v1`, `metas_plan_v1`, `dash-agenda-oculta`, `habilidades_checklist_v1`, `edad_checklist_v1`, `examen_genai_v1` | Dashboard | nadie |
 | `dash-habitos-v1` | Dashboard (`habitos.js`) | Coach, solo lectura: la cuenta de «Cero alcohol» de *Tus referentes* (`refRacha()`) |
 | `voc_estado_v1` | Alemán (`vocabulario.html`: la sección, la subsección y los filtros donde te quedaste) | nadie |
+| `aleman_k10_v1` | Alemán (`k10-interactivo.js`: cada ejercicio del Kapitel 10 con sus aciertos y su fecha) | el inicio de Alemán (`index.html`), por lección |
 | `vestimenta_v1` | Vestimenta | nadie |
 | `theme`, `sidebar-collapsed`, `study-done-v2`, `wayve-visited-v2` | Entrevistas | Dashboard lee `study-done-v2` (*Hoy aprendes*: cuántos temas de Python llevas); las demás, nadie |
 | `heli-tema`, `heli-idioma`, `aero-tema`, `aero-idioma` | Heliescala, Aeroresinas | nadie |

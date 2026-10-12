@@ -1586,7 +1586,7 @@ function impactoDelCambio() {
 })();
 
 // ── 21. Las familias cubren las 37 secciones, y cada una una sola vez ────────
-// El índice de las dos pantallas se pinta desde `familias`, no desde `cats`: una sección
+// El índice del vocabulario se pinta desde `familias`, no desde `cats`: una sección
 // que no esté en ninguna familia sigue teniendo sus palabras y su subsección, pero ya no
 // hay forma de llegar a ella. No falla, no avisa — desaparece.
 (function () {
@@ -1597,8 +1597,8 @@ function impactoDelCambio() {
   if (!V || !V.cats) return;
 
   if (!Array.isArray(V.familias)) {
-    problemas.push('`Aleman/vocab-datos.js` no trae `familias`, y el índice de las dos ' +
-      'pantallas se pinta desde ahí: sin ellas no se ve ninguna sección.');
+    problemas.push('`Aleman/vocab-datos.js` no trae `familias`, y el índice del ' +
+      'vocabulario se pinta desde ahí: sin ellas no se ve ninguna sección.');
     return;
   }
 
@@ -2059,6 +2059,69 @@ function promptsDeLoTocado() {
   L.push('', '  ¿El cambio cumple su "Al modificar esta página" y las reglas comunes? Si no, se corrige antes de cerrar.');
   return L.join('\n');
 }
+
+/* ── 25. El inicio de Alemán: los ejercicios del Kapitel 10, las lecciones y las fotos ───────
+   `Aleman/index.html` calcula el progreso de cada lección del Kapitel 10 con la lista de sus
+   ejercicios, escrita en `data-bloques`: desde file:// el navegador no puede abrir las otras
+   páginas para contarlos. Si una lección gana un ejercicio y la lista no, sale «Completa» con uno
+   sin hacer; si lo pierde, no llega nunca al 100 %. Por eso se compara con los `k10…('id'` de la
+   página. Un k10Conjugar guarda una entrada por verbo, y en la lista va como `id:n`.
+   Y, ya que se lee el inicio: que enlace todas las lecciones y que cada foto exista y lleve crédito. */
+(function () {
+  const dir = path.join(RAIZ, 'Aleman');
+  const ini = path.join(dir, 'index.html');
+  if (!fs.existsSync(ini)) return;
+  const h = fs.readFileSync(ini, 'utf8');
+  const malos = [];
+  let lecciones = 0, ejercicios = 0, m;
+
+  const reTarjeta = /<a\b[^>]*\bhref="(k10-[^"#]+\.html)"[^>]*\bdata-bloques="([^"]*)"/g;
+  while ((m = reTarjeta.exec(h))) {
+    lecciones++;
+    const archivo = path.join(dir, m[1]);
+    if (!fs.existsSync(archivo)) { malos.push(m[1] + ' no existe'); continue; }
+    const pag = fs.readFileSync(archivo, 'utf8');
+    const reales = [];
+    let c;
+    const reId = /k10(?:Escribir|Opciones|Ordenar|Emparejar|Hueco|Test|Dictado)\(\s*['"]([^'"]+)['"]/g;
+    while ((c = reId.exec(pag))) reales.push(c[1]);
+    const reConj = /k10Conjugar\(\s*['"]([^'"]+)['"]\s*,\s*\[([\s\S]*?)\]\s*\)/g;
+    while ((c = reConj.exec(pag))) reales.push(c[1] + ':' + (c[2].match(/\binf\s*:/g) || []).length);
+    const dice = m[2].trim().split(/\s+/).filter(Boolean);
+    ejercicios += dice.length;
+    const faltan = reales.filter(function (x) { return dice.indexOf(x) === -1; });
+    const sobran = dice.filter(function (x) { return reales.indexOf(x) === -1; });
+    if (faltan.length || sobran.length)
+      malos.push(m[1] + ': ' + [faltan.length ? 'le faltan ' + faltan.join(', ') : '',
+                                sobran.length ? 'sobran ' + sobran.join(', ') : ''].filter(Boolean).join('; '));
+  }
+
+  // Todas las lecciones salen en el inicio, y las del Kapitel 10 con su lista.
+  const archivos = fs.readdirSync(dir).filter(function (f) { return /^(a1|a2|k10)-\d\d-[\w-]+\.html$/.test(f); });
+  archivos.forEach(function (f) {
+    if (h.indexOf('href="' + f + '"') === -1) malos.push(f + ' no sale en el inicio');
+    else if (/^k10-/.test(f) && !new RegExp('href="' + f.replace(/[.]/g, '[.]') + '"[^>]*data-bloques="').test(h))
+      malos.push(f + ' sale en el inicio sin su lista de ejercicios');
+  });
+
+  // Cada foto existe y lleva su crédito; y no hay fotos sueltas que nadie usa.
+  const usadas = new Set();
+  const reFoto = /<img\b[^>]*\bsrc="fotos\/([^"]+)"[^>]*>/g;
+  while ((m = reFoto.exec(h))) {
+    usadas.add(m[1]);
+    if (!fs.existsSync(path.join(dir, 'fotos', m[1]))) malos.push('fotos/' + m[1] + ' no existe');
+    if (!/\btitle="Foto: [^"]+"/.test(m[0])) malos.push('fotos/' + m[1] + ' sin su crédito en el title');
+  }
+  const sueltas = fs.existsSync(path.join(dir, 'fotos'))
+    ? fs.readdirSync(path.join(dir, 'fotos')).filter(function (f) { return !usadas.has(f); }) : [];
+  if (sueltas.length) malos.push('fotos que nadie usa: ' + sueltas.join(', '));
+
+  if (malos.length)
+    problemas.push('El inicio de Alemán no cuadra con sus lecciones:\n  - ' + malos.slice(0, 12).join('\n  - '));
+  else
+    ok.push('Inicio de Alemán: ' + lecciones + ' lecciones del Kapitel 10 con sus ' + ejercicios +
+            ' ejercicios, las ' + archivos.length + ' lecciones enlazadas y ' + usadas.size + ' fotos con crédito');
+})();
 
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {

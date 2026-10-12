@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Alemán · la ruta</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Playfair+Display:wght@700;800;900&amp;display=swap">
+<style>
+body{margin:0;background:#F5F4F0}
+a{color:#1A1A1A;text-decoration:none}a:hover{color:#A30000}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #F5F4F0; color: #1A1A1A; font-family: Inter, system-ui, sans-serif; font-size: 15px; line-height: 1.5">
+
+  <header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 12px 40px; background: #FBFAF7; border-bottom: 1px solid #E6E3DC">
+    <div style="display: flex; align-items: center; gap: 14px">
+      <button type="button" aria-label="El prompt de esta página" style="width: 40px; height: 40px; border-radius: 50%; border: 0; background: #2F6FED; color: #FFFFFF; display: grid; place-items: center">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg>
+      </button>
+      <span style="font-family: 'Playfair Display', serif; font-weight: 900; font-size: 23px">Deutsch</span>
+    </div>
+    <nav aria-label="Consulta" style="display: flex; flex-wrap: wrap; gap: 6px; margin-left: auto">
+      <a href="#ruta" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 15px; border-radius: 999px; border: 1px solid #DCD8CF; background: #FFFFFF; font-weight: 700; font-size: 14px">Vocabulario · 1.516</a>
+      <a href="#ruta" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 15px; border-radius: 999px; border: 1px solid #DCD8CF; background: #FFFFFF; font-weight: 700; font-size: 14px">Gramática</a>
+      <a href="#ruta" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 15px; border-radius: 10px; background: #1A1A1A; color: #FFFFFF; font-weight: 700; font-size: 14px">Dashboard</a>
+    </nav>
+  </header>
+
+  <main id="ruta" style="max-width: 1600px; margin: 0 auto; padding: 36px 40px 56px; display: flex; flex-direction: column; gap: 36px">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <h1 style="margin: 0; font-family: 'Playfair Display', serif; font-weight: 800; font-size: 44px; line-height: 1.05">Tu camino al A2</h1>
+      <p style="margin: 0; font-size: 16px; color: #4F4F4F">Toca una estación para ver sus lecciones. Estás en el Kapitel 10: 19 de 44 bloques hechos.</p>
+    </div>
+
+    <div role="list" style="display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 24px; padding: 30px 32px; background: #FFFFFF; border: 1px solid #E6E3DC; border-radius: 22px">
+      <sc-for list="{{estaciones}}" as="e" hint-placeholder-count="4">
+        <div role="listitem" style="flex: 1 1 200px; min-width: 0; display: flex; align-items: center; gap: 14px">
+          <button type="button" onClick="{{e.pick}}" aria-pressed="{{e.on}}" style="flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 14px 8px; border: 0; border-radius: 18px; background: {{e.fondo}}; cursor: pointer; font: inherit; color: #1A1A1A">
+            <img src="{{e.img}}" alt="" style="width: {{e.tam}}; height: {{e.tam}}; border-radius: 50%; object-fit: cover; display: block; box-shadow: 0 0 0 4px #FFFFFF, 0 0 0 7px {{e.anillo}}">
+            <span style="font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: {{e.color}}">{{e.etiqueta}}</span>
+            <span style="font-size: 20px; font-weight: 800; line-height: 1.2; text-align: center">{{e.nombre}}</span>
+            <span style="font-size: 13.5px; color: #4F4F4F; text-align: center">{{e.dato}}</span>
+          </button>
+          <span aria-hidden="true" style="flex: 0 0 auto; color: #B9B4AA; font-size: 26px">{{e.flecha}}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <section aria-live="polite" style="display: flex; flex-direction: column; gap: 18px">
+      <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px">
+        <h2 style="margin: 0; font-size: 30px; font-weight: 800">{{titulo}}</h2>
+        <span style="font-size: 15px; color: #4F4F4F">{{subtitulo}}</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 18px">
+        <sc-for list="{{lecciones}}" as="l" hint-placeholder-count="6">
+          <a href="#ruta" style="display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E6E3DC; border-radius: 16px; overflow: hidden">
+            <img src="{{l.img}}" alt="{{l.alt}}" style="width: 100%; height: 150px; object-fit: cover; display: block">
+            <span style="padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 4px">
+              <span style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.1em; color: #4F4F4F">{{l.num}}</span>
+              <span style="font-size: 17px; font-weight: 800; line-height: 1.25">{{l.t}}</span>
+              <span style="font-size: 13.5px; color: #4F4F4F">{{l.s}}</span>
+              <span style="font-size: 13px; font-weight: 600; color: #1A1A1A; margin-top: 6px">{{l.prog}}</span>
+            </span>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1820}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { sel: 'k10' }; }
+  renderVals() {
+    const B = '/_blob/';
+    const sel = this.state.sel;
+    const L = function (x) { return { num: x[0], t: x[1], s: x[2], img: B + x[3], alt: x[4], prog: x[5] || '' }; };
+    const grupos = {
+      princ: { titulo: 'Para principiantes', sub: 'Nivel 0 → A1: lo que va antes de la primera lección', lecciones: [
+        ['NIVEL 0', 'Alfabeto y pronunciación', 'Cómo suena cada letra', 'b4de1c2feb9f971911c58bba338417b9', 'Pizarrón con las letras ABC'],
+        ['NIVEL 0', 'Primeros verbos y frases', 'Tus primeras oraciones', 'e136b1310072302b6b23c65e7b91c12a', 'Libros abiertos con una pluma']] },
+      a1: { titulo: 'A1 · Básico', sub: '15 lecciones: la base', lecciones: [
+        ['A1 · 01', 'Begrüßungen', 'Saludos y despedidas', '1cd08712a380a627ab2e52389db8af51', 'Dos personas se dan la mano'],
+        ['A1 · 02', 'Zahlen 1–100', 'Números del 1 al 100', '5c3be7d433b5db374a6359a85f70d82c', 'Buzones con su número'],
+        ['A1 · 03', 'Farben & Formen', 'Colores y formas', '1862272e9f40959f26ef89efc54a6403', 'Lápices de colores'],
+        ['A1 · 04', 'Wochentage & Monate', 'Días y meses', 'd39f941d3b3b3cf581190f6060baf8a2', 'Un calendario de escritorio'],
+        ['A1 · 05', 'Familie', 'La familia', 'f3aa9111c57df2090be2b767cd1f09bc', 'Una familia juega en la sala'],
+        ['A1 · 06', 'Artikel: der, die, das', 'Los artículos', '6954a65dc2f989b722e4d2d5f1a72a0b', 'Figuras de juguete'],
+        ['A1 · 07', 'Personalpronomen', 'Pronombres personales', 'bf37a738695d79e28f3f4dafcfabe6fd', 'Amigos platicando'],
+        ['A1 · 08', 'Verben: sein & haben', 'Ser/estar y tener', '3936eb7939779851a8d8517885f2aaf5', 'Un gafete con un nombre'],
+        ['A1 · 09', 'Uhrzeit', 'Decir la hora', '5cd79456e9d6761fdcb584fc7585c08d', 'Un reloj de pared'],
+        ['A1 · 10', 'Länder & Nationalitäten', 'Países', '979d58a498bd66e47c8760570c29780b', 'Un globo terráqueo en la mano']] },
+      k10: { titulo: 'Kapitel 10 · en clase', sub: 'Cenlex Santo Tomás · 19 de 44 bloques', lecciones: [
+        ['K10 · 01', 'Die Regel: Perfekt', 'La regla del Perfekt', 'fb9486b14aadb366a5b434af07e0a564', 'Cuaderno de estudio', 'Completa · 10 de 10'],
+        ['K10 · 06', 'Partizip I & II', 'Los dos participios', '955d5595932eeed0497ef9ecd377c3be', 'Una persona lee', '2 de 5 bloques'],
+        ['K10 · 02', 'Verbenliste', '207 verbos a memorizar', '3bbf6b13da40142f3bed444a383678fc', 'Tarjetas escritas a mano', '3 de 5 bloques'],
+        ['K10 · 03', 'Perfekt üben', 'Ejercicios y dos minitests', '9ada1f532175d29b382ada858a310024', 'Hoja de respuestas', '4 de 10 · aquí te quedaste'],
+        ['K10 · 04', 'Berufe', 'Profesiones y tu área', '16f6df44a3657c9e9b8a875866be6627', 'Un técnico en un rack', 'Sin empezar'],
+        ['K10 · 05', 'Mein Tag', 'Contar tu día', '1102a52a25e87b59811d49f608878892', 'Café y cruasanes', 'Sin empezar']] },
+      a2: { titulo: 'A2 · Elemental', sub: '20 lecciones: la meta', lecciones: [
+        ['A2 · 01', 'Modalverben', 'Verbos modales', '5c63f0c30d4f360a312bc44aa296a6e8', 'Una mujer toca la guitarra'],
+        ['A2 · 02', 'Perfekt mit haben', 'Pasado con haben', 'a1dc8e590037f364137d16a3a9e16096', 'Panquecitos horneados'],
+        ['A2 · 03', 'Perfekt mit sein', 'Pasado con sein', '587342212295477773bac3481d5e7015', 'Excursionistas'],
+        ['A2 · 04', 'Präteritum', 'Pasado simple', '64207c5b4879f0ee86b1f69676c33b4e', 'Máquina de escribir'],
+        ['A2 · 07', 'Kasus', 'Casos gramaticales', '7bb8b6082ec9c270ab72056116f4155e', 'Unas manos ofrecen un regalo'],
+        ['A2 · 08', 'Komparativ & Superlativ', 'Comparar', '84dc45347a4b6ea278c1380de9f65a2f', 'Matrioskas'],
+        ['A2 · 10', 'Präpositionen', 'Preposiciones', '8d50531ad97afae4353f2a15d044ba06', 'Un gato en una caja'],
+        ['A2 · 16', 'Reisen & Tourismus', 'Viajes', 'e87379834e5496a8bab67e25af862da5', 'Maletas apiladas']] }
+    };
+    const orden = [
+      ['princ', 'Nivel 0', 'Principiantes', 'Alfabeto y pronunciación', 'b4de1c2feb9f971911c58bba338417b9', '#6B6B6B'],
+      ['a1', 'A1', 'Básico', '15 lecciones', '1cd08712a380a627ab2e52389db8af51', '#8A6D00'],
+      ['k10', 'Estás aquí', 'Kapitel 10', '19 de 44 bloques', 'fb9486b14aadb366a5b434af07e0a564', '#CC0000'],
+      ['a2', 'A2 · la meta', 'Elemental', '20 lecciones', 'e87379834e5496a8bab67e25af862da5', '#B00000']
+    ];
+    const self = this;
+    const estaciones = orden.map(function (o, i) {
+      const on = o[0] === sel;
+      return { etiqueta: o[1], nombre: o[2], dato: o[3], img: B + o[4], color: o[5], on: on,
+               tam: on ? '132px' : '104px', anillo: on ? '#CC0000' : '#E6E3DC', fondo: on ? '#FBF3F3' : 'transparent',
+               flecha: i < orden.length - 1 ? '→' : '', pick: function () { self.setState({ sel: o[0] }); } };
+    });
+    const g = grupos[sel];
+    return { estaciones: estaciones, titulo: g.titulo, subtitulo: g.sub, lecciones: g.lecciones.map(L) };
+  }
+}
+</script>
+</body>
+</html>

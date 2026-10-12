@@ -492,6 +492,10 @@ function init() {
   }
 
   render();
+
+  // `#tab=cards`, `#tab=situ` o `#tab=pz` abre esa pestaña: los usa el repaso del inicio (index.html).
+  const tab = h.get('tab');
+  if (tab && document.getElementById('panel-' + tab)) setTab(tab);
 }
 
 // ── NAVEGAR ────────────────────────────────────────────────────────

@@ -157,9 +157,8 @@ window.CIFRAS = (function () {
 
     // ── Estudios de alemán ──
     // Retomó clases presenciales el 25-ago-2026 y va por el Kapitel 10 (Perfekt + Berufe).
-    // El Dashboard filtra por `kapitelAleman`: mientras esté puesto, el slide de Alemán muestra
-    // SOLO ese capítulo en vez de rotar por las 35 lecciones. Ponerlo en null devuelve la
-    // rotación completa. Adán: "necesito enfocarme en estos temas".
+    // `escuelaAleman` la citan Coach y el inicio de la app de Alemán; `kapitelAleman` es dato del
+    // proyecto y no filtra ninguna pantalla.
     escuelaAleman:   'Cenlex Santo Tomás',
     kapitelAleman:   10,
     // La meta diaria de proteína. Estaba escrita a mano en las 3 subtareas de la whey y en

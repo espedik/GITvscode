@@ -5,480 +5,682 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 <!-- Sin zoom en táctil, con el resto de gestos intactos. Safari ignora user-scalable, así que el bloqueo va por eventos. -->
 <script src="../Dashboard/sin-zoom.js"></script>
-<title>Deutsch Lernen — A1 & A2</title>
+<title>Deutsch — inicio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap"></noscript>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap"></noscript>
 <style>
-/* Animación bandera */
-@keyframes flagSlide{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-.flag-stripe{animation:flagSlide .6s ease forwards}
-.flag-black{animation-delay:.0s}
-.flag-red{animation-delay:.15s}
-.flag-gold{animation-delay:.3s}
-.flag-stripe{transform-origin:left}
+/* El inicio de la app de Alemán. Arriba lo que toca hoy (la lección del Kapitel 10 con tu progreso y
+   un repaso de 5 minutos); luego el Kapitel 10, la consulta y A2 y A1, cada lección con su foto.
+   Tiene su propio diseño: no carga styles.css, que sigue siendo el de las lecciones. */
+:root{
+  --bg:#F5F4F0; --barra:rgba(251,250,247,.96); --sup:#FFFFFF; --linea:#E6E3DC; --linea2:#EFECE6; --borde:#D9D5CC;
+  --tinta:#1A1A1A; --t2:#4F4F4F; --t3:#6B6B6B; --rojo:#CC0000; --rojo-t:#B00000; --oro:#E8B500; --oro-t:#8A6D00;
+  --pista:#ECE9E2; --r:18px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;background:var(--bg);color:var(--tinta);font:15px/1.5 Inter,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid #2F6FED;outline-offset:3px;border-radius:8px}
 
-/* Motivational banner */
-.motivation{background:linear-gradient(135deg,rgba(221,0,0,.08),rgba(255,206,0,.08));border:1px solid rgba(255,206,0,.15);border-radius:var(--r);padding:24px 32px;text-align:center;margin:40px 0}
-.motivation-quote{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:6px}
-.motivation-attr{font-size:13px;color:var(--text3)}
+/* ── La barra ── */
+.ini-barra{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:10px 24px;padding:10px 40px;background:var(--barra);backdrop-filter:blur(12px);border-bottom:1px solid var(--linea)}
+.ini-marca{display:flex;align-items:center;gap:10px;font:900 23px/1 'Playfair Display',Georgia,serif;letter-spacing:-.01em;white-space:nowrap}
+.ini-bandera{display:flex;flex-direction:column;width:7px;height:24px;border-radius:2px;overflow:hidden}
+.ini-bandera i{flex:1}
+.ini-bandera i:nth-child(1){background:var(--tinta)}
+.ini-bandera i:nth-child(2){background:var(--rojo)}
+.ini-bandera i:nth-child(3){background:var(--oro)}
+.ini-nav{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.ini-nav::-webkit-scrollbar{display:none}
+.ini-nav a{padding:9px 15px;border-radius:999px;font-weight:600;font-size:14px;white-space:nowrap;color:var(--t2)}
+.ini-nav a:hover{color:var(--tinta);background:var(--linea2)}
+.ini-nav a.on{background:var(--tinta);color:#fff}
+.ini-dash{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:10px;border:1px solid var(--borde);background:#fff;font-weight:700;font-size:14px;white-space:nowrap}
+.ini-dash:hover{border-color:var(--tinta)}
 
-/* Progress overview */
-.progress-overview{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:48px}
-.progress-overview h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text2);margin-bottom:20px}
-.progress-levels{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:480px){.progress-levels{grid-template-columns:1fr}}
+/* ── El cuerpo ── */
+.ini{max-width:1760px;margin:0 auto;padding:28px 40px 56px;display:flex;flex-direction:column;gap:56px}
+.ini-cab{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 28px}
+.ini-cab>div:first-child{flex:1 1 520px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.ini-cab h2{font-size:31px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
+.ini-cab p{color:var(--t2);font-size:15px;max-width:75ch}
+.ini-insignia{align-self:flex-start;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.ini-insignia-k{background:var(--tinta);color:#fff}
+.ini-insignia-a2{background:var(--rojo);color:#fff}
+.ini-insignia-a1{background:var(--oro);color:var(--tinta)}
+.ini-nivel{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px}
+.ini-nivel .ini-insignia{align-self:auto;font-size:13px}
+.ini-nivel h2{font-size:31px;font-weight:800;letter-spacing:-.01em}
+.ini-nivel p{font-size:15px;color:var(--t2)}
+.ini-subt{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--t2);margin-top:6px}
+
+/* ── Progreso ── */
+.ini-prog{display:flex;flex-direction:column;gap:6px}
+.ini-prog-cab{display:flex;justify-content:space-between;gap:12px;font-size:14px;font-weight:700}
+.ini-prog-cab span+span{color:var(--t2)}
+.ini-barra-p{display:block;height:8px;border-radius:999px;background:var(--pista);overflow:hidden}
+.ini-barra-p i{display:block;height:100%;width:0;border-radius:999px;background:var(--rojo);transition:width .6s ease}
+.ini-prog-k10{flex:0 1 320px;min-width:240px}
+
+/* ── Hoy ── */
+.ini-hoy{display:flex;flex-wrap:wrap;gap:24px;align-items:stretch}
+.ini-sigue{flex:7 1 640px;min-width:0;display:flex;flex-wrap:wrap;background:var(--sup);border:1px solid var(--linea);border-radius:20px;overflow:hidden}
+.ini-sigue>img{flex:1 1 300px;min-width:0;width:100%;min-height:300px;max-height:480px;object-fit:cover}
+.ini-sigue-txt{flex:1 1 340px;min-width:0;padding:32px 36px;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.ini-ceja{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--rojo)}
+.ini-sigue .ini-num{font-size:13px}
+.ini-sigue h1{font:800 46px/1.04 'Playfair Display',Georgia,serif;letter-spacing:-.01em}
+.ini-desc{font-size:16px;color:var(--t2);max-width:52ch}
+.ini-sigue .ini-barra-p{height:10px}
+.ini-ritmo{font-size:14px;color:var(--t2);max-width:60ch}
+.ini-ritmo b{color:var(--tinta)}
+.ini-ritmo.alerta b{color:var(--rojo-t)}
+.ini-botones{display:flex;flex-wrap:wrap;gap:10px;padding-top:6px}
+.ini-btn{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 22px;border-radius:12px;background:var(--tinta);color:#fff;font-weight:700;font-size:15px}
+.ini-btn:hover{background:#000}
+.ini-btn2{display:inline-flex;align-items:center;min-height:48px;padding:0 20px;border-radius:12px;border:1px solid var(--borde);background:#fff;font-weight:700;font-size:15px}
+.ini-btn2:hover{border-color:var(--tinta)}
+
+.ini-repaso{flex:5 1 420px;min-width:0;background:var(--sup);border:1px solid var(--linea);border-radius:20px;padding:26px 28px 18px;display:flex;flex-direction:column}
+.ini-repaso h2{font-size:21px;font-weight:800}
+.ini-repaso>p{margin:4px 0 10px;font-size:14px;color:var(--t2)}
+.ini-repaso a{flex:1;display:flex;align-items:center;gap:16px;padding:10px 8px;min-height:64px;border-top:1px solid var(--linea2)}
+.ini-repaso a:hover{background:#FAF9F6}
+.ini-repaso a:hover strong{color:var(--rojo-t)}
+.ini-repaso b{flex:0 0 164px;padding:9px 10px;border-radius:10px;background:var(--bg);font:700 15px/1.25 'Playfair Display',Georgia,serif;text-align:center}
+.ini-repaso a>span{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.ini-repaso strong{font-size:15px;font-weight:700}
+.ini-repaso small{font-size:13.5px;color:var(--t2)}
+.ini-repaso i{font-style:normal;color:var(--t3);font-size:18px}
+
+/* ── Las lecciones del Kapitel 10 ── */
+.ini-k10{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.ini-tarjeta{display:flex;flex-direction:column;background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);overflow:hidden;transition:transform .15s ease,box-shadow .15s ease}
+.ini-tarjeta:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.08)}
+.ini-tarjeta>img{width:100%;aspect-ratio:16/7;object-fit:cover}
+.ini-tarjeta-txt{flex:1;padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px}
+.ini-fila{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ini-num{font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--t2)}
+.ini-estado{padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;background:#F0EEE9;color:var(--t2)}
+.ini-estado.es-curso{background:var(--tinta);color:#fff}
+.ini-estado.es-hecha{background:#E3F1E6;color:#1B5E2E}
+.ini-tit{font-size:21px;font-weight:800;line-height:1.2;hyphens:auto;overflow-wrap:break-word}
+.ini-tarjeta:hover .ini-tit{color:var(--rojo-t)}
+.ini-sub{font-size:14.5px;color:var(--t2)}
+.ini-tags{font-size:13px;color:var(--t3)}
+.ini-tarjeta .ini-prog{margin-top:auto;padding-top:10px}
+.ini-tarjeta .ini-barra-p{height:6px}
+.ini-prog-txt{font-size:13px;font-weight:600;color:var(--t2)}
+
+/* ── Para consultar ── */
+.ini-consulta{display:flex;flex-wrap:wrap;gap:20px}
+.ini-caja{min-width:0;display:flex;flex-direction:column;background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);overflow:hidden}
+.ini-caja-voc{flex:1.45 1 520px}
+.ini-caja-gram,.ini-caja-princ{flex:1 1 340px}
+.ini-caja-foto img{width:100%;height:210px;object-fit:cover}
+.ini-caja-txt{flex:1;padding:22px 24px 24px;display:flex;flex-direction:column;gap:12px}
+.ini-caja-cab{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px}
+.ini-caja h3{font-size:23px;font-weight:800}
+.ini-caja h3 a:hover{color:var(--rojo-t)}
+.ini-caja-cab span{font-size:14px;font-weight:600;color:var(--t2)}
+.ini-caja p{font-size:14.5px;color:var(--t2)}
+.ini-mas{display:flex;flex-wrap:wrap;gap:8px 22px;padding-top:12px;border-top:1px solid var(--linea2);font-size:14px;font-weight:700}
+.ini-mas a:hover,.ini-gram a:hover{color:var(--rojo-t)}
+.ini-gram{flex:1;display:flex;flex-direction:column}
+.ini-gram a{flex:1;display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:40px;border-top:1px solid var(--linea2);font-size:14.5px;font-weight:600}
+.ini-gram small{font-size:13px;font-weight:500;color:var(--t3);text-align:right}
+.ini-gram em{font-style:normal;font-weight:500;color:var(--t3);margin-left:6px}
+
+/* ── A2 y A1 ── */
+.ini-nivel-sec{display:flex;flex-direction:column;gap:16px}
+.ini-lista{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.ini-l{display:flex;align-items:center;gap:14px;padding:10px;min-height:104px;background:var(--sup);border:1px solid var(--linea);border-radius:14px;transition:border-color .15s ease,box-shadow .15s ease}
+.ini-l:hover{border-color:#CFCAC0;box-shadow:0 6px 18px rgba(0,0,0,.06)}
+.ini-l:hover strong{color:var(--rojo-t)}
+.ini-l img{flex:0 0 120px;width:120px;height:84px;object-fit:cover;border-radius:10px}
+.ini-l>span{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ini-l .ini-num{font-size:11.5px}
+.ini-a2 .ini-num{color:var(--rojo-t)}
+.ini-a1 .ini-num{color:var(--oro-t)}
+.ini-l strong{font-size:16px;font-weight:800;line-height:1.25;hyphens:auto;overflow-wrap:break-word}
+.ini-l small{font-size:13.5px;color:var(--t2)}
+.ini-l em{font-style:normal;font-size:12.5px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.ini-pie{max-width:1760px;margin:0 auto;padding:22px 40px 40px;border-top:1px solid var(--linea);display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:space-between;font-size:13px;color:var(--t2)}
+
+@media (min-width:1500px){ .ini-a1 .ini-lista{grid-template-columns:repeat(5,minmax(0,1fr))} }
+@media (max-width:1499px){ .ini-a1 .ini-lista{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:1279px){ .ini-lista{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:1099px){ .ini-k10{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:959px){ .ini-lista,.ini-a1 .ini-lista{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:640px){
+  .ini-barra{flex-wrap:wrap;padding:8px 16px}
+  .ini-nav{order:3;width:100%;margin-left:0}
+  .ini{padding:20px 16px 40px;gap:40px}
+  .ini-k10,.ini-lista,.ini-a1 .ini-lista{grid-template-columns:minmax(0,1fr)}
+  .ini-sigue>img{min-height:190px;max-height:230px}
+  .ini-sigue-txt{padding:22px 20px}
+  .ini-sigue h1{font-size:34px}
+  .ini-repaso{padding:20px 16px 12px}
+  .ini-repaso a{gap:12px}
+  .ini-repaso b{flex-basis:112px;font-size:14px}
+  .ini-cab h2,.ini-nivel h2{font-size:25px}
+  .ini-prog-k10{flex-basis:100%}
+  .ini-caja-foto img{height:170px}
+  .ini-gram a{flex-direction:column;align-items:flex-start;justify-content:center;gap:0;padding:8px 0}
+  .ini-gram small{text-align:left}
+  .ini-pie{padding:20px 16px 32px}
+}
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .ini-barra-p i,.ini-tarjeta{transition:none} }
 </style>
 </head>
 <body>
 
-
-<nav class="nav">
-  <a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>
-  <div class="nav-links">
-    <a href="#a1" class="nav-link active">A1</a>
-    <a href="#a2" class="nav-link">A2</a>
-    <a href="principiantes.html" class="nav-link">🟢 Principiantes</a>
-    <a href="gramatica.html" class="nav-link">📐 Gramática</a>
-    <a href="vocabulario.html" class="nav-link">📖 Vocabulario</a>
-  
-    <a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="#hoy" class="on">Hoy</a>
+    <a href="#k10">Kapitel 10</a>
+    <a href="#a2">A2</a>
+    <a href="#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
   </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-flag">
-    <div class="flag-stripe flag-black" style="width:80px;height:12px;border-radius:3px 0 0 3px;border:1px solid rgba(255,255,255,.1)"></div>
-    <div class="flag-stripe flag-red" style="width:80px;height:12px;border-radius:0"></div>
-    <div class="flag-stripe flag-gold" style="width:80px;height:12px;border-radius:0 3px 3px 0"></div>
-  </div>
-  <div class="hero-tag">Tu camino al alemán</div>
-  <h1>Aprende <span>Deutsch</span><br>desde cero</h1>
-  <p>Domina el alemán nivel A1 y A2. Gramática, vocabulario y ejercicios organizados para que avances rápido y con confianza.</p>
-  <div class="hero-stats">
-    <div class="hero-stat"><div class="hero-stat-n">2</div><div class="hero-stat-l">Niveles</div></div>
-    <div class="hero-stat"><div class="hero-stat-n">30+</div><div class="hero-stat-l">Temas</div></div>
-    <div class="hero-stat"><div class="hero-stat-n">480+</div><div class="hero-stat-l">Palabras</div></div>
-    <div class="hero-stat"><div class="hero-stat-n">🎓</div><div class="hero-stat-l">Alemania</div></div>
-  </div>
-  <div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
-    <a href="principiantes.html" style="display:inline-flex;align-items:center;gap:7px;padding:11px 20px;background:#1a1a1a;color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;box-shadow:0 4px 14px rgba(0,0,0,.2)">🟢 Empezar desde cero</a>
-    <a href="gramatica.html" style="display:inline-flex;align-items:center;gap:7px;padding:11px 20px;background:var(--red);color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;box-shadow:0 4px 14px rgba(204,0,0,.3)">📐 Tablas de gramática</a>
-    <a href="vocabulario.html" style="display:inline-flex;align-items:center;gap:7px;padding:11px 20px;background:var(--surface);color:var(--red);border:2px solid var(--red);border-radius:10px;text-decoration:none;font-weight:700;font-size:13px">📖 Diccionario A1/A2</a>
-  </div>
-</section>
+<main class="ini">
 
-<div class="container">
-
-  <!-- Frase motivacional -->
-  <div class="motivation">
-    <div class="motivation-quote">"Eine Sprache zu lernen ist ein Fenster zur Welt zu öffnen."</div>
-    <div class="motivation-attr">Aprender un idioma es abrir una ventana al mundo.</div>
-  </div>
-
-  <!-- Progreso general -->
-  <div class="progress-overview">
-    <h3>📊 Tu progreso</h3>
-    <div class="progress-levels">
-      <div>
-        <div class="prog-wrap">
-          <div class="prog-label"><span>A1 — Básico</span><span style="color:var(--gold)">0%</span></div>
-          <div class="prog-bar"><div class="prog-fill" style="width:0%"></div></div>
+  <!-- ══ HOY: la lección que toca y un repaso corto ══ -->
+  <section id="hoy" class="ini-hoy" aria-label="Hoy">
+    <article class="ini-sigue">
+      <img id="sigueFoto" src="fotos/k10-01.jpg" alt="Cuaderno de estudio con unos lentes y un esquema en rojo" title="Foto: Daria Nepriakhina · Stocksnap · CC0 1.0">
+      <div class="ini-sigue-txt">
+        <p class="ini-ceja" id="sigueCeja">Empieza el Kapitel 10</p>
+        <p class="ini-num" id="sigueNum">KAPITEL 10 · K10 · 01</p>
+        <h1 id="sigueTit" lang="de">Die Regel: Perfekt</h1>
+        <p class="ini-desc" id="sigueDesc">La fórmula del Perfekt: haben o sein y el Partizip II al final, con modales, negación y subordinadas.</p>
+        <div class="ini-prog">
+          <div class="ini-prog-cab"><span id="sigueProg">0 de 10 ejercicios completos</span><span id="siguePct">0 %</span></div>
+          <span class="ini-barra-p"><i id="sigueBarra"></i></span>
+        </div>
+        <p class="ini-ritmo" id="sigueRitmo">La meta: 20 minutos al día, sin dejar pasar más de dos días.</p>
+        <div class="ini-botones">
+          <a class="ini-btn" id="sigueIr" href="k10-01-perfekt-regel.html">Empezar la lección →</a>
+          <a class="ini-btn2" href="#k10">Ver el Kapitel 10</a>
         </div>
       </div>
+    </article>
+
+    <aside class="ini-repaso" aria-labelledby="repasoT">
+      <h2 id="repasoT">Repaso de 5 minutos</h2>
+      <p>Sacar la respuesta de memoria fija más que releer. Elige uno.</p>
+      <a href="vocabulario.html#tab=cards"><b lang="de">das Formular</b><span><strong>Tarjetas del vocabulario</strong><small>Di la palabra con su artículo antes de voltear la tarjeta.</small></span><i aria-hidden="true">→</i></a>
+      <a href="k10-02-verben-liste.html#dic-verbos"><b lang="de">sind gefahren</b><span><strong>Dictado en Perfekt</strong><small>Escuchas una frase y la escribes (K10 · 02).</small></span><i aria-hidden="true">→</i></a>
+      <a href="k10-03-perfekt-uben.html#minitest"><b lang="de">haben · sein</b><span><strong>Minitest 1 de Perfekt</strong><small>Una pregunta a la vez, con nota y tiempo (K10 · 03).</small></span><i aria-hidden="true">→</i></a>
+      <a href="vocabulario.html#tab=situ"><b lang="de">Wie viel kostet das?</b><span><strong>Frases por situación</strong><small>Listas para el restaurante, las compras, el médico o la oficina.</small></span><i aria-hidden="true">→</i></a>
+      <a href="gramatica.html#tabla-maestra"><b lang="de">der · den · dem · des</b><span><strong>Tabla maestra de casos</strong><small>Los cuatro casos en una sola tabla.</small></span><i aria-hidden="true">→</i></a>
+    </aside>
+  </section>
+
+  <!-- ══ KAPITEL 10 · lo que cursa en clase, en el orden en que conviene estudiarlo ══
+       `data-bloques` es la lista de ejercicios de cada lección (los `k10…('id'` de su página; un
+       k10Conjugar va como `id:n`, con sus n verbos). Con ella se calcula el progreso, que guarda
+       k10-interactivo.js en `aleman_k10_v1`. El control 25 del verificador la compara con la página. -->
+  <section id="k10" class="ini-nivel-sec" aria-labelledby="k10T">
+    <div class="ini-cab">
       <div>
-        <div class="prog-wrap">
-          <div class="prog-label"><span>A2 — Elemental</span><span style="color:var(--red)">0%</span></div>
-          <div class="prog-bar"><div class="prog-fill" style="width:0%"></div></div>
-        </div>
+        <span class="ini-insignia ini-insignia-k">Kapitel 10 · en clase</span>
+        <h2 id="k10T">Lo que ves en {{escuelaAleman}}</h2>
+        <p>Perfekt, verbos irregulares, Berufe y «Mein Tag», en el orden en que conviene estudiarlos. Los ejercicios se corrigen solos mientras escribes.</p>
+      </div>
+      <div class="ini-prog ini-prog-k10">
+        <div class="ini-prog-cab"><span id="k10Prog">0 ejercicios completos</span><span id="k10Pct">0 %</span></div>
+        <span class="ini-barra-p"><i id="k10Barra"></i></span>
       </div>
     </div>
-  </div>
-
-  <!-- ══════════ NIVEL A1 ══════════ -->
-  <!-- Kapitel 10 · Cenlex Santo Tomás — lo que Adán cursa ahora mismo, arriba del todo para
-       que sea lo primero que ve al abrir el índice. -->
-  <div id="k10">
-    <div class="sh">
-      <span class="sh-badge a2">Kapitel 10</span>
-      <h2>Lo que estás cursando — Cenlex Santo Tomás</h2>
-      <div class="sh-line"></div>
+    <div class="ini-k10">
+      <a class="ini-tarjeta" href="k10-01-perfekt-regel.html" data-leccion="k10-01" data-bloques="ej-partizip ej-auxiliar em-part conj-perfekt:5 hueco-1 ej-praeteritum-vs ej-modales ej-negacion ord-sub hueco-tiempo" data-desc="La fórmula del Perfekt: haben o sein y el Partizip II al final, con modales, negación y subordinadas.">
+        <img src="fotos/k10-01.jpg" alt="Cuaderno de estudio con unos lentes y un esquema en rojo" title="Foto: Daria Nepriakhina · Stocksnap · CC0 1.0" loading="lazy">
+        <span class="ini-tarjeta-txt">
+          <span class="ini-fila"><span class="ini-num">K10 · 01</span><span class="ini-estado" data-estado>Sin empezar</span></span>
+          <span class="ini-tit" lang="de">Die Regel: Perfekt</span>
+          <span class="ini-sub">La regla del Perfekt</span>
+          <span class="ini-tags">haben/sein · Partizip II · al final</span>
+          <span class="ini-prog"><span class="ini-barra-p"><i></i></span><span class="ini-prog-txt">10 ejercicios</span></span>
+        </span>
+      </a>
+      <a class="ini-tarjeta" href="k10-06-partizip.html" data-leccion="k10-06" data-bloques="ej-p1 ej-cual ej-decl em-pz hueco-pz" data-desc="Partizip I y II frente a frente: cómo se forma cada uno, para qué sirve y cómo se declina.">
+        <img src="fotos/k10-06.jpg" alt="Una persona lee un libro" title="Foto: Shopify · Stocksnap · CC0 1.0" loading="lazy">
+        <span class="ini-tarjeta-txt">
+          <span class="ini-fila"><span class="ini-num">K10 · 06</span><span class="ini-estado" data-estado>Sin empezar</span></span>
+          <span class="ini-tit" lang="de">Partizip I &amp; II</span>
+          <span class="ini-sub">Los dos participios, a fondo</span>
+          <span class="ini-tags">lesend vs. gelesen · 205 verbos · declinación</span>
+          <span class="ini-prog"><span class="ini-barra-p"><i></i></span><span class="ini-prog-txt">5 ejercicios</span></span>
+        </span>
+      </a>
+      <a class="ini-tarjeta" href="k10-02-verben-liste.html" data-leccion="k10-02" data-bloques="ej-prateritum ej-partizip2 em-prat dic-verbos ej-3p" data-desc="Los 207 verbos con sus cuatro formas, los patrones de vocal y los que engañan.">
+        <img src="fotos/k10-02.jpg" alt="Un montón de tarjetas escritas a mano" title="Foto: muninn.net · Flickr · BY 2.0" loading="lazy">
+        <span class="ini-tarjeta-txt">
+          <span class="ini-fila"><span class="ini-num">K10 · 02</span><span class="ini-estado" data-estado>Sin empezar</span></span>
+          <span class="ini-tit" lang="de">Verbenliste</span>
+          <span class="ini-sub">Tabla a memorizar: 207 verbos</span>
+          <span class="ini-tags">Präteritum · Partizip II · filtros</span>
+          <span class="ini-prog"><span class="ini-barra-p"><i></i></span><span class="ini-prog-txt">5 ejercicios</span></span>
+        </span>
+      </a>
+      <a class="ini-tarjeta" href="k10-03-perfekt-uben.html" data-leccion="k10-03" data-bloques="u1 u2 u3 u4 minitest hueco-fds test-final test-2 u5 u6-dic" data-desc="Seis bloques de práctica del Perfekt y dos minitests con nota. Se corrigen solos mientras escribes.">
+        <img src="fotos/k10-03.jpg" alt="Hoja de respuestas de un examen con un lápiz" title="Foto: albertogp123 · Flickr · BY 2.0" loading="lazy">
+        <span class="ini-tarjeta-txt">
+          <span class="ini-fila"><span class="ini-num">K10 · 03</span><span class="ini-estado" data-estado>Sin empezar</span></span>
+          <span class="ini-tit" lang="de">Perfekt üben</span>
+          <span class="ini-sub">Ejercicios y dos minitests</span>
+          <span class="ini-tags">6 bloques · 2 minitests · se corrige solo</span>
+          <span class="ini-prog"><span class="ini-barra-p"><i></i></span><span class="ini-prog-txt">10 ejercicios</span></span>
+        </span>
+      </a>
+      <a class="ini-tarjeta" href="k10-04-berufe.html" data-leccion="k10-04" data-bloques="ej-berufe ord-berufe em-berufe hueco-beruf ej-prep hueco-entrev em-cond" data-desc="Profesiones con su femenino, tu área, lugares y condiciones de trabajo, y las cinco preguntas del oral.">
+        <img src="fotos/k10-04.jpg" alt="Un técnico conecta cables de red en un rack" title="Foto: Field Engineer · Stocksnap · CC0 1.0" loading="lazy">
+        <span class="ini-tarjeta-txt">
+          <span class="ini-fila"><span class="ini-num">K10 · 04</span><span class="ini-estado" data-estado>Sin empezar</span></span>
+          <span class="ini-tit" lang="de">Berufe</span>
+          <span class="ini-sub">Profesiones y tu área</span>
+          <span class="ini-tags">sin artículo · -in · Testingenieur</span>
+          <span class="ini-prog"><span class="ini-barra-p"><i></i></span><span class="ini-prog-txt">7 ejercicios</span></span>
+        </span>
+      </a>
+      <a class="ini-tarjeta" href="k10-05-mein-tag.html" data-leccion="k10-05" data-bloques="mt-ej mt-ord hueco-tag dic-tag ej-hora em-frec ej-sep" data-desc="Tu rutina con conectores, en presente y en Perfekt, y el guion para grabar tu video.">
+        <img src="fotos/k10-05.jpg" alt="Desayuno con café y cruasanes" title="Foto: JESHOOTS.com · Stocksnap · CC0 1.0" loading="lazy">
+        <span class="ini-tarjeta-txt">
+          <span class="ini-fila"><span class="ini-num">K10 · 05</span><span class="ini-estado" data-estado>Sin empezar</span></span>
+          <span class="ini-tit" lang="de">Mein Tag</span>
+          <span class="ini-sub">Contar tu día (video)</span>
+          <span class="ini-tags">zuerst/dann · tu rutina · guion</span>
+          <span class="ini-prog"><span class="ini-barra-p"><i></i></span><span class="ini-prog-txt">7 ejercicios</span></span>
+        </span>
+      </a>
     </div>
-    <p style="margin:-6px 0 18px;color:var(--text2);font-size:14px">Perfekt, verbos irregulares, Berufe y «Mein Tag». Los ejercicios se corrigen solos mientras escribes.</p>
+  </section>
 
-    <div class="topic-grid">
-      <a href="k10-01-perfekt-regel.html" class="topic-card a2">
-        <div class="topic-num">K10 · 01</div>
-        <div class="topic-icon">🔑</div>
-        <div class="topic-title">Die Regel: Perfekt<br><span style="font-size:12px;color:var(--text2);font-weight:400">La regla del Perfekt</span></div>
-        <div class="topic-tags"><span class="topic-tag">haben/sein</span><span class="topic-tag">Partizip II</span><span class="topic-tag">al final</span></div>
-        <div class="topic-arrow">→</div>
+  <!-- ══ PARA CONSULTAR ══ -->
+  <section id="consulta" class="ini-nivel-sec" aria-labelledby="consultaT">
+    <div class="ini-cab">
+      <div>
+        <h2 id="consultaT">Para consultar</h2>
+        <p>Lo que abres cuando te falta una palabra o una tabla.</p>
+      </div>
+    </div>
+    <div class="ini-consulta">
+      <article class="ini-caja ini-caja-voc">
+        <a class="ini-caja-foto" href="vocabulario.html" tabindex="-1" aria-hidden="true"><img src="fotos/t-vocab.jpg" alt="Una pila de diccionarios sobre una mesa" title="Foto: Freestocks.org · Stocksnap · CC0 1.0" loading="lazy"></a>
+        <div class="ini-caja-txt">
+          <div class="ini-caja-cab"><h3><a href="vocabulario.html">Vocabulario</a></h3><span id="vocCifras"></span></div>
+          <p>Cada sustantivo con su artículo y su plural; cada verbo con su Partizip. Entra por una familia:</p>
+          <div class="ini-gram" id="vocFamilias"></div>
+          <div class="ini-mas">
+            <a href="vocabulario.html#tab=cards">Tarjetas de repaso →</a>
+            <a href="vocabulario.html#tab=situ">Frases por situación →</a>
+            <a href="vocabulario.html#tab=pz">Partizip I y II →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="ini-caja ini-caja-gram">
+        <a class="ini-caja-foto" href="gramatica.html" tabindex="-1" aria-hidden="true"><img src="fotos/t-gram.jpg" alt="Libros abiertos con una pluma sobre una mesa" title="Foto: Aaron Burden · Stocksnap · CC0 1.0" loading="lazy"></a>
+        <div class="ini-caja-txt">
+          <h3><a href="gramatica.html">Gramática</a></h3>
+          <p>Todas las tablas en una página. Salta directo a la que necesitas:</p>
+          <div class="ini-gram">
+            <a href="gramatica.html#casos-intro"><span>Los cuatro casos</span><small lang="de">Nominativ · Akkusativ · Dativ · Genitiv</small></a>
+            <a href="gramatica.html#tabla-maestra"><span>Tabla maestra</span><small lang="de">der · den · dem · des</small></a>
+            <a href="gramatica.html#art-indefinido"><span>Artículos y pronombres</span><small lang="de">ein · kein · ich · mich · mir</small></a>
+            <a href="gramatica.html#prep-akk"><span>Preposiciones</span><small lang="de">für · mit · in</small></a>
+            <a href="gramatica.html#perfekt"><span>El Perfekt</span><small lang="de">hat gemacht · ist gegangen</small></a>
+            <a href="gramatica.html#verbos-irregulares"><span>Verbos irregulares</span><small lang="de">fahren · du fährst</small></a>
+            <a href="gramatica.html#verbos-modales"><span>Verbos modales</span><small lang="de">können · müssen · wollen</small></a>
+            <a href="gramatica.html#komparativ"><span>Comparativo</span><small lang="de">größer · am größten</small></a>
+            <a href="gramatica.html#orden"><span>Orden de palabras</span><small>el verbo, en segundo lugar</small></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="ini-caja ini-caja-princ">
+        <a class="ini-caja-foto" href="principiantes.html" tabindex="-1" aria-hidden="true"><img src="fotos/t-princ.jpg" alt="Un pizarrón con las letras ABC y unos libros" title="Foto: Krzysztof Puszczyński · Stocksnap · CC0 1.0" loading="lazy"></a>
+        <div class="ini-caja-txt">
+          <div class="ini-caja-cab"><h3><a href="principiantes.html">Para principiantes</a></h3><span>Nivel 0 → A1</span></div>
+          <p>Lo que va antes de la primera lección, para volver a lo básico cuando algo no suena bien:</p>
+          <div class="ini-gram">
+            <a href="principiantes.html#alfabeto"><span>El alfabeto</span><small lang="de">26 letras + ä · ö · ü · ß</small></a>
+            <a href="principiantes.html#pronunciacion"><span>La pronunciación</span><small lang="de">ei · ie · sch · z</small></a>
+            <a href="principiantes.html#articulos"><span>Los artículos</span><small lang="de">der · die · das</small></a>
+            <a href="principiantes.html#pronombres"><span>Los pronombres</span><small lang="de">ich · du · er · sie · es</small></a>
+            <a href="principiantes.html#sein-haben"><span>sein y haben</span><small lang="de">ich bin · ich habe</small></a>
+            <a href="principiantes.html#presente"><span>Verbos regulares en presente</span><small lang="de">ich mache · du machst</small></a>
+            <a href="principiantes.html#orden"><span>El orden de las palabras</span><small lang="de">Heute lerne ich Deutsch.</small></a>
+            <a href="principiantes.html#w-fragen"><span>Las preguntas con W</span><small lang="de">wer · was · wo · wann</small></a>
+            <a href="principiantes.html#negacion"><span>Decir que no</span><small lang="de">nicht · kein</small></a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ══ A2 ══ -->
+  <section id="a2" class="ini-nivel-sec ini-a2" aria-labelledby="a2T">
+    <div class="ini-nivel">
+      <span class="ini-insignia ini-insignia-a2">A2</span>
+      <h2 id="a2T">Elemental</h2>
+      <p>20 lecciones: 12 de gramática y 8 de temas.</p>
+    </div>
+    <h3 class="ini-subt">Gramática</h3>
+    <div class="ini-lista">
+      <a class="ini-l" href="a2-01-modalverben.html" data-leccion="a2-01">
+        <img src="fotos/a2-01.jpg" alt="Una mujer toca la guitarra" title="Foto: Negative Space · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 01</span><strong lang="de">Modalverben</strong><small>Verbos modales</small><em lang="de">können · müssen · wollen</em></span>
       </a>
-      <a href="k10-06-partizip.html" class="topic-card a2">
-        <div class="topic-num">K10 · 06</div>
-        <div class="topic-icon">🔵</div>
-        <div class="topic-title">Partizip I &amp; II<br><span style="font-size:12px;color:var(--text2);font-weight:400">Los dos participios, a fondo</span></div>
-        <div class="topic-tags"><span class="topic-tag">lesend vs gelesen</span><span class="topic-tag">205 verbos</span><span class="topic-tag">declinación</span></div>
-        <div class="topic-arrow">→</div>
+      <a class="ini-l" href="a2-02-perfekt-haben.html" data-leccion="a2-02">
+        <img src="fotos/a2-02.jpg" alt="Panquecitos de chocolate recién horneados" title="Foto: Pawel Kadysz · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 02</span><strong lang="de">Perfekt mit haben</strong><small>Pasado con haben</small><em lang="de">ich habe gemacht · Partizip II</em></span>
       </a>
-      <a href="k10-02-verben-liste.html" class="topic-card a2">
-        <div class="topic-num">K10 · 02</div>
-        <div class="topic-icon">📋</div>
-        <div class="topic-title">Verbenliste<br><span style="font-size:12px;color:var(--text2);font-weight:400">Tabla a memorizar — 207 verbos</span></div>
-        <div class="topic-tags"><span class="topic-tag">Präteritum</span><span class="topic-tag">Partizip II</span><span class="topic-tag">filtros</span></div>
-        <div class="topic-arrow">→</div>
+      <a class="ini-l" href="a2-03-perfekt-sein.html" data-leccion="a2-03">
+        <img src="fotos/a2-03.jpg" alt="Excursionistas caminan por un sendero" title="Foto: Austin Ban · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 03</span><strong lang="de">Perfekt mit sein</strong><small>Pasado con sein</small><em lang="de">ich bin gegangen · Bewegung</em></span>
       </a>
-      <a href="k10-03-perfekt-uben.html" class="topic-card a2">
-        <div class="topic-num">K10 · 03</div>
-        <div class="topic-icon">✍️</div>
-        <div class="topic-title">Perfekt üben<br><span style="font-size:12px;color:var(--text2);font-weight:400">Ejercicios y Minitest 1</span></div>
-        <div class="topic-tags"><span class="topic-tag">4 bloques</span><span class="topic-tag">minitest</span><span class="topic-tag">se corrige solo</span></div>
-        <div class="topic-arrow">→</div>
+      <a class="ini-l" href="a2-04-prateritum.html" data-leccion="a2-04">
+        <img src="fotos/a2-04.jpg" alt="Una máquina de escribir sobre una mesa de madera" title="Foto: Dustin Lee · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 04</span><strong lang="de">Präteritum</strong><small>Pasado simple (escrito)</small><em lang="de">war · hatte · konnte</em></span>
       </a>
-      <a href="k10-04-berufe.html" class="topic-card a2">
-        <div class="topic-num">K10 · 04</div>
-        <div class="topic-icon">💼</div>
-        <div class="topic-title">Berufe<br><span style="font-size:12px;color:var(--text2);font-weight:400">Profesiones y tu área</span></div>
-        <div class="topic-tags"><span class="topic-tag">sin artículo</span><span class="topic-tag">-in</span><span class="topic-tag">Testingenieur</span></div>
-        <div class="topic-arrow">→</div>
+      <a class="ini-l" href="a2-05-verbos-separables.html" data-leccion="a2-05">
+        <img src="fotos/a2-05.jpg" alt="Un teléfono antiguo en una cabina roja" title="Foto: Antoine Barrès · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 05</span><strong lang="de">Trennbare Verben</strong><small>Verbos separables</small><em lang="de">aufstehen · anrufen · mitkommen</em></span>
       </a>
-      <a href="k10-05-mein-tag.html" class="topic-card a2">
-        <div class="topic-num">K10 · 05</div>
-        <div class="topic-icon">🕐</div>
-        <div class="topic-title">Mein Tag<br><span style="font-size:12px;color:var(--text2);font-weight:400">Contar tu día (video)</span></div>
-        <div class="topic-tags"><span class="topic-tag">zuerst/dann</span><span class="topic-tag">tu rutina</span><span class="topic-tag">guion</span></div>
-        <div class="topic-arrow">→</div>
+      <a class="ini-l" href="a2-06-verbos-reflexivos.html" data-leccion="a2-06">
+        <img src="fotos/a2-06.jpg" alt="Unas manos bajo el chorro de la llave" title="Foto: Catt Liu · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 06</span><strong lang="de">Reflexive Verben</strong><small>Verbos reflexivos</small><em lang="de">sich freuen · sich waschen</em></span>
+      </a>
+      <a class="ini-l" href="a2-07-kasus.html" data-leccion="a2-07">
+        <img src="fotos/a2-07.jpg" alt="Unas manos ofrecen un regalo" title="Foto: Ben White · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 07</span><strong lang="de">Kasus: Nom., Akk., Dat.</strong><small>Casos gramaticales</small><em lang="de">der/den/dem · Subjekt · Objekt</em></span>
+      </a>
+      <a class="ini-l" href="a2-08-komparativ.html" data-leccion="a2-08">
+        <img src="fotos/a2-08.jpg" alt="Matrioskas de mayor a menor" title="Foto: archer10 (Dennis) · Flickr · BY-SA 2.0" loading="lazy">
+        <span><span class="ini-num">A2 · 08</span><strong lang="de">Komparativ &amp; Superlativ</strong><small>Comparativo y superlativo</small><em lang="de">größer · am größten · als</em></span>
+      </a>
+      <a class="ini-l" href="a2-09-konjunktionen.html" data-leccion="a2-09">
+        <img src="fotos/a2-09.jpg" alt="Fichas de letras que forman una frase" title="Foto: Words as Pictures · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 09</span><strong lang="de">Konjunktionen</strong><small>Conjunciones y conectores</small><em lang="de">weil · dass · wenn · obwohl</em></span>
+      </a>
+      <a class="ini-l" href="a2-10-preposiciones.html" data-leccion="a2-10">
+        <img src="fotos/a2-10.jpg" alt="Un gato dentro de una caja" title="Foto: bnilsen · Flickr · BY-SA 2.0" loading="lazy">
+        <span><span class="ini-num">A2 · 10</span><strong lang="de">Präpositionen</strong><small>Preposiciones + casos</small><em lang="de">in/an/auf · Wechselpräp.</em></span>
+      </a>
+      <a class="ini-l" href="a2-11-adjetivos.html" data-leccion="a2-11">
+        <img src="fotos/a2-11.jpg" alt="Un perro con un gorro de fiesta rojo" title="Foto: Shopify · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 11</span><strong lang="de">Adjektivdeklination</strong><small>Declinación de adjetivos</small><em lang="de">ein großer Mann · Endungen</em></span>
+      </a>
+      <a class="ini-l" href="a2-12-infinitiv.html" data-leccion="a2-12">
+        <img src="fotos/a2-12.jpg" alt="Una persona escala una pared de roca" title="Foto: Tommy Lisbin · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 12</span><strong lang="de">Infinitiv mit zu</strong><small>Infinitivo con zu</small><em lang="de">Es ist schön, Deutsch zu lernen · versuchen zu</em></span>
       </a>
     </div>
-  </div>
-
-  <div id="a1">
-    <div class="sh">
-      <span class="sh-badge a1">Nivel A1</span>
-      <h2>Básico — Punto de partida</h2>
-      <div class="sh-line"></div>
+    <h3 class="ini-subt">Temas</h3>
+    <div class="ini-lista">
+      <a class="ini-l" href="a2-13-wohnen.html" data-leccion="a2-13">
+        <img src="fotos/a2-13.jpg" alt="La fachada de un edificio de departamentos" title="Foto: Roman Kraft · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 13</span><strong lang="de">Wohnen &amp; Haushalt</strong><small>Vivienda y hogar</small><em lang="de">Miete · Kühlschrank · Nachbar</em></span>
+      </a>
+      <a class="ini-l" href="a2-14-arbeit.html" data-leccion="a2-14">
+        <img src="fotos/a2-14.jpg" alt="Una entrevista de trabajo" title="Foto: amtec_photos · Flickr · BY-SA 2.0" loading="lazy">
+        <span><span class="ini-num">A2 · 14</span><strong lang="de">Arbeit &amp; Beruf</strong><small>Trabajo y carrera</small><em lang="de">Gehalt · Kollege · Bewerbung</em></span>
+      </a>
+      <a class="ini-l" href="a2-15-gesundheit.html" data-leccion="a2-15">
+        <img src="fotos/a2-15.jpg" alt="Un estetoscopio junto a un teléfono" title="Foto: Negative Space · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 15</span><strong lang="de">Gesundheit &amp; Körper</strong><small>Salud y cuerpo humano</small><em lang="de">Schmerzen · Arzt · Apotheke</em></span>
+      </a>
+      <a class="ini-l" href="a2-16-reisen.html" data-leccion="a2-16">
+        <img src="fotos/a2-16.jpg" alt="Maletas antiguas apiladas" title="Foto: Mike Birdy · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 16</span><strong lang="de">Reisen &amp; Tourismus</strong><small>Viajes y turismo</small><em lang="de">Flug · Hotel · Ausflug</em></span>
+      </a>
+      <a class="ini-l" href="a2-17-freizeit.html" data-leccion="a2-17">
+        <img src="fotos/a2-17.jpg" alt="La marquesina iluminada de un cine" title="Foto: Nathan Engel · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 17</span><strong lang="de">Freizeit &amp; Hobbys</strong><small>Tiempo libre y aficiones</small><em lang="de">Kino · Sport · Musik</em></span>
+      </a>
+      <a class="ini-l" href="a2-18-essen.html" data-leccion="a2-18">
+        <img src="fotos/a2-18.jpg" alt="Ingredientes para cocinar pasta" title="Foto: JESHOOTS.com · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 18</span><strong lang="de">Essen, Trinken &amp; Kochen</strong><small>Gastronomía y cocina</small><em lang="de">Rezept · Restaurant · bestellen</em></span>
+      </a>
+      <a class="ini-l" href="a2-19-einkaufen.html" data-leccion="a2-19">
+        <img src="fotos/a2-19.jpg" alt="El pasillo de un supermercado" title="Foto: Simon Shek · Flickr · BY 2.0" loading="lazy">
+        <span><span class="ini-num">A2 · 19</span><strong lang="de">Einkaufen &amp; Preise</strong><small>Compras y precios</small><em lang="de">Supermarkt · Rabatt · bezahlen</em></span>
+      </a>
+      <a class="ini-l" href="a2-20-medien.html" data-leccion="a2-20">
+        <img src="fotos/a2-20.jpg" alt="Una mano con un celular y un café" title="Foto: JESHOOTS.com · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A2 · 20</span><strong lang="de">Medien &amp; Technologie</strong><small>Medios y tecnología</small><em lang="de">Internet · Handy · Nachrichten</em></span>
+      </a>
     </div>
+  </section>
 
-    <div class="topic-grid">
-
-      <a href="a1-01-saludos.html" class="topic-card a1">
-        <div class="topic-num">A1 · 01</div>
-        <div class="topic-icon">👋</div>
-        <div class="topic-title">Begrüßungen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Saludos y despedidas</span></div>
-        <div class="topic-tags"><span class="topic-tag">Hallo</span><span class="topic-tag">Tschüss</span><span class="topic-tag">Guten Morgen</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a1-02-zahlen.html" class="topic-card a1">
-        <div class="topic-num">A1 · 02</div>
-        <div class="topic-icon">🔢</div>
-        <div class="topic-title">Zahlen 1–100<br><span style="font-size:12px;color:var(--text2);font-weight:400">Números del 1 al 100</span></div>
-        <div class="topic-tags"><span class="topic-tag">eins</span><span class="topic-tag">zehn</span><span class="topic-tag">hundert</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a1-03-farben.html" class="topic-card a1">
-        <div class="topic-num">A1 · 03</div>
-        <div class="topic-icon">🎨</div>
-        <div class="topic-title">Farben & Formen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Colores y formas</span></div>
-        <div class="topic-tags"><span class="topic-tag">rot</span><span class="topic-tag">blau</span><span class="topic-tag">groß</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a1-04-wochentage.html" class="topic-card a1">
-        <div class="topic-num">A1 · 04</div>
-        <div class="topic-icon">📅</div>
-        <div class="topic-title">Wochentage & Monate<br><span style="font-size:12px;color:var(--text2);font-weight:400">Días de la semana y meses</span></div>
-        <div class="topic-tags"><span class="topic-tag">Montag</span><span class="topic-tag">Januar</span><span class="topic-tag">heute</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a1-05-familie.html" class="topic-card a1">
-        <div class="topic-num">A1 · 05</div>
-        <div class="topic-icon">👨‍👩‍👧</div>
-        <div class="topic-title">Familie<br><span style="font-size:12px;color:var(--text2);font-weight:400">La familia</span></div>
-        <div class="topic-tags"><span class="topic-tag">Mutter</span><span class="topic-tag">Vater</span><span class="topic-tag">Bruder</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a1-06-artikel.html" class="topic-card a1">
-        <div class="topic-num">A1 · 06</div>
-        <div class="topic-icon">🔤</div>
-        <div class="topic-title">Artikel: der, die, das<br><span style="font-size:12px;color:var(--text2);font-weight:400">Los artículos alemanes</span></div>
-        <div class="topic-tags"><span class="topic-tag">der Mann</span><span class="topic-tag">die Frau</span><span class="topic-tag">das Kind</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a1-07-pronomen.html" class="topic-card a1">
-        <div class="topic-num">A1 · 07</div>
-        <div class="topic-icon">👤</div>
-        <div class="topic-title">Personalpronomen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Pronombres personales</span></div>
-        <div class="topic-tags"><span class="topic-tag">ich</span><span class="topic-tag">du</span><span class="topic-tag">er/sie/es</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a1-08-sein-haben.html" class="topic-card a1">
-        <div class="topic-num">A1 · 08</div>
-        <div class="topic-icon">⚙️</div>
-        <div class="topic-title">Verben: sein & haben<br><span style="font-size:12px;color:var(--text2);font-weight:400">Los verbos ser/estar y tener</span></div>
-        <div class="topic-tags"><span class="topic-tag">ich bin</span><span class="topic-tag">du hast</span><span class="topic-tag">er ist</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a1-09-uhrzeit.html" class="topic-card a1">
-        <div class="topic-num">A1 · 09</div>
-        <div class="topic-icon">🕐</div>
-        <div class="topic-title">Uhrzeit<br><span style="font-size:12px;color:var(--text2);font-weight:400">Decir la hora</span></div>
-        <div class="topic-tags"><span class="topic-tag">Wie spät ist es?</span><span class="topic-tag">halb</span><span class="topic-tag">Uhr</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a1-10-laender.html" class="topic-card a1">
-        <div class="topic-num">A1 · 10</div>
-        <div class="topic-icon">🌍</div>
-        <div class="topic-title">Länder & Nationalitäten<br><span style="font-size:12px;color:var(--text2);font-weight:400">Países y nacionalidades</span></div>
-        <div class="topic-tags"><span class="topic-tag">Deutschland</span><span class="topic-tag">Mexiko</span><span class="topic-tag">ich komme aus</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a1-11-berufe.html" class="topic-card a1">
-        <div class="topic-num">A1 · 11</div>
-        <div class="topic-icon">💼</div>
-        <div class="topic-title">Berufe<br><span style="font-size:12px;color:var(--text2);font-weight:400">Profesiones</span></div>
-        <div class="topic-tags"><span class="topic-tag">Arzt</span><span class="topic-tag">Lehrer</span><span class="topic-tag">Ingenieur</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a1-12-essen.html" class="topic-card a1">
-        <div class="topic-num">A1 · 12</div>
-        <div class="topic-icon">🍎</div>
-        <div class="topic-title">Essen & Trinken<br><span style="font-size:12px;color:var(--text2);font-weight:400">Comida y bebida básica</span></div>
-        <div class="topic-tags"><span class="topic-tag">Brot</span><span class="topic-tag">Wasser</span><span class="topic-tag">Bier</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a1-13-wohnen.html" class="topic-card a1">
-        <div class="topic-num">A1 · 13</div>
-        <div class="topic-icon">🏠</div>
-        <div class="topic-title">Wohnen — Grundlagen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Vivienda básica</span></div>
-        <div class="topic-tags"><span class="topic-tag">Haus</span><span class="topic-tag">Zimmer</span><span class="topic-tag">Küche</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a1-14-verkehr.html" class="topic-card a1">
-        <div class="topic-num">A1 · 14</div>
-        <div class="topic-icon">🚇</div>
-        <div class="topic-title">Verkehr & Richtungen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Transporte y direcciones</span></div>
-        <div class="topic-tags"><span class="topic-tag">links</span><span class="topic-tag">rechts</span><span class="topic-tag">U-Bahn</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a1-15-hobbys.html" class="topic-card a1">
-        <div class="topic-num">A1 · 15</div>
-        <div class="topic-icon">🎮</div>
-        <div class="topic-title">Hobbys & Freizeit<br><span style="font-size:12px;color:var(--text2);font-weight:400">Pasatiempos básicos</span></div>
-        <div class="topic-tags"><span class="topic-tag">lesen</span><span class="topic-tag">spielen</span><span class="topic-tag">Sport</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
+  <!-- ══ A1 ══ -->
+  <section id="a1" class="ini-nivel-sec ini-a1" aria-labelledby="a1T">
+    <div class="ini-nivel">
+      <span class="ini-insignia ini-insignia-a1">A1</span>
+      <h2 id="a1T">Básico</h2>
+      <p>15 lecciones: la base, para repasar cuando algo no sale.</p>
     </div>
-  </div>
-
-  <!-- ══════════ NIVEL A2 ══════════ -->
-  <div id="a2">
-    <div class="sh">
-      <span class="sh-badge a2">Nivel A2</span>
-      <h2>Elemental — Tu meta actual</h2>
-      <div class="sh-line"></div>
+    <div class="ini-lista">
+      <a class="ini-l" href="a1-01-saludos.html" data-leccion="a1-01">
+        <img src="fotos/a1-01.jpg" alt="Dos personas se dan la mano" title="Foto: Matt Moloney · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A1 · 01</span><strong lang="de">Begrüßungen</strong><small>Saludos y despedidas</small><em lang="de">Hallo · Tschüss · Guten Morgen</em></span>
+      </a>
+      <a class="ini-l" href="a1-02-zahlen.html" data-leccion="a1-02">
+        <img src="fotos/a1-02.jpg" alt="Buzones con su número" title="Foto: Mathyas Kurmann · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A1 · 02</span><strong lang="de">Zahlen 1–100</strong><small>Números del 1 al 100</small><em lang="de">eins · zehn · hundert</em></span>
+      </a>
+      <a class="ini-l" href="a1-03-farben.html" data-leccion="a1-03">
+        <img src="fotos/a1-03.jpg" alt="Lápices de colores" title="Foto: Artsy Crafty · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A1 · 03</span><strong lang="de">Farben &amp; Formen</strong><small>Colores y formas</small><em lang="de">rot · blau · groß</em></span>
+      </a>
+      <a class="ini-l" href="a1-04-wochentage.html" data-leccion="a1-04">
+        <img src="fotos/a1-04.jpg" alt="Un calendario de escritorio" title="Foto: Jeff Sheldon · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A1 · 04</span><strong lang="de">Wochentage &amp; Monate</strong><small>Días de la semana y meses</small><em lang="de">Montag · Januar · heute</em></span>
+      </a>
+      <a class="ini-l" href="a1-05-familie.html" data-leccion="a1-05">
+        <img src="fotos/a1-05.jpg" alt="Una familia juega en la sala" title="Foto: Direct Media · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A1 · 05</span><strong lang="de">Familie</strong><small>La familia</small><em lang="de">Mutter · Vater · Bruder</em></span>
+      </a>
+      <a class="ini-l" href="a1-06-artikel.html" data-leccion="a1-06">
+        <img src="fotos/a1-06.jpg" alt="Figuras de juguete: un hombre, una mujer y un niño" title="Foto: Steinar Engeland · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A1 · 06</span><strong lang="de">Artikel: der, die, das</strong><small>Los artículos alemanes</small><em lang="de">der Mann · die Frau · das Kind</em></span>
+      </a>
+      <a class="ini-l" href="a1-07-pronomen.html" data-leccion="a1-07">
+        <img src="fotos/a1-07.jpg" alt="Un grupo de amigos platica en una mesa" title="Foto: Brodie Vissers · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A1 · 07</span><strong lang="de">Personalpronomen</strong><small>Pronombres personales</small><em lang="de">ich · du · er/sie/es</em></span>
+      </a>
+      <a class="ini-l" href="a1-08-sein-haben.html" data-leccion="a1-08">
+        <img src="fotos/a1-08.jpg" alt="Un gafete que dice «Hi, my name is»" title="Foto: EvelynGiggles · Flickr · BY 2.0" loading="lazy">
+        <span><span class="ini-num">A1 · 08</span><strong lang="de">Verben: sein &amp; haben</strong><small>Los verbos ser/estar y tener</small><em lang="de">ich bin · du hast · er ist</em></span>
+      </a>
+      <a class="ini-l" href="a1-09-uhrzeit.html" data-leccion="a1-09">
+        <img src="fotos/a1-09.jpg" alt="Un reloj de pared sobre fondo rojo" title="Foto: Freestocks.org · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A1 · 09</span><strong lang="de">Uhrzeit</strong><small>Decir la hora</small><em lang="de">Wie spät ist es? · halb · Uhr</em></span>
+      </a>
+      <a class="ini-l" href="a1-10-laender.html" data-leccion="a1-10">
+        <img src="fotos/a1-10.jpg" alt="Una mano sostiene un globo terráqueo" title="Foto: Porapak Apichodilok · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A1 · 10</span><strong lang="de">Länder &amp; Nationalitäten</strong><small>Países y nacionalidades</small><em lang="de">Deutschland · Mexiko · ich komme aus</em></span>
+      </a>
+      <a class="ini-l" href="a1-11-berufe.html" data-leccion="a1-11">
+        <img src="fotos/a1-11.jpg" alt="Un médico con una tableta" title="Foto: Direct Media · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A1 · 11</span><strong lang="de">Berufe</strong><small>Profesiones</small><em lang="de">Arzt · Lehrer · Ingenieur</em></span>
+      </a>
+      <a class="ini-l" href="a1-12-essen.html" data-leccion="a1-12">
+        <img src="fotos/a1-12.jpg" alt="Canastas de pan en una panadería" title="Foto: Drew Coffman · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A1 · 12</span><strong lang="de">Essen &amp; Trinken</strong><small>Comida y bebida básica</small><em lang="de">Brot · Wasser · Bier</em></span>
+      </a>
+      <a class="ini-l" href="a1-13-wohnen.html" data-leccion="a1-13">
+        <img src="fotos/a1-13.jpg" alt="Una sala con sillones amarillos" title="Foto: Dan Gold · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A1 · 13</span><strong lang="de">Wohnen: Grundlagen</strong><small>Vivienda básica</small><em lang="de">Haus · Zimmer · Küche</em></span>
+      </a>
+      <a class="ini-l" href="a1-14-verkehr.html" data-leccion="a1-14">
+        <img src="fotos/a1-14.jpg" alt="Un tren del metro llega al andén" title="Foto: Negative Space · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A1 · 14</span><strong lang="de">Verkehr &amp; Richtungen</strong><small>Transportes y direcciones</small><em lang="de">links · rechts · U-Bahn</em></span>
+      </a>
+      <a class="ini-l" href="a1-15-hobbys.html" data-leccion="a1-15">
+        <img src="fotos/a1-15.jpg" alt="Un balón de futbol en el pasto de un estadio" title="Foto: Michal Jarmoluk · Stocksnap · CC0 1.0" loading="lazy">
+        <span><span class="ini-num">A1 · 15</span><strong lang="de">Hobbys &amp; Freizeit</strong><small>Pasatiempos básicos</small><em lang="de">lesen · spielen · Sport</em></span>
+      </a>
     </div>
+  </section>
+</main>
 
-    <!-- Gramática A2 -->
-    <p class="section-label">📐 Gramática</p>
-    <div class="topic-grid">
-
-      <a href="a2-01-modalverben.html" class="topic-card a2">
-        <div class="topic-num">A2 · 01</div>
-        <div class="topic-icon">⚙️</div>
-        <div class="topic-title">Modalverben<br><span style="font-size:12px;color:var(--text2);font-weight:400">Verbos modales</span></div>
-        <div class="topic-tags"><span class="topic-tag">können</span><span class="topic-tag">müssen</span><span class="topic-tag">wollen</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-02-perfekt-haben.html" class="topic-card a2">
-        <div class="topic-num">A2 · 02</div>
-        <div class="topic-icon">✅</div>
-        <div class="topic-title">Perfekt mit haben<br><span style="font-size:12px;color:var(--text2);font-weight:400">Pasado con haben</span></div>
-        <div class="topic-tags"><span class="topic-tag">ich habe gemacht</span><span class="topic-tag">Partizip II</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-03-perfekt-sein.html" class="topic-card a2">
-        <div class="topic-num">A2 · 03</div>
-        <div class="topic-icon">🚶</div>
-        <div class="topic-title">Perfekt mit sein<br><span style="font-size:12px;color:var(--text2);font-weight:400">Pasado con sein</span></div>
-        <div class="topic-tags"><span class="topic-tag">ich bin gegangen</span><span class="topic-tag">Bewegung</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-04-prateritum.html" class="topic-card a2">
-        <div class="topic-num">A2 · 04</div>
-        <div class="topic-icon">📜</div>
-        <div class="topic-title">Präteritum<br><span style="font-size:12px;color:var(--text2);font-weight:400">Pasado simple (escrito)</span></div>
-        <div class="topic-tags"><span class="topic-tag">war</span><span class="topic-tag">hatte</span><span class="topic-tag">konnte</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-05-verbos-separables.html" class="topic-card a2">
-        <div class="topic-num">A2 · 05</div>
-        <div class="topic-icon">✂️</div>
-        <div class="topic-title">Trennbare Verben<br><span style="font-size:12px;color:var(--text2);font-weight:400">Verbos separables</span></div>
-        <div class="topic-tags"><span class="topic-tag">aufstehen</span><span class="topic-tag">anrufen</span><span class="topic-tag">mitkommen</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-06-verbos-reflexivos.html" class="topic-card a2">
-        <div class="topic-num">A2 · 06</div>
-        <div class="topic-icon">🔄</div>
-        <div class="topic-title">Reflexive Verben<br><span style="font-size:12px;color:var(--text2);font-weight:400">Verbos reflexivos</span></div>
-        <div class="topic-tags"><span class="topic-tag">sich freuen</span><span class="topic-tag">sich waschen</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-07-kasus.html" class="topic-card a2">
-        <div class="topic-num">A2 · 07</div>
-        <div class="topic-icon">📊</div>
-        <div class="topic-title">Kasus: Nom., Akk., Dat.<br><span style="font-size:12px;color:var(--text2);font-weight:400">Casos gramaticales</span></div>
-        <div class="topic-tags"><span class="topic-tag">der/den/dem</span><span class="topic-tag">Subjekt</span><span class="topic-tag">Objekt</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-08-komparativ.html" class="topic-card a2">
-        <div class="topic-num">A2 · 08</div>
-        <div class="topic-icon">📈</div>
-        <div class="topic-title">Komparativ & Superlativ<br><span style="font-size:12px;color:var(--text2);font-weight:400">Comparativo y superlativo</span></div>
-        <div class="topic-tags"><span class="topic-tag">größer</span><span class="topic-tag">am größten</span><span class="topic-tag">als</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-09-konjunktionen.html" class="topic-card a2">
-        <div class="topic-num">A2 · 09</div>
-        <div class="topic-icon">🔗</div>
-        <div class="topic-title">Konjunktionen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Conjunciones y conectores</span></div>
-        <div class="topic-tags"><span class="topic-tag">weil</span><span class="topic-tag">dass</span><span class="topic-tag">wenn</span><span class="topic-tag">obwohl</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-10-preposiciones.html" class="topic-card a2">
-        <div class="topic-num">A2 · 10</div>
-        <div class="topic-icon">📍</div>
-        <div class="topic-title">Präpositionen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Preposiciones + casos</span></div>
-        <div class="topic-tags"><span class="topic-tag">in/an/auf</span><span class="topic-tag">Wechselpräp.</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-11-adjetivos.html" class="topic-card a2">
-        <div class="topic-num">A2 · 11</div>
-        <div class="topic-icon">🎨</div>
-        <div class="topic-title">Adjektivdeklination<br><span style="font-size:12px;color:var(--text2);font-weight:400">Declinación de adjetivos</span></div>
-        <div class="topic-tags"><span class="topic-tag">ein großer Mann</span><span class="topic-tag">Endungen</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-12-infinitiv.html" class="topic-card a2">
-        <div class="topic-num">A2 · 12</div>
-        <div class="topic-icon">∞</div>
-        <div class="topic-title">Infinitiv mit zu<br><span style="font-size:12px;color:var(--text2);font-weight:400">Infinitivo con zu</span></div>
-        <div class="topic-tags"><span class="topic-tag">Es ist schön, zu...</span><span class="topic-tag">versuchen zu</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-    </div>
-
-    <!-- Vocabulario A2 -->
-    <p class="section-label mt32">📚 Vocabulario temático</p>
-    <div class="topic-grid">
-
-      <a href="a2-13-wohnen.html" class="topic-card a2">
-        <div class="topic-num">A2 · 13</div>
-        <div class="topic-icon">🏠</div>
-        <div class="topic-title">Wohnen & Haushalt<br><span style="font-size:12px;color:var(--text2);font-weight:400">Vivienda y hogar</span></div>
-        <div class="topic-tags"><span class="topic-tag">Miete</span><span class="topic-tag">Kühlschrank</span><span class="topic-tag">Nachbar</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-14-arbeit.html" class="topic-card a2">
-        <div class="topic-num">A2 · 14</div>
-        <div class="topic-icon">💼</div>
-        <div class="topic-title">Arbeit & Beruf<br><span style="font-size:12px;color:var(--text2);font-weight:400">Trabajo y carrera</span></div>
-        <div class="topic-tags"><span class="topic-tag">Gehalt</span><span class="topic-tag">Kollege</span><span class="topic-tag">Bewerbung</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-15-gesundheit.html" class="topic-card a2">
-        <div class="topic-num">A2 · 15</div>
-        <div class="topic-icon">🏥</div>
-        <div class="topic-title">Gesundheit & Körper<br><span style="font-size:12px;color:var(--text2);font-weight:400">Salud y cuerpo humano</span></div>
-        <div class="topic-tags"><span class="topic-tag">Schmerzen</span><span class="topic-tag">Arzt</span><span class="topic-tag">Apotheke</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-16-reisen.html" class="topic-card a2">
-        <div class="topic-num">A2 · 16</div>
-        <div class="topic-icon">✈️</div>
-        <div class="topic-title">Reisen & Tourismus<br><span style="font-size:12px;color:var(--text2);font-weight:400">Viajes y turismo</span></div>
-        <div class="topic-tags"><span class="topic-tag">Flug</span><span class="topic-tag">Hotel</span><span class="topic-tag">Ausflug</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-17-freizeit.html" class="topic-card a2">
-        <div class="topic-num">A2 · 17</div>
-        <div class="topic-icon">🎯</div>
-        <div class="topic-title">Freizeit & Hobbys<br><span style="font-size:12px;color:var(--text2);font-weight:400">Tiempo libre y aficiones</span></div>
-        <div class="topic-tags"><span class="topic-tag">Kino</span><span class="topic-tag">Sport</span><span class="topic-tag">Musik</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-18-essen.html" class="topic-card a2">
-        <div class="topic-num">A2 · 18</div>
-        <div class="topic-icon">🍽️</div>
-        <div class="topic-title">Essen, Trinken & Kochen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Gastronomía y cocina</span></div>
-        <div class="topic-tags"><span class="topic-tag">Rezept</span><span class="topic-tag">Restaurant</span><span class="topic-tag">bestellen</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-19-einkaufen.html" class="topic-card a2">
-        <div class="topic-num">A2 · 19</div>
-        <div class="topic-icon">🛒</div>
-        <div class="topic-title">Einkaufen & Preise<br><span style="font-size:12px;color:var(--text2);font-weight:400">Compras y precios</span></div>
-        <div class="topic-tags"><span class="topic-tag">Supermarkt</span><span class="topic-tag">Rabatt</span><span class="topic-tag">bezahlen</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-      <a href="a2-20-medien.html" class="topic-card a2">
-        <div class="topic-num">A2 · 20</div>
-        <div class="topic-icon">📱</div>
-        <div class="topic-title">Medien & Technologie<br><span style="font-size:12px;color:var(--text2);font-weight:400">Medios y tecnología</span></div>
-        <div class="topic-tags"><span class="topic-tag">Internet</span><span class="topic-tag">Handy</span><span class="topic-tag">Nachrichten</span></div>
-        <div class="topic-arrow">→</div>
-      </a>
-
-    </div>
-  </div>
-
-</div><!-- /container -->
-
-<footer class="footer">
-  <p>🇩🇪 Deutsch A1 & A2 — Tu camino a Alemania</p>
-  <div class="footer-flag">
-    <span style="background:#000;width:20px;height:5px"></span>
-    <span style="background:var(--red);width:20px;height:5px"></span>
-    <span style="background:var(--gold);width:20px;height:5px"></span>
-  </div>
+<footer class="ini-pie">
+  <span id="pieCuenta">Deutsch A1 y A2</span>
+  <span>Fotos de Openverse (StockSnap y Flickr): el autor y la licencia de cada una aparecen al pasar el cursor.</span>
 </footer>
 
+<!-- El vocabulario (sus cifras y sus familias) y el maestro (el nombre de la escuela). -->
+<script src="vocab-datos.js"></script>
+<script src="../Dashboard/datos-maestros.js"></script>
+<script>
+// Lo que cambia en el inicio: el progreso del Kapitel 10 y las cifras del vocabulario.
+// Todo lo demás es HTML fijo.
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var nf = function (n) { return Number(n).toLocaleString('es-MX'); };
+
+  // ── El progreso del Kapitel 10 ──────────────────────────────────────────────────────────
+  // k10-interactivo.js guarda cada ejercicio como {hechos, total, fecha}; uno está completo
+  // cuando tiene todos sus reactivos bien. Un k10Conjugar guarda uno por verbo (`id-verbo`),
+  // y por eso en `data-bloques` va como `id:n`.
+  var datos = {};
+  try { datos = JSON.parse(localStorage.getItem('aleman_k10_v1')) || {}; } catch (e) { datos = {}; }
+  var completo = function (r) { return !!r && r.total > 0 && r.hechos >= r.total; };
+
+  function ejercicio(spec) {
+    var p = spec.split(':'), id = p[0], n = +p[1] || 0;
+    if (!n) {
+      var r = datos[id];
+      return { hecho: completo(r), tocado: !!r, fecha: (r && r.fecha) || '' };
+    }
+    var bien = 0, tocado = false, fecha = '';
+    Object.keys(datos).forEach(function (k) {
+      if (k.indexOf(id + '-') !== 0) return;
+      tocado = true;
+      if (completo(datos[k])) bien++;
+      if ((datos[k].fecha || '') > fecha) fecha = datos[k].fecha;
+    });
+    return { hecho: bien >= n, tocado: tocado, fecha: fecha };
+  }
+
+  var lecciones = [].slice.call(document.querySelectorAll('.ini-k10 [data-bloques]')).map(function (el, orden) {
+    var ej = el.getAttribute('data-bloques').trim().split(/\s+/).map(ejercicio);
+    return {
+      el: el, orden: orden, total: ej.length,
+      hechos: ej.filter(function (x) { return x.hecho; }).length,
+      tocados: ej.filter(function (x) { return x.tocado; }).length,
+      fecha: ej.reduce(function (m, x) { return x.fecha > m ? x.fecha : m; }, '')
+    };
+  });
+
+  lecciones.forEach(function (l) {
+    var estado = l.hechos === l.total ? 'Completa' : (l.tocados ? 'En curso' : 'Sin empezar');
+    var chip = l.el.querySelector('[data-estado]');
+    chip.textContent = estado;
+    chip.className = 'ini-estado' + (estado === 'Completa' ? ' es-hecha' : estado === 'En curso' ? ' es-curso' : '');
+    l.el.querySelector('.ini-barra-p i').style.width = Math.round(l.hechos / l.total * 100) + '%';
+    l.el.querySelector('.ini-prog-txt').textContent = l.hechos + ' de ' + l.total + ' ejercicios';
+  });
+
+  var total = lecciones.reduce(function (a, l) { return a + l.total; }, 0);
+  var hechos = lecciones.reduce(function (a, l) { return a + l.hechos; }, 0);
+  var pctK = total ? Math.round(hechos / total * 100) : 0;
+  $('k10Prog').textContent = hechos + ' de ' + total + ' ejercicios completos';
+  $('k10Pct').textContent = pctK + ' %';
+  $('k10Barra').style.width = pctK + '%';
+
+  // ── Qué toca hoy ──────────────────────────────────────────────────────────────────────
+  // La lección empezada que practicaste por última vez; si no hay, la primera sin terminar
+  // en el orden del Kapitel; con todo hecho, los minitests para no perderlo.
+  var enCurso = lecciones.filter(function (l) { return l.tocados && l.hechos < l.total; })
+    .sort(function (a, b) { return a.fecha < b.fecha ? 1 : a.fecha > b.fecha ? -1 : a.orden - b.orden; })[0];
+  var pendiente = lecciones.filter(function (l) { return l.hechos < l.total; })[0];
+  var alguna = lecciones.some(function (l) { return l.tocados; });
+  var toca = enCurso || pendiente, ceja, boton, href;
+  if (enCurso) { ceja = 'Sigue donde te quedaste'; boton = 'Continuar la lección →'; }
+  else if (pendiente && alguna) { ceja = 'La siguiente lección'; boton = 'Empezar la lección →'; }
+  else if (pendiente) { ceja = 'Empieza el Kapitel 10'; boton = 'Empezar la lección →'; }
+  else {
+    toca = lecciones.filter(function (l) { return /k10-03/.test(l.el.getAttribute('href')); })[0] || lecciones[0];
+    ceja = 'Kapitel 10 completo'; boton = 'Repasar con el minitest →';
+    href = toca.el.getAttribute('href') + '#minitest';
+  }
+  if (toca) {
+    var foto = toca.el.querySelector('img'), pct = Math.round(toca.hechos / toca.total * 100);
+    $('sigueFoto').src = foto.getAttribute('src');
+    $('sigueFoto').alt = foto.alt;
+    $('sigueFoto').title = foto.title;
+    $('sigueCeja').textContent = ceja;
+    $('sigueNum').textContent = 'KAPITEL 10 · ' + toca.el.querySelector('.ini-num').textContent;
+    $('sigueTit').textContent = toca.el.querySelector('.ini-tit').textContent;
+    $('sigueDesc').textContent = toca.el.getAttribute('data-desc');
+    $('sigueProg').textContent = toca.hechos + ' de ' + toca.total + ' ejercicios completos';
+    $('siguePct').textContent = pct + ' %';
+    $('sigueBarra').style.width = pct + '%';
+    $('sigueIr').textContent = boton;
+    $('sigueIr').href = href || toca.el.getAttribute('href');
+  }
+
+  // Cuándo fue el último ejercicio: la meta del prompt es no dejar pasar más de dos días.
+  // Las fechas se guardan en fecha local ('AAAA-MM-DD').
+  var ultima = Object.keys(datos).reduce(function (m, k) {
+    var f = (datos[k] && datos[k].fecha) || ''; return f > m ? f : m; }, '');
+  var ritmo = $('sigueRitmo');
+  if (ultima) {
+    var p = ultima.split('-'), hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    var dias = Math.max(0, Math.round((hoy - new Date(+p[0], +p[1] - 1, +p[2])) / 864e5));
+    var cuando = dias === 0 ? 'hoy' : dias === 1 ? 'ayer' : 'hace ' + dias + ' días';
+    ritmo.innerHTML = 'Tu último ejercicio del Kapitel 10 fue <b>' + cuando + '</b>. ' +
+      (dias > 2 ? 'Hoy toca: la meta es no dejar pasar más de dos días.' : 'La meta: 20 minutos al día, sin dejar pasar más de dos días.');
+    ritmo.classList.toggle('alerta', dias > 2);
+  }
+
+  // ── El vocabulario ──────────────────────────────────────────────────────────────────────
+  var V = (typeof ALEMAN_VOCAB !== 'undefined') ? ALEMAN_VOCAB : null;
+  if (V) {
+    var subs = Object.keys(V.cats).reduce(function (a, k) { return a + Object.keys(V.cats[k].subs || {}).length; }, 0);
+    $('vocCifras').textContent = nf(V.voc.length) + ' palabras · ' + Object.keys(V.cats).length + ' secciones · ' + subs + ' subsecciones';
+    var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+    // Cada familia abre su primera sección, con el árbol desplegado en esa familia.
+    $('vocFamilias').innerHTML = V.familias.map(function (f) {
+      var n = f.cats.reduce(function (a, k) { return a + V.cuantas(k); }, 0);
+      var muestra = f.cats.slice(0, 3).map(function (k) { return V.cats[k].label; }).join(' · ') + (f.cats.length > 3 ? ' …' : '');
+      return '<a href="vocabulario.html#cat=' + encodeURIComponent(f.cats[0]) + '"><span>' + esc(f.label) +
+        '<em>' + nf(n) + '</em></span><small>' + esc(muestra) + '</small></a>';
+    }).join('');
+  }
+  var n = document.querySelectorAll('[data-leccion]').length;
+  $('pieCuenta').textContent = 'Deutsch A1 y A2 · ' + n + ' lecciones' + (V ? ' · ' + nf(V.voc.length) + ' palabras' : '');
+
+  // ── La barra marca la sección que estás viendo ──────────────────────────────────────────
+  if ('IntersectionObserver' in window) {
+    var enlaces = [].slice.call(document.querySelectorAll('.ini-nav a[href^="#"]'));
+    var io = new IntersectionObserver(function (ents) {
+      ents.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        enlaces.forEach(function (a) { a.classList.toggle('on', a.getAttribute('href') === '#' + en.target.id); });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    enlaces.forEach(function (a) { var s = document.querySelector(a.getAttribute('href')); if (s) io.observe(s); });
+  }
+})();
+</script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body>
 </html>

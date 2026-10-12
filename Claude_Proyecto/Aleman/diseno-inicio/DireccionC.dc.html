@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Alemán · índice mínimo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Playfair+Display:wght@700;800;900&amp;display=swap">
+<style>
+body{margin:0;background:#F5F4F0}
+a{color:#1A1A1A;text-decoration:none}a:hover{color:#A30000}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #F5F4F0; color: #1A1A1A; font-family: Inter, system-ui, sans-serif; font-size: 15px; line-height: 1.5">
+  <div style="max-width: 1600px; margin: 0 auto; padding: 28px 40px 48px; display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start">
+
+    <nav aria-label="Niveles" style="flex: 1 1 250px; max-width: 300px; display: flex; flex-direction: column; gap: 4px">
+      <div style="display: flex; align-items: center; gap: 12px; padding: 0 8px 16px">
+        <button type="button" aria-label="El prompt de esta página" style="width: 36px; height: 36px; border-radius: 50%; border: 0; background: #2F6FED; color: #FFFFFF; display: grid; place-items: center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg>
+        </button>
+        <span style="font-family: 'Playfair Display', serif; font-weight: 900; font-size: 22px">Deutsch</span>
+      </div>
+      <a href="#k10" style="display: flex; justify-content: space-between; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 10px; background: #1A1A1A; color: #FFFFFF; font-weight: 700"><span>Kapitel 10</span><span style="font-weight: 500; font-size: 13px">19/44</span></a>
+      <a href="#a2" style="display: flex; justify-content: space-between; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 10px; font-weight: 600"><span>A2 · Elemental</span><span style="font-weight: 500; font-size: 13px; color: #6B6B6B">20</span></a>
+      <a href="#a1" style="display: flex; justify-content: space-between; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 10px; font-weight: 600"><span>A1 · Básico</span><span style="font-weight: 500; font-size: 13px; color: #6B6B6B">15</span></a>
+      <div style="margin: 14px 14px 6px; font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #6B6B6B">Consulta</div>
+      <a href="#k10" style="display: flex; justify-content: space-between; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 10px; font-weight: 600"><span>Vocabulario</span><span style="font-weight: 500; font-size: 13px; color: #6B6B6B">1.516</span></a>
+      <a href="#k10" style="display: flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 10px; font-weight: 600">Gramática</a>
+      <a href="#k10" style="display: flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 10px; font-weight: 600">Principiantes</a>
+      <a href="#k10" style="display: flex; align-items: center; min-height: 44px; margin-top: 10px; padding: 0 14px; border-radius: 10px; border: 1px solid #DCD8CF; background: #FFFFFF; font-weight: 700">Dashboard</a>
+    </nav>
+
+    <main style="flex: 999 1 640px; min-width: 0; display: flex; flex-direction: column; gap: 30px">
+      <a href="#k10" style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding: 16px 20px; background: #FFFFFF; border: 1px solid #E6E3DC; border-radius: 14px">
+        <span style="font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #CC0000">Sigue</span>
+        <span style="font-size: 17px; font-weight: 800">K10 · 03 Perfekt üben</span>
+        <span style="font-size: 14px; color: #4F4F4F">4 de 10 bloques · practicaste ayer</span>
+        <span style="margin-left: auto; font-weight: 700">Continuar →</span>
+      </a>
+
+      <section id="k10" style="display: flex; flex-direction: column">
+        <h2 style="margin: 0 0 8px; font-size: 22px; font-weight: 800">Kapitel 10 <span style="font-size: 15px; font-weight: 500; color: #4F4F4F">· Cenlex Santo Tomás</span></h2>
+        <sc-for list="{{k10}}" as="l" hint-placeholder-count="6">
+          <a href="#k10" style="display: flex; align-items: center; gap: 16px; padding: 8px 0; border-top: 1px solid #E6E3DC">
+            <img src="{{l.img}}" alt="{{l.alt}}" style="flex: 0 0 72px; width: 72px; height: 50px; object-fit: cover; border-radius: 8px; display: block">
+            <span style="flex: 0 0 84px; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; color: #4F4F4F">{{l.num}}</span>
+            <span style="flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px"><span style="font-weight: 700">{{l.t}}</span><span style="font-size: 14px; color: #4F4F4F">{{l.s}}</span></span>
+            <span style="flex: 0 0 120px; height: 6px; border-radius: 999px; background: #E6E3DC; overflow: hidden"><span style="display: block; height: 100%; background: #CC0000; width: {{l.pct}}"></span></span>
+            <span style="flex: 0 0 76px; text-align: right; font-size: 13px; font-weight: 600; color: #4F4F4F">{{l.prog}}</span>
+          </a>
+        </sc-for>
+      </section>
+
+      <section id="a2" style="display: flex; flex-direction: column">
+        <h2 style="margin: 0 0 8px; font-size: 22px; font-weight: 800">A2 · Elemental <span style="font-size: 15px; font-weight: 500; color: #4F4F4F">· 20 lecciones</span></h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); column-gap: 32px">
+          <sc-for list="{{a2}}" as="l" hint-placeholder-count="20">
+            <a href="#a2" style="display: flex; align-items: center; gap: 14px; padding: 7px 0; border-top: 1px solid #E6E3DC">
+              <img src="{{l.img}}" alt="{{l.alt}}" style="flex: 0 0 64px; width: 64px; height: 44px; object-fit: cover; border-radius: 7px; display: block">
+              <span style="flex: 0 0 64px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; color: #B00000">{{l.num}}</span>
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-weight: 700; font-size: 14.5px">{{l.t}}</span><span style="font-size: 13px; color: #4F4F4F">{{l.s}}</span></span>
+            </a>
+          </sc-for>
+        </div>
+      </section>
+
+      <section id="a1" style="display: flex; flex-direction: column">
+        <h2 style="margin: 0 0 8px; font-size: 22px; font-weight: 800">A1 · Básico <span style="font-size: 15px; font-weight: 500; color: #4F4F4F">· 15 lecciones</span></h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); column-gap: 32px">
+          <sc-for list="{{a1}}" as="l" hint-placeholder-count="15">
+            <a href="#a1" style="display: flex; align-items: center; gap: 14px; padding: 7px 0; border-top: 1px solid #E6E3DC">
+              <img src="{{l.img}}" alt="{{l.alt}}" style="flex: 0 0 64px; width: 64px; height: 44px; object-fit: cover; border-radius: 7px; display: block">
+              <span style="flex: 0 0 64px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; color: #8A6D00">{{l.num}}</span>
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-weight: 700; font-size: 14.5px">{{l.t}}</span><span style="font-size: 13px; color: #4F4F4F">{{l.s}}</span></span>
+            </a>
+          </sc-for>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2360}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const B = '/_blob/';
+    const L = function (x) { return { num: x[0], t: x[1], s: x[2], img: B + x[3], alt: x[4] }; };
+    const k10 = [
+      ['K10 · 01', 'Die Regel: Perfekt', 'La regla del Perfekt', 'fb9486b14aadb366a5b434af07e0a564', 'Cuaderno de estudio', 10, 10],
+      ['K10 · 06', 'Partizip I & II', 'Los dos participios, a fondo', '955d5595932eeed0497ef9ecd377c3be', 'Una persona lee', 2, 5],
+      ['K10 · 02', 'Verbenliste', 'Tabla a memorizar: 207 verbos', '3bbf6b13da40142f3bed444a383678fc', 'Tarjetas escritas a mano', 3, 5],
+      ['K10 · 03', 'Perfekt üben', 'Ejercicios y dos minitests', '9ada1f532175d29b382ada858a310024', 'Hoja de respuestas', 4, 10],
+      ['K10 · 04', 'Berufe', 'Profesiones y tu área', '16f6df44a3657c9e9b8a875866be6627', 'Un técnico en un rack', 0, 7],
+      ['K10 · 05', 'Mein Tag', 'Contar tu día (video)', '1102a52a25e87b59811d49f608878892', 'Café y cruasanes', 0, 7]
+    ].map(function (x) { return { num: x[0], t: x[1], s: x[2], img: B + x[3], alt: x[4], pct: Math.round(x[5] / x[6] * 100) + '%', prog: x[5] + ' de ' + x[6] }; });
+    const a2 = [
+      ['A2 · 01', 'Modalverben', 'Verbos modales', '5c63f0c30d4f360a312bc44aa296a6e8', 'Guitarra'],
+      ['A2 · 02', 'Perfekt mit haben', 'Pasado con haben', 'a1dc8e590037f364137d16a3a9e16096', 'Panquecitos'],
+      ['A2 · 03', 'Perfekt mit sein', 'Pasado con sein', '587342212295477773bac3481d5e7015', 'Excursionistas'],
+      ['A2 · 04', 'Präteritum', 'Pasado simple (escrito)', '64207c5b4879f0ee86b1f69676c33b4e', 'Máquina de escribir'],
+      ['A2 · 05', 'Trennbare Verben', 'Verbos separables', '4be2a93bbd5c920b9392cee91ebf3ff9', 'Teléfono en una cabina'],
+      ['A2 · 06', 'Reflexive Verben', 'Verbos reflexivos', 'ff8b403b6ecdad9513cf15c127ef2ce3', 'Lavarse las manos'],
+      ['A2 · 07', 'Kasus: Nom., Akk., Dat.', 'Casos gramaticales', '7bb8b6082ec9c270ab72056116f4155e', 'Un regalo'],
+      ['A2 · 08', 'Komparativ & Superlativ', 'Comparativo y superlativo', '84dc45347a4b6ea278c1380de9f65a2f', 'Matrioskas'],
+      ['A2 · 09', 'Konjunktionen', 'Conjunciones y conectores', 'a114184a4d87c2b28a91e63941fc79c4', 'Fichas de letras'],
+      ['A2 · 10', 'Präpositionen', 'Preposiciones + casos', '8d50531ad97afae4353f2a15d044ba06', 'Un gato en una caja'],
+      ['A2 · 11', 'Adjektivdeklination', 'Declinación de adjetivos', '0033b633e2bd1635f164515d2e40da71', 'Perro con gorro'],
+      ['A2 · 12', 'Infinitiv mit zu', 'Infinitivo con zu', '55916ff06980bbc36b448ece454391f3', 'Escalada'],
+      ['A2 · 13', 'Wohnen & Haushalt', 'Vivienda y hogar', '0baeafa6ad9cad53629c03a2c29ccda3', 'Edificio'],
+      ['A2 · 14', 'Arbeit & Beruf', 'Trabajo y carrera', '2a81129ed5b0e58f44474aa6cbb63e49', 'Entrevista'],
+      ['A2 · 15', 'Gesundheit & Körper', 'Salud y cuerpo', '584a569381b7e464d1f9b68baae355a7', 'Estetoscopio'],
+      ['A2 · 16', 'Reisen & Tourismus', 'Viajes y turismo', 'e87379834e5496a8bab67e25af862da5', 'Maletas'],
+      ['A2 · 17', 'Freizeit & Hobbys', 'Tiempo libre', 'b47256ff375ee1927216d0f6898cbd58', 'Cine'],
+      ['A2 · 18', 'Essen, Trinken & Kochen', 'Gastronomía y cocina', '03260d97931f7ef94e5a5b3cc8edbf8b', 'Ingredientes'],
+      ['A2 · 19', 'Einkaufen & Preise', 'Compras y precios', '7676e5c98578704b6de005d3d027142d', 'Supermercado'],
+      ['A2 · 20', 'Medien & Technologie', 'Medios y tecnología', '146bdc1ddc6b31af5f962d771b8ab28a', 'Celular']
+    ].map(L);
+    const a1 = [
+      ['A1 · 01', 'Begrüßungen', 'Saludos y despedidas', '1cd08712a380a627ab2e52389db8af51', 'Apretón de manos'],
+      ['A1 · 02', 'Zahlen 1–100', 'Números del 1 al 100', '5c3be7d433b5db374a6359a85f70d82c', 'Buzones numerados'],
+      ['A1 · 03', 'Farben & Formen', 'Colores y formas', '1862272e9f40959f26ef89efc54a6403', 'Lápices de colores'],
+      ['A1 · 04', 'Wochentage & Monate', 'Días y meses', 'd39f941d3b3b3cf581190f6060baf8a2', 'Calendario'],
+      ['A1 · 05', 'Familie', 'La familia', 'f3aa9111c57df2090be2b767cd1f09bc', 'Familia'],
+      ['A1 · 06', 'Artikel: der, die, das', 'Los artículos', '6954a65dc2f989b722e4d2d5f1a72a0b', 'Figuras de juguete'],
+      ['A1 · 07', 'Personalpronomen', 'Pronombres personales', 'bf37a738695d79e28f3f4dafcfabe6fd', 'Amigos'],
+      ['A1 · 08', 'Verben: sein & haben', 'Ser/estar y tener', '3936eb7939779851a8d8517885f2aaf5', 'Gafete'],
+      ['A1 · 09', 'Uhrzeit', 'Decir la hora', '5cd79456e9d6761fdcb584fc7585c08d', 'Reloj'],
+      ['A1 · 10', 'Länder & Nationalitäten', 'Países y nacionalidades', '979d58a498bd66e47c8760570c29780b', 'Globo terráqueo'],
+      ['A1 · 11', 'Berufe', 'Profesiones', '2d76693f52cba8d7f9ea587c88e4be48', 'Médico'],
+      ['A1 · 12', 'Essen & Trinken', 'Comida y bebida', 'c407f1df35e8211e29693db366d6eec0', 'Panadería'],
+      ['A1 · 13', 'Wohnen: Grundlagen', 'Vivienda básica', 'e429b86f5a25da6599ef69834cf96b76', 'Sala'],
+      ['A1 · 14', 'Verkehr & Richtungen', 'Transportes', 'c38aa98750814a9343ff3e5d8d16beec', 'Metro'],
+      ['A1 · 15', 'Hobbys & Freizeit', 'Pasatiempos', '3d0e16b94ff3fd9b8f25d86ecd53ef70', 'Balón']
+    ].map(L);
+    return { k10: k10, a2: a2, a1: a1 };
+  }
+}
+</script>
+</body>
+</html>
