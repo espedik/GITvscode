@@ -151,8 +151,11 @@ anterior, con guardas `if(!el) return`; se conservan por si vuelve.
 **Se oculta a la izquierda**, como el rail (Adán: *"la sección donde viene mi horario día a día igual hazla
 que se oculte a la izquierda"*): el tirador de arriba a la derecha (`toggleAgenda()`) la pliega a una tira de
 64 px con la hora, un punto por bloque en sus tres franjas —verde si está hecho, con anillo el de ahora; tocarlo
-abre ese bloque en el AHORA— y el ✓ del bloque actual (`pintarAgendaMini()`). La derecha gana 356 px: a
-2048×1040, Hoy aprendes pasa de 927 a 1164 px de ancho. Se queda como la dejaste (`dash-agenda-oculta`) y, al
+abre ese bloque en el AHORA— y el ✓ del bloque actual (`pintarAgendaMini()`). Lo que se gana es para Hoy
+aprendes: con la agenda plegada, `#miDiaSecundarios` pasa de 1:2 a 1:3 (Adán: *"que hábitos de hoy, entrenas, qué
+invertir hoy se hagan más pequeños a lo ancho, para que hoy aprendes sea más largo"*). A 2048×1040 con el rail y la
+agenda plegados, Entrenas/Hábitos/Qué invertir miden 437 px (antes 583) y Hoy aprendes 1312 (antes 1166); con
+la tarjeta de Entrenas bajo 400 px, el icono de cada día de la tira baja bajo su nombre. Se queda como la dejaste (`dash-agenda-oculta`) y, al
 cambiar de ancho, el AHORA, los hábitos y Hoy aprendes se vuelven a medir. En el teléfono no se pliega.
 
 ### El AHORA

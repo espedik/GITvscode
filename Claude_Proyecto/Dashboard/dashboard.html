@@ -3107,6 +3107,11 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 @media(max-width:900px){.dia-ag-tir{display:none}}
 @media(min-width:901px){
   .dia-b.ag-oculta{grid-template-columns:64px minmax(0,1fr)}
+  /* Con la agenda plegada, lo que se gana es para Hoy aprendes: Entrenas, Hábitos de hoy y Qué invertir hoy
+     quedan casi del ancho que tienen con la agenda abierta (Adán: "quiero que hábitos de hoy, entrenas, qué
+     invertir hoy se hagan más pequeños a lo ancho, para que hoy aprendes sea más largo"). */
+  #miDiaSecundarios{transition:grid-template-columns .28s ease}
+  .dia-b.ag-oculta #miDiaSecundarios{grid-template-columns:minmax(0,1fr) minmax(0,3fr)}
   .dia-b.ag-oculta .dia-agenda{padding:12px 6px;align-items:center;gap:12px}
   .dia-b.ag-oculta .dia-agenda>:not(.dia-ag-tir):not(.dia-ag-mini){display:none!important}
   .dia-b.ag-oculta .dia-ag-tir{position:static;flex:none;width:40px;height:32px;padding:0}
@@ -3557,6 +3562,14 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 .dia-entrena-tile .ws-ddate,.dia-entrena-tile .ws-gym-lbl{display:none}
 .dia-entrena-tile .ws-gym-badge{font-size:9px}
 .dia-entrena-tile .ws-day.today{border-color:var(--g);box-shadow:0 0 0 1px var(--g)}
+/* Con la tarjeta angosta (la columna se encoge cuando la agenda se pliega, y bajo 1600 px) el nombre del día y
+   su icono no caben en un renglón de ~30 px: el icono baja bajo el nombre. */
+@container (max-width:400px){
+  .dia-entrena-tile .ws-day{padding:3px 3px}
+  .dia-entrena-tile .ws-dhead{flex-direction:column;align-items:flex-start;gap:1px}
+  .dia-entrena-tile .ws-dname{font-size:8px;letter-spacing:.02em}
+  .dia-entrena-tile .ws-gym-badge{margin-left:0}
+}
 .dia-entrena-sig i{font-style:normal;color:var(--text3);margin:0 6px}
 /* Otro día que no es hoy: su nombre en verde arriba. Sus ejercicios: la lista desplaza por dentro y
    es lo que cede alto, para que la tira se quede abajo. Gana a `.dia-entrena span` por especificidad. */
