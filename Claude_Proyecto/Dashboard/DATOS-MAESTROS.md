@@ -889,6 +889,24 @@ Qué revisa:
   aparecer en una subtarea de la rutina de la mañana y los de la noche en una de la noche: mover
   el magnesio a la mañana en un sitio y no en el otro no mueve ninguna cifra.
 
+- **«Hoy» en fecha local** (control 26): ninguna app saca la fecha del día de `toISOString()`, que
+  es UTC y en México ya es mañana desde las 18:00; se usa `CIFRAS.fechaLocal()`. Un cálculo que
+  entra y sale en UTC a propósito lo dice en la misma línea («UTC a propósito»).
+
+- **Las lecciones de Alemán con su plantilla** (control 27): la barra del inicio, su foto con
+  crédito, las dos columnas y, con práctica, `leccion.js` después de `k10-interactivo.js`.
+
+- **Ningún plan con fecha vencida** (control 28): una fecha con su día de la semana («el martes 14
+  de julio», el día fija el año) que ya pasó, o una cuenta regresiva escrita a mano («tienes 7
+  días»), en el texto de cualquier app. Así abrió Entrevistas meses después de la entrevista de
+  Wayve. Lo que va entre comillas es un ejemplo y no cuenta, ni los comentarios; un archivo que
+  guarda un plan viejo a propósito lo declara con «ARCHIVO —» en su cabecera.
+
+- **Los precios del súper y el recetario, solo aquí** (control 29): ningún otro archivo le pone
+  precio a un producto de `PRECIOS_SUPER`, copia el nombre de una receta del `RECETARIO` ni arma
+  su propia lista con `ingredientes: [`. El Dashboard tuvo las dos copias, y el costo del desayuno
+  de la proyección salía de recetas que ya no eran las de Comida.
+
 Los valores **no están escritos en el verificador**: los pide al maestro. Tenerlos a mano era el
 mismo fallo que persigue — con `$292,000` en su lista seguía vigilando el saldo viejo.
 

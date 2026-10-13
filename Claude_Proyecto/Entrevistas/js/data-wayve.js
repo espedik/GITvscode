@@ -1,5 +1,8 @@
 // ══════════════════════════════════════════════════════════════════
 //  WAYVE RICH CONTENT (páginas con contenido pre-cargado)
+//  ARCHIVO — la preparación de la entrevista de Wayve (julio de 2026). Sus fechas y su cuenta
+//  regresiva ya pasaron y se quedan así a propósito: la app la enseña al final del panel, bajo
+//  «Archivo», y el control 28 del verificador no la revisa.
 // ══════════════════════════════════════════════════════════════════
 const WAYVE_RICH = {
 

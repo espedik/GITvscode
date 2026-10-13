@@ -2219,6 +2219,93 @@ function promptsDeLoTocado() {
             ' con su panel de práctica y leccion.js');
 })();
 
+/* ── 28. Ningún plan con fecha vencida ───────────────────────────────────────────────────────
+   Entrevistas abría en «La entrevista es el martes 14 de julio — tienes 7 días» meses después de esa
+   entrevista: una fecha y una cuenta regresiva escritas en prosa no avisan cuando pasan. Aquí se
+   buscan las dos cosas en el texto de las apps: una fecha con su día de la semana («el martes 14 de
+   julio» —el día fija el año— que ya pasó) y una cuenta escrita a mano («tienes 7 días», «faltan 3
+   semanas»), que solo es verdad un día. Lo que va entre comillas es un ejemplo y no cuenta, ni los
+   comentarios. Un archivo que guarda un plan viejo a propósito lo dice en su cabecera con
+   «ARCHIVO —» (Entrevistas/js/data-wayve.js), y se salta. */
+(function () {
+  const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+  const reFecha = new RegExp('(^|[^\\wáéíóúñ])(' + DIAS.join('|') + ') (\\d{1,2}) de (' + MESES.join('|') + ')(?![\\wáéíóúñ])', 'gi');
+  const reCuenta = /(tienes|faltan|quedan|te quedan) (\d+) (días|semanas)/gi;
+  const blanco = function (m) { return m.replace(/[^\n]/g, ' '); };
+  const malos = [];
+  let revisados = 0;
+  (function recorre(dir) {
+    fs.readdirSync(path.join(RAIZ, dir), { withFileTypes: true }).forEach(function (e) {
+      const rel = dir ? dir + '/' + e.name : e.name;
+      if (e.isDirectory()) { if (!/^(node_modules|\.git|syllabus)$/.test(e.name) && !/^diseno-/.test(e.name)) recorre(rel); return; }
+      if (!/\.(html|js)$/.test(e.name) || /verificar-sincronia\.js$/.test(e.name)) return;
+      let txt = fs.readFileSync(path.join(RAIZ, rel), 'utf8');
+      if (/^[\s\S]{0,600}ARCHIVO —/.test(txt)) return;
+      revisados++;
+      txt = txt.replace(/\/\*[\s\S]*?\*\//g, blanco).replace(/<!--[\s\S]*?-->/g, blanco);
+      txt.split(/\r?\n/).forEach(function (l, i) {
+        if (/^\s*\/\//.test(l)) return;
+        let m;
+        reFecha.lastIndex = 0;
+        while ((m = reFecha.exec(l))) {
+          const dia = DIAS.indexOf(m[2].toLowerCase()), d = +m[3], mes = MESES.indexOf(m[4].toLowerCase());
+          const años = [hoy.getFullYear() - 1, hoy.getFullYear(), hoy.getFullYear() + 1]
+            .filter(function (a) { return new Date(a, mes, d).getDay() === dia; });
+          if (años.length !== 1 || new Date(años[0], mes, d) >= hoy) continue;
+          malos.push('     ' + rel + ':' + (i + 1) + '  «' + m[2] + ' ' + d + ' de ' + m[4] + '» (' + años[0] + ') ya pasó');
+        }
+        reCuenta.lastIndex = 0;
+        while ((m = reCuenta.exec(l))) {
+          if (/["«“]/.test(l.slice(Math.max(0, m.index - 3), m.index))) continue;
+          malos.push('     ' + rel + ':' + (i + 1) + '  «' + m[0] + '» escrito a mano: solo es verdad un día');
+        }
+      });
+    });
+  })('');
+  if (malos.length)
+    problemas.push('Planes con fecha vencida o cuenta regresiva fija (si es archivo, «ARCHIVO —» en la cabecera del archivo):\n' + malos.slice(0, 12).join('\n'));
+  else
+    ok.push('Fechas de los planes: ninguna vencida ni cuenta regresiva escrita a mano (' + revisados + ' archivos revisados)');
+})();
+
+/* ── 29. Los precios del súper y el recetario, solo en el maestro ────────────────────────────
+   El Dashboard tuvo su propio recetario (RECETAS_MINI) y su propia lista de precios mientras Comida
+   y el maestro tenían otros: el costo del desayuno de la proyección salía de recetas que ya no eran
+   las de Comida. Hoy viven en `PRECIOS_SUPER` y `RECETARIO`. Aquí se comprueba que ningún otro
+   archivo vuelva a ponerle precio a un producto de la lista (`'Nombre': {… precio: …`), que ninguno
+   copie el nombre de una receta ni arme otra lista de recetas con `ingredientes: [`. */
+(function () {
+  if (!global.window || !global.window.CIFRAS) return;   // el control 4 ya avisó
+  const C = global.window.CIFRAS;
+  const prod = Object.keys(C.PRECIOS_SUPER || {});
+  const rec = ((C.RECETARIO && C.RECETARIO.todas) || []).map(function (r) { return r.nombre; }).filter(Boolean);
+  const esc = function (t) { return t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); };
+  const malos = [];
+  (function recorre(dir) {
+    fs.readdirSync(path.join(RAIZ, dir), { withFileTypes: true }).forEach(function (e) {
+      const rel = dir ? dir + '/' + e.name : e.name;
+      if (e.isDirectory()) { if (!/^(node_modules|\.git|syllabus)$/.test(e.name) && !/^diseno-/.test(e.name)) recorre(rel); return; }
+      if (!/\.(html|js)$/.test(e.name) || /verificar-sincronia\.js$|datos-maestros\.js$/.test(e.name)) return;
+      const txt = fs.readFileSync(path.join(RAIZ, rel), 'utf8');
+      prod.forEach(function (n) {
+        if (new RegExp('[\'"]' + esc(n) + '[\'"]\\s*:\\s*\\{[^}]*\\bprecio\\s*:').test(txt))
+          malos.push('     ' + rel + '  le pone precio a «' + n + '»: ese precio vive en PRECIOS_SUPER');
+      });
+      rec.forEach(function (n) {
+        if (txt.indexOf(n) !== -1) malos.push('     ' + rel + '  copia la receta «' + n + '»: léela de CIFRAS.RECETARIO');
+      });
+      const ing = (txt.match(/\bingredientes\s*:\s*\[/g) || []).length;
+      if (ing >= 3) malos.push('     ' + rel + '  arma su propia lista de recetas (' + ing + ' con ingredientes): el recetario es CIFRAS.RECETARIO');
+    });
+  })('');
+  if (malos.length)
+    problemas.push('Precios del súper o recetas fuera del maestro:\n' + malos.slice(0, 12).join('\n'));
+  else
+    ok.push('Recetario y precios del súper: ' + rec.length + ' recetas y ' + prod.length + ' productos, solo en el maestro');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];
