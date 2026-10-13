@@ -74,7 +74,7 @@ no dependen del Dashboard; la barra de apps del Dashboard las agrupa aparte.
 | `voc_estado_v1` | Alemán (`vocabulario.html`: la sección, la subsección y los filtros donde te quedaste) | nadie |
 | `aleman_k10_v1` | Alemán (`k10-interactivo.js`: cada ejercicio del Kapitel 10 con sus aciertos y su fecha) | el inicio de Alemán (`index.html`), por lección |
 | `vestimenta_v1` | Vestimenta | nadie |
-| `theme`, `sidebar-collapsed`, `study-done-v2`, `wayve-visited-v2` | Entrevistas | Dashboard lee `study-done-v2` (*Hoy aprendes*: cuántos temas de Python llevas); las demás, nadie |
+| `theme`, `sidebar-collapsed`, `study-done-v2` | Entrevistas | Dashboard lee `study-done-v2` (*Hoy aprendes*: cuántos temas de Python llevas); las demás, nadie |
 | `heli-tema`, `heli-idioma`, `aero-tema`, `aero-idioma` | Heliescala, Aeroresinas | nadie |
 | `posts-empresa`, `posts-ediciones-v1`, `posts-publicados-v1` | Posts (pestaña elegida, textos editados, posts marcados como publicados) | nadie |
 

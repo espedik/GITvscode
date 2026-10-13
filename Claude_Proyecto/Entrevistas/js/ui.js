@@ -127,7 +127,91 @@ function refreshProgress() {
   document.getElementById('progress-text').textContent = `${doneCount} / ${TOTAL}`;
   document.getElementById('progress-fill').style.width = pct + '%';
   document.getElementById('progress-pct').textContent = pct + '%';
-  document.getElementById('ws-done').textContent = doneCount;
+  renderInicio();
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  LA PORTADA — «Tu preparación, hoy»
+// ══════════════════════════════════════════════════════════════════
+// Antes abría en el plan de Wayve («la entrevista es el martes 14 de julio»), ya vencido. Ahora la
+// portada sale del avance real: arriba las prioridades (lo que piden Mis Metas y Mi Día: el CT-GenAI,
+// Python y coding), cada una con su siguiente tema sin estudiar; abajo todos los módulos con su barra.
+// El orden de los temas es el del panel lateral. Wayve queda al final, como archivo.
+const INICIO_PRIORIDAD = [
+  ['istqbai', 'La certificación de tu meta: el CT-GenAI'],
+  ['pyfund', 'El Python de Mi Día'],
+  ['poo', 'Python orientado a objetos'],
+  ['testing', 'pytest, lo que más te preguntan'],
+  ['coding', 'Retos de código, con el razonamiento en voz alta'],
+  ['interview', 'Conducta y estrategia: tus historias STAR'],
+];
+
+function modulosDelPanel() {
+  return [...document.querySelectorAll('#sidebar .module[data-mod]')].map(m => ({
+    mod: m.dataset.mod,
+    label: (m.querySelector('.m-label') || {}).textContent || m.dataset.mod,
+    icon: (m.querySelector('.m-icon') || {}).textContent || '',
+    temas: [...m.querySelectorAll('.s-link')].map(l => ((l.getAttribute('onclick') || '').match(/'([^']+)'/) || [])[1]).filter(id => id && T[id]),
+  }));
+}
+
+function renderInicio() {
+  const el = document.getElementById('welcome');
+  if (!el) return;
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const mods = modulosDelPanel();
+  const porMod = Object.fromEntries(mods.map(m => [m.mod, m]));
+  const hechos = Object.keys(done).filter(k => done[k] && T[k]).length;
+  const estado = m => {
+    const d = m.temas.filter(id => done[id]).length;
+    return { d, t: m.temas.length, pct: m.temas.length ? Math.round(d / m.temas.length * 100) : 0,
+             sig: m.temas.find(id => !done[id]) };
+  };
+  const tarjetas = INICIO_PRIORIDAD.filter(([mod]) => porMod[mod] && estado(porMod[mod]).sig).slice(0, 3).map(([mod, porque]) => {
+    const m = porMod[mod], e = estado(m), t = T[e.sig];
+    return `<div class="in-card">
+      <div class="in-card-top"><span class="in-mod">${esc(m.icon)} ${esc(m.label)}</span><span class="in-cnt">${e.d}/${e.t}</span></div>
+      <div class="in-bar"><i style="width:${e.pct}%"></i></div>
+      <div class="in-porque">${esc(porque)}</div>
+      <div class="in-sig-lbl">Sigue con</div>
+      <div class="in-sig">${esc(t.title)}</div>
+      <p class="in-hint">${esc(t.hint || '')}</p>
+      <button class="in-btn" onclick="go('${e.sig}')">Abrir el tema →</button>
+    </div>`;
+  }).join('');
+  const lista = mods.filter(m => m.mod !== 'wayve').map(m => {
+    const e = estado(m);
+    return `<button class="in-mod-fila" onclick="go('${e.sig || m.temas[0]}')">
+      <span class="in-mod-nom">${esc(m.icon)} ${esc(m.label)}</span>
+      <span class="in-bar in-bar-s"><i style="width:${e.pct}%"></i></span>
+      <span class="in-mod-n">${e.d}/${e.t}</span></button>`;
+  }).join('');
+  el.innerHTML = `<div class="in">
+    <div class="in-cab">
+      <div><div class="in-ceja">Interview Prep · Automotive SW</div><h2>Tu preparación, hoy</h2>
+        <p>Pregunta antes que lectura: abre el tema, explícalo en voz alta en 2 minutos y márcalo como estudiado.</p></div>
+      <div class="in-stats">
+        <div><b>${hechos}</b><span>estudiados</span></div>
+        <div><b>${TOTAL}</b><span>temas</span></div>
+        <div><b>${mods.filter(m => m.mod !== 'wayve').length}</b><span>módulos</span></div>
+      </div>
+    </div>
+    <h3 class="in-h3">Tus prioridades</h3>
+    <div class="in-cards">${tarjetas || '<p class="in-hint">Terminaste tus prioridades: repasa con los quizzes de cada módulo.</p>'}</div>
+    <h3 class="in-h3">Todos los módulos</h3>
+    <div class="in-mods">${lista}</div>
+    <p class="in-archivo">La preparación de Wayve (julio 2026) quedó al final del panel, en Archivo.</p>
+  </div>`;
+}
+
+function irInicio() {
+  if (currentPage) document.getElementById('page-' + currentPage)?.classList.remove('visible');
+  currentPage = null;
+  document.querySelectorAll('.s-link.active, .module-header.active').forEach(l => l.classList.remove('active'));
+  renderInicio();
+  document.getElementById('welcome').style.display = '';
+  document.getElementById('content').scrollTo({ top: 0 });
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -225,7 +309,6 @@ function toggleSidebar() {
 // ══════════════════════════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════════════════════════
-document.getElementById('ws-topics').textContent = TOTAL;
 buildPages();
 enhanceExampleColumns();
 refreshSidebar();
@@ -266,9 +349,5 @@ function irDesdeHash() {
 }
 window.addEventListener('hashchange', irDesdeHash);
 
-// El deep-link gana a la bienvenida de primera visita: si vienes con una URL concreta, es a eso
-// a lo que vienes.
-if (!irDesdeHash() && !localStorage.getItem('wayve-visited-v2')) {
-  localStorage.setItem('wayve-visited-v2', '1');
-  go('wayve-plan');
-}
+// Sin URL concreta se queda en la portada, «Tu preparación, hoy» (ya pintada por refreshProgress()).
+irDesdeHash();

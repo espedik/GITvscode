@@ -49,9 +49,21 @@ Se verifica recorriendo los 229 temas con `go(id)` en iPad (820×1180) e iPhone 
 `irDesdeHash()`, al final de `js/ui.js`, acepta `#<id>` de tema (`#istqb-ch4`) y `#<data-mod>`
 (`#istqb`, abre el primer capítulo del módulo). **Desde fuera conviene la segunda**: los ids de
 tema cambian al reordenar un módulo, el `data-mod` no. Antes de `go()` despliega el módulo y hace
-`scrollIntoView` del enlace en el sidebar; corre al arrancar y en `hashchange`, y tiene prioridad
-sobre el `go('wayve-plan')` de primera visita. Un hash desconocido devuelve `false` y no toca nada.
-El Dashboard enlaza aquí desde la meta ISTQB CT-GenAI.
+`scrollIntoView` del enlace en el sidebar; corre al arrancar y en `hashchange`. Sin hash, la app se
+queda en la portada. Un hash desconocido devuelve `false` y no toca nada. El Dashboard enlaza aquí
+desde la meta ISTQB CT-GenAI.
+
+## La portada — «Tu preparación, hoy»
+
+Es `#welcome`, y la pinta `renderInicio()` (`js/ui.js`) con el avance real (`study-done-v2`); se
+repinta cada vez que marcas un tema. Arriba, **tus prioridades** (`INICIO_PRIORIDAD`: el CT-GenAI de
+Mis Metas, el Python de Mi Día, POO, pytest, coding y conducta): las tres primeras que aún tienen
+temas pendientes, cada una con su barra y el **siguiente tema sin estudiar**, en el orden del panel.
+Abajo, **todos los módulos** con su barra; tocar uno abre su siguiente tema. Se vuelve a ella con el
+logo o con *Tu preparación, hoy*, arriba del panel (`irInicio()`).
+
+La preparación de **Wayve** (julio 2026) queda al final del panel, en *Archivo*, plegada: la app ya
+no abre en su plan de «1 día para la entrevista»; esa fecha pasó.
 
 ## El enlace al Dashboard
 

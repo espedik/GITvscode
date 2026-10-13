@@ -210,21 +210,41 @@
   #content::-webkit-scrollbar { width: 5px; }
   #content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-  /* WELCOME */
-  #welcome {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    height: 100%; text-align: center; padding: 40px;
-    color: var(--text-muted);
-  }
-  .welcome-icon { font-size: 3rem; margin-bottom: 16px; }
-  #welcome h2 { font-size: 1.4rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-  #welcome p { font-size: .9rem; line-height: 1.7; max-width: 420px; }
-  .welcome-stats {
-    display: flex; gap: 32px; margin-top: 32px;
-  }
-  .w-stat { text-align: center; }
-  .w-stat .w-num { font-size: 1.8rem; font-weight: 800; color: var(--accent); }
-  .w-stat .w-label { font-size: .75rem; color: var(--text-muted); }
+  /* PORTADA — «Tu preparación, hoy» (renderInicio en js/ui.js) */
+  #welcome { padding: 32px 44px 48px; color: var(--text); }
+  .in { display: flex; flex-direction: column; gap: 18px; }
+  .in-cab { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 32px; }
+  .in-cab > div:first-child { flex: 1 1 480px; min-width: 0; }
+  .in-ceja { font-size: .72rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+  .in-cab h2 { font-size: 1.9rem; font-weight: 800; margin: 4px 0 6px; }
+  .in-cab p { color: var(--text-muted); font-size: .92rem; max-width: 70ch; }
+  .in-stats { display: flex; gap: 12px; }
+  .in-stats > div { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 10px 18px; text-align: center; }
+  .in-stats b { display: block; font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+  .in-stats span { font-size: .72rem; color: var(--text-muted); }
+  .in-h3 { font-size: .78rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-top: 8px; }
+  .in-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .in-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+  .in-card-top { display: flex; justify-content: space-between; gap: 8px; font-weight: 700; }
+  .in-cnt, .in-mod-n { color: var(--text-muted); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .in-bar { display: block; height: 7px; border-radius: 99px; background: var(--tag-bg); overflow: hidden; }
+  .in-bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+  .in-porque { font-size: .82rem; color: var(--text-muted); }
+  .in-sig-lbl { font-size: .7rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-top: 6px; }
+  .in-sig { font-size: 1.05rem; font-weight: 700; }
+  .in-hint { font-size: .85rem; color: var(--text-muted); line-height: 1.55; flex: 1; }
+  .in-btn { align-self: flex-start; margin-top: 4px; padding: 9px 16px; border-radius: 10px; border: 0; background: var(--accent); color: #fff; font-weight: 700; cursor: pointer; }
+  .in-btn:hover { filter: brightness(1.08); }
+  .in-mods { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 16px; }
+  .in-mod-fila { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); color: var(--text); font: inherit; font-size: .88rem; text-align: left; cursor: pointer; }
+  .in-mod-fila:hover { border-color: var(--accent); }
+  .in-mod-nom { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+  .in-bar-s { height: 6px; }
+  .in-archivo { font-size: .8rem; color: var(--text-muted); }
+  .s-inicio { margin: 10px 12px 4px; padding: 9px 12px; border-radius: 10px; font-weight: 700; font-size: .88rem; color: var(--accent); background: var(--accent-light); cursor: pointer; }
+  .s-inicio:hover { filter: brightness(.97); }
+  @media (max-width: 1100px) { .in-cards, .in-mods { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 700px) { #welcome { padding: 20px 16px 32px; } .in-cards, .in-mods { grid-template-columns: minmax(0, 1fr); } }
 
   /* TOPIC PAGE */
   .topic-page { display: none; padding: 36px 48px; width: 100%; min-height: calc(100vh - var(--header-h) - 20px); animation: fadeIn .18s ease; }

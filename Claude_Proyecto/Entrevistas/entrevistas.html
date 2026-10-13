@@ -24,7 +24,7 @@
 
 <header>
   <button class="btn-sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" title="Ocultar/mostrar barra lateral" aria-label="Ocultar/mostrar barra lateral">☰</button>
-  <div class="logo">
+  <div class="logo" onclick="irInicio()" title="Tu preparación, hoy" style="cursor:pointer">
     <div class="logo-icon">🚗</div>
     <h1>Interview Prep <small>Automotive SW Engineering</small></h1>
   </div>
@@ -43,6 +43,8 @@
 
 <div class="app-layout">
 <nav id="sidebar">
+
+  <div class="s-inicio" onclick="irInicio()">🏠 Tu preparación, hoy</div>
 
   <!-- ═══ 1. ARQUITECTURA AUTOMOTRIZ ═══ -->
   <div class="sidebar-section-label">Dominio Automotriz</div>
@@ -524,14 +526,14 @@
   <!-- ══════════════════════════════════════════ -->
   <!-- ═══ WAYVE INTERVIEW — SECCIÓN ESPECIAL ═══ -->
   <!-- ══════════════════════════════════════════ -->
-  <div class="wayve-label">WAYVE <span class="wayve-badge">MARTES 14 JUL</span></div>
+  <div class="wayve-label">ARCHIVO <span class="wayve-badge">WAYVE · JUL 2026</span></div>
 
   <div class="module wayve-mod" data-mod="wayve">
-    <div class="module-header open" onclick="toggleMod(this)">
+    <div class="module-header" onclick="toggleMod(this)">
       <span class="m-icon">🚀</span><span class="m-label">Wayve Interview Prep</span>
       <span class="m-count" id="cnt-wayve">0/23</span><span class="m-arrow">▶</span>
     </div>
-    <div class="module-body open">
+    <div class="module-body">
 
       <!-- ── SECCIÓN 1: PLAN ─────────────────── -->
       <div class="wayve-section-header">📅 Plan & Qué estudiar</div>
@@ -582,17 +584,8 @@
 <!-- ═══ MAIN CONTENT ═══ -->
 <main id="content">
 
-  <div id="welcome">
-    <div class="welcome-icon">🚀</div>
-    <h2>Automotive SW Engineering — Interview Prep</h2>
-    <p>Selecciona un tema del panel izquierdo para empezar.<br>
-    Marca cada sección como estudiada y sigue tu progreso.</p>
-    <div class="welcome-stats">
-      <div class="w-stat"><div class="w-num" id="ws-modules">14</div><div class="w-label">Módulos</div></div>
-      <div class="w-stat"><div class="w-num" id="ws-topics">--</div><div class="w-label">Temas</div></div>
-      <div class="w-stat"><div class="w-num" id="ws-done">0</div><div class="w-label">Estudiados</div></div>
-    </div>
-  </div>
+  <!-- La portada: «Tu preparación, hoy». La arma renderInicio() (js/ui.js) con el avance real. -->
+  <div id="welcome"></div>
 
   <!-- Las páginas de temas se generan con JS -->
 
