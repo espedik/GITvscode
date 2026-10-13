@@ -21,35 +21,61 @@
 </head>
 <body>
 
-<nav class="nav">
-  <a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>
-  <div class="nav-links">
-    <a href="index.html" class="nav-back">← Índice</a>
-    <a href="../Dashboard/dashboard.html" class="nav-back" title="Volver al Dashboard">🚀</a>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10" class="on" aria-current="page">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
   </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
 </nav>
 
-<div class="topic-hero">
-  <div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/k10-04.jpg" alt="Un técnico conecta cables de red en un rack" title="Foto: Field Engineer · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Field Engineer · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
     <div class="topic-hero-tag">Kapitel 10 · Cenlex · Tema 04</div>
     <h1><em>Berufe</em> — las profesiones</h1>
     <p class="topic-hero-desc">Cómo se dice tu profesión, cómo se forma el femenino, y la regla que casi nadie explica: en alemán la profesión va SIN artículo. Incluye el vocabulario técnico de tu área — ingeniería, pruebas de software y automoción.</p>
     <div class="topic-hero-meta">
-      <span class="meta-pill">💼 Vocabulario</span>
-      <span class="meta-pill">🎯 Beruf + Perfekt</span>
-      <span class="meta-pill">⏱️ ~35 min</span>
-      <span class="meta-pill">🗣️ Para presentarte</span>
+      <span class="meta-pill">Vocabulario</span>
+      <span class="meta-pill">Beruf + Perfekt</span>
+      <span class="meta-pill">~35 min</span>
+      <span class="meta-pill">Para presentarte</span>
     </div>
+  
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#la-regla-que-mas-se-falla-sin-articulo"><span>La regla que más se falla: sin artículo</span></a></li>
+        <li><a href="#el-femenino-casi-siempre-in"><span>El femenino: casi siempre -in</span></a></li>
+        <li><a href="#profesiones-mas-comunes"><span>Profesiones más comunes</span></a></li>
+        <li><a href="#tu-area-ingenieria-pruebas-y-automocion"><span>Tu área: ingeniería, pruebas y automoción</span></a></li>
+        <li><a href="#dialogo"><span>Diálogo</span></a></li>
+        <li><a href="#donde-se-trabaja-y-que-se-hace"><span>Dónde se trabaja y qué se hace</span></a></li>
+        <li><a href="#condiciones-horario-sueldo-y-contrato"><span>Condiciones: horario, sueldo y contrato</span></a></li>
+        <li><a href="#las-cinco-preguntas-que-te-van-a-hacer"><span>Las cinco preguntas que te van a hacer</span></a></li>
+        <li><a href="#el-plural-de-las-profesiones"><span>El plural de las profesiones</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 8 bloques →</a>
+    </nav>
   </div>
 </div>
 
 <div class="topic-content">
-  <div class="container">
+  <div class="container lec">
+<div class="lec-explica">
 
     <!-- ── LA REGLA DEL ARTÍCULO ── -->
     <div class="content-full">
       <div class="card card-gold">
-        <h3><span>🔑</span> La regla que más se falla: sin artículo</h3>
+        <h3 id="la-regla-que-mas-se-falla-sin-articulo">La regla que más se falla: sin artículo</h3>
         <div class="rule-box">
           Para decir a qué te dedicas, la profesión va <b>sin artículo</b>: <span class="k10-de">Ich bin Ingenieur.</span> — nunca <s>Ich bin ein Ingenieur</s>. En español decimos "soy ingeniero", no "soy un ingeniero": funciona igual.
         </div>
@@ -74,7 +100,7 @@
     <!-- ── MASCULINO / FEMENINO ── -->
     <div class="content-full">
       <div class="card">
-        <h3><span>♀️♂️</span> El femenino: casi siempre <em>-in</em></h3>
+        <h3 id="el-femenino-casi-siempre-in">El femenino: casi siempre <em>-in</em></h3>
         <p>Se añade <b>-in</b> al masculino. Si la palabra tiene a/o/u, muchas veces toma Umlaut.</p>
         <table class="vocab-table">
           <thead><tr><th>Masculino</th><th>Femenino</th><th>Español</th><th>Nota</th></tr></thead>
@@ -95,7 +121,7 @@
     <!-- ── VOCABULARIO GENERAL ── -->
     <div class="content-full">
       <div class="card">
-        <h3><span>💼</span> Profesiones más comunes</h3>
+        <h3 id="profesiones-mas-comunes">Profesiones más comunes</h3>
         <input type="text" id="buscarBeruf" class="k10-buscador" placeholder="Buscar: Arzt, médico, ingeniero…" spellcheck="false" autocomplete="off" aria-label="Buscar profesión">
         <table class="vocab-table k10-verbos" id="tablaBerufe">
           <thead><tr><th>Deutsch</th><th>Español</th><th>Ejemplo</th></tr></thead>
@@ -128,7 +154,7 @@
     <!-- ── TU PROPIO VOCABULARIO ── -->
     <div class="content-full">
       <div class="card card-gold">
-        <h3><span>🚗</span> Tu área: ingeniería, pruebas y automoción</h3>
+        <h3 id="tu-area-ingenieria-pruebas-y-automocion">Tu área: ingeniería, pruebas y automoción</h3>
         <p>El vocabulario que necesitas tú para hablar de tu trabajo real, no el genérico del libro.</p>
         <table class="vocab-table">
           <thead><tr><th>Deutsch</th><th>Español</th></tr></thead>
@@ -153,7 +179,7 @@
     <!-- ── DIÁLOGO ── -->
     <div class="content-full">
       <div class="card">
-        <h3><span>💬</span> Diálogo — «Was sind Sie von Beruf?»</h3>
+        <h3 id="dialogo">Diálogo — «Was sind Sie von Beruf?»</h3>
         <div class="dialog-box">
           <div class="dialog-line"><span class="dialog-speaker">Anna</span><div><div class="dialog-de">Was sind Sie von Beruf?</div><div class="dialog-es">¿A qué se dedica usted?</div></div></div>
           <div class="dialog-line"><span class="dialog-speaker">Adán</span><div><div class="dialog-de">Ich bin Testingenieur. Ich arbeite in der Automobilindustrie.</div><div class="dialog-es">Soy ingeniero de pruebas. Trabajo en la industria automotriz.</div></div></div>
@@ -172,7 +198,7 @@
     <!-- ── DÓNDE Y QUÉ ── -->
     <div class="content-full">
       <div class="card">
-        <h3><span>🏢</span> Dónde se trabaja y qué se hace</h3>
+        <h3 id="donde-se-trabaja-y-que-se-hace">Dónde se trabaja y qué se hace</h3>
         <p>Con la profesión sola no llegas lejos. Estas dos tablas son lo que completa la respuesta.</p>
         <table class="vocab-table">
           <thead><tr><th>Lugar</th><th>Español</th><th>Ejemplo</th></tr></thead>
@@ -209,7 +235,7 @@
     <!-- ── CONDICIONES DE TRABAJO ── -->
     <div class="content-full">
       <div class="card">
-        <h3><span>💶</span> Condiciones: horario, sueldo y contrato</h3>
+        <h3 id="condiciones-horario-sueldo-y-contrato">Condiciones: horario, sueldo y contrato</h3>
         <table class="vocab-table">
           <thead><tr><th>Deutsch</th><th>Español</th><th>Ejemplo</th></tr></thead>
           <tbody>
@@ -231,7 +257,7 @@
     <!-- ── LAS PREGUNTAS DEL EXAMEN ── -->
     <div class="content-full">
       <div class="card card-gold">
-        <h3><span>🎤</span> Las cinco preguntas que te van a hacer</h3>
+        <h3 id="las-cinco-preguntas-que-te-van-a-hacer">Las cinco preguntas que te van a hacer</h3>
         <p>Con tu respuesta ya escrita. Apréndetelas y el oral se resuelve solo.</p>
         <table class="vocab-table">
           <thead><tr><th>Pregunta</th><th>Tu respuesta</th></tr></thead>
@@ -252,7 +278,7 @@
     <!-- ── PLURALES ── -->
     <div class="content-full">
       <div class="card">
-        <h3><span>👥</span> El plural de las profesiones</h3>
+        <h3 id="el-plural-de-las-profesiones">El plural de las profesiones</h3>
         <table class="vocab-table">
           <thead><tr><th>Singular</th><th>Plural</th><th>Regla</th></tr></thead>
           <tbody>
@@ -266,66 +292,70 @@
         </table>
       </div>
     </div>
+</div>
 
-    <div class="content-full">
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-preposiciones-del-trabajo">Preposiciones del trabajo</a><a href="#practica-responde-la-entrevista">Responde la entrevista</a><a href="#practica-empareja">Empareja · condiciones de trabajo</a><a href="#practica-profesion-y-articulo">Profesión y artículo</a><a href="#practica-arma-tu-presentacion">Arma tu presentación</a><a href="#practica-empareja-2">Empareja · profesión → español</a><a href="#practica-luckentext">Lückentext</a><a href="#practica-tarjetas">Tarjetas</a></nav></div>
+
+    <div id="practica-preposiciones-del-trabajo" class="content-full">
       <div class="card">
-        <h3><span>🏢</span> Practica: preposiciones del trabajo</h3>
+        <h3>Practica: preposiciones del trabajo</h3>
         <div id="ej-prep" class="k10-quiz"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-responde-la-entrevista" class="content-full">
       <div class="card">
-        <h3><span>🎤</span> Practica: responde la entrevista</h3>
+        <h3>Practica: responde la entrevista</h3>
         <div id="hueco-entrev"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-empareja" class="content-full">
       <div class="card">
-        <h3><span>🔗</span> Empareja: condiciones de trabajo</h3>
+        <h3>Empareja: condiciones de trabajo</h3>
         <div id="em-cond"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-profesion-y-articulo" class="content-full">
       <div class="card">
-        <h3><span>🎯</span> Practica — profesión y artículo</h3>
+        <h3>Practica — profesión y artículo</h3>
         <div id="ej-berufe" class="k10-quiz"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-arma-tu-presentacion" class="content-full">
       <div class="card card-gold">
-        <h3><span>🗣️</span> Arma tu presentación</h3>
+        <h3>Arma tu presentación</h3>
         <p>Ordena estas frases: son exactamente las que dirías tú en un examen oral.</p>
         <div id="ord-berufe" class="k10-ordenar"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-empareja-2" class="content-full">
       <div class="card">
-        <h3><span>🔗</span> Empareja: profesión → español</h3>
+        <h3>Empareja: profesión → español</h3>
         <p>Vocabulario de trabajo, incluido el de tu área.</p>
         <div id="em-berufe"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-luckentext" class="content-full">
       <div class="card card-gold">
-        <h3><span>📝</span> Lückentext — preséntate</h3>
+        <h3>Lückentext — preséntate</h3>
         <p>El texto que dirías en un examen oral sobre tu trabajo.</p>
         <div id="hueco-beruf"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-tarjetas" class="content-full">
       <div class="card">
-        <h3><span>🎴</span> Repasa con tarjetas</h3>
+        <h3>Repasa con tarjetas</h3>
         <div id="fc-k10-04" class="flashcards"></div>
       </div>
     </div>
-
+</aside>
   </div>
 </div>
 
@@ -443,6 +473,7 @@ k10Emparejar('em-cond', [
 ], ['Deutsch', 'Español']);
 </script>
 
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body>
 </html>

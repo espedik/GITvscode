@@ -25,39 +25,59 @@
 </head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>  <div class="nav-links">
-    <a href="index.html" class="nav-back">← Índice</a>
-    <a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a>
-  </div></nav>
-<div class="topic-hero"><div class="container">
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2" class="on" aria-current="page">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a2-08.jpg" alt="Matrioskas de mayor a menor" title="Foto: archer10 (Dennis) · Flickr · BY-SA 2.0" width="360" height="240"><figcaption>Foto: archer10 (Dennis) · Flickr · BY-SA 2.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A2 · Gramática · Tema 08</div>
   <h1>Komparativ & <em>Superlativ</em></h1>
   <p class="topic-hero-desc">Compara personas, lugares y cosas en alemán. Equivale a "más grande", "el más grande", "tan grande como".</p>
-  <div class="topic-hero-meta"><span class="meta-pill">📈 Comparación</span><span class="meta-pill">🥇 Superlativo</span><span class="meta-pill">⏱️ ~40 min</span></div>
-</div></div>
-<div class="topic-content"><div class="container">
-
-  <div class="content-full">
-    <div class="card">
-      <h3><span>🎴</span> Repasa con tarjetas</h3>
-      <div id="fc-a2-08" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill">Comparación</span><span class="meta-pill">Superlativo</span><span class="meta-pill">~40 min</span></div>
     </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#positivo-komparativ-superlativ"><span>Positivo → Komparativ → Superlativ</span></a></li>
+        <li><a href="#comparaciones"><span>Comparaciones</span></a></li>
+        <li><a href="#adjetivos-irregulares-importantes"><span>Adjetivos irregulares importantes</span></a></li>
+        <li><a href="#frases-comunes-usando-comparativo-y-superl"><span>Frases comunes usando comparativo y superlativo</span></a></li>
+        <li><a href="#ejemplos-komparativ"><span>Ejemplos Komparativ</span></a></li>
+        <li><a href="#ejemplos-superlativ"><span>Ejemplos Superlativ</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 4 bloques →</a>
+    </nav>
   </div>
+</div>
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
   <div class="content-grid">
     <div class="card card-gold">
-      <h3><span>💡</span> Positivo → Komparativ → Superlativ</h3>
+      <h3 id="positivo-komparativ-superlativ">Positivo → Komparativ → Superlativ</h3>
       <div class="rule-box">groß → größ<strong>er</strong> → am größ<strong>ten</strong><br><em style="color:var(--text3)">grande → más grande → el más grande</em><br><br>schnell → schnell<strong>er</strong> → am schnell<strong>sten</strong><br><em style="color:var(--text3)">rápido → más rápido → el más rápido</em></div>
     </div>
     <div class="card">
-      <h3><span>💡</span> Comparaciones</h3>
+      <h3 id="comparaciones">Comparaciones</h3>
       <div class="rule-box">A <strong>so ... wie</strong> B → igual que<br>Berlin ist so groß wie Madrid.<br><br>A <strong>...er als</strong> B → más que<br>Berlin ist größer als München.<br><br><strong>am ...sten</strong> → el más<br>Berlin ist am größten.</div>
     </div>
   </div>
 
   <div class="content-full">
     <div class="card">
-      <h3><span>📚</span> Adjetivos irregulares importantes</h3>
+      <h3 id="adjetivos-irregulares-importantes">Adjetivos irregulares importantes</h3>
       <table class="vocab-table">
         <thead><tr><th>Positivo</th><th>Komparativ</th><th>Superlativ</th><th>Español</th></tr></thead>
         <tbody>
@@ -82,7 +102,7 @@
   <!-- FRASES COMUNES -->
   <div class="content-full">
     <div class="card card-gold">
-      <h3><span>🗨️</span> Frases comunes usando comparativo y superlativo</h3>
+      <h3 id="frases-comunes-usando-comparativo-y-superl">Frases comunes usando comparativo y superlativo</h3>
       <div class="phrase-grid">
         <div class="phrase-item"><span class="phrase-situation">Comparar precios</span><span class="phrase-de">Dieses Handy ist teurer als das andere.</span><span class="phrase-es">Este celular es más caro que el otro.</span></div>
         <div class="phrase-item"><span class="phrase-situation">Elegir la mejor opción</span><span class="phrase-de">Welches Hotel ist am besten?</span><span class="phrase-es">¿Cuál hotel es el mejor?</span></div>
@@ -98,10 +118,36 @@
     </div>
   </div>
 
-  <!-- DIÁLOGO -->
-  <div class="content-full">
+  <div class="content-grid">
     <div class="card">
-      <h3><span>💬</span> Diálogo de práctica — Comprando un celular</h3>
+      <h3 id="ejemplos-komparativ">Ejemplos Komparativ</h3>
+      <div class="example"><div class="example-de">Mexiko ist größer als Deutschland.</div><div class="example-es">México es más grande que Alemania.</div></div>
+      <div class="example"><div class="example-de">Mein Bruder ist älter als ich.</div><div class="example-es">Mi hermano es mayor que yo.</div></div>
+      <div class="example"><div class="example-de">Ich spreche besser Englisch als Deutsch.</div><div class="example-es">Hablo mejor inglés que alemán.</div></div>
+    </div>
+    <div class="card">
+      <h3 id="ejemplos-superlativ">Ejemplos Superlativ</h3>
+      <div class="example"><div class="example-de">Berlin ist die größte Stadt Deutschlands.</div><div class="example-es">Berlín es la ciudad más grande de Alemania.</div></div>
+      <div class="example"><div class="example-de">Ich mag Schokolade am liebsten.</div><div class="example-es">Lo que más me gusta es el chocolate.</div></div>
+      <div class="example"><div class="example-de">Das ist das beste Restaurant hier!</div><div class="example-es">¡Este es el mejor restaurante aquí!</div></div>
+    </div>
+  </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a><a href="#practica-notas">Notas</a></nav></div>
+
+  <div id="practica-tarjetas" class="content-full">
+    <div class="card">
+      <h3>Repasa con tarjetas</h3>
+      <div id="fc-a2-08" class="flashcards"></div>
+    </div>
+  </div>
+
+  <!-- DIÁLOGO -->
+  <div id="practica-dialogo" class="content-full">
+    <div class="card">
+      <h3>Diálogo de práctica — Comprando un celular</h3>
       <div class="dialog-box">
         <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Welches Handy ist besser, dieses oder jenes?</div><div class="dialog-es">¿Cuál celular es mejor, este o aquel?</div></div></div>
         <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Dieses hier ist teurer, aber die Kamera ist viel besser.</div><div class="dialog-es">Este de aquí es más caro, pero la cámara es mucho mejor.</div></div></div>
@@ -112,24 +158,9 @@
     </div>
   </div>
 
-  <div class="content-grid">
-    <div class="card">
-      <h3><span>💬</span> Ejemplos Komparativ</h3>
-      <div class="example"><div class="example-de">Mexiko ist größer als Deutschland.</div><div class="example-es">México es más grande que Alemania.</div></div>
-      <div class="example"><div class="example-de">Mein Bruder ist älter als ich.</div><div class="example-es">Mi hermano es mayor que yo.</div></div>
-      <div class="example"><div class="example-de">Ich spreche besser Englisch als Deutsch.</div><div class="example-es">Hablo mejor inglés que alemán.</div></div>
-    </div>
-    <div class="card">
-      <h3><span>💬</span> Ejemplos Superlativ</h3>
-      <div class="example"><div class="example-de">Berlin ist die größte Stadt Deutschlands.</div><div class="example-es">Berlín es la ciudad más grande de Alemania.</div></div>
-      <div class="example"><div class="example-de">Ich mag Schokolade am liebsten.</div><div class="example-es">Lo que más me gusta es el chocolate.</div></div>
-      <div class="example"><div class="example-de">Das ist das beste Restaurant hier!</div><div class="example-es">¡Este es el mejor restaurante aquí!</div></div>
-    </div>
-  </div>
-
-  <div class="content-full mt32">
+  <div id="practica-ejercicios" class="content-full mt32">
     <div class="card card-red">
-      <h3><span>✏️</span> Ejercicios</h3>
+      <h3>Ejercicios</h3>
       <div class="exercise"><div class="exercise-num">Ejercicio 1 — Komparativ</div><div class="exercise-q">Deutsch ist _______ als Englisch. (schwer)</div><div class="exercise-hint">Pista: schwerer</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 2 — Superlativ</div><div class="exercise-q">Welches Fach magst du _______? (gern)</div><div class="exercise-hint">Pista: am liebsten</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 3 — Igualdad</div><div class="exercise-q">Ich bin ______ groß ______ mein Vater.</div><div class="exercise-hint">Pista: so / wie</div></div>
@@ -139,12 +170,12 @@
     </div>
   </div>
 
-  <div class="content-full"><div class="card"><h3><span>📝</span> Mis notas</h3><div class="placeholder">Mis comparaciones favoritas y adjetivos irregulares a memorizar</div></div></div>
-
+  <div id="practica-notas" class="content-full"><div class="card"><h3>Mis notas</h3><div class="placeholder">Mis comparaciones favoritas y adjetivos irregulares a memorizar</div></div></div>
+</aside>
 </div></div>
 <div class="page-nav">
-  <a href="a2-07-kasus.html" class="page-nav-btn"><span style="font-size:24px">📊</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Kasus</div></div></a>
-  <a href="a2-09-konjunktionen.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Konjunktionen</div></div><span style="font-size:24px">🔗</span></a>
+  <a href="a2-07-kasus.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a2-07.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Kasus</div></div></a>
+  <a href="a2-09-konjunktionen.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Konjunktionen</div></div><img class="pn-foto" src="fotos/a2-09.jpg" alt="" loading="lazy"></a>
 </div>
 <footer class="footer"><p>A2 · 08 — Komparativ & Superlativ</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
 
@@ -168,5 +199,6 @@ initFlashcards('fc-a2-08', [
 ]);
 </script>
 
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

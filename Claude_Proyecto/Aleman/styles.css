@@ -236,3 +236,107 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
   img,video,canvas{max-width:100%;height:auto}
   .container{max-width:100%;overflow-x:hidden}
 }
+
+/* ══ La plantilla de las lecciones ════════════════════════════════════════════════════════
+   Arriba, la misma barra del inicio (index.html). Debajo, el encabezado: la foto de la lección
+   (la misma del inicio, de fotos/, con su crédito), el título y el índice «En esta lección».
+   Y el cuerpo: con la pantalla ancha, dos columnas —la explicación a la izquierda y la práctica a
+   la derecha (.lec-practica), fija mientras bajas y con su propio scroll—, para hacer los
+   ejercicios con la regla a la vista y sin media pantalla vacía. En pantalla angosta va todo en
+   una columna: primero la explicación, después la práctica. Principiantes no tiene práctica:
+   sus temas van en dos columnas parejas (.lec-sola). */
+
+/* ── La barra: la misma del inicio ── */
+.nav.ini-barra{height:auto;justify-content:flex-start;gap:10px 24px;padding:10px 40px;background:rgba(251,250,247,.96);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E6E3DC;box-shadow:none}
+.ini-marca{display:flex;align-items:center;gap:10px;font:900 23px/1 'Playfair Display',Georgia,serif;letter-spacing:-.01em;
+  white-space:nowrap;color:var(--black);text-decoration:none}
+.ini-bandera{display:flex;flex-direction:column;width:7px;height:24px;border-radius:2px;overflow:hidden}
+.ini-bandera i{flex:1}
+.ini-bandera i:nth-child(1){background:#1A1A1A}
+.ini-bandera i:nth-child(2){background:#CC0000}
+.ini-bandera i:nth-child(3){background:#E8B500}
+.ini-nav{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.ini-nav::-webkit-scrollbar{display:none}
+.ini-nav a{padding:9px 15px;border-radius:999px;font-weight:600;font-size:14px;white-space:nowrap;color:#4F4F4F;text-decoration:none}
+.ini-nav a:hover{color:var(--black);background:#EFECE6}
+.ini-nav a.on{background:var(--black);color:#fff}
+.ini-dash{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:10px;border:1px solid #D9D5CC;
+  background:#fff;font-weight:700;font-size:14px;white-space:nowrap;color:var(--black);text-decoration:none}
+.ini-dash:hover{border-color:var(--black)}
+
+/* ── El encabezado: foto, título e índice ── */
+.lec-hero{padding:28px 0 30px}
+.lec-hero .container.lec-hero-in{max-width:1760px;padding:0 40px;display:flex;flex-wrap:wrap;align-items:stretch;gap:24px 40px}
+.lec-foto{margin:0;flex:0 0 360px;display:flex;flex-direction:column;justify-content:center}
+.lec-foto img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border-radius:16px;box-shadow:var(--shadow-md);background:var(--surface2)}
+.lec-foto figcaption{margin-top:7px;font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lec-hero-txt{flex:2 1 480px;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.lec-hero-txt .topic-hero-desc{max-width:68ch}
+.lec-hero .topic-hero-meta{gap:8px;margin-top:18px}
+.meta-pill .punto{display:inline-block;width:9px;height:9px;border-radius:50%}
+.lec-indice{flex:1 1 400px;min-width:0;align-self:center;display:flex;flex-direction:column;gap:10px;padding:18px 20px;border-radius:16px;
+  background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow)}
+.lec-indice-t{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text2)}
+.lec-indice ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:0 20px;counter-reset:ind}
+.lec-indice li{counter-increment:ind;min-width:0}
+.lec-indice li a{display:flex;gap:9px;align-items:baseline;padding:6px 0;font-size:13.5px;font-weight:600;color:var(--text);
+  text-decoration:none;border-bottom:1px solid var(--border)}
+.lec-indice li a::before{content:counter(ind);font-size:11px;font-weight:800;color:var(--red);min-width:14px}
+.lec-indice li a span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lec-indice li a:hover{color:var(--red)}
+.lec-indice-p{margin-top:4px;align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:10px;
+  background:var(--black);color:#fff;font-size:13px;font-weight:700;text-decoration:none}
+.lec-indice-p:hover{background:var(--red)}
+
+/* ── El cuerpo: la explicación y la práctica ── */
+.topic-content .container.lec{max-width:1760px;padding:0 40px}
+.topic-content:has(>.container.lec){padding-left:0;padding-right:0}   /* el margen lo pone .lec, igual que el encabezado */
+.lec-explica,.lec-practica{min-width:0;container-type:inline-size}
+.lec-practica-cab{display:flex;align-items:center;gap:8px 14px;margin-bottom:16px}
+.lec-practica-cab h2{flex:none;margin:0;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text2)}
+.lec-chips{display:flex;gap:6px;min-width:0;overflow-x:auto;scrollbar-width:none;
+  -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent);padding-right:28px}
+.lec-chips::-webkit-scrollbar{display:none}
+.lec-chips a{flex:none;padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface);font-size:12.5px;
+  font-weight:700;color:var(--text2);text-decoration:none;white-space:nowrap}
+.lec-chips a:hover{border-color:rgba(204,0,0,.35);color:var(--red)}
+.lec [id]{scroll-margin-top:84px}
+/* Dentro de una columna, las rejillas de dos se apilan cuando la columna es angosta (antes lo
+   decidía el ancho de la ventana, y la columna ya no mide la ventana). */
+@container (max-width:700px){
+  .content-grid,.phrase-grid,.k10-cols,.family-tree,.conj-grid{grid-template-columns:minmax(0,1fr)}
+  .pz-duelo{grid-template-columns:minmax(0,1fr)}
+  .day-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  /* Y una tabla que no cabe se desplaza dentro de su caja, como en celular. */
+  table{display:block;width:100%;max-width:100%;overflow-x:auto}
+  table thead,table tbody{width:max-content;min-width:100%}
+}
+
+@media(min-width:1280px){
+  .lec{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px;align-items:start}
+  .lec.lec-mucha-practica{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}
+  .lec-practica{position:sticky;top:76px;max-height:calc(100vh - 92px);overflow-y:auto;overscroll-behavior:contain;
+    scroll-behavior:smooth;padding:0 16px 16px;border-radius:18px;background:#EDEBE5;border:1px solid var(--border)}
+  .lec-practica-cab{position:sticky;top:0;z-index:3;margin:0 -16px 16px;padding:14px 16px 12px;background:#EDEBE5;
+    border-bottom:1px solid var(--border)}
+  .lec-practica>.content-full:last-child{margin-bottom:0}
+  .lec.lec-sola{display:block}
+  .lec-sola .lec-explica{column-count:2;column-gap:28px}
+  .lec-sola .lec-explica>*{break-inside:avoid}
+  .lec-sola .lec-explica>.lec-ancho{column-span:all}
+}
+
+/* ── Anterior y siguiente, con la foto de la lección ── */
+.page-nav-btn{max-width:360px}
+.pn-foto{flex:none;width:64px;height:44px;object-fit:cover;border-radius:8px}
+
+@media(max-width:640px){
+  .nav.ini-barra{flex-wrap:wrap;padding:8px 16px}
+  .ini-nav{order:3;width:100%;margin-left:0}
+  .topic-hero.lec-hero{padding:20px 0 22px}
+  .lec-hero .container.lec-hero-in{padding:0 16px;gap:18px}
+  .lec-foto{flex:1 1 100%}
+  .topic-content .container.lec{padding:0 16px}
+  .lec-indice{padding:14px 16px}
+}

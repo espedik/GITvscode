@@ -37,29 +37,52 @@
 </head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><div class="nav-links"><a href="index.html" class="nav-link">← Índice A1</a><a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a></div></nav>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1" class="on" aria-current="page">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
 
-<div class="topic-hero"><div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a1-02.jpg" alt="Buzones con su número" title="Foto: Mathyas Kurmann · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Mathyas Kurmann · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A1 · Tema 02</div>
   <h1>Zahlen — <em>Números</em></h1>
   <p class="topic-hero-desc">Los números en alemán siguen un patrón lógico. Una vez que aprendes del 1 al 19 y las decenas, puedes construir cualquier número hasta el 999.</p>
-  <div class="topic-hero-meta"><span class="meta-pill">🔢 1 al 1000</span><span class="meta-pill">📐 Ordinales</span><span class="meta-pill">💶 Precios</span><span class="meta-pill">⏱️ ~45 min</span></div>
-</div></div>
-
-<div class="topic-content"><div class="container">
-
-<!-- 0. FLASHCARDS -->
-<div class="content-full">
-  <div class="card">
-    <h3><span>🎴</span> Repasa con tarjetas</h3>
-    <div id="fc-a1-02" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill">1 al 1000</span><span class="meta-pill">Ordinales</span><span class="meta-pill">Precios</span><span class="meta-pill">~45 min</span></div>
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#numeros-del-1-al-20"><span>Números del 1 al 20</span></a></li>
+        <li><a href="#las-decenas"><span>Las decenas</span></a></li>
+        <li><a href="#numeros-del-21-al-99"><span>Números del 21 al 99</span></a></li>
+        <li><a href="#numeros-grandes"><span>Números grandes</span></a></li>
+        <li><a href="#numeros-en-contexto"><span>Números en contexto</span></a></li>
+        <li><a href="#numeros-ordinales"><span>Números ordinales</span></a></li>
+        <li><a href="#frases-comunes-en-este-tema"><span>Frases comunes en este tema</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 3 bloques →</a>
+    </nav>
   </div>
 </div>
+
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
 <!-- 1 AL 20 -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>1️⃣</span> 1. Números del 1 al 20 — Hay que memorizar estos</h3>
+    <h3 id="numeros-del-1-al-20">1. Números del 1 al 20 — Hay que memorizar estos</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Del 1 al 12 son únicos. Del 13 al 19 siguen el patrón: número + <strong>-zehn</strong>. Hay algunas excepciones.</p>
     <div class="num-grid">
       <div class="num-card"><div class="num-n">1</div><div class="num-de">eins / ein</div><div class="num-es">uno</div></div>
@@ -90,7 +113,7 @@
 <!-- DECENAS -->
 <div class="content-full">
   <div class="card">
-    <h3><span>🔟</span> 2. Las decenas — patrón con -zig</h3>
+    <h3 id="las-decenas">2. Las decenas — patrón con -zig</h3>
     <table class="vocab-table">
       <thead><tr><th>Número</th><th>Alemán</th><th>Español</th><th>Patrón</th></tr></thead>
       <tbody>
@@ -112,7 +135,7 @@
 <!-- CÓMO CONSTRUIR NÚMEROS COMPUESTOS -->
 <div class="content-full">
   <div class="card card-red">
-    <h3><span>🧩</span> 3. Números del 21 al 99 — La regla de la inversión</h3>
+    <h3 id="numeros-del-21-al-99">3. Números del 21 al 99 — La regla de la inversión</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:16px">En alemán los números compuestos se dicen al revés: primero las unidades, luego las decenas, unidos por <strong>"und"</strong> (y).</p>
     <div class="formula-box">
       <div class="formula">Unidades + "und" + Decenas = número compuesto</div>
@@ -136,7 +159,7 @@
 <!-- NÚMEROS GRANDES -->
 <div class="content-grid">
   <div class="card">
-    <h3><span>💯</span> 4. Números grandes</h3>
+    <h3 id="numeros-grandes">4. Números grandes</h3>
     <table class="vocab-table">
       <thead><tr><th>Número</th><th>Alemán</th></tr></thead>
       <tbody>
@@ -152,7 +175,7 @@
     <div class="tip-box" style="margin-top:12px"><strong>💡 Nota:</strong> En alemán los miles se separan con punto: 1.000, y los decimales con coma: 3,14.</div>
   </div>
   <div class="card">
-    <h3><span>📱</span> 5. Números en contexto</h3>
+    <h3 id="numeros-en-contexto">5. Números en contexto</h3>
     <table class="vocab-table">
       <thead><tr><th>Situación</th><th>Ejemplo</th></tr></thead>
       <tbody>
@@ -170,7 +193,7 @@
 <!-- NÚMEROS ORDINALES -->
 <div class="content-full">
   <div class="card">
-    <h3><span>🥇</span> 6. Números ordinales — Primero, segundo, tercero...</h3>
+    <h3 id="numeros-ordinales">6. Números ordinales — Primero, segundo, tercero...</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Se forman con <strong>-te</strong> (del 2 al 19) y <strong>-ste</strong> (del 20 en adelante). Los primeros tres son irregulares.</p>
     <table class="vocab-table">
       <thead><tr><th>Número</th><th>Ordinal</th><th>Español</th><th>Ejemplo</th></tr></thead>
@@ -190,7 +213,7 @@
 <!-- FRASES COMUNES -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>🗨️</span> Frases comunes en este tema</h3>
+    <h3 id="frases-comunes-en-este-tema">Frases comunes en este tema</h3>
     <div class="phrase-grid">
       <div class="phrase-item"><span class="phrase-situation">Preguntando el precio</span><span class="phrase-de">Wie viel kostet das?</span><span class="phrase-es">¿Cuánto cuesta eso?</span></div>
       <div class="phrase-item"><span class="phrase-situation">En la caja de una tienda</span><span class="phrase-de">Das macht zwanzig Euro fünfzig.</span><span class="phrase-es">Son veinte euros con cincuenta.</span></div>
@@ -207,11 +230,23 @@
     </div>
   </div>
 </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a></nav></div>
+
+<!-- 0. FLASHCARDS -->
+<div id="practica-tarjetas" class="content-full">
+  <div class="card">
+    <h3>Repasa con tarjetas</h3>
+    <div id="fc-a1-02" class="flashcards"></div>
+  </div>
+</div>
 
 <!-- DIÁLOGO -->
-<div class="content-full">
+<div id="practica-dialogo" class="content-full">
   <div class="card">
-    <h3><span>💬</span> Diálogo de práctica — En la tienda</h3>
+    <h3>Diálogo de práctica — En la tienda</h3>
     <div class="dialog-box">
       <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Guten Tag! Was kostet der Kaffee?</div><div class="dialog-es">¡Buenos días! ¿Cuánto cuesta el café?</div></div></div>
       <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Der Kaffee kostet drei Euro fünfzig.</div><div class="dialog-es">El café cuesta tres euros con cincuenta.</div></div></div>
@@ -223,20 +258,20 @@
 </div>
 
 <!-- EJERCICIOS -->
-<div class="content-full">
+<div id="practica-ejercicios" class="content-full">
   <div class="card card-red">
-    <h3><span>✏️</span> 7. Ejercicios</h3>
+    <h3>7. Ejercicios</h3>
     <div class="exercise"><div class="exercise-num">Ejercicio 1 — Escribe en alemán</div><div class="exercise-q">17 / 35 / 68 / 99 / 100</div><div class="exercise-hint">siebzehn / fünfunddreißig / achtundsechzig / neunundneunzig / hundert</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 2 — Lee en voz alta</div><div class="exercise-q">Escribe con palabras: Mi número de teléfono es +52 55 1234 5678</div><div class="exercise-hint">Divide por pares: fünfundfünfzig / zwölf / vierunddreißig / sechsundfünfzig / achtundsiebzig</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 3 — Precios</div><div class="exercise-q">¿Cómo dices 29,99 € en alemán?</div><div class="exercise-hint">neunundzwanzig Euro neunundneunzig</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 4 — Ordinal</div><div class="exercise-q">¿Cómo se dice "el 3 de octubre"?</div><div class="exercise-hint">am dritten Oktober</div></div>
   </div>
 </div>
-
+</aside>
 </div></div>
 <div class="page-nav">
-  <a href="a1-01-saludos.html" class="page-nav-btn"><span style="font-size:24px">👋</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Saludos</div></div></a>
-  <a href="a1-03-farben.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Farben & Formen</div></div><span style="font-size:24px">🎨</span></a>
+  <a href="a1-01-saludos.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a1-01.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Saludos</div></div></a>
+  <a href="a1-03-farben.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Farben & Formen</div></div><img class="pn-foto" src="fotos/a1-03.jpg" alt="" loading="lazy"></a>
 </div>
 <footer class="footer"><p>A1 · 02 — Zahlen</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
 <script src="flashcards.js"></script>
@@ -260,5 +295,6 @@ initFlashcards('fc-a1-02', [
   {art:'-', de:'Der Wievielte ist heute?', es:'¿Qué fecha es hoy?'}
 ]);
 </script>
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

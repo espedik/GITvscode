@@ -2180,6 +2180,45 @@ function promptsDeLoTocado() {
     ok.push('Fechas: ninguna app saca «hoy» de toISOString() (' + revisados + ' archivos revisados)');
 })();
 
+/* ── 27. Las lecciones de Alemán con su plantilla ────────────────────────────────────────────
+   Las 41 lecciones, Principiantes y Gramática llevan la barra del inicio, en el encabezado la foto
+   de su lección (la misma del inicio, con su crédito) y, las que tienen práctica, el panel
+   .lec-practica con leccion.js después de k10-interactivo.js: «Tu avance» le pregunta a este qué
+   ejercicios hay. Una lección hecha a mano sin alguna de esas piezas sale aquí. */
+(function () {
+  const dir = path.join(RAIZ, 'Aleman');
+  if (!fs.existsSync(dir)) return;
+  const pags = fs.readdirSync(dir).filter(function (f) {
+    return /^(a1|a2|k10)-\d\d-[\w-]+\.html$/.test(f) || /^(principiantes|gramatica)\.html$/.test(f);
+  });
+  const malos = [];
+  let practica = 0;
+  pags.forEach(function (f) {
+    const h = fs.readFileSync(path.join(dir, f), 'utf8');
+    const faltan = [];
+    if (!/<nav class="nav ini-barra"/.test(h)) faltan.push('la barra del inicio');
+    const foto = /<figure class="lec-foto"><img src="fotos\/([^"]+)"[^>]*\btitle="Foto: [^"]+"/.exec(h);
+    const suya = /^(a1|a2|k10)-(\d\d)-/.exec(f);
+    if (!foto) faltan.push('la foto con su crédito');
+    else if (!fs.existsSync(path.join(dir, 'fotos', foto[1]))) faltan.push('fotos/' + foto[1] + ', que no existe');
+    else if (suya && foto[1] !== suya[1] + '-' + suya[2] + '.jpg') faltan.push('su foto (lleva fotos/' + foto[1] + ')');
+    if (suya && !/class="container lec\b/.test(h)) faltan.push('las dos columnas (.lec)');
+    if (/class="lec-practica"/.test(h)) {
+      practica++;
+      const iL = h.indexOf('src="leccion.js"'), iK = h.indexOf('src="k10-interactivo.js"');
+      if (iL === -1) faltan.push('leccion.js');
+      else if (iK !== -1 && iK > iL) faltan.push('leccion.js después de k10-interactivo.js');
+    }
+    if (faltan.length) malos.push(f + ': sin ' + faltan.join(', '));
+  });
+  if (malos.length)
+    problemas.push('Lecciones de Alemán fuera de su plantilla (Aleman/readme_aleman.md → La plantilla de las lecciones):\n  - ' +
+                   malos.slice(0, 12).join('\n  - '));
+  else
+    ok.push('Plantilla de Alemán: ' + pags.length + ' páginas con la barra del inicio y su foto; ' + practica +
+            ' con su panel de práctica y leccion.js');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

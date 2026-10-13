@@ -7,29 +7,50 @@
 <link rel="stylesheet" href="styles.css"></head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><div class="nav-links"><a href="index.html" class="nav-link">← Índice A1</a><a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a></div></nav>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1" class="on" aria-current="page">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
 
-<div class="topic-hero"><div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a1-15.jpg" alt="Un balón de futbol en el pasto de un estadio" title="Foto: Michal Jarmoluk · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Michal Jarmoluk · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A1 · Tema 15 — Último tema A1</div>
   <h1>Hobbys & Freizeit — <em>Pasatiempos</em></h1>
   <p class="topic-hero-desc">Aprenderás el vocabulario de actividades de ocio, adverbios de frecuencia y cómo hablar de tus aficiones en alemán. Con esto completas el nivel A1.</p>
-  <div class="topic-hero-meta"><span class="meta-pill">🎮 Actividades</span><span class="meta-pill">⏰ Frecuencia</span><span class="meta-pill">❤️ Preferencias</span><span class="meta-pill">🏁 Fin del A1</span></div>
-</div></div>
-
-<div class="topic-content"><div class="container">
-
-<!-- FLASHCARDS -->
-<div class="content-full">
-  <div class="card">
-    <h3><span>🎴</span> Repasa con tarjetas</h3>
-    <div id="fc-a1-15" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill">Actividades</span><span class="meta-pill">Frecuencia</span><span class="meta-pill">Preferencias</span><span class="meta-pill">Fin del A1</span></div>
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#actividades-de-tiempo-libre"><span>Actividades de tiempo libre</span></a></li>
+        <li><a href="#adverbios-de-frecuencia"><span>Adverbios de frecuencia</span></a></li>
+        <li><a href="#hablar-de-hobbies"><span>Hablar de hobbies</span></a></li>
+        <li><a href="#frases-comunes-en-este-tema"><span>Frases comunes en este tema</span></a></li>
+        <li><a href="#dialogo"><span>Diálogo</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 2 bloques →</a>
+    </nav>
   </div>
 </div>
+
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
 <!-- ACTIVIDADES -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>🎮</span> 1. Actividades de tiempo libre — Freizeitaktivitäten</h3>
+    <h3 id="actividades-de-tiempo-libre">1. Actividades de tiempo libre — Freizeitaktivitäten</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px">En alemán, muchas actividades usan el verbo <strong>machen</strong> (hacer) o verbos específicos. Con <em>gern</em> detrás del verbo expresas que te gusta.</p>
     <table class="vocab-table">
       <thead><tr><th>Actividad</th><th>Español</th><th>Con gern (me gusta...)</th></tr></thead>
@@ -62,7 +83,7 @@
 <!-- ADVERBIOS DE FRECUENCIA -->
 <div class="content-full">
   <div class="card card-red">
-    <h3><span>⏰</span> 2. Adverbios de frecuencia — Häufigkeitsadverbien</h3>
+    <h3 id="adverbios-de-frecuencia">2. Adverbios de frecuencia — Häufigkeitsadverbien</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Van generalmente después del verbo conjugado, o al inicio de la oración para énfasis.</p>
     <table class="vocab-table">
       <thead><tr><th>Frecuencia</th><th>Alemán</th><th>Ejemplo</th></tr></thead>
@@ -94,7 +115,7 @@
 <!-- PREGUNTAR POR HOBBIES -->
 <div class="content-full">
   <div class="card">
-    <h3><span>💬</span> 3. Hablar de hobbies — frases clave</h3>
+    <h3 id="hablar-de-hobbies">3. Hablar de hobbies — frases clave</h3>
     <table class="vocab-table">
       <thead><tr><th>Pregunta</th><th>Respuesta modelo</th><th>Español</th></tr></thead>
       <tbody>
@@ -114,7 +135,7 @@
 <!-- FRASES COMUNES -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>🗨️</span> 4. Frases comunes en este tema</h3>
+    <h3 id="frases-comunes-en-este-tema">4. Frases comunes en este tema</h3>
     <div class="phrase-grid">
       <div class="phrase-item"><span class="phrase-situation">Invitar a alguien</span><span class="phrase-de">Hast du Lust, ins Kino zu gehen?</span><span class="phrase-es">¿Te apetece ir al cine?</span></div>
       <div class="phrase-item"><span class="phrase-situation">Aceptar una invitación</span><span class="phrase-de">Ja, sehr gern! Wann treffen wir uns?</span><span class="phrase-es">¡Sí, con mucho gusto! ¿Cuándo nos vemos?</span></div>
@@ -133,7 +154,7 @@
 <!-- DIÁLOGO COMPLETO -->
 <div class="content-full">
   <div class="card">
-    <h3><span>💬</span> 5. Diálogo — Hablando de pasatiempos</h3>
+    <h3 id="dialogo">5. Diálogo — Hablando de pasatiempos</h3>
     <div class="dialog-box">
       <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Hallo! Was machst du heute Abend?</div><div class="dialog-es">¡Hola! ¿Qué haces esta noche?</div></div></div>
       <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ich weiß noch nicht. Ich lese vielleicht ein Buch oder schaue eine Serie. Und du?</div><div class="dialog-es">No sé todavía. Quizás lea un libro o vea una serie. ¿Y tú?</div></div></div>
@@ -156,22 +177,34 @@
     </div>
   </div>
 </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-ejercicios">Ejercicios</a></nav></div>
+
+<!-- FLASHCARDS -->
+<div id="practica-tarjetas" class="content-full">
+  <div class="card">
+    <h3>Repasa con tarjetas</h3>
+    <div id="fc-a1-15" class="flashcards"></div>
+  </div>
+</div>
 
 <!-- EJERCICIOS -->
-<div class="content-full">
+<div id="practica-ejercicios" class="content-full">
   <div class="card card-red">
-    <h3><span>✏️</span> 6. Ejercicios finales A1</h3>
+    <h3>6. Ejercicios finales A1</h3>
     <div class="exercise"><div class="exercise-num">Ejercicio 1 — Frecuencia</div><div class="exercise-q">Ich ___ nie Sport. / Ich gehe ___ ins Kino (50%). / Ich lese ___ vor dem Schlafen (100%).</div><div class="exercise-hint">mache / manchmal / immer</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 2 — Tus hobbies completos</div><div class="placeholder" style="margin-top:8px">In meiner Freizeit... gern. Ich mache ___ Sport. Mein Lieblingshobby ist... Ich... einmal/zweimal pro Woche.</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 3 — Presentación completa A1</div><div class="placeholder" style="margin-top:8px">Kombiniere alles was du gelernt hast: Name, Herkunft, Wohnort, Alter, Beruf/Studium, Familie, Hobbys, Lieblingsessen...</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 4 — Mini-carta a un amigo alemán</div><div class="placeholder" style="margin-top:8px">Hallo! Ich heiße... Ich komme aus... und wohne in... Ich bin... Jahre alt. In meiner Freizeit... Mein Lieblingsessen ist... Wie heißt du? Was machst du gern?</div></div>
   </div>
 </div>
-
+</aside>
 </div></div>
 <div class="page-nav">
-  <a href="a1-14-verkehr.html" class="page-nav-btn"><span style="font-size:24px">🚇</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Verkehr & Richtungen</div></div></a>
-  <a href="index.html#a2" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente nivel →</div><div class="page-nav-title">Inicio del A2</div></div><span style="font-size:24px">🚀</span></a>
+  <a href="a1-14-verkehr.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a1-14.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Verkehr & Richtungen</div></div></a>
+  <a href="index.html#a2" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente nivel →</div><div class="page-nav-title">Inicio del A2</div></div></a>
 </div>
 <footer class="footer"><p>A1 · 15 — Hobbys & Freizeit · ¡A1 completado!</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
 <script src="flashcards.js"></script>
@@ -193,5 +226,6 @@ initFlashcards('fc-a1-15', [
   {art:'-', de:'Hast du Lust, ...?', es:'¿Te apetece...?', ex:'Hast du Lust, mitzukommen?'}
 ]);
 </script>
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

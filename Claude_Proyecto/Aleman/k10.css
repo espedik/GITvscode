@@ -234,3 +234,22 @@
   .k10-em,.k10-em-cab{grid-template-columns:1fr}
   .k10-hueco-txt{line-height:2.8}
 }
+
+/* ── Tu avance en esta lección (lo pinta leccion.js al final de la explicación) ──
+   Cada bloque de práctica con sus ejercicios completos; la barra cuenta también los empezados.
+   «Practicaste hace N días» va en rojo pasados dos: el indicador del prompt de Alemán. */
+.lec-avance-res{font-size:14px;color:var(--text2);margin:-4px 0 12px}
+.lec-avance-res b{color:var(--text)}
+.lec-avance-res .tarde{color:var(--red);font-weight:700}
+.lec-avance{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.lec-avance a{display:grid;grid-template-columns:minmax(0,1fr) 120px 84px;align-items:center;gap:14px;padding:8px 10px;
+  border-radius:8px;text-decoration:none;color:var(--text);font-size:13.5px;font-weight:600}
+.lec-avance a:hover{background:rgba(0,0,0,.04)}
+.lec-avance-n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lec-avance-b{height:7px;border-radius:4px;background:rgba(0,0,0,.07);overflow:hidden}
+.lec-avance-b i{display:block;height:100%;width:0;border-radius:4px;background:var(--red);transition:width .4s ease}
+.lec-avance li.lleno .lec-avance-b i{background:#1a9e5c}
+.lec-avance-c{font-size:12px;font-weight:700;color:var(--text3);text-align:right;white-space:nowrap}
+.lec-avance li.lleno .lec-avance-c{color:#1a9e5c}
+.lec-chips a.hecho{border-color:rgba(26,158,92,.45);color:#13804a}
+.lec-chips a.hecho::before{content:'✓ '}

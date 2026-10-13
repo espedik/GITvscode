@@ -26,29 +26,52 @@
 </style></head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><div class="nav-links"><a href="index.html" class="nav-link">← Índice A1</a><a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a></div></nav>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1" class="on" aria-current="page">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
 
-<div class="topic-hero"><div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a1-08.jpg" alt="Un gafete que dice «Hi, my name is»" title="Foto: EvelynGiggles · Flickr · BY 2.0" width="360" height="240"><figcaption>Foto: EvelynGiggles · Flickr · BY 2.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A1 · Tema 08</div>
   <h1>sein & <em>haben</em></h1>
   <p class="topic-hero-desc">Estos son los dos verbos más importantes del alemán. sein (ser/estar) y haben (tener) son irregulares y se usan en casi todas las conversaciones. También forman el pasado (Perfekt).</p>
-  <div class="topic-hero-meta"><span class="meta-pill">⚙️ Verbos clave</span><span class="meta-pill">🔥 Muy frecuentes</span><span class="meta-pill">📐 Irregulares</span><span class="meta-pill">⏱️ ~45 min</span></div>
-</div></div>
-
-<div class="topic-content"><div class="container">
-
-<!-- FLASHCARDS -->
-<div class="content-full">
-  <div class="card">
-    <h3><span>🎴</span> Repasa con tarjetas</h3>
-    <div id="fc-a1-08" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill">Verbos clave</span><span class="meta-pill">Muy frecuentes</span><span class="meta-pill">Irregulares</span><span class="meta-pill">~45 min</span></div>
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#sein"><span>sein</span></a></li>
+        <li><a href="#haben"><span>haben</span></a></li>
+        <li><a href="#cuando-usar-sein"><span>¿Cuándo usar sein?</span></a></li>
+        <li><a href="#cuando-usar-haben"><span>¿Cuándo usar haben?</span></a></li>
+        <li><a href="#negacion-con-sein-y-haben"><span>Negación con sein y haben</span></a></li>
+        <li><a href="#las-20-frases-mas-utiles-con-sein-y-haben"><span>Las 20 frases más útiles con sein y haben</span></a></li>
+        <li><a href="#frases-comunes-en-este-tema"><span>Frases comunes en este tema</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 3 bloques →</a>
+    </nav>
   </div>
 </div>
+
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
 <!-- SEIN -->
 <div class="content-grid">
   <div class="card card-gold">
-    <h3><span>⭐</span> 1. sein — ser / estar</h3>
+    <h3 id="sein">1. sein — ser / estar</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Totalmente irregular. Equivale al español "ser" y "estar" — en alemán ambos son el mismo verbo.</p>
     <div class="conj-big">
       <div class="conj-header">SEIN — Presente</div>
@@ -61,7 +84,7 @@
     </div>
   </div>
   <div class="card">
-    <h3><span>⭐</span> 2. haben — tener</h3>
+    <h3 id="haben">2. haben — tener</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px">También irregular en du y er/sie/es: pierde la -b-. Es el auxiliar del pasado (Perfekt) de la mayoría de verbos.</p>
     <div class="conj-big">
       <div class="conj-header">HABEN — Presente</div>
@@ -79,7 +102,7 @@
 <!-- USOS DE SEIN -->
 <div class="content-full">
   <div class="card">
-    <h3><span>📋</span> 3. ¿Cuándo usar sein?</h3>
+    <h3 id="cuando-usar-sein">3. ¿Cuándo usar sein?</h3>
     <table class="vocab-table">
       <thead><tr><th>Uso</th><th>Ejemplo alemán</th><th>Español</th></tr></thead>
       <tbody>
@@ -99,7 +122,7 @@
 <!-- USOS DE HABEN -->
 <div class="content-full">
   <div class="card card-red">
-    <h3><span>📋</span> 4. ¿Cuándo usar haben?</h3>
+    <h3 id="cuando-usar-haben">4. ¿Cuándo usar haben?</h3>
     <table class="vocab-table">
       <thead><tr><th>Uso</th><th>Ejemplo alemán</th><th>Español</th></tr></thead>
       <tbody>
@@ -119,7 +142,7 @@
 <!-- NEGACIÓN -->
 <div class="content-full">
   <div class="card">
-    <h3><span>🚫</span> 5. Negación con sein y haben</h3>
+    <h3 id="negacion-con-sein-y-haben">5. Negación con sein y haben</h3>
     <table class="vocab-table">
       <thead><tr><th>Afirmativo</th><th>Negativo</th><th>Español</th></tr></thead>
       <tbody>
@@ -136,7 +159,7 @@
 <!-- FRASES ÚTILES -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>💬</span> 6. Las 20 frases más útiles con sein y haben</h3>
+    <h3 id="las-20-frases-mas-utiles-con-sein-y-haben">6. Las 20 frases más útiles con sein y haben</h3>
     <table class="vocab-table">
       <thead><tr><th>Alemán</th><th>Español</th></tr></thead>
       <tbody>
@@ -163,7 +186,7 @@
 <!-- FRASES COMUNES -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>🗨️</span> 7. Frases comunes en este tema</h3>
+    <h3 id="frases-comunes-en-este-tema">7. Frases comunes en este tema</h3>
     <div class="phrase-grid">
       <div class="phrase-item"><span class="phrase-situation">En el médico</span><span class="phrase-de">Ich habe Fieber und Kopfschmerzen.</span><span class="phrase-es">Tengo fiebre y dolor de cabeza.</span></div>
       <div class="phrase-item"><span class="phrase-situation">Presentarte en el trabajo</span><span class="phrase-de">Ich bin neu hier.</span><span class="phrase-es">Soy nuevo/a aquí.</span></div>
@@ -180,11 +203,23 @@
     </div>
   </div>
 </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a></nav></div>
+
+<!-- FLASHCARDS -->
+<div id="practica-tarjetas" class="content-full">
+  <div class="card">
+    <h3>Repasa con tarjetas</h3>
+    <div id="fc-a1-08" class="flashcards"></div>
+  </div>
+</div>
 
 <!-- DIÁLOGO -->
-<div class="content-full">
+<div id="practica-dialogo" class="content-full">
   <div class="card">
-    <h3><span>💬</span> 8. Diálogo de práctica — En el consultorio</h3>
+    <h3>8. Diálogo de práctica — En el consultorio</h3>
     <div class="dialog-box">
       <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Guten Tag! Was haben Sie?</div><div class="dialog-es">¡Buenos días! ¿Qué tiene usted?</div></div></div>
       <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ich habe Kopfschmerzen und ich bin sehr müde.</div><div class="dialog-es">Tengo dolor de cabeza y estoy muy cansado.</div></div></div>
@@ -196,20 +231,20 @@
 </div>
 
 <!-- EJERCICIOS -->
-<div class="content-full">
+<div id="practica-ejercicios" class="content-full">
   <div class="card card-red">
-    <h3><span>✏️</span> 9. Ejercicios</h3>
+    <h3>9. Ejercicios</h3>
     <div class="exercise"><div class="exercise-num">Ejercicio 1 — Conjuga</div><div class="exercise-q">Wir ___ Studenten. / Du ___ müde. / Er ___ kein Auto. / Ich ___ Hunger. / Ihr ___ spät!</div><div class="exercise-hint">sind / bist / hat / habe / seid</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 2 — sein o haben?</div><div class="exercise-q">Ich ___ 25 Jahre alt. / Das ___ mein Bruder. / Sie ___ keine Zeit. / Er ___ krank. / Wir ___ Durst.</div><div class="exercise-hint">bin / ist / hat / ist / haben</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 3 — Niega las oraciones</div><div class="exercise-q">Das ist ein Hund. → Das ist ___.<br>Ich bin müde. → Ich bin ___.<br>Wir haben Zeit. → Wir haben ___.</div><div class="exercise-hint">kein Hund / nicht müde / keine Zeit</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 4 — Sobre ti</div><div class="placeholder" style="margin-top:8px">Ich bin... / Ich bin ... Jahre alt. / Ich habe... / Ich bin nicht... / Ich habe kein/keine...</div></div>
   </div>
 </div>
-
+</aside>
 </div></div>
 <div class="page-nav">
-  <a href="a1-07-pronomen.html" class="page-nav-btn"><span style="font-size:24px">👤</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Personalpronomen</div></div></a>
-  <a href="a1-09-uhrzeit.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Uhrzeit</div></div><span style="font-size:24px">🕐</span></a>
+  <a href="a1-07-pronomen.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a1-07.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Personalpronomen</div></div></a>
+  <a href="a1-09-uhrzeit.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Uhrzeit</div></div><img class="pn-foto" src="fotos/a1-09.jpg" alt="" loading="lazy"></a>
 </div>
 <footer class="footer"><p>A1 · 08 — sein & haben</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
 <script src="flashcards.js"></script>
@@ -232,5 +267,6 @@ initFlashcards('fc-a1-08', [
   {art:'-', de:'fertig sein', es:'estar listo/a o terminado/a', ex:'Ich bin fertig.'}
 ]);
 </script>
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

@@ -25,29 +25,51 @@
 </style></head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><div class="nav-links"><a href="index.html" class="nav-link">← Índice A1</a><a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a></div></nav>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1" class="on" aria-current="page">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
 
-<div class="topic-hero"><div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a1-09.jpg" alt="Un reloj de pared sobre fondo rojo" title="Foto: Freestocks.org · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Freestocks.org · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A1 · Tema 09</div>
   <h1>Uhrzeit — <em>La hora</em></h1>
   <p class="topic-hero-desc">En alemán existen dos formas de decir la hora: la oficial (estaciones, aeropuertos, documentos) y la coloquial (conversación diaria). Ambas son esenciales en Alemania.</p>
-  <div class="topic-hero-meta"><span class="meta-pill">🕐 Hora oficial</span><span class="meta-pill">💬 Coloquial</span><span class="meta-pill">⏱️ Preposiciones</span><span class="meta-pill">⏳ ~40 min</span></div>
-</div></div>
-
-<div class="topic-content"><div class="container">
-
-<!-- FLASHCARDS -->
-<div class="content-full">
-  <div class="card">
-    <h3><span>🎴</span> Repasa con tarjetas</h3>
-    <div id="fc-a1-09" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill">Hora oficial</span><span class="meta-pill">Coloquial</span><span class="meta-pill">Preposiciones</span><span class="meta-pill">~40 min</span></div>
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#preguntar-la-hora"><span>Preguntar la hora</span></a></li>
+        <li><a href="#hora-oficial-24-horas"><span>Hora oficial (24 horas)</span></a></li>
+        <li><a href="#hora-coloquial"><span>Hora coloquial</span></a></li>
+        <li><a href="#momentos-del-dia"><span>Momentos del día</span></a></li>
+        <li><a href="#preposiciones-con-la-hora"><span>Preposiciones con la hora</span></a></li>
+        <li><a href="#frases-comunes-en-este-tema"><span>Frases comunes en este tema</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 3 bloques →</a>
+    </nav>
   </div>
 </div>
+
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
 <!-- PREGUNTAR LA HORA -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>❓</span> 1. Preguntar la hora</h3>
+    <h3 id="preguntar-la-hora">1. Preguntar la hora</h3>
     <table class="vocab-table">
       <thead><tr><th>Pregunta</th><th>Español</th><th>Uso</th></tr></thead>
       <tbody>
@@ -71,7 +93,7 @@
 <!-- HORA OFICIAL -->
 <div class="content-full">
   <div class="card">
-    <h3><span>📋</span> 2. Hora oficial (24 horas) — trenes, horarios, documentos</h3>
+    <h3 id="hora-oficial-24-horas">2. Hora oficial (24 horas) — trenes, horarios, documentos</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Se usa en transportes públicos, horarios, medios de comunicación. Es más sencilla: simplemente se dice el número.</p>
     <div class="rule-box">
       Es ist <strong>13:00 Uhr</strong> → Es ist dreizehn Uhr.<br>
@@ -98,7 +120,7 @@
 <!-- HORA COLOQUIAL -->
 <div class="content-full">
   <div class="card card-red">
-    <h3><span>💬</span> 3. Hora coloquial — conversación diaria</h3>
+    <h3 id="hora-coloquial">3. Hora coloquial — conversación diaria</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px">La hora coloquial usa el reloj de 12 horas con expresiones especiales. El sistema alemán piensa "en cuartos" y puede resultar confuso al principio.</p>
     <div class="big-rule" style="margin-bottom:16px">
       <div class="big-rule-title">⚡ La regla del "halb" — la más importante</div>
@@ -134,7 +156,7 @@
 <!-- PARTES DEL DÍA -->
 <div class="content-full">
   <div class="card">
-    <h3><span>🌅</span> 4. Momentos del día — Tageszeiten</h3>
+    <h3 id="momentos-del-dia">4. Momentos del día — Tageszeiten</h3>
     <table class="vocab-table">
       <thead><tr><th>Alemán</th><th>Horas aprox.</th><th>Español</th><th>Saludo</th></tr></thead>
       <tbody>
@@ -153,7 +175,7 @@
 <!-- PREPOSICIONES DE HORA -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>📌</span> 5. Preposiciones con la hora</h3>
+    <h3 id="preposiciones-con-la-hora">5. Preposiciones con la hora</h3>
     <table class="vocab-table">
       <thead><tr><th>Prep.</th><th>Uso</th><th>Ejemplo</th><th>Español</th></tr></thead>
       <tbody>
@@ -170,7 +192,7 @@
 <!-- FRASES COMUNES -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>🗨️</span> 6. Frases comunes en este tema</h3>
+    <h3 id="frases-comunes-en-este-tema">6. Frases comunes en este tema</h3>
     <div class="phrase-grid">
       <div class="phrase-item"><span class="phrase-situation">Preguntar en la calle</span><span class="phrase-de">Entschuldigung, wie spät ist es?</span><span class="phrase-es">Disculpe, ¿qué hora es?</span></div>
       <div class="phrase-item"><span class="phrase-situation">En la estación de tren</span><span class="phrase-de">Um wie viel Uhr fährt der nächste Zug?</span><span class="phrase-es">¿A qué hora sale el próximo tren?</span></div>
@@ -185,11 +207,23 @@
     </div>
   </div>
 </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a></nav></div>
+
+<!-- FLASHCARDS -->
+<div id="practica-tarjetas" class="content-full">
+  <div class="card">
+    <h3>Repasa con tarjetas</h3>
+    <div id="fc-a1-09" class="flashcards"></div>
+  </div>
+</div>
 
 <!-- DIÁLOGO -->
-<div class="content-full">
+<div id="practica-dialogo" class="content-full">
   <div class="card">
-    <h3><span>💬</span> 7. Diálogo de práctica — Quedar para vernos</h3>
+    <h3>7. Diálogo de práctica — Quedar para vernos</h3>
     <div class="dialog-box">
       <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Wann treffen wir uns morgen?</div><div class="dialog-es">¿Cuándo nos vemos mañana?</div></div></div>
       <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Wie wäre es um halb neun?</div><div class="dialog-es">¿Qué tal a las ocho y media?</div></div></div>
@@ -201,20 +235,20 @@
 </div>
 
 <!-- EJERCICIOS -->
-<div class="content-full">
+<div id="practica-ejercicios" class="content-full">
   <div class="card card-red">
-    <h3><span>✏️</span> 8. Ejercicios</h3>
+    <h3>8. Ejercicios</h3>
     <div class="exercise"><div class="exercise-num">Ejercicio 1 — ¿Qué hora es?</div><div class="exercise-q">Di en alemán (coloquial): 3:15 / 5:30 / 7:45 / 11:55</div><div class="exercise-hint">Viertel nach drei / halb sechs / Viertel vor acht / fünf vor zwölf</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 2 — Modo oficial</div><div class="exercise-q">¿Cómo se dice en modo oficial: 15:30 / 20:45 / 08:15?</div><div class="exercise-hint">fünfzehn Uhr dreißig / zwanzig Uhr fünfundvierzig / acht Uhr fünfzehn</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 3 — Tu horario diario</div><div class="placeholder" style="margin-top:8px">Um ___ Uhr stehe ich auf. / Um ___ esse ich Frühstück. / Von ___ bis ___ arbeite ich...</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 4 — El halb más peligroso</div><div class="exercise-q">¿A qué hora es "halb sieben"? ¿Y "halb zwölf"?</div><div class="exercise-hint">6:30 / 11:30 — siempre media hora ANTES de la hora dicha</div></div>
   </div>
 </div>
-
+</aside>
 </div></div>
 <div class="page-nav">
-  <a href="a1-08-sein-haben.html" class="page-nav-btn"><span style="font-size:24px">⚙️</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">sein & haben</div></div></a>
-  <a href="a1-10-laender.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Länder & Nationalitäten</div></div><span style="font-size:24px">🌍</span></a>
+  <a href="a1-08-sein-haben.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a1-08.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">sein & haben</div></div></a>
+  <a href="a1-10-laender.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Länder & Nationalitäten</div></div><img class="pn-foto" src="fotos/a1-10.jpg" alt="" loading="lazy"></a>
 </div>
 <footer class="footer"><p>A1 · 09 — Uhrzeit</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
 <script src="flashcards.js"></script>
@@ -236,5 +270,6 @@ initFlashcards('fc-a1-09', [
   {art:'-', de:'ab', es:'a partir de', ex:'Ab 18 Uhr bin ich frei.'}
 ]);
 </script>
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

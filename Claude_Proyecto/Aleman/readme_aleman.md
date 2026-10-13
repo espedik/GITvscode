@@ -20,8 +20,8 @@ información repetida): el alemán se estudia aquí. Mi Día solo lee de esta ca
 | A1 | `a1-01`…`a1-15` | Base: saludos, números, artículos, hora, profesiones… |
 | A2 | `a2-01`…`a2-20` | Gramática y vocabulario temático |
 | Apoyo | `index.html`, `principiantes.html`, `gramatica.html`, `vocabulario.html` | El inicio (ver abajo), lo básico para principiantes y la referencia transversal. La barra de apps del Dashboard enlaza a los cuatro |
-| Fotos | `fotos/` | Una por lección y por caja de consulta del inicio, con su crédito |
-| Compartido | `styles.css`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js` | Estilos y motores |
+| Fotos | `fotos/` | Una por lección y por caja de consulta del inicio, con su crédito; la misma va en el encabezado de su lección |
+| Compartido | `styles.css`, `leccion.js`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js` | La plantilla de las lecciones (ver abajo), estilos y motores |
 | **Vocabulario** | `vocab-datos.js`, `vocab.css`, `vocab.js` | Los datos, el diseño y el motor de `vocabulario.html`. Mi Día lee los datos — ver abajo |
 
 ---
@@ -66,6 +66,47 @@ is» para *sein*.
 **Enlaces directos**: `vocabulario.html#tab=cards` (o `situ`, `pz`) abre esa pestaña,
 `vocabulario.html#cat=…` una sección, y `gramatica.html#…` y `principiantes.html#…` su tema (las nueve
 secciones de principiantes llevan id).
+
+---
+
+## La plantilla de las lecciones
+
+Las 41 lecciones, Principiantes y Gramática comparten una plantilla, hecha para la pantalla de Adán
+(2048 px), que usan a todo el ancho: ninguna deja media pantalla vacía.
+
+- **La barra** es la del inicio (`nav.nav.ini-barra`): la marca, Hoy, Kapitel 10, A2, A1,
+  Vocabulario, Gramática y Principiantes, con el grupo de la página marcado, y el botón del
+  Dashboard. Vocabulario también la lleva. Sigue siendo `nav.nav` porque ahí se monta la brújula.
+- **El encabezado** (`.lec-hero`): la foto de la lección (`.lec-foto`, la misma del inicio, con su
+  crédito al pie), el título y, a la derecha, **En esta lección** (`.lec-indice`): las secciones de
+  la explicación como enlaces y el botón *Práctica · N bloques*. Si hay menos de cuatro secciones,
+  el índice lista también los bloques de práctica. Las píldoras van sin emoji; los círculos de color
+  de K10·06 quedan como un punto del color de su participio.
+- **El cuerpo** (`.lec`): desde 1280 px, dos columnas. A la izquierda **la explicación**
+  (`.lec-explica`); a la derecha **la práctica** (`.lec-practica`): tarjetas, diálogos de práctica,
+  ejercicios y notas, en un panel fijo con su propio scroll y una fila de chips arriba
+  (`.lec-chips`) para saltar entre bloques. Así se practica con la regla a la vista. Por debajo de
+  1280 px va todo en una columna: primero la explicación y después la práctica.
+  `.lec-mucha-practica` (K10·03, A2·14) da la columna ancha a la práctica.
+- **Dentro de una columna** las rejillas de dos se apilan y las tablas que no caben se desplazan
+  en su caja: lo decide el ancho de la columna (`@container`), no el de la ventana.
+- **Principiantes** no tiene práctica (`.lec-sola`): sus temas van en dos columnas parejas y el
+  cierre (`.lec-ancho`) a todo el ancho. **Gramática** conserva su índice lateral; desde 1800 px sus
+  secciones van en dos columnas, con los capítulos, la introducción y la tabla maestra a todo el
+  ancho, y a la derecha del título, el color de cada caso con su artículo.
+
+**`leccion.js`** hace dos cosas que el CSS no puede. Un enlace a algo que está en el panel —los
+chips, *Práctica · N bloques* o un enlace directo como `k10-03-perfekt-uben.html#minitest`— mueve el
+panel hasta el título de ese bloque, y la página solo lo necesario para que el panel quede completo
+(sin esto, el navegador bajaba la página entera y la cabecera del panel se escondía bajo la barra).
+Y en las lecciones del Kapitel 10 pinta **Tu avance en esta lección** al final de la explicación:
+cada bloque de práctica con su barra, *completo*, su porcentaje o *sin empezar*, y cuándo
+practicaste por última vez, en rojo pasados dos días. Lee `aleman_k10_v1` con la misma regla que
+el inicio, y los ejercicios de cada bloque se los da `k10Ejercicios()` de `k10-interactivo.js`. Un
+bloque completo marca su chip con ✓.
+
+El control 27 de `../Dashboard/verificar-sincronia.js` comprueba que cada lección tenga la barra, su
+foto con crédito, las dos columnas y, si tiene práctica, `leccion.js` después de `k10-interactivo.js`.
 
 ---
 
@@ -441,7 +482,12 @@ Deutsch).
 
 ## Añadir una lección
 
-1. Crear el HTML siguiendo la estructura de las existentes (`.topic-hero`, `.topic-content`,
-   `.card`, `.vocab-table`, `.rule-box`, `.example`).
-2. Añadir su tarjeta en `index.html`.
-3. Comprobar en el navegador que no hay scroll horizontal a 390px.
+1. Copiar una lección existente del mismo nivel: trae la barra, el encabezado con la foto y el
+   índice, y las dos columnas. La explicación va en `.lec-explica` (cada `<h3>` con su `id`, que es
+   el destino del índice); las tarjetas, diálogos de práctica, ejercicios y notas, en
+   `.lec-practica`, cada bloque con su `id` y su chip en `.lec-chips`. Dentro: `.card`,
+   `.vocab-table`, `.rule-box`, `.example`.
+2. Su foto en `fotos/`, con el nombre de la lección (a1-16.jpg para la A1·16), y su tarjeta con esa
+   misma foto en `index.html`.
+3. Comprobar en el navegador a 2048, 1600 y 390 px que no hay scroll horizontal, y correr el
+   verificador.

@@ -25,32 +25,52 @@
 </head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>  <div class="nav-links">
-    <a href="index.html" class="nav-back">← Índice</a>
-    <a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a>
-  </div></nav>
-<div class="topic-hero"><div class="container">
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2" class="on" aria-current="page">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a2-10.jpg" alt="Un gato dentro de una caja" title="Foto: bnilsen · Flickr · BY-SA 2.0" width="360" height="240"><figcaption>Foto: bnilsen · Flickr · BY-SA 2.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A2 · Gramática · Tema 10</div>
   <h1><em>Präpositionen</em></h1>
   <p class="topic-hero-desc">Las preposiciones en alemán rigen casos específicos. Las Wechselpräpositionen pueden ir con Akkusativ o Dativ según el contexto.</p>
-  <div class="topic-hero-meta"><span class="meta-pill">📍 Posición</span><span class="meta-pill">🔀 Wechselpräp.</span><span class="meta-pill">⏱️ ~60 min</span></div>
-</div></div>
-<div class="topic-content"><div class="container">
-
-  <div class="content-full">
-    <div class="card">
-      <h3><span>🎴</span> Repasa con tarjetas</h3>
-      <div id="fc-a2-10" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill">Posición</span><span class="meta-pill">Wechselpräp.</span><span class="meta-pill">~60 min</span></div>
     </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#wechselprapositionen"><span>Wechselpräpositionen</span></a></li>
+        <li><a href="#las-9-wechselprapositionen"><span>Las 9 Wechselpräpositionen</span></a></li>
+        <li><a href="#solo-akkusativ"><span>Solo Akkusativ</span></a></li>
+        <li><a href="#solo-dativ"><span>Solo Dativ</span></a></li>
+        <li><a href="#ejemplos-wechselprapositionen"><span>Ejemplos Wechselpräpositionen</span></a></li>
+        <li><a href="#frases-comunes-usando-preposiciones"><span>Frases comunes usando preposiciones</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 4 bloques →</a>
+    </nav>
   </div>
+</div>
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
   <div class="content-grid">
     <div class="card card-gold">
-      <h3><span>💡</span> Wechselpräpositionen — la regla</h3>
+      <h3 id="wechselprapositionen">Wechselpräpositionen — la regla</h3>
       <div class="rule-box">¿<strong>Dónde está algo?</strong> (estado) → <strong>Dativ</strong><br>Das Buch liegt <strong>auf dem</strong> Tisch.<br><em style="color:var(--text3)">El libro está sobre la mesa.</em><br><br>¿<strong>Adónde va algo?</strong> (movimiento) → <strong>Akkusativ</strong><br>Ich lege das Buch <strong>auf den</strong> Tisch.<br><em style="color:var(--text3)">Pongo el libro sobre la mesa.</em></div>
     </div>
     <div class="card">
-      <h3><span>📋</span> Las 9 Wechselpräpositionen</h3>
+      <h3 id="las-9-wechselprapositionen">Las 9 Wechselpräpositionen</h3>
       <table class="vocab-table">
         <thead><tr><th>Prep.</th><th>Español</th></tr></thead>
         <tbody>
@@ -70,13 +90,13 @@
 
   <div class="content-grid">
     <div class="card">
-      <h3><span>📋</span> Solo Akkusativ</h3>
+      <h3 id="solo-akkusativ">Solo Akkusativ</h3>
       <div class="rule-box" style="font-size:13px">durch — a través de<br>für — para<br>gegen — contra<br>ohne — sin<br>um — alrededor / a las (hora)</div>
       <div class="example" style="margin-top:12px"><div class="example-de">Das Geschenk ist für dich.</div><div class="example-es">El regalo es para ti.</div></div>
       <div class="example"><div class="example-de">Wir gehen ohne ihn.</div><div class="example-es">Vamos sin él.</div></div>
     </div>
     <div class="card">
-      <h3><span>📋</span> Solo Dativ</h3>
+      <h3 id="solo-dativ">Solo Dativ</h3>
       <div class="rule-box" style="font-size:13px">aus — de (origen)<br>bei — en casa de / cerca<br>mit — con<br>nach — después / hacia<br>seit — desde (tiempo)<br>von — de<br>zu — a / hacia</div>
       <div class="example" style="margin-top:12px"><div class="example-de">Ich fahre mit dem Zug.</div><div class="example-es">Voy en tren.</div></div>
       <div class="example"><div class="example-de">Seit einem Jahr lerne ich Deutsch.</div><div class="example-es">Llevo un año aprendiendo alemán.</div></div>
@@ -85,7 +105,7 @@
 
   <div class="content-full">
     <div class="card">
-      <h3><span>💬</span> Ejemplos Wechselpräpositionen</h3>
+      <h3 id="ejemplos-wechselprapositionen">Ejemplos Wechselpräpositionen</h3>
       <table class="vocab-table">
         <thead><tr><th>Dativ (dónde)</th><th>Akkusativ (adónde)</th></tr></thead>
         <tbody>
@@ -102,7 +122,7 @@
 
   <div class="content-full">
     <div class="card card-gold">
-      <h3><span>🗨️</span> Frases comunes usando preposiciones</h3>
+      <h3 id="frases-comunes-usando-preposiciones">Frases comunes usando preposiciones</h3>
       <div class="phrase-grid">
         <div class="phrase-item"><span class="phrase-situation">Preguntando cómo llegar</span><span class="phrase-de">Wie komme ich zum Bahnhof?</span><span class="phrase-es">¿Cómo llego a la estación?</span></div>
         <div class="phrase-item"><span class="phrase-situation">Dando indicaciones</span><span class="phrase-de">Gehen Sie geradeaus, das Geschäft ist neben der Bank.</span><span class="phrase-es">Siga derecho, la tienda está al lado del banco.</span></div>
@@ -119,10 +139,21 @@
       </div>
     </div>
   </div>
+</div>
 
-  <div class="content-full">
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a><a href="#practica-notas">Notas</a></nav></div>
+
+  <div id="practica-tarjetas" class="content-full">
     <div class="card">
-      <h3><span>💬</span> Diálogo de práctica — Pidiendo indicaciones</h3>
+      <h3>Repasa con tarjetas</h3>
+      <div id="fc-a2-10" class="flashcards"></div>
+    </div>
+  </div>
+
+  <div id="practica-dialogo" class="content-full">
+    <div class="card">
+      <h3>Diálogo de práctica — Pidiendo indicaciones</h3>
       <div class="dialog-box">
         <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Entschuldigung, wie komme ich zum Bahnhof?</div><div class="dialog-es">Disculpe, ¿cómo llego a la estación?</div></div></div>
         <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Gehen Sie geradeaus und dann die zweite Straße links. Der Bahnhof ist neben der Post.</div><div class="dialog-es">Siga derecho y luego la segunda calle a la izquierda. La estación está al lado del correo.</div></div></div>
@@ -134,9 +165,9 @@
     </div>
   </div>
 
-  <div class="content-full mt32">
+  <div id="practica-ejercicios" class="content-full mt32">
     <div class="card card-red">
-      <h3><span>✏️</span> Ejercicios</h3>
+      <h3>Ejercicios</h3>
       <div class="exercise"><div class="exercise-num">Ejercicio 1 — Dativ o Akkusativ?</div><div class="exercise-q">Das Buch liegt ___ dem Tisch. (auf — estado)</div><div class="exercise-hint">Pista: auf dem (Dativ)</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 2</div><div class="exercise-q">Ich lege das Buch ___ den Tisch. (auf — movimiento)</div><div class="exercise-hint">Pista: auf den (Akkusativ)</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 3 — Preposición correcta</div><div class="exercise-q">Ich fahre ___ dem Bus ___ die Schule.</div><div class="exercise-hint">Pista: mit / zu</div></div>
@@ -144,12 +175,12 @@
     </div>
   </div>
 
-  <div class="content-full"><div class="card"><h3><span>📝</span> Mis notas</h3><div class="placeholder">Truco personal para recordar las Wechselpräpositionen</div></div></div>
-
+  <div id="practica-notas" class="content-full"><div class="card"><h3>Mis notas</h3><div class="placeholder">Truco personal para recordar las Wechselpräpositionen</div></div></div>
+</aside>
 </div></div>
 <div class="page-nav">
-  <a href="a2-09-konjunktionen.html" class="page-nav-btn"><span style="font-size:24px">🔗</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Konjunktionen</div></div></a>
-  <a href="a2-11-adjetivos.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Adjektivdeklination</div></div><span style="font-size:24px">🎨</span></a>
+  <a href="a2-09-konjunktionen.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a2-09.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Konjunktionen</div></div></a>
+  <a href="a2-11-adjetivos.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Adjektivdeklination</div></div><img class="pn-foto" src="fotos/a2-11.jpg" alt="" loading="lazy"></a>
 </div>
 <footer class="footer"><p>A2 · 10 — Präpositionen</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
 <script src="flashcards.js"></script>
@@ -171,5 +202,6 @@ initFlashcards('fc-a2-10', [
   {art:'-', de:'Die Katze schläft unter dem Bett.', es:'El gato duerme debajo de la cama.'}
 ]);
 </script>
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

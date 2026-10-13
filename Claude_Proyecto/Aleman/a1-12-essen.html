@@ -7,29 +7,51 @@
 <link rel="stylesheet" href="styles.css"></head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><div class="nav-links"><a href="index.html" class="nav-link">← Índice A1</a><a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a></div></nav>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1" class="on" aria-current="page">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
 
-<div class="topic-hero"><div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a1-12.jpg" alt="Canastas de pan en una panadería" title="Foto: Drew Coffman · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Drew Coffman · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A1 · Tema 12</div>
   <h1>Essen & Trinken — <em>Comida y bebida</em></h1>
   <p class="topic-hero-desc">Aprenderás el vocabulario básico de alimentos y bebidas, las tres comidas del día, cómo pedir en un restaurante y expresar preferencias con gern / nicht gern / lieber.</p>
-  <div class="topic-hero-meta"><span class="meta-pill">🍎 Alimentos</span><span class="meta-pill">🍺 Bebidas</span><span class="meta-pill">🍽️ Restaurante</span><span class="meta-pill">⏱️ ~40 min</span></div>
-</div></div>
-
-<div class="topic-content"><div class="container">
-
-<!-- FLASHCARDS -->
-<div class="content-full">
-  <div class="card">
-    <h3><span>🎴</span> Repasa con tarjetas</h3>
-    <div id="fc-a1-12" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill">Alimentos</span><span class="meta-pill">Bebidas</span><span class="meta-pill">Restaurante</span><span class="meta-pill">~40 min</span></div>
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#las-tres-comidas-del-dia"><span>Las tres comidas del día</span></a></li>
+        <li><a href="#alimentos-basicos"><span>Alimentos básicos</span></a></li>
+        <li><a href="#bebidas"><span>Bebidas</span></a></li>
+        <li><a href="#expresar-preferencias"><span>Expresar preferencias</span></a></li>
+        <li><a href="#en-el-restaurante"><span>En el restaurante</span></a></li>
+        <li><a href="#frases-comunes-en-este-tema"><span>Frases comunes en este tema</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 3 bloques →</a>
+    </nav>
   </div>
 </div>
+
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
 <!-- LAS 3 COMIDAS -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>🕐</span> 1. Las tres comidas del día</h3>
+    <h3 id="las-tres-comidas-del-dia">1. Las tres comidas del día</h3>
     <table class="vocab-table">
       <thead><tr><th>Comida</th><th>Alemán</th><th>Hora</th><th>Qué se come típicamente</th></tr></thead>
       <tbody>
@@ -49,7 +71,7 @@
 <!-- ALIMENTOS -->
 <div class="content-grid">
   <div class="card">
-    <h3><span>🥖</span> 2. Alimentos básicos</h3>
+    <h3 id="alimentos-basicos">2. Alimentos básicos</h3>
     <table class="vocab-table">
       <thead><tr><th>Alemán</th><th>Español</th></tr></thead>
       <tbody>
@@ -72,7 +94,7 @@
     </table>
   </div>
   <div class="card">
-    <h3><span>🥤</span> 3. Bebidas — Getränke</h3>
+    <h3 id="bebidas">3. Bebidas — Getränke</h3>
     <table class="vocab-table">
       <thead><tr><th>Alemán</th><th>Español</th></tr></thead>
       <tbody>
@@ -95,7 +117,7 @@
 <!-- GERN / NICHT GERN -->
 <div class="content-full">
   <div class="card card-red">
-    <h3><span>❤️</span> 4. Expresar preferencias — gern / nicht gern / lieber / am liebsten</h3>
+    <h3 id="expresar-preferencias">4. Expresar preferencias — gern / nicht gern / lieber / am liebsten</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px"><strong>gern</strong> (con gusto / me gusta) se coloca después del verbo. No confundir con el verbo "gustar" del español.</p>
     <table class="vocab-table">
       <thead><tr><th>Expresión</th><th>Significado</th><th>Ejemplo</th></tr></thead>
@@ -118,7 +140,7 @@
 <!-- EN EL RESTAURANTE -->
 <div class="content-full">
   <div class="card">
-    <h3><span>🍽️</span> 5. En el restaurante — Im Restaurant</h3>
+    <h3 id="en-el-restaurante">5. En el restaurante — Im Restaurant</h3>
     <table class="vocab-table">
       <thead><tr><th>Frase</th><th>Español</th><th>Quién la dice</th></tr></thead>
       <tbody>
@@ -142,7 +164,7 @@
 <!-- FRASES COMUNES -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>🗨️</span> 6. Frases comunes en este tema</h3>
+    <h3 id="frases-comunes-en-este-tema">6. Frases comunes en este tema</h3>
     <div class="phrase-grid">
       <div class="phrase-item"><span class="phrase-situation">En el supermercado</span><span class="phrase-de">Wo finde ich das Brot?</span><span class="phrase-es">¿Dónde encuentro el pan?</span></div>
       <div class="phrase-item"><span class="phrase-situation">Comprar fruta en el mercado</span><span class="phrase-de">Ein Kilo Äpfel, bitte.</span><span class="phrase-es">Un kilo de manzanas, por favor.</span></div>
@@ -157,11 +179,23 @@
     </div>
   </div>
 </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a></nav></div>
+
+<!-- FLASHCARDS -->
+<div id="practica-tarjetas" class="content-full">
+  <div class="card">
+    <h3>Repasa con tarjetas</h3>
+    <div id="fc-a1-12" class="flashcards"></div>
+  </div>
+</div>
 
 <!-- DIÁLOGO -->
-<div class="content-full">
+<div id="practica-dialogo" class="content-full">
   <div class="card">
-    <h3><span>💬</span> 7. Diálogo de práctica — Pidiendo en el restaurante</h3>
+    <h3>7. Diálogo de práctica — Pidiendo en el restaurante</h3>
     <div class="dialog-box">
       <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Guten Abend! Haben Sie reserviert?</div><div class="dialog-es">¡Buenas noches! ¿Tiene reservación?</div></div></div>
       <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Nein, aber einen Tisch für zwei Personen, bitte.</div><div class="dialog-es">No, pero una mesa para dos personas, por favor.</div></div></div>
@@ -173,20 +207,20 @@
 </div>
 
 <!-- EJERCICIOS -->
-<div class="content-full">
+<div id="practica-ejercicios" class="content-full">
   <div class="card card-red">
-    <h3><span>✏️</span> 8. Ejercicios</h3>
+    <h3>8. Ejercicios</h3>
     <div class="exercise"><div class="exercise-num">Ejercicio 1 — gern o mögen</div><div class="exercise-q">Ich ___ gern Kaffee. / Ich ___ keine Zwiebeln. / Er isst ___ Pasta als Reis.</div><div class="exercise-hint">trinke / mag ... nicht / lieber</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 2 — Preferencias alimenticias</div><div class="placeholder" style="margin-top:8px">Ich esse gern... / Ich esse nicht gern... / Ich mag... sehr / Am liebsten esse/trinke ich...</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 3 — En el restaurante</div><div class="placeholder" style="margin-top:8px">Escribe el diálogo completo: pedir mesa, pedir bebida, pedir comida, pedir la cuenta.</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 4 — Menú alemán típico</div><div class="exercise-q">¿Qué comerías en un restaurante alemán? Busca: Sauerbraten, Currywurst, Brezel, Apfelstrudel. ¿Los conoces?</div><div class="placeholder" style="margin-top:8px">Ich möchte... probieren. Das klingt lecker!</div></div>
   </div>
 </div>
-
+</aside>
 </div></div>
 <div class="page-nav">
-  <a href="a1-11-berufe.html" class="page-nav-btn"><span style="font-size:24px">💼</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Berufe</div></div></a>
-  <a href="a1-13-wohnen.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Wohnen</div></div><span style="font-size:24px">🏠</span></a>
+  <a href="a1-11-berufe.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a1-11.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Berufe</div></div></a>
+  <a href="a1-13-wohnen.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Wohnen</div></div><img class="pn-foto" src="fotos/a1-13.jpg" alt="" loading="lazy"></a>
 </div>
 <footer class="footer"><p>A1 · 12 — Essen & Trinken</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
 <script src="flashcards.js"></script>
@@ -208,5 +242,6 @@ initFlashcards('fc-a1-12', [
   {art:'-', de:'Guten Appetit!', es:'¡Buen provecho!'}
 ]);
 </script>
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

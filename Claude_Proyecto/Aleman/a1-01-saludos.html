@@ -34,37 +34,55 @@
 </head>
 <body>
 
-<nav class="nav">
-  <a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>
-  <div class="nav-links"><a href="index.html" class="nav-link">← Índice A1</a><a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a></div>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1" class="on" aria-current="page">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
 </nav>
 
-<div class="topic-hero">
-  <div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a1-01.jpg" alt="Dos personas se dan la mano" title="Foto: Matt Moloney · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Matt Moloney · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
     <div class="topic-hero-tag">A1 · Tema 01</div>
     <h1>Begrüßungen — <em>Saludos</em></h1>
     <p class="topic-hero-desc">Los saludos son lo primero que debes aprender. En alemán existen saludos formales e informales, y también varían según la hora del día.</p>
     <div class="topic-hero-meta">
-      <span class="meta-pill">👋 Saludos</span><span class="meta-pill">🕐 Por hora</span>
-      <span class="meta-pill">👔 Formal vs informal</span><span class="meta-pill">⏱️ ~30 min</span>
+      <span class="meta-pill">Saludos</span><span class="meta-pill">Por hora</span>
+      <span class="meta-pill">Formal vs informal</span><span class="meta-pill">~30 min</span>
     </div>
+  
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#saludos-segun-la-hora-del-dia"><span>Saludos según la hora del día</span></a></li>
+        <li><a href="#despedidas"><span>Despedidas</span></a></li>
+        <li><a href="#como-estas"><span>¿Cómo estás?</span></a></li>
+        <li><a href="#presentarse"><span>Presentarse</span></a></li>
+        <li><a href="#palabras-de-cortesia-indispensables"><span>Palabras de cortesía indispensables</span></a></li>
+        <li><a href="#frases-comunes-en-este-tema"><span>Frases comunes en este tema</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 3 bloques →</a>
+    </nav>
   </div>
 </div>
 
-<div class="topic-content"><div class="container">
-
-<!-- 0. FLASHCARDS -->
-<div class="content-full">
-  <div class="card">
-    <h3><span>🎴</span> Repasa con tarjetas</h3>
-    <div id="fc-a1-01" class="flashcards"></div>
-  </div>
-</div>
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
 <!-- 1. SALUDOS POR HORA -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>🕐</span> 1. Saludos según la hora del día</h3>
+    <h3 id="saludos-segun-la-hora-del-dia">1. Saludos según la hora del día</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:16px">En alemán, el saludo correcto depende del momento del día. Usar el equivocado no es un error grave, pero usar el correcto impresiona.</p>
     <table class="vocab-table">
       <thead><tr><th>Saludo</th><th>Español</th><th>Hora aprox.</th><th>Uso</th></tr></thead>
@@ -85,7 +103,7 @@
 <!-- 2. DESPEDIDAS -->
 <div class="content-full">
   <div class="card">
-    <h3><span>👋</span> 2. Despedidas</h3>
+    <h3 id="despedidas">2. Despedidas</h3>
     <table class="vocab-table">
       <thead><tr><th>Despedida</th><th>Español</th><th>Uso</th></tr></thead>
       <tbody>
@@ -107,7 +125,7 @@
 <!-- 3. PREGUNTAR Y RESPONDER CÓMO ESTÁS -->
 <div class="content-full">
   <div class="card card-red">
-    <h3><span>😊</span> 3. ¿Cómo estás? — Wie geht es dir/Ihnen?</h3>
+    <h3 id="como-estas">3. ¿Cómo estás? — Wie geht es dir/Ihnen?</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:16px"><strong>dir</strong> = informal (con amigos) / <strong>Ihnen</strong> = formal (con desconocidos, jefes)</p>
     <table class="vocab-table">
       <thead><tr><th>Pregunta</th><th>Español</th><th>Uso</th></tr></thead>
@@ -136,7 +154,7 @@
 <!-- 4. PRESENTARSE -->
 <div class="content-full">
   <div class="card">
-    <h3><span>🪪</span> 4. Presentarse — Sich vorstellen</h3>
+    <h3 id="presentarse">4. Presentarse — Sich vorstellen</h3>
     <table class="vocab-table">
       <thead><tr><th>Frase</th><th>Español</th><th>Contexto</th></tr></thead>
       <tbody>
@@ -160,7 +178,7 @@
 <!-- 5. PALABRAS CORTESES -->
 <div class="content-full">
   <div class="card">
-    <h3><span>🎩</span> 5. Palabras de cortesía indispensables</h3>
+    <h3 id="palabras-de-cortesia-indispensables">5. Palabras de cortesía indispensables</h3>
     <table class="vocab-table">
       <thead><tr><th>Alemán</th><th>Español</th><th>Cuándo usarlo</th></tr></thead>
       <tbody>
@@ -179,7 +197,7 @@
 <!-- 5b. FRASES COMUNES -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>🗨️</span> Frases comunes en este tema</h3>
+    <h3 id="frases-comunes-en-este-tema">Frases comunes en este tema</h3>
     <div class="phrase-grid">
       <div class="phrase-item"><span class="phrase-situation">Al llegar a la oficina</span><span class="phrase-de">Guten Morgen, wie geht es Ihnen?</span><span class="phrase-es">Buenos días, ¿cómo está usted?</span></div>
       <div class="phrase-item"><span class="phrase-situation">Conociendo a alguien nuevo</span><span class="phrase-de">Freut mich, Sie kennenzulernen!</span><span class="phrase-es">¡Mucho gusto en conocerlo!</span></div>
@@ -196,11 +214,23 @@
     </div>
   </div>
 </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogos">Diálogos</a><a href="#practica-ejercicios">Ejercicios</a></nav></div>
+
+<!-- 0. FLASHCARDS -->
+<div id="practica-tarjetas" class="content-full">
+  <div class="card">
+    <h3>Repasa con tarjetas</h3>
+    <div id="fc-a1-01" class="flashcards"></div>
+  </div>
+</div>
 
 <!-- 6. DIÁLOGOS -->
-<div class="content-full">
+<div id="practica-dialogos" class="content-full">
   <div class="card card-gold">
-    <h3><span>💬</span> 6. Diálogos de práctica</h3>
+    <h3>6. Diálogos de práctica</h3>
 
     <div style="font-size:12px;font-weight:700;color:var(--gold-dark);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Diálogo 1 — Primer encuentro (informal)</div>
     <div class="dialog-box">
@@ -229,9 +259,9 @@
 </div>
 
 <!-- 7. EJERCICIOS -->
-<div class="content-full">
+<div id="practica-ejercicios" class="content-full">
   <div class="card card-red">
-    <h3><span>✏️</span> 7. Ejercicios prácticos</h3>
+    <h3>7. Ejercicios prácticos</h3>
     <div class="exercise">
       <div class="exercise-num">Ejercicio 1 — ¿Qué saludo usas?</div>
       <div class="exercise-q">Son las 8:00 AM. Llegas a la oficina. ¿Cómo saludas a tu jefe?</div>
@@ -258,11 +288,11 @@
     </div>
   </div>
 </div>
-
+</aside>
 </div></div>
 <div class="page-nav">
   <div></div>
-  <a href="a1-02-zahlen.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Zahlen 1–100</div></div><span style="font-size:24px">🔢</span></a>
+  <a href="a1-02-zahlen.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Zahlen 1–100</div></div><img class="pn-foto" src="fotos/a1-02.jpg" alt="" loading="lazy"></a>
 </div>
 <footer class="footer"><p>A1 · 01 — Begrüßungen</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
 <script src="flashcards.js"></script>
@@ -286,5 +316,6 @@ initFlashcards('fc-a1-01', [
   {art:'-', de:'Bitte', es:'Por favor / De nada'}
 ]);
 </script>
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

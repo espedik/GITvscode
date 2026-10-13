@@ -39,29 +39,50 @@
 </style></head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><div class="nav-links"><a href="index.html" class="nav-link">← Índice A1</a><a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a></div></nav>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1" class="on" aria-current="page">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
 
-<div class="topic-hero"><div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a1-06.jpg" alt="Figuras de juguete: un hombre, una mujer y un niño" title="Foto: Steinar Engeland · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Steinar Engeland · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A1 · Tema 06</div>
   <h1>Artikel — <em>der, die, das</em></h1>
   <p class="topic-hero-desc">El artículo es la parte más desafiante del alemán para hispanohablantes. Cada sustantivo tiene un género (masculino, femenino o neutro) que determina qué artículo lleva. Existen reglas y patrones que ayudan.</p>
-  <div class="topic-hero-meta"><span class="meta-pill">🔵 der (masc.)</span><span class="meta-pill">🩷 die (fem.)</span><span class="meta-pill">🟢 das (neutro)</span><span class="meta-pill">🔥 Esencial</span></div>
-</div></div>
-
-<div class="topic-content"><div class="container">
-
-<!-- 0. FLASHCARDS -->
-<div class="content-full">
-  <div class="card">
-    <h3><span>🎴</span> Repasa con tarjetas</h3>
-    <div id="fc-a1-06" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill"><i class="punto" style="background:#1668c7"></i>der (masc.)</span><span class="meta-pill">die (fem.)</span><span class="meta-pill"><i class="punto" style="background:#059669"></i>das (neutro)</span><span class="meta-pill">Esencial</span></div>
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#los-tres-articulos-definidos"><span>Los tres artículos definidos</span></a></li>
+        <li><a href="#pistas-para-adivinar-el-genero"><span>Pistas para adivinar el género</span></a></li>
+        <li><a href="#articulo-indefinido-ein-eine-y-negacion-ke"><span>Artículo indefinido (ein/eine) y negación (kein/keine)</span></a></li>
+        <li><a href="#los-50-sustantivos-mas-frecuentes"><span>Los 50 sustantivos más frecuentes</span></a></li>
+        <li><a href="#frases-comunes-en-este-tema"><span>Frases comunes en este tema</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 3 bloques →</a>
+    </nav>
   </div>
 </div>
+
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
 <!-- LOS 3 ARTÍCULOS -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>📌</span> 1. Los tres artículos definidos</h3>
+    <h3 id="los-tres-articulos-definidos">1. Los tres artículos definidos</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:16px">En alemán cada sustantivo tiene un género gramatical que no siempre coincide con el género natural. El neutro (<em>das</em>) es único del alemán.</p>
     <div style="margin-bottom:20px">
       <span class="art-big art-der">der</span><span style="font-size:14px;color:#2563eb;font-weight:700">masculino</span><br style="margin:4px 0">
@@ -107,7 +128,7 @@
 <!-- PISTAS DE GÉNERO -->
 <div class="content-full">
   <div class="card card-red">
-    <h3><span>🔍</span> 2. Pistas para adivinar el género</h3>
+    <h3 id="pistas-para-adivinar-el-genero">2. Pistas para adivinar el género</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:16px">No hay reglas perfectas, pero estas pistas cubren más del 80% de los casos. Memorizar los patrones de terminación te ahorra mucho trabajo.</p>
     <div class="gender-grid">
       <div class="gender-card m">
@@ -139,7 +160,7 @@
 <!-- ARTÍCULO INDEFINIDO Y NEGACIÓN -->
 <div class="content-full">
   <div class="card">
-    <h3><span>❓</span> 3. Artículo indefinido (ein/eine) y negación (kein/keine)</h3>
+    <h3 id="articulo-indefinido-ein-eine-y-negacion-ke">3. Artículo indefinido (ein/eine) y negación (kein/keine)</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px">El artículo indefinido equivale a "un/una". La negación <em>kein/keine</em> equivale a "ningún/ninguna".</p>
     <table class="vocab-table">
       <thead><tr><th>Género</th><th>Definido</th><th>Indefinido</th><th>Negación</th><th>Ejemplo</th></tr></thead>
@@ -160,7 +181,7 @@
 <!-- 50 SUSTANTIVOS CON ARTÍCULO -->
 <div class="content-full">
   <div class="card">
-    <h3><span>📚</span> 4. Los 50 sustantivos más frecuentes — con artículo</h3>
+    <h3 id="los-50-sustantivos-mas-frecuentes">4. Los 50 sustantivos más frecuentes — con artículo</h3>
     <table class="vocab-table">
       <thead><tr><th>der (masc.)</th><th>die (fem.)</th><th>das (neutro)</th></tr></thead>
       <tbody>
@@ -187,7 +208,7 @@
 <!-- FRASES COMUNES -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>🗨️</span> Frases comunes en este tema</h3>
+    <h3 id="frases-comunes-en-este-tema">Frases comunes en este tema</h3>
     <div class="phrase-grid">
       <div class="phrase-item"><span class="phrase-situation">Preguntando qué es algo</span><span class="phrase-de">Was ist das?</span><span class="phrase-es">¿Qué es eso?</span></div>
       <div class="phrase-item"><span class="phrase-situation">Identificando un objeto</span><span class="phrase-de">Das ist ein Tisch.</span><span class="phrase-es">Eso es una mesa.</span></div>
@@ -204,11 +225,23 @@
     </div>
   </div>
 </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a></nav></div>
+
+<!-- 0. FLASHCARDS -->
+<div id="practica-tarjetas" class="content-full">
+  <div class="card">
+    <h3>Repasa con tarjetas</h3>
+    <div id="fc-a1-06" class="flashcards"></div>
+  </div>
+</div>
 
 <!-- DIÁLOGO -->
-<div class="content-full">
+<div id="practica-dialogo" class="content-full">
   <div class="card">
-    <h3><span>💬</span> Diálogo de práctica — ¿Qué es eso?</h3>
+    <h3>Diálogo de práctica — ¿Qué es eso?</h3>
     <div class="dialog-box">
       <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Was ist das?</div><div class="dialog-es">¿Qué es eso?</div></div></div>
       <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Das ist ein Wörterbuch. Ich brauche es für den Deutschkurs.</div><div class="dialog-es">Eso es un diccionario. Lo necesito para el curso de alemán.</div></div></div>
@@ -220,20 +253,20 @@
 </div>
 
 <!-- EJERCICIOS -->
-<div class="content-full">
+<div id="practica-ejercicios" class="content-full">
   <div class="card card-red">
-    <h3><span>✏️</span> 5. Ejercicios</h3>
+    <h3>5. Ejercicios</h3>
     <div class="exercise"><div class="exercise-num">Ejercicio 1 — Artículo correcto</div><div class="exercise-q">___ Tisch / ___ Schule / ___ Auto / ___ Kind / ___ Mutter</div><div class="exercise-hint">der / die / das / das / die</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 2 — Niega la oración</div><div class="exercise-q">Ich habe ein Auto. → Ich habe _____ Auto.<br>Das ist eine Schule. → Das ist _____ Schule.</div><div class="exercise-hint">kein / keine</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 3 — ¿Qué artículo? (por terminación)</div><div class="exercise-q">___ Zeitung / ___ Schönheit / ___ Frühling / ___ Mädchen / ___ Bäckerei</div><div class="exercise-hint">die (-ung) / die (-heit) / der (estación) / das (-chen) / die (-ei)</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 4 — Lista personal</div><div class="placeholder" style="margin-top:8px">Escribe 10 objetos de tu entorno con el artículo correcto: der/die/das...</div></div>
   </div>
 </div>
-
+</aside>
 </div></div>
 <div class="page-nav">
-  <a href="a1-05-familie.html" class="page-nav-btn"><span style="font-size:24px">👨‍👩‍👧</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Familie</div></div></a>
-  <a href="a1-07-pronomen.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Personalpronomen</div></div><span style="font-size:24px">👤</span></a>
+  <a href="a1-05-familie.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a1-05.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Familie</div></div></a>
+  <a href="a1-07-pronomen.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Personalpronomen</div></div><img class="pn-foto" src="fotos/a1-07.jpg" alt="" loading="lazy"></a>
 </div>
 <footer class="footer"><p>A1 · 06 — Artikel: der, die, das</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
 <script src="flashcards.js"></script>
@@ -257,5 +290,6 @@ initFlashcards('fc-a1-06', [
   {art:'das', de:'Wasser', es:'el agua'}
 ]);
 </script>
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

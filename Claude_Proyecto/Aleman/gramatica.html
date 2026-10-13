@@ -16,7 +16,29 @@
 .gram-hero h1 em{font-style:normal;color:var(--red)}
 
 /* ── STICKY SIDE NAV ── */
-.gram-layout{display:grid;grid-template-columns:220px 1fr;gap:28px;padding:28px 32px 80px;max-width:1200px;margin:0 auto}
+.gram-layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:28px;padding:28px 40px 80px;max-width:1760px;margin:0 auto}
+.gram-layout>main{min-width:0}
+/* Entre 901 y 1100 px el índice se angosta para que las tablas de cinco columnas quepan sin salirse. */
+@media(min-width:901px) and (max-width:1100px){.gram-layout{grid-template-columns:180px minmax(0,1fr);gap:20px;padding:24px 24px 72px}}
+/* Desde 1800 px, las secciones van en dos columnas parejas; los capítulos, la introducción y la
+   tabla maestra, a todo el ancho. El índice de la izquierda sigue llevando a cada una. */
+@media(min-width:1800px){
+  .gram-layout>main{column-count:2;column-gap:32px}
+  .gram-layout>main .case-table th,.gram-layout>main .case-table td{padding-left:8px;padding-right:8px}   /* las de 8 columnas (irregulares, modales) caben en media columna */
+  .gram-layout>main>*{break-inside:avoid}
+  .gram-layout>main>.chapter-banner,#casos-intro,#tabla-maestra{column-span:all}
+  .gram-layout>main>.chapter-banner:first-child{margin-top:0}
+}
+.gram-hero.lec-hero{padding:28px 0 30px}
+.gram-casos{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.gram-casos li{display:grid;grid-template-columns:104px minmax(0,1fr) auto;align-items:center;gap:12px;padding:9px 14px;border-radius:10px;font-size:13.5px}
+.gram-casos b{font-weight:800}
+.gram-casos span{color:var(--text2)}
+.gram-casos em{font-style:normal;font-weight:800;color:var(--black);white-space:nowrap}
+.gc-nom{background:rgba(37,99,235,.08)}.gc-nom b{color:#2563eb}
+.gc-akk{background:rgba(204,0,0,.07)}.gc-akk b{color:#cc0000}
+.gc-dat{background:rgba(5,150,105,.08)}.gc-dat b{color:#059669}
+.gc-gen{background:rgba(124,58,237,.08)}.gc-gen b{color:#7c3aed}
 .gram-nav{position:sticky;top:80px;height:fit-content}
 .gram-nav-item{display:block;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;color:var(--text2);transition:all .2s;border-left:3px solid transparent}
 .gram-nav-item:hover{color:var(--red);background:rgba(204,0,0,.05)}
@@ -185,28 +207,36 @@
 <body>
 
 
-<nav class="nav">
-  <a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>
-  <div class="nav-links">
-    <a href="index.html" class="nav-link">Inicio</a>
-    <a href="principiantes.html" class="nav-link">Principiantes</a>
-    <a href="gramatica.html" class="nav-link active">Gramática</a>
-    <a href="vocabulario.html" class="nav-link">Vocabulario</a>
-  
-    <a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html" class="on" aria-current="page">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
   </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
 </nav>
 
-<div class="gram-hero">
-  <div style="max-width:1200px;margin:0 auto;padding:0">
-    <div style="font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Referencia completa</div>
-    <h1>Gramática <em>alemana</em> — Todas las tablas</h1>
-    <p style="color:var(--text2);font-size:15px;max-width:580px">Nominativ, Akkusativ, Dativ, Genitiv — todos los casos con tablas ultra claras. Tu referencia permanente para hablar alemán correctamente.</p>
-    <div class="legend" style="margin-top:16px">
-      <span class="leg-pill leg-nom">🔵 Nominativ — sujeto</span>
-      <span class="leg-pill leg-akk">🔴 Akkusativ — objeto directo</span>
-      <span class="leg-pill leg-dat">🟢 Dativ — objeto indirecto</span>
-      <span class="leg-pill leg-gen">🟣 Genitiv — posesión</span>
+<div class="gram-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/t-gram.jpg" alt="Libros abiertos con una pluma sobre una mesa" title="Foto: Aaron Burden · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Aaron Burden · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
+      <div class="topic-hero-tag">Referencia completa</div>
+      <h1>Gramática <em>alemana</em> — Todas las tablas</h1>
+      <p class="topic-hero-desc">Nominativ, Akkusativ, Dativ, Genitiv — todos los casos con tablas ultra claras. Tu referencia permanente para hablar alemán correctamente.</p>
+    </div>
+    <div class="lec-indice gram-colores">
+      <div class="lec-indice-t">El color de cada caso · su artículo (m · f · n · plural)</div>
+      <ul class="gram-casos">
+        <li class="gc-nom"><b>Nominativ</b><span>el sujeto</span><em>der · die · das · die</em></li>
+        <li class="gc-akk"><b>Akkusativ</b><span>el objeto directo</span><em>den · die · das · die</em></li>
+        <li class="gc-dat"><b>Dativ</b><span>el objeto indirecto</span><em>dem · der · dem · den</em></li>
+        <li class="gc-gen"><b>Genitiv</b><span>la posesión</span><em>des · der · des · der</em></li>
+      </ul>
     </div>
   </div>
 </div>
@@ -760,8 +790,9 @@
 const sections = document.querySelectorAll('.gram-section[id]');
 const navItems = document.querySelectorAll('.gram-nav-item');
 window.addEventListener('scroll', ()=>{
-  let cur='';
-  sections.forEach(s=>{if(s.getBoundingClientRect().top<=120)cur=s.id});
+  let cur='', izq=Infinity;
+  sections.forEach(s=>{const r=s.getBoundingClientRect();if(r.top<=120&&r.bottom>120&&r.left<izq){izq=r.left;cur=s.id}});
+  if(!cur) sections.forEach(s=>{if(s.getBoundingClientRect().top<=120)cur=s.id});
   navItems.forEach(n=>{
     n.classList.toggle('active', n.getAttribute('href')==='#'+cur);
   });

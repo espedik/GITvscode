@@ -6,28 +6,46 @@
 <link rel="stylesheet" href="styles.css"></head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>  <div class="nav-links">
-    <a href="index.html" class="nav-back">← Índice</a>
-    <a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a>
-  </div></nav>
-<div class="topic-hero"><div class="container">
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2" class="on" aria-current="page">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a2-19.jpg" alt="El pasillo de un supermercado" title="Foto: Simon Shek · Flickr · BY 2.0" width="360" height="240"><figcaption>Foto: Simon Shek · Flickr · BY 2.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A2 · Vocabulario · Tema 19</div>
   <h1>Einkaufen & <em>Preise</em></h1>
   <p class="topic-hero-desc">Comprar ropa, hacer el supermercado, pagar y entender precios. Vocabulario diario indispensable para vivir en Alemania.</p>
-  <div class="topic-hero-meta"><span class="meta-pill">🛒 Compras</span><span class="meta-pill">💶 Precios</span><span class="meta-pill">⏱️ ~40 min</span></div>
-</div></div>
-<div class="topic-content"><div class="container">
-
-  <div class="content-full">
-    <div class="card">
-      <h3><span>🎴</span> Repasa con tarjetas</h3>
-      <div id="fc-a2-19" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill">Compras</span><span class="meta-pill">Precios</span><span class="meta-pill">~40 min</span></div>
     </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#lugares-de-compra"><span>Lugares de compra</span></a></li>
+        <li><a href="#vocabulario-de-compras"><span>Vocabulario de compras</span></a></li>
+        <li><a href="#frases-de-compras"><span>Frases de compras</span></a></li>
+        <li><a href="#frases-comunes-en-este-tema"><span>Frases comunes en este tema</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 4 bloques →</a>
+    </nav>
   </div>
+</div>
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
   <div class="content-grid">
     <div class="card">
-      <h3><span>🏪</span> Lugares de compra</h3>
+      <h3 id="lugares-de-compra">Lugares de compra</h3>
       <table class="vocab-table">
         <thead><tr><th>Alemán</th><th>Español</th></tr></thead>
         <tbody>
@@ -46,7 +64,7 @@
       </table>
     </div>
     <div class="card">
-      <h3><span>💶</span> Vocabulario de compras</h3>
+      <h3 id="vocabulario-de-compras">Vocabulario de compras</h3>
       <table class="vocab-table">
         <thead><tr><th>Alemán</th><th>Español</th></tr></thead>
         <tbody>
@@ -69,7 +87,7 @@
 
   <div class="content-full">
     <div class="card">
-      <h3><span>💬</span> Frases de compras</h3>
+      <h3 id="frases-de-compras">Frases de compras</h3>
       <div class="example"><div class="example-de">Was kostet das? / Wie viel kostet das?</div><div class="example-es">¿Cuánto cuesta esto?</div></div>
       <div class="example"><div class="example-de">Haben Sie das in Größe M?</div><div class="example-es">¿Lo tiene en talla M?</div></div>
       <div class="example"><div class="example-de">Ich möchte das zurückgeben.</div><div class="example-es">Quisiera devolver esto.</div></div>
@@ -80,7 +98,7 @@
 
   <div class="content-full">
     <div class="card card-gold">
-      <h3><span>🗨️</span> Frases comunes en este tema</h3>
+      <h3 id="frases-comunes-en-este-tema">Frases comunes en este tema</h3>
       <div class="phrase-grid">
         <div class="phrase-item"><span class="phrase-situation">Preguntando el precio</span><span class="phrase-de">Entschuldigung, was kostet dieses Hemd?</span><span class="phrase-es">Disculpe, ¿cuánto cuesta esta camisa?</span></div>
         <div class="phrase-item"><span class="phrase-situation">Probándose ropa</span><span class="phrase-de">Kann ich das anprobieren?</span><span class="phrase-es">¿Puedo probármelo?</span></div>
@@ -97,10 +115,21 @@
       </div>
     </div>
   </div>
+</div>
 
-  <div class="content-full">
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a><a href="#practica-notas">Notas</a></nav></div>
+
+  <div id="practica-tarjetas" class="content-full">
     <div class="card">
-      <h3><span>💬</span> Diálogo de práctica — Comprando ropa</h3>
+      <h3>Repasa con tarjetas</h3>
+      <div id="fc-a2-19" class="flashcards"></div>
+    </div>
+  </div>
+
+  <div id="practica-dialogo" class="content-full">
+    <div class="card">
+      <h3>Diálogo de práctica — Comprando ropa</h3>
       <div class="dialog-box">
         <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Guten Tag! Ich suche ein Hemd für die Arbeit.</div><div class="dialog-es">¡Buenos días! Busco una camisa para el trabajo.</div></div></div>
         <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Welche Größe brauchen Sie? Wir haben viele Farben.</div><div class="dialog-es">¿Qué talla necesita? Tenemos muchos colores.</div></div></div>
@@ -112,21 +141,21 @@
     </div>
   </div>
 
-  <div class="content-full mt32">
+  <div id="practica-ejercicios" class="content-full mt32">
     <div class="card card-red">
-      <h3><span>✏️</span> Ejercicios</h3>
+      <h3>Ejercicios</h3>
       <div class="exercise"><div class="exercise-num">Ejercicio 1 — En la tienda</div><div class="exercise-q">¿Cómo preguntas si tienen una camisa azul en talla L?</div><div class="exercise-hint">Pista: Haben Sie ein blaues Hemd in Größe L?</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 2 — Lista del supermercado</div><div class="placeholder" style="margin-top:8px">Escribe tu lista de compras semanal en alemán: Ich brauche...</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 3 — Roleplay en tienda de ropa</div><div class="placeholder" style="margin-top:8px">Diálogo completo: buscar prenda, preguntar talla, precio, pagar</div></div>
     </div>
   </div>
 
-  <div class="content-full"><div class="card"><h3><span>📝</span> Mis notas</h3><div class="placeholder">Vocabulario de compras más útil para el día a día en Alemania</div></div></div>
-
+  <div id="practica-notas" class="content-full"><div class="card"><h3>Mis notas</h3><div class="placeholder">Vocabulario de compras más útil para el día a día en Alemania</div></div></div>
+</aside>
 </div></div>
 <div class="page-nav">
-  <a href="a2-18-essen.html" class="page-nav-btn"><span style="font-size:24px">🍽️</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Essen & Kochen</div></div></a>
-  <a href="a2-20-medien.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Medien & Technologie</div></div><span style="font-size:24px">📱</span></a>
+  <a href="a2-18-essen.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a2-18.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Essen & Kochen</div></div></a>
+  <a href="a2-20-medien.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Medien & Technologie</div></div><img class="pn-foto" src="fotos/a2-20.jpg" alt="" loading="lazy"></a>
 </div>
 <footer class="footer"><p>A2 · 19 — Einkaufen & Preise</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
 <script src="flashcards.js"></script>
@@ -150,5 +179,6 @@ initFlashcards('fc-a2-19', [
   {art:'die', de:'Umkleidekabine', es:'el probador'}
 ]);
 </script>
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

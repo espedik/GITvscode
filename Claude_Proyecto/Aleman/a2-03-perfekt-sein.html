@@ -25,30 +25,49 @@
 </head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>  <div class="nav-links">
-    <a href="index.html" class="nav-back">← Índice</a>
-    <a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a>
-  </div></nav>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2" class="on" aria-current="page">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
 
-<div class="topic-hero"><div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a2-03.jpg" alt="Excursionistas caminan por un sendero" title="Foto: Austin Ban · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Austin Ban · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A2 · Gramática · Tema 03</div>
   <h1>Perfekt mit <em>sein</em></h1>
   <p class="topic-hero-desc">Algunos verbos forman el Perfekt con sein en vez de haben. Generalmente son verbos de movimiento o cambio de estado.</p>
-  <div class="topic-hero-meta"><span class="meta-pill">⚙️ Gramática</span><span class="meta-pill">🚶 Movimiento</span><span class="meta-pill">⏱️ ~45 min</span></div>
-</div></div>
-
-<div class="topic-content"><div class="container">
-
-  <div class="content-full">
-    <div class="card">
-      <h3><span>🎴</span> Repasa con tarjetas</h3>
-      <div id="fc-a2-03" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill">Gramática</span><span class="meta-pill">Movimiento</span><span class="meta-pill">~45 min</span></div>
     </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#cuando-se-usa-sein"><span>¿Cuándo se usa sein?</span></a></li>
+        <li><a href="#verbos-que-usan-sein-partizip-ii"><span>Verbos que usan sein + Partizip II</span></a></li>
+        <li><a href="#frases-comunes-usando-el-perfekt-con-sein"><span>Frases comunes usando el Perfekt con sein</span></a></li>
+        <li><a href="#ejemplos-en-contexto"><span>Ejemplos en contexto</span></a></li>
+        <li><a href="#haben-vs-sein"><span>haben vs. sein</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 4 bloques →</a>
+    </nav>
   </div>
+</div>
+
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
   <div class="content-full">
     <div class="card card-gold">
-      <h3><span>💡</span> ¿Cuándo se usa sein?</h3>
+      <h3 id="cuando-se-usa-sein">¿Cuándo se usa sein?</h3>
       <div class="rule-box">
         Verbos de <strong>movimiento</strong>: gehen, fahren, laufen, kommen...<br>
         Verbos de <strong>cambio de estado</strong>: werden, sterben, aufwachen...<br>
@@ -61,7 +80,7 @@
 
   <div class="content-full">
     <div class="card">
-      <h3><span>📚</span> Verbos que usan sein + Partizip II</h3>
+      <h3 id="verbos-que-usan-sein-partizip-ii">Verbos que usan sein + Partizip II</h3>
       <table class="vocab-table">
         <thead><tr><th>Infinitivo</th><th>Partizip II</th><th>Español</th><th>Ejemplo</th></tr></thead>
         <tbody>
@@ -89,7 +108,7 @@
   <!-- FRASES COMUNES -->
   <div class="content-full">
     <div class="card card-gold">
-      <h3><span>🗨️</span> Frases comunes usando el Perfekt con sein</h3>
+      <h3 id="frases-comunes-usando-el-perfekt-con-sein">Frases comunes usando el Perfekt con sein</h3>
       <div class="phrase-grid">
         <div class="phrase-item"><span class="phrase-situation">Contar un viaje</span><span class="phrase-de">Ich bin letztes Jahr nach Spanien gereist.</span><span class="phrase-es">Viajé a España el año pasado.</span></div>
         <div class="phrase-item"><span class="phrase-situation">Preguntar por llegada</span><span class="phrase-de">Wann bist du angekommen?</span><span class="phrase-es">¿Cuándo llegaste?</span></div>
@@ -105,10 +124,34 @@
     </div>
   </div>
 
-  <!-- DIÁLOGO -->
-  <div class="content-full">
+  <div class="content-grid">
     <div class="card">
-      <h3><span>💬</span> Diálogo de práctica — Después del viaje</h3>
+      <h3 id="ejemplos-en-contexto">Ejemplos en contexto</h3>
+      <div class="example"><div class="example-de">Gestern bin ich ins Kino gegangen.</div><div class="example-es">Ayer fui al cine.</div></div>
+      <div class="example"><div class="example-de">Wann bist du aufgestanden?</div><div class="example-es">¿Cuándo te levantaste?</div></div>
+      <div class="example"><div class="example-de">Wir sind mit dem Zug gefahren.</div><div class="example-es">Fuimos en tren.</div></div>
+    </div>
+    <div class="card">
+      <h3 id="haben-vs-sein">haben vs. sein — truco</h3>
+      <div class="rule-box">¿El verbo implica <strong>movimiento de A a B</strong>?<br>→ usa <strong style="color:var(--gold)">sein</strong><br><br>¿No hay cambio de lugar?<br>→ usa <strong style="color:var(--gold)">haben</strong><br><br>Ich habe gegessen. ✓ (no hay movimiento)<br>Ich bin gegangen. ✓ (hay movimiento)</div>
+    </div>
+  </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a><a href="#practica-notas">Notas</a></nav></div>
+
+  <div id="practica-tarjetas" class="content-full">
+    <div class="card">
+      <h3>Repasa con tarjetas</h3>
+      <div id="fc-a2-03" class="flashcards"></div>
+    </div>
+  </div>
+
+  <!-- DIÁLOGO -->
+  <div id="practica-dialogo" class="content-full">
+    <div class="card">
+      <h3>Diálogo de práctica — Después del viaje</h3>
       <div class="dialog-box">
         <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Wo bist du in den Ferien gewesen?</div><div class="dialog-es">¿Dónde estuviste en las vacaciones?</div></div></div>
         <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ich bin nach Italien geflogen und dort viel gewandert.</div><div class="dialog-es">Volé a Italia y caminé mucho allá.</div></div></div>
@@ -119,22 +162,9 @@
     </div>
   </div>
 
-  <div class="content-grid">
-    <div class="card">
-      <h3><span>💬</span> Ejemplos en contexto</h3>
-      <div class="example"><div class="example-de">Gestern bin ich ins Kino gegangen.</div><div class="example-es">Ayer fui al cine.</div></div>
-      <div class="example"><div class="example-de">Wann bist du aufgestanden?</div><div class="example-es">¿Cuándo te levantaste?</div></div>
-      <div class="example"><div class="example-de">Wir sind mit dem Zug gefahren.</div><div class="example-es">Fuimos en tren.</div></div>
-    </div>
-    <div class="card">
-      <h3><span>⚠️</span> haben vs. sein — truco</h3>
-      <div class="rule-box">¿El verbo implica <strong>movimiento de A a B</strong>?<br>→ usa <strong style="color:var(--gold)">sein</strong><br><br>¿No hay cambio de lugar?<br>→ usa <strong style="color:var(--gold)">haben</strong><br><br>Ich habe gegessen. ✓ (no hay movimiento)<br>Ich bin gegangen. ✓ (hay movimiento)</div>
-    </div>
-  </div>
-
-  <div class="content-full mt32">
+  <div id="practica-ejercicios" class="content-full mt32">
     <div class="card card-red">
-      <h3><span>✏️</span> Ejercicios</h3>
+      <h3>Ejercicios</h3>
       <div class="exercise"><div class="exercise-num">Ejercicio 1 — haben o sein?</div><div class="exercise-q">Er <span class="exercise-blank"></span> nach Hause gegangen.</div><div class="exercise-hint">Pista: sein — movimiento</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 2</div><div class="exercise-q">Wir <span class="exercise-blank"></span> einen Film gesehen.</div><div class="exercise-hint">Pista: haben — no hay movimiento</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 3 — Completa con el Partizip II</div><div class="exercise-q">Ich bin zu spät <span class="exercise-blank"></span>. (kommen)</div><div class="exercise-hint">Pista: gekommen</div></div>
@@ -142,13 +172,13 @@
     </div>
   </div>
 
-  <div class="content-full"><div class="card"><h3><span>📝</span> Mis notas</h3><div class="placeholder">Lista personalizada de verbos con sein que más usas</div></div></div>
-
+  <div id="practica-notas" class="content-full"><div class="card"><h3>Mis notas</h3><div class="placeholder">Lista personalizada de verbos con sein que más usas</div></div></div>
+</aside>
 </div></div>
 
 <div class="page-nav">
-  <a href="a2-02-perfekt-haben.html" class="page-nav-btn"><span style="font-size:24px">✅</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Perfekt mit haben</div></div></a>
-  <a href="a2-04-prateritum.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Präteritum</div></div><span style="font-size:24px">📜</span></a>
+  <a href="a2-02-perfekt-haben.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a2-02.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Perfekt mit haben</div></div></a>
+  <a href="a2-04-prateritum.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Präteritum</div></div><img class="pn-foto" src="fotos/a2-04.jpg" alt="" loading="lazy"></a>
 </div>
 <footer class="footer"><p>A2 · 03 — Perfekt mit sein</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
 
@@ -172,5 +202,6 @@ initFlashcards('fc-a2-03', [
 ]);
 </script>
 
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

@@ -6,28 +6,47 @@
 <link rel="stylesheet" href="styles.css"></head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>  <div class="nav-links">
-    <a href="index.html" class="nav-back">← Índice</a>
-    <a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a>
-  </div></nav>
-<div class="topic-hero"><div class="container">
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2" class="on" aria-current="page">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a2-20.jpg" alt="Una mano con un celular y un café" title="Foto: JESHOOTS.com · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: JESHOOTS.com · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A2 · Vocabulario · Tema 20</div>
   <h1>Medien & <em>Technologie</em></h1>
   <p class="topic-hero-desc">Vocabulario digital y mediático. Desde hablar de redes sociales hasta usar el transporte público digital en Alemania.</p>
-  <div class="topic-hero-meta"><span class="meta-pill">📱 Tecnología</span><span class="meta-pill">🌐 Internet</span><span class="meta-pill">⏱️ ~35 min</span></div>
-</div></div>
-<div class="topic-content"><div class="container">
-
-  <div class="content-full">
-    <div class="card">
-      <h3><span>🎴</span> Repasa con tarjetas</h3>
-      <div id="fc-a2-20" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill">Tecnología</span><span class="meta-pill">Internet</span><span class="meta-pill">~35 min</span></div>
     </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#dispositivos"><span>Dispositivos</span></a></li>
+        <li><a href="#internet-y-redes"><span>Internet y redes</span></a></li>
+        <li><a href="#medios-de-comunicacion"><span>Medios de comunicación</span></a></li>
+        <li><a href="#frases-tecnologicas"><span>Frases tecnológicas</span></a></li>
+        <li><a href="#frases-comunes-en-este-tema"><span>Frases comunes en este tema</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 4 bloques →</a>
+    </nav>
   </div>
+</div>
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
   <div class="content-grid">
     <div class="card">
-      <h3><span>📱</span> Dispositivos</h3>
+      <h3 id="dispositivos">Dispositivos</h3>
       <table class="vocab-table">
         <thead><tr><th>Alemán</th><th>Español</th></tr></thead>
         <tbody>
@@ -45,7 +64,7 @@
       </table>
     </div>
     <div class="card">
-      <h3><span>🌐</span> Internet y redes</h3>
+      <h3 id="internet-y-redes">Internet y redes</h3>
       <table class="vocab-table">
         <thead><tr><th>Alemán</th><th>Español</th></tr></thead>
         <tbody>
@@ -68,7 +87,7 @@
 
   <div class="content-full">
     <div class="card">
-      <h3><span>📺</span> Medios de comunicación</h3>
+      <h3 id="medios-de-comunicacion">Medios de comunicación</h3>
       <table class="vocab-table">
         <thead><tr><th>Alemán</th><th>Español</th></tr></thead>
         <tbody>
@@ -86,7 +105,7 @@
 
   <div class="content-full">
     <div class="card">
-      <h3><span>💬</span> Frases tecnológicas</h3>
+      <h3 id="frases-tecnologicas">Frases tecnológicas</h3>
       <div class="example"><div class="example-de">Haben Sie WLAN? Was ist das Passwort?</div><div class="example-es">¿Tienen WiFi? ¿Cuál es la contraseña?</div></div>
       <div class="example"><div class="example-de">Mein Handy hat keinen Akku mehr.</div><div class="example-es">Mi celular ya no tiene batería.</div></div>
       <div class="example"><div class="example-de">Ich schaue gern Serien auf Netflix.</div><div class="example-es">Me gusta ver series en Netflix.</div></div>
@@ -96,7 +115,7 @@
 
   <div class="content-full">
     <div class="card card-gold">
-      <h3><span>🗨️</span> Frases comunes en este tema</h3>
+      <h3 id="frases-comunes-en-este-tema">Frases comunes en este tema</h3>
       <div class="phrase-grid">
         <div class="phrase-item"><span class="phrase-situation">Preguntando por el wifi</span><span class="phrase-de">Entschuldigung, haben Sie hier WLAN?</span><span class="phrase-es">Disculpe, ¿tienen wifi aquí?</span></div>
         <div class="phrase-item"><span class="phrase-situation">Pidiendo recomendación de serie</span><span class="phrase-de">Welche Serie kannst du mir empfehlen?</span><span class="phrase-es">¿Qué serie me puedes recomendar?</span></div>
@@ -114,9 +133,30 @@
     </div>
   </div>
 
+  <!-- Última página — mensaje motivacional -->
   <div class="content-full">
+    <div class="card" style="background:linear-gradient(135deg,rgba(221,0,0,.08),rgba(255,206,0,.08));border:1.5px solid rgba(255,206,0,.25);text-align:center;padding:40px">
+      <div style="font-size:40px;margin-bottom:16px">🎉</div>
+      <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--gold);margin-bottom:10px">¡Has completado todos los temas A2!</div>
+      <p style="color:var(--text2);font-size:15px;max-width:480px;margin:0 auto 20px">Dominar estos 20 temas te da las herramientas para desenvolverte en Alemania con confianza. Ahora es tiempo de practicar y avanzar al B1.</p>
+      <a href="index.html" style="display:inline-block;padding:12px 28px;background:linear-gradient(135deg,var(--red),var(--gold));color:#000;border-radius:8px;font-weight:800;text-decoration:none;font-size:14px">← Volver al índice</a>
+    </div>
+  </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a><a href="#practica-notas">Notas</a></nav></div>
+
+  <div id="practica-tarjetas" class="content-full">
     <div class="card">
-      <h3><span>💬</span> Diálogo de práctica — Problema técnico en un café</h3>
+      <h3>Repasa con tarjetas</h3>
+      <div id="fc-a2-20" class="flashcards"></div>
+    </div>
+  </div>
+
+  <div id="practica-dialogo" class="content-full">
+    <div class="card">
+      <h3>Diálogo de práctica — Problema técnico en un café</h3>
       <div class="dialog-box">
         <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Entschuldigung, haben Sie hier WLAN?</div><div class="dialog-es">Disculpe, ¿tienen wifi aquí?</div></div></div>
         <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ja, das Passwort steht auf der Quittung.</div><div class="dialog-es">Sí, la contraseña está en el recibo.</div></div></div>
@@ -127,31 +167,21 @@
     </div>
   </div>
 
-  <div class="content-full mt32">
+  <div id="practica-ejercicios" class="content-full mt32">
     <div class="card card-red">
-      <h3><span>✏️</span> Ejercicios</h3>
+      <h3>Ejercicios</h3>
       <div class="exercise"><div class="exercise-num">Ejercicio 1 — ¿Cómo pides el WiFi en un café?</div><div class="exercise-hint">Pista: Entschuldigung, haben Sie WLAN? Was ist das Passwort?</div><div class="placeholder" style="margin-top:8px">Escribe el diálogo completo</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 2 — Describe tus hábitos digitales</div><div class="placeholder" style="margin-top:8px">Ich benutze... / Ich schaue... / Ich lese... / Täglich/oft/manchmal...</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 3 — Apps útiles en Alemania</div><div class="placeholder" style="margin-top:8px">Investiga: DB Navigator, BVG, Google Maps en alemán. Escribe cómo las usarías.</div></div>
     </div>
   </div>
 
-  <!-- Última página — mensaje motivacional -->
-  <div class="content-full">
-    <div class="card" style="background:linear-gradient(135deg,rgba(221,0,0,.08),rgba(255,206,0,.08));border:1.5px solid rgba(255,206,0,.25);text-align:center;padding:40px">
-      <div style="font-size:40px;margin-bottom:16px">🎉</div>
-      <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--gold);margin-bottom:10px">¡Has completado todos los temas A2!</div>
-      <p style="color:var(--text2);font-size:15px;max-width:480px;margin:0 auto 20px">Dominar estos 20 temas te da las herramientas para desenvolverte en Alemania con confianza. Ahora es tiempo de practicar y avanzar al B1.</p>
-      <a href="index.html" style="display:inline-block;padding:12px 28px;background:linear-gradient(135deg,var(--red),var(--gold));color:#000;border-radius:8px;font-weight:800;text-decoration:none;font-size:14px">← Volver al índice</a>
-    </div>
-  </div>
-
-  <div class="content-full"><div class="card"><h3><span>📝</span> Mis notas</h3><div class="placeholder">Apps y recursos digitales que usaré para practicar alemán a diario</div></div></div>
-
+  <div id="practica-notas" class="content-full"><div class="card"><h3>Mis notas</h3><div class="placeholder">Apps y recursos digitales que usaré para practicar alemán a diario</div></div></div>
+</aside>
 </div></div>
 <div class="page-nav">
-  <a href="a2-19-einkaufen.html" class="page-nav-btn"><span style="font-size:24px">🛒</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Einkaufen & Preise</div></div></a>
-  <a href="index.html" class="page-nav-btn next"><div><div class="page-nav-dir">Fin del A2 →</div><div class="page-nav-title">Volver al índice</div></div><span style="font-size:24px">🏠</span></a>
+  <a href="a2-19-einkaufen.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a2-19.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Einkaufen & Preise</div></div></a>
+  <a href="index.html" class="page-nav-btn next"><div><div class="page-nav-dir">Fin del A2 →</div><div class="page-nav-title">Volver al índice</div></div></a>
 </div>
 <footer class="footer"><p>A2 · 20 — Medien & Technologie · ¡Nivel A2 completado!</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
 <script src="flashcards.js"></script>
@@ -175,5 +205,6 @@ initFlashcards('fc-a2-20', [
   {art:'-', de:'teilen', es:'compartir'}
 ]);
 </script>
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

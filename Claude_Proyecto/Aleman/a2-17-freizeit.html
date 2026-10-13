@@ -6,28 +6,46 @@
 <link rel="stylesheet" href="styles.css"></head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>  <div class="nav-links">
-    <a href="index.html" class="nav-back">← Índice</a>
-    <a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a>
-  </div></nav>
-<div class="topic-hero"><div class="container">
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2" class="on" aria-current="page">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a2-17.jpg" alt="La marquesina iluminada de un cine" title="Foto: Nathan Engel · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Nathan Engel · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A2 · Vocabulario · Tema 17</div>
   <h1>Freizeit & <em>Hobbys</em></h1>
   <p class="topic-hero-desc">Vocabulario para hablar de tus aficiones, planes de fin de semana y actividades de ocio. Fundamental para hacer amigos alemanes.</p>
-  <div class="topic-hero-meta"><span class="meta-pill">🎯 Ocio</span><span class="meta-pill">🎵 Aficiones</span><span class="meta-pill">⏱️ ~40 min</span></div>
-</div></div>
-<div class="topic-content"><div class="container">
-
-  <div class="content-full">
-    <div class="card">
-      <h3><span>🎴</span> Repasa con tarjetas</h3>
-      <div id="fc-a2-17" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill">Ocio</span><span class="meta-pill">Aficiones</span><span class="meta-pill">~40 min</span></div>
     </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#actividades-populares"><span>Actividades populares</span></a></li>
+        <li><a href="#deportes"><span>Deportes</span></a></li>
+        <li><a href="#hablar-de-aficiones"><span>Hablar de aficiones</span></a></li>
+        <li><a href="#frases-comunes-en-este-tema"><span>Frases comunes en este tema</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 4 bloques →</a>
+    </nav>
   </div>
+</div>
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
   <div class="content-grid">
     <div class="card">
-      <h3><span>🎮</span> Actividades populares</h3>
+      <h3 id="actividades-populares">Actividades populares</h3>
       <table class="vocab-table">
         <thead><tr><th>Alemán</th><th>Español</th></tr></thead>
         <tbody>
@@ -50,7 +68,7 @@
       </table>
     </div>
     <div class="card">
-      <h3><span>⚽</span> Deportes</h3>
+      <h3 id="deportes">Deportes</h3>
       <table class="vocab-table">
         <thead><tr><th>Alemán</th><th>Español</th></tr></thead>
         <tbody>
@@ -73,7 +91,7 @@
 
   <div class="content-full">
     <div class="card">
-      <h3><span>💬</span> Hablar de aficiones</h3>
+      <h3 id="hablar-de-aficiones">Hablar de aficiones</h3>
       <div class="example"><div class="example-de">Was machst du in deiner Freizeit?</div><div class="example-es">¿Qué haces en tu tiempo libre?</div></div>
       <div class="example"><div class="example-de">Ich interessiere mich sehr für Musik und Kochen.</div><div class="example-es">Me interesa mucho la música y la cocina.</div></div>
       <div class="example"><div class="example-de">Ich spiele gern Gitarre, aber ich tanze nicht so gern.</div><div class="example-es">Me gusta tocar guitarra, pero no me gusta tanto bailar.</div></div>
@@ -84,7 +102,7 @@
 
   <div class="content-full">
     <div class="card card-gold">
-      <h3><span>🗨️</span> Frases comunes en este tema</h3>
+      <h3 id="frases-comunes-en-este-tema">Frases comunes en este tema</h3>
       <div class="phrase-grid">
         <div class="phrase-item"><span class="phrase-situation">Invitando a alguien al cine</span><span class="phrase-de">Hast du Lust, mit mir ins Kino zu gehen?</span><span class="phrase-es">¿Te apetece ir al cine conmigo?</span></div>
         <div class="phrase-item"><span class="phrase-situation">Rechazando una invitación</span><span class="phrase-de">Das klingt gut, aber ich habe leider keine Zeit.</span><span class="phrase-es">Suena bien, pero lamentablemente no tengo tiempo.</span></div>
@@ -101,10 +119,21 @@
       </div>
     </div>
   </div>
+</div>
 
-  <div class="content-full">
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a><a href="#practica-notas">Notas</a></nav></div>
+
+  <div id="practica-tarjetas" class="content-full">
     <div class="card">
-      <h3><span>💬</span> Diálogo de práctica — Planeando el fin de semana</h3>
+      <h3>Repasa con tarjetas</h3>
+      <div id="fc-a2-17" class="flashcards"></div>
+    </div>
+  </div>
+
+  <div id="practica-dialogo" class="content-full">
+    <div class="card">
+      <h3>Diálogo de práctica — Planeando el fin de semana</h3>
       <div class="dialog-box">
         <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Was machst du am Wochenende?</div><div class="dialog-es">¿Qué haces el fin de semana?</div></div></div>
         <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ich weiß noch nicht. Vielleicht gehe ich wandern. Und du?</div><div class="dialog-es">Todavía no sé. Quizás vaya a hacer senderismo. ¿Y tú?</div></div></div>
@@ -116,21 +145,21 @@
     </div>
   </div>
 
-  <div class="content-full mt32">
+  <div id="practica-ejercicios" class="content-full mt32">
     <div class="card card-red">
-      <h3><span>✏️</span> Ejercicios</h3>
+      <h3>Ejercicios</h3>
       <div class="exercise"><div class="exercise-num">Ejercicio 1 — Tus hobbies en alemán</div><div class="placeholder" style="margin-top:8px">Ich ... gern / nicht gern. Ich interessiere mich für... Mein Lieblingssport ist...</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 2 — Invita a alguien a hacer algo</div><div class="placeholder" style="margin-top:8px">Hast du Lust, ...? / Möchtest du...? / Wollen wir...?</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 3 — ¿Qué harás en Alemania los fines de semana?</div><div class="placeholder" style="margin-top:8px">Am Wochenende möchte ich... / Ich plane... / Ich will...</div></div>
     </div>
   </div>
 
-  <div class="content-full"><div class="card"><h3><span>📝</span> Mis notas</h3><div class="placeholder">Mis hobbies y cómo describirlos a nuevos amigos alemanes</div></div></div>
-
+  <div id="practica-notas" class="content-full"><div class="card"><h3>Mis notas</h3><div class="placeholder">Mis hobbies y cómo describirlos a nuevos amigos alemanes</div></div></div>
+</aside>
 </div></div>
 <div class="page-nav">
-  <a href="a2-16-reisen.html" class="page-nav-btn"><span style="font-size:24px">✈️</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Reisen & Tourismus</div></div></a>
-  <a href="a2-18-essen.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Essen & Kochen</div></div><span style="font-size:24px">🍽️</span></a>
+  <a href="a2-16-reisen.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a2-16.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Reisen & Tourismus</div></div></a>
+  <a href="a2-18-essen.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Essen & Kochen</div></div><img class="pn-foto" src="fotos/a2-18.jpg" alt="" loading="lazy"></a>
 </div>
 <footer class="footer"><p>A2 · 17 — Freizeit & Hobbys</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
 <script src="flashcards.js"></script>
@@ -154,5 +183,6 @@ initFlashcards('fc-a2-17', [
   {art:'-', de:'sich interessieren für', es:'interesarse por', ex:'Ich interessiere mich für Musik.'}
 ]);
 </script>
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

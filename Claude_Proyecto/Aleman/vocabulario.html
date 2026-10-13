@@ -205,16 +205,18 @@ mark{background:rgba(204,0,0,.15);color:var(--red);border-radius:3px;padding:0 2
 <body>
 
 
-<nav class="nav">
-  <a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>
-  <div class="nav-links">
-    <a href="index.html" class="nav-link">A1 & A2</a>
-    <a href="principiantes.html" class="nav-link">🟢 Principiantes</a>
-    <a href="gramatica.html" class="nav-link">📐 Gramática</a>
-    <a href="vocabulario.html" class="nav-link active">📖 Vocabulario</a>
-  
-    <a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html" class="on" aria-current="page">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
   </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
 </nav>
 
 <!-- HERO. Compacto a propósito: lo que hace falta arriba es el buscador, que con

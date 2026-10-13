@@ -31,43 +31,62 @@
 <body>
 
 
-<nav class="nav">
-  <a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>
-  <div class="nav-links">
-    <a href="index.html" class="nav-back">← Índice</a>
-    <a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2" class="on" aria-current="page">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
   </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
 </nav>
 
-<div class="topic-hero">
-  <div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a2-01.jpg" alt="Una mujer toca la guitarra" title="Foto: Negative Space · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Negative Space · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
     <div class="topic-hero-tag">A2 · Gramática · Tema 01</div>
     <h1>Modal<em>verben</em></h1>
     <p class="topic-hero-desc">Los verbos modales expresan posibilidad, obligación, permiso o deseo. Son esenciales para comunicarte en alemán cotidiano.</p>
     <div class="topic-hero-meta">
-      <span class="meta-pill">⚙️ Gramática</span>
-      <span class="meta-pill">🎯 6 verbos clave</span>
-      <span class="meta-pill">⏱️ ~45 min</span>
-      <span class="meta-pill">🔥 Muy importante</span>
+      <span class="meta-pill">Gramática</span>
+      <span class="meta-pill">6 verbos clave</span>
+      <span class="meta-pill">~45 min</span>
+      <span class="meta-pill">Muy importante</span>
     </div>
+  
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#que-son-los-verbos-modales"><span>¿Qué son los verbos modales?</span></a></li>
+        <li><a href="#los-6-verbos-modales"><span>Los 6 verbos modales</span></a></li>
+        <li><a href="#ejemplos-con-konnen"><span>Ejemplos con können</span></a></li>
+        <li><a href="#ejemplos-con-mussen"><span>Ejemplos con müssen</span></a></li>
+        <li><a href="#ejemplos-con-wollen"><span>Ejemplos con wollen</span></a></li>
+        <li><a href="#ejemplos-con-durfen"><span>Ejemplos con dürfen</span></a></li>
+        <li><a href="#ejemplos-con-sollen"><span>Ejemplos con sollen</span></a></li>
+        <li><a href="#ejemplos-con-mogen-mochten"><span>Ejemplos con mögen / möchten</span></a></li>
+        <li><a href="#frases-comunes-usando-verbos-modales"><span>Frases comunes usando verbos modales</span></a></li>
+        <li><a href="#puntos-clave-a-recordar"><span>Puntos clave a recordar</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 3 bloques →</a>
+    </nav>
   </div>
 </div>
 
 <div class="topic-content">
-  <div class="container">
-
-    <!-- 0. FLASHCARDS -->
-    <div class="content-full">
-      <div class="card">
-        <h3><span>🎴</span> Repasa con tarjetas</h3>
-        <div id="fc-a2-01" class="flashcards"></div>
-      </div>
-    </div>
+  <div class="container lec">
+<div class="lec-explica">
 
     <!-- INTRODUCCIÓN -->
     <div class="content-full">
       <div class="card card-gold">
-        <h3><span>💡</span> ¿Qué son los verbos modales?</h3>
+        <h3 id="que-son-los-verbos-modales">¿Qué son los verbos modales?</h3>
         <p style="color:var(--text2);font-size:14px;line-height:1.8">Los verbos modales modifican el significado del verbo principal. En alemán siempre van en la <strong style="color:var(--gold)">posición 2</strong> de la oración, y el verbo principal va al <strong style="color:var(--gold)">final en infinitivo</strong>.</p>
         <div class="rule-box" style="margin-top:16px">
           Ich <strong>muss</strong> morgen früh aufstehen.<br>
@@ -80,7 +99,7 @@
     <!-- LOS 6 MODALES -->
     <div class="content-full">
       <div class="card">
-        <h3><span>📊</span> Los 6 verbos modales</h3>
+        <h3 id="los-6-verbos-modales">Los 6 verbos modales</h3>
         <table class="vocab-table">
           <thead><tr><th>Infinitivo</th><th>Significado</th><th>ich</th><th>du</th><th>er/sie/es</th><th>wir</th><th>ihr</th><th>sie/Sie</th></tr></thead>
           <tbody>
@@ -98,37 +117,37 @@
     <!-- EJEMPLOS -->
     <div class="content-grid">
       <div class="card">
-        <h3><span>💬</span> Ejemplos con können</h3>
+        <h3 id="ejemplos-con-konnen">Ejemplos con können</h3>
         <div class="example"><div class="example-de">Ich kann Deutsch sprechen.</div><div class="example-es">Puedo hablar alemán.</div></div>
         <div class="example"><div class="example-de">Kannst du mir helfen?</div><div class="example-es">¿Puedes ayudarme?</div></div>
         <div class="example"><div class="example-de">Er kann nicht kommen.</div><div class="example-es">Él no puede venir.</div></div>
       </div>
       <div class="card">
-        <h3><span>💬</span> Ejemplos con müssen</h3>
+        <h3 id="ejemplos-con-mussen">Ejemplos con müssen</h3>
         <div class="example"><div class="example-de">Ich muss jetzt gehen.</div><div class="example-es">Tengo que irme ahora.</div></div>
         <div class="example"><div class="example-de">Du musst mehr schlafen.</div><div class="example-es">Debes dormir más.</div></div>
         <div class="example"><div class="example-de">Wir müssen arbeiten.</div><div class="example-es">Tenemos que trabajar.</div></div>
       </div>
       <div class="card">
-        <h3><span>💬</span> Ejemplos con wollen</h3>
+        <h3 id="ejemplos-con-wollen">Ejemplos con wollen</h3>
         <div class="example"><div class="example-de">Ich will nach Deutschland.</div><div class="example-es">Quiero ir a Alemania.</div></div>
         <div class="example"><div class="example-de">Was willst du essen?</div><div class="example-es">¿Qué quieres comer?</div></div>
         <div class="example"><div class="example-de">Sie will Ärztin werden.</div><div class="example-es">Ella quiere ser médica.</div></div>
       </div>
       <div class="card">
-        <h3><span>💬</span> Ejemplos con dürfen</h3>
+        <h3 id="ejemplos-con-durfen">Ejemplos con dürfen</h3>
         <div class="example"><div class="example-de">Darf ich hier sitzen?</div><div class="example-es">¿Puedo sentarme aquí?</div></div>
         <div class="example"><div class="example-de">Du darfst nicht rauchen.</div><div class="example-es">No tienes permiso de fumar.</div></div>
         <div class="example"><div class="example-de">Kinder dürfen hier spielen.</div><div class="example-es">Los niños pueden jugar aquí.</div></div>
       </div>
       <div class="card">
-        <h3><span>💬</span> Ejemplos con sollen</h3>
+        <h3 id="ejemplos-con-sollen">Ejemplos con sollen</h3>
         <div class="example"><div class="example-de">Ich soll den Arzt anrufen.</div><div class="example-es">Debo llamar al médico (alguien me lo pidió).</div></div>
         <div class="example"><div class="example-de">Was soll ich tun?</div><div class="example-es">¿Qué debo hacer?</div></div>
         <div class="example"><div class="example-de">Du sollst pünktlich sein.</div><div class="example-es">Se supone que debes ser puntual.</div></div>
       </div>
       <div class="card">
-        <h3><span>💬</span> Ejemplos con mögen / möchten</h3>
+        <h3 id="ejemplos-con-mogen-mochten">Ejemplos con mögen / möchten</h3>
         <div class="example"><div class="example-de">Ich möchte einen Kaffee, bitte.</div><div class="example-es">Quisiera un café, por favor.</div></div>
         <div class="example"><div class="example-de">Magst du klassische Musik?</div><div class="example-es">¿Te gusta la música clásica?</div></div>
         <div class="example"><div class="example-de">Wir möchten nach Hause gehen.</div><div class="example-es">Quisiéramos irnos a casa.</div></div>
@@ -138,7 +157,7 @@
     <!-- FRASES COMUNES -->
     <div class="content-full">
       <div class="card card-gold">
-        <h3><span>🗨️</span> Frases comunes usando verbos modales</h3>
+        <h3 id="frases-comunes-usando-verbos-modales">Frases comunes usando verbos modales</h3>
         <div class="phrase-grid">
           <div class="phrase-item"><span class="phrase-situation">Pedir permiso</span><span class="phrase-de">Darf ich das Fenster öffnen?</span><span class="phrase-es">¿Puedo abrir la ventana?</span></div>
           <div class="phrase-item"><span class="phrase-situation">Pedir ayuda</span><span class="phrase-de">Können Sie mir bitte helfen?</span><span class="phrase-es">¿Podría ayudarme, por favor?</span></div>
@@ -156,10 +175,30 @@
       </div>
     </div>
 
-    <!-- DIÁLOGO -->
+    <!-- NOTAS ADICIONALES -->
     <div class="content-full">
       <div class="card">
-        <h3><span>💬</span> Diálogo de práctica — En la oficina</h3>
+        <h3 id="puntos-clave-a-recordar">Puntos clave a recordar</h3>
+        <div class="placeholder">Agrega aquí tus notas personales y trucos para memorizar los verbos modales</div>
+      </div>
+    </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a></nav></div>
+
+    <!-- 0. FLASHCARDS -->
+    <div id="practica-tarjetas" class="content-full">
+      <div class="card">
+        <h3>Repasa con tarjetas</h3>
+        <div id="fc-a2-01" class="flashcards"></div>
+      </div>
+    </div>
+
+    <!-- DIÁLOGO -->
+    <div id="practica-dialogo" class="content-full">
+      <div class="card">
+        <h3>Diálogo de práctica — En la oficina</h3>
         <div class="dialog-box">
           <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Entschuldigung, darf ich Sie etwas fragen?</div><div class="dialog-es">Disculpe, ¿puedo preguntarle algo?</div></div></div>
           <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Natürlich, was möchten Sie wissen?</div><div class="dialog-es">Claro, ¿qué le gustaría saber?</div></div></div>
@@ -171,9 +210,9 @@
     </div>
 
     <!-- EJERCICIOS -->
-    <div class="content-full mt32">
+    <div id="practica-ejercicios" class="content-full mt32">
       <div class="card card-red">
-        <h3><span>✏️</span> Ejercicios prácticos</h3>
+        <h3>Ejercicios prácticos</h3>
         <div class="exercise">
           <div class="exercise-num">Ejercicio 1 — Completa con el modal correcto</div>
           <div class="exercise-q">Ich <span class="exercise-blank"></span> morgen nicht arbeiten. (tener permiso de no)</div>
@@ -206,15 +245,7 @@
         </div>
       </div>
     </div>
-
-    <!-- NOTAS ADICIONALES -->
-    <div class="content-full">
-      <div class="card">
-        <h3><span>⚠️</span> Puntos clave a recordar</h3>
-        <div class="placeholder">Agrega aquí tus notas personales y trucos para memorizar los verbos modales</div>
-      </div>
-    </div>
-
+</aside>
   </div>
 </div>
 
@@ -222,7 +253,7 @@
   <div></div>
   <a href="a2-02-perfekt-haben.html" class="page-nav-btn next">
     <div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Perfekt mit haben</div></div>
-    <span style="font-size:24px">✅</span>
+    <img class="pn-foto" src="fotos/a2-02.jpg" alt="" loading="lazy">
   </a>
 </div>
 
@@ -251,6 +282,7 @@ initFlashcards('fc-a2-01', [
 ]);
 </script>
 
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body>
 </html>

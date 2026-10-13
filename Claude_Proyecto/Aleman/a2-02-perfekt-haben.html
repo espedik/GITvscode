@@ -30,42 +30,56 @@
 </head>
 <body>
 
-<nav class="nav">
-  <a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>
-  <div class="nav-links">
-    <a href="index.html" class="nav-back">← Índice</a>
-    <a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2" class="on" aria-current="page">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
   </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
 </nav>
 
-<div class="topic-hero">
-  <div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a2-02.jpg" alt="Panquecitos de chocolate recién horneados" title="Foto: Pawel Kadysz · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Pawel Kadysz · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
     <div class="topic-hero-tag">A2 · Gramática · Tema 02</div>
     <h1>Perfekt mit <em>haben</em></h1>
     <p class="topic-hero-desc">El Perfekt es el tiempo pasado más usado en alemán hablado. Con haben formas el pasado de la mayoría de los verbos.</p>
     <div class="topic-hero-meta">
-      <span class="meta-pill">⚙️ Gramática</span>
-      <span class="meta-pill">🎯 Partizip II</span>
-      <span class="meta-pill">⏱️ ~60 min</span>
-      <span class="meta-pill">🔥 Muy importante</span>
+      <span class="meta-pill">Gramática</span>
+      <span class="meta-pill">Partizip II</span>
+      <span class="meta-pill">~60 min</span>
+      <span class="meta-pill">Muy importante</span>
     </div>
+  
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#estructura-del-perfekt"><span>Estructura del Perfekt</span></a></li>
+        <li><a href="#formar-el-partizip-ii"><span>Formar el Partizip II</span></a></li>
+        <li><a href="#haben-conjugado"><span>haben conjugado</span></a></li>
+        <li><a href="#partizip-ii-irregulares-mas-comunes"><span>Partizip II irregulares más comunes</span></a></li>
+        <li><a href="#frases-comunes-usando-el-perfekt-con-haben"><span>Frases comunes usando el Perfekt con haben</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 4 bloques →</a>
+    </nav>
   </div>
 </div>
 
 <div class="topic-content">
-  <div class="container">
-
-    <!-- FLASHCARDS -->
-    <div class="content-full">
-      <div class="card">
-        <h3><span>🎴</span> Repasa con tarjetas</h3>
-        <div id="fc-a2-02" class="flashcards"></div>
-      </div>
-    </div>
+  <div class="container lec">
+<div class="lec-explica">
 
     <div class="content-full">
       <div class="card card-gold">
-        <h3><span>💡</span> Estructura del Perfekt</h3>
+        <h3 id="estructura-del-perfekt">Estructura del Perfekt</h3>
         <div class="rule-box">
           Sujeto + <strong>haben</strong> (conjugado) + ... + <strong>Partizip II</strong><br><br>
           Ich <strong>habe</strong> gestern viel <strong>gelernt</strong>.<br>
@@ -76,12 +90,12 @@
 
     <div class="content-grid">
       <div class="card">
-        <h3><span>📐</span> Formar el Partizip II</h3>
+        <h3 id="formar-el-partizip-ii">Formar el Partizip II</h3>
         <div class="rule-box">Verbos regulares:<br><strong>ge</strong> + raíz + <strong>t</strong><br><br>machen → <strong>ge</strong>mach<strong>t</strong><br>kaufen → <strong>ge</strong>kauf<strong>t</strong><br>lernen → <strong>ge</strong>lern<strong>t</strong></div>
         <div class="rule-box" style="margin-top:8px">Verbos irregulares:<br><strong>ge</strong> + raíz (cambia) + <strong>en</strong><br><br>schreiben → <strong>ge</strong>schrieb<strong>en</strong><br>essen → <strong>ge</strong>gess<strong>en</strong><br>trinken → <strong>ge</strong>trunk<strong>en</strong></div>
       </div>
       <div class="card">
-        <h3><span>📋</span> haben conjugado</h3>
+        <h3 id="haben-conjugado">haben conjugado</h3>
         <table class="vocab-table">
           <thead><tr><th>Pronombre</th><th>haben</th></tr></thead>
           <tbody>
@@ -98,7 +112,7 @@
 
     <div class="content-full">
       <div class="card">
-        <h3><span>📚</span> Partizip II irregulares más comunes</h3>
+        <h3 id="partizip-ii-irregulares-mas-comunes">Partizip II irregulares más comunes</h3>
         <table class="vocab-table">
           <thead><tr><th>Infinitivo</th><th>Partizip II</th><th>Español</th><th>Ejemplo</th></tr></thead>
           <tbody>
@@ -124,7 +138,7 @@
     <!-- FRASES COMUNES -->
     <div class="content-full">
       <div class="card card-gold">
-        <h3><span>🗨️</span> Frases comunes usando el Perfekt con haben</h3>
+        <h3 id="frases-comunes-usando-el-perfekt-con-haben">Frases comunes usando el Perfekt con haben</h3>
         <div class="phrase-grid">
           <div class="phrase-item"><span class="phrase-situation">Contar el fin de semana</span><span class="phrase-de">Was hast du am Wochenende gemacht?</span><span class="phrase-es">¿Qué hiciste el fin de semana?</span></div>
           <div class="phrase-item"><span class="phrase-situation">Responder</span><span class="phrase-de">Ich habe viel gearbeitet.</span><span class="phrase-es">Trabajé mucho.</span></div>
@@ -139,11 +153,23 @@
         </div>
       </div>
     </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a><a href="#practica-notas">Notas</a></nav></div>
+
+    <!-- FLASHCARDS -->
+    <div id="practica-tarjetas" class="content-full">
+      <div class="card">
+        <h3>Repasa con tarjetas</h3>
+        <div id="fc-a2-02" class="flashcards"></div>
+      </div>
+    </div>
 
     <!-- DIÁLOGO -->
-    <div class="content-full">
+    <div id="practica-dialogo" class="content-full">
       <div class="card">
-        <h3><span>💬</span> Diálogo de práctica — El lunes en la oficina</h3>
+        <h3>Diálogo de práctica — El lunes en la oficina</h3>
         <div class="dialog-box">
           <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Hallo! Was hast du am Wochenende gemacht?</div><div class="dialog-es">¡Hola! ¿Qué hiciste el fin de semana?</div></div></div>
           <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ich habe ein Buch gelesen und meine Wohnung geputzt. Und du?</div><div class="dialog-es">Leí un libro y limpié mi apartamento. ¿Y tú?</div></div></div>
@@ -154,9 +180,9 @@
       </div>
     </div>
 
-    <div class="content-full mt32">
+    <div id="practica-ejercicios" class="content-full mt32">
       <div class="card card-red">
-        <h3><span>✏️</span> Ejercicios</h3>
+        <h3>Ejercicios</h3>
         <div class="exercise">
           <div class="exercise-num">Ejercicio 1 — Forma el Perfekt</div>
           <div class="exercise-q">Ich <span class="exercise-blank"></span> gestern Fußball <span class="exercise-blank"></span>. (spielen)</div>
@@ -179,21 +205,21 @@
       </div>
     </div>
 
-    <div class="content-full">
-      <div class="card"><h3><span>📝</span> Mis notas</h3><div class="placeholder">Agrega aquí los verbos irregulares que más te cuestan recordar</div></div>
+    <div id="practica-notas" class="content-full">
+      <div class="card"><h3>Mis notas</h3><div class="placeholder">Agrega aquí los verbos irregulares que más te cuestan recordar</div></div>
     </div>
-
+</aside>
   </div>
 </div>
 
 <div class="page-nav">
   <a href="a2-01-modalverben.html" class="page-nav-btn">
-    <span style="font-size:24px">⚙️</span>
+    <img class="pn-foto" src="fotos/a2-01.jpg" alt="" loading="lazy">
     <div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Modalverben</div></div>
   </a>
   <a href="a2-03-perfekt-sein.html" class="page-nav-btn next">
     <div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Perfekt mit sein</div></div>
-    <span style="font-size:24px">🚶</span>
+    <img class="pn-foto" src="fotos/a2-03.jpg" alt="" loading="lazy">
   </a>
 </div>
 
@@ -222,6 +248,7 @@ initFlashcards('fc-a2-02', [
 ]);
 </script>
 
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body>
 </html>

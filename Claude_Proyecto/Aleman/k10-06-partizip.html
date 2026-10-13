@@ -14,35 +14,58 @@
 </head>
 <body>
 
-<nav class="nav">
-  <a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>
-  <div class="nav-links">
-    <a href="index.html" class="nav-back">← Índice</a>
-    <a href="../Dashboard/dashboard.html" class="nav-back" title="Volver al Dashboard">🚀</a>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10" class="on" aria-current="page">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
   </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
 </nav>
 
-<div class="topic-hero">
-  <div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/k10-06.jpg" alt="Una persona lee un libro" title="Foto: Shopify · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Shopify · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
     <div class="topic-hero-tag">Kapitel 10 · Cenlex · Tema 06</div>
     <h1><em>Partizip I</em> y <em>Partizip II</em></h1>
     <p class="topic-hero-desc">Los dos participios del alemán, uno al lado del otro. Qué significa cada uno, cómo se construye paso a paso, cuándo se usa cada cual y la lista completa de verbos con sus tres formas.</p>
     <div class="topic-hero-meta">
-      <span class="meta-pill">🔵 Partizip I · activo</span>
-      <span class="meta-pill">🟠 Partizip II · pasivo</span>
-      <span class="meta-pill">📋 205 verbos</span>
-      <span class="meta-pill">⏱️ ~45 min</span>
+      <span class="meta-pill"><i class="punto" style="background:#1668c7"></i>Partizip I · activo</span>
+      <span class="meta-pill"><i class="punto" style="background:#d97400"></i>Partizip II · pasivo</span>
+      <span class="meta-pill">205 verbos</span>
+      <span class="meta-pill">~45 min</span>
     </div>
+  
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#la-diferencia-en-una-sola-frase"><span>La diferencia, en una sola frase</span></a></li>
+        <li><a href="#como-se-construye-cada-uno-paso-a-paso"><span>Cómo se construye cada uno, paso a paso</span></a></li>
+        <li><a href="#los-dos-comparados-de-frente"><span>Los dos, comparados de frente</span></a></li>
+        <li><a href="#para-que-sirve-cada-uno-con-ejemplos"><span>Para qué sirve cada uno, con ejemplos</span></a></li>
+        <li><a href="#cuando-van-delante-de-un-sustantivo-se-dec"><span>Cuando van delante de un sustantivo, se declinan</span></a></li>
+        <li><a href="#los-205-verbos-con-sus-tres-formas"><span>Los 205 verbos con sus tres formas</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 5 bloques →</a>
+    </nav>
   </div>
 </div>
 
 <div class="topic-content">
-  <div class="container">
+  <div class="container lec">
+<div class="lec-explica">
 
     <!-- ══ LA IDEA EN UNA IMAGEN ══ -->
     <div class="content-full">
       <div class="card card-gold">
-        <h3><span>💡</span> La diferencia, en una sola frase</h3>
+        <h3 id="la-diferencia-en-una-sola-frase">La diferencia, en una sola frase</h3>
         <p class="pz-lead">El Partizip I es <b>quien hace</b> la acción. El Partizip II es <b>a quien se la hacen</b>.</p>
 
         <div class="pz-duelo">
@@ -71,7 +94,7 @@
     <!-- ══ CÓMO SE CONSTRUYE CADA UNO ══ -->
     <div class="content-full">
       <div class="card">
-        <h3><span>🔨</span> Cómo se construye cada uno, paso a paso</h3>
+        <h3 id="como-se-construye-cada-uno-paso-a-paso">Cómo se construye cada uno, paso a paso</h3>
 
         <div class="pz-build pz-build-i">
           <div class="pz-build-t"><span class="pz-chip pz-chip-i">Partizip I</span> Infinitivo + <b>d</b> — y ya está</div>
@@ -119,7 +142,7 @@
     <!-- ══ TABLA COMPARATIVA ══ -->
     <div class="content-full">
       <div class="card">
-        <h3><span>⚖️</span> Los dos, comparados de frente</h3>
+        <h3 id="los-dos-comparados-de-frente">Los dos, comparados de frente</h3>
         <table class="vocab-table pz-comp">
           <thead><tr><th></th><th class="pz-th-i">Partizip I</th><th class="pz-th-ii">Partizip II</th></tr></thead>
           <tbody>
@@ -143,7 +166,7 @@
     <!-- ══ PARA QUÉ SIRVE CADA UNO ══ -->
     <div class="content-full">
       <div class="card card-gold">
-        <h3><span>🎯</span> Para qué sirve cada uno, con ejemplos</h3>
+        <h3 id="para-que-sirve-cada-uno-con-ejemplos">Para qué sirve cada uno, con ejemplos</h3>
 
         <div class="pz-uso pz-uso-i">
           <div class="pz-uso-t"><span class="pz-chip pz-chip-i">Partizip I</span> — dos usos, y no hay más</div>
@@ -190,7 +213,7 @@
     <!-- ══ LA DECLINACIÓN ══ -->
     <div class="content-full">
       <div class="card">
-        <h3><span>🔤</span> Cuando van delante de un sustantivo, se declinan</h3>
+        <h3 id="cuando-van-delante-de-un-sustantivo-se-dec">Cuando van delante de un sustantivo, se declinan</h3>
         <p>Los dos participios se comportan como adjetivos normales. La terminación depende del artículo y del caso.</p>
         <table class="vocab-table">
           <thead><tr><th>Artículo</th><th>Partizip I</th><th>Partizip II</th></tr></thead>
@@ -215,7 +238,7 @@
     <!-- ══ LA TABLA DE LAS TRES FORMAS ══ -->
     <div class="content-full">
       <div class="card">
-        <h3><span>📋</span> Los 205 verbos con sus tres formas</h3>
+        <h3 id="los-205-verbos-con-sus-tres-formas">Los 205 verbos con sus tres formas</h3>
         <p>Infinitivo, Partizip I y Partizip II de cada uno. Los marcados con 🟢 son aquellos cuyo Partizip I se usa de verdad — en muchos verbos existe gramaticalmente pero no lo dice nadie.</p>
         <input type="text" id="buscarPz" class="k10-buscador" placeholder="Buscar: lesen, leer, gelesen…" spellcheck="false" autocomplete="off" aria-label="Buscar verbo">
         <div class="k10-filtros" id="filtrosPz">
@@ -439,45 +462,49 @@
         <div class="k10-sin" id="sinPz">Ningún verbo coincide con esa búsqueda.</div>
       </div>
     </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-forma-el-partizip-i">Forma el Partizip I</a><a href="#practica-partizip-i-o-ii">¿Partizip I o II?</a><a href="#practica-declinacion">Declinación</a><a href="#practica-empareja">Empareja</a><a href="#practica-luckentext">Lückentext</a></nav></div>
 
     <!-- ══ EJERCICIOS ══ -->
-    <div class="content-full">
+    <div id="practica-forma-el-partizip-i" class="content-full">
       <div class="card card-gold">
-        <h3><span>🔨</span> Practica: forma el Partizip I</h3>
+        <h3>Practica: forma el Partizip I</h3>
         <p>Recuerda: infinitivo + <b>d</b>. Sin excepciones (salvo sein y tun).</p>
         <div id="ej-p1" class="k10-ejercicios"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-partizip-i-o-ii" class="content-full">
       <div class="card">
-        <h3><span>⚖️</span> Practica: ¿Partizip I o II?</h3>
+        <h3>Practica: ¿Partizip I o II?</h3>
         <p>Pregúntate: ¿lo hace, o se lo hacen?</p>
         <div id="ej-cual" class="k10-quiz"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-declinacion" class="content-full">
       <div class="card">
-        <h3><span>🔤</span> Practica: la declinación</h3>
+        <h3>Practica: la declinación</h3>
         <div id="ej-decl" class="k10-quiz"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-empareja" class="content-full">
       <div class="card">
-        <h3><span>🔗</span> Empareja: forma → significado</h3>
+        <h3>Empareja: forma → significado</h3>
         <div id="em-pz"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-luckentext" class="content-full">
       <div class="card">
-        <h3><span>📝</span> Lückentext — los dos participios</h3>
+        <h3>Lückentext — los dos participios</h3>
         <div id="hueco-pz"></div>
       </div>
     </div>
-
+</aside>
   </div>
 </div>
 
@@ -581,6 +608,7 @@ k10Altavoces('.pz-frase');
 k10Altavoces('#tablaPz td.vocab-de');
 </script>
 
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body>
 </html>

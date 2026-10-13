@@ -6,28 +6,46 @@
 <link rel="stylesheet" href="styles.css"></head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>  <div class="nav-links">
-    <a href="index.html" class="nav-back">← Índice</a>
-    <a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a>
-  </div></nav>
-<div class="topic-hero"><div class="container">
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2" class="on" aria-current="page">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a2-18.jpg" alt="Ingredientes para cocinar pasta" title="Foto: JESHOOTS.com · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: JESHOOTS.com · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A2 · Vocabulario · Tema 18</div>
   <h1>Essen, Trinken & <em>Kochen</em></h1>
   <p class="topic-hero-desc">Gastronomía alemana, pedir en restaurante, hacer el súper y cocinar. Imprescindible para la vida cotidiana en Alemania.</p>
-  <div class="topic-hero-meta"><span class="meta-pill">🍽️ Comida</span><span class="meta-pill">🍺 Bebidas</span><span class="meta-pill">⏱️ ~45 min</span></div>
-</div></div>
-<div class="topic-content"><div class="container">
-
-  <div class="content-full">
-    <div class="card">
-      <h3><span>🎴</span> Repasa con tarjetas</h3>
-      <div id="fc-a2-18" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill">Comida</span><span class="meta-pill">Bebidas</span><span class="meta-pill">~45 min</span></div>
     </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#comida-tipica-alemana"><span>Comida típica alemana</span></a></li>
+        <li><a href="#bebidas-y-restaurante"><span>Bebidas y restaurante</span></a></li>
+        <li><a href="#en-el-restaurante"><span>En el restaurante</span></a></li>
+        <li><a href="#frases-comunes-en-este-tema"><span>Frases comunes en este tema</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 4 bloques →</a>
+    </nav>
   </div>
+</div>
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
   <div class="content-grid">
     <div class="card">
-      <h3><span>🥙</span> Comida típica alemana</h3>
+      <h3 id="comida-tipica-alemana">Comida típica alemana</h3>
       <table class="vocab-table">
         <thead><tr><th>Alemán</th><th>Español</th></tr></thead>
         <tbody>
@@ -48,7 +66,7 @@
       </table>
     </div>
     <div class="card">
-      <h3><span>🍺</span> Bebidas y restaurante</h3>
+      <h3 id="bebidas-y-restaurante">Bebidas y restaurante</h3>
       <table class="vocab-table">
         <thead><tr><th>Alemán</th><th>Español</th></tr></thead>
         <tbody>
@@ -71,7 +89,7 @@
 
   <div class="content-full">
     <div class="card">
-      <h3><span>💬</span> En el restaurante</h3>
+      <h3 id="en-el-restaurante">En el restaurante</h3>
       <div class="example"><div class="example-de">Einen Tisch für zwei Personen, bitte.</div><div class="example-es">Una mesa para dos personas, por favor.</div></div>
       <div class="example"><div class="example-de">Was empfehlen Sie?</div><div class="example-es">¿Qué recomienda usted?</div></div>
       <div class="example"><div class="example-de">Ich bin Vegetarier / Ich habe eine Allergie gegen Nüsse.</div><div class="example-es">Soy vegetariano / Tengo alergia a las nueces.</div></div>
@@ -82,7 +100,7 @@
 
   <div class="content-full">
     <div class="card card-gold">
-      <h3><span>🗨️</span> Frases comunes en este tema</h3>
+      <h3 id="frases-comunes-en-este-tema">Frases comunes en este tema</h3>
       <div class="phrase-grid">
         <div class="phrase-item"><span class="phrase-situation">Pidiendo mesa al llegar</span><span class="phrase-de">Haben Sie einen Tisch für zwei Personen frei?</span><span class="phrase-es">¿Tienen una mesa libre para dos personas?</span></div>
         <div class="phrase-item"><span class="phrase-situation">Preguntando recomendación</span><span class="phrase-de">Was ist die Spezialität des Hauses?</span><span class="phrase-es">¿Cuál es la especialidad de la casa?</span></div>
@@ -99,10 +117,21 @@
       </div>
     </div>
   </div>
+</div>
 
-  <div class="content-full">
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a><a href="#practica-notas">Notas</a></nav></div>
+
+  <div id="practica-tarjetas" class="content-full">
     <div class="card">
-      <h3><span>💬</span> Diálogo de práctica — Pidiendo en un restaurante</h3>
+      <h3>Repasa con tarjetas</h3>
+      <div id="fc-a2-18" class="flashcards"></div>
+    </div>
+  </div>
+
+  <div id="practica-dialogo" class="content-full">
+    <div class="card">
+      <h3>Diálogo de práctica — Pidiendo en un restaurante</h3>
       <div class="dialog-box">
         <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Guten Abend! Haben Sie einen Tisch für zwei Personen?</div><div class="dialog-es">¡Buenas noches! ¿Tienen una mesa para dos personas?</div></div></div>
         <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ja, natürlich. Hier ist die Speisekarte. Was möchten Sie trinken?</div><div class="dialog-es">Sí, claro. Aquí está la carta. ¿Qué desean tomar?</div></div></div>
@@ -114,21 +143,21 @@
     </div>
   </div>
 
-  <div class="content-full mt32">
+  <div id="practica-ejercicios" class="content-full mt32">
     <div class="card card-red">
-      <h3><span>✏️</span> Ejercicios</h3>
+      <h3>Ejercicios</h3>
       <div class="exercise"><div class="exercise-num">Ejercicio 1 — Pedir comida</div><div class="exercise-q">¿Cómo pides un Schnitzel con Pommes y una cerveza?</div><div class="exercise-hint">Pista: Ich möchte ein Schnitzel mit Pommes und ein Bier, bitte.</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 2 — Tu comida alemana favorita</div><div class="placeholder" style="margin-top:8px">Ich mag ... am liebsten, weil... / Ich esse gern... / Ich mag kein/keine...</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 3 — Roleplay en restaurante alemán</div><div class="placeholder" style="margin-top:8px">Escribe el diálogo completo: llegar, pedir, preguntar, pagar</div></div>
     </div>
   </div>
 
-  <div class="content-full"><div class="card"><h3><span>📝</span> Mis notas</h3><div class="placeholder">Comidas alemanas que quiero probar y cómo pedirlas</div></div></div>
-
+  <div id="practica-notas" class="content-full"><div class="card"><h3>Mis notas</h3><div class="placeholder">Comidas alemanas que quiero probar y cómo pedirlas</div></div></div>
+</aside>
 </div></div>
 <div class="page-nav">
-  <a href="a2-17-freizeit.html" class="page-nav-btn"><span style="font-size:24px">🎯</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Freizeit & Hobbys</div></div></a>
-  <a href="a2-19-einkaufen.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Einkaufen & Preise</div></div><span style="font-size:24px">🛒</span></a>
+  <a href="a2-17-freizeit.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a2-17.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Freizeit & Hobbys</div></div></a>
+  <a href="a2-19-einkaufen.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Einkaufen & Preise</div></div><img class="pn-foto" src="fotos/a2-19.jpg" alt="" loading="lazy"></a>
 </div>
 <footer class="footer"><p>A2 · 18 — Essen, Trinken & Kochen</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
 <script src="flashcards.js"></script>
@@ -152,5 +181,6 @@ initFlashcards('fc-a2-18', [
   {art:'die', de:'Zutat', es:'el ingrediente'}
 ]);
 </script>
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

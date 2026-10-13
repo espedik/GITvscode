@@ -25,28 +25,49 @@
 </head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>  <div class="nav-links">
-    <a href="index.html" class="nav-back">← Índice</a>
-    <a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a>
-  </div></nav>
-<div class="topic-hero"><div class="container">
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2" class="on" aria-current="page">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a2-14.jpg" alt="Una entrevista de trabajo" title="Foto: amtec_photos · Flickr · BY-SA 2.0" width="360" height="240"><figcaption>Foto: amtec_photos · Flickr · BY-SA 2.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A2 · Vocabulario · Tema 14</div>
   <h1>Arbeit & <em>Beruf</em></h1>
   <p class="topic-hero-desc">Vocabulario para el mundo laboral: hablar de tu profesión, buscar trabajo y desenvolverte en una oficina alemana.</p>
-  <div class="topic-hero-meta"><span class="meta-pill">💼 Trabajo</span><span class="meta-pill">🎓 Profesiones</span><span class="meta-pill">⏱️ ~50 min</span></div>
-</div></div>
-<div class="topic-content"><div class="container">
-
-  <div class="content-full">
-    <div class="card">
-      <h3><span>🎴</span> Repasa con tarjetas</h3>
-      <div id="fc-a2-14" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill">Trabajo</span><span class="meta-pill">Profesiones</span><span class="meta-pill">~50 min</span></div>
     </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#profesiones-comunes"><span>Profesiones comunes</span></a></li>
+        <li><a href="#vocabulario-laboral"><span>Vocabulario laboral</span></a></li>
+        <li><a href="#frases-comunes-en-el-trabajo"><span>Frases comunes en el trabajo</span></a></li>
+        <li><a href="#practica-tarjetas"><span>Tarjetas</span></a></li>
+        <li><a href="#practica-dialogo"><span>Diálogo</span></a></li>
+        <li><a href="#practica-ejercicios"><span>Ejercicios</span></a></li>
+        <li><a href="#practica-notas"><span>Notas</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 4 bloques →</a>
+    </nav>
   </div>
+</div>
+<div class="topic-content"><div class="container lec lec-mucha-practica">
+<div class="lec-explica">
 
   <div class="content-grid">
     <div class="card">
-      <h3><span>👔</span> Profesiones comunes</h3>
+      <h3 id="profesiones-comunes">Profesiones comunes</h3>
       <table class="vocab-table">
         <thead><tr><th>Alemán (m/f)</th><th>Español</th></tr></thead>
         <tbody>
@@ -62,7 +83,7 @@
       </table>
     </div>
     <div class="card">
-      <h3><span>🏢</span> Vocabulario laboral</h3>
+      <h3 id="vocabulario-laboral">Vocabulario laboral</h3>
       <table class="vocab-table">
         <thead><tr><th>Alemán</th><th>Español</th></tr></thead>
         <tbody>
@@ -82,7 +103,7 @@
 
   <div class="content-full">
     <div class="card card-gold">
-      <h3><span>🗨️</span> Frases comunes en el trabajo</h3>
+      <h3 id="frases-comunes-en-el-trabajo">Frases comunes en el trabajo</h3>
       <div class="phrase-grid">
         <div class="phrase-item"><span class="phrase-situation">Preguntando profesión (formal)</span><span class="phrase-de">Was sind Sie von Beruf?</span><span class="phrase-es">¿A qué se dedica usted?</span></div>
         <div class="phrase-item"><span class="phrase-situation">Presentándote profesionalmente</span><span class="phrase-de">Ich bin Ingenieur bei Bosch.</span><span class="phrase-es">Soy ingeniero en Bosch.</span></div>
@@ -99,10 +120,21 @@
       </div>
     </div>
   </div>
+</div>
 
-  <div class="content-full">
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a><a href="#practica-notas">Notas</a></nav></div>
+
+  <div id="practica-tarjetas" class="content-full">
     <div class="card">
-      <h3><span>💬</span> Diálogo de práctica — Entrevista de trabajo</h3>
+      <h3>Repasa con tarjetas</h3>
+      <div id="fc-a2-14" class="flashcards"></div>
+    </div>
+  </div>
+
+  <div id="practica-dialogo" class="content-full">
+    <div class="card">
+      <h3>Diálogo de práctica — Entrevista de trabajo</h3>
       <div class="dialog-box">
         <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Guten Tag, vielen Dank, dass Sie gekommen sind. Erzählen Sie mir etwas über sich.</div><div class="dialog-es">Buenos días, gracias por venir. Cuénteme algo sobre usted.</div></div></div>
         <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Guten Tag! Ich heiße Laura und bin seit fünf Jahren als Programmiererin tätig.</div><div class="dialog-es">Buenos días. Me llamo Laura y trabajo como programadora desde hace cinco años.</div></div></div>
@@ -114,21 +146,21 @@
     </div>
   </div>
 
-  <div class="content-full mt32">
+  <div id="practica-ejercicios" class="content-full mt32">
     <div class="card card-red">
-      <h3><span>✏️</span> Ejercicios</h3>
+      <h3>Ejercicios</h3>
       <div class="exercise"><div class="exercise-num">Ejercicio 1 — Preséntate profesionalmente</div><div class="placeholder" style="margin-top:8px">Ich heiße... Ich bin... von Beruf. Ich arbeite bei... Mein Gehalt ist...</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 2 — Entrevista de trabajo (roleplay)</div><div class="placeholder" style="margin-top:8px">Escribe 5 preguntas típicas de una entrevista en alemán y sus respuestas</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 3 — Tu Lebenslauf en alemán</div><div class="placeholder" style="margin-top:8px">Puntos clave: Name, Beruf, Erfahrung, Fähigkeiten, Sprachen</div></div>
     </div>
   </div>
 
-  <div class="content-full"><div class="card"><h3><span>📝</span> Mis notas</h3><div class="placeholder">Vocabulario laboral específico para mi área (ingeniería / tecnología)</div></div></div>
-
+  <div id="practica-notas" class="content-full"><div class="card"><h3>Mis notas</h3><div class="placeholder">Vocabulario laboral específico para mi área (ingeniería / tecnología)</div></div></div>
+</aside>
 </div></div>
 <div class="page-nav">
-  <a href="a2-13-wohnen.html" class="page-nav-btn"><span style="font-size:24px">🏠</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Wohnen & Haushalt</div></div></a>
-  <a href="a2-15-gesundheit.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Gesundheit & Körper</div></div><span style="font-size:24px">🏥</span></a>
+  <a href="a2-13-wohnen.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a2-13.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Wohnen & Haushalt</div></div></a>
+  <a href="a2-15-gesundheit.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Gesundheit & Körper</div></div><img class="pn-foto" src="fotos/a2-15.jpg" alt="" loading="lazy"></a>
 </div>
 <footer class="footer"><p>A2 · 14 — Arbeit & Beruf</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
 <script src="flashcards.js"></script>
@@ -150,5 +182,6 @@ initFlashcards('fc-a2-14', [
   {art:'-', de:'sich bewerben (um)', es:'postularse (a)', ex:'Ich bewerbe mich um die Stelle.'}
 ]);
 </script>
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

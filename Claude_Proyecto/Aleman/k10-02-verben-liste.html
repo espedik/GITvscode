@@ -13,35 +13,58 @@
 </head>
 <body>
 
-<nav class="nav">
-  <a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>
-  <div class="nav-links">
-    <a href="index.html" class="nav-back">← Índice</a>
-    <a href="../Dashboard/dashboard.html" class="nav-back" title="Volver al Dashboard">🚀</a>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10" class="on" aria-current="page">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
   </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
 </nav>
 
-<div class="topic-hero">
-  <div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/k10-02.jpg" alt="Un montón de tarjetas escritas a mano" title="Foto: muninn.net · Flickr · BY 2.0" width="360" height="240"><figcaption>Foto: muninn.net · Flickr · BY 2.0</figcaption></figure>
+    <div class="lec-hero-txt">
     <div class="topic-hero-tag">Kapitel 10 · Cenlex · Tema 02</div>
     <h1>Listado de <em>verbos</em> — la tabla a memorizar</h1>
     <p class="topic-hero-desc">Los 207 verbos con las cuatro columnas de la tabla de clase: significado, Präsens (con la 3ª persona cuando cambia), Präteritum y Partizip II con su auxiliar. Irregulares, mixtos y regulares, buscables y filtrables.</p>
     <div class="topic-hero-meta">
-      <span class="meta-pill">📋 207 verbos</span>
-      <span class="meta-pill">🔍 Buscador y filtros</span>
-      <span class="meta-pill">🎯 Präsens · Präteritum · Partizip II</span>
-      <span class="meta-pill">🔥 15 imprescindibles marcados</span>
+      <span class="meta-pill">207 verbos</span>
+      <span class="meta-pill">Buscador y filtros</span>
+      <span class="meta-pill">Präsens · Präteritum · Partizip II</span>
+      <span class="meta-pill">15 imprescindibles marcados</span>
     </div>
+  
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#como-se-lee-esta-tabla"><span>Cómo se lee esta tabla</span></a></li>
+        <li><a href="#tres-tipos-tres-patrones"><span>Tres tipos, tres patrones</span></a></li>
+        <li><a href="#los-irregulares-no-son-139-sueltos-son-pat"><span>Los irregulares no son 139 sueltos: son patrones</span></a></li>
+        <li><a href="#por-que-la-tabla-trae-la-3a-persona"><span>Por qué la tabla trae la 3ª persona</span></a></li>
+        <li><a href="#tabla-a-memorizar"><span>Tabla a memorizar</span></a></li>
+        <li><a href="#los-que-enganan"><span>Los que engañan</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 5 bloques →</a>
+    </nav>
   </div>
 </div>
 
 <div class="topic-content">
-  <div class="container">
+  <div class="container lec">
+<div class="lec-explica">
 
     <!-- ── CÓMO SE LEE ── -->
     <div class="content-full">
       <div class="card card-gold">
-        <h3><span>🧭</span> Cómo se lee esta tabla</h3>
+        <h3 id="como-se-lee-esta-tabla">Cómo se lee esta tabla</h3>
         <table class="vocab-table">
           <thead><tr><th>Columna</th><th>Qué contiene</th></tr></thead>
           <tbody>
@@ -61,7 +84,7 @@
     <!-- ── LOS TRES TIPOS ── -->
     <div class="content-full">
       <div class="card">
-        <h3><span>🧩</span> Tres tipos, tres patrones</h3>
+        <h3 id="tres-tipos-tres-patrones">Tres tipos, tres patrones</h3>
         <table class="vocab-table">
           <thead><tr><th>Tipo</th><th>Präteritum</th><th>Partizip II</th><th>Ejemplo</th></tr></thead>
           <tbody>
@@ -79,7 +102,7 @@
     <!-- ── PATRONES DE VOCAL ── -->
     <div class="content-full">
       <div class="card">
-        <h3><span>🔤</span> Los irregulares no son 139 sueltos: son patrones</h3>
+        <h3 id="los-irregulares-no-son-139-sueltos-son-pat">Los irregulares no son 139 sueltos: son patrones</h3>
         <p>Si reconoces el patrón, deduces el Präteritum y el Partizip sin haberlos memorizado uno a uno.</p>
         <table class="vocab-table">
           <thead><tr><th>Patrón</th><th>Modelo</th><th>Otros del grupo</th></tr></thead>
@@ -100,7 +123,7 @@
     <!-- ── EL PRÄSENS IRREGULAR ── -->
     <div class="content-full">
       <div class="card card-gold">
-        <h3><span>🔀</span> Por qué la tabla trae la 3ª persona</h3>
+        <h3 id="por-que-la-tabla-trae-la-3a-persona">Por qué la tabla trae la 3ª persona</h3>
         <p>Muchos irregulares también cambian en <b>presente</b>, pero solo en <b>du</b> y <b>er/sie/es</b>. El resto de personas van normales. Por eso la columna Präsens lleva esa forma entre paréntesis.</p>
         <table class="vocab-table">
           <thead><tr><th>Cambio</th><th>Infinitiv</th><th>du</th><th>er/sie/es</th><th>Otros del grupo</th></tr></thead>
@@ -125,18 +148,10 @@
       </div>
     </div>
 
-    <div class="content-full">
-      <div class="card">
-        <h3><span>🔀</span> Practica: la 3ª persona del presente</h3>
-        <p>Escribe la forma de <b>er/sie/es</b>.</p>
-        <div id="ej-3p" class="k10-ejercicios"></div>
-      </div>
-    </div>
-
     <!-- ── LA TABLA ── -->
     <div class="content-full">
       <div class="card">
-        <h3><span>📋</span> Tabla a memorizar — 207 verbos</h3>
+        <h3 id="tabla-a-memorizar">Tabla a memorizar — 207 verbos</h3>
         <p>Busca en alemán o en español. Los filtros acotan por tipo o por auxiliar.</p>
         <input type="text" id="buscarVerbo" class="k10-buscador" placeholder="Buscar: trinken, beber, sein, ging…" spellcheck="false" autocomplete="off" aria-label="Buscar verbo">
         <div class="k10-filtros" id="filtros">
@@ -364,26 +379,10 @@
       </div>
     </div>
 
-    <div class="content-full">
-      <div class="card">
-        <h3><span>🔗</span> Empareja: Präteritum → Infinitiv</h3>
-        <p>La dirección contraria a la habitual. En un texto te encuentras el Präteritum y tienes que reconocer de qué verbo viene.</p>
-        <div id="em-prat"></div>
-      </div>
-    </div>
-
-    <div class="content-full">
-      <div class="card card-gold">
-        <h3><span>🎧</span> Dictado — escucha y escribe</h3>
-        <p>Necesita voz alemana en el sistema. Es el único ejercicio donde no ves la palabra antes de responder.</p>
-        <div id="dic-verbos"></div>
-      </div>
-    </div>
-
     <!-- ── LOS QUE ENGAÑAN ── -->
     <div class="content-full">
       <div class="card card-red">
-        <h3><span>🪤</span> Los que engañan</h3>
+        <h3 id="los-que-enganan">Los que engañan</h3>
         <table class="vocab-table">
           <thead><tr><th>Verbo</th><th>Trampa</th></tr></thead>
           <tbody>
@@ -399,24 +398,52 @@
         </table>
       </div>
     </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-3a-persona-del-presente">3ª persona del presente</a><a href="#practica-empareja">Empareja</a><a href="#practica-dictado">Dictado</a><a href="#practica-prateritum">Präteritum</a><a href="#practica-partizip-ii">Partizip II</a></nav></div>
+
+    <div id="practica-3a-persona-del-presente" class="content-full">
+      <div class="card">
+        <h3>Practica: la 3ª persona del presente</h3>
+        <p>Escribe la forma de <b>er/sie/es</b>.</p>
+        <div id="ej-3p" class="k10-ejercicios"></div>
+      </div>
+    </div>
+
+    <div id="practica-empareja" class="content-full">
+      <div class="card">
+        <h3>Empareja: Präteritum → Infinitiv</h3>
+        <p>La dirección contraria a la habitual. En un texto te encuentras el Präteritum y tienes que reconocer de qué verbo viene.</p>
+        <div id="em-prat"></div>
+      </div>
+    </div>
+
+    <div id="practica-dictado" class="content-full">
+      <div class="card card-gold">
+        <h3>Dictado — escucha y escribe</h3>
+        <p>Necesita voz alemana en el sistema. Es el único ejercicio donde no ves la palabra antes de responder.</p>
+        <div id="dic-verbos"></div>
+      </div>
+    </div>
 
     <!-- ── PRÁCTICA ── -->
-    <div class="content-full">
+    <div id="practica-prateritum" class="content-full">
       <div class="card card-gold">
-        <h3><span>✍️</span> Practica el Präteritum</h3>
+        <h3>Practica el Präteritum</h3>
         <p>Escribe el Präteritum (3ª persona / forma base) de estos 20 verbos clave.</p>
         <div id="ej-prateritum" class="k10-ejercicios"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-partizip-ii" class="content-full">
       <div class="card">
-        <h3><span>🧱</span> Practica el Partizip II — los difíciles</h3>
+        <h3>Practica el Partizip II — los difíciles</h3>
         <p>Separables, prefijos inseparables, -ieren y raíces en -t: los que más se fallan.</p>
         <div id="ej-partizip2" class="k10-ejercicios"></div>
       </div>
     </div>
-
+</aside>
   </div>
 </div>
 
@@ -545,6 +572,7 @@ k10Escribir('ej-3p', [
 ]);
 </script>
 
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body>
 </html>

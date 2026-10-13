@@ -20,35 +20,59 @@
 </head>
 <body>
 
-<nav class="nav">
-  <a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>
-  <div class="nav-links">
-    <a href="index.html" class="nav-back">← Índice</a>
-    <a href="../Dashboard/dashboard.html" class="nav-back" title="Volver al Dashboard">🚀</a>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10" class="on" aria-current="page">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
   </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
 </nav>
 
-<div class="topic-hero">
-  <div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/k10-05.jpg" alt="Desayuno con café y cruasanes" title="Foto: JESHOOTS.com · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: JESHOOTS.com · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
     <div class="topic-hero-tag">Kapitel 10 · Cenlex · Tema 05</div>
     <h1><em>Mein Tag</em> — contar tu día</h1>
     <p class="topic-hero-desc">La tarea de video del capítulo: contar tu día. Aquí está tu rutina real —la de verdad, con Didi, ALTEN y el gimnasio— escrita en presente y en Perfekt, más los conectores de tiempo que hacen que suene natural en vez de una lista.</p>
     <div class="topic-hero-meta">
-      <span class="meta-pill">🗣️ Producción oral</span>
-      <span class="meta-pill">🎬 Mein Tag_Video</span>
-      <span class="meta-pill">⏱️ ~40 min</span>
-      <span class="meta-pill">🔥 Junta todo el capítulo</span>
+      <span class="meta-pill">Producción oral</span>
+      <span class="meta-pill">Mein Tag_Video</span>
+      <span class="meta-pill">~40 min</span>
+      <span class="meta-pill">Junta todo el capítulo</span>
     </div>
+  
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#primero-los-conectores-sin-ellos-suena-a-l"><span>Primero los conectores: sin ellos suena a lista</span></a></li>
+        <li><a href="#tu-dia-real-en-presente"><span>Tu día real, en presente</span></a></li>
+        <li><a href="#el-mismo-dia-en-perfekt"><span>El mismo día, en Perfekt</span></a></li>
+        <li><a href="#guion-listo-para-el-video"><span>Guion listo para el video</span></a></li>
+        <li><a href="#con-que-frecuencia-de-siempre-a-nunca"><span>Con qué frecuencia: de siempre a nunca</span></a></li>
+        <li><a href="#decir-la-hora"><span>Decir la hora</span></a></li>
+        <li><a href="#vocabulario-de-la-rutina"><span>Vocabulario de la rutina</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 8 bloques →</a>
+    </nav>
   </div>
 </div>
 
 <div class="topic-content">
-  <div class="container">
+  <div class="container lec">
+<div class="lec-explica">
 
     <!-- ── CONECTORES ── -->
     <div class="content-full">
       <div class="card card-gold">
-        <h3><span>🔗</span> Primero los conectores: sin ellos suena a lista</h3>
+        <h3 id="primero-los-conectores-sin-ellos-suena-a-l">Primero los conectores: sin ellos suena a lista</h3>
         <p>Es lo que separa un "me levanto, desayuno, trabajo" de algo que suena a alemán de verdad.</p>
         <table class="vocab-table">
           <thead><tr><th>Conector</th><th>Español</th><th>Ejemplo</th></tr></thead>
@@ -72,7 +96,7 @@
     <!-- ── TU DÍA EN PRESENTE ── -->
     <div class="content-full">
       <div class="card">
-        <h3><span>☀️</span> Tu día real, en presente</h3>
+        <h3 id="tu-dia-real-en-presente">Tu día real, en presente</h3>
         <p>Para el video de "Mein Tag". Son tus horarios de verdad — los mismos que tienes en el Dashboard.</p>
         <div class="mt-linea"><span class="mt-hora">6:40</span><div><div class="mt-de">Ich stehe um zwanzig vor sieben auf.</div><div class="mt-es">Me levanto a las 6:40. — <b>aufstehen</b>, separable: el prefijo se va al final</div></div></div>
         <div class="mt-linea"><span class="mt-hora">6:43</span><div><div class="mt-de">Zuerst arbeite ich zwanzig Minuten an meiner App.</div><div class="mt-es">Primero trabajo veinte minutos en mi aplicación.</div></div></div>
@@ -89,7 +113,7 @@
     <!-- ── EL MISMO DÍA EN PERFEKT ── -->
     <div class="content-full">
       <div class="card card-red">
-        <h3><span>🕐</span> El mismo día, en Perfekt</h3>
+        <h3 id="el-mismo-dia-en-perfekt">El mismo día, en Perfekt</h3>
         <p>Esto es lo que te van a pedir: <em>«Was hast du gestern gemacht?»</em>. Compara cada frase con la de arriba.</p>
         <div class="mt-linea"><span class="mt-hora">6:40</span><div><div class="mt-de">Ich <b>bin</b> um zwanzig vor sieben <b>aufgestanden</b>.</div><div class="mt-es">Me levanté a las 6:40. — cambio de estado → <b>sein</b></div></div></div>
         <div class="mt-linea"><span class="mt-hora">6:43</span><div><div class="mt-de">Zuerst <b>habe</b> ich an meiner App <b>gearbeitet</b>.</div><div class="mt-es">Primero trabajé en mi aplicación. — raíz en -t → gearbeit<b>e</b>t</div></div></div>
@@ -110,7 +134,7 @@
     <!-- ── GUION DEL VIDEO ── -->
     <div class="content-full">
       <div class="card card-gold">
-        <h3><span>🎬</span> Guion listo para el video</h3>
+        <h3 id="guion-listo-para-el-video">Guion listo para el video</h3>
         <p>Un minuto, con principio y final. Léelo en voz alta tres veces antes de grabar.</p>
         <div class="rule-box" style="line-height:1.9">
           Hallo, ich heiße Adán und ich bin Testingenieur.<br>
@@ -130,7 +154,7 @@
     <!-- ── FRECUENCIA ── -->
     <div class="content-full">
       <div class="card">
-        <h3><span>🔁</span> Con qué frecuencia: de siempre a nunca</h3>
+        <h3 id="con-que-frecuencia-de-siempre-a-nunca">Con qué frecuencia: de siempre a nunca</h3>
         <p>Contar tu día sin estas palabras suena a robot. Van normalmente después del verbo.</p>
         <table class="vocab-table">
           <thead><tr><th>Deutsch</th><th>%</th><th>Español</th><th>Ejemplo</th></tr></thead>
@@ -151,7 +175,7 @@
     <!-- ── LA HORA ── -->
     <div class="content-full">
       <div class="card card-gold">
-        <h3><span>🕐</span> Decir la hora — la forma hablada</h3>
+        <h3 id="decir-la-hora">Decir la hora — la forma hablada</h3>
         <p>En el video vas a decir horas. La forma oficial (17:40) es fácil; la hablada es la que suena natural y la que te van a preguntar.</p>
         <table class="vocab-table">
           <thead><tr><th>Hora</th><th>Hablada</th><th>Cómo se piensa</th></tr></thead>
@@ -182,7 +206,7 @@
     <!-- ── VOCABULARIO DE LA RUTINA ── -->
     <div class="content-full">
       <div class="card">
-        <h3><span>🧺</span> Vocabulario de la rutina — casi todo separable</h3>
+        <h3 id="vocabulario-de-la-rutina">Vocabulario de la rutina — casi todo separable</h3>
         <p>Fíjate en cuántos llevan prefijo separable: en presente se va al final, y en Perfekt el <b>ge-</b> va en medio.</p>
         <table class="vocab-table">
           <thead><tr><th>Infinitiv</th><th>Presente</th><th>Perfekt</th><th>Español</th></tr></thead>
@@ -207,66 +231,70 @@
         </div>
       </div>
     </div>
+</div>
 
-    <div class="content-full">
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-hora-hablada">Hora hablada</a><a href="#practica-frecuencia">Frecuencia</a><a href="#practica-separables-de-la-rutina">Separables de la rutina</a><a href="#practica-pasa-tu-dia-a-perfekt">Pasa tu día a Perfekt</a><a href="#practica-ordena-las-frases-de-tu-dia">Ordena las frases de tu día</a><a href="#practica-luckentext">Lückentext</a><a href="#practica-dictado">Dictado</a><a href="#practica-tarjetas">Tarjetas</a></nav></div>
+
+    <div id="practica-hora-hablada" class="content-full">
       <div class="card">
-        <h3><span>🕐</span> Practica: la hora hablada</h3>
+        <h3>Practica: la hora hablada</h3>
         <div id="ej-hora" class="k10-quiz"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-frecuencia" class="content-full">
       <div class="card">
-        <h3><span>🔁</span> Practica: frecuencia</h3>
+        <h3>Practica: frecuencia</h3>
         <div id="em-frec"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-separables-de-la-rutina" class="content-full">
       <div class="card">
-        <h3><span>🧺</span> Practica: separables de la rutina</h3>
+        <h3>Practica: separables de la rutina</h3>
         <div id="ej-sep" class="k10-ejercicios"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-pasa-tu-dia-a-perfekt" class="content-full">
       <div class="card">
-        <h3><span>✍️</span> Pasa tu día a Perfekt</h3>
+        <h3>Pasa tu día a Perfekt</h3>
         <p>Escribe la frase completa. Se acepta con o sin mayúscula inicial.</p>
         <div id="mt-ej" class="k10-ejercicios"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-ordena-las-frases-de-tu-dia" class="content-full">
       <div class="card">
-        <h3><span>🧩</span> Ordena las frases de tu día</h3>
+        <h3>Ordena las frases de tu día</h3>
         <div id="mt-ord" class="k10-ordenar"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-luckentext" class="content-full">
       <div class="card card-gold">
-        <h3><span>📝</span> Lückentext — tu día completo</h3>
+        <h3>Lückentext — tu día completo</h3>
         <p>Tu rutina real con huecos. Es prácticamente el guion del video.</p>
         <div id="hueco-tag"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-dictado" class="content-full">
       <div class="card">
-        <h3><span>🎧</span> Dictado — frases de tu día</h3>
+        <h3>Dictado — frases de tu día</h3>
         <p>Escucha y escribe. Si vas a grabar un video, primero hay que oírselo decir a alguien.</p>
         <div id="dic-tag"></div>
       </div>
     </div>
 
-    <div class="content-full">
+    <div id="practica-tarjetas" class="content-full">
       <div class="card">
-        <h3><span>🎴</span> Repasa con tarjetas</h3>
+        <h3>Repasa con tarjetas</h3>
         <div id="fc-k10-05" class="flashcards"></div>
       </div>
     </div>
-
+</aside>
   </div>
 </div>
 
@@ -374,6 +402,7 @@ k10Escribir('ej-sep', [
 ]);
 </script>
 
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body>
 </html>

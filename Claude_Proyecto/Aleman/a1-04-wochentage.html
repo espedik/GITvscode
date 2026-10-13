@@ -41,29 +41,52 @@
 </style></head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><div class="nav-links"><a href="index.html" class="nav-link">← Índice A1</a><a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a></div></nav>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1" class="on" aria-current="page">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
 
-<div class="topic-hero"><div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a1-04.jpg" alt="Un calendario de escritorio" title="Foto: Jeff Sheldon · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Jeff Sheldon · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A1 · Tema 04</div>
   <h1>Wochentage & Monate — <em>Días y Meses</em></h1>
   <p class="topic-hero-desc">Aprenderás los días de la semana, los meses del año, las estaciones y cómo expresar fechas, horarios y rutinas temporales en alemán.</p>
-  <div class="topic-hero-meta"><span class="meta-pill">📅 Días</span><span class="meta-pill">📆 Meses</span><span class="meta-pill">🌸 Estaciones</span><span class="meta-pill">🕐 Preposiciones de tiempo</span></div>
-</div></div>
-
-<div class="topic-content"><div class="container">
-
-<!-- 0. FLASHCARDS -->
-<div class="content-full">
-  <div class="card">
-    <h3><span>🎴</span> Repasa con tarjetas</h3>
-    <div id="fc-a1-04" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill">Días</span><span class="meta-pill">Meses</span><span class="meta-pill">Estaciones</span><span class="meta-pill">Preposiciones de tiempo</span></div>
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#dias-de-la-semana"><span>Días de la semana</span></a></li>
+        <li><a href="#los-meses-del-ano"><span>Los meses del año</span></a></li>
+        <li><a href="#las-estaciones"><span>Las estaciones</span></a></li>
+        <li><a href="#preposiciones-de-tiempo"><span>Preposiciones de tiempo</span></a></li>
+        <li><a href="#expresiones-de-tiempo-frecuentes"><span>Expresiones de tiempo frecuentes</span></a></li>
+        <li><a href="#como-escribir-y-decir-fechas"><span>Cómo escribir y decir fechas</span></a></li>
+        <li><a href="#frases-comunes-en-este-tema"><span>Frases comunes en este tema</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 3 bloques →</a>
+    </nav>
   </div>
 </div>
+
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
 <!-- DÍAS DE LA SEMANA -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>📅</span> 1. Días de la semana — die Wochentage</h3>
+    <h3 id="dias-de-la-semana">1. Días de la semana — die Wochentage</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px">En alemán la semana empieza el <strong>lunes (Montag)</strong>. Todos los días son masculinos: <em>der Montag</em>. La mayoría terminan en <strong>-tag</strong> (día).</p>
     <div class="day-grid">
       <div class="day-card"><div class="day-num">Mo</div><div class="day-de">Montag</div><div class="day-es">lunes</div></div>
@@ -90,7 +113,7 @@
 <!-- MESES -->
 <div class="content-full">
   <div class="card">
-    <h3><span>📆</span> 2. Los meses del año — die Monate</h3>
+    <h3 id="los-meses-del-ano">2. Los meses del año — die Monate</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Todos los meses son masculinos: <em>der Januar</em>. Para decir "en enero" usa <strong>im</strong> + mes.</p>
     <div class="month-grid">
       <div class="month-card season-winter"><div class="month-num">01 ❄️</div><div class="month-de">Januar</div><div class="month-es">enero</div></div>
@@ -112,7 +135,7 @@
 <!-- ESTACIONES -->
 <div class="content-full">
   <div class="card">
-    <h3><span>🌸</span> 3. Las estaciones — die Jahreszeiten</h3>
+    <h3 id="las-estaciones">3. Las estaciones — die Jahreszeiten</h3>
     <table class="vocab-table">
       <thead><tr><th>Estación</th><th>Alemán</th><th>Meses</th><th>Ejemplo</th></tr></thead>
       <tbody>
@@ -129,7 +152,7 @@
 <!-- PREPOSICIONES DE TIEMPO -->
 <div class="content-full">
   <div class="card card-red">
-    <h3><span>⏰</span> 4. Preposiciones de tiempo — esenciales</h3>
+    <h3 id="preposiciones-de-tiempo">4. Preposiciones de tiempo — esenciales</h3>
     <table class="vocab-table">
       <thead><tr><th>Prep.</th><th>Uso</th><th>Ejemplo</th><th>Español</th></tr></thead>
       <tbody>
@@ -148,7 +171,7 @@
 <!-- EXPRESIONES DE TIEMPO -->
 <div class="content-full">
   <div class="card">
-    <h3><span>💬</span> 5. Expresiones de tiempo frecuentes</h3>
+    <h3 id="expresiones-de-tiempo-frecuentes">5. Expresiones de tiempo frecuentes</h3>
     <table class="vocab-table">
       <thead><tr><th>Alemán</th><th>Español</th><th>Ejemplo</th></tr></thead>
       <tbody>
@@ -169,7 +192,7 @@
 <!-- CÓMO ESCRIBIR FECHAS -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>🗓️</span> 6. Cómo escribir y decir fechas</h3>
+    <h3 id="como-escribir-y-decir-fechas">6. Cómo escribir y decir fechas</h3>
     <div class="rule-box">
       Estructura: <strong>am + ordinal + Monat</strong><br><br>
       am <strong>ersten</strong> Januar → el 1 de enero<br>
@@ -191,7 +214,7 @@
 <!-- FRASES COMUNES -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>🗨️</span> Frases comunes en este tema</h3>
+    <h3 id="frases-comunes-en-este-tema">Frases comunes en este tema</h3>
     <div class="phrase-grid">
       <div class="phrase-item"><span class="phrase-situation">Planeando una cita</span><span class="phrase-de">Hast du am Montag Zeit?</span><span class="phrase-es">¿Tienes tiempo el lunes?</span></div>
       <div class="phrase-item"><span class="phrase-situation">Aceptando un plan</span><span class="phrase-de">Ja, am Freitag passt mir gut.</span><span class="phrase-es">Sí, el viernes me viene bien.</span></div>
@@ -207,11 +230,23 @@
     </div>
   </div>
 </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a></nav></div>
+
+<!-- 0. FLASHCARDS -->
+<div id="practica-tarjetas" class="content-full">
+  <div class="card">
+    <h3>Repasa con tarjetas</h3>
+    <div id="fc-a1-04" class="flashcards"></div>
+  </div>
+</div>
 
 <!-- DIÁLOGO -->
-<div class="content-full">
+<div id="practica-dialogo" class="content-full">
   <div class="card">
-    <h3><span>💬</span> Diálogo de práctica — Planeando una reunión</h3>
+    <h3>Diálogo de práctica — Planeando una reunión</h3>
     <div class="dialog-box">
       <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Hast du am Freitag Zeit für ein Treffen?</div><div class="dialog-es">¿Tienes tiempo el viernes para una reunión?</div></div></div>
       <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Am Freitag kann ich leider nicht. Wie wäre es am Montag?</div><div class="dialog-es">El viernes lamentablemente no puedo. ¿Qué tal el lunes?</div></div></div>
@@ -223,20 +258,20 @@
 </div>
 
 <!-- EJERCICIOS -->
-<div class="content-full">
+<div id="practica-ejercicios" class="content-full">
   <div class="card card-red">
-    <h3><span>✏️</span> 7. Ejercicios</h3>
+    <h3>7. Ejercicios</h3>
     <div class="exercise"><div class="exercise-num">Ejercicio 1 — ¿Qué preposición?</div><div class="exercise-q">___ Montag / ___ März / ___ 8 Uhr / ___ Sommer / ___ zwei Jahren</div><div class="exercise-hint">am / im / um / im / seit</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 2 — Escribe tu rutina semanal</div><div class="placeholder" style="margin-top:8px">Am Montag... Am Dienstag... Am Wochenende... Immer / Oft / Manchmal...</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 3 — Fechas importantes</div><div class="exercise-q">¿Cómo dices en alemán: "El día de la unidad alemana es el 3 de octubre"?</div><div class="exercise-hint">Der Tag der Deutschen Einheit ist am dritten Oktober.</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 4 — Tu cumpleaños</div><div class="exercise-q">Schreib: Cuándo es tu cumpleaños, en qué mes, y qué estación es.</div><div class="placeholder" style="margin-top:8px">Ich habe am ... Geburtstag. Das ist im ... (Monat), im ... (Jahreszeit).</div></div>
   </div>
 </div>
-
+</aside>
 </div></div>
 <div class="page-nav">
-  <a href="a1-03-farben.html" class="page-nav-btn"><span style="font-size:24px">🎨</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Farben & Formen</div></div></a>
-  <a href="a1-05-familie.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Familie</div></div><span style="font-size:24px">👨‍👩‍👧</span></a>
+  <a href="a1-03-farben.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a1-03.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Farben & Formen</div></div></a>
+  <a href="a1-05-familie.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Familie</div></div><img class="pn-foto" src="fotos/a1-05.jpg" alt="" loading="lazy"></a>
 </div>
 <footer class="footer"><p>A1 · 04 — Wochentage & Monate</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
 <script src="flashcards.js"></script>
@@ -260,5 +295,6 @@ initFlashcards('fc-a1-04', [
   {art:'-', de:'immer / oft / manchmal / nie', es:'siempre / a menudo / a veces / nunca'}
 ]);
 </script>
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>

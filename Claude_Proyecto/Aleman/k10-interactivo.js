@@ -13,6 +13,8 @@
      k10Dictado(id, items)       escuchar y escribir (comprensión oral)
      k10Hablar(texto)            pronunciar en alemán con la voz del sistema
      k10Altavoces(selector)      poner un botón 🔊 en cada elemento que coincida
+     k10Ejercicios()             los ejercicios de la página ({caja, clave}): con ellos leccion.js
+                                 pinta «Tu avance en esta lección»
 
    Se corrigen SOLOS mientras escribes, sin botón de "comprobar". La razón es práctica: con un
    botón se acaba escribiendo las diez respuestas a ciegas y revisando al final, que es justo
@@ -544,4 +546,20 @@
     Object.keys(d).forEach(k => { hechos += d[k].hechos || 0; total += d[k].total || 0; });
     return { hechos: hechos, total: total, pct: total ? Math.round(hechos / total * 100) : 0 };
   };
+
+  /* Qué ejercicios tiene la página y en qué caja vive cada uno, para que la plantilla de la lección
+     (leccion.js) cuente el avance de cada bloque de práctica. `clave` es con la que se guarda en
+     aleman_k10_v1: un k10Conjugar guarda una entrada por verbo. */
+  const REGISTRO = [];
+  ['k10Escribir', 'k10Opciones', 'k10Ordenar', 'k10Emparejar', 'k10Hueco', 'k10Conjugar', 'k10Test', 'k10Dictado']
+    .forEach(function (n) {
+      const f = window[n];
+      window[n] = function (id, datos) {
+        if (n === 'k10Conjugar' && Array.isArray(datos))
+          datos.forEach(function (v) { REGISTRO.push({ caja: id, clave: id + '-' + v.inf }); });
+        else REGISTRO.push({ caja: id, clave: id });
+        return f.apply(this, arguments);
+      };
+    });
+  window.k10Ejercicios = function () { return REGISTRO.slice(); };
 })();

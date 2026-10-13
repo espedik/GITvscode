@@ -7,29 +7,51 @@
 <link rel="stylesheet" href="styles.css"></head>
 <body>
 
-<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><div class="nav-links"><a href="index.html" class="nav-link">← Índice A1</a><a href="../Dashboard/dashboard.html" class="nav-back" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">🚀 Dashboard</a></div></nav>
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1" class="on" aria-current="page">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
 
-<div class="topic-hero"><div class="container">
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a1-13.jpg" alt="Una sala con sillones amarillos" title="Foto: Dan Gold · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Dan Gold · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
   <div class="topic-hero-tag">A1 · Tema 13</div>
   <h1>Wohnen — <em>Vivienda básica</em></h1>
   <p class="topic-hero-desc">Vocabulario fundamental para describir tu hogar: las habitaciones, los muebles y los electrodomésticos. También aprenderás a usar preposiciones de lugar (in, an, auf, unter...).</p>
-  <div class="topic-hero-meta"><span class="meta-pill">🏠 Habitaciones</span><span class="meta-pill">🛋️ Muebles</span><span class="meta-pill">📍 Preposiciones</span><span class="meta-pill">⏱️ ~40 min</span></div>
-</div></div>
-
-<div class="topic-content"><div class="container">
-
-<!-- FLASHCARDS -->
-<div class="content-full">
-  <div class="card">
-    <h3><span>🎴</span> Repasa con tarjetas</h3>
-    <div id="fc-a1-13" class="flashcards"></div>
+  <div class="topic-hero-meta"><span class="meta-pill">Habitaciones</span><span class="meta-pill">Muebles</span><span class="meta-pill">Preposiciones</span><span class="meta-pill">~40 min</span></div>
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#tipos-de-vivienda"><span>Tipos de vivienda</span></a></li>
+        <li><a href="#las-habitaciones"><span>Las habitaciones</span></a></li>
+        <li><a href="#muebles-y-objetos"><span>Muebles y objetos</span></a></li>
+        <li><a href="#preposiciones-de-lugar"><span>Preposiciones de lugar</span></a></li>
+        <li><a href="#como-describir-tu-vivienda"><span>Cómo describir tu vivienda</span></a></li>
+        <li><a href="#frases-comunes-en-este-tema"><span>Frases comunes en este tema</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 3 bloques →</a>
+    </nav>
   </div>
 </div>
+
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
 
 <!-- TIPOS DE VIVIENDA -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>🏠</span> 1. Tipos de vivienda</h3>
+    <h3 id="tipos-de-vivienda">1. Tipos de vivienda</h3>
     <table class="vocab-table">
       <thead><tr><th>Alemán</th><th>Español</th><th>Descripción</th></tr></thead>
       <tbody>
@@ -49,7 +71,7 @@
 <!-- HABITACIONES -->
 <div class="content-grid">
   <div class="card">
-    <h3><span>🚪</span> 2. Las habitaciones — die Zimmer</h3>
+    <h3 id="las-habitaciones">2. Las habitaciones — die Zimmer</h3>
     <table class="vocab-table">
       <thead><tr><th>Alemán</th><th>Español</th></tr></thead>
       <tbody>
@@ -69,7 +91,7 @@
     </table>
   </div>
   <div class="card">
-    <h3><span>🛋️</span> 3. Muebles y objetos — Möbel</h3>
+    <h3 id="muebles-y-objetos">3. Muebles y objetos — Möbel</h3>
     <table class="vocab-table">
       <thead><tr><th>Alemán</th><th>Español</th></tr></thead>
       <tbody>
@@ -95,7 +117,7 @@
 <!-- PREPOSICIONES DE LUGAR -->
 <div class="content-full">
   <div class="card card-red">
-    <h3><span>📍</span> 4. Preposiciones de lugar — básicas A1</h3>
+    <h3 id="preposiciones-de-lugar">4. Preposiciones de lugar — básicas A1</h3>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px">En A1 usamos las preposiciones de lugar con <strong>Dativ</strong> (dónde está algo). Las preguntas son: <em>Wo ist...? / Wo sind...?</em></p>
     <table class="vocab-table">
       <thead><tr><th>Prep.</th><th>Español</th><th>Ejemplo con Dativ</th><th>Español</th></tr></thead>
@@ -117,7 +139,7 @@
 <!-- DESCRIPCIÓN DE LA VIVIENDA -->
 <div class="content-full">
   <div class="card">
-    <h3><span>💬</span> 5. Cómo describir tu vivienda</h3>
+    <h3 id="como-describir-tu-vivienda">5. Cómo describir tu vivienda</h3>
     <table class="vocab-table">
       <thead><tr><th>Frase</th><th>Español</th></tr></thead>
       <tbody>
@@ -141,7 +163,7 @@
 <!-- FRASES COMUNES -->
 <div class="content-full">
   <div class="card card-gold">
-    <h3><span>🗨️</span> 6. Frases comunes en este tema</h3>
+    <h3 id="frases-comunes-en-este-tema">6. Frases comunes en este tema</h3>
     <div class="phrase-grid">
       <div class="phrase-item"><span class="phrase-situation">Buscando piso</span><span class="phrase-de">Ich suche eine Wohnung in der Nähe vom Zentrum.</span><span class="phrase-es">Busco un apartamento cerca del centro.</span></div>
       <div class="phrase-item"><span class="phrase-situation">Preguntar por la renta</span><span class="phrase-de">Wie hoch ist die Miete?</span><span class="phrase-es">¿Cuánto es la renta?</span></div>
@@ -156,11 +178,23 @@
     </div>
   </div>
 </div>
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a></nav></div>
+
+<!-- FLASHCARDS -->
+<div id="practica-tarjetas" class="content-full">
+  <div class="card">
+    <h3>Repasa con tarjetas</h3>
+    <div id="fc-a1-13" class="flashcards"></div>
+  </div>
+</div>
 
 <!-- DIÁLOGO -->
-<div class="content-full">
+<div id="practica-dialogo" class="content-full">
   <div class="card">
-    <h3><span>💬</span> 7. Diálogo de práctica — Visitando un apartamento</h3>
+    <h3>7. Diálogo de práctica — Visitando un apartamento</h3>
     <div class="dialog-box">
       <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Guten Tag! Ich rufe wegen der Wohnung an. Ist sie noch frei?</div><div class="dialog-es">¡Buenos días! Llamo por el apartamento. ¿Sigue disponible?</div></div></div>
       <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ja, sie ist noch frei. Möchten Sie sie besichtigen?</div><div class="dialog-es">Sí, todavía está disponible. ¿Le gustaría visitarlo?</div></div></div>
@@ -172,19 +206,19 @@
 </div>
 
 <!-- EJERCICIOS -->
-<div class="content-full">
+<div id="practica-ejercicios" class="content-full">
   <div class="card card-red">
-    <h3><span>✏️</span> 8. Ejercicios</h3>
+    <h3>8. Ejercicios</h3>
     <div class="exercise"><div class="exercise-num">Ejercicio 1 — ¿Dónde está?</div><div class="exercise-q">Die Katze ist ___ dem Sofa. (auf) / Das Buch liegt ___ dem Tisch. (auf) / Der Hund schläft ___ dem Bett. (unter)</div><div class="exercise-hint">auf dem / auf dem / unter dem</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 2 — Describe tu habitación</div><div class="placeholder" style="margin-top:8px">In meinem Zimmer gibt es... Das Bett steht... Der Schreibtisch ist... An der Wand hängt... Auf dem Boden liegt...</div></div>
     <div class="exercise"><div class="exercise-num">Ejercicio 3 — Tu vivienda ideal en Alemania</div><div class="placeholder" style="margin-top:8px">Ich möchte in Deutschland in einer... wohnen. Die Wohnung soll ... Zimmer haben und... sein. Sie soll in der Nähe von... sein.</div></div>
   </div>
 </div>
-
+</aside>
 </div></div>
 <div class="page-nav">
-  <a href="a1-12-essen.html" class="page-nav-btn"><span style="font-size:24px">🍎</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Essen & Trinken</div></div></a>
-  <a href="a1-14-verkehr.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Verkehr & Richtungen</div></div><span style="font-size:24px">🚇</span></a>
+  <a href="a1-12-essen.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a1-12.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Essen & Trinken</div></div></a>
+  <a href="a1-14-verkehr.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Verkehr & Richtungen</div></div><img class="pn-foto" src="fotos/a1-14.jpg" alt="" loading="lazy"></a>
 </div>
 <footer class="footer"><p>A1 · 13 — Wohnen Grundlagen</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
 <script src="flashcards.js"></script>
@@ -205,5 +239,6 @@ initFlashcards('fc-a1-13', [
   {art:'-', de:'möbliert', es:'amueblado', ex:'Ist die Wohnung möbliert?'}
 ]);
 </script>
+<script src="leccion.js"></script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
 </body></html>
