@@ -121,8 +121,24 @@ todas daría un avance que no corresponde a lo que hay delante.
 ### La distribución
 
 `main` ocupa **todo el ancho** de la pantalla (Adán: *"no abarca todo el ancho de la pantalla"*): con el tope de 1280 px quedaban 388 px vacíos a la derecha en un monitor de 1920. Las pestañas de arriba (`.subtab-nav`) también bajan de línea en vez de esconderse. Y el índice es lo
-que arregla el problema real: `#perfil` mide **10,700 px** y hasta ahora solo se podía recorrer a
-ciegas hacia abajo.
+que arregla el problema real: Diagnóstico & Plan mide **19,000 px** entero.
+
+**Abre en «Hoy, en una pantalla»** (`#hoyCoach`, el primer bloque de Diagnóstico & Plan): la
+sección cabe en una pantalla de 1,040 px y lo demás queda plegado detrás de su pestaña del índice;
+*Todo* la enseña entera. El índice aplica solo ese filtro al bloque marcado con `data-cc-inicio`,
+salvo que hayas elegido *Todo* o que llegues con un enlace a otra cosa de la sección
+(`Coach.html#proyeccionPlan` la abre entera). Al cambiar de sección o de pestaña y volver, abre
+otra vez en *Hoy*. `ccVer(id)` enseña la sección entera y baja hasta ese bloque: lo usan los
+enlaces del pie del resumen.
+
+`pintarHoyCoach` —el bloque que lo pinta— lleva tres partes, todas de `CIFRAS.PHASES` y de tus
+casillas (`coach_checks_v1`):
+
+| Parte | Qué enseña |
+|---|---|
+| Tu fase | La fase en curso con sus fechas, los días que quedan y la barra del tiempo, sus pasos hechos (de la fase y del mes), el patrimonio líquido de hoy (`CIFRAS.patrimonio`) contra el `liquido` con que cierra —solo si el navegador tiene los datos de Finanzas— y su punto de control |
+| Lo que cierra la fase | Su meta numerada, cada punto hasta su primer «—» (el texto completo en el `title`) |
+| Tu siguiente paso | La primera tarea sin marcar de la fase en el orden del plan —primero lo atrasado, en rojo—, su primera frase como acción y el resto como el cómo y el porqué. *Hecho* marca la misma casilla de la fase; *Siguiente* enseña la que sigue y *↺* vuelve a la primera. Debajo, las dos que vienen |
 
 Medido: 0 px de desbordamiento horizontal a 390 px, sin errores de consola, y el recorrido por las
 once secciones da franja e índice donde toca. Marcar una casilla mueve la franja y el contador del

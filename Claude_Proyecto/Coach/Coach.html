@@ -1776,6 +1776,40 @@
       .ref-elige-b small { font-size: 8.5px; letter-spacing: .05em; }
       .ref-edades { margin-left: 0; }
     }
+    /* ── Hoy, en una pantalla (#hoyCoach, arriba de Diagnóstico & Plan) ─────────────────────
+       La fase en curso, lo que la cierra y el siguiente paso de su checklist. La sección abre en
+       esta pestaña del índice; lo demás queda plegado detrás de la suya. */
+    .hc-grid { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr) minmax(0,1.25fr); gap: 16px; margin-top: 14px; }
+    @media (max-width: 1100px) { .hc-grid { grid-template-columns: minmax(0,1fr); } }
+    .hc-blq { border: 1px solid var(--border); border-radius: var(--hud,3px); padding: 16px 18px; background: var(--surface-2); min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+    .hc-l { font: 700 10.5px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+    .hc-fase-t { font-size: 19px; font-weight: 800; line-height: 1.25; color: var(--text); }
+    .hc-fase-r { font-size: 13px; color: var(--muted); }
+    .hc-barra { height: 7px; border-radius: 4px; background: var(--border); overflow: hidden; }
+    .hc-barra i { display: block; height: 100%; background: var(--accent); }
+    .hc-cifras { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; margin-top: 4px; }
+    .hc-cifra { background: var(--surface); border: 1px solid var(--border); border-radius: var(--hud,3px); padding: 9px 11px; min-width: 0; }
+    .hc-cifra:only-child { grid-column: 1 / -1; }
+    .hc-cifra b { display: block; font: 800 17px/1.15 var(--mono); color: rgb(var(--acc2-rgb)); font-variant-numeric: tabular-nums; }
+    .hc-cifra span { display: block; font-size: 11.5px; color: var(--muted); margin-top: 3px; line-height: 1.35; }
+    .hc-nota { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+    .hc-nota b { color: var(--text); }
+    .hc-metas { margin: 0; padding-left: 0; list-style: none; counter-reset: hcm; display: flex; flex-direction: column; gap: 7px; }
+    .hc-metas li { counter-increment: hcm; display: grid; grid-template-columns: 22px minmax(0,1fr); gap: 8px; font-size: 13.5px; line-height: 1.45; color: var(--text); }
+    .hc-metas li::before { content: counter(hcm); font: 800 12px/1.5 var(--mono); color: var(--accent); }
+    .hc-tag { align-self: flex-start; font: 700 10.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; padding: 5px 8px; border-radius: var(--hud,3px); background: var(--accent-soft); color: var(--accent); }
+    .hc-tag.tarde { background: var(--red-soft); color: var(--red); }
+    .hc-paso { font-size: 17px; font-weight: 800; line-height: 1.3; color: var(--text); }
+    .hc-por { font-size: 13px; line-height: 1.6; color: var(--muted); }
+    .hc-botones { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    .hc-botones button { font: 700 12.5px/1 var(--font); padding: 9px 14px; border-radius: var(--hud,3px); border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; }
+    .hc-botones button.si { background: var(--green); border-color: var(--green); color: #fff; }
+    .hc-botones button:hover { border-color: var(--accent); }
+    .hc-despues { font-size: 12.5px; color: var(--muted); line-height: 1.5; border-top: 1px solid var(--border); padding-top: 8px; margin-top: auto; }
+    .hc-despues b { color: var(--text); font-weight: 700; }
+    .hc-pie { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; margin-top: 14px; font-size: 12.5px; color: var(--muted); }
+    .hc-pie a { color: var(--accent); font-weight: 700; text-decoration: none; cursor: pointer; }
+    .hc-pie a:hover { text-decoration: underline; }
 </style>
   <script>
     (function () {
@@ -1870,6 +1904,14 @@
     </div>
 
     <div id="perfil-diagnostico" class="subtab-panel active">
+
+    <!-- Hoy, en una pantalla: la fase en curso, lo que la cierra y tu siguiente paso, del maestro
+         (CIFRAS.PHASES) y de tus casillas (coach_checks_v1). Lo pinta pintarHoyCoach(). La sección
+         abre en esta pestaña del índice (data-cc-inicio); lo demás queda plegado detrás de la suya. -->
+    <div class="card hc" id="hoyCoach">
+      <h3 id="perfil-hoy" data-idx="Hoy" data-cc-inicio style="margin:0">Hoy, en una pantalla</h3>
+      <div id="hoyCoachCuerpo"></div>
+    </div>
 
     <div class="perfil-hero">
       <div class="hero-top">
@@ -6508,9 +6550,18 @@
         idx.addEventListener('click', function (e) {
           const x = e.target.closest('a'); if (!x) return;
           e.preventDefault();
+          if (!x.dataset.h) sec.dataset.ccTodo = '1';
           filtra(sec, x.dataset.h || '');
           sec.scrollIntoView({ block: 'start' });
         });
+      }
+      // Abre en «Hoy» (el bloque con data-cc-inicio): una pantalla en vez de la sección entera.
+      // No si elegiste «Todo» o si llegaste con un enlace (#…) a otra cosa de la sección.
+      const ini = contDe(sec).querySelector('[data-cc-inicio]');
+      const ancla = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+      if (ini && !sec.dataset.ccSel && sec.dataset.ccTodo !== '1' && !(ancla && ancla !== sec && contDe(sec).contains(ancla) && !ini.contains(ancla))) {
+        if (!ini.id) ini.id = sec.id + '-inicio';
+        filtra(sec, ini.id);
       }
       const sel = sec.dataset.ccSel || '';
       idx.innerHTML = '<a href="#' + sec.id + '" data-h=""' + (sel ? '' : ' class="on"') + ' title="Toda la sección">Todo</a>' +
@@ -6550,12 +6601,129 @@
       if (typeof orig !== 'function') return;
       window[fn] = function () {
         // irASeccion(sección, …) y showSubtab(sección, …): la sección llega primero.
-        if (fn !== 'cambiarModo') quitaFiltro(document.getElementById(arguments[0]));
+        if (fn !== 'cambiarModo') {
+          const s0 = document.getElementById(arguments[0]);
+          quitaFiltro(s0);
+          if (s0) delete s0.dataset.ccTodo;   // al volver, abre otra vez en «Hoy»
+        }
         const r = orig.apply(this, arguments); repintar(); return r;
       };
     });
 
+    // Para los enlaces del resumen: enseña la sección entera y baja hasta ese bloque.
+    window.ccVer = function (id) {
+      const el = document.getElementById(id); if (!el) return;
+      const sec = el.closest('main > section[id]'); if (!sec) return;
+      sec.dataset.ccTodo = '1';
+      filtra(sec, '');
+      // 120 px: lo que ocupan la barra de arriba y el índice pegajoso (el mismo margen que sus <h3>).
+      requestAnimationFrame(function () { requestAnimationFrame(function () { window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 120); }); });
+    };
+
     pintar();
+  })();
+
+  /* ── Hoy, en una pantalla ───────────────────────────────────────────────────────────────
+     La fase en curso de CIFRAS.PHASES (fechas, cuánto falta, sus pasos hechos y el patrimonio
+     líquido de hoy contra el que espera al cerrar), lo que la cierra (su meta numerada) y el
+     siguiente paso de su checklist en el orden del plan —primero lo atrasado—, con su
+     explicación. «Hecho» marca la MISMA casilla de la fase (coach_checks_v1); «Siguiente» enseña
+     el que sigue y «↺» vuelve al primero. Se repinta al marcar cualquier casilla. */
+  (function () {
+    const cuerpo = document.getElementById('hoyCoachCuerpo');
+    const C = window.CIFRAS;
+    if (!cuerpo || !C || !C.PHASES || !C.PHASES.length) return;
+    const MES3 = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    const MESL = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    const mx = n => (n < 0 ? '−' : '') + '$' + Math.round(Math.abs(n)).toLocaleString('es-MX');
+    const tx = t => (C.texto ? C.texto(String(t || '')) : String(t || ''));
+    const sinHtml = t => String(t || '').replace(/<[^>]+>/g, '');
+    let salto = 0;
+
+    function marcados() { try { return JSON.parse(localStorage.getItem('coach_checks_v1')) || {}; } catch (e) { return {}; } }
+
+    function pintarHoyCoach() {
+      const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+      const F = C.PHASES, i = F.findIndex(f => hoy >= f.start && hoy <= f.end);
+      const f = F[i >= 0 ? i : F.findIndex(x => hoy < x.start)] || F[F.length - 1];
+      const ymHoy = C.fechaLocal(hoy).slice(0, 7);
+      const ck = marcados();
+      const tareas = (f.semanas || []).filter(t => t.id);
+      const hechas = tareas.filter(t => ck[t.id]).length;
+      const delMes = tareas.filter(t => t.mes === ymHoy);
+      const pend = tareas.filter(t => !ck[t.id]).sort((a, b) => (a.mes < b.mes ? -1 : a.mes > b.mes ? 1 : 0));
+      const total = f.end - f.start, pasado = Math.min(1, Math.max(0, (hoy - f.start) / total));
+      const quedan = Math.max(0, Math.round((f.end - hoy) / 86400000));
+      const rango = MES3[f.start.getMonth()] + ' ' + f.start.getFullYear() + ' – ' + MES3[f.end.getMonth()] + ' ' + f.end.getFullYear();
+      // Sin los datos de Finanzas en este navegador el patrimonio sale en cero: mejor no enseñarlo.
+      const P0 = C.patrimonio ? C.patrimonio() : null;
+      const liq = P0 && (P0.deuda || P0.bienes || P0.liquido) ? P0.liquido : null;
+
+      // Lo que cierra la fase: su meta numerada, cada punto hasta su primer «—» o «;».
+      const metas = String(tx(f.meta)).split(/<b>\d+\)<\/b>\s*/).slice(1).map(m => {
+        const limpio = sinHtml(m).replace(/[;.\s]+$/, '');
+        const corto = limpio.split(/ —|; /)[0];
+        return '<li title="' + limpio.replace(/"/g, '') + '">' + corto[0].toUpperCase() + corto.slice(1) + '</li>';
+      }).join('');
+
+      // El siguiente paso: lo atrasado primero, luego lo del mes, en el orden del plan.
+      if (salto >= pend.length) salto = 0;
+      const t = pend[salto];
+      let paso = '<div class="hc-paso">La fase no tiene pasos pendientes.</div><div class="hc-por">Lo que sigue es su punto de control.</div>';
+      if (t) {
+        const txt = sinHtml(tx(t.txt));
+        const corte = txt.search(/\.\s/);
+        const accion = corte > 0 ? txt.slice(0, corte + 1) : txt;
+        const resto = corte > 0 ? txt.slice(corte + 2) : '';
+        const tarde = t.mes < ymHoy;
+        const mesT = MESL[+t.mes.slice(5, 7) - 1];
+        const despues = pend.filter(x => x !== t).slice(0, 2).map(x => {
+          const y = sinHtml(tx(x.txt)); const c = y.search(/\.\s/); return '<b>' + (c > 0 ? y.slice(0, c + 1) : y) + '</b>';
+        });
+        paso = '<span class="hc-tag' + (tarde ? ' tarde' : '') + '">' + (tarde ? 'Atrasado · ' + mesT : 'De ' + mesT) + ' · paso ' + (salto + 1) + ' de ' + pend.length + '</span>' +
+          '<div class="hc-paso">' + accion + '</div>' +
+          (resto ? '<div class="hc-por">' + resto + '</div>' : '') +
+          '<div class="hc-botones"><button class="si" type="button" data-hc="hecho" data-id="' + t.id + '">✓ Hecho</button>' +
+          (pend.length > 1 ? '<button type="button" data-hc="sig">Siguiente →</button>' : '') +
+          (salto ? '<button type="button" data-hc="inicio" title="Volver al primero">↺</button>' : '') + '</div>' +
+          (despues.length ? '<div class="hc-despues">Después: ' + despues.join(' · ') + '</div>' : '');
+      }
+
+      cuerpo.innerHTML =
+        '<div class="hc-grid">' +
+          '<div class="hc-blq"><div class="hc-l">Tu fase</div>' +
+            '<div class="hc-fase-t">' + f.tag + ' · ' + tx(f.title) + '</div>' +
+            '<div class="hc-fase-r">' + rango + ' · quedan <b>' + quedan + ' días</b></div>' +
+            '<div class="hc-barra" title="' + Math.round(pasado * 100) + '% del tiempo de la fase"><i style="width:' + Math.round(pasado * 100) + '%"></i></div>' +
+            '<div class="hc-cifras">' +
+              '<div class="hc-cifra"><b>' + hechas + ' de ' + tareas.length + '</b><span>pasos de la fase hechos · ' + delMes.filter(x => ck[x.id]).length + ' de ' + delMes.length + ' este mes</span></div>' +
+              (liq != null ? '<div class="hc-cifra"><b>' + mx(liq) + '</b><span>patrimonio líquido hoy · la fase cierra en ' + mx(f.liquido) + '</span></div>' : '') +
+            '</div>' +
+            '<div class="hc-nota"><b>Se revisa el ' + f.end.getDate() + ' de ' + MESL[f.end.getMonth()] + ':</b> ' + sinHtml(tx(f.checkpoint)).split(/\.\s/)[0].replace(/^[^:]+:\s*/, '') + '.</div>' +
+          '</div>' +
+          '<div class="hc-blq"><div class="hc-l">Lo que cierra la ' + f.tag.toLowerCase() + '</div><ol class="hc-metas">' + metas + '</ol></div>' +
+          '<div class="hc-blq"><div class="hc-l">Tu siguiente paso</div>' + paso + '</div>' +
+        '</div>' +
+        '<div class="hc-pie"><span>Lo demás está plegado en el índice de arriba; <b>Todo</b> enseña la sección entera.</span>' +
+          '<a data-hc-ver="fasesPlan">La fase completa →</a><a data-hc-ver="proyeccionPlan">La proyección →</a><a data-hc-ver="brechaMillon">Lo que falta para el millón →</a></div>';
+    }
+
+    cuerpo.addEventListener('click', function (e) {
+      const b = e.target.closest('[data-hc], [data-hc-ver]'); if (!b) return;
+      if (b.dataset.hcVer) { if (window.ccVer) window.ccVer(b.dataset.hcVer); return; }
+      if (b.dataset.hc === 'sig') { salto++; pintarHoyCoach(); return; }
+      if (b.dataset.hc === 'inicio') { salto = 0; pintarHoyCoach(); return; }
+      if (b.dataset.hc === 'hecho') {
+        const cb = document.getElementById(b.dataset.id);
+        if (cb && !cb.checked) cb.click();   // la casilla de la fase: guarda y repinta todo
+        else { const ck = marcados(); ck[b.dataset.id] = true; localStorage.setItem('coach_checks_v1', JSON.stringify(ck)); }
+        pintarHoyCoach();
+      }
+    });
+    document.addEventListener('change', function (e) {
+      if (e.target && e.target.matches('.check-item input[type="checkbox"]')) setTimeout(pintarHoyCoach, 0);
+    });
+    pintarHoyCoach();
   })();
 
 </script>
