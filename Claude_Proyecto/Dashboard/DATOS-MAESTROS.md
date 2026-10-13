@@ -321,6 +321,7 @@ tabla, en verde. Lo que recorte va a GBM.
 |---|---|---|
 | `{{escuelaAleman}}` | Cenlex Santo Tomás | Clases presenciales desde el 25-ago-2026. La citan Coach y el inicio de Alemán |
 | `{{proteinaMeta}}` | 186 | Meta diaria de proteína. La citan la rutina (whey de la noche) y la ficha de whey de Salud |
+| `{{kcalMeta}}` | 3115 | Meta diaria de calorías del Plan Masa Muscular (≈325 sobre el mantenimiento). Con `carbsMeta` (404 g) y `grasaMeta` (86 g), que viven a su lado en `PROYECTO`: las leen Comida y la semilla de Salud |
 | `{{kapitelAleman}}` | 10 | El capítulo que cursa en Cenlex. Dato del proyecto; no filtra ninguna pantalla |
 
 ### La rutina diaria

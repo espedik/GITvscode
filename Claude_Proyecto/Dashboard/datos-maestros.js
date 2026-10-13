@@ -164,6 +164,11 @@ window.CIFRAS = (function () {
     // La meta diaria de proteína. Estaba escrita a mano en las 3 subtareas de la whey y en
     // el catálogo de salud.html; ahora la citan como {{proteinaMeta}}.
     proteinaMeta:    186,
+    // Las otras metas diarias del Plan Masa Muscular (≈325 kcal sobre el mantenimiento de ~2,790).
+    // Estaban escritas a mano en comida.html (dos veces) y en la semilla de salud.html.
+    kcalMeta:        3115,
+    carbsMeta:       404,
+    grasaMeta:       86,
 
     // ── Fechas y metas no financieras ──
     entrevistaWayve: '2026-07-08',          // ver Entrevistas/ → sección Wayve
@@ -4331,6 +4336,7 @@ window.CIFRAS = (function () {
     escuelaAleman: { v: () => PROYECTO.escuelaAleman, fmt: 'txt' },
     kapitelAleman: { v: () => PROYECTO.kapitelAleman, fmt: 'num' },
     proteinaMeta: { v: () => PROYECTO.proteinaMeta, fmt: 'num' },
+    kcalMeta:     { v: () => PROYECTO.kcalMeta, fmt: 'num' },
     maestriaInicio:{ v: () => PROYECTO.maestriaInicio,   fmt: 'fecha' },
     // Las fechas del plan, para escribirlas en prosa sin copiarlas: `fecha` las pinta "18 jul 2027".
     decisionMaestria: { v: () => PROYECTO.maestriaDecision, fmt: 'fecha' },

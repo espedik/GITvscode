@@ -948,8 +948,8 @@ function registrarReceta(id,tipo){
 //     igual que las 28 recetas de arriba. ────────────────────────────────────────
 const PLAN_ITEMS=[
   [
-    {nombre:'4 huevos revueltos con espinacas y aceite',cal:345,prot:26,carbs:4,gra:24},
-    {nombre:'Avena (70g) cocida con 250ml leche entera',cal:410,prot:19,carbs:59,gra:13},
+    {nombre:'4 huevos revueltos con nopales y aceite',cal:350,prot:27,carbs:7,gra:24},
+    {nombre:'Granola de amaranto (70g) con 250ml leche entera',cal:442,prot:16,carbs:61,gra:15},
     {nombre:'3 plátanos medianos (120g c/u)',cal:300,prot:3,carbs:75,gra:0}
   ],
   [
@@ -988,17 +988,24 @@ function registrarRutinaMeal(idx){
 function renderRutinaMuscular(){
   const sec=document.getElementById('s-rutina'); if(!sec) return;
   const M=(window.CIFRAS&&CIFRAS.PROYECTO)||{};
-  const tCal=3115,tProt=M.proteinaMeta||186,tCarb=404,tGra=86;
+  // Las metas, del maestro (PROYECTO); los totales de cada comida se suman de sus alimentos; las horas
+  // de la comida y la cena salen de la rutina (descanso de ALTEN y la cena de las 21:15).
+  const tCal=M.kcalMeta||3115,tProt=M.proteinaMeta||186,tCarb=M.carbsMeta||404,tGra=M.grasaMeta||86;
+  const RT=(window.CIFRAS&&CIFRAS.rutina)?CIFRAS.rutina():[];
+  const horaDe=(id,resp)=>{const t=RT.find(x=>x.id===id);return t?t.hora:resp;};
+  const suma=idx=>PLAN_ITEMS[idx].reduce((a,x)=>({cal:a.cal+x.cal,prot:a.prot+x.prot,carbs:a.carbs+x.carbs,gra:a.gra+x.gra}),{cal:0,prot:0,carbs:0,gra:0});
   const meals=[
-    {idx:0,ico:'🌅',name:'Desayuno',time:'7:00 – 8:00 am',cal:1055,prot:48,carbs:138,gra:37,col:'#ffd93d'},
-    {idx:1,ico:'☀️',name:'Comida',time:'1:00 – 2:00 pm',cal:1220,prot:74,carbs:166,gra:30,col:'#ff8a3d'},
-    {idx:2,ico:'🌙',name:'Cena',time:'7:00 – 8:00 pm',cal:840,prot:64,carbs:100,gra:19,col:'#3b82f6'}
+    {idx:0,ico:'🌅',name:'Desayuno',time:'7:00 – 8:00 am',...suma(0),col:'#ffd93d'},
+    {idx:1,ico:'☀️',name:'Comida',time:horaDe('wd12b','13:00')+' · descanso de ALTEN',...suma(1),col:'#ff8a3d'},
+    {idx:2,ico:'🌙',name:'Cena',time:horaDe('wd14','21:15')+' · entre semana',...suma(2),col:'#3b82f6'}
   ];
+  const PS=(window.CIFRAS&&CIFRAS.PESO)||{};
+  const edad=M.nacimiento?Math.floor((Date.now()-new Date(M.nacimiento))/31557600000):null;
   const alts=[
     {ico:'🥩',cat:'Proteínas económicas',items:['Huevo (la fuente más barata)','Atún en lata','Pollo pierna/muslo','Carne molida 90/10','Leche entera','Frijoles + arroz combinados']},
-    {ico:'🌾',cat:'Carbohidratos complejos',items:['Arroz blanco/integral','Avena en hojuelas','Tortillas de maíz','Plátano','Papa cocida','Pan integral']},
-    {ico:'🥑',cat:'Grasas saludables',items:['Aguacate','Mantequilla de cacahuate','Aceite de oliva','Yema de huevo','Semillas de girasol','Coco rallado sin azúcar']},
-    {ico:'🥦',cat:'Verduras recomendadas',items:['Espinacas','Brócoli','Zanahoria','Jitomate','Pepino','Chayote cocido']}
+    {ico:'🌾',cat:'Carbohidratos complejos',items:['Arroz blanco/integral','Granola de amaranto','Tortillas de maíz','Plátano','Papa cocida','Pan integral']},
+    {ico:'🥑',cat:'Grasas saludables',items:['Aguacate','Nuez','Aceite de oliva','Yema de huevo','Semillas de girasol','Coco rallado sin azúcar']},
+    {ico:'🥦',cat:'Verduras recomendadas',items:['Nopales','Brócoli','Zanahoria','Jitomate','Pepino','Chayote cocido']}
   ];
   const tips=[
     {ico:'⏰',t:'Timing de proteína',d:'Consume mínimo 40g de proteína en cada comida para maximizar la síntesis muscular postentrenamiento.'},
@@ -1006,22 +1013,22 @@ function renderRutinaMuscular(){
     {ico:'😴',t:'Descanso obligatorio',d:'Duerme 7–9 horas. El 70% de la hormona de crecimiento se libera durante el sueño profundo — ahí crece el músculo.'},
     {ico:'📅',t:'Consistencia',d:'Los primeros cambios visibles llegan entre las semanas 6–12. Ningún suplemento reemplaza una dieta sostenida.'},
     {ico:'📈',t:'Superávit controlado',d:'Consumes ~325 kcal sobre tu mantenimiento estimado (≈2,790 kcal/día). Ideal para ganar músculo sin acumular exceso de grasa.'},
-    {ico:'🏋️',t:'Entrenamiento',d:'3–4 días/semana con movimientos compuestos: sentadilla, peso muerto, press banca, dominadas y remo con barra.'}
+    {ico:'🏋️',t:'Entrenamiento',d:'Sigue tu rutina de Ejercicio: lo que comes aquí es para recuperarte de esas sesiones. Los días de fuerza, no te saltes la proteína de la cena.'}
   ];
   sec.innerHTML=`
     <div class="sh"><h2>🥩 Plan Masa Muscular</h2></div>
     <div class="card" style="margin-bottom:16px;border-color:rgba(255,138,61,.3);background:rgba(255,138,61,.05)">
       <div class="pm-hero">
-        <div><div>Peso actual</div><div style="color:var(--g)">77 kg</div></div>
-        <div><div>Estatura</div><div style="color:var(--b)">1.78 m</div></div>
-        <div><div>Edad</div><div style="color:var(--p)">31 años</div></div>
-        <div><div>Objetivo</div><div style="font-size:15px;color:var(--o)">Ganar masa muscular</div></div>
+        <div><div>Peso actual</div><div style="color:var(--g)">${PS.actualKg?PS.actualKg+' kg':'—'}</div></div>
+        <div><div>Estatura</div><div style="color:var(--b)">${PS.alturaCm?(PS.alturaCm/100).toFixed(2)+' m':'—'}</div></div>
+        <div><div>Edad</div><div style="color:var(--p)">${edad!=null?edad+' años':'—'}</div></div>
+        <div><div>Objetivo</div><div style="font-size:15px;color:var(--o)">${PS.objetivo||'Ganar masa muscular'}</div></div>
       </div>
     </div>
     <div class="g4" style="margin-bottom:16px">
       ${[
         {l:'Calorías / día',v:fmt(tCal)+' kcal',sub:'Superávit +325 kcal',c:'var(--o)'},
-        {l:'Proteína',v:tProt+'g',sub:'2.4 g por kg de peso',c:'var(--p)'},
+        {l:'Proteína',v:tProt+'g',sub:(PS.actualKg?(tProt/PS.actualKg).toFixed(1)+' g por kg de peso':'por kg de peso'),c:'var(--p)'},
         {l:'Carbohidratos',v:tCarb+'g',sub:'Energía y recuperación',c:'var(--b)'},
         {l:'Grasas',v:tGra+'g',sub:'Hormonas anabólicas',c:'var(--w)'}
       ].map(k=>`<div class="card" style="border-left:4px solid ${k.c};text-align:center"><div class="card-title" style="color:${k.c};justify-content:center">${k.l}</div><div class="card-val" style="color:${k.c}">${k.v}</div><div class="card-sub">${k.sub}</div></div>`).join('')}
@@ -1098,7 +1105,7 @@ function cpCabComida(){
     sub:nDes+' desayunos \u00b7 '+nCen+' cenas, sin tus disparadores',
     kpis:[
       {v:(M.proteinaMeta||186)+' g', k:'Meta de prote\u00edna'},
-      {v:'3,115 kcal', k:'Meta del d\u00eda'},
+      {v:Number(M.kcalMeta||3115).toLocaleString('es-MX')+' kcal', k:'Meta del d\u00eda'},
       (typeof rcElegidas==='function'&&rcElegidas().length
         ? {v:String(rcElegidas().length), k:'Vas a cocinar'}
         : {v:String(nDes+nCen), k:'Recetas tuyas'}),

@@ -30,7 +30,7 @@ Súper" del menú es un **enlace al Dashboard** (↗): la lista vive solo allá.
 |---|---|---|
 | `desayunos` | 🌅 Desayunos | 12 tarjetas de receta |
 | `cenas` | 🌙 Cenas | 12 tarjetas de receta |
-| `rutina` | 🥩 Plan Masa Muscular | Perfil (`.pm-hero`: peso/estatura/edad/objetivo), 4 KPI de macros objetivo, desglose desayuno/comida/cena con tabla de alimentos (`PLAN_ITEMS`), alimentos de bajo presupuesto por categoría y 6 tips. Cada comida se registra con un botón (`registrarRutinaMeal`) |
+| `rutina` | 🥩 Plan Masa Muscular | Perfil (`.pm-hero`: peso, estatura y objetivo de `CIFRAS.PESO`, edad de `nacimiento`), 4 KPI con las metas del maestro (`kcalMeta`, `proteinaMeta`, `carbsMeta`, `grasaMeta`), desglose desayuno/comida/cena con tabla de alimentos (`PLAN_ITEMS`; los totales de cada comida se suman de ahí y las horas de la comida y la cena salen de la rutina), alimentos de bajo presupuesto por categoría y 6 tips. Nada de lo que no le gusta. Cada comida se registra con un botón (`registrarRutinaMeal`) |
 
 ## El recetario vive en el maestro
 

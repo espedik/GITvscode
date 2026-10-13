@@ -2385,7 +2385,8 @@ function init() {
   let _needSave=false;
   if(!S.perfil.peso&&!S.perfil.altura){
     S.perfil={nombre:'',peso:77,altura:178,edad:31,sexo:'M',actividad:'moderado'};
-    S.metas={...S.metas,caloriasD:3115,proteina:186,carbs:404,grasa:86,agua:10};
+    const MT=(window.CIFRAS&&CIFRAS.PROYECTO)||{};   // las metas viven en el maestro
+    S.metas={...S.metas,caloriasD:MT.kcalMeta||3115,proteina:MT.proteinaMeta||186,carbs:MT.carbsMeta||404,grasa:MT.grasaMeta||86,agua:10};
     _needSave=true;
   }
   // Dashboard → Hero lee D.sal.medidas (historial de pesajes), no D.sal.perfil.peso (que es solo
