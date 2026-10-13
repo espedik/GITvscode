@@ -109,8 +109,8 @@ día entrenado.
 desaparecería. **`init()` llama `save()` después de `load()`**: así el Dashboard ve la rutina
 desde la primera apertura, aunque Adán no haya guardado nada a mano.
 
-`today()` usa `toISOString()` (**UTC**): en México adelanta el día a partir de las 18:00. El
-Dashboard (`habitos.js`) usa fecha local; si se cambia aquí, revisar `gymSesiones()` allá.
+`today()` es la fecha **local**, la misma cuenta que `CIFRAS.fechaLocal()` (esta app no carga el maestro):
+las claves de sesión y las que lee `gymSesiones()` en el Dashboard coinciden.
 
 **El modal ✏️ Editar** (`saveRutina()`) hace `S.rutina[dia]={...S.rutina[dia], nombre, tipo,
 ejercicios}`: el spread conserva `foco` y cualquier campo que el modal no edite. Solo edita

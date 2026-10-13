@@ -913,9 +913,9 @@ const PALETTE = ['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#0
 // ─── UTILS ───────────────────────────────────────────────────────────────────
 const fmt = n => new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(n||0);
 const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2);
-const today = () => new Date().toISOString().slice(0,10);
+const today = () => CIFRAS.fechaLocal();
 const ym = d => d ? d.slice(0,7) : '';
-const nowYM = () => new Date().toISOString().slice(0,7);
+const nowYM = () => CIFRAS.fechaLocal().slice(0,7);
 const save = () => localStorage.setItem(KEY, JSON.stringify(S));
 const load = () => { try { const d=localStorage.getItem(KEY); if(d) S={...S,...JSON.parse(d)}; } catch(e){} };
 const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -2690,7 +2690,7 @@ function autoSaveCurrentMonthSnapshot() {
   // Sobrescribir solo el mes actual (pasados son inmutables)
   S.indicatorHistory=S.indicatorHistory.filter(s=>s.month!==monthKey);
   S.indicatorHistory.push({
-    month:monthKey, savedAt:now.toISOString().split('T')[0],
+    month:monthKey, savedAt:CIFRAS.fechaLocal(now),
     // Métricas calculadas
     netWorth:netW, totalActivos:totAct, totalPasivos:totPas, finActivos:finAct,
     liqActivos:liqAct, fisActivos:fisAct, btcValue:btcV,
@@ -2743,7 +2743,7 @@ function backfillMissingMonthSnapshots() {
     if(!byMonth[next]) {
       const filled = JSON.parse(JSON.stringify(byMonth[cursor]));
       filled.month = next;
-      filled.savedAt = new Date().toISOString().split('T')[0];
+      filled.savedAt = CIFRAS.fechaLocal();
       filled.backfilled = true;
       filled.backfilledFrom = byMonth[cursor].backfilled ? byMonth[cursor].backfilledFrom : cursor;
       byMonth[next] = filled;

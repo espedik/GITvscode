@@ -4719,7 +4719,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 // ══════════════════════════════════════════════════════════════════════════
 // DATA ENGINE — lee en vivo el localStorage de cada proyecto hermano
 // ══════════════════════════════════════════════════════════════════════════
-const today=()=>new Date().toISOString().slice(0,10);
+const today=()=>CIFRAS.fechaLocal();
 const cssVar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 function toggleTheme(){
   const html=document.documentElement;
@@ -5019,7 +5019,7 @@ const LOGROS_KEY='dash-logros-v1';
 function logrosLoad(){ return rawGet(LOGROS_KEY,{}); }
 // Fecha LOCAL, no `toISOString()`: en México (UTC-6) el ISO ya está en el día siguiente a partir
 // de las 18:00, así que un logro conseguido por la noche quedaba fechado mañana.
-function hoyLocal(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function hoyLocal(){ return CIFRAS.fechaLocal(); }
 function registrarLogro(id,txt,fecha){
   const l=logrosLoad();
   if(l[id]) return l[id];   // ya registrado: se respeta la fecha original, no se pisa
@@ -5277,7 +5277,7 @@ const MES_LABEL_FULL=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 // Semana calendario (Domingo→Sábado), misma convención que ejercicio.html → renderDashboard()
-function semanaActual(){const hoy=new Date();const dow=hoy.getDay();return Array.from({length:7},(_,i)=>{const d=new Date(hoy);d.setDate(d.getDate()-dow+i);return d.toISOString().slice(0,10);});}
+function semanaActual(){const hoy=new Date();const dow=hoy.getDay();return Array.from({length:7},(_,i)=>{const d=new Date(hoy);d.setDate(d.getDate()-dow+i);return CIFRAS.fechaLocal(d);});}
 const DIAS_CORTOS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 const DIAS_LARGO=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 
@@ -7021,8 +7021,7 @@ function renderDiaEntrena(gymRutina, dowHoy){
     return null;
   };
   const titulo=r&&r.tipo==='descanso'?(esHoy?'Hoy descansas':'Descanso'):(nom(r)||(esHoy?'Sin rutina hoy':'Sin rutina ese día'));
-  // La fecha que se LEE va en hora local; `fecha` (como today() y las claves de Ejercicio) es la
-  // de toISOString, que desde las 18:00 de México ya es la de mañana. Se busca con una y se rotula con la otra.
+  // La fecha que se lee y `fecha` (como today() y las claves de Ejercicio) van las dos en hora local.
   const dLoc=new Date(); dLoc.setDate(dLoc.getDate()-dowHoy+dow);
   const filas=(r&&Array.isArray(r.ejercicios)?r.ejercicios:[]).map(ej=>{
     const info=ejInfo(ej.id), ini=info&&info.pesoIni, lado=info&&info.porLado?' c/u':'';
@@ -10382,7 +10381,7 @@ function renderCalendario(){
       // objetivo. Lo que cambia es el encabezado, no la cuenta.
       const t=calRitmoTC();
       if(t&&t.plan){
-        const hoyIso=new Date().toISOString().slice(0,10), prox=t.abonos.filter(x=>x.fecha>=hoyIso).slice(0,4);
+        const hoyIso=CIFRAS.fechaLocal(), prox=t.abonos.filter(x=>x.fecha>=hoyIso).slice(0,4);
         const dCorto=iso=>{ const p=iso.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]).toLocaleDateString('es-MX',{day:'numeric',month:'short'}); };
         h+='<div class="cal-med" style="border-color:rgba(var(--o-rgb),.28);background:linear-gradient(140deg,rgba(var(--o-rgb),.1),transparent 75%)">'+
           '<div class="cal-med-h"><span class="cal-med-k" style="color:var(--o)">Quincena a quincena · '+esc(t.nombre)+'</span>'+
@@ -10688,7 +10687,7 @@ function invContexto(){
   const ph = (typeof activePhase === 'function') ? activePhase() : null;
   const fmtF = d => d instanceof Date ? d.toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' }) : '';
   return {
-    fecha: hoy.toISOString().slice(0, 10),
+    fecha: CIFRAS.fechaLocal(hoy),
     edad: P.nacimiento ? Math.floor((hoy - new Date(P.nacimiento)) / 31557600000) : null,
     ciudad: P.ciudad || '', empleador: P.empleador || '',
     ingresosMes: { sueldo: +P.sueldo || 0, didi: +P.didiMes || 0, siVale: +P.siVale || 0 },
@@ -10711,7 +10710,7 @@ function invContextoApuesta(modo){
   const R = invReglaSA(), hoy = new Date(), ant = invDatosApuesta(modo);
   return {
     perfil: modo,
-    fecha: hoy.toISOString().slice(0, 10),
+    fecha: CIFRAS.fechaLocal(hoy),
     hora: hoy.toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' }),
     ciudad: _PG().ciudad || '', broker: 'GBM+', exchangeBtc: 'Bitso',
     reglaMes: { totalMxn: R.mes, cetesMxn: R.cetes, cetesPct: Math.round(R.cetesPct * 10) / 10, btcMxn: R.btc, btcPct: R.btcPct, empresaMxn: R.resto, empresaPct: Math.round(R.restoPct * 10) / 10 },

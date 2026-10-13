@@ -2145,6 +2145,32 @@ function promptsDeLoTocado() {
             ' ejercicios, las ' + archivos.length + ' lecciones enlazadas y ' + usadas.size + ' fotos con crédito');
 })();
 
+/* ── 26. «Hoy» va en fecha LOCAL, nunca de toISOString() ─────────────────────────────────────
+   toISOString() da la fecha UTC, y en México (UTC-6) ya es el día siguiente desde las 18:00: lo que se
+   marcaba de noche (la rutina, la cena, el cierre del día) quedaba fechado mañana, en siete apps a la
+   vez. La fecha del día sale de CIFRAS.fechaLocal(). Un cálculo que entra y sale en UTC a propósito
+   lleva el comentario «UTC a propósito» en la misma línea. */
+(function () {
+  const re = /toISOString\(\)\s*\.\s*(slice\(\s*0\s*,\s*(7|10)\s*\)|substr\(\s*0\s*,\s*(7|10)\s*\)|split\(\s*['"]T['"]\s*\)\s*\[\s*0\s*\])/;
+  const malos = [];
+  let revisados = 0;
+  (function recorre(dir) {
+    fs.readdirSync(path.join(RAIZ, dir), { withFileTypes: true }).forEach(function (e) {
+      const rel = dir ? dir + '/' + e.name : e.name;
+      if (e.isDirectory()) { if (!/^(node_modules|\.git|syllabus)$/.test(e.name) && !/^diseno-/.test(e.name)) recorre(rel); return; }
+      if (!/\.(html|js)$/.test(e.name) || /verificar-sincronia\.js$/.test(e.name)) return;
+      revisados++;
+      fs.readFileSync(path.join(RAIZ, rel), 'utf8').split(/\r?\n/).forEach(function (l, i) {
+        if (re.test(l) && !/UTC a propósito/.test(l)) malos.push('     ' + rel + ':' + (i + 1) + '  ' + l.trim().slice(0, 90));
+      });
+    });
+  })('');
+  if (malos.length)
+    problemas.push('Fechas sacadas de toISOString() (UTC: desde las 18:00 de México ya es mañana); usa CIFRAS.fechaLocal():\n' + malos.slice(0, 12).join('\n'));
+  else
+    ok.push('Fechas: ninguna app saca «hoy» de toISOString() (' + revisados + ' archivos revisados)');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

@@ -4545,7 +4545,7 @@
       radar: RADAR_IDS.reduce((o, id) => { o[id] = localStorage.getItem('radarp_' + id); return o; }, {}),
     };
     const b = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(b), download: `coach_${new Date().toISOString().slice(0,10)}.json` });
+    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(b), download: `coach_${CIFRAS.fechaLocal()}.json` });
     a.click();
     URL.revokeObjectURL(a.href);
   }
@@ -5467,7 +5467,7 @@
     return h > 0 ? (h+'h'+(m ? ' '+m+'m' : '')) : m+'m';
   }
 
-  function rutinaHoyStr() { return new Date().toISOString().slice(0,10); }
+  function rutinaHoyStr() { return CIFRAS.fechaLocal(); }
   function rutinaLoad() { try { const r = localStorage.getItem(RUTINA_KEY); return r ? JSON.parse(r) : {completado:{}}; } catch(e) { return {completado:{}}; } }
   function rutinaSave(d) { localStorage.setItem(RUTINA_KEY, JSON.stringify(d)); }
   function rutinaTareasDia(dow) { return RUTINA_TASKS.filter(t => t.dias.includes(dow)).sort((a,b) => a.hora.localeCompare(b.hora)); }

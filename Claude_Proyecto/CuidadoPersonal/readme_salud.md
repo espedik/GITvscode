@@ -131,7 +131,7 @@ profesional.
 }
 ```
 
-`today()` usa `toISOString()` (**UTC**): en México adelanta el día desde las 18:00. `load()`
+`today()` es la fecha **local** (`CIFRAS.fechaLocal()`). `load()`
 hace spread sobre los defaults, así que claves que este archivo no declara sobreviven.
 
 ## Diseño y tema

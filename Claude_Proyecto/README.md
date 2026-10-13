@@ -104,10 +104,9 @@ y actualizar esta tabla.
 6. **Coach, Finanzas y las de CuidadoPersonal enlazan de vuelta al Dashboard** con un botón
    `.theme-toggle-btn` (🚀) junto al de tema; el Dashboard enlaza a todas desde su barra de apps.
    Una app nueva necesita las dos cosas.
-7. **Fechas**: Coach, Finanzas y las apps de CuidadoPersonal usan `today() = toISOString().slice(0,10)`
-   (**UTC**: en México el día cambia a las 18:00). El Dashboard usa **fecha local** en lo que
-   escribe él (`hoyLocal()`, `hoyISO()` de `habitos.js`). Al cruzar claves entre apps, tener las
-   dos convenciones presentes.
+7. **Fechas**: todas las apps usan la fecha **local** (`CIFRAS.fechaLocal()` del maestro; Ejercicio,
+   que no lo carga, la misma cuenta). Nunca `toISOString().slice(0,10)`: en México (UTC-6) ya es el día
+   siguiente desde las 18:00. El control 26 del verificador lo vigila.
 
 ## Diseño
 

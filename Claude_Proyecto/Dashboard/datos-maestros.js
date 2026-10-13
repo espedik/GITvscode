@@ -4812,8 +4812,17 @@ window.CIFRAS = (function () {
     if (r) f.liquido = Math.round(r.liquido / 1000) * 1000;
   });
 
+  // La fecha LOCAL de un día ('AAAA-MM-DD'; sin argumento, hoy). Nunca toISOString(): en México
+  // (UTC-6) el ISO ya es el día siguiente desde las 18:00, y lo que se marcaba de noche —la rutina,
+  // la cena, el cierre del día— quedaba fechado mañana. La usan todas las apps que cargan el maestro;
+  // el control 26 del verificador vigila que nadie vuelva a sacar «hoy» de toISOString().
+  function fechaLocal(d) {
+    d = d || new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
   return {
-    n: n, v: v, texto: texto, aplicarDOM: aplicarDOM, refrescar: refrescar, tabla: tabla,
+    n: n, v: v, texto: texto, aplicarDOM: aplicarDOM, refrescar: refrescar, tabla: tabla, fechaLocal: fechaLocal,
     // El balance mensual y sus piezas, para que Dashboard y Finanzas pinten LO MISMO.
     balanceMeses: balanceMeses, agendaDia: agendaDia, caeEnMes: caeEnMes, comerEnMes: comerEnMes, planBbva: planBbva,
     palabras: palabras, norm: norm, yaContado: yaContado, esNomina: esNomina,

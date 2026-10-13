@@ -221,7 +221,7 @@ nada, los lentes amarillos no mejoran la visión nocturna.
 
 ## Utilidades compartidas
 
-`uid()`, `today()` (`toISOString()`, **UTC**), `fmtD(d)`, `addDays`, `daysAgo`, `toast`,
+`uid()`, `today()` (fecha **local**, `CIFRAS.fechaLocal()`), `fmtD(d)`, `addDays` (en UTC de punta a punta), `daysAgo`, `toast`,
 `openM(id)`/`closeM(id)`, `askDel(msg,cb)`/`closeConf()`/`doConf()`.
 
 ## Responsivo
