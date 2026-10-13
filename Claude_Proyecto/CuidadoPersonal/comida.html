@@ -841,6 +841,7 @@ function rcTipoDe(id){ return (RECETAS.desayuno||[]).some(function(x){return x.i
 function rcFicha(id){
   const r = rcReceta(id); if(!r) return;
   const tipo = rcTipoDe(id), el = rcEsElegida(id);
+  const costo = (window.CIFRAS && CIFRAS.costoReceta) ? CIFRAS.costoReceta(r) : null;
   const fondo = document.getElementById('rc-ficha');
   const caja = document.getElementById('rc-ficha-caja');
   if(!fondo||!caja) return;
@@ -866,6 +867,7 @@ function rcFicha(id){
       '<div class="rf-m"><div class="rf-m-v" style="color:#c99bff">'+r.macros.prot+'<em>g</em></div><div class="rf-m-k">Prote\u00edna</div></div>'+
       '<div class="rf-m"><div class="rf-m-v" style="color:#4f8cff">'+r.macros.carbs+'<em>g</em></div><div class="rf-m-k">Carbohidratos</div></div>'+
       '<div class="rf-m"><div class="rf-m-v" style="color:#ffd93d">'+r.macros.gra+'<em>g</em></div><div class="rf-m-k">Grasa</div></div>'+
+      (costo!=null?'<div class="rf-m" title="Sus gramos por los precios de tu lista del súper"><div class="rf-m-v" style="color:#4ade80">$'+costo+'</div><div class="rf-m-k">Cuesta</div></div>':'')+
     '</div>'+
 
     '<div class="rf-cuerpo"><div class="rf-col">'+

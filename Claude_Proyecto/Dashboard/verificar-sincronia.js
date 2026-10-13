@@ -849,13 +849,16 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
      `monto × base` a la semana. */
   try {
     const objeto = nombre => { const m = dash.match(new RegExp('const ' + nombre + '=(\\{[\\s\\S]*?\\n\\});')); return m ? eval('(' + m[1] + ')') : null; };
-    const LP = objeto('LISTA_COMPRAS_PRECIOS'), RM = objeto('RECETAS_MINI'), LC = C.LISTA_COMPRAS.comida;
-    if (!LP || !RM) malos.push('     no se pudo leer LISTA_COMPRAS_PRECIOS o RECETAS_MINI del Dashboard para comprobar la comida del plan');
+    const LP = C.PRECIOS_SUPER, LC = C.LISTA_COMPRAS.comida;
+    if (!LP || !C.RECETARIO) malos.push('     el maestro no trae PRECIOS_SUPER o RECETARIO para comprobar la comida del plan');
     else {
       let semana = 0;
-      Object.keys(LC).forEach(p => LC[p].forEach(n => { const x = LP[n]; if (x) semana += (+x.monto || 0) * (+x.base || 0); }));
-      const des = RM.desayuno.map(r => +r.costoAprox || 0).filter(x => x > 0);
-      const comida = Math.round(semana / 7 * 30.4), desayuno = Math.round(des.reduce((a, b) => a + b, 0) / des.length * 30.4);
+      Object.keys(LC).forEach(p => LC[p].forEach(n => {
+        const x = LP[n];
+        if (x) semana += (+x.monto || 0) * (+x.base || 0);
+        else malos.push('     ' + n + ' está en la lista de compras sin precio en PRECIOS_SUPER: lo que cuesta comer lo cuenta como $0');
+      }));
+      const comida = Math.round(semana / 7 * 30.4), desayuno = Math.round(C.RECETARIO.costoDesayuno * 30.4);
       const SU = C.PROYECCION.supuestos;
       if (SU.comida !== comida) malos.push('     SUPUESTOS.comida es $' + SU.comida + ' y la lista de compras da $' + comida + ' al mes: actualízalo y recalcula el ahorro de cada quincena');
       if (SU.comidaEnCasa !== desayuno) malos.push('     SUPUESTOS.comidaEnCasa es $' + SU.comidaEnCasa + ' y tus recetas de desayuno dan $' + desayuno + ' al mes');
@@ -1048,6 +1051,12 @@ function impactoDelCambio() {
     const atw = 4 * (m.prot || 0) + 4 * (m.carbs || 0) + 9 * (m.gra || 0);
     if (m.cal && Math.abs(atw - m.cal) / m.cal > 0.15)
       malos.push('     ' + r.nombre + ': ' + m.cal + ' kcal no cuadran con sus macros (' + Math.round(atw) + ')');
+  });
+
+  // f) cada receta tiene costo: todos sus ingredientes con gramos y precio en PRECIOS_SUPER
+  R.todas.forEach(function (r) {
+    if (C.costoReceta && C.costoReceta(r) == null)
+      malos.push('     ' + r.nombre + ': no se puede costear (un ingrediente sin `g` o sin precio en PRECIOS_SUPER)');
   });
 
   // e) cada foto existe junto a comida.html y lleva su crédito

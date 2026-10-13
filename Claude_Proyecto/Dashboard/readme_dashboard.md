@@ -512,7 +512,7 @@ Ningún importe está escrito en el código del tablero:
 | Color de cada categoría | `CT_COLOR`, los mismos hex que `CCOLORS` de Finanzas |
 | Pagos programados de un día | `CIFRAS.CALENDARIO.cobros` + el `day` de cada deuda viva + los abonos de la BBVA de `CIFRAS.planBbva` (`ctAgenda`) |
 | Tareas y fase | `PHASES`, con su estado en `coach_checks_v1` |
-| Costo de comer, por día | `LISTA_COMPRAS_PRECIOS` × `CIFRAS.LISTA_COMPRAS.comida` (`ctComida`) |
+| Costo de comer, por día | `CIFRAS.PRECIOS_SUPER` (aquí, `LISTA_COMPRAS_PRECIOS`) × `CIFRAS.LISTA_COMPRAS.comida` (`ctComida`) |
 
 `ctAgenda()` es la misma fuente que el globo del calendario anual: dos
 pantallas que dicen qué se paga un día no pueden discrepar. **Si `D.fin.debts` viene vacío**
@@ -682,16 +682,17 @@ son botones: caen los siete días.
 
 ### Lo que cuesta comer
 
-Una sola línea —`Comer · desayuno, comida y cena · −$115`— en el día y en la semana; el desglose
-vive en el `title`. Sale de datos que ya existen: `RECETAS_MINI` guarda el `costoAprox` de cada
-plato.
+Una sola línea —`Comer · desayuno, comida y cena · −$111`— en el día y en la semana; el desglose
+vive en el `title`. Sale de datos que ya existen, en el maestro: el costo de cada receta del recetario
+(`CIFRAS.costoReceta`, sus gramos por la tarifa por gramo de `CIFRAS.PRECIOS_SUPER`) y la despensa
+semanal.
 
 | | De dónde sale | Vale |
 |---|---|---|
-| Desayuno | promedio de las 10 recetas de desayuno | $16.60 |
-| Cena | promedio de las 8 recetas de cena | $37.50 |
-| Comida | lo que queda de la despensa del día | $60.87 |
-| **Día** | **la despensa semanal entre 7** | **$114.97** |
+| Desayuno | promedio de las 18 recetas de desayuno (`RECETARIO.costoDesayuno`) | $27 |
+| Cena | promedio de las 18 recetas de cena (`RECETARIO.costoCena`) | $61 |
+| Comida | lo que queda de la despensa del día | $23.15 |
+| **Día** | **la despensa semanal entre 7** | **$111.15** |
 
 Los tres suman exactamente el gasto diario del tablero. No hay recetas de comida, por eso ese
 tiempo es el resto y no un promedio; si se añaden, se afina solo.
@@ -1158,7 +1159,8 @@ Siete categorías (`LISTA_CAT_META`), una activa a la vez. **Comida** es la úni
 contador; el resto son checklists con dos precios de plataforma. Links de tienda en
 todas: Comida con Walmart Súper + Amazon, el resto Amazon + Mercado Libre.
 
-**El contador cuenta piezas.** Cada producto de `LISTA_COMPRAS_PRECIOS` declara un `paso` —lo que
+**El contador cuenta piezas.** Los precios viven en el maestro (`CIFRAS.PRECIOS_SUPER`; aquí se leen como
+`LISTA_COMPRAS_PRECIOS`). Cada producto declara un `paso` —lo que
 suma un `+`— con `monto` y `g`; `base` dice cuántos `paso` son una semana y es lo que mete el
 checkbox de un clic (marcar Plátano pone 6).
 

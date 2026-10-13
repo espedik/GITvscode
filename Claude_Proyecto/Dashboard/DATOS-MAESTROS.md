@@ -135,10 +135,10 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{servicios}}` | $1,075 | Plan AT&T + internet + gas (la mitad: es bimestral) + luz/agua |
 | `{{suscripciones}}` | $1,080 | Gym + Claude Code + iCloud |
 | `{{cetesDia15}}` | $0 | El aporte a CETES del día 15. En 0: el ahorro va todo a GBM (Adán, 5-oct-2026: *"el ahorro no se irá a cetes, se irá a gbm, lo invertiré todo"*). Los CETES que ya tiene siguen siendo su fondo de emergencia |
-| `{{ahorroDia1}}` | $2,200 | Págate primero, con depa: lo que va a GBM el día 1, desde noviembre de 2026 |
-| `{{ahorroDia15}}` | $7,200 | Lo mismo el día 15, con depa |
+| `{{ahorroDia1}}` | $2,050 | Págate primero, con depa: lo que va a GBM el día 1, desde noviembre de 2026 |
+| `{{ahorroDia15}}` | $6,950 | Lo mismo el día 15, con depa |
 | `{{ahorroDia1Casa}}` | $12,100 | En casa de su familia: lo que va a GBM el día 1 |
-| `{{ahorroDia15Casa}}` | $9,000 | En casa: lo que va el día 15. Cada quincena se sostiene sola (Adán: *"eso debe ser cada quincena y deja dinero sobrante para la quincena"*): su sueldo menos los fijos de sus días, la comida de sus días y su parte del gasto personal —sus rutinas y el tope de lo demás (`SUPUESTOS.loDemas`, `loDemasEnCasa`) repartidos por día—, redondeado a cientos hacia abajo con el peor mes de cada etapa. Mientras la BBVA tenga saldo, los cuatro van primero a ella (`planBbva`) |
+| `{{ahorroDia15Casa}}` | $8,900 | En casa: lo que va el día 15. Cada quincena se sostiene sola (Adán: *"eso debe ser cada quincena y deja dinero sobrante para la quincena"*): su sueldo menos los fijos de sus días, la comida de sus días y su parte del gasto personal —sus rutinas y el tope de lo demás (`SUPUESTOS.loDemas`, `loDemasEnCasa`) repartidos por día—, redondeado a cientos hacia abajo con el peor mes de cada etapa. Mientras la BBVA tenga saldo, los cuatro van primero a ella (`planBbva`) |
 | `{{especulacionMes}}` `{{especulacionBtcPct}}` | $20,000 · 10 | La pestaña *Riesgo súper alto* de Qué invertir hoy: al mes, `{{cetesDia15}}` a CETES (hoy nada), ese % a Bitcoin y todo el resto a una sola empresa a la baja que investiga Claude |
 | `{{fijosTotal}}` | $13,405 | Derivada: renta + servicios + suscripciones |
 
@@ -228,19 +228,19 @@ pero el nombre de la variable se queda corto.
 | `{{sperrkonto}}` | $249,984 — la cuenta bloqueada, €11,904 al euro del plan | derivada |
 | `{{sperrkontoEur}}` `{{colegiaturaEur}}` `{{werkstudentEur}}` | €11,904 · €1,900 · €1,100 — en euros, como los pide Alemania: la cuenta bloqueada (`SALIDA.costos`), la colegiatura de cada semestre y lo que deja el Werkstudent al mes, neto (`SUPUESTOS.alemania`) (`fmt: 'txt'`) | constantes |
 | `{{bydRenta}}` | $7,500 — lo que deja el BYD rentado al mes, neto (`SUPUESTOS.byd.rentaNeta`) | constante |
-| `{{ahorroMesDepa}}` | $14,400 — lo que llega a GBM en un mes con depa: lo del 1, lo del 15 y Didi | derivada (`mesTipo(false)`) |
-| `{{ahorroMesCasa}}` | $31,100 — lo mismo en casa de su familia: lo del 1, lo del 15 y Didi | derivada (`mesTipo(true)`) |
-| `{{gastoPersonalDepa}}` | $8,218 — lo que queda del sueldo con depa tras los fijos, la comida y el ahorro: su gasto personal, con sus rutinas dentro; lo que pague con tarjeta, saldado en la misma quincena | derivada |
-| `{{gastoPersonalCasa}}` | $7,471 — lo mismo en casa | derivada |
+| `{{ahorroMesDepa}}` | $14,000 — lo que llega a GBM en un mes con depa: lo del 1, lo del 15 y Didi | derivada (`mesTipo(false)`) |
+| `{{ahorroMesCasa}}` | $31,000 — lo mismo en casa de su familia: lo del 1, lo del 15 y Didi | derivada (`mesTipo(true)`) |
+| `{{gastoPersonalDepa}}` | $8,022 — lo que queda del sueldo con depa tras los fijos, la comida y el ahorro: su gasto personal, con sus rutinas dentro; lo que pague con tarjeta, saldado en la misma quincena | derivada |
+| `{{gastoPersonalCasa}}` | $7,255 — lo mismo en casa | derivada |
 | `{{cuidadoMes}}` | $4,624 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
 | `{{recorteRutinas}}` | $1,880 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $857 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
-| `{{alemaniaMarzo}}` | $135,840 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
+| `{{alemaniaMarzo}}` | $134,190 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
 | `{{salidaAgosto}}` | $324,284 — lo que pide la salida completa en agosto de 2027: la cuenta bloqueada, la reserva del BYD, el colchón y la colegiatura del primer semestre (`cortes.salida.pide`) | derivada; se mueve con `PROYECTO.eurMxn` |
-| `{{extraSalida}}` | $10,554 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
-| `{{marzoParaSalida}}` | $188,609 — lo que tendría GBM al cerrar la Fase 1 con ese ingreso nuevo: el punto de control del 31 de marzo | derivada |
-| `{{mayoParaSalida}}` | $260,317 — lo mismo el día de decidir (`PROYECTO.maestriaDecision`) | derivada |
+| `{{extraSalida}}` | $10,769 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
+| `{{marzoParaSalida}}` | $188,034 — lo que tendría GBM al cerrar la Fase 1 con ese ingreso nuevo: el punto de control del 31 de marzo | derivada |
+| `{{mayoParaSalida}}` | $259,972 — lo mismo el día de decidir (`PROYECTO.maestriaDecision`) | derivada |
 | `{{salida2028}}` | «sobran …» o «faltan …»: la salida completa si se mueve a septiembre de 2028 (`desfase: 12`, `fmt: 'txt'`) | derivada |
-| `{{alemaniaJunio}}` | $213,046 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
+| `{{alemaniaJunio}}` | $211,096 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
 | `{{bbvaCero}}` | 2 nov 2026 — el día que la BBVA queda en cero con `planBbva` (`fmt: 'fecha'`) | derivada |
 | `{{bbvaIntereses}}` | $0 — lo que costaría en intereses llegar a cero; en 0 con `PROYECTO.bbvaSinIntereses` | derivada |
 | `{{junioVeredicto}}` | «faltan … para la cuenta bloqueada» o «alcanza, con … de margen» (`fmt: 'txt'`) | derivada |
@@ -939,6 +939,26 @@ Tres casos que no son una copia movida y siguen necesitando cuidado:
 - **`LISTA_COMPRAS`**: sus siete categorías son **getters** — `comida` sobre `RECETARIO`,
   `skincare` y `cabello` sobre `RUTINA_PIEL`/`RUTINA_PELO`, `suplementos`, `higiene`, `ojos` y
   `libros` sobre sus catálogos. Se edita el catálogo, nunca la lista.
+
+### Los precios del súper
+
+`PRECIOS_SUPER` — el precio de cada producto de la lista de comida: `tipo` (peso, pieza o paquete),
+`precio`, `paso` y `monto` (lo que suma un `+`), `base` (cuántos pasos son tu semana), `real` (de tu
+ticket o investigado) y `gPaq` (los gramos que cuesta `precio` en los productos por paquete). Vivía
+en el Dashboard; está aquí porque de él sale también el costo de cada receta.
+
+```js
+CIFRAS.costoReceta(r)                // MXN por porción: Σ gramos × tarifa por gramo
+CIFRAS.RECETARIO.costoDesayuno       // promedio de las recetas de desayuno
+CIFRAS.RECETARIO.costoCena           // promedio de las recetas de cena
+```
+
+**Lo que cuesta comer al mes** (`SUPUESTOS.comida`) es la despensa semanal —`monto × base` de cada
+producto de la lista— por 30.4 entre 7, y **el desayuno en casa** (`SUPUESTOS.comidaEnCasa`), el
+promedio de las recetas de desayuno por 30.4. Los dos son constantes que el verificador recalcula:
+si la lista o una receta cambian y no coinciden, avisa. Tortilla de harina, nuez, bolsa de verduras
+y láminas de salmón llevan **precio estimado** (`real:false`), no de ticket: se corrigen cuando
+Adán los compre.
 
 ### El recetario
 

@@ -78,7 +78,8 @@ la ruta relativa a esta carpeta y `fotoCredito` lleva el autor, la fuente y la l
 - **El ✓ marca "voy a cocinar esta"** → `comida_v1.elegidas`. Arriba aparece **Lo que vas a
   cocinar** con los ingredientes de las marcadas **agrupados por pasillo** (el orden del súper),
   con `×2` si sale en dos; la cabecera común (`cpCabecera`) cuenta las marcadas.
-- **La ficha** (`.rf-fondo`, `rcCerrarFicha()`; cierra con ✕, fuera o Escape): foto a sangre,
+- **La ficha** (`.rf-fondo`, `rcCerrarFicha()`; cierra con ✕, fuera o Escape): **lo que cuesta
+  cocinarla** (`CIFRAS.costoReceta`: sus gramos por los precios de la lista del súper), foto a sangre,
   4 macros, ingredientes, preparación paso a paso y tip. Dos botones: **Registrar hoy**
   (`registrarReceta(id,tipo)` → `misalud_v1.alimentos`) y **A la compra** (marca la receta y
   lleva a la Lista del Súper del Dashboard). Es la única ventana de la app: no hay modales ni
@@ -132,7 +133,9 @@ filas a medias, ficha fija que cabe en pantalla, filtros, cero desborde y cero e
   (`readme_cuidadopersonal.md`): quitar una sección del carril la quita del shell sola.
 - Si cambia la forma de `alimentos` en `salud.html`, revisar `readSalud()`/`writeSalud()`,
   `registrarReceta` y `registrarRutinaMeal`. El Dashboard no lee `comida_v1`.
-- La Lista del Súper y `RECETAS_MINI` del Dashboard salen del mismo `RECETARIO`.
+- La Lista del Súper, los precios (`PRECIOS_SUPER`) y el costo de cada receta (`costoReceta`) viven en
+  el maestro junto al `RECETARIO`; los leen el Dashboard (lo que cuesta comer) y Finanzas (cocinar contra
+  comer fuera).
 - Mapa completo: [`../README.md`](../README.md).
 
 ## Cómo usarlo

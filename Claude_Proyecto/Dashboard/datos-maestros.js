@@ -134,10 +134,10 @@ window.CIFRAS = (function () {
     // por día—, redondeado a cientos hacia abajo con el peor mes de cada etapa. Ninguna quincena
     // vive del sobrante de la otra y la tarjeta ya no se paga de golpe el 11: mientras la BBVA tenga
     // saldo, estos envíos van primero a ella (`planBbva`). El verificador avisa si dejan de caber.
-    ahorroDia1:      2200,    // con depa: de noviembre de 2026 a enero de 2027
-    ahorroDia15:     7200,    // con depa: del 15 de octubre de 2026 a enero de 2027
+    ahorroDia1:      2050,    // con depa: de noviembre de 2026 a enero de 2027
+    ahorroDia15:     6950,    // con depa: del 15 de octubre de 2026 a enero de 2027
     ahorroDia1Casa: 12100,    // en casa de tu familia: de enCasaDesde a ultimoMesMexico
-    ahorroDia15Casa: 9000,
+    ahorroDia15Casa: 8900,
     // El día del saldo de la BBVA que dijo Adán (`d001` en DEUDAS_SEED): de aquí arranca su plan.
     bbvaFecha: '2026-10-05',
     // Y no cobra intereses (Adán, 6-oct-2026: "bbva no va cobrar intereses, eso déjalo en 0, por
@@ -791,8 +791,8 @@ window.CIFRAS = (function () {
     // su familia, comida y cena son de la casa —las cubre el aporte— y él paga su desayuno: el
     // promedio de sus recetas de desayuno ($16.60 al día). El verificador los compara con la lista
     // y las recetas: si cambian, avisa que hay que actualizarlos aquí.
-    comida: 2783,
-    comidaEnCasa: 505,
+    comida: 3379,
+    comidaEnCasa: 821,
     // El gasto personal tiene dos partes. Sus rutinas —piel, cabello y suplementos— salen de
     // RUTINA_PIEL, RUTINA_PELO y SUPLEMENTOS (`cuidadoMes`). Lo demás —ropa, salidas, regalos,
     // compras sueltas, la carga del auto fuera de Didi— no lo ha dicho: es el tope con que se
@@ -2228,6 +2228,108 @@ window.CIFRAS = (function () {
     get cinturaUltima() { const r = this.registros.filter(function (x) { return x.cintura; }).sort(function (a, b) { return a.fecha < b.fecha ? 1 : -1; }); return r[0] || null; },
   };
 
+  // ─── Los precios del súper ─────────────────────────────────────────────────────
+  // Vivían en dashboard.html; están aquí porque de ellos sale también el costo de cada receta del
+  // recetario (costoReceta, abajo), que leen Comida, el Dashboard, Finanzas y la proyección.
+  // `gPaq` — gramos (o ml) de lo que cuesta `precio` en los productos por paquete o pieza: con él
+  // sale la tarifa por gramo. Los de `tipo:'peso'` ya traen el precio por kg.
+  // Precios de referencia — Lista de Compras → Comida (2026-08-11). "real:true" viene del
+  // ticket de Walmart de Adán (10-ago-2026, 22:51h) mapeado al producto de la lista más
+  // parecido — con `nota` cuando el producto exacto del ticket no es 100% el mismo (p. ej.
+  // compró "Jamón Virginia" y la etiqueta no dice "de pavo"). "real:false" no aparece en ese
+  // ticket: precio investigado (Walmart México / Profeco "Quién es Quién en los Precios",
+  // ago-2026), aproximado — varía por sucursal y temporada. Solo cubre la categoría `comida`;
+  // `lcPrecioHtml()` no pinta nada para skincare/cabello/suplementos/libros.
+  // `monto` (2026-08-11) — número en MXN usado SOLO para sumar el total marcado (`lcTotalComida()`),
+  // no es lo mismo que `precio` (que muestra precio unitario/por kg, útil como referencia de
+  // mercado). `monto` asume una cantidad típica de una sola compra — para los 11 productos
+  // `real:true` con presentación por peso, es la cantidad exacta que Adán compró ese día en el
+  // ticket (aguacate 0.2kg, cebolla 0.375kg, jitomate 0.38kg, papaya 1.43kg, plátano 0.895kg);
+  // para el resto, una porción razonable (≈0.3-1kg fruta/verdura cruda, 0.5kg carne/pescado, 1
+  // paquete/lata/frasco/bolsa) — por eso `monto` casi nunca es igual al número que aparece en
+  // `precio` (ese es por kg o por unidad, `monto` ya multiplicó por la cantidad típica).
+  // Reestructurado el 2026-08-12 — pedido explícito: "siento que lo de los precios esta un poco
+  // mal por que luego puedo escoger por pieza o por paquete o por peso, entonces acomodalo mejor".
+  // Antes `precio` era UN solo string que mezclaba 3 formas distintas de vender el mismo tipo de
+  // producto ('$59/kg', '$18/pza', '$20 (bolsa 400g)'), así que no se podía comparar nada entre sí
+  // ni se veía de dónde salía el total. Ahora cada producto declara por separado:
+  //   tipo   — 'peso' | 'pieza' | 'paquete' — CÓMO se vende (es lo que decide si el precio de
+  //            referencia es por kg, por pieza suelta, o por la presentación cerrada).
+  //   precio — número en MXN del precio de referencia según ese `tipo`.
+  //   unidad — texto corto de a qué corresponde ese `precio` ('kg', 'pza', 'paquete 250 g', ...).
+  //   paso   — QUÉ suma un "+1" del contador, escrito como lo pides en el súper ('1 pza ≈127 g').
+  //   monto  — lo que cuesta UN `paso`. Es lo único que suma el ticket.
+  //   g      — gramos de UN `paso`. Solo en frutas / verduras / almidones / grasas: de ahí sale el
+  //            chip de fruta+verdura por día. Ausente en el resto — una lata de atún no entra ahí.
+  //   prot   — gramos de proteína de UN `paso`, aproximados por etiqueta. No se pinta: es el dato
+  //            con el que se mide la proteína por peso gastado del prompt de Lista de Compras.
+  //   base   — cuántos `paso` te comes en UNA semana. Hace dos cosas: marcar la casilla mete esa
+  //            cantidad de golpe (un clic = tu semana) y el "Al mes" sabe cuánto dura lo que
+  //            llevas — dura = pasos / base, con piso de 1 semana.
+  //   real   — true = precio de tu ticket de Walmart (10-ago-2026, 22:51h); false = investigado
+  //            (Walmart MX / Profeco "Quién es Quién en los Precios", ago-2026), aproximado.
+  //   nota   — cuando el producto del ticket no es exactamente el de la lista.
+  //
+  // 2026-08-27 — `compra` y `sem` se sustituyeron por `paso` / `g` / `base`. Pedido de Adán: "las
+  // cantidades en comida, maneja mejor por pieza, por que no siempre agarro el kg". Antes el
+  // contador multiplicaba la COMPRA TÍPICA COMPLETA (Jitomate: +1 = 380 g = 3 piezas = $6), así
+  // que "llevo 2 jitomates" no se podía expresar: o llevabas 3 o llevabas 6. Ahora +1 = 1 pieza
+  // ($2) y `base:3` dice que tu semana son 3 piezas.
+  // De paso arregla el "Al mes", que con unidades por pieza contaba doble: la fórmula vieja
+  // multiplicaba por la cantidad Y dividía por `sem`, y con `sem` por pieza (1/3 de semana) el
+  // resultado se disparaba. Ahora la duración se DERIVA de lo que llevas (`pasos / base`), que es
+  // lo que de verdad significa "me dura": 6 plátanos duran una semana, 12 duran dos, y el gasto
+  // mensual es el mismo en los dos casos.
+  // `monto` va redondeado al peso entero: 127 g de jitomate a $15/kg son $1.90 y se guardan como
+  // $2. En un carrito de 30 productos la diferencia son unos pesos, y el precio real varía más que
+  // eso entre sucursales y temporada.
+  // Para los `real:true` vendidos por peso, el precio por kg es el EXACTO que Adán pagó ese día;
+  // el corte por pieza sale de dividir la cantidad del ticket entre las piezas que traía.
+  const PRECIOS_SUPER = {
+  // ── Verduras ──
+  'Cebolla':{tipo:'peso',precio:62,unidad:'kg',paso:'1 pza ≈190 g',g:190,monto:12,base:1,real:true},
+  'Champiñones':{tipo:'peso',precio:70,unidad:'kg',paso:'250 g',g:250,monto:18,base:1,real:false,nota:'No tiene pieza natural: el paso es la porción de 250 g que se pesa en bolsa.'},
+  'Chayote':{tipo:'peso',precio:22,unidad:'kg',paso:'1 pza ≈300 g',g:300,monto:7,base:2,real:false},
+  'Jitomate':{tipo:'peso',precio:15,unidad:'kg',paso:'1 pza ≈127 g',g:127,monto:2,base:3,real:true},
+  'Lechuga':{tipo:'pieza',precio:18,gPaq:500,unidad:'pza',paso:'1 pza ≈500 g',g:500,monto:18,base:1,real:false,nota:'Se vende por pieza; los 500 g son una romana mediana, estimados.'},
+  'Nopales cocidos':{tipo:'paquete',precio:20,gPaq:400,unidad:'bolsa 400 g',paso:'1 bolsa 400 g',g:400,monto:20,base:1,real:false},
+  'Pepino':{tipo:'peso',precio:18,unidad:'kg',paso:'1 pza ≈250 g',g:250,monto:5,base:2,real:false},
+  'Pimiento morrón':{tipo:'peso',precio:50,unidad:'kg',paso:'1 pza ≈150 g',g:150,monto:8,base:2,real:false},
+  // ── Frutas ──
+  'Papaya':{tipo:'peso',precio:40,unidad:'kg',paso:'1 pza ≈1.4 kg',g:1430,monto:57,base:1,real:true,nota:'La pieza de tu ticket pesó 1.43 kg. Si la compras en trozo, ajusta el contador a ojo.'},
+  'Pera':{tipo:'peso',precio:55,unidad:'kg',paso:'1 pza ≈167 g',g:167,monto:9,base:3,real:false},
+  'Plátano':{tipo:'peso',precio:24,unidad:'kg',paso:'1 pza ≈150 g',g:149,monto:4,base:6,real:true},
+  // ── Almidones y grasas ──
+  'Papa':{tipo:'peso',precio:24,unidad:'kg',paso:'1 pza ≈200 g',g:200,monto:5,base:2,real:false},
+  'Aguacate':{tipo:'peso',precio:59,unidad:'kg',paso:'1 pza ≈200 g',g:200,monto:12,base:1,real:true},
+  // ── Carnes y Pescados ──
+  'Filete de res magro':{tipo:'peso',precio:220,unidad:'kg',paso:'1 filete ≈250 g',monto:55,base:2,real:false,prot:53},
+  'Filete de tilapia':{tipo:'peso',precio:130,unidad:'kg',paso:'1 filete ≈250 g',monto:33,base:2,real:false,nota:'En tu ticket compraste Filete de Basa, no tilapia (pagaste $55, 1 pieza con descuento) — precio de tilapia investigado aparte.',prot:50},
+  'Jamón de pavo':{tipo:'paquete',precio:57,gPaq:250,unidad:'paquete 250 g',paso:'1 paquete 250 g',monto:57,base:1,real:true,nota:'Ticket: "Jamón Virginia" — casi siempre es la variante de pavo en súper, pero la etiqueta no lo dice explícito.',prot:35},
+  'Pechuga de pollo':{tipo:'paquete',precio:66,gPaq:265,unidad:'paquete ≈265 g',paso:'1 paquete ≈265 g',monto:66,base:1,real:true,nota:'Ticket: "Milanesa de Pechuga" — mismo corte, ya fileteado delgado. Se vende por paquete ya pesado, sale a ≈$249/kg.',prot:61},
+  // ── Lácteos y Huevo ──
+  'Clara de huevo':{tipo:'paquete',precio:45,gPaq:946,unidad:'envase 946 ml',paso:'1 envase 946 ml',monto:45,base:0.5,real:false,prot:100},
+  'Huevo':{tipo:'paquete',precio:29,gPaq:600,unidad:'paquete 12 pza',paso:'1 paquete 12 pza',monto:29,base:1,real:true,nota:'Ticket: Bachoco. También se vende suelto por pieza o por kg en mercado — el paquete de 12 sale más barato por huevo.',prot:75},
+  'Leche entera':{tipo:'paquete',precio:26,gPaq:1000,unidad:'L',paso:'1 L',monto:26,base:1,real:false,nota:'En tu ticket compraste Lala Deslactosada, no entera — precio de leche entera investigado aparte.',prot:33},
+  'Queso panela':{tipo:'paquete',precio:42,gPaq:400,unidad:'paquete ≈400 g',paso:'1 paquete ≈400 g',monto:42,base:0.5,real:true,nota:'Precio con descuento en tu ticket. También se vende por peso en cremería, a ≈$120-140/kg.',prot:72},
+  'Yogurt griego natural':{tipo:'paquete',precio:38,gPaq:900,unidad:'envase ≈900 g',paso:'1 envase ≈900 g',monto:38,base:0.5,real:false,nota:'En tu ticket compraste Yoplait ($12 c/u) — no es griego. Precio de yogurt griego investigado aparte.',prot:80},
+  // ── Abarrotes y Despensa ──
+  'Aceite de oliva':{tipo:'paquete',precio:150,gPaq:500,unidad:'botella 500 ml',paso:'1 botella 500 ml',monto:150,base:0.125,real:false},
+  'Arroz blanco cocido':{tipo:'peso',precio:28,unidad:'kg (crudo)',paso:'1 kg crudo',monto:28,base:0.25,real:false,prot:70},
+  'Atún en agua':{tipo:'pieza',precio:20,gPaq:140,unidad:'lata 140 g',paso:'1 lata 140 g',monto:20,base:1,real:true,nota:'Precio con descuento en tu ticket. En paquete de 4-6 latas sale más barato por lata.',prot:26},
+  'Frijoles negros':{tipo:'paquete',precio:24,gPaq:560,unidad:'lata 560 g',paso:'1 lata 560 g',monto:24,base:0.5,real:false,prot:34},
+  'Granola de amaranto':{tipo:'paquete',precio:60,gPaq:400,unidad:'bolsa 400 g',paso:'1 bolsa 400 g',monto:60,base:0.33,real:false,prot:40},
+  'Miel de abeja':{tipo:'paquete',precio:90,gPaq:500,unidad:'frasco 500 g',paso:'1 frasco 500 g',monto:90,base:0.125,real:false},
+  // ── Panadería y Tortillas ──
+  'Pan integral':{tipo:'paquete',precio:75,gPaq:720,unidad:'paquete grande',paso:'1 paquete',monto:75,base:0.5,real:true,nota:'Ticket: "Pan Doble" (Bimbo Doble Fibra) — no dice "integral", pero es el pan de caja más cercano que compraste.'},
+  'Tortilla de maíz':{tipo:'peso',precio:17,unidad:'kg',paso:'½ kg',monto:9,base:2,real:false,nota:'Medio kilo es lo que se pide de una en la tortillería; $8.50 redondeado a $9.',prot:28},
+  // ── Los 4 de la lista que no tenían precio (contaban $0 en lo que cuesta comer) ──
+  'Tortilla de harina':{tipo:'paquete',precio:32,gPaq:320,unidad:'paquete 10 pza',paso:'1 paquete 10 pza',monto:32,base:1,real:false,nota:'Precio estimado de súper (Walmart MX, oct-2026), no de tu ticket: corrígelo cuando lo compres.'},
+  'Nuez':{tipo:'paquete',precio:85,gPaq:200,unidad:'bolsa 200 g',paso:'1 bolsa 200 g',monto:85,base:0.25,real:false,nota:'Precio estimado de súper (Walmart MX, oct-2026), no de tu ticket: corrígelo cuando lo compres.'},
+  'Bolsa de verduras (brócoli, col y zanahoria)':{tipo:'paquete',precio:42,gPaq:500,unidad:'bolsa 500 g',paso:'1 bolsa 500 g',g:500,monto:42,base:1,real:false,nota:'Precio estimado de súper (Walmart MX, oct-2026), no de tu ticket: corrígelo cuando lo compres.'},
+  'Láminas de salmón':{tipo:'peso',precio:420,unidad:'kg',paso:'1 paquete ≈200 g',monto:84,base:0.5,real:false,nota:'Precio estimado de súper (Walmart MX, oct-2026), no de tu ticket: corrígelo cuando lo compres.'},
+  };
+
   // ─── El recetario ──────────────────────────────────────────────────────────
   // Las recetas son la fuente y LISTA_COMPRAS.comida se deriva de sus ingredientes: cada uno
   // declara su pasillo (`p`) y el getter los agrupa. Agregar una receta agrega sus
@@ -2250,109 +2352,109 @@ window.CIFRAS = (function () {
     desayuno: [
       {id:'d1', nombre:'Molletes de frijol con queso panela', tiempo:'10 min',
        foto:'fotos-comida/d1.jpg', fotoCredito:'Foodie Girl · StockSnap · CC0 1.0',
-       ingredientes:[{n:'Pan integral',c:'2 rebanadas',p:'Panadería y Tortillas'},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa'},{n:'Queso panela',c:'90 g',p:'Lácteos y Huevo'},{n:'Jitomate',c:'1/2 pza, picado',p:'Verduras'}],
+       ingredientes:[{n:'Pan integral',c:'2 rebanadas',p:'Panadería y Tortillas',g:60},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa',g:86},{n:'Queso panela',c:'90 g',p:'Lácteos y Huevo',g:90},{n:'Jitomate',c:'1/2 pza, picado',p:'Verduras',g:64}],
        pasos:['Unta los frijoles en el pan y cúbrelos con el queso en rebanadas.','Tápalos en el sartén a fuego bajo 5 minutos, hasta que el queso se suavice.','Sirve con el jitomate picado encima.'],
        macros:{cal:490,prot:30,carbs:51,gra:19},
        tip:'Frijoles enteros, no refritos con manteca: más ligeros y no te caen pesados a media mañana.'},
       {id:'d2', nombre:'Tacos de huevo con jamón de pavo', tiempo:'10 min',
        foto:'fotos-comida/d2.jpg', fotoCredito:'U.S. Department of Agriculture · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Huevo',c:'3 pza',p:'Lácteos y Huevo'},{n:'Jamón de pavo',c:'60 g',p:'Carnes y Pescados'},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas'}],
+       ingredientes:[{n:'Huevo',c:'3 pza',p:'Lácteos y Huevo',g:150},{n:'Jamón de pavo',c:'60 g',p:'Carnes y Pescados',g:60},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas',g:64}],
        pasos:['Pica el jamón y dóralo 1 minuto en el sartén.','Agrega los huevos batidos y revuelve a fuego bajo hasta que cuajen.','Sirve en las tortillas calientes.'],
        macros:{cal:482,prot:34,carbs:35,gra:22},
        tip:'El jamón ya trae sal: no le pongas más.'},
       {id:'d3', nombre:'Yogurt griego con pera y granola', tiempo:'3 min',
        foto:'fotos-comida/d3.jpg', fotoCredito:'Jamie Hamel-Smith · StockSnap · CC0 1.0',
-       ingredientes:[{n:'Yogurt griego natural',c:'300 g',p:'Lácteos y Huevo'},{n:'Pera',c:'1 pza',p:'Frutas'},{n:'Granola de amaranto',c:'30 g',p:'Abarrotes y Despensa'},{n:'Miel de abeja',c:'1 cdta',p:'Abarrotes y Despensa'}],
+       ingredientes:[{n:'Yogurt griego natural',c:'300 g',p:'Lácteos y Huevo',g:300},{n:'Pera',c:'1 pza',p:'Frutas',g:167},{n:'Granola de amaranto',c:'30 g',p:'Abarrotes y Despensa',g:30},{n:'Miel de abeja',c:'1 cdta',p:'Abarrotes y Despensa',g:7}],
        pasos:['Sirve el yogurt en un tazón.','Pica la pera encima.','Termina con la granola y la miel.'],
        macros:{cal:500,prot:32,carbs:66,gra:14},
        tip:'La granola va al final para que siga crujiente. El yogurt griego de verdad trae unos 10 g de proteína por cada 100 g: revísalo en la etiqueta.'},
       {id:'d4', nombre:'Huevos con nopales y queso panela', tiempo:'10 min',
        foto:'fotos-comida/d4.jpg', fotoCredito:'U.S. Department of Agriculture · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Huevo',c:'3 pza',p:'Lácteos y Huevo'},{n:'Nopales cocidos',c:'1 taza',p:'Verduras'},{n:'Queso panela',c:'30 g',p:'Lácteos y Huevo'},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas'}],
+       ingredientes:[{n:'Huevo',c:'3 pza',p:'Lácteos y Huevo',g:150},{n:'Nopales cocidos',c:'1 taza',p:'Verduras',g:150},{n:'Queso panela',c:'30 g',p:'Lácteos y Huevo',g:30},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas',g:64}],
        pasos:['Escurre y seca los nopales, y saltéalos 2 minutos en el sartén caliente.','Agrega los huevos batidos y revuelve a fuego bajo.','Sirve con el queso desmoronado y las tortillas calientes.'],
        macros:{cal:510,prot:31,carbs:39,gra:25},
        tip:'Secar los nopales es el truco: si sueltan baba, el huevo queda aguado.'},
       {id:'d5', nombre:'Licuado de plátano con yogurt griego', tiempo:'3 min',
        foto:'fotos-comida/d5.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Plátano',c:'1 pza',p:'Frutas'},{n:'Yogurt griego natural',c:'200 g',p:'Lácteos y Huevo'},{n:'Leche entera',c:'300 ml',p:'Lácteos y Huevo'}],
+       ingredientes:[{n:'Plátano',c:'1 pza',p:'Frutas',g:149},{n:'Yogurt griego natural',c:'200 g',p:'Lácteos y Huevo',g:200},{n:'Leche entera',c:'300 ml',p:'Lácteos y Huevo',g:300}],
        pasos:['Licúa el plátano con el yogurt y la leche 30 segundos.','Sírvelo al momento.'],
        macros:{cal:461,prot:30,carbs:49,gra:17},
        tip:'Con el plátano bien maduro no necesita miel.'},
       {id:'d6', nombre:'Sándwich de pollo con aguacate', tiempo:'5 min',
        foto:'fotos-comida/d6.jpg', fotoCredito:'Jay Mantri · StockSnap · CC0 1.0',
-       ingredientes:[{n:'Pan integral',c:'2 rebanadas',p:'Panadería y Tortillas'},{n:'Pechuga de pollo',c:'100 g, cocida',p:'Carnes y Pescados'},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas'},{n:'Jitomate',c:'2 rodajas',p:'Verduras'}],
+       ingredientes:[{n:'Pan integral',c:'2 rebanadas',p:'Panadería y Tortillas',g:60},{n:'Pechuga de pollo',c:'100 g, cocida',p:'Carnes y Pescados',g:133},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas',g:100},{n:'Jitomate',c:'2 rodajas',p:'Verduras',g:32}],
        pasos:['Tuesta el pan.','Unta el aguacate y arma con el pollo deshebrado y el jitomate.'],
        macros:{cal:440,prot:40,carbs:34,gra:17},
        tip:'Usa la pechuga de la cena: cocina una de más y ya tienes el desayuno.'},
       {id:'d7', nombre:'Omelette de claras con pimiento y queso', tiempo:'8 min',
        foto:'fotos-comida/d7.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Clara de huevo',c:'6 pza',p:'Lácteos y Huevo'},{n:'Pimiento morrón',c:'1/2 pza',p:'Verduras'},{n:'Queso panela',c:'30 g',p:'Lácteos y Huevo'},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas'}],
+       ingredientes:[{n:'Clara de huevo',c:'6 pza',p:'Lácteos y Huevo',g:198},{n:'Pimiento morrón',c:'1/2 pza',p:'Verduras',g:75},{n:'Queso panela',c:'30 g',p:'Lácteos y Huevo',g:30},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas',g:64}],
        pasos:['Saltea el pimiento en tiras 2 minutos.','Vierte las claras batidas encima y tapa a fuego bajo 3 minutos.','Pon el queso, dobla a la mitad y sirve con las tortillas.'],
        macros:{cal:390,prot:33,carbs:38,gra:12},
        tip:'Las claras son proteína casi pura: el desayuno para los días que vas justo de calorías.'},
       {id:'d8', nombre:'Burritos de huevo con frijoles', tiempo:'10 min',
        foto:'fotos-comida/d8.jpg', fotoCredito:'Jakub Kapusnak · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Huevo',c:'3 pza',p:'Lácteos y Huevo'},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa'},{n:'Queso panela',c:'30 g',p:'Lácteos y Huevo'},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas'}],
+       ingredientes:[{n:'Huevo',c:'3 pza',p:'Lácteos y Huevo',g:150},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa',g:86},{n:'Queso panela',c:'30 g',p:'Lácteos y Huevo',g:30},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas',g:64}],
        pasos:['Revuelve los huevos a fuego bajo.','Calienta los frijoles y las tortillas.','Rellena con el huevo, los frijoles y el queso, y enróllalos.'],
        macros:{cal:602,prot:37,carbs:54,gra:26},
        tip:'Envueltos en papel aluminio se llevan al coche sin ensuciar.'},
       {id:'d9', nombre:'Yogurt griego con plátano y nuez', tiempo:'3 min',
        foto:'fotos-comida/d9.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Yogurt griego natural',c:'300 g',p:'Lácteos y Huevo'},{n:'Plátano',c:'1 pza',p:'Frutas'},{n:'Nuez',c:'15 g',p:'Abarrotes y Despensa'},{n:'Miel de abeja',c:'1 cdta',p:'Abarrotes y Despensa'}],
+       ingredientes:[{n:'Yogurt griego natural',c:'300 g',p:'Lácteos y Huevo',g:300},{n:'Plátano',c:'1 pza',p:'Frutas',g:149},{n:'Nuez',c:'15 g',p:'Abarrotes y Despensa',g:15},{n:'Miel de abeja',c:'1 cdta',p:'Abarrotes y Despensa',g:7}],
        pasos:['Sirve el yogurt en un tazón.','Agrega el plátano en rodajas y la nuez picada.','Termina con un hilo de miel.'],
        macros:{cal:478,prot:32,carbs:47,gra:21},
        tip:'La nuez da grasa buena y te deja satisfecho: con 15 g basta.'},
       {id:'d10', nombre:'Huevos con jitomate y frijoles', tiempo:'10 min',
        foto:'fotos-comida/d10.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Huevo',c:'3 pza',p:'Lácteos y Huevo'},{n:'Jitomate',c:'1 pza',p:'Verduras'},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa'},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas'}],
+       ingredientes:[{n:'Huevo',c:'3 pza',p:'Lácteos y Huevo',g:150},{n:'Jitomate',c:'1 pza',p:'Verduras',g:127},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa',g:86},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas',g:64}],
        pasos:['Sofríe el jitomate picado 2 minutos, hasta que se ablande.','Agrega los huevos y revuelve a fuego bajo.','Sirve con los frijoles calientes y las tortillas.'],
        macros:{cal:552,prot:33,carbs:58,gra:20},
        tip:'Sin chile ni cebolla cruda: el jitomate cocido da el sabor sin las agruras.'},
       {id:'d11', nombre:'Pan tostado con aguacate y huevo', tiempo:'8 min',
        foto:'fotos-comida/d11.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Pan integral',c:'2 rebanadas',p:'Panadería y Tortillas'},{n:'Huevo',c:'4 pza',p:'Lácteos y Huevo'},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas'}],
+       ingredientes:[{n:'Pan integral',c:'2 rebanadas',p:'Panadería y Tortillas',g:60},{n:'Huevo',c:'4 pza',p:'Lácteos y Huevo',g:200},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas',g:100}],
        pasos:['Tuesta el pan.','Estrella los huevos tapados, en sartén antiadherente.','Unta el aguacate en el pan y pon los huevos encima.'],
        macros:{cal:558,prot:34,carbs:34,gra:32},
        tip:'La otra mitad del aguacate, con el hueso y tapada, aguanta para mañana.'},
       {id:'d12', nombre:'Quesadillas de pollo y queso panela', tiempo:'8 min',
        foto:'fotos-comida/d12.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Tortilla de harina',c:'3 pza',p:'Panadería y Tortillas'},{n:'Pechuga de pollo',c:'80 g, cocida',p:'Carnes y Pescados'},{n:'Queso panela',c:'50 g',p:'Lácteos y Huevo'}],
+       ingredientes:[{n:'Tortilla de harina',c:'3 pza',p:'Panadería y Tortillas',g:96},{n:'Pechuga de pollo',c:'80 g, cocida',p:'Carnes y Pescados',g:107},{n:'Queso panela',c:'50 g',p:'Lácteos y Huevo',g:50}],
        pasos:['Rellena las tortillas con el pollo deshebrado y el queso.','Dóralas en el comal sin aceite hasta que el queso se suavice.'],
        macros:{cal:552,prot:41,carbs:50,gra:20},
        tip:'En comal y sin aceite: la quesadilla frita es de las que te dan agruras a media mañana.'},
       {id:'d13', nombre:'Sándwich de atún con aguacate', tiempo:'5 min',
        foto:'fotos-comida/d13.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Pan integral',c:'2 rebanadas',p:'Panadería y Tortillas'},{n:'Atún en agua',c:'1 lata',p:'Abarrotes y Despensa'},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas'},{n:'Jitomate',c:'2 rodajas',p:'Verduras'}],
+       ingredientes:[{n:'Pan integral',c:'2 rebanadas',p:'Panadería y Tortillas',g:60},{n:'Atún en agua',c:'1 lata',p:'Abarrotes y Despensa',g:140},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas',g:100},{n:'Jitomate',c:'2 rodajas',p:'Verduras',g:32}],
        pasos:['Escurre bien el atún y mézclalo con el aguacate machacado.','Úntalo en el pan tostado y pon el jitomate encima.'],
        macros:{cal:392,prot:34,carbs:34,gra:14},
        tip:'El aguacate sustituye a la mayonesa: misma cremosidad, grasa buena y nada que te caiga pesado.'},
       {id:'d14', nombre:'Huevos revueltos con jamón y pimiento', tiempo:'10 min',
        foto:'fotos-comida/d14.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Huevo',c:'3 pza',p:'Lácteos y Huevo'},{n:'Jamón de pavo',c:'50 g',p:'Carnes y Pescados'},{n:'Pimiento morrón',c:'1/2 pza',p:'Verduras'},{n:'Pan integral',c:'2 rebanadas',p:'Panadería y Tortillas'}],
+       ingredientes:[{n:'Huevo',c:'3 pza',p:'Lácteos y Huevo',g:150},{n:'Jamón de pavo',c:'50 g',p:'Carnes y Pescados',g:50},{n:'Pimiento morrón',c:'1/2 pza',p:'Verduras',g:75},{n:'Pan integral',c:'2 rebanadas',p:'Panadería y Tortillas',g:60}],
        pasos:['Saltea el pimiento y el jamón picados 2 minutos.','Agrega los huevos batidos y revuelve a fuego bajo.','Sirve con el pan tostado.'],
        macros:{cal:436,prot:35,carbs:32,gra:18},
        tip:'El pimiento cocido no da agruras y le pone color y dulzor al huevo.'},
       {id:'d15', nombre:'Licuado de pera con yogurt y amaranto', tiempo:'3 min',
        foto:'fotos-comida/d15.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Pera',c:'1 pza',p:'Frutas'},{n:'Yogurt griego natural',c:'250 g',p:'Lácteos y Huevo'},{n:'Leche entera',c:'200 ml',p:'Lácteos y Huevo'},{n:'Granola de amaranto',c:'20 g',p:'Abarrotes y Despensa'}],
+       ingredientes:[{n:'Pera',c:'1 pza',p:'Frutas',g:167},{n:'Yogurt griego natural',c:'250 g',p:'Lácteos y Huevo',g:250},{n:'Leche entera',c:'200 ml',p:'Lácteos y Huevo',g:200},{n:'Granola de amaranto',c:'20 g',p:'Abarrotes y Despensa',g:20}],
        pasos:['Pica la pera sin el corazón.','Licúala con el yogurt, la leche y el amaranto 30 segundos.'],
        macros:{cal:520,prot:33,carbs:61,gra:18},
        tip:'La pera madura endulza sola; el amaranto lo espesa y te deja satisfecho más rato.'},
       {id:'d16', nombre:'Pan francés con plátano', tiempo:'10 min',
        foto:'fotos-comida/d16.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Pan integral',c:'2 rebanadas',p:'Panadería y Tortillas'},{n:'Huevo',c:'3 pza',p:'Lácteos y Huevo'},{n:'Leche entera',c:'100 ml',p:'Lácteos y Huevo'},{n:'Plátano',c:'1 pza',p:'Frutas'}],
+       ingredientes:[{n:'Pan integral',c:'2 rebanadas',p:'Panadería y Tortillas',g:60},{n:'Huevo',c:'3 pza',p:'Lácteos y Huevo',g:150},{n:'Leche entera',c:'100 ml',p:'Lácteos y Huevo',g:100},{n:'Plátano',c:'1 pza',p:'Frutas',g:149}],
        pasos:['Bate los huevos con la leche y remoja el pan por los dos lados.','Dóralo 2 minutos por lado en sartén antiadherente.','Sirve con el plátano en rodajas.'],
        macros:{cal:533,prot:30,carbs:59,gra:20},
        tip:'Sin mantequilla ni azúcar: el plátano endulza, y en antiadherente no hace falta grasa.'},
       {id:'d17', nombre:'Burrito de pollo con frijoles y aguacate', tiempo:'8 min',
        foto:'fotos-comida/d17.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas'},{n:'Pechuga de pollo',c:'80 g, cocida',p:'Carnes y Pescados'},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa'},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas'}],
+       ingredientes:[{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas',g:64},{n:'Pechuga de pollo',c:'80 g, cocida',p:'Carnes y Pescados',g:107},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa',g:86},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas',g:100}],
        pasos:['Calienta los frijoles y el pollo deshebrado.','Calienta las tortillas en el comal.','Rellénalas con el pollo, los frijoles y el aguacate, y enróllalas.'],
        macros:{cal:566,prot:39,carbs:59,gra:20},
        tip:'Con el pollo de la cena de ayer sale en 8 minutos.'},
       {id:'d18', nombre:'Claras con nopales y frijoles', tiempo:'10 min',
        foto:'fotos-comida/d18.jpg', fotoCredito:'Brooke Lark · StockSnap · CC0 1.0',
-       ingredientes:[{n:'Clara de huevo',c:'6 pza',p:'Lácteos y Huevo'},{n:'Nopales cocidos',c:'1 taza',p:'Verduras'},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa'},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas'}],
+       ingredientes:[{n:'Clara de huevo',c:'6 pza',p:'Lácteos y Huevo',g:198},{n:'Nopales cocidos',c:'1 taza',p:'Verduras',g:150},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa',g:86},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas',g:64}],
        pasos:['Saltea los nopales escurridos 2 minutos.','Agrega las claras batidas y revuelve hasta que cuajen.','Sirve con los frijoles calientes y las tortillas.'],
        macros:{cal:438,prot:37,carbs:59,gra:7},
        tip:'Casi sin grasa y llena de proteína: para los días que vas justo de calorías.'}
@@ -2360,114 +2462,117 @@ window.CIFRAS = (function () {
     cena: [
       {id:'c1', nombre:'Tilapia con verduras salteadas', tiempo:'12 min',
        foto:'fotos-comida/c1.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Filete de tilapia',c:'200 g',p:'Carnes y Pescados'},{n:'Bolsa de verduras (brócoli, col y zanahoria)',c:'2 tazas',p:'Verduras'},{n:'Aceite de oliva',c:'1 cda',p:'Abarrotes y Despensa'},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas'}],
+       ingredientes:[{n:'Filete de tilapia',c:'200 g',p:'Carnes y Pescados',g:200},{n:'Bolsa de verduras (brócoli, col y zanahoria)',c:'2 tazas',p:'Verduras',g:180},{n:'Aceite de oliva',c:'1 cda',p:'Abarrotes y Despensa',g:14},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas',g:64}],
        pasos:['Saltea las verduras 5 minutos en el aceite y sácalas.','Seca la tilapia y séllala 3 minutos por lado en el mismo sartén.','Sirve el pescado sobre la verdura, con las tortillas calientes.'],
        macros:{cal:574,prot:49,carbs:45,gra:23},
        tip:'Pescado blanco: la cena más ligera que tienes, no te pesa al acostarte.'},
       {id:'c2', nombre:'Pechuga asada con verduras y frijoles', tiempo:'15 min',
        foto:'fotos-comida/c2.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Pechuga de pollo',c:'200 g',p:'Carnes y Pescados'},{n:'Bolsa de verduras (brócoli, col y zanahoria)',c:'2 tazas',p:'Verduras'},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa'},{n:'Aceite de oliva',c:'1 cdta',p:'Abarrotes y Despensa'}],
+       ingredientes:[{n:'Pechuga de pollo',c:'200 g',p:'Carnes y Pescados',g:200},{n:'Bolsa de verduras (brócoli, col y zanahoria)',c:'2 tazas',p:'Verduras',g:180},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa',g:86},{n:'Aceite de oliva',c:'1 cdta',p:'Abarrotes y Despensa',g:4}],
        pasos:['Aplana la pechuga y ásala 5 minutos por lado sin moverla.','Mientras reposa 3 minutos, saltea las verduras en el aceite.','Sirve con los frijoles calientes.'],
        macros:{cal:456,prot:57,carbs:33,gra:11},
        tip:'Asa dos pechugas: la segunda es tu comida de mañana o el pollo de tus quesadillas.'},
       {id:'c3', nombre:'Bistec de res con nopales', tiempo:'12 min',
        foto:'fotos-comida/c3.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Filete de res magro',c:'200 g',p:'Carnes y Pescados'},{n:'Nopales cocidos',c:'1 taza',p:'Verduras'},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas'}],
+       ingredientes:[{n:'Filete de res magro',c:'200 g',p:'Carnes y Pescados',g:200},{n:'Nopales cocidos',c:'1 taza',p:'Verduras',g:150},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas',g:64}],
        pasos:['Sella la carne 3 minutos por lado y déjala reposar.','En el mismo sartén saltea los nopales 2 minutos.','Sirve con las tortillas calientes.'],
        macros:{cal:522,prot:51,carbs:37,gra:18},
        tip:'Res magra dos veces por semana, no más: la grasa de la carne es de lo que más agruras da de noche.'},
       {id:'c4', nombre:'Atún con aguacate y frijoles', tiempo:'8 min',
        foto:'fotos-comida/c4.jpg', fotoCredito:'Katrin Gilger · Wikimedia Commons · BY-SA 2.0',
-       ingredientes:[{n:'Atún en agua',c:'2 latas',p:'Abarrotes y Despensa'},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas'},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa'}],
+       ingredientes:[{n:'Atún en agua',c:'2 latas',p:'Abarrotes y Despensa',g:280},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas',g:100},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa',g:86}],
        pasos:['Calienta los frijoles.','Escurre el atún y mézclalo con el aguacate en cubos.','Sírvelo sobre los frijoles.'],
        macros:{cal:466,prot:60,carbs:27,gra:13},
        tip:'La cena de 8 minutos para cuando llegas tarde de Didi: todo sale de la despensa.'},
       {id:'c5', nombre:'Salmón al sartén con verduras', tiempo:'12 min',
        foto:'fotos-comida/c5.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Láminas de salmón',c:'180 g',p:'Carnes y Pescados'},{n:'Bolsa de verduras (brócoli, col y zanahoria)',c:'2 tazas',p:'Verduras'}],
+       ingredientes:[{n:'Láminas de salmón',c:'180 g',p:'Carnes y Pescados',g:180},{n:'Bolsa de verduras (brócoli, col y zanahoria)',c:'2 tazas',p:'Verduras',g:180}],
        pasos:['Saltea las verduras 5 minutos y apártalas.','Dora las láminas de salmón 2 minutos por lado: son finas y se cuecen rápido.','Sirve el salmón sobre la verdura.'],
        macros:{cal:436,prot:40,carbs:13,gra:25},
        tip:'Sácalo en cuanto se separe con el tenedor: un minuto de más y queda seco.'},
       {id:'c6', nombre:'Tacos de tilapia con aguacate', tiempo:'12 min',
        foto:'fotos-comida/c6.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Filete de tilapia',c:'200 g',p:'Carnes y Pescados'},{n:'Tortilla de harina',c:'3 pza',p:'Panadería y Tortillas'},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas'},{n:'Aceite de oliva',c:'1 cdta',p:'Abarrotes y Despensa'}],
+       ingredientes:[{n:'Filete de tilapia',c:'200 g',p:'Carnes y Pescados',g:200},{n:'Tortilla de harina',c:'3 pza',p:'Panadería y Tortillas',g:96},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas',g:100},{n:'Aceite de oliva',c:'1 cdta',p:'Abarrotes y Despensa',g:4}],
        pasos:['Corta la tilapia en tiras y dórala 2 minutos por lado con el aceite.','Calienta las tortillas.','Arma los tacos con el pescado y el aguacate.'],
        macros:{cal:652,prot:50,carbs:54,gra:27},
        tip:'Sin salsa picante ni mucho limón: de noche te caen mal y el pescado no los necesita.'},
       {id:'c7', nombre:'Pollo salteado con verduras y pimiento', tiempo:'12 min',
        foto:'fotos-comida/c7.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Pechuga de pollo',c:'200 g',p:'Carnes y Pescados'},{n:'Bolsa de verduras (brócoli, col y zanahoria)',c:'2 tazas',p:'Verduras'},{n:'Pimiento morrón',c:'1 pza',p:'Verduras'},{n:'Aceite de oliva',c:'1 cda',p:'Abarrotes y Despensa'}],
+       ingredientes:[{n:'Pechuga de pollo',c:'200 g',p:'Carnes y Pescados',g:200},{n:'Bolsa de verduras (brócoli, col y zanahoria)',c:'2 tazas',p:'Verduras',g:180},{n:'Pimiento morrón',c:'1 pza',p:'Verduras',g:150},{n:'Aceite de oliva',c:'1 cda',p:'Abarrotes y Despensa',g:14}],
        pasos:['Dora la pechuga en tiras a fuego alto y sácala.','Saltea las verduras y el pimiento 4 minutos.','Regresa el pollo un minuto y sirve.'],
        macros:{cal:453,prot:50,carbs:20,gra:20},
        tip:'Sacar el pollo y regresarlo al final es lo que evita que quede seco.'},
       {id:'c8', nombre:'Bowl de pollo, huevo y aguacate', tiempo:'10 min',
        foto:'fotos-comida/c8.jpg', fotoCredito:'James Harris · StockSnap · CC0 1.0',
-       ingredientes:[{n:'Pechuga de pollo',c:'150 g, cocida',p:'Carnes y Pescados'},{n:'Huevo',c:'2 pza',p:'Lácteos y Huevo'},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas'},{n:'Bolsa de verduras (brócoli, col y zanahoria)',c:'1 taza',p:'Verduras'}],
+       ingredientes:[{n:'Pechuga de pollo',c:'150 g, cocida',p:'Carnes y Pescados',g:200},{n:'Huevo',c:'2 pza',p:'Lácteos y Huevo',g:100},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas',g:100},{n:'Bolsa de verduras (brócoli, col y zanahoria)',c:'1 taza',p:'Verduras',g:90}],
        pasos:['Cuece los huevos 10 minutos y, mientras, calienta la verdura.','Arma el bowl con la verdura, el pollo deshebrado y los huevos en cuartos.','Termina con el aguacate y una pizca de sal.'],
        macros:{cal:542,prot:63,carbs:14,gra:26},
        tip:'Con el pollo ya cocido es la cena de los días que entrenas tarde.'},
       {id:'c9', nombre:'Tacos de pollo con nopales', tiempo:'12 min',
        foto:'fotos-comida/c9.jpg', fotoCredito:'Tim Sullivan · StockSnap · CC0 1.0',
-       ingredientes:[{n:'Pechuga de pollo',c:'200 g',p:'Carnes y Pescados'},{n:'Nopales cocidos',c:'1 taza',p:'Verduras'},{n:'Tortilla de harina',c:'3 pza',p:'Panadería y Tortillas'}],
+       ingredientes:[{n:'Pechuga de pollo',c:'200 g',p:'Carnes y Pescados',g:200},{n:'Nopales cocidos',c:'1 taza',p:'Verduras',g:150},{n:'Tortilla de harina',c:'3 pza',p:'Panadería y Tortillas',g:96}],
        pasos:['Dora la pechuga en tiras 6 minutos.','Agrega los nopales escurridos y saltea 2 minutos más.','Sirve en las tortillas calientes.'],
        macros:{cal:562,prot:55,carbs:53,gra:13},
        tip:'Haz el doble: es tu comida de mañana en ALTEN, y todo sale de un solo sartén.'},
       {id:'c10', nombre:'Fajitas de res con pimiento', tiempo:'12 min',
        foto:'fotos-comida/c10.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Filete de res magro',c:'200 g',p:'Carnes y Pescados'},{n:'Pimiento morrón',c:'1 pza',p:'Verduras'},{n:'Tortilla de harina',c:'3 pza',p:'Panadería y Tortillas'},{n:'Aceite de oliva',c:'1 cdta',p:'Abarrotes y Despensa'}],
+       ingredientes:[{n:'Filete de res magro',c:'200 g',p:'Carnes y Pescados',g:200},{n:'Pimiento morrón',c:'1 pza',p:'Verduras',g:150},{n:'Tortilla de harina',c:'3 pza',p:'Panadería y Tortillas',g:96},{n:'Aceite de oliva',c:'1 cdta',p:'Abarrotes y Despensa',g:4}],
        pasos:['Saltea el pimiento en tiras 3 minutos con el aceite.','Agrega la res en tiras a fuego alto, 3 minutos.','Sirve en las tortillas calientes.'],
        macros:{cal:671,prot:53,carbs:55,gra:26},
        tip:'Tiras delgadas y fuego alto: así la res se dora en 3 minutos y no se endurece.'},
       {id:'c11', nombre:'Frijoles con huevo estrellado y queso', tiempo:'10 min',
        foto:'fotos-comida/c11.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Frijoles negros',c:'1 taza',p:'Abarrotes y Despensa'},{n:'Huevo',c:'3 pza',p:'Lácteos y Huevo'},{n:'Queso panela',c:'40 g',p:'Lácteos y Huevo'}],
+       ingredientes:[{n:'Frijoles negros',c:'1 taza',p:'Abarrotes y Despensa',g:172},{n:'Huevo',c:'3 pza',p:'Lácteos y Huevo',g:150},{n:'Queso panela',c:'40 g',p:'Lácteos y Huevo',g:40}],
        pasos:['Calienta los frijoles hasta que espesen un poco.','Estrella los huevos tapados, en sartén antiadherente.','Sirve los huevos sobre los frijoles, con el queso desmoronado.'],
        macros:{cal:539,prot:41,carbs:43,gra:22},
        tip:'La cena más barata de la semana, y con 40 g de proteína.'},
       {id:'c12', nombre:'Pollo en jitomate', tiempo:'15 min',
        foto:'fotos-comida/c12.jpg', fotoCredito:'rexipe · Flickr · BY 2.0',
-       ingredientes:[{n:'Pechuga de pollo',c:'200 g',p:'Carnes y Pescados'},{n:'Jitomate',c:'2 pza',p:'Verduras'},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas'}],
+       ingredientes:[{n:'Pechuga de pollo',c:'200 g',p:'Carnes y Pescados',g:200},{n:'Jitomate',c:'2 pza',p:'Verduras',g:254},{n:'Tortilla de harina',c:'2 pza',p:'Panadería y Tortillas',g:64}],
        pasos:['Dora la pechuga en cubos 5 minutos.','Agrega el jitomate picado, tapa y deja 7 minutos hasta que se haga salsa.','Sirve con las tortillas calientes.'],
        macros:{cal:484,prot:53,carbs:41,gra:11},
        tip:'El jitomate cocido hace la salsa solo: sin chile ni cebolla cruda, no hay agruras.'},
       {id:'c13', nombre:'Tacos de res con aguacate', tiempo:'12 min',
        foto:'fotos-comida/c13.jpg', fotoCredito:'Dan Gold · StockSnap · CC0 1.0',
-       ingredientes:[{n:'Filete de res magro',c:'200 g',p:'Carnes y Pescados'},{n:'Tortilla de harina',c:'3 pza',p:'Panadería y Tortillas'},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas'},{n:'Jitomate',c:'1/2 pza, picado',p:'Verduras'}],
+       ingredientes:[{n:'Filete de res magro',c:'200 g',p:'Carnes y Pescados',g:200},{n:'Tortilla de harina',c:'3 pza',p:'Panadería y Tortillas',g:96},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas',g:100},{n:'Jitomate',c:'1/2 pza, picado',p:'Verduras',g:64}],
        pasos:['Corta la res en tiras y dórala a fuego alto 3 minutos.','Calienta las tortillas.','Arma los tacos con la res, el aguacate y el jitomate.'],
        macros:{cal:731,prot:54,carbs:57,gra:32},
        tip:'Jitomate picado en vez de salsa picante: frescura sin agruras.'},
       {id:'c14', nombre:'Salmón con aguacate y jitomate', tiempo:'12 min',
        foto:'fotos-comida/c14.jpg', fotoCredito:'usembassynewzealand · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Láminas de salmón',c:'200 g',p:'Carnes y Pescados'},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas'},{n:'Jitomate',c:'1 pza',p:'Verduras'}],
+       ingredientes:[{n:'Láminas de salmón',c:'200 g',p:'Carnes y Pescados',g:200},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas',g:100},{n:'Jitomate',c:'1 pza',p:'Verduras',g:127}],
        pasos:['Dora las láminas de salmón 2 minutos por lado.','Pica el aguacate y el jitomate.','Sirve el salmón sobre la ensalada.'],
        macros:{cal:558,prot:43,carbs:11,gra:38},
        tip:'Salmón y aguacate son la grasa buena de la semana; por eso esta cena no lleva aceite.'},
       {id:'c15', nombre:'Ensalada tibia de pollo con aguacate', tiempo:'12 min',
        foto:'fotos-comida/c15.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Pechuga de pollo',c:'200 g',p:'Carnes y Pescados'},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas'},{n:'Jitomate',c:'1 pza',p:'Verduras'},{n:'Aceite de oliva',c:'1 cdta',p:'Abarrotes y Despensa'}],
+       ingredientes:[{n:'Pechuga de pollo',c:'200 g',p:'Carnes y Pescados',g:200},{n:'Aguacate',c:'1/2 pza',p:'Almidones y grasas',g:100},{n:'Jitomate',c:'1 pza',p:'Verduras',g:127},{n:'Aceite de oliva',c:'1 cdta',p:'Abarrotes y Despensa',g:4}],
        pasos:['Asa la pechuga 5 minutos por lado y córtala en tiras.','Pica el jitomate y el aguacate.','Mezcla todo con el aceite y una pizca de sal.'],
        macros:{cal:422,prot:48,carbs:11,gra:21},
        tip:'Tibia, no fría: el pollo recién hecho le da sabor a toda la ensalada.'},
       {id:'c16', nombre:'Pechuga con nopales y frijoles', tiempo:'15 min',
        foto:'fotos-comida/c16.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Pechuga de pollo',c:'200 g',p:'Carnes y Pescados'},{n:'Nopales cocidos',c:'1 taza',p:'Verduras'},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa'},{n:'Aceite de oliva',c:'1 cdta',p:'Abarrotes y Despensa'}],
+       ingredientes:[{n:'Pechuga de pollo',c:'200 g',p:'Carnes y Pescados',g:200},{n:'Nopales cocidos',c:'1 taza',p:'Verduras',g:150},{n:'Frijoles negros',c:'1/2 taza',p:'Abarrotes y Despensa',g:86},{n:'Aceite de oliva',c:'1 cdta',p:'Abarrotes y Despensa',g:4}],
        pasos:['Asa la pechuga 5 minutos por lado.','En el mismo sartén saltea los nopales 2 minutos.','Sirve con los frijoles calientes.'],
        macros:{cal:416,prot:55,carbs:25,gra:10},
        tip:'Nopal y frijol: fibra que te deja satisfecho hasta el desayuno.'},
       {id:'c17', nombre:'Omelette de claras con pollo', tiempo:'10 min',
        foto:'fotos-comida/c17.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Clara de huevo',c:'6 pza',p:'Lácteos y Huevo'},{n:'Pechuga de pollo',c:'80 g, cocida',p:'Carnes y Pescados'},{n:'Pimiento morrón',c:'1/2 pza',p:'Verduras'},{n:'Queso panela',c:'30 g',p:'Lácteos y Huevo'}],
+       ingredientes:[{n:'Clara de huevo',c:'6 pza',p:'Lácteos y Huevo',g:198},{n:'Pechuga de pollo',c:'80 g, cocida',p:'Carnes y Pescados',g:107},{n:'Pimiento morrón',c:'1/2 pza',p:'Verduras',g:75},{n:'Queso panela',c:'30 g',p:'Lácteos y Huevo',g:30}],
        pasos:['Saltea el pimiento en tiras con el pollo deshebrado 2 minutos.','Vierte las claras batidas, tapa y deja 3 minutos a fuego bajo.','Pon el queso, dobla a la mitad y sirve.'],
        macros:{cal:322,prot:52,carbs:6,gra:9},
        tip:'Cena ligera y con mucha proteína: ideal si entrenaste tarde y no quieres acostarte lleno.'},
       {id:'c18', nombre:'Res con verduras salteadas', tiempo:'12 min',
        foto:'fotos-comida/c18.jpg', fotoCredito:'Autor desconocido · Rawpixel · CC0 1.0',
-       ingredientes:[{n:'Filete de res magro',c:'200 g',p:'Carnes y Pescados'},{n:'Bolsa de verduras (brócoli, col y zanahoria)',c:'2 tazas',p:'Verduras'},{n:'Aceite de oliva',c:'1 cdta',p:'Abarrotes y Despensa'}],
+       ingredientes:[{n:'Filete de res magro',c:'200 g',p:'Carnes y Pescados',g:200},{n:'Bolsa de verduras (brócoli, col y zanahoria)',c:'2 tazas',p:'Verduras',g:180},{n:'Aceite de oliva',c:'1 cdta',p:'Abarrotes y Despensa',g:4}],
        pasos:['Saltea las verduras 4 minutos en el aceite y apártalas.','Dora la res en tiras a fuego alto 3 minutos.','Junta todo un minuto y sirve.'],
        macros:{cal:402,prot:48,carbs:13,gra:18},
        tip:'Haz el doble: es tu comida de mañana en ALTEN.'}
     ],
     get todas() { return this.desayuno.concat(this.cena); },
+    // Lo que cuesta, en promedio, cocinar una receta de cada tiempo (MXN, por porción).
+    get costoDesayuno() { return promedioCosto(this.desayuno); },
+    get costoCena() { return promedioCosto(this.cena); },
     // Los ingredientes de todas las recetas, agrupados por pasillo y sin repetir.
     // De aquí sale la lista de la compra: no hay una segunda lista que mantener.
     get porPasillo() {
@@ -2485,6 +2590,27 @@ window.CIFRAS = (function () {
       return out;
     },
   };
+  // Lo que cuesta cocinar una receta: los gramos de cada ingrediente (`g`) por la tarifa por gramo de su
+  // producto en PRECIOS_SUPER. null si algún ingrediente no tiene precio o gramos (el control 14 lo exige).
+  function tarifaGramo(n) {
+    const x = PRECIOS_SUPER[n];
+    if (!x) return null;
+    if (x.tipo === 'peso') return x.precio / 1000;
+    return x.gPaq ? x.precio / x.gPaq : null;
+  }
+  function costoReceta(r) {
+    let t = 0;
+    for (let i = 0; i < r.ingredientes.length; i++) {
+      const x = r.ingredientes[i], k = tarifaGramo(x.n);
+      if (k == null || !x.g) return null;
+      t += k * x.g;
+    }
+    return Math.round(t);
+  }
+  function promedioCosto(xs) {
+    const c = xs.map(costoReceta).filter(function (x) { return x != null; });
+    return c.length ? Math.round(c.reduce(function (a, b) { return a + b; }, 0) / c.length) : 0;
+  }
 
   // \u2500\u2500 KIT DE HIGIENE \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   // Agrupado por bolsa, no por tipo de producto: cuando armas la maleta lo que importa
@@ -4861,7 +4987,7 @@ window.CIFRAS = (function () {
     KIT_HIGIENE: KIT_HIGIENE,
     CUIDADO_OJOS: CUIDADO_OJOS,
     BIBLIOTECA: BIBLIOTECA,
-    RECETARIO: RECETARIO,
+    RECETARIO: RECETARIO, PRECIOS_SUPER: PRECIOS_SUPER, costoReceta: costoReceta,
     SUPLEMENTOS: SUPLEMENTOS,
     CHEQUEO: CHEQUEO,
     PESO: PESO,

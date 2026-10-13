@@ -2845,11 +2845,10 @@ function renderSnapshotView(snap, curSnap) {
 // compro, pero si yo cocino pues lo que gaste del super". Al preguntarle la frecuencia confirmó
 // **2 veces al día, todos los días**.
 //
-// Los costos de cocinar NO son inventados: son el `costoAprox` real de su propio recetario
-// (CuidadoPersonal/comida.html → RECETAS, replicado en Dashboard → RECETAS_MINI), donde cada
-// receta trae el costo sumado de sus ingredientes con precios de su ticket de Walmart.
-// Promedios de ahí: desayuno ~$17, cena ~$38. Se usa el de cena ($38) como referencia para
-// comida y cena porque son platillos completos con proteína; el desayuno se cuenta aparte.
+// Los costos de cocinar NO son inventados: salen de su recetario, en el maestro
+// (CIFRAS.RECETARIO.costoDesayuno / costoCena: cada receta, sus gramos por la tarifa de los precios
+// del súper). Se usa el de cena como referencia para comida y cena porque son platillos completos
+// con proteína; el desayuno se cuenta aparte.
 //
 // Se declara arriba de getMonthProjection() a propósito: esa función lo usa como respaldo cuando
 // no hay historial real, y el desglose de gastos lo usa para el comparativo de abajo.
@@ -2857,8 +2856,8 @@ const ALIMENTACION_MODELO={
   precioCalle:110,      // lo que gasta por comida comprada fuera
   vecesPorDia:2,        // comida y cena
   diasPorMes:30,        // todos los días
-  costoDesayunoCasa:17, // promedio real de sus 10 recetas de desayuno
-  costoCenaCasa:38,     // promedio real de sus 8 recetas de cena
+  get costoDesayunoCasa(){ return CIFRAS.RECETARIO.costoDesayuno; }, // promedio de sus recetas de desayuno
+  get costoCenaCasa(){ return CIFRAS.RECETARIO.costoCena; },         // promedio de sus recetas de cena
   get mensualCalle(){ return this.precioCalle*this.vecesPorDia*this.diasPorMes; },
   get mensualDesayuno(){ return this.costoDesayunoCasa*this.diasPorMes; },
   // Hoy: desayuna en casa (ya está en su rutina) y compra comida y cena fuera.
