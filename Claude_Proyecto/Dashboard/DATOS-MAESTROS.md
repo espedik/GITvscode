@@ -178,8 +178,8 @@ en DEUDAS_SEED el día `PROYECTO.bbvaFecha`. La deuda cara va primero (prompt de
 que cada quincena manda a GBM y lo que Didi aparta cada lunes van a la tarjeta hasta dejarla en
 cero, y el día de pago se cubre, con lo de Didi, lo que pide el estado de cuenta. Con `bbvaSinIntereses` no corre interés; sin él correría por día a la tasa más
 IVA y cada abono lo pagaría primero, así el último no deja centavos. Con los números de hoy: el 11 de
-octubre $1,500 (lo que el plan cuenta para ese pago), $1,154 de Didi los lunes 12, 19 y 26, $7,200 el 15 y $2,200 el 1 de
-noviembre; queda en cero el `{{bbvaCero}}` (2 nov 2026) con `{{bbvaIntereses}}` ($0) de
+octubre $1,500 (lo que el plan cuenta para ese pago), $1,154 de Didi los lunes 12, 19 y 26, $6,950 el 15, $2,050 el 1 de
+noviembre y $1,038 de Didi el lunes 2; queda en cero el `{{bbvaCero}}` (2 nov 2026) con `{{bbvaIntereses}}` ($0) de
 intereses. Desde ahí, lo que pague con la tarjeta se paga en la misma quincena, dentro de su gasto
 personal.
 

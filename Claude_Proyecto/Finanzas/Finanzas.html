@@ -117,7 +117,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .card-hi .card-title{color:rgba(0,212,255,.8)}
 .card-hi .card-val{background:linear-gradient(90deg,#00d4ff,#b06eff);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.card-hi .card-sub{color:rgba(255,255,255,.4)}
+.card-hi .card-sub{color:var(--text3)}
 
 /* ── GRIDS ────────────────────────────────────────────────────── */
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
@@ -500,6 +500,31 @@ select option{background:var(--surface-solid);color:var(--text)}
   pre,code{max-width:100%;overflow-x:auto}
   img,video,canvas{max-width:100%;height:auto}
 }
+/* ── Tu quincena (tablero, mes actual): próximos pagos, la BBVA hasta cero y lo que va a GBM ── */
+.qn-cab{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-bottom:14px}
+.qn-cab h3{margin:0;font-size:15px;font-weight:800;color:var(--text)}
+.qn-cab p{margin:0;font-size:12px;color:var(--text2);flex:1 1 320px}
+.qn-cab p b{color:var(--text)}
+.qn-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) minmax(0,1fr);gap:14px}
+@media(max-width:1100px){.qn-grid{grid-template-columns:minmax(0,1fr)}}
+.qn-blq{display:flex;flex-direction:column;border:1px solid rgba(var(--ov),.09);border-radius:12px;padding:14px 16px;background:rgba(var(--ov),.02);min-width:0}
+.qn-t{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);margin-bottom:10px}
+.qn-pago{display:grid;grid-template-columns:74px minmax(0,1fr) auto;gap:10px;align-items:baseline;padding:6px 0;border-top:1px solid rgba(var(--ov),.06);font-size:12.5px}
+.qn-pago:first-of-type{border-top:none}
+.qn-pago .d{font-size:11px;font-weight:700;color:var(--text3);white-space:nowrap}
+.qn-pago .c{color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qn-pago .m{font-weight:800;white-space:nowrap;color:var(--danger)}
+.qn-pago.entra .m{color:var(--success)}
+.qn-pago.gbm .m{color:var(--purple)}
+.qn-pago.bbva .m{color:#f59e0b}
+.qn-mas{font-size:11px;color:var(--text3);margin-top:6px}
+.qn-tot{margin-top:auto;padding-top:10px;border-top:1px solid rgba(var(--ov),.12);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--text2)}
+.qn-cifra{font-size:24px;font-weight:900;letter-spacing:-.5px;line-height:1.1}
+.qn-sub{font-size:11.5px;color:var(--text2);margin-top:4px;line-height:1.5}
+.qn-sub b{color:var(--text)}
+.qn-fila{display:flex;justify-content:space-between;gap:10px;font-size:12px;padding:5px 0;border-top:1px solid rgba(var(--ov),.06)}
+.qn-fila span:first-child{color:var(--text2)}
+.qn-fila b{white-space:nowrap}
 </style>
 <script>
 (function () {
@@ -573,7 +598,7 @@ select option{background:var(--surface-solid);color:var(--text)}
       <!-- Fila 3: Gráfica de balance + gastos por categoría del mes -->
       <div class="g2 mt20">
         <div class="card"><div class="card-title">📈 Balance últimos 6 meses</div><div class="chart-c"><canvas id="ch-bal"></canvas></div></div>
-        <div class="card"><div class="card-title">🥧 Gastos por categoría — este mes</div><div class="chart-c"><canvas id="ch-cat"></canvas></div><div id="ch-cat-empty" class="alert a-ok" style="display:none;margin-top:10px">Sin gastos registrados este mes todavía.</div></div>
+        <div class="card"><div class="card-title" id="ch-cat-tit">🥧 Gastos por categoría — este mes</div><div class="chart-c"><canvas id="ch-cat"></canvas></div><div id="ch-cat-empty" class="alert a-ok" style="display:none;margin-top:10px">Sin gastos registrados este mes todavía.</div></div>
       </div>
       <!-- Fila 4: Paneles estratégicos -->
       <div class="g2 mt20" id="d-specials"></div>
@@ -3058,34 +3083,109 @@ function loadRecurringForMonth(month) {
   const d1=`${month}-01`, d28=`${month}-28`, d16=`${month}-16`;
   const monthDate=new Date(yr,mn-1,1);
 
+  // Los importes salen del maestro, por el mismo camino que la proyección del mes
+  // (`getMonthProjection`): escritos aquí a mano seguían con la renta en $11,000, el gym en $1,500
+  // y el plan de datos en $600. Los meses a 0 % van el 16, como su cargo.
+  const _pg=_PG();
+  const msi=new Set(S.debts.filter(d=>d.type==='other'&&d.rate===0).map(d=>d.name));
   const toAdd=[
-    {type:'income', desc:'Salario',              amount:41000,date:d1, cat:'Salario',              notes:'[recurrente]'},
-    {type:'income', desc:'Tarjeta Si Vale',      amount:940,  date:d1, cat:'Salario',              notes:'[recurrente]'},
-    {type:'expense',desc:'Renta departamento',   amount:11000,date:d1, cat:'Hogar/Renta',          notes:'[recurrente]'},
-    {type:'expense',desc:'Agua y luz',           amount:135,  date:d1, cat:'Servicios',            notes:'[recurrente]'},
-    {type:'expense',desc:'Internet',             amount:200,  date:d1, cat:'Servicios',            notes:'[recurrente]'},
-    {type:'expense',desc:'Plan de datos celular',amount:600,  date:d1, cat:'Servicios',            notes:'[recurrente]'},
-    {type:'expense',desc:'Gas',                  amount:179,  date:d1, cat:'Servicios',            notes:'[recurrente]'},
-    {type:'expense',desc:'Artículos de limpieza',amount:150,  date:d1, cat:'Hogar/Renta',          notes:'[recurrente]'},
-    {type:'expense',desc:'Gym',                  amount:1500, date:d1, cat:'Salud',                notes:'[recurrente]'},
-    {type:'expense',desc:'Claude Code',          amount:380,  date:d1, cat:'Suscripciones',        notes:'[recurrente]'},
-    {type:'expense',desc:'iCloud',               amount:50,   date:d1, cat:'Suscripciones',        notes:'[recurrente]'},
-  ];
-
-  S.debts.forEach(d=>{
-    if(!d.min||d.balance<=0) return;
-    if(d.rate>0||d.type==='car'){
-      toAdd.push({type:'expense',desc:`Pago: ${d.name}`,amount:d.min,date:d1,cat:'Deudas',notes:'[recurrente]'});
-    } else if(d.type==='other'&&d.rate===0&&d.start){
-      const st=new Date(d.start);
-      const totalM=d.total>0&&d.min>0?Math.round(d.total/d.min):0;
-      const end=new Date(st); end.setMonth(end.getMonth()+totalM);
-      if(monthDate<end) toAdd.push({type:'expense',desc:d.name,amount:d.min,date:d16,cat:'Suscripciones',notes:'[recurrente]'});
-    }
-  });
+    {type:'income', desc:'Salario',         amount:_pg.sueldo, date:d1, cat:'Salario', notes:'[recurrente]'},
+    {type:'income', desc:'Tarjeta Si Vale', amount:_pg.siVale, date:d1, cat:'Salario', notes:'[recurrente]'},
+    ...getMonthProjection(month).fixed.filter(f=>+f.amount>0).map(f=>({type:'expense',desc:f.desc,amount:f.amount,
+      date:msi.has(f.desc)?d16:d1,cat:f.cat,notes:'[recurrente]'})),
+  ].filter(t=>+t.amount>0);
 
   toAdd.forEach(t=>S.transactions.push({id:uid(),...t}));
   save(); renderDashboard(); toast(`✅ ${toAdd.length} recurrentes cargados para ${month}`);
+}
+
+// ─── TU QUINCENA ──────────────────────────────────────────────────────────────
+// Adán no registra cada gasto, así que «Gastos del mes $0.00» y una dona en blanco no decían
+// nada. En el mes actual, esta tarjeta enseña lo que sí usa, todo del maestro —lo mismo que pinta
+// el calendario del Dashboard—: los pagos de los próximos 15 días (`agendaDia`, más lo que Didi
+// aparta para la BBVA, que no pasa por el calendario), la BBVA hasta quedar en cero (`planBbva`)
+// y lo que llega a GBM (`desgloseMes`). Cuánto te queda de la quincena día a día lo dice el riel
+// del Dashboard; aquí no se calcula otra vez.
+function renderQuincena(m){
+  const C=window.CIFRAS;
+  if(!C||!C.agendaDia||!C.planBbva||!C.desgloseMes||!C.fechaLocal) return false;
+  const P=_PG(), DM=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const DS=['dom','lun','mar','mié','jue','vie','sáb'];
+  const hoy=new Date(); hoy.setHours(0,0,0,0);
+  const hoyIso=C.fechaLocal(hoy);
+  const corto=d=>d.getDate()+' '+DM[d.getMonth()];
+  const fIso=f=>{ const p=String(f).slice(0,10).split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); };
+  const plan=C.planBbva();
+
+  // La quincena en curso
+  const dia=hoy.getDate(), q1=dia<15;
+  const finMes=new Date(hoy.getFullYear(),hoy.getMonth()+1,0).getDate();
+  const sigQ=q1?new Date(hoy.getFullYear(),hoy.getMonth(),15):new Date(hoy.getFullYear(),hoy.getMonth()+1,1);
+  const quinc=P.sueldoQuinc||Math.round((P.sueldo||0)/2);
+
+  // 1. Próximos pagos: 15 días
+  const pagos=[];
+  for(let i=0;i<15;i++){
+    const d=new Date(hoy); d.setDate(d.getDate()+i);
+    const iso=C.fechaLocal(d);
+    (C.agendaDia(d.getDate(),iso.slice(0,7),S.debts)||[]).forEach(x=>pagos.push({d:d,t:x.t,monto:+x.monto||0,
+      tipo:x.entra?'entra':x.ahorro?'gbm':x.tarjeta?'bbva':''}));
+    (plan.abonos||[]).filter(a=>a.de==='didi'&&a.fecha===iso)
+      .forEach(a=>pagos.push({d:d,t:'Tarjeta BBVA — lo que aparta Didi',monto:a.monto,tipo:'bbva'}));
+  }
+  const cuando=d=>{ const n=Math.round((d-hoy)/86400000); return n===0?'hoy':n===1?'mañana':DS[d.getDay()]+' '+corto(d); };
+  const salen=pagos.filter(p=>p.tipo!=='entra').reduce((s,p)=>s+p.monto,0);
+  const entran=pagos.filter(p=>p.tipo==='entra').reduce((s,p)=>s+p.monto,0);
+  const MAX=9, vis=pagos.slice(0,MAX);
+  const lista=vis.length?vis.map(p=>`<div class="qn-pago ${p.tipo}"><span class="d">${cuando(p.d)}</span><span class="c" title="${p.t}">${p.t}</span><span class="m">${p.tipo==='entra'?'+':'−'}${fmt(p.monto)}</span></div>`).join('')
+    :'<div class="qn-sub">Nada programado en los próximos 15 días.</div>';
+
+  // 2. La BBVA, quincena a quincena
+  const ab=plan.abonos||[];
+  const total=ab.reduce((s,a)=>s+a.monto,0);
+  const hecho=ab.filter(a=>a.fecha<=hoyIso).reduce((s,a)=>s+a.monto,0);
+  const resta=Math.max(0,Math.round((total-hecho)*100)/100);
+  const fin=plan.fin?new Date(plan.fin):null;
+  const sig=ab.filter(a=>a.fecha>hoyIso).slice(0,4);
+  const DE={quincena:'de la quincena',didi:'de Didi',minimo:'el pago del mes, con lo de Didi'};
+  const bbva=(total>0&&resta>0)?`
+      <div class="qn-cifra" style="color:#f59e0b">${fmt(resta)}</div>
+      <div class="qn-sub">debe hoy según tu plan, de ${fmt(total)} · <b>en cero el ${fin?corto(fin):'—'}</b> · ${fmt(plan.intereses||0)} de intereses</div>
+      <div class="pbar" style="height:6px;margin:10px 0 8px;background:rgba(var(--ov),.09)"><div class="pfill" style="width:${Math.round(hecho/total*100)}%;background:#f59e0b"></div></div>
+      ${sig.map(a=>`<div class="qn-fila"><span>${corto(fIso(a.fecha))} · ${DE[a.de]||a.de}</span><b>${fmt(a.monto)}</b></div>`).join('')}
+      <div class="qn-sub" style="margin-top:8px">¿El banco dice otra cifra? Ese saldo manda: repórtalo y el plan se recalcula.</div>`
+    :`<div class="qn-cifra" style="color:var(--success)">En cero</div>
+      <div class="qn-sub">Lo que pagues con ella, págalo en la misma quincena: así no genera intereses.</div>`;
+
+  // 3. A GBM: este mes, el siguiente y el primero sin BBVA
+  const sigYM=x=>{ const p=x.split('-').map(Number); const d=new Date(p[0],p[1],1); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); };
+  const nombreMes=x=>['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'][+x.slice(5)-1];
+  const filasGbm=[[m,C.desgloseMes(m)]];
+  let x=sigYM(m); filasGbm.push([x,C.desgloseMes(x)]);
+  const conBbva=f=>!!(f[1].g&&f[1].g.tarjeta>0);
+  if(conBbva(filasGbm[1])) for(let i=0;i<14;i++){ x=sigYM(x); const d=C.desgloseMes(x); if(!(d.g&&d.g.tarjeta>0)){ filasGbm.push([x,d]); break; } }
+  const ult=filasGbm[filasGbm.length-1], crucero=ult[1];
+  const Mayus=t=>t[0].toUpperCase()+t.slice(1);
+  const gbm=`
+      <div class="qn-cifra" style="color:var(--purple)">${fmt(crucero.ahorro||0)}<span style="font-size:12px;font-weight:700;color:var(--text3)"> al mes</span></div>
+      <div class="qn-sub">en ${nombreMes(ult[0])}${conBbva(filasGbm[0])?', ya sin la BBVA':''}: el día 1 ${fmt(crucero.dia1||0)}, el 15 ${fmt(crucero.dia15||0)} y Didi ${fmt(crucero.didi||0)}</div>
+      ${filasGbm.map(f=>`<div class="qn-fila"><span>${f[0]===m?'Este mes':Mayus(nombreMes(f[0]))}${conBbva(f)?' · lo demás va a la BBVA':''}</span><b>${fmt(f[1].ahorro||0)}</b></div>`).join('')}
+      ${C.n?`<div class="qn-tot"><span>Junio de 2027, a este ritmo</span><span><b>${fmt(+C.n('alemaniaJunio')||0)}</b> de los ${fmt(+C.n('sperrkonto')||0)} de la cuenta bloqueada · <b style="color:var(--warning)">${C.n('junioCorto')}</b></span></div>`:''}`;
+
+  document.getElementById('d-income').innerHTML=`
+    <div class="card" style="padding:16px 20px">
+      <div class="qn-cab">
+        <h3>💰 Tu quincena</h3>
+        <p>Del ${q1?1:15} al ${q1?14:finMes} de ${DM[hoy.getMonth()]} · entraron <b>${fmt(quinc)}</b> el día ${q1?1:15} · la siguiente, el <b>${corto(sigQ)}</b>.</p>
+        <button class="btn btn-p btn-sm" onclick="openTxModal()">+ Registrar un gasto</button>
+      </div>
+      <div class="qn-grid">
+        <div class="qn-blq"><div class="qn-t">Próximos pagos · 15 días</div>${lista}${pagos.length>MAX?`<div class="qn-mas">y ${pagos.length-MAX} más en el calendario del Dashboard</div>`:''}<div class="qn-tot"><span>En 15 días</span><span>entran <b style="color:var(--success)">${fmt(entran)}</b> · salen <b style="color:var(--danger)">${fmt(salen)}</b></span></div></div>
+        <div class="qn-blq"><div class="qn-t">La BBVA, quincena a quincena</div>${bbva}</div>
+        <div class="qn-blq"><div class="qn-t">A GBM, para Alemania</div>${gbm}</div>
+      </div>
+    </div>`;
+  return true;
 }
 
 // ─── DASHBOARD ────────────────────────────────────────────────────────────────
@@ -3174,9 +3274,17 @@ function renderDashboard() {
     &&!t.desc.toLowerCase().includes('vale'));
   const extrasTotal = extras.reduce((s,t)=>s+t.amount,0);
 
-  const inc      = BASE_INC + extrasTotal;
-  const bal      = inc - exp;
-  const sobrante = inc - exp;
+  let inc      = BASE_INC + extrasTotal;
+  let exp2     = exp;
+  // Un mes que ya empezó se cuenta como la gráfica de balance (`CIFRAS.balanceMeses`): lo que ya
+  // se sabe que entra y sale —quincenas, Didi, vale, renta, auto, servicios, la BBVA, comer— más
+  // lo anotado, sin duplicar. Sumar solo lo anotado daba «Gastos $0» y «Superávit» de un sueldo
+  // entero, y con eso la Maestría salía «alcanzable» y la tasa de ahorro en 100 %.
+  const B1 = (!isFuture && window.CIFRAS && CIFRAS.balanceMeses)
+    ? CIFRAS.balanceMeses(m, 1, { tx:S.transactions, debts:S.debts }).slice(-1)[0] : null;
+  if (B1) { inc = B1.inc; exp2 = B1.exp; }
+  const bal      = inc - exp2;
+  const sobrante = inc - exp2;
 
   // ── Fondo de emergencia ──
   const EF_TARGET = _metaFondo();
@@ -3215,18 +3323,18 @@ function renderDashboard() {
     <div class="card card-hi">
       <div class="card-title">💰 Balance del Mes</div>
       <div class="card-val">${fmt(bal)}</div>
-      <div class="card-sub">${bal>=0?'✅ Superávit':'⚠️ Déficit'}</div>
+      <div class="card-sub">${B1?'Lo que entra menos lo previsto · sin tu gasto personal':(bal>=0?'✅ Superávit':'⚠️ Déficit')}</div>
     </div>
     <div class="card">
       <div class="card-title">📥 Ingresos del Mes</div>
       <div class="card-val tc-ok">${fmt(inc)}</div>
-      <div class="card-sub">Base ${fmt(BASE_INC)}${extrasTotal?` + extras ${fmt(extrasTotal)}`:''}</div>
+      <div class="card-sub">${B1?'Sueldo, Didi y vale':`Base ${fmt(BASE_INC)}${extrasTotal?` + extras ${fmt(extrasTotal)}`:''}`}</div>
     </div>
     <div class="card card-click" onclick="abrirDesgloseGastos('${m}')" role="button" tabindex="0"
          title="Ver todos los gastos del mes, desglosados por apartado">
       <div class="card-title">📤 Gastos del Mes <span style="float:right;font-size:10px;color:var(--text3);font-weight:700">ver desglose →</span></div>
-      <div class="card-val tc-err">${fmt(exp)}</div>
-      <div class="card-sub">${(isFuture&&!hasActualTx)?'📊 Estimado (fijos + variables prom.)':`${mtx.filter(t=>t.type==='expense').length} movimientos registrados`}</div>
+      <div class="card-val tc-err">${fmt(exp2)}</div>
+      <div class="card-sub">${(isFuture&&!hasActualTx)?'📊 Estimado (fijos + variables prom.)':B1?`Previsto + ${mtx.filter(t=>t.type==='expense').length} anotados`:`${mtx.filter(t=>t.type==='expense').length} movimientos registrados`}</div>
     </div>
     <div class="card">
       <div class="card-title">📈 Activos Totales</div>
@@ -3234,8 +3342,8 @@ function renderDashboard() {
       <div class="card-sub">Deuda total: ${fmt(totDebt)}</div>
     </div>`;
 
-  // ── Desglose de ingresos + sobrante ──
-  document.getElementById('d-income').innerHTML=`
+  // ── El mes actual: tu quincena. Los otros meses: el desglose de ingresos ──
+  if (!(m===nowYM() && renderQuincena(m))) document.getElementById('d-income').innerHTML=`
     <div class="card" style="padding:16px 20px">
       <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px">
         💰 Ingresos — ${m.slice(5)}/${m.slice(0,4)}
@@ -3258,8 +3366,8 @@ function renderDashboard() {
     </div>`;
 
   const refDate = isFuture ? new Date(m+'-01') : new Date();
-  renderInsights(inc, exp);
-  renderDashCharts(mtx);
+  renderInsights(inc, exp2);
+  renderDashCharts(mtx, m);
   renderSpecials(bal, refDate);
   renderSubscriptions(refDate);
   renderRecent();
@@ -3681,6 +3789,26 @@ function renderSpecials(freeMonth, refDate=new Date()) {
           ⚠️ Tarjetas de crédito con interés
         </div>
         ${ccDebts.map(d=>{
+          // La BBVA con plan de pago (`planBbva`): se paga quincena a quincena y queda en cero en
+          // semanas, no en los meses que daría el mínimo. Es la misma fecha que el Dashboard y Coach.
+          const PB=(d.id==='d001'&&window.CIFRAS&&CIFRAS.planBbva)?CIFRAS.planBbva():null;
+          if(PB&&PB.fin&&(PB.abonos||[]).length){
+            const hoyI=CIFRAS.fechaLocal(new Date()), tot=PB.abonos.reduce((s,a)=>s+a.monto,0);
+            const pag=PB.abonos.filter(a=>a.fecha<=hoyI).reduce((s,a)=>s+a.monto,0), finD=new Date(PB.fin);
+            if(tot-pag>0) return `<div style="background:rgba(255,217,61,.06);border-radius:8px;padding:11px 14px;border:1px solid rgba(255,217,61,.15)">
+            <div class="flex jb aic" style="margin-bottom:5px">
+              <span style="font-size:12px;font-weight:700;color:var(--warning)">${d.name}</span>
+              <span style="font-size:11px;font-weight:600;color:var(--warning)">en cero el ${finD.getDate()} ${['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][finD.getMonth()]}</span>
+            </div>
+            <div class="pbar" style="height:7px;margin-bottom:5px;background:rgba(var(--ov),.09)">
+              <div class="pfill" style="width:${Math.round(pag/tot*100)}%;background:var(--warning);box-shadow:0 0 8px var(--warning)"></div>
+            </div>
+            <div class="flex jb">
+              <span class="ts tm">Quincena a quincena · ${fmt(PB.intereses||0)} de intereses</span>
+              <span class="ts" style="color:var(--text2)">Debe según el plan: <strong style="color:var(--warning)">${fmt(Math.round((tot-pag)*100)/100)}</strong></span>
+            </div>
+          </div>`;
+          }
           const projB=pb(d);
           const dMonths=d.min>0?Math.ceil(projB/d.min):0;
           const dEnd=addM(now,dMonths);
@@ -3740,7 +3868,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
     </div>`;
 }
 
-function renderDashCharts(mtx) {
+function renderDashCharts(mtx, mes) {
   // Balance line
   /* Los mismos seis meses y las mismas dos capas que el Dashboard, del mismo sitio:
      `CIFRAS.balanceMeses`. Adán, 2026-09-07: *"también el html de finanzas la gráfica está
@@ -3781,7 +3909,19 @@ function renderDashCharts(mtx) {
   // Gastos por categoría del mes seleccionado (dona) — usa las mismas CATS/CCOLORS del selector de transacciones
   const catTotals={};
   mtx.filter(t=>t.type==='expense').forEach(t=>{ catTotals[t.cat]=(catTotals[t.cat]||0)+t.amount; });
-  const catEntries=Object.entries(catTotals).sort((a,b)=>b[1]-a[1]);
+  let catEntries=Object.entries(catTotals).sort((a,b)=>b[1]-a[1]);
+  // Sin gastos anotados, la dona no se queda en blanco: enseña a dónde va el sueldo ese mes según el
+  // plan (`desgloseMes`, los mismos apartados que el desglose del Dashboard), marcado como previsto.
+  const titCat=document.getElementById('ch-cat-tit'), COL_SUELDO={renta:'#3b82f6',depa:'#06b6d4',celular:'#14b8a6',
+    suscripciones:'#6366f1',familia:'#ec4899',auto:'#ef4444',iphone:'#f97316',comida:'#22c55e',cuidado:'#a855f7',
+    personal:'#94a3b8',tarjeta:'#f59e0b',ahorro:'#b06eff'};
+  if(titCat) titCat.textContent='🥧 Gastos por categoría — este mes';
+  if(!catEntries.length && mes && window.CIFRAS && CIFRAS.desgloseMes && CIFRAS.GRUPOS_SUELDO){
+    const g=(CIFRAS.desgloseMes(mes)||{}).g||{}, nom={};
+    CIFRAS.GRUPOS_SUELDO.forEach(x=>{ nom[x[0]]=x[1]; });
+    catEntries=Object.keys(g).filter(k=>k!=='sueldo'&&g[k]>0).sort((a,b)=>g[b]-g[a]).map(k=>[nom[k]||k,g[k],COL_SUELDO[k]]);
+    if(catEntries.length&&titCat) titCat.textContent='🥧 A dónde va tu sueldo este mes — previsto';
+  }
   const ctxCat=document.getElementById('ch-cat'), catEmptyEl=document.getElementById('ch-cat-empty');
   chCat=killChart(chCat);
   if(ctxCat){
@@ -3791,7 +3931,7 @@ function renderDashCharts(mtx) {
       const catTotal=catEntries.reduce((s,e)=>s+e[1],0);
       chCat=new Chart(ctxCat,{type:'doughnut',data:{
         labels:catEntries.map(e=>e[0]),
-        datasets:[{data:catEntries.map(e=>e[1]),backgroundColor:catEntries.map(e=>CCOLORS[e[0]]||'#94a3b8'),borderColor:cssVar('--surface'),borderWidth:2}]
+        datasets:[{data:catEntries.map(e=>e[1]),backgroundColor:catEntries.map(e=>e[2]||CCOLORS[e[0]]||'#94a3b8'),borderColor:cssVar('--surface'),borderWidth:2}]
       },options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
         plugins:{legend:{position:'right',labels:{boxWidth:9,padding:8,color:cssVar('--text2'),font:{size:10}}},
           tooltip:{callbacks:{label:c=>` ${c.label}: ${fmt(c.parsed)} (${(c.parsed/catTotal*100).toFixed(0)}%)`}}}}});

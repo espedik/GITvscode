@@ -289,9 +289,10 @@ fusiona en vez de pisarlo.
 `getMonthProjection(month)` (meses futuros): fijos del mes (renta, CETES, gym, servicios,
 suscripciones, deudas con interés, `car`, MSI vigentes) + promedio de variables de Alimentación,
 Restaurantes y Entretenimiento de los últimos 3 meses → `{inc, fixedExp, varExp, fixed, varItems,
-totalExp, balance}`. `loadRecurringForMonth(month)` genera transacciones con `notes:'[recurrente]'`
-(salario y Si Vale el día 1, fijos de `RECURRENTES`, deudas con interés y auto, MSI el 16); pide
-confirmación si ya existen. `removeRecurringForMonth(month)` las borra.
+totalExp, balance}`. `loadRecurringForMonth(month)` genera transacciones con `notes:'[recurrente]'`:
+el sueldo y el vale del maestro el día 1 y los fijos de `getMonthProjection(month).fixed` (los MSI,
+el 16), así que los importes son los del maestro; pide confirmación si ya existen.
+`removeRecurringForMonth(month)` las borra.
 
 ---
 
@@ -299,15 +300,39 @@ confirmación si ya existen. `removeRecurringForMonth(month)` las borra.
 
 `setDashMonth(ym)` → `renderDashboard()`: tabs de meses (actual → diciembre), banner de
 proyección para meses futuros con cargar/quitar recurrentes, fondo de emergencia inline, 4 KPIs
-(Balance, Ingresos, Gastos, Activos), desglose de ingresos (Salario / Didi / Si Vale / Extras —
-`extras` son ingresos del mes que no son salario ni vale), y llama a `renderInsights` (Patrimonio
-Neto, Dinero Libre, DTI, Tasa de Ahorro), `renderDashCharts`, `renderSpecials`,
+(Balance, Ingresos, Gastos, Activos), la tarjeta del mes (abajo) y llama a `renderInsights`
+(Patrimonio Neto, Dinero Libre, DTI, Tasa de Ahorro), `renderDashCharts`, `renderSpecials`,
 `renderSubscriptions`, `renderRecent` (últimas 7), `renderAlerts` (presupuestos ≥ 70 %).
+
+**Los KPIs de un mes que ya empezó** salen de `CIFRAS.balanceMeses`, la misma cuenta que la
+gráfica de balance: lo que ya se sabe que entra y sale más lo anotado, sin duplicar. Adán no anota
+cada gasto, y sumar solo lo anotado daba «Gastos $0.00» y el sueldo entero como superávit; con eso
+la Maestría salía «alcanzable» y la tasa de ahorro en 100 %. El balance dice *sin tu gasto
+personal*: ese no está previsto. Los meses futuros siguen con `getMonthProjection`.
+
+**Tu quincena** (`renderQuincena(m)`, en `#d-income`, solo el mes actual; los demás meses llevan el
+desglose de ingresos): la quincena en curso y cuándo entra la siguiente, un botón *Registrar un
+gasto* (`openTxModal()`) y tres bloques, todos del maestro —lo mismo que pinta el calendario del
+Dashboard—:
+
+| Bloque | De dónde sale |
+|---|---|
+| Próximos pagos · 15 días | `CIFRAS.agendaDia` día por día, más lo que Didi aparta para la BBVA (los abonos `de: 'didi'` de `planBbva`, que no pasan por el calendario); al pie, lo que entra y sale en esos días |
+| La BBVA, quincena a quincena | `CIFRAS.planBbva()`: lo que debe hoy según el plan (sus abonos hasta hoy), la fecha en cero, los intereses y los siguientes abonos. El saldo que reporte del banco manda: va al maestro como migración |
+| A GBM, para Alemania | `CIFRAS.desgloseMes`: este mes, el siguiente y el primero ya sin la BBVA, con lo del día 1, el 15 y Didi; al pie, `{{alemaniaJunio}}` contra la cuenta bloqueada (`{{sperrkonto}}`, `{{junioCorto}}`) |
+
+Cuánto te queda de la quincena día a día no se calcula aquí: es el riel del Dashboard.
+
+**La dona** enseña los gastos anotados del mes por categoría; sin ninguno, *A dónde va tu sueldo
+este mes — previsto*: los apartados de `CIFRAS.desgloseMes` con los nombres de
+`CIFRAS.GRUPOS_SUELDO`.
 
 `renderSpecials(freeMonth, refDate)`: **Maestría** (barra segmentada, `monthlyNeeded` para
 llegar a la fecha, 5 escenarios de ahorro con fecha estimada) y **Hoja de Ruta de Deudas** (MSI
 con fecha de liquidación, tarjetas con meses estimados, auto con tip de $1,000 extra; proyección
-`pb(d) = max(0, balance − meses × min)`). `renderSubscriptions`: recurrentes sin fin (de
+`pb(d) = max(0, balance − meses × min)`). La BBVA con plan de pago sale con `planBbva`
+—*quincena a quincena*, lo que debe según el plan y el día que queda en cero—, no con lo que
+tardaría pagando el mínimo. `renderSubscriptions`: recurrentes sin fin (de
 `PROYECTO`) y MSI activas (`rate===0 && type==='other' && start`) con urgencia por meses restantes.
 
 **La gráfica de balance `ch-bal`** toma sus seis puntos de **`CIFRAS.balanceMeses`**, la misma
