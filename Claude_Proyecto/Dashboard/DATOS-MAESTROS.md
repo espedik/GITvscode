@@ -941,13 +941,13 @@ Tres casos que no son una copia movida y siguen necesitando cuidado:
 
 ### El recetario
 
-`RECETARIO` — las **24 recetas** (12 desayunos, 12 cenas) con sus ingredientes,
+`RECETARIO` — las **36 recetas** (18 desayunos, 18 cenas) con sus ingredientes,
 pasos, macros, el tip y la foto de cada una. Cada ingrediente declara `{n, c, p}`: nombre,
 cantidad y **pasillo del súper**. `foto` es la ruta relativa a `CuidadoPersonal/` (los archivos
 viven en `CuidadoPersonal/fotos-comida/`) y `fotoCredito`, su autor, fuente y licencia.
 
 **Son sencillas**: 4 ingredientes o menos, 3 pasos y 15 minutos; 30 g de proteína o más en el
-desayuno y 40 g o más en la cena; y las kcal cuadran con sus macros. Las 24 usan los mismos 25
+desayuno y 40 g o más en la cena; y las kcal cuadran con sus macros. Las 36 usan los mismos 25
 productos de la lista, así que cambiar una receta sin cambiar productos no mueve el presupuesto de
 comida.
 

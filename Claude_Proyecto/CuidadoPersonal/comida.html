@@ -273,9 +273,8 @@ canvas{max-width:100%}
    maestro junto a su receta, sale en el title de la foto y en la ficha. */
 .recetas-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
   grid-auto-rows:248px;gap:14px;align-content:start}
-/* 12 recetas por sección: en 6, 4, 3, 2 o 1 columnas nunca queda una fila a medias. */
-@media(max-width:1699px){.recetas-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:1199px){.recetas-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* 18 recetas por sección: en 6, 3, 2 o 1 columnas nunca queda una fila a medias. */
+@media(max-width:1499px){.recetas-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:899px){.recetas-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){.recetas-grid{grid-template-columns:minmax(0,1fr)}}
 
@@ -674,7 +673,7 @@ function nav(s){
 // ─── Render de recetas ──────────────────────────────────────────────────────
 
 // ══ Buscar, filtrar y elegir ═════════════════════════════════════
-// Con 24 recetas hace falta encontrarlas. Y marcar las de la semana sirve para
+// Con 36 recetas hace falta encontrarlas. Y marcar las de la semana sirve para
 // algo concreto: sus ingredientes son los que hay que comprar. Se guardan en
 // `elegidas` dentro del mismo comida_v1 que ya usa el registro.
 let rcFiltro = {desayuno:'todo', cena:'todo'};
@@ -798,7 +797,7 @@ function rcFiltra(tipo){
 
 // ══ LA TARJETA ════════════════════════════════════════════
 // La foto y tres datos: tiempo, kcal y proteína. Los ingredientes, los pasos y
-// el tip se fueron a la ficha — con 24 recetas, desplegarlo todo era un muro.
+// el tip se fueron a la ficha — con 36 recetas, desplegarlo todo era un muro.
 const RC_CUBIERTO = '<svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 11v9' +
   'M17 4c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6zM17 10v10"></path></svg>';
 const RC_CHECK = '<svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg>';

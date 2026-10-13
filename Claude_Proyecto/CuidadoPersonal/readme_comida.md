@@ -1,6 +1,6 @@
 # comida.html — Mi Comida: Recetario & Plan Masa Muscular
 
-App de una sola página (HTML+CSS+JS, sin backend): el recetario de **12 desayunos y 12 cenas
+App de una sola página (HTML+CSS+JS, sin backend): el recetario de **18 desayunos y 18 cenas
 sencillos** a la medida de Adán, con buscador, filtros y la ficha de cada receta; y el **Plan Masa
 Muscular**.
 Es el centro de nutrición del proyecto: lo que registra aquí lo leen Salud y el Dashboard.
@@ -34,7 +34,7 @@ Súper" del menú es un **enlace al Dashboard** (↗): la lista vive solo allá.
 
 ## El recetario vive en el maestro
 
-`const RECETAS = CIFRAS.RECETARIO` — `datos-maestros.js` tiene las 24 recetas (`desayuno`, `cena`,
+`const RECETAS = CIFRAS.RECETARIO` — `datos-maestros.js` tiene las 36 recetas (`desayuno`, `cena`,
 `todas`, `porPasillo`), **cada ingrediente declara su pasillo y `LISTA_COMPRAS.comida` es un
 getter sobre ellos**: agregar una receta agrega sus ingredientes a la compra del Dashboard sin
 tocar nada más. El **control 14** del verificador lo vigila (recetas completas, ids únicos, lista
@@ -70,7 +70,7 @@ la ruta relativa a esta carpeta y `fotoCredito` lleva el autor, la fuente y la l
 ## Encontrarlas, elegirlas, cocinarlas
 
 - **La tarjeta es la foto** (248 px de alto) con tiempo, kcal y proteína: lo que decide si la
-  haces hoy. Van en 6 columnas a partir de 1700 px, y en 4, 3, 2 o 1 más abajo: con 12 recetas por
+  haces hoy. Van en 6 columnas a partir de 1500 px, y en 3, 2 o 1 más abajo: con 18 recetas por
   sección nunca queda una fila a medias.
 - **Buscador y filtros**: por texto —nombre **o ingrediente**— y por proteína y tiempo. Como todo
   desayuno ya pasa de 30 g y de 10 minutos, los umbrales van por comida (`RC_UMBRAL`: desayuno 35 g y
@@ -123,7 +123,7 @@ se abría dentro del flujo). La aurora va detrás con `z-index:-1`; vale para to
   `canvas{max-width:100%}`: sin eso las tablas con `nowrap` del Plan empujaban el documento fuera
   del viewport (misma trampa de flex/grid que `salud.html`).
 
-Se verifica a 2048, 1600, 1024 y 390 px: 24 tarjetas con su foto y su crédito, columnas sin
+Se verifica a 2048, 1600, 1024 y 390 px: 36 tarjetas con su foto y su crédito, columnas sin
 filas a medias, ficha fija que cabe en pantalla, filtros, cero desborde y cero errores.
 
 ## Referencias cruzadas
