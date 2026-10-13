@@ -1036,10 +1036,32 @@ function impactoDelCambio() {
     if (!enRecetas[x]) malos.push('     ' + x + ': está en la lista y en NINGUNA receta');
   });
 
+  // d) sencillas, con su proteína y macros que cuadran (Adán, 12-oct-2026: "comidas más
+  //    sencillas"): 4 ingredientes o menos, 3 pasos, 15 minutos; 30 g de proteína o más en el
+  //    desayuno y 40 g o más en la cena; kcal ≈ 4·proteína + 4·carbohidratos + 9·grasa (±15 %).
+  R.desayuno.concat(R.cena).forEach(function (r) {
+    const minimo = R.desayuno.indexOf(r) !== -1 ? 30 : 40, m = r.macros || {};
+    if ((r.ingredientes || []).length > 4) malos.push('     ' + r.nombre + ': ' + r.ingredientes.length + ' ingredientes (máximo 4)');
+    if ((r.pasos || []).length > 3) malos.push('     ' + r.nombre + ': ' + r.pasos.length + ' pasos (máximo 3)');
+    if ((parseInt(r.tiempo, 10) || 99) > 15) malos.push('     ' + r.nombre + ': ' + r.tiempo + ' (máximo 15 min)');
+    if ((m.prot || 0) < minimo) malos.push('     ' + r.nombre + ': ' + m.prot + ' g de proteína (mínimo ' + minimo + ')');
+    const atw = 4 * (m.prot || 0) + 4 * (m.carbs || 0) + 9 * (m.gra || 0);
+    if (m.cal && Math.abs(atw - m.cal) / m.cal > 0.15)
+      malos.push('     ' + r.nombre + ': ' + m.cal + ' kcal no cuadran con sus macros (' + Math.round(atw) + ')');
+  });
+
+  // e) cada foto existe junto a comida.html y lleva su crédito
+  R.todas.forEach(function (r) {
+    if (!r.foto) { malos.push('     ' + r.nombre + ': sin foto'); return; }
+    if (/^https?:/.test(r.foto)) malos.push('     ' + r.nombre + ': la foto se pide a internet; va en fotos-comida/');
+    else if (!fs.existsSync(path.join(RAIZ, 'CuidadoPersonal', r.foto))) malos.push('     ' + r.nombre + ': no existe CuidadoPersonal/' + r.foto);
+    if (!r.fotoCredito) malos.push('     ' + r.nombre + ': la foto no lleva su crédito (fotoCredito)');
+  });
+
   if (malos.length)
     problemas.push('El recetario y la lista de compras no cuadran:\n' + malos.slice(0, 12).join('\n'));
   else
-    ok.push('RECETARIO alimenta la lista de compras (' + R.todas.length + ' recetas, ' +
+    ok.push('RECETARIO alimenta la lista de compras (' + R.todas.length + ' recetas sencillas con foto, ' +
             Object.keys(enRecetas).length + ' ingredientes en ' +
             Object.keys(C.LISTA_COMPRAS.comida).length + ' pasillos)');
 })();

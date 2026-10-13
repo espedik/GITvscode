@@ -1,7 +1,8 @@
 # comida.html — Mi Comida: Recetario & Plan Masa Muscular
 
-App de una sola página (HTML+CSS+JS, sin backend): el recetario de **12 desayunos y 12 cenas** a
-la medida de Adán, con buscador, filtros y la ficha de cada receta; y el **Plan Masa Muscular**.
+App de una sola página (HTML+CSS+JS, sin backend): el recetario de **12 desayunos y 12 cenas
+sencillos** a la medida de Adán, con buscador, filtros y la ficha de cada receta; y el **Plan Masa
+Muscular**.
 Es el centro de nutrición del proyecto: lo que registra aquí lo leen Salud y el Dashboard.
 
 **Su prompt**: la clave `comida` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
@@ -12,8 +13,11 @@ Vive en `CuidadoPersonal/comida.html`. Se abre incrustada en `cuidadopersonal.ht
 **Comida**, `?embed=1` con `embed.js` y la cabecera común de `cabecera.js`) o directa. Carga
 `../Dashboard/datos-maestros.js` y `vidrio.css`.
 
-**Solo desayuno y cena**: la comida de mediodía Adán la resuelve aparte, y el banner lo dice al
-abrir. El Plan Masa Muscular sí incluye la comida de mediodía.
+**Solo desayuno y cena**: la comida de mediodía Adán la resuelve aparte, y el bloque *Proteína*
+de arriba lo dice al abrir. El Plan Masa Muscular sí incluye la comida de mediodía.
+
+Arriba, las reglas del recetario en cuatro bloques con su etiqueta (`.ctx-reglas`): *Sencillas*,
+*Proteína* (con `{{proteinaMeta}}`), *Sin agruras* y *Sin lo que no te gusta*.
 
 ## Secciones
 
@@ -36,6 +40,14 @@ getter sobre ellos**: agregar una receta agrega sus ingredientes a la compra del
 tocar nada más. El **control 14** del verificador lo vigila (recetas completas, ids únicos, lista
 derivada). `CATEGORIA_ING`/`ORDEN_CAT` quedan aquí solo como clasificación de referencia.
 
+**Sencillas** (Adán pidió *"comidas más sencillas"*): **4 ingredientes o menos, 3 pasos y 15
+minutos** como máximo, con **30 g de proteína o más en el desayuno y 40 g o más en la cena**. Todas
+salen de los mismos 25 productos de la lista del súper, así que el presupuesto de comida no se mueve.
+La cena se cocina doble —la mitad es la comida del día siguiente, como dice la rutina de las 21:15—;
+el domingo es de Didi y ninguna receta depende de cocinar ese día. Los macros se calculan con una
+tabla por ingrediente, no a ojo. El control 14 exige todo esto, y que las kcal cuadren con
+4·proteína + 4·carbohidratos + 9·grasa (±15 %).
+
 **Por qué estas recetas**: se eligieron cruzando lo que el proyecto ya sabe de Adán —
 
 1. **Reflujo** (`salud.html` → Digestión): sin café, picante, cítricos en exceso, chocolate,
@@ -48,16 +60,20 @@ derivada). `CATEGORIA_ING`/`ORDEN_CAT` quedan aquí solo como clasificación de 
    (`CIFRAS.texto()`); desayuno + cena cubren una parte sustancial y el resto es la comida de
    mediodía.
 
-Cada receta: tiempo, macros, ingredientes con cantidad, pasos, tip y **foto de Wikimedia
-Commons** (las 24, en el maestro junto a su receta; verificadas cargándolas en un navegador —
-comprobarlas en serie con `fetch` da 429). Cada `<img>` lleva `onerror` con respaldo dibujado.
+Cada receta: tiempo, macros, ingredientes con cantidad, pasos, tip y **una foto real del
+platillo** en `fotos-comida/` (800 px, de Openverse y Wikimedia Commons). En el maestro, `foto` es
+la ruta relativa a esta carpeta y `fotoCredito` lleva el autor, la fuente y la licencia: sale en el
+`title` de la tarjeta y arriba a la izquierda de la ficha (`.rf-cred`). Cada `<img>` lleva
+`onerror` con respaldo dibujado.
 
 ## Encontrarlas, elegirlas, cocinarlas
 
-- **La tarjeta es la foto** (214 px; 4 por fila en el shell, 1 en móvil) con tiempo, kcal y
-  proteína: lo que decide si la haces hoy.
-- **Buscador y filtros**: por texto —nombre **o ingrediente**— y por lo que de verdad decide una
-  cena: **30 g+ de proteína** y **10 min o menos**.
+- **La tarjeta es la foto** (248 px de alto) con tiempo, kcal y proteína: lo que decide si la
+  haces hoy. Van en 6 columnas a partir de 1700 px, y en 4, 3, 2 o 1 más abajo: con 12 recetas por
+  sección nunca queda una fila a medias.
+- **Buscador y filtros**: por texto —nombre **o ingrediente**— y por proteína y tiempo. Como todo
+  desayuno ya pasa de 30 g y de 10 minutos, los umbrales van por comida (`RC_UMBRAL`: desayuno 35 g y
+  5 min; cena 55 g y 10 min) y las etiquetas de los botones salen de ahí.
 - **El ✓ marca "voy a cocinar esta"** → `comida_v1.elegidas`. Arriba aparece **Lo que vas a
   cocinar** con los ingredientes de las marcadas **agrupados por pasillo** (el orden del súper),
   con `×2` si sale en dos; la cabecera común (`cpCabecera`) cuenta las marcadas.
@@ -96,17 +112,18 @@ se abría dentro del flujo). La aurora va detrás con `z-index:-1`; vale para to
 
 ## Responsivo
 
+- **A todo el ancho**: `.content` no tiene tope, como Salud y Ejercicio. Con el tope de 1200 px
+  el recetario dejaba vacío el tercio derecho de una pantalla de 2048.
 - **iPad vertical (641–1100 px)**: la barra lateral baja a **190 px** (sigue visible: en una
-  tablet un menú escondido no ayuda) y `.recetas-grid` pide 250 px en vez de 300 → 2 columnas de
-  291 px en 820 px. Sin este bloque el iPad tenía una sola columna y un tercio en blanco.
+  tablet un menú escondido no ayuda) y las recetas van en 3 o 2 columnas.
 - `900px`: `.g4`/`.g3` a 2 columnas, `.pm-hero` a 2×2. `640px`: sidebar overlay, todo a una
   columna; la barra de filtros se apila y los filtros se deslizan.
 - **`.main{min-width:0}`** y **`.g4>*,.g3>*,.g2>*,.fr>*,.recetas-grid>*,.pm-hero>*{min-width:0}`** +
   `canvas{max-width:100%}`: sin eso las tablas con `nowrap` del Plan empujaban el documento fuera
   del viewport (misma trampa de flex/grid que `salud.html`).
 
-Se verifica a 1500 y 390 px en los dos temas: 24 tarjetas, ficha fija que cabe en pantalla,
-filtros y panel de "lo que vas a cocinar", contraste sin nada bajo el mínimo, cero errores.
+Se verifica a 2048, 1600, 1024 y 390 px: 24 tarjetas con su foto y su crédito, columnas sin
+filas a medias, ficha fija que cabe en pantalla, filtros, cero desborde y cero errores.
 
 ## Referencias cruzadas
 

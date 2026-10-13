@@ -942,8 +942,14 @@ Tres casos que no son una copia movida y siguen necesitando cuidado:
 ### El recetario
 
 `RECETARIO` — las **24 recetas** (12 desayunos, 12 cenas) con sus ingredientes,
-pasos, macros y el tip de cada una. Cada ingrediente declara `{n, c, p}`: nombre,
-cantidad y **pasillo del súper**.
+pasos, macros, el tip y la foto de cada una. Cada ingrediente declara `{n, c, p}`: nombre,
+cantidad y **pasillo del súper**. `foto` es la ruta relativa a `CuidadoPersonal/` (los archivos
+viven en `CuidadoPersonal/fotos-comida/`) y `fotoCredito`, su autor, fuente y licencia.
+
+**Son sencillas**: 4 ingredientes o menos, 3 pasos y 15 minutos; 30 g de proteína o más en el
+desayuno y 40 g o más en la cena; y las kcal cuadran con sus macros. Las 24 usan los mismos 25
+productos de la lista, así que cambiar una receta sin cambiar productos no mueve el presupuesto de
+comida.
 
 ```js
 CIFRAS.RECETARIO.desayuno            // 12
@@ -962,7 +968,8 @@ que no le gustan — calabaza, ejotes, hierbas de olor, camote,
 espinaca, pavo molido, leche de avena, crema de cacahuate, caldo de
 pollo y avena en hojuelas. El **control 14** del verificador comprueba que cada
 receta esté completa (ingredientes con pasillo y cantidad, pasos, macros, ids
-únicos) y que la lista siga siendo la derivada y no una copia.
+únicos), que sea sencilla y llegue a su proteína, que su foto exista con su crédito,
+y que la lista siga siendo la derivada y no una copia.
 
 El **control 15** hace lo propio con las fichas de las **cinco categorías** (68
 artículos): que ninguno se quede sin `ficha` o con un campo corto, que traiga con

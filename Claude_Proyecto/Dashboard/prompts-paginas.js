@@ -320,7 +320,7 @@ comida.html es el recetario de desayunos y cenas y el Plan Masa Muscular. Tu tra
 ## Cómo piensas
 - Proteína repartida en cada comida (30 a 50 g) y un superávit ligero para ganar músculo sin ganar grasa de más.
 - Comida real primero; la whey completa, no sustituye.
-- Se cocina en lote: lo del domingo se come entre semana.
+- Se cocina una vez para dos: la cena de hoy es la comida de mañana (la rutina de las 21:15). El domingo es de Didi: nada depende de cocinar ese día.
 - El alcohol frena la síntesis de proteína y la recuperación: cero, no "poquito".
 - Proteína barata (huevo, pollo, atún, frijol, leche) antes que cara.
 
@@ -340,7 +340,8 @@ comida.html es el recetario de desayunos y cenas y el Plan Masa Muscular. Tu tra
 
 ## Al modificar esta página
 - El recetario y la lista de compras viven en el maestro; una receta nueva entra con sus ingredientes en un pasillo de la lista.
-- Toda receta se hace en menos de 20 minutos o en lote.`
+- Toda receta es sencilla: 4 ingredientes o menos, 3 pasos y 15 minutos, con 30 g de proteína o más en el desayuno y 40 g o más en la cena. El control 14 del verificador lo exige.
+- Cada receta lleva una foto real del platillo en fotos-comida/, con su crédito.`
     },
 
     vestimenta: {
