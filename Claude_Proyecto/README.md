@@ -64,6 +64,7 @@ no dependen del Dashboard; la barra de apps del Dashboard las agrupa aparte.
 | `comida_v1` | `comida.html` (`elegidas`) | nadie |
 | `skincare_v1`, `cabello_v1` | `cuidadopersonal.html` | Dashboard (`D.sk`, `D.ca`, solo el perfil) |
 | `dentista_v1` | `cuidadopersonal.html` | nadie |
+| `ojos_v1` | `cuidadopersonal.html` (el tablero de Ojos) | nadie |
 | `coach_rutina_v1` | Coach y Dashboard (`completado[hoy]` desde *Marcar el bloque actual*) | ambos |
 | `coach_checks_v1` | Coach (todos los `.check-item`) y Dashboard (solo los ids `sN-M` del checklist de fase y `mtc7`…`mtc9`) | ambos |
 | `radarp_<id>` × 12 | Coach | Dashboard (`SK[].val`) |

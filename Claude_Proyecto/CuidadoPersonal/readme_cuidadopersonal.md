@@ -200,17 +200,34 @@ no, `{tieneDatos:false}` y la guía lo dice. **"✅ Fui al dentista hoy"** (`deR
 escribe `ultimoChequeo = today()`.
 
 `deRenderGuiaContent()` pinta, en orden: hero con chips (`deResumenChips()`; cita en menta si en
-regla, coral si atrasada) · formulario (`#de-form-card`, oculto hasta Editar) · `.de-cita-box`
-con la cifra grande (`.atrasada` en coral) · 🪥 rutina diaria (3 `.de-step`: cepillado, hilo
-con nota de enhebrador si hay brackets, enjuague según sensibilidad/sangrado) · ⚡ cuidado
-especial condicional por aparato y preocupación · ⚠️ señales de alerta fijas · 🛒 lista de
-compras armada según perfil · 💡 consejos y disclaimer.
+regla, coral si atrasada) · formulario (`#de-form-card`, oculto hasta Editar) · 🪥 rutina diaria
+(3 `.de-step`: cepillado, hilo con nota de enhebrador si hay brackets, enjuague según
+sensibilidad/sangrado) · ⚡ cuidado especial condicional por aparato y preocupación · ⚠️ señales de
+alerta (`DE_ALERTAS`) · 🛒 lista de compras según perfil (`deCompras(p)`) · 💡 consejos y disclaimer.
+La cabecera (`cpCabDentista`) cuenta los meses desde `ultimoChequeo` y la frecuencia de tu perfil.
+
+## Tu tablero — Dentista y Ojos
+
+La guía enseña una sección a la vez y dejaba media pantalla vacía. Entre el título y la guía va
+**Tu tablero** (`.cp-tab`, `#de-tablero` y `#oj-tablero`): cuatro bloques con su etiqueta, a la vista
+en todas las secciones, en dos columnas bajo 1280 px y en una en el celular.
+
+| Dentista (`deTablero()`) | Ojos (`ojTablero()`) |
+|---|---|
+| **Tu próxima limpieza**: en cuántos días y la fecha (`deProximaCita()`), con *✅ Fui al dentista hoy*; sin fecha, pide la de la última (`deGuardarUltima()`) | **La regla 20-20-20 · hoy**: un reloj de 20 minutos; al llegar a cero pide mirar a 6 metros 20 segundos (también en el título de la pestaña) y suma la pausa del día |
+| **Esta noche**: cepillado, hilo y enjuague según tu perfil, a la hora de dormir de hoy (`cpHoraDormir()`, de la rutina del maestro) | **Tu próximo examen de la vista**: uno al año desde el último; sin fecha, la pide |
+| **Tu kit**: `deCompras(p)`, lo mismo que *Tu lista de compras* | **Tu kit para los ojos**: cuatro de `CUIDADO_OJOS` (lágrimas, polarizados, luz azul y gel de noche) |
+| **Ve antes si notas**: las tres primeras de `DE_ALERTAS` | **Urgencias el mismo día si**: las tres primeras de `OJ_ALERTAS` |
+
+Los enlaces de cada bloque abren su sección de la guía con el mismo botón del menú
+(`cpIrSeccion`). Ojos guarda lo suyo en `localStorage['ojos_v1']`:
+`{ultimoExamen:'AAAA-MM-DD', pausas:{'AAAA-MM-DD': n}}`; lo demás de su guía sigue sin perfil.
 
 ## Ojos y Vista — `#view-ojos`
 
-Guía **estática, sin perfil ni `localStorage`**: 9 secciones, 23 pasos numerados, 7 señales de
-alarma y 12 productos, con el esqueleto y las clases `.de-*` de Dentista y el menú de
-`guiaEnSecciones()` con `formCardId` nulo. Todo anclado a **su exposición real**, que es la
+Guía **estática, sin perfil**: 9 secciones, 23 pasos numerados, 7 señales de alarma (`OJ_ALERTAS`)
+y 12 productos, con el esqueleto, las clases `.de-*` y las variables de color de Dentista, y el menú
+de `guiaEnSecciones()` con `formCardId` nulo. Lo único que guarda es lo de su tablero (arriba). Todo anclado a **su exposición real**, que es la
 primera sección: ~28 h/semana al volante (UV lateral, deslumbramiento LED), 10-12 h de pantalla
 (se parpadea hasta 66 % menos), 5h40-6h40 de sueño. Secciones: exposición · fatiga visual digital
 · ojo seco · al volante · exámenes · nutrición · ojeras · señales de alarma · qué comprar. Conecta
