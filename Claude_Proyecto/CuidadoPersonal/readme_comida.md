@@ -61,7 +61,8 @@ tabla por ingrediente, no a ojo. El control 14 exige todo esto, y que las kcal c
    mediodía.
 
 Cada receta: tiempo, macros, ingredientes con cantidad, pasos, tip y **una foto real del
-platillo** en `fotos-comida/` (800 px, de Openverse y Wikimedia Commons). En el maestro, `foto` es
+platillo** en `fotos-comida/` (800 px): fotografía de estudio de StockSnap y Rawpixel (vía Openverse),
+bien iluminada y de cerca, y unas pocas de Flickr y Wikimedia Commons donde no había mejor. En el maestro, `foto` es
 la ruta relativa a esta carpeta y `fotoCredito` lleva el autor, la fuente y la licencia: sale en el
 `title` de la tarjeta y arriba a la izquierda de la ficha (`.rf-cred`). Cada `<img>` lleva
 `onerror` con respaldo dibujado.
