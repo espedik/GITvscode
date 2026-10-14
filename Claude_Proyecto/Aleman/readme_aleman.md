@@ -112,7 +112,8 @@ foto con crédito, las dos columnas y, si tiene práctica, `leccion.js` después
 
 ## `vocabulario.html` — donde se trabaja el vocabulario
 
-Es la pantalla del vocabulario: **aquí se estudia, se añade y se corrige**. Cuatro pestañas:
+Es la pantalla del vocabulario: **aquí se estudia, se añade y se corrige**. El lienzo de su diseño
+está en `diseno-vocabulario/`. Cuatro pestañas:
 
 | Pestaña | Qué es |
 |---|---|

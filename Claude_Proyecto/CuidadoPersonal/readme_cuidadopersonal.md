@@ -229,7 +229,7 @@ Guía **estática, sin perfil**: 9 secciones, 23 pasos numerados, 7 señales de 
 y 12 productos, con el esqueleto, las clases `.de-*` y las variables de color de Dentista, y el menú
 de `guiaEnSecciones()` con `formCardId` nulo. Lo único que guarda es lo de su tablero (arriba). Todo anclado a **su exposición real**, que es la
 primera sección: ~28 h/semana al volante (UV lateral, deslumbramiento LED), 10-12 h de pantalla
-(se parpadea hasta 66 % menos), 5h40-6h40 de sueño. Secciones: exposición · fatiga visual digital
+(se parpadea hasta 66 % menos) y el sueño que le da su rutina —las horas salen de `{{horaApp}}`, `{{horaDormir}}` y `{{horasSueno}}`, que `deStepHtml()` resuelve—. Secciones: exposición · fatiga visual digital
 · ojo seco · al volante · exámenes · nutrición · ojeras · señales de alarma · qué comprar. Conecta
 con lo que ya existe (el Omega 3 de la mañana cubre parte del ojo seco; la compresa térmica va en
 la meditación de las 23:00; el fondo de ojo dilatado, un día sin Didi después) y desmonta

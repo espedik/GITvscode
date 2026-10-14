@@ -73,16 +73,17 @@ estilos sin CSS propio. Nada flota ni se encima sobre el buscador.
 ## Lo que viaja al Dashboard — `_generar-datos-dashboard.js`
 
 Script de Node **sin dependencias**: ejecuta `js/core.js` + los `js/data-*.js` en una sandbox
-(`vm`), lee `T` y los `*_RICH`, y escribe `../Dashboard/entrevistas-data.js` (`ENTREVISTA_TEMAS`,
-`ENTREVISTA_CONTENT`, `ENTREVISTA_CSS`, `PY_MOD_LABEL`). **Es de solo lectura sobre esta carpeta.**
+(`vm`), lee `T` y los `*_RICH`, y escribe `../Dashboard/entrevistas-data.js` con lo único que el
+Dashboard lee: `ENTREVISTA_TEMAS` y `PY_MOD_LABEL` (10 KB). **Es de solo lectura sobre esta carpeta.**
 
 **Lo que el Dashboard usa hoy** es la tarjeta *Hoy aprendes* de Mi Día: nombra el tema de Python
 del día (`entrevistaTemaHoy()`: la rotación diaria, saltando los que ya estudiaste, con la etiqueta de `PY_MOD_LABEL`) y lo abre
 aquí por hash (`entrevistas.html#<id>`); de `study-done-v2` saca cuántos llevas
 estudiados o si el de hoy ya está —si cambia su forma (`{id: true}`), hay que revisar
-`pythonHoyHtml()` del Dashboard—. La pantalla "Entrevista del día", que pintaba
-`ENTREVISTA_CONTENT` con `ENTREVISTA_CSS`, se quitó del Dashboard; el generador los sigue
-emitiendo, en reposo, y volver a pintarlos es solo volver a leerlos.
+`pythonHoyHtml()` del Dashboard—. El HTML y el CSS de cada tema (`ENTREVISTA_CONTENT`,
+`ENTREVISTA_CSS`) el generador los sigue armando —su reporte cuenta las reglas portadas— pero no
+los escribe: ninguna pantalla del Dashboard los pinta, y eran ~1 MB en cada arranque. Volver a
+pintarlos es añadirlos de nuevo al `out` del generador.
 
 **Si se agrega, quita o edita un tema aquí, el Dashboard no se entera solo**: hay que correr
 `node Entrevistas/_generar-datos-dashboard.js`. El script aborta si un id de `T` no tiene

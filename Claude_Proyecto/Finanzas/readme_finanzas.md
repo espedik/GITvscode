@@ -62,8 +62,10 @@ instancias de Chart (`chCat`, `chBal`, `chBud`, `chInv`, `chGbmInv`, `chBtcPnl`,
   semanal en GBM. **Se actualiza pidiéndoselo a Claude cada lunes** y solo con precios reales:
   no se inventan cotizaciones.
 - **Meta Maestría** — `g001` (o `icon === '🎓'`), `target` del propio registro con respaldo en
-  `CIFRAS.n('maestriaMeta')` (`_metaMaestria()`). Cuentan fondo de emergencia (que son los CETES) +
-  inversiones + BTC en MXN.
+  `CIFRAS.n('maestriaMeta')` (`_metaMaestria()`). **Lo ahorrado no es un campo**: es
+  `CIFRAS.fondoMaestria(S).total` (`_maeHoy()`) —fondo de emergencia (los CETES) + inversiones + BTC
+  en MXN—, la misma cuenta de `{{maestria}}`, Mis Metas y Coach. `g001` ya no guarda `current`: era un
+  número puesto a mano que nadie recalculaba (migración `_maestriaViva20261013`).
 - **Fondo de emergencia** — meta `ef-001` ("Fondo de emergencia (CETES)"); `EF_TARGET = _metaFondo()`.
   **Son los CETES**, un solo número (`S.emergencyFund`): no hay inversión `type:'cetes'` en
   `investments`, porque los indicadores, el patrimonio y el fondo de la maestría sumaban las dos

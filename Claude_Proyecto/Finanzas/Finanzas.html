@@ -900,6 +900,9 @@ const KEY = 'finanzasmx_v2';
    caen al maestro si todavía no hay nada guardado. */
 const _PG = () => (window.CIFRAS && window.CIFRAS.PROYECTO) || {};
 const _autoMin = () => { const d=(S.debts||[]).find(x=>x.id==='d003'); return (d&&+d.min)||_PG().autoPago||0; };
+// El dinero de la maestría: una sola cuenta, la del maestro (CIFRAS.fondoMaestria). Aquí había
+// cinco copias de la misma suma; Mis Metas y Coach leen la misma función.
+const _maeHoy = f => (window.CIFRAS && CIFRAS.fondoMaestria) ? CIFRAS.fondoMaestria(f || S).total : 0;
 const _metaMaestria = () => { const g=(S.goals||[]).find(x=>x.id==='g001'); return (g&&+g.target)||(window.CIFRAS&&CIFRAS.n('maestriaMeta'))||500000; };
 const _metaFondo = () => { const g=(S.goals||[]).find(x=>x.id==='ef-001'); return (g&&+g.target)||10000; };
 let S = { transactions:[], budgets:[], debts:[], goals:[], investments:[], activos:[], btcHistory:[], btcPriceHist:[], currentBtcPrice:0, usdMxn:19.5, btcLastFetch:'', btcHistFetch:'', weeklyLeftover:0, emergencyFund:0, didiMonthly:0, gbmMonth:'', indicatorHistory:[] };
@@ -2287,7 +2290,7 @@ function renderIndicatorsHTML(src) {
   const inv2inc2    = finActivos/(BASE_INC*12);
   const roi2        = totalInvested2>0?((finActivos-totalInvested2)/totalInvested2)*100:0;
   const maestria2   = (src.goals||[]).find(g=>g.id==='g001')||(src.goals||[]).find(g=>g.icon==='🎓');
-  const maeBase2    = (src.emergencyFund||0)+finActivos+btcValue2;
+  const maeBase2    = _maeHoy(src);
   const mPct2       = Math.min(100,(maeBase2/(maestria2?.target||500000))*100);
   const sc2={
     dti:dti2<20?100:dti2<30?80:dti2<40?55:dti2<50?30:5,
@@ -2410,7 +2413,7 @@ function renderIndicatorsHTML(src) {
       <div style="display:flex;flex-direction:column;gap:9px">
         ${goals2.map(g=>{
           const isMae=g.id==='g001'||g.icon==='🎓';
-          const cur=isMae?(efV2+cetesV2+accV2+rentaV2+btcValue2):(g.current||0);
+          const cur=isMae?_maeHoy(src):(g.current||0);
           const pct=g.target>0?Math.min(100,cur/g.target*100):0;
           const col=pct>=100?'var(--success)':pct>=75?'#3b82f6':pct>=50?'var(--warning)':'var(--danger)';
           const falta=Math.max(0,(g.target||0)-cur);
@@ -2693,7 +2696,7 @@ function autoSaveCurrentMonthSnapshot() {
   const avgE=vE.length>0?vE.reduce((s,e)=>s+e,0)/vE.length:_fixedFloor+Math.round(BASE_INC*0.15);
   const savRate=Math.max(0,((BASE_INC-avgE)/BASE_INC)*100);
   const mae=S.goals.find(g=>g.id==='g001')||S.goals.find(g=>g.icon==='🎓');
-  const maeBase=(S.emergencyFund||0)+finAct+btcV;
+  const maeBase=_maeHoy(S);
   const mPct=Math.min(100,(maeBase/(mae?.target||500000))*100);
   const d2a=totAct>0?(totPas/totAct)*100:100;
   const sol=totPas>0?totAct/totPas:99;
@@ -3385,7 +3388,7 @@ function renderInsights(inc, exp) {
   const totDebt=autoDebtsIns.reduce((s,d)=>s+d.balance,0);
   const netWorth=totAssets-totDebt;
   const maestria=(S.goals||[]).find(g=>g.id==='g001')||(S.goals||[]).find(g=>g.icon==='🎓');
-  const maeBase=(S.emergencyFund||0)+finAct+_btcIns;
+  const maeBase=_maeHoy(S);
   const maePct=Math.min(100,(maeBase/(maestria?.target||500000))*100);
   const maeCol=maePct>=75?'var(--success)':maePct>=30?'#f97316':'var(--danger)';
 
@@ -3429,7 +3432,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
   const monthsFromNow=Math.max(0,Math.round((now-realToday)/2592000000));
   const btcHeld = (S.btcHistory||[]).reduce((s,h)=>s+(h.btc||0),0);
   const btcVal  = btcHeld * (S.currentBtcPrice||0) * (S.usdMxn||19.5);
-  const totalActivos = S.investments.reduce((s,i)=>s+i.value,0) + (S.emergencyFund||0) + btcVal;
+  const totalActivos = _maeHoy(S);
   const maestriaTarget=maestria?.target||500000;
   // Proyectar activos acumulados al llegar al mes seleccionado
   const totalMonthsToGoal=Math.max(1,Math.round((targetDate-realToday)/2592000000));
@@ -4328,7 +4331,7 @@ function seedData() {
     goals: [
       // Salida a Alemania en sep 2027 (Coach → Plan Maestro): sin pausa, y la meta es lo que cuesta irse —el
       // total de SALIDA en el maestro, redondeado—. Las migraciones _alemania20261003 y _ahorroReal20261003 hacen lo mismo con los datos guardados.
-      {id:'g001',name:'Maestría en Alemania', target:398000, current:53740, date:'2027-09-01',icon:'🎓'},
+      {id:'g001',name:'Maestría en Alemania', target:398000, date:'2027-09-01',icon:'🎓'},
     ],
     investments: [
       // CETES no va aquí desde el 20-sep-2026: es el fondo de emergencia (`emergencyFund`, meta

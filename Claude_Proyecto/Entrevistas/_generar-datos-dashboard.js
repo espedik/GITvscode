@@ -411,10 +411,12 @@ console.log('Etiquetas de módulo:', JSON.stringify(PY_MOD_LABEL));
 const header = '// Generado automáticamente por Entrevistas/_generar-datos-dashboard.js a partir de\n' +
   '// Entrevistas/js/core.js + js/data-*.js + styles.css — no editar a mano. Si cambia un tema o\n' +
   '// una clase de contenido, volver a correr: node Entrevistas/_generar-datos-dashboard.js\n';
+// Solo lo que el Dashboard lee: la tarjeta «Hoy aprendes» de Mi Día nombra el tema del día y lo
+// abre en la app de Entrevistas, así que le bastan el catálogo y las etiquetas. El HTML y el CSS de
+// cada tema (ENTREVISTA_CONTENT, ENTREVISTA_CSS) se siguen armando arriba —el reporte los mide—,
+// pero ya no se escriben: eran ~1 MB que el Dashboard cargaba en cada arranque sin pintarlos.
 const out = header +
   'const ENTREVISTA_TEMAS = ' + JSON.stringify(ENTREVISTA_TEMAS) + ';\n' +
-  'const ENTREVISTA_CONTENT = ' + JSON.stringify(ENTREVISTA_CONTENT) + ';\n' +
-  'const ENTREVISTA_CSS = ' + JSON.stringify(ENTREVISTA_CSS) + ';\n' +
   'const PY_MOD_LABEL = ' + JSON.stringify(PY_MOD_LABEL) + ';\n';
 fs.writeFileSync(OUTPUT_FILE, out);
 console.log('Escrito', OUTPUT_FILE, '—', fs.statSync(OUTPUT_FILE).size, 'bytes,', ENTREVISTA_TEMAS.length, 'temas,', scopedRules.length, 'reglas CSS portadas +', innerBlocksCountSafe(), 'del <style> embebido.');

@@ -1517,10 +1517,10 @@ function guiaSoloPerfil(bodyId,navId){
 //
 // Todo está anclado a su exposición REAL, que es lo que separa esta guía de una lista genérica:
 // ~28h/semana al volante (UV de día, deslumbramiento de noche), jornada completa de pantalla en
-// ALTEN más 2 bloques diarios construyendo esta app, y 5h40-6h40 de sueño. Los 3 datos salen de
-// su rutina real, no de un promedio de población.
+// ALTEN más 2 bloques diarios construyendo esta app, y el sueño que le da su rutina. Las horas
+// salen de la rutina del maestro con {{marcadores}} ({{horaApp}}, {{horasSueno}}), no se escriben aquí.
 // El emoji y la frase corta SÍ son de esta guía: dicen para qué sirve cada cosa
-// EN TU CASO ("Pantalla — para el bloque de las 23:30"), que es más específico que
+// EN TU CASO ("Pantalla — para el bloque de la noche"), que es más específico que
 // el grupo del maestro. El NOMBRE no: ese vive en `CUIDADO_OJOS` y antes estaba
 // escrito aquí también, así que cambiarlo en un sitio dejaba el otro mintiendo.
 const OJ_EXTRA={
@@ -1532,7 +1532,7 @@ const OJ_EXTRA={
   antirreflejante:{ico:'🌙',cat:'Al volante — de noche'},
   luzAzul:        {ico:'💻',cat:'Pantalla — ALTEN y la app'},
   soporte:        {ico:'🖥️',cat:'Pantalla — ergonomía'},
-  lampara:        {ico:'💡',cat:'Pantalla — para el bloque de las 23:30'},
+  lampara:        {ico:'💡',cat:'Pantalla — para el bloque de la noche'},
   luteina:        {ico:'💊',cat:'Nutrición — protege la mácula'},
   hialuronico:    {ico:'👁️',cat:'Alivio rápido a media jornada'},
   contorno:       {ico:'🫙',cat:'Ojeras vasculares — las tuyas'},
@@ -1557,10 +1557,10 @@ function ojRenderGuia(){
     'Didi de día y de noche, más el trayecto a ALTEN. Al volante te pegan dos cosas distintas: <b>radiación UV</b> de día (el parabrisas filtra parte pero la ventanilla lateral casi no filtra nada) y <b>deslumbramiento</b> de noche por los faros LED que hoy trae todo el mundo.',
     'El sol de CDMX a 2,240 m pega más fuerte que a nivel del mar: hay alrededor de 10% más radiación UV por cada 1,000 m de altura.');
   h+=deStepHtml('2','var(--de-amber)','Jornada completa de pantalla, y luego 2 bloques más',
-    'ALTEN de 8:30 a 17:00, más tus 20 min de las 06:43 y el bloque de 23:30 a 00:00/01:00 construyendo esta aplicación. Son fácilmente <b>10-12 horas de pantalla al día</b>.',
+    'ALTEN de 8:30 a 16:40, más tus 10 min de la mañana y la media hora de las {{horaApp}} construyendo esta aplicación. Son fácilmente <b>10-12 horas de pantalla al día</b>.',
     'Frente a una pantalla parpadeas hasta 66% menos: de unas 15 veces por minuto bajas a 5. Ese solo dato explica casi todo el ojo seco de oficina.');
-  h+=deStepHtml('3','var(--de-coral)','5h40-6h40 de sueño',
-    'El ojo se repara y se lubrica mientras duermes. Dormir poco es de las causas más directas de ojos rojos, irritados y con ojeras marcadas — y en tu caso no es un mal día suelto, es tu promedio.',
+  h+=deStepHtml('3','var(--de-coral)','{{horasSueno}} de sueño, sin margen',
+    'El ojo se repara y se lubrica mientras duermes. Dormir poco es de las causas más directas de ojos rojos, irritados y con ojeras marcadas — y tu rutina va justo en el mínimo: cada noche que te pasas de las {{horaDormir}}, se nota en los ojos.',
     'Es la única de las 3 que se arregla sin comprar nada.');
 
   h+=H('🖥️','Fatiga visual digital — lo que sí funciona');
@@ -1571,7 +1571,7 @@ function ojRenderGuia(){
     'Suena tonto y es la medida con mejor relación esfuerzo-resultado de toda esta guía. Cada vez que termines un párrafo o un commit, cierra los ojos con fuerza 2 segundos y ábrelos. Eso reparte la lágrima por toda la córnea.');
   h+=deStepHtml('3','var(--de-amber)','Monitor: altura, distancia y brillo',
     'El borde superior de la pantalla <b>a la altura de tus ojos o un poco más abajo</b> (mirar ligeramente hacia abajo deja el párpado más cerrado y el ojo se seca menos), a <b>50-70 cm</b> de distancia, y con el <b>brillo parecido al de la habitación</b> — si la pantalla parece una lámpara en un cuarto oscuro, está muy alta.');
-  h+=deStepHtml('4','var(--de-coral)','El bloque de las 23:30 es el más agresivo',
+  h+=deStepHtml('4','var(--de-coral)','El bloque de las {{horaApp}} es el más agresivo',
     'Pantalla brillante, cuarto oscuro y ojos que ya llevan 16 horas despiertos. Baja el brillo, activa el modo cálido del sistema y enciende una lámpara tibia — no trabajes con la pantalla como única fuente de luz del cuarto.',
     'La luz azul de noche además retrasa la melatonina, así que esto también te ayuda con las horas de sueño que ya traes justas.');
   h+=tip('🔎','Si tienes que acercarte a la pantalla o subir el zoom para leer cómodo, eso ya no es fatiga: es una graduación que hace falta revisar.');
@@ -1621,7 +1621,7 @@ function ojRenderGuia(){
   h+=H('🌙','Ojeras y contorno — qué es real y qué no');
   h+=deStepHtml('1','var(--de-coral)','Primero identifica cuál tienes',
     'Jala suavemente la piel bajo el ojo hacia afuera. Si la mancha <b>se aclara</b>, es pigmentaria (melanina) y responde a vitamina C y protector solar. Si <b>no cambia</b>, es vascular (se transparentan los vasos) y responde a sueño, frío y cafeína tópica. Si es una <b>sombra por hundimiento</b>, ninguna crema la va a quitar: eso es estructura ósea.',
-    'Con 5h40-6h40 de sueño, lo más probable es que la tuya sea vascular — justo la que sí mejora durmiendo.');
+    'Con {{horasSueno}} de sueño, justas, lo más probable es que la tuya sea vascular — justo la que sí mejora durmiendo.');
   h+=deStepHtml('2','var(--de-blue)','Lo que funciona',
     '<b>Dormir</b> (la única que de verdad mueve la aguja) · <b>frío</b> por la mañana, 2 minutos con una cuchara fría o compresa, baja la hinchazón · <b>cafeína tópica</b> en el contorno, que es vasoconstrictor suave · <b>protector solar</b> también bajo el ojo, que ya te lo aplicas.');
   h+=deStepHtml('3','var(--de-amber)','Lo que no',
@@ -2768,6 +2768,9 @@ function deSavePerfil(){
   toast('Perfil guardado — guía actualizada');
 }
 function deStepHtml(num,color,nombre,texto,nota){
+  // Los {{marcadores}} del maestro (las horas de la rutina) se resuelven aquí: esta guía no las copia.
+  const T=s=>(s&&window.CIFRAS)?CIFRAS.texto(s):s;
+  nombre=T(nombre); texto=T(texto); nota=T(nota);
   return `<div class="de-step">
     <div class="de-step-num" style="background:${color}">${num}</div>
     <div class="de-step-body">

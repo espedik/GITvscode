@@ -305,7 +305,9 @@ window.CIFRAS = (function () {
     // $4,900 (20-sep-2026 → $3,900 el 21-sep: abonó $3,000 de la venta del Bitcoin; los $100 sobre la resta son
     // intereses o cargos del corte, dicho por él) → $0 (30-sep-2026: "ya no debo nada a mi tarjeta
     // de crédito de banamex"). Liquidada por segunda vez.
-    {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:0,          rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
+    // `liquidaciones`: cada vez que quedó en $0. Se liquidó dos veces —13 ago y 30 sep 2026— y la
+    // libreta de logros solo guardaba la primera; la ruta del Plan Maestro enseña la última y cuántas.
+    {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:0,          rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0, liquidaciones:['2026-08-13','2026-09-30']},
     // Saldo reportado por Adán: $299,000 (24-ago) → $292,000 → $293,000 (25-ago-2026) → $283,000 (21-sep-2026).
     {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:283000,    rate:12.99, min:6700, day:15, start:'2026-01-01', remainingMonths:61},
     // Liquidado: la última cuota era la del 18 sep 2026 y Adán la dio por pagada el 21-sep-2026.
@@ -375,13 +377,12 @@ window.CIFRAS = (function () {
     {id:"wd-didi2",dias:[1,2,3,4,5],hora:"19:30",cat:"admin",corto:"🚗 Didi",txt:"🚗 Didi — sesión corta de la noche (hasta ~20:00)"},
     {id:"wd11",dias:[1,2,3,4,5],hora:"20:00",cat:"profundo",corto:"🎯 Plan Maestro",txt:"🎯 Plan Maestro — 1h15 en la tarea de la fase que toca esta semana: la marca el tablero (20:00–21:15)"},
     {id:"wd14",dias:[1,2,3,4,5],hora:"21:15",cat:"salud",corto:"🍽️ Cena y comida de mañana",txt:"🍽️ Cena + preparar la comida de mañana",subtareas:[{id:"wd14a",txt:"Cocina un solo platillo para cenar hoy y llevar de comida mañana a ALTEN — ahorra tiempo, sin carbohidratos refinados en la cena",link:{href:"../CuidadoPersonal/comida.html?s=cenas",label:"🍳 Ver cenas"}},{id:"wd14b",txt:"Deja todo empacado y listo junto a la puerta para salir rápido mañana",link:{href:"../CuidadoPersonal/comida.html?s=desayunos",label:"🍳 Ver desayunos"}}]},
-    {id:"wd-pm",dias:[1,2,3,4,5],hora:"22:30",cat:"salud",corto:"🌙 Rutina de la noche",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos",producto:true,subtareas:[{id:"wd17a",sec:"Piel y minoxidil",txt:"Limpiador: CeraVe Limpiador Espumoso (verde) — una sola pasada de 60 segundos: quita el protector y el sudor del día"},{id:"wd17b",txt:"Retinoide, con la cara bien seca: Differin Adapaleno 0.1% Gel — un chícharo para toda la cara; si te arde o se pela, noche sí y noche no hasta que se calme"},{id:"wd17c",txt:"Hidratante, encima y sin esperar: CeraVe Loción Hidratante Facial PM — sin perfume ni aceite: calma el adapaleno sin tapar poros"},{id:"wd18",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la noche: espera 30 minutos antes de acostarte, para que no se quede en la almohada"},{id:"wdSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)"}]},
+    {id:"wd-pm",dias:[1,2,3,4,5],hora:"23:00",cat:"salud",corto:"🌙 Rutina de la noche",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos",producto:true,subtareas:[{id:"wd17a",sec:"Piel y minoxidil",txt:"Limpiador: CeraVe Limpiador Espumoso (verde) — una sola pasada de 60 segundos: quita el protector y el sudor del día"},{id:"wd17b",txt:"Retinoide, con la cara bien seca: Differin Adapaleno 0.1% Gel — un chícharo para toda la cara; si te arde o se pela, noche sí y noche no hasta que se calme"},{id:"wd17c",txt:"Hidratante, encima y sin esperar: CeraVe Loción Hidratante Facial PM — sin perfume ni aceite: calma el adapaleno sin tapar poros"},{id:"wd18",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la noche: espera 30 minutos antes de acostarte, para que no se quede en la almohada"},{id:"wdSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)"}]},
     {id:"sa-pm",dias:[6],hora:"22:20",cat:"salud",corto:"🌙 Rutina de la noche",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos",producto:true,subtareas:[{id:"sa13",sec:"Piel y minoxidil",txt:"Skincare PM — limpiador + retinoide + hidratante nocturno"},{id:"sa13b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la noche: espera 30 minutos antes de acostarte, para que no se quede en la almohada"},{id:"saSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"saSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)"}]},
     {id:"do-pm",dias:[0],hora:"22:05",cat:"salud",corto:"🌙 Rutina de la noche",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos",producto:true,subtareas:[{id:"do10",sec:"Piel y minoxidil",txt:"Skincare PM — limpiador + retinoide + hidratante nocturno"},{id:"do10b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la noche: espera 30 minutos antes de acostarte, para que no se quede en la almohada"},{id:"doSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"doSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)"}]},
-    {id:"wd20",dias:[1,2,3,4,5],hora:"23:00",cat:"descanso",corto:"🧘 Meditación",txt:"🧘 Meditación — respiración box (10 min)",subtareas:[{id:"wd20a",txt:"Inhala 4 segundos por la nariz"},{id:"wd20b",txt:"Sostén el aire 4 segundos"},{id:"wd20c",txt:"Exhala 4 segundos por la boca"},{id:"wd20d",txt:"Sostén sin aire 4 segundos — repite el ciclo (~10 veces en 10 min)"}]},
-    {id:"wd20e",dias:[1,2,3,4,5],hora:"23:10",cat:"descanso",corto:"Tiempo libre",txt:"Tiempo libre / relajación (20 min, hasta las 23:30)"},
-    {id:"wd-app-pm",dias:[1,2,3,4,5],hora:"23:30",cat:"aprender",corto:"💻 Construir esta app",txt:"💻 Construir esta aplicación — de 23:30 a 00:00, a veces hasta la 01:00"},
-    {id:"wd21",dias:[1,2,3,4,5],hora:"23:59",cat:"salud",corto:"Dormir",txt:"Apagar pantallas y dormir en cuanto cierres la app — entre 00:00 y 01:00 (5h40–6h40 de sueño con el despertar de las 06:40)"},
+    {id:"wd20",dias:[1,2,3,4,5],hora:"23:30",cat:"descanso",corto:"🧘 Meditación",txt:"🧘 Meditación — respiración box (10 min)",subtareas:[{id:"wd20a",txt:"Inhala 4 segundos por la nariz"},{id:"wd20b",txt:"Sostén el aire 4 segundos"},{id:"wd20c",txt:"Exhala 4 segundos por la boca"},{id:"wd20d",txt:"Sostén sin aire 4 segundos — repite el ciclo (~10 veces en 10 min)"}]},
+    {id:"wd-app-pm",dias:[1,2,3,4,5],hora:"22:30",cat:"aprender",corto:"💻 Construir esta app",txt:"💻 Construir esta aplicación — media hora, y es la última pantalla del día: lo que no cupo se parte para mañana"},
+    {id:"wd21",dias:[1,2,3,4,5],hora:"23:40",cat:"salud",corto:"Dormir",txt:"Luz fuera y celular fuera del cuarto: sin pantallas desde que cerraste la app"},
     {id:"lu-gbm",dias:[1],hora:"09:00",dur:20,cat:"admin",corto:"💰 Bolsa GBM",txt:"💰 Bolsa GBM (20 min): compra rápida — revisa qué toca hoy y ejecuta. Solo lunes."},
     {id:"wd-cierre",dias:[1,2,3,4,5],hora:"21:45",dur:45,cat:"descanso",corto:"📓 Cierre del día",txt:"📓 Cierre del día — lectura, diario y plan de mañana",subtareas:[{id:"wd-lect",sec:"Lectura",txt:"30 minutos de lectura — el libro que tengas en curso, en papel o en el celular con la pantalla en modo noche."},{id:"wd16a",sec:"Diario del día",txt:"Escribe 3 cosas que sí lograste hoy, aunque sean pequeñas"},{id:"wd16b",txt:"1 cosa que salió mal o que aprendiste — sin autocastigo, solo para no repetirla"},{id:"wd16c",txt:"1 gasto que pudiste evitar hoy (o \"ninguno\" si no hubo)"},{id:"wd19a",sec:"Plan de mañana",txt:"Elige 1 sola tarea que, si mañana solo lograras esa, el día ya valió la pena — tu tarea más importante (MIT)"},{id:"wd19b",txt:"Anota 4 tareas más chicas para mañana, en el orden en que las harás"}]},
     {id:"e1",dias:[1],gym:true,hora:"18:15",cat:"salud",corto:"🏋️ Espalda + bíceps",txt:"🏋️ Ejercicio: Espalda + bíceps"},
@@ -1480,8 +1481,8 @@ window.CIFRAS = (function () {
             { t: 'libro', id: 'atomicHabits', nota: 'capítulo de sistemas frente a metas' },
           ] },
         { n: 'El sueño es la palanca, no la fuerza de voluntad',
-          q: 'Duermes 5h40-6h40. A ese nivel, la mitad de lo que parece falta de disciplina es falta de sueño.',
-          c: 'Sube 30 minutos durante dos semanas, adelantando la hora de acostarte, no atrasando la de levantarte (tu mañana ya está comprometida). Mide el cambio en la sesión de gimnasio y en los bloques del día: se nota antes en el gimnasio.',
+          q: 'Tu rutina te da {{horasSueno}} de sueño, justo el mínimo: cada noche que la app se alarga caes debajo, y a ese nivel la mitad de lo que parece falta de disciplina es falta de sueño.',
+          c: 'Cumple la luz fuera de las {{horaDormir}} dos semanas seguidas: lo que no cupo en la media hora de la app, se parte para mañana. Mide el cambio en la sesión de gimnasio y en los bloques del día: se nota antes en el gimnasio.',
           r: [
             { t: 'libro', id: 'whySleep' },
           ] },
@@ -3872,7 +3873,7 @@ window.CIFRAS = (function () {
           ficha: {
             sobre: 'Walker dirige el laboratorio del sue\u00f1o de Berkeley y este es el libro divulgativo de referencia sobre el tema. Tambi\u00e9n es el m\u00e1s inc\u00f3modo de la lista si duermes poco.',
             resumen: 'Explica las dos fases \u2014<b>NREM</b>, que consolida lo aprendido y repara el cuerpo, y <b>REM</b>, donde se procesa lo emocional y aparecen las conexiones creativas\u2014 y por qu\u00e9 recortar horas recorta sobre todo REM, que es la del final de la noche. Despu\u00e9s el cat\u00e1logo de consecuencias, documentado: memoria, aprendizaje, sistema inmune, regulaci\u00f3n del apetito, testosterona, riesgo cardiovascular y capacidad de decidir. Dedica un cap\u00edtulo a la cafe\u00edna y su vida media de seis horas, otro al alcohol \u2014que seda pero destruye el REM\u2014, y termina con lo que s\u00ed funciona para dormir mejor: horario constante, oscuridad, fr\u00edo y nada de pantallas a \u00faltima hora.',
-            porQue: 'Duermes 5h40-6h40 y tienes dos bloques nocturnos de pantalla. Este libro es el que pone n\u00fameros a lo que eso cuesta.',
+            porQue: 'Tu rutina te da el m\u00ednimo de sue\u00f1o, sin margen, y tu \u00faltimo bloque del d\u00eda es de pantalla. Este libro es el que pone n\u00fameros a lo que cuesta pasarte de la hora.',
             idea: 'Dormir menos no se compensa: el rendimiento cae y la percepci\u00f3n de que est\u00e1s bien cae con \u00e9l, as\u00ed que no lo notas.',
             cuando: 'Ahora. Es el que m\u00e1s puede cambiar tu d\u00eda a d\u00eda de toda la lista.'
           } },
@@ -4114,9 +4115,9 @@ window.CIFRAS = (function () {
         if (tc) { tc.balance = 37000; tc.total = 37000; }
         const bx = (f.debts || []).find(d => d.id === 'd002');
         if (bx) bx.balance = 7000;
-        /* Y se sellan las correcciones de AGOSTO que tocan estas mismas tarjetas. Viven en
-           `dashboard.html` como espejos (`fixPagos20260813IfNeeded` y compañía) y corren
-           DESPUÉS que este archivo: a un navegador al que le falte una de sus banderas, esa
+        /* Y se sellan las correcciones de AGOSTO que tocan estas mismas tarjetas. Siguen en
+           `Finanzas.html` (su `init()`) como espejos —las del Dashboard se borraron: ya eran
+           inertes— y corren DESPUÉS que este archivo: a un navegador al que le falte una de sus banderas, esa
            foto de agosto le devolvería la Banamex a $0 y pisaría el dato de hoy —salió al
            probar esta migración con Playwright—. Es la misma defensa que ya aplica el seed de
            Finanzas.html: ninguna corrección histórica puede pisar un dato más nuevo que ella.
@@ -4201,8 +4202,7 @@ window.CIFRAS = (function () {
           f.investments = f.investments.filter(i => !(i.type === 'cetes' || /cetes/i.test(i.name || '')));
         const cta = (f.activos || []).find(a => a.id === 'ac013');
         if (cta) cta.value = 1200;
-        /* Se sella el espejo del ahorro de agosto (`fixAhorro20260817IfNeeded` en dashboard.html
-           y su gemelo en Finanzas): a un navegador sin esa bandera le devolvería el fondo a
+        /* Se sella el espejo del ahorro de agosto (el de Finanzas; el del Dashboard ya se borró): a un navegador sin esa bandera le devolvería el fondo a
            $4,000 y volvería a meter CETES como inversión. Misma defensa que el 7-sep. */
         try { localStorage.setItem(KEY + '_ahorro20260817', '1'); } catch (e) {}
       }
@@ -4290,6 +4290,16 @@ window.CIFRAS = (function () {
       flag: '_bbva20261005',
       hacer: function (f) {
         const tc = (f.debts || []).find(x => x.id === 'd001'); if (tc) { tc.balance = 15000; tc.noInterest = 0; }
+      }
+    },
+    {
+      // 2026-10-13 · El dinero de la maestría se calcula, no se escribe: `fondoMaestria()`. El
+      // `current` de g001 era un número puesto a mano ($53,740) que nadie recalculaba y que
+      // `{{maestria}}` y Coach seguían citando mientras Mis Metas decía otra cosa. Se borra para que
+      // nadie pueda volver a leerlo. Finanzas.html ya no lo siembra.
+      flag: '_maestriaViva20261013',
+      hacer: function (f) {
+        const g = (f.goals || []).find(x => x.id === 'g001'); if (g) delete g.current;
       }
     },
   ];
@@ -4392,6 +4402,22 @@ window.CIFRAS = (function () {
      Cada clave dice de dónde sale el número y cómo se escribe (`fmt` por omisión es dinero).
      Los ids (d001, d003…) son los de `debts` en Finanzas.html — el mismo contrato que ya usan
      las migraciones `fix*IfNeeded()` del Dashboard. */
+  /* ── La noche y el sueño, leídos de RUTINA_TASKS ──
+     Adán, 2026-10-13: "corrige el tiempo de sueño". La rutina de lunes a viernes dormía de 23:59 a
+     06:40 y el hábito decía «Dormir 7 h»; además «5h40–6h40», «el bloque de las 23:30» y «la
+     meditación de las 23:10» estaban escritos a mano en Coach, Cuidado Personal y el Dashboard. Ahora
+     se cita {{horaDormir}}, {{horasSueno}}… y el control 31 del verificador vigila que nadie lo copie. */
+  const horaBloque = id => { const t = RUTINA_TASKS.find(x => x.id === id); return t ? t.hora : null; };
+  const aMin = h => { const p = String(h).split(':'); return +p[0] * 60 + +p[1]; };
+  function suenoMin() {
+    const d = horaBloque('wd21'), a = horaBloque('wd01');
+    return d && a ? (aMin(a) - aMin(d) + 1440) % 1440 : null;
+  }
+  function horasSueno() {
+    const m = suenoMin(); if (m == null) return null;
+    return Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + (m % 60) + ' min' : '');
+  }
+
   const CLAVES = {
     // ── Deudas ──
     autoSaldo:     { v: () => campo('d003', 'balance') },
@@ -4431,7 +4457,9 @@ window.CIFRAS = (function () {
     // ── Ahorro y metas ──
     fondo:         { v: () => (fin && fin.emergencyFund != null ? +fin.emergencyFund : null) },
     fondoMeta:     { v: () => { const g = meta('ef-001'); return g ? +g.target : null; } },
-    maestria:      { v: () => { const g = meta('g001');   return g ? +g.current : null; } },
+    // El dinero de la maestría NO es un campo guardado: es `fondoMaestria()`, la misma cuenta que
+    // enseñan Mis Metas, los indicadores de Finanzas y Coach. Sin datos de Finanzas, null.
+    maestria:      { v: () => (fin ? fondoMaestria(fin).total : null) },
     maestriaMeta:  { v: () => { const g = meta('g001');   return g ? +g.target  : null; } },
     // ── Constantes del proyecto, expuestas como marcadores ──
     // Van por PROYECTO y no por localStorage: no cambian solas, se editan aquí arriba.
@@ -4443,6 +4471,13 @@ window.CIFRAS = (function () {
     renta:         { v: () => PROYECTO.renta },
     gym:           { v: () => PROYECTO.gym },
     gymNombre:     { v: () => PROYECTO.gymNombre, fmt: 'txt' },
+    // ── La noche de lunes a viernes, de RUTINA_TASKS (ver horasSueno, arriba) ──
+    horaDespertar:   { v: () => horaBloque('wd01'), fmt: 'txt' },
+    horaApp:         { v: () => horaBloque('wd-app-pm'), fmt: 'txt' },
+    horaRutinaNoche: { v: () => horaBloque('wd-pm'), fmt: 'txt' },
+    horaMeditacion:  { v: () => horaBloque('wd20'), fmt: 'txt' },
+    horaDormir:      { v: () => horaBloque('wd21'), fmt: 'txt' },
+    horasSueno:      { v: () => horasSueno(), fmt: 'txt' },
     // `gasCadaMeses` divide al recibo antes de entrar en servicios, así que mueve el
     // total igual que el importe. Sin declararlo, el impacto quedaba invisible.
     gasMensual:    { dep: ['gas','gasCadaMeses'], v: () => PROYECTO.gasMensual },
@@ -4933,6 +4968,28 @@ window.CIFRAS = (function () {
     return { neto: neto, liquido: neto - bienes, bienes: bienes, deuda: deuda };
   }
 
+  /* ── EL DINERO DE LA MAESTRÍA — una sola cuenta ────────────────────────────────────────────
+     Lo que hoy tienes para irte: el fondo de emergencia (los CETES), cada inversión registrada en
+     Finanzas —hoy el depósito de la renta, que vuelve al dejar el depa— y el Bitcoin a precio de
+     hoy. Adán, 2026-10-13, sobre los $17,250 de Mis Metas: *"esta cifra es la correcta… te dije que
+     ligaras los datos entre sí para que no pasara nunca esto"*. Había cinco copias de esta suma en
+     Finanzas, otra en el Dashboard, y `{{maestria}}` leía un `current` escrito a mano ($53,740).
+     Ahora todas llaman aquí, y el control 30 del verificador lo vigila.
+     `f` es un `finanzasmx_v2` ya leído; sin él, el que leyó este módulo. */
+  function fondoMaestria(f) {
+    const F = f || fin || {};
+    const ef = +F.emergencyFund || 0;
+    const inversiones = (F.investments || []).map(function (i) {
+      return { id: i.id, n: i.name || 'Inversión', tipo: i.type || '', v: +i.value || +i.invested || 0, rate: i.rate };
+    }).filter(function (i) { return i.v > 0; });
+    const inv = inversiones.reduce(function (s, i) { return s + i.v; }, 0);
+    const held = (F.btcHistory || []).reduce(function (s, x) { return s + (+x.btc || 0); }, 0);
+    const precio = +F.currentBtcPrice || 0, fx = +F.usdMxn || 19.5;
+    // Vendido todo, el historial deja -0.000000 ₿: nunca resta.
+    const btc = Math.max(0, held * precio * fx);
+    return { ef: ef, inversiones: inversiones, inv: inv, btc: btc, btcHeld: held, total: ef + inv + btc };
+  }
+
   // La proyección del Plan Maestro (ver PROYECCION, arriba), ya con todo lo que lee declarado.
   PROYECCION.meses = proyectar();
   PROYECCION.cortes = cortesSalida(PROYECCION.meses);
@@ -4943,6 +5000,50 @@ window.CIFRAS = (function () {
     const r = PROYECCION.meses.filter(function (m) { return m.mes === mesDe(f.end); })[0];
     if (r) f.liquido = Math.round(r.liquido / 1000) * 1000;
   });
+
+  /* ── El avance de la BBVA, desde que arrancó el plan quincena a quincena ───────────────────────
+     Adán, 2026-10-13: "el 74% ya es 0%". El tablero enseñaba el promedio de los tres pasos de la
+     ruta (fondo, Banamex y BBVA) y Mis Metas lo pagado sobre los $53,350 con que nacieron las dos
+     tarjetas: los dos decían que la deuda iba de salida cuando los $15,000 del 5 de octubre no
+     habían bajado. Se mide contra el saldo con que arrancó el plan: `d001` en DEUDAS_SEED, el día
+     `PROYECTO.bbvaFecha` (cada saldo nuevo que reporta Adán mueve los dos, con su migración). */
+  function avanceBbva(f) {
+    const F = f || fin;
+    const seed = DEUDAS_SEED.filter(d => d.id === 'd001')[0] || {};
+    const vivo = ((F && F.debts) || DEUDAS_SEED).filter(d => d.id === 'd001')[0];
+    const inicio = +seed.balance || 0, saldo = vivo ? +vivo.balance || 0 : inicio;
+    const pagado = Math.max(0, inicio - saldo);
+    return { inicio: inicio, saldo: saldo, pagado: pagado, desde: PROYECTO.bbvaFecha,
+             pct: inicio > 0 ? Math.min(100, pagado / inicio * 100) : (saldo > 0 ? 0 : 100) };
+  }
+  /* ── La deuda que de verdad cobra interés ──
+     La BBVA tiene la tasa del producto (55.7 %) pero no le corre interés: Adán paga lo que pide el
+     estado de cuenta (`PROYECTO.bbvaSinIntereses`). Sumarla como «con interés» daba $298,000 donde
+     son los $283,000 del BYD, y la regla de «Qué invertir hoy» la trataba como deuda que muerde. */
+  function deudasConInteres(f) {
+    const F = f || fin;
+    return ((F && F.debts) || DEUDAS_SEED).filter(d => +d.rate > 0 && +d.balance > 0 && !(d.id === 'd001' && PROYECTO.bbvaSinIntereses));
+  }
+
+  /* ── Los días de una fase — una sola cuenta ─────────────────────────────────────────────────
+     El tablero del Plan Maestro decía «quedan 168 días · 26 semanas» —contaba con la hora del reloj
+     y sin el día de inicio— mientras el calendario y Coach decían 169. Adán, 2026-10-13: "arregla
+     los días de las fases". Se cuenta en días de calendario, de medianoche a medianoche: el día de
+     hoy ya corre (`corrido`), y `quedan` son los que faltan después de hoy. Fase 1 el 13-oct-2026:
+     día 13 de 182, quedan 169 (24 semanas), 7 %. La usan el tablero, el calendario, el panel de las
+     fases y Coach; el control 33 vigila que nadie vuelva a contar por su cuenta. */
+  function diasHasta(fecha, hoy) {
+    const a = new Date(hoy || new Date()), b = new Date(fecha);
+    a.setHours(0, 0, 0, 0); b.setHours(0, 0, 0, 0);
+    return Math.round((b - a) / 86400000);
+  }
+  function diasFase(f, hoy) {
+    const largo = diasHasta(f.end, f.start) + 1;
+    const corrido = Math.min(largo, Math.max(0, diasHasta(hoy || new Date(), f.start) + 1));
+    const quedan = Math.max(0, diasHasta(f.end, hoy));
+    return { largo: largo, corrido: corrido, quedan: quedan, pct: largo ? corrido / largo * 100 : 0,
+             semanas: Math.round(largo / 7), semanasQuedan: Math.round(quedan / 7) };
+  }
 
   // La fecha LOCAL de un día ('AAAA-MM-DD'; sin argumento, hoy). Nunca toISOString(): en México
   // (UTC-6) el ISO ya es el día siguiente desde las 18:00, y lo que se marcaba de noche —la rutina,
@@ -4968,6 +5069,9 @@ window.CIFRAS = (function () {
     MOVIMIENTOS_20260920: MOVIMIENTOS_20260920,
     mesesRestantes: mesesRestantes,
     patrimonio: patrimonio,
+    fondoMaestria: fondoMaestria,
+    diasFase: diasFase, diasHasta: diasHasta,
+    avanceBbva: avanceBbva, deudasConInteres: deudasConInteres,
     BTC_SEED: BTC_SEED,
     // Para que `seedData()` pueda marcarlas como aplicadas: un seed nuevo ya las incluye.
     MIGRACIONES_FLAGS: MIGRACIONES.map(function (m) { return m.flag; }),

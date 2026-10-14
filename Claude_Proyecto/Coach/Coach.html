@@ -3609,7 +3609,7 @@
 
       <div class="context-banner">
         <p><strong>Tu contexto ahora mismo:</strong> <span id="contextoFase">estás en el <a href="#perfil" class="inline-link">Plan Maestro</a>.</span>
-          Horario real confirmado: te levantas <strong>6:40</strong> y arrancas el día con <strong>20 min construyendo este mismo ecosistema</strong>, te bañas a las <strong>7:03</strong>, sales <strong>7:40</strong> ya manejando <strong>Didi con direccionamiento</strong> rumbo a ALTEN (~50 min con el desvío del pasajero), entras <strong>8:30</strong>, comes en tu descanso de las <strong>13:00</strong>, y sales a las <strong>17:00</strong> — la ventana de la mañana solo alcanza para el bloque de la aplicación más higiene/skincare, así que el ejercicio y el bloque de habilidad se movieron a después del trabajo, donde sí hay tiempo. Al salir de ALTEN (<strong>17:00</strong>) manejas Didi ~40 min con un pasajero rumbo a Buenavista, y de ahí entras directo al gym a las <strong>17:40</strong>. Por la noche retomas Didi en una sesión corta hasta ~<strong>20:00</strong>, y de ahí tienes <strong>1h15 seguidas</strong> para la prioridad activa de tu fase (no antes, para no cortar el impulso de manejar), y después preparas la cena y la comida de mañana en una sola sesión. <strong>Dos de tus tres bloques diarios de Didi son trayectos que ya manejabas</strong> —a ALTEN y al gym—, así que casi todo ese ingreso no te cuesta tiempo nuevo. A las <strong>23:30</strong> vuelves a la aplicación hasta las <strong>00:00</strong>, a veces hasta la <strong>01:00</strong> — eso te deja entre <strong>5h40 y 6h40 de sueño</strong>, por debajo de las 7h que la rutina asumía antes. <strong>Skincare y el tratamiento anticaída (minoxidil) están en la rutina al despertar y antes de dormir, todos los días</strong> — el lavado de cabello (Lun/Jue/Sáb) se hace en la ducha de la mañana. El ejercicio y el bloque de habilidad cambian cada día de la semana (tomados de tus 5 prioridades en <a href="#aprendizaje" class="inline-link">Aprendizaje</a>), y el fin de semana tiene su propio horario, sin ALTEN. Usa las pestañas de abajo para ver cualquier día — solo el día de hoy guarda tu avance.
+          Horario real: te levantas a las <strong>{{horaDespertar}}</strong> y arrancas con <strong>10 min construyendo este mismo ecosistema</strong>, sales a ALTEN ya manejando <strong>Didi con direccionamiento</strong> y entras a las <strong>8:30</strong>. Al salir vas al <strong>CENLEX</strong> (clase de alemán de 17:00 a 18:00) y de ahí al gimnasio; por la noche, una sesión corta de Didi hasta las 20:00, <strong>1h15 seguidas</strong> para la tarea de tu fase y la cena con la comida de mañana en una sola sesión. <strong>Dos de tus bloques de Didi son trayectos que ya manejabas</strong>, así que casi todo ese ingreso no te cuesta tiempo nuevo. A las <strong>{{horaApp}}</strong> construyes la aplicación media hora —es la última pantalla del día—, a las <strong>{{horaRutinaNoche}}</strong> la rutina de la noche, a las <strong>{{horaMeditacion}}</strong> la meditación y a las <strong>{{horaDormir}}</strong> luz fuera: <strong>{{horasSueno}} de sueño</strong>, justo el mínimo. <strong>Skincare y el tratamiento anticaída (minoxidil) están en la rutina al despertar y antes de dormir, todos los días</strong> — el lavado de cabello (Lun/Jue/Sáb) se hace en la ducha de la mañana. El ejercicio y el bloque de habilidad cambian cada día de la semana (tomados de tus 5 prioridades en <a href="#aprendizaje" class="inline-link">Aprendizaje</a>), y el fin de semana tiene su propio horario, sin ALTEN. Usa las pestañas de abajo para ver cualquier día — solo el día de hoy guarda tu avance.
           <em style="color:var(--muted-2)">Los 40 min de Didi a Buenavista y la sesión de la noche son estimados — ajusta las horas si tu tráfico o tus viajes reales varían.</em>
         </p>
       </div>
@@ -3685,8 +3685,8 @@
         <p class="fs-13 text-muted mt-16" style="line-height:1.7;">
           Tu tiempo libre ya tiene dueño. La Fase 1 usa el bloque del Plan Maestro para la solicitud, el ISTQB
           y tu palanca de ingreso; el negocio de tu papá va en piloto automático, sin horas. Si el ingreso nuevo
-          es freelance, sus horas salen de Didi —a tres o cuatro veces la tarifa—, no del sueño: ya duermes
-          entre 5h40 y 6h40.
+          es freelance, sus horas salen de Didi —a tres o cuatro veces la tarifa—, no del sueño: tu rutina ya
+          te da solo {{horasSueno}}.
         </p>
       </div>
 
@@ -4669,7 +4669,7 @@
     const cuantoFalta = f => {
       const e = estado(f);
       if (e === 'done') return '✓ Cerrada';
-      if (e === 'active') return 'En curso · quedan ' + Math.round((f.end - hoyPM) / msDia) + ' días';
+      if (e === 'active') return 'En curso · quedan ' + (window.CIFRAS && CIFRAS.diasFase ? CIFRAS.diasFase(f, hoyPM).quedan : Math.round((f.end - hoyPM) / msDia)) + ' días';
       const m = Math.round((f.start - hoyPM) / msDia / 30.44);
       return 'Empieza en ' + m + (m === 1 ? ' mes' : ' meses');
     };
@@ -6653,7 +6653,7 @@
       const delMes = tareas.filter(t => t.mes === ymHoy);
       const pend = tareas.filter(t => !ck[t.id]).sort((a, b) => (a.mes < b.mes ? -1 : a.mes > b.mes ? 1 : 0));
       const total = f.end - f.start, pasado = Math.min(1, Math.max(0, (hoy - f.start) / total));
-      const quedan = Math.max(0, Math.round((f.end - hoy) / 86400000));
+      const quedan = C.diasFase ? C.diasFase(f, hoy).quedan : Math.max(0, Math.round((f.end - hoy) / 86400000));
       const rango = MES3[f.start.getMonth()] + ' ' + f.start.getFullYear() + ' – ' + MES3[f.end.getMonth()] + ' ' + f.end.getFullYear();
       // Sin los datos de Finanzas en este navegador el patrimonio sale en cero: mejor no enseñarlo.
       const P0 = C.patrimonio ? C.patrimonio() : null;

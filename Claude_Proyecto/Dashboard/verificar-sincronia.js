@@ -2306,6 +2306,153 @@ function promptsDeLoTocado() {
     ok.push('Recetario y precios del súper: ' + rec.length + ' recetas y ' + prod.length + ' productos, solo en el maestro');
 })();
 
+/* ── 30. El dinero de la maestría: una sola cuenta ─────────────────────────────────────────────
+   Mis Metas decía $17,250 y `{{maestria}}` —con él Coach— $53,740: el marcador leía `g001.current`,
+   un número puesto a mano que nadie recalculaba, y Finanzas tenía cinco copias de la suma. Adán,
+   2026-10-13: "te dije que ligaras los datos entre sí para que no pasara nunca esto". La suma es
+   `CIFRAS.fondoMaestria()`. Aquí se comprueba que (1) el marcador y la función dan lo mismo con unos
+   datos de prueba, (2) ninguna app lee el `current` de la meta de la maestría y (3) ninguna vuelve a
+   sumar el fondo, las inversiones y el Bitcoin por su cuenta. */
+(function () {
+  const PRUEBA = { emergencyFund: 6000, debts: [], goals: [{ id: 'g001', target: 398000, current: 99999 }],
+    investments: [{ id: 'i1', name: 'A', type: 'otro', value: 11250 }, { id: 'i2', name: 'B', type: 'cetes', invested: 500 }],
+    btcHistory: [{ btc: 0.01 }], currentBtcPrice: 100000, usdMxn: 18 };
+  let C;
+  try {
+    const ls = { getItem: k => (k === 'finanzasmx_v2' ? JSON.stringify(PRUEBA) : null), setItem: () => {} };
+    C = new Function('window', 'localStorage', maestro + '; return window.CIFRAS;')({}, ls);
+  } catch (e) { problemas.push('El maestro no carga con datos de prueba: ' + e.message); return; }
+  if (!C || !C.fondoMaestria) { problemas.push('El maestro ya no exporta fondoMaestria(): {{maestria}} se quedaría sin su cuenta'); return; }
+  const esperado = 6000 + 11250 + 500 + 0.01 * 100000 * 18;
+  const fx = C.fondoMaestria(PRUEBA).total, marcador = C.n('maestria');
+  const malos = [];
+  if (Math.round(fx) !== esperado) malos.push('     fondoMaestria() da ' + fx + ' y debía dar ' + esperado + ' (fondo + inversiones + Bitcoin)');
+  if (Math.round(marcador) !== esperado) malos.push('     {{maestria}} da ' + marcador + ' y fondoMaestria() ' + esperado + ': el marcador no sale de la función');
+  const LEE = /\b(maestria2?|maes|mae|goalMae|_maeGoal)\??\.current\b/;
+  const SUMA = /emergencyFund[^;\n]{0,90}\+[^;\n]{0,90}btc|btc[^;\n]{0,90}\+[^;\n]{0,90}emergencyFund/i;
+  let revisados = 0;
+  (function recorre(dir) {
+    fs.readdirSync(path.join(RAIZ, dir), { withFileTypes: true }).forEach(function (e) {
+      const rel = dir ? dir + '/' + e.name : e.name;
+      if (e.isDirectory()) { if (!/^(node_modules|\.git|syllabus)$/.test(e.name) && !/^diseno-/.test(e.name)) recorre(rel); return; }
+      if (!/\.(html|js)$/.test(e.name) || /verificar-sincronia\.js$|datos-maestros\.js$/.test(e.name)) return;
+      revisados++;
+      sinComentarios(fs.readFileSync(path.join(RAIZ, rel), 'utf8')).split('\n').forEach(function (l) {
+        if ((/g001/.test(l) && /\.current\b/.test(l)) || LEE.test(l))
+          malos.push('     ' + rel + '  lee el `current` de la meta de la maestría: usa CIFRAS.fondoMaestria() o {{maestria}}\n        ' + l.trim().slice(0, 110));
+        else if (SUMA.test(l))
+          malos.push('     ' + rel + '  suma fondo + Bitcoin por su cuenta: usa CIFRAS.fondoMaestria()\n        ' + l.trim().slice(0, 110));
+      });
+    });
+  })('');
+  if (malos.length) problemas.push('El dinero de la maestría ya no es una sola cuenta:\n' + malos.slice(0, 10).join('\n'));
+  else ok.push('Dinero de la maestría: una sola cuenta (CIFRAS.fondoMaestria), {{maestria}} sale de ella y ninguna de ' + revisados + ' páginas la copia');
+})();
+
+/* ── 31. El sueño: la rutina, el hábito y lo que dicen las apps ────────────────────────────────
+   La rutina dormía de 23:59 a 06:40 mientras el hábito se llamaba «Dormir 7 h», y «5h40–6h40», «el
+   bloque de las 23:30» o «la meditación de las 23:10» estaban escritos a mano en cinco archivos.
+   Adán, 2026-10-13: "corrige el tiempo de sueño". Aquí se comprueba que (1) la rutina de lunes a
+   viernes da al menos 7 h —la salud va primero en el plan que todos sirven—, (2) la semilla de los
+   hábitos de la noche dice las mismas horas que la rutina y (3) nadie vuelve a escribir cuánto duerme
+   Adán: se cita {{horasSueno}}, {{horaDormir}}, {{horaApp}}… */
+(function () {
+  if (!global.window || !global.window.CIFRAS) return;   // el control 4 ya avisó
+  const C = global.window.CIFRAS, malos = [];
+  const RT = C.rutina(''), hora = id => (RT.filter(t => t.id === id)[0] || {}).hora;
+  const aMin = x => +String(x).split(':')[0] * 60 + +String(x).split(':')[1];
+  const dormir = hora('wd21'), despertar = hora('wd01'), app = hora('wd-app-pm'), noche = hora('wd-pm');
+  if (!dormir || !despertar) { problemas.push('La rutina ya no tiene el bloque de dormir (wd21) o el de despertar (wd01): los marcadores del sueño se quedan sin fuente'); return; }
+  const min = (aMin(despertar) - aMin(dormir) + 1440) % 1440;
+  if (min < 420) malos.push('     la rutina de lunes a viernes da ' + Math.floor(min / 60) + ' h ' + (min % 60) + ' min de sueño (' + dormir + '–' + despertar + '): el mínimo es 7 h');
+  const hab = leer('Dashboard/habitos.js');
+  const sem = id => { const m = hab.match(new RegExp("\\{\\s*id:'" + id + "',\\s*nombre:'([^']*)',\\s*ancla:'([^']*)',\\s*hora:'([^']*)'")); return m ? { nombre: m[1], ancla: m[2], hora: m[3] } : null; };
+  const s = sem('sueno'), a = sem('app'), p = sem('piel');
+  if (!s) malos.push('     habitos.js: no encuentro la semilla del hábito de dormir (sueno)');
+  else {
+    if (s.hora !== dormir) malos.push('     habitos.js: el hábito de dormir va a las ' + s.hora + ' y la rutina apaga a las ' + dormir);
+    if (s.nombre.indexOf(C.v('horasSueno')) === -1) malos.push('     habitos.js: el hábito se llama «' + s.nombre + '» y la rutina da ' + C.v('horasSueno'));
+    if (s.ancla.indexOf(dormir) === -1 && s.ancla.indexOf('{{horaDormir}}') === -1) malos.push('     habitos.js: el anclaje «' + s.ancla + '» no dice la hora de dormir de la rutina (' + dormir + ')');
+  }
+  if (a && (a.ancla.indexOf(app) === -1 || a.ancla.indexOf(noche) === -1))
+    malos.push('     habitos.js: «Construir esta app» dice «' + a.ancla + '» y la rutina le da de ' + app + ' a ' + noche);
+  if (p && p.hora !== noche) malos.push('     habitos.js: «Rutina de la noche» va a las ' + p.hora + ' y en la rutina a las ' + noche);
+  // Lo que se vigila es AFIRMAR cuánto duerme («5h40–6h40 de sueño», «duermes entre…»), no una meta
+  // como «7 horas de sueño la mayoría de las noches» ni el tiempo de una carrera.
+  const MANO = /\b\d{1,2}h\d{2}\s*(?:–|-|y|a)\s*\d{1,2}h\d{2}\s*de\s+sue|\bduermes (?:entre|\d)/i;
+  let revisados = 0;
+  (function recorre(dir) {
+    fs.readdirSync(path.join(RAIZ, dir), { withFileTypes: true }).forEach(function (e) {
+      const rel = dir ? dir + '/' + e.name : e.name;
+      if (e.isDirectory()) { if (!/^(node_modules|\.git|syllabus)$/.test(e.name) && !/^diseno-/.test(e.name)) recorre(rel); return; }
+      if (!/\.(html|js|md)$/.test(e.name) || /verificar-sincronia\.js$/.test(e.name)) return;
+      revisados++;
+      let txt = fs.readFileSync(path.join(RAIZ, rel), 'utf8');
+      if (!/\.md$/.test(e.name)) txt = sinComentarios(txt);
+      // La migración de los hábitos tiene que guardar los pasos viejos tal cual para reconocerlos.
+      if (/habitos\.js$/.test(e.name)) { const pp = literal(txt, 'const PASOS_PREVIOS', '{'); if (pp) txt = txt.replace(pp, '{}'); }
+      txt.split('\n').forEach(function (l) {
+        if (MANO.test(l)) malos.push('     ' + rel + '  escribe a mano cuánto duerme: usa {{horasSueno}} / {{horaDormir}}\n        ' + l.trim().slice(0, 110));
+      });
+    });
+  })('');
+  if (malos.length) problemas.push('El sueño no cuadra entre la rutina, los hábitos y las apps:\n' + malos.slice(0, 10).join('\n'));
+  else ok.push('Sueño: la rutina da ' + C.v('horasSueno') + ' (' + dormir + '–' + despertar + '), los hábitos de la noche dicen lo mismo y ninguno de ' + revisados + ' archivos lo escribe a mano');
+})();
+
+/* ── 32. Las frases de Mi Día no hablan de deudas que ya no existen ────────────────────────────
+   Una frase citaba la Banamex meses después de liquidada y otra decía que el BYD «puede esperar»
+   cuando ya era la única deuda con interés. Ninguna frase sin condición puede nombrar una deuda en
+   $0, y la que nombre una viva lleva `si` (FRASE_SI) para salir del sorteo cuando se salde. Tampoco
+   pueden escribir un monto: va con {{marcador}}. */
+(function () {
+  if (!global.window || !global.window.CIFRAS) return;
+  const src = literal(dash, 'const FRASES_MOTIVACION', '[');
+  const lista = src ? evaluar(src) : null;
+  if (!lista) { problemas.push('No pude leer FRASES_MOTIVACION en dashboard.html'); return; }
+  const seed = global.window.CIFRAS.DEUDAS_SEED || [];
+  const malos = [];
+  const escape = t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  lista.forEach(function (f) {
+    const t = typeof f === 'string' ? f : f.t, cond = typeof f === 'object' && f.si;
+    if (/\$\d/.test(t)) malos.push('     escribe un monto a mano: «' + t.slice(0, 80) + '»');
+    Object.keys(ALIAS_DEUDA).forEach(function (id) {
+      const d = seed.filter(x => x.id === id)[0]; if (!d) return;
+      ALIAS_DEUDA[id].forEach(function (a) {
+        if (!new RegExp('\\b' + escape(a) + '\\b', 'i').test(t)) return;
+        if (!(+d.balance > 0)) malos.push('     nombra «' + a + '», que está en $0: «' + t.slice(0, 80) + '»');
+        else if (!cond && id !== 'd003') malos.push('     nombra «' + a + '» sin `si`: saldrá aunque se salde. «' + t.slice(0, 70) + '»');
+      });
+    });
+  });
+  if (malos.length) problemas.push('Frases de Mi Día desactualizadas:\n' + malos.slice(0, 10).join('\n'));
+  else ok.push('Frases de Mi Día: ' + lista.length + ', ninguna nombra una deuda saldada ni escribe un monto a mano');
+})();
+
+/* ── 33. Los días de una fase: una sola cuenta ──────────────────────────────────────────────────
+   El tablero del Plan Maestro decía «quedan 168 días · 26 semanas» y el calendario 169: uno contaba
+   con la hora del reloj y sin el día de inicio. Adán, 2026-10-13: "arregla los días de las fases".
+   La cuenta es `CIFRAS.diasFase()` (días de calendario; hoy ya corre). Aquí se comprueba con la
+   Fase 1 a distintas horas del mismo día y que nadie vuelva a restar `.end - …` entre milisegundos de
+   un día fuera del maestro (las líneas con `diasFase` son el respaldo de cuando el maestro no carga). */
+(function () {
+  if (!global.window || !global.window.CIFRAS || !global.window.CIFRAS.diasFase) { problemas.push('El maestro no exporta diasFase(): los días de fase no tienen cuenta única'); return; }
+  const C = global.window.CIFRAS, f = { start: new Date(2026, 9, 1), end: new Date(2027, 2, 31) }, malos = [];
+  [[0, 5], [12, 0], [22, 47], [23, 59]].forEach(function (hm) {
+    const r = C.diasFase(f, new Date(2026, 9, 13, hm[0], hm[1]));
+    if (r.largo !== 182 || r.corrido !== 13 || r.quedan !== 169)
+      malos.push('     a las ' + hm.join(':') + ' del 13-oct la Fase 1 da día ' + r.corrido + ' de ' + r.largo + ', quedan ' + r.quedan + ' (debía: 13 de 182, quedan 169)');
+  });
+  const RESTA = /\.end\s*-\s*[\w.]+\s*\)\s*\/\s*(86400000|864e5|msDia|DIA)\b/;
+  [['Dashboard/dashboard.html', dash], ['Coach/Coach.html', coach]].forEach(function (par) {
+    sinComentarios(par[1]).split('\n').forEach(function (l) {
+      if (RESTA.test(l) && !/diasFase|30\.44/.test(l)) malos.push('     ' + par[0] + '  cuenta días de fase por su cuenta: usa CIFRAS.diasFase()\n        ' + l.trim().slice(0, 110));
+    });
+  });
+  if (malos.length) problemas.push('Los días de fase no salen de una sola cuenta:\n' + malos.slice(0, 8).join('\n'));
+  else ok.push('Días de fase: una sola cuenta (CIFRAS.diasFase) — la Fase 1 da 13 de 182 y quedan 169 a cualquier hora del 13-oct');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];
@@ -2320,7 +2467,8 @@ if (process.argv.indexOf('--hook') !== -1) {
   process.exit(0);   // el hook informa, no bloquea
 }
 
-console.log('\nVERIFICAR SINCRONÍA — ' + new Date().toISOString().slice(0, 10));
+// La fecha del encabezado, LOCAL (control 26): a las 22:44 de México el ISO ya decía «mañana».
+console.log('\nVERIFICAR SINCRONÍA — ' + (global.window && global.window.CIFRAS ? global.window.CIFRAS.fechaLocal() : new Date().toLocaleDateString('sv')));
 console.log('='.repeat(70));
 if (ok.length) { console.log('\nOK'); ok.forEach(l => console.log('  ✔ ' + l)); }
 if (avisos.length) { console.log('\nAVISOS (no está roto, pero es deuda pendiente)'); avisos.forEach(l => console.log('  ! ' + l)); }

@@ -136,7 +136,7 @@ casillas (`coach_checks_v1`):
 
 | Parte | Qué enseña |
 |---|---|
-| Tu fase | La fase en curso con sus fechas, los días que quedan y la barra del tiempo, sus pasos hechos (de la fase y del mes), el patrimonio líquido de hoy (`CIFRAS.patrimonio`) contra el `liquido` con que cierra —solo si el navegador tiene los datos de Finanzas— y su punto de control |
+| Tu fase | La fase en curso con sus fechas, los días que quedan (`CIFRAS.diasFase()`, la misma cuenta del Dashboard) y la barra del tiempo, sus pasos hechos (de la fase y del mes), el patrimonio líquido de hoy (`CIFRAS.patrimonio`) contra el `liquido` con que cierra —solo si el navegador tiene los datos de Finanzas— y su punto de control |
 | Lo que cierra la fase | Su meta numerada, cada punto hasta su primer «—» (el texto completo en el `title`) |
 | Tu siguiente paso | La primera tarea sin marcar de la fase en el orden del plan —primero lo atrasado, en rojo—, su primera frase como acción y el resto como el cómo y el porqué. *Hecho* marca la misma casilla de la fase; *Siguiente* enseña la que sigue y *↺* vuelve a la primera. Debajo, las dos que vienen |
 
@@ -222,7 +222,7 @@ Estructura vigente, sin las horas exactas (esas están en el maestro, que es don
 - **Sábado y domingo**: días de ingreso, con dos turnos largos de Didi (mañana y tarde-noche). El
   domingo cierra la semana con finanzas, checkpoint del Plan Maestro y diario, comprimidos al final.
 
-**Duerme entre 5h40 y 6h40.** La tarjeta *La matemática de tu tiempo libre* cuenta de la rutina las horas de la semana (`pintarTiempoLibre()`): el bloque del Plan Maestro, el alemán y Didi. No hay horas para el negocio, y lo dice.
+**Duerme lo que da su rutina** (`{{horasSueno}}`, de `{{horaDormir}}` a `{{horaDespertar}}`): el banner del horario real lo cita con marcadores, no con horas escritas. La tarjeta *La matemática de tu tiempo libre* cuenta de la rutina las horas de la semana (`pintarTiempoLibre()`): el bloque del Plan Maestro, el alemán y Didi. No hay horas para el negocio, y lo dice.
 
 **El bloque de freelance no existe hoy.** Era condicional, ocupaba las franjas que hoy son turnos
 de Didi, y en la práctica estaba vacío. El plan tiene un solo frente de negocio —el de su papá, en

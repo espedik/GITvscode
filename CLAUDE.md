@@ -143,7 +143,7 @@ propósito de esto es mejorarme a mí"*.
 
 ## Editar los HTML con scripts
 
-Los `.html` de `Claude_Proyecto/` son archivos grandes (`dashboard.html` pasa de 1.2 MB) con **finales de línea mixtos** — `dashboard.html` tiene ~11 850 líneas CRLF y ~250 LF sueltas. Se ancla por línea, nunca por bloque multilínea.
+Los `.html` de `Claude_Proyecto/` son archivos grandes (`dashboard.html` pasa de 1.4 MB) con **finales de línea mixtos** — `dashboard.html` tiene ~13 200 líneas CRLF y ~290 LF sueltas. Se ancla por línea, nunca por bloque multilínea.
 
 - Leer y escribir **siempre** con `newline=''` y usar `\r\n` en el texto insertado. Sin eso, Python normaliza el archivo entero y un cambio de 100 líneas produce un diff de 12,000.
 - **Escribir a un temporal y `os.replace` al final.** `open(p,'w')` trunca el archivo *antes* de escribir: si el `write` falla a mitad (un emoji escrito como par subrogado, por ejemplo), el archivo se queda en 0 bytes. Ya pasó una vez con `dashboard.html`.

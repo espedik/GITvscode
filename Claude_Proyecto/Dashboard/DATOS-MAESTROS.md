@@ -249,7 +249,7 @@ pero el nombre de la variable se queda corto.
 | `{{mesMillon}}` | ago 2031 — el mes en que la proyección cruza el millón (`fmt: 'mes'`) | derivada de la PROYECCION |
 | `PROYECTO.eurMxn` | 21.0 — el euro para planear; el 2-oct-2026 estaba en $20.46 | constante |
 | `{{cetes}}` | $6,000 — el mismo número que `{{fondo}}` | derivada de `fondo` |
-| `{{maestria}}` `{{maestriaMeta}}` | $53,740 de $398,000 — la meta es lo que cuesta irse (migraciones `_alemania20261003` y `_ahorroReal20261003`) | vivo |
+| `{{maestria}}` `{{maestriaMeta}}` | $17,250 de $398,000 — el dinero es `CIFRAS.fondoMaestria()`: el fondo de emergencia (CETES), las inversiones de Finanzas (hoy el depósito de la renta) y el Bitcoin; la meta es lo que cuesta irse (migraciones `_alemania20261003` y `_ahorroReal20261003`) | derivada de lo vivo |
 | `{{maestriaEscuela}}` | Esslingen — Automotive Systems M.Eng. | constante |
 | `{{maestriaInicio}}` `{{decisionMaestria}}` | 1 sep 2027 · 31 may 2027, la decisión (`PROYECTO.maestriaInicio`, `maestriaDecision`) | constantes, con `fmt: 'fecha'` |
 | `{{hyroxSede}}` `{{hyroxFecha}}` | HYROX Guadalajara · 20 mar 2027, el primer Hyrox (`PROYECTO.hyroxSede`, `hyroxFecha`). Lo leen Mis Metas, la lista de salida y Coach | constantes |
@@ -326,7 +326,7 @@ tabla, en verde. Lo que recorte va a GBM.
 
 ### La rutina diaria
 
-`RUTINA_TASKS` — **57 bloques** con sus subtareas: el horario completo de los 7 días. No es un
+`RUTINA_TASKS` — **56 bloques** con sus subtareas: el horario completo de los 7 días. No es un
 marcador, se pide desde JS:
 
 ```js
@@ -341,6 +341,24 @@ Cada bloque lleva dos títulos: `txt`, el completo (el AHORA del Dashboard y Coa
 la agenda de Mi Día —«🚗 Didi rumbo a ALTEN» en vez de «Didi con direccionamiento — camino a ALTEN
 (~50 min…)»—, sin horas dentro: la hora de inicio y fin la pone la agenda. Los de ejercicio toman
 el corto del nombre de la rutina real (`tituloCorto` en el Dashboard).
+
+**La noche de lunes a viernes sí tiene marcadores**, porque la citan Coach, Cuidado Personal, los
+hábitos y las fichas del Dashboard. Salen de los bloques de `RUTINA_TASKS` por su id, así que
+mover un bloque los mueve a todos. La noche está ordenada para dormir 7 h (Adán, 13-oct-2026:
+*"corrige el tiempo de sueño"*): la app es la última pantalla y lo que sigue va sin celular.
+
+| Marcador | Valor hoy | Bloque |
+|---|---|---|
+| `{{horaDespertar}}` | 06:40 | `wd01` |
+| `{{horaApp}}` | 22:30 — Construir esta app, media hora | `wd-app-pm` |
+| `{{horaRutinaNoche}}` | 23:00 — piel, minoxidil y suplementos, sin pantalla | `wd-pm` |
+| `{{horaMeditacion}}` | 23:30 | `wd20` |
+| `{{horaDormir}}` | 23:40 — luz fuera | `wd21` |
+| `{{horasSueno}}` | 7 h — de `wd21` a `wd01` | derivada |
+
+El hábito «Dormir 7 h» (`habitos.js`) lleva su hora y su nombre escritos —son datos que Adán puede
+editar en la pantalla—, así que el **control 31** comprueba que la semilla diga lo mismo que la
+rutina y que ningún otro archivo vuelva a escribir las horas de sueño a mano.
 
 ### Los recursos de las rutas de habilidad
 
@@ -444,7 +462,7 @@ todas las variantes.
 
 Y `OJ_PRODUCTOS`, en cuidadopersonal.html, **dejó de escribir los nombres a mano**:
 salen de `CUIDADO_OJOS`. El emoji y la frase corta sí se quedan ahí, porque dicen
-para qué sirve cada cosa *en su caso* («Pantalla — para el bloque de las 23:30»),
+para qué sirve cada cosa *en su caso* («Pantalla — para el bloque de la noche»),
 que es más específico que el grupo del maestro.
 
 Como módulo compartido, `ficha.css` **no da por hechos los tokens de la app**:
@@ -907,6 +925,23 @@ Qué revisa:
   su propia lista con `ingredientes: [`. El Dashboard tuvo las dos copias, y el costo del desayuno
   de la proyección salía de recetas que ya no eran las de Comida.
 
+- **El dinero de la maestría es una sola cuenta** (control 30): `{{maestria}}` sale de
+  `CIFRAS.fondoMaestria()` y ninguna app lee el `current` de la meta `g001` ni vuelve a sumar fondo,
+  inversiones y Bitcoin por su cuenta. Mis Metas decía $17,250 mientras `{{maestria}}` y Coach
+  decían $53,740, un número puesto a mano; Finanzas tenía cinco copias de la suma.
+
+- **El sueño cuadra** (control 31): la rutina de lunes a viernes da al menos 7 h, la semilla de los
+  hábitos de la noche dice las mismas horas que la rutina y nadie escribe a mano cuánto duerme Adán
+  —ni un rango de horas de sueño ni un «duermes» con cifras—: se cita `{{horasSueno}}`, `{{horaDormir}}`…
+
+- **Las frases de Mi Día no hablan de deudas que ya no existen** (control 32): ninguna nombra una
+  deuda en $0, la que nombra una viva lleva `si` para salir del sorteo cuando se salde, y ninguna
+  escribe un monto.
+
+- **Los días de una fase son una sola cuenta** (control 33): `CIFRAS.diasFase()` da el mismo día a
+  cualquier hora (la Fase 1 el 13-oct: 13 de 182, quedan 169) y nadie vuelve a restar `f.end - hoy`
+  en milisegundos fuera del maestro. El tablero del Plan Maestro decía 168 y el calendario 169.
+
 Los valores **no están escritos en el verificador**: los pide al maestro. Tenerlos a mano era el
 mismo fallo que persigue — con `$292,000` en su lista seguía vigilando el saldo viejo.
 
@@ -929,7 +964,7 @@ Ninguna estructura está copiada entre archivos; todas se leen de aquí:
 | `DEUDAS_SEED` | Punto de partida de las deudas | `CIFRAS.DEUDAS_SEED` |
 | `GASTOS_20260901` | Las seis compras del 1-sep-2026 — las siembra Finanzas.html y las aplica la migración `_gastos20260901` | `CIFRAS.GASTOS_20260901` |
 | `MOVIMIENTOS_20260920` | Los tres movimientos del 19-sep-2026 — la venta de todo el Bitcoin ($39,500), el pago a la TC BBVA ($38,100) y el abono a Banamex ($3,000). Los pagos se llaman como la deuda para que `yaContado` los empareje con el mínimo previsto del mes. Los siembra Finanzas.html y los aplica `_liquidacion20260920` | `CIFRAS.MOVIMIENTOS_20260920` |
-| `RUTINA_TASKS` | 57 bloques del horario | `CIFRAS.rutina(base)` |
+| `RUTINA_TASKS` | 56 bloques del horario | `CIFRAS.rutina(base)` |
 | `SK` | 12 habilidades del radar: nivel con su evidencia (`desc`), peso por impacto en carrera y patrimonio con el plan de hoy (`w`), `porQue`, `prueba`, `mant` (el paso de la semana fuera del foco, con horas), `practica` y `pausa` | `CIFRAS.SK` |
 | `HAB_FOCO` | El foco de las habilidades, una a la vez y con fechas, alineado al Plan Maestro: cada tramo con horas, el paso de la semana, el entregable y cuándo cambia | `CIFRAS.HAB_FOCO` |
 | `PESO` | Altura (178 cm), meta (80 kg), objetivo y el histórico de pesajes (2: 75 kg el 2-sep-2026, 78 el 13-sep) con IMC derivado. Salud lo siembra en Peso & Medidas en cada carga | `CIFRAS.PESO` |
@@ -938,6 +973,11 @@ Ninguna estructura está copiada entre archivos; todas se leen de aquí:
 | `SALIDA` | La salida a Alemania: lo que cuesta (`costos`) y todo lo que hay que reunir, por tema (`bloques`) | `CIFRAS.SALIDA`, `CIFRAS.costoSalida(c)` |
 | `PROYECCION` | El plan mes a mes hasta el millón, con sus `supuestos` y los `cortes` de la salida | `CIFRAS.PROYECCION`, `CIFRAS.proyectar(cambios)`, `CIFRAS.cortesSalida()`, `CIFRAS.desgloseMes()`, `CIFRAS.mesTipo()` |
 | `APRENDIZAJE` | 6 prioridades de aprendizaje | `CIFRAS.APRENDIZAJE` |
+| `fondoMaestria(f)` | El dinero de la maestría: el fondo de emergencia (CETES), las inversiones de Finanzas (hoy el depósito de la renta) y el Bitcoin a precio de hoy. Lo usan `{{maestria}}`, Mis Metas, los indicadores de Finanzas, Coach y el contexto de *Qué invertir hoy* | `CIFRAS.fondoMaestria(f)` |
+| `diasFase(f, hoy)` · `diasHasta(fecha, hoy)` | Los días de una fase en días de calendario —`largo`, `corrido` (hoy ya corre), `quedan`, `pct`, `semanas`, `semanasQuedan`— y los días entre hoy y una fecha, de medianoche a medianoche. Los usan el tablero, el calendario, la ventana de las fases, Mis Metas y Coach | `CIFRAS.diasFase()`, `CIFRAS.diasHasta()` |
+| `avanceBbva(f)` | Lo pagado de la BBVA desde el saldo con que arrancó su plan quincena a quincena (`d001` en DEUDAS_SEED el día `PROYECTO.bbvaFecha`): la cifra de la ruta de deuda y el medidor de Deuda cara | `CIFRAS.avanceBbva(f)` |
+| `deudasConInteres(f)` | Las deudas a las que de verdad les corre interés: la BBVA no mientras `PROYECTO.bbvaSinIntereses`. *Con interés* en Mis Metas, la regla de *Qué invertir hoy* y su panel | `CIFRAS.deudasConInteres(f)` |
+| `liquidaciones` (en una deuda de `DEUDAS_SEED`) | Cada fecha en que esa deuda quedó en $0: la Banamex, `['2026-08-13','2026-09-30']`. La ruta de deuda dice la última y cuántas | `CIFRAS.DEUDAS_SEED` |
 | `LISTA_COMPRAS` | Catálogo de compras por pasillos — 7 categorías; `comida` en 7 pasillos, con `Verduras` / `Frutas` / `Almidones y grasas` separados para colorear los frescos por clase y sumar la fruta+verdura por día | `CIFRAS.LISTA_COMPRAS` |
 
 `verificar-sincronia.js` vigila que **ninguna vuelva a incrustarse** en un HTML.

@@ -86,11 +86,11 @@
   const SEMILLA = [
     /* `flex:true`: toca de lunes a viernes, pero se puede marcar cualquier día.
        Adán rompe la rutina a veces y lo hace en fin de semana; ese extra suma. */
-    { id:'app',    nombre:'Construir esta app',     ancla:'10 min antes de arrancar · y de 23:30 a 00:00', hora:'06:43', color:'#22d3ee', ico:'codigo', dow:[1,2,3,4,5], flex:true,
+    { id:'app',    nombre:'Construir esta app',     ancla:'10 min antes de arrancar · y de 22:30 a 23:00', hora:'06:43', color:'#22d3ee', ico:'codigo', dow:[1,2,3,4,5], flex:true,
       pasos:[
         'Por la mañana, 10 min: abre el proyecto y anota UNA mejora concreta para hoy.',
-        'De 23:30 a 00:00: constrúyela, pruébala en el navegador y súbela a GitHub.',
-        'Si no cabe en 30 min, pártela. Lo que suba hoy tiene que funcionar.'
+        'De {{horaApp}} a {{horaRutinaNoche}}: constrúyela, pruébala en el navegador y súbela a GitHub. Es la última pantalla del día.',
+        'Si no cabe en 30 min, pártela. Lo que suba hoy tiene que funcionar; lo demás espera a mañana, no al sueño.'
       ] },
     /* Sustituye al CT-GenAI en el mismo hueco (Adán, 21-sep-2026: "quita lo de genAI y en su
        lugar pon hacer post en LinkedIn de Aeroresinas"). Lunes, miércoles y viernes, con
@@ -123,11 +123,11 @@
        solo la sección indicada. Aquí, la lectura del cierre del día. */
     { id:'leer',   nombre:'Leer 10 páginas',        ancla:'En el cierre del día',                        hora:'21:45', color:'#b06eff', ico:'libro',  dow:'todos', rutina:'wd-cierre', sec:'Lectura',
       pasos:['10 páginas es el mínimo para marcarlo; el bloque completo son 30 min.'] },
-    { id:'piel',   nombre:'Rutina de la noche',     ancla:'Piel, minoxidil y suplementos',               hora:'22:30', color:'#fb7185', ico:'chispa', dow:'todos', rutina:'wd-pm' },
-    { id:'sueno',  nombre:'Dormir 7 h',             ancla:'Apagar pantallas al cerrar la app',           hora:'23:59', color:'#818cf8', ico:'luna',   dow:'todos',
+    { id:'piel',   nombre:'Rutina de la noche',     ancla:'Piel, minoxidil y suplementos',               hora:'23:00', color:'#fb7185', ico:'chispa', dow:'todos', rutina:'wd-pm' },
+    { id:'sueno',  nombre:'Dormir 7 h',             ancla:'Luz fuera a las 23:40',                       hora:'23:40', color:'#818cf8', ico:'luna',   dow:'todos',
       pasos:[
-        'Apaga pantallas en cuanto cierres la app: entre 00:00 y 01:00.',
-        'Son 5h40 a 6h40 de sueño hasta las 06:40. Cada media hora que te pases se nota al día siguiente.',
+        'Pantallas fuera a las {{horaRutinaNoche}}, al cerrar la app: la rutina de la noche y la meditación van sin celular.',
+        'Luz fuera a las {{horaDormir}}: son {{horasSueno}} hasta las {{horaDespertar}}, justo el mínimo. Cada media hora que te pases se nota al día siguiente.',
         'Celular fuera del cuarto: es lo que hace que despertar sin snooze funcione.'
       ] },
     /* `meta` parte el hábito en pasos: el agua se marca litro a litro y solo
@@ -155,13 +155,13 @@
      La regla de todas: lo que Adán editó a mano manda. Un hábito se considera
      "suyo" si su nombre o su anclaje no son los que le puso la semilla anterior
      — entonces se le añade solo lo nuevo (la hora) y no se le toca nada más. */
-  const MIG = 9;
+  const MIG = 10;
   const RETIRADOS = { 2: ['azucar', 'gasto'], 3: ['pasos'], 4: ['snooze', 'diario'], 5: ['nata'], 7: ['genai', 'medi'] };
   /* Lo que decía la semilla anterior de cada hábito, para saber si Adán lo tocó */
   const PREVIO = {
     gym:   [['Gimnasio', '19:00 · después de comer'], ['Gimnasio', 'Tras el CENLEX · el sábado a las 07:35']],
     nata:  [['Natación', 'Miércoles, 20:00'], ['Natación', 'Alberca del Fitsi Buenavista']],
-    app:   [['Construir esta app', '10 min antes de arrancar · y de 23:30 a 00:00']],
+    app:   [['Construir esta app', '10 min antes de arrancar · y de 23:30 a 00:00'], ['Construir esta app', '10 min antes de arrancar · y de 22:30 a 23:00']],
     fase0: [['Fase 0 · 1h15', 'Negocio de tu papá o plantilla GBM'], ['Plan Maestro · 1h15', 'Primer ingreso real: negocio de tu papá o plantilla GBM'],
             ['Plan Maestro · 1h15', 'La tarea de la fase que toca esta semana']],
     ale:   [['Alemán · 15 min', 'Antes del café'], ['Clase de alemán', 'CENLEX · ESCA Santo Tomás, hasta las 18:00']],
@@ -177,8 +177,17 @@
   const PASOS_PREVIOS = {
     fase0: ['1h15 de avance en la prioridad activa: el negocio de tu papá o la plantilla GBM.',
             'Antes de empezar, decide qué vas a tener hecho a las 21:15. Una cosa, no tres.',
-            'Sin Didi ni celular en este bloque: es el único hueco de trabajo profundo del día.']
+            'Sin Didi ni celular en este bloque: es el único hueco de trabajo profundo del día.'],
+    /* Migración 10 (2026-10-13): la noche se reordenó para dormir 7 h. */
+    app:   ['Por la mañana, 10 min: abre el proyecto y anota UNA mejora concreta para hoy.',
+            'De 23:30 a 00:00: constrúyela, pruébala en el navegador y súbela a GitHub.',
+            'Si no cabe en 30 min, pártela. Lo que suba hoy tiene que funcionar.'],
+    sueno: ['Apaga pantallas en cuanto cierres la app: entre 00:00 y 01:00.',
+            'Son 5h40 a 6h40 de sueño hasta las 06:40. Cada media hora que te pases se nota al día siguiente.',
+            'Celular fuera del cuarto: es lo que hace que despertar sin snooze funcione.']
   };
+  /* La hora que traía la semilla anterior: si sigue en esa, toma la nueva; si Adán la movió, manda la suya. */
+  const HORAS_PREVIAS = { sueno: ['23:59'], piel: ['22:30'] };
   const intacto = function (h) {
     const p = PREVIO[h.id];
     if (!p) return false;
@@ -264,6 +273,7 @@
             h.color = sem.color; h.ico = sem.ico;
           }
           if (h.hora === undefined) h.hora = sem.hora;
+          else if (HORAS_PREVIAS[h.id] && HORAS_PREVIAS[h.id].indexOf(h.hora) !== -1) h.hora = sem.hora;
           if (h.pasos === undefined && sem.pasos) h.pasos = sem.pasos.slice();
           else if (sem.pasos && PASOS_PREVIOS[h.id] && JSON.stringify(h.pasos) === JSON.stringify(PASOS_PREVIOS[h.id])) h.pasos = sem.pasos.slice();
           if (h.rutina === undefined && sem.rutina) { h.rutina = sem.rutina; if (sem.sec) h.sec = sem.sec; }
@@ -671,7 +681,7 @@
           '<div class="hb2-grid-t">' +
             '<span class="hb2-k" style="color:var(--cy)">Cuadrícula del mes</span>' +
             '<span class="hb2-linea"></span>' +
-            '<span class="hb2-k" style="font-size:7.5px">' + S.def.length + ' hábitos · ' + dias.length + ' días · toca un día pasado para corregirlo</span>' +
+            '<span class="hb2-k" style="font-size:8.5px">' + S.def.length + ' hábitos · ' + dias.length + ' días · toca un día pasado para corregirlo</span>' +
           '</div>' +
           '<button class="hb2-add" onclick="HB.nuevo()">' + ICO_MAS + ' Hábito</button>' +
           '<div class="hb2-leg">' +
@@ -681,8 +691,8 @@
         '<div class="hb2-scroll"><div class="hb2-tabla">' +
           '<div class="hb2-cab"><div class="hb2-nom-sp"></div>' +
             '<div class="hb2-celdas">' + cabDias + '</div>' +
-            '<div class="hb2-rac"><span class="hb2-k" style="font-size:7.5px">Racha</span>' +
-            '<span class="hb2-k" style="font-size:7.5px;opacity:.55">Récord</span></div></div>' +
+            '<div class="hb2-rac"><span class="hb2-k" style="font-size:8.5px">Racha</span>' +
+            '<span class="hb2-k" style="font-size:8.5px;opacity:.55">Récord</span></div></div>' +
           '<div class="hb2-filasw"><div class="hb2-filas">' + filas + '</div></div>' +
           '<div class="hb2-tot"><div class="hb2-nom-sp">' +
             '<span class="hb2-k" style="color:var(--cy);font-size:8px">Cuántos cerraste ese día</span></div>' +
@@ -702,6 +712,7 @@
           '<div class="hb2-chips">' + chips + '</div>' +
         '</div>' +
       '</div>';
+    if (typeof marcarDesborde === 'function') requestAnimationFrame(function () { marcarDesborde(raiz.querySelector('.hb2-filasw')); });
   }
 
   /* ── Gráfica 1 · El anillo: el titular del mes ───────────────────────── */
@@ -745,7 +756,7 @@
       d = sumaDias(d, 1);
     }
     const cab = '<div class="hb2-pf-hd"><span class="hb2-k">Perfil por día de la semana</span>' +
-      (pTot ? '<span class="hb2-k" style="font-size:7.5px">Últimos 90 días · ' + pTot + ' marcas</span>' : '') + '</div>';
+      (pTot ? '<span class="hb2-k" style="font-size:8.5px">Últimos 90 días · ' + pTot + ' marcas</span>' : '') + '</div>';
     if (!pTot) {
       return '<div class="hb2-panel hb2-perfil">' + cab +
         '<div class="hb2-sindatos">Con una semana marcada sabrás qué día se te cae.</div></div>';
@@ -810,7 +821,7 @@
         '<div class="hb2-pf-call-d"><b>' + DOW_3[peor] + '</b>' +
           '<i style="color:' + (bien ? 'var(--text3)' : 'var(--r)') + '">' + Math.round(peorP) + '%</i></div>' +
         (hb ? '<div class="hb2-pf-call-t">Lo que más cae: <b>' + esc(hb.h.nombre) + '</b> <span>' + hb.ok + ' de ' + hb.tot + '</span></div>' : '') +
-        (mejor >= 0 && mejor !== peor ? '<div class="hb2-pf-call-m"><span class="hb2-k" style="font-size:7.5px">Mejor</span>' +
+        (mejor >= 0 && mejor !== peor ? '<div class="hb2-pf-call-m"><span class="hb2-k" style="font-size:8.5px">Mejor</span>' +
           '<b>' + DOW_3[mejor] + '</b><i>' + Math.round(mejorP) + '%</i></div>' : '') +
       '</div>';
     }
@@ -835,8 +846,8 @@
   function kpi(n, uni, lbl, col, alerta) {
     return '<div class="hb2-panel hb2-kpi' + (alerta ? ' hb2-hot' : '') + '">' +
       '<div class="hb2-kpi-v"><b style="color:' + col + '">' + n + '</b>' +
-      '<span class="hb2-k" style="font-size:7.5px' + (alerta ? ';color:var(--r)' : '') + '">' + uni + '</span></div>' +
-      '<div class="hb2-k" style="font-size:7.5px' + (alerta ? ';color:var(--r)' : '') + '">' + esc(lbl) + '</div></div>';
+      '<span class="hb2-k" style="font-size:8.5px' + (alerta ? ';color:var(--r)' : '') + '">' + uni + '</span></div>' +
+      '<div class="hb2-k" style="font-size:8.5px' + (alerta ? ';color:var(--r)' : '') + '">' + esc(lbl) + '</div></div>';
   }
   function leg(cls, txt) {
     return '<span class="hb2-leg-i"><i class="hb2-c hb2-' + cls + '"></i>' + txt + '</span>';
@@ -940,7 +951,7 @@
         '<div class="hb2-panel hb2-ficha-cal">' +
           '<div class="hb2-ficha-cal-hd"><span class="hb2-k" style="color:var(--cy)">' +
             MESES[base.getMonth()] + '</span>' +
-            '<span class="hb2-k" style="font-size:7.5px">Toca un día para corregirlo</span></div>' +
+            '<span class="hb2-k" style="font-size:8.5px">Toca un día para corregirlo</span></div>' +
           '<div class="hb2-fdow">' + DOW_N.map(function (n) { return '<span>' + n + '</span>'; }).join('') + '</div>' +
           '<div class="hb2-fcal">' + cal + '</div>' +
         '</div>' +
@@ -1520,7 +1531,7 @@
 .hb2-pf-ret i,.hb2-pf-ret b{position:absolute;left:0;right:0;border-top:1px solid rgba(var(--ov),.09)}
 .hb2-pf-ret i.hb2-pf-base{bottom:0;border-top-color:rgba(var(--ov),.18)}
 .hb2-pf-ret b{border-top:1px dashed rgba(var(--cy-rgb),.6)}
-.hb2-pf-ret span{position:absolute;right:0;font-family:var(--mono);font-size:7px;font-weight:700;
+.hb2-pf-ret span{position:absolute;right:0;font-family:var(--mono);font-size:8.5px;font-weight:700;
   letter-spacing:.14em;text-transform:uppercase;color:var(--cy);background:var(--bg);padding:0 4px;line-height:1.2}
 .hb2-pf-cols{position:relative;display:flex;gap:7px;height:100%;padding-right:64px}
 .hb2-pf-col{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:8px}
@@ -1797,7 +1808,7 @@
 .hb2-ficha-cal-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;
   margin-bottom:9px;text-transform:capitalize}
 .hb2-fdow,.hb2-fcal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.hb2-fdow span{text-align:center;font-family:var(--mono);font-size:7.5px;font-weight:700;
+.hb2-fdow span{text-align:center;font-family:var(--mono);font-size:8.5px;font-weight:700;
   color:var(--text3);letter-spacing:.1em;margin-bottom:3px}
 .hb2-fd{height:25px;border-radius:6px;display:flex;align-items:center;justify-content:center;
   font-family:var(--mono);font-size:9.5px;font-weight:700;color:rgba(var(--ov),.2);

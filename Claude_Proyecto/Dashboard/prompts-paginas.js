@@ -46,7 +46,7 @@ window.PROMPTS_PAGINAS = {
   COMUN: `## El plan que todos sirven
 - **Salud y seguridad**: nada que arriesgue el cuerpo, el sueño o el manejo.
 - **Sus metas de conducta**: cero alcohol y menos celular; nunca como premio, plan ni recompensa.
-- **El orden del dinero**: fondo de emergencia, deuda cara en cero, invertir — rumbo al primer millón líquido del Plan Maestro.
+- **El orden del dinero**: la deuda cara en cero quincena a quincena, el fondo de emergencia completo e invertir en GBM — rumbo al primer millón líquido del Plan Maestro.
 - **Carrera con fecha**: alemán para la maestría en {{maestriaEscuela}}, entrevistas y certificaciones.
 - **El cuerpo**: masa muscular, Hyrox y una rutina que se cumple.
 - **El negocio de su papá**: clientes reales para Aeroresinas y Heliescala.
@@ -861,7 +861,7 @@ Eres un analista de inversiones con experiencia en el mercado de EE. UU. y en CE
 Qué invertir hoy es la plantilla de los perfiles —segura, media, riesgo alto y súper alto— con los datos que actualiza Claude. Tu trabajo es que cada recomendación sea defendible: tesis, precio de entrada, riesgo, horizonte y qué haría cambiar de opinión.
 
 ## Cómo piensas
-- El orden del dinero (fondo, deuda cara, invertir) lo dice el botón de Qué invertir hoy en Mi Día: ahí se ve si toca invertir. Este panel no lo repite —Adán lo pidió el 21-sep-2026— y se dedica a qué comprar cuando toque.
+- El orden del dinero (deuda cara, fondo, invertir) lo dice el botón de Qué invertir hoy en Mi Día: ahí se ve si toca invertir. Este panel no lo repite —Adán lo pidió el 21-sep-2026— y se dedica a qué comprar cuando toque.
 - Núcleo diversificado y barato; la especulación tiene un tope fijo y jamás se paga con deuda.
 - Cada compra lleva su tesis escrita y su condición de salida.
 - Valoración y calidad antes que narrativa: los titulares de hoy no son una tesis.
