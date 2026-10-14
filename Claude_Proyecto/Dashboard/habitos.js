@@ -640,6 +640,8 @@
           fraseHTML() +
         '</div>' +
         '<div class="hb2-hd-r">' +
+          '<button class="hb2-sync" onclick="HB.sync()" title="Junta las marcas de tu iPad y de tu PC">' +
+            ICO_SYNC + '<span>Sincronizar</span></button>' +
           '<div class="hb2-panel hb2-mes">' +
             '<button class="hb2-mb" onclick="HB.mes(-1)" title="Mes anterior">‹</button>' +
             '<span>' + MESES[mesVisto.getMonth()].slice(0, 3) + ' ' + mesVisto.getFullYear() + '</span>' +
@@ -1099,6 +1101,8 @@
   const ICO_ALERTA = sv('<path d="M12 3.5 22 20H2L12 3.5Z"/><path d="M12 10v4.5M12 17.3v.2"/>', 2);
   const ICO_ESCUDO = sv('<path d="M12 3 20 6v6c0 4.4-3.2 7.8-8 9-4.8-1.2-8-4.6-8-9V6l8-3Z"/><path d="M8.8 12.2l2.2 2.2 4.2-4.4"/>');
   const ICO_MAS = sv('<path d="M12 5v14M5 12h14"/>', 2);
+  const ICO_SYNC = sv('<path d="M4.5 10a7.5 7.5 0 0 1 13.2-3.6L20 8.5"/><path d="M20 4v4.5h-4.5"/>' +
+                      '<path d="M19.5 14a7.5 7.5 0 0 1-13.2 3.6L4 15.5"/><path d="M4 20v-4.5h4.5"/>');
   const ICO_ANCLA = sv('<path d="M9 6.5H6a3.5 3.5 0 0 0 0 7h3M15 17.5h3a3.5 3.5 0 0 0 0-7h-3"/><path d="M8.5 12h7"/>');
   const ICO_BOMBILLA = sv('<path d="M9.5 18h5M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.4.3.6.7.6 1.1h5.8c0-.4.2-.8.6-1.1A6 6 0 0 0 12 3Z"/>');
   const ICO_LAPIZ = sv('<path d="M4 20h4L19 9a2.1 2.1 0 0 0-3-3L5 17v3Z"/><path d="M14.5 7.5 16.5 9.5"/>');
@@ -1108,7 +1112,117 @@
   /* ══════════════════════════════════════════════════════════════════════
      API PÚBLICA
      ══════════════════════════════════════════════════════════════════════ */
+  /* ── Sincronizar el iPad y la PC, sin servidor ──────────────────────────
+     Cada navegador guarda sus marcas por su cuenta: el Safari del iPad y el Chrome de la PC nunca
+     se ven, aunque abran la misma página. Aquí lo de un dispositivo se copia como un código y se
+     FUNDE en el otro, no lo reemplaza: por cada día y hábito queda lo más avanzado de los dos (el
+     agua en 3 de 3 gana a 2 de 3), así que ninguna marca se borra. Los hábitos que solo tiene el
+     otro se agregan; los que existen en los dos conservan la definición de aquí. Hecho en los dos
+     sentidos, quedan iguales. */
+  const SYNC_PRE = 'HABITOS1:';
+  function codigoSync() {
+    const json = JSON.stringify({ v: 1, def: S.def, marcas: S.marcas, desde: S.desde });
+    const b = new TextEncoder().encode(json);     // los nombres llevan acentos: base64 de UTF-8
+    let bin = '';
+    for (let i = 0; i < b.length; i++) bin += String.fromCharCode(b[i]);
+    return SYNC_PRE + btoa(bin);
+  }
+  function leerCodigo(txt) {
+    const t = String(txt || '').replace(/\s+/g, '');
+    if (t.indexOf(SYNC_PRE) !== 0) throw new Error('eso no es un código de Hábitos: empieza con ' + SYNC_PRE);
+    let d;
+    try {
+      const bin = atob(t.slice(SYNC_PRE.length)), b = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i);
+      d = JSON.parse(new TextDecoder().decode(b));
+    } catch (e) { throw new Error('el código llegó cortado; cópialo otra vez completo'); }
+    if (!d || d.v !== 1 || typeof d.marcas !== 'object' || !Array.isArray(d.def)) throw new Error('el código está incompleto');
+    return d;
+  }
+  function fundir(d) {
+    const fuera = Object.keys(RETIRADOS).reduce(function (a, k) { return a.concat(RETIRADOS[k]); }, []);
+    const ids = {};
+    S.def.forEach(function (h) { ids[h.id] = true; });
+    const habs = [];
+    d.def.forEach(function (h) {
+      if (!h || !h.id || ids[h.id] || fuera.indexOf(h.id) >= 0) return;
+      S.def.push(h); ids[h.id] = true; habs.push(h.nombre || h.id);
+    });
+    let nuevas = 0, dias = 0;
+    Object.keys(d.marcas).forEach(function (f) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(f) || f > hoyISO()) return;
+      const otro = d.marcas[f] || {};
+      let toco = false;
+      Object.keys(otro).forEach(function (id) {
+        if (!ids[id]) return;
+        const v = typeof otro[id] === 'number' ? otro[id] : (otro[id] ? 1 : 0);
+        const a = S.marcas[f] && S.marcas[f][id];
+        const va = typeof a === 'number' ? a : (a ? 1 : 0);
+        if (v > va) { if (!S.marcas[f]) S.marcas[f] = {}; S.marcas[f][id] = v; nuevas++; toco = true; }
+      });
+      if (toco) dias++;
+    });
+    if (d.desde && (!S.desde || d.desde < S.desde)) S.desde = d.desde;
+    guardar();
+    return { nuevas: nuevas, dias: dias, habs: habs };
+  }
+  function pintarSync(msg) {
+    const ov = document.getElementById('hb2Ficha');
+    if (!ov) return;
+    fichaId = null;
+    const nDias = Object.keys(S.marcas).length;
+    const nMarcas = Object.keys(S.marcas).reduce(function (a, f) { return a + Object.keys(S.marcas[f]).length; }, 0);
+    ov.innerHTML =
+      '<div class="hb2-ficha-card hb2-ed hb2-sync-card" onclick="event.stopPropagation()">' +
+        '<button class="hb2-x" onclick="HB.cerrarFicha()" aria-label="Cerrar">✕</button>' +
+        '<div class="hb2-eyebrow"><span class="hb2-dot"></span>' +
+          '<span class="hb2-k" style="color:var(--cy)">Sincronizar</span><span class="hb2-linea"></span></div>' +
+        '<div class="hb2-ficha-t" style="margin-bottom:8px"><span>Tu iPad y tu PC, con las mismas marcas</span></div>' +
+        '<p class="hb2-sync-p">Cada uno guarda lo suyo y no se ven. Copia el código en uno y fúndelo en el otro: ' +
+          'por cada día queda lo más avanzado de los dos, así que ninguna marca se borra. Hazlo en los dos sentidos y quedan iguales.</p>' +
+        '<label class="hb2-lbl">1 · El código de este dispositivo <i>— ' + nMarcas + ' marcas en ' + nDias + ' días</i></label>' +
+        '<textarea class="hb2-in hb2-ta hb2-sync-code" id="hbSyncYo" rows="3" readonly onclick="this.select()">' + codigoSync() + '</textarea>' +
+        '<div class="hb2-ficha-pie" style="margin-top:8px">' +
+          '<button class="hb2-b hb2-b-g" id="hbSyncCopiar" onclick="HB.syncCopiar()">' + ICO_CHECK + ' Copiar</button>' +
+          (navigator.share ? '<button class="hb2-b" onclick="HB.syncCompartir()">Compartir…</button>' : '') +
+        '</div>' +
+        '<label class="hb2-lbl" style="margin-top:16px">2 · Pega aquí el código del otro</label>' +
+        '<textarea class="hb2-in hb2-ta hb2-sync-code" id="hbSyncOtro" rows="3" placeholder="' + SYNC_PRE + '…"></textarea>' +
+        '<div class="hb2-ficha-pie" style="margin-top:8px">' +
+          '<button class="hb2-b hb2-b-g" onclick="HB.syncFundir()">' + ICO_SYNC + ' Fundir con lo de aquí</button></div>' +
+        (msg ? '<div class="hb2-sync-msg">' + msg + '</div>' : '') +
+      '</div>';
+    ov.classList.add('open');
+  }
+
   const HB = {
+    sync: function () { cargar(); pintarSync(''); },
+    syncCopiar: function () {
+      const t = document.getElementById('hbSyncYo');
+      if (!t) return;
+      const listo = function () { const b = document.getElementById('hbSyncCopiar'); if (b) b.innerHTML = ICO_CHECK + ' Copiado'; };
+      const aMano = function () { t.focus(); t.select(); try { document.execCommand('copy'); } catch (e) {} listo(); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t.value).then(listo, aMano);
+      else aMano();
+    },
+    syncCompartir: function () {
+      const t = document.getElementById('hbSyncYo');
+      if (t && navigator.share) navigator.share({ title: 'Mis hábitos', text: t.value }).catch(function () {});
+    },
+    syncFundir: function () {
+      const t = document.getElementById('hbSyncOtro');
+      if (!t || !t.value.trim()) return;
+      let r;
+      try { r = fundir(leerCodigo(t.value)); }
+      catch (e) { pintarSync('<b style="color:var(--r)">No se pudo fundir:</b> ' + esc(e.message) + '.'); return; }
+      pintar();
+      const pl = function (n, uno, varios) { return n + ' ' + (n === 1 ? uno : varios); };
+      pintarSync(r.nuevas || r.habs.length
+        ? '<b style="color:var(--g)">Listo.</b> ' + pl(r.nuevas, 'marca nueva', 'marcas nuevas') + ' en ' + pl(r.dias, 'día', 'días') +
+          (r.habs.length ? ', y ' + pl(r.habs.length, 'hábito', 'hábitos') + ' que solo tenía el otro: ' + esc(r.habs.join(', ')) : '') +
+          '. El código de arriba ya lo lleva todo: fúndelo en el otro dispositivo para que queden iguales.'
+        : '<b style="color:var(--g)">Ya estaban iguales:</b> el otro no tenía nada que aquí faltara.');
+    },
     render: function () {
       cargar();
       if (!mesVisto) mesVisto = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
@@ -1785,6 +1899,17 @@
   .hb2-nom,.hb2-nom-sp{width:132px}
   .hb2-leg{display:none}
 }
+/* Sincronizar (HB.sync): el botón de la cabecera y su ficha */
+.hb2-sync{display:flex;align-items:center;gap:7px;padding:8px 13px;border-radius:10px;cursor:pointer;
+  border:1px solid rgba(var(--cy-rgb),.28);background:rgba(var(--cy-rgb),.07);color:var(--cy);
+  font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.hb2-sync:hover{background:rgba(var(--cy-rgb),.14)}
+.hb2-sync svg{width:15px;height:15px}
+.hb2-sync-p{font-size:12px;line-height:1.55;color:var(--text2);margin:0 0 14px}
+.hb2-sync-code{font-family:var(--mono);font-size:10.5px;word-break:break-all;min-height:64px}
+.hb2-sync-msg{margin-top:14px;padding:11px 13px;border-radius:9px;font-size:12px;line-height:1.55;color:var(--text);
+  background:rgba(var(--g-rgb),.08);border:1px solid rgba(var(--g-rgb),.25)}
+@media (max-width:640px){ .hb2-sync span{display:none} }
 `;
 
   const st = document.createElement('style');

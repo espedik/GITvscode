@@ -1325,6 +1325,24 @@ recibe lo nuevo (hora, icono, meta, qué hacer, flex). Los retirados salen de la
 historial; los nuevos entran con arranque en hoy. Si el guardado trae `marcas` pero no `def`, el
 historial se conserva.
 
+### Tu iPad y tu PC, con las mismas marcas
+
+`localStorage` es una caja por navegador: el Safari del iPad y el Chrome de la PC nunca se ven,
+aunque abran la misma página. **Sincronizar** (`HB.sync()`, el botón de la cabecera, junto al mes)
+abre una ficha con el código de este dispositivo —`HABITOS1:` y el estado en base64 de UTF-8:
+`def`, `marcas` y `desde`—, con *Copiar* y, donde el navegador lo tiene (el iPad), *Compartir…*.
+Abajo se pega el código del otro y se **funde**, no se reemplaza (`fundir()`):
+
+- Por cada día y hábito queda **lo más avanzado de los dos** (el agua en 3 de 3 gana a 2 de 3): una
+  marca nunca se borra al fundir, y desmarcar en un dispositivo no viaja al otro.
+- Los hábitos que solo tiene el otro se agregan (menos los retirados); los que están en los dos
+  conservan la definición de aquí. El arranque (`desde`) queda en el más antiguo.
+- Fundir otra vez lo mismo no cambia nada, y un código cortado lo dice sin tocar los datos.
+
+Hecho en los dos sentidos, los dos quedan iguales. Es la vía sin servidor; la sincronía automática
+pediría un servidor con cuentas (un repositorio privado con Cloudflare Pages y Access, y Supabase
+para los datos) que Adán tendría que crear.
+
 ---
 
 ## Los datos no se declaran aquí
