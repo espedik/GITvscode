@@ -68,7 +68,7 @@ Todas comparten origen porque se abren con `file://`.
 forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
-y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la ruta abierta en *En qué invertir tu tiempo* y el paso de cada una),
+y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta),
 `habilidades_checklist_v1`, `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-inversion-v1` (pestaña, perfil elegido y monto de *Qué
 invertir hoy*).
 
@@ -86,7 +86,7 @@ navega con las flechas, el rail, el menú ☰ o deslizando en táctil. `irASlide
 | `theme-coach` | **Plan Maestro** | Fase activa, ruta de deuda y el tablero mes / día / semana | `planmaestro` |
 | `theme-metas` | **Mis Metas** | 8 KPIs financieros, franja de instrumentos y 17 metas con estado | `metas` |
 | `theme-basicas` | **Habilidades Base** | 27 fichas de vida práctica con sus videos. **Única fuente**: la sección equivalente de Coach se eliminó | `basicas` |
-| `theme-skills` | **En qué invertir tu tiempo** | Radar de 12 habilidades, la ruta y el paso de la semana | `skills` |
+| `theme-skills` | **En qué invertir tu tiempo** | La interfaz de Habilidades Base: sus indicadores, las 12 habilidades como fichas y el plan de foco; cada una abre su ruta en la ventana de detalle | `skills` |
 | `theme-lista` | **Lista de Compras** | 7 categorías; Comida con precios, ticket y costo al mes | `lista` |
 | `theme-habitos` | **Hábitos** | La cuadrícula del mes con rachas y la ficha de cada hábito | `habitos` |
 
@@ -1054,7 +1054,7 @@ cualquier recurso que sea una serie.
 
 ## El panel de detalle — "tres apartados"
 
-El overlay que abre una ficha de Habilidades Base, una meta de Mis Metas o Tu año
+El overlay que abre una ficha de Habilidades Base, una habilidad de En qué invertir tu tiempo, una meta de Mis Metas o Tu año
 (`#metaDetailOverlay`; `pintarDetailOverlay()` → `mdPintar()`, **los tres comparten los mismos
 ids**: al tocarlo se verifican los tres). Diseño de `diseno-ficha/`.
 
@@ -1084,46 +1084,46 @@ Tu año.
 
 ---
 
-## En qué invertir tu tiempo — "mesa de estudio" con el plan a la vista
+## En qué invertir tu tiempo — la interfaz de Habilidades Base
 
-`renderSkills()` pinta en `#habOvr`, `#habRuta`, `#habFoco` y `#habRank`. Adán: *"llena con más
-información la sección… hay secciones que ni siquiera me aportan nada y están muy separadas o
-divididas… deben ser cosas que me aporten a mis metas"*. Gobierna el prompt `skills`: el paso de la
-semana con horas y entregable, cuándo cambia el foco y por qué, y sus tres indicadores. Todo lleva foto
-(`apFotoSk()`, la misma de *Hoy aprendes*).
+Adán: *"la interfaz de habilidades debe ser como la misma interfaz de habilidades base, pero con sus
+indicadores… qué tanto tengo de cada sección… al abrir la información debe ser una ventana así como en
+habilidades base"*. `renderSkills()` pinta en `#skBay`, `#skGrid` y `#skPlan` con las piezas `.hb-*` de
+Habilidades Base (la franja, la ficha con foto y las marcas por paso). Gobierna el prompt `skills`. Todo
+lleva foto (`apFotoSk()`, la misma de *Hoy aprendes*).
 
-**Arriba, los tres indicadores del prompt** (`#habOvr`), junto al título: el **nivel general** (`50 /100`,
-su barra y *"llevar IA de 45 a 55 lo sube a 51"*, con `calcOVRcon()`); **el entregable del foco** —el del
-tramo de hoy, los días que le quedan (`habDiasA()`) y, si es el CT-GenAI, cómo vas en los simulacros contra
-la meta de la tarea de la Fase 1 (`habSimTxt()`: «34 de 46 dos veces seguidas»; si no, los pasos de su
-ruta)—, y **tu semana de estudio** (`habSemana()`): las horas del foco más el mantenimiento de las demás
-(`mant.h`, sin las de pausa) y el rato al volante, que abre *Qué escuchar*. Bajo 1500 px van en su propia fila.
-
-**Abajo, tres columnas** (22 % · fluida · 24 %):
-
-| Columna | Qué lleva |
+| Pieza | Qué lleva |
 |---|---|
-| **El plan de foco** (`#habRuta`) | Un tramo de `CIFRAS.HAB_FOCO` por habilidad, a toda la altura: foto, fechas, horas a la semana, entregable, qué hacer cada semana, el avance de su ruta y, el de hoy, *Ahora · N días* y cuándo cambia. Tocar uno abre su ruta. Al pie, qué pasa después del último tramo. *Ajustar en Coach →* |
-| **El paso** (`#habFoco`) | La ruta abierta: su foto, nivel, peso y retorno, y sus pasos en círculos (lo hecho, el de ahora). Si no es el foco de hoy, un aviso con *Volver al foco →*. A la izquierda la lectura: el paso en Fraunces, **Por qué este paso**, **Qué hacer**, **Con qué** (el libro con su portada y *Qué es*, o el recurso con `pfRecursoHtml()`), el estante con los libros de la ruta y **Lo que viene** (el paso siguiente y lo que pide). Al lado (`.hf-lado`): **Esta semana** (las horas del tramo o el mantenimiento), **Se demuestra con** (`prueba`), **Por qué esta habilidad** (`porQue`), **Dónde estás** (`desc`, la evidencia del nivel) y **Dónde se practica**. Pie con *‹ Anterior* y *Siguiente paso ›* |
-| **Tus 12 habilidades** (`#habRank`) | Ordenadas por retorno —peso por lo que falta: dónde una hora sube más tu nivel— y medidas por nivel; cada una con su foto, *FOCO* o *EN PAUSA* y **lo que toca esta semana**: el foco, sus horas de tramo; las demás, su `mant`. La marca es el siguiente nivel de la que tienes abierta |
+| **La franja** (`#skBay`) | Los indicadores del prompt: el **nivel general** con la jugada que más lo sube (`calcOVRcon()`: *IA de 45 a 55 lo sube a 51*); **el nivel de cada una**, una columna por habilidad en el orden de las fichas, con su nombre (tocarla abre su ruta); **el entregable del foco** con los días que le quedan a su tramo y, si es el CT-GenAI, los simulacros (`habSimTxt()`); **tu semana de estudio** (`habSemana()`) con el rato al volante, que abre *Qué escuchar*; y los **pasos** dominados de todas las rutas y las que están **en pausa** |
+| **Las 12 fichas** (`#skGrid`) | Seis por fila, por retorno —peso por lo que falta: dónde una hora sube más tu nivel—. Cada una: su foto; arriba su **nivel** (`45/100`) y, si toca, *FOCO · 4 H* con los ángulos encendidos o *EN PAUSA* (la foto se apaga); abajo el nombre, el escalón (`skLevel()`), la barra del nivel y **lo que toca esta semana** (el tramo del foco o el `mant` de las demás); debajo, una marca por paso de su ruta y `hechos/total` |
+| **El plan de foco** (`#skPlan`) | Un tramo de `CIFRAS.HAB_FOCO` por habilidad, ancho según los meses que dura: foto, fechas, horas, el entregable y *Ahora · N días*, *Pasó* o *Desde…*. Tocar uno abre su ruta. *Ajustar en Coach →* |
 
-La lectura y el lado desplazan por dentro; a 2048×1040 —la pantalla de Adán— no desplaza nada. Un
-recurso que no es libro sale con `pfRecursoHtml()`; el estante solo aparece con dos libros o más, y las
-doce rutas van paso a paso con su `r` (`habPasos` todavía sabe leer el formato viejo).
+**La ventana** (`abrirSkillDetalle(id)`) es la de Habilidades Base (`pintarDetailOverlay`, ver *El panel
+de detalle*): el temario es la ruta de `APRENDIZAJE` (`habPasos()`); cada paso, **Qué hacer**, la caja **Por
+qué este paso** y **Con qué** (el libro con su portada y *Qué es*, o el recurso con `pfRecursoHtml()`), que
+`skillDetalle()` arma en el formato de las fichas (`cajas` y `boton`). En Recursos (`lado`): **tu nivel** con
+la marca del siguiente escalón y cuánto sube el general, **esta semana**, **se demuestra con** (`prueba`),
+**por qué esta habilidad** (`porQue`), **dónde estás** (`desc`), **dónde se practica** y los libros de su
+ruta. La frase de la cabecera dice su papel en el plan: el foco de hoy con su entregable y sus días, cuándo
+llega su foco, en mantenimiento o en pausa.
+
+**Cada paso se marca como dominado**, igual que una ficha (`toggleSkillPaso()`, en `dash_habpasos_v1`). La
+primera vez se siembra con lo que ya habías avanzado con «Siguiente paso»: los pasos anteriores al tuyo
+cuentan como hechos. **El paso de la semana es el primero sin dominar** (`habSincronizaPaso()` lo escribe en
+`dash_habfoco_v1.paso`): es el que enseña Mi Día, y su tarjeta abre esta misma ventana en ese paso.
 
 **El foco lo pone el plan** (prompt de la página: *una habilidad en foco a la vez; las demás, en
 mantenimiento*). `CIFRAS.HAB_FOCO` es una lista de tramos —IA de oct 2026 a ene 2027 (el CT-GenAI, que se presenta en
 enero), Inglés de feb a mar 2027 (la solicitud a Esslingen, que cierra el 31 de marzo), Código de abr a may 2027 (el proyecto
 para el Werkstudent) y Networking de jun a ago 2027— con horas, el paso de la semana, el
 entregable y cuándo cambia. `habPlanHoy()` da el tramo de hoy y el siguiente; `habCandidatas()`
-son esos dos (si el plan ya terminó, manda el retorno). Adán puede abrir cualquier otra ruta y se
-recuerda en `dash_habfoco_v1`. Mi Día no la sigue: el paso de la semana y *Al volante* van con el foco del plan
-(`aprendeFoco()`) o con lo que eligió ahí con «Siguiente». Los `{{marcadores}}` de las rutas se resuelven al cargar
+son esos dos (si el plan ya terminó, manda el retorno). Mi Día va con el foco del plan (`aprendeFoco()`) o
+con la que eligió ahí con «Siguiente». Los `{{marcadores}}` de las rutas se resuelven al cargar
 (`cifrarLiterales(APRENDIZAJE)`).
 
-**Tamaños.** Hasta 1050 px de alto, el texto de cada tramo va a una línea; bajo 940 px la lectura baja un
-escalón y el estante se pliega; bajo 1280 px de ancho las columnas son 260 · fluida · 290 y el plan de la
-habilidad pasa debajo de la lectura; en el celular todo va en una columna y en el flujo.
+**Tamaños.** A 2048×1040 —la pantalla de Adán— cabe sin desplazar, igual que Habilidades Base. Bajo 1280 px
+las fichas van de cuatro en cuatro; bajo 1024, de tres, y la pantalla desplaza; en el celular, de dos. La
+ventana se apila como las fichas.
 
 ---
 

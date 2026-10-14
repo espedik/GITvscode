@@ -1933,62 +1933,92 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 
 @media(max-width:640px){.debt-steps{grid-template-columns:1fr}}
 
-/* ─── "En qué invertir tu tiempo" — "mesa de estudio" con el plan a la vista ───
-   Adán: "llena con más información la sección… hay secciones que ni siquiera me aportan nada y están
-   muy separadas o divididas… deben ser cosas que me aporten a mis metas". Gobierna el prompt `skills`
-   (el paso de la semana con horas y entregable, cuándo cambia el foco y por qué). Arriba, sus tres
-   indicadores —el nivel general, el entregable del foco y la semana de estudio—; abajo, tres columnas:
-   EL PLAN DE FOCO en el tiempo (un tramo por habilidad, con foto, fechas, horas, entregable y avance),
-   EL PASO de la ruta abierta (la lectura y, al lado, esta semana, la prueba, el porqué y dónde estás) y
-   LAS 12 HABILIDADES por retorno, cada una con lo que toca esta semana. Todo lleva foto. */
+/* ─── "En qué invertir tu tiempo" — la interfaz de Habilidades Base ───────────────────────
+   Adán: «la interfaz de habilidades debe ser como la misma interfaz de habilidades base, pero con sus
+   indicadores… qué tanto tengo de cada sección… al abrir la información debe ser una ventana». Usa las
+   piezas `.hb-*` de Habilidades Base (la franja, la ficha con foto, las marcas por paso) y añade lo suyo:
+   el nivel de cada habilidad en la franja, el entregable del foco y la semana de estudio, y el plan de
+   foco al pie. La ruta se abre en la ventana de detalle (`abrirSkillDetalle`). */
 .theme-skills .slide-inner{justify-content:flex-start}
-.hab-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;flex:none;margin-bottom:14px}
-.hab-head .eyebrow{margin-bottom:6px}
-.hab-title{font-size:clamp(26px,2.6vw,36px);margin-bottom:0;line-height:1;white-space:nowrap}
-.hab-cols{flex:1;min-height:0;display:grid;grid-template-columns:minmax(300px,22%) minmax(0,1fr) minmax(320px,24%);gap:16px;align-items:stretch}
-.hab-cols>*{min-width:0}
+.theme-skills .slide-title{font-size:clamp(22px,2.8vw,40px);margin-bottom:clamp(10px,1.4vh,16px)}
+.theme-skills .hb-bay::before{background:var(--g);box-shadow:0 0 14px var(--g)}
+.sk-sub{font-size:11px;color:var(--text3);line-height:1.35}
+.sk-sub b{color:var(--text2);font-weight:700}
+.sk-sub i{font-style:normal;font-family:var(--mono);font-weight:800;color:var(--g)}
+.sk-bay .hb-n{min-width:132px;justify-content:flex-start}
+/* El nivel de cada habilidad: una columna por habilidad, en el orden de las fichas, con su nombre. */
+.sk-eq{display:flex;align-items:flex-end;gap:6px;height:clamp(44px,5.4vh,58px)}
+.sk-eq-c{flex:1;min-width:0;height:100%;display:grid;grid-template-rows:minmax(0,1fr) auto;justify-items:center;align-items:end;gap:3px;cursor:pointer}
+.sk-eq-c i{width:100%;max-width:22px;border-radius:2px 2px 0 0;opacity:.75}
+.sk-eq-c.foco i{opacity:1;box-shadow:0 0 9px var(--g)}
+.sk-eq-c.pausa i{opacity:.28}
+.sk-eq-c span{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.04em;color:var(--text3);
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sk-eq-c.foco span{color:var(--g)}
+.sk-eq-c:hover i{opacity:1}
+.sk-ind{display:flex;flex-direction:column;gap:4px;min-width:0;max-width:330px;flex:0 1 330px}
+.sk-ind-t{font-size:13px;font-weight:700;color:var(--text);line-height:1.3}
+.sk-ind-n{display:flex;align-items:baseline;gap:6px}
+.sk-ind-n b{font-family:var(--mono);font-size:clamp(20px,2vw,28px);font-weight:700;line-height:1;color:var(--text)}
+.sk-ind-n small{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--text3)}
+.sk-a{padding:0;border:0;background:none;font:inherit;color:var(--cy);font-weight:700;cursor:pointer}
+.sk-a:hover{text-decoration:underline}
+/* Las 12 fichas: seis por fila a todo lo ancho. */
+.sk-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:minmax(140px,1fr);
+  gap:clamp(8px,.8vw,11px);overflow-y:auto;padding-right:2px}
+.sk-card .hb-ph{background-color:rgba(var(--ov),.08)}
+.sk-card .hb-pc{font-size:11px;padding:3px 6px}
+.sk-card .hb-pc small{font-size:.75em;opacity:.7}
+.sk-card .hb-next{left:7px}
+.sk-card.next .hb-ph{border-color:var(--g);box-shadow:0 0 0 1px rgba(var(--g-rgb),.45),0 14px 34px rgba(var(--g-rgb),.22)}
+.sk-card.next .hb-sc::before,.sk-card.next .hb-sc::after,.sk-card .hb-br{border-color:var(--g)}
+.sk-card .hb-next{color:#05050a;background:var(--g);border-color:var(--g)}
+.sk-card .hb-next.pausa{color:#fff;background:rgba(0,0,0,.55);border-color:rgba(255,255,255,.25)}
+.sk-card.pausa .hb-ph{filter:saturate(.35)}
+.sk-tt{flex-direction:column;align-items:stretch;gap:3px;padding:8px 10px}
+.sk-tt-n{display:flex;align-items:flex-end;gap:6px;font-size:clamp(12px,1.05vw,15px)}
+.sk-tt-l{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.sk-tt-m{font-size:clamp(9.5px,.75vw,11px);font-weight:600;line-height:1.3;color:rgba(255,255,255,.85);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.sk-lvb{height:4px;border-radius:2px;background:rgba(255,255,255,.18);overflow:hidden}
+.sk-lvb i{display:block;height:100%;border-radius:2px}
+/* El plan de foco, al pie: un tramo por habilidad, ancho según lo que dura. */
+.sk-plan{flex-shrink:0;display:flex;flex-direction:column;gap:6px;margin-top:clamp(8px,1.2vh,12px)}
+.sk-plan-h{display:flex;align-items:baseline;gap:14px}
+.sk-plan-h a{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--cy);text-decoration:none}
+.sk-plan-h .sk-sub{margin-left:auto}
+.sk-plan-l{display:grid;gap:8px}
+.sk-tr{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center;padding:8px 10px;border-radius:3px;cursor:pointer;
+  text-align:left;font:inherit;color:inherit;background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.11);min-width:0}
+.sk-tr:hover{background:rgba(var(--ov),.08)}
+.sk-tr.ahora{background:rgba(var(--g-rgb),.09);border-color:rgba(var(--g-rgb),.4)}
+.sk-tr.hecho{opacity:.55}
+.sk-tr img{width:44px;height:44px;border-radius:3px;object-fit:cover}
+.sk-tr-c{display:flex;flex-direction:column;gap:2px;min-width:0}
+.sk-tr-top{display:flex;align-items:center;gap:8px;min-width:0}
+.sk-tr-n{font-size:13px;font-weight:800;color:var(--text)}
+.sk-tr-f{font-family:var(--mono);font-size:9.5px;color:var(--text3);white-space:nowrap}
+.sk-tr-chip{margin-left:auto;font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:2px 6px;border-radius:2px;border:1px solid rgba(var(--ov),.18);color:var(--text3);white-space:nowrap}
+.sk-tr.ahora .sk-tr-chip{background:var(--g);border-color:var(--g);color:#05050a}
+.sk-tr-e{font-size:11.5px;font-weight:600;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* La ventana de una habilidad: el lado de Recursos y la etiqueta de «Qué hacer». */
+.md-d-lbl{display:block;margin-bottom:6px}
+.md-sk{display:flex;flex-direction:column;gap:6px}
+.md-sk+.md-sk{margin-top:16px}
+.md-sk p{margin:0;font-size:13px;line-height:1.55;color:var(--text2)}
+.md-sk p b{color:var(--text)}
+.md-sk.foco{padding:11px 13px;border-radius:5px;background:rgba(var(--g-rgb),.08);border:1px solid rgba(var(--g-rgb),.3)}
+.md-sk.foco .md-lbl{color:var(--g)}
+.md-sk-nv{display:flex;align-items:baseline;gap:6px}
+.md-sk-nv b{font-family:var(--mono);font-size:28px;font-weight:700;line-height:1;color:var(--text)}
+.md-sk-nv span{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.md-sk-bar{height:5px;border-radius:3px;background:rgba(var(--ov),.09);position:relative}
+.md-sk-bar i{display:block;height:100%;border-radius:3px}
+.md-sk-bar u{position:absolute;top:-3px;bottom:-3px;width:2px;border-radius:1px;background:rgba(var(--ov),.5);text-decoration:none}
+.md-sk-libros{display:flex;gap:8px;flex-wrap:wrap}
+.md-paso .hf-libro,.md-paso .hf-res{margin-top:16px;max-width:66ch}
 .hab-lbl{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
-/* Los tres indicadores del prompt. */
-.hab-ovr{display:grid;grid-template-columns:repeat(3,minmax(220px,300px));gap:10px}
-.hi{display:flex;flex-direction:column;gap:5px;padding:10px 14px;border-radius:14px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);min-width:0}
-.hi-fila{display:flex;gap:11px;align-items:center;min-width:0}
-.hi-img{flex:none;width:46px;height:46px;border-radius:10px;object-fit:cover}
-.hi-n{display:flex;align-items:baseline;gap:5px}
-.hi-n b{font-family:var(--mono);font-size:28px;font-weight:800;color:var(--text);line-height:1}
-.hi-n span{font-size:12px;color:var(--text3)}
-.hi-t1{font-size:13px;font-weight:700;color:var(--text);line-height:1.3}
-.hi-t{font-size:11.5px;color:var(--text3);line-height:1.35}
-.hi-t b{color:var(--text2);font-weight:700}
-.hi-t i{font-style:normal;font-family:var(--mono);font-weight:800;color:var(--g)}
-.hi-a{padding:0;border:0;background:none;font:inherit;color:var(--cy);font-weight:700;cursor:pointer}
-.hi-a:hover{text-decoration:underline}
-/* EL PLAN DE FOCO: un tramo por habilidad, a toda la altura. */
-.hab-ruta{padding:16px 14px;display:flex;flex-direction:column;gap:10px;min-height:0;overflow:hidden}
-.hp-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
-.hp-h a{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cy);text-decoration:none}
-.hpl{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;overflow-y:auto;scrollbar-width:thin}
-.hpl-t{flex:1 0 auto;min-height:0;display:grid;grid-template-columns:62px minmax(0,1fr);gap:12px;align-items:start;width:100%;padding:11px 12px;
-  border-radius:12px;border:1px solid rgba(var(--ov),.08);background:rgba(var(--ov),.03);color:inherit;font:inherit;text-align:left;cursor:pointer;transition:background .15s,border-color .15s}
-.hpl-t:hover{background:rgba(var(--ov),.06)}
-.hpl-t.ahora{background:rgba(var(--g-rgb),.08);border-color:rgba(var(--g-rgb),.35)}
-.hpl-t.abierta{box-shadow:inset 3px 0 0 var(--cy)}
-.hpl-t.hecho{opacity:.6}
-.hpl-img{width:62px;height:62px;border-radius:10px;object-fit:cover;box-shadow:0 3px 10px rgba(0,0,0,.14)}
-.hpl-c{display:flex;flex-direction:column;gap:3px;min-width:0}
-.hpl-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.hpl-n{font-size:15px;font-weight:800;color:var(--text)}
-.hpl-chip{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border-radius:20px;
-  background:rgba(var(--ov),.07);color:var(--text2);white-space:nowrap}
-.hpl-t.ahora .hpl-chip{background:var(--g);color:#05050a}
-.hpl-f{font-family:var(--mono);font-size:10.5px;color:var(--text3)}
-.hpl-e{font-size:12.5px;font-weight:700;color:var(--text);line-height:1.35}
-.hpl-s{font-size:11.5px;color:var(--text2);line-height:1.4;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
-.hpl-cambio{font-size:11px;color:var(--text3);line-height:1.4}
-.hpl-r{display:flex;align-items:center;gap:8px;margin-top:2px;font-family:var(--mono);font-size:10px;color:var(--text3)}
-.hpl-bar{flex:1;height:4px;border-radius:2px;background:rgba(var(--ov),.08);overflow:hidden}
-.hpl-bar i{display:block;height:100%;background:var(--g)}
-.hp-pie{flex:none;font-size:11px;color:var(--text3);line-height:1.45;padding-top:8px;border-top:1px solid rgba(var(--ov),.09)}
-/* Los botones de la casa (también los usa la agenda de Mi Día). */
 .hf-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:10px;font-family:inherit;font-size:12.5px;font-weight:800;
   background:rgba(var(--ov),.06);border:1px solid var(--card-br);color:var(--text);cursor:pointer;text-decoration:none;white-space:nowrap;transition:background .15s}
 .hf-btn:hover{background:rgba(var(--ov),.11)}
@@ -1996,32 +2026,6 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .hf-btn.primario{background:var(--g);border-color:var(--g);color:#05050a}
 .hf-btn.primario:hover{background:var(--g);filter:brightness(1.08)}
 .hf-btn:disabled{opacity:.4;cursor:default}
-/* EL PASO: cabecera con la ruta en pasos, la lectura y, al lado, el plan de la habilidad. */
-.hab-foco{position:relative;padding:18px 26px 16px;display:flex;flex-direction:column;gap:12px;min-width:0;min-height:0;overflow:hidden}
-.hab-foco::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;z-index:1;background:linear-gradient(90deg,transparent,var(--g),transparent);opacity:.5}
-.hf-cab{flex:none;display:flex;align-items:center;gap:14px;min-width:0}
-.hf-cab-img{flex:none;width:52px;height:52px;border-radius:12px;object-fit:cover}
-.hf-cab-t{display:flex;flex-direction:column;gap:3px;min-width:0}
-.hf-cab-n{font-size:17px;font-weight:800;color:var(--text)}
-.hf-cab-v{font-family:var(--mono);font-size:10.5px;color:var(--text3)}
-.hf-steps{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-.hf-st{width:30px;height:30px;border-radius:50%;border:1px solid rgba(var(--ov),.16);background:transparent;color:var(--text2);
-  font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer}
-.hf-st.ok{background:rgba(var(--g-rgb),.18);border-color:transparent;color:var(--text)}
-.hf-st.act{background:var(--g);border-color:var(--g);color:#05050a}
-.hf-aviso{flex:none;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 12px;border-radius:10px;font-size:12.5px;color:var(--text2);
-  background:rgba(var(--cy-rgb),.08);border:1px solid rgba(var(--cy-rgb),.25)}
-.hf-aviso b{color:var(--text)}
-.hf-aviso button{margin-left:auto;padding:5px 11px;border-radius:8px;border:1px solid var(--cy);background:transparent;color:var(--cy);font:inherit;font-weight:700;cursor:pointer}
-.hf-cuerpo{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,34%);gap:22px}
-.hf-lectura{min-height:0;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column;gap:14px;padding-right:4px}
-.hf-h1{font-family:var(--font-title);font-size:clamp(26px,2.4vw,40px);font-weight:600;line-height:1.08;letter-spacing:-.015em;color:var(--text);text-wrap:pretty}
-.hf-qw{display:grid;grid-template-columns:6px minmax(0,1fr);gap:14px}
-.hf-qw>i{border-radius:4px;background:var(--g);opacity:.8}
-.hf-blk{display:flex;flex-direction:column;gap:6px}
-.hf-q{font-size:17px;color:var(--text2);line-height:1.55}
-.hf-c{font-size:16px;color:var(--text2);line-height:1.65}
-.hf-q b,.hf-c b{color:var(--text);font-weight:700}
 .hf-libro{display:grid;grid-template-columns:70px minmax(0,1fr) auto;gap:16px;align-items:center;padding:12px 15px;border-radius:14px;
   background:rgba(var(--g-rgb),.07);border:1px solid rgba(var(--g-rgb),.2)}
 .hf-libro img{width:70px;height:102px;object-fit:cover;border-radius:4px;box-shadow:0 8px 20px rgba(0,0,0,.25);background:rgba(var(--ov),.08)}
@@ -2033,104 +2037,22 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .hf-libro .hf-btn{background:rgba(var(--g-rgb),.12);border-color:rgba(var(--g-rgb),.35);color:var(--g)}
 .hf-res{padding:11px 14px;border-radius:12px;background:rgba(var(--g-rgb),.07);border:1px solid rgba(var(--g-rgb),.2)}
 .hf-res .hab-lbl{color:var(--g);margin-bottom:6px;display:block}
-/* Lo que viene: el siguiente paso de la ruta y lo que pide, más chico, al final de la lectura. */
-.hf-sig{padding-top:12px;border-top:1px solid rgba(var(--ov),.08)}
-.hf-sig-t{font-size:14px;line-height:1.55;color:var(--text3)}
-.hf-sig-t b{color:var(--text2);font-weight:700}
-.hf-estante{display:flex;flex-direction:column;gap:7px}
-.hf-estante-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
-.hf-estante-h small{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--text3)}
-.hf-estante-l{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
 .hf-tomo{padding:0;border:none;background:none;cursor:pointer;line-height:0;border-radius:3px;opacity:.85;transition:opacity .15s,transform .15s}
 .hf-tomo img{width:46px;height:68px;object-fit:cover;border-radius:3px;box-shadow:0 6px 14px rgba(0,0,0,.18);background:rgba(var(--ov),.08)}
 .hf-tomo:hover{opacity:1;transform:translateY(-2px)}
 .hf-tomo.act{opacity:1;outline:2px solid var(--g);outline-offset:2px}
-/* Al lado de la lectura: el plan de la habilidad, en bloques con su etiqueta. */
-.hf-lado{min-height:0;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column;gap:9px;padding-left:20px;border-left:1px solid rgba(var(--ov),.08)}
-.hf-pl{display:flex;flex-direction:column;gap:4px}
-.hf-pl p{margin:0;font-size:13px;line-height:1.5;color:var(--text2)}
-.hf-pl p b{color:var(--text)}
-.hf-pl.foco{padding:10px 12px;border-radius:10px;background:rgba(var(--g-rgb),.08);border:1px solid rgba(var(--g-rgb),.3)}
-.hf-pl.foco .hab-lbl{color:var(--g)}
-.hf-pie{flex:none;display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:12px;border-top:1px solid rgba(var(--ov),.09)}
-.hf-pie-t{font-size:12.5px;color:var(--text3)}
-.hf-pie-t b{color:var(--text2);font-weight:700}
-.hf-pie-b{display:flex;gap:8px}
-/* LAS 12 HABILIDADES: por retorno, medidas por nivel, cada una con lo que toca esta semana. */
-.hab-rank{padding:16px 14px;min-height:0;display:flex;flex-direction:column;gap:8px;overflow:hidden}
-.hr-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.hr-sub{font-size:10px;color:var(--text3);text-align:right}
-.hr-rows{display:flex;flex-direction:column;justify-content:space-between;flex:1;min-height:0;gap:2px;overflow-y:auto;scrollbar-width:thin}
-.hr-row{display:grid;grid-template-columns:16px 34px minmax(0,1fr);gap:9px;align-items:center;padding:3px 8px;border-radius:9px}
-.hr-row.pausa{opacity:.45}
-.hr-row.foco{background:rgba(var(--g-rgb),.09)}
-.hr-row.abrible{cursor:pointer;transition:background .13s}
-.hr-row.abrible:hover{background:rgba(var(--ov),.05)}
-.hr-row.abierta{box-shadow:inset 2px 0 0 var(--cy)}
-.hr-n{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text3)}
-.hr-row.foco .hr-n{color:var(--g)}
-.hr-img{width:34px;height:34px;border-radius:8px;object-fit:cover}
-.hr-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:3px}
-.hr-name{font-size:13px;font-weight:700;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hr-row.foco .hr-name{font-weight:800}
-.hr-v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;color:var(--text);flex-shrink:0}
-.hr-tag{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.1em;color:var(--text3)}
-.hr-bar{position:relative;height:4px;background:rgba(var(--ov),.07);border-radius:3px}
-.hr-fill{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
-.hr-meta{position:absolute;top:-3px;bottom:-3px;width:2px;background:rgba(var(--ov),.42);border-radius:1px}
-.hr-mant{margin-top:3px;font-size:11px;color:var(--text3);line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hr-mant b{color:var(--text2);font-family:var(--mono);font-weight:700}
-.hr-nota{flex:none;font-size:11px;color:var(--text3);line-height:1.45;padding-top:8px;border-top:1px solid rgba(var(--ov),.09)}
-.hr-nota b{color:var(--text);font-weight:700}
-/* Hasta ~1050 px de alto (la pantalla de Adán, 2048×1040): el texto de cada tramo, a una línea, para que
-   los cuatro quepan sin desplazar. */
-@media(max-height:1050px){.hpl-s{-webkit-line-clamp:1}.hpl-t{padding:9px 11px}}
-/* Pantallas bajas: la lectura baja un escalón y el estante se pliega. */
-@media(max-height:940px){
-  .hab-head{margin-bottom:10px}
-  .hab-title{font-size:clamp(24px,2.2vw,30px)}
-  .hi-n b{font-size:24px}
-  .hab-foco{padding:16px 22px 14px;gap:10px}
-  .hf-h1{font-size:clamp(22px,2.2vw,32px)}
-  .hf-q{font-size:15px}
-  .hf-c{font-size:14.5px;line-height:1.6}
-  .hf-estante{display:none}
-  .hpl-s{-webkit-line-clamp:1}
+@media(max-width:1500px){ .sk-ind{flex-basis:260px} }
+@media(max-width:1280px){ .sk-grid{grid-template-columns:repeat(4,minmax(0,1fr))} }
+@media(max-width:1024px){
+  .sk-grid{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:190px;overflow:visible;flex:none}
+  .sk-ind{flex-basis:100%;max-width:none}
+  .sk-plan-l{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
-/* Menos ancho: los indicadores bajan a su propia fila y el plan del paso va debajo de la lectura. */
-@media(max-width:1500px){
-  .hab-head{grid-template-columns:minmax(0,1fr)}
-  .hab-ovr{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:640px){
+  .sk-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:170px}
+  .sk-plan-l{grid-template-columns:minmax(0,1fr)!important}
+  .sk-plan-h .sk-sub{display:none}
 }
-@media(max-width:1280px){
-  .hab-cols{grid-template-columns:260px minmax(0,1fr) 290px;gap:12px}
-  .hf-cuerpo{grid-template-columns:minmax(0,1fr)}
-  .hf-lado{padding-left:0;border-left:0;border-top:1px solid rgba(var(--ov),.08);padding-top:10px;overflow:visible}
-  .hf-cuerpo{overflow-y:auto}
-  .hf-lectura{overflow:visible}
-}
-/* Teléfono: todo en una columna y en el flujo. */
-@media(max-width:900px){
-  .hab-ovr{grid-template-columns:minmax(0,1fr)}
-  .hab-cols{grid-template-columns:minmax(0,1fr);gap:12px}
-  .hab-ruta,.hab-foco,.hab-rank{overflow:visible}
-  .hpl{overflow:visible}
-  .hpl-t{min-height:0}
-  .hf-cab{flex-wrap:wrap}
-  .hf-steps{margin-left:0;justify-content:flex-start}
-  .hf-cuerpo{display:flex;flex-direction:column;overflow:visible}
-  .hf-h1{font-size:28px}
-  .hf-q{font-size:15px}
-  .hf-c{font-size:14.5px}
-  .hf-libro{grid-template-columns:52px minmax(0,1fr);gap:12px;padding:12px}
-  .hf-libro img{width:52px;height:76px}
-  .hf-libro .hf-btn{grid-column:1/-1;min-height:44px}
-  .hf-pie{flex-wrap:wrap}
-  .hf-pie-b{flex:1 1 100%}
-  .hf-pie .hf-btn{flex:1;min-height:44px}
-  .hr-rows{overflow:visible}
-}
-
 
 /* ─── Franja "Qué escuchar en Didi" (2026-08-15) ───────────────────────────
    Pedido: "cuando maneje en didi ponga podcast, audiolibros... pon que hacer en didi".
@@ -4415,23 +4337,20 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
     </div>
   </section>
 
-  <!-- 4 · COACH: HABILIDADES — "mesa de estudio" con el plan a la vista: arriba los tres indicadores
-       del prompt (nivel general, entregable del foco y semana de estudio); abajo el plan de foco, el paso
-       de la ruta abierta y las 12 habilidades con lo que toca esta semana. Los ids los pinta renderSkills(). -->
+  <!-- 4 · COACH: HABILIDADES — la interfaz de Habilidades Base: la franja con sus indicadores (el nivel
+       general, el de cada habilidad, el entregable del foco, la semana de estudio y los pasos de las rutas),
+       las 12 habilidades como fichas con foto y, al pie, el plan de foco. Tocar una abre su ruta en la
+       ventana de detalle (abrirSkillDetalle). Los ids los pinta renderSkills(). -->
   <section class="slide theme-skills" data-i="4">
     <div class="slide-inner">
-      <div class="hab-head reveal d1">
-        <div>
-          <div class="eyebrow"><span class="dot"></span> Coach · Habilidades</div>
-          <div class="slide-title hab-title"><span class="ico">🧠</span> En qué invertir tu tiempo</div>
-        </div>
-        <div class="hab-ovr" id="habOvr"></div>
+      <div class="hb-hd reveal d1">
+        <div class="eyebrow"><span class="dot"></span> Coach · Habilidades</div>
+        <div class="hb-hint">Toca una habilidad para abrir su ruta</div>
       </div>
-      <div class="hab-cols reveal d2">
-        <div class="tile hab-ruta" id="habRuta"></div>
-        <div class="tile hab-foco" id="habFoco"></div>
-        <div class="tile hab-rank" id="habRank"></div>
-      </div>
+      <div class="slide-title reveal d2"><span class="ico">🧠</span> En qué invertir tu tiempo</div>
+      <div class="hb-bay sk-bay reveal d3" id="skBay"></div>
+      <div class="sk-grid reveal d4" id="skGrid"></div>
+      <div class="sk-plan reveal d4" id="skPlan"></div>
     </div>
   </section>
 
@@ -7007,7 +6926,8 @@ function apPunto(html, cls){
   return `<span class="ap-pt${cls ? ' ' + cls : ''}"><span class="ap-pt-t ap-cl l2" data-min="1">${h}</span></span>`;
 }
 // El paso de la semana, resumido: el paso con su ruta en tramos, qué hacer y lo que sigue; donde sobra
-// alto, el libro, el porqué y la idea del libro. Tocarlo abre En qué invertir tu tiempo.
+// alto, el libro, el porqué y la idea del libro. Tocarlo abre la ruta en su ventana (abrirSkillDetalle),
+// la misma de En qué invertir tu tiempo.
 function pasoSemanaHtml(){
   if(typeof habFocoActual!=='function') return '';
   const foco=aprendeFoco(); if(!foco) return '';
@@ -7026,8 +6946,8 @@ function pasoSemanaHtml(){
     +(fi.idea?apBloque('La idea del libro',`<span class="ap-bq-idea ap-cl">${fi.idea}</span>`,'ap-opc'):'');
   return apTarjeta({ c:'var(--w)', mat:`${esc(foco.name)} · ${propia?'elegida por ti':'esta semana'}`,
     estado:`<span class="ap-av-n">${i+1}/${pasos.length}</span>`, ctl:apCtl('paso','Habilidad',propia?esc(rec.name):''),
-    foto:apFotoLibro(r&&r.id, foco.id), ico:foco.icon, abrir:"irASlide('theme-skills')",
-    titulo:`Abrir En qué invertir tu tiempo${lib?` · con ${habAttr(lib.t)}`:''}`, txt });
+    foto:apFotoLibro(r&&r.id, foco.id), ico:foco.icon, abrir:`abrirSkillDetalle('${foco.id}')`,
+    titulo:`Abrir la ruta de ${habAttr(foco.name)}${lib?` · con ${habAttr(lib.t)}`:''}`, txt });
 }
 // La ficha de Habilidades Base en curso, resumida: el paso que toca con su entrada, por qué te toca según
 // el plan de Coach (`hbPlan()`) y lo que sigue; donde sobra alto, los puntos del paso, un renglón cada uno.
@@ -10957,11 +10877,6 @@ function habConRuta(){
   const plan = habCandidatas().filter(s => habPasos(s.id).length);
   return plan.concat(SK.filter(s => habPasos(s.id).length && !plan.includes(s)).sort((a, b) => skRetorno(b) - skRetorno(a)));
 }
-function habFocoSet(id){ const st = habFocoLoad(); st.skill = id; habFocoSave(st); renderSkills(); }
-function habPasoSet(i){
-  const f = habFocoActual(); if(!f) return;
-  const st = habFocoLoad(); st.paso[f.id] = i; habFocoSave(st); renderSkills();
-}
 // Para title="": el texto de APRENDIZAJE trae <b> y comillas dobles ("Influence", "$100M
 // Offers"), que romperían el atributo si se metieran tal cual.
 function habAttr(t){ return String(t || '').replace(/<[^>]*>/g, '').replace(/"/g, '&quot;'); }
@@ -11009,70 +10924,48 @@ function habSimTxt(){
   return s.n ? `Simulacro: el último <b>${s.ult.pts} de ${s.max}</b>, el mejor ${s.mejor}; presentas con <b>${s.meta}</b> dos veces seguidas${s.listo ? ' — <i>ya lo tienes</i>' : ''}.`
     : `Sin simulacros todavía: presentas con <b>${s.meta} de ${s.max}</b> dos veces seguidas.`;
 }
-function renderSkills(){
-  renderDidiStrip();
-  const cand = habCandidatas(); if(!cand.length) return;
-  const foco = habFocoActual();
-  const pasos = habPasos(foco.id); if(!pasos.length) return;
-  const st = habFocoLoad();
-  let i = st.paso[foco.id] || 0; if(i < 0 || i >= pasos.length) i = 0;
-  const p = pasos[i], H = habPlanHoy(), rec = habRecomendada();
-  const tramoF = H.todos.find(t => t.id === foco.id) || null, enFoco = !!(H.tramo && H.tramo.id === foco.id);
-  const skN = id => (SK.find(s => s.id === id) || {}).name || id, sem = habSemana();
-  const fotoSk = id => (typeof apFotoSk === 'function' ? apFotoSk(id) : null);
-  const img = (f, cls) => (typeof apImg === 'function' ? apImg(f, cls) : '');
+// ── El avance de cada ruta. Cada paso se marca como dominado en la ventana, igual que una ficha de
+//    Habilidades Base (`dash_habpasos_v1`: {habilidad: {paso: true}}). El paso de la semana —el de Mi Día,
+//    `dash_habfoco_v1.paso`— es el primero sin dominar. La primera vez se siembra con lo que ya habías
+//    avanzado con «Siguiente paso»: los pasos de antes del tuyo cuentan como hechos.
+const HABPASOS_KEY = 'dash_habpasos_v1';
+function habPasosStore(){
+  let st = rawGet(HABPASOS_KEY, null);
+  if(!st || typeof st !== 'object'){
+    st = {};
+    const p = habFocoLoad().paso;
+    Object.keys(p).forEach(id => {
+      const n = Math.min(p[id] || 0, habPasos(id).length);
+      if(n > 0){ st[id] = {}; for(let k = 0; k < n; k++) st[id][k] = true; }
+    });
+    rawSet(HABPASOS_KEY, st);
+  }
+  return st;
+}
+function habAvanceRuta(id){
+  const pasos = habPasos(id), m = habPasosStore()[id] || {};
+  const hechos = pasos.filter((_, k) => m[k]).length;
+  return { hechos, total: pasos.length, pct: pasos.length ? Math.round(hechos / pasos.length * 100) : 0 };
+}
+function habSincronizaPaso(id){
+  const n = habPasos(id).length, m = habPasosStore()[id] || {};
+  let k = 0; while(k < n && m[k]) k++;
+  const st = habFocoLoad(); st.paso[id] = Math.max(0, Math.min(k, n - 1)); habFocoSave(st);
+}
 
-  // ── Los tres indicadores del prompt.
-  const ovr = calcOVR(), meta = skSiguienteEscalon(foco.val), ovrF = calcOVRcon(foco.id, meta);
-  const t = H.tramo, focoSk = t ? SK.find(s => s.id === t.id) : null;
-  const avanceT = id => { const n = habPasos(id).length, k = Math.min(n, (st.paso[id] || 0)); return { n, k }; };
-  document.getElementById('habOvr').innerHTML = `
-    <div class="hi">
-      <span class="hab-lbl">Nivel general</span>
-      <div class="hi-n"><b>${ovr}</b><span>/100</span></div>
-      <div class="pbar" style="height:5px"><div class="pfill" style="width:${ovr}%;background:${skLevel(ovr).c}"></div></div>
-      <div class="hi-t">Llevar ${foco.name} de <b>${foco.val} a ${meta}</b> lo sube a <i>${ovrF}</i>. Sube con evidencia, no con sensación.</div>
-    </div>
-    ${t ? `<div class="hi"><span class="hab-lbl">El entregable del foco · ${esc(skN(t.id))}</span>
-      <div class="hi-fila">${img(fotoSk(t.id), 'hi-img')}<div>
-        <div class="hi-t1">${esc(t.entregable)}</div>
-        <div class="hi-t">Faltan <b>${habDiasA(t.hasta)} días</b> de su tramo (${cdMes(t.desde)} – ${cdMes(t.hasta)}).
-          ${/CT-GenAI/.test(t.entregable) ? habSimTxt() : (() => { const a = avanceT(t.id); return `Su ruta: <b>${a.k} de ${a.n}</b> pasos.`; })()}</div>
-      </div></div></div>` : ''}
-    <div class="hi"><span class="hab-lbl">Tu semana de estudio</span>
-      <div class="hi-n"><b>${String(sem.hFoco + sem.hMant).replace('.', ',')}</b><span>h</span></div>
-      <div class="hi-t"><b>${sem.hFoco} h</b> de foco${focoSk ? ` en ${esc(focoSk.name)}` : ''} + <b>${String(sem.hMant).replace('.', ',')} h</b> de mantenimiento en ${sem.mant.length} habilidades.
-        Al volante, <button type="button" class="hi-a" onclick="abrirDidi()">${didiViajes().totalTxt} a la semana →</button></div>
-    </div>`;
-
-  // ── EL PLAN DE FOCO: los tramos de HAB_FOCO, uno por habilidad, con su foto, fechas, horas, entregable y
-  //    avance. El de hoy, marcado y con lo que dice de cuándo cambia. Tocar uno abre su ruta.
-  const hoyYm = new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0');
-  const ultimo = H.todos[H.todos.length - 1];
-  document.getElementById('habRuta').innerHTML = `
-    <div class="hp-h"><span class="hab-lbl">El plan de foco</span><a href="../Coach/Coach.html#aprendizaje">Ajustar en Coach →</a></div>
-    <div class="hpl">${H.todos.map(x => {
-      const s = SK.find(y => y.id === x.id) || { name: x.id }, a = avanceT(x.id);
-      const est = x.hasta < hoyYm ? 'hecho' : (H.tramo && H.tramo.id === x.id) ? 'ahora' : 'luego';
-      const chip = est === 'ahora' ? `Ahora · ${habDiasA(x.hasta)} días` : est === 'hecho' ? 'Pasó' : 'Desde ' + cdMes(x.desde);
-      return `<button type="button" class="hpl-t ${est}${x.id === foco.id ? ' abierta' : ''}" onclick="habFocoSet('${x.id}')" title="Abrir la ruta de ${habAttr(s.name)}">
-        ${img(fotoSk(x.id), 'hpl-img')}
-        <span class="hpl-c">
-          <span class="hpl-top"><span class="hpl-n">${esc(s.name)}</span><span class="hpl-chip">${chip}</span></span>
-          <span class="hpl-f">${cdMes(x.desde)} – ${cdMes(x.hasta)} · ${x.horas} h a la semana</span>
-          <span class="hpl-e">${esc(x.entregable)}</span>
-          <span class="hpl-s">${esc(x.semana)}</span>
-          ${est === 'ahora' ? `<span class="hpl-cambio">${esc(x.cambio)}</span>` : ''}
-          <span class="hpl-r"><span class="hpl-bar"><i style="width:${a.n ? Math.round(a.k / a.n * 100) : 0}%"></i></span>${a.k} de ${a.n} pasos</span>
-        </span>
-      </button>`; }).join('')}</div>
-    ${ultimo ? `<div class="hp-pie">${esc(ultimo.cambio)} Las demás habilidades van en mantenimiento: una hora o media a la semana.</div>` : ''}`;
-
-  // ── EL PASO: la ruta abierta. Arriba, sus pasos; si no es el foco de hoy, un aviso para volver a él.
-  //    A la izquierda la lectura —el paso, su porqué, qué hacer, el libro y el estante— y, al lado, el plan
-  //    de la habilidad: esta semana, con qué se demuestra, por qué ahora, dónde estás y dónde se practica.
+// ── La ventana de una habilidad: la misma de Habilidades Base (`pintarDetailOverlay`), con la ruta de
+//    APRENDIZAJE como temario. Cada paso: qué hacer, por qué este paso y con qué (el libro o el recurso);
+//    a la derecha, el plan de la habilidad —su nivel, esta semana, con qué se demuestra, por qué esta
+//    habilidad, dónde estás, dónde se practica y los libros de su ruta—.
+const SKILL_DETALLE = {};
+function skPapel(s){
+  const H = habPlanHoy(), tramo = H.todos.find(t => t.id === s.id) || null;
+  const foco = !!(H.tramo && H.tramo.id === s.id), pausa = PRIORIDAD_EXCLUIDAS.includes(s.id);
+  return { H, tramo, foco, pausa };
+}
+function skConQue(p){
   const recs = Array.isArray(p.r) ? p.r : (p.r ? [p.r] : []);
-  const conQue = recs.map(r => {
+  return recs.map(r => {
     const lib = (r && r.t === 'libro') ? habLibro(r.id) : null;
     if(!lib) return typeof pfRecursoHtml === 'function' ? `<div class="hf-res"><span class="hab-lbl">Con qué</span>${pfRecursoHtml(r)}</div>` : '';
     return `<div class="hf-libro">
@@ -11088,75 +10981,155 @@ function renderSkills(){
       </button>
     </div>`;
   }).join('');
-  const estante = habLibrosRuta(pasos), idsPaso = recs.filter(r => r && r.t === 'libro').map(r => r.id);
-  const estanteHtml = estante.length >= 2 ? `
-    <div class="hf-estante">
-      <div class="hf-estante-h"><span class="hab-lbl">Los libros de esta ruta</span><small>${estante.length} · toca uno para ver qué es</small></div>
-      <div class="hf-estante-l">${estante.map(lib => `
-        <button class="hf-tomo${idsPaso.includes(lib.id) ? ' act' : ''}" onclick="pfAbrirId('libros','${lib.id}')" title="${habAttr(lib.t)} — ${habAttr(lib.a)}"><img src="${lib.portada || ''}" alt="${habAttr(lib.t)}" loading="lazy"></button>`).join('')}</div>
-    </div>` : '';
-  const semanaTxt = enFoco ? `<b>${tramoF.horas} h</b> a la semana: ${tramoF.semana}`
-    : (foco.mant ? (foco.mant.h ? `<b>${foco.mant.h} h</b> a la semana: ` : '') + foco.mant.txt : '');
-  const l = skLevel(foco.val);
-  const aviso = !enFoco && rec && rec.id !== foco.id ? `<div class="hf-aviso"><span>Estás viendo la ruta de <b>${esc(foco.name)}</b>${
-    foco.pausa ? ', en pausa por decisión tuya' : tramoF ? `: su foco es <b>${habTramoTxt(tramoF)}</b>` : ', en mantenimiento'}. El foco de hoy es <b>${esc(rec.name)}</b>.</span>
-    <button type="button" onclick="habFocoSet('${rec.id}')">Volver al foco →</button></div>` : '';
-  document.getElementById('habFoco').innerHTML = `
-    <div class="hf-cab">
-      ${img(fotoSk(foco.id), 'hf-cab-img')}
-      <div class="hf-cab-t"><span class="hab-lbl" style="color:var(--cy)">${enFoco ? 'El foco de hoy' : 'Su ruta'} · paso ${String(i + 1).padStart(2, '0')} de ${pasos.length}</span>
-        <span class="hf-cab-n">${esc(foco.name)}</span>
-        <span class="hf-cab-v">${foco.val}/100 · ${l.l.toLowerCase()} · pesa ×${foco.w} · rinde ${skRetorno(foco)}</span></div>
-      <div class="hf-steps">${pasos.map((x, j) => `<button type="button" class="hf-st${j < i ? ' ok' : j === i ? ' act' : ''}" onclick="habPasoSet(${j})" title="${j + 1}. ${habAttr(x.n)}">${j + 1}</button>`).join('')}</div>
+}
+function skillDetalle(id){
+  const s = SK.find(x => x.id === id), pasos = habPasos(id);
+  if(!s || !pasos.length) return null;
+  const { tramo, foco, pausa } = skPapel(s), lv = skLevel(s.val), meta = skSiguienteEscalon(s.val);
+  const frase = foco ? `El foco de hoy: ${tramo.entregable} Faltan ${habDiasA(tramo.hasta)} días de su tramo.`
+    : pausa ? `En pausa por decisión tuya.${s.mant && s.mant.txt ? ' ' + s.mant.txt : ''}`
+    : tramo ? `Su foco llega ${habTramoTxt(tramo)}: ${tramo.entregable}`
+    : `En mantenimiento${s.mant && s.mant.h ? `: ${String(s.mant.h).replace('.', ',')} h a la semana` : ''}.`;
+  const semana = foco ? `<b>${tramo.horas} h</b> a la semana: ${tramo.semana}`
+    : (s.mant ? (s.mant.h ? `<b>${String(s.mant.h).replace('.', ',')} h</b> a la semana: ` : '') + s.mant.txt : '');
+  const bloque = (lbl, txt, cls) => txt ? `<div class="md-sk${cls ? ' ' + cls : ''}"><span class="md-lbl">${lbl}</span><p>${txt}</p></div>` : '';
+  const libros = habLibrosRuta(pasos);
+  const lado = `<div class="md-sk"><span class="md-lbl">Tu nivel</span>
+      <div class="md-sk-nv"><b>${s.val}</b><span>/100 · ${lv.l.toLowerCase()} · pesa ×${s.w} · rinde ${skRetorno(s)}</span></div>
+      <div class="md-sk-bar"><i style="width:${s.val}%;background:${lv.c}"></i><u style="left:${meta}%"></u></div>
+      <p>Llevarla de <b>${s.val} a ${meta}</b> sube tu nivel general a <b>${calcOVRcon(s.id, meta)}</b>. Sube con evidencia, no con sensación.</p></div>`
+    + bloque('Esta semana', semana, foco ? 'foco' : '')
+    + bloque('Se demuestra con', s.prueba || (tramo && tramo.entregable))
+    + bloque('Por qué esta habilidad', s.porQue)
+    + bloque('Dónde estás', s.desc)
+    + bloque('Dónde se practica', s.practica)
+    + (libros.length ? `<div class="md-sk"><span class="md-lbl">Los libros de esta ruta</span><div class="md-sk-libros">${libros.map(lib =>
+        `<button class="hf-tomo" onclick="pfAbrirId('libros','${lib.id}')" title="${habAttr(lib.t)} — ${habAttr(lib.a)}"><img src="${lib.portada || ''}" alt="${habAttr(lib.t)}" loading="lazy"></button>`).join('')}</div></div>` : '');
+  return {
+    titulo: s.name, frase,
+    eyebrow: foco ? 'El foco de hoy' : pausa ? 'En pausa' : tramo ? 'Su foco: ' + habTramoTxt(tramo) : 'En mantenimiento',
+    lado,
+    pasos: pasos.map(p => ({
+      t: p.n,
+      d: p.c ? `<span class="md-lbl md-d-lbl">Qué hacer</span>${p.c}` : '',
+      cajas: p.q ? [{ lbl: 'Por qué este paso', txt: p.q }] : [],
+      boton: skConQue(p)
+    }))
+  };
+}
+function abrirSkillDetalle(id){
+  habPasosStore();
+  const info = skillDetalle(id); if(!info) return;
+  SKILL_DETALLE[id] = info;
+  const f = typeof apFotoSk === 'function' ? apFotoSk(id) : null;
+  const hero = document.getElementById('metaDetailHero');
+  hero.style.background = ''; hero.style.backgroundImage = f ? `url('${f.u}')` : 'none';
+  document.getElementById('metaDetailTitle').textContent = info.titulo;
+  document.getElementById('metaDetailFrase').textContent = info.frase;
+  document.getElementById('metaDetailEyebrow').textContent = 'En qué invertir tu tiempo · ' + info.eyebrow;
+  pintarDetailOverlay(SKILL_DETALLE, HABPASOS_KEY, id, 'toggleSkillPaso', null);
+  document.getElementById('metaDetailOverlay').classList.add('open');
+  clearInterval(timer);
+}
+function toggleSkillPaso(id, idx){
+  const st = habPasosStore();
+  if(!st[id]) st[id] = {};
+  st[id][idx] = !st[id][idx];
+  rawSet(HABPASOS_KEY, st);
+  habSincronizaPaso(id);
+  pintarDetailOverlay(SKILL_DETALLE, HABPASOS_KEY, id, 'toggleSkillPaso', null);
+  renderSkills();
+  if(typeof renderHeroAprender === 'function') renderHeroAprender();
+}
+
+// ── La pantalla: la interfaz de Habilidades Base con los indicadores del prompt `skills`. Arriba la franja
+//    —el nivel general con la jugada que más lo sube, el nivel de cada habilidad, el entregable del foco,
+//    tu semana de estudio y los pasos de las rutas—; las 12 fichas por retorno (dónde una hora sube más tu
+//    nivel), cada una con su nivel, lo que toca esta semana y las marcas de su ruta; al pie, el plan de foco.
+function renderSkills(){
+  renderDidiStrip();
+  const bay = document.getElementById('skBay'), grid = document.getElementById('skGrid'), plan = document.getElementById('skPlan');
+  if(!bay || !grid || !plan) return;
+  const H = habPlanHoy(), sem = habSemana(), ovr = calcOVR(), t = H.tramo;
+  const focoSk = t ? SK.find(s => s.id === t.id) : null;
+  const jugada = focoSk || [...SK].sort((a, b) => skRetorno(b) - skRetorno(a))[0];
+  const metaJ = skSiguienteEscalon(jugada.val), ovrJ = calcOVRcon(jugada.id, metaJ);
+  const orden = [...SK].sort((a, b) => skRetorno(b) - skRetorno(a));
+  const av = orden.map(s => Object.assign({ s, lv: skLevel(s.val) }, habAvanceRuta(s.id), skPapel(s)));
+  const pasosH = av.reduce((a, x) => a + x.hechos, 0), pasosT = av.reduce((a, x) => a + x.total, 0);
+  const pausas = av.filter(x => x.pausa).length;
+  const corto = n => n.length > 9 ? n.slice(0, 8) + '.' : n;
+
+  bay.innerHTML = `
+    <div class="hb-n">
+      <span class="hb-k">NIVEL GENERAL</span>
+      <span class="hb-v"><b>${ovr}</b><i>/100</i></span>
+      <span class="sk-sub">${esc(jugada.name)} de ${jugada.val} a ${metaJ} lo sube a <i>${ovrJ}</i></span>
     </div>
-    ${aviso}
-    <div class="hf-cuerpo">
-      <div class="hf-lectura">
-        <div class="hf-h1">${p.n}</div>
-        ${p.q ? `<div class="hf-qw"><i></i><div class="hf-blk"><span class="hab-lbl" style="color:var(--g)">Por qué este paso</span><div class="hf-q">${p.q}</div></div></div>` : ''}
-        <div class="hf-blk"><span class="hab-lbl" style="color:var(--cy)">Qué hacer</span><div class="hf-c">${p.c}</div></div>
-        ${conQue}
-        ${estanteHtml}
-        ${pasos[i + 1] ? `<div class="hf-blk hf-sig"><span class="hab-lbl">Lo que viene · paso ${String(i + 2).padStart(2, '0')}</span><div class="hf-sig-t"><b>${pasos[i + 1].n}.</b> ${pasos[i + 1].c || ''}</div></div>` : ''}
-      </div>
-      <aside class="hf-lado">
-        ${semanaTxt ? `<div class="hf-pl${enFoco ? ' foco' : ''}"><span class="hab-lbl">Esta semana</span><p>${semanaTxt}</p></div>` : ''}
-        ${foco.prueba || (tramoF && tramoF.entregable) ? `<div class="hf-pl"><span class="hab-lbl">Se demuestra con</span><p>${foco.prueba || tramoF.entregable}</p></div>` : ''}
-        ${foco.porQue ? `<div class="hf-pl"><span class="hab-lbl">Por qué esta habilidad</span><p>${foco.porQue}</p></div>` : ''}
-        ${foco.desc ? `<div class="hf-pl"><span class="hab-lbl">Dónde estás</span><p>${foco.desc}</p></div>` : ''}
-        ${foco.practica ? `<div class="hf-pl"><span class="hab-lbl">Dónde se practica</span><p>${foco.practica}</p></div>` : ''}
-      </aside>
+    <div class="hb-d"></div>
+    <div class="hb-eqw">
+      <span class="hb-k">EL NIVEL DE CADA UNA · POR RETORNO</span>
+      <div class="sk-eq">${av.map(x => `<div class="sk-eq-c${x.foco ? ' foco' : ''}${x.pausa ? ' pausa' : ''}" onclick="abrirSkillDetalle('${x.s.id}')" title="${habAttr(x.s.name)}: ${x.s.val}/100 · ${x.lv.l}">
+        <i style="height:${Math.max(8, x.s.val)}%;background:${x.lv.c}"></i><span>${esc(corto(x.s.name))}</span></div>`).join('')}</div>
     </div>
-    <div class="hf-pie">
-      <span class="hf-pie-t">${i + 1 < pasos.length ? `Al cerrarlo sigue <b>${pasos[i + 1].n}</b>` : `Es el último de los ${pasos.length}`}</span>
-      <span class="hf-pie-b">
-        <button class="hf-btn" onclick="habPasoSet(${i - 1})"${i > 0 ? '' : ' disabled'}>‹ Anterior</button>
-        <button class="hf-btn primario" onclick="habPasoSet(${i + 1})"${i + 1 < pasos.length ? '' : ' disabled'}>Siguiente paso ›</button>
-      </span>
+    <div class="hb-d"></div>
+    ${t ? `<div class="sk-ind">
+      <span class="hb-k">EL ENTREGABLE DEL FOCO · ${esc((focoSk || {}).name || t.id).toUpperCase()}</span>
+      <span class="sk-ind-t">${esc(t.entregable)}</span>
+      <span class="sk-sub">Faltan <b>${habDiasA(t.hasta)} días</b> de su tramo. ${/CT-GenAI/.test(t.entregable) ? habSimTxt() : (() => { const a = habAvanceRuta(t.id); return `Su ruta: <b>${a.hechos} de ${a.total}</b> pasos.`; })()}</span>
+    </div>
+    <div class="hb-d"></div>` : ''}
+    <div class="sk-ind">
+      <span class="hb-k">TU SEMANA DE ESTUDIO</span>
+      <span class="sk-ind-n"><b>${String(sem.hFoco + sem.hMant).replace('.', ',')}</b><small>h</small></span>
+      <span class="sk-sub"><b>${sem.hFoco} h</b> de foco${focoSk ? ` en ${esc(focoSk.name)}` : ''} + <b>${String(sem.hMant).replace('.', ',')} h</b> de mantenimiento. Al volante, <button type="button" class="sk-a" onclick="abrirDidi()">${didiViajes().totalTxt} →</button></span>
+    </div>
+    <div class="hb-d"></div>
+    <div class="hb-s">
+      <div class="hb-rd"><span class="hb-rv ok">${pasosH}<small>/${pasosT}</small></span><span class="hb-k">PASOS</span></div>
+      <div class="hb-rd"><span class="hb-rv">${pausas}</span><span class="hb-k">EN PAUSA</span></div>
     </div>`;
 
-  // ── LAS 12 HABILIDADES: ordenadas por retorno (peso × lo que falta: dónde rinde más una hora), medidas por
-  //    nivel —la barra es lo que ya sabes; Adán, 2026-08-31—, cada una con su foto y lo que toca esta semana:
-  //    el foco, sus horas de tramo; las demás, su mantenimiento; las de pausa, apagadas.
-  const orden = [...SK].sort((a, b) => skRetorno(b) - skRetorno(a));
-  document.getElementById('habRank').innerHTML = `
-    <div class="hr-head"><span class="hab-lbl">Tus 12 habilidades</span><span class="hr-sub">por retorno: dónde una hora sube más tu nivel</span></div>
-    <div class="hr-rows">${orden.map((s, j) => {
-      const lv = skLevel(s.val), pausa = PRIORIDAD_EXCLUIDAS.includes(s.id), esFoco = !!(H.tramo && H.tramo.id === s.id);
-      const conRuta = habPasos(s.id).length > 0;
-      const quehacer = esFoco ? `<b>${H.tramo.horas} h</b> · foco: ${esc(H.tramo.semana)}` : (s.mant ? `${s.mant.h ? `<b>${String(s.mant.h).replace('.', ',')} h</b> · ` : ''}${esc(s.mant.txt)}` : '');
-      return `<div class="hr-row${pausa ? ' pausa' : ''}${esFoco ? ' foco' : ''}${conRuta ? ' abrible' : ''}${foco.id === s.id ? ' abierta' : ''}"${
-        conRuta ? ` onclick="habFocoSet('${s.id}')"` : ''} title="${habAttr(s.name)}: ${s.val}/100 · ${lv.l} · peso ×${s.w} · rinde ${skRetorno(s)}. ${habAttr(quehacer)}">
-        <span class="hr-n">${String(j + 1).padStart(2, '0')}</span>
-        ${img(fotoSk(s.id), 'hr-img')}
-        <div style="min-width:0">
-          <div class="hr-top"><span class="hr-name">${esc(s.name)}</span>
-            <span style="display:flex;align-items:baseline;gap:7px;flex-shrink:0">${pausa ? '<span class="hr-tag">EN PAUSA</span>' : ''}${esFoco ? '<span class="hr-tag" style="color:var(--g)">FOCO</span>' : ''}<span class="hr-v">${s.val}</span></span></div>
-          <div class="hr-bar"><div class="hr-fill" style="width:${s.val}%;background:${lv.c}"></div>${s.id === foco.id ? `<i class="hr-meta" style="left:${meta}%"></i>` : ''}</div>
-          ${quehacer ? `<div class="hr-mant">${quehacer}</div>` : ''}
-        </div>
-      </div>`; }).join('')}</div>
-    <div class="hr-nota">La barra es <b>lo que ya sabes</b>; la marca, el siguiente nivel de la que tienes abierta. ${orden[0].name} va primera porque pesa ×${orden[0].w} y le falta casi todo.</div>`;
+  grid.innerHTML = av.map(x => {
+    const s = x.s, f = typeof apFotoSk === 'function' ? apFotoSk(s.id) : null;
+    const tk = Array.from({ length: x.total }, (_, k) => `<i class="${k < x.hechos ? 'on' : ''}"></i>`).join('');
+    const quehacer = x.foco ? `${t.horas} h · foco: ${t.semana}`
+      : (s.mant ? `${s.mant.h ? String(s.mant.h).replace('.', ',') + ' h · ' : ''}${s.mant.txt}` : '');
+    const tag = x.foco ? `<span class="hb-br hb-br-tr"></span><span class="hb-br hb-br-bl"></span><span class="hb-next">FOCO · ${t.horas} H</span>`
+      : x.pausa ? '<span class="hb-next pausa">EN PAUSA</span>' : '';
+    return `<div class="hb-card sk-card${x.total && x.hechos === x.total ? ' ok' : ''}${x.foco ? ' next' : ''}${x.pausa ? ' pausa' : ''}">
+      <div class="hb-ph" style="background-image:url('${f ? f.u : ''}')" onclick="abrirSkillDetalle('${s.id}')" role="button" tabindex="0"
+        title="${habAttr(s.name)}: ${s.val}/100 · ${x.lv.l} · peso ×${s.w} · rinde ${skRetorno(s)}. Toca para abrir su ruta">
+        <span class="hb-sc"></span>${tag}
+        <span class="hb-pc">${s.val}<small>/100</small></span>
+        <span class="hb-tt sk-tt">
+          <span class="sk-tt-n"><span class="e">${s.icon}</span>${esc(s.name)}</span>
+          <span class="sk-tt-l">${esc(x.lv.l)}</span>
+          <span class="sk-lvb"><i style="width:${s.val}%;background:${x.lv.c}"></i></span>
+          ${quehacer ? `<span class="sk-tt-m">${esc(quehacer)}</span>` : ''}
+        </span>
+      </div>
+      <div class="hb-sg"><span class="hb-tk">${tk}</span><span class="hb-ct">${x.hechos}/${x.total}</span></div>
+    </div>`;
+  }).join('');
+
+  const hoyYm = new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0');
+  const meses = x => { const a = x.desde.split('-').map(Number), b = x.hasta.split('-').map(Number); return (b[0] - a[0]) * 12 + b[1] - a[1] + 1; };
+  const ultimo = H.todos[H.todos.length - 1];
+  plan.innerHTML = `
+    <div class="sk-plan-h"><span class="hb-k">EL PLAN DE FOCO · UNA HABILIDAD A LA VEZ</span><a href="../Coach/Coach.html#aprendizaje">Ajustar en Coach →</a>
+      <span class="sk-sub">La cifra de cada ficha es tu nivel; las marcas, los pasos de su ruta.${ultimo ? ' ' + esc(ultimo.cambio) : ''}</span></div>
+    <div class="sk-plan-l" style="grid-template-columns:${H.todos.map(x => meses(x) + 'fr').join(' ')}">${H.todos.map(x => {
+      const s = SK.find(y => y.id === x.id) || { name: x.id }, f = typeof apFotoSk === 'function' ? apFotoSk(x.id) : null;
+      const est = x.hasta < hoyYm ? 'hecho' : (t && t.id === x.id) ? 'ahora' : 'luego';
+      const chip = est === 'ahora' ? `Ahora · ${habDiasA(x.hasta)} días` : est === 'hecho' ? 'Pasó' : 'Desde ' + cdMes(x.desde);
+      return `<button type="button" class="sk-tr ${est}" onclick="abrirSkillDetalle('${x.id}')" title="Abrir la ruta de ${habAttr(s.name)}">
+        ${f ? `<img src="${f.u}" alt="" loading="lazy">` : '<span></span>'}
+        <span class="sk-tr-c">
+          <span class="sk-tr-top"><span class="sk-tr-n">${esc(s.name)}</span><span class="sk-tr-f">${cdMes(x.desde)} – ${cdMes(x.hasta)} · ${x.horas} h/sem</span><span class="sk-tr-chip">${chip}</span></span>
+          <span class="sk-tr-e">${esc(x.entregable)}</span>
+        </span>
+      </button>`; }).join('')}</div>`;
 }
 
 // ── BARRA SUPERIOR — acceso directo a los demás proyectos (persistente, no rota) ─
@@ -11979,7 +11952,8 @@ function mdPintar(){
   // que dice); lo que no se pudo comprobar desde aquí es la duración ni las vistas, así que la
   // ficha no las promete.
   const vids=info.videos||[];
-  document.getElementById('metaDetailVideo').innerHTML=vids.length?`
+  // `lado`: lo que una habilidad de En qué invertir tu tiempo pone en Recursos (su nivel, esta semana…).
+  document.getElementById('metaDetailVideo').innerHTML=(info.lado||'')+(vids.length?`
     <div class="md-rec">
       <div class="md-rec-hd"><span class="md-lbl">Para escucharlo</span><small>${vids.length} ${vids.length===1?'video':'videos'}</small></div>
       <div>
@@ -11996,13 +11970,13 @@ function mdPintar(){
             <a class="md-eps-all" href="${v.serie.canal}" target="_blank" rel="noopener">Ver la serie completa en el canal ↗</a>
           </details>`).join('')}
       </div>
-    </div>`:'';
+    </div>`:'');
 
   // Tu avance: dominados, pendientes, y el siguiente paso pendiente como botón (es a donde se
   // retoma; con 16 pasos hace falta un punto de entrada que no sea recorrer el temario).
   const sig=pasos.findIndex((_,k)=>!store[k]);
   document.getElementById('metaDetailAvance').innerHTML=`
-    ${(mb||vids.length)?'<div class="md-hair"></div>':''}
+    ${(mb||vids.length||info.lado)?'<div class="md-hair"></div>':''}
     <div class="md-rec-hd"><span class="md-lbl">Tu avance</span></div>
     <div class="md-avance">
       <div><b class="ok">${done}</b><span class="md-lbl">Dominados</span></div>
@@ -12034,7 +12008,7 @@ function mdPintar(){
   const RE_CAJA=/^\s*(?:<b>)?\s*(tu caso[^:<]*|plantilla[^:<]*|ejemplo[^:<]*)\s*(?:<\/b>)?\s*[:\-–—]\s*/i;
   const RE_AVISO=/^\s*⚠️\s*(?:<b>)?([^:<]{1,60}?)(?:<\/b>)?\s*:\s*/;
   const items=p.list||[];
-  const cajas=[], avisos=[], mapas=[], resto=[];
+  const cajas=(p.cajas||[]).slice(), avisos=[], mapas=[], resto=[];   // una habilidad trae «Por qué este paso» ya armado
   const cap=s=>s.replace(/^(\s*(?:<[^>]+>\s*)*)(\p{Ll})/u,(m,a,b)=>a+b.toUpperCase());   // la etiqueta se fue al rótulo; el texto arranca en mayúscula
   items.forEach(x=>{
     let m;
