@@ -3,9 +3,9 @@
 41 lecciones de alemán en HTML, sin backend ni build, más el vocabulario y el tema de Partizip.
 Se abren con `file://`. **El Dashboard no tiene pantalla de alemán** (Adán no quiere la
 información repetida): el alemán se estudia aquí. Mi Día solo lee de esta carpeta dos archivos de
-datos —la palabra del día de `vocab-datos.js` y la lección que toca de `lecciones-datos.js`— y los abre en
-su ventana: la palabra con sus datos y la lección en su propia página, enmarcada (ver *Dentro de la ventana
-del Dashboard*).
+datos —diez palabras al día de `vocab-datos.js` y la lección que toca de `lecciones-datos.js`— y los abre en
+su ventana: las palabras con su repaso espaciado y la lección en su propia página, enmarcada (ver *Dentro de
+la ventana del Dashboard*).
 
 **Su prompt**: la clave `aleman` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
 
@@ -152,10 +152,12 @@ está en `diseno-vocabulario/`. Cuatro pestañas:
 Los controles 19 y 20 de `../Dashboard/verificar-sincronia.js` vigilan que nadie los copie:
 `vocabulario.html` carga los tres y el Dashboard solo lee `vocab-datos.js`.
 
-**Mi Día lee `vocab-datos.js`.** La tarjeta *Hoy aprendes* del Dashboard toma la palabra del día
-—cada palabra una vez por vuelta, en el orden de Coach— y, si es un verbo, su Perfekt con `aux` y la
-última forma de `conj` (*ist zurückgekommen*); su ventana la enseña entera, con «Pruébate» de su
-subsección. *Ver «…» en Vocabulario →*, en esa ventana, abre esta página en su sección:
+**Mi Día lee `vocab-datos.js`.** La tarjeta *Hoy aprendes* del Dashboard toma diez palabras al día
+—cada palabra una vez por vuelta, en el orden de Coach— con su artículo, su plural o, si es un verbo, sus tres
+formas con `aux` (*kommt zurück · kam zurück · ist zurückgekommen*); su ventana las enseña en tarjetas, las
+practica (ves el español y dices el alemán) y las repasa a los 1, 3, 7, 14 y 30 días. El repaso vive en
+`aleman_repaso_v1`, con el nombre de esta app para que sus Tarjetas puedan usarlo. *Ver «…» en Vocabulario
+→*, en esa ventana, abre esta página en su sección:
 `vocabulario.html#cat=tramites&sub=formulario` abre en *Trámites › Formularios*, con todos los
 niveles para que la palabra esté a la vista (y lo guarda en `voc_estado_v1`, como cualquier visita).
 Y `#tab=cards`, `#tab=situ` o `#tab=pz` abre esa pestaña: los usa el repaso del inicio.

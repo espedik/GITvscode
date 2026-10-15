@@ -2765,62 +2765,126 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 /* La pregunta del ISTQB, en su panel (#istqbOverlay): se contesta tocando una opción, la primera
    respuesta es la que cuenta, y al pie va el marcador de la semana. */
 #istqbOverlay{--c:var(--p)}
-/* El alemán de hoy (#alemanOverlay, `abrirAleman()`): a la izquierda la palabra del día y a la derecha la
-   lección que toca, en su propia página de la app de Alemán dentro de un iframe (leccion.js la pone en modo
-   ventana). Ancha y alta para que la lección quepa en sus dos columnas, que salen desde 1280 px dentro del
-   iframe; por debajo de 1100 px, una cosa a la vez, con dos pestañas, y en el teléfono a pantalla completa. */
+/* El alemán de hoy (#alemanOverlay, `abrirAleman()`): dos pestañas a todo lo ancho. Vocabulario: las palabras
+   de hoy en tarjetas —el artículo en el color de su género, los de la app de Alemán—, «Practicar» y el repaso.
+   Lección: la que toca, en su propia página dentro de un iframe (leccion.js la pone en modo ventana). Ancha y
+   alta para que la lección quepa en sus dos columnas, que salen desde 1280 px dentro del iframe; en el
+   teléfono, a pantalla completa. */
 #alemanOverlay{--c:var(--g)}
+#alemanOverlay .der{--gen:#3b82f6}
+#alemanOverlay .die{--gen:#ec4899}
+#alemanOverlay .das{--gen:#10b981}
+#alemanOverlay .pl{--gen:#f97316}
 .gbm-card.alv-card{width:min(1900px,96vw);height:92vh;display:flex;flex-direction:column;overflow:hidden}
-.alv-card .gbm-head{flex:none}
-.alv-tabs{display:none;gap:6px;margin-top:10px}
-.alv-tabs button{height:28px;padding:0 13px;border-radius:99px;border:1px solid rgba(var(--ov),.14);background:transparent;
-  color:var(--text2);font:inherit;font-size:12px;font-weight:700;cursor:pointer}
-.alv-tabs button.on{background:color-mix(in srgb,var(--c) 16%,transparent);border-color:var(--c);color:var(--text)}
-.alv-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(290px,340px) minmax(0,1fr);grid-template-rows:minmax(0,1fr);
-  gap:22px;padding:16px 22px 20px}
-/* La palabra del día: dónde vive, el artículo en el color de su género (los de la app de Alemán), su gramática,
-   el ejemplo, el uso, «Pruébate» y lo que sigue. */
-.alv-pal{min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:12px;padding-right:6px}
-.alv-pal-foto{flex:none;width:100%;height:128px;object-fit:cover;border-radius:12px;background:color-mix(in srgb,var(--c) 12%,transparent)}
+/* Opaca, no de vidrio: es para leer, y con el vidrio se veían las fotos de Mi Día detrás de cada tarjeta. La de
+   Python también. */
+.gbm-card.alv-card,.gbm-card.pyv-card{background:linear-gradient(rgba(var(--ov),.035),rgba(var(--ov),.035)),var(--bg)}
+.alv-card .gbm-head{flex:none;padding-bottom:0}
+.alv-tabs{display:flex;gap:4px;margin-top:12px}
+.alv-tabs button{position:relative;display:flex;align-items:baseline;gap:9px;padding:9px 16px 12px;border:0;border-radius:10px 10px 0 0;
+  background:transparent;color:var(--text2);font:inherit;font-size:14.5px;font-weight:800;cursor:pointer}
+.alv-tabs button span{font-size:12px;font-weight:600;color:var(--text3)}
+.alv-tabs button:hover{color:var(--text)}
+.alv-tabs button.on{color:var(--text);background:rgba(var(--ov),.05)}
+.alv-tabs button.on::after{content:'';position:absolute;left:12px;right:12px;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--c)}
+.alv-body{flex:1;min-height:0;display:flex}
+.alv-voc,.alv-lec{flex:1;min-width:0;min-height:0}
+.alv-body[data-tab="vocab"] .alv-lec,.alv-body[data-tab="leccion"] .alv-voc{display:none}
+/* El vocabulario: su encabezado, las tarjetas y el repaso. */
+.alv-voc{overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:18px;padding:20px 24px 28px}
+.alv-voc-cab{display:flex;align-items:center;gap:18px}
+.alv-voc-foto{flex:none;width:150px;height:100px;border-radius:14px;object-fit:cover;background:color-mix(in srgb,var(--c) 12%,transparent)}
+.alv-voc-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
 .alv-k{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
 .alv-k.c{color:var(--c)}
-.alv-w{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;font-family:var(--font-title);font-size:30px;font-weight:600;
-  line-height:1.15;letter-spacing:-.01em;color:var(--text)}
-.alv-art{font-weight:700}
-.alv-art.der{color:#3b82f6}
-.alv-art.die{color:#ec4899}
-.alv-art.das{color:#10b981}
-.alv-art.pl{color:#f97316}
-.alv-es{margin-top:-6px;font-size:15px;line-height:1.4;color:var(--text2)}
-.alv-gram{display:flex;flex-wrap:wrap;gap:6px}
-.alv-gram span{padding:3px 8px;border-radius:7px;background:rgba(var(--ov),.06);font-family:var(--mono);font-size:11px;
-  line-height:1.5;color:var(--text3)}
-.alv-gram b{font-weight:600;color:var(--text)}
-.alv-ex{display:flex;gap:8px;align-items:flex-start;font-size:14px;font-style:italic;line-height:1.5;color:var(--text)}
-.alv-ex small{display:block;font-size:12.5px;font-style:normal;color:var(--text3)}
-.alv-uso{padding:9px 11px;border-radius:10px;background:color-mix(in srgb,var(--c) 9%,transparent);font-size:12.5px;line-height:1.5;color:var(--text2)}
-.alv-uso b{margin-right:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--c)}
-.alv-oir{flex:none;display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;padding:0;border-radius:50%;
+.alv-voc-h{margin:0;font-size:25px;font-weight:800;line-height:1.2;color:var(--text)}
+.alv-voc-h span{font-weight:600;color:var(--text2)}
+.alv-voc-s{margin:0;max-width:820px;font-size:13.5px;line-height:1.5;color:var(--text2)}
+.alv-voc-dato{font-size:12px;line-height:1.5;color:var(--text3)}
+.alv-voc-dato b{font-weight:700;color:var(--text2)}
+.alv-voc-acc{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.alv-fila{display:flex;align-items:center;gap:10px}
+.alv-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:42px;padding:0 20px;border-radius:12px;border:1px solid var(--c);
+  background:var(--c);color:var(--bg);font:inherit;font-size:14px;font-weight:800;cursor:pointer}
+.alv-btn:hover{filter:brightness(1.08)}
+.alv-btn.mal{background:transparent;border-color:var(--r);color:var(--text)}
+.alv-btn kbd{font-family:var(--mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;background:rgba(0,0,0,.18)}
+.alv-btn.mal kbd{background:rgba(var(--ov),.1)}
+.alv-ir{font-size:12px;font-weight:700}
+.alv-grid{flex:1 0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));grid-auto-rows:1fr;gap:14px}
+.alv-wc{position:relative;display:flex;flex-direction:column;gap:6px;min-width:0;padding:14px 16px 15px 21px;border-radius:14px;
+  background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.09);overflow:hidden}
+.alv-wc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--gen,rgba(var(--ov),.22))}
+.alv-wc-top{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:26px;font-family:var(--mono);font-size:9.5px;
+  font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)}
+.alv-wc-de{font-family:var(--font-title);font-size:26px;font-weight:600;line-height:1.15;letter-spacing:-.01em;color:var(--text);overflow-wrap:anywhere}
+.alv-art{font-weight:700;color:var(--gen,var(--text2))}
+.alv-wc-es{font-size:15px;line-height:1.35;color:var(--text2)}
+.alv-wc-gram{font-family:var(--mono);font-size:11.5px;line-height:1.5;color:var(--text3)}
+.alv-wc-gram b{font-weight:600;color:var(--text)}
+.alv-wc-ex{display:flex;gap:8px;align-items:flex-start;margin-top:2px;font-size:13.5px;font-style:italic;line-height:1.45;color:var(--text)}
+.alv-wc-ex small{display:block;font-size:12.5px;font-style:normal;color:var(--text3)}
+.alv-wc-uso{margin-top:auto;padding-top:8px;border-top:1px dashed rgba(var(--ov),.13);font-size:12px;line-height:1.45;color:var(--text2)}
+.alv-wc-uso b{margin-right:6px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--w)}
+.alv-oir{flex:none;display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border-radius:50%;
   border:1px solid rgba(var(--ov),.14);background:transparent;color:var(--text2);cursor:pointer}
 .alv-oir:hover{color:var(--c);border-color:var(--c)}
-.alv-oir svg{width:15px;height:15px}
-.alv-ex .alv-oir{width:24px;height:24px;margin-top:1px}
-.alv-ex .alv-oir svg{width:12px;height:12px}
-.alv-pr{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:1px 10px;padding:7px 0;border-top:1px solid rgba(var(--ov),.07)}
-.alv-pr-w{font-size:14px;font-weight:650;color:var(--text)}
-.alv-pr-es{grid-column:1;font-size:11.5px;color:var(--text3)}
-.alv-pr-ops{grid-row:1 / span 2;grid-column:2;display:flex;gap:4px}
-.alv-pr-ops button{min-width:38px;height:28px;padding:0 8px;border-radius:8px;border:1px solid rgba(var(--ov),.14);background:transparent;
-  color:var(--text2);font-family:var(--mono);font-size:11.5px;font-weight:700;cursor:pointer}
-.alv-pr-ops button:not(:disabled):hover{border-color:var(--c);color:var(--text)}
-.alv-pr-ops button:disabled{cursor:default;opacity:.4}
-.alv-pr-ops button.ok{opacity:1;border-color:var(--g);background:rgba(var(--g-rgb),.14);color:var(--text)}
-.alv-pr-ops button.mal{opacity:1;border-color:var(--r);background:rgba(var(--r-rgb),.1);color:var(--text)}
-.alv-sig{font-size:12.5px;line-height:1.5;color:var(--text2)}
-.alv-sig b{font-weight:650;color:var(--text)}
-.alv-ir{font-size:12px;font-weight:700}
+.alv-oir svg{width:14px;height:14px}
+.alv-wc-ex .alv-oir{width:22px;height:22px;margin-top:1px}
+.alv-wc-ex .alv-oir svg{width:11px;height:11px}
+.alv-repaso{display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-radius:14px;background:rgba(var(--ov),.03);border:1px dashed rgba(var(--ov),.15)}
+.alv-repaso p{margin:0;font-size:13px;line-height:1.5;color:var(--text3)}
+.alv-rp-lista{display:flex;flex-wrap:wrap;gap:8px}
+.alv-rp{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 13px;border-radius:99px;border:1px solid rgba(var(--ov),.14);
+  border-left:4px solid var(--gen,rgba(var(--ov),.25));background:rgba(var(--ov),.04);color:var(--text2);font:inherit;font-size:13px;cursor:pointer}
+.alv-rp:hover{border-color:var(--c);border-left-color:var(--gen,var(--c))}
+.alv-rp .alv-rp-de{display:none;color:var(--text);font-weight:650}
+.alv-rp.ver .alv-rp-es{display:none}
+.alv-rp.ver .alv-rp-de{display:inline}
+/* Practicar: una tarjeta grande —el español; al voltearla, el alemán con su artículo— y te calificas. */
+.alv-voc.practica{align-items:center;justify-content:center}
+.alv-pr{width:min(880px,100%);display:flex;flex-direction:column;gap:16px}
+.alv-pr-cab{display:flex;align-items:center;gap:14px}
+.alv-pr-barra{flex:1;height:6px;border-radius:3px;background:rgba(var(--ov),.1);overflow:hidden}
+.alv-pr-barra i{display:block;height:100%;background:var(--c)}
+.alv-pr-x{border:0;background:none;color:var(--text3);font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.alv-pr-x:hover{color:var(--text)}
+.alv-t{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;min-height:430px;padding:42px 36px 30px;border-radius:20px;
+  background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.12);text-align:center;overflow:hidden}
+.alv-t::before{content:'';position:absolute;left:0;right:0;top:0;height:6px;background:var(--gen,rgba(var(--ov),.22))}
+.alv-t-tipo{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.alv-t-es{font-size:32px;font-weight:700;line-height:1.3;color:var(--text)}
+.alv-t.vuelta .alv-t-es{font-size:16px;font-weight:600;color:var(--text3)}
+.alv-t-pista{font-size:14px;color:var(--text3)}
+.alv-t-de{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 14px;font-family:var(--font-title);font-size:48px;
+  font-weight:600;line-height:1.1;color:var(--text)}
+.alv-t-gram{font-family:var(--mono);font-size:13px;line-height:1.5;color:var(--text3)}
+.alv-t-gram b{font-weight:600;color:var(--text)}
+.alv-t-ex{max-width:580px;font-size:15.5px;font-style:italic;line-height:1.5;color:var(--text)}
+.alv-t-ex small{display:block;font-size:13px;font-style:normal;color:var(--text3)}
+.alv-t-uso{max-width:580px;font-size:13px;line-height:1.5;color:var(--text2)}
+.alv-t-acc{display:flex;gap:12px;margin-top:auto;padding-top:12px}
+.alv-pr-fin{width:min(980px,100%);display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+/* El mazo, debajo de la tarjeta: cada palabra en español —cuál va, cuáles sabías y cuáles no—, sin delatar el alemán. */
+.alv-pr-mazo{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.alv-pr-ch{padding:4px 11px;border-radius:99px;border:1px solid transparent;background:rgba(var(--ov),.05);font-size:12.5px;color:var(--text3)}
+.alv-pr-ch.ya{border-color:var(--c);color:var(--text);background:color-mix(in srgb,var(--c) 10%,transparent)}
+.alv-pr-ch.ok{color:var(--g)}
+.alv-pr-ch.mal{color:var(--r)}
+.alv-pr-ch.ok::before{content:'✓ '}
+.alv-pr-ch.mal::before{content:'✗ '}
+/* Al terminar: las que vuelven mañana y las que sabías, ya con su alemán. */
+.alv-pr-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:100%;margin:6px 0 4px;text-align:left}
+.alv-pr-col{padding:14px 16px;border-radius:14px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.09)}
+.alv-pr-col .alv-k{margin-bottom:8px}
+.alv-pr-pal{display:flex;justify-content:space-between;gap:10px;padding:4px 0;font-size:13.5px;color:var(--text2)}
+.alv-pr-pal+.alv-pr-pal{border-top:1px solid rgba(var(--ov),.06)}
+.alv-pr-pal b{font-weight:650;color:var(--text)}
+.alv-pr-res{margin:0;font-size:30px;font-weight:800;color:var(--text)}
+.alv-pr-fin p{margin:0;max-width:540px;font-size:14px;line-height:1.55;color:var(--text2)}
+.alv-vacio{padding:40px;text-align:center;font-size:13px;color:var(--text3)}
 /* La lección que toca: su encabezado —por qué toca, lo que llevas, cómo pasar a otra— y la lección misma. */
-.alv-lec{min-height:0;display:flex;flex-direction:column;gap:12px}
+.alv-lec{display:flex;flex-direction:column;gap:12px;padding:14px 22px 18px}
 .alv-lec-cab{flex:none;display:flex;align-items:center;gap:14px;min-width:0}
 .alv-lec-foto{flex:none;width:96px;height:64px;border-radius:10px;object-fit:cover}
 .alv-lec-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
@@ -2840,20 +2904,34 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .alv-lec-carga{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b665e;pointer-events:none}
 .alv-lec-marco.lista .alv-lec-carga{display:none}
 @media(max-width:1100px){
-  .alv-tabs{display:flex}
-  .alv-body{grid-template-columns:minmax(0,1fr)}
-  .alv-body[data-tab="leccion"] .alv-pal,.alv-body[data-tab="palabra"] .alv-lec{display:none}
-  .alv-pal{padding-right:0}
+  .alv-voc-cab{flex-wrap:wrap}
+  .alv-voc-acc{width:100%;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between}
 }
 @media(max-width:640px){
   body:has(#alemanOverlay.open) .pp-btn{visibility:hidden}
   .gbm-card.alv-card{width:100%;height:100%}
-  .alv-body{padding:10px 10px 12px;gap:12px}
+  .alv-tabs button{padding:8px 11px 11px;font-size:13.5px}
+  .alv-tabs button span{display:none}
+  .alv-voc{padding:12px 12px 22px;gap:14px}
+  .alv-voc-cab{gap:12px}
+  .alv-voc-foto{width:72px;height:56px}
+  .alv-voc-h{font-size:19px}
+  .alv-voc-s{display:none}
+  .alv-grid{flex:none;grid-template-columns:minmax(0,1fr);grid-auto-rows:auto;gap:10px}
+  .alv-voc.practica{justify-content:flex-start}
+  .alv-t{min-height:300px;padding:28px 16px 20px}
+  .alv-t-es{font-size:22px}
+  .alv-t-de{font-size:32px}
+  .alv-pr-cols{grid-template-columns:minmax(0,1fr)}
+  .alv-lec{padding:10px 10px 12px}
   .alv-lec-cab{flex-wrap:wrap;gap:10px}
   .alv-lec-foto{width:64px;height:44px}
   .alv-lec-h{white-space:normal;font-size:16px}
   .alv-lec-ctl{width:100%;justify-content:flex-end}
 }
+/* En la tarjeta de Hoy aprendes, la lección se toca aparte: abre la ventana en su pestaña. */
+.ap-ir-lec{cursor:pointer}
+.ap-ir-lec:hover .ap-t,.ap-ir-lec:hover .ap-bq-k{color:var(--c)}
 /* El Python de hoy (#pythonOverlay, `abrirPython()`): el tema entero —la explicación en llano, el contenido,
    sus pestañas y su quiz— con el CSS que trae entrevistas-temas.js (`.en-content`, ya con las variables del
    Dashboard). Ese CSS toma el acento de `--ac1`, que en las pantallas pone su tema; aquí lo fija la ventana,
@@ -4239,20 +4317,20 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   </div>
 </div>
 
-<!-- ─── EL ALEMÁN DE HOY — la lección que toca y la palabra del día, sin salir de Mi Día (abrirAleman()) ─── -->
+<!-- ─── EL ALEMÁN DE HOY — el vocabulario del día y la lección que toca, sin salir de Mi Día (abrirAleman()) ─── -->
 <div class="gbm-overlay" id="alemanOverlay" onclick="if(event.target===this) cerrarAleman()">
   <div class="gbm-card alv-card" role="dialog" aria-modal="true" aria-labelledby="alemanTit">
     <div class="gbm-head">
       <button class="gbm-close" onclick="cerrarAleman()" aria-label="Cerrar">✕</button>
       <h2 id="alemanTit">Alemán de hoy</h2>
       <p id="alemanSub"></p>
-      <div class="alv-tabs" role="tablist" aria-label="Qué ver">
-        <button type="button" role="tab" data-alv-tab="leccion" onclick="alemanTab('leccion')">La lección</button>
-        <button type="button" role="tab" data-alv-tab="palabra" onclick="alemanTab('palabra')">La palabra del día</button>
+      <div class="alv-tabs" role="tablist" aria-label="Qué estudiar">
+        <button type="button" role="tab" data-alv-tab="vocab" onclick="alemanTab('vocab')">Vocabulario</button>
+        <button type="button" role="tab" data-alv-tab="leccion" onclick="alemanTab('leccion')">Lección</button>
       </div>
     </div>
-    <div class="alv-body" id="alemanBody" data-tab="leccion">
-      <aside class="alv-pal" id="alemanPalabra" aria-label="La palabra del día"></aside>
+    <div class="alv-body" id="alemanBody" data-tab="vocab">
+      <section class="alv-voc" id="alemanVocab" aria-label="El vocabulario de hoy"></section>
       <section class="alv-lec" aria-label="La lección de hoy">
         <div class="alv-lec-cab" id="alemanLecCab"></div>
         <div class="alv-lec-marco" id="alemanMarco"><iframe id="alemanFrame" title="La lección de hoy, de la app de Alemán" onload="window.alemanCargada&&alemanCargada(this)"></iframe><span class="alv-lec-carga">Abriendo la lección…</span></div>
@@ -5602,7 +5680,7 @@ function alemanPalabras(){
 }
 // La palabra (o frase) del día, para Hoy aprendes y el menú: la primera del orden de Coach que no haya
 // salido —ver `aprendeOrdenAleman()`— o la que pediste con ↻.
-function alemanPalabraHoy(){ return aprendeDelDia('de'); }
+function alemanPalabraHoy(){ return alemanVocabHoy()[0] || null; }
 
 // El tema de Python del día: el primero del orden de Coach que no hayas estudiado en Entrevistas
 // (`study-done-v2`) —ver `aprendeOrdenPython()`—. Se fija al primer vistazo del día, así que si lo
@@ -6738,6 +6816,7 @@ function aprendeLuego(slot, n){
 // toda la semana (`didiOtroLibro()`).
 function aprendeOtra(slot){
   if(slot === 'escuchar'){ didiOtroLibro(); renderHeroAprender(); return; }
+  if(slot === 'de'){ alemanVocOtra(); renderHeroAprender(); if(alemanAbierta()) alemanPintarVocab(); return; }
   const { st, h } = aprendeHoy();
   const o = aprendeOrdenDe(slot); if(!o || o.orden.length < 2) return;
   const x = aprendePrimero(st, slot, o, (h.fijo || {})[slot]); if(!x) return;
@@ -6929,101 +7008,189 @@ function apLuego(items){
     : `<span class="ap-bq ap-opc"><span class="ap-bq-k">Lo que sigue</span><span class="ap-sig">${x}</span></span>`).join('');
 }
 
-// ── El alemán de hoy, en su tarjeta: la lección que toca y la palabra del día ────────────────
-// Adán, 2026-10-14: "vi que solo estás agregando vocabulario, también agrega lecciones de alemán". Arriba, la
-// lección —la del Kapitel que ve en clase, con la regla del inicio de Alemán (`ALEMAN_LECCIONES.queToca()`): la
-// que dejó a medias o la siguiente sin terminar— con lo que lleva; debajo, la palabra con su artículo y su
-// plural o, si es verbo, su Perfekt (lo que se ve en clase en el Kapitel 10), el ejemplo y el fallo típico.
-// Tocarla abre su ventana (`abrirAleman()`). La bandera va en CSS (`.flag-de`): el emoji se pinta como las
-// letras "DE" en Windows.
+// ── El alemán de hoy, en su tarjeta: el vocabulario del día y la lección que toca ─────────────────
+// Adán, 2026-10-14: "vi que solo estás agregando vocabulario, también agrega lecciones de alemán", y el 15: "no
+// me das suficiente vocabulario, mejora el diseño de la ventana". Arriba, el vocabulario de hoy —AL_VOC_DIA
+// palabras en el orden de Coach, la primera en grande con su artículo y su plural o su Perfekt— y cuántas tocan
+// de repaso; debajo, la lección que toca, con la regla del inicio de Alemán (`ALEMAN_LECCIONES.queToca()`).
+// Tocar la tarjeta abre su ventana en el vocabulario y tocar la lección, en la lección (`abrirAleman()`). La
+// bandera va en CSS (`.flag-de`): el emoji se pinta como las letras "DE" en Windows.
 function alLecciones(){ return (typeof ALEMAN_LECCIONES !== 'undefined') ? ALEMAN_LECCIONES : null; }
 function alemanLeccionHoy(){ const L = alLecciones(); return L ? L.queToca() : null; }
-// Si hoy ya hizo un ejercicio de una lección cuenta como hecho, igual que abrir la ventana.
-function alemanPracticoHoy(){ const L = alLecciones(); return !!L && L.ultimo(L.datos()) === hoyLocal(); }
+// Si hoy ya practicó —las tarjetas del vocabulario o un ejercicio de una lección— cuenta como hecho, igual que abrir la ventana.
+function alemanPracticoHoy(){ const L = alLecciones(); return !!aprendeHoy().h.vocPractica || (!!L && L.ultimo(L.datos()) === hoyLocal()); }
 function apFotoLeccion(l){ return l && l.foto ? { u: '../Aleman/fotos/' + l.foto, c: 'Foto: ' + l.credito } : null; }
 // El artículo delante de la palabra («die» si es plural), con su espacio; nada si no lleva.
 function alemanArtTxt(w){ return w.art && w.art !== '-' ? (w.art === 'pl.' ? 'die' : w.art) + ' ' : ''; }
+// Su género, para el color: el de la app de Alemán (der azul, die rosa, das verde, plural naranja).
+function alemanGenero(w){ return { der: 'der', die: 'die', das: 'das', 'pl.': 'pl' }[String((w && w.art) || '').split('/')[0].trim()] || ''; }
+function alemanArtHtml(w){ const t = alemanArtTxt(w).trim(); return t ? `<span class="alv-art ${alemanGenero(w)}">${esc(t)}</span> ` : ''; }
 // Un ejemplo que repite la frase tal cual no enseña nada nuevo: se omite.
 function alemanEjemplo(a){
   const sinPunto = s => String(s || '').replace(/[.!?¡¿]+$/, '').trim().toLowerCase();
   return a.ex && sinPunto(a.ex) !== sinPunto(a.de) ? a.ex : '';
 }
+// Su gramática en una línea: el plural, o las tres formas del verbo con su auxiliar, el régimen, el comparativo y lo raro.
+function alemanGram(w){
+  const f = w.conj ? String(w.conj).split('·').map(x => x.trim()) : null, aux = w.aux === 'ist' ? 'ist' : 'hat';
+  return [
+    w.pl && w.pl !== '-' ? `pl. <b lang="de">die ${esc(w.pl)}</b>` : (String(w.art || '').trim() === 'pl.' ? 'solo plural' : ''),
+    f && f.length === 3 && w.aux ? `<b lang="de">${esc(f[0])} · ${esc(f[1])} · <span class="ap-aux ${aux}">${aux}</span> ${esc(f[2])}</b>` : '',
+    w.reg ? `rige <b lang="de">${esc(w.reg)}</b>` : '',
+    w.comp ? `<b lang="de">${esc(w.comp)}</b>` : '',
+    w.tag ? esc(w.tag) : ''
+  ].filter(Boolean).join(' · ');
+}
+const AL_TIPO = { sust: 'sustantivo', verbo: 'verbo', adj: 'adjetivo', adv: 'adverbio', num: 'número', frase: 'frase' };
 function alemanHoyHtml(vistos){
-  const V = (typeof alVocab === 'function') ? alVocab() : null, a = V ? alemanPalabraHoy() : null, t = alemanLeccionHoy();
+  const V = (typeof alVocab === 'function') ? alVocab() : null, ws = V ? alemanVocabHoy() : [], a = ws[0], t = alemanLeccionHoy();
   if(!a && !t) return '';
   let txt = '';
-  if(t){
-    const l = t.l, av = t.avance;
-    txt += apBloque(`${esc(t.ceja)} · ${esc(l.num)}`, `<span class="ap-t ap-cl l2" data-min="1" lang="de">${esc(l.de)}</span>`)
-      + (av ? apTramos(av.total, j => j < av.hechos, -1) : '')
-      + `<span class="ap-dato ap-1l">${esc(l.es)}${av ? ` · <b>${av.hechos} de ${av.total}</b> ejercicios` : ''}</span>`;
-  }
   if(a){
     const art = (a.art || '-').split('/')[0].trim();
     const artHtml = art && art !== '-' ? `<span>${esc(art === 'pl.' ? 'die' : a.art)}</span> ` : '';
     const pl = a.pl && a.pl !== '-' ? `<span class="ap-m">pl. die ${esc(a.pl)}</span>`
              : (art === 'pl.' ? '<span class="ap-m">solo plural</span>' : '');
-    const f = a.conj && a.aux ? String(a.conj).split('·').map(s => s.trim()) : null;
+    const f = a.conj && a.aux ? String(a.conj).split('·').map(x => x.trim()) : null;
     const aux = a.aux === 'ist' ? 'ist' : 'hat';
     const perf = f ? `<span class="ap-m">Perfekt · <span class="ap-aux ${aux}">${aux}</span> ${esc(f[f.length - 1])}</span>` : '';
-    const ex = alemanEjemplo(a);
-    const etapa = aprendeEtapaAleman(), salio = new Set((((rawGet(APRENDE_KEY, {}) || {}).salio || {}).de) || []);
-    const delNivel = alemanPalabras().filter(x => x.niv === etapa.nivel), van = delNivel.filter(x => salio.has(x.de)).length;
-    txt += apBloque(a.tipo === 'frase' ? 'Frase del día' : 'Palabra del día', `<span class="ap-de ap-cl l2" data-min="1" lang="de">${artHtml}${esc(a.de)}</span>`)
+    const rep = alemanRepasoHoy().length;
+    txt += apBloque(`Vocabulario de hoy · ${ws.length} palabras${rep ? ` · ${rep} de repaso` : ''}`, `<span class="ap-de ap-cl l2" data-min="1" lang="de">${artHtml}${esc(a.de)}</span>`)
       + `<span class="ap-es">${esc(a.es)}${pl}${perf}</span>`
-      + (ex ? `<span class="ap-ex ap-cl"><span lang="de">${esc(ex)}</span>${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</span>` : '')
-      + (a.uso ? `<span class="ap-nota ap-cl l2 ap-opc" data-min="1"><b>Uso</b> · ${esc(a.uso)}</span>` : '')
-      + `<span class="ap-dato ap-1l ap-opc">${etapa.nivel === 'A2' ? 'A2, el que pide Esslingen' : etapa.nivel} · han salido <b>${van} de ${delNivel.length}</b></span>`
-      + apLuego(aprendeLuego('de', 3).map(w => `<b>${esc(alemanArtTxt(w))}${esc(w.de)}</b> · ${esc(w.es)}`));
+      + (ws.length > 1 ? `<span class="ap-dato ap-1l">y ${ws.length - 1} más: ${ws.slice(1, 5).map(w => `<b lang="de">${esc(w.de)}</b>`).join(' · ')}${ws.length > 5 ? '…' : ''}</span>` : '');
   }
-  const L = alLecciones(), g = t && L ? L.grupo(L.grupoDe(t.l)) : null, practico = alemanPracticoHoy();
-  return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA, foto: t ? apFotoLeccion(t.l) : apFotoAleman(a),
-    mat: `Alemán · ${t && t.elegida ? 'elegida por ti' : esc(g ? g.label : ((V && V.cats[a.cat]) || {}).label || '')}`,
-    estado: apEstado(!!vistos.de || practico, 'lección y palabra', practico ? '✓ practicaste' : '✓ visto'),
-    otra: a && a.tipo === 'frase' ? 'La siguiente frase, en el orden de Coach' : 'La siguiente palabra, en el orden de Coach',
-    abrir: "aprendeAbrir('de')", titulo: 'Abrir la lección y la palabra del día aquí mismo', txt });
+  if(t){
+    const l = t.l, av = t.avance, ir = ` onclick="event.stopPropagation();abrirAleman('leccion')" title="Abrir la lección aquí mismo"`;
+    txt += `<span class="ap-bq ap-ir-lec"${ir}><span class="ap-bq-k">Lección · ${esc(t.ceja)} · ${esc(l.num)}</span><span class="ap-t ap-cl l2" data-min="1" lang="de">${esc(l.de)}</span></span>`
+      + (av ? apTramos(av.total, j => j < av.hechos, -1).replace('<span class="ap-seg"', `<span class="ap-seg ap-ir-lec"${ir}`) : '')
+      + `<span class="ap-dato ap-1l ap-ir-lec"${ir}>${esc(l.es)}${av ? ` · <b>${av.hechos} de ${av.total}</b> ejercicios` : ''}</span>`;
+  }
+  if(a){
+    const ex = alemanEjemplo(a);
+    txt += (ex ? `<span class="ap-ex ap-cl ap-opc"><span lang="de">${esc(ex)}</span>${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</span>` : '')
+      + (a.uso ? `<span class="ap-nota ap-cl l2 ap-opc" data-min="1"><b>Uso</b> · ${esc(a.uso)}</span>` : '');
+  }
+  const practico = alemanPracticoHoy();
+  return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA, foto: a ? apFotoAleman(a) : apFotoLeccion(t.l),
+    mat: `Alemán · ${esc(a ? ((V.cats[a.cat] || {}).label || '') : (t.l.num || ''))}`,
+    estado: apEstado(!!vistos.de || practico, a ? `${ws.length} palabras` : 'lección', practico ? '✓ practicaste' : '✓ visto'),
+    otra: `Las ${AL_VOC_DIA} palabras siguientes, en el orden de Coach`,
+    abrir: "aprendeAbrir('de')", titulo: 'Abrir el vocabulario y la lección de hoy aquí mismo', txt });
 }
 
-// ── La ventana del alemán (#alemanOverlay) ────────────────────────────────────────────────────
-// Adán, 2026-10-14: "cuando haga click aquí, debes mostrarme una ventana, no deberías abrirme el html, ahí
-// mismo quiero la información, como en las demás cosas de hoy aprendes". A la izquierda, la palabra del día
-// entera —de `Aleman/vocab-datos.js`—, con su audio si hay voz alemana y «Pruébate» con su misma subsección; a
-// la derecha, la lección que toca en su propia página de la app de Alemán, dentro de un iframe que leccion.js
-// pone en modo ventana (sin barra ni pie). Nada se copia: lo que practicas ahí se guarda en `aleman_k10_v1`,
-// donde lo leen el inicio de Alemán, la lección y esta ventana, que lo cuenta al momento (evento `storage`).
-// «‹», «Siguiente ›» y «↺» eligen la lección en el orden de Coach (`ALEMAN_LECCIONES.orden()`); la elección,
+// ── El vocabulario de hoy y su repaso ─────────────────────────────────────────────────────────────
+// Diez palabras al día, no una: las siguientes del orden de Coach (`aprendeOrdenAleman()`) que todavía no han
+// salido. Se fijan al primer vistazo del día en `dash-aprende-v1` (`hoy.fijo.voc`) y quedan apuntadas como
+// salidas; ↻ trae las diez siguientes. Cada una entra en el repaso espaciado (`aleman_repaso_v1`; el prompt de
+// Alemán pide repetición espaciada y recuperación activa: releer no basta) y vuelve al día siguiente. Al
+// practicar un repaso, «La sabía» lo sube de caja —vuelve a los 3, 7, 14 y 30 días— y «Otra vez» lo regresa a
+// la 1; las de hoy vuelven mañana pase lo que pase. Con diez nuevas al día el repaso llega a unas 40–60 tarjetas
+// diarias: en la práctica van AL_REPASO_MAX (unos 4 minutos), primero las más atrasadas, y lo que quede se dice y
+// se puede seguir repasando («Repasar N más»). La clave lleva el nombre de la app de Alemán para que sus Tarjetas
+// puedan usar el mismo repaso.
+const AL_VOC_DIA = 10, AL_REPASO_MAX = 30, AL_REPASO_DIAS = [1, 3, 7, 14, 30], AL_REPASO_KEY = 'aleman_repaso_v1';
+function alFechaMas(f, n){ const p = String(f).split('-').map(Number); return CIFRAS.fechaLocal(new Date(p[0], p[1] - 1, p[2] + n)); }
+function alRepaso(){ const r = rawGet(AL_REPASO_KEY, {}) || {}; r.p = r.p || {}; return r; }
+let _alPor = null;
+function alemanPorPalabra(){ if(!_alPor) _alPor = new Map(alemanPalabras().map(w => [w.de, w])); return _alPor; }
+// Las palabras que salen hoy entran al repaso y vuelven mañana. La primera vez entran también las que ya habían
+// salido de una en una, antes de que hubiera repaso: esas tocan hoy.
+function alRepasoEntran(ws){
+  const r = alRepaso(), hoy = hoyLocal(), man = alFechaMas(hoy, 1), nuevas = new Set(ws.map(w => w.de));
+  if(!r.sembrado){
+    (((rawGet(APRENDE_KEY, {}) || {}).salio || {}).de || []).forEach(d => { if(!nuevas.has(d) && !r.p[d]) r.p[d] = { c: 1, p: hoy, n: '' }; });
+    r.sembrado = true;
+  }
+  ws.forEach(w => { if(!r.p[w.de]) r.p[w.de] = { c: 1, p: man, n: hoy }; });
+  rawSet(AL_REPASO_KEY, r);
+}
+// Las siguientes del orden de Coach que no han salido, hasta AL_VOC_DIA (si el orden se acaba, empieza otra vuelta).
+function alemanVocabTomar(st, o, ws){
+  while(ws.length < AL_VOC_DIA){ const x = aprendePrimero(st, 'de', o, null); if(!x || ws.includes(x)) break; ws.push(x); }
+  return ws;
+}
+function alemanVocabHoy(){
+  const o = aprendeOrdenDe('de'); if(!o || !o.orden.length) return [];
+  const { st, h } = aprendeHoy(), f = h.fijo || {}, por = alemanPorPalabra();
+  if(Array.isArray(f.voc) && f.voc.length){ const ws = f.voc.map(d => por.get(d)).filter(Boolean); if(ws.length) return ws; }
+  // La palabra que ya tenías hoy, si la había, va primero.
+  const ws = alemanVocabTomar(st, o, f.de && por.get(f.de) ? [por.get(f.de)] : []);
+  h.fijo = Object.assign({}, h.fijo, { voc: ws.map(w => w.de) });
+  aprendeGuarda(st, h);
+  alRepasoEntran(ws);
+  return ws;
+}
+// ↻: las diez siguientes, que quedan como las de hoy.
+function alemanVocOtra(){
+  const o = aprendeOrdenDe('de'); if(!o || !o.orden.length) return;
+  const { st, h } = aprendeHoy(), ws = alemanVocabTomar(st, o, []);
+  if(!ws.length) return;
+  h.fijo = Object.assign({}, h.fijo, { voc: ws.map(w => w.de) });
+  aprendeGuarda(st, h);
+  alRepasoEntran(ws);
+}
+// Lo que toca repasar hoy: lo que ya venció, sin las de hoy, primero lo más atrasado y hasta AL_REPASO_MAX
+// (`todo`: sin tope, para contar lo que queda atrasado).
+function alemanRepasoHoy(todo){
+  const r = alRepaso(), hoy = hoyLocal(), nuevas = new Set((aprendeHoy().h.fijo || {}).voc || []), por = alemanPorPalabra();
+  const ds = Object.keys(r.p).filter(d => r.p[d].p <= hoy && !nuevas.has(d) && por.has(d))
+    .sort((x, y) => r.p[x].p.localeCompare(r.p[y].p) || r.p[x].c - r.p[y].c);
+  return (todo ? ds : ds.slice(0, AL_REPASO_MAX)).map(d => por.get(d));
+}
+function alRepasoMarca(w, sabia){
+  const r = alRepaso(), hoy = hoyLocal(), x = r.p[w.de] || { c: 1, n: hoy };
+  if(x.n === hoy || !sabia){ x.c = 1; x.p = alFechaMas(hoy, 1); }
+  else { x.c = Math.min(x.c + 1, AL_REPASO_DIAS.length); x.p = alFechaMas(hoy, AL_REPASO_DIAS[x.c - 1]); }
+  x.u = hoy; r.p[w.de] = x;
+  rawSet(AL_REPASO_KEY, r);
+}
+
+// ── La ventana del alemán (#alemanOverlay) ────────────────────────────────────────────────────────
+// Adán, 2026-10-14: "debes mostrarme una ventana… ahí mismo quiero la información", y el 15: "no me das
+// suficiente vocabulario, mejora el diseño de la ventana". Dos pestañas a todo lo ancho. Vocabulario: las diez de
+// hoy en tarjetas, «Practicar» —ves el español, dices el alemán, la volteas y te calificas— y el repaso de las
+// que ya salieron. Lección: la que toca, en su propia página de la app de Alemán dentro de un iframe que
+// leccion.js pone en modo ventana; lo que practicas ahí se guarda en `aleman_k10_v1` y el encabezado lo cuenta
+// al momento (evento `storage`). «‹», «Siguiente ›» y «↺» eligen la lección en el orden de Coach; la elección,
 // en `aleman_leccion_v1`, la lee también el inicio de Alemán. Mientras está abierta, Mi Día no rota.
-let _alTab = 'leccion';
+let _alTab = 'vocab', _alPr = null;
 function abrirAleman(tab){
   const ov = document.getElementById('alemanOverlay'); if(!ov) return;
   aprendeVisto('de');
+  _alPr = null;
   alemanPintar();
-  alemanTab(tab || _alTab);
+  alemanTab(tab || 'vocab');
   ov.classList.add('open'); clearInterval(timer);
 }
 function cerrarAleman(){
   const ov = document.getElementById('alemanOverlay');
   if(!ov || !ov.classList.contains('open')) return;
   ov.classList.remove('open'); restartTimer();
+  _alPr = null;
   if(window.speechSynthesis) speechSynthesis.cancel();
   renderHeroAprender();
 }
 function alemanAbierta(){ const ov = document.getElementById('alemanOverlay'); return !!ov && ov.classList.contains('open'); }
-// Por debajo de 1100 px va una cosa a la vez: la lección o la palabra.
 function alemanTab(t){
-  _alTab = t === 'palabra' ? 'palabra' : 'leccion';
+  _alTab = t === 'leccion' ? 'leccion' : 'vocab';
   const b = document.getElementById('alemanBody'); if(b) b.dataset.tab = _alTab;
   document.querySelectorAll('#alemanOverlay [data-alv-tab]').forEach(x => {
     const on = x.dataset.alvTab === _alTab; x.classList.toggle('on', on); x.setAttribute('aria-selected', on ? 'true' : 'false');
   });
 }
-// Pinta la palabra y el encabezado de la lección y, si la lección cambió, la carga en el iframe (`src` manda
+// Las pestañas dicen lo que hay en cada una: cuántas palabras y repasos, y qué lección y cuánto llevas.
+function alemanTabsTxt(){
+  const ws = alemanVocabHoy(), rep = alemanRepasoHoy(), t = alemanLeccionHoy();
+  const bv = document.querySelector('#alemanOverlay [data-alv-tab="vocab"]'), bl = document.querySelector('#alemanOverlay [data-alv-tab="leccion"]');
+  if(bv) bv.innerHTML = `Vocabulario <span>${ws.length} nuevas${rep.length ? ` · ${rep.length} de repaso` : ''}</span>`;
+  if(bl) bl.innerHTML = t ? `Lección <span>${esc(t.l.num)} · ${esc(t.l.de)}${t.avance ? ` · ${t.avance.hechos} de ${t.avance.total}` : ''}</span>` : 'Lección';
+}
+// Pinta el vocabulario y el encabezado de la lección y, si la lección cambió, la carga en el iframe (`src` manda
 // cuando se abre otra página desde la lección, con su ancla).
 function alemanPintar(src){
   const t = alemanLeccionHoy(), L = alLecciones(), k = L ? L.kapitel() : null;
-  document.getElementById('alemanSub').textContent = 'La lección que toca' + (k ? ' del ' + k.label : '') +
-    ' y la palabra del día, en el orden de Coach. Lo que practicas aquí se guarda en la app de Alemán.';
-  alemanPintarPalabra();
+  document.getElementById('alemanSub').textContent = `${AL_VOC_DIA} palabras al día con su repaso, y la lección que toca${k ? ' del ' + k.label : ''}, en el orden de Coach.`;
+  alemanPintarVocab();
   alemanPintarCab();
   const f = document.getElementById('alemanFrame'), url = src || (t ? '../Aleman/' + t.href : '');
   if(f && url && f.dataset.src !== url){
@@ -7034,13 +7201,10 @@ function alemanPintar(src){
 }
 // Hasta que la lección termina de cargar se ve «Abriendo la lección…», no la página a medio pintar.
 function alemanCargada(f){ if(f && f.dataset.src) document.getElementById('alemanMarco').classList.add('lista'); }
-function alemanPintarPalabra(){
-  const el = document.getElementById('alemanPalabra'), a = alemanPalabraHoy();
-  if(el) el.innerHTML = a ? alemanPalabraHtml(a) : '';
-}
 function alemanPintarCab(){
   const el = document.getElementById('alemanLecCab'), t = alemanLeccionHoy();
   if(el) el.innerHTML = t ? alemanLecCabHtml(t) : '';
+  alemanTabsTxt();
 }
 // El encabezado de la lección: su foto, por qué toca (la regla de `queToca`), lo que llevas y cuándo fue tu
 // último ejercicio —en ámbar pasados dos días: el prompt de Alemán pide no dejar huecos más largos—, y cómo
@@ -7090,73 +7254,138 @@ window.addEventListener('storage', e => {
   if(alemanAbierta() && (e.key === 'aleman_k10_v1' || e.key === null)) alemanPintarCab();
 });
 
-// La palabra del día, entera: su foto, dónde vive en el vocabulario, el artículo en el color de su género, su
-// gramática —plural y genitivo, o las formas del verbo con su auxiliar, el régimen, el comparativo—, el
-// ejemplo, el uso o fallo típico, «Pruébate», lo que queda de su subsección, cuánto va del nivel y lo que sigue.
-const DE_OIR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>';
-// El artículo en el color de su género, con su espacio; nada si la palabra no lleva.
-function alemanArtHtml(w){
-  const t = alemanArtTxt(w).trim(), g = { der: 'der', die: 'die', das: 'das' }[t.split('/')[0]] || (w.art === 'pl.' ? 'pl' : '');
-  return t ? `<span class="alv-art ${g}">${esc(t)}</span> ` : '';
+// El vocabulario: su encabezado —la foto de su tema, de qué va, cuántas y cómo estudiarlas, «Practicar», ↻—, las
+// palabras en tarjetas y el repaso. O, mientras practicas, la tarjeta de la práctica.
+function alemanPintarVocab(){
+  const el = document.getElementById('alemanVocab'); if(!el) return;
+  el.classList.toggle('practica', !!_alPr);
+  if(_alPr){ el.innerHTML = alemanPracticaHtml(); alemanTabsTxt(); return; }
+  const ws = alemanVocabHoy(), rep = alemanRepasoHoy();
+  el.innerHTML = ws.length ? alemanVocabCabHtml(ws, rep) + `<div class="alv-grid">${ws.map(alemanTarjetaHtml).join('')}</div>` + alemanRepasoHtml(rep)
+    : '<div class="alv-vacio">El vocabulario no cargó: revisa Aleman/vocab-datos.js.</div>';
+  el.scrollTop = 0;
+  alemanTabsTxt();
 }
-function alemanPalabraHtml(a){
-  const V = alVocab(), cat = V.cats[a.cat] || {}, sub = (cat.subs || {})[a.sub] || '';
-  const art = (a.art || '-').split('/')[0].trim(), genero = { der: 'der', die: 'die', das: 'das', 'pl.': 'pl' }[art] || '';
-  const artTxt = alemanArtTxt(a).trim();
-  const f = a.conj ? String(a.conj).split('·').map(s => s.trim()) : null, aux = a.aux === 'ist' ? 'ist' : 'hat';
-  const gram = [
-    a.pl && a.pl !== '-' ? `plural <b lang="de">die ${esc(a.pl)}</b>` : (art === 'pl.' ? 'solo plural' : ''),
-    a.gen && a.gen !== '-' ? `genitivo <b lang="de">${esc(a.gen)}</b>` : '',
-    f && f.length === 3 && a.aux ? `<b lang="de">${esc(f[0])} · ${esc(f[1])} · <span class="ap-aux ${aux}">${aux}</span> ${esc(f[2])}</b>` : '',
-    a.reg ? `rige <b lang="de">${esc(a.reg)}</b>` : '',
-    a.comp ? `<b lang="de">${esc(a.comp)}</b>` : '',
-    a.tag ? esc(a.tag) : '',
-    a.niv ? `nivel <b>${esc(a.niv)}</b>` : ''
-  ].filter(Boolean);
-  const ex = alemanEjemplo(a), voz = alemanVoz();
-  const oir = t => voz ? `<button type="button" class="alv-oir" data-t="${habAttr(t)}" onclick="alemanOir(this.dataset.t)" title="Escuchar" aria-label="Escuchar en alemán">${DE_OIR}</button>` : '';
+const DE_OIR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>';
+function alemanOirBtn(t){ return alemanVoz() ? `<button type="button" class="alv-oir" data-t="${habAttr(t)}" onclick="alemanOir(this.dataset.t)" title="Escuchar" aria-label="Escuchar en alemán">${DE_OIR}</button>` : ''; }
+function alemanVocabCabHtml(ws, rep){
+  const V = alVocab(), a = ws[0], cat = V.cats[a.cat] || {}, sub = (cat.subs || {})[a.sub] || '';
+  const temas = [...new Set(ws.map(w => (V.cats[w.cat] || {}).label || ''))].filter(Boolean);
   const etapa = aprendeEtapaAleman(), salio = new Set((((rawGet(APRENDE_KEY, {}) || {}).salio || {}).de) || []);
   const delNivel = alemanPalabras().filter(x => x.niv === etapa.nivel), van = delNivel.filter(x => salio.has(x.de)).length;
-  const luego = aprendeLuego('de', 3), pr = alemanPruebaDe(a), usados = new Set(pr ? pr.items.map(w => w.de) : []);
-  const mas = V.de(a.cat, a.sub).filter(w => w.de !== a.de && !usados.has(w.de)).slice(0, 8);
-  return `${apImg(apFotoAleman(a), 'alv-pal-foto')}
-    <div class="alv-k c">${a.tipo === 'frase' ? 'Frase' : 'Palabra'} del día · ${esc(cat.label || '')}${sub ? ' › ' + esc(sub) : ''}</div>
-    <div class="alv-w" lang="de">${artTxt ? `<span class="alv-art ${genero}">${esc(artTxt)}</span>` : ''}<span>${esc(a.de)}</span>${oir((artTxt ? artTxt + ' ' : '') + a.de)}</div>
-    <div class="alv-es">${esc(a.es)}</div>
-    ${gram.length ? `<div class="alv-gram">${gram.map(x => `<span>${x}</span>`).join('')}</div>` : ''}
-    ${ex ? `<div class="alv-ex">${oir(ex)}<span><span lang="de">${esc(ex)}</span>${a.esEx ? `<small>${esc(a.esEx)}</small>` : ''}</span></div>` : ''}
-    ${a.uso ? `<div class="alv-uso"><b>Uso</b>${esc(a.uso)}</div>` : ''}
-    ${pr ? alemanPruebaHtml(pr) : ''}
-    ${mas.length ? `<div class="alv-k">Más de «${esc(sub || cat.label || '')}»</div>${mas.map(w => `<div class="alv-sig"><b lang="de">${alemanArtHtml(w)}${esc(w.de)}</b> · ${esc(w.es)}</div>`).join('')}` : ''}
-    <div class="alv-k">${etapa.nivel === 'A2' ? 'A2, el que pide Esslingen' : esc(etapa.nivel)} · han salido ${van} de ${delNivel.length}</div>
-    ${luego.length ? `<div class="alv-k">Lo que sigue</div>${luego.map(w => `<div class="alv-sig"><b lang="de">${alemanArtHtml(w)}${esc(w.de)}</b> · ${esc(w.es)}</div>`).join('')}` : ''}
-    <a href="javascript:void(0)" class="hp-link alv-ir" onclick="hoyAlAleman('${a.cat}','${a.sub || ''}')">Ver «${esc(sub || cat.label || '')}» en Vocabulario →</a>`;
+  const luego = aprendeLuego('de', 4), atrasadas = Math.max(0, alemanRepasoHoy(true).length - rep.length);
+  return `<div class="alv-voc-cab">
+      ${apImg(apFotoAleman(a), 'alv-voc-foto')}
+      <div class="alv-voc-t">
+        <div class="alv-k c">Vocabulario de hoy · ${temas.map(esc).join(' · ')}</div>
+        <h3 class="alv-voc-h">${ws.length} palabras nuevas${rep.length ? `<span> y ${rep.length} de repaso</span>` : ''}</h3>
+        ${atrasadas ? `<div class="alv-voc-dato">Y <b>${atrasadas} más atrasadas</b>: al terminar la práctica puedes seguir con ellas.</div>` : ''}
+        <p class="alv-voc-s">Léelas en voz alta con su artículo y su plural. Después, «Practicar»: ves el español, dices el alemán y la volteas. Las que no sepas vuelven mañana; las que sí, a los 3, 7, 14 y 30 días.</p>
+        <div class="alv-voc-dato">${etapa.nivel === 'A2' ? 'A2, el que pide Esslingen' : esc(etapa.nivel)} · van <b>${van} de ${delNivel.length}</b>${luego.length ? ` · mañana siguen ${luego.map(w => `<b lang="de">${esc(w.de)}</b>`).join(', ')}…` : ''}</div>
+      </div>
+      <div class="alv-voc-acc">
+        <button type="button" class="alv-btn" onclick="alemanPracticar()">Practicar · ${ws.length + rep.length} tarjetas</button>
+        <div class="alv-fila">
+          <button type="button" class="ap-otra" onclick="aprendeOtra('de')" title="Las ${AL_VOC_DIA} siguientes, en el orden de Coach" aria-label="Las ${AL_VOC_DIA} palabras siguientes">${AP_OTRA}</button>
+          <a href="javascript:void(0)" class="hp-link alv-ir" onclick="hoyAlAleman('${a.cat}','${a.sub || ''}')">Ver «${esc(sub || cat.label || '')}» en Vocabulario →</a>
+        </div>
+      </div>
+    </div>`;
 }
-// «Pruébate»: de su misma subsección, el artículo de hasta cuatro sustantivos —o, si son verbos, su auxiliar
-// en el Perfekt— de memoria, antes de verlo (el prompt de Alemán: recuperación activa, releer no basta). Una
-// ficha con dos palabras («Angabe / das Feld») delataría la respuesta: no entra. No se guarda.
-function alemanPruebaDe(a){
-  const mismos = alVocab().de(a.cat, a.sub).filter(w => w.de !== a.de && String(w.de).indexOf('/') === -1);
-  const sust = mismos.filter(w => /^(der|die|das)$/.test(String(w.art || '').trim()));
-  const verb = mismos.filter(w => w.conj && (w.aux === 'hat' || w.aux === 'ist'));
-  if(sust.length >= 2) return { items: sust.slice(0, 4), ops: ['der', 'die', 'das'], ok: w => w.art.trim(), ver: w => w.de, q: '¿der, die o das?' };
-  if(verb.length >= 2) return { items: verb.slice(0, 4), ops: ['hat', 'ist'], ok: w => w.aux, ver: w => String(w.conj).split('·').pop().trim(), q: '¿hat o ist?' };
-  return null;
+// Una palabra en su tarjeta: el color de su género a la izquierda, qué es y su nivel, la palabra con su artículo
+// y su audio, la traducción, la gramática, el ejemplo traducido y el uso o fallo típico.
+function alemanTarjetaHtml(w){
+  const ex = alemanEjemplo(w), gram = alemanGram(w);
+  return `<article class="alv-wc ${alemanGenero(w)}">
+      <div class="alv-wc-top"><span>${esc(AL_TIPO[w.tipo] || '')}${w.niv ? ' · ' + esc(w.niv) : ''}</span>${alemanOirBtn(alemanArtTxt(w) + w.de)}</div>
+      <div class="alv-wc-de" lang="de">${alemanArtHtml(w)}${esc(w.de)}</div>
+      <div class="alv-wc-es">${esc(w.es)}</div>
+      ${gram ? `<div class="alv-wc-gram">${gram}</div>` : ''}
+      ${ex ? `<div class="alv-wc-ex">${alemanOirBtn(ex)}<span><span lang="de">${esc(ex)}</span>${w.esEx ? `<small>${esc(w.esEx)}</small>` : ''}</span></div>` : ''}
+      ${w.uso ? `<div class="alv-wc-uso"><b>Ojo</b>${esc(w.uso)}</div>` : ''}
+    </article>`;
 }
-function alemanPruebaHtml(pr){
-  return `<div class="alv-k c">Pruébate · ${pr.q}</div><div class="alv-prueba">${pr.items.map(w => `<div class="alv-pr" data-ok="${pr.ok(w)}"><span class="alv-pr-w" lang="de">${esc(pr.ver(w))}</span><span class="alv-pr-es">${esc(w.es)}</span><span class="alv-pr-ops">${pr.ops.map(o => `<button type="button" onclick="alemanPrueba(this)">${o}</button>`).join('')}</span></div>`).join('')}</div>`;
+// El repaso: lo que ya salió y toca hoy, cada una con el español a la vista —tocarla enseña el alemán—.
+function alemanRepasoHtml(rep){
+  if(!rep.length) return '<div class="alv-repaso"><div class="alv-k">Repaso de hoy</div><p>Nada pendiente. Las palabras de hoy vuelven mañana para su primer repaso.</p></div>';
+  return `<div class="alv-repaso"><div class="alv-k">Repaso de hoy · ${rep.length} que ya te salieron · toca una para ver el alemán, o repásalas todas en «Practicar»</div>
+      <div class="alv-rp-lista">${rep.map(w => `<button type="button" class="alv-rp ${alemanGenero(w)}" onclick="this.classList.toggle('ver')"><span class="alv-rp-es">${esc(w.es)}</span><span class="alv-rp-de" lang="de">${alemanArtHtml(w)}${esc(w.de)}</span></button>`).join('')}</div></div>`;
 }
-function alemanPrueba(b){
-  const fila = b.closest('.alv-pr'); if(!fila || fila.classList.contains('hecha')) return;
-  fila.classList.add('hecha');
-  fila.querySelectorAll('button').forEach(x => {
-    x.disabled = true;
-    if(x.textContent === fila.dataset.ok) x.classList.add('ok'); else if(x === b) x.classList.add('mal');
-  });
+// «Practicar»: las de hoy y los repasos, una tarjeta a la vez. Ves el español, dices el alemán —el sustantivo con
+// su artículo y su plural; el verbo con su Perfekt—, la volteas y te calificas: «Otra vez» la devuelve al final de
+// la práctica (dos veces como mucho) y mañana al repaso; «La sabía» la sube de caja. Solo cuenta la primera
+// respuesta de cada una. Espacio voltea, 1 es «Otra vez» y 2 «La sabía».
+function alemanPracticar(soloRepaso){
+  _alPr = { mazo: (soloRepaso ? [] : alemanVocabHoy()).concat(alemanRepasoHoy()), i: 0, vuelta: false, res: {}, repes: {} };
+  if(!_alPr.mazo.length) _alPr = null;
+  alemanPintarVocab();
 }
+function alemanVoltear(){
+  const p = _alPr; if(!p || p.fin || p.vuelta) return;
+  p.vuelta = true;
+  alemanPintarVocab();
+  const w = p.mazo[p.i]; if(w) alemanOir(alemanArtTxt(w) + w.de);
+}
+function alemanResp(sabia){
+  const p = _alPr; if(!p || !p.vuelta || p.fin) return;
+  const w = p.mazo[p.i];
+  if(!(w.de in p.res)){ p.res[w.de] = sabia; alRepasoMarca(w, sabia); }
+  if(!sabia){ const k = p.repes[w.de] || 0; if(k < 2){ p.repes[w.de] = k + 1; p.mazo.push(w); } }
+  p.i++; p.vuelta = false;
+  if(p.i >= p.mazo.length){
+    p.fin = true;
+    const { st, h } = aprendeHoy(); h.vocPractica = 1; h.vistos = Object.assign({}, h.vistos, { de: 1 }); aprendeGuarda(st, h);
+  }
+  alemanPintarVocab();
+}
+function alemanPracticaSalir(){ _alPr = null; alemanPintarVocab(); renderHeroAprender(); }
+function alemanTecla(e){
+  const p = _alPr; if(!p || p.fin || _alTab !== 'vocab') return;
+  if(e.key === ' ' || e.key === 'Enter'){
+    if(e.target && e.target.closest && e.target.closest('button,a')) return;
+    e.preventDefault(); if(!p.vuelta) alemanVoltear();
+  } else if(p.vuelta && e.key === '1') alemanResp(false);
+  else if(p.vuelta && e.key === '2') alemanResp(true);
+}
+function alemanPracticaHtml(){
+  const p = _alPr, n = p.mazo.length;
+  if(p.fin){
+    const total = Object.keys(p.res).length, bien = Object.values(p.res).filter(Boolean).length, quedan = alemanRepasoHoy(true).length;
+    const unicas = alemanMazoUnico(p), lista = (ws, k) => `<div class="alv-pr-col"><div class="alv-k${k ? ' c' : ''}">${k ? 'Las sabías' : 'Vuelven mañana'} · ${ws.length}</div>${ws.length
+      ? ws.map(w => `<div class="alv-pr-pal"><b lang="de">${alemanArtHtml(w)}${esc(w.de)}</b><span>${esc(w.es)}</span></div>`).join('')
+      : `<div class="alv-pr-pal"><span>${k ? 'Ninguna a la primera: mañana vuelven todas.' : 'Ninguna: te las sabías todas.'}</span></div>`}</div>`;
+    return `<div class="alv-pr-fin">
+        <div class="alv-k c">Práctica terminada</div>
+        <h3 class="alv-pr-res">Sabías ${bien} de ${total} a la primera</h3>
+        <p>Las que no, vuelven mañana. Los repasos que sí te sabías regresan a los 3, 7, 14 o 30 días, según cuántas veces los aciertes seguidos. Mañana te esperan ${AL_VOC_DIA} nuevas.</p>
+        <div class="alv-pr-cols">${lista(unicas.filter(w => p.res[w.de] === false), false)}${lista(unicas.filter(w => p.res[w.de] === true), true)}</div>
+        <div class="alv-fila">${quedan ? `<button type="button" class="alv-btn mal" onclick="alemanPracticar(true)">Repasar ${Math.min(quedan, AL_REPASO_MAX)} más <span>· quedan ${quedan} atrasadas</span></button>` : ''}<button type="button" class="alv-btn" onclick="alemanPracticaSalir()">Volver a las palabras</button></div>
+      </div>`;
+  }
+  const w = p.mazo[p.i], nueva = ((aprendeHoy().h.fijo || {}).voc || []).includes(w.de), ex = alemanEjemplo(w), gram = alemanGram(w);
+  const pista = w.tipo === 'sust' ? 'Dilo con su artículo' + (w.pl && w.pl !== '-' ? ' y su plural' : '')
+    : w.tipo === 'verbo' && w.aux ? 'Dilo con su Perfekt' : 'Dilo en alemán';
+  return `<div class="alv-pr">
+      <div class="alv-pr-cab"><span class="alv-k c">Practicar · ${p.i + 1} de ${n}</span><span class="alv-pr-barra"><i style="width:${Math.round(p.i / n * 100)}%"></i></span><button type="button" class="alv-pr-x" onclick="alemanPracticaSalir()">Terminar</button></div>
+      <div class="alv-t ${alemanGenero(w)}${p.vuelta ? ' vuelta' : ''}">
+        <div class="alv-t-tipo">${esc(AL_TIPO[w.tipo] || '')} · ${nueva ? 'de hoy' : 'repaso'}</div>
+        <div class="alv-t-es">${esc(w.es)}</div>
+        ${p.vuelta ? `<div class="alv-t-de" lang="de"><span>${alemanArtHtml(w)}${esc(w.de)}</span>${alemanOirBtn(alemanArtTxt(w) + w.de)}</div>
+          ${gram ? `<div class="alv-t-gram">${gram}</div>` : ''}
+          ${ex ? `<div class="alv-t-ex"><span lang="de">${esc(ex)}</span>${w.esEx ? `<small>${esc(w.esEx)}</small>` : ''}</div>` : ''}
+          ${w.uso ? `<div class="alv-t-uso">${esc(w.uso)}</div>` : ''}
+          <div class="alv-t-acc"><button type="button" class="alv-btn mal" onclick="alemanResp(false)">Otra vez <kbd>1</kbd></button><button type="button" class="alv-btn" onclick="alemanResp(true)">La sabía <kbd>2</kbd></button></div>`
+        : `<div class="alv-t-pista">${pista}</div>
+          <div class="alv-t-acc"><button type="button" class="alv-btn" onclick="alemanVoltear()">Mostrar <kbd>espacio</kbd></button></div>`}
+      </div>
+      <div class="alv-pr-mazo">${alemanMazoUnico(p).map(x => `<span class="alv-pr-ch${x.de === w.de ? ' ya' : ''}${x.de in p.res ? (p.res[x.de] ? ' ok' : ' mal') : ''}">${esc(x.es)}</span>`).join('')}</div>
+    </div>`;
+}
+// Cada palabra de la práctica una vez, en su orden (las que vuelven al final no se repiten).
+function alemanMazoUnico(p){ return [...new Map(p.mazo.map(x => [x.de, x])).values()]; }
 // El audio, con la voz alemana del sistema (SpeechSynthesis, como la app de Alemán). Las voces llegan tarde
 // (`voiceschanged`): sin voz alemana no se pone ningún botón —uno que no suena es peor que nada— y, si llega con
-// la ventana abierta, la palabra se vuelve a pintar con los suyos.
+// la ventana abierta, el vocabulario se vuelve a pintar con los suyos.
 function alemanVoz(){
   if(!('speechSynthesis' in window)) return null;
   return (speechSynthesis.getVoices() || []).find(v => /^de([-_]|$)/i.test(v.lang)) || null;
@@ -7168,7 +7397,7 @@ function alemanOir(t){
   speechSynthesis.speak(u);
 }
 if('speechSynthesis' in window && speechSynthesis.addEventListener)
-  speechSynthesis.addEventListener('voiceschanged', () => { if(alemanAbierta()) alemanPintarPalabra(); });
+  speechSynthesis.addEventListener('voiceschanged', () => { if(alemanAbierta()) alemanPintarVocab(); });
 
 // ── Al volante: qué escuchar hoy en Didi, del catálogo de «Qué escuchar» (`DIDI_AUDIO`) en el orden
 //    de su panel —el foco de la semana primero; lo que está en pausa, fuera—. El audiolibro es el de
@@ -7504,7 +7733,7 @@ const CD_METAS = [
   { id: 'a1-4',  t: 'Las dos cartas de recomendación',  para: 'la ficha de Networking' },
   { id: 'a1-18', t: 'Subir tu ingreso desde noviembre', para: 'la ficha de Persuadir' },
   { id: 'a1-10', t: 'Mandar la solicitud a Esslingen',  para: 'el foco de Inglés, después del ISTQB' },
-  { id: 'a1-14', t: 'Alemán A2, el que pide Esslingen', para: 'la lección y la palabra del día' }
+  { id: 'a1-14', t: 'Alemán A2, el que pide Esslingen', para: 'el vocabulario de hoy y la lección' }
 ];
 function cdMes(ym){
   const p = String(ym || '').split('-').map(Number);
@@ -7540,17 +7769,17 @@ function comoDecideHtml(){
   // Tarjeta por tarjeta.
   const filas = [], foco = aprendeFoco(), rec = habRecomendada();
   const w = alemanPalabraHoy(), V = (typeof alVocab === 'function') ? alVocab() : null;
-  const tl = alemanLeccionHoy(), Lc = alLecciones(), kc = Lc ? Lc.kapitel() : null;
-  if(tl || (w && V)){
+  const tl = alemanLeccionHoy(), Lc = alLecciones(), kc = Lc ? Lc.kapitel() : null, vh = V ? alemanVocabHoy() : [], rh = vh.length ? alemanRepasoHoy() : [];
+  if(tl || vh.length){
     const salio = new Set((((rawGet(APRENDE_KEY, {}) || {}).salio || {}).de) || []);
     const delNivel = alemanPalabras().filter(x => x.niv === etapa.nivel), van = delNivel.filter(x => salio.has(x.de)).length;
     const temas = V ? AL_COACH_TEMAS.slice(0, 7).map(c => (V.cats[c] || {}).label || c).join(', ').toLowerCase() : '';
     const rl = tl ? (tl.elegida
         ? `La lección la elegiste tú; la del plan es <b>${esc(tl.rec.l.num)} · ${esc(tl.rec.l.de)}</b> y «↺», en su ventana, vuelve a ella. `
         : `La lección, la del <b>${esc(kc ? kc.label : 'Kapitel')}</b> que ves en clase en ${esc(CIFRAS.texto('{{escuelaAleman}}'))}: la que dejaste a medias o, si no, la siguiente sin terminar, en el orden en que conviene estudiarlo; con todo hecho, el minitest. «Siguiente», en su ventana, recorre el Kapitel, luego el A2 y el A1. `) : '';
-    const rp = w && V ? `La palabra: primero el <b>${etapa.nivel}</b>${etapa.nivel === 'A2' ? `, el certificado que pide Esslingen, hasta la Fase 2 (${cdFecha(etapa.hasta)})` : ', el de la maestría y el trabajo'}. Dentro, lo que vas a necesitar primero al llegar —${esc(temas)}—, luego la casa, la escuela y el trabajo, y lo demás al final. Cada día, la siguiente que no haya salido: van <b>${van} de ${delNivel.length}</b> del ${etapa.nivel}.` : '';
-    filas.push({ k: 'Alemán', c: 'var(--g)', foto: tl ? apFotoLeccion(tl.l) : apFotoAleman(w),
-      hoy: `${tl ? `${esc(tl.l.num)} · ${esc(tl.l.de)}` : ''}${tl && w ? ' · ' : ''}${w ? `${w.art && w.art !== '-' && w.art !== 'pl.' ? esc(w.art) + ' ' : ''}${esc(w.de)}` : ''} <span>${w && V ? `${esc((V.cats[w.cat] || {}).label || w.cat)} · ${esc(w.niv || '')}` : ''}</span>`,
+    const rp = vh.length ? `El vocabulario: <b>${AL_VOC_DIA} palabras al día</b>, primero el <b>${etapa.nivel}</b>${etapa.nivel === 'A2' ? `, el certificado que pide Esslingen, hasta la Fase 2 (${cdFecha(etapa.hasta)})` : ', el de la maestría y el trabajo'}. Dentro, lo que vas a necesitar primero al llegar —${esc(temas)}—, luego la casa, la escuela y el trabajo, y lo demás al final: cada día, las siguientes que no hayan salido (van <b>${van} de ${delNivel.length}</b> del ${etapa.nivel}). Y el repaso espaciado: cada una vuelve al día siguiente y, si te la sabes, a los 3, 7, 14 y 30 días; hoy tocan <b>${rh.length}</b>.` : '';
+    filas.push({ k: 'Alemán', c: 'var(--g)', foto: tl ? apFotoLeccion(tl.l) : apFotoAleman(vh[0]),
+      hoy: `${tl ? `${esc(tl.l.num)} · ${esc(tl.l.de)}` : ''}${tl && vh.length ? ' · ' : ''}${vh.length ? `${vh.length} palabras: ${esc(alemanArtTxt(vh[0]))}${esc(vh[0].de)}…` : ''} <span>${vh.length ? `${esc((V.cats[vh[0].cat] || {}).label || '')} · ${esc(vh[0].niv || '')}` : ''}</span>`,
       regla: rl + rp });
   }
   const d = didiHoy();
@@ -7627,7 +7856,7 @@ function renderHeroAprender(){
   const d = new Date();
   const fecha = `${DIAS_CORTOS[d.getDay()].toLowerCase()} ${d.getDate()} ${MES_LABEL_FULL[d.getMonth()].slice(0, 3).toLowerCase()}`;
   el.innerHTML = `<div class="hp-title"><span>🎓 Hoy aprendes<button type="button" class="ap-como" onclick="abrirComoDecide()" title="El orden de Coach y el porqué de lo de hoy">${AP_ICO.porque}Cómo lo decide Coach</button></span><span class="ap-fecha">${fecha} · <b>${hechos.filter(Boolean).length} de ${hechos.length}</b></span></div>
-    <div class="ap-barra" title="El alemán cuenta al abrir su ventana o al hacer un ejercicio de la lección; «Al volante», al tocar qué escuchar; Python, al marcarlo estudiado (en su ventana o en Entrevistas); el ISTQB, al contestarlo; el paso de la semana y la ficha, al abrirlos">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
+    <div class="ap-barra" title="El alemán cuenta al abrir su ventana, al practicar sus palabras o al hacer un ejercicio de la lección; «Al volante», al tocar qué escuchar; Python, al marcarlo estudiado (en su ventana o en Entrevistas); el ISTQB, al contestarlo; el paso de la semana y la ficha, al abrirlos">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
     <div class="ap-seis">${alemanHoyHtml(vistos)}${escucharHoyHtml(vistos)}${pythonHoyHtml()}${istqbHtml()}${pasoSemanaHtml()}${fichaEnCursoHtml()}</div>`;
   apAjustar();
 }
@@ -13891,7 +14120,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&document.getElementById('calOverlay').classList.contains('open')){ cerrarCalendario(); return; }
   if(e.key==='Escape'&&document.getElementById('gbmOverlay').classList.contains('open')){ cerrarGBM(); return; }
   if(e.key==='Escape'&&document.getElementById('istqbOverlay').classList.contains('open')){ cerrarIstqb(); return; }
-  if(document.getElementById('alemanOverlay').classList.contains('open')){ if(e.key==='Escape') cerrarAleman(); return; }
+  if(document.getElementById('alemanOverlay').classList.contains('open')){ if(e.key==='Escape') cerrarAleman(); else alemanTecla(e); return; }
   if(document.getElementById('pythonOverlay').classList.contains('open')){ if(e.key==='Escape') cerrarPython(); return; }
   if(e.key==='Escape'&&document.getElementById('comoDecideOverlay').classList.contains('open')){ cerrarComoDecide(); return; }
   if(e.key==='ArrowRight') nextSlide();

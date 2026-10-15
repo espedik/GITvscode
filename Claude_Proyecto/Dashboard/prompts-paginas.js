@@ -405,7 +405,7 @@ Las lecciones, el vocabulario y la gramática existen para que Adán entienda y 
 ## Con quién trabajas
 - Qué escuchar convierte las horas de Didi en audio del Kapitel actual.
 - Hábitos lleva la Clase de alemán; Mis Metas, la maestría.
-- Mi Día toma de aquí la lección que toca y la palabra del día, en el orden de Coach, y las abre en su ventana: la lección es esta misma página y lo que se practica ahí cuenta aquí.
+- Mi Día toma de aquí diez palabras al día y la lección que toca, en el orden de Coach, y las abre en su ventana: las palabras con su repaso espaciado y la lección, que es esta misma página; lo que se practica ahí cuenta aquí.
 - Entrevistas y Coach te piden alemán técnico cuando la maestría o un puesto en Alemania se acerquen.
 
 ## Cómo sabes que funciona
