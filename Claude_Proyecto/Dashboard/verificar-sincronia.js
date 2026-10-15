@@ -2525,6 +2525,26 @@ function promptsDeLoTocado() {
             [...usadas].join(' y ') + ' existen en el Dashboard');
 })();
 
+/* ── 35. El hábito del Gimnasio toca los días con sesión de la rutina ──────────────────────────────
+   El miércoles era natación y el hábito no lo tenía; cuando la rutina lo cambió por intervalos en el gym
+   (10-oct-2026), el hábito siguió sin el miércoles y su celda no se podía marcar. Adán, 15-oct-2026:
+   "aparece que no puedo modificar los miércoles, pero los miércoles sí voy al gym". Los días de la semilla
+   (`dow` de `gym` en habitos.js) deben ser los de GYM_RUTINA_DEFAULT que no son de descanso. */
+(function () {
+  const R = evaluar(literal(dash, 'const GYM_RUTINA_DEFAULT=', '{'));
+  const m = leer('Dashboard/habitos.js').match(/\{\s*id:'gym',[^}]*?dow:\[([\d,\s]*)\]/);
+  if (!R || !m) { avisos.push('Gimnasio: no se pudo leer la rutina del gym o la semilla del hábito; comprobar a mano'); return; }
+  const DIA = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+  const sesion = Object.keys(R).map(Number).filter(function (d) { return R[d] && R[d].tipo !== 'descanso'; }).sort();
+  const dow = m[1].split(',').map(function (x) { return +x; }).filter(function (x) { return !isNaN(x); }).sort();
+  const faltan = sesion.filter(function (d) { return dow.indexOf(d) === -1; }), sobran = dow.filter(function (d) { return sesion.indexOf(d) === -1; });
+  if (faltan.length || sobran.length)
+    problemas.push('El hábito del Gimnasio no toca los días con sesión de la rutina (habitos.js contra GYM_RUTINA_DEFAULT):' +
+      (faltan.length ? '\n     le faltan: ' + faltan.map(function (d) { return DIA[d] + ' (' + R[d].nombre + ')'; }).join(', ') : '') +
+      (sobran.length ? '\n     le sobran: ' + sobran.map(function (d) { return DIA[d]; }).join(', ') : ''));
+  else ok.push('Gimnasio: el hábito toca los ' + sesion.length + ' días con sesión de la rutina (' + sesion.map(function (d) { return DIA[d]; }).join(', ') + ')');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

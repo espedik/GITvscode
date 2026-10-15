@@ -110,8 +110,10 @@
         'A las 18:00, del CENLEX al gimnasio: unos 15 min.'
       ] },
     /* `gym:true`: la ficha lee el día de GYM_RUTINA_DEFAULT que toca hoy (nombre y
-       foco) en vez de copiarlo aquí. El detalle de cada ejercicio vive en Ejercicio. */
-    { id:'gym',    nombre:'Gimnasio',               ancla:'Tras el CENLEX · el sábado a las 07:35',      hora:'18:15', color:'#ff8a3d', ico:'pesa',   dow:[1,2,4,5,6], gym:true,
+       foco) en vez de copiarlo aquí. El detalle de cada ejercicio vive en Ejercicio. Toca los días
+       con sesión de esa rutina —de lunes a sábado; el domingo es descanso—: el control 35 del
+       verificador los compara. */
+    { id:'gym',    nombre:'Gimnasio',               ancla:'Tras el CENLEX · el sábado a las 07:35',      hora:'18:15', color:'#ff8a3d', ico:'pesa',   dow:[1,2,3,4,5,6], gym:true,
       pasos:['Series, reps y peso de cada ejercicio: en Ejercicio, en la barra de arriba.'] },
     { id:'fase0',  nombre:'Plan Maestro · 1h15',    ancla:'La tarea de la fase que toca esta semana', hora:'20:00', color:'#8b5cf6', ico:'diana',  dow:[1,2,3,4,5], flex:true,
       pasos:[
@@ -155,8 +157,13 @@
      La regla de todas: lo que Adán editó a mano manda. Un hábito se considera
      "suyo" si su nombre o su anclaje no son los que le puso la semilla anterior
      — entonces se le añade solo lo nuevo (la hora) y no se le toca nada más. */
-  const MIG = 10;
+  const MIG = 11;
   const RETIRADOS = { 2: ['azucar', 'gasto'], 3: ['pasos'], 4: ['snooze', 'diario'], 5: ['nata'], 7: ['genai', 'medi'] };
+  /* Los días que traía la semilla anterior. La migración 11 le devuelve el miércoles al Gimnasio:
+     era natación, y desde el 10-oct-2026 son intervalos en el gym (Adán, 15-oct-2026: "aparece que no
+     puedo modificar los miércoles, pero los miércoles sí voy al gym, solo que ya no hago natación"). Si
+     Adán cambió los días a mano, no se tocan. */
+  const DOW_PREVIOS = { gym: [[1, 2, 4, 5, 6]] };
   /* Lo que decía la semilla anterior de cada hábito, para saber si Adán lo tocó */
   const PREVIO = {
     gym:   [['Gimnasio', '19:00 · después de comer'], ['Gimnasio', 'Tras el CENLEX · el sábado a las 07:35']],
@@ -271,6 +278,8 @@
           if (intacto(h)) {
             h.nombre = sem.nombre; h.ancla = sem.ancla; h.dow = sem.dow;
             h.color = sem.color; h.ico = sem.ico;
+          } else if (DOW_PREVIOS[h.id] && DOW_PREVIOS[h.id].some(function (d) { return JSON.stringify(d) === JSON.stringify(h.dow); })) {
+            h.dow = sem.dow.slice();
           }
           if (h.hora === undefined) h.hora = sem.hora;
           else if (HORAS_PREVIAS[h.id] && HORAS_PREVIAS[h.id].indexOf(h.hora) !== -1) h.hora = sem.hora;

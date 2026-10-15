@@ -2937,7 +2937,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
    Dashboard). Ese CSS toma el acento de `--ac1`, que en las pantallas pone su tema; aquí lo fija la ventana,
    con el cian de Python. */
 #pythonOverlay{--c:var(--cy);--ac1:var(--cy);--ac2:var(--b)}
-.gbm-card.pyv-card{width:min(1500px,96vw);height:92vh;display:flex;flex-direction:column;overflow:hidden}
+.gbm-card.pyv-card{width:min(1900px,96vw);height:92vh;display:flex;flex-direction:column;overflow:hidden}
 .pyv-card .gbm-head{flex:none}
 .pyv-cab{flex:none;display:flex;align-items:flex-start;gap:16px;padding:14px 22px;border-bottom:1px solid rgba(var(--ov),.08)}
 .pyv-foto{flex:none;width:124px;height:84px;border-radius:12px;object-fit:cover;background:color-mix(in srgb,var(--c) 12%,transparent)}
@@ -2963,9 +2963,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .pyv-dato{font-size:11.5px;color:var(--text3)}
 .pyv-dato b{color:var(--text2)}
 .pyv-ir{font-weight:700}
-.pyv-cuerpo{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:18px 22px 30px}
-.pyv-cuerpo .en-content{max-width:1180px;margin:0 auto}
-.pyv-cuerpo.ancho .en-content{max-width:none}
+.pyv-cuerpo{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:20px 30px 32px}
 .pyv-carga{display:flex;align-items:center;justify-content:center;min-height:200px;padding:0 20px;text-align:center;font-size:13px;color:var(--text3)}
 @media(max-width:900px){
   .pyv-cab{flex-wrap:wrap}
@@ -7554,7 +7552,6 @@ function pythonPintar(){
   pythonPintarCab();
   if(_pyVisto === p.id && cuerpo.querySelector('.en-content')) return;
   _pyVisto = p.id;
-  cuerpo.classList.toggle('ancho', p.id === 'py-cheatsheet');
   cuerpo.innerHTML = '<div class="pyv-carga">Abriendo el tema…</div>';
   cuerpo.scrollTop = 0;
   pythonCargar().then(() => {

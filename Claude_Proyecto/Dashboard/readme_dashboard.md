@@ -350,7 +350,8 @@ practicando a diario, 10 repasos al día la primera semana, 20 la segunda y 30 d
 ### La ventana de Python
 
 Adán, 14-oct-2026: *"lo mismo para lo de python"*, después de la ventana del alemán. Tocar la tarjeta abre
-`#pythonOverlay` (`abrirPython()`), hasta 1500 px de ancho y el 92 % del alto: el tema entero, como en
+`#pythonOverlay` (`abrirPython()`), tan ancha como la del alemán —hasta 1900 px, el 96 % del ancho, y el 92 % del
+alto (Adán, 15-oct-2026: *"hazlo más ancho a los lados"*)—, opaca y con el tema a todo lo ancho: como en
 Entrevistas pero con la piel del Dashboard, en claro y en oscuro.
 
 - **Arriba, su encabezado** (`pythonPintarCab()`): la foto de su módulo, *Tema de hoy · Testing*, el título con
@@ -373,7 +374,7 @@ Hoy aprendes (`vistos.py`) aunque después ↻ traiga otro: ese día sí estudia
 siguiente del orden de Coach, que queda como el de hoy en la tarjeta. Mientras la ventana está abierta, Mi Día
 no rota, las teclas no lo mueven por detrás y la brújula enseña el prompt de Entrevistas (la vista
 `#pythonOverlay.open`); Escape la cierra. Bajo 900 px los botones bajan a su propia fila y bajo 640 px va a
-pantalla completa, sin brújula. Medido: a 2048×1040 la ventana mide 1500×957 y el tema, 758 px de alto con su
+pantalla completa, sin brújula. Medido: a 2048×1040 la ventana mide 1884×957 y el tema, 1822 px de ancho, con su
 propio desplazamiento; a 390×844, a pantalla completa, sin desplazamiento horizontal.
 
 ### La ficha de un ejercicio
@@ -1402,6 +1403,13 @@ Gimnasio, Plan Maestro · 1h15, Leer 10 páginas, Rutina de la noche, Dormir 7 h
 uno lleva `hora` y **la lista se pinta ordenada por ella** (se ordena una copia; el orden guardado
 es el de creación). La hora se edita en la ficha (`time`).
 
+**El Gimnasio toca los días con sesión de la rutina del gym** (`GYM_RUTINA_DEFAULT`): de lunes a sábado; el
+domingo es descanso. El miércoles era natación y desde el 10-oct-2026 son intervalos en el gym, pero el hábito
+siguió sin él y su celda no se podía marcar (Adán, 15-oct-2026: *"los miércoles sí voy al gym, solo que ya no
+hago natación"*). La migración 11 se lo devolvió (`DOW_PREVIOS`: solo a quien seguía con los días de la
+semilla anterior; unos días puestos a mano no se tocan) y el **control 35** compara los días del hábito con
+los de la rutina, para que el próximo cambio de rutina no vuelva a dejar un día sin marcar.
+
 **La noche está ordenada para dormir 7 h** (Adán, 13-oct-2026: *"corrige el tiempo de sueño"*):
 Construir esta app de `{{horaApp}}` a `{{horaRutinaNoche}}` —la última pantalla del día—, la rutina de
 la noche, la meditación de las `{{horaMeditacion}}` y *Dormir 7 h* con *Luz fuera a las 23:40*. Los
@@ -1469,7 +1477,7 @@ adelanta el día desde las 18:00), `desde` y `mig`.
 de `def` o de `marcas` se revisa también allá. Desde Coach se llega a esta pantalla con
 `dashboard.html#habitos`.
 
-Las migraciones van por versión (`MIG = 8`), corren una sola vez y en orden, y **lo que Adán
+Las migraciones van por versión (`MIG = 11`), corren una sola vez y en orden, y **lo que Adán
 editó a mano manda**: un hábito cuyo nombre o anclaje no son los de la semilla anterior solo
 recibe lo nuevo (hora, icono, meta, qué hacer, flex). Los retirados salen de la lista y de su
 historial; los nuevos entran con arranque en hoy. Si el guardado trae `marcas` pero no `def`, el
