@@ -147,13 +147,13 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | Marcador | Valor hoy | id |
 |---|---|---|
 | `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $283,000 · $315,800 · $6,700 · 12.99% · 57 (calculado) | `d003` |
-| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $15,000 · $1,500 · 55.7% | `d001` |
+| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $9,900 · $1,500 · 55.7% | `d001` |
 | `{{banamex}}` `{{banamexMin}}` | $0 · $810 — liquidada el 30-sep-2026 | `d002` |
 | `{{depto}}` | $0 — "por temas de mi apartamento"; pagada entera el 21-sep-2026 | `d012` |
 | `{{iphone}}` | $11,362 | `d008` |
 | `{{appleWatch}}` `{{appleWatchCuota}}` | $0 · $854 — liquidado: la última cuota era la del 18 sep 2026 | `d004` |
 | `{{zapStylo}}` `{{zapStyloCuota}}` | $0 · $167 — "el de los zapatos", liquidado el 21-sep-2026 | `d009` |
-| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $309,362 · $15,000 · $11,362 | derivadas |
+| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $304,262 · $9,900 · $11,362 | derivadas |
 | `{{minimosDeuda}}` `{{margen}}` | suma de mínimos vivos · lo que sobra al mes | derivadas |
 
 **Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas: `{{autoMeses}}`
@@ -162,24 +162,29 @@ porque el `remainingMonths` del seed (61) no bajaba con el saldo; queda solo com
 falta el pago. De ahí `{{autoAPagar}}` (meses × pago) y `{{autoInteres}}` (lo que cuesta en puro
 interés). El detalle de intereses del Dashboard usa la misma función para cualquier crédito a plazo.
 
-**La BBVA debe $15,000 desde el 5-oct-2026 y se paga quincena a quincena** (Adán: *"me estás
+**La BBVA debe $9,900 al 14-oct-2026 y se paga quincena a quincena** desde el 5-oct, cuando debía $15,000 (Adán: *"me estás
 diciendo de pagar mi tarjeta pero ni tengo dinero, eso está mal, eso debe ser cada quincena y deja
 dinero sobrante para la quincena; actualmente debo 15,000 a bbva"*). La Banamex quedó liquidada el
 30-sep-2026. El 19-sep la venta del Bitcoin había dejado la BBVA de $39,000 en $900; el 30-sep iba
-en $10,000 y la pagaba completa; el 5-oct, en $15,000, ya sin con qué pagarla el 11. Cada saldo
-nuevo que reporta es una entrada de `MIGRACIONES` (la de este es `_bbva20261005`, que además pone
-`noInterest` en 0 para que el 11 no pida el total). **No paga intereses**: cada mes cubre lo que pide el estado de cuenta para no generarlos (Adán, 6-oct-2026: *"bbva no va cobrar intereses, eso déjalo en 0"*); `PROYECTO.bbvaSinIntereses` se lo dice al plan y a `tasaQueCorre` del Dashboard, y la tasa de 55.7% se queda como la del producto. Con Banamex en $0 su mínimo de $810 sale de
+en $10,000 y la pagaba completa; el 5-oct, en $15,000, ya sin con qué pagarla el 11; el 14-oct, en
+$9,900 (*"el credito de tarjeta de bbva ya bajo a 9,900"*), $2,446 adelante del plan. Cada saldo
+nuevo que reporta es una entrada de `MIGRACIONES` (`_bbva20261005` además puso `noInterest` en 0
+para que el 11 no pida el total; la última es `_bbva20261014`), el saldo en `d001` y su día en
+`PROYECTO.bbvaSaldoFecha`. El arranque del plan, `bbvaInicio` ($15,000) el día `bbvaFecha`, no se mueve. **No paga intereses**: cada mes cubre lo que pide el estado de cuenta para no generarlos (Adán, 6-oct-2026: *"bbva no va cobrar intereses, eso déjalo en 0"*); `PROYECTO.bbvaSinIntereses` se lo dice al plan y a `tasaQueCorre` del Dashboard, y la tasa de 55.7% se queda como la del producto. Con Banamex en $0 su mínimo de $810 sale de
 `minimosDeuda` y `margen` sube eso mismo; `deudaCara` es solo la BBVA. En `d001` `total` se queda
 en $39,000: el "pagado real" de las barras de Finanzas sale de ahí.
 
 **`planBbva()`** es el plan de pago, y la única cuenta: lo leen el calendario (`agendaDia`), el
-desglose del sueldo (`desgloseMes`, renglón `tarjeta`) y la proyección. Arranca del saldo de `d001`
-en DEUDAS_SEED el día `PROYECTO.bbvaFecha`. La deuda cara va primero (prompt del Plan Maestro): lo
+desglose del sueldo (`desgloseMes`, renglón `tarjeta`) y la proyección. Arranca de
+`PROYECTO.bbvaInicio` el día `bbvaFecha` y, el día `bbvaSaldoFecha`, se ancla al saldo de `d001` en
+DEUDAS_SEED: los abonos de antes se quedan como pasaron, así la proyección no vuelve a contar como
+ahorro lo que ya se pagó, y lo que vaya adelante del plan llega a GBM en la quincena en que la
+tarjeta ya no lo pide. La deuda cara va primero (prompt del Plan Maestro): lo
 que cada quincena manda a GBM y lo que Didi aparta cada lunes van a la tarjeta hasta dejarla en
 cero, y el día de pago se cubre, con lo de Didi, lo que pide el estado de cuenta. Con `bbvaSinIntereses` no corre interés; sin él correría por día a la tasa más
-IVA y cada abono lo pagaría primero, así el último no deja centavos. Con los números de hoy: el 11 de
-octubre $1,500 (lo que el plan cuenta para ese pago), $1,154 de Didi los lunes 12, 19 y 26, $6,950 el 15, $2,050 el 1 de
-noviembre y $1,038 de Didi el lunes 2; queda en cero el `{{bbvaCero}}` (2 nov 2026) con `{{bbvaIntereses}}` ($0) de
+IVA y cada abono lo pagaría primero, así el último no deja centavos. Con los números de hoy, desde
+los $9,900 del 14 de octubre: $6,950 el 15, $1,154 de Didi los lunes 19 y 26 y $642 el 1 de noviembre
+(el resto de esa quincena, a GBM); queda en cero el `{{bbvaCero}}` (1 nov 2026) con `{{bbvaIntereses}}` ($0) de
 intereses. Desde ahí, lo que pague con la tarjeta se paga en la misma quincena, dentro de su gasto
 personal.
 
@@ -234,14 +239,14 @@ pero el nombre de la variable se queda corto.
 | `{{gastoPersonalCasa}}` | $7,255 — lo mismo en casa | derivada |
 | `{{cuidadoMes}}` | $4,624 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
 | `{{recorteRutinas}}` | $1,880 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $857 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
-| `{{alemaniaMarzo}}` | $134,190 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
+| `{{alemaniaMarzo}}` | $136,636 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
 | `{{salidaAgosto}}` | $324,284 — lo que pide la salida completa en agosto de 2027: la cuenta bloqueada, la reserva del BYD, el colchón y la colegiatura del primer semestre (`cortes.salida.pide`) | derivada; se mueve con `PROYECTO.eurMxn` |
-| `{{extraSalida}}` | $10,769 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
-| `{{marzoParaSalida}}` | $188,034 — lo que tendría GBM al cerrar la Fase 1 con ese ingreso nuevo: el punto de control del 31 de marzo | derivada |
-| `{{mayoParaSalida}}` | $259,972 — lo mismo el día de decidir (`PROYECTO.maestriaDecision`) | derivada |
+| `{{extraSalida}}` | $10,524 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
+| `{{marzoParaSalida}}` | $189,257 — lo que tendría GBM al cerrar la Fase 1 con ese ingreso nuevo: el punto de control del 31 de marzo | derivada |
+| `{{mayoParaSalida}}` | $260,705 — lo mismo el día de decidir (`PROYECTO.maestriaDecision`) | derivada |
 | `{{salida2028}}` | «sobran …» o «faltan …»: la salida completa si se mueve a septiembre de 2028 (`desfase: 12`, `fmt: 'txt'`) | derivada |
-| `{{alemaniaJunio}}` | $211,096 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
-| `{{bbvaCero}}` | 2 nov 2026 — el día que la BBVA queda en cero con `planBbva` (`fmt: 'fecha'`) | derivada |
+| `{{alemaniaJunio}}` | $213,542 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
+| `{{bbvaCero}}` | 1 nov 2026 — el día que la BBVA queda en cero con `planBbva` (`fmt: 'fecha'`) | derivada |
 | `{{bbvaIntereses}}` | $0 — lo que costaría en intereses llegar a cero; en 0 con `PROYECTO.bbvaSinIntereses` | derivada |
 | `{{junioVeredicto}}` | «faltan … para la cuenta bloqueada» o «alcanza, con … de margen» (`fmt: 'txt'`) | derivada |
 | `{{junioCorto}}` | «faltan …» o «sobran …»: lo mismo en corto, para la cifra grande de las tarjetas de las fases (`fmt: 'txt'`) | derivada |
@@ -975,7 +980,7 @@ Ninguna estructura está copiada entre archivos; todas se leen de aquí:
 | `APRENDIZAJE` | 6 prioridades de aprendizaje | `CIFRAS.APRENDIZAJE` |
 | `fondoMaestria(f)` | El dinero de la maestría: el fondo de emergencia (CETES), las inversiones de Finanzas (hoy el depósito de la renta) y el Bitcoin a precio de hoy. Lo usan `{{maestria}}`, Mis Metas, los indicadores de Finanzas, Coach y el contexto de *Qué invertir hoy* | `CIFRAS.fondoMaestria(f)` |
 | `diasFase(f, hoy)` · `diasHasta(fecha, hoy)` | Los días de una fase en días de calendario —`largo`, `corrido` (hoy ya corre), `quedan`, `pct`, `semanas`, `semanasQuedan`— y los días entre hoy y una fecha, de medianoche a medianoche. Los usan el tablero, el calendario, la ventana de las fases, Mis Metas y Coach | `CIFRAS.diasFase()`, `CIFRAS.diasHasta()` |
-| `avanceBbva(f)` | Lo pagado de la BBVA desde el saldo con que arrancó su plan quincena a quincena (`d001` en DEUDAS_SEED el día `PROYECTO.bbvaFecha`): la cifra de la ruta de deuda y el medidor de Deuda cara | `CIFRAS.avanceBbva(f)` |
+| `avanceBbva(f)` | Lo pagado de la BBVA desde el saldo con que arrancó su plan quincena a quincena (`PROYECTO.bbvaInicio` el día `PROYECTO.bbvaFecha`, que no se mueven con cada saldo nuevo): la cifra de la ruta de deuda y el medidor de Deuda cara | `CIFRAS.avanceBbva(f)` |
 | `deudasConInteres(f)` | Las deudas a las que de verdad les corre interés: la BBVA no mientras `PROYECTO.bbvaSinIntereses`. *Con interés* en Mis Metas, la regla de *Qué invertir hoy* y su panel | `CIFRAS.deudasConInteres(f)` |
 | `liquidaciones` (en una deuda de `DEUDAS_SEED`) | Cada fecha en que esa deuda quedó en $0: la Banamex, `['2026-08-13','2026-09-30']`. La ruta de deuda dice la última y cuántas | `CIFRAS.DEUDAS_SEED` |
 | `LISTA_COMPRAS` | Catálogo de compras por pasillos — 7 categorías; `comida` en 7 pasillos, con `Verduras` / `Frutas` / `Almidones y grasas` separados para colorear los frescos por clase y sumar la fruta+verdura por día | `CIFRAS.LISTA_COMPRAS` |

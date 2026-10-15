@@ -138,8 +138,14 @@ window.CIFRAS = (function () {
     ahorroDia15:     6950,    // con depa: del 15 de octubre de 2026 a enero de 2027
     ahorroDia1Casa: 12100,    // en casa de tu familia: de enCasaDesde a ultimoMesMexico
     ahorroDia15Casa: 8900,
-    // El día del saldo de la BBVA que dijo Adán (`d001` en DEUDAS_SEED): de aquí arranca su plan.
+    // El plan de la BBVA arranca el día `bbvaFecha` con `bbvaInicio` (lo que debía entonces), y
+    // contra ese saldo se mide lo pagado (`avanceBbva`). No se mueven con cada saldo nuevo: el
+    // último que dice Adán va en `d001` de DEUDAS_SEED y su día en `bbvaSaldoFecha`; ahí el plan
+    // se ancla al saldo real. Lo de antes se queda como pasó, y la proyección no vuelve a contar
+    // como ahorro lo que ya se pagó.
     bbvaFecha: '2026-10-05',
+    bbvaInicio: 15000,
+    bbvaSaldoFecha: '2026-10-14',
     // Y no cobra intereses (Adán, 6-oct-2026: "bbva no va cobrar intereses, eso déjalo en 0, por
     // que pagaré para no pagar intereses a la tarjeta"): cada mes cubre lo que pide el estado de
     // cuenta para no generarlos. `planBbva` no les suma nada y el Dashboard no se los cuenta.
@@ -290,7 +296,9 @@ window.CIFRAS = (function () {
     // 5-oct-2026 debe $15,000 y no le alcanza para pagarla el 11 ("me estás diciendo de pagar mi
     // tarjeta pero ni tengo dinero"): `noInterest` queda en 0 —el 11 ya no pide el total— y se paga quincena a
     // quincena con `planBbva`, desde `PROYECTO.bbvaFecha`, sin intereses (`bbvaSinIntereses`).
-    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:15000,       rate:55.7,  min:1500, day:11,start:'2024-01-22', noInterest:0},
+    // 14-oct-2026: $9,900 ("el credito de tarjeta de bbva ya bajo a 9,900"), adelante del plan;
+    // el día va en `PROYECTO.bbvaSaldoFecha`.
+    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:9900,        rate:55.7,  min:1500, day:11,start:'2024-01-22', noInterest:0},
     // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. 55.7 es un supuesto tomado de
     // la BBVA, no un dato medido de esta tarjeta.
     // 2026-09-01: VUELVE A TENER SALDO, y con él vuelve a ser deuda cara. Cuatro compras de ese
@@ -515,7 +523,7 @@ window.CIFRAS = (function () {
        hitos:[{f:"31 mar 2027",t:"Cierra la solicitud de Esslingen",s:"completa: CV, carta de motivación y las dos de recomendación",foto:"meta-esslingen"},
               {f:"Junio 2027",t:"La cuenta bloqueada y la visa",v:"{{salidaJunio}}",s:"en la cuenta a mediados de mes",foto:"de-dinero"},
               {f:"Agosto 2027",t:"La salida completa",v:"{{salidaAgosto}}",s:"con la colegiatura del 1er semestre, la reserva del BYD y el colchón",foto:"fase-avion"}]},
-      {tipo:"paso",t:"Primero la BBVA",foto:"fase-tarjeta",cifras:[{v:"{{tcBbva}}",l:"lo que debes"},{v:"{{bbvaCero}}",l:"en cero, sin intereses"}],d:"debes {{tcBbva}} y no se paga de golpe el 11. Lo que sobra de cada quincena y lo de Didi de cada lunes van a la tarjeta hasta dejarla en cero el {{bbvaCero}}, sin intereses: el 11 de octubre pagas, con lo de Didi, lo que pide el estado de cuenta para no generarlos."},
+      {tipo:"paso",t:"Primero la BBVA",foto:"fase-tarjeta",cifras:[{v:"{{tcBbva}}",l:"lo que debes"},{v:"{{bbvaCero}}",l:"en cero, sin intereses"}],d:"debes {{tcBbva}} y no se paga de golpe. Lo que sobra de cada quincena y lo de Didi de cada lunes van a la tarjeta hasta dejarla en cero el {{bbvaCero}}, sin intereses: el 15 oct, los {{ahorroDia15}} de la quincena; los lunes 19 y 26, lo de Didi, y el 1 nov, lo que falte."},
       {tipo:"paso",t:"Después, todo a GBM",foto:"fase-alcancia",cifras:[{v:"{{ahorroMesDepa}}",l:"al mes, hasta enero"},{v:"{{ahorroMesCasa}}",l:"al mes, desde febrero"}],d:"cada quincena se sostiene sola. Hasta enero mandas {{ahorroDia1}} el 1 y {{ahorroDia15}} el 15, más {{didiAhorro}} de Didi; desde febrero, sin renta y en casa de tu familia ({{aporteCasa}} de aporte, y comes en casa), {{ahorroDia1Casa}} el 1 y {{ahorroDia15Casa}} el 15, más {{didiAhorroMas}} de Didi. El aguinaldo paga el seguro del BYD y no entra."},
       {tipo:"riesgo",t:"Con ese ritmo",foto:"sk-inversion",cifras:[{v:"{{junioCorto}}",l:"en junio, para la cuenta bloqueada"},{v:"{{salidaVeredicto}}",l:"en agosto, para la salida completa"}],d:"en junio {{junioVeredicto}} y en agosto {{salidaVeredicto}}, aun mandando cada quincena completa y lo de Didi cada lunes."},
       {tipo:"palanca",t:"Lo cierra el ingreso, no el recorte",foto:"istqb-5",cifras:[{v:"{{recorteRutinas}}",l:"lo que dan tus rutinas al mes",tono:"gris"},{v:"+{{extraSalida}}",l:"de ingreso nuevo al mes, de noviembre a agosto"},{v:"{{marzoParaSalida}}",l:"en GBM el 31 de marzo, con él"}],d:"tus rutinas pueden dar {{recorteRutinas}} al mes y las ventas ya están contadas. Hacen falta unos {{extraSalida}} más al mes, de noviembre a agosto —un aumento, un puesto mejor pagado o freelance de pruebas en lugar de horas de Didi—, y con ellos GBM llega a {{marzoParaSalida}} el 31 de marzo."},
@@ -525,7 +533,7 @@ window.CIFRAS = (function () {
      deja:"Riesgo alto y súper alto en Qué invertir hoy: el dinero de Alemania vive en GBM, en un fondo de deuda de corto plazo, porque se usa en meses, no en años. Compras a meses. Gastar de la quincena antes de mandar el ahorro. Abonos extra al BYD: cada peso extra va a la salida. Nuevos frentes de negocio: el de tu papá se queda en piloto automático con los posts y el dossier. Y el depa: a fin de enero se entrega.",
      checkpoint:"31 mar 2027: solicitud enviada y GBM contra {{marzoParaSalida}}, lo que hace falta para pagar la salida completa en agosto si el ingreso nuevo sigue hasta allá. Si llega, sigue septiembre de 2027 y se decide el {{decisionMaestria}}. Si no, la salida se mueve a septiembre de 2028 —la solicitud se repite en noviembre, ya armada— y el ahorro sigue igual: no se viaja a medias ni con deuda.",
      semanas:[
-      {id:"a1-1",mes:"2026-10",txt:"Deja la BBVA en cero quincena a quincena. El 11 oct, con lo de Didi, lo que pide el estado de cuenta para no generar intereses (el plan cuenta {{tcBbvaMin}}); el 15 oct, los {{ahorroDia15}} de la quincena van a la tarjeta y no a GBM; cada lunes, lo de Didi, y el 1 nov, {{ahorroDia1}}: quedará en cero el {{bbvaCero}}. Desde ahí, lo que pagues con ella lo pagas en la misma quincena."},
+      {id:"a1-1",mes:"2026-10",txt:"Deja la BBVA en cero quincena a quincena. El 15 oct, los {{ahorroDia15}} de la quincena van a la tarjeta y no a GBM; los lunes 19 y 26, lo de Didi, y el 1 nov, lo que falte de los {{ahorroDia1}} (el resto, a GBM): quedará en cero el {{bbvaCero}}. Desde ahí, lo que pagues con ella lo pagas en la misma quincena."},
       {id:"a1-2",mes:"2026-10",txt:"Abre tu cuenta de GBM para Alemania, aparte del día a día. En cuanto la BBVA quede en cero, lo que sobra de cada quincena va ahí el día que entra el sueldo —{{ahorroDia1}} el 1 y {{ahorroDia15}} el 15— y lo de Didi cada lunes, hasta juntar {{didiAhorro}} al mes."},
       {id:"a1-18",mes:"2026-10",txt:"Decide tu palanca de ingreso este mes. Septiembre de 2027 pide {{extraSalida}} más al mes desde noviembre, y la de ese tamaño es el sueldo: pide el aumento en {{empleador}} con números —lo que haces en Ford y el CT-GenAI que presentas en enero— o aplica a puestos que paguen más, remotos o en un Tier 1. Freelance de pruebas en lugar de horas de Didi también suma, después de revisar tu contrato. Cada peso, a GBM el día que entra."},
       {id:"a1-4",mes:"2026-10",txt:"Pide las dos cartas de recomendación. Un jefe de Bosch, Continental o ALTEN y un líder técnico o profesor: en inglés y firmadas."},
@@ -862,7 +870,9 @@ window.CIFRAS = (function () {
      debo 15,000 a bbva"). Ya no se paga de golpe el 11: la deuda cara va primero (prompt del Plan
      Maestro), así que lo que cada quincena manda a GBM y lo que Didi aparta cada lunes van a la
      tarjeta hasta dejarla en cero, y el día de pago se completa al menos el mínimo con lo de Didi.
-     Arranca del saldo de `d001` en DEUDAS_SEED el día `PROYECTO.bbvaFecha`; salvo con `PROYECTO.bbvaSinIntereses`, el interés corre por día
+     Arranca de `PROYECTO.bbvaInicio` el día `PROYECTO.bbvaFecha` y, el día `bbvaSaldoFecha`, se ancla
+     al último saldo que dijo Adán (`d001` en DEUDAS_SEED): los abonos de antes quedan como pasaron.
+     Salvo con `PROYECTO.bbvaSinIntereses`, el interés corre por día
      a la tasa de la tarjeta más IVA, se carga el día de pago y, al llegar a cero, lo que quedaba va
      con el abono siguiente. Devuelve cada abono con su fecha y de dónde sale (`quincena`, `didi` o
      `minimo`), el día que queda en cero, lo que cuesta en intereses y el saldo al cerrar cada mes.
@@ -875,7 +885,7 @@ window.CIFRAS = (function () {
     const p = P.bbvaFecha.split('-').map(Number), d = new Date(p[0], p[1] - 1, p[2]);
     // `acum` es el interés que corre y todavía no se carga: cada abono lo paga primero, así el
     // último deja la tarjeta en cero de verdad y no un residuo de centavos para la quincena siguiente.
-    let saldo = +tc.balance, acum = 0, ciclo = 0;
+    let saldo = +P.bbvaInicio || +tc.balance, acum = 0, ciclo = 0;
     const abona = function (monto, de) {
       const x = Math.round(Math.min(saldo + acum, monto) * 100) / 100;
       if (!(x >= 1)) return;
@@ -886,6 +896,8 @@ window.CIFRAS = (function () {
     for (let k = 0; k < 730; k++, d.setDate(d.getDate() + 1)) {
       const ym = mesDe(d), dia = d.getDate();
       if (k > 0) { const i = saldo * diario; acum += i; out.intereses += i; }
+      const hoyEs = ym + '-' + String(dia).padStart(2, '0'), anclado = !P.bbvaSaldoFecha || hoyEs >= P.bbvaSaldoFecha;
+      if (hoyEs === P.bbvaSaldoFecha) { saldo = +tc.balance; acum = 0; }   // el saldo real manda
       if (dia === diaPago) {
         saldo += acum; acum = 0;
         if (k > 0 && ciclo < min) abona(min - ciclo, 'minimo');
@@ -894,7 +906,7 @@ window.CIFRAS = (function () {
       if (k > 0 && d.getDay() === 1) abona(didiAlAhorro(ym) * 12 / 52, 'didi');
       if (dia === 1 || dia === 15) abona(envioQuincena(dia, ym), 'quincena');
       out.saldoMes[ym] = saldo + acum;
-      if (saldo + acum < 1) { out.fin = new Date(d.getFullYear(), d.getMonth(), d.getDate()); out.saldoMes[ym] = 0; break; }
+      if (saldo + acum < 1 && anclado) { out.fin = new Date(d.getFullYear(), d.getMonth(), d.getDate()); out.saldoMes[ym] = 0; break; }
     }
     return out;
   }
@@ -4302,6 +4314,14 @@ window.CIFRAS = (function () {
         const g = (f.goals || []).find(x => x.id === 'g001'); if (g) delete g.current;
       }
     },
+    {
+      // 2026-10-14 · "el credito de tarjeta de bbva ya bajo a 9,900". El saldo nuevo; el plan se
+      // ancla a él ese día (`PROYECTO.bbvaSaldoFecha`) y el avance se sigue midiendo desde los $15,000.
+      flag: '_bbva20261014',
+      hacer: function (f) {
+        const tc = (f.debts || []).find(x => x.id === 'd001'); if (tc) tc.balance = 9900;
+      }
+    },
   ];
 
   /* Las seis compras del 1-sep-2026, en un solo sitio: las usa la migración de arriba para el
@@ -5005,13 +5025,13 @@ window.CIFRAS = (function () {
      Adán, 2026-10-13: "el 74% ya es 0%". El tablero enseñaba el promedio de los tres pasos de la
      ruta (fondo, Banamex y BBVA) y Mis Metas lo pagado sobre los $53,350 con que nacieron las dos
      tarjetas: los dos decían que la deuda iba de salida cuando los $15,000 del 5 de octubre no
-     habían bajado. Se mide contra el saldo con que arrancó el plan: `d001` en DEUDAS_SEED, el día
-     `PROYECTO.bbvaFecha` (cada saldo nuevo que reporta Adán mueve los dos, con su migración). */
+     habían bajado. Se mide contra el saldo con que arrancó el plan, `PROYECTO.bbvaInicio` el día
+     `PROYECTO.bbvaFecha`, que no se mueve: cada saldo nuevo que reporta Adán va a `d001` con su
+     migración, y si moviera también el inicio, lo pagado volvería a 0 %. */
   function avanceBbva(f) {
     const F = f || fin;
-    const seed = DEUDAS_SEED.filter(d => d.id === 'd001')[0] || {};
     const vivo = ((F && F.debts) || DEUDAS_SEED).filter(d => d.id === 'd001')[0];
-    const inicio = +seed.balance || 0, saldo = vivo ? +vivo.balance || 0 : inicio;
+    const inicio = +PROYECTO.bbvaInicio || 0, saldo = vivo ? +vivo.balance || 0 : inicio;
     const pagado = Math.max(0, inicio - saldo);
     return { inicio: inicio, saldo: saldo, pagado: pagado, desde: PROYECTO.bbvaFecha,
              pct: inicio > 0 ? Math.min(100, pagado / inicio * 100) : (saldo > 0 ? 0 : 100) };

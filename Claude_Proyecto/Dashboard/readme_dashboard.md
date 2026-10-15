@@ -736,11 +736,11 @@ propio estado: `toggleFaseCheck(id, this.checked)`.
 ### La ruta de deuda y la libreta de logros
 
 Los pasos van en su orden —fondo, Banamex, BBVA— y uno solo está activo: el primero sin terminar,
-salvo **mientras corre el plan de la BBVA**, que la vuelve el paso activo y dice *$15,000 · en cero
-el 2 nov*. El fondo se queda en lo que tiene: el ahorro de cada quincena ya no va a CETES.
+salvo **mientras corre el plan de la BBVA**, que la vuelve el paso activo y dice *$9,900 · en cero
+el 1 nov*. El fondo se queda en lo que tiene: el ahorro de cada quincena ya no va a CETES.
 
 **La cifra de la derecha es lo pagado de la BBVA** desde el saldo con que arrancó su plan
-(`CIFRAS.avanceBbva()`: `d001` en DEUDAS_SEED el día `PROYECTO.bbvaFecha`), la misma que el medidor de
+(`CIFRAS.avanceBbva()`: `PROYECTO.bbvaInicio` el día `PROYECTO.bbvaFecha`, hoy 34 % de $15,000), la misma que el medidor de
 Deuda cara de Mis Metas. Adán, 13-oct-2026: *"el 74% ya es 0%"* —el promedio de los tres pasos decía
 74 % con la tarjeta sin bajar—.
 
@@ -832,7 +832,7 @@ paga completa cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, 
 los desgloses de Deuda cara y Patrimonio, que la marcan "sin intereses". La BBVA ya no lleva
 `noInterest`, pero tampoco paga intereses: Adán cubre cada mes lo que pide el estado de cuenta para
 no generarlos (`CIFRAS.PROYECTO.bbvaSinIntereses`), así que su tasa tampoco corre y en Deuda cara y
-Deuda total dice cuándo quedará en cero (`bbvaPlanTxt()`: *quincena a quincena, en cero el 2 nov, sin intereses*).
+Deuda total dice cuándo quedará en cero (`bbvaPlanTxt()`: *quincena a quincena, en cero el 1 nov, sin intereses*).
 Sigue sumando en Deuda cara porque es saldo de tarjeta.
 **El panel de cada medidor es XL** (`.gbm-card.kpi-card`: `min(1560px, 96vw)` de ancho y alto
 automático hasta el 94 %; Adán, 21-sep-2026: *"todas las ventanas iguales a estas debes hacerlas
