@@ -340,3 +340,14 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
   .topic-content .container.lec{padding:0 16px}
   .lec-indice{padding:14px 16px}
 }
+
+/* ── Dentro de la ventana del Dashboard ──
+   Mi Día (Hoy aprendes → Alemán) abre la lección en un iframe y leccion.js pone `.embebida`: la ventana
+   ya trae el título y cómo pasar a otra lección, así que sobran la barra, «Anterior/Siguiente» y el pie, y
+   el panel de práctica sube hasta arriba. La brújula tampoco: mientras la ventana está abierta, la del
+   Dashboard enseña este mismo prompt, el de Alemán. */
+html.embebida .nav.ini-barra,html.embebida .page-nav,html.embebida .footer,html.embebida .pp-btn{display:none}
+html.embebida .lec [id]{scroll-margin-top:16px}
+@media(min-width:1280px){
+  html.embebida .lec-practica{top:16px;max-height:calc(100vh - 32px)}
+}

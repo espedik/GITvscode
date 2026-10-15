@@ -2,8 +2,10 @@
 
 41 lecciones de alemán en HTML, sin backend ni build, más el vocabulario y el tema de Partizip.
 Se abren con `file://`. **El Dashboard no tiene pantalla de alemán** (Adán no quiere la
-información repetida): el alemán se estudia aquí. Mi Día solo lee de esta carpeta la palabra del día
-(`vocab-datos.js`) y, al tocarla, abre `vocabulario.html` en su sección.
+información repetida): el alemán se estudia aquí. Mi Día solo lee de esta carpeta dos archivos de
+datos —la palabra del día de `vocab-datos.js` y la lección que toca de `lecciones-datos.js`— y los abre en
+su ventana: la palabra con sus datos y la lección en su propia página, enmarcada (ver *Dentro de la ventana
+del Dashboard*).
 
 **Su prompt**: la clave `aleman` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
 
@@ -22,6 +24,7 @@ información repetida): el alemán se estudia aquí. Mi Día solo lee de esta ca
 | Apoyo | `index.html`, `principiantes.html`, `gramatica.html`, `vocabulario.html` | El inicio (ver abajo), lo básico para principiantes y la referencia transversal. La barra de apps del Dashboard enlaza a los cuatro |
 | Fotos | `fotos/` | Una por lección y por caja de consulta del inicio, con su crédito; la misma va en el encabezado de su lección |
 | Compartido | `styles.css`, `leccion.js`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js` | La plantilla de las lecciones (ver abajo), estilos y motores |
+| **Lecciones** | `lecciones-datos.js` | El catálogo de las 41: título, foto con su crédito, ejercicios del Kapitel y la regla de qué lección toca. Lo leen el inicio y Mi Día — ver abajo |
 | **Vocabulario** | `vocab-datos.js`, `vocab.css`, `vocab.js` | Los datos, el diseño y el motor de `vocabulario.html`. Mi Día lee los datos — ver abajo |
 
 ---
@@ -36,12 +39,18 @@ principiantes, cada tema con su enlace) y A2 y A1. Tiene su propio diseño: no c
 que sigue siendo el de las lecciones. El lienzo del rediseño está en `diseno-inicio/`: Main es lo
 implementado; B (la ruta) y C (el índice mínimo) son las alternativas.
 
-**El progreso es real.** Sale de `aleman_k10_v1`, que escribe `k10-interactivo.js`: un ejercicio
-cuenta como completo cuando tiene todos sus reactivos bien. Cada tarjeta del Kapitel 10 lleva en
-`data-bloques` la lista de sus ejercicios, porque desde `file://` el inicio no puede abrir las otras
-páginas para contarlos; un `k10Conjugar` guarda una entrada por verbo y va como `id:n`. El control
-25 de `../Dashboard/verificar-sincronia.js` compara esa lista con cada página y comprueba que el
-inicio enlace las 41 lecciones y que cada foto exista y lleve su crédito.
+**Las tarjetas salen del catálogo.** Las del Kapitel 10, A2 y A1 las pinta el script desde
+`lecciones-datos.js`, el mismo que lee Mi Día: cada lección con su página, su número, su título en alemán
+y en español, sus temas, su foto con el crédito y, si es del Kapitel, la lista de sus ejercicios
+(`bloques`), porque desde `file://` el inicio no puede abrir las otras páginas para contarlos; un
+`k10Conjugar` guarda una entrada por verbo y va como `id:n`. Una lección se añade o se corrige ahí, no en
+el HTML. El control 25 de `../Dashboard/verificar-sincronia.js` compara cada lista con su página, la foto y
+el crédito con los del encabezado de la lección, y comprueba que estén las 41 y que ni el inicio ni el
+Dashboard lleven una lección escrita a mano.
+
+**El progreso es real.** Sale de `aleman_k10_v1`, que escribe `k10-interactivo.js`: un ejercicio cuenta
+como completo cuando tiene todos sus reactivos bien (`ALEMAN_LECCIONES.avance()`). **Lo que toca hoy** lo
+decide `ALEMAN_LECCIONES.queToca()`, la misma regla que usa Mi Día del Dashboard para su lección del día:
 
 | Caso | Qué enseña la tarjeta de arriba |
 |---|---|
@@ -49,14 +58,16 @@ inicio enlace las 41 lecciones y que cada foto exista y lleve su crédito.
 | Ninguna a medias, alguna terminada | La primera sin terminar, en el orden del Kapitel |
 | Navegador en blanco | `k10-01`: *Empieza el Kapitel 10* |
 | Todo completo | El minitest de `k10-03`, para no perderlo |
+| Elegiste otra en la ventana de Mi Día | La tuya, *Elegida por ti*, con *Volver a la del plan* (`aleman_leccion_v1`) |
 
 Debajo dice cuándo fue el último ejercicio del Kapitel 10 y, si pasaron más de dos días, lo marca en
 rojo: es el indicador del prompt (*sin huecos de más de dos días*). Solo cuenta los ejercicios del
 Kapitel 10, que son lo único que guarda su fecha.
 
 **Nada va escrito a mano.** Las cifras del vocabulario (palabras, secciones, subsecciones y cada
-familia) se cuentan de `vocab-datos.js`; el nombre de la escuela es `{{escuelaAleman}}`, del maestro,
-y el número de lecciones del pie se cuenta en la página.
+familia) se cuentan de `vocab-datos.js`; las de A2 y A1 (*20 lecciones: 12 de gramática y 8 de temas*),
+de `lecciones-datos.js`; el nombre de la escuela es `{{escuelaAleman}}`, del maestro, y el número de
+lecciones del pie se cuenta en la página.
 
 **Las fotos** viven en `fotos/`: de Openverse (StockSnap y Flickr), a 800 px las grandes y a 360 las
 miniaturas, cada una con su autor y su licencia en el `title`. Una por lección y de lo que enseña: las
@@ -95,7 +106,7 @@ Las 41 lecciones, Principiantes y Gramática comparten una plantilla, hecha para
   secciones van en dos columnas, con los capítulos, la introducción y la tabla maestra a todo el
   ancho, y a la derecha del título, el color de cada caso con su artículo.
 
-**`leccion.js`** hace dos cosas que el CSS no puede. Un enlace a algo que está en el panel —los
+**`leccion.js`** hace tres cosas que el CSS no puede. Un enlace a algo que está en el panel —los
 chips, *Práctica · N bloques* o un enlace directo como `k10-03-perfekt-uben.html#minitest`— mueve el
 panel hasta el título de ese bloque, y la página solo lo necesario para que el panel quede completo
 (sin esto, el navegador bajaba la página entera y la cabecera del panel se escondía bajo la barra).
@@ -104,6 +115,14 @@ cada bloque de práctica con su barra, *completo*, su porcentaje o *sin empezar*
 practicaste por última vez, en rojo pasados dos días. Lee `aleman_k10_v1` con la misma regla que
 el inicio, y los ejercicios de cada bloque se los da `k10Ejercicios()` de `k10-interactivo.js`. Un
 bloque completo marca su chip con ✓.
+
+**Dentro de la ventana del Dashboard.** Mi Día abre la lección que toca en un iframe, dentro de su
+ventana del alemán, y `leccion.js` la reconoce enmarcada: pone `.embebida` en `<html>` y `styles.css`
+quita la barra, «Anterior/Siguiente», el pie y la brújula —la ventana trae su título, cómo pasar a otra
+lección y la brújula del Dashboard con este mismo prompt—, y el panel de práctica sube hasta arriba. Un
+enlace a otra página se lo pide a la ventana con `postMessage`: otra lección se abre ahí mismo y una
+página que no es lección (el vocabulario, la gramática), aparte; Escape cierra la ventana. Lo que se
+practica ahí se guarda en `aleman_k10_v1`, igual que aquí. Abierta sola, la lección no cambia.
 
 El control 27 de `../Dashboard/verificar-sincronia.js` comprueba que cada lección tenga la barra, su
 foto con crédito, las dos columnas y, si tiene práctica, `leccion.js` después de `k10-interactivo.js`.
@@ -135,7 +154,8 @@ Los controles 19 y 20 de `../Dashboard/verificar-sincronia.js` vigilan que nadie
 
 **Mi Día lee `vocab-datos.js`.** La tarjeta *Hoy aprendes* del Dashboard toma la palabra del día
 —cada palabra una vez por vuelta, en el orden de Coach— y, si es un verbo, su Perfekt con `aux` y la
-última forma de `conj` (*ist zurückgekommen*). Tocarla abre esta página en su sección:
+última forma de `conj` (*ist zurückgekommen*); su ventana la enseña entera, con «Pruébate» de su
+subsección. *Ver «…» en Vocabulario →*, en esa ventana, abre esta página en su sección:
 `vocabulario.html#cat=tramites&sub=formulario` abre en *Trámites › Formularios*, con todos los
 niveles para que la palabra esté a la vista (y lo guarda en `voc_estado_v1`, como cualquier visita).
 Y `#tab=cards`, `#tab=situ` o `#tab=pz` abre esa pestaña: los usa el repaso del inicio.
@@ -488,7 +508,8 @@ Deutsch).
    el destino del índice); las tarjetas, diálogos de práctica, ejercicios y notas, en
    `.lec-practica`, cada bloque con su `id` y su chip en `.lec-chips`. Dentro: `.card`,
    `.vocab-table`, `.rule-box`, `.example`.
-2. Su foto en `fotos/`, con el nombre de la lección (a1-16.jpg para la A1·16), y su tarjeta con esa
-   misma foto en `index.html`.
+2. Su foto en `fotos/`, con el nombre de la lección (a1-16.jpg para la A1·16), y su entrada en
+   `lecciones-datos.js` con esa misma foto y su crédito —y, si es del Kapitel, sus `bloques`—, en su lugar
+   de la lista: el inicio pinta su tarjeta y Mi Día la cuenta en su orden.
 3. Comprobar en el navegador a 2048, 1600 y 390 px que no hay scroll horizontal, y correr el
    verificador.

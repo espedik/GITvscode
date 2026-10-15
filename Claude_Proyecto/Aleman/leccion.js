@@ -11,8 +11,33 @@
       el inicio, con la misma regla: un ejercicio está completo cuando tiene todos sus reactivos bien).
       Los ejercicios de cada bloque los da k10Ejercicios(); un bloque completo marca su chip.
 
+   3. Dentro de la ventana del Dashboard (Mi Día → Hoy aprendes → Alemán), que abre la lección en un
+      iframe: pone `.embebida` en <html> —styles.css quita la barra, «Anterior/Siguiente», el pie y la
+      brújula—, un enlace a otra página se lo pide a la ventana, que abre ahí otra lección o, si no es
+      lección, la abre aparte, y Escape cierra la ventana.
+
    Sin dependencias. Va al final del <body>, después de los scripts de la lección.
    ══════════════════════════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  /* ── 3. Dentro de la ventana del Dashboard ── */
+  var dentro = false;
+  try { dentro = window.self !== window.top; } catch (e) { dentro = true; }
+  if (!dentro) return;
+  document.documentElement.classList.add('embebida');
+  function avisa(m) { m.aleman = 1; try { window.parent.postMessage(m, '*'); } catch (e) { /* sin ventana, nada */ } }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a || e.defaultPrevented) return;
+    var href = a.getAttribute('href') || '';
+    if (!href || href.charAt(0) === '#' || /^(javascript|mailto|tel):/i.test(href)) return;
+    if (/^https?:/i.test(href)) { a.target = '_blank'; a.rel = 'noopener'; return; }
+    e.preventDefault();
+    avisa({ tipo: 'abrir', href: href });
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') avisa({ tipo: 'cerrar' }); });
+})();
+
 (function () {
   'use strict';
   var panel = document.querySelector('.lec-practica');

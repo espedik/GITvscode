@@ -46,10 +46,11 @@
      uso privado). Si no está, las preguntas enlazan el PDF oficial en la página de cada cita. -->
 <script src="syllabus/ct-genai-syllabus.js" onerror="this.remove()"></script>
 <script src="examen-genai.js"></script>
-<!-- El vocabulario de alemán, del que sale la palabra del día de Mi Día: los datos de la pantalla de
-     vocabulario de la app de Alemán (Aleman/vocab-datos.js). El Dashboard no pinta vocabulario: tocar la
-     palabra abre Aleman/vocabulario.html en su sección. -->
+<!-- El alemán de Mi Día, de la app de Alemán: la palabra del día sale de su vocabulario (Aleman/vocab-datos.js)
+     y la lección que toca, de su catálogo de lecciones (Aleman/lecciones-datos.js). El Dashboard no copia
+     ninguno: tocar la tarjeta abre su ventana, con la palabra y la lección en su propia página. -->
 <script src="../Aleman/vocab-datos.js"></script>
+<script src="../Aleman/lecciones-datos.js"></script>
 <!-- El catálogo de los 41 temas de Python de Entrevistas/ (ENTREVISTA_TEMAS y PY_MOD_LABEL), que
      genera Entrevistas/_generar-datos-dashboard.js: la tarjeta «Hoy aprendes» de Mi Día nombra el
      tema del día y lo abre en la app. Solo eso: 10 KB. El HTML y el CSS de cada tema ya no vienen
@@ -2764,6 +2765,95 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 /* La pregunta del ISTQB, en su panel (#istqbOverlay): se contesta tocando una opción, la primera
    respuesta es la que cuenta, y al pie va el marcador de la semana. */
 #istqbOverlay{--c:var(--p)}
+/* El alemán de hoy (#alemanOverlay, `abrirAleman()`): a la izquierda la palabra del día y a la derecha la
+   lección que toca, en su propia página de la app de Alemán dentro de un iframe (leccion.js la pone en modo
+   ventana). Ancha y alta para que la lección quepa en sus dos columnas, que salen desde 1280 px dentro del
+   iframe; por debajo de 1100 px, una cosa a la vez, con dos pestañas, y en el teléfono a pantalla completa. */
+#alemanOverlay{--c:var(--g)}
+.gbm-card.alv-card{width:min(1900px,96vw);height:92vh;display:flex;flex-direction:column;overflow:hidden}
+.alv-card .gbm-head{flex:none}
+.alv-tabs{display:none;gap:6px;margin-top:10px}
+.alv-tabs button{height:28px;padding:0 13px;border-radius:99px;border:1px solid rgba(var(--ov),.14);background:transparent;
+  color:var(--text2);font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.alv-tabs button.on{background:color-mix(in srgb,var(--c) 16%,transparent);border-color:var(--c);color:var(--text)}
+.alv-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(290px,340px) minmax(0,1fr);grid-template-rows:minmax(0,1fr);
+  gap:22px;padding:16px 22px 20px}
+/* La palabra del día: dónde vive, el artículo en el color de su género (los de la app de Alemán), su gramática,
+   el ejemplo, el uso, «Pruébate» y lo que sigue. */
+.alv-pal{min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:12px;padding-right:6px}
+.alv-pal-foto{flex:none;width:100%;height:128px;object-fit:cover;border-radius:12px;background:color-mix(in srgb,var(--c) 12%,transparent)}
+.alv-k{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.alv-k.c{color:var(--c)}
+.alv-w{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;font-family:var(--font-title);font-size:30px;font-weight:600;
+  line-height:1.15;letter-spacing:-.01em;color:var(--text)}
+.alv-art{font-weight:700}
+.alv-art.der{color:#3b82f6}
+.alv-art.die{color:#ec4899}
+.alv-art.das{color:#10b981}
+.alv-art.pl{color:#f97316}
+.alv-es{margin-top:-6px;font-size:15px;line-height:1.4;color:var(--text2)}
+.alv-gram{display:flex;flex-wrap:wrap;gap:6px}
+.alv-gram span{padding:3px 8px;border-radius:7px;background:rgba(var(--ov),.06);font-family:var(--mono);font-size:11px;
+  line-height:1.5;color:var(--text3)}
+.alv-gram b{font-weight:600;color:var(--text)}
+.alv-ex{display:flex;gap:8px;align-items:flex-start;font-size:14px;font-style:italic;line-height:1.5;color:var(--text)}
+.alv-ex small{display:block;font-size:12.5px;font-style:normal;color:var(--text3)}
+.alv-uso{padding:9px 11px;border-radius:10px;background:color-mix(in srgb,var(--c) 9%,transparent);font-size:12.5px;line-height:1.5;color:var(--text2)}
+.alv-uso b{margin-right:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--c)}
+.alv-oir{flex:none;display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;padding:0;border-radius:50%;
+  border:1px solid rgba(var(--ov),.14);background:transparent;color:var(--text2);cursor:pointer}
+.alv-oir:hover{color:var(--c);border-color:var(--c)}
+.alv-oir svg{width:15px;height:15px}
+.alv-ex .alv-oir{width:24px;height:24px;margin-top:1px}
+.alv-ex .alv-oir svg{width:12px;height:12px}
+.alv-pr{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:1px 10px;padding:7px 0;border-top:1px solid rgba(var(--ov),.07)}
+.alv-pr-w{font-size:14px;font-weight:650;color:var(--text)}
+.alv-pr-es{grid-column:1;font-size:11.5px;color:var(--text3)}
+.alv-pr-ops{grid-row:1 / span 2;grid-column:2;display:flex;gap:4px}
+.alv-pr-ops button{min-width:38px;height:28px;padding:0 8px;border-radius:8px;border:1px solid rgba(var(--ov),.14);background:transparent;
+  color:var(--text2);font-family:var(--mono);font-size:11.5px;font-weight:700;cursor:pointer}
+.alv-pr-ops button:not(:disabled):hover{border-color:var(--c);color:var(--text)}
+.alv-pr-ops button:disabled{cursor:default;opacity:.4}
+.alv-pr-ops button.ok{opacity:1;border-color:var(--g);background:rgba(var(--g-rgb),.14);color:var(--text)}
+.alv-pr-ops button.mal{opacity:1;border-color:var(--r);background:rgba(var(--r-rgb),.1);color:var(--text)}
+.alv-sig{font-size:12.5px;line-height:1.5;color:var(--text2)}
+.alv-sig b{font-weight:650;color:var(--text)}
+.alv-ir{font-size:12px;font-weight:700}
+/* La lección que toca: su encabezado —por qué toca, lo que llevas, cómo pasar a otra— y la lección misma. */
+.alv-lec{min-height:0;display:flex;flex-direction:column;gap:12px}
+.alv-lec-cab{flex:none;display:flex;align-items:center;gap:14px;min-width:0}
+.alv-lec-foto{flex:none;width:96px;height:64px;border-radius:10px;object-fit:cover}
+.alv-lec-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.alv-lec-h{font-size:18px;font-weight:800;line-height:1.25;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alv-lec-num{margin-right:8px;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--c)}
+.alv-lec-s{font-size:12.5px;line-height:1.45;color:var(--text3)}
+.alv-lec-s b{color:var(--text2)}
+.alv-lec-s b.bajo{color:var(--w)}
+.alv-lec-t .ap-seg{max-width:340px;margin:3px 0 0}
+.alv-lec-ctl{flex:none;display:flex;align-items:center;gap:6px}
+.alv-lec-ctl button{height:30px}
+.alv-lec-ctl .ap-av-ant{width:30px}
+.alv-lec-ctl .ap-av-sig{padding:0 10px 0 12px;font-size:10px}
+.alv-lec-marco{position:relative;flex:1;min-height:0;border-radius:14px;overflow:hidden;background:#F5F4F0;border:1px solid rgba(var(--ov),.12)}
+.alv-lec-marco iframe{display:block;width:100%;height:100%;border:0;opacity:0;transition:opacity .2s ease}
+.alv-lec-marco.lista iframe{opacity:1}
+.alv-lec-carga{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b665e;pointer-events:none}
+.alv-lec-marco.lista .alv-lec-carga{display:none}
+@media(max-width:1100px){
+  .alv-tabs{display:flex}
+  .alv-body{grid-template-columns:minmax(0,1fr)}
+  .alv-body[data-tab="leccion"] .alv-pal,.alv-body[data-tab="palabra"] .alv-lec{display:none}
+  .alv-pal{padding-right:0}
+}
+@media(max-width:640px){
+  body:has(#alemanOverlay.open) .pp-btn{visibility:hidden}
+  .gbm-card.alv-card{width:100%;height:100%}
+  .alv-body{padding:10px 10px 12px;gap:12px}
+  .alv-lec-cab{flex-wrap:wrap;gap:10px}
+  .alv-lec-foto{width:64px;height:44px}
+  .alv-lec-h{white-space:normal;font-size:16px}
+  .alv-lec-ctl{width:100%;justify-content:flex-end}
+}
 /* «Cómo lo decide Coach»: el botón junto al título de Hoy aprendes y su panel (#comoDecideOverlay) — lo
    que manda, en orden, y tarjeta por tarjeta lo de hoy con su regla (`comoDecideHtml()`). */
 .ap-como{display:inline-flex;align-items:center;gap:5px;height:20px;margin-left:6px;padding:0 8px 0 7px;border-radius:99px;
@@ -4102,6 +4192,28 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   </div>
 </div>
 
+<!-- ─── EL ALEMÁN DE HOY — la lección que toca y la palabra del día, sin salir de Mi Día (abrirAleman()) ─── -->
+<div class="gbm-overlay" id="alemanOverlay" onclick="if(event.target===this) cerrarAleman()">
+  <div class="gbm-card alv-card" role="dialog" aria-modal="true" aria-labelledby="alemanTit">
+    <div class="gbm-head">
+      <button class="gbm-close" onclick="cerrarAleman()" aria-label="Cerrar">✕</button>
+      <h2 id="alemanTit">Alemán de hoy</h2>
+      <p id="alemanSub"></p>
+      <div class="alv-tabs" role="tablist" aria-label="Qué ver">
+        <button type="button" role="tab" data-alv-tab="leccion" onclick="alemanTab('leccion')">La lección</button>
+        <button type="button" role="tab" data-alv-tab="palabra" onclick="alemanTab('palabra')">La palabra del día</button>
+      </div>
+    </div>
+    <div class="alv-body" id="alemanBody" data-tab="leccion">
+      <aside class="alv-pal" id="alemanPalabra" aria-label="La palabra del día"></aside>
+      <section class="alv-lec" aria-label="La lección de hoy">
+        <div class="alv-lec-cab" id="alemanLecCab"></div>
+        <div class="alv-lec-marco" id="alemanMarco"><iframe id="alemanFrame" title="La lección de hoy, de la app de Alemán" onload="window.alemanCargada&&alemanCargada(this)"></iframe><span class="alv-lec-carga">Abriendo la lección…</span></div>
+      </section>
+    </div>
+  </div>
+</div>
+
 <!-- Cómo lo decide Coach: lo que manda en Hoy aprendes y el porqué de lo de hoy (abrirComoDecide()). -->
 <div class="gbm-overlay" id="comoDecideOverlay" onclick="if(event.target===this) cerrarComoDecide()">
   <div class="gbm-card cd-card">
@@ -5409,11 +5521,11 @@ function toggleListaItem(id,cat,txt){
   actualizarLcTotal();
 }
 
-// ─── ALEMÁN — la palabra del día de Mi Día ───────────────────────────
-// El Dashboard ya no tiene pantalla de alemán (Adán: "elimina la sección de alemán todo todo, porque está
-// repetida la info de alemán"): el vocabulario se estudia en la app de Alemán. Mi Día toma de sus datos
-// —`Aleman/vocab-datos.js` (`ALEMAN_VOCAB`), los de su pantalla de vocabulario— la palabra del día, y
-// tocarla abre `Aleman/vocabulario.html` en su sección (`hoyAlAleman`).
+// ─── ALEMÁN — la lección y la palabra del día de Mi Día ────────────────
+// El Dashboard no tiene pantalla de alemán (Adán: "elimina la sección de alemán todo todo, porque está
+// repetida la info de alemán"): se estudia en la app de Alemán. Mi Día toma de sus datos la palabra del día
+// —`Aleman/vocab-datos.js` (`ALEMAN_VOCAB`)— y la lección que toca —`Aleman/lecciones-datos.js`
+// (`ALEMAN_LECCIONES`)—, y tocar su tarjeta abre su ventana (`abrirAleman()`), con la lección en su propia página.
 function alVocab(){ return (typeof ALEMAN_VOCAB !== 'undefined') ? ALEMAN_VOCAB : null; }
 
 // Las palabras, cada una una vez: 18 están en dos secciones (laufen, en Deporte y en Movimiento) y
@@ -6484,8 +6596,8 @@ function irASlide(cls){
   const sl = document.querySelector('.slide.' + cls);
   if(sl && typeof goTo === 'function') goTo(+sl.dataset.i);
 }
-// La palabra del día abre la pantalla de vocabulario de la app de Alemán en su sección y subsección
-// (`vocabulario.html#cat=…&sub=…`: la abre ahí, con todos los niveles, para que la palabra esté a la vista).
+// «Ver … en Vocabulario», en la ventana del alemán, abre la pantalla de vocabulario de la app de Alemán en la
+// sección y subsección de la palabra (`vocabulario.html#cat=…&sub=…`), con todos los niveles, para que esté a la vista.
 function hoyAlAleman(sec, sub){
   const h = 'cat=' + encodeURIComponent(sec || '') + (sub ? '&sub=' + encodeURIComponent(sub) : '');
   window.open('../Aleman/vocabulario.html#' + h, '_blank', 'noopener');
@@ -6718,10 +6830,10 @@ function aprendeVisto(slot){
   h.vistos = h.vistos || {};
   if(!h.vistos[slot]){ h.vistos[slot] = 1; aprendeGuarda(st, h); }
 }
-// Tocar un renglón lo abre donde se estudia.
+// Tocar un renglón lo abre donde se estudia: el alemán, en su ventana, aquí mismo.
 function aprendeAbrir(slot){
   aprendeVisto(slot);
-  if(slot === 'de'){ const a = alemanPalabraHoy(); if(a) hoyAlAleman(a.cat, a.sub); }
+  if(slot === 'de') abrirAleman();
   else if(slot === 'py'){ const p = entrevistaTemaHoy(); if(p) window.open('../Entrevistas/entrevistas.html#' + p.id, '_blank', 'noopener'); }
 }
 
@@ -6757,36 +6869,246 @@ function apLuego(items){
     : `<span class="ap-bq ap-opc"><span class="ap-bq-k">Lo que sigue</span><span class="ap-sig">${x}</span></span>`).join('');
 }
 
-// El alemán de hoy, un solo renglón: la palabra —con su artículo y su plural o, si es verbo, su Perfekt
-// (lo que se ve en clase en el Kapitel 10)—, el ejemplo y
-// el fallo típico. La bandera va en CSS (`.flag-de`): el emoji se pinta como las letras "DE" en Windows.
-function alemanHoyHtml(vistos){
-  const V = (typeof alVocab === 'function') ? alVocab() : null; if(!V) return '';
-  const a = alemanPalabraHoy(); if(!a) return '';
-  const art = (a.art || '-').split('/')[0].trim();
-  const artHtml = art && art !== '-' ? `<span>${esc(art === 'pl.' ? 'die' : a.art)}</span> ` : '';
-  const pl = a.pl && a.pl !== '-' ? `<span class="ap-m">pl. die ${esc(a.pl)}</span>`
-           : (art === 'pl.' ? '<span class="ap-m">solo plural</span>' : '');
-  const f = a.conj && a.aux ? String(a.conj).split('·').map(s => s.trim()) : null;
-  const aux = a.aux === 'ist' ? 'ist' : 'hat';
-  const perf = f ? `<span class="ap-m">Perfekt · <span class="ap-aux ${aux}">${aux}</span> ${esc(f[f.length - 1])}</span>` : '';
-  const frase = a.tipo === 'frase';
-  // Un ejemplo que repite la frase tal cual no enseña nada nuevo: se omite.
+// ── El alemán de hoy, en su tarjeta: la lección que toca y la palabra del día ────────────────
+// Adán, 2026-10-14: "vi que solo estás agregando vocabulario, también agrega lecciones de alemán". Arriba, la
+// lección —la del Kapitel que ve en clase, con la regla del inicio de Alemán (`ALEMAN_LECCIONES.queToca()`): la
+// que dejó a medias o la siguiente sin terminar— con lo que lleva; debajo, la palabra con su artículo y su
+// plural o, si es verbo, su Perfekt (lo que se ve en clase en el Kapitel 10), el ejemplo y el fallo típico.
+// Tocarla abre su ventana (`abrirAleman()`). La bandera va en CSS (`.flag-de`): el emoji se pinta como las
+// letras "DE" en Windows.
+function alLecciones(){ return (typeof ALEMAN_LECCIONES !== 'undefined') ? ALEMAN_LECCIONES : null; }
+function alemanLeccionHoy(){ const L = alLecciones(); return L ? L.queToca() : null; }
+// Si hoy ya hizo un ejercicio de una lección cuenta como hecho, igual que abrir la ventana.
+function alemanPracticoHoy(){ const L = alLecciones(); return !!L && L.ultimo(L.datos()) === hoyLocal(); }
+function apFotoLeccion(l){ return l && l.foto ? { u: '../Aleman/fotos/' + l.foto, c: 'Foto: ' + l.credito } : null; }
+// El artículo delante de la palabra («die» si es plural), con su espacio; nada si no lleva.
+function alemanArtTxt(w){ return w.art && w.art !== '-' ? (w.art === 'pl.' ? 'die' : w.art) + ' ' : ''; }
+// Un ejemplo que repite la frase tal cual no enseña nada nuevo: se omite.
+function alemanEjemplo(a){
   const sinPunto = s => String(s || '').replace(/[.!?¡¿]+$/, '').trim().toLowerCase();
-  const ex = a.ex && sinPunto(a.ex) !== sinPunto(a.de) ? a.ex : '';
+  return a.ex && sinPunto(a.ex) !== sinPunto(a.de) ? a.ex : '';
+}
+function alemanHoyHtml(vistos){
+  const V = (typeof alVocab === 'function') ? alVocab() : null, a = V ? alemanPalabraHoy() : null, t = alemanLeccionHoy();
+  if(!a && !t) return '';
+  let txt = '';
+  if(t){
+    const l = t.l, av = t.avance;
+    txt += apBloque(`${esc(t.ceja)} · ${esc(l.num)}`, `<span class="ap-t ap-cl l2" data-min="1" lang="de">${esc(l.de)}</span>`)
+      + (av ? apTramos(av.total, j => j < av.hechos, -1) : '')
+      + `<span class="ap-dato ap-1l">${esc(l.es)}${av ? ` · <b>${av.hechos} de ${av.total}</b> ejercicios` : ''}</span>`;
+  }
+  if(a){
+    const art = (a.art || '-').split('/')[0].trim();
+    const artHtml = art && art !== '-' ? `<span>${esc(art === 'pl.' ? 'die' : a.art)}</span> ` : '';
+    const pl = a.pl && a.pl !== '-' ? `<span class="ap-m">pl. die ${esc(a.pl)}</span>`
+             : (art === 'pl.' ? '<span class="ap-m">solo plural</span>' : '');
+    const f = a.conj && a.aux ? String(a.conj).split('·').map(s => s.trim()) : null;
+    const aux = a.aux === 'ist' ? 'ist' : 'hat';
+    const perf = f ? `<span class="ap-m">Perfekt · <span class="ap-aux ${aux}">${aux}</span> ${esc(f[f.length - 1])}</span>` : '';
+    const ex = alemanEjemplo(a);
+    const etapa = aprendeEtapaAleman(), salio = new Set((((rawGet(APRENDE_KEY, {}) || {}).salio || {}).de) || []);
+    const delNivel = alemanPalabras().filter(x => x.niv === etapa.nivel), van = delNivel.filter(x => salio.has(x.de)).length;
+    txt += apBloque(a.tipo === 'frase' ? 'Frase del día' : 'Palabra del día', `<span class="ap-de ap-cl l2" data-min="1" lang="de">${artHtml}${esc(a.de)}</span>`)
+      + `<span class="ap-es">${esc(a.es)}${pl}${perf}</span>`
+      + (ex ? `<span class="ap-ex ap-cl"><span lang="de">${esc(ex)}</span>${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</span>` : '')
+      + (a.uso ? `<span class="ap-nota ap-cl l2 ap-opc" data-min="1"><b>Uso</b> · ${esc(a.uso)}</span>` : '')
+      + `<span class="ap-dato ap-1l ap-opc">${etapa.nivel === 'A2' ? 'A2, el que pide Esslingen' : etapa.nivel} · han salido <b>${van} de ${delNivel.length}</b></span>`
+      + apLuego(aprendeLuego('de', 3).map(w => `<b>${esc(alemanArtTxt(w))}${esc(w.de)}</b> · ${esc(w.es)}`));
+  }
+  const L = alLecciones(), g = t && L ? L.grupo(L.grupoDe(t.l)) : null, practico = alemanPracticoHoy();
+  return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA, foto: t ? apFotoLeccion(t.l) : apFotoAleman(a),
+    mat: `Alemán · ${t && t.elegida ? 'elegida por ti' : esc(g ? g.label : ((V && V.cats[a.cat]) || {}).label || '')}`,
+    estado: apEstado(!!vistos.de || practico, 'lección y palabra', practico ? '✓ practicaste' : '✓ visto'),
+    otra: a && a.tipo === 'frase' ? 'La siguiente frase, en el orden de Coach' : 'La siguiente palabra, en el orden de Coach',
+    abrir: "aprendeAbrir('de')", titulo: 'Abrir la lección y la palabra del día aquí mismo', txt });
+}
+
+// ── La ventana del alemán (#alemanOverlay) ────────────────────────────────────────────────────
+// Adán, 2026-10-14: "cuando haga click aquí, debes mostrarme una ventana, no deberías abrirme el html, ahí
+// mismo quiero la información, como en las demás cosas de hoy aprendes". A la izquierda, la palabra del día
+// entera —de `Aleman/vocab-datos.js`—, con su audio si hay voz alemana y «Pruébate» con su misma subsección; a
+// la derecha, la lección que toca en su propia página de la app de Alemán, dentro de un iframe que leccion.js
+// pone en modo ventana (sin barra ni pie). Nada se copia: lo que practicas ahí se guarda en `aleman_k10_v1`,
+// donde lo leen el inicio de Alemán, la lección y esta ventana, que lo cuenta al momento (evento `storage`).
+// «‹», «Siguiente ›» y «↺» eligen la lección en el orden de Coach (`ALEMAN_LECCIONES.orden()`); la elección,
+// en `aleman_leccion_v1`, la lee también el inicio de Alemán. Mientras está abierta, Mi Día no rota.
+let _alTab = 'leccion';
+function abrirAleman(tab){
+  const ov = document.getElementById('alemanOverlay'); if(!ov) return;
+  aprendeVisto('de');
+  alemanPintar();
+  alemanTab(tab || _alTab);
+  ov.classList.add('open'); clearInterval(timer);
+}
+function cerrarAleman(){
+  const ov = document.getElementById('alemanOverlay');
+  if(!ov || !ov.classList.contains('open')) return;
+  ov.classList.remove('open'); restartTimer();
+  if(window.speechSynthesis) speechSynthesis.cancel();
+  renderHeroAprender();
+}
+function alemanAbierta(){ const ov = document.getElementById('alemanOverlay'); return !!ov && ov.classList.contains('open'); }
+// Por debajo de 1100 px va una cosa a la vez: la lección o la palabra.
+function alemanTab(t){
+  _alTab = t === 'palabra' ? 'palabra' : 'leccion';
+  const b = document.getElementById('alemanBody'); if(b) b.dataset.tab = _alTab;
+  document.querySelectorAll('#alemanOverlay [data-alv-tab]').forEach(x => {
+    const on = x.dataset.alvTab === _alTab; x.classList.toggle('on', on); x.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+}
+// Pinta la palabra y el encabezado de la lección y, si la lección cambió, la carga en el iframe (`src` manda
+// cuando se abre otra página desde la lección, con su ancla).
+function alemanPintar(src){
+  const t = alemanLeccionHoy(), L = alLecciones(), k = L ? L.kapitel() : null;
+  document.getElementById('alemanSub').textContent = 'La lección que toca' + (k ? ' del ' + k.label : '') +
+    ' y la palabra del día, en el orden de Coach. Lo que practicas aquí se guarda en la app de Alemán.';
+  alemanPintarPalabra();
+  alemanPintarCab();
+  const f = document.getElementById('alemanFrame'), url = src || (t ? '../Aleman/' + t.href : '');
+  if(f && url && f.dataset.src !== url){
+    f.dataset.src = url;
+    document.getElementById('alemanMarco').classList.remove('lista');
+    f.src = url;
+  }
+}
+// Hasta que la lección termina de cargar se ve «Abriendo la lección…», no la página a medio pintar.
+function alemanCargada(f){ if(f && f.dataset.src) document.getElementById('alemanMarco').classList.add('lista'); }
+function alemanPintarPalabra(){
+  const el = document.getElementById('alemanPalabra'), a = alemanPalabraHoy();
+  if(el) el.innerHTML = a ? alemanPalabraHtml(a) : '';
+}
+function alemanPintarCab(){
+  const el = document.getElementById('alemanLecCab'), t = alemanLeccionHoy();
+  if(el) el.innerHTML = t ? alemanLecCabHtml(t) : '';
+}
+// El encabezado de la lección: su foto, por qué toca (la regla de `queToca`), lo que llevas y cuándo fue tu
+// último ejercicio —en ámbar pasados dos días: el prompt de Alemán pide no dejar huecos más largos—, y cómo
+// pasar a otra.
+function alemanLecCabHtml(t){
+  const L = alLecciones(), l = t.l, av = t.avance, ult = L.ultimo(L.datos()), rec = t.rec.l;
+  let cuando = '';
+  if(ult){
+    const p = ult.split('-'), hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    const dias = Math.max(0, Math.round((hoy - new Date(+p[0], +p[1] - 1, +p[2])) / 864e5));
+    cuando = ` · último ejercicio: <b class="${dias > 2 ? 'bajo' : ''}">${dias === 0 ? 'hoy' : dias === 1 ? 'ayer' : 'hace ' + dias + ' días'}</b>`;
+  }
+  const ctl = (t.elegida ? `<button type="button" class="ap-av-ant" onclick="alemanLeccionOtra(0)" title="Volver a la del plan: ${habAttr(rec.num + ' · ' + rec.de)}" aria-label="Volver a la del plan">${AP_ICO.volver}</button>` : '')
+    + `<button type="button" class="ap-av-ant" onclick="alemanLeccionOtra(-1)" title="La anterior, en el orden de Coach" aria-label="Lección anterior">${AP_ICO.ant}</button>`
+    + `<button type="button" class="ap-av-sig" onclick="alemanLeccionOtra(1)" title="¿No te convence? Pasa a la siguiente, en el orden de Coach">Siguiente${AP_ICO.sig}</button>`;
+  return `${apImg(apFotoLeccion(l), 'alv-lec-foto')}
+    <div class="alv-lec-t">
+      <div class="alv-k c">Lección de hoy · ${esc(t.ceja)}</div>
+      <div class="alv-lec-h"><span class="alv-lec-num">${esc(l.num)}</span><span lang="de">${esc(l.de)}</span></div>
+      <div class="alv-lec-s">${esc(l.es)}${av ? ` · <b>${av.hechos} de ${av.total}</b> ejercicios` : ' · sus tarjetas y diálogos no guardan avance'}${cuando}${t.elegida ? ` · la del plan: <b>${esc(rec.num)}</b>` : ''}</div>
+      ${av ? apTramos(av.total, j => j < av.hechos, -1) : ''}
+    </div>
+    <div class="alv-lec-ctl">${ctl}</div>`;
+}
+// «‹» (d = −1), «Siguiente ›» (d = 1) y «↺» (d = 0): otra lección en el orden de Coach —el Kapitel en curso,
+// luego el A2 y el A1—; llegar a la del plan, o volver a ella, borra la elección.
+function alemanLeccionOtra(d){
+  const L = alLecciones(), t = alemanLeccionHoy(); if(!L || !t) return;
+  if(!d) L.elegir(null);
+  else { const o = L.orden(), i = Math.max(0, o.indexOf(t.l)), x = o[(i + d + o.length) % o.length]; L.elegir(x === t.rec.l ? null : x.id); }
+  alemanPintar();
+}
+// La lección, dentro de la ventana, pide lo que no puede hacer sola (leccion.js): abrir otra página —otra lección
+// se abre aquí y queda elegida; lo demás (el vocabulario, la gramática), aparte— o cerrar la ventana con Escape.
+window.addEventListener('message', e => {
+  const f = document.getElementById('alemanFrame'), m = e.data;
+  if(!f || e.source !== f.contentWindow || !m || m.aleman !== 1) return;
+  if(m.tipo === 'cerrar'){ cerrarAleman(); return; }
+  if(m.tipo === 'abrir' && typeof m.href === 'string'){
+    const L = alLecciones(), x = L ? L.por(m.href) : null;
+    if(x){ const t = alemanLeccionHoy(); L.elegir(t && x === t.rec.l ? null : x.id); alemanPintar('../Aleman/' + m.href); }
+    else window.open('../Aleman/' + m.href, '_blank', 'noopener');
+  }
+});
+// Lo que practicas en la lección se guarda en `aleman_k10_v1`; el encabezado lo cuenta al momento.
+window.addEventListener('storage', e => {
+  if(alemanAbierta() && (e.key === 'aleman_k10_v1' || e.key === null)) alemanPintarCab();
+});
+
+// La palabra del día, entera: su foto, dónde vive en el vocabulario, el artículo en el color de su género, su
+// gramática —plural y genitivo, o las formas del verbo con su auxiliar, el régimen, el comparativo—, el
+// ejemplo, el uso o fallo típico, «Pruébate», lo que queda de su subsección, cuánto va del nivel y lo que sigue.
+const DE_OIR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>';
+// El artículo en el color de su género, con su espacio; nada si la palabra no lleva.
+function alemanArtHtml(w){
+  const t = alemanArtTxt(w).trim(), g = { der: 'der', die: 'die', das: 'das' }[t.split('/')[0]] || (w.art === 'pl.' ? 'pl' : '');
+  return t ? `<span class="alv-art ${g}">${esc(t)}</span> ` : '';
+}
+function alemanPalabraHtml(a){
+  const V = alVocab(), cat = V.cats[a.cat] || {}, sub = (cat.subs || {})[a.sub] || '';
+  const art = (a.art || '-').split('/')[0].trim(), genero = { der: 'der', die: 'die', das: 'das', 'pl.': 'pl' }[art] || '';
+  const artTxt = alemanArtTxt(a).trim();
+  const f = a.conj ? String(a.conj).split('·').map(s => s.trim()) : null, aux = a.aux === 'ist' ? 'ist' : 'hat';
+  const gram = [
+    a.pl && a.pl !== '-' ? `plural <b lang="de">die ${esc(a.pl)}</b>` : (art === 'pl.' ? 'solo plural' : ''),
+    a.gen && a.gen !== '-' ? `genitivo <b lang="de">${esc(a.gen)}</b>` : '',
+    f && f.length === 3 && a.aux ? `<b lang="de">${esc(f[0])} · ${esc(f[1])} · <span class="ap-aux ${aux}">${aux}</span> ${esc(f[2])}</b>` : '',
+    a.reg ? `rige <b lang="de">${esc(a.reg)}</b>` : '',
+    a.comp ? `<b lang="de">${esc(a.comp)}</b>` : '',
+    a.tag ? esc(a.tag) : '',
+    a.niv ? `nivel <b>${esc(a.niv)}</b>` : ''
+  ].filter(Boolean);
+  const ex = alemanEjemplo(a), voz = alemanVoz();
+  const oir = t => voz ? `<button type="button" class="alv-oir" data-t="${habAttr(t)}" onclick="alemanOir(this.dataset.t)" title="Escuchar" aria-label="Escuchar en alemán">${DE_OIR}</button>` : '';
   const etapa = aprendeEtapaAleman(), salio = new Set((((rawGet(APRENDE_KEY, {}) || {}).salio || {}).de) || []);
   const delNivel = alemanPalabras().filter(x => x.niv === etapa.nivel), van = delNivel.filter(x => salio.has(x.de)).length;
-  return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA, foto: apFotoAleman(a),
-    mat: `Alemán · ${esc((V.cats[a.cat] || {}).label || '')}`,
-    estado: apEstado(vistos.de, frase ? 'frase del día' : 'palabra del día', '✓ vista'),
-    otra: frase ? 'La siguiente frase, en el orden de Coach' : 'La siguiente palabra, en el orden de Coach', abrir: "aprendeAbrir('de')", titulo: 'Abrir su sección en el vocabulario de la app de Alemán',
-    txt: `<span class="ap-de ap-cl l2" data-min="1">${artHtml}${esc(a.de)}</span>
-      <span class="ap-es">${esc(a.es)}${pl}${perf}</span>
-      ${ex ? `<span class="ap-ex ap-cl">${esc(ex)}${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</span>` : ''}
-      ${a.uso ? `<span class="ap-nota ap-cl l2 ap-opc" data-min="1"><b>Uso</b> · ${esc(a.uso)}</span>` : ''}
-      <span class="ap-dato ap-1l ap-opc">${etapa.nivel === 'A2' ? 'A2, el que pide Esslingen' : etapa.nivel} · han salido <b>${van} de ${delNivel.length}</b></span>
-      ${apLuego(aprendeLuego('de', 3).map(w => `<b>${w.art && w.art !== '-' ? esc(w.art === 'pl.' ? 'die' : w.art) + ' ' : ''}${esc(w.de)}</b> · ${esc(w.es)}`))}` });
+  const luego = aprendeLuego('de', 3), pr = alemanPruebaDe(a), usados = new Set(pr ? pr.items.map(w => w.de) : []);
+  const mas = V.de(a.cat, a.sub).filter(w => w.de !== a.de && !usados.has(w.de)).slice(0, 8);
+  return `${apImg(apFotoAleman(a), 'alv-pal-foto')}
+    <div class="alv-k c">${a.tipo === 'frase' ? 'Frase' : 'Palabra'} del día · ${esc(cat.label || '')}${sub ? ' › ' + esc(sub) : ''}</div>
+    <div class="alv-w" lang="de">${artTxt ? `<span class="alv-art ${genero}">${esc(artTxt)}</span>` : ''}<span>${esc(a.de)}</span>${oir((artTxt ? artTxt + ' ' : '') + a.de)}</div>
+    <div class="alv-es">${esc(a.es)}</div>
+    ${gram.length ? `<div class="alv-gram">${gram.map(x => `<span>${x}</span>`).join('')}</div>` : ''}
+    ${ex ? `<div class="alv-ex">${oir(ex)}<span><span lang="de">${esc(ex)}</span>${a.esEx ? `<small>${esc(a.esEx)}</small>` : ''}</span></div>` : ''}
+    ${a.uso ? `<div class="alv-uso"><b>Uso</b>${esc(a.uso)}</div>` : ''}
+    ${pr ? alemanPruebaHtml(pr) : ''}
+    ${mas.length ? `<div class="alv-k">Más de «${esc(sub || cat.label || '')}»</div>${mas.map(w => `<div class="alv-sig"><b lang="de">${alemanArtHtml(w)}${esc(w.de)}</b> · ${esc(w.es)}</div>`).join('')}` : ''}
+    <div class="alv-k">${etapa.nivel === 'A2' ? 'A2, el que pide Esslingen' : esc(etapa.nivel)} · han salido ${van} de ${delNivel.length}</div>
+    ${luego.length ? `<div class="alv-k">Lo que sigue</div>${luego.map(w => `<div class="alv-sig"><b lang="de">${alemanArtHtml(w)}${esc(w.de)}</b> · ${esc(w.es)}</div>`).join('')}` : ''}
+    <a href="javascript:void(0)" class="hp-link alv-ir" onclick="hoyAlAleman('${a.cat}','${a.sub || ''}')">Ver «${esc(sub || cat.label || '')}» en Vocabulario →</a>`;
 }
+// «Pruébate»: de su misma subsección, el artículo de hasta cuatro sustantivos —o, si son verbos, su auxiliar
+// en el Perfekt— de memoria, antes de verlo (el prompt de Alemán: recuperación activa, releer no basta). Una
+// ficha con dos palabras («Angabe / das Feld») delataría la respuesta: no entra. No se guarda.
+function alemanPruebaDe(a){
+  const mismos = alVocab().de(a.cat, a.sub).filter(w => w.de !== a.de && String(w.de).indexOf('/') === -1);
+  const sust = mismos.filter(w => /^(der|die|das)$/.test(String(w.art || '').trim()));
+  const verb = mismos.filter(w => w.conj && (w.aux === 'hat' || w.aux === 'ist'));
+  if(sust.length >= 2) return { items: sust.slice(0, 4), ops: ['der', 'die', 'das'], ok: w => w.art.trim(), ver: w => w.de, q: '¿der, die o das?' };
+  if(verb.length >= 2) return { items: verb.slice(0, 4), ops: ['hat', 'ist'], ok: w => w.aux, ver: w => String(w.conj).split('·').pop().trim(), q: '¿hat o ist?' };
+  return null;
+}
+function alemanPruebaHtml(pr){
+  return `<div class="alv-k c">Pruébate · ${pr.q}</div><div class="alv-prueba">${pr.items.map(w => `<div class="alv-pr" data-ok="${pr.ok(w)}"><span class="alv-pr-w" lang="de">${esc(pr.ver(w))}</span><span class="alv-pr-es">${esc(w.es)}</span><span class="alv-pr-ops">${pr.ops.map(o => `<button type="button" onclick="alemanPrueba(this)">${o}</button>`).join('')}</span></div>`).join('')}</div>`;
+}
+function alemanPrueba(b){
+  const fila = b.closest('.alv-pr'); if(!fila || fila.classList.contains('hecha')) return;
+  fila.classList.add('hecha');
+  fila.querySelectorAll('button').forEach(x => {
+    x.disabled = true;
+    if(x.textContent === fila.dataset.ok) x.classList.add('ok'); else if(x === b) x.classList.add('mal');
+  });
+}
+// El audio, con la voz alemana del sistema (SpeechSynthesis, como la app de Alemán). Las voces llegan tarde
+// (`voiceschanged`): sin voz alemana no se pone ningún botón —uno que no suena es peor que nada— y, si llega con
+// la ventana abierta, la palabra se vuelve a pintar con los suyos.
+function alemanVoz(){
+  if(!('speechSynthesis' in window)) return null;
+  return (speechSynthesis.getVoices() || []).find(v => /^de([-_]|$)/i.test(v.lang)) || null;
+}
+function alemanOir(t){
+  const v = alemanVoz(); if(!v || !t) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(t); u.voice = v; u.lang = v.lang; u.rate = 0.92;
+  speechSynthesis.speak(u);
+}
+if('speechSynthesis' in window && speechSynthesis.addEventListener)
+  speechSynthesis.addEventListener('voiceschanged', () => { if(alemanAbierta()) alemanPintarPalabra(); });
 
 // ── Al volante: qué escuchar hoy en Didi, del catálogo de «Qué escuchar» (`DIDI_AUDIO`) en el orden
 //    de su panel —el foco de la semana primero; lo que está en pausa, fuera—. El audiolibro es el de
@@ -6999,7 +7321,7 @@ const CD_METAS = [
   { id: 'a1-4',  t: 'Las dos cartas de recomendación',  para: 'la ficha de Networking' },
   { id: 'a1-18', t: 'Subir tu ingreso desde noviembre', para: 'la ficha de Persuadir' },
   { id: 'a1-10', t: 'Mandar la solicitud a Esslingen',  para: 'el foco de Inglés, después del ISTQB' },
-  { id: 'a1-14', t: 'Alemán A2, el que pide Esslingen', para: 'la palabra del día' }
+  { id: 'a1-14', t: 'Alemán A2, el que pide Esslingen', para: 'la lección y la palabra del día' }
 ];
 function cdMes(ym){
   const p = String(ym || '').split('-').map(Number);
@@ -7035,12 +7357,18 @@ function comoDecideHtml(){
   // Tarjeta por tarjeta.
   const filas = [], foco = aprendeFoco(), rec = habRecomendada();
   const w = alemanPalabraHoy(), V = (typeof alVocab === 'function') ? alVocab() : null;
-  if(w && V){
+  const tl = alemanLeccionHoy(), Lc = alLecciones(), kc = Lc ? Lc.kapitel() : null;
+  if(tl || (w && V)){
     const salio = new Set((((rawGet(APRENDE_KEY, {}) || {}).salio || {}).de) || []);
     const delNivel = alemanPalabras().filter(x => x.niv === etapa.nivel), van = delNivel.filter(x => salio.has(x.de)).length;
-    const temas = AL_COACH_TEMAS.slice(0, 7).map(c => (V.cats[c] || {}).label || c).join(', ').toLowerCase();
-    filas.push({ k: 'Alemán', c: 'var(--g)', foto: apFotoAleman(w), hoy: `${w.art && w.art !== '-' && w.art !== 'pl.' ? esc(w.art) + ' ' : ''}${esc(w.de)} <span>${esc((V.cats[w.cat] || {}).label || w.cat)} · ${esc(w.niv || '')}</span>`,
-      regla: `Primero el <b>${etapa.nivel}</b>${etapa.nivel === 'A2' ? `, el certificado que pide Esslingen, hasta la Fase 2 (${cdFecha(etapa.hasta)})` : ', el de la maestría y el trabajo'}. Dentro, lo que vas a necesitar primero al llegar —${esc(temas)}—, luego la casa, la escuela y el trabajo, y lo demás al final. Cada día, la siguiente que no haya salido: van <b>${van} de ${delNivel.length}</b> del ${etapa.nivel}.` });
+    const temas = V ? AL_COACH_TEMAS.slice(0, 7).map(c => (V.cats[c] || {}).label || c).join(', ').toLowerCase() : '';
+    const rl = tl ? (tl.elegida
+        ? `La lección la elegiste tú; la del plan es <b>${esc(tl.rec.l.num)} · ${esc(tl.rec.l.de)}</b> y «↺», en su ventana, vuelve a ella. `
+        : `La lección, la del <b>${esc(kc ? kc.label : 'Kapitel')}</b> que ves en clase en ${esc(CIFRAS.texto('{{escuelaAleman}}'))}: la que dejaste a medias o, si no, la siguiente sin terminar, en el orden en que conviene estudiarlo; con todo hecho, el minitest. «Siguiente», en su ventana, recorre el Kapitel, luego el A2 y el A1. `) : '';
+    const rp = w && V ? `La palabra: primero el <b>${etapa.nivel}</b>${etapa.nivel === 'A2' ? `, el certificado que pide Esslingen, hasta la Fase 2 (${cdFecha(etapa.hasta)})` : ', el de la maestría y el trabajo'}. Dentro, lo que vas a necesitar primero al llegar —${esc(temas)}—, luego la casa, la escuela y el trabajo, y lo demás al final. Cada día, la siguiente que no haya salido: van <b>${van} de ${delNivel.length}</b> del ${etapa.nivel}.` : '';
+    filas.push({ k: 'Alemán', c: 'var(--g)', foto: tl ? apFotoLeccion(tl.l) : apFotoAleman(w),
+      hoy: `${tl ? `${esc(tl.l.num)} · ${esc(tl.l.de)}` : ''}${tl && w ? ' · ' : ''}${w ? `${w.art && w.art !== '-' && w.art !== 'pl.' ? esc(w.art) + ' ' : ''}${esc(w.de)}` : ''} <span>${w && V ? `${esc((V.cats[w.cat] || {}).label || w.cat)} · ${esc(w.niv || '')}` : ''}</span>`,
+      regla: rl + rp });
   }
   const d = didiHoy();
   if(d && d.libro){
@@ -7108,15 +7436,15 @@ function renderHeroAprender(){
   const vistos = aprendeHoy().h.vistos || {};
   const p = entrevistaTemaHoy(), q = istqbPreguntaHoy();
   const estudiados = rawGet('study-done-v2', {}) || {};
-  // Lo hecho hoy, en el orden de las seis tarjetas: la palabra al abrirla, «Al volante» al tocar qué escuchar,
-  // Python al marcarlo estudiado, el ISTQB al contestar una, y el paso de la semana y la ficha de Habilidades
-  // Base al abrirlos. Antes contaba cuatro de seis («0 de 4»).
-  const hechos = [!!vistos.de, !!vistos.escuchar, !!(p && estudiados[p.id]), !!(q && (istqbRespuestas()[hoyLocal()] || []).length), !!vistos.paso, !!vistos.hb];
+  // Lo hecho hoy, en el orden de las seis tarjetas: el alemán al abrir su ventana o al hacer un ejercicio de una
+  // lección, «Al volante» al tocar qué escuchar, Python al marcarlo estudiado, el ISTQB al contestar una, y el
+  // paso de la semana y la ficha de Habilidades Base al abrirlos. Antes contaba cuatro de seis («0 de 4»).
+  const hechos = [!!vistos.de || alemanPracticoHoy(), !!vistos.escuchar, !!(p && estudiados[p.id]), !!(q && (istqbRespuestas()[hoyLocal()] || []).length), !!vistos.paso, !!vistos.hb];
   const color = ['var(--g)', 'var(--o)', 'var(--cy)', 'var(--p)', 'var(--w)', 'var(--b)'];
   const d = new Date();
   const fecha = `${DIAS_CORTOS[d.getDay()].toLowerCase()} ${d.getDate()} ${MES_LABEL_FULL[d.getMonth()].slice(0, 3).toLowerCase()}`;
   el.innerHTML = `<div class="hp-title"><span>🎓 Hoy aprendes<button type="button" class="ap-como" onclick="abrirComoDecide()" title="El orden de Coach y el porqué de lo de hoy">${AP_ICO.porque}Cómo lo decide Coach</button></span><span class="ap-fecha">${fecha} · <b>${hechos.filter(Boolean).length} de ${hechos.length}</b></span></div>
-    <div class="ap-barra" title="La palabra cuenta al abrirla; «Al volante», al tocar qué escuchar; Python, al marcarlo estudiado; el ISTQB, al contestarlo; el paso de la semana y la ficha, al abrirlos">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
+    <div class="ap-barra" title="El alemán cuenta al abrir su ventana o al hacer un ejercicio de la lección; «Al volante», al tocar qué escuchar; Python, al marcarlo estudiado; el ISTQB, al contestarlo; el paso de la semana y la ficha, al abrirlos">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
     <div class="ap-seis">${alemanHoyHtml(vistos)}${escucharHoyHtml(vistos)}${pythonHoyHtml()}${istqbHtml()}${pasoSemanaHtml()}${fichaEnCursoHtml()}</div>`;
   apAjustar();
 }
@@ -13380,6 +13708,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&document.getElementById('calOverlay').classList.contains('open')){ cerrarCalendario(); return; }
   if(e.key==='Escape'&&document.getElementById('gbmOverlay').classList.contains('open')){ cerrarGBM(); return; }
   if(e.key==='Escape'&&document.getElementById('istqbOverlay').classList.contains('open')){ cerrarIstqb(); return; }
+  if(document.getElementById('alemanOverlay').classList.contains('open')){ if(e.key==='Escape') cerrarAleman(); return; }
   if(e.key==='Escape'&&document.getElementById('comoDecideOverlay').classList.contains('open')){ cerrarComoDecide(); return; }
   if(e.key==='ArrowRight') nextSlide();
   if(e.key==='ArrowLeft') prevSlide();

@@ -100,6 +100,7 @@ El Dashboard es la cabina de mando: tiene que responder en segundos **¿qué hag
 - Cada pantalla nueva se gana su sitio en la rotación —¿qué decisión diaria mejora?— y llega con su prompt.
 - Antes de añadir algo, pregúntate qué se quita.`,
       vistas: [
+        { si: '#alemanOverlay.open', clave: 'aleman' },
         { si: '#gbmOverlay.open', clave: 'invertir' },
         { si: '#didiOverlay.open', clave: 'didi' },
         { si: 'section.slide.theme-dia.active', clave: 'midia' },
@@ -403,7 +404,7 @@ Las lecciones, el vocabulario y la gramática existen para que Adán entienda y 
 ## Con quién trabajas
 - Qué escuchar convierte las horas de Didi en audio del Kapitel actual.
 - Hábitos lleva la Clase de alemán; Mis Metas, la maestría.
-- Mi Día toma de este vocabulario la palabra del día, en el orden de Coach, y tocarla la abre aquí, en su sección.
+- Mi Día toma de aquí la lección que toca y la palabra del día, en el orden de Coach, y las abre en su ventana: la lección es esta misma página y lo que se practica ahí cuenta aquí.
 - Entrevistas y Coach te piden alemán técnico cuando la maestría o un puesto en Alemania se acerquen.
 
 ## Cómo sabes que funciona
@@ -413,6 +414,7 @@ Las lecciones, el vocabulario y la gramática existen para que Adán entienda y 
 
 ## Al modificar estas páginas
 - El vocabulario vive en vocab-datos.js y toda sección nueva necesita su familia.
+- Las lecciones, en lecciones-datos.js: una lección nueva es su página y su entrada ahí, con su foto y, si es del Kapitel, sus ejercicios.
 - Todo alemán que se publique va revisado: un artículo o una terminación mal enseñados se aprenden mal.
 - Prioridad al Kapitel actual.`
     },

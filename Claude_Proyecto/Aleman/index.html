@@ -214,6 +214,7 @@ h1,h2,h3,p{margin:0}
         <div class="ini-botones">
           <a class="ini-btn" id="sigueIr" href="k10-01-perfekt-regel.html">Empezar la lección →</a>
           <a class="ini-btn2" href="#k10">Ver el Kapitel 10</a>
+          <a class="ini-btn2" id="sigueVolver" href="#" style="display:none">Volver a la del plan</a>
         </div>
       </div>
     </article>
@@ -230,8 +231,8 @@ h1,h2,h3,p{margin:0}
   </section>
 
   <!-- ══ KAPITEL 10 · lo que cursa en clase, en el orden en que conviene estudiarlo ══
-       `data-bloques` es la lista de ejercicios de cada lección (los `k10…('id'` de su página; un
-       k10Conjugar va como `id:n`, con sus n verbos). Con ella se calcula el progreso, que guarda
+       Las tarjetas las pinta el script desde lecciones-datos.js, el catálogo que también lee Mi Día:
+       cada lección con la lista de sus ejercicios, con la que se calcula el progreso que guarda
        k10-interactivo.js en `aleman_k10_v1`. El control 25 del verificador la compara con la página. -->
   <section id="k10" class="ini-nivel-sec" aria-labelledby="k10T">
     <div class="ini-cab">
@@ -245,68 +246,7 @@ h1,h2,h3,p{margin:0}
         <span class="ini-barra-p"><i id="k10Barra"></i></span>
       </div>
     </div>
-    <div class="ini-k10">
-      <a class="ini-tarjeta" href="k10-01-perfekt-regel.html" data-leccion="k10-01" data-bloques="ej-partizip ej-auxiliar em-part conj-perfekt:5 hueco-1 ej-praeteritum-vs ej-modales ej-negacion ord-sub hueco-tiempo" data-desc="La fórmula del Perfekt: haben o sein y el Partizip II al final, con modales, negación y subordinadas.">
-        <img src="fotos/k10-01.jpg" alt="Cuaderno de estudio con unos lentes y un esquema en rojo" title="Foto: Daria Nepriakhina · Stocksnap · CC0 1.0" loading="lazy">
-        <span class="ini-tarjeta-txt">
-          <span class="ini-fila"><span class="ini-num">K10 · 01</span><span class="ini-estado" data-estado>Sin empezar</span></span>
-          <span class="ini-tit" lang="de">Die Regel: Perfekt</span>
-          <span class="ini-sub">La regla del Perfekt</span>
-          <span class="ini-tags">haben/sein · Partizip II · al final</span>
-          <span class="ini-prog"><span class="ini-barra-p"><i></i></span><span class="ini-prog-txt">10 ejercicios</span></span>
-        </span>
-      </a>
-      <a class="ini-tarjeta" href="k10-06-partizip.html" data-leccion="k10-06" data-bloques="ej-p1 ej-cual ej-decl em-pz hueco-pz" data-desc="Partizip I y II frente a frente: cómo se forma cada uno, para qué sirve y cómo se declina.">
-        <img src="fotos/k10-06.jpg" alt="Una persona lee un libro" title="Foto: Shopify · Stocksnap · CC0 1.0" loading="lazy">
-        <span class="ini-tarjeta-txt">
-          <span class="ini-fila"><span class="ini-num">K10 · 06</span><span class="ini-estado" data-estado>Sin empezar</span></span>
-          <span class="ini-tit" lang="de">Partizip I &amp; II</span>
-          <span class="ini-sub">Los dos participios, a fondo</span>
-          <span class="ini-tags">lesend vs. gelesen · 205 verbos · declinación</span>
-          <span class="ini-prog"><span class="ini-barra-p"><i></i></span><span class="ini-prog-txt">5 ejercicios</span></span>
-        </span>
-      </a>
-      <a class="ini-tarjeta" href="k10-02-verben-liste.html" data-leccion="k10-02" data-bloques="ej-prateritum ej-partizip2 em-prat dic-verbos ej-3p" data-desc="Los 207 verbos con sus cuatro formas, los patrones de vocal y los que engañan.">
-        <img src="fotos/k10-02.jpg" alt="Un montón de tarjetas escritas a mano" title="Foto: muninn.net · Flickr · BY 2.0" loading="lazy">
-        <span class="ini-tarjeta-txt">
-          <span class="ini-fila"><span class="ini-num">K10 · 02</span><span class="ini-estado" data-estado>Sin empezar</span></span>
-          <span class="ini-tit" lang="de">Verbenliste</span>
-          <span class="ini-sub">Tabla a memorizar: 207 verbos</span>
-          <span class="ini-tags">Präteritum · Partizip II · filtros</span>
-          <span class="ini-prog"><span class="ini-barra-p"><i></i></span><span class="ini-prog-txt">5 ejercicios</span></span>
-        </span>
-      </a>
-      <a class="ini-tarjeta" href="k10-03-perfekt-uben.html" data-leccion="k10-03" data-bloques="u1 u2 u3 u4 minitest hueco-fds test-final test-2 u5 u6-dic" data-desc="Seis bloques de práctica del Perfekt y dos minitests con nota. Se corrigen solos mientras escribes.">
-        <img src="fotos/k10-03.jpg" alt="Hoja de respuestas de un examen con un lápiz" title="Foto: albertogp123 · Flickr · BY 2.0" loading="lazy">
-        <span class="ini-tarjeta-txt">
-          <span class="ini-fila"><span class="ini-num">K10 · 03</span><span class="ini-estado" data-estado>Sin empezar</span></span>
-          <span class="ini-tit" lang="de">Perfekt üben</span>
-          <span class="ini-sub">Ejercicios y dos minitests</span>
-          <span class="ini-tags">6 bloques · 2 minitests · se corrige solo</span>
-          <span class="ini-prog"><span class="ini-barra-p"><i></i></span><span class="ini-prog-txt">10 ejercicios</span></span>
-        </span>
-      </a>
-      <a class="ini-tarjeta" href="k10-04-berufe.html" data-leccion="k10-04" data-bloques="ej-berufe ord-berufe em-berufe hueco-beruf ej-prep hueco-entrev em-cond" data-desc="Profesiones con su femenino, tu área, lugares y condiciones de trabajo, y las cinco preguntas del oral.">
-        <img src="fotos/k10-04.jpg" alt="Un técnico conecta cables de red en un rack" title="Foto: Field Engineer · Stocksnap · CC0 1.0" loading="lazy">
-        <span class="ini-tarjeta-txt">
-          <span class="ini-fila"><span class="ini-num">K10 · 04</span><span class="ini-estado" data-estado>Sin empezar</span></span>
-          <span class="ini-tit" lang="de">Berufe</span>
-          <span class="ini-sub">Profesiones y tu área</span>
-          <span class="ini-tags">sin artículo · -in · Testingenieur</span>
-          <span class="ini-prog"><span class="ini-barra-p"><i></i></span><span class="ini-prog-txt">7 ejercicios</span></span>
-        </span>
-      </a>
-      <a class="ini-tarjeta" href="k10-05-mein-tag.html" data-leccion="k10-05" data-bloques="mt-ej mt-ord hueco-tag dic-tag ej-hora em-frec ej-sep" data-desc="Tu rutina con conectores, en presente y en Perfekt, y el guion para grabar tu video.">
-        <img src="fotos/k10-05.jpg" alt="Desayuno con café y cruasanes" title="Foto: JESHOOTS.com · Stocksnap · CC0 1.0" loading="lazy">
-        <span class="ini-tarjeta-txt">
-          <span class="ini-fila"><span class="ini-num">K10 · 05</span><span class="ini-estado" data-estado>Sin empezar</span></span>
-          <span class="ini-tit" lang="de">Mein Tag</span>
-          <span class="ini-sub">Contar tu día (video)</span>
-          <span class="ini-tags">zuerst/dann · tu rutina · guion</span>
-          <span class="ini-prog"><span class="ini-barra-p"><i></i></span><span class="ini-prog-txt">7 ejercicios</span></span>
-        </span>
-      </a>
-    </div>
+    <div class="ini-k10" id="k10Lista"></div>
   </section>
 
   <!-- ══ PARA CONSULTAR ══ -->
@@ -377,94 +317,12 @@ h1,h2,h3,p{margin:0}
     <div class="ini-nivel">
       <span class="ini-insignia ini-insignia-a2">A2</span>
       <h2 id="a2T">Elemental</h2>
-      <p>20 lecciones: 12 de gramática y 8 de temas.</p>
+      <p id="a2Cuenta">20 lecciones: 12 de gramática y 8 de temas.</p>
     </div>
     <h3 class="ini-subt">Gramática</h3>
-    <div class="ini-lista">
-      <a class="ini-l" href="a2-01-modalverben.html" data-leccion="a2-01">
-        <img src="fotos/a2-01.jpg" alt="Una mujer toca la guitarra" title="Foto: Negative Space · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 01</span><strong lang="de">Modalverben</strong><small>Verbos modales</small><em lang="de">können · müssen · wollen</em></span>
-      </a>
-      <a class="ini-l" href="a2-02-perfekt-haben.html" data-leccion="a2-02">
-        <img src="fotos/a2-02.jpg" alt="Panquecitos de chocolate recién horneados" title="Foto: Pawel Kadysz · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 02</span><strong lang="de">Perfekt mit haben</strong><small>Pasado con haben</small><em lang="de">ich habe gemacht · Partizip II</em></span>
-      </a>
-      <a class="ini-l" href="a2-03-perfekt-sein.html" data-leccion="a2-03">
-        <img src="fotos/a2-03.jpg" alt="Excursionistas caminan por un sendero" title="Foto: Austin Ban · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 03</span><strong lang="de">Perfekt mit sein</strong><small>Pasado con sein</small><em lang="de">ich bin gegangen · Bewegung</em></span>
-      </a>
-      <a class="ini-l" href="a2-04-prateritum.html" data-leccion="a2-04">
-        <img src="fotos/a2-04.jpg" alt="Una máquina de escribir sobre una mesa de madera" title="Foto: Dustin Lee · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 04</span><strong lang="de">Präteritum</strong><small>Pasado simple (escrito)</small><em lang="de">war · hatte · konnte</em></span>
-      </a>
-      <a class="ini-l" href="a2-05-verbos-separables.html" data-leccion="a2-05">
-        <img src="fotos/a2-05.jpg" alt="Un teléfono antiguo en una cabina roja" title="Foto: Antoine Barrès · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 05</span><strong lang="de">Trennbare Verben</strong><small>Verbos separables</small><em lang="de">aufstehen · anrufen · mitkommen</em></span>
-      </a>
-      <a class="ini-l" href="a2-06-verbos-reflexivos.html" data-leccion="a2-06">
-        <img src="fotos/a2-06.jpg" alt="Unas manos bajo el chorro de la llave" title="Foto: Catt Liu · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 06</span><strong lang="de">Reflexive Verben</strong><small>Verbos reflexivos</small><em lang="de">sich freuen · sich waschen</em></span>
-      </a>
-      <a class="ini-l" href="a2-07-kasus.html" data-leccion="a2-07">
-        <img src="fotos/a2-07.jpg" alt="Unas manos ofrecen un regalo" title="Foto: Ben White · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 07</span><strong lang="de">Kasus: Nom., Akk., Dat.</strong><small>Casos gramaticales</small><em lang="de">der/den/dem · Subjekt · Objekt</em></span>
-      </a>
-      <a class="ini-l" href="a2-08-komparativ.html" data-leccion="a2-08">
-        <img src="fotos/a2-08.jpg" alt="Matrioskas de mayor a menor" title="Foto: archer10 (Dennis) · Flickr · BY-SA 2.0" loading="lazy">
-        <span><span class="ini-num">A2 · 08</span><strong lang="de">Komparativ &amp; Superlativ</strong><small>Comparativo y superlativo</small><em lang="de">größer · am größten · als</em></span>
-      </a>
-      <a class="ini-l" href="a2-09-konjunktionen.html" data-leccion="a2-09">
-        <img src="fotos/a2-09.jpg" alt="Fichas de letras que forman una frase" title="Foto: Words as Pictures · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 09</span><strong lang="de">Konjunktionen</strong><small>Conjunciones y conectores</small><em lang="de">weil · dass · wenn · obwohl</em></span>
-      </a>
-      <a class="ini-l" href="a2-10-preposiciones.html" data-leccion="a2-10">
-        <img src="fotos/a2-10.jpg" alt="Un gato dentro de una caja" title="Foto: bnilsen · Flickr · BY-SA 2.0" loading="lazy">
-        <span><span class="ini-num">A2 · 10</span><strong lang="de">Präpositionen</strong><small>Preposiciones + casos</small><em lang="de">in/an/auf · Wechselpräp.</em></span>
-      </a>
-      <a class="ini-l" href="a2-11-adjetivos.html" data-leccion="a2-11">
-        <img src="fotos/a2-11.jpg" alt="Un perro con un gorro de fiesta rojo" title="Foto: Shopify · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 11</span><strong lang="de">Adjektivdeklination</strong><small>Declinación de adjetivos</small><em lang="de">ein großer Mann · Endungen</em></span>
-      </a>
-      <a class="ini-l" href="a2-12-infinitiv.html" data-leccion="a2-12">
-        <img src="fotos/a2-12.jpg" alt="Una persona escala una pared de roca" title="Foto: Tommy Lisbin · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 12</span><strong lang="de">Infinitiv mit zu</strong><small>Infinitivo con zu</small><em lang="de">Es ist schön, Deutsch zu lernen · versuchen zu</em></span>
-      </a>
-    </div>
+    <div class="ini-lista" data-grupo="a2" data-parte="Gramática"></div>
     <h3 class="ini-subt">Temas</h3>
-    <div class="ini-lista">
-      <a class="ini-l" href="a2-13-wohnen.html" data-leccion="a2-13">
-        <img src="fotos/a2-13.jpg" alt="La fachada de un edificio de departamentos" title="Foto: Roman Kraft · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 13</span><strong lang="de">Wohnen &amp; Haushalt</strong><small>Vivienda y hogar</small><em lang="de">Miete · Kühlschrank · Nachbar</em></span>
-      </a>
-      <a class="ini-l" href="a2-14-arbeit.html" data-leccion="a2-14">
-        <img src="fotos/a2-14.jpg" alt="Una entrevista de trabajo" title="Foto: amtec_photos · Flickr · BY-SA 2.0" loading="lazy">
-        <span><span class="ini-num">A2 · 14</span><strong lang="de">Arbeit &amp; Beruf</strong><small>Trabajo y carrera</small><em lang="de">Gehalt · Kollege · Bewerbung</em></span>
-      </a>
-      <a class="ini-l" href="a2-15-gesundheit.html" data-leccion="a2-15">
-        <img src="fotos/a2-15.jpg" alt="Un estetoscopio junto a un teléfono" title="Foto: Negative Space · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 15</span><strong lang="de">Gesundheit &amp; Körper</strong><small>Salud y cuerpo humano</small><em lang="de">Schmerzen · Arzt · Apotheke</em></span>
-      </a>
-      <a class="ini-l" href="a2-16-reisen.html" data-leccion="a2-16">
-        <img src="fotos/a2-16.jpg" alt="Maletas antiguas apiladas" title="Foto: Mike Birdy · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 16</span><strong lang="de">Reisen &amp; Tourismus</strong><small>Viajes y turismo</small><em lang="de">Flug · Hotel · Ausflug</em></span>
-      </a>
-      <a class="ini-l" href="a2-17-freizeit.html" data-leccion="a2-17">
-        <img src="fotos/a2-17.jpg" alt="La marquesina iluminada de un cine" title="Foto: Nathan Engel · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 17</span><strong lang="de">Freizeit &amp; Hobbys</strong><small>Tiempo libre y aficiones</small><em lang="de">Kino · Sport · Musik</em></span>
-      </a>
-      <a class="ini-l" href="a2-18-essen.html" data-leccion="a2-18">
-        <img src="fotos/a2-18.jpg" alt="Ingredientes para cocinar pasta" title="Foto: JESHOOTS.com · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 18</span><strong lang="de">Essen, Trinken &amp; Kochen</strong><small>Gastronomía y cocina</small><em lang="de">Rezept · Restaurant · bestellen</em></span>
-      </a>
-      <a class="ini-l" href="a2-19-einkaufen.html" data-leccion="a2-19">
-        <img src="fotos/a2-19.jpg" alt="El pasillo de un supermercado" title="Foto: Simon Shek · Flickr · BY 2.0" loading="lazy">
-        <span><span class="ini-num">A2 · 19</span><strong lang="de">Einkaufen &amp; Preise</strong><small>Compras y precios</small><em lang="de">Supermarkt · Rabatt · bezahlen</em></span>
-      </a>
-      <a class="ini-l" href="a2-20-medien.html" data-leccion="a2-20">
-        <img src="fotos/a2-20.jpg" alt="Una mano con un celular y un café" title="Foto: JESHOOTS.com · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A2 · 20</span><strong lang="de">Medien &amp; Technologie</strong><small>Medios y tecnología</small><em lang="de">Internet · Handy · Nachrichten</em></span>
-      </a>
-    </div>
+    <div class="ini-lista" data-grupo="a2" data-parte="Temas"></div>
   </section>
 
   <!-- ══ A1 ══ -->
@@ -472,70 +330,9 @@ h1,h2,h3,p{margin:0}
     <div class="ini-nivel">
       <span class="ini-insignia ini-insignia-a1">A1</span>
       <h2 id="a1T">Básico</h2>
-      <p>15 lecciones: la base, para repasar cuando algo no sale.</p>
+      <p id="a1Cuenta">15 lecciones: la base, para repasar cuando algo no sale.</p>
     </div>
-    <div class="ini-lista">
-      <a class="ini-l" href="a1-01-saludos.html" data-leccion="a1-01">
-        <img src="fotos/a1-01.jpg" alt="Dos personas se dan la mano" title="Foto: Matt Moloney · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A1 · 01</span><strong lang="de">Begrüßungen</strong><small>Saludos y despedidas</small><em lang="de">Hallo · Tschüss · Guten Morgen</em></span>
-      </a>
-      <a class="ini-l" href="a1-02-zahlen.html" data-leccion="a1-02">
-        <img src="fotos/a1-02.jpg" alt="Buzones con su número" title="Foto: Mathyas Kurmann · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A1 · 02</span><strong lang="de">Zahlen 1–100</strong><small>Números del 1 al 100</small><em lang="de">eins · zehn · hundert</em></span>
-      </a>
-      <a class="ini-l" href="a1-03-farben.html" data-leccion="a1-03">
-        <img src="fotos/a1-03.jpg" alt="Lápices de colores" title="Foto: Artsy Crafty · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A1 · 03</span><strong lang="de">Farben &amp; Formen</strong><small>Colores y formas</small><em lang="de">rot · blau · groß</em></span>
-      </a>
-      <a class="ini-l" href="a1-04-wochentage.html" data-leccion="a1-04">
-        <img src="fotos/a1-04.jpg" alt="Un calendario de escritorio" title="Foto: Jeff Sheldon · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A1 · 04</span><strong lang="de">Wochentage &amp; Monate</strong><small>Días de la semana y meses</small><em lang="de">Montag · Januar · heute</em></span>
-      </a>
-      <a class="ini-l" href="a1-05-familie.html" data-leccion="a1-05">
-        <img src="fotos/a1-05.jpg" alt="Una familia juega en la sala" title="Foto: Direct Media · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A1 · 05</span><strong lang="de">Familie</strong><small>La familia</small><em lang="de">Mutter · Vater · Bruder</em></span>
-      </a>
-      <a class="ini-l" href="a1-06-artikel.html" data-leccion="a1-06">
-        <img src="fotos/a1-06.jpg" alt="Figuras de juguete: un hombre, una mujer y un niño" title="Foto: Steinar Engeland · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A1 · 06</span><strong lang="de">Artikel: der, die, das</strong><small>Los artículos alemanes</small><em lang="de">der Mann · die Frau · das Kind</em></span>
-      </a>
-      <a class="ini-l" href="a1-07-pronomen.html" data-leccion="a1-07">
-        <img src="fotos/a1-07.jpg" alt="Un grupo de amigos platica en una mesa" title="Foto: Brodie Vissers · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A1 · 07</span><strong lang="de">Personalpronomen</strong><small>Pronombres personales</small><em lang="de">ich · du · er/sie/es</em></span>
-      </a>
-      <a class="ini-l" href="a1-08-sein-haben.html" data-leccion="a1-08">
-        <img src="fotos/a1-08.jpg" alt="Un gafete que dice «Hi, my name is»" title="Foto: EvelynGiggles · Flickr · BY 2.0" loading="lazy">
-        <span><span class="ini-num">A1 · 08</span><strong lang="de">Verben: sein &amp; haben</strong><small>Los verbos ser/estar y tener</small><em lang="de">ich bin · du hast · er ist</em></span>
-      </a>
-      <a class="ini-l" href="a1-09-uhrzeit.html" data-leccion="a1-09">
-        <img src="fotos/a1-09.jpg" alt="Un reloj de pared sobre fondo rojo" title="Foto: Freestocks.org · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A1 · 09</span><strong lang="de">Uhrzeit</strong><small>Decir la hora</small><em lang="de">Wie spät ist es? · halb · Uhr</em></span>
-      </a>
-      <a class="ini-l" href="a1-10-laender.html" data-leccion="a1-10">
-        <img src="fotos/a1-10.jpg" alt="Una mano sostiene un globo terráqueo" title="Foto: Porapak Apichodilok · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A1 · 10</span><strong lang="de">Länder &amp; Nationalitäten</strong><small>Países y nacionalidades</small><em lang="de">Deutschland · Mexiko · ich komme aus</em></span>
-      </a>
-      <a class="ini-l" href="a1-11-berufe.html" data-leccion="a1-11">
-        <img src="fotos/a1-11.jpg" alt="Un médico con una tableta" title="Foto: Direct Media · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A1 · 11</span><strong lang="de">Berufe</strong><small>Profesiones</small><em lang="de">Arzt · Lehrer · Ingenieur</em></span>
-      </a>
-      <a class="ini-l" href="a1-12-essen.html" data-leccion="a1-12">
-        <img src="fotos/a1-12.jpg" alt="Canastas de pan en una panadería" title="Foto: Drew Coffman · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A1 · 12</span><strong lang="de">Essen &amp; Trinken</strong><small>Comida y bebida básica</small><em lang="de">Brot · Wasser · Bier</em></span>
-      </a>
-      <a class="ini-l" href="a1-13-wohnen.html" data-leccion="a1-13">
-        <img src="fotos/a1-13.jpg" alt="Una sala con sillones amarillos" title="Foto: Dan Gold · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A1 · 13</span><strong lang="de">Wohnen: Grundlagen</strong><small>Vivienda básica</small><em lang="de">Haus · Zimmer · Küche</em></span>
-      </a>
-      <a class="ini-l" href="a1-14-verkehr.html" data-leccion="a1-14">
-        <img src="fotos/a1-14.jpg" alt="Un tren del metro llega al andén" title="Foto: Negative Space · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A1 · 14</span><strong lang="de">Verkehr &amp; Richtungen</strong><small>Transportes y direcciones</small><em lang="de">links · rechts · U-Bahn</em></span>
-      </a>
-      <a class="ini-l" href="a1-15-hobbys.html" data-leccion="a1-15">
-        <img src="fotos/a1-15.jpg" alt="Un balón de futbol en el pasto de un estadio" title="Foto: Michal Jarmoluk · Stocksnap · CC0 1.0" loading="lazy">
-        <span><span class="ini-num">A1 · 15</span><strong lang="de">Hobbys &amp; Freizeit</strong><small>Pasatiempos básicos</small><em lang="de">lesen · spielen · Sport</em></span>
-      </a>
-    </div>
+    <div class="ini-lista" data-grupo="a1"></div>
   </section>
 </main>
 
@@ -544,50 +341,60 @@ h1,h2,h3,p{margin:0}
   <span>Fotos de Openverse (StockSnap y Flickr): el autor y la licencia de cada una aparecen al pasar el cursor.</span>
 </footer>
 
-<!-- El vocabulario (sus cifras y sus familias) y el maestro (el nombre de la escuela). -->
+<!-- Las lecciones (sus tarjetas y lo que toca hoy), el vocabulario (sus cifras y sus familias) y el maestro
+     (el nombre de la escuela y el Kapitel en curso). -->
+<script src="lecciones-datos.js"></script>
 <script src="vocab-datos.js"></script>
 <script src="../Dashboard/datos-maestros.js"></script>
 <script>
-// Lo que cambia en el inicio: el progreso del Kapitel 10 y las cifras del vocabulario.
-// Todo lo demás es HTML fijo.
+// Lo que cambia en el inicio: las tarjetas de las lecciones, el progreso del Kapitel 10 y las
+// cifras del vocabulario. Todo lo demás es HTML fijo.
 (function () {
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
   var nf = function (n) { return Number(n).toLocaleString('es-MX'); };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
 
-  // ── El progreso del Kapitel 10 ──────────────────────────────────────────────────────────
-  // k10-interactivo.js guarda cada ejercicio como {hechos, total, fecha}; uno está completo
-  // cuando tiene todos sus reactivos bien. Un k10Conjugar guarda uno por verbo (`id-verbo`),
-  // y por eso en `data-bloques` va como `id:n`.
-  var datos = {};
-  try { datos = JSON.parse(localStorage.getItem('aleman_k10_v1')) || {}; } catch (e) { datos = {}; }
-  var completo = function (r) { return !!r && r.total > 0 && r.hechos >= r.total; };
-
-  function ejercicio(spec) {
-    var p = spec.split(':'), id = p[0], n = +p[1] || 0;
-    if (!n) {
-      var r = datos[id];
-      return { hecho: completo(r), tocado: !!r, fecha: (r && r.fecha) || '' };
-    }
-    var bien = 0, tocado = false, fecha = '';
-    Object.keys(datos).forEach(function (k) {
-      if (k.indexOf(id + '-') !== 0) return;
-      tocado = true;
-      if (completo(datos[k])) bien++;
-      if ((datos[k].fecha || '') > fecha) fecha = datos[k].fecha;
+  // ── Las lecciones, de lecciones-datos.js ────────────────────────────────────────────────
+  // El catálogo es el mismo que lee Mi Día del Dashboard: una lección se añade o se corrige ahí y
+  // sale igual en las dos pantallas. Aquí se pintan sus tarjetas, en el orden de la lista.
+  var L = (typeof ALEMAN_LECCIONES !== 'undefined') ? ALEMAN_LECCIONES : null;
+  var foto = function (l) {
+    return '<img src="fotos/' + esc(l.foto) + '" alt="' + esc(l.alt) + '" title="Foto: ' + esc(l.credito) + '" loading="lazy">';
+  };
+  if (L) {
+    $('k10Lista').innerHTML = L.delGrupo('k10').map(function (l) {
+      return '\n      <a class="ini-tarjeta" href="' + esc(l.href) + '" data-leccion="' + esc(l.id) + '">\n        ' + foto(l) +
+        '\n        <span class="ini-tarjeta-txt">' +
+        '\n          <span class="ini-fila"><span class="ini-num">' + esc(l.num) + '</span><span class="ini-estado" data-estado>Sin empezar</span></span>' +
+        '\n          <span class="ini-tit" lang="de">' + esc(l.de) + '</span>' +
+        '\n          <span class="ini-sub">' + esc(l.es) + '</span>' +
+        '\n          <span class="ini-tags">' + esc(l.tags) + '</span>' +
+        '\n          <span class="ini-prog"><span class="ini-barra-p"><i></i></span><span class="ini-prog-txt">' + l.bloques.length + ' ejercicios</span></span>' +
+        '\n        </span>\n      </a>';
+    }).join('') + '\n    ';
+    [].forEach.call(document.querySelectorAll('.ini-lista[data-grupo]'), function (el) {
+      var parte = el.getAttribute('data-parte');
+      el.innerHTML = L.delGrupo(el.getAttribute('data-grupo')).filter(function (l) { return !parte || l.parte === parte; })
+        .map(function (l) {
+          return '\n      <a class="ini-l" href="' + esc(l.href) + '" data-leccion="' + esc(l.id) + '">\n        ' + foto(l) +
+            '\n        <span><span class="ini-num">' + esc(l.num) + '</span><strong lang="de">' + esc(l.de) + '</strong><small>' +
+            esc(l.es) + '</small><em lang="de">' + esc(l.tags) + '</em></span>\n      </a>';
+        }).join('') + '\n    ';
     });
-    return { hecho: bien >= n, tocado: tocado, fecha: fecha };
+    var a2 = L.delGrupo('a2'), gram = a2.filter(function (l) { return l.parte === 'Gramática'; }).length;
+    $('a2Cuenta').textContent = a2.length + ' lecciones: ' + gram + ' de gramática y ' + (a2.length - gram) + ' de temas.';
+    $('a1Cuenta').textContent = L.delGrupo('a1').length + ' lecciones: la base, para repasar cuando algo no sale.';
   }
 
-  var lecciones = [].slice.call(document.querySelectorAll('.ini-k10 [data-bloques]')).map(function (el, orden) {
-    var ej = el.getAttribute('data-bloques').trim().split(/\s+/).map(ejercicio);
-    return {
-      el: el, orden: orden, total: ej.length,
-      hechos: ej.filter(function (x) { return x.hecho; }).length,
-      tocados: ej.filter(function (x) { return x.tocado; }).length,
-      fecha: ej.reduce(function (m, x) { return x.fecha > m ? x.fecha : m; }, '')
-    };
-  });
+  // ── El progreso del Kapitel 10 ──────────────────────────────────────────────────────────
+  // Lo que llevas de cada lección sale de `ALEMAN_LECCIONES.avance`, la misma cuenta que usa Mi Día:
+  // un ejercicio está completo cuando tiene todos sus reactivos bien.
+  var datos = L ? L.datos() : {};
+  var lecciones = L ? L.delGrupo('k10').map(function (l) {
+    var a = L.avance(l, datos);
+    return { el: $('k10Lista').querySelector('[data-leccion="' + l.id + '"]'), total: a.total, hechos: a.hechos, tocados: a.tocados };
+  }) : [];
 
   lecciones.forEach(function (l) {
     var estado = l.hechos === l.total ? 'Completa' : (l.tocados ? 'En curso' : 'Sin empezar');
@@ -606,41 +413,35 @@ h1,h2,h3,p{margin:0}
   $('k10Barra').style.width = pctK + '%';
 
   // ── Qué toca hoy ──────────────────────────────────────────────────────────────────────
-  // La lección empezada que practicaste por última vez; si no hay, la primera sin terminar
-  // en el orden del Kapitel; con todo hecho, los minitests para no perderlo.
-  var enCurso = lecciones.filter(function (l) { return l.tocados && l.hechos < l.total; })
-    .sort(function (a, b) { return a.fecha < b.fecha ? 1 : a.fecha > b.fecha ? -1 : a.orden - b.orden; })[0];
-  var pendiente = lecciones.filter(function (l) { return l.hechos < l.total; })[0];
-  var alguna = lecciones.some(function (l) { return l.tocados; });
-  var toca = enCurso || pendiente, ceja, boton, href;
-  if (enCurso) { ceja = 'Sigue donde te quedaste'; boton = 'Continuar la lección →'; }
-  else if (pendiente && alguna) { ceja = 'La siguiente lección'; boton = 'Empezar la lección →'; }
-  else if (pendiente) { ceja = 'Empieza el Kapitel 10'; boton = 'Empezar la lección →'; }
-  else {
-    toca = lecciones.filter(function (l) { return /k10-03/.test(l.el.getAttribute('href')); })[0] || lecciones[0];
-    ceja = 'Kapitel 10 completo'; boton = 'Repasar con el minitest →';
-    href = toca.el.getAttribute('href') + '#minitest';
-  }
+  // La regla es la de lecciones-datos.js (`queToca`), la misma de Mi Día: la lección empezada que
+  // practicaste por última vez; si no hay, la primera sin terminar en el orden del Kapitel; con todo
+  // hecho, el minitest. Si en Mi Día elegiste otra, va la tuya, con cómo volver a la del plan.
+  var toca = L ? L.queToca(datos) : null;
   if (toca) {
-    var foto = toca.el.querySelector('img'), pct = Math.round(toca.hechos / toca.total * 100);
-    $('sigueFoto').src = foto.getAttribute('src');
-    $('sigueFoto').alt = foto.alt;
-    $('sigueFoto').title = foto.title;
-    $('sigueCeja').textContent = ceja;
-    $('sigueNum').textContent = 'KAPITEL 10 · ' + toca.el.querySelector('.ini-num').textContent;
-    $('sigueTit').textContent = toca.el.querySelector('.ini-tit').textContent;
-    $('sigueDesc').textContent = toca.el.getAttribute('data-desc');
-    $('sigueProg').textContent = toca.hechos + ' de ' + toca.total + ' ejercicios completos';
-    $('siguePct').textContent = pct + ' %';
+    var l = toca.l, a = toca.avance, g = L.grupo(L.grupoDe(l)), pct = a ? a.pct : 0;
+    $('sigueFoto').src = 'fotos/' + l.foto;
+    $('sigueFoto').alt = l.alt;
+    $('sigueFoto').title = 'Foto: ' + l.credito;
+    $('sigueCeja').textContent = toca.ceja;
+    $('sigueNum').textContent = (g && g.kapitel ? g.label.toUpperCase() + ' · ' : '') + l.num;
+    $('sigueTit').textContent = l.de;
+    $('sigueDesc').textContent = l.desc || l.es + ': ' + l.tags + '.';
+    $('sigueProg').textContent = a ? a.hechos + ' de ' + a.total + ' ejercicios completos' : 'Sus tarjetas y diálogos no guardan avance';
+    $('siguePct').textContent = a ? pct + ' %' : '';
     $('sigueBarra').style.width = pct + '%';
-    $('sigueIr').textContent = boton;
-    $('sigueIr').href = href || toca.el.getAttribute('href');
+    $('sigueIr').textContent = toca.boton;
+    $('sigueIr').href = toca.href;
+    if (toca.elegida) {
+      var volver = $('sigueVolver');
+      volver.textContent = 'Volver a la del plan · ' + toca.rec.l.num;
+      volver.style.display = '';
+      volver.onclick = function (e) { e.preventDefault(); L.elegir(null); location.reload(); };
+    }
   }
 
   // Cuándo fue el último ejercicio: la meta del prompt es no dejar pasar más de dos días.
   // Las fechas se guardan en fecha local ('AAAA-MM-DD').
-  var ultima = Object.keys(datos).reduce(function (m, k) {
-    var f = (datos[k] && datos[k].fecha) || ''; return f > m ? f : m; }, '');
+  var ultima = L ? L.ultimo(datos) : '';
   var ritmo = $('sigueRitmo');
   if (ultima) {
     var p = ultima.split('-'), hoy = new Date(); hoy.setHours(0, 0, 0, 0);
@@ -656,7 +457,6 @@ h1,h2,h3,p{margin:0}
   if (V) {
     var subs = Object.keys(V.cats).reduce(function (a, k) { return a + Object.keys(V.cats[k].subs || {}).length; }, 0);
     $('vocCifras').textContent = nf(V.voc.length) + ' palabras · ' + Object.keys(V.cats).length + ' secciones · ' + subs + ' subsecciones';
-    var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
     // Cada familia abre su primera sección, con el árbol desplegado en esa familia.
     $('vocFamilias').innerHTML = V.familias.map(function (f) {
       var n = f.cats.reduce(function (a, k) { return a + V.cuantas(k); }, 0);
