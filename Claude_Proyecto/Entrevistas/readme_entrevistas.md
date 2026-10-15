@@ -73,21 +73,25 @@ estilos sin CSS propio. Nada flota ni se encima sobre el buscador.
 ## Lo que viaja al Dashboard — `_generar-datos-dashboard.js`
 
 Script de Node **sin dependencias**: ejecuta `js/core.js` + los `js/data-*.js` en una sandbox
-(`vm`), lee `T` y los `*_RICH`, y escribe `../Dashboard/entrevistas-data.js` con lo único que el
-Dashboard lee: `ENTREVISTA_TEMAS` y `PY_MOD_LABEL` (10 KB). **Es de solo lectura sobre esta carpeta.**
+(`vm`), lee `T` y los `*_RICH`, y escribe en `../Dashboard/` lo único que el Dashboard lee de aquí, en dos
+archivos: `entrevistas-data.js`, el catálogo (`ENTREVISTA_TEMAS` y `PY_MOD_LABEL`, 10 KB), que carga al
+arrancar, y `entrevistas-temas.js`, el HTML de cada tema con su CSS (`ENTREVISTA_CONTENT` y `ENTREVISTA_CSS`,
+~1 MB), que solo carga la ventana de Python de Mi Día cuando se abre. **Es de solo lectura sobre esta
+carpeta.** Todo lo arma `generar()`, que devuelve los dos archivos sin escribirlos: corrido a mano los
+escribe, y el control 34 de `../Dashboard/verificar-sincronia.js` lo llama para comparar lo que escribiría con
+lo que hay.
 
-**Lo que el Dashboard usa hoy** es la tarjeta *Hoy aprendes* de Mi Día: nombra el tema de Python
-del día (`entrevistaTemaHoy()`: la rotación diaria, saltando los que ya estudiaste, con la etiqueta de `PY_MOD_LABEL`) y lo abre
-aquí por hash (`entrevistas.html#<id>`); de `study-done-v2` saca cuántos llevas
-estudiados o si el de hoy ya está —si cambia su forma (`{id: true}`), hay que revisar
-`pythonHoyHtml()` del Dashboard—. El HTML y el CSS de cada tema (`ENTREVISTA_CONTENT`,
-`ENTREVISTA_CSS`) el generador los sigue armando —su reporte cuenta las reglas portadas— pero no
-los escribe: ninguna pantalla del Dashboard los pinta, y eran ~1 MB en cada arranque. Volver a
-pintarlos es añadirlos de nuevo al `out` del generador.
+**Lo que el Dashboard usa** es la tarjeta *Hoy aprendes* de Mi Día: nombra el tema de Python del día
+(`entrevistaTemaHoy()`, en el orden de Coach, saltando los que ya estudiaste, con la etiqueta de
+`PY_MOD_LABEL`) y, al tocarla, lo abre entero en su ventana (`abrirPython()`): la explicación en llano primero
+y después el contenido, con sus pestañas y su quiz; *Abrir en Entrevistas →* lo abre aquí por hash
+(`entrevistas.html#<id>`). **`study-done-v2` lo escriben las dos**: esta app con `toggleDone()` y la ventana
+con «Marcar estudiado», en la misma forma (`{id: true/false}`); el Dashboard saca de ahí cuántos llevas y si
+el de hoy ya está. Si cambia su forma, hay que revisar `pythonHoyHtml()` y `pythonEstudiado()` del Dashboard.
 
 **Si se agrega, quita o edita un tema aquí, el Dashboard no se entera solo**: hay que correr
-`node Entrevistas/_generar-datos-dashboard.js`. El script aborta si un id de `T` no tiene
-contenido `RICH` o viceversa, y si algún tema de Python se queda sin explicación.
+`node Entrevistas/_generar-datos-dashboard.js` (el control 34 lo avisa al final del turno). El script aborta
+si un id de `T` no tiene contenido `RICH` o viceversa, y si algún tema de Python se queda sin explicación.
 
 - **Solo viaja Python**: `MODULOS_DASHBOARD = ['pyfund','poo','testing','pycheat']` — **41 temas**
   (13 + 7 + 20 + 1), los que la propia app agrupa bajo ese nombre en su menú. Filtrar en origen
@@ -97,7 +101,7 @@ contenido `RICH` o viceversa, y si algún tema de Python se queda sin explicaci�
 - **`PY_MOD_LABEL`** sale de los `m-label` del menú de `entrevistas.html`, sin el prefijo
   "Python —": la tarjeta ya dice que es Python.
 - **El CSS se remapea al Dashboard**: `--white`/`--border` → `var(--card)`/`var(--card-br)`,
-  `--accent` → `var(--ac1)`, `--text-muted` → `var(--text2)`, `--tag-*` → el gris de las píldoras;
+  `--accent` → `var(--ac1)` (la ventana de Python lo fija en su cian), `--text-muted` → `var(--text2)`, `--tag-*` → el gris de las píldoras;
   las reglas se prefijan con `.en-content`. **Los colores semánticos se quedan fijos** (verde de
   correcto, ámbar de aviso, fondo oscuro de código): ahí el color es la información. **No se
   declara `--text:var(--text)`** dentro de `.en-content`: es una autorreferencia, el CSS la trata

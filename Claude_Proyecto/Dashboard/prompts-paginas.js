@@ -101,6 +101,7 @@ El Dashboard es la cabina de mando: tiene que responder en segundos **¿qué hag
 - Antes de añadir algo, pregúntate qué se quita.`,
       vistas: [
         { si: '#alemanOverlay.open', clave: 'aleman' },
+        { si: '#pythonOverlay.open', clave: 'entrevistas' },
         { si: '#gbmOverlay.open', clave: 'invertir' },
         { si: '#didiOverlay.open', clave: 'didi' },
         { si: 'section.slide.theme-dia.active', clave: 'midia' },
@@ -442,7 +443,7 @@ entrevistas.html es el temario: arquitectura, protocolos (CAN, LIN, Ethernet, XC
 
 ## Con quién trabajas
 - Mis Metas lleva la certificación ISTQB CT-GenAI (con su simulacro) y la de trabajar remoto: este temario las alimenta.
-- En qué invertir tu tiempo decide cuánto pesan Código, IA y Datos en la semana; Mi Día enseña el tema de Python de hoy.
+- En qué invertir tu tiempo decide cuánto pesan Código, IA y Datos en la semana; Mi Día enseña el tema de Python de hoy y lo abre entero en su ventana, con la explicación en llano primero: lo que se marca ahí cuenta aquí.
 - Coach decide a qué puestos apuntar; Vestimenta prepara el outfit; Qué escuchar repasa temas al volante.
 
 ## Cómo sabes que funciona
@@ -453,7 +454,8 @@ entrevistas.html es el temario: arquitectura, protocolos (CAN, LIN, Ethernet, XC
 ## Al modificar esta página
 - La estructura de datos y el orden de carga están en Entrevistas/CLAUDE.md y se respetan.
 - El contenido técnico es exacto y vigente (versiones de normas, ISTQB actual); lo dudoso se verifica.
-- Cada tema nuevo trae su quiz.`
+- Cada tema nuevo trae su quiz.
+- Un tema de Python nuevo o cambiado se regenera para el Dashboard (node Entrevistas/_generar-datos-dashboard.js); el verificador avisa si no.`
     },
 
     aeroresinas: {

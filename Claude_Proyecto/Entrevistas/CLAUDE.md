@@ -47,4 +47,5 @@ App estática de una sola página (sin build, sin servidor — se abre con doble
 
 - Para editar un tema puntual: identifica el módulo (`mod` en `T`) y edita solo el `js/data-*.js` correspondiente — no hace falta tocar `entrevistas.html` ni los demás archivos.
 - Para agregar un tema nuevo: añadir entrada en `js/core.js` (objeto `T`) + contenido en el `data-*.js` del módulo correspondiente.
+- Si el tema es de Python (`pyfund`, `poo`, `testing`, `pycheat`), correr `node Entrevistas/_generar-datos-dashboard.js`: la ventana de Python del Dashboard lo lee de ahí, y el control 34 de `Dashboard/verificar-sincronia.js` avisa si se olvida.
 - No hay build ni bundler: los cambios se ven recargando `entrevistas.html` directamente en el navegador.

@@ -743,7 +743,7 @@ que añade un registro lo hace **por id y solo si falta**: así el navegador que
 | `CuidadoPersonal/` | `cuidadopersonal.html` + `salud`/`ejercicio`/`comida` | Shell de 8 áreas (Skincare, Cabello, Dentista, Ojos nativas; Salud, Ejercicio, Comida, Vestimenta en iframe) | `skincare_v1`, `cabello_v1`, `dentista_v1`, `misalud_v1`, `mirutina_v1`, `comida_v1` |
 | `Vestimenta/` | `vestimenta.html` | Guardarropa y compras | `vestimenta_v1` |
 | `Aleman/` | `index.html` (el inicio) + 41 lecciones + `vocabulario.html` | Estudio A1/A2/Kapitel 10. Aloja el vocabulario entero (`vocab-datos.js` + `vocab.css` + `vocab.js`) y el catálogo de las lecciones (`lecciones-datos.js`); Mi Día solo lee los datos y abre la lección en su ventana | `aleman_k10_v1`, `voc_estado_v1`, `aleman_leccion_v1` |
-| `Entrevistas/` | `entrevistas.html` + `js/data-*.js` | Prep. técnica automotriz, 229 temas | `theme`, `sidebar-collapsed`, `study-done-v2` |
+| `Entrevistas/` | `entrevistas.html` + `js/data-*.js` | Prep. técnica automotriz, 229 temas; los 41 de Python viajan al Dashboard (`entrevistas-data.js`, `entrevistas-temas.js`), que los abre en su ventana | `theme`, `sidebar-collapsed`, `study-done-v2` (también lo escribe la ventana de Python) |
 | `Aeroresinas/`, `Heliescala/` | `aeroresinas.html`, `heliescala.html` + `dossier.html` | Las dos webs públicas del negocio del papá de Adán | solo tema e idioma |
 | `Posts/` | `posts.html` + `plantillas.js` | Plantillas de LinkedIn para las dos empresas, armadas con los `datos.js` de sus webs (no con el maestro) | `posts-*`, `coach-theme` |
 

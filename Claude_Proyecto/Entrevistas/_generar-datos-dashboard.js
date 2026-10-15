@@ -1,8 +1,10 @@
-// ── Generador de Dashboard/entrevistas-data.js ───────────────────────────────────────────────
+// ── Generador de Dashboard/entrevistas-data.js y Dashboard/entrevistas-temas.js ─────────────────
 // Lee los 229 temas reales de Entrevistas/js/core.js (metadata, objeto T) y de los 19
 // js/data-*.js (contenido enriquecido, objetos *_RICH — ya son template strings de HTML real,
-// escritas a mano, no HTML renderizado que haya que scrapear) y produce un solo archivo de
-// datos estático que el Dashboard carga con <script src="entrevistas-data.js">.
+// escritas a mano, no HTML renderizado que haya que scrapear) y produce los dos archivos de datos
+// que lee el Dashboard: `entrevistas-data.js`, el catálogo, que carga al arrancar, y
+// `entrevistas-temas.js`, el contenido de cada tema con su CSS, que carga la ventana de Python de
+// Mi Día solo cuando se abre (ver la sección 5).
 //
 // Por qué NO usa Playwright (a diferencia de Aleman/_generar-datos-dashboard.js): las lecciones
 // de Alemán son HTML ya renderizado por el navegador (hay que abrir la página y leer el DOM
@@ -27,12 +29,21 @@
 //
 //   node Entrevistas/_generar-datos-dashboard.js
 //
+// El control 34 de Dashboard/verificar-sincronia.js lo llama con `require` (`generar()`, sin escribir
+// nada) y compara lo que escribiría con lo que hay: si alguien cambia un tema y no lo corre, avisa.
+//
 const fs = require('fs');
 const vm = require('vm');
 const path = require('path');
 
 const DIR = path.resolve(__dirname);
 const OUTPUT_FILE = path.resolve(__dirname, '../Dashboard/entrevistas-data.js');
+const OUTPUT_TEMAS = path.resolve(__dirname, '../Dashboard/entrevistas-temas.js');
+
+// Todo lo que sigue arma los dos archivos sin escribirlos; `log` recibe el reporte (nada, si lo llama
+// el verificador). Escribirlos es cosa del final del archivo, cuando se corre a mano.
+function generar(log) {
+log = log || function () {};
 
 // ══════════════════════════════════════════════════════════════════════════
 // 1) Cargar T + todos los *_RICH ejecutando los archivos reales en una sandbox
@@ -76,13 +87,10 @@ const tIds = Object.keys(T);
 const richIds = Object.keys(RICH);
 const missing = tIds.filter(id => !RICH[id]);
 const extra = richIds.filter(id => !T[id]);
-if (missing.length || extra.length) {
-  console.error('DESAJUSTE T vs RICH — revisar antes de continuar.');
-  console.error('Ids en T sin contenido RICH:', missing);
-  console.error('Ids con contenido RICH que no están en T:', extra);
-  process.exit(1);
-}
-console.log(`OK: ${tIds.length} temas en T, ${richIds.length} con contenido RICH — 1:1 completo.`);
+if (missing.length || extra.length)
+  throw new Error('DESAJUSTE T vs RICH — revisar antes de continuar.\nIds en T sin contenido RICH: ' + missing.join(', ') +
+                  '\nIds con contenido RICH que no están en T: ' + extra.join(', '));
+log(`OK: ${tIds.length} temas en T, ${richIds.length} con contenido RICH — 1:1 completo.`);
 
 // ══════════════════════════════════════════════════════════════════════════
 // 2) ENTREVISTA_TEMAS — metadata plana (title/icon/mod/tags/hint), en el mismo
@@ -105,12 +113,9 @@ console.log(`OK: ${tIds.length} temas en T, ${richIds.length} con contenido RICH
 // ══════════════════════════════════════════════════════════════════════════
 const MODULOS_DASHBOARD = ['pyfund', 'poo', 'testing', 'pycheat'];
 const idsFiltrados = tIds.filter(id => MODULOS_DASHBOARD.includes(T[id].mod));
-if (!idsFiltrados.length) {
-  console.error('El filtro MODULOS_DASHBOARD no dejó ningún tema — revisar los ids de módulo.');
-  process.exit(1);
-}
+if (!idsFiltrados.length) throw new Error('El filtro MODULOS_DASHBOARD no dejó ningún tema — revisar los ids de módulo.');
 const porMod = MODULOS_DASHBOARD.map(m => `${m}:${idsFiltrados.filter(id => T[id].mod === m).length}`).join(' · ');
-console.log(`Filtrado a Python: ${idsFiltrados.length} de ${tIds.length} temas (${porMod}).`);
+log(`Filtrado a Python: ${idsFiltrados.length} de ${tIds.length} temas (${porMod}).`);
 
 // `hint` se sustituye por el subtítulo en lenguaje llano (ver subtituloLlano, más abajo); el
 // original no se pierde, viaja dentro del bloque de explicación como "Resumen técnico".
@@ -178,8 +183,8 @@ idsFiltrados.forEach(id => {
   if (intro) conIntro++; else sinIntro.push(id);
   ENTREVISTA_CONTENT[id] = intro + html;
 });
-console.log(`Placeholders "notes-card" genéricos quitados: ${notesStripped} · con consejo real conservados: ${notesKept}`);
-console.log(`Explicación en lenguaje llano: ${conIntro}/${idsFiltrados.length} temas` + (sinIntro.length ? ` — SIN explicación: ${sinIntro.join(', ')}` : ' — todos cubiertos.'));
+log(`Placeholders "notes-card" genéricos quitados: ${notesStripped} · con consejo real conservados: ${notesKept}`);
+log(`Explicación en lenguaje llano: ${conIntro}/${idsFiltrados.length} temas` + (sinIntro.length ? ` — SIN explicación: ${sinIntro.join(', ')}` : ' — todos cubiertos.'));
 
 // ══════════════════════════════════════════════════════════════════════════
 // 4) ENTREVISTA_CSS — solo las reglas de styles.css que de verdad usan las
@@ -311,7 +316,7 @@ if (styleMatch) {
 // fondos propios) — por eso el bloque se seguía viendo como una app ajena pegada encima.
 // Ahora TODO lo que es "color de interfaz" se toma de las variables del Dashboard, que ya
 // cambian solas con el tema claro/oscuro y con el slide activo:
-//   --accent      -> var(--ac1)   (el acento del propio slide: el azul de theme-entrevista)
+//   --accent      -> var(--ac1)   (el acento de la ventana de Python de Mi Día: lo fija `#pythonOverlay`)
 //   --text-muted  -> var(--text2)
 //   --text        -> NO se declara. El Dashboard ya define `--text` y las variables CSS se
 //                    heredan, así que dentro de `.en-content` `var(--text)` resuelve solo al
@@ -402,25 +407,46 @@ HTML_APP.split(/<div class="module(?:"| module-link")/).slice(1).forEach(functio
 // Un módulo sin etiqueta dejaría el badge vacío: se avisa y se cae al id en mayúsculas, que es
 // lo que el Dashboard ya hace como respaldo.
 const sinLabel = MODULOS_DASHBOARD.filter(m => !PY_MOD_LABEL[m]);
-if (sinLabel.length) console.warn('⚠️  Sin m-label en entrevistas.html:', sinLabel.join(', '));
-console.log('Etiquetas de módulo:', JSON.stringify(PY_MOD_LABEL));
+if (sinLabel.length) log('⚠️  Sin m-label en entrevistas.html: ' + sinLabel.join(', '));
+log('Etiquetas de módulo: ' + JSON.stringify(PY_MOD_LABEL));
 
 // ══════════════════════════════════════════════════════════════════════════
-// 5) Escribir el archivo generado
+// 5) Los dos archivos
+//    entrevistas-data.js  — el catálogo (ENTREVISTA_TEMAS) y las etiquetas (PY_MOD_LABEL), 10 KB:
+//      el Dashboard lo carga al arrancar y la tarjeta «Hoy aprendes» de Mi Día nombra con él el tema del día.
+//    entrevistas-temas.js — el HTML de cada tema (ENTREVISTA_CONTENT) y su CSS (ENTREVISTA_CSS), ~1 MB:
+//      solo lo carga la ventana de Python de Mi Día, la primera vez que se abre (`abrirPython()`). Al
+//      arrancar eran ~1 MB que nadie pintaba; ahora no cuestan nada hasta que Adán abre un tema.
 // ══════════════════════════════════════════════════════════════════════════
 const header = '// Generado automáticamente por Entrevistas/_generar-datos-dashboard.js a partir de\n' +
   '// Entrevistas/js/core.js + js/data-*.js + styles.css — no editar a mano. Si cambia un tema o\n' +
   '// una clase de contenido, volver a correr: node Entrevistas/_generar-datos-dashboard.js\n';
-// Solo lo que el Dashboard lee: la tarjeta «Hoy aprendes» de Mi Día nombra el tema del día y lo
-// abre en la app de Entrevistas, así que le bastan el catálogo y las etiquetas. El HTML y el CSS de
-// cada tema (ENTREVISTA_CONTENT, ENTREVISTA_CSS) se siguen armando arriba —el reporte los mide—,
-// pero ya no se escriben: eran ~1 MB que el Dashboard cargaba en cada arranque sin pintarlos.
 const out = header +
   'const ENTREVISTA_TEMAS = ' + JSON.stringify(ENTREVISTA_TEMAS) + ';\n' +
   'const PY_MOD_LABEL = ' + JSON.stringify(PY_MOD_LABEL) + ';\n';
-fs.writeFileSync(OUTPUT_FILE, out);
-console.log('Escrito', OUTPUT_FILE, '—', fs.statSync(OUTPUT_FILE).size, 'bytes,', ENTREVISTA_TEMAS.length, 'temas,', scopedRules.length, 'reglas CSS portadas +', innerBlocksCountSafe(), 'del <style> embebido.');
+const outTemas = header +
+  '// Lo carga la ventana de Python de Mi Día al abrirse (abrirPython()), no el arranque del Dashboard.\n' +
+  'const ENTREVISTA_CONTENT = ' + JSON.stringify(ENTREVISTA_CONTENT) + ';\n' +
+  'const ENTREVISTA_CSS = ' + JSON.stringify(ENTREVISTA_CSS) + ';\n';
 // Cuenta lo que DE VERDAD se embebió, no lo que traía el tema origen: antes leía siempre de
 // `RICH` y por eso seguía reportando 104 reglas aunque el filtro de módulos ya hubiera dejado
 // ese tema fuera y `embeddedCss` hubiera salido vacío — un log que mentía sobre el resultado.
 function innerBlocksCountSafe(){ return embeddedCss ? topBlocks(embeddedCss).length : 0; }
+return {
+  archivos: { [OUTPUT_FILE]: out, [OUTPUT_TEMAS]: outTemas },
+  resumen: ENTREVISTA_TEMAS.length + ' temas, ' + scopedRules.length + ' reglas CSS portadas + ' + innerBlocksCountSafe() + ' del <style> embebido.',
+};
+}
+
+// Corrido a mano escribe los dos archivos; con `require`, solo ofrece `generar()`.
+if (require.main === module) {
+  try {
+    const r = generar(console.log);
+    Object.keys(r.archivos).forEach(function (f) {
+      fs.writeFileSync(f, r.archivos[f]);
+      console.log('Escrito', f, '—', fs.statSync(f).size, 'bytes');
+    });
+    console.log(r.resumen);
+  } catch (e) { console.error(e.message); process.exit(1); }
+}
+module.exports = { generar: generar, OUTPUT_FILE: OUTPUT_FILE, OUTPUT_TEMAS: OUTPUT_TEMAS };

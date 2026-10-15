@@ -2479,6 +2479,52 @@ function promptsDeLoTocado() {
   else ok.push('Días de fase: una sola cuenta (CIFRAS.diasFase) — la Fase 1 da 13 de 182 y quedan 169 a cualquier hora del 13-oct');
 })();
 
+/* ── 34. Entrevistas → Dashboard: lo que viaja, al día ───────────────────────────────────────────
+   El Dashboard lee de Entrevistas dos archivos que arma `Entrevistas/_generar-datos-dashboard.js`:
+   `entrevistas-data.js` (el catálogo de los 41 temas de Python, al arrancar) y `entrevistas-temas.js` (su
+   contenido y su CSS, que carga la ventana de Python la primera vez que se abre). Si alguien cambia un tema y
+   no corre el generador, la tarjeta y la ventana enseñan lo viejo sin que nada falle: aquí se llama a
+   `generar()` —sin escribir nada— y se compara con lo que hay. Y que el arranque no cargue el contenido, y que
+   cada función que el contenido llama desde sus botones (`switchTab`, `toggleQuiz`) exista en el Dashboard. */
+(function () {
+  let G, r;
+  try { G = require('../Entrevistas/_generar-datos-dashboard.js'); r = G.generar(); }
+  catch (e) { problemas.push('El generador de Entrevistas no corre (Entrevistas/_generar-datos-dashboard.js): ' + e.message); return; }
+  const malos = [];
+  Object.keys(r.archivos).forEach(function (f) {
+    const rel = path.relative(RAIZ, f).split(path.sep).join('/');
+    let hay = null;
+    try { hay = fs.readFileSync(f, 'utf8'); } catch (e) { /* no existe */ }
+    if (hay === null) malos.push(rel + ' no existe');
+    else if (hay !== r.archivos[f]) malos.push(rel + ' no está al día con los temas de Entrevistas');
+  });
+  const dash = leer('Dashboard/dashboard.html');
+  if (/<script src="entrevistas-temas\.js"><\/script>/.test(dash))
+    malos.push('dashboard.html carga entrevistas-temas.js al arrancar: ~1 MB que solo necesita la ventana de Python');
+  if (dash.indexOf("'entrevistas-temas.js'") === -1) malos.push('dashboard.html no carga entrevistas-temas.js en ninguna parte');
+  const vm = require('vm'), ctx = {};
+  let temas = 0;
+  const usadas = new Set();
+  try {
+    vm.createContext(ctx);
+    vm.runInContext(r.archivos[G.OUTPUT_TEMAS] + ';this.__C = ENTREVISTA_CONTENT;', ctx);
+    Object.keys(ctx.__C).forEach(function (id) {
+      temas++;
+      const re = /on(?:click|input|change)="([A-Za-z_$][\w$]*)\(/g;
+      let m;
+      while ((m = re.exec(ctx.__C[id]))) usadas.add(m[1]);
+    });
+  } catch (e) { malos.push('entrevistas-temas.js no se puede leer: ' + e.message); }
+  usadas.forEach(function (fn) {
+    if (!new RegExp('function ' + fn + '\\s*\\(').test(dash)) malos.push('el contenido de los temas llama a ' + fn + '() y dashboard.html no la define');
+  });
+  if (malos.length)
+    problemas.push('Lo que viaja de Entrevistas al Dashboard no cuadra (corre node Entrevistas/_generar-datos-dashboard.js):\n  - ' + malos.slice(0, 10).join('\n  - '));
+  else
+    ok.push('Entrevistas → Dashboard: entrevistas-data.js y entrevistas-temas.js al día con sus ' + temas + ' temas; el contenido lo carga la ventana de Python, y ' +
+            [...usadas].join(' y ') + ' existen en el Dashboard');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

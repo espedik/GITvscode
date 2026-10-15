@@ -52,9 +52,9 @@
 <script src="../Aleman/vocab-datos.js"></script>
 <script src="../Aleman/lecciones-datos.js"></script>
 <!-- El catálogo de los 41 temas de Python de Entrevistas/ (ENTREVISTA_TEMAS y PY_MOD_LABEL), que
-     genera Entrevistas/_generar-datos-dashboard.js: la tarjeta «Hoy aprendes» de Mi Día nombra el
-     tema del día y lo abre en la app. Solo eso: 10 KB. El HTML y el CSS de cada tema ya no vienen
-     (eran ~1 MB que ninguna pantalla pintaba); Entrevistas se abre desde su píldora en la barra. -->
+     genera Entrevistas/_generar-datos-dashboard.js: con él la tarjeta «Hoy aprendes» de Mi Día nombra
+     el tema del día (10 KB). El HTML y el CSS de cada tema van aparte, en entrevistas-temas.js (~1 MB),
+     y no se cargan aquí: los carga la ventana de Python la primera vez que se abre (pythonCargar()). -->
 <script src="entrevistas-data.js"></script>
 <!-- La biblioteca de ejercicios (EJ_DB), la misma de CuidadoPersonal/ejercicio.html: nombre,
      imagen, técnica paso a paso y error de cada uno. La ficha que se abre al tocar un ejercicio
@@ -2854,6 +2854,53 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   .alv-lec-h{white-space:normal;font-size:16px}
   .alv-lec-ctl{width:100%;justify-content:flex-end}
 }
+/* El Python de hoy (#pythonOverlay, `abrirPython()`): el tema entero —la explicación en llano, el contenido,
+   sus pestañas y su quiz— con el CSS que trae entrevistas-temas.js (`.en-content`, ya con las variables del
+   Dashboard). Ese CSS toma el acento de `--ac1`, que en las pantallas pone su tema; aquí lo fija la ventana,
+   con el cian de Python. */
+#pythonOverlay{--c:var(--cy);--ac1:var(--cy);--ac2:var(--b)}
+.gbm-card.pyv-card{width:min(1500px,96vw);height:92vh;display:flex;flex-direction:column;overflow:hidden}
+.pyv-card .gbm-head{flex:none}
+.pyv-cab{flex:none;display:flex;align-items:flex-start;gap:16px;padding:14px 22px;border-bottom:1px solid rgba(var(--ov),.08)}
+.pyv-foto{flex:none;width:124px;height:84px;border-radius:12px;object-fit:cover;background:color-mix(in srgb,var(--c) 12%,transparent)}
+.pyv-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.pyv-k{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
+.pyv-h{display:flex;align-items:baseline;gap:9px;margin:0;font-size:22px;font-weight:800;line-height:1.25;color:var(--text)}
+.pyv-ico{font-size:20px}
+.pyv-s{font-size:13.5px;line-height:1.5;color:var(--text2)}
+.pyv-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
+.pyv-tags i{font-style:normal;font-family:var(--mono);font-size:10.5px;line-height:21px;padding:0 8px;border-radius:99px;
+  background:color-mix(in srgb,var(--c) 12%,transparent);color:var(--text2)}
+.pyv-acc{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.pyv-fila{display:flex;align-items:center;gap:6px}
+.pyv-hecho{height:34px;padding:0 15px;border-radius:10px;border:1px solid var(--c);background:color-mix(in srgb,var(--c) 12%,transparent);
+  color:var(--text);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.pyv-hecho:hover{background:color-mix(in srgb,var(--c) 22%,transparent)}
+.pyv-hecho.ok{background:var(--c);color:var(--bg)}
+.pyv-quiz{height:34px;padding:0 13px;border-radius:10px;border:1px solid rgba(var(--ov),.14);background:transparent;color:var(--text2);
+  font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+.pyv-quiz:hover{color:var(--c);border-color:var(--c)}
+.pyv-acc .ap-otra{width:34px;height:34px;border-radius:10px}
+.pyv-acc .ap-otra svg{width:14px;height:14px}
+.pyv-dato{font-size:11.5px;color:var(--text3)}
+.pyv-dato b{color:var(--text2)}
+.pyv-ir{font-weight:700}
+.pyv-cuerpo{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:18px 22px 30px}
+.pyv-cuerpo .en-content{max-width:1180px;margin:0 auto}
+.pyv-cuerpo.ancho .en-content{max-width:none}
+.pyv-carga{display:flex;align-items:center;justify-content:center;min-height:200px;padding:0 20px;text-align:center;font-size:13px;color:var(--text3)}
+@media(max-width:900px){
+  .pyv-cab{flex-wrap:wrap}
+  .pyv-acc{width:100%;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between}
+}
+@media(max-width:640px){
+  body:has(#pythonOverlay.open) .pp-btn{visibility:hidden}
+  .gbm-card.pyv-card{width:100%;height:100%}
+  .pyv-cab{padding:10px 12px;gap:10px}
+  .pyv-foto{width:72px;height:48px}
+  .pyv-h{font-size:18px}
+  .pyv-cuerpo{padding:12px 12px 24px}
+}
 /* «Cómo lo decide Coach»: el botón junto al título de Hoy aprendes y su panel (#comoDecideOverlay) — lo
    que manda, en orden, y tarjeta por tarjeta lo de hoy con su regla (`comoDecideHtml()`). */
 .ap-como{display:inline-flex;align-items:center;gap:5px;height:20px;margin-left:6px;padding:0 8px 0 7px;border-radius:99px;
@@ -4211,6 +4258,19 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
         <div class="alv-lec-marco" id="alemanMarco"><iframe id="alemanFrame" title="La lección de hoy, de la app de Alemán" onload="window.alemanCargada&&alemanCargada(this)"></iframe><span class="alv-lec-carga">Abriendo la lección…</span></div>
       </section>
     </div>
+  </div>
+</div>
+
+<!-- ─── EL PYTHON DE HOY — el tema que toca, entero, sin salir de Mi Día (abrirPython()) ─── -->
+<div class="gbm-overlay" id="pythonOverlay" onclick="if(event.target===this) cerrarPython()">
+  <div class="gbm-card pyv-card" role="dialog" aria-modal="true" aria-labelledby="pythonTit">
+    <div class="gbm-head">
+      <button class="gbm-close" onclick="cerrarPython()" aria-label="Cerrar">✕</button>
+      <h2 id="pythonTit">Python de hoy</h2>
+      <p>El tema que toca, en el orden de Coach, con la explicación en llano primero. Lo que marques aquí cuenta en Entrevistas.</p>
+    </div>
+    <div class="pyv-cab" id="pythonCab"></div>
+    <div class="pyv-cuerpo" id="pythonCuerpo"></div>
   </div>
 </div>
 
@@ -6834,7 +6894,7 @@ function aprendeVisto(slot){
 function aprendeAbrir(slot){
   aprendeVisto(slot);
   if(slot === 'de') abrirAleman();
-  else if(slot === 'py'){ const p = entrevistaTemaHoy(); if(p) window.open('../Entrevistas/entrevistas.html#' + p.id, '_blank', 'noopener'); }
+  else if(slot === 'py') abrirPython();
 }
 
 // Una tarjeta de Hoy aprendes: la foto —tocarla abre lo mismo que el texto—, la materia con su marca, su
@@ -7194,8 +7254,8 @@ function escucharHoyHtml(vistos){
       ${apLuego(didiLibrosLuego(d, 2).map(x => `<b>${esc(x.it.n)}</b>${x.it.d ? ` · ${esc(x.it.d)}` : ''}`))}` });
 }
 
-// El tema de Python, con su explicación de una línea. Cuenta como hecho cuando lo marcas estudiado
-// en Entrevistas (`study-done-v2`, {id: true}).
+// El tema de Python, con su explicación de una línea. Cuenta como hecho cuando lo marcas estudiado —en su
+// ventana o en Entrevistas: los dos escriben `study-done-v2`, {id: true}—. Tocarlo abre su ventana.
 function pythonHoyHtml(){
   const p = entrevistaTemaHoy();
   if(!p) return '<div class="hp-empty">El catálogo de Python no cargó — revisa entrevistas-data.js.</div>';
@@ -7203,13 +7263,136 @@ function pythonHoyHtml(){
   const n = ENTREVISTA_TEMAS.filter(t => hechos[t.id]).length;
   return apFila({ slot: 'py', c: 'var(--cy)', marca: AP_PUNTO, foto: apFoto('py-' + p.mod) || apFotoSk('codigo'), mat: `Python · ${esc(pyModLabel(p.mod))}`,
     estado: apEstado(!!hechos[p.id], 'tema del día', '✓ estudiado'), otra: 'El siguiente tema, en el orden de Coach', abrir: "aprendeAbrir('py')",
-    titulo: `Abrir el tema en la app de Entrevistas · llevas ${n} de ${ENTREVISTA_TEMAS.length} estudiados`,
+    titulo: `Abrir el tema aquí mismo · llevas ${n} de ${ENTREVISTA_TEMAS.length} estudiados`,
     txt: `<span class="ap-t ap-cl l2" data-min="1">${esc(p.title)}</span>
       ${p.hint ? `<span class="ap-es ap-cl">${esc(p.hint)}</span>` : ''}
       ${(p.tags || []).length ? `<span class="ap-tags ap-opc">${p.tags.map(t => `<i>${esc(t)}</i>`).join('')}</span>` : ''}
       <span class="ap-dato ap-1l ap-opc">Llevas <b>${n} de ${ENTREVISTA_TEMAS.length}</b> temas estudiados en Entrevistas</span>
       ${apLuego(aprendeLuego('py', 3).map(t => `<b>${esc(t.title)}</b>${t.hint ? ` · ${esc(t.hint)}` : ''}`))}` });
 }
+
+// ── La ventana de Python (#pythonOverlay) ────────────────────────────────────────────────────
+// Adán, 2026-10-14: "lo mismo para lo de python" —que el tema se abra ahí mismo, como el alemán—. El tema
+// entero, como en Entrevistas pero con la piel del Dashboard: arriba la explicación en llano (Qué es · Para qué
+// sirve · Lo que importa, de `Entrevistas/js/data-python-intro.js`) y después el contenido, con sus pestañas y
+// su quiz. Viene de `entrevistas-temas.js`, que arma el generador de Entrevistas y que solo se carga la primera
+// vez que se abre la ventana (`pythonCargar()`): son ~1 MB que el arranque no paga. «Marcar estudiado» escribe
+// `study-done-v2` igual que Entrevistas ({id: true/false}): la tarjeta, la barra de Hoy aprendes y la app se
+// enteran. ↻ trae el siguiente tema del orden de Coach. Mientras está abierta, Mi Día no rota.
+let _pyCarga = null;
+function pythonCargar(){
+  if(typeof ENTREVISTA_CONTENT !== 'undefined') return Promise.resolve();
+  if(!_pyCarga) _pyCarga = new Promise((ok, mal) => {
+    const sc = document.createElement('script');
+    sc.src = 'entrevistas-temas.js';
+    sc.onload = () => {
+      if(typeof ENTREVISTA_CSS !== 'undefined' && !document.getElementById('enCss')){
+        const st = document.createElement('style'); st.id = 'enCss'; st.textContent = ENTREVISTA_CSS; document.head.appendChild(st);
+      }
+      ok();
+    };
+    sc.onerror = () => { _pyCarga = null; sc.remove(); mal(new Error('sin entrevistas-temas.js')); };
+    document.head.appendChild(sc);
+  });
+  return _pyCarga;
+}
+// Las pestañas y los quizzes del contenido llaman a estas dos, como en su app (Entrevistas/js/core.js); el
+// control 34 del verificador comprueba que existan las que el contenido usa.
+function toggleQuiz(el){ el.classList.toggle('open'); if(el.nextElementSibling) el.nextElementSibling.classList.toggle('open'); }
+function switchTab(btn, panelId, groupClass){
+  const c = btn.closest('.tab-group-' + groupClass); if(!c) return;
+  c.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  c.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId)?.classList.add('active');
+}
+// El tema que pinta el cuerpo: si no cambió, no se repinta (se perderían las pestañas y respuestas abiertas).
+let _pyVisto = null;
+function abrirPython(){
+  const ov = document.getElementById('pythonOverlay'); if(!ov || !entrevistaTemaHoy()) return;
+  pythonPintar();
+  ov.classList.add('open'); clearInterval(timer);
+}
+function cerrarPython(){
+  const ov = document.getElementById('pythonOverlay');
+  if(!ov || !ov.classList.contains('open')) return;
+  ov.classList.remove('open'); restartTimer();
+  renderHeroAprender();
+}
+function pythonAbierta(){ const ov = document.getElementById('pythonOverlay'); return !!ov && ov.classList.contains('open'); }
+function pythonPintar(){
+  const p = entrevistaTemaHoy(), cuerpo = document.getElementById('pythonCuerpo'); if(!p || !cuerpo) return;
+  pythonPintarCab();
+  if(_pyVisto === p.id && cuerpo.querySelector('.en-content')) return;
+  _pyVisto = p.id;
+  cuerpo.classList.toggle('ancho', p.id === 'py-cheatsheet');
+  cuerpo.innerHTML = '<div class="pyv-carga">Abriendo el tema…</div>';
+  cuerpo.scrollTop = 0;
+  pythonCargar().then(() => {
+    if(_pyVisto !== p.id) return;
+    const html = ENTREVISTA_CONTENT[p.id];
+    cuerpo.innerHTML = html ? `<div class="en-content">${html}</div>`
+      : '<div class="pyv-carga">Este tema no está en entrevistas-temas.js: corre node Entrevistas/_generar-datos-dashboard.js.</div>';
+    pythonPintarCab();
+  }, () => {
+    if(_pyVisto !== p.id) return;
+    _pyVisto = null;
+    cuerpo.innerHTML = '<div class="pyv-carga">No encontré Dashboard/entrevistas-temas.js: corre node Entrevistas/_generar-datos-dashboard.js, o ábrelo en Entrevistas.</div>';
+  });
+}
+// El encabezado: su foto, el módulo, el título con su icono, la explicación de una línea y sus palabras clave; a
+// la derecha, «Pruébate» si trae quiz (el prompt de Entrevistas: preguntas antes que lectura), «Marcar
+// estudiado», ↻ y cuántos llevas.
+function pythonPintarCab(){
+  const el = document.getElementById('pythonCab'), p = entrevistaTemaHoy(); if(!el || !p) return;
+  const hechos = rawGet('study-done-v2', {}) || {}, n = ENTREVISTA_TEMAS.filter(t => hechos[t.id]).length, hecho = !!hechos[p.id];
+  const quiz = document.querySelectorAll('#pythonCuerpo .quiz-card').length;
+  el.innerHTML = `${apImg(apFoto('py-' + p.mod) || apFotoSk('codigo'), 'pyv-foto')}
+    <div class="pyv-t">
+      <div class="pyv-k">Tema de hoy · ${esc(pyModLabel(p.mod))}</div>
+      <h3 class="pyv-h">${p.icon ? `<span class="pyv-ico" aria-hidden="true">${esc(p.icon)}</span>` : ''}<span>${esc(p.title)}</span></h3>
+      ${p.hint ? `<div class="pyv-s">${esc(p.hint)}</div>` : ''}
+      ${(p.tags || []).length ? `<div class="pyv-tags">${p.tags.map(t => `<i>${esc(t)}</i>`).join('')}</div>` : ''}
+    </div>
+    <div class="pyv-acc">
+      <div class="pyv-fila">
+        ${quiz ? `<button type="button" class="pyv-quiz" onclick="pythonAlQuiz()">Pruébate · ${quiz} ${quiz === 1 ? 'pregunta' : 'preguntas'}</button>` : ''}
+        <button type="button" class="pyv-hecho${hecho ? ' ok' : ''}" onclick="pythonEstudiado()">${hecho ? '✓ Estudiado' : '◯ Marcar estudiado'}</button>
+        <button type="button" class="ap-otra" onclick="pythonOtro()" title="El siguiente tema, en el orden de Coach" aria-label="El siguiente tema, en el orden de Coach">${AP_OTRA}</button>
+      </div>
+      <div class="pyv-dato">Llevas <b>${n} de ${ENTREVISTA_TEMAS.length}</b> temas estudiados · <a href="javascript:void(0)" class="hp-link pyv-ir" onclick="window.open('../Entrevistas/entrevistas.html#${p.id}','_blank','noopener')">Abrir en Entrevistas →</a></div>
+    </div>`;
+}
+// «Marcar estudiado», como en Entrevistas (`toggleDone()`): el mismo `study-done-v2`, {id: true/false}. Y
+// cuenta como lo hecho hoy (`vistos.py`) aunque después ↻ traiga otro tema: hoy sí estudiaste uno.
+function pythonEstudiado(){
+  const p = entrevistaTemaHoy(); if(!p) return;
+  const d = rawGet('study-done-v2', {}) || {};
+  d[p.id] = !d[p.id];
+  rawSet('study-done-v2', d);
+  const { st, h } = aprendeHoy();
+  h.vistos = h.vistos || {};
+  if(d[p.id]) h.vistos.py = 1; else delete h.vistos.py;
+  aprendeGuarda(st, h);
+  pythonPintarCab();
+  renderHeroAprender();
+}
+// ↻: el siguiente del orden de Coach, que queda como el de hoy (`aprendeOtra('py')`).
+function pythonOtro(){ aprendeOtra('py'); pythonPintar(); }
+// «Pruébate» baja al primer quiz del tema; si vive en una pestaña cerrada, primero la abre.
+function pythonAlQuiz(){
+  const c = document.getElementById('pythonCuerpo'), q = c && c.querySelector('.quiz-section, .quiz-card'); if(!q) return;
+  const panel = q.closest('.tab-panel');
+  if(panel && !panel.classList.contains('active')){
+    const btn = [...c.querySelectorAll('.tab-btn')].find(b => (b.getAttribute('onclick') || '').indexOf("'" + panel.id + "'") >= 0);
+    if(btn) btn.click();
+  }
+  requestAnimationFrame(() => c.scrollTo({ top: q.getBoundingClientRect().top - c.getBoundingClientRect().top + c.scrollTop - 12, behavior: 'smooth' }));
+}
+// Si se marca en Entrevistas con la ventana abierta (otra pestaña), el encabezado se entera.
+window.addEventListener('storage', e => {
+  if(pythonAbierta() && (e.key === 'study-done-v2' || e.key === null)) pythonPintarCab();
+});
 
 // La pregunta del ISTQB CT-GenAI: una de los dos bancos del simulacro (los mismos que usa
 // examen-genai.js). En la columna va en dos líneas; se contesta en su panel (#istqbOverlay) —la
@@ -7437,14 +7620,14 @@ function renderHeroAprender(){
   const p = entrevistaTemaHoy(), q = istqbPreguntaHoy();
   const estudiados = rawGet('study-done-v2', {}) || {};
   // Lo hecho hoy, en el orden de las seis tarjetas: el alemán al abrir su ventana o al hacer un ejercicio de una
-  // lección, «Al volante» al tocar qué escuchar, Python al marcarlo estudiado, el ISTQB al contestar una, y el
+  // lección, «Al volante» al tocar qué escuchar, Python al marcar estudiado el de hoy (o uno en su ventana), el ISTQB al contestar una, y el
   // paso de la semana y la ficha de Habilidades Base al abrirlos. Antes contaba cuatro de seis («0 de 4»).
-  const hechos = [!!vistos.de || alemanPracticoHoy(), !!vistos.escuchar, !!(p && estudiados[p.id]), !!(q && (istqbRespuestas()[hoyLocal()] || []).length), !!vistos.paso, !!vistos.hb];
+  const hechos = [!!vistos.de || alemanPracticoHoy(), !!vistos.escuchar, !!(p && estudiados[p.id]) || !!vistos.py, !!(q && (istqbRespuestas()[hoyLocal()] || []).length), !!vistos.paso, !!vistos.hb];
   const color = ['var(--g)', 'var(--o)', 'var(--cy)', 'var(--p)', 'var(--w)', 'var(--b)'];
   const d = new Date();
   const fecha = `${DIAS_CORTOS[d.getDay()].toLowerCase()} ${d.getDate()} ${MES_LABEL_FULL[d.getMonth()].slice(0, 3).toLowerCase()}`;
   el.innerHTML = `<div class="hp-title"><span>🎓 Hoy aprendes<button type="button" class="ap-como" onclick="abrirComoDecide()" title="El orden de Coach y el porqué de lo de hoy">${AP_ICO.porque}Cómo lo decide Coach</button></span><span class="ap-fecha">${fecha} · <b>${hechos.filter(Boolean).length} de ${hechos.length}</b></span></div>
-    <div class="ap-barra" title="El alemán cuenta al abrir su ventana o al hacer un ejercicio de la lección; «Al volante», al tocar qué escuchar; Python, al marcarlo estudiado; el ISTQB, al contestarlo; el paso de la semana y la ficha, al abrirlos">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
+    <div class="ap-barra" title="El alemán cuenta al abrir su ventana o al hacer un ejercicio de la lección; «Al volante», al tocar qué escuchar; Python, al marcarlo estudiado (en su ventana o en Entrevistas); el ISTQB, al contestarlo; el paso de la semana y la ficha, al abrirlos">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
     <div class="ap-seis">${alemanHoyHtml(vistos)}${escucharHoyHtml(vistos)}${pythonHoyHtml()}${istqbHtml()}${pasoSemanaHtml()}${fichaEnCursoHtml()}</div>`;
   apAjustar();
 }
@@ -13709,6 +13892,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&document.getElementById('gbmOverlay').classList.contains('open')){ cerrarGBM(); return; }
   if(e.key==='Escape'&&document.getElementById('istqbOverlay').classList.contains('open')){ cerrarIstqb(); return; }
   if(document.getElementById('alemanOverlay').classList.contains('open')){ if(e.key==='Escape') cerrarAleman(); return; }
+  if(document.getElementById('pythonOverlay').classList.contains('open')){ if(e.key==='Escape') cerrarPython(); return; }
   if(e.key==='Escape'&&document.getElementById('comoDecideOverlay').classList.contains('open')){ cerrarComoDecide(); return; }
   if(e.key==='ArrowRight') nextSlide();
   if(e.key==='ArrowLeft') prevSlide();
