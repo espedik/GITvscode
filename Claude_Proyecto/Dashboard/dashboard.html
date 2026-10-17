@@ -3503,6 +3503,31 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .ct-tar-chip{font-family:var(--mono);font-size:9px;font-weight:700;color:#05050a;
   background:var(--w);padding:2px 5px;border-radius:4px;flex-shrink:0}
 .ct-vacio{font-size:11px;color:var(--text3);padding:6px 0}
+/* Tu estrategia de hoy (columna del día, solo hoy): la BBVA con su saldo vivo, lo que toca mandarle,
+   lo previsto sin anotar y el tope de gasto; con la tarjeta en cero, cancelarla y todo a GBM. */
+.ce-caja{display:flex;flex-direction:column;gap:7px;padding:11px 12px;border-radius:12px;
+  background:rgba(var(--w-rgb),.05);border:1px solid rgba(var(--w-rgb),.24)}
+.ce-caja.verde{background:rgba(var(--g-rgb),.05);border-color:rgba(var(--g-rgb),.26)}
+.ce-cab{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.ce-saldo{font-size:10.5px;color:var(--text3);white-space:nowrap}
+.ce-saldo b{font-size:15px;font-weight:700;color:var(--text)}
+.ce-barra{height:5px;border-radius:3px;background:rgba(var(--ov),.09);overflow:hidden}
+.ce-barra i{display:block;height:100%;border-radius:3px;background:var(--w)}
+.ce-pie{font-size:10.5px;color:var(--text3);line-height:1.45}
+.ce-pie b{color:var(--text2)}
+.ce-fila{display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;padding:7px 9px;border-radius:9px;
+  font-size:11.5px;line-height:1.42;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.07)}
+.ce-fila.toca{background:rgba(var(--cy-rgb),.08);border-color:rgba(var(--cy-rgb),.3)}
+.ce-fila.ya{background:rgba(var(--g-rgb),.08);border-color:rgba(var(--g-rgb),.26)}
+.ce-txt{flex:1 1 200px;min-width:0}
+.ce-txt b{font-weight:700;color:var(--text)}
+.ce-acc{display:flex;align-items:center;gap:5px;flex-shrink:0;margin-left:auto}
+.ce-acc input{width:76px;padding:4px 6px;border-radius:7px;border:1px solid rgba(var(--ov),.2);
+  background:var(--card);color:var(--text);font-family:var(--mono);font-size:11.5px;text-align:right}
+.ce-btn{padding:5px 10px;border-radius:7px;border:0;background:var(--cy);color:#05050a;font-family:inherit;
+  font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
+.ce-btn.sec{background:rgba(var(--ov),.09);color:var(--text2)}
+.ce-btn:hover{filter:brightness(1.08)}
 .ct-hechas-btn{display:flex;align-items:center;gap:4px;padding:2px 6px;margin:-2px -6px;border:0;
   border-radius:6px;background:transparent;cursor:pointer;font-family:var(--mono);font-size:9.5px;
   font-weight:700;color:var(--g);transition:background .15s}
@@ -8216,27 +8241,13 @@ const ctYaContado = (t, fijosMes) => !!(window.CIFRAS && CIFRAS.yaContado(t, fij
    La excepción es la categoría **Deudas**: ahí la nota también nombra la tarjeta, pero eso es un
    PAGO a la tarjeta y sí sale del bolsillo. Sin esta salvedad, la liquidación de los $9,000 del
    13-ago-2026 dejaría de restar. */
-function ctTarjetas(){
-  const DEU = ((D.fin && D.fin.debts) || (window.CIFRAS && CIFRAS.DEUDAS_SEED) || []);
-  const out = [];
-  DEU.filter(function(d){ return d.type === 'credit_card'; }).forEach(function(d){
-    ctPalabras(d.name).forEach(function(w){ if(w !== 'tarjeta' && out.indexOf(w) === -1) out.push(w); });
-  });
-  return out;
-}
-/* Qué tarjeta, para poder decir cuándo se paga de verdad. */
+/* La regla vive en el maestro (CIFRAS.tarjetaDe): la misma con la que Finanzas sube el saldo de la
+   tarjeta cuando se anota una compra con ella. «Débito» en la nota es la cuenta, y una tarjeta
+   cancelada ya no se nombra. Qué tarjeta, para poder decir cuándo se paga de verdad: */
 function ctTarjetaDe(t){
-  const n = String(t.notes||'').toLowerCase();
-  const DEU = ((D.fin && D.fin.debts) || (window.CIFRAS && CIFRAS.DEUDAS_SEED) || []);
-  return DEU.filter(function(d){ return d.type === 'credit_card'; }).find(function(d){
-    return ctPalabras(d.name).some(function(w){ return w !== 'tarjeta' && n.indexOf(w) !== -1; });
-  }) || null;
+  return window.CIFRAS && CIFRAS.tarjetaDe ? CIFRAS.tarjetaDe(t, (D.fin && D.fin.debts) || null) : null;
 }
-function ctACredito(t, tarjetas){
-  if(t.cat === 'Deudas') return false;
-  const n = String(t.notes||'').toLowerCase();
-  return (tarjetas||[]).some(function(w){ return n.indexOf(w) !== -1; });
-}
+function ctACredito(t){ return t.cat !== 'Deudas' && !!ctTarjetaDe(t); }
 
 /* ── EL BALANCE DE LOS ÚLTIMOS SEIS MESES ───────────────────────────────
    Sustituye a "El mes de un vistazo" (Adán, 2026-09-07: "quita esto del mes de un vistazo
@@ -8531,13 +8542,12 @@ function ctFijosMes(nDias, ym){
 }
 /* Devuelve los movimientos reales del día que la agenda no conoce, cada uno marcado con si
    fue a crédito. Los dos se PINTAN; solo los de contado RESTAN. */
-function ctExtras(dia, ym, mov, fijosMes, tarjetas){
+function ctExtras(dia, ym, mov, fijosMes){
   const k = ym+'-'+String(dia).padStart(2,'0');
-  const TJ = tarjetas || ctTarjetas();
   return (mov[k]||[]).filter(function(t){
     return t.type === 'expense' && !ctYaContado(t, fijosMes);
   }).map(function(t){
-    return Object.assign({}, t, { credito: ctACredito(t, TJ) });
+    return Object.assign({}, t, { credito: ctACredito(t) });
   });
 }
 const ctSaleDeCaja = arr => (arr||[]).filter(t=>!t.credito).reduce((x,t)=>x+(+t.amount||0), 0);
@@ -8560,7 +8570,6 @@ function ctTramo(nSel, nDias, mov, ym){
   const YM = ym || ctYM || '';
   const MV = mov || {};
   const fijosMes = ctFijosMes(nDias, YM);
-  const TJ = ctTarjetas();
   let entra = 0, corre = 0, sale = 0;
   const serie = [];
   for(let d=ini; d<=fin; d++){
@@ -8569,7 +8578,7 @@ function ctTramo(nSel, nDias, mov, ym){
     const pag = ag.filter(a=>!a.entra);
     // Lo registrado ese día que no está en los fijos. Lo pagado a crédito se lleva marcado:
     // se enseña, pero no resta hoy — ya lo cobra el mínimo de su tarjeta.
-    const ext = ctExtras(d, YM, MV, fijosMes, TJ);
+    const ext = ctExtras(d, YM, MV, fijosMes);
     const sal = pag.reduce((x,a)=>x+(+a.monto||0), 0) + comeDia + ctSaleDeCaja(ext);
     const may = pag.slice().sort((a,b)=>(+b.monto||0)-(+a.monto||0))[0];
     entra += ent; sale += sal;
@@ -8597,6 +8606,165 @@ function ctAnclaReal(YM, ini, fin){
   const d=+cta.fecha.slice(8,10);
   if(d<ini||d>fin) return null;
   return { dia:d, saldo:+cta.value||0, fecha:cta.fecha, nombre:cta.name||'Cuenta' };
+}
+
+/* ── TU ESTRATEGIA DE HOY ─────────────────────────────────────────────────────────────────────
+   Adán, 15-oct-2026: "debe actualizarse lo de tarjeta de bbva solito, en base a cuánto gasto y
+   cuánto gano cada día, después que la liquide la cancelo y de ahí nos vamos a incrementar números
+   en inversiones, recuerda que cada día debo tener una estrategia para seguir bien en los números".
+   Va en la columna del día cuando ese día es hoy, debajo de «De dónde sale ese saldo»: qué mandar
+   hoy a la BBVA (o lo que ya se mandó), lo previsto que no se anotó, cuánto se puede gastar sin
+   romper la quincena y, con la tarjeta en cero, cancelarla y pasar todo a GBM. El saldo y el plan
+   salen de CIFRAS.bbvaEstado —el saldo vivo de Finanzas, que se mueve con cada compra «TC BBVA» y
+   cada pago—; el tope de gasto, del riel (T). Ningún importe va escrito aquí. */
+const CE_DE = { quincena:'lo que sobra de la quincena', didi:'lo que apartas de Didi', minimo:'el pago del corte, con lo de Didi', extra:'un abono de más' };
+const CE_DOW = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+function ctEstrategiaHtml(T, H, faltaR, mv){
+  if(!window.CIFRAS || !CIFRAS.bbvaEstado) return '';
+  const E = CIFRAS.bbvaEstado();
+  if(!E.vivo) return '';                           // sin Finanzas en este navegador no hay saldo que seguir
+  const hoyK = hoyLocal(), ym = hoyK.slice(0,7);
+  const num = v => '<b class="ct-num'+(privado?' fin-hidden':'')+'">'+money(Math.round(v))+'</b>';
+  const dia = k => { const d = new Date(k+'T12:00:00'); return CE_DOW[d.getDay()]+' '+d.getDate(); };
+  const corta = d => d.toLocaleDateString('es-MX',{day:'numeric',month:'short'});
+  const fila = (cls, txt, acc) => '<div class="ce-fila'+(cls?' '+cls:'')+'"><span class="ce-txt">'+txt+'</span>'+
+    (acc?'<span class="ce-acc">'+acc+'</span>':'')+'</div>';
+  const entrada = v => '<input type="number" min="1" step="1" value="'+Math.round(v)+'"'+(privado?' class="fin-hidden"':'')+' aria-label="Monto">';
+  const boton = (txt, js, sec) => '<button type="button" class="ce-btn'+(sec?' sec':'')+'" onclick="'+js+'">'+txt+'</button>';
+  const cab = (lbl, c, der) => '<div class="ce-cab"><span class="ct-lbl" style="color:'+c+'">'+lbl+'</span><span class="ce-saldo">'+der+'</span></div>';
+
+  // El gasto de hoy: el tope que deja el riel, lo que ya salió de contado, lo cargado a la BBVA y lo
+  // que entró de más (Didi y lo que no es nómina), del que se aparta lo que el plan guarda de Didi.
+  const ext = (H && H.extras) || [];
+  const gHoy = ext.filter(t => !t.credito).reduce((s,t) => s + (+t.amount||0), 0);
+  const cHoy = ext.filter(t => t.credito && (ctTarjetaDe(t)||{}).id === 'd001').reduce((s,t) => s + (+t.amount||0), 0);
+  const iHoy = (mv||[]).filter(t => t.type === 'income' && !CIFRAS.esNomina(t)).reduce((s,t) => s + (+t.amount||0), 0);
+  const didiMes = CIFRAS.n('didiMes') || 0, pctDidi = didiMes > 0 ? CIFRAS.didiAlAhorro(ym) / didiMes : 0;
+  const destino = E.saldo > 0 ? 'para la BBVA' : 'para GBM';
+  const gasto = (T.cierre < 0
+      ? 'Hoy nada fuera de lo fijo: a la quincena le faltan '+num(faltaR)+' para cerrar.'
+      : 'Para gastar: hasta '+num(T.libreDia)+' al día hasta el '+T.fin+(gHoy > 0 ? ' · hoy llevas '+num(gHoy) : '')+'.')+
+    (iHoy > 0 && pctDidi > 0 ? ' Entraron '+num(iHoy)+' de más: aparta '+num(iHoy*pctDidi)+' '+destino+
+      ' (el '+Math.round(pctDidi*100)+' %, lo que el plan guarda de Didi).' : '');
+
+  // Lo que la quincena y Didi mandan a GBM sin tarjeta que pagar: el mes que entra, ya sin abonos.
+  const pM = ym.split('-').map(Number), sig = new Date(pM[0], pM[1], 1);
+  const ymSig = sig.getFullYear()+'-'+String(sig.getMonth()+1).padStart(2,'0');
+  const G = CIFRAS.desgloseMes(ymSig);
+  const aGbm = num(G.dia1)+' el 1 y '+num(G.dia15)+' el 15, más '+num(CIFRAS.didiAlAhorro(ymSig))+' de Didi al mes';
+
+  // ── Con saldo: la tarjeta primero ──
+  if(E.saldo > 0){
+    const pct = E.inicio > 0 ? Math.max(0, Math.min(100, (E.inicio - E.saldo) / E.inicio * 100)) : 0;
+    const anotados = ((D.fin && D.fin.transactions) || []).filter(t => t.origen === 'planmaestro' && t.anotado === hoyK);
+    const yaHoy = anotados.reduce((s,t) => s + (+t.amount||0), 0);
+    let h = cab('Tu estrategia de hoy', 'var(--w)', 'BBVA '+num(E.saldo))+
+      '<div class="ce-barra"><i style="width:'+pct.toFixed(1)+'%"></i></div>'+
+      '<span class="ce-pie">Pagado '+num(E.inicio - E.saldo)+' de '+num(E.inicio)+
+        (E.fin ? ' · en cero el <b>'+corta(E.fin)+'</b> si sigues el plan' : '')+'.</span>';
+    if(yaHoy > 0) h += fila('ya', '✓ Anotaste '+num(yaHoy)+' a la BBVA hoy.', boton('Deshacer', 'bbvaDeshacer()', 1));
+    else if(E.pagadoHoy > 0) h += fila('ya', '✓ Hoy mandaste '+num(E.pagadoHoy)+' a la BBVA.');
+    if(E.hoy.length){
+      const tot = E.hoy.reduce((s,a) => s + a.monto, 0);
+      const de = E.hoy.some(a => a.de === 'quincena') ? 'quincena' : E.hoy[0].de;
+      // Si con el abono completo la quincena no cierra, se manda lo que la deja en cero, no en rojo.
+      const sug = (de === 'quincena' && T.cierre < 0) ? Math.max(0, tot - faltaR) : tot;
+      h += fila('toca', 'Hoy manda '+num(sug)+' a la BBVA: '+E.hoy.map(a => CE_DE[a.de]).join(' y ')+'.'+
+          (sug < tot ? ' No los '+num(tot)+' del plan: con eso la quincena no cierra.' : '')+
+          (sug >= E.saldo - 0.5 ? ' Con eso queda en cero.' : ''),
+        entrada(sug)+boton('Ya lo mandé', "bbvaAnotar(this,'"+hoyK+"','"+de+"')"));
+    } else if(!(yaHoy > 0) && !(E.pagadoHoy > 0)){
+      const s = E.siguiente;
+      h += fila('', 'Hoy no toca abono.'+(s ? ' El siguiente: el '+dia(s.fecha)+', '+num(s.monto)+' — '+CE_DE[s.de]+'.' : ''),
+        boton('Abonar', 'ceAbonar(this)', 1));
+    }
+    // Lo previsto que no se anotó, el más viejo primero. Si no se mandó, la fecha de cero ya lo sabe:
+    // sale del saldo vivo.
+    if(E.pendientes.length){
+      const p = E.pendientes[0], mas = E.pendientes.length - 1;
+      h += fila('toca', 'Sin anotar: el '+dia(p.fecha)+' tocaban '+num(p.monto)+' — '+CE_DE[p.de]+'. ¿Lo mandaste? Hasta que lo anotes, la fecha de cero no lo cuenta.'+
+          (mas ? ' <span style="color:var(--text3)">(y '+mas+' más)</span>' : ''),
+        entrada(p.monto)+boton('Sí, lo mandé', "bbvaAnotar(this,'"+p.fecha+"','"+p.de+"')"));
+    }
+    h += fila('', gasto+(cHoy > 0
+      ? ' Hoy le cargaste '+num(cHoy)+' a la BBVA: súmalo al próximo abono para no mover la fecha de cero.'
+      : ' Si pagas con la BBVA, anótalo en Finanzas con «TC BBVA»: sube su saldo y el plan se mueve solo.'));
+    return '<div class="ce-caja">'+h+'</div>';
+  }
+  // ── En cero: cancelarla, y lo que iba a ella va a GBM ──
+  if(!E.cancelada){
+    return '<div class="ce-caja verde">'+cab('Tu estrategia de hoy', 'var(--g)', 'BBVA '+num(0))+
+      fila('ya', '🎉 La BBVA está en cero'+(E.fin ? ' desde el '+corta(E.fin) : '')+'. Cancélala: en la app o en sucursal, '+
+        'pide la cancelación y tu carta de no adeudo.', boton('Ya la cancelé', 'bbvaCancelar()'))+
+      fila('', 'Desde ya, lo que iba a la tarjeta va a GBM: '+aGbm+'.', boton('Qué invertir →', 'abrirGBM()', 1))+
+      fila('', gasto)+'</div>';
+  }
+  // ── Cancelada: cada peso que iba a la tarjeta, a GBM ──
+  const envio = ctAgenda(+hoyK.slice(8), ym).filter(a => a.ahorro).reduce((s,a) => s + (+a.monto||0), 0);
+  // El lunes aparta lo de Didi, salvo que ese mismo día ya se haya ido a la tarjeta.
+  const lunes = new Date(hoyK+'T12:00:00').getDay() === 1 && !(E.pagadoHoy > 0), toca = envio > 0 || lunes;
+  const hoyGbm = envio > 0 ? 'Hoy manda '+num(envio)+' a GBM: lo que sobra de la quincena.'
+    : lunes ? 'Hoy aparta '+num(CIFRAS.didiAlAhorro(ym) * 12 / 52)+' de Didi para GBM.'
+    : 'Hoy no toca envío a GBM: el siguiente es el '+(+hoyK.slice(8) < 15 ? '15' : '1')+'.';
+  const fc = E.cancelada.split('-').map(Number);
+  return '<div class="ce-caja verde">'+cab('Tu estrategia de hoy', 'var(--g)', 'este mes a GBM '+num(CIFRAS.desgloseMes(ym).ahorro))+
+    '<span class="ce-pie">BBVA cancelada el '+corta(new Date(fc[0], fc[1]-1, fc[2]))+'. Sin tarjeta, a GBM van '+aGbm+'.</span>'+
+    fila(toca ? 'toca' : '', hoyGbm, boton('Qué invertir hoy →', 'abrirGBM()', !toca))+
+    fila('', gasto)+'</div>';
+}
+/* «Ya lo mandé»: el abono se anota en Finanzas tal como lo deja «Pagar» allá —una transacción en
+   Deudas y el saldo de `d001` que baja—, con la fecha del día que tocaba y la marca `tarjeta` para que
+   borrarla en Finanzas lo devuelva. `origen`/`anotado`: lo que busca «Deshacer». Finanzas, si está
+   abierta en otra pestaña, lo relee (evento storage). */
+function bbvaAnotar(btn, fecha, de){
+  const inp = btn && btn.parentNode ? btn.parentNode.querySelector('input') : null;
+  const monto = Math.round((parseFloat(inp && inp.value) || 0) * 100) / 100;
+  if(!(monto > 0)){ if(inp) inp.focus(); return; }
+  const F = rawGet('finanzasmx_v2', null);
+  const d = F && Array.isArray(F.debts) ? F.debts.find(x => x.id === 'd001') : null;
+  if(!d) return;
+  const hoy = hoyLocal(), antes = +d.balance || 0, despues = Math.max(0, Math.round((antes - monto) * 100) / 100);
+  d.balance = despues; d.fecha = hoy;
+  (F.transactions = F.transactions || []).push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2),
+    type:'expense', desc:'Pago: '+(d.name || 'Tarjeta BBVA'), amount: monto, date: fecha || hoy, cat:'Deudas',
+    notes:'TC BBVA — '+(CE_DE[de] || 'abono')+' (anotado en el Plan Maestro)',
+    tarjeta:{ id:'d001', delta: Math.round((despues - antes) * 100) / 100 }, origen:'planmaestro', anotado: hoy });
+  ceGuardar(F);
+}
+function ceGuardar(F){
+  try{ rawSet('finanzasmx_v2', F); }catch(e){ return; }
+  D.fin = F;
+  if(window.CIFRAS) CIFRAS.refrescar();
+  detectarLogros();
+  RENDERS[cur]();
+}
+// Deshace lo último que se anotó hoy desde aquí: quita la transacción y devuelve el saldo.
+function bbvaDeshacer(){
+  const F = rawGet('finanzasmx_v2', null); if(!F) return;
+  const tx = F.transactions || [], hoy = hoyLocal();
+  let i = -1;
+  for(let k = tx.length - 1; k >= 0; k--) if(tx[k].origen === 'planmaestro' && tx[k].anotado === hoy){ i = k; break; }
+  if(i < 0) return;
+  const t = tx[i], d = (F.debts || []).find(x => t.tarjeta && x.id === t.tarjeta.id);
+  if(d){ d.balance = Math.max(0, Math.round(((+d.balance || 0) - t.tarjeta.delta) * 100) / 100); d.fecha = hoy; }
+  tx.splice(i, 1);
+  ceGuardar(F);
+}
+// Un día sin abono previsto también se puede abonar: el botón se vuelve el monto y «Ya lo mandé».
+function ceAbonar(btn){
+  const acc = btn.parentNode;
+  acc.innerHTML = '<input type="number" min="1" step="1" placeholder="monto" aria-label="Monto">'+
+    '<button type="button" class="ce-btn" onclick="bbvaAnotar(this,\''+hoyLocal()+'\',\'extra\')">Ya lo mandé</button>';
+  acc.querySelector('input').focus();
+}
+// En cero y cancelada en el banco: la tarjeta se queda en Finanzas como liquidada, con su fecha.
+function bbvaCancelar(){
+  const F = rawGet('finanzasmx_v2', null);
+  const d = F && (F.debts || []).find(x => x.id === 'd001');
+  if(!d || +d.balance > 0) return;
+  if(!confirm('¿Ya cancelaste la BBVA en el banco? Desde hoy, lo que iba a la tarjeta va a GBM.')) return;
+  d.cancelada = hoyLocal();
+  ceGuardar(F);
 }
 
 function renderCoachTablero(){
@@ -8863,7 +9031,8 @@ function renderCoachTablero(){
       });
       const pie = tjs.length
         ? 'No sale hoy: sube el saldo de '+tjs.map(d=>esc(d.name.replace(/^Tarjeta /,''))+
-            (d.day?' (mínimo '+money(+d.min||0)+' el '+d.day+')':'')).join(' y ')+'.'
+            (d.id==='d001'?' (va en '+money(+d.balance||0)+': súmalo al próximo abono)'
+              :d.day?' (mínimo '+money(+d.min||0)+' el '+d.day+')':'')).join(' y ')+'.'
         : 'No sale hoy: lo cobra el mínimo de la tarjeta.';
       return '<div style="display:flex;flex-direction:column;gap:6px;padding-top:11px;'+
         'border-top:1px solid rgba(var(--ov),.07)">'+
@@ -8906,6 +9075,8 @@ function renderCoachTablero(){
         : '<span style="font-size:10px;color:var(--text3);line-height:1.45">Faltan por salir <b class="ct-num'+
           (privado?' fin-hidden':'')+'" style="color:var(--text2)">'+money(T.falta)+'</b> '+ctRango(nSel+1,T.fin)+'.</span>')+
     '</div>'+
+
+    (dd===0 ? ctEstrategiaHtml(T, H, faltaR, mvSel) : '')+
 
     (mvSel.length
       ? (function(){
@@ -9119,7 +9290,7 @@ function renderCoach(){
     {n:2,ico:'💳',lbl:'Banamex',done:banaDone,pct:banaPct,
      txt:banaDone?liq('banamex-liquidada'):banaVuelve?otraVez(bana,'banamex-liquidada'):(bana.found?money(bana.balance)+' restante':'Sin datos en Finanzas')},
     {n:3,ico:'💳',lbl:'BBVA TC',done:bbvaDone,pct:bbvaPct,
-     txt:bbvaDone?liq('bbva-liquidada'):bbvaVuelve?otraVez(bbva,'bbva-liquidada'):(bbva.found?money(bbva.balance)+(bbvaPlan()?' · en cero el '+bbvaPlan().fin.toLocaleDateString('es-MX',{day:'numeric',month:'short'}):' restante'):'Sin datos en Finanzas')},
+     txt:bbvaDone?liq('bbva-liquidada')+(bbva.cancelada?' · cancelada':''):bbvaVuelve?otraVez(bbva,'bbva-liquidada'):(bbva.found?money(bbva.balance)+(bbvaPlan()?' · en cero el '+bbvaPlan().fin.toLocaleDateString('es-MX',{day:'numeric',month:'short'}):' restante'):'Sin datos en Finanzas')},
   ];
   // Un solo paso activo: el primero sin terminar. Antes cada paso calculaba su propio `activo`
   // encadenado al anterior (`efDone&&!banaDone`), y al quedar Banamex liquidada con el fondo
@@ -12690,7 +12861,7 @@ function kpiDetalle(id){
 
 function metaDebtInfo(matcher){
   const d=(D.fin.debts||[]).find(matcher);
-  return d?{balance:d.balance||0,total:d.total||d.balance||0,found:true}:{balance:0,total:0,found:false};
+  return d?{balance:d.balance||0,total:d.total||d.balance||0,found:true,cancelada:d.cancelada||null}:{balance:0,total:0,found:false};
 }
 function renderMetasSlide(){
   // La meta del fondo sale de datos-maestros.js: este KPI se arma en JS y no pasa por
@@ -14177,7 +14348,7 @@ document.addEventListener('keydown',e=>{
   },{passive:true});
 })();
 
-window.addEventListener('storage',()=>{loadAll();RENDERS[cur]();renderQuickApps();});
+window.addEventListener('storage',()=>{loadAll();if(window.CIFRAS)CIFRAS.refrescar();RENDERS[cur]();renderQuickApps();});
 
 // ── Reloj vivo ───────────────────────────────────────────────────────────
 let lastSync=Date.now();

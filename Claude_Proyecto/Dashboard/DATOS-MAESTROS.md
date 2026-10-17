@@ -70,7 +70,8 @@ desayuno: `SUPUESTOS.comidaEnCasa` al mes. Lo decide `comerEnMes(ym, come)`, que
 tablero del Dashboard.
 
 Junto a ella viajan sus piezas, para que nadie las reimplemente: `agendaDia`, `palabras`,
-`norm`, `yaContado`, `esNomina`.
+`norm`, `yaContado`, `esNomina`, y la regla de la tarjeta: `tarjetaDe` y `movimientoTarjeta` (ver
+*La tarjeta se mueve con lo que se anota*).
 
 `agendaDia` pone el mínimo de cada deuda en su día, salvo una tarjeta que se paga completa
 (`noInterest`): en su **próximo** pago sale el total para no generar intereses; los meses de
@@ -78,7 +79,10 @@ después siguen con el mínimo, porque esos estados de cuenta todavía no existe
 de pago no lleva ninguno de los dos**: desde `PROYECTO.bbvaFecha` la pintan los abonos de
 `planBbva` —el día 1 y el 15, lo que sobra de la quincena (y el envío a GBM de ese día baja en lo
 mismo); el día de pago, lo que pide el estado de cuenta, que paga Didi—, con `tarjeta: true` y `de`. Lo que Didi aparta
-cada lunes no pasa por el calendario.
+cada lunes no pasa por el calendario. Un día con un pago anotado dice lo que se mandó de verdad
+(*lo que mandaste de la quincena*, o *un abono de más* si ese día no tocaba nada), con `hecho`; el
+envío a GBM de ese día baja en lo **previsto**: si se mandó menos, la diferencia se queda en la
+cuenta para la quincena, no se va a GBM mientras la tarjeta tenga saldo.
 Si un cobro cae en un mes lo decide `caeEnMes` —`cada`, `desde` y `hasta`; sin `cada`, `desde` es
 el primer mes en que cae—, el mismo predicado que usa el desglose de la proyección.
 
@@ -185,8 +189,49 @@ cero, y el día de pago se cubre, con lo de Didi, lo que pide el estado de cuent
 IVA y cada abono lo pagaría primero, así el último no deja centavos. Con los números de hoy, desde
 los $9,900 del 14 de octubre: $6,950 el 15, $1,154 de Didi los lunes 19 y 26 y $642 el 1 de noviembre
 (el resto de esa quincena, a GBM); queda en cero el `{{bbvaCero}}` (1 nov 2026) con `{{bbvaIntereses}}` ($0) de
-intereses. Desde ahí, lo que pague con la tarjeta se paga en la misma quincena, dentro de su gasto
-personal.
+intereses. En cero se cancela (Adán, 15-oct-2026: *"después que la liquide la cancelo y de ahí nos
+vamos a incrementar números en inversiones"*) y lo que iba a ella va a GBM.
+
+**Con Finanzas en el navegador, el plan sigue al saldo vivo** (Adán, 15-oct-2026: *"debe
+actualizarse lo de tarjeta de bbva solito, en base a cuánto gasto y cuánto gano cada día"*): arranca
+HOY del saldo de `d001` que lleva Finanzas, que se mueve con cada compra y cada pago anotados. Los
+días entre el último saldo dicho y hoy llevan lo pagado (`hecho`, con lo previsto en `plan`) donde
+hay un pago anotado, y lo previsto donde no; lo previsto que no se anotó **no** cuenta para la fecha
+de cero (el saldo vivo no lo trae), y el Plan Maestro pregunta si se mandó. `desgloseMes` cuenta un
+abono hecho por lo previsto —es el presupuesto— y uno de más no entra. Sin datos (el verificador,
+un navegador en blanco) es el plan puro desde `bbvaSaldoFecha`, idéntico al de antes. Se calcula
+una vez por día y por lectura de Finanzas (`planCache`): lo piden el calendario y el riel día por
+día. Con la tarjeta en cero, `fin` es el día en que llegó ahí (su último movimiento).
+
+### La tarjeta se mueve con lo que se anota
+
+Una sola regla para Finanzas y el Dashboard. **`tarjetaDe(t, debts)`**: la tarjeta de crédito que
+nombra un gasto —en la nota (*TC BBVA*) o, si es un pago en `Deudas`, también en la descripción
+(*Pago: Tarjeta BBVA*)—; *débito* en la nota es la cuenta, y una tarjeta con `cancelada` ya no se
+nombra. El Dashboard la usa para saber qué no sale de la caja ese día. **`movimientoTarjeta(t, debts,
+ahora)`**: lo que le hace a su saldo, `{id, delta}` —una compra suma, un pago resta—; una compra a
+meses (*MSI*) es su propia deuda y no lo toca. Solo cuenta lo fechado **después** del último saldo
+que dijo Adán (`corteTarjeta`: `saldoAl` de la deuda, sus `liquidaciones` y, para la BBVA,
+`bbvaSaldoFecha`), porque ese saldo ya traía lo de ese día y lo de antes; `ahora` es un pago que se
+hace en el momento («Pagar» en Finanzas, «Ya lo mandé» en el Plan Maestro) y cuenta con la fecha
+que lleve. El **control 36** del verificador vigila que la regla siga siendo una sola: ni Finanzas ni el
+Dashboard vuelven a buscar por su cuenta las palabras de las tarjetas.
+
+Lo que guarda cada uno en `finanzasmx_v2`:
+
+| Campo | Dónde | Qué es |
+|---|---|---|
+| `tarjeta: {id, delta}` | transacción | lo que le aplicó a la tarjeta, para deshacerlo al editarla o borrarla; `null` si no movió nada. Las anotadas antes de la regla no lo llevan y no mueven saldos |
+| `origen: 'planmaestro'`, `anotado` | transacción | la anotó «Ya lo mandé» del Plan Maestro ese día: lo que busca «Deshacer» |
+| `fecha` | deuda | el día de su último movimiento |
+| `saldoAl` | deuda | el día en que se escribió su saldo a mano en Finanzas: un saldo dicho |
+| `cancelada` | deuda | el día que se canceló, ya en $0 |
+
+**`bbvaEstado()`** es lo que el Plan Maestro le dice cada día: el saldo vivo, el día que queda en
+cero, lo que toca hoy (`hoy`) o lo ya mandado hoy (`pagadoHoy`), lo previsto sin anotar
+(`pendientes`, desde el último pago anotado: ese pago ya responde por lo de antes), el abono
+`siguiente` y `cancelada`. Un pago a la BBVA posterior al último saldo dicho lo pone el plan en su
+día, así que `yaContado` lo da por contado aunque se llame distinto.
 
 **El 21-sep-2026 se liquidaron tres de golpe**: el Apple Watch (`d004`, su última cuota era la del
 18 sep), los zapatos (`d009`, el último MSI vivo de la TC BBVA) y la deuda del departamento (`d012`).
@@ -982,6 +1027,8 @@ Ninguna estructura está copiada entre archivos; todas se leen de aquí:
 | `fondoMaestria(f)` | El dinero de la maestría: el fondo de emergencia (CETES), las inversiones de Finanzas (hoy el depósito de la renta) y el Bitcoin a precio de hoy. Lo usan `{{maestria}}`, Mis Metas, los indicadores de Finanzas, Coach y el contexto de *Qué invertir hoy* | `CIFRAS.fondoMaestria(f)` |
 | `diasFase(f, hoy)` · `diasHasta(fecha, hoy)` | Los días de una fase en días de calendario —`largo`, `corrido` (hoy ya corre), `quedan`, `pct`, `semanas`, `semanasQuedan`— y los días entre hoy y una fecha, de medianoche a medianoche. Los usan el tablero, el calendario, la ventana de las fases, Mis Metas y Coach | `CIFRAS.diasFase()`, `CIFRAS.diasHasta()` |
 | `avanceBbva(f)` | Lo pagado de la BBVA desde el saldo con que arrancó su plan quincena a quincena (`PROYECTO.bbvaInicio` el día `PROYECTO.bbvaFecha`, que no se mueven con cada saldo nuevo): la cifra de la ruta de deuda y el medidor de Deuda cara | `CIFRAS.avanceBbva(f)` |
+| `tarjetaDe(t, debts)` · `movimientoTarjeta(t, debts, ahora)` | La regla de la tarjeta: qué tarjeta de crédito nombra un movimiento y lo que le hace a su saldo. Finanzas mueve el saldo con ella; el Dashboard sabe qué no sale de la caja | `CIFRAS.tarjetaDe()`, `CIFRAS.movimientoTarjeta()` |
+| `bbvaEstado()` | La BBVA de hoy para la estrategia del Plan Maestro: saldo vivo, fecha de cero, lo que toca hoy, lo mandado hoy, lo previsto sin anotar, el abono siguiente y si está cancelada | `CIFRAS.bbvaEstado()` |
 | `deudasConInteres(f)` | Las deudas a las que de verdad les corre interés: la BBVA no mientras `PROYECTO.bbvaSinIntereses`. *Con interés* en Mis Metas, la regla de *Qué invertir hoy* y su panel | `CIFRAS.deudasConInteres(f)` |
 | `liquidaciones` (en una deuda de `DEUDAS_SEED`) | Cada fecha en que esa deuda quedó en $0: la Banamex, `['2026-08-13','2026-09-30']`. La ruta de deuda dice la última y cuántas | `CIFRAS.DEUDAS_SEED` |
 | `LISTA_COMPRAS` | Catálogo de compras por pasillos — 7 categorías; `comida` en 7 pasillos, con `Verduras` / `Frutas` / `Almidones y grasas` separados para colorear los frescos por clase y sumar la fruta+verdura por día | `CIFRAS.LISTA_COMPRAS` |

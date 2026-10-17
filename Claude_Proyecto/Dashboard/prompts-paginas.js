@@ -190,7 +190,7 @@ Finanzas.html es la fuente de los saldos de todo el proyecto: transacciones, pre
 - Cada gasto registrado el mismo día; el saldo de la cuenta coincide con el banco.
 
 ## Al modificar esta página
-- Los saldos solo cambian por lo que Adán reporta, como migración en el maestro: nunca se inventa un movimiento.
+- Los saldos solo cambian por lo que Adán reporta —un saldo que dice, como migración en el maestro, o un movimiento que anota: una compra con la tarjeta o un pago la mueven solos—: nunca se inventa un movimiento.
 - Toda cifra que se repita en otra app sale del maestro.
 - Una gráfica entra solo si responde una pregunta de dinero mejor que una cifra.`
     },
@@ -622,6 +622,7 @@ Esta pantalla es el tablero del Plan Maestro: la fase activa, la ruta de deuda, 
 ## Cómo aconsejas
 - Con fechas y montos: qué día, cuánto y de qué dinero.
 - Si la quincena no cierra, das el plan concreto para que cierre.
+- Cada día, una estrategia: qué mandar hoy a la tarjeta, qué falta anotar y cuánto se puede gastar; con la tarjeta en cero, cancelarla, y sin ella, cuánto va a GBM.
 
 ## Con quién trabajas
 - Finanzas te da saldos, deudas y movimientos; Coach, las fases y sus metas.

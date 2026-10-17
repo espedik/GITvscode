@@ -622,6 +622,7 @@ Ningún importe está escrito en el código del tablero:
 | Gasto e ingreso de cada día | `finanzasmx_v2.transactions`, agrupadas por fecha en `ctMovs(ym)` |
 | Color de cada categoría | `CT_COLOR`, los mismos hex que `CCOLORS` de Finanzas |
 | Pagos programados de un día | `CIFRAS.CALENDARIO.cobros` + el `day` de cada deuda viva + los abonos de la BBVA de `CIFRAS.planBbva` (`ctAgenda`) |
+| Tu estrategia de hoy | `CIFRAS.bbvaEstado()` (el saldo vivo de la BBVA y su plan) + el riel (`ctTramo`) |
 | Tareas y fase | `PHASES`, con su estado en `coach_checks_v1` |
 | Costo de comer, por día | `CIFRAS.PRECIOS_SUPER` (aquí, `LISTA_COMPRAS_PRECIOS`) × `CIFRAS.LISTA_COMPRAS.comida` (`ctComida`) |
 
@@ -635,7 +636,7 @@ septiembre; en el presupuesto mensual entra por la mitad, `gasMensual`). El veri
 que **todo gasto fijo de `PROYECTO` con importe caiga algún día de `CALENDARIO.cobros`**: un
 servicio nuevo sin día ya no sale de la cuenta sin que ninguna pantalla lo vea.
 
-Desde octubre de 2026 el calendario trae también **el plan**: el ahorro de cada quincena a GBM (en verde, `ahorro: true`) y, desde febrero de 2027, el aporte a tu familia del día 1. Salen de la quincena como cualquier cobro, así que lo que el riel dice que te queda ya es tu gasto personal. **Mientras la BBVA tenga saldo**, lo que sobra de la quincena va a ella: el día 1 y el 15 sale *Tarjeta BBVA — lo que sobra de la quincena* y el envío a GBM de ese día baja en lo mismo; el día de pago, *el pago del 11, con lo de Didi* —lo que pide el estado de cuenta para no generar intereses—. Ya no se pinta el total de la tarjeta el día 11 (Adán: *"me estás diciendo de pagar mi tarjeta pero ni tengo dinero… eso debe ser cada quincena"*).
+Desde octubre de 2026 el calendario trae también **el plan**: el ahorro de cada quincena a GBM (en verde, `ahorro: true`) y, desde febrero de 2027, el aporte a tu familia del día 1. Salen de la quincena como cualquier cobro, así que lo que el riel dice que te queda ya es tu gasto personal. **Mientras la BBVA tenga saldo**, lo que sobra de la quincena va a ella: el día 1 y el 15 sale *Tarjeta BBVA — lo que sobra de la quincena* y el envío a GBM de ese día baja en lo mismo; el día de pago, *el pago del 11, con lo de Didi* —lo que pide el estado de cuenta para no generar intereses—. Un día con el pago anotado dice lo que se mandó: *lo que mandaste de la quincena*, o *un abono de más*. Ya no se pinta el total de la tarjeta el día 11 (Adán: *"me estás diciendo de pagar mi tarjeta pero ni tengo dinero… eso debe ser cada quincena"*).
 
 ### El mes
 
@@ -747,18 +748,48 @@ desglose siga abierto al repintar, y al abrirse hace `scrollIntoView({block:'nea
 1. **Lo que pagas el 18** — comer y los pagos que caen, con el total del día.
 2. **De dónde sale ese saldo** — la resta explícita: entró el 15 `+$20,500`, salió del 15 al 18
    `−$10,164`, te queda `$10,336`, falta por salir `$1,662` del 19 al 31.
+3. **Tu estrategia de hoy** — solo cuando el día es hoy (ver abajo).
 
 **Los gastos registrados en Finanzas que la agenda no conoce entran en la resta** (`ctTramo`,
 `ctQuincena` y la semana los suman), con **borde punteado**: un cobro programado va a caer, uno
 punteado ya cayó.
 
-**Una compra a crédito no es una salida de caja.** Sube el saldo de la tarjeta (que ya vive en la
-deuda) y se paga después con el mínimo que la agenda ya cobra; restarla el día de la compra sería
-contar dos veces. Salen en su propio bloque bajo el total, en gris, con el pie *"No sale hoy: sube
-el saldo de Banamex (mínimo $810 el 8)"*. Se reconocen por la **nota** de la transacción: si nombra
-una tarjeta de crédito del maestro, fue a crédito (convención documentada en `readme_finanzas.md`).
-⚠️ **Excepción: la categoría `Deudas`** — ahí la nota también nombra la tarjeta, pero es un PAGO a
-la tarjeta y sí sale del bolsillo.
+**Una compra a crédito no es una salida de caja.** Sube el saldo de la tarjeta —Finanzas lo mueve
+al anotarla— y se paga después; restarla el día de la compra sería contar dos veces. Salen en su
+propio bloque bajo el total, en gris, con el pie *"No sale hoy: sube el saldo de BBVA (va en $3,450:
+súmalo al próximo abono)"* —o el mínimo y su día, en otra tarjeta—. La regla es la del maestro,
+`ctTarjetaDe()` → `CIFRAS.tarjetaDe`: la **nota** nombra una tarjeta de crédito viva (convención en
+`readme_finanzas.md`); *débito* es la cuenta. ⚠️ **Excepción: la categoría `Deudas`** — ahí la nota
+también nombra la tarjeta, pero es un PAGO a la tarjeta y sí sale del bolsillo.
+
+### Tu estrategia de hoy
+
+Adán, 15-oct-2026: *"cada día debo tener una estrategia para seguir bien en los números"*. Un bloque
+al pie de la columna del día cuando ese día es hoy (`ctEstrategiaHtml`), con lo que hay que hacer;
+el saldo y el plan salen de `CIFRAS.bbvaEstado()` y el tope de gasto del riel:
+
+- **Con saldo en la BBVA** (ámbar): el saldo vivo, lo pagado desde los $15,000 con su barra y el día
+  en que quedará en cero. Debajo, **lo de hoy**: *Hoy manda $6,950 a la BBVA: lo que sobra de la
+  quincena* con el monto editable y **Ya lo mandé** (`bbvaAnotar`); si con el abono completo la
+  quincena no cierra, sugiere lo que la deja en cero, no en rojo. Un día sin abono dice el siguiente y
+  ofrece **Abonar** (`ceAbonar`). **Sin anotar**: lo previsto que no se anotó, el más viejo primero,
+  con **Sí, lo mandé** (se anota con la fecha del día que tocaba); mientras no se anote, la fecha de
+  cero no lo cuenta. Lo anotado hoy desde aquí se puede **Deshacer** (`bbvaDeshacer`). Al final, el
+  tope de gasto (*hasta $270 al día hasta el 31*, o *nada fuera de lo fijo* si la quincena no cierra),
+  lo cargado hoy a la BBVA (*súmalo al próximo abono*) y, si entró dinero que no es nómina, cuánto
+  apartar: el porcentaje que el plan guarda de Didi (`didiAlAhorro` entre `didiMes`).
+- **En cero** (verde): *Cancélala* —en la app o en sucursal, con su carta de no adeudo— y **Ya la
+  cancelé** (`bbvaCancelar`, pone `cancelada` en `d001`); y lo que desde ya va a GBM.
+- **Cancelada**: lo que va a GBM este mes (`desgloseMes`), el envío de hoy —el día 1 y el 15 lo de
+  la quincena, el lunes lo de Didi— y *Qué invertir hoy* (`abrirGBM`).
+
+«Ya lo mandé» anota en Finanzas lo mismo que «Pagar» allá: una transacción en `Deudas` y el saldo de
+`d001` que baja, con `tarjeta`, `origen` y `anotado` (ver *La tarjeta se mueve con lo que se anota* en
+`DATOS-MAESTROS.md`); `ceGuardar` la guarda, relee el maestro y repinta. Finanzas abierta en otra
+pestaña la relee por el evento `storage`, y el Dashboard igual: su listener también refresca la caché
+del maestro. Medido a 2048×1040: el bloque mide 512×189 px el 15 (con abono) y 512×244 con un
+pendiente, y la columna no se desplaza; a 1600, 390×291; a 1366×768 la columna se desplaza 216 px
+(ya lo hacía), y a 390 px no hay desborde horizontal.
 
 ### No contar dos veces
 
@@ -771,6 +802,7 @@ cuatro caminos:
 | mismo nombre, en cualquier orden | "Agua y luz" es "Luz y agua"; el internet se anota el 1 y se cobra el 8 |
 | dos palabras en común, aunque cambie el importe | "Plan de datos celular" $600 es "Plan de datos AT&T" $650 |
 | una palabra en común **y** el importe clavado | "Gas" $179 |
+| un pago a la BBVA posterior a su último saldo dicho | lo pone el plan en su día (`pagoBbva`), se llame como se llame |
 
 Lo que no encaja en ninguna ("Tenis Tommy Hilfiger") es gasto real que la agenda no puede conocer.
 
@@ -833,7 +865,8 @@ propio estado: `toggleFaseCheck(id, this.checked)`.
 
 Los pasos van en su orden —fondo, Banamex, BBVA— y uno solo está activo: el primero sin terminar,
 salvo **mientras corre el plan de la BBVA**, que la vuelve el paso activo y dice *$9,900 · en cero
-el 1 nov*. El fondo se queda en lo que tiene: el ahorro de cada quincena ya no va a CETES.
+el 1 nov* —el saldo vivo y la fecha del plan, que se mueven con lo que se anota—; cancelada, *Liquidada
+🎉 · 19 oct 2026 · cancelada*. El fondo se queda en lo que tiene: el ahorro de cada quincena ya no va a CETES.
 
 **La cifra de la derecha es lo pagado de la BBVA** desde el saldo con que arrancó su plan
 (`CIFRAS.avanceBbva()`: `PROYECTO.bbvaInicio` el día `PROYECTO.bbvaFecha`, hoy 34 % de $15,000), la misma que el medidor de

@@ -2545,6 +2545,30 @@ function promptsDeLoTocado() {
   else ok.push('Gimnasio: el hábito toca los ' + sesion.length + ' días con sesión de la rutina (' + sesion.map(function (d) { return DIA[d]; }).join(', ') + ')');
 })();
 
+/* ── 36. La regla de la tarjeta vive en el maestro ─────────────────────────────────────────────────
+   Una compra con «TC BBVA» en la nota sube el saldo de la tarjeta y un pago lo baja (Adán, 15-oct-2026:
+   "debe actualizarse lo de tarjeta de bbva solito, en base a cuánto gasto y cuánto gano cada día"). La
+   regla es una sola, `tarjetaDe` / `movimientoTarjeta` en datos-maestros.js: Finanzas mueve el saldo con
+   ella y el Dashboard decide con ella qué no sale de la caja. Si una de las dos vuelve a buscar por su
+   cuenta las palabras de las tarjetas, las dos apps dejan de estar de acuerdo sobre qué fue a crédito. */
+(function () {
+  const fin = leer('Finanzas/Finanzas.html'), mal = [];
+  if (dash.indexOf('CIFRAS.tarjetaDe(') === -1) mal.push('el Dashboard ya no usa CIFRAS.tarjetaDe');
+  if (fin.indexOf('CIFRAS.movimientoTarjeta(') === -1) mal.push('Finanzas ya no usa CIFRAS.movimientoTarjeta');
+  // Una copia de la regla: filtrar las tarjetas de crédito y buscar las palabras de su nombre a mano.
+  [['Dashboard/dashboard.html', dash], ['Finanzas/Finanzas.html', fin]].forEach(function (a) {
+    let i = -1;
+    while ((i = a[1].indexOf("'credit_card'", i + 1)) !== -1) {
+      if (/alabras\(\s*d\.name/.test(a[1].slice(i, i + 320))) { mal.push(a[0] + ' busca otra vez las palabras de las tarjetas (línea ' + a[1].slice(0, i).split('\n').length + ')'); break; }
+    }
+  });
+  // «Ya lo mandé» deja la marca con la que Finanzas puede deshacer el pago.
+  const anota = (dash.match(/function bbvaAnotar\([\s\S]*?\n\}/) || [''])[0];
+  if (!/tarjeta:\s*\{\s*id:\s*'d001'/.test(anota)) mal.push('bbvaAnotar ya no guarda la marca `tarjeta` en la transacción');
+  if (mal.length) problemas.push('La regla de la tarjeta dejó de ser una sola:\n     ' + mal.join('\n     '));
+  else ok.push('Tarjeta: una sola regla (CIFRAS.tarjetaDe / movimientoTarjeta) para Finanzas y el Dashboard; «Ya lo mandé» deja su marca');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

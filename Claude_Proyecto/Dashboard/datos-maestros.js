@@ -876,13 +876,37 @@ window.CIFRAS = (function () {
      a la tasa de la tarjeta más IVA, se carga el día de pago y, al llegar a cero, lo que quedaba va
      con el abono siguiente. Devuelve cada abono con su fecha y de dónde sale (`quincena`, `didi` o
      `minimo`), el día que queda en cero, lo que cuesta en intereses y el saldo al cerrar cada mes.
-     Lo leen `agendaDia` (el calendario), `desgloseMes` y `proyectar`: una sola cuenta. */
+     Lo leen `agendaDia` (el calendario), `desgloseMes` y `proyectar`: una sola cuenta.
+     Con Finanzas en el navegador sigue al saldo VIVO (Adán, 15-oct-2026: "debe actualizarse lo de
+     tarjeta de bbva solito, en base a cuánto gasto y cuánto gano cada día"): Finanzas mueve `d001`
+     con cada compra y cada pago que se anotan (`movimientoTarjeta`) y el plan arranca HOY de ese
+     saldo. Un día con un pago anotado después del último saldo dicho lleva lo pagado (`hecho`, con
+     lo previsto en `plan`) en vez de lo previsto, y lo previsto que no se anotó es lo que el Plan
+     Maestro pregunta si ya se mandó (`bbvaEstado`). Sin datos —el verificador, un navegador en
+     blanco— es el plan puro desde `bbvaSaldoFecha`. Se calcula una vez por día y por lectura de
+     Finanzas: lo piden el calendario y el riel día por día. */
+  let planCache = null;
   function planBbva() {
+    const hoyK = fechaLocal();
+    if (planCache && planCache.fin === fin && planCache.hoy === hoyK) return planCache.out;
     const P = PROYECTO, tc = DEUDAS_SEED.filter(function (d) { return d.id === 'd001'; })[0];
-    const out = { abonos: [], fin: null, intereses: 0, saldoMes: {}, desde: P.bbvaFecha || null };
-    if (!tc || !(+tc.balance > 0) || !P.bbvaFecha) return out;
+    const vivo = fin && Array.isArray(fin.debts) ? fin.debts.filter(function (d) { return d.id === 'd001'; })[0] : null;
+    const conVivo = !!vivo && !!P.bbvaSaldoFecha && hoyK >= P.bbvaSaldoFecha;
+    const out = { abonos: [], fin: null, intereses: 0, saldoMes: {}, desde: P.bbvaFecha || null, vivo: conVivo };
+    planCache = { fin: fin, hoy: hoyK, out: out };
+    if (!tc || !P.bbvaFecha || (!conVivo && !(+tc.balance > 0))) return out;
     const diario = P.bbvaSinIntereses ? 0 : (+tc.rate || 0) / 100 * 1.16 / 365, min = +tc.min || 0, diaPago = +tc.day || 0;
     const p = P.bbvaFecha.split('-').map(Number), d = new Date(p[0], p[1] - 1, p[2]);
+    const r2 = function (x) { return Math.round(x * 100) / 100; };
+    // Lo pagado de verdad cada día, del último saldo dicho a hoy, y —con la tarjeta ya en cero— el
+    // día en que llegó ahí: su último movimiento o su último pago.
+    const pagos = {};
+    if (conVivo) (fin.transactions || []).forEach(function (t) {
+      const m = pagoBbva(t, fin.debts);
+      if (m > 0 && t.date <= hoyK) pagos[t.date] = (pagos[t.date] || 0) + m;
+    });
+    const cero = conVivo && !(+vivo.balance > 0)
+      ? [vivo.fecha, Object.keys(pagos).sort().pop(), P.bbvaSaldoFecha].filter(function (x) { return x && x <= hoyK; }).sort().pop() : null;
     // `acum` es el interés que corre y todavía no se carga: cada abono lo paga primero, así el
     // último deja la tarjeta en cero de verdad y no un residuo de centavos para la quincena siguiente.
     let saldo = +P.bbvaInicio || +tc.balance, acum = 0, ciclo = 0;
@@ -893,22 +917,60 @@ window.CIFRAS = (function () {
       acum -= aInteres; saldo -= x - aInteres; ciclo += x;
       out.abonos.push({ fecha: mesDe(d) + '-' + String(d.getDate()).padStart(2, '0'), monto: x, de: de });
     };
+    const ORDEN = { quincena: 0, minimo: 1, didi: 2 };
     for (let k = 0; k < 730; k++, d.setDate(d.getDate() + 1)) {
       const ym = mesDe(d), dia = d.getDate();
       if (k > 0) { const i = saldo * diario; acum += i; out.intereses += i; }
-      const hoyEs = ym + '-' + String(dia).padStart(2, '0'), anclado = !P.bbvaSaldoFecha || hoyEs >= P.bbvaSaldoFecha;
-      if (hoyEs === P.bbvaSaldoFecha) { saldo = +tc.balance; acum = 0; }   // el saldo real manda
-      if (dia === diaPago) {
-        saldo += acum; acum = 0;
-        if (k > 0 && ciclo < min) abona(min - ciclo, 'minimo');
-        ciclo = 0;
+      const hoyEs = ym + '-' + String(dia).padStart(2, '0');
+      const anclado = conVivo ? hoyEs >= hoyK : (!P.bbvaSaldoFecha || hoyEs >= P.bbvaSaldoFecha);
+      if (hoyEs === P.bbvaSaldoFecha) { saldo = +tc.balance; acum = 0; }   // el último saldo que dijo Adán
+      if (conVivo && hoyEs === hoyK) { saldo = Math.max(0, +vivo.balance || 0); acum = 0; }   // y hoy, el de Finanzas
+      if (dia === diaPago) { saldo += acum; acum = 0; }
+      // Lo que toca ese día: completar el pago del día de corte, lo de Didi del lunes y la quincena.
+      const toca = [];
+      if (dia === diaPago && k > 0 && ciclo < min) toca.push({ de: 'minimo', m: min - ciclo });
+      if (k > 0 && d.getDay() === 1) toca.push({ de: 'didi', m: didiAlAhorro(ym) * 12 / 52 });
+      if (dia === 1 || dia === 15) toca.push({ de: 'quincena', m: envioQuincena(dia, ym) });
+      const pagado = pagos[hoyEs] || 0;
+      if (pagado > 0) {
+        // Lo pagado, repartido en lo que tocaba —primero la quincena, después el pago del corte y al
+        // final lo de Didi—; lo que pasa de ahí va con el primero, y si ese día no tocaba nada es un
+        // abono de más. Hoy el saldo vivo ya lo trae; los días de antes se descuenta aquí.
+        const filas = toca.filter(function (x) { return x.m >= 1; })
+          .sort(function (a, b) { return ORDEN[a.de] - ORDEN[b.de]; })
+          .map(function (x) { return { de: x.de, plan: x.m, monto: 0 }; });
+        if (!filas.length) filas.push({ de: 'extra', plan: 0, monto: 0 });
+        let resta = pagado;
+        filas.forEach(function (x) { x.monto = Math.min(resta, x.plan); resta -= x.monto; });
+        filas[0].monto += resta;
+        filas.forEach(function (x) {
+          if (x.monto > 0) out.abonos.push({ fecha: hoyEs, monto: r2(x.monto), de: x.de, plan: r2(x.plan), hecho: true });
+        });
+        if (!(conVivo && hoyEs === hoyK)) saldo = Math.max(0, saldo - pagado);
+        if (dia === diaPago) ciclo = 0;
+        ciclo += pagado - filas.filter(function (x) { return x.de === 'minimo'; }).reduce(function (s, x) { return s + x.monto; }, 0);
+      } else {
+        toca.filter(function (x) { return x.de === 'minimo'; }).forEach(function (x) { abona(x.m, x.de); });
+        if (dia === diaPago) ciclo = 0;
+        toca.filter(function (x) { return x.de !== 'minimo'; }).forEach(function (x) { abona(x.m, x.de); });
       }
-      if (k > 0 && d.getDay() === 1) abona(didiAlAhorro(ym) * 12 / 52, 'didi');
-      if (dia === 1 || dia === 15) abona(envioQuincena(dia, ym), 'quincena');
       out.saldoMes[ym] = saldo + acum;
-      if (saldo + acum < 1 && anclado) { out.fin = new Date(d.getFullYear(), d.getMonth(), d.getDate()); out.saldoMes[ym] = 0; break; }
+      if (saldo + acum < 1 && anclado) {
+        const c = cero ? cero.split('-').map(Number) : null;
+        out.fin = c ? new Date(c[0], c[1] - 1, c[2]) : new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        out.saldoMes[ym] = 0; break;
+      }
     }
     return out;
+  }
+  /* Un pago a la BBVA anotado DESPUÉS del último saldo que dijo Adán: lo que el plan pone en su día
+     en vez del abono previsto. Lo marca lo que Finanzas o el Plan Maestro le aplicaron al saldo
+     (`tarjeta`); uno anotado antes de esa marca se reconoce por la regla de siempre. */
+  function pagoBbva(t, debts) {
+    if (!t || t.type !== 'expense' || t.cat !== 'Deudas' || !(String(t.date || '') > String(PROYECTO.bbvaSaldoFecha || ''))) return 0;
+    if (t.tarjeta) return t.tarjeta.id === 'd001' ? +t.amount || 0 : 0;
+    const m = movimientoTarjeta(t, debts, true);
+    return m && m.id === 'd001' ? +t.amount || 0 : 0;
   }
   // Lo que un día de quincena manda a GBM según el calendario, antes de que la tarjeta tome su parte.
   function envioQuincena(dia, ym) {
@@ -956,12 +1018,14 @@ window.CIFRAS = (function () {
     if (opts.promedio) GRUPOS_SUELDO.forEach(function (x) { g[x[0]] = Math.round(g[x[0]]); });
     // La BBVA con plan: lo que se lleva de cada quincena sale del ahorro de ese mes y va en su
     // propio renglón; lo que se lleva de Didi (los lunes y el mínimo del día de pago), de Didi.
+    // Es el presupuesto: un abono ya hecho cuenta por lo previsto (`plan`), y uno de más no entra.
     let deDidi = 0;
     planBbva().abonos.forEach(function (a) {
       if (a.fecha.slice(0, 7) !== mes) return;
-      if (a.de !== 'quincena') { deDidi += a.monto; return; }
-      g.tarjeta += a.monto; g.ahorro -= a.monto;
-      if (+a.fecha.slice(8) < 15) dia1 -= a.monto; else dia15 -= a.monto;
+      const m = a.hecho ? a.plan : a.monto;
+      if (a.de !== 'quincena') { deDidi += m; return; }
+      g.tarjeta += m; g.ahorro -= m;
+      if (+a.fecha.slice(8) < 15) dia1 -= m; else dia15 -= m;
     });
     const cetes = g.ahorro - dia1 - dia15;
     g.ahorro -= s.menosAhorro || 0;
@@ -4748,11 +4812,50 @@ window.CIFRAS = (function () {
     return String(s || '').toLowerCase().split(/[^a-záéíóúüñ0-9]+/).filter(Boolean).sort().join(' ');
   }
 
+  /* ── La tarjeta de crédito que nombra un movimiento, y lo que le hace a su saldo ─────────────
+     La convención de Finanzas («Transacciones» en readme_finanzas.md): lo pagado con tarjeta de
+     crédito la nombra en la nota («TC BBVA»), y un pago a la tarjeta va en Deudas y la nombra en la
+     nota o en la descripción («Pago: Tarjeta BBVA»). Una sola regla para las dos apps: el Dashboard
+     la usa para saber qué no sale de la caja ese día y Finanzas para mover el saldo de la tarjeta
+     (Adán, 15-oct-2026: "debe actualizarse lo de tarjeta de bbva solito, en base a cuánto gasto y
+     cuánto gano cada día"). «Débito» en la nota es la cuenta, no la tarjeta, y una tarjeta cancelada
+     (`cancelada`) ya no se nombra: su banco en una nota es la cuenta de débito. */
+  function tarjetaDe(t, debts) {
+    if (!t || t.type !== 'expense') return null;
+    const txt = (String(t.notes || '') + (t.cat === 'Deudas' ? ' ' + String(t.desc || '') : '')).toLowerCase();
+    if (/d[eé]bito/.test(txt)) return null;
+    return (debts && debts.length ? debts : deudas()).filter(function (d) {
+      return d.type === 'credit_card' && !d.cancelada &&
+        palabras(d.name).some(function (w) { return w !== 'tarjeta' && txt.indexOf(w) !== -1; });
+    })[0] || null;
+  }
+  /* Lo que el movimiento le hace al saldo de su tarjeta: `{id, delta}` —una compra suma, un pago
+     (Deudas) resta— o null. Una compra a meses sin intereses es su propia deuda (`type:'other'`) y
+     no toca el saldo de la tarjeta. Solo cuenta lo anotado con fecha POSTERIOR al último saldo que
+     dijo Adán (`corteTarjeta`): ese saldo ya traía lo de ese día y lo de antes. `ahora`: un pago que
+     se está haciendo («Pagar» en Finanzas, «Ya lo mandé» en el Plan Maestro), que cuenta con la
+     fecha que lleve. */
+  function movimientoTarjeta(t, debts, ahora) {
+    const d = tarjetaDe(t, debts), monto = +(t && t.amount) || 0;
+    if (!d || !(monto > 0) || /\bmsi\b/i.test(String(t.notes || '') + ' ' + String(t.desc || ''))) return null;
+    if (!ahora && !(String(t.date || '') > corteTarjeta(d))) return null;
+    return { id: d.id, delta: t.cat === 'Deudas' ? -monto : monto };
+  }
+  // El último día en que Adán dijo el saldo de una tarjeta: `saldoAl` (lo escribe Finanzas cuando se
+  // edita a mano), sus liquidaciones del seed y, para la BBVA, `PROYECTO.bbvaSaldoFecha`.
+  function corteTarjeta(d) {
+    const sd = DEUDAS_SEED.filter(function (x) { return x.id === d.id; })[0] || {};
+    return [String(d.saldoAl || ''), d.id === 'd001' ? String(PROYECTO.bbvaSaldoFecha || '') : '']
+      .concat(sd.liquidaciones || []).sort().pop() || '';
+  }
+
   /* ¿Este movimiento ya está en la agenda del mes? Se mira por nombre y, si comparten una
      sola palabra, además por importe. Es lo que evita contar la renta dos veces cuando
-     además está anotada a mano. */
+     además está anotada a mano. Un pago a la BBVA de después de su último saldo dicho lo pone
+     el plan en su día (`planBbva`): ya está, aunque se llame distinto. */
   function yaContado(t, agenda) {
     if (t.notes === '[recurrente]') return true;
+    if (pagoBbva(t) > 0) return true;
     const imp = Math.round(+t.amount || 0), pt = palabras(t.desc), nt = norm(t.desc);
     return (agenda || []).some(function (f) {
       if (norm(f.t) === nt) return true;
@@ -4812,9 +4915,11 @@ window.CIFRAS = (function () {
     // quincena —o, el día de pago, de lo de Didi para completar el mínimo— y su pago genérico, el
     // mínimo o el total, deja de pintarse. Lo de Didi de cada lunes no pasa por aquí: Didi no está
     // en el calendario.
+    // Lo que la tarjeta le quita a GBM es lo previsto: si se mandó menos, la diferencia se queda en la
+    // cuenta para la quincena, no se va a GBM mientras la tarjeta tenga saldo.
     const B = mes ? planBbva() : null, fecha = mes + '-' + String(dia).padStart(2, '0');
     const tarjeta = B ? B.abonos.filter(function (a) { return a.fecha === fecha && a.de !== 'didi'; }) : [];
-    let resta = tarjeta.reduce(function (s, a) { return s + (a.de === 'quincena' ? a.monto : 0); }, 0);
+    let resta = tarjeta.reduce(function (s, a) { return s + (a.de === 'quincena' ? (a.hecho ? a.plan : a.monto) : 0); }, 0);
     (CALENDARIO.cobros || []).forEach(function (c) {
       if (c.dia !== dia || !caeEnMes(c, mes)) return;
       let monto = c.monto;
@@ -4823,8 +4928,10 @@ window.CIFRAS = (function () {
       out.push({ t: c.txt, monto: monto, entra: !!c.entra, ahorro: !!c.ahorro });
     });
     tarjeta.forEach(function (a) {
-      out.push({ t: a.de === 'minimo' ? 'Tarjeta BBVA — el pago del ' + dia + ', con lo de Didi' : 'Tarjeta BBVA — lo que sobra de la quincena',
-                 monto: a.monto, entra: false, tarjeta: true, de: a.de });
+      out.push({ t: a.de === 'minimo' ? 'Tarjeta BBVA — el pago del ' + dia + ', con lo de Didi'
+                  : a.de === 'extra' ? 'Tarjeta BBVA — un abono de más'
+                  : a.hecho ? 'Tarjeta BBVA — lo que mandaste de la quincena' : 'Tarjeta BBVA — lo que sobra de la quincena',
+                 monto: a.monto, entra: false, tarjeta: true, de: a.de, hecho: !!a.hecho });
     });
     const DEU = (debts && debts.length) ? debts : deudas();
     const hoy = new Date();
@@ -5036,6 +5143,29 @@ window.CIFRAS = (function () {
     return { inicio: inicio, saldo: saldo, pagado: pagado, desde: PROYECTO.bbvaFecha,
              pct: inicio > 0 ? Math.min(100, pagado / inicio * 100) : (saldo > 0 ? 0 : 100) };
   }
+  /* ── La BBVA hoy, para la estrategia del día del Plan Maestro ──────────────────────────────────
+     Lo que el Plan Maestro le dice a Adán cada día sobre la tarjeta, de una sola cuenta: el saldo
+     vivo, el día que queda en cero, lo que toca hoy (o lo que ya mandó hoy), lo previsto que no se
+     anotó —desde el último pago anotado: ese pago ya responde por lo de antes— y el abono siguiente.
+     `cancelada`: el día que la canceló, después de dejarla en cero (Adán, 15-oct-2026: "después que
+     la liquide la cancelo y de ahí nos vamos a incrementar números en inversiones"). */
+  function bbvaEstado() {
+    const B = planBbva(), hoyK = fechaLocal(), P = PROYECTO;
+    const tc = deudas().filter(function (d) { return d.id === 'd001'; })[0] || null;
+    const hechos = B.abonos.filter(function (a) { return a.hecho; });
+    const ultimo = hechos.length ? hechos[hechos.length - 1].fecha : '';
+    const desde = ultimo > String(P.bbvaSaldoFecha || '') ? ultimo : String(P.bbvaSaldoFecha || '');
+    const hoy = B.abonos.filter(function (a) { return a.fecha === hoyK; });
+    return {
+      saldo: tc ? Math.max(0, +tc.balance || 0) : 0, nombre: tc ? tc.name : 'Tarjeta BBVA',
+      fecha: (tc && tc.fecha) || null, cancelada: (tc && tc.cancelada) || null,
+      vivo: B.vivo, fin: B.fin, inicio: +P.bbvaInicio || 0,
+      hoy: hoy.filter(function (a) { return !a.hecho; }),
+      pagadoHoy: hoy.filter(function (a) { return a.hecho; }).reduce(function (s, a) { return s + a.monto; }, 0),
+      pendientes: B.vivo ? B.abonos.filter(function (a) { return !a.hecho && a.fecha > desde && a.fecha < hoyK; }) : [],
+      siguiente: B.abonos.filter(function (a) { return a.fecha > hoyK; })[0] || null,
+    };
+  }
   /* ── La deuda que de verdad cobra interés ──
      La BBVA tiene la tasa del producto (55.7 %) pero no le corre interés: Adán paga lo que pide el
      estado de cuenta (`PROYECTO.bbvaSinIntereses`). Sumarla como «con interés» daba $298,000 donde
@@ -5091,7 +5221,8 @@ window.CIFRAS = (function () {
     patrimonio: patrimonio,
     fondoMaestria: fondoMaestria,
     diasFase: diasFase, diasHasta: diasHasta,
-    avanceBbva: avanceBbva, deudasConInteres: deudasConInteres,
+    avanceBbva: avanceBbva, deudasConInteres: deudasConInteres, bbvaEstado: bbvaEstado,
+    tarjetaDe: tarjetaDe, movimientoTarjeta: movimientoTarjeta,
     BTC_SEED: BTC_SEED,
     // Para que `seedData()` pueda marcarlas como aplicadas: un seed nuevo ya las incluye.
     MIGRACIONES_FLAGS: MIGRACIONES.map(function (m) { return m.flag; }),

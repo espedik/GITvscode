@@ -126,13 +126,18 @@ latido y levantamiento.
 ## Utilidades, navegación, modales
 
 `fmt(n)` (MXN con `Intl.NumberFormat`), `uid()`, `today()` (`YYYY-MM-DD`), `ym(d)`, `nowYM()`,
-`save()`/`load()` (spread sobre `S`, silencia errores), `fmtDate(d)` (`"28 Jun 2026"`),
+`save()`/`load()` (spread sobre `S`, silencia errores; `save()` además relee la caché del maestro con
+`CIFRAS.refrescar()`, para que el plan de la BBVA siga a lo anotado), `fmtDate(d)` (`"28 Jun 2026"`),
 `last6Months()`, `toast(msg)`, `killChart(c)` (destruye y devuelve `null`; siempre antes de redibujar).
 
 `nav(s)` activa una de `SECS = dashboard | transactions | budgets | debts | patrimonio |
 indicators | gbm` (`<section id="s-{s}">`) y llama a `RENDERS[s]()`. `closeMo(id)` cierra un
 modal y resetea los ids de edición; `Escape` y el clic en el backdrop `.mo` cierran.
 `askDel(type, cb)` / `doConf()` / `closeConf()` es el diálogo de confirmación.
+
+**Otra pestaña puede escribir los datos**: el Plan Maestro del Dashboard anota los abonos a la BBVA
+(«Ya lo mandé»). Un listener de `storage` relee `S` y repinta la sección abierta, para que el
+siguiente `save()` de esta pestaña no pise lo que escribió la otra.
 
 ---
 
@@ -154,6 +159,17 @@ gasto **sale de tu caja ese día** o solo **sube el saldo de la tarjeta**.
 | `cat: 'Deudas'` + `notes` con la tarjeta | sí resta: es un **pago a** la tarjeta |
 
 Sin la nota, una compra a crédito se contaría dos veces: el día de la compra y en el mínimo.
+
+**La nota también mueve el saldo de la tarjeta** (Adán, 15-oct-2026: *"debe actualizarse lo de
+tarjeta de bbva solito, en base a cuánto gasto y cuánto gano cada día"*). Al guardar, `saveTx` pasa la
+transacción por la regla del maestro (`CIFRAS.movimientoTarjeta`): una compra con *TC BBVA* sube el
+saldo de `d001` y un pago en `Deudas` que la nombra lo baja; el aviso lo dice (*Guardada · Tarjeta
+BBVA: $3,450*). *Débito* en la nota es la cuenta, una compra a meses (*MSI*) no toca la tarjeta y solo
+cuenta lo fechado después del último saldo dicho. `tarjetaAplica()` guarda lo aplicado en la
+transacción (`tarjeta: {id, delta}`) y pone `fecha` en la deuda; `tarjetaDeshace()` lo devuelve al
+editarla o borrarla (`delTx`). Las anotadas antes de la regla no llevan `tarjeta` y no mueven nada:
+el saldo que dijo Adán ya las traía. El detalle, en *La tarjeta se mueve con lo que se anota* de
+`DATOS-MAESTROS.md`.
 
 **Los gastos que Adán reporta de golpe** (un lote de compras) van a `datos-maestros.js` una sola
 vez (`CIFRAS.GASTOS_20260901` y `CIFRAS.MOVIMIENTOS_20260920` son el patrón): de ahí los siembra `seedData()` para un navegador en
@@ -182,7 +198,11 @@ activas**; las de `balance <= 0` van aparte al final en **"✅ Liquidadas"** (si
 conservando editar/eliminar: la tarjeta sigue existiendo). Con `noInterest`, bloque "paga antes
 del día X". `openDebtModal`, `saveDebt`, `delDebt` (→ `maybeRefreshIndicators()`),
 `openPayModal(debtId)` (prellena el mínimo), `savePayment()` (resta al saldo y crea una
-transacción `expense` en `Deudas`, `"Pago: {nombre}"`).
+transacción `expense` en `Deudas`, `"Pago: {nombre}"`; en una tarjeta lleva `tarjeta`, así que
+borrarla devuelve el saldo). `saveDebt()`: un saldo escrito a mano es un **saldo dicho** —pone
+`saldoAl` y `fecha`—, y desde ese día solo lo mueve lo anotado con fecha posterior. Cada tarjeta
+activa dice *se movió el …* con su `fecha`; una liquidada con `cancelada` (la BBVA, cuando Adán la
+cancele desde el Plan Maestro) dice *cancelada el …* en «Liquidadas».
 
 **Cómo se calculan los saldos MSI.** `autoBalance(d, refDate)` solo auto-calcula **MSI a 0 %**
 (`type:'other'`, `rate:0`): `total − meses × cuota`. Tarjetas y crédito con interés son manuales.

@@ -750,7 +750,7 @@ select option{background:var(--surface-solid);color:var(--text)}
       <div class="fg"><label>Fecha *</label><input type="date" id="tx-date"></div>
     </div>
     <div class="fg"><label>Categoría *</label><select id="tx-cat"></select></div>
-    <div class="fg"><label>Notas</label><textarea id="tx-notes" rows="2" placeholder="Observaciones opcionales..."></textarea></div>
+    <div class="fg"><label>Notas</label><textarea id="tx-notes" rows="2" placeholder="¿Con tarjeta de crédito? Escríbela: «TC BBVA» sube su saldo"></textarea></div>
     <div class="flex" style="justify-content:flex-end;gap:8px">
       <button class="btn btn-o" onclick="closeMo('mo-tx')">Cancelar</button>
       <button class="btn btn-p" onclick="saveTx()">Guardar</button>
@@ -944,7 +944,8 @@ const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2);
 const today = () => CIFRAS.fechaLocal();
 const ym = d => d ? d.slice(0,7) : '';
 const nowYM = () => CIFRAS.fechaLocal().slice(0,7);
-const save = () => localStorage.setItem(KEY, JSON.stringify(S));
+// Cada guardado relee la caché del maestro: el plan de la BBVA y las cifras siguen a lo anotado.
+const save = () => { localStorage.setItem(KEY, JSON.stringify(S)); if(window.CIFRAS&&CIFRAS.refrescar) CIFRAS.refrescar(); };
 const load = () => { try { const d=localStorage.getItem(KEY); if(d) S={...S,...JSON.parse(d)}; } catch(e){} };
 const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
@@ -997,6 +998,14 @@ function nav(s) {
   document.getElementById('topTitle').textContent = STITLE[s];
   RENDERS[s]?.();
 }
+// Otra pestaña cambió los datos —el Plan Maestro anota un abono a la BBVA con «Ya lo mandé»—: se
+// releen y se repinta lo abierto, antes de que el próximo save() de esta pestaña los pise.
+window.addEventListener('storage', e=>{
+  if(e.key!==KEY) return;
+  load(); if(window.CIFRAS&&CIFRAS.refrescar) CIFRAS.refrescar();
+  const s=SECS.find(x=>document.getElementById(`s-${x}`).classList.contains('active'));
+  if(s) RENDERS[s]?.();
+});
 
 // ─── MODALS ───────────────────────────────────────────────────────────────────
 function closeMo(id) {
@@ -1088,6 +1097,30 @@ function fillCatSel(selId, type, selected=null) {
   sel.innerHTML=CATS[type].map(c=>`<option value="${c}"${c===selected?' selected':''}>${c}</option>`).join('');
 }
 
+// ─── Las tarjetas se mueven con lo que se anota ──────────────────────────────────────────────
+// Adán, 15-oct-2026: "debe actualizarse lo de tarjeta de bbva solito, en base a cuánto gasto y cuánto
+// gano cada día". Una compra con la tarjeta en la nota («TC BBVA») sube su saldo y un pago en Deudas
+// lo baja; la regla vive en el maestro (CIFRAS.movimientoTarjeta) y la comparte el Plan Maestro. Lo
+// aplicado se guarda en la transacción (`tarjeta: {id, delta}`) para deshacerlo al editarla o
+// borrarla; las anotadas antes de la regla no lo llevan y no mueven nada: el saldo que dijo Adán ya
+// las traía. En la deuda, `fecha` es el día de su último movimiento.
+function tarjetaAplica(t, ahora){
+  const m=window.CIFRAS&&CIFRAS.movimientoTarjeta?CIFRAS.movimientoTarjeta(t,S.debts,ahora):null;
+  const d=m&&S.debts.find(x=>x.id===m.id);
+  t.tarjeta=null;
+  if(!d) return null;
+  const antes=+d.balance||0, despues=Math.max(0,Math.round((antes+m.delta)*100)/100);
+  if(despues===antes) return null;
+  d.balance=despues; d.fecha=today();
+  t.tarjeta={id:d.id,delta:Math.round((despues-antes)*100)/100};
+  return d;
+}
+function tarjetaDeshace(t){
+  const m=t&&t.tarjeta, d=m&&S.debts.find(x=>x.id===m.id);
+  if(!d) return;
+  d.balance=Math.max(0,Math.round(((+d.balance||0)-m.delta)*100)/100); d.fecha=today();
+}
+
 function saveTx() {
   const desc=document.getElementById('tx-desc').value.trim();
   const amount=parseFloat(document.getElementById('tx-amount').value);
@@ -1095,18 +1128,29 @@ function saveTx() {
   const cat=document.getElementById('tx-cat').value;
   const notes=document.getElementById('tx-notes').value.trim();
   if(!desc||!amount||!date) return alert('Completa descripción, monto y fecha.');
+  let tj=null;
   if(editId) {
     const i=S.transactions.findIndex(t=>t.id===editId);
-    if(i>=0) S.transactions[i]={...S.transactions[i],type:curType,desc,amount,date,cat,notes};
+    if(i>=0){
+      const viejo=S.transactions[i], nuevo={...viejo,type:curType,desc,amount,date,cat,notes};
+      // Solo la anotada con la regla (lleva `tarjeta`, aunque sea null) se vuelve a calcular; si ya
+      // movía una tarjeta, la sigue moviendo con lo editado.
+      if('tarjeta' in viejo){ tarjetaDeshace(viejo); tj=tarjetaAplica(nuevo,!!viejo.tarjeta); }
+      S.transactions[i]=nuevo;
+    }
   } else {
-    S.transactions.push({id:uid(),type:curType,desc,amount,date,cat,notes});
+    const t={id:uid(),type:curType,desc,amount,date,cat,notes};
+    tj=tarjetaAplica(t);
+    S.transactions.push(t);
   }
-  save(); closeMo('mo-tx'); renderTx(); toast('✅ Transacción guardada');
+  save(); closeMo('mo-tx'); renderTx(); toast(tj?`✅ Guardada · ${tj.name}: ${fmt(tj.balance)}`:'✅ Transacción guardada');
+  if(document.getElementById('s-debts').classList.contains('active')) renderDebts();
   if(document.getElementById('s-dashboard').classList.contains('active')) renderDashboard();
   maybeRefreshIndicators();
 }
 
 function delTx(id) {
+  tarjetaDeshace(S.transactions.find(t=>t.id===id));
   S.transactions=S.transactions.filter(t=>t.id!==id);
   save(); renderTx(); toast('🗑️ Eliminado');
   if(document.getElementById('s-dashboard').classList.contains('active')) renderDashboard();
@@ -1215,7 +1259,7 @@ function renderDebts() {
     return `<div class="card">
       <div class="flex jb aic">
         <div><div class="fw7" style="font-size:15px">${d.name}</div>
-          <div class="ts tm" style="margin-top:2px">${DTYPE[d.type]||d.type} · ${d.rate}% anual${d.day?` · Corte día ${d.day}`:''}</div>
+          <div class="ts tm" style="margin-top:2px">${DTYPE[d.type]||d.type} · ${d.rate}% anual${d.day?` · Corte día ${d.day}`:''}${d.fecha?` · se movió el ${fmtDate(d.fecha)}`:''}</div>
         </div>
         <div class="flex gap6">
           <button class="btn btn-s btn-sm" onclick="openPayModal('${d.id}')">💳 Pagar</button>
@@ -1257,7 +1301,7 @@ function renderDebts() {
       <div class="flex jb aic" style="gap:10px;flex-wrap:wrap">
         <div>
           <div class="fw7" style="font-size:13px;color:var(--success)">${d.name}</div>
-          <div class="ts tm" style="margin-top:2px">${DTYPE[d.type]||d.type} · pagada en su totalidad${d.total>0?` · original ${fmt(d.total)}`:''}</div>
+          <div class="ts tm" style="margin-top:2px">${DTYPE[d.type]||d.type} · pagada en su totalidad${d.cancelada?` · cancelada el ${fmtDate(d.cancelada)}`:''}${d.total>0?` · original ${fmt(d.total)}`:''}</div>
         </div>
         <div class="flex gap6 aic">
           <span style="font-size:15px;font-weight:800;color:var(--success)">$0</span>
@@ -1295,8 +1339,12 @@ function saveDebt() {
     day:parseInt(document.getElementById('d-day').value)||0,
     start:document.getElementById('d-start').value,
     noInterest:parseFloat(document.getElementById('d-nointerest').value)||0};
-  if(editId){const i=S.debts.findIndex(d=>d.id===editId);if(i>=0)S.debts[i]={...S.debts[i],...data};}
-  else S.debts.push({id:uid(),...data});
+  // Un saldo escrito a mano es un saldo dicho (`saldoAl`): desde ese día, solo mueve la tarjeta lo
+  // que se anote con fecha posterior (CIFRAS.movimientoTarjeta).
+  if(editId){const i=S.debts.findIndex(d=>d.id===editId);if(i>=0){
+    if((+S.debts[i].balance||0)!==data.balance){ data.fecha=today(); data.saldoAl=today(); }
+    S.debts[i]={...S.debts[i],...data};}}
+  else S.debts.push({id:uid(),...data,fecha:today(),saldoAl:today()});
   save(); closeMo('mo-debt'); renderDebts(); toast('✅ Deuda guardada'); maybeRefreshIndicators();
 }
 
@@ -1317,8 +1365,13 @@ function savePayment() {
   if(!amount||!date) return alert('Completa los campos.');
   const i=S.debts.findIndex(d=>d.id===payDebtId);
   if(i>=0){
-    S.debts[i].balance=Math.max(0,S.debts[i].balance-amount);
-    S.transactions.push({id:uid(),type:'expense',desc:`Pago: ${S.debts[i].name}`,amount,date,cat:'Deudas',notes:''});
+    const d=S.debts[i], antes=+d.balance||0;
+    d.balance=Math.max(0,antes-amount); d.fecha=today();
+    const t={id:uid(),type:'expense',desc:`Pago: ${d.name}`,amount,date,cat:'Deudas',notes:''};
+    // En una tarjeta, lo que bajó: borrar el pago lo devuelve (la regla de las transacciones solo
+    // conoce tarjetas, por eso las demás deudas no la llevan).
+    if(d.type==='credit_card') t.tarjeta={id:d.id,delta:Math.round((d.balance-antes)*100)/100};
+    S.transactions.push(t);
   }
   save(); closeMo('mo-pay'); renderDebts(); toast('✅ Pago registrado');
   if(document.getElementById('s-dashboard').classList.contains('active')) renderDashboard();
