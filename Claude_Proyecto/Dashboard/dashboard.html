@@ -766,14 +766,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .fzc-k{font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--fc);filter:brightness(.8);margin-right:6px}
 .fzc-det{font-size:12.5px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fzc-item.abierto .fzc-det,.fzc-tx.abierto .fzc-det{white-space:normal}
-.fzc-item.ok .fzc-tx>b,.fzc-item.r-no .fzc-tx>b{color:var(--text3);text-decoration:line-through;font-weight:500}
+.fzc-item.ok .fzc-tx>b,.fzc-item.r-nova .fzc-tx>b{color:var(--text3);text-decoration:line-through;font-weight:500}
 .fzc-tag{font-style:normal;font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:4px;background:rgba(var(--w-rgb),.16);color:var(--w);
   margin-left:5px;white-space:nowrap;display:inline-block}
-.fzc-dec{display:flex;gap:4px;flex:none;align-self:center}
-.fzc-dec button{padding:3px 8px;border-radius:6px;border:1px solid rgba(var(--ov),.15);background:transparent;color:var(--text3);font-family:inherit;
-  font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
-.fzc-dec button.on{background:rgba(var(--w-rgb),.16);border-color:rgba(var(--w-rgb),.42);color:var(--w)}
-.fzc-dec button.on.no{background:rgba(var(--r-rgb),.12);border-color:rgba(var(--r-rgb),.42);color:var(--r)}
+.fzc-tag.gris{background:rgba(var(--ov),.08);color:var(--text3)}
+.fzc-item.r-medias .fzc-tx>b{color:var(--text2)}
 .fzc-vacio{font-size:13px;color:var(--text3);padding:8px 2px}
 .fzn{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr);gap:4px 14px;align-items:end;padding:10px 13px;border-radius:11px;
   border:1px solid rgba(var(--ov),.1);background:rgba(var(--ov),.03);margin-bottom:8px}
@@ -799,10 +796,57 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .fzz-h{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;font-size:13.5px}
 .fzz-n{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--text2)}
 .fzz-n b{color:var(--text);font-family:var(--mono)}
-.fzz-nota{margin:10px 0 0;font-size:13px;line-height:1.5;color:var(--text);white-space:pre-wrap}
-.fzz textarea{width:100%;min-height:56px;padding:8px 10px;border-radius:9px;border:1px solid rgba(var(--ov),.16);background:var(--card);color:var(--text);
-  font-family:inherit;font-size:13px;line-height:1.45;resize:vertical;box-sizing:border-box}
-.fzz-pie{display:flex;justify-content:flex-end;margin-top:10px}
+.fzz-pie{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+/* La auditoría del mes (fzaHTML): cinco pasos con opciones y la calificación en vivo. */
+.fza-top{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;margin:0 0 16px}
+.fza-top h3{margin:0;flex:1;min-width:220px;font-family:var(--font-title);font-size:22px;font-weight:700}
+.fza-marcador{display:flex;align-items:baseline;gap:10px;padding:8px 14px;border-radius:10px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.1);font-size:12.5px;color:var(--text2)}
+.fza-marcador b{font-family:var(--mono);font-size:22px;color:var(--text)}
+.fza-sec{border:1px solid rgba(var(--ov),.1);border-radius:13px;padding:12px 16px 4px;margin:0 0 14px;background:rgba(var(--ov),.02)}
+.fza-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 4px}
+.fza-n{width:24px;height:24px;border-radius:50%;background:var(--fc);color:#0b0b10;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex:none;align-self:center}
+.fza-h b{font-size:15px}
+.fza-h>span:last-child{font-size:12.5px;color:var(--text3)}
+.fza-fila{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px;align-items:center;padding:9px 0;border-top:1px solid rgba(var(--ov),.07)}
+.fza-q{font-size:13.5px;line-height:1.42;min-width:0}
+.fza-q b{font-weight:600}
+.fza-mr{font-size:12.5px;color:var(--text3);margin-left:6px}
+.fza-ops{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.fza-sub{grid-column:1/-1;display:flex;gap:5px;flex-wrap:wrap;align-items:center;padding-left:14px}
+.fza-sub>span{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-right:4px}
+.fza-chip{padding:5px 10px;border-radius:8px;border:1px solid rgba(var(--ov),.16);background:transparent;color:var(--text2);font-family:inherit;
+  font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+button.fza-chip:hover{border-color:var(--fc);color:var(--text)}
+.fza-chip.on{background:var(--fc);border-color:var(--fc);color:#0b0b10}
+.fza-chip.on.ok{background:var(--g);border-color:var(--g)}
+.fza-chip.on.medias{background:var(--w);border-color:var(--w)}
+.fza-chip.on.no{background:var(--r);border-color:var(--r);color:#fff}
+span.fza-chip{cursor:default}
+span.fza-chip:not(.on){opacity:.45}
+.fza-chk{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;line-height:1.42;cursor:pointer}
+.fza-chk input{margin-top:2px;width:16px;height:16px;accent-color:var(--g);flex:none;cursor:pointer}
+.fza-ev{font-size:12.5px;color:var(--text2);text-align:right}
+.fza-est{font-size:12.5px;font-weight:700;white-space:nowrap}
+.fza-est.bien{color:var(--g)}
+.fza-est.mal{color:var(--r)}
+.fza-nota,.fza-vacio{font-size:12.5px;color:var(--text3);padding:6px 0 10px}
+.fza-res{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:16px;align-items:center;padding:14px 18px;border-radius:13px;
+  border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.04)}
+.fza-res.compacto{grid-template-columns:auto minmax(0,1fr);padding:4px 0 10px;border:0;background:none}
+.fza-cal{font-family:var(--mono);font-size:40px;font-weight:800;line-height:1}
+.fza-cal.bien,.fza-marcador b.bien,.fzv-n b.bien{color:var(--g)}
+.fza-cal.medio,.fza-marcador b.medio,.fzv-n b.medio{color:var(--w)}
+.fza-cal.mal,.fza-marcador b.mal,.fzv-n b.mal{color:var(--r)}
+.fza-res-d{display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--text2);min-width:0}
+.fza-res-d b{font-size:15px;color:var(--text)}
+.fza-peso{font-size:11.5px;color:var(--text3)}
+.fza-cierra{display:flex;flex-direction:column;align-items:flex-end;gap:5px;font-size:12px;color:var(--text3)}
+.fza-cierra .ce-btn[disabled]{opacity:.45;cursor:default}
+.fza-causas{margin-top:10px;font-size:13px;color:var(--text2);display:flex;flex-wrap:wrap;gap:6px;align-items:baseline}
+.fza-causas>b{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);flex-basis:100%}
+.fza-causas ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;line-height:1.45}
+@media(max-width:760px){.fza-fila{grid-template-columns:minmax(0,1fr)}.fza-ops{justify-content:flex-start}.fza-ev{text-align:left}
+  .fza-res{grid-template-columns:auto minmax(0,1fr)}.fza-cierra{grid-column:1/-1;align-items:stretch}}
 .fzz .ce-btn[disabled]{opacity:.45;cursor:default}
 /* La información general, en bandas: la meta, el checkpoint y cómo va; las fichas de los meses; el dinero
    y las reglas; y, plegado, el porqué y el detalle. De lo que se actúa a lo que se explica. */
@@ -837,8 +881,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .fzv-pl[open]>summary::after{content:'▴'}
 .fzv-pl>div{padding:0 14px 14px}
 .fzm-pl{margin:8px 0 0}
-@media(max-width:640px){.fzm-li{grid-template-columns:80px minmax(0,1fr)}.fzm-cab-t{font-size:19px}.fzc-item{flex-wrap:wrap}.fzc-dec{margin-left:25px}
-  .fzn{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.fzn-e{grid-column:1/-1;text-align:left}}
+@media(max-width:640px){.fzm-li{grid-template-columns:80px minmax(0,1fr)}.fzm-cab-t{font-size:19px}
+  .fzn{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.fzn-e{grid-column:1/-1;text-align:left}.fzc-item{flex-wrap:nowrap}}
 /* Dos columnas dentro de cada fase: lo que la explica a la izquierda y el checklist a la derecha.
    En una sola columna de 1,500 px los renglones se volvían ilegibles y el checklist quedaba bajo
    el pliegue; bajo 1024 px vuelve a una. */
@@ -12601,19 +12645,21 @@ function kpiFaseTab(i){
 /* ── LOS MESES DE CADA FASE Y SU AUDITORÍA ─────────────────────────────────────────────────────
    Adán, 18-oct-2026: "en cada fase debes crear diferentes subtabs de los meses y poner la
    información, también debe ir como información general… al terminar cada mes debemos auditar qué
-   cosas se cumplieron y qué cosas no… en todas las fases cada mes tiene un plan completo". Y sobre la
-   primera versión: "solo hiciste auditoría en octubre y no en los demás, pero deben ser checklist o
-   cifras… siento que abarcas mucho pero nada a la vez". Cada mes es una FICHA con lo único que se
-   audita —su checklist y sus cifras— y auditarlo es cerrar esa misma ficha: lo no marcado pasa al mes
-   siguiente (o no va), las cifras se comparan con la proyección y queda una nota. Todos los meses
-   llevan la misma ficha desde el principio. El plan sale de CIFRAS.planMes; lo de cada mes se guarda
-   en `plan_auditoria_v1`: `siempre` (lo sostenido, se marca durante el mes), `decision` (lo que no
-   va), `nota` y, al auditarlo, `cerrado`, `tareas` (ok, pasa o no) y `cifras` ({real, meta, medido}).
-   Lo que pasa al mes siguiente aparece en su ficha y en «Te toca esta semana» del tablero
-   (planArrastradas). Una pestaña de mes se pinta al abrirla (fzmVer). */
+   cosas se cumplieron y qué cosas no… en todas las fases cada mes tiene un plan completo"; que la
+   auditoría "deben ser checklist o cifras", con la información bien acomodada; y "la auditoría es con
+   los checklist, no un text box… ve cómo hacerle para auditar bien bien".
+   Cada mes es una FICHA con lo único que se audita —su checklist y sus cifras—. Auditarla es un
+   procedimiento de cinco pasos, todo con opciones y nada de texto libre: (1) verificar que lo anotado
+   en Finanzas cuadre con el banco, (2) cada tarea —cumplida, a medias o no; si no, por qué y qué
+   sigue—, (3) lo sostenido —siempre, casi siempre, a veces o nunca—, (4) las cifras —la meta contra
+   lo real y, si no se llegó, qué pasó— y (5) lo que se corrige: acciones que salen de las causas
+   marcadas y entran al checklist del mes siguiente. Deja una calificación y causas que se cuentan.
+   Lo de cada mes se guarda en `plan_auditoria_v1`: `siempre` (lo sostenido, durante el mes), `aud`
+   (las respuestas), y al cerrar `cerrado`, `tareas` (ok, pasa o no), `cifras` ({real, meta, medido}),
+   `califica` y `correcciones`. Lo que pasa y lo que se corrige aparecen en el mes siguiente y en «Te
+   toca esta semana» del tablero (planArrastradas). Una pestaña de mes se pinta al abrirla (fzmVer). */
 const FZM_KEY = 'plan_auditoria_v1';
 const FZM_ESTADO = { ok:'auditado', pend:'sin auditar', hoy:'en curso', fut:'por venir' };
-const FZA_ICO = { ok:'✅', pasa:'➡️', no:'✖' };
 const fzmAud = () => rawGet(FZM_KEY, {}) || {};
 const fzmGuardaAud = A => { try{ rawSet(FZM_KEY, A); }catch(e){} };
 const fzmYM = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
@@ -12627,47 +12673,50 @@ const fzmDiaD = d => d.toLocaleDateString('es-MX', { day:'numeric', month:'long'
 const fzmDia = f => fzmDiaD(new Date(f+'T12:00:00'));
 const fzmTx = t => (window.CIFRAS && CIFRAS.texto) ? CIFRAS.texto(String(t||'')) : String(t||'');
 const fzmNum = v => '<span class="'+(privado?'fin-hidden':'')+'">'+money(Math.round(v))+'</span>';
+const fzmQ = x => '\''+String(x).replace(/\\/g, '\\\\').replace(/'/g, "\\'")+'\'';
 function fzmMeses(f){ const out = []; for(let k = fzmYM(f.start); k <= fzmYM(f.end); k = fzmMesSig(k)) out.push(k); return out; }
 const fzmFaseDe = ym => PHASES.findIndex(f => ym >= fzmYM(f.start) && ym <= fzmYM(f.end));
-// Una tarea por su id, venga de una fase o de la lista de salida (lo que pasa de un mes al siguiente).
+const fzmAuditado = a => !!(a && a.cerrado && !a.reabierto && a.tareas);
+// Una tarea por su id: de una fase, de la lista de salida o una corrección de una auditoría.
 function fzmTareaPorId(id){
+  if(String(id).indexOf('cor-') === 0){
+    const a = fzmAud()[String(id).slice(4, 11)], c = a && (a.correcciones || []).find(x => x.id === id);
+    return c ? { id: id, txt: c.txt } : null;
+  }
   for(const f of PHASES){ const s = (f.semanas||[]).find(x => x.id === id); if(s) return { id: id, txt: s.txt }; }
   for(const b of ((window.CIFRAS && CIFRAS.SALIDA && CIFRAS.SALIDA.bloques) || [])){
     const x = b.items.find(y => y.id === id); if(x) return { id: id, txt: x.txt, ico: b.ico };
   }
   return null;
 }
-// Lo que viene de meses anteriores: lo que alguna auditoría pasó al siguiente y ninguna posterior dio por
-// hecho ni por descartado. Aparece en el primer mes sin auditar después del que lo pasó —aunque se audite
-// en desorden— y de ahí sigue con su auditoría. Lo leen la ficha del mes y el tablero.
+// Lo que viene de meses anteriores: lo que una auditoría pasó al siguiente o se comprometió a corregir, y
+// ninguna posterior dio por hecho ni por descartado. Aparece en el primer mes sin auditar después del que
+// lo dejó —aunque se audite en desorden— y ahí se vuelve a auditar. Lo leen la ficha y el tablero.
 function planArrastradas(ym){
   const A = fzmAud(), vivo = {};
-  const auditado = k => A[k] && A[k].cerrado && !A[k].reabierto && A[k].tareas;
-  Object.keys(A).filter(k => k < ym && auditado(k)).sort().forEach(function(k){
+  Object.keys(A).filter(k => k < ym && fzmAuditado(A[k])).sort().forEach(function(k){
     Object.keys(A[k].tareas).forEach(id => { if(A[k].tareas[id] === 'pasa') vivo[id] = k; else delete vivo[id]; });
+    (A[k].correcciones || []).forEach(c => { vivo[c.id] = k; });
   });
-  const destino = k => { let m = fzmMesSig(k); while(auditado(m)) m = fzmMesSig(m); return m; };
+  const destino = k => { let m = fzmMesSig(k); while(fzmAuditado(A[m])) m = fzmMesSig(m); return m; };
   return Object.keys(vivo).filter(id => destino(vivo[id]) === ym)
     .map(id => { const t = fzmTareaPorId(id); return t ? Object.assign({ de: vivo[id] }, t) : null; }).filter(Boolean);
 }
-// Lo que tiene que quedar hecho en un mes: las tareas de la fase, lo que viene de antes y lo de la salida.
-// Un mes auditado se queda con la lista que se auditó, tal cual.
+// Lo que tiene que quedar hecho en un mes: las tareas de la fase, lo que viene de antes (lo que pasó y las
+// correcciones) y lo de la salida. Un mes auditado se queda con la lista que se auditó, tal cual.
 function fzmTareas(P, A){
   const a = (A || fzmAud())[P.mes], vistas = {}, out = [];
+  const grupoDe = id => String(id).indexOf('cor-') === 0 ? 'correccion' : P.salida.some(x => x.id === id) ? 'salida' : P.tareas.some(x => x.id === id) ? 'fase' : 'pasa';
   const pon = (t, grupo) => { if(!t || vistas[t.id]) return; vistas[t.id] = 1; out.push(Object.assign({ grupo: grupo }, t)); };
-  if(a && a.cerrado && !a.reabierto && a.tareas){
-    Object.keys(a.tareas).forEach(id => pon(fzmTareaPorId(id), P.salida.some(x => x.id === id) ? 'salida' : P.tareas.some(x => x.id === id) ? 'fase' : 'pasa'));
-    return out;
-  }
+  if(fzmAuditado(a)){ Object.keys(a.tareas).forEach(id => pon(fzmTareaPorId(id), grupoDe(id))); return out; }
   P.tareas.forEach(t => pon(t, 'fase'));
-  planArrastradas(P.mes).forEach(t => pon(t, 'pasa'));
+  planArrastradas(P.mes).forEach(t => pon(t, grupoDe(t.id)));
   P.salida.forEach(t => pon(t, 'salida'));
   return out;
 }
-// Lo que no se hizo pasa al mes siguiente, salvo en una fase que ya cerró: ahí el plan ya lo movió a la
+// Lo que no se cumplió pasa al mes siguiente, salvo en una fase que ya cerró: ahí el plan ya lo movió a la
 // fase que sigue, y de entrada no va.
 const fzmDecDef = ym => { const j = fzmFaseDe(ym); return j >= 0 && PHASES[j].end < new Date() ? 'no' : 'pasa'; };
-const fzmDec = (a, id, ym) => ((a && a.decision) || {})[id] || fzmDecDef(ym);
 // La primera frase es el título; lo demás, el detalle, que se abre al tocarlo.
 function fzmPartir(txt){
   const t = fzmTx(txt), m = t.match(/^(.{12,}?[.!?])\s+(.+)$/);
@@ -12688,7 +12737,7 @@ function fzmEstado(ym, A){
   if(a && a.cerrado && !a.reabierto) return 'ok';
   return ym < hoy ? 'pend' : ym === hoy ? 'hoy' : 'fut';
 }
-// Las cifras guardadas al auditar, {real, meta, medido} (la primera versión las guardaba en `filas`).
+// Las cifras guardadas al auditar, {real, meta, medido} (una auditoría vieja las guardaba en `filas`).
 function fzmFoto(a){
   const c = a && a.cifras; if(!c) return null;
   if(c.real) return c;
@@ -12731,8 +12780,8 @@ function fzmPintar(i, ym){
   const g = panel.querySelector('.fzm-vista[data-vista="gen"]');
   if(g && !g.classList.contains('is-activa')) g.innerHTML = fzvGeneralHTML(i);
 }
-/* ── La información general de una fase: la meta, el checkpoint y cómo va; las fichas de sus meses; el
-   dinero y las reglas; y, plegado, el porqué y el detalle. */
+/* ── La información general de una fase: la meta, el checkpoint y cómo va; las fichas de sus meses con su
+   calificación; el dinero y las reglas; y, plegado, el porqué y el detalle. */
 function fzvGeneralHTML(i){
   const f = PHASES[i], C = window.CIFRAS, A = fzmAud(), checks = rawGet('coach_checks_v1', {});
   if(!C || !C.planMes) return '';
@@ -12740,34 +12789,34 @@ function fzvGeneralHTML(i){
   const e = hoy > f.end ? 'hecha' : hoy >= f.start ? 'curso' : 'despues';
   const MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'], dC = d => d.getDate()+' '+MC[d.getMonth()]+' '+d.getFullYear();
   const meses = fzmMeses(f), hoyYM = fzmYM(hoy);
-  let tH = 0, tT = 0, cM = 0, cT = 0;
+  let tH = 0, tT = 0, cal = [];
   const tarjetas = meses.map(function(k){
     const P = C.planMes(k), F = fzmFicha(P, A), est = fzmEstado(k, A), a = A[k] || {};
     const hechas = F.tareas.filter(t => est === 'ok' ? (a.tareas || {})[t.id] === 'ok' : ctHecha(t, checks)).length;
-    const sost = F.habitos.filter(h => (a.siempre || {})[h.id]).length, enMeta = est === 'ok' ? fzmCifrasEnMeta(P, a) : null;
     if(k <= hoyYM){ tH += hechas; tT += F.tareas.length; }
-    if(enMeta !== null){ cM += enMeta; cT += P.metas.length; }
-    const txt = est === 'ok' ? '✓ Auditado el '+new Date(a.cerrado+'T12:00:00').getDate()+' de '+fzmMesMin(a.cerrado.slice(0,7))
+    const q = est === 'ok' && a.califica && typeof a.califica.total === 'number' ? a.califica.total : null;
+    if(q !== null) cal.push(q);
+    const txt = est === 'ok' ? (q !== null ? '✓ '+q+' · '+fzaVeredicto(q).t : '✓ Auditado el '+new Date(a.cerrado+'T12:00:00').getDate()+' de '+fzmMesMin(a.cerrado.slice(0,7)))
       : est === 'pend' ? '⚠ Sin auditar' : est === 'hoy' ? 'En curso · se audita el '+fzmFinMes(k).getDate() : 'Por venir';
     return '<button type="button" class="fzv-mes '+est+'" onclick="fzmVer('+i+',\''+k+'\')"><span class="fzv-mes-m">'+fzmNombre(k)+'</span>'+
-      '<span class="fzv-mes-l">✅ '+hechas+' de '+F.tareas.length+' tareas · 🔁 '+sost+' de '+F.habitos.length+'</span>'+
-      (P.metas.length ? '<span class="fzv-mes-l">🔢 '+(enMeta === null ? P.metas.length+' cifras' : enMeta+' de '+P.metas.length+' en meta')+'</span>' : '')+
+      '<span class="fzv-mes-l">✅ '+hechas+' de '+F.tareas.length+' tareas'+(F.habitos.length ? ' · 🔁 '+F.habitos.length : '')+(P.metas.length ? ' · 🔢 '+P.metas.length : '')+'</span>'+
       '<span class="fzv-mes-e">'+txt+'</span></button>';
   }).join('');
   const cerrados = meses.filter(k => k < hoyYM).length, auditados = meses.filter(k => fzmEstado(k, A) === 'ok').length;
   const pend = meses.filter(k => fzmEstado(k, A) === 'pend');
   const sigue = pend.length
     ? '<button type="button" class="ce-btn" onclick="fzmVer('+i+',\''+pend[0]+'\')">Auditar '+fzmMesMin(pend[0])+'</button>'
-    : '<span>'+(e === 'curso' ? 'El siguiente cierre: el '+fzmDiaD(fzmFinMes(hoyYM))+'.' : e === 'despues' ? 'Empieza el '+dC(f.start)+': sus meses ya tienen su ficha.' : 'Fase cerrada.')+'</span>';
+    : '<span>'+(e === 'curso' ? 'La siguiente auditoría: el '+fzmDiaD(fzmFinMes(hoyYM))+'.' : e === 'despues' ? 'Empieza el '+dC(f.start)+': sus meses ya tienen su ficha.' : 'Fase cerrada.')+'</span>';
+  const prom = cal.length ? Math.round(cal.reduce((s, x) => s + x, 0) / cal.length) : null;
   const va = '<div>'+kpiSec('📈 Cómo va la fase')+
     '<div class="fzv-n"><span>Meses auditados</span><b>'+(cerrados ? auditados+' de '+cerrados : 'aún no cierra ninguno')+'</b></div>'+
-    '<div class="fzv-n"><span>Tareas hechas hasta hoy</span><b>'+tH+' de '+tT+'</b></div>'+
-    (cT ? '<div class="fzv-n"><span>Cifras en meta al auditar</span><b>'+cM+' de '+cT+'</b></div>' : '')+
+    '<div class="fzv-n"><span>Tareas cumplidas hasta hoy</span><b>'+tH+' de '+tT+'</b></div>'+
+    (prom !== null ? '<div class="fzv-n"><span>Calificación de los meses</span><b class="'+fzaVeredicto(prom).c+'">'+prom+'</b></div>' : '')+
     '<div class="fzv-sigue">'+sigue+'</div></div>';
   const A1 = '<div class="fzv-a'+(f.checkpoint ? '' : ' dos')+'"><div>'+kpiSec('🎯 La meta al '+dC(f.end))+faseMetaHTML(f.meta)+'</div>'+
     (f.checkpoint ? '<div>'+faseCheckHTML(f.checkpoint)+'</div>' : '')+va+'</div>';
   const AH = faseAhorroHTML(f) || {};
-  const cont = (f.semanas || []).filter(s => s.cont);
+  const cont = (f.semanas || []).filter(x => x.cont);
   const B = '<div class="fzv-b"><div>'+(AH.barras || '')+
       (typeof f.liquido === 'number' ? kpiNota('📈 Al cierre ('+dC(f.end)+') la trayectoria espera <b>≈ '+(f.liquido < 0 ? '−' : '+')+money(Math.abs(f.liquido))+'</b> de patrimonio líquido — hipótesis, no promesa.') : '')+'</div>'+
     '<div>'+(f.deja ? faseDejaHTML(f.deja) : '')+
@@ -12780,45 +12829,65 @@ function fzvGeneralHTML(i){
     pl('💰 Un mes de cada etapa, renglón por renglón', AH.tabla)+
     pl('🧴 Tus rutinas y dónde recortar', AH.rutinas);
 }
-/* ── La ficha de un mes: la cabecera con sus tres números —tareas, lo sostenido y las cifras—, el
-   checklist y, a la derecha, las cifras, la auditoría, el dinero y las fechas. */
+// Cómo quedó una tarea en la auditoría: {r, por, sigue}. Una auditoría vieja solo guardaba ok, pasa o no.
+function fzaResTarea(a, t, checks){
+  const x = a && a.aud && a.aud.t && a.aud.t[t.id];
+  if(x && x.r) return x;
+  const v = (a && a.tareas || {})[t.id];
+  return v === 'ok' ? { r:'ok' } : v ? { r:'no', sigue: v } : { r: ctHecha(t, checks) ? 'ok' : 'no', sigue: 'pasa' };
+}
+const fzaNivel = (a, h) => (a && a.aud && a.aud.h || {})[h.id] || ((a && a.siempre || {})[h.id] ? 'siempre' : 'nunca');
+/* ── La ficha de un mes: la cabecera con sus números, el checklist y, a la derecha, las cifras, la
+   auditoría, el dinero y las fechas. Mientras se audita, en su lugar va la auditoría (fzaHTML). */
 function faseMesHTML(i, ym){
   const C = window.CIFRAS; if(!C || !C.planMes) return '';
+  if(FZA_ABIERTA[ym]) return fzaHTML(i, ym, FZA_ABIERTA[ym] === 'ver');
   const P = C.planMes(ym), A = fzmAud(), a = A[ym] || {}, checks = rawGet('coach_checks_v1', {});
   const e = fzmEstado(ym, A), auditado = e === 'ok', F = fzmFicha(P, A);
   const fin = fzmFinMes(ym), sigN = fzmMesMin(fzmMesSig(ym));
   const hoyD = new Date(); hoyD.setHours(0,0,0,0);
   const desde = new Date(fin); desde.setDate(fin.getDate() - 6);
   const cerrable = !auditado && hoyD >= desde, empezo = ym <= fzmYM(hoyD);
-  const res = t => (a.tareas || {})[t.id] || (ctHecha(t, checks) ? 'ok' : 'pasa');
-  const hecha = t => auditado ? res(t) === 'ok' : ctHecha(t, checks);
-  const hechas = F.tareas.filter(hecha).length, sost = F.habitos.filter(h => (a.siempre || {})[h.id]).length;
-  const tx = (p, tag, k) => '<div class="fzc-tx"'+(p.d ? ' onclick="this.parentNode.classList.toggle(\'abierto\')" title="Toca para ver el detalle"' : '')+'>'+
-    '<b>'+(k ? '<em class="fzc-k">'+esc(k)+'</em>' : '')+p.t+(tag ? ' <em class="fzc-tag">'+tag+'</em>' : '')+'</b>'+(p.d ? '<span class="fzc-det">'+p.d+'</span>' : '')+'</div>';
+  const hecha = t => auditado ? fzaResTarea(a, t, checks).r === 'ok' : ctHecha(t, checks);
+  const sostenido = h => auditado ? ['siempre','casi'].indexOf(fzaNivel(a, h)) >= 0 : !!(a.siempre || {})[h.id];
+  const hechas = F.tareas.filter(hecha).length, sost = F.habitos.filter(sostenido).length;
+  const tx = (p, tags, k) => '<div class="fzc-tx"'+(p.d ? ' onclick="this.parentNode.classList.toggle(\'abierto\')" title="Toca para ver el detalle"' : '')+'>'+
+    '<b>'+(k ? '<em class="fzc-k">'+esc(k)+'</em>' : '')+p.t+(tags || []).filter(Boolean).map(x => ' <em class="fzc-tag'+(x[1] ? ' '+x[1] : '')+'">'+x[0]+'</em>').join('')+'</b>'+
+    (p.d ? '<span class="fzc-det">'+p.d+'</span>' : '')+'</div>';
+  const deDonde = t => t.grupo === 'pasa' && t.de ? ['de '+fzmMesMin(t.de)] : t.grupo === 'correccion' && t.de ? ['de la auditoría de '+fzmMesMin(t.de)] : null;
   const filaT = function(t){
-    const p = fzmPartir(t.txt), q = { t: (t.ico ? t.ico+' ' : '')+p.t, d: p.d }, de = t.grupo === 'pasa' && t.de ? 'de '+fzmMesMin(t.de) : '';
-    if(auditado){ const r = res(t); return '<div class="fzc-item r-'+r+'"><span class="fzc-ico">'+FZA_ICO[r]+'</span>'+tx(q, r === 'pasa' ? 'pasó a '+sigN : de)+'</div>'; }
-    const ok = ctHecha(t, checks), fijo = String(t.txt).indexOf('\u2705') >= 0, no = fzmDec(a, t.id, ym) === 'no';
-    return '<div class="fzc-item'+(ok ? ' ok' : no && cerrable ? ' r-no' : '')+'"><input type="checkbox"'+(ok ? ' checked' : '')+(fijo ? ' disabled' : '')+
-      ' aria-label="Hecha" onchange="fzmCheck(\''+t.id+'\',this.checked,'+i+',\''+ym+'\')">'+tx(q, de)+
-      (cerrable && !ok ? '<span class="fzc-dec"><button type="button"'+(no ? '' : ' class="on"')+' onclick="fzmDecide(\''+ym+'\',\''+t.id+'\',\'pasa\','+i+')">➡️ Pasa a '+sigN+'</button>'+
-        '<button type="button"'+(no ? ' class="on no"' : '')+' onclick="fzmDecide(\''+ym+'\',\''+t.id+'\',\'no\','+i+')">✖ No va</button></span>' : '')+'</div>';
+    const p = fzmPartir(t.txt), q = { t: (t.ico ? t.ico+' ' : '')+p.t, d: p.d };
+    if(auditado){
+      const x = fzaResTarea(a, t, checks), por = FZA_POR.find(o => o.k === x.por);
+      return '<div class="fzc-item r-'+(x.r === 'ok' ? 'ok' : x.sigue === 'no' ? 'nova' : x.r === 'medias' ? 'medias' : 'pasa')+'"><span class="fzc-ico">'+(x.r === 'ok' ? '✅' : x.r === 'medias' ? '◐' : '❌')+'</span>'+
+        tx(q, [x.r === 'medias' ? ['a medias'] : null, por ? [por.t.replace(/^\S+\s/, '').toLowerCase(), 'gris'] : null,
+               x.r !== 'ok' ? [x.sigue === 'no' ? 'no va' : 'pasó a '+sigN, x.sigue === 'no' ? 'gris' : ''] : null])+'</div>';
+    }
+    const ok = ctHecha(t, checks), fijo = String(t.txt).indexOf('\u2705') >= 0;
+    return '<div class="fzc-item'+(ok ? ' ok' : '')+'"><input type="checkbox"'+(ok ? ' checked' : '')+(fijo ? ' disabled' : '')+
+      ' aria-label="Hecha" onchange="fzmCheck(\''+t.id+'\',this.checked,'+i+',\''+ym+'\')">'+tx(q, [deDonde(t)])+'</div>';
   };
   const filaH = function(h){
+    if(auditado){
+      const n = fzaNivel(a, h), o = FZA_HAB.find(x => x.k === n);
+      return '<div class="fzc-item r-'+(n === 'nunca' ? 'hno' : n === 'aveces' ? 'medias' : 'ok')+'"><span class="fzc-ico">'+(n === 'nunca' ? '❌' : n === 'aveces' ? '◐' : '✅')+'</span>'+
+        tx(h, [[o ? o.t.toLowerCase() : n, n === 'siempre' || n === 'casi' ? '' : 'gris']], h.k)+'</div>';
+    }
     const ok = !!(a.siempre || {})[h.id];
-    if(auditado) return '<div class="fzc-item r-'+(ok ? 'ok' : 'no')+'"><span class="fzc-ico">'+(ok ? '✅' : '✖')+'</span>'+tx(h, '', h.k)+'</div>';
     return '<div class="fzc-item'+(ok ? ' ok' : '')+'"><input type="checkbox"'+(ok ? ' checked' : '')+(empezo ? '' : ' disabled title="Se marca cuando empiece el mes"')+
-      ' aria-label="Lo sostuve" onchange="fzmSostuve(\''+ym+'\',\''+h.id+'\',this.checked,'+i+')">'+tx(h, '', h.k)+'</div>';
+      ' aria-label="Lo sostuve" onchange="fzmSostuve(\''+ym+'\',\''+h.id+'\',this.checked,'+i+')">'+tx(h, null, h.k)+'</div>';
   };
-  const deFase = F.tareas.filter(t => t.grupo !== 'salida'), deSalida = F.tareas.filter(t => t.grupo === 'salida');
+  const deFase = F.tareas.filter(t => t.grupo === 'fase' || t.grupo === 'pasa'), deSalida = F.tareas.filter(t => t.grupo === 'salida');
+  const deCorr = F.tareas.filter(t => t.grupo === 'correccion');
   const cuenta = L => L.filter(hecha).length+' de '+L.length;
+  const grupo = (titulo, L) => L.length ? '<div class="fzc-g"><span>'+titulo+'</span><span>'+cuenta(L)+'</span></div>'+L.map(filaT).join('') : '';
   const checklist = kpiSec('✅ El checklist del mes')+
     '<div class="fzc-g"><span>Lo que tiene que quedar hecho</span><span>'+cuenta(deFase)+'</span></div>'+
     (deFase.length ? deFase.map(filaT).join('') : '<div class="fzc-vacio">Este mes no trae tareas propias'+(F.habitos.length ? ': cuenta lo que sostienes, abajo.' : '.')+'</div>')+
-    (deSalida.length ? '<div class="fzc-g"><span>🧳 Para la salida a Alemania</span><span>'+cuenta(deSalida)+'</span></div>'+deSalida.map(filaT).join('') : '')+
+    grupo('🔧 Lo que corriges', deCorr)+grupo('🧳 Para la salida a Alemania', deSalida)+
     (F.habitos.length ? '<div class="fzc-g"><span>🔁 Lo que sostienes todo el mes</span><span>'+sost+' de '+F.habitos.length+'</span></div>'+F.habitos.map(filaH).join('') : '');
-  const enMeta = auditado ? fzmCifrasEnMeta(P, a) : null;
-  const chip = e === 'hoy' ? ' <em class="fz-chip">ESTE MES</em>' : e === 'ok' ? ' <em class="fz-chip ok">AUDITADO</em>' : e === 'pend' ? ' <em class="fz-chip pend">SIN AUDITAR</em>' : '';
+  const enMeta = auditado ? fzmCifrasEnMeta(P, a) : null, q = auditado && a.califica && typeof a.califica.total === 'number' ? a.califica.total : null;
+  const chip = e === 'hoy' ? ' <em class="fz-chip">ESTE MES</em>' : e === 'ok' ? ' <em class="fz-chip ok">AUDITADO'+(q !== null ? ' · '+q : '')+'</em>' : e === 'pend' ? ' <em class="fz-chip pend">SIN AUDITAR</em>' : '';
   const cab = '<div class="fzm-cab"><div class="fzm-cab-t">'+fzmNombre(ym)+chip+'<span class="fzm-cab-s">del 1 al '+fin.getDate()+' de '+fzmMesMin(ym)+'</span></div>'+
     '<div class="fzm-cab-n"><span>✅ <b>'+hechas+'</b> de '+F.tareas.length+' tareas</span>'+(F.habitos.length ? '<span>🔁 <b>'+sost+'</b> de '+F.habitos.length+' sostenidas</span>' : '')+
       (P.metas.length ? '<span>🔢 '+(enMeta === null ? '<b>'+P.metas.length+'</b> cifras' : '<b>'+enMeta+'</b> de '+P.metas.length+' en meta')+'</span>' : '')+'</div></div>';
@@ -12826,11 +12895,11 @@ function faseMesHTML(i, ym){
   const aviso = (e === 'hoy' && jAnt >= 0 && fzmEstado(ant, A) === 'pend')
     ? '<div class="fzm-aviso"><span>⚠ <b>'+fzmNombre(ant)+'</b> cerró sin auditar: qué se cumplió, qué no y qué pasa a '+fzmMesMin(ym)+'.</span>'+
       '<button type="button" class="ce-btn" onclick="kpiFaseTab('+jAnt+');fzmVer('+jAnt+',\''+ant+'\')">Auditar '+fzmMesMin(ant)+'</button></div>' : '';
-  const der = fzmCifrasHTML(P, a, e, cerrable)+fzmCierreHTML(i, ym, P, F, a, e, cerrable, desde, sost, enMeta)+fzmDineroHTML(P, ym)+fzmFechasHTML(P, ym);
+  const der = fzmCifrasHTML(P, a, e, cerrable)+fzmCierreHTML(i, ym, P, F, a, e, cerrable, desde)+fzmDineroHTML(P, ym)+fzmFechasHTML(P, ym);
   return cab+aviso+'<div class="fzm-2"><div>'+checklist+'</div><div>'+der+'</div></div>';
 }
-// Las cifras del mes: la meta de la proyección, lo real (hoy, o la foto al auditar) y si se llegó. A media
-// quincena no se pinta de rojo: todavía falta lo que el plan pone después.
+// Las cifras del mes: la meta de la proyección, lo real (hoy, o la foto al auditar) y si se llegó; ya
+// auditado, con la causa que se marcó. A media quincena no se pinta de rojo: falta lo que el plan pone después.
 function fzmCifrasHTML(P, a, e, cerrable){
   const M = P.metas || []; if(!M.length) return '';
   const foto = e === 'ok' ? fzmFoto(a) : null;
@@ -12840,42 +12909,52 @@ function fzmCifrasHTML(P, a, e, cerrable){
     const meta = foto && typeof foto.meta[m.k] === 'number' ? foto.meta[m.k] : m.meta;
     const real = foto ? foto.real[m.k] : vivo ? vivo[m.k] : null, tiene = typeof real === 'number';
     const dif = tiene ? (m.mas ? real - meta : meta - real) : 0, bien = dif >= -0.5;
+    const causa = foto && !bien ? FZA_CAUSA.find(o => o.k === (a.aud && a.aud.c || {})[m.k]) : null;
     const est = !tiene ? (e === 'ok' ? 'sin foto' : 'se mide al auditar')
       : bien ? '✓ '+(dif < 0.5 ? 'en la meta' : fzmNum(dif)+' mejor')
       : (juzga ? '✗ ' : '')+(m.mas ? 'faltan '+fzmNum(-dif) : fzmNum(-dif)+' de más');
     return '<div class="fzn"><span class="fzn-t">'+m.t+'<i>'+m.d+'</i></span>'+
       '<span class="fzn-c"><small>Meta</small><b>'+fzmNum(meta)+'</b></span>'+
       '<span class="fzn-c"><small>'+(foto ? 'Al auditar' : 'Hoy')+'</small><b>'+(tiene ? fzmNum(real) : '—')+'</b></span>'+
-      '<span class="fzn-e'+(tiene && bien ? ' bien' : tiene && juzga ? ' mal' : '')+'">'+est+'</span></div>';
+      '<span class="fzn-e'+(tiene && bien ? ' bien' : tiene && juzga ? ' mal' : '')+'">'+est+(causa ? '<br><small>'+causa.t+'</small>' : '')+'</span></div>';
   }).join('');
   const pie = foto ? 'Medidas el '+fzmDia(foto.medido)+'.' : e === 'ok' ? 'Sin foto de cifras: se auditó más de diez días después del cierre.'
     : e === 'fut' ? 'Es lo que la proyección pone al cerrar el mes; lo real se mide al auditarlo.'
     : 'Lo real se guarda al auditar el mes, hasta diez días después de que cierre.';
   return '<div class="fzm-blk">'+kpiSec('🔢 Las cifras del mes')+filas+'<div class="fzn-pie">'+pie+'</div></div>';
 }
-// La auditoría: por venir, abierta (marca lo que falta y audita) o auditada (lo que quedó, y reabrir).
-function fzmCierreHTML(i, ym, P, F, a, e, cerrable, desde, sost, enMeta){
+// La auditoría en la ficha: por venir, abierta (el botón que la empieza) o cerrada (su resultado).
+function fzmCierreHTML(i, ym, P, F, a, e, cerrable, desde){
   const fin = fzmFinMes(ym), sigN = fzmMesMin(fzmMesSig(ym)), nom = fzmMesMin(ym), sec = kpiSec('🧾 La auditoría de '+nom);
   if(e === 'ok'){
-    const c = a.tareas || {}, n = k => Object.keys(c).filter(id => c[id] === k).length;
-    const nota = a.nota || (a.notas ? [a.notas.bien, a.notas.mal, a.notas.cambio].filter(Boolean).join(' · ') : '');
-    return '<div class="fzm-blk fzz ok">'+sec+'<div class="fzz-h"><b>✓ Auditado el '+fzmDia(a.cerrado)+'</b>'+
-      '<button type="button" class="ce-btn sec" onclick="fzmReabrir('+i+',\''+ym+'\')">Reabrir</button></div>'+
-      '<div class="fzz-n"><span><b>'+n('ok')+'</b> hechas</span><span><b>'+n('pasa')+'</b> pasaron a '+sigN+'</span><span><b>'+n('no')+'</b> no van</span>'+
-      (F.habitos.length ? '<span><b>'+sost+' de '+F.habitos.length+'</b> sostenidas</span>' : '')+(enMeta !== null ? '<span><b>'+enMeta+' de '+P.metas.length+'</b> cifras en meta</span>' : '')+'</div>'+
-      (nota ? '<p class="fzz-nota">'+esc(nota)+'</p>' : '')+'</div>';
+    const q = a.califica || {}, V = fzaVeredicto(typeof q.total === 'number' ? q.total : null);
+    const T = a.tareas || {}, n = k => Object.keys(T).filter(id => T[id] === k).length;
+    const corr = (a.correcciones || []).map(c => '<li>'+fzmTx(c.txt)+'</li>').join('');
+    const causas = fzaCausas(a);
+    return '<div class="fzm-blk fzz ok">'+sec+
+      '<div class="fza-res compacto"><span class="fza-cal '+V.c+'">'+(typeof q.total === 'number' ? q.total : '✓')+'</span>'+
+        '<div class="fza-res-d"><b>'+V.t+'</b><span>Auditado el '+fzmDia(a.cerrado)+'</span>'+
+        '<span>'+[typeof q.tareas === 'number' ? 'tareas '+q.tareas+' %' : '', typeof q.habitos === 'number' ? 'lo sostenido '+q.habitos+' %' : '',
+                  q.cifras ? 'cifras '+q.cifras.en+' de '+q.cifras.de : ''].filter(Boolean).join(' · ')+'</span></div></div>'+
+      '<div class="fzz-n"><span><b>'+n('ok')+'</b> cumplidas</span><span><b>'+n('pasa')+'</b> pasaron a '+sigN+'</span><span><b>'+n('no')+'</b> no van</span></div>'+
+      (causas ? '<div class="fza-causas"><b>Causas</b>'+causas+'</div>' : '')+
+      (corr ? '<div class="fza-causas"><b>Lo que corriges en '+sigN+'</b><ul>'+corr+'</ul></div>' : '')+
+      '<div class="fzz-pie"><button type="button" class="ce-btn sec" onclick="fzaAbrir('+i+',\''+ym+'\',1)">Ver la auditoría</button>'+
+        '<button type="button" class="ce-btn sec" onclick="fzmReabrir('+i+',\''+ym+'\')">Reabrir</button></div></div>';
   }
   if(e === 'fut') return '<div class="fzm-blk fzz">'+sec+'<p class="fzz-p" style="margin:0">Se audita al cerrar el mes, el <b>'+fzmDiaD(fin)+
-    '</b>: el checklist y las cifras de esta ficha. Lo que no quede hecho pasa al mes siguiente.</p></div>';
+    '</b>: el checklist y las cifras de esta ficha, en cinco pasos con opciones.</p></div>';
+  const E = a.aud ? fzaEvalua(ym, P, F, a) : null;
   return '<div class="fzm-blk fzz'+(e === 'pend' ? ' pend' : '')+'">'+sec+
-    '<p class="fzz-p">'+(e === 'pend' ? '⚠ Cerró el '+fzmDiaD(fin)+' y falta auditarlo. ' : cerrable ? 'Ya se puede auditar. ' : 'Se audita desde el '+fzmDiaD(desde)+'. ')+
-      'Marca lo que hiciste'+(F.habitos.length ? ' y lo que sostuviste' : '')+'; lo que no, '+(fzmDecDef(ym) === 'no' ? 'no va —esta fase ya cerró y el plan lo movió—, salvo lo que pases a '+sigN : 'pasa a '+sigN+', salvo lo que digas que no va')+'.</p>'+
-    '<textarea data-nota="'+ym+'" placeholder="Una nota, si quieres: qué funcionó, qué no y qué cambias en '+sigN+'" oninput="fzmNota(\''+ym+'\',this.value)">'+esc(a.nota || '')+'</textarea>'+
-    '<div class="fzz-pie"><button type="button" class="ce-btn"'+(cerrable ? '' : ' disabled')+' onclick="fzmAuditar('+i+',\''+ym+'\')">Auditar '+nom+'</button></div></div>';
+    '<p class="fzz-p">'+(e === 'pend' ? '⚠ Cerró el '+fzmDiaD(fin)+' y falta auditarlo.' : cerrable ? 'Ya se puede auditar.' : 'Se audita desde el '+fzmDiaD(desde)+'.')+
+      ' Cinco pasos, todos con opciones: verificar tus datos, cada tarea, lo que sostuviste, las cifras y lo que corriges.'+
+      (E ? (E.falta ? ' Faltan <b>'+E.falta+'</b> '+(E.falta === 1 ? 'respuesta' : 'respuestas')+'.' : ' Todo contestado: falta cerrarla.') : '')+'</p>'+
+    '<div class="fzz-pie"><button type="button" class="ce-btn"'+(cerrable ? '' : ' disabled')+' onclick="fzaAbrir('+i+',\''+ym+'\')">'+
+      (E ? 'Seguir con la auditoría' : 'Auditar '+nom)+'</button></div></div>';
 }
 // El dinero del mes, en renglones cortos: lo que entra y sale y el ahorro, qué va a GBM y cuándo, los
-// abonos de la BBVA y lo propio de ese mes; el detalle, plegado. Antes de la proyección (la Fase 0), lo
-// que se anotó en Finanzas.
+// abonos de la BBVA desde el último saldo dicho y lo propio de ese mes; el detalle, plegado. Antes de la
+// proyección (la Fase 0), lo que se anotó en Finanzas.
 function fzmDineroHTML(P, ym){
   const C = window.CIFRAS, R = P.dinero;
   const li = (k, v) => '<div class="fzm-li"><b>'+k+'</b><span>'+v+'</span></div>';
@@ -12910,47 +12989,221 @@ function fzmCheck(id, marcada, i, ym){
   toggleFaseCheck(id, marcada, ym === mesHoy ? mesHoy+'#'+ctSemDe(hoy.getDate()) : true);
   fzmPintar(i, ym);
 }
-// Lo que se sostiene se marca durante el mes; lo que no va se dice al auditar; la nota se guarda al vuelo.
+// Lo que se sostiene se marca durante el mes; en la auditoría se dice cuánto.
 function fzmSostuve(ym, id, on, i){
   const A = fzmAud(), a = A[ym] || (A[ym] = {}); a.siempre = a.siempre || {};
   if(on) a.siempre[id] = true; else delete a.siempre[id];
   fzmGuardaAud(A); fzmPintar(i, ym);
 }
-function fzmDecide(ym, id, v, i){
-  const A = fzmAud(), a = A[ym] || (A[ym] = {}); a.decision = a.decision || {};
-  if(v === fzmDecDef(ym)) delete a.decision[id]; else a.decision[id] = v;
-  fzmGuardaAud(A); fzmPintar(i, ym);
+/* ── LA AUDITORÍA DEL MES, CON CHECKLIST ───────────────────────────────────────────────────────
+   Como la haría un auditor: primero la evidencia —que lo anotado en Finanzas cuadre con el banco; si no,
+   las cifras no valen—, después cada punto con su resultado y, si no se cumplió, su causa; las cifras con
+   su causa; y al final las acciones que corrigen esas causas, que se vuelven tareas del mes siguiente.
+   Todo con opciones, para que cada mes deje datos que se cuentan: la calificación (las tareas pesan la
+   mitad; lo sostenido y las cifras, un cuarto cada uno; lo que «ya no aplica» no cuenta) y sus causas. */
+const FZA_RES = [{ k:'ok', t:'✅ Cumplida' }, { k:'medias', t:'◐ A medias' }, { k:'no', t:'❌ No' }];
+const FZA_POR = [
+  { k:'tiempo',   t:'⏱ Sin tiempo',            corr:'Cada pendiente con día y hora en un bloque de tu rutina: lo que no tiene hora no pasa.' },
+  { k:'dinero',   t:'💸 Sin dinero',           corr:'Antes del día 1, revisa el dinero del mes que entra: qué se paga, cuándo y de qué quincena sale.' },
+  { k:'otro',     t:'🔗 Dependía de alguien',  corr:'A quien dependía, pídele esta semana una fecha de entrega por escrito.' },
+  { k:'olvido',   t:'🧠 Se me olvidó',         corr:'Cada lunes, revisa «Te toca esta semana» en el Plan Maestro y marca lo que toca.' },
+  { k:'noaplica', t:'🔄 Ya no aplica',         corr:'' },
+];
+const FZA_HAB = [{ k:'siempre', t:'Siempre', v:1 }, { k:'casi', t:'Casi siempre', v:.75 }, { k:'aveces', t:'A veces', v:.4 }, { k:'nunca', t:'Nunca', v:0 }];
+const FZA_CAUSA = [
+  { k:'gaste',   t:'🛍 Gasté de más',            corr:'Respeta el tope de gasto diario del tablero y anota cada gasto el mismo día.' },
+  { k:'entro',   t:'📉 Entró menos',             corr:'Revisa tu ingreso con tu palanca de ingreso: lo que falte, se compensa en el mismo mes.' },
+  { k:'fuera',   t:'🧾 Un gasto fuera del plan', corr:'El gasto que no estaba en el plan, al plan: si se repite, va como fijo en el calendario.' },
+  { k:'plan',    t:'📐 El plan no era realista', corr:'Ajusta la meta en el plan con Coach: si no es realista, se corrige el plan, no se ignora.' },
+  { k:'refleja', t:'⏳ Aún no se refleja',       corr:'Vuelve a medir a mitad del mes que entra: si sigue igual, es una de las otras causas.' },
+];
+const FZA_ABIERTA = {};   // ym → 'si' mientras se audita, 'ver' para leer una cerrada (en memoria)
+const fzaPuedeMedir = ym => { const fin = fzmFinMes(ym), h = new Date(); h.setHours(0,0,0,0); return h <= new Date(fin.getFullYear(), fin.getMonth(), fin.getDate() + 10); };
+const fzaVeredicto = n => n === null ? { t:'Auditado', c:'' } : n >= 85 ? { t:'Mes cumplido', c:'bien' } : n >= 60 ? { t:'Mes a medias', c:'medio' } : { t:'Mes que no se cumplió', c:'mal' };
+// Las causas de un mes auditado, contadas: «sin tiempo ×2 · gasté de más».
+function fzaCausas(a){
+  const au = a && a.aud; if(!au) return '';
+  const c = {};
+  Object.keys(au.t || {}).forEach(id => { const p = (au.t[id] || {}).por; if(p && p !== 'noaplica' && au.t[id].r !== 'ok') c['p:'+p] = (c['p:'+p] || 0) + 1; });
+  Object.keys(au.c || {}).forEach(k => { const v = au.c[k]; c['c:'+v] = (c['c:'+v] || 0) + 1; });
+  return Object.keys(c).sort((x, y) => c[y] - c[x]).map(function(k){
+    const o = (k[0] === 'p' ? FZA_POR : FZA_CAUSA).find(x => x.k === k.slice(2));
+    return o ? '<span class="fzc-tag gris">'+o.t+(c[k] > 1 ? ' ×'+c[k] : '')+'</span>' : '';
+  }).join(' ');
 }
-function fzmNota(ym, v){
-  const A = fzmAud(), a = A[ym] || (A[ym] = {}); a.nota = String(v || '').slice(0, 2000); fzmGuardaAud(A);
+// Paso 1: la evidencia, con lo que hoy dice Finanzas al lado.
+function fzaDatos(ym){
+  const C = window.CIFRAS, F = D.fin || {}, out = [];
+  const B = C.balanceMeses(ym, 1, { tx: F.transactions || [], debts: F.debts || [] })[0] || { n: 0 };
+  out.push({ k:'movs', t:'Todo lo que gastaste y ganaste en '+fzmMesMin(ym)+' está anotado en Finanzas.', ev: B.n+' movimientos anotados en el mes' });
+  const acts = F.activos || [], cta = acts.find(x => x.id === 'ac013') || acts.find(x => x.type === 'liquido' && /bbva|cuenta/i.test(x.name || ''));
+  if(cta) out.push({ k:'cuenta', t:'El saldo de tu cuenta en Finanzas es el que dice el banco.', ev: esc(cta.name || 'Cuenta')+': '+fzmNum(+cta.value || 0)+(cta.fecha ? ' al '+fzmDia(cta.fecha) : '') });
+  const tc = (F.debts || []).find(d => d.id === 'd001');
+  if(tc && !tc.cancelada) out.push({ k:'bbva', t:'Lo que debes de la BBVA en Finanzas es lo que dice su app.', ev: 'BBVA: '+fzmNum(+tc.balance || 0) });
+  out.push({ k:'inv', t:'Lo de CETES, GBM y tus inversiones en Finanzas es lo real.', ev: fzmNum(C.fondoMaestria(F).total)+' entre CETES, inversiones y Bitcoin' });
+  return out;
 }
-/* Auditar el mes: cada tarea queda hecha (su casilla), pasa al mes siguiente o no va (lo que se dijo);
-   lo sostenido ya está marcado; y, si se audita hasta diez días después del cierre, la foto de las cifras.
-   Lo que pasa al mes siguiente aparece en su ficha y en el tablero. */
-function fzmAuditar(i, ym){
-  const C = window.CIFRAS, P = C.planMes(ym), A = fzmAud(), a = A[ym] || {}, F = fzmFicha(P, A), checks = rawGet('coach_checks_v1', {});
-  const fin = fzmFinMes(ym), hoyD = new Date(); hoyD.setHours(0,0,0,0);
-  const ta = document.querySelector('textarea[data-nota="'+ym+'"]'); if(ta) a.nota = ta.value.trim();
-  if(!a.nota && a.notas) a.nota = [a.notas.bien, a.notas.mal, a.notas.cambio].filter(Boolean).join(' · ');
-  const tareas = {};
-  F.tareas.forEach(t => { tareas[t.id] = ctHecha(t, checks) ? 'ok' : fzmDec(a, t.id, ym); });
+// Lo que llevan las respuestas de un mes: cuántas faltan, la calificación y las correcciones que salen.
+function fzaEvalua(ym, P, F, a){
+  const C = window.CIFRAS, au = (a && a.aud) || {}, checks = rawGet('coach_checks_v1', {}), dt = fzaDatos(ym);
+  let falta = dt.filter(d => !(au.datos || {})[d.k]).length;
+  let tS = 0, tN = 0; const por = {};
+  F.tareas.forEach(function(t){
+    const x = (au.t || {})[t.id] || {}, r = x.r || (ctHecha(t, checks) ? 'ok' : '');
+    if(!r){ falta++; return; }
+    if(r !== 'ok' && !x.por){ falta++; return; }
+    if(x.por === 'noaplica') return;
+    tN++; tS += r === 'ok' ? 1 : r === 'medias' ? .5 : 0;
+    if(r !== 'ok') por[x.por] = (por[x.por] || 0) + 1;
+  });
+  let hS = 0, hN = 0; const flojos = [];
+  F.habitos.forEach(function(h){
+    const v = (au.h || {})[h.id] || ((a && a.siempre || {})[h.id] ? 'siempre' : '');
+    if(!v){ falta++; return; }
+    hN++; hS += FZA_HAB.find(x => x.k === v).v;
+    if(v === 'aveces' || v === 'nunca') flojos.push(h);
+  });
+  const foto = fzmAuditado(a) ? fzmFoto(a) : null, vivo = !foto && fzaPuedeMedir(ym) ? C.cifrasHoy(D.fin) : null;
+  let cE = 0, cN = 0; const causas = {};
+  (P.metas || []).forEach(function(m){
+    const real = foto ? foto.real[m.k] : vivo ? vivo[m.k] : null; if(typeof real !== 'number') return;
+    const meta = foto && typeof foto.meta[m.k] === 'number' ? foto.meta[m.k] : m.meta;
+    cN++;
+    if(fzmEnMeta(m, real, meta)){ cE++; return; }
+    const c = (au.c || {})[m.k]; if(!c) falta++; else causas[c] = (causas[c] || 0) + 1;
+  });
+  const corr = [];
+  FZA_POR.forEach(p => { if(por[p.k] && p.corr) corr.push({ id:'cor-'+ym+'-'+p.k, txt: p.corr, por: por[p.k]+(por[p.k] === 1 ? ' tarea' : ' tareas')+' por '+p.t.replace(/^\S+\s/, '').toLowerCase() }); });
+  if(flojos.length) corr.push({ id:'cor-'+ym+'-habitos', txt:'Sostén con un disparador fijo —justo después de algo que ya haces cada día—: '+
+    flojos.map(h => '«'+(h.k ? h.k.toLowerCase()+': ' : '')+String(h.t).replace(/\.$/, '')+'»').join(', ')+'.', por: flojos.length+' de lo que sostienes, a veces o nunca' });
+  FZA_CAUSA.forEach(c => { if(causas[c.k]) corr.push({ id:'cor-'+ym+'-'+c.k, txt: c.corr, por: causas[c.k]+(causas[c.k] === 1 ? ' cifra: ' : ' cifras: ')+c.t.replace(/^\S+\s/, '').toLowerCase() }); });
+  const elegidas = corr.filter(x => (au.corr || {})[x.id]);
+  if(corr.length && !elegidas.length) falta++;
+  const partes = [];
+  if(tN) partes.push([tS / tN, .5]); if(hN) partes.push([hS / hN, .25]); if(cN) partes.push([cE / cN, .25]);
+  const peso = partes.reduce((s, x) => s + x[1], 0);
+  return { datos: dt, falta: falta, corr: corr, elegidas: elegidas,
+           tareas: tN ? Math.round(tS / tN * 100) : null, habitos: hN ? Math.round(hS / hN * 100) : null, cifras: cN ? { en: cE, de: cN } : null,
+           total: peso ? Math.round(partes.reduce((s, x) => s + x[0] * x[1], 0) / peso * 100) : null };
+}
+// La auditoría de un mes, en cinco pasos y con la calificación en vivo. `ro`: una cerrada, para leerla.
+function fzaHTML(i, ym, ro){
+  const C = window.CIFRAS, P = C.planMes(ym), A = fzmAud(), a = A[ym] || {}, F = fzmFicha(P, A);
+  const au = a.aud || {}, checks = rawGet('coach_checks_v1', {}), E = fzaEvalua(ym, P, F, a), V = fzaVeredicto(E.total);
+  const sigN = fzmMesMin(fzmMesSig(ym)), nom = fzmMesMin(ym), Y = fzmQ(ym);
+  const btn = (on, txt, fn, cls) => ro ? '<span class="fza-chip'+(on ? ' on' : '')+(cls ? ' '+cls : '')+'">'+txt+'</span>'
+    : '<button type="button" class="fza-chip'+(on ? ' on' : '')+(cls ? ' '+cls : '')+'" onclick="'+fn+'">'+txt+'</button>';
+  const sec = (n, t, s, cuerpo) => '<div class="fza-sec"><div class="fza-h"><span class="fza-n">'+n+'</span><b>'+t+'</b><span>'+s+'</span></div>'+cuerpo+'</div>';
+  const s1 = E.datos.map(function(d){ const on = !!(au.datos || {})[d.k];
+      return '<div class="fza-fila"><label class="fza-chk"><input type="checkbox"'+(on ? ' checked' : '')+(ro ? ' disabled' : '')+
+        ' onchange="fzaDato('+Y+','+fzmQ(d.k)+',this.checked,'+i+')"><span>'+d.t+'</span></label><span class="fza-ev">'+d.ev+'</span></div>'; }).join('')+
+    (ro ? '' : '<div class="fza-nota">¿No cuadra? Corrígelo en Finanzas y regresa: la auditoría mide lo anotado.</div>');
+  const s2 = F.tareas.length ? F.tareas.map(function(t){
+    const x = (au.t || {})[t.id] || {}, r = x.r || (ctHecha(t, checks) ? 'ok' : ''), p = fzmPartir(t.txt);
+    const sigue = x.sigue || (x.por === 'noaplica' ? 'no' : fzmDecDef(ym)), T = fzmQ(t.id);
+    const f = (campo, v) => 'fzaTarea('+Y+','+T+','+fzmQ(campo)+','+fzmQ(v)+','+i+')';
+    const tag = t.grupo === 'pasa' && t.de ? 'de '+fzmMesMin(t.de) : t.grupo === 'correccion' ? 'corrección' : t.grupo === 'salida' ? 'salida' : '';
+    return '<div class="fza-fila"><div class="fza-q"><b>'+(t.ico ? t.ico+' ' : '')+p.t+'</b>'+(tag ? ' <em class="fzc-tag gris">'+tag+'</em>' : '')+'</div>'+
+      '<div class="fza-ops">'+FZA_RES.map(o => btn(r === o.k, o.t, f('r', o.k), o.k)).join('')+'</div>'+
+      (r && r !== 'ok' ? '<div class="fza-sub"><span>¿Por qué?</span>'+FZA_POR.map(o => btn(x.por === o.k, o.t, f('por', o.k))).join('')+'</div>'+
+        '<div class="fza-sub"><span>¿Y ahora?</span>'+btn(sigue === 'pasa', '➡️ Pasa a '+sigN, f('sigue', 'pasa'))+btn(sigue === 'no', '✖ No va', f('sigue', 'no'), 'no')+'</div>' : '')+'</div>';
+  }).join('') : '<div class="fza-vacio">Este mes no trae tareas.</div>';
+  const s3 = F.habitos.map(function(h){
+    const v = (au.h || {})[h.id] || ((a.siempre || {})[h.id] ? 'siempre' : '');
+    return '<div class="fza-fila"><div class="fza-q">'+(h.k ? '<em class="fzc-k">'+esc(h.k)+'</em>' : '')+'<b>'+h.t+'</b></div>'+
+      '<div class="fza-ops">'+FZA_HAB.map(o => btn(v === o.k, o.t, 'fzaHabito('+Y+','+fzmQ(h.id)+','+fzmQ(o.k)+','+i+')', o.k === 'nunca' ? 'no' : o.k === 'aveces' ? 'medias' : 'ok')).join('')+'</div></div>';
+  }).join('');
+  const foto = fzmAuditado(a) ? fzmFoto(a) : null, vivo = !foto && fzaPuedeMedir(ym) ? C.cifrasHoy(D.fin) : null;
+  const s4 = (P.metas || []).map(function(m){
+    const real = foto ? foto.real[m.k] : vivo ? vivo[m.k] : null;
+    if(typeof real !== 'number') return '<div class="fza-fila"><div class="fza-q"><b>'+m.t+'</b></div><span class="fza-ev">no se puede medir: pasaron más de diez días del cierre</span></div>';
+    const meta = foto && typeof foto.meta[m.k] === 'number' ? foto.meta[m.k] : m.meta, bien = fzmEnMeta(m, real, meta), dif = m.mas ? real - meta : meta - real;
+    const c = (au.c || {})[m.k];
+    return '<div class="fza-fila"><div class="fza-q"><b>'+m.t+'</b> <span class="fza-mr">meta '+fzmNum(meta)+' · real '+fzmNum(real)+'</span></div>'+
+      '<span class="fza-est '+(bien ? 'bien' : 'mal')+'">'+(bien ? '✓ en la meta' : '✗ '+(m.mas ? 'faltan '+fzmNum(-dif) : fzmNum(-dif)+' de más'))+'</span>'+
+      (bien ? '' : '<div class="fza-sub"><span>¿Qué pasó?</span>'+FZA_CAUSA.map(o => btn(c === o.k, o.t, 'fzaCifra('+Y+','+fzmQ(m.k)+','+fzmQ(o.k)+','+i+')')).join('')+'</div>')+'</div>';
+  }).join('');
+  const s5 = E.corr.length ? E.corr.map(function(x){ const on = !!(au.corr || {})[x.id];
+      return '<div class="fza-fila"><label class="fza-chk"><input type="checkbox"'+(on ? ' checked' : '')+(ro ? ' disabled' : '')+
+        ' onchange="fzaCorr('+Y+','+fzmQ(x.id)+',this.checked,'+i+')"><span>'+x.txt+'</span></label><span class="fza-ev">'+x.por+'</span></div>'; }).join('')
+    : '<div class="fza-vacio">Nada que corregir: lo que contestaste no deja causas.</div>';
+  const pasos = [sec(1, 'Verifica tus datos', 'antes de calificar, que lo anotado sea verdad', s1),
+                 sec(2, 'Cada tarea', 'cumplida, a medias o no; si no, por qué y qué sigue', s2)];
+  if(F.habitos.length) pasos.push(sec(pasos.length + 1, 'Lo que sostienes', 'cuánto lo cumpliste en el mes', s3));
+  if((P.metas || []).length) pasos.push(sec(pasos.length + 1, 'Las cifras', 'la meta contra lo real; si no se llegó, qué pasó', s4));
+  pasos.push(sec(pasos.length + 1, 'Lo que corriges en '+sigN, 'sale de tus respuestas; marca lo que te comprometes a hacer', s5));
+  const parciales = [E.tareas !== null ? 'tareas '+E.tareas+' %' : '', E.habitos !== null ? 'lo sostenido '+E.habitos+' %' : '', E.cifras ? 'cifras '+E.cifras.en+' de '+E.cifras.de+' en meta' : ''].filter(Boolean).join(' · ');
+  // Una calificación con respuestas pendientes no es una auditoría: el número sale con todo contestado.
+  const lista = !E.falta && E.total !== null;
+  const res = '<div class="fza-res"><span class="fza-cal '+(lista ? V.c : '')+'">'+(lista ? E.total : '—')+'</span>'+
+    '<div class="fza-res-d"><b>'+(lista ? V.t : 'La calificación sale cuando contestes todo')+'</b><span>'+(lista ? parciales : 'Faltan '+E.falta+(E.falta === 1 ? ' respuesta.' : ' respuestas.'))+'</span>'+
+      '<span class="fza-peso">Las tareas pesan la mitad; lo sostenido y las cifras, un cuarto cada uno. Lo que «ya no aplica» no cuenta.</span></div>'+
+    (ro ? '' : '<div class="fza-cierra"><button type="button" class="ce-btn"'+(E.falta ? ' disabled' : '')+' onclick="fzaCerrar('+i+','+Y+')">Cerrar la auditoría</button>'+
+      '<span>'+(E.falta ? 'Faltan '+E.falta+(E.falta === 1 ? ' respuesta' : ' respuestas') : 'Todo contestado')+'</span></div>')+'</div>';
+  const top = '<div class="fza-top"><button type="button" class="ce-btn sec" onclick="fzaVolver('+i+','+Y+')">← La ficha de '+nom+'</button>'+
+    '<h3>🧾 La auditoría de '+fzmNombre(ym)+'</h3>'+
+    '<span class="fza-marcador"><b class="'+(lista ? V.c : '')+'">'+(lista ? E.total : '—')+'</b><span>'+(ro ? 'auditado el '+fzmDia(a.cerrado) : E.falta ? 'faltan '+E.falta+(E.falta === 1 ? ' respuesta' : ' respuestas') : 'lista para cerrar')+'</span></span></div>';
+  return top+pasos.join('')+res;
+}
+function fzaZ(ym){ const A = fzmAud(), a = A[ym] || (A[ym] = {}); a.aud = a.aud || {}; return { A: A, a: a, au: a.aud }; }
+function fzaAbrir(i, ym, ver){
+  FZA_ABIERTA[ym] = ver ? 'ver' : 'si';
+  if(!ver){ const z = fzaZ(ym); fzmGuardaAud(z.A); }
+  fzmPintar(i, ym);
+  const v = document.querySelector('.fases-panel[data-fase="'+i+'"] .fzm-vista[data-vista="'+ym+'"]');
+  if(v && v.scrollIntoView) v.scrollIntoView({ block:'start' });
+}
+function fzaVolver(i, ym){ delete FZA_ABIERTA[ym]; fzmPintar(i, ym); }
+function fzaDato(ym, k, on, i){ const z = fzaZ(ym); z.au.datos = z.au.datos || {}; if(on) z.au.datos[k] = 1; else delete z.au.datos[k]; fzmGuardaAud(z.A); fzmPintar(i, ym); }
+function fzaTarea(ym, id, campo, v, i){
+  const z = fzaZ(ym); z.au.t = z.au.t || {}; const x = z.au.t[id] = z.au.t[id] || {};
+  x[campo] = v;
+  if(campo === 'r' && v === 'ok'){ delete x.por; delete x.sigue; }
+  if(campo === 'por' && v === 'noaplica') x.sigue = 'no';
+  fzmGuardaAud(z.A); fzmPintar(i, ym);
+}
+function fzaHabito(ym, id, v, i){ const z = fzaZ(ym); z.au.h = z.au.h || {}; z.au.h[id] = v; fzmGuardaAud(z.A); fzmPintar(i, ym); }
+function fzaCifra(ym, k, v, i){ const z = fzaZ(ym); z.au.c = z.au.c || {}; z.au.c[k] = v; fzmGuardaAud(z.A); fzmPintar(i, ym); }
+function fzaCorr(ym, id, on, i){ const z = fzaZ(ym); z.au.corr = z.au.corr || {}; if(on) z.au.corr[id] = 1; else delete z.au.corr[id]; fzmGuardaAud(z.A); fzmPintar(i, ym); }
+/* Cerrar la auditoría: cada tarea queda cumplida (y su casilla, marcada), pasa al mes siguiente o no va;
+   lo sostenido, con su nivel; la foto de las cifras si se audita hasta diez días después del cierre; la
+   calificación; y las correcciones elegidas, que se vuelven tareas del mes que entra. */
+function fzaCerrar(i, ym){
+  const C = window.CIFRAS, P = C.planMes(ym), A = fzmAud(), a = A[ym] || {}, F = fzmFicha(P, A), E = fzaEvalua(ym, P, F, a);
+  if(E.falta) return;
+  const au = a.aud || {}, checks = rawGet('coach_checks_v1', {}), tareas = {};
+  au.t = au.t || {}; au.h = au.h || {};
+  F.tareas.forEach(function(t){
+    const x = au.t[t.id] = au.t[t.id] || {};
+    if(!x.r) x.r = ctHecha(t, checks) ? 'ok' : 'no';
+    if(x.r !== 'ok' && !x.sigue) x.sigue = x.por === 'noaplica' ? 'no' : fzmDecDef(ym);
+    tareas[t.id] = x.r === 'ok' ? 'ok' : x.sigue;
+    if(String(t.txt).indexOf('\u2705') < 0){ if(x.r === 'ok'){ if(!checks[t.id]) checks[t.id] = true; } else delete checks[t.id]; }
+  });
+  F.habitos.forEach(h => { if(!au.h[h.id] && (a.siempre || {})[h.id]) au.h[h.id] = 'siempre'; });
+  rawSet('coach_checks_v1', checks);
   let cifras = null;
-  if(P.metas.length && hoyD <= new Date(fin.getFullYear(), fin.getMonth(), fin.getDate() + 10)){
+  if(P.metas.length && fzaPuedeMedir(ym)){
     const r = C.cifrasHoy(D.fin), real = {}, meta = {};
     P.metas.forEach(m => { real[m.k] = r[m.k]; meta[m.k] = m.meta; });
     cifras = { real: real, meta: meta, medido: hoyLocal() };
   }
-  A[ym] = Object.assign({}, a, { cerrado: hoyLocal(), tareas: tareas, cifras: cifras });
-  ['reabierto','borrador','notas'].forEach(k => { delete A[ym][k]; });
+  A[ym] = Object.assign({}, a, { aud: au, cerrado: hoyLocal(), tareas: tareas, cifras: cifras,
+    califica: { total: E.total, tareas: E.tareas, habitos: E.habitos, cifras: E.cifras },
+    correcciones: E.elegidas.map(x => ({ id: x.id, txt: x.txt })) });
+  ['reabierto','borrador','notas','nota','decision'].forEach(k => { delete A[ym][k]; });
   fzmGuardaAud(A);
+  delete FZA_ABIERTA[ym];
   fzmPintar(i, ym);
   const sig = fzmMesSig(ym), j = fzmFaseDe(sig), vs = j >= 0 ? document.querySelector('.fases-panel[data-fase="'+j+'"] .fzm-vista[data-vista="'+sig+'"]') : null;
   if(vs && vs.dataset.pintada) fzmPintar(j, sig);
   if(cur === 1) renderCoach();
 }
+// Reabrir: vuelve a la auditoría con lo que se contestó.
 function fzmReabrir(i, ym){
   const A = fzmAud(); if(!A[ym]) return;
-  A[ym].reabierto = true; fzmGuardaAud(A); fzmPintar(i, ym);
+  A[ym].reabierto = true; fzmGuardaAud(A);
+  FZA_ABIERTA[ym] = 'si'; fzmPintar(i, ym);
 }
 // Gasto mensual real: promedio de los gastos de los últimos 3 meses cerrados. Se usa para
 // dimensionar el fondo de emergencia contra la realidad y no contra un número redondo.

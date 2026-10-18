@@ -1033,9 +1033,11 @@ del plan a la fecha del millón (`finDelPlan()`). La ventana es opaca, como las 
 Adán, 18-oct-2026: *"en cada fase debes crear diferentes subtabs de los meses y poner la información,
 también debe ir como información general… al terminar cada mes debemos auditar qué cosas se cumplieron
 y qué cosas no… en todas las fases cada mes tiene un plan completo"*, y que la auditoría *"deben ser
-checklist o cifras"*, con la información bien acomodada y no *"mucho pero nada a la vez"*. Por eso **cada mes es una ficha con lo único que se audita —su checklist y sus
-cifras— y auditarlo es cerrar esa misma ficha**: nada se repite, y todos los meses llevan la misma ficha
-desde el principio.
+checklist o cifras"*, con la información bien acomodada y no *"mucho pero nada a la vez"*; y *"la auditoría
+es con los checklist, no un text box… ve cómo hacerle para auditar bien bien"*. Por eso **cada mes es una
+ficha con lo único que se audita —su checklist y sus cifras—**, todos los meses la llevan desde el
+principio, y **se audita como lo haría un auditor**: en cinco pasos, todo con opciones y nada de texto
+libre.
 
 **Las pestañas** (`fzmTabsHTML`): *Información general* y los meses agrupados por año, cada uno con el
 punto de su auditoría —verde auditado, rojo ya cerró sin auditar, el color de la fase el de hoy—.
@@ -1043,9 +1045,9 @@ punto de su auditoría —verde auditado, rojo ya cerró sin auditar, el color d
 punto y la información general, oculta mientras se ve un mes).
 
 **La información general** (`fzvGeneralHTML`), en bandas, de lo que se actúa a lo que se explica: la meta,
-el checkpoint y **cómo va la fase** (meses auditados, tareas hechas hasta hoy, cifras en meta y lo que
-sigue: *Auditar septiembre* o el próximo cierre); las **fichas de los meses** (`.fzv-mes`: tareas hechas,
-lo sostenido, las cifras —o cuántas quedaron en meta— y su estado), que abren su mes; GBM al cerrar cada
+el checkpoint y **cómo va la fase** (meses auditados, tareas cumplidas hasta hoy, la calificación de los
+meses y lo que sigue: *Auditar septiembre* o la próxima auditoría); las **fichas de los meses**
+(`.fzv-mes`: tareas cumplidas y su estado, con la calificación si ya se auditó), que abren su mes; GBM al cerrar cada
 mes en barras, lo que dejas de hacer y lo de toda la fase; y **plegados** el porqué, un mes de cada etapa
 renglón por renglón y las rutinas con dónde recortar (`faseAhorroHTML` devuelve sus partes por separado).
 
@@ -1062,26 +1064,51 @@ un aviso lleva a él.
 - **🔢 Las cifras** (derecha, `fzmCifrasHTML`): las metas del mes (`metas`) con lo real de hoy
   (`CIFRAS.cifrasHoy`) o la foto al auditar. A media quincena no se pintan de rojo —todavía falta lo que
   el plan pone después—; desde la última semana del mes, sí.
-- **🧾 La auditoría** (`fzmCierreHTML`): por venir, una línea con la fecha; abierta desde siete días antes
-  de que acabe el mes (y vencida, en rojo), cada tarea sin marcar lleva **➡️ Pasa a noviembre** o **✖ No va**
-  (`fzmDecide`), una nota opcional que se guarda al vuelo (`fzmNota`) y **Auditar octubre** (`fzmAuditar`):
-  lo marcado queda hecho, lo demás pasa o no va, y si se audita hasta diez días después del cierre se
-  guarda la foto de las cifras. Auditada: cuántas hechas, cuántas pasaron, cuántas no van, lo sostenido,
-  las cifras en meta y la nota, con **Reabrir** (`fzmReabrir`). En una fase que ya cerró, lo no hecho de
-  entrada no va —el plan ya lo movió a la fase que sigue— (`fzmDecDef`).
+- **🧾 La auditoría** (`fzmCierreHTML`): por venir, una línea con la fecha; desde siete días antes de que
+  acabe el mes (y vencida, en rojo), **Auditar octubre** la abre en el lugar de la ficha. Auditada: la
+  calificación con su veredicto, cuántas tareas quedaron cumplidas, pasaron o no van, las causas contadas
+  y lo que se corrige el mes siguiente, con **Ver la auditoría** (en solo lectura) y **Reabrir**.
 - **💰 El dinero** y **📅 las fechas**, en renglones cortos: el ahorro con lo que entra y sale, qué va a GBM
   el 1 y el 15, los abonos de la BBVA desde el último saldo dicho, lo propio de ese mes y el renglón por
   renglón plegado; el cierre y el checkpoint de la fase, los hitos, el cambio de foco y lo que se paga.
 
-**Lo que pasa al mes siguiente** (`planArrastradas`) aparece en el primer mes sin auditar después del que lo
-pasó —aunque se audite en desorden— y en *Te toca esta semana* del tablero, y ahí se vuelve a decidir; un
-mes auditado conserva la lista que se auditó. Por mes, en `plan_auditoria_v1`: `siempre` (lo sostenido),
-`decision` (lo que no va, o lo que pasa en una fase cerrada), `nota` y, al auditar, `cerrado`, `tareas`
-(`ok`, `pasa` o `no`) y `cifras` (`real`, `meta`, `medido`); `reabierto` al reabrir. El **control 38** del
+**La auditoría, paso a paso** (`fzaHTML`, en el lugar de la ficha mientras se audita; `FZA_ABIERTA`):
+
+1. **Verifica tus datos**: antes de calificar, que lo anotado sea verdad. Una casilla por cada control, con
+   lo que hoy dice Finanzas al lado (`fzaDatos`): los movimientos anotados del mes, el saldo de la cuenta,
+   lo que se debe de la BBVA y lo de CETES, GBM e inversiones. Si algo no cuadra, se corrige en Finanzas.
+2. **Cada tarea**: *✅ Cumplida*, *◐ A medias* o *❌ No*; si no, **¿por qué?** (*sin tiempo*, *sin dinero*,
+   *dependía de alguien*, *se me olvidó*, *ya no aplica*) y **¿y ahora?** (*pasa al mes siguiente* o *no
+   va*). Lo que trae su casilla marcada entra como cumplida; en una fase que ya cerró, lo no cumplido de
+   entrada no va —el plan ya lo movió— (`fzmDecDef`).
+3. **Lo que sostienes**: *siempre*, *casi siempre*, *a veces* o *nunca* (lo marcado durante el mes entra
+   como *siempre*).
+4. **Las cifras**: la meta contra lo real; la que no llegó pide **¿qué pasó?** (*gasté de más*, *entró
+   menos*, *un gasto fuera del plan*, *el plan no era realista*, *aún no se refleja*).
+5. **Lo que corriges**: acciones que salen de las causas marcadas (`FZA_POR`, `FZA_CAUSA`, y una para lo que
+   se sostuvo a veces o nunca), cada una con su porqué; se marca a cuáles se compromete y **se vuelven
+   tareas del mes siguiente** (*Lo que corriges*, con su casilla).
+
+Cada respuesta se guarda al tocarla (`fzaTarea`, `fzaHabito`, `fzaCifra`, `fzaDato`, `fzaCorr`) y
+`fzaEvalua` cuenta lo que falta. **La calificación** sale solo con todo contestado: las tareas pesan la
+mitad (cumplida 1, a medias ½), lo sostenido un cuarto (siempre 1, casi siempre ¾, a veces 0.4) y las
+cifras otro cuarto; lo que *ya no aplica* no cuenta. 85 o más es *mes cumplido*, de 60 a 84 *a medias* y
+menos, *no se cumplió*. **Cerrar la auditoría** (`fzaCerrar`) deja cada tarea cumplida (con su casilla
+marcada), pasada o fuera, guarda la foto de las cifras si es hasta diez días después del cierre, la
+calificación y las correcciones; **Reabrir** (`fzmReabrir`) vuelve a la auditoría con lo contestado.
+
+**Lo que pasa al mes siguiente y lo que se corrige** (`planArrastradas`) aparecen en el primer mes sin
+auditar después del que los dejó —aunque se audite en desorden— y en *Te toca esta semana* del tablero, y
+ahí se vuelven a auditar; un mes auditado conserva la lista que se auditó. Por mes, en
+`plan_auditoria_v1`: `siempre` (lo sostenido durante el mes), `aud` (las respuestas: `datos`, `t`, `h`, `c`,
+`corr`) y, al cerrar, `cerrado`, `tareas` (`ok`, `pasa` o `no`), `cifras` (`real`, `meta`, `medido`),
+`califica` y `correcciones` (cada una con su texto y un id que dice el mes y la causa); `reabierto` al reabrir. El **control 38** del
 verificador vigila que los 63 meses de las fases 1 a 4 tengan plan completo y sus cifras, y que los `id` de
 `mensual` no choquen.
 
-Medido a 2048×1040: la ficha de octubre mide 1124 px de alto y la información general 1092; sin desborde lateral a 2048, 1600, 1366 ni 390 px, en claro y en oscuro.
+Medido a 2048×1040: la ficha de octubre mide 1124 px de alto, la información general 1092 y la auditoría
+1682 (se desplaza dentro de la ventana); sin desborde lateral a 2048, 1600, 1366 ni 390 px, en claro y en
+oscuro.
 
 **Patrimonio hacia $1M** es todo lo suyo menos las deudas (`patrimonioNeto()`, que delega en `CIFRAS.patrimonio()` —la misma fórmula de Coach—: inversiones, fondo,
 Bitcoin a precio de hoy, efectivo y cuenta, y los bienes), la misma cifra que el Patrimonio Neto de
