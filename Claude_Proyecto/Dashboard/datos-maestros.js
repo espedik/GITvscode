@@ -532,6 +532,13 @@ window.CIFRAS = (function () {
      ],
      deja:"Riesgo alto y súper alto en Qué invertir hoy: el dinero de Alemania vive en GBM, en un fondo de deuda de corto plazo, porque se usa en meses, no en años. Compras a meses. Gastar de la quincena antes de mandar el ahorro. Abonos extra al BYD: cada peso extra va a la salida. Nuevos frentes de negocio: el de tu papá se queda en piloto automático con los posts y el dossier. Y el depa: a fin de enero se entrega.",
      checkpoint:"31 mar 2027: solicitud enviada y GBM contra {{marzoParaSalida}}, lo que hace falta para pagar la salida completa en agosto si el ingreso nuevo sigue hasta allá. Si llega, sigue septiembre de 2027 y se decide el {{decisionMaestria}}. Si no, la salida se mueve a septiembre de 2028 —la solicitud se repite en noviembre, ya armada— y el ahorro sigue igual: no se viaja a medias ni con deuda.",
+     // Lo que se repite cada mes de la fase, además de lo de toda la fase (`cont`): lo lee el plan de
+     // cada mes (`planMes`). El día 1 y el 15 los dice el dinero del mes, con sus montos.
+     mensual:[
+      {id:"m1-1",cuando:"Cada lunes",txt:"Lo que apartas de Didi, el mismo lunes: a la BBVA mientras tenga saldo y, después, a GBM."},
+      {id:"m1-2",cuando:"Cada semana",txt:"Las horas de tu foco de aprendizaje, en el bloque de la noche del Plan Maestro."},
+      {id:"m1-3",cuando:"Cada día",txt:"Cada gasto anotado en Finanzas el mismo día; lo que pagues con tarjeta, con la tarjeta en la nota."},
+     ],
      semanas:[
       {id:"a1-1",mes:"2026-10",txt:"Deja la BBVA en cero quincena a quincena. El 15 oct, los {{ahorroDia15}} de la quincena van a la tarjeta y no a GBM; los lunes 19 y 26, lo de Didi, y el 1 nov, lo que falte de los {{ahorroDia1}} (el resto, a GBM): quedará en cero el {{bbvaCero}}. Desde ahí, lo que pagues con ella lo pagas en la misma quincena."},
       {id:"a1-2",mes:"2026-10",txt:"Abre tu cuenta de GBM para Alemania, aparte del día a día. En cuanto la BBVA quede en cero, lo que sobra de cada quincena va ahí el día que entra el sueldo —{{ahorroDia1}} el 1 y {{ahorroDia15}} el 15— y lo de Didi cada lunes, hasta juntar {{didiAhorro}} al mes."},
@@ -565,6 +572,10 @@ window.CIFRAS = (function () {
      ],
      deja:"Viajes y compras que no estén en la lista de salida. Y nada sin papel: cuarto y auto, con contrato.",
      checkpoint:"{{decisionMaestria}}, el día de decidir: la admisión en la mano y {{mayoParaSalida}} en GBM —lo que llena la cuenta bloqueada en junio y deja pagada la salida completa en agosto—. Si están las dos, te vas. Sin admisión, se reaplica para septiembre de 2028; sin el dinero, la salida se mueve un año y el ahorro sigue. No se viaja a medias ni con deuda.",
+     mensual:[
+      {id:"m2-1",cuando:"Cada semana",txt:"Las horas de tu foco de aprendizaje y alemán sin pausa: llegas a Esslingen con el A2 y rumbo al B1."},
+      {id:"m2-2",cuando:"Cada día",txt:"Cada gasto anotado en Finanzas el mismo día, y nada que no esté en la lista de salida."},
+     ],
      semanas:[
       {id:"a2-1",mes:"2027-04",txt:"Declaración anual. Con tus deducciones; si sale saldo a favor, a GBM."},
       {id:"a2-2",mes:"2027-04",txt:"Goethe-Zertifikat A2 (o telc A2) en México. El requisito de alemán de Esslingen queda cumplido desde el primer día."},
@@ -593,6 +604,11 @@ window.CIFRAS = (function () {
      ],
      deja:"Gastos fuera del presupuesto en euros, viajes que no paga el Werkstudent y cualquier deuda alemana: ni tarjeta a meses ni préstamo.",
      checkpoint:"Al cerrar el 1er semestre (feb 2028): sin Werkstudent, el plan se ajusta ese mes —más horas en vacaciones, un HiWi en la universidad (no cuenta en el tope de 140 días) o recortar— antes de que el dinero llegue a seis meses de gasto. Sin oferta en enero de 2029, la búsqueda se vuelve de tiempo completo.",
+     mensual:[
+      {id:"m3-1",cuando:"Cada mes",txt:"Tu presupuesto en euros: la vida en Esslingen dentro de lo previsto en el dinero del mes; si algo se pasa, se recorta antes de tocar el fondo."},
+      {id:"m3-2",cuando:"Cada semana",txt:"El Werkstudent hasta 20 horas en semestre —el tope es de 140 días al año— y una sesión de alemán o Tandem."},
+      {id:"m3-3",cuando:"Cada mes",txt:"Cuántos meses de gasto quedan en el fondo: si bajan de seis, el plan se ajusta ese mismo mes."},
+     ],
      semanas:[
       {id:"a3-1",mes:"2027-09",txt:"Las primeras dos semanas. Anmeldung (obligatoria en 14 días), inscripción, cuenta, seguro y SIM; después, el permiso de residencia."},
       {id:"a3-2",mes:"2027-09",txt:"Presupuesto en euros. €1,050 al mes: renta, comida, seguro y transporte; lo que pase de ahí se recorta antes de tocar el fondo."},
@@ -621,6 +637,10 @@ window.CIFRAS = (function () {
      ],
      deja:"Subir el nivel de vida al ritmo del sueldo nuevo: cada aumento va primero al ahorro. Y ningún premio a crédito.",
      checkpoint:"Cada diciembre, el patrimonio líquido contra la proyección. Dos cortes seguidos por debajo: se ajusta el porcentaje de ahorro o la fecha, sin abandonar la meta.",
+     mensual:[
+      {id:"m4-1",cuando:"El día de pago",txt:"El 30 % del neto a la inversión el mismo día —el ETF-Sparplan—, antes de gastar."},
+      {id:"m4-2",cuando:"Cada mes",txt:"Tu gasto dentro de lo previsto en el dinero del mes y el patrimonio líquido contra la proyección."},
+     ],
      semanas:[
       {id:"a4-1",mes:"2029-03",txt:"Automatiza el ahorro el día de pago. 30% del neto a la inversión el mismo día; súbelo con cada aumento."},
       {id:"a4-2",mes:"2029-06",txt:"Portafolio de largo plazo. Fondos indexados globales con comisión baja (en Alemania, un ETF-Sparplan); acciones sueltas, no más del 10%."},
@@ -778,6 +798,67 @@ window.CIFRAS = (function () {
     ],
   };
   function costoSalida(c, eur) { return (c.mxn || 0) + (c.eur || 0) * (eur || PROYECTO.eurMxn); }
+
+  /* ── El plan de un mes ──────────────────────────────────────────────────────────────────────
+     Adán, 18-oct-2026: "en cada fase debes crear diferentes subtabs de los meses y poner la
+     información… en todas las fases cada mes tiene un plan completo". Un mes del plan, armado con
+     lo que ya vive aquí, sin escribir nada dos veces: sus tareas de fase (`semanas` con `mes`), lo
+     de la salida a Alemania que cae ese mes (`SALIDA.bloques`, y lo que se paga en `costos`), lo
+     que se sostiene toda la fase (`cont`) y lo que se repite cada mes (`mensual`), el foco de
+     aprendizaje (`HAB_FOCO`), el dinero de la proyección (`PROYECCION.meses`: lo que entra y sale,
+     el ahorro, GBM y el patrimonio al cerrar), los abonos de la BBVA y las fechas que caen en él:
+     el arranque y el cierre de la fase, su checkpoint, los hitos de las rutas de las fases y el
+     cambio de foco. Lo pinta la ventana de las fases del Dashboard, una pestaña por mes, y ahí
+     mismo se audita al cerrarlo. */
+  const MESES_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+  // El mes ('AAAA-MM') y el día, si lo trae, de una fecha escrita: «31 mar 2027», «Junio 2027».
+  function mesDeTexto(s) {
+    const m = String(s || '').toLowerCase()
+      .match(/(?:(\d{1,2})\s+(?:de\s+)?)?(ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)[a-zé]*\.?\s+(?:de\s+)?(\d{4})/);
+    return m ? { mes: m[3] + '-' + String(MESES_ES.indexOf(m[2]) + 1).padStart(2, '0'), dia: m[1] ? +m[1] : 0 } : null;
+  }
+  function planMes(ym) {
+    const f = PHASES.filter(function (p) { return ym >= mesDe(p.start) && ym <= mesDe(p.end); })[0] || null;
+    const salida = [];
+    SALIDA.bloques.forEach(function (b) {
+      b.items.forEach(function (x) { if (x.cuando === ym) salida.push({ id: x.id, txt: x.txt, ico: b.ico, tema: b.titulo }); });
+    });
+    const fechas = [];
+    const pon = function (dia, txt, tipo) { fechas.push({ dia: dia || 0, txt: txt, tipo: tipo }); };
+    if (f && mesDe(f.start) === ym) pon(f.start.getDate(), 'Arranca la ' + f.tag + ': ' + f.title + '.', 'fase');
+    if (f && mesDe(f.end) === ym) pon(f.end.getDate(), 'Cierra la ' + f.tag + '.', 'fase');
+    // Los hitos fechados de cualquier ruta: la de la Fase 1 pone junio y agosto de 2027, que caen en la 2.
+    PHASES.forEach(function (p) {
+      (p.razones || []).forEach(function (b) {
+        (b.hitos || []).forEach(function (h) {
+          const d = mesDeTexto(texto(h.f || ''));
+          if (d && d.mes === ym) pon(d.dia, texto(h.t + (h.v ? ' (' + h.v + ')' : '') + (h.s ? ': ' + h.s : '') + '.'), 'hito');
+        });
+      });
+    });
+    if (f && f.checkpoint) {
+      const cp = texto(f.checkpoint), antes = cp.split(':')[0], d = mesDeTexto(antes);
+      if (/cada diciembre/i.test(antes) && ym.slice(5) === '12') pon(0, 'Checkpoint: ' + cp, 'checkpoint');
+      else if (d && d.mes === ym) pon(d.dia, 'Checkpoint: ' + cp.slice(antes.length + 1).trim(), 'checkpoint');
+    }
+    const foco = HAB_FOCO.filter(function (h) { return ym >= h.desde && ym <= h.hasta; })[0] || null;
+    if (foco && foco.hasta === ym) pon(0, 'Cambia el foco: ' + foco.cambio, 'foco');
+    fechas.sort(function (a, b) { return (a.dia || 99) - (b.dia || 99); });
+    const sk = foco ? SK.filter(function (x) { return x.id === foco.id; })[0] : null;
+    return {
+      mes: ym, fase: f ? PHASES.indexOf(f) : -1,
+      tareas: f ? (f.semanas || []).filter(function (x) { return x.mes === ym; }) : [],
+      salida: salida,
+      siempre: f ? (f.semanas || []).filter(function (x) { return x.cont; }) : [],
+      mensual: (f && f.mensual) || [],
+      foco: foco ? Object.assign({ nombre: sk ? sk.name : foco.id }, foco) : null,
+      dinero: PROYECCION.meses.filter(function (m) { return m.mes === ym; })[0] || null,
+      costos: SALIDA.costos.filter(function (c) { return c.mes === ym; })
+        .map(function (c) { return { txt: c.txt, mxn: costoSalida(c), gasta: c.gasta !== false }; }),
+      bbva: planBbva().abonos.filter(function (a) { return a.fecha.slice(0, 7) === ym; }),
+      fechas: fechas,
+    };
+  }
 
   /* ── LA PROYECCIÓN DEL PLAN MAESTRO ──────────────────────────────────────────────────────────
      Mes a mes, del 1 oct 2026 al millón: lo que entra, lo que sale, GBM (todo el
@@ -5291,7 +5372,7 @@ window.CIFRAS = (function () {
     SALIDA: SALIDA,
     PROYECCION: PROYECCION,
     proyectar: proyectar,
-    cortesSalida: cortesSalida, desgloseMes: desgloseMes, mesTipo: mesTipo,
+    cortesSalida: cortesSalida, desgloseMes: desgloseMes, mesTipo: mesTipo, planMes: planMes,
     didiAlAhorro: didiAlAhorro, GRUPOS_SUELDO: GRUPOS_SUELDO, rutinasDesglose: rutinasDesglose,
     costoSalida: costoSalida,
     APRENDIZAJE: APRENDIZAJE,

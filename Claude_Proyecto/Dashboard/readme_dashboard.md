@@ -70,7 +70,7 @@ Todas comparten origen porque se abren con `file://`.
 forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
-y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta),
+y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta),
 `habilidades_checklist_v1`, `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-inversion-v1` (pestaña, perfil elegido y monto de *Qué
 invertir hoy*).
 
@@ -863,6 +863,8 @@ para que el chip `P1` no se vuelva gris) y en verde. El tope de filas va sobre l
 sobre la lista entera. Un `true` de los de antes cuenta como hecha, pero al no tener semana no
 reaparece. La semana la puede fijar quien llama (`toggleFaseCheck(id, estado, semana)`): el
 módulo Fase de Mi Día marca siempre en la semana de hoy, aunque el tablero tenga abierto otro mes.
+Lo que la auditoría del mes anterior pasó a este (`planArrastradas`) entra en el reparto como una
+tarea más del mes.
 
 **`8 ya hechas` es un botón** que despliega la lista: con casilla lo que se marcó desde aquí
 (`checks[id]`, se puede desmarcar); con ✓ y sin casilla lo que trae ✅ escrito en `PHASES` y los
@@ -1000,10 +1002,12 @@ caben tres meses de tareas sin desplazarse. Mientras está abierta se oculta la 
 - **La cabecera de la fase** (`.fz-cab`): el título y tres casillas —Empieza, Termina y Dura— con las
   fechas escritas completas, la barra de días y *vas en el día 3 de 182 · quedan 179 días · 0 de 15
   tareas hechas*.
-- **Debajo, dos columnas** (`.fases-cols`, una sola bajo 1024 px): a la izquierda, en este orden, lo
-  que tiene que estar listo en su fecha —la meta numerada (`faseMetaHTML`)—, el porqué, el
-  checkpoint, lo que se deja y el dinero de la fase; a la derecha las tareas mes por mes, cada mes con
-  sus días (*del 1 al 31 de octubre*) y el de hoy marcado.
+- **Debajo, las subpestañas de la fase** (`.fzm-tabs`, ver *Los meses de cada fase y su auditoría*):
+  **Información general** y un mes por pestaña. La general va en dos columnas (`.fases-cols`, una sola
+  bajo 1024 px): a la izquierda, en este orden, lo que tiene que estar listo en su fecha —la meta
+  numerada (`faseMetaHTML`)—, el porqué, el checkpoint, lo que se deja y el dinero de la fase; a la
+  derecha **los meses de la fase** (`fzmResumenHTML`), una tarjeta por mes con sus tareas hechas y su
+  auditoría —✓ auditado, ⚠ sin auditar, en curso o por venir— que abre ese mes, y lo de toda la fase.
 - **💡 Por qué esta fase** (`faseRazonesHTML`) pinta los bloques `razones` de la fase en el maestro
   (Adán, sobre el párrafo que había: *"esto no está bien diseñado, hazlo mejor visualmente e
   impactante"*). Arriba, la frase que manda (`.fzr-lema`, en Fraunces con la raya del color de la
@@ -1023,8 +1027,64 @@ caben tres meses de tareas sin desplazarse. Mientras está abierta se oculta la 
   debajo lo que falta o lo que sobra; tus rutinas producto por producto con dónde recortar en verde
   (`faseRutinasHTML`), y el patrimonio que espera la trayectoria (`liquido`).
 
-Abre en la fase en curso (o la siguiente sin empezar, o la última si el plan ya cerró). El subtítulo
-va del arranque del plan a la fecha del millón (`finDelPlan()`).
+Abre en la fase en curso (o la siguiente sin empezar, o la última si el plan ya cerró), en la
+pestaña del mes de hoy; las otras fases abren en su información general. El subtítulo va del arranque
+del plan a la fecha del millón (`finDelPlan()`). La ventana es opaca, como las del alemán y Python.
+
+### Los meses de cada fase y su auditoría
+
+Adán, 18-oct-2026: *"en cada fase debes crear diferentes subtabs de los meses y poner la información,
+también debe ir como información general… al terminar cada mes debemos auditar qué cosas se cumplieron
+y qué cosas no… en todas las fases cada mes tiene un plan completo"*.
+
+**Las pestañas** (`fzmTabsHTML`): *Información general* y los meses agrupados por año, cada uno con el
+punto de su auditoría —verde auditado, rojo ya cerró y falta auditar, el color de la fase el de hoy—.
+`fzmVer(i, vista)` cambia de pestaña; un mes se pinta al abrirlo (`fzmPintar`, son 63 meses de la Fase 1
+a la 4 y dos de la 0), y repintarlo deja al día su punto y el resumen de la fase.
+
+**El plan de cada mes** (`faseMesHTML`) sale entero de `CIFRAS.planMes(mes)` (ver `DATOS-MAESTROS.md`):
+
+- **🎯 Lo que tiene que quedar hecho**: las tareas de la fase de ese mes, las que pasaron del mes
+  anterior (*pasa de septiembre*) y, aparte, lo de la salida a Alemania de ese mes. Las casillas son las
+  de `coach_checks_v1` —las mismas de Coach y del tablero— y se marcan aquí (`fzmCheck` →
+  `toggleFaseCheck`); lo que trae ✅ escrito en el maestro va marcado y fijo.
+- **🔁 Todo el mes**: lo que se repite cada mes en la fase (`mensual`: los lunes de Didi, las horas del
+  foco, el presupuesto en euros, el 30 % del día de pago…), el último día para auditar y lo de toda la
+  fase (`cont`).
+- **📚 Tu foco de aprendizaje**: la habilidad de `HAB_FOCO` con sus horas, la semana y lo que la
+  demuestra; pasado el último tramo, lo que dice su cambio (en la Fase 3).
+- **📅 Fechas y pagos**: el arranque y el cierre de la fase, su checkpoint, los hitos fechados de las
+  rutas, el cambio de foco y lo que se paga de la salida ese mes.
+- **💰 El dinero del mes** (`fzmDineroHTML`): de la proyección, renglón por renglón, el ahorro, lo que
+  hay en GBM (o en tu fondo, ya en Alemania), el patrimonio y la BBVA al cerrar, qué va a GBM el 1 y el
+  15 y los abonos de la BBVA. Antes de la proyección (la Fase 0), lo que se anotó en Finanzas.
+
+Sobre el mes de hoy, si el anterior cerró sin auditar, un aviso lo lleva a él.
+
+**🧾 La auditoría** (`fzmAuditHTML`), en tres estados:
+
+- **Por venir**: qué se va a revisar y cuándo.
+- **Abierta** (el mes en curso o uno que ya cerró): cada tarea con *✅ Hecha*, *➡️ Pasa a noviembre* o *✖ No
+  va* —de entrada, hecha si su casilla lo está y, si no, pasa—, una casilla por cada cosa de todo el mes
+  (*¿lo sostuviste?*), las cifras de hoy contra lo que la proyección pone al cerrarlo —patrimonio líquido
+  (`CIFRAS.patrimonio`), lo de Alemania (`CIFRAS.fondoMaestria`) y la BBVA— y tres notas: lo que
+  funcionó, lo que no salió y por qué (se analiza, no se castiga) y lo que cambia el mes que entra. Lo
+  escrito se guarda al vuelo (`fzmBorrador`), así que marcar una casilla y repintar no lo borra.
+  **Cerrar el mes** (`fzmAuditar`) se puede desde siete días antes de que termine: las casillas se ponen
+  de acuerdo con lo auditado y, si se cierra hasta diez días después, se guarda la foto de las cifras.
+- **Auditada**: la fecha, cuántas tareas quedaron hechas, cuántas pasaron y cuántas no van, cada una con
+  su icono, lo sostenido, las cifras al cerrar y las notas; **Reabrir** (`fzmReabrir`) vuelve al
+  formulario con lo guardado.
+
+**Lo que pasa al mes siguiente** (`planArrastradas`) aparece en su plan y en *Te toca esta semana* del
+tablero, y en su auditoría se vuelve a decidir. Se guarda por mes en `plan_auditoria_v1`:
+`{ cerrado, tareas: {id: 'ok'|'pasa'|'no'}, siempre: {id: true}, notas: {bien, mal, cambio}, cifras:
+{filas, medido} }`, más `borrador` mientras está abierta y `reabierto` al reabrirla. El **control 38** del
+verificador vigila que los 63 meses de las fases 1 a 4 tengan plan completo y que los `id` de `mensual`
+no choquen.
+
+Medido a 2048×1040: el mes de octubre mide 2345 px de alto y la ventana se desplaza por dentro; sin
+desborde lateral a 2048, 1600, 1366 ni 390 px, en claro y en oscuro.
 
 **Patrimonio hacia $1M** es todo lo suyo menos las deudas (`patrimonioNeto()`, que delega en `CIFRAS.patrimonio()` —la misma fórmula de Coach—: inversiones, fondo,
 Bitcoin a precio de hoy, efectivo y cuenta, y los bienes), la misma cifra que el Patrimonio Neto de

@@ -668,6 +668,7 @@ Mis Metas reúne los medidores financieros, los instrumentos y las metas con sus
 
 ## Cómo sabes que funciona
 - Pasos cerrados por mes, contados en pasos y no en promedios de porcentajes.
+- Cada mes del Plan Maestro auditado al cerrarlo: lo hecho, lo que pasa al siguiente y por qué.
 - Toda meta activa tiene un siguiente paso con fecha.
 - Días seguidos sin alcohol —la racha de Cero alcohol en Hábitos, que la tarjeta enseña— y menos horas de pantalla.
 
