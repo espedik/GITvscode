@@ -174,18 +174,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .slides{position:fixed;top:58px;left:0;right:0;bottom:0;overflow:hidden}
 .slide{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  /* padding: el lado izquierdo bajó a 4vw cuando el rail de ese lado desapareció
-     (2026-08-31); a la derecha se mantiene el piso, que es donde vive el rail.
-     Nota vieja, aún válida para el lado derecho: las barras HUD fijas de los lados
-     (.hud-side-left/-right) tienen ancho FIJO en px (el reloj hace la derecha ~85px), así que
-     un padding solo proporcional al viewport se queda corto en anchos de laptop comunes
-     (1366px medido: el contenido invadía 19px por debajo del HUD derecho) — el piso fijo
-     garantiza espacio libre sin importar el ancho, y en pantallas grandes el 6vw ya es mayor
-     de todos modos, así que no se pierde espacio ahí. 2026-08-09, Adán: "las cosas se ven muy
-     amontonadas". */
-  /* El hueco de la derecha depende de si el rail está abierto (198+32) o plegado (44+28):
-     con el rail cerrado el contenido se lleva casi toda la pantalla. */
-  padding:5vh max(4vw,42px) 5vh var(--pad-rail,84px);opacity:0;transform:scale(1.045);filter:blur(10px);
+  /* padding: a la izquierda, el hueco del rail (`--pad-rail`: 12 px del rail plegado, 16 del abierto); a la
+     derecha no hay nada fijo, así que el contenido llega a 16 px del borde —la misma distancia que deja el
+     rail a la izquierda—. Con `max(4vw,42px)` quedaban 82 px vacíos a 2048 (Adán, 18-oct-2026: "no estamos
+     aprovechando el lado derecho, hay algo vacío igual"). Bajo 1024 px manda su propia regla. */
+  padding:5vh 16px 5vh var(--pad-rail,84px);opacity:0;transform:scale(1.045);filter:blur(10px);
   transition:opacity 1.3s cubic-bezier(.22,.61,.36,1), transform 1.8s cubic-bezier(.22,.61,.36,1), filter 1.3s ease;
   pointer-events:none; overflow:hidden;
 }
