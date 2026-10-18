@@ -185,7 +185,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
      amontonadas". */
   /* El hueco de la derecha depende de si el rail está abierto (198+32) o plegado (44+28):
      con el rail cerrado el contenido se lleva casi toda la pantalla. */
-  padding:5vh max(4vw,42px) 5vh var(--pad-rail,max(6vw,88px));opacity:0;transform:scale(1.045);filter:blur(10px);
+  padding:5vh max(4vw,42px) 5vh var(--pad-rail,84px);opacity:0;transform:scale(1.045);filter:blur(10px);
   transition:opacity 1.3s cubic-bezier(.22,.61,.36,1), transform 1.8s cubic-bezier(.22,.61,.36,1), filter 1.3s ease;
   pointer-events:none; overflow:hidden;
 }
@@ -921,7 +921,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   background:var(--bar2);border:1px solid rgba(var(--ov),.08);backdrop-filter:blur(14px);
   border-radius:18px;padding:14px 12px;opacity:.72;transition:opacity .3s}
 .hud-side:hover{opacity:1}
-body{--pad-rail:max(6vw,88px)}
+/* El contenido arranca a 12 px del rail plegado (16 + 56 + 12), en cualquier ancho: con 6vw quedaban 51 px
+   de hueco a 2048 (Adán, 18-oct-2026: "estas dos barras las quiero más pegadas"). */
+body{--pad-rail:84px}
 body.rail-on{--pad-rail:max(6vw,230px)}
 .hud-rail{left:16px;top:70px;bottom:16px;width:198px;box-sizing:border-box;
   transition:width .22s ease,padding .22s ease}

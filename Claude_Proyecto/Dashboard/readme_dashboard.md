@@ -152,7 +152,7 @@ que se oculte a la izquierda"*): el tirador de arriba a la derecha (`toggleAgend
 abre ese bloque en el AHORA— y el ✓ del bloque actual (`pintarAgendaMini()`). Lo que se gana es para Hoy
 aprendes: con la agenda plegada, `#miDiaSecundarios` pasa de 1:2 a 1:3 (Adán: *"que hábitos de hoy, entrenas, qué
 invertir hoy se hagan más pequeños a lo ancho, para que hoy aprendes sea más largo"*). A 2048×1040 con el rail y la
-agenda plegados, Entrenas/Hábitos/Qué invertir miden 437 px (antes 583) y Hoy aprendes 1312 (antes 1166); con
+agenda plegados, Entrenas/Hábitos/Qué invertir miden 447 px y Hoy aprendes 1341; con
 la tarjeta de Entrenas bajo 400 px, el icono de cada día de la tira baja bajo su nombre. Se queda como la dejaste (`dash-agenda-oculta`) y, al
 cambiar de ancho, el AHORA, los hábitos y Hoy aprendes se vuelven a medir. En el teléfono no se pliega.
 
@@ -435,9 +435,11 @@ una pantalla no lo pliega (`showSlide` no toca el rail), para poder saltar entre
 El estado se guarda en `dash-rail-abierto` (`RAIL_KEY`) y sobrevive a la recarga. Los siete
 iconos de 38 px caben a 720 px de alto.
 
-**El hueco sigue al rail**: `--pad-rail` cambia con la clase `rail-on` del `body` (88 px plegado,
-230 abierto), así que el contenido pasa de 1306 a 1440 px a 1600 de ancho al cerrarlo. El otro
-lado se queda en 42 px.
+**El hueco sigue al rail**: `--pad-rail` cambia con la clase `rail-on` del `body` (84 px plegado,
+230 abierto), así que el contenido pasa de 1306 a 1452 px a 1600 de ancho al cerrarlo. Plegado, el
+contenido —en Mi Día, la tira de la agenda— arranca **a 12 px del rail en cualquier ancho** (Adán,
+18-oct-2026: *"estas dos barras las quiero más pegadas"*; con `6vw` quedaban 51 px a 2048). El otro
+lado se queda en `max(4vw, 42px)`.
 
 El menú ☰ (`navMenuList`) es un overlay modal aparte: sus ítems llaman `goTo(i);toggleMenu()` y
 cerrarse al elegir es lo esperado de un modal.
