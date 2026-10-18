@@ -2603,14 +2603,15 @@ function promptsDeLoTocado() {
     for (let k = ym(f.start); k <= ym(f.end); ) {
       const P = C.planMes(k), cosas = P.tareas.length + P.salida.length + P.mensual.length + P.siempre.length;
       meses++;
-      if (!P.dinero || cosas < 3) flojos.push(k + ' (' + f.tag + (P.dinero ? '' : ', sin dinero') + ', ' + cosas + ' cosas)');
+      if (!P.dinero || cosas < 3 || (P.metas || []).length < 2)
+        flojos.push(k + ' (' + f.tag + (P.dinero ? '' : ', sin dinero') + ', ' + cosas + ' cosas, ' + (P.metas || []).length + ' cifras)');
       const p = k.split('-').map(Number); k = ym(new Date(p[0], p[1], 1));
     }
   });
   if (flojos.length || dup.length)
     problemas.push('Meses de las fases sin plan completo (CIFRAS.planMes):' + (flojos.length ? '\n     ' + flojos.join('\n     ') : '') +
       (dup.length ? '\n     ids repetidos en semanas/mensual: ' + dup.join(', ') : ''));
-  else ok.push('Fases: los ' + meses + ' meses de las fases 1 a 4 tienen plan completo —tareas o rutina, y el dinero de la proyección—, con ids únicos para la auditoría');
+  else ok.push('Fases: los ' + meses + ' meses de las fases 1 a 4 tienen plan completo —tareas o rutina, el dinero de la proyección y sus cifras para auditar—, con ids únicos');
 })();
 
 // ── Salida ──

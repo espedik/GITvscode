@@ -857,7 +857,28 @@ window.CIFRAS = (function () {
         .map(function (c) { return { txt: c.txt, mxn: costoSalida(c), gasta: c.gasta !== false }; }),
       bbva: planBbva().abonos.filter(function (a) { return a.fecha.slice(0, 7) === ym; }),
       fechas: fechas,
+      metas: metasMes(PROYECCION.meses.filter(function (m) { return m.mes === ym; })[0] || null, ym),
     };
+  }
+  /* Las cifras con que se audita un mes: lo que la proyección pone al cerrarlo. `dinero` son los
+     activos líquidos —en la proyección, GBM (todo el efectivo: fondo, cuenta y GBM) más el depósito
+     del depa—, `bbva` la tarjeta mientras su plan corre y `liquido` el patrimonio líquido (el dinero
+     menos todo lo que se debe, el auto incluido). `mas`: si más es mejor. Lo real lo mide `cifrasHoy`
+     con la misma definición, así que meta y real comparan lo mismo. */
+  function metasMes(fila, ym) {
+    if (!fila) return [];
+    const fuera = ym >= String(PROYECTO.maestriaInicio || '').slice(0, 7);
+    const ant = PROYECCION.meses.filter(function (m) { return m.mes === mesMas(ym, -1); })[0];
+    const out = [{ k: 'dinero', t: 'Tu dinero al cerrar', d: fuera ? 'lo invertido y el efectivo' : 'efectivo, CETES, GBM y el depósito del depa',
+                   meta: fila.alemania + (fila.deposito || 0), mas: true }];
+    if (fila.bbva > 0.5 || (ant && ant.bbva > 0.5)) out.push({ k: 'bbva', t: 'La BBVA al cerrar', d: 'lo que debes en la tarjeta', meta: fila.bbva, mas: false });
+    out.push({ k: 'liquido', t: 'Patrimonio líquido al cerrar', d: 'tu dinero menos todo lo que debes, el auto incluido', meta: fila.liquido, mas: true });
+    return out;
+  }
+  // Lo real de hoy, medido como `metasMes`: los activos líquidos, la BBVA y el patrimonio líquido.
+  function cifrasHoy(f) {
+    const F = f || fin || {}, Pt = patrimonio(F), tc = (F.debts || []).filter(function (d) { return d.id === 'd001'; })[0];
+    return { dinero: Pt.liquido + Pt.deuda, bbva: tc ? Math.max(0, +tc.balance || 0) : 0, liquido: Pt.liquido };
   }
 
   /* ── LA PROYECCIÓN DEL PLAN MAESTRO ──────────────────────────────────────────────────────────
@@ -5372,7 +5393,7 @@ window.CIFRAS = (function () {
     SALIDA: SALIDA,
     PROYECCION: PROYECCION,
     proyectar: proyectar,
-    cortesSalida: cortesSalida, desgloseMes: desgloseMes, mesTipo: mesTipo, planMes: planMes,
+    cortesSalida: cortesSalida, desgloseMes: desgloseMes, mesTipo: mesTipo, planMes: planMes, cifrasHoy: cifrasHoy,
     didiAlAhorro: didiAlAhorro, GRUPOS_SUELDO: GRUPOS_SUELDO, rutinasDesglose: rutinasDesglose,
     costoSalida: costoSalida,
     APRENDIZAJE: APRENDIZAJE,
