@@ -7973,11 +7973,12 @@ const CT_COLOR = {
 };
 
 // Los movimientos del mes agrupados por día. Una sola pasada sobre las transacciones:
-// la pantalla la consultan la cuadrícula, el panel del día y el de la semana.
+// la pantalla la consultan la cuadrícula, el panel del día y el de la semana. Los abonos a la BBVA que
+// el plan restó solo (`origen:'plan'`) no son algo que Adán anotara: ya salen en la agenda de su día.
 function ctMovs(ym){
   const out = {};
   ((D.fin && D.fin.transactions) || []).forEach(function(t){
-    if(!t || !t.date || t.date.slice(0,7) !== ym) return;
+    if(!t || !t.date || t.date.slice(0,7) !== ym || t.origen === 'plan') return;
     (out[t.date] = out[t.date] || []).push(t);
   });
   return out;
@@ -8613,11 +8614,12 @@ function ctAnclaReal(YM, ini, fin){
    cuánto gano cada día, después que la liquide la cancelo y de ahí nos vamos a incrementar números
    en inversiones, recuerda que cada día debo tener una estrategia para seguir bien en los números".
    Va en la columna del día cuando ese día es hoy, debajo de «De dónde sale ese saldo»: qué mandar
-   hoy a la BBVA (o lo que ya se mandó), lo previsto que no se anotó, cuánto se puede gastar sin
-   romper la quincena y, con la tarjeta en cero, cancelarla y pasar todo a GBM. El saldo y el plan
-   salen de CIFRAS.bbvaEstado —el saldo vivo de Finanzas, que se mueve con cada compra «TC BBVA» y
-   cada pago—; el tope de gasto, del riel (T). Ningún importe va escrito aquí. */
-const CE_DE = { quincena:'lo que sobra de la quincena', didi:'lo que apartas de Didi', minimo:'el pago del corte, con lo de Didi', extra:'un abono de más' };
+   hoy a la BBVA —el plan ya lo restó solo (CIFRAS.aplicarPlanBbva), y aquí se corrige si no fue
+   así—, cuánto se puede gastar sin romper la quincena y, con la tarjeta en cero, cancelarla y pasar
+   todo a GBM. El saldo y el plan salen de CIFRAS.bbvaEstado —el saldo vivo de Finanzas, que se mueve
+   solo con los abonos del plan, con cada compra «TC BBVA» y con cada pago—; el tope de gasto, del
+   riel (T). Ningún importe va escrito aquí. Adán, 17-oct-2026: "no se actualiza conforme a los días". */
+const CE_DE = (window.CIFRAS && CIFRAS.ABONO_DE) || {};
 const CE_DOW = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
 function ctEstrategiaHtml(T, H, faltaR, mv){
   if(!window.CIFRAS || !CIFRAS.bbvaEstado) return '';
@@ -8653,6 +8655,18 @@ function ctEstrategiaHtml(T, H, faltaR, mv){
   const G = CIFRAS.desgloseMes(ymSig);
   const aGbm = num(G.dia1)+' el 1 y '+num(G.dia15)+' el 15, más '+num(CIFRAS.didiAlAhorro(ymSig))+' de Didi al mes';
 
+  // Lo que el plan restó solo hoy y los dos días de antes, con «Corregir» y «No lo mandé». Si con el
+  // abono completo la quincena no cierra, sugiere lo que la deja en cero, no en rojo.
+  const recientes = (E.recientes || []).map(r => {
+    const esHoy = r.fecha === hoyK;
+    const sug = (esHoy && r.de === 'quincena' && T.cierre < 0) ? Math.max(0, Math.round(r.monto - faltaR)) : r.monto;
+    return fila(esHoy ? 'toca' : '',
+      (esHoy ? 'Hoy manda '+num(r.monto)+' a la BBVA: '+CE_DE[r.de]+'. Ya va restado'
+             : 'El '+dia(r.fecha)+' se restaron '+num(r.monto)+': '+CE_DE[r.de])+
+      (sug < r.monto ? '; con lo que llevas gastado la quincena no cierra: manda '+num(sug)+' y corrígelo.' : '; si fue otra cantidad, corrígela.'),
+      entrada(sug)+boton('Corregir', "bbvaCorregir(this,'"+r.id+"')")+boton('No lo mandé', "bbvaNoMande('"+r.id+"')", 1));
+  }).join('');
+
   // ── Con saldo: la tarjeta primero ──
   if(E.saldo > 0){
     const pct = E.inicio > 0 ? Math.max(0, Math.min(100, (E.inicio - E.saldo) / E.inicio * 100)) : 0;
@@ -8662,8 +8676,10 @@ function ctEstrategiaHtml(T, H, faltaR, mv){
       '<div class="ce-barra"><i style="width:'+pct.toFixed(1)+'%"></i></div>'+
       '<span class="ce-pie">Pagado '+num(E.inicio - E.saldo)+' de '+num(E.inicio)+
         (E.fin ? ' · en cero el <b>'+corta(E.fin)+'</b> si sigues el plan' : '')+'.</span>';
+    h += recientes;
     if(yaHoy > 0) h += fila('ya', '✓ Anotaste '+num(yaHoy)+' a la BBVA hoy.', boton('Deshacer', 'bbvaDeshacer()', 1));
-    else if(E.pagadoHoy > 0) h += fila('ya', '✓ Hoy mandaste '+num(E.pagadoHoy)+' a la BBVA.');
+    const autoHoy = (E.recientes || []).some(r => r.fecha === hoyK);
+    // Lo de hoy que el plan todavía no restó (si se quitó con «Deshacer», por ejemplo).
     if(E.hoy.length){
       const tot = E.hoy.reduce((s,a) => s + a.monto, 0);
       const de = E.hoy.some(a => a.de === 'quincena') ? 'quincena' : E.hoy[0].de;
@@ -8673,27 +8689,22 @@ function ctEstrategiaHtml(T, H, faltaR, mv){
           (sug < tot ? ' No los '+num(tot)+' del plan: con eso la quincena no cierra.' : '')+
           (sug >= E.saldo - 0.5 ? ' Con eso queda en cero.' : ''),
         entrada(sug)+boton('Ya lo mandé', "bbvaAnotar(this,'"+hoyK+"','"+de+"')"));
-    } else if(!(yaHoy > 0) && !(E.pagadoHoy > 0)){
+    } else if(E.omitidoHoy){
+      h += fila('', 'Hoy no mandaste el abono: los '+num(E.omitidoHoy.monto)+' se quedan en tu cuenta.', boton('Abonar', 'ceAbonar(this)', 1));
+    } else if(!autoHoy && !(yaHoy > 0)){
       const s = E.siguiente;
-      h += fila('', 'Hoy no toca abono.'+(s ? ' El siguiente: el '+dia(s.fecha)+', '+num(s.monto)+' — '+CE_DE[s.de]+'.' : ''),
-        boton('Abonar', 'ceAbonar(this)', 1));
-    }
-    // Lo previsto que no se anotó, el más viejo primero. Si no se mandó, la fecha de cero ya lo sabe:
-    // sale del saldo vivo.
-    if(E.pendientes.length){
-      const p = E.pendientes[0], mas = E.pendientes.length - 1;
-      h += fila('toca', 'Sin anotar: el '+dia(p.fecha)+' tocaban '+num(p.monto)+' — '+CE_DE[p.de]+'. ¿Lo mandaste? Hasta que lo anotes, la fecha de cero no lo cuenta.'+
-          (mas ? ' <span style="color:var(--text3)">(y '+mas+' más)</span>' : ''),
-        entrada(p.monto)+boton('Sí, lo mandé', "bbvaAnotar(this,'"+p.fecha+"','"+p.de+"')"));
+      h += E.pagadoHoy > 0 ? fila('ya', '✓ Hoy mandaste '+num(E.pagadoHoy)+' a la BBVA.')
+        : fila('', 'Hoy no toca abono.'+(s ? ' El siguiente: el '+dia(s.fecha)+', '+num(s.monto)+' — '+CE_DE[s.de]+'; ese día se resta solo.' : ''),
+            boton('Abonar', 'ceAbonar(this)', 1));
     }
     h += fila('', gasto+(cHoy > 0
       ? ' Hoy le cargaste '+num(cHoy)+' a la BBVA: súmalo al próximo abono para no mover la fecha de cero.'
-      : ' Si pagas con la BBVA, anótalo en Finanzas con «TC BBVA»: sube su saldo y el plan se mueve solo.'));
+      : ' ¿Pagas con la BBVA? Anótalo con «TC BBVA» en Finanzas y el plan se mueve solo.'));
     return '<div class="ce-caja">'+h+'</div>';
   }
   // ── En cero: cancelarla, y lo que iba a ella va a GBM ──
   if(!E.cancelada){
-    return '<div class="ce-caja verde">'+cab('Tu estrategia de hoy', 'var(--g)', 'BBVA '+num(0))+
+    return '<div class="ce-caja verde">'+cab('Tu estrategia de hoy', 'var(--g)', 'BBVA '+num(0))+recientes+
       fila('ya', '🎉 La BBVA está en cero'+(E.fin ? ' desde el '+corta(E.fin) : '')+'. Cancélala: en la app o en sucursal, '+
         'pide la cancelación y tu carta de no adeudo.', boton('Ya la cancelé', 'bbvaCancelar()'))+
       fila('', 'Desde ya, lo que iba a la tarjeta va a GBM: '+aGbm+'.', boton('Qué invertir →', 'abrirGBM()', 1))+
@@ -8747,8 +8758,51 @@ function bbvaDeshacer(){
   if(i < 0) return;
   const t = tx[i], d = (F.debts || []).find(x => t.tarjeta && x.id === t.tarjeta.id);
   if(d){ d.balance = Math.max(0, Math.round(((+d.balance || 0) - t.tarjeta.delta) * 100) / 100); d.fecha = hoy; }
+  // Un abono del plan que se corrigió vuelve a lo que el plan había restado; lo demás se quita.
+  if(d && t.original > 0){
+    const sin = +d.balance || 0, despues = Math.max(0, Math.round((sin - t.original) * 100) / 100);
+    d.balance = despues;
+    Object.assign(t, { amount: t.original, tarjeta: { id: d.id, delta: Math.round((despues - sin) * 100) / 100 }, origen: 'plan',
+      notes: 'TC BBVA — '+(CE_DE[t.abono] || 'abono')+' (del plan: se anotó solo)' });
+    delete t.original; delete t.anotado;
+  } else tx.splice(i, 1);
+  ceGuardar(F);
+}
+/* «Corregir»: lo que el plan restó solo fue otra cantidad. El pago se rehace con la cantidad real y
+   queda como anotado aquí (`origen:'planmaestro'`, con lo que había restado el plan en `original`). */
+function bbvaCorregir(btn, id){
+  const inp = btn && btn.parentNode ? btn.parentNode.querySelector('input') : null;
+  const monto = Math.round((parseFloat(inp && inp.value) || 0) * 100) / 100;
+  if(!(monto > 0)){ if(inp) inp.focus(); return; }
+  const F = rawGet('finanzasmx_v2', null);
+  const t = F && (F.transactions || []).find(x => x.id === id), d = F && (F.debts || []).find(x => x.id === 'd001');
+  if(!t || !d || !t.tarjeta) return;
+  const hoy = hoyLocal(), sin = Math.round(((+d.balance || 0) - t.tarjeta.delta) * 100) / 100;
+  const despues = Math.max(0, Math.round((sin - monto) * 100) / 100);
+  d.balance = despues; d.fecha = hoy;
+  Object.assign(t, { original: t.origen === 'plan' ? +t.amount || 0 : t.original, amount: monto,
+    tarjeta: { id: 'd001', delta: Math.round((despues - sin) * 100) / 100 },
+    notes: 'TC BBVA — '+(CE_DE[t.abono] || 'abono')+' (corregido en el Plan Maestro)', origen: 'planmaestro', anotado: hoy });
+  ceGuardar(F);
+}
+/* «No lo mandé»: se quita el abono que el plan restó solo, el saldo vuelve y ese día queda en
+   `omitidos` de la deuda: el plan no lo vuelve a poner, ni en la tarjeta ni en la caja. */
+function bbvaNoMande(id){
+  const F = rawGet('finanzasmx_v2', null);
+  const tx = (F && F.transactions) || [], i = tx.findIndex(x => x.id === id), d = F && (F.debts || []).find(x => x.id === 'd001');
+  if(i < 0 || !d) return;
+  const t = tx[i];
+  if(t.tarjeta) d.balance = Math.max(0, Math.round(((+d.balance || 0) - t.tarjeta.delta) * 100) / 100);
+  d.fecha = hoyLocal();
+  (d.omitidos = Array.isArray(d.omitidos) ? d.omitidos : []).push({ fecha: t.date, de: t.abono || 'quincena', monto: +t.amount || 0 });
   tx.splice(i, 1);
   ceGuardar(F);
+}
+/* El día cambió con el Dashboard abierto: el plan resta los abonos que llegaron y el Plan Maestro
+   vuelve a hoy (lo llama el reloj). */
+function ceNuevoDia(){
+  if(window.CIFRAS && CIFRAS.aplicarPlanBbva && CIFRAS.aplicarPlanBbva()){ loadAll(); CIFRAS.refrescar(); }
+  if(cur === 1){ ctYM = null; ctSel = null; RENDERS[cur](); }
 }
 // Un día sin abono previsto también se puede abonar: el botón se vuelve el monto y «Ya lo mandé».
 function ceAbonar(btn){
@@ -14362,6 +14416,9 @@ function tickClock(){
   // Lo del día cambia a medianoche aunque el Dashboard siga abierto y Mi Día no rote.
   const diaN=diaCorrido(n);
   if(_diaPintado!==diaN){ const antes=_diaPintado; _diaPintado=diaN; if(antes!==undefined&&typeof renderDiaHero==='function') renderDiaHero(); }
+  // Y el día del calendario: los abonos de la BBVA que llegaron se restan y el Plan Maestro vuelve a hoy.
+  const fechaN=hoyLocal();
+  if(_fechaPintada!==fechaN){ const antes=_fechaPintada; _fechaPintada=fechaN; if(antes!==undefined) ceNuevoDia(); }
   // El panel del bloque NO se repinta cada segundo (2026-08-23). Antes sí, porque solo mostraba
   // el bloque activo; ahora puede estar mostrando el tramo que tocaste en la cinta, y repintarlo
   // te lo quitaría de debajo del cursor 60 veces por minuto. Se repinta solo cuando el bloque
@@ -14380,6 +14437,7 @@ function tickClock(){
 }
 let _ultimoBloqueActivo;
 let _diaPintado;
+let _fechaPintada;
 
 // Desliza la línea verde de "ahora" sobre la cinta sin volver a pintarla: la cinta guarda su
 // rango en data-ini/data-fin al construirse.

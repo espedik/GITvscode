@@ -2569,6 +2569,23 @@ function promptsDeLoTocado() {
   else ok.push('Tarjeta: una sola regla (CIFRAS.tarjetaDe / movimientoTarjeta) para Finanzas y el Dashboard; «Ya lo mandé» deja su marca');
 })();
 
+/* ── 37. La BBVA se actualiza con los días ──────────────────────────────────────────────────────────
+   Adán, 17-oct-2026: "no se actualiza conforme a los días". El saldo solo bajaba si confirmaba cada abono,
+   y con el Dashboard abierto de un día para otro el Plan Maestro seguía en el día viejo. Los abonos del plan
+   se restan solos: el maestro llama a aplicarPlanBbva al cargar (antes de la proyección) y el reloj del
+   Dashboard la vuelve a llamar cuando cambia la fecha (ceNuevoDia). */
+(function () {
+  const M = leer('Dashboard/datos-maestros.js'), mal = [];
+  const iCarga = M.indexOf('if (aplicarPlanBbva()) leer();'), iProy = M.indexOf('PROYECCION.meses = proyectar();');
+  if (iCarga === -1) mal.push('el maestro ya no resta los abonos del plan al cargar (aplicarPlanBbva)');
+  else if (iProy !== -1 && iCarga > iProy) mal.push('el maestro resta los abonos después de la proyección: la proyección nacería con el saldo viejo');
+  const reloj = (dash.match(/function tickClock\(\)\{[\s\S]*?\n\}/) || [''])[0];
+  if (reloj.indexOf('ceNuevoDia()') === -1) mal.push('el reloj del Dashboard ya no nota el cambio de día (ceNuevoDia)');
+  if (!/function ceNuevoDia\(\)\{[\s\S]*?CIFRAS\.aplicarPlanBbva\(\)/.test(dash)) mal.push('ceNuevoDia ya no resta los abonos que llegaron');
+  if (mal.length) problemas.push('La BBVA dejó de actualizarse con los días:\n     ' + mal.join('\n     '));
+  else ok.push('BBVA: los abonos del plan se restan solos al cargar y al cambiar el día con el Dashboard abierto');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

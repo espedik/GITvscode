@@ -769,12 +769,15 @@ al pie de la columna del día cuando ese día es hoy (`ctEstrategiaHtml`), con l
 el saldo y el plan salen de `CIFRAS.bbvaEstado()` y el tope de gasto del riel:
 
 - **Con saldo en la BBVA** (ámbar): el saldo vivo, lo pagado desde los $15,000 con su barra y el día
-  en que quedará en cero. Debajo, **lo de hoy**: *Hoy manda $6,950 a la BBVA: lo que sobra de la
-  quincena* con el monto editable y **Ya lo mandé** (`bbvaAnotar`); si con el abono completo la
-  quincena no cierra, sugiere lo que la deja en cero, no en rojo. Un día sin abono dice el siguiente y
-  ofrece **Abonar** (`ceAbonar`). **Sin anotar**: lo previsto que no se anotó, el más viejo primero,
-  con **Sí, lo mandé** (se anota con la fecha del día que tocaba); mientras no se anote, la fecha de
-  cero no lo cuenta. Lo anotado hoy desde aquí se puede **Deshacer** (`bbvaDeshacer`). Al final, el
+  en que quedará en cero. **El abono del día ya se restó solo** (`CIFRAS.aplicarPlanBbva`; Adán,
+  17-oct-2026: *"no se actualiza conforme a los días"*): *Hoy manda $6,950 a la BBVA: lo que sobra de
+  la quincena. Ya va restado*, con el monto editable, **Corregir** (`bbvaCorregir`) y **No lo mandé**
+  (`bbvaNoMande`: el saldo vuelve, el día queda en `omitidos` y esa quincena se queda en la cuenta).
+  Lo restado los dos días de antes sale igual (*El jueves 15 se restaron $6,950*). Si con el abono
+  completo la quincena no cierra, sugiere lo que la deja en cero, no en rojo. Un día sin abono dice el
+  siguiente —*ese día se resta solo*— y ofrece **Abonar** (`ceAbonar` → `bbvaAnotar`); si el plan aún
+  no restó lo de hoy, *Ya lo mandé*. Lo anotado o corregido hoy desde aquí se puede **Deshacer**
+  (`bbvaDeshacer`: un abono corregido vuelve a lo que restó el plan). Al final, el
   tope de gasto (*hasta $270 al día hasta el 31*, o *nada fuera de lo fijo* si la quincena no cierra),
   lo cargado hoy a la BBVA (*súmalo al próximo abono*) y, si entró dinero que no es nómina, cuánto
   apartar: el porcentaje que el plan guarda de Didi (`didiAlAhorro` entre `didiMes`).
@@ -783,13 +786,16 @@ el saldo y el plan salen de `CIFRAS.bbvaEstado()` y el tope de gasto del riel:
 - **Cancelada**: lo que va a GBM este mes (`desgloseMes`), el envío de hoy —el día 1 y el 15 lo de
   la quincena, el lunes lo de Didi— y *Qué invertir hoy* (`abrirGBM`).
 
-«Ya lo mandé» anota en Finanzas lo mismo que «Pagar» allá: una transacción en `Deudas` y el saldo de
-`d001` que baja, con `tarjeta`, `origen` y `anotado` (ver *La tarjeta se mueve con lo que se anota* en
-`DATOS-MAESTROS.md`); `ceGuardar` la guarda, relee el maestro y repinta. Finanzas abierta en otra
-pestaña la relee por el evento `storage`, y el Dashboard igual: su listener también refresca la caché
-del maestro. Medido a 2048×1040: el bloque mide 512×189 px el 15 (con abono) y 512×244 con un
-pendiente, y la columna no se desplaza; a 1600, 390×291; a 1366×768 la columna se desplaza 216 px
-(ya lo hacía), y a 390 px no hay desborde horizontal.
+Lo que se anota aquí es lo mismo que deja «Pagar» en Finanzas: una transacción en `Deudas` y el
+saldo de `d001` que baja, con `tarjeta`, `origen` y `anotado` (ver *La tarjeta se mueve con lo que se
+anota* en `DATOS-MAESTROS.md`); `ceGuardar` la guarda, relee el maestro y repinta. Finanzas abierta en
+otra pestaña la relee por el evento `storage`, y el Dashboard igual: su listener también refresca la
+caché del maestro. **Con el Dashboard abierto de un día para otro**, el reloj (`tickClock`) nota el
+cambio de fecha y `ceNuevoDia` resta los abonos que llegaron y devuelve el Plan Maestro a hoy. Los
+abonos que restó el plan no salen en *Lo que anotaste ese día* (`ctMovs` los salta): ya están en la
+agenda de su día. Medido a 2048×1040: el bloque mide 512×205 px el día de pago y 512×261 el día
+siguiente, y la columna no se desplaza; a 1600, 390×291; a 1366×768 la columna se desplaza 216 px (ya
+lo hacía), y a 390 px no hay desborde horizontal.
 
 ### No contar dos veces
 

@@ -171,6 +171,12 @@ editarla o borrarla (`delTx`). Las anotadas antes de la regla no llevan `tarjeta
 el saldo que dijo Adán ya las traía. El detalle, en *La tarjeta se mueve con lo que se anota* de
 `DATOS-MAESTROS.md`.
 
+**Los abonos del plan de la BBVA se anotan solos** el día que tocan (`CIFRAS.aplicarPlanBbva`, al cargar
+cualquier app): salen en Transacciones como *Pago: Tarjeta BBVA* con la nota *(del plan: se anotó
+solo)* y bajan el saldo de `d001`. Si no fue así, se corrige en el Plan Maestro del Dashboard
+(«Corregir», «No lo mandé») o se borra aquí: borrarla devuelve el saldo y el plan no la vuelve a
+poner.
+
 **Los gastos que Adán reporta de golpe** (un lote de compras) van a `datos-maestros.js` una sola
 vez (`CIFRAS.GASTOS_20260901` y `CIFRAS.MOVIMIENTOS_20260920` son el patrón): de ahí los siembra `seedData()` para un navegador en
 blanco y de ahí los aplica una migración **por id, solo si falta**, para el navegador que ya
