@@ -248,10 +248,37 @@
   let mesVisto = null;
   let fichaId = null;
 
+  /* ── Lo que llega del repositorio (habitos-sync.js) ─────────────────────────────────────────
+     Adán, 19-oct-2026: "yo los actualizaré desde mi pc… pero quiero que se reflejen las
+     actualizaciones en mis otros dispositivos". Cada commit en la PC copia las marcas de su Chrome a
+     `habitos-sync.js` (el hook de pre-commit, `habitos-exportar.js`), y la página publicada lo trae
+     como `window.HABITOS_SYNC = {exportado, datos}`. `exportado` es la última vez que se tocó algo en
+     la PC; aquí `editado` es la última vez que se tocó algo en este dispositivo y `sincAl`, la
+     exportación que ya se trajo. Se trae una sola vez y solo si es más nueva que lo último que se tocó
+     aquí: así la PC no se vuelve a importar a sí misma ni resucita una marca que acaba de quitar. En un
+     dispositivo sin hábitos, o si desde la última vez aquí no se tocó nada, se copia tal cual —el iPad
+     queda igual a la PC, también lo que se desmarcó—; si se tocó algo, se funde como el código de
+     «Sincronizar» y ninguna marca se pierde. */
+  let porFundir = null;
+  function delRepo(g) {
+    const X = window.HABITOS_SYNC, d = X && X.datos;
+    if (!d || !X.exportado || !Array.isArray(d.def) || !d.def.length || !d.marcas || typeof d.marcas !== 'object') return g;
+    const loc = g || {};
+    if (X.exportado <= (loc.sincAl || '') || (loc.editado && X.exportado <= loc.editado)) return g;
+    const fresco = !Array.isArray(loc.def) || !loc.def.length;
+    const sinTocar = !!loc.sincAl && (!loc.editado || loc.editado <= loc.sincAl);
+    if (fresco || sinTocar)
+      return { def: d.def, marcas: d.marcas, desde: d.desde || loc.desde, mig: d.mig || loc.mig, editado: loc.editado, sincAl: X.exportado, repo: true };
+    porFundir = d;
+    return Object.assign({}, loc, { sincAl: X.exportado, repo: true });
+  }
+  // Lo último que se tocó en este dispositivo: decide si lo que llega del repositorio es más nuevo.
+  function tocado() { S.editado = new Date().toISOString(); }
+
   function cargar() {
-    const g = (typeof rawGet === 'function')
+    const g = delRepo((typeof rawGet === 'function')
       ? rawGet(LS, null)
-      : (function () { try { return JSON.parse(localStorage.getItem(LS)); } catch (e) { return null; } })();
+      : (function () { try { return JSON.parse(localStorage.getItem(LS)); } catch (e) { return null; } })());
 
     let nuevo = false;
     if (g && g.def && g.def.length) {
@@ -328,7 +355,9 @@
        y no al primer toggle: si se abre hoy, no se marca nada y se vuelve en
        una semana, el arranque tiene que seguir siendo hoy. */
     if (!S.desde) { S.desde = hoyISO(); nuevo = true; }
+    if (g && g.repo) { delete S.repo; if (!S.sincAl) S.sincAl = g.sincAl; nuevo = true; }
     if (nuevo) guardar();
+    if (porFundir) { const d = porFundir; porFundir = null; fundir({ v: 1, def: d.def, marcas: d.marcas, desde: d.desde }); }
     return S;
   }
 
@@ -460,6 +489,7 @@
     if (n === 0) delete S.marcas[fecha][id];
     else S.marcas[fecha][id] = n;
     if (!Object.keys(S.marcas[fecha]).length) delete S.marcas[fecha];
+    tocado();
     guardar();
     pintar();
     if (fichaId) pintarFicha();
@@ -1235,6 +1265,7 @@
       let r;
       try { r = fundir(leerCodigo(t.value)); }
       catch (e) { pintarSync('<b style="color:var(--r)">No se pudo fundir:</b> ' + esc(e.message) + '.'); return; }
+      tocado(); guardar();
       pintar();
       const pl = function (n, uno, varios) { return n + ' ' + (n === 1 ? uno : varios); };
       pintarSync(r.nuevas || r.habs.length
@@ -1335,6 +1366,7 @@
         while (S.def.some(function (h) { return h.id === nid; })) nid = base + (k++);
         S.def.push({ id: nid, nombre: nom, ancla: ancla, hora: hora, color: color, ico: ico, dow: dow, pasos: pasos, flex: flex, desde: hoyISO() });
       }
+      tocado();
       guardar();
       HB.cerrarFicha();
       pintar();
@@ -1348,6 +1380,7 @@
         delete S.marcas[f][id];
         if (!Object.keys(S.marcas[f]).length) delete S.marcas[f];
       });
+      tocado();
       guardar();
       HB.cerrarFicha();
       pintar();

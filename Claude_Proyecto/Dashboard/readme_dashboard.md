@@ -631,14 +631,32 @@ tokens procesados (11.4 k de salida), medido; las búsquedas son el grueso, y el
 
 ## El tablero del Plan Maestro
 
-La pantalla 2. Bajo la banda de fase y la ruta de deuda, tres columnas: **el mes, el día que
-toques y la semana a la que pertenece**.
+La pantalla 2. Arriba la banda de la fase; debajo, más bajas, la ruta de deuda y el riel, y tres
+columnas: **el mes, el día que toques y la semana a la que pertenece**.
 
-**Los días de la fase** salen de `CIFRAS.diasFase()`, la misma cuenta del calendario, la ventana de
-las fases y Coach: días de calendario, hoy ya corre. La banda dice *quedan N días*, las **semanas que
-quedan** (las que dura la fase, en su `title`) y el % transcurrido; el último día, *último día*.
+**La banda de la fase** (`cfbHtml`; Adán, 19-oct-2026: *"haz un mucho mejor diseño de esta barra que
+directamente te lleva a las fases, hazla más ancha y las demás de esa página del dashboard hazlas más
+pequeñas, aquí ponme info importante… pon algo de las fases"*) va en dos filas:
 
-**La banda de fase es un botón**: abre la ventana de las fases (`abrirKpi('fases')`, en
+- **Arriba, la fase en el tiempo**: su chip y su título, sus fechas, *día 19 de 182 · quedan 163 días*
+  (`CIFRAS.diasFase()`, la misma cuenta del calendario, la ventana de las fases y Coach) y sus meses
+  como una línea partida. Cada mes dice su auditoría y algo de él: ✓ con su calificación si se auditó,
+  ⚠ *auditar* si cerró sin auditar, lo que llevas de su checklist el mes en curso —con una barrita en
+  su borde de abajo hasta hoy y la marca del día— y sus tareas los que vienen. Tocar un mes abre la
+  ventana de las fases en ese mes (`cfbAbrir`).
+- **Abajo, lo que importa de la fase hoy**, en tres bloques: **este mes** —cuántas tareas de su
+  checklist llevas, la siguiente que te toca (su primera frase) y cuándo se audita, o *falta auditar
+  septiembre* si quedó un mes atrás; de `CIFRAS.planMes` y `fzmFicha`—; **las cifras del mes** —sus
+  metas (tu dinero, la BBVA, el patrimonio líquido) contra lo de hoy (`CIFRAS.cifrasHoy`), en verde
+  las que van en meta y, desde la última semana, en rojo las que no—, y **el checkpoint** —la fecha
+  que cierra la fase, lo que pide y lo que tendrán GBM y los CETES ese día si sigues el plan
+  (`CIFRAS.estadoDia`)—.
+
+Medido a 2048×1040: la banda mide 156 px de alto (antes una fila de 46), la ruta 41 (antes 52) y el
+riel 69 (antes 77). Bajo 1180 px los meses bajan a su propia fila; bajo 760, los tres bloques van uno
+debajo de otro, y a 390 px no hay desborde.
+
+**Toda la banda es un botón**: abre la ventana de las fases (`abrirKpi('fases')`, en
 `kpiDetalle`) con fechas, estado, meta, el porqué en tarjetas, el checkpoint y el checklist de cada mes leído de
 `coach_checks_v1`. En las fases que pasan en México, **💰 Tu ahorro en esta fase** (`faseAhorroHTML`): un mes de cada etapa —con depa y en casa de tu familia— renglón por renglón y GBM al cerrar cada mes en barras contra lo que piden junio y la salida —en la Fase 1, el 31 de marzo contra la salida completa (`marzoParaSalida`)—; el mismo desglose que Coach. El título del módulo Fase de Mi Día abre la misma ventana.
 
@@ -694,13 +712,14 @@ cierre y la resta de la columna del día. **El estado en palabras** (`Vas holgad
 `$667/día` es ese sobrante entre los días que quedan. **La línea está escalada al rango del
 tramo, no al cero**: así se ve el escalón del día 15. Los 17 días son botones.
 
-**El saldo real manda sobre el modelo.** La Cuenta BBVA de Finanzas (activo líquido `ac013`) lleva
-la `fecha` de su saldo; si cae dentro del tramo, `ctAnclaReal()` ancla la serie ahí: ese día vale
-lo que hay en la cuenta y de ahí en adelante se resta lo previsto (antes de esa fecha sigue el
-modelo). El estado lo dice (*desde tu saldo real del 21*) y la resta de la columna del día arranca
-en *Saldo real el 21 · Cuenta BBVA*. Adán, 21-sep-2026: *"esa cifra está mal, ya te había dicho
-que me quedan 1200"*. Cuando reporta un saldo, va al maestro como migración con su fecha; si lo
-edita en Finanzas, `saveActivo` pone la fecha sola.
+**El saldo real manda sobre el modelo.** Los activos líquidos de Finanzas —la Cuenta BBVA (`ac013`) y el
+Efectivo (`ac014`)— llevan la `fecha` de su saldo; los que caen dentro del tramo se suman y
+`ctAnclaReal()` ancla la serie en el más reciente: ese día vale lo que tienes para gastar y de ahí en
+adelante se resta lo previsto (antes de esa fecha sigue el modelo). El estado lo dice (*saldo real del
+19*) y la resta de la columna del día arranca en *Saldo real el 19 · Cuenta BBVA y Efectivo*. Adán,
+21-sep-2026: *"esa cifra está mal, ya te había dicho que me quedan 1200"*, y el 19-oct-2026: *"tengo en
+mi tarjeta de débito 1,700 y 2500 en efectivo"*. Cuando reporta un saldo, va al maestro como migración
+con su fecha; si lo edita en Finanzas, `saveActivo` pone la fecha sola.
 
 **Cuando la quincena no cierra, el estado da el plan** (prompt de Plan Maestro: el hueco previsto
 se resuelve antes de que llegue): cuánto falta para llegar al 15 (o al día 1), cuánto trae Didi de
@@ -709,9 +728,9 @@ serie; solo entra en el plan. Bajo «Cierras el 14 con» la nota dice *te falta*
 negativo. La BBVA con plan sale con sus abonos de `planBbva`, no con su mínimo ni su total (ver
 `agendaDia` en `DATOS-MAESTROS.md`).
 
-Alto del riel a 1600×1000: 118 px con el estado en dos líneas. El alto del riel lo pone `.cr-hero` (cifra grande en
-`clamp(20px,1.95vw,26px)`; `.cr-estado` envuelve a dos líneas con interlineado 1.25). En la ruta,
-el padding inferior de cada paso es el hueco de su barrita (`.crb-b`, absoluta).
+Alto del riel: 69 px a 2048×1040. Lo pone `.cr-hero` (un cuarto del ancho, hasta 430 px, con la cifra grande
+en `clamp(18px,1.6vw,22px)`; `.cr-estado` envuelve con interlineado 1.25). En la ruta, el padding
+inferior de cada paso es el hueco de su barrita (`.crb-b`, absoluta).
 
 `ctQuincena` **deja a Didi fuera**: ahí la pregunta es cuánto puedes gastar esta quincena, y un
 ingreso variable es un colchón que puede no llegar. En el balance de 6 meses sí entra.
@@ -778,6 +797,15 @@ desglose siga abierto al repintar, y al abrirse hace `scrollIntoView({block:'nea
 2. **De dónde sale ese saldo** — la resta explícita: entró el 15 `+$20,500`, salió del 15 al 18
    `−$10,164`, te queda `$10,336`, falta por salir `$1,662` del 19 al 31.
 3. **Tu estrategia de hoy** — solo cuando el día es hoy (ver abajo).
+4. **Tu dinero ese día** (`ctDineroDiaHtml`; Adán, 19-oct-2026: *"conforme seleccione otro día, debes
+   proyectar todo todo hasta mis inversiones"*) — hoy, lo de Finanzas; un día que viene, la proyección
+   siguiendo el plan (`CIFRAS.estadoDia`, ver `DATOS-MAESTROS.md`): para gastar (el riel: la cuenta y el
+   efectivo), GBM, los CETES y el depósito del depa —*tu dinero*—, lo que debes (la BBVA con el día en
+   que quedará en cero, el auto y el iPhone) y el patrimonio líquido, cada cifra con lo que cambia desde
+   hoy en verde o en rojo, y al pie lo que el plan manda de aquí a ese día a la BBVA y a GBM. Un día que
+   ya pasó no lleva el bloque, y después del último mes en México dice que la proyección sigue mes a mes
+   en Coach. Proyectado el 20 de noviembre desde los saldos del 19-oct-2026: para gastar $5,534 y GBM
+   $5,869; la BBVA quedará en cero el 15. A 2048×1040 mide 544×268.
 
 **Los gastos registrados en Finanzas que la agenda no conoce entran en la resta** (`ctTramo`,
 `ctQuincena` y la semana los suman), con **borde punteado**: un cobro programado va a caer, uno
@@ -901,12 +929,12 @@ propio estado: `toggleFaseCheck(id, this.checked)`.
 ### La ruta de deuda y la libreta de logros
 
 Los pasos van en su orden —fondo, Banamex, BBVA— y uno solo está activo: el primero sin terminar,
-salvo **mientras corre el plan de la BBVA**, que la vuelve el paso activo y dice *$9,900 · en cero
-el 1 nov* —el saldo vivo y la fecha del plan, que se mueven con lo que se anota—; cancelada, *Liquidada
+salvo **mientras corre el plan de la BBVA**, que la vuelve el paso activo y dice *$8,900 · en cero
+el 15 nov* —el saldo vivo y la fecha del plan, que se mueven con lo que se anota—; cancelada, *Liquidada
 🎉 · 19 oct 2026 · cancelada*. El fondo se queda en lo que tiene: el ahorro de cada quincena ya no va a CETES.
 
 **La cifra de la derecha es lo pagado de la BBVA** desde el saldo con que arrancó su plan
-(`CIFRAS.avanceBbva()`: `PROYECTO.bbvaInicio` el día `PROYECTO.bbvaFecha`, hoy 34 % de $15,000), la misma que el medidor de
+(`CIFRAS.avanceBbva()`: `PROYECTO.bbvaInicio` el día `PROYECTO.bbvaFecha`, hoy 41 % de $15,000), la misma que el medidor de
 Deuda cara de Mis Metas. Adán, 13-oct-2026: *"el 74% ya es 0%"* —el promedio de los tres pasos decía
 74 % con la tarjeta sin bajar—.
 
@@ -1622,7 +1650,9 @@ envuelve la tabla entera y el vertical solo las filas, así la fila de totales s
 
 `localStorage['dash-habitos-v1']` con `rawGet`/`rawSet`: `def` (los hábitos, editables desde la
 pantalla), `marcas` (indexado por **fecha ISO local** — nunca `toISOString()`, que en México
-adelanta el día desde las 18:00), `desde` y `mig`.
+adelanta el día desde las 18:00), `desde`, `mig` y, para la sincronía por el repositorio, `editado` (la
+última vez que se tocó algo en este dispositivo, `tocado()`) y `sincAl` (la exportación de la PC que ya
+se trajo).
 
 **Coach también la lee**, sin escribir: la pestaña *Tus referentes* cuenta los días del hábito con
 "alcohol" en el nombre con la misma regla de racha (`refRacha()` en Coach.html). Un cambio de forma
@@ -1649,9 +1679,24 @@ Abajo se pega el código del otro y se **funde**, no se reemplaza (`fundir()`):
   conservan la definición de aquí. El arranque (`desde`) queda en el más antiguo.
 - Fundir otra vez lo mismo no cambia nada, y un código cortado lo dice sin tocar los datos.
 
-Hecho en los dos sentidos, los dos quedan iguales. Es la vía sin servidor; la sincronía automática
-pediría un servidor con cuentas (un repositorio privado con Cloudflare Pages y Access, y Supabase
-para los datos) que Adán tendría que crear.
+Hecho en los dos sentidos, los dos quedan iguales.
+
+**Y cada commit los lleva solos a los otros dispositivos** (Adán, 19-oct-2026: *"yo los actualizaré desde
+mi pc… pero quiero que se reflejen las actualizaciones en mis otros dispositivos, entonces crea un hook…
+que cada día cuando haga algún commit, de cualquier cosa se actualicen los hábitos"*). El hook de
+pre-commit (`.githooks/pre-commit`, activo con `git config core.hooksPath Claude_Proyecto/.githooks`)
+corre `habitos-exportar.js`: copia el almacenamiento del Chrome de la PC a una carpeta temporal, lo lee
+con el mismo Chrome en modo invisible y con un perfil aparte —el navegador abierto no se toca— y, si las
+marcas cambiaron, escribe `habitos-sync.js` (`window.HABITOS_SYNC = {exportado, datos}`, una línea por
+hábito y una por día) y lo agrega al commit. Tarda menos de un segundo y nunca detiene un commit: si
+no encuentra Chrome o los hábitos, lo dice en una línea. La página publicada lo carga antes que
+`habitos.js`, y `delRepo()` lo trae una sola vez por exportación y solo si es más nuevo que lo último
+que se tocó en ese dispositivo (`exportado` es la última marca de la PC; `editado`, la de aquí): así la
+PC no se reimporta ni resucita una marca que acaba de quitar. Un dispositivo sin hábitos, o que no tocó
+nada desde la última vez, queda **igual a la PC** —también lo desmarcado—; uno con cambios propios lo
+**funde** como el código de Sincronizar, sin perder nada. El **control 39** del verificador vigila las
+piezas. El repositorio es público: lo que viaja ahí —los nombres de los hábitos y sus marcas— se puede
+leer sin sesión, como `datos-maestros.js`.
 
 ---
 

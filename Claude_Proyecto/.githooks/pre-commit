@@ -1,0 +1,11 @@
+#!/bin/sh
+# Antes de cada commit, las marcas de hábitos del Chrome de esta PC van a
+# Claude_Proyecto/Dashboard/habitos-sync.js, que el iPad y los demás dispositivos leen en la página
+# publicada (Adán, 19-oct-2026: "cada día cuando haga algún commit, de cualquier cosa se actualicen
+# los hábitos"). Lo hace Dashboard/habitos-exportar.js. Nunca detiene un commit.
+# Se activa una vez por clon: git config core.hooksPath Claude_Proyecto/.githooks
+raiz="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+if command -v node >/dev/null 2>&1; then
+  node "$raiz/Claude_Proyecto/Dashboard/habitos-exportar.js" --add || true
+fi
+exit 0

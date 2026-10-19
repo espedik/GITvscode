@@ -137,6 +137,12 @@ propósito de esto es mejorarme a mí"*.
 4. **Commit con mensaje descriptivo en español**, en el estilo que ya tiene el historial: una línea que diga qué cambió y por qué, no "cambios varios". Cuerpo con el detalle si hace falta.
 5. **`git push origin main`** y confirmar que el push salió bien.
 
+**Cada commit lleva también los hábitos de la PC.** El hook de pre-commit (`Claude_Proyecto/.githooks/pre-commit`,
+activo con `git config core.hooksPath Claude_Proyecto/.githooks`) corre `Dashboard/habitos-exportar.js`: lee las
+marcas del Chrome de esta PC y, si cambiaron, agrega `Dashboard/habitos-sync.js` al commit, para que el iPad las
+vea en la página publicada. Que ese archivo aparezca en un commit que no habla de hábitos es eso, no un error. Si
+no encuentra Chrome lo dice en una línea y el commit sigue.
+
 **Si hay trabajo pendiente de días previos sin commitear**, se pregunta el alcance antes de subir, pero recomendando subir todo lo pendiente.
 
 **Lo que no se sube nunca**: archivos temporales, respaldos (`*.bak`, `*.PREV.html`, `*.tmp`) y scripts de un solo uso — esos viven en el scratchpad de la sesión, no en el repo.

@@ -2614,6 +2614,37 @@ function promptsDeLoTocado() {
   else ok.push('Fases: los ' + meses + ' meses de las fases 1 a 4 tienen plan completo —tareas o rutina, el dinero de la proyección y sus cifras para auditar—, con ids únicos');
 })();
 
+/* ── 39. Los hábitos de la PC llegan a los otros dispositivos ───────────────────────────────────────
+   Adán, 19-oct-2026: "crea un hook que actualice esa info que tenemos aquí, que cada día cuando haga algún
+   commit, de cualquier cosa se actualicen los hábitos". El hook de pre-commit (.githooks/pre-commit, activo
+   con core.hooksPath) corre habitos-exportar.js, que escribe habitos-sync.js con las marcas del Chrome de la
+   PC; el Dashboard lo carga antes de habitos.js, y habitos.js lo trae (delRepo) y deja la hora de lo que se
+   toca en cada dispositivo (tocado). Si una pieza falta, el iPad deja de recibir los hábitos sin que se note. */
+(function () {
+  const malos = [];
+  const existe = rel => fs.existsSync(path.join(RAIZ, rel));
+  if (!existe('.githooks/pre-commit') || leer('.githooks/pre-commit').indexOf('habitos-exportar.js') === -1) malos.push('.githooks/pre-commit ya no corre habitos-exportar.js');
+  if (!existe('Dashboard/habitos-exportar.js')) malos.push('falta Dashboard/habitos-exportar.js');
+  const h = leer('Dashboard/dashboard.html'), iS = h.indexOf('<script src="habitos-sync.js"'), iH = h.indexOf('<script src="habitos.js"');
+  if (iS === -1 || iS > iH) malos.push('dashboard.html tiene que cargar habitos-sync.js antes que habitos.js');
+  const hb = leer('Dashboard/habitos.js');
+  if (hb.indexOf('window.HABITOS_SYNC') === -1 || hb.indexOf('function delRepo') === -1) malos.push('habitos.js ya no trae lo de habitos-sync.js (delRepo)');
+  if ((hb.match(/tocado\(\);/g) || []).length < 4) malos.push('habitos.js dejó de anotar la hora de lo que se toca (tocado) en alguno de sus cambios');
+  let det = 'todavía sin exportar';
+  if (existe('Dashboard/habitos-sync.js')) {
+    try {
+      const w = {}; new Function('window', leer('Dashboard/habitos-sync.js'))(w);
+      const X = w.HABITOS_SYNC, d = X && X.datos;
+      if (!X || !/^\d{4}-\d{2}-\d{2}T/.test(X.exportado || '') || !d || !Array.isArray(d.def) || typeof d.marcas !== 'object') malos.push('habitos-sync.js no tiene la forma {exportado, datos: {def, marcas}}');
+      else det = d.def.length + ' hábitos y ' + Object.keys(d.marcas).length + ' días, exportados el ' + X.exportado.slice(0, 10);
+    } catch (e) { malos.push('habitos-sync.js no se puede leer: ' + e.message); }
+  }
+  let ruta = '';
+  try { ruta = require('child_process').execSync('git config --get core.hooksPath', { cwd: RAIZ, encoding: 'utf8' }).trim(); } catch (e) { ruta = ''; }
+  if (malos.length) problemas.push('Hábitos a los otros dispositivos:\n     ' + malos.join('\n     '));
+  else ok.push('Hábitos: el hook de pre-commit los exporta y el Dashboard los trae (' + det + ')' + (ruta ? '' : ' — en esta copia falta activar el hook: git config core.hooksPath Claude_Proyecto/.githooks'));
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

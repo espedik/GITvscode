@@ -416,8 +416,8 @@ auto-fetch del precio BTC si tiene más de 15 minutos y hay historial.
 por deuda (solo las vivas cuentan como "obligaciones activas") y dónut `ch-pat`. `openActivoModal`
 (tipos `liquido | vehiculo | electronico | inmueble | joyeria | mueble | otro`), `saveActivo`,
 `delActivo`. **Un activo líquido lleva `fecha`**: `saveActivo` pone la de hoy al guardarlo, porque un
-saldo es de un día; el riel del Plan Maestro (Dashboard) se ancla a la Cuenta BBVA (`ac013`) por esa
-fecha. El recuadro de Si Vale del Dashboard de Finanzas se quitó ("ya no me sirve de nada").
+saldo es de un día; el riel del Plan Maestro (Dashboard) suma la Cuenta BBVA (`ac013`) y el Efectivo
+(`ac014`) que caen en la quincena y se ancla al más reciente por esa fecha. El recuadro de Si Vale del Dashboard de Finanzas se quitó ("ya no me sirve de nada").
 
 **Es la misma cifra que el medidor "Patrimonio hacia $1M" del Dashboard** (`patrimonioNeto()`: todo
 lo suyo menos las deudas; Adán, 21-sep-2026: *"tengo mis activos y mis deudas y eso no da números

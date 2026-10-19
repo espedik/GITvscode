@@ -145,7 +145,7 @@ window.CIFRAS = (function () {
     // como ahorro lo que ya se pagó.
     bbvaFecha: '2026-10-05',
     bbvaInicio: 15000,
-    bbvaSaldoFecha: '2026-10-14',
+    bbvaSaldoFecha: '2026-10-19',
     // Y no cobra intereses (Adán, 6-oct-2026: "bbva no va cobrar intereses, eso déjalo en 0, por
     // que pagaré para no pagar intereses a la tarjeta"): cada mes cubre lo que pide el estado de
     // cuenta para no generarlos. `planBbva` no les suma nada y el Dashboard no se los cuenta.
@@ -296,9 +296,10 @@ window.CIFRAS = (function () {
     // 5-oct-2026 debe $15,000 y no le alcanza para pagarla el 11 ("me estás diciendo de pagar mi
     // tarjeta pero ni tengo dinero"): `noInterest` queda en 0 —el 11 ya no pide el total— y se paga quincena a
     // quincena con `planBbva`, desde `PROYECTO.bbvaFecha`, sin intereses (`bbvaSinIntereses`).
-    // 14-oct-2026: $9,900 ("el credito de tarjeta de bbva ya bajo a 9,900"), adelante del plan;
-    // el día va en `PROYECTO.bbvaSaldoFecha`.
-    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:9900,        rate:55.7,  min:1500, day:11,start:'2024-01-22', noInterest:0},
+    // 14-oct-2026: $9,900 ("el credito de tarjeta de bbva ya bajo a 9,900"), adelante del plan. 19-oct-2026:
+    // $8,900 ("aún debo hoy mismo, debo 8,900"): los abonos del 15 y del 19 no pasaron como decía el plan.
+    // El día del último saldo va en `PROYECTO.bbvaSaldoFecha`.
+    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:8900,        rate:55.7,  min:1500, day:11,start:'2024-01-22', noInterest:0},
     // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. 55.7 es un supuesto tomado de
     // la BBVA, no un dato medido de esta tarjeta.
     // 2026-09-01: VUELVE A TENER SALDO, y con él vuelve a ser deuda cara. Cuatro compras de ese
@@ -523,7 +524,7 @@ window.CIFRAS = (function () {
        hitos:[{f:"31 mar 2027",t:"Cierra la solicitud de Esslingen",s:"completa: CV, carta de motivación y las dos de recomendación",foto:"meta-esslingen"},
               {f:"Junio 2027",t:"La cuenta bloqueada y la visa",v:"{{salidaJunio}}",s:"en la cuenta a mediados de mes",foto:"de-dinero"},
               {f:"Agosto 2027",t:"La salida completa",v:"{{salidaAgosto}}",s:"con la colegiatura del 1er semestre, la reserva del BYD y el colchón",foto:"fase-avion"}]},
-      {tipo:"paso",t:"Primero la BBVA",foto:"fase-tarjeta",cifras:[{v:"{{tcBbva}}",l:"lo que debes"},{v:"{{bbvaCero}}",l:"en cero, sin intereses"}],d:"debes {{tcBbva}} y no se paga de golpe. Lo que sobra de cada quincena y lo de Didi de cada lunes van a la tarjeta hasta dejarla en cero el {{bbvaCero}}, sin intereses: el 15 oct, los {{ahorroDia15}} de la quincena; los lunes 19 y 26, lo de Didi, y el 1 nov, lo que falte."},
+      {tipo:"paso",t:"Primero la BBVA",foto:"fase-tarjeta",cifras:[{v:"{{tcBbva}}",l:"lo que debes"},{v:"{{bbvaCero}}",l:"en cero, sin intereses"}],d:"debes {{tcBbva}} y no se paga de golpe. Lo que sobra de cada quincena y lo de Didi de cada lunes van a la tarjeta hasta dejarla en cero el {{bbvaCero}}, sin intereses: {{bbvaRuta}}."},
       {tipo:"paso",t:"Después, todo a GBM",foto:"fase-alcancia",cifras:[{v:"{{ahorroMesDepa}}",l:"al mes, hasta enero"},{v:"{{ahorroMesCasa}}",l:"al mes, desde febrero"}],d:"cada quincena se sostiene sola. Hasta enero mandas {{ahorroDia1}} el 1 y {{ahorroDia15}} el 15, más {{didiAhorro}} de Didi; desde febrero, sin renta y en casa de tu familia ({{aporteCasa}} de aporte, y comes en casa), {{ahorroDia1Casa}} el 1 y {{ahorroDia15Casa}} el 15, más {{didiAhorroMas}} de Didi. El aguinaldo paga el seguro del BYD y no entra."},
       {tipo:"riesgo",t:"Con ese ritmo",foto:"sk-inversion",cifras:[{v:"{{junioCorto}}",l:"en junio, para la cuenta bloqueada"},{v:"{{salidaVeredicto}}",l:"en agosto, para la salida completa"}],d:"en junio {{junioVeredicto}} y en agosto {{salidaVeredicto}}, aun mandando cada quincena completa y lo de Didi cada lunes."},
       {tipo:"palanca",t:"Lo cierra el ingreso, no el recorte",foto:"istqb-5",cifras:[{v:"{{recorteRutinas}}",l:"lo que dan tus rutinas al mes",tono:"gris"},{v:"+{{extraSalida}}",l:"de ingreso nuevo al mes, de noviembre a agosto"},{v:"{{marzoParaSalida}}",l:"en GBM el 31 de marzo, con él"}],d:"tus rutinas pueden dar {{recorteRutinas}} al mes y las ventas ya están contadas. Hacen falta unos {{extraSalida}} más al mes, de noviembre a agosto —un aumento, un puesto mejor pagado o freelance de pruebas en lugar de horas de Didi—, y con ellos GBM llega a {{marzoParaSalida}} el 31 de marzo."},
@@ -540,7 +541,7 @@ window.CIFRAS = (function () {
       {id:"m1-3",cuando:"Cada día",txt:"Cada gasto anotado en Finanzas el mismo día; lo que pagues con tarjeta, con la tarjeta en la nota."},
      ],
      semanas:[
-      {id:"a1-1",mes:"2026-10",txt:"Deja la BBVA en cero quincena a quincena. El 15 oct, los {{ahorroDia15}} de la quincena van a la tarjeta y no a GBM; los lunes 19 y 26, lo de Didi, y el 1 nov, lo que falte de los {{ahorroDia1}} (el resto, a GBM): quedará en cero el {{bbvaCero}}. Desde ahí, lo que pagues con ella lo pagas en la misma quincena."},
+      {id:"a1-1",mes:"2026-10",txt:"Deja la BBVA en cero quincena a quincena. Lo que sobra de cada quincena y lo de Didi de cada lunes van a la tarjeta y no a GBM —{{bbvaRuta}}— y quedará en cero el {{bbvaCero}}. Desde ahí, lo que pagues con ella lo pagas en la misma quincena."},
       {id:"a1-2",mes:"2026-10",txt:"Abre tu cuenta de GBM para Alemania, aparte del día a día. En cuanto la BBVA quede en cero, lo que sobra de cada quincena va ahí el día que entra el sueldo —{{ahorroDia1}} el 1 y {{ahorroDia15}} el 15— y lo de Didi cada lunes, hasta juntar {{didiAhorro}} al mes."},
       {id:"a1-18",mes:"2026-10",txt:"Decide tu palanca de ingreso este mes. Septiembre de 2027 pide {{extraSalida}} más al mes desde noviembre, y la de ese tamaño es el sueldo: pide el aumento en {{empleador}} con números —lo que haces en Ford y el CT-GenAI que presentas en enero— o aplica a puestos que paguen más, remotos o en un Tier 1. Freelance de pruebas en lugar de horas de Didi también suma, después de revisar tu contrato. Cada peso, a GBM el día que entra."},
       {id:"a1-4",mes:"2026-10",txt:"Pide las dos cartas de recomendación. Un jefe de Bosch, Continental o ALTEN y un líder técnico o profesor: en inglés y firmadas."},
@@ -4499,6 +4500,31 @@ window.CIFRAS = (function () {
         const tc = (f.debts || []).find(x => x.id === 'd001'); if (tc) tc.balance = 9900;
       }
     },
+    {
+      // 2026-10-19 · "en mi deuda de bbva tarjeta de crédito aún debo hoy mismo, debo 8,900 y tengo en mi
+      // tarjeta de débito 1,700 y 2500 en efectivo, actualiza todo conforme a eso a día de hoy". Tres saldos
+      // dichos el mismo día: la BBVA (`d001`; su día va en `PROYECTO.bbvaSaldoFecha`), la cuenta (`ac013`) y el
+      // efectivo (`ac014`), los dos con la fecha de hoy para que el riel del Plan Maestro se ancle ahí. Los
+      // abonos que el plan restó solo después del 14 —el del 15 y el de hoy— no pasaron así, porque la tarjeta
+      // sigue en $8,900: se quitan y el plan vuelve a contar desde hoy. Lo anotado a mano se queda.
+      flag: '_saldos20261019',
+      hacer: function (f) {
+        const tc = (f.debts || []).find(x => x.id === 'd001');
+        if (tc) {
+          tc.balance = 8900; tc.fecha = '2026-10-19'; tc.planAl = '2026-10-19';
+          if (Array.isArray(tc.omitidos)) tc.omitidos = tc.omitidos.filter(o => o.fecha > '2026-10-19');
+        }
+        if (Array.isArray(f.transactions))
+          f.transactions = f.transactions.filter(t => !(t.origen === 'plan' && t.date > '2026-10-14' && t.date <= '2026-10-19'));
+        if (!Array.isArray(f.activos)) f.activos = [];
+        const pon = function (id, nombre, v) {
+          let a = f.activos.find(x => x.id === id);
+          if (!a) { a = { id: id, name: nombre, type: 'liquido', notes: '' }; f.activos.push(a); }
+          a.value = v; a.fecha = '2026-10-19';
+        };
+        pon('ac013', 'Cuenta BBVA', 1700); pon('ac014', 'Efectivo', 2500);
+      }
+    },
   ];
 
   /* Las seis compras del 1-sep-2026, en un solo sitio: las usa la migración de arriba para el
@@ -4732,6 +4758,8 @@ window.CIFRAS = (function () {
     ahorroDia15Casa: { v: () => PROYECTO.ahorroDia15Casa },
     // La BBVA, quincena a quincena: el día que queda en cero y lo que cuesta en intereses.
     bbvaCero:        { fmt: 'fecha', v: () => planBbva().fin },
+    // Los abonos que siguen, en una frase («hoy, $1,154 de Didi; el lunes 26, …»): sale del plan de cada día.
+    bbvaRuta:        { fmt: 'txt', v: () => bbvaRutaTxt() },
     bbvaIntereses:   { v: () => Math.round(planBbva().intereses) },
     // Lo que llega a GBM en un mes tipo, con depa (hasta enero) y en casa.
     ahorroMesDepa:   { dep: ['ahorroDia1','ahorroDia15','didiAhorro'], v: () => mesTipo(false).ahorro },
@@ -5287,6 +5315,106 @@ window.CIFRAS = (function () {
       siguiente: B.abonos.filter(function (a) { return a.fecha > hoyK; })[0] || null,
     };
   }
+  /* Los abonos que le quedan a la BBVA, en una frase: el marcador {{bbvaRuta}}. Sale del plan de cada día
+     (`planBbva`), así que la prosa del Plan Maestro y de Coach no se queda con un calendario viejo. */
+  const RUTA_DE = { quincena: 'de la quincena', didi: 'de Didi', minimo: 'para el pago del corte, con lo de Didi', extra: 'de más' };
+  const RUTA_DIA = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+  function bbvaRutaTxt(tope) {
+    const B = planBbva(), hoyK = fechaLocal(), max = tope || 6;
+    const xs = B.abonos.filter(function (a) { return !a.hecho && a.fecha >= hoyK; });
+    if (!xs.length) return B.fin ? 'ya está en cero' : 'sin abonos pendientes';
+    const dia = function (k) {
+      if (k === hoyK) return 'hoy';
+      const p = k.split('-').map(Number), d = new Date(p[0], p[1] - 1, p[2]);
+      return 'el ' + RUTA_DIA[d.getDay()] + ' ' + p[2] +
+        (k.slice(0, 7) !== hoyK.slice(0, 7) ? ' ' + d.toLocaleDateString('es-MX', { month: 'short' }).replace('.', '') : '');
+    };
+    const partes = xs.slice(0, max).map(function (a) { return dia(a.fecha) + ', ' + fmt(a.monto) + ' ' + (RUTA_DE[a.de] || ''); });
+    const resto = xs.length - partes.length;
+    return (partes.length > 1 ? partes.slice(0, -1).join('; ') + ' y ' + partes[partes.length - 1] : partes[0]) +
+      (resto > 0 ? '; y ' + resto + (resto === 1 ? ' abono más' : ' abonos más') : '');
+  }
+  /* ── Tu dinero un día: de lo de hoy, día por día ─────────────────────────────────────────────
+     Adán, 19-oct-2026: "conforme seleccione otro día, debes proyectar todo todo hasta mis
+     inversiones… ya tenemos un trackeo muy completo de mis finanzas y actualiza todo día a día".
+     Arranca de lo que hoy dice Finanzas —la BBVA viva, lo invertido, los CETES, el depósito del depa, el
+     auto, el iPhone y el Bitcoin— y camina día por día con el mismo plan que el calendario: los abonos
+     de la BBVA (`planBbva`), lo que cada quincena manda a GBM (los cobros `ahorro` de `agendaDia`, ya
+     sin lo que se lleva la tarjeta), lo que Didi aparta cada lunes cuando ya no va a la tarjeta
+     (`didiAlAhorro`, menos lo que se llevó el pago del corte), las ventas del plan (`SUPUESTOS.extras`,
+     el último día de su mes), el depósito que regresa al dejar el depa y lo que bajan el auto (su día,
+     con su interés) y el iPhone. Hoy es lo real, con lo que el plan pide hoy (`pendiente`); un día que
+     viene ya cuenta lo de hoy, porque la proyección es seguir el plan. El dinero para gastar —la cuenta
+     y el efectivo— lo lleva el riel del Plan Maestro, con la comida y lo anotado. Un día que ya pasó, o
+     después del último mes en México (de ahí la proyección es mes a mes, en Coach), devuelve null. */
+  function estadoDia(fechaK) {
+    const hoyK = fechaLocal(), P = PROYECTO;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(fechaK || '') || fechaK < hoyK) return null;
+    const pu = P.ultimoMesMexico.split('-').map(Number);
+    if (fechaK > P.ultimoMesMexico + '-' + String(new Date(pu[0], pu[1], 0).getDate()).padStart(2, '0')) return null;
+    const F = fin || {}, DEU = deudas(), r2 = function (x) { return Math.round(x * 100) / 100; };
+    const deuda = function (id) { return DEU.filter(function (d) { return d.id === id; })[0] || null; };
+    const tc = deuda('d001'), car = deuda('d003'), iph = deuda('d008');
+    const inv = F.investments || [], dep = inv.filter(function (i) { return i.id === 'i004'; })[0];
+    const o = {
+      fecha: fechaK, hoy: fechaK === hoyK,
+      bbva: tc && !tc.cancelada ? Math.max(0, +tc.balance || 0) : 0,
+      gbm: inv.filter(function (i) { return i.id !== 'i004'; }).reduce(function (s, i) { return s + (+i.value || +i.invested || 0); }, 0),
+      cetes: +F.emergencyFund || 0,
+      deposito: dep ? (+dep.value || +dep.invested || 0) : 0,
+      btc: Math.max(0, (F.btcHistory || []).reduce(function (s, x) { return s + (+x.btc || 0); }, 0) * (+F.currentBtcPrice || 0) * (+F.usdMxn || 19.5)),
+      auto: car ? Math.max(0, +car.balance || 0) : 0,
+      iphone: iph ? Math.max(0, +iph.balance || 0) : 0,
+      otras: DEU.filter(function (d) { return ['d001', 'd003', 'd008'].indexOf(d.id) === -1; })
+        .reduce(function (s, d) { return s + Math.max(0, +d.balance || 0); }, 0),
+      aBbva: 0, aGbm: 0, movs: [], pendiente: { bbva: [], gbm: 0 }, bbvaCero: null,
+    };
+    const B = planBbva();
+    o.bbvaCero = B.fin;
+    const gbmDe = function (k) {
+      return agendaDia(+k.slice(8), k.slice(0, 7)).filter(function (c) { return c.ahorro; })
+        .reduce(function (s, c) { return s + (+c.monto || 0); }, 0);
+    };
+    // Lo que el plan pide hoy: lo de la BBVA que todavía no se anotó y el envío de la quincena a GBM.
+    o.pendiente.bbva = B.abonos.filter(function (a) { return a.fecha === hoyK && !a.hecho; });
+    o.pendiente.gbm = gbmDe(hoyK);
+    if (o.hoy) return o;
+    const devuelve = mesSiguiente(P.rentaHasta) + '-01';
+    const p0 = hoyK.split('-').map(Number), d = new Date(p0[0], p0[1] - 1, p0[2]);
+    let didiDebe = 0;
+    for (let k = 0; k < 400; k++, d.setDate(d.getDate() + 1)) {
+      const ym = mesDe(d), dia = d.getDate(), kd = ym + '-' + String(dia).padStart(2, '0');
+      if (kd > fechaK) break;
+      const delDia = B.abonos.filter(function (a) { return a.fecha === kd && !a.hecho; });
+      delDia.forEach(function (a) { const x = Math.min(o.bbva, a.monto); o.bbva = r2(o.bbva - x); o.aBbva += x; });
+      const q = gbmDe(kd);
+      if (q > 0) { o.gbm += q; o.aGbm += q; o.movs.push({ fecha: kd, t: 'de la quincena', mxn: q }); }
+      // Lo de Didi del lunes que ya no se lleva la tarjeta, después de reponer lo que se llevó el pago del corte.
+      didiDebe += delDia.filter(function (a) { return a.de === 'minimo'; }).reduce(function (s, a) { return s + a.monto; }, 0);
+      if (d.getDay() === 1) {
+        const aTarjeta = delDia.filter(function (a) { return a.de === 'didi'; }).reduce(function (s, a) { return s + a.monto; }, 0);
+        let libre = Math.max(0, didiAlAhorro(ym) * 12 / 52 - aTarjeta);
+        const repone = Math.min(libre, didiDebe); didiDebe -= repone; libre -= repone;
+        if (libre >= 1) { o.gbm += libre; o.aGbm += libre; o.movs.push({ fecha: kd, t: 'de Didi', mxn: r2(libre) }); }
+      }
+      if (new Date(d.getFullYear(), d.getMonth(), dia + 1).getDate() === 1)
+        SUPUESTOS.extras.forEach(function (e) {
+          if (e.mes !== ym) return;
+          const x = typeof e.mxn === 'string' ? P[e.mxn] : e.mxn;
+          o.gbm += x; o.aGbm += x; o.movs.push({ fecha: kd, t: e.txt, mxn: x });
+        });
+      if (kd === devuelve && o.deposito > 0) {
+        o.gbm += o.deposito; o.aGbm += o.deposito; o.movs.push({ fecha: kd, t: 'regresa el depósito del depa', mxn: o.deposito }); o.deposito = 0;
+      }
+      if (car && dia === +car.day && o.auto > 0) {
+        const i = o.auto * (+car.rate || 0) / 100 / 12;
+        o.auto = r2(Math.max(0, o.auto + i - Math.min(o.auto + i, +car.min || 0)));
+      }
+      if (iph && dia === +iph.day && o.iphone > 0) o.iphone = r2(Math.max(0, o.iphone - (+iph.min || 0)));
+    }
+    o.gbm = r2(o.gbm); o.aGbm = r2(o.aGbm); o.aBbva = r2(o.aBbva);
+    return o;
+  }
   /* ── Los abonos del plan se restan solos el día que tocan ─────────────────────────────────────
      Adán, 17-oct-2026: "no se actualiza conforme a los días". Cuando llega el día de un abono del
      plan —lo de la quincena el 1 y el 15, lo de Didi el lunes, el pago del corte—, se anota solo en
@@ -5382,7 +5510,7 @@ window.CIFRAS = (function () {
     patrimonio: patrimonio,
     fondoMaestria: fondoMaestria,
     diasFase: diasFase, diasHasta: diasHasta,
-    avanceBbva: avanceBbva, deudasConInteres: deudasConInteres, bbvaEstado: bbvaEstado,
+    avanceBbva: avanceBbva, deudasConInteres: deudasConInteres, bbvaEstado: bbvaEstado, estadoDia: estadoDia, bbvaRutaTxt: bbvaRutaTxt,
     tarjetaDe: tarjetaDe, movimientoTarjeta: movimientoTarjeta, aplicarPlanBbva: aplicarPlanBbva, ABONO_DE: ABONO_DE,
     BTC_SEED: BTC_SEED,
     // Para que `seedData()` pueda marcarlas como aplicadas: un seed nuevo ya las incluye.

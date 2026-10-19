@@ -638,7 +638,9 @@ Esta pantalla es el tablero del Plan Maestro: la fase activa, la ruta de deuda, 
 ## Al modificar esta pantalla
 - Ningún importe en el código: todo sale del maestro y de Finanzas.
 - Lo que se cuenta en pasado lleva fecha; lo que se afirma en presente coincide con el saldo vivo.
-- El cálculo es uno solo (el riel): la cifra grande, la línea y el cierre salen de la misma serie.`
+- El cálculo es uno solo (el riel): la cifra grande, la línea y el cierre salen de la misma serie.
+- Cualquier día que se elija enseña todo el dinero —para gastar, GBM, CETES, el depósito, lo que se debe y el patrimonio líquido—: hoy lo real, un día que viene proyectado siguiendo el plan (CIFRAS.estadoDia), nunca una cifra escrita a mano.
+- La banda de la fase dice lo que importa hoy de la fase —el checklist del mes y lo que toca, sus cifras contra la meta y el checkpoint— y lleva a la ventana de las fases.`
     },
 
     metas: {

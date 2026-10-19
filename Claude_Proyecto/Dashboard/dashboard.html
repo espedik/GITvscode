@@ -39,6 +39,8 @@
 <!-- Habitos: el slide 7. Datos, motor, pintado y estilos viven todos ahi, igual que
      el simulacro del ISTQB - dashboard.html ya pesa 1.1 MB. Aqui solo esta el
      <section> vacio, el tema de color y la entrada en RENDERS/SLIDE_MENU_META. -->
+<!-- Las marcas de hábitos de la PC, que el hook de pre-commit deja aquí para los otros dispositivos (habitos.js las trae) -->
+<script src="habitos-sync.js" onerror="this.remove()"></script>
 <script src="habitos.js"></script>
 <script src="examen-genai-data.js"></script>
 <script src="examen-genai-data-b.js"></script>
@@ -1419,34 +1421,63 @@ body.rail-on{--pad-rail:max(6vw,230px)}
    todavía más pequeño a lo alto"): de 241px de cabecera a ~180. Lo que se recorta es aire
    —paddings, márgenes entre bandas— y el tamaño de las cifras que no son LA cifra; ninguna
    pierde un dato. El que manda sigue siendo el número grande del riel. */
-.coach-fase-band{display:flex;align-items:center;gap:14px;padding:7px 15px;border-radius:14px;
-  background:color-mix(in srgb,var(--w) 7%,transparent);
-  border:1px solid color-mix(in srgb,var(--w) 24%,transparent);margin-bottom:8px;flex-shrink:0}
+.coach-fase-band{display:flex;flex-direction:column;gap:8px;padding:10px 16px 11px;border-radius:16px;cursor:pointer;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--w) 12%,transparent),color-mix(in srgb,var(--w) 4%,transparent));
+  border:1px solid color-mix(in srgb,var(--w) 30%,transparent);margin-bottom:8px;flex-shrink:0;transition:border-color .15s}
+.coach-fase-band:hover{border-color:color-mix(in srgb,var(--w) 55%,transparent)}
+/* Arriba, la fase en el tiempo: chip, título, fechas y sus meses como una línea partida. */
+.cfb-arriba{display:flex;align-items:center;gap:14px;min-width:0}
 .cfb-chip{flex-shrink:0;font-family:var(--mono);font-size:10px;font-weight:900;letter-spacing:.08em;
   padding:4px 10px;border-radius:8px;background:var(--w);color:#05050a}
-.cfb-t{flex-shrink:0;font-family:var(--font-title);font-size:clamp(13px,1.2vw,16px);font-weight:600;line-height:1.15}
-.cfb-linea{flex:1;min-width:110px;padding:0 6px}
-.cfb-barra{position:relative;height:5px;border-radius:3px;background:rgba(var(--ov),.12)}
-.cfb-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--w),var(--o))}
-.cfb-hoy{position:absolute;top:-4px;width:2px;height:13px;background:var(--text);border-radius:2px}
-.cfb-rot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:3px}
-.cfb-kpis{display:flex;gap:18px;flex-shrink:0}
-.cfb-kpi b{display:block;font-family:var(--mono);font-size:16px;font-weight:900;line-height:1}
-.cfb-kpi span{display:block;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.06em;
-  text-transform:uppercase;color:var(--text3);margin-top:2px}
+.cfb-t{flex-shrink:0;font-family:var(--font-title);font-size:clamp(15px,1.35vw,20px);font-weight:600;line-height:1.15}
+.cfb-cuando{flex-shrink:0;font-family:var(--mono);font-size:10.5px;line-height:1.4;color:var(--text3)}
+.cfb-cuando b{color:var(--w);font-weight:700}
+.cfb-meses{flex:1;min-width:240px;display:flex;gap:4px}
+.cfb-mes{position:relative;flex:1 1 0;min-width:0;height:27px;display:flex;align-items:center;justify-content:center;gap:5px;padding:0 6px;
+  border:0;border-radius:8px;background:rgba(var(--ov),.07);color:var(--text3);font:inherit;font-family:var(--mono);font-size:10px;
+  font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;overflow:hidden;white-space:nowrap}
+.cfb-mes:hover{background:rgba(var(--ov),.14);color:var(--text)}
+.cfb-mes span,.cfb-mes small{position:relative}
+.cfb-mes small{font-size:9.5px;font-weight:600;letter-spacing:0;text-transform:none;opacity:.85}
+.cfb-mes.ok{background:rgba(var(--g-rgb),.15);color:var(--g)}
+.cfb-mes.pend{background:rgba(var(--r-rgb),.13);color:var(--r)}
+.cfb-mes.hoy{color:var(--text);background:color-mix(in srgb,var(--w) 16%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--w) 55%,transparent)}
+/* Lo que va del mes, en su borde de abajo: una barrita hasta hoy y la marca del día. */
+.cfb-mes.hoy::before{content:'';position:absolute;left:0;bottom:0;height:3px;width:var(--va,0%);background:var(--w)}
+.cfb-mes.hoy::after{content:'';position:absolute;left:var(--va,0%);bottom:0;height:8px;width:2px;margin-left:-1px;border-radius:2px 2px 0 0;background:var(--text)}
+/* Abajo, lo que importa hoy de la fase: este mes, sus cifras y el checkpoint. */
+.cfb-abajo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cfb-b{min-width:0;display:flex;flex-direction:column;gap:5px;padding:9px 12px 10px;border-radius:11px;
+  background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.07)}
+.cfb-k{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-family:var(--mono);font-size:9.5px;
+  font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)}
+.cfb-k em{font-style:normal;letter-spacing:.03em;text-transform:none;color:var(--w);white-space:nowrap}
+.cfb-k em.mal{color:var(--r)}
+.cfb-v{display:flex;align-items:baseline;gap:7px;min-width:0;font-size:12px;color:var(--text2)}
+.cfb-v b{font-family:var(--mono);font-size:17px;font-weight:800;line-height:1.05;color:var(--text);white-space:nowrap}
+.cfb-barra{height:4px;border-radius:3px;background:rgba(var(--ov),.12);overflow:hidden}
+.cfb-barra i{display:block;height:100%;border-radius:3px;background:var(--g)}
+.cfb-toca{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;line-height:1.4;color:var(--text)}
+.cfb-toca small{margin-right:5px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--w)}
+.cfb-n{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:9px;align-items:baseline;font-size:11.5px;color:var(--text2)}
+.cfb-n b{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--text)}
+.cfb-n b.bien{color:var(--g)}
+.cfb-n b.mal{color:var(--r)}
+.cfb-n i{font-style:normal;font-family:var(--mono);font-size:10px;color:var(--text3);white-space:nowrap;text-align:right}
+.cfb-cp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;line-height:1.4;color:var(--text2)}
 
-.coach-ruta-band{display:flex;align-items:center;gap:11px;padding:7px 15px;border-radius:14px;
+.coach-ruta-band{display:flex;align-items:center;gap:9px;padding:4px 12px;border-radius:12px;
   background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.09);margin-bottom:8px;flex-shrink:0}
 .crb-lbl{flex-shrink:0;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.14em;
   text-transform:uppercase;color:var(--text3)}
 /* Cada paso ocupa lo mismo: son tres hitos de una secuencia, no tres magnitudes comparables. */
 .crb-paso{position:relative;flex:1;min-width:0;display:flex;align-items:center;gap:9px;
-  padding:6px 12px 11px;border-radius:11px;background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.07)}
+  padding:4px 10px 8px;border-radius:9px;background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.07)}
 .crb-paso.activo{border-color:var(--w);background:color-mix(in srgb,var(--w) 9%,transparent)}
 .crb-paso.done{border-color:rgba(0,232,122,.35);background:rgba(0,232,122,.05)}
-.crb-nom{flex:1;min-width:0;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.crb-val{font-family:var(--mono);font-size:11px;font-weight:700;flex-shrink:0}
-.crb-b{position:absolute;left:12px;right:12px;bottom:4px;height:3px;border-radius:2px;background:rgba(var(--ov),.09)}
+.crb-nom{flex:1;min-width:0;font-size:11.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crb-val{font-family:var(--mono);font-size:10.5px;font-weight:700;flex-shrink:0}
+.crb-b{position:absolute;left:10px;right:10px;bottom:3px;height:2px;border-radius:2px;background:rgba(var(--ov),.09)}
 .crb-b i{display:block;height:100%;border-radius:2px}
 .crb-pct{flex-shrink:0;font-family:var(--mono);font-size:13px;font-weight:900;color:var(--g)}
 
@@ -3634,23 +3665,23 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
    de 125px a ~90. Lo que manda es `.cr-hero` —123 de esos 125—, y dentro de él la cifra
    grande, así que el recorte sale sobre todo de ahí y de los paddings, no de la gráfica:
    estrechar el dibujo habría sido quitar el dato en vez del aire. */
-.cr-hero{flex-shrink:0;width:clamp(250px,22%,330px);padding:7px 16px;display:flex;flex-direction:column;
-  gap:3px;justify-content:center;border-right:1px solid rgba(var(--cy-rgb),.2);background:rgba(var(--cy-rgb),.05)}
-.cr-big{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(20px,1.95vw,26px);
+.cr-hero{flex-shrink:0;width:clamp(250px,25%,430px);padding:5px 14px;display:flex;flex-direction:column;
+  gap:2px;justify-content:center;border-right:1px solid rgba(var(--cy-rgb),.2);background:rgba(var(--cy-rgb),.05)}
+.cr-big{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(18px,1.6vw,22px);
   font-weight:700;line-height:.95;letter-spacing:-.02em;color:var(--cy)}
 /* Envuelve a dos líneas en un hero de 250-330px, y ahí se iban 30 de sus 85px. No se le
    quita el wrap —el texto se saldría—: se le aprieta el interlineado. */
 .cr-estado{display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.25}
 .cr-punto{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.cr-graf{flex:1;min-width:0;padding:5px 16px 4px;display:flex;flex-direction:column;gap:3px}
-.cr-svgw{position:relative;flex:1;min-height:38px}
+.cr-graf{flex:1;min-width:0;padding:4px 14px 3px;display:flex;flex-direction:column;gap:3px}
+.cr-svgw{position:relative;flex:1;min-height:30px}
 .cr-svgw svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .cr-hit{position:absolute;inset:0;display:grid;gap:0}
 .cr-hit button{border:0;background:transparent;padding:0;cursor:pointer;border-radius:4px}
 .cr-hit button:hover{background:rgba(var(--ov),.06)}
 .cr-dias{display:grid;gap:0}
 .cr-dias span{font-family:var(--mono);font-size:8.5px;text-align:center;color:var(--text3)}
-.cr-fin{flex-shrink:0;width:clamp(130px,12%,180px);padding:7px 14px;display:flex;flex-direction:column;
+.cr-fin{flex-shrink:0;width:clamp(130px,12%,180px);padding:5px 12px;display:flex;flex-direction:column;
   justify-content:center;gap:2px;border-left:1px solid rgba(var(--ov),.09)}
 .coach-tablero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);
   gap:12px;align-items:stretch;flex:1;min-height:0}
@@ -3658,6 +3689,22 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
   padding:15px 16px;display:flex;flex-direction:column;gap:11px;min-width:0;
   min-height:0;overflow-y:auto;scrollbar-gutter:stable}
 .ct-dia{border-color:rgba(var(--cy-rgb),.32);background:rgba(var(--cy-rgb),.04)}
+/* Tu dinero ese día (ctDineroDiaHtml): cada cifra con lo que cambia desde hoy. */
+.cdd{display:flex;flex-direction:column;gap:4px;padding-top:11px;border-top:1px solid rgba(var(--ov),.09)}
+.cdd-f{display:grid;grid-template-columns:minmax(0,1fr) auto 84px;gap:10px;align-items:baseline;padding:2px 0}
+.cdd-t{min-width:0;font-size:11.5px;color:var(--text2)}
+.cdd-t small{margin-left:6px;font-size:10px;color:var(--text3)}
+.cdd-f>b{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap}
+.cdd-f.debe>b{color:var(--r)}
+.cdd-d{font-family:var(--mono);font-size:10px;text-align:right;color:var(--text3);white-space:nowrap}
+.cdd-d i{font-style:normal}
+.cdd-d i.up{color:var(--g)}
+.cdd-d i.dn{color:var(--r)}
+.cdd-f.tot{margin:2px 0;padding:6px 10px;border-radius:9px;background:rgba(var(--ov),.05)}
+.cdd-f.tot .cdd-t{font-weight:700;color:var(--text)}
+.cdd-f.tot>b{font-size:14px}
+.cdd-nota{font-size:10px;line-height:1.45;color:var(--text3)}
+.cdd-nota b{color:var(--text2)}
 .ct-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 /* El titulo no se envuelve: "Septiembre 2026" no puede empujar a las flechas. */
 .ct-cal .ct-h{align-items:center;min-height:26px}
@@ -3831,11 +3878,14 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   .cr-fin{border-left:0;width:auto;flex:1}
   .coach-tablero{grid-template-columns:minmax(0,1fr) minmax(0,1fr);flex:none}
   .ct-sem{grid-column:1/-1}
+  .cfb-arriba{flex-wrap:wrap;row-gap:8px}
+  .cfb-meses{flex-basis:100%}
   .slide.theme-coach .slide-inner{overflow-y:auto}
   .ct-col{overflow-y:visible;min-height:auto}
 }
 @media(max-width:760px){
   .coach-tablero{grid-template-columns:1fr}
+  .cfb-abajo{grid-template-columns:minmax(0,1fr)}
   .ct-sem{grid-column:auto}
 }
 /* En el teléfono cada pieza va a lo ancho: a 390 px la ruta de deuda encimaba sus tres pasos, la
@@ -3843,9 +3893,9 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 @media(max-width:640px){
   .cr-graf{flex-basis:100%}
   .cr-fin{flex:1 1 100%;border-top:1px solid rgba(var(--cy-rgb),.2)}
-  .coach-fase-band{flex-wrap:wrap;row-gap:6px}
-  .cfb-linea{order:3;flex-basis:100%;padding:0}
-  .cfb-kpis{margin-left:auto}
+  .coach-fase-band{padding:10px 12px}
+  .cfb-cuando{flex-basis:100%}
+  .cfb-mes{font-size:9px;padding:0 3px}
   .coach-ruta-band{flex-wrap:wrap;row-gap:6px}
   .crb-lbl{flex-basis:100%}
   .crb-paso{flex:1 1 100%}
@@ -9034,15 +9084,65 @@ function ctTramo(nSel, nDias, mov, ym){
            comeDia:comeDia, restan:restan, gastado:gastado, entrado:entrado, ancla:ancla, desdeAncla:desdeAncla,
            falta: (hoy.saldo - cierre), libreDia: Math.round(cierre/restan) };
 }
-// El activo líquido de la cuenta con fecha, si su fecha cae dentro del tramo [ini, fin] del mes YM.
+// Lo que hay de verdad para gastar: los activos líquidos de Finanzas con fecha —la cuenta y el efectivo—
+// que caen dentro del tramo [ini, fin] del mes YM, sumados y anclados al día más reciente. Adán,
+// 19-oct-2026: "tengo en mi tarjeta de débito 1,700 y 2500 en efectivo".
 function ctAnclaReal(YM, ini, fin){
-  const acts=(D.fin&&D.fin.activos)||[];
-  const cta=acts.find(a=>a.id==='ac013')||acts.find(a=>a.type==='liquido'&&a.fecha&&/bbva|cuenta/i.test(a.name||''));
-  if(!cta||!/^\d{4}-\d{2}-\d{2}$/.test(cta.fecha||'')) return null;
-  if(cta.fecha.slice(0,7)!==YM) return null;
-  const d=+cta.fecha.slice(8,10);
-  if(d<ini||d>fin) return null;
-  return { dia:d, saldo:+cta.value||0, fecha:cta.fecha, nombre:cta.name||'Cuenta' };
+  const acts=((D.fin&&D.fin.activos)||[]).filter(function(a){
+    if(a.type!=='liquido'||!/^\d{4}-\d{2}-\d{2}$/.test(a.fecha||'')||a.fecha.slice(0,7)!==YM) return false;
+    const d=+a.fecha.slice(8,10); return d>=ini&&d<=fin;
+  });
+  if(!acts.length) return null;
+  const f=acts.map(a=>a.fecha).sort().pop();
+  return { dia:+f.slice(8,10), saldo:acts.reduce((x,a)=>x+(+a.value||0),0), fecha:f,
+           nombre:acts.map(a=>a.name||'Cuenta').join(' y ') };
+}
+
+/* ── TU DINERO ESE DÍA ─────────────────────────────────────────────────────────────────────────
+   Adán, 19-oct-2026: "conforme seleccione otro día, debes proyectar todo todo hasta mis inversiones,
+   esto debido a que ya tenemos un trackeo muy completo de mis finanzas". En la columna del día, todo tu
+   dinero: hoy, lo que dice Finanzas; un día que viene, la proyección siguiendo el plan
+   (`CIFRAS.estadoDia`). Para gastar es el riel —la cuenta y el efectivo—; GBM, los CETES y el depósito
+   del depa completan tu dinero; la BBVA, el auto y el iPhone son lo que debes, y la resta es el
+   patrimonio líquido. Cada cifra lleva lo que cambia desde hoy. Un día que ya pasó no se proyecta. */
+function ctDineroDiaHtml(T, dd){
+  if(dd < 0 || !window.CIFRAS || !CIFRAS.estadoDia) return '';
+  const E = CIFRAS.estadoDia(ctSel);
+  const cab = '<span class="ct-lbl">'+(dd === 0 ? 'Tu dinero hoy' : 'Tu dinero ese día · si sigues el plan')+'</span>';
+  if(!E) return '<div class="cdd">'+cab+'<span class="cdd-nota">Después del último mes en México la proyección va mes a mes: está en Coach.</span></div>';
+  const H0 = dd === 0 ? E : CIFRAS.estadoDia(hoyLocal());
+  if(!H0) return '';
+  // Para gastar: el riel de ese día y, para la diferencia, el de hoy.
+  let gastar0 = T.hoy.saldo;
+  if(dd !== 0){
+    const hk = hoyLocal(), hy = hk.slice(0,7), nd = new Date(+hy.slice(0,4), +hy.slice(5,7), 0).getDate();
+    gastar0 = ctTramo(+hk.slice(8), nd, ctMovs(hy), hy).hoy.saldo;
+  }
+  const tuyo = x => x.gbm + x.cetes + x.deposito + x.btc, debes = x => x.bbva + x.auto + x.iphone + x.otras;
+  const din = T.hoy.saldo + tuyo(E), din0 = gastar0 + tuyo(H0);
+  const MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const dC = d => d ? d.getDate()+' '+MC[d.getMonth()] : '';
+  const cambio = (a, b, menos) => {
+    if(dd === 0) return '';
+    const v = a - b; if(Math.abs(v) < 1) return '<i>igual</i>';
+    return '<i class="'+((menos ? v < 0 : v > 0) ? 'up' : 'dn')+'">'+(v > 0 ? '+' : '−')+money(Math.abs(v))+'</i>';
+  };
+  const fila = (t, sub, v, c, cls) => '<div class="cdd-f'+(cls ? ' '+cls : '')+'"><span class="cdd-t">'+t+(sub ? '<small>'+sub+'</small>' : '')+'</span>'+
+    '<b class="ct-num'+(privado?' fin-hidden':'')+'">'+v+'</b><span class="cdd-d'+(privado?' fin-hidden':'')+'">'+c+'</span></div>';
+  const vuelve = window.CIFRAS.PROYECTO && CIFRAS.PROYECTO.rentaHasta ? (function(){ const p = CIFRAS.PROYECTO.rentaHasta.split('-').map(Number); return 'regresa el 1 '+MC[p[1] % 12]; })() : '';
+  const resta = dd === 0 ? '' : '<span class="cdd-nota">De hoy a ese día: <b class="'+(privado?'fin-hidden':'')+'">'+money(E.aBbva)+'</b> a la BBVA y <b class="'+(privado?'fin-hidden':'')+'">'+money(E.aGbm)+'</b> a GBM.</span>';
+  return '<div class="cdd">'+cab+
+    fila('Para gastar', 'la cuenta y el efectivo', money(T.hoy.saldo), cambio(T.hoy.saldo, gastar0)) +
+    fila('GBM', 'lo invertido', money(E.gbm), cambio(E.gbm, H0.gbm)) +
+    fila('CETES', 'tu fondo de emergencia', money(E.cetes), cambio(E.cetes, H0.cetes)) +
+    (E.deposito > 0 || H0.deposito > 0 ? fila('Depósito del depa', E.deposito > 0 ? vuelve : 'ya regresó, a GBM', money(E.deposito), cambio(E.deposito, H0.deposito)) : '') +
+    (E.btc > 0 ? fila('Bitcoin', '', money(E.btc), cambio(E.btc, H0.btc)) : '') +
+    fila('Tu dinero', '', money(din), cambio(din, din0), 'tot') +
+    fila('La BBVA', E.bbva > 0 ? 'en cero el '+dC(E.bbvaCero) : 'en cero', E.bbva > 0 ? '−'+money(E.bbva) : money(0), cambio(E.bbva, H0.bbva, true), E.bbva > 0 ? 'debe' : '') +
+    fila('El auto y el iPhone', '', '−'+money(E.auto + E.iphone + E.otras), cambio(E.auto + E.iphone + E.otras, H0.auto + H0.iphone + H0.otras, true), 'debe') +
+    fila('Patrimonio líquido', '', (din - debes(E) < 0 ? '−' : '')+money(Math.abs(din - debes(E))), cambio(din - debes(E), din0 - debes(H0)), 'tot') +
+    (dd === 0 ? '<span class="cdd-nota">Es lo de Finanzas hoy. Toca un día que viene y lo ves proyectado, con lo que el plan manda a la BBVA y a GBM.</span>' : resta)+
+  '</div>';
 }
 
 /* ── TU ESTRATEGIA DE HOY ─────────────────────────────────────────────────────────────────────
@@ -9343,8 +9443,8 @@ function renderCoachTablero(){
       '<span class="cr-big'+(privado?' fin-hidden':'')+'">'+money(T.hoy.saldo)+'</span>'+
       '<span class="cr-estado">'+
         '<i class="cr-punto" style="background:'+estado.c+';box-shadow:0 0 9px '+estado.c+'"></i>'+
-        '<span style="font-size:11.5px;font-weight:600;color:var(--text)">'+estado.t+'</span>'+
-        '<span style="font-size:10.5px;color:var(--text3)">'+detalleR+(T.ancla&&nSel>=T.ancla.dia?' · desde tu saldo real del '+T.ancla.dia:'')+'</span>'+
+        '<span style="font-size:11px;font-weight:600;color:var(--text)">'+estado.t+'</span>'+
+        '<span style="font-size:10px;color:var(--text3)">'+detalleR+(T.ancla&&nSel>=T.ancla.dia?' · saldo real del '+T.ancla.dia:'')+'</span>'+
       '</span>'+
     '</div>'+
 
@@ -9380,7 +9480,7 @@ function renderCoachTablero(){
 
     '<div class="cr-fin">'+
       '<span class="ct-lbl">Cierras el '+T.fin+' con</span>'+
-      '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:21px;font-weight:700;line-height:1;color:'+
+      '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:18px;font-weight:700;line-height:1;color:'+
         (T.cierre>=0?'var(--text)':'var(--r)')+'">'+money(T.cierre)+'</span>'+
       '<span style="font-size:9.5px;color:var(--text3);line-height:1.25">'+(T.cierre < 0 ? 'Es lo que te falta para cerrar esta quincena' : 'Es lo que te sobra de esta quincena')+'</span>'+
     '</div>';
@@ -9566,7 +9666,7 @@ function renderCoachTablero(){
           (privado?' fin-hidden':'')+'" style="color:var(--text2)">'+money(T.falta)+'</b> '+ctRango(nSel+1,T.fin)+'.</span>')+
     '</div>'+
 
-    (dd===0 ? ctEstrategiaHtml(T, H, faltaR, mvSel) : '')+
+    (dd===0 ? ctEstrategiaHtml(T, H, faltaR, mvSel) : '')+ctDineroDiaHtml(T, dd)+
 
     (mvSel.length
       ? (function(){
@@ -9813,29 +9913,11 @@ function renderCoach(){
   const pctFase=Math.max(0,Math.min(100,DF.pct));
   const dFmt=d=>d.toLocaleDateString('es-MX',{day:'numeric',month:'short'});
 
-  // ── Banda 1: fase + título + barra con la posición de hoy + 3 cifras, todo en una fila ──
+  // ── Banda 1: la fase, en dos filas (cfbHtml): en el tiempo y lo que importa hoy ──
   const bandaFase=document.getElementById('coachFaseBand');
-  bandaFase.innerHTML=`
-    <span class="cfb-chip">${esc(ph.tag)}</span>
-    <span class="cfb-t">${esc(ph.title)}</span>
-    <div class="cfb-linea">
-      <div class="cfb-barra">
-        <div class="cfb-fill" style="width:${pctFase}%"></div>
-        <div class="cfb-hoy" style="left:${pctFase}%"></div>
-      </div>
-      <div class="cfb-rot">
-        <span>${dFmt(ph.start)} ${ph.start.getFullYear()}</span>
-        <span style="color:var(--w);font-weight:700">${diasFase>0?'quedan '+fmt(diasFase)+' días':DF.corrido>=DF.largo&&CIFRAS.diasHasta(ph.end)===0?'último día':'fase vencida'}</span>
-        <span>${dFmt(ph.end)} ${ph.end.getFullYear()}</span>
-      </div>
-    </div>
-    <div class="cfb-kpis">
-      <div class="cfb-kpi"><b style="color:${diasFase<=14?'var(--r)':diasFase<=30?'var(--o)':'var(--w)'}">${fmt(diasFase)}</b><span>días</span></div>
-      <div class="cfb-kpi" title="Las que quedan, de ${DF.semanas} que dura la fase"><b style="color:var(--cy)">${DF.semanasQuedan}</b><span>semanas</span></div>
-      <div class="cfb-kpi"><b>${Math.round(pctFase)}%</b><span>transcurrido</span></div>
-    </div>`;
+  bandaFase.innerHTML=cfbHtml(ph, DF);
   // El párrafo largo de la fase ya no ocupa media pantalla: vive aquí como tooltip.
-  bandaFase.title=explicaTxt+'\n\nClic: ver las 4 fases del plan.';
+  bandaFase.title=explicaTxt+'\n\nClic: ver las fases del plan; un mes, la abre en ese mes.';
   // Toda la banda abre la ventana con las cuatro fases (Adán, 21-sep-2026: "al hacer click en el
   // recuadro de fase 0 (…) debes mostrarme una ventana con la info de todas las fases").
   bandaFase.setAttribute('role','button'); bandaFase.setAttribute('tabindex','0');
@@ -9844,6 +9926,79 @@ function renderCoach(){
   // El reparto de tareas ya no vive aquí: lo pinta el tablero, repartidas por la
   // semana que les toca en vez de en tres listas del mismo peso.
   renderCoachTablero();
+}
+/* ── LA BANDA DE LA FASE ───────────────────────────────────────────────────────────────────────
+   Adán, 19-oct-2026: "haz un mucho mejor diseño de esta barra que directamente te lleva a las fases,
+   hazla más ancha y las demás de esa página del dashboard hazlas más pequeñas, aquí ponme info
+   importante… pon algo de las fases". Dos filas. Arriba, la fase en el tiempo: su chip, su título, sus
+   fechas y dónde vas, y sus meses como una línea partida —cada uno con su auditoría (✓ auditado, ⚠ sin
+   auditar, en curso con la marca de hoy, por venir)—; tocar un mes abre la ventana de las fases en ese
+   mes (`cfbAbrir`). Abajo, lo que importa de la fase hoy: ESTE MES —lo que llevas de su checklist, lo
+   que te toca y cuándo se audita (`CIFRAS.planMes`, `fzmFicha`)—, LAS CIFRAS DEL MES —sus metas contra lo
+   de hoy (`CIFRAS.cifrasHoy`), con la regla de su ficha: desde la última semana se pintan en rojo— y EL
+   CHECKPOINT —la fecha que cierra la fase, lo que pide y lo que GBM y los CETES tendrán ese día si sigues
+   el plan (`CIFRAS.estadoDia`)—. Toda la banda abre la ventana de las fases. */
+function cfbHtml(ph, DF){
+  const C = window.CIFRAS, i = PHASES.indexOf(ph), A = fzmAud(), checks = rawGet('coach_checks_v1', {}) || {};
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  const hoyYM = fzmYM(hoy), MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const dC = d => d.getDate()+' '+MC[d.getMonth()]+' '+d.getFullYear();
+  const num = v => '<span class="'+(privado?'fin-hidden':'')+'">'+money(Math.round(v))+'</span>';
+  const dias = n => n === 0 ? 'hoy' : n === 1 ? 'mañana' : 'en '+n+' días';
+  // Arriba: la fase y sus meses.
+  const meses = fzmMeses(ph).map(function(k){
+    const e = fzmEstado(k, A), fin = fzmFinMes(k), a = A[k] || {};
+    const va = k === hoyYM ? Math.round(hoy.getDate() / fin.getDate() * 100) : 0;
+    const ico = e === 'ok' ? '✓ ' : e === 'pend' ? '⚠ ' : '';
+    const Fk = C && C.planMes ? fzmFicha(C.planMes(k), A) : null, n = Fk ? Fk.tareas.length : 0;
+    const sub = e === 'ok' ? (a.califica && typeof a.califica.total === 'number' ? String(a.califica.total) : '')
+      : e === 'pend' ? 'auditar'
+      : e === 'hoy' ? (Fk ? Fk.tareas.filter(t => ctHecha(t, checks)).length+'/'+n : '')
+      : (n ? n+(n === 1 ? ' tarea' : ' tareas') : '');
+    return '<button type="button" class="cfb-mes '+e+'"'+(va ? ' style="--va:'+va+'%"' : '')+' title="'+fzmNombre(k)+' · '+FZM_ESTADO[e]+
+      '" onclick="event.stopPropagation();cfbAbrir('+i+',\''+k+'\')"><span>'+ico+MES_LABEL_FULL[+k.slice(5,7)-1].slice(0,3)+'</span>'+
+      (sub ? '<small>'+sub+'</small>' : '')+'</button>';
+  }).join('');
+  const quedan = DF.quedan > 0 ? 'quedan <b>'+fmt(DF.quedan)+' días</b>' : DF.corrido >= DF.largo && CIFRAS.diasHasta(ph.end) === 0 ? '<b>último día</b>' : '<b>fase vencida</b>';
+  const arriba = '<div class="cfb-arriba"><span class="cfb-chip">'+esc(ph.tag)+'</span><span class="cfb-t">'+esc(ph.title)+'</span>'+
+    '<span class="cfb-cuando">'+dC(ph.start)+' → '+dC(ph.end)+'<br>día '+DF.corrido+' de '+DF.largo+' · '+quedan+'</span>'+
+    '<div class="cfb-meses">'+meses+'</div></div>';
+  if(!C || !C.planMes) return arriba;
+  // Este mes: el checklist, lo que toca y la auditoría; si quedó un mes atrás sin auditar, eso primero.
+  const P = C.planMes(hoyYM), F = fzmFicha(P, A);
+  const hechas = F.tareas.filter(t => ctHecha(t, checks)).length, total = F.tareas.length;
+  const toca = F.tareas.find(t => !ctHecha(t, checks));
+  const finMes = fzmFinMes(hoyYM), dAud = CIFRAS.diasHasta(finMes);
+  const atras = fzmMeses(ph).filter(k => k < hoyYM && fzmEstado(k, A) === 'pend')[0];
+  const esteMes = '<div class="cfb-b"><span class="cfb-k">Este mes · '+fzmMesMin(hoyYM)+
+      (atras ? '<em class="mal">⚠ falta auditar '+fzmMesMin(atras)+'</em>' : '<em>se audita el '+finMes.getDate()+' · '+dias(dAud)+'</em>')+'</span>'+
+    '<span class="cfb-v"><b>'+hechas+' de '+total+'</b>tareas de su checklist</span>'+
+    '<span class="cfb-barra"><i style="width:'+(total ? Math.round(hechas / total * 100) : 0)+'%"></i></span>'+
+    (toca ? '<span class="cfb-toca"><small>Te toca</small>'+fzmPartir(toca.txt).t+'</span>'
+          : '<span class="cfb-toca"><small>Listo</small>Todo el checklist del mes está hecho: queda sostener lo de cada semana.</span>')+'</div>';
+  // Las cifras del mes contra lo de hoy, con la regla de su ficha.
+  const vivo = C.cifrasHoy(D.fin), juzga = dAud <= 7;
+  const CORTO = { dinero: 'Tu dinero', bbva: 'La BBVA', liquido: 'Patrimonio líquido' };
+  const cifras = '<div class="cfb-b"><span class="cfb-k">Las cifras de '+fzmMesMin(hoyYM)+'<em>meta al '+finMes.getDate()+'</em></span>'+
+    (P.metas || []).map(function(m){
+      const real = vivo[m.k], tiene = typeof real === 'number', bien = tiene && fzmEnMeta(m, real, m.meta);
+      return '<span class="cfb-n"><span>'+(CORTO[m.k] || m.t)+'</span><b class="'+(bien ? 'bien' : tiene && juzga ? 'mal' : '')+'">'+(tiene ? (real < 0 ? '−' : '')+num(Math.abs(real)) : '—')+
+        '</b><i>de '+(m.meta < 0 ? '−' : '')+num(Math.abs(m.meta))+'</i></span>';
+    }).join('')+'</div>';
+  // El checkpoint: su fecha, lo que pide y lo que GBM y los CETES tendrán ese día siguiendo el plan.
+  const finK = fzmYM(ph.end)+'-'+String(ph.end.getDate()).padStart(2,'0');
+  const E = C.estadoDia ? C.estadoDia(finK) : null;
+  const cp = ph.checkpoint ? C.texto(String(ph.checkpoint)).replace(/^[^:]{0,24}:\s*/, '') : '';
+  const check = '<div class="cfb-b"><span class="cfb-k">El checkpoint · '+dC(ph.end)+'<em>'+dias(Math.max(0, DF.quedan))+'</em></span>'+
+    (cp ? '<span class="cfb-cp">'+cp+'</span>' : '')+
+    (E ? '<span class="cfb-v"><b>'+num(E.gbm + E.cetes)+'</b>en GBM y CETES ese día, si sigues el plan</span>' : '')+'</div>';
+  return arriba+'<div class="cfb-abajo">'+esteMes+cifras+check+'</div>';
+}
+// Un mes de la banda abre la ventana de las fases en esa fase y en ese mes.
+function cfbAbrir(i, ym){
+  abrirKpi('fases');
+  if(typeof kpiFaseTab === 'function') kpiFaseTab(i);
+  fzmVer(i, ym);
 }
 // Checklist semana a semana de "Qué hacer en esta fase" — comparte coach_checks_v1 con
 // Coach.html (mismos ids sN-M), igual patrón de escritura cruzada que quickMarkDone().
