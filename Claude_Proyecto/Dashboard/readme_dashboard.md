@@ -805,7 +805,7 @@ desglose siga abierto al repintar, y al abrirse hace `scrollIntoView({block:'nea
    hoy en verde o en rojo, y al pie lo que el plan manda de aquí a ese día a la BBVA y a GBM. Un día que
    ya pasó no lleva el bloque, y después del último mes en México dice que la proyección sigue mes a mes
    en Coach. Proyectado el 20 de noviembre desde los saldos del 19-oct-2026: para gastar $5,534 y GBM
-   $5,869; la BBVA quedará en cero el 15. A 2048×1040 mide 544×268.
+   $5,613; la BBVA quedará en cero el 15. A 2048×1040 mide 544×268.
 
 **Los gastos registrados en Finanzas que la agenda no conoce entran en la resta** (`ctTramo`,
 `ctQuincena` y la semana los suman), con **borde punteado**: un cobro programado va a caer, uno
@@ -848,7 +848,8 @@ saldo de `d001` que baja, con `tarjeta`, `origen` y `anotado` (ver *La tarjeta s
 anota* en `DATOS-MAESTROS.md`); `ceGuardar` la guarda, relee el maestro y repinta. Finanzas abierta en
 otra pestaña la relee por el evento `storage`, y el Dashboard igual: su listener también refresca la
 caché del maestro. **Con el Dashboard abierto de un día para otro**, el reloj (`tickClock`) nota el
-cambio de fecha y `ceNuevoDia` resta los abonos que llegaron y devuelve el Plan Maestro a hoy. Los
+cambio de fecha y `ceNuevoDia` resta los abonos que llegaron, anota las mensualidades fijas que tocaban
+(`CIFRAS.aplicarPagosFijos`) y devuelve el Plan Maestro a hoy. Los
 abonos que restó el plan no salen en *Lo que anotaste ese día* (`ctMovs` los salta): ya están en la
 agenda de su día. Medido a 2048×1040: el bloque mide 512×205 px el día de pago y 512×261 el día
 siguiente, y la columna no se desplaza; a 1600, 390×291; a 1366×768 la columna se desplaza 216 px (ya

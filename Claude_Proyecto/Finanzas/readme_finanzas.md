@@ -91,7 +91,6 @@ que el tema claro funciona sin reglas aparte.
 | `.fx-panel` | Panel base con borde y fondo tenue |
 | `.fx-grid` | Rejilla técnica de 64 px como `::before`, enmascarada con un radial |
 | `.fx-edge` | Borde de gradiente cyan→purple: envoltorio de 1 px de padding con el hijo opaco encima — la única forma de que un borde degradado respete el `border-radius` |
-| `.wk-card` | Tarjeta de semana; es un `<button>`, funciona con teclado |
 
 **Inter sigue siendo el cuerpo.** Space Grotesk entra solo en cifras y titulares; la gráfica de
 BTC pasa la misma familia a Chart.js (`FX_FONT`) y a `ctx.font` de los plugins (el canvas no
@@ -191,6 +190,13 @@ gasto y ficha.
 `spentCat(cat, month)`, `renderBudgets()` (barra verde < 70 %, amarilla < 90 %, roja ≥ 90 %),
 `renderBudgetChart()`, `openBudgetModal(id)`, `saveBudget()` (uno por categoría), `delBudget(id)`.
 
+**Los presupuestos que el plan ya conoce salen del plan del mes** (`budgetLimit(b, m)` →
+`CIFRAS.presupuestoFijo`, con la etiqueta *del plan*): Hogar/Renta (la renta y, desde febrero, el aporte a
+tu familia), Servicios, Suscripciones, Alimentación, Salud (tus rutinas) y Deudas (las mensualidades y
+los abonos de la BBVA de ese mes). Un límite escrito a mano se quedaba atrás —la renta seguía en $11,000—.
+Restaurantes, viajes, transporte y entretenimiento son tu gasto personal: llevan el límite que tú pones.
+Lo mismo leen la gráfica y las alertas.
+
 ---
 
 ## Módulo: Deudas
@@ -210,12 +216,20 @@ borrarla devuelve el saldo). `saveDebt()`: un saldo escrito a mano es un **saldo
 activa dice *se movió el …* con su `fecha`; una liquidada con `cancelada` (la BBVA, cuando Adán la
 cancele desde el Plan Maestro) dice *cancelada el …* en «Liquidadas».
 
-**Cómo se calculan los saldos MSI.** `autoBalance(d, refDate)` solo auto-calcula **MSI a 0 %**
-(`type:'other'`, `rate:0`): `total − meses × cuota`. Tarjetas y crédito con interés son manuales.
-Cuenta cuotas con **`floor`, no `round`**: solo las ya cobradas. El `start` de cada MSI **no es la
-fecha de compra literal**: es la que hace que `autoBalance` reproduzca las cuotas del estado de
-cuenta (30.44 días por mes), y esa misma fecha decide si la cuota entra en el plan semanal
-(`start + totalM`): al elegirla, verificar contra los dos cálculos.
+**Las mensualidades fijas se pagan solas** (Adán, 19-oct-2026: *"siempre en finanzas algo está
+desactualizado… arréglalo y que no vuelva a pasar"*). Una deuda a plazo —el auto, el iPhone, unos meses
+sin intereses— lleva `pagosAl`, y el maestro le aplica cada mensualidad el día que toca
+(`CIFRAS.aplicarPagosFijos`, al cargar cualquier app): una transacción *Pago: …* en Deudas, marcada
+*(del plan: se anotó sola)*, con `prestamo: {id, delta}` —lo que bajó el capital; en el auto, la
+mensualidad menos el interés del mes—. Borrarla devuelve ese capital (`tarjetaDeshace`) y el plan no la
+vuelve a poner; corregir el monto mueve el capital en lo mismo. `saveDebt()` le pone `pagosAl` a una
+deuda a plazo nueva o con saldo nuevo (`aPlazo`). Con `pagosAl`, `autoBalance` deja el saldo guardado
+—ya trae cada cuota—; sin él, sigue calculando `total − meses × cuota` como respaldo.
+
+**Lo que falta de cada una, con una sola cuenta**: la última cuota y las que van salen de
+`CIFRAS.cuotas(d)` en la hoja de ruta y en las suscripciones (daban jun, ago y sep de 2028 para el mismo
+iPhone); los meses del auto, de `CIFRAS.mesesRestantes` —con su interés: dividir el saldo entre la
+mensualidad daba años de menos—, en Deudas, Indicadores y la hoja de ruta, y la BBVA, de su plan.
 
 **Lo que se sabe de las tarjetas y no está en el código**:
 
@@ -253,33 +267,28 @@ activo e indicadores.
 
 ## Módulo: Plan de Inversiones (GBM)
 
-`renderGBM()` calcula, sobre `_PG()`:
+**Nada se estima aquí: todo sale del plan del maestro.** Tenía su propio modelo —lo que sobra de cada
+quincena menos un gasto variable promedio— y su propia lista de acciones, de junio: decía que esa semana
+iban $14,295 a la bolsa mientras el plan los mandaba a la BBVA. `renderGBM()`:
 
-- `QUINC = round(sueldo/2)`; `msiActive` = cuotas 0 % vigentes; `avgExpTotal` = promedio de gastos
-  reales de los últimos 3 meses; `varPerWeek` = variables estimados / 4.
-- **Sobrante por semana** (`Math.max(0, …)`, nunca negativo):
-  `w1 = QUINC − renta − varPerWeek` · `w2 = 0` (el auto se paga del saldo reservado la semana 1) ·
-  `w3 = QUINC − CETES − servicios − suscripciones − minimosTC() − msiActive − varPerWeek` · `w4 = 0`.
-- Tabs de meses (actual + 4), `efectivoSemana` (= `S.weeklyLeftover` si > 0), reparto entre
-  `WEEKLY_PICKS`, portafolio con KPIs, proyecciones a 12 meses, tabla por tipo, bloque de CETES,
-  y `renderBtcHistory()` al final.
+- **Tabs de meses** (actual + 4; `setGbmMonth`).
+- **A dónde va tu ahorro** (`CIFRAS.gbmMes(mes)`, el mismo calendario del Dashboard y de Coach): lo que va
+  a GBM ese mes —lo de cada quincena, lo de Didi de los lunes, las ventas del plan y el depósito que
+  regresa—, lo que va a la BBVA y el día que quedará en cero, esta semana, y las cuatro semanas (1–7, 8–14,
+  15–21, 22–fin) con cada envío y su día. Mientras la BBVA tenga saldo lo dice: a la bolsa no va nada
+  hasta que quede en cero.
+- **En qué va** —el perfil *seguro* de Qué invertir hoy (`window.INVERSION_HOY`, `Dashboard/inversion-hoy.js`,
+  la misma fuente del Dashboard): el dinero de Alemania se usa en meses y va en deuda de corto plazo. Cada
+  activo con su porcentaje y lo que le toca de la semana o del mes, dónde se compra, por qué y qué vigilar;
+  la fecha en que se investigó y, con más de siete días, en rojo, que se actualice antes de comprar;
+  *Abrir Qué invertir hoy →* lleva al panel del Dashboard (`dashboard.html#invertir`).
+- **El portafolio** (las posiciones de `investments`, KPIs, mejor y peor, la tabla por tipo), **En GBM si
+  sigues el plan** —al cerrar la fase y al irte, de `CIFRAS.estadoDia`, sin rendimiento en México— y lo
+  de esta semana a GBM; el bloque de CETES y `renderBtcHistory()` al final.
 
-**El plan semanal, tal como se ve**: cuatro `.wk-card` y el detalle de la elegida, encabezados por
-una **línea de tiempo del mes** que responde *por qué unas semanas dan para invertir y otras no*
-antes de leer una cifra. Los eventos (`GRUPOS`) van agrupados por día y alternan arriba y abajo
-del eje (el 14 y el 15 se pisarían). Bajo **760 px** la línea (`.fx-tl`) se oculta y sale una
-lista vertical (`.fx-tl-lista`) generada del **mismo array**. Ningún importe está en el marcado.
-**El bloque dice lo que el modelo no cuenta**: solo reparte la nómina; Didi no entra y la
-mensualidad del auto aparece en el calendario pero no se descuenta de ninguna semana.
-
-`switchGBMTab(n)` mueve `.on` (antes reescribía `style` con regex y cualquier retoque lo rompía).
-`setWeeklyLeftover`, `setGbmMonth`,
-`setEmergencyFund` (sincroniza `ef-001`), `maybeRefreshIndicators()` (solo si `s-indicators` está
-activa).
-
-**Código muerto**: `S.didiMonthly` y `setDidiMonthly()` existen pero ningún botón los llama;
-`BASE_INC` es solo el sueldo y Didi se registra como transacción manual. Borrarlos o reconectarlos
-es una decisión pendiente; hoy no rompe nada.
+`setEmergencyFund` (sincroniza `ef-001`) y `maybeRefreshIndicators()` (solo si `s-indicators` está activa).
+**Sin uso**: `S.didiMonthly`, `setDidiMonthly()` y `S.weeklyLeftover` siguen en el estado para no romper
+datos guardados.
 
 ---
 
@@ -346,7 +355,7 @@ Dashboard—:
 | Bloque | De dónde sale |
 |---|---|
 | Próximos pagos · 15 días | `CIFRAS.agendaDia` día por día, más lo que Didi aparta para la BBVA (los abonos `de: 'didi'` de `planBbva`, que no pasan por el calendario); al pie, lo que entra y sale en esos días |
-| La BBVA, quincena a quincena | `CIFRAS.planBbva()`: lo que debe hoy según el plan (sus abonos hasta hoy), la fecha en cero, los intereses y los siguientes abonos. El saldo que reporte del banco manda: va al maestro como migración |
+| La BBVA, quincena a quincena | El saldo vivo (`CIFRAS.bbvaEstado`, el mismo del Plan Maestro y de Mis Metas), lo pagado desde que arrancó su plan (`CIFRAS.avanceBbva`), el día que quedará en cero y los abonos que siguen desde hoy, el de hoy incluido. El saldo que reporte del banco manda: va al maestro como migración |
 | A GBM, para Alemania | `CIFRAS.desgloseMes`: este mes, el siguiente y el primero ya sin la BBVA, con lo del día 1, el 15 y Didi; al pie, `{{alemaniaJunio}}` contra la cuenta bloqueada (`{{sperrkonto}}`, `{{junioCorto}}`) |
 
 Cuánto te queda de la quincena día a día no se calcula aquí: es el riel del Dashboard.
@@ -355,12 +364,14 @@ Cuánto te queda de la quincena día a día no se calcula aquí: es el riel del 
 este mes — previsto*: los apartados de `CIFRAS.desgloseMes` con los nombres de
 `CIFRAS.GRUPOS_SUELDO`.
 
-`renderSpecials(freeMonth, refDate)`: **Maestría** (barra segmentada, `monthlyNeeded` para
-llegar a la fecha, 5 escenarios de ahorro con fecha estimada) y **Hoja de Ruta de Deudas** (MSI
-con fecha de liquidación, tarjetas con meses estimados, auto con tip de $1,000 extra; proyección
-`pb(d) = max(0, balance − meses × min)`). La BBVA con plan de pago sale con `planBbva`
-—*quincena a quincena*, lo que debe según el plan y el día que queda en cero—, no con lo que
-tardaría pagando el mínimo. `renderSubscriptions`: recurrentes sin fin (de
+`renderSpecials(freeMonth, refDate)`: **Maestría** —la barra segmentada de lo que ya tienes y
+**Lo que dice tu plan** (`maePlanHTML`): lo que piden junio y agosto contra lo que habrá con tu ritmo, lo
+que GBM y los CETES tendrán al cerrar la fase si sigues el plan, el ingreso nuevo que cierra el hueco y
+la fecha que el ahorro sí paga; es la proyección de Coach y del Plan Maestro, sin un modelo propio ni
+rendimiento supuesto— y **Hoja de Ruta de Deudas** (las cuotas con su última fecha de `CIFRAS.cuotas`, el
+auto con sus meses con interés y lo que ahorra con $1,000 extra; proyección `pb(d) = max(0, balance −
+meses × min)`). La BBVA sale con su saldo vivo, lo pagado desde que arrancó su plan y el día que queda en
+cero, no con lo que tardaría pagando el mínimo. `renderSubscriptions`: recurrentes sin fin (de
 `PROYECTO`) y MSI activas (`rate===0 && type==='other' && start`) con urgencia por meses restantes.
 
 **La gráfica de balance `ch-bal`** toma sus seis puntos de **`CIFRAS.balanceMeses`**, la misma
@@ -385,16 +396,17 @@ respaldo viejo borraba meses que el navegador sí tenía. Un import nunca quita 
 
 ## Módulo: Seed Data y migraciones
 
-`seedData()` corre solo si `localStorage['finanzasmx_v2_v'] !== SEED_VER` (hoy `'23'`): **borra**
-`localStorage[KEY]` y siembra 6 meses de transacciones de ejemplo más los lotes reales,
-presupuestos, deudas, metas, inversiones, activos e historial BTC. **Las deudas salen de
+`seedData()` **solo siembra un navegador en blanco** (sin deudas guardadas): 6 meses de transacciones
+de ejemplo más los lotes reales, presupuestos, deudas, metas, inversiones, activos e historial BTC. Si
+`SEED_VER` (hoy `'23'`) cambia en un navegador que ya tiene datos, no se resiembra —antes borraba sus
+movimientos, saldos y metas y solo rescataba el historial de indicadores—: marca la versión y lo dice en
+la consola, y lo que hubiera ilegible se guarda en `KEY + '_respaldo'` antes de sembrar. **Las deudas salen de
 `CIFRAS.DEUDAS_SEED`** y el BTC de `CIFRAS.BTC_SEED` (copia profunda): si el `<script src>` fallara,
 siembra sin deudas y avisa por `console.error`, mejor que sembrar una copia vieja escondida aquí.
 Al terminar marca todas las banderas de migración (las suyas y las del maestro) para que ninguna
 corrección histórica pise un seed más nuevo.
 
-**Bumpear `SEED_VER` es para cambios estructurales**; es demasiado destructivo para "este saldo
-cambió". Para eso, **migraciones puntuales**: un `if` después de `load()` con **bandera propia en
+**Los cambios de forma y de saldos van por migraciones**, no por `SEED_VER`: un `if` después de `load()` con **bandera propia en
 `localStorage`** (nunca comparación de igualdad con el valor viejo: el saldo pudo moverse por el
 uso normal y la comparación no dispara), que corrige y no vuelve a tocar, así que si Adán paga
 por su cuenta después no se lo revierte. **Las nuevas van a `MIGRACIONES` en

@@ -318,7 +318,7 @@ window.CIFRAS = (function () {
     // libreta de logros solo guardaba la primera; la ruta del Plan Maestro enseña la última y cuántas.
     {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:0,          rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0, liquidaciones:['2026-08-13','2026-09-30']},
     // Saldo reportado por Adán: $299,000 (24-ago) → $292,000 → $293,000 (25-ago-2026) → $283,000 (21-sep-2026).
-    {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:283000,    rate:12.99, min:6700, day:15, start:'2026-01-01', remainingMonths:61},
+    {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:279363.48, rate:12.99, min:6700, day:15, start:'2026-01-01', remainingMonths:61, pagosAl:'2026-10-15'},
     // Liquidado: la última cuota era la del 18 sep 2026 y Adán la dio por pagada el 21-sep-2026.
     {id:'d004',name:'Apple Watch MSI (TC Banamex)',  type:'other',      total:10248,     balance:0,        rate:0,     min:854,  day:18,start:'2025-09-16'},
     // d005 (Vuelo Viva Aerobus) y d006 (Mercado Libre) se ELIMINARON el 13 ago 2026: Adán
@@ -330,7 +330,7 @@ window.CIFRAS = (function () {
     // AT&T, y se cobra el día 1 (Adán, 2026-08-28). `type:'other'` se mantiene porque esa
     // categoría agrupa la deuda a 0% de interés, no solo los MSI de tarjeta — sigue contando
     // en `deudaMsi` y fuera de `deudaCara`, que es lo correcto.
-    {id:'d008',name:'iPhone 15 (crédito AT&T)',    type:'other',      total:13337.46,  balance:11361.54,  rate:0,     min:493.98,day:1, start:'2026-03-20'},
+    {id:'d008',name:'iPhone 15 (crédito AT&T)',    type:'other',      total:13337.46,  balance:9879.6,    rate:0,     min:493.98,day:1, start:'2026-03-20', pagosAl:'2026-10-01'},
     // MSI reales de la TC BBVA, leídos del estado de cuenta con corte del 22 jul 2026
     // (captura que mandó Adán el 13 ago 2026). El `start` de cada uno está puesto para que
     // `autoBalance()` reproduzca exactamente las cuotas ya cobradas: 30.44 días por mes desde
@@ -4525,6 +4525,19 @@ window.CIFRAS = (function () {
         pon('ac013', 'Cuenta BBVA', 1700); pon('ac014', 'Efectivo', 2500);
       }
     },
+    {
+      // 2026-10-19 · "siempre en finanzas algo está desactualizado… arréglalo y que no vuelva a pasar". El auto y el
+      // iPhone se pagan cada mes y su saldo no se movía: el iPhone seguía en los $11,361.54 de julio y Finanzas lo
+      // contaba de tres maneras. Desde hoy cada mensualidad se aplica sola el día que toca (`aplicarPagosFijos`), y
+      // `pagosAl` es el día del último saldo que se sabe: el auto, los $283,000 que Adán dijo el 21-sep (ya con el pago
+      // del 15); el iPhone, los $11,361.54 del seed, que traían la cuota del 1 de julio (4 de 27). Al cargar se
+      // aplican las que faltan: el auto el 15 de octubre; el iPhone el 1 de agosto, de septiembre y de octubre.
+      flag: '_mensualidades20261019',
+      hacer: function (f) {
+        const pon = function (id, al) { const d = (f.debts || []).find(x => x.id === id); if (d && !d.pagosAl) d.pagosAl = al; };
+        pon('d003', '2026-09-21'); pon('d008', '2026-07-01');
+      }
+    },
   ];
 
   /* Las seis compras del 1-sep-2026, en un solo sitio: las usa la migración de arriba para el
@@ -5259,8 +5272,9 @@ window.CIFRAS = (function () {
     return { ef: ef, inversiones: inversiones, inv: inv, btc: btc, btcHeld: held, total: ef + inv + btc };
   }
 
-  // Los abonos del plan que ya llegaron se restan solos (aplicarPlanBbva); después, la proyección.
-  try { if (aplicarPlanBbva()) leer(); } catch (e) { /* sin localStorage (el verificador): nada que aplicar */ }
+  // Los abonos del plan y las mensualidades que ya llegaron se anotan solos (aplicarPlanBbva,
+  // aplicarPagosFijos); después, la proyección.
+  try { if (aplicarPlanBbva() + aplicarPagosFijos()) leer(); } catch (e) { /* sin localStorage (el verificador): nada que aplicar */ }
   // La proyección del Plan Maestro (ver PROYECCION, arriba), ya con todo lo que lee declarado.
   PROYECCION.meses = proyectar();
   PROYECCION.cortes = cortesSalida(PROYECCION.meses);
@@ -5380,8 +5394,7 @@ window.CIFRAS = (function () {
     o.pendiente.gbm = gbmDe(hoyK);
     if (o.hoy) return o;
     const devuelve = mesSiguiente(P.rentaHasta) + '-01';
-    const p0 = hoyK.split('-').map(Number), d = new Date(p0[0], p0[1] - 1, p0[2]);
-    let didiDebe = 0;
+    const p0 = hoyK.split('-').map(Number), d = new Date(p0[0], p0[1] - 1, p0[2]), didiDe = {};
     for (let k = 0; k < 400; k++, d.setDate(d.getDate() + 1)) {
       const ym = mesDe(d), dia = d.getDate(), kd = ym + '-' + String(dia).padStart(2, '0');
       if (kd > fechaK) break;
@@ -5389,14 +5402,9 @@ window.CIFRAS = (function () {
       delDia.forEach(function (a) { const x = Math.min(o.bbva, a.monto); o.bbva = r2(o.bbva - x); o.aBbva += x; });
       const q = gbmDe(kd);
       if (q > 0) { o.gbm += q; o.aGbm += q; o.movs.push({ fecha: kd, t: 'de la quincena', mxn: q }); }
-      // Lo de Didi del lunes que ya no se lleva la tarjeta, después de reponer lo que se llevó el pago del corte.
-      didiDebe += delDia.filter(function (a) { return a.de === 'minimo'; }).reduce(function (s, a) { return s + a.monto; }, 0);
-      if (d.getDay() === 1) {
-        const aTarjeta = delDia.filter(function (a) { return a.de === 'didi'; }).reduce(function (s, a) { return s + a.monto; }, 0);
-        let libre = Math.max(0, didiAlAhorro(ym) * 12 / 52 - aTarjeta);
-        const repone = Math.min(libre, didiDebe); didiDebe -= repone; libre -= repone;
-        if (libre >= 1) { o.gbm += libre; o.aGbm += libre; o.movs.push({ fecha: kd, t: 'de Didi', mxn: r2(libre) }); }
-      }
+      // Lo de Didi del lunes que ya no se lleva la tarjeta: la misma regla que el plan de inversiones (`didiGbmLunes`).
+      const dd = (didiDe[ym] = didiDe[ym] || didiGbmLunes(ym))[kd];
+      if (dd >= 1) { o.gbm += dd; o.aGbm += dd; o.movs.push({ fecha: kd, t: 'de Didi', mxn: dd }); }
       if (new Date(d.getFullYear(), d.getMonth(), dia + 1).getDate() === 1)
         SUPUESTOS.extras.forEach(function (e) {
           if (e.mes !== ym) return;
@@ -5406,11 +5414,11 @@ window.CIFRAS = (function () {
       if (kd === devuelve && o.deposito > 0) {
         o.gbm += o.deposito; o.aGbm += o.deposito; o.movs.push({ fecha: kd, t: 'regresa el depósito del depa', mxn: o.deposito }); o.deposito = 0;
       }
-      if (car && dia === +car.day && o.auto > 0) {
+      if (car && dia === +car.day && o.auto > 0 && !(car.pagosAl && kd <= car.pagosAl)) {
         const i = o.auto * (+car.rate || 0) / 100 / 12;
         o.auto = r2(Math.max(0, o.auto + i - Math.min(o.auto + i, +car.min || 0)));
       }
-      if (iph && dia === +iph.day && o.iphone > 0) o.iphone = r2(Math.max(0, o.iphone - (+iph.min || 0)));
+      if (iph && dia === +iph.day && o.iphone > 0 && !(iph.pagosAl && kd <= iph.pagosAl)) o.iphone = r2(Math.max(0, o.iphone - (+iph.min || 0)));
     }
     o.gbm = r2(o.gbm); o.aGbm = r2(o.aGbm); o.aBbva = r2(o.aBbva);
     return o;
@@ -5454,6 +5462,118 @@ window.CIFRAS = (function () {
     d.planAl = hoyK;
     try { localStorage.setItem(KEY, JSON.stringify(f)); } catch (e) { return 0; }
     return n;
+  }
+  /* ── Las mensualidades fijas se pagan solas el día que tocan ─────────────────────────────────
+     Adán, 19-oct-2026: "siempre en finanzas algo está desactualizado… arréglalo y que no vuelva a
+     pasar". El auto y el iPhone se quedaban con el saldo del día en que Adán lo dijo aunque cada mes se
+     pagan solos. Una deuda a plazo con `pagosAl` —hasta qué día ya se aplicaron sus pagos— recibe cada
+     mensualidad el día que toca, como los abonos de la BBVA: una transacción en Deudas con
+     `origen: 'plan'` y `abono: 'mensualidad'`, y el saldo que baja por el capital —en el auto, la
+     mensualidad menos el interés del mes—. `prestamo: {id, delta}` es lo que se le aplicó, para
+     deshacerlo si se borra (Finanzas). Un saldo nuevo que diga Adán va como migración con su `pagosAl`.
+     Corre al cargar cualquier app, junto a `aplicarPlanBbva`. Devuelve cuántas anotó. */
+  function aplicarPagosFijos() {
+    let f;
+    try { const r = localStorage.getItem(KEY); f = r ? JSON.parse(r) : null; } catch (e) { return 0; }
+    if (!f || !Array.isArray(f.debts)) return 0;
+    const hoyK = fechaLocal(), tx = Array.isArray(f.transactions) ? f.transactions : (f.transactions = []);
+    let n = 0;
+    f.debts.forEach(function (d) {
+      if (!d.pagosAl || !(+d.balance > 0) || !(+d.min > 0) || !(+d.day > 0) || d.pagosAl >= hoyK) return;
+      const p = d.pagosAl.split('-').map(Number);
+      for (let m = p[1] - 1 + (p[2] >= +d.day ? 1 : 0), k = 0; k < 120; k++, m++) {
+        const dia = new Date(p[0], m, Math.min(+d.day, new Date(p[0], m + 1, 0).getDate())), kd = fechaLocal(dia);
+        if (kd > hoyK || !(+d.balance > 0)) break;
+        const id = 'fijo-' + kd + '-' + d.id;
+        if (tx.some(function (t) { return t.id === id; })) continue;
+        const interes = Math.round((+d.balance) * (+d.rate || 0) / 100 / 12 * 100) / 100;
+        const pago = Math.round(Math.min(+d.balance + interes, +d.min) * 100) / 100;
+        const capital = Math.round((pago - interes) * 100) / 100;
+        d.balance = Math.max(0, Math.round((+d.balance - capital) * 100) / 100);
+        tx.push({ id: id, type: 'expense', desc: 'Pago: ' + d.name, amount: pago, date: kd, cat: 'Deudas',
+                  notes: 'Mensualidad' + (interes > 0 ? ' — ' + fmt(interes) + ' de interés y ' + fmt(capital) + ' a capital' : '') + ' (del plan: se anotó sola)',
+                  prestamo: { id: d.id, delta: -capital }, origen: 'plan', abono: 'mensualidad' });
+        d.fecha = kd; n++;
+      }
+      d.pagosAl = hoyK;
+    });
+    if (n) { try { localStorage.setItem(KEY, JSON.stringify(f)); } catch (e) { return 0; } }
+    return n;
+  }
+  /* Las cuotas de una deuda a plazo: cuántas van, cuántas faltan y cuándo cae la siguiente y la última.
+     Las que faltan salen del saldo —con interés, de `mesesRestantes`—, y la siguiente es el próximo día de
+     pago que todavía no se aplicó (`pagosAl`). Una sola cuenta: la hoja de ruta y las suscripciones de
+     Finanzas daban dos fechas distintas para el mismo iPhone. */
+  function cuotas(d, hoy) {
+    const min = +(d && d.min) || 0, bal = Math.max(0, +(d && d.balance) || 0), dia = +(d && d.day) || 1;
+    const h = hoy ? new Date(hoy) : new Date(); h.setHours(0, 0, 0, 0);
+    const total = +d.total > 0 && min > 0 ? Math.round(+d.total / min) : 0;
+    const restantes = bal > 0 && min > 0 ? (+d.rate > 0 ? mesesRestantes(d) : Math.ceil(bal / min - 1e-9)) : 0;
+    let sig = new Date(h.getFullYear(), h.getMonth(), dia);
+    if (sig < h || (d.pagosAl && fechaLocal(sig) <= d.pagosAl)) sig = new Date(h.getFullYear(), h.getMonth() + 1, dia);
+    return { total: total, restantes: restantes, pagadas: total && restantes != null ? Math.max(0, total - restantes) : null,
+             siguiente: restantes ? sig : null, ultima: restantes ? new Date(sig.getFullYear(), sig.getMonth() + restantes - 1, dia) : null };
+  }
+  /* Lo de Didi que llega a GBM cada lunes de un mes: lo que el plan del mes le deja a GBM
+     (`desgloseMes(mes).didi`: lo que Didi aparta menos lo que se lleva la BBVA), repartido entre los lunes
+     que no van a la tarjeta. Una sola regla para la proyección día a día y el plan de inversiones de
+     Finanzas: la suma del mes es la de `desgloseMes`. */
+  function didiGbmLunes(ym) {
+    const p = ym.split('-').map(Number), n = new Date(p[0], p[1], 0).getDate(), B = planBbva(), out = {};
+    const dDidi = desgloseMes(ym).didi, lunes = [];
+    for (let dia = 1; dia <= n; dia++) if (new Date(p[0], p[1] - 1, dia).getDay() === 1) lunes.push(ym + '-' + String(dia).padStart(2, '0'));
+    if (!(dDidi >= 1) || !lunes.length) return out;
+    const libres = lunes.filter(function (k) { return !B.abonos.some(function (a) { return a.fecha === k && a.de === 'didi'; }); });
+    const usa = libres.length ? libres : [lunes[lunes.length - 1]];
+    usa.forEach(function (k) { out[k] = Math.round(dDidi / usa.length * 100) / 100; });
+    return out;
+  }
+  /* Lo que va a GBM —y a la BBVA mientras tenga saldo— en un mes, semana por semana (1–7, 8–14, 15–21 y
+     22–fin, los tramos del tablero). Del mismo plan que el calendario: el envío de cada quincena (los cobros
+     `ahorro` de `agendaDia`, ya sin la parte de la tarjeta), lo de Didi de los lunes (`didiGbmLunes`), las
+     ventas del plan (el último día de su mes) y el depósito que regresa al dejar el depa; y los abonos de
+     `planBbva`. Lo pinta el plan de inversiones de Finanzas. */
+  function gbmMes(ym) {
+    const p = ym.split('-').map(Number), n = new Date(p[0], p[1], 0).getDate(), B = planBbva(), P = PROYECTO;
+    const didi = didiGbmLunes(ym), F = fin || {};
+    const dep = ((F.investments || []).filter(function (i) { return i.id === 'i004'; })[0] || {}).value || SUPUESTOS.foto.deposito;
+    const semanas = [[1, 7], [8, 14], [15, 21], [22, n]].map(function (r, i) { return { n: i + 1, ini: r[0], fin: r[1], gbm: [], bbva: [], aGbm: 0, aBbva: 0 }; });
+    const sem = function (dia) { return semanas[dia <= 7 ? 0 : dia <= 14 ? 1 : dia <= 21 ? 2 : 3]; };
+    for (let dia = 1; dia <= n; dia++) {
+      const k = ym + '-' + String(dia).padStart(2, '0'), S = sem(dia);
+      agendaDia(dia, ym).filter(function (c) { return c.ahorro; }).forEach(function (c) { S.gbm.push({ dia: dia, t: c.t, mxn: +c.monto || 0, de: 'quincena' }); });
+      if (didi[k]) S.gbm.push({ dia: dia, t: 'Lo que apartas de Didi', mxn: didi[k], de: 'didi' });
+      // Lo del plan de antes del último saldo que dijo Adán ya no cuenta: ese saldo lo desmintió o lo confirmó.
+      B.abonos.filter(function (a) { return a.fecha === k && (a.hecho || !P.bbvaSaldoFecha || a.fecha >= P.bbvaSaldoFecha); }).forEach(function (a) {
+        S.bbva.push({ dia: dia, t: ABONO_DE[a.de] || 'un abono', mxn: a.monto, de: a.de, hecho: !!a.hecho });
+      });
+    }
+    SUPUESTOS.extras.forEach(function (e) {
+      if (e.mes === ym) semanas[3].gbm.push({ dia: n, t: e.txt, mxn: typeof e.mxn === 'string' ? P[e.mxn] : e.mxn, de: 'venta' });
+    });
+    if (ym === mesSiguiente(P.rentaHasta) && dep > 0) semanas[0].gbm.unshift({ dia: 1, t: 'Regresa el depósito del depa', mxn: dep, de: 'deposito' });
+    semanas.forEach(function (x) {
+      x.aGbm = Math.round(x.gbm.reduce(function (a, y) { return a + y.mxn; }, 0) * 100) / 100;
+      x.aBbva = Math.round(x.bbva.reduce(function (a, y) { return a + y.mxn; }, 0) * 100) / 100;
+    });
+    return { mes: ym, semanas: semanas, bbvaCero: B.fin,
+             aGbm: semanas.reduce(function (a, x) { return a + x.aGbm; }, 0), aBbva: semanas.reduce(function (a, x) { return a + x.aBbva; }, 0) };
+  }
+  /* El presupuesto de una categoría de Finanzas que el plan ya conoce, en un mes: lo que `desgloseMes` aparta
+     para ella —la renta y el aporte a tu familia, los servicios, las suscripciones, la comida, tus rutinas— y, en
+     Deudas, las mensualidades más los abonos de la BBVA de ese mes. Un límite escrito a mano se quedaba atrás (la
+     renta seguía en $11,000). Las demás categorías son tu gasto personal y llevan el límite que tú pones: null. */
+  const PRESUPUESTO_DE = { 'Hogar/Renta': ['renta', 'familia'], 'Servicios': ['depa', 'celular'], 'Suscripciones': ['suscripciones'],
+                           'Alimentación': ['comida'], 'Salud': ['cuidado'], 'Deudas': ['auto', 'iphone'] };
+  function presupuestoFijo(cat, ym) {
+    const g = PRESUPUESTO_DE[cat];
+    if (!g || !ym || ym < SUPUESTOS.desde || ym > PROYECTO.ultimoMesMexico) return null;
+    const D = desgloseMes(ym).g;
+    let v = g.reduce(function (a, k) { return a + (+D[k] || 0); }, 0);
+    // La BBVA: lo del plan desde el último saldo que dijo Adán (lo de antes, ese saldo lo desmintió o lo confirmó).
+    if (cat === 'Deudas') v += planBbva().abonos.filter(function (a) { return a.fecha.slice(0, 7) === ym && (a.hecho || !PROYECTO.bbvaSaldoFecha || a.fecha >= PROYECTO.bbvaSaldoFecha); })
+      .reduce(function (a, x) { return a + (x.hecho ? x.plan : x.monto); }, 0);
+    return Math.round(v);
   }
   /* ── La deuda que de verdad cobra interés ──
      La BBVA tiene la tasa del producto (55.7 %) pero no le corre interés: Adán paga lo que pide el
@@ -5510,7 +5630,8 @@ window.CIFRAS = (function () {
     patrimonio: patrimonio,
     fondoMaestria: fondoMaestria,
     diasFase: diasFase, diasHasta: diasHasta,
-    avanceBbva: avanceBbva, deudasConInteres: deudasConInteres, bbvaEstado: bbvaEstado, estadoDia: estadoDia, bbvaRutaTxt: bbvaRutaTxt,
+    avanceBbva: avanceBbva, deudasConInteres: deudasConInteres, bbvaEstado: bbvaEstado, estadoDia: estadoDia, bbvaRutaTxt: bbvaRutaTxt, aplicarPagosFijos: aplicarPagosFijos, cuotas: cuotas,
+    didiGbmLunes: didiGbmLunes, gbmMes: gbmMes, presupuestoFijo: presupuestoFijo,
     tarjetaDe: tarjetaDe, movimientoTarjeta: movimientoTarjeta, aplicarPlanBbva: aplicarPlanBbva, ABONO_DE: ABONO_DE,
     BTC_SEED: BTC_SEED,
     // Para que `seedData()` pueda marcarlas como aplicadas: un seed nuevo ya las incluye.

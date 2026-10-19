@@ -21,7 +21,7 @@ apps lo leen. Nunca se copia un número a mano en un HTML.
 En la prosa se escribe un marcador y el módulo lo sustituye al cargar la página:
 
 ```html
-<p>un crédito de {{autoSaldo}}</p>        →   un crédito de $283,000
+<p>un crédito de {{autoSaldo}}</p>        →   un crédito de $279,363
 <p>ganas {{sueldo}} en {{empleador}}</p>  →   ganas $41,000 en ALTEN
 ```
 
@@ -150,14 +150,14 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 
 | Marcador | Valor hoy | id |
 |---|---|---|
-| `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $283,000 · $315,800 · $6,700 · 12.99% · 57 (calculado) | `d003` |
+| `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $279,363 · $315,800 · $6,700 · 12.99% · 56 (calculado) — baja sola cada día 15 (`aplicarPagosFijos`) | `d003` |
 | `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $8,900 · $1,500 · 55.7% | `d001` |
 | `{{banamex}}` `{{banamexMin}}` | $0 · $810 — liquidada el 30-sep-2026 | `d002` |
 | `{{depto}}` | $0 — "por temas de mi apartamento"; pagada entera el 21-sep-2026 | `d012` |
-| `{{iphone}}` | $11,362 | `d008` |
+| `{{iphone}}` | $9,880 — baja sola cada día 1 (`aplicarPagosFijos`) | `d008` |
 | `{{appleWatch}}` `{{appleWatchCuota}}` | $0 · $854 — liquidado: la última cuota era la del 18 sep 2026 | `d004` |
 | `{{zapStylo}}` `{{zapStyloCuota}}` | $0 · $167 — "el de los zapatos", liquidado el 21-sep-2026 | `d009` |
-| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $303,262 · $8,900 · $11,362 | derivadas |
+| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $298,143 · $8,900 · $9,880 | derivadas |
 | `{{minimosDeuda}}` `{{margen}}` | suma de mínimos vivos · lo que sobra al mes | derivadas |
 
 **Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas: `{{autoMeses}}`
@@ -355,6 +355,23 @@ Adán se va a la maestría de Esslingen en **septiembre de 2027** (`maestriaInic
   queda de cada deuda (`auto`, `iphone`, `bbva`) y del depósito. `SUPUESTOS.porque` dice de dónde
   sale cada supuesto, en una frase con su fuente. Coach los enseña mes por mes.
 
+**Las mensualidades fijas se anotan solas: `aplicarPagosFijos()`** (Adán, 19-oct-2026: *"siempre en
+finanzas algo está desactualizado… arréglalo y que no vuelva a pasar"*). Una deuda a plazo con `pagosAl`
+—hasta qué día ya se aplicaron sus pagos— recibe cada mensualidad el día que toca, como los abonos de la
+BBVA: una transacción en Deudas con `origen: 'plan'`, `abono: 'mensualidad'` y `prestamo: {id, delta}`, y
+el saldo que baja por el capital (en el auto, la mensualidad menos el interés del mes). Corre al cargar
+cualquier app junto a `aplicarPlanBbva`, y el Dashboard la vuelve a llamar al cambiar el día (control
+37). El auto y el iPhone la llevan desde `_mensualidades20261019`; en `DEUDAS_SEED` ya van con su saldo de
+hoy. `cuotas(d)` da cuántas van, cuántas faltan (con interés, `mesesRestantes`) y la fecha de la siguiente
+y de la última: una sola cuenta para Finanzas.
+
+**Lo que va a GBM cada semana: `gbmMes(ym)`**: el envío de cada quincena (los cobros `ahorro` de
+`agendaDia`), lo de Didi de los lunes —`didiGbmLunes(ym)`: lo que `desgloseMes` le deja a GBM, repartido
+entre los lunes que no van a la tarjeta, la misma regla de `estadoDia`—, las ventas del plan, el depósito
+que regresa y los abonos de la BBVA desde el último saldo dicho. Lo pinta el plan de inversiones de
+Finanzas. **`presupuestoFijo(cat, ym)`**: el límite de una categoría de Finanzas que el plan conoce
+(renta y aporte, servicios, suscripciones, comida, rutinas y deudas), de `desgloseMes`.
+
 **Tu dinero un día, de lo de hoy en adelante: `estadoDia(fecha)`** (Adán, 19-oct-2026: *"conforme
 seleccione otro día, debes proyectar todo todo hasta mis inversiones… ya tenemos un trackeo muy
 completo de mis finanzas y actualiza todo día a día"*). La `PROYECCION` es el plan desde la foto del 1
@@ -368,8 +385,8 @@ lo que bajan el auto (su día, con su interés) y el iPhone. Devuelve el estado 
 `movs`) y, para hoy, lo que el plan pide hoy (`pendiente`). Hoy es lo real; un día que viene ya cuenta
 lo de hoy, porque proyectar es seguir el plan. El dinero para gastar —la cuenta y el efectivo— no va
 aquí: lo lleva el riel del Plan Maestro, con la comida y lo anotado. Un día que ya pasó, o después de
-`ultimoMesMexico`, devuelve null. Desde los saldos del 19-oct-2026, la proyección pone GBM en $5,869 el
-20 de noviembre —la BBVA quedará en cero el 15— y en $129,427 el 31 de marzo, con el depósito ya dentro. Lo pintan
+`ultimoMesMexico`, devuelve null. Desde los saldos del 19-oct-2026, la proyección pone GBM en $5,613 el
+20 de noviembre —la BBVA quedará en cero el 15— y en $128,658 el 31 de marzo, con el depósito ya dentro. Lo pintan
 *Tu dinero ese día* y el checkpoint de la banda de la fase, en el Plan Maestro.
 
 **El ahorro sale de lo que se manda, no de una resta.** En México, del sueldo solo llega a GBM lo

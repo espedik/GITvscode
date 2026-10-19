@@ -9337,7 +9337,7 @@ function bbvaNoMande(id){
 /* El día cambió con el Dashboard abierto: el plan resta los abonos que llegaron y el Plan Maestro
    vuelve a hoy (lo llama el reloj). */
 function ceNuevoDia(){
-  if(window.CIFRAS && CIFRAS.aplicarPlanBbva && CIFRAS.aplicarPlanBbva()){ loadAll(); CIFRAS.refrescar(); }
+  if(window.CIFRAS && CIFRAS.aplicarPlanBbva && (CIFRAS.aplicarPlanBbva() + (CIFRAS.aplicarPagosFijos ? CIFRAS.aplicarPagosFijos() : 0))){ loadAll(); CIFRAS.refrescar(); }
   if(cur === 1){ ctYM = null; ctSel = null; RENDERS[cur](); }
 }
 // Un día sin abono previsto también se puede abonar: el botón se vuelve el monto y «Ya lo mandé».
@@ -15627,6 +15627,8 @@ restartTimer();
               compras:'lista',entrevista:'entrevista',
               habitos:'habitos'};
   const h=(location.hash||'').replace('#','').toLowerCase();
+  // #invertir: Mi Día con Qué invertir hoy abierto (el plan de inversiones de Finanzas lleva aquí).
+  if(h==='invertir'){ goTo(0); if(typeof abrirGBM==='function') setTimeout(abrirGBM, 400); return; }
   const tema=MAPA[h];
   if(!tema) return;
   const s=document.querySelector('.slide.theme-'+tema);

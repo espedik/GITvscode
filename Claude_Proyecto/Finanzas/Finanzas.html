@@ -18,6 +18,8 @@
      esta app use los mismos {{marcadores}} que el Dashboard y el Coach, en vez de
      empezar otra copia a mano. Mapa en ../Dashboard/DATOS-MAESTROS.md -->
 <script src="../Dashboard/datos-maestros.js"></script>
+<!-- Lo que recomienda Qué invertir hoy (lo escribe Claude con inversion-actualizar.ps1): el plan de inversiones lo pinta -->
+<script src="../Dashboard/inversion-hoy.js" onerror="this.remove()"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <!-- La fuente se carga SIN bloquear el pintado (2026-08-23). Antes era un `@import` dentro
      del <style>: el navegador no lo descubría hasta parsear el CSS y, mientras Google no
@@ -163,25 +165,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
   background:linear-gradient(135deg,rgba(0,212,255,.5),rgba(176,110,255,.35) 50%,rgba(0,212,255,.06) 90%)}
 .fx-edge>*{border-radius:17px;background:var(--surface-solid)}
 
-/* Tarjeta de semana: es un <button> para que funcione con teclado. */
-.wk-card{cursor:pointer;border-radius:14px;padding:14px 15px;display:flex;flex-direction:column;
-  gap:8px;text-align:left;font-family:inherit;color:inherit;
-  background:rgba(var(--ov),.025);border:1px solid rgba(var(--ov),.08);
-  transition:transform .16s,border-color .16s,background .16s}
-.wk-card:hover{transform:translateY(-2px);border-color:rgba(0,212,255,.3)}
-.wk-card.on{background:rgba(0,212,255,.07);border-color:rgba(0,212,255,.45)}
 .gbm-wk4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
 
-/* La línea de tiempo del mes reparte 31 días sobre el ancho disponible. En un
-   teléfono, el día 14 y el 17 caen a diez píxeles y las etiquetas se encabalgan
-   — medido a 390 px. Ahí la sustituye una lista con los mismos eventos, que se
-   generan del mismo array: no hay dos fuentes de verdad, solo dos formas. */
-.fx-tl{display:block}
-.fx-tl-lista{display:none}
-@media(max-width:760px){
-  .fx-tl{display:none}
-  .fx-tl-lista{display:flex;flex-direction:column;gap:2px}
-}
 .gbm-week-grid{display:grid;grid-template-columns:repeat(3,1fr)}
 .gbm-svc-grid{display:grid;grid-template-columns:repeat(3,1fr)}
 .gbm-port-kpis{display:grid;grid-template-columns:repeat(5,1fr)}
@@ -1116,7 +1101,8 @@ function tarjetaAplica(t, ahora){
   return d;
 }
 function tarjetaDeshace(t){
-  const m=t&&t.tarjeta, d=m&&S.debts.find(x=>x.id===m.id);
+  // Una mensualidad del plan (`prestamo`, CIFRAS.aplicarPagosFijos) devuelve su capital a la deuda.
+  const m=t&&(t.tarjeta||t.prestamo), d=m&&S.debts.find(x=>x.id===m.id);
   if(!d) return;
   d.balance=Math.max(0,Math.round(((+d.balance||0)-m.delta)*100)/100); d.fecha=today();
 }
@@ -1136,6 +1122,12 @@ function saveTx() {
       // Solo la anotada con la regla (lleva `tarjeta`, aunque sea null) se vuelve a calcular; si ya
       // movía una tarjeta, la sigue moviendo con lo editado.
       if('tarjeta' in viejo){ tarjetaDeshace(viejo); tj=tarjetaAplica(nuevo,!!viejo.tarjeta); }
+      // Una mensualidad del plan corregida: lo que cambió el monto cambia el capital que bajó la deuda.
+      else if(viejo.prestamo){
+        const dif=Math.round(((+amount||0)-(+viejo.amount||0))*100)/100, d=S.debts.find(x=>x.id===viejo.prestamo.id);
+        if(d&&dif){ d.balance=Math.max(0,Math.round(((+d.balance||0)-dif)*100)/100); d.fecha=today();
+          nuevo.prestamo={id:d.id,delta:Math.round((viejo.prestamo.delta-dif)*100)/100}; }
+      }
       S.transactions[i]=nuevo;
     }
   } else {
@@ -1162,6 +1154,13 @@ function spentCat(cat,month) {
   return S.transactions.filter(t=>t.type==='expense'&&t.cat===cat&&ym(t.date)===month).reduce((s,t)=>s+t.amount,0);
 }
 
+// El límite de un presupuesto: el del plan del mes si la categoría la conoce el maestro (la renta, los
+// servicios, las suscripciones, la comida, tus rutinas, las deudas: CIFRAS.presupuestoFijo); si no, el tuyo.
+function budgetLimit(b, m){
+  const v = window.CIFRAS && CIFRAS.presupuestoFijo ? CIFRAS.presupuestoFijo(b.cat, m) : null;
+  return v != null ? v : (+b.limit || 0);
+}
+const budgetDelPlan = (b, m) => !!(window.CIFRAS && CIFRAS.presupuestoFijo && CIFRAS.presupuestoFijo(b.cat, m) != null);
 function renderBudgets() {
   const list=document.getElementById('bud-list');
   const empty=document.getElementById('bud-empty');
@@ -1169,14 +1168,14 @@ function renderBudgets() {
   empty.style.display='none';
   const m=nowYM();
   list.innerHTML=S.budgets.map(b=>{
-    const sp=spentCat(b.cat,m);
-    const pct=Math.min(100,(sp/b.limit)*100);
-    const over=sp>b.limit;
+    const sp=spentCat(b.cat,m), lim=budgetLimit(b,m), plan=budgetDelPlan(b,m);
+    const pct=lim>0?Math.min(100,(sp/lim)*100):0;
+    const over=sp>lim;
     const col=pct<70?'var(--success)':pct<90?'var(--warning)':'var(--danger)';
     return `<div class="card" style="margin-bottom:12px">
       <div class="flex jb aic">
         <div><span class="flex aic gap6 fw6"><span class="dot" style="background:${CCOLORS[b.cat]||'#94a3b8'}"></span>${b.cat}</span>
-        <div class="ts tm" style="margin-top:2px">${fmt(sp)} / ${fmt(b.limit)}</div></div>
+        <div class="ts tm" style="margin-top:2px">${fmt(sp)} / ${fmt(lim)}${plan?' <span class="badge b-n" style="font-size:9px" title="Lo que el Plan Maestro aparta este mes para esta categoría">del plan</span>':''}</div></div>
         <div class="flex aic gap6">
           <span style="font-size:13px;font-weight:700;color:${col}">${pct.toFixed(1)}%</span>
           <button class="btn btn-o btn-sm btn-ico" onclick="openBudgetModal('${b.id}')">✏️</button>
@@ -1184,7 +1183,7 @@ function renderBudgets() {
         </div>
       </div>
       <div class="pbar"><div class="pfill" style="width:${pct}%;background:${col}"></div></div>
-      ${over?`<div class="alert a-err" style="margin-top:8px;padding:6px 10px;font-size:12px">⚠️ Excedido por ${fmt(sp-b.limit)}</div>`:''}
+      ${over?`<div class="alert a-err" style="margin-top:8px;padding:6px 10px;font-size:12px">⚠️ Excedido por ${fmt(sp-lim)}</div>`:''}
     </div>`;
   }).join('');
   renderBudgetChart();
@@ -1199,7 +1198,7 @@ function renderBudgetChart() {
     labels:S.budgets.map(b=>b.cat),
     datasets:[
       {label:'Gastado',data:S.budgets.map(b=>spentCat(b.cat,m)),backgroundColor:'#ef444488',borderRadius:5},
-      {label:'Límite',data:S.budgets.map(b=>b.limit),backgroundColor:'#3b82f622',borderColor:'#3b82f6',borderWidth:1.5,borderRadius:5}
+      {label:'Límite',data:S.budgets.map(b=>budgetLimit(b,m)),backgroundColor:'#3b82f622',borderColor:'#3b82f6',borderWidth:1.5,borderRadius:5}
     ]
   },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10,color:cssVar('--text2')}}},
     scales:{y:{ticks:{color:cssVar('--text3'),callback:v=>'$'+v.toLocaleString('es-MX')},grid:{color:'rgba('+cssVar('--ov')+',.08)'}},x:{ticks:{color:cssVar('--text3')},grid:{display:false}}}}});
@@ -1255,7 +1254,11 @@ function renderDebts() {
 
   list.innerHTML=activas.map(d=>{
     const paidPct=d.total>0?Math.max(0,Math.min(100,((d.total-d.balance)/d.total)*100)):0;
-    const months=d.remainingMonths||(d.min>0?Math.ceil(d.balance/d.min):null);
+    // Lo que falta, con una sola cuenta: la BBVA, su plan (en cero el día que dice); lo demás, sus cuotas con su
+    // interés (CIFRAS.cuotas). `remainingMonths` era un número del seed que no bajaba con el saldo.
+    const PBd=(d.id==='d001'&&window.CIFRAS&&CIFRAS.planBbva)?CIFRAS.planBbva():null;
+    const months=PBd&&PBd.fin&&d.balance>0?Math.max(1,Math.round((new Date(PBd.fin)-new Date())/2629800000))
+      :(window.CIFRAS&&CIFRAS.cuotas?CIFRAS.cuotas(d).restantes:(d.remainingMonths||(d.min>0?Math.ceil(d.balance/d.min):null)));
     return `<div class="card">
       <div class="flex jb aic">
         <div><div class="fw7" style="font-size:15px">${d.name}</div>
@@ -1328,6 +1331,9 @@ function openDebtModal(id=null) {
   document.getElementById('mo-debt').classList.add('open');
 }
 
+// Una deuda a plazo —el auto, un crédito, unos meses sin intereses— tiene mensualidad y día: el maestro la
+// aplica sola el día que toca desde `pagosAl` (CIFRAS.aplicarPagosFijos). Las tarjetas no: se mueven con lo anotado.
+const aPlazo = d => d.type!=='credit_card' && (+d.min||0)>0 && (+d.day||0)>0 && (+d.balance||0)>0;
 function saveDebt() {
   const name=document.getElementById('d-name').value.trim();
   if(!name) return alert('Ingresa el nombre.');
@@ -1342,9 +1348,9 @@ function saveDebt() {
   // Un saldo escrito a mano es un saldo dicho (`saldoAl`): desde ese día, solo mueve la tarjeta lo
   // que se anote con fecha posterior (CIFRAS.movimientoTarjeta).
   if(editId){const i=S.debts.findIndex(d=>d.id===editId);if(i>=0){
-    if((+S.debts[i].balance||0)!==data.balance){ data.fecha=today(); data.saldoAl=today(); }
+    if((+S.debts[i].balance||0)!==data.balance){ data.fecha=today(); data.saldoAl=today(); if(aPlazo(data)) data.pagosAl=today(); }
     S.debts[i]={...S.debts[i],...data};}}
-  else S.debts.push({id:uid(),...data,fecha:today(),saldoAl:today()});
+  else S.debts.push({id:uid(),...data,fecha:today(),saldoAl:today(),...(aPlazo(data)?{pagosAl:today()}:{})});
   save(); closeMo('mo-debt'); renderDebts(); toast('✅ Deuda guardada'); maybeRefreshIndicators();
 }
 
@@ -1413,52 +1419,11 @@ function saveInv() {
 function delInv(id){S.investments=S.investments.filter(i=>i.id!==id);save();if(document.getElementById('s-gbm').classList.contains('active'))renderGBM();toast('🗑️ Eliminado');maybeRefreshIndicators();}
 
 // ─── GBM PLAN ─────────────────────────────────────────────────────────────────
-// ⟳ Actualizar WEEKLY_PICKS cada lunes pidiendo a Claude: "actualiza las picks de GBM para esta semana"
-const WEEKLY_PICKS = {
-  semana: '23 Jun 2026',
-  actualizadoEl: 'Lunes 23 Jun 2026',
-  fuentes: ['TradingView', 'Bank of America Research', 'Motley Fool', 'Morningstar'],
-  acciones: [
-    {
-      ticker:'MSFT', nombre:'Microsoft Corporation', sector:'Cloud / IA / Enterprise',
-      tipo:'conservadora', tipoLabel:'🛡️ Conservadora', tipoColor:'#00e87a',
-      consensus:'Strong Buy', upside:'+15% est.', precio:'~$470 USD',
-      tv:'https://www.tradingview.com/symbols/NASDAQ-MSFT/',
-      pct:70,
-      razon:'La empresa más sólida del mundo en tecnología. Azure Cloud crece +33% YoY y ya supera el 50% del margen operativo. Copilot IA integrado en toda la suite Office — $365/usuario/año de ingresos recurrentes. Dividendo creciente por 20 años consecutivos. TradingView: tendencia alcista sostenida con soporte fuerte en $450. Riesgo bajo, crecimiento estable y predecible — ideal para el grueso del portafolio.'
-    },
-    {
-      ticker:'NVDA', nombre:'NVIDIA Corporation', sector:'Semiconductores / IA',
-      tipo:'crecimiento', tipoLabel:'🚀 Crecimiento', tipoColor:'#b06eff',
-      consensus:'Strong Buy', upside:'+18% est.', precio:'~$135 USD',
-      tv:'https://www.tradingview.com/symbols/NASDAQ-NVDA/',
-      pct:30,
-      razon:'La empresa con mayor potencial de crecimiento de la próxima década. Monopolio de facto en hardware para IA: >80% del mercado de GPUs para centros de datos. Ingresos +122% YoY. Blackwell GPU agotada hasta 2026. TradingView: momentum alcista con soporte en $125, precio objetivo BofA $200. Más volátil que MSFT, pero el upside justifica el riesgo con una posición del 30%.'
-    },
-  ],
-};
-
+// Las recomendaciones ya no viven aquí: las da Qué invertir hoy (Dashboard/inversion-hoy.js), que Claude investiga
+// con inversion-actualizar.ps1. La lista que había aquí era de junio y nadie la actualizaba.
 function renderGBM() {
-  // ── Ingresos ─────────────────────────────────────────────────────────────────
-  const BASE_SALARY=_PG().sueldo;
-  const QUINC = Math.round(BASE_SALARY / 2); // $21,500/quincena
+  // Lo que va a GBM no se estima aquí: lo dice el plan del maestro (CIFRAS.gbmMes, abajo).
 
-  // ── Gastos fijos por fecha ──────────────────────────────────────────────────
-  const RENTA=_PG().renta;   // día 1 de cada mes
-  const AUTO=_autoMin();     // día 14 de cada mes — Dolphin Mini
-  const SVC_CELULAR=_PG().celular, SVC_INTERNET=_PG().internet, SVC_GAS=_PG().gas,
-        SVC_AGUA=_PG().luzAgua, SVC_LIMPIEZA=_PG().limpieza;
-  const SUB_GYM=_PG().gym, SUB_CLAUDE=_PG().claudeCode, SUB_ICLOUD=_PG().icloud;
-  const SERVICIOS = _PG().servicios;
-  const SUSCRIPCIONES = _PG().suscripciones;
-  // Los mínimos de TC salen de las deudas reales, no de un número escrito a mano: si una
-  // tarjeta queda en $0 (Banamex, 13 ago 2026) su mínimo desaparece solo del plan semanal,
-  // y si Adán vuelve a usarla reaparece sin tocar código.
-  const _tcBBVA=(S.debts||[]).find(d=>d.id==='d001');
-  const _tcBanamex=(S.debts||[]).find(d=>d.id==='d002');
-  const TC_BBVA=(_tcBBVA&&_tcBBVA.balance>0)?(_tcBBVA.min||0):0;
-  const TC_BANAMEX=(_tcBanamex&&_tcBanamex.balance>0)?(_tcBanamex.min||0):0;
-  const TC_MINS=minimosTC();
   const CETES_DIA15 = _PG().cetesDia15; // ahorro recurrente fijo día 15
 
   // ── Mes seleccionado (tabs) ───────────────────────────────────────────────────
@@ -1470,52 +1435,25 @@ function renderGBM() {
   const nowD = new Date(selY_, selMN_-1, 1); // primer día del mes seleccionado
   const isCurrentM = selM === nowYM();
 
-  const msiActive=(S.debts||[]).filter(d=>d.rate===0&&d.balance>0&&d.type==='other'&&d.start)
-    .reduce((s,d)=>{
-      const st=new Date(d.start);
-      const totalM=d.total>0&&d.min>0?Math.round(d.total/d.min):0;
-      const endD=new Date(st); endD.setMonth(endD.getMonth()+totalM);
-      return nowD<endD?s+(d.min||0):s;
-    },0);
-
-  // ── Gastos variables: siempre los últimos 3 meses reales ──────────────────────
-  const past3=Array.from({length:3},(_,i)=>{
-    const d=new Date(realNow.getFullYear(),realNow.getMonth()-i-1,1);
-    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-  });
-  const p3E=past3.map(m=>S.transactions.filter(t=>ym(t.date)===m&&t.type==='expense').reduce((s,t)=>s+t.amount,0));
-  const vE=p3E.filter(e=>e>0);
-  const _msiGBM=(S.debts||[]).filter(d=>d.rate===0&&d.balance>0&&d.type==='other'&&d.start)
-    .reduce((s,d)=>{const st=new Date(d.start),tm=d.total>0&&d.min>0?Math.round(d.total/d.min):0;
-      const ed=new Date(st);ed.setMonth(ed.getMonth()+tm);return new Date()<ed?s+(d.min||0):s;},0);
-  const _fixedFloorGBM=RENTA+AUTO+SERVICIOS+SUSCRIPCIONES+TC_MINS+CETES_DIA15+_msiGBM;
-  const avgExpTotal=vE.length>0?vE.reduce((s,e)=>s+e,0)/vE.length:_fixedFloorGBM+Math.round(BASE_SALARY*0.15);
-  const totalFixed=RENTA+AUTO+SERVICIOS+SUSCRIPCIONES+TC_MINS+msiActive+CETES_DIA15;
-  const varMonthly=Math.max(0,avgExpTotal-totalFixed);
-  const varPerWeek=Math.round(varMonthly/4);
-
-  const w1GBM = Math.max(0, QUINC - RENTA - varPerWeek);
-  const w2GBM = 0;
-  const w3GBM = Math.max(0, QUINC - CETES_DIA15 - SERVICIOS - SUSCRIPCIONES - TC_MINS - msiActive - varPerWeek);
-  const w4GBM = 0;
-
-  const monthGBM   = w1GBM + w2GBM + w3GBM + w4GBM;
-  const monthCETES = CETES_DIA15;
-  const monthTotal = monthGBM + monthCETES;
-
-  // ── Semana actual: solo aplica si es el mes en curso ─────────────────────────
-  const dayN = isCurrentM ? realNow.getDate() : 0;
-  const cw   = isCurrentM ? (dayN<=7?1:dayN<=14?2:dayN<=21?3:4) : 1;
-  const thisWeekGBM = cw===1?w1GBM:cw===2?w2GBM:cw===3?w3GBM:w4GBM;
-  const efectivoSemana = (isCurrentM && S.weeklyLeftover > 0) ? S.weeklyLeftover : thisWeekGBM;
-
+  // ── El mes, según tu plan (CIFRAS.gbmMes): lo de cada quincena, lo de Didi, las ventas y el depósito; y la BBVA.
+  //    Es el mismo calendario del Dashboard y de Coach: la BBVA va primero mientras tenga saldo.
+  const C=window.CIFRAS, G=(C&&C.gbmMes)?C.gbmMes(selM):{semanas:[],aGbm:0,aBbva:0,bbvaCero:null};
+  const monthGBM=Math.round(G.aGbm*100)/100;
+  const hoyN=realNow.getDate(), semHoy=isCurrentM?(hoyN<=7?1:hoyN<=14?2:hoyN<=21?3:4):0;
+  const SH=G.semanas.find(w=>w.n===semHoy)||null;
+  const MC3=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const cero=G.bbvaCero?new Date(G.bbvaCero):null, ceroTxt=cero?cero.getDate()+' '+MC3[cero.getMonth()]:'';
   const MN=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
   const mesActual=MN[nowD.getMonth()]+' '+nowD.getFullYear();
-  const P=WEEKLY_PICKS;
-
-  const wAcciones=monthGBM;
-  const wCetes   =monthCETES;
-  const P_TOTAL  =monthTotal;
+  // En qué: el perfil seguro de Qué invertir hoy —el dinero de Alemania se usa en meses: deuda de corto plazo—.
+  const INV=window.INVERSION_HOY, PS=INV&&INV.perfiles&&INV.perfiles.seguro;
+  const genD=INV&&INV._meta&&INV._meta.generado?new Date(INV._meta.generado):null;
+  const diasInv=genD?Math.round((new Date(realNow).setHours(0,0,0,0)-new Date(genD).setHours(0,0,0,0))/86400000):null;
+  // Si sigues el plan: GBM y los CETES al cerrar la fase y al irte (CIFRAS.estadoDia).
+  const fase=C&&C.PHASES?C.PHASES.find(f=>realNow>=f.start&&realNow<=f.end):null;
+  const EF=fase&&C.estadoDia?C.estadoDia(C.fechaLocal(fase.end)):null;
+  const ultM=C&&C.PROYECTO&&C.PROYECTO.ultimoMesMexico, ultD=ultM?new Date(+ultM.slice(0,4),+ultM.slice(5,7),0):null;
+  const EA=ultD&&C.estadoDia?C.estadoDia(C.fechaLocal(ultD)):null;
 
   // ── Portafolio actual ────────────────────────────────────────────────────────
   const invs = S.investments || [];
@@ -1536,8 +1474,6 @@ function renderGBM() {
   const bestPos  = invsSorted.length?[...invsSorted].sort((a,b)=>b.roi-a.roi)[0]:null;
   const worstPos = invsSorted.length?[...invsSorted].sort((a,b)=>a.roi-b.roi)[0]:null;
   const avgDias  = invsSorted.length?Math.round(invsSorted.reduce((s,i)=>s+i.dias,0)/invsSorted.length):0;
-  const proj12   = totVal + (monthGBM*12);
-  const proj12r  = proj12 * 1.15;
 
   // ── Grupos del portafolio ─────────────────────────────────────────────────────
   const invsBolsa  = invsSorted.filter(i => i.type !== 'otro');
@@ -1597,7 +1533,7 @@ function renderGBM() {
 
   document.getElementById('gbm-body').innerHTML=`
     <!-- TABS DE MESES -->
-    <div style="display:flex;gap:5px;margin-bottom:18px;padding:5px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.07);flex-wrap:wrap">
+    <div style="display:flex;gap:5px;margin-bottom:18px;padding:5px;background:rgba(var(--ov),.03);border-radius:12px;border:1px solid rgba(var(--ov),.08);flex-wrap:wrap">
       ${gbmMonthTabs.map((m,i)=>{
         const [y,mn]=m.split('-');
         const label=MN[parseInt(mn)-1]+' '+y;
@@ -1605,9 +1541,9 @@ function renderGBM() {
         const isCur=m===nowYM();
         return `<button onclick="setGbmMonth('${m}')"
           style="flex:1;min-width:90px;padding:10px 8px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:${isActive?800:500};transition:all .2s;
-            border:${isActive?'2px solid var(--primary)':'1px solid rgba(255,255,255,.07)'};
+            border:${isActive?'2px solid var(--primary)':'1px solid rgba(var(--ov),.1)'};
             background:${isActive?'linear-gradient(135deg,rgba(0,212,255,.18),rgba(0,212,255,.07))':'transparent'};
-            color:${isActive?'var(--primary)':'rgba(255,255,255,.4)'};
+            color:${isActive?'var(--primary)':'var(--text2)'};
             box-shadow:${isActive?'0 0 14px rgba(0,212,255,.2)':'none'}">
           <div>${label}</div>
           <div style="font-size:9px;margin-top:2px;font-weight:600;opacity:.7">${isCur?'← mes actual':i===0?'':'proyección'}</div>
@@ -1615,387 +1551,71 @@ function renderGBM() {
       }).join('')}
     </div>
 
-    <!-- HEADER MENSUAL PRINCIPAL -->
-    <div style="margin-bottom:20px;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,rgba(0,12,35,.95) 0%,rgba(0,20,50,.9) 100%);border:1.5px solid rgba(0,212,255,.2);box-shadow:0 8px 40px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06)">
-
-      <!-- Banda superior: mes y fuentes -->
-      <div style="padding:18px 22px 14px;border-bottom:1px solid rgba(255,255,255,.07)">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-          <div>
-            <div style="font-size:20px;font-weight:900;color:#fff;letter-spacing:-.4px">${mesActual} — Plan de Inversión</div>
-            <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:3px;letter-spacing:.03em">Fuentes: ${P.fuentes.join(' · ')} &nbsp;·&nbsp; Actualizado: ${P.actualizadoEl}</div>
-          </div>
-          <span style="font-size:10px;padding:4px 12px;border-radius:20px;background:rgba(0,232,122,.12);color:var(--success);border:1px solid rgba(0,232,122,.25);font-weight:700;letter-spacing:.04em">📈 ACTIVO</span>
-        </div>
-      </div>
-
-      <!-- KPIs del mes -->
-      <div style="display:flex;flex-wrap:wrap">
-        <div style="flex:1;min-width:130px;padding:18px 22px;border-right:1px solid rgba(255,255,255,.06)">
-          <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Estimado al mes → bolsa</div>
-          <div style="font-size:26px;font-weight:900;color:var(--primary);letter-spacing:-.5px">${fmt(monthGBM)}</div>
-          <div style="font-size:10px;color:rgba(0,212,255,.5);margin-top:3px">acciones USA · GBM+</div>
-        </div>
-        ${CETES_DIA15>0?`<div style="flex:1;min-width:130px;padding:18px 22px;border-right:1px solid rgba(255,255,255,.06)">
-          <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">CETES día 15</div>
-          <div style="font-size:26px;font-weight:900;color:var(--success);letter-spacing:-.5px">${fmt(CETES_DIA15)}</div>
-          <div style="font-size:10px;color:rgba(0,232,122,.5);margin-top:3px">ahorro recurrente · ~11% anual</div>
-        </div>`:''}
-        <div style="flex:1;min-width:130px;padding:18px 22px;background:rgba(0,212,255,.05)">
-          <div style="font-size:10px;font-weight:600;color:rgba(0,212,255,.6);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Esta semana — Sem ${cw}</div>
-          <div style="font-size:26px;font-weight:900;color:#00d4ff;letter-spacing:-.5px">${fmt(efectivoSemana)}</div>
-          <div style="font-size:10px;color:rgba(0,212,255,.5);margin-top:3px">${S.weeklyLeftover>0?'monto corregido manualmente':'estimado automático'}</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SOBRANTE INICIO DE SEMANA -->
-    <div style="margin-bottom:20px;border-radius:16px;overflow:hidden;border:1.5px solid rgba(0,212,255,.25);background:linear-gradient(135deg,rgba(0,30,60,.7) 0%,rgba(0,18,40,.9) 100%);box-shadow:0 4px 32px rgba(0,212,255,.08)">
-
-      <!-- Header -->
-      <div style="padding:16px 20px 12px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px">
-        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#0099ff,#00d4ff);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📈</div>
+    <!-- EL MES, SEGÚN TU PLAN — CIFRAS.gbmMes: el mismo calendario del Dashboard y de Coach -->
+    <div class="card" style="margin-bottom:16px;padding:18px 20px">
+      <div class="flex jb aic" style="flex-wrap:wrap;gap:8px;margin-bottom:14px">
         <div>
-          <div style="font-size:14px;font-weight:800;color:#00d4ff;letter-spacing:-.2px">¿Cuánto inviertes esta semana?</div>
-          <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:1px">Tu sobrante del salario va directo a acciones de USA en GBM+</div>
+          <div style="font-size:19px;font-weight:900;color:var(--text);letter-spacing:-.3px">${mesActual} — a dónde va tu ahorro</div>
+          <div class="ts tm" style="margin-top:3px">Del Plan Maestro, el mismo calendario del Dashboard y de Coach: lo de cada quincena se manda el día que entra el sueldo; lo de Didi, el lunes.</div>
+        </div>
+        <span class="badge ${G.aBbva>0?'b-ex':'b-in'}" style="font-size:11px">${G.aBbva>0?'Primero la BBVA':'Todo a GBM'}</span>
+      </div>
+      <div class="g3" style="gap:10px;margin-bottom:12px">
+        <div style="background:rgba(0,212,255,.07);border-radius:10px;padding:12px 14px;border:1px solid rgba(0,212,255,.18)">
+          <div class="ts tm" style="text-transform:uppercase;letter-spacing:.06em;font-size:10px">A GBM este mes</div>
+          <div style="font-size:24px;font-weight:900;color:var(--primary);margin-top:3px">${fmt(monthGBM)}</div>
+          <div class="ts tm">de la quincena y de Didi${G.semanas.some(w=>w.gbm.some(x=>x.de==='venta'))?', más las ventas':''}${G.semanas.some(w=>w.gbm.some(x=>x.de==='deposito'))?' y el depósito del depa':''}</div>
+        </div>
+        <div style="background:rgba(255,217,61,.07);border-radius:10px;padding:12px 14px;border:1px solid rgba(255,217,61,.18)">
+          <div class="ts tm" style="text-transform:uppercase;letter-spacing:.06em;font-size:10px">A la BBVA este mes</div>
+          <div style="font-size:24px;font-weight:900;color:var(--warning);margin-top:3px">${fmt(G.aBbva)}</div>
+          <div class="ts tm">${cero?(cero<new Date(+selM.slice(0,4),+selM.slice(5,7)-1,1)?'ya en cero desde el '+ceroTxt:'queda en cero el '+ceroTxt):'sin saldo'}</div>
+        </div>
+        <div style="background:rgba(var(--ov),.04);border-radius:10px;padding:12px 14px;border:1px solid rgba(var(--ov),.09)">
+          <div class="ts tm" style="text-transform:uppercase;letter-spacing:.06em;font-size:10px">${SH?'Esta semana · días '+SH.ini+' al '+SH.fin:'Si sigues el plan'}</div>
+          ${SH?`<div style="font-size:24px;font-weight:900;color:var(--text);margin-top:3px">${fmt(SH.aGbm)}</div>
+          <div class="ts tm">a GBM${SH.aBbva>0?' · '+fmt(SH.aBbva)+' a la BBVA':''}</div>`
+          :`<div style="font-size:24px;font-weight:900;color:var(--text);margin-top:3px">${EF?fmt(Math.round(EF.gbm)):'—'}</div>
+          <div class="ts tm">en GBM al cerrar la fase</div>`}
         </div>
       </div>
-
-      <!-- Cuerpo -->
-      <div style="padding:16px 20px;display:flex;align-items:stretch;gap:14px;flex-wrap:wrap">
-
-        <!-- Explicación + input -->
-        <div style="flex:2;min-width:220px;display:flex;flex-direction:column;gap:12px">
-
-          <!-- Paso 1: lo que la app calcula -->
-          <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:12px 14px;border-left:3px solid rgba(0,212,255,.4)">
-            <div style="font-size:11px;font-weight:700;color:#00d4ff;margin-bottom:4px">① La app ya calculó tu estimado</div>
-            <div style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.7">
-              Basándose en tus ingresos y gastos fijos de esta semana, la app estima cuánto dinero te debería sobrar para invertir.
-              Ese monto ya aparece a la derecha — <strong style="color:rgba(255,255,255,.85)">no necesitas hacer nada si el estimado es correcto</strong>.
+      ${G.aBbva>0&&isCurrentM?`<div class="alert a-warn" style="margin:0 0 12px;font-size:12px">Mientras la BBVA tenga saldo, lo que sobra de cada quincena y lo de Didi van a ella: a la bolsa empieza a ir dinero cuando quede en cero${ceroTxt?', el '+ceroTxt:''}. Ninguna inversión le gana a una tarjeta al 55.7 % anual.</div>`:''}
+      <div class="g4" style="gap:8px">
+        ${G.semanas.map(w=>{
+          const items=w.gbm.map(x=>({...x,k:'gbm'})).concat(w.bbva.map(x=>({...x,k:'bbva'}))).sort((a,b)=>a.dia-b.dia);
+          return `<div style="border-radius:10px;padding:11px 12px;background:${w.n===semHoy?'rgba(0,212,255,.07)':'rgba(var(--ov),.03)'};border:1px solid ${w.n===semHoy?'rgba(0,212,255,.3)':'rgba(var(--ov),.08)'}">
+            <div class="flex jb aic" style="margin-bottom:6px"><span style="font-size:11px;font-weight:800;color:var(--text)">Semana ${w.n}</span>
+              <span class="ts tm">${w.n===semHoy?'<b style="color:var(--primary)">HOY</b> · ':''}días ${w.ini} al ${w.fin}</span></div>
+            <div style="font-size:17px;font-weight:900;color:${w.aGbm>0?'var(--primary)':'var(--text3)'}">${fmt(w.aGbm)} <span class="ts tm" style="font-weight:600">a GBM</span></div>
+            ${w.aBbva>0?`<div style="font-size:12px;font-weight:700;color:var(--warning);margin-top:2px">${fmt(w.aBbva)} <span class="ts tm" style="font-weight:600">a la BBVA</span></div>`:''}
+            <div style="display:flex;flex-direction:column;gap:3px;margin-top:7px">
+              ${items.length?items.map(x=>`<div class="flex jb" style="gap:8px;font-size:11px;color:var(--text2)"><span>día ${x.dia} · ${x.k==='bbva'?'BBVA, ':''}${x.t}</span><b style="white-space:nowrap;color:${x.k==='bbva'?'var(--warning)':'var(--text)'}">${fmt(x.mxn)}</b></div>`).join('')
+                :'<div class="ts tm">Nada esta semana: lo que entra se va en lo fijo y en tu gasto.</div>'}
             </div>
-          </div>
-
-          <!-- Paso 2: corrección manual -->
-          <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:12px 14px;border-left:3px solid rgba(255,217,61,.4)">
-            <div style="font-size:11px;font-weight:700;color:var(--warning);margin-bottom:4px">② ¿El monto real fue diferente? Corrígelo aquí</div>
-            <div style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:10px;line-height:1.7">
-              Si en la realidad te sobró más o menos de lo estimado, escribe el monto real.
-              La distribución entre acciones se actualizará automáticamente.
-            </div>
-            <input type="number" id="gbm-sobrante-input" value="${S.weeklyLeftover||''}" placeholder="Escribe aquí si quieres corregir el monto..." min="0" step="0.01"
-              style="width:100%;padding:10px 14px;border:1.5px solid rgba(255,217,61,.3);border-radius:9px;font-size:15px;font-weight:700;color:#fff;background:rgba(255,217,61,.05);outline:none;font-family:inherit;transition:border-color .2s"
-              onchange="setWeeklyLeftover(this.value)"
-              onfocus="this.style.borderColor='rgba(255,217,61,.7)'"
-              onblur="this.style.borderColor='rgba(255,217,61,.3)'">
-            ${S.weeklyLeftover>0?`<div style="font-size:10px;color:var(--warning);margin-top:5px">✏️ Estás usando un monto manual — <a href="#" onclick="setWeeklyLeftover(0);document.getElementById('gbm-sobrante-input').value='';return false" style="color:var(--warning)">volver al estimado automático</a></div>`:`<div style="font-size:10px;color:rgba(255,255,255,.2);margin-top:5px">Si lo dejas vacío se usa el estimado automático</div>`}
-          </div>
-        </div>
-
-        <!-- Resultado -->
-        <div style="flex:1;min-width:160px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);border-radius:12px;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px">
-          <div style="font-size:10px;font-weight:700;color:rgba(0,212,255,.6);text-transform:uppercase;letter-spacing:.07em">
-            ${S.weeklyLeftover>0?'💵 Monto corregido':'🤖 Estimado automático'}
-          </div>
-          <div style="font-size:30px;font-weight:900;color:#00d4ff;letter-spacing:-.5px">${fmt(efectivoSemana)}</div>
-          <div style="font-size:11px;color:rgba(255,255,255,.4);line-height:1.5">
-            ${S.weeklyLeftover>0?'Ingresado manualmente':'Calculado con tus ingresos y gastos fijos'}
-          </div>
-          <div style="font-size:11px;font-weight:700;color:var(--success);margin-top:4px">
-            ${efectivoSemana>0?'✅ Se divide entre las acciones ↓':''}
-          </div>
-        </div>
-
+          </div>`;}).join('')}
       </div>
     </div>
 
-    <!-- ═══ PLAN SEMANAL ═════════════════════════════════════════════
-         Antes eran cuatro pestañas con emoji y un panel de servicios repetido en las
-         cuatro; el número que Adán necesita —cuánto va a la bolsa esta semana— salía
-         al mismo tamaño que todo lo demás. Ahora la sección responde UNA pregunta:
-         por qué unas semanas dan para invertir y otras no. La línea de tiempo lo
-         enseña antes de que haya que leer una cifra.
-
-         Los importes NO se escriben aquí: salen de w1GBM…w4GBM, que es el modelo que
-         la app ya usaba — quincena en las semanas 1 y 3, cero en las otras dos.  -->
-    ${(()=>{
-      const mx0 = n => '$'+Math.round(Math.abs(n)).toLocaleString('es-MX');
-      const AUTO_N = _PG().auto || 'Auto';
-
-      const SEM = [
-        { n:1, dias:'1 al 7',
-          ins:  [{l:'Quincena 1 · '+(_PG().bancoSueldo||'BBVA'), a:QUINC}],
-          outs: [{l:'Renta · día 1', a:RENTA},
-                 {l:'Gasto variable estimado', a:varPerWeek}],
-          gbm:w1GBM,
-          resumen:'Entra la quincena, se va la renta.',
-          aviso:'La renta se lleva más de la mitad de la quincena. Lo que queda después del gasto variable estimado es lo que puede ir a la bolsa — y por eso esta semana sí aporta, aunque sea la que más aprieta.' },
-        { n:2, dias:'8 al 14',
-          ins:  [],
-          outs: [{l:AUTO_N+' · día 14', a:AUTO}],
-          gbm:w2GBM,
-          resumen:'Se paga el auto. No entra quincena.',
-          aviso:'Semana sin ingreso de nómina: la mensualidad del auto sale del saldo que quedó reservado. El plan no aparta nada para la bolsa esta semana, y no es un error — es que no hay de dónde.' },
-        { n:3, dias:'15 al 21',
-          ins:  [{l:'Quincena 2 · '+(_PG().bancoSueldo||'BBVA'), a:QUINC}],
-          outs: [...(CETES_DIA15>0?[{l:'CETES · día 15', a:CETES_DIA15}]:[]),
-                 {l:'Plan de datos celular', a:SVC_CELULAR},
-                 {l:'Internet', a:SVC_INTERNET},
-                 {l:'Gas', a:SVC_GAS},
-                 {l:'Agua y luz', a:SVC_AGUA},
-                 {l:'Artículos de limpieza', a:SVC_LIMPIEZA},
-                 {l:(_PG().gymNombre||'Gimnasio')+' · día 17', a:SUB_GYM},
-                 {l:'Claude Code', a:SUB_CLAUDE},
-                 {l:'iCloud', a:SUB_ICLOUD},
-                 {l:'TC BBVA · mínimo', a:TC_BBVA},
-                 {l:'TC Banamex · mínimo', a:TC_BANAMEX},
-                 ...(msiActive>0?[{l:'Cuotas MSI activas', a:Math.round(msiActive)}]:[]),
-                 {l:'Gasto variable estimado', a:varPerWeek}],
-          gbm:w3GBM,
-          resumen:'Entra la segunda quincena y se paga casi todo.',
-          aviso:'La semana que sostiene el mes: aquí caen los servicios, las suscripciones, los mínimos de tarjeta y el apartado de CETES. Aun así es la que más deja para la bolsa, porque el ingreso llega junto y los pagos son muchos pero pequeños.' },
-        { n:4, dias:'22 al 28',
-          ins:  [], outs:[], gbm:w4GBM,
-          resumen:'Sin pagos ni ingresos programados.',
-          aviso:'Semana en blanco en el calendario. El plan no aparta nada porque la nómina ya se repartió en las semanas 1 y 3 — si te sobra dinero de verdad, escríbelo arriba en “corrige el monto” y se reparte entre las dos acciones.' },
-      ];
-
-      // Los días que mueven el dinero, agrupados por fecha: dos eventos del mismo
-      // día comparten columna. Los grupos alternan arriba/abajo del eje porque el
-      // 14 y el 15 caen a 3% de distancia y las etiquetas se pisarían.
-      const diasMes = new Date(nowD.getFullYear(), nowD.getMonth()+1, 0).getDate();
-      const posD = d => (4 + ((d-1)/(diasMes-1))*92).toFixed(2)+'%';
-      const GRUPOS = [
-        {d:1,  ev:[{t:'Quincena 1', a:QUINC, c:'var(--success)'},
-                   {t:'Renta',      a:-RENTA, c:'var(--danger)'}]},
-        {d:14, ev:[{t:AUTO_N,       a:-AUTO, c:'var(--danger)'}]},
-        {d:15, ev:[{t:'Quincena 2', a:QUINC, c:'var(--success)'},
-                   ...(CETES_DIA15>0?[{t:'CETES', a:-CETES_DIA15, c:'var(--primary)'}]:[])]},
-        {d:17, ev:[{t:_PG().gymNombre||'Gimnasio', a:-SUB_GYM, c:'var(--danger)'}]},
-      ];
-
-      const semActiva = w => (isCurrentM && w.n===cw);
-
-      return `
-      <div class="fx-panel fx-grid" style="padding:24px 26px;margin-bottom:14px">
-        <div style="position:relative;display:flex;flex-direction:column;gap:18px">
-
-          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap">
-            <div style="display:flex;flex-direction:column;gap:6px">
-              <div style="display:flex;align-items:center;gap:8px">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary)"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18"></path><path d="M8 3v4"></path><path d="M16 3v4"></path></svg>
-                <span class="fx-lbl" style="color:var(--primary)">Tu mes, semana por semana</span>
-              </div>
-              <div class="fx-num" style="font-size:24px;font-weight:700;line-height:1.15;color:var(--text)">Por qué unas semanas aprietan y otras no</div>
-            </div>
-            <div style="font-size:11.5px;color:var(--text3);text-align:right;max-width:36ch;line-height:1.5">
-              Toca una semana para ver qué entra, qué sale y cuánto queda para la bolsa.
-            </div>
-          </div>
-
-          <!-- LÍNEA DE TIEMPO DEL MES -->
-          <div class="fx-tl" style="position:relative;height:172px;margin-top:2px">
-            <div style="position:absolute;left:0;right:0;top:86px;height:2px;background:linear-gradient(90deg,rgba(var(--ov),.05),rgba(var(--ov),.16) 12%,rgba(var(--ov),.16) 88%,rgba(var(--ov),.05))"></div>
-            ${GRUPOS.map((g,gi)=>{
-              const arriba = gi%2===0;
-              return `
-              <div style="position:absolute;left:${posD(g.d)};top:0;bottom:0;width:0">
-                <div style="position:absolute;left:0;top:0;bottom:0;width:1px;transform:translateX(-50%);background:repeating-linear-gradient(180deg,rgba(var(--ov),.18) 0 3px,transparent 3px 8px)"></div>
-                <div style="position:absolute;left:0;top:87px;width:11px;height:11px;border-radius:50%;transform:translate(-50%,-50%);background:${g.ev[0].c};border:2px solid var(--surface-solid);box-shadow:0 0 10px ${g.ev[0].c}"></div>
-                <div style="position:absolute;left:0;top:${arriba?'6px':'106px'};transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap">
-                  ${g.ev.map(e=>`<span class="fx-num" style="font-size:13px;font-weight:700;color:${e.c}">${e.a<0?'−':'+'}${mx0(e.a)}</span>
-                    <span style="font-size:10px;color:var(--text3);margin-top:-2px">${e.t}</span>`).join('')}
-                  <span style="font-size:9.5px;color:var(--text3);opacity:.7;margin-top:2px">día ${g.d}</span>
-                </div>
-              </div>`;
-            }).join('')}
-            <!-- franja de la semana en curso -->
-            ${isCurrentM?`<div style="position:absolute;left:${posD((cw-1)*7+1)};width:calc(${posD(Math.min(cw*7,diasMes))} - ${posD((cw-1)*7+1)});top:80px;height:14px;border-radius:7px;background:rgba(0,212,255,.16);border:1px solid rgba(0,212,255,.35)"></div>`:''}
-          </div>
-
-          <!-- La misma información en vertical, para pantallas estrechas -->
-          <div class="fx-tl-lista">
-            ${GRUPOS.map(g=>{
-              const enCurso = isCurrentM && g.d>=(cw-1)*7+1 && g.d<=cw*7;
-              return `<div style="display:flex;align-items:center;gap:12px;padding:9px 11px;border-radius:10px;background:${enCurso?'rgba(0,212,255,.07)':'rgba(var(--ov),.025)'};border:1px solid ${enCurso?'rgba(0,212,255,.3)':'transparent'}">
-                <span class="fx-num" style="font-size:11px;font-weight:700;color:var(--text3);min-width:44px">DÍA ${g.d}</span>
-                <div style="flex:1;display:flex;flex-direction:column;gap:3px">
-                  ${g.ev.map(e=>`<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
-                    <span style="font-size:12px;color:var(--text2)">${e.t}</span>
-                    <span class="fx-num" style="font-size:13.5px;font-weight:700;color:${e.c}">${e.a<0?'−':'+'}${mx0(e.a)}</span>
-                  </div>`).join('')}
-                </div>
-              </div>`;
-            }).join('')}
-          </div>
-
-          <div style="display:flex;gap:18px;flex-wrap:wrap;padding-top:2px">
-            <span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:var(--success)"></span><span style="font-size:11px;color:var(--text3)">Entra dinero</span></span>
-            <span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:var(--danger)"></span><span style="font-size:11px;color:var(--text3)">Sale dinero</span></span>
-            ${CETES_DIA15>0?`<span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:var(--primary)"></span><span style="font-size:11px;color:var(--text3)">Se aparta a CETES</span></span>`:''}
-            ${isCurrentM?`<span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:8px;border-radius:4px;background:rgba(0,212,255,.16);border:1px solid rgba(0,212,255,.35)"></span><span style="font-size:11px;color:var(--text3)">Semana en curso</span></span>`:''}
-          </div>
-
-        </div>
+    <!-- EN QUÉ VA: el perfil seguro de Qué invertir hoy (Dashboard/inversion-hoy.js), la misma fuente del Dashboard -->
+    ${PS?`<div class="card" style="margin-bottom:16px;padding:18px 20px">
+      <div class="flex jb aic" style="flex-wrap:wrap;gap:8px;margin-bottom:6px">
+        <div style="font-size:15px;font-weight:800;color:var(--text)">🛡️ En qué va: el perfil seguro de Qué invertir hoy</div>
+        <a href="../Dashboard/dashboard.html#invertir" class="btn btn-o btn-sm" style="text-decoration:none">Abrir Qué invertir hoy →</a>
       </div>
-
-      <!-- LAS CUATRO SEMANAS -->
-      <div class="gbm-wk4" style="gap:10px;margin-bottom:14px">
-        ${SEM.map(w=>{
-          const act = semActiva(w);
-          const monto = act && efectivoSemana>0 ? efectivoSemana : w.gbm;
-          const pct = monthGBM>0 ? Math.round((w.gbm/monthGBM)*100) : 0;
-          return `<button type="button" id="gbm-tab-${w.n}" class="wk-card${w.n===cw?' on':''}" onclick="switchGBMTab(${w.n})">
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-              <span class="fx-lbl">Semana ${w.n}</span>
-              ${act?`<span style="font-size:9px;font-weight:800;letter-spacing:.06em;color:var(--bg);background:var(--primary);padding:3px 7px;border-radius:5px">HOY</span>`:''}
-            </div>
-            <div class="fx-num" style="font-size:23px;font-weight:700;line-height:1;color:${monto>0?'var(--primary)':'var(--text3)'}">${monto>0?mx0(monto):'—'}</div>
-            <div style="font-size:10.5px;color:var(--text3)">${monto>0?'a la bolsa':'nada esta semana'} · días ${w.dias}</div>
-            <div style="height:5px;border-radius:3px;background:rgba(var(--ov),.07);overflow:hidden">
-              <div style="height:100%;border-radius:3px;width:${pct}%;background:var(--primary)"></div>
-            </div>
-            <div style="font-size:11px;color:var(--text2);line-height:1.4">${w.resumen}</div>
-          </button>`;
-        }).join('')}
+      <div class="ts tm" style="margin-bottom:6px">${PS.lema||''} · El dinero de Alemania se usa en meses: va en deuda de corto plazo, no en acciones (Plan Maestro, Fase 1).</div>
+      ${genD?`<div style="font-size:11px;margin-bottom:12px;color:${diasInv>7?'var(--danger)':'var(--text3)'}">📅 Investigado el ${genD.getDate()} de ${MC3[genD.getMonth()]}${diasInv!=null?' · hace '+diasInv+' días':''}${diasInv>7?': actualízalo en Qué invertir hoy antes de comprar':''}</div>`:''}
+      <div class="g2" style="gap:10px">
+        ${(PS.activos||[]).map(a=>{
+          const base=SH&&SH.aGbm>0?SH.aGbm:monthGBM, monto=Math.round(base*(+a.pct||0)/100);
+          return `<div style="border-radius:10px;padding:12px 14px;background:rgba(0,232,122,.05);border:1px solid rgba(0,232,122,.16)">
+            <div class="flex jb aic" style="gap:8px"><span style="font-size:13px;font-weight:800;color:var(--text)">${a.nombre}${a.ticker&&a.ticker!==a.nombre?' <span class="ts tm">('+a.ticker+')</span>':''}</span>
+              <span style="font-size:13px;font-weight:900;color:var(--success)">${a.pct}%</span></div>
+            <div class="ts tm" style="margin:2px 0 6px">${a.tipo||''}${a.donde?' · en '+a.donde:''}${monto>0?' · '+fmt(monto)+(SH&&SH.aGbm>0?' de esta semana':' del mes'):''}</div>
+            <div style="font-size:12px;line-height:1.5;color:var(--text2)">${a.porque||''}</div>
+            ${a.vigilar?`<div class="ts tm" style="margin-top:5px">👀 ${a.vigilar}</div>`:''}
+          </div>`;}).join('')}
       </div>
-
-      <!-- DETALLE DE LA SEMANA ELEGIDA -->
-      ${SEM.map(w=>{
-        const act = semActiva(w);
-        const monto = act && efectivoSemana>0 ? efectivoSemana : w.gbm;
-        const outs = w.outs.filter(o=>o.a>0);
-        const totIn = w.ins.reduce((s,i)=>s+i.a,0);
-        const totOut = outs.reduce((s,o)=>s+o.a,0);
-        return `
-        <div id="gbm-week-${w.n}" style="display:${w.n===cw?'block':'none'};margin-bottom:20px">
-          <div class="fx-edge">
-            <div style="padding:24px 26px;display:flex;flex-direction:column;gap:18px">
-
-              <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap">
-                <div style="display:flex;flex-direction:column;gap:5px">
-                  <span class="fx-lbl" style="color:var(--primary)">Detalle</span>
-                  <div class="fx-num" style="font-size:22px;font-weight:700;color:var(--text)">Semana ${w.n} · días ${w.dias}</div>
-                  <div style="font-size:12px;color:var(--text2)">${w.resumen}</div>
-                </div>
-                <div style="text-align:right;display:flex;flex-direction:column;gap:4px">
-                  <span class="fx-lbl">Queda para la bolsa</span>
-                  <div class="fx-num" style="font-size:32px;font-weight:700;line-height:1;color:${monto>0?'var(--primary)':'var(--text3)'}">${monto>0?mx0(monto):'$0'}</div>
-                </div>
-              </div>
-
-              <div class="gbm-week-grid" style="gap:12px">
-
-                <div style="background:rgba(0,232,122,.055);border:1px solid rgba(0,232,122,.16);border-radius:13px;padding:15px 16px;display:flex;flex-direction:column;gap:9px">
-                  <div style="display:flex;align-items:center;gap:7px">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="color:var(--success)"><path d="M12 19V5"></path><path d="M6 11l6-6 6 6"></path></svg>
-                    <span class="fx-lbl" style="color:var(--success)">Entra</span>
-                  </div>
-                  ${w.ins.length?w.ins.map(i=>`<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
-                    <span style="font-size:12px;color:var(--text2)">${i.l}</span>
-                    <span class="fx-num" style="font-size:13.5px;font-weight:700">${mx0(i.a)}</span>
-                  </div>`).join(''):`<div style="font-size:12px;color:var(--text3)">Sin nómina esta semana</div>`}
-                  <div style="height:1px;background:rgba(0,232,122,.15)"></div>
-                  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
-                    <span style="font-size:11.5px;font-weight:600;color:var(--success)">Total</span>
-                    <span class="fx-num" style="font-size:17px;font-weight:700;color:var(--success)">${mx0(totIn)}</span>
-                  </div>
-                </div>
-
-                <div style="background:rgba(255,59,107,.05);border:1px solid rgba(255,59,107,.15);border-radius:13px;padding:15px 16px;display:flex;flex-direction:column;gap:9px">
-                  <div style="display:flex;align-items:center;gap:7px">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="color:var(--danger)"><path d="M12 5v14"></path><path d="M6 13l6 6 6-6"></path></svg>
-                    <span class="fx-lbl" style="color:var(--danger)">Sale</span>
-                  </div>
-                  ${outs.length?outs.map(o=>`<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
-                    <span style="font-size:12px;color:var(--text2)">${o.l}</span>
-                    <span class="fx-num" style="font-size:13.5px;font-weight:700">${mx0(o.a)}</span>
-                  </div>`).join(''):`<div style="font-size:12px;color:var(--text3)">Nada programado</div>`}
-                  <div style="height:1px;background:rgba(255,59,107,.15)"></div>
-                  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
-                    <span style="font-size:11.5px;font-weight:600;color:var(--danger)">Total</span>
-                    <span class="fx-num" style="font-size:17px;font-weight:700;color:var(--danger)">${mx0(totOut)}</span>
-                  </div>
-                </div>
-
-                <div style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.2);border-radius:13px;padding:15px 16px;display:flex;flex-direction:column;gap:10px">
-                  <div style="display:flex;align-items:center;gap:7px">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary)"><path d="M3 3v18h18"></path><path d="M7 15l4-5 3 3 5-7"></path></svg>
-                    <span class="fx-lbl" style="color:var(--primary)">Se invierte en bolsa</span>
-                  </div>
-                  ${monto>0?P.acciones.map(a=>{
-                    const amt=Math.round(monto*a.pct/100);
-                    return `<div style="display:flex;flex-direction:column;gap:5px">
-                      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
-                        <span style="display:flex;align-items:baseline;gap:7px">
-                          <span class="fx-num" style="font-size:14px;font-weight:700;color:${a.tipoColor}">${a.ticker}</span>
-                          <a href="${a.tv}" target="_blank" rel="noopener" style="font-size:9.5px;color:var(--primary);opacity:.75">TV↗</a>
-                        </span>
-                        <span class="fx-num" style="font-size:15px;font-weight:700">${mx0(amt)}</span>
-                      </div>
-                      <div style="display:flex;gap:3px">
-                        <span style="height:5px;flex:${a.pct};border-radius:3px;background:${a.tipoColor}"></span>
-                        <span style="height:5px;flex:${100-a.pct};border-radius:3px;background:rgba(var(--ov),.07)"></span>
-                      </div>
-                      <span style="font-size:10px;color:var(--text3)">${a.pct}% · ${a.tipoLabel.replace(/^[^\s]+\s/,'')}</span>
-                    </div>`;
-                  }).join(''):`<div style="font-size:12px;color:var(--text3);line-height:1.55">El plan no aparta nada esta semana. La nómina ya se repartió en las semanas 1 y 3.</div>`}
-                </div>
-
-              </div>
-
-              <div style="display:flex;align-items:flex-start;gap:11px;padding:14px 16px;border-radius:12px;background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.07)">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" style="color:var(--text3);flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5"></path><path d="M12 7.5v.01"></path></svg>
-                <div style="font-size:12.5px;color:var(--text2);line-height:1.6">${w.aviso}</div>
-              </div>
-
-            </div>
-          </div>
-        </div>`;
-      }).join('')}
-
-      <!-- LO QUE EL PLAN SEMANAL NO CUENTA — el hueco, dicho en voz alta -->
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:16px 18px;border-radius:13px;background:rgba(255,217,61,.05);border:1px solid rgba(255,217,61,.2);margin-bottom:24px">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="color:var(--warning);flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5"></path><path d="M12 16.5v.01"></path></svg>
-        <div style="font-size:12.5px;color:var(--text2);line-height:1.65">
-          <b style="color:var(--warning)">El plan semanal solo cuenta tu nómina.</b>
-          Los ${fmt(_PG().didiMes)} al mes de Didi no entran en el reparto, y la mensualidad del auto
-          (${fmt(AUTO)}) tampoco se descuenta de ninguna semana — aparece en el calendario, pero no
-          baja el estimado. En la práctica son <span class="fx-num" style="color:var(--text);font-weight:700">${mx0(_PG().didiMes-AUTO)}</span>
-          al mes que quedan fuera de esta cuenta: no están perdidos, simplemente no los reparte el plan.
-        </div>
-      </div>
-
-      `;
-    })()}
-
-    <!-- DETALLE DE LAS 2 ACCIONES (análisis) -->
-    <div class="sh" style="margin-bottom:12px"><h2>🔎 Por qué estas 2 acciones</h2></div>
-    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px">
-      ${P.acciones.map(a=>{
-        const col=a.tipoColor;
-        return `<div class="card" style="border-left:4px solid ${col}">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-            <div style="background:${col}14;border:1px solid ${col}40;border-radius:10px;padding:8px 12px;text-align:center;min-width:62px">
-              <div style="font-size:10px;font-weight:700;color:${col};margin-bottom:2px">${a.tipoLabel}</div>
-              <div style="font-size:16px;font-weight:900;color:${col}">${a.ticker}</div>
-              <div style="font-size:9px;color:var(--text3)">${a.precio}</div>
-            </div>
-            <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text)">${a.nombre}</div>
-              <div style="font-size:11px;color:var(--text3)">${a.sector}</div>
-              <div style="display:flex;gap:5px;margin-top:5px;flex-wrap:wrap">
-                <span style="font-size:10px;padding:2px 7px;border-radius:4px;background:rgba(0,232,122,.12);color:var(--success);font-weight:700">${a.consensus}</span>
-                <span style="font-size:10px;padding:2px 7px;border-radius:4px;background:rgba(0,212,255,.1);color:var(--primary);font-weight:600">${a.upside}</span>
-                <span style="font-size:10px;padding:2px 7px;border-radius:4px;background:${col}14;color:${col};font-weight:700">${a.pct}% del sobrante</span>
-              </div>
-            </div>
-          </div>
-          <div style="font-size:11px;color:var(--text2);line-height:1.75;margin-bottom:10px;padding:8px 12px;background:rgba(255,255,255,.03);border-radius:8px">${a.razon}</div>
-          <a href="${a.tv}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:7px;background:${col}14;border:1px solid ${col}33;font-size:11px;font-weight:700;color:${col};text-decoration:none">📈 Ver en TradingView →</a>
-        </div>`;
-      }).join('')}
-    </div>
+    </div>`:''}
 
     <!-- PORTAFOLIO ACTUAL -->
     <div class="sh" style="margin-bottom:16px">
@@ -2113,24 +1733,24 @@ function renderGBM() {
 
         <!-- Proyección -->
         <div class="card" style="padding:14px;border-color:rgba(0,212,255,.2)">
-          <div style="font-size:9px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">📈 Proyección a 12 meses</div>
+          <div style="font-size:9px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">📈 En GBM, si sigues el plan</div>
           <div style="display:flex;flex-direction:column;gap:8px">
             <div style="background:rgba(0,212,255,.06);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center">
-              <div style="font-size:11px;color:var(--text3)">Solo aportaciones</div>
-              <div style="font-size:15px;font-weight:800;color:var(--primary)">${fmt(Math.round(proj12))}</div>
+              <div style="font-size:11px;color:var(--text3)">Al cerrar la ${fase?fase.tag:'fase'}${fase?' · '+fase.end.getDate()+' '+MC3[fase.end.getMonth()]:''}</div>
+              <div style="font-size:15px;font-weight:800;color:var(--primary)">${EF?fmt(Math.round(EF.gbm)):'—'}</div>
             </div>
             <div style="background:rgba(0,232,122,.07);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center">
-              <div style="font-size:11px;color:var(--text3)">Con +15% anual</div>
-              <div style="font-size:15px;font-weight:800;color:var(--success)">${fmt(Math.round(proj12r))}</div>
+              <div style="font-size:11px;color:var(--text3)">Al irte${ultD?' · '+ultD.getDate()+' '+MC3[ultD.getMonth()]+' '+ultD.getFullYear():''}</div>
+              <div style="font-size:15px;font-weight:800;color:var(--success)">${EA?fmt(Math.round(EA.gbm)):'—'}</div>
             </div>
           </div>
         </div>
 
         <!-- DCA -->
         <div class="card" style="padding:14px;border-color:rgba(176,110,255,.2)">
-          <div style="font-size:9px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">💸 DCA semanal estimado</div>
-          <div style="font-size:22px;font-weight:900;color:var(--purple)">${fmt(Math.round(monthGBM/4))}</div>
-          <div style="font-size:10px;color:var(--text3);margin-top:4px">~${fmt(monthGBM)}/mes · promedio 4 semanas</div>
+          <div style="font-size:9px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">💸 ${SH?'Esta semana a GBM':'Este mes a GBM'}</div>
+          <div style="font-size:22px;font-weight:900;color:var(--purple)">${fmt(SH?SH.aGbm:monthGBM)}</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">${fmt(monthGBM)} en el mes, del plan · sin rendimiento: la parte conservadora</div>
         </div>
 
       </div>
@@ -2231,25 +1851,6 @@ function renderGBM() {
   renderBtcHistory();
 }
 
-// Antes reescribía el `style` de cada pestaña con cinco expresiones regulares
-// sobre cssText — cualquier retoque al estilo del botón rompía el resaltado sin
-// avisar, porque el regex dejaba de encontrar lo que buscaba. Ahora el estado
-// activo es una clase (.wk-card.on) y esto solo la mueve.
-function switchGBMTab(n) {
-  for(let i=1;i<=4;i++){
-    const tab=document.getElementById('gbm-tab-'+i);
-    const pane=document.getElementById('gbm-week-'+i);
-    if(tab) tab.classList.toggle('on', i===n);
-    if(pane) pane.style.display=i===n?'block':'none';
-  }
-}
-
-function setWeeklyLeftover(val) {
-  S.weeklyLeftover = parseFloat(val) || 0;
-  save();
-  renderGBM();
-}
-
 function setDidiMonthly(val) {
   S.didiMonthly = Math.max(0, parseFloat(val) || 0);
   save();
@@ -2279,6 +1880,8 @@ function maybeRefreshIndicators() {
 // Calcula el saldo actual esperado de una deuda según fecha de inicio y pagos realizados.
 // Solo aplica para MSI (0%) y crédito automotriz. Las TC se quedan manuales.
 function autoBalance(d, refDate) {
+  // Con `pagosAl` el saldo ya trae cada mensualidad aplicada (CIFRAS.aplicarPagosFijos): manda el saldo.
+  if(d.pagosAl) return d.balance;
   // Solo auto-calcular MSI a 0% (deterministas: total − meses × cuota)
   // Créditos con interés y TCs se quedan manuales — dependen de pagos reales hechos
   if(!d.start || !d.balance || !d.min || d.rate !== 0 || d.type !== 'other') return d.balance;
@@ -2515,13 +2118,15 @@ function renderIndicatorsHTML(src) {
           const pct=orig>0?Math.min(100,(orig-d.balance)/orig*100):0;
           const col=pct>=75?'var(--success)':pct>=50?'#3b82f6':pct>=25?'var(--warning)':'var(--danger)';
           const icon=d.type==='credit_card'?'💳':d.type==='mortgage'?'🏠':d.type==='loan'?'💰':'📋';
-          const meses=d.min>0?Math.ceil(d.balance/d.min):null;
+          // Lo que falta: la BBVA con su plan, la fecha del plan; lo demás, sus cuotas con interés (CIFRAS.cuotas).
+          const PBi=(!isSnapshot&&d.id==='d001'&&window.CIFRAS&&CIFRAS.planBbva)?CIFRAS.planBbva():null;
+          const meses=PBi&&PBi.fin?Math.max(1,Math.round((new Date(PBi.fin)-now2)/2629800000)):(window.CIFRAS&&CIFRAS.cuotas?CIFRAS.cuotas(d).restantes:(d.min>0?Math.ceil(d.balance/d.min):null));
           return `<div>
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
               <span style="font-size:12px;font-weight:600;color:var(--text)">${icon} ${d.name}</span>
               <div style="display:flex;align-items:center;gap:10px">
                 ${d.rate>0?`<span style="font-size:10px;color:var(--text3)">${d.rate}% anual</span>`:''}
-                ${meses?`<span style="font-size:10px;color:${meses<=3?'var(--success)':meses<=12?'#3b82f6':'var(--text3)'}">~${meses} meses</span>`:''}
+                ${meses?`<span style="font-size:10px;color:${meses<=3?'var(--success)':meses<=12?'#3b82f6':'var(--text3)'}">~${meses} ${meses===1?'mes':'meses'}</span>`:''}
                 <span style="font-size:10px;color:var(--danger);font-weight:600">${fmt(d.balance)}</span>
                 <span style="font-size:11px;font-weight:700;color:${col};min-width:38px;text-align:right">${pct.toFixed(0)}%</span>
               </div>
@@ -2547,7 +2152,7 @@ function renderIndicatorsHTML(src) {
         <div style="background:rgba(0,232,122,.07);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Ya pagado</div><div style="font-size:14px;font-weight:800;color:var(--success)">${fmt((auto2.total||auto2.balance)-auto2.balance)}</div></div>
         <div style="background:rgba(255,217,61,.07);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Mensualidad</div><div style="font-size:14px;font-weight:800;color:var(--warning)">${fmt(auto2.min)}</div></div>
       </div>
-      ${(()=>{const orig=auto2.total||auto2.balance,paid=orig-auto2.balance,pct=orig>0?Math.min(100,paid/orig*100):0,meses=auto2.min>0?Math.ceil(auto2.balance/auto2.min):null;
+      ${(()=>{const orig=auto2.total||auto2.balance,paid=orig-auto2.balance,pct=orig>0?Math.min(100,paid/orig*100):0,meses=window.CIFRAS&&CIFRAS.mesesRestantes?CIFRAS.mesesRestantes(auto2):(auto2.min>0?Math.ceil(auto2.balance/auto2.min):null);
       return `<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:5px"><span>Progreso pagado</span><span style="font-weight:700;color:var(--warning)">${pct.toFixed(1)}%</span></div>
         <div class="pbar" style="height:8px"><div class="pfill" style="width:${pct}%;background:linear-gradient(90deg,var(--warning),var(--success))"></div></div></div>
         <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--text2);padding-top:10px;border-top:1px solid rgba(var(--ov),.07)">
@@ -3196,19 +2801,17 @@ function renderQuincena(m){
   const lista=vis.length?vis.map(p=>`<div class="qn-pago ${p.tipo}"><span class="d">${cuando(p.d)}</span><span class="c" title="${p.t}">${p.t}</span><span class="m">${p.tipo==='entra'?'+':'−'}${fmt(p.monto)}</span></div>`).join('')
     :'<div class="qn-sub">Nada programado en los próximos 15 días.</div>';
 
-  // 2. La BBVA, quincena a quincena
-  const ab=plan.abonos||[];
-  const total=ab.reduce((s,a)=>s+a.monto,0);
-  const hecho=ab.filter(a=>a.fecha<=hoyIso).reduce((s,a)=>s+a.monto,0);
-  const resta=Math.max(0,Math.round((total-hecho)*100)/100);
-  const fin=plan.fin?new Date(plan.fin):null;
-  const sig=ab.filter(a=>a.fecha>hoyIso).slice(0,4);
+  // 2. La BBVA, quincena a quincena: el saldo vivo (CIFRAS.bbvaEstado, el mismo del Plan Maestro y de Mis
+  //    Metas), lo pagado desde que arrancó su plan (CIFRAS.avanceBbva) y lo que el plan pide de hoy en adelante.
+  const BE=C.bbvaEstado?C.bbvaEstado():null, AB=C.avanceBbva?C.avanceBbva(S):null;
+  const resta=BE?BE.saldo:0, fin=BE&&BE.fin?new Date(BE.fin):(plan.fin?new Date(plan.fin):null);
+  const sig=(plan.abonos||[]).filter(a=>a.fecha>=hoyIso&&!a.hecho).slice(0,4);
   const DE={quincena:'de la quincena',didi:'de Didi',minimo:'el pago del mes, con lo de Didi'};
-  const bbva=(total>0&&resta>0)?`
+  const bbva=(resta>0&&!(BE&&BE.cancelada))?`
       <div class="qn-cifra" style="color:#f59e0b">${fmt(resta)}</div>
-      <div class="qn-sub">debe hoy según tu plan, de ${fmt(total)} · <b>en cero el ${fin?corto(fin):'—'}</b> · ${fmt(plan.intereses||0)} de intereses</div>
-      <div class="pbar" style="height:6px;margin:10px 0 8px;background:rgba(var(--ov),.09)"><div class="pfill" style="width:${Math.round(hecho/total*100)}%;background:#f59e0b"></div></div>
-      ${sig.map(a=>`<div class="qn-fila"><span>${corto(fIso(a.fecha))} · ${DE[a.de]||a.de}</span><b>${fmt(a.monto)}</b></div>`).join('')}
+      <div class="qn-sub">debes hoy${AB?' · llevas '+fmt(AB.pagado)+' de los '+fmt(AB.inicio)+' con que arrancó su plan':''} · <b>en cero el ${fin?corto(fin):'—'}</b> · ${fmt(plan.intereses||0)} de intereses</div>
+      <div class="pbar" style="height:6px;margin:10px 0 8px;background:rgba(var(--ov),.09)"><div class="pfill" style="width:${AB?Math.round(AB.pct):0}%;background:#f59e0b"></div></div>
+      ${sig.map(a=>`<div class="qn-fila"><span>${a.fecha===hoyIso?'hoy':corto(fIso(a.fecha))} · ${DE[a.de]||a.de}</span><b>${fmt(a.monto)}</b></div>`).join('')}
       <div class="qn-sub" style="margin-top:8px">¿El banco dice otra cifra? Ese saldo manda: repórtalo y el plan se recalcula.</div>`
     :`<div class="qn-cifra" style="color:var(--success)">En cero</div>
       <div class="qn-sub">Lo que pagues con ella, págalo en la misma quincena: así no genera intereses.</div>`;
@@ -3366,7 +2969,7 @@ function renderDashboard() {
         <div class="pbar" style="height:5px">
           <div class="pfill" style="width:${efPct}%;background:${efColor}"></div>
         </div>
-        <div style="font-size:10px;color:var(--text3);margin-top:3px">Fondo de emergencia · BBVA</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:3px">Fondo de emergencia · en CETES</div>
       </div>
       <input type="number" value="${efBalance||''}" min="0" max="${EF_TARGET}" step="0.01"
         placeholder="Actualizar saldo..."
@@ -3468,6 +3071,29 @@ function renderInsights(inc, exp) {
     </div>`;
 }
 
+// La maestría con la proyección del Plan Maestro —la misma de Coach y del Dashboard (CIFRAS.PROYECCION)—, no con
+// un modelo propio: lo que piden junio (la cuenta bloqueada y la visa) y agosto (la salida completa), lo que habrá
+// con el ritmo de hoy, lo que GBM y los CETES tendrán al cerrar la fase si sigues el plan (CIFRAS.estadoDia), el
+// ingreso nuevo que cierra el hueco y la fecha que el ahorro sí paga. Sin rendimiento en México: es la parte conservadora.
+function maePlanHTML(){
+  const C=window.CIFRAS; if(!C||!C.texto) return '';
+  const T=k=>C.texto('{{'+k+'}}'), mal=v=>/^faltan/.test(v);
+  const MC=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const fila=(t,v,sub,col)=>`<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-bottom:1px solid rgba(var(--ov),.06)">
+    <div style="min-width:0"><div style="font-size:12px;font-weight:700;color:var(--text)">${t}</div>${sub?`<div class="ts tm" style="margin-top:2px">${sub}</div>`:''}</div>
+    <div style="font-size:15px;font-weight:800;white-space:nowrap;color:${col||'var(--text)'}">${v}</div></div>`;
+  const hoy=new Date(), ph=(C.PHASES||[]).find(f=>hoy>=f.start&&hoy<=f.end);
+  const E=ph&&C.estadoDia?C.estadoDia(C.fechaLocal(ph.end)):null;
+  const ini=C.PROYECTO&&C.PROYECTO.maestriaInicio?new Date(C.PROYECTO.maestriaInicio+'T12:00:00'):null;
+  const tarde=ini?MC[ini.getMonth()]+' '+(ini.getFullYear()+1):'';
+  return `<div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;margin:6px 0 2px">📅 Lo que dice tu plan</div>
+    ${fila('Junio de 2027 · la cuenta bloqueada y la visa piden', T('salidaJunio'), 'a fin de junio tendrías '+T('alemaniaJunio')+': '+T('junioVeredicto'), mal(T('junioCorto'))?'#f97316':'var(--success)')}
+    ${fila('Agosto de 2027 · la salida completa pide', T('salidaAgosto'), 'con la colegiatura, la reserva del BYD y el colchón; con tu ritmo, '+T('salidaVeredicto'), mal(T('salidaVeredicto'))?'#f97316':'var(--success)')}
+    ${E?fila('Al cerrar la '+ph.tag+' · '+ph.end.getDate()+' '+MC[ph.end.getMonth()], fmt(Math.round(E.gbm+E.cetes)), 'GBM y tus CETES si sigues el plan; el checkpoint pide '+T('marzoParaSalida')):''}
+    ${fila('Lo que cierra el hueco', '+'+T('extraSalida')+'/mes', 'de ingreso nuevo hasta que te vas: un aumento, un puesto mejor pagado o freelance de pruebas en lugar de horas de Didi')}
+    ${tarde?fila('Si no llega', tarde, 'la fecha que tu ahorro sí paga: a la salida '+T('salida2028')):''}
+    <div class="ts tm" style="margin-top:9px">Es la misma proyección de Coach y del Plan Maestro, sin rendimiento en México (la parte conservadora): si cambia un supuesto, cambia en las tres.</div>`;
+}
 function renderSpecials(freeMonth, refDate=new Date()) {
   // ── Análisis Maestría ──
   const maestria=(S.goals||[]).find(g=>g.id==='g001')||(S.goals||[]).find(g=>g.icon==='🎓'||g.name.toLowerCase().includes('maestr')||g.name.toLowerCase().includes('alemania'));
@@ -3523,111 +3149,20 @@ function renderSpecials(freeMonth, refDate=new Date()) {
 
   const autoDebt=S.debts.find(d=>d.type==='car');
   const autoPb=autoDebt?pb(autoDebt):0;
-  const autoMonths=autoPb>0?(autoDebt?.min>0?Math.ceil(autoPb/autoDebt.min):67):0;
+  // Con su interés (CIFRAS.mesesRestantes): dividir el saldo entre la mensualidad daba años de menos.
+  const _mr=x=>window.CIFRAS&&CIFRAS.mesesRestantes?CIFRAS.mesesRestantes(x):(x.min>0?Math.ceil(x.balance/x.min):null);
+  const autoMonths=autoPb>0&&autoDebt?(_mr({...autoDebt,balance:autoPb})||0):0;
   const autoFree=addM(now,autoMonths);
-  const autoExtraMonths=autoPb>0?Math.ceil(autoPb/((autoDebt?.min||6700)+1000)):0;
+  const autoExtraMonths=autoPb>0&&autoDebt?(_mr({...autoDebt,balance:autoPb,min:(+autoDebt.min||0)+1000})||0):0;
   const autoFreeExtra=addM(now,autoExtraMonths);
   const autoSavedMonths=Math.max(0,autoMonths-autoExtraMonths);
-
-  // ── Cálculo realista del sobrante mensual (igual que plan GBM) ──────────────
-  const _gbmQUINc=Math.round(_PG().sueldo/2);
-  const _gbmRENTA=_PG().renta,_gbmAUTO=_autoMin();
-  const _gbmSVC=_PG().servicios,_gbmSUB=_PG().suscripciones,_gbmTC=minimosTC(),_gbmCETES=_PG().cetesDia15;
-  const _gbmMSI=(S.debts||[]).filter(d=>d.rate===0&&d.balance>0&&d.type==='other'&&d.start)
-    .reduce((s,d)=>{
-      const st=new Date(d.start),tm=d.total>0&&d.min>0?Math.round(d.total/d.min):0;
-      const ed=new Date(st);ed.setMonth(ed.getMonth()+tm);
-      return now<ed?s+(d.min||0):s;
-    },0);
-  const _gbmP3=Array.from({length:3},(_,i)=>{
-    const d=new Date(now.getFullYear(),now.getMonth()-i-1,1);
-    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-  });
-  const _gbmVE=_gbmP3.map(m=>S.transactions.filter(t=>ym(t.date)===m&&t.type==='expense').reduce((s,t)=>s+t.amount,0)).filter(e=>e>0);
-  const _gbmTF=_gbmRENTA+_gbmAUTO+_gbmSVC+_gbmSUB+_gbmTC+_gbmMSI+_gbmCETES;
-  const _gbmAvg=_gbmVE.length>0?_gbmVE.reduce((s,e)=>s+e,0)/_gbmVE.length:_PG().sueldo*0.75;
-  const _gbmVPW=Math.round(Math.max(0,_gbmAvg-_gbmTF)/4);
-  const monthGBMCalc=
-    Math.max(0,_gbmQUINc-_gbmRENTA-_gbmAUTO-_gbmVPW)+
-    Math.max(0,_gbmQUINc-_gbmCETES-_gbmSVC-_gbmSUB-_gbmTC-_gbmMSI-_gbmVPW);
-
-  // ── Escenarios realistas ──────────────────────────────────────────────────
-  const mxDateL=d=>d.toLocaleDateString('es-MX',{month:'long',year:'numeric'});
-
-  // helper: meses entre dos fechas directamente (sin pasar por refDate)
-  const diffMonths=(a,b)=>Math.round((b-a)/2592000000);
-
-  // A: Tu plan GBM mensual (lo que realmente puedes invertir)
-  const scA_mo=monthGBMCalc;
-  const scA_months=scA_mo>0?Math.ceil(needed/scA_mo):999;
-  const scA_date=addM(now,scA_months);
-  const scA_diff=diffMonths(scA_date,targetDate);
-
-  // B: Plan GBM + CETES (todo el ahorro mensual combinado)
-  const scB_mo=monthGBMCalc+_gbmCETES;
-  const scB_months=scB_mo>0?Math.ceil(needed/scB_mo):999;
-  const scB_date=addM(now,scB_months);
-  const scB_diff=diffMonths(scB_date,targetDate);
-
-  // C: Mínimo necesario para llegar en oct 2027
-  const scC_mo=monthlyNeeded;
-  const scC_months=monthsLeft;
-
-  // D: Si reduces gastos variables 20%
-  const scD_mo=Math.round(monthGBMCalc*1.2);
-  const scD_months=scD_mo>0?Math.ceil(needed/scD_mo):999;
-  const scD_date=addM(now,scD_months);
-  const scD_diff=diffMonths(scD_date,targetDate);
-
-  // E: el del Plan Maestro — lo que Didi aparta para GBM (el maestro: didiAhorro
-  // hasta enero, didiAhorroMas desde didiMasDesde) y, desde que dejas el depa (enCasaDesde), la renta.
-  // El aporte a tu familia lo compensa lo que ahorras en comida (Adán, 3-oct-2026).
-  const scE_didi1=+_PG().didiAhorro||0, scE_didi2=+_PG().didiAhorroMas||0;
-  const scE_sinRentaDate=_PG().enCasaDesde?new Date(_PG().enCasaDesde+'-01T12:00:00'):new Date(2027,1,1);
-  const scE_p1Months=Math.max(0,Math.round((scE_sinRentaDate-now)/2592000000));
-  const scE_mo1=monthGBMCalc+scE_didi1;          // ahora → ene 2027
-  const scE_mo2=monthGBMCalc+scE_didi2+_PG().renta;    // feb 2027 en adelante
-  const scE_savedP1=Math.min(needed,scE_p1Months*scE_mo1);
-  const scE_remainP2=Math.max(0,needed-scE_savedP1);
-  const scE_p2Months=scE_remainP2>0?(scE_mo2>0?Math.ceil(scE_remainP2/scE_mo2):999):0;
-  const scE_months=scE_p1Months+scE_p2Months;
-  const scE_date=addM(now,scE_months);
-  const scE_diff=diffMonths(scE_date,targetDate);
-  // ¿Cuánto tendrías en la fecha límite (oct 2027)?
-  const scE_p2ToDeadline=Math.max(0,Math.round((targetDate-scE_sinRentaDate)/2592000000));
-  const scE_atDeadlineFlat=totalActivos+scE_savedP1+scE_p2ToDeadline*scE_mo2;
-  const scE_atDeadline=Math.min(maestriaTarget,scE_atDeadlineFlat);
-  const scE_shortfall=Math.max(0,maestriaTarget-scE_atDeadline);
-  // Con rendimiento GBM (~10% anual = 0.833% mensual, interés compuesto)
-  const gbmR=0.10/12;
-  const fvCalc=(pv,pmt,r,n)=>pv*Math.pow(1+r,n)+(r>0?pmt*(Math.pow(1+r,n)-1)/r:pmt*n);
-  const scE_fv1=fvCalc(totalActivos,scE_mo1,gbmR,scE_p1Months);
-  const scE_fvDeadline=fvCalc(scE_fv1,scE_mo2,gbmR,scE_p2ToDeadline);
-  const scE_rendimiento=Math.round(scE_fvDeadline-scE_atDeadlineFlat);
-  const scE_shortfallR=Math.max(0,maestriaTarget-scE_fvDeadline);
-
-  const scRow=(icon,label,mo,months,date,diff)=>`
-    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:${diff>0?'var(--success-light)':diff===0?'var(--primary-light)':'var(--danger-light)'}">
-      <span style="font-size:18px">${icon}</span>
-      <div style="flex:1">
-        <div style="font-size:12px;font-weight:700;color:var(--text)">${label}</div>
-        <div style="font-size:11px;color:var(--text2);margin-top:1px">Ahorrando <strong>${fmt(mo)}/mes</strong></div>
-      </div>
-      <div style="text-align:right;white-space:nowrap">
-        <div style="font-size:13px;font-weight:800;color:${diff>0?'var(--success)':diff===0?'var(--primary)':'var(--danger)'}">${mxDateL(date)}</div>
-        <div style="font-size:11px;font-weight:600;color:${diff>0?'var(--success)':diff===0?'var(--primary)':'var(--danger)'}">
-          ${diff>0?`✅ ${diff} mes${diff!==1?'es':''} antes`
-            :diff===0?'⏱️ En tiempo exacto'
-            :`⚠️ ${Math.abs(diff)} mes${Math.abs(diff)!==1?'es':''} de retraso`}
-        </div>
-      </div>
-    </div>`;
 
   document.getElementById('d-specials').innerHTML=`
     <div class="card">
       <div class="flex jb aic" style="margin-bottom:12px">
         <div class="card-title" style="margin:0">🎓 Maestría en Alemania — Proyecciones</div>
-        <span class="badge ${canAfford?'b-in':'b-ex'}">${canAfford?'✅ Meta alcanzable':'⚠️ Revisar plan'}</span>
+        ${(()=>{ const v=window.CIFRAS?CIFRAS.texto('{{salidaVeredicto}}'):''; const mal=/^faltan/.test(v);
+          return v?`<span class="badge ${mal?'b-ex':'b-in'}">${mal?'⚠️ A la salida '+v:'✅ A la salida '+v}</span>`:''; })()}
       </div>
 
       <!-- Barra segmentada + desglose -->
@@ -3677,134 +3212,8 @@ function renderSpecials(freeMonth, refDate=new Date()) {
         </div>`;
       })()}
 
-      <!-- Datos clave -->
-      ${maestriaPausada?`
-      <div style="background:var(--bg);border-radius:8px;padding:12px 14px;margin-bottom:14px;border-left:3px solid var(--text3)">
-        <div class="ts fw6" style="color:var(--text)">⏸️ Aportaciones pausadas hasta ${new Date(maestria.pausadaHasta+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'})}</div>
-        <div class="ts tm" style="margin-top:3px">Decisión tomada en Coach — los ${fmt(Math.round(totalActivos))} ya ahorrados quedan intactos, sin nuevas aportaciones mientras se prioriza deuda. Nueva meta: ${targetLabel}.</div>
-      </div>`:`
-      <div class="g2" style="gap:8px;margin-bottom:14px">
-        <div style="background:var(--bg);border-radius:8px;padding:10px 14px;text-align:center">
-          <div class="ts tm">Falta por ahorrar / mes</div>
-          <div style="font-size:19px;font-weight:800;color:${monthlyNeeded>0?'var(--primary)':'var(--success)'};margin-top:2px">
-            ${monthlyNeeded>0?fmt(monthlyNeeded):'¡Ya cubierto!'}
-          </div>
-          <div class="ts tm">para llegar en ${targetLabel}</div>
-        </div>
-        <div style="background:var(--bg);border-radius:8px;padding:10px 14px;text-align:center">
-          <div class="ts tm">Tu sobrante real mensual</div>
-          <div style="font-size:19px;font-weight:800;color:var(--primary);margin-top:2px">${fmt(monthGBMCalc)}</div>
-          <div class="ts tm" style="color:${monthGBMCalc>=monthlyNeeded?'var(--success)':'var(--danger)'}">
-            ${monthGBMCalc>=monthlyNeeded?`✅ cubre el mínimo de ${fmt(monthlyNeeded)}`:`⚠️ faltan ${fmt(monthlyNeeded-monthGBMCalc)}/mes`}
-          </div>
-        </div>
-      </div>`}
-
-      <!-- Tabla de escenarios -->
-      <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">
-        📊 Escenarios — ¿Cuándo llegas a ${fmt(_metaMaestria())}?
-      </div>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        ${scRow('📈','Tu plan GBM mensual (sobrante real calculado)',scA_mo,scA_months,scA_date,scA_diff)}
-        ${_gbmCETES>0?scRow('💰','Plan GBM + CETES combinados (ahorro total)',scB_mo,scB_months,scB_date,scB_diff):''}
-        ${scRow('🎯',`Mínimo necesario para llegar en ${targetLabel}`,scC_mo,scC_months,targetDate,0)}
-        ${scRow('💡','Si reduces gastos variables 20%',scD_mo,scD_months,scD_date,scD_diff)}
-        <!-- Escenario E expandido -->
-        <div style="border-radius:8px;border:1px solid rgba(0,212,255,.3);background:linear-gradient(135deg,rgba(0,212,255,.06),rgba(176,110,255,.06));overflow:hidden">
-          <!-- Header -->
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px 6px">
-            <div style="display:flex;align-items:center;gap:8px">
-              <span style="font-size:18px">🚀</span>
-              <div>
-                <div style="font-size:12px;font-weight:700;color:var(--text)">Escenario del plan — Didi y sin renta</div>
-                <div style="font-size:10px;color:var(--text3);margin-top:1px;font-style:italic">⚠️ Supuestos: Didi aparta ${fmt(scE_didi1)} al mes hasta enero y ${fmt(scE_didi2)} desde febrero; el aporte a tu familia lo compensa lo que ahorras en comida</div>
-              </div>
-            </div>
-            <div style="text-align:right;white-space:nowrap">
-              <div style="font-size:13px;font-weight:800;color:${scE_diff>0?'var(--success)':scE_diff===0?'var(--primary)':'var(--danger)'}">${mxDateL(scE_date)}</div>
-              <div style="font-size:11px;font-weight:600;color:${scE_diff>0?'var(--success)':scE_diff===0?'var(--primary)':'var(--danger)'}">
-                ${scE_diff>0?`✅ ${scE_diff} mes${scE_diff!==1?'es':''} antes`:scE_diff===0?'⏱️ En tiempo exacto':`⚠️ ${Math.abs(scE_diff)} mes${Math.abs(scE_diff)!==1?'es':''} de retraso`}
-              </div>
-            </div>
-          </div>
-          <!-- Fases -->
-          <div style="display:flex;flex-direction:column;gap:4px;padding:0 12px 10px">
-            <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(var(--ov),.04);border-radius:6px;padding:7px 10px">
-              <div>
-                <div style="font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.05em">Fase 1 — Ahora → ene 2027</div>
-                <div style="font-size:11px;color:var(--text2);margin-top:2px">
-                  Salario GBM <span style="color:var(--text3)">${fmt(monthGBMCalc)}</span>
-                  + Didi <span style="color:var(--success);font-weight:700">${fmt(scE_didi1)}</span>
-                </div>
-              </div>
-              <div style="font-size:16px;font-weight:800;color:var(--primary)">${fmt(scE_mo1)}<span style="font-size:10px;font-weight:600;color:var(--text3)">/mes</span></div>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(0,232,122,.07);border-radius:6px;padding:7px 10px;border:1px solid rgba(0,232,122,.18)">
-              <div>
-                <div style="font-size:10px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.05em">Fase 2 — Feb 2027 en adelante</div>
-                <div style="font-size:11px;color:var(--text2);margin-top:2px">
-                  Salario GBM <span style="color:var(--text3)">${fmt(monthGBMCalc)}</span>
-                  + Didi <span style="color:var(--success);font-weight:700">${fmt(scE_didi2)}</span>
-                  + Sin renta <span style="color:var(--success);font-weight:700">+${fmt(_PG().renta)}</span>
-                </div>
-              </div>
-              <div style="font-size:16px;font-weight:800;color:var(--success)">${fmt(scE_mo2)}<span style="font-size:10px;font-weight:600;color:var(--text3)">/mes</span></div>
-            </div>
-            <!-- Proyección al deadline oct 2027 -->
-            <div style="margin-top:6px;border-radius:6px;padding:9px 12px;background:${scE_shortfall>0?'rgba(249,115,22,.08)':'rgba(0,232,122,.08)'};border:1px solid ${scE_shortfall>0?'rgba(249,115,22,.3)':'rgba(0,232,122,.3)'}">
-              <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">📅 ¿Cuánto tendrías en ${targetLabel}?</div>
-              <div style="display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--text2)">
-                <div style="display:flex;justify-content:space-between">
-                  <span>Activos hoy</span>
-                  <span style="font-weight:600;color:var(--text)">${fmt(totalActivos)}</span>
-                </div>
-                <div style="display:flex;justify-content:space-between">
-                  <span>Fase 1 completa (${scE_p1Months} meses × ${fmt(scE_mo1)})</span>
-                  <span style="font-weight:600;color:var(--primary)">+${fmt(scE_savedP1)}</span>
-                </div>
-                <div style="display:flex;justify-content:space-between">
-                  <span>Fase 2 parcial (${scE_p2ToDeadline} meses × ${fmt(scE_mo2)})</span>
-                  <span style="font-weight:600;color:var(--success)">+${fmt(scE_p2ToDeadline*scE_mo2)}</span>
-                </div>
-                <div style="height:1px;background:rgba(255,255,255,.1);margin:4px 0"></div>
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                  <span style="font-weight:700;color:var(--text)">Total en ${targetLabel}</span>
-                  <span style="font-size:14px;font-weight:800;color:${scE_shortfall>0?'#f97316':'var(--success)'}">
-                    ${fmt(Math.round(scE_atDeadline))}
-                  </span>
-                </div>
-                ${scE_shortfall>0?`
-                <div style="display:flex;justify-content:space-between;margin-top:2px">
-                  <span style="color:#f97316">Aún faltarían</span>
-                  <span style="font-weight:700;color:#f97316">−${fmt(Math.round(scE_shortfall))}</span>
-                </div>`:`
-                <div style="font-size:11px;color:var(--success);font-weight:600;margin-top:2px;text-align:center">✅ Meta cubierta antes de ${targetLabel}</div>`}
-                <!-- Rendimiento GBM -->
-                <div style="margin-top:8px;padding-top:8px;border-top:1px dashed rgba(176,110,255,.35)">
-                  <div style="font-size:10px;font-weight:700;color:#b06eff;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">📈 + Rendimiento GBM estimado (~10% anual)</div>
-                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2)">
-                    <span>Interés compuesto acumulado</span>
-                    <span style="font-weight:700;color:#b06eff">+${fmt(scE_rendimiento)}</span>
-                  </div>
-                  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
-                    <span style="font-size:11px;font-weight:700;color:var(--text)">Total con rendimiento en ${targetLabel}</span>
-                    <span style="font-size:14px;font-weight:800;color:${scE_shortfallR>0?'#f97316':'var(--success)'}">
-                      ${fmt(Math.round(scE_fvDeadline))}
-                    </span>
-                  </div>
-                  ${scE_shortfallR>0?`
-                  <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:11px">
-                    <span style="color:#f97316">Aún faltarían con rendimiento</span>
-                    <span style="font-weight:700;color:#f97316">−${fmt(Math.round(scE_shortfallR))}</span>
-                  </div>`:`
-                  <div style="font-size:11px;color:var(--success);font-weight:600;margin-top:2px;text-align:center">✅ Meta cubierta con rendimientos</div>`}
-                  <div style="font-size:10px;color:var(--text3);margin-top:4px;font-style:italic">* Estimado. GBM+ (acciones USA) históricamente rinde 8–12% anual. No garantizado.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- Lo que dice el plan: la misma proyección de Coach y del Plan Maestro -->
+      ${maePlanHTML()}
     </div>
 
     <div class="card">
@@ -3820,9 +3229,10 @@ function renderSpecials(freeMonth, refDate=new Date()) {
           ✅ Cuotas a 0% — se liquidan solas
         </div>
         ${zeroDebts.map(d=>{
-          const projB=pb(d);
+          // La última cuota y las que van: una sola cuenta con las suscripciones (CIFRAS.cuotas).
+          const projB=pb(d), Q=window.CIFRAS&&CIFRAS.cuotas?CIFRAS.cuotas(d):null;
           const dMonths=d.min>0?Math.ceil(projB/d.min):0;
-          const dEnd=addM(now,dMonths);
+          const dEnd=Q&&Q.ultima?Q.ultima:addM(now,dMonths);
           const totalMonths=d.total>0&&d.min>0?Math.round(d.total/d.min):0;
           const paidMonths=totalMonths-dMonths;
           const dPct=totalMonths>0?Math.min(100,(paidMonths/totalMonths)*100):0;
@@ -3849,19 +3259,19 @@ function renderSpecials(freeMonth, refDate=new Date()) {
           // semanas, no en los meses que daría el mínimo. Es la misma fecha que el Dashboard y Coach.
           const PB=(d.id==='d001'&&window.CIFRAS&&CIFRAS.planBbva)?CIFRAS.planBbva():null;
           if(PB&&PB.fin&&(PB.abonos||[]).length){
-            const hoyI=CIFRAS.fechaLocal(new Date()), tot=PB.abonos.reduce((s,a)=>s+a.monto,0);
-            const pag=PB.abonos.filter(a=>a.fecha<=hoyI).reduce((s,a)=>s+a.monto,0), finD=new Date(PB.fin);
-            if(tot-pag>0) return `<div style="background:rgba(255,217,61,.06);border-radius:8px;padding:11px 14px;border:1px solid rgba(255,217,61,.15)">
+            // El saldo vivo y lo pagado desde que arrancó su plan: lo mismo que el Plan Maestro y Mis Metas.
+            const AB=CIFRAS.avanceBbva?CIFRAS.avanceBbva(S):null, finD=new Date(PB.fin), debe=+d.balance||0;
+            if(debe>0) return `<div style="background:rgba(255,217,61,.06);border-radius:8px;padding:11px 14px;border:1px solid rgba(255,217,61,.15)">
             <div class="flex jb aic" style="margin-bottom:5px">
               <span style="font-size:12px;font-weight:700;color:var(--warning)">${d.name}</span>
               <span style="font-size:11px;font-weight:600;color:var(--warning)">en cero el ${finD.getDate()} ${['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][finD.getMonth()]}</span>
             </div>
             <div class="pbar" style="height:7px;margin-bottom:5px;background:rgba(var(--ov),.09)">
-              <div class="pfill" style="width:${Math.round(pag/tot*100)}%;background:var(--warning);box-shadow:0 0 8px var(--warning)"></div>
+              <div class="pfill" style="width:${AB?Math.round(AB.pct):0}%;background:var(--warning);box-shadow:0 0 8px var(--warning)"></div>
             </div>
             <div class="flex jb">
               <span class="ts tm">Quincena a quincena · ${fmt(PB.intereses||0)} de intereses</span>
-              <span class="ts" style="color:var(--text2)">Debe según el plan: <strong style="color:var(--warning)">${fmt(Math.round((tot-pag)*100)/100)}</strong></span>
+              <span class="ts" style="color:var(--text2)">Debes hoy: <strong style="color:var(--warning)">${fmt(debe)}</strong></span>
             </div>
           </div>`;
           }
@@ -4031,7 +3441,8 @@ function renderSubscriptions(refDate=new Date()) {
       // que aproximar meses con bloques de 30 días se desfasaba y quitaba una cuota de más.
       const remaining = d.min>0 ? Math.ceil(d.balance/d.min) : 0;
       // Última cuota = este mes + (restantes − 1), en el día de cobro de la deuda.
-      const endD = new Date(now.getFullYear(), now.getMonth()+Math.max(0,remaining-1), d.day||28);
+      const Q = window.CIFRAS && CIFRAS.cuotas ? CIFRAS.cuotas(d) : null;
+      const endD = Q && Q.ultima ? Q.ultima : new Date(now.getFullYear(), now.getMonth()+Math.max(0,remaining-1), d.day||28);
       return {...d, _totalM:totalM, _remaining:remaining, _endDate:endD};
     })
     .filter(d=>d._remaining>0)
@@ -4133,12 +3544,12 @@ function renderAlerts() {
   const m=dashMonth||nowYM();
   const el=document.getElementById('d-alerts');
   if(!S.budgets.length){el.innerHTML='<div class="ts tm" style="padding:12px 0">Sin presupuestos. <a href="#" onclick="nav(\'budgets\');return false">Crear uno</a></div>';return;}
-  const alerts=S.budgets.map(b=>{const sp=spentCat(b.cat,m);return{...b,sp,pct:(sp/b.limit)*100};}).filter(b=>b.pct>=70).sort((a,b)=>b.pct-a.pct);
+  const alerts=S.budgets.map(b=>{const sp=spentCat(b.cat,m),lim=budgetLimit(b,m);return{...b,sp,lim,pct:lim>0?(sp/lim)*100:0};}).filter(b=>b.pct>=70).sort((a,b)=>b.pct-a.pct);
   if(!alerts.length){el.innerHTML='<div class="alert a-ok">✅ Todos los presupuestos bajo control.</div>';return;}
   el.innerHTML=alerts.map(b=>`
     <div class="alert ${b.pct>100?'a-err':'a-warn'}">
       ${b.pct>100?'🔴':'🟡'} <strong>${b.cat}</strong>: ${b.pct.toFixed(0)}% usado
-      <span style="opacity:.7;margin-left:4px">(${fmt(b.sp)} / ${fmt(b.limit)})</span>
+      <span style="opacity:.7;margin-left:4px">(${fmt(b.sp)} / ${fmt(b.lim)})</span>
     </div>`).join('');
 }
 
@@ -4195,6 +3606,20 @@ function seedData() {
   // El seed de deudas vive en el módulo común; si no cargó, hay que verlo, no adivinarlo.
   if(!window.CIFRAS) console.error('[Finanzas] No cargó ../Dashboard/datos-maestros.js: el seed se sembrará SIN deudas. Revisa la ruta del <script src> en el <head>.');
   if (localStorage.getItem(KEY+'_v') === SEED_VER) return;
+  /* NUNCA SE BORRA LO QUE YA TIENES. Subir SEED_VER sembraba de nuevo encima de los datos de Adán y solo
+     rescataba el historial de indicadores: sus movimientos, saldos y metas se perdían. Desde el 19-oct-2026 un
+     navegador con datos no se vuelve a sembrar: los cambios de forma van como migraciones en el maestro
+     (MIGRACIONES) y aquí solo se marca la versión. La semilla es para un navegador en blanco. */
+  try {
+    const _ya = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (_ya && Array.isArray(_ya.debts) && _ya.debts.length) {
+      console.warn('[Finanzas] SEED_VER cambió, pero este navegador ya tiene datos: no se resiembra (los cambios van por MIGRACIONES).');
+      localStorage.setItem(KEY+'_v', SEED_VER);
+      return;
+    }
+  } catch(e) { /* datos ilegibles: se respaldan abajo antes de sembrar */ }
+  // Lo que hubiera (aunque ilegible) se guarda tal cual antes de sembrar.
+  try { const _r = localStorage.getItem(KEY); if (_r) localStorage.setItem(KEY+'_respaldo', _r); } catch(e) {}
   // REGLA FIJA: `indicatorHistory` (historial mensual de Indicadores) nunca debe
   // perderse en un reseed. A diferencia del resto de este seed (transacciones, deudas,
   // metas...), que sí es contenido que Claude mantiene a mano para reflejar la

@@ -2576,14 +2576,15 @@ function promptsDeLoTocado() {
    Dashboard la vuelve a llamar cuando cambia la fecha (ceNuevoDia). */
 (function () {
   const M = leer('Dashboard/datos-maestros.js'), mal = [];
-  const iCarga = M.indexOf('if (aplicarPlanBbva()) leer();'), iProy = M.indexOf('PROYECCION.meses = proyectar();');
-  if (iCarga === -1) mal.push('el maestro ya no resta los abonos del plan al cargar (aplicarPlanBbva)');
+  const iCarga = M.indexOf('if (aplicarPlanBbva() + aplicarPagosFijos()) leer();'), iProy = M.indexOf('PROYECCION.meses = proyectar();');
+  if (iCarga === -1) mal.push('el maestro ya no anota solos los abonos de la BBVA y las mensualidades al cargar (aplicarPlanBbva + aplicarPagosFijos)');
   else if (iProy !== -1 && iCarga > iProy) mal.push('el maestro resta los abonos después de la proyección: la proyección nacería con el saldo viejo');
   const reloj = (dash.match(/function tickClock\(\)\{[\s\S]*?\n\}/) || [''])[0];
   if (reloj.indexOf('ceNuevoDia()') === -1) mal.push('el reloj del Dashboard ya no nota el cambio de día (ceNuevoDia)');
   if (!/function ceNuevoDia\(\)\{[\s\S]*?CIFRAS\.aplicarPlanBbva\(\)/.test(dash)) mal.push('ceNuevoDia ya no resta los abonos que llegaron');
+  if (!/function ceNuevoDia\(\)\{[\s\S]*?CIFRAS\.aplicarPagosFijos\(\)/.test(dash)) mal.push('ceNuevoDia ya no anota las mensualidades que llegaron');
   if (mal.length) problemas.push('La BBVA dejó de actualizarse con los días:\n     ' + mal.join('\n     '));
-  else ok.push('BBVA: los abonos del plan se restan solos al cargar y al cambiar el día con el Dashboard abierto');
+  else ok.push('BBVA y mensualidades: los abonos del plan y las mensualidades fijas se anotan solos al cargar y al cambiar el día con el Dashboard abierto');
 })();
 
 /* ── 38. Cada mes de cada fase tiene su plan completo ───────────────────────────────────────────────
@@ -2643,6 +2644,44 @@ function promptsDeLoTocado() {
   try { ruta = require('child_process').execSync('git config --get core.hooksPath', { cwd: RAIZ, encoding: 'utf8' }).trim(); } catch (e) { ruta = ''; }
   if (malos.length) problemas.push('Hábitos a los otros dispositivos:\n     ' + malos.join('\n     '));
   else ok.push('Hábitos: el hook de pre-commit los exporta y el Dashboard los trae (' + det + ')' + (ruta ? '' : ' — en esta copia falta activar el hook: git config core.hooksPath Claude_Proyecto/.githooks'));
+})();
+
+/* ── 40. Finanzas no se queda atrás ──────────────────────────────────────────────────────────────────
+   Adán, 19-oct-2026: "siempre en finanzas algo está desactualizado, revísalo, arréglalo y que no vuelva a
+   pasar". Lo que se quedaba atrás eran copias y modelos propios: una lista de acciones de junio
+   (WEEKLY_PICKS), un estimado de ahorro y una proyección con rendimiento inventado que contradecían al plan,
+   la BBVA contada como la suma de lo que el plan suponía en vez de su saldo vivo, el auto y el iPhone con el
+   saldo del día en que se dijeron, dos fechas distintas para la última cuota del iPhone, presupuestos fijos
+   escritos a mano y una resiembra que borraba los datos. Cada uno vuelve a fallar aquí. */
+(function () {
+  const F = leer('Finanzas/Finanzas.html'), M = leer('Dashboard/datos-maestros.js'), mal = [];
+  if (/WEEKLY_PICKS\s*=/.test(F)) mal.push('Finanzas volvió a tener su propia lista de acciones (WEEKLY_PICKS): la da Qué invertir hoy');
+  if (F.indexOf('../Dashboard/inversion-hoy.js') === -1) mal.push('Finanzas ya no carga inversion-hoy.js (Qué invertir hoy)');
+  if (/0\.10\s*\/\s*12|\*\s*1\.15\b|monthGBMCalc|scE_mo/.test(F)) mal.push('Finanzas volvió a proyectar con un modelo propio (sobrante estimado o rendimiento supuesto): la proyección es la del maestro');
+  if (F.indexOf('CIFRAS.gbmMes') === -1) mal.push('el plan de inversiones de Finanzas ya no sale de CIFRAS.gbmMes');
+  if (/Debe según el plan|debe hoy según tu plan/.test(F) || F.indexOf('CIFRAS.bbvaEstado') === -1 && F.indexOf('C.bbvaEstado') === -1) mal.push('Finanzas volvió a contar la BBVA con lo que el plan suponía, no con su saldo vivo (bbvaEstado)');
+  if ((F.match(/CIFRAS\.cuotas\(d\)/g) || []).length < 2) mal.push('la última cuota de las deudas a plazo ya no sale de una sola cuenta (CIFRAS.cuotas) en la hoja de ruta y en las suscripciones');
+  if (F.indexOf('function budgetLimit') === -1 || /\(sp\/b\.limit\)/.test(F)) mal.push('los presupuestos fijos volvieron a leer el límite escrito a mano en vez del plan (budgetLimit)');
+  const iBorra = F.indexOf('localStorage.removeItem(KEY);'), iGuarda = F.indexOf("no se resiembra");
+  if (iBorra !== -1 && (iGuarda === -1 || iGuarda > iBorra)) mal.push('seedData puede volver a borrar los datos de un navegador que ya los tiene');
+  // Toda deuda a plazo viva del seed lleva `pagosAl`: sin él, su saldo se congela.
+  try {
+    const C = global.window && global.window.CIFRAS;
+    (C ? C.DEUDAS_SEED : []).forEach(function (d) {
+      if (d.type !== 'credit_card' && +d.balance > 0 && +d.min > 0 && +d.day > 0 && !d.pagosAl) mal.push(d.id + ' (' + d.name + ') es una deuda a plazo sin pagosAl: sus mensualidades no se aplicarían solas');
+    });
+  } catch (e) {}
+  if (M.indexOf('function aplicarPagosFijos') === -1) mal.push('el maestro ya no tiene aplicarPagosFijos');
+  if (mal.length) problemas.push('Finanzas se puede volver a quedar atrás:\n     ' + mal.join('\n     '));
+  else ok.push('Finanzas al día: sin listas ni proyecciones propias, la BBVA con su saldo vivo, las mensualidades solas, una sola cuenta de las cuotas, los presupuestos fijos del plan y una resiembra que no borra');
+  // Lo que Claude investiga para Qué invertir hoy envejece: se avisa (actualizarlo cuesta una corrida de Claude).
+  ['inversion-hoy.js', 'inversion-alto.js', 'inversion-superalto.js'].forEach(function (f) {
+    try {
+      const m = /"generado"\s*:\s*"(\d{4}-\d{2}-\d{2})/.exec(leer('Dashboard/' + f));
+      const dias = m ? Math.round((new Date() - new Date(m[1] + 'T12:00:00')) / 86400000) : null;
+      if (dias != null && dias > 14) avisos.push('Qué invertir hoy · ' + f + ' se investigó hace ' + dias + ' días: actualízalo antes de comprar (el botón 🤖 del panel o inversion-actualizar.ps1)');
+    } catch (e) {}
+  });
 })();
 
 // ── Salida ──

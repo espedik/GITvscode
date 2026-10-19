@@ -191,7 +191,8 @@ Finanzas.html es la fuente de los saldos de todo el proyecto: transacciones, pre
 - Cada gasto registrado el mismo día; el saldo de la cuenta coincide con el banco.
 
 ## Al modificar esta página
-- Los saldos solo cambian por lo que Adán reporta —un saldo que dice, como migración en el maestro, o un movimiento que anota: una compra con la tarjeta o un pago la mueven solos— y por los abonos de su plan de la BBVA, que se anotan solos el día que tocan, marcados como del plan, y él corrige si no fueron así: nunca se inventa otro movimiento.
+- Los saldos solo cambian por lo que Adán reporta —un saldo que dice, como migración en el maestro, o un movimiento que anota: una compra con la tarjeta o un pago la mueven solos— y por los abonos de su plan de la BBVA y las mensualidades fijas (el auto, el iPhone), que se anotan solos el día que tocan, marcados como del plan, y él corrige si no fueron así: nunca se inventa otro movimiento.
+- Nada se estima con un modelo propio: lo que va a GBM, la proyección de la maestría y los presupuestos fijos salen del plan del maestro, y lo que se compra, de Qué invertir hoy. Una cifra que otra pantalla también dice se lee de la misma función.
 - Toda cifra que se repita en otra app sale del maestro.
 - Una gráfica entra solo si responde una pregunta de dinero mejor que una cifra.`
     },

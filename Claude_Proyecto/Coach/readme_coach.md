@@ -238,7 +238,7 @@ Los saldos y datos personales que salen en la prosa vienen de `../Dashboard/dato
 esta app carga en el `<head>`. En el HTML se escribe un marcador y el módulo lo sustituye:
 
 ```html
-<p>un crédito de {{autoSaldo}}</p>     →     un crédito de $283,000
+<p>un crédito de {{autoSaldo}}</p>     →     un crédito de $279,363
 ```
 
 Se resuelven con `CIFRAS.aplicarDOM()`, que recorre los nodos de texto. Hay **una segunda llamada
