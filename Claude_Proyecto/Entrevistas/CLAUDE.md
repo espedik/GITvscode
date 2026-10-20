@@ -39,13 +39,12 @@ App estática de una sola página (sin build, sin servidor — se abre con doble
 - Las secciones de **Quiz** (`quiz-section`/`quiz-card`, con `toggleQuiz()` de `core.js`) son
   contenido legítimo —exámenes de práctica en 6 módulos— y no se borran.
 - `data-devops.js` lleva también los 10 temas del módulo `linux`, que no tiene archivo propio.
-- `js/data-python-intro.js` → `PY_INTRO`: explicación en español llano de cada tema de Python. **No
-  la carga `entrevistas.html`**; la consume solo `_generar-datos-dashboard.js` para el Dashboard
-  (ver `readme_entrevistas.md`).
+- `js/data-python-intro.js` → `PY_INTRO`: explicación en español llano de cada tema de Python. La carga
+  `entrevistas.html` antes de `ui.js`, y `introPython()` la pone arriba de cada tema (ver `readme_entrevistas.md`).
 
 ## Al hacer cambios
 
 - Para editar un tema puntual: identifica el módulo (`mod` en `T`) y edita solo el `js/data-*.js` correspondiente — no hace falta tocar `entrevistas.html` ni los demás archivos.
 - Para agregar un tema nuevo: añadir entrada en `js/core.js` (objeto `T`) + contenido en el `data-*.js` del módulo correspondiente.
-- Si el tema es de Python (`pyfund`, `poo`, `testing`, `pycheat`), correr `node Entrevistas/_generar-datos-dashboard.js`: la ventana de Python del Dashboard lo lee de ahí, y el control 34 de `Dashboard/verificar-sincronia.js` avisa si se olvida.
+- Si el tema es de Python (`pyfund`, `poo`, `testing`, `pycheat`), lleva su entrada en `js/data-python-intro.js` (qué es, para qué sirve, lo que importa).
 - No hay build ni bundler: los cambios se ven recargando `entrevistas.html` directamente en el navegador.

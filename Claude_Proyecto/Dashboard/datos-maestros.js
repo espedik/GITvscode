@@ -9,9 +9,8 @@
    El único sitio donde se escribe un dato sobre Adán o sobre su plan. Las apps no repiten
    números: los leen de aquí. Cambias un dato una vez y las cuatro pantallas lo dicen igual.
 
-   Vive en `Dashboard/` porque el Dashboard es el centro del proyecto y ahí ya viven los otros
-   archivos de datos (`aleman-data.js`, `entrevistas-data.js`). Las demás apps lo cargan con una
-   ruta relativa: `<script src="../Dashboard/datos-maestros.js"></script>`.
+   Vive en `Dashboard/` porque el Dashboard es el centro del proyecto. Las demás apps lo cargan con
+   una ruta relativa: `<script src="../Dashboard/datos-maestros.js"></script>`.
 
    EL MAPA ESTÁ EN `DATOS-MAESTROS.md`, en esta misma carpeta: qué variable existe, qué vale hoy
    y quién la usa. Ese `.md` es el índice para leer rápido sin abrir 900 KB de HTML.

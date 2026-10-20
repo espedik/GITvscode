@@ -101,7 +101,6 @@ El Dashboard es la cabina de mando: tiene que responder en segundos **¿qué hag
 - Antes de añadir algo, pregúntate qué se quita.`,
       vistas: [
         { si: '#alemanOverlay.open', clave: 'aleman' },
-        { si: '#pythonOverlay.open', clave: 'entrevistas' },
         { si: '#istqbOverlay.open', clave: 'entrevistas' },
         { si: '#gbmOverlay.open', clave: 'invertir' },
         { si: '#didiOverlay.open', clave: 'didi' },
@@ -445,7 +444,7 @@ entrevistas.html es el temario: arquitectura, protocolos (CAN, LIN, Ethernet, XC
 
 ## Con quién trabajas
 - Mis Metas lleva la certificación ISTQB CT-GenAI (con su simulacro) y la de trabajar remoto: este temario las alimenta.
-- En qué invertir tu tiempo decide cuánto pesan Código, IA y Datos en la semana; Mi Día enseña el tema de Python de hoy y lo abre entero en su ventana, con la explicación en llano primero: lo que se marca ahí cuenta aquí. La pregunta del ISTQB de hoy también tiene su ventana: se contesta antes de leer el porqué, y lo que falla queda en una lista con su sección del syllabus.
+- En qué invertir tu tiempo decide cuánto pesan Código, IA y Datos en la semana. La pregunta del ISTQB de hoy tiene su ventana en Mi Día: se contesta antes de leer el porqué, y lo que falla queda en una lista con su sección del syllabus.
 - Coach decide a qué puestos apuntar; Vestimenta prepara el outfit; Qué escuchar repasa temas al volante.
 
 ## Cómo sabes que funciona
@@ -457,7 +456,7 @@ entrevistas.html es el temario: arquitectura, protocolos (CAN, LIN, Ethernet, XC
 - La estructura de datos y el orden de carga están en Entrevistas/CLAUDE.md y se respetan.
 - El contenido técnico es exacto y vigente (versiones de normas, ISTQB actual); lo dudoso se verifica.
 - Cada tema nuevo trae su quiz.
-- Un tema de Python nuevo o cambiado se regenera para el Dashboard (node Entrevistas/_generar-datos-dashboard.js); el verificador avisa si no.`
+- Cada tema de Python abre con su explicación en llano —qué es, para qué sirve, lo que importa— antes de la jerga: un tema nuevo trae la suya en js/data-python-intro.js.`
     },
 
     aeroresinas: {
@@ -601,7 +600,8 @@ Mi Día es la pantalla que más se usa: la agenda en franjas de mañana, tarde y
 - Lo primero que se ve es el AHORA; todo lo demás compite por atención y tiene que ganársela.
 - La agenda sale de la rutina y del calendario del maestro: no se escriben horas a mano.
 - Cada módulo nuevo responde a una pregunta del día; si no, va a otra pantalla.
-- Hoy aprendes nunca elige al azar: cada renglón sigue el orden de Coach y «Cómo lo decide Coach» enseña su porqué. Una regla nueva entra en ese orden y en ese panel.`
+- Hoy aprendes nunca elige al azar: cada renglón sigue el orden de Coach y «Cómo lo decide Coach» enseña su porqué. Una regla nueva entra en ese orden y en ese panel.
+- Todo resumen lo entiende alguien que no conoce la app: cada tarjeta dice primero de qué se trata, en una frase corta, y ninguna cifra va sin decir de qué es (nada de K10, Cap. o 1/6 sueltos). La letra puede ser chica; lo que no puede es ser críptico.`
     },
 
     planmaestro: {

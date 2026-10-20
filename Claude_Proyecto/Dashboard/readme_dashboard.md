@@ -26,10 +26,9 @@ en una página.
 | `ficha.js` · `ficha.css` | El panel de ficha de producto (`pfAbrirId`, `pfPorNombre`, `.lc-info`) que usan la Lista de Compras y la rutina |
 | `examen-genai.js` · `examen-genai-data.js` (A, 79 preguntas) · `examen-genai-data-b.js` (B, 77) | El simulacro ISTQB CT-GenAI: motor y los dos bancos |
 | `syllabus/` (**fuera de git**) | La copia local del syllabus CT-GenAI LATAM: el PDF y `ct-genai-syllabus.js`, el texto de cada sección con su página. Su aviso de derechos solo permite reproducirlo en parte y para uso privado, así que no va al repositorio público (`.gitignore`) |
-| `entrevistas-data.js` · `entrevistas-temas.js` | Los 41 temas de Python de Entrevistas: el catálogo (`ENTREVISTA_TEMAS`, `PY_MOD_LABEL`, 10 KB), con el que la tarjeta *Hoy aprendes* de Mi Día nombra el tema del día, y su contenido con su CSS (`ENTREVISTA_CONTENT`, `ENTREVISTA_CSS`, ~1 MB), que solo carga la ventana de Python al abrirse (`pythonCargar()`). Los genera `Entrevistas/_generar-datos-dashboard.js`; **no se editan a mano**, y el control 34 avisa si se quedan atrás |
 | `sin-zoom.js` | Bloqueo del zoom en táctil. Lo cargan las seis apps |
 | `prompt-pagina.js` · `prompts-paginas.js` | El icono de la brújula que llevan **todas** las páginas del proyecto y los prompts que abre: el especialista que gobierna cada una (ver `DATOS-MAESTROS.md` → *El prompt de cada página*). En el Dashboard va fijo arriba a la izquierda, donde la barra de apps deja la esquina libre |
-| `fotos-aprende/` | Las 45 fotos de *Hoy aprendes* y, las `fase-*` (13), de *Por qué esta fase* (480 px, de Openverse: StockSnap, Flickr y Rawpixel); su crédito va en `AP_FOTOS` y sale en el `title` de cada una |
+| `fotos-aprende/` | Las 41 fotos de *Hoy aprendes* y, las `fase-*` (13), de *Por qué esta fase* (480 px, de Openverse: StockSnap, Flickr y Rawpixel); su crédito va en `AP_FOTOS` y sale en el `title` de cada una |
 | `diseno-*/` | Los canvas de cada rediseño: `Main.dc.html` (lo elegido) y las direcciones descartadas al lado |
 | `readme_dashboard.md` | Este archivo |
 
@@ -41,7 +40,7 @@ que se ve en su propia página dentro de la ventana del alemán. Se abre con `fi
 cargan con normalidad (los módulos ES no), y es lo que permite compartir archivos entre carpetas.
 
 Orden de carga: `sin-zoom.js` → `datos-maestros.js` → `ficha.js` → `habitos.js` → los tres del
-examen → `../Aleman/vocab-datos.js` → `../Aleman/lecciones-datos.js` → `entrevistas-data.js`. `entrevistas-temas.js` no: lo carga la ventana de Python cuando se abre.
+examen → `../Aleman/vocab-datos.js` → `../Aleman/lecciones-datos.js`.
 
 ---
 
@@ -59,7 +58,6 @@ deja en el objeto `D`:
 | `mirutina_v1` | `ejercicio.html` | `gym` | Rutina y sesiones del gimnasio |
 | `radarp_<id>` | `Coach.html` | `SK[].val` | Nivel de cada una de las 12 habilidades |
 | `coach_checks_v1` | `Coach.html` | *(con `rawGet`)* | Checklist de la fase |
-| `study-done-v2` | `entrevistas.html` | *(con `rawGet`)* | Los temas de Python ya estudiados, para *Hoy aprendes* |
 
 Todas comparten origen porque se abren con `file://`.
 
@@ -172,7 +170,7 @@ La tarjeta de la derecha, bajo la frase del día y `Semana 37 · día 256`. La p
 `pintarBloqueDetalle()`: el bloque de la hora actual o el tocado en la agenda, con sus subtareas
 o la rutina de gym; **Después, 21:00 · Cena ligera** (el que sigue, con su título corto) y, si el
 bloque es de Didi —`esDidi()`: el que empieza por «Didi»; el descanso que solo lo nombra no cuenta—,
-**Mientras manejas** con lo mismo que *Al volante* de Hoy aprendes (`didiHoy()`): el audiolibro de la
+**Mientras manejas** con lo mismo que *Para escuchar manejando* de Hoy aprendes (`didiHoy()`): el audiolibro de la
 semana en el primer bloque y el podcast del día en los demás; el fin de semana, el audiolibro. Y el
 enlace a *Qué escuchar*.
 
@@ -199,9 +197,11 @@ línea de dosis; a 1440×900, 1366×768 y 1280×800, apretadas y sin desplazar.
 
 ### Los módulos
 
-Rejilla de dos columnas que toma lo que queda de alto. **A la izquierda**, un tercio: *Entrenas*
-arriba, *Hábitos de hoy* abajo y, al pie, *Qué invertir hoy*. **A la derecha**, los dos tercios que
-quedan, a todo lo alto: *Hoy aprendes*. Cada módulo desplaza por dentro.
+Rejilla de dos columnas que toma lo que queda de alto. **A la izquierda**, un tercio: *Entrenas* arriba y
+*Hábitos de hoy* abajo, mitad y mitad. **A la derecha**, los dos tercios que quedan, a todo lo alto:
+*Hoy aprendes*, que lleva *Qué invertir hoy* como una de sus seis tarjetas (Adán: *"quita esta sección
+[Python] y pon ahí el recuadro que tenemos de qué invertir hoy y acomódalo como los demás recuadros"*).
+**Ningún módulo deja hueco al pie**: el alto que sobra lo reparten sus renglones.
 
 Tu dinero y la fase no están en Mi Día (Adán: *"todo eso ya está en la otra página de Coach y se
 repite info, solo déjame lo de invertir hoy"*): sus cifras viven en Coach y en el Plan Maestro.
@@ -209,15 +209,66 @@ repite info, solo déjame lo de invertir hoy"*): sus cifras viven en Coach y en 
 
 | Módulo | Qué muestra | Fuente |
 |---|---|---|
-| **Entrenas** | El día que se mira —hoy, o el que tocaste en la tira— en grande (si no es hoy, su nombre en verde arriba), **sus ejercicios** con series×reps y peso, en una línea los tres días que siguen y la tira de 7 días como chips de foto (`#heroWeekStrip`, 52 px). El peso es el último que registró Ejercicio (naranja; mismo criterio que su `ejUltimo()`) o el inicial de `EJ_PESO_INI` (gris), solo en kg; un ejercicio con todas sus series hechas ese día va en verde, y tocar su nombre abre **su ficha** (ver *La ficha de un ejercicio*, abajo). *Ejercicio →* (`#diaEntrenaLink`) abre el día elegido con `?dia=N`. `.dia-entrena` es `display:contents`: la lista es lo único que cede alto y, si ni así cabe (bajo 1280 px de ancho), desplaza la tarjeta. Con 440 px de alto o más, bajo cada ejercicio va su indicación (`.de-ex-cue`, la misma de su `title`) y la tira crece a 92 px | `renderDiaEntrena()` sobre `D.gym.rutina` o `GYM_RUTINA_DEFAULT`; el ✅ sale de `gymSesiones()`, que normaliza `mirutina_v1.sesiones` (objeto por fecha desde el 1-sep-2026, lista antes) |
-| **Hábitos de hoy** | Los que tocan hoy con ancla, racha (🔥 desde 3) y `2 de 5`; se marcan aquí mismo. **Caben todos sin desplazar**: letra chica (11.5 px el nombre, 9.5 px el ancla) con el ancla debajo y, si la lista no cabe así, `.compacto` pone el ancla en la misma línea, cortada con `…` y completa en el `title`. `renderDiaHabitos()` lo decide midiendo la lista, también al cambiar el tamaño de la ventana. Medido con 9 hábitos: a 1920×1080 en dos líneas; a 1600×1000, 1536×864 y 1440×900 en una (20 px por fila); a 1366×768 todavía queda uno abajo. Con 440 px de alto o más (a 2560×1440 mide unos 490) la letra y el aire de cada renglón suben (`@container`) | `HB.hoy()` / `HB.toggleHoy()`, la API que expone `habitos.js` — el mismo toggle de la cuadrícula |
-| **Hoy aprendes** | **Seis partes iguales** (Adán: *"estos 6 quiero que los dividas en partes iguales en el diseño de esta sección y que se vea bien, con info resumida pero importante"*): el alemán —el vocabulario de hoy y la lección que toca—, *Al volante*, Python, la pregunta del ISTQB, el paso de la semana y la ficha de Habilidades Base, cada una en su tarjeta (`apTarjeta()`) con la misma anatomía —la foto, la materia con su estado y sus controles, y lo que aprendes en bloques en orden de importancia— y sin cajas: las separa el aire. **Lo decide Coach**: cada tarjeta sale del orden de su plan, nunca del azar, y junto al título **«Cómo lo decide Coach»** (`abrirComoDecide()`) abre el panel con lo que manda y el porqué de lo de hoy (abajo, *Lo decide Coach*). **Todo lleva foto** (Adán: *"todo quiero que tenga imágenes, no dejes nada vacío y menos con solo iconos"*): el alemán, la del tema de su vocabulario o de su familia (`apFotoAleman()`; en su ventana, la lección lleva la suya, `apFotoLeccion()`, de `Aleman/fotos/`); Python, la de su módulo; el ISTQB, la de su capítulo; *Al volante* y el paso, la portada del libro (`apFotoLibro()`) o, sin libro, la de su habilidad (`apFotoSk()`; Networking, Ventas, Liderazgo, Finanzas y Mentalidad usan la de su ficha de Habilidades Base), y la ficha, la suya. Arriba, la fecha, `N de 6` y una barra de seis tramos, uno por tarjeta, que se llena con lo hecho hoy: el alemán al abrir su ventana, al practicar sus palabras o al hacer un ejercicio de una lección (`alemanPracticoHoy()`), *Al volante* al tocar lo que vas a escuchar, Python al marcar estudiado el de hoy —en su ventana o en Entrevistas— o cualquiera en su ventana (`vistos.py`), el ISTQB al contestarlo y el paso de la semana y la ficha al abrirlos (`aprendeVisto('paso')`, `aprendeVisto('hb')`). **La rejilla se acomoda a su propio ancho** (es el contenedor `aprende`): desde 760 px, 3×2, con la foto arriba a todo lo ancho —un libro, en su 2:3 sobre su propia portada desenfocada— y los controles encima de ella; desde 440 px, 2×3, con la foto a la izquierda (en una tarjeta de menos de 280 px, «Siguiente» se queda en su flecha); más angosto, una columna. **Lo que dice cada una, resumido**: **el alemán**, arriba el vocabulario de hoy —cuántas palabras y repasos, la primera en grande con su artículo y su plural o, si es verbo, su Perfekt, y las siguientes en una línea— y debajo la lección que toca —por qué toca (*Sigue donde te quedaste · K10 · 06*), su título en alemán, un tramo por ejercicio y cuántos llevas—; donde sobra alto, el ejemplo traducido (se omite si repite la frase) y el `uso`; **Al volante**, el audiolibro de la semana con la hora del trayecto, el podcast del otro turno y de qué trata el libro —los títulos abren la búsqueda en Spotify; la foto y *Qué escuchar*, el panel—; **Python**, el tema con su explicación, sus palabras clave y cuántos llevas; **el ISTQB**, la pregunta con *Responder*, lo que vale (*K3 · 2 puntos*), tu marcador de 7 días y, sin contestar, las cuatro opciones o, contestada, el porqué; **el paso de la semana** (`aprendeFoco()`), un tramo por paso, *Qué hacer* (su frase en negritas, como con resaltador), *Después*, el libro, *Por qué* y *La idea del libro*; **la ficha en curso** (`hbEnCurso()`), un tramo por paso, el paso que toca con su entrada en tres líneas, *Por qué* te toca según el plan de Coach (`hbPlan()`), *Después* y sus puntos, un renglón cada uno con su nombre primero (`apPunto()`). *Al volante* y Python cierran con **«Lo que sigue»**: lo que traerán ↻ y los días que vienen (`aprendeLuego()`; los audiolibros, `didiLibrosLuego()`). Las cuatro del día llevan ↻ (`aprendeOtra()`; en el alemán trae las diez palabras siguientes: la lección se cambia en su ventana); el paso y la ficha, **«‹» / «Siguiente ›»** (`apSiguiente()`; Adán: *"si no me gusta alguna de las que me recomiendas, pon un botón como que siguiente"*): pasas a otra opción y la elección se queda; mientras no sea la recomendada, la materia dice *elegida por ti* y «↺» vuelve a ella. El paso recorre las habilidades con ruta —primero las del plan, después por retorno (`habConRuta()`)— sin tocar la ruta abierta en *En qué invertir tu tiempo*; *Al volante* sigue ese foco. Las dos elecciones se guardan en `dash-avance-v1`, que también decide «SIGUIENTE» en Habilidades Base. **En escritorio las seis miden lo mismo** y toman el alto que le queda a la columna (104 px como mínimo en 2×3 y 200 en 3×2 —así caben mientras el AHORA enseña una rutina—; con menos, desplaza); en 3×2 la foto es el 34 % del alto de la tarjeta (el 40 % en una tarjeta de 440 px de alto o más) y lo de apoyo (`.ap-opc`) solo sale en escritorio. `apAjustar()` quita lo que no cabe entero y recorta el primer bloque que no cabe a las líneas que le quedan, con «…» —nunca a media línea—, al pintar, al cambiar el tamaño de la ventana y al terminar de cargar cada fuente; en el teléfono el texto va en el flujo, con su tope de líneas. Medido: a 2048×1040 —la pantalla de Adán, 2560 al 125 %— cada tarjeta mide 284×306 y enseña lo esencial de cada una; a 1920×1080, 258×325; a 2560×1440, 386×498, con «Lo que sigue» y las opciones del ISTQB; a 1600×1000, 303×175 en 2×3; a 1440×900, 254×146; a 1366×768, 231×105, y a 1280×800, 223×116, con la materia, la foto y el título. En ninguno desplaza la columna; a 390 px va en una columna sin desbordes. Tocar una tarjeta la abre donde se estudia: el alemán, en su ventana aquí mismo —en el vocabulario, o en la lección si tocas la lección— (`abrirAleman()`; abajo, *La ventana del alemán*); Python, también en su ventana (`abrirPython()`; abajo, *La ventana de Python*); el ISTQB, su ventana; el paso, *En qué invertir tu tiempo*, y la ficha, la suya. La bandera es CSS (`.flag-de`): el emoji 🇩🇪 sale como «DE» en Windows | `renderHeroAprender()` con `alemanHoyHtml()`, `escucharHoyHtml()`, `pythonHoyHtml()`, `istqbHtml()`, `pasoSemanaHtml()` y `fichaEnCursoHtml()`, todas por `apTarjeta()` —las del día, por `apFila()`, que le pone ↻—; lo de cada día, de `alemanVocabHoy()`, `alemanLeccionHoy()` (la regla del catálogo de lecciones de la app de Alemán), `didiHoy()`, `entrevistaTemaHoy()` e `istqbPreguntaHoy()` (abajo, *Lo decide Coach*) |
-| **Qué invertir hoy** | Al pie de la primera columna: el paso que toca hoy, en el orden del plan (Adán, 5-oct-2026, y el prompt del Plan Maestro) —*Primero la BBVA* mientras tenga saldo (quincena a quincena hasta `{{bbvaCero}}`; hoy no compras nada más) o *Hoy sí inviertes* (todo a GBM; los primeros pesos completan el colchón, porque el fondo ya no recibe aporte)— en su color, con su porqué en una línea y *Abrir →*. El BYD no entra: se paga con su mensualidad. Tocarlo abre el panel completo | `pintarInvertirBtn()` sobre `pasoInversionHoy()`, la misma regla que el panel; `#diaInvertirBtn` → `abrirGBM()` |
+| **Entrenas** | El día que se mira —hoy, o el que tocaste en la tira— en grande (si no es hoy, su nombre en verde arriba), **sus ejercicios** con series×reps y peso, en una línea los tres días que siguen y la tira de 7 días como chips de foto (`#heroWeekStrip`). El peso es el último que registró Ejercicio (naranja; mismo criterio que su `ejUltimo()`) o el inicial de `EJ_PESO_INI` (gris), solo en kg; un ejercicio con todas sus series hechas ese día va en verde, y tocar su nombre abre **su ficha** (ver *La ficha de un ejercicio*, abajo). *Ejercicio →* (`#diaEntrenaLink`) abre el día elegido con `?dia=N`. `.dia-entrena` es `display:contents`: **la lista y la tira se reparten el alto que sobra** —cada renglón crece con lo suyo al centro y la tira va de 52 a 92 px—, y bajo cada ejercicio va su indicación (`.de-ex-cue`, la misma de su `title`) donde cabe: `deAjustar()` la prueba en dos líneas, luego en una y, si ni así cabe la lista entera, la quita (al pintar y al cambiar el tamaño; en el teléfono no va). Medido: a 2048×1040 la tarjeta mide 427×346, sin indicaciones y con la tira en 85 px; a 2560×1440, 555×539, con las indicaciones en dos líneas; a 1366×768 y 1280×800 la lista ya no cabe entera y desplaza por dentro | `renderDiaEntrena()` sobre `D.gym.rutina` o `GYM_RUTINA_DEFAULT`; el ✅ sale de `gymSesiones()`, que normaliza `mirutina_v1.sesiones` (objeto por fecha desde el 1-sep-2026, lista antes) |
+| **Hábitos de hoy** | Los que tocan hoy con ancla, racha (🔥 desde 3) y `2 de 5`; se marcan aquí mismo. **Caben todos sin desplazar**: letra chica (11.5 px el nombre, 9.5 px el ancla) con el ancla debajo y, si la lista no cabe así, `.compacto` pone el ancla en la misma línea, cortada con `…` y completa en el `title`. `renderDiaHabitos()` lo decide midiendo la lista, también al cambiar el tamaño de la ventana. **Los renglones se reparten el alto que sobra**, hasta 52 px cada uno (`.dh-list .dh-row`): sin hueco al pie. Medido con 10 hábitos: a 2048×1040, 1920×1080, 1600×1000 y 1440×900 en una línea, repartidos a todo lo alto; a 2560×1440, en dos líneas; a 1366×768 y 1280×800 todavía quedan dos abajo. Con 440 px de alto o más la letra y el aire de cada renglón suben (`@container`) | `HB.hoy()` / `HB.toggleHoy()`, la API que expone `habitos.js` — el mismo toggle de la cuadrícula |
+| **Hoy aprendes** | Seis tarjetas iguales (Adán: *"estos 6 quiero que los dividas en partes iguales en el diseño de esta sección y que se vea bien, con info resumida pero importante"*): el alemán, *Para escuchar manejando*, *Qué invertir hoy*, la pregunta del ISTQB, la habilidad del plan y la ficha de Habilidades Base. **Cada una se entiende sin conocer la app** (abajo, *Las seis tarjetas de Hoy aprendes*) y lo que estudias **lo decide Coach** (abajo, *Lo decide Coach*) | `renderHeroAprender()` con `alemanHoyHtml()`, `escucharHoyHtml()`, `invertirHoyHtml()`, `istqbHtml()`, `pasoSemanaHtml()` y `fichaEnCursoHtml()`, todas por `apTarjeta()` —las del alemán y el ISTQB, por `apFila()`, que le pone ↻— |
 
 **Tamaños.** Bajo 940 px de alto el AHORA baja a 30 vh (34 si va `.apretado`) y desde 1000 px puede llegar a 372 px; bajo 1280 px de ancho la agenda mide 360 px y los módulos siguen en sus dos columnas;
-bajo 900 px, Entrenas y Hábitos van lado a lado y, debajo, a todo lo ancho, Qué invertir hoy y Hoy aprendes; bajo 600 px, uno por fila, en una columna `minmax(0,1fr)` —con `1fr`, el ancla más larga de un hábito ensanchaba la columna y los módulos se salían de la pantalla—. Medido a 390 px: sin desbordes.
+bajo 900 px, Entrenas y Hábitos van lado a lado y, debajo, a todo lo ancho, Hoy aprendes; bajo 600 px, uno por fila, en una columna `minmax(0,1fr)` —con `1fr`, el ancla más larga de un hábito ensanchaba la columna y los módulos se salían de la pantalla—. Medido a 390 px: sin desbordes.
 **Al medir Mi Día, la hora importa**: el alto cambia con el bloque actual y los que
 quedan, así que dos medidas a horas distintas no son comparables.
+
+### Las seis tarjetas de Hoy aprendes
+
+Adán, 19-oct-2026: *"el texto de hoy aprendes, el resumen, ni se entiende para nada, si una persona que no
+sabe de mi app no va a saber ni de qué se trata, debe ser muy claro y muy entendible, aun que hagas la letra
+pequeña para que no se sature visualmente"*. Cada tarjeta (`apTarjeta()`) tiene la misma anatomía —la foto,
+la materia con su estado y sus controles, y lo que aprendes en bloques en orden de importancia— y **abre con
+una frase de qué se trata** (`.ap-que`: 11 px, en gris), antes que lo de hoy. **Nada de siglas sueltas**:
+*K10 · 03* se lee *Lección 3 del capítulo 10* (`alNumTxt()`), *K3* es *caso práctico* (`IQ_K_LLANO`) y las
+cuentas dicen de qué son (*paso 1 de 6*, *0 de 20 pasos*, *3 de 6 hechas*). El control 34 del verificador lo
+vigila. Sin cajas: las separa el aire.
+
+| Tarjeta | Qué dice, en orden de importancia | Tocarla abre |
+|---|---|---|
+| **Alemán** · el tema de su vocabulario | *Tus palabras nuevas de hoy y la lección que sigue en tu curso.* Las diez palabras del día y cuántas tocan de repaso, la primera en grande con su artículo y su plural o, si es verbo, su pasado, su traducción y las otras nueve; la lección que toca —*Lección 3 del capítulo 10 · Sigue donde te quedaste*, su título en alemán con cuántos ejercicios llevas y un tramo por ejercicio—; donde sobra alto, la descripción de la lección, el ejemplo traducido (se omite si repite la frase) y *Cuándo se usa*. Arriba, *Practicar* o *✓ practicaste*; ↻ trae las diez siguientes | Su ventana, aquí mismo (`abrirAleman()`), en el vocabulario; tocar la lección, en la lección |
+| **Para escuchar manejando** · la habilidad del libro | *Un audiolibro por semana y un podcast al día, para cuando manejas.* El audiolibro de la semana con la hora de su trayecto, el podcast o el video de hoy con la suya, *De qué trata* y, donde cabe, *Las próximas semanas*. Los títulos abren la búsqueda en Spotify; ↻, el siguiente audiolibro | La foto y *Qué escuchar*: su panel (`abrirDidi()`) |
+| **Qué invertir hoy** | *Lo que toca hoy con tu dinero, según tu plan de finanzas.* El paso del Plan Maestro en su color —*Primero, pagar la tarjeta BBVA* en rojo mientras tenga saldo; *Hoy sí inviertes: todo a GBM* en verde después—, su porqué con tus saldos de Finanzas (lo que debes y el día en que la ruta la deja en cero), lo que haces hoy (*Hoy abonas … de Didi a la tarjeta, y no compras ninguna inversión*, si la ruta trae un abono hoy) y lo que sigue; donde sobra alto, *Los abonos que siguen* (tres, de la misma ruta que el Plan Maestro, `CIFRAS.planBbva`) y el fondo de emergencia. La foto sigue al paso: la tarjeta cortada o la gráfica. Todo pasa por `money()`: el modo privado tapa las cifras. Sale de `pasoInversionHoy()`, la misma regla que el panel | El panel completo (`abrirGBM()`; ver *Qué invertir hoy*) |
+| **Examen ISTQB · pruebas con IA** | *Una pregunta al día para tu examen de pruebas con IA* con el mes del examen (la tarea `a1-7`). La pregunta, *Capítulo 2 · caso práctico · vale 2 puntos* y el tema del capítulo (`EXAMEN_GENAI.capitulos`); donde sobra alto, tu marcador de 7 días y el último simulacro y, sin contestar, las cuatro opciones o, contestada, el porqué. Arriba, *Responder* o el resultado | Su ventana (`abrirIstqb()`) |
+| **Habilidad** · la del plan (el paso de la semana, `aprendeFoco()`) | *Un ejercicio práctico para subir la habilidad que trabaja tu plan.* El paso, un tramo por paso, *Qué hacer* (su frase en negritas, como con resaltador) y el *Siguiente paso*; donde sobra alto, el libro, *Por qué* y *La idea del libro*. Arriba, *paso 1 de 6* y «‹» / «Siguiente ›» | Su ruta, la de *En qué invertir tu tiempo* (`abrirSkillDetalle()`) |
+| **Habilidades base** | *Guías prácticas para la vida, paso a paso: esta es la que toca.* La ficha en curso (`hbEnCurso()`), un tramo por paso, el paso que toca con su entrada en tres líneas, *Por qué ahora* según el plan de Coach (`hbPlan()`) y el *Siguiente paso*; donde sobra alto, sus puntos, un renglón cada uno con su nombre primero (`apPunto()`). Arriba, *0 de 20 pasos* y «‹» / «Siguiente ›» | Su ficha (`abrirHabilidadDetalle()`) |
+
+**Arriba**, *🎓 Hoy aprendes*, «Cómo lo decide Coach» (`abrirComoDecide()`), la fecha y *N de 6 hechas*, con
+una barra de seis tramos, uno por tarjeta, que se llena con lo hecho hoy: el alemán al abrir su ventana, al
+practicar sus palabras o al hacer un ejercicio de una lección (`alemanPracticoHoy()`), lo de escuchar al tocar
+lo que vas a escuchar, *Qué invertir hoy* al abrir su panel (`aprendeVisto('invertir')`), el ISTQB al contestarlo,
+y la habilidad y la ficha al abrirlas (`aprendeVisto('paso')`, `aprendeVisto('hb')`). En la habilidad y la ficha,
+«‹» / «Siguiente ›» (`apSiguiente()`; Adán: *"si no me gusta alguna de las que me recomiendas, pon un botón como
+que siguiente"*) pasan a otra opción y la elección se queda; mientras no sea la recomendada, la materia dice *la
+elegiste tú* y «↺» vuelve a ella. La habilidad recorre las que tienen ruta —primero las del plan, después por
+retorno (`habConRuta()`)— sin tocar la ruta abierta en *En qué invertir tu tiempo*; lo que escuchas sigue ese
+foco. Las dos elecciones se guardan en `dash-avance-v1`, que también decide «SIGUIENTE» en Habilidades Base.
+
+**Todo lleva foto** (Adán: *"todo quiero que tenga imágenes, no dejes nada vacío y menos con solo iconos"*): el
+alemán, la del tema de su vocabulario o de su familia (`apFotoAleman()`; en su ventana, la lección lleva la suya,
+`apFotoLeccion()`, de `Aleman/fotos/`); el ISTQB, la de su capítulo; lo que escuchas y la habilidad, la portada
+del libro (`apFotoLibro()`) o, sin libro, la de su habilidad (`apFotoSk()`; Networking, Ventas, Liderazgo,
+Finanzas y Mentalidad usan la de su ficha de Habilidades Base); la ficha, la suya, y *Qué invertir hoy*, la de su
+paso. La bandera es CSS (`.flag-de`): el emoji 🇩🇪 sale como «DE» en Windows.
+
+**La rejilla se acomoda a su propio ancho** (es el contenedor `aprende`): desde 760 px, 3×2, con la foto arriba a
+todo lo ancho —un libro, en su 2:3 sobre su propia portada desenfocada— y los controles encima de ella; desde
+440 px, 2×3, con la foto a la izquierda (en una tarjeta de menos de 280 px, «Siguiente» se queda en su flecha);
+más angosto, una columna. **En escritorio las seis miden lo mismo** y toman el alto que le queda a la columna
+(104 px como mínimo en 2×3 y 200 en 3×2; con menos, desplaza); en 3×2 la foto es el 34 % del alto de la tarjeta
+(el 40 % en una tarjeta de 440 px de alto o más) y lo de apoyo (`.ap-opc`) solo sale en escritorio. `apAjustar()`
+quita lo que no cabe entero y recorta el primer bloque que no cabe a las líneas que le quedan, con «…» —nunca a
+media línea—, al pintar, al cambiar el tamaño de la ventana y al terminar de cargar cada fuente; en una tarjeta de
+menos de 130 px de alto la frase de qué se trata se va, para que quepa el título. En el teléfono el texto va en el
+flujo, con su tope de líneas. Medido: a 2048×1040 —la pantalla de Adán, 2560 al 125 %— cada tarjeta mide 401×307
+y enseña lo esencial de cada una; a 1920×1080, 369×327; a 2560×1440, 529×500, con lo de apoyo; a 1600×1000,
+289×288, y a 1440×900, 249×245, en 3×2; a 1366×768, 358×119, y a 1280×800, 326×130, en 2×3, con la materia, la
+foto y el título. En ninguno desplaza la columna; a 390 px va en una columna sin desbordes.
 
 ### Lo decide Coach
 
@@ -231,19 +282,19 @@ sigue: nada sale al azar.
 | Tarjeta | El orden de Coach | Dónde |
 |---|---|---|
 | **Alemán** | **La lección**: la del Kapitel que ve en clase (`ALEMAN_LECCIONES.kapitel()`, con `kapitelAleman` del maestro), con la regla del inicio de Alemán —la que dejó a medias y practicó por última vez; si no, la primera sin terminar en el orden en que conviene estudiar el Kapitel; con todo hecho, el minitest de K10·03—. No cambia cada día: sigue a lo que practicas, y «Siguiente», en su ventana, recorre el Kapitel, luego el A2 y el A1. **El vocabulario**: diez palabras al día (`AL_VOC_DIA`), las siguientes del orden: el nivel de la etapa —A2, el que pide Esslingen, hasta que empieza la Fase 2; desde ahí, B1— y, dentro, lo que vas a necesitar primero al llegar (`AL_COACH_TEMAS`: trámites, piso, dinero, salud, teléfono, ciudad, súper), luego la casa, la escuela y el trabajo; lo demás, al final. Y su repaso espaciado: vuelven al día siguiente y, si te las sabes, a los 3, 7, 14 y 30 días | `ALEMAN_LECCIONES.queToca()`, `alemanVocabHoy()`, `aprendeOrdenAleman()`, `aprendeEtapaAleman()`, `alemanRepasoHoy()` |
-| **Al volante** | El foco de Hoy aprendes (`aprendeFoco()`: el del plan o el que eligió con «Siguiente» en el paso de la semana), luego el siguiente foco del plan y las demás por retorno; lo que está en pausa no entra. Si el foco tiene menos de dos opciones, se completa con lo que sigue. El audiolibro es de la semana: se decide el primer día que lo ves y se queda hasta el lunes aunque el orden cambie a media semana —el del paso de la semana si su libro está en el catálogo o, si no, el primero del orden que todavía no te haya tocado—; ↻ pasa al siguiente y también vale la semana. El podcast, el siguiente cada día | `didiHoy()`, `didiGruposOrden()`, `didiLibroSemana()` |
-| **Python** | Testing primero —la prueba de Código es un repositorio de pytest y los Werkstudent de validación lo piden—, con lo central de pytest antes que unittest (`PY_COACH_TESTING`); con el foco en IA, abre la generación de pruebas con IA. Después los fundamentos y la POO. Lo estudiado —en Entrevistas o en su ventana— no sale | `aprendeOrdenPython()` |
+| **Para escuchar manejando** | El foco de Hoy aprendes (`aprendeFoco()`: el del plan o el que eligió con «Siguiente» en el paso de la semana), luego el siguiente foco del plan y las demás por retorno; lo que está en pausa no entra. Si el foco tiene menos de dos opciones, se completa con lo que sigue. El audiolibro es de la semana: se decide el primer día que lo ves y se queda hasta el lunes aunque el orden cambie a media semana —el del paso de la semana si su libro está en el catálogo o, si no, el primero del orden que todavía no te haya tocado—; ↻ pasa al siguiente y también vale la semana. El podcast, el siguiente cada día | `didiHoy()`, `didiGruposOrden()`, `didiLibroSemana()` |
+| **Qué invertir hoy** | No es un orden de estudio: es el paso del Plan Maestro para tu dinero de hoy, la misma regla que su panel (`pasoInversionHoy()`): la BBVA quincena a quincena hasta dejarla sin saldo —hoy no compras nada más— y después todo a GBM, con los primeros pesos al fondo de emergencia. El BYD se paga con su mensualidad. Lo que abonas hoy y los abonos que siguen salen de la misma ruta que el Plan Maestro (`CIFRAS.planBbva`) | `pasoInversionHoy()`, `invertirHoyHtml()` |
 | **ISTQB** | El capítulo con más puntos en juego —lo que vale en el examen (`EXAMEN_GENAI.blueprint`: el 2 vale 16 de 46) por lo que falta de acierto ahí; con menos de tres respuestas cuenta la mitad— y, dentro, las de 2 puntos. Las contestadas no vuelven | `aprendeOrdenIstqb()`, `istqbEnJuego()` |
-| **Paso de la semana** | El foco del plan para hoy (`habRecomendada()`), paso a paso | `aprendeFoco()` |
+| **Habilidad** (el paso de la semana) | El foco del plan para hoy (`habRecomendada()`), paso a paso | `aprendeFoco()` |
 | **Habilidades Base** | `HB_PLAN`: lo que pide la Fase 1 (Networking por las cartas de recomendación, Persuadir por la palanca de ingreso, Dinero), lo de antes de irte, lo de Alemania y lo demás; vino, coctelería y citas esperan mientras dure la meta de alcohol. El grupo se mueve con la fase (`hbRango()`) y, a igual grupo, va primero la ya empezada | `hbEnCurso()` |
 
-- **Sin repetir**: lo que salió vive en `dash-aprende-v1` → `salio`. Las palabras y el tema de Python no
-  vuelven hasta recorrer su orden entero —las palabras, salvo en su repaso—; una pregunta del ISTQB sin contestar vuelve a la semana
+- **Sin repetir**: lo que salió vive en `dash-aprende-v1` → `salio`. Las palabras no vuelven hasta recorrer
+  su orden entero, salvo en su repaso; una pregunta del ISTQB sin contestar vuelve a la semana
   (`APRENDE_MEMORIA`), porque su capítulo sigue siendo el que más puntos tiene en juego.
 - **Fijo en el día**: lo de hoy se fija al primer vistazo (`hoy.fijo`); si lo estudias o lo contestas, se
   queda con su ✓. Con otra fecha se empieza en limpio.
-- **Lo que sigue**: *Al volante* y Python enseñan, donde cabe, lo que traerán ↻ y los días que vienen —el alemán, en su ventana—
-  (`aprendeLuego()`; los audiolibros, `didiLibrosLuego()`), sin apuntarlo como salido. Medido en 6 días simulados: acertó 10 de 10.
+- **Lo que sigue**: *Para escuchar manejando* enseña, donde cabe, los audiolibros de las próximas semanas
+  (`didiLibrosLuego()`) y el alemán, en su ventana, lo que traerá ↻ (`aprendeLuego()`), sin apuntarlo como salido.
 - **El audiolibro, por semana** (`didiLibroSemana()`): se fija en `dash-aprende-v1` → `semana` con el número de
   semana, y lo que ya salió vive en `salio`. Medido con la fecha simulada del 10 de octubre al 2 de noviembre
   de 2026: el libro no cambia en la semana; ↻ un martes se queda hasta el domingo aunque el miércoles cambies
@@ -258,7 +309,7 @@ y lo que sigue en Habilidades Base. Bajo 1180 px, todo a una columna. Sale de la
 la brújula del prompt se oculta; se cierra con ✕, clic fuera o Escape.
 
 Medido con la fecha simulada, 40 días seguidos desde el 10 de octubre de 2026 sin estudiar ni contestar
-nada: 40 temas distintos, ninguno igual al del día anterior —las palabras, diez al día sin repetirse (ver *La ventana del alemán*)—; el ISTQB, del capítulo 2 y
+nada: las palabras, diez al día sin repetirse (ver *La ventana del alemán*); el ISTQB, del capítulo 2 y
 nunca la pregunta de la víspera; el podcast, nunca el del día anterior, y el audiolibro cambia los
 lunes. El 2 de abril de 2027 (Fase 2) el vocabulario pasa al B1 y el foco a Código.
 
@@ -270,7 +321,7 @@ líneas con *Responder*, o el resultado cuando ya la contestaste, y lo contestad
 simulacro (`istqbMarcador()`).
 
 Tocarla abre su ventana, `#istqbOverlay` (`abrirIstqb()`). Adán, 19-oct-2026: *"haz la ventana mucho más grande, así
-como las otras… así se ve mejor y puedes meter más info"*. Es tan ancha y alta como las del alemán y Python —hasta
+como las otras… así se ve mejor y puedes meter más info"*. Es tan ancha y alta como la del alemán —hasta
 1900 px, el 96 % del ancho y el 92 % del alto—, opaca, y bajo el título dice por qué Coach la eligió (`iqPorQue`: lo
 que vale su capítulo, lo que llevas en él y sus puntos en juego). Va en **tres columnas, una por trabajo**, cada una
 con su propio desplazamiento (`istqbPintar()`):
@@ -372,36 +423,6 @@ brújula, con las tarjetas una debajo de otra. Medido: a 2048×1040 la ventana m
 en cinco columnas y la lección 1836×730, en sus dos columnas; a 1600, cuatro columnas; a 1024, dos; a 390, una,
 sin desplazamiento horizontal. Con la fecha simulada, 30 días seguidos: 300 palabras nuevas, ninguna repetida, y,
 practicando a diario, 10 repasos al día la primera semana, 20 la segunda y 30 desde el día 12.
-
-### La ventana de Python
-
-Adán, 14-oct-2026: *"lo mismo para lo de python"*, después de la ventana del alemán. Tocar la tarjeta abre
-`#pythonOverlay` (`abrirPython()`), tan ancha como la del alemán —hasta 1900 px, el 96 % del ancho, y el 92 % del
-alto (Adán, 15-oct-2026: *"hazlo más ancho a los lados"*)—, opaca y con el tema a todo lo ancho: como en
-Entrevistas pero con la piel del Dashboard, en claro y en oscuro.
-
-- **Arriba, su encabezado** (`pythonPintarCab()`): la foto de su módulo, *Tema de hoy · Testing*, el título con
-  su icono, la explicación de una línea y sus palabras clave; a la derecha, **«Pruébate · N preguntas»** si el
-  tema trae quiz —abre la pestaña donde vive y baja a él (`pythonAlQuiz()`; el prompt de Entrevistas pide
-  preguntas antes que lectura)—, **«Marcar estudiado»**, ↻ y cuántos llevas, con *Abrir en Entrevistas →* aparte.
-- **Debajo, el tema**, en `.en-content`: primero la explicación en llano —*Qué es*, *Para qué sirve*, *Lo que
-  importa* y el resumen técnico, de `Entrevistas/js/data-python-intro.js`, que la app de Entrevistas no
-  enseña— y después el contenido, con sus pestañas y su quiz, que llaman a `switchTab()` y `toggleQuiz()` como
-  en la app.
-
-**El contenido no se carga al arrancar.** Viene de `entrevistas-temas.js` (~1 MB, con su CSS ya pasado a las
-variables del Dashboard; el acento `--ac1` lo fija la ventana con el cian de Python), que la ventana trae la
-primera vez que se abre (`pythonCargar()`): Mi Día arranca igual que antes. Lo arma el generador de
-Entrevistas junto con el catálogo, y el control 34 avisa si alguno de los dos se queda atrás de los temas.
-
-**«Marcar estudiado»** (`pythonEstudiado()`) escribe `study-done-v2` igual que Entrevistas (`{id: true/false}`):
-la tarjeta dice *✓ estudiado*, la app lo ve y el tema sale del orden de Coach. También cuenta en la barra de
-Hoy aprendes (`vistos.py`) aunque después ↻ traiga otro: ese día sí estudiaste uno. ↻ (`pythonOtro()`) trae el
-siguiente del orden de Coach, que queda como el de hoy en la tarjeta. Mientras la ventana está abierta, Mi Día
-no rota, las teclas no lo mueven por detrás y la brújula enseña el prompt de Entrevistas (la vista
-`#pythonOverlay.open`); Escape la cierra. Bajo 900 px los botones bajan a su propia fila y bajo 640 px va a
-pantalla completa, sin brújula. Medido: a 2048×1040 la ventana mide 1884×957 y el tema, 1822 px de ancho, con su
-propio desplazamiento; a 390×844, a pantalla completa, sin desplazamiento horizontal.
 
 ### La ficha de un ejercicio
 
@@ -542,8 +563,8 @@ apps: manda en Android y escritorio.
 
 ## Qué invertir hoy — plantilla fija, datos de Claude
 
-Se abre desde el módulo *📈 Qué invertir hoy* de Mi Día (`#diaInvertirBtn` →
-`abrirGBM()`), cualquier día de la semana, y ocupa `min(1560px, 96vw)` × `min(960px, 94vh)`
+Se abre desde su tarjeta en *Hoy aprendes* de Mi Día (`invertirHoyHtml()` → `abrirGBM()`) o con
+`dashboard.html#invertir`, cualquier día de la semana, y ocupa `min(1560px, 96vw)` × `min(960px, 94vh)`
 (`.gbm-card.inv-card`; las clases `.gbm-*` las comparte el panel de los medidores de Mis Metas, que
 lleva su propio modificador `.kpi-card`). Adán, 21-sep-2026: *"hazla lo más grande posible… una
 especie de plantilla… claude solo se encargará de la información y la plantilla no se modificará
@@ -576,7 +597,7 @@ interés de `CIFRAS.deudasConInteres()` (la BBVA no: no le corre interés).
 **En esta pantalla no aparece nada del fondo de emergencia** (Adán, 21-sep-2026: *"quita todo lo
 que tenga que ver con lo del fondo de emergencia"*): ni la regla fondo → deuda → invertir en
 grande, ni la barra del fondo, ni la nota de CETES; el prompt de los perfiles tampoco la lleva y el
-contexto no manda el fondo. La regla sigue viva solo en el botón de Mi Día (`pintarInvertirBtn()`
+contexto no manda el fondo. La regla sigue viva solo en su tarjeta de Mi Día (`invertirHoyHtml()`
 sobre `pasoInversionHoy()`).
 
 **Los botones 🤖.** `invPedirClaude(modo)` arma el contexto y navega a
@@ -1081,7 +1102,7 @@ caben tres meses de tareas sin desplazarse. Mientras está abierta se oculta la 
 
 Abre en la fase en curso (o la siguiente sin empezar, o la última si el plan ya cerró), en la
 pestaña del mes de hoy; las otras fases abren en su información general. El subtítulo va del arranque
-del plan a la fecha del millón (`finDelPlan()`). La ventana es opaca, como las del alemán y Python.
+del plan a la fecha del millón (`finDelPlan()`). La ventana es opaca, como la del alemán.
 
 ### Los meses de cada fase y su auditoría
 
@@ -1446,8 +1467,8 @@ ventana se apila como las fichas.
 
 ## Qué escuchar mientras manejas
 
-El panel que abren *Tu semana de estudio* en *En qué invertir tu tiempo*, el AHORA en un bloque de Didi y *Al volante* de
-Hoy aprendes (`abrirDidi()`). Lo gobierna el prompt `didi`; su diseño es la dirección Main de
+El panel que abren *Tu semana de estudio* en *En qué invertir tu tiempo*, el AHORA en un bloque de Didi y *Para escuchar
+manejando* de Hoy aprendes (`abrirDidi()`). Lo gobierna el prompt `didi`; su diseño es la dirección Main de
 `diseno-escuchar/`.
 
 **A lo grande** (Adán: *"hazla en pantalla más grande que abarque más ancho y alto"*): hasta 2200 px

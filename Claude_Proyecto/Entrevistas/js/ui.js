@@ -1,4 +1,14 @@
 
+// Los temas de Python abren con su explicación en llano (`PY_INTRO`, de js/data-python-intro.js): qué es, para qué
+// sirve, lo que importa y, al final, el resumen técnico de siempre (el `hint`), que sirve de índice a quien ya
+// conoce el tema. Un tema sin entrada no lleva bloque.
+function introPython(id, hint) {
+  const i = typeof PY_INTRO !== 'undefined' && PY_INTRO[id];
+  if (!i) return '';
+  const fila = (k, v) => v ? `<div class="pyi-row"><span class="pyi-k">${k}</span><span class="pyi-v">${v}</span></div>` : '';
+  return `<div class="py-intro">${fila('Qué es', i.que)}${fila('Para qué sirve', i.usa)}${fila('Lo que importa', i.ojo)}${fila('Resumen técnico', hint)}</div>`;
+}
+
 function buildPages() {
   const content = document.getElementById('content');
   for (const [id, d] of Object.entries(T)) {
@@ -36,7 +46,7 @@ function buildPages() {
         </button>
       </div>
       <div class="hr"></div>
-      ${richContent}`;
+      ${introPython(id, d.hint)}${richContent}`;
     content.appendChild(page);
   }
 }
@@ -139,7 +149,7 @@ function refreshProgress() {
 // El orden de los temas es el del panel lateral. Wayve queda al final, como archivo.
 const INICIO_PRIORIDAD = [
   ['istqbai', 'La certificación de tu meta: el CT-GenAI'],
-  ['pyfund', 'El Python de Mi Día'],
+  ['pyfund', 'Los fundamentos de Python, la base del reto técnico'],
   ['poo', 'Python orientado a objetos'],
   ['testing', 'pytest, lo que más te preguntan'],
   ['coding', 'Retos de código, con el razonamiento en voz alta'],

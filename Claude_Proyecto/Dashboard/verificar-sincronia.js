@@ -1867,6 +1867,7 @@ function impactoDelCambio() {
   const EXCEPCIONES = {
     addInitScript: 'API de Playwright: se cita en "Verificar un cambio", no es código del proyecto',
     finanzasmx_v2_v: "la bandera del seed se construye como KEY+'_v', nunca aparece literal",
+    ReferenceError: 'error nativo de JavaScript: se cita en "Trampas conocidas", no es código del proyecto',
   };
   const DIARIO = [
     [/^#{1,6} .*(\b20\d\d-\d\d(-\d\d)?\b|\(nuevo\b)|^#{1,6} Fix:/i, 'encabezado fechado o de bitácora'],
@@ -2479,50 +2480,37 @@ function promptsDeLoTocado() {
   else ok.push('Días de fase: una sola cuenta (CIFRAS.diasFase) — la Fase 1 da 13 de 182 y quedan 169 a cualquier hora del 13-oct');
 })();
 
-/* ── 34. Entrevistas → Dashboard: lo que viaja, al día ───────────────────────────────────────────
-   El Dashboard lee de Entrevistas dos archivos que arma `Entrevistas/_generar-datos-dashboard.js`:
-   `entrevistas-data.js` (el catálogo de los 41 temas de Python, al arrancar) y `entrevistas-temas.js` (su
-   contenido y su CSS, que carga la ventana de Python la primera vez que se abre). Si alguien cambia un tema y
-   no corre el generador, la tarjeta y la ventana enseñan lo viejo sin que nada falle: aquí se llama a
-   `generar()` —sin escribir nada— y se compara con lo que hay. Y que el arranque no cargue el contenido, y que
-   cada función que el contenido llama desde sus botones (`switchTab`, `toggleQuiz`) exista en el Dashboard. */
+/* ── 34. Hoy aprendes se entiende sin conocer la app ─────────────────────────────────────────────
+   Adán, 19-oct-2026: "el texto de hoy aprendes… ni se entiende para nada, si una persona que no sabe de mi app
+   no va a saber ni de qué se trata, debe ser muy claro y muy entendible". Cada tarjeta de Mi Día abre con una
+   frase de qué se trata (`.ap-que`) y sin siglas sueltas en su cabecera; y Qué invertir hoy, que ocupa el
+   lugar de Python, sale de la misma regla que su panel (`pasoInversionHoy()`), nunca de una copia. Aquí se
+   lee la lista de tarjetas de `renderHeroAprender()` y se revisa cada una. */
 (function () {
-  let G, r;
-  try { G = require('../Entrevistas/_generar-datos-dashboard.js'); r = G.generar(); }
-  catch (e) { problemas.push('El generador de Entrevistas no corre (Entrevistas/_generar-datos-dashboard.js): ' + e.message); return; }
-  const malos = [];
-  Object.keys(r.archivos).forEach(function (f) {
-    const rel = path.relative(RAIZ, f).split(path.sep).join('/');
-    let hay = null;
-    try { hay = fs.readFileSync(f, 'utf8'); } catch (e) { /* no existe */ }
-    if (hay === null) malos.push(rel + ' no existe');
-    else if (hay !== r.archivos[f]) malos.push(rel + ' no está al día con los temas de Entrevistas');
+  const cuerpo = function (fn) {
+    const i = dash.indexOf('function ' + fn + '(');
+    if (i < 0) return null;
+    const m = /\n\}\r?\n/.exec(dash.slice(i));
+    return m ? dash.slice(i, i + m.index) : null;
+  };
+  const malos = [], r = cuerpo('renderHeroAprender');
+  const lista = r && (r.match(/class="ap-seis">([\s\S]*?)<\/div>/) || [])[1];
+  const fns = lista ? (lista.match(/\$\{(\w+)\(/g) || []).map(function (x) { return x.slice(2, -1); }) : [];
+  if (fns.length !== 6) malos.push('renderHeroAprender() debía pintar seis tarjetas y pinta ' + fns.length);
+  fns.forEach(function (fn) {
+    const c = cuerpo(fn);
+    if (!c) { malos.push(fn + '() no existe'); return; }
+    if (c.indexOf('class="ap-que') < 0) malos.push(fn + '() no dice de qué se trata la tarjeta (falta su frase .ap-que)');
+    const mat = (c.match(/mat\s*:\s*(`[^`]*`|'[^']*')/) || [])[1] || '';
+    if (/\bK\d|Cap\.|\$\{[^}]*\}\/\$\{/.test(mat)) malos.push(fn + '() lleva una sigla suelta en su cabecera: ' + mat.slice(0, 60));
   });
-  const dash = leer('Dashboard/dashboard.html');
-  if (/<script src="entrevistas-temas\.js"><\/script>/.test(dash))
-    malos.push('dashboard.html carga entrevistas-temas.js al arrancar: ~1 MB que solo necesita la ventana de Python');
-  if (dash.indexOf("'entrevistas-temas.js'") === -1) malos.push('dashboard.html no carga entrevistas-temas.js en ninguna parte');
-  const vm = require('vm'), ctx = {};
-  let temas = 0;
-  const usadas = new Set();
-  try {
-    vm.createContext(ctx);
-    vm.runInContext(r.archivos[G.OUTPUT_TEMAS] + ';this.__C = ENTREVISTA_CONTENT;', ctx);
-    Object.keys(ctx.__C).forEach(function (id) {
-      temas++;
-      const re = /on(?:click|input|change)="([A-Za-z_$][\w$]*)\(/g;
-      let m;
-      while ((m = re.exec(ctx.__C[id]))) usadas.add(m[1]);
-    });
-  } catch (e) { malos.push('entrevistas-temas.js no se puede leer: ' + e.message); }
-  usadas.forEach(function (fn) {
-    if (!new RegExp('function ' + fn + '\\s*\\(').test(dash)) malos.push('el contenido de los temas llama a ' + fn + '() y dashboard.html no la define');
-  });
-  if (malos.length)
-    problemas.push('Lo que viaja de Entrevistas al Dashboard no cuadra (corre node Entrevistas/_generar-datos-dashboard.js):\n  - ' + malos.slice(0, 10).join('\n  - '));
-  else
-    ok.push('Entrevistas → Dashboard: entrevistas-data.js y entrevistas-temas.js al día con sus ' + temas + ' temas; el contenido lo carga la ventana de Python, y ' +
-            [...usadas].join(' y ') + ' existen en el Dashboard');
+  const inv = cuerpo('invertirHoyHtml');
+  if (fns.indexOf('invertirHoyHtml') < 0) malos.push('Qué invertir hoy no está entre las tarjetas de Hoy aprendes');
+  if (!inv || inv.indexOf('pasoInversionHoy()') < 0) malos.push('invertirHoyHtml() no lee la regla de pasoInversionHoy()');
+  if ((cuerpo('renderGBMPanel') || '').indexOf('pasoInversionHoy()') < 0) malos.push('el panel de Qué invertir hoy no lee pasoInversionHoy()');
+  if (/id="diaInvertirBtn"|id="pythonOverlay"/.test(dash)) malos.push('dashboard.html todavía tiene el botón suelto de Qué invertir hoy o la ventana de Python');
+  if (malos.length) problemas.push('Hoy aprendes no se entiende solo:\n  - ' + malos.join('\n  - '));
+  else ok.push('Hoy aprendes: seis tarjetas (' + fns.join(', ') + '), cada una con su frase de qué se trata y Qué invertir hoy con la regla de su panel');
 })();
 
 /* ── 35. El hábito del Gimnasio toca los días con sesión de la rutina ──────────────────────────────

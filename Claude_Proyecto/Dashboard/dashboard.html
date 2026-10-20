@@ -53,11 +53,6 @@
      ninguno: tocar la tarjeta abre su ventana, con la palabra y la lección en su propia página. -->
 <script src="../Aleman/vocab-datos.js"></script>
 <script src="../Aleman/lecciones-datos.js"></script>
-<!-- El catálogo de los 41 temas de Python de Entrevistas/ (ENTREVISTA_TEMAS y PY_MOD_LABEL), que
-     genera Entrevistas/_generar-datos-dashboard.js: con él la tarjeta «Hoy aprendes» de Mi Día nombra
-     el tema del día (10 KB). El HTML y el CSS de cada tema van aparte, en entrevistas-temas.js (~1 MB),
-     y no se cargan aquí: los carga la ventana de Python la primera vez que se abre (pythonCargar()). -->
-<script src="entrevistas-data.js"></script>
 <!-- La biblioteca de ejercicios (EJ_DB), la misma de CuidadoPersonal/ejercicio.html: nombre,
      imagen, técnica paso a paso y error de cada uno. La ficha que se abre al tocar un ejercicio
      en Mi Día (verFichaEjercicio) sale de aquí. -->
@@ -1224,26 +1219,6 @@ body.rail-on{--pad-rail:max(6vw,230px)}
    vez de compartir la misma tarjeta genérica blanca/gris que el resto. */
 .now-hero{border-left:3px solid var(--card-br);transition:border-color .3s,box-shadow .3s}
 .now-live-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);display:inline-block;animation:pulse 2s ease-in-out infinite}
-/* Es <button> y no <div onclick>: así entra en el orden de tabulación y responde a Enter/Espacio
-   sin JS extra. `font:inherit` + `text-align:left` deshacen lo que el navegador impone a los
-   botones (fuente del sistema, texto centrado), que aquí desentonaría con el resto de tarjetas.
-   El borde izquierdo de color lo pinta pintarInvertirBtn() según el paso que toque, igual que
-   .now-hero se pinta con el color de la categoría activa. */
-.inv-btn{display:flex;flex-direction:column;justify-content:center;gap:2px;width:100%;text-align:left;
-  font:inherit;cursor:pointer;border-radius:22px;padding:11px 16px;
-  background:var(--card);border:1px solid var(--card-br);border-left:3px solid var(--g);
-  backdrop-filter:blur(16px);box-shadow:0 10px 40px rgba(0,0,0,.35);
-  transition:transform .18s,box-shadow .18s,border-color .3s}
-.inv-btn:hover{transform:translateY(-2px);box-shadow:0 14px 44px rgba(0,0,0,.42)}
-.inv-btn:active{transform:translateY(0)}
-.inv-btn-lbl{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:800;
-  letter-spacing:.07em;text-transform:uppercase;color:var(--text3)}
-.inv-btn-go{margin-left:auto;color:var(--cy);letter-spacing:.02em}
-.inv-btn-paso{font-weight:800;font-size:clamp(14px,1.35vw,17px);line-height:1.25;margin-top:3px}
-/* 2 líneas y corta: el subtítulo cambia de largo según el paso (y con el modo privado las cifras
-   se vuelven "$••,•••"), así que se le pone tope en vez de dejar que estire la fila entera. */
-.inv-btn-sub{font-size:10.5px;color:var(--text2);line-height:1.35;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
 /* Los pasos de un bloque (`pasosHtml()`), en el AHORA. Una columna por sección —Ducha y cabello, Piel y
    minoxidil, Suplementos— con su línea divisora y su cuenta; sin secciones, una sola lista. Cada paso es un
@@ -2756,9 +2731,9 @@ body.rail-on{--pad-rail:max(6vw,230px)}
   background:rgba(var(--cy-rgb),.07);border:1px solid rgba(var(--cy-rgb),.2);font-size:12.5px;color:var(--text2);line-height:1.4}
 .blq-escuchar b{color:var(--text)}
 .blq-escuchar .hp-link{margin-left:auto;flex-shrink:0;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase}
-/* Los módulos: a la izquierda Entrenas, Hábitos de hoy y, al pie, Qué invertir hoy; a la derecha,
-   Hoy aprendes en los dos tercios que quedan, a todo lo alto. Cada uno desplaza por dentro. */
-.dia-mods{flex:1;min-height:0;grid-template-columns:minmax(0,1fr) minmax(0,2fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr) auto;gap:14px}
+/* Los módulos: a la izquierda Entrenas y Hábitos de hoy; a la derecha, Hoy aprendes en los dos tercios
+   que quedan, a todo lo alto. Cada uno desplaza por dentro. */
+.dia-mods{flex:1;min-height:0;grid-template-columns:minmax(0,1fr) minmax(0,2fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr);gap:14px}
 #miDiaSecundarios{grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:14px}
 #miDiaSecundarios>.tile{border-radius:16px;padding:14px 16px 12px;min-height:0;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column;gap:6px}
 #miDiaSecundarios .hp-title{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--text3);margin-bottom:4px}
@@ -2775,13 +2750,13 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .hp-cobro .m.entra{color:var(--g)}
 /* ─── Hoy aprendes: los dos tercios de la derecha de Mi Día ───
    Seis partes iguales (Adán: "estos 6 quiero que los dividas en partes iguales… con info resumida
-   pero importante"): la palabra de alemán, Al volante, Python, el ISTQB, el paso de la semana y la
-   ficha de Habilidades Base. Las seis con la misma anatomía —la foto, la materia con su estado y sus
+   pero importante"): el alemán, lo que escuchas manejando, Qué invertir hoy, el ISTQB, la habilidad
+   del plan y la ficha de Habilidades Base. Las seis con la misma anatomía —la foto, la materia con su estado y sus
    controles, y lo que aprendes en bloques en orden de importancia— y `--c`, el color de su materia, un
    token del tema. Sin cajas: las separa el aire. Ocupa la segunda columna a todo lo alto; bajo 900 px
    va a todo lo ancho, debajo de los demás. */
 #heroAprenderPanel{grid-column:2;grid-row:1/-1;container:aprende / inline-size}
-@media(max-width:900px){#heroAprenderPanel,#miDiaSecundarios>.dia-invertir{grid-column:1/-1;grid-row:auto}}
+@media(max-width:900px){#heroAprenderPanel{grid-column:1/-1;grid-row:auto}}
 #miDiaSecundarios>#heroAprenderPanel{gap:0}
 .ap-fecha{font-family:var(--mono);font-size:10.5px;letter-spacing:0;text-transform:none;color:var(--text3);white-space:nowrap}
 .ap-fecha b{color:var(--text);font-weight:700}
@@ -2818,6 +2793,10 @@ button.ap-c-ir{cursor:pointer}
 button.ap-c-ir:hover .ap-de,button.ap-c-ir:hover .ap-t,button.ap-c-ir:hover .ap-q{color:var(--c)}
 .ap-c-txt{display:flex;flex-direction:column;gap:5px;min-width:0}
 .ap-c-txt>*{flex:none;min-width:0}
+/* De qué se trata cada tarjeta, en una frase chica y en gris, antes que lo de hoy (Adán: "si una persona que no
+   sabe de mi app no va a saber ni de qué se trata, debe ser muy claro… aunque hagas la letra pequeña para que no
+   se sature visualmente"). En una tarjeta de menos de 130 px de alto no cabe con el título: ahí se va ella. */
+.ap-que{font-size:11px;line-height:1.42;color:var(--text3)}
 /* El texto que se puede recortar (`.ap-cl`), por líneas y con «…»: tres como mucho; dos los títulos,
    las notas y los puntos (`.l2`). En escritorio el párrafo no tiene tope —salvo `.l3`—: lo pone apAjustar(). */
 .ap-c-txt .ap-cl{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
@@ -2864,15 +2843,11 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .ap-oir:hover{color:var(--c)}
 .ap-nota .ap-oir{color:var(--text2);font-weight:600}
 .ap-hora{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--c)}
-/* Cómo vas, en una línea: lo que llevas de Python, lo que vale la pregunta y tu marcador del ISTQB. */
+/* Un dato en una línea: lo que vale la pregunta del ISTQB, el tema de su capítulo y tu marcador. */
 .ap-dato{font-size:11px;line-height:1.45;color:var(--text3)}
 .ap-dato b{font-weight:700;color:var(--text2)}
 .ap-dato b.ok{color:var(--g)}
 .ap-dato b.bajo{color:var(--w)}
-/* Python: las palabras clave del tema, en una línea (las que no caben se van enteras). */
-.ap-tags{display:flex;flex-wrap:wrap;gap:4px;max-height:19px;overflow:hidden}
-.ap-tags i{font-style:normal;font-family:var(--mono);font-size:10px;line-height:19px;padding:0 7px;border-radius:99px;
-  white-space:nowrap;background:color-mix(in srgb,var(--c) 12%,transparent);color:var(--text2)}
 /* El ISTQB sin contestar: las cuatro opciones, una línea cada una. */
 .ap-ops{display:flex;flex-direction:column;gap:1px}
 .ap-op{display:flex;gap:7px;min-width:0;font-size:12px;line-height:1.5;color:var(--text2)}
@@ -2942,6 +2917,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
     #heroAprenderPanel .ap-c-foto.libro{width:clamp(34px,28cqh,72px);aspect-ratio:2/3}
     #heroAprenderPanel .ap-c-txt{flex:1 1 0;min-height:0;overflow:hidden}
     #heroAprenderPanel .ap-c-txt .ap-cl:not(.l2):not(.l3){-webkit-line-clamp:unset}
+    @container apcarta (max-height:129.98px){#heroAprenderPanel .ap-que{display:none}}
   }
   @container aprende (min-width:760px){
     #heroAprenderPanel .ap-seis{grid-template-rows:repeat(2,minmax(200px,1fr))}
@@ -2954,7 +2930,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 /* La bandera de Alemania en CSS: el emoji se pinta como las letras "DE" en Windows. */
 .flag-de{display:inline-block;width:14px;height:9px;border-radius:2px;flex-shrink:0;
   background:linear-gradient(#000 0 33.4%,#dd0000 33.4% 66.7%,#ffce00 66.7%);box-shadow:0 0 0 1px rgba(var(--ov),.16)}
-/* La pregunta del ISTQB (#istqbOverlay, `abrirIstqb()`): tan ancha y alta como las del alemán y Python, opaca —es para
+/* La pregunta del ISTQB (#istqbOverlay, `abrirIstqb()`): tan ancha y alta como la del alemán, opaca —es para
    leer— y en tres columnas que desplazan cada una por dentro: la pregunta, para entenderla y cómo vas. Bajo 1280 px, la
    pregunta y el syllabus lado a lado y cómo vas debajo, en un solo desplazamiento; bajo 900 px, una columna, y bajo
    640 px, a pantalla completa. */
@@ -3118,9 +3094,8 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 #alemanOverlay .das{--gen:#10b981}
 #alemanOverlay .pl{--gen:#f97316}
 .gbm-card.alv-card{width:min(1900px,96vw);height:92vh;display:flex;flex-direction:column;overflow:hidden}
-/* Opaca, no de vidrio: es para leer, y con el vidrio se veían las fotos de Mi Día detrás de cada tarjeta. La de
-   Python también. */
-.gbm-card.alv-card,.gbm-card.pyv-card{background:linear-gradient(rgba(var(--ov),.035),rgba(var(--ov),.035)),var(--bg)}
+/* Opaca, no de vidrio: es para leer, y con el vidrio se veían las fotos de Mi Día detrás de cada tarjeta. */
+.gbm-card.alv-card{background:linear-gradient(rgba(var(--ov),.035),rgba(var(--ov),.035)),var(--bg)}
 .alv-card .gbm-head{flex:none;padding-bottom:0}
 .alv-tabs{display:flex;gap:4px;margin-top:12px}
 .alv-tabs button{position:relative;display:flex;align-items:baseline;gap:9px;padding:9px 16px 12px;border:0;border-radius:10px 10px 0 0;
@@ -3274,51 +3249,6 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 /* En la tarjeta de Hoy aprendes, la lección se toca aparte: abre la ventana en su pestaña. */
 .ap-ir-lec{cursor:pointer}
 .ap-ir-lec:hover .ap-t,.ap-ir-lec:hover .ap-bq-k{color:var(--c)}
-/* El Python de hoy (#pythonOverlay, `abrirPython()`): el tema entero —la explicación en llano, el contenido,
-   sus pestañas y su quiz— con el CSS que trae entrevistas-temas.js (`.en-content`, ya con las variables del
-   Dashboard). Ese CSS toma el acento de `--ac1`, que en las pantallas pone su tema; aquí lo fija la ventana,
-   con el cian de Python. */
-#pythonOverlay{--c:var(--cy);--ac1:var(--cy);--ac2:var(--b)}
-.gbm-card.pyv-card{width:min(1900px,96vw);height:92vh;display:flex;flex-direction:column;overflow:hidden}
-.pyv-card .gbm-head{flex:none}
-.pyv-cab{flex:none;display:flex;align-items:flex-start;gap:16px;padding:14px 22px;border-bottom:1px solid rgba(var(--ov),.08)}
-.pyv-foto{flex:none;width:124px;height:84px;border-radius:12px;object-fit:cover;background:color-mix(in srgb,var(--c) 12%,transparent)}
-.pyv-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
-.pyv-k{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
-.pyv-h{display:flex;align-items:baseline;gap:9px;margin:0;font-size:22px;font-weight:800;line-height:1.25;color:var(--text)}
-.pyv-ico{font-size:20px}
-.pyv-s{font-size:13.5px;line-height:1.5;color:var(--text2)}
-.pyv-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
-.pyv-tags i{font-style:normal;font-family:var(--mono);font-size:10.5px;line-height:21px;padding:0 8px;border-radius:99px;
-  background:color-mix(in srgb,var(--c) 12%,transparent);color:var(--text2)}
-.pyv-acc{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
-.pyv-fila{display:flex;align-items:center;gap:6px}
-.pyv-hecho{height:34px;padding:0 15px;border-radius:10px;border:1px solid var(--c);background:color-mix(in srgb,var(--c) 12%,transparent);
-  color:var(--text);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
-.pyv-hecho:hover{background:color-mix(in srgb,var(--c) 22%,transparent)}
-.pyv-hecho.ok{background:var(--c);color:var(--bg)}
-.pyv-quiz{height:34px;padding:0 13px;border-radius:10px;border:1px solid rgba(var(--ov),.14);background:transparent;color:var(--text2);
-  font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
-.pyv-quiz:hover{color:var(--c);border-color:var(--c)}
-.pyv-acc .ap-otra{width:34px;height:34px;border-radius:10px}
-.pyv-acc .ap-otra svg{width:14px;height:14px}
-.pyv-dato{font-size:11.5px;color:var(--text3)}
-.pyv-dato b{color:var(--text2)}
-.pyv-ir{font-weight:700}
-.pyv-cuerpo{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:20px 30px 32px}
-.pyv-carga{display:flex;align-items:center;justify-content:center;min-height:200px;padding:0 20px;text-align:center;font-size:13px;color:var(--text3)}
-@media(max-width:900px){
-  .pyv-cab{flex-wrap:wrap}
-  .pyv-acc{width:100%;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between}
-}
-@media(max-width:640px){
-  body:has(#pythonOverlay.open) .pp-btn{visibility:hidden}
-  .gbm-card.pyv-card{width:100%;height:100%}
-  .pyv-cab{padding:10px 12px;gap:10px}
-  .pyv-foto{width:72px;height:48px}
-  .pyv-h{font-size:18px}
-  .pyv-cuerpo{padding:12px 12px 24px}
-}
 /* «Cómo lo decide Coach»: el botón junto al título de Hoy aprendes y su panel (#comoDecideOverlay) — lo
    que manda, en orden, y tarjeta por tarjeta lo de hoy con su regla (`comoDecideHtml()`). */
 .ap-como{display:inline-flex;align-items:center;gap:5px;height:20px;margin-left:6px;padding:0 8px 0 7px;border-radius:99px;
@@ -3378,6 +3308,8 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 .dh-row{display:grid;grid-template-columns:18px minmax(0,1fr) auto;gap:8px;align-items:center;padding:2px 0;border-top:1px solid rgba(var(--ov),.07);
   background:none;border-left:none;border-right:none;border-bottom:none;width:100%;text-align:left;font-family:inherit;cursor:pointer;color:inherit}
 .dh-row:first-child{border-top:none}
+/* Los renglones se reparten el alto que sobra, hasta 52 px cada uno: sin hueco al pie de la tarjeta. */
+.dh-list .dh-row{flex:1 0 auto;max-height:52px}
 .dh-c{width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(var(--ov),.22);display:flex;align-items:center;justify-content:center;color:#05050a;font-size:10px;transition:background .15s,border-color .15s}
 .dh-row.ok .dh-c{background:var(--g);border-color:var(--g)}
 .dh-row.no .dh-c{border-color:var(--r)}
@@ -3399,8 +3331,11 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 .dia-entrena{display:contents}
 .dia-entrena b{font-family:var(--font-title);font-size:20px;font-weight:600;color:var(--text);line-height:1.1}
 .dia-entrena span{font-size:11.5px;color:var(--text3)}
-.dia-entrena-tile .week-strip{gap:4px;margin-top:auto}
-.dia-entrena-tile .ws-day{height:52px;padding:3px 5px;border-radius:8px;justify-content:flex-end}
+/* La tira toma el alto que sobra, de 52 a 92 px, y lo que quede va arriba de ella (margin-top:auto): sin hueco
+   entre la lista y la tira. En el teléfono va en dos filas de 52 px y sin tope. */
+.dia-entrena-tile .week-strip{gap:4px;margin-top:auto;flex:1 0 auto;max-height:92px}
+.dia-entrena-tile .ws-day{height:auto;min-height:52px;padding:3px 5px;border-radius:8px;justify-content:flex-end}
+@media(max-width:900px){.dia-entrena-tile .week-strip{max-height:none}}
 .dia-entrena-sig{flex:none;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;color:var(--text2)}
 .dia-entrena-sig span{font-size:12px;color:var(--text2)}
 .dia-entrena-sig b{font-family:var(--mono);font-size:10.5px;color:var(--text3);margin-right:5px}
@@ -3420,9 +3355,11 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 /* Otro día que no es hoy: su nombre en verde arriba. Sus ejercicios: la lista desplaza por dentro y
    es lo que cede alto, para que la tira se quede abajo. Gana a `.dia-entrena span` por especificidad. */
 .dia-entrena .de-dia{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g)}
-.de-ex{flex:0 1 auto;min-height:24px;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column}
+.de-ex{flex:1 1 auto;min-height:24px;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column}
 .de-ex-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:8px;padding:4px 0;border-bottom:1px solid rgba(var(--ov),.06)}
 .de-ex-row:last-child{border-bottom:none}
+/* La lista y la tira se reparten el alto que sobra: cada renglón crece, con lo suyo al centro. */
+.de-ex .de-ex-row{flex:1 0 auto;align-content:center}
 .dia-entrena .de-ex-n{all:unset;cursor:pointer;font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .dia-entrena .de-ex-n:hover{color:var(--ac1)}
 .dia-entrena .de-ex-sr{font-family:var(--mono);font-size:10px;color:var(--text2);white-space:nowrap}
@@ -3430,28 +3367,19 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 .de-ex-sr i.real{color:var(--o);font-weight:700}
 .dia-entrena .de-ex-row.ok .de-ex-n{color:var(--g)}
 .de-ex-row.ok .de-ex-sr{opacity:.6}
-/* En pantallas altas (la de Adán, 2560×1440) Entrenas y Hábitos miden casi 500 px de alto: se usan.
-   Hábitos sube la letra y el aire de cada renglón; Entrenas enseña bajo cada ejercicio su indicación
-   (la misma del `title`) y agranda la tira de días. Con menos de 440 px de alto, como siempre. El
-   contenedor mide su alto solo con la rejilla de escritorio: en el teléfono el alto es el contenido. */
+/* Bajo cada ejercicio, su indicación (la misma del `title`) donde cabe: deAjustar() la prueba y la quita si la
+   lista ya no cabe entera. En pantallas altas (2560×1440: Entrenas y Hábitos miden casi 500 px) Hábitos sube
+   la letra y el aire de cada renglón. El contenedor mide su alto solo con la rejilla de escritorio: en el
+   teléfono el alto es el contenido. */
 @media(min-width:901px){#diaHabitos,.dia-entrena-tile{container-type:size}}
 .de-ex-cue{display:none;grid-column:1/-1;font-size:11px;line-height:1.35;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.de-ex.con-cue .de-ex-cue{display:block}
+.de-ex.cue2 .de-ex-cue{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;white-space:normal}
 @container (min-height:440px){
-  .de-ex-cue{display:block}
-  .dia-entrena-tile .ws-day{height:92px}
   .dh-row{padding:7px 0}
   .dh-n{font-size:13px}
   .dh-a{font-size:11px}
 }
-/* Qué invertir hoy, en su propio módulo: al pie de la primera columna, bajo Hábitos. Dos renglones:
-   la etiqueta con «Abrir →» y el paso de hoy con su porqué, cortado a una línea; las cifras completas
-   viven en el panel que abre. */
-#miDiaSecundarios>.dia-invertir{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"lbl lbl" "paso sub";
-  align-items:baseline;column-gap:10px;row-gap:4px;border-radius:16px;padding:10px 16px 11px;box-shadow:none}
-#miDiaSecundarios>.dia-invertir:hover{transform:translateY(-1px);box-shadow:none}
-.dia-invertir .inv-btn-lbl{grid-area:lbl}
-.dia-invertir .inv-btn-paso{grid-area:paso;font-size:14.5px;margin-top:0;white-space:nowrap}
-.dia-invertir .inv-btn-sub{grid-area:sub;-webkit-line-clamp:1;font-size:11px}
 @media(max-height:940px){
   .dia-ahora{max-height:30vh}
   .dia-ahora .blq-txt{font-size:clamp(20px,2vw,26px)}
@@ -4396,12 +4324,6 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
               <div class="week-strip" id="heroWeekStrip"></div>
             </div>
             <div class="tile" id="diaHabitos"></div>
-            <!-- Qué invertir hoy, solo. Tu dinero y la fase salieron de Mi Día (Adán: "solo déjame lo
-                 de invertir hoy, déjame esa función"). pintarInvertirBtn() lo pinta con el paso que
-                 toca hoy —"primero tu fondo" / "abona a tu deuda" / "hoy sí inviertes"— y su porqué;
-                 el detalle, con las cifras, en el panel que abre. -->
-            <button class="inv-btn dia-invertir" id="diaInvertirBtn" onclick="abrirGBM()"
-                    title="Qué invertir hoy — precios en vivo y tus saldos reales de Finanzas"></button>
             <div class="tile" id="heroAprenderPanel"></div>
           </div>
         </div>
@@ -4688,19 +4610,6 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
         <div class="alv-lec-marco" id="alemanMarco"><iframe id="alemanFrame" title="La lección de hoy, de la app de Alemán" onload="window.alemanCargada&&alemanCargada(this)"></iframe><span class="alv-lec-carga">Abriendo la lección…</span></div>
       </section>
     </div>
-  </div>
-</div>
-
-<!-- ─── EL PYTHON DE HOY — el tema que toca, entero, sin salir de Mi Día (abrirPython()) ─── -->
-<div class="gbm-overlay" id="pythonOverlay" onclick="if(event.target===this) cerrarPython()">
-  <div class="gbm-card pyv-card" role="dialog" aria-modal="true" aria-labelledby="pythonTit">
-    <div class="gbm-head">
-      <button class="gbm-close" onclick="cerrarPython()" aria-label="Cerrar">✕</button>
-      <h2 id="pythonTit">Python de hoy</h2>
-      <p>El tema que toca, en el orden de Coach, con la explicación en llano primero. Lo que marques aquí cuenta en Entrevistas.</p>
-    </div>
-    <div class="pyv-cab" id="pythonCab"></div>
-    <div class="pyv-cuerpo" id="pythonCuerpo"></div>
   </div>
 </div>
 
@@ -6034,13 +5943,6 @@ function alemanPalabras(){
 // salido —ver `aprendeOrdenAleman()`— o la que pediste con ↻.
 function alemanPalabraHoy(){ return alemanVocabHoy()[0] || null; }
 
-// El tema de Python del día: el primero del orden de Coach que no hayas estudiado en Entrevistas
-// (`study-done-v2`) —ver `aprendeOrdenPython()`—. Se fija al primer vistazo del día, así que si lo
-// estudias hoy se queda con su ✓ en vez de saltar al siguiente.
-function entrevistaTemaHoy(){ return aprendeDelDia('py'); }
-/* La etiqueta legible del módulo, con respaldo. `PY_MOD_LABEL` lo genera
-   `_generar-datos-dashboard.js` leyendo el menú de la app; si el .js de datos es anterior
-   a eso, se cae al id en mayúsculas en vez de reventar — que es justo lo que pasó. */
 /* Las frases con `si` dependen de una deuda viva: entran al sorteo solo mientras sea verdad. */
 const FRASE_SI={
   bbva: ()=>(window.CIFRAS?+CIFRAS.n('tcBbva')||0:0)>0,
@@ -6051,10 +5953,6 @@ function fraseDelDia(i){
     .map(f=>typeof f==='string'?f:f.t);
   const t=pool[i%pool.length]||'';
   return window.CIFRAS?CIFRAS.texto(t):t;
-}
-function pyModLabel(mod){
-  const L = (typeof PY_MOD_LABEL !== 'undefined' && PY_MOD_LABEL) || {};
-  return L[mod] || String(mod||'').toUpperCase();
 }
 
 // ── Frases motivacionales, reescritas con tono de exigencia (2026-08-07, a
@@ -6392,7 +6290,6 @@ function renderDia(){
   // con las 2 pantallas fusionadas, la línea de tiempo de abajo queda a la vista en el mismo
   // slide, con la tarjeta "ahora" ya resaltada (.rt2-now) y sus subtareas completas — mostrarlas
   // dos veces solo quitaba espacio vertical sin aportar nada nuevo.
-  pintarInvertirBtn();
 
   // Línea de tiempo — hoy en tiempo real, o el día elegido en la tira semanal del Hero.
   // 2026-08-09, segundo ajuste: Adán pidió explícitamente que, sin importar el día elegido, la
@@ -6823,6 +6720,19 @@ function renderDiaEntrena(gymRutina, dowHoy){
     <div class="dia-entrena-sig" title="${esc(sig.map(x=>lbl(x.n)+' '+nom(x.r)).join(' · '))}">${sig.map(x=>`<span><b>${lbl(x.n)}</b>${esc(corto(x.r))}</span>`).join('<i>·</i>')}</div>`;
   const a=document.getElementById('diaEntrenaLink');
   if(a) a.href='../CuidadoPersonal/ejercicio.html'+(esHoy?'':'?dia='+dow);
+  deAjustar();
+}
+// La indicación bajo cada ejercicio sale donde cabe: primero en dos líneas, si no en una y, si ni así cabe la
+// lista entera, sin ella; el alto que sobra lo reparten los renglones y la tira de días. En el teléfono no va:
+// ahí la lista corre en el flujo.
+function deAjustar(){
+  const L=document.querySelector('#diaEntrenaTxt .de-ex'); if(!L) return;
+  const cabe=()=>L.clientHeight>0&&L.scrollHeight<=L.clientHeight+1;
+  L.classList.remove('con-cue','cue2');
+  if(!matchMedia('(min-width:901px)').matches) return;
+  L.classList.add('con-cue','cue2'); if(cabe()) return;
+  L.classList.remove('cue2'); if(cabe()) return;
+  L.classList.remove('con-cue');
 }
 // Hábitos de hoy: los que tocan hoy según habitos.js (HB.hoy), con su racha, y se marcan aquí
 // mismo — es el mismo toggle que la cuadrícula del slide de Hábitos.
@@ -6850,7 +6760,7 @@ function renderDiaHabitos(){
 }
 // Al cambiar el tamaño de la ventana cambia lo que cabe: los hábitos y el AHORA se vuelven a decidir.
 let _dhResize=0;
-addEventListener('resize',()=>{ clearTimeout(_dhResize); _dhResize=setTimeout(()=>{ renderDiaHabitos(); if(typeof renderDia==='function') renderDia(); if(typeof apAjustar==='function') apAjustar(); },150); });
+addEventListener('resize',()=>{ clearTimeout(_dhResize); _dhResize=setTimeout(()=>{ renderDiaHabitos(); deAjustar(); if(typeof renderDia==='function') renderDia(); if(typeof apAjustar==='function') apAjustar(); },150); });
 // Los cobros y abonos de los próximos 7 días, de CIFRAS.agendaDia — la misma fuente que el
 // calendario del Plan Maestro, para que las dos pantallas no puedan discrepar.
 function cobrosHtml(mon){
@@ -6935,15 +6845,16 @@ function pasoSemanaHtml(){
   const r=(Array.isArray(p.r)?p.r:[]).find(x=>x&&x.t==='libro');
   const lib=r?habLibro(r.id):null, fi=(lib&&lib.ficha)||{};
   const rec=habRecomendada(), propia=!!rec&&rec.id!==foco.id;
-  const txt=`<span class="ap-t ap-cl l2" data-min="1">${esc(p.n)}</span>`
+  const txt=`<span class="ap-que ap-cl l2" data-min="1">Un ejercicio práctico para subir la habilidad que trabaja tu plan.</span>`
+    +`<span class="ap-t ap-cl l2" data-min="1">${esc(p.n)}</span>`
     +apTramos(pasos.length, j=>j<i, i)
     +(p.c?apBloque('Qué hacer',`<span class="ap-hacer ap-cl">${p.c}</span>`):'')
-    +(sig?apMeta('sigue',`Después: <b>${esc(sig.n)}</b>`):apMeta('meta','Último paso de la ruta'))
-    +(lib?apMeta('libro',`Con <i>${esc(lib.t)}</i>${r.nota?`, ${esc(r.nota)}`:lib.a?` · ${esc(lib.a)}`:''}`,'ap-opc'):'')
+    +(sig?apMeta('sigue',`Siguiente paso: <b>${esc(sig.n)}</b>`):apMeta('meta','Es el último paso de esta habilidad'))
+    +(lib?apMeta('libro',`Con el libro <i>${esc(lib.t)}</i>${r.nota?`, ${esc(r.nota)}`:lib.a?` · ${esc(lib.a)}`:''}`,'ap-opc'):'')
     +(p.q?apBloque('Por qué',`<span class="ap-bq-t ap-cl">${p.q}</span>`,'ap-opc'):'')
     +(fi.idea?apBloque('La idea del libro',`<span class="ap-bq-idea ap-cl">${fi.idea}</span>`,'ap-opc'):'');
-  return apTarjeta({ c:'var(--w)', mat:`${esc(foco.name)} · ${propia?'elegida por ti':'esta semana'}`,
-    estado:`<span class="ap-av-n">${i+1}/${pasos.length}</span>`, ctl:apCtl('paso','Habilidad',propia?esc(rec.name):''),
+  return apTarjeta({ c:'var(--w)', mat:`Habilidad · ${esc(foco.name)}${propia?' · la elegiste tú':''}`,
+    estado:`<span class="ap-av-n">paso ${i+1} de ${pasos.length}</span>`, ctl:apCtl('paso','Habilidad',propia?esc(rec.name):''),
     foto:apFotoLibro(r&&r.id, foco.id), ico:foco.icon, abrir:`aprendeVisto('paso');abrirSkillDetalle('${foco.id}')`,
     titulo:`Abrir la ruta de ${habAttr(foco.name)}${lib?` · con ${habAttr(lib.t)}`:''}`, txt });
 }
@@ -6957,16 +6868,16 @@ function fichaEnCursoHtml(){
   const k=info?info.pasos.findIndex((_,j)=>!store[j]):-1;
   const paso=k>=0?info.pasos[k]:null;
   const luego=paso?info.pasos.map((q,j)=>({q,j})).find(x=>x.j>k&&!store[x.j]):null;
-  const titulo=x=>`Paso ${x.j+1} · ${esc(mdLimpiaTitulo(x.q.t))}`;
-  const txt=`<span class="ap-t ap-cl l2" data-min="1">${esc(sig.h.t)}</span>`
+  const txt=`<span class="ap-que ap-cl l2" data-min="1">Guías prácticas para la vida, paso a paso: esta es la que toca.</span>`
+    +`<span class="ap-t ap-cl l2" data-min="1">${esc(sig.h.t)}</span>`
     +(info?apTramos(info.pasos.length, j=>!!store[j], k):'')
-    +(paso?`<span class="ap-bq"><span class="ap-bq-k ap-bq-paso">${titulo({q:paso,j:k})}</span>${paso.d?`<span class="ap-bq-t ap-cl l3">${paso.d}</span>`:''}</span>`
+    +(paso?`<span class="ap-bq"><span class="ap-bq-k ap-bq-paso">Paso ${k+1} · ${esc(mdLimpiaTitulo(paso.t))}</span>${paso.d?`<span class="ap-bq-t ap-cl l3">${paso.d}</span>`:''}</span>`
       :apBloque('Ficha completa','<span class="ap-bq-t">Repásala cuando quieras: la tienes entera.</span>'))
-    +apMeta('porque',`Por qué: ${esc(hbPlan(sig.h.id).para)}`)
-    +(!paso?'':luego?apMeta('sigue',`Después: <b>${titulo(luego)}</b>`):apMeta('meta','Último paso de la ficha'))
+    +apMeta('porque',`Por qué ahora: ${esc(hbPlan(sig.h.id).para)}`)
+    +(!paso?'':luego?apMeta('sigue',`Siguiente paso: <b>${esc(mdLimpiaTitulo(luego.q.t))}</b>`):apMeta('meta','Es el último paso de la ficha'))
     +(paso?(paso.list||[]).map(x=>apPunto(x,'ap-opc')).join(''):'');
-  return apTarjeta({ c:'var(--b)', mat:`Habilidades base${propia?' · elegida por ti':''}`,
-    estado:`<span class="ap-av-n">${sig.hechos}/${sig.total}</span>`, ctl:apCtl('ficha','Ficha',propia?habAttr(ec.recomendada.h.t):''),
+  return apTarjeta({ c:'var(--b)', mat:`Habilidades base${propia?' · la elegiste tú':''}`,
+    estado:`<span class="ap-av-n">${sig.hechos} de ${sig.total} pasos</span>`, ctl:apCtl('ficha','Ficha',propia?habAttr(ec.recomendada.h.t):''),
     foto:apFotoHb(sig.h), abrir:`aprendeVisto('hb');abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')`, titulo:'Abrir la ficha de Habilidades Base', txt });
 }
 // En escritorio cada tarjeta tiene alto fijo: lo que no cabe se quita completo y el primer bloque que no
@@ -7052,9 +6963,9 @@ function renderHero(){
   // Los módulos de abajo. renderHeroGymPanel()/renderHeroNutri() ya no se llaman desde aquí: sus
   // tiles salieron de esta pantalla (2026-08-23). Tampoco renderHeroDinero() ni renderHeroFase():
   // Tu dinero y la fase salieron el 8-oct-2026 (Adán: "todo eso ya está en la otra página de
-  // Coach y se repite info"); de Tu dinero se quedó solo Qué invertir hoy, que pinta
-  // pintarInvertirBtn(). Las funciones siguen en el archivo, con su guarda `if(!el)return`, para
-  // poder devolverlas sin reescribirlas.
+  // Coach y se repite info"); de Tu dinero se quedó solo Qué invertir hoy, que es una de las seis
+  // tarjetas de Hoy aprendes (`invertirHoyHtml()`). Las funciones siguen en el archivo, con su guarda
+  // `if(!el)return`, para poder devolverlas sin reescribirlas.
   renderHeroAprender();
   renderDiaEntrena(gymRutina, dowHoy);
   renderDiaHabitos();
@@ -7077,11 +6988,11 @@ function verDiaSemana(dow){
 }
 
 
-// ── 🎓 Hoy aprendes — la tercera columna entera de Mi Día (diseño: diseno-hoyaprendes/, Main).
-//    Una lista, no cajas: arriba lo de cada día —la palabra y el verbo de alemán, el tema de Python
-//    y la pregunta del ISTQB— con una barra que se llena al hacerlo; abajo, lo que avanza contigo.
-//    Tocar un renglón lo abre donde se estudia —Python, en la app de Entrevistas por su hash (#id)—
-//    y ↻ pide otro.
+// ── 🎓 Hoy aprendes — los dos tercios de la derecha de Mi Día: seis tarjetas iguales (`apTarjeta()`) con
+//    el alemán, lo que escuchas manejando, Qué invertir hoy, la pregunta del ISTQB, la habilidad del plan y
+//    la ficha de Habilidades Base, y una barra que se llena con lo hecho hoy. Cada una dice primero de qué
+//    se trata, en una frase chica (`.ap-que`), para que se entienda sin conocer la app. Tocar una la abre
+//    donde se estudia, y ↻ y «Siguiente» piden otra en el orden de Coach.
 function irASlide(cls){
   const sl = document.querySelector('.slide.' + cls);
   if(sl && typeof goTo === 'function') goTo(+sl.dataset.i);
@@ -7115,17 +7026,13 @@ function aprendeHoy(){
   return { st, h };
 }
 function aprendeGuarda(st, h){ st.hoy = h; rawSet(APRENDE_KEY, st); }
-// Cuánto recuerda cada renglón lo que ya salió: la palabra y el tema de Python no se repiten hasta
-// recorrer su orden entero; una pregunta del ISTQB que no contestaste vuelve a la semana, porque su
-// capítulo sigue siendo el que más puntos tiene en juego.
-const APRENDE_MEMORIA = { de: Infinity, py: Infinity, istqb: 7 };
+// Cuánto recuerda cada renglón lo que ya salió: la palabra no se repite hasta recorrer su orden entero;
+// una pregunta del ISTQB que no contestaste vuelve a la semana, porque su capítulo sigue siendo el que
+// más puntos tiene en juego.
+const APRENDE_MEMORIA = { de: Infinity, istqb: 7 };
 // Los órdenes de Coach de cada renglón, con lo que cuenta como hecho en cada uno.
 function aprendeOrdenDe(slot){
   if(slot === 'de') return { orden: aprendeOrdenAleman(), id: w => w.de, libre: () => true };
-  if(slot === 'py'){
-    const hechos = rawGet('study-done-v2', {}) || {};
-    return { orden: aprendeOrdenPython(), id: t => t.id, libre: t => !hechos[t.id] };
-  }
   if(slot === 'istqb'){ const ya = istqbYaContestadas(); return { orden: aprendeOrdenIstqb(), id: q => q.id, libre: q => !ya.has(q.id) }; }
   return null;
 }
@@ -7206,24 +7113,10 @@ function aprendeOrdenAleman(){
   _alOrden = { nivel: e.nivel, n: ps.length, lista };
   return lista;
 }
-// Python, en el orden de Coach. Tu prueba de Código es un repositorio público de pytest y los Werkstudent
-// de validación, HIL y ADAS piden Python para automatizar pruebas: Testing primero, con lo central de
-// pytest antes que unittest; mientras el foco del plan es IA, abre la generación de pruebas con IA.
-// Después los fundamentos —los retos técnicos de las entrevistas— y la POO. Lo estudiado no sale.
-const PY_COACH_MODULOS = ['testing', 'pyfund', 'poo', 'pycheat'];
-const PY_COACH_TESTING = [/^IA Test/i, /^pytest/i, /^Fixtures/i, /parametrize/i, /^Assert en pytest/i, /^Marks/i, /^conftest/i, /^Mock/i,
-  /^Coverage/i, /^GitHub Actions/i, /^API Testing/i, /^Reportes/i, /^Faker/i];
-function aprendeOrdenPython(){
-  if(typeof ENTREVISTA_TEMAS === 'undefined') return [];
-  const ia = (aprendeFoco() || {}).id === 'ia';
-  const mod = t => { const k = PY_COACH_MODULOS.indexOf(t.mod); return k < 0 ? 9 : k; };
-  const sub = t => { let k = PY_COACH_TESTING.findIndex(re => re.test(t.title)); if(k === 0 && !ia) k = 7.5; return k < 0 ? 99 : k; };
-  return ENTREVISTA_TEMAS.map((t, i) => ({ t, i })).sort((a, b) => mod(a.t) - mod(b.t) || sub(a.t) - sub(b.t) || a.i - b.i).map(x => x.t);
-}
 // ── Las fotos de Hoy aprendes. Adán: "todo quiero que tenga imágenes, no dejes nada vacío y menos con
 //    solo iconos". Viven en `fotos-aprende/` —reducidas a 480 px, de Openverse (StockSnap y Flickr), con
 //    su crédito en el `title`— y cada renglón lleva la de lo que enseña: la palabra, la de su tema o, si
-//    no tiene, la de su familia; Python, la de su módulo; el ISTQB, la de su capítulo; una habilidad sin
+//    no tiene, la de su familia; Qué invertir hoy, la de su paso; el ISTQB, la de su capítulo; una habilidad sin
 //    libro, la suya. Networking, Ventas, Liderazgo, Finanzas y Mentalidad usan la de su ficha de
 //    Habilidades Base, y un audiolibro, su portada de la biblioteca.
 const AP_FOTOS = {
@@ -7248,10 +7141,6 @@ const AP_FOTOS = {
   'istqb-5': "Startup Stock Photos · Stocksnap · CC0 1.0",
   'meta-esslingen': "Jorge Franganillo · Flickr · BY 2.0",
   'meta-salida': "Jorge Franganillo · Flickr · BY 2.0",
-  'py-poo': "Christina Morillo · Stocksnap · CC0 1.0",
-  'py-pycheat': "Helder da Rocha · Flickr · BY-SA 2.0",
-  'py-pyfund': "Tirza van Dijk · Stocksnap · CC0 1.0",
-  'py-testing': "One Idea LLC · Stocksnap · CC0 1.0",
   'sk-codigo': "Negative Space · Stocksnap · CC0 1.0",
   'sk-copy': "Aaron Burden · Stocksnap · CC0 1.0",
   'sk-datos': "Negative Space · Stocksnap · CC0 1.0",
@@ -7314,18 +7203,19 @@ function aprendeOrdenIstqb(){
   return istqbBanco().map((q, i) => ({ q, i, j: istqbEnJuego(+q.cap, pts, ac) }))
     .sort((a, b) => b.j - a.j || (b.q.pts || 1) - (a.q.pts || 1) || a.i - b.i).map(x => x.q);
 }
-// Lo hecho hoy: la palabra cuenta al abrirla y «Al volante» al tocar lo que vas a escuchar;
-// Python, al marcarlo estudiado en Entrevistas, y el ISTQB, al contestarlo.
+// Lo hecho hoy: el alemán cuenta al abrir su ventana, lo de escuchar al tocar lo que vas a escuchar, Qué
+// invertir hoy al abrirlo, el ISTQB al contestarlo, y la habilidad y la ficha al abrirlas.
 function aprendeVisto(slot){
   const { st, h } = aprendeHoy();
   h.vistos = h.vistos || {};
   if(!h.vistos[slot]){ h.vistos[slot] = 1; aprendeGuarda(st, h); }
 }
-// Tocar un renglón lo abre donde se estudia: el alemán, en su ventana, aquí mismo.
+// Tocar una tarjeta la abre aquí mismo: el alemán, en su ventana, y Qué invertir hoy, en su panel (antes se
+// repinta Hoy aprendes, para que la barra ya lo cuente al cerrarlo).
 function aprendeAbrir(slot){
   aprendeVisto(slot);
   if(slot === 'de') abrirAleman();
-  else if(slot === 'py') abrirPython();
+  else if(slot === 'invertir'){ renderHeroAprender(); abrirGBM(); }
 }
 
 // Una tarjeta de Hoy aprendes: la foto —tocarla abre lo mismo que el texto—, la materia con su marca, su
@@ -7351,13 +7241,13 @@ function apTarjeta(o){
 }
 // ↻: el siguiente en el orden de Coach.
 function apOtraBtn(slot, otra){ return `<button type="button" class="ap-otra" onclick="aprendeOtra('${slot}')" title="${otra}" aria-label="${otra}">${AP_OTRA}</button>`; }
-// Lo de hoy en alemán, Python y el ISTQB: su tarjeta con ↻.
+// Lo de hoy en alemán y el ISTQB: su tarjeta con ↻.
 function apFila(o){ return apTarjeta(Object.assign({ ctl: apOtraBtn(o.slot, o.otra) }, o)); }
-// «Lo que sigue»: la etiqueta con el primero y, debajo, los demás, un renglón cada uno —bloques aparte,
-// para que apAjustar() quite enteros los que no caben—. Es lo de apoyo: solo sale donde sobra alto.
-function apLuego(items){
+// «Lo que sigue» (o la etiqueta `k`): el primero con su etiqueta y, debajo, los demás, un renglón cada uno
+// —bloques aparte, para que apAjustar() quite enteros los que no caben—. Es lo de apoyo: solo sale donde sobra alto.
+function apLuego(items, k){
   return items.map((x, i) => i ? `<span class="ap-sig ap-opc">${x}</span>`
-    : `<span class="ap-bq ap-opc"><span class="ap-bq-k">Lo que sigue</span><span class="ap-sig">${x}</span></span>`).join('');
+    : `<span class="ap-bq ap-opc"><span class="ap-bq-k">${k || 'Lo que sigue'}</span><span class="ap-sig">${x}</span></span>`).join('');
 }
 
 // ── El alemán de hoy, en su tarjeta: el vocabulario del día y la lección que toca ─────────────────
@@ -7394,38 +7284,45 @@ function alemanGram(w){
   ].filter(Boolean).join(' · ');
 }
 const AL_TIPO = { sust: 'sustantivo', verbo: 'verbo', adj: 'adjetivo', adv: 'adverbio', num: 'número', frase: 'frase' };
+// «K10 · 03» se lee «Lección 3 del capítulo 10», y «A2 · 05», «Lección 5 del A2».
+function alNumTxt(num){
+  const m = String(num || '').match(/^(?:K(\d+)|([AB]\d))\s*·\s*(\d+)$/);
+  return m ? 'Lección ' + (+m[3]) + ' del ' + (m[1] ? 'capítulo ' + m[1] : m[2]) : 'Lección ' + String(num || '');
+}
 function alemanHoyHtml(vistos){
   const V = (typeof alVocab === 'function') ? alVocab() : null, ws = V ? alemanVocabHoy() : [], a = ws[0], t = alemanLeccionHoy();
   if(!a && !t) return '';
-  let txt = '';
+  let txt = `<span class="ap-que ap-cl l2" data-min="1">${a && t ? 'Tus palabras nuevas de hoy y la lección que sigue en tu curso.'
+    : a ? 'Tus palabras nuevas de hoy y las que toca repasar.' : 'La lección que sigue en tu curso de alemán.'}</span>`;
   if(a){
     const art = (a.art || '-').split('/')[0].trim();
     const artHtml = art && art !== '-' ? `<span>${esc(art === 'pl.' ? 'die' : a.art)}</span> ` : '';
-    const pl = a.pl && a.pl !== '-' ? `<span class="ap-m">pl. die ${esc(a.pl)}</span>`
-             : (art === 'pl.' ? '<span class="ap-m">solo plural</span>' : '');
+    const pl = a.pl && a.pl !== '-' ? `<span class="ap-m">plural: die ${esc(a.pl)}</span>`
+             : (art === 'pl.' ? '<span class="ap-m">solo en plural</span>' : '');
     const f = a.conj && a.aux ? String(a.conj).split('·').map(x => x.trim()) : null;
     const aux = a.aux === 'ist' ? 'ist' : 'hat';
-    const perf = f ? `<span class="ap-m">Perfekt · <span class="ap-aux ${aux}">${aux}</span> ${esc(f[f.length - 1])}</span>` : '';
+    const perf = f ? `<span class="ap-m">en pasado: <span class="ap-aux ${aux}">${aux}</span> ${esc(f[f.length - 1])}</span>` : '';
     const rep = alemanRepasoHoy().length;
-    txt += apBloque(`Vocabulario de hoy · ${ws.length} palabras${rep ? ` · ${rep} de repaso` : ''}`, `<span class="ap-de ap-cl l2" data-min="1" lang="de">${artHtml}${esc(a.de)}</span>`)
+    txt += apBloque(`${ws.length} palabras nuevas${rep ? ` · ${rep} de repaso` : ''}`, `<span class="ap-de ap-cl l2" data-min="1" lang="de">${artHtml}${esc(a.de)}</span>`)
       + `<span class="ap-es">${esc(a.es)}${pl}${perf}</span>`
-      + (ws.length > 1 ? `<span class="ap-dato ap-1l">y ${ws.length - 1} más: ${ws.slice(1, 5).map(w => `<b lang="de">${esc(w.de)}</b>`).join(' · ')}${ws.length > 5 ? '…' : ''}</span>` : '');
+      + (ws.length > 1 ? `<span class="ap-dato ap-1l">Las otras ${ws.length - 1}: ${ws.slice(1, 5).map(w => `<b lang="de">${esc(w.de)}</b>`).join(' · ')}${ws.length > 5 ? '…' : ''}</span>` : '');
   }
   if(t){
     const l = t.l, av = t.avance, ir = ` onclick="event.stopPropagation();abrirAleman('leccion')" title="Abrir la lección aquí mismo"`;
-    txt += `<span class="ap-bq ap-ir-lec"${ir}><span class="ap-bq-k">Lección · ${esc(t.ceja)} · ${esc(l.num)}</span><span class="ap-t ap-cl l2" data-min="1" lang="de">${esc(l.de)}</span></span>`
+    txt += `<span class="ap-bq ap-ir-lec"${ir}><span class="ap-bq-k">${esc(alNumTxt(l.num))} · ${esc(String(t.ceja).replace(/Kapitel/g, 'capítulo'))}</span><span class="ap-t ap-cl l2" data-min="1"><span lang="de">${esc(l.de)}</span>${av ? `<span class="ap-m">${av.hechos} de ${av.total} ejercicios hechos</span>` : ''}</span></span>`
       + (av ? apTramos(av.total, j => j < av.hechos, -1).replace('<span class="ap-seg"', `<span class="ap-seg ap-ir-lec"${ir}`) : '')
-      + `<span class="ap-dato ap-1l ap-ir-lec"${ir}>${esc(l.es)}${av ? ` · <b>${av.hechos} de ${av.total}</b> ejercicios` : ''}</span>`;
+      + `<span class="ap-dato ap-1l ap-ir-lec"${ir}>${esc(l.es)}</span>`;
   }
   if(a){
     const ex = alemanEjemplo(a);
     txt += (ex ? `<span class="ap-ex ap-cl ap-opc"><span lang="de">${esc(ex)}</span>${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</span>` : '')
-      + (a.uso ? `<span class="ap-nota ap-cl l2 ap-opc" data-min="1"><b>Uso</b> · ${esc(a.uso)}</span>` : '');
+      + (a.uso ? `<span class="ap-nota ap-cl l2 ap-opc" data-min="1"><b>Cuándo se usa</b> · ${esc(a.uso)}</span>` : '');
   }
   const practico = alemanPracticoHoy();
   return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA, foto: a ? apFotoAleman(a) : apFotoLeccion(t.l),
-    mat: `Alemán · ${esc(a ? ((V.cats[a.cat] || {}).label || '') : (t.l.num || ''))}`,
-    estado: apEstado(!!vistos.de || practico, a ? `${ws.length} palabras` : 'lección', practico ? '✓ practicaste' : '✓ visto'),
+    mat: `Alemán · ${esc(a ? ((V.cats[a.cat] || {}).label || '') : 'tu curso')}`,
+    estado: (vistos.de || practico) ? apEstado(true, '', practico ? '✓ practicaste' : '✓ abierto')
+      : `<button type="button" class="ap-estado ir" onclick="aprendeAbrir('de')">Practicar</button>`,
     otra: `Las ${AL_VOC_DIA} palabras siguientes, en el orden de Coach`,
     abrir: "aprendeAbrir('de')", titulo: 'Abrir el vocabulario y la lección de hoy aquí mismo', txt });
 }
@@ -7820,159 +7717,44 @@ function escucharHoyHtml(vistos){
   const d = didiHoy(); if(!d || !d.libro) return '';
   const { libro, pod, finde, horas } = d;
   const sk = SK.find(s => s.id === libro.g.sk);
-  const cuando = finde ? (horas.length ? horas.join(' y ') : 'los turnos largos') : (horas[0] || 'la mañana');
-  const cuandoPod = finde ? 'el otro turno' : (horas.slice(1).join(' y ') || 'la noche');
+  // «a las 07:40», con la hora en su color; sin horas en la rutina, el momento del día.
+  const aLas = hs => hs.map(h => `a las <b class="ap-hora">${esc(h)}</b>`).join(' y ');
+  const cuando = horas.length ? aLas(finde ? horas : horas.slice(0, 1)) : (finde ? 'en los turnos largos' : 'en la mañana');
+  const cuandoPod = finde ? 'en el otro turno' : (horas.length > 1 ? aLas(horas.slice(1)) : 'en la noche');
   const oir = x => `<a class="ap-oir" href="${didiSpo(x.q)}" target="_blank" rel="noopener" onclick="aprendeVisto('escuchar');setTimeout(renderHeroAprender,60)" title="Buscarlo en Spotify">${esc(x.n)}<span aria-hidden="true">&nbsp;↗</span></a>`;
   const estado = vistos.escuchar ? '<span class="ap-estado ok">✓ escuchando</span>'
     : '<button type="button" class="ap-estado ir" onclick="abrirDidi()">Qué escuchar</button>';
-  return apTarjeta({ c: 'var(--o)', mat: `Al volante · ${esc(sk ? sk.name : '')}`, estado,
+  const tipo = pod && pod.it.tipo === 'yt' ? 'El video de hoy' : 'El podcast de hoy';
+  return apTarjeta({ c: 'var(--o)', mat: `Para escuchar manejando · ${esc(sk ? sk.name : '')}`, estado,
     ctl: apOtraBtn('escuchar', 'El siguiente audiolibro del foco'), foto: apFotoLibro(libro.it.lib, libro.g.sk),
     abrirFoto: 'abrirDidi()', titulo: 'Abrir Qué escuchar',
-    txt: `<span class="ap-t ap-cl l2" data-min="1">${oir(libro.it)}</span>
-      <span class="ap-es ap-1l"><b class="ap-hora">${esc(cuando)}</b> · audiolibro de la semana</span>
-      ${pod ? `<span class="ap-nota ap-cl l2" data-min="1"><b class="ap-hora">${esc(cuandoPod)}</b> · ${DIDI_TAG[pod.it.tipo].l.toLowerCase()}: ${oir(pod.it)}</span>` : ''}
-      ${libro.it.d ? `<span class="ap-es ap-cl ap-opc">${esc(libro.it.d)}</span>` : ''}
-      ${apLuego(didiLibrosLuego(d, 2).map(x => `<b>${esc(x.it.n)}</b>${x.it.d ? ` · ${esc(x.it.d)}` : ''}`))}` });
+    txt: `<span class="ap-que ap-cl l2" data-min="1">Un audiolibro por semana y un podcast al día, para cuando manejas.</span>
+      <span class="ap-t ap-cl l2" data-min="1">${oir(libro.it)}</span>
+      <span class="ap-es ap-1l">El audiolibro de esta semana, ${cuando}</span>
+      ${pod ? `<span class="ap-es ap-cl l2" data-min="1">${tipo}, ${cuandoPod}: ${oir(pod.it)}</span>` : ''}
+      ${libro.it.d ? `<span class="ap-es ap-cl ap-opc"><b>De qué trata:</b> ${esc(libro.it.d)}</span>` : ''}
+      ${apLuego(didiLibrosLuego(d, 2).map(x => `<b>${esc(x.it.n)}</b>${x.it.d ? ` · ${esc(x.it.d)}` : ''}`), 'Las próximas semanas')}` });
 }
 
-// El tema de Python, con su explicación de una línea. Cuenta como hecho cuando lo marcas estudiado —en su
-// ventana o en Entrevistas: los dos escriben `study-done-v2`, {id: true}—. Tocarlo abre su ventana.
-function pythonHoyHtml(){
-  const p = entrevistaTemaHoy();
-  if(!p) return '<div class="hp-empty">El catálogo de Python no cargó — revisa entrevistas-data.js.</div>';
-  const hechos = rawGet('study-done-v2', {}) || {};
-  const n = ENTREVISTA_TEMAS.filter(t => hechos[t.id]).length;
-  return apFila({ slot: 'py', c: 'var(--cy)', marca: AP_PUNTO, foto: apFoto('py-' + p.mod) || apFotoSk('codigo'), mat: `Python · ${esc(pyModLabel(p.mod))}`,
-    estado: apEstado(!!hechos[p.id], 'tema del día', '✓ estudiado'), otra: 'El siguiente tema, en el orden de Coach', abrir: "aprendeAbrir('py')",
-    titulo: `Abrir el tema aquí mismo · llevas ${n} de ${ENTREVISTA_TEMAS.length} estudiados`,
-    txt: `<span class="ap-t ap-cl l2" data-min="1">${esc(p.title)}</span>
-      ${p.hint ? `<span class="ap-es ap-cl">${esc(p.hint)}</span>` : ''}
-      ${(p.tags || []).length ? `<span class="ap-tags ap-opc">${p.tags.map(t => `<i>${esc(t)}</i>`).join('')}</span>` : ''}
-      <span class="ap-dato ap-1l ap-opc">Llevas <b>${n} de ${ENTREVISTA_TEMAS.length}</b> temas estudiados en Entrevistas</span>
-      ${apLuego(aprendeLuego('py', 3).map(t => `<b>${esc(t.title)}</b>${t.hint ? ` · ${esc(t.hint)}` : ''}`))}` });
+// Qué invertir hoy, en su tarjeta (Adán, 19-oct-2026: "quita esta sección [Python] y pon ahí el recuadro que
+// tenemos de qué invertir hoy y acomódalo como los demás recuadros"): el paso del Plan Maestro para tu dinero de
+// hoy (`pasoInversionHoy()`, la misma regla que el panel) en su color, su porqué con tus saldos de Finanzas, lo
+// que haces hoy y lo que sigue. La foto sigue al paso: la tarjeta cortada mientras haya que pagarla y la gráfica
+// cuando toca invertir. Tocarla abre el panel completo (`abrirGBM()`) y cuenta como hecho hoy.
+function invertirHoyHtml(vistos){
+  const p = pasoInversionHoy();
+  const estado = vistos.invertir ? '<span class="ap-estado ok">✓ revisado</span>'
+    : `<button type="button" class="ap-estado ir" onclick="aprendeAbrir('invertir')">Ver el plan</button>`;
+  return apTarjeta({ c: 'var(--cy)', mat: 'Qué invertir hoy', estado, foto: apFoto(p.foto),
+    abrir: "aprendeAbrir('invertir')", titulo: 'Abrir Qué invertir hoy: tu situación, los precios de hoy y qué comprar según tu perfil',
+    txt: `<span class="ap-que ap-cl l2" data-min="1">Lo que toca hoy con tu dinero, según tu plan de finanzas.</span>
+      <span class="ap-t ap-cl l2" data-min="1" style="color:${p.color}">${p.titulo}</span>
+      <span class="ap-es ap-cl">${p.porque}</span>
+      ${p.hoy ? `<span class="ap-hacer ap-cl l2" data-min="1">${p.hoy}</span>` : ''}
+      ${apMeta(p.notaIco, p.nota)}
+      ${apLuego(p.abonos, 'Los abonos que siguen')}
+      ${p.fondo ? apMeta('meta', p.fondo, 'ap-opc') : ''}` });
 }
-
-// ── La ventana de Python (#pythonOverlay) ────────────────────────────────────────────────────
-// Adán, 2026-10-14: "lo mismo para lo de python" —que el tema se abra ahí mismo, como el alemán—. El tema
-// entero, como en Entrevistas pero con la piel del Dashboard: arriba la explicación en llano (Qué es · Para qué
-// sirve · Lo que importa, de `Entrevistas/js/data-python-intro.js`) y después el contenido, con sus pestañas y
-// su quiz. Viene de `entrevistas-temas.js`, que arma el generador de Entrevistas y que solo se carga la primera
-// vez que se abre la ventana (`pythonCargar()`): son ~1 MB que el arranque no paga. «Marcar estudiado» escribe
-// `study-done-v2` igual que Entrevistas ({id: true/false}): la tarjeta, la barra de Hoy aprendes y la app se
-// enteran. ↻ trae el siguiente tema del orden de Coach. Mientras está abierta, Mi Día no rota.
-let _pyCarga = null;
-function pythonCargar(){
-  if(typeof ENTREVISTA_CONTENT !== 'undefined') return Promise.resolve();
-  if(!_pyCarga) _pyCarga = new Promise((ok, mal) => {
-    const sc = document.createElement('script');
-    sc.src = 'entrevistas-temas.js';
-    sc.onload = () => {
-      if(typeof ENTREVISTA_CSS !== 'undefined' && !document.getElementById('enCss')){
-        const st = document.createElement('style'); st.id = 'enCss'; st.textContent = ENTREVISTA_CSS; document.head.appendChild(st);
-      }
-      ok();
-    };
-    sc.onerror = () => { _pyCarga = null; sc.remove(); mal(new Error('sin entrevistas-temas.js')); };
-    document.head.appendChild(sc);
-  });
-  return _pyCarga;
-}
-// Las pestañas y los quizzes del contenido llaman a estas dos, como en su app (Entrevistas/js/core.js); el
-// control 34 del verificador comprueba que existan las que el contenido usa.
-function toggleQuiz(el){ el.classList.toggle('open'); if(el.nextElementSibling) el.nextElementSibling.classList.toggle('open'); }
-function switchTab(btn, panelId, groupClass){
-  const c = btn.closest('.tab-group-' + groupClass); if(!c) return;
-  c.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  c.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(panelId)?.classList.add('active');
-}
-// El tema que pinta el cuerpo: si no cambió, no se repinta (se perderían las pestañas y respuestas abiertas).
-let _pyVisto = null;
-function abrirPython(){
-  const ov = document.getElementById('pythonOverlay'); if(!ov || !entrevistaTemaHoy()) return;
-  pythonPintar();
-  ov.classList.add('open'); clearInterval(timer);
-}
-function cerrarPython(){
-  const ov = document.getElementById('pythonOverlay');
-  if(!ov || !ov.classList.contains('open')) return;
-  ov.classList.remove('open'); restartTimer();
-  renderHeroAprender();
-}
-function pythonAbierta(){ const ov = document.getElementById('pythonOverlay'); return !!ov && ov.classList.contains('open'); }
-function pythonPintar(){
-  const p = entrevistaTemaHoy(), cuerpo = document.getElementById('pythonCuerpo'); if(!p || !cuerpo) return;
-  pythonPintarCab();
-  if(_pyVisto === p.id && cuerpo.querySelector('.en-content')) return;
-  _pyVisto = p.id;
-  cuerpo.innerHTML = '<div class="pyv-carga">Abriendo el tema…</div>';
-  cuerpo.scrollTop = 0;
-  pythonCargar().then(() => {
-    if(_pyVisto !== p.id) return;
-    const html = ENTREVISTA_CONTENT[p.id];
-    cuerpo.innerHTML = html ? `<div class="en-content">${html}</div>`
-      : '<div class="pyv-carga">Este tema no está en entrevistas-temas.js: corre node Entrevistas/_generar-datos-dashboard.js.</div>';
-    pythonPintarCab();
-  }, () => {
-    if(_pyVisto !== p.id) return;
-    _pyVisto = null;
-    cuerpo.innerHTML = '<div class="pyv-carga">No encontré Dashboard/entrevistas-temas.js: corre node Entrevistas/_generar-datos-dashboard.js, o ábrelo en Entrevistas.</div>';
-  });
-}
-// El encabezado: su foto, el módulo, el título con su icono, la explicación de una línea y sus palabras clave; a
-// la derecha, «Pruébate» si trae quiz (el prompt de Entrevistas: preguntas antes que lectura), «Marcar
-// estudiado», ↻ y cuántos llevas.
-function pythonPintarCab(){
-  const el = document.getElementById('pythonCab'), p = entrevistaTemaHoy(); if(!el || !p) return;
-  const hechos = rawGet('study-done-v2', {}) || {}, n = ENTREVISTA_TEMAS.filter(t => hechos[t.id]).length, hecho = !!hechos[p.id];
-  const quiz = document.querySelectorAll('#pythonCuerpo .quiz-card').length;
-  el.innerHTML = `${apImg(apFoto('py-' + p.mod) || apFotoSk('codigo'), 'pyv-foto')}
-    <div class="pyv-t">
-      <div class="pyv-k">Tema de hoy · ${esc(pyModLabel(p.mod))}</div>
-      <h3 class="pyv-h">${p.icon ? `<span class="pyv-ico" aria-hidden="true">${esc(p.icon)}</span>` : ''}<span>${esc(p.title)}</span></h3>
-      ${p.hint ? `<div class="pyv-s">${esc(p.hint)}</div>` : ''}
-      ${(p.tags || []).length ? `<div class="pyv-tags">${p.tags.map(t => `<i>${esc(t)}</i>`).join('')}</div>` : ''}
-    </div>
-    <div class="pyv-acc">
-      <div class="pyv-fila">
-        ${quiz ? `<button type="button" class="pyv-quiz" onclick="pythonAlQuiz()">Pruébate · ${quiz} ${quiz === 1 ? 'pregunta' : 'preguntas'}</button>` : ''}
-        <button type="button" class="pyv-hecho${hecho ? ' ok' : ''}" onclick="pythonEstudiado()">${hecho ? '✓ Estudiado' : '◯ Marcar estudiado'}</button>
-        <button type="button" class="ap-otra" onclick="pythonOtro()" title="El siguiente tema, en el orden de Coach" aria-label="El siguiente tema, en el orden de Coach">${AP_OTRA}</button>
-      </div>
-      <div class="pyv-dato">Llevas <b>${n} de ${ENTREVISTA_TEMAS.length}</b> temas estudiados · <a href="javascript:void(0)" class="hp-link pyv-ir" onclick="window.open('../Entrevistas/entrevistas.html#${p.id}','_blank','noopener')">Abrir en Entrevistas →</a></div>
-    </div>`;
-}
-// «Marcar estudiado», como en Entrevistas (`toggleDone()`): el mismo `study-done-v2`, {id: true/false}. Y
-// cuenta como lo hecho hoy (`vistos.py`) aunque después ↻ traiga otro tema: hoy sí estudiaste uno.
-function pythonEstudiado(){
-  const p = entrevistaTemaHoy(); if(!p) return;
-  const d = rawGet('study-done-v2', {}) || {};
-  d[p.id] = !d[p.id];
-  rawSet('study-done-v2', d);
-  const { st, h } = aprendeHoy();
-  h.vistos = h.vistos || {};
-  if(d[p.id]) h.vistos.py = 1; else delete h.vistos.py;
-  aprendeGuarda(st, h);
-  pythonPintarCab();
-  renderHeroAprender();
-}
-// ↻: el siguiente del orden de Coach, que queda como el de hoy (`aprendeOtra('py')`).
-function pythonOtro(){ aprendeOtra('py'); pythonPintar(); }
-// «Pruébate» baja al primer quiz del tema; si vive en una pestaña cerrada, primero la abre.
-function pythonAlQuiz(){
-  const c = document.getElementById('pythonCuerpo'), q = c && c.querySelector('.quiz-section, .quiz-card'); if(!q) return;
-  const panel = q.closest('.tab-panel');
-  if(panel && !panel.classList.contains('active')){
-    const btn = [...c.querySelectorAll('.tab-btn')].find(b => (b.getAttribute('onclick') || '').indexOf("'" + panel.id + "'") >= 0);
-    if(btn) btn.click();
-  }
-  requestAnimationFrame(() => c.scrollTo({ top: q.getBoundingClientRect().top - c.getBoundingClientRect().top + c.scrollTop - 12, behavior: 'smooth' }));
-}
-// Si se marca en Entrevistas con la ventana abierta (otra pestaña), el encabezado se entera.
-window.addEventListener('storage', e => {
-  if(pythonAbierta() && (e.key === 'study-done-v2' || e.key === null)) pythonPintarCab();
-});
 
 // La pregunta del ISTQB CT-GenAI: una de los dos bancos del simulacro (los mismos que usa
 // examen-genai.js). En la columna va en dos líneas; se contesta en su ventana (#istqbOverlay) —la
@@ -8017,25 +7799,30 @@ function istqbMarcador(){
   }
   const X = window.EXAMEN_GENAI || {}, corte = (X.meta && X.meta.corte) || 0;
   const u = ((rawGet('examen_genai_v1', {}) || {}).intentos || []).slice(-1)[0];
-  return [n ? `7 días: <b>${ok} de ${n}</b>` : '',
-          u ? `simulacro <b class="${u.pts >= corte ? 'ok' : 'bajo'}" title="El corte es ${corte} de ${u.max}">${u.pts}/${u.max}</b>` : '']
+  return [n ? `En 7 días: <b>${ok} de ${n}</b> bien` : '',
+          u ? `último simulacro: <b class="${u.pts >= corte ? 'ok' : 'bajo'}" title="Se aprueba con ${corte} de ${u.max}">${u.pts} de ${u.max}</b>` : '']
     .filter(Boolean).join(' · ');
 }
-// En su tarjeta: la pregunta, lo que vale y cómo vas; arriba, «Responder» o el resultado y, donde sobra alto, las opciones o el porqué.
+// En su tarjeta: de qué se trata, la pregunta, de qué capítulo es y cuánto vale, y cómo vas; arriba, «Responder» o el
+// resultado y, donde sobra alto, las opciones o el porqué. El nivel K del programa se dice en llano (`IQ_K_LLANO`).
+const IQ_K_LLANO = { K1: 'pregunta de memoria', K2: 'pregunta de comprensión', K3: 'caso práctico' };
 function istqbHtml(){
   const q = istqbPreguntaHoy(); if(!q) return '';
-  const hecha = istqbHoy(q);
+  const hecha = istqbHoy(q), ex = cdTarea('a1-7'), vas = istqbMarcador(), cap = ((window.EXAMEN_GENAI || {}).capitulos || {})[q.cap] || '';
   const estado = !hecha ? '<button type="button" class="ap-estado ir" onclick="abrirIstqb()">Responder</button>'
     : `<span class="ap-estado ${hecha.ok ? 'ok' : 'mal'}">${hecha.ok ? '✓ correcta' : '✗ era la ' + 'ABCD'[q.r]}</span>`;
-  const dato = [esc(q.k || ''), (q.pts || 1) === 1 ? '<b>1 punto</b>' : `<b>${q.pts} puntos</b>`, istqbMarcador()].filter(Boolean).join(' · ');
-  return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), mat: `ISTQB CT-GenAI · Cap. ${q.cap}`,
+  const dato = [`Capítulo ${esc(q.cap)}`, IQ_K_LLANO[q.k] || esc(q.k || ''), (q.pts || 1) === 1 ? 'vale <b>1 punto</b>' : `vale <b>${q.pts} puntos</b>`].filter(Boolean).join(' · ');
+  return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), mat: 'Examen ISTQB · pruebas con IA',
     estado, otra: 'La siguiente pregunta, en el orden de Coach', abrir: 'abrirIstqb()', titulo: 'Contestar la pregunta del día',
-    txt: `<span class="ap-q ap-cl">${q.q}</span>
+    txt: `<span class="ap-que ap-cl l2" data-min="1">Una pregunta al día para tu examen de pruebas con IA${ex && ex.s.mes ? ` (${cdMes(ex.s.mes)})` : ''}.</span>
+      <span class="ap-q ap-cl">${q.q}</span>
       <span class="ap-dato ap-1l">${dato}</span>
+      ${cap ? `<span class="ap-dato ap-cl l2" data-min="1">Tema del capítulo: ${esc(cap)}</span>` : ''}
+      ${vas ? `<span class="ap-dato ap-1l ap-opc">${vas}</span>` : ''}
       ${hecha ? (q.why ? `<span class="ap-es ap-cl ap-opc">${q.why}</span>` : '')
         : `<span class="ap-ops ap-opc">${q.o.map((o, i) => `<span class="ap-op"><b>${'ABCD'[i]}</b><span>${o}</span></span>`).join('')}</span>`}` });
 }
-// La ventana (#istqbOverlay): tan ancha y alta como las del alemán y Python —Adán: "haz la ventana mucho más grande, así
+// La ventana (#istqbOverlay): tan ancha y alta como la del alemán —Adán: "haz la ventana mucho más grande, así
 // como las otras… y puedes meter más info"—, en tres columnas con un trabajo cada una (`istqbPintar()`):
 //   · La pregunta (`iqPreguntaHtml`): la foto de su capítulo, el enunciado y las cuatro opciones —también con 1–4 o
 //     A–D—. Contestada, la buena en verde, la tuya en rojo si fallaste y «Siguiente pregunta» (Enter).
@@ -8235,7 +8022,7 @@ function istqbTecla(e){
 //    una regla cambia, el panel cambia con ella. Las metas son ids de tareas de `PHASES`: el mes y si ya
 //    está hecha (`coach_checks_v1`) salen de ahí.
 const CD_METAS = [
-  { id: 'a1-7',  t: 'Aprobar el ISTQB CT-GenAI',        para: 'la pregunta del ISTQB, el paso de la semana, «Al volante» y Python' },
+  { id: 'a1-7',  t: 'Aprobar el ISTQB CT-GenAI',        para: 'la pregunta del ISTQB, la habilidad del plan y lo que escuchas manejando' },
   { id: 'a1-4',  t: 'Las dos cartas de recomendación',  para: 'la ficha de Networking' },
   { id: 'a1-18', t: 'Subir tu ingreso desde noviembre', para: 'la ficha de Persuadir' },
   { id: 'a1-10', t: 'Mandar la solicitud a Esslingen',  para: 'el foco de Inglés, después del ISTQB' },
@@ -8285,7 +8072,7 @@ function comoDecideHtml(){
         : `La lección, la del <b>${esc(kc ? kc.label : 'Kapitel')}</b> que ves en clase en ${esc(CIFRAS.texto('{{escuelaAleman}}'))}: la que dejaste a medias o, si no, la siguiente sin terminar, en el orden en que conviene estudiarlo; con todo hecho, el minitest. «Siguiente», en su ventana, recorre el Kapitel, luego el A2 y el A1. `) : '';
     const rp = vh.length ? `El vocabulario: <b>${AL_VOC_DIA} palabras al día</b>, primero el <b>${etapa.nivel}</b>${etapa.nivel === 'A2' ? `, el certificado que pide Esslingen, hasta la Fase 2 (${cdFecha(etapa.hasta)})` : ', el de la maestría y el trabajo'}. Dentro, lo que vas a necesitar primero al llegar —${esc(temas)}—, luego la casa, la escuela y el trabajo, y lo demás al final: cada día, las siguientes que no hayan salido (van <b>${van} de ${delNivel.length}</b> del ${etapa.nivel}). Y el repaso espaciado: cada una vuelve al día siguiente y, si te la sabes, a los 3, 7, 14 y 30 días; hoy tocan <b>${rh.length}</b>.` : '';
     filas.push({ k: 'Alemán', c: 'var(--g)', foto: tl ? apFotoLeccion(tl.l) : apFotoAleman(vh[0]),
-      hoy: `${tl ? `${esc(tl.l.num)} · ${esc(tl.l.de)}` : ''}${tl && vh.length ? ' · ' : ''}${vh.length ? `${vh.length} palabras: ${esc(alemanArtTxt(vh[0]))}${esc(vh[0].de)}…` : ''} <span>${vh.length ? `${esc((V.cats[vh[0].cat] || {}).label || '')} · ${esc(vh[0].niv || '')}` : ''}</span>`,
+      hoy: `${tl ? `${esc(alNumTxt(tl.l.num))} · ${esc(tl.l.de)}` : ''}${tl && vh.length ? ' · ' : ''}${vh.length ? `${vh.length} palabras: ${esc(alemanArtTxt(vh[0]))}${esc(vh[0].de)}…` : ''} <span>${vh.length ? `${esc((V.cats[vh[0].cat] || {}).label || '')} · ${esc(vh[0].niv || '')}` : ''}</span>`,
       regla: rl + rp });
   }
   const d = didiHoy();
@@ -8296,29 +8083,26 @@ function comoDecideHtml(){
       : delFoco(d.libro) ? 'El audiolibro, el siguiente del foco que no hayas escuchado: se decide el lunes y se queda toda la semana.'
       : `${foco ? esc(foco.name) : 'El foco'} no tiene audiolibros en el catálogo: va el de ${nombre(d.libro)}, lo primero del orden de Coach que todavía no te ha tocado. Uno por semana: se decide el lunes y no cambia hasta el siguiente.`;
     const rPod = !d.pod ? '' : (delFoco(d.pod) ? 'El podcast, el siguiente del foco cada día' : `El podcast, de ${nombre(d.pod)}`) + ' (los de una hora o más, el fin de semana).';
-    filas.push({ k: 'Al volante', c: 'var(--o)', foto: apFotoLibro(d.libro.it.lib, d.libro.g.sk), hoy: `${esc(d.libro.it.n)}${d.pod ? ` <span>· ${esc(d.pod.it.n)}</span>` : ''}`,
+    filas.push({ k: 'Para escuchar manejando', c: 'var(--o)', foto: apFotoLibro(d.libro.it.lib, d.libro.g.sk), hoy: `${esc(d.libro.it.n)}${d.pod ? ` <span>· ${esc(d.pod.it.n)}</span>` : ''}`,
       regla: `Primero lo del foco${foco ? ` (<b>${esc(foco.name)}</b>)` : ''}, luego el siguiente foco del plan y las habilidades con más retorno; lo que Coach tiene en pausa no entra. ${rLibro} ${rPod}` });
   }
-  const p = entrevistaTemaHoy();
-  if(p){
-    const hechos = rawGet('study-done-v2', {}) || {}, n = ENTREVISTA_TEMAS.filter(x => hechos[x.id]).length, cod = SK.find(s => s.id === 'codigo');
-    filas.push({ k: 'Python', c: 'var(--cy)', foto: apFoto('py-' + p.mod) || apFotoSk('codigo'), hoy: `${esc(p.title)} <span>${esc(pyModLabel(p.mod))}</span>`,
-      regla: `Testing primero, con lo central de pytest antes que unittest. Tu prueba de Código en Coach: <b>${esc(cod ? cod.prueba : '')}</b> ${foco && foco.id === 'ia' ? 'Con el foco en IA, abre la generación de pruebas con IA. ' : ''}Después los fundamentos y la POO. Lo que estudias no vuelve: llevas <b>${n} de ${ENTREVISTA_TEMAS.length}</b>.` });
-  }
+  const pi = pasoInversionHoy();
+  filas.push({ k: 'Qué invertir hoy', c: 'var(--cy)', foto: apFoto(pi.foto), hoy: pi.titulo,
+    regla: 'No lo decide el azar ni el mercado: es el orden de tu Plan Maestro, con tus saldos de Finanzas. Primero la tarjeta BBVA, quincena a quincena y sin intereses, hasta dejarla en cero; después, todo a GBM para Alemania, y los primeros pesos completan el fondo de emergencia. El auto no se adelanta: se paga con su mensualidad. Qué comprar en GBM lo dice tu perfil, en el panel.' });
   const q = istqbPreguntaHoy();
   if(q){
     const pts = istqbPuntosCap(), ac = istqbAciertoCap(), X = window.EXAMEN_GENAI || {}, ex = cdTarea('a1-7');
     const caps = Object.keys(pts).map(Number).sort((a, b) => istqbEnJuego(b, pts, ac) - istqbEnJuego(a, pts, ac));
     const tabla = caps.map(c => { const a = ac[c];
       return `<span class="cd-cap${c === +q.cap ? ' on' : ''}"><b>Cap. ${c}</b> ${pts[c]} pts · ${a && a.n ? `${a.ok} de ${a.n}` : 'sin respuestas'} · ${istqbEnJuego(c, pts, ac).toFixed(1)} en juego</span>`; }).join('');
-    filas.push({ k: 'ISTQB', c: 'var(--p)', foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), hoy: `Capítulo ${esc(q.cap)} · ${esc(q.lo || '')} <span>${q.pts > 1 ? q.pts + ' puntos' : '1 punto'}</span>`,
+    filas.push({ k: 'ISTQB', c: 'var(--p)', foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), hoy: `Capítulo ${esc(q.cap)}: ${esc((X.capitulos || {})[q.cap] || '')} <span>${IQ_K_LLANO[q.k] || esc(q.k || '')} · ${q.pts > 1 ? q.pts + ' puntos' : '1 punto'} · objetivo ${esc(q.lo || '')}</span>`,
       regla: `El examen va en ${ex && ex.s.mes ? cdMes(ex.s.mes) : 'la Fase 1'}${X.meta ? ` (${X.meta.preguntas} preguntas; el corte es ${X.meta.corte} de ${X.meta.puntos})` : ''}. Primero el capítulo con más puntos en juego —lo que vale en el examen por lo que te falta de acierto ahí; con menos de tres respuestas cuenta la mitad— y, dentro, las de 2 puntos. Las que contestas no vuelven.`,
       extra: `<div class="cd-caps">${tabla}</div>` });
   }
   if(foco){
     const pasos = habPasos(foco.id), st = habFocoLoad(); let i = st.paso[foco.id] || 0; if(i < 0 || i >= pasos.length) i = 0;
     const libP = pasos[i] && (Array.isArray(pasos[i].r) ? pasos[i].r : []).find(x => x && x.t === 'libro');
-    filas.push({ k: 'Paso de la semana', c: 'var(--w)', foto: apFotoLibro(libP && libP.id, foco.id), hoy: `${esc(foco.name)} · ${esc(pasos[i] ? pasos[i].n : '')} <span>paso ${i + 1} de ${pasos.length}</span>`,
+    filas.push({ k: 'Habilidad', c: 'var(--w)', foto: apFotoLibro(libP && libP.id, foco.id), hoy: `${esc(foco.name)} · ${esc(pasos[i] ? pasos[i].n : '')} <span>paso ${i + 1} de ${pasos.length}</span>`,
       regla: rec && rec.id !== foco.id ? `Lo elegiste tú con «Siguiente». El de Coach es <b>${esc(rec.name)}</b>: «↺» en la tarjeta vuelve a él.`
         : `El foco del plan para hoy${t ? `, de ${cdMes(t.desde)} a ${cdMes(t.hasta)}` : ''}: su ruta, paso a paso, al ritmo que la avanzas en En qué invertir tu tiempo. ${t ? esc(t.cambio) : ''}` });
   }
@@ -8352,18 +8136,17 @@ function cerrarComoDecide(){
 function renderHeroAprender(){
   const el = document.getElementById('heroAprenderPanel'); if(!el) return;
   const vistos = aprendeHoy().h.vistos || {};
-  const p = entrevistaTemaHoy(), q = istqbPreguntaHoy();
-  const estudiados = rawGet('study-done-v2', {}) || {};
+  const q = istqbPreguntaHoy();
   // Lo hecho hoy, en el orden de las seis tarjetas: el alemán al abrir su ventana o al hacer un ejercicio de una
-  // lección, «Al volante» al tocar qué escuchar, Python al marcar estudiado el de hoy (o uno en su ventana), el ISTQB al contestar una, y el
-  // paso de la semana y la ficha de Habilidades Base al abrirlos. Antes contaba cuatro de seis («0 de 4»).
-  const hechos = [!!vistos.de || alemanPracticoHoy(), !!vistos.escuchar, !!(p && estudiados[p.id]) || !!vistos.py, !!(q && (istqbRespuestas()[hoyLocal()] || []).length), !!vistos.paso, !!vistos.hb];
+  // lección, lo de escuchar al tocar qué escuchar, Qué invertir hoy al abrir su panel, el ISTQB al contestar una, y
+  // la habilidad y la ficha de Habilidades Base al abrirlas.
+  const hechos = [!!vistos.de || alemanPracticoHoy(), !!vistos.escuchar, !!vistos.invertir, !!(q && (istqbRespuestas()[hoyLocal()] || []).length), !!vistos.paso, !!vistos.hb];
   const color = ['var(--g)', 'var(--o)', 'var(--cy)', 'var(--p)', 'var(--w)', 'var(--b)'];
   const d = new Date();
   const fecha = `${DIAS_CORTOS[d.getDay()].toLowerCase()} ${d.getDate()} ${MES_LABEL_FULL[d.getMonth()].slice(0, 3).toLowerCase()}`;
-  el.innerHTML = `<div class="hp-title"><span>🎓 Hoy aprendes<button type="button" class="ap-como" onclick="abrirComoDecide()" title="El orden de Coach y el porqué de lo de hoy">${AP_ICO.porque}Cómo lo decide Coach</button></span><span class="ap-fecha">${fecha} · <b>${hechos.filter(Boolean).length} de ${hechos.length}</b></span></div>
-    <div class="ap-barra" title="El alemán cuenta al abrir su ventana, al practicar sus palabras o al hacer un ejercicio de la lección; «Al volante», al tocar qué escuchar; Python, al marcarlo estudiado (en su ventana o en Entrevistas); el ISTQB, al contestarlo; el paso de la semana y la ficha, al abrirlos">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
-    <div class="ap-seis">${alemanHoyHtml(vistos)}${escucharHoyHtml(vistos)}${pythonHoyHtml()}${istqbHtml()}${pasoSemanaHtml()}${fichaEnCursoHtml()}</div>`;
+  el.innerHTML = `<div class="hp-title"><span>🎓 Hoy aprendes<button type="button" class="ap-como" onclick="abrirComoDecide()" title="El orden de Coach y el porqué de lo de hoy">${AP_ICO.porque}Cómo lo decide Coach</button></span><span class="ap-fecha">${fecha} · <b>${hechos.filter(Boolean).length} de ${hechos.length}</b> hechas</span></div>
+    <div class="ap-barra" title="Se llena con lo que haces hoy: el alemán al abrir su ventana, practicar sus palabras o hacer un ejercicio de la lección; lo de escuchar, al tocar qué escuchar; Qué invertir hoy, al abrirlo; el ISTQB, al contestar la pregunta, y la habilidad y la ficha, al abrirlas">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
+    <div class="ap-seis">${alemanHoyHtml(vistos)}${escucharHoyHtml(vistos)}${invertirHoyHtml(vistos)}${istqbHtml()}${pasoSemanaHtml()}${fichaEnCursoHtml()}</div>`;
   apAjustar();
 }
 
@@ -11021,12 +10804,11 @@ function guardarPrecioBtc(usd, mxn){
   if(document.getElementById('metasProgreso')) renderMetasSlide();
 }
 
-// La regla que ya está escrita en tu Plan Maestro, aplicada al saldo de hoy. Vive aparte desde el
-// 2026-08-18 porque ahora la leen DOS piezas: el panel completo (renderGBMPanel) y el botón de Mi
-// Día (pintarInvertirBtn). Con el if/else duplicado en cada una, el botón habría podido decir "hoy
-// sí inviertes" mientras el panel decía "primero tu fondo" en cuanto una de las dos copias se
-// tocara sin la otra. `corto`/`sub` son la versión de una línea para el botón; `detalle` es el
-// texto largo del panel — mismo veredicto, distinto largo.
+// La regla que ya está escrita en tu Plan Maestro, aplicada al saldo de hoy. Vive aparte porque la leen tres
+// piezas: el panel completo (renderGBMPanel), su tarjeta en Hoy aprendes (invertirHoyHtml) y su renglón en «Cómo
+// lo decide Coach»; con una copia del if/else en cada una, la tarjeta podría decir "hoy sí inviertes" mientras el
+// panel dice otra cosa. Devuelve el paso en palabras llanas —`titulo`, `porque`, `hoy`, `nota` y `fondo`— con su
+// color y su foto.
 // Todas las cantidades pasan por money() (2026-08-18, pedido explícito: "el modo privado deberia
 // funcionar aqui tambien con los datos de ahi") — antes este panel tenía su propio formateador que
 // imprimía el número tal cual, así que con "Ocultar finanzas" activo el resto del Dashboard se
@@ -11052,34 +10834,31 @@ function pasoInversionHoy(){
   // BYD hasta 2031.
   const tc = (F.debts||[]).find(d=>d.id==='d001'), bbvaSaldo = tc ? (+tc.balance||0) : 0;
   const B = bbvaPlan(), bbvaFin = B ? B.fin.toLocaleDateString('es-MX',{day:'numeric',month:'short'}) : '';
+  // Los abonos que faltan, de la misma ruta que el Plan Maestro (`CIFRAS.planBbva`): el de hoy va en lo que
+  // haces hoy y los que siguen, uno por renglón, con money() para que el modo privado los tape.
+  const hoyK = today(), DE = { quincena: 'de la quincena', didi: 'de Didi', minimo: 'para el pago del corte', extra: 'de más' };
+  const pend = B ? B.abonos.filter(a=>!a.hecho && a.fecha>=hoyK) : [], deHoy = pend.filter(a=>a.fecha===hoyK);
+  const diaCorto = k => { const p = k.split('-').map(Number), d = new Date(p[0], p[1]-1, p[2]); return DIAS_CORTOS[d.getDay()].toLowerCase()+' '+p[2]+' '+MES_LABEL_FULL[p[1]-1].slice(0,3).toLowerCase(); };
+  const abonos = pend.filter(a=>a.fecha!==hoyK).slice(0, 3).map(a=>'<b>'+diaCorto(a.fecha)+'</b> · '+mon(a.monto)+' '+(DE[a.de]||''));
   const faltaEf = Math.max(0, metaEf-ef);
-  let paso, color, detalle, corto, sub;
+  let color, titulo, porque, hoy, nota, notaIco, fondo, foto;
   if(bbvaSaldo > 0){
-    paso = '1º La BBVA en cero'; color = 'var(--r)';
-    detalle = 'Debes <b>'+mon(bbvaSaldo)+'</b> a la BBVA. Lo que sobra de cada quincena y lo que aparta Didi cada lunes van a la tarjeta'+(bbvaFin?' hasta dejarla en cero el <b>'+bbvaFin+'</b>':'')+', sin intereses. El fondo se queda en sus '+mon(ef)+' de CETES. <b>Hoy no compras nada más.</b>';
-    corto = 'Primero la BBVA';
-    sub = mon(bbvaSaldo)+' quincena a quincena'+(bbvaFin?', en cero el '+bbvaFin:'')+' — hoy no compras nada más.';
+    color = 'var(--r)'; foto = 'fase-tarjeta-cortada';
+    titulo = 'Primero, pagar la tarjeta BBVA';
+    porque = 'Debes <b>'+mon(bbvaSaldo)+'</b>. Lo que sobra de cada quincena y lo que apartas de Didi cada lunes van a la tarjeta'+(bbvaFin?' hasta dejarla en cero el <b>'+bbvaFin+'</b>':'')+', sin pagar intereses.';
+    hoy = deHoy.length ? '<b>Hoy abonas '+mon(deHoy.reduce((t,a)=>t+a.monto,0))+'</b> '+(DE[deHoy[0].de]||'')+' a la tarjeta, y no compras ninguna inversión.'
+      : '<b>Hoy no compras ninguna inversión.</b>';
+    notaIco = 'sigue'; nota = 'Después: todo a <b>GBM</b>, tu cuenta de inversiones, para Alemania.';
+    fondo = 'Tu fondo de emergencia se queda en <b>'+mon(ef)+'</b> de CETES.';
   }else{
-    paso = '2º A GBM, para Alemania'; color = 'var(--g)';
-    detalle = 'Sin tarjeta que pagar, lo de cada quincena y lo que aparta Didi van a GBM.'+(faltaEf>0?' Los primeros <b>'+mon(faltaEf)+'</b> completan tu colchón —no van a nada volátil—; lo demás se reparte según tu perfil.':' Reparte según tu perfil y ejecuta sin pensarlo dos veces.');
-    corto = 'Hoy sí inviertes';
-    sub = faltaEf>0 ? 'A GBM: los primeros '+mon(faltaEf)+' completan tu colchón, lo demás según tu perfil.' : 'A GBM: reparte según tu perfil y ejecuta.';
+    color = 'var(--g)'; foto = 'sk-inversion';
+    titulo = 'Hoy sí inviertes: todo a GBM';
+    porque = 'Sin tarjeta que pagar, lo que sobra de cada quincena y lo que apartas de Didi va a GBM, tu cuenta de inversiones, para Alemania.'+(faltaEf>0?' Los primeros <b>'+mon(faltaEf)+'</b> completan tu fondo de emergencia: nada volátil.':'');
+    hoy = 'Reparte según tu perfil y <b>ejecuta sin pensarlo dos veces</b>.';
+    notaIco = 'meta'; nota = 'El auto no se adelanta: se paga con su mensualidad.';
+    fondo = faltaEf>0 ? '' : 'Tu fondo de emergencia está completo: <b>'+mon(ef)+'</b> en CETES.';
   }
-  return {F, inv, ef, metaEf, totalInv, cetes, deudaCara, mon, paso, color, detalle, corto, sub};
-}
-
-// Botón "📈 Qué invertir hoy" de Mi Día (2026-08-18) — abre el mismo panel que el bloque de GBM de
-// la línea de tiempo, pero cualquier día de la semana. Se repinta en cada renderDia(), así que
-// sigue al saldo real de Finanzas y al modo privado sin trabajo extra.
-function pintarInvertirBtn(){
-  const el = document.getElementById('diaInvertirBtn');
-  if(!el) return;
-  const p = pasoInversionHoy();
-  el.style.borderLeftColor = p.color;
-  el.innerHTML =
-    '<div class="inv-btn-lbl"><span>📈 Qué invertir hoy</span><span class="inv-btn-go">Abrir →</span></div>'+
-    '<div class="inv-btn-paso" style="color:'+p.color+'">'+p.corto+'</div>'+
-    '<div class="inv-btn-sub">'+p.sub+'</div>';
+  return {F, inv, ef, metaEf, totalInv, cetes, deudaCara, mon, color, titulo, porque, hoy, nota, notaIco, fondo, foto, abonos: bbvaSaldo > 0 ? abonos : []};
 }
 
 // ─── "Qué invertir hoy" — la plantilla y los datos van separados ─────────────────────────
@@ -11104,7 +10883,7 @@ function pintarInvertirBtn(){
 // página los muestra ("ver el prompt") y solo puede cargarlos con <script src>.
 // En esta pantalla no aparece nada del fondo de emergencia (Adán, 21-sep-2026: "quita todo lo que
 // tenga que ver con lo del fondo de emergencia"): ni la regla de pasos en grande, ni la barra ni la nota
-// de CETES. La regla sigue viva en el botón de Mi Día (pasoInversionHoy).
+// de CETES. La regla sigue viva en la tarjeta Qué invertir hoy de Mi Día (pasoInversionHoy).
 const INV_KEY = 'dash-inversion-v1';   // {tab, perfil, monto} — pestaña abierta, perfil elegido, monto al mes
 const INV_PERFILES = [
   { id:'seguro',    nombre:'Inversión segura',  ico:'🛡️', color:'var(--g)', rgb:'var(--g-rgb)' },
@@ -15483,7 +15262,6 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&document.getElementById('gbmOverlay').classList.contains('open')){ cerrarGBM(); return; }
   if(document.getElementById('istqbOverlay').classList.contains('open')){ if(e.key==='Escape') cerrarIstqb(); else istqbTecla(e); return; }
   if(document.getElementById('alemanOverlay').classList.contains('open')){ if(e.key==='Escape') cerrarAleman(); else alemanTecla(e); return; }
-  if(document.getElementById('pythonOverlay').classList.contains('open')){ if(e.key==='Escape') cerrarPython(); return; }
   if(e.key==='Escape'&&document.getElementById('comoDecideOverlay').classList.contains('open')){ cerrarComoDecide(); return; }
   if(e.key==='ArrowRight') nextSlide();
   if(e.key==='ArrowLeft') prevSlide();

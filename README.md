@@ -36,11 +36,11 @@ Todas son **HTML de un solo archivo, sin build ni servidor**: se abren con doble
 
 **2. El dato guardado le gana al código.** Las apps leen su estado de `localStorage`, así que cambiar un valor por defecto en el código **no** actualiza un navegador que ya lo tenía guardado. Para eso existen las funciones `fix*IfNeeded()`: migraciones de una sola vez, con bandera propia, que respetan lo que el usuario ya haya personalizado. **Si cambias un default, casi siempre necesitas una migración — y si ya existe una, hay que subirle la versión a la bandera** (`..._v2`, `_v3`) o no volverá a correr.
 
-**3. Dos generadores producen archivos que no se editan a mano:**
-- `Aleman/_generar-datos-dashboard.js` → `Dashboard/aleman-data.js` (necesita Playwright)
-- `Entrevistas/_generar-datos-dashboard.js` → `Dashboard/entrevistas-data.js`
+**3. Hay archivos que se generan y no se editan a mano:**
+- `Dashboard/habitos-sync.js` → lo escribe `Dashboard/habitos-exportar.js` en cada commit (el hook de pre-commit), con las marcas de hábitos de la PC.
+- `Dashboard/inversion-hoy.js`, `inversion-alto.js` e `inversion-superalto.js` → los reescribe `Dashboard/inversion-actualizar.ps1` con Claude Code.
 
-Si cambias una lección o un tema, hay que volver a correr el generador o el Dashboard se queda con la versión vieja.
+Si los editas a mano, la siguiente corrida los pisa.
 
 **4. Nada de contenido inventado.** El criterio de todo el proyecto: los números vienen de sus datos reales (Finanzas, su ticket del súper, sus recetas), y lo que es estimación se marca como tal. Si un dato no existe, la app dice "sin medir" en vez de mostrar un cero que parezca real.
 

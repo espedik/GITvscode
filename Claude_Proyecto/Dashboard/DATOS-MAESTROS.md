@@ -802,8 +802,7 @@ Es lo que evita que el calendario se congele como se congeló la vieja barra de 
 | `CuidadoPersonal/salud.html` | `<script src="../Dashboard/datos-maestros.js">` | `CIFRAS.SUPLEMENTOS` (siembra la lista y el botiquín) y `CIFRAS.CHEQUEO` |
 | `Aleman/index.html` | `<script src="../Dashboard/datos-maestros.js">` | `{{escuelaAleman}}` en el encabezado del Kapitel 10 (`aplicarDOM`) |
 
-El Dashboard es donde vive el archivo porque es el centro del proyecto, junto a
-`entrevistas-data.js`. El alemán vive en su app: el vocabulario en `Aleman/vocab-datos.js`, junto
+El Dashboard es donde vive el archivo porque es el centro del proyecto. El alemán vive en su app: el vocabulario en `Aleman/vocab-datos.js`, junto
 con su diseño (`vocab.css`) y su motor (`vocab.js`), y las 41 lecciones en `Aleman/lecciones-datos.js`
 —su catálogo, con la regla de qué lección toca (`queToca`)—. Los pintan `vocabulario.html` y el inicio de
 Alemán, y el Dashboard —que no tiene pantalla de alemán— solo lee los dos para la ventana del alemán de
@@ -842,7 +841,7 @@ que añade un registro lo hace **por id y solo si falta**: así el navegador que
 | `CuidadoPersonal/` | `cuidadopersonal.html` + `salud`/`ejercicio`/`comida` | Shell de 8 áreas (Skincare, Cabello, Dentista, Ojos nativas; Salud, Ejercicio, Comida, Vestimenta en iframe) | `skincare_v1`, `cabello_v1`, `dentista_v1`, `misalud_v1`, `mirutina_v1`, `comida_v1` |
 | `Vestimenta/` | `vestimenta.html` | Guardarropa y compras | `vestimenta_v1` |
 | `Aleman/` | `index.html` (el inicio) + 41 lecciones + `vocabulario.html` | Estudio A1/A2/Kapitel 10. Aloja el vocabulario entero (`vocab-datos.js` + `vocab.css` + `vocab.js`) y el catálogo de las lecciones (`lecciones-datos.js`); Mi Día solo lee los datos y abre la lección en su ventana | `aleman_k10_v1`, `voc_estado_v1`, `aleman_leccion_v1`, `aleman_repaso_v1` (el repaso del vocabulario, que escribe la ventana del alemán) |
-| `Entrevistas/` | `entrevistas.html` + `js/data-*.js` | Prep. técnica automotriz, 229 temas; los 41 de Python viajan al Dashboard (`entrevistas-data.js`, `entrevistas-temas.js`), que los abre en su ventana | `theme`, `sidebar-collapsed`, `study-done-v2` (también lo escribe la ventana de Python) |
+| `Entrevistas/` | `entrevistas.html` + `js/data-*.js` | Prep. técnica automotriz, 229 temas; los 41 de Python abren con su explicación en llano (`js/data-python-intro.js`) | `theme`, `sidebar-collapsed`, `study-done-v2` |
 | `Aeroresinas/`, `Heliescala/` | `aeroresinas.html`, `heliescala.html` + `dossier.html` | Las dos webs públicas del negocio del papá de Adán | solo tema e idioma |
 | `Posts/` | `posts.html` + `plantillas.js` | Plantillas de LinkedIn para las dos empresas, armadas con los `datos.js` de sus webs (no con el maestro) | `posts-*`, `coach-theme` |
 
