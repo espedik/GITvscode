@@ -227,11 +227,11 @@ y en el mismo orden** (`apCuerpo()`), con poco texto:
 
 1. **El título** (`.ap-mat`: 12.5 px en negritas y en el color de su materia), en palabras de todos los días.
 2. **Para qué es**, en una línea gris (`.ap-sub`).
-3. **Lo de hoy, en su ficha** (`.ap-hoy`): un fondo suave del color de su materia —el de la acción en *Tu dinero hoy*—
-   con lo de hoy en grande (`.ap-big`: 23 px con la letra de los títulos; 19 px en una tarjeta de menos de 360 px de
-   ancho o 300 de alto y 16.5 px bajo 280 de ancho) y, debajo, **un solo detalle** (`.ap-det`). Lo de hoy siempre es
-   un nombre corto —la palabra, el libro, la acción, el tema, el paso o la guía—, nunca una instrucción: esa va en el
-   detalle. En escritorio las fichas de una fila miden lo mismo (hasta 132 px, con el texto al centro).
+3. **Lo de hoy, en su ficha** (`.ap-hoy`): un recuadro bajo, con fondo suave del color de su materia —el de la acción
+   en *Tu dinero hoy*— y a su altura natural (Adán: *"hazlo muchísimo más pequeño"*), con lo de hoy en 16 px y la
+   letra de los títulos (`.ap-big`; 14.5 px bajo 280 de ancho) y, debajo, **un solo detalle** en 11.5 px (`.ap-det`).
+   Lo de hoy siempre es un nombre corto —la palabra, el libro, la acción, el tema, el paso o la guía—, nunca una
+   instrucción: esa va en el detalle. A 2048×1040 la ficha mide 50 px de alto (66 con dos renglones de detalle).
 4. **El pie** (`.ap-pie`), pegado abajo —a la misma altura en las seis—: el avance con sus tramos o lo que sigue.
 
 La foto ocupa el 40 % del alto de la tarjeta (el 44 % desde 440 px). Ningún renglón se corta con «…»: si uno no cabe
@@ -249,7 +249,7 @@ de hasta 32 letras y nombres de paso de hasta 50.
 
 | Título | Para qué es | Lo de hoy, en su ficha | El detalle | El pie | Tocarla abre |
 |---|---|---|---|---|---|
-| **Alemán** | *Para mudarte a Alemania · hoy, 10 palabras nuevas y una lección* | La primera palabra, en alemán | Su traducción | Los tramos de la lección y *Lección: Practicar el pasado · 0 de 10* | Su ventana (`abrirAleman()`); arriba, *Practicar* o *✓ practicaste* y ↻ |
+| **Alemán** | *Para mudarte a Alemania · Trámites: 10 palabras y una lección* —el tema del día— | La primera palabra, en alemán | Su traducción | Los tramos de la lección y *Lección: Practicar el pasado · 0 de 10* | Su ventana (`abrirAleman()`); arriba, *Practicar* o *✓ practicaste* y ↻ |
 | **Audiolibro y podcast** | *Para escuchar mientras manejas · de Thomas Stanley* | El libro, con su título en español (busca en Spotify) | De qué trata | *El libro, a las 07:40; hoy también, un video de IA* | La foto y *Qué escuchar*: su panel (`abrirDidi()`); ↻, el siguiente libro |
 | **Tu dinero hoy** | *Según tu plan para juntar el dinero de Alemania* | La acción en su color: *Paga … a tu tarjeta BBVA* (rojo), *Hoy no toca pagar la tarjeta* o *Hoy sí inviertes en GBM* (verde) | Cuánto te quedará y el día en que queda en cero | *Mientras tengas deuda, no compres inversiones* o el siguiente pago | El panel *Qué invertir hoy* (`abrirGBM()`). Sale de `pasoInversionHoy()` (`corto`, `det`, `pie`), la regla del panel; todo por `money()` |
 | **Examen de certificación** | *ISTQB de pruebas con IA · lo presentas en ene 2027* | El tema de la pregunta, corto: *Cómo pedirle cosas a la IA* | *Una pregunta de práctica de este tema; vale 2 puntos* (contestada, si fue bien) | Tu marcador de la semana | Su ventana, con la pregunta completa (`abrirIstqb()`) |
@@ -300,7 +300,7 @@ sigue: nada sale al azar.
 
 | Tarjeta | El orden de Coach | Dónde |
 |---|---|---|
-| **Alemán** | **La lección**: la del Kapitel que ve en clase (`ALEMAN_LECCIONES.kapitel()`, con `kapitelAleman` del maestro), con la regla del inicio de Alemán —la que dejó a medias y practicó por última vez; si no, la primera sin terminar en el orden en que conviene estudiar el Kapitel; con todo hecho, el minitest de K10·03—. No cambia cada día: sigue a lo que practicas, y «Siguiente», en su ventana, recorre el Kapitel, luego el A2 y el A1. **El vocabulario**: diez palabras al día (`AL_VOC_DIA`), las siguientes del orden: el nivel de la etapa —A2, el que pide Esslingen, hasta que empieza la Fase 2; desde ahí, B1— y, dentro, lo que vas a necesitar primero al llegar (`AL_COACH_TEMAS`: trámites, piso, dinero, salud, teléfono, ciudad, súper), luego la casa, la escuela y el trabajo; lo demás, al final. Y su repaso espaciado: vuelven al día siguiente y, si te las sabes, a los 3, 7, 14 y 30 días | `ALEMAN_LECCIONES.queToca()`, `alemanVocabHoy()`, `aprendeOrdenAleman()`, `aprendeEtapaAleman()`, `alemanRepasoHoy()` |
+| **Alemán** | **La lección**: la del Kapitel que ve en clase (`ALEMAN_LECCIONES.kapitel()`, con `kapitelAleman` del maestro), con la regla del inicio de Alemán —la que dejó a medias y practicó por última vez; si no, la primera sin terminar en el orden en que conviene estudiar el Kapitel; con todo hecho, el minitest de K10·03—. No cambia cada día: sigue a lo que practicas, y «Siguiente», en su ventana, recorre el Kapitel, luego el A2 y el A1. **El vocabulario**: diez palabras al día (`AL_VOC_DIA`), en este orden: el nivel de la etapa —A2, el que pide Esslingen, hasta que empieza la Fase 2; desde ahí, B1— y, dentro, lo que vas a necesitar primero al llegar (`AL_COACH_TEMAS`: trámites, piso, dinero, salud, teléfono, ciudad, súper), luego la casa, la escuela y el trabajo; lo demás, al final. **Cada día, un solo tema** (`alemanTanda()`; Adán: *"quiero que las tarjetas de vocabulario sean de un tema en específico y no diferentes"*): el de la primera palabra de ese orden que no ha salido; salen las suyas, primero las del nivel y, si no llegan a diez, las de los otros niveles del mismo tema —si después de las diez le quedarían menos de cinco, salen todas, hasta 14—. Simulado en 14 días seguidos desde cero: Trámites, Buscar piso, Dinero y banco, Salud (dos días), Teléfono y correos, Ciudad (tres), En el súper (dos) y Casa, siempre uno por día. Y su repaso espaciado: vuelven al día siguiente y, si te las sabes, a los 3, 7, 14 y 30 días | `ALEMAN_LECCIONES.queToca()`, `alemanVocabHoy()`, `alemanTanda()`, `aprendeOrdenAleman()`, `aprendeEtapaAleman()`, `alemanRepasoHoy()` |
 | **Audiolibro y podcast** | El foco de Hoy aprendes (`aprendeFoco()`: el del plan o el que eligió con «Siguiente» en el paso de la semana), luego el siguiente foco del plan y las demás por retorno; lo que está en pausa no entra. Si el foco tiene menos de dos opciones, se completa con lo que sigue. El audiolibro es de la semana: se decide el primer día que lo ves y se queda hasta el lunes aunque el orden cambie a media semana —el del paso de la semana si su libro está en el catálogo o, si no, el primero del orden que todavía no te haya tocado—; ↻ pasa al siguiente y también vale la semana. El podcast, el siguiente cada día | `didiHoy()`, `didiGruposOrden()`, `didiLibroSemana()` |
 | **Tu dinero hoy** | No es un orden de estudio: es el paso del Plan Maestro para tu dinero de hoy, la misma regla que su panel (`pasoInversionHoy()`): la BBVA quincena a quincena hasta dejarla sin saldo —hoy no compras nada más— y después todo a GBM, con los primeros pesos al fondo de emergencia. El BYD se paga con su mensualidad. Lo que abonas hoy y los abonos que siguen salen de la misma ruta que el Plan Maestro (`CIFRAS.planBbva`) | `pasoInversionHoy()`, `invertirHoyHtml()` |
 | **Examen de certificación** (ISTQB) | El capítulo con más puntos en juego —lo que vale en el examen (`EXAMEN_GENAI.blueprint`: el 2 vale 16 de 46) por lo que falta de acierto ahí; con menos de tres respuestas cuenta la mitad— y, dentro, las de 2 puntos. Las contestadas no vuelven | `aprendeOrdenIstqb()`, `istqbEnJuego()` |
@@ -313,7 +313,7 @@ sigue: nada sale al azar.
 - **Fijo en el día**: lo de hoy se fija al primer vistazo (`hoy.fijo`); si lo estudias o lo contestas, se
   queda con su ✓. Con otra fecha se empieza en limpio.
 - **Lo que sigue**: *Audiolibro y podcast* enseña, donde cabe, los audiolibros de las próximas semanas
-  (`didiLibrosLuego()`) y el alemán, en su ventana, lo que traerá ↻ (`aprendeLuego()`), sin apuntarlo como salido.
+  (`didiLibrosLuego()`) y el alemán, en su ventana, el tema que sigue mañana (`alemanTemaLuego()`), sin apuntarlo como salido.
 - **El audiolibro, por semana** (`didiLibroSemana()`): se fija en `dash-aprende-v1` → `semana` con el número de
   semana, y lo que ya salió vive en `salio`. Medido con la fecha simulada del 10 de octubre al 2 de noviembre
   de 2026: el libro no cambia en la semana; ↻ un martes se queda hasta el domingo aunque el miércoles cambies
@@ -389,10 +389,11 @@ leer: con vidrio se veían las fotos de Mi Día detrás de cada tarjeta) y con *
 dicen lo que hay en cada una: *Vocabulario · 10 nuevas · 5 de repaso* y *Lección · K10 · 06 · Partizip I & II ·
 0 de 5* (`alemanTabsTxt()`).
 
-**El vocabulario de hoy** son diez palabras, no una (`AL_VOC_DIA`, `alemanVocabHoy()`): las siguientes del orden
-de Coach que no han salido, fijas en el día (`hoy.fijo.voc` en `dash-aprende-v1`); ↻ trae las diez siguientes.
-Arriba, su encabezado: la foto del tema, de qué secciones son, *10 palabras nuevas y 5 de repaso*, cómo
-estudiarlas, cuánto va del nivel, lo que sigue mañana y **«Practicar»**. Debajo, una tarjeta por palabra
+**El vocabulario de hoy** son diez palabras, no una (`AL_VOC_DIA`, `alemanVocabHoy()`), **todas de un mismo tema**:
+las siguientes del orden de Coach que no han salido, por tema (`alemanTanda()`, ver *Lo decide Coach*), fijas en el día
+(`hoy.fijo.voc` en `dash-aprende-v1`); un día fijado con temas mezclados y sin practicar se vuelve a tomar. ↻ trae las
+diez siguientes. Arriba, su encabezado: la foto del tema, *Vocabulario de hoy · Trámites*, *10 palabras nuevas y 5 de
+repaso*, cómo estudiarlas, cuánto va del nivel, el tema de mañana y **«Practicar»**. Debajo, una tarjeta por palabra
 (`alemanTarjetaHtml()`): el color de su género a la izquierda —los de la app de Alemán: der azul, die rosa, das
 verde, plural naranja—, qué es y su nivel, la palabra con su artículo, la traducción, su gramática (el plural, o
 las tres formas del verbo con su auxiliar, el régimen, el comparativo, lo raro), el ejemplo traducido y, si lo

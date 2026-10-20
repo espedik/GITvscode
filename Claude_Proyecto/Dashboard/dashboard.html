@@ -2802,24 +2802,19 @@ button.ap-c-ir:hover .ap-de,button.ap-c-ir:hover .ap-t,button.ap-c-ir:hover .ap-
    un solo detalle, y el pie —el avance o lo que sigue— pegado abajo, a la misma altura en las seis. */
 .ap-sub{font-size:11.5px;line-height:1.35;color:var(--text3)}
 /* Lo de hoy, en su ficha (Adán: "esa parte no me gusta de todas las tarjetas, pon poca información, pero con un buen
-   diseño"): un fondo suave del color de su materia con lo de hoy en grande —un nombre corto, nunca una instrucción— y
-   su detalle debajo. En escritorio las fichas de una fila crecen juntas hasta 132 px y su texto va al centro; donde
-   falta alto, apAjustar() quita primero el detalle y deja lo de hoy. */
-.ap-hoy{display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0;margin:3px 0 2px;padding:12px 15px 13px;
-  border-radius:12px;background:color-mix(in srgb,var(--c) 8%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 16%,transparent)}
-.ap-big{font-family:var(--font-title);font-size:23px;font-weight:600;line-height:1.18;letter-spacing:-.015em;color:var(--text)}
-.ap-big.ap-big-txt{font-family:inherit;font-size:14.5px;line-height:1.45;letter-spacing:0}
+   diseño" y, sobre la primera versión, de 23 px y que llenaba el alto: "hazlo muchísimo más pequeño"): un fondo suave
+   del color de su materia, bajo y a su altura natural, con lo de hoy en 16 px —un nombre corto, nunca una
+   instrucción— y su detalle debajo. Donde falta alto, apAjustar() quita primero el detalle y deja lo de hoy. */
+.ap-hoy{display:flex;flex-direction:column;gap:1px;min-width:0;margin-top:2px;padding:6px 10px 7px;border-radius:8px;
+  background:color-mix(in srgb,var(--c) 8%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 14%,transparent)}
+.ap-big{font-family:var(--font-title);font-size:16px;font-weight:600;line-height:1.25;letter-spacing:-.01em;color:var(--text)}
+.ap-big.ap-big-txt{font-family:inherit;font-size:13px;line-height:1.4;letter-spacing:0}
 .ap-big a{color:inherit;text-decoration:none}
 .ap-big a:hover{color:var(--c)}
-.ap-det{font-size:12.5px;line-height:1.45;color:var(--text2)}
+.ap-det{font-size:11.5px;line-height:1.4;color:var(--text2)}
 .ap-det b{color:var(--text);font-weight:600}
-/* En una tarjeta angosta (menos de 360 px: de 1280 a 1600 px y el teléfono), la ficha se aprieta y lo de hoy baja a 19 px;
-   en una de menos de 280 px (la 2×3 con la agenda abierta, 1280 con ella plegada), a 16.5 px. */
-@container apcarta (max-width:359.98px){
-  .ap-hoy{gap:2px;padding:8px 12px 9px;border-radius:10px}
-  .ap-big{font-size:19px}
-}
-@container apcarta (max-width:279.98px){#heroAprenderPanel .ap-c .ap-big{font-size:16.5px}}
+/* En una tarjeta de menos de 280 px (la 2×3 con la agenda abierta, 1280 con ella plegada), lo de hoy baja a 14.5 px. */
+@container apcarta (max-width:279.98px){#heroAprenderPanel .ap-c .ap-big{font-size:14.5px}}
 .ap-c-txt .ap-pie{margin-top:auto;padding-top:4px;display:flex;align-items:center;gap:9px;font-size:11.5px;line-height:1.35;color:var(--text3)}
 .ap-pie b{color:var(--text2);font-weight:600}
 .ap-pie .ap-seg{flex:0 0 34%;margin:0}
@@ -2951,11 +2946,6 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
     #heroAprenderPanel .ap-c-txt{flex:1 1 0;min-height:0;overflow:hidden}
     #heroAprenderPanel .ap-c-txt .ap-cl:not(.l2):not(.l3){-webkit-line-clamp:unset}
     @container apcarta (max-height:129.98px){#heroAprenderPanel .ap-que,#heroAprenderPanel .ap-sub{display:none}}
-    #heroAprenderPanel .ap-c-txt .ap-hoy{flex:0 1 132px;min-height:min-content}
-    @container apcarta (max-height:299.98px){
-      #heroAprenderPanel .ap-hoy{gap:2px;padding:8px 12px 9px;border-radius:10px}
-      #heroAprenderPanel .ap-big{font-size:19px}
-    }
   }
   @container aprende (min-width:760px){
     #heroAprenderPanel .ap-seis{grid-template-rows:repeat(2,minmax(200px,1fr))}
@@ -7171,16 +7161,6 @@ function aprendeDelDia(slot){
   aprendeGuarda(st, h);
   return x;
 }
-// Lo que sigue en el orden de Coach después de lo de hoy, sin apuntarlo como salido: los `n` primeros que
-// sigan libres y no hayan salido. Es lo que traerán ↻ y los días que vienen.
-function aprendeLuego(slot, n){
-  const o = aprendeOrdenDe(slot); if(!o) return [];
-  const { st, h } = aprendeHoy(), fijo = (h.fijo || {})[slot];
-  const ya = new Set(((st.salio || {})[slot] || []).slice(-(APRENDE_MEMORIA[slot] || Infinity)));
-  const out = [];
-  for(const e of o.orden){ if(out.length >= n) break; if(o.libre(e) && !ya.has(o.id(e)) && o.id(e) !== fijo) out.push(e); }
-  return out;
-}
 // ↻ — el siguiente en el orden de Coach. Lo de cada día se queda hasta mañana; el audiolibro de «Al volante»,
 // toda la semana (`didiOtroLibro()`).
 function aprendeOtra(slot){
@@ -7419,7 +7399,7 @@ function alemanHoyHtml(vistos){
       : `<button type="button" class="ap-estado ir" onclick="aprendeAbrir('de')">Practicar</button>`,
     otra: `Las ${AL_VOC_DIA} palabras siguientes, en el orden de Coach`,
     abrir: "aprendeAbrir('de')", titulo: 'Abrir el vocabulario y la lección de hoy aquí mismo',
-    txt: apCuerpo({ sub: `Para mudarte a Alemania · hoy, ${a ? ws.length + ' palabras nuevas y ' : ''}una lección`,
+    txt: apCuerpo({ sub: `Para mudarte a Alemania · ${a ? `${esc((V.cats[a.cat] || {}).label || '')}: ${ws.length} palabras y ` : 'hoy, '}una lección`,
       big: a ? `${esc(alemanArtTxt(a))}${esc(a.de)}` : esc(l.es), lang: a ? 'de' : '', det: a ? esc(a.es) : '', pie }) });
 }
 
@@ -7449,15 +7429,41 @@ function alRepasoEntran(ws){
   ws.forEach(w => { if(!r.p[w.de]) r.p[w.de] = { c: 1, p: man, n: hoy }; });
   rawSet(AL_REPASO_KEY, r);
 }
-// Las siguientes del orden de Coach que no han salido, hasta AL_VOC_DIA (si el orden se acaba, empieza otra vuelta).
+// Las de hoy son de un solo tema (Adán, 20-oct-2026: "quiero que las tarjetas de vocabulario sean de un tema en
+// específico y no diferentes"): el de la primera palabra del orden de Coach que no ha salido —la primera sección, en
+// ese orden, a la que le quedan palabras del nivel de la etapa—. Salen las suyas que no han salido, en el mismo orden:
+// primero las del nivel y, si no llegan a AL_VOC_DIA, las de los otros niveles del mismo tema. Si después de las diez
+// le quedarían menos de cinco, salen todas hoy (hasta 14): ningún tema se queda con un día de dos palabras.
+function alemanTanda(orden, ya, ws){
+  const libre = w => !ya.has(w.de) && !ws.includes(w), cat = ws.length ? ws[0].cat : (orden.find(libre) || {}).cat;
+  if(!cat) return ws;
+  const del = orden.filter(w => w.cat === cat && libre(w)), n = AL_VOC_DIA - ws.length;
+  return ws.concat(del.length - n < 5 ? del : del.slice(0, n));
+}
+// Toma las de hoy y las apunta como salidas; si ya salió todo, empieza otra vuelta.
 function alemanVocabTomar(st, o, ws){
-  while(ws.length < AL_VOC_DIA){ const x = aprendePrimero(st, 'de', o, null); if(!x || ws.includes(x)) break; ws.push(x); }
-  return ws;
+  st.salio = st.salio || {};
+  let s = st.salio.de = st.salio.de || [], out = alemanTanda(o.orden, new Set(s), ws);
+  if(out.length === ws.length){ s = st.salio.de = []; out = alemanTanda(o.orden, new Set(), ws); }
+  out.forEach(w => { const k = s.indexOf(w.de); if(k >= 0) s.splice(k, 1); s.push(w.de); });
+  if(s.length > 2000) s.splice(0, s.length - 2000);
+  return out;
+}
+// El tema que sigue mañana: el de la tanda siguiente a la de hoy.
+function alemanTemaLuego(ws){
+  const o = aprendeOrdenDe('de'), V = alVocab(); if(!o || !V) return '';
+  const s = ((aprendeHoy().st.salio || {}).de) || [], sig = alemanTanda(o.orden, new Set(s.concat(ws.map(w => w.de))), []);
+  return sig.length ? (V.cats[sig[0].cat] || {}).label || '' : '';
 }
 function alemanVocabHoy(){
   const o = aprendeOrdenDe('de'); if(!o || !o.orden.length) return [];
   const { st, h } = aprendeHoy(), f = h.fijo || {}, por = alemanPorPalabra();
-  if(Array.isArray(f.voc) && f.voc.length){ const ws = f.voc.map(d => por.get(d)).filter(Boolean); if(ws.length) return ws; }
+  // Las fijadas se quedan todo el día; si mezclan temas (las de antes de la regla de un tema) y no las has practicado,
+  // se vuelven a tomar.
+  if(Array.isArray(f.voc) && f.voc.length){
+    const ws = f.voc.map(d => por.get(d)).filter(Boolean);
+    if(ws.length && (new Set(ws.map(w => w.cat)).size === 1 || alemanPracticoHoy())) return ws;
+  }
   // La palabra que ya tenías hoy, si la había, va primero.
   const ws = alemanVocabTomar(st, o, f.de && por.get(f.de) ? [por.get(f.de)] : []);
   h.fijo = Object.assign({}, h.fijo, { voc: ws.map(w => w.de) });
@@ -7618,7 +7624,7 @@ function alemanVocabCabHtml(ws, rep){
   const temas = [...new Set(ws.map(w => (V.cats[w.cat] || {}).label || ''))].filter(Boolean);
   const etapa = aprendeEtapaAleman(), salio = new Set((((rawGet(APRENDE_KEY, {}) || {}).salio || {}).de) || []);
   const delNivel = alemanPalabras().filter(x => x.niv === etapa.nivel), van = delNivel.filter(x => salio.has(x.de)).length;
-  const luego = aprendeLuego('de', 4), atrasadas = Math.max(0, alemanRepasoHoy(true).length - rep.length);
+  const luego = alemanTemaLuego(ws), atrasadas = Math.max(0, alemanRepasoHoy(true).length - rep.length);
   return `<div class="alv-voc-cab">
       ${apImg(apFotoAleman(a), 'alv-voc-foto')}
       <div class="alv-voc-t">
@@ -7626,7 +7632,7 @@ function alemanVocabCabHtml(ws, rep){
         <h3 class="alv-voc-h">${ws.length} palabras nuevas${rep.length ? `<span> y ${rep.length} de repaso</span>` : ''}</h3>
         ${atrasadas ? `<div class="alv-voc-dato">Y <b>${atrasadas} más atrasadas</b>: al terminar la práctica puedes seguir con ellas.</div>` : ''}
         <p class="alv-voc-s">Léelas en voz alta con su artículo y su plural. Después, «Practicar»: ves el español, dices el alemán y la volteas. Las que no sepas vuelven mañana; las que sí, a los 3, 7, 14 y 30 días.</p>
-        <div class="alv-voc-dato">${etapa.nivel === 'A2' ? 'A2, el que pide Esslingen' : esc(etapa.nivel)} · van <b>${van} de ${delNivel.length}</b>${luego.length ? ` · mañana siguen ${luego.map(w => `<b lang="de">${esc(w.de)}</b>`).join(', ')}…` : ''}</div>
+        <div class="alv-voc-dato">${etapa.nivel === 'A2' ? 'A2, el que pide Esslingen' : esc(etapa.nivel)} · van <b>${van} de ${delNivel.length}</b>${luego ? ` · mañana, <b>${esc(luego)}</b>` : ''}</div>
       </div>
       <div class="alv-voc-acc">
         <button type="button" class="alv-btn" onclick="alemanPracticar()">Practicar · ${ws.length + rep.length} tarjetas</button>
@@ -8160,7 +8166,7 @@ function comoDecideHtml(){
     const rl = tl ? (tl.elegida
         ? `La lección la elegiste tú; la del plan es <b>${esc(tl.rec.l.num)} · ${esc(tl.rec.l.de)}</b> y «↺», en su ventana, vuelve a ella. `
         : `La lección, la del <b>${esc(kc ? kc.label : 'Kapitel')}</b> que ves en clase en ${esc(CIFRAS.texto('{{escuelaAleman}}'))}: la que dejaste a medias o, si no, la siguiente sin terminar, en el orden en que conviene estudiarlo; con todo hecho, el minitest. «Siguiente», en su ventana, recorre el Kapitel, luego el A2 y el A1. `) : '';
-    const rp = vh.length ? `El vocabulario: <b>${AL_VOC_DIA} palabras al día</b>, primero el <b>${etapa.nivel}</b>${etapa.nivel === 'A2' ? `, el certificado que pide Esslingen, hasta la Fase 2 (${cdFecha(etapa.hasta)})` : ', el de la maestría y el trabajo'}. Dentro, lo que vas a necesitar primero al llegar —${esc(temas)}—, luego la casa, la escuela y el trabajo, y lo demás al final: cada día, las siguientes que no hayan salido (van <b>${van} de ${delNivel.length}</b> del ${etapa.nivel}). Y el repaso espaciado: cada una vuelve al día siguiente y, si te la sabes, a los 3, 7, 14 y 30 días; hoy tocan <b>${rh.length}</b>.` : '';
+    const rp = vh.length ? `El vocabulario: <b>${AL_VOC_DIA} palabras al día</b>, primero el <b>${etapa.nivel}</b>${etapa.nivel === 'A2' ? `, el certificado que pide Esslingen, hasta la Fase 2 (${cdFecha(etapa.hasta)})` : ', el de la maestría y el trabajo'}. Dentro, lo que vas a necesitar primero al llegar —${esc(temas)}—, luego la casa, la escuela y el trabajo, y lo demás al final. <b>Cada día, un solo tema</b>: el primero de ese orden al que le quedan palabras sin salir; si las del nivel no llegan a diez, se completan con las de otros niveles del mismo tema (van <b>${van} de ${delNivel.length}</b> del ${etapa.nivel}). Y el repaso espaciado: cada una vuelve al día siguiente y, si te la sabes, a los 3, 7, 14 y 30 días; hoy tocan <b>${rh.length}</b>.` : '';
     filas.push({ k: 'Alemán', c: 'var(--g)', foto: tl ? apFotoLeccion(tl.l) : apFotoAleman(vh[0]),
       hoy: `${tl ? `${esc(alNumTxt(tl.l.num))} · ${esc(tl.l.de)}` : ''}${tl && vh.length ? ' · ' : ''}${vh.length ? `${vh.length} palabras: ${esc(alemanArtTxt(vh[0]))}${esc(vh[0].de)}…` : ''} <span>${vh.length ? `${esc((V.cats[vh[0].cat] || {}).label || '')} · ${esc(vh[0].niv || '')}` : ''}</span>`,
       regla: rl + rp });
