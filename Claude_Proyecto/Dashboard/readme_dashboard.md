@@ -227,27 +227,33 @@ y en el mismo orden** (`apCuerpo()`), con poco texto:
 
 1. **El título** (`.ap-mat`: 12.5 px en negritas y en el color de su materia), en palabras de todos los días.
 2. **Para qué es**, en una línea gris (`.ap-sub`).
-3. **Lo de hoy, en grande** (`.ap-big`: 19 px con la letra de los títulos; una instrucción larga, en 14.5 px).
-4. **Un solo detalle** (`.ap-det`).
-5. **El pie** (`.ap-pie`), pegado abajo —a la misma altura en las seis—: el avance con sus tramos o lo que sigue.
+3. **Lo de hoy, en su ficha** (`.ap-hoy`): un fondo suave del color de su materia —el de la acción en *Tu dinero hoy*—
+   con lo de hoy en grande (`.ap-big`: 23 px con la letra de los títulos; 19 px en una tarjeta de menos de 360 px de
+   ancho o 300 de alto y 16.5 px bajo 280 de ancho) y, debajo, **un solo detalle** (`.ap-det`). Lo de hoy siempre es
+   un nombre corto —la palabra, el libro, la acción, el tema, el paso o la guía—, nunca una instrucción: esa va en el
+   detalle. En escritorio las fichas de una fila miden lo mismo (hasta 132 px, con el texto al centro).
+4. **El pie** (`.ap-pie`), pegado abajo —a la misma altura en las seis—: el avance con sus tramos o lo que sigue.
 
 La foto ocupa el 40 % del alto de la tarjeta (el 44 % desde 440 px). Ningún renglón se corta con «…»: si uno no cabe
-entero, `apAjustar()` lo quita. Los textos están escritos para la tarjeta, nunca son un pedazo del catálogo: la
+entero, `apAjustar()` lo quita: primero el pie y, si la ficha no cabe, su detalle y luego el *para qué es*; lo de hoy es
+lo último que se va (medido de 1280×800 a 2560×1440, con la agenda abierta y plegada, y a 390 px: las seis fichas se
+ven). Los textos están escritos para la tarjeta, nunca son un pedazo del catálogo: la
 instrucción corta de cada paso de ejercicio (`corto` en `APRENDIZAJE`, en el maestro), de qué trata cada audio con su
 título en español (`trata` en `DIDI_AUDIO`), la idea de cada paso de las guías que tocan primero —networking,
-persuadir y dinero— (`HB_IDEA`; las demás dicen el nombre del paso), el tema de cada capítulo del examen en llano
+persuadir y dinero— (`HB_IDEA`; las demás dicen el nombre del paso), el tema de cada capítulo del examen, corto
 (`IQ_CAP_LLANO`) y el nombre llano de tres habilidades (`SK_LLANO`: *escritura persuasiva*, *programación*,
 *análisis de datos*). Nada de siglas sueltas: *K10 · 03* se lee *Lección 3 del capítulo 10* (`alNumTxt()`) y las
 cuentas dicen de qué son. El control 34 del verificador exige que las seis usen `apCuerpo()`, el `corto` de cada
-paso, el `trata` de cada audio y una idea por paso en `HB_IDEA`.
+paso, el `trata` de cada audio, una idea por paso en `HB_IDEA` y que lo de hoy quepa en su ficha: temas del examen
+de hasta 32 letras y nombres de paso de hasta 50.
 
-| Título | Para qué es | Lo de hoy, en grande | El detalle | El pie | Tocarla abre |
+| Título | Para qué es | Lo de hoy, en su ficha | El detalle | El pie | Tocarla abre |
 |---|---|---|---|---|---|
 | **Alemán** | *Para mudarte a Alemania · hoy, 10 palabras nuevas y una lección* | La primera palabra, en alemán | Su traducción | Los tramos de la lección y *Lección: Practicar el pasado · 0 de 10* | Su ventana (`abrirAleman()`); arriba, *Practicar* o *✓ practicaste* y ↻ |
 | **Audiolibro y podcast** | *Para escuchar mientras manejas · de Thomas Stanley* | El libro, con su título en español (busca en Spotify) | De qué trata | *El libro, a las 07:40; hoy también, un video de IA* | La foto y *Qué escuchar*: su panel (`abrirDidi()`); ↻, el siguiente libro |
 | **Tu dinero hoy** | *Según tu plan para juntar el dinero de Alemania* | La acción en su color: *Paga … a tu tarjeta BBVA* (rojo), *Hoy no toca pagar la tarjeta* o *Hoy sí inviertes en GBM* (verde) | Cuánto te quedará y el día en que queda en cero | *Mientras tengas deuda, no compres inversiones* o el siguiente pago | El panel *Qué invertir hoy* (`abrirGBM()`). Sale de `pasoInversionHoy()` (`corto`, `det`, `pie`), la regla del panel; todo por `money()` |
-| **Examen de certificación** | *ISTQB de pruebas con IA · lo presentas en ene 2027* | El tema de la pregunta, en llano | *Una pregunta de práctica de este tema; vale 2 puntos* (contestada, si fue bien) | Tu marcador de la semana | Su ventana, con la pregunta completa (`abrirIstqb()`) |
-| **Ejercicio de mentalidad** —la habilidad del plan (`aprendeFoco()`)— | *Para subir tu nivel · con el libro Atomic Habits* | La instrucción corta del paso | — | Los tramos y *Paso 1 de 6*; arriba, «‹» / «Siguiente ›» | Su ruta (`abrirSkillDetalle()`) |
+| **Examen de certificación** | *ISTQB de pruebas con IA · lo presentas en ene 2027* | El tema de la pregunta, corto: *Cómo pedirle cosas a la IA* | *Una pregunta de práctica de este tema; vale 2 puntos* (contestada, si fue bien) | Tu marcador de la semana | Su ventana, con la pregunta completa (`abrirIstqb()`) |
+| **Ejercicio de mentalidad** —la habilidad del plan (`aprendeFoco()`)— | *Para subir tu nivel · con el libro Atomic Habits* | El nombre del paso: *Lo alto no se mantiene solo* | Su instrucción corta (`corto`) | Los tramos y *Paso 1 de 6*; arriba, «‹» / «Siguiente ›» | Su ruta (`abrirSkillDetalle()`) |
 | **Habilidades para la vida** | *Guías prácticas, paso a paso* | El nombre de la guía | La idea del paso que toca | Los tramos y *Paso 1 de 20*; arriba, «‹» / «Siguiente ›» | La guía completa (`abrirHabilidadDetalle()`) |
 
 **Arriba**, *🎓 Hoy aprendes*, «Cómo lo decide Coach» (`abrirComoDecide()`), la fecha y *N de 6 hechas*, con

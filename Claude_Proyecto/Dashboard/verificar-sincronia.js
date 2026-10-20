@@ -2527,6 +2527,14 @@ function promptsDeLoTocado() {
     const n = ((HD[id] || {}).pasos || []).length;
     if (n !== HI[id].length) malos.push('HB_IDEA.' + id + ' trae ' + HI[id].length + ' ideas y la guía tiene ' + n + ' pasos');
   });
+  // Lo de hoy va corto, en su ficha (Adán, 20-oct-2026: "pon poca información, pero con un buen diseño"): el tema de
+  // cada capítulo del examen (IQ_CAP_LLANO) y el nombre de cada paso de ejercicio son lo de hoy en su tarjeta; la
+  // instrucción va en su detalle. Un tema de más de 32 letras o un paso de más de 50 ya no es un nombre.
+  const IQ = evaluar(literal(dash, 'const IQ_CAP_LLANO =', '{')) || {}, largos = [];
+  if (!Object.keys(IQ).length) malos.push('no pude leer IQ_CAP_LLANO');
+  Object.keys(IQ).forEach(function (k) { if (IQ[k].length > 32) largos.push('capítulo ' + k + ': ' + IQ[k]); });
+  Object.keys(A).forEach(function (id) { (A[id].subs || []).forEach(function (x) { if (x.n.length > 50) largos.push(id + ' · ' + x.n); }); });
+  if (largos.length) malos.push(largos.length + ' textos de lo de hoy son demasiado largos para su ficha: ' + largos.slice(0, 4).join('; '));
   if (malos.length) problemas.push('Hoy aprendes no se entiende solo:\n  - ' + malos.join('\n  - '));
   else ok.push('Hoy aprendes: seis tarjetas (' + fns.join(', ') + '), cada una con el mismo orden simple (apCuerpo), sus textos revisados (' + Object.keys(A).length + ' habilidades con versión corta, ' + audios.reduce(function (t, g) { return t + (g.items || []).length; }, 0) + ' audios con de qué trata, ideas de ' + Object.keys(HI).join(', ') + ') y Qué invertir hoy con la regla de su panel');
 })();

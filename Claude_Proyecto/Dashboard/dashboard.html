@@ -2798,15 +2798,28 @@ button.ap-c-ir:hover .ap-de,button.ap-c-ir:hover .ap-t,button.ap-c-ir:hover .ap-
    se sature visualmente"). En una tarjeta de menos de 130 px de alto no cabe con el título: ahí se va ella. */
 .ap-que{font-size:11px;line-height:1.42;color:var(--text2)}
 /* La tarjeta simple (`apCuerpo()`), siempre en el mismo orden y con poco texto (Adán: "no hay nada ordenado… nada
-   visualmente atractivo, con contenido simple, está muy saturado"): para qué es, en una línea; lo de hoy, en grande;
+   visualmente atractivo, con contenido simple, está muy saturado"): para qué es, en una línea; lo de hoy, en su ficha;
    un solo detalle, y el pie —el avance o lo que sigue— pegado abajo, a la misma altura en las seis. */
 .ap-sub{font-size:11.5px;line-height:1.35;color:var(--text3)}
-.ap-big{font-family:var(--font-title);font-size:19px;font-weight:600;line-height:1.25;letter-spacing:-.01em;color:var(--text)}
+/* Lo de hoy, en su ficha (Adán: "esa parte no me gusta de todas las tarjetas, pon poca información, pero con un buen
+   diseño"): un fondo suave del color de su materia con lo de hoy en grande —un nombre corto, nunca una instrucción— y
+   su detalle debajo. En escritorio las fichas de una fila crecen juntas hasta 132 px y su texto va al centro; donde
+   falta alto, apAjustar() quita primero el detalle y deja lo de hoy. */
+.ap-hoy{display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0;margin:3px 0 2px;padding:12px 15px 13px;
+  border-radius:12px;background:color-mix(in srgb,var(--c) 8%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 16%,transparent)}
+.ap-big{font-family:var(--font-title);font-size:23px;font-weight:600;line-height:1.18;letter-spacing:-.015em;color:var(--text)}
 .ap-big.ap-big-txt{font-family:inherit;font-size:14.5px;line-height:1.45;letter-spacing:0}
 .ap-big a{color:inherit;text-decoration:none}
 .ap-big a:hover{color:var(--c)}
 .ap-det{font-size:12.5px;line-height:1.45;color:var(--text2)}
 .ap-det b{color:var(--text);font-weight:600}
+/* En una tarjeta angosta (menos de 360 px: de 1280 a 1600 px y el teléfono), la ficha se aprieta y lo de hoy baja a 19 px;
+   en una de menos de 280 px (la 2×3 con la agenda abierta, 1280 con ella plegada), a 16.5 px. */
+@container apcarta (max-width:359.98px){
+  .ap-hoy{gap:2px;padding:8px 12px 9px;border-radius:10px}
+  .ap-big{font-size:19px}
+}
+@container apcarta (max-width:279.98px){#heroAprenderPanel .ap-c .ap-big{font-size:16.5px}}
 .ap-c-txt .ap-pie{margin-top:auto;padding-top:4px;display:flex;align-items:center;gap:9px;font-size:11.5px;line-height:1.35;color:var(--text3)}
 .ap-pie b{color:var(--text2);font-weight:600}
 .ap-pie .ap-seg{flex:0 0 34%;margin:0}
@@ -2938,6 +2951,11 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
     #heroAprenderPanel .ap-c-txt{flex:1 1 0;min-height:0;overflow:hidden}
     #heroAprenderPanel .ap-c-txt .ap-cl:not(.l2):not(.l3){-webkit-line-clamp:unset}
     @container apcarta (max-height:129.98px){#heroAprenderPanel .ap-que,#heroAprenderPanel .ap-sub{display:none}}
+    #heroAprenderPanel .ap-c-txt .ap-hoy{flex:0 1 132px;min-height:min-content}
+    @container apcarta (max-height:299.98px){
+      #heroAprenderPanel .ap-hoy{gap:2px;padding:8px 12px 9px;border-radius:10px}
+      #heroAprenderPanel .ap-big{font-size:19px}
+    }
   }
   @container aprende (min-width:760px){
     #heroAprenderPanel .ap-seis{grid-template-rows:repeat(2,minmax(200px,1fr))}
@@ -6874,7 +6892,8 @@ function pasoSemanaHtml(){
     foto:apFotoLibro(r&&r.id, foco.id), ico:foco.icon, abrir:`aprendeVisto('paso');abrirSkillDetalle('${foco.id}')`,
     titulo:`Abrir la ruta de ${habAttr(foco.name)}${lib?` · con ${habAttr(lib.t)}`:''}`,
     txt: apCuerpo({ sub: lib ? `Para subir tu nivel · con el libro <i>${esc(lib.t)}</i>` : 'Para subir tu nivel, un paso a la vez',
-      big: hacer, bigTxt: true, pie: `${apTramos(pasos.length, j=>j<i, i)}<span>Paso <b>${i+1} de ${pasos.length}</b></span>` }) });
+      big: p.k ? esc(p.n) : hacer, bigTxt: !p.k, det: p.k ? hacer : '',
+      pie: `${apTramos(pasos.length, j=>j<i, i)}<span>Paso <b>${i+1} de ${pasos.length}</b></span>` }) });
 }
 // La idea de cada paso de las guías que tocan primero (HB_PLAN: networking, persuadir y dinero), en una frase
 // revisada: es lo que enseña la tarjeta de Habilidades para la vida en Mi Día. Un paso por renglón, en el orden de
@@ -6969,8 +6988,14 @@ function apAjustar(){
   document.querySelectorAll('#heroAprenderPanel .ap-c-txt').forEach(caja => {
     const bloques = [...caja.children], clDe = b => b.matches('.ap-cl') ? b : b.querySelector('.ap-cl');
     bloques.forEach(b => { b.style.display = ''; const t = clDe(b); if(t) t.style.webkitLineClamp = ''; });
+    const det = caja.querySelector('.ap-hoy .ap-det'); if(det) det.style.display = '';
     if(getComputedStyle(caja).overflowY !== 'hidden' || !caja.clientHeight) return;
     const fondo = caja.getBoundingClientRect().bottom + 1, cabe = b => b.getBoundingClientRect().bottom <= fondo;
+    // Lo de hoy es lo último que se va: si su ficha no cabe, primero se quita su detalle y, si sigue sin caber, el
+    // «para qué es» de arriba (en una tarjeta baja, de 1280 a 1440 px, lo de hoy vale más). El pie se va antes que ellos.
+    const hoy = caja.querySelector('.ap-hoy'), sub = caja.querySelector('.ap-sub');
+    if(hoy && det && !cabe(hoy)) det.style.display = 'none';
+    if(hoy && sub && !cabe(hoy)) sub.style.display = 'none';
     const i = bloques.findIndex(b => getComputedStyle(b).display !== 'none' && !cabe(b));
     if(i < 0) return;
     const b = bloques[i], t = clDe(b);
@@ -7316,12 +7341,14 @@ function apFotoC(f){
   return (f.libro ? `<img class="ap-c-fondo" src="${f.u}" alt="" loading="lazy" onerror="this.style.display='none'">` : '')
     + `<img class="ap-c-img" src="${f.u}" alt="" loading="lazy" title="${habAttr(f.c)}" onerror="this.style.display='none'">`;
 }
-// El cuerpo de una tarjeta simple, siempre en este orden: `sub` (para qué es, una línea), `big` (lo de hoy, en
-// grande; `bigTxt` si es una frase larga), `det` (un solo detalle) y `pie` (el avance o lo que sigue, abajo).
+// El cuerpo de una tarjeta simple, siempre en este orden: `sub` (para qué es, una línea), la ficha de hoy (`.ap-hoy`)
+// con `big` (lo de hoy, corto y en grande; `bigTxt` si no hay más que una frase larga) y `det` (un solo detalle), y
+// `pie` (el avance o lo que sigue, abajo). `color` tiñe la ficha y lo de hoy (Tu dinero: rojo mientras haya deuda).
 function apCuerpo(o){
   return `<span class="ap-sub">${o.sub}</span>`
+    + `<span class="ap-hoy"${o.color ? ` style="--c:${o.color}"` : ''}>`
     + `<span class="ap-big${o.bigTxt ? ' ap-big-txt' : ''}"${o.color ? ` style="color:${o.color}"` : ''}${o.lang ? ` lang="${o.lang}"` : ''}>${o.big}</span>`
-    + (o.det ? `<span class="ap-det">${o.det}</span>` : '')
+    + (o.det ? `<span class="ap-det">${o.det}</span>` : '') + '</span>'
     + (o.pie ? `<span class="ap-pie">${o.pie}</span>` : '');
 }
 function apTarjeta(o){
@@ -7866,9 +7893,10 @@ function istqbMarcador(){
 // En su tarjeta: de qué se trata, la pregunta, su tema y cuánto vale, y cómo vas; arriba, «Responder» o el resultado y,
 // donde sobra alto, las opciones o el porqué. El nivel K del programa, en llano (`IQ_K_LLANO`), va en «Cómo lo decide Coach».
 const IQ_K_LLANO = { K1: 'pregunta de memoria', K2: 'pregunta de comprensión', K3: 'caso práctico' };
-// El tema de cada capítulo del temario, dicho para quien no conoce el examen (el título oficial va en su ventana).
-const IQ_CAP_LLANO = { 1: 'qué es la IA generativa y cómo ayuda a probar software', 2: 'cómo pedirle a la IA lo que necesitas para probar software (prompts)',
-  3: 'los riesgos de usar IA al probar software', 4: 'herramientas de prueba que funcionan con modelos de lenguaje', 5: 'cómo llevar la IA a un equipo de pruebas' };
+// El tema de cada capítulo del temario, corto y dicho para quien no conoce el examen: es lo de hoy en su tarjeta
+// (el título oficial va en su ventana).
+const IQ_CAP_LLANO = { 1: 'Qué es la IA generativa', 2: 'Cómo pedirle cosas a la IA',
+  3: 'Los riesgos de probar con IA', 4: 'Herramientas de prueba con IA', 5: 'Llevar la IA a tu equipo' };
 function istqbHtml(){
   const q = istqbPreguntaHoy(); if(!q) return '';
   const hecha = istqbHoy(q), ex = cdTarea('a1-7'), vas = istqbMarcador();
