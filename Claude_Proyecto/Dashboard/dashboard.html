@@ -2797,6 +2797,20 @@ button.ap-c-ir:hover .ap-de,button.ap-c-ir:hover .ap-t,button.ap-c-ir:hover .ap-
    sabe de mi app no va a saber ni de qué se trata, debe ser muy claro… aunque hagas la letra pequeña para que no
    se sature visualmente"). En una tarjeta de menos de 130 px de alto no cabe con el título: ahí se va ella. */
 .ap-que{font-size:11px;line-height:1.42;color:var(--text2)}
+/* La tarjeta simple (`apCuerpo()`), siempre en el mismo orden y con poco texto (Adán: "no hay nada ordenado… nada
+   visualmente atractivo, con contenido simple, está muy saturado"): para qué es, en una línea; lo de hoy, en grande;
+   un solo detalle, y el pie —el avance o lo que sigue— pegado abajo, a la misma altura en las seis. */
+.ap-sub{font-size:11.5px;line-height:1.35;color:var(--text3)}
+.ap-big{font-family:var(--font-title);font-size:19px;font-weight:600;line-height:1.25;letter-spacing:-.01em;color:var(--text)}
+.ap-big.ap-big-txt{font-family:inherit;font-size:14.5px;line-height:1.45;letter-spacing:0}
+.ap-big a{color:inherit;text-decoration:none}
+.ap-big a:hover{color:var(--c)}
+.ap-det{font-size:12.5px;line-height:1.45;color:var(--text2)}
+.ap-det b{color:var(--text);font-weight:600}
+.ap-c-txt .ap-pie{margin-top:auto;padding-top:4px;display:flex;align-items:center;gap:9px;font-size:11.5px;line-height:1.35;color:var(--text3)}
+.ap-pie b{color:var(--text2);font-weight:600}
+.ap-pie .ap-seg{flex:0 0 34%;margin:0}
+.ap-pie svg{flex:none;width:13px;height:13px}
 /* La versión corta de un bloque largo: solo sale cuando el bloque completo no cabe (`apAjustar()`). */
 .ap-c-txt .ap-alt{display:none}
 /* El texto que se puede recortar (`.ap-cl`), por líneas y con «…»: tres como mucho; dos los títulos,
@@ -2923,13 +2937,13 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
     #heroAprenderPanel .ap-c-foto.libro{width:clamp(34px,28cqh,72px);aspect-ratio:2/3}
     #heroAprenderPanel .ap-c-txt{flex:1 1 0;min-height:0;overflow:hidden}
     #heroAprenderPanel .ap-c-txt .ap-cl:not(.l2):not(.l3){-webkit-line-clamp:unset}
-    @container apcarta (max-height:129.98px){#heroAprenderPanel .ap-que{display:none}}
+    @container apcarta (max-height:129.98px){#heroAprenderPanel .ap-que,#heroAprenderPanel .ap-sub{display:none}}
   }
   @container aprende (min-width:760px){
     #heroAprenderPanel .ap-seis{grid-template-rows:repeat(2,minmax(200px,1fr))}
-    #heroAprenderPanel .ap-c-foto,#heroAprenderPanel .ap-c-foto.libro{width:100%;height:clamp(84px,34cqh,220px);aspect-ratio:auto}
+    #heroAprenderPanel .ap-c-foto,#heroAprenderPanel .ap-c-foto.libro{width:100%;height:clamp(84px,40cqh,240px);aspect-ratio:auto}
     @container apcarta (min-height:440px){
-      #heroAprenderPanel .ap-c-foto,#heroAprenderPanel .ap-c-foto.libro{height:clamp(84px,40cqh,240px)}
+      #heroAprenderPanel .ap-c-foto,#heroAprenderPanel .ap-c-foto.libro{height:clamp(84px,44cqh,260px)}
     }
   }
 }
@@ -6852,19 +6866,15 @@ function pasoSemanaHtml(){
   const st=habFocoLoad(); let i=st.paso[foco.id]||0; if(i<0||i>=pasos.length) i=0;
   const p=pasos[i];
   const r=(Array.isArray(p.r)?p.r:[]).find(x=>x&&x.t==='libro');
-  const lib=r?habLibro(r.id):null, fi=(lib&&lib.ficha)||{};
-  const rec=habRecomendada(), propia=!!rec&&rec.id!==foco.id;
-  const nom=skLlano(foco);
-  // Lo que se hace hoy, en la versión corta y revisada del maestro (`corto`); el texto largo está en la ruta.
+  const lib=r?habLibro(r.id):null;
+  const rec=habRecomendada(), propia=!!rec&&rec.id!==foco.id, nom=skLlano(foco);
   const hacer=p.k||String(p.c||'').split(/(?<=[.!?])\s/)[0];
-  const txt=`<span class="ap-que">Subes tu nivel de ${esc(nom)} con ejercicios cortos${lib?`, basados en el libro <i>${esc(lib.t)}</i>`:''}.</span>`
-    +apTramos(pasos.length, j=>j<i, i)
-    +(hacer?apBloque('Qué hacer hoy',`<span class="ap-hacer">${hacer}</span>`):'')
-    +(fi.idea?apMeta('libro',`<b>La idea del libro:</b> ${fi.idea}`,'ap-opc libre'):'');
   return apTarjeta({ c:'var(--w)', mat:`Ejercicio de ${esc(nom)}${propia?' · elegido por ti':''}`,
-    estado:`<span class="ap-av-n">paso ${i+1} de ${pasos.length}</span>`, ctl:apCtl('paso','Habilidad',propia?esc(rec.name):''),
+    ctl:apCtl('paso','Habilidad',propia?esc(rec.name):''),
     foto:apFotoLibro(r&&r.id, foco.id), ico:foco.icon, abrir:`aprendeVisto('paso');abrirSkillDetalle('${foco.id}')`,
-    titulo:`Abrir la ruta de ${habAttr(foco.name)}${lib?` · con ${habAttr(lib.t)}`:''}`, txt });
+    titulo:`Abrir la ruta de ${habAttr(foco.name)}${lib?` · con ${habAttr(lib.t)}`:''}`,
+    txt: apCuerpo({ sub: lib ? `Para subir tu nivel · con el libro <i>${esc(lib.t)}</i>` : 'Para subir tu nivel, un paso a la vez',
+      big: hacer, bigTxt: true, pie: `${apTramos(pasos.length, j=>j<i, i)}<span>Paso <b>${i+1} de ${pasos.length}</b></span>` }) });
 }
 // La idea de cada paso de las guías que tocan primero (HB_PLAN: networking, persuadir y dinero), en una frase
 // revisada: es lo que enseña la tarjeta de Habilidades para la vida en Mi Día. Un paso por renglón, en el orden de
@@ -6943,19 +6953,13 @@ function fichaEnCursoHtml(){
   const info=HABILIDAD_DETALLE[sig.h.id]; const store=(rawGet('habilidades_checklist_v1',{})[sig.h.id])||{};
   const k=info?info.pasos.findIndex((_,j)=>!store[j]):-1;
   const paso=k>=0?info.pasos[k]:null;
-  const luego=paso?info.pasos.map((q,j)=>({q,j})).find(x=>x.j>k&&!store[x.j]):null;
-  // La idea del paso, revisada (HB_IDEA); sin ella, solo el nombre del paso: nunca un pedazo del texto largo.
   const idea=paso?(HB_IDEA[sig.h.id]||[])[k]||'':'';
-  const txt=`<span class="ap-que">Aprendes habilidades prácticas con guías paso a paso; ${paso?`hoy toca el paso ${k+1} de ${sig.total} de esta:`:'esta ya la completaste:'}</span>`
-    +`<span class="ap-t ap-cl l2" data-min="1">${esc(sig.h.t)}</span>`
-    +(info?apTramos(info.pasos.length, j=>!!store[j], k):'')
-    +(paso?`<span class="ap-bq"><span class="ap-bq-k ap-bq-paso">Paso ${k+1}: ${esc(mdLimpiaTitulo(paso.t))}</span>${idea?`<span class="ap-bq-t">${esc(idea)}</span>`:''}</span>`
-      :apBloque('Guía completa','<span class="ap-bq-t">Repásala cuando quieras: la tienes entera.</span>'))
-    +apMeta('porque',`<b>Para qué te sirve:</b> ${esc(hbPlan(sig.h.id).para)}`,'libre')
-    +(!paso?'':luego?apMeta('sigue',`Siguiente paso: <b>${esc(mdLimpiaTitulo(luego.q.t))}</b>`,'libre'):apMeta('meta','Es el último paso de la guía'));
   return apTarjeta({ c:'var(--b)', mat:`Habilidades para la vida${propia?' · elegida por ti':''}`,
-    estado:`<span class="ap-av-n">${sig.hechos} de ${sig.total} pasos</span>`, ctl:apCtl('ficha','Ficha',propia?habAttr(ec.recomendada.h.t):''),
-    foto:apFotoHb(sig.h), abrir:`aprendeVisto('hb');abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')`, titulo:'Abrir la guía completa', txt });
+    ctl:apCtl('ficha','Ficha',propia?habAttr(ec.recomendada.h.t):''),
+    foto:apFotoHb(sig.h), abrir:`aprendeVisto('hb');abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')`, titulo:'Abrir la guía completa',
+    txt: apCuerpo({ sub: 'Guías prácticas, paso a paso', big: esc(sig.h.t),
+      det: paso ? (idea ? esc(idea) : `Hoy: <b>${esc(mdLimpiaTitulo(paso.t))}</b>.`) : 'La terminaste: repásala cuando quieras.',
+      pie: `${info?apTramos(info.pasos.length, j=>!!store[j], k):''}<span>Paso <b>${paso?k+1:sig.total} de ${sig.total}</b></span>` }) });
 }
 // En escritorio cada tarjeta tiene alto fijo: lo que no cabe se quita completo y el primer bloque que no
 // cabe entero se recorta a las líneas que le quedan, con «…» —nunca a media línea—. Los bloques van en
@@ -7312,6 +7316,14 @@ function apFotoC(f){
   return (f.libro ? `<img class="ap-c-fondo" src="${f.u}" alt="" loading="lazy" onerror="this.style.display='none'">` : '')
     + `<img class="ap-c-img" src="${f.u}" alt="" loading="lazy" title="${habAttr(f.c)}" onerror="this.style.display='none'">`;
 }
+// El cuerpo de una tarjeta simple, siempre en este orden: `sub` (para qué es, una línea), `big` (lo de hoy, en
+// grande; `bigTxt` si es una frase larga), `det` (un solo detalle) y `pie` (el avance o lo que sigue, abajo).
+function apCuerpo(o){
+  return `<span class="ap-sub">${o.sub}</span>`
+    + `<span class="ap-big${o.bigTxt ? ' ap-big-txt' : ''}"${o.color ? ` style="color:${o.color}"` : ''}${o.lang ? ` lang="${o.lang}"` : ''}>${o.big}</span>`
+    + (o.det ? `<span class="ap-det">${o.det}</span>` : '')
+    + (o.pie ? `<span class="ap-pie">${o.pie}</span>` : '');
+}
 function apTarjeta(o){
   const txt = `<span class="ap-c-txt">${o.txt}</span>`;
   return `<div class="ap-c" style="--c:${o.c}">
@@ -7373,42 +7385,15 @@ function alNumTxt(num){
 function alemanHoyHtml(vistos){
   const V = (typeof alVocab === 'function') ? alVocab() : null, ws = V ? alemanVocabHoy() : [], a = ws[0], t = alemanLeccionHoy();
   if(!a && !t) return '';
-  // Lo de hoy en una línea, con sus números: «Hoy: 10 palabras nuevas (teléfono y correos), 30 de repaso y una lección.»
-  const tema = a ? String((V.cats[a.cat] || {}).label || '').toLowerCase() : '', rep = a ? alemanRepasoHoy().length : 0;
-  const hoy = [a ? `${ws.length} palabras nuevas${tema ? ` (${esc(tema)})` : ''}` : '', rep ? `${rep} de repaso` : '', t ? 'una lección' : ''].filter(Boolean);
-  // Una palabra con su traducción, completa: «Auf Wiederhören = adiós».
-  const par = (w, cls) => `<span class="ap-es${cls ? ' ' + cls : ''}"><b lang="de">${esc(alemanArtTxt(w))}${esc(w.de)}</b> = ${esc(w.es)}</span>`;
-  let txt = `<span class="ap-que">Estudias alemán para mudarte a Alemania. Hoy: ${hoy.length > 1 ? hoy.slice(0, -1).join(', ') + ' y ' + hoy[hoy.length - 1] : hoy[0]}.</span>`;
-  if(a){
-    const art = (a.art || '-').split('/')[0].trim();
-    const artHtml = art && art !== '-' ? `<span>${esc(art === 'pl.' ? 'die' : a.art)}</span> ` : '';
-    const pl = a.pl && a.pl !== '-' ? `<span class="ap-m">plural: die ${esc(a.pl)}</span>`
-             : (art === 'pl.' ? '<span class="ap-m">solo en plural</span>' : '');
-    const f = a.conj && a.aux ? String(a.conj).split('·').map(x => x.trim()) : null;
-    const aux = a.aux === 'ist' ? 'ist' : 'hat';
-    const perf = f ? `<span class="ap-m">en pasado: <span class="ap-aux ${aux}">${aux}</span> ${esc(f[f.length - 1])}</span>` : '';
-    txt += apBloque(`Palabra 1 de ${ws.length}`, `<span class="ap-de ap-cl l2" data-min="1" lang="de">${artHtml}${esc(a.de)}</span>`)
-      + `<span class="ap-es">${esc(a.es)}${pl}${perf}</span>`;
-  }
-  if(t){
-    // La lección: qué lección es y por qué toca, su título en español y cuánto llevas.
-    const l = t.l, av = t.avance, ir = ` onclick="event.stopPropagation();abrirAleman('leccion')" title="Abrir la lección aquí mismo"`;
-    txt += `<span class="ap-bq ap-ir-lec"${ir}><span class="ap-bq-k">${esc(alNumTxt(l.num))} · ${esc(String(t.ceja).replace(/Kapitel/g, 'capítulo'))}</span><span class="ap-t">${esc(l.es)}</span></span>`
-      + (av ? apTramos(av.total, j => j < av.hechos, -1).replace('<span class="ap-seg"', `<span class="ap-seg ap-ir-lec"${ir}`) : '')
-      + (av ? `<span class="ap-dato ap-ir-lec"${ir}>Llevas <b>${av.hechos} de ${av.total}</b> ejercicios de esta lección.</span>` : '');
-  }
-  if(ws.length > 1) txt += apBloque('Más palabras de hoy', par(ws[1]), 'ap-opc') + ws.slice(2, 4).map(w => par(w, 'ap-opc')).join('');
-  if(a){
-    const ex = alemanEjemplo(a);
-    txt += (ex ? `<span class="ap-ex ap-opc"><span lang="de">${esc(ex)}</span>${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</span>` : '')
-      + (a.uso ? `<span class="ap-nota ap-opc"><b>Cuándo se usa</b> · ${esc(a.uso)}</span>` : '');
-  }
-  const practico = alemanPracticoHoy();
-  return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA, foto: a ? apFotoAleman(a) : apFotoLeccion(t.l), mat: 'Alemán',
+  const l = t ? t.l : null, av = t ? t.avance : null, practico = alemanPracticoHoy();
+  const pie = l ? `${av ? apTramos(av.total, j => j < av.hechos, -1) : ''}<span>Lección: <b>${esc(String(l.es).split(':')[0])}</b>${av ? ` · ${av.hechos} de ${av.total}` : ''}</span>` : '';
+  return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA, foto: a ? apFotoAleman(a) : apFotoLeccion(l), mat: 'Alemán',
     estado: (vistos.de || practico) ? apEstado(true, '', practico ? '✓ practicaste' : '✓ abierto')
       : `<button type="button" class="ap-estado ir" onclick="aprendeAbrir('de')">Practicar</button>`,
     otra: `Las ${AL_VOC_DIA} palabras siguientes, en el orden de Coach`,
-    abrir: "aprendeAbrir('de')", titulo: 'Abrir el vocabulario y la lección de hoy aquí mismo', txt });
+    abrir: "aprendeAbrir('de')", titulo: 'Abrir el vocabulario y la lección de hoy aquí mismo',
+    txt: apCuerpo({ sub: `Para mudarte a Alemania · hoy, ${a ? ws.length + ' palabras nuevas y ' : ''}una lección`,
+      big: a ? `${esc(alemanArtTxt(a))}${esc(a.de)}` : esc(l.es), lang: a ? 'de' : '', det: a ? esc(a.es) : '', pie }) });
 }
 
 // ── El vocabulario de hoy y su repaso ─────────────────────────────────────────────────────────────
@@ -7800,23 +7785,20 @@ function didiLibrosLuego(d, n){
 function escucharHoyHtml(vistos){
   const d = didiHoy(); if(!d || !d.libro) return '';
   const { libro, pod, finde, horas } = d;
-  const tema = skLlano(SK.find(s => s.id === libro.g.sk)), yt = pod && pod.it.tipo === 'yt', temaPod = pod ? skLlano(SK.find(s => s.id === pod.g.sk)) : '';
-  const aLas = hs => hs.map(h => 'a las ' + h).join(' y ');
-  const cuando = horas.length ? aLas(finde ? horas : horas.slice(0, 1)) : (finde ? 'en los turnos largos' : 'en la mañana');
-  const cuandoPod = finde ? 'en el otro turno' : (horas.length > 1 ? aLas(horas.slice(1)) : 'en la noche');
-  const oir = x => `<a class="ap-oir" href="${didiSpo(x.q)}" target="_blank" rel="noopener" onclick="aprendeVisto('escuchar');setTimeout(renderHeroAprender,60)" title="Buscarlo en Spotify">${esc(x.n)}<span aria-hidden="true">&nbsp;↗</span></a>`;
+  const yt = pod && pod.it.tipo === 'yt', temaPod = pod ? skLlano(SK.find(s => s.id === pod.g.sk)) : '';
+  // El título en español si lo tiene (va entre «» al inicio de `trata`) y de qué trata, en una frase.
+  const m = String(libro.it.trata || '').match(/^«([^»]+)»:\s*(.*)$/), titulo = m ? m[1] : String(libro.it.n).split(' — ')[0];
+  const trata = m ? m[2] : (libro.it.trata || ''), autor = String(libro.it.n).split(' — ')[1] || '';
+  const cuando = horas.length ? 'a las ' + (finde ? horas.join(' y ') : horas[0]) : (finde ? 'en los turnos largos' : 'en la mañana');
   const estado = vistos.escuchar ? '<span class="ap-estado ok">✓ escuchando</span>'
     : '<button type="button" class="ap-estado ir" onclick="abrirDidi()">Qué escuchar</button>';
-  // De qué trata cada uno, en la frase revisada del catálogo (`trata`); la nota larga (`d`) es del panel.
+  const link = `<a href="${didiSpo(libro.it.q)}" target="_blank" rel="noopener" onclick="aprendeVisto('escuchar');setTimeout(renderHeroAprender,60)" title="Buscar ${habAttr(libro.it.n)} en Spotify">${esc(titulo)}</a>`;
   return apTarjeta({ c: 'var(--o)', mat: 'Audiolibro y podcast', estado,
     ctl: apOtraBtn('escuchar', 'El siguiente audiolibro del foco'), foto: apFotoLibro(libro.it.lib, libro.g.sk),
     abrirFoto: 'abrirDidi()', titulo: 'Abrir Qué escuchar',
-    txt: `<span class="ap-que">Escuchas para aprender mientras manejas en Didi. Esta semana, un libro${tema ? ` de ${esc(tema)}` : ''}${pod ? `; hoy, ${yt ? 'un video' : 'un podcast'}${temaPod ? ` de ${esc(temaPod)}` : ''}` : ''}.</span>
-      ${apBloque(`Audiolibro de la semana · ${cuando}`, `<span class="ap-t ap-cl l2" data-min="1">${oir(libro.it)}</span>`)}
-      ${libro.it.trata ? `<span class="ap-es">${esc(libro.it.trata)}</span>` : ''}
-      ${pod ? `<span class="ap-es"><b>${yt ? 'Video' : 'Podcast'} de hoy, ${cuandoPod}:</b> ${oir(pod.it)}</span>` : ''}
-      ${pod && pod.it.trata ? `<span class="ap-es ap-opc">${esc(pod.it.trata)}</span>` : ''}
-      ${apLuego(didiLibrosLuego(d, 2).map(x => `<b>${esc(x.it.n)}</b>`), 'Las próximas semanas')}` });
+    txt: apCuerpo({ sub: `Para escuchar mientras manejas${autor ? ' · de ' + esc(autor) : ''}`, big: link,
+      det: trata ? esc(trata.charAt(0).toUpperCase() + trata.slice(1)) : '',
+      pie: `${AP_ICO.sigue}<span>El libro, ${esc(cuando)}${pod ? `; hoy también, ${yt ? 'un video' : 'un podcast'}${temaPod ? ' de ' + esc(temaPod) : ''}` : ''}</span>` }) });
 }
 
 // Qué invertir hoy, en su tarjeta (Adán, 19-oct-2026: "quita esta sección [Python] y pon ahí el recuadro que
@@ -7830,14 +7812,8 @@ function invertirHoyHtml(vistos){
     : `<button type="button" class="ap-estado ir" onclick="aprendeAbrir('invertir')">Ver el plan</button>`;
   return apTarjeta({ c: 'var(--cy)', mat: 'Tu dinero hoy', estado, foto: apFoto(p.foto),
     abrir: "aprendeAbrir('invertir')", titulo: 'Abrir Qué invertir hoy: tu situación, los precios de hoy y qué comprar según tu perfil',
-    txt: `<span class="ap-que">${p.que}</span>
-      <span class="ap-t" style="color:${p.color}">${p.titulo}</span>
-      ${p.origen ? `<span class="ap-es">${p.origen}</span>` : ''}
-      <span class="ap-es">${p.porque}</span>
-      ${p.hoy ? `<span class="ap-hacer">${p.hoy}</span>` : ''}
-      ${apMeta(p.notaIco, p.nota, 'libre')}
-      ${apLuego(p.abonos, 'Tus siguientes pagos')}
-      ${p.fondo ? apMeta('meta', p.fondo, 'ap-opc libre') : ''}` });
+    txt: apCuerpo({ sub: 'Según tu plan para juntar el dinero de Alemania', big: p.corto, color: p.color, det: p.det,
+      pie: `${AP_ICO[p.notaIco]}<span>${p.pie}</span>` }) });
 }
 
 // La pregunta del ISTQB CT-GenAI: una de los dos bancos del simulacro (los mismos que usa
@@ -7899,16 +7875,14 @@ function istqbHtml(){
   const tema = IQ_CAP_LLANO[q.cap] || ((window.EXAMEN_GENAI || {}).capitulos || {})[q.cap] || '';
   const estado = !hecha ? '<button type="button" class="ap-estado ir" onclick="abrirIstqb()">Responder</button>'
     : `<span class="ap-estado ${hecha.ok ? 'ok' : 'mal'}">${hecha.ok ? '✓ correcta' : '✗ era la ' + 'ABCD'[q.r]}</span>`;
-  const vale = (q.pts || 1) === 1 ? 'vale 1 punto' : `vale ${q.pts} puntos`;
+  const vale = (q.pts || 1) === 1 ? '1 punto' : `${q.pts} puntos`;
   return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), mat: 'Examen de certificación',
     estado, otra: 'La siguiente pregunta, en el orden de Coach', abrir: 'abrirIstqb()', titulo: 'Contestar la pregunta del día',
-    txt: `<span class="ap-que">Te preparas para el examen ISTQB de pruebas de software con IA${ex && ex.s.mes ? ` (${cdMes(ex.s.mes)})` : ''}. Hoy, una pregunta de práctica.</span>
-      ${apBloque(`La pregunta · ${vale}`, `<span class="ap-q">${q.q}</span>`)}
-      <span class="ap-es ap-alt">Una pregunta de práctica${tema ? ` sobre ${esc(tema)}` : ''}: tócala para leerla completa y responder.</span>
-      ${tema ? `<span class="ap-dato">Tema: ${esc(tema)}.</span>` : ''}
-      ${vas ? `<span class="ap-dato ap-opc">${vas}.</span>` : ''}
-      ${hecha ? (q.why ? `<span class="ap-es ap-opc">${q.why}</span>` : '')
-        : `<span class="ap-ops ap-opc">${q.o.map((o, i) => `<span class="ap-op"><b>${'ABCD'[i]}</b><span>${o}</span></span>`).join('')}</span>`}` });
+    txt: apCuerpo({ sub: `ISTQB de pruebas con IA${ex && ex.s.mes ? ' · lo presentas en ' + cdMes(ex.s.mes) : ''}`,
+      big: tema ? esc(tema.charAt(0).toUpperCase() + tema.slice(1)) : 'La pregunta de hoy',
+      det: hecha ? (hecha.ok ? 'La contestaste bien. Ábrela para ver el porqué.' : 'Era la ' + 'ABCD'[q.r] + '. Ábrela para ver el porqué.')
+        : `Una pregunta de práctica de este tema; vale ${vale}.`,
+      pie: `${AP_ICO.meta}<span>${vas || 'Esta semana aún no contestas ninguna'}</span>` }) });
 }
 // La ventana (#istqbOverlay): tan ancha y alta como la del alemán —Adán: "haz la ventana mucho más grande, así
 // como las otras… y puedes meter más info"—, en tres columnas con un trabajo cada una (`istqbPintar()`):
@@ -10952,7 +10926,14 @@ function pasoInversionHoy(){
     notaIco = 'meta'; nota = 'El auto no se adelanta: se paga con su mensualidad normal.';
     fondo = faltaEf>0 ? '' : 'Tu fondo para emergencias está completo: <b>'+mon(ef)+'</b> en CETES.';
   }
-  return {F, inv, ef, metaEf, totalInv, cetes, deudaCara, mon, color, que, titulo, origen, porque, hoy, nota, notaIco, fondo, foto, abonos: bbvaSaldo > 0 ? abonos : []};
+  // La tarjeta de Mi Día, en simple: la acción en grande, un detalle y el pie.
+  const corto = bbvaSaldo > 0 ? (deHoy.length ? 'Paga '+mon(sumHoy)+' a tu tarjeta BBVA' : 'Hoy no toca pagar la tarjeta') : 'Hoy sí inviertes en GBM';
+  const det = bbvaSaldo > 0
+    ? (deHoy.length ? 'Te quedarán <b>'+mon(Math.max(0, bbvaSaldo-sumHoy))+'</b> por pagar' : 'Debes <b>'+mon(bbvaSaldo)+'</b>')+(bbvaFin ? '; queda en cero el <b>'+bbvaFin+'</b>.' : '.')
+    : 'Lo que te sobra de la quincena y de Didi va a tu cuenta de inversiones.';
+  const pie = bbvaSaldo > 0 ? (deHoy.length || !resto[0] ? 'Mientras tengas deuda, no compres inversiones' : 'Siguiente pago: <b>'+diaCorto(resto[0].fecha)+'</b>, '+mon(resto[0].monto))
+    : 'Reparte según tu perfil, sin pensarlo dos veces';
+  return {F, inv, ef, metaEf, totalInv, cetes, deudaCara, mon, color, que, titulo, origen, porque, hoy, nota, notaIco, fondo, foto, corto, det, pie, abonos: bbvaSaldo > 0 ? abonos : []};
 }
 
 // ─── "Qué invertir hoy" — la plantilla y los datos van separados ─────────────────────────

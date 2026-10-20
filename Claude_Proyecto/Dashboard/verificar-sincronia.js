@@ -2500,7 +2500,7 @@ function promptsDeLoTocado() {
   fns.forEach(function (fn) {
     const c = cuerpo(fn);
     if (!c) { malos.push(fn + '() no existe'); return; }
-    if (c.indexOf('class="ap-que') < 0) malos.push(fn + '() no dice de qué se trata la tarjeta (falta su frase .ap-que)');
+    if (c.indexOf('apCuerpo(') < 0) malos.push(fn + '() no usa apCuerpo(): la tarjeta pierde su orden simple (para qué es, lo de hoy, un detalle y el pie)');
     const mat = (c.match(/mat\s*:\s*(`[^`]*`|'[^']*')/) || [])[1] || '';
     if (/\bK\d|Cap\.|\$\{[^}]*\}\/\$\{/.test(mat)) malos.push(fn + '() lleva una sigla suelta en su cabecera: ' + mat.slice(0, 60));
   });
@@ -2528,7 +2528,7 @@ function promptsDeLoTocado() {
     if (n !== HI[id].length) malos.push('HB_IDEA.' + id + ' trae ' + HI[id].length + ' ideas y la guía tiene ' + n + ' pasos');
   });
   if (malos.length) problemas.push('Hoy aprendes no se entiende solo:\n  - ' + malos.join('\n  - '));
-  else ok.push('Hoy aprendes: seis tarjetas (' + fns.join(', ') + '), cada una con su frase de qué se trata, sus textos revisados (' + Object.keys(A).length + ' habilidades con versión corta, ' + audios.reduce(function (t, g) { return t + (g.items || []).length; }, 0) + ' audios con de qué trata, ideas de ' + Object.keys(HI).join(', ') + ') y Qué invertir hoy con la regla de su panel');
+  else ok.push('Hoy aprendes: seis tarjetas (' + fns.join(', ') + '), cada una con el mismo orden simple (apCuerpo), sus textos revisados (' + Object.keys(A).length + ' habilidades con versión corta, ' + audios.reduce(function (t, g) { return t + (g.items || []).length; }, 0) + ' audios con de qué trata, ideas de ' + Object.keys(HI).join(', ') + ') y Qué invertir hoy con la regla de su panel');
 })();
 
 /* ── 35. El hábito del Gimnasio toca los días con sesión de la rutina ──────────────────────────────

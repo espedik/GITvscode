@@ -220,37 +220,35 @@ quedan, así que dos medidas a horas distintas no son comparables.
 
 ### Las seis tarjetas de Hoy aprendes
 
-Adán, 19-oct-2026: *"si una persona que no sabe de mi app no va a saber ni de qué se trata, debe ser muy claro y
-muy entendible, aun que hagas la letra pequeña para que no se sature visualmente"*, y *"quería algo preciso y
-conciso y que diera información de alguien que no tiene idea de esta app y pueda saber luego luego de qué se va
-a tratar"*. Cada tarjeta (`apTarjeta()`) lleva arriba **su título en palabras de todos los días** (`.ap-mat`:
-12.5 px en negritas y en el color de su materia, no en mono mayúscula) y debajo **una línea concreta con lo de
-hoy** (`.ap-que`: 11 px, en gris), escrita para quien no conoce la app: primero qué haces y para qué, en segunda
-persona, y después lo concreto de hoy con sus números. Lo principal de cada tarjeta es lo que se
-entiende sin contexto —en el ejercicio, la instrucción, no el nombre del paso— y **nada va en siglas sueltas**:
-*K10 · 03* se lee *Lección 3 del capítulo 10* (`alNumTxt()`) y las cuentas dicen de qué son (*paso 1 de 6*,
-*0 de 20 pasos*, *3 de 6 hechas*). Sin cajas: las separa el aire.
+Adán, 19-oct-2026: *"si una persona que no sabe de mi app no va a saber ni de qué se trata, debe ser muy claro"*,
+*"quería algo preciso y conciso"* y, sobre una versión llena de texto: *"no hay nada ordenado… nada visualmente
+atractivo, con contenido simple, está muy saturado y no me aporta nada"*. Por eso **las seis tienen el mismo cuerpo
+y en el mismo orden** (`apCuerpo()`), con poco texto:
 
-**Lo que dicen viene revisado, nunca un pedazo del texto largo** (Adán: *"ninguna tarjeta es clara, solo pones
-información sin revisarla, debe ser muy claro lo que dice ahí, muy preciso y muy entendible"*). Cada renglón es una
-frase completa: sin `.ap-cl`, `apAjustar()` lo quita entero si no cabe, en vez de cortarlo con «…» (solo los títulos
-cortos conservan su tope de dos líneas). Un bloque largo puede traer su versión corta (`.ap-alt`), que sale solo
-cuando el completo no cupo. Los textos salen de campos escritos para esto: la instrucción corta de cada paso de
-ejercicio (`corto` en `APRENDIZAJE`, en el maestro), de qué trata cada audio (`trata` en `DIDI_AUDIO`), la idea de
-cada paso de las guías que tocan primero —networking, persuadir y dinero— (`HB_IDEA`; las demás enseñan solo el
-nombre del paso), para qué te sirve cada guía (`HB_PLAN`), el tema de cada capítulo del examen en llano
+1. **El título** (`.ap-mat`: 12.5 px en negritas y en el color de su materia), en palabras de todos los días.
+2. **Para qué es**, en una línea gris (`.ap-sub`).
+3. **Lo de hoy, en grande** (`.ap-big`: 19 px con la letra de los títulos; una instrucción larga, en 14.5 px).
+4. **Un solo detalle** (`.ap-det`).
+5. **El pie** (`.ap-pie`), pegado abajo —a la misma altura en las seis—: el avance con sus tramos o lo que sigue.
+
+La foto ocupa el 40 % del alto de la tarjeta (el 44 % desde 440 px). Ningún renglón se corta con «…»: si uno no cabe
+entero, `apAjustar()` lo quita. Los textos están escritos para la tarjeta, nunca son un pedazo del catálogo: la
+instrucción corta de cada paso de ejercicio (`corto` en `APRENDIZAJE`, en el maestro), de qué trata cada audio con su
+título en español (`trata` en `DIDI_AUDIO`), la idea de cada paso de las guías que tocan primero —networking,
+persuadir y dinero— (`HB_IDEA`; las demás dicen el nombre del paso), el tema de cada capítulo del examen en llano
 (`IQ_CAP_LLANO`) y el nombre llano de tres habilidades (`SK_LLANO`: *escritura persuasiva*, *programación*,
-*análisis de datos*). El control 34 del verificador exige el `corto`, el `trata` y que `HB_IDEA` tenga una idea
-por paso.
+*análisis de datos*). Nada de siglas sueltas: *K10 · 03* se lee *Lección 3 del capítulo 10* (`alNumTxt()`) y las
+cuentas dicen de qué son. El control 34 del verificador exige que las seis usen `apCuerpo()`, el `corto` de cada
+paso, el `trata` de cada audio y una idea por paso en `HB_IDEA`.
 
-| Título | La línea de abajo | Lo que sigue, en orden de importancia | Tocarla abre |
-|---|---|---|---|
-| **Alemán** | *Estudias alemán para mudarte a Alemania. Hoy: 10 palabras nuevas (teléfono y correos), 30 de repaso y una lección* —el tema, del vocabulario del día— | *Palabra 1 de 10*: la primera en grande con su artículo y su plural o, si es verbo, su pasado, y su traducción; la lección (*Lección 3 del capítulo 10 · Sigue donde te quedaste*) con su título en español (`l.es` de `Aleman/lecciones-datos.js`), un tramo por ejercicio y *Llevas 0 de 10 ejercicios de esta lección*; donde sobra alto, tres palabras más con su traducción (*Auf Wiederhören = Hasta luego*), el ejemplo y *Cuándo se usa*. Arriba, *Practicar* o *✓ practicaste*; ↻ trae las diez siguientes | Su ventana, aquí mismo (`abrirAleman()`), en el vocabulario; tocar la lección, en la lección |
-| **Audiolibro y podcast** | *Escuchas para aprender mientras manejas en Didi. Esta semana, un libro de finanzas; hoy, un video de IA* —la habilidad del libro y la del podcast (`skLlano()`)— | *Audiolibro de la semana · a las 07:40*, el libro (abre la búsqueda en Spotify) y de qué trata (*«El millonario de al lado»: los millonarios reales se hicieron gastando poco, no ganando mucho*); *Video de hoy, a las 19:30:* el canal y, donde cabe, de qué trata y *Las próximas semanas*; ↻, el siguiente libro | La foto y *Qué escuchar*: su panel (`abrirDidi()`) |
-| **Tu dinero hoy** | *Tu plan para juntar el dinero de Alemania: primero liquidas la tarjeta de crédito y después inviertes* (sin tarjeta que pagar: *ya sin deuda de tarjeta, todo lo que ahorras se invierte*) | La acción de hoy en su color —*Hoy: paga … a tu tarjeta BBVA* en rojo si la ruta trae un pago hoy, o *Hoy no te toca pagar la tarjeta* con la fecha del siguiente; *Hoy sí inviertes: todo va a GBM* en verde cuando ya no tenga saldo—, de dónde sale ese pago (*Sale de lo que apartas cada semana de lo que ganas en Didi*), cuánto debes, cuánto queda con este pago y el día en que la terminas de pagar, *Mientras tengas esta deuda, no compres inversiones*, *Después: invertir cada quincena en GBM* y, donde sobra alto, *Tus siguientes pagos* (tres, de `CIFRAS.planBbva`) y el fondo para emergencias. La foto sigue al paso: la tarjeta cortada o la gráfica. Sale de `pasoInversionHoy()`, la misma regla que el panel; todo pasa por `money()`, así el modo privado tapa las cifras | El panel *Qué invertir hoy* (`abrirGBM()`) |
-| **Examen de certificación** | *Te preparas para el examen ISTQB de pruebas de software con IA (ene 2027). Hoy, una pregunta de práctica* —el mes, de la tarea `a1-7`— | *La pregunta · vale 2 puntos* con la pregunta completa —si no cabe, su versión corta: *Una pregunta de práctica sobre … : tócala para leerla completa y responder*— y *Tema: cómo pedirle a la IA lo que necesitas para probar software (prompts)* (`IQ_CAP_LLANO`); donde sobra alto, tu marcador de 7 días y el último simulacro y las cuatro opciones completas o, contestada, el porqué. Arriba, *Responder* o el resultado | Su ventana (`abrirIstqb()`) |
-| **Ejercicio de mentalidad** —la habilidad del plan: el paso de la semana (`aprendeFoco()`)— | *Subes tu nivel de mentalidad con ejercicios cortos, basados en el libro Atomic Habits* | Un tramo por paso, *Qué hacer hoy* con la instrucción corta del maestro (`corto`: *Anota las tres cosas que te mantienen bien… esa es la que debes cuidar*) y, donde cabe, *La idea del libro*. Arriba, *paso 1 de 6* y «‹» / «Siguiente ›» | Su ruta, la de *En qué invertir tu tiempo* (`abrirSkillDetalle()`) |
-| **Habilidades para la vida** | *Aprendes habilidades prácticas con guías paso a paso; hoy toca el paso 1 de 20 de esta:* | La guía en curso (`hbEnCurso()`) con su título, un tramo por paso, *Paso 1: Qué es y qué no es* con su idea (`HB_IDEA`), *Para qué te sirve* (`hbPlan()`: *Las dos cartas de recomendación que pide la maestría saldrán de tu red de contactos*) y el *Siguiente paso*. Arriba, *0 de 20 pasos* y «‹» / «Siguiente ›» | La guía completa (`abrirHabilidadDetalle()`) |
+| Título | Para qué es | Lo de hoy, en grande | El detalle | El pie | Tocarla abre |
+|---|---|---|---|---|---|
+| **Alemán** | *Para mudarte a Alemania · hoy, 10 palabras nuevas y una lección* | La primera palabra, en alemán | Su traducción | Los tramos de la lección y *Lección: Practicar el pasado · 0 de 10* | Su ventana (`abrirAleman()`); arriba, *Practicar* o *✓ practicaste* y ↻ |
+| **Audiolibro y podcast** | *Para escuchar mientras manejas · de Thomas Stanley* | El libro, con su título en español (busca en Spotify) | De qué trata | *El libro, a las 07:40; hoy también, un video de IA* | La foto y *Qué escuchar*: su panel (`abrirDidi()`); ↻, el siguiente libro |
+| **Tu dinero hoy** | *Según tu plan para juntar el dinero de Alemania* | La acción en su color: *Paga … a tu tarjeta BBVA* (rojo), *Hoy no toca pagar la tarjeta* o *Hoy sí inviertes en GBM* (verde) | Cuánto te quedará y el día en que queda en cero | *Mientras tengas deuda, no compres inversiones* o el siguiente pago | El panel *Qué invertir hoy* (`abrirGBM()`). Sale de `pasoInversionHoy()` (`corto`, `det`, `pie`), la regla del panel; todo por `money()` |
+| **Examen de certificación** | *ISTQB de pruebas con IA · lo presentas en ene 2027* | El tema de la pregunta, en llano | *Una pregunta de práctica de este tema; vale 2 puntos* (contestada, si fue bien) | Tu marcador de la semana | Su ventana, con la pregunta completa (`abrirIstqb()`) |
+| **Ejercicio de mentalidad** —la habilidad del plan (`aprendeFoco()`)— | *Para subir tu nivel · con el libro Atomic Habits* | La instrucción corta del paso | — | Los tramos y *Paso 1 de 6*; arriba, «‹» / «Siguiente ›» | Su ruta (`abrirSkillDetalle()`) |
+| **Habilidades para la vida** | *Guías prácticas, paso a paso* | El nombre de la guía | La idea del paso que toca | Los tramos y *Paso 1 de 20*; arriba, «‹» / «Siguiente ›» | La guía completa (`abrirHabilidadDetalle()`) |
 
 **Arriba**, *🎓 Hoy aprendes*, «Cómo lo decide Coach» (`abrirComoDecide()`), la fecha y *N de 6 hechas*, con
 una barra de seis tramos, uno por tarjeta, que se llena con lo hecho hoy: el alemán al abrir su ventana, al
