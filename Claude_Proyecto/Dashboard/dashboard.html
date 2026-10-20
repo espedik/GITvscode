@@ -2796,7 +2796,7 @@ button.ap-c-ir:hover .ap-de,button.ap-c-ir:hover .ap-t,button.ap-c-ir:hover .ap-
 /* De qué se trata cada tarjeta, en una frase chica y en gris, antes que lo de hoy (Adán: "si una persona que no
    sabe de mi app no va a saber ni de qué se trata, debe ser muy claro… aunque hagas la letra pequeña para que no
    se sature visualmente"). En una tarjeta de menos de 130 px de alto no cabe con el título: ahí se va ella. */
-.ap-que{font-size:11px;line-height:1.42;color:var(--text3)}
+.ap-que{font-size:11px;line-height:1.42;color:var(--text2)}
 /* El texto que se puede recortar (`.ap-cl`), por líneas y con «…»: tres como mucho; dos los títulos,
    las notas y los puntos (`.l2`). En escritorio el párrafo no tiene tope —salvo `.l3`—: lo pone apAjustar(). */
 .ap-c-txt .ap-cl{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
@@ -2805,10 +2805,11 @@ button.ap-c-ir:hover .ap-de,button.ap-c-ir:hover .ap-t,button.ap-c-ir:hover .ap-
 /* Lo de apoyo (`.ap-opc`) solo sale donde la tarjeta tiene alto fijo; en el teléfono, no. */
 @media(max-width:900px){.ap-c-txt .ap-opc{display:none}}
 @media(min-width:901px){@container aprende (max-width:439.98px){.ap-c-txt .ap-opc{display:none}}}
-/* Arriba de cada tarjeta: la materia con su marca, el estado o la cuenta, y los controles. */
+/* Arriba de cada tarjeta: su título —qué es, en palabras de todos los días y en letra normal, no en mono
+   mayúscula, para que se lea de un vistazo—, el estado o la cuenta, y los controles. */
 .ap-punto{width:7px;height:7px;margin:0 3.5px;border-radius:50%;flex-shrink:0;background:var(--c)}
-.ap-mat{flex:1;min-width:0;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--c);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ap-mat{flex:1;min-width:0;font-size:12.5px;font-weight:700;line-height:1.2;color:var(--c);overflow:hidden;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
 .ap-estado{flex:none;font-family:var(--mono);font-size:9.5px;color:var(--text3);white-space:nowrap}
 .ap-estado.ok{color:var(--g)}
 .ap-estado.mal{color:var(--r)}
@@ -2899,10 +2900,10 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   #heroAprenderPanel .ap-c-ctl>button{border-color:transparent;background:var(--bar);color:var(--text);
     -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 }
-/* En una tarjeta de lado angosta (menos de 280 px: la 2×3 de las pantallas de 1280 a 1440), «Siguiente»
-   se queda en su flecha; lo dice al pasar el ratón. */
+/* En una tarjeta de lado angosta (menos de 360 px: la 2×3 de 1280 a 1440 y el teléfono), «Siguiente» se queda en
+   su flecha —lo dice al pasar el ratón— para que el título quepa a su lado. */
 @container aprende (max-width:759.98px){
-  @container apcarta (max-width:279.98px){
+  @container apcarta (max-width:359.98px){
     #heroAprenderPanel .ap-av-sig{width:22px;padding:0;gap:0;font-size:0}
   }
 }
@@ -6845,15 +6846,15 @@ function pasoSemanaHtml(){
   const r=(Array.isArray(p.r)?p.r:[]).find(x=>x&&x.t==='libro');
   const lib=r?habLibro(r.id):null, fi=(lib&&lib.ficha)||{};
   const rec=habRecomendada(), propia=!!rec&&rec.id!==foco.id;
-  const txt=`<span class="ap-que ap-cl l2" data-min="1">Un ejercicio práctico para subir la habilidad que trabaja tu plan.</span>`
-    +`<span class="ap-t ap-cl l2" data-min="1">${esc(p.n)}</span>`
+  const nom=/^[A-ZÁÉÍÓÚÑ]{2,}$/.test(foco.name)?foco.name:foco.name.toLowerCase();
+  // El nombre del paso es la idea del libro; lo que se entiende sin contexto es la instrucción: va como lo principal.
+  const txt=`<span class="ap-que ap-cl l2" data-min="1">Para subir tu nivel de ${esc(nom)}${lib?`, con ideas del libro <i>${esc(lib.t)}</i>`:''}.</span>`
     +apTramos(pasos.length, j=>j<i, i)
-    +(p.c?apBloque('Qué hacer',`<span class="ap-hacer ap-cl">${p.c}</span>`):'')
-    +(sig?apMeta('sigue',`Siguiente paso: <b>${esc(sig.n)}</b>`):apMeta('meta','Es el último paso de esta habilidad'))
-    +(lib?apMeta('libro',`Con el libro <i>${esc(lib.t)}</i>${r.nota?`, ${esc(r.nota)}`:lib.a?` · ${esc(lib.a)}`:''}`,'ap-opc'):'')
+    +(p.c?apBloque('Qué hacer hoy',`<span class="ap-hacer ap-cl">${p.c}</span>`):`<span class="ap-t ap-cl l2" data-min="1">${esc(p.n)}</span>`)
+    +(sig?apMeta('sigue',`Siguiente paso: <b>${esc(sig.n)}</b>`):apMeta('meta','Es el último paso de este ejercicio'))
     +(p.q?apBloque('Por qué',`<span class="ap-bq-t ap-cl">${p.q}</span>`,'ap-opc'):'')
     +(fi.idea?apBloque('La idea del libro',`<span class="ap-bq-idea ap-cl">${fi.idea}</span>`,'ap-opc'):'');
-  return apTarjeta({ c:'var(--w)', mat:`Habilidad · ${esc(foco.name)}${propia?' · la elegiste tú':''}`,
+  return apTarjeta({ c:'var(--w)', mat:`Ejercicio de ${esc(nom)}${propia?' · elegido por ti':''}`,
     estado:`<span class="ap-av-n">paso ${i+1} de ${pasos.length}</span>`, ctl:apCtl('paso','Habilidad',propia?esc(rec.name):''),
     foto:apFotoLibro(r&&r.id, foco.id), ico:foco.icon, abrir:`aprendeVisto('paso');abrirSkillDetalle('${foco.id}')`,
     titulo:`Abrir la ruta de ${habAttr(foco.name)}${lib?` · con ${habAttr(lib.t)}`:''}`, txt });
@@ -6868,7 +6869,7 @@ function fichaEnCursoHtml(){
   const k=info?info.pasos.findIndex((_,j)=>!store[j]):-1;
   const paso=k>=0?info.pasos[k]:null;
   const luego=paso?info.pasos.map((q,j)=>({q,j})).find(x=>x.j>k&&!store[x.j]):null;
-  const txt=`<span class="ap-que ap-cl l2" data-min="1">Guías prácticas para la vida, paso a paso: esta es la que toca.</span>`
+  const txt=`<span class="ap-que ap-cl l2" data-min="1">Aprende una habilidad práctica en ${sig.total} pasos; ${paso?`hoy toca el paso ${k+1}`:'ya la completaste'}.</span>`
     +`<span class="ap-t ap-cl l2" data-min="1">${esc(sig.h.t)}</span>`
     +(info?apTramos(info.pasos.length, j=>!!store[j], k):'')
     +(paso?`<span class="ap-bq"><span class="ap-bq-k ap-bq-paso">Paso ${k+1} · ${esc(mdLimpiaTitulo(paso.t))}</span>${paso.d?`<span class="ap-bq-t ap-cl l3">${paso.d}</span>`:''}</span>`
@@ -6876,9 +6877,9 @@ function fichaEnCursoHtml(){
     +apMeta('porque',`Por qué ahora: ${esc(hbPlan(sig.h.id).para)}`)
     +(!paso?'':luego?apMeta('sigue',`Siguiente paso: <b>${esc(mdLimpiaTitulo(luego.q.t))}</b>`):apMeta('meta','Es el último paso de la ficha'))
     +(paso?(paso.list||[]).map(x=>apPunto(x,'ap-opc')).join(''):'');
-  return apTarjeta({ c:'var(--b)', mat:`Habilidades base${propia?' · la elegiste tú':''}`,
+  return apTarjeta({ c:'var(--b)', mat:`Habilidades para la vida${propia?' · elegida por ti':''}`,
     estado:`<span class="ap-av-n">${sig.hechos} de ${sig.total} pasos</span>`, ctl:apCtl('ficha','Ficha',propia?habAttr(ec.recomendada.h.t):''),
-    foto:apFotoHb(sig.h), abrir:`aprendeVisto('hb');abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')`, titulo:'Abrir la ficha de Habilidades Base', txt });
+    foto:apFotoHb(sig.h), abrir:`aprendeVisto('hb');abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')`, titulo:'Abrir la guía completa', txt });
 }
 // En escritorio cada tarjeta tiene alto fijo: lo que no cabe se quita completo y el primer bloque que no
 // cabe entero se recorta a las líneas que le quedan, con «…» —nunca a media línea—. Los bloques van en
@@ -7292,8 +7293,10 @@ function alNumTxt(num){
 function alemanHoyHtml(vistos){
   const V = (typeof alVocab === 'function') ? alVocab() : null, ws = V ? alemanVocabHoy() : [], a = ws[0], t = alemanLeccionHoy();
   if(!a && !t) return '';
-  let txt = `<span class="ap-que ap-cl l2" data-min="1">${a && t ? 'Tus palabras nuevas de hoy y la lección que sigue en tu curso.'
-    : a ? 'Tus palabras nuevas de hoy y las que toca repasar.' : 'La lección que sigue en tu curso de alemán.'}</span>`;
+  // Lo de hoy en una línea, con sus números: «Hoy: 10 palabras nuevas (teléfono y correos), 30 de repaso y una lección.»
+  const tema = a ? String((V.cats[a.cat] || {}).label || '').toLowerCase() : '', rep = a ? alemanRepasoHoy().length : 0;
+  const hoy = [a ? `${ws.length} palabras nuevas${tema ? ` (${esc(tema)})` : ''}` : '', rep ? `${rep} de repaso` : '', t ? 'una lección' : ''].filter(Boolean);
+  let txt = `<span class="ap-que ap-cl l2" data-min="1">Hoy: ${hoy.length > 1 ? hoy.slice(0, -1).join(', ') + ' y ' + hoy[hoy.length - 1] : hoy[0]}.</span>`;
   if(a){
     const art = (a.art || '-').split('/')[0].trim();
     const artHtml = art && art !== '-' ? `<span>${esc(art === 'pl.' ? 'die' : a.art)}</span> ` : '';
@@ -7302,16 +7305,16 @@ function alemanHoyHtml(vistos){
     const f = a.conj && a.aux ? String(a.conj).split('·').map(x => x.trim()) : null;
     const aux = a.aux === 'ist' ? 'ist' : 'hat';
     const perf = f ? `<span class="ap-m">en pasado: <span class="ap-aux ${aux}">${aux}</span> ${esc(f[f.length - 1])}</span>` : '';
-    const rep = alemanRepasoHoy().length;
-    txt += apBloque(`${ws.length} palabras nuevas${rep ? ` · ${rep} de repaso` : ''}`, `<span class="ap-de ap-cl l2" data-min="1" lang="de">${artHtml}${esc(a.de)}</span>`)
+    txt += `<span class="ap-de ap-cl l2" data-min="1" lang="de">${artHtml}${esc(a.de)}</span>`
       + `<span class="ap-es">${esc(a.es)}${pl}${perf}</span>`
       + (ws.length > 1 ? `<span class="ap-dato ap-1l">Las otras ${ws.length - 1}: ${ws.slice(1, 5).map(w => `<b lang="de">${esc(w.de)}</b>`).join(' · ')}${ws.length > 5 ? '…' : ''}</span>` : '');
   }
   if(t){
+    // La lección: qué lección es y por qué toca; su título en español, y el alemán con lo que llevas.
     const l = t.l, av = t.avance, ir = ` onclick="event.stopPropagation();abrirAleman('leccion')" title="Abrir la lección aquí mismo"`;
-    txt += `<span class="ap-bq ap-ir-lec"${ir}><span class="ap-bq-k">${esc(alNumTxt(l.num))} · ${esc(String(t.ceja).replace(/Kapitel/g, 'capítulo'))}</span><span class="ap-t ap-cl l2" data-min="1"><span lang="de">${esc(l.de)}</span>${av ? `<span class="ap-m">${av.hechos} de ${av.total} ejercicios hechos</span>` : ''}</span></span>`
+    txt += `<span class="ap-bq ap-ir-lec"${ir}><span class="ap-bq-k">${esc(alNumTxt(l.num))} · ${esc(String(t.ceja).replace(/Kapitel/g, 'capítulo'))}</span><span class="ap-t ap-cl l2" data-min="1">${esc(l.es)}</span></span>`
       + (av ? apTramos(av.total, j => j < av.hechos, -1).replace('<span class="ap-seg"', `<span class="ap-seg ap-ir-lec"${ir}`) : '')
-      + `<span class="ap-dato ap-1l ap-ir-lec"${ir}>${esc(l.es)}</span>`;
+      + `<span class="ap-dato ap-1l ap-ir-lec"${ir}><span lang="de">${esc(l.de)}</span>${av ? ` · <b>${av.hechos} de ${av.total}</b> ejercicios hechos` : ''}</span>`;
   }
   if(a){
     const ex = alemanEjemplo(a);
@@ -7319,8 +7322,7 @@ function alemanHoyHtml(vistos){
       + (a.uso ? `<span class="ap-nota ap-cl l2 ap-opc" data-min="1"><b>Cuándo se usa</b> · ${esc(a.uso)}</span>` : '');
   }
   const practico = alemanPracticoHoy();
-  return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA, foto: a ? apFotoAleman(a) : apFotoLeccion(t.l),
-    mat: `Alemán · ${esc(a ? ((V.cats[a.cat] || {}).label || '') : 'tu curso')}`,
+  return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA, foto: a ? apFotoAleman(a) : apFotoLeccion(t.l), mat: 'Alemán',
     estado: (vistos.de || practico) ? apEstado(true, '', practico ? '✓ practicaste' : '✓ abierto')
       : `<button type="button" class="ap-estado ir" onclick="aprendeAbrir('de')">Practicar</button>`,
     otra: `Las ${AL_VOC_DIA} palabras siguientes, en el orden de Coach`,
@@ -7716,7 +7718,7 @@ function didiLibrosLuego(d, n){
 function escucharHoyHtml(vistos){
   const d = didiHoy(); if(!d || !d.libro) return '';
   const { libro, pod, finde, horas } = d;
-  const sk = SK.find(s => s.id === libro.g.sk);
+  const sk = SK.find(s => s.id === libro.g.sk), tema = sk ? (/^[A-ZÁÉÍÓÚÑ]{2,}$/.test(sk.name) ? sk.name : sk.name.toLowerCase()) : '';
   // «a las 07:40», con la hora en su color; sin horas en la rutina, el momento del día.
   const aLas = hs => hs.map(h => `a las <b class="ap-hora">${esc(h)}</b>`).join(' y ');
   const cuando = horas.length ? aLas(finde ? horas : horas.slice(0, 1)) : (finde ? 'en los turnos largos' : 'en la mañana');
@@ -7724,15 +7726,14 @@ function escucharHoyHtml(vistos){
   const oir = x => `<a class="ap-oir" href="${didiSpo(x.q)}" target="_blank" rel="noopener" onclick="aprendeVisto('escuchar');setTimeout(renderHeroAprender,60)" title="Buscarlo en Spotify">${esc(x.n)}<span aria-hidden="true">&nbsp;↗</span></a>`;
   const estado = vistos.escuchar ? '<span class="ap-estado ok">✓ escuchando</span>'
     : '<button type="button" class="ap-estado ir" onclick="abrirDidi()">Qué escuchar</button>';
-  const tipo = pod && pod.it.tipo === 'yt' ? 'El video de hoy' : 'El podcast de hoy';
-  return apTarjeta({ c: 'var(--o)', mat: `Para escuchar manejando · ${esc(sk ? sk.name : '')}`, estado,
+  const yt = pod && pod.it.tipo === 'yt';
+  return apTarjeta({ c: 'var(--o)', mat: 'Audiolibro y podcast', estado,
     ctl: apOtraBtn('escuchar', 'El siguiente audiolibro del foco'), foto: apFotoLibro(libro.it.lib, libro.g.sk),
     abrirFoto: 'abrirDidi()', titulo: 'Abrir Qué escuchar',
-    txt: `<span class="ap-que ap-cl l2" data-min="1">Un audiolibro por semana y un podcast al día, para cuando manejas.</span>
+    txt: `<span class="ap-que ap-cl l2" data-min="1">Para oír mientras manejas: un libro${tema ? ` de ${esc(tema)}` : ''} por semana y un podcast o video al día.</span>
       <span class="ap-t ap-cl l2" data-min="1">${oir(libro.it)}</span>
-      <span class="ap-es ap-1l">El audiolibro de esta semana, ${cuando}</span>
-      ${pod ? `<span class="ap-es ap-cl l2" data-min="1">${tipo}, ${cuandoPod}: ${oir(pod.it)}</span>` : ''}
-      ${libro.it.d ? `<span class="ap-es ap-cl ap-opc"><b>De qué trata:</b> ${esc(libro.it.d)}</span>` : ''}
+      ${libro.it.d ? `<span class="ap-es ap-cl l2" data-min="1"><b>De qué trata:</b> ${esc(libro.it.d)}</span>` : ''}
+      <span class="ap-es ap-cl l2" data-min="1">El libro, ${cuando}${pod ? `; ${yt ? 'el video' : 'el podcast'} de hoy, ${cuandoPod}: ${oir(pod.it)}` : ''}</span>
       ${apLuego(didiLibrosLuego(d, 2).map(x => `<b>${esc(x.it.n)}</b>${x.it.d ? ` · ${esc(x.it.d)}` : ''}`), 'Las próximas semanas')}` });
 }
 
@@ -7745,9 +7746,9 @@ function invertirHoyHtml(vistos){
   const p = pasoInversionHoy();
   const estado = vistos.invertir ? '<span class="ap-estado ok">✓ revisado</span>'
     : `<button type="button" class="ap-estado ir" onclick="aprendeAbrir('invertir')">Ver el plan</button>`;
-  return apTarjeta({ c: 'var(--cy)', mat: 'Qué invertir hoy', estado, foto: apFoto(p.foto),
+  return apTarjeta({ c: 'var(--cy)', mat: 'Tu dinero hoy', estado, foto: apFoto(p.foto),
     abrir: "aprendeAbrir('invertir')", titulo: 'Abrir Qué invertir hoy: tu situación, los precios de hoy y qué comprar según tu perfil',
-    txt: `<span class="ap-que ap-cl l2" data-min="1">Lo que toca hoy con tu dinero, según tu plan de finanzas.</span>
+    txt: `<span class="ap-que ap-cl l2" data-min="1">${p.que}</span>
       <span class="ap-t ap-cl l2" data-min="1" style="color:${p.color}">${p.titulo}</span>
       <span class="ap-es ap-cl">${p.porque}</span>
       ${p.hoy ? `<span class="ap-hacer ap-cl l2" data-min="1">${p.hoy}</span>` : ''}
@@ -7803,21 +7804,20 @@ function istqbMarcador(){
           u ? `último simulacro: <b class="${u.pts >= corte ? 'ok' : 'bajo'}" title="Se aprueba con ${corte} de ${u.max}">${u.pts} de ${u.max}</b>` : '']
     .filter(Boolean).join(' · ');
 }
-// En su tarjeta: de qué se trata, la pregunta, de qué capítulo es y cuánto vale, y cómo vas; arriba, «Responder» o el
-// resultado y, donde sobra alto, las opciones o el porqué. El nivel K del programa se dice en llano (`IQ_K_LLANO`).
+// En su tarjeta: de qué se trata, la pregunta, su tema y cuánto vale, y cómo vas; arriba, «Responder» o el resultado y,
+// donde sobra alto, las opciones o el porqué. El nivel K del programa, en llano (`IQ_K_LLANO`), va en «Cómo lo decide Coach».
 const IQ_K_LLANO = { K1: 'pregunta de memoria', K2: 'pregunta de comprensión', K3: 'caso práctico' };
 function istqbHtml(){
   const q = istqbPreguntaHoy(); if(!q) return '';
   const hecha = istqbHoy(q), ex = cdTarea('a1-7'), vas = istqbMarcador(), cap = ((window.EXAMEN_GENAI || {}).capitulos || {})[q.cap] || '';
   const estado = !hecha ? '<button type="button" class="ap-estado ir" onclick="abrirIstqb()">Responder</button>'
     : `<span class="ap-estado ${hecha.ok ? 'ok' : 'mal'}">${hecha.ok ? '✓ correcta' : '✗ era la ' + 'ABCD'[q.r]}</span>`;
-  const dato = [`Capítulo ${esc(q.cap)}`, IQ_K_LLANO[q.k] || esc(q.k || ''), (q.pts || 1) === 1 ? 'vale <b>1 punto</b>' : `vale <b>${q.pts} puntos</b>`].filter(Boolean).join(' · ');
-  return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), mat: 'Examen ISTQB · pruebas con IA',
+  const vale = (q.pts || 1) === 1 ? '<b>1 punto</b>' : `<b>${q.pts} puntos</b>`;
+  return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), mat: 'Examen de certificación',
     estado, otra: 'La siguiente pregunta, en el orden de Coach', abrir: 'abrirIstqb()', titulo: 'Contestar la pregunta del día',
-    txt: `<span class="ap-que ap-cl l2" data-min="1">Una pregunta al día para tu examen de pruebas con IA${ex && ex.s.mes ? ` (${cdMes(ex.s.mes)})` : ''}.</span>
+    txt: `<span class="ap-que ap-cl l2" data-min="1">Practica para el ISTQB, la certificación de testing con IA${ex && ex.s.mes ? ` (examen: ${cdMes(ex.s.mes)})` : ''}.</span>
       <span class="ap-q ap-cl">${q.q}</span>
-      <span class="ap-dato ap-1l">${dato}</span>
-      ${cap ? `<span class="ap-dato ap-cl l2" data-min="1">Tema del capítulo: ${esc(cap)}</span>` : ''}
+      <span class="ap-dato ap-cl l2" data-min="1">${cap ? `Tema: ${esc(cap)} · ` : ''}vale ${vale}</span>
       ${vas ? `<span class="ap-dato ap-1l ap-opc">${vas}</span>` : ''}
       ${hecha ? (q.why ? `<span class="ap-es ap-cl ap-opc">${q.why}</span>` : '')
         : `<span class="ap-ops ap-opc">${q.o.map((o, i) => `<span class="ap-op"><b>${'ABCD'[i]}</b><span>${o}</span></span>`).join('')}</span>`}` });
@@ -8022,7 +8022,7 @@ function istqbTecla(e){
 //    una regla cambia, el panel cambia con ella. Las metas son ids de tareas de `PHASES`: el mes y si ya
 //    está hecha (`coach_checks_v1`) salen de ahí.
 const CD_METAS = [
-  { id: 'a1-7',  t: 'Aprobar el ISTQB CT-GenAI',        para: 'la pregunta del ISTQB, la habilidad del plan y lo que escuchas manejando' },
+  { id: 'a1-7',  t: 'Aprobar el ISTQB CT-GenAI',        para: 'el examen de certificación, el ejercicio de habilidad y el audiolibro' },
   { id: 'a1-4',  t: 'Las dos cartas de recomendación',  para: 'la ficha de Networking' },
   { id: 'a1-18', t: 'Subir tu ingreso desde noviembre', para: 'la ficha de Persuadir' },
   { id: 'a1-10', t: 'Mandar la solicitud a Esslingen',  para: 'el foco de Inglés, después del ISTQB' },
@@ -8083,11 +8083,11 @@ function comoDecideHtml(){
       : delFoco(d.libro) ? 'El audiolibro, el siguiente del foco que no hayas escuchado: se decide el lunes y se queda toda la semana.'
       : `${foco ? esc(foco.name) : 'El foco'} no tiene audiolibros en el catálogo: va el de ${nombre(d.libro)}, lo primero del orden de Coach que todavía no te ha tocado. Uno por semana: se decide el lunes y no cambia hasta el siguiente.`;
     const rPod = !d.pod ? '' : (delFoco(d.pod) ? 'El podcast, el siguiente del foco cada día' : `El podcast, de ${nombre(d.pod)}`) + ' (los de una hora o más, el fin de semana).';
-    filas.push({ k: 'Para escuchar manejando', c: 'var(--o)', foto: apFotoLibro(d.libro.it.lib, d.libro.g.sk), hoy: `${esc(d.libro.it.n)}${d.pod ? ` <span>· ${esc(d.pod.it.n)}</span>` : ''}`,
+    filas.push({ k: 'Audiolibro y podcast', c: 'var(--o)', foto: apFotoLibro(d.libro.it.lib, d.libro.g.sk), hoy: `${esc(d.libro.it.n)}${d.pod ? ` <span>· ${esc(d.pod.it.n)}</span>` : ''}`,
       regla: `Primero lo del foco${foco ? ` (<b>${esc(foco.name)}</b>)` : ''}, luego el siguiente foco del plan y las habilidades con más retorno; lo que Coach tiene en pausa no entra. ${rLibro} ${rPod}` });
   }
   const pi = pasoInversionHoy();
-  filas.push({ k: 'Qué invertir hoy', c: 'var(--cy)', foto: apFoto(pi.foto), hoy: pi.titulo,
+  filas.push({ k: 'Tu dinero hoy', c: 'var(--cy)', foto: apFoto(pi.foto), hoy: pi.titulo,
     regla: 'No lo decide el azar ni el mercado: es el orden de tu Plan Maestro, con tus saldos de Finanzas. Primero la tarjeta BBVA, quincena a quincena y sin intereses, hasta dejarla en cero; después, todo a GBM para Alemania, y los primeros pesos completan el fondo de emergencia. El auto no se adelanta: se paga con su mensualidad. Qué comprar en GBM lo dice tu perfil, en el panel.' });
   const q = istqbPreguntaHoy();
   if(q){
@@ -8095,14 +8095,14 @@ function comoDecideHtml(){
     const caps = Object.keys(pts).map(Number).sort((a, b) => istqbEnJuego(b, pts, ac) - istqbEnJuego(a, pts, ac));
     const tabla = caps.map(c => { const a = ac[c];
       return `<span class="cd-cap${c === +q.cap ? ' on' : ''}"><b>Cap. ${c}</b> ${pts[c]} pts · ${a && a.n ? `${a.ok} de ${a.n}` : 'sin respuestas'} · ${istqbEnJuego(c, pts, ac).toFixed(1)} en juego</span>`; }).join('');
-    filas.push({ k: 'ISTQB', c: 'var(--p)', foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), hoy: `Capítulo ${esc(q.cap)}: ${esc((X.capitulos || {})[q.cap] || '')} <span>${IQ_K_LLANO[q.k] || esc(q.k || '')} · ${q.pts > 1 ? q.pts + ' puntos' : '1 punto'} · objetivo ${esc(q.lo || '')}</span>`,
+    filas.push({ k: 'Examen de certificación (ISTQB)', c: 'var(--p)', foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), hoy: `Capítulo ${esc(q.cap)}: ${esc((X.capitulos || {})[q.cap] || '')} <span>${IQ_K_LLANO[q.k] || esc(q.k || '')} · ${q.pts > 1 ? q.pts + ' puntos' : '1 punto'} · objetivo ${esc(q.lo || '')}</span>`,
       regla: `El examen va en ${ex && ex.s.mes ? cdMes(ex.s.mes) : 'la Fase 1'}${X.meta ? ` (${X.meta.preguntas} preguntas; el corte es ${X.meta.corte} de ${X.meta.puntos})` : ''}. Primero el capítulo con más puntos en juego —lo que vale en el examen por lo que te falta de acierto ahí; con menos de tres respuestas cuenta la mitad— y, dentro, las de 2 puntos. Las que contestas no vuelven.`,
       extra: `<div class="cd-caps">${tabla}</div>` });
   }
   if(foco){
     const pasos = habPasos(foco.id), st = habFocoLoad(); let i = st.paso[foco.id] || 0; if(i < 0 || i >= pasos.length) i = 0;
     const libP = pasos[i] && (Array.isArray(pasos[i].r) ? pasos[i].r : []).find(x => x && x.t === 'libro');
-    filas.push({ k: 'Habilidad', c: 'var(--w)', foto: apFotoLibro(libP && libP.id, foco.id), hoy: `${esc(foco.name)} · ${esc(pasos[i] ? pasos[i].n : '')} <span>paso ${i + 1} de ${pasos.length}</span>`,
+    filas.push({ k: 'Ejercicio de habilidad', c: 'var(--w)', foto: apFotoLibro(libP && libP.id, foco.id), hoy: `${esc(foco.name)} · ${esc(pasos[i] ? pasos[i].n : '')} <span>paso ${i + 1} de ${pasos.length}</span>`,
       regla: rec && rec.id !== foco.id ? `Lo elegiste tú con «Siguiente». El de Coach es <b>${esc(rec.name)}</b>: «↺» en la tarjeta vuelve a él.`
         : `El foco del plan para hoy${t ? `, de ${cdMes(t.desde)} a ${cdMes(t.hasta)}` : ''}: su ruta, paso a paso, al ritmo que la avanzas en En qué invertir tu tiempo. ${t ? esc(t.cambio) : ''}` });
   }
@@ -8110,7 +8110,7 @@ function comoDecideHtml(){
   if(ec.actual){
     const x = ec.actual, propia = ec.recomendada && x.h.id !== ec.recomendada.h.id;
     const luego = ec.lista.filter(y => y !== x).slice(0, 3).map(y => esc(y.h.t)).join(' · ');
-    filas.push({ k: 'Habilidades Base', c: 'var(--b)', foto: apFotoHb(x.h), hoy: `${esc(x.h.t)} <span>${x.hechos} de ${x.total} pasos</span>`,
+    filas.push({ k: 'Habilidades para la vida', c: 'var(--b)', foto: apFotoHb(x.h), hoy: `${esc(x.h.t)} <span>${x.hechos} de ${x.total} pasos</span>`,
       regla: `${propia ? `La elegiste tú con «Siguiente»; la de Coach es <b>${esc(ec.recomendada.h.t)}</b>. ` : ''}<b>Por qué:</b> ${esc(hbPlan(x.h.id).para)} El orden: primero lo que pide la fase en curso, luego lo de antes de irte, lo de Alemania y lo demás; a igual prioridad, la que ya empezaste. Lo que choca con tu meta de alcohol espera al final.${luego ? ` Después: ${luego}.` : ''}` });
   }
 
@@ -8145,7 +8145,7 @@ function renderHeroAprender(){
   const d = new Date();
   const fecha = `${DIAS_CORTOS[d.getDay()].toLowerCase()} ${d.getDate()} ${MES_LABEL_FULL[d.getMonth()].slice(0, 3).toLowerCase()}`;
   el.innerHTML = `<div class="hp-title"><span>🎓 Hoy aprendes<button type="button" class="ap-como" onclick="abrirComoDecide()" title="El orden de Coach y el porqué de lo de hoy">${AP_ICO.porque}Cómo lo decide Coach</button></span><span class="ap-fecha">${fecha} · <b>${hechos.filter(Boolean).length} de ${hechos.length}</b> hechas</span></div>
-    <div class="ap-barra" title="Se llena con lo que haces hoy: el alemán al abrir su ventana, practicar sus palabras o hacer un ejercicio de la lección; lo de escuchar, al tocar qué escuchar; Qué invertir hoy, al abrirlo; el ISTQB, al contestar la pregunta, y la habilidad y la ficha, al abrirlas">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
+    <div class="ap-barra" title="Se llena con lo que haces hoy: el alemán al abrir su ventana, practicar sus palabras o hacer un ejercicio de la lección; el audiolibro, al tocar qué escuchar; tu dinero, al abrir el plan; el examen, al contestar la pregunta, y el ejercicio y la guía, al abrirlos">${hechos.map((x, i) => `<i${x ? ` class="on" style="--c:${color[i]}"` : ''}></i>`).join('')}</div>
     <div class="ap-seis">${alemanHoyHtml(vistos)}${escucharHoyHtml(vistos)}${invertirHoyHtml(vistos)}${istqbHtml()}${pasoSemanaHtml()}${fichaEnCursoHtml()}</div>`;
   apAjustar();
 }
@@ -10807,7 +10807,7 @@ function guardarPrecioBtc(usd, mxn){
 // La regla que ya está escrita en tu Plan Maestro, aplicada al saldo de hoy. Vive aparte porque la leen tres
 // piezas: el panel completo (renderGBMPanel), su tarjeta en Hoy aprendes (invertirHoyHtml) y su renglón en «Cómo
 // lo decide Coach»; con una copia del if/else en cada una, la tarjeta podría decir "hoy sí inviertes" mientras el
-// panel dice otra cosa. Devuelve el paso en palabras llanas —`titulo`, `porque`, `hoy`, `nota` y `fondo`— con su
+// panel dice otra cosa. Devuelve el paso en palabras llanas —`que`, `titulo`, `porque`, `hoy`, `nota` y `fondo`— con su
 // color y su foto.
 // Todas las cantidades pasan por money() (2026-08-18, pedido explícito: "el modo privado deberia
 // funcionar aqui tambien con los datos de ahi") — antes este panel tenía su propio formateador que
@@ -10841,24 +10841,25 @@ function pasoInversionHoy(){
   const diaCorto = k => { const p = k.split('-').map(Number), d = new Date(p[0], p[1]-1, p[2]); return DIAS_CORTOS[d.getDay()].toLowerCase()+' '+p[2]+' '+MES_LABEL_FULL[p[1]-1].slice(0,3).toLowerCase(); };
   const abonos = pend.filter(a=>a.fecha!==hoyK).slice(0, 3).map(a=>'<b>'+diaCorto(a.fecha)+'</b> · '+mon(a.monto)+' '+(DE[a.de]||''));
   const faltaEf = Math.max(0, metaEf-ef);
-  let color, titulo, porque, hoy, nota, notaIco, fondo, foto;
+  let color, que, titulo, porque, hoy, nota, notaIco, fondo, foto;
   if(bbvaSaldo > 0){
     color = 'var(--r)'; foto = 'fase-tarjeta-cortada';
-    titulo = 'Primero, pagar la tarjeta BBVA';
-    porque = 'Debes <b>'+mon(bbvaSaldo)+'</b>. Lo que sobra de cada quincena y lo que apartas de Didi cada lunes van a la tarjeta'+(bbvaFin?' hasta dejarla en cero el <b>'+bbvaFin+'</b>':'')+', sin pagar intereses.';
-    hoy = deHoy.length ? '<b>Hoy abonas '+mon(deHoy.reduce((t,a)=>t+a.monto,0))+'</b> '+(DE[deHoy[0].de]||'')+' a la tarjeta, y no compras ninguna inversión.'
-      : '<b>Hoy no compras ninguna inversión.</b>';
-    notaIco = 'sigue'; nota = 'Después: todo a <b>GBM</b>, tu cuenta de inversiones, para Alemania.';
+    que = 'Tu plan: primero pagas la tarjeta de crédito y después inviertes.';
+    titulo = deHoy.length ? 'Hoy: abona '+mon(deHoy.reduce((t,a)=>t+a.monto,0))+' '+(DE[deHoy[0].de]||'')+' a la tarjeta BBVA' : 'Hoy no inviertes: primero la tarjeta BBVA';
+    porque = 'Debes <b>'+mon(bbvaSaldo)+'</b>. Con lo que sobra de cada quincena y lo que apartas de Didi la liquidas'+(bbvaFin?' el <b>'+bbvaFin+'</b>':'')+', sin pagar intereses.';
+    hoy = '<b>No compras ninguna inversión</b> hasta liquidarla.';
+    notaIco = 'sigue'; nota = 'Después, todo se invierte en <b>GBM</b>.';
     fondo = 'Tu fondo de emergencia se queda en <b>'+mon(ef)+'</b> de CETES.';
   }else{
     color = 'var(--g)'; foto = 'sk-inversion';
+    que = 'Tu plan: ya sin tarjeta que pagar, lo que ahorras se invierte para irte a Alemania.';
     titulo = 'Hoy sí inviertes: todo a GBM';
-    porque = 'Sin tarjeta que pagar, lo que sobra de cada quincena y lo que apartas de Didi va a GBM, tu cuenta de inversiones, para Alemania.'+(faltaEf>0?' Los primeros <b>'+mon(faltaEf)+'</b> completan tu fondo de emergencia: nada volátil.':'');
+    porque = 'Lo que sobra de cada quincena y lo que apartas de Didi va a tu cuenta de inversión en GBM.'+(faltaEf>0?' Los primeros <b>'+mon(faltaEf)+'</b> completan tu fondo de emergencia: nada volátil.':'');
     hoy = 'Reparte según tu perfil y <b>ejecuta sin pensarlo dos veces</b>.';
     notaIco = 'meta'; nota = 'El auto no se adelanta: se paga con su mensualidad.';
     fondo = faltaEf>0 ? '' : 'Tu fondo de emergencia está completo: <b>'+mon(ef)+'</b> en CETES.';
   }
-  return {F, inv, ef, metaEf, totalInv, cetes, deudaCara, mon, color, titulo, porque, hoy, nota, notaIco, fondo, foto, abonos: bbvaSaldo > 0 ? abonos : []};
+  return {F, inv, ef, metaEf, totalInv, cetes, deudaCara, mon, color, que, titulo, porque, hoy, nota, notaIco, fondo, foto, abonos: bbvaSaldo > 0 ? abonos : []};
 }
 
 // ─── "Qué invertir hoy" — la plantilla y los datos van separados ─────────────────────────

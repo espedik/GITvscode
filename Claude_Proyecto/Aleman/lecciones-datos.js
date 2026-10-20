@@ -33,7 +33,7 @@ const ALEMAN_LECCIONES = {
 
   lista: [
     // Kapitel 10 · lo que cursa en clase, en el orden en que conviene estudiarlo
-    { id: 'k10-01', href: 'k10-01-perfekt-regel.html', num: 'K10 · 01', de: 'Die Regel: Perfekt', es: 'La regla del Perfekt',
+    { id: 'k10-01', href: 'k10-01-perfekt-regel.html', num: 'K10 · 01', de: 'Die Regel: Perfekt', es: 'La regla del pasado (Perfekt)',
       tags: 'haben/sein · Partizip II · al final',
       desc: 'La fórmula del Perfekt: haben o sein y el Partizip II al final, con modales, negación y subordinadas.',
       foto: 'k10-01.jpg', alt: 'Cuaderno de estudio con unos lentes y un esquema en rojo', credito: 'Daria Nepriakhina · Stocksnap · CC0 1.0',
@@ -48,7 +48,7 @@ const ALEMAN_LECCIONES = {
       desc: 'Los 207 verbos con sus cuatro formas, los patrones de vocal y los que engañan.',
       foto: 'k10-02.jpg', alt: 'Un montón de tarjetas escritas a mano', credito: 'muninn.net · Flickr · BY 2.0',
       bloques: ['ej-prateritum', 'ej-partizip2', 'em-prat', 'dic-verbos', 'ej-3p'] },
-    { id: 'k10-03', href: 'k10-03-perfekt-uben.html', num: 'K10 · 03', de: 'Perfekt üben', es: 'Ejercicios y dos minitests',
+    { id: 'k10-03', href: 'k10-03-perfekt-uben.html', num: 'K10 · 03', de: 'Perfekt üben', es: 'Practicar el pasado: ejercicios y dos minitests',
       tags: '6 bloques · 2 minitests · se corrige solo',
       desc: 'Seis bloques de práctica del Perfekt y dos minitests con nota. Se corrigen solos mientras escribes.',
       foto: 'k10-03.jpg', alt: 'Hoja de respuestas de un examen con un lápiz', credito: 'albertogp123 · Flickr · BY 2.0',
