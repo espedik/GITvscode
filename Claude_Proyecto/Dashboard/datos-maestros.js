@@ -1318,32 +1318,32 @@ window.CIFRAS = (function () {
   const APRENDIZAJE = {
     ia: {
       subs: [
-        { n: 'El syllabus, capítulo por capítulo',
+        { n: 'El syllabus, capítulo por capítulo', corto: 'Lee un capítulo del temario del examen (empieza por el 2) y escribe de memoria sus cinco ideas principales.',
           q: 'El examen pregunta el syllabus, no tu experiencia: hay que contestar con sus palabras. Son cinco capítulos y el 2 —ingeniería de instrucciones— vale 16 de los 46 puntos.',
           c: 'Una sesión por capítulo, empezando por el 2: léelo y escribe sin mirar sus cinco ideas en una tarjeta. Al cerrar, contesta las preguntas de ese capítulo en el simulacro; lo que falles abre la sesión siguiente.',
           r: [
             { t: 'web', n: 'ISTQB — Testing with Generative AI (CT-GenAI)', url: 'https://istqb.org/certifications/gen-ai/', nota: 'la página oficial: temario, examen y requisito del CTFL' },
           ] },
-        { n: 'El simulacro como termómetro',
+        { n: 'El simulacro como termómetro', corto: 'Haz un examen de práctica completo cada viernes, con reloj. Presentas el real cuando saques 34 de 46 dos veces seguidas.',
           q: 'Saber que sabes no es lo mismo que contestar con reloj. El simulacro te dice cuándo estás listo; tu sensación, no.',
           c: 'Un simulacro completo cada viernes, con reloj, en el bloque de la noche del Plan Maestro. Presentas cuando saques <b>34 de 46 o más dos veces seguidas</b> (el corte es 30). Cada pregunta fallada va a una lista con su sección del syllabus.',
           r: [
             { t: 'propio', n: 'El simulacro de Mis Metas', nota: '40 preguntas y 46 puntos sacados del programa de estudio oficial' },
           ] },
-        { n: 'Una prueba con IA que puedas enseñar',
+        { n: 'Una prueba con IA que puedas enseñar', corto: 'Después del examen: pídele a una IA casos de prueba para un frenado de emergencia, revísalos y publica qué estaba mal y por qué.',
           q: 'El certificado dice que sabes la teoría; un repositorio dice que la usas. Es lo que pregunta un entrevistador de validación.',
           c: 'Después del examen: toma el requisito de una función ADAS —un frenado de emergencia, por ejemplo—, pídele a un modelo los casos de prueba, revísalos tú y anota cuáles estaban mal y por qué. Publícalo con un README en inglés: ese "por qué" es lo que vale.',
           r: [
             { t: 'curso', n: 'DeepLearning.AI — Prompt Engineering for Developers', url: 'https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/', nota: 'gratis, una hora y media, y es el de Andrew Ng' },
             { t: 'propio', n: 'Tu propio repositorio', nota: 'donde vive la prueba que vas a enseñar' },
           ] },
-        { n: 'Automatiza una tarea tuya',
+        { n: 'Automatiza una tarea tuya', corto: 'Elige una tarea que repites cada semana, como anotar tus gastos, y automatízala en menos de una hora.',
           q: 'Automatizar lo que repites cada semana libera horas y te da un caso real que contar.',
           c: 'Elige una tarea que hagas cada semana —anotar gastos, armar un reporte— y automatízala en menos de una hora. Mide cuánto tiempo te ahorra al mes.',
           r: [
             { t: 'web', n: 'n8n', url: 'https://n8n.io/', nota: 'automatizaciones conectando servicios, sin escribir casi nada' },
           ] },
-        { n: 'Lo que no se le delega a la IA',
+        { n: 'Lo que no se le delega a la IA', corto: 'Antes de usar IA con datos de tu trabajo o de un cliente, revisa sus reglas de privacidad, y revisa todo lo que la IA te entregue.',
           q: 'Alucinaciones, datos de un cliente en un modelo público, una prueba que nadie revisó: son los riesgos del capítulo 3 y los que pueden costarte el trabajo.',
           c: 'Antes de usar IA con algo de ALTEN o de un cliente, revisa su política de datos. Cada salida de un modelo se revisa como el trabajo de alguien nuevo: con criterio, no con fe.',
           r: [
@@ -1360,26 +1360,26 @@ window.CIFRAS = (function () {
     },
     ingles: {
       subs: [
-        { n: 'Tu nivel real es el de hablar bajo presión',
+        { n: 'Tu nivel real es el de hablar bajo presión', corto: 'Grábate dos minutos respondiendo «tell me about yourself» sin guion y cuenta cuántas veces te trabas o traduces del español.',
           q: 'Estás en <b>80</b>: el IELTS dice B2 y lees y escribes bien. El hueco está en <b>hablar sin preparar</b>, que es exactamente lo que pasa en una entrevista.',
           c: 'Grábate dos minutos contestando "tell me about yourself" sin guión y escucha la grabación. Cuenta las pausas largas y las veces que traduces del español. Ese es tu número real, no el del certificado.',
           r: [
             { t: 'propio', n: 'Tu propio teléfono', nota: 'grabarte es el diagnóstico más honesto y no cuesta nada' },
           ] },
-        { n: 'La carta de motivación de Esslingen',
+        { n: 'La carta de motivación de Esslingen', corto: 'Escribe una página para la maestría: por qué esa escuela, qué experiencia traes y qué quieres después. Un borrador por semana.',
           q: 'Es tu primera entrevista, por escrito: con ella decide el comité si vales una plaza.',
           c: 'Una página: por qué Automotive Systems en Esslingen, qué traes —seis años de validación, HIL y ADAS en Ford, Continental, Bosch y ALTEN— y qué quieres después. Un borrador por semana; léelo en voz alta y pásalo a alguien que lo critique sin piedad.',
           r: [
             { t: 'web', n: 'Esslingen — Automotive Systems (M.Eng.)', url: 'https://www.hs-esslingen.de/en/international/coming-to-esslingen-uas/international-masters-programmes-graduate-school/master-degree-programmes/automotive-systems-meng', nota: 'requisitos, fechas y lo que esperan de quien aplica' },
           ] },
-        { n: 'El vocabulario de TU trabajo primero',
+        { n: 'El vocabulario de TU trabajo primero', corto: 'Haz una lista de 40 palabras técnicas de tu trabajo que dudarías al decir en inglés y practica frases completas con ellas.',
           q: 'No necesitas inglés general: necesitas explicar arquitectura, sensores y decisiones técnicas.',
           c: 'Haz una lista de 40 términos que usáis en ALTEN y que dudarías al decir en inglés: <i>trade-off, edge case, throughput, root cause, deprecate</i>. Practica frases con ellos, no palabras sueltas. Cuarenta términos cubren el 90% de tu jornada.',
           r: [
             { t: 'web', n: 'English for Career Development (Coursera, gratis)', url: 'https://www.coursera.org/learn/careerdevelopment', nota: 'inglés de trabajo: CV, entrevista y correo. Auditarlo es gratis' },
             { t: 'web', n: 'Glosario de ROS', url: 'https://docs.ros.org/en/rolling/Glossary.html', nota: 'el vocabulario exacto que vas a tener que decir en voz alta' },
           ] },
-        { n: 'Simulacros de entrevista de verdad',
+        { n: 'Simulacros de entrevista de verdad', corto: 'Una vez por semana, ensaya en voz alta las preguntas típicas de una entrevista en inglés y grábate.',
           q: 'Con la maestría y el Werkstudent por delante, es el escenario exacto que hay que ensayar.',
           c: 'Una sesión a la semana en voz alta con las preguntas típicas: proyecto del que estés orgulloso, un conflicto técnico, por qué esta empresa. Grábalas. La primera vez da vergüenza; a la cuarta ya no.',
           r: [
@@ -1387,7 +1387,7 @@ window.CIFRAS = (function () {
             { t: 'practica', n: 'interviewing.io', url: 'https://interviewing.io/', nota: 'entrevistas anónimas con ingenieros de empresas grandes' },
             { t: 'propio', n: 'Un compañero de ALTEN', nota: 'lo más barato y lo que menos gente usa' },
           ] },
-        { n: 'Pensar en inglés durante el manejo',
+        { n: 'Pensar en inglés durante el manejo', corto: 'Mientras manejas, escucha podcasts técnicos en inglés y repite frases en voz alta.',
           q: 'Tienes ~28 h a la semana al volante con Didi. Es el mayor bloque de tiempo libre que tienes.',
           c: 'Podcasts técnicos en inglés mientras manejas, y <b>repite en voz alta</b> frases sueltas. Repetir es lo que entrena la boca; sólo escuchar entrena el oído, que ya lo tienes. Nadie te ve en el coche.',
           r: [
@@ -1395,7 +1395,7 @@ window.CIFRAS = (function () {
             { t: 'podcast', n: 'Lex Fridman Podcast', url: 'https://lexfridman.com/podcast/', nota: 'episodios largos: bueno para acostumbrar el oído' },
             { t: 'podcast', n: 'Software Engineering Daily', url: 'https://softwareengineeringdaily.com/', nota: 'media hora al día de inglés técnico' },
           ] },
-        { n: 'Cero traducción en el trabajo',
+        { n: 'Cero traducción en el trabajo', corto: 'Cambia a inglés todo lo que usas en el trabajo: tus programas, tus notas y la documentación.',
           q: 'El hábito que sube de 80 a 90 sin estudiar una hora más.',
           c: 'Pon en inglés todo lo que ya usas: el editor, la documentación, tus notas técnicas, los commits. No es estudiar más, es dejar de traducir. El idioma se aprende usando lo que ya haces.',
           r: [
@@ -1409,38 +1409,38 @@ window.CIFRAS = (function () {
     },
     codigo: {
       subs: [
-        { n: 'Qué te pide el puesto que quieres',
+        { n: 'Qué te pide el puesto que quieres', corto: 'Lee cinco anuncios de trabajo de estudiante (Werkstudent) en pruebas de software en Stuttgart y marca qué piden que todavía no dominas.',
           q: 'Estás en <b>60</b>: escribes código que funciona. Estudiar sin un anuncio delante es estudiar a ciegas: los de Werkstudent dicen exactamente qué piden.',
           c: 'Lee cinco anuncios de Werkstudent de validación, HIL o ADAS en la región de Stuttgart y subraya lo que se repite: Python, pytest, CAN, HIL, CI. Marca en cuáles podrías resolver un ejercicio mañana sin buscar: esa marca es tu punto de partida.',
           r: [
             { t: 'empleo', n: 'Bosch — ofertas', url: 'https://www.bosch.com/careers/' },
           ] },
-        { n: 'Tests antes que features',
+        { n: 'Tests antes que features', corto: 'En tu próximo cambio en el trabajo, escribe la prueba antes que el código, una sola vez, para sentir la diferencia.',
           q: 'En automotive, el código sin test no llega a producción. Es lo que más separa a un junior de un senior en una revisión.',
           c: 'En tu próximo cambio en ALTEN, escribe la prueba <b>antes</b> del arreglo. Una sola vez, para sentir la diferencia: la prueba te obliga a decir qué esperas, y eso es la mitad del diseño hecho.',
           r: [
             { t: 'libro', id: 'legacyCode' },
           ] },
-        { n: 'pytest de verdad',
+        { n: 'pytest de verdad', corto: 'Escribe pruebas automáticas con pytest para una función de control (casos normales, límites y fallos) que corran solas en cada cambio.',
           q: 'pytest es el estándar para automatizar pruebas en Python y aparece en casi todos los anuncios de validación.',
           c: 'Escribe pruebas con pytest para una función de control —un PID o la lógica de un frenado de emergencia simulado—: casos normales, límites y fallos, y que corran solas en cada commit con GitHub Actions.',
           r: [
             { t: 'web', n: 'pytest — Get Started', url: 'https://docs.pytest.org/en/stable/getting-started.html', nota: 'la documentación oficial; empieza aquí' },
           ] },
-        { n: 'Un proyecto que se pueda enseñar',
+        { n: 'Un proyecto que se pueda enseñar', corto: 'Termina un proyecto pequeño y completo, por ejemplo procesar datos de un sensor, con sus pruebas y una explicación de tus decisiones.',
           q: 'En la entrevista pesa más un proyecto tuyo explicado bien que diez cursos terminados.',
           c: 'Algo pequeño y completo: un nodo que procese datos de sensor, con tests, CI en GitHub Actions y un README que explique <b>la decisión difícil</b> que tomaste. Lo que impresiona no es el tamaño, es que esté terminado y razonado.',
           r: [
             { t: 'propio', n: 'Tu propio repositorio', nota: 'el README es la mitad del trabajo; es lo que va a leer un reclutador' },
           ] },
-        { n: 'Leer código ajeno a propósito',
+        { n: 'Leer código ajeno a propósito', corto: 'Una vez por semana, lee un archivo completo de un proyecto serio de tu área (como ROS 2) y anota una idea que copiarías.',
           q: 'Se aprende más leyendo un buen repositorio que escribiendo tres tuyos.',
           c: 'Elige un repositorio serio de tu campo — Autoware, ROS 2, o el propio Apollo— y lee <b>un archivo entero</b> a la semana, entendiendo por qué está hecho así. Anota una cosa que copiarías. En tres meses son doce ideas que no tenías.',
           r: [
             { t: 'repo', n: 'autowarefoundation/autoware', url: 'https://github.com/autowarefoundation/autoware', nota: 'la pila de conducción autónoma de referencia en abierto' },
             { t: 'repo', n: 'ros2', url: 'https://github.com/ros2', nota: 'el código de ROS 2, que es lo que piden esas ofertas' },
           ] },
-        { n: 'Media hora diaria, no seis el domingo',
+        { n: 'Media hora diaria, no seis el domingo', corto: 'Programa media hora cada día antes del trabajo, en vez de seis horas el domingo.',
           q: 'El hábito. Programar es memoria muscular: se pierde rápido y se recupera despacio.',
           c: 'Media hora al día antes de ALTEN, con el bloque de las 06:40 que ya tienes. Media hora diaria son 15 horas al mes; seis horas el domingo son seis y además se olvidan.',
           r: [
@@ -1454,37 +1454,37 @@ window.CIFRAS = (function () {
     },
     network: {
       subs: [
-        { n: 'Tu red real, en una hoja',
+        { n: 'Tu red real, en una hoja', corto: 'Escribe 20 nombres de gente de tu área con la que hablaste alguna vez y cuándo fue la última vez.',
           q: 'Estás en <b>55</b>: conoces gente, pero no sabes a quién tienes. Sin esa lista, "hacer networking" es un deseo, no un plan.',
           c: 'Escribe 20 nombres de gente de tu campo con la que hablaste alguna vez: ALTEN, la universidad, proyectos, gente de automotive. Al lado de cada uno, cuándo fue la última vez. Las que pasen de un año son tu trabajo de las próximas semanas.',
           r: [
             { t: 'libro', id: 'neverEatAlone' },
           ] },
-        { n: 'Las cartas de recomendación, ya',
+        { n: 'Las cartas de recomendación, ya', corto: 'Pide tus dos cartas de recomendación para la maestría, a un exjefe y a un líder técnico o profesor, con un correo corto.',
           q: 'Esslingen pide dos y una carta tarda semanas: si se piden en enero, la solicitud se atrasa.',
           c: 'Un jefe de Bosch o de ALTEN y un líder técnico o profesor. Pídela con un correo corto: para qué es, la fecha y tres cosas tuyas que te gustaría que mencione. Ofrece un borrador: casi todos lo agradecen.',
           r: [
             { t: 'propio', n: 'Tu lista de jefes y líderes', nota: 'los que te vieron trabajar, no los de más cargo' },
           ] },
-        { n: 'Reactivar sin pedir nada',
+        { n: 'Reactivar sin pedir nada', corto: 'Manda cinco mensajes esta semana sin pedir nada: algo útil, una felicitación o una pregunta sobre su trabajo.',
           q: 'El error común es aparecer cuando necesitas algo. Reactivar antes de necesitarlo es lo que hace que la red exista.',
           c: 'Manda cinco mensajes esta semana sin pedir <b>nada</b>: algo que leíste y le sirve a esa persona, una felicitación por un cambio de trabajo, una pregunta concreta sobre algo suyo. Tres líneas. Sin pedir café.',
           r: [
             { t: 'libro', id: 'giveAndTake' },
           ] },
-        { n: 'Stuttgart antes de llegar',
+        { n: 'Stuttgart antes de llegar', corto: 'Desde marzo, una videollamada al mes con alguien que ya trabaja o vive en Stuttgart.',
           q: 'Llegar con cinco personas que ya te conocen cambia el primer invierno y la búsqueda de Werkstudent.',
           c: 'Desde marzo, una videollamada al mes con alguien de Bosch o con un mexicano en Stuttgart: cómo se busca Werkstudent, qué equipos contratan, dónde vivir. Anótalo en tu hoja.',
           r: [
             { t: 'web', n: 'LinkedIn — grupos de automotive y ADAS', url: 'https://www.linkedin.com/search/results/groups/?keywords=ADAS', nota: 'donde está la gente del sector' },
           ] },
-        { n: 'La pregunta que abre puertas',
+        { n: 'La pregunta que abre puertas', corto: 'Pregúntale a dos personas que trabajan donde quieres entrar: «¿qué te habría gustado saber antes de entrar?».',
           q: 'Con el Werkstudent y la maestría por delante, la conversación informal vale más que la formal.',
           c: 'A quien ya trabaja donde tú quieres, pregúntale: <b>"¿qué te habría gustado saber antes de entrar?"</b>. Casi nadie se niega y casi todos contestan algo que no sale en ninguna oferta. Úsalo con dos personas antes de tu primera entrevista de Werkstudent.',
           r: [
             { t: 'libro', id: 'designingLife', nota: 'capítulo de entrevistas de prototipo' },
           ] },
-        { n: 'Una hora al mes, en el calendario',
+        { n: 'Una hora al mes, en el calendario', corto: 'Aparta una hora al mes para revisar tu lista de contactos y escribirle a tres personas.',
           q: 'El hábito: sin bloque fijo, esto se cae en dos semanas.',
           c: 'Un bloque de una hora al mes para revisar la lista, escribir a tres personas y añadir a los nuevos que conociste. Una hora al mes sostiene una red; cero horas la disuelve en un año.',
           r: [
@@ -1498,49 +1498,49 @@ window.CIFRAS = (function () {
     },
     finanzas: {
       subs: [
-        { n: 'Págate primero',
+        { n: 'Págate primero', corto: 'El día que cobras, manda primero tu ahorro a tu cuenta de inversión y gasta solo lo que queda.',
           q: 'El ahorro que sale el día que entra el dinero es el único que sobrevive al mes. Todo lo que ahorres es para Alemania.',
           c: 'El 15 —y desde febrero también el 1—, lo que va a GBM sale en cuanto entra la quincena, antes de pagar o comprar nada. Lo que queda es lo que puedes gastar: el riel del Plan Maestro te dice cuánto al día.',
           r: [
             { t: 'libro', id: 'iWillTeach' },
           ] },
-        { n: 'Saber a dónde se va tu dinero',
+        { n: 'Saber a dónde se va tu dinero', corto: 'Anota cada gasto el mismo día durante 30 días y mira en qué tres categorías se te va más dinero.',
           q: 'Es la base de todo lo demás. Sin el dato real, cualquier presupuesto es una suposición y cualquier recorte es adivinar.',
           c: 'Registra <b>30 días seguidos</b>, cada gasto el mismo día en que ocurre — no el domingo de memoria, porque ahí ya perdiste los chicos, que son justo los que no ves. Cinco categorías bastan: fijos, comida, transporte, deuda y gusto. Al día 30 ordénalas de mayor a menor y mira solo las tres primeras: ahí está el 80% de lo que puedes mover. Tu app de <b>Finanzas</b> ya hace esto, no necesitas otra herramienta.',
           r: [
             { t: 'libro', id: 'cerdo', nota: 'los capítulos de gastos hormiga; es de México, habla de pesos y de CETES, no de 401k' },
           ] },
-        { n: 'Presupuestar sobre ingreso variable',
+        { n: 'Presupuestar sobre ingreso variable', corto: 'Haz tu presupuesto con tu peor mes de los últimos tres, no con el promedio; lo que entre de más va directo al ahorro.',
           q: 'Tu ingreso no es uno: ALTEN es fijo y Didi cambia cada semana. Presupuestar sobre el promedio es lo que hace que un mes flojo te descuadre.',
           c: 'Presupuesta sobre el <b>mínimo de tus últimos 3 meses</b>, nunca sobre el promedio ni sobre el mejor mes. Lo que entre por encima de ese mínimo no es para gastar: va a GBM el mismo día. Con Didi, aparta cada lunes lo de la semana antes de tocarlo.',
           r: [
             { t: 'libro', id: 'profitFirst', nota: 'el método de repartir el ingreso en cuentas separadas antes de gastarlo' },
           ] },
-        { n: 'Decidir con la cabeza fría',
+        { n: 'Decidir con la cabeza fría', corto: 'Antes de comprar algo de más de $2,000, espera 72 horas; si todavía lo quieres, cómpralo sin culpa.',
           q: 'Casi ninguna mala decisión de dinero viene por no saber matemáticas. Viene por decidir cansado, con prisa o comparándote.',
           c: 'Ponle una regla mecánica a lo que te cuesta: <b>72 horas</b> entre querer algo de más de $2,000 y comprarlo. Si a las 72 h sigues queriéndolo, cómpralo sin culpa. Y escribe la razón de cada decisión grande antes de tomarla — al releerla en 6 meses aprendes más de ti que de cualquier libro.',
           r: [
             { t: 'libro', id: 'psychMoney', nota: '18 historias cortas; se lee en una semana' },
           ] },
-        { n: 'Calcular el costo real de la deuda',
+        { n: 'Calcular el costo real de la deuda', corto: 'Ordena tus deudas de la tasa más alta a la más baja y paga primero la más cara.',
           q: 'La tasa que anuncian no es lo que pagas. El CAT sí, porque mete comisiones y seguros. Sin ese número no puedes comparar dos créditos ni saber si un MSI te conviene.',
           c: 'Aprende a leer el <b>CAT</b> de cada estado de cuenta y ordena tus deudas por tasa, de mayor a menor: eso es el <b>método avalancha</b> y es el que menos intereses te cuesta (la bola de nieve, de menor a mayor saldo, solo gana en motivación). Antes de un MSI, calcula qué porcentaje de tu excedente mensual te compromete y por cuántos meses: un MSI no es dinero gratis, es un pago fijo que ya vendiste.',
           r: [
             { t: 'libro', id: 'cerdo', nota: 'deuda y CAT explicados con productos mexicanos' },
           ] },
-        { n: 'El colchón dentro de la cuenta',
+        { n: 'El colchón dentro de la cuenta', corto: 'Guarda un mes de tus gastos fijos en CETES como colchón, solo para emergencias de verdad.',
           q: 'Todo tu ahorro va a GBM, pero no todo se puede gastar en la salida: una parte es el colchón que evita volver a la tarjeta ante un imprevisto.',
           c: 'Dentro de la cuenta, un mes de tus fijos ({{fijosTotal}}) no se toca para nada que no sea una emergencia de verdad: el auto, la salud, un gasto que no podías prever. Guárdalo en CETES de 28 días: se saca en 24 a 48 horas y no vale menos el día que lo necesites.',
           r: [
             { t: 'libro', id: 'simplePath' },
           ] },
-        { n: 'Leer tu propio balance',
+        { n: 'Leer tu propio balance', corto: 'Una vez al mes, revisa lo que tienes menos lo que debes: ese número tiene que subir cada mes.',
           q: 'Flujo (lo que entra y sale cada mes) y patrimonio (lo que tienes menos lo que debes) son dos cosas distintas. Puedes tener buen flujo y patrimonio negativo, que es donde estabas hace un año.',
           c: 'Una vez al mes anota <b>activos − pasivos</b>: efectivo + fondo + inversiones + valor del BYD, menos lo que reste de deuda. Ese número, no tu quincena, es el que tiene que subir todos los meses rumbo al millón. El Dashboard ya lo calcula en <b>patrimonio neto</b>: tu trabajo es mirarlo una vez al mes, no cada día.',
           r: [
             { t: 'libro', id: 'millionaireNextDoor', nota: 'por qué el patrimonio y el ingreso no son lo mismo' },
           ] },
-        { n: 'Entender tus impuestos',
+        { n: 'Entender tus impuestos', corto: 'Aprende qué gastos puedes deducir, cuándo es tu declaración anual (abril) y qué avisar al SAT si te vas de México.',
           q: 'Lo que ganas fuera de la nómina tiene reglas propias. No saberlas cuesta dinero de dos formas: multas, y deducciones que dejas en la mesa.',
           c: 'Aprende tres cosas concretas: qué gastos son deducibles para una persona física (salud, lentes, colegiaturas), cuándo cae la declaración anual (abril) y qué avisas al SAT si dejas de vivir en México. Empieza por tu constancia de situación fiscal en el portal del SAT: ahí está tu situación real.',
           r: [
@@ -1556,58 +1556,58 @@ window.CIFRAS = (function () {
     },
     inversion: {
       subs: [
-        { n: 'Saber cuándo NO invertir',
+        { n: 'Saber cuándo NO invertir', corto: 'Respeta el orden: primero el fondo de emergencia, después pagar las deudas caras y solo entonces invertir.',
           q: 'Invertir con deuda cara viva o sin fondo de emergencia no es ser agresivo, es perder dinero con más pasos.',
           c: 'Ordena siempre igual: <b>1) fondo de emergencia completo · 2) deuda con tasa alta a cero · 3) invertir</b>. Ninguna tasa de rendimiento razonable le gana a una tarjeta. Tu panel de "Qué invertir hoy" ya aplica esta regla a tu saldo real cada vez que lo abres — la habilidad es respetarla cuando el mercado esté subiendo y dé comezón saltarse un paso.',
           r: [
             { t: 'libro', id: 'iWillTeach', nota: 'el orden de operaciones, capítulos 1 a 4' },
           ] },
-        { n: 'Conocer los instrumentos mexicanos',
+        { n: 'Conocer los instrumentos mexicanos', corto: 'Aprende tres datos de cada inversión que usas (CETES, VOO y Bitcoin): plazo, riesgo y cómo paga impuestos.',
           q: 'No puedes repartir entre cosas que no distingues. En México tienes acceso directo a más de lo que parece, y cada instrumento tiene un para qué distinto.',
           c: 'Aprende de cada uno tres datos: <b>plazo, riesgo y cómo se le cobran impuestos</b>. Empieza por los que ya usas — CETES a 28 días (cetesdirecto, sin comisión), un índice como VOO vía GBM, y BTC — y añade solo lo que entiendas: Bonos M, Udibonos si te preocupa la inflación, y tu Afore, que es inversión aunque no lo parezca y casi nadie revisa.',
           r: [
             { t: 'web', n: 'Banxico — Educación financiera', url: 'https://educa.banxico.org.mx/', nota: 'fuente oficial, sin nadie vendiéndote nada' },
             { t: 'web', n: 'cetesdirecto', url: 'https://www.cetesdirecto.com/', nota: 'donde se compran los CETES sin intermediario' },
           ] },
-        { n: 'Interés compuesto y horizonte',
+        { n: 'Interés compuesto y horizonte', corto: 'Calcula con tus números cuánto juntarías para 2030 invirtiendo cada mes, y cuánto pierdes si te saltas un año.',
           q: 'Es el motor de todo. Y lo que lo mueve no es la tasa, es el <b>tiempo</b>: cada año que pospones cuesta más que cualquier punto extra de rendimiento.',
           c: 'Haz el cálculo una vez con tus números reales, no con ejemplos de libro: lo que puedes aportar al mes, un rendimiento conservador (8-10% anual nominal en México) y los años hasta 2030. Repítelo restando un año de aportaciones y compara — ver esa diferencia en pesos es lo que hace que ya no te saltes un mes.',
           r: [
             { t: 'libro', id: 'littleBook', nota: 'corto y va directo al punto' },
           ] },
-        { n: 'Escribir tu asignación objetivo',
+        { n: 'Escribir tu asignación objetivo', corto: 'Escribe en porcentajes cómo vas a repartir tu dinero (CETES, un índice y Bitcoin): cada compra solo completa lo que falte.',
           q: '<b>Esta es la que te falta</b>, y es la razón real de que cada lunes decidas desde cero. Una asignación es un reparto en porcentajes, escrito una sola vez, que decide por ti cuando el mercado te esté gritando.',
           c: 'Define <b>tres porcentajes que sumen 100</b>: renta fija (CETES), índice global o S&P 500, y una porción chica de riesgo alto (BTC). Escríbelos con fecha en un solo renglón y guárdalos. La regla que evita el error clásico: en lo volátil no pongas más de lo que puedas ver caer un 50% sin tocarlo. Cada compra del lunes deja de ser una decisión y pasa a ser rellenar el porcentaje que quedó abajo.',
           r: [
             { t: 'libro', id: 'bogleheads', nota: 'capítulo de asset allocation' },
             { t: 'libro', id: 'cerdoInv' },
           ] },
-        { n: 'Aportar periódicamente y automatizarlo',
+        { n: 'Aportar periódicamente y automatizarlo', corto: 'Invierte el mismo monto el mismo día cada vez; súbelo cuando ganes más y nunca lo bajes por cómo va el mercado.',
           q: 'Aportar lo mismo cada periodo (DCA) compra más barato cuando el mercado cae y menos caro cuando sube, sin que tengas que adivinar. Y quita la decisión de en medio.',
           c: 'Fija un <b>monto y un día</b> — tú ya tienes el bloque de GBM de los lunes y los $1,500 a CETES el día 15. Súbelo cuando suba tu ingreso, nunca lo bajes por cómo se vea el mercado. La prueba de que funciona es aburrida a propósito: 12 meses seguidos sin saltarte uno.',
           r: [
             { t: 'libro', id: 'simplePath' },
           ] },
-        { n: 'Ver las comisiones antes que el rendimiento',
+        { n: 'Ver las comisiones antes que el rendimiento', corto: 'Antes de comprar, compara comisiones: el mismo índice puede costar 0.03 % o 1.5 % al año.',
           q: 'El rendimiento no lo controlas; el costo sí. Un 1% anual de comisión, sostenido 20 años, se come cerca de una quinta parte de lo que habrías acumulado.',
           c: 'De cada instrumento busca tres costos: <b>comisión de administración</b> (anual, el que más pesa), <b>comisión por operación</b> y el <b>spread</b> de compra-venta si es en dólares o cripto. Compara el mismo índice en dos casas antes de comprarlo: la diferencia entre 0.03% y 1.5% anual es la diferencia entre llegar y no llegar al millón en 2030.',
           r: [
             { t: 'libro', id: 'randomWalk', nota: 'por qué los costos predicen mejor que las estrellas de un fondo' },
           ] },
-        { n: 'Aguantar sin vender',
+        { n: 'Aguantar sin vender', corto: 'Escribe hoy qué harás si tus inversiones caen 30 %, y revisa los precios solo una vez por semana.',
           q: 'La diferencia entre lo que rinde un fondo y lo que gana la gente que lo tiene se explica casi entera por comprar arriba y vender abajo. Es la habilidad que más dinero vale y la única que no se estudia, se entrena.',
           c: 'Escribe <b>hoy</b>, con el mercado tranquilo, qué vas a hacer si tu cartera cae 30% — y déjalo junto a la asignación. En la caída no se decide, se ejecuta lo que ya está escrito. Regla de higiene: revisa precios una vez por semana, en tu bloque del lunes, y no vuelvas a abrir la app hasta el siguiente.',
           r: [
             { t: 'libro', id: 'psychMoney' },
             { t: 'libro', id: 'intelligentInvestor', nota: 'los capítulos 8 y 20, que son los que Buffett señala' },
           ] },
-        { n: 'Rebalancear una vez al año',
+        { n: 'Rebalancear una vez al año', corto: 'Una vez al año, vuelve a tu reparto ideal metiendo el dinero nuevo en lo que quedó abajo.',
           q: 'Con el tiempo, lo que sube se lleva más peso del que le asignaste y tu cartera termina siendo más arriesgada de lo que decidiste.',
           c: 'Una vez al año, o cuando algo se desvíe más de <b>5 puntos</b> de su porcentaje, vuelve a los números que escribiste. Lo más fácil: no vendas nada, dirige las aportaciones nuevas a lo que quedó abajo hasta emparejar. Rebalancear obliga a vender caro y comprar barato, que es justo lo contrario de lo que pide el instinto.',
           r: [
             { t: 'libro', id: 'bogleheads' },
           ] },
-        { n: 'Saber qué impuestos pagas al invertir',
+        { n: 'Saber qué impuestos pagas al invertir', corto: 'Aprende cómo pagan impuestos tus inversiones y guarda en una carpeta tus constancias anuales de GBM y Cetesdirecto.',
           q: 'El rendimiento que ves no es el que te queda. En México hay retención sobre intereses y un ISR distinto para ganancias de bolsa y para cripto.',
           c: 'Aprende cómo tributa cada cosa que tienes: la retención anual sobre el capital en instrumentos de deuda, el <b>10% sobre la ganancia</b> en enajenación de acciones en bolsa, y que la ganancia por cripto se acumula a tus demás ingresos. Guarda tus constancias anuales de GBM y cetesdirecto en la misma carpeta desde ahora: en abril valen oro.',
           r: [
@@ -1623,31 +1623,31 @@ window.CIFRAS = (function () {
     },
     datos: {
       subs: [
-        { n: 'Python y pandas con tus datos',
+        { n: 'Python y pandas con tus datos', corto: 'Haz el curso gratis de Python y pandas de Kaggle (2 a 3 horas) y úsalo para analizar tus propios gastos.',
           q: 'El hueco es de herramienta, no de criterio: ya sabes qué preguntarle a los datos.',
           c: 'Haz los módulos de Python y pandas de Kaggle Learn (2 a 3 horas) y, en paralelo, carga tus gastos de Finanzas en un cuaderno: cuánto gastas por categoría y por semana.',
           r: [
             { t: 'curso', n: 'Kaggle Learn', url: 'https://www.kaggle.com/learn', nota: 'módulos cortos y gratis de Python y pandas, con cuaderno incluido' },
           ] },
-        { n: 'Un tablero que responda una pregunta',
+        { n: 'Un tablero que responda una pregunta', corto: 'Arma un tablero en Looker Studio que responda una sola pregunta: ¿en qué semana del mes se te va el dinero?',
           q: 'Un tablero sin pregunta es decoración.',
           c: 'Arma en Looker Studio un tablero que conteste una sola pregunta: ¿en qué semana del mes se me va el dinero? Después repítelo con otros datos tuyos: el segundo tarda la mitad, y esa caída es la señal de que ya es hábito.',
           r: [
             { t: 'web', n: 'Google Looker Studio', url: 'https://lookerstudio.google.com/', nota: 'para montar el dashboard de gastos sin instalar nada' },
           ] },
-        { n: 'Contar lo que dicen los datos',
+        { n: 'Contar lo que dicen los datos', corto: 'Toma un resultado de pruebas de tu trabajo y explícalo con una gráfica y tres frases.',
           q: 'En una revisión de pruebas, convence quien explica el dato, no quien lo tiene.',
           c: 'Toma un resultado de pruebas de tu trabajo —sin datos del cliente— y cuéntalo en una gráfica y tres frases. Pídele a alguien que te diga qué entendió.',
           r: [
             { t: 'libro', id: 'storytellingData' },
           ] },
-        { n: 'SQL, diez minutos al día',
+        { n: 'SQL, diez minutos al día', corto: 'Haz 10 minutos diarios de ejercicios de SQL en SQLZoo durante 30 días, escribiendo tú cada consulta.',
           q: 'SQL se olvida si no se usa: diez minutos diarios le ganan a tres horas al mes.',
           c: 'Treinta días seguidos de ejercicios en SQLZoo. Teclea cada consulta; no la copies.',
           r: [
             { t: 'practica', n: 'SQLZoo', url: 'https://sqlzoo.net/wiki/SQL_Tutorial', nota: 'ejercicios cortos que corren en el navegador' },
           ] },
-        { n: 'Teclear, no mirar',
+        { n: 'Teclear, no mirar', corto: 'Por cada video tutorial que veas, haz el mismo ejercicio con tus propios datos.',
           q: 'Ver tutoriales sin escribir código en paralelo se te olvida en una semana.',
           c: 'Por cada video, el mismo ejercicio con tus datos. Si no lo tecleaste, no lo aprendiste.',
           r: [
@@ -1663,37 +1663,37 @@ window.CIFRAS = (function () {
     },
     mente: {
       subs: [
-        { n: 'Lo alto no se mantiene solo',
+        { n: 'Lo alto no se mantiene solo', corto: 'Anota las tres cosas que te mantienen bien (por ejemplo dormir, entrenar y tener un plan) y cuál dejas primero cuando el mes se complica: esa es la que debes cuidar.',
           q: 'Estás en <b>85</b>: es tu punto más fuerte. La trampa de lo alto es creer que ya no necesita mantenimiento.',
           c: 'Escribe qué tres cosas te sostienen hoy — dormir, entrenar, tener un plan— y cuál de las tres es la primera que se cae cuando el mes se pone duro. Esa es la que hay que blindar, no las otras dos.',
           r: [
             { t: 'libro', id: 'atomicHabits', nota: 'capítulo de sistemas frente a metas' },
           ] },
-        { n: 'El sueño es la palanca, no la fuerza de voluntad',
+        { n: 'El sueño es la palanca, no la fuerza de voluntad', corto: 'Apaga la luz a tu hora de dormir dos semanas seguidas y fíjate cómo cambia tu energía en el gimnasio.',
           q: 'Tu rutina te da {{horasSueno}} de sueño, justo el mínimo: cada noche que la app se alarga caes debajo, y a ese nivel la mitad de lo que parece falta de disciplina es falta de sueño.',
           c: 'Cumple la luz fuera de las {{horaDormir}} dos semanas seguidas: lo que no cupo en la media hora de la app, se parte para mañana. Mide el cambio en la sesión de gimnasio y en los bloques del día: se nota antes en el gimnasio.',
           r: [
             { t: 'libro', id: 'whySleep' },
           ] },
-        { n: 'Terapia antes de irte',
+        { n: 'Terapia antes de irte', corto: 'Empieza terapia antes de irte: cuatro sesiones para prepararte para la soledad, el estrés y el sueño.',
           q: 'Llegar con herramientas es más fácil que construirlas solo en febrero, con ocho horas de luz.',
           c: 'Empieza terapia aquí en noviembre: cuatro sesiones para armar tu plan de soledad, estrés y sueño. Allá, el Studierendenwerk da asesoría psicológica gratis a estudiantes.',
           r: [
             { t: 'propio', n: 'Un terapeuta, aquí', nota: 'antes de la mudanza, no después' },
           ] },
-        { n: 'La deuda pesa en la cabeza, no sólo en la cartera',
+        { n: 'La deuda pesa en la cabeza, no sólo en la cartera', corto: 'Una vez al mes, mira cuánto bajó tu deuda: ver el avance la vuelve un problema con fecha de fin.',
           q: 'Es tu ruido de fondo. Y es el que hace que un mal día parezca un mal año.',
           c: 'Una vez al mes, mira el número real y qué bajó — el Dashboard ya lo calcula. Ver un abono real convierte la deuda de <b>amenaza difusa</b> en <b>problema con plazo</b>, que es una carga mucho más ligera de llevar.',
           r: [
             { t: 'propio', n: 'Tu propio Dashboard', nota: 'la pantalla de Finanzas' },
           ] },
-        { n: 'Cortar la rumia con una acción pequeña',
+        { n: 'Cortar la rumia con una acción pequeña', corto: 'Cuando lleves 10 minutos dándole vueltas a algo, haz la acción más pequeña que lo mueva: un mensaje, una línea, una búsqueda.',
           q: 'Pensar mucho un problema que no se mueve no es analizar: es girar.',
           c: 'Cuando notes que llevas 10 minutos dando vueltas a lo mismo, haz <b>la cosa más pequeña</b> que lo mueva: un mensaje, una línea, una búsqueda. No la solución completa. La acción corta la rumia mejor que cualquier raz onamiento.',
           r: [
             { t: 'libro', id: 'practicing' },
           ] },
-        { n: 'Una revisión corta cada domingo',
+        { n: 'Una revisión corta cada domingo', corto: 'Cada domingo, 10 minutos por escrito: qué salió bien, qué falló y qué cambiarás la próxima semana.',
           q: 'El hábito que sostiene el 85.',
           c: 'Diez minutos el domingo: qué salió bien esta semana, qué se cayó y qué es lo único que cambio la que viene. Escrito, no pensado. Escribirlo es lo que hace que la semana siguiente no sea igual que la anterior.',
           r: [
@@ -1707,31 +1707,31 @@ window.CIFRAS = (function () {
     },
     liderazgo: {
       subs: [
-        { n: 'Dónde está tu techo',
+        { n: 'Dónde está tu techo', corto: 'Anota las tres conversaciones difíciles que llevas evitando y qué dirías en cada una, en una frase.',
           q: 'Estás en <b>80</b>: alto. Lo que separa 80 de 90 no es técnica, es <b>hacerlo cuando cuesta</b> — la conversación incómoda que pospones.',
           c: 'Apunta las tres conversaciones que llevas evitando (en ALTEN, en un proyecto, en casa). No las tengas todavía: sólo escribe qué dirías en una frase. Ver las tres juntas te dice si tu techo es de valentía o de claridad.',
           r: [
             { t: 'libro', id: 'crucial' },
           ] },
-        { n: 'Separar el hecho de la historia',
+        { n: 'Separar el hecho de la historia', corto: 'En una de esas conversaciones, separa en dos columnas lo que pasó y lo que tú interpretaste, y empieza solo por lo que pasó.',
           q: 'Casi todo conflicto viene de contar la historia como si fuera el hecho.',
           c: 'Para una de esas tres conversaciones, escribe en dos columnas: <b>lo que pasó</b> (grabable en vídeo) y <b>lo que tú concluiste</b>. Casi siempre la segunda columna es larga y la primera cabe en dos líneas. Empieza la conversación sólo por la primera.',
           r: [
             { t: 'libro', id: 'crucial', nota: 'capítulos 4 y 5, los hechos frente a las historias' },
           ] },
-        { n: 'Liderar sin el puesto',
+        { n: 'Liderar sin el puesto', corto: 'Arregla algo que esté roto en tu equipo y que nadie haya tomado, y cuéntalo en una frase.',
           q: 'No tienes gente a cargo, y ahí está la oportunidad: el liderazgo que se ve en una entrevista es el que ejerces sin autoridad.',
           c: 'Elige algo que esté roto en tu equipo y que nadie ha tomado —una documentación, un proceso de revisión, un test que siempre falla—. Arréglalo y cuéntalo en una frase: es lo que te van a preguntar en cada entrevista de Werkstudent cuando digan "háblame de una vez que lideraste".',
           r: [
             { t: 'libro', id: 'staffPath' },
           ] },
-        { n: 'Dar retroalimentación que no duela',
+        { n: 'Dar retroalimentación que no duela', corto: 'Da tu opinión en tres partes: qué pasó, qué efecto tuvo y qué propones. Pruébalo esta semana con algo pequeño.',
           q: 'La mitad del liderazgo real es decirle a alguien algo que no quiere oír sin romper la relación.',
           c: 'Fórmula de tres partes: qué pasó (hecho), qué efecto tuvo (concreto), qué propones. Sin "siempre" ni "nunca". Pruébalo una vez esta semana con algo pequeño — la práctica en cosas pequeñas es lo que te deja usarlo en las grandes.',
           r: [
             { t: 'libro', id: 'radicalCandor' },
           ] },
-        { n: 'Una conversación pendiente al mes',
+        { n: 'Una conversación pendiente al mes', corto: 'Cada mes, ten una de las conversaciones que evitas, agendada como cualquier cita.',
           q: 'El hábito que mantiene el 80 y lo sube.',
           c: 'Una de las conversaciones que evitas, al mes. Una. No más, porque quemarse tampoco es liderar. Apúntala en el calendario como cualquier otra cita.',
           r: [
@@ -1745,31 +1745,31 @@ window.CIFRAS = (function () {
     },
     copy: {
       subs: [
-        { n: 'Qué te falta, exactamente',
+        { n: 'Qué te falta, exactamente', corto: 'Revisa tus últimos cinco mensajes importantes y marca en cuáles pediste algo concreto al final.',
           q: 'Estás en <b>55</b>: escribes claro. Lo que falta no es redacción, es <b>pedir algo</b> al final de lo que escribes.',
           c: 'Toma los últimos 5 mensajes largos que mandaste — correo a un reclutador, mensaje a un cliente, tu perfil de LinkedIn— y subraya la frase donde pides algo concreto. Si en tres de los cinco no hay ninguna, ese es tu hueco entero.',
           r: [
             { t: 'libro', id: 'everybody' },
           ] },
-        { n: 'Una promesa por texto',
+        { n: 'Una promesa por texto', corto: 'Antes de escribir, anota en una línea quién lo leerá y qué quieres que haga. Empieza por tu perfil de LinkedIn.',
           q: 'Un texto que promete tres cosas no promete ninguna. Es el error más caro y el más fácil de arreglar.',
           c: 'Antes de escribir nada, apunta en una línea: <b>quién lo lee</b> y <b>qué quiero que haga</b>. Si no cabe en una línea, todavía no sabes qué estás escribiendo. Aplica esto primero a tu perfil de LinkedIn, que es el que más gente ve.',
           r: [
             { t: 'libro', id: 'blyCopy' },
           ] },
-        { n: 'Reescribe tu perfil de LinkedIn',
+        { n: 'Reescribe tu perfil de LinkedIn', corto: 'Reescribe tu perfil de LinkedIn en inglés: qué resuelves, un resultado con número y qué estás buscando.',
           q: 'Es lo primero que ve un reclutador de Stuttgart, y hoy describe un puesto, no un resultado.',
           c: 'Titular en inglés con lo que resuelves y lo que buscas: «Validation engineer · HIL & ADAS · open to Werkstudent in the Stuttgart region from Oct 2027». En el "acerca de", tres líneas: qué haces, un resultado con número y cómo contactarte.',
           r: [
             { t: 'web', n: 'LinkedIn — perfiles de ingenieros senior de automotive', url: 'https://www.linkedin.com/search/results/people/?keywords=senior%20automotive%20software%20engineer', nota: 'para calibrar el tono, no para copiar' },
           ] },
-        { n: 'El correo frío de 5 líneas',
+        { n: 'El correo frío de 5 líneas', corto: 'Escribe tres correos de cinco líneas a gente que no te conoce: por qué a esa persona, quién eres, un logro y qué le pides.',
           q: 'Es el formato que más te va a servir este año: para reclutadores, para clientes de proyectos y para pedir referencias.',
           c: 'Cinco líneas: por qué le escribes a esa persona (algo suyo, no genérico), qué haces tú en una frase, un resultado concreto, qué le pides, y una salida fácil ("si no es el momento, sin problema"). Escribe tres esta semana y mándalos.',
           r: [
             { t: 'libro', id: 'coldEmail' },
           ] },
-        { n: 'Leer en voz alta antes de enviar',
+        { n: 'Leer en voz alta antes de enviar', corto: 'Lee en voz alta todo mensaje importante antes de enviarlo: donde te trabes, sobra algo.',
           q: 'Es el hábito que sostiene todo lo anterior y cuesta 30 segundos.',
           c: 'Antes de dar enviar a cualquier cosa que importe, léela en voz alta. Donde te tropieces, ahí sobra algo. Es el filtro más barato que existe y detecta el 80% de lo que un editor te marcaría.',
           r: [
@@ -1783,25 +1783,25 @@ window.CIFRAS = (function () {
     },
     ventas: {
       subs: [
-        { n: 'Vender lo que no usas a su precio',
+        { n: 'Vender lo que no usas a su precio', corto: 'Vende algo que no uses: fotos con luz de día, un precio 10 % arriba de anuncios iguales y contesta en menos de una hora.',
           q: 'Es la venta que hoy sí rinde: cada peso va a GBM.',
           c: 'Fotos con luz de día, el precio de tres anuncios iguales y un 10% arriba para tener margen al negociar. Contesta en menos de una hora: en Marketplace vende el primero que contesta.',
           r: [
             { t: 'libro', id: 'neverSplit' },
           ] },
-        { n: 'El seguimiento es la venta',
+        { n: 'El seguimiento es la venta', corto: 'A quien preguntó y no compró, escríbele de nuevo a los 1, 3 y 7 días, sin presionar.',
           q: 'La mayoría de las ventas cierran entre el tercer y el quinto contacto, no en el primero.',
           c: 'A quien preguntó y no compró: seguimiento a los días 1, 3 y 7, sin presionar. Anota quién respondió y en qué contacto.',
           r: [
             { t: 'libro', id: 'influence' },
           ] },
-        { n: 'Negociar tu sueldo en euros',
+        { n: 'Negociar tu sueldo en euros', corto: 'Antes de negociar tu sueldo en Alemania, investiga cuánto paga el puesto y fija tu mínimo; nunca digas tu número primero.',
           q: 'Una buena negociación en tu primer empleo en Alemania vale más que cualquier venta de este año.',
           c: 'Antes de cualquier oferta, el rango del puesto en la región y tu número mínimo, por escrito. Nunca digas tu número primero: pregunta el rango del puesto.',
           r: [
             { t: 'libro', id: 'neverSplit' },
           ] },
-        { n: 'Una oferta que se pueda comprar',
+        { n: 'Una oferta que se pueda comprar', corto: 'Escribe en una frase la oferta del negocio de tu papá: para quién es, qué resultado da y en cuánto tiempo.',
           q: 'Cuando el negocio vuelva —en la Fase 4—, se empieza por la oferta, no por el anuncio.',
           c: 'Escribe la oferta del negocio de tu papá en una frase: para quién, qué resultado y en cuánto tiempo. Si no cabe en una frase, no está terminada.',
           r: [
@@ -1817,19 +1817,19 @@ window.CIFRAS = (function () {
     },
     marketing: {
       subs: [
-        { n: 'Dejar el negocio en piloto automático',
+        { n: 'Dejar el negocio en piloto automático', corto: 'Deja listos 12 posts con foto, texto y fecha para que tu papá pueda publicar sin ti.',
           q: 'Tu papá tiene que poder publicar sin ti desde febrero.',
           c: 'Doce posts listos con su foto, su texto y su fecha; el dossier y el QR de WhatsApp en sus manos. Publica uno con él para que vea cómo se hace.',
           r: [
             { t: 'propio', n: 'Las plantillas de Posts', nota: 'ya están en el proyecto; solo falta programarlas' },
           ] },
-        { n: 'Una métrica antes de gastar',
+        { n: 'Una métrica antes de gastar', corto: 'Anota vistas, comentarios y mensajes de cada post, y repite el formato que más mensajes trae.',
           q: 'Sin medir, no sabes si un post funciona o solo se ve bien.',
           c: 'De cada post anota vistas, comentarios y mensajes. Al mes, repite el formato que más mensajes trajo y deja de hacer el que menos.',
           r: [
             { t: 'libro', id: 'leads100m' },
           ] },
-        { n: 'Un canal a la vez',
+        { n: 'Un canal a la vez', corto: 'Publica cuatro semanas seguidas en la red donde ya están los clientes de tu papá antes de abrir otra.',
           q: 'Tres redes a medias no traen un cliente.',
           c: 'Elige el canal donde ya están los clientes de tu papá y publica ahí cuatro semanas seguidas antes de abrir otro.',
           r: [

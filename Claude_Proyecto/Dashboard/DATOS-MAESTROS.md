@@ -464,6 +464,10 @@ El hábito «Dormir 7 h» (`habitos.js`) lleva su hora y su nombre escritos —s
 editar en la pantalla—, así que el **control 31** comprueba que la semilla diga lo mismo que la
 rutina y que ningún otro archivo vuelva a escribir las horas de sueño a mano.
 
+### La versión corta de cada paso
+
+Cada paso de una ruta (`APRENDIZAJE[hab].subs[]`) trae, además de su texto largo (`c`), su instrucción corta y revisada (`corto`): una frase completa y en palabras de todos los días, que es lo que enseña la tarjeta *Ejercicio de …* de Mi Día. Un paso nuevo llega con su `corto`; el control 34 del verificador lo exige.
+
 ### Los recursos de las rutas de habilidad
 
 Cada paso de una ruta (`APRENDIZAJE[hab].subs[].r`) y cada habilidad

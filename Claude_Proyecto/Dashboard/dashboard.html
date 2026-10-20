@@ -2791,12 +2791,14 @@ body.rail-on{--pad-rail:max(6vw,230px)}
   color:inherit;font:inherit;text-align:left}
 button.ap-c-ir{cursor:pointer}
 button.ap-c-ir:hover .ap-de,button.ap-c-ir:hover .ap-t,button.ap-c-ir:hover .ap-q{color:var(--c)}
-.ap-c-txt{display:flex;flex-direction:column;gap:5px;min-width:0}
+.ap-c-txt{display:flex;flex-direction:column;gap:4px;min-width:0}
 .ap-c-txt>*{flex:none;min-width:0}
 /* De qué se trata cada tarjeta, en una frase chica y en gris, antes que lo de hoy (Adán: "si una persona que no
    sabe de mi app no va a saber ni de qué se trata, debe ser muy claro… aunque hagas la letra pequeña para que no
    se sature visualmente"). En una tarjeta de menos de 130 px de alto no cabe con el título: ahí se va ella. */
 .ap-que{font-size:11px;line-height:1.42;color:var(--text2)}
+/* La versión corta de un bloque largo: solo sale cuando el bloque completo no cabe (`apAjustar()`). */
+.ap-c-txt .ap-alt{display:none}
 /* El texto que se puede recortar (`.ap-cl`), por líneas y con «…»: tres como mucho; dos los títulos,
    las notas y los puntos (`.l2`). En escritorio el párrafo no tiene tope —salvo `.l3`—: lo pone apAjustar(). */
 .ap-c-txt .ap-cl{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
@@ -2853,15 +2855,18 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .ap-ops{display:flex;flex-direction:column;gap:1px}
 .ap-op{display:flex;gap:7px;min-width:0;font-size:12px;line-height:1.5;color:var(--text2)}
 .ap-op b{flex:none;font-family:var(--mono);font-size:10.5px;color:var(--c)}
-.ap-op>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ap-op>span{min-width:0}
 /* El paso y la ficha: un tramo por paso —lleno lo hecho, marcado el que toca—, lo que haces y lo que sigue. */
-.ap-seg{display:flex;gap:3px;margin:2px 0 3px}
+.ap-seg{display:flex;gap:3px;margin:1px 0 2px}
 .ap-seg i{flex:1 1 0;height:4px;border-radius:2px;background:rgba(var(--ov),.1)}
 .ap-seg i.ok{background:var(--c)}
 .ap-seg i.ya{background:color-mix(in srgb,var(--c) 30%,transparent);box-shadow:inset 0 0 0 1px var(--c)}
 .ap-av-m{display:flex;align-items:center;gap:7px;min-width:0;font-size:12px;line-height:1.4;color:var(--text2)}
 .ap-av-m svg{flex:none;width:13px;height:13px;color:var(--text3)}
 .ap-av-m>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ap-av-m.libre{align-items:flex-start}
+.ap-av-m.libre>span{white-space:normal;overflow:visible}
+.ap-av-m.libre svg{margin-top:2px}
 .ap-av-m i{color:var(--text)}
 .ap-av-m b{font-weight:600;color:var(--text)}
 .ap-bq{display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -6837,28 +6842,98 @@ function apPunto(html, cls){
 // El paso de la semana, resumido: el paso con su ruta en tramos, qué hacer y lo que sigue; donde sobra
 // alto, el libro, el porqué y la idea del libro. Tocarlo abre la ruta en su ventana (abrirSkillDetalle),
 // la misma de En qué invertir tu tiempo.
+// El nombre de una habilidad dicho para quien no conoce la app: «copy» no le dice nada a nadie.
+const SK_LLANO = { copy: 'escritura persuasiva', codigo: 'programación', datos: 'análisis de datos' };
+function skLlano(s){ return !s ? '' : SK_LLANO[s.id] || (/^[A-ZÁÉÍÓÚÑ]{2,}$/.test(s.name) ? s.name : s.name.toLowerCase()); }
 function pasoSemanaHtml(){
   if(typeof habFocoActual!=='function') return '';
   const foco=aprendeFoco(); if(!foco) return '';
   const pasos=habPasos(foco.id); if(!pasos.length) return '';
   const st=habFocoLoad(); let i=st.paso[foco.id]||0; if(i<0||i>=pasos.length) i=0;
-  const p=pasos[i], sig=pasos[i+1];
+  const p=pasos[i];
   const r=(Array.isArray(p.r)?p.r:[]).find(x=>x&&x.t==='libro');
   const lib=r?habLibro(r.id):null, fi=(lib&&lib.ficha)||{};
   const rec=habRecomendada(), propia=!!rec&&rec.id!==foco.id;
-  const nom=/^[A-ZÁÉÍÓÚÑ]{2,}$/.test(foco.name)?foco.name:foco.name.toLowerCase();
-  // El nombre del paso es la idea del libro; lo que se entiende sin contexto es la instrucción: va como lo principal.
-  const txt=`<span class="ap-que ap-cl l2" data-min="1">Subes tu nivel de ${esc(nom)} con ejercicios cortos${lib?`, basados en el libro <i>${esc(lib.t)}</i>`:''}.</span>`
+  const nom=skLlano(foco);
+  // Lo que se hace hoy, en la versión corta y revisada del maestro (`corto`); el texto largo está en la ruta.
+  const hacer=p.k||String(p.c||'').split(/(?<=[.!?])\s/)[0];
+  const txt=`<span class="ap-que">Subes tu nivel de ${esc(nom)} con ejercicios cortos${lib?`, basados en el libro <i>${esc(lib.t)}</i>`:''}.</span>`
     +apTramos(pasos.length, j=>j<i, i)
-    +(p.c?apBloque('Qué hacer hoy',`<span class="ap-hacer ap-cl">${p.c}</span>`):`<span class="ap-t ap-cl l2" data-min="1">${esc(p.n)}</span>`)
-    +(sig?apMeta('sigue',`Siguiente paso: <b>${esc(sig.n)}</b>`):apMeta('meta','Es el último paso de este ejercicio'))
-    +(p.q?apBloque('Por qué',`<span class="ap-bq-t ap-cl">${p.q}</span>`,'ap-opc'):'')
-    +(fi.idea?apBloque('La idea del libro',`<span class="ap-bq-idea ap-cl">${fi.idea}</span>`,'ap-opc'):'');
+    +(hacer?apBloque('Qué hacer hoy',`<span class="ap-hacer">${hacer}</span>`):'')
+    +(fi.idea?apMeta('libro',`<b>La idea del libro:</b> ${fi.idea}`,'ap-opc libre'):'');
   return apTarjeta({ c:'var(--w)', mat:`Ejercicio de ${esc(nom)}${propia?' · elegido por ti':''}`,
     estado:`<span class="ap-av-n">paso ${i+1} de ${pasos.length}</span>`, ctl:apCtl('paso','Habilidad',propia?esc(rec.name):''),
     foto:apFotoLibro(r&&r.id, foco.id), ico:foco.icon, abrir:`aprendeVisto('paso');abrirSkillDetalle('${foco.id}')`,
     titulo:`Abrir la ruta de ${habAttr(foco.name)}${lib?` · con ${habAttr(lib.t)}`:''}`, txt });
 }
+// La idea de cada paso de las guías que tocan primero (HB_PLAN: networking, persuadir y dinero), en una frase
+// revisada: es lo que enseña la tarjeta de Habilidades para la vida en Mi Día. Un paso por renglón, en el orden de
+// HABILIDAD_DETALLE; el control 34 avisa si una guía cambia de número de pasos. Una guía sin ideas enseña solo
+// el nombre del paso, nunca un pedazo del texto largo.
+const HB_IDEA = {
+  networking: [
+    'Hacer networking es construir relaciones en las que los dos ganan, empezando por lo que tú das; no es juntar contactos.',
+    'No necesitas ser sociable: quien escucha y se acuerda de lo que le dijeron deja mejor recuerdo que quien habla mucho.',
+    'Las oportunidades de trabajo suelen llegar de conocidos lejanos, no de tus amigos cercanos: ellos ven puertas que tú no.',
+    'Ayuda con lo que a ti te cuesta poco y al otro le vale mucho, como presentarle a alguien o un dato que ya sabes.',
+    'Ya tienes qué ofrecer: tu experiencia en pruebas de software automotriz es algo que poca gente puede compartir.',
+    'Escribe 20 personas que quieres en tu red dentro de un año, con qué hace cada una y qué puedes darle tú.',
+    'Preséntate diciendo qué problema resuelves, para quién, y algo que invite a seguir la plática.',
+    'En un evento, únete a grupos de tres o más con un hueco libre; a dos personas hablando de frente no las interrumpas.',
+    'Pregunta «¿en qué andas metido últimamente?» en vez de «¿a qué te dedicas?»: abre la conversación.',
+    'Para despedirte, di algo que te sirvió de la plática y qué sigue: «te mando el artículo; voy a saludar a alguien».',
+    'Escríbele a quien conociste antes de 48 horas: dónde se conocieron, algo que te dijo y algo útil para esa persona.',
+    'Cada tres meses, manda un mensaje a cada uno de tus 20 contactos sin pedir nada, por ejemplo un artículo que le sirva.',
+    'Tu titular de LinkedIn debe decir qué haces y en qué eres bueno, no solo tu puesto: ahí te buscan los reclutadores.',
+    'Antes de presentar a dos personas, pregúntale a cada una si quiere; así nadie queda comprometido.',
+    'Cuando pidas algo, que sea concreto y fácil de conceder en 30 segundos, no «ayúdame a conseguir trabajo».',
+    'Practica donde la gente ya va a conocer a otros, como tus clases presenciales de alemán en el CENLEX o el Goethe.',
+    'El peor error es aparecer solo cuando necesitas algo: se nota siempre y quema el contacto.',
+    'Un plan de 12 semanas. En la primera, escribe tu lista de 20 personas y tu presentación de 20 segundos.',
+    'Cuatro libros para profundizar; si solo lees uno, que sea «Nunca comas solo», de Keith Ferrazzi.',
+    'Lo dominas cuando cumples cuatro pruebas; la primera: 20 nombres escritos, cada uno con algo concreto que puedes darle.'
+  ],
+  persuadir: [
+    'Estos principios vienen de Robert Cialdini, que estudió por qué la gente dice que sí; no son trucos, son atajos de la mente.',
+    'Influir es usar la verdad; manipular es mentir o esconder algo. La técnica puede ser la misma: cambia la honestidad.',
+    'Reciprocidad: cuando alguien recibe algo de ti, siente que tiene que devolverlo. Da primero.',
+    'Compromiso: la gente cumple lo que dijo en voz alta, sobre todo si lo escribió y lo decidió sin presión.',
+    'Prueba social: ante la duda hacemos lo que hace la mayoría, sobre todo si se parece a nosotros.',
+    'Autoridad: hacemos caso a quien vemos como experto; los datos precisos y las credenciales te dan esa autoridad.',
+    'Simpatía: decimos que sí a quien nos cae bien. Busca coincidencias reales, elogia con sinceridad y colabora.',
+    'Escasez: valoramos más lo que se puede acabar; perder algo duele el doble de lo que alegra ganarlo.',
+    'Unidad, el más fuerte: confiamos en quien sentimos de nuestro mismo grupo, como la escuela, el equipo o el país.',
+    'Lo que pasa justo antes de pedir algo cambia la respuesta: prepara el terreno antes de hacer tu petición.',
+    'En una plática tensa, nombra en voz alta lo que siente el otro: «parece que te preocupa el precio».',
+    'Repite las últimas palabras de la otra persona en tono de pregunta y te explicará sola lo que hay detrás.',
+    'Pregunta con «cómo» o «qué», nunca con «por qué»: «¿cómo se supone que haga eso?» pone al otro a resolver.',
+    'Haz preguntas que se respondan con «no»: «¿sería mal momento para hablar?» hace que el otro se sienta en control.',
+    'Practica una técnica al día en situaciones reales y de poco riesgo; el lunes, nombra una emoción en una plática de trabajo.',
+    'Cuando alguien te aplique uno de estos principios, nómbralo para ti («me está aplicando escasez») y pierde su fuerza.',
+    'Tres libros que se complementan; empieza por «Influencia», de Robert Cialdini.',
+    'Lo dominas cuando reconoces cuál de los siete principios te están aplicando, en el momento en que pasa.'
+  ],
+  dinero: [
+    'Ganar, administrar y hacer crecer el dinero son tres habilidades distintas: si ganas más pero no administras, solo gastas más.',
+    'Hay tres formas de ganar dinero y solo una crece sin límite; cambiar tiempo por dinero, como tu sueldo y Didi, tiene tope.',
+    'Si ya entregas bien, cobrar 20 % más rinde lo mismo que trabajar 20 % más horas, sin quitarte tiempo.',
+    'Anota cada gasto e ingreso en Finanzas, sin excepciones: las excepciones son justo por donde se va el dinero.',
+    'En cuanto cobras, aparta el ahorro y el pago de deudas antes de gastar: ahorrar «lo que sobre» casi nunca deja nada.',
+    'Antes de invertir, junta de 3 a 6 meses de gastos en algo que puedas sacar rápido, para no volver a la tarjeta.',
+    'Pagar una tarjeta que cobra 45 % al año es como invertir al 45 % sin riesgo: no hay mejor inversión que esa.',
+    'Los meses sin intereses comprometen tu ingreso futuro: antes de firmar uno nuevo, suma cuántos ya traes.',
+    'Invierte solo después de tener tu fondo de emergencia y pagar la deuda cara: invertir con desorden lo hace más grande.',
+    'Invertir $5,000 al mes al 10 % anual da cerca de un millón de pesos en 10 años, y más de la mitad es rendimiento.',
+    'Para empezar, un fondo de índice amplio (como el S&P 500) en GBM y los CETES cubren lo esencial.',
+    'De cada inversión aprende tres datos: plazo, riesgo e impuestos. Los CETES, por ejemplo, son lo más seguro en pesos.',
+    'Tu sueldo ya trae el impuesto descontado, pero lo que ganas en Didi o por tu cuenta no: ese impuesto lo pagas tú.',
+    'Si algo promete ganancias altas y seguras sin riesgo, es fraude; revisa que esté registrado en la CNBV o la CONDUSEF.',
+    'No saques dinero de tus inversiones para gastos del mes: casi siempre terminas vendiendo cuando todo está abajo.',
+    'Una vez al mes, 20 minutos con Finanzas abierta para responder cinco preguntas, empezando por cuánto entró y cuánto salió.',
+    'Cuatro libros y dos fuentes oficiales: los dos primeros son de hábitos y los otros dos, de inversión.',
+    'Lo dominas cuando, por ejemplo, sabes cuánto te deja de verdad una hora de Didi, ya sin gasolina ni desgaste.'
+  ]
+};
 // La ficha de Habilidades Base en curso, resumida: el paso que toca con su entrada, por qué te toca según
 // el plan de Coach (`hbPlan()`) y lo que sigue; donde sobra alto, los puntos del paso, un renglón cada uno.
 function fichaEnCursoHtml(){
@@ -6869,14 +6944,15 @@ function fichaEnCursoHtml(){
   const k=info?info.pasos.findIndex((_,j)=>!store[j]):-1;
   const paso=k>=0?info.pasos[k]:null;
   const luego=paso?info.pasos.map((q,j)=>({q,j})).find(x=>x.j>k&&!store[x.j]):null;
-  const txt=`<span class="ap-que ap-cl l2" data-min="1">Aprendes habilidades prácticas con guías paso a paso; ${paso?`hoy toca el paso ${k+1} de ${sig.total} de esta:`:'esta ya la completaste:'}</span>`
+  // La idea del paso, revisada (HB_IDEA); sin ella, solo el nombre del paso: nunca un pedazo del texto largo.
+  const idea=paso?(HB_IDEA[sig.h.id]||[])[k]||'':'';
+  const txt=`<span class="ap-que">Aprendes habilidades prácticas con guías paso a paso; ${paso?`hoy toca el paso ${k+1} de ${sig.total} de esta:`:'esta ya la completaste:'}</span>`
     +`<span class="ap-t ap-cl l2" data-min="1">${esc(sig.h.t)}</span>`
     +(info?apTramos(info.pasos.length, j=>!!store[j], k):'')
-    +(paso?`<span class="ap-bq"><span class="ap-bq-k ap-bq-paso">Paso ${k+1} · ${esc(mdLimpiaTitulo(paso.t))}</span>${paso.d?`<span class="ap-bq-t ap-cl l3">${paso.d}</span>`:''}</span>`
-      :apBloque('Ficha completa','<span class="ap-bq-t">Repásala cuando quieras: la tienes entera.</span>'))
-    +apMeta('porque',`Por qué ahora: ${esc(hbPlan(sig.h.id).para)}`)
-    +(!paso?'':luego?apMeta('sigue',`Siguiente paso: <b>${esc(mdLimpiaTitulo(luego.q.t))}</b>`):apMeta('meta','Es el último paso de la ficha'))
-    +(paso?(paso.list||[]).map(x=>apPunto(x,'ap-opc')).join(''):'');
+    +(paso?`<span class="ap-bq"><span class="ap-bq-k ap-bq-paso">Paso ${k+1}: ${esc(mdLimpiaTitulo(paso.t))}</span>${idea?`<span class="ap-bq-t">${esc(idea)}</span>`:''}</span>`
+      :apBloque('Guía completa','<span class="ap-bq-t">Repásala cuando quieras: la tienes entera.</span>'))
+    +apMeta('porque',`<b>Para qué te sirve:</b> ${esc(hbPlan(sig.h.id).para)}`,'libre')
+    +(!paso?'':luego?apMeta('sigue',`Siguiente paso: <b>${esc(mdLimpiaTitulo(luego.q.t))}</b>`,'libre'):apMeta('meta','Es el último paso de la guía'));
   return apTarjeta({ c:'var(--b)', mat:`Habilidades para la vida${propia?' · elegida por ti':''}`,
     estado:`<span class="ap-av-n">${sig.hechos} de ${sig.total} pasos</span>`, ctl:apCtl('ficha','Ficha',propia?habAttr(ec.recomendada.h.t):''),
     foto:apFotoHb(sig.h), abrir:`aprendeVisto('hb');abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')`, titulo:'Abrir la guía completa', txt });
@@ -6901,6 +6977,10 @@ function apAjustar(){
       if(!ok) t.style.webkitLineClamp = '';
     }
     for(let k = ok ? i + 1 : i; k < bloques.length; k++) bloques[k].style.display = 'none';
+    // Si el bloque que no cupo trae su versión corta (`.ap-alt`, justo después), se prueba ésa: mejor una frase
+    // completa que una tarjeta vacía o un texto cortado.
+    const alt = !ok && bloques[i + 1] && bloques[i + 1].matches('.ap-alt') ? bloques[i + 1] : null;
+    if(alt){ alt.style.display = 'block'; if(!cabe(alt)) alt.style.display = 'none'; }
   });
 }
 if(document.fonts){
@@ -7296,7 +7376,9 @@ function alemanHoyHtml(vistos){
   // Lo de hoy en una línea, con sus números: «Hoy: 10 palabras nuevas (teléfono y correos), 30 de repaso y una lección.»
   const tema = a ? String((V.cats[a.cat] || {}).label || '').toLowerCase() : '', rep = a ? alemanRepasoHoy().length : 0;
   const hoy = [a ? `${ws.length} palabras nuevas${tema ? ` (${esc(tema)})` : ''}` : '', rep ? `${rep} de repaso` : '', t ? 'una lección' : ''].filter(Boolean);
-  let txt = `<span class="ap-que ap-cl l2" data-min="1">Estudias alemán para mudarte a Alemania. Hoy: ${hoy.length > 1 ? hoy.slice(0, -1).join(', ') + ' y ' + hoy[hoy.length - 1] : hoy[0]}.</span>`;
+  // Una palabra con su traducción, completa: «Auf Wiederhören = adiós».
+  const par = (w, cls) => `<span class="ap-es${cls ? ' ' + cls : ''}"><b lang="de">${esc(alemanArtTxt(w))}${esc(w.de)}</b> = ${esc(w.es)}</span>`;
+  let txt = `<span class="ap-que">Estudias alemán para mudarte a Alemania. Hoy: ${hoy.length > 1 ? hoy.slice(0, -1).join(', ') + ' y ' + hoy[hoy.length - 1] : hoy[0]}.</span>`;
   if(a){
     const art = (a.art || '-').split('/')[0].trim();
     const artHtml = art && art !== '-' ? `<span>${esc(art === 'pl.' ? 'die' : a.art)}</span> ` : '';
@@ -7305,21 +7387,21 @@ function alemanHoyHtml(vistos){
     const f = a.conj && a.aux ? String(a.conj).split('·').map(x => x.trim()) : null;
     const aux = a.aux === 'ist' ? 'ist' : 'hat';
     const perf = f ? `<span class="ap-m">en pasado: <span class="ap-aux ${aux}">${aux}</span> ${esc(f[f.length - 1])}</span>` : '';
-    txt += `<span class="ap-de ap-cl l2" data-min="1" lang="de">${artHtml}${esc(a.de)}</span>`
-      + `<span class="ap-es">${esc(a.es)}${pl}${perf}</span>`
-      + (ws.length > 1 ? `<span class="ap-dato ap-1l">Las otras ${ws.length - 1}: ${ws.slice(1, 5).map(w => `<b lang="de">${esc(w.de)}</b>`).join(' · ')}${ws.length > 5 ? '…' : ''}</span>` : '');
+    txt += apBloque(`Palabra 1 de ${ws.length}`, `<span class="ap-de ap-cl l2" data-min="1" lang="de">${artHtml}${esc(a.de)}</span>`)
+      + `<span class="ap-es">${esc(a.es)}${pl}${perf}</span>`;
   }
   if(t){
-    // La lección: qué lección es y por qué toca; su título en español, y el alemán con lo que llevas.
+    // La lección: qué lección es y por qué toca, su título en español y cuánto llevas.
     const l = t.l, av = t.avance, ir = ` onclick="event.stopPropagation();abrirAleman('leccion')" title="Abrir la lección aquí mismo"`;
-    txt += `<span class="ap-bq ap-ir-lec"${ir}><span class="ap-bq-k">${esc(alNumTxt(l.num))} · ${esc(String(t.ceja).replace(/Kapitel/g, 'capítulo'))}</span><span class="ap-t ap-cl l2" data-min="1">${esc(l.es)}</span></span>`
+    txt += `<span class="ap-bq ap-ir-lec"${ir}><span class="ap-bq-k">${esc(alNumTxt(l.num))} · ${esc(String(t.ceja).replace(/Kapitel/g, 'capítulo'))}</span><span class="ap-t">${esc(l.es)}</span></span>`
       + (av ? apTramos(av.total, j => j < av.hechos, -1).replace('<span class="ap-seg"', `<span class="ap-seg ap-ir-lec"${ir}`) : '')
-      + `<span class="ap-dato ap-1l ap-ir-lec"${ir}><span lang="de">${esc(l.de)}</span>${av ? ` · <b>${av.hechos} de ${av.total}</b> ejercicios hechos` : ''}</span>`;
+      + (av ? `<span class="ap-dato ap-ir-lec"${ir}>Llevas <b>${av.hechos} de ${av.total}</b> ejercicios de esta lección.</span>` : '');
   }
+  if(ws.length > 1) txt += apBloque('Más palabras de hoy', par(ws[1]), 'ap-opc') + ws.slice(2, 4).map(w => par(w, 'ap-opc')).join('');
   if(a){
     const ex = alemanEjemplo(a);
-    txt += (ex ? `<span class="ap-ex ap-cl ap-opc"><span lang="de">${esc(ex)}</span>${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</span>` : '')
-      + (a.uso ? `<span class="ap-nota ap-cl l2 ap-opc" data-min="1"><b>Cuándo se usa</b> · ${esc(a.uso)}</span>` : '');
+    txt += (ex ? `<span class="ap-ex ap-opc"><span lang="de">${esc(ex)}</span>${a.esEx ? ` <span>— ${esc(a.esEx)}</span>` : ''}</span>` : '')
+      + (a.uso ? `<span class="ap-nota ap-opc"><b>Cuándo se usa</b> · ${esc(a.uso)}</span>` : '');
   }
   const practico = alemanPracticoHoy();
   return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA, foto: a ? apFotoAleman(a) : apFotoLeccion(t.l), mat: 'Alemán',
@@ -7718,24 +7800,23 @@ function didiLibrosLuego(d, n){
 function escucharHoyHtml(vistos){
   const d = didiHoy(); if(!d || !d.libro) return '';
   const { libro, pod, finde, horas } = d;
-  const sk = SK.find(s => s.id === libro.g.sk), tema = sk ? (/^[A-ZÁÉÍÓÚÑ]{2,}$/.test(sk.name) ? sk.name : sk.name.toLowerCase()) : '';
-  // «a las 07:40», con la hora en su color; sin horas en la rutina, el momento del día.
-  const aLas = hs => hs.map(h => `a las <b class="ap-hora">${esc(h)}</b>`).join(' y ');
+  const tema = skLlano(SK.find(s => s.id === libro.g.sk)), yt = pod && pod.it.tipo === 'yt', temaPod = pod ? skLlano(SK.find(s => s.id === pod.g.sk)) : '';
+  const aLas = hs => hs.map(h => 'a las ' + h).join(' y ');
   const cuando = horas.length ? aLas(finde ? horas : horas.slice(0, 1)) : (finde ? 'en los turnos largos' : 'en la mañana');
   const cuandoPod = finde ? 'en el otro turno' : (horas.length > 1 ? aLas(horas.slice(1)) : 'en la noche');
   const oir = x => `<a class="ap-oir" href="${didiSpo(x.q)}" target="_blank" rel="noopener" onclick="aprendeVisto('escuchar');setTimeout(renderHeroAprender,60)" title="Buscarlo en Spotify">${esc(x.n)}<span aria-hidden="true">&nbsp;↗</span></a>`;
   const estado = vistos.escuchar ? '<span class="ap-estado ok">✓ escuchando</span>'
     : '<button type="button" class="ap-estado ir" onclick="abrirDidi()">Qué escuchar</button>';
-  const yt = pod && pod.it.tipo === 'yt', skPod = pod ? SK.find(s => s.id === pod.g.sk) : null;
-  const temaPod = skPod ? (/^[A-ZÁÉÍÓÚÑ]{2,}$/.test(skPod.name) ? skPod.name : skPod.name.toLowerCase()) : '';
+  // De qué trata cada uno, en la frase revisada del catálogo (`trata`); la nota larga (`d`) es del panel.
   return apTarjeta({ c: 'var(--o)', mat: 'Audiolibro y podcast', estado,
     ctl: apOtraBtn('escuchar', 'El siguiente audiolibro del foco'), foto: apFotoLibro(libro.it.lib, libro.g.sk),
     abrirFoto: 'abrirDidi()', titulo: 'Abrir Qué escuchar',
-    txt: `<span class="ap-que ap-cl l2" data-min="1">Escuchas para aprender mientras manejas en Didi. Esta semana, un libro${tema ? ` de ${esc(tema)}` : ''}${pod ? `; hoy, ${yt ? 'un video' : 'un podcast'}${temaPod ? ` de ${esc(temaPod)}` : ''}` : ''}.</span>
-      <span class="ap-t ap-cl l2" data-min="1">${oir(libro.it)}</span>
-      ${libro.it.d ? `<span class="ap-es ap-cl l2" data-min="1"><b>De qué trata:</b> ${esc(libro.it.d)}</span>` : ''}
-      <span class="ap-es ap-cl l2" data-min="1">El libro, ${cuando}${pod ? `; ${yt ? 'el video' : 'el podcast'} de hoy, ${cuandoPod}: ${oir(pod.it)}` : ''}</span>
-      ${apLuego(didiLibrosLuego(d, 2).map(x => `<b>${esc(x.it.n)}</b>${x.it.d ? ` · ${esc(x.it.d)}` : ''}`), 'Las próximas semanas')}` });
+    txt: `<span class="ap-que">Escuchas para aprender mientras manejas en Didi. Esta semana, un libro${tema ? ` de ${esc(tema)}` : ''}${pod ? `; hoy, ${yt ? 'un video' : 'un podcast'}${temaPod ? ` de ${esc(temaPod)}` : ''}` : ''}.</span>
+      ${apBloque(`Audiolibro de la semana · ${cuando}`, `<span class="ap-t ap-cl l2" data-min="1">${oir(libro.it)}</span>`)}
+      ${libro.it.trata ? `<span class="ap-es">${esc(libro.it.trata)}</span>` : ''}
+      ${pod ? `<span class="ap-es"><b>${yt ? 'Video' : 'Podcast'} de hoy, ${cuandoPod}:</b> ${oir(pod.it)}</span>` : ''}
+      ${pod && pod.it.trata ? `<span class="ap-es ap-opc">${esc(pod.it.trata)}</span>` : ''}
+      ${apLuego(didiLibrosLuego(d, 2).map(x => `<b>${esc(x.it.n)}</b>`), 'Las próximas semanas')}` });
 }
 
 // Qué invertir hoy, en su tarjeta (Adán, 19-oct-2026: "quita esta sección [Python] y pon ahí el recuadro que
@@ -7749,13 +7830,14 @@ function invertirHoyHtml(vistos){
     : `<button type="button" class="ap-estado ir" onclick="aprendeAbrir('invertir')">Ver el plan</button>`;
   return apTarjeta({ c: 'var(--cy)', mat: 'Tu dinero hoy', estado, foto: apFoto(p.foto),
     abrir: "aprendeAbrir('invertir')", titulo: 'Abrir Qué invertir hoy: tu situación, los precios de hoy y qué comprar según tu perfil',
-    txt: `<span class="ap-que ap-cl l2" data-min="1">${p.que}</span>
-      <span class="ap-t ap-cl l2" data-min="1" style="color:${p.color}">${p.titulo}</span>
-      <span class="ap-es ap-cl">${p.porque}</span>
-      ${p.hoy ? `<span class="ap-hacer ap-cl l2" data-min="1">${p.hoy}</span>` : ''}
-      ${apMeta(p.notaIco, p.nota)}
-      ${apLuego(p.abonos, 'Los abonos que siguen')}
-      ${p.fondo ? apMeta('meta', p.fondo, 'ap-opc') : ''}` });
+    txt: `<span class="ap-que">${p.que}</span>
+      <span class="ap-t" style="color:${p.color}">${p.titulo}</span>
+      ${p.origen ? `<span class="ap-es">${p.origen}</span>` : ''}
+      <span class="ap-es">${p.porque}</span>
+      ${p.hoy ? `<span class="ap-hacer">${p.hoy}</span>` : ''}
+      ${apMeta(p.notaIco, p.nota, 'libre')}
+      ${apLuego(p.abonos, 'Tus siguientes pagos')}
+      ${p.fondo ? apMeta('meta', p.fondo, 'ap-opc libre') : ''}` });
 }
 
 // La pregunta del ISTQB CT-GenAI: una de los dos bancos del simulacro (los mismos que usa
@@ -7808,19 +7890,24 @@ function istqbMarcador(){
 // En su tarjeta: de qué se trata, la pregunta, su tema y cuánto vale, y cómo vas; arriba, «Responder» o el resultado y,
 // donde sobra alto, las opciones o el porqué. El nivel K del programa, en llano (`IQ_K_LLANO`), va en «Cómo lo decide Coach».
 const IQ_K_LLANO = { K1: 'pregunta de memoria', K2: 'pregunta de comprensión', K3: 'caso práctico' };
+// El tema de cada capítulo del temario, dicho para quien no conoce el examen (el título oficial va en su ventana).
+const IQ_CAP_LLANO = { 1: 'qué es la IA generativa y cómo ayuda a probar software', 2: 'cómo pedirle a la IA lo que necesitas para probar software (prompts)',
+  3: 'los riesgos de usar IA al probar software', 4: 'herramientas de prueba que funcionan con modelos de lenguaje', 5: 'cómo llevar la IA a un equipo de pruebas' };
 function istqbHtml(){
   const q = istqbPreguntaHoy(); if(!q) return '';
-  const hecha = istqbHoy(q), ex = cdTarea('a1-7'), vas = istqbMarcador(), cap = ((window.EXAMEN_GENAI || {}).capitulos || {})[q.cap] || '';
+  const hecha = istqbHoy(q), ex = cdTarea('a1-7'), vas = istqbMarcador();
+  const tema = IQ_CAP_LLANO[q.cap] || ((window.EXAMEN_GENAI || {}).capitulos || {})[q.cap] || '';
   const estado = !hecha ? '<button type="button" class="ap-estado ir" onclick="abrirIstqb()">Responder</button>'
     : `<span class="ap-estado ${hecha.ok ? 'ok' : 'mal'}">${hecha.ok ? '✓ correcta' : '✗ era la ' + 'ABCD'[q.r]}</span>`;
-  const vale = (q.pts || 1) === 1 ? '<b>1 punto</b>' : `<b>${q.pts} puntos</b>`;
+  const vale = (q.pts || 1) === 1 ? 'vale 1 punto' : `vale ${q.pts} puntos`;
   return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), mat: 'Examen de certificación',
     estado, otra: 'La siguiente pregunta, en el orden de Coach', abrir: 'abrirIstqb()', titulo: 'Contestar la pregunta del día',
-    txt: `<span class="ap-que ap-cl l2" data-min="1">Te preparas para el examen ISTQB de pruebas de software con IA${ex && ex.s.mes ? ` (${cdMes(ex.s.mes)})` : ''}. Hoy, una pregunta de práctica.</span>
-      <span class="ap-q ap-cl">${q.q}</span>
-      <span class="ap-dato ap-cl l2" data-min="1">${cap ? `Tema: ${esc(cap)} · ` : ''}vale ${vale}</span>
-      ${vas ? `<span class="ap-dato ap-1l ap-opc">${vas}</span>` : ''}
-      ${hecha ? (q.why ? `<span class="ap-es ap-cl ap-opc">${q.why}</span>` : '')
+    txt: `<span class="ap-que">Te preparas para el examen ISTQB de pruebas de software con IA${ex && ex.s.mes ? ` (${cdMes(ex.s.mes)})` : ''}. Hoy, una pregunta de práctica.</span>
+      ${apBloque(`La pregunta · ${vale}`, `<span class="ap-q">${q.q}</span>`)}
+      <span class="ap-es ap-alt">Una pregunta de práctica${tema ? ` sobre ${esc(tema)}` : ''}: tócala para leerla completa y responder.</span>
+      ${tema ? `<span class="ap-dato">Tema: ${esc(tema)}.</span>` : ''}
+      ${vas ? `<span class="ap-dato ap-opc">${vas}.</span>` : ''}
+      ${hecha ? (q.why ? `<span class="ap-es ap-opc">${q.why}</span>` : '')
         : `<span class="ap-ops ap-opc">${q.o.map((o, i) => `<span class="ap-op"><b>${'ABCD'[i]}</b><span>${o}</span></span>`).join('')}</span>`}` });
 }
 // La ventana (#istqbOverlay): tan ancha y alta como la del alemán —Adán: "haz la ventana mucho más grande, así
@@ -9874,37 +9961,37 @@ const didiApple = (tipo,q) => tipo==='pod' ? didiApP(q) : didiApB(q);
 // tramos cortos; «Al volante» de Hoy aprendes los reparte así.
 const DIDI_AUDIO=[
   {sk:'network', why:'Tu foco de la semana. Son los tres libros de tu ruta: escucharlos al volante adelanta el paso sin quitarle una hora al día.', items:[
-    {tipo:'audio', lib:'designingLife', n:'Designing Your Life — Bill Burnett y Dave Evans', d:'Design thinking aplicado a tu carrera: su capítulo de entrevistas de prototipo es la base de «la pregunta que abre puertas». 6 h 18 min, leído por sus autores.', q:'Designing Your Life Bill Burnett Dave Evans'},
-    {tipo:'audio', lib:'neverEatAlone', n:'Never Eat Alone — Keith Ferrazzi', d:'El método para tener la red antes de necesitarla: tu lista, a quién llamar y cuándo. 11 h 11 min.', q:'Never Eat Alone Keith Ferrazzi'},
-    {tipo:'audio', lib:'giveAndTake', n:'Give and Take — Adam Grant', d:'Por qué los que dan primero terminan con mejores redes: la idea detrás de reactivar sin pedir nada. 11 h 50 min; en español es «Dar y recibir».', q:'Give and Take Adam Grant'},
+    {tipo:'audio', lib:'designingLife', n:'Designing Your Life — Bill Burnett y Dave Evans', trata:'«Diseña tu vida»: cómo decidir tu carrera como lo haría un diseñador, probando ideas pequeñas antes de dar el salto.', d:'Design thinking aplicado a tu carrera: su capítulo de entrevistas de prototipo es la base de «la pregunta que abre puertas». 6 h 18 min, leído por sus autores.', q:'Designing Your Life Bill Burnett Dave Evans'},
+    {tipo:'audio', lib:'neverEatAlone', n:'Never Eat Alone — Keith Ferrazzi', trata:'«Nunca comas solo»: cómo construir tu red de contactos antes de necesitarla, ayudando primero.', d:'El método para tener la red antes de necesitarla: tu lista, a quién llamar y cuándo. 11 h 11 min.', q:'Never Eat Alone Keith Ferrazzi'},
+    {tipo:'audio', lib:'giveAndTake', n:'Give and Take — Adam Grant', trata:'«Dar y recibir»: por qué a quien ayuda sin pedir nada a cambio le va mejor en el trabajo.', d:'Por qué los que dan primero terminan con mejores redes: la idea detrás de reactivar sin pedir nada. 11 h 50 min; en español es «Dar y recibir».', q:'Give and Take Adam Grant'},
   ]},
   {sk:'ventas', why:'Tu habilidad más baja, y la que más rinde este año: negociar tu ingreso decide si te vas en septiembre de 2027. Una hora escuchando ventas rinde más que una hora en cualquier otra de las 12 — y es escuchar, no vender: no rompe la regla de no contactar prospectos sin oferta lista.', items:[
-    {tipo:'audio', lib:'influence', n:'Influence — Robert Cialdini', d:'Los 6 principios de persuasión. El más citado del tema y el más fácil de seguir manejando: son historias, no teoría.', q:'Influence Robert Cialdini'},
-    {tipo:'audio', lib:'offers100m', n:'$100M Offers — Alex Hormozi', d:'Cómo armar una oferta que sea difícil de rechazar: tu caso para el aumento es una oferta, y el negocio de la Fase 4 también.', q:'100M Offers Alex Hormozi'},
-    {tipo:'audio', lib:'neverSplit', n:'Never Split the Difference — Chris Voss', d:'Negociación por un ex-negociador de rehenes del FBI: el libro para pedir el aumento o el puesto mejor pagado de este año, y después tu sueldo en euros.', q:'Never Split the Difference Chris Voss'},
-    {tipo:'pod', n:'The Game — Alex Hormozi', d:'Episodios de 10-40 min, sin relleno. Ideal para los trayectos cortos.', q:'The Game Alex Hormozi podcast'},
-    {tipo:'yt', n:'Alex Hormozi (canal)', d:'Ya estaba en tus recursos de Ventas. Con YouTube Premium se reproduce en segundo plano con la pantalla apagada.', q:'Alex Hormozi'},
+    {tipo:'audio', lib:'influence', n:'Influence — Robert Cialdini', trata:'«Influencia»: los seis principios que hacen que la gente diga que sí, contados con historias.', d:'Los 6 principios de persuasión. El más citado del tema y el más fácil de seguir manejando: son historias, no teoría.', q:'Influence Robert Cialdini'},
+    {tipo:'audio', lib:'offers100m', n:'$100M Offers — Alex Hormozi', trata:'Cómo armar una oferta tan buena que cueste decirle que no; sirve para pedir un aumento.', d:'Cómo armar una oferta que sea difícil de rechazar: tu caso para el aumento es una oferta, y el negocio de la Fase 4 también.', q:'100M Offers Alex Hormozi'},
+    {tipo:'audio', lib:'neverSplit', n:'Never Split the Difference — Chris Voss', trata:'«Rompe la barrera del no»: técnicas de un exnegociador del FBI para negociar tu sueldo.', d:'Negociación por un ex-negociador de rehenes del FBI: el libro para pedir el aumento o el puesto mejor pagado de este año, y después tu sueldo en euros.', q:'Never Split the Difference Chris Voss'},
+    {tipo:'pod', n:'The Game — Alex Hormozi', trata:'Episodios cortos, de 10 a 40 minutos, sobre cómo vender mejor y hacer crecer un negocio.', d:'Episodios de 10-40 min, sin relleno. Ideal para los trayectos cortos.', q:'The Game Alex Hormozi podcast'},
+    {tipo:'yt', n:'Alex Hormozi (canal)', trata:'Videos cortos sobre ventas, ofertas y negocios.', d:'Ya estaba en tus recursos de Ventas. Con YouTube Premium se reproduce en segundo plano con la pantalla apagada.', q:'Alex Hormozi'},
   ]},
   {sk:'finanzas', why:'Tu diagnóstico dice que el hueco no es de conocimiento sino de hábito: revisas gastos de forma reactiva. Estos tres atacan justo eso.', items:[
-    {tipo:'audio', lib:'iWillTeach', n:'I Will Teach You to Be Rich — Ramit Sethi', d:'Sistema de automatización de finanzas personales. Es el primer recurso que ya tenías listado en Finanzas.', q:'I Will Teach You to Be Rich Ramit Sethi'},
-    {tipo:'audio', lib:'psychMoney', n:'Psicología del Dinero — Morgan Housel', d:'Por qué la gente toma malas decisiones con dinero aunque sepa la teoría. Hay edición en español.', q:'Psicologia del Dinero Morgan Housel'},
-    {tipo:'audio', lib:'millionaireNextDoor', n:'The Millionaire Next Door — Thomas Stanley', d:'El patrimonio real se construye con gasto bajo, no con ingreso alto. Antídoto directo al error de los MSI.', q:'The Millionaire Next Door Thomas Stanley'},
-    {tipo:'pod', n:'I Will Teach You To Be Rich — Ramit Sethi', d:'Sesiones reales con parejas y sus finanzas. Escuchar los errores ajenos pega más que la teoría.', q:'I Will Teach You To Be Rich podcast Ramit Sethi'},
+    {tipo:'audio', lib:'iWillTeach', n:'I Will Teach You to Be Rich — Ramit Sethi', trata:'«Te enseñaré a ser rico»: un sistema para que tu ahorro, tus pagos y tu inversión se hagan solos.', d:'Sistema de automatización de finanzas personales. Es el primer recurso que ya tenías listado en Finanzas.', q:'I Will Teach You to Be Rich Ramit Sethi'},
+    {tipo:'audio', lib:'psychMoney', n:'Psicología del Dinero — Morgan Housel', trata:'Por qué decidimos mal con el dinero aunque sepamos la teoría, y cómo evitarlo.', d:'Por qué la gente toma malas decisiones con dinero aunque sepa la teoría. Hay edición en español.', q:'Psicologia del Dinero Morgan Housel'},
+    {tipo:'audio', lib:'millionaireNextDoor', n:'The Millionaire Next Door — Thomas Stanley', trata:'«El millonario de al lado»: los millonarios reales se hicieron gastando poco, no ganando mucho.', d:'El patrimonio real se construye con gasto bajo, no con ingreso alto. Antídoto directo al error de los MSI.', q:'The Millionaire Next Door Thomas Stanley'},
+    {tipo:'pod', n:'I Will Teach You To Be Rich — Ramit Sethi', trata:'Conversaciones reales con parejas sobre sus deudas y sus gastos: aprendes de sus errores.', d:'Sesiones reales con parejas y sus finanzas. Escuchar los errores ajenos pega más que la teoría.', q:'I Will Teach You To Be Rich podcast Ramit Sethi'},
   ]},
   {sk:'marketing', why:'No está en tus 2 prioridades del Dashboard (la decisión de no empujar ventas sin producto sigue en pie), pero escuchar sí es gratis.', items:[
-    {tipo:'audio', lib:'leads100m', n:'$100M Leads — Alex Hormozi', d:'Cómo conseguir que gente desconocida se interese. La secuela de $100M Offers, ya estaba en tus recursos.', q:'100M Leads Alex Hormozi'},
-    {tipo:'pod', n:'Marketing School — Neil Patel & Eric Siu', d:'Episodios de ~10 min. Perfecto para el tramo del gym cuando no quieres empezar algo largo.', q:'Marketing School Neil Patel'},
+    {tipo:'audio', lib:'leads100m', n:'$100M Leads — Alex Hormozi', trata:'Cómo hacer que gente que no te conoce se interese en lo que vendes.', d:'Cómo conseguir que gente desconocida se interese. La secuela de $100M Offers, ya estaba en tus recursos.', q:'100M Leads Alex Hormozi'},
+    {tipo:'pod', n:'Marketing School — Neil Patel & Eric Siu', trata:'Episodios de 10 minutos, cada uno con una idea práctica de marketing.', d:'Episodios de ~10 min. Perfecto para el tramo del gym cuando no quieres empezar algo largo.', q:'Marketing School Neil Patel'},
   ]},
   {sk:'inversion', why:'Ya invertiste en CETES, BTC y GBM — lo que falta es criterio para no decidir cada lunes desde cero. Estos tres te dan el marco.', items:[
-    {tipo:'audio', lib:'littleBook', n:'The Little Book of Common Sense Investing — John Bogle', d:'EMPIEZA POR ESTE: es corto (~5h), y su tesis —índices de bajo costo— es exactamente tu VOO de los lunes.', q:'Little Book of Common Sense Investing John Bogle'},
-    {tipo:'audio', lib:'randomWalk', n:'A Random Walk Down Wall Street — Burton Malkiel', d:'Por qué casi nadie le gana al mercado de forma sostenida. Refuerza la disciplina de la asignación fija.', q:'A Random Walk Down Wall Street Malkiel'},
-    {tipo:'audio', lib:'oneUp', n:'One Up On Wall Street — Peter Lynch', d:'El más entretenido de los tres, lleno de anécdotas. Buen premio después de los otros dos.', q:'One Up On Wall Street Peter Lynch'},
-    {tipo:'pod', largo:true, n:'We Study Billionaires — The Investor\'s Podcast', d:'Episodios largos (1h+). Encaja en los turnos de fin de semana, no en los trayectos cortos.', q:'We Study Billionaires investors podcast'},
+    {tipo:'audio', lib:'littleBook', n:'The Little Book of Common Sense Investing — John Bogle', trata:'«El pequeño libro para invertir con sentido común»: por qué los fondos de índice baratos, como VOO, le ganan a casi todo.', d:'EMPIEZA POR ESTE: es corto (~5h), y su tesis —índices de bajo costo— es exactamente tu VOO de los lunes.', q:'Little Book of Common Sense Investing John Bogle'},
+    {tipo:'audio', lib:'randomWalk', n:'A Random Walk Down Wall Street — Burton Malkiel', trata:'«Un paseo aleatorio por Wall Street»: por qué casi nadie le gana al mercado y conviene invertir siempre igual.', d:'Por qué casi nadie le gana al mercado de forma sostenida. Refuerza la disciplina de la asignación fija.', q:'A Random Walk Down Wall Street Malkiel'},
+    {tipo:'audio', lib:'oneUp', n:'One Up On Wall Street — Peter Lynch', trata:'«Un paso por delante de Wall Street»: cómo encontrar buenas empresas en lo que ves todos los días.', d:'El más entretenido de los tres, lleno de anécdotas. Buen premio después de los otros dos.', q:'One Up On Wall Street Peter Lynch'},
+    {tipo:'pod', largo:true, n:'We Study Billionaires — The Investor\'s Podcast', trata:'Episodios largos, de una hora o más, sobre cómo invierten los grandes inversionistas.', d:'Episodios largos (1h+). Encaja en los turnos de fin de semana, no en los trayectos cortos.', q:'We Study Billionaires investors podcast'},
   ]},
   {sk:'ia', why:'Tu práctica real de IA es construir esta aplicación dos veces al día; lo que falta es contexto amplio, y eso sí se absorbe escuchando.', items:[
-    {tipo:'pod', largo:true, n:'Lex Fridman Podcast', d:'Entrevistas de 2-3h con investigadores de IA. Hechas para los turnos largos del fin de semana.', q:'Lex Fridman Podcast'},
-    {tipo:'pod', n:'The AI Daily Brief', d:'Resumen diario de ~15 min. Cabe entero en el trayecto al gym y te mantiene al día sin esfuerzo.', q:'The AI Daily Brief podcast'},
-    {tipo:'yt', n:'DeepLearning.AI', d:'Ya estaba en tus recursos de IA. Las charlas y paneles funcionan bien en audio; los cursos con código no.', q:'DeepLearning AI'},
+    {tipo:'pod', largo:true, n:'Lex Fridman Podcast', trata:'Entrevistas largas, de 2 a 3 horas, con investigadores y creadores de inteligencia artificial.', d:'Entrevistas de 2-3h con investigadores de IA. Hechas para los turnos largos del fin de semana.', q:'Lex Fridman Podcast'},
+    {tipo:'pod', n:'The AI Daily Brief', trata:'Las noticias del día sobre inteligencia artificial, en unos 15 minutos.', d:'Resumen diario de ~15 min. Cabe entero en el trayecto al gym y te mantiene al día sin esfuerzo.', q:'The AI Daily Brief podcast'},
+    {tipo:'yt', n:'DeepLearning.AI', trata:'Charlas y paneles sobre inteligencia artificial, de la escuela de Andrew Ng.', d:'Ya estaba en tus recursos de IA. Las charlas y paneles funcionan bien en audio; los cursos con código no.', q:'DeepLearning AI'},
   ]},
 ];
 
@@ -10835,32 +10922,37 @@ function pasoInversionHoy(){
   // BYD hasta 2031.
   const tc = (F.debts||[]).find(d=>d.id==='d001'), bbvaSaldo = tc ? (+tc.balance||0) : 0;
   const B = bbvaPlan(), bbvaFin = B ? B.fin.toLocaleDateString('es-MX',{day:'numeric',month:'short'}) : '';
-  // Los abonos que faltan, de la misma ruta que el Plan Maestro (`CIFRAS.planBbva`): el de hoy va en lo que
-  // haces hoy y los que siguen, uno por renglón, con money() para que el modo privado los tape.
-  const hoyK = today(), DE = { quincena: 'de la quincena', didi: 'de Didi', minimo: 'para el pago del corte', extra: 'de más' };
-  const pend = B ? B.abonos.filter(a=>!a.hecho && a.fecha>=hoyK) : [], deHoy = pend.filter(a=>a.fecha===hoyK);
+  // Los abonos que faltan, de la misma ruta que el Plan Maestro (`CIFRAS.planBbva`): el de hoy es la acción del día
+  // y los que siguen van uno por renglón, con money() para que el modo privado los tape.
+  const hoyK = today(), DE = { quincena: 'de la quincena', didi: 'de Didi', minimo: 'pago mínimo', extra: 'extra' };
+  const ORIGEN = { didi: 'Sale de lo que apartas cada semana de lo que ganas en Didi.', quincena: 'Sale de lo que te sobra de la quincena.',
+    minimo: 'Es el pago mínimo de tu estado de cuenta.', extra: 'Es un pago extra.' };
+  const pend = B ? B.abonos.filter(a=>!a.hecho && a.fecha>=hoyK) : [], deHoy = pend.filter(a=>a.fecha===hoyK), resto = pend.filter(a=>a.fecha!==hoyK);
   const diaCorto = k => { const p = k.split('-').map(Number), d = new Date(p[0], p[1]-1, p[2]); return DIAS_CORTOS[d.getDay()].toLowerCase()+' '+p[2]+' '+MES_LABEL_FULL[p[1]-1].slice(0,3).toLowerCase(); };
-  const abonos = pend.filter(a=>a.fecha!==hoyK).slice(0, 3).map(a=>'<b>'+diaCorto(a.fecha)+'</b> · '+mon(a.monto)+' '+(DE[a.de]||''));
+  const sumHoy = deHoy.reduce((t,a)=>t+a.monto,0);
+  const abonos = (deHoy.length ? resto : resto.slice(1)).slice(0, 3).map(a=>'<b>'+diaCorto(a.fecha)+'</b> · '+mon(a.monto)+' ('+(DE[a.de]||'')+')');
   const faltaEf = Math.max(0, metaEf-ef);
-  let color, que, titulo, porque, hoy, nota, notaIco, fondo, foto;
+  let color, que, titulo, origen = '', porque, hoy, nota, notaIco, fondo, foto;
   if(bbvaSaldo > 0){
     color = 'var(--r)'; foto = 'fase-tarjeta-cortada';
     que = 'Tu plan para juntar el dinero de Alemania: primero liquidas la tarjeta de crédito y después inviertes.';
-    titulo = deHoy.length ? 'Hoy: abona '+mon(deHoy.reduce((t,a)=>t+a.monto,0))+' '+(DE[deHoy[0].de]||'')+' a la tarjeta BBVA' : 'Hoy no inviertes: primero la tarjeta BBVA';
-    porque = 'Debes <b>'+mon(bbvaSaldo)+'</b>. Con lo que sobra de cada quincena y lo que apartas de Didi la liquidas'+(bbvaFin?' el <b>'+bbvaFin+'</b>':'')+', sin pagar intereses.';
-    hoy = '<b>No compras ninguna inversión</b> hasta liquidarla.';
-    notaIco = 'sigue'; nota = 'Después, todo se invierte en <b>GBM</b>.';
-    fondo = 'Tu fondo de emergencia se queda en <b>'+mon(ef)+'</b> de CETES.';
+    titulo = deHoy.length ? 'Hoy: paga '+mon(sumHoy)+' a tu tarjeta BBVA' : 'Hoy no te toca pagar la tarjeta';
+    origen = deHoy.length ? (ORIGEN[deHoy[0].de]||'') : (resto[0] ? 'Tu siguiente pago es el <b>'+diaCorto(resto[0].fecha)+'</b>: '+mon(resto[0].monto)+'.' : '');
+    porque = 'Debes <b>'+mon(bbvaSaldo)+'</b>'+(deHoy.length?'; con este pago te quedan <b>'+mon(Math.max(0, bbvaSaldo-sumHoy))+'</b>':'')+'.'
+      +(bbvaFin?' Si sigues el plan, terminas de pagarla el <b>'+bbvaFin+'</b>, sin pagar intereses.':'');
+    hoy = '<b>Mientras tengas esta deuda, no compres inversiones.</b>';
+    notaIco = 'sigue'; nota = 'Después: invertir cada quincena en GBM, tu cuenta de inversiones.';
+    fondo = 'Tu fondo para emergencias se queda como está: <b>'+mon(ef)+'</b> en CETES.';
   }else{
     color = 'var(--g)'; foto = 'sk-inversion';
     que = 'Tu plan para juntar el dinero de Alemania: ya sin deuda de tarjeta, todo lo que ahorras se invierte.';
-    titulo = 'Hoy sí inviertes: todo a GBM';
-    porque = 'Lo que sobra de cada quincena y lo que apartas de Didi va a tu cuenta de inversión en GBM.'+(faltaEf>0?' Los primeros <b>'+mon(faltaEf)+'</b> completan tu fondo de emergencia: nada volátil.':'');
-    hoy = 'Reparte según tu perfil y <b>ejecuta sin pensarlo dos veces</b>.';
-    notaIco = 'meta'; nota = 'El auto no se adelanta: se paga con su mensualidad.';
-    fondo = faltaEf>0 ? '' : 'Tu fondo de emergencia está completo: <b>'+mon(ef)+'</b> en CETES.';
+    titulo = 'Hoy sí inviertes: todo va a GBM';
+    porque = 'Lo que te sobra de cada quincena y lo que apartas de Didi va a tu cuenta de inversiones en GBM.'+(faltaEf>0?' Los primeros <b>'+mon(faltaEf)+'</b> completan tu fondo para emergencias.':'');
+    hoy = 'Reparte según tu perfil de inversión, <b>sin pensarlo dos veces</b>.';
+    notaIco = 'meta'; nota = 'El auto no se adelanta: se paga con su mensualidad normal.';
+    fondo = faltaEf>0 ? '' : 'Tu fondo para emergencias está completo: <b>'+mon(ef)+'</b> en CETES.';
   }
-  return {F, inv, ef, metaEf, totalInv, cetes, deudaCara, mon, color, que, titulo, porque, hoy, nota, notaIco, fondo, foto, abonos: bbvaSaldo > 0 ? abonos : []};
+  return {F, inv, ef, metaEf, totalInv, cetes, deudaCara, mon, color, que, titulo, origen, porque, hoy, nota, notaIco, fondo, foto, abonos: bbvaSaldo > 0 ? abonos : []};
 }
 
 // ─── "Qué invertir hoy" — la plantilla y los datos van separados ─────────────────────────
@@ -11366,7 +11458,7 @@ function calcOVRcon(id, valor){
 // y si mañana IA o Datos entran al foco, el slide ya sabe mostrarlas.
 function habPasos(id){
   const a = APRENDIZAJE[id]; if(!a) return [];
-  if(a.subs) return a.subs.map(x => ({ n: x.n, q: x.q, c: x.c, r: x.r }));
+  if(a.subs) return a.subs.map(x => ({ n: x.n, q: x.q, c: x.c, r: x.r, k: x.corto }));
   // Los recursos de la habilidad, tal cual: `pfRecursosHtml` sabe pintarlos.
   const r = (a.recursos || []).slice(0, 2);
   return [
@@ -14924,25 +15016,25 @@ function hbAvance(id){
 // esta lista. El grupo se mueve con la fase en curso (`hbRango()`): pasada la Fase 1, lo de `ahora` queda
 // como lo de antes de irte, y desde la Fase 2 lo de Alemania sube con él.
 const HB_PLAN = {
-  networking:   { cuando: 'ahora',    para: 'Las dos cartas de recomendación para Esslingen salen de tu red, y en Alemania el Werkstudent llega por recomendación.' },
-  persuadir:    { cuando: 'ahora',    para: 'Es la palanca de ingreso de la Fase 1: pedir el aumento con números es negociar, y el ingreso nuevo decide si te vas en 2027.' },
-  dinero:       { cuando: 'ahora',    para: 'Finanzas es la habilidad que decide si te vas en 2027: se practica cada quincena con el Plan Maestro.' },
-  manejar:      { cuando: 'antes',    para: 'El BYD es tu ingreso de Didi hasta irte, y en Alemania se maneja estándar.' },
-  recuperar:    { cuando: 'antes',    para: 'Dormir bien sostiene el estudio del CT-GenAI, el Hyrox y tus metas de conducta.' },
-  decirno:      { cuando: 'antes',    para: 'Cada sí de más sale del ahorro o de tus horas de estudio: protege la quincena y el foco.' },
-  mecanica:     { cuando: 'antes',    para: 'El coche te da de comer hasta la salida y después se renta: cuidarlo es dinero.' },
-  caracter:     { cuando: 'antes',    para: 'Mudarte solo a otro país pide decidir rápido y sostenerte sin tu red de siempre.' },
-  cocinar:      { cuando: 'alemania', para: 'En Esslingen comes de lo que cocinas: es tu presupuesto de estudiante.' },
-  reparaciones: { cuando: 'alemania', para: 'Tu cuarto en Esslingen: colgar, arreglar una fuga o un contacto sin pagarle a nadie.' },
-  auxilios:     { cuando: 'alemania', para: 'Vas a vivir solo y lejos de tu familia.' },
-  relacionarte: { cuando: 'alemania', para: 'La maestría y el Werkstudent también se ganan en el trato de cada día.' },
-  sacarmejor:   { cuando: 'alemania', para: 'Los proyectos en equipo de la maestría, liderando como en Bosch.' },
-  leerpersonas: { cuando: 'alemania', para: 'Entrevistas y equipos nuevos, en otro idioma y otra cultura.' },
-  vino:         { cuando: 'espera',   para: 'Saber de anfitrión: espera mientras dure tu meta de alcohol.' },
-  coctel:       { cuando: 'espera',   para: 'Saber de anfitrión: espera mientras dure tu meta de alcohol.' },
-  citas:        { cuando: 'espera',   para: 'Lleva copas entre sus pasos: espera mientras dure tu meta de alcohol.' }
+  networking:   { cuando: 'ahora',    para: 'Las dos cartas de recomendación que pide la maestría saldrán de tu red de contactos.' },
+  persuadir:    { cuando: 'ahora',    para: 'Te sirve para pedir un aumento con argumentos: tu ingreso decide si te vas en 2027.' },
+  dinero:       { cuando: 'ahora',    para: 'Manejar bien tu dinero decide si juntas lo necesario para irte a Alemania en 2027.' },
+  manejar:      { cuando: 'antes',    para: 'Tu auto es tu ingreso en Didi, y en Alemania casi todos los autos son estándar.' },
+  recuperar:    { cuando: 'antes',    para: 'Dormir bien te sostiene para estudiar, entrenar y cumplir tus metas.' },
+  decirno:      { cuando: 'antes',    para: 'Cada «sí» de más te cuesta ahorro u horas de estudio: decir que no protege tu plan.' },
+  mecanica:     { cuando: 'antes',    para: 'Tu auto te da de comer y después lo vas a rentar: cuidarlo es dinero.' },
+  caracter:     { cuando: 'antes',    para: 'Mudarte solo a otro país te pedirá decidir rápido y sostenerte sin tu gente.' },
+  cocinar:      { cuando: 'alemania', para: 'En Alemania vas a comer de lo que cocines: es tu presupuesto de estudiante.' },
+  reparaciones: { cuando: 'alemania', para: 'En Alemania vas a arreglar tú mismo lo que se descomponga en tu cuarto.' },
+  auxilios:     { cuando: 'alemania', para: 'Vas a vivir solo y lejos de tu familia: tienes que saber qué hacer si algo pasa.' },
+  relacionarte: { cuando: 'alemania', para: 'La maestría y tu trabajo en Alemania también se ganan en el trato de cada día.' },
+  sacarmejor:   { cuando: 'alemania', para: 'Te servirá para liderar los proyectos en equipo de la maestría.' },
+  leerpersonas: { cuando: 'alemania', para: 'Te ayudará en entrevistas y con equipos nuevos, en otro idioma y otra cultura.' },
+  vino:         { cuando: 'espera',   para: 'Espera mientras dure tu meta de no tomar alcohol.' },
+  coctel:       { cuando: 'espera',   para: 'Espera mientras dure tu meta de no tomar alcohol.' },
+  citas:        { cuando: 'espera',   para: 'Incluye salir a tomar: espera mientras dure tu meta de no tomar alcohol.' }
 };
-function hbPlan(id){ return HB_PLAN[id] || { cuando: 'despues', para: 'No tiene fecha en el plan de Coach: va después de lo que sí la tiene.' }; }
+function hbPlan(id){ return HB_PLAN[id] || { cuando: 'despues', para: 'Todavía no tiene fecha en tu plan: va después de las que sí la tienen.' }; }
 // El grupo de una ficha según la fase en curso: 0 lo de esta fase, 1 lo de antes de irte, 2 lo de
 // Alemania, 3 lo demás y 4 lo que espera.
 function hbRango(id){

@@ -2509,8 +2509,26 @@ function promptsDeLoTocado() {
   if (!inv || inv.indexOf('pasoInversionHoy()') < 0) malos.push('invertirHoyHtml() no lee la regla de pasoInversionHoy()');
   if ((cuerpo('renderGBMPanel') || '').indexOf('pasoInversionHoy()') < 0) malos.push('el panel de Qué invertir hoy no lee pasoInversionHoy()');
   if (/id="diaInvertirBtn"|id="pythonOverlay"/.test(dash)) malos.push('dashboard.html todavía tiene el botón suelto de Qué invertir hoy o la ventana de Python');
+  // Lo que enseñan las tarjetas viene revisado, nunca un pedazo del texto largo (Adán: "solo pones información sin
+  // revisarla, debe ser muy claro lo que dice ahí"): cada paso de ejercicio con su versión corta (`corto`, en el
+  // maestro), cada audio de DIDI_AUDIO con de qué trata (`trata`) y las ideas de las guías (HB_IDEA) alineadas con
+  // los pasos de su guía.
+  const A = (global.window && global.window.CIFRAS && global.window.CIFRAS.APRENDIZAJE) || {};
+  const sinCorto = [];
+  Object.keys(A).forEach(function (id) { (A[id].subs || []).forEach(function (x) { if (!x.corto) sinCorto.push(id + ' · ' + x.n); }); });
+  if (sinCorto.length) malos.push(sinCorto.length + ' pasos de ejercicio sin su versión corta (corto, en datos-maestros.js): ' + sinCorto.slice(0, 4).join('; '));
+  const audios = evaluar(literal(dash, 'const DIDI_AUDIO=', '[')) || [];
+  const sinTrata = [];
+  audios.forEach(function (g) { (g.items || []).forEach(function (it) { if (!it.trata) sinTrata.push(it.n); }); });
+  if (!audios.length) malos.push('no pude leer DIDI_AUDIO');
+  if (sinTrata.length) malos.push(sinTrata.length + ' audios sin «de qué trata» (trata, en DIDI_AUDIO): ' + sinTrata.slice(0, 4).join('; '));
+  const HI = evaluar(literal(dash, 'const HB_IDEA =', '{')) || {}, HD = evaluar(literal(dash, 'const HABILIDAD_DETALLE=', '{')) || {};
+  Object.keys(HI).forEach(function (id) {
+    const n = ((HD[id] || {}).pasos || []).length;
+    if (n !== HI[id].length) malos.push('HB_IDEA.' + id + ' trae ' + HI[id].length + ' ideas y la guía tiene ' + n + ' pasos');
+  });
   if (malos.length) problemas.push('Hoy aprendes no se entiende solo:\n  - ' + malos.join('\n  - '));
-  else ok.push('Hoy aprendes: seis tarjetas (' + fns.join(', ') + '), cada una con su frase de qué se trata y Qué invertir hoy con la regla de su panel');
+  else ok.push('Hoy aprendes: seis tarjetas (' + fns.join(', ') + '), cada una con su frase de qué se trata, sus textos revisados (' + Object.keys(A).length + ' habilidades con versión corta, ' + audios.reduce(function (t, g) { return t + (g.items || []).length; }, 0) + ' audios con de qué trata, ideas de ' + Object.keys(HI).join(', ') + ') y Qué invertir hoy con la regla de su panel');
 })();
 
 /* ── 35. El hábito del Gimnasio toca los días con sesión de la rutina ──────────────────────────────
