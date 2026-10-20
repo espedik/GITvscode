@@ -6848,7 +6848,7 @@ function pasoSemanaHtml(){
   const rec=habRecomendada(), propia=!!rec&&rec.id!==foco.id;
   const nom=/^[A-ZÁÉÍÓÚÑ]{2,}$/.test(foco.name)?foco.name:foco.name.toLowerCase();
   // El nombre del paso es la idea del libro; lo que se entiende sin contexto es la instrucción: va como lo principal.
-  const txt=`<span class="ap-que ap-cl l2" data-min="1">Para subir tu nivel de ${esc(nom)}${lib?`, con ideas del libro <i>${esc(lib.t)}</i>`:''}.</span>`
+  const txt=`<span class="ap-que ap-cl l2" data-min="1">Subes tu nivel de ${esc(nom)} con ejercicios cortos${lib?`, basados en el libro <i>${esc(lib.t)}</i>`:''}.</span>`
     +apTramos(pasos.length, j=>j<i, i)
     +(p.c?apBloque('Qué hacer hoy',`<span class="ap-hacer ap-cl">${p.c}</span>`):`<span class="ap-t ap-cl l2" data-min="1">${esc(p.n)}</span>`)
     +(sig?apMeta('sigue',`Siguiente paso: <b>${esc(sig.n)}</b>`):apMeta('meta','Es el último paso de este ejercicio'))
@@ -6869,7 +6869,7 @@ function fichaEnCursoHtml(){
   const k=info?info.pasos.findIndex((_,j)=>!store[j]):-1;
   const paso=k>=0?info.pasos[k]:null;
   const luego=paso?info.pasos.map((q,j)=>({q,j})).find(x=>x.j>k&&!store[x.j]):null;
-  const txt=`<span class="ap-que ap-cl l2" data-min="1">Aprende una habilidad práctica en ${sig.total} pasos; ${paso?`hoy toca el paso ${k+1}`:'ya la completaste'}.</span>`
+  const txt=`<span class="ap-que ap-cl l2" data-min="1">Aprendes habilidades prácticas con guías paso a paso; ${paso?`hoy toca el paso ${k+1} de ${sig.total} de esta:`:'esta ya la completaste:'}</span>`
     +`<span class="ap-t ap-cl l2" data-min="1">${esc(sig.h.t)}</span>`
     +(info?apTramos(info.pasos.length, j=>!!store[j], k):'')
     +(paso?`<span class="ap-bq"><span class="ap-bq-k ap-bq-paso">Paso ${k+1} · ${esc(mdLimpiaTitulo(paso.t))}</span>${paso.d?`<span class="ap-bq-t ap-cl l3">${paso.d}</span>`:''}</span>`
@@ -7296,7 +7296,7 @@ function alemanHoyHtml(vistos){
   // Lo de hoy en una línea, con sus números: «Hoy: 10 palabras nuevas (teléfono y correos), 30 de repaso y una lección.»
   const tema = a ? String((V.cats[a.cat] || {}).label || '').toLowerCase() : '', rep = a ? alemanRepasoHoy().length : 0;
   const hoy = [a ? `${ws.length} palabras nuevas${tema ? ` (${esc(tema)})` : ''}` : '', rep ? `${rep} de repaso` : '', t ? 'una lección' : ''].filter(Boolean);
-  let txt = `<span class="ap-que ap-cl l2" data-min="1">Hoy: ${hoy.length > 1 ? hoy.slice(0, -1).join(', ') + ' y ' + hoy[hoy.length - 1] : hoy[0]}.</span>`;
+  let txt = `<span class="ap-que ap-cl l2" data-min="1">Estudias alemán para mudarte a Alemania. Hoy: ${hoy.length > 1 ? hoy.slice(0, -1).join(', ') + ' y ' + hoy[hoy.length - 1] : hoy[0]}.</span>`;
   if(a){
     const art = (a.art || '-').split('/')[0].trim();
     const artHtml = art && art !== '-' ? `<span>${esc(art === 'pl.' ? 'die' : a.art)}</span> ` : '';
@@ -7726,11 +7726,12 @@ function escucharHoyHtml(vistos){
   const oir = x => `<a class="ap-oir" href="${didiSpo(x.q)}" target="_blank" rel="noopener" onclick="aprendeVisto('escuchar');setTimeout(renderHeroAprender,60)" title="Buscarlo en Spotify">${esc(x.n)}<span aria-hidden="true">&nbsp;↗</span></a>`;
   const estado = vistos.escuchar ? '<span class="ap-estado ok">✓ escuchando</span>'
     : '<button type="button" class="ap-estado ir" onclick="abrirDidi()">Qué escuchar</button>';
-  const yt = pod && pod.it.tipo === 'yt';
+  const yt = pod && pod.it.tipo === 'yt', skPod = pod ? SK.find(s => s.id === pod.g.sk) : null;
+  const temaPod = skPod ? (/^[A-ZÁÉÍÓÚÑ]{2,}$/.test(skPod.name) ? skPod.name : skPod.name.toLowerCase()) : '';
   return apTarjeta({ c: 'var(--o)', mat: 'Audiolibro y podcast', estado,
     ctl: apOtraBtn('escuchar', 'El siguiente audiolibro del foco'), foto: apFotoLibro(libro.it.lib, libro.g.sk),
     abrirFoto: 'abrirDidi()', titulo: 'Abrir Qué escuchar',
-    txt: `<span class="ap-que ap-cl l2" data-min="1">Para oír mientras manejas: un libro${tema ? ` de ${esc(tema)}` : ''} por semana y un podcast o video al día.</span>
+    txt: `<span class="ap-que ap-cl l2" data-min="1">Escuchas para aprender mientras manejas en Didi. Esta semana, un libro${tema ? ` de ${esc(tema)}` : ''}${pod ? `; hoy, ${yt ? 'un video' : 'un podcast'}${temaPod ? ` de ${esc(temaPod)}` : ''}` : ''}.</span>
       <span class="ap-t ap-cl l2" data-min="1">${oir(libro.it)}</span>
       ${libro.it.d ? `<span class="ap-es ap-cl l2" data-min="1"><b>De qué trata:</b> ${esc(libro.it.d)}</span>` : ''}
       <span class="ap-es ap-cl l2" data-min="1">El libro, ${cuando}${pod ? `; ${yt ? 'el video' : 'el podcast'} de hoy, ${cuandoPod}: ${oir(pod.it)}` : ''}</span>
@@ -7815,7 +7816,7 @@ function istqbHtml(){
   const vale = (q.pts || 1) === 1 ? '<b>1 punto</b>' : `<b>${q.pts} puntos</b>`;
   return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), mat: 'Examen de certificación',
     estado, otra: 'La siguiente pregunta, en el orden de Coach', abrir: 'abrirIstqb()', titulo: 'Contestar la pregunta del día',
-    txt: `<span class="ap-que ap-cl l2" data-min="1">Practica para el ISTQB, la certificación de testing con IA${ex && ex.s.mes ? ` (examen: ${cdMes(ex.s.mes)})` : ''}.</span>
+    txt: `<span class="ap-que ap-cl l2" data-min="1">Te preparas para el examen ISTQB de pruebas de software con IA${ex && ex.s.mes ? ` (${cdMes(ex.s.mes)})` : ''}. Hoy, una pregunta de práctica.</span>
       <span class="ap-q ap-cl">${q.q}</span>
       <span class="ap-dato ap-cl l2" data-min="1">${cap ? `Tema: ${esc(cap)} · ` : ''}vale ${vale}</span>
       ${vas ? `<span class="ap-dato ap-1l ap-opc">${vas}</span>` : ''}
@@ -10844,7 +10845,7 @@ function pasoInversionHoy(){
   let color, que, titulo, porque, hoy, nota, notaIco, fondo, foto;
   if(bbvaSaldo > 0){
     color = 'var(--r)'; foto = 'fase-tarjeta-cortada';
-    que = 'Tu plan: primero pagas la tarjeta de crédito y después inviertes.';
+    que = 'Tu plan para juntar el dinero de Alemania: primero liquidas la tarjeta de crédito y después inviertes.';
     titulo = deHoy.length ? 'Hoy: abona '+mon(deHoy.reduce((t,a)=>t+a.monto,0))+' '+(DE[deHoy[0].de]||'')+' a la tarjeta BBVA' : 'Hoy no inviertes: primero la tarjeta BBVA';
     porque = 'Debes <b>'+mon(bbvaSaldo)+'</b>. Con lo que sobra de cada quincena y lo que apartas de Didi la liquidas'+(bbvaFin?' el <b>'+bbvaFin+'</b>':'')+', sin pagar intereses.';
     hoy = '<b>No compras ninguna inversión</b> hasta liquidarla.';
@@ -10852,7 +10853,7 @@ function pasoInversionHoy(){
     fondo = 'Tu fondo de emergencia se queda en <b>'+mon(ef)+'</b> de CETES.';
   }else{
     color = 'var(--g)'; foto = 'sk-inversion';
-    que = 'Tu plan: ya sin tarjeta que pagar, lo que ahorras se invierte para irte a Alemania.';
+    que = 'Tu plan para juntar el dinero de Alemania: ya sin deuda de tarjeta, todo lo que ahorras se invierte.';
     titulo = 'Hoy sí inviertes: todo a GBM';
     porque = 'Lo que sobra de cada quincena y lo que apartas de Didi va a tu cuenta de inversión en GBM.'+(faltaEf>0?' Los primeros <b>'+mon(faltaEf)+'</b> completan tu fondo de emergencia: nada volátil.':'');
     hoy = 'Reparte según tu perfil y <b>ejecuta sin pensarlo dos veces</b>.';
