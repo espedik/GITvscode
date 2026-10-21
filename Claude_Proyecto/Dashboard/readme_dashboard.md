@@ -1491,14 +1491,17 @@ ids**: al tocarlo se verifican los tres). Diseño de `diseno-ficha/`.
 | **El paso** | el resto | `Paso N de M` · título en Fraunces 34 px · la idea (`d`) 16.5 px · **En detalle**: los puntos como libro mayor numerado (`01`, `02`…) · los apartados |
 | **Recursos** | 300 px | Videos (`Para escucharlo`), la barra de dinero de la Maestría, el ritmo y el avance real de una meta, el bloque de Tu año, y **Tu avance** con el siguiente pendiente como botón |
 
-**En Habilidades Base el temario va contraído** (Adán: *"contrae el menú y pon 2 botones, uno de avance
-y otro de retroceso para los temas, esto para ahorrar espacio y quede mejor visualmente"*). `mdPintar()`
-pone `.md-hab` y `.md-temario-min` cuando el diccionario es `HABILIDAD_DETALLE`: la columna se va y arriba
-del paso queda la barra del tema (`#metaDetailTema`, `.md-tema`): ‹ tema anterior, *Tema N de M* con su
-título (✓ verde si está dominado), **☰ Temas** y tema siguiente ›. ☰ vuelve a abrir la columna
-(`mdTemario(true)`) y *‹ Contraer*, en su cabecera, la cierra; al cerrar la ficha vuelve contraído. El paso
-gana los 300 px: 1234 px de ancho en 1600×1000. Hasta 1180 px, contraído, Recursos se queda al lado a 260 px
-en vez de bajar, y el paso usa todo el alto. Metas, En qué invertir tu tiempo y Tu año siguen con la columna.
+**En Habilidades Base y Mis Metas el temario va contraído** (Adán: *"contrae el menú y pon 2 botones, uno de
+avance y otro de retroceso para los temas, esto para ahorrar espacio y quede mejor visualmente"*; después,
+*"el temario de las metas también contráelo"*). `mdPintar()` pone `.md-contraible` y `.md-temario-min` cuando
+el diccionario es `HABILIDAD_DETALLE` o `META_DETALLE`: la columna se va y arriba del paso queda la barra del
+tema (`#metaDetailTema`, `.md-tema`, la pinta `mdTemaBar()`): ‹ tema anterior, el tema con su título (✓ verde
+si está dominado), **☰ Temas** y tema siguiente ›. En una meta con plan la barra empieza en *Tu plan, con
+fechas* (sus pasos hechos y el siguiente) y sigue con *Lo que necesitas saber · N de M*: ‹ desde el primer tema
+vuelve al plan. ☰ vuelve a abrir la columna (`mdTemario(true)`) y *‹ Contraer*, en su cabecera, la cierra; al
+cerrar la ficha vuelve contraído. El paso gana los 300 px: 1234 px de ancho en 1600×1000. Hasta 1180 px,
+contraído, Recursos se queda al lado a 260 px en vez de bajar, y el paso usa todo el alto. En qué invertir tu
+tiempo y Tu año siguen con la columna.
 
 Cabecera: frase de la ficha en cursiva y el avance en grande (`7 / 16 · Dominados · 44 %`). Pie a
 lo ancho: **Marcar como dominado**, un punto por paso (tocable) y Anterior / Siguiente.

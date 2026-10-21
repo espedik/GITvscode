@@ -2183,12 +2183,12 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .md-ix-sep{border-top:1px solid rgba(var(--ov),.09);margin:8px 10px 6px}
 /* El paso, en tamaño de lectura de verdad. */
 .md-main{min-width:0;min-height:0;display:flex;flex-direction:column}
-/* Temario contraído (Habilidades Base): la columna se va y arriba del paso queda una barra con el tema
+/* Temario contraído (Habilidades Base y Mis Metas): la columna se va y arriba del paso queda una barra con el tema
    y dos botones, ‹ anterior y siguiente ›. ☰ vuelve a abrir la columna; «‹ Contraer» la cierra. */
 .md-tema,.md-ix-contraer{display:none}
-.md-hab .md-ix-contraer{display:inline-flex;margin-left:auto;align-self:center;padding:3px 9px;border-radius:5px;cursor:pointer;font-family:var(--mono);
+.md-contraible .md-ix-contraer{display:inline-flex;margin-left:auto;align-self:center;padding:3px 9px;border-radius:5px;cursor:pointer;font-family:var(--mono);
   font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--text3);background:none;border:1px solid rgba(var(--ov),.14)}
-.md-hab .md-ix-contraer:hover{color:var(--cy);border-color:rgba(var(--cy-rgb),.4)}
+.md-contraible .md-ix-contraer:hover{color:var(--cy);border-color:rgba(var(--cy-rgb),.4)}
 .md-temario-min .md-indice{display:none}
 .md-temario-min .md-body{grid-template-columns:minmax(0,1fr) 300px}
 .md-temario-min .md-tema{display:flex;align-items:center;gap:10px;flex:none;padding:16px 48px 4px}
@@ -12503,6 +12503,14 @@ function toggleMetaPlan(id,k){
   renderMetasSlide();
 }
 // En el temario, la entrada del plan va primero; lo de META_DETALLE queda debajo, como lo que hay que saber.
+// Barra del tema (con el temario contraído): ‹ tema anterior · el tema · ☰ Temas · tema siguiente ›
+function mdTemaBar(i,min,max,etq,titulo,hecho){
+  document.getElementById('metaDetailTema').innerHTML=`
+    <button class="md-tema-b" onclick="mdIr(${i-1})"${i<=min?' disabled':''} aria-label="Tema anterior" title="Tema anterior">‹</button>
+    <div class="md-tema-t"><span class="md-lbl">${etq}</span><b class="${hecho?'hecho':''}">${hecho?'✓ ':''}${esc(titulo)}</b></div>
+    <button class="md-tema-ix" onclick="mdTemario(true)" title="Ver todos los temas">☰ Temas</button>
+    <button class="md-tema-b" onclick="mdIr(${i+1})"${i>=max?' disabled':''} aria-label="Tema siguiente" title="Tema siguiente">›</button>`;
+}
 function mdIxPlan(on){
   const mp=mdEstado.dict===META_DETALLE?metaPlan(mdEstado.id):null; if(!mp) return '';
   return `<button class="md-ix md-ix-plan${on?' on':''}${mp.hechos===mp.total?' hecho':''}" onclick="mdIr(-1)">
@@ -12515,6 +12523,7 @@ function mdPintarPlan(){
   const id=mdEstado.id, info=META_DETALLE[id], mp=metaPlan(id); if(!info||!mp) return;
   const P=mp.P, pct=mp.total?Math.round(mp.hechos/mp.total*100):0;
   const ov=document.getElementById('metaDetailOverlay'); if(ov) ov.classList.add('md-plan-on');
+  mdTemaBar(-1,-1,info.pasos.length-1,'Tu plan, con fechas',`${mp.hechos} de ${mp.total} pasos${mp.sig?' · sigue el '+mp.sig.fTxt:''}`,mp.total>0&&mp.hechos===mp.total);
   document.getElementById('metaDetailBarFill').style.width=pct+'%';
   document.getElementById('metaDetailBarNum').innerHTML=`${mp.hechos}<small>/ ${mp.total}</small>`;
   document.getElementById('metaDetailProgLbl').textContent=`Pasos del plan · ${pct} %`;
@@ -12889,9 +12898,9 @@ function mdPintar(){
   const info=dict&&dict[id]; if(!info) return;
   const conPlan=dict===META_DETALLE&&!!META_PLAN[id];
   const ov=document.getElementById('metaDetailOverlay');
-  const hab=dict===HABILIDAD_DETALLE;   // solo Habilidades Base contrae el temario
-  ov.classList.toggle('md-hab',hab);
-  ov.classList.toggle('md-temario-min',hab&&!mdEstado.temario);
+  const contraible=dict===HABILIDAD_DETALLE||dict===META_DETALLE;   // Habilidades Base y Mis Metas contraen el temario
+  ov.classList.toggle('md-contraible',contraible);
+  ov.classList.toggle('md-temario-min',contraible&&!mdEstado.temario);
   if(conPlan&&mdEstado.i<0){ mdPintarPlan(); return; }
   ov.classList.remove('md-plan-on');
   const pasos=info.pasos, total=pasos.length;
@@ -12902,12 +12911,8 @@ function mdPintar(){
   mdEstado.i=i;
   const p=pasos[i], hecho=!!store[i];
 
-  // Barra del tema (con el temario contraído): ‹ tema anterior · el tema · tema siguiente ›
-  document.getElementById('metaDetailTema').innerHTML=`
-    <button class="md-tema-b" onclick="mdIr(${i-1})"${i<=0?' disabled':''} aria-label="Tema anterior" title="Tema anterior">‹</button>
-    <div class="md-tema-t"><span class="md-lbl">Tema ${i+1} de ${total}</span><b class="${hecho?'hecho':''}">${hecho?'✓ ':''}${esc(mdLimpiaTitulo(p.t))}</b></div>
-    <button class="md-tema-ix" onclick="mdTemario(true)" title="Ver todos los temas">☰ Temas</button>
-    <button class="md-tema-b" onclick="mdIr(${i+1})"${i>=total-1?' disabled':''} aria-label="Tema siguiente" title="Tema siguiente">›</button>`;
+  // En una meta, «‹» desde el primer tema vuelve a «Tu plan» (el -1).
+  mdTemaBar(i,conPlan?-1:0,total-1,conPlan?`Lo que necesitas saber · ${i+1} de ${total}`:`Tema ${i+1} de ${total}`,mdLimpiaTitulo(p.t),hecho);
 
   // Cabecera: el avance, en grande
   document.getElementById('metaDetailBarFill').style.width=pct+'%';
@@ -13040,7 +13045,7 @@ addEventListener('resize',()=>{
   const ov=document.getElementById('metaDetailOverlay');
   if(ov&&ov.classList.contains('open')&&mdEstado.id) mdPintar();
 });
-// Abre o contrae el temario de Habilidades Base; se queda como lo dejaste hasta cerrar la ficha.
+// Abre o contrae el temario (Habilidades Base y Mis Metas); se queda como lo dejaste hasta cerrar la ficha.
 function mdTemario(abierto){ mdEstado.temario=abierto; mdPintar(); }
 function mdIr(k){
   const info=mdEstado.dict&&mdEstado.dict[mdEstado.id]; if(!info) return;
@@ -13090,7 +13095,7 @@ document.addEventListener('keydown',e=>{
 });
 function cerrarMetaDetalle(){
   mdEstado.id='';   // la próxima apertura vuelve a calcular en qué paso retomar
-  mdEstado.temario=false;   // y el temario de Habilidades Base vuelve contraído
+  mdEstado.temario=false;   // y el temario vuelve contraído
   document.getElementById('metaDetailOverlay').classList.remove('open');
   restartTimer();
 }
