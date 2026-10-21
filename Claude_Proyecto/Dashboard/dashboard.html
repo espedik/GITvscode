@@ -4069,7 +4069,9 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
    Los colores de los activos (--iv1 azul, --iv2 naranja, --iv3 morado, --iv4 ámbar) pasaron el validador de
    paleta de la guía de visualización en los dos temas (sobre #f2f2f6 y #0b0b12): los acentos del tablero en
    oscuro son demasiado claros para una gráfica, por eso el tema oscuro lleva sus propios tonos. */
-.gbm-card.inv-card{width:min(1560px,96vw);height:min(960px,94vh);max-height:94vh;display:flex;flex-direction:column;overflow:hidden;
+/* Casi toda la pantalla (Adán: "haz la ventana mucho más grande"): 97 % por 97 %, con la capa casi sin margen. */
+#gbmOverlay{padding:1.5vh 1.5vw}
+.gbm-card.inv-card{width:97vw;max-width:none;height:97vh;max-height:97vh;display:flex;flex-direction:column;overflow:hidden;
   --iv1:#3b82f6;--iv2:#d9631a;--iv3:#a066f0;--iv4:#b08a12}
 :root[data-theme="light"] .gbm-card.inv-card{--iv1:#2563eb;--iv2:#b8632c;--iv3:#7f4fb8;--iv4:#a8790a}
 .inv-card .inv-head{display:flex;align-items:flex-start;gap:16px;padding:14px 56px 12px 22px;flex-shrink:0}
@@ -4086,9 +4088,11 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .inv-ayuda{font-size:10px;color:var(--text3)}
 .inv-ayuda a{color:var(--text2);text-decoration:underline dotted;cursor:pointer}
 /* Dos columnas que desplazan por separado: la pestaña a la izquierda, los precios y tu situación a la derecha. */
-.inv-card .inv-body{flex:1;min-height:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr) 340px;overflow:hidden}
-.inv-main{overflow-y:auto;padding:14px 22px 24px}
-.inv-side{overflow-y:auto;padding:14px 18px 24px;border-left:1px solid rgba(var(--ov),.08);background:rgba(var(--ov),.025)}
+.inv-card .inv-body{flex:1;min-height:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr) 400px;overflow:hidden}
+.inv-main{overflow-y:auto;padding:16px 26px 26px;display:flex;flex-direction:column}
+/* La pestaña llena el alto de la ventana: las cajas de las gráficas crecen y la de 12 meses se estira con ellas. */
+.inv-panel{flex:1 0 auto;display:flex;flex-direction:column}
+.inv-side{overflow-y:auto;padding:16px 22px 26px;border-left:1px solid rgba(var(--ov),.08);background:rgba(var(--ov),.025)}
 .inv-side .gbm-sec:first-child{margin-top:0}
 
 /* El monto al mes va en la misma línea del reparto de segura y medio: una cifra editable en mono. */
@@ -4110,62 +4114,65 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .inv-dots{font-family:var(--mono);letter-spacing:1px;font-size:11px;color:var(--c);white-space:nowrap}
 
 /* La cabecera de la pestaña: el lema y para quién es, y una fila de cifras cortas. */
-.inv-perfil{--c:var(--cy)}
-.inv-pf-cab{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,600px);gap:20px;align-items:center;margin-bottom:12px}
-.inv-pf-lema{font-family:var(--font-title);font-size:clamp(21px,2vw,26px);font-weight:700;line-height:1.12;color:var(--text);margin-bottom:5px}
+.inv-perfil{--c:var(--cy);flex:1 0 auto;display:flex;flex-direction:column}
+.inv-pf-cab{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,760px);gap:24px;align-items:center;margin-bottom:14px}
+.inv-pf-lema{font-family:var(--font-title);font-size:clamp(22px,1.8vw,32px);font-weight:700;line-height:1.12;color:var(--text);margin-bottom:5px}
 .inv-pf-lema i{color:var(--c);font-style:normal}
-.inv-pf-para{font-size:12.5px;color:var(--text2);line-height:1.45}
+.inv-pf-para{font-size:13.5px;color:var(--text2);line-height:1.5}
 .inv-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .inv-kpis-3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .inv-kpi{border-radius:11px;padding:8px 11px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.07);min-width:0}
-.inv-kpi>span{display:block;font-size:10.5px;font-weight:600;color:var(--text3);margin-bottom:2px}
-.inv-kpi b{display:block;font-size:16px;font-weight:700;color:var(--text);line-height:1.2}
-.inv-kpi b.txt{font-size:12.5px;font-weight:600;line-height:1.3}
+.inv-kpi>span{display:block;font-size:11.5px;font-weight:600;color:var(--text3);margin-bottom:2px}
+.inv-kpi b{display:block;font-size:19px;font-weight:700;color:var(--text);line-height:1.2}
+.inv-kpi b.txt{font-size:13.5px;font-weight:600;line-height:1.3}
 .inv-kpi b .inv-dots{font-size:14px}
 .inv-kpi small{display:block;font-size:10px;color:var(--text3);margin-top:2px;line-height:1.3}
 
 /* Lo que haces este mes: la acción, en una franja del color del perfil. */
-.inv-mes{display:flex;gap:12px;align-items:baseline;padding:10px 14px;border-radius:12px;margin-bottom:12px;font-size:13px;line-height:1.5;color:var(--text);
+.inv-mes{display:flex;flex-direction:column;gap:3px;margin-top:auto;padding:12px 16px;border-radius:12px;font-size:14px;line-height:1.5;color:var(--text);
   background:color-mix(in srgb,var(--c) 9%,transparent);border:1px solid color-mix(in srgb,var(--c) 28%,transparent)}
-.inv-mes>b{flex:none;font-size:12px;font-weight:800;color:var(--text)}
+.inv-mes>b{font-size:12.5px;font-weight:800;color:var(--text)}
+.inv-dos .inv-rt{margin-bottom:14px}
 
 /* Las cajas de las gráficas: el reparto y la proyección lado a lado; la escala de una apuesta a todo lo ancho. */
-.inv-dos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.inv-caja{border-radius:14px;padding:12px 15px 14px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.08);min-width:0}
+.inv-dos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;flex:1 0 auto}
+.inv-dos>.inv-caja{display:flex;flex-direction:column}
+.inv-dos .inv-proy{flex:1 1 auto;grid-template-rows:minmax(170px,1fr) auto}
+.inv-caja{border-radius:14px;padding:14px 18px 16px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.08);min-width:0}
 .inv-caja+.inv-tres,.inv-tres+.inv-caja{margin-top:12px}
-.inv-caja-t{display:flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap;font-size:13px;font-weight:800;color:var(--text);margin-bottom:10px}
-.inv-caja-t small{font-weight:500;font-size:11px;color:var(--text3)}
+.inv-caja-t{display:flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap;font-size:14.5px;font-weight:800;color:var(--text);margin-bottom:10px}
+.inv-caja-t small{font-weight:500;font-size:12px;color:var(--text3)}
 
 /* El reparto: barra apilada de 12 px con 2 px de aire entre tramos y las puntas redondeadas, y su tabla. */
-.inv-rb{display:flex;gap:2px;height:12px;margin-bottom:8px}
+.inv-rb{display:flex;gap:2px;height:14px;margin-bottom:10px}
 .inv-rb i{flex:1 1 0;min-width:3px;background:var(--a)}
 .inv-rb i:first-child{border-radius:4px 0 0 4px}.inv-rb i:last-child{border-radius:0 4px 4px 0}.inv-rb i:only-child{border-radius:4px}
-.inv-rt-f{display:grid;grid-template-columns:10px minmax(0,1fr) 52px 76px minmax(0,92px);gap:10px;align-items:center;padding:7px 0;
-  border-top:1px solid rgba(var(--ov),.07);font-size:12px;color:var(--text2)}
+.inv-rt-f{display:grid;grid-template-columns:10px minmax(0,1fr) 60px 90px minmax(0,110px);gap:12px;align-items:center;padding:9px 0;
+  border-top:1px solid rgba(var(--ov),.07);font-size:13px;color:var(--text2)}
 .inv-rt-f:first-child{border-top:0}
 .inv-rt-sw{width:10px;height:10px;border-radius:3px;background:var(--a)}
 .inv-rt-n{min-width:0;display:flex;align-items:center;gap:3px 7px;flex-wrap:wrap}
-.inv-rt-n b{font-size:13px;font-weight:700;color:var(--text)}
-.inv-rt-n small{flex-basis:100%;font-size:10.5px;color:var(--text3);line-height:1.3}
+.inv-rt-n b{font-size:14px;font-weight:700;color:var(--text)}
+.inv-rt-n small{flex-basis:100%;font-size:11.5px;color:var(--text3);line-height:1.3}
 .inv-rt-pct,.inv-rt-m{font-family:var(--mono);font-weight:700;color:var(--text);text-align:right;font-variant-numeric:tabular-nums}
-.inv-rt-d{font-size:11px;color:var(--text3);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inv-rt-d{font-size:12px;color:var(--text3);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .inv-ac-tk{font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--text2);border:1px solid rgba(var(--ov),.2);border-radius:6px;padding:1px 6px}
 
 /* Cuánto tendrías en 12 meses: una columna por mes (22 px como mucho), lo que aportas en gris y lo que rinde
    encima en verde —la ganancia, como en la escala de las apuestas; el color del perfil chocaba con el ámbar de
    Bitcoin en Riesgo medio—, con 2 px de aire; rejilla de 1 px y el valor de cada mes en su tooltip. */
-.inv-proy-tot{font-size:24px;font-weight:700;color:var(--text);line-height:1.1}
-.inv-proy-ley{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:11px;color:var(--text2);margin:5px 0 12px}
+.inv-proy-tot{font-size:28px;font-weight:700;color:var(--text);line-height:1.1}
+.inv-proy-ley{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:var(--text2);margin:5px 0 12px}
 .inv-proy-ley i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:-1px;background:var(--a)}
 .inv-proy-ley b{font-family:var(--mono);color:var(--text)}
-.inv-proy{display:grid;grid-template-columns:52px minmax(0,1fr);grid-template-rows:118px auto;column-gap:8px}
+.inv-proy{display:grid;grid-template-columns:56px minmax(0,1fr);grid-template-rows:170px auto;column-gap:8px}
 .inv-proy-y{position:relative}
-.inv-proy-y em{position:absolute;right:0;transform:translateY(50%);font-style:normal;font-size:10px;color:var(--text3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.inv-proy-y em{position:absolute;right:0;transform:translateY(50%);font-style:normal;font-size:11px;color:var(--text3);white-space:nowrap;font-variant-numeric:tabular-nums}
 .inv-proy-plot{position:relative;border-bottom:1px solid rgba(var(--ov),.2)}
 .inv-proy-g{position:absolute;left:0;right:0;height:0;border-top:1px solid rgba(var(--ov),.08)}
 .inv-proy-cols{position:absolute;inset:0;display:flex}
 .inv-proy-c{position:relative;flex:1 1 0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:2px;outline:none}
-.inv-proy-c i{display:block;width:min(22px,62%);flex:none}
+.inv-proy-c i{display:block;width:min(24px,62%);flex:none}
 .inv-proy-c i:first-child{border-radius:4px 4px 0 0}
 .inv-proy-c .ren{background:var(--g);min-height:2px}
 .inv-proy-c .apo{background:rgba(var(--ov),.24)}
@@ -4176,32 +4183,35 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .inv-proy-c.izq:hover::after,.inv-proy-c.izq:focus-visible::after{left:0;transform:translateY(-100%)}
 .inv-proy-c.der:hover::after,.inv-proy-c.der:focus-visible::after{left:auto;right:0;transform:translateY(-100%)}
 .inv-proy-x{grid-column:2;display:flex}
-.inv-proy-x span{flex:1 1 0;text-align:center;font-size:10px;color:var(--text3);padding-top:5px}
-.inv-proy-nota{font-size:10.5px;color:var(--text3);margin-top:6px}
+.inv-proy-x span{flex:1 1 0;text-align:center;font-size:11px;color:var(--text3);padding-top:5px}
+.inv-proy-nota{font-size:11.5px;color:var(--text3);margin-top:6px}
 
 /* La escala de una apuesta: stop, hoy, objetivo y el máximo de 52 semanas sobre una pista; a la izquierda de hoy,
    lo que perderías y a la derecha lo que ganarías (además del color, lo dicen el texto y el lado). */
 .inv-esc{padding:32px 4px 40px}
-.inv-esc-pista{position:relative;height:28px;border-radius:7px;background:rgba(var(--ov),.05)}
-.inv-esc-z{position:absolute;top:0;bottom:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.inv-esc-pista{position:relative;height:32px;border-radius:7px;background:rgba(var(--ov),.05)}
+.inv-esc-z{position:absolute;top:0;bottom:0;display:flex;align-items:center;justify-content:center;overflow:hidden;container-type:inline-size}
 .inv-esc-z.pierde{background:rgba(var(--r-rgb),.16)}
 .inv-esc-z.gana{background:rgba(var(--g-rgb),.16)}
-.inv-esc-z em{font-style:normal;font-size:11.5px;font-weight:700;color:var(--text);white-space:nowrap}
+.inv-esc-z em{font-style:normal;font-size:12.5px;font-weight:700;color:var(--text);white-space:nowrap}
 .inv-esc-z.pierde em{margin-right:12px}.inv-esc-z.gana em{margin-left:12px}
+.inv-esc-z em .l{display:none}
+@container (min-width:190px){.inv-esc-z em .l{display:inline}.inv-esc-z em .c{display:none}}
+@container (max-width:69.98px){.inv-esc-z em{display:none}}
 .inv-esc-ent{position:absolute;bottom:0;height:5px;border-radius:2px;background:rgba(var(--ov),.5)}
 .inv-esc-m{position:absolute;top:0;bottom:0;width:0}
 .inv-esc-m i{position:absolute;top:-4px;bottom:-4px;left:-1px;width:2px;border-radius:1px;background:var(--text3)}
 .inv-esc-m.stop i{background:var(--r)}
 .inv-esc-m.obj i{background:var(--g)}
 .inv-esc-m.hoy i{top:50%;bottom:auto;left:-7px;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:var(--text);box-shadow:0 0 0 2px var(--bg)}
-.inv-esc-m>b,.inv-esc-m>span{position:absolute;left:0;transform:translateX(-50%);white-space:nowrap;font-size:11px}
+.inv-esc-m>b,.inv-esc-m>span{position:absolute;left:0;transform:translateX(-50%);white-space:nowrap;font-size:12px}
 .inv-esc-m>b{top:calc(100% + 8px);font-weight:700;color:var(--text)}
 .inv-esc-m>span{top:calc(100% + 23px);font-family:var(--mono);color:var(--text2)}
 .inv-esc-m.hoy>b{top:auto;bottom:calc(100% + 19px)}
 .inv-esc-m.hoy>span{top:auto;bottom:calc(100% + 5px);font-weight:700;color:var(--text)}
 .inv-esc-m.izq>b,.inv-esc-m.izq>span{transform:none}
 .inv-esc-m.der>b,.inv-esc-m.der>span{transform:translateX(-100%)}
-.inv-esc-ent-t{display:flex;gap:10px;font-size:12px;line-height:1.45;color:var(--text2)}
+.inv-esc-ent-t{display:flex;gap:10px;font-size:13px;line-height:1.45;color:var(--text2)}
 .inv-esc-ent-t b{flex:none;color:var(--text)}
 
 /* Las apuestas: su cabecera con el botón, la empresa con tres cifras y el resto como en los perfiles. */
@@ -4209,20 +4219,20 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .inv-sa-acc{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
 .inv-btn-sa{border-color:rgba(var(--c-rgb),.5);color:var(--c);background:rgba(var(--c-rgb),.1)}
 .inv-btn-sa:hover{background:rgba(var(--c-rgb),.18)}
-.inv-ap-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,560px);gap:16px;align-items:center;margin-bottom:12px}
-.inv-sa-nombre{font-family:var(--font-title);font-size:clamp(20px,2vw,26px);font-weight:700;line-height:1.1;color:var(--text);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.inv-ap-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,720px);gap:20px;align-items:center;margin-bottom:14px}
+.inv-sa-nombre{font-family:var(--font-title);font-size:clamp(22px,1.8vw,32px);font-weight:700;line-height:1.1;color:var(--text);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .inv-sa-nombre .inv-ac-tk{font-size:12px}
-.inv-sa-bolsa{font-size:11.5px;color:var(--text3);margin-top:4px}
+.inv-sa-bolsa{font-size:12.5px;color:var(--text3);margin-top:4px}
 .inv-caja-rep{margin-top:12px}
 
 /* Tres columnas cortas (la tesis, lo que la mueve, cuándo vender) y lo que va dentro del análisis plegado. */
-.inv-tres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.inv-col{border-radius:13px;padding:11px 13px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.07)}
-.inv-col-t{font-size:12px;font-weight:800;color:var(--text);margin-bottom:6px}
+.inv-tres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.inv-col{border-radius:13px;padding:13px 16px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.07)}
+.inv-col-t{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:7px}
 .inv-col ul,.inv-col ol{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:5px}
-.inv-col li{font-size:12px;line-height:1.45;color:var(--text2)}
+.inv-col li{font-size:13px;line-height:1.5;color:var(--text2)}
 .inv-col li::marker{color:var(--c);font-weight:800}
-.inv-col-p{margin:0;font-size:12px;line-height:1.5;color:var(--text2)}
+.inv-col-p{margin:0;font-size:13px;line-height:1.55;color:var(--text2)}
 .inv-col-r{border-color:rgba(var(--r-rgb),.35);background:rgba(var(--r-rgb),.06)}
 .inv-col-r .inv-col-p{color:var(--text)}
 .inv-activos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
@@ -4241,7 +4251,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 
 /* «El análisis completo» y lo plegado de la barra lateral: un renglón que se abre. */
 .inv-mas{margin-top:12px;border-radius:12px;border:1px solid rgba(var(--ov),.09);background:rgba(var(--ov),.025)}
-.inv-mas>summary{cursor:pointer;list-style:none;padding:10px 14px;font-size:12px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:9px}
+.inv-mas>summary{cursor:pointer;list-style:none;padding:12px 16px;font-size:13px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:9px}
 .inv-mas>summary::-webkit-details-marker{display:none}
 .inv-mas>summary::before{content:'▸';color:var(--text3);transition:transform .15s}
 .inv-mas[open]>summary::before{transform:rotate(90deg)}
@@ -4258,16 +4268,16 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   border:1px solid color-mix(in srgb,var(--c) 45%,transparent);color:var(--c);background:color-mix(in srgb,var(--c) 10%,transparent)}
 .inv-elegir:hover{background:color-mix(in srgb,var(--c) 18%,transparent)}
 .inv-elegir.on{background:var(--c);color:var(--bg);border-color:var(--c)}
-.inv-disc{flex:1;min-width:220px;font-size:10px;color:var(--text3);line-height:1.35}
+.inv-disc{flex:1;min-width:220px;font-size:11px;color:var(--text3);line-height:1.35}
 .inv-vacio{border-radius:16px;padding:34px 26px;text-align:center;border:1px dashed rgba(var(--ov),.2);color:var(--text2);font-size:13px;line-height:1.55}
 .inv-vacio b{display:block;font-family:var(--font-title);font-size:22px;color:var(--text);margin-bottom:8px}
 
 /* Barra lateral: precios, el mercado en señales, tu situación y dónde comprar. */
 .inv-precios{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
 .inv-precios .gbm-precio{padding:8px 9px}
-.inv-precios .gbm-precio b{font-size:12.5px}
+.inv-precios .gbm-precio b{font-size:14px}
 .inv-senales{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
-.inv-senales li{display:grid;grid-template-columns:8px 1fr;gap:8px;align-items:start;font-size:11.5px;line-height:1.4;color:var(--text2)}
+.inv-senales li{display:grid;grid-template-columns:8px 1fr;gap:8px;align-items:start;font-size:12.5px;line-height:1.4;color:var(--text2)}
 .inv-senales li::before{content:'';width:8px;height:8px;border-radius:50%;margin-top:4px;background:var(--text3)}
 .inv-senales li.ok::before{background:var(--g)}.inv-senales li.alerta::before{background:var(--o)}
 .inv-senales li b{color:var(--text)}
@@ -4277,10 +4287,10 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .inv-objetivo-n{font-size:13px;font-weight:900;color:var(--c)}
 .inv-objetivo-r{font-family:var(--mono);font-size:11px;color:var(--text2);margin-top:3px;line-height:1.4}
 .inv-links{display:flex;flex-direction:column}
-.inv-links a{display:flex;flex-direction:column;padding:6px 2px;border-top:1px solid rgba(var(--ov),.07);font-size:12px;font-weight:700;color:var(--cy);text-decoration:none}
+.inv-links a{display:flex;flex-direction:column;padding:7px 2px;border-top:1px solid rgba(var(--ov),.07);font-size:13px;font-weight:700;color:var(--cy);text-decoration:none}
 .inv-links a:first-child{border-top:0}
 .inv-links a:hover{text-decoration:underline}
-.inv-links a span{font-size:10.5px;font-weight:500;color:var(--text3)}
+.inv-links a span{font-size:11.5px;font-weight:500;color:var(--text3)}
 .inv-fuentes{display:flex;flex-direction:column;gap:3px}
 .inv-fuentes a{font-size:10.5px;color:var(--text3);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .inv-fuentes a:hover{color:var(--cy);text-decoration:underline}
@@ -4301,9 +4311,10 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 
 @media(max-width:1440px){
   .inv-pf-cab,.inv-ap-hero{grid-template-columns:1fr}
+  .inv-dos .inv-proy{grid-template-rows:minmax(120px,1fr) auto}
 }
 @media(max-width:1280px){
-  .inv-card .inv-body{grid-template-columns:minmax(0,1fr) 300px}
+  .inv-card .inv-body{grid-template-columns:minmax(0,1fr) 320px}
   .inv-sa-top{grid-template-columns:1fr}
   .inv-sa-acc{align-items:flex-start}
   .inv-sa-acc .inv-estado{text-align:left}
@@ -4319,6 +4330,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   .inv-kpis,.inv-kpis-3{grid-template-columns:1fr 1fr}
 }
 @media(max-width:640px){
+  #gbmOverlay{padding:0}
   .gbm-card.inv-card{width:100%;height:100%;max-height:100%}
   .inv-card .inv-head{padding:12px 48px 10px 14px;flex-direction:column;gap:8px}
   .inv-head-acc{align-items:flex-start}
@@ -4330,7 +4342,6 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   .inv-tab-n{font-size:11.5px}
   .inv-rt-f{grid-template-columns:10px minmax(0,1fr) 46px 70px}
   .inv-rt-d{display:none}
-  .inv-mes{flex-direction:column;gap:2px}
   .inv-prompt-ov{padding:0}
   .inv-prompt-card{border-radius:0;height:100%}
 }
@@ -11362,8 +11373,9 @@ function invEscalaHtml(p, R){
   const m = String(p.entrada || '').replace(/,/g, '').match(/(\d+(?:\.\d+)?)\s*(?:USD|MXN)?\s*(?:-|–|a)\s*\$?(\d+(?:\.\d+)?)/);
   const ent = m && +m[1] < +m[2] && +m[1] >= stop && +m[2] <= obj ? [+m[1], +m[2]] : null;
   const pierdes = R.resto * Math.abs(+p.stopPct || 0) / 100, ganas = R.resto * (+p.objetivoPct || 0) / 100;
-  // En una zona angosta va la cifra sola (−$2,016) para que el punto de hoy no la tape; en una muy angosta, nada.
-  const zona = (a, b, cls, txt, corto) => { const w = x(b) - x(a); return '<span class="inv-esc-z ' + cls + '" style="left:' + x(a).toFixed(2) + '%;width:' + w.toFixed(2) + '%">' + (w > 22 ? '<em>' + txt + '</em>' : w > 9 ? '<em>' + corto + '</em>' : '') + '</span>'; };
+  // Cada zona lleva las dos versiones y el CSS enseña la que cabe en su ancho real: la frase (perderías ≈ $2,196),
+  // la cifra sola (−$2,196) para que el punto de hoy no la tape, o nada en una zona muy angosta.
+  const zona = (a, b, cls, txt, corto) => { const w = x(b) - x(a); return '<span class="inv-esc-z ' + cls + '" style="left:' + x(a).toFixed(2) + '%;width:' + w.toFixed(2) + '%"><em><span class="l">' + txt + '</span><span class="c">' + corto + '</span></em></span>'; };
   const lado = v => x(v) < 7 ? ' izq' : x(v) > 93 ? ' der' : '';
   const marca = (v, cls, k, sub) => '<span class="inv-esc-m ' + cls + lado(v) + '" style="left:' + x(v).toFixed(2) + '%"><i></i><b>' + k + '</b><span>' + pr(v) + (sub ? ' · ' + sub : '') + '</span></span>';
   const conMax = max > obj && x(max) - x(obj) > 14;
@@ -11418,10 +11430,10 @@ function invPerfilHtml(d, id){
         invKpi('Peor caída', esc(caida), '', true) +
       '</div>' +
     '</div>' +
-    (pf.esteMes ? '<div class="inv-mes"><b>Este mes</b><span>' + esc(pf.esteMes) + '</span></div>' : '') +
     '<div class="inv-dos">' +
       '<section class="inv-caja"><div class="inv-caja-t">Cómo se reparten tus ' + invMontoHtml(monto) + ' al mes<small>edita la cifra y todo se recalcula</small></div>' +
         invRepartoHtml(activos.map((a, i) => ({ n: a.nombre, tk: a.ticker, pct: a.pct, monto: monto * a.pct / 100, donde: a.donde, nota: esc(a.tipo || ''), c: cols[i] }))) +
+        (pf.esteMes ? '<div class="inv-mes"><b>Este mes</b><span>' + esc(pf.esteMes) + '</span></div>' : '') +
       '</section>' +
       '<section class="inv-caja">' + invProyHtml(monto, r) + '</section>' +
     '</div>' +
