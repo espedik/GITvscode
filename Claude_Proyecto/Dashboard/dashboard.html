@@ -3376,8 +3376,14 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .alv-voc-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
 .alv-k{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
 .alv-k.c{color:var(--c)}
-.alv-voc-h{margin:0;font-size:25px;font-weight:800;line-height:1.2;color:var(--text)}
-.alv-voc-h span{font-weight:600;color:var(--text2)}
+.alv-voc-h{margin:0;display:flex;align-items:center;gap:10px;font-family:var(--font-title);font-size:32px;font-weight:700;line-height:1.1;letter-spacing:-.01em;color:var(--text)}
+.alv-voc-ico{font-size:.85em;line-height:1}
+/* Los subtemas que tocan hoy, como fichas: lo que vas a estudiar, de un vistazo. */
+.alv-voc-subs{display:flex;flex-wrap:wrap;align-items:center;gap:6px 7px;margin:2px 0 3px}
+.alv-voc-subs .alv-k{margin-right:3px}
+.alv-voc-sub{padding:3px 11px;border-radius:999px;font-size:12.5px;font-weight:700;color:var(--text);
+  background:color-mix(in srgb,var(--c) 12%,transparent);border:1px solid color-mix(in srgb,var(--c) 35%,transparent)}
+.alv-wc-top b{font-weight:700;color:var(--c)}
 .alv-voc-s{margin:0;max-width:820px;font-size:13.5px;line-height:1.5;color:var(--text2)}
 .alv-voc-dato{font-size:12px;line-height:1.5;color:var(--text3)}
 .alv-voc-dato b{font-weight:700;color:var(--text2)}
@@ -3494,7 +3500,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   .alv-voc{padding:12px 12px 22px;gap:14px}
   .alv-voc-cab{gap:12px}
   .alv-voc-foto{width:72px;height:56px}
-  .alv-voc-h{font-size:19px}
+  .alv-voc-h{font-size:24px}
   .alv-voc-s{display:none}
   .alv-grid{flex:none;grid-template-columns:minmax(0,1fr);grid-auto-rows:auto;gap:10px}
   .alv-voc.practica{justify-content:flex-start}
@@ -7787,7 +7793,8 @@ function alemanTab(t){
 function alemanTabsTxt(){
   const ws = alemanVocabHoy(), rep = alemanRepasoHoy(), t = alemanLeccionHoy();
   const bv = document.querySelector('#alemanOverlay [data-alv-tab="vocab"]'), bl = document.querySelector('#alemanOverlay [data-alv-tab="leccion"]');
-  if(bv) bv.innerHTML = `Vocabulario <span>${ws.length} nuevas${rep.length ? ` · ${rep.length} de repaso` : ''}</span>`;
+  const tema = ws.length && alVocab() ? (alVocab().cats[ws[0].cat] || {}).label || '' : '';
+  if(bv) bv.innerHTML = `Vocabulario <span>${tema ? esc(tema) + ' · ' : ''}${ws.length} nuevas${rep.length ? ` · ${rep.length} de repaso` : ''}</span>`;
   if(bl) bl.innerHTML = t ? `Lección <span>${esc(t.l.num)} · ${esc(t.l.de)}${t.avance ? ` · ${t.avance.hechos} de ${t.avance.total}` : ''}</span>` : 'Lección';
 }
 // Pinta el vocabulario y el encabezado de la lección y, si la lección cambió, la carga en el iframe (`src` manda
@@ -7876,14 +7883,17 @@ function alemanOirBtn(t){ return alemanVoz() ? `<button type="button" class="alv
 function alemanVocabCabHtml(ws, rep){
   const V = alVocab(), a = ws[0], cat = V.cats[a.cat] || {}, sub = (cat.subs || {})[a.sub] || '';
   const temas = [...new Set(ws.map(w => (V.cats[w.cat] || {}).label || ''))].filter(Boolean);
+  // Lo que se estudia hoy, dicho claro: el tema es el título y debajo van sus subtemas, en el orden de las tarjetas.
+  const subsHoy = [...new Set(ws.map(w => ((V.cats[w.cat] || {}).subs || {})[w.sub]).filter(Boolean))];
   const etapa = aprendeEtapaAleman(), salio = new Set((((rawGet(APRENDE_KEY, {}) || {}).salio || {}).de) || []);
   const delNivel = alemanPalabras().filter(x => x.niv === etapa.nivel), van = delNivel.filter(x => salio.has(x.de)).length;
   const luego = alemanTemaLuego(ws), atrasadas = Math.max(0, alemanRepasoHoy(true).length - rep.length);
   return `<div class="alv-voc-cab">
       ${apImg(apFotoAleman(a), 'alv-voc-foto')}
       <div class="alv-voc-t">
-        <div class="alv-k c">Vocabulario de hoy · ${temas.map(esc).join(' · ')}</div>
-        <h3 class="alv-voc-h">${ws.length} palabras nuevas${rep.length ? `<span> y ${rep.length} de repaso</span>` : ''}</h3>
+        <div class="alv-k c">Vocabulario de hoy · ${ws.length} palabras nuevas${rep.length ? ` y ${rep.length} de repaso` : ''}</div>
+        <h3 class="alv-voc-h">${temas.length === 1 ? `<span class="alv-voc-ico">${cat.icon || ''}</span>` : ''}${temas.map(esc).join(' · ')}</h3>
+        ${subsHoy.length ? `<div class="alv-voc-subs"><span class="alv-k">Hoy estudias</span>${subsHoy.map(x => `<span class="alv-voc-sub">${esc(x)}</span>`).join('')}</div>` : ''}
         ${atrasadas ? `<div class="alv-voc-dato">Y <b>${atrasadas} más atrasadas</b>: al terminar la práctica puedes seguir con ellas.</div>` : ''}
         <p class="alv-voc-s">Léelas en voz alta con su artículo y su plural. Después, «Practicar»: ves el español, dices el alemán y la volteas. Las que no sepas vuelven mañana; las que sí, a los 3, 7, 14 y 30 días.</p>
         <div class="alv-voc-dato">${etapa.nivel === 'A2' ? 'A2, el que pide Esslingen' : esc(etapa.nivel)} · van <b>${van} de ${delNivel.length}</b>${luego ? ` · mañana, <b>${esc(luego)}</b>` : ''}</div>
@@ -7900,9 +7910,9 @@ function alemanVocabCabHtml(ws, rep){
 // Una palabra en su tarjeta: el color de su género a la izquierda, qué es y su nivel, la palabra con su artículo
 // y su audio, la traducción, la gramática, el ejemplo traducido y el uso o fallo típico.
 function alemanTarjetaHtml(w){
-  const ex = alemanEjemplo(w), gram = alemanGram(w);
+  const ex = alemanEjemplo(w), gram = alemanGram(w), V = alVocab(), sub = V ? ((V.cats[w.cat] || {}).subs || {})[w.sub] || '' : '';
   return `<article class="alv-wc ${alemanGenero(w)}">
-      <div class="alv-wc-top"><span>${esc(AL_TIPO[w.tipo] || '')}${w.niv ? ' · ' + esc(w.niv) : ''}</span>${alemanOirBtn(alemanArtTxt(w) + w.de)}</div>
+      <div class="alv-wc-top"><span>${sub ? `<b>${esc(sub)}</b> · ` : ''}${esc(AL_TIPO[w.tipo] || '')}${w.niv ? ' · ' + esc(w.niv) : ''}</span>${alemanOirBtn(alemanArtTxt(w) + w.de)}</div>
       <div class="alv-wc-de" lang="de">${alemanArtHtml(w)}${esc(w.de)}</div>
       <div class="alv-wc-es">${esc(w.es)}</div>
       ${gram ? `<div class="alv-wc-gram">${gram}</div>` : ''}

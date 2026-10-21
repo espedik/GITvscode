@@ -389,16 +389,18 @@ también agrega lecciones de alemán"*, y el 15: *"no me das suficiente vocabula
 ventana"*. Tocar la tarjeta abre `#alemanOverlay` (`abrirAleman()`) en el vocabulario, y tocar la lección de la
 tarjeta, en la lección. Es ancha y alta —hasta 1900 px, el 96 % del ancho y el 92 % del alto—, opaca (es para
 leer: con vidrio se veían las fotos de Mi Día detrás de cada tarjeta) y con **dos pestañas a todo lo ancho** que
-dicen lo que hay en cada una: *Vocabulario · 10 nuevas · 5 de repaso* y *Lección · K10 · 06 · Partizip I & II ·
+dicen lo que hay en cada una: *Vocabulario · Trámites · 10 nuevas · 5 de repaso* y *Lección · K10 · 06 · Partizip I & II ·
 0 de 5* (`alemanTabsTxt()`).
 
 **El vocabulario de hoy** son diez palabras, no una (`AL_VOC_DIA`, `alemanVocabHoy()`), **todas de un mismo tema**:
 las siguientes del orden de Coach que no han salido, por tema (`alemanTanda()`, ver *Lo decide Coach*), fijas en el día
 (`hoy.fijo.voc` en `dash-aprende-v1`); un día fijado con temas mezclados y sin practicar se vuelve a tomar. ↻ trae las
-diez siguientes. Arriba, su encabezado: la foto del tema, *Vocabulario de hoy · Trámites*, *10 palabras nuevas y 5 de
-repaso*, cómo estudiarlas, cuánto va del nivel, el tema de mañana y **«Practicar»**. Debajo, una tarjeta por palabra
+diez siguientes. Arriba, su encabezado: la foto del tema, *Vocabulario de hoy · 10 palabras nuevas y 5 de repaso* y,
+**como título, el tema del día** con su emoji (*📋 Trámites*, en Fraunces) y debajo **Hoy estudias**, sus subtemas en
+fichas, en el orden de las tarjetas (*Formularios · Conseguir cita · Documentos · Empadronarse*; Adán: *"debe haber
+un título claro que abarque el tema de las tarjetas y saber qué se estudiará ese día"*); después, cómo estudiarlas, cuánto va del nivel, el tema de mañana y **«Practicar»**. Debajo, una tarjeta por palabra
 (`alemanTarjetaHtml()`): el color de su género a la izquierda —los de la app de Alemán: der azul, die rosa, das
-verde, plural naranja—, qué es y su nivel, la palabra con su artículo, la traducción, su gramática (el plural, o
+verde, plural naranja—, su subtema (en el color de la ventana), qué es y su nivel, la palabra con su artículo, la traducción, su gramática (el plural, o
 las tres formas del verbo con su auxiliar, el régimen, el comparativo, lo raro), el ejemplo traducido y, si lo
 tiene, el uso o fallo típico (*Ojo*). Las tarjetas toman el alto que sobra: a 2048×1040 van cinco por fila y
 caben las diez sin desplazar. Al pie, **el repaso de hoy**: lo que ya salió y toca, con el español a la vista
