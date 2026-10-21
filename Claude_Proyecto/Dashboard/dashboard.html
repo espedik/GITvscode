@@ -789,8 +789,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .fzc-tx[onclick]{cursor:pointer}
 .fzc-tx>b{font-weight:600;color:var(--text)}
 .fzc-k{font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--fc);filter:brightness(.8);margin-right:6px}
-.fzc-det{font-size:12.5px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fzc-item.abierto .fzc-det,.fzc-tx.abierto .fzc-det{white-space:normal}
+/* El detalle se abre al tocar el renglón: cerrado no ocupa espacio ni corta la frase con puntos suspensivos (Adán,
+   21-oct-2026: "se ve algo amontonado, ahorra espacio"). El › dice que hay más. */
+.fzc-det{display:none;font-size:12.5px;color:var(--text3)}
+.fzc-item.abierto .fzc-det,.fzc-tx.abierto .fzc-det{display:block}
+.fzc-tx[onclick]>b::after{content:'›';display:inline-block;margin-left:7px;font-weight:800;color:var(--text3);transition:transform .15s}
+.fzc-item.abierto .fzc-tx[onclick]>b::after,.fzc-tx.abierto[onclick]>b::after{transform:rotate(90deg)}
 .fzc-item.ok .fzc-tx>b,.fzc-item.r-nova .fzc-tx>b{color:var(--text3);text-decoration:line-through;font-weight:500}
 .fzc-tag{font-style:normal;font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:4px;background:rgba(var(--w-rgb),.16);color:var(--w);
   margin-left:5px;white-space:nowrap;display:inline-block}
@@ -920,6 +924,32 @@ span.fza-chip:not(.on){opacity:.45}
 .fa-dash thead th{font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
 .fa-dash tr.tot th,.fa-dash tr.tot td{font-weight:800;color:var(--text)}
 .fa-dash td.ok{color:var(--g)}
+/* Un renglón con desglose (faDetalle) lleva ▸ y, al tocarlo, abre sus partes debajo, en las mismas columnas: las rutinas
+   producto por producto con dónde recortar, los servicios y las suscripciones cobro por cobro, la comida por tiempo y la
+   mensualidad del BYD entre capital e intereses (Adán, 21-oct-2026: "no debe ser otra sección… al hacer click, que te
+   desglose todo eso y se expanda"). Los renglones sin desglose dejan el mismo hueco, para que los nombres se alineen. */
+.fa-dash.con-g th:first-child{padding-left:20px}
+.fa-dash tr.fa-g-h{cursor:pointer}
+.fa-dash tr.fa-g-h:hover>*,.fa-dash tr.fa-g-h:focus-visible>*{background:rgba(var(--ov),.05)}
+.fa-dash tr.fa-g-h:focus-visible{outline:none}
+.fa-dash.con-g tr.fa-g-h th:first-child{padding-left:6px}
+.fa-dash tr.fa-g-h th:first-child::before{content:'▸';display:inline-block;width:14px;color:var(--text3);transition:transform .15s}
+.fa-dash tbody.abierto tr.fa-g-h th:first-child::before{transform:rotate(90deg)}
+.fa-dash tbody.abierto tr.fa-g-h>*{color:var(--text);font-weight:700}
+.fa-dash tr.fa-g-d{display:none}
+.fa-dash tbody.abierto tr.fa-g-d{display:table-row}
+.fa-dash tr.fa-g-d>*{background:rgba(var(--ov),.025);color:var(--text3)}
+.fa-dash tr.fa-g-d th:first-child{padding-left:34px}
+.fa-dash tr.fa-g-d.sub>*{font-size:9.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding-top:9px}
+.fa-dash tr.fa-g-d.sub th:first-child{padding-left:26px}
+.fa-dash tr.fa-g-d.it th:first-child{padding-left:42px}
+.fa-dash td.fa-g-blk{padding:8px 6px 12px 26px;text-align:left;white-space:normal}
+.fa-dash td.fa-g-blk .fa-recorte{margin:0}
+.fa-dash .fa-g-nota{font-size:10px;color:var(--text3)}
+/* En el teléfono la tabla cabe: los títulos de columna bajan de renglón y las celdas se aprietan. */
+@media(max-width:640px){.fa-dash thead th{white-space:normal}.fa-dash th,.fa-dash td{padding:4px 3px}
+  .fa-dash.con-g th:first-child{padding-left:16px}.fa-dash.con-g tr.fa-g-h th:first-child{padding-left:2px}.fa-dash tr.fa-g-d th:first-child{padding-left:24px}
+  .fa-dash tr.fa-g-d.it th:first-child{padding-left:30px}.fa-dash td.fa-g-blk{padding-left:8px}}
 @keyframes fasesIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 /* La ventana de las fases, a pantalla casi completa y con la letra más grande (Adán: "haz más
    grande la ventana de Las 5 fases del Plan Maestro"). abrirKpi pone .kpi-fases en el overlay
@@ -12383,10 +12413,10 @@ function cortesSalidaDash(){
   if(!window.CIFRAS||!CIFRAS.PROYECCION) return [];
   const C=CIFRAS.PROYECCION.cortes||{}, F1=PHASES.find(p=>p.tag==='Fase 1'), dec=String(CIFRAS.n('decisionMaestria')||'').slice(0,7);
   return [
-    {mes:F1?mpYM(F1.end):'',pide:+CIFRAS.n('marzoParaSalida')||0,t:'Cierre de la Fase 1'},
-    {mes:dec,pide:+CIFRAS.n('mayoParaSalida')||0,t:'El día de decidir'},
-    C.junio?{mes:C.junio.mes,pide:C.junio.pide,t:'La cuenta bloqueada'}:null,
-    C.salida?{mes:C.salida.mes,pide:C.salida.pide,t:'La salida completa'}:null
+    {mes:F1?mpYM(F1.end):'',pide:+CIFRAS.n('marzoParaSalida')||0,t:'Cierre de la Fase 1',p:'para irte completo en septiembre'},
+    {mes:dec,pide:+CIFRAS.n('mayoParaSalida')||0,t:'El día de decidir',p:'el día de decidir'},
+    C.junio?{mes:C.junio.mes,pide:C.junio.pide,t:'La cuenta bloqueada',p:'la cuenta bloqueada'}:null,
+    C.salida?{mes:C.salida.mes,pide:C.salida.pide,t:'La salida completa',p:'la salida completa'}:null
   ].filter(c=>c&&c.mes&&c.pide>0);
 }
 function mpRealSalida(){
@@ -12870,27 +12900,69 @@ function faseMetaHTML(meta){
   return (intro?'<p class="fz-p">'+intro+'</p>':'')+
     '<ol class="fz-ol">'+partes.slice(1).map(x=>'<li>'+x.replace(/[;.\s]+$/,'')+'</li>').join('')+'</ol>';
 }
-// Las rutinas producto por producto y, debajo y en verde, dónde recortar (CIFRAS.rutinasDesglose):
-// una recomendación por producto, lo que costaría al mes con la misma dosis y lo que ahorra.
-function faseRutinasHTML(){
-  const C=window.CIFRAS;
-  if(!C||!C.rutinasDesglose) return '';
-  const R=C.rutinasDesglose();
+// Dónde recortar en tus rutinas (CIFRAS.rutinasDesglose), en verde: una recomendación por producto, lo que costaría al mes con
+// la misma dosis y lo que ahorra. Va dentro del renglón de tus rutinas, al abrirlo (faDetalle).
+function faRecorteHTML(R){
   const recortes=[].concat.apply([],R.grupos.map(g=>g.items.filter(x=>x.recorte))).sort((a,b)=>b.recorte.ahorro-a.recorte.ahorro);
-  return kpiSec('🧴 Tus rutinas, producto por producto')+
-    '<table class="fa-dash"><thead><tr><th>Producto</th><th>Al mes</th></tr></thead><tbody>'+
-    R.grupos.map(g=>'<tr class="grupo"><th>'+g.grupo+'</th><td>'+money(g.total)+'</td></tr>'+
-      g.items.map(x=>'<tr><th>'+esc(x.n)+'</th><td>'+money(x.mes)+'</td></tr>').join('')).join('')+
-    '<tr class="tot"><th>Total de tus rutinas</th><td>'+money(R.total)+'</td></tr></tbody></table>'+
-    '<div class="fa-recorte"><div class="fa-recorte-t">✂️ Dónde puedes recortar: hasta '+money(R.ahorro)+' al mes más para Alemania</div><ul>'+
+  if(!recortes.length) return '';
+  return '<div class="fa-recorte"><div class="fa-recorte-t">✂️ Dónde puedes recortar: hasta '+money(R.ahorro)+' al mes más para Alemania</div><ul>'+
     recortes.map(x=>'<li><b>'+(x.recorte.quitar?'Quita el '+esc(x.n.toLowerCase()):esc(x.n)+' → '+esc(x.recorte.n))+'</b>: '+
       money(x.mes)+' → '+money(x.recorte.mes)+' al mes, <b>ahorras '+money(x.recorte.ahorro)+'</b>. '+
       (x.recorte.medico?'<span class="med">Con tu dermatólogo.</span> ':'')+esc(x.recorte.txt)+' <span class="fte">('+esc(x.recorte.fuente)+')</span></li>').join('')+
     '</ul><p>Sin tocar tus tratamientos ahorras <b>'+money(R.ahorro-R.medico)+'</b> al mes desde ya; los otros '+money(R.medico)+
     ' los decide tu dermatólogo. Lo que recortes, súmalo a lo que mandas a GBM cada quincena.</p></div>';
 }
-// Devuelve sus partes por separado —la tabla, las barras y las rutinas— para que la información general
-// las acomode: las barras a la vista, el detalle plegado. Sin meses en México, null.
+/* ── EL DESGLOSE DE UN RENGLÓN DEL DINERO ──────────────────────────────────────────────────────────
+   Adán, 21-oct-2026: "🧴 Tus rutinas, producto por producto, esto no debe ser otra sección, debe estar en Un mes de cada
+   etapa, renglón por renglón, pero en la sección que corresponde: al hacer click, que te desglose todo eso y se expanda".
+   `ds` es el desglose de cada columna (`CIFRAS.mesTipo`, o `desgloseMes` del mes de la ficha). Devuelve los renglones de
+   detalle de un grupo —que suman lo que dice su renglón— o '' si no se abre:
+   · los servicios del depa y las suscripciones, cobro por cobro (`items`, del calendario);
+   · la comida por tiempo: lo de la lista de compras de cada tiempo al día por 30.4 —la cuenta del maestro—; el último
+     tiempo cierra con lo que falta para el renglón. En casa, tu desayuno; la comida y la cena las cubre el aporte;
+   · la mensualidad del BYD: a capital, lo que baja el saldo en la proyección ese mes; lo demás son intereses;
+   · tus rutinas: piel, cabello y suplementos, producto por producto, y dónde recortar. */
+function faDetalle(k, ds){
+  const C=window.CIFRAS; if(!C||!ds||!ds.length) return '';
+  const v=x=>x>=0.5?'−'+money(Math.round(x)):'—';
+  const fila=(t,vs,cls)=>'<tr class="fa-g-d'+(cls?' '+cls:'')+'"><th>'+t+'</th>'+vs.map(x=>'<td>'+x+'</td>').join('')+'</tr>';
+  if(k==='depa'||k==='suscripciones'){
+    const ts=[]; ds.forEach(d=>((d.items||{})[k]||[]).forEach(x=>{ if(ts.indexOf(x.t)<0) ts.push(x.t); }));
+    if(ts.length<2) return '';
+    return ts.map(t=>fila(esc(t), ds.map(d=>v(((d.items||{})[k]||[]).filter(x=>x.t===t).reduce((s,x)=>s+x.v,0))))).join('');
+  }
+  if(k==='comida'){
+    const T=((typeof ctComida==='function'&&ctComida())||{}).tiempos||[];
+    if(T.length<2) return '';
+    return T.map((t,j)=>fila(esc(t.n), ds.map(function(d){
+      if(d.casa) return j===0 ? v(d.g.comida) : '<span class="fa-g-nota">en casa</span>';
+      const antes=T.slice(0,j).reduce((s,x)=>s+Math.round(x.m*30.4),0);
+      return v(j===T.length-1 ? d.g.comida-antes : Math.round(t.m*30.4));
+    }))).join('');
+  }
+  if(k==='auto'){
+    const M=C.PROYECCION?C.PROYECCION.meses:[], de=ym=>M.filter(m=>m.mes===ym)[0];
+    const cap=ds.map(function(d){ const a=de(d.mes), b=de(fzmMesAnt(d.mes)); return a&&b&&b.auto>a.auto ? b.auto-a.auto : null; });
+    if(cap.some(x=>x===null)) return '';
+    return fila('A capital', cap.map(v))+fila('Intereses', ds.map((d,j)=>v(d.g.auto-cap[j])));
+  }
+  if(k==='cuidado'){
+    const R=C.rutinasDesglose?C.rutinasDesglose():null; if(!R) return '';
+    return R.grupos.map(g=>fila(esc(g.grupo), ds.map(()=>v(g.total)), 'sub')+g.items.map(x=>fila(esc(x.n), ds.map(()=>v(x.mes)), 'it')).join('')).join('')+
+      '<tr class="fa-g-d"><td class="fa-g-blk" colspan="'+(ds.length+1)+'">'+faRecorteHTML(R)+'</td></tr>';
+  }
+  return '';
+}
+// Un renglón del dinero: con desglose se abre al tocarlo (o con Enter); sin él, un renglón como siempre.
+function faRenglon(celdas, det){
+  return det
+    ? '<tbody class="fa-g"><tr class="fa-g-h" tabindex="0" role="button" aria-expanded="false" title="Toca para ver el desglose" onclick="faAbrir(this)" '+
+      'onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();faAbrir(this)}">'+celdas+'</tr>'+det+'</tbody>'
+    : '<tbody><tr>'+celdas+'</tr></tbody>';
+}
+function faAbrir(tr){ const on=tr.parentNode.classList.toggle('abierto'); tr.setAttribute('aria-expanded', on?'true':'false'); }
+// Devuelve sus partes por separado —la tabla y las barras— para que la información general las acomode: las barras a la
+// vista y la tabla plegada, con cada renglón que tiene desglose abrible ahí mismo. Sin meses en México, null.
 function faseAhorroHTML(f){
   const C=window.CIFRAS;
   if(!C||!C.PROYECCION||!C.mesTipo) return null;
@@ -12903,18 +12975,17 @@ function faseAhorroHTML(f){
     .map(e=>({t:(e[0]?'En casa':'Con depa')+' · '+tramo(e[1]),d:C.mesTipo(e[0])}));
   const G=C.GRUPOS_SUELDO, nom=k=>G.filter(x=>x[0]===k)[0][1];
   const td=(v,s)=>'<td>'+(v?(s<0?'−':'+')+money(v):'—')+'</td>';
-  const fila=(k,s)=>et.some(e=>e.d.g[k])?'<tr><th>'+nom(k)+'</th>'+et.map(e=>td(e.d.g[k],s)).join('')+'</tr>':'';
+  const ds=et.map(e=>e.d);
+  const fila=(k,s)=>et.some(e=>e.d.g[k])?faRenglon('<th>'+nom(k)+'</th>'+et.map(e=>td(e.d.g[k],s)).join(''), faDetalle(k, ds)):'';
   // La BBVA va antes que GBM: si su plan cae en esta fase, se dice cuándo queda en cero.
   const B=C.planBbva?C.planBbva():null;
   const bbvaNota=B&&B.fin&&filas.some(m=>m.mes===ym(B.fin))?'Antes que GBM, la BBVA: lo que sobra de cada quincena y lo de Didi de cada lunes van a ella hasta el <b>'+
     B.fin.getDate()+' '+mc(ym(B.fin))+'</b>'+(B.intereses>=1?' ('+money(Math.round(B.intereses))+' de intereses)':', sin intereses')+'; por eso octubre casi no ahorra. ':'';
-  // GBM al cerrar cada mes, en barras, y la línea de lo que pide cada corte que cae en la fase:
-  // junio (la cuenta bloqueada), la salida completa y, al cerrar la Fase 1, irte completo en
-  // septiembre de 2027 (marzoParaSalida). Bajo cada corte, lo que falta o lo que sobra.
-  const K=C.PROYECCION.cortes, metas={};
-  [K.junio,K.salida].forEach(c=>{ if(filas.some(m=>m.mes===c.mes)) metas[c.mes]={pide:c.pide,falta:c.falta,t:c===K.junio?'la cuenta bloqueada':'la salida completa'}; });
-  const marzo=f===PHASES[1]&&C.n?C.n('marzoParaSalida'):null;
-  if(marzo!=null){ const u=filas[filas.length-1]; metas[u.mes]={pide:marzo,falta:marzo-u.alemania,t:'para irte completo en septiembre'}; }
+  // GBM al cerrar cada mes, en barras, y la línea de lo que pide cada corte que cae en la fase —el cierre de la Fase 1, el
+  // día de decidir, la cuenta bloqueada y la salida completa—: los mismos cortes que Mis Metas y el checkpoint de la banda
+  // (cortesSalidaDash). Bajo cada corte, lo que falta o lo que sobra.
+  const metas={};
+  cortesSalidaDash().forEach(c=>{ const m=filas.filter(x=>x.mes===c.mes)[0]; if(m) metas[c.mes]={pide:c.pide,falta:c.pide-m.alemania,t:c.p}; });
   const tope=Math.max.apply(null,filas.map(m=>m.alemania).concat(Object.keys(metas).map(k=>metas[k].pide)))*1.16;
   const alto=x=>(Math.max(0,x)/tope*100).toFixed(1)+'%';
   const barras='<div class="fzg">'+filas.map(function(m){ const mt=metas[m.mes];
@@ -12925,17 +12996,16 @@ function faseAhorroHTML(f){
       (mt?'<span class="fzg-f '+(mt.falta>0?'mal':'ok')+'">'+(mt.falta>0?'faltan ':'sobran ')+money(Math.abs(mt.falta))+'</span>':'')+'</div>';
   }).join('')+'</div>';
   const quePide=Object.keys(metas).sort().map(k=>mc(k)+', '+metas[k].t).join(' · ');
-  return { tabla: '<table class="fa-dash"><thead><tr><th>Un mes</th>'+et.map(e=>'<th>'+e.t+'</th>').join('')+'</tr></thead><tbody>'+
+  return { tabla: '<table class="fa-dash con-g"><thead><tr><th>Un mes</th>'+et.map(e=>'<th>'+e.t+'</th>').join('')+'</tr></thead>'+
     G.filter(x=>x[0]!=='personal'&&x[0]!=='ahorro').map(x=>fila(x[0],x[0]==='sueldo'?1:-1)).join('')+
-    '<tr><th>'+nom('personal')+'</th>'+et.map(e=>'<td>−'+money(e.d.g.personal)+'</td>').join('')+'</tr>'+
+    '<tbody><tr><th>'+nom('personal')+'</th>'+et.map(e=>'<td>−'+money(e.d.g.personal)+'</td>').join('')+'</tr>'+
     '<tr class="tot"><th>Del sueldo, a GBM</th>'+et.map(e=>'<td>'+money(e.d.g.ahorro)+'</td>').join('')+'</tr>'+
     '<tr><th>Didi, a GBM</th>'+et.map(e=>td(e.d.didi,1)).join('')+'</tr>'+
     '<tr class="tot"><th>Ahorro del mes</th>'+et.map(e=>'<td class="ok">'+money(e.d.ahorro)+'</td>').join('')+'</tr>'+
     '</tbody></table>',
     barras: kpiSec('📊 GBM al cerrar cada mes')+barras+
     kpiNota(bbvaNota+'Las barras son lo que tiene GBM al cerrar cada mes con tu ritmo'+(quePide?'; la línea roja, lo que pide cada corte ('+quePide+')':'')+
-      '. Cada mes, con su ficha, en su pestaña.'),
-    rutinas: faseRutinasHTML() };
+      '. Cada mes, con su ficha, en su pestaña.') };
 }
 function kpiSec(t){ return '<div class="gbm-sec">'+t+'</div>'; }
 function kpiNota(t){ return '<div class="gbm-nota">'+t+'</div>'; }
@@ -13041,7 +13111,7 @@ function fzmPartir(txt){
 // La ficha de un mes: lo que tiene que quedar hecho y lo que se sostiene todo el mes —lo de cada semana o
 // cada mes, el foco de aprendizaje y lo de toda la fase—.
 function fzmFicha(P, A){
-  const habitos = P.mensual.map(x => ({ id: x.id, k: x.cuando, t: fzmTx(x.txt), d: '' }))
+  const habitos = P.mensual.map(x => Object.assign({ id: x.id, k: x.cuando }, fzmPartir(x.txt)))
     .concat(P.foco ? [{ id: 'foco-'+P.foco.id, k: 'Tu foco', t: P.foco.nombre+', '+P.foco.horas+' h a la semana.',
                         d: fzmTx(P.foco.semana)+' Lo que lo demuestra: '+fzmTx(P.foco.entregable) }] : [])
     .concat(P.siempre.map(x => Object.assign({ id: x.id, k: 'Toda la fase' }, fzmPartir(x.txt))));
@@ -13115,7 +13185,7 @@ function fzvGeneralHTML(i){
     const txt = est === 'ok' ? (q !== null ? '✓ '+q+' · '+fzaVeredicto(q).t : '✓ Auditado el '+new Date(a.cerrado+'T12:00:00').getDate()+' de '+fzmMesMin(a.cerrado.slice(0,7)))
       : est === 'pend' ? '⚠ Sin auditar' : est === 'hoy' ? 'En curso · se audita el '+fzmFinMes(k).getDate() : 'Por venir';
     return '<button type="button" class="fzv-mes '+est+'" onclick="fzmVer('+i+',\''+k+'\')"><span class="fzv-mes-m">'+fzmNombre(k)+'</span>'+
-      '<span class="fzv-mes-l">✅ '+hechas+' de '+F.tareas.length+' tareas'+(F.habitos.length ? ' · 🔁 '+F.habitos.length : '')+(P.metas.length ? ' · 🔢 '+P.metas.length : '')+'</span>'+
+      '<span class="fzv-mes-l">'+(F.tareas.length ? '✅ '+hechas+' de '+F.tareas.length+' tareas' : '🔁 Lo de cada mes')+'</span>'+
       '<span class="fzv-mes-e">'+txt+'</span></button>';
   }).join('');
   const cerrados = meses.filter(k => k < hoyYM).length, auditados = meses.filter(k => fzmEstado(k, A) === 'ok').length;
@@ -13126,7 +13196,7 @@ function fzvGeneralHTML(i){
   const prom = cal.length ? Math.round(cal.reduce((s, x) => s + x, 0) / cal.length) : null;
   const va = '<div>'+kpiSec('📈 Cómo va la fase')+
     '<div class="fzv-n"><span>Meses auditados</span><b>'+(cerrados ? auditados+' de '+cerrados : 'aún no cierra ninguno')+'</b></div>'+
-    '<div class="fzv-n"><span>Tareas cumplidas hasta hoy</span><b>'+tH+' de '+tT+'</b></div>'+
+    (tT ? '<div class="fzv-n"><span>Tareas cumplidas hasta hoy</span><b>'+tH+' de '+tT+'</b></div>' : '')+
     (prom !== null ? '<div class="fzv-n"><span>Calificación de los meses</span><b class="'+fzaVeredicto(prom).c+'">'+prom+'</b></div>' : '')+
     '<div class="fzv-sigue">'+sigue+'</div></div>';
   const A1 = '<div class="fzv-a'+(f.checkpoint ? '' : ' dos')+'"><div>'+kpiSec('🎯 La meta al '+dC(f.end))+faseMetaHTML(f.meta)+'</div>'+
@@ -13142,8 +13212,7 @@ function fzvGeneralHTML(i){
   const pl = (t, h) => h ? '<details class="fzv-pl"><summary>'+t+'</summary><div>'+h+'</div></details>' : '';
   return A1+kpiSec('🗓️ Los meses de la fase')+'<div class="fzv-meses">'+tarjetas+'</div>'+B+
     pl('💡 Por qué esta fase', (f.razones || f.explica) ? faseRazonesHTML(f) : '')+
-    pl('💰 Un mes de cada etapa, renglón por renglón', AH.tabla)+
-    pl('🧴 Tus rutinas y dónde recortar', AH.rutinas);
+    pl('💰 Un mes de cada etapa, renglón por renglón', AH.tabla);
 }
 // Cómo quedó una tarea en la auditoría: {r, por, sigue}. Una auditoría vieja solo guardaba ok, pasa o no.
 function fzaResTarea(a, t, checks){
@@ -13284,13 +13353,17 @@ function fzmDineroHTML(P, ym){
   const corte = String((C.PROYECTO && C.PROYECTO.bbvaSaldoFecha) || '');
   const bb = (P.bbva || []).filter(x => x.hecho || x.fecha > corte)
     .map(x => +x.fecha.slice(8)+' '+fzmCorto(ym)+': '+fzmNum(x.monto)+(x.hecho ? ' ✓' : '')).join(' · ');
-  const partes = (R.partes || []).map(p => '<tr><th>'+esc(p.t)+'</th><td'+(p.mxn > 0 ? ' class="ok"' : '')+'>'+(p.mxn < 0 ? '−' : '+')+fzmNum(Math.abs(p.mxn))+'</td></tr>').join('');
+  // Cada renglón que es un grupo del sueldo se abre con su desglose de ESE mes (el gas, en sus meses), igual que en la
+  // información general (faDetalle).
+  const dm = C.desgloseMes ? [C.desgloseMes(ym)] : [], llave = t => ((C.GRUPOS_SUELDO || []).filter(x => x[1] === t)[0] || [])[0];
+  const partes = (R.partes || []).map(p => faRenglon('<th>'+esc(p.t)+'</th><td'+(p.mxn > 0 ? ' class="ok"' : '')+'>'+(p.mxn < 0 ? '−' : '+')+fzmNum(Math.abs(p.mxn))+'</td>',
+    llave(p.t) && dm.length ? faDetalle(llave(p.t), dm) : '')).join('');
   return '<div class="fzm-blk">'+kpiSec('💰 El dinero del mes')+
     li('Ahorro', '<b>'+fzmNum(R.ahorro)+'</b> · entra '+fzmNum(R.entra)+' y sale '+fzmNum(R.sale))+
     (G ? li('A GBM', aG.length ? aG.join(', ').replace(/, ([^,]*)$/, ' y $1') : 'nada este mes: el ahorro se lo lleva la BBVA') : '')+
     (bb ? li('A la BBVA', bb) : '')+
     ((R.notas || []).length ? li('Este mes', R.notas.map(esc).join(' · ')) : '')+
-    (partes ? '<details class="fzv-pl fzm-pl"><summary>Renglón por renglón</summary><div><table class="fa-dash"><tbody>'+partes+'</tbody></table></div></details>' : '')+'</div>';
+    (partes ? '<details class="fzv-pl fzm-pl"><summary>Renglón por renglón</summary><div><table class="fa-dash con-g">'+partes+'</table></div></details>' : '')+'</div>';
 }
 // Las fechas del mes —el cierre y el checkpoint de la fase, los hitos y el cambio de foco— y lo que se paga.
 function fzmFechasHTML(P, ym){

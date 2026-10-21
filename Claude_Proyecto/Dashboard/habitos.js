@@ -92,15 +92,17 @@
         'De {{horaApp}} a {{horaRutinaNoche}}: constrúyela, pruébala en el navegador y súbela a GitHub. Es la última pantalla del día.',
         'Si no cabe en 30 min, pártela. Lo que suba hoy tiene que funcionar; lo demás espera a mañana, no al sueño.'
       ] },
-    /* Sustituye al CT-GenAI en el mismo hueco (Adán, 21-sep-2026: "quita lo de genAI y en su
-       lugar pon hacer post en LinkedIn de Aeroresinas"). Lunes, miércoles y viernes, con
-       `flex`: tres posts a la semana es un ritmo que se sostiene; se cambia desde la pantalla. */
-    { id:'linkedin', nombre:'Post de Aeroresinas en LinkedIn', ancla:'Al llegar a ALTEN, antes del correo · 20 min', hora:'08:30', color:'#4ade80', ico:'pluma', dow:[1,3,5], flex:true,
+    /* Sustituyó al CT-GenAI en el mismo hueco (Adán, 21-sep-2026: "quita lo de genAI y en su lugar pon hacer post en
+       LinkedIn de Aeroresinas"), y desde el 21-oct-2026 son las dos empresas de su papá, en LinkedIn y en Facebook: "no
+       dejes de lado lo de publicar en LinkedIn o FB acerca de la empresa de mi papá de reparar helicópteros y vender
+       helicópteros a escala… si llega un cliente, nos ahorraremos mucho tiempo y ganaremos mucho dinero". Los posts salen
+       listos de la app Posts; el plan de cada fase lo pide (`m1-4`). Lunes, miércoles y viernes, con `flex`. */
+    { id:'linkedin', nombre:'Posts del negocio de tu papá', ancla:'Al llegar a ALTEN, antes del correo · 20 min', hora:'08:30', color:'#4ade80', ico:'pluma', dow:[1,3,5], flex:true,
       pasos:[
-        'Un tema por post: uno de los 14 trabajos de aeroresinas.html, una foto de antes/después o un dato del proceso (material, horas, técnica).',
-        'Foto real + tres líneas: qué se hizo, en qué aeronave (sin nombrar al cliente) y qué problema resolvió.',
-        'Cierra con una puerta: el WhatsApp o el correo de Aeroresinas, o la pregunta que abre conversación.',
-        'Publica desde la página de empresa y comparte desde el perfil de tu papá; responde los comentarios ese mismo día. 20 min y fuera.'
+        'Abre Posts: trae listo el post de hoy de Aeroresinas —reparación de helicópteros— y el de Heliescala —helicópteros a escala—.',
+        'Publica los dos en LinkedIn —en la página de cada empresa, y compártelos desde el perfil de tu papá— y su versión corta en Facebook.',
+        'Cada uno cierra con el WhatsApp de su web: el cliente que llegue ya sabe dónde escribir.',
+        'Contesta comentarios y mensajes ese mismo día. 20 min y fuera.'
       ] },
     { id:'ale',    nombre:'Clase de alemán',        ancla:'CENLEX · ESCA Santo Tomás, hasta las 18:00',  hora:'17:00', color:'#ffd93d', ico:'habla',  dow:[1,2,3,4,5],
       pasos:[
@@ -156,7 +158,7 @@
      La regla de todas: lo que Adán editó a mano manda. Un hábito se considera
      "suyo" si su nombre o su anclaje no son los que le puso la semilla anterior
      — entonces se le añade solo lo nuevo (la hora) y no se le toca nada más. */
-  const MIG = 11;
+  const MIG = 12;
   const RETIRADOS = { 2: ['azucar', 'gasto'], 3: ['pasos'], 4: ['snooze', 'diario'], 5: ['nata'], 7: ['genai', 'medi'] };
   /* Los días que traía la semilla anterior. La migración 11 le devuelve el miércoles al Gimnasio:
      era natación, y desde el 10-oct-2026 son intervalos en el gym (Adán, 15-oct-2026: "aparece que no
@@ -181,6 +183,12 @@
      redefinieron el 3 oct 2026) cambia los de `fase0`, que mandaban a la plantilla GBM: solo
      si siguen tal cual — si Adán los editó, mandan los suyos. */
   const PASOS_PREVIOS = {
+    /* Migración 12 (2026-10-21): el post de Aeroresinas pasa a los posts de las dos empresas de su papá, en LinkedIn y
+       Facebook. El nombre lo cambia PREVIO (si sigue el de antes); estos son los pasos de antes. */
+    linkedin: ['Un tema por post: uno de los 14 trabajos de aeroresinas.html, una foto de antes/después o un dato del proceso (material, horas, técnica).',
+               'Foto real + tres líneas: qué se hizo, en qué aeronave (sin nombrar al cliente) y qué problema resolvió.',
+               'Cierra con una puerta: el WhatsApp o el correo de Aeroresinas, o la pregunta que abre conversación.',
+               'Publica desde la página de empresa y comparte desde el perfil de tu papá; responde los comentarios ese mismo día. 20 min y fuera.'],
     fase0: ['1h15 de avance en la prioridad activa: el negocio de tu papá o la plantilla GBM.',
             'Antes de empezar, decide qué vas a tener hecho a las 21:15. Una cosa, no tres.',
             'Sin Didi ni celular en este bloque: es el único hueco de trabajo profundo del día.'],

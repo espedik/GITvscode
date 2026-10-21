@@ -717,7 +717,7 @@ debajo de otro, y a 390 px no hay desborde.
 
 **Toda la banda es un botón**: abre la ventana de las fases (`abrirKpi('fases')`, en
 `kpiDetalle`) con fechas, estado, meta, el porqué en tarjetas, el checkpoint y el checklist de cada mes leído de
-`coach_checks_v1`. En las fases que pasan en México, **💰 Tu ahorro en esta fase** (`faseAhorroHTML`): un mes de cada etapa —con depa y en casa de tu familia— renglón por renglón y GBM al cerrar cada mes en barras contra lo que piden junio y la salida —en la Fase 1, el 31 de marzo contra la salida completa (`marzoParaSalida`)—; el mismo desglose que Coach. El título del módulo Fase de Mi Día abre la misma ventana.
+`coach_checks_v1`. En las fases que pasan en México, **💰 Tu ahorro en esta fase** (`faseAhorroHTML`): un mes de cada etapa —con depa y en casa de tu familia— renglón por renglón, cada uno abrible con su desglose, y GBM al cerrar cada mes en barras contra lo que pide cada corte de la salida que cae en la fase (`cortesSalidaDash`: el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la salida completa); el mismo desglose que Coach. El título del módulo Fase de Mi Día abre la misma ventana.
 
 ### De dónde sale cada cosa
 
@@ -1124,10 +1124,12 @@ caben tres meses de tareas sin desplazarse. Mientras está abierta se oculta la 
   rojo). **🚫 Lo que dejas de hacer** (`faseDejaHTML`): una frase por renglón, con lo de antes de los
   dos puntos en negritas.
 - **El dinero de la fase** (`faseAhorroHTML`, en las fases que pasan en México): la tabla de un mes de
-  cada etapa; **📊 GBM al cerrar cada mes** en barras (`.fzg`), con la línea roja de lo que pide cada
-  corte que cae en la fase —junio, la salida completa y, al cerrar la Fase 1, `marzoParaSalida`— y
-  debajo lo que falta o lo que sobra; tus rutinas producto por producto con dónde recortar en verde
-  (`faseRutinasHTML`), y el patrimonio que espera la trayectoria (`liquido`).
+  cada etapa, con cada renglón abrible (ver *El desglose de un renglón*); **📊 GBM al cerrar cada mes** en
+  barras (`.fzg`), con la línea roja de lo que pide cada corte que cae en la fase —los de
+  `cortesSalidaDash`, los mismos que Mis Metas y el checkpoint de la banda: el cierre de la Fase 1, el día
+  de decidir, la cuenta bloqueada y la salida completa— y debajo lo que falta o lo que sobra (*faltan
+  $56,173* en marzo; en la Fase 2, *$78,642* en mayo, *$43,546* en junio y *$112,346* en agosto), y el
+  patrimonio que espera la trayectoria (`liquido`).
 
 Abre en la fase en curso (o la siguiente sin empezar, o la última si el plan ya cerró), en la
 pestaña del mes de hoy; las otras fases abren en su información general. El subtítulo va del arranque
@@ -1152,9 +1154,28 @@ punto y la información general, oculta mientras se ve un mes).
 **La información general** (`fzvGeneralHTML`), en bandas, de lo que se actúa a lo que se explica: la meta,
 el checkpoint y **cómo va la fase** (meses auditados, tareas cumplidas hasta hoy, la calificación de los
 meses y lo que sigue: *Auditar septiembre* o la próxima auditoría); las **fichas de los meses**
-(`.fzv-mes`: tareas cumplidas y su estado, con la calificación si ya se auditó), que abren su mes; GBM al cerrar cada
-mes en barras, lo que dejas de hacer y lo de toda la fase; y **plegados** el porqué, un mes de cada etapa
-renglón por renglón y las rutinas con dónde recortar (`faseAhorroHTML` devuelve sus partes por separado).
+(`.fzv-mes`: tareas cumplidas —o *lo de cada mes*, si el mes no trae tareas— y su estado, con la calificación si ya
+se auditó), que abren su mes; GBM al cerrar cada mes en barras, lo que dejas de hacer y lo de toda la fase; y
+**plegados** el porqué y un mes de cada etapa renglón por renglón (`faseAhorroHTML` devuelve sus partes por
+separado). Las rutinas ya no son una sección aparte: van dentro de su renglón.
+
+### El desglose de un renglón
+
+Adán, 21-oct-2026: *"🧴 Tus rutinas, producto por producto, esto no debe ser otra sección, debe estar en Un mes
+de cada etapa, renglón por renglón, pero en la sección que corresponde: al hacer click, que te desglose todo eso
+y se expanda"*. En la tabla de la fase y en *Renglón por renglón* de cada mes, un renglón con desglose lleva ▸ y
+se abre ahí mismo, en las mismas columnas (`faRenglon` → `faAbrir`, también con Enter; cada grupo es su `<tbody>`).
+Lo que trae cada uno sale de `faDetalle(k, ds)` y suma exacto lo que dice su renglón:
+
+| Renglón | Al abrirlo | De dónde |
+|---|---|---|
+| Luz, agua, internet y gas · Gym, Claude Code e iCloud | cobro por cobro (el gas, a su promedio en el mes tipo y completo en sus meses) | `desgloseMes().items` |
+| Comida | desayuno, comida y cena; en casa, tu desayuno y los otros dos *en casa* | `ctComida().tiempos` × 30.4; el último cierra con lo que falta |
+| BYD, la mensualidad | a capital (lo que baja el saldo ese mes en la proyección) e intereses | `PROYECCION.meses[].auto` |
+| Tus rutinas | piel, cabello y suplementos, producto por producto, y **dónde recortar** en verde | `CIFRAS.rutinasDesglose()`, `faRecorteHTML` |
+
+Con depa: $135 + $200 + $90 = $425; el BYD, $3,756 a capital y $2,944 de intereses; comer, $821 + $704 + $1,854
+= $3,379, y las rutinas, $683 + $2,811 + $1,130 = $4,624.
 
 **La ficha del mes** (`faseMesHTML`), con todo de `CIFRAS.planMes(mes)` (ver `DATOS-MAESTROS.md`). Arriba,
 el mes y sus tres números: tareas hechas, lo sostenido y las cifras. Si el mes anterior cerró sin auditar,
@@ -1163,7 +1184,8 @@ un aviso lleva a él.
 - **✅ El checklist** (izquierda): *Lo que tiene que quedar hecho* —las tareas de la fase y lo que viene de
   antes, con su marca *de octubre*—, *Para la salida a Alemania* y *Lo que sostienes todo el mes* —lo de
   cada semana o cada mes (`mensual`), el foco de aprendizaje y lo de toda la fase—. Cada renglón muestra
-  su primera frase; el detalle va en una línea que se abre al tocarlo (`fzmPartir`). Las tareas usan las
+  su primera frase con un ›; el detalle se abre al tocarlo y, cerrado, no ocupa lugar ni se corta con puntos
+  suspensivos (`fzmPartir`; lo de cada mes también se parte así). Las tareas usan las
   casillas de `coach_checks_v1` (`fzmCheck` → `toggleFaseCheck`); lo sostenido se marca por mes
   (`fzmSostuve`) y no se puede marcar un mes que no ha empezado.
 - **🔢 Las cifras** (derecha, `fzmCifrasHTML`): las metas del mes (`metas`) con lo real de hoy
@@ -1175,7 +1197,8 @@ un aviso lleva a él.
   y lo que se corrige el mes siguiente, con **Ver la auditoría** (en solo lectura) y **Reabrir**.
 - **💰 El dinero** y **📅 las fechas**, en renglones cortos: el ahorro con lo que entra y sale, qué va a GBM
   el 1 y el 15, los abonos de la BBVA desde el último saldo dicho, lo propio de ese mes y el renglón por
-  renglón plegado; el cierre y el checkpoint de la fase, los hitos, el cambio de foco y lo que se paga.
+  renglón plegado, con el desglose de ese mes en cada renglón; el cierre y el checkpoint de la fase, los hitos,
+  el cambio de foco y lo que se paga.
 
 **La auditoría, paso a paso** (`fzaHTML`, en el lugar de la ficha mientras se audita; `FZA_ABIERTA`):
 
@@ -1647,8 +1670,9 @@ marcas o más, y si hasta el peor pasa del 80 % lo dice en verde. Mira los últi
 
 ### Los hábitos siguen el horario
 
-Los nueve de `SEMILLA` salen de `RUTINA_TASKS`: Construir esta app, Post de Aeroresinas en LinkedIn
-(lun/mié/vie, `flex`, en el hueco del CT-GenAI), Clase de alemán,
+Los nueve de `SEMILLA` salen de `RUTINA_TASKS`: Construir esta app, Posts del negocio de tu papá
+(lun/mié/vie, `flex`, en el hueco del CT-GenAI: Aeroresinas y Heliescala en LinkedIn y Facebook, con la app
+Posts; la migración 12 le cambió nombre y pasos, y el plan de cada fase lo pide), Clase de alemán,
 Gimnasio, Plan Maestro · 1h15, Leer 10 páginas, Rutina de la noche, Dormir 7 h, Agua 3 litros. Cada
 uno lleva `hora` y **la lista se pinta ordenada por ella** (se ordena una copia; el orden guardado
 es el de creación). La hora se edita en la ficha (`time`).

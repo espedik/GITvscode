@@ -399,7 +399,8 @@ que se aparta el día que entra cada quincena —`ahorroDia1`, `ahorroDia15`, `a
 `ahorroDia15Casa`, que son cobros del calendario, menos lo que se lleva la BBVA mientras tenga
 saldo— y de Didi lo que Adán dijo
 que aparta (`didiAlAhorro`). Lo demás del sueldo son los fijos, la comida, sus rutinas y el gasto personal,
-que es lo que queda: `desgloseMes(mes)` lo da renglón por renglón con el `grupo` de cada cobro, y
+que es lo que queda: `desgloseMes(mes)` lo da renglón por renglón con el `grupo` de cada cobro —y en
+`items` los cobros de cada grupo, para que el Dashboard abra un renglón en sus partes—, y
 `mesTipo(casa)` da un mes tipo de cada etapa —con depa y en casa de su familia— para las tablas
 de las fases. Así el calendario del Dashboard y la proyección no pueden decir cosas distintas, y
 el verificador lo comprueba mes a mes. El aguinaldo paga el seguro del BYD y ALTEN no da

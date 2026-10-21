@@ -538,12 +538,17 @@ window.CIFRAS = (function () {
       {id:"m1-1",cuando:"Cada lunes",txt:"Lo que apartas de Didi, el mismo lunes: a la BBVA mientras tenga saldo y, después, a GBM."},
       {id:"m1-2",cuando:"Cada semana",txt:"Las horas de tu foco de aprendizaje, en el bloque de la noche del Plan Maestro."},
       {id:"m1-3",cuando:"Cada día",txt:"Cada gasto anotado en Finanzas el mismo día; lo que pagues con tarjeta, con la tarjeta en la nota."},
+      // Adán, 21-oct-2026: "no dejes de lado lo de publicar en LinkedIn o FB acerca de la empresa de mi papá de reparar
+      // helicópteros y vender helicópteros a escala, esto es muy necesario porque si llega un cliente, nos ahorraremos mucho
+      // tiempo y ganaremos mucho dinero". Los posts salen de la app Posts; el hábito «Posts del negocio de tu papá» los marca.
+      {id:"m1-4",cuando:"Lunes, miércoles y viernes",txt:"Los posts del negocio de tu papá, sin falta. El de Aeroresinas —reparación de helicópteros— y el de Heliescala —helicópteros a escala—, listos en la app Posts: en LinkedIn y su versión corta en Facebook. Hasta enero los publicas tú, 20 min al llegar a {{empleador}}; desde febrero, tu papá, y tú revisas cada lunes que salieron. Cada uno cierra con el WhatsApp de su web: el cliente que llega ya sabe dónde escribir."},
      ],
      semanas:[
       {id:"a1-1",mes:"2026-10",txt:"Deja la BBVA en cero quincena a quincena. Lo que sobra de cada quincena y lo de Didi de cada lunes van a la tarjeta y no a GBM —{{bbvaRuta}}— y quedará en cero el {{bbvaCero}}. Desde ahí, lo que pagues con ella lo pagas en la misma quincena."},
       {id:"a1-2",mes:"2026-10",txt:"Abre tu cuenta de GBM para Alemania, aparte del día a día. En cuanto la BBVA quede en cero, lo que sobra de cada quincena va ahí el día que entra el sueldo —{{ahorroDia1}} el 1 y {{ahorroDia15}} el 15— y lo de Didi cada lunes, hasta juntar {{didiAhorro}} al mes."},
       {id:"a1-18",mes:"2026-10",txt:"Decide tu palanca de ingreso este mes. Septiembre de 2027 pide {{extraSalida}} más al mes desde noviembre, y la de ese tamaño es el sueldo: pide el aumento en {{empleador}} con números —lo que haces en Ford y el CT-GenAI que presentas en enero— o aplica a puestos que paguen más, remotos o en un Tier 1. Freelance de pruebas en lugar de horas de Didi también suma, después de revisar tu contrato. Cada peso, a GBM el día que entra."},
       {id:"a1-4",mes:"2026-10",txt:"Pide las dos cartas de recomendación. Un jefe de Bosch, Continental o ALTEN y un líder técnico o profesor: en inglés y firmadas."},
+      {id:"a1-19",mes:"2026-10",txt:"Arranca hoy los posts del negocio de tu papá. La app Posts trae listo el de cada día de Aeroresinas y de Heliescala: publica el de hoy de las dos en LinkedIn y en Facebook, y sigue lunes, miércoles y viernes. Un cliente que llega por un post ya vio el trabajo y escribe directo al WhatsApp de la web: menos tiempo para cerrarlo."},
       {id:"a1-5",mes:"2026-11",txt:"La ventana de Esslingen abre el 4 nov. Arma la solicitud: CV europeo, carta de motivación, título y certificado del IPN."},
       {id:"a1-6",mes:"2026-11",txt:"Vende lo que no usas. PS5 y su control, monitores e iPad: cada venta, a GBM."},
       {id:"a1-7",mes:"2027-01",txt:"Presenta el ISTQB CT-GenAI en enero. Llega con el simulacro de Mis Metas en 34 de 46 o más, dos veces seguidas: el corte oficial es 30."},
@@ -575,6 +580,7 @@ window.CIFRAS = (function () {
      mensual:[
       {id:"m2-1",cuando:"Cada semana",txt:"Las horas de tu foco de aprendizaje y alemán sin pausa: llegas a Esslingen con el A2 y rumbo al B1."},
       {id:"m2-2",cuando:"Cada día",txt:"Cada gasto anotado en Finanzas el mismo día, y nada que no esté en la lista de salida."},
+      {id:"m2-3",cuando:"Cada lunes",txt:"Los posts del negocio de tu papá siguen saliendo. Los publica él con la app Posts —Aeroresinas y Heliescala, en LinkedIn y en Facebook—; tú revisas que salieron los de la semana y contestas ese mismo día lo que llegue."},
      ],
      semanas:[
       {id:"a2-1",mes:"2027-04",txt:"Declaración anual. Con tus deducciones; si sale saldo a favor, a GBM."},
@@ -583,7 +589,7 @@ window.CIFRAS = (function () {
       {id:"a2-4",mes:"2027-05",txt:"La respuesta de Esslingen, antes de fin de mayo. Si es sí: acepta el lugar, pide la carta de admisión y solicita cuarto en el Studierendenwerk Stuttgart ese día."},
       {id:"a2-5",mes:"2027-06",txt:"Cuenta bloqueada llena. Expatrio, Fintiba o Coracle: con la confirmación se completa el expediente de visa."},
       {id:"a2-6",mes:"2027-06",txt:"Cita de visa con BLS. Dos juegos de todo: formularios, fotos biométricas, pasaporte, admisión, cuenta bloqueada, seguro de viaje e IELTS. Visa €75 + BLS €39.90."},
-      {id:"a2-7",mes:"2027-06",txt:"Aplica a Werkstudent desde México. Bosch, Mercedes-Benz, Porsche y sus proveedores: 20 h a la semana pagan unos €1,200 al mes."},
+      {id:"a2-7",mes:"2027-06",txt:"Aplica a Werkstudent desde México. Bosch, Mercedes-Benz, Porsche y sus proveedores: 20 h a la semana pagan unos €1,200 brutos al mes, {{werkstudentEur}} netos."},
       {id:"a2-8",mes:"2027-07",txt:"Renta el BYD con contrato. Seguro para plataformas, GPS con paro de motor, depósito y pago semanal por adelantado; tu papá lo administra."},
       {id:"a2-9",mes:"2027-07",txt:"Compra el vuelo y el seguro de viaje. Salida a fines de agosto; el seguro cubre los primeros 3 meses, como pide la visa."},
       {id:"a2-10",mes:"2027-08",txt:"Renuncia en {{empleador}} con el aviso que pida tu contrato. Constancia laboral y carta de recomendación en inglés; el plan no cuenta finiquito."},
@@ -608,6 +614,7 @@ window.CIFRAS = (function () {
       {id:"m3-1",cuando:"Cada mes",txt:"Tu presupuesto en euros: la vida en Esslingen dentro de lo previsto en el dinero del mes; si algo se pasa, se recorta antes de tocar el fondo."},
       {id:"m3-2",cuando:"Cada semana",txt:"El Werkstudent hasta 20 horas en semestre —el tope es de 140 días al año— y una sesión de alemán o Tandem."},
       {id:"m3-3",cuando:"Cada mes",txt:"Cuántos meses de gasto quedan en el fondo: si bajan de seis, el plan se ajusta ese mismo mes."},
+      {id:"m3-4",cuando:"Cada lunes",txt:"Los posts del negocio de tu papá, también desde Esslingen. Él los publica con la app Posts —Aeroresinas y Heliescala, en LinkedIn y en Facebook—; tú revisas que salieron los de la semana y le ayudas a contestar lo que llegue."},
      ],
      semanas:[
       {id:"a3-1",mes:"2027-09",txt:"Las primeras dos semanas. Anmeldung (obligatoria en 14 días), inscripción, cuenta, seguro y SIM; después, el permiso de residencia."},
@@ -640,6 +647,7 @@ window.CIFRAS = (function () {
      mensual:[
       {id:"m4-1",cuando:"El día de pago",txt:"El 30 % del neto a la inversión el mismo día —el ETF-Sparplan—, antes de gastar."},
       {id:"m4-2",cuando:"Cada mes",txt:"Tu gasto dentro de lo previsto en el dinero del mes y el patrimonio líquido contra la proyección."},
+      {id:"m4-3",cuando:"Cada lunes",txt:"Los posts del negocio de tu papá siguen saliendo. Revisa con él los de la semana y lo que llegó: un cliente de Aeroresinas o de Heliescala se contesta el mismo día."},
      ],
      semanas:[
       {id:"a4-1",mes:"2029-03",txt:"Automatiza el ahorro el día de pago. 30% del neto a la inversión el mismo día; súbelo con cada aumento."},
@@ -903,9 +911,9 @@ window.CIFRAS = (function () {
     // 1 oct 2026: fondo $6,000 + cuenta $390 + efectivo $1,600; el depósito del depa; el crédito
     // del auto con su tasa y su pago; el iPhone de AT&T. La BBVA no va aquí: la lleva `planBbva`.
     foto: { efectivo: 7990, deposito: 11250, auto: 283000, autoTasa: 12.99, autoPago: 6700, iphone: 11362, iphonePago: 494 },
-    // Comer al mes: lo que da la lista de compras del Dashboard ($91.54 al día × 30.4). En casa de
-    // su familia, comida y cena son de la casa —las cubre el aporte— y él paga su desayuno: el
-    // promedio de sus recetas de desayuno ($16.60 al día). El verificador los compara con la lista
+    // Comer al mes: lo que da la lista de compras del Dashboard al día, por 30.4. En casa de su
+    // familia, comida y cena son de la casa —las cubre el aporte— y él paga su desayuno: el promedio
+    // de sus recetas de desayuno, por 30.4. El verificador los compara con la lista
     // y las recetas: si cambian, avisa que hay que actualizarlos aquí.
     comida: 3379,
     comidaEnCasa: 821,
@@ -1119,12 +1127,14 @@ window.CIFRAS = (function () {
     const g = {};
     GRUPOS_SUELDO.forEach(function (x) { g[x[0]] = 0; });
     let dia1 = 0, dia15 = 0;
+    const items = {};
     CALENDARIO.cobros.forEach(function (c) {
       // Irse un año después estira lo que dura hasta el último mes en México.
       const hasta = c.hasta === P.ultimoMesMexico ? ultimo : c.hasta;
       if (!caeEnMes({ cada: c.cada, desde: c.desde, hasta: hasta }, mes, opts.promedio)) return;
       const v = opts.promedio && c.cada > 1 ? c.monto / c.cada : c.monto;
       g[c.grupo] = (g[c.grupo] || 0) + v;
+      (items[c.grupo] = items[c.grupo] || []).push({ t: c.txt, v: v });
       if (c.quincena) { if (c.dia < 15) dia1 += v; else dia15 += v; }
     });
     g.auto = opts.pagoAuto != null ? opts.pagoAuto : f.autoPago;
@@ -1151,7 +1161,7 @@ window.CIFRAS = (function () {
       return x[0] === 'sueldo' || x[0] === 'ahorro' || x[0] === 'personal' ? a : a + g[x[0]];
     }, 0);
     const didi = didiAlAhorro(mes, ultimo) - deDidi;
-    return { mes: mes, casa: casa, g: g, cetes: cetes, dia1: dia1, dia15: dia15, didi: didi, ahorro: g.ahorro + didi };
+    return { mes: mes, casa: casa, g: g, items: items, cetes: cetes, dia1: dia1, dia15: dia15, didi: didi, ahorro: g.ahorro + didi };
   }
   // Lo que cuestan al mes sus rutinas de piel, cabello y suplementos: el mismo número que pintan
   // esas pantallas, leído de sus estructuras.
