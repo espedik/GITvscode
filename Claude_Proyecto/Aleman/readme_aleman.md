@@ -217,7 +217,8 @@ preposición no arrastra los huecos de un verbo:
  reg:'warten auf + Akk.', esEx:'Espero el autobús.'},
 
 // Una sección con sus subsecciones
-comida: {label:'Comida', icon:'🍽️', subs:{
+comida: {label:'Comida', icon:'🍽️',
+  trata:'Los alimentos y bebidas de cada día, las comidas y cómo hablar de lo que comes.', subs:{
   frutas: 'Frutas y verduras',
   carnes: 'Carnes y pescado',
 }},
@@ -237,7 +238,12 @@ comida: {label:'Comida', icon:'🍽️', subs:{
 | `esEx` | La traducción del ejemplo. Las 1.516 la tienen |
 
 **Añadir una sección entera** es lo mismo con una entrada más en `cats`: su etiqueta, su
-emoji y sus `subs`. Así entraron Hobbies, Armar frases y las siete de vida cotidiana.
+emoji, de qué trata (`trata`) y sus `subs`. Así entraron Hobbies, Armar frases y las siete de vida cotidiana.
+
+**`trata` es lo que dice Mi Día** el día que toca ese tema: las diez palabras de cada día son de una sola
+sección, y la tarjeta de Alemán enseña su nombre y, debajo, esta frase. Va en segunda persona, dice para qué
+te sirven esas palabras y cabe en dos renglones (95 letras como mucho). El control 34 de
+`../Dashboard/verificar-sincronia.js` avisa si una sección no la tiene.
 
 ### La tabla de verbos del tema de Partizip
 

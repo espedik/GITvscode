@@ -7392,15 +7392,17 @@ function alNumTxt(num){
 function alemanHoyHtml(vistos){
   const V = (typeof alVocab === 'function') ? alVocab() : null, ws = V ? alemanVocabHoy() : [], a = ws[0], t = alemanLeccionHoy();
   if(!a && !t) return '';
-  const l = t ? t.l : null, av = t ? t.avance : null, practico = alemanPracticoHoy();
+  const l = t ? t.l : null, av = t ? t.avance : null, practico = alemanPracticoHoy(), tema = a ? (V.cats[a.cat] || {}) : {};
   const pie = l ? `${av ? apTramos(av.total, j => j < av.hechos, -1) : ''}<span>Lección: <b>${esc(String(l.es).split(':')[0])}</b>${av ? ` · ${av.hechos} de ${av.total}` : ''}</span>` : '';
   return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA, foto: a ? apFotoAleman(a) : apFotoLeccion(l), mat: 'Alemán',
     estado: (vistos.de || practico) ? apEstado(true, '', practico ? '✓ practicaste' : '✓ abierto')
       : `<button type="button" class="ap-estado ir" onclick="aprendeAbrir('de')">Practicar</button>`,
     otra: `Las ${AL_VOC_DIA} palabras siguientes, en el orden de Coach`,
     abrir: "aprendeAbrir('de')", titulo: 'Abrir el vocabulario y la lección de hoy aquí mismo',
-    txt: apCuerpo({ sub: `Para mudarte a Alemania · ${a ? `${esc((V.cats[a.cat] || {}).label || '')}: ${ws.length} palabras y ` : 'hoy, '}una lección`,
-      big: a ? `${esc(alemanArtTxt(a))}${esc(a.de)}` : esc(l.es), lang: a ? 'de' : '', det: a ? esc(a.es) : '', pie }) });
+    // Lo de hoy es el tema de las diez palabras y, debajo, de qué trata (`trata` de su sección, en vocab-datos.js;
+    // Adán: "dime de qué se va a tratar… debe ser más descriptivo"): una palabra suelta no lo decía.
+    txt: apCuerpo({ sub: `Para mudarte a Alemania · hoy, ${a ? ws.length + ' palabras y ' : ''}una lección`,
+      big: a ? esc(tema.label || '') : esc(l.es), det: a ? esc(tema.trata || '') : '', pie }) });
 }
 
 // ── El vocabulario de hoy y su repaso ─────────────────────────────────────────────────────────────
@@ -7903,6 +7905,14 @@ const IQ_K_LLANO = { K1: 'pregunta de memoria', K2: 'pregunta de comprensión', 
 // (el título oficial va en su ventana).
 const IQ_CAP_LLANO = { 1: 'Qué es la IA generativa', 2: 'Cómo pedirle cosas a la IA',
   3: 'Los riesgos de probar con IA', 4: 'Herramientas de prueba con IA', 5: 'Llevar la IA a tu equipo' };
+// De qué trata cada capítulo, en una frase y sin siglas: es el detalle de la tarjeta (Adán: "dime de qué se va a
+// tratar… debe ser más descriptivo"). Sigue el temario oficial (`EXAMEN_GENAI.secciones`).
+const IQ_CAP_TRATA = {
+  1: 'Qué son los modelos de lenguaje como ChatGPT, qué tipos hay y en qué tareas de pruebas te ayudan.',
+  2: 'Cómo escribir instrucciones (prompts) para que la IA analice, diseñe y revise pruebas, y cómo mejorarlas.',
+  3: 'Respuestas inventadas, sesgos, datos privados, el gasto de energía y las leyes: cuándo no confiar en la IA.',
+  4: 'Cómo se arma una herramienta de pruebas con IA: conectarla a tus documentos, agentes y ajustar el modelo.',
+  5: 'Cómo llevar la IA a un equipo de pruebas: la estrategia, elegir el modelo y preparar a la gente.' };
 function istqbHtml(){
   const q = istqbPreguntaHoy(); if(!q) return '';
   const hecha = istqbHoy(q), ex = cdTarea('a1-7'), vas = istqbMarcador();
@@ -7912,10 +7922,9 @@ function istqbHtml(){
   const vale = (q.pts || 1) === 1 ? '1 punto' : `${q.pts} puntos`;
   return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), mat: 'Examen de certificación',
     estado, otra: 'La siguiente pregunta, en el orden de Coach', abrir: 'abrirIstqb()', titulo: 'Contestar la pregunta del día',
-    txt: apCuerpo({ sub: `ISTQB de pruebas con IA${ex && ex.s.mes ? ' · lo presentas en ' + cdMes(ex.s.mes) : ''}`,
+    txt: apCuerpo({ sub: `ISTQB de pruebas con IA${ex && ex.s.mes ? ' · lo presentas en ' + cdMes(ex.s.mes) : ''}${hecha ? '' : ' · una pregunta de ' + vale}`,
       big: tema ? esc(tema.charAt(0).toUpperCase() + tema.slice(1)) : 'La pregunta de hoy',
-      det: hecha ? (hecha.ok ? 'La contestaste bien. Ábrela para ver el porqué.' : 'Era la ' + 'ABCD'[q.r] + '. Ábrela para ver el porqué.')
-        : `Una pregunta de práctica de este tema; vale ${vale}.`,
+      det: IQ_CAP_TRATA[q.cap] || 'Una pregunta de práctica de este tema.',
       pie: `${AP_ICO.meta}<span>${vas || 'Esta semana aún no contestas ninguna'}</span>` }) });
 }
 // La ventana (#istqbOverlay): tan ancha y alta como la del alemán —Adán: "haz la ventana mucho más grande, así
@@ -10960,11 +10969,11 @@ function pasoInversionHoy(){
     notaIco = 'meta'; nota = 'El auto no se adelanta: se paga con su mensualidad normal.';
     fondo = faltaEf>0 ? '' : 'Tu fondo para emergencias está completo: <b>'+mon(ef)+'</b> en CETES.';
   }
-  // La tarjeta de Mi Día, en simple: la acción en grande, un detalle y el pie.
+  // La tarjeta de Mi Día, en simple: la acción en grande, un detalle que dice de qué se trata el plan y el pie.
   const corto = bbvaSaldo > 0 ? (deHoy.length ? 'Paga '+mon(sumHoy)+' a tu tarjeta BBVA' : 'Hoy no toca pagar la tarjeta') : 'Hoy sí inviertes en GBM';
   const det = bbvaSaldo > 0
-    ? (deHoy.length ? 'Te quedarán <b>'+mon(Math.max(0, bbvaSaldo-sumHoy))+'</b> por pagar' : 'Debes <b>'+mon(bbvaSaldo)+'</b>')+(bbvaFin ? '; queda en cero el <b>'+bbvaFin+'</b>.' : '.')
-    : 'Lo que te sobra de la quincena y de Didi va a tu cuenta de inversiones.';
+    ? 'Primero liquidas la tarjeta y después inviertes: '+(deHoy.length ? 'con este pago te quedarán <b>'+mon(Math.max(0, bbvaSaldo-sumHoy))+'</b>' : 'debes <b>'+mon(bbvaSaldo)+'</b>')+(bbvaFin ? ' y queda en cero el <b>'+bbvaFin+'</b>.' : '.')
+    : 'Ya sin deuda de tarjeta, lo que te sobra de la quincena y de Didi va a tu cuenta de inversiones.';
   const pie = bbvaSaldo > 0 ? (deHoy.length || !resto[0] ? 'Mientras tengas deuda, no compres inversiones' : 'Siguiente pago: <b>'+diaCorto(resto[0].fecha)+'</b>, '+mon(resto[0].monto))
     : 'Reparte según tu perfil, sin pensarlo dos veces';
   return {F, inv, ef, metaEf, totalInv, cetes, deudaCara, mon, color, que, titulo, origen, porque, hoy, nota, notaIco, fondo, foto, corto, det, pie, abonos: bbvaSaldo > 0 ? abonos : []};

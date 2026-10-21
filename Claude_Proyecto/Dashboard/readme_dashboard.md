@@ -230,8 +230,9 @@ y en el mismo orden** (`apCuerpo()`), con poco texto:
 3. **Lo de hoy, en su ficha** (`.ap-hoy`): un recuadro bajo, con fondo suave del color de su materia —el de la acción
    en *Tu dinero hoy*— y a su altura natural (Adán: *"hazlo muchísimo más pequeño"*), con lo de hoy en 16 px y la
    letra de los títulos (`.ap-big`; 14.5 px bajo 280 de ancho) y, debajo, **un solo detalle** en 11.5 px (`.ap-det`).
-   Lo de hoy siempre es un nombre corto —la palabra, el libro, la acción, el tema, el paso o la guía—, nunca una
-   instrucción: esa va en el detalle. A 2048×1040 la ficha mide 50 px de alto (66 con dos renglones de detalle).
+   Lo de hoy siempre es un nombre corto —el tema del alemán, el libro, la acción, el tema del examen, el paso o la
+   guía—, nunca una instrucción, y **el detalle dice de qué se trata** (Adán: *"dime de qué se va a tratar… debe ser
+   más descriptivo"*): una palabra suelta o *vale 2 puntos* no lo decían. A 2048×1040 la ficha mide 66 px de alto.
 4. **El pie** (`.ap-pie`), pegado abajo —a la misma altura en las seis—: el avance con sus tramos o lo que sigue.
 
 La foto ocupa el 40 % del alto de la tarjeta (el 44 % desde 440 px). Ningún renglón se corta con «…»: si uno no cabe
@@ -241,18 +242,20 @@ ven). Los textos están escritos para la tarjeta, nunca son un pedazo del catál
 instrucción corta de cada paso de ejercicio (`corto` en `APRENDIZAJE`, en el maestro), de qué trata cada audio con su
 título en español (`trata` en `DIDI_AUDIO`), la idea de cada paso de las guías que tocan primero —networking,
 persuadir y dinero— (`HB_IDEA`; las demás dicen el nombre del paso), el tema de cada capítulo del examen, corto
-(`IQ_CAP_LLANO`) y el nombre llano de tres habilidades (`SK_LLANO`: *escritura persuasiva*, *programación*,
+(`IQ_CAP_LLANO`) y de qué trata (`IQ_CAP_TRATA`), de qué trata cada sección del vocabulario (`trata` en
+`Aleman/vocab-datos.js`) y el nombre llano de tres habilidades (`SK_LLANO`: *escritura persuasiva*, *programación*,
 *análisis de datos*). Nada de siglas sueltas: *K10 · 03* se lee *Lección 3 del capítulo 10* (`alNumTxt()`) y las
 cuentas dicen de qué son. El control 34 del verificador exige que las seis usen `apCuerpo()`, el `corto` de cada
 paso, el `trata` de cada audio, una idea por paso en `HB_IDEA` y que lo de hoy quepa en su ficha: temas del examen
-de hasta 32 letras y nombres de paso de hasta 50.
+de hasta 32 letras y nombres de paso de hasta 50. Y que cada sección del vocabulario y cada capítulo del examen
+traigan su frase de qué trata.
 
 | Título | Para qué es | Lo de hoy, en su ficha | El detalle | El pie | Tocarla abre |
 |---|---|---|---|---|---|
-| **Alemán** | *Para mudarte a Alemania · Trámites: 10 palabras y una lección* —el tema del día— | La primera palabra, en alemán | Su traducción | Los tramos de la lección y *Lección: Practicar el pasado · 0 de 10* | Su ventana (`abrirAleman()`); arriba, *Practicar* o *✓ practicaste* y ↻ |
+| **Alemán** | *Para mudarte a Alemania · hoy, 10 palabras y una lección* | El tema de las diez palabras: *Trámites* | De qué trata: *Los papeles al llegar: empadronarte, extranjería, llenar formularios y conseguir cita* | Los tramos de la lección y *Lección: Practicar el pasado · 0 de 10* | Su ventana (`abrirAleman()`); arriba, *Practicar* o *✓ practicaste* y ↻ |
 | **Audiolibro y podcast** | *Para escuchar mientras manejas · de Thomas Stanley* | El libro, con su título en español (busca en Spotify) | De qué trata | *El libro, a las 07:40; hoy también, un video de IA* | La foto y *Qué escuchar*: su panel (`abrirDidi()`); ↻, el siguiente libro |
-| **Tu dinero hoy** | *Según tu plan para juntar el dinero de Alemania* | La acción en su color: *Paga … a tu tarjeta BBVA* (rojo), *Hoy no toca pagar la tarjeta* o *Hoy sí inviertes en GBM* (verde) | Cuánto te quedará y el día en que queda en cero | *Mientras tengas deuda, no compres inversiones* o el siguiente pago | El panel *Qué invertir hoy* (`abrirGBM()`). Sale de `pasoInversionHoy()` (`corto`, `det`, `pie`), la regla del panel; todo por `money()` |
-| **Examen de certificación** | *ISTQB de pruebas con IA · lo presentas en ene 2027* | El tema de la pregunta, corto: *Cómo pedirle cosas a la IA* | *Una pregunta de práctica de este tema; vale 2 puntos* (contestada, si fue bien) | Tu marcador de la semana | Su ventana, con la pregunta completa (`abrirIstqb()`) |
+| **Tu dinero hoy** | *Según tu plan para juntar el dinero de Alemania* | La acción en su color: *Paga … a tu tarjeta BBVA* (rojo), *Hoy no toca pagar la tarjeta* o *Hoy sí inviertes en GBM* (verde) | De qué se trata el plan y tus cifras: *Primero liquidas la tarjeta y después inviertes: debes $8,900 y queda en cero el 15 nov* | *Mientras tengas deuda, no compres inversiones* o el siguiente pago | El panel *Qué invertir hoy* (`abrirGBM()`). Sale de `pasoInversionHoy()` (`corto`, `det`, `pie`), la regla del panel; todo por `money()` |
+| **Examen de certificación** | *ISTQB de pruebas con IA · lo presentas en ene 2027 · una pregunta de 2 puntos* | El tema de la pregunta, corto: *Cómo pedirle cosas a la IA* | De qué trata el capítulo (`IQ_CAP_TRATA`); contestada, el resultado va arriba (*✓ correcta*) | Tu marcador de la semana | Su ventana, con la pregunta completa (`abrirIstqb()`) |
 | **Ejercicio de mentalidad** —la habilidad del plan (`aprendeFoco()`)— | *Para subir tu nivel · con el libro Atomic Habits* | El nombre del paso: *Lo alto no se mantiene solo* | Su instrucción corta (`corto`) | Los tramos y *Paso 1 de 6*; arriba, «‹» / «Siguiente ›» | Su ruta (`abrirSkillDetalle()`) |
 | **Habilidades para la vida** | *Guías prácticas, paso a paso* | El nombre de la guía | La idea del paso que toca | Los tramos y *Paso 1 de 20*; arriba, «‹» / «Siguiente ›» | La guía completa (`abrirHabilidadDetalle()`) |
 

@@ -3,7 +3,8 @@
 // archivo para la palabra del día de Mi Día —no tiene copia ni pantalla propia—: corregir
 // una palabra aquí la corrige en los dos sitios.
 //
-//   cats  las 37 secciones, con su etiqueta, su emoji y sus SUBsecciones
+//   cats  las 37 secciones, con su etiqueta, su emoji, de qué trata (`trata`: una frase revisada,
+//         es lo que dice la tarjeta de Alemán en Mi Día el día que toca ese tema) y sus SUBsecciones
 //   voc   las 1516 palabras
 //   partizip  el tema de gramática, por bloques
 //
@@ -27,6 +28,7 @@ const ALEMAN_VOCAB = {
   cats: {
     saludos: {
       label: 'Saludos', icon: '\ud83d\udc4b',
+      trata: 'Saludar, despedirte y presentarte con la cortes\u00eda que esperan en Alemania.',
       subs: {
         hola: 'Saludar y despedirse',
         cortesia: 'Cortes\u00eda',
@@ -36,6 +38,7 @@ const ALEMAN_VOCAB = {
     },
     gente: {
       label: 'Conocer gente', icon: '\ud83e\udd1d',
+      trata: 'Romper el hielo, hacer pl\u00e1tica, quedar con alguien y mantener el contacto.',
       subs: {
         romper: 'Romper el hielo',
         temas: 'De qu\u00e9 se habla',
@@ -46,6 +49,7 @@ const ALEMAN_VOCAB = {
     },
     opinar: {
       label: 'Opinar y discutir', icon: '\ud83d\udcac',
+      trata: 'Dar tu opini\u00f3n, decir que est\u00e1s o no de acuerdo y matizar sin sonar brusco.',
       subs: {
         opinion: 'Dar tu opini\u00f3n',
         acuerdo: 'Estar de acuerdo',
@@ -56,6 +60,7 @@ const ALEMAN_VOCAB = {
     },
     frases: {
       label: 'Armar frases', icon: '\ud83e\uddf1',
+      trata: 'Las piezas que arman cualquier oraci\u00f3n: preguntar, unir ideas, negar y decir d\u00f3nde y cu\u00e1ndo.',
       subs: {
         modales: 'Poder, deber, querer',
         preguntar: 'Preguntar',
@@ -67,6 +72,7 @@ const ALEMAN_VOCAB = {
     },
     numeros: {
       label: 'N\u00fameros', icon: '\ud83d\udd22',
+      trata: 'Contar y decir precios, fechas, medidas y cantidades.',
       subs: {
         cardinales: 'Del 0 al 12',
         decenas: 'Decenas y cientos',
@@ -76,6 +82,7 @@ const ALEMAN_VOCAB = {
     },
     colores: {
       label: 'Colores', icon: '\ud83c\udfa8',
+      trata: 'Los colores, sus matices, claros y oscuros, para describir lo que ves o buscas.',
       subs: {
         basicos: 'Los b\u00e1sicos',
         matices: 'Matices y met\u00e1licos',
@@ -84,6 +91,7 @@ const ALEMAN_VOCAB = {
     },
     tiempo: {
       label: 'Tiempo', icon: '\ud83d\udcc5',
+      trata: 'D\u00edas, meses, estaciones y fechas: para hacer citas y decir cu\u00e1ndo pasa algo.',
       subs: {
         dias: 'D\u00edas de la semana',
         meses: 'Meses',
@@ -93,6 +101,7 @@ const ALEMAN_VOCAB = {
     },
     familia: {
       label: 'Familia', icon: '\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67',
+      trata: 'C\u00f3mo se llama cada pariente y c\u00f3mo hablar de tu pareja y tu estado civil.',
       subs: {
         nucleo: 'Familia directa',
         extensa: 'Familia extensa',
@@ -102,6 +111,7 @@ const ALEMAN_VOCAB = {
     },
     cuerpo: {
       label: 'Cuerpo', icon: '\ud83e\udec0',
+      trata: 'Las partes del cuerpo, por fuera y por dentro, para explicar d\u00f3nde te duele.',
       subs: {
         cabeza: 'Cabeza y cara',
         tronco: 'Tronco',
@@ -111,6 +121,7 @@ const ALEMAN_VOCAB = {
     },
     salud: {
       label: 'Salud', icon: '\ud83e\ude7a',
+      trata: 'Pedir cita con el m\u00e9dico, contar qu\u00e9 te pasa y entenderte en la farmacia y con el seguro.',
       subs: {
         cita: 'Pedir cita',
         sintomas: 'Contar qu\u00e9 te pasa',
@@ -122,6 +133,7 @@ const ALEMAN_VOCAB = {
     },
     ropa: {
       label: 'Ropa', icon: '\ud83d\udc55',
+      trata: 'Las prendas, el abrigo para el fr\u00edo y el calzado, y c\u00f3mo pedir tu talla al comprar.',
       subs: {
         prendas: 'Prendas',
         abrigo: 'Abrigo y fr\u00edo',
@@ -132,6 +144,7 @@ const ALEMAN_VOCAB = {
     },
     comida: {
       label: 'Comida', icon: '\ud83c\udf7d\ufe0f',
+      trata: 'Los alimentos y bebidas de cada d\u00eda, las comidas y c\u00f3mo hablar de lo que comes.',
       subs: {
         frutas: 'Frutas y verduras',
         carnes: 'Carnes y pescado',
@@ -144,6 +157,7 @@ const ALEMAN_VOCAB = {
     },
     mostrador: {
       label: 'En el mostrador', icon: '\ud83e\udd56',
+      trata: 'Pedir en la panader\u00eda, la carnicer\u00eda o el queso: la cantidad, el corte y cerrar el pedido.',
       subs: {
         empezar: 'Cuando te toca',
         cantidad: 'Pedir la cantidad',
@@ -155,6 +169,7 @@ const ALEMAN_VOCAB = {
     },
     restaurante: {
       label: 'En el restaurante', icon: '\ud83c\udf74',
+      trata: 'Pedir mesa, ordenar, reclamar si algo falla y pagar, juntos o por separado.',
       subs: {
         llegar: 'Llegar y sentarse',
         pedir: 'Pedir',
@@ -165,6 +180,7 @@ const ALEMAN_VOCAB = {
     },
     super: {
       label: 'En el s\u00faper', icon: '\ud83e\uddfe',
+      trata: 'Encontrar las cosas en el s\u00faper, pesar la fruta, devolver envases y pagar en la caja.',
       subs: {
         encontrar: 'Encontrar las cosas',
         pesar: 'Pesar y etiquetar',
@@ -175,6 +191,7 @@ const ALEMAN_VOCAB = {
     },
     tienda: {
       label: 'En la tienda', icon: '\ud83d\udc57',
+      trata: 'Buscar algo en una tienda, probarte tu talla, decidirte, cambiarlo o reclamar.',
       subs: {
         buscar: 'Buscar algo',
         tallas: 'Tallas y probarse',
@@ -185,6 +202,7 @@ const ALEMAN_VOCAB = {
     },
     servicios: {
       label: 'Servicios', icon: '\u2702\ufe0f',
+      trata: 'Peluquer\u00eda, tintorer\u00eda, correos y que te arreglen algo: pedir el servicio y la cita.',
       subs: {
         peluqueria: 'En la peluquer\u00eda',
         lavanderia: 'Lavander\u00eda y tintorer\u00eda',
@@ -195,6 +213,7 @@ const ALEMAN_VOCAB = {
     },
     casa: {
       label: 'Casa', icon: '\ud83c\udfe0',
+      trata: 'Las partes de la casa, los muebles y aparatos, y hablar del alquiler y los vecinos.',
       subs: {
         vivienda: 'La vivienda',
         estancias: 'Las estancias',
@@ -206,6 +225,7 @@ const ALEMAN_VOCAB = {
     },
     piso: {
       label: 'Buscar piso', icon: '\ud83d\udd11',
+      trata: 'Buscar piso en Alemania: leer el anuncio, ir a la visita, conseguirlo y mudarte.',
       subs: {
         anuncio: 'Leer el anuncio',
         visita: 'La visita',
@@ -216,6 +236,7 @@ const ALEMAN_VOCAB = {
     },
     ciudad: {
       label: 'Ciudad', icon: '\ud83c\udfd9\ufe0f',
+      trata: 'Moverte por la ciudad: lugares, comercios, transporte, tr\u00e1fico y c\u00f3mo pedir direcciones.',
       subs: {
         lugares: 'Lugares de la ciudad',
         servicios: 'Servicios y comercios',
@@ -226,6 +247,7 @@ const ALEMAN_VOCAB = {
     },
     coche: {
       label: 'Coche y conducir', icon: '\ud83d\ude97',
+      trata: 'Manejar en Alemania: los papeles, la gasolinera, estacionarte, el taller y las multas.',
       subs: {
         permiso: 'Permiso y papeles',
         conducir: 'Conducir',
@@ -237,6 +259,7 @@ const ALEMAN_VOCAB = {
     },
     trabajo: {
       label: 'Trabajo', icon: '\ud83d\udcbc',
+      trata: 'Tu puesto y tu empresa, la gente con la que trabajas, buscar empleo y tu contrato.',
       subs: {
         puesto: 'El puesto y la empresa',
         personas: 'Personas del trabajo',
@@ -247,6 +270,7 @@ const ALEMAN_VOCAB = {
     },
     oficina: {
       label: 'Hablar en el trabajo', icon: '\ud83d\udde3\ufe0f',
+      trata: 'Hablar en el trabajo: reuniones, pedir ayuda, plazos, la entrevista y avisar que faltas.',
       subs: {
         llegar: 'Llegar y saludar',
         reunion: 'En una reuni\u00f3n',
@@ -258,6 +282,7 @@ const ALEMAN_VOCAB = {
     },
     naturaleza: {
       label: 'Naturaleza', icon: '\ud83c\udf3f',
+      trata: 'El clima, el paisaje, las plantas y el cielo: para hablar del tiempo y salir al campo.',
       subs: {
         clima: 'El clima',
         paisaje: 'Paisaje y accidentes',
@@ -268,6 +293,7 @@ const ALEMAN_VOCAB = {
     },
     hobbies: {
       label: 'Hobbies', icon: '\ud83c\udfb2',
+      trata: 'Tu tiempo libre: deporte, m\u00fasica, juegos y salir, para contar qu\u00e9 te gusta hacer.',
       subs: {
         tiempo: 'Tiempo libre',
         deporte: 'Deporte',
@@ -281,6 +307,7 @@ const ALEMAN_VOCAB = {
     },
     verbos: {
       label: 'Verbos', icon: '\u2699\ufe0f',
+      trata: 'Los verbos de todos los d\u00edas: moverte, comunicarte, pensar, dar, empezar y comprar.',
       subs: {
         esenciales: 'Los imprescindibles',
         movimiento: 'Movimiento',
@@ -294,6 +321,7 @@ const ALEMAN_VOCAB = {
     },
     adjetivos: {
       label: 'Adjetivos', icon: '\ud83c\udfaf',
+      trata: 'Describir cosas y personas: tama\u00f1o, calidad, c\u00f3mo te sientes y el car\u00e1cter de alguien.',
       subs: {
         tamano: 'Tama\u00f1o y cantidad',
         valor: 'Bueno, malo y bonito',
@@ -305,6 +333,7 @@ const ALEMAN_VOCAB = {
     },
     viaje: {
       label: 'Viajes', icon: '\u2708\ufe0f',
+      trata: 'Viajar: el aeropuerto, el hotel, los documentos, el equipaje y qu\u00e9 hacer si algo sale mal.',
       subs: {
         transporte: 'Aeropuerto y billetes',
         alojamiento: 'Alojamiento',
@@ -316,6 +345,7 @@ const ALEMAN_VOCAB = {
     },
     emociones: {
       label: 'Emociones', icon: '\ud83d\ude0a',
+      trata: 'Decir c\u00f3mo te sientes, bien o mal, tenso o tranquilo, y qu\u00e9 sientes por otros.',
       subs: {
         positivas: 'Positivas',
         negativas: 'Negativas',
@@ -325,6 +355,7 @@ const ALEMAN_VOCAB = {
     },
     tecnologia: {
       label: 'Tecnolog\u00eda', icon: '\ud83d\udcf1',
+      trata: 'Aparatos, internet, cuentas y mensajes: lo que usas y lo que haces con ellos.',
       subs: {
         aparatos: 'Aparatos',
         internet: 'Internet y conexi\u00f3n',
@@ -334,6 +365,7 @@ const ALEMAN_VOCAB = {
     },
     animales: {
       label: 'Animales', icon: '\ud83d\udc3e',
+      trata: 'Los animales de casa, de granja, salvajes, peque\u00f1os y del agua.',
       subs: {
         casa: 'En casa',
         granja: 'De granja',
@@ -344,6 +376,7 @@ const ALEMAN_VOCAB = {
     },
     compras: {
       label: 'Compras', icon: '\ud83d\uded2',
+      trata: 'Ir de compras: la tienda, los precios y las ofertas, y c\u00f3mo pagar.',
       subs: {
         tienda: 'La tienda',
         pagar: 'Pagar',
@@ -353,6 +386,7 @@ const ALEMAN_VOCAB = {
     },
     dinero: {
       label: 'Dinero y banco', icon: '\ud83d\udcb6',
+      trata: 'Tu cuenta de banco, pagar y transferir, tus gastos e impuestos y qu\u00e9 hacer si algo va mal.',
       subs: {
         cuenta: 'La cuenta',
         pagar: 'Pagar y transferir',
@@ -363,6 +397,7 @@ const ALEMAN_VOCAB = {
     },
     tramites: {
       label: 'Tr\u00e1mites', icon: '\ud83d\udccb',
+      trata: 'Los papeles al llegar: empadronarte, extranjer\u00eda, llenar formularios y conseguir cita.',
       subs: {
         anmeldung: 'Empadronarse',
         extranjeria: 'Extranjer\u00eda',
@@ -373,6 +408,7 @@ const ALEMAN_VOCAB = {
     },
     telefono: {
       label: 'Tel\u00e9fono y correos', icon: '\u260e\ufe0f',
+      trata: 'Llamar, dejar recado, escribir un correo formal y salir del apuro si no entiendes.',
       subs: {
         llamar: 'Llamar',
         recado: 'Dejar recado',
@@ -383,6 +419,7 @@ const ALEMAN_VOCAB = {
     },
     escuela: {
       label: 'Escuela', icon: '\ud83c\udf93',
+      trata: 'La escuela y las clases: el material, las tareas, las notas y c\u00f3mo hablar de lo que aprendes.',
       subs: {
         personas: 'Personas y lugares',
         material: 'Material',
@@ -392,6 +429,7 @@ const ALEMAN_VOCAB = {
     },
     adverbios: {
       label: 'Adverbios', icon: '\u23f1\ufe0f',
+      trata: 'Decir con qu\u00e9 frecuencia, cu\u00e1ndo y en qu\u00e9 orden pasan las cosas.',
       subs: {
         frecuencia: 'Con qu\u00e9 frecuencia',
         momento: 'Cu\u00e1ndo',
