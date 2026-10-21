@@ -824,7 +824,8 @@ La Lista de Compras tiene siete categorías; Comida lleva precios, ticket y cost
 
 ## Al modificar esta pantalla
 - Productos y precios viven en el maestro; el recetario y la lista se hablan.
-- Cada producto lleva su porción y un precio verificable en la tienda enlazada.`
+- Cada producto lleva su porción y un precio verificable en la tienda enlazada.
+- Todo cuadrado: ningún renglón más ancho que su columna, las tiendas del mismo ancho en cada categoría y los nombres enteros, nunca cortados.`
     },
 
     habitos: {

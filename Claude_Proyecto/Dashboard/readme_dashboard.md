@@ -1572,15 +1572,24 @@ debajo del HUD empiezan los pasillos. Lo que decía la leyenda —ticket o estim
 muy mal así"* y *"igual en kit de higiene"*): cada pasillo es un bloque con sus productos uno debajo
 de otro, y `.lc-aisles` reparte los pasillos en tantas columnas como quepan, parejas de alto y sin
 partir un pasillo (`break-inside:avoid`). `LC_COLUMNAS` dice qué categorías van así: Comida en
-columnas de 440 px; el kit, con `ancho`, en columnas de 540 px (`.lc-ancho`) y con el nombre en
-hasta dos renglones en vez de cortado, porque sus nombres son frases y su renglón lleva dos tiendas
-y *Ya lo tengo*. Medido: Comida da 4 columnas a 2282 px, 3 a 1600 y 2 a 1366; el kit, 3 a 2282 y 2 a
-1600 y 1366; los dos, una en iPad y celular, sin desborde. Las demás categorías no llevan
-`.lc-aisles`: sus pasillos van a todo lo ancho. En todas, los renglones de un pasillo son una sola
-columna (`.lc-grid.lc-grid-1col`).
+columnas de 440 px; el kit, con `ancho`, en columnas de 620 px (`.lc-ancho`), porque sus nombres son
+frases y su renglón lleva *Qué es*, dos tiendas y *Ya lo tengo*. En los dos el nombre largo baja de
+renglón y se lee entero, nunca con puntos suspensivos. Medido: Comida da 4 columnas a 2048 px, 3 a 1600
+y 2 a 1366; el kit, 3 a 2282, 2 a 2048 y 1600 y una a 1366; los dos, una en iPad y celular, sin
+desborde. Las demás categorías no llevan `.lc-aisles`: sus pasillos van a todo lo ancho. En todas, los
+renglones de un pasillo son una sola columna (`.lc-grid.lc-grid-1col`) de pista `minmax(0,1fr)`: con
+`1fr` la pista no bajaba del ancho del nombre sin cortar, y en Comida «Bolsa de verduras (brócoli, col y
+zanahoria)» hacía de su pasillo uno de 559 px en una columna de 451 —el contador y el subtotal se metían
+en la columna de al lado— (Adán, 21-oct-2026: *"se ve algunas cosas muy descuadradas"*).
 
 **El renglón cabe en una línea** —checkbox · nombre · píldora · precio unitario · contador ·
-tiendas · subtotal— en los 440 px de una columna. La píldora lleva punto lleno si el precio salió
+tiendas · subtotal— en los 440 px de una columna; solo un nombre muy largo baja de renglón.
+
+**Las tiendas, del mismo ancho.** Fuera de Comida cada tienda ocupa el ancho de la más larga de su
+categoría, con precio o sin él (`lcAlinearTiendas` la mide al pintar y la deja en `--lc-tienda`; `.lc-tienda`),
+y *Ya lo tengo* 80 px: *Qué es*, las dos tiendas y *Ya lo tengo* quedan en columnas parejas renglón a
+renglón —antes *Qué es* brincaba según si la tienda traía precio—. La de receta (`.doble`) va sola y ocupa
+las dos. Los precios llevan coma de miles (*≈ $1,560 Amazon*). La píldora lleva punto lleno si el precio salió
 del ticket de Walmart y hueco si es estimado. En celular (`≤760px`) el renglón va a dos líneas de
 46 px.
 

@@ -1572,7 +1572,12 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 /* Los renglones de un pasillo van uno debajo de otro (`.lc-grid-1col`). Fuera de Comida los nombres
    son líneas enteras —"Exfoliante (BHA/AHA) — The Ordinary Ácido Salicílico 2% o..."— y en varias
    columnas se comían en puntos suspensivos. */
-.lc-grid.lc-grid-1col{grid-template-columns:1fr}
+/* `minmax(0,1fr)` y no `1fr`: con `1fr` la pista nunca baja del ancho mínimo de su renglón —el nombre sin cortar—, y en
+   Comida «Bolsa de verduras (brócoli, col y zanahoria)» hacía de su pasillo uno de 559 px en una columna de 451: los
+   contadores y el subtotal se metían en la columna de al lado (Adán, 21-oct-2026: "se ve algunas cosas muy descuadradas"). */
+.lc-grid.lc-grid-1col{grid-template-columns:minmax(0,1fr)}
+/* En Comida y el kit el nombre largo baja de renglón y se lee entero: nunca con puntos suspensivos. */
+.lc-aisles .lc-item label.lc-item-txt{white-space:normal;overflow:visible}
 /* Comida, por columnas (Adán: "lo de comida, ordénalo por columnas, se ve muy mal así"): cada
    pasillo es un bloque con sus productos en lista, y los pasillos se reparten en tantas columnas de
    440 px como quepan —3 a 1600 px, 4 a 2000— con el alto parejo. Un pasillo no se parte entre dos
@@ -1604,13 +1609,11 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .lc-aisles .lc-aisle{break-inside:avoid;margin:0 0 18px}
 /* El Kit de Higiene, igual (Adán: "igual en kit de higiene"), pero sus nombres son frases
    —"Botellas de viaje rellenables 100 ml (set de 4, aptas para equipaje de mano)"— y su renglón
-   lleva dos tiendas y "Ya lo tengo": columnas de 540 px y el nombre baja a un segundo renglón en vez
-   de cortarse con puntos suspensivos. */
-.lc-aisles.lc-ancho{columns:auto 540px}
+   lleva «Qué es», dos tiendas del mismo ancho y "Ya lo tengo": columnas de 620 px —dos a 2048, tres desde 2282— y el
+   nombre entero, en los renglones que haga falta. */
+.lc-aisles.lc-ancho{columns:auto 620px}
 .lc-aisles.lc-ancho .lc-item{align-items:flex-start}
 .lc-aisles.lc-ancho .lc-item input[type="checkbox"]{margin-top:1px}
-.lc-aisles.lc-ancho .lc-item label.lc-item-txt{white-space:normal;overflow:visible;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .lc-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(var(--ov),.05)}
 .lc-item:hover{background:rgba(var(--ov),.025)}
 /* `display:contents` en escritorio (todo en la misma línea flex) y contenedor real en celular,
@@ -1667,6 +1670,11 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .lc-price-link{text-decoration:none;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
 .lc-price-link:hover{background:rgba(var(--cy-rgb),.14);border-color:rgba(var(--cy-rgb),.4);color:var(--cy)}
 .lc-price-link:hover i{border-color:var(--cy)}
+/* Cada tienda ocupa el mismo ancho en toda la categoría —con precio o sin él— (`lcAlinearTiendas` mide la más larga
+   y la deja en `--lc-tienda`), y «Ya lo tengo» también: «Qué es», las dos tiendas y «Ya lo tengo» quedan en columnas
+   parejas renglón a renglón. La de receta va sola y ocupa las dos. */
+.lc-tienda{min-width:var(--lc-tienda,auto);justify-content:center}
+.lc-tienda.doble{min-width:calc(var(--lc-tienda,0px)*2 + 8px)}
 
 .lc-price-leyenda{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:10px;font-weight:600;
   color:var(--text3);margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid rgba(var(--ov),.08)}
@@ -1678,7 +1686,7 @@ body.rail-on{--pad-rail:max(6vw,230px)}
    mi casa?" — así que son dos controles, no tres estados de uno. Lo que ya tienes no suma al
    total ni cuenta como pendiente: desaparece del cálculo sin desaparecer de la lista. Vive en su
    propia clave (`dash-lista-tengo`), así que marcar/desmarcar la compra no lo pisa. */
-.lc-tengo-btn{font-size:9px;font-weight:800;letter-spacing:.02em;white-space:nowrap;flex-shrink:0;
+.lc-tengo-btn{font-size:9px;font-weight:800;letter-spacing:.02em;white-space:nowrap;flex-shrink:0;min-width:80px;text-align:center;
   padding:2px 8px;border-radius:9px;cursor:pointer;font-family:inherit;
   border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.04);color:var(--text3);
   transition:background .15s,color .15s,border-color .15s}
@@ -5710,7 +5718,7 @@ function lcPrecioHtml(cat,txt){
   const q=lcAmazonQuery(cat,txt);
   if(LC_RECETA.test(txt)) return lcTiendaPill(lcFarmaciaUrl(q),'🩺 Con receta',null,
     'Medicamento de prescripción: no se vende en Amazon ni en Mercado Libre, y por eso aquí nunca hubo precio. '+
-    'Clic para buscarlo en Farmacias del Ahorro — el precio real te lo dan en el mostrador, con la receta.');
+    'Clic para buscarlo en Farmacias del Ahorro — el precio real te lo dan en el mostrador, con la receta.',true);
   const t=(cat==='libros'
       ? 'Precio típico de un libro de no ficción en pasta blanda.'
       : o ? (o.delMaestro?'Lo que te costó, según tu rutina.':'Precio de lista aproximado (ago-2026) del primer producto de la línea.')
@@ -5753,10 +5761,10 @@ function lcPrecioOtros(cat,txt){
 // la usan también otras apps y copiarla sería duplicarla.
 
 // Una píldora de tienda. Con `url` es un link — sin él, el mismo chip sin subrayado ni ↗.
-function lcTiendaPill(url,tienda,precio,tip){
-  const at=' class="lc-price '+(precio?'lc-price-est':'lc-price-nil')+(url?' lc-price-link':'')+
+function lcTiendaPill(url,tienda,precio,tip,doble){
+  const at=' class="lc-price lc-tienda'+(doble?' doble':'')+' '+(precio?'lc-price-est':'lc-price-nil')+(url?' lc-price-link':'')+
     '" title="'+tip.replace(/"/g,'&quot;')+'"';
-  const dentro='<i></i>'+(precio?'≈ $'+precio+' ':'')+tienda+(url?' ↗':'');
+  const dentro='<i></i>'+(precio?'≈ $'+(+precio).toLocaleString('es-MX')+' ':'')+tienda+(url?' ↗':'');
   return url
     ? '<a href="'+url+'" target="_blank" rel="noopener"'+at+'>'+dentro+'</a>'
     : '<span'+at+'>'+dentro+'</span>';
@@ -6039,7 +6047,17 @@ function renderListaCompras(){
   body.classList.toggle('lc-flex', esComida);
   body.innerHTML=hud+leyenda+(cols?'<div class="lc-aisles'+(cols.ancho?' lc-ancho':'')+'">'+html+'</div>':html)+(esComida?lcCocinasHtml():'');
   if(esComida) requestAnimationFrame(lcAjustarCocinas);
+  else requestAnimationFrame(()=>lcAlinearTiendas(body));
 }
+// El ancho de la tienda más larga de la categoría, para todas (ver `.lc-tienda`). Sin la pestaña a la vista no hay qué
+// medir: se alinea al volver a pintarla. Cuando cargan las fuentes, otra vez, que el ancho cambia.
+function lcAlinearTiendas(caja){
+  if(!caja) return;
+  caja.style.removeProperty('--lc-tienda');
+  const w=Math.ceil(Math.max(0,...[...caja.querySelectorAll('.lc-tienda:not(.doble)')].map(p=>p.getBoundingClientRect().width)));
+  if(w) caja.style.setProperty('--lc-tienda', w+'px');
+}
+if(document.fonts) document.fonts.ready.then(()=>{ if(listaCatSel!=='comida') lcAlinearTiendas(document.getElementById('listaCompraBody')); });
 function verListaCat(cat){ listaCatSel=cat; renderListaCompras(); }
 // ── Con esta lista cocinas ── La lista sale del menú (prompt de Lista de Compras): bajo los pasillos
 // de Comida, las recetas del recetario del maestro (CIFRAS.RECETARIO, con su foto de Comida),
