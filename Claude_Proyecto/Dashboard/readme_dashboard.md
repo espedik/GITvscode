@@ -1069,7 +1069,10 @@ desplaza al mes de hoy solo cuando hay una columna.
 **Los ocho medidores** (`#metasProgreso`, `tiles` en `renderMetasSlide()`) llevan el porcentaje en
 su línea de detalle, todos. En **Deuda cara** y **Deuda total** la barra es verde sobre rojo: lo
 verde es lo pagado y lo rojo lo que falta (`fill`/`track` del tile; la pista es `--r` al 60 %), y
-el avance de Deuda total se mide sobre lo que nació cada deuda, liquidadas incluidas. Los desgloses
+el avance de Deuda total se mide sobre lo que nació cada deuda, liquidadas incluidas. Son compactos
+(Adán: *"en las cifras que están arriba de metas, todos los recuadros, hazlos más pequeños"*): 55 px de alto
+en 1600×1000, cifra a 14 px como máximo y la línea de detalle en un renglón, con el texto completo en el
+`title`; *ver detalle →* flota arriba a la derecha al pasar el cursor. Los desgloses
 de esos dos (`kpiDetalle`, `kpiBarra` con `pista`) usan el mismo par y ponen el % junto al saldo.
 
 **Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se
@@ -1265,6 +1268,12 @@ resuelve todo: el estado de cada paso (`mpFalta`: hoy, esta semana, más adelant
 siguiente. Las metas de la Fase 4 (empresa, depa, Tailandia, Hong Kong, SpaceX, Cupra) van
 **en pausa** con su fecha de arranque (`pausa`, `desde`): lo que no cabe en la semana se pausa con
 fecha, no se abandona. Las dos logradas (11K y Básico 5) no llevan plan.
+
+**Las logradas no ocupan ficha grande** (Adán: *"las metas ya logradas, haz los iconos mucho más pequeños
+y los demás más grandes"*): `metaHechaHtml()` las saca del deck a una franja al pie de su columna
+(`.mg-hechas`), una ficha chica cada una (`.mg-hecha`: miniatura de 26 px, título y ✓ pasos, borde
+verde) que abre el mismo panel. El alto que dejan se lo reparten las que faltan: en 1600×1000 las
+fichas de corto y mediano plazo miden 188 px y la franja 34.
 
 **La ficha** dice, bajo la foto, la fecha de la meta con el resultado y lo que sigue (`.mg-pl`,
 un renglón cada uno; el texto completo en el `title`), y al pie los pasos y el día de lo siguiente,
