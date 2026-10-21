@@ -324,16 +324,42 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   font-style:normal;color:var(--text2)}
 .mg-d{width:1px;background:rgba(var(--ov),.1);flex-shrink:0}
 .mg-eqw{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between;gap:4px}
-/* Una barra por meta, en el orden en que se leen. El piso de 16% existe para que una meta
-   sin empezar siga siendo un elemento visible y no un hueco en el ecualizador. */
-.mg-eq{display:flex;align-items:flex-end;justify-content:space-between;gap:3px;
-  height:clamp(22px,3.2vh,34px)}
-.mg-eq i{flex:1;max-width:15px;border-radius:2px 2px 0 0;background:var(--ac1);opacity:.6}
-.mg-eq i.ok{background:var(--g);opacity:1;box-shadow:0 0 9px var(--g)}
-.mg-eq i.zero{background:rgba(var(--ov),.32);opacity:.75}
-/* En claro el ámbar y el verde sobre fondo casi blanco se lavan al 60%: mismo override
-   puntual que ya usa el ecualizador de Habilidades Base. */
-:root[data-theme="light"] .mg-eq i{opacity:.85}
+/* La línea del tiempo de las metas (`mgLineaHtml`), en lugar del ecualizador: el eje con hoy a la izquierda,
+   cada meta con su punto sobre el eje y su etiqueta en uno de tres carriles, las fases del Plan Maestro debajo
+   y las fechas al pie. El corte marca dónde la escala se comprime (los próximos 15 meses van al 58 %). */
+.mgl{position:relative;height:90px;margin-top:3px}
+.mgl-eje{position:absolute;left:0;right:0;bottom:30px;height:1px;background:rgba(var(--ov),.28)}
+.mgl-corte{position:absolute;bottom:26px;width:6px;height:9px;margin-left:-3px;transform:skewX(-22deg);
+  border-left:1px solid rgba(var(--ov),.5);border-right:1px solid rgba(var(--ov),.5);background:var(--bg)}
+.mgl-hoy{position:absolute;bottom:20px;font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--cy)}
+.mgl-hoy::before{content:'';position:absolute;left:0;bottom:8px;width:1.5px;height:9px;background:var(--cy)}
+.mgl-m{position:absolute;bottom:30px;width:0;height:0;--mc:var(--text2)}
+.mgl-m.on{--mc:var(--ac1)}
+.mgl-m.pausa{--mc:var(--text3)}
+.mgl-m>i{position:absolute;left:-5px;bottom:-5px;width:10px;height:10px;border-radius:50%;background:var(--mc);box-shadow:0 0 0 2px var(--bg)}
+.mgl-m.pausa>i{background:var(--bg);box-shadow:inset 0 0 0 2px var(--mc)}
+.mgl-m.tarde>i{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--r)}
+.mgl-m::before{content:'';position:absolute;left:-.5px;bottom:5px;width:1px;height:calc(6px + var(--l)*18px);
+  background:color-mix(in srgb,var(--mc) 55%,transparent)}
+.mgl-m>span{position:absolute;left:-2px;bottom:calc(9px + var(--l)*18px);display:flex;align-items:baseline;gap:6px;
+  white-space:nowrap;padding:2px 6px;border-radius:4px;border-left:2px solid var(--mc);background:rgba(var(--ov),.06);
+  font-size:11px;font-weight:700;line-height:1.25;color:var(--text);transition:background .15s}
+.mgl-m.der>span{left:auto;right:-2px;border-left:0;border-right:2px solid var(--mc)}
+.mgl-m.pausa>span{font-weight:600;color:var(--text2)}
+.mgl-m>span small{font-family:var(--mono);font-size:9.5px;font-weight:600;color:var(--text3)}
+.mgl-b{all:unset;cursor:pointer;border-radius:3px}
+.mgl-b:hover,.mgl-b:focus-visible{text-decoration:underline;text-underline-offset:2px}
+.mgl-b:focus-visible{outline:2px solid var(--cy);outline-offset:1px}
+.mgl-sep{font-style:normal;color:var(--text3)}
+.mgl-b em{font-style:normal}
+.mgl-fases{position:absolute;left:0;right:0;bottom:11px;height:10px}
+.mgl-f{position:absolute;top:0;bottom:0;overflow:hidden;white-space:nowrap;padding-left:4px;border-radius:2px;
+  border-left:2px solid var(--fc);background:color-mix(in srgb,var(--fc) 24%,transparent);
+  font-family:var(--mono);font-size:7.5px;font-weight:700;letter-spacing:.1em;line-height:10px;text-transform:uppercase;color:var(--text2)}
+.mgl-ts{position:absolute;left:0;right:0;bottom:0;height:10px}
+.mgl-ts span{position:absolute;transform:translateX(-50%);font-family:var(--mono);font-size:8.5px;color:var(--text3);white-space:nowrap}
+@media(max-width:700px){.mgl-m>span small,.mgl-b em,.mgl-sep{display:none}.mgl-m>span{gap:4px;padding:1px 4px}}
 .mg-s{display:flex;align-items:center;gap:clamp(10px,1.4vw,19px);flex-shrink:0}
 .mg-rd{display:flex;flex-direction:column;gap:3px}
 .mg-rv{font-family:var(--mono);font-size:clamp(14px,1.4vw,20px);font-weight:700;
@@ -368,17 +394,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 /* Mismo patrón de "estira si cabe, scrollea si no" que ya usaban las dos rejillas de fichas
    del Dashboard: cualquier número de metas reparte el alto por igual y, si no alcanza, hace
    scroll interno en vez de aplastarlas. */
-/* Tres columnas en corto/mediano y dos en largo plazo: con dos en la columna ancha, las 8
-   metas pedían 4 filas y la última —justo las dos YA LOGRADAS— quedaba fuera del scroll.
-   A tres caben las 8 en tres filas, y la ficha sigue siendo más ancha que las de largo
-   plazo, que es lo que se pidió el 2026-08-11 ("que esten mas grandes las fotos de metas a
-   mediano y corto plazo"). */
-.mg-deck{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-  grid-auto-rows:minmax(126px,1fr);gap:clamp(7px,.7vw,10px);overflow-y:auto;
+/* Dos columnas en las dos listas: corto y mediano plazo son seis fichas —cuatro en marcha y las dos logradas— en
+   tres filas, como las de largo plazo. A dos, la ficha es ancha y el resultado y lo que sigue se leen enteros. */
+.mg-deck{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-auto-rows:minmax(112px,1fr);gap:clamp(7px,.7vw,10px);overflow-y:auto;
   /* El padding inferior no es decorativo: con filas `1fr` el redondeo deja 1px de desborde y
      el conteo de pasos de la última fila quedaba pegado al borde del slide. */
   padding:0 2px 4px 0}
-.mg-deck-sm{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(122px,1fr)}
+.mg-deck-sm{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(112px,1fr)}
 /* Una ficha suelta en la última fila de largo plazo llena el ancho, para no dejar un hueco. */
 .mg-deck-sm>.mg-card:last-child:nth-child(odd){grid-column:1/-1}
 
@@ -419,6 +442,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .mg-card:not(.on):not(.ok) .mg-chip{color:rgba(255,255,255,.8);background:rgba(0,0,0,.5);
   border:1px solid rgba(255,255,255,.28)}
 
+/* Cuánto falta para la meta, sobre la foto (o desde cuándo arranca, si está en pausa); con un paso vencido, el borde rojo. */
+.mg-cuenta{position:absolute;top:5px;left:5px;z-index:2;pointer-events:none;border-radius:2px;padding:2px 6px;
+  font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.08em;color:#fff;background:rgba(0,0,0,.55);
+  border:1px solid rgba(255,255,255,.25)}
+.mg-cuenta.tarde{border-color:#ff5c5c;color:#ffb8b8}
 /* Una marca por paso real del checklist. Es el indicativo que sustituye a la barra. */
 .mg-rail{display:flex;align-items:center;gap:2px;height:6px;flex-shrink:0}
 .mg-rail i{flex:1;height:100%;border-radius:1px;background:rgba(var(--ov),.2)}
@@ -2226,6 +2254,114 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .mp-paso.hecho .mp-t{color:var(--text3);text-decoration:line-through;text-decoration-color:rgba(var(--ov),.35)}
 .mp-paso.hecho .mp-c{color:var(--g)}
 .mp-dos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+/* La ruta, el ritmo y el avance real de una meta (`mpRutaHtml`, `mpRitmoHtml`, `mpRealHtml`; Adán, 20-oct-2026:
+   "falta mucho contenido para las metas… si puedes hacer cosas más gráficas hazlas"). La ruta va en el centro;
+   el ritmo y el avance real, en Recursos. Marcas delgadas, rejilla de 1 px y el texto siempre en tinta. */
+.mpr{position:relative;height:100px;margin:4px 12px 0}
+.mpr-pista{position:absolute;left:0;right:0;top:48px;height:4px;border-radius:2px;background:rgba(var(--ov),.12)}
+.mpr-pista span{display:block;height:100%;border-radius:2px;background:rgba(var(--cy-rgb),.35)}
+.mpr-pausa{position:absolute;top:44px;height:12px;border-radius:3px;background:repeating-linear-gradient(135deg,rgba(var(--ov),.16) 0 4px,transparent 4px 8px)}
+.mpr-p{position:absolute;top:50px;width:0;height:0;z-index:1}
+.mpr-p i{position:absolute;left:-6px;top:-6px;width:12px;height:12px;border-radius:50%;background:var(--bg);box-shadow:inset 0 0 0 2px rgba(var(--ov),.42)}
+.mpr-p.hecho i{background:var(--g);box-shadow:0 0 0 2px var(--bg)}
+.mpr-p.tarde i{background:var(--r);box-shadow:0 0 0 2px var(--bg)}
+.mpr-p.pronto i{box-shadow:inset 0 0 0 2px var(--cy)}
+.mpr-p.sig i{left:-8px;top:-8px;width:16px;height:16px;background:var(--cy);box-shadow:0 0 0 3px var(--bg),0 0 0 5px rgba(var(--cy-rgb),.35)}
+.mpr-p.sig.tarde i{background:var(--r);box-shadow:0 0 0 3px var(--bg),0 0 0 5px rgba(var(--r-rgb),.35)}
+.mpr-p em{position:absolute;left:0;transform:translateX(-50%);white-space:nowrap;font-style:normal;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--text3)}
+.mpr-p em.ar{bottom:11px}
+.mpr-p em.ab{top:11px}
+.mpr-p em.izq{transform:none;left:-6px}
+.mpr-p em.der{transform:translateX(-100%);left:6px}
+.mpr-p.hecho em{color:var(--g)}
+.mpr-p.tarde em{color:var(--r)}
+.mpr-p.sig em{color:var(--cy)}
+.mpr-hoy{position:absolute;top:18px;height:62px;width:0;border-left:1px solid var(--text2)}
+.mpr-hoy b{position:absolute;bottom:100%;left:0;transform:translateX(-50%);margin-bottom:2px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text)}
+.mpr-hoy.der b{transform:translateX(-100%)}
+.mpr-fin{position:absolute;top:18px;height:32px;width:0;border-left:1px solid rgba(var(--ov),.35)}
+.mpr-fin b{position:absolute;bottom:100%;left:0;transform:translateX(-50%);margin-bottom:2px;white-space:nowrap;font-size:11.5px;font-weight:700;color:var(--text)}
+.mpr-fin.der b{transform:translateX(-100%)}
+.mpr-ley{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 4px 0 9px;background:rgba(var(--ov),.42)}
+.mpr-ley.hecho{background:var(--g)}
+.mpr-ley.tarde{background:var(--r)}
+.mpr-ley.sig{background:var(--cy)}
+/* El ritmo: la cuenta regresiva en grande y el tiempo recorrido contra los pasos hechos. */
+.mpc{display:flex;flex-direction:column;gap:4px}
+.mpc b{font-family:var(--mono);font-size:40px;font-weight:700;line-height:1;letter-spacing:-.02em;color:var(--text)}
+.mpc b small{margin-left:7px;font-size:13px;font-weight:600;letter-spacing:0;color:var(--text3)}
+.mpc-f{font-size:12px;line-height:1.4;color:var(--text2)}
+.mpt{display:flex;flex-direction:column;gap:5px}
+.mpt-r{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:11.5px;color:var(--text2)}
+.mpt-r b{font-family:var(--mono);font-size:12px;color:var(--text)}
+.mpt-b{height:6px;border-radius:3px;overflow:hidden;background:rgba(var(--ov),.1);margin-bottom:3px}
+.mpt-b i{display:block;height:100%;border-radius:3px;background:var(--text3)}
+.mpt-b.p i{background:var(--g)}
+.mpt-v{margin:2px 0 0;padding:8px 10px;border-radius:5px;font-size:12px;line-height:1.45;color:var(--text2);border:1px solid rgba(var(--ov),.1)}
+.mpt-v b{color:var(--text)}
+.mpt-v.tarde{border-color:rgba(var(--r-rgb),.4);background:rgba(var(--r-rgb),.06)}
+.mpt-v.tarde b{color:var(--r)}
+.mpt-v.ok{border-color:rgba(var(--g-rgb),.35);background:rgba(var(--g-rgb),.06)}
+.mpt-v.medio{border-color:rgba(var(--w-rgb),.4);background:rgba(var(--w-rgb),.06)}
+/* Las columnas del avance real (simulacros, sesiones, el GBM de la salida): 2 px de aire, líneas de referencia
+   de 1 px con su nombre y el valor encima de cada columna. */
+.mpg{position:relative;height:118px;margin-top:16px;border-bottom:1px solid rgba(var(--ov),.22)}
+.mpg-cols{position:absolute;inset:0;display:flex;gap:2px}
+.mpg-c{position:relative;flex:1 1 0;min-width:0;display:flex;align-items:flex-end;justify-content:center}
+.mpg-c i{position:relative;display:block;width:min(20px,72%);min-height:2px;border-radius:3px 3px 0 0;background:rgba(var(--cy-rgb),.72)}
+.mpg-c i.ok{background:var(--g)}
+.mpg-c i.medio{background:var(--w)}
+.mpg-c i.bajo{background:var(--r)}
+.mpg-c i.actual{opacity:.55}
+.mpg-c i b{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:2px;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text)}
+.mpg-ref{position:absolute;left:0;right:0;height:0;border-top:1px solid;z-index:1;pointer-events:none}
+.mpg-ref em{position:absolute;left:0;bottom:2px;font-style:normal;font-family:var(--mono);font-size:9.5px;font-weight:700}
+.mpg-ref.corte{border-color:var(--r)}
+.mpg-ref.corte em{color:var(--r)}
+.mpg-ref.meta{border-color:var(--g)}
+.mpg-ref.meta em{color:var(--g)}
+.mpg-pide{position:absolute;left:6%;right:6%;height:0;border-top:2px solid var(--r);z-index:1}
+.mpg-x{display:flex;gap:2px;margin-top:4px}
+.mpg-x span{flex:1 1 0;min-width:0;text-align:center;font-family:var(--mono);font-size:9px;color:var(--text3);white-space:nowrap;overflow:hidden}
+.mpg-ley{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:10.5px;color:var(--text3)}
+.mpg-ley i{display:inline-block;width:10px;height:6px;margin-right:5px;border-radius:1px;background:rgba(var(--cy-rgb),.72)}
+.mpg-ley i.pide{height:0;border-top:2px solid var(--r);vertical-align:3px}
+.mpq{display:flex;gap:3px}
+.mpq i{flex:1 1 0;height:14px;border-radius:2px;background:rgba(var(--ov),.1)}
+.mpq i.ok{background:var(--g)}
+.mpq i.medio{background:var(--w)}
+.mpq i.mal{background:var(--r)}
+.mpk{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.mpk div{display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:5px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08)}
+.mpk b{font-family:var(--mono);font-size:24px;font-weight:700;line-height:1;color:var(--text)}
+.mpk span{font-size:11px;line-height:1.35;color:var(--text2)}
+.mps{display:flex;flex-direction:column}
+.mps-f{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:7px 0;border-top:1px solid rgba(var(--ov),.07);font-size:12px;font-weight:600;color:var(--text)}
+.mps-f small{display:block;margin-top:1px;font-size:10.5px;font-weight:500;color:var(--text3)}
+.mps-f b{font-family:var(--mono);font-size:11.5px;white-space:nowrap}
+.mps-f b.mal{color:var(--r)}
+.mps-f b.ok{color:var(--g)}
+.mpa{display:flex;flex-direction:column;gap:4px;font-size:12px;line-height:1.4;color:var(--text2)}
+.mpa b{color:var(--text)}
+/* La trayectoria del millón (las de largo plazo): la línea de la proyección, el cero, hoy y la meta. */
+.mpm{position:relative;height:130px;margin-top:12px}
+.mpm svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.mpm-g{stroke:rgba(var(--ov),.08);stroke-width:1;vector-effect:non-scaling-stroke}
+.mpm-cero{stroke:rgba(var(--ov),.32);stroke-width:1;vector-effect:non-scaling-stroke}
+.mpm-area{fill:rgba(var(--cy-rgb),.1)}
+.mpm-l{fill:none;stroke:var(--cy);stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.mpm-z{position:absolute;left:2px;transform:translateY(-100%);font-family:var(--mono);font-size:9px;color:var(--text3)}
+.mpm-p{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;box-shadow:0 0 0 2px var(--bg)}
+.mpm-p.hoy.ok{background:var(--g)}
+.mpm-p.hoy.mal{background:var(--r)}
+.mpm-p.meta{background:var(--cy)}
+.mpm-p.meta em{position:absolute;right:9px;bottom:5px;font-style:normal;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--text);white-space:nowrap}
+.mpg-x.mpm-x{display:block;position:relative;height:14px}
+.mpm-x span{position:absolute;transform:translateX(-50%)}
+.mpm-x span:first-child{left:0;transform:none}
+.mpr-vacio{padding:10px 12px;border-radius:5px;border:1px dashed rgba(var(--ov),.2);font-size:12px;line-height:1.5;color:var(--text3)}
+.mpr-nota{font-size:12px;line-height:1.5;color:var(--text2)}
+.mpr-nota b{color:var(--text)}
 @media(max-width:760px){
   .mp-top{grid-template-columns:minmax(0,1fr)}
   .mp-sis{grid-template-columns:minmax(0,1fr);gap:3px}
@@ -6118,7 +6254,6 @@ const FRASES_MOTIVACION=[
   'Saltarte el bloque de Negociar tu ingreso es dejarle el aumento a la suerte: tu caso se arma con logros y números, no con ganas.',
   'Le exiges rigor a un sistema en el trabajo y se lo perdonas todo a tus propios hábitos. Cámbialo — revísate con la misma exigencia.',
   'Ya sabes desarmar, entender y volver a armar un sistema completo. No tienes excusa para no hacerle lo mismo a tu vida financiera.',
-  'Trabajar remoto no se pide, se gana. Cada entrega a medias te aleja de eso — exígete la entrega completa.',
   'Si le dedicas horas a encontrar un bug pero ni cinco minutos a encontrar el hábito que te frena, estás mal priorizado. Corrígelo.',
   'No dejes que ser bueno en tu trabajo actual sea tu techo. Úsalo como base para exigir algo mejor, no como excusa para quedarte cómodo.',
   // Aprendizaje (alemán, entrevista, lectura)
@@ -12097,28 +12232,6 @@ const META_DETALLE={
       {t:"📅 Ver todas las fechas en México y registrarte",d:"El listado oficial con todos los eventos de México, sus fechas y el estado de las inscripciones. Los precios suben por oleadas conforme se llena, así que registrarse temprano cuesta menos. Aquí también aparecen las sedes nuevas cuando se anuncian — es la página que hay que revisar, no una fecha copiada en este dashboard que puede quedar vieja.",href:"https://mexico.hyrox.com/",label:"HYROX México — todos los eventos y registro"},
       {t:"⏱️ Qué tiempo apuntar en tu primera",d:"Un debutante de Men Open que llega entrenado suele terminar entre <b>1h20 y 1h40</b>. La mediana global de la categoría ronda 1h30. Para una primera vez, la meta correcta no es un tiempo: es <b>terminar sin caminar los últimos 2 km</b> y sin repeticiones anuladas en wall balls. El tiempo lo persigues en la segunda.",href:"https://hyroxdatalab.com/",label:"Ver tiempos reales por estación y categoría"},
     ]},
-  remoto:{titulo:"Trabajar remoto",frase:"Trabajar remoto no se pide — se construye con evidencia de lo que ya sabes hacer.",pasos:[
-      {t:"Tu base ya existe",d:"Experiencia real de testing automotriz en Bosch y Continental, más SQL — documenta esto primero en tu perfil, es justo lo que piden estos trabajos."},
-      {t:"LinkedIn con señal remota",d:"Titular explícito de disponibilidad y zona horaria (ej. \"QA/Test Engineer · Automotive · GMT-6 · Remote\") — así filtran los reclutadores remotos."},
-      {t:"Bolsas especializadas",d:"We Work Remotely (sección QA), RemoteOK y Himalayas — revísalas cada semana, no solo una vez.",href:"https://weworkremotely.com/remote-qa-jobs",label:"We Work Remotely — QA"},
-      {t:"Wellfound",d:"Más de 130,000 vacantes activas publicadas directo por el empleador, sin agencias, con filtro de trabajo remoto.",href:"https://wellfound.com/remote",label:"Wellfound — remoto"},
-      {t:"GetOnBoard LatAm",d:"Exige que las vacantes publiquen rango salarial y stack tecnológico — te ahorra tiempo filtrando antes de aplicar.",href:"https://www.getonbrd.com.co/jobs-latam-remote-work",label:"GetOnBoard LatAm"},
-      {t:"ALTEN ya publica remoto",d:"Vacantes reales de tu propia empresa: \"Quality Assurance Test Engineer\" y \"Test and Validation Engineer\" (automotriz, HIL, CANoe/CANape) — tu perfil calza casi exacto.",href:"https://remotive.com/remote-jobs/qa/quality-assurance-test-engineer-2071338",label:"Ejemplo real: QA remoto en ALTEN"},
-      {t:"Pregunta primero adentro",d:"Antes de buscar afuera, pregunta directo con tu gerente en ALTEN si existe la opción de días remotos."},
-      {t:"Portales directos",d:"Revisa los de Bosch y Continental con el filtro de remoto activado — las bolsas generales no siempre muestran sus vacantes internas."},
-      {t:"Aplica constante",d:"2-3 vacantes remotas por semana aunque no te sientas 100% listo — practicar entrevistas es parte del proceso (tu app de Entrevistas)."},
-      {t:"Este año, también es tu palanca de ingreso",d:"Septiembre de 2027 pide {{extraSalida}} más al mes desde noviembre: un puesto remoto que pague más es una de las tres formas de conseguirlo —las otras, un aumento o freelance de pruebas—. Se mide el 31 de marzo, en el Plan Maestro."},
-    ]},
-  byd:{titulo:"Liquidar el BYD Dolphin Mini",frase:"El orden ya está definido: primero la deuda que sí te cobra intereses, después el coche.",pasos:[
-      {t:"Paso 1 · Fondo de emergencia",d:"Los CETES más GBM: pasa de {{fondoMeta}} con la primera quincena que llegue a GBM, después del {{bbvaCero}}. Antes de tocar el BYD, esto va primero."},
-      {t:"Paso 2 · Banamex en $0",d:"La liquidaste el 13 ago 2026 — saldo completo, no el mínimo, 5 meses antes de la meta. Volvió a abrirse el 1 sep 2026 con cuatro compras de un día ($5,985) y <b>la volviste a dejar en $0 el 30 sep 2026</b>. Paso cumplido otra vez: que no vuelva a cargarse."},
-      {t:"Paso 3 · BBVA en $0",d:"La única tarjeta con saldo: {{tcBbva}}. Se paga quincena a quincena y sin intereses hasta quedar en cero el {{bbvaCero}}; desde ahí, lo que pagues con ella se paga en la misma quincena."},
-      {t:"Fase 2 · Se renta mientras estás en Alemania",d:"No se vende: es tu respaldo para trabajar Didi si regresas sin empleo. Mientras estás fuera se renta a un conductor de plataforma —un particular cobra unos $3,000 a la semana— con contrato, seguro para plataformas, GPS y tu papá como administrador: la renta paga la mensualidad de {{autoPago}}."},
-      {t:"Pregunta por pagos extra",d:"A tu crédito del BYD, si permite pagos extraordinarios a capital sin penalización — resuélvelo antes de necesitarlo."},
-      {t:"Hasta irte, el extra va a la salida",d:"Didi de más, las ventas y el ingreso nuevo van a GBM: un abono al crédito ya no se puede sacar si en junio falta para la cuenta bloqueada. Abonar a capital es de la Fase 4, con sueldo de ingeniero, si el contrato no lo penaliza."},
-      {t:"Revisa el saldo cada mes",d:"En Finanzas, junto con tus otras deudas — verlo bajar es lo que sostiene la disciplina de seguir el orden."},
-      {t:"BYD liquidado 🎉",d:"Hacia mediados de 2031, pagado con su propia renta. Desde ahí la renta es ingreso entero —o el auto vuelve a ser tuyo si regresas— y ese pago mensual se va al fondo del Cupra Formentor."},
-    ]},
   cupra:{titulo:"Cupra Formentor",frase:"El Cupra es el premio, no el punto de partida — llega después de la deuda, no antes.",pasos:[
       {t:"Regla no negociable",d:"Nada de MSI ni crédito nuevo para el Cupra hasta que la deuda cara esté en $0. Van {{deudaCara}} en la BBVA; la Banamex quedó en $0 el 30 sep 2026."},
       {t:"Redirige el pago del BYD",d:"Una vez liquidado (ver esa meta), ese mismo monto —ya estás acostumbrado a él— va a un fondo de ahorro específico para el Cupra."},
@@ -12201,49 +12314,6 @@ const META_DETALLE={
       {t:"BMW · Masterprogramm Fastlane",d:"Para maestría con 18+ meses restantes y desempeño sobresaliente — solicitud reportada 1-31 de mayo, inicio en octubre.",href:"https://www.bmwgroup.jobs/de/de/studierende/einstiegs-und-foerderprogramme/masterprogramm-fastlane.html",label:"BMW — Masterprogramm Fastlane"},
       {t:"La decisión: {{decisionMaestria}}",d:"Con dos datos: la admisión de Esslingen (llega antes de fin de mayo) y {{mayoParaSalida}} en GBM, lo que llena la cuenta bloqueada en junio y paga la salida completa en agosto. Antes, el 31 de marzo, GBM contra {{marzoParaSalida}} dice si vas en camino. Si están los dos, te vas el {{maestriaInicio}}; si falta uno, se reaplica para septiembre de 2028 y el ahorro sigue, sin deuda."},
     ]},
-  // ── Las adicciones (2026-09-14) ─────────────────────────────────────
-  // Adán quitó la de las citas el 21-sep-2026 ("quita el botón y meta de dejar la adicción de las
-  // citas"); quedan celular y alcohol.
-  // Pedido de Adán: "dejar de ser adicto al celular, dejar adicción por salir con mujeres y
-  // dejar la adicción de tomar alcohol... con información muy completa". Van juntas a propósito:
-  // las tres son la misma mecánica (una conducta que se repite para regular emociones) y se
-  // disparan entre sí —el alcohol baja la guardia para salir, salir pone alcohol enfrente, y el
-  // celular es donde viven las apps de citas—. Datos verificados el mismo día: Línea de la Vida
-  // (CONASAMA), alcoholímetro CDMX (0.4 mg/L, arresto 20-36 h, cero para transporte de
-  // pasajeros), trago estándar FISAC (13 g), Parr et al. 2014 (PLOS ONE: -24% / -37%), OMS 2023
-  // (ningún nivel seguro), SLAA en español, AUDIT de la OMS. Las URLs respondieron 200 con curl.
-  celular:{titulo:"Dejar la adicción al celular",frase:"El celular no se deja: se le quita el poder de decidir por ti cuándo lo agarras.",pasos:[
-      {t:"Mide antes de cambiar nada",d:"Ajustes → <b>Tiempo en pantalla</b> ya lleva la cuenta. Anota tres números de la última semana: <b>horas al día</b>, <b>desbloqueos</b> y <b>a qué hora lo abriste por primera vez</b> después de despertar. Sin esos tres no hay meta, hay una intención. Para tener contra qué comparar: las encuestas de Asurion (2019) y reviews.org (2023) ponen el promedio entre <b>96 y 144 desbloqueos al día</b> — uno cada 10 minutos despierto.",href:"https://support.apple.com/es-mx/108806",label:"Tiempo en pantalla en el iPhone · Apple"},
-      {t:"Distingue usar de consumir",d:"Tú <b>trabajas</b> con el celular: Didi, el mapa, WhatsApp de trabajo, el alemán y este mismo dashboard son herramientas. El scroll de Instagram, TikTok, los shorts y las noticias son <b>consumo</b>. La meta no es “cero celular” —eso no existe para ti—, es <b>cero scroll sin propósito</b>. Tiempo en pantalla te dice app por app dónde se van las horas: escribe la lista de las 3 que más se llevan y ponles nombre de lo que son, herramienta o consumo."},
-      {t:"Por qué engancha: es una tragamonedas",d:"Cada vez que deslizas para refrescar no sabes qué va a salir — eso es <b>refuerzo intermitente</b>, el mismo mecanismo de las máquinas de casino, y es el más resistente a la extinción que se conoce. Anna Lembke (<i>Generación dopamina</i>, 2021) explica lo que sigue: a más estímulo, el cerebro baja su punto de equilibrio y <b>lo normal se siente aburrido</b>. Por eso el libro de la noche “no engancha” y el celular sí. No es falta de voluntad: es una balanza inclinada, y se vuelve a nivelar con <b>4 semanas</b> de bajar el estímulo."},
-      {t:"Los 30 días de limpieza digital",d:"El protocolo de Cal Newport (<i>Minimalismo digital</i>, 2019): <b>30 días sin ninguna tecnología opcional</b> —redes, YouTube, noticias, juegos—, y al terminar reintroduces <b>solo</b> lo que aporte algo concreto, con una regla de uso escrita (qué, cuándo, cuánto). Antes de empezar escribe dos columnas: <b>obligatorio</b> (Didi, mapa, WhatsApp de trabajo y familia, banca, alemán, este dashboard) y <b>opcional</b> (todo lo demás). Lo opcional se va del teléfono el día 1.",href:"https://calnewport.com/digital-minimalism/",label:"Minimalismo digital · Cal Newport"},
-      {t:"Borra las apps, no la cuenta",d:"Instagram, TikTok, X y YouTube <b>fuera del teléfono</b>. Las cuentas se quedan; si de verdad necesitas ver algo, entras desde la computadora y con sesión que hay que iniciar cada vez. Es la regla de James Clear (<i>Hábitos atómicos</i>) para romper un hábito: <b>hazlo invisible y hazlo difícil</b>. Diez segundos de fricción matan el reflejo, porque el reflejo vive en los primeros dos."},
-      {t:"Notificaciones: solo personas, nunca apps",d:"Desactiva <b>todas</b> las notificaciones salvo llamadas, mensajes de personas (WhatsApp, iMessage) y Didi cuando estás en turno. Ninguna app tiene derecho a vibrar en tu bolsillo. Luego arma dos <b>Modos de concentración</b> en el iPhone: <b>Trabajo</b> (solo llamadas y tu jefe) y <b>Dormir</b> (nadie, desde las 22:30). Sin la vibración, la mayoría de las veces que lo agarras simplemente no ocurren.",href:"https://www.humanetech.com/take-control",label:"Guía “Take control” · Center for Humane Technology"},
-      {t:"Pantalla en escala de grises",d:"Ajustes → Accesibilidad → Pantalla y tamaño del texto → <b>Filtros de color → Escala de grises</b>. Y en Accesibilidad → <b>Función rápida</b>, marca “Filtros de color” para prenderla y apagarla con triple clic del botón lateral (para Didi y el mapa la necesitas en color). Sin color, Instagram parece un periódico viejo: el gancho visual es la mitad del gancho. Pantalla de inicio: <b>solo herramientas</b>; lo demás se queda en la biblioteca de apps, donde hay que buscarlo."},
-      {t:"Un segundo de pausa antes de abrir: one sec",d:"App que, antes de dejarte entrar a la app que elijas, te obliga a <b>respirar unos segundos</b> y te pregunta si de verdad quieres entrar. Un estudio publicado en <i>PNAS</i> (2023) con sus usuarios midió que <b>uno de cada tres intentos se abandona</b> ahí mismo y el uso de las apps bloqueadas cayó más de la mitad en seis semanas. Gratis para una app; <b>Opal</b> y <b>Freedom</b> son las alternativas de pago si quieres bloquear en horarios.",href:"https://one-sec.app/",label:"one sec · la pausa antes de abrir"},
-      {t:"Tiempo de inactividad y límites de apps",d:"Dentro de Tiempo en pantalla: <b>Tiempo de inactividad de {{horaApp}} a 7:00</b> —a esa hora empiezas Construir esta app, que es en la compu, y siguen la rutina de la noche y la meditación de las {{horaMeditacion}}, sin celular— y <b>Límites de apps: 20 minutos al día</b> para todo lo que haya quedado de consumo. El detalle que lo hace funcionar: el <b>código de Tiempo en pantalla lo pone otra persona</b> (tu mamá, un amigo) o lo escribes en un papel que se queda en casa. “Un minuto más” tiene que costar un trámite, no un clic."},
-      {t:"El celular duerme fuera del cuarto",d:"Tienes <b>Apple Watch</b>: es tu despertador. El celular se carga en la cocina o la sala desde las 22:30 y no entra a la recámara. Las dos horas que más daño hacen son la <b>última antes de dormir</b> (retrasa el sueño y te roba REM — tu hábito “Dormir 7 h” cuenta horas, no calidad) y la <b>primera al despertar</b> (arrancas el día reaccionando a lo que otros mandaron). Regla: <b>no lo tocas hasta después de bañarte y desayunar</b>. Y en el escritorio y en la mesa, tampoco a la vista: Ward y colegas (<i>Brain Drain</i>, 2017) midieron que la sola presencia del celular sobre la mesa, aunque esté apagado, reduce la capacidad de atención disponible."},
-      {t:"Reemplaza, no solo quites",d:"El hueco se llena solo con lo mismo si no lo llenas tú. Ya tienes con qué, y todo está en tus otras metas: <b>puzzles de ajedrez</b> (la meta del torneo pide 15-20 min diarios), <b>el libro de la noche</b> (hábito “Leer 10 páginas”), el <b>alemán</b> y el plan del <b>Hyrox</b>. Lleva un <b>libro físico en la mochila</b> para las filas, el metro y las esperas: es exactamente cuando el celular sale del bolsillo por reflejo, y el libro es lo que pones en la mano en su lugar."},
-      {t:"Las horas de Didi, con reglas propias",d:"En turno el celular va montado, con Didi y el mapa, <b>y nada más</b>. En semáforos no se abre ninguna otra app: es infracción, con el pasajero atrás se nota, y es el mismo reflejo que estás desarmando. <b>Entre viaje y viaje es donde el impulso llega</b> — ahí la regla es agua, estirar la espalda y bajar la ventana, no scroll. Diez minutos de espera con la pantalla apagada son diez minutos de práctica de la meta."},
-      {t:"Cómo saber que vas ganando",d:"Cuatro números cada domingo, con la revisión de la semana, sacados de Tiempo en pantalla:",list:["Horas al día fuera de Didi: <b>menos de 2</b>","Desbloqueos: <b>menos de 40</b>","Primer uso del día: <b>más de 45 minutos</b> después de despertar","Uso después de las 22:30: <b>cero</b>"],href:"https://support.apple.com/es-mx/guide/iphone/iph3dd5f4d1/ios",label:"Ver el informe semanal de Tiempo en pantalla"},
-      {t:"Si al mes no se movió, es más que un hábito",d:"Las señales de que hay algo debajo: ansiedad fuerte cuando no lo tienes, lo agarras <b>para no sentir</b> (soledad, estrés del trabajo, las deudas), o las reglas de arriba no aguantan más de dos días seguidos. Ahí ya no es configuración: es lo mismo que trabajan tus otras dos metas de esta fila, y se trabaja igual, con alguien. Gloria Mark (UC Irvine, <i>Attention Span</i>, 2023) midió que la atención promedio frente a una pantalla dura <b>47 segundos</b> y que recuperar el foco tras una interrupción cuesta unos <b>23 minutos</b> — eso es lo que está en juego con el ISTQB y el alemán, no solo el tiempo perdido. El Centro de Servicios Psicológicos “Dr. Guillermo Dávila” de la Facultad de Psicología de la UNAM atiende al público con cuota accesible y tiene programa de adicciones.",href:"https://www.psicologia.unam.mx/centros-de-formacion/",label:"Centros de servicios psicológicos · UNAM"},
-    ]},
-  alcohol:{titulo:"Dejar el alcohol",frase:"No es que no puedas beber. Es que ya viste lo que te cuesta y decidiste que no lo vale.",pasos:[
-      {t:"Primero, seguridad: depende de cuánto bebes",d:"Si bebes <b>todos los días</b> o en cantidades altas, y al parar unas horas te <b>tiemblan las manos, sudas, tienes ansiedad fuerte o no duermes</b>, no lo cortes de golpe tú solo: la abstinencia del alcohol puede dar convulsiones o <i>delirium tremens</i> y necesita supervisión médica — un médico general puede manejarlo con medicación unos días. Si bebes de fin de semana y social, puedes parar <b>hoy</b> sin riesgo físico. En la duda, la <b>Línea de la Vida: 800 911 2000</b>, gratis, confidencial, 24 horas los 365 días; te orientan y te dicen a dónde ir.",href:"https://www.gob.mx/conasama/articulos/linea-de-la-vida-800-911-2000",label:"Línea de la Vida · CONASAMA"},
-      {t:"Hazte el AUDIT (10 preguntas, OMS)",d:"El cuestionario estándar de la Organización Mundial de la Salud: <b>10 preguntas, 2 minutos</b>. Puntaje de 0 a 40: <b>8 o más</b> = consumo de riesgo; <b>16-19</b> = consumo dañino; <b>20 o más</b> = probable dependencia. No es una etiqueta, es la brújula que decide si esto lo haces solo (paso 8 en adelante) o con ayuda desde el principio (paso 13).",href:"https://auditscreen.org/",label:"AUDIT · el cuestionario de la OMS"},
-      {t:"Cuánto es una copa: el trago estándar",d:"En México un <b>trago estándar son 13 gramos de alcohol</b> (FISAC): una <b>cerveza de 355 ml</b>, una <b>copa de vino de 120 ml</b> o un <b>caballito de 45 ml</b> de tequila valen exactamente lo mismo. “Unas chelas” no es un dato; cuenta las últimas 4 semanas en tragos estándar. La referencia de consumo “moderado” para un hombre adulto en México es <b>máximo 4 por ocasión y 12 a la semana</b> — si estás arriba de eso, no es que “tomes normal”.",href:"https://tragoestandar.org.mx/preguntas-frecuentes/",label:"Trago Estándar · FISAC"},
-      {t:"Lo que dice la ciencia hoy",d:"OMS, enero de 2023: <b>no existe un nivel de consumo de alcohol que sea seguro para la salud</b>; el riesgo empieza con la primera copa. El alcohol está clasificado como <b>carcinógeno del grupo 1</b> — el mismo grupo que el tabaco y el asbesto — y se le atribuyen siete tipos de cáncer, incluidos los más comunes. “Una copa de vino es buena para el corazón” quedó desmentida en la misma declaración.",href:"https://www.who.int/europe/news/item/04-01-2023-no-level-of-alcohol-consumption-is-safe-for-our-health",label:"OMS · ningún nivel es seguro (2023)"},
-      {t:"Lo que le hace a tus otras metas",d:"Todo lo que entrenas compite con esto:",list:["<b>Hyrox.</b> Parr y colegas (<i>PLOS ONE</i>, 2014) midieron que beber después de entrenar reduce la síntesis de proteína muscular <b>24% aunque comas proteína</b>, y 37% si solo comes carbohidratos. Una noche de copas es el entrenamiento del día medio tirado","<b>Sueño.</b> Te duerme rápido, pero rompe el REM de la segunda mitad de la noche y te despierta a las 4. Tu hábito “Dormir 7 h” cuenta horas, no calidad","<b>Peso.</b> 7 kcal por gramo: cuatro cervezas son ~600 kcal, más lo que se come a esa hora. Tus registros de peso lo van a enseñar en un mes","<b>Alemán, ajedrez, ISTQB.</b> La resaca es un día perdido, y la del sábado es el domingo entero"],href:"https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0088384",label:"Parr et al. 2014 · alcohol y síntesis de proteína"},
-      {t:"Lo que cuesta en dinero",d:"Saca de <b>Finanzas</b> lo que gastaste en bares, alcohol de súper y salidas los últimos 3 meses, y divídelo entre 3. Ese número mensual, puesto <b>extra a la BBVA</b> ({{tcBbva}}), la deja en $0 antes. La cuenta que más duele: <b>cada $1,000 al mes en copas son $12,000 al año</b> que no bajan la deuda ({{deudaCara}} en tarjeta). El alcohol es el único gasto que te cobra dos veces: la copa y el interés de la copa."},
-      {t:"Didi y el alcoholímetro: cero",d:"CDMX: <b>0.4 mg/L</b> de aire espirado (0.8 g/L en sangre) = <b>arresto de 20 a 36 horas</b> en el Torito, <b>inconmutable</b> —no se paga ni lo cumple otro—, más multa y puntos de licencia. Para <b>conductores de transporte de pasajeros el límite es cero</b>. Un solo positivo un viernes te cuesta el fin de semana de Didi, la cuenta y posiblemente el trabajo en ALTEN. Y no hace falta el operativo: con el pasajero atrás, “una sola” ya es un riesgo que no puedes pagar.",href:"https://web.didiglobal.com/mx/articulos/limite-de-alcohol-para-conducir-en-mexico/",label:"Límite de alcohol para conducir · Didi México"},
-      {t:"Ponle fecha y cuenta los días",d:"Empieza un día <b>concreto</b> —mañana, no “el lunes”— y cuenta. Dos formas, usa las dos: la app <b>I Am Sober</b> (gratis: contador de días, dinero y calorías que no gastaste, y los motivos que escribiste el día 1, que es lo que relees el día 12) y un <b>hábito nuevo en tu app de Hábitos: “Cero alcohol”</b>, diario, cadena que no se rompe. Primera meta: <b>30 días</b> — si empiezas el 15 de septiembre, el día 30 es el <b>14 de octubre</b>. Luego 90 —tu plan te dice qué día—. Luego el año.",href:"https://iamsober.com/",label:"I Am Sober · contador de días"},
-      {t:"Las primeras 4 semanas: qué esperar",d:"Para que no te agarre de sorpresa y lo confundas con “no está funcionando”:",list:["<b>Semana 1.</b> Duermes peor y estás irritable — es el rebote, y pasa. Antojo fuerte de azúcar: es normal, el cuerpo busca lo que el alcohol le daba","<b>Semana 2.</b> El sueño mejora de golpe, baja la hinchazón de la cara y las manos, y despiertas sin la boca seca","<b>Semanas 3-4.</b> Energía estable, piel, presión arterial, ánimo más parejo, y la primera vez que ves bajar el peso sin cambiar nada más","<b>Después del mes.</b> Lembke: ~4 semanas es lo que tarda el sistema de recompensa en reajustarse; antes de eso todo se siente plano. No es que no funcione: es la balanza volviendo al centro"]},
-      {t:"Cambia el guion social",d:"Ten la respuesta lista <b>antes</b> de que pregunten: <i>“Estoy en preparación para el Hyrox, no estoy tomando”</i> — es verdad y nadie discute con eso. Pide <b>agua mineral con limón o cerveza sin alcohol desde el primer round</b>: el primer trago es el que abre la puerta, el quinto solo la cruza. Y las primeras semanas, menos bar y más cosas donde no se bebe: ajedrez presencial, alberca, gym, la clase de alemán. Los amigos que solo existen con alcohol de por medio te van a enseñar algo en este mes."},
-      {t:"Los disparadores que te conocen",d:"Mapea los tuyos, por escrito: viernes después del trabajo, después de una cita, fiesta familiar, ver el partido, una semana mala de deudas. Para cada uno, <b>un plan concreto de qué haces en su lugar</b>. Y la conexión que importa: <b>esta meta y la de las citas se disparan la una a la otra</b> — el alcohol baja la guardia para lo segundo y lo segundo pone alcohol enfrente. Dejarlas juntas es más fácil que por separado, porque le quitas al ciclo sus dos patas a la vez."},
-      {t:"Lee esto: cambia cómo lo ves, no solo cuánto",d:"Tres libros que atacan la idea de que el alcohol te da algo, que es lo que hace que “moderar” falle:",list:["<b>This Naked Mind</b> — Annie Grace. El más usado para dejarlo sin sentir que renuncias a algo; incluye el reto <i>The Alcohol Experiment</i> de 30 días","<b>Alcohol Explained</b> — William Porter. La fisiología en llano: por qué te despiertas a las 4, por qué la segunda copa pide la tercera","<b>Es fácil controlar el consumo de alcohol</b> — Allen Carr. El mismo método con el que millones dejaron de fumar"],href:"https://thisnakedmind.com/",label:"This Naked Mind · Annie Grace"},
-      {t:"Si necesitas más que voluntad",d:"Tres puertas, ninguna requiere “tocar fondo”:",list:["<b>AA México</b> — grupos gratuitos en toda la CDMX, buscador por colonia, reuniones todos los días. Ir a una y solo escuchar no te compromete a nada","<b>Centros de Integración Juvenil (CIJ)</b> — consulta médica y psicológica de adicciones a bajo costo; atienden adultos, el nombre engaña","<b>SMART Recovery</b> — la alternativa laica, basada en terapia cognitivo-conductual, con reuniones en línea; para quien los 12 pasos no le hablan"],href:"https://aa.org.mx/",label:"AA México · buscar un grupo"},
-      {t:"Cómo saber que ya lo dejaste",d:"No es “llevo X días”: es que un viernes con amigos y una cerveza enfrente <b>no te cuesta decir que no, y no te quedas pensando en eso</b>. Números que lo confirman: la cadena en Hábitos, dinero en alcohol en Finanzas = $0, horas de sueño, el peso en tus registros, y las cargas en el gym. Si recaes: <b>una copa no borra 60 días</b>. Anota qué la disparó (paso 11), y vuelve al día siguiente — sin castigo y sin el “ya que la regué, sigo”, que es el que de verdad cuesta caro.",href:"https://smartrecovery.org/",label:"SMART Recovery · reuniones en línea"},
-    ]},
   ipn11k:{titulo:"11K de la Carrera IPN — ya corridos",frase:"La meta no era terminar — era terminar bien, y 1:10:00 lo confirma.",pasos:[
       {t:"Meta cumplida",d:"Corriste los 11K de la Carrera del Politécnico (IPN) en 1 hora 10 minutos. Este registro queda como evidencia de que ya pasó, no como algo pendiente."},
     ]},
@@ -12251,14 +12321,14 @@ const META_DETALLE={
       {t:"Meta cumplida",d:"Avanzaste a Básico 5 de alemán en el CENLEX Santo Tomás. Este registro queda como evidencia de que ya pasó, no como algo pendiente."},
     ]},
 };
-// Barra de dinero real (BYD y Maestría) — se recalcula en cada renderMetasSlide() con datos reales
+// Barra de dinero real (la Maestría) — se recalcula en cada renderMetasSlide() con datos reales
 // de Finanzas y la usa abrirMetaDetalle() para pintarla también dentro del overlay de detalle.
 // ── El plan de cada meta. Adán, 10-oct-2026: "las metas, corto, mediano y largo, no me ayudan a nada, no me
 //    das la suficiente información para ejecutar estos planes". El prompt de Mis Metas manda: meta = resultado
 //    medible + fecha + sistema, y toda meta activa tiene un siguiente paso con fecha. META_DETALLE es lo que hay
 //    que saber; META_PLAN es lo que hay que HACER:
 //      meta     el resultado, medible
-//      fecha    'AAAA-MM-DD' o 'AAAA-MM' · {clave} del maestro · {tarea} de PHASES · {fase, inicio} · {racha, dias, si}
+//      fecha    'AAAA-MM-DD' o 'AAAA-MM' · {clave} del maestro · {tarea} de PHASES · {fase, inicio}
 //      pausa    la meta espera su turno hasta `desde`: lo que no cabe en la semana se pausa con fecha, no se abandona
 //      sistema  [{c: cuándo, q: qué}], en los bloques que ya tiene tu rutina (CIFRAS.rutina())
 //      pasos    [{f, t}] o {tarea}. Se palomean en `metas_plan_v1`; los {tarea} son la MISMA casilla del Plan Maestro
@@ -12332,42 +12402,6 @@ const META_PLAN={
     vas:'Tu rating de puzzles sube de lo que anotaste el 12 de octubre, y juegas tus dos partidas cada sábado.',
     si:'Si el 31 de octubre no hay uno en sábado de aquí a diciembre, el primero de enero que lo sea: lo que no se mueve es inscribirte con fecha. Uno en domingo no: el domingo es de Didi.'
   },
-  remoto:{
-    meta:'Una oferta firmada para trabajar remoto que pague más que hoy: es la palanca de ingreso que pide la salida',
-    fecha:{fase:'Fase 1'},
-    sistema:[
-      {c:'Mar · 19:00–19:30',q:'«Negociar tu ingreso», de tu rutina: dos aplicaciones remotas a la semana, con el CV en inglés.'},
-      {c:'Sábado · 14:40',q:'En la revisión semanal: cuántas aplicaciones, respuestas y entrevistas llevas.'}
-    ],
-    pasos:[
-      {tarea:'a1-18'},
-      {f:'2026-10-13',t:'LinkedIn: el titular con «QA/Test Engineer · Automotive · HIL · Remote · GMT-6» y tus logros con números.'},
-      {f:'2026-10-20',t:'Pregunta a tu gerente de ALTEN por días remotos y por el aumento, con números: lo que haces en Ford.'},
-      {f:'2026-10-27',t:'CV en inglés de una página: HIL/SIL, CANoe, Ford, Bosch y Continental, con resultados medibles.'},
-      {f:'2026-11-03',t:'Las primeras dos aplicaciones remotas: las vacantes de ALTEN, Wellfound, GetOnBoard o We Work Remotely.'},
-      {f:'2026-12',t:'Tu primera entrevista. La preparas con tu app de Entrevistas.'},
-      {f:'2027-01',t:'El CT-GenAI aprobado, a tu CV y a LinkedIn el mismo día.'},
-      {f:{fase:'Fase 1'},t:'La oferta firmada: se mide al cerrar la Fase 1, en el Plan Maestro.'}
-    ],
-    vas:'Dos aplicaciones cada semana, todas las semanas, y al menos una entrevista al mes desde diciembre. Seis semanas sin entrevistas dicen que el problema es el CV, no tú: reescríbelo.',
-    si:'Si al cierre de la Fase 1 no hay oferta, la palanca no espera: el aumento en ALTEN o freelance de pruebas en vez de horas de Didi, después de revisar tu contrato.'
-  },
-  byd:{
-    meta:'Liquidar el crédito del BYD con su propia renta, sin abonos que le quiten a la salida',
-    fecha:{tarea:'a4-6'},
-    sistema:[
-      {c:'Cada mes',q:'La mensualidad puntual y sin abonos extra: hasta irte, lo que sobra va a la salida.'},
-      {c:'Día 1 · Finanzas',q:'Revisa el saldo del crédito junto con tus otras deudas.'}
-    ],
-    pasos:[
-      {tarea:'a1-1'},
-      {f:'2026-10-31',t:'Pregunta a tu financiera, por escrito, si el crédito acepta pagos a capital sin penalización y si permite rentarlo para plataformas.'},
-      {tarea:'a2-8'},
-      {tarea:'a4-6'}
-    ],
-    vas:'El saldo baja cada mes lo que dice tu tabla de amortización, y desde julio de 2027 la renta paga la mensualidad completa.',
-    si:'Si un mes no se renta, la reserva del BYD paga la mensualidad. Abonar a capital es de la Fase 4, con sueldo de ingeniero.'
-  },
   maestria:{
     meta:'Empezar el M.Eng. Automotive Systems en Esslingen con la salida pagada completa',
     fecha:{clave:'maestriaInicio'},
@@ -12379,43 +12413,6 @@ const META_PLAN={
     pasos:[{tarea:'a1-4'},{tarea:'a1-5'},{tarea:'a1-10'},{tarea:'a1-12'},{tarea:'a2-2'},{tarea:'a2-4'},{tarea:'a2-5'},{tarea:'a2-6'},{tarea:'a2-9'},{tarea:'a3-1'}],
     vas:'El 31 de marzo, GBM contra {{marzoParaSalida}}; el {{decisionMaestria}}, la admisión en la mano y {{mayoParaSalida}} en GBM.',
     si:'Si el dinero no llega, la fecha que tu ahorro sí paga es septiembre de 2028, con todo pagado.'
-  },
-  celular:{
-    meta:'20 minutos al día o menos de consumo (redes, video y noticias) y el celular fuera del cuarto todas las noches',
-    fecha:'2026-11-10',
-    sistema:[
-      {c:'Cada noche · 22:30',q:'El celular se carga en la cocina; el Apple Watch es tu despertador.'},
-      {c:'Sábado · 14:40',q:'En la revisión semanal, Tiempo en pantalla: horas al día, desbloqueos y a qué hora lo abriste primero.'},
-      {c:'En Didi',q:'Montado, con Didi y el mapa, y nada más.'}
-    ],
-    pasos:[
-      {f:'2026-10-12',t:'Anota tus tres números de la semana pasada en Tiempo en pantalla: horas al día, desbloqueos y la primera vez que lo abriste.'},
-      {f:'2026-10-12',t:'Borra Instagram, TikTok, X y YouTube del teléfono; notificaciones solo de personas; escala de grises con triple clic.'},
-      {f:'2026-10-12',t:'Tiempo de inactividad de 22:30 a 7:00 y límite de 20 minutos para lo que quede de consumo. Empiezan los 30 días de limpieza.'},
-      {f:'2026-10-17',t:'Primera revisión del sábado: tus números contra los de partida.'},
-      {f:'2026-10-31',t:'Tercera semana: si un día rompiste la regla, qué lo disparó y qué cambias en el entorno.'},
-      {f:'2026-11-10',t:'Día 30: reintroduce solo lo que aporte algo concreto, cada app con su regla escrita (qué, cuándo y cuánto).'},
-      {f:'2026-12-12',t:'Un mes después: si los números volvieron a subir, es la señal de la ficha para pedir ayuda.'}
-    ],
-    vas:'Cada sábado: el consumo bajo 20 minutos al día, menos desbloqueos que en tu semana de partida y la primera hora del día sin celular.',
-    si:'Una recaída se analiza, no se castiga: qué la disparó (soledad, estrés, las deudas) y qué cambias en el entorno. Si las reglas no aguantan dos días seguidos, la ficha trae dónde pedir ayuda.'
-  },
-  alcohol:{
-    meta:'90 días seguidos sin alcohol, contados por la cadena de «Cero alcohol» en Hábitos',
-    fecha:{racha:'alcohol',dias:90,si:'2026-12-13'},
-    sistema:[
-      {c:'Cada noche',q:'Palomea «Cero alcohol» en Hábitos: la cadena es la meta.'},
-      {c:'Viernes y fiestas',q:'Agua mineral con limón o cerveza sin alcohol desde la primera ronda, y tu frase lista: «estoy preparando el Hyrox».'},
-      {c:'Sábado · 14:40',q:'En la revisión semanal: los días, el dinero que no se fue en alcohol y cómo dormiste.'}
-    ],
-    pasos:[
-      {f:'2026-10-14',t:'Día 30 de la cadena: hazte otra vez el AUDIT (10 preguntas) y compáralo con el primero.'},
-      {f:'2026-10-24',t:'Escribe tus disparadores (viernes, citas, fiestas, partidos, una semana mala de deudas) y, para cada uno, qué haces en su lugar.'},
-      {f:'2026-10-30',t:'El fin de semana de Halloween: llegas con tu bebida y tu frase, y te vas a la hora que decidiste antes.'},
-      {f:'2026-12-12',t:'Posadas, Navidad y Año Nuevo: un plan escrito para cada noche, antes de que llegue la primera.'}
-    ],
-    vas:'La cadena de Hábitos sigue, el gasto en alcohol en Finanzas es $0 y duermes mejor.',
-    si:'Si se rompe la cadena, se analiza, no se castiga: qué la disparó, qué cambias, y vuelve a empezar al día siguiente. Si al parar te tiemblan las manos o no duermes, la ficha dice a dónde ir antes de seguir solo.'
   },
   empresa:{
     meta:'Tu empresa facturando: un cliente al mes, recurrente',
@@ -12512,12 +12509,6 @@ function mpFecha(f){
     const ph=PHASES.find(p=>p.tag===f.fase); if(!ph) return null;
     const d=new Date(f.inicio?ph.start:ph.end); d.setHours(0,0,0,0); return {d,mes:false};
   }
-  if(f.racha){
-    // Los días que faltan salen de la cadena del hábito, no de una fecha supuesta: si se rompe, la meta se mueve.
-    const r=(window.HB&&typeof HB.racha==='function')?HB.racha(f.racha):null;
-    if(r===null||r===undefined) return f.si?mpFecha(f.si):null;
-    const d=mpHoy(); d.setDate(d.getDate()+Math.max(0,f.dias-r)); return {d,mes:false};
-  }
   return null;
 }
 function mpFechaTxt(x,conDia){
@@ -12564,7 +12555,7 @@ function metaPlan(id){
   });
   const hechos=pasos.filter(p=>p.hecho).length, fecha=mpFecha(P.fecha), desde=P.pausa?mpFecha(P.desde):null;
   return {P,pasos,hechos,total:pasos.length,sig:pasos.find(p=>!p.hecho)||null,fecha,fechaTxt:mpFechaTxt(fecha),
-    falta:mpFalta(fecha),pausa:!!(desde&&desde.d>mpHoy()&&hechos<pasos.length),desdeTxt:mpFechaTxt(desde)};
+    falta:mpFalta(fecha),pausa:!!(desde&&desde.d>mpHoy()&&hechos<pasos.length),desdeTxt:mpFechaTxt(desde),desdeF:desde};
 }
 // Palomear un paso del plan. Los que son tareas del Plan Maestro se marcan en su casilla de siempre
 // (`coach_checks_v1`, con la semana de hoy, como Mi Día), así que el tablero y Coach los ven igual.
@@ -12605,16 +12596,12 @@ function mdPintarPlan(){
       <div class="img-goal-pbar"><div class="img-goal-pbar-fill" style="width:${mb.pct}%;background:var(--cy)"></div></div>
     </div>`:'';
   document.getElementById('metaDetailVideo').innerHTML='';
-  const tarde=mp.pasos.filter(p=>p.est==='tarde').length;
   document.getElementById('metaDetailAvance').innerHTML=`
     ${mb?'<div class="md-hair"></div>':''}
-    <div class="md-rec-hd"><span class="md-lbl">Tu plan</span></div>
-    <div class="md-avance">
-      <div><b class="ok">${mp.hechos}</b><span class="md-lbl">Hechos</span></div>
-      <div><b${tarde?' style="color:var(--r)"':''}>${tarde||mp.total-mp.hechos}</b><span class="md-lbl">${tarde?'Atrasados':'Pendientes'}</span></div>
-    </div>
+    ${mpRitmoHtml(mp)}
+    ${mpRealHtml(id,mp)}
     <div class="md-avance-nota">${mp.pausa?`En pausa hasta <b>${esc(mp.desdeTxt)}</b>: lo que no cabe en la semana se pausa con fecha, no se abandona.`
-      :(mp.sig?`Lo siguiente es para el <b>${esc(mp.sig.fTxt)}</b> (${esc(mp.sig.cuando)}). Los pasos marcados <b>Plan Maestro</b> son la misma casilla del tablero.`:'Todos los pasos del plan están hechos.')}</div>`;
+      :(mp.sig?`Los pasos marcados <b>Plan Maestro</b> son la misma casilla del tablero.`:'Todos los pasos del plan están hechos.')}</div>`;
   document.getElementById('metaDetailIndiceN').textContent=`${info.pasos.length} ${info.pasos.length===1?'paso':'pasos'}`;
   document.getElementById('metaDetailIndice').innerHTML=mdIxPlan(true)+info.pasos.map((x,k)=>{
     const h=!!((rawGet(mdEstado.storeKey,{})[id]||{})[k]);
@@ -12631,6 +12618,7 @@ function mdPintarPlan(){
         <div class="mp-box mp-sig ${sig?clase(sig):'hecho'}"><span class="md-lbl">${mp.pausa?'Cuando le toque':'Lo siguiente'}</span><b>${sig?esc(sig.t):'Todo hecho'}</b><small>${sig?esc(sig.fTxt+' · '+sig.cuando):''}</small></div>
       </div>
       ${mp.pausa?`<div class="mp-pausa"><b>En pausa hasta ${esc(mp.desdeTxt)}.</b> ${esc(P.sistema[0].q)}</div>`:''}
+      ${mpRutaHtml(mp)}
       ${mp.pausa?'':`<div class="mp-sec">
         <div class="mp-sec-hd"><span class="md-lbl">Tu sistema, cada semana</span><small>en los bloques de tu rutina</small></div>
         ${P.sistema.map(s=>`<div class="mp-sis"><span class="mp-sis-c">${esc(s.c)}</span><span class="mp-sis-q">${esc(s.q)}</span></div>`).join('')}
@@ -12652,6 +12640,274 @@ function mdPintarPlan(){
   const navs=document.querySelectorAll('.md-acciones .md-nav');
   if(navs[0]) navs[0].disabled=true;
   if(navs[1]) navs[1].disabled=!info.pasos.length;
+}
+// ══ Lo que el panel de una meta enseña además del plan ═════════════════════════════════════════════════
+// Adán, 20-oct-2026: "falta mucho contenido para las metas, pero debe ser contenido muuuy muy útil si no ni lo
+// pongas, si puedes hacer cosas más gráficas hazlas, pero mejora muchísimo eso en todas las metas". Tres piezas,
+// todas con datos que ya existen —lo que no tiene un dato real no se inventa—:
+//   · la ruta (`mpRutaHtml`): los pasos del plan sobre el tiempo, con hoy y la meta marcados;
+//   · el ritmo (`mpRitmoHtml`): la cuenta regresiva y el tiempo que ya pasó contra los pasos hechos;
+//   · el avance real (`mpRealHtml`): los simulacros y las preguntas del CT-GenAI, las sesiones de gym de cada
+//     semana para el Hyrox, el GBM que proyecta el plan contra lo que pide cada corte de la salida para la
+//     maestría, lo que queda de entrenamiento antes del torneo de ajedrez y, en las de largo plazo, tu
+//     patrimonio contra la trayectoria del millón que las habilita (`CIFRAS.PROYECCION`).
+// Las gráficas siguen la guía de visualización: marcas delgadas, rejilla de 1 px, texto en tinta y cada valor
+// también fuera del tooltip (en su etiqueta o en su tabla).
+function mpK(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function mpYM(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
+// Una cifra corta para las etiquetas de una gráfica: $186 mil, −$278 mil, $1.2 M (el texto lleva la exacta).
+function mpMil(v){
+  if(privado) return '$••';
+  const a=Math.abs(v), s=v<0?'−':'';
+  return s+'$'+(a>=1e6?(a/1e6).toLocaleString('es-MX',{maximumFractionDigits:1})+' M':Math.round(a/1000).toLocaleString('es-MX')+' mil');
+}
+function mpDiaMes(d){ return d.getDate()+' '+MP_MES[d.getMonth()]; }
+// La ruta: cada paso con fecha es un punto sobre el tiempo —hecho en verde, atrasado en rojo, el siguiente en
+// cian—, con hoy y la meta marcados. Las fechas van arriba y abajo por turnos; la que no cabe queda en su title.
+function mpRutaHtml(mp){
+  const con=mp.pasos.filter(p=>p.f), hoy=mpHoy();
+  if(!con.length||!mp.fecha) return '';
+  const ts=con.map(p=>+p.f.d).concat([+mp.fecha.d,+hoy]);
+  const a=Math.min.apply(null,ts), b=Math.max.apply(null,ts), x=t=>(t-a)/((b-a)||1)*100;
+  const ult=[-99,-99];
+  const puntos=con.map((p,k)=>{
+    const px=x(+p.f.d), fila=k%2, sig=!!(mp.sig&&mp.sig.k===p.k);
+    const est=p.hecho?'hecho':(p.est==='hoy'?'pronto':p.est);
+    const conTxt=px-ult[fila]>=11&&Math.abs(+p.f.d-+mp.fecha.d)>864e5; if(conTxt) ult[fila]=px;
+    return '<span class="mpr-p '+est+(sig?' sig':'')+'" style="left:'+px.toFixed(2)+'%" title="'+esc(p.fTxt+' · '+p.t)+'"><i></i>'+
+      (conTxt?'<em class="'+(fila?'ab':'ar')+(px>90?' der':px<8?' izq':'')+'">'+esc(p.fTxt)+'</em>':'')+'</span>';
+  }).join('');
+  const hx=x(+hoy), fx=x(+mp.fecha.d);
+  const pausa=mp.pausa&&mp.desdeF?'<span class="mpr-pausa" style="left:'+hx.toFixed(2)+'%;width:'+Math.max(0,x(+mp.desdeF.d)-hx).toFixed(2)+'%" title="'+esc('En pausa hasta '+mp.desdeTxt)+'"></span>':'';
+  return '<div class="mp-sec"><div class="mp-sec-hd"><span class="md-lbl">Tu ruta</span><small>cada punto es un paso · '+
+      '<i class="mpr-ley hecho"></i>hecho <i class="mpr-ley tarde"></i>atrasado <i class="mpr-ley sig"></i>el siguiente</small></div>'+
+    '<div class="mpr" role="img" aria-label="'+esc(mp.hechos+' de '+mp.total+' pasos hechos; la meta, '+mpFechaTxt(mp.fecha,true))+'">'+
+      '<div class="mpr-pista"><span style="width:'+Math.max(0,Math.min(100,hx)).toFixed(2)+'%"></span></div>'+pausa+
+      '<span class="mpr-hoy'+(hx>88?' der':'')+'" style="left:'+hx.toFixed(2)+'%"><b>hoy</b></span>'+puntos+
+      '<span class="mpr-fin'+(fx>88?' der':'')+'" style="left:'+fx.toFixed(2)+'%" title="'+esc('La meta: '+mpFechaTxt(mp.fecha,true))+'"><b>🏁 '+esc(mpFechaTxt(mp.fecha))+'</b></span>'+
+    '</div></div>';
+}
+// El ritmo: cuánto falta (o cuándo arranca, si está en pausa) y, con el plan ya en marcha, el tiempo que pasó
+// desde el primer paso contra los pasos hechos. Lo que manda son los atrasados: un paso vencido es el aviso.
+function mpRitmoHtml(mp){
+  if(!mp.fecha) return '';
+  const hoy=mpHoy(), obj=mp.pausa&&mp.desdeF?mp.desdeF:mp.fecha, dias=Math.round((obj.d-hoy)/864e5);
+  let n, u;
+  if(dias<0){ n=-dias; u=n===1?'día de retraso':'días de retraso'; }
+  else if(dias<=120){ n=dias; u=n===1?'día':'días'; }
+  else if(dias<=1095){ n=Math.round(dias/30.44); u='meses'; }
+  else { n=(dias/365.25).toLocaleString('es-MX',{maximumFractionDigits:1}); u='años'; }
+  let h='<div class="mpc"><span class="md-lbl">'+(mp.pausa?'Arranca en':dias<0?'Se pasó':'Faltan')+'</span><b>'+n+'<small>'+u+'</small></b>'+
+    '<span class="mpc-f">'+esc(mp.pausa?mpFechaTxt(obj,true)+' · la meta, '+mp.fechaTxt:mpFechaTxt(mp.fecha,true))+'</span></div>';
+  const con=mp.pasos.filter(p=>p.f), ini=con.length?Math.min.apply(null,con.map(p=>+p.f.d)):null;
+  const tarde=mp.pasos.filter(p=>p.est==='tarde');
+  if(!mp.pausa&&ini!==null&&ini<=+hoy&&+mp.fecha.d>ini){
+    const tP=Math.max(0,Math.min(100,(hoy-ini)/(mp.fecha.d-ini)*100)), pP=mp.total?mp.hechos/mp.total*100:0;
+    const v=tarde.length?['tarde','<b>'+tarde.length+(tarde.length===1?' paso atrasado':' pasos atrasados')+'</b>: el primero era para el '+esc(tarde[0].fTxt)+'.']
+      :pP+5>=tP?['ok','Vas al día: los pasos van al paso del calendario.']
+      :['medio','Nada vencido, pero vas detrás del calendario: adelanta el siguiente.'];
+    h+='<div class="mpt">'+
+      '<div class="mpt-r"><span>Tiempo recorrido</span><b>'+Math.round(tP)+' %</b></div><div class="mpt-b"><i style="width:'+tP.toFixed(1)+'%"></i></div>'+
+      '<div class="mpt-r"><span>Pasos hechos</span><b>'+mp.hechos+' de '+mp.total+'</b></div><div class="mpt-b p"><i style="width:'+pP.toFixed(1)+'%"></i></div>'+
+      '<p class="mpt-v '+v[0]+'">'+v[1]+'</p></div>';
+  } else if(!mp.pausa&&tarde.length){
+    h+='<p class="mpt-v tarde"><b>'+tarde.length+(tarde.length===1?' paso atrasado':' pasos atrasados')+'</b>: el primero era para el '+esc(tarde[0].fTxt)+'.</p>';
+  }
+  return h;
+}
+// Una gráfica de columnas chica, para la columna de Recursos: `cols` = [{v, cls, lbl, tit}], con líneas de
+// referencia `refs` = [{v, cls, t}] y el máximo `max`. El valor va encima de cada columna (`lbl`).
+function mpColsHtml(cols, refs, max, xs, aria){
+  const h=v=>Math.max(0,Math.min(100,v/max*100)).toFixed(1)+'%';
+  return '<div class="mpg" role="img" aria-label="'+esc(aria)+'">'+
+      (refs||[]).map(r=>'<span class="mpg-ref '+r.cls+'" style="bottom:'+h(r.v)+'"><em>'+r.t+'</em></span>').join('')+
+      '<div class="mpg-cols">'+cols.map(c=>'<div class="mpg-c" title="'+esc(c.tit||'')+'"><i class="'+(c.cls||'')+'" style="height:'+h(c.v)+'">'+
+        (c.lbl!=null?'<b>'+c.lbl+'</b>':'')+'</i></div>').join('')+'</div>'+
+    '</div><div class="mpg-x">'+xs.map(t=>'<span>'+t+'</span>').join('')+'</div>';
+}
+// El CT-GenAI: cada simulacro contra el corte oficial y tu meta, y las preguntas de Hoy aprendes de 14 días.
+function mpRealIstqb(){
+  const X=window.EXAMEN_GENAI||{}, S=habSimulacro(), max=S.max||((X.meta&&X.meta.puntos)||46), corte=(X.meta&&X.meta.corte)||0, meta=S.meta||corte;
+  const ints=(((rawGet('examen_genai_v1',{})||{}).intentos)||[]).slice(-8);
+  let h='<div class="md-hair"></div><div class="md-rec-hd"><span class="md-lbl">Tus simulacros</span><small>puntos de '+max+'</small></div>';
+  h+=ints.length
+    ? mpColsHtml(ints.map(t=>({v:t.pts,lbl:t.pts,cls:t.pts>=meta?'ok':t.pts>=corte?'medio':'bajo',
+          tit:mpDiaMes(new Date(t.fecha))+' · juego '+(t.set||'A')+' · '+t.pts+' de '+t.max+(t.minutos?' · '+t.minutos+' min':'')})),
+        [{v:corte,cls:'corte',t:'corte '+corte}].concat(meta>corte?[{v:meta,cls:'meta',t:'tu meta '+meta}]:[]), max,
+        ints.map(t=>mpDiaMes(new Date(t.fecha))), 'Tus simulacros: '+ints.map(t=>t.pts).join(', ')+' de '+max)+
+      '<div class="mpr-nota">'+(S.listo?'<b>Dos seguidos sobre '+meta+'</b>: estás listo para presentarlo.'
+        :'El último, <b>'+S.ult.pts+' de '+max+'</b>; el mejor, '+S.mejor+'. Presentas con '+meta+' dos veces seguidas.')+'</div>'
+    : '<div class="mpr-vacio">Todavía sin simulacros. Cada uno que hagas aparece aquí contra el corte de '+corte+' y tu meta de '+meta+' de '+max+'.</div>';
+  const R=istqbRespuestas(), dias=[]; let n=0, ok=0;
+  for(let i=13;i>=0;i--){
+    const d=mpHoy(); d.setDate(d.getDate()-i);
+    const xs=(R[mpK(d)]||[]).filter(Boolean), b=xs.filter(x=>x.ok).length;
+    n+=xs.length; ok+=b; dias.push({d,n:xs.length,b});
+  }
+  h+='<div class="md-rec-hd"><span class="md-lbl">Tus preguntas diarias</span><small>14 días</small></div>'+
+    '<div class="mpq">'+dias.map(x=>'<i class="'+(!x.n?'':x.b===x.n?'ok':x.b?'medio':'mal')+'" title="'+esc(mpDiaMes(x.d)+': '+(x.n?x.b+' de '+x.n+' bien':'sin contestar'))+'"></i>').join('')+'</div>'+
+    '<div class="mpr-nota">'+(n?'<b>'+ok+' de '+n+'</b> bien ('+Math.round(ok/n*100)+' %). La meta es 7 de cada 10.':'Ninguna en 14 días: la de hoy está en Hoy aprendes.')+'</div>';
+  return h;
+}
+// El Hyrox: las sesiones de gym de las últimas 8 semanas (lunes a domingo) contra los días de tu rutina.
+function mpRealHyrox(){
+  const rut=(D.gym&&D.gym.rutina&&Object.keys(D.gym.rutina).length)?D.gym.rutina:GYM_RUTINA_DEFAULT;
+  const obj=Object.keys(rut).filter(k=>rut[k]&&rut[k].tipo!=='descanso').length||6;
+  const ses=new Set(gymSesiones().map(s=>s.fecha)), hoy=mpHoy(), lun=new Date(hoy);
+  lun.setDate(hoy.getDate()-((hoy.getDay()+6)%7));
+  const sem=[];
+  for(let w=7;w>=0;w--){
+    const a=new Date(lun); a.setDate(lun.getDate()-7*w);
+    let n=0; for(let d=0;d<7;d++){ const x=new Date(a); x.setDate(a.getDate()+d); if(ses.has(mpK(x))) n++; }
+    sem.push({a,n,actual:w===0});
+  }
+  const tot=sem.reduce((s,w)=>s+w.n,0), prev=sem.slice(0,7), prom=prev.reduce((s,w)=>s+w.n,0)/7;
+  let h='<div class="md-hair"></div><div class="md-rec-hd"><span class="md-lbl">Tus sesiones de gym</span><small>por semana</small></div>';
+  if(!tot) return h+'<div class="mpr-vacio">Tus sesiones de Ejercicio aparecen aquí, semana por semana, contra las '+obj+' de tu rutina: el Hyrox se construye en el gym de cada semana.</div>';
+  return h+mpColsHtml(sem.map(w=>({v:w.n,lbl:w.n,cls:(w.actual?'actual ':'')+(w.n>=obj?'ok':w.n>=obj-1?'medio':'bajo'),
+        tit:'Semana del '+mpDiaMes(w.a)+': '+w.n+' de '+obj+' sesiones'+(w.actual?' (va en curso)':'')})),
+      [{v:obj,cls:'meta',t:'tu rutina '+obj}], Math.max(obj,7), sem.map(w=>w.actual?'esta':mpDiaMes(w.a)),
+      'Sesiones por semana: '+sem.map(w=>w.n).join(', '))+
+    '<div class="mpr-nota">Esta semana, <b>'+sem[7].n+' de '+obj+'</b>; el promedio de las 7 anteriores, '+prom.toLocaleString('es-MX',{maximumFractionDigits:1})+'.</div>';
+}
+// La maestría: el GBM que proyecta el plan al cerrar cada mes hasta irte, contra lo que pide cada corte de la
+// salida (`marzoParaSalida`, `mayoParaSalida` y los dos de `PROYECCION.cortes`), con lo que falta en cada uno;
+// lo que tienes hoy contra lo que el plan espera este mes, y el alemán que pide Esslingen.
+function mpRealSalida(){
+  if(!window.CIFRAS||!CIFRAS.PROYECCION) return '';
+  const P=CIFRAS.PROYECCION, ult=CIFRAS.PROYECTO.ultimoMesMexico, hoyYM=hoyLocal().slice(0,7);
+  const meses=P.meses.filter(m=>m.mes>=hoyYM&&m.mes<=ult);
+  if(!meses.length) return '';
+  const C=P.cortes||{}, F1=PHASES.find(p=>p.tag==='Fase 1'), f1=F1?mpYM(F1.end):'', dec=String(CIFRAS.n('decisionMaestria')||'').slice(0,7);
+  const cortes=[
+    {mes:f1,pide:+CIFRAS.n('marzoParaSalida')||0,t:'Cierre de la Fase 1'},
+    {mes:dec,pide:+CIFRAS.n('mayoParaSalida')||0,t:'El día de decidir'},
+    C.junio?{mes:C.junio.mes,pide:C.junio.pide,t:'La cuenta bloqueada'}:null,
+    C.salida?{mes:C.salida.mes,pide:C.salida.pide,t:'La salida completa'}:null
+  ].filter(c=>c&&c.pide>0&&meses.some(m=>m.mes===c.mes));
+  const max=Math.max.apply(null,meses.map(m=>m.alemania).concat(cortes.map(c=>c.pide)))*1.06;
+  const h=v=>Math.max(0,Math.min(100,v/max*100)).toFixed(1)+'%', nom=ym=>MP_MES[+ym.slice(5,7)-1];
+  const cols=meses.map(m=>{
+    const c=cortes.filter(x=>x.mes===m.mes)[0], corto=c&&m.alemania<c.pide;
+    return '<div class="mpg-c" title="'+esc('Al cerrar '+nom(m.mes)+' '+m.mes.slice(0,4)+': '+money(m.alemania)+(c?' · '+c.t+' pide '+money(c.pide):''))+'">'+
+      (c?'<span class="mpg-pide" style="bottom:'+h(c.pide)+'"></span>':'')+'<i class="'+(corto?'bajo':c?'ok':'')+'" style="height:'+h(m.alemania)+'"></i></div>';
+  }).join('');
+  const real=fondoMaestria().total, plan=meses[0].alemania;
+  let x='<div class="md-hair"></div><div class="md-rec-hd"><span class="md-lbl">El dinero de la salida</span><small>GBM al cerrar cada mes</small></div>'+
+    '<div class="mpg" role="img" aria-label="'+esc('GBM proyectado contra lo que pide cada corte de la salida')+'"><div class="mpg-cols">'+cols+'</div></div>'+
+    '<div class="mpg-x">'+meses.map(m=>'<span>'+nom(m.mes)+'</span>').join('')+'</div>'+
+    '<div class="mpg-ley"><span><i class="bar"></i>lo que el plan junta</span><span><i class="pide"></i>lo que pide el corte</span></div>'+
+    '<div class="mps">'+cortes.map(c=>{
+      const tiene=(meses.filter(m=>m.mes===c.mes)[0]||{}).alemania||0, d=tiene-c.pide;
+      return '<div class="mps-f"><span>'+esc(c.t)+'<small>'+nom(c.mes)+' '+c.mes.slice(0,4)+' · pide '+money(c.pide)+'</small></span>'+
+        '<b class="'+(d<0?'mal':'ok')+'">'+(d<0?'faltan ':'sobran ')+money(Math.abs(d))+'</b></div>';
+    }).join('')+'</div>'+
+    '<div class="mpr-nota">Hoy tienes <b>'+money(real)+'</b>; el plan espera '+money(plan)+' al cerrar '+nom(meses[0].mes)+'.'+
+      (cortes.some(c=>((meses.filter(m=>m.mes===c.mes)[0]||{}).alemania||0)<c.pide)?' Lo que cierra la diferencia: '+esc(CIFRAS.texto('{{extraSalida}}'))+' más al mes de ingreso nuevo.':'')+'</div>';
+  // El alemán que pide Esslingen: la lección del Kapitel y el vocabulario del nivel de la etapa.
+  const t=typeof alemanLeccionHoy==='function'?alemanLeccionHoy():null;
+  if(t&&t.l){
+    const etapa=aprendeEtapaAleman(), salio=new Set((((rawGet(APRENDE_KEY,{})||{}).salio||{}).de)||[]);
+    const del=alemanPalabras().filter(w=>w.niv===etapa.nivel), van=del.filter(w=>salio.has(w.de)).length;
+    x+='<div class="md-rec-hd"><span class="md-lbl">El alemán</span><small>Esslingen pide el A2</small></div>'+
+      '<div class="mpa"><span>Lección: <b>'+esc(String(t.l.es).split(':')[0])+'</b>'+(t.avance?' · '+t.avance.hechos+' de '+t.avance.total:'')+'</span>'+
+      '<span>Vocabulario '+esc(etapa.nivel)+': <b>'+van+' de '+del.length+'</b> palabras</span>'+
+      '<div class="mpt-b p"><i style="width:'+(del.length?van/del.length*100:0).toFixed(1)+'%"></i></div></div>';
+  }
+  return x;
+}
+// El torneo de ajedrez: lo que queda de tu sistema antes de la fecha —los sábados de partidas y los días de puzzles—.
+function mpRealAjedrez(mp){
+  if(!mp.fecha) return '';
+  const hoy=mpHoy(), fin=mp.fecha.d; if(fin<=hoy) return '';
+  let sab=0, lab=0;
+  for(const d=new Date(hoy); d<fin; d.setDate(d.getDate()+1)){ const w=d.getDay(); if(w===6) sab++; else if(w>=1&&w<=5) lab++; }
+  const min=lab*15;
+  return '<div class="md-hair"></div><div class="md-rec-hd"><span class="md-lbl">Antes del torneo</span><small>con tu sistema</small></div>'+
+    '<div class="mpk"><div><b>'+sab+'</b><span>sábados · '+sab*2+' partidas rápidas</span></div>'+
+      '<div><b>'+lab+'</b><span>días de puzzles · '+Math.floor(min/60)+' h '+String(min%60).padStart(2,'0')+' min</span></div></div>'+
+    '<div class="mpr-nota">Quince minutos de puzzles en el descanso de ALTEN y dos partidas cada sábado: el torneo se gana antes.</div>';
+}
+// Las de largo plazo: tu patrimonio líquido contra la trayectoria del millón (`PROYECCION.meses`), hasta la fecha
+// de la meta. Es lo que las habilita: cada una espera su corte de diciembre en la proyección.
+function mpRealMillon(mp){
+  if(!window.CIFRAS||!CIFRAS.PROYECCION||!mp.fecha) return '';
+  const ms=CIFRAS.PROYECCION.meses, hoyYM=hoyLocal().slice(0,7), metaYM=mpYM(mp.fecha.d);
+  const serie=ms.filter(m=>m.mes>=hoyYM&&m.mes<=metaYM);
+  if(serie.length<3) return '';
+  const real=patrimonioLiquido(), plan=serie[0].liquido, fin=serie[serie.length-1];
+  const vs=serie.map(m=>m.liquido).concat([real,0]);
+  const lo=Math.min.apply(null,vs), hi=Math.max.apply(null,vs), pad=(hi-lo)*.08||1, y0=lo-pad, y1=hi+pad;
+  const X=i=>i/(serie.length-1)*100, Y=v=>(1-(v-y0)/(y1-y0))*100;
+  const pts=serie.map((m,i)=>X(i).toFixed(2)+','+Y(m.liquido).toFixed(2)).join(' ');
+  const z=Y(0).toFixed(2), dif=real-plan;
+  const anios=serie.map((m,i)=>({i,m})).filter(o=>o.m.mes.slice(5)==='01'&&X(o.i)>9);
+  return '<div class="md-hair"></div><div class="md-rec-hd"><span class="md-lbl">Lo que la habilita</span><small>tu patrimonio líquido</small></div>'+
+    '<div class="mpm" role="img" aria-label="'+esc('La proyección del patrimonio líquido hasta '+metaYM+': de '+money(plan)+' a '+money(fin.liquido)+'; hoy, '+money(real))+'">'+
+      '<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'+
+        anios.map(o=>'<line x1="'+X(o.i).toFixed(2)+'" x2="'+X(o.i).toFixed(2)+'" y1="0" y2="100" class="mpm-g"/>').join('')+
+        '<line x1="0" x2="100" y1="'+z+'" y2="'+z+'" class="mpm-cero"/>'+
+        '<polygon points="0,'+z+' '+pts+' 100,'+z+'" class="mpm-area"/>'+
+        '<polyline points="'+pts+'" class="mpm-l"/>'+
+      '</svg>'+
+      '<span class="mpm-z" style="top:'+z+'%">$0</span>'+
+      '<span class="mpm-p hoy '+(dif>=0?'ok':'mal')+'" style="left:0;top:'+Y(real).toFixed(2)+'%" title="'+esc('Hoy: '+money(real))+'"></span>'+
+      '<span class="mpm-p meta" style="left:100%;top:'+Y(fin.liquido).toFixed(2)+'%" title="'+esc(mpFechaTxt(mp.fecha)+': '+money(fin.liquido))+'"><em>'+mpMil(fin.liquido)+'</em></span>'+
+    '</div>'+
+    '<div class="mpg-x mpm-x"><span>hoy</span>'+anios.map(o=>'<span style="left:'+X(o.i).toFixed(2)+'%">'+o.m.mes.slice(0,4)+'</span>').join('')+'</div>'+
+    '<div class="mpr-nota">En '+esc(mpFechaTxt(mp.fecha))+' la proyección pone <b>'+money(fin.liquido)+'</b> líquidos. Hoy vas en <b>'+money(real)+'</b>: '+
+      money(Math.abs(dif))+(dif>=0?' arriba':' abajo')+' de lo que el plan espera este mes.</div>';
+}
+const MP_REAL={istqbgenai:mpRealIstqb, hyrox:mpRealHyrox, maestria:mpRealSalida, ajedrez:mpRealAjedrez};
+function mpRealHtml(id,mp){ const f=MP_REAL[id]||mpRealMillon; try{ return f(mp,id); }catch(e){ return ''; } }
+
+// ══ La línea del tiempo de Mis Metas ═══════════════════════════════════════════════════════════════════
+// En la franja, en lugar de una barra por meta (que no decía cuándo): cada meta que falta en su fecha, sobre las
+// fases del Plan Maestro, de hoy al cierre del plan. Los próximos 15 meses ocupan el 58 % del ancho —ahí está lo
+// que se mueve esta semana— y de ahí al cierre el resto, con el corte marcado. Las etiquetas se acomodan en tres
+// carriles para no encimarse; tocar una meta abre su panel. Las logradas no van: ya pasaron.
+function mgLineaHtml(metas){
+  const hoy=mpHoy(), ini=new Date(hoy.getFullYear(),hoy.getMonth(),1), fin=finDelPlan();
+  const corte=new Date(ini.getFullYear(),ini.getMonth()+15,1), K=.58;
+  const x=d=>{ const t=+d; return t<=+corte?Math.max(0,(t-ini)/(corte-ini))*K*100:(K+Math.min(1,(t-corte)/((fin-corte)||1))*(1-K))*100; };
+  const ticks=[];
+  for(let m=3;m<15;m+=3){ const d=new Date(ini.getFullYear(),ini.getMonth()+m,1); ticks.push({x:x(d),t:MP_MES[d.getMonth()]+(d.getMonth()<3?' '+d.getFullYear():'')}); }
+  for(let y=corte.getFullYear()+(corte.getMonth()>0?1:0);y<=fin.getFullYear();y++){ const d=new Date(y,0,1); if(d>corte) ticks.push({x:x(d),t:String(y)}); }
+  const fases=PHASES.map((ph,i)=>{
+    const a=Math.max(+ph.start,+ini), b=Math.min(+ph.end,+fin); if(b<=a) return '';
+    const xa=x(a), xb=x(b);
+    return '<span class="mgl-f" style="left:'+xa.toFixed(2)+'%;width:'+(xb-xa).toFixed(2)+'%;--fc:'+CAL_FASE_COLOR[i%CAL_FASE_COLOR.length]+'" title="'+esc(ph.tag+' · '+ph.title)+'">'+(xb-xa>7?esc(ph.tag):'')+'</span>';
+  }).join('');
+  const anchoBay=((document.getElementById('metasBay')||{}).clientWidth||1200), angosta=anchoBay<700, ancho=Math.max(320,anchoBay*.6);
+  const fTxt=f=>f.mes?MP_MES[f.d.getMonth()]+' '+f.d.getFullYear():f.d.getDate()+' '+MP_MES[f.d.getMonth()]+(f.d.getFullYear()!==hoy.getFullYear()?' '+f.d.getFullYear():'');
+  const ms=metas.filter(m=>m.mp&&m.mp.fecha&&m.est!=='ok').map(m=>Object.assign({},m,{px:Math.max(0,Math.min(100,x(m.mp.fecha.d)))})).sort((a,b)=>a.px-b.px);
+  // Las que caen casi en el mismo punto (el cierre del plan junta cuatro) van en un solo grupo: un punto y una
+  // etiqueta con un nombre por meta, y cada nombre abre su panel.
+  const grupos=[];
+  ms.forEach(m=>{ const g=grupos[grupos.length-1]; if(g&&m.px-g.px<1.6) g.ms.push(m); else grupos.push({px:m.px,ms:[m]}); });
+  const finCarril=[-99,-99,-99];
+  grupos.forEach(g=>{
+    const fs=[...new Set(g.ms.map(m=>fTxt(m.mp.fecha)))];
+    g.f=fs.length===1?fs[0]:fs[0]+' – '+fs[fs.length-1];
+    const w=angosta?(g.ms.length*24+8)/anchoBay*100:(g.ms.reduce((s,m)=>s+(m.c||m.t).length+3,0)+g.f.length)*6.2/ancho*100+4, der=g.px+w>100;
+    const a0=der?g.px-w:g.px, a1=der?g.px:g.px+w;
+    let l=finCarril.findIndex(e=>e<=a0-.6); if(l<0) l=finCarril.indexOf(Math.min.apply(null,finCarril));
+    finCarril[l]=a1; g.l=l; g.der=der;
+  });
+  const marcas=grupos.map(g=>{
+    const tarde=g.ms.some(m=>!m.mp.pausa&&m.mp.sig&&m.mp.sig.est==='tarde');
+    const cls=g.ms.some(m=>!m.mp.pausa&&m.est==='on')?'on':g.ms.some(m=>!m.mp.pausa)?'off':'pausa';
+    return '<div class="mgl-m '+cls+(tarde?' tarde':'')+(g.der?' der':'')+'" style="left:'+g.px.toFixed(2)+'%;--l:'+g.l+'"><i></i><span>'+
+      g.ms.map(m=>'<button type="button" class="mgl-b" onclick="abrirMetaDetalle(\''+m.id+'\',\''+m.img+'\',\''+m.epi+'\')" title="'+
+        esc(m.t+' · '+m.mp.fechaTxt+' · '+m.mp.falta.txt+(m.mp.pausa?' · en pausa hasta '+m.mp.desdeTxt:'')+(!m.mp.pausa&&m.mp.sig&&m.mp.sig.est==='tarde'?' · tiene pasos atrasados':''))+'">'+
+        m.ico+'<em> '+esc(m.c||m.t)+'</em></button>').join('<i class="mgl-sep">·</i>')+'<small>'+esc(g.f)+'</small></span></div>';
+  }).join('');
+  return '<div class="mgl" role="group" aria-label="Tus metas en el tiempo">'+
+      '<div class="mgl-eje"></div><span class="mgl-corte" style="left:'+(K*100)+'%" title="Desde aquí la escala se comprime: un año ocupa menos"></span>'+
+      '<span class="mgl-hoy" style="left:'+x(hoy).toFixed(2)+'%">hoy</span>'+marcas+
+      '<div class="mgl-fases">'+fases+'</div>'+
+      '<div class="mgl-ts">'+ticks.map(t=>'<span style="left:'+t.x.toFixed(2)+'%">'+t.t+'</span>').join('')+'</div>'+
+    '</div>';
 }
 let METAS_MONEYBAR={};
 // ══════════════════════════════════════════════════════════════════════════
@@ -14084,7 +14340,6 @@ function renderMetasSlide(){
   // Solo la tarjeta, no cualquier deuda que mencione al banco (ver la nota en renderCoach()).
   const bana=metaDebtInfo(d=>/banamex/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
   const bbva=metaDebtInfo(d=>/bbva/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
-  const carro=metaDebtInfo(d=>d.type==='car');
   const goalMae=(D.fin.goals||[]).find(g=>g.id==='g001'||/maestr/i.test(g.name||''));
   // Misma correccion que en renderCoach() (2026-08-23): el fondo se suma en vivo de sus piezas
   // reales —fondo de emergencia, inversiones y Bitcoin— en vez de leer la foto vieja de
@@ -14150,17 +14405,13 @@ function renderMetasSlide(){
       <div class="sub${privado?' fin-hidden':''}">${x.sub}</div>
     </div>`).join('');
 
-  // Barra de dinero real de BYD/Maestría (2026-08-09, pedido explícito) — de solo lectura, calculada
+  // Barra de dinero real de la Maestría (2026-08-09, pedido explícito) — de solo lectura, calculada
   // aquí con los mismos datos de Finanzas que ya usan los 4 medidores de arriba, no se toca con clic.
-  const carroPct=carro.found&&carro.total>0?Math.max(0,Math.min(100,(1-carro.balance/carro.total)*100)):0;
   const maePct=maeTgt>0?Math.max(0,Math.min(100,fmMae.total/maeTgt*100)):0;
   // `short` es nuevo (2026-08-30): la ficha enseña la CIFRA, no solo el porcentaje. "$22,800
   // pagado" dice algo; "7%" obliga a recordar de qué es el 7%. El `lbl` largo se queda como
   // title del elemento, para quien quiera el detalle completo.
   METAS_MONEYBAR={
-    byd:{pct:Math.round(carroPct),
-         lbl:carro.found?`Pagado real: ${money(carro.total-carro.balance)} de ${money(carro.total)}`:'Pagado real: sin datos en Finanzas',
-         short:carro.found?`${money(carro.total-carro.balance)} pagado`:'sin datos'},
     maestria:{pct:Math.round(maePct),
          lbl:maeTgt>0?`Ahorrado: ${money(fmMae.total)} de ${money(maeTgt)}`:'Ahorrado: sin datos en Finanzas',
          short:maeTgt>0?`${money(fmMae.total)} ahorrado`:'sin datos'}
@@ -14171,36 +14422,28 @@ function renderMetasSlide(){
   // corto/mediano plazo (con las 2 barras: checklist + dinero ahorrado real) y Cupra pasó a largo
   // plazo (recompensa después del BYD, ya no compite por atención con las metas activas de ahora).
   const cortoMediano=[
-    {id:'ajedrez',ico:'🏆',t:'Torneo de ajedrez',img:'https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=800&q=80&auto=format&fit=crop'},
-    {id:'hyrox',ico:'🏋️',t:'Primer Hyrox',img:'https://images.unsplash.com/photo-1739283180407-21e27d5c0735?w=800&q=80&auto=format&fit=crop'},
-    {id:'remoto',ico:'💻',t:'Trabajar remoto',img:'https://images.unsplash.com/photo-1586227740560-8cf2732c1531?w=800&q=80&auto=format&fit=crop'},
-    {id:'byd',ico:'🚗',t:'Liquidar el BYD Dolphin Mini'+(carro.found?' · '+money(carro.balance)+' restantes':''),img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/BYD_DOLPHIN_MINI_%28BRAZIL%29_BYD_SEAGULL.jpg/960px-BYD_DOLPHIN_MINI_%28BRAZIL%29_BYD_SEAGULL.jpg',money:METAS_MONEYBAR.byd},
-    {id:'maestria',ico:'🎓',t:'Maestría en Alemania',img:'https://images.unsplash.com/photo-1627556704302-624286467c65?w=800&q=80&auto=format&fit=crop',money:METAS_MONEYBAR.maestria},
+    {id:'ajedrez',c:'Ajedrez',ico:'🏆',t:'Torneo de ajedrez',img:'https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=800&q=80&auto=format&fit=crop'},
+    {id:'hyrox',c:'Hyrox',ico:'🏋️',t:'Primer Hyrox',img:'https://images.unsplash.com/photo-1739283180407-21e27d5c0735?w=800&q=80&auto=format&fit=crop'},
+    {id:'maestria',c:'Maestría',ico:'🎓',t:'Maestría en Alemania',img:'https://images.unsplash.com/photo-1627556704302-624286467c65?w=800&q=80&auto=format&fit=crop',money:METAS_MONEYBAR.maestria},
     // Mediano plazo, añadida el 2026-08-19 a petición de Adán. Es la única meta suya que se
     // apoya en una credencial que YA tiene (el CTFL de 2025): no empieza de cero.
-    {id:'istqbgenai',ico:'🤖',t:'Certificación ISTQB CT-GenAI',img:'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1920&q=85&auto=format&fit=crop'},
-    // Las tres adicciones (2026-09-14, pedido de Adán) — ver el bloque del mismo nombre en
-    // META_DETALLE. Van en su propia fila, antes de las dos logradas, porque son metas de todos
-    // los días y no de una fecha. Fotos de Unsplash verificadas con curl (200) el mismo día: las
-    // manos con el celular a oscuras, el camino que se recorre solo, y la mano que tapa el vaso.
-    {id:'celular',ico:'📵',t:'Dejar la adicción al celular',img:'https://images.unsplash.com/photo-1423784346385-c1d4dac9893a?w=800&q=80&auto=format&fit=crop'},
-    {id:'alcohol',ico:'🍺',t:'Dejar el alcohol',img:'https://images.unsplash.com/photo-1676629922083-96d147ab81a9?w=800&q=80&auto=format&fit=crop'},
+    {id:'istqbgenai',c:'CT-GenAI',ico:'🤖',t:'Certificación ISTQB CT-GenAI',img:'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1920&q=85&auto=format&fit=crop'},
     // 2 metas YA LOGRADAS (2026-08-11, pedido explícito: "en las metas a corto y mediano plazo,
     // no pusiste mi carrera de 11k ni que estaba estudiando aleman" — corrige la omisión de la
     // ronda anterior, donde estas 2 solo se agregaron a Coach y no aquí). Mismo mecanismo de
     // checklist/% que el resto — no un badge estático — pero sembradas ya al 100% desde la
     // primera carga (ver seedMetasLogradasIfNeeded() en Init, al final del archivo), porque no
     // tiene sentido pedirle a Adán que "marque" algo que ya pasó para que se vea completo.
-    {id:'ipn11k',ico:'🏃',t:'Correr los 11K de la Carrera IPN (1:10:00)',img:'https://images.unsplash.com/photo-1714963145999-f35277765fe6?w=800&q=80&auto=format&fit=crop'},
-    {id:'aleman5',ico:'🇩🇪',t:'Básico 5 de alemán (CENLEX Santo Tomás)',img:'https://images.unsplash.com/photo-1705573384249-3eff0565c04d?w=800&q=80&auto=format&fit=crop'}
+    {id:'ipn11k',c:'11K IPN',ico:'🏃',t:'Correr los 11K de la Carrera IPN (1:10:00)',img:'https://images.unsplash.com/photo-1714963145999-f35277765fe6?w=800&q=80&auto=format&fit=crop'},
+    {id:'aleman5',c:'Básico 5',ico:'🇩🇪',t:'Básico 5 de alemán (CENLEX Santo Tomás)',img:'https://images.unsplash.com/photo-1705573384249-3eff0565c04d?w=800&q=80&auto=format&fit=crop'}
   ];
   const largoExtras=[
-    {id:'empresa',ico:'🏢',t:'Empresa ya creada',img:'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80&auto=format&fit=crop'},
-    {id:'depa',ico:'🏙️',t:'Depa en la zona que quieras',img:'https://images.unsplash.com/photo-1594873604892-b599f847e859?w=800&q=80&auto=format&fit=crop'},
-    {id:'tailandia',ico:'🥊',t:'Pelear en Tailandia',img:'https://images.unsplash.com/photo-1564097147829-44f8c74a8549?w=800&q=80&auto=format&fit=crop'},
-    {id:'hongkong',ico:'🌃',t:'Rascacielos en Hong Kong',img:'https://images.unsplash.com/photo-1620015092538-e33c665fc181?w=800&q=80&auto=format&fit=crop'},
-    {id:'spacex',ico:'🚀',t:'Lanzamiento de SpaceX',img:'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?w=800&q=80&auto=format&fit=crop'},
-    {id:'cupra',ico:'🚙',t:'Cupra Formentor',img:'https://images.unsplash.com/photo-1655288808681-17caed2fc987?w=800&q=80&auto=format&fit=crop'}
+    {id:'empresa',c:'Tu empresa',ico:'🏢',t:'Empresa ya creada',img:'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80&auto=format&fit=crop'},
+    {id:'depa',c:'Depa',ico:'🏙️',t:'Depa en la zona que quieras',img:'https://images.unsplash.com/photo-1594873604892-b599f847e859?w=800&q=80&auto=format&fit=crop'},
+    {id:'tailandia',c:'Tailandia',ico:'🥊',t:'Pelear en Tailandia',img:'https://images.unsplash.com/photo-1564097147829-44f8c74a8549?w=800&q=80&auto=format&fit=crop'},
+    {id:'hongkong',c:'Hong Kong',ico:'🌃',t:'Rascacielos en Hong Kong',img:'https://images.unsplash.com/photo-1620015092538-e33c665fc181?w=800&q=80&auto=format&fit=crop'},
+    {id:'spacex',c:'SpaceX',ico:'🚀',t:'Lanzamiento de SpaceX',img:'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?w=800&q=80&auto=format&fit=crop'},
+    {id:'cupra',c:'Cupra',ico:'🚙',t:'Cupra Formentor',img:'https://images.unsplash.com/photo-1655288808681-17caed2fc987?w=800&q=80&auto=format&fit=crop'}
   ];
   // ── Los pasos reales de una meta ──────────────────────────────────────────
   // `detailPct()` devuelve solo el porcentaje, y un 33% no dice si faltan dos pasos o diez.
@@ -14217,13 +14460,9 @@ function renderMetasSlide(){
     const hechos=info.pasos.filter((_,k)=>store[k]).length;
     return {hechos,total,pct:Math.round(hechos/total*100)};
   };
-  // EN MARCHA es cualquier avance real, no solo un paso palomeado: el dinero de Finanzas (BYD y
-  // maestría, METAS_MONEYBAR) o la racha del hábito que la sostiene (alcohol, META_RACHA). Antes el
-  // BYD con $32,800 pagados y la maestría con su ahorro salían «sin empezar».
-  const avanceReal=id=>{
-    const mb=METAS_MONEYBAR[id]; if(mb&&mb.pct>0) return true;
-    const m=META_RACHA[id]; return !!(m&&window.HB&&typeof HB.racha==='function'&&HB.racha(m.habito)>0);
-  };
+  // EN MARCHA es cualquier avance real, no solo un paso palomeado: también el dinero de Finanzas (la maestría,
+  // METAS_MONEYBAR). Antes la maestría con su ahorro salía «sin empezar».
+  const avanceReal=id=>{ const mb=METAS_MONEYBAR[id]; return !!(mb&&mb.pct>0); };
   const estadoMeta=(p,id)=>p.total&&p.hechos>=p.total?'ok':(p.hechos>0||(id&&avanceReal(id))?'on':'');
 
   // Corto/mediano y largo plazo: ficha con foto de fondo (motiva más que una fila de texto
@@ -14232,22 +14471,14 @@ function renderMetasSlide(){
   // a otro archivo.
   // Lo que la ficha DICE, y es el rediseño del 2026-08-30: el chip de estado (LOGRADA /
   // EN MARCHA / SIN EMPEZAR), una marca por paso real del checklist con el conteo debajo, y
-  // —solo en BYD y Maestría— una segunda barra con el dinero real de Finanzas y su cifra.
+  // —solo en la Maestría— una segunda barra con el dinero real de Finanzas y su cifra.
   // `sm` es la variante angosta de la columna de largo plazo: mismo contenido, tipografía
   // un punto menor.
-  /* El indicador de conducta que pide el prompt de Mis Metas: días seguidos. Sale de la racha
-     del hábito que sostiene la meta (Hábitos → "Cero alcohol"), no de una fecha supuesta. */
-  const META_RACHA = { alcohol: { habito: 'alcohol', txt: 'sin alcohol' } };
-  const metaRachaHtml = id => {
-    const m = META_RACHA[id];
-    if(!m || !window.HB || typeof HB.racha !== 'function') return '';
-    const r = HB.racha(m.habito);
-    if(r === null) return '';
-    return `<span style="margin-left:auto;font-size:10.5px;font-weight:700;color:var(--g);white-space:nowrap" title="La cadena del hábito «Cero alcohol», en Hábitos">🔥 ${r} día${r===1?'':'s'} ${m.txt}</span>`;
-  };
   const metaDeckHtml=(arr,sm,epigrafe)=>`<div class="mg-deck${sm?' mg-deck-sm':''}">${arr.map(i=>{
     const p=pasosMeta(i.id), est=estadoMeta(p,i.id), mp=metaPlan(i.id);
     const chip=est==='ok'?'LOGRADA':(mp&&mp.pausa?'EN PAUSA':(est==='on'?'EN MARCHA':'SIN EMPEZAR'));
+    // Cuánto falta, sobre la foto: el plazo de la meta o, en pausa, desde cuándo arranca.
+    const cuenta=mp&&mp.fecha&&est!=='ok'?`<span class="mg-cuenta${!mp.pausa&&mp.sig&&mp.sig.est==='tarde'?' tarde':''}">${esc(mp.pausa?'desde '+mp.desdeTxt:mp.falta.txt)}</span>`:'';
     // El plan en dos renglones: la fecha con el resultado medible, y lo que sigue (o hasta cuándo espera).
     const urg=x=>x.est==='hoy'?'pronto':x.est;
     const plan=mp?`<div class="mg-pl">
@@ -14268,12 +14499,12 @@ function renderMetasSlide(){
     return `<div class="mg-card${est?' '+est:''}">
       <div class="mg-ph" style="background-image:url('${i.img}')" onclick="abrirMetaDetalle('${i.id}','${i.img}','${epigrafe||''}')" role="button" tabindex="0" title="${i.t}">
         <div class="mg-sc"></div>
-        <span class="mg-chip">${chip}</span>
+        <span class="mg-chip">${chip}</span>${cuenta}
         <div class="mg-tt${sm?' mg-tt-sm':''}">${i.ico} ${i.t}</div>
       </div>
       <div class="mg-rail">${marcas}</div>
       ${plan}
-      <div class="mg-foot"><span class="mg-steps">${p.hechos}<i>/</i>${p.total}<small>PASOS</small></span>${cuando}${metaRachaHtml(i.id)}</div>
+      <div class="mg-foot"><span class="mg-steps">${p.hechos}<i>/</i>${p.total}<small>PASOS</small></span>${cuando}</div>
       ${money}
     </div>`;
   }).join('')}</div>`;
@@ -14294,12 +14525,11 @@ function renderMetasSlide(){
   const nOn=todasMetas.filter(x=>estadoMeta(x.p,x.id)==='on'&&!pausada(x)).length;
   const nPausa=todasMetas.filter(x=>estadoMeta(x.p,x.id)!=='ok'&&pausada(x)).length;
   const nOff=todasMetas.length-nOk-nOn-nPausa;
-  // Piso del 16%: una meta sin empezar tiene que seguir siendo una barra visible en el
-  // ecualizador, no un hueco — si desaparece, el conjunto miente sobre cuántas metas hay.
-  const eq=todasMetas.map(x=>{
-    const e=estadoMeta(x.p,x.id);
-    return `<i class="${e==='ok'?'ok':(e?'':'zero')}" style="height:${Math.max(20,x.p.pct)}%" title="${x.t} — ${x.p.hechos}/${x.p.total} pasos"></i>`;
-  }).join('');
+  // La línea del tiempo (`mgLineaHtml`): cada meta que falta, en su fecha y con su estado.
+  const lineaMetas=todasMetas.map(x=>Object.assign({},x,{est:estadoMeta(x.p,x.id),mp:metaPlan(x.id),
+    epi:cortoMediano.some(c=>c.id===x.id)?'Corto y mediano plazo':'Largo plazo'}));
+  let linea='';
+  try{ linea=mgLineaHtml(lineaMetas); }catch(e){ console.error('mgLineaHtml', e); }
 
   const ei=edadInfo();
   document.getElementById('metasBay').innerHTML=`
@@ -14312,8 +14542,8 @@ function renderMetasSlide(){
       </div>
       <div class="mg-d"></div>
       <div class="mg-eqw">
-        <span class="mg-k">LAS ${todasMetas.length} METAS, UNA A UNA</span>
-        <div class="mg-eq">${eq}</div>
+        <span class="mg-k">TUS METAS EN EL TIEMPO · HOY → ${finDelPlan().getFullYear()}</span>
+        ${linea}
       </div>
       <div class="mg-d"></div>
       <div class="mg-s">
@@ -14492,7 +14722,7 @@ const HABILIDAD_DETALLE={
   networking:{titulo:'Hacer networking de verdad',frase:'La red no se construye cuando la necesitas — se construye antes, cuando no necesitas nada.',videos:[{u:"https://www.youtube.com/watch?v=mQV4KH2ryI4",t:"Masterclass: Networking… ¿cómo hacerlo y dónde? — OBS Business School",d:"Masterclass de escuela de negocios: método y sitios, no consejos sueltos."},{u:"https://www.youtube.com/watch?v=k7p_ZdBBTig",t:"Cómo hacer networking profesional",d:"La versión corta y práctica del método, para repasar antes de un evento."},{u:"https://www.youtube.com/watch?v=Oq8RrM1Qyzk",t:"Cómo hacer contactos de calidad — networking estratégico",d:"El filtro: no más contactos, mejores contactos."}],pasos:[
       {t:'Qué es y qué no es',d:'Keith Ferrazzi lo resume en <b>Never Eat Alone</b>: <i>"no hagas networking cuando necesites algo — para entonces ya es tarde"</i>. Networking no es coleccionar contactos ni repartir tarjetas: es construir <b>relaciones donde las dos partes ganan</b>, empezando por lo que tú das.',list:['Mil personas que te vieron una vez valen menos que <b>veinte que te deben un favor de verdad</b>.','Se siente raro al principio porque inviertes en algo que no da resultado inmediato. Esa incomodidad es la señal de que lo estás haciendo bien: si diera resultado hoy, sería vender, no construir.','La medida no es cuántos contactos tienes, es <b>a cuántos podrías escribirles mañana sin que les pareciera raro</b>. Cuéntalos ahora mismo. Ese número es tu punto de partida real.']},
       {t:'El mito del extrovertido',d:'La creencia de que esto es para gente sociable es lo que más frena a los que mejor lo harían. Susan Cain documenta en <b>Quiet</b> que entre un tercio y la mitad de la población es introvertida — y en relaciones profesionales el introvertido tiene <b>ventaja estructural</b>.',list:['El que habla mucho es olvidable; el que escucha y luego <b>pregunta por lo que dijiste</b> se recuerda semanas después.','No necesitas trabajar la sala. Necesitas <b>dos conversaciones buenas por evento</b>. Dos. Si sales con dos nombres que puedes seguir, ganaste la noche.','Estrategia de introvertido que funciona: llega <b>15 minutos antes</b>. Con cinco personas en la sala es fácil hablar; con ochenta ya se formaron los grupos y entrar cuesta el triple.','⚠️ Error más común: creer que hay que ser el alma de la fiesta. No hay que serlo. Hay que ser el que se acuerda del nombre del hijo del otro.']},
-      {t:'La fuerza de los vínculos débiles',d:'Mark Granovetter, sociólogo de Stanford, publicó en 1973 <i>The Strength of Weak Ties</i>, uno de los papers más citados de las ciencias sociales. Preguntó a profesionistas que habían cambiado de trabajo por un contacto de dónde venía ese contacto. El resultado le sorprendió a todo el mundo:',list:['La mayoría de esas oportunidades <b>no vinieron de amigos cercanos</b>, sino de conocidos con los que había poco contacto.','La razón es matemática, no social: tus amigos cercanos se mueven en <b>tu mismo círculo</b> y conocen las mismas vacantes que tú. El conocido lejano vive en otro mundo y ve puertas que tú no ves.','Consecuencia práctica: tu red útil no son tus cinco amigos. Son los <b>cincuenta que casi no ves</b> — el compañero de la carrera, el de la certificación, el excolega que se fue a otra empresa.','Tu caso: si buscas trabajo remoto en Europa, no va a salir de tus amigos de CDMX. Va a salir de alguien que se fue, de alguien de tu clase de alemán, o de un excompañero de ALTEN que ya está allá.']},
+      {t:'La fuerza de los vínculos débiles',d:'Mark Granovetter, sociólogo de Stanford, publicó en 1973 <i>The Strength of Weak Ties</i>, uno de los papers más citados de las ciencias sociales. Preguntó a profesionistas que habían cambiado de trabajo por un contacto de dónde venía ese contacto. El resultado le sorprendió a todo el mundo:',list:['La mayoría de esas oportunidades <b>no vinieron de amigos cercanos</b>, sino de conocidos con los que había poco contacto.','La razón es matemática, no social: tus amigos cercanos se mueven en <b>tu mismo círculo</b> y conocen las mismas vacantes que tú. El conocido lejano vive en otro mundo y ve puertas que tú no ves.','Consecuencia práctica: tu red útil no son tus cinco amigos. Son los <b>cincuenta que casi no ves</b> — el compañero de la carrera, el de la certificación, el excolega que se fue a otra empresa.','Tu caso: tu trabajo en Alemania no va a salir de tus amigos de CDMX. Va a salir de alguien que se fue, de alguien de tu clase de alemán, o de un excompañero de ALTEN que ya está allá.']},
       {t:'Dar antes de pedir — pero con criterio',d:'Adam Grant estudió a miles de profesionales en <b>Give and Take</b> y encontró algo incómodo: los que dan ocupan <b>tanto la cima como el fondo</b> del éxito. La diferencia no es cuánto dan, sino cómo.',list:['<b>Fondo</b>: dice que sí a todo, se queda sin tiempo ni energía, y su ayuda ni siquiera fue memorable porque era genérica.','<b>Cima</b>: da <b>lo que a él le cuesta poco y al otro le vale mucho</b> — una presentación, un dato que lleva años sabiendo, cinco minutos de su especialidad.','La regla de los cinco minutos, de Adam Rifkin: si puedes ayudar a alguien en menos de cinco minutos, hazlo sin pensarlo. Si toma más, piénsalo.','⚠️ Error más común: dar lo que a ti te parece valioso en vez de lo que el otro necesita. Preguntar <i>"¿en qué andas atorado?"</i> vale más que ofrecer ayuda al aire.']},
       {t:'Tu inventario: qué tienes tú para dar',d:'Nadie construye red si cree que no tiene nada que ofrecer, y casi todo el mundo lo cree. Esto es lo que tú tienes <b>hoy</b>, sin conseguir nada nuevo:',list:['<b>Automatización de pruebas y QA en automotriz</b> — es un nicho, y en los nichos tu ayuda no la puede dar cualquiera.','<b>Construir cosas con IA</b>: sabes hacer que un modelo produzca algo que funciona. En 2026 la mitad de la gente que conoces quiere eso y no sabe por dónde empezar.','<b>Finanzas personales</b>: llevas tus números con más orden que el 90% de la gente. Un rato explicando CETES, GBM o cómo salir de una tarjeta le cambia el año a alguien.','<b>Alemán en curso y proceso de maestría en Alemania</b>: cualquiera que esté pensando lo mismo daría lo que fuera por hablar con quien ya recorrió el trámite.','<b>Tu tiempo y tu atención</b>: presentar a dos personas que se necesitan no te cuesta nada y a ellas les puede cambiar el año.','Escribe estas cinco en una nota del celular. Cuando conozcas a alguien, ya sabes qué puedes darle.']},
       {t:'La lista de 20',d:'Escribe <b>20 personas</b> que quieres en tu red dentro de un año. No 200 — veinte, porque veinte se pueden atender de verdad. Hazlo en una hoja con cinco columnas:',list:['<b>Nombre</b> · <b>Qué hace</b> · <b>Por qué me interesa</b> · <b>Qué puedo darle yo</b> · <b>Último contacto</b>.','Si no se te ocurre nada en la cuarta columna, todavía no es tu contacto — es alguien a quien quieres pedirle algo, que no es lo mismo.','Mézclalas: unas de automotriz, unas de software/IA, unas de finanzas, unas de Alemania. Una red de un solo gremio se queda ciega en todo lo demás.','Revísala cada 3 meses. Si en un año no has hablado con alguien, o lo contactas esta semana o lo sacas de la lista.','⚠️ Error más común: llenarla de gente famosa e inalcanzable. La lista útil es de gente que está <b>dos pasos adelante de ti</b>, no veinte — esos sí contestan, y su consejo todavía aplica a tu situación.']},
@@ -14502,7 +14732,7 @@ const HABILIDAD_DETALLE={
       {t:'Cómo salir sin quedar mal',d:'Nadie enseña esto y arruina más conversaciones que empezarlas mal: quedarte atrapado media hora con una persona te deja sin evento, e irte de golpe te deja mal.',list:['La fórmula: <b>cierra con valor + di lo que sigue</b>. <i>"Oye, me sirvió mucho lo que dijiste de los proveedores. Te voy a mandar el artículo que te comenté. Voy a saludar a alguien allá, pero seguimos."</i>','Funciona porque te vas <b>dejando algo pendiente</b> — el artículo — que es exactamente tu excusa para escribirle mañana.','Si quieres seguir el contacto, pide el dato ahí mismo: <i>"¿te busco en LinkedIn o prefieres que te escriba?"</i>. Preguntarlo respeta al otro y casi nadie dice que no.','⚠️ Error más común: irte al baño para escapar. La otra persona se da cuenta y ahí muere el contacto.']},
       {t:'La regla de las 48 horas',d:'A todo el que conoces le escribes en <b>menos de dos días</b>. Pasadas 48 horas ya no se acuerda de tu cara y el mensaje se vuelve incómodo. Este es el paso que casi todo el mundo se salta, y por eso casi todo el mundo cree que el networking no funciona.',list:['El mensaje lleva tres cosas y nada más: <b>dónde se conocieron</b>, <b>algo específico que él dijo</b>, y <b>algo que le mandas sin que lo pida</b>.','Plantilla lista para copiar: <i>"Rodrigo, mucho gusto ayer en el meetup de GBM. Me quedé pensando en lo que dijiste de que llevas tus inversiones en tres hojas de Excel distintas. Te dejo la plantilla que armé para lo mío por si te sirve — la hice para mí, sin compromiso. Un gusto."</i>','Por qué funciona: el detalle específico prueba que <b>escuchaste</b>, y lo que mandas prueba que no vas a pedir nada. Tres líneas, sin pedir, sin adjuntar tu CV.','⚠️ Error más común: pedir algo en ese primer mensaje. Es la señal más rápida de que la persona no te interesaba, solo lo que tiene.','⚠️ Segundo error: el mensaje genérico. <i>"Fue un gusto conocerte, quedamos en contacto"</i> no lo lee nadie porque no dice nada.']},
       {t:'El ping trimestral',d:'Un contacto sin mantenimiento se enfría en unos seis meses, y volver a escribir después se siente como pedir. Ferrazzi lo llama <b>mantener el fuego encendido</b>: cada 3 meses, un mensaje a cada uno de tus 20 <b>sin pedir absolutamente nada</b>.',list:['<b>El artículo útil</b>: <i>"me acordé de ti con esto"</i> — es el más fácil y el que más se agradece.','<b>La felicitación real</b>: ascenso, cambio de empresa, algo que publicó. LinkedIn te avisa gratis.','<b>La presentación</b>: <i>"creo que tú y Ana se tienen que conocer"</i>. Es el ping más poderoso de todos.','<b>El seguimiento con memoria</b>: <i>"¿cómo te fue con lo del proveedor que me contaste?"</i> — recordar un detalle de hace tres meses te vuelve inolvidable.','<b>La comida</b>: el título del libro de Ferrazzi es literal. Comes todos los días de todas formas; comer solo es tiempo desperdiciado.','Agéndalo o no ocurre: un recordatorio recurrente cada tres meses con los 20 nombres. Son <b>20 minutos por trimestre</b>, ochenta al año, para mantener viva la red entera.']},
-      {t:'LinkedIn sin hacer el ridículo',d:'Para tu meta de trabajo remoto y de Alemania, LinkedIn no es opcional: es donde te buscan los reclutadores de fuera. Pero el 95% lo usa mal.',list:['<b>El titular no es tu puesto.</b> "QA Engineer en ALTEN" no dice nada. <i>"QA de sistemas ADAS · automatización de pruebas · certificado ISTQB, ahora en IA aplicada a testing"</i> es lo que hace que un reclutador se detenga.','<b>Ponlo en inglés.</b> Si buscas remoto o Europa, el perfil en español te saca de la mitad de las búsquedas. Alemán en el titular es un plus enorme para empresas alemanas.','<b>Publica algo cada dos semanas</b>, aunque sea corto: qué aprendiste probando un sistema, un error que encontraste, cómo usas IA en tu trabajo. No para volverte influencer — para que cuando alguien te busque encuentre a alguien que piensa, no un CV.','<b>La solicitud de contacto siempre con nota.</b> Sin nota es spam. Con dos líneas de por qué le escribes, se acepta casi siempre.','⚠️ Error más común: actualizar el perfil solo cuando ya necesitas trabajo. Se nota, y es exactamente el momento en que menos fuerza tienes.']},
+      {t:'LinkedIn sin hacer el ridículo',d:'Para tu meta de Alemania, LinkedIn no es opcional: es donde te buscan los reclutadores de fuera. Pero el 95% lo usa mal.',list:['<b>El titular no es tu puesto.</b> "QA Engineer en ALTEN" no dice nada. <i>"QA de sistemas ADAS · automatización de pruebas · certificado ISTQB, ahora en IA aplicada a testing"</i> es lo que hace que un reclutador se detenga.','<b>Ponlo en inglés.</b> Si buscas trabajo en Europa, el perfil en español te saca de la mitad de las búsquedas. Alemán en el titular es un plus enorme para empresas alemanas.','<b>Publica algo cada dos semanas</b>, aunque sea corto: qué aprendiste probando un sistema, un error que encontraste, cómo usas IA en tu trabajo. No para volverte influencer — para que cuando alguien te busque encuentre a alguien que piensa, no un CV.','<b>La solicitud de contacto siempre con nota.</b> Sin nota es spam. Con dos líneas de por qué le escribes, se acepta casi siempre.','⚠️ Error más común: actualizar el perfil solo cuando ya necesitas trabajo. Se nota, y es exactamente el momento en que menos fuerza tienes.']},
       {t:'Presentar a dos personas (bien hecho)',d:'Es el favor más barato que puedes hacer y el que más red construye — pero mal hecho quema a las dos partes. La forma correcta se llama <b>double opt-in</b>: preguntas a los dos <b>antes</b> de presentarlos.',list:['Paso 1: escribes a cada uno por separado. <i>"Conozco a Ana, que está haciendo X. Creo que te serviría hablar con ella. ¿Te la presento?"</i>','Paso 2: solo si los dos dicen que sí, mandas el correo con los dos, con <b>dos líneas de cada uno</b> y por qué se tienen que conocer.','Paso 3: te sales. <i>"Los dejo en sus manos."</i> Tu trabajo terminó.','⚠️ Error más común: presentar sin avisar, poniendo a los dos en copia de golpe. Le regalas trabajo a alguien que no lo pidió, y si sale mal la culpa es tuya.','Este favor es el que hace que la gente te recuerde: no le diste un consejo, le diste una persona.']},
       {t:'Pedir: tarde, concreto y fácil de conceder',d:'Cuando por fin pidas — después de meses de dar — que sea algo que se pueda conceder en treinta segundos. La diferencia entre recibir un sí y un silencio casi nunca está en la relación, está en <b>cómo pediste</b>.',list:['❌ <i>"¿Me puedes ayudar a conseguir trabajo?"</i> — imposible de responder. El otro no sabe ni por dónde empezar, así que no empieza.','✅ <i>"¿Conoces a alguien en el equipo de QA de X a quien le pueda escribir?"</i> — se responde con un nombre o con un no. Treinta segundos.','Dale <b>la salida fácil</b>: <i>"si no es el momento, sin ningún problema"</i>. Suena menor y sube muchísimo la tasa de respuesta, porque le quitas la culpa de decir que no.','Ponle <b>fecha</b>: <i>"lo necesito para el viernes"</i>. Sin fecha, tu petición se queda para siempre en el "luego".','Y cuando te ayuden: <b>cierra el círculo</b>. Cuenta cómo salió. Casi nadie lo hace, y es lo que hace que te vuelvan a ayudar la próxima vez.']},
       {t:'Dónde practicarlo en CDMX',d:'El método sin terreno no sirve de nada. Sitios donde la gente <b>ya va predispuesta</b> a conocer a alguien, que es lo que te ahorra la parte difícil:',list:['<b>Tus clases de alemán, pero presenciales.</b> Cambia el online por CENLEX o el Goethe-Institut y el mismo tiempo que ya inviertes te da compañeros con un objetivo idéntico al tuyo.','<b>Comunidades de GBM y de inversión</b> — además es exactamente donde está el público de tu plantilla de finanzas.','<b>Pádel.</b> El deporte de mayor crecimiento entre profesionistas de 28 a 45 años, y se juega en parejas: conversación garantizada durante hora y media, sin tener que forzar nada.','<b>Meetups de QA, testing y automatización</b> — busca en Meetup y en Eventbrite; en CDMX hay comunidades activas de software testing y de IA.','<b>Diplomados y cursos abiertos</b> (Tec, EGADE, IPADE): caros, pero es donde está el perfil que buscas y el vínculo dura años. Muchas conferencias de invitados y clases muestra son <b>abiertas al público o de bajo costo</b>, sin estar inscrito en el programa completo.','<b>Tu propia empresa.</b> ALTEN tiene gente en varios países. El networking interno es el más barato que existe y el que más rápido mueve una carrera.']},

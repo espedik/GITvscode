@@ -84,7 +84,7 @@ navega con las flechas, el rail, el menú ☰ o deslizando en táctil. `irASlide
 |---|---|---|---|
 | `theme-dia` | **Mi Día** | La principal. Agenda del día, el AHORA y cuatro módulos | `midia` |
 | `theme-coach` | **Plan Maestro** | Fase activa, ruta de deuda y el tablero mes / día / semana | `planmaestro` |
-| `theme-metas` | **Mis Metas** | 8 KPIs financieros, franja de instrumentos y 16 metas con estado | `metas` |
+| `theme-metas` | **Mis Metas** | 8 KPIs financieros, la línea del tiempo de las metas y 12 metas con su plan | `metas` |
 | `theme-basicas` | **Habilidades Base** | 27 fichas de vida práctica con sus videos. **Única fuente**: la sección equivalente de Coach se eliminó | `basicas` |
 | `theme-skills` | **En qué invertir tu tiempo** | La interfaz de Habilidades Base: sus indicadores, las 12 habilidades como fichas y el plan de foco; cada una abre su ruta en la ventana de detalle | `skills` |
 | `theme-lista` | **Lista de Compras** | 7 categorías; Comida con precios, ticket y costo al mes | `lista` |
@@ -1245,8 +1245,7 @@ de la noche, que es del sueño), `pasos` con fecha, `vas`
 (cómo sabes que vas bien) y `si` (qué haces si te atrasas). Las fechas no se copian: `{tarea}` toma
 fecha y texto de `PHASES` (y se palomea en la MISMA casilla del Plan Maestro, `coach_checks_v1`,
 con la semana de hoy), `{clave}` lee el maestro (`maestriaInicio`, `hyroxFecha`), `{fase}` el
-inicio o el cierre de una fase, y `{racha}` cuenta desde la cadena de Hábitos (los 90 días sin
-alcohol se mueven si se rompe). Los demás pasos se guardan en `metas_plan_v1`. `metaPlan(id)` lo
+inicio o el cierre de una fase. Los demás pasos se guardan en `metas_plan_v1`. `metaPlan(id)` lo
 resuelve todo: el estado de cada paso (`mpFalta`: hoy, esta semana, más adelante o atrasado) y lo
 siguiente. Las metas de la Fase 4 (empresa, depa, Tailandia, Hong Kong, SpaceX, Cupra) van
 **en pausa** con su fecha de arranque (`pausa`, `desde`): lo que no cabe en la semana se pausa con
@@ -1254,7 +1253,9 @@ fecha, no se abandona. Las dos logradas (11K y Básico 5) no llevan plan.
 
 **La ficha** dice, bajo la foto, la fecha de la meta con el resultado y lo que sigue (`.mg-pl`,
 un renglón cada uno; el texto completo en el `title`), y al pie los pasos y el día de lo siguiente,
-en cian si es esta semana y en rojo si se pasó. **El indicador es una marca por paso del plan** y
+en cian si es esta semana y en rojo si se pasó; sobre la foto, cuánto falta para la meta (`.mg-cuenta`:
+*en 9 semanas*; en pausa, *desde 1 mar 2029*), con el borde rojo si tiene un paso vencido. **El indicador es una
+marca por paso del plan** y
 el conteo (`4 / 9 PASOS`); en las logradas, los de `META_DETALLE`. Las columnas de la rejilla son
 `minmax(0,…)`: con `1fr` el texto de una línea ensanchaba la columna y sacaba de la pantalla la de
 largo plazo. **Cuatro estados** con su color en una sola variable por ficha (`--mgc`), que tiñe
@@ -1263,7 +1264,7 @@ chip, marcas, conteo y borde:
 | Estado | Clase | Color | Cuándo |
 |---|---|---|---|
 | LOGRADA | `.mg-card.ok` | `--g` verde | todos los pasos marcados |
-| EN MARCHA | `.mg-card.on` | `--ac1` ámbar | avance real: un paso, dinero en Finanzas (BYD y maestría, `METAS_MONEYBAR`) o racha en su hábito (alcohol, `META_RACHA`) |
+| EN MARCHA | `.mg-card.on` | `--ac1` ámbar | avance real: un paso, dinero en Finanzas (la maestría, `METAS_MONEYBAR`) |
 | EN PAUSA | *(ninguna)* | `--text3` | su plan arranca después de hoy |
 | SIN EMPEZAR | *(ninguna)* | `--text3` | ninguno |
 
@@ -1272,8 +1273,8 @@ suman a «sin empezar». **El dinero de la maestría** es `CIFRAS.fondoMaestria(
 inversiones de Finanzas y el Bitcoin; Adán, 13-oct-2026, sobre los $17,250: *"esta cifra es la
 correcta"*), el mismo número que `{{maestria}}`, Finanzas y Coach. **Total invertido** nombra lo que
 suma y dice qué parte es del dinero de la maestría; **Deuda cara**, con solo la BBVA viva, lo pagado
-de su plan quincena a quincena; y *con interés* es `CIFRAS.deudasConInteres()`. La columna de corto
-plazo desplaza por dentro y su borde de abajo se desvanece mientras haya más (`marcarDesborde()`).
+de su plan quincena a quincena; y *con interés* es `CIFRAS.deudasConInteres()`. Si una lista no
+cabe, desplaza por dentro y su borde de abajo se desvanece mientras haya más (`marcarDesborde()`).
 
 **El panel de una meta abre en «Tu plan»** (`mdPintarPlan()`, `mdEstado.i = -1`): arriba el
 resultado, la fecha y lo siguiente; *Tu sistema, cada semana*; *Los pasos, con fecha*, que se
@@ -1284,6 +1285,32 @@ dominados; *Anterior* desde el paso 1 vuelve al plan. En esa vista no hay *Marca
 ni puntos (`.md-plan-on`). Habilidades Base y la barra de edad usan el mismo panel sin plan.
 Medido a 2048×1040, 1366×768 y 390: 0 px de desborde; el panel desplaza su columna central.
 
+### El panel de una meta: la ruta, el ritmo y el avance real
+
+Adán, 20-oct-2026: *"falta mucho contenido para las metas, pero debe ser contenido muuuy muy útil si no ni lo
+pongas, si puedes hacer cosas más gráficas hazlas"*. Tres piezas en el plan de cada meta, todas con datos que ya
+existen —lo que no tiene un dato real no se inventa—, con las marcas de la guía de visualización (delgadas, rejilla
+de 1 px, texto en tinta y cada valor también fuera del tooltip):
+
+- **Tu ruta** (`mpRutaHtml`, en el centro, bajo el resultado): los pasos sobre el tiempo, del primero a la meta,
+  con hoy y la bandera de la meta. Verde lo hecho, rojo lo atrasado y cian el siguiente; las fechas van arriba y
+  abajo por turnos y la que no cabe queda en su `title`. En pausa, rayado hasta que arranca.
+- **El ritmo** (`mpRitmoHtml`, arriba de Recursos): cuánto falta —días, meses o años— o, en pausa, cuándo
+  arranca; con el plan en marcha, el tiempo recorrido desde el primer paso contra los pasos hechos y el veredicto:
+  los pasos atrasados con el primero, *vas al día* o *vas detrás del calendario*.
+- **El avance real** (`mpRealHtml`), uno por meta:
+
+| Meta | Qué enseña | De dónde |
+|---|---|---|
+| ISTQB CT-GenAI | Cada simulacro en columnas contra el corte y tu meta, y las preguntas de Hoy aprendes de 14 días, una celda por día | `examen_genai_v1.intentos`, `habSimulacro()`, `istqbRespuestas()` |
+| Hyrox | Las sesiones de gym de las últimas 8 semanas contra los días de tu rutina | `gymSesiones()` y la rutina de Ejercicio |
+| Maestría | El GBM que proyecta el plan al cerrar cada mes hasta irte contra lo que pide cada corte —el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la salida completa—, con lo que falta o sobra en cada uno; lo que tienes hoy contra lo que el plan espera este mes, y el alemán (la lección y el vocabulario del nivel) | `CIFRAS.PROYECCION`, `marzoParaSalida`, `mayoParaSalida`, `fondoMaestria()` |
+| Torneo de ajedrez | Lo que queda de tu sistema antes de la fecha: los sábados de partidas y los días de puzzles | el plan |
+| Las de largo plazo | Tu patrimonio líquido contra la trayectoria del millón hasta la fecha de la meta, con hoy y la meta marcados: es lo que las habilita | `CIFRAS.PROYECCION.meses`, `patrimonioLiquido()` |
+
+Sin datos (ni simulacros ni sesiones), su recuadro dice qué va a aparecer ahí. Medido a 2048×1040, en claro y
+en oscuro, con el Hyrox, la maestría, el CT-GenAI, el ajedrez y Tailandia: sin errores y sin desborde.
+
 **El Hyrox** es `{{hyroxSede}}` el `{{hyroxFecha}}` (Guadalajara, 19–21 mar 2027, en hyrox.com):
 el de CDMX (29 oct–1 nov 2026) quedó a tres semanas de la rutina nueva, y Monterrey (16–18 abr
 2027) cae en la Fase 2, que no lleva viajes. La fecha vive en el maestro; la leen el plan, la
@@ -1291,36 +1318,19 @@ lista de salida y Coach.
 
 **La franja de instrumentos** (`#metasBay`) trae el avance del conjunto **en pasos**, no
 promediando porcentajes (promediar daba el mismo peso a una meta de 1 paso que al Hyrox de 15),
-el ecualizador de las 16 metas con piso del 20 % y los tres conteos; la regla de edad va dentro,
-separada por filete. **Tres columnas en corto/mediano (10 fichas, cuatro filas), dos en largo
-plazo.** Con los dos renglones del plan, la columna de corto/mediano desplaza 85 px a 2048×1040
-(la última fila es la de las logradas).
+**la línea del tiempo de las metas** (`mgLineaHtml`) y los cuatro conteos; la regla de edad va dentro,
+separada por filete. La línea pone cada meta que falta en su fecha, sobre las fases del Plan Maestro, de hoy al
+cierre del plan: los próximos 15 meses ocupan el 58 % del ancho y de ahí al cierre el resto, con el corte
+marcado. El punto lleva el estado (ámbar en marcha, gris sin empezar, hueco en pausa) y un anillo rojo si tiene
+pasos atrasados; las que caen casi juntas van en un grupo —el cierre del plan junta Hong Kong, la empresa, el depa
+y el Cupra— y cada nombre abre su panel. Las etiquetas van en tres carriles para no encimarse; en el teléfono,
+solo el icono. **Dos columnas en las dos listas**: seis fichas en tres filas cada una, las logradas al final de
+corto plazo. Medido: a 2048×1040 no desplaza ninguna, y las 7 etiquetas no chocan a 2560, 1920, 1600, 1366 ni 390.
 
-**El dinero real** de BYD y Maestría es una barra continua en `--ac2`, distinta de las marcas de
-paso, con la cifra (`$22,800 pagado`): `METAS_MONEYBAR[x].short`; `.lbl` va en el `title`.
+**El dinero real** de la Maestría es una barra continua en `--ac2`, distinta de las marcas de
+paso, con la cifra (`$2,500 ahorrado`): `METAS_MONEYBAR.maestria.short`; `.lbl` va en el `title`.
 
 **El panel de la Maestría** (`kpiDetalle`, `maestria`) enseña la pausa solo mientras siga vigente (`goal.pausadaHasta`); si no, el ritmo que pide la salida —lo que falta entre los meses que quedan hasta `goal.date`—, lo que el plan junta al mes con depa y en casa, el ingreso nuevo que cierra el hueco (`extraSalida`) y el día de decidir con lo que pide la salida completa (`mayoParaSalida`, `salidaVeredicto`); la proyección y la lista de la salida están en Coach.
-
-### Las adicciones — celular y alcohol
-
-**Los días sin alcohol salen de Hábitos**, no de una fecha supuesta: el hábito *Cero alcohol*
-(el que la ficha pide) lleva la cadena, y la tarjeta de la meta enseña su racha con
-`HB.racha('alcohol')` (`META_RACHA`, `metaRachaHtml()`).
-
-`celular` y `alcohol` en `META_DETALLE`, **14 pasos cada una**, en su propia fila de corto/mediano
-plazo. **Van juntas a propósito**: son la misma mecánica —una conducta que se repite para regular
-emociones— y se disparan entre sí; cada ficha remite a la otra y las dos cierran con la misma
-puerta (Línea de la Vida 800 911 2000, UNAM, CIJ).
-
-Lo citado se verificó con curl el 14-sep-2026: alcoholímetro CDMX (0.4 mg/L, **cero** para
-transporte de pasajeros —Didi—), trago estándar FISAC (13 g; máximo 4 por ocasión y 12 por
-semana), Parr et al. 2014 (síntesis de proteína −24 % con proteína y −37 % con carbohidratos), OMS
-2023 (ningún nivel seguro), AUDIT (8 / 16 / 20).
-
-**Las fechas están ancladas**: los 30 días de `alcohol` terminan el **14 de octubre de 2026**. Si
-se reescriben las fichas, esas cuentas se rehacen. Fotos de Unsplash `photo-1423784346385` y
-`photo-1676629922083`. **Coach** las repite como marcadores `mtc7` y `mtc9` en `coach_checks_v1`;
-el detalle vive solo aquí.
 
 ### El simulacro del ISTQB CT-GenAI
 
@@ -1440,7 +1450,7 @@ ids**: al tocarlo se verifican los tres). Diseño de `diseno-ficha/`.
 |---|---|---|
 | **Temario** | 300 px | Un paso por fila, número o ✓ verde, el activo en cian. Un filete separa los de cierre (Practicarlo, Qué leer, Ya lo dominas) |
 | **El paso** | el resto | `Paso N de M` · título en Fraunces 34 px · la idea (`d`) 16.5 px · **En detalle**: los puntos como libro mayor numerado (`01`, `02`…) · los apartados |
-| **Recursos** | 300 px | Videos (`Para escucharlo`), la barra de dinero de BYD y Maestría, el bloque de Tu año, y **Tu avance** con el siguiente pendiente como botón |
+| **Recursos** | 300 px | Videos (`Para escucharlo`), la barra de dinero de la Maestría, el ritmo y el avance real de una meta, el bloque de Tu año, y **Tu avance** con el siguiente pendiente como botón |
 
 Cabecera: frase de la ficha en cursiva y el avance en grande (`7 / 16 · Dominados · 44 %`). Pie a
 lo ancho: **Marcar como dominado**, un punto por paso (tocable) y Anterior / Siguiente.
@@ -1454,7 +1464,7 @@ Nada de esto toca `HABILIDAD_DETALLE` ni `META_DETALLE`.
 **Tamaños.** Hasta 1180 px Recursos baja bajo el temario (260 px). En el celular los tres se
 apilan y la ficha desplaza como una sola página: temario en tira de chips, frase a dos líneas,
 puntos del pie ocultos, Marcar y Siguiente a 44 px. Se verifica en 1600, 1366, 1024 y 390, en los
-dos temas, con una ficha de mapas (Citas), una de serie (Vino), una con barra de dinero (BYD) y
+dos temas, con una ficha de mapas (Citas), una de serie (Vino), una con barra de dinero (la Maestría) y
 Tu año.
 
 ---

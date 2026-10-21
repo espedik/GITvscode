@@ -2707,6 +2707,38 @@ function promptsDeLoTocado() {
   });
 })();
 
+/* ── 41. Cada meta de Mis Metas tiene su ficha y su plan ──────────────────────────────────────────────
+   Adán, 20-oct-2026: "en metas quita trabajo remoto, liquidar byd, lo de dejar de tomar alcohol y adicción al
+   celular… falta mucho contenido para las metas, pero debe ser contenido muuuy muy útil". Una meta vive en tres
+   sitios de dashboard.html: su ficha en la rejilla (`renderMetasSlide`), lo que hay que saber (META_DETALLE) y lo
+   que hay que hacer (META_PLAN). Al quitar una se quita de los tres, y ninguna de la rejilla se queda sin su ficha
+   ni —si no es de las logradas que siembra `seedMetasLogradasIfNeeded`— sin un plan con resultado, fecha y pasos:
+   de ahí salen la línea del tiempo, la ruta, el ritmo y el avance real del panel. */
+(function () {
+  const i = dash.indexOf('function renderMetasSlide('), r = i < 0 ? '' : dash.slice(i, i + 40000);
+  const enRejilla = [], re = /\{id:'(\w+)',c:'/g;
+  let m;
+  while ((m = re.exec(r))) enRejilla.push(m[1]);
+  const MD = evaluar(literal(dash, 'const META_DETALLE=', '{')) || {}, MP = evaluar(literal(dash, 'const META_PLAN=', '{')) || {};
+  const s = dash.indexOf('function seedMetasLogradasIfNeeded('), seed = s < 0 ? '' : dash.slice(s, s + 600);
+  const logradas = (seed.match(/store\.(\w+)=\{0:true\}/g) || []).map(function (x) { return x.slice(6, x.indexOf('=')); });
+  const mal = [];
+  if (!enRejilla.length) mal.push('no pude leer las metas de la rejilla (renderMetasSlide, `{id:…,c:…}`)');
+  if (!Object.keys(MD).length || !Object.keys(MP).length) mal.push('no pude leer META_DETALLE o META_PLAN');
+  enRejilla.forEach(function (id) {
+    if (!MD[id]) mal.push(id + ' está en la rejilla sin su ficha (META_DETALLE)');
+    if (!MP[id] && logradas.indexOf(id) === -1) mal.push(id + ' está en la rejilla sin su plan (META_PLAN) y no es de las logradas');
+  });
+  Object.keys(MD).forEach(function (id) { if (enRejilla.indexOf(id) === -1) mal.push('META_DETALLE.' + id + ' quedó suelta: no está en la rejilla'); });
+  Object.keys(MP).forEach(function (id) {
+    if (enRejilla.indexOf(id) === -1) mal.push('META_PLAN.' + id + ' quedó suelto: no está en la rejilla');
+    else if (!MP[id].meta || !MP[id].fecha || !(MP[id].pasos || []).length) mal.push('META_PLAN.' + id + ' no trae resultado, fecha o pasos');
+  });
+  if (mal.length) problemas.push('Mis Metas no está completa:\n     ' + mal.join('\n     '));
+  else ok.push('Mis Metas: ' + enRejilla.length + ' metas en la rejilla, cada una con su ficha; ' + Object.keys(MP).length +
+    ' con plan (resultado, fecha y pasos) y ' + logradas.length + ' logradas, sin fichas ni planes sueltos');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

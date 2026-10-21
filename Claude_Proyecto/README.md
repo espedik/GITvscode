@@ -66,7 +66,7 @@ no dependen del Dashboard; la barra de apps del Dashboard las agrupa aparte.
 | `dentista_v1` | `cuidadopersonal.html` | nadie |
 | `ojos_v1` | `cuidadopersonal.html` (el tablero de Ojos) | nadie |
 | `coach_rutina_v1` | Coach y Dashboard (`completado[hoy]` desde *Marcar el bloque actual*) | ambos |
-| `coach_checks_v1` | Coach (todos los `.check-item`) y Dashboard (solo los ids `sN-M` del checklist de fase y `mtc7`…`mtc9`) | ambos |
+| `coach_checks_v1` | Coach (todos los `.check-item`) y Dashboard (solo los ids `sN-M` del checklist de fase) | ambos |
 | `radarp_<id>` × 12 | Coach | Dashboard (`SK[].val`) |
 | `coach_referente` | Coach (qué referente se ve en *Tus referentes*) | nadie |
 | `coach-theme` | Dashboard, Coach, Finanzas, CuidadoPersonal y Vestimenta | Clave compartida de tema claro/oscuro (Entrevistas, Heliescala y Aeroresinas tienen la suya) |

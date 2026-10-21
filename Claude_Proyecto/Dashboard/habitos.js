@@ -141,14 +141,13 @@
         'Litro 3: entre el gimnasio y la cena.',
         'Marca un litro cada vez que termines la botella: tres toques y el día está.'
       ] },
-    /* 2026-10-01 · La ficha "Dejar el alcohol" de Mis Metas le pide a Adán un hábito diario
-       "Cero alcohol" —la cadena que no se rompe— y no existía: Mis Metas no tenía con qué
-       contar los días limpios, que es el indicador de su prompt. Su racha es ese conteo. */
+    /* «Cero alcohol»: la cadena que no se rompe. Sostiene la meta de conducta del plan común (cero alcohol); su
+       racha es el conteo de días limpios, que también lee Coach en Tus referentes. */
     { id:'alcohol', nombre:'Cero alcohol',          ancla:'Todo el día · si se antoja, agua mineral o té', hora:'', color:'#4ade80', ico:'loto', dow:'todos',
       pasos:[
         'Se marca al cerrar el día si no tomaste nada: ni una.',
         'Si se antoja: agua mineral con limón o un té, y cambia de lugar si hace falta.',
-        'Si recaes, márcalo como fallado y anota qué lo disparó en la ficha de Dejar el alcohol de Mis Metas. Mañana sigue la cadena.'
+        'Si recaes, márcalo como fallado y anota qué lo disparó y qué cambias en el entorno. Mañana sigue la cadena.'
       ] }
   ];
 
