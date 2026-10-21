@@ -2183,6 +2183,27 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .md-ix-sep{border-top:1px solid rgba(var(--ov),.09);margin:8px 10px 6px}
 /* El paso, en tamaño de lectura de verdad. */
 .md-main{min-width:0;min-height:0;display:flex;flex-direction:column}
+/* Temario contraído (Habilidades Base): la columna se va y arriba del paso queda una barra con el tema
+   y dos botones, ‹ anterior y siguiente ›. ☰ vuelve a abrir la columna; «‹ Contraer» la cierra. */
+.md-tema,.md-ix-contraer{display:none}
+.md-hab .md-ix-contraer{display:inline-flex;margin-left:auto;align-self:center;padding:3px 9px;border-radius:5px;cursor:pointer;font-family:var(--mono);
+  font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--text3);background:none;border:1px solid rgba(var(--ov),.14)}
+.md-hab .md-ix-contraer:hover{color:var(--cy);border-color:rgba(var(--cy-rgb),.4)}
+.md-temario-min .md-indice{display:none}
+.md-temario-min .md-body{grid-template-columns:minmax(0,1fr) 300px}
+.md-temario-min .md-tema{display:flex;align-items:center;gap:10px;flex:none;padding:16px 48px 4px}
+.md-tema-b{flex:none;width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
+  font-family:inherit;font-size:18px;font-weight:700;line-height:1;color:var(--text);background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.16);
+  transition:background .15s,border-color .15s,color .15s}
+.md-tema-b:hover:not(:disabled){color:var(--cy);border-color:rgba(var(--cy-rgb),.5);background:rgba(var(--cy-rgb),.09)}
+.md-tema-b:disabled{opacity:.3;cursor:default}
+.md-tema-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;text-align:center}
+.md-tema-t .md-lbl{color:var(--cy)}
+.md-tema-t b{font-size:13.5px;font-weight:600;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.md-tema-t b.hecho{color:var(--g)}
+.md-tema-ix{flex:none;height:30px;padding:0 10px;border-radius:5px;cursor:pointer;font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.06em;color:var(--text3);background:none;border:1px solid rgba(var(--ov),.14)}
+.md-tema-ix:hover{color:var(--cy);border-color:rgba(var(--cy-rgb),.4)}
 .md-paso{flex:1;min-height:0;overflow-y:auto;padding:24px 48px 30px;display:flex;flex-direction:column;gap:20px}
 .md-paso-hd{display:flex;flex-direction:column;gap:9px;padding-bottom:16px;border-bottom:1px solid rgba(var(--ov),.1)}
 .md-paso-n{display:flex;align-items:center;gap:12px}
@@ -2460,6 +2481,11 @@ body.rail-on{--pad-rail:max(6vw,230px)}
   .md-recursos{grid-area:2/1/3/2;border-left:none;border-top:1px solid rgba(var(--ov),.1);padding:14px 16px 16px;gap:16px}
   .md-main{grid-area:1/2/3/3}
   .md-paso{padding:22px 32px 26px}
+  /* contraído, el temario libera su columna y Recursos vuelve a ir al lado, a 260 px: el paso usa todo el alto */
+  .md-temario-min .md-body{grid-template-columns:minmax(0,1fr) 260px;grid-template-rows:minmax(0,1fr)}
+  .md-temario-min .md-main{grid-area:1/1/2/2}
+  .md-temario-min .md-recursos{grid-area:1/2/2/3;border-top:none;border-left:1px solid rgba(var(--ov),.1)}
+  .md-temario-min .md-tema{padding:14px 32px 2px}
 }
 /* Celular: los tres apartados se apilan y toda la ficha desplaza como una sola página; el temario
    es una tira de chips, el pie se queda fijo con Dominado y Siguiente a 44px. */
@@ -2491,6 +2517,7 @@ body.rail-on{--pad-rail:max(6vw,230px)}
   .md-ix-sep{display:none}
   .md-main{flex:none}
   .md-paso{overflow:visible;padding:18px 16px;gap:16px}
+  .md-temario-min .md-tema{padding:12px 16px 0;gap:8px}
   .md-paso-t{font-size:24px}
   .md-paso-d{font-size:15px}
   .md-pt{grid-template-columns:26px minmax(0,1fr);gap:10px}
@@ -4764,11 +4791,12 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 
     <div class="md-body">
       <aside class="md-indice">
-        <div class="md-col-hd"><span class="md-lbl">Temario</span><small id="metaDetailIndiceN"></small></div>
+        <div class="md-col-hd"><span class="md-lbl">Temario</span><small id="metaDetailIndiceN"></small><button class="md-ix-contraer" onclick="mdTemario(false)" title="Contraer el temario">‹ Contraer</button></div>
         <div class="md-indice-list" id="metaDetailIndice"></div>
       </aside>
 
       <div class="md-main">
+        <div class="md-tema" id="metaDetailTema"></div>
         <div class="md-paso" id="metaDetailSteps"></div>
       </div>
 
@@ -12605,8 +12633,12 @@ function mdPintar(){
   const {dict,storeKey,id}=mdEstado;
   const info=dict&&dict[id]; if(!info) return;
   const conPlan=dict===META_DETALLE&&!!META_PLAN[id];
+  const ov=document.getElementById('metaDetailOverlay');
+  const hab=dict===HABILIDAD_DETALLE;   // solo Habilidades Base contrae el temario
+  ov.classList.toggle('md-hab',hab);
+  ov.classList.toggle('md-temario-min',hab&&!mdEstado.temario);
   if(conPlan&&mdEstado.i<0){ mdPintarPlan(); return; }
-  document.getElementById('metaDetailOverlay').classList.remove('md-plan-on');
+  ov.classList.remove('md-plan-on');
   const pasos=info.pasos, total=pasos.length;
   const store=(rawGet(storeKey,{})[id])||{};
   const done=pasos.filter((_,k)=>store[k]).length;
@@ -12614,6 +12646,13 @@ function mdPintar(){
   const i=Math.max(0,Math.min(total-1,mdEstado.i));
   mdEstado.i=i;
   const p=pasos[i], hecho=!!store[i];
+
+  // Barra del tema (con el temario contraído): ‹ tema anterior · el tema · tema siguiente ›
+  document.getElementById('metaDetailTema').innerHTML=`
+    <button class="md-tema-b" onclick="mdIr(${i-1})"${i<=0?' disabled':''} aria-label="Tema anterior" title="Tema anterior">‹</button>
+    <div class="md-tema-t"><span class="md-lbl">Tema ${i+1} de ${total}</span><b class="${hecho?'hecho':''}">${hecho?'✓ ':''}${esc(mdLimpiaTitulo(p.t))}</b></div>
+    <button class="md-tema-ix" onclick="mdTemario(true)" title="Ver todos los temas">☰ Temas</button>
+    <button class="md-tema-b" onclick="mdIr(${i+1})"${i>=total-1?' disabled':''} aria-label="Tema siguiente" title="Tema siguiente">›</button>`;
 
   // Cabecera: el avance, en grande
   document.getElementById('metaDetailBarFill').style.width=pct+'%';
@@ -12739,6 +12778,8 @@ addEventListener('resize',()=>{
   const ov=document.getElementById('metaDetailOverlay');
   if(ov&&ov.classList.contains('open')&&mdEstado.id) mdPintar();
 });
+// Abre o contrae el temario de Habilidades Base; se queda como lo dejaste hasta cerrar la ficha.
+function mdTemario(abierto){ mdEstado.temario=abierto; mdPintar(); }
 function mdIr(k){
   const info=mdEstado.dict&&mdEstado.dict[mdEstado.id]; if(!info) return;
   const min=(mdEstado.dict===META_DETALLE&&META_PLAN[mdEstado.id])?-1:0;   // -1 = la vista «Tu plan»
@@ -12787,6 +12828,7 @@ document.addEventListener('keydown',e=>{
 });
 function cerrarMetaDetalle(){
   mdEstado.id='';   // la próxima apertura vuelve a calcular en qué paso retomar
+  mdEstado.temario=false;   // y el temario de Habilidades Base vuelve contraído
   document.getElementById('metaDetailOverlay').classList.remove('open');
   restartTimer();
 }
