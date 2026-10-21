@@ -1309,6 +1309,18 @@ dominados; *Anterior* desde el paso 1 vuelve al plan. En esa vista no hay *Marca
 ni puntos (`.md-plan-on`). Habilidades Base y la barra de edad usan el mismo panel sin plan.
 Medido a 2048×1040, 1366×768 y 390: 0 px de desborde; el panel desplaza su columna central.
 
+**Lo que necesitas saber** es el *cómo* y el *porqué* de cada meta; las fechas viven en *Tu plan* y
+no se repiten aquí (Adán: *"debes poner más info e imágenes que me ayuden muchísimo y que me motiven,
+debe ser contenido de calidad"*). Cada una de las diez metas activas lleva de 7 a 12 temas: qué es, la
+técnica o las reglas, los errores comunes (`⚠️`), lo que toca a Adán (`Tu caso`), los números que
+importan en `cifras` y, al cierre, *✅ Ya lo dominas cuando…* con criterios comprobables y *📚 Qué
+leer* donde aplica. 42 temas llevan foto: las de Wikimedia Commons (verificadas por su página de
+archivo) y las locales de `fotos-aprende/`, `../Aeroresinas/fotos/` y `../Heliescala/fotos/`. Las
+dos logradas siguen con un solo paso: uno más las sacaría de *logrado*. Los datos que viven en el
+maestro van con marcador (`{{colegiaturaEur}}`, `{{sperrkontoEur}}`, `{{werkstudentEur}}`,
+`{{hyroxFecha}}`…); los de Alemania (seguro médico a partir de los 30, 140/280 días de trabajo, los 18
+meses para buscar empleo) se comprobaron en fuentes universitarias y oficiales en octubre de 2026.
+
 ### El panel de una meta: la ruta, el ritmo y el avance real
 
 Adán, 20-oct-2026: *"falta mucho contenido para las metas, pero debe ser contenido muuuy muy útil si no ni lo
@@ -1496,6 +1508,14 @@ lo ancho: **Marcar como dominado**, un punto por paso (tocable) y Anterior / Sig
 `<a class="mapa">` → rejilla de lugares; el resto es la teoría. Un `(1)` al frente se quita
 (el libro mayor ya numera) y los emojis del título (📚, ✅) se quitan en temario y título grande.
 Nada de esto toca `HABILIDAD_DETALLE` ni `META_DETALLE`.
+
+**Foto y cifras de un paso.** Un paso con `foto` pinta una figura (`.md-foto`) justo bajo la idea, con
+su `pie`. Si la dirección es de Wikimedia (`Special:FilePath/…?width=1280`), el pie enlaza a la ficha
+del archivo, donde están autor y licencia; si la foto no carga, `onerror` quita la figura. Las web van
+a 16:7 y hasta 880 px; las locales (`.md-foto-loc`, de 480 px) a 3:2 y 480 px, para no pixelarse; con
+`alta:1` (fotos verticales) el marco pasa a 4:3 (`.md-foto-alta`). `cifras: [[valor, qué es], …]` pinta
+un renglón de datos grandes (`.md-cifras`); en el celular, de dos en dos. El paso que trae `img` (las
+de Habilidades Base) sigue igual, al final.
 
 **Tamaños.** Hasta 1180 px Recursos baja bajo el temario (260 px). En el celular los tres se
 apilan y la ficha desplaza como una sola página: temario en tira de chips, frase a dos líneas,
