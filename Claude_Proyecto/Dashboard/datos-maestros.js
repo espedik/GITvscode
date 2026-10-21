@@ -875,10 +875,15 @@ window.CIFRAS = (function () {
     out.push({ k: 'liquido', t: 'Patrimonio líquido al cerrar', d: 'tu dinero menos todo lo que debes, el auto incluido', meta: fila.liquido, mas: true });
     return out;
   }
-  // Lo real de hoy, medido como `metasMes`: los activos líquidos, la BBVA y el patrimonio líquido.
-  function cifrasHoy(f) {
+  // Lo real de hoy, medido como `metasMes`: los activos líquidos, la BBVA y el patrimonio líquido. `gastar`, si se da, es
+  // lo que hoy hay para gastar —la cuenta y el efectivo— según el riel del Plan Maestro (tu último saldo dicho y lo previsto
+  // desde entonces) y sustituye al saldo de Finanzas, que es el del día en que lo dijiste: así una pantalla entera mide con
+  // la misma cifra (Adán, 21-oct-2026: "todo cuadre"). Sin él, lo de Finanzas.
+  function cifrasHoy(f, gastar) {
     const F = f || fin || {}, Pt = patrimonio(F), tc = (F.debts || []).filter(function (d) { return d.id === 'd001'; })[0];
-    return { dinero: Pt.liquido + Pt.deuda, bbva: tc ? Math.max(0, +tc.balance || 0) : 0, liquido: Pt.liquido };
+    const caja = (F.activos || []).filter(function (a) { return a.type === 'liquido'; }).reduce(function (s, a) { return s + (+a.value || 0); }, 0);
+    const aj = typeof gastar === 'number' && isFinite(gastar) ? gastar - caja : 0;
+    return { dinero: Pt.liquido + Pt.deuda + aj, bbva: tc ? Math.max(0, +tc.balance || 0) : 0, liquido: Pt.liquido + aj, gastar: caja + aj };
   }
 
   /* ── LA PROYECCIÓN DEL PLAN MAESTRO ──────────────────────────────────────────────────────────
@@ -5355,7 +5360,8 @@ window.CIFRAS = (function () {
      de la BBVA (`planBbva`), lo que cada quincena manda a GBM (los cobros `ahorro` de `agendaDia`, ya
      sin lo que se lleva la tarjeta), lo que Didi aparta cada lunes cuando ya no va a la tarjeta
      (`didiAlAhorro`, menos lo que se llevó el pago del corte), las ventas del plan (`SUPUESTOS.extras`,
-     el último día de su mes), el depósito que regresa al dejar el depa y lo que bajan el auto (su día,
+     el último día de su mes), lo que cuesta la salida ese mes (`SALIDA.costos` con `gasta`, también el último día,
+     en `aSalida`), el depósito que regresa al dejar el depa y lo que bajan el auto (su día,
      con su interés) y el iPhone. Hoy es lo real, con lo que el plan pide hoy (`pendiente`); un día que
      viene ya cuenta lo de hoy, porque la proyección es seguir el plan. El dinero para gastar —la cuenta
      y el efectivo— lo lleva el riel del Plan Maestro, con la comida y lo anotado. Un día que ya pasó, o
@@ -5380,7 +5386,7 @@ window.CIFRAS = (function () {
       iphone: iph ? Math.max(0, +iph.balance || 0) : 0,
       otras: DEU.filter(function (d) { return ['d001', 'd003', 'd008'].indexOf(d.id) === -1; })
         .reduce(function (s, d) { return s + Math.max(0, +d.balance || 0); }, 0),
-      aBbva: 0, aGbm: 0, movs: [], pendiente: { bbva: [], gbm: 0 }, bbvaCero: null,
+      aBbva: 0, aGbm: 0, aSalida: 0, movs: [], pendiente: { bbva: [], gbm: 0 }, bbvaCero: null,
     };
     const B = planBbva();
     o.bbvaCero = B.fin;
@@ -5404,12 +5410,20 @@ window.CIFRAS = (function () {
       // Lo de Didi del lunes que ya no se lleva la tarjeta: la misma regla que el plan de inversiones (`didiGbmLunes`).
       const dd = (didiDe[ym] = didiDe[ym] || didiGbmLunes(ym))[kd];
       if (dd >= 1) { o.gbm += dd; o.aGbm += dd; o.movs.push({ fecha: kd, t: 'de Didi', mxn: dd }); }
-      if (new Date(d.getFullYear(), d.getMonth(), dia + 1).getDate() === 1)
+      if (new Date(d.getFullYear(), d.getMonth(), dia + 1).getDate() === 1) {
         SUPUESTOS.extras.forEach(function (e) {
           if (e.mes !== ym) return;
           const x = typeof e.mxn === 'string' ? P[e.mxn] : e.mxn;
           o.gbm += x; o.aGbm += x; o.movs.push({ fecha: kd, t: e.txt, mxn: x });
         });
+        // Lo que la salida cuesta ese mes (`SALIDA.costos` con `gasta`) sale de GBM el último día del mes, como en la
+        // proyección. Sin esto el 31 de marzo traía $6,000 de más: las apostillas de diciembre (control 43).
+        SALIDA.costos.forEach(function (c) {
+          if (c.mes !== ym || !c.gasta) return;
+          const x = costoSalida(c);
+          o.gbm -= x; o.aSalida += x; o.movs.push({ fecha: kd, t: c.txt.replace(/ \(estimado[^)]*\)$/, ''), mxn: -x });
+        });
+      }
       if (kd === devuelve && o.deposito > 0) {
         o.gbm += o.deposito; o.aGbm += o.deposito; o.movs.push({ fecha: kd, t: 'regresa el depósito del depa', mxn: o.deposito }); o.deposito = 0;
       }
@@ -5419,7 +5433,7 @@ window.CIFRAS = (function () {
       }
       if (iph && dia === +iph.day && o.iphone > 0 && !(iph.pagosAl && kd <= iph.pagosAl)) o.iphone = r2(Math.max(0, o.iphone - (+iph.min || 0)));
     }
-    o.gbm = r2(o.gbm); o.aGbm = r2(o.aGbm); o.aBbva = r2(o.aBbva);
+    o.gbm = r2(o.gbm); o.aGbm = r2(o.aGbm); o.aBbva = r2(o.aBbva); o.aSalida = r2(o.aSalida);
     return o;
   }
   /* ── Los abonos del plan se restan solos el día que tocan ─────────────────────────────────────

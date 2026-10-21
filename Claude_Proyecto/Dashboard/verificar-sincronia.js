@@ -2739,6 +2739,59 @@ function promptsDeLoTocado() {
     ' con plan (resultado, fecha y pasos) y ' + logradas.length + ' logradas, sin fichas ni planes sueltos');
 })();
 
+/* ── 42. Las cifras de hoy: una sola cuenta en el Dashboard ───────────────────────────────────────────
+   Adán, 21-oct-2026: "revisa bien bien las métricas de los números para que todo cuadre". La banda de la fase decía
+   «Tu dinero $21,513» y la columna del día $21,291: una tomaba el efectivo de Finanzas del día en que lo dijo y la
+   otra el riel, con lo previsto desde entonces. Todo el Dashboard pide las cifras de hoy a `ctCifrasHoy()`, que le
+   pasa al maestro (`cifrasHoy(f, gastar)`) lo que el riel dice que hay para gastar. Se comprueba que nadie más llame a
+   `cifrasHoy` y que el maestro cambie el efectivo por `gastar` sin tocar lo demás. */
+(function () {
+  const mal = [], C = global.window && global.window.CIFRAS;
+  sinComentarios(dash).split('\n').forEach(function (l) {
+    if (/\bcifrasHoy\s*\(/.test(l) && !/CIFRAS\.cifrasHoy\(D\.fin,\s*ctTramo\(/.test(l))
+      mal.push('dashboard.html le pide las cifras de hoy al maestro por su cuenta: usa ctCifrasHoy()\n        ' + l.trim().slice(0, 110));
+  });
+  if (!/function ctCifrasHoy\(\)\{/.test(dash)) mal.push('dashboard.html ya no tiene ctCifrasHoy()');
+  if (!C || !C.cifrasHoy) mal.push('el maestro no exporta cifrasHoy');
+  else {
+    const F = { activos: [{ type: 'liquido', value: 1000 }, { type: 'vehiculo', value: 50000 }], emergencyFund: 2000,
+                debts: [{ id: 'd001', balance: 500 }, { id: 'd003', balance: 40000 }] };
+    const a = C.cifrasHoy(F), b = C.cifrasHoy(F, 700);
+    if (Math.round(a.dinero) !== 3000 || Math.round(a.liquido) !== -37500 || a.bbva !== 500)
+      mal.push('cifrasHoy sin gastar no mide lo de Finanzas: ' + JSON.stringify(a));
+    if (Math.round(b.dinero) !== 2700 || Math.round(b.liquido) !== -37800 || Math.round(b.gastar) !== 700 || b.bbva !== 500)
+      mal.push('cifrasHoy con gastar no cambia solo el efectivo: ' + JSON.stringify(b));
+  }
+  if (mal.length) problemas.push('Las cifras de hoy no salen de una sola cuenta:\n     ' + mal.join('\n     '));
+  else ok.push('Cifras de hoy: la banda de la fase, Tu dinero hoy y la ventana de las fases miden con ctCifrasHoy() (el riel dice lo que hay para gastar)');
+})();
+
+/* ── 43. Tu dinero un día sube como el plan ──────────────────────────────────────────────────────────────
+   `estadoDia` (tu dinero un día, desde lo de hoy) y la `PROYECCION` (el plan desde la foto del 1 oct) arrancan de sitios
+   distintos, pero mes a mes tienen que moverse igual: lo que llega a GBM, las ventas, el depósito y lo que la salida
+   cuesta. Adán, 21-oct-2026: "todo cuadre". `estadoDia` no restaba los costos de la salida y el 31 de marzo traía $6,000
+   de más (las apostillas de diciembre). Del segundo mes en adelante hasta el último en México, lo que sube GBM + CETES +
+   el depósito al cerrar cada mes contra lo que sube el plan (su GBM más el depósito). */
+(function () {
+  const C = global.window && global.window.CIFRAS;
+  if (!C || !C.estadoDia || !C.PROYECCION || !C.fechaLocal) { problemas.push('No se pudo comparar estadoDia con la PROYECCION'); return; }
+  const finDe = function (ym) { const p = ym.split('-').map(Number); return ym + '-' + String(new Date(p[0], p[1], 0).getDate()).padStart(2, '0'); };
+  const hoyYM = C.fechaLocal().slice(0, 7), ult = C.PROYECTO.ultimoMesMexico, mal = [];
+  let ant = null, n = 0;
+  C.PROYECCION.meses.filter(function (m) { return m.mes > hoyYM && m.mes <= ult; }).forEach(function (m) {
+    const e = C.estadoDia(finDe(m.mes)); if (!e) return;
+    const v = e.gbm + e.cetes + e.deposito, p = m.alemania + (m.deposito || 0);
+    if (ant) {
+      n++;
+      const de = v - ant.v, dp = p - ant.p;
+      if (Math.abs(de - dp) > 2) mal.push(m.mes + ': tu dinero un día sube ' + Math.round(de).toLocaleString('es-MX') + ' y el plan ' + Math.round(dp).toLocaleString('es-MX'));
+    }
+    ant = { v: v, p: p };
+  });
+  if (mal.length) problemas.push('Tu dinero un día (estadoDia) no se mueve como el plan:\n     ' + mal.join('\n     '));
+  else ok.push('Tu dinero un día: ' + n + ' meses suben igual que el plan (GBM, ventas, el depósito y lo que cuesta la salida)');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

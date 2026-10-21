@@ -1458,6 +1458,8 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .cfb-k em.mal{color:var(--r)}
 .cfb-v{display:flex;align-items:baseline;gap:7px;min-width:0;font-size:12px;color:var(--text2)}
 .cfb-v b{font-family:var(--mono);font-size:17px;font-weight:800;line-height:1.05;color:var(--text);white-space:nowrap}
+.cfb-v em{font-style:normal;font-family:var(--mono);font-size:12px;font-weight:700;white-space:nowrap;color:var(--g)}
+.cfb-v em.falta{color:var(--w)}
 .cfb-barra{height:4px;border-radius:3px;background:rgba(var(--ov),.12);overflow:hidden}
 .cfb-barra i{display:block;height:100%;border-radius:3px;background:var(--g)}
 .cfb-toca{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;line-height:1.4;color:var(--text)}
@@ -3757,24 +3759,24 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
    de 125px a ~90. Lo que manda es `.cr-hero` —123 de esos 125—, y dentro de él la cifra
    grande, así que el recorte sale sobre todo de ahí y de los paddings, no de la gráfica:
    estrechar el dibujo habría sido quitar el dato en vez del aire. */
-.cr-hero{flex-shrink:0;width:clamp(250px,25%,430px);padding:5px 14px;display:flex;flex-direction:column;
-  gap:2px;justify-content:center;border-right:1px solid rgba(var(--cy-rgb),.2);background:rgba(var(--cy-rgb),.05)}
+.cr-hero{flex:1.5 1 0;min-width:0;padding:6px 16px;display:flex;flex-direction:column;gap:3px;justify-content:center;
+  border-left:1px solid rgba(var(--cy-rgb),.22);border-right:1px solid rgba(var(--cy-rgb),.22);background:rgba(var(--cy-rgb),.07)}
 .cr-big{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(18px,1.6vw,22px);
   font-weight:700;line-height:.95;letter-spacing:-.02em;color:var(--cy)}
 /* Envuelve a dos líneas en un hero de 250-330px, y ahí se iban 30 de sus 85px. No se le
    quita el wrap —el texto se saldría—: se le aprieta el interlineado. */
 .cr-estado{display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.25}
 .cr-punto{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.cr-graf{flex:1;min-width:0;padding:4px 14px 3px;display:flex;flex-direction:column;gap:3px}
-.cr-svgw{position:relative;flex:1;min-height:30px}
-.cr-svgw svg{position:absolute;inset:0;width:100%;height:100%;display:block}
-.cr-hit{position:absolute;inset:0;display:grid;gap:0}
-.cr-hit button{border:0;background:transparent;padding:0;cursor:pointer;border-radius:4px}
-.cr-hit button:hover{background:rgba(var(--ov),.06)}
-.cr-dias{display:grid;gap:0}
-.cr-dias span{font-family:var(--mono);font-size:8.5px;text-align:center;color:var(--text3)}
-.cr-fin{flex-shrink:0;width:clamp(130px,12%,180px);padding:5px 12px;display:flex;flex-direction:column;
-  justify-content:center;gap:2px;border-left:1px solid rgba(var(--ov),.09)}
+/* La quincena como una sola cuenta, de izquierda a derecha y al peso (Adán, 21-oct-2026: "quítame la gráfica de cómo cae
+   el dinero desde que entró la nómina y rediseña después todo… que todo cuadre"): lo que entró, lo que salió y lo que se
+   fue sin anotar dan lo que te queda; lo que falta salir da el cierre. */
+.cr-op{flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:3px;padding:6px 16px}
+.cr-op+.cr-op{border-left:1px solid rgba(var(--ov),.09)}
+.cr-op b{font-size:15px;font-weight:700;line-height:1.1;white-space:nowrap}
+.cr-op small{font-size:10px;line-height:1.3;color:var(--text3)}
+.cr-igual{flex-shrink:0;align-self:center;padding:0 4px;font-style:normal;font-family:var(--mono);font-size:16px;font-weight:700;color:var(--text3)}
+.cr-fin{flex:1 1 0;min-width:0;padding:6px 16px;display:flex;flex-direction:column;justify-content:center;gap:3px;
+  border-left:1px solid rgba(var(--ov),.09)}
 .coach-tablero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);
   gap:12px;align-items:stretch;flex:1;min-height:0}
 .ct-col{border-radius:15px;border:1px solid var(--card-br);background:var(--card);
@@ -3808,12 +3810,14 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 .ct-lbl{font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--text3)}
 .ct-num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 
-/* El mes. Cada celda lleva su carga: el importe del día y una barra por lo que
-   entró y por lo que salió, para que el peso se vea sin tocar nada. */
-.ct-mes{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+/* El mes. Cada celda dice lo que sale ese día —el nombre y el importe de lo que más pesa— y lleva su barra VERTICAL,
+   cuyo alto es lo que sale: el mes se lee como un ecualizador y los días de solo comer quedan en una rayita (diseño
+   aprobado el 2026-08-30). Sin la gráfica de balance debajo, la cuadrícula se queda con todo el alto de la columna. */
+.ct-mes{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.ct-celdas{flex:1;min-height:0;grid-auto-rows:minmax(50px,1fr)}
 .ct-dow{font-family:var(--mono);font-size:9px;color:var(--text3);text-align:center}
-.ct-d{position:relative;height:38px;border-radius:7px;padding:4px 5px;cursor:pointer;
-  display:flex;flex-direction:column;justify-content:space-between;text-align:left;
+.ct-d{position:relative;min-height:0;border-radius:8px;padding:5px 12px 5px 7px;cursor:pointer;overflow:hidden;
+  display:flex;flex-direction:column;gap:3px;text-align:left;
   font-family:inherit;color:inherit;background:rgba(var(--ov),.03);
   border:1px solid rgba(var(--ov),.06);transition:background .13s,border-color .13s}
 .ct-d:hover{background:rgba(var(--ov),.1)}
@@ -3822,76 +3826,23 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 .ct-d.fijo{border-color:rgba(var(--w-rgb),.3)}
 .ct-d.sel{background:rgba(var(--cy-rgb),.13);border-color:var(--cy);opacity:1}
 .ct-d.hoy .ct-dn{color:var(--cy)}
-.ct-dn{font-family:var(--mono);font-size:11px;font-weight:700}
-.ct-dm{font-family:var(--mono);font-size:8.5px}
-/* La barra del día es VERTICAL y su alto dice cuánto sale: el mes se lee como un
-   ecualizador y los días de solo comer quedan en una rayita (diseño aprobado 2026-08-30). */
-.ct-db{display:flex;align-items:flex-end;justify-content:flex-end;flex:1;min-height:0}
-.ct-db i{display:block;width:7px;border-radius:2.5px}
-/* El balance de los últimos 6 meses, bajo la cuadrícula del mes. Mismo reparto que
-   `.cr-svgw`: el SVG se estira con preserveAspectRatio="none" y todo lo que no debe
-   deformarse —etiquetas, puntos, zonas de hover— va en HTML por encima. */
-.ct-bal{position:relative;display:flex;gap:7px;flex:1;min-height:118px}
-.ct-bal-y{position:relative;width:32px;flex-shrink:0}
-.ct-bal-y span{position:absolute;right:0;transform:translateY(-50%);white-space:nowrap;
-  font-family:var(--mono);font-size:8.5px;color:var(--text3)}
-.ct-bal-p{position:relative;flex:1;min-width:0}
-.ct-bal-p svg{position:absolute;inset:0;width:100%;height:100%;display:block}
-/* Los puntos van en HTML: dentro del SVG estirado saldrían como elipses. */
-.ct-bal-pt{position:absolute;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
-.ct-bal-hit{position:absolute;inset:0;display:grid;gap:0}
-.ct-bal-hit button{border:0;background:transparent;padding:0;cursor:pointer;border-radius:5px}
-.ct-bal-hit button:hover{background:rgba(var(--ov),.07)}
-.ct-bal-x{display:grid;gap:0;padding-left:39px}
-.ct-bal-x span{font-family:var(--mono);font-size:9px;text-align:center;color:var(--text3)}
-.ct-bal-leg{display:flex;justify-content:center;flex-wrap:wrap;gap:5px 14px}
-.ct-bal-leg span{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--text2)}
-.ct-bal-leg i{width:16px;height:0;flex-shrink:0;border-top:2px solid transparent}
-/* La leyenda es de botones: cada uno abre el desglose de su serie (Adán, 2026-09-07:
-   "cuando haga click en los label de balance, ingresos o gastos, debes desplegarme la
-   información completa"). De paso es la vista en números de la gráfica: ningún dato
-   queda dependiendo de distinguir un color. */
-.ct-bal-leg button{display:flex;align-items:center;gap:6px;padding:3px 9px;border-radius:20px;
-  border:1px solid transparent;background:transparent;cursor:pointer;font-family:inherit;
-  font-size:10px;color:var(--text2);transition:background .15s,border-color .15s,color .15s}
-.ct-bal-leg button:hover{background:rgba(var(--ov),.08);color:var(--text)}
-.ct-bal-leg button.act{border-color:var(--cy);background:rgba(var(--cy-rgb),.12);color:var(--text)}
-.ct-bal-det{border:1px solid rgba(var(--ov),.1);border-radius:12px;padding:10px 12px;
-  background:rgba(var(--ov),.03);display:flex;flex-direction:column;gap:9px}
-.ct-bal-det-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.ct-bal-det-x{margin-left:auto;border:0;background:transparent;cursor:pointer;padding:0 3px;
-  font-family:inherit;font-size:15px;line-height:1;color:var(--text3)}
-.ct-bal-det-x:hover{color:var(--text)}
-.ct-bal-tab{display:flex;flex-direction:column;gap:1px}
-/* Cada fila lleva su propia rejilla con las MISMAS columnas: así la fila entera puede
-   ser un botón —y encenderse al pasar por encima— sin perder la alineación. */
-.ct-bal-fila{display:grid;gap:3px 10px;align-items:center;width:100%;padding:2px 7px;
-  border:1px solid transparent;border-radius:7px;background:transparent;
-  font-family:inherit;color:inherit;text-align:left}
-.ct-bal-fila.tap{cursor:pointer;transition:background .13s,border-color .13s}
-.ct-bal-fila.tap:hover{background:rgba(var(--ov),.07)}
-.ct-bal-fila.act{border-color:var(--cy);background:rgba(var(--cy-rgb),.1)}
-.ct-bal-tab .h{font-size:8.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--text3)}
-.ct-bal-tab .m{font-family:var(--mono);font-size:9.5px;color:var(--text3)}
-.ct-bal-tab .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:10.5px;
-  font-weight:700;color:var(--text);text-align:right;white-space:nowrap}
-.ct-bal-tab .b{height:5px;border-radius:3px;background:rgba(var(--ov),.08);overflow:hidden}
-.ct-bal-tab .b i{display:block;height:100%;border-radius:3px}
-/* En qué se fue el dinero, cosa por cosa. Dos columnas porque los conceptos son
-   cortos y así caben el doble sin hacer scroll; el punto lleva el color de su
-   categoría, que es el de Finanzas. */
-/* Sin tope de alto ni scroll propio: la lista se enseña ENTERA y de crecer se encarga el
-   scroll que la columna ya tiene. Dos scrolls anidados esconden justo lo que se busca. */
-.ct-bal-cosas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px 16px}
-@media(max-width:1180px){.ct-bal-cosas{grid-template-columns:minmax(0,1fr)}}
-.ct-bal-cosa{display:flex;align-items:center;gap:6px;min-width:0;padding:2px 0;
-  font-size:10px;color:var(--text2)}
-.ct-bal-cosa i{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-/* El nombre es lo unico que cede: los importes nunca se parten ni se recortan. */
-.ct-bal-cosa u{text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ct-bal-cosa em{flex-shrink:0;font-style:normal;font-family:var(--mono);font-size:8.5px;color:var(--text3)}
-.ct-bal-cosa b{margin-left:auto;flex-shrink:0;font-family:var(--mono);
-  font-variant-numeric:tabular-nums;font-weight:700;color:var(--text)}
+.ct-dt{display:flex;align-items:baseline;justify-content:space-between;gap:3px;min-width:0}
+.ct-dn{font-family:var(--mono);font-size:11.5px;font-weight:700}
+.ct-dm{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--g);white-space:nowrap}
+.ct-dc{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ct-dl{display:flex;align-items:center;gap:4px;min-width:0;font-size:clamp(9px,.52vw,10.5px);line-height:1.2;color:var(--text2)}
+.ct-dl i{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.ct-dl u{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none}
+.ct-dl b{margin-left:auto;flex-shrink:0;font-family:var(--mono);font-weight:700;color:var(--text)}
+.ct-dl.mas{font-size:9px;color:var(--text3)}
+/* La barra va pegada al borde derecho, fuera del texto. */
+.ct-db{position:absolute;right:4px;top:6px;bottom:6px;width:4px;display:flex;align-items:flex-end}
+.ct-db i{display:block;width:100%;border-radius:2px}
+/* El nombre cabe con la columna ancha (2048 px y más); en una pantalla mediana la celda se queda con el punto de color y
+   el importe —el nombre sigue en su título y en la columna del día—, y en el teléfono, con el día y la barra. */
+.ct-cal{container-type:inline-size}
+@container (max-width:640px){.ct-dl u{display:none}}
+@container (max-width:430px){.ct-dc,.ct-d .ct-dm{display:none}}
 .ct-cat{display:flex;flex-direction:column;gap:3px}
 /* El concepto que cae un dia concreto lleva a ese dia. Los tiempos de comida no:
    caen todos los dias de la semana y no hay un dia al que ir. */
@@ -3961,13 +3912,11 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
    inner y las columnas dejan de tener el suyo — dos scrolls anidados en un telefono no
    se pueden usar. */
 @media(max-width:1180px){
-  /* La celda se estrecha y el +20.5k ya no cabe: lo dicen igual el borde verde y su
-     chip en la lista de abajo. */
-  .ct-d .ct-dm{display:none}
   .coach-riel{flex-wrap:wrap}
-  .cr-hero{width:100%;border-right:0;border-bottom:1px solid rgba(var(--cy-rgb),.2)}
-  .cr-graf{min-width:200px}
-  .cr-fin{border-left:0;width:auto;flex:1}
+  /* La cifra grande va primero y a lo ancho; debajo, la cuenta en filas de tres. */
+  .cr-hero{flex:1 1 100%;order:-1;border:0;border-bottom:1px solid rgba(var(--cy-rgb),.2)}
+  .cr-igual{display:none}
+  .cr-op,.cr-fin{flex:1 1 30%}
   .coach-tablero{grid-template-columns:minmax(0,1fr) minmax(0,1fr);flex:none}
   .ct-sem{grid-column:1/-1}
   .cfb-arriba{flex-wrap:wrap;row-gap:8px}
@@ -3983,8 +3932,8 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 /* En el teléfono cada pieza va a lo ancho: a 390 px la ruta de deuda encimaba sus tres pasos, la
    barra de la fase se salía por la derecha y el título de la gráfica quedaba una palabra por renglón. */
 @media(max-width:640px){
-  .cr-graf{flex-basis:100%}
-  .cr-fin{flex:1 1 100%;border-top:1px solid rgba(var(--cy-rgb),.2)}
+  .cr-op,.cr-fin{flex:1 1 45%;padding:6px 12px}
+  .ct-celdas{grid-auto-rows:44px}
   .coach-fase-band{padding:10px 12px}
   .cfb-cuando{flex-basis:100%}
   .cfb-mes{font-size:9px;padding:0 3px}
@@ -4572,9 +4521,8 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
            banda de fase: repetía lo que la ruta de deuda ya dice con números reales. -->
       <div class="coach-fase-band reveal d1" id="coachFaseBand"></div>
       <div class="coach-ruta-band reveal d2" id="coachRutaBand"></div>
-      <!-- El riel: una sola cifra manda y la línea muestra cómo cae el dinero desde que
-           entró la nómina. Debajo, las tres columnas explican esa cifra en vez de competir
-           con ella (diseño aprobado el 2026-08-30). -->
+      <!-- El riel: una sola cifra manda y a su lado la cuenta que la da, al peso (la línea de cómo caía el dinero
+           salió el 2026-10-21). Debajo, las tres columnas explican esa cifra en vez de competir con ella. -->
       <div class="coach-riel reveal d3" id="coachRiel"></div>
       <div class="coach-tablero reveal d4">
         <div class="ct-col ct-cal" id="ctCal"></div>
@@ -8573,61 +8521,6 @@ function ctAgenda(dia, ym){
 // asi hacer los calculos". Con el corte fijo en cuatro, esos d\u00edas se ca\u00edan de la cuenta.
 const ctSemDe = n => Math.min(5, Math.ceil(n/7));
 
-// EL MODELO: el mes son DOS QUINCENAS que arrancan cuando entra la n\u00f3mina, el 1 y el 15,
-// y cada una se reinicia. Ad\u00e1n: "cada quincena me dan dinero entonces apartir de eso
-// calcula mis gastos, cuanto me queda\u2026 cada quincena debe reiniciarse lo que me sobra,
-// es decir el dia 15 pues haces lo mismo y me das el resultado".
-//
-// De cada quincena salen los pagos fijos de sus d\u00edas y lo que cuesta comer esos d\u00edas. Lo
-// que quede es lo que hay para administrar \u2014 la pantalla no decide qu\u00e9 hacer con ello.
-// Didi NO entra: es ingreso variable, y contarlo dar\u00eda un colch\u00f3n que puede no llegar.
-/* Los gastos ya registrados entran igual que en `ctTramo`: si el día 1 resta las compras
-   del 1-sep y la quincena no, las dos columnas del tablero se contradicen en pantalla. */
-function ctQuincena(q, nDias, mov, ym){
-  const ini = q===1 ? 1 : 15;
-  const fin = q===1 ? 14 : nDias;
-  const COM = ctComida();
-  const YM = ym || ctYM || '';
-  const comeDia = ctComeDe(YM, COM).dia;
-  const MV = mov || {};
-  const fijosMes = ctFijosMes(nDias, YM);
-  let entra = 0, pagos = 0;
-  const movs = [];
-  for(let d=ini; d<=fin; d++){
-    ctAgenda(d).forEach(function(a){
-      if(a.entra) entra += (+a.monto||0); else pagos += (+a.monto||0);
-      movs.push({d:d, t:a.t, monto:+a.monto||0, entra:!!a.entra});
-    });
-    ctExtras(d, YM, MV, fijosMes).forEach(function(t){
-      if(t.credito) return;              // lo cobra el mínimo de la tarjeta, no este día
-      pagos += (+t.amount||0);
-      movs.push({d:d, t:t.desc, monto:+t.amount||0, entra:false, real:true});
-    });
-  }
-  const dias = fin - ini + 1;
-  const come = Math.round(comeDia * dias);
-
-  // Lo que llevas encima al cerrar cada semana: el saldo va bajando dentro de la quincena.
-  const semanas = [];
-  for(let sm = ctSemDe(ini); sm <= ctSemDe(fin); sm++){
-    const si = Math.max(ini, (sm-1)*7+1), sf = Math.min(fin, sm*7);
-    if(sf < si) continue;
-    let e = 0, p = 0;
-    for(let d=si; d<=sf; d++) ctAgenda(d).forEach(function(a){
-      if(a.entra) e += (+a.monto||0); else p += (+a.monto||0);
-    });
-    for(let d=si; d<=sf; d++)
-      p += ctSaleDeCaja(ctExtras(d, YM, MV, fijosMes));
-    const c = Math.round(comeDia * (sf - si + 1));
-    semanas.push({n:sm, ini:si, fin:sf, entra:e, pagos:p, come:c, mueve:e-p-c});
-  }
-  let acum = 0;
-  semanas.forEach(function(w){ acum += w.mueve; w.saldo = acum; });
-
-  return { q:q, ini:ini, fin:fin, dias:dias, entra:entra, pagos:pagos, come:come,
-           queda: entra - pagos - come, semanas:semanas, movs:movs };
-}
-
 // Las tareas de la fase que caen en una semana. PHASES no las reparte por semana — solo
 // por mes — así que el reparto es por ORDEN dentro del mes: la primera tarea a la primera
 // semana, y así. No es una fecha real y por eso la pantalla lo dice ("reparto sugerido").
@@ -8744,6 +8637,17 @@ function ctVerMes(delta){
   renderCoachTablero();
 }
 function ctVerDia(k){ ctSel = k; renderCoachTablero(); }
+// El nombre de un pago en la celda del mes: «Tarjeta BBVA — lo que sobra de la quincena» → BBVA, «Crédito Automotriz» →
+// Auto, «Ahorro → GBM» → GBM. El nombre completo va en el título de la celda y en la columna del día.
+function ctCorto(t){
+  const s = String(t||'');
+  if(/^Ahorro\b/i.test(s) && /GBM/.test(s)) return 'GBM';
+  let c = s.split(/ — | \(| →/)[0].trim();
+  const sin = c.replace(/^(Tarjeta|Crédito|Plan de|Aporte a tu|Pago:?)\s+/i, '');
+  if(sin !== c) c = sin.charAt(0).toUpperCase()+sin.slice(1);
+  if(/^Automotriz$/i.test(c)) return 'Auto';
+  return c.length > 8 ? c.split(' ')[0] : c;
+}
 
 // La lista de lo ya hecho se despliega bajo el contador (Adán, 2026-08-30: "necesito
 // poder ver y revertir las tareas ya hechas"). Vive en una variable de módulo para que
@@ -8755,7 +8659,8 @@ function ctToggleHechas(){ ctHechasAbierto = !ctHechasAbierto; renderCoachTabler
 // tiene el mismo color en el calendario, en el dia y en la semana.
 function ctColor(t){
   if(/desayuno/i.test(t)) return '#fbbf24';
-  if(/cena/i.test(t)) return '#f97316';
+  // «cena» como palabra: «quincena» la contiene, y la BBVA de la quincena salía con el color de la cena.
+  if(/\bcena\b/i.test(t)) return '#f97316';
   if(/comer|comida/i.test(t)) return '#ef4444';
   if(/renta|familia/i.test(t)) return '#eab308';
   if(/cetes|ahorro/i.test(t)) return '#10b981';
@@ -8821,290 +8726,6 @@ function ctTarjetaDe(t){
 }
 function ctACredito(t){ return t.cat !== 'Deudas' && !!ctTarjetaDe(t); }
 
-/* ── EL BALANCE DE LOS ÚLTIMOS SEIS MESES ───────────────────────────────
-   Sustituye a "El mes de un vistazo" (Adán, 2026-09-07: "quita esto del mes de un vistazo
-   y en todo ese espacio en blanco pon una gráfica de mis finanzas").
-
-   EL CÁLCULO VIVE EN `datos-maestros.js` —`CIFRAS.balanceMeses`— y no aquí. Estuvo aquí
-   unas horas, hasta que Adán pidió que la gráfica de Finanzas fuera igual: dos copias de
-   la misma lógica es exactamente lo que este proyecto no permite. Allí está explicado cómo
-   se arma cada mes (lo previsto del calendario más lo anotado que la agenda no conoce).
-
-   La ventana sigue al mes que se está viendo, así que las flechas ‹ › mueven la gráfica. */
-function ctBalance6(ym){
-  if(!window.CIFRAS) return [];
-  return CIFRAS.balanceMeses(ym || ctYM || '', 6,
-    { tx:(D.fin && D.fin.transactions) || [], debts:(D.fin && D.fin.debts) || [] });
-}
-/* Saltar a un mes concreto desde la gráfica. `ctVerMes` solo sabe moverse de uno en
-   uno; tocar "May 26" tiene que llevar ahí de un golpe. */
-function ctIrMes(k){
-  if(!/^\d{4}-\d{2}$/.test(k||'')) return;
-  ctYM = k; ctSel = null; renderCoachTablero();
-}
-/* La curva de Chart.js con tensión .4 —la que dibuja Finanzas—. Cada punto interior
-   reparte sus dos manijas según lo que dista de cada vecino, que es lo que evita que
-   la curva se pase de largo en los picos. */
-function ctCurva(P){
-  const n = P.length; if(n < 2) return '';
-  const T = 0.4, cp = P.map(function(){ return {p:null, n:null}; });
-  for(let i=1; i<n-1; i++){
-    const a=P[i-1], b=P[i], c=P[i+1];
-    const d01=Math.hypot(b.x-a.x, b.y-a.y), d12=Math.hypot(c.x-b.x, c.y-b.y), s=d01+d12;
-    const fa = s ? T*(d01/s) : 0, fb = s ? T*(d12/s) : 0;
-    cp[i].p = {x:b.x-fa*(c.x-a.x), y:b.y-fa*(c.y-a.y)};
-    cp[i].n = {x:b.x+fb*(c.x-a.x), y:b.y+fb*(c.y-a.y)};
-  }
-  let d = 'M'+P[0].x.toFixed(2)+' '+P[0].y.toFixed(2);
-  for(let i=0; i<n-1; i++){
-    const c1 = cp[i].n || P[i], c2 = cp[i+1].p || P[i+1];
-    d += ' C'+c1.x.toFixed(2)+' '+c1.y.toFixed(2)+','+c2.x.toFixed(2)+' '+c2.y.toFixed(2)+
-         ','+P[i+1].x.toFixed(2)+' '+P[i+1].y.toFixed(2);
-  }
-  return d;
-}
-/* Qué serie tiene el desglose abierto: 'bal', 'inc', 'exp' o null. Vive fuera de la
-   función para que siga abierto cuando el tablero se repinta —igual que
-   `ctHechasAbierto`—: si no, cambiar de mes lo cerraba solo. */
-let ctBalVer = null;
-/* Y de qué mes se desglosan las cosas: 'YYYY-MM', o null para el último de la ventana
-   —el que se está viendo en el calendario—. Adán, 2026-09-07: "solo muéstrame esos datos
-   de un mes en específico, porque me juntaste todos y no es muy entendible". */
-let ctBalMes = null;
-function ctBalVerMes(ym){ ctBalMes = ym; renderCoachTablero(); }
-function ctBalToggle(k){
-  ctBalVer = (ctBalVer === k) ? null : k;
-  renderCoachTablero();
-  /* El desglose se abre por DEBAJO de la gráfica y la columna tiene su propio scroll:
-     sin esto queda fuera de vista y parece que el clic no hizo nada. `block:'nearest'`
-     mueve solo esa columna, no la pantalla entera. */
-  if(ctBalVer) requestAnimationFrame(function(){
-    const d = document.querySelector('.ct-bal-det');
-    if(d && d.scrollIntoView) d.scrollIntoView({block:'nearest', behavior:'smooth'});
-  });
-}
-
-/* El desglose de una serie. Arriba, los seis meses en números —del balance no se enseña
-   una cifra sola sino la RESTA, que es lo que se pregunta al tocarlo: entró, salió,
-   quedó—. Abajo, y solo para ingresos y gastos, en qué se fue el dinero **de UN mes**:
-   juntar los seis mezclaba la renta de medio año con una compra suelta y no se entendía
-   nada. El mes se elige tocando su fila arriba. */
-function ctBalDetalle(S, SER){
-  const s = SER.filter(function(x){ return x.k === ctBalVer; })[0];
-  if(!s) return '';
-  const total = S.reduce(function(x,m){ return x + m[s.k]; }, 0);
-  const media = S.length ? total/S.length : 0;
-  // Hay algo que enseñar mientras algún mes mueva dinero —previsto o anotado, da igual—.
-  // Antes esto miraba `m.n`, el número de transacciones, y con la previsión del calendario
-  // ya dentro eso daba "no hay nada que desglosar" sobre un mes con $41,000 de quincenas.
-  const hay = S.some(function(m){ return m.inc !== 0 || m.exp !== 0; });
-  const tope = Math.max.apply(null, S.map(function(m){ return Math.abs(m[s.k]); }).concat([1]));
-  // Si el mes elegido se sale de la ventana al navegar, se cae al último en vez de
-  // quedarse en blanco.
-  const sel = S.filter(function(m){ return m.ym === ctBalMes; })[0] || S[S.length-1];
-
-  const cols = s.k === 'bal' ? '46px repeat(3,minmax(0,1fr))' : '46px minmax(0,1fr) auto 34px';
-  const tap = s.k !== 'bal';   // en balance la tabla YA es el desglose: no hay nada que elegir
-  const cab = s.k === 'bal'
-    ? '<span class="h">Mes</span><span class="h" style="text-align:right">Entró</span>'+
-      '<span class="h" style="text-align:right">Salió</span><span class="h" style="text-align:right">Quedó</span>'
-    : '<span class="h">Mes</span><span class="h"></span>'+
-      '<span class="h" style="text-align:right">Importe</span><span class="h" style="text-align:right">Peso</span>';
-
-  const filas = S.map(function(m){
-    const v = m[s.k];
-    const cel = s.k === 'bal'
-      ? '<span class="m">'+m.lbl+'</span>'+
-        '<span class="v" style="color:var(--g)">'+money(m.inc)+'</span>'+
-        '<span class="v" style="color:var(--r)">−'+money(m.exp)+'</span>'+
-        '<span class="v"'+(v<0?' style="color:var(--r)"':'')+'>'+money(v)+'</span>'
-      : '<span class="m">'+m.lbl+'</span>'+
-        '<span class="b"><i style="width:'+(Math.abs(v)/tope*100).toFixed(1)+
-          '%;background:'+s.col+'"></i></span>'+
-        '<span class="v">'+money(v)+'</span>'+
-        '<span class="m" style="text-align:right">'+(total?Math.round(v/total*100):0)+'%</span>';
-    if(!tap) return '<div class="ct-bal-fila" style="grid-template-columns:'+cols+'">'+cel+'</div>';
-    return '<button type="button" class="ct-bal-fila tap'+(m.ym===sel.ym?' act':'')+'" '+
-           'style="grid-template-columns:'+cols+'" onclick="ctBalVerMes(\''+m.ym+'\')" '+
-           'title="Ver el detalle de '+m.lbl+'">'+cel+'</button>';
-  }).join('');
-
-  /* En qué se fue, o de dónde vino — cosa por cosa, y solo del mes elegido. Se agrupa por
-     el `desc` del movimiento, así que dos despensas del mismo mes son una línea con un 2×
-     al lado. El punto conserva el color de su categoría —los de CT_COLOR, que son los de
-     Finanzas—, que es lo que deja leer el bloque también por categoría de un vistazo. */
-  let cosas = '';
-  if(tap){
-    const MESL = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto',
-                  'septiembre','octubre','noviembre','diciembre'];
-    const nom = MESL[(+sel.ym.slice(5,7) || 1) - 1];
-    const acc = [];
-    Object.keys(sel.cosas||{}).forEach(function(d){
-      const o = sel.cosas[d];
-      /* El maestro devuelve la CATEGORÍA, no un color: los colores son cosa de la
-         pantalla. `__entra` marca un ingreso; un previsto trae el nombre del pago, que
-         es lo que `ctColor` sabe leer; un anotado trae la categoría de Finanzas. */
-      const col = o.cat === '__entra' ? 'var(--g)'
-                : o.prev ? ctColor(o.cat)
-                : (CT_COLOR[o.cat] || '#94a3b8');
-      if(o[s.k]) acc.push({d:d, v:o[s.k], n:o.veces[s.k], col:col, prev:o.prev});
-    });
-    // De mayor a menor: lo que más pesa es lo que hay que ver primero. Se enseñan 12 y el
-    // resto se suma en una línea, para que la cola de compras chicas no tape el bulto.
-    acc.sort(function(a,b){ return b.v - a.v; });
-    // Todas, sin cortar (Adán, 2026-09-07: "y 8 cosas más, debe mostrarse todo completo").
-    const ver = acc;
-    cosas = '<div style="display:flex;align-items:baseline;gap:8px;font-size:8.5px;'+
-        'font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--text3)">'+
-        '<span>'+(s.k === 'exp' ? 'En qué se fue' : 'De dónde vino')+' en '+nom+'</span>'+
-        '<span style="margin-left:auto;letter-spacing:0;text-transform:none;font-size:10px;'+
-          'font-weight:700" class="ct-num'+(privado?' fin-hidden':'')+'">'+money(sel[s.k])+'</span>'+
-      '</div>'+
-      (ver.length
-        ? '<div class="ct-bal-cosas">'+
-          ver.map(function(o){
-            // Punto relleno = movimiento anotado en Finanzas. Punto hueco = previsión del
-            // calendario. Sin esa distinción, una renta que nadie ha registrado se leería
-            // como un hecho.
-            return '<span class="ct-bal-cosa" title="'+esc(o.d+(o.prev
-                     ? ' · importe previsto del calendario'
-                     : ' · registrado en Finanzas'))+'">'+
-                   '<i style="'+(o.prev
-                     ? 'box-shadow:inset 0 0 0 1.5px '+o.col
-                     : 'background:'+o.col)+'"></i>'+
-                   '<u>'+esc(o.d)+'</u>'+(o.n > 1 ? '<em>'+o.n+'×</em>' : '')+
-                   '<b>'+money(o.v)+'</b></span>';
-          }).join('')+
-          '</div>'
-        : '<span style="font-size:10px;color:var(--text3)">En '+nom+' no hay movimientos '+
-          'registrados. Toca otro mes de la tabla para ver el suyo.</span>');
-  }
-
-  return '<div class="ct-bal-det">'+
-      '<div class="ct-bal-det-h">'+
-        '<span style="display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:var(--text)">'+
-          '<i style="width:15px;height:0;border-top:2px '+(s.dash?'dashed':'solid')+' '+s.col+'"></i>'+
-          s.nom+' · los seis meses</span>'+
-        '<span style="font-size:9.5px;color:var(--text3)">total <b class="ct-num'+(privado?' fin-hidden':'')+
-          '" style="color:var(--text2)">'+money(total)+'</b> · media <b class="ct-num'+(privado?' fin-hidden':'')+
-          '" style="color:var(--text2)">'+money(media)+'</b>/mes</span>'+
-        '<button type="button" class="ct-bal-det-x" onclick="ctBalToggle(\''+s.k+'\')" title="Cerrar">×</button>'+
-      '</div>'+
-      (hay
-        ? '<div class="ct-bal-tab">'+
-            '<div class="ct-bal-fila" style="grid-template-columns:'+cols+'">'+cab+'</div>'+
-            filas+
-          '</div>'+cosas
-        : '<span style="font-size:10px;color:var(--text3);line-height:1.45">Estos seis meses '+
-          'no mueven dinero ni previsto ni anotado, así que no hay nada que desglosar.</span>')+
-    '</div>';
-}
-function ctBalanceHTML(ym){
-  const S = ctBalance6(ym), n = S.length;
-  // Azul sólido para el balance, verde y rojo punteados para sus dos sumandos: los
-  // mismos roles y casi los mismos hex que Chart.js pinta en Finanzas.
-  const SER = [
-    {k:'bal', nom:'Balance',  col:'var(--b)', w:'2',   dash:'',    pt:7},
-    {k:'inc', nom:'Ingresos', col:'var(--g)', w:'1.5', dash:'4 4', pt:5},
-    {k:'exp', nom:'Gastos',   col:'var(--r)', w:'1.5', dash:'4 4', pt:5}
-  ];
-  // La escala va en múltiplos de 10k y SIEMPRE incluye el cero: sin él, un balance
-  // negativo se leería como uno positivo pequeño.
-  const vals = [];
-  S.forEach(function(m){ vals.push(m.bal, m.inc, m.exp); });
-  const PASO = 10000;
-  let hi = Math.ceil(Math.max(0, Math.max.apply(null, vals))/PASO)*PASO;
-  let lo = Math.floor(Math.min(0, Math.min.apply(null, vals))/PASO)*PASO;
-  if(hi === lo) hi = lo + PASO;
-  const rango = hi - lo, paso = (rango/PASO > 8) ? PASO*2 : PASO;
-  const Y = v => (hi - v)/rango*100;
-  const X = i => n>1 ? i/(n-1)*100 : 50;
-  const y0 = Y(0);
-
-  let rej = '', ejeY = '';
-  for(let v=lo; v<=hi+0.5; v+=paso){
-    const y = Y(v).toFixed(2), cero = Math.abs(v) < 0.5;
-    rej += '<line x1="0" y1="'+y+'" x2="100" y2="'+y+'" stroke="rgba(var(--ov),'+
-           (cero?'.2':'.08')+')" stroke-width="1" vector-effect="non-scaling-stroke"></line>';
-    ejeY += '<span style="top:'+y+'%">$'+Math.round(v/1000)+'k</span>';
-  }
-
-  let paths = '', puntos = '';
-  SER.forEach(function(s){
-    const P = S.map(function(m,i){ return {x:X(i), y:Y(m[s.k])}; });
-    const d = ctCurva(P);
-    // Solo el balance lleva relleno, y hasta la línea del cero: es la lectura de
-    // "cuánto te sobró o te faltó", no un área apilada.
-    if(s.k === 'bal')
-      paths += '<path d="'+d+' L'+X(n-1).toFixed(2)+' '+y0.toFixed(2)+' L'+X(0).toFixed(2)+
-               ' '+y0.toFixed(2)+' Z" fill="var(--b)" opacity=".13"></path>';
-    paths += '<path d="'+d+'" fill="none" stroke="'+s.col+'" stroke-width="'+s.w+'" '+
-             (s.dash ? 'stroke-dasharray="'+s.dash+'" ' : '')+
-             'stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>';
-    P.forEach(function(p){
-      puntos += '<i class="ct-bal-pt" style="left:'+p.x.toFixed(2)+'%;top:'+p.y.toFixed(2)+
-                '%;width:'+s.pt+'px;height:'+s.pt+'px;background:'+s.col+
-                ';box-shadow:0 0 0 2px var(--bg)"></i>';
-    });
-  });
-
-  const hits = S.map(function(m){
-    return '<button type="button" onclick="ctIrMes(\''+m.ym+'\')" title="'+
-      esc(m.lbl+' — entró '+money(m.inc)+', salió '+money(m.exp)+', quedó '+money(m.bal)+
-          (m.n ? ' · '+m.n+' movimientos' : ' · sin movimientos registrados'))+'"></button>';
-  }).join('');
-  const ejeX = S.map(function(m,i){
-    return '<span'+(i===n-1 ? ' style="color:var(--text2);font-weight:700"' : '')+'>'+m.lbl+'</span>';
-  }).join('');
-  const leg = SER.map(function(s){
-    return '<button type="button"'+(ctBalVer===s.k?' class="act"':'')+
-           ' onclick="ctBalToggle(\''+s.k+'\')" title="Ver '+s.nom.toLowerCase()+' mes a mes">'+
-           '<i style="border-top-color:'+s.col+(s.dash?';border-top-style:dashed':'')+'"></i>'+
-           s.nom+'</button>';
-  }).join('');
-
-  // Lo que se le debe HOY a las tarjetas. No es una cuarta serie: es un saldo, y
-  // meterlo en el mismo par de ejes que un flujo mensual inventaría una relación
-  // que no existe. Va como cifra en el encabezado, que es donde se consulta.
-  // `.length ?` y no `||`: un array VACÍO es truthy, así que con `||` un navegador que aún
-  // no ha abierto Finanzas se quedaba sin la cifra. Mismo patrón que usa ctAgenda.
-  const DEUTJ = (D.fin && D.fin.debts || []).length
-    ? D.fin.debts
-    : ((window.CIFRAS && CIFRAS.DEUDAS_SEED) || []);
-  const TJ = DEUTJ
-    .filter(function(d){ return d.type === 'credit_card'; });
-  const tc = TJ.reduce(function(x,d){ return x + Math.max(0, +d.balance||0); }, 0);
-  // Cuántos de los seis meses van solo con la previsión, sin un solo movimiento anotado.
-  const sinDatos = S.filter(function(m){ return !m.n; }).length;
-
-  return '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">'+
-      '<span class="ct-lbl">Balance de los últimos 6 meses</span>'+
-      (tc > 0
-        ? '<span style="font-size:9.5px;color:var(--text3);white-space:nowrap">a las tarjetas '+
-          '<b class="ct-num'+(privado?' fin-hidden':'')+'" style="color:var(--r)">'+money(tc)+'</b></span>'
-        : '')+
-    '</div>'+
-    '<div class="ct-bal'+(privado?' fin-hidden':'')+'">'+
-      '<div class="ct-bal-y">'+ejeY+'</div>'+
-      '<div class="ct-bal-p">'+
-        '<svg viewBox="0 0 100 100" preserveAspectRatio="none">'+rej+paths+'</svg>'+
-        puntos+
-        '<div class="ct-bal-hit" style="grid-template-columns:repeat('+n+',minmax(0,1fr))">'+hits+'</div>'+
-      '</div>'+
-    '</div>'+
-    '<div class="ct-bal-x" style="grid-template-columns:repeat('+n+',minmax(0,1fr))">'+ejeX+'</div>'+
-    '<div class="ct-bal-leg">'+leg+'</div>'+
-    ctBalDetalle(S, SER)+
-    '<span style="font-size:9.5px;color:var(--text3);line-height:1.45">'+
-      'Punto hueco: previsto · relleno: anotado. Toca un mes para ir a él.'+
-      (sinDatos
-        ? ' <b style="color:var(--w)">'+sinDatos+(sinDatos===1?' mes va':' meses van')+
-          ' solo con lo previsto.</b>'
-        : '')+
-    '</span>';
-}
-
-
 function ctFijosMes(nDias, ym){
   const out = [];
   for(let d=1; d<=nDias; d++) ctAgenda(d, ym).forEach(function(a){ if(!a.entra) out.push(a); });
@@ -9143,7 +8764,7 @@ function ctTramo(nSel, nDias, mov, ym){
   let entra = 0, corre = 0, sale = 0;
   const serie = [];
   for(let d=ini; d<=fin; d++){
-    const ag = ctAgenda(d);
+    const ag = ctAgenda(d, YM);
     const ent = ag.filter(a=>a.entra).reduce((x,a)=>x+(+a.monto||0), 0);
     const pag = ag.filter(a=>!a.entra);
     // Lo registrado ese día que no está en los fijos. Lo pagado a crédito se lleva marcado:
@@ -9181,6 +8802,16 @@ function ctAnclaReal(YM, ini, fin){
            nombre:acts.map(a=>a.name||'Cuenta').join(' y ') };
 }
 
+/* Lo de hoy con UNA sola cifra para gastar: la del riel —tu último saldo dicho y lo previsto desde entonces—, no el
+   saldo de Finanzas del día en que lo dijiste. La banda de la fase, Tu dinero hoy y la ventana de las fases leen de aquí
+   (Adán, 21-oct-2026: "revisa bien bien las métricas de los números para que todo cuadre": la banda decía $21,513 y la
+   columna del día $21,291). El control 42 vigila que nadie más le pida al maestro sus `cifrasHoy`. */
+function ctCifrasHoy(){
+  if(!window.CIFRAS || !CIFRAS.cifrasHoy) return {};
+  const hk = hoyLocal(), ym = hk.slice(0,7), nd = new Date(+ym.slice(0,4), +ym.slice(5,7), 0).getDate();
+  return CIFRAS.cifrasHoy(D.fin, ctTramo(+hk.slice(8), nd, ctMovs(ym), ym).hoy.saldo);
+}
+
 /* ── TU DINERO ESE DÍA ─────────────────────────────────────────────────────────────────────────
    Adán, 19-oct-2026: "conforme seleccione otro día, debes proyectar todo todo hasta mis inversiones,
    esto debido a que ya tenemos un trackeo muy completo de mis finanzas". En la columna del día, todo tu
@@ -9196,11 +8827,7 @@ function ctDineroDiaHtml(T, dd){
   const H0 = dd === 0 ? E : CIFRAS.estadoDia(hoyLocal());
   if(!H0) return '';
   // Para gastar: el riel de ese día y, para la diferencia, el de hoy.
-  let gastar0 = T.hoy.saldo;
-  if(dd !== 0){
-    const hk = hoyLocal(), hy = hk.slice(0,7), nd = new Date(+hy.slice(0,4), +hy.slice(5,7), 0).getDate();
-    gastar0 = ctTramo(+hk.slice(8), nd, ctMovs(hy), hy).hoy.saldo;
-  }
+  const gastar0 = dd === 0 ? T.hoy.saldo : ctCifrasHoy().gastar;
   const tuyo = x => x.gbm + x.cetes + x.deposito + x.btc, debes = x => x.bbva + x.auto + x.iphone + x.otras;
   const din = T.hoy.saldo + tuyo(E), din0 = gastar0 + tuyo(H0);
   const MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
@@ -9213,7 +8840,9 @@ function ctDineroDiaHtml(T, dd){
   const fila = (t, sub, v, c, cls) => '<div class="cdd-f'+(cls ? ' '+cls : '')+'"><span class="cdd-t">'+t+(sub ? '<small>'+sub+'</small>' : '')+'</span>'+
     '<b class="ct-num'+(privado?' fin-hidden':'')+'">'+v+'</b><span class="cdd-d'+(privado?' fin-hidden':'')+'">'+c+'</span></div>';
   const vuelve = window.CIFRAS.PROYECTO && CIFRAS.PROYECTO.rentaHasta ? (function(){ const p = CIFRAS.PROYECTO.rentaHasta.split('-').map(Number); return 'regresa el 1 '+MC[p[1] % 12]; })() : '';
-  const resta = dd === 0 ? '' : '<span class="cdd-nota">De hoy a ese día: <b class="'+(privado?'fin-hidden':'')+'">'+money(E.aBbva)+'</b> a la BBVA y <b class="'+(privado?'fin-hidden':'')+'">'+money(E.aGbm)+'</b> a GBM.</span>';
+  const bN = v => '<b class="'+(privado?'fin-hidden':'')+'">'+money(v)+'</b>';
+  const resta = dd === 0 ? '' : '<span class="cdd-nota">De hoy a ese día: '+bN(E.aBbva)+' a la BBVA y '+bN(E.aGbm)+' a GBM'+
+    (E.aSalida >= 1 ? ', y de GBM salen '+bN(E.aSalida)+' de la salida' : '')+'.</span>';
   return '<div class="cdd">'+cab+
     fila('Para gastar', 'la cuenta y el efectivo', money(T.hoy.saldo), cambio(T.hoy.saldo, gastar0)) +
     fila('GBM', 'lo invertido', money(E.gbm), cambio(E.gbm, H0.gbm)) +
@@ -9224,7 +8853,7 @@ function ctDineroDiaHtml(T, dd){
     fila('La BBVA', E.bbva > 0 ? 'en cero el '+dC(E.bbvaCero) : 'en cero', E.bbva > 0 ? '−'+money(E.bbva) : money(0), cambio(E.bbva, H0.bbva, true), E.bbva > 0 ? 'debe' : '') +
     fila('El auto y el iPhone', '', '−'+money(E.auto + E.iphone + E.otras), cambio(E.auto + E.iphone + E.otras, H0.auto + H0.iphone + H0.otras, true), 'debe') +
     fila('Patrimonio líquido', '', (din - debes(E) < 0 ? '−' : '')+money(Math.abs(din - debes(E))), cambio(din - debes(E), din0 - debes(H0)), 'tot') +
-    (dd === 0 ? '<span class="cdd-nota">Es lo de Finanzas hoy. Toca un día que viene y lo ves proyectado, con lo que el plan manda a la BBVA y a GBM.</span>' : resta)+
+    (dd === 0 ? '<span class="cdd-nota">Para gastar es la cifra del riel; lo demás, lo de Finanzas hoy. Toca un día que viene y lo ves proyectado con el plan.</span>' : resta)+
   '</div>';
 }
 
@@ -9455,7 +9084,7 @@ function renderCoachTablero(){
     ctSel = (hoyK.slice(0,7) === ctYM) ? hoyK : (conMov[0] || kDe(1));
   }
 
-  // ── El riel: la cifra que manda y como cae el dinero ──
+  // ── El riel: la cifra que manda y de dónde sale ──
   const nSel = +ctSel.slice(8);
   const T = ctTramo(nSel, nDias, MOV, ctYM);
   const MESN = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -9492,100 +9121,85 @@ function renderCoachTablero(){
         ? (didiR >= faltaR ? ' · Didi trae ≈'+numR(didiR)+': lo cubre si lo apartas'
                            : ' · Didi trae ≈'+numR(didiR)+': aún faltan '+numR(faltaR - didiR)+', recorta o mueve un pago')
         : '')
-    : '· te sobran '+numR(T.libreDia)+'/día hasta el '+T.fin;
+    : (nSel >= T.fin ? '· es con lo que cierras la quincena' : '· te sobran '+numR(T.libreDia)+'/día hasta el '+T.fin);
 
-  // La linea del saldo, escalonada: cada dia mantiene su altura hasta el siguiente.
-  const RW = 900, RH = 96;
-  const vals = T.serie.map(x=>x.saldo);
-  const hiR = Math.max.apply(null, vals), loR = Math.min.apply(null, vals);
-  const spanR = Math.max(1, hiR - loR);
-  const pasoR = RW / T.serie.length;
-  // Escalada al rango real del tramo: lo que importa es ver la CAIDA, no la distancia
-  // al cero. Con el tope en la nomina la linea salia plana y no decia nada.
-  const yDe = v => RH - 7 - ((v - loR)/spanR) * (RH - 24);
-  let linea = '', marcas = '';
-  T.serie.forEach(function(p, i){
-    const x0 = (i*pasoR).toFixed(1), x1 = ((i+1)*pasoR).toFixed(1), y = yDe(p.saldo).toFixed(1);
-    linea += (i===0 ? 'M '+x0+','+y : ' L '+x0+','+y) + ' L '+x1+','+y;
-    // Los dias que mueven de verdad el saldo llevan su marca de color.
-    if(p.sale > T.comeDia*3)
-      marcas += '<line x1="'+x0+'" y1="'+y+'" x2="'+x0+'" y2="'+RH+'" stroke="'+p.col+
-        '" stroke-width="1" stroke-dasharray="3 3" opacity=".6" vector-effect="non-scaling-stroke"></line>';
-  });
-  const xSel = (T.serie.map(x=>x.d).indexOf(nSel) * pasoR).toFixed(1);
-  const ySel = yDe(T.hoy.saldo).toFixed(1);
+  /* De dónde sale la cifra grande, como una cuenta que cuadra al peso. Adán, 21-oct-2026: "quítame la gráfica de cómo
+     cae el dinero desde que entró la nómina y rediseña después todo… revisa bien bien las métricas de los números para
+     que todo cuadre". Todo sale de la MISMA serie (ctTramo): el tramo arranca en cero el día de la nómina; lo que entró y
+     salió hasta el día elegido da el modelo, y si dijiste tu saldo real un día del tramo, la diferencia entre el modelo y
+     ese saldo es el ajuste —lo que se fue sin anotar, o lo que tenías de más—. Después, lo que sale hasta el cierre. */
+  const sumaS = (f, k) => T.serie.filter(f).reduce((s, p) => s + p[k], 0);
+  const ajR = T.ancla ? T.serie.filter(p => p.d <= T.ancla.dia).reduce((s, p) => s + p.ent - p.sale, 0) - T.ancla.saldo : 0;
+  const hastaSel = p => p.d <= nSel, trasSel = p => p.d > nSel;
+  const ajAntes = T.ancla && T.ancla.dia <= nSel ? ajR : 0, ajDesp = T.ancla && T.ancla.dia > nSel ? ajR : 0;
+  // Lo que sale en unos días del tramo, concepto por concepto y de la misma serie: el título del riel y la lista de la
+  // semana suman exactamente lo que restan, comida incluida.
+  const conceptos = function(f){
+    const o = {}, dia = {}, ps = T.serie.filter(f);
+    ps.forEach(function(p){
+      p.pagos.forEach(function(a){ o[a.t] = (o[a.t]||0) + (+a.monto||0); if(dia[a.t] === undefined) dia[a.t] = p.d; });
+      p.extras.filter(t => !t.credito).forEach(function(t){ o[t.desc] = (o[t.desc]||0) + (+t.amount||0); if(dia[t.desc] === undefined) dia[t.desc] = p.d; });
+    });
+    if(ps.length && T.comeDia > 0) o['Comer · '+ps.length+(ps.length === 1 ? ' día' : ' días')] = T.comeDia * ps.length;
+    return { o:o, dia:dia, orden:Object.keys(o).sort((a,b) => o[b]-o[a]) };
+  };
+  const tituloDe = f => { const c = conceptos(f); return c.orden.slice(0, 6).map(k => k+' '+money(c.o[k])).join(' · ')+(c.orden.length > 6 ? ' y '+(c.orden.length-6)+' más' : ''); };
+  const opR = (v, lbl, t) => '<div class="cr-op"'+(t ? ' title="'+esc(t)+'"' : '')+'><b class="ct-num'+(privado?' fin-hidden':'')+'" style="color:'+
+    (v > 0 ? 'var(--g)' : 'var(--text)')+'">'+(v < 0 ? '−' : '+')+money(Math.abs(Math.round(v)))+'</b><small>'+lbl+'</small></div>';
+  const igualR = '<i class="cr-igual" aria-hidden="true">=</i>';
+  const ajLbl = v => (v > 0 ? 'se fue sin anotar' : 'tenías de más')+' · tu saldo real del '+T.ancla.dia;
+  const diasEnt = T.serie.filter(p => hastaSel(p) && p.ent > 0).map(p => p.d);
+  const entroR = sumaS(hastaSel, 'ent'), salioR = sumaS(hastaSel, 'sale'), entraR = sumaS(trasSel, 'ent'), saleR = sumaS(trasSel, 'sale');
 
+  // Una sola cuenta de izquierda a derecha: entró − salió − sin anotar = TE QUEDA − lo que falta salir = CIERRAS CON.
   document.getElementById('coachRiel').innerHTML =
+    (entroR ? opR(entroR, (diasEnt.length === 1 && diasEnt[0] === T.ini ? 'tu nómina del ' : 'entró el ')+diasEnt.join(' y ')) : '')+
+    opR(-salioR, (dd > 0 ? 'sale ' : 'salió ')+ctRango(T.ini, nSel), tituloDe(hastaSel))+
+    (Math.abs(ajAntes) >= 1 ? opR(-ajAntes, ajLbl(ajAntes)) : '')+
+    igualR+
     '<div class="cr-hero">'+
       '<span class="ct-lbl" style="color:var(--cy)">'+dowSel.charAt(0).toUpperCase()+dowSel.slice(1)+' '+nSel+
         ' · '+cuenta+' · te queda</span>'+
-      '<span class="cr-big'+(privado?' fin-hidden':'')+'">'+money(T.hoy.saldo)+'</span>'+
+      '<span class="cr-big'+(privado?' fin-hidden':'')+'">'+(T.hoy.saldo < 0 ? '−' : '')+money(Math.abs(T.hoy.saldo))+'</span>'+
       '<span class="cr-estado">'+
         '<i class="cr-punto" style="background:'+estado.c+';box-shadow:0 0 9px '+estado.c+'"></i>'+
         '<span style="font-size:11px;font-weight:600;color:var(--text)">'+estado.t+'</span>'+
-        '<span style="font-size:10px;color:var(--text3)">'+detalleR+(T.ancla&&nSel>=T.ancla.dia?' · saldo real del '+T.ancla.dia:'')+'</span>'+
+        '<span style="font-size:10px;color:var(--text3)">'+detalleR+'</span>'+
       '</span>'+
     '</div>'+
-
-    '<div class="cr-graf">'+
-      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">'+
-        '<span class="ct-lbl">Cómo cae el dinero desde que entró la nómina</span>'+
-        '<span style="font-size:10px;color:var(--text3);white-space:nowrap">del '+T.ini+' al '+T.fin+' de '+MESN[M-1].toLowerCase()+'</span>'+
-      '</div>'+
-      '<div class="cr-svgw">'+
-        '<svg viewBox="0 0 '+RW+' '+RH+'" preserveAspectRatio="none">'+
-          '<defs><linearGradient id="crArea" x1="0" y1="0" x2="0" y2="1">'+
-            '<stop offset="0%" stop-color="var(--cy)" stop-opacity=".4"></stop>'+
-            '<stop offset="100%" stop-color="var(--cy)" stop-opacity=".02"></stop></linearGradient></defs>'+
-          '<path d="'+linea+' L '+RW+','+RH+' L 0,'+RH+' Z" fill="url(#crArea)"></path>'+
-          '<path d="'+linea+'" fill="none" stroke="var(--cy)" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>'+
-          marcas+
-          '<line x1="'+xSel+'" y1="0" x2="'+xSel+'" y2="'+RH+'" stroke="var(--cy)" stroke-width="1.5" opacity=".85" vector-effect="non-scaling-stroke"></line>'+
-          '<circle cx="'+xSel+'" cy="'+ySel+'" r="5" fill="var(--bg)" stroke="var(--cy)" stroke-width="2.5" vector-effect="non-scaling-stroke"></circle>'+
-        '</svg>'+
-        '<div class="cr-hit" style="grid-template-columns:repeat('+T.serie.length+',minmax(0,1fr))">'+
-          T.serie.map(p=>'<button type="button" onclick="ctVerDia(\''+kDe(p.d)+'\')" title="Día '+p.d+
-            ': te quedan '+money(p.saldo)+'"></button>').join('')+
-        '</div>'+
-      '</div>'+
-      '<div class="cr-dias" style="grid-template-columns:repeat('+T.serie.length+',minmax(0,1fr))">'+
-        T.serie.map(function(p){
-          const act = p.d === nSel;
-          return '<span style="color:'+(act?'var(--cy)':(p.ent>0?'var(--w)':'var(--text3)'))+
-            ';font-weight:'+(act?'700':'400')+'">'+p.d+'</span>';
-        }).join('')+
-      '</div>'+
-    '</div>'+
-
-    '<div class="cr-fin">'+
-      '<span class="ct-lbl">Cierras el '+T.fin+' con</span>'+
-      '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:18px;font-weight:700;line-height:1;color:'+
-        (T.cierre>=0?'var(--text)':'var(--r)')+'">'+money(T.cierre)+'</span>'+
-      '<span style="font-size:9.5px;color:var(--text3);line-height:1.25">'+(T.cierre < 0 ? 'Es lo que te falta para cerrar esta quincena' : 'Es lo que te sobra de esta quincena')+'</span>'+
-    '</div>';
+    (nSel < T.fin
+      ? (entraR ? opR(entraR, 'entra '+ctRango(nSel+1, T.fin)) : '')+
+        opR(-saleR, 'sale '+ctRango(nSel+1, T.fin), tituloDe(trasSel))+
+        (Math.abs(ajDesp) >= 1 ? opR(-ajDesp, ajLbl(ajDesp)) : '')+
+        igualR+
+        '<div class="cr-fin">'+
+          '<span class="ct-lbl">Cierras el '+T.fin+' con</span>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:18px;font-weight:700;line-height:1;color:'+
+            (T.cierre>=0?'var(--text)':'var(--r)')+'">'+(T.cierre < 0 ? '−' : '')+money(Math.abs(T.cierre))+'</span>'+
+          '<span style="font-size:9.5px;color:var(--text3);line-height:1.25">'+(T.cierre < 0 ? 'Es lo que te falta para cerrar esta quincena' : 'Es lo que te sobra de esta quincena')+'</span>'+
+        '</div>'
+      : '');
 
   // ── Columna 1: elige el día ──
-  // Cada celda lleva una barra VERTICAL cuyo alto es lo que sale ese día, y su color el
-  // concepto que manda. Los 23 días que solo cuestan comer quedan en una rayita, así los
-  // 8 que de verdad mueven el saldo saltan a la vista. Debajo, el mes como espectro y la
-  // lista de los pagos con su nombre (Adán, 2026-08-30: "solo abajo si ponme el nombre
-  // de las cosas").
+  /* Cada celda dice lo que sale ese día con su nombre y su importe (Adán, 2026-08-30: "ponme el nombre de las cosas") y
+     lleva una barra VERTICAL cuyo alto es lo que sale, del color del concepto que manda: los días de solo comer quedan en
+     una rayita y el 1 y el 15 se ven como los escalones que son. Sin la gráfica de balance (Adán, 21-oct-2026: "quita la
+     gráfica donde está lo del calendario y redistribuye todo"), la cuadrícula se queda con toda la columna. Lo que sale
+     cada día es la misma suma que la serie del riel: lo programado, lo anotado de contado y comer. */
   const comeDia = T.comeDia;
   const saleDe = {};
   const _fijosMes = ctFijosMes(nDias, ctYM);
   let topeDia = 1;
   for(let d=1; d<=nDias; d++){
     const ag = ctAgenda(d);
-    const pag = ag.filter(a=>!a.entra);
-    const may = pag.slice().sort((a,b)=>(+b.monto||0)-(+a.monto||0))[0];
-    const sal = pag.reduce((x,a)=>x+(+a.monto||0), 0) + comeDia +
-                ctSaleDeCaja(ctExtras(d, ctYM, MOV, _fijosMes));
+    const cosas = ag.filter(a=>!a.entra).map(a=>({t:a.t, m:+a.monto||0}))
+      .concat(ctExtras(d, ctYM, MOV, _fijosMes).filter(t=>!t.credito).map(t=>({t:t.desc||t.cat||'Gasto', m:+t.amount||0})))
+      .sort((a,b)=>b.m-a.m);
+    const sal = cosas.reduce((x,c)=>x+c.m, 0) + comeDia;
     saleDe[d] = { sale:sal, ent: ag.filter(a=>a.entra).reduce((x,a)=>x+(+a.monto||0),0),
-                  col: may ? ctColor(may.t) : '#ef4444',
-                  nom: may ? may.t : '', nPagos: pag.length };
+                  col: cosas.length ? ctColor(cosas[0].t) : '#ef4444', cosas:cosas };
     if(sal > topeDia) topeDia = sal;
   }
-  const altoDe = v => Math.max(4, Math.round(v/topeDia*25));
   // Lo que el plan manda este mes a GBM —los cobros de ahorro del calendario y lo que aparta Didi—
   // y, mientras la BBVA tenga saldo, lo que va a ella (CIFRAS.planBbva: de la quincena, de Didi y el
   // mínimo). Es la misma cuenta que la proyección de Coach; fuera del plan (antes de octubre de 2026
@@ -9596,6 +9210,8 @@ function renderCoachTablero(){
   const didiAh = enPlan && CIFRAS.desgloseMes ? Math.max(0, CIFRAS.desgloseMes(ctYM).didi) : 0;
   const bbvaMes = enPlan && CIFRAS.planBbva ? CIFRAS.planBbva().abonos.filter(a=>a.fecha.slice(0,7)===ctYM).reduce((s,a)=>s+a.monto,0) : 0;
 
+  // Importes de celda: en miles con un decimal desde $1,000 (20.5k, 6.7k), enteros abajo (650).
+  const kC = v => v >= 1000 ? (Math.round(v/100)/10)+'k' : String(Math.round(v));
   let celdas = '';
   for(let i=0;i<primero;i++) celdas += '<span class="ct-d vacio"></span>';
   for(let d=1; d<=nDias; d++){
@@ -9605,17 +9221,17 @@ function renderCoachTablero(){
     if(x.ent > 0) cls.push('fijo');
     if(k === ctSel) cls.push('sel');
     if(k === hoyK) cls.push('hoy');
+    const lineas = x.cosas.slice(0, 2).map(c => '<span class="ct-dl"><i style="background:'+ctColor(c.t)+'"></i><u>'+esc(ctCorto(c.t))+'</u>'+
+        '<b class="'+(privado?'fin-hidden':'')+'">'+kC(c.m)+'</b></span>').join('')+
+      (x.cosas.length > 2 ? '<span class="ct-dl mas">y '+(x.cosas.length-2)+' más</span>' : '');
     celdas += '<button type="button" class="'+cls.join(' ')+'" onclick="ctVerDia(\''+k+'\')" '+
-      'title="'+esc(x.nom ? x.nom+' · sale '+money(x.sale) : 'Solo comer · '+money(x.sale))+'">'+
-      '<span style="display:flex;align-items:baseline;justify-content:space-between;gap:2px">'+
-        '<span class="ct-dn">'+d+'</span>'+
-        (x.ent>0 ? '<span class="ct-dm'+(privado?' fin-hidden':'')+'" style="color:var(--g);font-weight:700;'+
-                     'font-size:8.5px;overflow:hidden">+'+(Math.round(x.ent/100)/10)+'k</span>' : '')+
-      '</span>'+
-      '<span class="ct-db"><i style="height:'+altoDe(x.sale)+'px;background:'+x.col+'"></i></span></button>';
+      'title="'+esc(x.cosas.map(c=>c.t+' '+money(c.m)).concat(comeDia > 0 ? ['comer '+money(comeDia)] : []).join(' · ')+' — sale '+money(x.sale)+
+        (x.ent > 0 ? ' · entra '+money(x.ent) : ''))+'">'+
+      '<span class="ct-dt"><span class="ct-dn">'+d+'</span>'+
+        (x.ent>0 ? '<span class="ct-dm'+(privado?' fin-hidden':'')+'">+'+kC(x.ent)+'</span>' : '')+'</span>'+
+      (lineas ? '<span class="ct-dc">'+lineas+'</span>' : '')+
+      '<span class="ct-db"><i style="height:max(3px,'+(x.sale/topeDia*100).toFixed(1)+'%);background:'+x.col+'"></i></span></button>';
   }
-
-
 
   document.getElementById('ctCal').innerHTML =
     '<div class="ct-h">'+
@@ -9628,15 +9244,7 @@ function renderCoachTablero(){
       '<button onclick="ctVerMes(1)" title="Mes siguiente">›</button></span>'+
     '</div>'+
     '<div class="ct-mes">'+['L','M','M','J','V','S','D'].map(x=>'<span class="ct-dow">'+x+'</span>').join('')+'</div>'+
-    '<div class="ct-mes">'+celdas+'</div>'+
-
-    // Bajo la cuadrícula ya no va el espectro del mes ni la lista de pagos: los dos
-    // repetían lo que la propia cuadrícula y la columna del día ya dicen. En su sitio,
-    // y con todo el alto que sobraba, la gráfica de balance (ver ctBalanceHTML).
-    '<div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;padding-top:12px;'+
-      'border-top:1px solid rgba(var(--ov),.08);flex:1;min-height:0">'+
-      ctBalanceHTML(ctYM)+
-    '</div>';
+    '<div class="ct-mes ct-celdas">'+celdas+'</div>';
 
   // ── Columna 2: el día ──
   // Primero lo que pagas ESE día, que es lo accionable; despues de donde sale el saldo,
@@ -9742,87 +9350,62 @@ function renderCoachTablero(){
       : '');
 
   // ── Columna 3: la semana ──
-  // Las semanas del tablero son tramos de la quincena (1–7, 8–14, 15–21, 22–fin), no de lunes a
-  // domingo: el cierre se nombra con el día real en que acaba («el miércoles 14»).
-  // El cierre se explica como una resta de tres lineas, no como una cifra suelta.
+  /* Las semanas del tablero son bloques de siete días desde el 1 (1–7, 8–14, 15–21, 22–28 y el resto), siempre dentro de
+     una quincena; el cierre se nombra con su día real («el miércoles 14»). La resta sale de la MISMA serie que el riel
+     (ctTramo): lo que traías, lo que entró, lo que sale —la lista de abajo, concepto por concepto, que suma lo mismo— y,
+     si tu saldo real cae en la semana, la diferencia con el modelo. Adán, 21-oct-2026: "revisa bien bien las métricas de
+     los números para que todo cuadre": la resta arrancaba en el saldo real del 19 y la lista era de toda la semana. */
   const sem = ctSemDe(nSel);
-  const qn = nSel <= 14 ? 1 : 2;
-  const Qz = ctQuincena(qn, nDias, MOV, ctYM);
-  const W = Qz.semanas.filter(function(x){ return x.n === sem; })[0] || Qz.semanas[0];
+  const wIni = Math.max(T.ini, (sem-1)*7+1), wFin = Math.min(T.fin, sem >= 5 ? nDias : sem*7);
+  const enSem = p => p.d >= wIni && p.d <= wFin;
+  const wSerie = T.serie.filter(enSem);
+  const wTraias = wIni > T.ini ? (T.serie.filter(p => p.d === wIni-1)[0] || {saldo:0}).saldo : 0;
+  const wEntro = sumaS(enSem, 'ent'), wSalio = sumaS(enSem, 'sale');
+  const wAj = T.ancla && T.ancla.dia >= wIni && T.ancla.dia <= wFin ? ajR : 0;
+  const wCierre = wSerie.length ? wSerie[wSerie.length-1].saldo : wTraias;
+  const wC = conceptos(enSem), wConc = wC.orden, wMax = wConc.length ? wC.o[wConc[0]] : 1;
   const TR = ctTareasSemana(ph, ctYM, sem);
-  // El cierre sale de la MISMA serie que el riel (ctTramo, anclada al saldo real de la cuenta si
-  // lo hay): ctQuincena solo modela desde la nómina y daba otro domingo (Adán, 21-sep-2026:
-  // "cierras el domingo, la cifra está mal"). Con ancla dentro de la semana, la resta arranca
-  // en el saldo real y solo cuenta lo que sale después de ese día.
-  const wSerie = T.serie.filter(function(p){ return p.d >= W.ini && p.d <= W.fin; });
-  const wAncla = (T.ancla && T.ancla.dia >= W.ini && T.ancla.dia <= W.fin) ? T.ancla : null;
-  const wCierre = wSerie.length ? wSerie[wSerie.length-1].saldo : W.saldo;
-  const wSalio = wSerie.filter(function(p){ return !wAncla || p.d > wAncla.dia; }).reduce(function(x,p){ return x + p.sale; }, 0);
-  const wEntro = wSerie.filter(function(p){ return !wAncla || p.d > wAncla.dia; }).reduce(function(x,p){ return x + p.ent; }, 0);
-  // Sin ancla, la primera línea es la nómina si entró esta semana ("Arrancaste con") o lo que
-  // traías si no entró nada ("Traías"), como siempre fue.
-  const wArranque = wAncla ? wAncla.saldo : (wEntro > 0 ? wEntro : wCierre + wSalio);
-
-  const wSale = {}, wDia = {};
-  const _fmSem = ctFijosMes(nDias, ctYM);
-  for(let d=W.ini; d<=W.fin; d++){
-    ctAgenda(d).forEach(function(a){
-      if(a.entra) return;
-      wSale[a.t] = (wSale[a.t]||0) + (+a.monto||0);
-      if(wDia[a.t] === undefined) wDia[a.t] = d;   // si cayera dos veces, la primera manda
-    });
-    // Y lo ya gastado, con el mismo nombre con el que se anotó en Finanzas.
-    ctExtras(d, ctYM, MOV, _fmSem).forEach(function(t){
-      if(t.credito) return;
-      wSale[t.desc] = (wSale[t.desc]||0) + (+t.amount||0);
-      if(wDia[t.desc] === undefined) wDia[t.desc] = d;
-    });
-  }
-  const wDias = W.fin - W.ini + 1;
-  // Por semana la comida va JUNTA (Adán, 2026-08-30: "aqui por sema si juntame cuanto
-  // gasto en comida, cena y desayuno juntos y no separados"). Los tres tiempos siguen
-  // desglosados en el panel del día, que es donde se decide qué comer.
-  if(W.come > 0) wSale['Comer · '+wDias+(wDias===1?' día':' días')] = W.come;
-  const wConc = Object.keys(wSale).sort((a,b)=>wSale[b]-wSale[a]);
-  const wMax = wConc.length ? wSale[wConc[0]] : 1;
+  // Dónde cae hoy respecto a la semana: un mes que ya pasó está todo atrás; uno que viene, todo adelante.
+  const hoyD = hoyK.slice(0,7) === ctYM ? +hoyK.slice(8) : (hoyK.slice(0,7) > ctYM ? 99 : 0);
+  const wPasada = wFin < hoyD, wFutura = wIni > hoyD;
+  const wNum = (v, signo) => '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700;color:'+
+    (signo === '+' ? 'var(--g)' : signo === '−' ? 'var(--r)' : 'var(--text)')+'">'+(signo || (v < 0 ? '−' : ''))+money(Math.abs(Math.round(v)))+'</span>';
+  const wFila = (lbl, num) => '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
+    '<span style="font-size:11.5px;color:var(--text2)">'+lbl+'</span>'+num+'</div>';
+  const wDiasEnt = wSerie.filter(p => p.ent > 0).map(p => p.d);
 
   document.getElementById('ctSem').innerHTML =
     '<div class="ct-h"><div style="display:flex;flex-direction:column;gap:2px;min-width:0">'+
-      '<span class="ct-lbl" style="color:var(--p)">Esta semana</span>'+
-      '<span class="ct-tit">Del '+W.ini+' al '+W.fin+'</span>'+
-    '</div><span class="ct-num" style="font-size:9.5px;color:var(--text3);white-space:nowrap">'+W.n+' de '+Qz.semanas.length+'</span></div>'+
+      '<span class="ct-lbl" style="color:var(--p)">'+(wPasada || wFutura ? 'Esa semana' : 'Esta semana')+'</span>'+
+      '<span class="ct-tit">'+ctRango(wIni, wFin).replace(/^./, c => c.toUpperCase())+'</span>'+
+    '</div><span class="ct-num" style="font-size:9.5px;color:var(--text3);white-space:nowrap">semana '+sem+' de '+ctSemDe(nDias)+'</span></div>'+
 
     '<div style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:12px;'+
       'background:rgba(var(--p-rgb,176,110,255),.08);border:1px solid rgba(var(--ov),.12)">'+
-      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
-        '<span style="font-size:11.5px;color:var(--text2)">'+(wAncla?'Saldo real el '+wAncla.dia:(wEntro>0?'Arrancaste con':'Traías'))+'</span>'+
-        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700'+(wAncla?';color:var(--g)':'')+'">'+
-          money(wArranque)+'</span></div>'+
-      // Con el saldo real del último día de la semana ya no queda nada por salir: esa fila sobra.
-      ((wAncla&&wAncla.dia>=W.fin)?'':
-      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
-        '<span style="font-size:11.5px;color:var(--text2)">'+(wAncla?'Se va '+ctRango(wAncla.dia+1,W.fin):'Se fue en la semana')+'</span>'+
-        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700;color:var(--r)">−'+money(wSalio)+'</span></div>')+
+      (wIni > T.ini ? wFila('Traías del '+(wIni-1), wNum(wTraias)) : '')+
+      (wEntro ? wFila('Entró tu nómina, el '+wDiasEnt.join(' y '), wNum(wEntro, '+')) : '')+
+      wFila((wPasada ? 'Salió' : 'Sale')+' en la semana', wNum(wSalio, '−'))+
+      (Math.abs(wAj) >= 1 ? wFila(wAj > 0 ? 'Se fue sin anotar · tu saldo real del '+T.ancla.dia : 'Tenías de más · tu saldo real del '+T.ancla.dia, wNum(wAj, wAj > 0 ? '−' : '+')) : '')+
       '<div style="height:1px;background:rgba(var(--ov),.12)"></div>'+
       '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
-        '<span style="font-size:12.5px;font-weight:600">Cierras el '+ctDiaNombre(W.fin)+' con</span>'+
+        '<span style="font-size:12.5px;font-weight:600">'+(wPasada ? 'Cerraste el ' : 'Cierras el ')+ctDiaNombre(wFin)+' con</span>'+
         '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:22px;font-weight:700;line-height:1;color:'+
-          (wCierre>=0?'var(--p)':'var(--r)')+'">'+money(wCierre)+'</span></div>'+
+          (wCierre>=0?'var(--p)':'var(--r)')+'">'+(wCierre < 0 ? '−' : '')+money(Math.abs(wCierre))+'</span></div>'+
     '</div>'+
 
     (wConc.length
       ? '<div style="display:flex;flex-direction:column;gap:7px">'+
         '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
-          '<span class="ct-lbl">En qué se fue</span>'+
-          '<span style="font-size:9.5px;color:var(--text3)">de mayor a menor</span></div>'+
+          '<span class="ct-lbl">'+(wPasada ? 'En qué se fue' : wFutura ? 'En qué se va a ir' : 'En qué se va')+'</span>'+
+          '<span style="font-size:9.5px;color:var(--text3)">de mayor a menor · suman <b class="ct-num'+(privado?' fin-hidden':'')+'" style="color:var(--text2)">'+money(wSalio)+'</b></span></div>'+
         wConc.map(function(k){
           const col = ctColor(k);
-          const dia = wDia[k];
+          const dia = wC.dia[k];
           const cuerpo = '<div class="ct-cat-h">'+
             '<span class="ct-cat-n"><i style="background:'+col+'"></i>'+esc(k)+
               (dia!==undefined ? '<em style="font-style:normal;font-size:9.5px;color:var(--text3);margin-left:3px">día '+dia+'</em>' : '')+'</span>'+
-            '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700">'+money(wSale[k])+'</span></div>'+
-            '<div class="ct-cat-b"><i style="width:'+Math.round(wSale[k]/wMax*100)+'%;background:'+col+'"></i></div>';
+            '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700">'+money(wC.o[k])+'</span></div>'+
+            '<div class="ct-cat-b"><i style="width:'+Math.round(wC.o[k]/wMax*100)+'%;background:'+col+'"></i></div>';
           return dia!==undefined
             ? '<button type="button" class="ct-cat" onclick="ctVerDia(\''+kDe(dia)+'\')" title="Ver el día '+dia+'">'+cuerpo+'</button>'
             : '<div class="ct-cat">'+cuerpo+'</div>';
@@ -9988,9 +9571,9 @@ function renderCoach(){
    auditar, en curso con la marca de hoy, por venir)—; tocar un mes abre la ventana de las fases en ese
    mes (`cfbAbrir`). Abajo, lo que importa de la fase hoy: ESTE MES —lo que llevas de su checklist, lo
    que te toca y cuándo se audita (`CIFRAS.planMes`, `fzmFicha`)—, LAS CIFRAS DEL MES —sus metas contra lo
-   de hoy (`CIFRAS.cifrasHoy`), con la regla de su ficha: desde la última semana se pintan en rojo— y EL
-   CHECKPOINT —la fecha que cierra la fase, lo que pide y lo que GBM y los CETES tendrán ese día si sigues
-   el plan (`CIFRAS.estadoDia`)—. Toda la banda abre la ventana de las fases. */
+   de hoy (`ctCifrasHoy`), con la regla de su ficha: desde la última semana se pintan en rojo— y EL
+   CHECKPOINT —la fecha que cierra la fase, lo que pide y lo que da tu ritmo ese mes en el plan (`PROYECCION`), con lo
+   que falta o sobra—. Toda la banda abre la ventana de las fases. */
 function cfbHtml(ph, DF){
   const C = window.CIFRAS, i = PHASES.indexOf(ph), A = fzmAud(), checks = rawGet('coach_checks_v1', {}) || {};
   const hoy = new Date(); hoy.setHours(0,0,0,0);
@@ -10030,7 +9613,7 @@ function cfbHtml(ph, DF){
     (toca ? '<span class="cfb-toca"><small>Te toca</small>'+fzmPartir(toca.txt).t+'</span>'
           : '<span class="cfb-toca"><small>Listo</small>Todo el checklist del mes está hecho: queda sostener lo de cada semana.</span>')+'</div>';
   // Las cifras del mes contra lo de hoy, con la regla de su ficha.
-  const vivo = C.cifrasHoy(D.fin), juzga = dAud <= 7;
+  const vivo = ctCifrasHoy(), juzga = dAud <= 7;
   const CORTO = { dinero: 'Tu dinero', bbva: 'La BBVA', liquido: 'Patrimonio líquido' };
   const cifras = '<div class="cfb-b"><span class="cfb-k">Las cifras de '+fzmMesMin(hoyYM)+'<em>meta al '+finMes.getDate()+'</em></span>'+
     (P.metas || []).map(function(m){
@@ -10038,16 +9621,19 @@ function cfbHtml(ph, DF){
       return '<span class="cfb-n"><span>'+(CORTO[m.k] || m.t)+'</span><b class="'+(bien ? 'bien' : tiene && juzga ? 'mal' : '')+'">'+(tiene ? (real < 0 ? '−' : '')+num(Math.abs(real)) : '—')+
         '</b><i>de '+(m.meta < 0 ? '−' : '')+num(Math.abs(m.meta))+'</i></span>';
     }).join('')+'</div>';
-  // El checkpoint: su fecha, lo que pide y lo que GBM y los CETES tendrán ese día siguiendo el plan.
-  const finK = fzmYM(ph.end)+'-'+String(ph.end.getDate()).padStart(2,'0');
-  const E = C.estadoDia ? C.estadoDia(finK) : null;
+  // El checkpoint: su fecha, lo que pide y lo que da tu ritmo ese mes en el plan (`PROYECCION`): la misma cifra que la meta
+  // de la fase —«tu ritmo da…»—, Mis Metas y la ventana de las fases, con lo que falta o sobra contra lo que pide (Adán,
+  // 21-oct-2026: "todo cuadre"; la banda decía $133,504 y la meta de la fase $129,532).
+  const filaCp = C.PROYECCION ? C.PROYECCION.meses.filter(m => m.mes === fzmYM(ph.end))[0] : null;
+  const pideCp = ((cortesSalidaDash().filter(c => c.mes === fzmYM(ph.end))[0]) || {}).pide || 0;
   // Lo que pide, en su primera cláusula («solicitud enviada y GBM contra {{marzoParaSalida}}», ya resuelto); si queda muy corta, su primera
   // frase. El texto completo vive en la ventana de las fases, que abre la banda.
   const cpTodo = ph.checkpoint ? C.texto(String(ph.checkpoint)).replace(/^[^:]{0,40}:\s*/, '') : '';
   const cp1 = (cpTodo.split(/,\s|\s—|\.\s/)[0] || '').trim(), cp = cp1.length >= 20 ? cp1 : cpTodo.split(/\.\s/)[0];
   const check = '<div class="cfb-b"><span class="cfb-k">El checkpoint · '+dC(ph.end)+'<em>'+dias(Math.max(0, DF.quedan))+'</em></span>'+
     (cp ? '<span class="cfb-cp">'+cp+'</span>' : '')+
-    (E ? '<span class="cfb-v"><b>'+num(E.gbm + E.cetes)+'</b>en GBM y CETES ese día, si sigues el plan</span>' : '')+'</div>';
+    (filaCp ? '<span class="cfb-v"><b>'+num(filaCp.alemania)+'</b>en GBM con tu ritmo'+
+      (pideCp ? ' · <em class="'+(filaCp.alemania >= pideCp ? '' : 'falta')+'">'+(filaCp.alemania >= pideCp ? 'sobran ' : 'faltan ')+num(Math.abs(pideCp - filaCp.alemania))+'</em>' : '')+'</span>' : '')+'</div>';
   return arriba+'<div class="cfb-abajo">'+esteMes+cifras+check+'</div>';
 }
 // Un mes de la banda abre la ventana de las fases en esa fase y en ese mes.
@@ -12773,18 +12359,24 @@ function mpRealHyrox(){
 // La maestría: el GBM que proyecta el plan al cerrar cada mes hasta irte, contra lo que pide cada corte de la
 // salida (`marzoParaSalida`, `mayoParaSalida` y los dos de `PROYECCION.cortes`), con lo que falta en cada uno;
 // lo que tienes hoy contra lo que el plan espera este mes, y el alemán que pide Esslingen.
+// Los cortes de la salida con lo que pide cada uno: el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la
+// salida completa. Los usan el dinero de la salida de Mis Metas y el checkpoint de la banda del Plan Maestro.
+function cortesSalidaDash(){
+  if(!window.CIFRAS||!CIFRAS.PROYECCION) return [];
+  const C=CIFRAS.PROYECCION.cortes||{}, F1=PHASES.find(p=>p.tag==='Fase 1'), dec=String(CIFRAS.n('decisionMaestria')||'').slice(0,7);
+  return [
+    {mes:F1?mpYM(F1.end):'',pide:+CIFRAS.n('marzoParaSalida')||0,t:'Cierre de la Fase 1'},
+    {mes:dec,pide:+CIFRAS.n('mayoParaSalida')||0,t:'El día de decidir'},
+    C.junio?{mes:C.junio.mes,pide:C.junio.pide,t:'La cuenta bloqueada'}:null,
+    C.salida?{mes:C.salida.mes,pide:C.salida.pide,t:'La salida completa'}:null
+  ].filter(c=>c&&c.mes&&c.pide>0);
+}
 function mpRealSalida(){
   if(!window.CIFRAS||!CIFRAS.PROYECCION) return '';
   const P=CIFRAS.PROYECCION, ult=CIFRAS.PROYECTO.ultimoMesMexico, hoyYM=hoyLocal().slice(0,7);
   const meses=P.meses.filter(m=>m.mes>=hoyYM&&m.mes<=ult);
   if(!meses.length) return '';
-  const C=P.cortes||{}, F1=PHASES.find(p=>p.tag==='Fase 1'), f1=F1?mpYM(F1.end):'', dec=String(CIFRAS.n('decisionMaestria')||'').slice(0,7);
-  const cortes=[
-    {mes:f1,pide:+CIFRAS.n('marzoParaSalida')||0,t:'Cierre de la Fase 1'},
-    {mes:dec,pide:+CIFRAS.n('mayoParaSalida')||0,t:'El día de decidir'},
-    C.junio?{mes:C.junio.mes,pide:C.junio.pide,t:'La cuenta bloqueada'}:null,
-    C.salida?{mes:C.salida.mes,pide:C.salida.pide,t:'La salida completa'}:null
-  ].filter(c=>c&&c.pide>0&&meses.some(m=>m.mes===c.mes));
+  const cortes=cortesSalidaDash().filter(c=>meses.some(m=>m.mes===c.mes));
   const max=Math.max.apply(null,meses.map(m=>m.alemania).concat(cortes.map(c=>c.pide)))*1.06;
   const h=v=>Math.max(0,Math.min(100,v/max*100)).toFixed(1)+'%', nom=ym=>MP_MES[+ym.slice(5,7)-1];
   const cols=meses.map(m=>{
@@ -12792,7 +12384,9 @@ function mpRealSalida(){
     return '<div class="mpg-c" title="'+esc('Al cerrar '+nom(m.mes)+' '+m.mes.slice(0,4)+': '+money(m.alemania)+(c?' · '+c.t+' pide '+money(c.pide):''))+'">'+
       (c?'<span class="mpg-pide" style="bottom:'+h(c.pide)+'"></span>':'')+'<i class="'+(corto?'bajo':c?'ok':'')+'" style="height:'+h(m.alemania)+'"></i></div>';
   }).join('');
-  const real=fondoMaestria().total, plan=meses[0].alemania;
+  // Hoy contra el plan con la misma definición que la banda del Plan Maestro: tu dinero —con el depósito del depa y lo que
+  // tienes para gastar— contra lo que el plan pide al cerrar el mes (su GBM más el depósito).
+  const real=ctCifrasHoy().dinero||0, plan=meses[0].alemania+(meses[0].deposito||0);
   let x='<div class="md-hair"></div><div class="md-rec-hd"><span class="md-lbl">El dinero de la salida</span><small>GBM al cerrar cada mes</small></div>'+
     '<div class="mpg" role="img" aria-label="'+esc('GBM proyectado contra lo que pide cada corte de la salida')+'"><div class="mpg-cols">'+cols+'</div></div>'+
     '<div class="mpg-x">'+meses.map(m=>'<span>'+nom(m.mes)+'</span>').join('')+'</div>'+
@@ -12802,7 +12396,7 @@ function mpRealSalida(){
       return '<div class="mps-f"><span>'+esc(c.t)+'<small>'+nom(c.mes)+' '+c.mes.slice(0,4)+' · pide '+money(c.pide)+'</small></span>'+
         '<b class="'+(d<0?'mal':'ok')+'">'+(d<0?'faltan ':'sobran ')+money(Math.abs(d))+'</b></div>';
     }).join('')+'</div>'+
-    '<div class="mpr-nota">Hoy tienes <b>'+money(real)+'</b>; el plan espera '+money(plan)+' al cerrar '+nom(meses[0].mes)+'.'+
+    '<div class="mpr-nota">Tu dinero hoy, con el depósito y lo que tienes para gastar: <b>'+money(real)+'</b>; el plan pide '+money(plan)+' al cerrar '+nom(meses[0].mes)+'.'+
       (cortes.some(c=>((meses.filter(m=>m.mes===c.mes)[0]||{}).alemania||0)<c.pide)?' Lo que cierra la diferencia: '+esc(CIFRAS.texto('{{extraSalida}}'))+' más al mes de ingreso nuevo.':'')+'</div>';
   // El alemán que pide Esslingen: la lección del Kapitel y el vocabulario del nivel de la etapa.
   const t=typeof alemanLeccionHoy==='function'?alemanLeccionHoy():null;
@@ -13607,7 +13201,7 @@ function faseMesHTML(i, ym){
 function fzmCifrasHTML(P, a, e, cerrable){
   const M = P.metas || []; if(!M.length) return '';
   const foto = e === 'ok' ? fzmFoto(a) : null;
-  const vivo = !foto && (e === 'hoy' || e === 'pend') ? CIFRAS.cifrasHoy(D.fin) : null;
+  const vivo = !foto && (e === 'hoy' || e === 'pend') ? ctCifrasHoy() : null;
   const juzga = !!foto || (!!vivo && cerrable);
   const filas = M.map(function(m){
     const meta = foto && typeof foto.meta[m.k] === 'number' ? foto.meta[m.k] : m.meta;
@@ -13767,7 +13361,7 @@ function fzaEvalua(ym, P, F, a){
     hN++; hS += FZA_HAB.find(x => x.k === v).v;
     if(v === 'aveces' || v === 'nunca') flojos.push(h);
   });
-  const foto = fzmAuditado(a) ? fzmFoto(a) : null, vivo = !foto && fzaPuedeMedir(ym) ? C.cifrasHoy(D.fin) : null;
+  const foto = fzmAuditado(a) ? fzmFoto(a) : null, vivo = !foto && fzaPuedeMedir(ym) ? ctCifrasHoy() : null;
   let cE = 0, cN = 0; const causas = {};
   (P.metas || []).forEach(function(m){
     const real = foto ? foto.real[m.k] : vivo ? vivo[m.k] : null; if(typeof real !== 'number') return;
@@ -13817,7 +13411,7 @@ function fzaHTML(i, ym, ro){
     return '<div class="fza-fila"><div class="fza-q">'+(h.k ? '<em class="fzc-k">'+esc(h.k)+'</em>' : '')+'<b>'+h.t+'</b></div>'+
       '<div class="fza-ops">'+FZA_HAB.map(o => btn(v === o.k, o.t, 'fzaHabito('+Y+','+fzmQ(h.id)+','+fzmQ(o.k)+','+i+')', o.k === 'nunca' ? 'no' : o.k === 'aveces' ? 'medias' : 'ok')).join('')+'</div></div>';
   }).join('');
-  const foto = fzmAuditado(a) ? fzmFoto(a) : null, vivo = !foto && fzaPuedeMedir(ym) ? C.cifrasHoy(D.fin) : null;
+  const foto = fzmAuditado(a) ? fzmFoto(a) : null, vivo = !foto && fzaPuedeMedir(ym) ? ctCifrasHoy() : null;
   const s4 = (P.metas || []).map(function(m){
     const real = foto ? foto.real[m.k] : vivo ? vivo[m.k] : null;
     if(typeof real !== 'number') return '<div class="fza-fila"><div class="fza-q"><b>'+m.t+'</b></div><span class="fza-ev">no se puede medir: pasaron más de diez días del cierre</span></div>';
@@ -13888,7 +13482,7 @@ function fzaCerrar(i, ym){
   rawSet('coach_checks_v1', checks);
   let cifras = null;
   if(P.metas.length && fzaPuedeMedir(ym)){
-    const r = C.cifrasHoy(D.fin), real = {}, meta = {};
+    const r = ctCifrasHoy(), real = {}, meta = {};
     P.metas.forEach(m => { real[m.k] = r[m.k]; meta[m.k] = m.meta; });
     cifras = { real: real, meta: meta, medido: hoyLocal() };
   }
@@ -15622,7 +15216,7 @@ function showSlide(i){
      de RENDERS[i]() para que el primer pintado ya salga en el mes correcto. Mismo trato que
      recibe "Mi Día" en la línea de arriba, solo que aquí se reinicia al entrar y no al salir:
      así también queda limpio si el estado se ensució por otra vía. */
-  if(cur!==1 && i===1){ ctYM=null; ctSel=null; ctBalVer=null; ctBalMes=null; ctHechasAbierto=false; }
+  if(cur!==1 && i===1){ ctYM=null; ctSel=null; ctHechasAbierto=false; }
   loadAll();
   RENDERS[i]();
   renderQuickApps();

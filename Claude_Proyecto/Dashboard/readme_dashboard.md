@@ -703,13 +703,16 @@ pequeñas, aquí ponme info importante… pon algo de las fases"*) va en dos fil
 - **Abajo, lo que importa de la fase hoy**, en tres bloques: **este mes** —cuántas tareas de su
   checklist llevas, la siguiente que te toca (su primera frase) y cuándo se audita, o *falta auditar
   septiembre* si quedó un mes atrás; de `CIFRAS.planMes` y `fzmFicha`—; **las cifras del mes** —sus
-  metas (tu dinero, la BBVA, el patrimonio líquido) contra lo de hoy (`CIFRAS.cifrasHoy`), en verde
-  las que van en meta y, desde la última semana, en rojo las que no—, y **el checkpoint** —la fecha
-  que cierra la fase, lo que pide en su primera cláusula —*solicitud enviada y GBM contra* `{{marzoParaSalida}}`; el texto completo, en la ventana de las fases— y lo que tendrán GBM y los CETES ese día si sigues el plan
-  (`CIFRAS.estadoDia`)—.
+  metas (tu dinero, la BBVA, el patrimonio líquido) contra lo de hoy (`ctCifrasHoy`, ver *Las cifras de hoy, una
+  sola cuenta*), en verde las que van en meta y, desde la última semana, en rojo las que no—, y **el checkpoint**
+  —la fecha que cierra la fase, lo que pide en su primera cláusula —*solicitud enviada y GBM contra*
+  `{{marzoParaSalida}}`; el texto completo, en la ventana de las fases— y lo que da tu ritmo ese mes en el plan
+  (`PROYECCION`), con lo que falta o sobra contra lo que pide su corte (`cortesSalidaDash`): *$129,532 en GBM con
+  tu ritmo · faltan $56,173*, la misma cifra que la meta de la fase (*tu ritmo da…*), Mis Metas y la ventana de
+  las fases—.
 
-Medido a 2048×1040: la banda mide 156 px de alto (antes una fila de 46), la ruta 41 (antes 52) y el
-riel 69 (antes 77). Bajo 1180 px los meses bajan a su propia fila; bajo 760, los tres bloques van uno
+Medido a 2048×1040: la banda mide 157 px de alto (antes una fila de 46), la ruta 41 (antes 52) y el
+riel 66 (antes 77). Bajo 1180 px los meses bajan a su propia fila; bajo 760, los tres bloques van uno
 debajo de otro, y a 390 px no hay desborde.
 
 **Toda la banda es un botón**: abre la ventana de las fases (`abrirKpi('fases')`, en
@@ -726,6 +729,8 @@ Ningún importe está escrito en el código del tablero:
 | Color de cada categoría | `CT_COLOR`, los mismos hex que `CCOLORS` de Finanzas |
 | Pagos programados de un día | `CIFRAS.CALENDARIO.cobros` + el `day` de cada deuda viva + los abonos de la BBVA de `CIFRAS.planBbva` (`ctAgenda`) |
 | Tu estrategia de hoy | `CIFRAS.bbvaEstado()` (el saldo vivo de la BBVA y su plan) + el riel (`ctTramo`) |
+| Las cifras de hoy (tu dinero, la BBVA, el patrimonio) | `ctCifrasHoy()` → `CIFRAS.cifrasHoy(f, gastar)`, con lo que el riel dice que hay para gastar |
+| El checkpoint de la fase | `CIFRAS.PROYECCION` (lo que da tu ritmo ese mes) contra su corte de `cortesSalidaDash()` |
 | Tareas y fase | `PHASES`, con su estado en `coach_checks_v1` |
 | Costo de comer, por día | `CIFRAS.PRECIOS_SUPER` (aquí, `LISTA_COMPRAS_PRECIOS`) × `CIFRAS.LISTA_COMPRAS.comida` (`ctComida`) |
 
@@ -743,36 +748,47 @@ Desde octubre de 2026 el calendario trae también **el plan**: el ahorro de cada
 
 ### El mes
 
-Cada celda lleva el importe redondeado a miles (con un decimal: `20.5k`, no `21k`; se oculta bajo
-1180 px), una barra verde por lo que entró y otra roja/ámbar por lo que salió, con altura
-proporcional al día más caro del mes, y borde ámbar cuando cae un pago fijo. Las flechas ‹ ›
-cambian de mes; **al abrir un mes que no es el actual se elige el primer día con movimiento**.
+Sin la gráfica de balance que tenía debajo (Adán, 21-oct-2026: *"quita la gráfica donde está lo del calendario y
+redistribuye todo"*), la cuadrícula se queda con todo el alto de la columna (celdas de 100×92 px a 2048×1040).
+Cada celda dice **lo que sale ese día con su nombre y su importe** —los dos que más pesan, *Renta 11.3k* y *Datos
+650*, y *y 3 más*; el nombre corto sale de `ctCorto` y el completo va en el título— y **lo que entra** en verde
+(*+20.5k*, en miles con un decimal), con su **barra vertical** pegada al borde derecho: su alto es lo que sale ese
+día —lo programado, lo anotado de contado y comer: la misma suma que la serie del riel— y su color, el del concepto
+que manda (`ctColor`; *cena* va como palabra: *quincena* la contiene y la BBVA salía con el color de la cena).
+Borde ámbar el día que entra la nómina. La columna es un contenedor (`.ct-cal`, `container-type`): bajo 640 px de
+ancho —una pantalla de 1600 o de 1366— la celda deja el punto de color y el importe, y bajo 430 —el teléfono—, el
+día y la barra. Las flechas ‹ › cambian de mes; **al abrir un mes que no es el actual se elige el primer día con
+movimiento**.
 
 Bajo el nombre del mes, mientras dure el plan en México: **a dónde va el dinero ese mes**. Con la BBVA en su plan, *A la BBVA* —todo lo que le toca ese mes: de las quincenas, de Didi y el mínimo— y, si pasa de $100, *a GBM*; después, *A GBM* —los cobros con `ahorro` del calendario más lo que Didi aparta, de `desgloseMes`— y *Didi*. Es la misma cuenta que la proyección de Coach.
 
 ### El riel: una sola cifra manda
 
-Una banda a lo ancho encima de las tres columnas, para que no compitan tres cifras:
+Una banda a lo ancho encima de las tres columnas: **la quincena como una sola cuenta, de izquierda a derecha y al
+peso** (Adán, 21-oct-2026: *"quítame la gráfica de cómo cae el dinero desde que entró la nómina y rediseña después
+todo… revisa bien bien las métricas de los números para que todo cuadre"*):
 
 ```
-MARTES 18 · HACE 11 DÍAS · TE QUEDA      CÓMO CAE EL DINERO…        CIERRAS EL 31 CON
-$10,336                                   ╲__                        $8,674
-● Vas holgado · te sobran $667/día            ╲______                Es lo que te sobra
-                                          15 16 17 18 … 31            de esta quincena
++$20,500     −$15,077       −$1,445               = MIÉRCOLES 21 · HOY · TE QUEDA   −$1,110       = CIERRAS EL 31 CON
+tu nómina    salió del 15   se fue sin anotar ·     $3,978                         sale del 22     $2,868
+del 15       al 21          tu saldo real del 19    ● Vas holgado · $287/día        al 31          te sobra de la quincena
 ```
 
-`ctTramo(nSel, nDias)` es el único cálculo: recorre la quincena desde que entra la nómina,
-arrastra el saldo día a día y devuelve la serie; de ahí salen el número grande, la línea, el
-cierre. **El estado en palabras** (`Vas holgado` / `Vas justo` /
-`Te vas a pasar`) compara lo que sobra al cerrar el tramo contra lo que cuesta comer una semana;
-`$667/día` es ese sobrante entre los días que quedan. **La línea está escalada al rango del
-tramo, no al cero**: así se ve el escalón del día 15. Los 17 días son botones.
+`ctTramo(nSel, nDias, mov, ym)` es el único cálculo: recorre la quincena desde que entra la nómina,
+arrastra el saldo día a día y devuelve la serie; de ahí salen la cifra grande, cada término de la cuenta, el
+cierre, lo que sale cada día en el mes y la resta de la semana. Lo que entró y salió hasta el día elegido da el
+modelo; **si dijiste tu saldo real un día del tramo, la diferencia con el modelo ese día es un término más** —*se
+fue sin anotar* o *tenías de más*—, antes de la cifra grande si ese día ya pasó y después si viene. Cada término
+lleva en su título lo que suma, concepto por concepto. **El estado en palabras** (`Vas holgado` / `Vas justo` /
+`Te vas a pasar`) compara lo que sobra al cerrar el tramo contra lo que cuesta comer una semana; `$287/día` es
+ese sobrante entre los días que quedan, y el último día del tramo dice *es con lo que cierras la quincena*. Con los
+datos reales del 21-oct-2026 la cuenta cuadra al peso en 17 días de cinco meses.
 
 **El saldo real manda sobre el modelo.** Los activos líquidos de Finanzas —la Cuenta BBVA (`ac013`) y el
 Efectivo (`ac014`)— llevan la `fecha` de su saldo; los que caen dentro del tramo se suman y
 `ctAnclaReal()` ancla la serie en el más reciente: ese día vale lo que tienes para gastar y de ahí en
-adelante se resta lo previsto (antes de esa fecha sigue el modelo). El estado lo dice (*saldo real del
-19*). Adán,
+adelante se resta lo previsto (antes de esa fecha sigue el modelo). La cuenta lo dice (*se fue sin anotar · tu
+saldo real del 19*). Adán,
 21-sep-2026: *"esa cifra está mal, ya te había dicho que me quedan 1200"*, y el 19-oct-2026: *"tengo en
 mi tarjeta de débito 1,700 y 2500 en efectivo"*. Cuando reporta un saldo, va al maestro como migración
 con su fecha; si lo edita en Finanzas, `saveActivo` pone la fecha sola.
@@ -784,72 +800,28 @@ serie; solo entra en el plan. Bajo «Cierras el 14 con» la nota dice *te falta*
 negativo. La BBVA con plan sale con sus abonos de `planBbva`, no con su mínimo ni su total (ver
 `agendaDia` en `DATOS-MAESTROS.md`).
 
-Alto del riel: 69 px a 2048×1040. Lo pone `.cr-hero` (un cuarto del ancho, hasta 430 px, con la cifra grande
-en `clamp(18px,1.6vw,22px)`; `.cr-estado` envuelve con interlineado 1.25). En la ruta, el padding
-inferior de cada paso es el hueco de su barrita (`.crb-b`, absoluta).
+Alto del riel: 66 px a 2048×1040. Cada término es un `.cr-op` del mismo ancho; la cifra grande (`.cr-hero`, vez y
+media, con la cifra en `clamp(18px,1.6vw,22px)`) y el cierre (`.cr-fin`) van tras su `=` (`.cr-igual`). Bajo 1180 px
+la cifra grande sube a su propia fila y la cuenta sigue debajo, de tres en tres; en el teléfono, de dos en dos. En
+la ruta, el padding inferior de cada paso es el hueco de su barrita (`.crb-b`, absoluta).
 
-`ctQuincena` **deja a Didi fuera**: ahí la pregunta es cuánto puedes gastar esta quincena, y un
-ingreso variable es un colchón que puede no llegar. En el balance de 6 meses sí entra.
+**El riel deja a Didi fuera**: la pregunta es cuánto puedes gastar esta quincena, y un ingreso variable es un
+colchón que puede no llegar; solo entra en el plan cuando la quincena no cierra.
 
 ### La pantalla se reinicia al entrar
 
-Entrar al slide pone en `null` todo lo que se pueda haber dejado tocado —`ctYM`, `ctSel`,
-`ctBalVer`, `ctBalMes`, `ctHechasAbierto`— y `renderCoachTablero()` los recalcula a hoy. Va en
+Entrar al slide pone en `null` todo lo que se pueda haber dejado tocado —`ctYM`, `ctSel` y
+`ctHechasAbierto`— y `renderCoachTablero()` los recalcula a hoy. Va en
 `showSlide()` **antes** de `RENDERS[i]()`, para que el primer pintado ya salga en el mes actual.
 
 ### Elige el día
 
-Cada celda lleva una **barra vertical cuyo alto es lo que sale ese día** y cuyo color es el
-concepto que manda: los días de solo comer quedan en una rayita de 4 px y el 1 y el 15 se ven como
-los escalones que son. Celda de 38 px. Debajo va la gráfica de balance.
-
-### Balance de los últimos 6 meses
-
-**La misma gráfica que la tarjeta "Balance últimos 6 meses" de Finanzas**, en SVG porque el
-Dashboard no carga Chart.js: balance en azul con relleno hasta el cero, ingresos en verde y gastos
-en rojo punteados, con la curva de tensión .4 de Chart.js (`ctCurva()` reparte las manijas por
-distancia a los vecinos). Montaje como `.cr-svgw`: el SVG se estira con
-`preserveAspectRatio="none"` y etiquetas, puntos (`<i>` en %, no `<circle>`) y zonas de hover van
-en HTML encima.
-
-**El cálculo es `CIFRAS.balanceMeses`**, en `datos-maestros.js`, compartido con Finanzas; con él
-viven `agendaDia`, `palabras`, `norm`, `yaContado` y `esNomina` (aquí quedan alias). El detalle
-está en *El balance mensual, compartido* de [`DATOS-MAESTROS.md`](DATOS-MAESTROS.md). El por qué:
-
-- **Cada mes se arma en dos capas**: lo previsto (quincenas, renta, auto, servicios, mínimos —de
-  `ctAgenda`— más los tres que van por total mensual sin día: Didi, el vale y comer) y lo
-  registrado (transacciones que la agenda no conoce). **Un cero que en realidad es "no lo anoté"
-  miente más que una previsión etiquetada.** Punto hueco = previsto, relleno = anotado.
-- **Los tres mensuales llevan su propia lista de palabras** (`didi`, `vale`, `comer`/`despensa`…):
-  si el mes trae algo anotado que caiga ahí, manda lo anotado. Un dato real gana a una estimación.
-- **La nómina va fija a $41,000 al mes.** Un movimiento de nómina anotado en Finanzas es ese mismo
-  dinero: `esNomina()` lo reconoce por **categoría** `Salario` (más una lista de palabras como red,
-  con `nómina` con y sin tilde porque `palabras` no quita acentos). Didi igual, por
-  `Freelance/Honorarios`. El precio: un bono anotado como `Salario` no suma; va en `Bonos` u
-  `Otros ingresos`.
-- **Agujero conocido en los gastos**, sin cerrar porque taparlo tiene coste: una renta anotada
-  como `Depa` no se reconoce contra `Renta` y se contaría dos veces.
-- Los mínimos de deuda de un mes viejo se calculan con los saldos de hoy: aproximación.
-
-Lo que se debe hoy a las tarjetas va como cifra en el encabezado, no como cuarta línea: un saldo
-no comparte ejes con un flujo. Se lee con `.length ?` y no `||`: un array vacío es truthy.
-
-La ventana sigue al mes visto (las flechas mueven la gráfica; tocar un mes salta con `ctIrMes`);
-escala en múltiplos de 10k que siempre incluye el cero; un mes sin movimientos lo dice el pie.
-
-**Las etiquetas de la leyenda son botones** que abren el desglose de su serie debajo (y resuelven
-la lectura sin color): **Balance** enseña la resta mes a mes (entró, salió, quedó); **Ingresos** y
-**Gastos** dan el importe de cada mes con su barra y peso en el semestre, y debajo **cosa por cosa
-de UN mes** — el que se elige tocando su fila (cian); por defecto el último de la ventana. Dentro
-del mes se agrupa por `desc` con `2×` al lado (las veces se cuentan por tipo), se enseñan las 12
-mayores y el resto en `y 3 cosas más` con los nombres en `title`; el punto conserva el color de
-categoría; sin `desc`, el nombre de la categoría. Cada fila de la tabla lleva su propia rejilla
-para poder ser botón sin perder la alineación. `ctBalVer` vive fuera de la función para que el
-desglose siga abierto al repintar, y al abrirse hace `scrollIntoView({block:'nearest'})`.
+Tocar una celda elige el día (`ctVerDia`): el riel, la columna del día y la semana se recalculan para él. Cada
+concepto de la semana que cae un día concreto también lo elige.
 
 ### El día: qué pagas, tu estrategia y tu dinero
 
-Lo que te queda ese día y de dónde sale lo dice el riel —su cifra grande, su línea y su cierre—, así que la
+Lo que te queda ese día y de dónde sale lo dice el riel —su cifra grande, la cuenta que la da y su cierre—, así que la
 columna del día no lo repite (Adán, 20-oct-2026: *"en coach también siento que hay mucha información, deja la
 suficiente"*). Con eso, a 2048×1040 la pantalla pasó de 3,183 caracteres a 2,391 y la columna cabe entera.
 
@@ -860,13 +832,14 @@ suficiente"*). Con eso, a 2048×1040 la pantalla pasó de 3,183 caracteres a 2,3
    siguiendo el plan (`CIFRAS.estadoDia`, ver `DATOS-MAESTROS.md`): para gastar (el riel: la cuenta y el
    efectivo), GBM, los CETES y el depósito del depa —*tu dinero*—, lo que debes (la BBVA con el día en
    que quedará en cero, el auto y el iPhone) y el patrimonio líquido, cada cifra con lo que cambia desde
-   hoy en verde o en rojo, y al pie lo que el plan manda de aquí a ese día a la BBVA y a GBM. Un día que
-   ya pasó no lleva el bloque, y después del último mes en México dice que la proyección sigue mes a mes
-   en Coach. Proyectado el 20 de noviembre desde los saldos del 19-oct-2026: para gastar $5,534 y GBM
-   $5,613; la BBVA quedará en cero el 15. A 2048×1040 mide 544×268.
+   hoy en verde o en rojo, y al pie lo que el plan manda de aquí a ese día a la BBVA y a GBM, y lo que la
+   salida cuesta en el camino. Hoy, *para gastar* es la cifra del riel y lo demás lo de Finanzas: la misma
+   cuenta que la banda (`ctCifrasHoy`). Un día que ya pasó no lleva el bloque, y después del último mes en
+   México dice que la proyección sigue mes a mes en Coach. Proyectado el 20 de noviembre desde los saldos
+   del 21-oct-2026: para gastar $5,534 y GBM $4,459; la BBVA quedará en cero el 15.
 
-**Los gastos registrados en Finanzas que la agenda no conoce entran en la resta** (`ctTramo`,
-`ctQuincena` y la semana los suman), con **borde punteado**: un cobro programado va a caer, uno
+**Los gastos registrados en Finanzas que la agenda no conoce entran en la resta** (`ctTramo` los suma,
+y de su serie salen el riel, el mes y la semana), con **borde punteado**: un cobro programado va a caer, uno
 punteado ya cayó.
 
 **Una compra a crédito no es una salida de caja.** Sube el saldo de la tarjeta —Finanzas lo mueve
@@ -876,6 +849,23 @@ súmalo al próximo abono)"* —o el mínimo y su día, en otra tarjeta—. La r
 `ctTarjetaDe()` → `CIFRAS.tarjetaDe`: la **nota** nombra una tarjeta de crédito viva (convención en
 `readme_finanzas.md`); *débito* es la cuenta. ⚠️ **Excepción: la categoría `Deudas`** — ahí la nota
 también nombra la tarjeta, pero es un PAGO a la tarjeta y sí sale del bolsillo.
+
+### Las cifras de hoy, una sola cuenta
+
+La banda decía *Tu dinero $21,513* y la columna del día *$21,291* (Adán, 21-oct-2026: *"revisa bien bien las
+métricas de los números para que todo cuadre"*): una tomaba el efectivo de Finanzas del día en que lo dijiste y la
+otra el riel, con lo previsto desde entonces. Ahora todo el Dashboard pide lo de hoy a `ctCifrasHoy()`, que le pasa
+al maestro (`CIFRAS.cifrasHoy(f, gastar)`) lo que el riel dice que hay para gastar: la banda de la fase, *Tu dinero
+hoy* y la ventana de las fases miden igual (*$21,291*; el patrimonio líquido, *−$276,853*). El control 42 vigila
+que nadie más llame a `cifrasHoy`.
+
+**El plan y tu dinero un día no son lo mismo, y cada uno va en su sitio.** Lo que pide la fase y lo que da tu ritmo
+salen del plan (`PROYECCION`, desde la foto del 1 oct): el checkpoint de la banda, la meta de la fase, Mis Metas y
+la ventana de las fases dicen *$129,532 en GBM el 31 de marzo*. *Tu dinero ese día* proyecta desde lo de hoy
+(`estadoDia`) y separa GBM y los CETES ($121,504 y $6,000): la diferencia son los $1,990 de la cuenta y el
+efectivo que la foto contó como ahorro y $38 de Didi de un lunes que ya pasó. Mes a mes los dos suben igual —lo
+que llega a GBM, las ventas, el depósito y lo que cuesta la salida— y lo vigila el control 43: `estadoDia` no
+restaba los costos de la salida y el 31 de marzo traía $6,000 de más (las apostillas de diciembre).
 
 ### Tu estrategia de hoy
 
@@ -934,19 +924,21 @@ no pise un saldo más nuevo que ella.
 
 ### La semana: el cierre como una resta
 
-**El cierre sale de la misma serie que el riel** (`ctTramo`, anclada al saldo real de la cuenta si
-lo hay; `ctQuincena` solo aporta el reparto de la quincena en semanas). Con el saldo real dentro de
-la semana, la resta arranca en *Saldo real el 21* y solo cuenta lo que sale después; si ese día es
-el último de la semana, la fila de «se va» se omite. **Las semanas son tramos de la quincena** (1–7,
-8–14, 15–21, 22–fin), no de lunes a domingo, así que el cierre se nombra con su día real
-(`ctDiaNombre()`), y un tramo de un solo día se dice *el 14* (`ctRango()`), nunca *del 14 al 14*. En
-el último día del tramo, el panel del día dice que lo que queda es con lo que cierras.
+**La resta sale de la misma serie que el riel** (`ctTramo`): *traías* —el saldo del día anterior, si la semana no
+arranca la quincena—, *entró tu nómina*, *sale en la semana* —exactamente lo que suma la lista de abajo, concepto
+por concepto— y, si tu saldo real cae en la semana, *se fue sin anotar* o *tenías de más*; la línea final es el
+saldo del último día. Adán, 21-oct-2026: *"revisa bien bien las métricas de los números para que todo cuadre"*
+—la resta arrancaba en el saldo real del 19 y la lista era de toda la semana—. **Las semanas son bloques de siete
+días desde el 1** (1–7, 8–14, 15–21, 22–28 y el resto), siempre dentro de una quincena, así que el cierre se
+nombra con su día real (`ctDiaNombre()`), un tramo de un solo día se dice *el 14* (`ctRango()`), nunca *del 14 al
+14*, y la esquina dice *semana 3 de 5*. Una semana que ya pasó dice *Salió* y *Cerraste*; una que viene, *En qué
+se va a ir*.
 
-Tres líneas —*arrancaste con* $20,500, *se fue en la semana* −$10,509, *cierras el miércoles 14 con*
-$9,991— seguidas de en qué se fue, de mayor a menor, y lo que toca esta semana con su casilla.
-**Cada gasto que cae un día concreto es un botón** que abre ese día (y arrastra calendario y
-riel), con el día escrito al lado (`Crédito Automotriz · día 15`). Los tres tiempos de comida no
-son botones: caen los siete días.
+Con los datos del 21-oct-2026: *entró tu nómina, el 15* +$20,500, *sale en la semana* −$15,077, *se fue sin anotar
+· tu saldo real del 19* −$1,445 y *cierras el miércoles 21 con* $3,978; la lista —la BBVA $6,950, el auto $6,700,
+comer 7 días $777 y el gym $650— *suman $15,077*. **Cada gasto que cae un día concreto es un botón** que abre ese
+día (y arrastra calendario y riel), con el día escrito al lado (`Crédito Automotriz · día 15`). Comer no es
+botón: cae los siete días.
 
 ### Lo que cuesta comer
 
@@ -965,7 +957,7 @@ semanal.
 Los tres suman exactamente el gasto diario del tablero. No hay recetas de comida, por eso ese
 tiempo es el resto y no un promedio; si se añaden, se afina solo.
 
-**En casa de tu familia** (de `PROYECTO.enCasaDesde` al último mes en México) la línea dice `Comer · tu desayuno; comida y cena, en casa` y vale `SUPUESTOS.comidaEnCasa` entre 30.4: `ctComeDe(ym)` se lo pide al maestro (`comerEnMes`), y de ahí lo toman el riel, la quincena y la semana.
+**En casa de tu familia** (de `PROYECTO.enCasaDesde` al último mes en México) la línea dice `Comer · tu desayuno; comida y cena, en casa` y vale `SUPUESTOS.comidaEnCasa` entre 30.4: `ctComeDe(ym)` se lo pide al maestro (`comerEnMes`), y de ahí lo toman el riel, el mes y la semana.
 
 ### Las tareas de la fase
 
@@ -1175,7 +1167,7 @@ un aviso lleva a él.
   casillas de `coach_checks_v1` (`fzmCheck` → `toggleFaseCheck`); lo sostenido se marca por mes
   (`fzmSostuve`) y no se puede marcar un mes que no ha empezado.
 - **🔢 Las cifras** (derecha, `fzmCifrasHTML`): las metas del mes (`metas`) con lo real de hoy
-  (`CIFRAS.cifrasHoy`) o la foto al auditar. A media quincena no se pintan de rojo —todavía falta lo que
+  (`ctCifrasHoy`, la misma cuenta que la banda) o la foto al auditar. A media quincena no se pintan de rojo —todavía falta lo que
   el plan pone después—; desde la última semana del mes, sí.
 - **🧾 La auditoría** (`fzmCierreHTML`): por venir, una línea con la fecha; desde siete días antes de que
   acabe el mes (y vencida, en rojo), **Auditar octubre** la abre en el lugar de la ficha. Auditada: la
@@ -1304,7 +1296,7 @@ de 1 px, texto en tinta y cada valor también fuera del tooltip):
 |---|---|---|
 | ISTQB CT-GenAI | Cada simulacro en columnas contra el corte y tu meta, y las preguntas de Hoy aprendes de 14 días, una celda por día | `examen_genai_v1.intentos`, `habSimulacro()`, `istqbRespuestas()` |
 | Hyrox | Las sesiones de gym de las últimas 8 semanas contra los días de tu rutina | `gymSesiones()` y la rutina de Ejercicio |
-| Maestría | El GBM que proyecta el plan al cerrar cada mes hasta irte contra lo que pide cada corte —el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la salida completa—, con lo que falta o sobra en cada uno; lo que tienes hoy contra lo que el plan espera este mes, y el alemán (la lección y el vocabulario del nivel) | `CIFRAS.PROYECCION`, `marzoParaSalida`, `mayoParaSalida`, `fondoMaestria()` |
+| Maestría | El GBM que proyecta el plan al cerrar cada mes hasta irte contra lo que pide cada corte —el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la salida completa—, con lo que falta o sobra en cada uno —los mismos cortes y cifras que el checkpoint del Plan Maestro—; tu dinero hoy contra lo que el plan pide al cerrar el mes, con la definición de la banda, y el alemán (la lección y el vocabulario del nivel) | `CIFRAS.PROYECCION`, `cortesSalidaDash()`, `ctCifrasHoy()` |
 | Torneo de ajedrez | Lo que queda de tu sistema antes de la fecha: los sábados de partidas y los días de puzzles | el plan |
 | Las de largo plazo | Tu patrimonio líquido contra la trayectoria del millón hasta la fecha de la meta, con hoy y la meta marcados: es lo que las habilita | `CIFRAS.PROYECCION.meses`, `patrimonioLiquido()` |
 

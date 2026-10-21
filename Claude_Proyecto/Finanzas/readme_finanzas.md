@@ -375,7 +375,7 @@ cero, no con lo que tardaría pagando el mínimo. `renderSubscriptions`: recurre
 `PROYECTO`) y MSI activas (`rate===0 && type==='other' && start`) con urgencia por meses restantes.
 
 **La gráfica de balance `ch-bal`** toma sus seis puntos de **`CIFRAS.balanceMeses`**, la misma
-función que el tablero del Dashboard, para que las dos pantallas no discrepen; se le pasan
+cuenta que los indicadores del mes, para que no discrepen; se le pasan
 `S.transactions` y `S.debts` (más frescos que `localStorage`). Si el maestro no cargara, cae al
 cálculo local. Sumar `transactions` a secas dejaba los meses sin registrar en cero.
 
