@@ -8961,12 +8961,10 @@ function ctBalanceHTML(ym){
     '<div class="ct-bal-leg">'+leg+'</div>'+
     ctBalDetalle(S, SER)+
     '<span style="font-size:9.5px;color:var(--text3);line-height:1.45">'+
-      'Cada mes lleva lo que ya se sabe —las dos quincenas, Didi, el vale, renta, auto, '+
-      'servicios, mínimos de tarjeta y lo que cuesta comer— más lo que hayas anotado en '+
-      'Finanzas aparte. Punto hueco = previsto; relleno = anotado. Toca un mes para ir a él.'+
+      'Punto hueco: previsto · relleno: anotado. Toca un mes para ir a él.'+
       (sinDatos
         ? ' <b style="color:var(--w)">'+sinDatos+(sinDatos===1?' mes va':' meses van')+
-          ' solo con lo previsto, sin nada anotado.</b>'
+          ' solo con lo previsto.</b>'
         : '')+
     '</span>';
 }
@@ -9121,17 +9119,14 @@ function ctEstrategiaHtml(T, H, faltaR, mv){
   const boton = (txt, js, sec) => '<button type="button" class="ce-btn'+(sec?' sec':'')+'" onclick="'+js+'">'+txt+'</button>';
   const cab = (lbl, c, der) => '<div class="ce-cab"><span class="ct-lbl" style="color:'+c+'">'+lbl+'</span><span class="ce-saldo">'+der+'</span></div>';
 
-  // El gasto de hoy: el tope que deja el riel, lo que ya salió de contado, lo cargado a la BBVA y lo
-  // que entró de más (Didi y lo que no es nómina), del que se aparta lo que el plan guarda de Didi.
+  // Lo de hoy que el riel no dice: que la quincena no cierre, lo cargado hoy a la BBVA y, si entró dinero que no es
+  // nómina, cuánto apartar. El tope de gasto al día ya va en el riel («te sobran $X/día»): aquí no se repite.
   const ext = (H && H.extras) || [];
-  const gHoy = ext.filter(t => !t.credito).reduce((s,t) => s + (+t.amount||0), 0);
   const cHoy = ext.filter(t => t.credito && (ctTarjetaDe(t)||{}).id === 'd001').reduce((s,t) => s + (+t.amount||0), 0);
   const iHoy = (mv||[]).filter(t => t.type === 'income' && !CIFRAS.esNomina(t)).reduce((s,t) => s + (+t.amount||0), 0);
   const didiMes = CIFRAS.n('didiMes') || 0, pctDidi = didiMes > 0 ? CIFRAS.didiAlAhorro(ym) / didiMes : 0;
   const destino = E.saldo > 0 ? 'para la BBVA' : 'para GBM';
-  const gasto = (T.cierre < 0
-      ? 'Hoy nada fuera de lo fijo: a la quincena le faltan '+num(faltaR)+' para cerrar.'
-      : 'Para gastar: hasta '+num(T.libreDia)+' al día hasta el '+T.fin+(gHoy > 0 ? ' · hoy llevas '+num(gHoy) : '')+'.')+
+  const gasto = (T.cierre < 0 ? 'Hoy nada fuera de lo fijo: a la quincena le faltan '+num(faltaR)+' para cerrar.' : '')+
     (iHoy > 0 && pctDidi > 0 ? ' Entraron '+num(iHoy)+' de más: aparta '+num(iHoy*pctDidi)+' '+destino+
       ' (el '+Math.round(pctDidi*100)+' %, lo que el plan guarda de Didi).' : '');
 
@@ -9180,12 +9175,11 @@ function ctEstrategiaHtml(T, H, faltaR, mv){
     } else if(!autoHoy && !(yaHoy > 0)){
       const s = E.siguiente;
       h += E.pagadoHoy > 0 ? fila('ya', '✓ Hoy mandaste '+num(E.pagadoHoy)+' a la BBVA.')
-        : fila('', 'Hoy no toca abono.'+(s ? ' El siguiente: el '+dia(s.fecha)+', '+num(s.monto)+' — '+CE_DE[s.de]+'; ese día se resta solo.' : ''),
+        : fila('', 'Hoy no toca abono.'+(s ? ' Siguiente: el '+dia(s.fecha)+', '+num(s.monto)+' ('+CE_DE[s.de]+').' : ''),
             boton('Abonar', 'ceAbonar(this)', 1));
     }
-    h += fila('', gasto+(cHoy > 0
-      ? ' Hoy le cargaste '+num(cHoy)+' a la BBVA: súmalo al próximo abono para no mover la fecha de cero.'
-      : ' ¿Pagas con la BBVA? Anótalo con «TC BBVA» en Finanzas y el plan se mueve solo.'));
+    const nota = (gasto+(cHoy > 0 ? ' Hoy le cargaste '+num(cHoy)+' a la BBVA: súmalo al próximo abono para no mover la fecha de cero.' : '')).trim();
+    if(nota) h += fila('', nota);
     return '<div class="ce-caja">'+h+'</div>';
   }
   // ── En cero: cancelarla, y lo que iba a ella va a GBM ──
@@ -9194,7 +9188,7 @@ function ctEstrategiaHtml(T, H, faltaR, mv){
       fila('ya', '🎉 La BBVA está en cero'+(E.fin ? ' desde el '+corta(E.fin) : '')+'. Cancélala: en la app o en sucursal, '+
         'pide la cancelación y tu carta de no adeudo.', boton('Ya la cancelé', 'bbvaCancelar()'))+
       fila('', 'Desde ya, lo que iba a la tarjeta va a GBM: '+aGbm+'.', boton('Qué invertir →', 'abrirGBM()', 1))+
-      fila('', gasto)+'</div>';
+      (gasto ? fila('', gasto) : '')+'</div>';
   }
   // ── Cancelada: cada peso que iba a la tarjeta, a GBM ──
   const envio = ctAgenda(+hoyK.slice(8), ym).filter(a => a.ahorro).reduce((s,a) => s + (+a.monto||0), 0);
@@ -9207,7 +9201,7 @@ function ctEstrategiaHtml(T, H, faltaR, mv){
   return '<div class="ce-caja verde">'+cab('Tu estrategia de hoy', 'var(--g)', 'este mes a GBM '+num(CIFRAS.desgloseMes(ym).ahorro))+
     '<span class="ce-pie">BBVA cancelada el '+corta(new Date(fc[0], fc[1]-1, fc[2]))+'. Sin tarjeta, a GBM van '+aGbm+'.</span>'+
     fila(toca ? 'toca' : '', hoyGbm, boton('Qué invertir hoy →', 'abrirGBM()', !toca))+
-    fila('', gasto)+'</div>';
+    (gasto ? fila('', gasto) : '')+'</div>';
 }
 /* «Ya lo mandé»: el abono se anota en Finanzas tal como lo deja «Pagar» allá —una transacción en
    Deudas y el saldo de `d001` que baja—, con la fecha del día que tocaba y la marca `tarjeta` para que
@@ -9587,34 +9581,8 @@ function renderCoachTablero(){
         '<span style="font-size:10px;color:var(--text3);line-height:1.45">'+pie+'</span></div>';
     })()+
 
-    '<div style="display:flex;flex-direction:column;gap:7px;padding-top:11px;border-top:1px solid rgba(var(--ov),.09)">'+
-      '<span class="ct-lbl">De dónde sale ese saldo</span>'+
-      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
-      (T.ancla&&nSel>=T.ancla.dia
-        // Anclado al saldo real: la resta arranca ahí, no en la nómina.
-        ? '<span style="font-size:11.5px;color:var(--text2)">Saldo real el '+T.ancla.dia+' · '+esc(T.ancla.nombre)+' <span style="color:var(--text3)">(Finanzas)</span></span>'+
-          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700;color:var(--g)">'+money(T.ancla.saldo)+'</span></div>'+
-          (nSel>T.ancla.dia
-            ? '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
-              '<span style="font-size:11.5px;color:var(--text2)">Salió del '+(T.ancla.dia+1)+' al '+nSel+'</span>'+
-              '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700">−'+money(T.desdeAncla)+'</span></div>'
-            : '')
-        : '<span style="font-size:11.5px;color:var(--text2)">Entró el '+T.ini+'</span>'+
-          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700;color:var(--g)">+'+money(T.entrado)+'</span></div>'+
-          '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
-          '<span style="font-size:11.5px;color:var(--text2)">Salió del '+T.ini+' al '+nSel+'</span>'+
-          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700">−'+money(T.gastado)+'</span></div>')+
-      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:9px 11px;border-radius:10px;'+
-        'background:rgba(var(--cy-rgb),.1);border:1px solid rgba(var(--cy-rgb),.26);margin-top:2px">'+
-        '<span style="font-size:12px;font-weight:600">Te queda</span>'+
-        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:20px;font-weight:700;color:'+
-          (H.saldo>=0?'var(--cy)':'var(--r)')+'">'+money(H.saldo)+'</span></div>'+
-      // El último día del tramo ya no queda nada por delante: «faltan $0 el 14» no decía nada.
-      (nSel>=T.fin
-        ? '<span style="font-size:10px;color:var(--text3);line-height:1.45">Es el último día del tramo: lo que queda es con lo que cierras.</span>'
-        : '<span style="font-size:10px;color:var(--text3);line-height:1.45">Faltan por salir <b class="ct-num'+
-          (privado?' fin-hidden':'')+'" style="color:var(--text2)">'+money(T.falta)+'</b> '+ctRango(nSel+1,T.fin)+'.</span>')+
-    '</div>'+
+    // Lo que te queda ese día y de dónde sale ya lo dice el riel, con su cifra grande, su línea y su cierre: aquí no
+    // se repite (Adán, 20-oct-2026: "en coach también siento que hay mucha información, deja la suficiente").
 
     (dd===0 ? ctEstrategiaHtml(T, H, faltaR, mvSel) : '')+ctDineroDiaHtml(T, dd)+
 
@@ -9938,7 +9906,10 @@ function cfbHtml(ph, DF){
   // El checkpoint: su fecha, lo que pide y lo que GBM y los CETES tendrán ese día siguiendo el plan.
   const finK = fzmYM(ph.end)+'-'+String(ph.end.getDate()).padStart(2,'0');
   const E = C.estadoDia ? C.estadoDia(finK) : null;
-  const cp = ph.checkpoint ? C.texto(String(ph.checkpoint)).replace(/^[^:]{0,24}:\s*/, '') : '';
+  // Lo que pide, en su primera cláusula («solicitud enviada y GBM contra {{marzoParaSalida}}», ya resuelto); si queda muy corta, su primera
+  // frase. El texto completo vive en la ventana de las fases, que abre la banda.
+  const cpTodo = ph.checkpoint ? C.texto(String(ph.checkpoint)).replace(/^[^:]{0,40}:\s*/, '') : '';
+  const cp1 = (cpTodo.split(/,\s|\s—|\.\s/)[0] || '').trim(), cp = cp1.length >= 20 ? cp1 : cpTodo.split(/\.\s/)[0];
   const check = '<div class="cfb-b"><span class="cfb-k">El checkpoint · '+dC(ph.end)+'<em>'+dias(Math.max(0, DF.quedan))+'</em></span>'+
     (cp ? '<span class="cfb-cp">'+cp+'</span>' : '')+
     (E ? '<span class="cfb-v"><b>'+num(E.gbm + E.cetes)+'</b>en GBM y CETES ese día, si sigues el plan</span>' : '')+'</div>';

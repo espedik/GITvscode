@@ -705,7 +705,7 @@ pequeñas, aquí ponme info importante… pon algo de las fases"*) va en dos fil
   septiembre* si quedó un mes atrás; de `CIFRAS.planMes` y `fzmFicha`—; **las cifras del mes** —sus
   metas (tu dinero, la BBVA, el patrimonio líquido) contra lo de hoy (`CIFRAS.cifrasHoy`), en verde
   las que van en meta y, desde la última semana, en rojo las que no—, y **el checkpoint** —la fecha
-  que cierra la fase, lo que pide y lo que tendrán GBM y los CETES ese día si sigues el plan
+  que cierra la fase, lo que pide en su primera cláusula —*solicitud enviada y GBM contra* `{{marzoParaSalida}}`; el texto completo, en la ventana de las fases— y lo que tendrán GBM y los CETES ese día si sigues el plan
   (`CIFRAS.estadoDia`)—.
 
 Medido a 2048×1040: la banda mide 156 px de alto (antes una fila de 46), la ruta 41 (antes 52) y el
@@ -763,7 +763,7 @@ $10,336                                   ╲__                        $8,674
 
 `ctTramo(nSel, nDias)` es el único cálculo: recorre la quincena desde que entra la nómina,
 arrastra el saldo día a día y devuelve la serie; de ahí salen el número grande, la línea, el
-cierre y la resta de la columna del día. **El estado en palabras** (`Vas holgado` / `Vas justo` /
+cierre. **El estado en palabras** (`Vas holgado` / `Vas justo` /
 `Te vas a pasar`) compara lo que sobra al cerrar el tramo contra lo que cuesta comer una semana;
 `$667/día` es ese sobrante entre los días que quedan. **La línea está escalada al rango del
 tramo, no al cero**: así se ve el escalón del día 15. Los 17 días son botones.
@@ -772,7 +772,7 @@ tramo, no al cero**: así se ve el escalón del día 15. Los 17 días son botone
 Efectivo (`ac014`)— llevan la `fecha` de su saldo; los que caen dentro del tramo se suman y
 `ctAnclaReal()` ancla la serie en el más reciente: ese día vale lo que tienes para gastar y de ahí en
 adelante se resta lo previsto (antes de esa fecha sigue el modelo). El estado lo dice (*saldo real del
-19*) y la resta de la columna del día arranca en *Saldo real el 19 · Cuenta BBVA y Efectivo*. Adán,
+19*). Adán,
 21-sep-2026: *"esa cifra está mal, ya te había dicho que me quedan 1200"*, y el 19-oct-2026: *"tengo en
 mi tarjeta de débito 1,700 y 2500 en efectivo"*. Cuando reporta un saldo, va al maestro como migración
 con su fecha; si lo edita en Finanzas, `saveActivo` pone la fecha sola.
@@ -847,13 +847,15 @@ categoría; sin `desc`, el nombre de la categoría. Cada fila de la tabla lleva 
 para poder ser botón sin perder la alineación. `ctBalVer` vive fuera de la función para que el
 desglose siga abierto al repintar, y al abrirse hace `scrollIntoView({block:'nearest'})`.
 
-### El día: qué pagas y de dónde sale el saldo
+### El día: qué pagas, tu estrategia y tu dinero
+
+Lo que te queda ese día y de dónde sale lo dice el riel —su cifra grande, su línea y su cierre—, así que la
+columna del día no lo repite (Adán, 20-oct-2026: *"en coach también siento que hay mucha información, deja la
+suficiente"*). Con eso, a 2048×1040 la pantalla pasó de 3,183 caracteres a 2,391 y la columna cabe entera.
 
 1. **Lo que pagas el 18** — comer y los pagos que caen, con el total del día.
-2. **De dónde sale ese saldo** — la resta explícita: entró el 15 `+$20,500`, salió del 15 al 18
-   `−$10,164`, te queda `$10,336`, falta por salir `$1,662` del 19 al 31.
-3. **Tu estrategia de hoy** — solo cuando el día es hoy (ver abajo).
-4. **Tu dinero ese día** (`ctDineroDiaHtml`; Adán, 19-oct-2026: *"conforme seleccione otro día, debes
+2. **Tu estrategia de hoy** — solo cuando el día es hoy (ver abajo).
+3. **Tu dinero ese día** (`ctDineroDiaHtml`; Adán, 19-oct-2026: *"conforme seleccione otro día, debes
    proyectar todo todo hasta mis inversiones"*) — hoy, lo de Finanzas; un día que viene, la proyección
    siguiendo el plan (`CIFRAS.estadoDia`, ver `DATOS-MAESTROS.md`): para gastar (el riel: la cuenta y el
    efectivo), GBM, los CETES y el depósito del depa —*tu dinero*—, lo que debes (la BBVA con el día en
@@ -888,12 +890,12 @@ el saldo y el plan salen de `CIFRAS.bbvaEstado()` y el tope de gasto del riel:
   (`bbvaNoMande`: el saldo vuelve, el día queda en `omitidos` y esa quincena se queda en la cuenta).
   Lo restado los dos días de antes sale igual (*El jueves 15 se restaron $6,950*). Si con el abono
   completo la quincena no cierra, sugiere lo que la deja en cero, no en rojo. Un día sin abono dice el
-  siguiente —*ese día se resta solo*— y ofrece **Abonar** (`ceAbonar` → `bbvaAnotar`); si el plan aún
+  siguiente con su monto y de dónde sale, y ofrece **Abonar** (`ceAbonar` → `bbvaAnotar`); si el plan aún
   no restó lo de hoy, *Ya lo mandé*. Lo anotado o corregido hoy desde aquí se puede **Deshacer**
-  (`bbvaDeshacer`: un abono corregido vuelve a lo que restó el plan). Al final, el
-  tope de gasto (*hasta $270 al día hasta el 31*, o *nada fuera de lo fijo* si la quincena no cierra),
-  lo cargado hoy a la BBVA (*súmalo al próximo abono*) y, si entró dinero que no es nómina, cuánto
-  apartar: el porcentaje que el plan guarda de Didi (`didiAlAhorro` entre `didiMes`).
+  (`bbvaDeshacer`: un abono corregido vuelve a lo que restó el plan). Al final, solo lo que el riel no
+  dice: *nada fuera de lo fijo* si la quincena no cierra, lo cargado hoy a la BBVA (*súmalo al próximo
+  abono*) y, si entró dinero que no es nómina, cuánto apartar: el porcentaje que el plan guarda de Didi
+  (`didiAlAhorro` entre `didiMes`). El tope de gasto al día ya lo da el riel (*te sobran $1,001/día*).
 - **En cero** (verde): *Cancélala* —en la app o en sucursal, con su carta de no adeudo— y **Ya la
   cancelé** (`bbvaCancelar`, pone `cancelada` en `d001`); y lo que desde ya va a GBM.
 - **Cancelada**: lo que va a GBM este mes (`desgloseMes`), el envío de hoy —el día 1 y el 15 lo de
