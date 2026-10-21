@@ -893,7 +893,8 @@ Qué invertir hoy es la plantilla de los perfiles —segura, media, riesgo alto 
 
 ## Al modificar este panel
 - La plantilla no cambia al actualizar: los datos viven en inversion-hoy.js, inversion-alto.js e inversion-superalto.js, y se generan con sus propios prompts (inversion-prompt.js, inversion-alto-prompt.js, inversion-superalto-prompt.js), que siguen este mismo criterio.
-- Toda cifra de mercado lleva su fecha y su fuente.`
+- Toda cifra de mercado lleva su fecha y su fuente.
+- Arriba va solo lo que decide la compra —cuánto, a qué, qué esperar y qué hacer este mes—, con gráficas; el análisis largo va plegado. Si un campo nuevo no cambia la decisión, va plegado o no va.`
     },
 
     didi: {
