@@ -394,8 +394,10 @@ dicen lo que hay en cada una: *Vocabulario · Trámites · 10 nuevas · 5 de rep
 
 **El vocabulario de hoy** son diez palabras, no una (`AL_VOC_DIA`, `alemanVocabHoy()`), **todas de un mismo tema**:
 las siguientes del orden de Coach que no han salido, por tema (`alemanTanda()`, ver *Lo decide Coach*), fijas en el día
-(`hoy.fijo.voc` en `dash-aprende-v1`); un día fijado con temas mezclados y sin practicar se vuelve a tomar. ↻ trae las
-diez siguientes. Arriba, su encabezado: la foto del tema, *Vocabulario de hoy · 10 palabras nuevas y 5 de repaso* y,
+(`hoy.fijo.voc` en `dash-aprende-v1`); un día fijado con temas mezclados y sin practicar se vuelve a tomar. **«Otro
+tema»** (`.alv-otro`, bajo «Practicar», del mismo tamaño y en contorno; Adán: *"el botón de nuevo tema… hazlo mucho
+más grande"*) trae las diez siguientes y dice qué trae: *Otro tema · Buscar piso* o, si al de hoy le quedan palabras,
+*10 palabras más de Trámites*. Arriba, su encabezado: la foto del tema, *Vocabulario de hoy · 10 palabras nuevas y 5 de repaso* y,
 **como título, el tema del día** con su emoji (*📋 Trámites*, en Fraunces) y debajo **Hoy estudias**, sus subtemas en
 fichas, en el orden de las tarjetas (*Formularios · Conseguir cita · Documentos · Empadronarse*; Adán: *"debe haber
 un título claro que abarque el tema de las tarjetas y saber qué se estudiará ese día"*); después, cómo estudiarlas, cuánto va del nivel, el tema de mañana y **«Practicar»**. Debajo, una tarjeta por palabra

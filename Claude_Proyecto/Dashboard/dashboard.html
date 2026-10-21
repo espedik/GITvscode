@@ -3387,12 +3387,19 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .alv-voc-s{margin:0;max-width:820px;font-size:13.5px;line-height:1.5;color:var(--text2)}
 .alv-voc-dato{font-size:12px;line-height:1.5;color:var(--text3)}
 .alv-voc-dato b{font-weight:700;color:var(--text2)}
-.alv-voc-acc{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.alv-voc-acc{flex:none;display:flex;flex-direction:column;align-items:stretch;gap:10px}
 .alv-fila{display:flex;align-items:center;gap:10px}
 .alv-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:42px;padding:0 20px;border-radius:12px;border:1px solid var(--c);
   background:var(--c);color:var(--bg);font:inherit;font-size:14px;font-weight:800;cursor:pointer}
 .alv-btn:hover{filter:brightness(1.08)}
 .alv-btn.mal{background:transparent;border-color:var(--r);color:var(--text)}
+/* Otro tema: tan grande como «Practicar» y del mismo ancho, en contorno para que Practicar siga siendo lo primero. */
+.alv-voc-acc .alv-btn{min-width:250px}
+.alv-voc-acc .alv-ir{text-align:right}
+.alv-btn.alv-otro{background:transparent;color:var(--text)}
+.alv-btn.alv-otro:hover{filter:none;background:color-mix(in srgb,var(--c) 12%,transparent)}
+.alv-otro svg{flex:none;width:19px;height:19px;color:var(--c)}
+.alv-otro b{font-weight:800;color:var(--c)}
 .alv-btn kbd{font-family:var(--mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;background:rgba(0,0,0,.18)}
 .alv-btn.mal kbd{background:rgba(var(--ov),.1)}
 .alv-ir{font-size:12px;font-weight:700}
@@ -3491,6 +3498,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 @media(max-width:1100px){
   .alv-voc-cab{flex-wrap:wrap}
   .alv-voc-acc{width:100%;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  .alv-voc-acc .alv-btn{flex:1 1 220px;min-width:0}
 }
 @media(max-width:640px){
   body:has(#alemanOverlay.open) .pp-btn{visibility:hidden}
@@ -7888,6 +7896,8 @@ function alemanVocabCabHtml(ws, rep){
   const etapa = aprendeEtapaAleman(), salio = new Set((((rawGet(APRENDE_KEY, {}) || {}).salio || {}).de) || []);
   const delNivel = alemanPalabras().filter(x => x.niv === etapa.nivel), van = delNivel.filter(x => salio.has(x.de)).length;
   const luego = alemanTemaLuego(ws), atrasadas = Math.max(0, alemanRepasoHoy(true).length - rep.length);
+  // El botón de otro tema dice qué trae: el tema siguiente o, si el de hoy aún tiene palabras, diez más de él.
+  const otroTxt = luego && luego !== temas[0] ? `Otro tema · <b>${esc(luego)}</b>` : `${AL_VOC_DIA} palabras más${temas[0] ? ` de <b>${esc(temas[0])}</b>` : ''}`;
   return `<div class="alv-voc-cab">
       ${apImg(apFotoAleman(a), 'alv-voc-foto')}
       <div class="alv-voc-t">
@@ -7900,10 +7910,8 @@ function alemanVocabCabHtml(ws, rep){
       </div>
       <div class="alv-voc-acc">
         <button type="button" class="alv-btn" onclick="alemanPracticar()">Practicar · ${ws.length + rep.length} tarjetas</button>
-        <div class="alv-fila">
-          <button type="button" class="ap-otra" onclick="aprendeOtra('de')" title="Las ${AL_VOC_DIA} siguientes, en el orden de Coach" aria-label="Las ${AL_VOC_DIA} palabras siguientes">${AP_OTRA}</button>
-          <a href="javascript:void(0)" class="hp-link alv-ir" onclick="hoyAlAleman('${a.cat}','${a.sub || ''}')">Ver «${esc(sub || cat.label || '')}» en Vocabulario →</a>
-        </div>
+        <button type="button" class="alv-btn alv-otro" onclick="aprendeOtra('de')" title="Las ${AL_VOC_DIA} siguientes, en el orden de Coach">${AP_OTRA}<span>${otroTxt}</span></button>
+        <a href="javascript:void(0)" class="hp-link alv-ir" onclick="hoyAlAleman('${a.cat}','${a.sub || ''}')">Ver «${esc(sub || cat.label || '')}» en Vocabulario →</a>
       </div>
     </div>`;
 }
