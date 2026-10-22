@@ -689,7 +689,7 @@
       /* ── Cabecera ─────────────────────────────────────────────────── */
       '<div class="hb2-hd">' +
         '<div>' +
-          '<div class="hb2-eyebrow"><span class="hb2-dot"></span>' +
+          '<div class="hb2-eyebrow hb2-rotulo"><span class="hb2-dot"></span>' +
             '<span class="hb2-k" style="color:var(--cy)">Hábitos · sistema de constancia</span>' +
             '<span class="hb2-linea"></span></div>' +
           fraseHTML() +
@@ -1525,6 +1525,10 @@
 .hb2-dot{width:7px;height:7px;border-radius:50%;background:var(--cy);flex-shrink:0;
   box-shadow:0 0 12px var(--cy);display:block}
 .hb2-eyebrow{display:flex;align-items:center;gap:9px;margin-bottom:5px}
+/* El rótulo de la pantalla mide lo que los de las demás (.eyebrow del Dashboard): 14 px a 2048, 11 en el celular. */
+.hb2-rotulo{gap:10px;margin-bottom:8px}
+.hb2-rotulo .hb2-k{font-family:var(--font);font-size:clamp(11px,1.1vw,14px);letter-spacing:.22em}
+.hb2-rotulo .hb2-dot{width:8px;height:8px}
 
 /* ── Cabecera ─────────────────────────────────────────────────────────── */
 .hb2-hd{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-shrink:0}

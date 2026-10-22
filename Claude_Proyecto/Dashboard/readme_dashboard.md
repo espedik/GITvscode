@@ -1777,6 +1777,8 @@ envuelve la tabla entera y el vertical solo las filas, así la fila de totales s
 ### El resto
 
 - El anclaje vive junto al nombre ("23:10, después de lavarme los dientes").
+- **El rótulo** *Hábitos · sistema de constancia* (`.hb2-rotulo`) mide lo que el de las demás pantallas
+  (`.eyebrow`): 14 px a 2048 y 11 en el celular, en su cian.
 - **Una frase al día** de dieciséis, elegida por la fecha; solo autores comprobables.
 - **Un solo aviso**: "Nunca falles dos veces seguidas" solo cuando algo se cayó ayer y hoy sigue
   sin marcar; si no, "cadena intacta". Con más de tres nombres, tres y "y N más".

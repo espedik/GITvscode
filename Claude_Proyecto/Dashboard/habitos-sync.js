@@ -1,7 +1,7 @@
 /* Las marcas de hábitos de la PC, para tus otros dispositivos. Lo escribe el hook de pre-commit
    (Dashboard/habitos-exportar.js) con lo que guarda el Chrome de la PC: no se edita a mano. */
 window.HABITOS_SYNC = {
-  "exportado": "2026-10-22T04:03:34.462Z",
+  "exportado": "2026-10-22T04:37:09.111Z",
   "datos": {
     "desde": "2026-09-11",
     "mig": 12,
@@ -51,7 +51,9 @@ window.HABITOS_SYNC = {
       "2026-10-16": {"ale":1,"gym":1,"fase0":1,"piel":1,"sueno":1,"agua":3,"alcohol":1},
       "2026-10-17": {"gym":1,"fase0":1,"piel":1,"sueno":1,"agua":3,"alcohol":1},
       "2026-10-18": {"app":1,"fase0":1,"piel":1,"sueno":1,"agua":3,"alcohol":1},
-      "2026-10-19": {"app":1}
+      "2026-10-19": {"app":1,"ale":1,"gym":1,"fase0":1,"piel":1,"sueno":1,"agua":3,"alcohol":1},
+      "2026-10-20": {"app":1,"gym":1,"fase0":1,"piel":1,"sueno":1,"agua":3,"alcohol":1},
+      "2026-10-21": {"app":1,"ale":1,"gym":1,"fase0":1,"piel":1,"sueno":1,"agua":3,"alcohol":1}
     }
   }
 };
