@@ -18,6 +18,7 @@
       (control 23).
    6. Que toda página cargue el icono de su prompt y que todo prompt esté completo (control 24);
       con --hook, además, recuerda qué prompt gobierna cada página tocada.
+   7. Que el modo oscuro de Alemán siga a las hojas de las que se deriva (control 44).
 
    Extrae los literales balanceando corchetes y **saltando strings** — no con regex: los textos
    del proyecto llevan llaves y comillas dentro, y una regex se equivoca.
@@ -2790,6 +2791,24 @@ function promptsDeLoTocado() {
   });
   if (mal.length) problemas.push('Tu dinero un día (estadoDia) no se mueve como el plan:\n     ' + mal.join('\n     '));
   else ok.push('Tu dinero un día: ' + n + ' meses suben igual que el plan (GBM, ventas, el depósito y lo que cuesta la salida)');
+})();
+
+/* ── 44. El modo oscuro de Alemán sigue a sus hojas ──────────────────────────────────────────────────────
+   Dentro de la ventana del Dashboard, en oscuro, las lecciones y casos.html se pintan con Aleman/oscuro.js, que deriva
+   cada color del tema claro. Las capas de styles.css, k10.css y partizip.css van calculadas en el propio archivo —desde
+   file:// el navegador no deja leer una hoja externa—: si una hoja cambia y no se recalculan, el oscuro se queda con los
+   colores de antes. Se arregla con `node Aleman/oscuro.js`. Casos.html, que no es lección, también necesita leccion.js. */
+(function () {
+  const dir = path.join(RAIZ, 'Aleman'), f = path.join(dir, 'oscuro.js');
+  if (!fs.existsSync(f)) return;
+  let O;
+  try { O = require(f); } catch (e) { problemas.push('Aleman/oscuro.js no carga: ' + e.message); return; }
+  const r = O.calcular(dir), malas = Object.keys(r.HOJAS).filter(function (n) { return r.HOJAS[n] !== O.HOJAS[n]; });
+  if (JSON.stringify(r.TOKENS) !== JSON.stringify(O.TOKENS)) malas.push('sus variables de :root');
+  const sinMotor = !/src="leccion\.js"/.test(fs.readFileSync(path.join(dir, 'casos.html'), 'utf8'));
+  if (malas.length) problemas.push('El modo oscuro de Alemán se quedó atrás de ' + malas.join(', ') + ': corre `node Aleman/oscuro.js`');
+  else if (sinMotor) problemas.push('Aleman/casos.html sin leccion.js: dentro del Dashboard no seguiría el modo oscuro');
+  else ok.push('Modo oscuro de Alemán: las capas de ' + Object.keys(r.HOJAS).join(', ') + ' al día con sus hojas');
 })();
 
 // ── Salida ──

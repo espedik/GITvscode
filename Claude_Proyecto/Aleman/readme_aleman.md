@@ -23,7 +23,7 @@ la ventana del Dashboard*).
 | A2 | `a2-01`…`a2-20` | Gramática y vocabulario temático |
 | Apoyo | `index.html`, `principiantes.html`, `gramatica.html`, `casos.html`, `vocabulario.html` | El inicio (ver abajo), lo básico para principiantes, la referencia transversal y los casos a fondo (ver abajo). La barra de apps del Dashboard enlaza al inicio, principiantes, la gramática y el vocabulario |
 | Fotos | `fotos/` | Una por lección y por caja de consulta del inicio, con su crédito; la misma va en el encabezado de su lección |
-| Compartido | `styles.css`, `leccion.js`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js` | La plantilla de las lecciones (ver abajo), estilos y motores |
+| Compartido | `styles.css`, `leccion.js`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js`, `oscuro.js` | La plantilla de las lecciones (ver abajo), estilos y motores; `oscuro.js`, el modo oscuro dentro del Dashboard |
 | **Lecciones** | `lecciones-datos.js` | El catálogo de las 41: título, foto con su crédito, ejercicios del Kapitel y la regla de qué lección toca. Lo leen el inicio y Mi Día — ver abajo |
 | **Vocabulario** | `vocab-datos.js`, `vocab.css`, `vocab.js` | Los datos, el diseño y el motor de `vocabulario.html`. Mi Día lee los datos — ver abajo |
 
@@ -123,6 +123,31 @@ lección y la brújula del Dashboard con este mismo prompt—, y el panel de pr�
 enlace a otra página se lo pide a la ventana con `postMessage`: otra lección se abre ahí mismo y una
 página que no es lección (el vocabulario, la gramática), aparte; Escape cierra la ventana. Lo que se
 practica ahí se guarda en `aleman_k10_v1`, igual que aquí. Abierta sola, la lección no cambia.
+
+**En oscuro, si el Dashboard va en oscuro** (Adán, 22-oct-2026: *"agrega el modo oscuro a todo lo que esté
+ahí"*). `leccion.js` lee el tema del Dashboard —`coach-theme`, con su misma regla: lo guardado o el del
+sistema— y, solo dentro de la ventana y en oscuro, carga `oscuro.js`, que pone `.oscuro` en `<html>`. Si el
+tema cambia con la página cargada, la sigue (evento `storage`). Abierta sola, la app sigue en claro: no tiene
+botón de tema y sus otras páginas son claras.
+
+No hay un segundo diseño escrito a mano: **el oscuro se deriva del claro**, color por color, según el papel de
+cada uno. Un fondo se oscurece, más claro cuanto más se separaba del papel, así que una tarjeta o un recuadro
+teñido quedan por encima del fondo como en claro, y los botones de acento se quedan. Un texto se aclara
+mezclándolo con blanco hasta 4.5:1 (el rojo `#CC0000` queda en `#e88a8a`) y los grises conservan su jerarquía.
+Un borde pasa a trazo claro y tenue, y una sombra a negra y más densa. Lo que se queda claro conserva su letra
+oscura, y una variable que es letra y fondo a la vez (`--c`, el color de cada caso en `casos.html`) lleva un
+gemelo para cuando pinta un fondo: la misma variable con el sufijo `--fondo` (`GEMELO`).
+
+Cada hoja recibe una **capa** con solo sus declaraciones de color, convertidas y puesta justo detrás de ella,
+así la cascada es la misma que en claro. Los `<style>` de cada página y sus atributos `style` se convierten al
+abrirla (2–7 ms), y lo que la página pinta después también (`MutationObserver`). `styles.css`, `k10.css` y
+`partizip.css` no se pueden leer desde `file://`, así que sus capas van ya calculadas en `HOJAS`, dentro de
+`oscuro.js`. **Al tocar una de esas tres hojas se corre `node Aleman/oscuro.js`**; el control 44 del
+verificador avisa si alguna capa se quedó atrás.
+
+Medido en las 41 lecciones y las seis pestañas de los casos (13,645 textos): por debajo del mínimo de
+contraste (4.5:1, o 3:1 en letra grande) quedan 903 en oscuro contra 1,886 en claro, y ninguno que pasara en
+claro queda por debajo en oscuro.
 
 El control 27 de `../Dashboard/verificar-sincronia.js` comprueba que cada lección tenga la barra, su
 foto con crédito, las dos columnas y, si tiene práctica, `leccion.js` después de `k10-interactivo.js`.

@@ -14,7 +14,8 @@
    3. Dentro de la ventana del Dashboard (Mi Día → Hoy aprendes → Alemán), que abre la lección en un
       iframe: pone `.embebida` en <html> —styles.css quita la barra, «Anterior/Siguiente», el pie y la
       brújula—, un enlace a otra página se lo pide a la ventana, que abre ahí otra lección o, si no es
-      lección, la abre aparte, y Escape cierra la ventana.
+      lección, la abre aparte, y Escape cierra la ventana. Si el Dashboard va en oscuro (`coach-theme`), carga
+      oscuro.js y la página se pinta en oscuro; cambia con él.
 
    Sin dependencias. Va al final del <body>, después de los scripts de la lección.
    ══════════════════════════════════════════════════════════════════════════════════════════ */
@@ -25,6 +26,23 @@
   try { dentro = window.self !== window.top; } catch (e) { dentro = true; }
   if (!dentro) return;
   document.documentElement.classList.add('embebida');
+  // El tema del Dashboard, con su misma regla: lo guardado o, si nada, el del sistema.
+  var aqui = ((document.currentScript && document.currentScript.src) || '').replace(/[^\/]*$/, '');
+  function tema() {
+    var t = null;
+    try { t = localStorage.getItem('coach-theme'); } catch (e) { /* sin almacenamiento, el del sistema */ }
+    return t || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  }
+  function oscuro() {
+    if (window.ALEMAN_OSCURO) { window.ALEMAN_OSCURO.aplicar(tema() === 'dark'); return; }
+    if (tema() !== 'dark') return;
+    var s = document.createElement('script');
+    s.src = aqui + 'oscuro.js';
+    s.onload = function () { window.ALEMAN_OSCURO.aplicar(tema() === 'dark'); };
+    document.head.appendChild(s);
+  }
+  oscuro();
+  window.addEventListener('storage', function (e) { if (e.key === 'coach-theme' || e.key === null) oscuro(); });
   function avisa(m) { m.aleman = 1; try { window.parent.postMessage(m, '*'); } catch (e) { /* sin ventana, nada */ } }
   document.addEventListener('click', function (e) {
     var a = e.target.closest ? e.target.closest('a[href]') : null;

@@ -431,7 +431,10 @@ hoy en la barra de Hoy aprendes, y la tarjeta dice *✓ practicaste*.
 `aleman_k10_v1`, donde lo leen el inicio de Alemán, la lección y esta ventana, que lo cuenta al momento por el
 evento `storage`. Encima va su encabezado (`alemanLecCabHtml()`): por qué toca (*Sigue donde te quedaste*,
 *Empieza el Kapitel 10*, *Elegida por ti*…), un tramo por ejercicio, cuántos llevas y tu último ejercicio, en
-ámbar pasados dos días. Hasta que carga se ve *Abriendo la lección…*.
+ámbar pasados dos días. Hasta que carga se ve *Abriendo la lección…*. **Con el Dashboard en oscuro, la lección
+y los casos también**: `leccion.js` lee `coach-theme` y la pinta con `../Aleman/oscuro.js`, que deriva cada color del
+tema claro (ver `../Aleman/readme_aleman.md` → *En oscuro*). El marco (`.alv-lec-marco`) lleva el papel de la página
+en cada tema —oscuro o claro—, para que no asome otro color en el borde ni mientras carga.
 
 **Los casos**, en su pestaña (Adán, 21-oct-2026: *"crea otro subtab, pero para el dativ, akkusativ, nominativ, y todas
 sus reglas, y ejemplos"*): la página `casos.html` de la app de Alemán en su propio iframe (`#alemanCasos`, en `.alv-cas`),
