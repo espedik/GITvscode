@@ -692,7 +692,6 @@
           '<div class="hb2-eyebrow"><span class="hb2-dot"></span>' +
             '<span class="hb2-k" style="color:var(--cy)">Hábitos · sistema de constancia</span>' +
             '<span class="hb2-linea"></span></div>' +
-          '<div class="hb2-titulo">La cadena que no se rompe</div>' +
           fraseHTML() +
         '</div>' +
         '<div class="hb2-hd-r">' +

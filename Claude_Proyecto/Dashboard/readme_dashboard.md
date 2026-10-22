@@ -1422,8 +1422,9 @@ app, `mdPintar()` pinta `paso.boton` (HTML nuestro, detrás de `linkHtml`) con `
 
 ## Habilidades Base
 
-El título de la pantalla es *Valerte por ti mismo, en cualquier parte* (la meta: un adulto capaz y seguro
-de sí mismo, aquí y en Alemania); la ficha abierta lleva *Valerte por ti mismo* como antetítulo.
+La pantalla no lleva título grande: debajo del rótulo *Habilidades Base* empieza la franja (Adán, 21-oct-2026:
+*"elimina este título"*; lo mismo en *En qué invertir tu tiempo*, la Lista de Compras y Hábitos). La ficha
+abierta lleva *Valerte por ti mismo* como antetítulo.
 
 **27 fichas, 383 pasos, 60 videos + la serie de vino**, en `HABILIDAD_DETALLE`. Avance en
 `habilidades_checklist_v1`. Orden: `citas`, las cuatro sociales (`networking`, `persuadir`,
