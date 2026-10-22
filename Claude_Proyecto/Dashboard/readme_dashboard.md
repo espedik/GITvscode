@@ -388,9 +388,9 @@ Adán, 14-oct-2026: *"cuando haga click aquí, debes mostrarme una ventana… ah
 también agrega lecciones de alemán"*, y el 15: *"no me das suficiente vocabulario, mejora el diseño de la
 ventana"*. Tocar la tarjeta abre `#alemanOverlay` (`abrirAleman()`) en el vocabulario, y tocar la lección de la
 tarjeta, en la lección. Es ancha y alta —hasta 1900 px, el 96 % del ancho y el 92 % del alto—, opaca (es para
-leer: con vidrio se veían las fotos de Mi Día detrás de cada tarjeta) y con **dos pestañas a todo lo ancho** que
-dicen lo que hay en cada una: *Vocabulario · Trámites · 10 nuevas · 5 de repaso* y *Lección · K10 · 06 · Partizip I & II ·
-0 de 5* (`alemanTabsTxt()`).
+leer: con vidrio se veían las fotos de Mi Día detrás de cada tarjeta) y con **tres pestañas a todo lo ancho** que
+dicen lo que hay en cada una: *Vocabulario · Trámites · 10 nuevas · 5 de repaso*, *Lección · K10 · 06 · Partizip I & II ·
+0 de 5* y *Casos · Nominativ · Akkusativ · Dativ · tu mejor: 9 de 12* (`alemanTabsTxt()`).
 
 **El vocabulario de hoy** son diez palabras, no una (`AL_VOC_DIA`, `alemanVocabHoy()`), **todas de un mismo tema**:
 las siguientes del orden de Coach que no han salido, por tema (`alemanTanda()`, ver *Lo decide Coach*), fijas en el día
@@ -432,6 +432,13 @@ hoy en la barra de Hoy aprendes, y la tarjeta dice *✓ practicaste*.
 evento `storage`. Encima va su encabezado (`alemanLecCabHtml()`): por qué toca (*Sigue donde te quedaste*,
 *Empieza el Kapitel 10*, *Elegida por ti*…), un tramo por ejercicio, cuántos llevas y tu último ejercicio, en
 ámbar pasados dos días. Hasta que carga se ve *Abriendo la lección…*.
+
+**Los casos**, en su pestaña (Adán, 21-oct-2026: *"crea otro subtab, pero para el dativ, akkusativ, nominativ, y todas
+sus reglas, y ejemplos"*): la página `casos.html` de la app de Alemán en su propio iframe (`#alemanCasos`, en `.alv-cas`),
+que se carga la primera vez que se abre la pestaña (`alemanTab('casos')`) y que `leccion.js` pone en modo ventana —con
+el encabezado compacto—. Lo que se practica ahí lo guarda la página en `aleman_casos_v1` y la pestaña dice tu mejor ronda
+al momento (evento `storage`); un enlace a una lección desde ahí la abre en la pestaña Lección. Medido a 2048×1040: el
+marco mide 1838×813; a 1366, 1211×562; a 390, 344×695, sin desplazamiento horizontal.
 
 **Qué lección toca** lo dice `ALEMAN_LECCIONES.queToca()`, de `../Aleman/lecciones-datos.js`: la misma regla
 que el inicio de Alemán (ver *Lo decide Coach*). **«‹» / «Siguiente ›»** recorren el orden de Coach

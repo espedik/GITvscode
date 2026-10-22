@@ -21,7 +21,7 @@ la ventana del Dashboard*).
 | **Kapitel 10** | `k10-01`…`k10-06` | Lo que Adán cursa en Cenlex Santo Tomás desde el 25-ago-2026 |
 | A1 | `a1-01`…`a1-15` | Base: saludos, números, artículos, hora, profesiones… |
 | A2 | `a2-01`…`a2-20` | Gramática y vocabulario temático |
-| Apoyo | `index.html`, `principiantes.html`, `gramatica.html`, `vocabulario.html` | El inicio (ver abajo), lo básico para principiantes y la referencia transversal. La barra de apps del Dashboard enlaza a los cuatro |
+| Apoyo | `index.html`, `principiantes.html`, `gramatica.html`, `casos.html`, `vocabulario.html` | El inicio (ver abajo), lo básico para principiantes, la referencia transversal y los casos a fondo (ver abajo). La barra de apps del Dashboard enlaza al inicio, principiantes, la gramática y el vocabulario |
 | Fotos | `fotos/` | Una por lección y por caja de consulta del inicio, con su crédito; la misma va en el encabezado de su lección |
 | Compartido | `styles.css`, `leccion.js`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js` | La plantilla de las lecciones (ver abajo), estilos y motores |
 | **Lecciones** | `lecciones-datos.js` | El catálogo de las 41: título, foto con su crédito, ejercicios del Kapitel y la regla de qué lección toca. Lo leen el inicio y Mi Día — ver abajo |
@@ -128,6 +128,25 @@ El control 27 de `../Dashboard/verificar-sincronia.js` comprueba que cada lecci�
 foto con crédito, las dos columnas y, si tiene práctica, `leccion.js` después de `k10-interactivo.js`.
 
 ---
+
+## `casos.html` — los casos a fondo
+
+Adán, 21-oct-2026: *"crea otro subtab, pero para el dativ, akkusativ, nominativ, y todas sus reglas, y ejemplos"*. Una
+página para los cuatro casos, que también se abre en la pestaña **Casos** de la ventana «Alemán de hoy» del Dashboard
+(con `leccion.js`, en modo ventana). Seis pestañas, una a la vez —el ancla abre la suya: `casos.html#dativ`—:
+
+| Pestaña | Lleva |
+|---|---|
+| Cómo elegir el caso | Los cuatro pasos (¿preposición? → ¿qué pregunta responde? → ¿verbo raro? → la terminación) y la tabla maestra con selector: der · ein · kein/mein · pronombres, en color lo que cambia respecto al Nominativ |
+| Nominativ · Akkusativ · Dativ · Genitiv | A la izquierda la ficha —la pregunta (*Wem?*), las formas de der, ein, kein y mein, los pronombres, sus preposiciones y sus verbos—; a la derecha las reglas, cada una con ejemplos traducidos y la palabra del caso subrayada, y los errores típicos (✗ / ✓ y el porqué) |
+| Practica | 12 frases al azar de 26: eliges la forma (clic o teclas 1-3 y Enter) y ves el porqué; al final, las que fallaste con su regla. Guarda la última y la mejor ronda en `aleman_casos_v1` |
+
+Todo el contenido vive en el propio archivo (`CASOS`, `PASOS`, `MAESTRA`, `PRON`, `PRACTICA`): en los ejemplos, lo que va
+entre corchetes es la palabra que lleva el caso. Cubre lo que pide el A2: es gibt, la n-Deklination, las contracciones
+(im, zum, zur…), el plural del Dativ con -n, el orden de dos objetos, las preposiciones fijas y las de dos casos, el
+tiempo (jeden Tag, am Montag, seit, vor) y el Genitiv frente a von + Dativ. El color de cada caso es el de
+`gramatica.html`, que manda aquí desde la introducción de sus casos; el inicio la enlaza en la caja de Gramática.
+Medido a 1600 y 390 px: sin desplazamiento horizontal ni errores.
 
 ## `vocabulario.html` — donde se trabaja el vocabulario
 

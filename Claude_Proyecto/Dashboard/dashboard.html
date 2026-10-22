@@ -3367,8 +3367,11 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .alv-tabs button.on{color:var(--text);background:rgba(var(--ov),.05)}
 .alv-tabs button.on::after{content:'';position:absolute;left:12px;right:12px;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--c)}
 .alv-body{flex:1;min-height:0;display:flex}
-.alv-voc,.alv-lec{flex:1;min-width:0;min-height:0}
-.alv-body[data-tab="vocab"] .alv-lec,.alv-body[data-tab="leccion"] .alv-voc{display:none}
+.alv-voc,.alv-lec,.alv-cas{flex:1;min-width:0;min-height:0}
+.alv-body[data-tab="vocab"] .alv-lec,.alv-body[data-tab="leccion"] .alv-voc,
+.alv-body:not([data-tab="casos"]) .alv-cas,.alv-body[data-tab="casos"] .alv-voc,.alv-body[data-tab="casos"] .alv-lec{display:none}
+/* Los casos: la página de la app de Alemán (casos.html) a todo el alto, en modo ventana. */
+.alv-cas{display:flex;flex-direction:column;padding:14px 22px 18px}
 /* El vocabulario: su encabezado, las tarjetas y el repaso. */
 .alv-voc{overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:18px;padding:20px 24px 28px}
 .alv-voc-cab{display:flex;align-items:center;gap:18px}
@@ -3516,7 +3519,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   .alv-t-es{font-size:22px}
   .alv-t-de{font-size:32px}
   .alv-pr-cols{grid-template-columns:minmax(0,1fr)}
-  .alv-lec{padding:10px 10px 12px}
+  .alv-lec,.alv-cas{padding:10px 10px 12px}
   .alv-lec-cab{flex-wrap:wrap;gap:10px}
   .alv-lec-foto{width:64px;height:44px}
   .alv-lec-h{white-space:normal;font-size:16px}
@@ -4882,6 +4885,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
       <div class="alv-tabs" role="tablist" aria-label="Qué estudiar">
         <button type="button" role="tab" data-alv-tab="vocab" onclick="alemanTab('vocab')">Vocabulario</button>
         <button type="button" role="tab" data-alv-tab="leccion" onclick="alemanTab('leccion')">Lección</button>
+        <button type="button" role="tab" data-alv-tab="casos" onclick="alemanTab('casos')">Casos</button>
       </div>
     </div>
     <div class="alv-body" id="alemanBody" data-tab="vocab">
@@ -4889,6 +4893,9 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
       <section class="alv-lec" aria-label="La lección de hoy">
         <div class="alv-lec-cab" id="alemanLecCab"></div>
         <div class="alv-lec-marco" id="alemanMarco"><iframe id="alemanFrame" title="La lección de hoy, de la app de Alemán" onload="window.alemanCargada&&alemanCargada(this)"></iframe><span class="alv-lec-carga">Abriendo la lección…</span></div>
+      </section>
+      <section class="alv-cas" aria-label="Los casos: Nominativ, Akkusativ, Dativ y Genitiv">
+        <div class="alv-lec-marco" id="alemanCasosMarco"><iframe id="alemanCasos" title="Los casos, de la app de Alemán" onload="if(this.dataset.src)this.parentNode.classList.add('lista')"></iframe><span class="alv-lec-carga">Abriendo los casos…</span></div>
       </section>
     </div>
   </div>
@@ -7787,7 +7794,11 @@ function cerrarAleman(){
 }
 function alemanAbierta(){ const ov = document.getElementById('alemanOverlay'); return !!ov && ov.classList.contains('open'); }
 function alemanTab(t){
-  _alTab = t === 'leccion' ? 'leccion' : 'vocab';
+  _alTab = t === 'leccion' || t === 'casos' ? t : 'vocab';
+  if(_alTab === 'casos'){
+    const f = document.getElementById('alemanCasos');
+    if(f && !f.dataset.src){ f.dataset.src = '../Aleman/casos.html'; f.src = f.dataset.src; }
+  }
   const b = document.getElementById('alemanBody'); if(b) b.dataset.tab = _alTab;
   document.querySelectorAll('#alemanOverlay [data-alv-tab]').forEach(x => {
     const on = x.dataset.alvTab === _alTab; x.classList.toggle('on', on); x.setAttribute('aria-selected', on ? 'true' : 'false');
@@ -7800,6 +7811,9 @@ function alemanTabsTxt(){
   const tema = ws.length && alVocab() ? (alVocab().cats[ws[0].cat] || {}).label || '' : '';
   if(bv) bv.innerHTML = `Vocabulario <span>${tema ? esc(tema) + ' · ' : ''}${ws.length} nuevas${rep.length ? ` · ${rep.length} de repaso` : ''}</span>`;
   if(bl) bl.innerHTML = t ? `Lección <span>${esc(t.l.num)} · ${esc(t.l.de)}${t.avance ? ` · ${t.avance.hechos} de ${t.avance.total}` : ''}</span>` : 'Lección';
+  // Los casos: su tema y, si ya practicaste, tu mejor ronda (`aleman_casos_v1`, lo guarda casos.html).
+  const bc = document.querySelector('#alemanOverlay [data-alv-tab="casos"]'), cs = rawGet('aleman_casos_v1', {}) || {};
+  if(bc) bc.innerHTML = `Casos <span>Nominativ · Akkusativ · Dativ${cs.rondas ? ` · tu mejor: ${cs.mejor} de ${cs.de || 12}` : ''}</span>`;
 }
 // Pinta el vocabulario y el encabezado de la lección y, si la lección cambió, la carga en el iframe (`src` manda
 // cuando se abre otra página desde la lección, con su ancla).
@@ -7856,18 +7870,18 @@ function alemanLeccionOtra(d){
 // La lección, dentro de la ventana, pide lo que no puede hacer sola (leccion.js): abrir otra página —otra lección
 // se abre aquí y queda elegida; lo demás (el vocabulario, la gramática), aparte— o cerrar la ventana con Escape.
 window.addEventListener('message', e => {
-  const f = document.getElementById('alemanFrame'), m = e.data;
-  if(!f || e.source !== f.contentWindow || !m || m.aleman !== 1) return;
+  const f = document.getElementById('alemanFrame'), fc = document.getElementById('alemanCasos'), m = e.data;
+  if(!f || !m || m.aleman !== 1 || (e.source !== f.contentWindow && !(fc && e.source === fc.contentWindow))) return;
   if(m.tipo === 'cerrar'){ cerrarAleman(); return; }
   if(m.tipo === 'abrir' && typeof m.href === 'string'){
     const L = alLecciones(), x = L ? L.por(m.href) : null;
-    if(x){ const t = alemanLeccionHoy(); L.elegir(t && x === t.rec.l ? null : x.id); alemanPintar('../Aleman/' + m.href); }
+    if(x){ const t = alemanLeccionHoy(); L.elegir(t && x === t.rec.l ? null : x.id); alemanPintar('../Aleman/' + m.href); alemanTab('leccion'); }
     else window.open('../Aleman/' + m.href, '_blank', 'noopener');
   }
 });
 // Lo que practicas en la lección se guarda en `aleman_k10_v1`; el encabezado lo cuenta al momento.
 window.addEventListener('storage', e => {
-  if(alemanAbierta() && (e.key === 'aleman_k10_v1' || e.key === null)) alemanPintarCab();
+  if(alemanAbierta() && (e.key === 'aleman_k10_v1' || e.key === 'aleman_casos_v1' || e.key === null)) alemanPintarCab();
 });
 
 // El vocabulario: su encabezado —la foto de su tema, de qué va, cuántas y cómo estudiarlas, «Practicar», ↻—, las

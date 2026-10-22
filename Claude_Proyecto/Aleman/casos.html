@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los casos — Nominativ, Akkusativ, Dativ y Genitiv | Deutsch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap"></noscript>
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ══ Los casos — una página para los cuatro, con sus reglas, ejemplos, errores típicos y práctica ══
+   Adán, 21-oct-2026: "en alemán de hoy, crea otro subtab, pero para el dativ, akkusativ, nominativ, y todas sus
+   reglas, y ejemplos". Vive en la app de Alemán y la ventana «Alemán de hoy» del Dashboard la abre en su pestaña
+   «Casos» (iframe; leccion.js la pone en modo ventana). Todo el contenido está en CASOS, abajo: una pestaña por
+   tema, una a la vez (el ancla #dativ abre esa). El color de cada caso es el de gramatica.html. */
+:root{--nom:#2563eb;--akk:#dc2626;--dat:#059669;--gen:#7c3aed;--dec:#b45309}
+.cs-hero{padding:26px 32px 18px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(204,0,0,.04),transparent)}
+.cs-in{max-width:1500px;margin:0 auto}
+.cs-k{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.cs-hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,3.4vw,40px);font-weight:900;line-height:1.1;margin:6px 0 8px}
+.cs-hero h1 .nom{color:var(--nom)}.cs-hero h1 .akk{color:var(--akk)}.cs-hero h1 .dat{color:var(--dat)}.cs-hero h1 small{font-size:.55em;color:var(--gen)}
+.cs-lead{max-width:880px;font-size:15px;color:var(--text2)}
+.cs-frase{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:14px;font-size:clamp(17px,1.8vw,22px);font-weight:700}
+.cs-frase span{padding:3px 10px;border-radius:9px}
+.cs-frase .nom{background:rgba(37,99,235,.12);color:var(--nom)}.cs-frase .akk{background:rgba(220,38,38,.1);color:var(--akk)}
+.cs-frase .dat{background:rgba(5,150,105,.12);color:var(--dat)}.cs-frase .gen{background:rgba(124,58,237,.1);color:var(--gen)}
+.cs-frase small{font-size:13px;font-weight:500;color:var(--text2);margin-left:6px}
+/* Dentro de la ventana del Dashboard el alto es poco: el encabezado se queda en el título y la frase. */
+html.embebida .cs-hero{padding:14px 32px 12px}
+html.embebida .cs-hero h1{font-size:28px;margin:4px 0 6px}
+html.embebida .cs-lead{display:none}
+html.embebida .cs-frase{margin-top:6px;font-size:18px}
+@media(max-width:640px){html.embebida .cs-hero{padding:12px 14px 10px}html.embebida .cs-hero h1{font-size:22px}}
+
+/* Las pestañas: siempre a la vista, también dentro de la ventana del Dashboard. */
+.cs-tabs{position:sticky;top:60px;z-index:20;background:rgba(245,244,240,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+html.embebida .cs-tabs{top:0}
+.cs-tabs .cs-in{display:flex;gap:6px;overflow-x:auto;padding:10px 32px;scrollbar-width:none}
+.cs-tab{flex:none;display:flex;align-items:center;gap:8px;padding:8px 15px;border-radius:999px;border:1px solid var(--border);background:#fff;
+  font:inherit;font-size:13.5px;font-weight:700;color:var(--text2);cursor:pointer;white-space:nowrap}
+.cs-tab i{width:9px;height:9px;border-radius:50%;background:var(--c,#999)}
+.cs-tab small{font-weight:600;color:var(--text3)}
+.cs-tab:hover{color:var(--text);border-color:rgba(0,0,0,.2)}
+.cs-tab.on{background:var(--c,#1a1a1a);border-color:var(--c,#1a1a1a);color:#fff}
+.cs-tab.on i{background:#fff}.cs-tab.on small{color:rgba(255,255,255,.8)}
+
+.cs-main{max-width:1500px;margin:0 auto;padding:22px 32px 70px}
+.cs-panel{display:none}
+.cs-panel.on{display:block;animation:csIn .2s ease}
+@keyframes csIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.cs-cab{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 14px;margin-bottom:16px}
+.cs-cab h2{font-family:'Playfair Display',serif;font-size:30px;font-weight:900;color:var(--c)}
+.cs-cab p{font-size:15px;color:var(--text2);max-width:900px}
+.cs-grid{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:22px;align-items:start}
+@media(max-width:1100px){.cs-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* La ficha del caso: la pregunta, las formas, los pronombres y lo que lo pide. */
+.cs-ficha{display:flex;flex-direction:column;gap:14px;position:sticky;top:130px}
+html.embebida .cs-ficha{top:66px}
+@media(max-width:1100px){.cs-ficha{position:static}}
+.cs-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.cs-lbl{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.cs-preg{display:flex;align-items:center;gap:12px}
+.cs-preg b{font-family:'Playfair Display',serif;font-size:30px;color:var(--c);line-height:1}
+.cs-preg span{font-size:14px;color:var(--text2)}
+.cs-t{width:100%;border-collapse:collapse;font-size:14px}
+.cs-t th{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);text-align:left;padding:4px 6px}
+.cs-t td{padding:6px;border-top:1px solid var(--border)}
+.cs-t td:first-child{font-size:12px;color:var(--text3);font-weight:700;white-space:nowrap}
+.cs-t td.f{font-weight:800;white-space:nowrap}
+.cs-t sup{font-size:.7em;margin-left:1px}
+.cs-t td.cam{color:var(--c)}
+.cs-t td.cam::after{content:'•';margin-left:3px;color:var(--c)}
+.cs-nota{font-size:12.5px;color:var(--text2);margin-top:8px;line-height:1.5}
+.cs-chips{display:flex;flex-wrap:wrap;gap:6px}
+.cs-chip{display:inline-flex;flex-direction:column;padding:5px 10px;border-radius:9px;background:rgba(0,0,0,.035);border:1px solid var(--border);font-size:13.5px;font-weight:800;line-height:1.25}
+.cs-chip small{font-size:11px;font-weight:500;color:var(--text3)}
+
+/* Las reglas: una tarjeta por regla, con sus ejemplos traducidos. */
+.cs-reglas{display:flex;flex-direction:column;gap:12px}
+.cs-regla{background:#fff;border:1px solid var(--border);border-left:4px solid var(--c);border-radius:14px;padding:14px 18px;box-shadow:var(--shadow)}
+.cs-regla h3{display:flex;align-items:baseline;gap:10px;font-size:16.5px;font-weight:800;margin-bottom:4px}
+.cs-regla h3 em{font-style:normal;font-family:'Playfair Display',serif;font-size:15px;color:var(--c);min-width:22px}
+.cs-regla>p{font-size:14px;color:var(--text2);margin-bottom:8px}
+.cs-ej{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2px 18px;padding:7px 0;border-top:1px dashed var(--border);font-size:15px}
+.cs-ej .de{font-weight:600}
+.cs-ej .es{color:var(--text2);font-size:14px}
+@media(max-width:640px){.cs-ej{grid-template-columns:minmax(0,1fr)}}
+mark{background:none;color:var(--c);font-weight:800;border-bottom:2px solid currentColor;padding:0 1px}
+
+/* Los errores típicos de un hispanohablante: lo que se dice mal y cómo va. */
+.cs-ojo{background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.28);border-left:4px solid #d97706;border-radius:14px;padding:14px 18px}
+.cs-ojo h3{font-size:16px;font-weight:800;color:#b45309;margin-bottom:8px}
+.cs-mal{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.4fr);gap:4px 16px;padding:7px 0;border-top:1px dashed rgba(217,119,6,.3);font-size:14.5px;align-items:baseline}
+.cs-mal .x{color:#b91c1c;text-decoration:line-through;text-decoration-thickness:1.5px}
+.cs-mal .ok{color:#047857;font-weight:700}
+.cs-mal .por{font-size:13px;color:var(--text2)}
+@media(max-width:760px){.cs-mal{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.cs-mal .por{grid-column:1/-1}}
+
+/* Cómo decidir: los cuatro pasos y la tabla maestra. */
+.cs-pasos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+@media(max-width:1100px){.cs-pasos{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.cs-pasos{grid-template-columns:minmax(0,1fr)}}
+.cs-paso{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.cs-paso b{display:block;font-family:'Playfair Display',serif;font-size:26px;color:var(--red);line-height:1}
+.cs-paso h3{font-size:15.5px;font-weight:800;margin:6px 0 4px}
+.cs-paso p{font-size:13.5px;color:var(--text2)}
+.cs-maestra{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.cs-sel{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.cs-sel button{padding:6px 13px;border-radius:999px;border:1px solid var(--border);background:#fff;font:inherit;font-size:13px;font-weight:700;color:var(--text2);cursor:pointer}
+.cs-sel button.on{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.cs-mt{width:100%;border-collapse:separate;border-spacing:6px;font-size:16px;table-layout:fixed}
+.cs-mt col.c0{width:150px}
+.cs-mt th{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);text-align:center;padding:2px}
+.cs-mt th:first-child{text-align:left}
+.cs-mt td{text-align:center;padding:9px 6px;border-radius:10px;background:rgba(0,0,0,.03);font-weight:800}
+.cs-mt td.caso{text-align:left;background:none;font-size:14px;color:var(--c)}
+.cs-mt td.caso small{display:block;font-size:11.5px;font-weight:600;color:var(--text3)}
+.cs-mt td.cam{background:color-mix(in srgb,var(--c) 13%,#fff);color:var(--c)}
+
+/* La práctica: una frase a la vez. */
+.cs-pr{max-width:860px;margin:0 auto}
+.cs-pr-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:26px 28px;box-shadow:var(--shadow-md)}
+.cs-pr-top{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)}
+.cs-pr-bar{height:5px;border-radius:3px;background:rgba(0,0,0,.07);margin:10px 0 18px;overflow:hidden}
+.cs-pr-bar i{display:block;height:100%;background:var(--red);border-radius:3px;transition:width .25s}
+.cs-pr-f{font-size:clamp(20px,2.2vw,27px);font-weight:700;line-height:1.35}
+.cs-pr-f .hueco{display:inline-block;min-width:90px;border-bottom:3px solid var(--text3);text-align:center;color:var(--text3)}
+.cs-pr-f .hueco.bien{border-color:#059669;color:#059669}.cs-pr-f .hueco.mal{border-color:#dc2626;color:#dc2626}
+.cs-pr-es{font-size:14px;color:var(--text3);margin-top:6px}
+.cs-pr-ops{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.cs-pr-ops button{min-width:120px;padding:12px 20px;border-radius:12px;border:1.5px solid var(--border);background:#fafaf8;font:inherit;font-size:17px;font-weight:800;cursor:pointer}
+.cs-pr-ops button:hover:not(:disabled){border-color:#1a1a1a}
+.cs-pr-ops button small{display:block;font-size:10.5px;font-weight:600;color:var(--text3)}
+.cs-pr-ops button.bien{border-color:#059669;background:rgba(5,150,105,.1);color:#047857}
+.cs-pr-ops button.mal{border-color:#dc2626;background:rgba(220,38,38,.08);color:#b91c1c}
+.cs-pr-por{margin-top:16px;padding:12px 14px;border-radius:12px;font-size:14.5px;line-height:1.5}
+.cs-pr-por.bien{background:rgba(5,150,105,.08);color:#065f46}.cs-pr-por.mal{background:rgba(220,38,38,.07);color:#7f1d1d}
+.cs-pr-sig{margin-top:16px;padding:11px 22px;border-radius:12px;border:0;background:#1a1a1a;color:#fff;font:inherit;font-size:15px;font-weight:800;cursor:pointer}
+.cs-pr-fin h3{font-family:'Playfair Display',serif;font-size:30px;margin-bottom:6px}
+.cs-pr-fin ul{margin:12px 0 0 18px;display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--text2)}
+.cs-pr-fin li b{color:var(--text)}
+.cs-pr-mejor{font-size:13px;color:var(--text3);margin-top:12px}
+@media(max-width:640px){.cs-hero{padding:18px 16px 12px}.cs-tabs .cs-in{padding:8px 16px}.cs-main{padding:16px 16px 50px}.cs-pr-card{padding:18px 16px}}
+</style>
+</head>
+<body>
+
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="casos.html" class="on" aria-current="page">Casos</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
+
+<header class="cs-hero">
+  <div class="cs-in">
+    <div class="cs-k">Gramática · A1–A2 · la base para hablar bien</div>
+    <h1>Los casos: <span class="nom">Nominativ</span>, <span class="akk">Akkusativ</span>, <span class="dat">Dativ</span> <small>y Genitiv</small></h1>
+    <p class="cs-lead">En alemán el artículo dice qué hace cada palabra en la frase. Elige el caso por su función —quién hace, qué recibe, a quién va— y la terminación sale sola. Cada pestaña trae sus reglas, ejemplos traducidos y los errores que más cometemos los hispanohablantes.</p>
+    <div class="cs-frase" lang="de" aria-label="Der Vater gibt dem Kind das Buch des Lehrers">
+      <span class="nom">Der Vater</span> gibt <span class="dat">dem Kind</span> <span class="akk">das Buch</span> <span class="gen">des Lehrers.</span>
+      <small lang="es">El papá le da al niño el libro del profesor.</small>
+    </div>
+  </div>
+</header>
+
+<div class="cs-tabs"><div class="cs-in" id="csTabs" role="tablist" aria-label="Temas"></div></div>
+<main class="cs-main" id="csMain"></main>
+
+<footer class="footer" style="margin-top:0">
+  <p>Los casos del alemán — reglas, ejemplos y práctica · A1/A2</p>
+  <div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div>
+</footer>
+
+<script>
+/* ── El contenido ────────────────────────────────────────────────────────────────────────────────────
+   En los ejemplos, lo que va entre [corchetes] es la palabra que lleva el caso: sale subrayada en su color.
+   Cada ejemplo es [alemán, español]. Todo alemán revisado (prompt de Alemán: "un artículo o una terminación mal
+   enseñados se aprenden mal"). */
+var CASOS = {
+  nom: {
+    nombre: 'Nominativ', c: 'var(--nom)', preg: 'Wer? · Was?', pregEs: '¿Quién? · ¿Qué? — el que hace la acción',
+    que: 'El caso del sujeto: quien hace lo que dice el verbo. Es la forma con la que aprendes cada sustantivo en el diccionario.',
+    formas: [['der', 'die', 'das', 'die'], ['ein', 'eine', 'ein', '—'], ['kein', 'keine', 'kein', 'keine'], ['mein', 'meine', 'mein', 'meine']],
+    cambian: [],
+    pron: 'ich · du · er · sie · es · wir · ihr · sie · Sie',
+    piden: [['sein', 'ser, estar'], ['werden', 'volverse'], ['bleiben', 'seguir siendo']],
+    reglas: [
+      { t: 'El sujeto: quien hace la acción', d: 'Pregunta «¿quién?» al verbo. La respuesta va en Nominativ, esté donde esté en la frase.',
+        ej: [['[Der Kollege] arbeitet heute im Büro.', 'El colega trabaja hoy en la oficina.'],
+             ['Heute arbeitet [der Kollege] im Büro.', 'Hoy el colega trabaja en la oficina (el sujeto cambió de lugar, no de caso).'],
+             ['[Mein Bruder] wohnt in Puebla.', 'Mi hermano vive en Puebla.']] },
+      { t: 'Con sein, werden y bleiben, las dos partes van en Nominativ', d: 'Estos verbos no tienen objeto: unen dos cosas que son lo mismo. Por eso a los dos lados va Nominativ.',
+        ej: [['[Das] ist [mein Auto].', 'Ese es mi coche.'],
+             ['[Er] wird [ein guter Ingenieur].', 'Él va a ser un buen ingeniero.'],
+             ['[Sie] bleibt [meine Nachbarin].', 'Ella sigue siendo mi vecina.']] },
+      { t: 'Profesión y nacionalidad, sin artículo', d: 'Con sein o werden, la profesión va sola; el artículo solo entra si le pones un adjetivo.',
+        ej: [['Ich bin [Ingenieur].', 'Soy ingeniero.'],
+             ['Sie ist [Mexikanerin].', 'Ella es mexicana.'],
+             ['Er ist [ein sehr guter Tester].', 'Él es un muy buen tester (con adjetivo, con artículo).']] },
+      { t: 'La forma del diccionario', d: 'Cada sustantivo se aprende en Nominativ, con su artículo y su plural: de ahí salen todos los demás casos.',
+        ej: [['[der] Tisch, die Tische', 'la mesa, las mesas'],
+             ['[die] Lampe, die Lampen', 'la lámpara, las lámparas'],
+             ['[das] Fenster, die Fenster', 'la ventana, las ventanas']] }
+    ],
+    ojo: [['Das ist einen Tisch.', 'Das ist ein Tisch.', 'Después de sein va Nominativ, nunca Akkusativ.'],
+          ['Ich bin ein Ingenieur.', 'Ich bin Ingenieur.', 'La profesión va sin artículo (salvo con adjetivo).'],
+          ['Den Chef ist nett.', 'Der Chef ist nett.', 'El sujeto siempre en Nominativ: der.']]
+  },
+  akk: {
+    nombre: 'Akkusativ', c: 'var(--akk)', preg: 'Wen? · Was?', pregEs: '¿A quién? · ¿Qué? — lo que recibe la acción directamente',
+    que: 'El caso del objeto directo: la persona o la cosa que recibe la acción. La buena noticia: solo cambia el masculino.',
+    formas: [['den', 'die', 'das', 'die'], ['einen', 'eine', 'ein', '—'], ['keinen', 'keine', 'kein', 'keine'], ['meinen', 'meine', 'mein', 'meine']],
+    cambian: [0],
+    pron: 'mich · dich · ihn · sie · es · uns · euch · sie · Sie',
+    prep: [['durch', 'a través de'], ['für', 'para'], ['gegen', 'contra'], ['ohne', 'sin'], ['um', 'alrededor, a las'], ['bis', 'hasta'], ['entlang', 'a lo largo de']],
+    verbos: 'haben · brauchen · kaufen · suchen · finden · nehmen · sehen · besuchen · kennen · mögen · bestellen · bezahlen · verstehen · fragen · anrufen',
+    reglas: [
+      { t: 'El objeto directo: lo que recibe la acción', d: 'Pregunta «¿qué?» o «¿a quién?» al verbo. La mayoría de los verbos llevan un objeto en Akkusativ.',
+        ej: [['Ich kaufe [einen Kaffee].', 'Compro un café.'],
+             ['Wir besuchen [den Kunden] in Stuttgart.', 'Visitamos al cliente en Stuttgart.'],
+             ['Ich sehe [dich] morgen.', 'Te veo mañana.']] },
+      { t: 'Solo el masculino cambia', d: 'der → den, ein → einen, kein → keinen, mein → meinen. Femenino, neutro y plural se quedan igual que en Nominativ.',
+        ej: [['Ich habe [einen Bruder] und [eine Schwester].', 'Tengo un hermano y una hermana.'],
+             ['Ich brauche [den Schlüssel], nicht [das Handy].', 'Necesito la llave, no el celular.'],
+             ['Er hat [keinen Termin].', 'Él no tiene cita.']] },
+      { t: 'Es gibt va con Akkusativ', d: '«Hay» en alemán es es gibt, y lo que hay va en Akkusativ.',
+        ej: [['Es gibt [einen Supermarkt] in der Nähe.', 'Hay un súper cerca.'],
+             ['In Esslingen gibt es [keinen Strand].', 'En Esslingen no hay playa.']] },
+      { t: 'Preposiciones que siempre piden Akkusativ', d: 'durch, für, gegen, ohne, um —y bis y entlang—. Truco: «DOGFU» (durch, ohne, gegen, für, um).',
+        ej: [['Das Geschenk ist [für meinen Vater].', 'El regalo es para mi papá.'],
+             ['Wir gehen [durch den Park].', 'Caminamos por el parque.'],
+             ['Ich trinke Kaffee [ohne Zucker].', 'Tomo café sin azúcar.'],
+             ['Der Kurs beginnt [um acht Uhr].', 'El curso empieza a las ocho.']] },
+      { t: 'Movimiento hacia un lugar: ¿Wohin? → Akkusativ', d: 'Con las nueve preposiciones de dos casos (an, auf, in, hinter, neben, über, unter, vor, zwischen), si hay movimiento hacia un destino, va Akkusativ.',
+        ej: [['Ich lege das Handy [auf den Tisch].', 'Pongo el celular sobre la mesa.'],
+             ['Wir gehen [in den Supermarkt].', 'Vamos al súper.'],
+             ['Gehst du heute [ins Kino]?', '¿Vas hoy al cine? (ins = in das)']] },
+      { t: 'Cuánto tiempo y cuándo, sin preposición', d: 'Las expresiones de tiempo sin preposición van en Akkusativ.',
+        ej: [['Ich lerne [jeden Tag] Deutsch.', 'Aprendo alemán todos los días.'],
+             ['Er bleibt [einen Monat] in München.', 'Se queda un mes en Múnich.'],
+             ['[Nächsten Montag] habe ich frei.', 'El próximo lunes tengo libre.']] },
+      { t: 'Saludos y deseos', d: 'Van en Akkusativ porque se sobreentiende «te deseo…» (ich wünsche dir…).',
+        ej: [['[Guten Morgen]! [Guten Appetit]!', '¡Buenos días! ¡Buen provecho!'],
+             ['[Einen schönen Tag] noch!', '¡Que tengas buen día!'],
+             ['[Herzlichen Glückwunsch] zum Geburtstag!', '¡Feliz cumpleaños!']] },
+      { t: 'n-Deklination: algunos masculinos añaden -n', d: 'Varios masculinos —casi todos personas o animales, muchos terminados en -e— llevan -(e)n en todos los casos menos el Nominativ: der Kollege, der Kunde, der Student, der Mensch, der Nachbar, der Junge, der Herr (→ den Herrn).',
+        ej: [['Ich frage [den Kollegen].', 'Le pregunto al colega.'],
+             ['Kennst du [den Nachbarn]?', '¿Conoces al vecino?'],
+             ['Wir suchen [einen Studenten] für das Projekt.', 'Buscamos a un estudiante para el proyecto.']] }
+    ],
+    ojo: [['Ich habe ein Bruder.', 'Ich habe einen Bruder.', 'haben pide Akkusativ: masculino → einen.'],
+          ['Ich frage dem Lehrer.', 'Ich frage den Lehrer.', 'fragen va con Akkusativ, aunque en español digas «le pregunto».'],
+          ['Das ist für mir.', 'Das ist für mich.', 'für siempre con Akkusativ: mich, no mir.'],
+          ['Ich besuche den Kunde.', 'Ich besuche den Kunden.', 'n-Deklination: der Kunde → den Kunden.']]
+  },
+  dat: {
+    nombre: 'Dativ', c: 'var(--dat)', preg: 'Wem?', pregEs: '¿A quién? · ¿Para quién? — el que recibe o se beneficia',
+    que: 'El caso del objeto indirecto: a quién le das, le dices o le muestras algo. Cambia todo, y el plural añade -n.',
+    formas: [['dem', 'der', 'dem', 'den …n'], ['einem', 'einer', 'einem', '—'], ['keinem', 'keiner', 'keinem', 'keinen …n'], ['meinem', 'meiner', 'meinem', 'meinen …n']],
+    cambian: [0, 1, 2, 3],
+    pron: 'mir · dir · ihm · ihr · ihm · uns · euch · ihnen · Ihnen',
+    prep: [['aus', 'de (origen)'], ['bei', 'en casa de, en'], ['mit', 'con'], ['nach', 'después de, a (países)'], ['seit', 'desde (hace)'], ['von', 'de, por'], ['zu', 'a, hacia'], ['gegenüber', 'enfrente de'], ['ab', 'a partir de']],
+    verbos: 'helfen · danken · gefallen · gehören · gratulieren · antworten · glauben · passen · schmecken · fehlen · folgen · wehtun · zuhören',
+    reglas: [
+      { t: 'A quién le das, le dices o le muestras algo', d: 'Con geben, schenken, zeigen, schicken, bringen, erklären, empfehlen, sagen o schreiben: la persona va en Dativ y la cosa en Akkusativ.',
+        ej: [['Ich schenke [meiner Mutter] Blumen.', 'Le regalo flores a mi mamá.'],
+             ['Kannst du [mir] die Datei schicken?', '¿Me puedes mandar el archivo?'],
+             ['Der Arzt erklärt [dem Patienten] die Therapie.', 'El doctor le explica la terapia al paciente (n-Deklination: dem Patienten).']] },
+      { t: 'Verbos que solo llevan Dativ', d: 'Aunque en español parezcan directos, estos verbos piden Dativ: helfen, danken, gefallen, gehören, gratulieren, antworten, glauben (a alguien), passen, schmecken, fehlen, folgen, wehtun.',
+        ej: [['Kannst du [mir] helfen?', '¿Me puedes ayudar?'],
+             ['Ich danke [Ihnen].', 'Le agradezco (a usted).'],
+             ['Die Jacke gefällt [mir], aber sie passt [mir] nicht.', 'La chamarra me gusta, pero no me queda.'],
+             ['Wem gehört das Auto? — Es gehört [meinem Vater].', '¿De quién es el coche? — Es de mi papá.']] },
+      { t: 'Preposiciones que siempre piden Dativ', d: 'aus, bei, mit, nach, seit, von, zu —y gegenüber y ab—. Se aprenden como canción: «aus-bei-mit-nach-seit-von-zu».',
+        ej: [['Ich komme [aus Mexiko] und wohne [bei meinen Eltern].', 'Vengo de México y vivo con mis papás.'],
+             ['Ich fahre [mit dem Bus] [zur Arbeit].', 'Voy en camión al trabajo.'],
+             ['Ich lerne [seit einem Jahr] Deutsch.', 'Aprendo alemán desde hace un año.'],
+             ['[Nach dem Kurs] gehe ich ins Fitnessstudio.', 'Después del curso voy al gimnasio.']] },
+      { t: 'Estar en un lugar: ¿Wo? → Dativ', d: 'Las nueve preposiciones de dos casos van con Dativ cuando dicen dónde está algo, sin movimiento hacia un destino.',
+        ej: [['Das Handy liegt [auf dem Tisch].', 'El celular está sobre la mesa.'],
+             ['Ich bin [im Büro].', 'Estoy en la oficina (im = in dem).'],
+             ['Das Bild hängt [an der Wand].', 'El cuadro cuelga en la pared.']] },
+      { t: 'Las contracciones', d: 'im = in dem · am = an dem · beim = bei dem · vom = von dem · zum = zu dem · zur = zu der. (ins = in das y ans = an das son de Akkusativ.)',
+        ej: [['Ich gehe [zum Arzt] und dann [zur Apotheke].', 'Voy al doctor y luego a la farmacia.'],
+             ['Wir treffen uns [am Bahnhof].', 'Nos vemos en la estación.'],
+             ['Er ist [beim Friseur].', 'Está en la peluquería.']] },
+      { t: 'El tiempo con preposición', d: 'am + día, im + mes o estación, seit (desde hace) y vor (hace) van con Dativ.',
+        ej: [['[Am Montag] habe ich Deutschkurs.', 'El lunes tengo clase de alemán.'],
+             ['[Im Juli] fliege ich nach Deutschland.', 'En julio vuelo a Alemania.'],
+             ['[Vor zwei Jahren] habe ich bei Bosch gearbeitet.', 'Hace dos años trabajé en Bosch.']] },
+      { t: 'El plural en Dativ lleva -n', d: 'El artículo es den y el sustantivo añade -n, salvo que ya termine en -n o en -s.',
+        ej: [['Ich spiele [mit den Kindern].', 'Juego con los niños (Kinder → Kindern).'],
+             ['Ich danke [meinen Freunden].', 'Les agradezco a mis amigos.'],
+             ['Wir fahren [mit den Autos].', 'Vamos en los coches (Autos termina en -s: sin -n).']] },
+      { t: 'Frases con Dativ que usarás a diario', d: 'En alemán muchas sensaciones se dicen «a mí me…», con Dativ y sin ich.',
+        ej: [['[Mir] ist kalt.', 'Tengo frío.'],
+             ['Wie geht es [dir]? — [Mir] geht es gut.', '¿Cómo estás? — Estoy bien.'],
+             ['Es tut [mir] leid.', 'Lo siento.'],
+             ['Das ist [mir] egal.', 'Me da igual.']] },
+      { t: 'El orden con dos objetos', d: 'Con dos sustantivos, primero el Dativ y luego el Akkusativ. Los pronombres van antes que los sustantivos, y entre dos pronombres, primero el Akkusativ.',
+        ej: [['Ich gebe [dem Kind] das Buch.', 'Le doy el libro al niño.'],
+             ['Ich gebe [ihm] das Buch.', 'Le doy el libro (pronombre antes que sustantivo).'],
+             ['Ich gebe es [dem Kind]. / Ich gebe es [ihm].', 'Se lo doy al niño. / Se lo doy (Akkusativ es, primero).']] }
+    ],
+    ojo: [['Ich helfe dich.', 'Ich helfe dir.', 'helfen siempre con Dativ.'],
+          ['Ich fahre mit der Bus.', 'Ich fahre mit dem Bus.', 'mit pide Dativ, y der Bus es masculino → dem.'],
+          ['Das gefällt mich.', 'Das gefällt mir.', 'gefallen va con Dativ: a mí → mir.'],
+          ['Ich gehe zu Hause.', 'Ich gehe nach Hause. / Ich bin zu Hause.', 'Hacia la casa es nach Hause; estar en casa, zu Hause.'],
+          ['mit die Kinder', 'mit den Kindern', 'Dativ plural: den y el sustantivo con -n.']]
+  },
+  gen: {
+    nombre: 'Genitiv', c: 'var(--gen)', preg: 'Wessen?', pregEs: '¿De quién? — de quién es algo',
+    que: 'El caso de la posesión: «el coche de mi papá». En el habla se cambia mucho por von + Dativ, pero en lo escrito y en los exámenes se usa.',
+    formas: [['des …s', 'der', 'des …s', 'der'], ['eines …s', 'einer', 'eines …s', '—'], ['keines …s', 'keiner', 'keines …s', 'keiner'], ['meines …s', 'meiner', 'meines …s', 'meiner']],
+    cambian: [0, 1, 2, 3],
+    pron: 'Casi no se usa con pronombres: se dice mein, dein, sein…',
+    prep: [['wegen', 'por, a causa de'], ['trotz', 'a pesar de'], ['während', 'durante'], ['statt', 'en lugar de'], ['innerhalb', 'dentro de'], ['außerhalb', 'fuera de']],
+    reglas: [
+      { t: 'De quién es algo', d: 'El poseedor va detrás, en Genitiv. Masculino y neutro añaden -s o -es (-es en palabras de una sílaba).',
+        ej: [['das Auto [meines Vaters]', 'el coche de mi papá'],
+             ['die Wohnung [meiner Schwester]', 'el depa de mi hermana'],
+             ['der Name [des Kurses]', 'el nombre del curso']] },
+      { t: 'Los nombres propios llevan -s, sin apóstrofo', d: 'El nombre va delante y sin artículo.',
+        ej: [['[Annas] Laptop', 'la laptop de Anna'],
+             ['[Adáns] Büro', 'la oficina de Adán']] },
+      { t: 'Preposiciones con Genitiv', d: 'wegen, trotz, während, statt, innerhalb, außerhalb.',
+        ej: [['[Wegen des Regens] bleibe ich zu Hause.', 'Por la lluvia me quedo en casa.'],
+             ['[Während des Semesters] arbeite ich 20 Stunden pro Woche.', 'Durante el semestre trabajo 20 horas a la semana.'],
+             ['[Trotz des Staus] bin ich pünktlich.', 'A pesar del tráfico llego a tiempo.']] },
+      { t: 'En el habla: von + Dativ', d: 'Al hablar casi siempre se dice von + Dativ. Entiéndelo, pero en un examen escribe el Genitiv.',
+        ej: [['das Auto [von meinem Vater]', 'el coche de mi papá (hablado)'],
+             ['die Tasche [von der Frau]', 'la bolsa de la señora (hablado)']] }
+    ],
+    ojo: [['Anna\'s Buch', 'Annas Buch', 'En alemán no lleva apóstrofo.'],
+          ['das Auto des Vater', 'das Auto des Vaters', 'Masculino y neutro añaden -s en Genitiv.']]
+  }
+};
+var GENEROS = ['masculino', 'femenino', 'neutro', 'plural'];
+var FILAS = ['der · die · das', 'ein · eine', 'kein · keine', 'mein · meine'];
+
+/* Los cuatro pasos para decidir el caso, y la tabla maestra con selector de determinante. */
+var PASOS = [
+  ['¿Hay preposición?', 'Manda ella: für siempre Akkusativ, mit siempre Dativ, wegen Genitiv. Si es de las nueve de dos casos (an, auf, in, hinter, neben, über, unter, vor, zwischen): ¿dónde está? → Dativ; ¿adónde va? → Akkusativ.'],
+  ['Busca el verbo y pregúntale', '¿Quién lo hace? → Nominativ (Wer?). ¿Qué o a quién directamente? → Akkusativ (Wen? Was?). ¿A quién o para quién? → Dativ (Wem?).'],
+  ['Revisa si el verbo es de los raros', 'helfen, danken, gefallen, gehören… piden Dativ. sein, werden y bleiben, Nominativ a los dos lados. es gibt, Akkusativ.'],
+  ['Pon la terminación', 'En Akkusativ solo cambia el masculino (den, einen). En Dativ cambian todos: dem, der, dem, den, y el plural lleva -n.']
+];
+var MAESTRA = {
+  der: { t: 'der · die · das', f: { nom: ['der', 'die', 'das', 'die'], akk: ['den', 'die', 'das', 'die'], dat: ['dem', 'der', 'dem', 'den'], gen: ['des', 'der', 'des', 'der'] } },
+  ein: { t: 'ein · eine', f: { nom: ['ein', 'eine', 'ein', '—'], akk: ['einen', 'eine', 'ein', '—'], dat: ['einem', 'einer', 'einem', '—'], gen: ['eines', 'einer', 'eines', '—'] } },
+  kein: { t: 'kein · mein · dein…', f: { nom: ['kein', 'keine', 'kein', 'keine'], akk: ['keinen', 'keine', 'kein', 'keine'], dat: ['keinem', 'keiner', 'keinem', 'keinen'], gen: ['keines', 'keiner', 'keines', 'keiner'] } },
+  pron: { t: 'Pronombres', pron: true }
+};
+var PRON = [['yo', 'ich', 'mich', 'mir'], ['tú', 'du', 'dich', 'dir'], ['él', 'er', 'ihn', 'ihm'], ['ella', 'sie', 'sie', 'ihr'], ['ello', 'es', 'es', 'ihm'],
+            ['nosotros', 'wir', 'uns', 'uns'], ['ustedes', 'ihr', 'euch', 'euch'], ['ellos', 'sie', 'sie', 'ihnen'], ['usted', 'Sie', 'Sie', 'Ihnen']];
+
+/* La práctica: [frase con ___, opciones, la correcta, el porqué, traducción]. */
+var PRACTICA = [
+  ['Ich kaufe ___ Kaffee.', ['einen', 'ein', 'einem'], 0, 'kaufen pide Akkusativ y der Kaffee es masculino → einen.', 'Compro un café.'],
+  ['Kannst du ___ helfen? (ich)', ['mir', 'mich', 'ich'], 0, 'helfen siempre va con Dativ: ich → mir.', '¿Me puedes ayudar?'],
+  ['Ich fahre mit ___ Bus zur Arbeit.', ['dem', 'den', 'der'], 0, 'mit pide Dativ; der Bus es masculino → dem.', 'Voy en camión al trabajo.'],
+  ['Das Geschenk ist für ___ Vater.', ['meinen', 'meinem', 'mein'], 0, 'für siempre con Akkusativ; der Vater → meinen.', 'El regalo es para mi papá.'],
+  ['Das Handy liegt auf ___ Tisch.', ['dem', 'den', 'der'], 0, '¿Dónde está? → Dativ: auf dem Tisch.', 'El celular está sobre la mesa.'],
+  ['Ich lege das Handy auf ___ Tisch.', ['den', 'dem', 'der'], 0, '¿Adónde lo pones? → Akkusativ: auf den Tisch.', 'Pongo el celular sobre la mesa.'],
+  ['Das ist ___ Kollege, Herr Braun.', ['mein', 'meinen', 'meinem'], 0, 'Después de sein va Nominativ: mein Kollege.', 'Él es mi colega, el señor Braun.'],
+  ['Es gibt ___ Supermarkt in der Nähe.', ['einen', 'ein', 'einem'], 0, 'es gibt pide Akkusativ; der Supermarkt → einen.', 'Hay un súper cerca.'],
+  ['Ich gebe ___ Kind das Buch.', ['dem', 'das', 'den'], 0, 'A quién le das algo → Dativ; das Kind → dem Kind.', 'Le doy el libro al niño.'],
+  ['Die Jacke gefällt ___. (sie, ella)', ['ihr', 'sie', 'ihn'], 0, 'gefallen va con Dativ: sie → ihr.', 'La chamarra le gusta (a ella).'],
+  ['Ich frage ___ Lehrer.', ['den', 'dem', 'der'], 0, 'fragen va con Akkusativ: den Lehrer.', 'Le pregunto al profesor.'],
+  ['Ich lerne seit ___ Jahr Deutsch.', ['einem', 'einen', 'ein'], 0, 'seit pide Dativ; das Jahr → einem Jahr.', 'Aprendo alemán desde hace un año.'],
+  ['Wir gehen durch ___ Park.', ['den', 'dem', 'der'], 0, 'durch siempre con Akkusativ; der Park → den.', 'Caminamos por el parque.'],
+  ['Ich wohne bei ___ Eltern.', ['meinen', 'meine', 'meiner'], 0, 'bei pide Dativ; en plural → meinen Eltern.', 'Vivo con mis papás.'],
+  ['Während ___ Semesters arbeite ich.', ['des', 'dem', 'den'], 0, 'während pide Genitiv; das Semester → des Semesters.', 'Durante el semestre trabajo.'],
+  ['Der Laptop gehört ___. (er)', ['ihm', 'ihn', 'er'], 0, 'gehören va con Dativ: er → ihm.', 'La laptop es de él.'],
+  ['Ich sehe ___ morgen. (du)', ['dich', 'dir', 'du'], 0, 'sehen pide Akkusativ: du → dich.', 'Te veo mañana.'],
+  ['Wir spielen mit ___ Kindern.', ['den', 'die', 'dem'], 0, 'mit + Dativ plural: den Kindern (con -n).', 'Jugamos con los niños.'],
+  ['Ich besuche ___ Kunden in Stuttgart.', ['den', 'dem', 'der'], 0, 'besuchen pide Akkusativ; der Kunde es de la n-Deklination → den Kunden.', 'Visito al cliente en Stuttgart.'],
+  ['Ich gehe ___ Arzt.', ['zum', 'zur', 'zu'], 0, 'zu + dem = zum (der Arzt).', 'Voy al doctor.'],
+  ['Ich gehe ___ Apotheke.', ['zur', 'zum', 'zu'], 0, 'zu + der = zur (die Apotheke).', 'Voy a la farmacia.'],
+  ['___ Name ist Adán.', ['Mein', 'Meinen', 'Meinem'], 0, 'Es el sujeto: Nominativ, der Name → mein Name.', 'Mi nombre es Adán.'],
+  ['Das Essen schmeckt ___. (wir)', ['uns', 'wir', 'unser'], 0, 'schmecken va con Dativ: wir → uns.', 'La comida nos sabe rica.'],
+  ['Ich danke ___ für die Hilfe. (Sie)', ['Ihnen', 'Sie', 'Ihr'], 0, 'danken va con Dativ: Sie → Ihnen.', 'Le agradezco la ayuda (a usted).'],
+  ['Er wird ___ guter Ingenieur.', ['ein', 'einen', 'einem'], 0, 'werden pide Nominativ a los dos lados: ein guter Ingenieur.', 'Él va a ser un buen ingeniero.'],
+  ['Ich komme aus ___ Schweiz.', ['der', 'die', 'dem'], 0, 'aus pide Dativ; die Schweiz → aus der Schweiz.', 'Vengo de Suiza.']
+];
+var RONDA = 12, CLAVE = 'aleman_casos_v1';
+
+/* ── El motor ── */
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function formaHtml(s) { return esc(s).replace(/ …([ns])$/, '<sup>+$1</sup>'); }
+function marca(s) { return esc(s).replace(/\[([^\]]+)\]/g, '<mark>$1</mark>'); }
+function ejHtml(e) { return '<div class="cs-ej"><span class="de" lang="de">' + marca(e[0]) + '</span><span class="es">' + esc(e[1]) + '</span></div>'; }
+function leer() { try { return JSON.parse(localStorage.getItem(CLAVE) || '{}') || {}; } catch (e) { return {}; } }
+function guardar(o) { try { localStorage.setItem(CLAVE, JSON.stringify(o)); } catch (e) { /* sin almacenamiento, sin récord */ } }
+
+var TABS = [['decidir', 'Cómo elegir el caso', '#CC0000', 'la tabla maestra'], ['nom', 'Nominativ', 'var(--nom)', 'el sujeto'], ['akk', 'Akkusativ', 'var(--akk)', 'lo directo'],
+            ['dat', 'Dativ', 'var(--dat)', 'a quién'], ['gen', 'Genitiv', 'var(--gen)', 'de quién'], ['practica', 'Practica', '#1a1a1a', RONDA + ' frases']];
+
+function panelCaso(k) {
+  var C = CASOS[k];
+  var tabla = '<table class="cs-t"><thead><tr><th></th>' + GENEROS.map(function (g) { return '<th>' + g + '</th>'; }).join('') + '</tr></thead><tbody>' +
+    C.formas.map(function (f, i) {
+      return '<tr><td>' + FILAS[i] + '</td>' + f.map(function (x, j) { return '<td class="f' + (C.cambian.indexOf(j) >= 0 && x !== '—' ? ' cam' : '') + '" lang="de">' + formaHtml(x) + '</td>'; }).join('') + '</tr>';
+    }).join('') + '</tbody></table>' +
+    (C.cambian.length ? '<div class="cs-nota">El punto marca lo que cambia respecto al Nominativ.' + (k === 'dat' ? ' +n: el sustantivo en plural lo añade (den Kindern).' : k === 'gen' ? ' +s: el sustantivo masculino o neutro añade -s o -es (des Vaters).' : '') + '</div>' : '');
+  var ficha = '<aside class="cs-ficha">' +
+    '<div class="cs-card"><div class="cs-lbl">La pregunta</div><div class="cs-preg"><b lang="de">' + esc(C.preg) + '</b><span>' + esc(C.pregEs) + '</span></div></div>' +
+    '<div class="cs-card"><div class="cs-lbl">Las formas</div>' + tabla + '</div>' +
+    '<div class="cs-card"><div class="cs-lbl">Los pronombres</div><div lang="de" style="font-size:15px;font-weight:700">' + esc(C.pron) + '</div></div>' +
+    (C.prep ? '<div class="cs-card"><div class="cs-lbl">Preposiciones con ' + esc(C.nombre) + '</div><div class="cs-chips">' +
+      C.prep.map(function (p) { return '<span class="cs-chip"><span lang="de">' + esc(p[0]) + '</span><small>' + esc(p[1]) + '</small></span>'; }).join('') + '</div></div>' : '') +
+    (C.piden ? '<div class="cs-card"><div class="cs-lbl">Verbos que lo piden a los dos lados</div><div class="cs-chips">' +
+      C.piden.map(function (p) { return '<span class="cs-chip"><span lang="de">' + esc(p[0]) + '</span><small>' + esc(p[1]) + '</small></span>'; }).join('') + '</div></div>' : '') +
+    (C.verbos ? '<div class="cs-card"><div class="cs-lbl">Verbos que lo piden</div><div lang="de" style="font-size:14.5px;font-weight:600;line-height:1.6">' + esc(C.verbos) + '</div></div>' : '') +
+  '</aside>';
+  var reglas = '<div class="cs-reglas">' + C.reglas.map(function (r, i) {
+      return '<article class="cs-regla"><h3><em>' + (i + 1) + '</em>' + esc(r.t) + '</h3><p>' + esc(r.d) + '</p>' + r.ej.map(ejHtml).join('') + '</article>';
+    }).join('') +
+    '<section class="cs-ojo"><h3>⚠️ Los errores típicos</h3>' + C.ojo.map(function (o) {
+      return '<div class="cs-mal"><span class="x" lang="de">' + esc(o[0]) + '</span><span class="ok" lang="de">' + esc(o[1]) + '</span><span class="por">' + esc(o[2]) + '</span></div>';
+    }).join('') + '</section></div>';
+  return '<section class="cs-panel" data-tab="' + k + '" style="--c:' + C.c + '"><div class="cs-cab"><h2 lang="de">' + esc(C.nombre) + '</h2><p>' + esc(C.que) + '</p></div>' +
+    '<div class="cs-grid">' + ficha + reglas + '</div></section>';
+}
+
+function maestraHtml(sel) {
+  var M = MAESTRA[sel], filas;
+  if (M.pron) {
+    filas = '<thead><tr><th></th><th>Nominativ</th><th>Akkusativ</th><th>Dativ</th></tr></thead><tbody>' + PRON.map(function (p) {
+      return '<tr><td class="caso" style="--c:#555">' + esc(p[0]) + '</td>' + [1, 2, 3].map(function (j) {
+        var c = ['', 'var(--nom)', 'var(--akk)', 'var(--dat)'][j];
+        return '<td class="' + (j > 1 && p[j] !== p[1] ? 'cam' : '') + '" style="--c:' + c + '" lang="de">' + esc(p[j]) + '</td>';
+      }).join('') + '</tr>';
+    }).join('') + '</tbody>';
+  } else {
+    filas = '<thead><tr><th></th>' + GENEROS.map(function (g) { return '<th>' + g + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      ['nom', 'akk', 'dat', 'gen'].map(function (k) {
+        var C = CASOS[k];
+        return '<tr><td class="caso" style="--c:' + C.c + '"><span lang="de">' + C.nombre + '</span><small>' + esc(C.preg) + '</small></td>' + M.f[k].map(function (x, j) {
+          return '<td class="' + (x !== M.f.nom[j] && x !== '—' ? 'cam' : '') + '" style="--c:' + C.c + '" lang="de">' + esc(x) + '</td>';
+        }).join('') + '</tr>';
+      }).join('') + '</tbody>';
+  }
+  return '<table class="cs-mt"><colgroup><col class="c0"><col><col><col>' + (M.pron ? '' : '<col>') + '</colgroup>' + filas + '</table>';
+}
+function verMaestra(sel) {
+  document.querySelectorAll('.cs-sel button').forEach(function (b) { b.classList.toggle('on', b.dataset.sel === sel); });
+  document.getElementById('csMaestra').innerHTML = maestraHtml(sel);
+}
+
+function panelDecidir() {
+  return '<section class="cs-panel" data-tab="decidir" style="--c:#CC0000"><div class="cs-cab"><h2>Cómo elegir el caso</h2><p>Cuatro preguntas, en este orden, y la terminación sale sola.</p></div>' +
+    '<div class="cs-pasos">' + PASOS.map(function (p, i) { return '<div class="cs-paso"><b>' + (i + 1) + '</b><h3>' + esc(p[0]) + '</h3><p>' + esc(p[1]) + '</p></div>'; }).join('') + '</div>' +
+    '<div class="cs-maestra"><div class="cs-lbl">La tabla maestra · en color, lo que cambia respecto al Nominativ</div><div class="cs-sel">' +
+      Object.keys(MAESTRA).map(function (k) { return '<button type="button" data-sel="' + k + '" onclick="verMaestra(\'' + k + '\')">' + esc(MAESTRA[k].t) + '</button>'; }).join('') +
+    '</div><div id="csMaestra"></div><div class="cs-nota">mein, dein, sein, ihr, unser, euer e Ihr se declinan igual que kein. En Dativ plural el sustantivo añade -n (mit den Kindern); en Genitiv, el masculino y el neutro añaden -s (des Vaters).</div></div></section>';
+}
+
+/* ── La práctica ── */
+var P = null;
+function barajar(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function nuevaRonda() {
+  P = { items: barajar(PRACTICA).slice(0, RONDA).map(function (it) {
+    var ops = barajar(it[1].map(function (o, i) { return { o: o, ok: i === it[2] }; }));
+    return { it: it, ops: ops, r: null };
+  }), i: 0 };
+  pintarPractica();
+}
+function responder(n) {
+  var q = P.items[P.i]; if (!q || q.r !== null) return;
+  q.r = n; pintarPractica();
+}
+function siguiente() {
+  if (P.items[P.i].r === null) return;
+  P.i++;
+  if (P.i >= P.items.length) {
+    var bien = P.items.filter(function (q) { return q.ops[q.r].ok; }).length, d = leer();
+    d.ultimo = bien; d.de = RONDA; d.mejor = Math.max(d.mejor || 0, bien); d.rondas = (d.rondas || 0) + 1; var h = new Date(); d.fecha = h.getFullYear() + '-' + String(h.getMonth() + 1).padStart(2, '0') + '-' + String(h.getDate()).padStart(2, '0');
+    guardar(d);
+  }
+  pintarPractica();
+}
+function pintarPractica() {
+  var el = document.getElementById('csPractica'); if (!el) return;
+  if (!P) { nuevaRonda(); return; }
+  var d = leer();
+  if (P.i >= P.items.length) {
+    var bien = P.items.filter(function (q) { return q.ops[q.r].ok; }), mal = P.items.filter(function (q) { return !q.ops[q.r].ok; });
+    el.innerHTML = '<div class="cs-pr-card cs-pr-fin"><h3>' + bien.length + ' de ' + P.items.length + '</h3><p>' +
+      (mal.length ? 'Repasa estas, con su regla:' : 'Todas a la primera. Los casos ya te salen.') + '</p>' +
+      (mal.length ? '<ul>' + mal.map(function (q) { var ok = q.ops.filter(function (o) { return o.ok; })[0].o;
+        return '<li><b lang="de">' + esc(q.it[0].replace('___', ok)) + '</b> — ' + esc(q.it[3]) + '</li>'; }).join('') + '</ul>' : '') +
+      '<button class="cs-pr-sig" type="button" onclick="nuevaRonda()">Otra ronda</button>' +
+      '<div class="cs-pr-mejor">Tu mejor ronda: ' + (d.mejor || 0) + ' de ' + RONDA + ' · rondas hechas: ' + (d.rondas || 0) + '</div></div>';
+    return;
+  }
+  var q = P.items[P.i], resp = q.r !== null, ok = resp && q.ops[q.r].ok, correcta = q.ops.filter(function (o) { return o.ok; })[0].o;
+  var hueco = '<span class="hueco' + (resp ? (ok ? ' bien' : ' mal') : '') + '">' + (resp ? esc(q.ops[q.r].o) : '…') + '</span>';
+  var partes = q.it[0].split('___');
+  el.innerHTML = '<div class="cs-pr-card"><div class="cs-pr-top"><span>Frase ' + (P.i + 1) + ' de ' + P.items.length + '</span><span>Teclas 1 · 2 · 3 y Enter</span></div>' +
+    '<div class="cs-pr-bar"><i style="width:' + (P.i / P.items.length * 100) + '%"></i></div>' +
+    '<div class="cs-pr-f" lang="de">' + esc(partes[0]) + hueco + esc(partes[1] || '') + '</div>' +
+    '<div class="cs-pr-es">' + esc(q.it[4]) + '</div>' +
+    '<div class="cs-pr-ops">' + q.ops.map(function (o, i) {
+      var cls = resp ? (o.ok ? 'bien' : (i === q.r ? 'mal' : '')) : '';
+      return '<button type="button" class="' + cls + '"' + (resp ? ' disabled' : '') + ' onclick="responder(' + i + ')" lang="de">' + esc(o.o) + '<small>' + (i + 1) + '</small></button>';
+    }).join('') + '</div>' +
+    (resp ? '<div class="cs-pr-por ' + (ok ? 'bien' : 'mal') + '">' + (ok ? '✓ Bien. ' : '✗ Es <b lang="de">' + esc(correcta) + '</b>. ') + esc(q.it[3]) + '</div>' +
+      '<button class="cs-pr-sig" type="button" onclick="siguiente()">' + (P.i === P.items.length - 1 ? 'Ver resultado' : 'Siguiente') + '</button>' : '') +
+    '</div>';
+}
+document.addEventListener('keydown', function (e) {
+  var pr = document.querySelector('.cs-panel[data-tab="practica"]');
+  if (!pr || !pr.classList.contains('on') || !P || P.i >= P.items.length) return;
+  if (/^[1-3]$/.test(e.key)) responder(+e.key - 1);
+  else if (e.key === 'Enter') siguiente();
+});
+
+/* ── Las pestañas: una a la vez; el ancla abre la suya (casos.html#dativ, #akk…). ── */
+var ALIAS = { nominativ: 'nom', akkusativ: 'akk', dativ: 'dat', genitiv: 'gen' };
+function ver(k, sinAncla) {
+  k = ALIAS[k] || k;
+  if (!TABS.some(function (t) { return t[0] === k; })) k = 'decidir';
+  document.querySelectorAll('.cs-panel').forEach(function (p) { p.classList.toggle('on', p.dataset.tab === k); });
+  document.querySelectorAll('.cs-tab').forEach(function (b) { var on = b.dataset.tab === k; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+  if (k === 'practica' && !P) nuevaRonda();
+  if (!sinAncla) { try { history.replaceState(null, '', '#' + k); } catch (e) { /* file:// sin historial */ } }
+  window.scrollTo(0, 0);
+}
+document.getElementById('csTabs').innerHTML = TABS.map(function (t) {
+  return '<button type="button" class="cs-tab" role="tab" data-tab="' + t[0] + '" style="--c:' + t[2] + '" onclick="ver(\'' + t[0] + '\')"><i></i>' + esc(t[1]) + ' <small>' + esc(t[3]) + '</small></button>';
+}).join('');
+document.getElementById('csMain').innerHTML = panelDecidir() + ['nom', 'akk', 'dat', 'gen'].map(panelCaso).join('') +
+  '<section class="cs-panel" data-tab="practica"><div class="cs-cab"><h2>Practica</h2><p>' + RONDA + ' frases al azar de ' + PRACTICA.length + ': elige la forma correcta y lee el porqué. Cada ronda cambia.</p></div><div class="cs-pr" id="csPractica"></div></section>';
+verMaestra('der');
+ver((location.hash || '').slice(1).toLowerCase(), true);
+</script>
+<script src="leccion.js"></script>
+<script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
+</body>
+</html>
