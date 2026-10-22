@@ -640,11 +640,11 @@ Esta pantalla es el tablero del Plan Maestro: la fase activa, la ruta de deuda, 
 - Ningún importe en el código: todo sale del maestro y de Finanzas.
 - Lo que se cuenta en pasado lleva fecha; lo que se afirma en presente coincide con el saldo vivo.
 - El cálculo es uno solo (el riel): la cifra grande, la cuenta que la da, el cierre, lo que sale cada día en el mes y la resta de la semana salen de la misma serie, y cuadran al peso. Nada de gráficas de relleno: cada número se explica con una cuenta.
-- Cualquier día que se elija enseña todo el dinero —para gastar, GBM, CETES, el depósito, lo que se debe y el patrimonio líquido—: hoy lo real, un día que viene proyectado siguiendo el plan (CIFRAS.estadoDia), nunca una cifra escrita a mano.
+- Cualquier día que se elija enseña todo el dinero —para gastar, GBM, CETES, el depósito y la BBVA—: hoy lo real, un día que viene proyectado siguiendo el plan (CIFRAS.estadoDia), nunca una cifra escrita a mano.
 - Las cifras de hoy son las mismas en toda la pantalla —la banda, Tu dinero hoy y la ventana de las fases—: lo que hay para gastar lo dice el riel (ctCifrasHoy).
 - En la ventana de las fases nada va en una sección aparte de su renglón: lo que tiene desglose —las rutinas, los servicios, la comida, el BYD— se abre ahí mismo al tocarlo, y los cortes de la salida son los mismos que en la banda y Mis Metas.
 - Los posts del negocio de su papá —Aeroresinas y Heliescala, en LinkedIn y Facebook— van en el plan de cada fase: no se quitan.
-- La banda de la fase dice lo que importa hoy de la fase —el checklist del mes y lo que toca, sus cifras contra la meta y el checkpoint con lo que da tu ritmo en el plan y lo que falta— y lleva a la ventana de las fases. Lo que pide una fase sale del plan (PROYECCION), igual que en Mis Metas.`
+- La banda de la fase dice lo que importa hoy de la fase —el checklist del mes y lo que toca, y tu dinero y la BBVA contra su meta— y lleva a la ventana de las fases, donde viven el checkpoint y lo que da tu ritmo en el plan. Lo que pide una fase sale del plan (PROYECCION), igual que en Mis Metas.`
     },
 
     metas: {

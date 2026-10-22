@@ -698,8 +698,9 @@ tokens procesados (11.4 k de salida), medido; las búsquedas son el grueso, y el
 
 ## El tablero del Plan Maestro
 
-La pantalla 2. Arriba la banda de la fase; debajo, más bajas, la ruta de deuda y el riel, y tres
-columnas: **el mes, el día que toques y la semana a la que pertenece**.
+La pantalla 2. Arriba su rótulo pequeño, *Coach · Plan Maestro*, como el de las demás pantallas; debajo la banda
+de la fase; luego, más bajas, la ruta de deuda y el riel, y tres columnas: **el mes, el día que toques y la semana a
+la que pertenece**.
 
 **La banda de la fase** (`cfbHtml`; Adán, 19-oct-2026: *"haz un mucho mejor diseño de esta barra que
 directamente te lleva a las fases, hazla más ancha y las demás de esa página del dashboard hazlas más
@@ -711,16 +712,13 @@ pequeñas, aquí ponme info importante… pon algo de las fases"*) va en dos fil
   ⚠ *auditar* si cerró sin auditar, lo que llevas de su checklist el mes en curso —con una barrita en
   su borde de abajo hasta hoy y la marca del día— y sus tareas los que vienen. Tocar un mes abre la
   ventana de las fases en ese mes (`cfbAbrir`).
-- **Abajo, lo que importa de la fase hoy**, en tres bloques: **este mes** —cuántas tareas de su
+- **Abajo, lo que importa de la fase hoy**, en dos bloques: **este mes** —cuántas tareas de su
   checklist llevas, la siguiente que te toca (su primera frase) y cuándo se audita, o *falta auditar
-  septiembre* si quedó un mes atrás; de `CIFRAS.planMes` y `fzmFicha`—; **las cifras del mes** —sus
-  metas (tu dinero, la BBVA, el patrimonio líquido) contra lo de hoy (`ctCifrasHoy`, ver *Las cifras de hoy, una
-  sola cuenta*), en verde las que van en meta y, desde la última semana, en rojo las que no—, y **el checkpoint**
-  —la fecha que cierra la fase, lo que pide en su primera cláusula —*solicitud enviada y GBM contra*
-  `{{marzoParaSalida}}`; el texto completo, en la ventana de las fases— y lo que da tu ritmo ese mes en el plan
-  (`PROYECCION`), con lo que falta o sobra contra lo que pide su corte (`cortesSalidaDash`): *$129,532 en GBM con
-  tu ritmo · faltan $56,173*, la misma cifra que la meta de la fase (*tu ritmo da…*), Mis Metas y la ventana de
-  las fases—.
+  septiembre* si quedó un mes atrás; de `CIFRAS.planMes` y `fzmFicha`— y **las cifras del mes** —tu dinero y
+  la BBVA contra su meta (`ctCifrasHoy`, ver *Las cifras de hoy, una sola cuenta*), en verde las que van en meta y,
+  desde la última semana, en rojo las que no—. El checkpoint y el patrimonio líquido no van en la banda (Adán,
+  21-oct-2026: *"quita la información del checkpoint, lo de patrimonio líquido, el auto y el iPhone"*): viven en
+  la ventana de las fases, que la banda abre.
 
 Medido a 2048×1040: la banda mide 157 px de alto (antes una fila de 46), la ruta 41 (antes 52) y el
 riel 66 (antes 77). Bajo 1180 px los meses bajan a su propia fila; bajo 760, los tres bloques van uno
@@ -741,7 +739,6 @@ Ningún importe está escrito en el código del tablero:
 | Pagos programados de un día | `CIFRAS.CALENDARIO.cobros` + el `day` de cada deuda viva + los abonos de la BBVA de `CIFRAS.planBbva` (`ctAgenda`) |
 | Tu estrategia de hoy | `CIFRAS.bbvaEstado()` (el saldo vivo de la BBVA y su plan) + el riel (`ctTramo`) |
 | Las cifras de hoy (tu dinero, la BBVA, el patrimonio) | `ctCifrasHoy()` → `CIFRAS.cifrasHoy(f, gastar)`, con lo que el riel dice que hay para gastar |
-| El checkpoint de la fase | `CIFRAS.PROYECCION` (lo que da tu ritmo ese mes) contra su corte de `cortesSalidaDash()` |
 | Tareas y fase | `PHASES`, con su estado en `coach_checks_v1` |
 | Costo de comer, por día | `CIFRAS.PRECIOS_SUPER` (aquí, `LISTA_COMPRAS_PRECIOS`) × `CIFRAS.LISTA_COMPRAS.comida` (`ctComida`) |
 
@@ -841,8 +838,8 @@ suficiente"*). Con eso, a 2048×1040 la pantalla pasó de 3,183 caracteres a 2,3
 3. **Tu dinero ese día** (`ctDineroDiaHtml`; Adán, 19-oct-2026: *"conforme seleccione otro día, debes
    proyectar todo todo hasta mis inversiones"*) — hoy, lo de Finanzas; un día que viene, la proyección
    siguiendo el plan (`CIFRAS.estadoDia`, ver `DATOS-MAESTROS.md`): para gastar (el riel: la cuenta y el
-   efectivo), GBM, los CETES y el depósito del depa —*tu dinero*—, lo que debes (la BBVA con el día en
-   que quedará en cero, el auto y el iPhone) y el patrimonio líquido, cada cifra con lo que cambia desde
+   efectivo), GBM, los CETES y el depósito del depa —*tu dinero*— y, debajo, la BBVA con el día en
+   que quedará en cero (el auto, el iPhone y el patrimonio líquido no van aquí), cada cifra con lo que cambia desde
    hoy en verde o en rojo, y al pie lo que el plan manda de aquí a ese día a la BBVA y a GBM, y lo que la
    salida cuesta en el camino. Hoy, *para gastar* es la cifra del riel y lo demás lo de Finanzas: la misma
    cuenta que la banda (`ctCifrasHoy`). Un día que ya pasó no lleva el bloque, y después del último mes en
@@ -867,12 +864,12 @@ La banda decía *Tu dinero $21,513* y la columna del día *$21,291* (Adán, 21-o
 métricas de los números para que todo cuadre"*): una tomaba el efectivo de Finanzas del día en que lo dijiste y la
 otra el riel, con lo previsto desde entonces. Ahora todo el Dashboard pide lo de hoy a `ctCifrasHoy()`, que le pasa
 al maestro (`CIFRAS.cifrasHoy(f, gastar)`) lo que el riel dice que hay para gastar: la banda de la fase, *Tu dinero
-hoy* y la ventana de las fases miden igual (*$21,291*; el patrimonio líquido, *−$276,853*). El control 42 vigila
+hoy* y la ventana de las fases miden igual (*$21,291*). El control 42 vigila
 que nadie más llame a `cifrasHoy`.
 
 **El plan y tu dinero un día no son lo mismo, y cada uno va en su sitio.** Lo que pide la fase y lo que da tu ritmo
-salen del plan (`PROYECCION`, desde la foto del 1 oct): el checkpoint de la banda, la meta de la fase, Mis Metas y
-la ventana de las fases dicen *$129,532 en GBM el 31 de marzo*. *Tu dinero ese día* proyecta desde lo de hoy
+salen del plan (`PROYECCION`, desde la foto del 1 oct): la meta y el checkpoint de la fase, Mis Metas y las barras
+de la ventana de las fases dicen *$129,532 en GBM el 31 de marzo*. *Tu dinero ese día* proyecta desde lo de hoy
 (`estadoDia`) y separa GBM y los CETES ($121,504 y $6,000): la diferencia son los $1,990 de la cuenta y el
 efectivo que la foto contó como ahorro y $38 de Didi de un lunes que ya pasó. Mes a mes los dos suben igual —lo
 que llega a GBM, las ventas, el depósito y lo que cuesta la salida— y lo vigila el control 43: `estadoDia` no
@@ -1140,7 +1137,7 @@ caben tres meses de tareas sin desplazarse. Mientras está abierta se oculta la 
 - **El dinero de la fase** (`faseAhorroHTML`, en las fases que pasan en México): la tabla de un mes de
   cada etapa, con cada renglón abrible (ver *El desglose de un renglón*); **📊 GBM al cerrar cada mes** en
   barras (`.fzg`), con la línea roja de lo que pide cada corte que cae en la fase —los de
-  `cortesSalidaDash`, los mismos que Mis Metas y el checkpoint de la banda: el cierre de la Fase 1, el día
+  `cortesSalidaDash`, los mismos que el dinero de la salida de Mis Metas: el cierre de la Fase 1, el día
   de decidir, la cuenta bloqueada y la salida completa— y debajo lo que falta o lo que sobra (*faltan
   $56,173* en marzo; en la Fase 2, *$78,642* en mayo, *$43,546* en junio y *$112,346* en agosto), y el
   patrimonio que espera la trayectoria (`liquido`).
@@ -1351,7 +1348,7 @@ de 1 px, texto en tinta y cada valor también fuera del tooltip):
 |---|---|---|
 | ISTQB CT-GenAI | Cada simulacro en columnas contra el corte y tu meta, y las preguntas de Hoy aprendes de 14 días, una celda por día | `examen_genai_v1.intentos`, `habSimulacro()`, `istqbRespuestas()` |
 | Hyrox | Las sesiones de gym de las últimas 8 semanas contra los días de tu rutina | `gymSesiones()` y la rutina de Ejercicio |
-| Maestría | El GBM que proyecta el plan al cerrar cada mes hasta irte contra lo que pide cada corte —el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la salida completa—, con lo que falta o sobra en cada uno —los mismos cortes y cifras que el checkpoint del Plan Maestro—; tu dinero hoy contra lo que el plan pide al cerrar el mes, con la definición de la banda, y el alemán (la lección y el vocabulario del nivel) | `CIFRAS.PROYECCION`, `cortesSalidaDash()`, `ctCifrasHoy()` |
+| Maestría | El GBM que proyecta el plan al cerrar cada mes hasta irte contra lo que pide cada corte —el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la salida completa—, con lo que falta o sobra en cada uno —los mismos cortes y cifras que la ventana de las fases—; tu dinero hoy contra lo que el plan pide al cerrar el mes, con la definición de la banda, y el alemán (la lección y el vocabulario del nivel) | `CIFRAS.PROYECCION`, `cortesSalidaDash()`, `ctCifrasHoy()` |
 | Torneo de ajedrez | Lo que queda de tu sistema antes de la fecha: los sábados de partidas y los días de puzzles | el plan |
 | Las de largo plazo | Tu patrimonio líquido contra la trayectoria del millón hasta la fecha de la meta, con hoy y la meta marcados: es lo que las habilita | `CIFRAS.PROYECCION.meses`, `patrimonioLiquido()` |
 

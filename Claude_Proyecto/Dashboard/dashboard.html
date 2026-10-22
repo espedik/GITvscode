@@ -1491,7 +1491,7 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .cfb-mes.hoy::before{content:'';position:absolute;left:0;bottom:0;height:3px;width:var(--va,0%);background:var(--w)}
 .cfb-mes.hoy::after{content:'';position:absolute;left:var(--va,0%);bottom:0;height:8px;width:2px;margin-left:-1px;border-radius:2px 2px 0 0;background:var(--text)}
 /* Abajo, lo que importa hoy de la fase: este mes, sus cifras y el checkpoint. */
-.cfb-abajo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cfb-abajo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .cfb-b{min-width:0;display:flex;flex-direction:column;gap:5px;padding:9px 12px 10px;border-radius:11px;
   background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.07)}
 .cfb-k{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-family:var(--mono);font-size:9.5px;
@@ -1500,8 +1500,6 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .cfb-k em.mal{color:var(--r)}
 .cfb-v{display:flex;align-items:baseline;gap:7px;min-width:0;font-size:12px;color:var(--text2)}
 .cfb-v b{font-family:var(--mono);font-size:17px;font-weight:800;line-height:1.05;color:var(--text);white-space:nowrap}
-.cfb-v em{font-style:normal;font-family:var(--mono);font-size:12px;font-weight:700;white-space:nowrap;color:var(--g)}
-.cfb-v em.falta{color:var(--w)}
 .cfb-barra{height:4px;border-radius:3px;background:rgba(var(--ov),.12);overflow:hidden}
 .cfb-barra i{display:block;height:100%;border-radius:3px;background:var(--g)}
 .cfb-toca{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;line-height:1.4;color:var(--text)}
@@ -1511,7 +1509,6 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .cfb-n b.bien{color:var(--g)}
 .cfb-n b.mal{color:var(--r)}
 .cfb-n i{font-style:normal;font-family:var(--mono);font-size:10px;color:var(--text3);white-space:nowrap;text-align:right}
-.cfb-cp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;line-height:1.4;color:var(--text2)}
 
 .coach-ruta-band{display:flex;align-items:center;gap:9px;padding:4px 12px;border-radius:12px;
   background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.09);margin-bottom:8px;flex-shrink:0}
@@ -4632,6 +4629,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
            sobre los logros — "si no, sentiré que no logro nada".
            El párrafo largo de `explica` salió de la pantalla y vive ahora en el `title` de la
            banda de fase: repetía lo que la ruta de deuda ya dice con números reales. -->
+      <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Plan Maestro</div>
       <div class="coach-fase-band reveal d1" id="coachFaseBand"></div>
       <div class="coach-ruta-band reveal d2" id="coachRutaBand"></div>
       <!-- El riel: una sola cifra manda y a su lado la cuenta que la da, al peso (la línea de cómo caía el dinero
@@ -8952,8 +8950,9 @@ function ctCifrasHoy(){
    esto debido a que ya tenemos un trackeo muy completo de mis finanzas". En la columna del día, todo tu
    dinero: hoy, lo que dice Finanzas; un día que viene, la proyección siguiendo el plan
    (`CIFRAS.estadoDia`). Para gastar es el riel —la cuenta y el efectivo—; GBM, los CETES y el depósito
-   del depa completan tu dinero; la BBVA, el auto y el iPhone son lo que debes, y la resta es el
-   patrimonio líquido. Cada cifra lleva lo que cambia desde hoy. Un día que ya pasó no se proyecta. */
+   del depa completan tu dinero, y debajo, la BBVA. El auto, el iPhone y el patrimonio líquido no van aquí (Adán,
+   21-oct-2026: "quita… lo de patrimonio líquido, el auto y el iPhone"). Cada cifra lleva lo que cambia desde hoy.
+   Un día que ya pasó no se proyecta. */
 function ctDineroDiaHtml(T, dd){
   if(dd < 0 || !window.CIFRAS || !CIFRAS.estadoDia) return '';
   const E = CIFRAS.estadoDia(ctSel);
@@ -8963,7 +8962,7 @@ function ctDineroDiaHtml(T, dd){
   if(!H0) return '';
   // Para gastar: el riel de ese día y, para la diferencia, el de hoy.
   const gastar0 = dd === 0 ? T.hoy.saldo : ctCifrasHoy().gastar;
-  const tuyo = x => x.gbm + x.cetes + x.deposito + x.btc, debes = x => x.bbva + x.auto + x.iphone + x.otras;
+  const tuyo = x => x.gbm + x.cetes + x.deposito + x.btc;
   const din = T.hoy.saldo + tuyo(E), din0 = gastar0 + tuyo(H0);
   const MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
   const dC = d => d ? d.getDate()+' '+MC[d.getMonth()] : '';
@@ -8986,8 +8985,6 @@ function ctDineroDiaHtml(T, dd){
     (E.btc > 0 ? fila('Bitcoin', '', money(E.btc), cambio(E.btc, H0.btc)) : '') +
     fila('Tu dinero', '', money(din), cambio(din, din0), 'tot') +
     fila('La BBVA', E.bbva > 0 ? 'en cero el '+dC(E.bbvaCero) : 'en cero', E.bbva > 0 ? '−'+money(E.bbva) : money(0), cambio(E.bbva, H0.bbva, true), E.bbva > 0 ? 'debe' : '') +
-    fila('El auto y el iPhone', '', '−'+money(E.auto + E.iphone + E.otras), cambio(E.auto + E.iphone + E.otras, H0.auto + H0.iphone + H0.otras, true), 'debe') +
-    fila('Patrimonio líquido', '', (din - debes(E) < 0 ? '−' : '')+money(Math.abs(din - debes(E))), cambio(din - debes(E), din0 - debes(H0)), 'tot') +
     (dd === 0 ? '<span class="cdd-nota">Para gastar es la cifra del riel; lo demás, lo de Finanzas hoy. Toca un día que viene y lo ves proyectado con el plan.</span>' : resta)+
   '</div>';
 }
@@ -9705,10 +9702,9 @@ function renderCoach(){
    fechas y dónde vas, y sus meses como una línea partida —cada uno con su auditoría (✓ auditado, ⚠ sin
    auditar, en curso con la marca de hoy, por venir)—; tocar un mes abre la ventana de las fases en ese
    mes (`cfbAbrir`). Abajo, lo que importa de la fase hoy: ESTE MES —lo que llevas de su checklist, lo
-   que te toca y cuándo se audita (`CIFRAS.planMes`, `fzmFicha`)—, LAS CIFRAS DEL MES —sus metas contra lo
-   de hoy (`ctCifrasHoy`), con la regla de su ficha: desde la última semana se pintan en rojo— y EL
-   CHECKPOINT —la fecha que cierra la fase, lo que pide y lo que da tu ritmo ese mes en el plan (`PROYECCION`), con lo
-   que falta o sobra—. Toda la banda abre la ventana de las fases. */
+   que te toca y cuándo se audita (`CIFRAS.planMes`, `fzmFicha`)— y LAS CIFRAS DEL MES —tu dinero y la BBVA
+   contra su meta (`ctCifrasHoy`), con la regla de su ficha: desde la última semana se pintan en rojo—. El
+   checkpoint y el patrimonio líquido viven en la ventana de las fases, que abre toda la banda. */
 function cfbHtml(ph, DF){
   const C = window.CIFRAS, i = PHASES.indexOf(ph), A = fzmAud(), checks = rawGet('coach_checks_v1', {}) || {};
   const hoy = new Date(); hoy.setHours(0,0,0,0);
@@ -9749,27 +9745,15 @@ function cfbHtml(ph, DF){
           : '<span class="cfb-toca"><small>Listo</small>Todo el checklist del mes está hecho: queda sostener lo de cada semana.</span>')+'</div>';
   // Las cifras del mes contra lo de hoy, con la regla de su ficha.
   const vivo = ctCifrasHoy(), juzga = dAud <= 7;
-  const CORTO = { dinero: 'Tu dinero', bbva: 'La BBVA', liquido: 'Patrimonio líquido' };
+  // Tu dinero y la BBVA; el patrimonio líquido no va en la banda (se audita en la ventana de las fases).
+  const CORTO = { dinero: 'Tu dinero', bbva: 'La BBVA' };
   const cifras = '<div class="cfb-b"><span class="cfb-k">Las cifras de '+fzmMesMin(hoyYM)+'<em>meta al '+finMes.getDate()+'</em></span>'+
-    (P.metas || []).map(function(m){
+    (P.metas || []).filter(m => CORTO[m.k]).map(function(m){
       const real = vivo[m.k], tiene = typeof real === 'number', bien = tiene && fzmEnMeta(m, real, m.meta);
       return '<span class="cfb-n"><span>'+(CORTO[m.k] || m.t)+'</span><b class="'+(bien ? 'bien' : tiene && juzga ? 'mal' : '')+'">'+(tiene ? (real < 0 ? '−' : '')+num(Math.abs(real)) : '—')+
         '</b><i>de '+(m.meta < 0 ? '−' : '')+num(Math.abs(m.meta))+'</i></span>';
     }).join('')+'</div>';
-  // El checkpoint: su fecha, lo que pide y lo que da tu ritmo ese mes en el plan (`PROYECCION`): la misma cifra que la meta
-  // de la fase —«tu ritmo da…»—, Mis Metas y la ventana de las fases, con lo que falta o sobra contra lo que pide (Adán,
-  // 21-oct-2026: "todo cuadre"; la banda decía $133,504 y la meta de la fase $129,532).
-  const filaCp = C.PROYECCION ? C.PROYECCION.meses.filter(m => m.mes === fzmYM(ph.end))[0] : null;
-  const pideCp = ((cortesSalidaDash().filter(c => c.mes === fzmYM(ph.end))[0]) || {}).pide || 0;
-  // Lo que pide, en su primera cláusula («solicitud enviada y GBM contra {{marzoParaSalida}}», ya resuelto); si queda muy corta, su primera
-  // frase. El texto completo vive en la ventana de las fases, que abre la banda.
-  const cpTodo = ph.checkpoint ? C.texto(String(ph.checkpoint)).replace(/^[^:]{0,40}:\s*/, '') : '';
-  const cp1 = (cpTodo.split(/,\s|\s—|\.\s/)[0] || '').trim(), cp = cp1.length >= 20 ? cp1 : cpTodo.split(/\.\s/)[0];
-  const check = '<div class="cfb-b"><span class="cfb-k">El checkpoint · '+dC(ph.end)+'<em>'+dias(Math.max(0, DF.quedan))+'</em></span>'+
-    (cp ? '<span class="cfb-cp">'+cp+'</span>' : '')+
-    (filaCp ? '<span class="cfb-v"><b>'+num(filaCp.alemania)+'</b>en GBM con tu ritmo'+
-      (pideCp ? ' · <em class="'+(filaCp.alemania >= pideCp ? '' : 'falta')+'">'+(filaCp.alemania >= pideCp ? 'sobran ' : 'faltan ')+num(Math.abs(pideCp - filaCp.alemania))+'</em>' : '')+'</span>' : '')+'</div>';
-  return arriba+'<div class="cfb-abajo">'+esteMes+cifras+check+'</div>';
+  return arriba+'<div class="cfb-abajo">'+esteMes+cifras+'</div>';
 }
 // Un mes de la banda abre la ventana de las fases en esa fase y en ese mes.
 function cfbAbrir(i, ym){
