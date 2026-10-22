@@ -1345,7 +1345,9 @@ marcado. El punto lleva el estado (ámbar en marcha, gris sin empezar, hueco en 
 pasos atrasados; las que caen casi juntas van en un grupo —el cierre del plan junta Hong Kong, la empresa, el depa
 y el Cupra— y cada nombre abre su panel. Las etiquetas van en tres carriles para no encimarse; en el teléfono,
 solo el icono. **Dos columnas en las dos listas**: seis fichas en tres filas cada una, las logradas al final de
-corto plazo. Medido: a 2048×1040 no desplaza ninguna, y las 7 etiquetas no chocan a 2560, 1920, 1600, 1366 ni 390.
+corto plazo. Medido a 2048×1040: la franja mide 208 px (Adán, 21-oct-2026: *"hazlo 1/3 más grande a lo
+alto"*), con la línea del tiempo a 132 px y sus carriles a 28, y ninguna lista desplaza; las 7 etiquetas no chocan a
+2560, 1920, 1600, 1366 ni 390.
 
 **El dinero real** de la Maestría es una barra continua en `--ac2`, distinta de las marcas de
 paso, con la cifra (`$2,500 ahorrado`): `METAS_MONEYBAR.maestria.short`; `.lbl` va en el `title`.

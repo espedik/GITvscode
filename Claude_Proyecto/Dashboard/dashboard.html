@@ -305,7 +305,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 /* ─── Franja de instrumentos ─────────────────────────────────────────── */
 .mg-bay{flex-shrink:0;position:relative;display:flex;flex-direction:column;gap:8px;
-  padding:9px clamp(12px,1.4vw,18px);margin-bottom:clamp(7px,1vh,11px);
+  padding:13px clamp(12px,1.4vw,18px);margin-bottom:clamp(7px,1vh,11px);
   background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.11);border-radius:3px;
   box-shadow:0 10px 34px rgba(0,0,0,.26),inset 0 1px 0 rgba(var(--ov),.05)}
 /* La regla de edad vive DENTRO de la franja, separada por un filete: como caja aparte
@@ -327,7 +327,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 /* La línea del tiempo de las metas (`mgLineaHtml`), en lugar del ecualizador: el eje con hoy a la izquierda,
    cada meta con su punto sobre el eje y su etiqueta en uno de tres carriles, las fases del Plan Maestro debajo
    y las fechas al pie. El corte marca dónde la escala se comprime (los próximos 15 meses van al 58 %). */
-.mgl{position:relative;height:90px;margin-top:3px}
+/* Un tercio más alta que antes (Adán, 21-oct-2026: "hazlo 1/3 más grande a lo alto"): 132 px y carriles de 28. */
+.mgl{position:relative;height:132px;margin-top:3px}
 .mgl-eje{position:absolute;left:0;right:0;bottom:30px;height:1px;background:rgba(var(--ov),.28)}
 .mgl-corte{position:absolute;bottom:26px;width:6px;height:9px;margin-left:-3px;transform:skewX(-22deg);
   border-left:1px solid rgba(var(--ov),.5);border-right:1px solid rgba(var(--ov),.5);background:var(--bg)}
@@ -340,9 +341,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .mgl-m>i{position:absolute;left:-5px;bottom:-5px;width:10px;height:10px;border-radius:50%;background:var(--mc);box-shadow:0 0 0 2px var(--bg)}
 .mgl-m.pausa>i{background:var(--bg);box-shadow:inset 0 0 0 2px var(--mc)}
 .mgl-m.tarde>i{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--r)}
-.mgl-m::before{content:'';position:absolute;left:-.5px;bottom:5px;width:1px;height:calc(6px + var(--l)*18px);
+.mgl-m::before{content:'';position:absolute;left:-.5px;bottom:5px;width:1px;height:calc(6px + var(--l)*28px);
   background:color-mix(in srgb,var(--mc) 55%,transparent)}
-.mgl-m>span{position:absolute;left:-2px;bottom:calc(9px + var(--l)*18px);display:flex;align-items:baseline;gap:6px;
+.mgl-m>span{position:absolute;left:-2px;bottom:calc(9px + var(--l)*28px);display:flex;align-items:baseline;gap:6px;
   white-space:nowrap;padding:2px 6px;border-radius:4px;border-left:2px solid var(--mc);background:rgba(var(--ov),.06);
   font-size:11px;font-weight:700;line-height:1.25;color:var(--text);transition:background .15s}
 .mgl-m.der>span{left:auto;right:-2px;border-left:0;border-right:2px solid var(--mc)}
@@ -370,7 +371,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 /* ─── La regla de edad ───────────────────────────────────────────────── */
 .mg-age{display:flex;align-items:center;gap:clamp(8px,1vw,13px);cursor:pointer;
-  padding-top:8px;border-top:1px solid rgba(var(--ov),.1);
+  padding-top:10px;border-top:1px solid rgba(var(--ov),.1);
   transition:opacity .2s}
 .mg-age:hover{opacity:.75}
 .mg-age-k{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.16em;
