@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Plan Maestro · B</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;700&amp;family=Fraunces:opsz,wght@9..144,600;9..144,700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#047a6b}a:hover{color:#035c51}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 1040px; box-sizing: border-box; padding: 26px 40px 30px; display: flex; flex-direction: column; gap: 12px; background: #f2f2f6; color: #16161a; font-family: Inter, -apple-system, sans-serif;">
+  <div style="display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: #5c5f70;">
+    <span style="width: 8px; height: 8px; border-radius: 50%; background: #a8790a;"></span><span>Coach · Plan Maestro</span>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px; padding: 16px 20px; border-radius: 16px; background: #ffffff; border: 1px solid rgba(0,0,0,.12);">
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; padding-bottom: 14px; border-bottom: 1px solid rgba(0,0,0,.1);">
+      <sc-for list="{{fases}}" as="f" hint-placeholder-count="5">
+        <button type="button" style="all: unset; cursor: pointer; display: flex; flex-direction: column; gap: 4px; padding: 10px 14px; border-radius: 12px; background: {{f.fondo}}; border: 1px solid {{f.borde}}; border-top: 3px solid {{f.color}}; box-sizing: border-box; min-width: 0;">
+          <span style="font-family: 'Space Grotesk', monospace; font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #63667c;">{{f.tag}}</span>
+          <span style="font-size: 13.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{f.titulo}}</span>
+          <span style="font-size: 12px; font-weight: 600; color: #5c5f70;">{{f.fechas}}</span>
+          <span style="font-size: 11.5px; color: #63667c;">{{f.estado}}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px;">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-family: 'Space Grotesk', monospace; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #63667c;">Fase 1 · en curso</span>
+        <span style="font-family: Fraunces, Georgia, serif; font-size: 28px; font-weight: 700;">Solicitud enviada y el ahorro en marcha</span>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <div style="padding: 8px 14px; border-radius: 10px; border: 1px solid rgba(0,0,0,.12);"><span style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: .12em; color: #63667c;">EMPIEZA</span><b style="font-size: 15px;">1 de octubre de 2026</b></div>
+        <div style="padding: 8px 14px; border-radius: 10px; border: 1px solid rgba(0,0,0,.12);"><span style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: .12em; color: #63667c;">TERMINA</span><b style="font-size: 15px;">31 de marzo de 2027</b></div>
+        <div style="padding: 8px 14px; border-radius: 10px; border: 1px solid rgba(0,0,0,.12);"><span style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: .12em; color: #63667c;">DURA</span><b style="font-size: 15px;">6 meses</b></div>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <span style="display: block; height: 6px; border-radius: 3px; background: rgba(0,0,0,.08); overflow: hidden;"><span style="display: block; width: 12%; height: 100%; background: #06b6d4;"></span></span>
+      <span style="font-size: 13px; color: #5c5f70;">Vas en el día <b style="color: #16161a;">21</b> de 182 · quedan <b style="color: #16161a;">161 días</b></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 10px 12px; border-radius: 12px; background: rgba(0,0,0,.035);">
+      <button type="button" style="all: unset; cursor: pointer; padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(0,0,0,.12); font-size: 13px; font-weight: 600;">Información general</button>
+      <sc-for list="{{meses}}" as="m" hint-placeholder-count="6">
+        <button type="button" style="all: unset; cursor: pointer; display: flex; flex-direction: column; gap: 1px; padding: 6px 14px; border-radius: 8px; background: {{m.fondo}}; color: {{m.texto}}; border: 1px solid rgba(0,0,0,.1);">
+          <b style="font-size: 13px;">{{m.n}}</b><span style="font-size: 11px; opacity: .85;">{{m.d}}</span>
+        </button>
+      </sc-for>
+      <span style="margin-left: auto; font-size: 13px; color: #c81e3a; font-weight: 600;">Septiembre cerró sin auditar →</span>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 8px;">
+    <sc-for list="{{medidores}}" as="k" hint-placeholder-count="8">
+      <button type="button" style="all: unset; cursor: pointer; display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-radius: 12px; background: #ffffff; border: 1px solid rgba(0,0,0,.12); min-width: 0; box-sizing: border-box;">
+        <span style="font-size: 12px; font-weight: 600; color: #5c5f70; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{k.n}}</span>
+        <span style="font-family: 'Space Grotesk', monospace; font-size: 20px; font-weight: 700; color: {{k.color}};">{{k.v}}</span>
+        <span style="font-size: 11.5px; color: #63667c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{k.d}}</span>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr); gap: 12px; flex: 1;">
+    <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 15px; background: #ffffff; border: 1px solid rgba(0,0,0,.12);">
+      <span style="font-size: 9.5px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #63667c;">Elige el día</span>
+      <span style="font-family: Fraunces, Georgia, serif; font-size: 19px; font-weight: 700;">Octubre 2026</span>
+      <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); grid-auto-rows: 36px; gap: 4px;">
+        <sc-for list="{{celdas}}" as="d" hint-placeholder-count="35">
+          <div style="visibility: {{d.vis}}; padding: 4px 7px; border-radius: 8px; background: {{d.fondo}}; border: 1px solid {{d.borde}}; font-family: 'Space Grotesk', monospace; font-size: 11.5px; font-weight: 700; box-sizing: border-box;">{{d.n}}</div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border-radius: 15px; background: rgba(4,122,107,.04); border: 1px solid rgba(4,122,107,.32);">
+      <span style="font-size: 9.5px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #047a6b;">Ese día</span>
+      <span style="font-family: Fraunces, Georgia, serif; font-size: 19px; font-weight: 700;">Miércoles 21</span>
+      <div style="display: flex; justify-content: space-between; padding: 8px 12px; border-radius: 9px; background: rgba(0,0,0,.04); font-size: 13px;"><b>Comer</b><b style="font-family: 'Space Grotesk', monospace;">−$110</b></div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border-radius: 15px; background: #ffffff; border: 1px solid rgba(0,0,0,.12);">
+      <span style="font-size: 9.5px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #7f4fb8;">Esta semana</span>
+      <span style="font-family: Fraunces, Georgia, serif; font-size: 19px; font-weight: 700;">Del 15 al 21</span>
+      <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 12px 14px; border-radius: 12px; background: rgba(127,79,184,.07);"><b style="font-size: 13px;">Cierras el miércoles 21 con</b><b style="font-family: 'Space Grotesk', monospace; font-size: 22px; color: #7f4fb8;">$3,600</b></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":2048,"height":1040}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const fases = [
+      ['Fase 0', 'Cerrar la fuga y arrancar ingreso', '1 ago → 30 sep 2026', '✓ cerrada', '#22c55e'],
+      ['Fase 1 · hoy', 'Solicitud enviada y el ahorro en marcha', '1 oct 2026 → 31 mar 2027', 'quedan 161 días', '#06b6d4'],
+      ['Fase 2', 'Admisión, visa y salida', '1 abr → 31 ago 2027', 'empieza en 5 meses', '#f59e0b'],
+      ['Fase 3', 'Esslingen: la maestría que cambia tu sueldo', '1 sep 2027 → 28 feb 2029', 'empieza en 10 meses', '#ec4899'],
+      ['Fase 4', 'El millón líquido con sueldo de ingeniero', '1 mar 2029 → 31 dic 2031', 'empieza en 28 meses', '#8b5cf6']
+    ].map((f, i) => ({ tag: f[0], titulo: f[1], fechas: f[2], estado: f[3], color: f[4],
+      fondo: i === 1 ? 'rgba(4,122,107,.06)' : '#ffffff', borde: i === 1 ? '#047a6b' : 'rgba(0,0,0,.12)' }));
+    const meses = [['Oct', '2 de 11'], ['Nov', '8 tareas'], ['Dic', '3 tareas'], ['Ene', '4 tareas'], ['Feb', '5 tareas'], ['Mar', '2 tareas']]
+      .map((m, i) => ({ n: m[0], d: m[1], fondo: i === 0 ? '#047a6b' : '#ffffff', texto: i === 0 ? '#ffffff' : '#16161a' }));
+    const medidores = [
+      ['Fondo de emergencia', '$5,000', '50% · meta $10,000', '#a8790a'], ['Deuda cara (BBVA)', '$9,500', '37% pagado', '#c81e3a'],
+      ['Fondo de la maestría', '$15,000', '4% de $398,000', '#047a6b'], ['Patrimonio hacia $1M', '$250,000', '25% del millón', '#00a758'],
+      ['Intereses este mes', '$2,800', '26% menos que al inicio', '#c81e3a'], ['Total invertido', '$12,000', 'Depósito y GBM', '#047a6b'],
+      ['Deuda total', '$300,000', '28% pagado', '#c81e3a'], ['Camino a 2031', '1,900 días', '5% recorrido', '#7f4fb8']
+    ].map(k => ({ n: k[0], v: k[1], d: k[2], color: k[3] }));
+    const celdas = [];
+    for (let k = 0; k < 35; k++) { const n = k - 2, v = n < 1 || n > 31;
+      celdas.push({ n: v ? '' : String(n), vis: v ? 'hidden' : 'visible', fondo: n === 21 ? 'rgba(4,122,107,.12)' : 'rgba(0,0,0,.04)', borde: n === 21 ? '#047a6b' : 'rgba(0,0,0,.08)' }); }
+    return { fases, meses, medidores, celdas };
+  }
+}
+</script>
+</body>
+</html>

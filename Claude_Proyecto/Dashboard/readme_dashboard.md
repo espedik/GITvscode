@@ -698,42 +698,44 @@ tokens procesados (11.4 k de salida), medido; las búsquedas son el grueso, y el
 
 ## El tablero del Plan Maestro
 
-La pantalla 2. Arriba su rótulo pequeño, *Coach · Plan Maestro*, como el de las demás pantallas; debajo la banda
-de la fase, los ocho medidores del dinero y del plan, y tres columnas: **el mes, el día que toques y la semana a la que
-pertenece**. Sin la ruta de deuda ni el riel de la quincena (Adán, 21-oct-2026: *"esto quítalo"*): en su lugar van los
-medidores. *Tu estrategia de hoy* va arriba del panel de **Deuda cara** y tu dinero, cuenta por cuenta, en el de
-**Patrimonio** (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las cantidades"*).
+La pantalla 2, de arriba abajo: su rótulo pequeño, *Coach · Plan Maestro*; **la ruta de las cinco fases**; **el mes en
+curso**; **los ocho medidores** del dinero y del plan, y tres columnas: **el mes, el día que toques y la semana a la que
+pertenece**. Diseño: Main de `diseno-planmaestro/` (Adán, 22-oct-2026: *"el diseño de las fases del dashboard no me
+gusta porque no me muestra info útil, y además cuando doy click me muestra la otra información, pero como que eso no
+cuadra… arregla todo el diseño, deja el calendario y lo de las cifras"*). Lo que no cuadraba: la banda de antes resumía
+la fase con su propio diseño (*2 de 11*, meses con *8 tareas*) y la ventana enseñaba otra cosa. Ahora la ruta y el mes
+en pantalla **son las piezas de la ventana de las fases**, con sus mismas clases y funciones.
 
-**La banda de la fase** (`cfbHtml`; Adán, 19-oct-2026: *"haz un mucho mejor diseño de esta barra que
-directamente te lleva a las fases, hazla más ancha y las demás de esa página del dashboard hazlas más
-pequeñas, aquí ponme info importante… pon algo de las fases"*) va en dos filas:
+- **La ruta** (`#coachFaseBand`, `fzRutaHtml(true)`): la misma de la ventana —una tarjeta por fase con su color, su
+  nombre y sus fechas en un renglón, su título y cómo va: *2 meses · ✓ cerrada*, *día 21 de 182 · quedan 161 días*
+  con su barra en la fase en curso, *empieza en 5 meses*—; el porqué de la fase (`explica`) va en su título. Tocar una
+  abre la ventana en esa fase (`cfbFase`); en la ventana, `fzRutaHtml(false)` cambia de fase (`kpiFaseTab`).
+- **El mes en curso** (`#pmMes`, `pmMesHtml()`): la ficha del mes de la ventana en corto. Arriba su nombre, *ESTE MES*,
+  la fase, sus días y cuándo se audita (*se audita desde el 25 · en 4 días*), y sus pestañas —*Información general* y
+  los meses de la fase, con el punto de su auditoría—, cada una abre la ventana en ese mes (`cfbAbrir`). Debajo, si el
+  mes anterior cerró sin auditar, el mismo aviso de la ficha con *Auditar septiembre*. Y tres columnas: **lo que tiene
+  que quedar hecho** —las tareas de la fase, las que pasaron del mes anterior y las correcciones; hasta cinco, cada una
+  en un renglón con su texto completo en el título, la primera pendiente con *Te toca*, y se palomean aquí mismo
+  (`pmCheck` → `toggleFaseCheck`, en la semana de hoy, la misma casilla que la ventana y Mi Día)—; **para la salida a
+  Alemania** —tres, las pendientes primero— y *lo que sostienes todo el mes*; y **las cifras del mes** con
+  `fzmCifrasHTML`, la misma función de la ficha, sin el patrimonio líquido (Adán, 21-oct-2026: *"quita la información
+  del checkpoint, lo de patrimonio líquido, el auto y el iPhone"*). Lo que no cabe dice *Y 3 más…* y abre la ficha.
 
-- **Arriba, la fase en el tiempo**: su chip y su título, sus fechas, *día 19 de 182 · quedan 163 días*
-  (`CIFRAS.diasFase()`, la misma cuenta del calendario, la ventana de las fases y Coach) y sus meses
-  como una línea partida. Cada mes dice su auditoría y algo de él: ✓ con su calificación si se auditó,
-  ⚠ *auditar* si cerró sin auditar, lo que llevas de su checklist el mes en curso —con una barrita en
-  su borde de abajo hasta hoy y la marca del día— y sus tareas los que vienen. Tocar un mes abre la
-  ventana de las fases en ese mes (`cfbAbrir`).
-- **Abajo, lo que importa de la fase hoy**, en dos bloques: **este mes** —cuántas tareas de su
-  checklist llevas, la siguiente que te toca (su primera frase) y cuándo se audita, o *falta auditar
-  septiembre* si quedó un mes atrás; de `CIFRAS.planMes` y `fzmFicha`— y **las cifras del mes** —tu dinero y
-  la BBVA contra su meta (`ctCifrasHoy`, ver *Las cifras de hoy, una sola cuenta*), en verde las que van en meta y,
-  desde la última semana, en rojo las que no—. El checkpoint y el patrimonio líquido no van en la banda (Adán,
-  21-oct-2026: *"quita la información del checkpoint, lo de patrimonio líquido, el auto y el iPhone"*): viven en
-  la ventana de las fases, que la banda abre.
+*Tu estrategia de hoy* va arriba del panel de **Deuda cara** y tu dinero, cuenta por cuenta, en el de **Patrimonio**
+(Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las
+cantidades"*). Sin la ruta de deuda, el riel de la quincena ni *Te toca esta semana*.
 
-Medido a 2048×1040: la banda mide 147 px de alto y los medidores 56; debajo, cada columna mide lo que lleva —el mes 311, el día
-151 y la semana 376—. Bajo
-1180 px los meses bajan a su propia fila; bajo 760, los bloques van uno debajo de otro, y a 390 px no hay
-desplazamiento horizontal.
+Medido a 2048×1040: la ruta mide 81 px, el mes en curso 284, los medidores 83 y el tablero 378, con las tres columnas
+sin desplazarse. El tablero no baja de 376 px: en una pantalla más baja (1366×768) la página baja en vez de
+aplastarlo. Bajo 1180 px el mes en curso va en dos columnas y bajo 760, en una; a 390 px no hay desplazamiento
+horizontal.
 
-**Toda la banda es un botón**: abre la ventana de las fases (`abrirKpi('fases')`, en
-`kpiDetalle`) con fechas, estado, meta, el porqué en tarjetas, el checkpoint y el checklist de cada mes leído de
-`coach_checks_v1`. En las fases que pasan en México, **💰 Tu ahorro en esta fase** (`faseAhorroHTML`): un mes de cada etapa —con depa y en casa de tu familia— renglón por renglón, cada uno abrible con su desglose, y GBM al cerrar cada mes en barras contra lo que pide cada corte de la salida que cae en la fase (`cortesSalidaDash`: el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la salida completa); el mismo desglose que Coach. El título del módulo Fase de Mi Día abre la misma ventana.
+La ventana de las fases (`abrirKpi('fases')`, en `kpiDetalle`) lleva fechas, estado, meta, el porqué en tarjetas, el
+checkpoint y el checklist de cada mes leído de `coach_checks_v1`. En las fases que pasan en México, **💰 Tu ahorro en esta fase** (`faseAhorroHTML`): un mes de cada etapa —con depa y en casa de tu familia— renglón por renglón, cada uno abrible con su desglose, y GBM al cerrar cada mes en barras contra lo que pide cada corte de la salida que cae en la fase (`cortesSalidaDash`: el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la salida completa); el mismo desglose que Coach. El título del módulo Fase de Mi Día abre la misma ventana.
 
 ### Los ocho medidores
 
-Entre la banda de la fase y el tablero, donde estaban la ruta de deuda y el riel (Adán, 21-oct-2026: *"todo esto,
+Entre el mes en curso y el tablero, donde estaban la ruta de deuda y el riel (Adán, 21-oct-2026: *"todo esto,
 ponlo en lo que acabas de quitar y quítalo de mis metas"*): **Fondo de emergencia, Deuda cara, Fondo Maestría,
 Patrimonio hacia $1M, Intereses este mes, Total invertido, Deuda total y Camino a 2031** (`#pmMedidores`,
 `tiles` en `renderMedidores()`, que pinta `renderCoach()`; el precio del Bitcoin los refresca). Cada uno lleva el
@@ -741,11 +743,12 @@ porcentaje en su línea de detalle y abre su desglose (`abrirKpi` → `kpiDetall
 arriba *Tu estrategia de hoy* (ver abajo). En **Deuda cara** y
 **Deuda total** la barra es verde sobre rojo: lo verde es lo pagado y lo rojo lo que falta (`fill`/`track` del tile;
 la pista es `--r` al 60 %), y el avance de Deuda total se mide sobre lo que nació cada deuda, liquidadas incluidas.
-Son compactos (Adán: *"en las cifras que están arriba de metas, todos los recuadros, hazlos más pequeños"*): cifra
-a 14 px como máximo y la línea de detalle en un renglón, con el texto completo en el `title`; *ver detalle →* flota
-arriba a la derecha al pasar el cursor. **Desde 1400 px van en una sola fila de ocho**: en dos filas, a 2048×1040
+Son compactos (Adán: *"en las cifras que están arriba de metas, todos los recuadros, hazlos más pequeños"*) y se
+leen sin saber la app: el título en palabras normales con un cuadrito de su color, la cifra a 19 px, su barra y una
+línea de detalle que cabe entera —*41% pagado · en cero el 15 nov*, *26% menos que al inicio*, *65% del dinero de la
+maestría*; lo demás, en su panel—; *ver detalle →* flota arriba a la derecha al pasar el cursor. **Desde 1400 px van en una sola fila de ocho**: en dos filas, a 2048×1040
 la columna del día se quedaba 34 px corta. Bajo 1400 van de cuatro en cuatro y bajo 900, de dos en dos. Medido a
-2048×1040: la fila mide 56 px y todas las líneas de detalle caben.
+2048×1040: la fila mide 83 px y todas las líneas de detalle caben.
 
 **Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se
 paga completa cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle y en
@@ -783,8 +786,8 @@ Desde octubre de 2026 el calendario trae también **el plan**: el ahorro de cada
 
 ### El mes
 
-El mes mide la mitad que cuando llenaba la columna (Adán, 21-oct-2026: *"el calendario hazlo la mitad de la altura
-que actualmente tiene"*): 311 px a 2048×1040, con celdas de 36 px de alto (`.ct-celdas`). Cada celda dice **lo que
+Las celdas del mes miden la mitad que cuando llenaban la columna (Adán, 21-oct-2026: *"el calendario hazlo la mitad
+de la altura que actualmente tiene"*): 36 px de alto (`.ct-celdas`). Cada celda dice **lo que
 sale ese día con su nombre y su importe** —lo que más pesa, *Renta 11.3k*, en un renglón; el nombre corto sale de
 `ctCorto`, y lo demás va en el título y en la columna del día— y **lo que entra** en verde
 (*+20.5k*, en miles con un decimal), con su **barra vertical** pegada al borde derecho: su alto es lo que sale ese
@@ -795,7 +798,7 @@ ancho —una pantalla de 1600 o de 1366— la celda deja el punto de color y el 
 día y la barra. Las flechas ‹ › cambian de mes; **al abrir un mes que no es el actual se elige el primer día con
 movimiento**.
 
-Bajo el nombre del mes, mientras dure el plan en México: **a dónde va el dinero ese mes**. Con la BBVA en su plan, *A la BBVA* —todo lo que le toca ese mes: de las quincenas, de Didi y el mínimo— y, si pasa de $100, *a GBM*; después, *A GBM* —los cobros con `ahorro` del calendario más lo que Didi aparta, de `desgloseMes`— y *Didi*. Es la misma cuenta que la proyección de Coach.
+Al pie de las celdas, mientras dure el plan en México: **a dónde va el dinero ese mes** (`.ct-dinero`), en tres cifras: *A la BBVA en octubre* —todo lo que le toca ese mes: de las quincenas, de Didi y el mínimo (`planBbva`)—, *A GBM* —los cobros con `ahorro` del calendario más lo que Didi aparta, de `desgloseMes`— y *Lo que trae Didi, al mes* (`didiMes`). Es la misma cuenta que la proyección de Coach.
 
 ### La quincena, una sola cuenta (`ctTramo`)
 
@@ -840,8 +843,9 @@ concepto de la semana que cae un día concreto también lo elige.
 
 ### El día: qué pagas
 
-La columna dice **lo que pagas ese día** —comer y los pagos que caen, con el total del día—, lo cargado a una tarjeta y
-lo que anotaste. Tu estrategia y tu dinero no van aquí (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las cantidades"*):
+La columna dice **lo que pagas ese día** —comer y los pagos que caen, con el total del día—, lo cargado a una tarjeta,
+lo que anotaste y **lo que viene**: los próximos cinco cobros después de ese día, y si el mes ya no trae, los del
+siguiente (*Renta · dom 1 nov · −$11,250*); cada uno abre su día. Tu estrategia y tu dinero no van aquí (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las cantidades"*):
 la estrategia, con sus botones, va arriba del panel de **Deuda cara**, y tu dinero, cuenta por cuenta, en el de
 **Patrimonio**. Lo que te queda y de dónde sale lo dice la semana.
 
@@ -862,8 +866,8 @@ también nombra la tarjeta, pero es un PAGO a la tarjeta y sí sale del bolsillo
 La banda decía *Tu dinero $21,513* y la columna del día *$21,291* (Adán, 21-oct-2026: *"revisa bien bien las
 métricas de los números para que todo cuadre"*): una tomaba el efectivo de Finanzas del día en que lo dijiste y la
 otra la serie de la quincena, con lo previsto desde entonces. Ahora todo el Dashboard pide lo de hoy a `ctCifrasHoy()`, que le pasa
-al maestro (`CIFRAS.cifrasHoy(f, gastar)`) lo que la serie de la quincena dice que hay para gastar: la banda de la fase y la
-ventana de las fases miden igual (*$21,291*). El control 42 vigila
+al maestro (`CIFRAS.cifrasHoy(f, gastar)`) lo que la serie de la quincena dice que hay para gastar: las cifras del mes
+—en la pantalla y en la ventana, con la misma `fzmCifrasHTML`— miden igual (*$21,291*). El control 42 vigila
 que nadie más llame a `cifrasHoy`.
 
 **El plan y tu dinero un día no son lo mismo, y cada uno va en su sitio.** Lo que pide la fase y lo que da tu ritmo
@@ -971,16 +975,16 @@ tiempo es el resto y no un promedio; si se añaden, se afina solo.
 
 ### Las tareas de la fase
 
-No van en el tablero (Adán, 21-oct-2026, sobre *Te toca esta semana*: *"también elimina esto"*): la banda de la fase
-dice la que te toca y cuántas llevas, y se palomean en la ficha de su mes, en la ventana de las fases, o en el módulo
-Fase de Mi Día. `toggleFaseCheck(id, estado, semana)` guarda en `coach_checks_v1` en qué semana se cerró cada una
+No van en el tablero (Adán, 21-oct-2026, sobre *Te toca esta semana*: *"también elimina esto"*): se palomean en el
+mes en curso de la pantalla (`pmCheck`), en la ficha de su mes en la ventana de las fases o en el módulo Fase de Mi
+Día. `toggleFaseCheck(id, estado, semana)` guarda en `coach_checks_v1` en qué semana se cerró cada una
 (`"2026-08#5"`); Mi Día marca siempre en la semana de hoy. Lo que la auditoría del mes anterior pasó a este
 (`planArrastradas`) aparece en el primer mes sin auditar.
 
 ### La libreta de logros
 
 La ruta de deuda —fondo, Banamex, BBVA— no va en el Plan Maestro (Adán, 21-oct-2026: *"esto quítalo"*): lo pagado
-de la BBVA lo dicen *Tu estrategia de hoy* y el medidor de Deuda cara (`CIFRAS.avanceBbva()`), entre la banda y el tablero. La
+de la BBVA lo dicen *Tu estrategia de hoy* y el medidor de Deuda cara (`CIFRAS.avanceBbva()`), entre el mes en curso y el tablero. La
 libreta (`dash-logros-v1`) sigue: graba un hito con su fecha y no lo borra aunque el dato de origen desaparezca
 (*"debes tener los registros siempre porque si no sentiré que no logro nada"*). Cada vez que una deuda quedó en $0
 sale de ella y de `liquidaciones` en la deuda del maestro (`vecesLogro()`): la Banamex, el 13 ago y el 30 sep 2026;
@@ -989,8 +993,8 @@ desmiente— vive en `DATOS-MAESTROS.md`; el control 22 la comprueba en la prosa
 
 ### Medidas
 
-A 2048×1040 cada columna del tablero mide lo que lleva (`align-items:start`, sin `flex:1`): el mes 311 px, el día 151
-y la semana 376, y lo que sobra de la pantalla queda libre debajo. Cada una conserva su `overflow-y:auto`. El
+A 2048×1040 el tablero se queda con los 378 px que dejan la ruta, el mes en curso y los medidores, y sus tres columnas
+miden lo mismo (`align-items:stretch`, `flex:1`, nunca menos de 376 px). Cada una conserva su `overflow-y:auto`. El
 slide de Coach scrollea **por dentro** (`.theme-coach .slide-inner`), no la página.
 
 ---
@@ -1069,7 +1073,7 @@ vea mejor"*): tareas a 13.5 px, textos a 14, la fase a 27 y la tabla del ahorro 
 caben tres meses de tareas sin desplazarse. Mientras está abierta se oculta la brújula del prompt
 (`.pp-btn`), que si no cae sobre su esquina. Los otros siete medidores siguen con el panel XL.
 
-- **La ruta** (`.fz-ruta`): una estación por fase (`.fz-est`), con el color de la fase en el
+- **La ruta** (`.fz-ruta`, `fzRutaHtml`: la misma de la pantalla, con la barra de la fase en curso): una estación por fase (`.fz-est`), con el color de la fase en el
   calendario (`CAL_FASE_COLOR`), el título, el rango de fechas (`1 oct 2026 → 31 mar 2027`), lo que
   dura y cómo va: *✓ cerrada*, *quedan 179 días* (con el chip HOY) o *empieza en 6 meses*. Bajo
   1180 px se desplaza de lado y `kpiFaseVer()` la lleva a la fase elegida. `kpiFaseTab(i)` cambia de
@@ -1159,7 +1163,7 @@ un aviso lleva a él.
   casillas de `coach_checks_v1` (`fzmCheck` → `toggleFaseCheck`); lo sostenido se marca por mes
   (`fzmSostuve`) y no se puede marcar un mes que no ha empezado.
 - **🔢 Las cifras** (derecha, `fzmCifrasHTML`): las metas del mes (`metas`) con lo real de hoy
-  (`ctCifrasHoy`, la misma cuenta que la banda) o la foto al auditar. A media quincena no se pintan de rojo —todavía falta lo que
+  (`ctCifrasHoy`; la misma función pinta las cifras del mes en curso de la pantalla) o la foto al auditar. A media quincena no se pintan de rojo —todavía falta lo que
   el plan pone después—; desde la última semana del mes, sí.
 - **🧾 La auditoría** (`fzmCierreHTML`): por venir, una línea con la fecha; desde siete días antes de que
   acabe el mes (y vencida, en rojo), **Auditar octubre** la abre en el lugar de la ficha. Auditada: la

@@ -392,7 +392,7 @@ aquí: lo lleva la cuenta de la quincena del Plan Maestro (`ctTramo`), con la co
 $121,504 el 31 de marzo, con el depósito ya dentro. Lo usa Finanzas: GBM y los CETES al cerrar la fase y al irte, si sigues el plan. **Sube mes a
 mes lo mismo que la `PROYECCION`** (control 43); lo que las separa es de dónde arrancan: el plan contó como ahorro
 los $1,990 de la cuenta y el efectivo del 1 oct. Por eso lo que pide una fase y lo que da tu ritmo —el checkpoint
-de la banda, la meta de la fase, Mis Metas, la ventana de las fases— salen del plan, y este, de lo de hoy.
+y la meta de la fase, Mis Metas, la ventana de las fases— salen del plan, y este, de lo de hoy.
 
 **El ahorro sale de lo que se manda, no de una resta.** En México, del sueldo solo llega a GBM lo
 que se aparta el día que entra cada quincena —`ahorroDia1`, `ahorroDia15`, `ahorroDia1Casa` y

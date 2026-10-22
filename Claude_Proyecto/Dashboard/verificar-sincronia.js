@@ -2763,7 +2763,7 @@ function promptsDeLoTocado() {
       mal.push('cifrasHoy con gastar no cambia solo el efectivo: ' + JSON.stringify(b));
   }
   if (mal.length) problemas.push('Las cifras de hoy no salen de una sola cuenta:\n     ' + mal.join('\n     '));
-  else ok.push('Cifras de hoy: la banda de la fase y la ventana de las fases miden con ctCifrasHoy() (la cuenta de la quincena dice lo que hay para gastar)');
+  else ok.push('Cifras de hoy: las cifras del mes, en la pantalla y en la ventana de las fases, miden con ctCifrasHoy() (la cuenta de la quincena dice lo que hay para gastar)');
 })();
 
 /* ── 43. Tu dinero un día sube como el plan ──────────────────────────────────────────────────────────────

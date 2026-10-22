@@ -1,0 +1,77 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-22T06:30:00Z"
+  },
+  "title": "Plan Maestro · rediseño",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 2048,
+      "h": 1040,
+      "title": "Main · La fase y el mes, con las piezas de la ventana",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "DireccionB.dc.html": {
+      "x": 2128,
+      "y": 0,
+      "w": 2048,
+      "h": 1040,
+      "title": "B · La cabecera de la ventana, arriba",
+      "expand": "fill"
+    },
+    "DireccionC.dc.html": {
+      "x": 4256,
+      "y": 0,
+      "w": 2048,
+      "h": 1040,
+      "title": "C · Lo mínimo"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "DireccionB.dc.html",
+    "DireccionC.dc.html"
+  ],
+  "notes": {
+    "titulo": {
+      "x": 0,
+      "y": -300,
+      "text": "Coach · Plan Maestro — rediseño (cifras de ejemplo)",
+      "kind": "title1",
+      "maxW": 6304
+    },
+    "nMain": {
+      "x": 0,
+      "y": 1120,
+      "w": 640,
+      "size": "m",
+      "fill": "teal",
+      "text": "Main. Problema: la banda resumía la fase con su propio diseño («2 de 11», meses con «8 tareas») y al tocarla la ventana enseñaba otra cosa. Aquí la ruta de las 5 fases y la ficha del mes SON las de la ventana: mismas tarjetas, mismas casillas, mismas cifras. El checklist se palomea en la pantalla; tocar una fase o un mes abre la ventana justo ahí. Los 8 medidores con títulos legibles y el mes a la mitad, con a dónde va el dinero al pie."
+    },
+    "nB": {
+      "x": 2128,
+      "y": 1120,
+      "w": 640,
+      "size": "m",
+      "fill": "blue",
+      "text": "B. La cabecera de la ventana tal cual —la ruta, la fase con sus fechas y su barra, y las pestañas de los meses—, sin el checklist en pantalla: el detalle vive solo en la ventana. Gana alto para el calendario, el día y la semana."
+    },
+    "nC": {
+      "x": 4256,
+      "y": 1120,
+      "w": 640,
+      "size": "m",
+      "fill": "orange",
+      "text": "C. Lo mínimo: la fase en una barra de cinco tramos y el mes en un renglón (lo que llevas, lo que te toca, cuándo se audita). Todo lo demás, en la ventana."
+    }
+  },
+  "artifact": "https://claude.ai/artifact/DJjkEsdgt6qdAWaUnJNMoA"
+}

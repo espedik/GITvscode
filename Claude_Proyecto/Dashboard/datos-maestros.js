@@ -665,7 +665,7 @@ window.CIFRAS = (function () {
   // o si son condiciones +), `paso`, `riesgo`, `palanca`, `planb`, `regla` y `logro`, cada uno con
   // su título `t`, sus `cifras` grandes y su frase `d`. La `foto` es un archivo de
   // Dashboard/fotos-aprende. Unidos en orden dan el párrafo `explica`, que leen Coach y el título
-  // de la banda de fase: un solo texto para las dos apps.
+  // de cada fase en la ruta del Plan Maestro: un solo texto para las dos apps.
   PHASES.forEach(function (f) {
     if (f.razones) f.explica = f.razones.map(function (b) { return b.t ? b.t + ': ' + b.d : b.d; }).join(' ');
   });
