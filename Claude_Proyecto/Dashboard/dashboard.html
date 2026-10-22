@@ -647,7 +647,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .pfill{height:100%;border-radius:20px;transition:width 1.2s cubic-bezier(.22,.61,.36,1);position:relative}
 .lbl{font-size:clamp(10px,.9vw,12px);color:var(--text2);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
 .sub{font-size:clamp(11px,1vw,13px);color:var(--text3);margin-top:4px}
-/* Fila de KPIs de "Mis Metas" (2026-08-11, pedido explícito: "esto de la imagen hazlo muchisimo
+/* Los ocho medidores, en el Plan Maestro entre la banda de la fase y el tablero (estaban en Mis Metas;
+   2026-08-11, pedido explícito: "esto de la imagen hazlo muchisimo
    mas pequeño y la lineas bar mas delgadas") — el emoji dentro de .lbl heredaba el mismo
    font-size que el texto (10-12px), pero un emoji a color se renderiza notoriamente más grande
    que el texto latino al mismo tamaño nominal (típico de las fuentes de emoji de iOS/Android) —
@@ -655,22 +656,25 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    propio span con tamaño fijo chico, y estas 4 tarjetas/su barra (no el .pbar/.tile genérico que
    se usa en el resto del Dashboard) más compactas para ganar el alto que le faltaba a las metas
    de abajo. */
-#metasProgreso.grid{gap:6px}
-#metasProgreso .tile{position:relative;padding:5px 10px;border-radius:14px}
-#metasProgreso .metas-kpi-ico{font-size:9px}
-#metasProgreso .lbl{font-size:8px}
-#metasProgreso .pbar{height:3px;margin-top:3px}
-#metasProgreso .sub{font-size:8.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* En una sola fila de ocho desde 1400 px: en dos filas, a 2048×1040 la columna del día se quedaba 34 px corta. */
+#pmMedidores.grid{gap:6px;grid-template-columns:repeat(8,minmax(0,1fr));margin-bottom:8px;flex-shrink:0}
+@media(max-width:1400px){#pmMedidores.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:900px){#pmMedidores.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+#pmMedidores .tile{position:relative;padding:5px 10px;border-radius:14px}
+#pmMedidores .metas-kpi-ico{font-size:9px}
+#pmMedidores .lbl{font-size:8px}
+#pmMedidores .pbar{height:3px;margin-top:3px}
+#pmMedidores .sub{font-size:8.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* ─── Medidores clicables (2026-08-19) ───
-   Los 4 (ahora 8) medidores de Mis Metas eran de solo lectura: un número sin de dónde sale. Ahora
+   Los 4 (ahora 8) medidores eran de solo lectura: un número sin de dónde sale. Ahora
    abren un panel con su desglose real. El panel reutiliza las clases `.gbm-*` del panel de
    inversión en vez de duplicar 60 líneas de CSS — mismo lenguaje visual, y lo que se arregle en
    uno vale para el otro. Solo las barras de desglose son nuevas. */
-#metasProgreso .tile{cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
-#metasProgreso .tile:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.4)}
-#metasProgreso .tile::after{content:'ver detalle →';position:absolute;top:5px;right:10px;font-size:8px;font-weight:800;
+#pmMedidores .tile{cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
+#pmMedidores .tile:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.4)}
+#pmMedidores .tile::after{content:'ver detalle →';position:absolute;top:5px;right:10px;font-size:8px;font-weight:800;
   letter-spacing:.04em;color:var(--text3);opacity:0;transition:opacity .15s}
-#metasProgreso .tile:hover::after{opacity:.85}
+#pmMedidores .tile:hover::after{opacity:.85}
 .kpi-desglose{display:flex;flex-direction:column;gap:9px}
 .kpi-card .kpi-desglose{gap:13px}
 .kpi-linea-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12px}
@@ -4569,13 +4573,15 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   <!-- 1 · COACH: PLAN MAESTRO -->
   <section class="slide theme-coach" data-i="1">
     <div class="slide-inner">
-      <!-- El tablero: el rótulo, la banda de la fase y tres columnas —el mes, el día que toques y su semana—.
-           Sin la ruta de deuda ni el riel de la quincena (Adán, 21-oct-2026: "esto quítalo"): lo que te queda es
-           «Para gastar» en la columna del día, y si la quincena cierra, Tu estrategia de hoy. El párrafo de
-           `explica` vive en el `title` de la banda de fase. -->
+      <!-- El tablero: el rótulo, la banda de la fase, los ocho medidores del dinero y del plan, y tres columnas
+           —el mes, el día que toques y su semana—. Los medidores van donde estaban la ruta de deuda y el riel, y
+           salieron de Mis Metas (Adán, 21-oct-2026: "todo esto, ponlo en lo que acabas de quitar y quítalo de mis
+           metas"). Lo que te queda es «Para gastar» en la columna del día, y si la quincena cierra, Tu estrategia
+           de hoy. El párrafo de `explica` vive en el `title` de la banda de fase. -->
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Plan Maestro</div>
       <div class="coach-fase-band reveal d1" id="coachFaseBand"></div>
-      <div class="coach-tablero reveal d2">
+      <div class="grid g4 reveal d2" id="pmMedidores"></div>
+      <div class="coach-tablero reveal d3">
         <div class="ct-col ct-cal" id="ctCal"></div>
         <div class="ct-col ct-dia" id="ctDia"></div>
         <div class="ct-col ct-sem" id="ctSem"></div>
@@ -4587,7 +4593,6 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   <section class="slide theme-metas" data-i="2">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Mis Metas</div>
-      <div class="grid g4 reveal d3" id="metasProgreso" style="margin-bottom:12px"></div>
       <div class="reveal d4" id="metasBay"></div>
       <div class="grid g-metas reveal d4" id="metasListas"></div>
     </div>
@@ -9512,6 +9517,8 @@ function renderCoach(){
   bandaFase.setAttribute('role','button'); bandaFase.setAttribute('tabindex','0');
   bandaFase.style.cursor='pointer'; bandaFase.onclick=function(){ abrirKpi('fases'); };
 
+  // Los ocho medidores, entre la banda y el tablero.
+  renderMedidores();
   // El reparto de tareas ya no vive aquí: lo pinta el tablero, repartidas por la
   // semana que les toca en vez de en tres listas del mismo peso.
   renderCoachTablero();
@@ -10600,7 +10607,7 @@ function guardarPrecioBtc(usd, mxn){
   fin.btcLastFetch=new Date().toISOString();
   try{ rawSet('finanzasmx_v2', fin); }catch(e){ return; }
   D.fin=fin;
-  if(document.getElementById('metasProgreso')) renderMetasSlide();
+  renderMedidores(); renderMetasSlide();
 }
 
 // La regla que ya está escrita en tu Plan Maestro, aplicada al saldo de hoy. Vive aparte porque la leen tres
@@ -14172,15 +14179,19 @@ function metaDebtInfo(matcher){
   const d=(D.fin.debts||[]).find(matcher);
   return d?{balance:d.balance||0,total:d.total||d.balance||0,found:true,cancelada:d.cancelada||null}:{balance:0,total:0,found:false};
 }
-function renderMetasSlide(){
+/* Los ocho medidores del dinero y del plan: el fondo, la deuda cara, la maestría, el patrimonio, los intereses,
+   lo invertido, la deuda total y el camino al cierre del plan. Van en el Plan Maestro, entre la banda de la fase
+   y el tablero (Adán, 21-oct-2026: "todo esto, ponlo en lo que acabas de quitar y quítalo de mis metas"); cada
+   uno abre su desglose (abrirKpi → kpiDetalle). */
+function renderMedidores(){
   // La meta del fondo sale de datos-maestros.js: este KPI se arma en JS y no pasa por
   // cifrarLiterales(), asi que se lee la variable directo en vez de escribir el numero.
   const metaFondo = _metaFondo();
-  // Solo la tarjeta, no cualquier deuda que mencione al banco (ver la nota en renderCoach()).
+  // Solo la tarjeta, no cualquier deuda que mencione al banco (ver metaDebtInfo).
   const bana=metaDebtInfo(d=>/banamex/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
   const bbva=metaDebtInfo(d=>/bbva/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
   const goalMae=(D.fin.goals||[]).find(g=>g.id==='g001'||/maestr/i.test(g.name||''));
-  // Misma correccion que en renderCoach() (2026-08-23): el fondo se suma en vivo de sus piezas
+  // El fondo se suma en vivo de sus piezas
   // reales —fondo de emergencia, inversiones y Bitcoin— en vez de leer la foto vieja de
   // `goalMae.current`. Ver fondoMaestria().
   const fmMae=fondoMaestria();
@@ -14221,7 +14232,7 @@ function renderMetasSlide(){
 
   const tiles=[
     {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/metaFondo*100),sub:Math.round(Math.min(100,ef/metaFondo*100))+'% · en CETES · meta '+money(metaFondo),c:'var(--w)',id:'fondo'},
-    // La etiqueta lista solo las tarjetas con saldo vivo (ver la nota igual en renderCoach()).
+    // La etiqueta lista solo las tarjetas con saldo vivo.
     {ico:'💳',lbl:'Deuda cara'+(deudaCaraBal>0?' ('+[bana.balance>0?'Banamex':null,bbva.balance>0?'BBVA':null].filter(Boolean).join('+')+')':''),val:deudaCaraTieneDatos?money(deudaCaraBal):'Sin datos',pct:deudaCaraTieneDatos?deudaCaraPct:0,sub:deudaCaraTieneDatos?(deudaCaraBal<=0?'100% · Liquidada 🎉':deudaCaraSub):'Regístralas en Finanzas',c:'var(--r)',fill:'var(--g)',track:PISTA_ROJA,id:'deudacara'},
     {ico:'🎓',lbl:'Fondo Maestría',val:fmMae.total>0?money(fmMae.total):'Sin datos',pct:maeTgt>0?Math.min(100,fmMae.total/maeTgt*100):0,sub:maeTgt>0?`${Math.round(Math.min(100,fmMae.total/maeTgt*100))}% · Meta: ${money(maeTgt)}${fmMae.btc.mxn>0?` · ${Math.round(fmMae.btc.mxn/fmMae.total*100)}% en BTC`:''}`:'Meta en Finanzas → Metas',c:'var(--cy)',id:'maestria'},
     {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:Math.round(patPct)+'% del millón · meta '+finDelPlan().toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'}),c:'var(--g)',id:'patrimonio'},
@@ -14231,18 +14242,25 @@ function renderMetasSlide(){
     // movimientos del mes: sin capturarlos salía en ceros. Los intereses se calculan de saldo ×
     // tasa, que siempre está, y la barra mide cuánto ha bajado el interés desde que debía el
     // total original — así avanza de verdad cada vez que abona.
-    {ico:'🔥',lbl:'Intereses este mes',val:hasFinData()?money(interesMesKpi):'Sin datos',pct:interesPctKpi,sub:interesMesKpi>0?`${Math.round(interesPctKpi)}% menos que al inicio · ${money(interesMesKpi*12)} al año si no cambia`:(hasFinData()?'Sin deuda con interés 🎉':'Abre Finanzas una vez para cargarlos'),c:'var(--r)',id:'intereses'},
+    {ico:'🔥',lbl:'Intereses este mes',val:hasFinData()?money(interesMesKpi):'Sin datos',pct:interesPctKpi,sub:interesMesKpi>0?`${Math.round(interesPctKpi)}% menos que al inicio · ${money(interesMesKpi*12)} al año`:(hasFinData()?'Sin deuda con interés 🎉':'Abre Finanzas una vez para cargarlos'),c:'var(--r)',id:'intereses'},
     {ico:'📈',lbl:'Total invertido',val:money(totalInvKpi),pct:fmMae.total>0?Math.min(100,totalInvKpi/fmMae.total*100):0,sub:(D.fin.investments||[]).filter(i=>(+i.value||+i.invested||0)>0).map(i=>esc(i.name||'Inversión')).join(' + ')+(fmMae.total>0?` · ${Math.round(totalInvKpi/fmMae.total*100)}% del dinero de la maestría`:''),c:'var(--cy)',id:'invertido'},
     {ico:'🧾',lbl:'Deuda total',val:hasFinData()?money(deudaTotKpi):'Sin datos',pct:deudaTotPctKpi,sub:deudaTotKpi>0?`${Math.round(deudaTotPctKpi)}% pagado · ${money(deudaCaraBalKpi)} con interés`:(hasFinData()?'Sin deudas vivas 🎉':'Abre Finanzas una vez para cargarlas'),c:'var(--r)',fill:'var(--g)',track:PISTA_ROJA,id:'deudatotal'},
     {ico:'⏳',lbl:'Camino a '+finDelPlan().getFullYear(),val:diasA2030.toLocaleString('es-MX')+' días',pct:pct2030,sub:`${Math.round(pct2030)}% del plan recorrido`,c:'var(--p)',id:'meta2030'}
   ];
-  document.getElementById('metasProgreso').innerHTML=tiles.map(x=>`
+  const el=document.getElementById('pmMedidores'); if(!el) return;
+  el.innerHTML=tiles.map(x=>`
     <div class="tile" onclick="abrirKpi('${x.id}')" role="button" tabindex="0" title="Ver el desglose de ${x.lbl}">
       <div class="lbl" style="color:${x.c}"><span class="metas-kpi-ico">${x.ico}</span> ${x.lbl}</div>
       <div class="big-num${privado?' fin-hidden':''}" style="font-size:clamp(11px,1.05vw,14px);color:${x.c}">${x.val}</div>
       <div class="pbar${privado?' fin-hidden':''}"${x.track?` style="background:${x.track}"`:''}><div class="pfill" style="width:${x.pct}%;background:${x.fill||x.c}"></div></div>
       <div class="sub${privado?' fin-hidden':''}" title="${esc(String(x.sub).replace(/<[^>]*>/g,''))}">${x.sub}</div>
     </div>`).join('');
+}
+function renderMetasSlide(){
+  // El dinero de la maestría para su barra (METAS_MONEYBAR): el fondo en vivo de sus piezas (ver fondoMaestria()).
+  const goalMae=(D.fin.goals||[]).find(g=>g.id==='g001'||/maestr/i.test(g.name||''));
+  const fmMae=fondoMaestria();
+  const maeTgt=(goalMae&&+goalMae.target)||0;
 
   // Barra de dinero real de la Maestría (2026-08-09, pedido explícito) — de solo lectura, calculada
   // aquí con los mismos datos de Finanzas que ya usan los 4 medidores de arriba, no se toca con clic.
@@ -14359,7 +14377,7 @@ function renderMetasSlide(){
     </div>`;
   }).join('')}</div>`;
 
-  // Barra de edad (2026-08-10) — justo debajo de #metasProgreso (las 4 estadísticas económicas
+  // Barra de edad (2026-08-10) — justo debajo de los medidores (las 4 estadísticas económicas
   // de arriba), dentro de "Corto & mediano plazo" tal como se pidió. Clic abre el mismo overlay
   // de detalle que las tarjetas con foto, con la cronología real de qué debo lograr (ver
   // abrirEdadDetalle()/EDAD_DETALLE arriba).

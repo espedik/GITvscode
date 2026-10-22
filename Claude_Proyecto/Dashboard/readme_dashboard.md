@@ -83,8 +83,8 @@ navega con las flechas, el rail, el menú ☰ o deslizando en táctil. `irASlide
 | Tema | Pantalla | Qué muestra | Prompt |
 |---|---|---|---|
 | `theme-dia` | **Mi Día** | La principal. Agenda del día, el AHORA y cuatro módulos | `midia` |
-| `theme-coach` | **Plan Maestro** | Fase activa y el tablero mes / día / semana | `planmaestro` |
-| `theme-metas` | **Mis Metas** | 8 KPIs financieros, la línea del tiempo de las metas y 12 metas con su plan | `metas` |
+| `theme-coach` | **Plan Maestro** | Fase activa, los 8 medidores del dinero y el tablero mes / día / semana | `planmaestro` |
+| `theme-metas` | **Mis Metas** | La línea del tiempo de las metas y 12 metas con su plan | `metas` |
 | `theme-basicas` | **Habilidades Base** | 27 fichas de vida práctica con sus videos. **Única fuente**: la sección equivalente de Coach se eliminó | `basicas` |
 | `theme-skills` | **En qué invertir tu tiempo** | La interfaz de Habilidades Base: sus indicadores, las 12 habilidades como fichas y el plan de foco; cada una abre su ruta en la ventana de detalle | `skills` |
 | `theme-lista` | **Lista de Compras** | 7 categorías; Comida con precios, ticket y costo al mes | `lista` |
@@ -599,7 +599,7 @@ apps: manda en Android y escritorio.
 
 Se abre desde la tarjeta *Tu dinero hoy* de Mi Día (`invertirHoyHtml()` → `abrirGBM()`) o con
 `dashboard.html#invertir`, cualquier día de la semana, y ocupa casi toda la pantalla, 97 % × 97 % (Adán: *"haz la ventana mucho más grande"*; a 2048×1040, 1987×1009)
-(`.gbm-card.inv-card`; las clases `.gbm-*` las comparte el panel de los medidores de Mis Metas, que
+(`.gbm-card.inv-card`; las clases `.gbm-*` las comparte el panel de los medidores del Plan Maestro, que
 lleva su propio modificador `.kpi-card`). Adán, 21-sep-2026: *"hazla lo más grande posible… una
 especie de plantilla… claude solo se encargará de la información y la plantilla no se modificará
 visualmente, entonces solo se gastan tokens en información"*.
@@ -699,9 +699,9 @@ tokens procesados (11.4 k de salida), medido; las búsquedas son el grueso, y el
 ## El tablero del Plan Maestro
 
 La pantalla 2. Arriba su rótulo pequeño, *Coach · Plan Maestro*, como el de las demás pantallas; debajo la banda
-de la fase y tres columnas: **el mes, el día que toques y la semana a la que pertenece**. Sin la ruta de deuda ni el
-riel de la quincena (Adán, 21-oct-2026: *"esto quítalo"*): lo que te queda es *Para gastar* en *Tu dinero hoy*, y si
-la quincena cierra, *Tu estrategia de hoy*.
+de la fase, los ocho medidores del dinero y del plan, y tres columnas: **el mes, el día que toques y la semana a la que
+pertenece**. Sin la ruta de deuda ni el riel de la quincena (Adán, 21-oct-2026: *"esto quítalo"*): en su lugar van los
+medidores, y lo que te queda es *Para gastar* en *Tu dinero hoy*; si la quincena cierra, *Tu estrategia de hoy*.
 
 **La banda de la fase** (`cfbHtml`; Adán, 19-oct-2026: *"haz un mucho mejor diseño de esta barra que
 directamente te lleva a las fases, hazla más ancha y las demás de esa página del dashboard hazlas más
@@ -721,13 +721,36 @@ pequeñas, aquí ponme info importante… pon algo de las fases"*) va en dos fil
   21-oct-2026: *"quita la información del checkpoint, lo de patrimonio líquido, el auto y el iPhone"*): viven en
   la ventana de las fases, que la banda abre.
 
-Medido a 2048×1040: la banda mide 147 px de alto y el tablero se queda con 689 (las celdas del mes, 112). Bajo
+Medido a 2048×1040: la banda mide 147 px de alto, los medidores 56 y el tablero se queda con 626 (las celdas del mes, 99). Bajo
 1180 px los meses bajan a su propia fila; bajo 760, los bloques van uno debajo de otro, y a 390 px no hay
 desplazamiento horizontal.
 
 **Toda la banda es un botón**: abre la ventana de las fases (`abrirKpi('fases')`, en
 `kpiDetalle`) con fechas, estado, meta, el porqué en tarjetas, el checkpoint y el checklist de cada mes leído de
 `coach_checks_v1`. En las fases que pasan en México, **💰 Tu ahorro en esta fase** (`faseAhorroHTML`): un mes de cada etapa —con depa y en casa de tu familia— renglón por renglón, cada uno abrible con su desglose, y GBM al cerrar cada mes en barras contra lo que pide cada corte de la salida que cae en la fase (`cortesSalidaDash`: el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la salida completa); el mismo desglose que Coach. El título del módulo Fase de Mi Día abre la misma ventana.
+
+### Los ocho medidores
+
+Entre la banda de la fase y el tablero, donde estaban la ruta de deuda y el riel (Adán, 21-oct-2026: *"todo esto,
+ponlo en lo que acabas de quitar y quítalo de mis metas"*): **Fondo de emergencia, Deuda cara, Fondo Maestría,
+Patrimonio hacia $1M, Intereses este mes, Total invertido, Deuda total y Camino a 2031** (`#pmMedidores`,
+`tiles` en `renderMedidores()`, que pinta `renderCoach()`; el precio del Bitcoin los refresca). Cada uno lleva el
+porcentaje en su línea de detalle y abre su desglose (`abrirKpi` → `kpiDetalle`, ver Mis Metas). En **Deuda cara** y
+**Deuda total** la barra es verde sobre rojo: lo verde es lo pagado y lo rojo lo que falta (`fill`/`track` del tile;
+la pista es `--r` al 60 %), y el avance de Deuda total se mide sobre lo que nació cada deuda, liquidadas incluidas.
+Son compactos (Adán: *"en las cifras que están arriba de metas, todos los recuadros, hazlos más pequeños"*): cifra
+a 14 px como máximo y la línea de detalle en un renglón, con el texto completo en el `title`; *ver detalle →* flota
+arriba a la derecha al pasar el cursor. **Desde 1400 px van en una sola fila de ocho**: en dos filas, a 2048×1040
+la columna del día se quedaba 34 px corta. Bajo 1400 van de cuatro en cuatro y bajo 900, de dos en dos. Medido a
+2048×1040: la fila mide 56 px y todas las líneas de detalle caben.
+
+**Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se
+paga completa cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle y en
+los desgloses de Deuda cara y Patrimonio, que la marcan "sin intereses". La BBVA ya no lleva
+`noInterest`, pero tampoco paga intereses: Adán cubre cada mes lo que pide el estado de cuenta para
+no generarlos (`CIFRAS.PROYECTO.bbvaSinIntereses`), así que su tasa tampoco corre y en Deuda cara y
+Deuda total dice cuándo quedará en cero (`bbvaPlanTxt()`: *quincena a quincena, en cero el 1 nov, sin intereses*).
+Sigue sumando en Deuda cara porque es saldo de tarjeta.
 
 ### De dónde sale cada cosa
 
@@ -816,7 +839,7 @@ concepto de la semana que cae un día concreto también lo elige.
 
 Lo que te queda ese día es *Para gastar* en *Tu dinero ese día*, y de dónde sale lo dicen la semana y el mes (Adán,
 20-oct-2026: *"en coach también siento que hay mucha información, deja la suficiente"*). A 2048×1040 la pantalla
-lleva 1,948 caracteres y la columna cabe entera.
+lleva 2,457 caracteres y la columna cabe entera.
 
 1. **Lo que pagas el 18** — comer y los pagos que caen, con el total del día.
 2. **Tu estrategia de hoy** — solo cuando el día es hoy (ver abajo).
@@ -974,7 +997,7 @@ propio estado: `toggleFaseCheck(id, this.checked)`.
 ### La libreta de logros
 
 La ruta de deuda —fondo, Banamex, BBVA— no va en el Plan Maestro (Adán, 21-oct-2026: *"esto quítalo"*): lo pagado
-de la BBVA lo dicen *Tu estrategia de hoy* y el medidor de Deuda cara de Mis Metas (`CIFRAS.avanceBbva()`). La
+de la BBVA lo dicen *Tu estrategia de hoy* y el medidor de Deuda cara (`CIFRAS.avanceBbva()`), entre la banda y el tablero. La
 libreta (`dash-logros-v1`) sigue: graba un hito con su fecha y no lo borra aunque el dato de origen desaparezca
 (*"debes tener los registros siempre porque si no sentiré que no logro nada"*). Cada vez que una deuda quedó en $0
 sale de ella y de `liquidaciones` en la deuda del maestro (`vecesLogro()`): la Banamex, el 13 ago y el 30 sep 2026;
@@ -983,7 +1006,7 @@ desmiente— vive en `DATOS-MAESTROS.md`; el control 22 la comprueba en la prosa
 
 ### Medidas
 
-A 2048×1040 el tablero ocupa los 689 px que deja la banda de la fase, con las tres columnas parejas
+A 2048×1040 el tablero ocupa los 626 px que dejan la banda de la fase y los medidores, con las tres columnas parejas
 (`flex:1` sobre `.slide-inner`, que ya es flex column) y cada una con su `overflow-y:auto`. El
 slide de Coach scrollea **por dentro** (`.theme-coach .slide-inner`), no la página.
 
@@ -1040,22 +1063,9 @@ desplaza al mes de hoy solo cuando hay una columna.
 
 ## Mis Metas — "panel de trayectoria"
 
-**Los ocho medidores** (`#metasProgreso`, `tiles` en `renderMetasSlide()`) llevan el porcentaje en
-su línea de detalle, todos. En **Deuda cara** y **Deuda total** la barra es verde sobre rojo: lo
-verde es lo pagado y lo rojo lo que falta (`fill`/`track` del tile; la pista es `--r` al 60 %), y
-el avance de Deuda total se mide sobre lo que nació cada deuda, liquidadas incluidas. Son compactos
-(Adán: *"en las cifras que están arriba de metas, todos los recuadros, hazlos más pequeños"*): 55 px de alto
-en 1600×1000, cifra a 14 px como máximo y la línea de detalle en un renglón, con el texto completo en el
-`title`; *ver detalle →* flota arriba a la derecha al pasar el cursor. Los desgloses
-de esos dos (`kpiDetalle`, `kpiBarra` con `pista`) usan el mismo par y ponen el % junto al saldo.
+Los ocho medidores del dinero y del plan no van aquí: viven en el Plan Maestro (ver *Los ocho medidores*), y
+los paneles que abren, abajo.
 
-**Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se
-paga completa cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle y en
-los desgloses de Deuda cara y Patrimonio, que la marcan "sin intereses". La BBVA ya no lleva
-`noInterest`, pero tampoco paga intereses: Adán cubre cada mes lo que pide el estado de cuenta para
-no generarlos (`CIFRAS.PROYECTO.bbvaSinIntereses`), así que su tasa tampoco corre y en Deuda cara y
-Deuda total dice cuándo quedará en cero (`bbvaPlanTxt()`: *quincena a quincena, en cero el 1 nov, sin intereses*).
-Sigue sumando en Deuda cara porque es saldo de tarjeta.
 **El panel de cada medidor es XL** (`.gbm-card.kpi-card`: `min(1560px, 96vw)` de ancho y alto
 automático hasta el 94 %; Adán, 21-sep-2026: *"todas las ventanas iguales a estas debes hacerlas
 lo más grande posible"*). Cada `kpiDetalle` sigue escribiendo su HTML de corrido con `kpiSec`,
@@ -1215,7 +1225,7 @@ Medido a 2048×1040: la ficha de octubre mide 1124 px de alto, la información g
 1682 (se desplaza dentro de la ventana); sin desborde lateral a 2048, 1600, 1366 ni 390 px, en claro y en
 oscuro.
 
-**Patrimonio hacia $1M** es todo lo suyo menos las deudas (`patrimonioNeto()`, que delega en `CIFRAS.patrimonio()` —la misma fórmula de Coach—: inversiones, fondo,
+El medidor **Patrimonio hacia $1M** (en el Plan Maestro) es todo lo suyo menos las deudas (`patrimonioNeto()`, que delega en `CIFRAS.patrimonio()` —la misma fórmula de Coach—: inversiones, fondo,
 Bitcoin a precio de hoy, efectivo y cuenta, y los bienes), la misma cifra que el Patrimonio Neto de
 Finanzas; la barra es el % del millón. El desglose separa lo que tiene, lo que debe y los bienes, y
 dice aparte el líquido sin bienes (`patrimonioLiquido()`), que es el número que se mueve con cada
@@ -1269,7 +1279,7 @@ chip, marcas, conteo y borde:
 La franja los cuenta en cuatro —logradas, en marcha, en pausa y sin empezar—: las pausadas no se
 suman a «sin empezar». **El dinero de la maestría** es `CIFRAS.fondoMaestria()` (el fondo, las
 inversiones de Finanzas y el Bitcoin; Adán, 13-oct-2026, sobre los $17,250: *"esta cifra es la
-correcta"*), el mismo número que `{{maestria}}`, Finanzas y Coach. **Total invertido** nombra lo que
+correcta"*), el mismo número que `{{maestria}}`, Finanzas y Coach. En los medidores del Plan Maestro, **Total invertido** nombra lo que
 suma y dice qué parte es del dinero de la maestría; **Deuda cara**, con solo la BBVA viva, lo pagado
 de su plan quincena a quincena; y *con interés* es `CIFRAS.deudasConInteres()`. Si una lista no
 cabe, desplaza por dentro y su borde de abajo se desvanece mientras haya más (`marcarDesborde()`).
