@@ -701,7 +701,8 @@ tokens procesados (11.4 k de salida), medido; las búsquedas son el grueso, y el
 La pantalla 2. Arriba su rótulo pequeño, *Coach · Plan Maestro*, como el de las demás pantallas; debajo la banda
 de la fase, los ocho medidores del dinero y del plan, y tres columnas: **el mes, el día que toques y la semana a la que
 pertenece**. Sin la ruta de deuda ni el riel de la quincena (Adán, 21-oct-2026: *"esto quítalo"*): en su lugar van los
-medidores, y lo que te queda es *Para gastar* en *Tu dinero hoy*; si la quincena cierra, *Tu estrategia de hoy*.
+medidores. *Tu estrategia de hoy* va arriba del panel de **Deuda cara** y tu dinero, cuenta por cuenta, en el de
+**Patrimonio** (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las cantidades"*).
 
 **La banda de la fase** (`cfbHtml`; Adán, 19-oct-2026: *"haz un mucho mejor diseño de esta barra que
 directamente te lleva a las fases, hazla más ancha y las demás de esa página del dashboard hazlas más
@@ -721,7 +722,8 @@ pequeñas, aquí ponme info importante… pon algo de las fases"*) va en dos fil
   21-oct-2026: *"quita la información del checkpoint, lo de patrimonio líquido, el auto y el iPhone"*): viven en
   la ventana de las fases, que la banda abre.
 
-Medido a 2048×1040: la banda mide 147 px de alto, los medidores 56 y el tablero se queda con 626 (las celdas del mes, 99). Bajo
+Medido a 2048×1040: la banda mide 147 px de alto y los medidores 56; debajo, cada columna mide lo que lleva —el mes 311, el día
+151 y la semana 376—. Bajo
 1180 px los meses bajan a su propia fila; bajo 760, los bloques van uno debajo de otro, y a 390 px no hay
 desplazamiento horizontal.
 
@@ -735,7 +737,8 @@ Entre la banda de la fase y el tablero, donde estaban la ruta de deuda y el riel
 ponlo en lo que acabas de quitar y quítalo de mis metas"*): **Fondo de emergencia, Deuda cara, Fondo Maestría,
 Patrimonio hacia $1M, Intereses este mes, Total invertido, Deuda total y Camino a 2031** (`#pmMedidores`,
 `tiles` en `renderMedidores()`, que pinta `renderCoach()`; el precio del Bitcoin los refresca). Cada uno lleva el
-porcentaje en su línea de detalle y abre su desglose (`abrirKpi` → `kpiDetalle`, ver Mis Metas). En **Deuda cara** y
+porcentaje en su línea de detalle y abre su desglose (`abrirKpi` → `kpiDetalle`, ver Mis Metas); el de **Deuda cara** lleva
+arriba *Tu estrategia de hoy* (ver abajo). En **Deuda cara** y
 **Deuda total** la barra es verde sobre rojo: lo verde es lo pagado y lo rojo lo que falta (`fill`/`track` del tile;
 la pista es `--r` al 60 %), y el avance de Deuda total se mide sobre lo que nació cada deuda, liquidadas incluidas.
 Son compactos (Adán: *"en las cifras que están arriba de metas, todos los recuadros, hazlos más pequeños"*): cifra
@@ -780,10 +783,10 @@ Desde octubre de 2026 el calendario trae también **el plan**: el ahorro de cada
 
 ### El mes
 
-Sin la gráfica de balance que tenía debajo (Adán, 21-oct-2026: *"quita la gráfica donde está lo del calendario y
-redistribuye todo"*), la cuadrícula se queda con todo el alto de la columna (celdas de 100×92 px a 2048×1040).
-Cada celda dice **lo que sale ese día con su nombre y su importe** —los dos que más pesan, *Renta 11.3k* y *Datos
-650*, y *y 3 más*; el nombre corto sale de `ctCorto` y el completo va en el título— y **lo que entra** en verde
+El mes mide la mitad que cuando llenaba la columna (Adán, 21-oct-2026: *"el calendario hazlo la mitad de la altura
+que actualmente tiene"*): 311 px a 2048×1040, con celdas de 36 px de alto (`.ct-celdas`). Cada celda dice **lo que
+sale ese día con su nombre y su importe** —lo que más pesa, *Renta 11.3k*, en un renglón; el nombre corto sale de
+`ctCorto`, y lo demás va en el título y en la columna del día— y **lo que entra** en verde
 (*+20.5k*, en miles con un decimal), con su **barra vertical** pegada al borde derecho: su alto es lo que sale ese
 día —lo programado, lo anotado de contado y comer: la misma suma que la serie de la quincena— y su color, el del concepto
 que manda (`ctColor`; *cena* va como palabra: *quincena* la contiene y la BBVA salía con el color de la cena).
@@ -798,8 +801,8 @@ Bajo el nombre del mes, mientras dure el plan en México: **a dónde va el diner
 
 No se pinta como banda (Adán, 21-oct-2026, sobre el riel y la ruta de deuda: *"esto quítalo"*), pero es el único
 cálculo del dinero de la quincena: `ctTramo(nSel, nDias, mov, ym)` recorre la quincena desde que entra la nómina,
-arrastra el saldo día a día y devuelve la serie. De ahí salen *Para gastar* en *Tu dinero ese día*, lo que sale cada
-día en el mes, la resta de la semana y la frase de la quincena en *Tu estrategia de hoy*. Lo que entró y salió hasta
+arrastra el saldo día a día y devuelve la serie. De ahí salen lo que sale cada día en el mes, la resta de la semana,
+lo que hay para gastar hoy (`ctCifrasHoy`) y la frase de la quincena en *Tu estrategia de hoy* (`ctQuincenaPlan`). Lo que entró y salió hasta
 un día da el modelo; **si dijiste tu saldo real un día del tramo, la diferencia con el modelo ese día es un término
 más** —*se fue sin anotar* o *tenías de más*—. Con los datos reales del 21-oct-2026: +$20,500 de nómina, −$15,077
 que salió del 15 al 21 y −$1,445 sin anotar dan $3,978 para gastar; del 22 al 31 salen $1,110 y la quincena cierra
@@ -826,8 +829,8 @@ colchón que puede no llegar; solo entra en el plan cuando la quincena no cierra
 
 ### La pantalla se reinicia al entrar
 
-Entrar al slide pone en `null` todo lo que se pueda haber dejado tocado —`ctYM`, `ctSel` y
-`ctHechasAbierto`— y `renderCoachTablero()` los recalcula a hoy. Va en
+Entrar al slide pone en `null` lo que se pueda haber dejado tocado —`ctYM` y `ctSel`— y
+`renderCoachTablero()` los recalcula a hoy. Va en
 `showSlide()` **antes** de `RENDERS[i]()`, para que el primer pintado ya salga en el mes actual.
 
 ### Elige el día
@@ -835,24 +838,12 @@ Entrar al slide pone en `null` todo lo que se pueda haber dejado tocado —`ctYM
 Tocar una celda elige el día (`ctVerDia`): la columna del día y la semana se recalculan para él. Cada
 concepto de la semana que cae un día concreto también lo elige.
 
-### El día: qué pagas, tu estrategia y tu dinero
+### El día: qué pagas
 
-Lo que te queda ese día es *Para gastar* en *Tu dinero ese día*, y de dónde sale lo dicen la semana y el mes (Adán,
-20-oct-2026: *"en coach también siento que hay mucha información, deja la suficiente"*). A 2048×1040 la pantalla
-lleva 2,457 caracteres y la columna cabe entera.
-
-1. **Lo que pagas el 18** — comer y los pagos que caen, con el total del día.
-2. **Tu estrategia de hoy** — solo cuando el día es hoy (ver abajo).
-3. **Tu dinero ese día** (`ctDineroDiaHtml`; Adán, 19-oct-2026: *"conforme seleccione otro día, debes
-   proyectar todo todo hasta mis inversiones"*) — hoy, lo de Finanzas; un día que viene, la proyección
-   siguiendo el plan (`CIFRAS.estadoDia`, ver `DATOS-MAESTROS.md`): para gastar (la cuenta y el
-   efectivo, de `ctTramo`), GBM, los CETES y el depósito del depa —*tu dinero*— y, debajo, la BBVA con el día en
-   que quedará en cero (el auto, el iPhone y el patrimonio líquido no van aquí), cada cifra con lo que cambia desde
-   hoy en verde o en rojo, y al pie lo que el plan manda de aquí a ese día a la BBVA y a GBM, y lo que la
-   salida cuesta en el camino. Hoy, *para gastar* sale de `ctTramo` y lo demás de Finanzas: la misma
-   cuenta que la banda (`ctCifrasHoy`). Un día que ya pasó no lleva el bloque, y después del último mes en
-   México dice que la proyección sigue mes a mes en Coach. Proyectado el 20 de noviembre desde los saldos
-   del 21-oct-2026: para gastar $5,534 y GBM $4,459; la BBVA quedará en cero el 15.
+La columna dice **lo que pagas ese día** —comer y los pagos que caen, con el total del día—, lo cargado a una tarjeta y
+lo que anotaste. Tu estrategia y tu dinero no van aquí (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las cantidades"*):
+la estrategia, con sus botones, va arriba del panel de **Deuda cara**, y tu dinero, cuenta por cuenta, en el de
+**Patrimonio**. Lo que te queda y de dónde sale lo dice la semana.
 
 **Los gastos registrados en Finanzas que la agenda no conoce entran en la resta** (`ctTramo` los suma,
 y de su serie salen para gastar, el mes y la semana), con **borde punteado**: un cobro programado va a caer, uno
@@ -871,22 +862,24 @@ también nombra la tarjeta, pero es un PAGO a la tarjeta y sí sale del bolsillo
 La banda decía *Tu dinero $21,513* y la columna del día *$21,291* (Adán, 21-oct-2026: *"revisa bien bien las
 métricas de los números para que todo cuadre"*): una tomaba el efectivo de Finanzas del día en que lo dijiste y la
 otra la serie de la quincena, con lo previsto desde entonces. Ahora todo el Dashboard pide lo de hoy a `ctCifrasHoy()`, que le pasa
-al maestro (`CIFRAS.cifrasHoy(f, gastar)`) lo que la serie de la quincena dice que hay para gastar: la banda de la fase, *Tu dinero
-hoy* y la ventana de las fases miden igual (*$21,291*). El control 42 vigila
+al maestro (`CIFRAS.cifrasHoy(f, gastar)`) lo que la serie de la quincena dice que hay para gastar: la banda de la fase y la
+ventana de las fases miden igual (*$21,291*). El control 42 vigila
 que nadie más llame a `cifrasHoy`.
 
 **El plan y tu dinero un día no son lo mismo, y cada uno va en su sitio.** Lo que pide la fase y lo que da tu ritmo
 salen del plan (`PROYECCION`, desde la foto del 1 oct): la meta y el checkpoint de la fase, Mis Metas y las barras
-de la ventana de las fases dicen *$129,532 en GBM el 31 de marzo*. *Tu dinero ese día* proyecta desde lo de hoy
-(`estadoDia`) y separa GBM y los CETES ($121,504 y $6,000): la diferencia son los $1,990 de la cuenta y el
+de la ventana de las fases dicen *$129,532 en GBM el 31 de marzo*. `estadoDia` —tu dinero un día, que usa Finanzas—
+proyecta desde lo de hoy y separa GBM y los CETES ($121,504 y $6,000): la diferencia son los $1,990 de la cuenta y el
 efectivo que la foto contó como ahorro y $38 de Didi de un lunes que ya pasó. Mes a mes los dos suben igual —lo
 que llega a GBM, las ventas, el depósito y lo que cuesta la salida— y lo vigila el control 43: `estadoDia` no
 restaba los costos de la salida y el 31 de marzo traía $6,000 de más (las apostillas de diciembre).
 
 ### Tu estrategia de hoy
 
-Adán, 15-oct-2026: *"cada día debo tener una estrategia para seguir bien en los números"*. Un bloque
-al pie de la columna del día cuando ese día es hoy (`ctEstrategiaHtml`), con lo que hay que hacer;
+Adán, 15-oct-2026: *"cada día debo tener una estrategia para seguir bien en los números"*. Va arriba del
+panel de **Deuda cara** (`ctEstrategiaHoyHtml` → `ctEstrategiaHtml`, siempre con el día de hoy; Adán, 21-oct-2026:
+*"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las cantidades"*), con lo que hay que hacer; lo que se anota ahí
+vuelve a pintar el panel y el medidor (`ceGuardar`);
 el saldo y el plan salen de `CIFRAS.bbvaEstado()`, y la quincena, de `ctTramo`:
 
 - **Con saldo en la BBVA** (ámbar): el saldo vivo, lo pagado desde los $15,000 con su barra y el día
@@ -978,21 +971,11 @@ tiempo es el resto y no un promedio; si se añaden, se afina solo.
 
 ### Las tareas de la fase
 
-`ctTareasSemana` reparte **las pendientes** entre las semanas que faltan. Para que una tarea
-marcada **no desaparezca**, `toggleFaseCheck` guarda **en qué semana se cerró** (`"2026-08#5"`) y
-la lista añade detrás las que llevan su marca: casilla puesta, texto tachado (`span:not(.ct-tar-chip)`,
-para que el chip `P1` no se vuelva gris) y en verde. El tope de filas va sobre las pendientes, no
-sobre la lista entera. Un `true` de los de antes cuenta como hecha, pero al no tener semana no
-reaparece. La semana la puede fijar quien llama (`toggleFaseCheck(id, estado, semana)`): el
-módulo Fase de Mi Día marca siempre en la semana de hoy, aunque el tablero tenga abierto otro mes.
-Lo que la auditoría del mes anterior pasó a este (`planArrastradas`) entra en el reparto como una
-tarea más del mes.
-
-**`8 ya hechas` es un botón** que despliega la lista: con casilla lo que se marcó desde aquí
-(`checks[id]`, se puede desmarcar); con ✓ y sin casilla lo que trae ✅ escrito en `PHASES` y los
-logros de la libreta, que no se desmarcan. `ctHechasAbierto` vive fuera del render. Como una tarea
-puede tener dos casillas en pantalla (la de "te toca" y la del desplegable), la casilla manda su
-propio estado: `toggleFaseCheck(id, this.checked)`.
+No van en el tablero (Adán, 21-oct-2026, sobre *Te toca esta semana*: *"también elimina esto"*): la banda de la fase
+dice la que te toca y cuántas llevas, y se palomean en la ficha de su mes, en la ventana de las fases, o en el módulo
+Fase de Mi Día. `toggleFaseCheck(id, estado, semana)` guarda en `coach_checks_v1` en qué semana se cerró cada una
+(`"2026-08#5"`); Mi Día marca siempre en la semana de hoy. Lo que la auditoría del mes anterior pasó a este
+(`planArrastradas`) aparece en el primer mes sin auditar.
 
 ### La libreta de logros
 
@@ -1006,8 +989,8 @@ desmiente— vive en `DATOS-MAESTROS.md`; el control 22 la comprueba en la prosa
 
 ### Medidas
 
-A 2048×1040 el tablero ocupa los 626 px que dejan la banda de la fase y los medidores, con las tres columnas parejas
-(`flex:1` sobre `.slide-inner`, que ya es flex column) y cada una con su `overflow-y:auto`. El
+A 2048×1040 cada columna del tablero mide lo que lleva (`align-items:start`, sin `flex:1`): el mes 311 px, el día 151
+y la semana 376, y lo que sobra de la pantalla queda libre debajo. Cada una conserva su `overflow-y:auto`. El
 slide de Coach scrollea **por dentro** (`.theme-coach .slide-inner`), no la página.
 
 ---
@@ -1213,7 +1196,7 @@ marcada), pasada o fuera, guarda la foto de las cifras si es hasta diez días de
 calificación y las correcciones; **Reabrir** (`fzmReabrir`) vuelve a la auditoría con lo contestado.
 
 **Lo que pasa al mes siguiente y lo que se corrige** (`planArrastradas`) aparecen en el primer mes sin
-auditar después del que los dejó —aunque se audite en desorden— y en *Te toca esta semana* del tablero, y
+auditar después del que los dejó —aunque se audite en desorden—, y
 ahí se vuelven a auditar; un mes auditado conserva la lista que se auditó. Por mes, en
 `plan_auditoria_v1`: `siempre` (lo sostenido durante el mes), `aud` (las respuestas: `datos`, `t`, `h`, `c`,
 `corr`) y, al cerrar, `cerrado`, `tareas` (`ok`, `pasa` o `no`), `cifras` (`real`, `meta`, `medido`),
