@@ -725,7 +725,7 @@ en pantalla **son las piezas de la ventana de las fases**, con sus mismas clases
 (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las
 cantidades"*). Sin la ruta de deuda, el riel de la quincena ni *Te toca esta semana*.
 
-Medido a 2048×1040: la ruta mide 81 px, el mes en curso 284, los medidores 83 y el tablero 378, con las tres columnas
+Medido a 2048×1040: la ruta mide 83 px, el mes en curso 288, los medidores 45 y el tablero 425, con las tres columnas
 sin desplazarse. El tablero no baja de 376 px: en una pantalla más baja (1366×768) la página baja en vez de
 aplastarlo. Bajo 1180 px el mes en curso va en dos columnas y bajo 760, en una; a 390 px no hay desplazamiento
 horizontal.
@@ -743,12 +743,14 @@ porcentaje en su línea de detalle y abre su desglose (`abrirKpi` → `kpiDetall
 arriba *Tu estrategia de hoy* (ver abajo). En **Deuda cara** y
 **Deuda total** la barra es verde sobre rojo: lo verde es lo pagado y lo rojo lo que falta (`fill`/`track` del tile;
 la pista es `--r` al 60 %), y el avance de Deuda total se mide sobre lo que nació cada deuda, liquidadas incluidas.
-Son compactos (Adán: *"en las cifras que están arriba de metas, todos los recuadros, hazlos más pequeños"*) y se
-leen sin saber la app: el título en palabras normales con un cuadrito de su color, la cifra a 19 px, su barra y una
-línea de detalle que cabe entera —*41% pagado · en cero el 15 nov*, *26% menos que al inicio*, *65% del dinero de la
-maestría*; lo demás, en su panel—; *ver detalle →* flota arriba a la derecha al pasar el cursor. **Desde 1400 px van en una sola fila de ocho**: en dos filas, a 2048×1040
-la columna del día se quedaba 34 px corta. Bajo 1400 van de cuatro en cuatro y bajo 900, de dos en dos. Medido a
-2048×1040: la fila mide 83 px y todas las líneas de detalle caben.
+Son **muy compactos** (Adán: *"en coach plan maestro, las cajas de las cifras que tenemos, hazlas muchísimo más
+pequeñas"*): dos renglones, el nombre en palabras normales con un cuadrito de su color y debajo la cifra a 15 px con
+su barra al lado (`.pm-med-fila`). La frase que explica el porcentaje —*41% pagado · en cero el 15 nov*, *26% menos
+que al inicio*, *65% del dinero de la maestría*— va en el `title` de la caja (sin cifras si está en modo privado) y
+en su panel, que se abre al tocarla. **Desde 1400 px van en una sola fila de ocho**: en dos filas, a 2048×1040 la
+columna del día se quedaba corta. Bajo 1400 van de cuatro en cuatro y bajo 900, de dos en dos. Medido: cada caja
+mide 46 px de alto (eran 83) y la fila 45 px a 2048×1040; ningún nombre se corta de 390 a 2048 px, ni con cifras de
+seis dígitos.
 
 **Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se
 paga completa cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle y en

@@ -661,13 +661,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 #pmMedidores.grid{gap:6px;grid-template-columns:repeat(8,minmax(0,1fr));margin-bottom:6px;flex-shrink:0}
 @media(max-width:1400px){#pmMedidores.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:900px){#pmMedidores.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-#pmMedidores .tile{position:relative;display:flex;flex-direction:column;gap:3px;padding:8px 12px 9px;border-radius:12px;box-shadow:none}
-#pmMedidores .lbl{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;letter-spacing:0;text-transform:none;
+#pmMedidores .tile{position:relative;display:flex;flex-direction:column;gap:1px;padding:5px 10px 6px;border-radius:9px;box-shadow:none}
+/* Dos renglones: el nombre, y la cifra con su barra al lado. La frase que explica el porcentaje va en el title de la
+   caja y en su desglose, que se abre al tocarla. */
+#pmMedidores .pm-med-fila{display:flex;align-items:center;gap:8px;min-width:0}
+#pmMedidores .pm-med-fila .pbar{flex:1;min-width:16px;height:3px;margin:0}
+#pmMedidores .lbl{min-width:0;display:flex;align-items:center;gap:5px;font-size:11px;line-height:1.25;font-weight:600;letter-spacing:0;text-transform:none;
   color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#pmMedidores .lbl i{width:7px;height:7px;border-radius:2px;flex-shrink:0}
-#pmMedidores .big-num{font-size:19px;line-height:1.1}
-#pmMedidores .pbar{height:4px;margin-top:1px}
-#pmMedidores .sub{font-size:11px;margin-top:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#pmMedidores .lbl i{width:6px;height:6px;border-radius:2px;flex-shrink:0}
+#pmMedidores .big-num{flex:none;font-size:15px;line-height:1.1;white-space:nowrap}
 /* ─── Medidores clicables (2026-08-19) ───
    Los 4 (ahora 8) medidores eran de solo lectura: un número sin de dónde sale. Ahora
    abren un panel con su desglose real. El panel reutiliza las clases `.gbm-*` del panel de
@@ -675,9 +677,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    uno vale para el otro. Solo las barras de desglose son nuevas. */
 #pmMedidores .tile{cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
 #pmMedidores .tile:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.4)}
-#pmMedidores .tile::after{content:'ver detalle →';position:absolute;top:9px;right:12px;font-size:9.5px;font-weight:800;
-  letter-spacing:.04em;color:var(--text3);opacity:0;transition:opacity .15s}
-#pmMedidores .tile:hover::after{opacity:.85}
 .kpi-desglose{display:flex;flex-direction:column;gap:9px}
 .kpi-card .kpi-desglose{gap:13px}
 .kpi-linea-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12px}
@@ -14117,11 +14116,10 @@ function renderMedidores(){
   ];
   const el=document.getElementById('pmMedidores'); if(!el) return;
   el.innerHTML=tiles.map(x=>`
-    <div class="tile" onclick="abrirKpi('${x.id}')" role="button" tabindex="0" title="Ver el desglose de ${x.lbl}">
+    <div class="tile" onclick="abrirKpi('${x.id}')" role="button" tabindex="0" title="${privado?`Ver el desglose de ${x.lbl}`:esc(`${x.lbl}: ${String(x.sub).replace(/<[^>]*>/g,'')}. Tócalo para ver el desglose.`)}">
       <div class="lbl"><i style="background:${x.c}"></i>${x.lbl}</div>
-      <div class="big-num${privado?' fin-hidden':''}" style="color:${x.c}">${x.val}</div>
-      <div class="pbar${privado?' fin-hidden':''}"${x.track?` style="background:${x.track}"`:''}><div class="pfill" style="width:${x.pct}%;background:${x.fill||x.c}"></div></div>
-      <div class="sub${privado?' fin-hidden':''}" title="${esc(String(x.sub).replace(/<[^>]*>/g,''))}">${x.sub}</div>
+      <div class="pm-med-fila"><div class="big-num${privado?' fin-hidden':''}" style="color:${x.c}">${x.val}</div>
+        <div class="pbar${privado?' fin-hidden':''}"${x.track?` style="background:${x.track}"`:''}><div class="pfill" style="width:${x.pct}%;background:${x.fill||x.c}"></div></div></div>
     </div>`).join('');
 }
 function renderMetasSlide(){
