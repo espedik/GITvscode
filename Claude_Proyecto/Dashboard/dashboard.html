@@ -103,20 +103,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 /* Las apps van AGRUPADAS y con ancho máximo. Antes se repartían por los 2000px de la
    pantalla y quedaban a un palmo unas de otras. */
 .qa-grupos{display:flex;align-items:center;gap:2px;flex-wrap:wrap;justify-content:center;
-  max-width:1430px;margin:0 auto}
+  max-width:1515px;margin:0 auto}
 /* Por debajo del umbral se quedan solo los iconos, con el nombre en el title: la fila con
    nombres se partiría en dos y taparía el slide (la franja empieza fija a 58px), o se metería
    debajo de los botones de tema y privacidad (`.qa-acciones`, 91 px pegados a la derecha, fuera
-   del flujo). Los dos números salen de medir, no de tantear: con las 15 apps de hoy la fila CON
-   nombres necesita 1,401 px, así que el contenedor va a 1,430; y como la fila va centrada, deja
-   de pisar los botones a partir de 1,583 px de viewport → umbral en 1,590 (a 1,600 queda un
-   hueco de 8 px). Historial: 15 apps → 1440/1500 · 16 (entra Aeroresinas) → 1560/1580 · 17
+   del flujo). Los dos números salen de medir, no de tantear: con las 16 apps de hoy la fila CON
+   nombres necesita 1,486 px, así que el contenedor va a 1,515; y como la fila va centrada, deja
+   de pisar los botones a partir de 1,668 px de viewport → umbral en 1,675. Historial: 15 apps → 1440/1500 · 16 (entra Aeroresinas) → 1560/1580 · 17
    (entra Heliescala) → 1660/1690 · 14 (salen Lecciones, Vocabulario y Gramática: el hub de
-   Alemán ya lleva a las tres) → 1350/1520 · 15 (entra Posts) → 1430/1590.
+   Alemán ya lleva a las tres) → 1350/1520 · 15 (entra Posts) → 1430/1590 · 16 (entra Laptop) → 1515/1675.
    Si entra o sale otra app hay que volver a medirlo — `.qa-grupos` con `flex-wrap:nowrap` y
    `max-width:none` da el ancho real en una línea, y el umbral es ese ancho más 2×91 de los
    botones (la fila centrada reparte el sobrante a los dos lados). */
-@media(max-width:1590px){.qa-name,.qa-stat{display:none}.qa-pill{padding:6px 8px}.qa-grupos{gap:2px}}
+@media(max-width:1675px){.qa-name,.qa-stat{display:none}.qa-pill{padding:6px 8px}.qa-grupos{gap:2px}}
 .qa-sep{width:1px;height:20px;background:rgba(var(--ov),.12);margin:0 4px;flex-shrink:0}
 .qa-pill{display:flex;align-items:center;gap:6px;padding:5px 7px;border-radius:9px;
   background:transparent;border:1px solid transparent;text-decoration:none;color:var(--text2);
@@ -142,7 +141,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   text-decoration:none;transition:background .15s,color .15s}
 .qa-pdf svg{width:10px;height:10px;stroke-width:2.1;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .qa-pdf:hover{background:rgba(var(--ov),.07);color:var(--text2)}
-@media(max-width:1590px){.qa-pdf span{display:none}.qa-pdf{padding:3px 4px}}
+@media(max-width:1675px){.qa-pdf span{display:none}.qa-pdf{padding:3px 4px}}
 /* Es una .qa-pill más: mismo trazo, mismo hover, mismo tamaño de icono. Solo cambia que
    va anclada al borde y que no lleva texto — lo que hace lo dice su `title`. */
 /* El ojo y el tema van juntos a la derecha de la barra. Antes el ojo era el
@@ -11560,6 +11559,7 @@ function renderSkills(){
 const QA_ICO = {
   coach:  '<circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><circle cx="12" cy="12" r="1" fill="currentColor"></circle>',
   dinero: '<rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2.6"></circle><path d="M6 12h.01M18 12h.01"></path>',
+  laptop: '<rect x="4" y="4.5" width="16" height="11" rx="1.5"></rect><path d="M2 19.5h20"></path><path d="M10 8l-2 2 2 2M14 8l2 2-2 2"></path>',
   gota:   '<path d="M12 3.2s5.5 5.6 5.5 9.4a5.5 5.5 0 0 1-11 0C6.5 8.8 12 3.2 12 3.2z"></path>',
   hoja:   '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6"></path>',
   pesa:   '<path d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11"></path>',
@@ -11607,7 +11607,9 @@ function renderQuickApps(){
   const CP = '../CuidadoPersonal/cuidadopersonal.html?tab=';
   const grupos=[
     [{k:'coach', c:'#b06eff', n:'Coach',   href:'../Coach/Coach.html', stat:activePhase().tag},
-     {k:'dinero',c:'#10b981', n:'Finanzas',href:'../Finanzas/Finanzas.html', stat:''}],
+     {k:'dinero',c:'#10b981', n:'Finanzas',href:'../Finanzas/Finanzas.html', stat:''},
+     // Lo que puede hacer la laptop para ganar dinero (Adán, 22-oct-2026): va con lo que administras.
+     {k:'laptop',c:'#6366f1', n:'Laptop',  href:'../Laptop/laptop.html', stat:'proyectos'}],
     // Las ocho pestañas de Cuidado Personal, en su mismo orden.
     [{k:'gota',   c:'#0891b2', n:'Skincare',  href:CP+'skincare',  stat:''},
      {k:'cabello',c:'#b45309', n:'Cabello',   href:CP+'cabello',   stat:''},

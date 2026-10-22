@@ -48,6 +48,7 @@ funciona desde `file://` (scripts clásicos sí, módulos ES no), y en eso se ap
 | `Aeroresinas/` | `aeroresinas.html`, `dossier.html`, `datos.js` | [`readme_aeroresinas.md`](Aeroresinas/readme_aeroresinas.md) | Web pública del taller de reparación de helicópteros del papá de Adán, con su PDF |
 | `Heliescala/` | `heliescala.html`, `dossier.html`, `datos.js` | [`readme_heliescala.md`](Heliescala/readme_heliescala.md) | Web pública de réplicas en resina, el otro negocio; independiente de Aeroresinas |
 | `Posts/` | `posts.html`, `plantillas.js` | [`readme_posts.md`](Posts/readme_posts.md) | Plantillas de publicación (LinkedIn, Facebook, WhatsApp) para las dos empresas: siete pilares por semana, armados con los `datos.js` de Aeroresinas y Heliescala |
+| `Laptop/` | `laptop.html`, `proyectos.js` | [`readme_laptop.md`](Laptop/readme_laptop.md) | Proyectos para que la laptop pague sola —3D, render, video, IA y código—: cuánto deja cada uno al mes con su cuenta, las tres mejores apuestas y la ruta de 90 días |
 | `Negocio/` | `plantilla-vs-saas.md` | — | Documento de decisión (ago-2026) sobre convertir el ecosistema en producto |
 
 Aeroresinas y Heliescala son páginas para clientes: no guardan estado más allá de tema e idioma y

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laptop — Proyectos que pagan</title>
+<!--
+  LAPTOP · proyectos para que la Zephyrus pague sola.
+
+  Herramienta de Adán: qué puede hacer con su laptop (3D, render, video, IA y código), cuánto deja
+  cada proyecto al mes con su cuenta a la vista, por dónde empezar y qué no le conviene. Los
+  proyectos viven en proyectos.js; lo que viene del plan (el ingreso nuevo que pide la salida, el
+  dólar) sale del maestro. Aquí solo hay molde, CSS y comportamiento. El mapa: readme_laptop.md.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
+<style>
+/* ── Tokens: los del Dashboard ──────────────────────────────────────────────────────────── */
+:root{
+  --bg:#05050a; --bg2:#0b0b14; --text:#f4f4f8; --text2:#9a9db3; --text3:#8589a8;
+  --ov:255,255,255; --card:rgba(var(--ov),.045); --br:rgba(var(--ov),.1);
+  --font:'Inter',-apple-system,sans-serif; --mono:'Space Grotesk',monospace; --title:'Fraunces',Georgia,serif;
+  --ok:#00e87a; --warn:#ffb63d; --bad:#ff5c5c; --cy:#22d3e6; --ac:#b06eff;
+}
+:root[data-theme="light"]{
+  --bg:#f2f2f6; --bg2:#ffffff; --text:#16161a; --text2:#5c5f70; --text3:#63667c;
+  --ov:0,0,0; --card:rgba(255,255,255,.85); --br:rgba(var(--ov),.1);
+  --ok:#00a758; --warn:#a8790a; --bad:#c81e3a; --cy:#07707c; --ac:#7f4fb8;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.55;
+  background-image:radial-gradient(1200px 600px at 85% -10%,rgba(176,110,255,.14),transparent 60%),
+                   radial-gradient(900px 500px at -10% 20%,rgba(34,211,230,.08),transparent 60%);background-attachment:fixed}
+a{color:var(--cy)}
+.wrap{max-width:1320px;margin:0 auto;padding:0 24px}
+
+/* ── Cabecera ─────────────────────────────────────────────────────────────────────────── */
+header.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;padding:12px 24px;
+  background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--br)}
+.marca{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.01em}
+.marca small{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)}
+.top nav{margin-left:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.top nav a,.btn-ico{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:9px;border:1px solid var(--br);
+  background:var(--card);color:var(--text2);font:inherit;font-size:13px;font-weight:600;text-decoration:none;cursor:pointer}
+.top nav a:hover,.btn-ico:hover{color:var(--text);border-color:rgba(var(--ov),.22)}
+.top nav .nav-sec{border:0;background:none}
+
+/* ── Piezas comunes ───────────────────────────────────────────────────────────────────── */
+section{padding:34px 0 8px}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ac)}
+h1{font-family:var(--title);font-size:clamp(34px,5vw,58px);line-height:1.02;letter-spacing:-.02em;margin:10px 0 12px}
+h2{font-family:var(--title);font-size:clamp(24px,2.6vw,32px);line-height:1.1;margin:6px 0 6px}
+.sub{color:var(--text2);max-width:760px;margin:0}
+.card{background:var(--card);border:1px solid var(--br);border-radius:16px}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700;
+  border:1px solid color-mix(in srgb,var(--c,var(--text3)) 45%,transparent);color:var(--c,var(--text2));
+  background:color-mix(in srgb,var(--c,var(--text3)) 10%,transparent)}
+.mono{font-family:var(--mono)}
+
+/* ── El equipo ────────────────────────────────────────────────────────────────────────── */
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:28px;align-items:start;padding-top:40px}
+.equipo{padding:18px 20px}
+.equipo-mod{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:10px}
+.equipo-mod b{font-size:15px}
+.piezas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pieza{padding:11px 13px;border-radius:12px;background:rgba(var(--ov),.035);border:1px solid var(--br)}
+.pieza span{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.12em;color:var(--text3)}
+.pieza b{display:block;font-size:14.5px;margin:2px 0 3px}
+.pieza p{margin:0;font-size:12.5px;line-height:1.45;color:var(--text2)}
+.equipo-nota{margin:10px 0 0;font-size:12px;color:var(--text3)}
+.poderes{display:flex;flex-direction:column;gap:9px;margin-top:18px}
+.poder{display:flex;gap:12px;align-items:flex-start}
+.poder b{flex:none;min-width:118px;font-family:var(--mono);font-size:13px;color:var(--cy)}
+.poder span{font-size:14px;color:var(--text2)}
+
+/* ── La meta y la calculadora ─────────────────────────────────────────────────────────── */
+.meta{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px;padding:22px 24px;margin-top:6px;
+  border-color:color-mix(in srgb,var(--ok) 35%,transparent);background:color-mix(in srgb,var(--ok) 6%,var(--card))}
+.meta-n{font-family:var(--mono);font-size:clamp(30px,4vw,44px);font-weight:700;color:var(--ok);line-height:1}
+.meta p{margin:8px 0 0;color:var(--text2);font-size:14px}
+.calc{display:flex;flex-direction:column;gap:12px}
+.calc label{display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:700;color:var(--text2)}
+.calc select,.calc input[type=range]{width:100%}
+.calc select{height:38px;border-radius:10px;border:1px solid var(--br);background:var(--bg2);color:var(--text);font:inherit;font-size:14px;padding:0 10px}
+.calc-r{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.calc-r b{font-family:var(--mono);font-size:26px}
+.barra{height:8px;border-radius:99px;background:rgba(var(--ov),.1);overflow:hidden}
+.barra i{display:block;height:100%;border-radius:99px;background:var(--ok);transition:width .25s}
+.calc small{color:var(--text3);font-size:12px}
+
+/* ── Las tres apuestas ────────────────────────────────────────────────────────────────── */
+.top3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+.apuesta{position:relative;padding:18px 18px 16px;cursor:pointer;transition:transform .15s,border-color .15s;border-top:3px solid var(--c)}
+.apuesta:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--c) 50%,transparent)}
+.apuesta .n{position:absolute;top:14px;right:16px;font-family:var(--title);font-size:34px;font-weight:700;color:color-mix(in srgb,var(--c) 55%,transparent)}
+.apuesta h3{margin:8px 0 6px;font-size:17px;line-height:1.25;padding-right:34px}
+.apuesta p{margin:0 0 12px;font-size:13.5px;color:var(--text2)}
+.dinero{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--ok)}
+.dinero small{display:block;font-family:var(--font);font-size:11.5px;font-weight:600;color:var(--text3)}
+
+/* ── La ruta de 90 días ───────────────────────────────────────────────────────────────── */
+.ruta{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:16px;counter-reset:r}
+.tramo{padding:14px 14px 15px;border-left:3px solid var(--ac)}
+.tramo span{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ac)}
+.tramo b{display:block;margin:4px 0;font-size:14.5px}
+.tramo p{margin:0;font-size:13px;color:var(--text2)}
+
+/* ── Todos los proyectos ──────────────────────────────────────────────────────────────── */
+.filtros{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px}
+.filtros button{height:32px;padding:0 13px;border-radius:999px;border:1px solid var(--br);background:var(--card);color:var(--text2);
+  font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.filtros button.on{color:var(--text);border-color:var(--c,var(--text2));background:color-mix(in srgb,var(--c,var(--text3)) 14%,transparent)}
+.filtros select{margin-left:auto;height:32px;border-radius:9px;border:1px solid var(--br);background:var(--bg2);color:var(--text);font:inherit;font-size:13px;padding:0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;margin-top:16px}
+.proy{display:flex;flex-direction:column;gap:9px;padding:16px 16px 14px;cursor:pointer;border-left:3px solid var(--c);transition:transform .15s,border-color .15s;text-align:left;font:inherit;color:inherit}
+.proy:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--c) 55%,transparent)}
+.proy-cab{display:flex;align-items:flex-start;gap:10px}
+.proy-ico{flex:none;font-size:24px;line-height:1}
+.proy h3{margin:0;font-size:15.5px;line-height:1.3}
+.proy p{margin:0;font-size:13px;color:var(--text2)}
+.proy-pie{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;margin-top:auto;padding-top:6px;border-top:1px dashed var(--br)}
+.proy-pie .dinero{font-size:16px}
+.datos{display:flex;flex-wrap:wrap;gap:6px}
+.dif{letter-spacing:2px;color:var(--warn);font-size:12px}
+.dif i{font-style:normal;color:rgba(var(--ov),.2)}
+
+/* ── Listas de aviso ──────────────────────────────────────────────────────────────────── */
+.avisos{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:14px}
+.aviso{padding:14px 16px;border-left:3px solid var(--c,var(--bad))}
+.aviso b{display:block;margin-bottom:4px;font-size:14.5px}
+.aviso p{margin:0;font-size:13px;color:var(--text2)}
+
+footer{padding:40px 0 60px;color:var(--text3);font-size:12.5px}
+
+/* ── El detalle de un proyecto ────────────────────────────────────────────────────────── */
+.ov{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.6);backdrop-filter:blur(6px)}
+.ov.open{display:flex}
+.det{width:min(980px,100%);max-height:92vh;overflow-y:auto;background:var(--bg2);border:1px solid var(--br);border-radius:18px;border-top:4px solid var(--c)}
+.det-cab{position:sticky;top:0;display:flex;gap:12px;align-items:flex-start;padding:18px 22px 14px;background:var(--bg2);border-bottom:1px solid var(--br)}
+.det-cab h2{margin:4px 0 2px;font-size:clamp(20px,2.4vw,26px)}
+.det-cab p{margin:0;color:var(--text2);font-size:14px}
+.det-x{margin-left:auto;flex:none;width:34px;height:34px;border-radius:50%;border:1px solid var(--br);background:var(--card);color:var(--text2);font-size:16px;cursor:pointer}
+.det-body{padding:18px 22px 24px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px}
+.det-dinero{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:12px 28px;align-items:flex-end;padding:14px 16px;border-radius:14px;
+  background:color-mix(in srgb,var(--ok) 7%,transparent);border:1px solid color-mix(in srgb,var(--ok) 30%,transparent)}
+.det-dinero .dinero{font-size:28px}
+.det-dinero .cuenta{flex:1 1 280px;font-size:12.5px;color:var(--text2)}
+.det-num{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;grid-column:1/-1}
+.det-num div{padding:9px 11px;border-radius:10px;background:rgba(var(--ov),.035);border:1px solid var(--br)}
+.det-num span{display:block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)}
+.det-num b{font-size:13.5px}
+.det h4{margin:0 0 7px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.det ol,.det ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.det-caja{padding:11px 13px;border-radius:12px;font-size:13.5px;margin-top:12px}
+.det-caja b{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px}
+.det-caja.ojo{background:color-mix(in srgb,var(--warn) 10%,transparent);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent)}
+.det-caja.ojo b{color:var(--warn)}
+.det-caja.vida{background:color-mix(in srgb,var(--cy) 9%,transparent);border:1px solid color-mix(in srgb,var(--cy) 32%,transparent)}
+.det-caja.vida b{color:var(--cy)}
+.det-fuente{grid-column:1/-1;font-size:12px;color:var(--text3)}
+
+@media(max-width:1000px){
+  .hero,.meta{grid-template-columns:minmax(0,1fr)}
+  .top3{grid-template-columns:minmax(0,1fr)}
+  .ruta{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .det-body{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:600px){
+  .wrap{padding:0 16px}
+  header.top{padding:10px 16px}
+  .top nav .nav-sec{display:none}
+  .piezas,.ruta{grid-template-columns:minmax(0,1fr)}
+  .poder{flex-direction:column;gap:2px}
+  .filtros select{margin-left:0;width:100%}
+  .ov{padding:0}
+  .det{max-height:100vh;height:100%;border-radius:0}
+}
+</style>
+<script>
+(function(){
+  // Comparte el tema con el Dashboard, Coach y Finanzas: misma clave, mismo criterio.
+  var saved=localStorage.getItem('coach-theme');
+  var theme=saved||((window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark');
+  document.documentElement.setAttribute('data-theme',theme);
+})();
+</script>
+</head>
+<body>
+
+<header class="top">
+  <div class="marca">💻 Laptop <small>proyectos que pagan</small></div>
+  <nav>
+    <a class="nav-sec" href="#meta">La meta</a>
+    <a class="nav-sec" href="#apuestas">Tus apuestas</a>
+    <a class="nav-sec" href="#proyectos">Todos</a>
+    <a href="../Dashboard/dashboard.html">← Dashboard</a>
+    <button type="button" class="btn-ico" id="btnTema" onclick="cambiarTema()">Tema</button>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Tu laptop, a trabajar</div>
+      <h1>Que la laptop<br>se pague sola</h1>
+      <p class="sub">Proyectos de 3D, render, video, IA y código que puedes hacer con tu equipo, con cuánto deja cada uno al mes —y la cuenta a la vista—, por dónde empezar y qué no te conviene.</p>
+      <div class="poderes" id="poderes"></div>
+    </div>
+    <div class="card equipo">
+      <div class="equipo-mod"><b id="equipoModelo"></b><span class="chip" style="--c:var(--cy)">tu equipo</span></div>
+      <div class="piezas" id="piezas"></div>
+      <p class="equipo-nota" id="equipoNota"></p>
+    </div>
+  </section>
+
+  <section id="meta">
+    <div class="eyebrow">La meta</div>
+    <h2>Lo que te pide el plan</h2>
+    <div class="card meta">
+      <div>
+        <div class="meta-n" id="metaN">—</div>
+        <p id="metaTxt"></p>
+      </div>
+      <div class="calc">
+        <label>Proyecto
+          <select id="calcProy" onchange="calcular()"></select></label>
+        <label>Horas a la semana: <span class="mono" id="calcHorasTxt"></span>
+          <input type="range" id="calcHoras" min="2" max="20" step="1" value="8" oninput="calcular()"></label>
+        <div class="calc-r"><span>Al mes, con ese ritmo</span><b id="calcMes">—</b></div>
+        <div class="barra"><i id="calcBarra" style="width:0"></i></div>
+        <small id="calcNota"></small>
+      </div>
+    </div>
+  </section>
+
+  <section id="apuestas">
+    <div class="eyebrow">Por dónde empezar</div>
+    <h2>Tus tres mejores apuestas</h2>
+    <p class="sub">Elegidas por tu perfil —mecatrónica, QA automotriz y el negocio de tu papá— y por lo rápido que dejan dinero.</p>
+    <div class="top3" id="top3"></div>
+  </section>
+
+  <section id="ruta">
+    <div class="eyebrow">90 días</div>
+    <h2 id="rutaTitulo">La ruta de la primera apuesta</h2>
+    <div class="ruta" id="rutaTramos"></div>
+  </section>
+
+  <section id="proyectos">
+    <div class="eyebrow">El catálogo</div>
+    <h2>Todos los proyectos</h2>
+    <p class="sub">Toca uno para ver los primeros pasos, el software, dónde venderlo y lo que hay que cuidar.</p>
+    <div class="filtros" id="filtros"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow" style="color:var(--bad)">Mejor no</div>
+    <h2>Lo que no te conviene</h2>
+    <div class="avisos" id="noConviene"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow" style="color:var(--warn)">Antes del primer peso</div>
+    <h2>Antes de cobrar</h2>
+    <div class="avisos" id="antes"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow" style="color:var(--cy)">Que dure</div>
+    <h2>Cuida tu laptop</h2>
+    <div class="avisos" id="cuidado"></div>
+  </section>
+
+  <footer id="pie"></footer>
+</main>
+
+<div class="ov" id="detOv" onclick="if(event.target===this)cerrarDet()">
+  <div class="det" id="det" role="dialog" aria-modal="true"></div>
+</div>
+
+<script src="../Dashboard/datos-maestros.js"></script>
+<script src="proyectos.js"></script>
+<script>
+const L = window.LAPTOP, CF = window.CIFRAS;
+// El dólar del plan (maestro) y el ingreso nuevo que pide la salida. Sin el maestro, la página sigue en dólares.
+const FX = CF && CF.PROYECTO && CF.PROYECTO.usdMxn || 0;
+const META = CF ? (+CF.n('extraSalida') || 0) : 0;
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+const pesos = n => '$' + Math.round(n).toLocaleString('es-MX');
+const cien = n => Math.round(n / 100) * 100;
+const cat = p => L.cats[p.cat] || { t: '', c: 'var(--text3)' };
+
+/* Lo que deja un proyecto al mes: precio × unidades × dólar, menos la comisión. La misma cuenta se
+   enseña en su detalle, para que cada cifra se pueda revisar. */
+function cuenta(p){
+  if(p.cero || p.sinRango || (!p.precio && !p.precioMxn)) return null;
+  const enMxn = !!p.precioMxn, neto = 1 - (p.comision || 0);
+  if(!enMxn && !FX) return null;
+  const pr = enMxn ? p.precioMxn : p.precio.map(x => x * FX);
+  const min = pr[0] * p.unidades[0] * neto, max = pr[1] * p.unidades[1] * neto;
+  const hMin = p.horas * p.unidades[0], hMax = p.horas * p.unidades[1];
+  const porHora = ((pr[0] + pr[1]) / 2 * neto) / p.horas;
+  const precioTxt = enMxn ? pesos(p.precioMxn[0]) + '–' + pesos(p.precioMxn[1]) : 'US$' + p.precio[0] + '–' + p.precio[1];
+  const txt = p.unidades[0] + (p.unidades[1] !== p.unidades[0] ? '–' + p.unidades[1] : '') + ' ' + p.de + ' × ' + precioTxt + ' ' + p.por +
+    (enMxn ? '' : ' × $' + FX.toFixed(2) + ' por dólar') + (p.comision ? ' − ' + Math.round(p.comision * 100) + ' % de comisión' : '');
+  return { min: cien(min), max: cien(max), hMin, hMax, porHora, txt };
+}
+const dineroHtml = (p, c) => c
+  ? '<div class="dinero">' + pesos(c.min) + '–' + pesos(c.max) + '<small>al mes' + (p.pasivo ? ', con el catálogo armado' : '') + '</small></div>'
+  : '<div class="dinero" style="color:var(--cy)">' + (p.cero ? 'Sin cobro' : 'Largo plazo') + '<small>' + (p.cero ? 'portafolio y clientes para tu papá' : 'el valor está en tu marca') + '</small></div>';
+const difHtml = n => '<span class="dif" title="Dificultad">' + '●'.repeat(n) + '<i>' + '●'.repeat(3 - n) + '</i></span>';
+// Para ordenar por rapidez: «3 a 6 semanas» → 3; «1 a 2 meses» → 4.3; «Desde la primera semana» → 1.
+const semanas = t => { const m = String(t).match(/(\d+)/), n = m ? +m[1] : 1; return /mes/.test(t) ? n * 4.3 : n; };
+
+/* ── El equipo ───────────────────────────────────────────────────────────────────────────── */
+function pintarEquipo(){
+  const E = L.equipo;
+  $('equipoModelo').textContent = E.modelo;
+  $('equipoNota').textContent = E.nota;
+  $('piezas').innerHTML = E.piezas.map(x => '<div class="pieza"><span>' + esc(x.k) + '</span><b>' + esc(x.v) + '</b><p>' + esc(x.d) + '</p></div>').join('');
+  $('poderes').innerHTML = E.superpoderes.map(x => '<div class="poder"><b>' + esc(x.t) + '</b><span>' + esc(x.d) + '</span></div>').join('');
+}
+
+/* ── La meta y la calculadora: cuánto pide el plan y cuánto da cada proyecto con tus horas ─── */
+function pintarMeta(){
+  $('metaN').textContent = META ? pesos(META) + ' al mes' : '—';
+  $('metaTxt').innerHTML = META
+    ? 'Es el <b>ingreso nuevo</b> que tu plan pide cada mes, hasta que te vayas, para pagar la salida completa del <b>' + CF.v('maestriaInicio') + '</b>. Cada proyecto de aquí es una forma de juntarlo: elige uno y mueve tus horas.'
+    : 'Abre esta página junto al Dashboard para ver la meta de tu plan.';
+  const opciones = L.proyectos.filter(p => !p.pasivo && cuenta(p)).sort((a, b) => cuenta(b).porHora - cuenta(a).porHora);
+  $('calcProy').innerHTML = opciones.map(p => '<option value="' + p.id + '">' + esc(p.t) + ' · ' + pesos(cuenta(p).porHora) + '/h</option>').join('');
+  $('calcProy').value = L.top[0].id;
+  calcular();
+}
+function calcular(){
+  const p = L.proyectos.find(x => x.id === $('calcProy').value), c = p && cuenta(p); if(!c) return;
+  // Más horas no suman más allá de lo que el mercado te compra al mes (el tope de unidades del proyecto).
+  const h = +$('calcHoras').value, horasMes = Math.min(h * 4.33, c.hMax), tope = h * 4.33 > c.hMax, mes = c.porHora * horasMes;
+  $('calcHorasTxt').textContent = h + ' h · ' + Math.round(h * 4.33) + ' h al mes';
+  $('calcMes').textContent = pesos(cien(mes));
+  const pct = META ? Math.min(100, mes / META * 100) : 0;
+  $('calcBarra').style.width = pct + '%';
+  $('calcBarra').style.background = pct >= 100 ? 'var(--ok)' : 'var(--warn)';
+  $('calcNota').innerHTML = META
+    ? (mes >= META ? '✓ Cubre el ingreso nuevo que pide el plan' : 'Cubre el ' + Math.round(pct) + ' % de lo que pide el plan; faltan ' + pesos(cien(META - mes)) + ' al mes') +
+      ' · a ' + pesos(c.porHora) + ' la hora, con el precio de en medio.' +
+      (tope ? ' Pasadas ' + Math.round(c.hMax) + ' h al mes no suma más: es lo que el mercado te compra a este ritmo; sube la tarifa o suma otro proyecto.' : ' Cada hora que le quitas a Didi para esto rinde más si la tarifa es más alta.')
+    : 'A ' + pesos(c.porHora) + ' la hora, con el precio de en medio.';
+}
+
+/* ── Las tres apuestas y su ruta ─────────────────────────────────────────────────────────── */
+function pintarTop(){
+  $('top3').innerHTML = L.top.map((x, i) => {
+    const p = L.proyectos.find(q => q.id === x.id); if(!p) return '';
+    return '<div class="card apuesta" style="--c:' + cat(p).c + '" onclick="abrirDet(\'' + p.id + '\')" role="button" tabindex="0">' +
+      '<span class="n">' + (i + 1) + '</span><span class="chip" style="--c:' + cat(p).c + '">' + esc(cat(p).t) + '</span>' +
+      '<h3>' + p.ico + ' ' + esc(p.t) + '</h3><p>' + esc(x.porque) + '</p>' + dineroHtml(p, cuenta(p)) + '</div>';
+  }).join('');
+  const R = L.ruta, p = L.proyectos.find(q => q.id === R.para);
+  $('rutaTitulo').textContent = 'La ruta de 90 días: ' + (p ? p.t.toLowerCase() : '');
+  $('rutaTramos').innerHTML = R.tramos.map(t => '<div class="card tramo"><span>' + esc(t.s) + '</span><b>' + esc(t.t) + '</b><p>' + esc(t.d) + '</p></div>').join('');
+}
+
+/* ── El catálogo, con filtro por categoría y orden ───────────────────────────────────────── */
+let filtro = 'todos', orden = 'dinero';
+function pintarFiltros(){
+  const b = (k, t, c) => '<button type="button" class="' + (filtro === k ? 'on' : '') + '" style="--c:' + (c || 'var(--text2)') + '" onclick="filtrar(\'' + k + '\')">' + esc(t) + '</button>';
+  $('filtros').innerHTML = b('todos', 'Todos (' + L.proyectos.length + ')') +
+    Object.keys(L.cats).map(k => b(k, L.cats[k].t + ' (' + L.proyectos.filter(p => p.cat === k).length + ')', L.cats[k].c)).join('') +
+    '<select aria-label="Ordenar" onchange="ordenar(this.value)">' +
+      [['dinero','Más dinero al mes'],['rapido','Primer pago más pronto'],['facil','Más fácil primero']].map(o => '<option value="' + o[0] + '"' + (orden === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') +
+    '</select>';
+}
+function filtrar(k){ filtro = k; pintarFiltros(); pintarGrid(); }
+function ordenar(k){ orden = k; pintarGrid(); }
+function pintarGrid(){
+  const L2 = L.proyectos.filter(p => filtro === 'todos' || p.cat === filtro).slice();
+  const max = p => (cuenta(p) || { max: -1 }).max;
+  L2.sort((a, b) => orden === 'rapido' ? semanas(a.primer) - semanas(b.primer) : orden === 'facil' ? (a.dificultad - b.dificultad) || (max(b) - max(a)) : max(b) - max(a));
+  $('grid').innerHTML = L2.map(p => {
+    const c = cuenta(p);
+    return '<button type="button" class="card proy" style="--c:' + cat(p).c + '" onclick="abrirDet(\'' + p.id + '\')">' +
+      '<div class="proy-cab"><span class="proy-ico">' + p.ico + '</span><div><h3>' + esc(p.t) + '</h3></div></div>' +
+      '<p>' + esc(p.gancho) + '</p>' +
+      '<div class="datos"><span class="chip" style="--c:' + cat(p).c + '">' + esc(cat(p).t) + '</span><span class="chip">⏱ ' + esc(p.primer) + '</span>' + difHtml(p.dificultad) + '</div>' +
+      '<div class="proy-pie">' + dineroHtml(p, c) + (c && !p.pasivo ? '<span class="mono" style="font-size:12px;color:var(--text3)">' + pesos(c.porHora) + '/h</span>' : '') + '</div></button>';
+  }).join('');
+}
+
+/* ── Las listas de aviso ─────────────────────────────────────────────────────────────────── */
+function pintarAvisos(){
+  const lista = (id, xs, c) => { $(id).innerHTML = xs.map(x => '<div class="card aviso" style="--c:' + c + '"><b>' + esc(x.t) + '</b><p>' + esc(x.d) + '</p></div>').join(''); };
+  lista('noConviene', L.noConviene, 'var(--bad)');
+  lista('antes', L.antes, 'var(--warn)');
+  lista('cuidado', L.cuidado, 'var(--cy)');
+  $('pie').innerHTML = (FX ? 'Los precios en dólares se convierten a <b>$' + FX.toFixed(2) + '</b> por dólar, el tipo de cambio del plan. ' : '') +
+    'Los rangos son de alguien que empieza con unas 8 horas a la semana; cada proyecto dice de dónde sale su precio. Ningún número de aquí es una promesa: son la cuenta de lo que pasa si consigues el ritmo.';
+}
+
+/* ── El detalle ──────────────────────────────────────────────────────────────────────────── */
+function abrirDet(id){
+  const p = L.proyectos.find(x => x.id === id); if(!p) return;
+  const c = cuenta(p), C = cat(p);
+  const lista = (xs, ol) => '<' + (ol ? 'ol' : 'ul') + '>' + xs.map(x => '<li>' + esc(x) + '</li>').join('') + '</' + (ol ? 'ol' : 'ul') + '>';
+  const num = (k, v) => '<div><span>' + k + '</span><b>' + v + '</b></div>';
+  $('det').style.setProperty('--c', C.c);
+  $('det').innerHTML =
+    '<div class="det-cab"><span style="font-size:34px;line-height:1">' + p.ico + '</span><div><span class="chip" style="--c:' + C.c + '">' + esc(C.t) + '</span>' +
+      '<h2>' + esc(p.t) + '</h2><p>' + esc(p.gancho) + '</p></div><button type="button" class="det-x" onclick="cerrarDet()" aria-label="Cerrar">✕</button></div>' +
+    '<div class="det-body">' +
+      '<div class="det-dinero">' + dineroHtml(p, c) + (c ? '<div class="cuenta"><b>La cuenta:</b> ' + esc(c.txt) + '.</div>' : '') + '</div>' +
+      '<div class="det-num">' +
+        num('Primer pago', esc(p.primer)) + num('Inversión', esc(p.inversion)) + num('Dificultad', difHtml(p.dificultad)) +
+        (c && !p.pasivo ? num('Horas al mes', Math.round(c.hMin) + (Math.round(c.hMax) !== Math.round(c.hMin) ? '–' + Math.round(c.hMax) : '')) + num('Por hora', pesos(c.porHora)) : '') +
+      '</div>' +
+      '<div><h4>Primeros pasos</h4>' + lista(p.pasos, true) +
+        '<div class="det-caja ojo"><b>Ojo</b>' + esc(p.ojo) + '</div>' +
+        (p.sinergia ? '<div class="det-caja vida"><b>Con tu vida</b>' + esc(p.sinergia) + '</div>' : '') + '</div>' +
+      '<div><h4>Por qué tu laptop</h4><p style="margin:0 0 16px;font-size:14px">' + esc(p.laptop) + '</p>' +
+        '<h4>Software</h4>' + lista(p.software) +
+        '<h4 style="margin-top:16px">Dónde venderlo</h4>' + lista(p.vender) + '</div>' +
+      (p.fuente ? '<div class="det-fuente">Precio: ' + esc(p.fuente) + (p.url ? ' <a href="' + esc(p.url) + '" target="_blank" rel="noopener">Ver la fuente ↗</a>' : '') + '</div>' : '') +
+    '</div>';
+  $('detOv').classList.add('open');
+  $('det').scrollTop = 0;
+}
+function cerrarDet(){ $('detOv').classList.remove('open'); }
+addEventListener('keydown', e => { if(e.key === 'Escape') cerrarDet(); });
+
+/* ── Tema ────────────────────────────────────────────────────────────────────────────────── */
+function cambiarTema(){
+  const t = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  try { localStorage.setItem('coach-theme', t); } catch(e) {}
+  pintarTema();
+}
+function pintarTema(){ $('btnTema').textContent = document.documentElement.getAttribute('data-theme') === 'light' ? '🌙 Oscuro' : '☀️ Claro'; }
+
+pintarEquipo(); pintarMeta(); pintarTop(); pintarFiltros(); pintarGrid(); pintarAvisos(); pintarTema();
+</script>
+<script src="../Dashboard/prompt-pagina.js" data-pagina="laptop" data-host="header.top"></script>
+</body>
+</html>

@@ -194,6 +194,9 @@ window.CIFRAS = (function () {
     // El euro para planear. El 2-oct-2026 estaba en $20.46 (Infobae); se planea a $21.00 para
     // que una subida normal (su volatilidad anda en ~7 %) no tumbe la cuenta bloqueada.
     eurMxn:          21.0,
+    // El dólar para planear lo que se cobra en dólares (los proyectos de Laptop). El 8-abr-2026 estaba
+    // en $17.76 (Banxico, vía Uno TV); se planea un poco abajo para no inflar lo que entra.
+    usdMxn:          17.5,
   };
 
   /* ── EL CALENDARIO ────────────────────────────────────────────────────────────────────────

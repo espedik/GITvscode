@@ -319,6 +319,7 @@ pero el nombre de la variable se queda corto.
 | `{{salidaVeredicto}}` | «faltan …» o «sobran …»: lo que pide la salida —cuenta bloqueada, reserva del BYD, colchón y la colegiatura del primer semestre— contra la cuenta a fin de agosto (`fmt: 'txt'`) | derivada |
 | `{{mesMillon}}` | ago 2031 — el mes en que la proyección cruza el millón (`fmt: 'mes'`) | derivada de la PROYECCION |
 | `PROYECTO.eurMxn` | 21.0 — el euro para planear; el 2-oct-2026 estaba en $20.46 | constante |
+| `PROYECTO.usdMxn` | 17.5 — el dólar para planear lo que se cobra en dólares (los proyectos de `Laptop/`); el 8-abr-2026 estaba en $17.76, se planea un poco abajo para no inflar lo que entra | constante |
 | `{{cetes}}` | $6,000 — el mismo número que `{{fondo}}` | derivada de `fondo` |
 | `{{maestria}}` `{{maestriaMeta}}` | $17,250 de $398,000 — el dinero es `CIFRAS.fondoMaestria()`: el fondo de emergencia (CETES), las inversiones de Finanzas (hoy el depósito de la renta) y el Bitcoin; la meta es lo que cuesta irse (migraciones `_alemania20261003` y `_ahorroReal20261003`) | derivada de lo vivo |
 | `{{maestriaEscuela}}` | Esslingen — Automotive Systems M.Eng. | constante |
@@ -811,6 +812,7 @@ Es lo que evita que el calendario se congele como se congeló la vieja barra de 
 | `CuidadoPersonal/cuidadopersonal.html` | `<script src="../Dashboard/datos-maestros.js">` | Skincare y Cabello: `CIFRAS.RUTINA_PIEL`, `CIFRAS.RUTINA_PELO` y las horas desde `CIFRAS.rutina()` |
 | `CuidadoPersonal/salud.html` | `<script src="../Dashboard/datos-maestros.js">` | `CIFRAS.SUPLEMENTOS` (siembra la lista y el botiquín) y `CIFRAS.CHEQUEO` |
 | `Aleman/index.html` | `<script src="../Dashboard/datos-maestros.js">` | `{{escuelaAleman}}` en el encabezado del Kapitel 10 (`aplicarDOM`) |
+| `Laptop/laptop.html` | `<script src="../Dashboard/datos-maestros.js">` | La meta de la calculadora (`{{extraSalida}}`), la fecha de la salida y el dólar (`PROYECTO.usdMxn`) |
 
 El Dashboard es donde vive el archivo porque es el centro del proyecto. El alemán vive en su app: el vocabulario en `Aleman/vocab-datos.js`, junto
 con su diseño (`vocab.css`) y su motor (`vocab.js`), y las 41 lecciones en `Aleman/lecciones-datos.js`
@@ -854,6 +856,7 @@ que añade un registro lo hace **por id y solo si falta**: así el navegador que
 | `Entrevistas/` | `entrevistas.html` + `js/data-*.js` | Prep. técnica automotriz, 229 temas; los 41 de Python abren con su explicación en llano (`js/data-python-intro.js`) | `theme`, `sidebar-collapsed`, `study-done-v2` |
 | `Aeroresinas/`, `Heliescala/` | `aeroresinas.html`, `heliescala.html` + `dossier.html` | Las dos webs públicas del negocio del papá de Adán | solo tema e idioma |
 | `Posts/` | `posts.html` + `plantillas.js` | Plantillas de LinkedIn para las dos empresas, armadas con los `datos.js` de sus webs (no con el maestro) | `posts-*`, `coach-theme` |
+| `Laptop/` | `laptop.html` + `proyectos.js` | 19 proyectos para que la laptop pague sola (3D, video, IA y código), con lo que deja cada uno al mes y su cuenta | solo `coach-theme` |
 
 Detalle por app en su propio `readme_<app>.md`; el mapa completo de claves y conexiones está en
 [`../README.md`](../README.md).
@@ -892,6 +895,7 @@ especialidad (las de Finanzas, los módulos de Entrevistas) comparten el de su p
 | `entrevistas` | `entrevistas.html` |
 | `aeroresinas` · `heliescala` | la web y el dossier de cada una, con `data-publica`: el icono solo sale en `file://` o `localhost`, nunca a un cliente |
 | `posts` | `posts.html` |
+| `laptop` | `laptop.html` |
 
 **Dónde va el icono**: fijo en la esquina si está libre (Dashboard, los dossiers); si la esquina
 tiene logo o botón ☰, la etiqueta lleva `data-host` y el icono entra como primer elemento de esa

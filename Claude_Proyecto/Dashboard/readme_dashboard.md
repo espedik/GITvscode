@@ -540,7 +540,8 @@ Cada app lleva un **SVG de trazo** de 24×24 (`QA_ICO`), mismo grosor y terminac
 no servían (la bandera de Alemán sale como `DE` en Windows). Colores medidos contra los dos
 fondos: peor contraste 5.43 en oscuro y 1.92 en claro.
 
-**Cuatro grupos** separados por filete fino, 15 píldoras: lo que administras (Coach, Finanzas);
+**Cuatro grupos** separados por filete fino, 16 píldoras: lo que administras (Coach, Finanzas y **Laptop**, los proyectos para
+que la laptop pague sola — ver `../Laptop/readme_laptop.md`);
 el cuerpo —las ocho pestañas de Cuidado Personal en su orden: Skincare, Cabello, Ojos, Dentista,
 Salud, Ejercicio, Comida, Vestimenta—; lo que estudias (Alemán y Entrevistas: Alemán entra por su
 hub `index.html`, que ya lleva a lecciones, vocabulario y gramática, así que esas tres no tienen
@@ -557,17 +558,17 @@ del pdf de cada uno"*, y 22-oct-2026: *"los pdfs que están abajo, ponlos mejor 
 Posts no, porque no tiene PDF propio. Al subirlos a la fila, la barra baja de 65 a 54 px. Abre el `.pdf` en pestaña nueva —`Aeroresinas-dossier.pdf`,
 `Heliescala-catalogo.pdf`—, no la web: el lector de PDF del navegador ya trae su propio botón de
 descarga en la barra de herramientas, así que no hace falta uno aparte para cumplir *"cuando esté
-en el pdf debe haber algo para poder descargar ese pdf"*. Por debajo de 1590 px se queda solo el
+en el pdf debe haber algo para poder descargar ese pdf"*. Por debajo de 1675 px se queda solo el
 icono, igual que las píldoras de arriba.
 
-Van en un contenedor con `max-width:1430px`, con 2 px entre píldoras, 7 px de relleno lateral y 4 px a
-cada lado del filete —lo justo para que los dos PDF quepan sin ensanchar la fila—; **por debajo de 1590 px** se quedan solo los iconos
+Van en un contenedor con `max-width:1515px`, con 2 px entre píldoras, 7 px de relleno lateral y 4 px a
+cada lado del filete —lo justo para que los dos PDF quepan sin ensanchar la fila—; **por debajo de 1675 px** se quedan solo los iconos
 con el nombre en `title`: la fila con nombres se partiría en dos y taparía el slide (que empieza
 fijo a 58 px), o se metería debajo de los botones de tema y privacidad, que van absolutos a la
 derecha (91 px). Los dos números salen de medir la fila con nombres (`.qa-grupos` con
-`flex-wrap:nowrap` y `max-width:none`, 1 401 px hoy) y de sumarle 2×91 para el umbral, porque la
+`flex-wrap:nowrap` y `max-width:none`, 1 486 px hoy) y de sumarle 2×91 para el umbral, porque la
 fila va centrada y reparte el sobrante a los dos lados: **si entra o sale una app, volver a
-medir**. A 1600 px se ven los nombres (queda un hueco de 8 px con los botones); a 1366, solo
+medir**. A 1680 px se ven los nombres (queda un hueco de 6 px con los botones); a 1600, solo
 iconos.
 
 **Privacidad y tema van juntos a la derecha**, en el carril `.qa-acciones`, como dos píldoras
