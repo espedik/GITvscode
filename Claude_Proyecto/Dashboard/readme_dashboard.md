@@ -559,17 +559,26 @@ Posts no, porque no tiene PDF propio. Al subirlos a la fila, la barra baja de 65
 `Heliescala-catalogo.pdf`—, no la web: el lector de PDF del navegador ya trae su propio botón de
 descarga en la barra de herramientas, así que no hace falta uno aparte para cumplir *"cuando esté
 en el pdf debe haber algo para poder descargar ese pdf"*. Por debajo de 1675 px se queda solo el
-icono, igual que las píldoras de arriba.
+icono del PDF, sin el texto.
 
 Van en un contenedor con `max-width:1515px`, con 2 px entre píldoras, 7 px de relleno lateral y 4 px a
-cada lado del filete —lo justo para que los dos PDF quepan sin ensanchar la fila—; **por debajo de 1675 px** se quedan solo los iconos
-con el nombre en `title`: la fila con nombres se partiría en dos y taparía el slide (que empieza
-fijo a 58 px), o se metería debajo de los botones de tema y privacidad, que van absolutos a la
-derecha (91 px). Los dos números salen de medir la fila con nombres (`.qa-grupos` con
-`flex-wrap:nowrap` y `max-width:none`, 1 486 px hoy) y de sumarle 2×91 para el umbral, porque la
-fila va centrada y reparte el sobrante a los dos lados: **si entra o sale una app, volver a
-medir**. A 1680 px se ven los nombres (queda un hueco de 6 px con los botones); a 1600, solo
-iconos.
+cada lado del filete. La fila tiene **dos escalones**, porque a lo ancho de la pantalla compite con
+los botones de tema y privacidad, que van absolutos a la derecha (91 px), y si se partiera en dos
+taparía el slide (que empieza fijo a 58 px):
+
+| Viewport | Qué se ve | Fila medida |
+|---|---|---|
+| más de 1675 px | nombre, segunda línea verde (`.qa-stat`) y «PDF» | 1 486 px |
+| 1525–1675 px | **el nombre**; se van la segunda línea, el texto «PDF» y parte del relleno (5 px) | 1 341 px |
+| menos de 1525 px | solo iconos, con el nombre en `title` | 729 px |
+
+El escalón de en medio existe para que a 1600 px —la pantalla de Adán— se lea cada app: con un solo
+umbral en 1675 se quedaba en iconos y la píldora de Laptop no se distinguía (*"No veo el botón de la
+página"*). Cada umbral es la fila medida (`.qa-grupos` con `flex-wrap:nowrap` y `max-width:none`) más
+2×91 de los botones, porque la fila va centrada y reparte el sobrante a los dos lados: **si entra o
+sale una app, volver a medir los dos**. Medido: a 1680 px queda un hueco de 6 px con los botones; a
+1600, de 38 px; a 1526, de 1 px. Los dos `@media` van después de las reglas base de `.qa-pill` y
+`.qa-sep`: a igual especificidad gana la última.
 
 **Privacidad y tema van juntos a la derecha**, en el carril `.qa-acciones`, como dos píldoras
 `qa-pill` iguales de 35 px: el ojo (`priv-btn`; tachado y en rojo con las cifras ocultas, con
