@@ -710,16 +710,24 @@ en pantalla **son las piezas de la ventana de las fases**, con sus mismas clases
   nombre y sus fechas en un renglón, su título y cómo va: *2 meses · ✓ cerrada*, *día 21 de 182 · quedan 161 días*
   con su barra en la fase en curso, *empieza en 5 meses*—; el porqué de la fase (`explica`) va en su título. Tocar una
   abre la ventana en esa fase (`cfbFase`); en la ventana, `fzRutaHtml(false)` cambia de fase (`kpiFaseTab`).
-- **El mes en curso** (`#pmMes`, `pmMesHtml()`): la ficha del mes de la ventana en corto. Arriba su nombre, *ESTE MES*,
-  la fase, sus días y cuándo se audita (*se audita desde el 25 · en 4 días*), y sus pestañas —*Información general* y
-  los meses de la fase, con el punto de su auditoría—, cada una abre la ventana en ese mes (`cfbAbrir`). Debajo, si el
-  mes anterior cerró sin auditar, el mismo aviso de la ficha con *Auditar septiembre*. Y tres columnas: **lo que tiene
-  que quedar hecho** —las tareas de la fase, las que pasaron del mes anterior y las correcciones; hasta cinco, cada una
-  en un renglón con su texto completo en el título, la primera pendiente con *Te toca*, y se palomean aquí mismo
-  (`pmCheck` → `toggleFaseCheck`, en la semana de hoy, la misma casilla que la ventana y Mi Día)—; **para la salida a
-  Alemania** —tres, las pendientes primero— y *lo que sostienes todo el mes*; y **las cifras del mes** con
-  `fzmCifrasHTML`, la misma función de la ficha, sin el patrimonio líquido (Adán, 21-oct-2026: *"quita la información
-  del checkpoint, lo de patrimonio líquido, el auto y el iPhone"*). Lo que no cabe dice *Y 3 más…* y abre la ficha.
+- **El mes en curso** (`#pmMes`, `pmMesHtml()`): la ficha del mes de la ventana en corto. Arriba su nombre y su estado
+  (*ESTE MES*, *AUDITADO*, *SIN AUDITAR*), la fase, sus días y cuándo se audita (*se audita desde el 25 · en 4 días*), y
+  sus pestañas —*Información general* y los meses de la fase, con el punto de su auditoría—. **Las pestañas cambian lo
+  que se ve aquí mismo, sin abrir la ventana** (`pmVer`, `_pmVista`; Adán, 22-oct-2026: *"cuando quiero cambiar de mes,
+  en los subtabs, no se actualiza la información… solamente quiero que se abran las ventanas cuando des click en alguna
+  fase"*): solo una fase de la ruta abre la ventana, y en esa fase. Un mes (`pmMesVistaHtml`) trae, si el anterior cerró
+  sin auditar, el aviso con *Auditar septiembre*, y tres columnas: **lo que tiene que quedar hecho** —las tareas de la
+  fase, las que pasaron del mes anterior y las correcciones; hasta cinco, cada una en un renglón con su texto completo en
+  el título y, en el mes de hoy, la primera pendiente con *Te toca*—; **para la salida a Alemania** —tres, las
+  pendientes primero— y *lo que sostienes todo el mes*; y **las cifras del mes** con `fzmCifrasHTML`, la misma función de
+  la ficha, sin el patrimonio líquido (Adán, 21-oct-2026: *"quita la información del checkpoint, lo de patrimonio
+  líquido, el auto y el iPhone"*). Las tareas se palomean aquí mismo, en la misma casilla que la ventana y Mi Día: el mes
+  de hoy en la semana de hoy (`pmCheck`), otro mes como lo hace su ficha (`fzmCheck`); un mes ya auditado enseña lo que
+  quedó, sin casilla. *Y 3 más…* y *Lo que sostienes* se despliegan en su lugar (`pmDespliega`); *Ver el mes completo en
+  la ventana* y *Auditar* son lo único que la abre. **La información general** (`pmGenHtml`) es la de la ventana en
+  corto: la meta de la fase, el checkpoint con sus dos salidas, cómo va —el mismo bloque y la misma cuenta que la ventana,
+  `fzvVaHTML` y `fzvAvance`— y lo que dejas de hacer solo con su encabezado (`.pm-gen`). Medido a 1600×1000: un mes mide
+  de 171 a 286 px y la información general 408.
 
 *Tu estrategia de hoy* va arriba del panel de **Deuda cara** y tu dinero, cuenta por cuenta, en el de **Patrimonio**
 (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las

@@ -646,7 +646,7 @@ Esta pantalla es el tablero del Plan Maestro: la ruta de las fases, el mes en cu
 - Cada medidor sale de los datos vivos, abre su desglose y su porcentaje se explica en una frase.
 - En la ventana de las fases nada va en una sección aparte de su renglón: lo que tiene desglose —las rutinas, los servicios, la comida, el BYD— se abre ahí mismo al tocarlo, y los cortes de la salida son los mismos que en Mis Metas.
 - Los posts del negocio de su papá —Aeroresinas y Heliescala, en LinkedIn y Facebook— van en el plan de cada fase: no se quitan.
-- La ruta de las fases y el mes en curso son las mismas piezas que la ventana de las fases (fzRutaHtml, fzmCifrasHTML, la misma casilla de cada tarea): lo que se ve en la pantalla y lo que abre la ventana tiene que cuadrar. El mes en curso dice lo útil —lo que tiene que quedar hecho, lo de la salida y tu dinero y la BBVA contra su meta— y la ventana, el resto: el checkpoint y lo que da tu ritmo en el plan. Lo que pide una fase sale del plan (PROYECCION), igual que en Mis Metas.`
+- La ruta de las fases y el mes en curso son las mismas piezas que la ventana de las fases (fzRutaHtml, fzmCifrasHTML, la misma casilla de cada tarea): lo que se ve en la pantalla y lo que abre la ventana tiene que cuadrar. El mes en curso dice lo útil —lo que tiene que quedar hecho, lo de la salida y tu dinero y la BBVA contra su meta— y la ventana, el resto: lo que da tu ritmo en el plan. Sus pestañas cambian lo que se ve ahí mismo —otro mes de la fase o su información general: la meta, el checkpoint y cómo va—; solo una fase de la ruta abre la ventana, y en esa fase. Lo que pide una fase sale del plan (PROYECCION), igual que en Mis Metas.`
     },
 
     metas: {

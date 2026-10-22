@@ -1483,6 +1483,24 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .pm-mes .fzm-tab{padding:4px 10px;font-size:12px}
 .pm-mes .fzm-aviso{margin:0;padding:5px 12px}
 .pm-mes-3{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr) minmax(0,1.15fr);gap:22px;align-items:start}
+/* La información general en la pantalla, en corto: la meta, el checkpoint con sus dos salidas una bajo otra, cómo va
+   y lo que dejas de hacer solo con su encabezado (el detalle, en la ventana). */
+.pm-gen .fz-p{margin:0 0 6px;font-size:13px}
+.pm-gen .fz-ol{margin:0;gap:4px;font-size:13px;line-height:1.42}
+.pm-gen .fzk{margin:0;gap:7px;padding:10px 12px}
+.pm-gen .fzk-cab{gap:10px}
+.pm-gen .fzk-cuando{font-size:13px;padding:4px 8px}
+.pm-gen .fzk-prueba{font-size:13px;line-height:1.4}
+.pm-gen .fzk-ramas{grid-template-columns:minmax(0,1fr);gap:5px}
+.pm-gen .fzk-r{font-size:12px;line-height:1.4;padding:5px 9px}
+.pm-gen .fzv-n{padding:6px 11px;margin-bottom:5px}
+.pm-gen .fzv-n b{font-size:14px}
+.pm-gen .fzv-sigue{margin:2px 0 10px}
+.pm-gen .fzd{grid-template-columns:minmax(0,1fr);gap:3px;margin:0 0 6px}
+.pm-gen .fzd-i{gap:8px;align-items:center;padding:4px 8px;border-radius:8px}
+.pm-gen .fzd-i span{display:none}
+.pm-gen .fzd-x{width:18px;height:18px;font-size:10px}
+.pm-gen .fzd-i b{font-size:12.5px}
 .pm-mes .fzc-g{margin:0 0 2px}
 .pm-mes .fzc-item{align-items:center;padding:4px 2px;cursor:pointer}
 .pm-mes .fzc-item>input{margin-top:0}
@@ -9354,7 +9372,7 @@ function renderCoach(){}
 function renderCoach(){
   // La ruta de las fases y el mes en curso, con las piezas de la ventana: cada fase abre la ventana en esa fase
   // (Adán, 21-sep-2026: "al hacer click en el recuadro de fase 0 (…) debes mostrarme una ventana con la info de
-  // todas las fases") y cada mes, en ese mes. El párrafo de `explica` va en el título de cada fase.
+  // todas las fases"); las pestañas del mes cambian lo que se ve aquí mismo. El párrafo de `explica` va en el título de cada fase.
   document.getElementById('coachFaseBand').innerHTML=fzRutaHtml(true);
   const pmMes=document.getElementById('pmMes'), iFase=fzmFaseDe(fzmYM(new Date()));
   pmMes.innerHTML=pmMesHtml();
@@ -9397,58 +9415,117 @@ function fzRutaHtml(enPantalla){
 function cfbFase(i){ abrirKpi('fases'); if(typeof kpiFaseTab === 'function') kpiFaseTab(i); }
 
 /* ── EL MES EN CURSO, EN PANTALLA ─────────────────────────────────────────────────────────────
-   La ficha del mes de la ventana, en corto y con sus mismas piezas: el nombre y sus pestañas (cada una abre la
-   ventana en ese mes), el aviso si el mes anterior cerró sin auditar, lo que tiene que quedar hecho —se palomea
-   aquí mismo, en la misma casilla que la ventana y Mi Día—, lo de la salida a Alemania y lo que sostienes, y las
-   cifras del mes con fzmCifrasHTML, la misma función de la ficha (sin el patrimonio líquido: Adán, 21-oct-2026). */
+   La ficha del mes de la ventana, en corto y con sus mismas piezas: el nombre y sus pestañas, el aviso si el mes
+   anterior cerró sin auditar, lo que tiene que quedar hecho —se palomea aquí mismo, en la misma casilla que la
+   ventana y Mi Día—, lo de la salida a Alemania y lo que sostienes, y las cifras del mes con fzmCifrasHTML, la misma
+   función de la ficha (sin el patrimonio líquido: Adán, 21-oct-2026).
+   Las pestañas cambian lo que se ve aquí mismo, sin abrir la ventana (Adán, 22-oct-2026: "cuando quiero cambiar de
+   mes, en los subtabs, no se actualiza la información… solamente quiero que se abran las ventanas cuando des click en
+   alguna fase"): `_pmVista` es null (el mes de hoy), 'gen' (la información general) u otro mes de la fase. «Y N más»
+   y «Lo que sostienes» se despliegan en su lugar (`_pmTodo`). */
+let _pmVista = null, _pmTodo = {};
+function pmVer(vista){
+  _pmVista = vista; _pmTodo = {};
+  const el = document.getElementById('pmMes'); if(el) el.innerHTML = pmMesHtml();
+}
+function pmDespliega(k){
+  _pmTodo[k] = !_pmTodo[k];
+  const el = document.getElementById('pmMes'); if(el) el.innerHTML = pmMesHtml();
+}
 function pmMesHtml(){
   const C = window.CIFRAS; if(!C || !C.planMes) return '';
   const hoyD = new Date(); hoyD.setHours(0,0,0,0);
-  const ym = fzmYM(hoyD), i = fzmFaseDe(ym); if(i < 0) return '';
-  const f = PHASES[i], P = C.planMes(ym), A = fzmAud(), a = A[ym] || {}, checks = rawGet('coach_checks_v1', {});
-  const e = fzmEstado(ym, A), F = fzmFicha(P, A), fin = fzmFinMes(ym);
-  const desde = new Date(fin); desde.setDate(fin.getDate() - 6);
-  const cerrable = e !== 'ok' && hoyD >= desde;
-  const hecha = t => ctHecha(t, checks);
-  const deFase = F.tareas.filter(t => t.grupo === 'fase' || t.grupo === 'pasa' || t.grupo === 'correccion');
-  const deSalida = F.tareas.filter(t => t.grupo === 'salida');
-  const sost = F.habitos.filter(h => !!(a.siempre || {})[h.id]).length;
-  const primera = deFase.find(t => !hecha(t));
-  const abre = "cfbAbrir("+i+",'"+ym+"')";
-  const fila = function(t){
-    const p = fzmPartir(t.txt), ok = hecha(t), fijo = String(t.txt).indexOf('\u2705') >= 0;
-    const de = t.grupo === 'pasa' && t.de ? 'de '+fzmMesMin(t.de) : t.grupo === 'correccion' && t.de ? 'de la auditoría de '+fzmMesMin(t.de) : '';
-    const plano = String(p.t).replace(/<[^>]*>/g, '');
-    return '<label class="fzc-item'+(ok ? ' ok' : '')+'" title="'+esc(plano)+'"><input type="checkbox"'+(ok ? ' checked' : '')+(fijo ? ' disabled' : '')+
-      ' onchange="pmCheck(\''+t.id+'\',this.checked)"><span class="fzc-tx"><b>'+(t.ico ? t.ico+' ' : '')+p.t+'</b></span>'+
-      (de ? '<em class="fzc-tag">'+de+'</em>' : '')+(t === primera ? '<em class="pm-toca">Te toca</em>' : '')+'</label>';
-  };
-  const VER = 5, SAL = 3;
-  const auditaTxt = e === 'ok' ? 'auditado' : hoyD >= desde ? 'ya se puede auditar' : 'se audita desde el '+desde.getDate()+' · en '+Math.round((desde - hoyD)/86400000)+' días';
-  let anio = '', tabs = '<div class="fzm-tabs"><button type="button" class="fzm-tab gen" onclick="cfbAbrir('+i+',\'gen\')">Información general</button>';
-  fzmMeses(f).forEach(function(k){
+  const ymHoy = fzmYM(hoyD), i = fzmFaseDe(ymHoy); if(i < 0) return '';
+  const f = PHASES[i], meses = fzmMeses(f), A = fzmAud();
+  if(_pmVista && _pmVista !== 'gen' && meses.indexOf(_pmVista) < 0) _pmVista = null;   // cambió el mes o la fase
+  const vista = _pmVista || ymHoy;
+  let anio = '', tabs = '<div class="fzm-tabs"><button type="button" class="fzm-tab gen'+(vista === 'gen' ? ' is-activa' : '')+'" onclick="pmVer(\'gen\')">Información general</button>';
+  meses.forEach(function(k){
     if(k.slice(0,4) !== anio){ anio = k.slice(0,4); tabs += '<span class="fzm-anio">'+anio+'</span>'; }
     const ek = fzmEstado(k, A);
-    tabs += '<button type="button" class="fzm-tab '+ek+(k === ym ? ' is-activa' : '')+'" onclick="cfbAbrir('+i+',\''+k+'\')" title="'+
+    tabs += '<button type="button" class="fzm-tab '+ek+(k === vista ? ' is-activa' : '')+'" onclick="pmVer(\''+k+'\')" title="'+
       fzmNombre(k)+' · '+FZM_ESTADO[ek]+'"><i></i>'+MES_LABEL_FULL[+k.slice(5,7)-1].slice(0,3)+'</button>';
   });
   tabs += '</div>';
+  return vista === 'gen' ? pmGenHtml(i, tabs) : pmMesVistaHtml(i, vista, tabs);
+}
+// Un mes de la fase en la pantalla: el de hoy, o el que se eligió en su pestaña.
+function pmMesVistaHtml(i, ym, tabs){
+  const C = window.CIFRAS, hoyD = new Date(); hoyD.setHours(0,0,0,0);
+  const f = PHASES[i], P = C.planMes(ym), A = fzmAud(), a = A[ym] || {}, checks = rawGet('coach_checks_v1', {});
+  const e = fzmEstado(ym, A), auditado = e === 'ok', esHoy = e === 'hoy', F = fzmFicha(P, A), fin = fzmFinMes(ym);
+  const desde = new Date(fin); desde.setDate(fin.getDate() - 6);
+  const cerrable = !auditado && hoyD >= desde;
+  const hecha = t => auditado ? fzaResTarea(a, t, checks).r === 'ok' : ctHecha(t, checks);
+  const sostenido = h => auditado ? ['siempre','casi'].indexOf(fzaNivel(a, h)) >= 0 : !!(a.siempre || {})[h.id];
+  const deFase = F.tareas.filter(t => t.grupo === 'fase' || t.grupo === 'pasa' || t.grupo === 'correccion');
+  const deSalida = F.tareas.filter(t => t.grupo === 'salida');
+  const sost = F.habitos.filter(sostenido).length;
+  const primera = esHoy ? deFase.find(t => !hecha(t)) : null;
+  const fila = function(t){
+    const p = fzmPartir(t.txt), plano = String(p.t).replace(/<[^>]*>/g, '');
+    const de = t.grupo === 'pasa' && t.de ? 'de '+fzmMesMin(t.de) : t.grupo === 'correccion' && t.de ? 'de la auditoría de '+fzmMesMin(t.de) : '';
+    const tx = '<span class="fzc-tx"><b>'+(t.ico ? t.ico+' ' : '')+p.t+'</b></span>'+(de ? '<em class="fzc-tag">'+de+'</em>' : '');
+    if(auditado){   // ya auditado: lo que quedó, sin casilla (como en la ventana)
+      const x = fzaResTarea(a, t, checks);
+      return '<div class="fzc-item'+(x.r === 'ok' ? ' ok' : '')+'" title="'+esc(plano)+'"><span class="fzc-ico">'+(x.r === 'ok' ? '✅' : x.r === 'medias' ? '◐' : '❌')+'</span>'+tx+'</div>';
+    }
+    const ok = ctHecha(t, checks), fijo = String(t.txt).indexOf('✅') >= 0;
+    const marca = esHoy ? 'pmCheck(\''+t.id+'\',this.checked)' : 'fzmCheck(\''+t.id+'\',this.checked,'+i+',\''+ym+'\')';
+    return '<label class="fzc-item'+(ok ? ' ok' : '')+'" title="'+esc(plano)+'"><input type="checkbox"'+(ok ? ' checked' : '')+(fijo ? ' disabled' : '')+
+      ' onchange="'+marca+'">'+tx+(t === primera ? '<em class="pm-toca">Te toca</em>' : '')+'</label>';
+  };
+  const filaH = function(h){
+    if(auditado){
+      const n = fzaNivel(a, h);
+      return '<div class="fzc-item'+(n === 'siempre' || n === 'casi' ? ' ok' : '')+'"><span class="fzc-ico">'+(n === 'nunca' ? '❌' : n === 'aveces' ? '◐' : '✅')+'</span><span class="fzc-tx"><b>'+h.t+'</b></span></div>';
+    }
+    const ok = !!(a.siempre || {})[h.id], empezo = ym <= fzmYM(hoyD);
+    return '<label class="fzc-item'+(ok ? ' ok' : '')+'"><input type="checkbox"'+(ok ? ' checked' : '')+(empezo ? '' : ' disabled title="Se marca cuando empiece el mes"')+
+      ' onchange="pmSostuve(\''+ym+'\',\''+h.id+'\',this.checked,'+i+')"><span class="fzc-tx"><b>'+h.t+'</b></span></label>';
+  };
+  const mas = (k, n, txt) => '<button type="button" class="pm-mas" onclick="pmDespliega(\''+k+'\')"><span>'+(_pmTodo[k] ? 'Ver menos' : txt)+'</span><b>'+(_pmTodo[k] ? '↑' : n)+'</b></button>';
+  const VER = 5, SAL = 3;
+  const estado = esHoy ? (hoyD >= desde ? 'ya se puede auditar' : 'se audita desde el '+desde.getDate()+' · en '+Math.round((desde - hoyD)/86400000)+' días') : FZM_ESTADO[e];
+  const q = auditado && a.califica && typeof a.califica.total === 'number' ? a.califica.total : null;
+  const chip = esHoy ? ' <em class="fz-chip">ESTE MES</em>' : auditado ? ' <em class="fz-chip ok">AUDITADO'+(q !== null ? ' · '+q : '')+'</em>' : e === 'pend' ? ' <em class="fz-chip pend">SIN AUDITAR</em>' : '';
   const ant = fzmMesAnt(ym), jAnt = fzmFaseDe(ant);
-  const aviso = (jAnt >= 0 && fzmEstado(ant, A) === 'pend')
+  const aviso = esHoy && jAnt >= 0 && fzmEstado(ant, A) === 'pend'
     ? '<div class="fzm-aviso"><span>⚠ <b>'+fzmNombre(ant)+'</b> cerró sin auditar: qué se cumplió, qué no y qué pasa a '+fzmMesMin(ym)+'.</span>'+
-      '<button type="button" class="ce-btn" onclick="cfbAbrir('+jAnt+',\''+ant+'\')">Auditar '+fzmMesMin(ant)+'</button></div>' : '';
+      '<button type="button" class="ce-btn" onclick="cfbAbrir('+jAnt+',\''+ant+'\')">Auditar '+fzmMesMin(ant)+'</button></div>'
+    : e === 'pend' ? '<div class="fzm-aviso"><span>⚠ <b>'+fzmNombre(ym)+'</b> cerró sin auditar.</span>'+
+      '<button type="button" class="ce-btn" onclick="cfbAbrir('+i+',\''+ym+'\')">Auditar '+fzmMesMin(ym)+'</button></div>' : '';
+  const salidaOrden = deSalida.slice().sort((x, y) => hecha(x) - hecha(y));
   const col1 = '<div><div class="fzc-g"><span>Lo que tiene que quedar hecho</span><span>'+deFase.filter(hecha).length+' de '+deFase.length+'</span></div>'+
-    (deFase.length ? deFase.slice(0, VER).map(fila).join('') : '<div class="fzc-vacio">Este mes no trae tareas propias.</div>')+
-    (deFase.length > VER ? '<button type="button" class="pm-mas" onclick="'+abre+'"><span>Y '+(deFase.length - VER)+' más en la ficha del mes</span><b>→</b></button>' : '')+'</div>';
+    (deFase.length ? (_pmTodo.fase ? deFase : deFase.slice(0, VER)).map(fila).join('') : '<div class="fzc-vacio">Este mes no trae tareas propias.</div>')+
+    (deFase.length > VER ? mas('fase', '→', 'Y '+(deFase.length - VER)+' más') : '')+'</div>';
   const col2 = '<div>'+(deSalida.length ? '<div class="fzc-g"><span>Para la salida a Alemania</span><span>'+deSalida.filter(hecha).length+' de '+deSalida.length+'</span></div>'+
-      deSalida.slice().sort((x, y) => hecha(x) - hecha(y)).slice(0, SAL).map(fila).join('')+
-      (deSalida.length > SAL ? '<button type="button" class="pm-mas" onclick="'+abre+'"><span>Y '+(deSalida.length - SAL)+' más para la salida</span><b>→</b></button>' : '') : '')+
-    (F.habitos.length ? '<button type="button" class="pm-mas" onclick="'+abre+'"><span>Lo que sostienes todo el mes</span><b>'+sost+' de '+F.habitos.length+'</b></button>' : '')+'</div>';
+      (_pmTodo.salida ? salidaOrden : salidaOrden.slice(0, SAL)).map(fila).join('')+
+      (deSalida.length > SAL ? mas('salida', '→', 'Y '+(deSalida.length - SAL)+' más para la salida') : '') : '')+
+    (F.habitos.length ? mas('sost', sost+' de '+F.habitos.length, 'Lo que sostienes todo el mes')+(_pmTodo.sost ? F.habitos.map(filaH).join('') : '') : '')+'</div>';
   const P2 = Object.assign({}, P, { metas: (P.metas || []).filter(m => m.k !== 'liquido') });
-  const col3 = '<div>'+fzmCifrasHTML(P2, a, e, cerrable)+'<button type="button" class="pm-mas" onclick="'+abre+'"><span>Ver el mes completo en la ventana de las fases</span><b>→</b></button></div>';
-  return '<div class="pm-mes-cab"><div class="fzm-cab-t">'+fzmNombre(ym)+' <em class="fz-chip">ESTE MES</em><span class="fzm-cab-s">'+
-      f.tag+' · del 1 al '+fin.getDate()+' de '+fzmMesMin(ym)+' · '+auditaTxt+'</span></div>'+tabs+'</div>'+
+  const col3 = '<div>'+fzmCifrasHTML(P2, a, e, cerrable)+'<button type="button" class="pm-mas" onclick="cfbAbrir('+i+',\''+ym+'\')"><span>Ver el mes completo en la ventana de las fases</span><b>→</b></button></div>';
+  return '<div class="pm-mes-cab"><div class="fzm-cab-t">'+fzmNombre(ym)+chip+'<span class="fzm-cab-s">'+
+      f.tag+' · del 1 al '+fin.getDate()+' de '+fzmMesMin(ym)+' · '+estado+'</span></div>'+tabs+'</div>'+
     aviso+'<div class="pm-mes-3">'+col1+col2+col3+'</div>';
+}
+// La información general de la fase en la pantalla: la meta, el checkpoint y lo que se deja, y cómo va.
+function pmGenHtml(i, tabs){
+  const f = PHASES[i], MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const dC = d => d.getDate()+' '+MC[d.getMonth()]+' '+d.getFullYear();
+  const av = fzvAvance(i);
+  const col1 = '<div>'+kpiSec('🎯 La meta al '+dC(f.end))+faseMetaHTML(f.meta)+'</div>';
+  const col2 = '<div>'+(f.checkpoint ? faseCheckHTML(f.checkpoint) : '')+'</div>';
+  const col3 = '<div>'+fzvVaHTML(i, av, ym => 'cfbAbrir('+i+',\''+ym+'\')')+(f.deja ? faseDejaHTML(f.deja) : '')+
+    '<button type="button" class="pm-mas" onclick="cfbAbrir('+i+',\'gen\')"><span>Ver la fase completa en la ventana de las fases</span><b>→</b></button></div>';
+  return '<div class="pm-mes-cab"><div class="fzm-cab-t">'+f.tag+' <em class="fz-chip">INFORMACIÓN GENERAL</em><span class="fzm-cab-s">'+
+      esc(f.title)+' · '+dC(f.start)+' → '+dC(f.end)+'</span></div>'+tabs+'</div>'+
+    '<div class="pm-mes-3 pm-gen">'+col1+col2+col3+'</div>';
+}
+// Lo que sostienes, palomeado desde la pantalla: lo guarda la ficha del mes y se repinta aquí.
+function pmSostuve(ym, id, on, i){
+  fzmSostuve(ym, id, on, i);
+  const el = document.getElementById('pmMes'); if(el) el.innerHTML = pmMesHtml();
 }
 // Palomear desde la pantalla es lo mismo que desde la ficha: la tarea queda en la semana de hoy y todo se repinta.
 function pmCheck(id, marcada){
@@ -13198,39 +13275,53 @@ function fzmPintar(i, ym){
   const g = panel.querySelector('.fzm-vista[data-vista="gen"]');
   if(g && !g.classList.contains('is-activa')) g.innerHTML = fzvGeneralHTML(i);
 }
-/* ── La información general de una fase: la meta, el checkpoint y cómo va; las fichas de sus meses con su
-   calificación; el dinero y las reglas; y, plegado, el porqué y el detalle. */
-function fzvGeneralHTML(i){
+/* ── Cómo va una fase: cada mes con sus tareas cumplidas, su estado y su calificación, y los totales. Lo usan la
+   información general de la ventana y la de la pantalla (pmGenHtml), para que digan lo mismo. */
+function fzvAvance(i){
   const f = PHASES[i], C = window.CIFRAS, A = fzmAud(), checks = rawGet('coach_checks_v1', {});
-  if(!C || !C.planMes) return '';
   const hoy = new Date(); hoy.setHours(0,0,0,0);
-  const e = hoy > f.end ? 'hecha' : hoy >= f.start ? 'curso' : 'despues';
-  const MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'], dC = d => d.getDate()+' '+MC[d.getMonth()]+' '+d.getFullYear();
   const meses = fzmMeses(f), hoyYM = fzmYM(hoy);
-  let tH = 0, tT = 0, cal = [];
-  const tarjetas = meses.map(function(k){
+  let tH = 0, tT = 0; const cal = [];
+  const porMes = meses.map(function(k){
     const P = C.planMes(k), F = fzmFicha(P, A), est = fzmEstado(k, A), a = A[k] || {};
     const hechas = F.tareas.filter(t => est === 'ok' ? (a.tareas || {})[t.id] === 'ok' : ctHecha(t, checks)).length;
     if(k <= hoyYM){ tH += hechas; tT += F.tareas.length; }
     const q = est === 'ok' && a.califica && typeof a.califica.total === 'number' ? a.califica.total : null;
     if(q !== null) cal.push(q);
+    return { k: k, F: F, est: est, a: a, hechas: hechas, q: q };
+  });
+  return { e: hoy > f.end ? 'hecha' : hoy >= f.start ? 'curso' : 'despues', hoyYM: hoyYM, porMes: porMes, tH: tH, tT: tT,
+    cerrados: meses.filter(k => k < hoyYM).length, auditados: meses.filter(k => fzmEstado(k, A) === 'ok').length,
+    pend: meses.filter(k => fzmEstado(k, A) === 'pend'), prom: cal.length ? Math.round(cal.reduce((s, x) => s + x, 0) / cal.length) : null };
+}
+// El bloque «Cómo va la fase». `ir(ym)` es lo que hace «Auditar»: en la ventana cambia al mes; en la pantalla, abre la ventana en él.
+function fzvVaHTML(i, av, ir){
+  const f = PHASES[i], MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'], dC = d => d.getDate()+' '+MC[d.getMonth()]+' '+d.getFullYear();
+  const sigue = av.pend.length
+    ? '<button type="button" class="ce-btn" onclick="'+ir(av.pend[0])+'">Auditar '+fzmMesMin(av.pend[0])+'</button>'
+    : '<span>'+(av.e === 'curso' ? 'La siguiente auditoría: el '+fzmDiaD(fzmFinMes(av.hoyYM))+'.' : av.e === 'despues' ? 'Empieza el '+dC(f.start)+': sus meses ya tienen su ficha.' : 'Fase cerrada.')+'</span>';
+  return '<div>'+kpiSec('📈 Cómo va la fase')+
+    '<div class="fzv-n"><span>Meses auditados</span><b>'+(av.cerrados ? av.auditados+' de '+av.cerrados : 'aún no cierra ninguno')+'</b></div>'+
+    (av.tT ? '<div class="fzv-n"><span>Tareas cumplidas hasta hoy</span><b>'+av.tH+' de '+av.tT+'</b></div>' : '')+
+    (av.prom !== null ? '<div class="fzv-n"><span>Calificación de los meses</span><b class="'+fzaVeredicto(av.prom).c+'">'+av.prom+'</b></div>' : '')+
+    '<div class="fzv-sigue">'+sigue+'</div></div>';
+}
+/* ── La información general de una fase: la meta, el checkpoint y cómo va; las fichas de sus meses con su
+   calificación; el dinero y las reglas; y, plegado, el porqué y el detalle. */
+function fzvGeneralHTML(i){
+  const f = PHASES[i], C = window.CIFRAS;
+  if(!C || !C.planMes) return '';
+  const MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'], dC = d => d.getDate()+' '+MC[d.getMonth()]+' '+d.getFullYear();
+  const av = fzvAvance(i);
+  const tarjetas = av.porMes.map(function(m){
+    const k = m.k, F = m.F, est = m.est, a = m.a, hechas = m.hechas, q = m.q;
     const txt = est === 'ok' ? (q !== null ? '✓ '+q+' · '+fzaVeredicto(q).t : '✓ Auditado el '+new Date(a.cerrado+'T12:00:00').getDate()+' de '+fzmMesMin(a.cerrado.slice(0,7)))
       : est === 'pend' ? '⚠ Sin auditar' : est === 'hoy' ? 'En curso · se audita el '+fzmFinMes(k).getDate() : 'Por venir';
     return '<button type="button" class="fzv-mes '+est+'" onclick="fzmVer('+i+',\''+k+'\')"><span class="fzv-mes-m">'+fzmNombre(k)+'</span>'+
       '<span class="fzv-mes-l">'+(F.tareas.length ? '✅ '+hechas+' de '+F.tareas.length+' tareas' : '🔁 Lo de cada mes')+'</span>'+
       '<span class="fzv-mes-e">'+txt+'</span></button>';
   }).join('');
-  const cerrados = meses.filter(k => k < hoyYM).length, auditados = meses.filter(k => fzmEstado(k, A) === 'ok').length;
-  const pend = meses.filter(k => fzmEstado(k, A) === 'pend');
-  const sigue = pend.length
-    ? '<button type="button" class="ce-btn" onclick="fzmVer('+i+',\''+pend[0]+'\')">Auditar '+fzmMesMin(pend[0])+'</button>'
-    : '<span>'+(e === 'curso' ? 'La siguiente auditoría: el '+fzmDiaD(fzmFinMes(hoyYM))+'.' : e === 'despues' ? 'Empieza el '+dC(f.start)+': sus meses ya tienen su ficha.' : 'Fase cerrada.')+'</span>';
-  const prom = cal.length ? Math.round(cal.reduce((s, x) => s + x, 0) / cal.length) : null;
-  const va = '<div>'+kpiSec('📈 Cómo va la fase')+
-    '<div class="fzv-n"><span>Meses auditados</span><b>'+(cerrados ? auditados+' de '+cerrados : 'aún no cierra ninguno')+'</b></div>'+
-    (tT ? '<div class="fzv-n"><span>Tareas cumplidas hasta hoy</span><b>'+tH+' de '+tT+'</b></div>' : '')+
-    (prom !== null ? '<div class="fzv-n"><span>Calificación de los meses</span><b class="'+fzaVeredicto(prom).c+'">'+prom+'</b></div>' : '')+
-    '<div class="fzv-sigue">'+sigue+'</div></div>';
+  const va = fzvVaHTML(i, av, ym => 'fzmVer('+i+',\''+ym+'\')');
   const A1 = '<div class="fzv-a'+(f.checkpoint ? '' : ' dos')+'"><div>'+kpiSec('🎯 La meta al '+dC(f.end))+faseMetaHTML(f.meta)+'</div>'+
     (f.checkpoint ? '<div>'+faseCheckHTML(f.checkpoint)+'</div>' : '')+va+'</div>';
   const AH = faseAhorroHTML(f) || {};
