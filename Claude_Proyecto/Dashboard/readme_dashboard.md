@@ -717,8 +717,8 @@ en pantalla **son las piezas de la ventana de las fases**, con sus mismas clases
   en los subtabs, no se actualiza la información… solamente quiero que se abran las ventanas cuando des click en alguna
   fase"*): solo una fase de la ruta abre la ventana, y en esa fase. Un mes (`pmMesVistaHtml`) trae, si el anterior cerró
   sin auditar, el aviso con *Auditar septiembre*, y tres columnas: **lo que tiene que quedar hecho** —las tareas de la
-  fase, las que pasaron del mes anterior y las correcciones; hasta cinco, cada una en un renglón con su texto completo en
-  el título y, en el mes de hoy, la primera pendiente con *Te toca*—; **para la salida a Alemania** —tres, las
+  fase, las que pasaron del mes anterior y las correcciones; hasta cinco, cada una con su texto completo en los renglones
+  que necesite y, en el mes de hoy, la primera pendiente con *Te toca*—; **para la salida a Alemania** —tres, las
   pendientes primero— y *lo que sostienes todo el mes*; y **las cifras del mes** con `fzmCifrasHTML`, la misma función de
   la ficha, sin el patrimonio líquido (Adán, 21-oct-2026: *"quita la información del checkpoint, lo de patrimonio
   líquido, el auto y el iPhone"*). Las tareas se palomean aquí mismo, en la misma casilla que la ventana y Mi Día: el mes
@@ -726,8 +726,10 @@ en pantalla **son las piezas de la ventana de las fases**, con sus mismas clases
   quedó, sin casilla. *Y 3 más…* y *Lo que sostienes* se despliegan en su lugar (`pmDespliega`); *Ver el mes completo en
   la ventana* y *Auditar* son lo único que la abre. **La información general** (`pmGenHtml`) es la de la ventana en
   corto: la meta de la fase, el checkpoint con sus dos salidas, cómo va —el mismo bloque y la misma cuenta que la ventana,
-  `fzvVaHTML` y `fzvAvance`— y lo que dejas de hacer solo con su encabezado (`.pm-gen`). Medido a 1600×1000: un mes mide
-  de 171 a 286 px y la información general 408.
+  `fzvVaHTML` y `fzvAvance`— y lo que dejas de hacer con su detalle (`.pm-gen`). **Nada se corta** (Adán: *"no quiero que
+  se corte texto"*): ni las tareas, ni los títulos de las fases en la ruta —en la pantalla y en la ventana—, ni lo que
+  dejas de hacer. Medido a 1600×1000: un mes mide de 171 a 337 px y la información general 520; de 390 a 2048 px ningún
+  texto de la pantalla ni de la ventana queda con «…».
 
 *Tu estrategia de hoy* va arriba del panel de **Deuda cara** y tu dinero, cuenta por cuenta, en el de **Patrimonio**
 (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las

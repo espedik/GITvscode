@@ -725,7 +725,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .fz-est-n{font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:6px}
 .fz-est.is-activa .fz-est-n{color:var(--text)}
 .fz-chip{font-style:normal;font-size:9.5px;font-weight:800;letter-spacing:.08em;padding:2px 6px;border-radius:4px;background:var(--fc);color:#0b0b10}
-.fz-est-t{font-size:12.5px;font-weight:700;line-height:1.3;min-height:2.6em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fz-est-t{font-size:12.5px;font-weight:700;line-height:1.3;min-height:2.6em}
 .fz-est-f{font-family:var(--mono);font-size:12.5px;font-weight:800;white-space:nowrap}
 .fz-est-e{font-size:11px;color:var(--text2)}
 .fz-cab{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:12px}
@@ -987,7 +987,7 @@ span.fza-chip:not(.on){opacity:.45}
   .kpi-fases .kpi-card .gbm-body{padding:20px 30px 34px}
   .kpi-fases .fz-ruta{gap:10px;margin-bottom:16px;padding-bottom:14px}
   .kpi-fases .fz-est{padding:9px 13px 10px;gap:3px}
-  .kpi-fases .fz-est-t{min-height:0;-webkit-line-clamp:1}
+  .kpi-fases .fz-est-t{min-height:0}
   .kpi-fases .fz-est-n{font-size:11px}
   .kpi-fases .fz-chip{font-size:9.5px}
   .kpi-fases .fz-est-t,.kpi-fases .fz-est-f{font-size:13px}
@@ -1472,7 +1472,7 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .pm-ruta .fz-est>*{grid-column:1/-1}
 .pm-ruta .fz-est-n{grid-column:1;grid-row:1}
 .pm-ruta .fz-est-f{grid-column:2;grid-row:1;justify-self:end;font-size:11.5px;color:var(--text2)}
-.pm-ruta .fz-est-t{min-height:0;-webkit-line-clamp:1}
+.pm-ruta .fz-est-t{min-height:0}
 .fz-est-b{display:block;align-self:stretch;height:4px;border-radius:2px;background:rgba(var(--ov),.1);overflow:hidden}
 .fz-est-b i{display:block;height:100%;border-radius:2px;background:var(--fc)}
 .pm-mes{flex-shrink:0;display:flex;flex-direction:column;gap:7px;margin-bottom:6px;padding:10px 18px 11px;border-radius:16px;
@@ -1484,7 +1484,7 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .pm-mes .fzm-aviso{margin:0;padding:5px 12px}
 .pm-mes-3{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr) minmax(0,1.15fr);gap:22px;align-items:start}
 /* La información general en la pantalla, en corto: la meta, el checkpoint con sus dos salidas una bajo otra, cómo va
-   y lo que dejas de hacer solo con su encabezado (el detalle, en la ventana). */
+   y lo que dejas de hacer, en una columna y sin cortar texto. */
 .pm-gen .fz-p{margin:0 0 6px;font-size:13px}
 .pm-gen .fz-ol{margin:0;gap:4px;font-size:13px;line-height:1.42}
 .pm-gen .fzk{margin:0;gap:7px;padding:10px 12px}
@@ -1497,15 +1497,15 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .pm-gen .fzv-n b{font-size:14px}
 .pm-gen .fzv-sigue{margin:2px 0 10px}
 .pm-gen .fzd{grid-template-columns:minmax(0,1fr);gap:3px;margin:0 0 6px}
-.pm-gen .fzd-i{gap:8px;align-items:center;padding:4px 8px;border-radius:8px}
-.pm-gen .fzd-i span{display:none}
+.pm-gen .fzd-i{gap:8px;padding:5px 8px;border-radius:8px}
+.pm-gen .fzd-i span{font-size:12px;line-height:1.4}
 .pm-gen .fzd-x{width:18px;height:18px;font-size:10px}
 .pm-gen .fzd-i b{font-size:12.5px}
 .pm-mes .fzc-g{margin:0 0 2px}
-.pm-mes .fzc-item{align-items:center;padding:4px 2px;cursor:pointer}
-.pm-mes .fzc-item>input{margin-top:0}
+.pm-mes .fzc-item{align-items:flex-start;padding:4px 2px;cursor:pointer}
+.pm-mes .fzc-item>input{margin-top:2px}
 .pm-mes .fzc-tx{font-size:13px;line-height:1.35}
-.pm-mes .fzc-tx>b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pm-mes .fzc-tx>b{display:block}
 .pm-mes .fzc-item>em{flex-shrink:0}
 .pm-mes .fzm-blk{margin:0}
 .pm-mes .gbm-sec{margin:0 0 6px}
