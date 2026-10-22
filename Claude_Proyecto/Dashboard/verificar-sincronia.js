@@ -2742,8 +2742,8 @@ function promptsDeLoTocado() {
 /* ── 42. Las cifras de hoy: una sola cuenta en el Dashboard ───────────────────────────────────────────
    Adán, 21-oct-2026: "revisa bien bien las métricas de los números para que todo cuadre". La banda de la fase decía
    «Tu dinero $21,513» y la columna del día $21,291: una tomaba el efectivo de Finanzas del día en que lo dijo y la
-   otra el riel, con lo previsto desde entonces. Todo el Dashboard pide las cifras de hoy a `ctCifrasHoy()`, que le
-   pasa al maestro (`cifrasHoy(f, gastar)`) lo que el riel dice que hay para gastar. Se comprueba que nadie más llame a
+   otra la cuenta de la quincena, con lo previsto desde entonces. Todo el Dashboard pide las cifras de hoy a `ctCifrasHoy()`, que le
+   pasa al maestro (`cifrasHoy(f, gastar)`) lo que la cuenta de la quincena (ctTramo) dice que hay para gastar. Se comprueba que nadie más llame a
    `cifrasHoy` y que el maestro cambie el efectivo por `gastar` sin tocar lo demás. */
 (function () {
   const mal = [], C = global.window && global.window.CIFRAS;
@@ -2763,7 +2763,7 @@ function promptsDeLoTocado() {
       mal.push('cifrasHoy con gastar no cambia solo el efectivo: ' + JSON.stringify(b));
   }
   if (mal.length) problemas.push('Las cifras de hoy no salen de una sola cuenta:\n     ' + mal.join('\n     '));
-  else ok.push('Cifras de hoy: la banda de la fase, Tu dinero hoy y la ventana de las fases miden con ctCifrasHoy() (el riel dice lo que hay para gastar)');
+  else ok.push('Cifras de hoy: la banda de la fase, Tu dinero hoy y la ventana de las fases miden con ctCifrasHoy() (la cuenta de la quincena dice lo que hay para gastar)');
 })();
 
 /* ── 43. Tu dinero un día sube como el plan ──────────────────────────────────────────────────────────────

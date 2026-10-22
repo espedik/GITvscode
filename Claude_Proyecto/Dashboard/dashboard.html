@@ -1510,20 +1510,6 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .cfb-n b.mal{color:var(--r)}
 .cfb-n i{font-style:normal;font-family:var(--mono);font-size:10px;color:var(--text3);white-space:nowrap;text-align:right}
 
-.coach-ruta-band{display:flex;align-items:center;gap:9px;padding:4px 12px;border-radius:12px;
-  background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.09);margin-bottom:8px;flex-shrink:0}
-.crb-lbl{flex-shrink:0;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--text3)}
-/* Cada paso ocupa lo mismo: son tres hitos de una secuencia, no tres magnitudes comparables. */
-.crb-paso{position:relative;flex:1;min-width:0;display:flex;align-items:center;gap:9px;
-  padding:4px 10px 8px;border-radius:9px;background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.07)}
-.crb-paso.activo{border-color:var(--w);background:color-mix(in srgb,var(--w) 9%,transparent)}
-.crb-paso.done{border-color:rgba(0,232,122,.35);background:rgba(0,232,122,.05)}
-.crb-nom{flex:1;min-width:0;font-size:11.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.crb-val{font-family:var(--mono);font-size:10.5px;font-weight:700;flex-shrink:0}
-.crb-b{position:absolute;left:10px;right:10px;bottom:3px;height:2px;border-radius:2px;background:rgba(var(--ov),.09)}
-.crb-b i{display:block;height:100%;border-radius:2px}
-.crb-pct{flex-shrink:0;font-family:var(--mono);font-size:13px;font-weight:900;color:var(--g)}
 
 /* Lista de Compras */
 .lc-tabs{display:flex;gap:6px;flex-wrap:wrap}
@@ -3862,31 +3848,6 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 .slide.theme-coach .slide-inner{width:100%}
 .coach-tablero{max-width:100%}
 .slide.theme-coach .slide-inner{justify-content:flex-start}
-.coach-riel{display:flex;align-items:stretch;flex-shrink:0;border-radius:14px;overflow:hidden;
-  border:1px solid rgba(var(--cy-rgb),.3);
-  background:linear-gradient(180deg,rgba(var(--cy-rgb),.09),rgba(var(--cy-rgb),.02))}
-/* El riel se achicó de alto el 2026-09-07 (Adán: "esta parte hazla más pequeña a lo alto"):
-   de 125px a ~90. Lo que manda es `.cr-hero` —123 de esos 125—, y dentro de él la cifra
-   grande, así que el recorte sale sobre todo de ahí y de los paddings, no de la gráfica:
-   estrechar el dibujo habría sido quitar el dato en vez del aire. */
-.cr-hero{flex:1.5 1 0;min-width:0;padding:6px 16px;display:flex;flex-direction:column;gap:3px;justify-content:center;
-  border-left:1px solid rgba(var(--cy-rgb),.22);border-right:1px solid rgba(var(--cy-rgb),.22);background:rgba(var(--cy-rgb),.07)}
-.cr-big{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(18px,1.6vw,22px);
-  font-weight:700;line-height:.95;letter-spacing:-.02em;color:var(--cy)}
-/* Envuelve a dos líneas en un hero de 250-330px, y ahí se iban 30 de sus 85px. No se le
-   quita el wrap —el texto se saldría—: se le aprieta el interlineado. */
-.cr-estado{display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.25}
-.cr-punto{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-/* La quincena como una sola cuenta, de izquierda a derecha y al peso (Adán, 21-oct-2026: "quítame la gráfica de cómo cae
-   el dinero desde que entró la nómina y rediseña después todo… que todo cuadre"): lo que entró, lo que salió y lo que se
-   fue sin anotar dan lo que te queda; lo que falta salir da el cierre. */
-.cr-op{flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:3px;padding:6px 16px}
-.cr-op+.cr-op{border-left:1px solid rgba(var(--ov),.09)}
-.cr-op b{font-size:15px;font-weight:700;line-height:1.1;white-space:nowrap}
-.cr-op small{font-size:10px;line-height:1.3;color:var(--text3)}
-.cr-igual{flex-shrink:0;align-self:center;padding:0 4px;font-style:normal;font-family:var(--mono);font-size:16px;font-weight:700;color:var(--text3)}
-.cr-fin{flex:1 1 0;min-width:0;padding:6px 16px;display:flex;flex-direction:column;justify-content:center;gap:3px;
-  border-left:1px solid rgba(var(--ov),.09)}
 .coach-tablero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);
   gap:12px;align-items:stretch;flex:1;min-height:0}
 .ct-col{border-radius:15px;border:1px solid var(--card-br);background:var(--card);
@@ -4022,11 +3983,6 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
    inner y las columnas dejan de tener el suyo — dos scrolls anidados en un telefono no
    se pueden usar. */
 @media(max-width:1180px){
-  .coach-riel{flex-wrap:wrap}
-  /* La cifra grande va primero y a lo ancho; debajo, la cuenta en filas de tres. */
-  .cr-hero{flex:1 1 100%;order:-1;border:0;border-bottom:1px solid rgba(var(--cy-rgb),.2)}
-  .cr-igual{display:none}
-  .cr-op,.cr-fin{flex:1 1 30%}
   .coach-tablero{grid-template-columns:minmax(0,1fr) minmax(0,1fr);flex:none}
   .ct-sem{grid-column:1/-1}
   .cfb-arriba{flex-wrap:wrap;row-gap:8px}
@@ -4039,18 +3995,12 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   .cfb-abajo{grid-template-columns:minmax(0,1fr)}
   .ct-sem{grid-column:auto}
 }
-/* En el teléfono cada pieza va a lo ancho: a 390 px la ruta de deuda encimaba sus tres pasos, la
-   barra de la fase se salía por la derecha y el título de la gráfica quedaba una palabra por renglón. */
+/* En el teléfono cada pieza va a lo ancho: a 390 px la barra de la fase se salía por la derecha. */
 @media(max-width:640px){
-  .cr-op,.cr-fin{flex:1 1 45%;padding:6px 12px}
   .ct-celdas{grid-auto-rows:44px}
   .coach-fase-band{padding:10px 12px}
   .cfb-cuando{flex-basis:100%}
   .cfb-mes{font-size:9px;padding:0 3px}
-  .coach-ruta-band{flex-wrap:wrap;row-gap:6px}
-  .crb-lbl{flex-basis:100%}
-  .crb-paso{flex:1 1 100%}
-  .crb-pct{margin-left:auto}
 }
 .cal-dow{margin:8px 0 3px}
 .cal-dow span{font-size:8px;font-weight:800;letter-spacing:.06em;color:var(--text3);text-align:center;opacity:.65}
@@ -4619,23 +4569,13 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   <!-- 1 · COACH: PLAN MAESTRO -->
   <section class="slide theme-coach" data-i="1">
     <div class="slide-inner">
-      <!-- 2026-08-23 — la página pasó de tres bloques apilados a un TABLERO. Medida en Chrome, la
-           versión anterior necesitaba 1092px de alto contra 1000 de ventana: el título de la fase
-           se cortaba por arriba, y todo iba en una sola columna a ancho completo desperdiciando
-           media pantalla. Además las 8 tareas del mes se pintaban con el mismo peso, así que las
-           dos que de verdad importan ("Prioridad 1" y "Prioridad 2") no se distinguían del resto.
-           Ahora: banda de fase compacta + banda con la ruta de deuda + 3 columnas
-           (Ahora / Este mes / Hecho). La columna "Hecho" existe por un pedido explícito de Adán
-           sobre los logros — "si no, sentiré que no logro nada".
-           El párrafo largo de `explica` salió de la pantalla y vive ahora en el `title` de la
-           banda de fase: repetía lo que la ruta de deuda ya dice con números reales. -->
+      <!-- El tablero: el rótulo, la banda de la fase y tres columnas —el mes, el día que toques y su semana—.
+           Sin la ruta de deuda ni el riel de la quincena (Adán, 21-oct-2026: "esto quítalo"): lo que te queda es
+           «Para gastar» en la columna del día, y si la quincena cierra, Tu estrategia de hoy. El párrafo de
+           `explica` vive en el `title` de la banda de fase. -->
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Plan Maestro</div>
       <div class="coach-fase-band reveal d1" id="coachFaseBand"></div>
-      <div class="coach-ruta-band reveal d2" id="coachRutaBand"></div>
-      <!-- El riel: una sola cifra manda y a su lado la cuenta que la da, al peso (la línea de cómo caía el dinero
-           salió el 2026-10-21). Debajo, las tres columnas explican esa cifra en vez de competir con ella. -->
-      <div class="coach-riel reveal d3" id="coachRiel"></div>
-      <div class="coach-tablero reveal d4">
+      <div class="coach-tablero reveal d2">
         <div class="ct-col ct-cal" id="ctCal"></div>
         <div class="ct-col ct-dia" id="ctDia"></div>
         <div class="ct-col ct-sem" id="ctSem"></div>
@@ -5229,10 +5169,6 @@ function vecesLogro(id){
   const did=LOGRO_DEUDA[id], sd=did&&window.CIFRAS?(CIFRAS.DEUDAS_SEED.filter(d=>d.id===did)[0]||{}):{};
   (sd.liquidaciones||[]).forEach(f=>{ if(v.indexOf(f)<0) v.push(f); });
   return v.sort();
-}
-function fechaUltimoLogro(id){
-  const v=vecesLogro(id), f=v[v.length-1]; if(!f) return '';
-  return new Date(f+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
 }
 function fechaLogro(id){
   const l=logro(id); if(!l||!l.fecha) return '';
@@ -8949,7 +8885,7 @@ function ctCifrasHoy(){
    Adán, 19-oct-2026: "conforme seleccione otro día, debes proyectar todo todo hasta mis inversiones,
    esto debido a que ya tenemos un trackeo muy completo de mis finanzas". En la columna del día, todo tu
    dinero: hoy, lo que dice Finanzas; un día que viene, la proyección siguiendo el plan
-   (`CIFRAS.estadoDia`). Para gastar es el riel —la cuenta y el efectivo—; GBM, los CETES y el depósito
+   (`CIFRAS.estadoDia`). Para gastar es lo que te queda —la cuenta y el efectivo, de `ctTramo`—; GBM, los CETES y el depósito
    del depa completan tu dinero, y debajo, la BBVA. El auto, el iPhone y el patrimonio líquido no van aquí (Adán,
    21-oct-2026: "quita… lo de patrimonio líquido, el auto y el iPhone"). Cada cifra lleva lo que cambia desde hoy.
    Un día que ya pasó no se proyecta. */
@@ -8960,7 +8896,7 @@ function ctDineroDiaHtml(T, dd){
   if(!E) return '<div class="cdd">'+cab+'<span class="cdd-nota">Después del último mes en México la proyección va mes a mes: está en Coach.</span></div>';
   const H0 = dd === 0 ? E : CIFRAS.estadoDia(hoyLocal());
   if(!H0) return '';
-  // Para gastar: el riel de ese día y, para la diferencia, el de hoy.
+  // Para gastar: la serie de la quincena ese día (ctTramo) y, para la diferencia, la de hoy.
   const gastar0 = dd === 0 ? T.hoy.saldo : ctCifrasHoy().gastar;
   const tuyo = x => x.gbm + x.cetes + x.deposito + x.btc;
   const din = T.hoy.saldo + tuyo(E), din0 = gastar0 + tuyo(H0);
@@ -8985,7 +8921,7 @@ function ctDineroDiaHtml(T, dd){
     (E.btc > 0 ? fila('Bitcoin', '', money(E.btc), cambio(E.btc, H0.btc)) : '') +
     fila('Tu dinero', '', money(din), cambio(din, din0), 'tot') +
     fila('La BBVA', E.bbva > 0 ? 'en cero el '+dC(E.bbvaCero) : 'en cero', E.bbva > 0 ? '−'+money(E.bbva) : money(0), cambio(E.bbva, H0.bbva, true), E.bbva > 0 ? 'debe' : '') +
-    (dd === 0 ? '<span class="cdd-nota">Para gastar es la cifra del riel; lo demás, lo de Finanzas hoy. Toca un día que viene y lo ves proyectado con el plan.</span>' : resta)+
+    (dd === 0 ? '<span class="cdd-nota">Para gastar es tu último saldo dicho menos lo previsto desde entonces; lo demás, lo de Finanzas hoy. Toca un día que viene y lo ves proyectado con el plan.</span>' : resta)+
   '</div>';
 }
 
@@ -8997,11 +8933,11 @@ function ctDineroDiaHtml(T, dd){
    hoy a la BBVA —el plan ya lo restó solo (CIFRAS.aplicarPlanBbva), y aquí se corrige si no fue
    así—, cuánto se puede gastar sin romper la quincena y, con la tarjeta en cero, cancelarla y pasar
    todo a GBM. El saldo y el plan salen de CIFRAS.bbvaEstado —el saldo vivo de Finanzas, que se mueve
-   solo con los abonos del plan, con cada compra «TC BBVA» y con cada pago—; el tope de gasto, del
-   riel (T). Ningún importe va escrito aquí. Adán, 17-oct-2026: "no se actualiza conforme a los días". */
+   solo con los abonos del plan, con cada compra «TC BBVA» y con cada pago—; la quincena, de su serie
+   (T, `ctTramo`). Ningún importe va escrito aquí. Adán, 17-oct-2026: "no se actualiza conforme a los días". */
 const CE_DE = (window.CIFRAS && CIFRAS.ABONO_DE) || {};
 const CE_DOW = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-function ctEstrategiaHtml(T, H, faltaR, mv){
+function ctEstrategiaHtml(T, H, faltaR, mv, didiR, hastaR){
   if(!window.CIFRAS || !CIFRAS.bbvaEstado) return '';
   const E = CIFRAS.bbvaEstado();
   if(!E.vivo) return '';                           // sin Finanzas en este navegador no hay saldo que seguir
@@ -9015,14 +8951,23 @@ function ctEstrategiaHtml(T, H, faltaR, mv){
   const boton = (txt, js, sec) => '<button type="button" class="ce-btn'+(sec?' sec':'')+'" onclick="'+js+'">'+txt+'</button>';
   const cab = (lbl, c, der) => '<div class="ce-cab"><span class="ct-lbl" style="color:'+c+'">'+lbl+'</span><span class="ce-saldo">'+der+'</span></div>';
 
-  // Lo de hoy que el riel no dice: que la quincena no cierre, lo cargado hoy a la BBVA y, si entró dinero que no es
-  // nómina, cuánto apartar. El tope de gasto al día ya va en el riel («te sobran $X/día»): aquí no se repite.
+  // La quincena en una frase, de la misma serie (ctTramo): si cierra, lo que te sobra al día fuera de lo fijo y la comida
+  // y con cuánto cierras; si no, lo que falta y si lo que trae Didi lo cubre (el hueco se resuelve antes de que llegue).
+  // Después, lo cargado hoy a la BBVA y, si entró dinero que no es nómina, cuánto apartar.
   const ext = (H && H.extras) || [];
   const cHoy = ext.filter(t => t.credito && (ctTarjetaDe(t)||{}).id === 'd001').reduce((s,t) => s + (+t.amount||0), 0);
   const iHoy = (mv||[]).filter(t => t.type === 'income' && !CIFRAS.esNomina(t)).reduce((s,t) => s + (+t.amount||0), 0);
   const didiMes = CIFRAS.n('didiMes') || 0, pctDidi = didiMes > 0 ? CIFRAS.didiAlAhorro(ym) / didiMes : 0;
   const destino = E.saldo > 0 ? 'para la BBVA' : 'para GBM';
-  const gasto = (T.cierre < 0 ? 'Hoy nada fuera de lo fijo: a la quincena le faltan '+num(faltaR)+' para cerrar.' : '')+
+  const nHoy = +hoyK.slice(8);
+  const quincena = T.cierre < 0
+    ? 'Hoy nada fuera de lo fijo: a la quincena le faltan '+num(faltaR)+' para llegar '+(hastaR || 'al cierre')+
+      (didiR > 0 ? (didiR >= faltaR ? '; Didi trae ≈'+num(didiR)+' y lo cubre si lo apartas.'
+                                    : '; Didi trae ≈'+num(didiR)+' y aún faltan '+num(faltaR - didiR)+': recorta o mueve un pago.') : '.')
+    : (nHoy >= T.fin ? 'Hoy cierras la quincena con '+num(T.cierre)+'.'
+                     : 'Fuera de lo fijo y la comida te sobran '+num(T.libreDia)+' al día hasta el '+T.fin+
+                       ': cierras la quincena con '+num(T.cierre)+'.');
+  const gasto = quincena+
     (iHoy > 0 && pctDidi > 0 ? ' Entraron '+num(iHoy)+' de más: aparta '+num(iHoy*pctDidi)+' '+destino+
       ' (el '+Math.round(pctDidi*100)+' %, lo que el plan guarda de Didi).' : '');
 
@@ -9216,7 +9161,7 @@ function renderCoachTablero(){
     ctSel = (hoyK.slice(0,7) === ctYM) ? hoyK : (conMov[0] || kDe(1));
   }
 
-  // ── El riel: la cifra que manda y de dónde sale ──
+  // ── La quincena: la serie de la que sale todo (ctTramo): para gastar, el mes, la semana y tu estrategia ──
   const nSel = +ctSel.slice(8);
   const T = ctTramo(nSel, nDias, MOV, ctYM);
   const MESN = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -9225,14 +9170,6 @@ function renderCoachTablero(){
   const dd = Math.round((new Date(Y,M-1,nSel) - new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate()))/86400000);
   const cuenta = dd===0?'hoy':dd===1?'mañana':dd===-1?'ayer':dd>0?('en '+dd+' días'):('hace '+(-dd)+' días');
 
-  // El estado en palabras: lo que sobra al cerrar el tramo, medido contra lo que
-  // cuesta comer una semana. Sin esto los numeros no dicen si vas bien.
-  // En casa de tu familia comer cuesta tu desayuno, y una semana de eso no es colchón: la vara es
-  // una semana de comer completa, la de la lista de compras.
-  const semanaComer = Math.round(((ctComida()||{}).dia || T.comeDia) * 7);
-  const estado = T.cierre < 0
-    ? { t:'Te vas a pasar', c:'var(--r)' }
-    : (T.cierre < semanaComer ? { t:'Vas justo', c:'var(--w)' } : { t:'Vas holgado', c:'var(--g)' });
   // Si no cierra, no basta con decirlo: el hueco previsto se resuelve antes de que llegue
   // (prompt de Plan Maestro). Didi no entra en la serie —es variable—, pero sí en el plan: lo
   // que trae de aquí al cierre del tramo, al ritmo de su promedio mensual.
@@ -9247,25 +9184,14 @@ function renderCoachTablero(){
   }).reduce(function(s,a){ return s + a.monto; }, 0) : 0;
   const didiR = Math.round(didiLibre * Math.max(0, T.fin - nSel) / 30.4 + minDidi);
   const hastaR = T.fin >= nDias ? 'al día 1' : 'al '+(T.fin+1);
-  const numR = v => '<b class="ct-num'+(privado?' fin-hidden':'')+'" style="color:var(--text2)">'+money(v)+'</b>';
-  const detalleR = T.cierre < 0
-    ? '· faltan '+numR(faltaR)+' para llegar '+hastaR+(didiR > 0
-        ? (didiR >= faltaR ? ' · Didi trae ≈'+numR(didiR)+': lo cubre si lo apartas'
-                           : ' · Didi trae ≈'+numR(didiR)+': aún faltan '+numR(faltaR - didiR)+', recorta o mueve un pago')
-        : '')
-    : (nSel >= T.fin ? '· es con lo que cierras la quincena' : '· te sobran '+numR(T.libreDia)+'/día hasta el '+T.fin);
 
-  /* De dónde sale la cifra grande, como una cuenta que cuadra al peso. Adán, 21-oct-2026: "quítame la gráfica de cómo
-     cae el dinero desde que entró la nómina y rediseña después todo… revisa bien bien las métricas de los números para
-     que todo cuadre". Todo sale de la MISMA serie (ctTramo): el tramo arranca en cero el día de la nómina; lo que entró y
-     salió hasta el día elegido da el modelo, y si dijiste tu saldo real un día del tramo, la diferencia entre el modelo y
-     ese saldo es el ajuste —lo que se fue sin anotar, o lo que tenías de más—. Después, lo que sale hasta el cierre. */
+  /* Todo sale de la MISMA serie (ctTramo): el tramo arranca en cero el día de la nómina; lo que entró y salió hasta un
+     día da el modelo, y si dijiste tu saldo real un día del tramo, la diferencia entre el modelo y ese saldo es el ajuste
+     —lo que se fue sin anotar, o lo que tenías de más—. La semana lo cuenta igual. */
   const sumaS = (f, k) => T.serie.filter(f).reduce((s, p) => s + p[k], 0);
   const ajR = T.ancla ? T.serie.filter(p => p.d <= T.ancla.dia).reduce((s, p) => s + p.ent - p.sale, 0) - T.ancla.saldo : 0;
-  const hastaSel = p => p.d <= nSel, trasSel = p => p.d > nSel;
-  const ajAntes = T.ancla && T.ancla.dia <= nSel ? ajR : 0, ajDesp = T.ancla && T.ancla.dia > nSel ? ajR : 0;
-  // Lo que sale en unos días del tramo, concepto por concepto y de la misma serie: el título del riel y la lista de la
-  // semana suman exactamente lo que restan, comida incluida.
+  // Lo que sale en unos días del tramo, concepto por concepto y de la misma serie: la lista de la semana suma
+  // exactamente lo que resta, comida incluida.
   const conceptos = function(f){
     const o = {}, dia = {}, ps = T.serie.filter(f);
     ps.forEach(function(p){
@@ -9275,42 +9201,6 @@ function renderCoachTablero(){
     if(ps.length && T.comeDia > 0) o['Comer · '+ps.length+(ps.length === 1 ? ' día' : ' días')] = T.comeDia * ps.length;
     return { o:o, dia:dia, orden:Object.keys(o).sort((a,b) => o[b]-o[a]) };
   };
-  const tituloDe = f => { const c = conceptos(f); return c.orden.slice(0, 6).map(k => k+' '+money(c.o[k])).join(' · ')+(c.orden.length > 6 ? ' y '+(c.orden.length-6)+' más' : ''); };
-  const opR = (v, lbl, t) => '<div class="cr-op"'+(t ? ' title="'+esc(t)+'"' : '')+'><b class="ct-num'+(privado?' fin-hidden':'')+'" style="color:'+
-    (v > 0 ? 'var(--g)' : 'var(--text)')+'">'+(v < 0 ? '−' : '+')+money(Math.abs(Math.round(v)))+'</b><small>'+lbl+'</small></div>';
-  const igualR = '<i class="cr-igual" aria-hidden="true">=</i>';
-  const ajLbl = v => (v > 0 ? 'se fue sin anotar' : 'tenías de más')+' · tu saldo real del '+T.ancla.dia;
-  const diasEnt = T.serie.filter(p => hastaSel(p) && p.ent > 0).map(p => p.d);
-  const entroR = sumaS(hastaSel, 'ent'), salioR = sumaS(hastaSel, 'sale'), entraR = sumaS(trasSel, 'ent'), saleR = sumaS(trasSel, 'sale');
-
-  // Una sola cuenta de izquierda a derecha: entró − salió − sin anotar = TE QUEDA − lo que falta salir = CIERRAS CON.
-  document.getElementById('coachRiel').innerHTML =
-    (entroR ? opR(entroR, (diasEnt.length === 1 && diasEnt[0] === T.ini ? 'tu nómina del ' : 'entró el ')+diasEnt.join(' y ')) : '')+
-    opR(-salioR, (dd > 0 ? 'sale ' : 'salió ')+ctRango(T.ini, nSel), tituloDe(hastaSel))+
-    (Math.abs(ajAntes) >= 1 ? opR(-ajAntes, ajLbl(ajAntes)) : '')+
-    igualR+
-    '<div class="cr-hero">'+
-      '<span class="ct-lbl" style="color:var(--cy)">'+dowSel.charAt(0).toUpperCase()+dowSel.slice(1)+' '+nSel+
-        ' · '+cuenta+' · te queda</span>'+
-      '<span class="cr-big'+(privado?' fin-hidden':'')+'">'+(T.hoy.saldo < 0 ? '−' : '')+money(Math.abs(T.hoy.saldo))+'</span>'+
-      '<span class="cr-estado">'+
-        '<i class="cr-punto" style="background:'+estado.c+';box-shadow:0 0 9px '+estado.c+'"></i>'+
-        '<span style="font-size:11px;font-weight:600;color:var(--text)">'+estado.t+'</span>'+
-        '<span style="font-size:10px;color:var(--text3)">'+detalleR+'</span>'+
-      '</span>'+
-    '</div>'+
-    (nSel < T.fin
-      ? (entraR ? opR(entraR, 'entra '+ctRango(nSel+1, T.fin)) : '')+
-        opR(-saleR, 'sale '+ctRango(nSel+1, T.fin), tituloDe(trasSel))+
-        (Math.abs(ajDesp) >= 1 ? opR(-ajDesp, ajLbl(ajDesp)) : '')+
-        igualR+
-        '<div class="cr-fin">'+
-          '<span class="ct-lbl">Cierras el '+T.fin+' con</span>'+
-          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:18px;font-weight:700;line-height:1;color:'+
-            (T.cierre>=0?'var(--text)':'var(--r)')+'">'+(T.cierre < 0 ? '−' : '')+money(Math.abs(T.cierre))+'</span>'+
-          '<span style="font-size:9.5px;color:var(--text3);line-height:1.25">'+(T.cierre < 0 ? 'Es lo que te falta para cerrar esta quincena' : 'Es lo que te sobra de esta quincena')+'</span>'+
-        '</div>'
-      : '');
 
   // ── Columna 1: elige el día ──
   /* Cada celda dice lo que sale ese día con su nombre y su importe (Adán, 2026-08-30: "ponme el nombre de las cosas") y
@@ -9456,10 +9346,10 @@ function renderCoachTablero(){
         '<span style="font-size:10px;color:var(--text3);line-height:1.45">'+pie+'</span></div>';
     })()+
 
-    // Lo que te queda ese día y de dónde sale ya lo dice el riel, con su cifra grande, su línea y su cierre: aquí no
-    // se repite (Adán, 20-oct-2026: "en coach también siento que hay mucha información, deja la suficiente").
+    // Lo que te queda ese día es «Para gastar» de Tu dinero, y si la quincena cierra y cuánto sobra al día, Tu estrategia
+    // de hoy: el riel que lo decía arriba salió (Adán, 21-oct-2026: "esto quítalo").
 
-    (dd===0 ? ctEstrategiaHtml(T, H, faltaR, mvSel) : '')+ctDineroDiaHtml(T, dd)+
+    (dd===0 ? ctEstrategiaHtml(T, H, faltaR, mvSel, didiR, hastaR) : '')+ctDineroDiaHtml(T, dd)+
 
     (mvSel.length
       ? (function(){
@@ -9601,78 +9491,9 @@ function renderCoach(){}
 
 function renderCoach(){
   const ph=activePhase();
-  // El párrafo de `explica` dejó de pintarse en la pantalla (2026-08-23): ocupaba cuatro líneas a
-  // ancho completo repitiendo lo que la ruta de deuda de abajo ya dice con números reales. Sigue
-  // disponible como tooltip de la banda de fase, en texto plano (un `title` no renderiza HTML).
+  // El párrafo de `explica` no se pinta en la pantalla —ocupaba cuatro líneas a ancho completo—: va como
+  // tooltip de la banda de fase, en texto plano (un `title` no renderiza HTML).
   const explicaTxt=String(ph.explica||ph.meta||'').replace(/<[^>]*>/g,'');
-
-  // ── Ruta real hacia deuda cara en $0: fondo de emergencia → Banamex → BBVA ──
-  // Un paso se da por cumplido si el saldo en vivo dice que sí **o si ya está en la libreta de
-  // logros** (ver detectarLogros()). Ese "o" es el arreglo de fondo del 2026-08-13: antes el paso
-  // Banamex mostraba "Sin datos en Finanzas" en cuanto la deuda dejaba de encontrarse —borrada,
-  // renombrada, o `finanzasmx_v2` inexistente en ese navegador— y le decía a Adán que no había
-  // logrado nada. Un logro registrado ya no se puede "desregistrar" por un dato que cambió.
-  const ef=D.fin.emergencyFund||0, efMeta=_metaFondo();
-  const bana=metaDebtInfo(d=>/banamex/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
-  const bbva=metaDebtInfo(d=>/bbva/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
-  const lgBana=logro('banamex-liquidada'), lgBbva=logro('bbva-liquidada'), lgEf=logro('fondo-emergencia');
-  const efDone=ef>=efMeta||!!lgEf;
-  const efPct=efDone?100:Math.min(100,ef/efMeta*100);
-  // Un logro NO se borra —es un hecho pasado, y así lo pidió Adán— pero tampoco puede TAPAR el
-  // presente. El 1 sep 2026 la Banamex, liquidada el 13 ago, volvió a tener saldo, y con el `||`
-  // de antes este paso la habría seguido mostrando "✅ Liquidada" para siempre: barra al 100%, y
-  // el paso activo saltando a BBVA como si solo quedara una tarjeta cara. Un saldo vivo REABRE
-  // el paso — el logro se conserva y se cuenta al lado ("liquidada el 13 ago"), que es la verdad
-  // entera: lo lograste, y hoy vuelve a estar abierto.
-  // El caso que el `||` sí resolvía se mantiene: si la deuda NO se encuentra (borrada, renombrada
-  // o sin `finanzasmx_v2` en este navegador), manda el logro y el paso sigue cumplido.
-  const pctVivo=d=>d.found&&d.total>0?Math.max(0,Math.min(100,(1-d.balance/d.total)*100)):0;
-  const reabre=(d,lg)=>!!lg&&d.found&&d.balance>0;
-  const banaVuelve=reabre(bana,lgBana), bbvaVuelve=reabre(bbva,lgBbva);
-  const banaDone=(bana.found&&bana.balance<=0)||(!!lgBana&&!bana.found);
-  const banaPct=banaDone?100:pctVivo(bana);
-  const bbvaDone=(bbva.found&&bbva.balance<=0)||(!!lgBbva&&!bbva.found);
-  // La BBVA se mide contra el saldo con que arrancó su plan quincena a quincena (CIFRAS.avanceBbva),
-  // no contra los $39,000 con que nació: lo pagado de esa deuda vieja no dice nada de la de hoy.
-  const AB=CIFRAS.avanceBbva(D.fin);
-  const bbvaPct=bbvaDone?100:(bbvaPlan()?AB.pct:pctVivo(bbva));
-  // La fecha que manda es la ÚLTIMA vez que quedó en $0, y si fue más de una, cuántas.
-  const liq=(id,fallback)=>{ const n=vecesLogro(id).length, f=fechaUltimoLogro(id);
-    return 'Liquidada 🎉'+(f?' · '+f:(fallback||''))+(n>1?' · '+n+' veces':''); };
-  // Reabierto: manda el importe de hoy, y la fecha del logro va detrás para no perderla.
-  const otraVez=(d,id)=>money(d.balance)+' otra vez · la liquidaste el '+(fechaUltimoLogro(id)||'día que la cerraste');
-
-  const steps=[
-    {n:1,ico:'🆘',lbl:'Fondo de emergencia',done:efDone,pct:efPct,
-     txt:efDone?'Completo 🎉'+(fechaLogro('fondo-emergencia')?' · '+fechaLogro('fondo-emergencia'):''):`${money(ef)} / ${money(efMeta)}`},
-    {n:2,ico:'💳',lbl:'Banamex',done:banaDone,pct:banaPct,
-     txt:banaDone?liq('banamex-liquidada'):banaVuelve?otraVez(bana,'banamex-liquidada'):(bana.found?money(bana.balance)+' restante':'Sin datos en Finanzas')},
-    {n:3,ico:'💳',lbl:'BBVA TC',done:bbvaDone,pct:bbvaPct,
-     txt:bbvaDone?liq('bbva-liquidada')+(bbva.cancelada?' · cancelada':''):bbvaVuelve?otraVez(bbva,'bbva-liquidada'):(bbva.found?money(bbva.balance)+(bbvaPlan()?' · en cero el '+bbvaPlan().fin.toLocaleDateString('es-MX',{day:'numeric',month:'short'}):' restante'):'Sin datos en Finanzas')},
-  ];
-  // Un solo paso activo: el primero sin terminar. Antes cada paso calculaba su propio `activo`
-  // encadenado al anterior (`efDone&&!banaDone`), y al quedar Banamex liquidada con el fondo
-  // todavía en $0 se encendían DOS a la vez — fondo de emergencia y BBVA — que es justo lo que
-  // Adán pidió corregir el 2026-08-13: la prioridad es el fondo, y BBVA entra después.
-  // El plan de la BBVA manda mientras corre (Adán, 5-oct-2026: la tarjeta, quincena a quincena): el
-  // fondo se queda en lo que tiene y lo que sobra de cada quincena va a la tarjeta antes que a GBM.
-  const _iActivo=(!bbvaDone&&bbvaPlan())?2:steps.findIndex(s=>!s.done);
-  steps.forEach((s,i)=>{ s.activo=(i===_iActivo); });
-  // ── Banda 2: la ruta de deuda. Los tres pasos ocupan lo mismo a propósito: son hitos de una
-  //    secuencia, no magnitudes comparables entre sí.
-  // La cifra de la derecha es lo pagado de la deuda que hoy corre (la BBVA), no el promedio de los
-  // tres pasos: con el fondo y la Banamex dentro decía 74 % cuando la tarjeta no había bajado nada.
-  const rutaPct=Math.round(bbvaDone?100:bbvaPct);
-  document.getElementById('coachRutaBand').innerHTML=
-    `<span class="crb-lbl">💰 Ruta a deuda cara en $0</span>`+
-    steps.map(s=>`
-      <div class="crb-paso ${s.done?'done':''} ${s.activo?'activo':''}" title="${esc(s.lbl+' · '+s.txt)}">
-        <span style="font-size:13px">${s.done?'✅':s.ico}</span>
-        <span class="crb-nom"${s.done?' style="color:var(--text2)"':''}>${esc(s.lbl)}</span>
-        <span class="crb-val${privado?' fin-hidden':''}" style="color:${s.done?'var(--g)':s.activo?'var(--w)':'var(--r)'}">${s.txt}</span>
-        <span class="crb-b"><i style="width:${s.pct}%;background:${s.done?'var(--g)':s.activo?'var(--w)':'var(--text3)'}"></i></span>
-      </div>`).join('')+
-    `<span class="crb-pct${privado?' fin-hidden':''}" title="Lo pagado de la BBVA desde los ${esc(money(AB.inicio))} con que arrancó su plan el ${esc(AB.desde||'')}">${rutaPct}%</span>`;
 
   // ── La fase, en tiempo (2026-08-19) ──────────────────────────────────────
   // Días de calendario, con la misma cuenta que el calendario, el panel de las fases y Coach.

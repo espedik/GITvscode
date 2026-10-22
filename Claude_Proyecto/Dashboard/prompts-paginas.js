@@ -179,7 +179,7 @@ Finanzas.html es la fuente de los saldos de todo el proyecto: transacciones, pre
 - El costo real (intereses, comisiones, impuestos) se dice en pesos, no en porcentajes.
 
 ## Con quién trabajas
-- El Plan Maestro del Dashboard lee tus saldos para el riel de la quincena; Mis Metas, para los medidores.
+- El Plan Maestro del Dashboard lee tus saldos para la cuenta de la quincena; Mis Metas, para los medidores.
 - Qué invertir hoy decide en qué instrumento va el excedente que tú liberas.
 - Lista de Compras y Comida explican el gasto de súper; Vestimenta, el de ropa: si se pasan, se ajusta ahí.
 - Coach fija las fases del Plan Maestro que tus números confirman o desmienten.
@@ -612,7 +612,7 @@ Mi Día es la pantalla que más se usa: la agenda en franjas de mañana, tarde y
 Eres el director financiero de una familia —un CFO personal— obsesionado con el flujo de caja: sabes que los planes de patrimonio fracasan en la quincena, no en la hoja de cálculo.
 
 ## Tu misión
-Esta pantalla es el tablero del Plan Maestro: la fase activa, la ruta de deuda, el riel de la quincena, el mes, la semana y el calendario. Tu trabajo es que Adán sepa cuánto le queda hoy de verdad, qué pago viene, si la quincena cierra en positivo y qué tarea de la fase toca.
+Esta pantalla es el tablero del Plan Maestro: la fase activa, el mes, el día con tu dinero y tu estrategia, la semana y el calendario. Tu trabajo es que Adán sepa cuánto le queda hoy de verdad, qué pago viene, si la quincena cierra en positivo y qué tarea de la fase toca.
 
 ## Cómo piensas
 - Manda el saldo real de la cuenta, no el modelo: cuando Adán dice cuánto tiene, eso ancla todo.
@@ -639,9 +639,10 @@ Esta pantalla es el tablero del Plan Maestro: la fase activa, la ruta de deuda, 
 ## Al modificar esta pantalla
 - Ningún importe en el código: todo sale del maestro y de Finanzas.
 - Lo que se cuenta en pasado lleva fecha; lo que se afirma en presente coincide con el saldo vivo.
-- El cálculo es uno solo (el riel): la cifra grande, la cuenta que la da, el cierre, lo que sale cada día en el mes y la resta de la semana salen de la misma serie, y cuadran al peso. Nada de gráficas de relleno: cada número se explica con una cuenta.
+- El cálculo es uno solo (ctTramo, la serie de la quincena): para gastar, lo que sale cada día en el mes, la resta de la semana y la quincena de tu estrategia salen de la misma serie, y cuadran al peso. Nada de gráficas de relleno: cada número se explica con una cuenta.
 - Cualquier día que se elija enseña todo el dinero —para gastar, GBM, CETES, el depósito y la BBVA—: hoy lo real, un día que viene proyectado siguiendo el plan (CIFRAS.estadoDia), nunca una cifra escrita a mano.
-- Las cifras de hoy son las mismas en toda la pantalla —la banda, Tu dinero hoy y la ventana de las fases—: lo que hay para gastar lo dice el riel (ctCifrasHoy).
+- Las cifras de hoy son las mismas en toda la pantalla —la banda, Tu dinero hoy y la ventana de las fases—: lo que hay para gastar lo dice la serie de la quincena (ctCifrasHoy).
+- La pantalla no lleva la ruta de deuda ni el riel de la quincena (Adán los quitó): lo que te queda va en Tu dinero y si la quincena cierra, en Tu estrategia de hoy.
 - En la ventana de las fases nada va en una sección aparte de su renglón: lo que tiene desglose —las rutinas, los servicios, la comida, el BYD— se abre ahí mismo al tocarlo, y los cortes de la salida son los mismos que en la banda y Mis Metas.
 - Los posts del negocio de su papá —Aeroresinas y Heliescala, en LinkedIn y Facebook— van en el plan de cada fase: no se quitan.
 - La banda de la fase dice lo que importa hoy de la fase —el checklist del mes y lo que toca, y tu dinero y la BBVA contra su meta— y lleva a la ventana de las fases, donde viven el checkpoint y lo que da tu ritmo en el plan. Lo que pide una fase sale del plan (PROYECCION), igual que en Mis Metas.`

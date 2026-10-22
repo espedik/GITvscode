@@ -358,7 +358,7 @@ Dashboard—:
 | La BBVA, quincena a quincena | El saldo vivo (`CIFRAS.bbvaEstado`, el mismo del Plan Maestro y de Mis Metas), lo pagado desde que arrancó su plan (`CIFRAS.avanceBbva`), el día que quedará en cero y los abonos que siguen desde hoy, el de hoy incluido. El saldo que reporte del banco manda: va al maestro como migración |
 | A GBM, para Alemania | `CIFRAS.desgloseMes`: este mes, el siguiente y el primero ya sin la BBVA, con lo del día 1, el 15 y Didi; al pie, `{{alemaniaJunio}}` contra la cuenta bloqueada (`{{sperrkonto}}`, `{{junioCorto}}`) |
 
-Cuánto te queda de la quincena día a día no se calcula aquí: es el riel del Dashboard.
+Cuánto te queda de la quincena día a día no se calcula aquí: es la cuenta de la quincena del Plan Maestro (Dashboard).
 
 **La dona** enseña los gastos anotados del mes por categoría; sin ninguno, *A dónde va tu sueldo
 este mes — previsto*: los apartados de `CIFRAS.desgloseMes` con los nombres de
@@ -428,7 +428,7 @@ auto-fetch del precio BTC si tiene más de 15 minutos y hay historial.
 por deuda (solo las vivas cuentan como "obligaciones activas") y dónut `ch-pat`. `openActivoModal`
 (tipos `liquido | vehiculo | electronico | inmueble | joyeria | mueble | otro`), `saveActivo`,
 `delActivo`. **Un activo líquido lleva `fecha`**: `saveActivo` pone la de hoy al guardarlo, porque un
-saldo es de un día; el riel del Plan Maestro (Dashboard) suma la Cuenta BBVA (`ac013`) y el Efectivo
+saldo es de un día; la cuenta de la quincena del Plan Maestro (Dashboard) suma la Cuenta BBVA (`ac013`) y el Efectivo
 (`ac014`) que caen en la quincena y se ancla al más reciente por esa fecha. El recuadro de Si Vale del Dashboard de Finanzas se quitó ("ya no me sirve de nada").
 
 **Es la misma cifra que el medidor "Patrimonio hacia $1M" del Dashboard** (`patrimonioNeto()`: todo

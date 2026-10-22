@@ -33,7 +33,7 @@ En la prosa se escribe un marcador y el módulo lo sustituye al cargar la págin
 compartir**. La primera es `CIFRAS.balanceMeses(hastaYM, n, opts)`, que arma la serie de los
 últimos `n` meses para la gráfica de balance de **Finanzas** (`ch-bal`) y sus indicadores del mes: dos
 copias de la misma lógica daban cifras distintas del mismo mes. El Plan Maestro del Dashboard no la usa:
-explica el dinero con la cuenta del riel.
+explica el dinero con la cuenta de la quincena (`ctTramo`).
 
 Cada mes se arma en **dos capas**:
 
@@ -217,7 +217,7 @@ de octubre, $6,592 el 26 (con lo de Didi del 19 mandado), $4,542 el 1 de noviemb
 y $0 el 15. Un saldo dicho el mismo día de un abono (`bbvaSaldoFecha` igual a hoy) es de antes de ese
 abono: el del día no se resta solo, se queda como lo que toca hoy, y «Ya lo mandé» lo anota. Sin datos (el verificador,
 un navegador en blanco) es el plan puro desde `bbvaSaldoFecha`, idéntico al de antes. Se calcula
-una vez por día y por lectura de Finanzas (`planCache`): lo piden el calendario y el riel día por
+una vez por día y por lectura de Finanzas (`planCache`): lo piden el calendario y la cuenta de la quincena día por
 día. Con la tarjeta en cero, `fin` es el día en que llegó ahí (su último movimiento).
 
 ### La tarjeta se mueve con lo que se anota
@@ -386,7 +386,7 @@ lo que bajan el auto (su día, con su interés) y el iPhone. Devuelve el estado 
 `cetes`, `deposito`, `btc`, `auto`, `iphone`, `otras`), lo que se mandó para llegar ahí (`aBbva`, `aGbm`,
 `aSalida`, `movs`) y, para hoy, lo que el plan pide hoy (`pendiente`). Hoy es lo real; un día que viene ya cuenta
 lo de hoy, porque proyectar es seguir el plan. El dinero para gastar —la cuenta y el efectivo— no va
-aquí: lo lleva el riel del Plan Maestro, con la comida y lo anotado. Un día que ya pasó, o después de
+aquí: lo lleva la cuenta de la quincena del Plan Maestro (`ctTramo`), con la comida y lo anotado. Un día que ya pasó, o después de
 `ultimoMesMexico`, devuelve null. Desde los saldos del 21-oct-2026, la proyección pone GBM en $4,459 el
 20 de noviembre —la BBVA quedará en cero el 15—, en $34,254 el 31 de diciembre, ya pagadas las apostillas, y en
 $121,504 el 31 de marzo, con el depósito ya dentro. Lo pinta *Tu dinero ese día*, en el Plan Maestro. **Sube mes a
@@ -1089,13 +1089,13 @@ Ninguna estructura está copiada entre archivos; todas se leen de aquí:
 | `APRENDIZAJE` | 6 prioridades de aprendizaje | `CIFRAS.APRENDIZAJE` |
 | `fondoMaestria(f)` | El dinero de la maestría: el fondo de emergencia (CETES), las inversiones de Finanzas (hoy el depósito de la renta) y el Bitcoin a precio de hoy. Lo usan `{{maestria}}`, Mis Metas, los indicadores de Finanzas, Coach y el contexto de *Qué invertir hoy* | `CIFRAS.fondoMaestria(f)` |
 | `diasFase(f, hoy)` · `diasHasta(fecha, hoy)` | Los días de una fase en días de calendario —`largo`, `corrido` (hoy ya corre), `quedan`, `pct`, `semanas`, `semanasQuedan`— y los días entre hoy y una fecha, de medianoche a medianoche. Los usan el tablero, el calendario, la ventana de las fases, Mis Metas y Coach | `CIFRAS.diasFase()`, `CIFRAS.diasHasta()` |
-| `planMes(ym)` | El plan completo de un mes, sin escribir nada dos veces: sus tareas de fase, lo de la salida a Alemania de ese mes y lo que se paga, lo de toda la fase (`cont`) y lo de cada mes (`mensual`), el foco de `HAB_FOCO`, el dinero de la proyección, los abonos de la BBVA y las fechas que caen en él (arranque y cierre de la fase, checkpoint, hitos fechados de las rutas, cambio de foco). Trae también las cifras con que se audita (`metas`: el dinero al cerrar —todos los activos líquidos, GBM más el depósito del depa en la proyección—, la BBVA mientras su plan corre y el patrimonio líquido), y `cifrasHoy(f, gastar)` mide lo real con la misma definición —con `gastar`, lo que hay para gastar según el riel del Plan Maestro, que el Dashboard le pasa desde `ctCifrasHoy()` (control 42)—. Lo pinta la ventana de las fases, una ficha por mes, y ahí se audita (`plan_auditoria_v1`); el control 38 vigila que ningún mes quede vacío ni sin cifras | `CIFRAS.planMes(ym)`, `CIFRAS.cifrasHoy(f, gastar)` |
-| `avanceBbva(f)` | Lo pagado de la BBVA desde el saldo con que arrancó su plan quincena a quincena (`PROYECTO.bbvaInicio` el día `PROYECTO.bbvaFecha`, que no se mueven con cada saldo nuevo): la cifra de la ruta de deuda y el medidor de Deuda cara | `CIFRAS.avanceBbva(f)` |
+| `planMes(ym)` | El plan completo de un mes, sin escribir nada dos veces: sus tareas de fase, lo de la salida a Alemania de ese mes y lo que se paga, lo de toda la fase (`cont`) y lo de cada mes (`mensual`), el foco de `HAB_FOCO`, el dinero de la proyección, los abonos de la BBVA y las fechas que caen en él (arranque y cierre de la fase, checkpoint, hitos fechados de las rutas, cambio de foco). Trae también las cifras con que se audita (`metas`: el dinero al cerrar —todos los activos líquidos, GBM más el depósito del depa en la proyección—, la BBVA mientras su plan corre y el patrimonio líquido), y `cifrasHoy(f, gastar)` mide lo real con la misma definición —con `gastar`, lo que hay para gastar según la cuenta de la quincena del Plan Maestro, que el Dashboard le pasa desde `ctCifrasHoy()` (control 42)—. Lo pinta la ventana de las fases, una ficha por mes, y ahí se audita (`plan_auditoria_v1`); el control 38 vigila que ningún mes quede vacío ni sin cifras | `CIFRAS.planMes(ym)`, `CIFRAS.cifrasHoy(f, gastar)` |
+| `avanceBbva(f)` | Lo pagado de la BBVA desde el saldo con que arrancó su plan quincena a quincena (`PROYECTO.bbvaInicio` el día `PROYECTO.bbvaFecha`, que no se mueven con cada saldo nuevo): el medidor de Deuda cara de Mis Metas | `CIFRAS.avanceBbva(f)` |
 | `tarjetaDe(t, debts)` · `movimientoTarjeta(t, debts, ahora)` | La regla de la tarjeta: qué tarjeta de crédito nombra un movimiento y lo que le hace a su saldo. Finanzas mueve el saldo con ella; el Dashboard sabe qué no sale de la caja | `CIFRAS.tarjetaDe()`, `CIFRAS.movimientoTarjeta()` |
 | `bbvaEstado()` | La BBVA de hoy para la estrategia del Plan Maestro: saldo vivo, fecha de cero, lo que toca hoy, lo mandado hoy, lo restado solo estos días, lo que hoy no se mandó, el abono siguiente y si está cancelada | `CIFRAS.bbvaEstado()` |
 | `aplicarPlanBbva()` · `ABONO_DE` | Resta solos los abonos del plan cuyo día ya llegó (corre al cargar; el Dashboard la llama al cambiar el día) y dice en palabras de dónde sale cada abono | `CIFRAS.aplicarPlanBbva()`, `CIFRAS.ABONO_DE` |
 | `deudasConInteres(f)` | Las deudas a las que de verdad les corre interés: la BBVA no mientras `PROYECTO.bbvaSinIntereses`. *Con interés* en Mis Metas, la regla de *Qué invertir hoy* y su panel | `CIFRAS.deudasConInteres(f)` |
-| `liquidaciones` (en una deuda de `DEUDAS_SEED`) | Cada fecha en que esa deuda quedó en $0: la Banamex, `['2026-08-13','2026-09-30']`. La ruta de deuda dice la última y cuántas | `CIFRAS.DEUDAS_SEED` |
+| `liquidaciones` (en una deuda de `DEUDAS_SEED`) | Cada fecha en que esa deuda quedó en $0: la Banamex, `['2026-08-13','2026-09-30']`. El detalle de Deuda cara las cita todas | `CIFRAS.DEUDAS_SEED` |
 | `LISTA_COMPRAS` | Catálogo de compras por pasillos — 7 categorías; `comida` en 7 pasillos, con `Verduras` / `Frutas` / `Almidones y grasas` separados para colorear los frescos por clase y sumar la fruta+verdura por día | `CIFRAS.LISTA_COMPRAS` |
 
 `verificar-sincronia.js` vigila que **ninguna vuelva a incrustarse** en un HTML.
