@@ -342,41 +342,40 @@ de Mis Metas), la primera del orden de Coach que no hayas contestado (*Lo decide
 líneas con *Responder*, o el resultado cuando ya la contestaste, y lo contestado en los últimos 7 días con el último
 simulacro (`istqbMarcador()`).
 
-Tocarla abre su ventana, `#istqbOverlay` (`abrirIstqb()`). Adán, 19-oct-2026: *"haz la ventana mucho más grande, así
-como las otras… así se ve mejor y puedes meter más info"*. Es tan ancha y alta como la del alemán —hasta
-1900 px, el 96 % del ancho y el 92 % del alto—, opaca, y bajo el título dice por qué Coach la eligió (`iqPorQue`: lo
-que vale su capítulo, lo que llevas en él y sus puntos en juego). Va en **tres columnas, una por trabajo**, cada una
-con su propio desplazamiento (`istqbPintar()`):
+Tocarla abre su ventana, `#istqbOverlay` (`abrirIstqb()`): tan ancha y alta como la del alemán —hasta 1900 px, el
+96 % del ancho y el 92 % del alto— y opaca. Adán, 22-oct-2026: *"está muy saturada de información, quita la más
+innecesaria, las preguntas hazlas más pequeñas pero dale un mejor formato de texto"*. Por eso lleva **dos columnas**
+(`istqbPintar()`) y bajo el título una sola línea con por qué Coach la eligió (`iqPorQue`): los puntos en juego de su
+capítulo y si es el que más tiene.
 
-- **La pregunta** (`iqPreguntaHtml`): la foto de su capítulo con su nombre, su nivel K y lo que vale; el enunciado y
-  las cuatro opciones, que se contestan tocándolas o con las teclas 1 a 4 (o A a D). **Cada pregunta se contesta una
-  vez**: la primera respuesta es la que cuenta, como en el examen. Contestada, la buena en verde, la tuya en rojo si
-  fallaste y *Siguiente pregunta* (también Enter), que trae la siguiente del orden.
-- **Para entenderla** (`iqEntenderHtml`, `iqMapaHtml`): *Qué te pide* —su nivel K del programa (`IQ_K`: recordar,
-  comprender o aplicar), cuántas preguntas de ese nivel trae el examen y cuánto valen (`iqKExamen`), el objetivo con
-  su enunciado textual (`EXAMEN_GENAI.objetivos`) y su sección como enlace al PDF en su página (`ctGenaiSeccion`)—.
-  Antes de contestar no hay nada que la responda: primero se recuerda y después se lee. Al contestar, **el porqué** y
-  **lo que dice el syllabus** (`ctGenaiFuente`, el mismo bloque que la revisión del simulacro): la sección con su
-  número, título y página; cada frase textual que sostiene la respuesta (`q.cita`) con la página exacta del PDF
-  (`q.pag`), que lo abre ahí; *Abrir el syllabus en la página N*, y, con la copia local, la sección completa —ya
-  abierta— párrafo por párrafo con lo citado resaltado. Debajo, **el capítulo en el syllabus**: cada sección con su
-  página y lo que llevas en ella (*2 de 3 bien*, *sin contestar*), con la de hoy marcada.
-- **Cómo vas** (`iqVasHtml`): **la meta** —presentar en el mes de la tarea a1-7 con el simulacro en su meta dos veces
-  seguidas, la regla que lee `habSimulacro()`—, tus últimos diez simulacros en barras con su fecha, contra la meta y
-  el corte, lo siguiente del plan de la meta con su fecha (`META_PLAN.istqbgenai.pasos`) y *Simulacro completo →*
-  (`istqbAlSimulacro()`, que abre el examen entero); **cada capítulo** con lo que vale, lo que llevas en las
-  preguntas del día y en el último simulacro, y sus puntos en juego —el orden de Coach—; **los últimos 7 días**, una
-  marca por respuesta, con lo contestado del banco y tu acierto, y **lo que fallaste** (`istqbHistorial()`), la más
-  reciente primero, con la buena, la tuya, el porqué y su sección: la ruta de IA pide que cada pregunta fallada vaya a
-  una lista con su sección del syllabus.
+- **La pregunta** (`iqPreguntaHtml`), en una hoja centrada de 820 px (`.iqv-hoja`). Arriba, en etiquetas, su capítulo
+  con el nombre oficial, su nivel K —el `title` dice qué pide ese nivel y cuántos puntos trae el examen de él (`IQ_K`,
+  `iqKExamen`)— y lo que vale. Si trae caso, **el caso va aparte**, en su recuadro, y **la pregunta debajo, en
+  negrita** (`iqPartes`: se parte en su último «¿»; 72 de las 156 traen caso). Las palabras clave van subrayadas en el
+  color de la ventana. La pregunta mide 16 px y las opciones 14. Se contesta tocando una opción o con 1 a 4 (o A a D),
+  y **cada pregunta se contesta una vez**: la primera respuesta es la que cuenta, como en el examen. Contestada, la
+  buena en verde con *Correcta*, la tuya en rojo con *Tu respuesta*, *Siguiente pregunta* (también Enter) y, debajo,
+  **el porqué** y **lo que dice el syllabus** (`ctGenaiFuente`, con su objetivo): la sección, cada frase textual con su
+  página del PDF y *Abrir el syllabus en la página N*. Antes de contestar no hay nada que la responda: primero se
+  recuerda y después se lee.
+- **Cómo vas** (`iqVasHtml`), en 420 px: **tu meta** —presentar en el mes de la tarea a1-7 con el simulacro en su meta
+  dos veces seguidas, la regla de `habSimulacro()`—, tus últimos diez simulacros en barras contra la meta y el corte,
+  y *Simulacro completo →* (`istqbAlSimulacro()`); **esta semana**, una marca por respuesta, con lo contestado del
+  banco y tu acierto; **dónde están los puntos**, cada capítulo en una línea con su nombre en llano, lo que llevas
+  bien y sus puntos en juego (`istqbEnJuego`: lo que vale por lo que te falta de acierto, el orden de Coach), y **lo
+  que fallaste** (`istqbHistorial()`), las seis más recientes con la buena, la tuya, el porqué y su sección: la ruta de
+  IA pide que cada pregunta fallada vaya a una lista con su sección del syllabus.
+
+Se quitaron la foto del capítulo, el recuadro de *Al contestar*, la lista de las secciones del capítulo con lo que
+llevas en cada una y el plan de la meta (vive en Mis Metas): repetían lo de otra parte o se usaban poco, y empujaban
+la pregunta fuera de la vista.
 
 Mientras la ventana está abierta, Mi Día no rota, las teclas no lo mueven por detrás (`istqbTecla`) y la brújula
-enseña el prompt de Entrevistas (la vista `#istqbOverlay.open`); se cierra con ✕, clic fuera o Escape. Bajo 1280 px van
-la pregunta y el syllabus lado a lado y *Cómo vas* debajo, en un solo desplazamiento; bajo 900 px, una columna, y bajo
-640 px, a pantalla completa, sin brújula. Medido: a 2048×1040 la ventana mide 1884×957 y sus columnas 686, 623 y 573 px
-de ancho —la pregunta cabe entera sin desplazar—; a 2560×1440, 1900×1325; a 1600×1000, 1472×920; a 1366×768,
-1257×707, todavía en tres columnas; a 1024, dos, y a 390, una. Sin desplazamiento horizontal en ninguno, en claro y en
-oscuro.
+enseña el prompt de Entrevistas (la vista `#istqbOverlay.open`); se cierra con ✕, clic fuera o Escape. Bajo 1100 px
+va en una columna, con *Cómo vas* debajo, y bajo 640 px a pantalla completa, sin brújula. Medido: a 2048×1040 la
+ventana mide 1884×957 y sus columnas 1462 y 420 px; a 1600×900, 1472×828 (1050 y 420); a 1366×768, 1257×707 (835 y
+420), y la pregunta con caso cabe entera sin desplazar; a 1024 y a 390, una columna. Sin desplazamiento horizontal en
+ninguno, en claro y en oscuro.
 
 Las respuestas viven en `dash-aprende-v1` → `istqb`, una lista por fecha local (`hoyLocal()`) de
 `{id, e, ok}`; una fecha con un objeto suelto es del primer formato y se lee igual. Se quedan los

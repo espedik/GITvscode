@@ -3210,157 +3210,138 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .flag-de{display:inline-block;width:14px;height:9px;border-radius:2px;flex-shrink:0;
   background:linear-gradient(#000 0 33.4%,#dd0000 33.4% 66.7%,#ffce00 66.7%);box-shadow:0 0 0 1px rgba(var(--ov),.16)}
 /* La pregunta del ISTQB (#istqbOverlay, `abrirIstqb()`): tan ancha y alta como la del alemán, opaca —es para
-   leer— y en tres columnas que desplazan cada una por dentro: la pregunta, para entenderla y cómo vas. Bajo 1280 px, la
-   pregunta y el syllabus lado a lado y cómo vas debajo, en un solo desplazamiento; bajo 900 px, una columna, y bajo
-   640 px, a pantalla completa. */
+   leer— y en dos columnas que desplazan cada una por dentro: la pregunta, en una hoja centrada de 820 px, y cómo vas,
+   de 420. Bajo 1100 px, una columna con cómo vas debajo; bajo 640 px, a pantalla completa. */
 #istqbOverlay{--c:var(--p)}
 .gbm-card.iqv-card{width:min(1900px,96vw);height:92vh;display:flex;flex-direction:column;overflow:hidden;
   background:linear-gradient(rgba(var(--ov),.035),rgba(var(--ov),.035)),var(--bg)}
 .iqv-card .gbm-head{flex:none;padding:16px 64px 14px 26px}
-.iqv-card .gbm-head p{max-width:1180px;margin-top:2px;font-size:13px;line-height:1.5;color:var(--text2)}
+.iqv-card .gbm-head p{margin-top:3px;font-size:13px;line-height:1.5;color:var(--text3)}
 .iqv-card .gbm-head p b{color:var(--text)}
-.iqv-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,.92fr)}
-.iqv-col{min-width:0;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:20px;padding:22px 26px 30px}
+.iqv-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,420px)}
+.iqv-col{min-width:0;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:28px 32px 36px}
 .iqv-col+.iqv-col{border-left:1px solid rgba(var(--ov),.08)}
 .iqv-bq{display:flex;flex-direction:column;gap:9px}
-.iqv-et{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
-.iqv-dato,.iqv-vacio{margin:0;font-size:12.5px;line-height:1.55;color:var(--text3)}
+.iqv-et{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
+.iqv-dato,.iqv-vacio{margin:0;font-size:12px;line-height:1.55;color:var(--text3)}
 .iqv-dato b{color:var(--text2)}
 .iqv-dato b.ok{color:var(--g)}
-/* La pregunta: la foto de su capítulo, el enunciado y las cuatro opciones. */
-.iqv-foto{position:relative;flex:none;height:clamp(110px,19vh,230px);border-radius:16px;overflow:hidden;background:color-mix(in srgb,var(--c) 16%,transparent)}
-.iqv-foto img{display:block;width:100%;height:100%;object-fit:cover}
-.iqv-foto::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.74))}
-.iqv-foto-t{position:absolute;left:18px;right:18px;bottom:14px;z-index:1;display:flex;flex-direction:column;gap:5px;color:#fff}
-.iqv-foto-t span{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.88}
-.iqv-foto-t b{font-size:clamp(16px,1.25vw,21px);font-weight:800;line-height:1.25;text-shadow:0 1px 10px rgba(0,0,0,.45)}
-.iqv-q{font-size:clamp(16.5px,1.05vw,19.5px);font-weight:600;line-height:1.55;color:var(--text)}
-.iqv-q b{font-weight:800}
-.iqv-ops{display:flex;flex-direction:column;gap:10px}
-.iqv-op{display:grid;grid-template-columns:30px minmax(0,1fr);gap:14px;align-items:center;width:100%;text-align:left;padding:13px 16px;
-  border-radius:13px;border:1px solid rgba(var(--ov),.13);background:rgba(var(--ov),.035);color:var(--text);font:inherit;
-  font-size:15.5px;line-height:1.5;cursor:pointer;transition:border-color .15s,background .15s}
-.iqv-op>b{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;font-family:var(--mono);
-  font-size:13px;color:var(--text2);background:rgba(var(--ov),.08);transition:background .15s,color .15s}
+/* La pregunta. De qué es, en etiquetas; el caso aparte, en su recuadro, y la pregunta en negrita debajo: más pequeñas
+   que antes (16 px la pregunta, 14 las opciones) pero con jerarquía, y las palabras clave subrayadas en su color. */
+.iqv-hoja{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.iqv-chips{display:flex;flex-wrap:wrap;gap:6px}
+.iqv-chip{display:inline-flex;align-items:baseline;gap:7px;padding:4px 11px;border-radius:999px;border:1px solid rgba(var(--ov),.09);
+  background:rgba(var(--ov),.05);font-size:11.5px;font-weight:600;line-height:1.4;color:var(--text2)}
+.iqv-chip b{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--c);white-space:nowrap}
+.iqv-chip.cap{color:var(--text)}
+.iqv-caso{display:flex;flex-direction:column;gap:6px;padding:13px 17px 14px;border-left:3px solid var(--c);border-radius:0 12px 12px 0;
+  background:color-mix(in srgb,var(--c) 7%,transparent)}
+.iqv-caso p{margin:0;font-size:14px;line-height:1.65;color:var(--text2)}
+.iqv-q{margin:0;font-size:16px;font-weight:700;line-height:1.5;letter-spacing:-.005em;color:var(--text)}
+.iqv-q b,.iqv-caso b{font-weight:800;color:var(--text);padding:0 1px;
+  background:linear-gradient(transparent 60%,color-mix(in srgb,var(--c) 32%,transparent) 0)}
+.iqv-ops{display:flex;flex-direction:column;gap:8px}
+.iqv-op{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:12px;align-items:start;width:100%;text-align:left;padding:11px 14px;
+  border-radius:11px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.03);color:var(--text);font:inherit;
+  font-size:14px;line-height:1.55;cursor:pointer;transition:border-color .15s,background .15s}
+.iqv-op>b{display:flex;align-items:center;justify-content:center;width:26px;height:26px;margin-top:-2px;border-radius:8px;font-family:var(--mono);
+  font-size:12px;color:var(--text2);background:rgba(var(--ov),.08);transition:background .15s,color .15s}
+.iqv-op>em{align-self:center;font-style:normal;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
 .iqv-op:not(:disabled):hover{border-color:var(--c);background:color-mix(in srgb,var(--c) 8%,transparent)}
 .iqv-op:not(:disabled):hover>b{background:var(--c);color:var(--bg)}
 .iqv-op:disabled{cursor:default}
 .iqv-op.ok{border-color:var(--g);background:rgba(var(--g-rgb),.1)}
 .iqv-op.ok>b{background:var(--g);color:var(--bg)}
+.iqv-op.ok>em{color:var(--g)}
 .iqv-op.mal{border-color:var(--r);background:rgba(var(--r-rgb),.08)}
 .iqv-op.mal>b{background:var(--r);color:#fff}
+.iqv-op.mal>em{color:var(--r)}
 .iqv-op.apagada{opacity:.5}
-.iqv-nota{margin:0;font-size:12.5px;line-height:1.6;color:var(--text3)}
+.iqv-nota{margin:0;font-size:12px;line-height:1.6;color:var(--text3)}
 .iqv-nota kbd{font-family:var(--mono);font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;border:1px solid rgba(var(--ov),.18);color:var(--text2)}
-.iqv-res{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 14px;padding:12px 14px 12px 18px;border-radius:13px;font-size:15px;font-weight:800}
+.iqv-res{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 14px;padding:10px 12px 10px 16px;border-radius:12px;font-size:14px;font-weight:800}
+.iqv-res .alv-btn{height:34px;padding:0 14px;border-radius:10px;font-size:13px}
 .iqv-res.ok{color:var(--g);background:rgba(var(--g-rgb),.08)}
 .iqv-res.mal{color:var(--r);background:rgba(var(--r-rgb),.07)}
-/* Para entenderla: el nivel K y el objetivo; al contestar, el porqué y el syllabus (`.sy-*`, más grande aquí), y el
-   capítulo en el syllabus, sección por sección. */
-.iqv-k{margin:0;font-size:14px;line-height:1.6;color:var(--text2)}
-.iqv-kchip{display:inline-block;margin-right:8px;padding:1px 9px;border-radius:7px;font-family:var(--mono);font-size:12px;font-weight:700;
-  color:var(--text);background:color-mix(in srgb,var(--c) 18%,transparent)}
-.iqv-lo{margin:0;font-size:14px;line-height:1.55;color:var(--text)}
-.iqv-lo b{margin-right:8px;font-family:var(--mono);font-size:12px;color:var(--c)}
-.iqv-bq .sy-links{margin-top:0}
-.iqv-bq .sy-link{font-size:12.5px}
-.iqv-espera{padding:14px 16px;border-radius:12px;border:1px dashed rgba(var(--ov),.2)}
-.iqv-espera p{margin:0;font-size:13.5px;line-height:1.6;color:var(--text3)}
-.iqv-why{font-size:15px;line-height:1.65;color:var(--text)}
+/* Contestada: el porqué y lo que dice el syllabus (`.sy-*`, con su objetivo), debajo de la pregunta. */
+.iqv-exp{display:flex;flex-direction:column;gap:14px;padding-top:18px;border-top:1px solid rgba(var(--ov),.08)}
+.iqv-why{display:flex;flex-direction:column;gap:7px}
+.iqv-why>div{font-size:14px;line-height:1.7;color:var(--text)}
 .iqv-why b{font-weight:700}
-.iqv-fuente .sy{margin:0;padding:14px 18px 13px}
-.iqv-fuente .sy-sec{font-size:13.5px}
-.iqv-fuente .sy-f,.iqv-fuente .sy-det p{font-size:14px;line-height:1.65}
-.iqv-fuente .sy-det summary{font-size:13px}
-.iqv-mapa{display:flex;flex-direction:column;gap:1px}
-.iqv-sec{display:grid;grid-template-columns:46px minmax(0,1fr) auto 50px;gap:10px;align-items:baseline;padding:7px 10px;border-radius:9px;
-  text-decoration:none;font-size:13px;line-height:1.45;color:var(--text2)}
-.iqv-sec:hover{background:rgba(var(--ov),.05)}
-.iqv-sec>b{font-family:var(--mono);font-size:11.5px;color:var(--text3)}
-.iqv-sec span i{margin-left:8px;font-style:normal;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c)}
-.iqv-sec em{font-style:normal;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--text3);white-space:nowrap}
-.iqv-sec em.ok{color:var(--g)}
-.iqv-sec em.medio{color:var(--w)}
-.iqv-sec em.mal{color:var(--r)}
-.iqv-sec small{font-family:var(--mono);font-size:10.5px;color:var(--text3);text-align:right;white-space:nowrap}
-.iqv-sec.h2{margin-top:6px;font-weight:700;color:var(--text)}
-.iqv-sec.h2>b{color:var(--c)}
-.iqv-sec.on{background:color-mix(in srgb,var(--c) 13%,transparent);color:var(--text)}
-/* Cómo vas: la meta y los simulacros, los capítulos, la semana y lo que fallaste. */
-.iqv-meta{margin:0;font-size:14px;line-height:1.55;color:var(--text2)}
+.iqv-fuente .sy{margin:0;padding:13px 17px 12px}
+.iqv-fuente .sy-lo{font-size:12.5px}
+.iqv-fuente .sy-nota{display:none}
+.iqv-fuente .sy-sec{font-size:13px}
+.iqv-fuente .sy-f,.iqv-fuente .sy-det p{font-size:13.5px;line-height:1.65}
+/* Cómo vas: la meta y los simulacros, la semana, dónde están los puntos y lo que fallaste. */
+.iqv-vas{display:flex;flex-direction:column;gap:24px;padding:24px 24px 32px;background:rgba(var(--ov),.018)}
+.iqv-meta{margin:0;font-size:13px;line-height:1.55;color:var(--text2)}
 .iqv-meta b{color:var(--text)}
-.iqv-sim{position:relative;display:flex;align-items:flex-end;gap:6px;height:110px;margin:18px 0 16px;padding-right:70px;border-bottom:1px solid rgba(var(--ov),.16)}
-.iqv-sim-b{position:relative;flex:1 1 0;max-width:40px;border-radius:6px 6px 0 0;background:var(--r)}
+.iqv-sim{position:relative;display:flex;align-items:flex-end;gap:6px;height:90px;margin:16px 0 16px;padding-right:62px;border-bottom:1px solid rgba(var(--ov),.16)}
+.iqv-sim-b{position:relative;flex:1 1 0;max-width:34px;border-radius:5px 5px 0 0;background:var(--r)}
 .iqv-sim-b.medio{background:var(--w)}
 .iqv-sim-b.ok{background:var(--g)}
-.iqv-sim-b b{position:absolute;left:-4px;right:-4px;top:-17px;text-align:center;font-family:var(--mono);font-size:10.5px;color:var(--text2)}
-.iqv-sim-b i{position:absolute;left:-10px;right:-10px;bottom:-17px;text-align:center;font-style:normal;font-family:var(--mono);font-size:9.5px;color:var(--text3);white-space:nowrap}
+.iqv-sim-b b{position:absolute;left:-4px;right:-4px;top:-16px;text-align:center;font-family:var(--mono);font-size:10px;color:var(--text2)}
+.iqv-sim-b i{position:absolute;left:-10px;right:-10px;bottom:-16px;text-align:center;font-style:normal;font-family:var(--mono);font-size:9px;color:var(--text3);white-space:nowrap}
 .iqv-sim-l{position:absolute;left:0;right:0;height:0;border-top:1px dashed rgba(var(--ov),.38);pointer-events:none}
-.iqv-sim-l span{position:absolute;right:0;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3)}
+.iqv-sim-l span{position:absolute;right:0;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3)}
 .iqv-sim-l.meta span{bottom:2px;color:var(--g)}
 .iqv-sim-l.corte span{top:2px}
-.iqv-sig{display:flex;flex-direction:column;gap:6px;padding:11px 13px;border-radius:11px;background:rgba(var(--ov),.04)}
-.iqv-sig>span{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)}
-.iqv-sig p{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:10px;align-items:baseline;margin:0;font-size:13px;line-height:1.5;color:var(--text2)}
-.iqv-sig p b{font-family:var(--mono);font-size:11.5px;color:var(--text)}
-.iqv-sig p i{font-style:normal;font-family:var(--mono);font-size:10.5px;color:var(--text3);white-space:nowrap}
-.iqv-btn2{align-self:flex-start;height:36px;padding:0 15px;border-radius:10px;border:1px solid var(--c);background:color-mix(in srgb,var(--c) 12%,transparent);
-  color:var(--text);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.iqv-btn2{align-self:flex-start;height:34px;padding:0 14px;border-radius:9px;border:1px solid var(--c);background:color-mix(in srgb,var(--c) 12%,transparent);
+  color:var(--text);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
 .iqv-btn2:hover{background:color-mix(in srgb,var(--c) 22%,transparent)}
-.iqv-caps{display:flex;flex-direction:column;gap:2px}
-.iqv-cap{display:grid;grid-template-columns:30px minmax(0,1fr) 76px;gap:12px;align-items:center;padding:8px 10px;border-radius:11px}
-.iqv-cap.on{background:color-mix(in srgb,var(--c) 12%,transparent)}
-.iqv-cap-n{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;font-family:var(--mono);font-size:14px;font-weight:800;
-  color:var(--text2);background:rgba(var(--ov),.07)}
-.iqv-cap.on .iqv-cap-n{background:var(--c);color:var(--bg)}
-.iqv-cap-t{min-width:0;display:flex;flex-direction:column;gap:4px}
-.iqv-cap-t b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13.5px;font-weight:700;line-height:1.35;color:var(--text)}
-.iqv-cap-t span{font-size:12px;color:var(--text3)}
-.iqv-barra{height:5px;border-radius:5px;background:rgba(var(--ov),.1);overflow:hidden}
-.iqv-barra i{display:block;height:100%;border-radius:5px;background:var(--g)}
-.iqv-cap-j{display:flex;flex-direction:column;align-items:flex-end;font-size:11px;line-height:1.3;color:var(--text3)}
-.iqv-cap-j b{font-family:var(--mono);font-size:16px;color:var(--text)}
-.iqv-cap-j em{font-style:normal;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--c)}
-.iqv-dias{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
-.iqv-dia{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px 10px;border-radius:10px;background:rgba(var(--ov),.04)}
+.iqv-dias{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.iqv-dia{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px 8px;border-radius:9px;background:rgba(var(--ov),.04)}
 .iqv-dia.hoy{background:color-mix(in srgb,var(--c) 13%,transparent)}
-.iqv-dia>span{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
-.iqv-dia>b{font-size:15px;font-weight:800;color:var(--text)}
-.iqv-dia>div{display:flex;flex-wrap:wrap;justify-content:center;gap:3px;min-height:9px}
-.iqv-dia i{width:9px;height:9px;border-radius:50%}
+.iqv-dia>span{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
+.iqv-dia>b{font-size:13px;font-weight:800;color:var(--text)}
+.iqv-dia>div{display:flex;flex-wrap:wrap;justify-content:center;gap:3px;min-height:8px}
+.iqv-dia i{width:8px;height:8px;border-radius:50%}
 .iqv-dia i.ok{background:var(--g)}
 .iqv-dia i.mal{background:var(--r)}
-.iqv-dia i.nada{width:12px;height:2px;margin-top:4px;border-radius:2px;background:rgba(var(--ov),.18)}
-.iqv-fallo{border-radius:11px;border:1px solid rgba(var(--ov),.09);background:rgba(var(--ov),.035)}
-.iqv-fallo summary{display:flex;flex-direction:column;gap:3px;padding:10px 13px;cursor:pointer;list-style:none}
+.iqv-dia i.nada{width:10px;height:2px;margin-top:3px;border-radius:2px;background:rgba(var(--ov),.18)}
+.iqv-caps{display:flex;flex-direction:column;gap:1px}
+.iqv-cap{display:grid;grid-template-columns:22px minmax(0,1fr) 34px 56px;column-gap:10px;row-gap:5px;align-items:center;padding:7px 9px;border-radius:9px}
+.iqv-cap.on{background:color-mix(in srgb,var(--c) 12%,transparent)}
+.iqv-cap.cab{padding-top:0;padding-bottom:2px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
+.iqv-cap.cab span:nth-child(n+3){text-align:right}
+.iqv-cap-n{display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;font-family:var(--mono);font-size:11px;font-weight:800;
+  color:var(--text2);background:rgba(var(--ov),.07)}
+.iqv-cap.on .iqv-cap-n{background:var(--c);color:var(--bg)}
+.iqv-cap-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12.5px;font-weight:600;color:var(--text)}
+.iqv-cap-l{font-family:var(--mono);font-size:10.5px;text-align:right;color:var(--text3)}
+.iqv-cap-j{font-family:var(--mono);font-size:13px;font-weight:700;text-align:right;color:var(--text2)}
+.iqv-cap-j.top{color:var(--c)}
+.iqv-barra{grid-column:2/-1;height:3px;border-radius:3px;background:rgba(var(--ov),.08);overflow:hidden}
+.iqv-barra i{display:block;height:100%;border-radius:3px;background:var(--g)}
+.iqv-fallo{border-radius:10px;border:1px solid rgba(var(--ov),.09);background:rgba(var(--ov),.03)}
+.iqv-fallo+.iqv-fallo{margin-top:-3px}
+.iqv-fallo summary{display:flex;flex-direction:column;gap:3px;padding:9px 12px;cursor:pointer;list-style:none}
 .iqv-fallo summary::-webkit-details-marker{display:none}
-.iqv-fallo-k{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--r)}
-.iqv-fallo-q{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;line-height:1.5;color:var(--text)}
+.iqv-fallo-k{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--r)}
+.iqv-fallo-q{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12.5px;line-height:1.5;color:var(--text)}
 .iqv-fallo[open] .iqv-fallo-q{display:block}
-.iqv-fallo-d{display:flex;flex-direction:column;gap:7px;padding:0 13px 12px}
-.iqv-fallo-d p{margin:0;font-size:13px;line-height:1.55;color:var(--text2)}
+.iqv-fallo-d{display:flex;flex-direction:column;gap:7px;padding:0 12px 11px}
+.iqv-fallo-d p{margin:0;font-size:12.5px;line-height:1.55;color:var(--text2)}
 .iqv-fallo-d p>b:first-child{margin-right:3px}
 .iqv-fallo-r>b{color:var(--g)}
 .iqv-fallo-tu>b{color:var(--r)}
-@media(max-width:1279px){
-  .iqv-body{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-auto-rows:max-content;align-content:start;overflow-y:auto;overscroll-behavior:contain}
+@media(max-width:1099px){
+  .iqv-body{grid-template-columns:minmax(0,1fr);grid-auto-rows:max-content;align-content:start;overflow-y:auto;overscroll-behavior:contain}
   .iqv-col{overflow:visible;min-height:auto}
-  .iqv-vas{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;border-top:1px solid rgba(var(--ov),.08)}
-  .iqv-col.iqv-vas{border-left:0}
-}
-@media(max-width:899px){
-  .iqv-body,.iqv-vas{grid-template-columns:minmax(0,1fr)}
   .iqv-col+.iqv-col{border-left:0;border-top:1px solid rgba(var(--ov),.08)}
+  .iqv-vas{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));align-items:start}
 }
 @media(max-width:640px){
   body:has(#istqbOverlay.open) .pp-btn{visibility:hidden}
   .gbm-card.iqv-card{width:100%;height:100%}
   .iqv-card .gbm-head{padding:12px 52px 10px 14px}
-  .iqv-col{gap:16px;padding:14px 14px 22px}
-  .iqv-foto{height:120px;border-radius:12px}
-  .iqv-op{gap:10px;padding:11px 12px;font-size:14.5px}
-  .iqv-sec{grid-template-columns:40px minmax(0,1fr) auto;font-size:12.5px}
-  .iqv-sec small{display:none}
+  .iqv-col{padding:16px 14px 22px}
+  .iqv-vas{gap:18px}
+  .iqv-q{font-size:15.5px}
+  .iqv-caso{padding:11px 13px 12px}
+  .iqv-caso p{font-size:13.5px}
+  .iqv-op{gap:10px;padding:10px 12px;font-size:13.5px}
 }
 /* El alemán de hoy (#alemanOverlay, `abrirAleman()`): dos pestañas a todo lo ancho. Vocabulario: las palabras
    de hoy en tarjetas —el artículo en el color de su género, los de la app de Alemán—, «Practicar» y el repaso.
@@ -8152,18 +8133,18 @@ function istqbHtml(){
       det: IQ_CAP_TRATA[q.cap] || 'Una pregunta de práctica de este tema.',
       pie: `${AP_ICO.meta}<span>${vas || 'Esta semana aún no contestas ninguna'}</span>` }) });
 }
-// La ventana (#istqbOverlay): tan ancha y alta como la del alemán —Adán: "haz la ventana mucho más grande, así
-// como las otras… y puedes meter más info"—, en tres columnas con un trabajo cada una (`istqbPintar()`):
-//   · La pregunta (`iqPreguntaHtml`): la foto de su capítulo, el enunciado y las cuatro opciones —también con 1–4 o
-//     A–D—. Contestada, la buena en verde, la tuya en rojo si fallaste y «Siguiente pregunta» (Enter).
-//   · Para entenderla (`iqEntenderHtml`, `iqMapaHtml`): lo que pide su nivel K y su objetivo del programa; al contestar,
-//     el porqué y lo que dice el syllabus (`ctGenaiFuente`, con la sección completa abierta si está la copia local), y el
-//     capítulo en el syllabus, sección por sección, con su página y lo que llevas en cada una. Antes de contestar no hay
-//     nada que la responda: primero se recuerda y después se lee.
-//   · Cómo vas (`iqVasHtml`): la meta del simulacro (`habSimulacro()`, la tarea a1-7) con tus intentos y lo siguiente del
-//     plan de la meta (`META_PLAN.istqbgenai`); cada capítulo con lo que vale y lo que llevas —el orden de Coach—; los
-//     últimos 7 días, y lo que fallaste, con la buena, su porqué y su sección (la ruta de IA lo pide: "cada pregunta
-//     fallada va a una lista con su sección del syllabus").
+// La ventana (#istqbOverlay): tan ancha y alta como la del alemán, en dos columnas (`istqbPintar()`). Adán, 22-oct-2026:
+// "está muy saturada de información, quita la más innecesaria, las preguntas hazlas más pequeñas pero dale un mejor
+// formato de texto". Se fueron la foto del capítulo, el recuadro de «Al contestar», la lista de secciones del capítulo y
+// el plan de la meta (vive en Mis Metas); el nivel K va en su etiqueta y el objetivo, con el syllabus, al contestar.
+//   · La pregunta (`iqPreguntaHtml`), en una hoja centrada: de qué capítulo es, su nivel y lo que vale, en etiquetas; el
+//     caso aparte y la pregunta debajo (`iqPartes`), y las cuatro opciones —también con 1–4 o A–D—. Contestada, la buena
+//     en verde y la tuya en rojo, cada una con su etiqueta, «Siguiente pregunta» (Enter) y, debajo, el porqué y lo que
+//     dice el syllabus (`ctGenaiFuente`). Antes de contestar no hay nada que la responda: primero se recuerda y después
+//     se lee.
+//   · Cómo vas (`iqVasHtml`): la meta del simulacro con tus intentos, la semana, dónde están los puntos —cada capítulo
+//     con lo que llevas y sus puntos en juego, el orden de Coach— y lo que fallaste, con la buena, su porqué y su
+//     sección (la ruta de IA lo pide: "cada pregunta fallada va a una lista con su sección del syllabus").
 // Los niveles K son los del programa: K1 recordar, K2 comprender, K3 aplicar.
 const IQ_K = {
   K1: ['Recordar', 'reconocer un término, una lista o una idea tal como la dice el programa'],
@@ -8172,11 +8153,6 @@ const IQ_K = {
 };
 const IQ_DIA = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
 function iqFecha(k){ const p = String(k).split('-').map(Number); return p[2] ? p[2] + ' ' + MES_LABEL_FULL[p[1] - 1].slice(0, 3).toLowerCase() : ''; }
-function iqRefs(q){ return String((q && q.ref) || '').split('·').map(s => s.trim()).filter(Boolean); }
-function iqPdf(pag){
-  const X = window.EXAMEN_GENAI || {}, loc = window.CT_GENAI_SYLLABUS;
-  return ((loc && loc.pdf) || (X.meta && X.meta.syllabusUrl) || '') + '#page=' + pag;
-}
 // Cuántas preguntas de un nivel K trae el examen y cuántos puntos suman (`EXAMEN_GENAI.blueprint`).
 function iqKExamen(k){
   const bp = ((window.EXAMEN_GENAI || {}).blueprint || []).filter(b => b.k === k);
@@ -8191,60 +8167,44 @@ function istqbHistorial(){
   }));
   return out;
 }
-// Por qué es esta, bajo el título: lo que vale su capítulo y lo que llevas en él, como lo ordena Coach.
+// Por qué es esta, en una línea bajo el título: sus puntos en juego, como lo ordena Coach.
 function iqPorQue(q){
-  const M = (window.EXAMEN_GENAI || {}).meta || {}, pts = istqbPuntosCap(), ac = istqbAciertoCap(), a = ac[q.cap];
+  const pts = istqbPuntosCap(), ac = istqbAciertoCap();
   const top = Object.keys(pts).map(Number).sort((x, y) => istqbEnJuego(y, pts, ac) - istqbEnJuego(x, pts, ac))[0];
-  return `Coach la eligió por puntos en juego: el capítulo ${esc(q.cap)} vale ${pts[q.cap] || 0}${M.puntos ? ` de los ${M.puntos}` : ''} puntos del examen y ` +
-    `${a && a.n ? `llevas ${a.ok} de ${a.n} bien en él` : 'todavía no contestas ninguna de él'} ` +
-    `(<b>${istqbEnJuego(+q.cap, pts, ac).toFixed(1)} puntos en juego</b>${+q.cap === top ? ': ningún capítulo tiene más' : ''}).` +
-    ((q.pts || 1) > 1 ? ' Dentro del capítulo van primero las de 2 puntos.' : '');
+  return `Coach la eligió por puntos en juego: el capítulo ${esc(q.cap)} tiene <b>${istqbEnJuego(+q.cap, pts, ac).toFixed(1)}</b>` +
+    `${+q.cap === top ? ', el que más' : ''}${(q.pts || 1) > 1 ? ', y dentro de él van primero las de 2 puntos' : ''}.`;
+}
+// El enunciado en dos partes: el caso, si lo hay, y la pregunta, desde su último «¿». 72 de las 156 traen caso; se
+// parte solo si el caso no deja una negrita o una cursiva abierta.
+function iqPartes(h){
+  const i = h.lastIndexOf('¿'), caso = i > 0 ? h.slice(0, i).trim() : '';
+  const par = t => (caso.split('<' + t + '>').length === caso.split('</' + t + '>').length);
+  return caso.replace(/<[^>]+>/g, '').length >= 25 && par('b') && par('i') ? { caso, preg: h.slice(i) } : { caso: '', preg: h };
 }
 function iqPreguntaHtml(q, hecha){
-  const X = window.EXAMEN_GENAI || {}, LET = 'ABCD', f = apFoto('istqb-' + q.cap) || apFotoSk('ia');
+  const X = window.EXAMEN_GENAI || {}, LET = 'ABCD', K = IQ_K[q.k], kx = iqKExamen(q.k), p = iqPartes(q.q);
   const vale = (q.pts || 1) === 1 ? '1 punto' : q.pts + ' puntos';
+  const kTit = K ? `${K[0]}: ${K[1]}.${kx.n && X.meta ? ` El examen trae ${kx.n} de estas, ${kx.pts} de sus ${X.meta.puntos} puntos.` : ''}` : '';
   const ops = q.o.map((o, i) => {
     const cls = !hecha ? '' : i === q.r ? ' ok' : i === hecha.e ? ' mal' : ' apagada';
-    return `<button type="button" class="iqv-op${cls}"${hecha ? ' disabled' : ` onclick="istqbResponder(${i})"`}><b>${LET[i]}</b><span>${o}</span></button>`;
+    const tag = !hecha ? '' : i === q.r ? '<em>Correcta</em>' : i === hecha.e ? '<em>Tu respuesta</em>' : '';
+    return `<button type="button" class="iqv-op${cls}"${hecha ? ' disabled' : ` onclick="istqbResponder(${i})"`}><b>${LET[i]}</b><span>${o}</span>${tag}</button>`;
   }).join('');
   const pie = !hecha
-    ? '<p class="iqv-nota">Tócala o usa las teclas <kbd>1</kbd> a <kbd>4</kbd>. La primera respuesta es la que cuenta, como en el examen.</p>'
-    : `<div class="iqv-res ${hecha.ok ? 'ok' : 'mal'}"><span>${hecha.ok ? '✓ Correcta · sumas ' + vale : `✗ Era la ${LET[q.r]} · marcaste la ${LET[hecha.e]}`}</span>` +
+    ? '<p class="iqv-nota">Toca una opción o usa <kbd>1</kbd>–<kbd>4</kbd>. Cuenta la primera respuesta, como en el examen.</p>'
+    : `<div class="iqv-res ${hecha.ok ? 'ok' : 'mal'}"><span>${hecha.ok ? '✓ Correcta · sumas ' + vale : '✗ Era la ' + LET[q.r]}</span>` +
       `<button type="button" class="alv-btn" onclick="aprendeOtra('istqb')">Siguiente pregunta <kbd>Enter</kbd></button></div>`;
-  return `<section class="iqv-col iqv-preg" aria-label="La pregunta">
-    <div class="iqv-foto">${f ? `<img src="${f.u}" alt="" title="${habAttr(f.c)}" onerror="this.remove()">` : ''}
-      <div class="iqv-foto-t"><span>Capítulo ${esc(q.cap)} · ${esc(q.k)} · vale ${vale}</span><b>${esc((X.capitulos || {})[q.cap] || '')}</b></div></div>
-    <div class="iqv-q">${q.q}</div>
+  const exp = !hecha ? '' : '<div class="iqv-exp">' +
+    (q.why ? `<div class="iqv-why"><span class="iqv-et">Por qué</span><div>${q.why}</div></div>` : '') +
+    (window.ctGenaiFuente ? `<div class="iqv-fuente">${ctGenaiFuente(q)}</div>` : '') + '</div>';
+  return `<section class="iqv-col iqv-preg" aria-label="La pregunta"><div class="iqv-hoja">
+    <div class="iqv-chips"><span class="iqv-chip cap"><b>Cap. ${esc(q.cap)}</b>${esc((X.capitulos || {})[q.cap] || '')}</span>` +
+      `<span class="iqv-chip" title="${habAttr(kTit)}"><b>${esc(q.k)}</b>${K ? K[0] : ''}</span><span class="iqv-chip">${vale}</span></div>
+    ${p.caso ? `<div class="iqv-caso"><span class="iqv-et">El caso</span><p>${p.caso}</p></div>` : ''}
+    <h3 class="iqv-q">${p.preg}</h3>
     <div class="iqv-ops">${ops}</div>
-    ${pie}
-  </section>`;
-}
-function iqEntenderHtml(q, hecha){
-  const X = window.EXAMEN_GENAI || {}, K = IQ_K[q.k], kx = iqKExamen(q.k), obj = (X.objetivos || {})[q.lo];
-  const secs = window.ctGenaiSeccion ? ctGenaiSeccion(q) : '';
-  const pide = `<div class="iqv-bq"><div class="iqv-et">Qué te pide</div>
-      <p class="iqv-k"><b class="iqv-kchip">${esc(q.k)}${K ? ' · ' + K[0] : ''}</b>${K ? esc(K[1]) + '.' : ''}${kx.n && X.meta ? ` El examen trae ${kx.n} ${kx.n === 1 ? 'pregunta' : 'preguntas'} ${esc(q.k)}: ${kx.pts} de sus ${X.meta.puntos} puntos.` : ''}</p>
-      ${obj ? `<p class="iqv-lo"><b>${esc(q.lo)}</b>${esc(obj)}</p>` : ''}${secs}</div>`;
-  if(!hecha) return pide + `<div class="iqv-bq iqv-espera"><div class="iqv-et">Al contestar</div>
-      <p>Aquí aparecen el porqué y las frases del syllabus que lo sostienen, cada una con su página. Antes, nada que la responda: primero recuerdas y después lees.</p></div>`;
-  return pide + `<div class="iqv-bq"><div class="iqv-et">Por qué</div><div class="iqv-why">${q.why || ''}</div></div>` +
-    (window.ctGenaiFuente ? `<div class="iqv-bq iqv-fuente">${ctGenaiFuente(q, { sinObjetivo: true })}</div>` : '');
-}
-// El capítulo de la pregunta en el syllabus (`EXAMEN_GENAI.secciones`): cada sección con su página y lo que llevas en ella.
-function iqMapaHtml(q){
-  const sec = (window.EXAMEN_GENAI || {}).secciones || {}, c = String(q.cap), hoy = new Set(iqRefs(q)), llevo = {};
-  istqbHistorial().forEach(h => iqRefs(h.q).forEach(r => { const l = llevo[r] = llevo[r] || { n: 0, ok: 0 }; l.n++; if(h.ok) l.ok++; }));
-  const num = k => k.split('.').map(Number);
-  const claves = Object.keys(sec).filter(k => k.split('.')[0] === c)
-    .sort((a, b) => { const A = num(a), B = num(b); return (A[1] - B[1]) || ((A[2] || 0) - (B[2] || 0)); });
-  if(!claves.length) return '';
-  const filas = claves.map(k => {
-    const t = sec[k], sub = k.split('.').length > 2, l = llevo[k], on = hoy.has(k);
-    const marca = !sub ? '<em></em>' : l ? `<em class="${l.ok === l.n ? 'ok' : l.ok * 2 < l.n ? 'mal' : 'medio'}">${l.ok} de ${l.n} bien</em>` : '<em>sin contestar</em>';
-    return `<a class="iqv-sec${sub ? '' : ' h2'}${on ? ' on' : ''}" href="${iqPdf(t.pag)}" target="_blank" rel="noopener" title="Abrir el syllabus en la página ${t.pag}">` +
-      `<b>${esc(k)}</b><span>${esc(t.t)}${on ? '<i>la de hoy</i>' : ''}</span>${marca}<small>pág. ${t.pag}</small></a>`;
-  }).join('');
-  return `<div class="iqv-bq"><div class="iqv-et">El capítulo ${esc(c)} en el syllabus · lo que llevas en cada sección</div><div class="iqv-mapa">${filas}</div></div>`;
+    ${pie}${exp}
+  </div></section>`;
 }
 function iqVasHtml(q){
   const X = window.EXAMEN_GENAI || {}, M = X.meta || {}, S = habSimulacro(), t = cdTarea('a1-7'), hoyK = hoyLocal(), LET = 'ABCD';
@@ -8258,27 +8218,7 @@ function iqVasHtml(q){
         ints.slice(-10).map((x, i, L) => { const d = new Date(x.fecha), dia = d.getDate() + ' ' + MES_LABEL_FULL[d.getMonth()].slice(0, 3).toLowerCase();
           return `<span class="iqv-sim-b ${x.pts >= S.meta ? 'ok' : x.pts >= M.corte ? 'medio' : 'mal'}" style="height:${alto(x.pts)}%" title="${dia} · ${x.pts} de ${x.max} · juego ${esc(x.set || 'A')}"><b>${x.pts}</b>${L.length <= 6 || !i || i === L.length - 1 ? `<i>${dia}</i>` : ''}</span>`; }).join('')}</div>
       <p class="iqv-dato">El último, <b>${S.ult.pts} de ${S.max}</b> · el mejor, ${S.mejor} · ${S.listo ? '<b class="ok">ya tienes las dos seguidas</b>' : `llevas <b>${Math.min(seguidas, 2)} de 2</b> seguidas en ${S.meta} o más`}</p>`
-    : `<p class="iqv-vacio">Todavía no haces un simulacro completo: ${M.preguntas} preguntas y ${M.puntos} puntos en ${M.minutos} minutos (${M.minutosExtra} con el 25 % extra por idioma).</p>`;
-  // Lo siguiente del plan de la meta, con su fecha.
-  let pasos = []; try { pasos = META_PLAN.istqbgenai.pasos || []; } catch(e){}
-  const dias = k => Math.round((new Date(k + 'T00:00:00') - new Date(hoyK + 'T00:00:00')) / 864e5);
-  const sig = pasos.map(p => {
-    if(p.f) return { k: p.f, cuando: iqFecha(p.f), t: p.t, n: dias(p.f) };
-    const x = p.tarea && cdTarea(p.tarea);
-    return x && x.s.mes ? { k: x.s.mes + '-31', cuando: cdMes(x.s.mes), t: x.s.txt, n: null } : null;
-  }).filter(p => p && p.k >= hoyK).slice(0, 2);
-  const sigHtml = sig.length ? `<div class="iqv-sig"><span>Lo siguiente del plan de la meta</span>${sig.map(p =>
-    `<p><b>${p.cuando}</b><span>${p.t}</span><i>${p.n === null ? '' : p.n <= 0 ? 'hoy' : p.n === 1 ? 'mañana' : 'en ' + p.n + ' días'}</i></p>`).join('')}</div>` : '';
-  // Cada capítulo: lo que vale, lo que llevas en las preguntas del día y en el último simulacro, y sus puntos en juego.
-  const pts = istqbPuntosCap(), ac = istqbAciertoCap(), u = ints[ints.length - 1], caps = Object.keys(pts).map(Number).sort((a, b) => a - b);
-  const top = caps.slice().sort((a, b) => istqbEnJuego(b, pts, ac) - istqbEnJuego(a, pts, ac))[0];
-  const capsHtml = caps.map(c => {
-    const a = ac[c], nom = (X.capitulos || {})[c] || '', sm = u && u.caps && u.caps[c];
-    return `<div class="iqv-cap${c === +q.cap ? ' on' : ''}"><span class="iqv-cap-n">${c}</span>` +
-      `<div class="iqv-cap-t"><b title="${habAttr(nom)}">${esc(nom)}</b><span>vale ${pts[c]} pts · ${a && a.n ? `${a.ok} de ${a.n} bien` : 'sin respuestas'}${sm ? ` · simulacro ${esc(sm)}` : ''}</span>` +
-      `<div class="iqv-barra"><i style="width:${a && a.n ? Math.round(a.ok / a.n * 100) : 0}%"></i></div></div>` +
-      `<span class="iqv-cap-j"><b>${istqbEnJuego(c, pts, ac).toFixed(1)}</b>en juego${c === top ? '<em>el más alto</em>' : ''}</span></div>`;
-  }).join('');
+    : `<p class="iqv-vacio">Aún no haces un simulacro completo: ${M.preguntas} preguntas en ${M.minutos} minutos (${M.minutosExtra} con el 25 % extra por idioma).</p>`;
   // Los últimos 7 días, una marca por respuesta.
   const r = istqbRespuestas(); let n7 = 0, ok7 = 0;
   const semana = [6, 5, 4, 3, 2, 1, 0].map(i => {
@@ -8289,34 +8229,41 @@ function iqVasHtml(q){
       xs.length ? xs.map(x => `<i class="${x.ok ? 'ok' : 'mal'}"></i>`).join('') : '<i class="nada"></i>'}</div></div>`;
   }).join('');
   const H = istqbHistorial(), okT = H.filter(h => h.ok).length;
+  // Dónde están los puntos: cada capítulo en una línea, con lo que llevas y sus puntos en juego —el orden de Coach—.
+  const pts = istqbPuntosCap(), ac = istqbAciertoCap(), caps = Object.keys(pts).map(Number).sort((a, b) => a - b);
+  const top = caps.slice().sort((a, b) => istqbEnJuego(b, pts, ac) - istqbEnJuego(a, pts, ac))[0];
+  const capsHtml = '<div class="iqv-cap cab"><span></span><span>Capítulo</span><span>bien</span><span>en juego</span></div>' + caps.map(c => {
+    const a = ac[c], nom = (X.capitulos || {})[c] || '';
+    return `<div class="iqv-cap${c === +q.cap ? ' on' : ''}" title="${habAttr(nom)} · vale ${pts[c]} de ${M.puntos || ''} puntos">` +
+      `<span class="iqv-cap-n">${c}</span><span class="iqv-cap-t">${esc(IQ_CAP_LLANO[c] || nom)}</span>` +
+      `<span class="iqv-cap-l">${a && a.n ? a.ok + '/' + a.n : '—'}</span><b class="iqv-cap-j${c === top ? ' top' : ''}">${istqbEnJuego(c, pts, ac).toFixed(1)}</b>` +
+      `<span class="iqv-barra"><i style="width:${a && a.n ? Math.round(a.ok / a.n * 100) : 0}%"></i></span></div>`;
+  }).join('');
   // Lo que fallaste, la más reciente primero (la de hoy ya está a la izquierda).
   const fallos = H.filter(h => !h.ok && !(h.f === hoyK && h.q.id === q.id));
-  const fHtml = fallos.length ? fallos.slice(0, 8).map(h =>
+  const fHtml = fallos.length ? fallos.slice(0, 6).map(h =>
       `<details class="iqv-fallo"><summary><span class="iqv-fallo-k">${iqFecha(h.f)} · Cap. ${esc(h.q.cap)} · ${esc(h.q.k)}</span><span class="iqv-fallo-q">${h.q.q}</span></summary>` +
       `<div class="iqv-fallo-d"><p class="iqv-fallo-r"><b>Era la ${LET[h.q.r]}</b> ${h.q.o[h.q.r]}</p>` +
       (h.q.o[h.e] != null ? `<p class="iqv-fallo-tu"><b>Marcaste la ${LET[h.e]}</b> ${h.q.o[h.e]}</p>` : '') +
       (h.q.why ? `<p>${h.q.why}</p>` : '') + (window.ctGenaiSeccion ? ctGenaiSeccion(h.q) : '') + '</div></details>').join('') +
-      (fallos.length > 8 ? `<p class="iqv-dato">Y ${fallos.length - 8} más de días anteriores.</p>` : '')
-    : `<p class="iqv-vacio">${H.length ? 'Ninguna fallada todavía.' : 'Aún no contestas ninguna.'} Lo que falles aparecerá aquí con la buena, su porqué y su sección, para repasarlo.</p>`;
-  return `<section class="iqv-col iqv-vas" aria-label="Cómo vas">
+      (fallos.length > 6 ? `<p class="iqv-dato">Y ${fallos.length - 6} más de días anteriores.</p>` : '')
+    : `<p class="iqv-vacio">${H.length ? 'Ninguna fallada todavía.' : 'Aún no contestas ninguna.'} Lo que falles aparece aquí con la buena, su porqué y su sección.</p>`;
+  return `<aside class="iqv-col iqv-vas" aria-label="Cómo vas">
     <div class="iqv-bq"><div class="iqv-et">Tu meta${mes ? ' · presentas en ' + mes : ''}</div>
-      <p class="iqv-meta">Presentas cuando el simulacro dé <b>${S.meta} de ${S.max}</b> o más dos veces seguidas${M.corte ? `; el corte oficial es ${M.corte}` : ''}.</p>
-      ${sim}${sigHtml}
-      <button type="button" class="iqv-btn2" onclick="istqbAlSimulacro()">Simulacro completo →</button></div>
-    <div class="iqv-bq"><div class="iqv-et">Por capítulo · lo que vale y lo que llevas</div><div class="iqv-caps">${capsHtml}</div></div>
-    <div class="iqv-bq"><div class="iqv-et">Los últimos 7 días${n7 ? ` · ${ok7} de ${n7} bien` : ''}</div><div class="iqv-dias">${semana}</div>
-      <p class="iqv-dato">Contestadas <b>${H.length} de ${istqbBanco().length}</b> del banco${H.length ? ` · aciertas el <b>${Math.round(okT / H.length * 100)} %</b>` : ''}.</p></div>
+      <p class="iqv-meta">El simulacro en <b>${S.meta} de ${S.max}</b> o más, dos veces seguidas${M.corte ? ` · el corte oficial es ${M.corte}` : ''}.</p>
+      ${sim}<button type="button" class="iqv-btn2" onclick="istqbAlSimulacro()">Simulacro completo →</button></div>
+    <div class="iqv-bq"><div class="iqv-et">Esta semana${n7 ? ` · ${ok7} de ${n7} bien` : ''}</div><div class="iqv-dias">${semana}</div>
+      <p class="iqv-dato">Contestadas <b>${H.length} de ${istqbBanco().length}</b> del banco${H.length ? ` · aciertas el <b>${Math.round(okT / H.length * 100)} %</b>` : ''}</p></div>
+    <div class="iqv-bq"><div class="iqv-et">Dónde están los puntos</div><div class="iqv-caps">${capsHtml}</div>
+      <p class="iqv-dato">En juego: lo que vale el capítulo por lo que te falta de acierto en él (con menos de tres respuestas, la mitad).</p></div>
     <div class="iqv-bq"><div class="iqv-et">Lo que fallaste${fallos.length ? ' · ' + fallos.length : ''}</div>${fHtml}</div>
-  </section>`;
+  </aside>`;
 }
 function istqbPintar(){
   const q = istqbPreguntaHoy(), b = document.getElementById('istqbBody'); if(!q || !b) return;
   const hecha = istqbHoy(q);
   document.getElementById('istqbSub').innerHTML = iqPorQue(q);
-  b.innerHTML = iqPreguntaHtml(q, hecha) +
-    `<section class="iqv-col iqv-syl" aria-label="Para entenderla">${iqEntenderHtml(q, hecha)}${iqMapaHtml(q)}</section>` + iqVasHtml(q);
-  // La sección completa del syllabus, abierta: en la ventana hay sitio para leerla.
-  b.querySelectorAll('.iqv-fuente details.sy-det').forEach(d => { d.open = true; });
+  b.innerHTML = iqPreguntaHtml(q, hecha) + iqVasHtml(q);
 }
 // Mientras está abierto, Mi Día no rota: la rotación vuelve al cerrarlo.
 function abrirIstqb(){
