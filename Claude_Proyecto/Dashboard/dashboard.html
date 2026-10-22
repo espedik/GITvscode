@@ -708,6 +708,27 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .kpi-card .gbm-paso-d{font-size:14px;line-height:1.5}
 .kpi-card .gbm-nota{font-size:13px;line-height:1.5;padding:10px 13px}
 .kpi-card .gbm-vacio{font-size:13px}
+/* Los paneles de los medidores, en compacto (Adán, 22-oct-2026: "agrega más información, pero reduce el tamaño de todo
+   para que quede mejor visualmente"): letra, barras y espacios más chicos y, desde 1400 px, tres columnas. La ventana de
+   las fases tiene sus propios tamaños y no cambia. */
+#kpiOverlay:not(.kpi-fases) .kpi-card .gbm-body{padding:14px 22px 22px}
+#kpiOverlay:not(.kpi-fases) .kpi-hero{gap:3px;margin-bottom:12px;padding-bottom:10px}
+#kpiOverlay:not(.kpi-fases) .kpi-card .kpi-cifra{font-size:clamp(26px,2.4vw,36px)}
+#kpiOverlay:not(.kpi-fases) .kpi-card .kpi-cifra span{font-size:12px!important}
+#kpiOverlay:not(.kpi-fases) .kpi-card .kpi-cifra-sub{font-size:12px}
+#kpiOverlay:not(.kpi-fases) .kpi-cols{column-gap:26px}
+@media(min-width:1400px){#kpiOverlay:not(.kpi-fases) .kpi-cols-3{columns:3}}
+#kpiOverlay:not(.kpi-fases) .kpi-grupo{margin-bottom:12px}
+#kpiOverlay:not(.kpi-fases) .kpi-card .kpi-desglose{gap:8px}
+#kpiOverlay:not(.kpi-fases) .kpi-card .gbm-sec{font-size:10px;margin-bottom:6px}
+#kpiOverlay:not(.kpi-fases) .kpi-card .kpi-linea-top{font-size:12.5px}
+#kpiOverlay:not(.kpi-fases) .kpi-card .kpi-linea-nota{font-size:11px;margin-top:2px}
+#kpiOverlay:not(.kpi-fases) .kpi-card .gbm-bar{height:6px;margin-top:4px}
+#kpiOverlay:not(.kpi-fases) .kpi-card .gbm-paso{padding:9px 12px}
+#kpiOverlay:not(.kpi-fases) .kpi-card .gbm-paso-t{font-size:13.5px}
+#kpiOverlay:not(.kpi-fases) .kpi-card .gbm-paso-d{font-size:12.5px;line-height:1.45}
+#kpiOverlay:not(.kpi-fases) .kpi-card .gbm-nota{font-size:12px;line-height:1.45;padding:7px 10px}
+#kpiOverlay:not(.kpi-fases) .kpi-card .gbm-vacio{font-size:12px}
 @media(max-width:1024px){ .kpi-cols{columns:1} }
 @media(max-width:640px){ .gbm-card.kpi-card{width:100%;height:100%;max-height:100%} .kpi-card .gbm-body{padding:12px 14px 28px} .kpi-card .kpi-linea-top,.kpi-card .gbm-paso-d,.kpi-card .gbm-nota{font-size:12.5px} }
 /* Las fases del Plan Maestro (rediseño del 3-oct-2026; Adán: "sé muy claro en las fechas… mejora
@@ -12928,6 +12949,50 @@ function kpiBarra(nom, val, pct, color, nota, pista){
          '<div class="gbm-bar"'+(pista?' style="background:'+pista+'"':'')+'><div class="gbm-bar-f" style="width:'+Math.max(0,Math.min(100,pct))+'%;background:'+color+'"></div></div>'+
          (nota?'<div class="kpi-linea-nota">'+nota+'</div>':'')+'</div>';
 }
+// Los cortes de la salida contra lo que la proyección espera en GBM ese mes, con la misma cuenta que Mis Metas y la
+// ventana de las fases (lo que pide menos `alemania` del mes en CIFRAS.PROYECCION).
+function kpiCortesHTML(){
+  const P=window.CIFRAS&&CIFRAS.PROYECCION, cs=cortesSalidaDash(); if(!P||!cs.length) return '';
+  return kpiSec('🚩 Los cortes de la salida, con tu ritmo')+'<div class="kpi-desglose">'+cs.map(function(c){
+    const m=P.meses.filter(x=>x.mes===c.mes)[0], proy=m?m.alemania:0, falta=c.pide-proy;
+    return kpiBarra(c.t+' · '+MP_MES[+c.mes.slice(5,7)-1]+' '+c.mes.slice(0,4), money(c.pide), c.pide>0?proy/c.pide*100:0, falta>0?'var(--o)':'var(--g)',
+      'La proyección espera <b>'+money(proy)+'</b> en GBM: '+(falta>0?'faltan ':'sobran ')+'<b>'+money(Math.abs(falta))+'</b>');
+  }).join('')+'</div>';
+}
+// Lo que espera la trayectoria de patrimonio líquido al cierre de cada fase (PHASES[].liquido) y el mes del millón.
+function kpiTrayectoriaHTML(){
+  const fs=PHASES.filter(f=>typeof f.liquido==='number'); if(!fs.length) return '';
+  const dC=d=>d.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
+  return kpiSec('🛤️ Lo que espera la trayectoria, fase por fase')+'<div class="kpi-desglose">'+fs.map(f=>
+    kpiBarra(f.tag+' · al '+dC(f.end), (f.liquido<0?'−':'')+money(Math.abs(f.liquido)), Math.max(0,f.liquido)/1000000*100, f.liquido<0?'var(--o)':'var(--g)',
+      esc(f.title)+' · patrimonio líquido, hipótesis')).join('')+'</div>'+
+    (window.CIFRAS?kpiNota('La proyección cruza el millón en <b>'+CIFRAS.v('mesMillon')+'</b>.'):'');
+}
+// Las fases en el tiempo: cuánto dura cada una y cuánto va de la que corre.
+function kpiFasesTiempoHTML(){
+  const hoy=new Date(); hoy.setHours(0,0,0,0);
+  const dC=d=>d.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
+  return kpiSec('🗓️ Las fases en el tiempo')+'<div class="kpi-desglose">'+PHASES.map(function(f){
+    const DF=CIFRAS.diasFase(f,hoy), e=hoy>f.end?'hecha':hoy>=f.start?'curso':'despues';
+    const pct=e==='hecha'?100:e==='curso'?DF.corrido/DF.largo*100:0, m=Math.round((f.start-hoy)/(86400000*30.44));
+    return kpiBarra(f.tag+' · '+esc(f.title), dC(f.start)+' → '+dC(f.end), pct, e==='hecha'?'var(--g)':'var(--p)',
+      e==='hecha'?'Cerrada · '+DF.largo+' días':e==='curso'?'En curso · día <b>'+DF.corrido+'</b> de '+DF.largo+' · quedan <b>'+DF.quedan+' días</b>':
+      'Empieza en '+(m<1?Math.max(0,Math.round((f.start-hoy)/86400000))+' días':m+(m===1?' mes':' meses'))+' · dura '+DF.largo+' días');
+  }).join('')+'</div>';
+}
+// Cuándo queda en cero cada deuda: la BBVA con su plan quincena a quincena; un crédito con lo que le queda a su pago
+// (CIFRAS.mesesRestantes). De la que acaba primero a la última.
+function kpiDeudaFinHTML(debts){
+  const hoy=new Date(), fmt=d=>d.toLocaleDateString('es-MX',{month:'long',year:'numeric'});
+  const L=debts.filter(d=>+d.balance>0).map(function(d){
+    if(d.id==='d001'&&bbvaPlan()) return {d:d, fin:bbvaPlan().fin, txt:'quincena a quincena, sin intereses'};
+    const n=window.CIFRAS?CIFRAS.mesesRestantes(d):0; if(!n) return null;
+    const fin=new Date(hoy.getFullYear(),hoy.getMonth()+n,1); return {d:d, fin:fin, txt:n+' pagos de '+money(+d.min||0)};
+  }).filter(Boolean).sort((a,b)=>a.fin-b.fin);
+  if(!L.length) return '';
+  return kpiSec('🏁 Cuándo queda en cero cada una')+L.map(x=>kpiPaso(esc(x.d.name)+' · '+fmt(x.fin), money(+x.d.balance)+' hoy · '+x.txt+'.', x.d.rate>0?'var(--r)':'var(--p)')).join('')+
+    (window.CIFRAS?kpiNota('Entre todas pagas <b>'+CIFRAS.v('minimosDeuda')+' al mes</b>. Cada una que se apaga libera su pago.'):'');
+}
 // El ahorro de una fase en México, un mes de cada etapa —con depa y en casa de tu familia— y la
 // GBM al cerrar cada mes, con lo que piden junio y la salida. Es el mismo desglose
 // que pinta Coach en cada fase (CIFRAS.mesTipo y la PROYECCION): aquí, compacto.
@@ -13764,6 +13829,7 @@ function kpiAcomodar(body){
   if(hero.children.length) body.appendChild(hero);
   // Con una sola sección no hay nada que repartir: una columna ancha se lee mejor que dos medias.
   if(cols.children.length<2) cols.classList.add('kpi-cols-1');
+  else if(cols.children.length>=3) cols.classList.add('kpi-cols-3');   // tres columnas solo si hay con qué llenarlas
   body.appendChild(cols);
 }
 
@@ -13784,6 +13850,7 @@ function kpiDetalle(id){
     const falta=Math.max(0,metaEf-ef), pct=ef/metaEf*100;
     const mesesCubiertos=g.prom>0?(ef/g.prom):0;
     const rec=Math.round(falta/3/100)*100;
+    const fijos=window.CIFRAS?(+CIFRAS.n('fijosTotal')||0):0;
     return {titulo:'🆘 Fondo de emergencia (CETES)', sub:'Vive en CETES y se vende si hace falta. Cuánto llevas, cuánto te cubre de verdad y qué falta.',
       html:
       '<div class="kpi-cifra" style="color:'+W+'">'+money(ef)+' <span style="font-size:14px;color:var(--text3)">de '+money(metaEf)+'</span></div>'+
@@ -13793,12 +13860,16 @@ function kpiDetalle(id){
         kpiBarra('Avance hacia los '+money(metaEf), money(ef), pct, W)+
         (g.prom>0?kpiBarra('Meses de gastos que te cubre hoy', mesesCubiertos.toFixed(1)+' meses', mesesCubiertos/3*100, mesesCubiertos>=3?V:O,
           'Tu gasto real es de '+money(g.prom)+'/mes (promedio de '+g.meses+' meses cerrados). El estándar es cubrir de 3 a 6.'):'')+
+        (fijos>0?kpiBarra('Meses de tus gastos fijos que cubre', (ef/fijos).toFixed(1)+' meses', ef/fijos/3*100, ef/fijos>=3?V:O,
+          'Tus fijos son <b>'+money(fijos)+' al mes</b>: renta, servicios y suscripciones. Es lo que no se puede dejar de pagar.'):'')+
       '</div>'+
       (g.prom>0&&metaEf<g.prom*3?kpiNota('⚠️ Ojo con la meta: <b>'+money(metaEf)+' no llega a 3 meses</b> de tu gasto real ('+money(g.prom*3)+'). Los '+money(metaEf)+' son un buen primer escalón, pero el fondo terminado para ti está más arriba.'):'')+
       kpiSec('🎯 Qué hacer')+
       (falta>0
         ? kpiPaso('Complétalo antes que cualquier otra cosa','Te faltan <b>'+money(falta)+'</b>. A <b>'+money(rec)+' al mes</b> lo cierras en 3 meses. Va antes que invertir y antes que abonos extra a deuda: es lo que evita que un imprevisto te regrese a la tarjeta y deshaga meses de avance.',O)
         : kpiPaso('Fondo completo ✅','Ya no aportas aquí. El excedente pasa al siguiente escalón: deuda cara si queda, y si no, inversión.',V))+
+      (window.CIFRAS&&!(+CIFRAS.n('cetesDia15'))?kpiSec('🧭 Qué hace el plan con él')+
+        kpiPaso('Hoy el plan no le aporta','El día 15 van <b>'+CIFRAS.v('cetesDia15')+'</b> a CETES: todo el ahorro —<b>'+CIFRAS.v('ahorroMesDepa')+'</b> al mes con depa, <b>'+CIFRAS.v('ahorroMesCasa')+'</b> en casa de tu familia— va a GBM para la salida. El fondo se queda como está: es el colchón para un imprevisto.',C):'')+
       kpiNota('Guárdalo donde puedas sacarlo en 24-48 h — CETES a 28 días o cuenta de ahorro. Nunca en algo que pueda valer menos justo el día que lo necesitas.')};
   }
 
@@ -13818,6 +13889,8 @@ function kpiDetalle(id){
       ctEstrategiaHoyHtml()+
       kpiSec('📊 Deuda por deuda')+
       '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">Sin deudas con interés registradas. 🎉</div>')+'</div>'+
+      (deudaCaraBal>0&&bbvaPlan()&&window.CIFRAS&&CIFRAS.v('bbvaRuta')?kpiSec('🗓️ Los abonos que faltan')+
+        kpiNota(fzCap(CIFRAS.v('bbvaRuta'))+'. Con el último queda en <b>$0</b>.'):'')+
       (deudaCaraBal>0?
         kpiSec('🎯 Cómo atacarla')+
         kpiPaso('Método avalancha','Ordena por <b>tasa</b>, no por saldo, y mete todo el excedente en la de arriba mientras pagas el mínimo en las demás. Es el que menos intereses te cuesta; la "bola de nieve" (de menor a mayor saldo) solo gana en motivación.',R)+
@@ -13878,6 +13951,7 @@ function kpiDetalle(id){
       (fm.dobleCrypto?kpiNota('⚠️ Hay una inversión de tipo <b>Criptomonedas</b> en Finanzas → Inversiones además del historial de compras de BTC. Si es el mismo dinero, está contado dos veces: déjalo en un solo lado.'):'')+
       (guardado>0&&Math.abs(guardado-cur)>=1?kpiNota('📌 En Finanzas → Metas la meta guarda <b>'+money(guardado)+'</b> escrito a mano. Ese número no se recalcula solo y ya no coincide: hoy el fondo real es <b>'+money(cur)+'</b> ('+(cur>guardado?'+':'−')+money(Math.abs(cur-guardado))+'). Actualízalo ahí, o déjalo sabiendo que la cifra viva es esta.'):'')+
 
+      kpiCortesHTML()+
       kpiSec('📊 Cómo se reparte la meta')+
       '<div class="kpi-desglose">'+
         kpiBarra('Ya lo tienes', money(cur), pct, V, 'Repartido en las '+fm.comps.length+' piezas de arriba')+
@@ -13960,6 +14034,7 @@ function kpiDetalle(id){
           patLiq>=0?V:O)
         :'')+
 
+      kpiTrayectoriaHTML()+
       kpiSec('📈 El ritmo que pide la meta')+
       kpiPaso('Para llegar en '+meses2030+' meses','Necesitarías sumar <b>'+money(ritmo)+' al mes</b> de patrimonio — y ojo: <b>pagar deuda cuenta igual que ahorrar</b>, porque mueve el mismo número. Cada peso que le quitas a la tarjeta es un peso de patrimonio.',C)+
       kpiNota('Este número baja solo conforme la deuda se apaga: no lo leas como una cuota fija, sino como el ritmo de hoy.')};
@@ -14039,15 +14114,20 @@ function kpiDetalle(id){
 
   if(id==='invertido'){
     const filas=inv.map(i=>{
-      const v=+i.value||+i.invested||0;
-      return kpiBarra(esc(i.name), money(v), totalInv>0?v/totalInv*100:0, C, totalInv>0?Math.round(v/totalInv*100)+'% de tu portafolio':'');
+      const v=+i.value||+i.invested||0, met=+i.invested||0, gan=met>0&&+i.value?(+i.value)-met:null;
+      return kpiBarra(esc(i.name), money(v), totalInv>0?v/totalInv*100:0, C, (totalInv>0?Math.round(v/totalInv*100)+'% de tu portafolio':'')+
+        (gan!==null&&Math.abs(gan)>=1?' · metiste '+money(met)+', '+(gan>=0?'gana ':'pierde ')+'<b>'+money(Math.abs(gan))+'</b> ('+(gan>=0?'+':'−')+Math.abs(gan/met*100).toFixed(1)+'%)':''));
     }).join('');
+    const btcI=btcInfo();
     return {titulo:'📈 Total invertido', sub:'Cuánto tienes trabajando y cómo está repartido.',
       html:
       '<div class="kpi-cifra" style="color:'+C+'">'+money(totalInv)+'</div>'+
       '<div class="kpi-cifra-sub">'+inv.length+' instrumento'+(inv.length===1?'':'s')+' registrado'+(inv.length===1?'':'s')+' en Finanzas</div>'+
       kpiSec('📊 Tu portafolio hoy')+
       '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">Todavía no hay inversiones registradas en Finanzas.</div>')+'</div>'+
+      (btcI.mxn>0?kpiNota('Aparte tienes <b>'+money(btcI.mxn)+'</b> en Bitcoin ('+btcI.held.toFixed(6)+' BTC a precio de hoy). No suma aquí: está en el Fondo Maestría y en el Patrimonio.'):'')+
+      (window.CIFRAS?kpiSec('💸 Lo que entra cada mes')+
+        kpiPaso('El ahorro del plan va a GBM','Con depa llegan <b>'+CIFRAS.v('ahorroMesDepa')+'</b> al mes (lo del 1, lo del 15 y Didi); en casa de tu familia, <b>'+CIFRAS.v('ahorroMesCasa')+'</b>. Al cerrar la Fase 1 la proyección espera <b>'+CIFRAS.v('alemaniaMarzo')+'</b> en GBM; con el ingreso nuevo, <b>'+CIFRAS.v('marzoParaSalida')+'</b>.',C):'')+
       kpiSec('🎯 Lo que falta')+
       kpiPaso('Una asignación objetivo escrita','Estos porcentajes son <b>el resultado</b> de lo que fuiste comprando, no una decisión. Escribe una sola vez qué reparto quieres (% renta fija / % índice / % cripto) y cada compra deja de ser una decisión: solo rellenas el que quedó abajo.',C)+
       kpiNota('Es la tarea pendiente #2 de tu habilidad de Inversión — la tienes desglosada en el slide de Habilidades.')};
@@ -14065,6 +14145,7 @@ function kpiDetalle(id){
       '<div class="kpi-cifra-sub">'+debts.filter(d=>d.balance>0).length+' deuda(s) viva(s) · '+money(CIFRAS.deudasConInteres(F).reduce((a,d)=>a+d.balance,0))+' con interés</div>'+
       kpiSec('📊 Ordenadas por tasa (la de arriba primero)')+
       '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">Sin deudas registradas. 🎉</div>')+'</div>'+
+      kpiDeudaFinHTML(debts)+
       kpiNota('Las de tasa 0 (MSI, crédito del coche si aplica) <b>no son urgentes pero sí comprometen tu excedente</b> cada mes. Cuentan para el flujo aunque no para los intereses.')};
   }
 
@@ -14128,6 +14209,8 @@ function kpiDetalle(id){
       kpiSec('📊 Tiempo recorrido')+
       '<div class="kpi-desglose">'+kpiBarra('Del plan completo', Math.round(pct)+'%', pct, P,
         'Quedan '+Math.round(dias/30.4)+' meses · '+(dias/365).toFixed(1)+' años')+'</div>'+
+      kpiFasesTiempoHTML()+
+      (window.CIFRAS?kpiNota('La proyección cruza el millón en <b>'+CIFRAS.v('mesMillon')+'</b>.'):'')+
       kpiNota('El tiempo corre igual se aproveche o no. Es el único recurso del plan que no se puede recuperar — por eso el interés compuesto premia empezar, no acertar.')};
   }
   return null;

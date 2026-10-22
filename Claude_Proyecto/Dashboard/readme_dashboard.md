@@ -1065,14 +1065,22 @@ desplaza al mes de hoy solo cuando hay una columna.
 Los ocho medidores del dinero y del plan no van aquí: viven en el Plan Maestro (ver *Los ocho medidores*), y
 los paneles que abren, abajo.
 
-**El panel de cada medidor es XL** (`.gbm-card.kpi-card`: `min(1560px, 96vw)` de ancho y alto
-automático hasta el 94 %; Adán, 21-sep-2026: *"todas las ventanas iguales a estas debes hacerlas
-lo más grande posible"*). Cada `kpiDetalle` sigue escribiendo su HTML de corrido con `kpiSec`,
-`kpiBarra`, `kpiPaso` y `kpiNota`; `kpiAcomodar()` lo reparte al abrir: `.kpi-cifra` y su sub
-arriba a lo ancho (`.kpi-hero`, cifra hasta 58 px) y cada sección con lo que le sigue en un
-`.kpi-grupo` dentro de `.kpi-cols` (dos columnas CSS que no parten un grupo; una sola sección va a
-una columna, y bajo 1024 px todo a una). Medido en 1600×1000: el fondo ocupa 449 px de alto, el
-patrimonio 842; sin desbordes en ninguno de los ocho.
+**El panel de cada medidor es ancho y compacto** (`.gbm-card.kpi-card`: `min(1560px, 96vw)` de ancho y alto
+automático hasta el 94 %; Adán, 21-sep-2026: *"todas las ventanas iguales a estas debes hacerlas lo más grande
+posible"*, y 22-oct-2026: *"agrega más información, pero reduce el tamaño de todo para que quede mejor
+visualmente"*). Cada `kpiDetalle` escribe su HTML de corrido con `kpiSec`, `kpiBarra`, `kpiPaso` y `kpiNota`;
+`kpiAcomodar()` lo reparte al abrir: `.kpi-cifra` y su sub arriba a lo ancho (`.kpi-hero`, cifra hasta 36 px) y cada
+sección con lo que le sigue en un `.kpi-grupo` dentro de `.kpi-cols` —columnas CSS que no parten un grupo: una sección
+va a una columna, dos a dos y, desde 1400 px, tres o más a tres (`.kpi-cols-3`); bajo 1024 px todo a una—. La letra, las
+barras (6 px) y los espacios son los compactos de `#kpiOverlay:not(.kpi-fases)`: la ventana de las fases conserva los
+suyos. Además de lo de antes, cada panel dice: **Fondo**, cuántos meses de tus fijos (`fijosTotal`) cubre y que el plan
+no le aporta mientras `cetesDia15` sea 0; **Deuda cara**, los abonos que faltan (`bbvaRuta`); **Maestría**, los cortes
+de la salida con lo que espera la proyección en GBM y lo que falta —la misma cuenta que Mis Metas— (`kpiCortesHTML`);
+**Patrimonio**, lo que espera la trayectoria al cierre de cada fase y el mes del millón (`kpiTrayectoriaHTML`); **Total
+invertido**, lo que gana o pierde cada pieza, el Bitcoin aparte y lo que entra cada mes; **Deuda total**, cuándo queda
+en cero cada una y lo que pagas entre todas (`kpiDeudaFinHTML`, `minimosDeuda`); y **Camino a 2031**, las fases en el
+tiempo (`kpiFasesTiempoHTML`). Medido en 1600×1000, con los datos de Finanzas: el fondo ocupa 440 px de alto, el
+patrimonio 743 (antes 940, con desplazamiento) y ninguno de los ocho se desplaza; a 390 px, sin desbordes.
 
 **Las fases son la excepción**: en vez de las 2 columnas de `.kpi-cols`, una **ruta** y un panel por
 fase (Adán, 3-oct-2026: *"sé muy claro en las fechas… mejora el diseño
