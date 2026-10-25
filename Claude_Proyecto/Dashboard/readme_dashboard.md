@@ -748,23 +748,33 @@ en pantalla **son las piezas de la ventana de las fases**, con sus mismas clases
   sin auditar, el aviso con *Auditar septiembre*, y tres columnas: **lo que tiene que quedar hecho** —las tareas de la
   fase, las que pasaron del mes anterior y las correcciones; hasta cinco, cada una con su texto completo en los renglones
   que necesite y, en el mes de hoy, la primera pendiente con *Te toca*—; **para la salida a Alemania** —tres, las
-  pendientes primero— y *lo que sostienes todo el mes*; y **las cifras del mes** con `fzmCifrasHTML`, la misma función de
-  la ficha, sin el patrimonio líquido (Adán, 21-oct-2026: *"quita la información del checkpoint, lo de patrimonio
-  líquido, el auto y el iPhone"*). Las tareas se palomean aquí mismo, en la misma casilla que la ventana y Mi Día: el mes
+  pendientes primero— y *lo que sostienes todo el mes*; y **tu dinero este mes, en palabras** (`pmCifrasHTML`; Adán,
+  25-oct-2026: *"las cifras de dinero que están ahí no son claras"*): tu dinero y tu tarjeta BBVA, cada uno con la cifra
+  de hoy en grande y, debajo, *El plan espera $13,346 al 31 oct* y cómo vas contra eso —*✓ llevas $1,506 más de lo que
+  pide* en verde; mientras el mes corre, *te falta bajarla $1,154 antes del 31 oct* en ámbar, aunque ya se pueda
+  auditar, porque el abono que falta puede llegar; y con el mes cerrado, *✗ quedaste … arriba* en rojo—. Antes decía
+  *Meta · Hoy · ✗ $1,154 de más*: comparaba lo de hoy con la meta del cierre como si el mes ya hubiera terminado. Un mes
+  que viene enseña lo que el plan espera y que lo real se mide al auditar. La cuenta es la de la ficha de la ventana
+  (`fzmCifrasDatos`, que también dibuja `fzmCifrasHTML`), así que nunca dicen cosas distintas; sin el patrimonio líquido
+  (Adán, 21-oct-2026: *"quita la información del checkpoint, lo de patrimonio líquido, el auto y el iPhone"*). Las tareas se palomean aquí mismo, en la misma casilla que la ventana y Mi Día: el mes
   de hoy en la semana de hoy (`pmCheck`), otro mes como lo hace su ficha (`fzmCheck`); un mes ya auditado enseña lo que
   quedó, sin casilla. *Y 3 más…* y *Lo que sostienes* se despliegan en su lugar (`pmDespliega`); *Ver el mes completo en
   la ventana* y *Auditar* son lo único que la abre. **La información general** (`pmGenHtml`) es la de la ventana en
   corto: la meta de la fase, el checkpoint con sus dos salidas, cómo va —el mismo bloque y la misma cuenta que la ventana,
-  `fzvVaHTML` y `fzvAvance`— y lo que dejas de hacer con su detalle (`.pm-gen`). **Nada se corta** (Adán: *"no quiero que
-  se corte texto"*): ni las tareas, ni los títulos de las fases en la ruta —en la pantalla y en la ventana—, ni lo que
-  dejas de hacer. Medido a 1600×1000: un mes mide de 171 a 337 px y la información general 520; de 390 a 2048 px ningún
-  texto de la pantalla ni de la ventana queda con «…».
+  `fzvVaHTML` y `fzvAvance`, solo si la fase ya empezó: en una que viene diría *aún no cierra ninguno* y su fecha, que ya
+  están en la ruta— y lo que dejas de hacer en fichas con solo su cabeza; el porqué de cada una va en su `title`
+  (`.pm-gen`). **Compacto** (Adán, 25-oct-2026: *"haz las cosas más pequeñas y la letra también, no debemos acaparar
+  mucho visualmente, solo lo importante"*): el título a 17 px, las tareas y los textos a 12, las etiquetas a 9.5, las
+  pestañas a 11 y los rellenos más cortos, solo en la pantalla —la ventana conserva los suyos—. **Nada se corta** (Adán:
+  *"no quiero que se corte texto"*): ni las tareas, ni los títulos de las fases en la ruta —en la pantalla y en la
+  ventana—. Medido a 1600×1000: la ruta mide 81 px (antes 89), un mes de 128 a 303 px (antes 171 a 337) y la información
+  general de 186 a 304 (antes hasta 520); de 390 a 2048 px ningún texto de la pantalla ni de la ventana queda con «…».
 
 *Tu estrategia de hoy* va arriba del panel de **Deuda cara** y tu dinero, cuenta por cuenta, en el de **Patrimonio**
 (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las
 cantidades"*). Sin la ruta de deuda, el riel de la quincena ni *Te toca esta semana*.
 
-Medido a 2048×1040: la ruta mide 83 px, el mes en curso 288, los medidores 45 y el tablero 425, con las tres columnas
+Medido a 2048×1040: la ruta mide 72 px, el mes en curso 292, los medidores 46 y el tablero 445, con las tres columnas
 sin desplazarse. El tablero no baja de 376 px: en una pantalla más baja (1366×768) la página baja en vez de
 aplastarlo. Bajo 1180 px el mes en curso va en dos columnas y bajo 760, en una; a 390 px no hay desplazamiento
 horizontal.

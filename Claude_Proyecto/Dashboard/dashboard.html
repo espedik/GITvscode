@@ -1499,63 +1499,84 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 /* La fase y el mes en pantalla (Main de diseno-planmaestro/): la ruta de las cinco fases y la ficha del mes en curso,
    con las mismas clases que la ventana de las fases (.fz-est, .fzm-tab, .fzc-item, .fzn), para que lo que ves aquí y lo
    que abre la ventana sean lo mismo. */
-.pm-ruta{flex-shrink:0;margin-bottom:6px}
-.pm-ruta .fz-ruta{margin:0;padding:0;border:0}
-.pm-ruta .fz-est{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:10px;row-gap:3px;padding:8px 14px 9px}
+/* Compacto (Adán, 25-oct-2026: "haz las cosas más pequeñas y la letra también, no debemos acaparar mucho
+   visualmente, solo lo importante"): el título a 17 px, las tareas y los textos a 12, las etiquetas a 9.5 y los
+   rellenos más cortos. Solo aquí: la ventana de las fases conserva los suyos. */
+.pm-ruta{flex-shrink:0;margin-bottom:5px}
+.pm-ruta .fz-ruta{margin:0;padding:0;border:0;gap:8px}
+.pm-ruta .fz-est{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:8px;row-gap:2px;padding:6px 11px 7px;border-radius:10px}
 .pm-ruta .fz-est>*{grid-column:1/-1}
-.pm-ruta .fz-est-n{grid-column:1;grid-row:1}
-.pm-ruta .fz-est-f{grid-column:2;grid-row:1;justify-self:end;font-size:11.5px;color:var(--text2)}
-.pm-ruta .fz-est-t{min-height:0}
+.pm-ruta .fz-est-n{grid-column:1;grid-row:1;font-size:10px}
+.pm-ruta .fz-est-f{grid-column:2;grid-row:1;justify-self:end;font-size:10.5px;color:var(--text2)}
+.pm-ruta .fz-est-t{min-height:0;font-size:11.5px;line-height:1.3}
+.pm-ruta .fz-est-e{font-size:10.5px}
+.pm-ruta .fz-chip,.pm-mes .fz-chip{font-size:8.5px;padding:1px 5px}
 .fz-est-b{display:block;align-self:stretch;height:4px;border-radius:2px;background:rgba(var(--ov),.1);overflow:hidden}
 .fz-est-b i{display:block;height:100%;border-radius:2px;background:var(--fc)}
-.pm-mes{flex-shrink:0;display:flex;flex-direction:column;gap:7px;margin-bottom:6px;padding:10px 18px 11px;border-radius:16px;
+.pm-mes{flex-shrink:0;display:flex;flex-direction:column;gap:6px;margin-bottom:5px;padding:8px 14px 9px;border-radius:14px;
   background:var(--card);border:1px solid var(--card-br)}
-.pm-mes-cab{display:flex;align-items:center;justify-content:space-between;gap:10px 18px;flex-wrap:wrap}
-.pm-mes .fzm-cab-t{font-size:22px}
+.pm-mes-cab{display:flex;align-items:center;justify-content:space-between;gap:8px 14px;flex-wrap:wrap}
+.pm-mes .fzm-cab-t{font-size:17px;gap:7px}
+.pm-mes .fzm-cab-s{font-size:11.5px}
 /* Otra fase a la vista: el botón que vuelve al mes de hoy, en el color de la fase que se ve. */
-.pm-hoy{margin-left:10px;padding:3px 10px;border-radius:999px;border:1px solid var(--fc,var(--cy));background:color-mix(in srgb,var(--fc,var(--cy)) 12%,transparent);
-  color:var(--text);font-family:var(--font);font-size:12px;font-weight:700;letter-spacing:0;text-transform:none;cursor:pointer;vertical-align:middle}
+.pm-hoy{margin-left:6px;padding:2px 9px;border-radius:999px;border:1px solid var(--fc,var(--cy));background:color-mix(in srgb,var(--fc,var(--cy)) 12%,transparent);
+  color:var(--text);font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:0;text-transform:none;cursor:pointer;vertical-align:middle}
 .pm-hoy:hover{background:color-mix(in srgb,var(--fc,var(--cy)) 24%,transparent)}
-.pm-mes .fzm-tabs{margin:0;padding:0;background:none;border:0;gap:5px}
-.pm-mes .fzm-tab{padding:4px 10px;font-size:12px}
-.pm-mes .fzm-aviso{margin:0;padding:5px 12px}
-.pm-mes-3{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr) minmax(0,1.15fr);gap:22px;align-items:start}
+.pm-mes .fzm-tabs{margin:0;padding:0;background:none;border:0;gap:4px}
+.pm-mes .fzm-tab{padding:2px 8px;font-size:11px;gap:5px}
+.pm-mes .fzm-anio{font-size:9.5px;margin-left:6px}
+.pm-mes .fzm-aviso{margin:0;padding:4px 10px;font-size:12px}
+.pm-mes .fzm-aviso .ce-btn{padding:3px 9px;font-size:10.5px}
+.pm-mes-3{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr) minmax(0,1.1fr);gap:18px;align-items:start}
 /* La información general en la pantalla, en corto: la meta, el checkpoint con sus dos salidas una bajo otra, cómo va
    y lo que dejas de hacer, en una columna y sin cortar texto. */
-.pm-gen .fz-p{margin:0 0 6px;font-size:13px}
-.pm-gen .fz-ol{margin:0;gap:4px;font-size:13px;line-height:1.42}
-.pm-gen .fzk{margin:0;gap:7px;padding:10px 12px}
-.pm-gen .fzk-cab{gap:10px}
-.pm-gen .fzk-cuando{font-size:13px;padding:4px 8px}
-.pm-gen .fzk-prueba{font-size:13px;line-height:1.4}
-.pm-gen .fzk-ramas{grid-template-columns:minmax(0,1fr);gap:5px}
-.pm-gen .fzk-r{font-size:12px;line-height:1.4;padding:5px 9px}
-.pm-gen .fzv-n{padding:6px 11px;margin-bottom:5px}
-.pm-gen .fzv-n b{font-size:14px}
-.pm-gen .fzv-sigue{margin:2px 0 10px}
-.pm-gen .fzd{grid-template-columns:minmax(0,1fr);gap:3px;margin:0 0 6px}
-.pm-gen .fzd-i{gap:8px;padding:5px 8px;border-radius:8px}
-.pm-gen .fzd-i span{font-size:12px;line-height:1.4}
-.pm-gen .fzd-x{width:18px;height:18px;font-size:10px}
-.pm-gen .fzd-i b{font-size:12.5px}
-.pm-mes .fzc-g{margin:0 0 2px}
-.pm-mes .fzc-item{align-items:flex-start;padding:4px 2px;cursor:pointer}
-.pm-mes .fzc-item>input{margin-top:2px}
-.pm-mes .fzc-tx{font-size:13px;line-height:1.35}
-.pm-mes .fzc-tx>b{display:block}
+.pm-gen .fz-p{margin:0 0 5px;font-size:12px}
+.pm-gen .fz-ol{margin:0;gap:3px;font-size:12px;line-height:1.4}
+.pm-gen .fzk{margin:0;gap:6px;padding:8px 10px}
+.pm-gen .fzk-cab{gap:8px}
+.pm-gen .fzk-cuando{font-size:11.5px;padding:3px 7px}
+.pm-gen .fzk-prueba{font-size:12px;font-weight:600;line-height:1.4}
+.pm-gen .fzk-ramas{grid-template-columns:minmax(0,1fr);gap:4px}
+.pm-gen .fzk-r{font-size:11.5px;line-height:1.4;padding:4px 8px}
+.pm-gen .fzv-n{padding:5px 10px;margin-bottom:4px}
+.pm-gen .fzv-n b{font-size:12.5px}
+.pm-gen .fzv-sigue{margin:2px 0 8px}
+.pm-gen .fzv-sigue span{font-size:11.5px}
+/* Lo que dejas de hacer, en la pantalla: solo la cabeza de cada una, en fichas que fluyen; el porqué, en su título. */
+.pm-gen .fzd{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 5px}
+.pm-gen .fzd-i{align-items:center;gap:5px;padding:2px 9px 2px 3px;border-radius:999px}
+.pm-gen .fzd-i>div>span{display:none}
+.pm-gen .fzd-x{width:16px;height:16px;font-size:9px}
+.pm-gen .fzd-i b{font-size:11.5px;font-weight:600;line-height:1.3}
+.pm-mes .fzc-g{margin:0 0 1px;font-size:9.5px}
+.pm-mes .fzc-item{align-items:flex-start;gap:7px;padding:3px 2px;cursor:pointer}
+.pm-mes .fzc-item>input{margin-top:1px;width:13px;height:13px}
+.pm-mes .fzc-tx{font-size:12px;line-height:1.35}
+.pm-mes .fzc-tx>b{display:block;font-weight:600}
 .pm-mes .fzc-item>em{flex-shrink:0}
 .pm-mes .fzm-blk{margin:0}
-.pm-mes .gbm-sec{margin:0 0 6px}
-.pm-mes .fzn{padding:6px 12px;margin-bottom:6px;row-gap:2px}
-.pm-mes .fzn-c b{font-size:15px}
-.pm-mes .fzn-pie{display:none}
-.pm-toca{font-style:normal;font-family:var(--mono);font-size:9.5px;font-weight:800;letter-spacing:.1em;padding:1px 6px;
+.pm-mes .gbm-sec{margin:0 0 5px;font-size:9.5px}
+.pm-toca{font-style:normal;font-family:var(--mono);font-size:8.5px;font-weight:800;letter-spacing:.1em;padding:1px 5px;
   border-radius:4px;background:rgba(var(--w-rgb),.16);color:var(--w);margin-left:4px;text-transform:uppercase}
-.pm-mas{all:unset;cursor:pointer;display:flex;justify-content:space-between;gap:10px;padding:4px 2px;font-size:12.5px;color:var(--text2)}
+.pm-mas{all:unset;cursor:pointer;display:flex;justify-content:space-between;gap:10px;padding:3px 2px;font-size:11.5px;color:var(--text2)}
 .pm-mas:hover{color:var(--text)}
 .pm-mas b{font-family:var(--mono);color:var(--text)}
+/* Las cifras del mes en palabras (`pmCifrasHTML`; Adán: "las cifras de dinero que están ahí no son claras"): la de
+   hoy en grande y, debajo, lo que el plan espera al cerrar el mes y cómo vas contra eso, con su color. */
+.pmc{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:10px;align-items:start;padding:6px 10px 7px;margin-bottom:5px;
+  border-radius:9px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.07)}
+.pmc-t{font-size:12px;font-weight:700;line-height:1.3;color:var(--text)}
+.pmc-v{text-align:right;white-space:nowrap;line-height:1.2}
+.pmc-v b{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--text)}
+.pmc-v small{margin-left:5px;font-size:10px;color:var(--text3)}
+.pmc-p{grid-column:1/-1;margin-top:4px;padding-top:4px;border-top:1px solid rgba(var(--ov),.06);font-size:11.5px;line-height:1.4;color:var(--text2)}
+.pmc-p b{font-family:var(--mono);font-weight:700;color:var(--text)}
+.pmc-p em{display:block;font-style:normal;font-weight:700;color:var(--text2)}
+.pmc-p em.bien{color:var(--g)}
+.pmc-p em.mal{color:var(--r)}
+.pmc-p em.va{color:var(--w)}
 @media(max-width:1180px){.pm-mes-3{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.pm-mes-3>:last-child{grid-column:1/-1}
-  .pm-ruta .fz-est{display:flex}.pm-ruta .fz-est-f{font-size:12px}}
+  .pm-ruta .fz-est{display:flex}.pm-ruta .fz-est-f{font-size:11px}}
 @media(max-width:760px){.pm-mes-3{grid-template-columns:minmax(0,1fr)}}
 
 
@@ -9528,7 +9549,7 @@ function pmMesVistaHtml(i, ym, tabs){
       (deSalida.length > SAL ? mas('salida', '→', 'Y '+(deSalida.length - SAL)+' más para la salida') : '') : '')+
     (F.habitos.length ? mas('sost', sost+' de '+F.habitos.length, 'Lo que sostienes todo el mes')+(_pmTodo.sost ? F.habitos.map(filaH).join('') : '') : '')+'</div>';
   const P2 = Object.assign({}, P, { metas: (P.metas || []).filter(m => m.k !== 'liquido') });
-  const col3 = '<div>'+fzmCifrasHTML(P2, a, e, cerrable)+'<button type="button" class="pm-mas" onclick="cfbAbrir('+i+',\''+ym+'\')"><span>Ver el mes completo en la ventana de las fases</span><b>→</b></button></div>';
+  const col3 = '<div>'+pmCifrasHTML(P2, a, e, cerrable, ym)+'<button type="button" class="pm-mas" onclick="cfbAbrir('+i+',\''+ym+'\')"><span>Ver el mes completo en la ventana</span><b>→</b></button></div>';
   return '<div class="pm-mes-cab"><div class="fzm-cab-t">'+fzmNombre(ym)+chip+'<span class="fzm-cab-s">'+
       f.tag+' · del 1 al '+fin.getDate()+' de '+fzmMesMin(ym)+' · '+estado+'</span>'+pmVolverBtn()+'</div>'+tabs+'</div>'+
     aviso+'<div class="pm-mes-3">'+col1+col2+col3+'</div>';
@@ -9540,8 +9561,10 @@ function pmGenHtml(i, tabs){
   const av = fzvAvance(i);
   const col1 = '<div>'+kpiSec('🎯 La meta al '+dC(f.end))+faseMetaHTML(f.meta)+'</div>';
   const col2 = '<div>'+(f.checkpoint ? faseCheckHTML(f.checkpoint) : '')+'</div>';
-  const col3 = '<div>'+fzvVaHTML(i, av, ym => 'cfbAbrir('+i+',\''+ym+'\')')+(f.deja ? faseDejaHTML(f.deja) : '')+
-    '<button type="button" class="pm-mas" onclick="cfbAbrir('+i+',\'gen\')"><span>Ver la fase completa en la ventana de las fases</span><b>→</b></button></div>';
+  // Cómo va, solo si la fase ya empezó: en una que viene diría «aún no cierra ninguno» y su fecha, que ya están en la ruta.
+  const empezo = new Date() >= f.start;
+  const col3 = '<div>'+(empezo ? fzvVaHTML(i, av, ym => 'cfbAbrir('+i+',\''+ym+'\')') : '')+(f.deja ? faseDejaHTML(f.deja) : '')+
+    '<button type="button" class="pm-mas" onclick="cfbAbrir('+i+',\'gen\')"><span>Ver la fase completa en la ventana</span><b>→</b></button></div>';
   return '<div class="pm-mes-cab"><div class="fzm-cab-t">'+f.tag+' <em class="fz-chip">INFORMACIÓN GENERAL</em><span class="fzm-cab-s">'+
       esc(f.title)+' · '+dC(f.start)+' → '+dC(f.end)+'</span>'+pmVolverBtn()+'</div>'+tabs+'</div>'+
     '<div class="pm-mes-3 pm-gen">'+col1+col2+col3+'</div>';
@@ -13077,7 +13100,8 @@ function faseDejaHTML(t){
   const fr=String(t||'').split(/(?<=\.)\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/).map(x=>x.replace(/^Y\s+/,'').trim()).filter(Boolean);
   return kpiSec('🚫 Lo que dejas de hacer')+'<div class="fzd">'+fr.map(function(x){
     const k=x.indexOf(':'), cab=k>0&&k<80?x.slice(0,k):x.replace(/\.$/,''), resto=k>0&&k<80?x.slice(k+1).trim():'';
-    return '<div class="fzd-i"><span class="fzd-x">✕</span><div><b>'+fzCap(cab)+'</b>'+(resto?'<span>'+fzCap(resto)+'</span>':'')+'</div></div>';
+    // El porqué va también en el título: la pantalla enseña solo la cabeza de cada una.
+    return '<div class="fzd-i"'+(resto?' title="'+esc(fzCap(resto).replace(/<[^>]*>/g,''))+'"':'')+'><span class="fzd-x">✕</span><div><b>'+fzCap(cab)+'</b>'+(resto?'<span>'+fzCap(resto)+'</span>':'')+'</div></div>';
   }).join('')+'</div>';
 }
 function faseMetaHTML(meta){
@@ -13487,8 +13511,10 @@ function faseMesHTML(i, ym){
 }
 // Las cifras del mes: la meta de la proyección, lo real (hoy, o la foto al auditar) y si se llegó; ya
 // auditado, con la causa que se marcó. A media quincena no se pinta de rojo: falta lo que el plan pone después.
-function fzmCifrasHTML(P, a, e, cerrable){
-  const M = P.metas || []; if(!M.length) return '';
+// Las cifras del mes, calculadas una sola vez: las dibujan la ficha de la ventana (fzmCifrasHTML) y la pantalla
+// (pmCifrasHTML), así nunca dicen cosas distintas. `juzga`: el mes ya se puede auditar o está auditado.
+function fzmCifrasDatos(P, a, e, cerrable){
+  const M = P.metas || []; if(!M.length) return null;
   const foto = e === 'ok' ? fzmFoto(a) : null;
   const vivo = !foto && (e === 'hoy' || e === 'pend') ? ctCifrasHoy() : null;
   const juzga = !!foto || (!!vivo && cerrable);
@@ -13497,6 +13523,18 @@ function fzmCifrasHTML(P, a, e, cerrable){
     const real = foto ? foto.real[m.k] : vivo ? vivo[m.k] : null, tiene = typeof real === 'number';
     const dif = tiene ? (m.mas ? real - meta : meta - real) : 0, bien = dif >= -0.5;
     const causa = foto && !bien ? FZA_CAUSA.find(o => o.k === (a.aud && a.aud.c || {})[m.k]) : null;
+    return { m: m, meta: meta, real: real, tiene: tiene, dif: dif, bien: bien, causa: causa };
+  });
+  const pie = foto ? 'Medidas el '+fzmDia(foto.medido)+'.' : e === 'ok' ? 'Sin foto de cifras: se auditó más de diez días después del cierre.'
+    : e === 'fut' ? 'Es lo que la proyección pone al cerrar el mes; lo real se mide al auditarlo.'
+    : 'Lo real se guarda al auditar el mes, hasta diez días después de que cierre.';
+  return { filas: filas, foto: foto, juzga: juzga, pie: pie };
+}
+function fzmCifrasHTML(P, a, e, cerrable){
+  const D = fzmCifrasDatos(P, a, e, cerrable); if(!D) return '';
+  const foto = D.foto, juzga = D.juzga;
+  const filas = D.filas.map(function(x){
+    const m = x.m, meta = x.meta, real = x.real, tiene = x.tiene, dif = x.dif, bien = x.bien, causa = x.causa;
     const est = !tiene ? (e === 'ok' ? 'sin foto' : 'se mide al auditar')
       : bien ? '✓ '+(dif < 0.5 ? 'en la meta' : fzmNum(dif)+' mejor')
       : (juzga ? '✗ ' : '')+(m.mas ? 'faltan '+fzmNum(-dif) : fzmNum(-dif)+' de más');
@@ -13505,10 +13543,33 @@ function fzmCifrasHTML(P, a, e, cerrable){
       '<span class="fzn-c"><small>'+(foto ? 'Al auditar' : 'Hoy')+'</small><b>'+(tiene ? fzmNum(real) : '—')+'</b></span>'+
       '<span class="fzn-e'+(tiene && bien ? ' bien' : tiene && juzga ? ' mal' : '')+'">'+est+(causa ? '<br><small>'+causa.t+'</small>' : '')+'</span></div>';
   }).join('');
-  const pie = foto ? 'Medidas el '+fzmDia(foto.medido)+'.' : e === 'ok' ? 'Sin foto de cifras: se auditó más de diez días después del cierre.'
-    : e === 'fut' ? 'Es lo que la proyección pone al cerrar el mes; lo real se mide al auditarlo.'
-    : 'Lo real se guarda al auditar el mes, hasta diez días después de que cierre.';
-  return '<div class="fzm-blk">'+kpiSec('🔢 Las cifras del mes')+filas+'<div class="fzn-pie">'+pie+'</div></div>';
+  return '<div class="fzm-blk">'+kpiSec('🔢 Las cifras del mes')+filas+'<div class="fzn-pie">'+D.pie+'</div></div>';
+}
+// Las cifras del mes en la pantalla, en palabras (Adán, 25-oct-2026: "las cifras de dinero que están ahí no son
+// claras"). Decía «Meta $13,346 · Hoy $14,500 · ✗ $1,154 de más»: comparaba lo de hoy con la meta del cierre como si
+// ya fuera tarde. Ahora la cifra de hoy va en grande, debajo lo que el plan espera al cerrar el mes y, mientras el mes
+// corre, lo que falta para llegar —en ámbar, no en rojo, aunque ya se pueda auditar: el abono que falta puede llegar—;
+// cerrado, cómo quedó. Mismas cuentas que la ficha (fzmCifrasDatos).
+const PM_CIFRA = { dinero: ['Tu dinero', 'efectivo, CETES, GBM y el depósito'], bbva: ['Tu tarjeta BBVA', 'lo que debes'] };
+function pmCifrasHTML(P, a, e, cerrable, ym){
+  const D = fzmCifrasDatos(P, a, e, cerrable); if(!D) return '';
+  const fin = fzmFinMes(ym), al = fin.getDate()+' '+MES_LABEL_FULL[fin.getMonth()].slice(0,3).toLowerCase();
+  const cerro = !!D.foto || e === 'pend';   // el mes ya terminó: se dice cómo quedó
+  const filas = D.filas.map(function(x){
+    const m = x.m, nom = PM_CIFRA[m.k] || [String(m.t).replace(/ al cerrar$/, ''), m.d], n = fzmNum(Math.abs(x.dif)), justo = Math.abs(x.dif) < 0.5;
+    if(!x.tiene) return '<div class="pmc"><div class="pmc-t" title="'+esc(nom[1])+'">'+nom[0]+'</div>'+
+      '<div class="pmc-v"><b>'+fzmNum(x.meta)+'</b><small>el plan, al '+al+'</small></div>'+
+      '<div class="pmc-p">'+(e === 'ok' ? 'Sin foto: se auditó más de diez días después del cierre.' : 'Lo real se mide al auditar el mes.')+'</div></div>';
+    const txt = justo ? '✓ justo en el plan'
+      : m.mas ? (x.bien ? '✓ llevas '+n+' más de lo que pide' : cerro ? '✗ quedaste '+n+' abajo' : 'te faltan '+n+' para el '+al)
+      : (x.bien ? '✓ debes '+n+' menos de lo que espera' : cerro ? '✗ quedaste '+n+' arriba' : 'te falta bajarla '+n+' antes del '+al);
+    const cls = x.bien ? 'bien' : cerro ? 'mal' : 'va';
+    return '<div class="pmc"><div class="pmc-t" title="'+esc(nom[1])+'">'+nom[0]+'</div>'+
+      '<div class="pmc-v"><b>'+fzmNum(x.real)+'</b><small>'+(D.foto ? 'al auditar' : 'hoy')+'</small></div>'+
+      '<div class="pmc-p">El plan espera <b>'+fzmNum(x.meta)+'</b> al '+al+'<em class="'+cls+'">'+txt+'</em>'+
+        (x.causa ? '<small>'+x.causa.t+'</small>' : '')+'</div></div>';
+  }).join('');
+  return '<div class="fzm-blk"><div class="fzc-g"><span>Tu dinero este mes</span></div>'+filas+'</div>';
 }
 // La auditoría en la ficha: por venir, abierta (el botón que la empieza) o cerrada (su resultado).
 function fzmCierreHTML(i, ym, P, F, a, e, cerrable, desde){
