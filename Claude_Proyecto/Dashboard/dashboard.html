@@ -1527,7 +1527,8 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .pm-mes .fzm-anio{font-size:9.5px;margin-left:6px}
 .pm-mes .fzm-aviso{margin:0;padding:4px 10px;font-size:12px}
 .pm-mes .fzm-aviso .ce-btn{padding:3px 9px;font-size:10.5px}
-.pm-mes-3{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr) minmax(0,1.1fr);gap:18px;align-items:start}
+/* Tres columnas iguales (Adán, 25-oct-2026: "acomoda simétricamente las columnas"), en el mes y en la información general. */
+.pm-mes-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start}
 /* La información general en la pantalla, en corto: la meta, el checkpoint con sus dos salidas una bajo otra, cómo va
    y lo que dejas de hacer, en una columna y sin cortar texto. */
 .pm-gen .fz-p{margin:0 0 5px;font-size:12px}
@@ -9494,6 +9495,31 @@ function pmMesHtml(){
   tabs += '</div>';
   return vista === 'gen' ? pmGenHtml(i, tabs) : pmMesVistaHtml(i, vista, tabs);
 }
+// Las tareas en la pantalla, con nombre corto (Adán, 25-oct-2026: "reduce más los nombres de la lista de las cosas que
+// tengo que hacer"): la idea principal —lo que va antes del primer «: », « —», «; » o de la segunda oración, sin
+// paréntesis— y, si aún pasa de 48 caracteres, hasta la primera coma (o «y»), o antes de una preposición; nunca con «…».
+// El texto completo va en el título de la fila y en la ventana de las fases. En las 146 tareas de las cinco fases la
+// mediana baja de 68 a 35 caracteres y la más larga, de 189 a 56.
+function pmCorto(html){
+  const MAX = 48;
+  let s = String(html || '').replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").trim();
+  const ico = (s.match(/^(?:\p{Extended_Pictographic}|\p{Regional_Indicator}{2})️?\s*/u) || [''])[0];
+  s = s.slice(ico.length).replace(/\s*\([^)]*\)/g, '');
+  const corte = [/:\s/, /\s—/, /;\s/, /\.\s(?=[A-ZÁÉÍÓÚÑ¿])/].map(re => s.search(re)).filter(k => k >= 14);
+  if(corte.length) s = s.slice(0, Math.min.apply(null, corte));
+  s = s.replace(/[.,;:\s—]+$/, '');
+  if(s.length > MAX){   // primero en una coma; si no hay, en una «y»
+    const en = re => [...s.matchAll(re)].map(m => m.index).find(k => k >= 18 && k <= MAX + 6);
+    const c = en(/,\s/g) !== undefined ? en(/,\s/g) : en(/\sy\s/g); if(c !== undefined) s = s.slice(0, c);
+  }
+  if(s.length > MAX + 6){
+    const c = [...s.matchAll(/\s(?:en|de|del|con|para|a|al|por|desde|hasta)\s/g)].map(m => m.index).filter(k => k >= 22 && k <= MAX + 4);
+    if(c.length) s = s.slice(0, c[c.length - 1]);
+  }
+  if(s.length > MAX + 6){ const k = s.search(/:\s/); if(k >= 5) s = s.slice(0, k); }   // último recurso: su rótulo
+  return esc(ico + s.replace(/[.,;:\s—]+$/, ''));
+}
 // Un mes de la fase en la pantalla: el de hoy, o el que se eligió en su pestaña.
 function pmMesVistaHtml(i, ym, tabs){
   const C = window.CIFRAS, hoyD = new Date(); hoyD.setHours(0,0,0,0);
@@ -9510,7 +9536,7 @@ function pmMesVistaHtml(i, ym, tabs){
   const fila = function(t){
     const p = fzmPartir(t.txt), plano = String(p.t).replace(/<[^>]*>/g, '');
     const de = t.grupo === 'pasa' && t.de ? 'de '+fzmMesMin(t.de) : t.grupo === 'correccion' && t.de ? 'de la auditoría de '+fzmMesMin(t.de) : '';
-    const tx = '<span class="fzc-tx"><b>'+(t.ico ? t.ico+' ' : '')+p.t+'</b></span>'+(de ? '<em class="fzc-tag">'+de+'</em>' : '');
+    const tx = '<span class="fzc-tx"><b>'+(t.ico ? t.ico+' ' : '')+pmCorto(p.t)+'</b></span>'+(de ? '<em class="fzc-tag">'+de+'</em>' : '');
     if(auditado){   // ya auditado: lo que quedó, sin casilla (como en la ventana)
       const x = fzaResTarea(a, t, checks);
       return '<div class="fzc-item'+(x.r === 'ok' ? ' ok' : '')+'" title="'+esc(plano)+'"><span class="fzc-ico">'+(x.r === 'ok' ? '✅' : x.r === 'medias' ? '◐' : '❌')+'</span>'+tx+'</div>';
@@ -9523,11 +9549,11 @@ function pmMesVistaHtml(i, ym, tabs){
   const filaH = function(h){
     if(auditado){
       const n = fzaNivel(a, h);
-      return '<div class="fzc-item'+(n === 'siempre' || n === 'casi' ? ' ok' : '')+'"><span class="fzc-ico">'+(n === 'nunca' ? '❌' : n === 'aveces' ? '◐' : '✅')+'</span><span class="fzc-tx"><b>'+h.t+'</b></span></div>';
+      return '<div class="fzc-item'+(n === 'siempre' || n === 'casi' ? ' ok' : '')+'" title="'+esc(String(h.t).replace(/<[^>]*>/g, ''))+'"><span class="fzc-ico">'+(n === 'nunca' ? '❌' : n === 'aveces' ? '◐' : '✅')+'</span><span class="fzc-tx"><b>'+pmCorto(h.t)+'</b></span></div>';
     }
     const ok = !!(a.siempre || {})[h.id], empezo = ym <= fzmYM(hoyD);
-    return '<label class="fzc-item'+(ok ? ' ok' : '')+'"><input type="checkbox"'+(ok ? ' checked' : '')+(empezo ? '' : ' disabled title="Se marca cuando empiece el mes"')+
-      ' onchange="pmSostuve(\''+ym+'\',\''+h.id+'\',this.checked,'+i+')"><span class="fzc-tx"><b>'+h.t+'</b></span></label>';
+    return '<label class="fzc-item'+(ok ? ' ok' : '')+'" title="'+esc(String(h.t).replace(/<[^>]*>/g, ''))+'"><input type="checkbox"'+(ok ? ' checked' : '')+(empezo ? '' : ' disabled title="Se marca cuando empiece el mes"')+
+      ' onchange="pmSostuve(\''+ym+'\',\''+h.id+'\',this.checked,'+i+')"><span class="fzc-tx"><b>'+pmCorto(h.t)+'</b></span></label>';
   };
   const mas = (k, n, txt) => '<button type="button" class="pm-mas" onclick="pmDespliega(\''+k+'\')"><span>'+(_pmTodo[k] ? 'Ver menos' : txt)+'</span><b>'+(_pmTodo[k] ? '↑' : n)+'</b></button>';
   const VER = 5, SAL = 3;

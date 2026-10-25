@@ -745,9 +745,10 @@ en pantalla **son las piezas de la ventana de las fases**, con sus mismas clases
   que se ve aquí mismo, sin abrir la ventana** (`pmVer`, `_pmVista`; Adán, 22-oct-2026: *"cuando quiero cambiar de mes,
   en los subtabs, no se actualiza la información… solamente quiero que se abran las ventanas cuando des click en alguna
   fase"*). Un mes (`pmMesVistaHtml`) trae, si el anterior cerró
-  sin auditar, el aviso con *Auditar septiembre*, y tres columnas: **lo que tiene que quedar hecho** —las tareas de la
-  fase, las que pasaron del mes anterior y las correcciones; hasta cinco, cada una con su texto completo en los renglones
-  que necesite y, en el mes de hoy, la primera pendiente con *Te toca*—; **para la salida a Alemania** —tres, las
+  sin auditar, el aviso con *Auditar septiembre*, y **tres columnas iguales** (Adán, 25-oct-2026: *"acomoda
+  simétricamente las columnas"*; también en la información general): **lo que tiene que quedar hecho** —las tareas de la
+  fase, las que pasaron del mes anterior y las correcciones; hasta cinco y, en el mes de hoy, la primera pendiente con
+  *Te toca*—; **para la salida a Alemania** —tres, las
   pendientes primero— y *lo que sostienes todo el mes*; y **tu dinero este mes, en palabras** (`pmCifrasHTML`; Adán,
   25-oct-2026: *"las cifras de dinero que están ahí no son claras"*): tu dinero y tu tarjeta BBVA, cada uno con la cifra
   de hoy en grande y, debajo, *El plan espera $13,346 al 31 oct* y cómo vas contra eso —*✓ llevas $1,506 más de lo que
@@ -765,10 +766,16 @@ en pantalla **son las piezas de la ventana de las fases**, con sus mismas clases
   están en la ruta— y lo que dejas de hacer en fichas con solo su cabeza; el porqué de cada una va en su `title`
   (`.pm-gen`). **Compacto** (Adán, 25-oct-2026: *"haz las cosas más pequeñas y la letra también, no debemos acaparar
   mucho visualmente, solo lo importante"*): el título a 17 px, las tareas y los textos a 12, las etiquetas a 9.5, las
-  pestañas a 11 y los rellenos más cortos, solo en la pantalla —la ventana conserva los suyos—. **Nada se corta** (Adán:
-  *"no quiero que se corte texto"*): ni las tareas, ni los títulos de las fases en la ruta —en la pantalla y en la
-  ventana—. Medido a 1600×1000: la ruta mide 81 px (antes 89), un mes de 128 a 303 px (antes 171 a 337) y la información
-  general de 186 a 304 (antes hasta 520); de 390 a 2048 px ningún texto de la pantalla ni de la ventana queda con «…».
+  pestañas a 11 y los rellenos más cortos, solo en la pantalla —la ventana conserva los suyos—. **Cada tarea, con su
+  nombre corto** (`pmCorto`; Adán, 25-oct-2026: *"reduce más los nombres de la lista de las cosas que tengo que
+  hacer"*): la idea principal —lo que va antes del primer «: », « —», «; » o de la segunda oración, sin paréntesis— y, si
+  aún pasa de 48 caracteres, hasta la primera coma (o «y») o antes de una preposición. Es una frase completa, nunca con
+  «…» (Adán: *"no quiero que se corte texto"*), y el texto entero va en el `title` de la fila y en la ventana: *Lee los
+  requisitos exactos en el portal de la Esslingen Graduate School (Automotive Systems): idioma, documentos y formato*
+  queda en *Lee los requisitos exactos en el portal*. En las 146 tareas de las cinco fases la mediana baja de 68 a 35
+  caracteres y la más larga, de 189 a 56: cada una cabe en un renglón. Lo mismo con lo que sostienes. Medido a
+  1600×1000: la ruta mide 81 px (antes 89), un mes de 128 a 292 px (antes 171 a 337) y la información general de 192 a
+  287 (antes hasta 520); de 390 a 2048 px ningún texto de la pantalla ni de la ventana queda con «…».
 
 *Tu estrategia de hoy* va arriba del panel de **Deuda cara** y tu dinero, cuenta por cuenta, en el de **Patrimonio**
 (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las
