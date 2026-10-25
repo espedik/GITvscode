@@ -732,14 +732,19 @@ en pantalla **son las piezas de la ventana de las fases**, con sus mismas clases
 
 - **La ruta** (`#coachFaseBand`, `fzRutaHtml(true)`): la misma de la ventana —una tarjeta por fase con su color, su
   nombre y sus fechas en un renglón, su título y cómo va: *2 meses · ✓ cerrada*, *día 21 de 182 · quedan 161 días*
-  con su barra en la fase en curso, *empieza en 5 meses*—; el porqué de la fase (`explica`) va en su título. Tocar una
-  abre la ventana en esa fase (`cfbFase`); en la ventana, `fzRutaHtml(false)` cambia de fase (`kpiFaseTab`).
-- **El mes en curso** (`#pmMes`, `pmMesHtml()`): la ficha del mes de la ventana en corto. Arriba su nombre y su estado
+  con su barra en la fase en curso, *empieza en 5 meses*—; el porqué de la fase (`explica`) va en su título. **Tocar una
+  la enseña debajo, aquí mismo, sin ventana** (`cfbFase`; Adán, 25-oct-2026: *"en las fases ya no abras una ventana, ahí
+  mismo cuando des click en alguna fase ahí mismo muéstrame la información"*): la marcada en la ruta es la que se ve
+  (`_pmFase`, null mientras sea la de hoy). En la ventana, `fzRutaHtml(false)` cambia de fase (`kpiFaseTab`), y solo la
+  ruta de la ventana: la de la pantalla no se mueve.
+- **El mes en curso, o la fase que tocaste** (`#pmMes`, `pmMesHtml()`, pintado con la ruta por `pmPintar()` en el color de
+  la fase que se ve). La fase de hoy abre en el mes de hoy; otra fase, en su *Información general*, con sus meses en
+  pestañas y **← Volver a hoy** (`pmVolverHoy`) junto al título. El mes es la ficha del mes de la ventana en corto. Arriba su nombre y su estado
   (*ESTE MES*, *AUDITADO*, *SIN AUDITAR*), la fase, sus días y cuándo se audita (*se audita desde el 25 · en 4 días*), y
   sus pestañas —*Información general* y los meses de la fase, con el punto de su auditoría—. **Las pestañas cambian lo
   que se ve aquí mismo, sin abrir la ventana** (`pmVer`, `_pmVista`; Adán, 22-oct-2026: *"cuando quiero cambiar de mes,
   en los subtabs, no se actualiza la información… solamente quiero que se abran las ventanas cuando des click en alguna
-  fase"*): solo una fase de la ruta abre la ventana, y en esa fase. Un mes (`pmMesVistaHtml`) trae, si el anterior cerró
+  fase"*). Un mes (`pmMesVistaHtml`) trae, si el anterior cerró
   sin auditar, el aviso con *Auditar septiembre*, y tres columnas: **lo que tiene que quedar hecho** —las tareas de la
   fase, las que pasaron del mes anterior y las correcciones; hasta cinco, cada una con su texto completo en los renglones
   que necesite y, en el mes de hoy, la primera pendiente con *Te toca*—; **para la salida a Alemania** —tres, las
@@ -868,8 +873,8 @@ colchón que puede no llegar; solo entra en el plan cuando la quincena no cierra
 
 ### La pantalla se reinicia al entrar
 
-Entrar al slide pone en `null` lo que se pueda haber dejado tocado —`ctYM` y `ctSel`— y
-`renderCoachTablero()` los recalcula a hoy. Va en
+Entrar al slide pone en `null` lo que se pueda haber dejado tocado —`ctYM` y `ctSel` del calendario, y la fase y la
+pestaña del bloque de arriba (`_pmFase`, `_pmVista`)— y `renderCoachTablero()` los recalcula a hoy. Va en
 `showSlide()` **antes** de `RENDERS[i]()`, para que el primer pintado ya salga en el mes actual.
 
 ### Elige el día

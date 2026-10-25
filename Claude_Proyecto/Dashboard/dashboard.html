@@ -1512,6 +1512,10 @@ body.rail-on{--pad-rail:max(6vw,230px)}
   background:var(--card);border:1px solid var(--card-br)}
 .pm-mes-cab{display:flex;align-items:center;justify-content:space-between;gap:10px 18px;flex-wrap:wrap}
 .pm-mes .fzm-cab-t{font-size:22px}
+/* Otra fase a la vista: el botón que vuelve al mes de hoy, en el color de la fase que se ve. */
+.pm-hoy{margin-left:10px;padding:3px 10px;border-radius:999px;border:1px solid var(--fc,var(--cy));background:color-mix(in srgb,var(--fc,var(--cy)) 12%,transparent);
+  color:var(--text);font-family:var(--font);font-size:12px;font-weight:700;letter-spacing:0;text-transform:none;cursor:pointer;vertical-align:middle}
+.pm-hoy:hover{background:color-mix(in srgb,var(--fc,var(--cy)) 24%,transparent)}
 .pm-mes .fzm-tabs{margin:0;padding:0;background:none;border:0;gap:5px}
 .pm-mes .fzm-tab{padding:4px 10px;font-size:12px}
 .pm-mes .fzm-aviso{margin:0;padding:5px 12px}
@@ -9372,13 +9376,9 @@ function renderCoach(){}
 function renderCoach(){}
 
 function renderCoach(){
-  // La ruta de las fases y el mes en curso, con las piezas de la ventana: cada fase abre la ventana en esa fase
-  // (Adán, 21-sep-2026: "al hacer click en el recuadro de fase 0 (…) debes mostrarme una ventana con la info de
-  // todas las fases"); las pestañas del mes cambian lo que se ve aquí mismo. El párrafo de `explica` va en el título de cada fase.
-  document.getElementById('coachFaseBand').innerHTML=fzRutaHtml(true);
-  const pmMes=document.getElementById('pmMes'), iFase=fzmFaseDe(fzmYM(new Date()));
-  pmMes.innerHTML=pmMesHtml();
-  if(iFase>=0) pmMes.style.setProperty('--fc', CAL_FASE_COLOR[iFase]);
+  // La ruta de las fases y, debajo, la fase que se ve —la de hoy, o la que se tocó en la ruta— con las piezas de la
+  // ventana: todo cambia aquí mismo (`cfbFase`, `pmVer`). El párrafo de `explica` va en el título de cada fase.
+  pmPintar();
 
   // Los ocho medidores, entre el mes y el tablero.
   renderMedidores();
@@ -9389,7 +9389,8 @@ function renderCoach(){
 /* ── LA RUTA DE LAS FASES ─────────────────────────────────────────────────────────────────────
    La misma en la pantalla y en la ventana (Adán, 22-oct-2026: "el diseño de las fases del dashboard no me gusta porque no me muestra info útil, y cuando doy click me muestra la otra información, pero eso no cuadra"):
    una tarjeta por fase con su título, sus fechas y cómo va; la que está en curso, con su barra y en qué día vas.
-   En la ventana cambia de fase (kpiFaseTab); en la pantalla abre la ventana en esa fase (cfbFase). */
+   En la ventana cambia de fase (kpiFaseTab); en la pantalla enseña esa fase debajo, sin ventana (cfbFase), y la
+   marcada es la que se ve. */
 function fzRutaHtml(enPantalla){
   const hoy = new Date(); hoy.setHours(0,0,0,0);
   const MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
@@ -9402,6 +9403,7 @@ function fzRutaHtml(enPantalla){
   let activa = PHASES.findIndex(f => hoy>=f.start && hoy<=f.end);
   if(activa<0) activa = PHASES.findIndex(f => hoy<f.start);
   if(activa<0) activa = PHASES.length-1;
+  if(enPantalla && _pmFase != null) activa = _pmFase;
   return '<div class="fz-ruta" role="tablist">'+PHASES.map(function(f,i){
     const e = est(f), DF = e==='curso' ? CIFRAS.diasFase(f,hoy) : null;
     return '<button type="button" class="fz-est '+e+(i===activa?' is-activa':'')+'" data-fase="'+i+'" onclick="'+(enPantalla?'cfbFase':'kpiFaseTab')+'('+i+')" '+
@@ -9413,8 +9415,28 @@ function fzRutaHtml(enPantalla){
       '<span class="fz-est-e">'+(e==='hecha' ? meses(f)+' meses · ✓ cerrada' : DF ? 'día '+DF.corrido+' de '+DF.largo+' · quedan '+DF.quedan+' días' : meses(f)+' meses · '+falta(f))+'</span></button>';
   }).join('')+'</div>';
 }
-// Una fase de la pantalla abre la ventana en esa fase.
-function cfbFase(i){ abrirKpi('fases'); if(typeof kpiFaseTab === 'function') kpiFaseTab(i); }
+// Una fase de la pantalla se enseña aquí mismo, sin ventana (Adán, 25-oct-2026: "en las fases ya no abras una
+// ventana, ahí mismo cuando des click en alguna fase ahí mismo muéstrame la información"): debajo de la ruta, su
+// información general y sus meses en pestañas. La de hoy vuelve al mes de hoy. `_pmFase` es null mientras se vea la de
+// hoy; entrar a la pantalla vuelve a ella (showSlide).
+let _pmFase = null;
+function pmFaseVista(){ return _pmFase != null ? _pmFase : fzmFaseDe(fzmYM(new Date())); }
+function cfbFase(i){
+  const iHoy = fzmFaseDe(fzmYM(new Date()));
+  _pmFase = i === iHoy ? null : i;
+  _pmVista = i === iHoy ? null : 'gen'; _pmTodo = {};
+  pmPintar();
+}
+function pmVolverHoy(){ _pmFase = null; _pmVista = null; _pmTodo = {}; pmPintar(); }
+// La ruta —para marcar la fase que se ve— y el bloque de esa fase, en su color.
+function pmPintar(){
+  const r = document.getElementById('coachFaseBand'); if(r) r.innerHTML = fzRutaHtml(true);
+  const el = document.getElementById('pmMes'); if(!el) return;
+  el.innerHTML = pmMesHtml();
+  const i = pmFaseVista(); if(i >= 0) el.style.setProperty('--fc', CAL_FASE_COLOR[i]);
+}
+// Con otra fase a la vista, el botón que vuelve al mes de hoy.
+function pmVolverBtn(){ return _pmFase != null ? '<button type="button" class="pm-hoy" onclick="pmVolverHoy()">← Volver a hoy</button>' : ''; }
 
 /* ── EL MES EN CURSO, EN PANTALLA ─────────────────────────────────────────────────────────────
    La ficha del mes de la ventana, en corto y con sus mismas piezas: el nombre y sus pestañas, el aviso si el mes
@@ -9423,8 +9445,8 @@ function cfbFase(i){ abrirKpi('fases'); if(typeof kpiFaseTab === 'function') kpi
    función de la ficha (sin el patrimonio líquido: Adán, 21-oct-2026).
    Las pestañas cambian lo que se ve aquí mismo, sin abrir la ventana (Adán, 22-oct-2026: "cuando quiero cambiar de
    mes, en los subtabs, no se actualiza la información… solamente quiero que se abran las ventanas cuando des click en
-   alguna fase"): `_pmVista` es null (el mes de hoy), 'gen' (la información general) u otro mes de la fase. «Y N más»
-   y «Lo que sostienes» se despliegan en su lugar (`_pmTodo`). */
+   alguna fase"): `_pmVista` es null (el mes de hoy, o la información general si la fase que se ve no es la de hoy),
+   'gen' u otro mes de la fase. «Y N más» y «Lo que sostienes» se despliegan en su lugar (`_pmTodo`). */
 let _pmVista = null, _pmTodo = {};
 function pmVer(vista){
   _pmVista = vista; _pmTodo = {};
@@ -9437,10 +9459,10 @@ function pmDespliega(k){
 function pmMesHtml(){
   const C = window.CIFRAS; if(!C || !C.planMes) return '';
   const hoyD = new Date(); hoyD.setHours(0,0,0,0);
-  const ymHoy = fzmYM(hoyD), i = fzmFaseDe(ymHoy); if(i < 0) return '';
+  const ymHoy = fzmYM(hoyD), iHoy = fzmFaseDe(ymHoy), i = _pmFase != null ? _pmFase : iHoy; if(i < 0) return '';
   const f = PHASES[i], meses = fzmMeses(f), A = fzmAud();
   if(_pmVista && _pmVista !== 'gen' && meses.indexOf(_pmVista) < 0) _pmVista = null;   // cambió el mes o la fase
-  const vista = _pmVista || ymHoy;
+  const vista = _pmVista || (i === iHoy ? ymHoy : 'gen');
   let anio = '', tabs = '<div class="fzm-tabs"><button type="button" class="fzm-tab gen'+(vista === 'gen' ? ' is-activa' : '')+'" onclick="pmVer(\'gen\')">Información general</button>';
   meses.forEach(function(k){
     if(k.slice(0,4) !== anio){ anio = k.slice(0,4); tabs += '<span class="fzm-anio">'+anio+'</span>'; }
@@ -9508,7 +9530,7 @@ function pmMesVistaHtml(i, ym, tabs){
   const P2 = Object.assign({}, P, { metas: (P.metas || []).filter(m => m.k !== 'liquido') });
   const col3 = '<div>'+fzmCifrasHTML(P2, a, e, cerrable)+'<button type="button" class="pm-mas" onclick="cfbAbrir('+i+',\''+ym+'\')"><span>Ver el mes completo en la ventana de las fases</span><b>→</b></button></div>';
   return '<div class="pm-mes-cab"><div class="fzm-cab-t">'+fzmNombre(ym)+chip+'<span class="fzm-cab-s">'+
-      f.tag+' · del 1 al '+fin.getDate()+' de '+fzmMesMin(ym)+' · '+estado+'</span></div>'+tabs+'</div>'+
+      f.tag+' · del 1 al '+fin.getDate()+' de '+fzmMesMin(ym)+' · '+estado+'</span>'+pmVolverBtn()+'</div>'+tabs+'</div>'+
     aviso+'<div class="pm-mes-3">'+col1+col2+col3+'</div>';
 }
 // La información general de la fase en la pantalla: la meta, el checkpoint y lo que se deja, y cómo va.
@@ -9521,7 +9543,7 @@ function pmGenHtml(i, tabs){
   const col3 = '<div>'+fzvVaHTML(i, av, ym => 'cfbAbrir('+i+',\''+ym+'\')')+(f.deja ? faseDejaHTML(f.deja) : '')+
     '<button type="button" class="pm-mas" onclick="cfbAbrir('+i+',\'gen\')"><span>Ver la fase completa en la ventana de las fases</span><b>→</b></button></div>';
   return '<div class="pm-mes-cab"><div class="fzm-cab-t">'+f.tag+' <em class="fz-chip">INFORMACIÓN GENERAL</em><span class="fzm-cab-s">'+
-      esc(f.title)+' · '+dC(f.start)+' → '+dC(f.end)+'</span></div>'+tabs+'</div>'+
+      esc(f.title)+' · '+dC(f.start)+' → '+dC(f.end)+'</span>'+pmVolverBtn()+'</div>'+tabs+'</div>'+
     '<div class="pm-mes-3 pm-gen">'+col1+col2+col3+'</div>';
 }
 // Lo que sostienes, palomeado desde la pantalla: lo guarda la ficha del mes y se repinta aquí.
@@ -13188,7 +13210,8 @@ function kpiFaseVer(){
   if(act&&ruta.scrollWidth>ruta.clientWidth) ruta.scrollLeft=Math.max(0,act.offsetLeft-ruta.offsetLeft-8);
 }
 function kpiFaseTab(i){
-  document.querySelectorAll('.fz-est').forEach(b=>b.classList.toggle('is-activa',+b.dataset.fase===i));
+  // Solo la ruta de la ventana: la de la pantalla marca la fase que se ve debajo (`_pmFase`).
+  document.querySelectorAll('#kpiOverlay .fz-est').forEach(b=>b.classList.toggle('is-activa',+b.dataset.fase===i));
   document.querySelectorAll('.fases-panel').forEach(p=>p.classList.toggle('is-activa',+p.dataset.fase===i));
   kpiFaseVer();
 }
@@ -15523,7 +15546,7 @@ function showSlide(i){
      de RENDERS[i]() para que el primer pintado ya salga en el mes correcto. Mismo trato que
      recibe "Mi Día" en la línea de arriba, solo que aquí se reinicia al entrar y no al salir:
      así también queda limpio si el estado se ensució por otra vía. */
-  if(cur!==1 && i===1){ ctYM=null; ctSel=null; }
+  if(cur!==1 && i===1){ ctYM=null; ctSel=null; _pmFase=null; _pmVista=null; _pmTodo={}; }
   loadAll();
   RENDERS[i]();
   renderQuickApps();
