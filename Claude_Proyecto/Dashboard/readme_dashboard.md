@@ -746,27 +746,34 @@ en pantalla **son las piezas de la ventana de las fases**, con sus mismas clases
   en los subtabs, no se actualiza la información… solamente quiero que se abran las ventanas cuando des click en alguna
   fase"*). Un mes (`pmMesVistaHtml`) trae, si el anterior cerró
   sin auditar, el aviso con *Auditar septiembre*, y **columnas iguales** (Adán, 25-oct-2026: *"acomoda
-  simétricamente las columnas"*; también en la información general). Van solo las que traen algo, en partes iguales
-  (`pmColumnas`): la Fase 0 no tiene checkpoint ni cosas de la salida y dejaba huecos en medio; un mes con solo tareas
-  las pone en dos columnas parejas (`.pm-c1`). Las columnas: **lo que tiene que quedar hecho** —las tareas de la
+  simétricamente las columnas"*; también en la información general). Van solo las que traen algo (`pmColumnas`): la
+  Fase 0 no tiene checkpoint ni cosas de la salida y dejaba huecos en medio. Con dos, la de tu dinero conserva el ancho
+  de un tercio, como en las demás fases, y las tareas van en dos columnas parejas en el resto (`.pm-c2`); con una sola,
+  también (`.pm-c1`). Las columnas: **lo que tiene que quedar hecho** —las tareas de la
   fase, las que pasaron del mes anterior y las correcciones; hasta cinco y, en el mes de hoy, la primera pendiente con
   *Te toca*—; **para la salida a Alemania** —tres, las
-  pendientes primero— y *lo que sostienes todo el mes*; y **tu dinero este mes, en palabras** (`pmCifrasHTML`; Adán,
-  25-oct-2026: *"las cifras de dinero que están ahí no son claras"*): tu dinero y tu tarjeta BBVA, cada uno con la cifra
-  de hoy en grande y, debajo, *El plan espera $13,346 al 31 oct* y cómo vas contra eso —*✓ llevas $1,506 más de lo que
-  pide* en verde; mientras el mes corre, *te falta bajarla $1,154 antes del 31 oct* en ámbar, aunque ya se pueda
-  auditar, porque el abono que falta puede llegar; y con el mes cerrado, *✗ quedaste … arriba* en rojo—. Antes decía
-  *Meta · Hoy · ✗ $1,154 de más*: comparaba lo de hoy con la meta del cierre como si el mes ya hubiera terminado. Un mes
-  que viene enseña lo que el plan espera y que lo real se mide al auditar. La cuenta es la de la ficha de la ventana
-  (`fzmCifrasDatos`, que también dibuja `fzmCifrasHTML`), así que nunca dicen cosas distintas; sin el patrimonio líquido
-  (Adán, 21-oct-2026: *"quita la información del checkpoint, lo de patrimonio líquido, el auto y el iPhone"*). Las tareas se palomean aquí mismo, en la misma casilla que la ventana y Mi Día: el mes
+  pendientes primero— y *lo que sostienes todo el mes*; y **tu dinero, en palabras** (`pmCifrasHTML`; Adán,
+  25-oct-2026: *"las cifras de dinero que están ahí no son claras"*). **Tiene el mismo formato en cada mes y en cada
+  fase** (`pmDineroTarjeta`, `.pm-dinero`; Adán: *"lo de mi dinero debe tener el mismo formato en las demás fases"*):
+  una tarjeta para tu dinero y otra para tu tarjeta BBVA mientras el plan le ponga meta, cada una con la cifra real en
+  grande —la de hoy o, en un mes auditado, la que se guardó al auditar— y, debajo, *El plan espera $13,346 al 31 oct* y
+  cómo vas contra eso: *✓ llevas $1,506 más de lo que pide* en verde; mientras no cierra —el mes en curso, aunque ya se
+  pueda auditar, o uno que viene— lo que falta, en ámbar (*te falta bajarla $1,154 antes del 31 oct*, *te faltan
+  $153,548 para el 31 may 2027*), porque el abono o el ahorro que falta puede llegar; y con el mes cerrado, *✗ quedaste
+  … arriba* en rojo. La fecha lleva el año cuando no es el de hoy (`pmAl`). Un mes de la Fase 0, anterior al plan de
+  dinero, enseña lo de hoy y que el plan arranca en octubre de 2026 (`pmDineroAntes`). La cuenta es la de la ficha de la
+  ventana (`fzmCifrasDatos`, que también dibuja `fzmCifrasHTML`), así que nunca dicen cosas distintas; sin el
+  patrimonio líquido (Adán, 21-oct-2026: *"quita la información del checkpoint, lo de patrimonio líquido, el auto y el
+  iPhone"*). Bajo 1180 px, cuando tu dinero pasa a lo ancho, sus tarjetas van de dos en dos. Las tareas se palomean aquí mismo, en la misma casilla que la ventana y Mi Día: el mes
   de hoy en la semana de hoy (`pmCheck`), otro mes como lo hace su ficha (`fzmCheck`); un mes ya auditado enseña lo que
   quedó, sin casilla. *Y 3 más…* y *Lo que sostienes* se despliegan en su lugar (`pmDespliega`); *Ver el mes completo en
   la ventana* y *Auditar* son lo único que la abre. **La información general** (`pmGenHtml`) es la de la ventana en
-  corto: la meta de la fase, el checkpoint con sus dos salidas, cómo va —el mismo bloque y la misma cuenta que la ventana,
-  `fzvVaHTML` y `fzvAvance`, solo si la fase ya empezó: en una que viene diría *aún no cierra ninguno* y su fecha, que ya
-  están en la ruta— y lo que dejas de hacer en fichas con solo su cabeza; el porqué de cada una va en su `title`
-  (`.pm-gen`). **Compacto** (Adán, 25-oct-2026: *"haz las cosas más pequeñas y la letra también, no debemos acaparar
+  corto, en las mismas tres columnas que el mes (`.pm-gen`): la meta de la fase y lo que dejas de hacer, en fichas con
+  solo su cabeza y el porqué en su `title`; el checkpoint con sus dos salidas y cómo va —el mismo bloque y la misma
+  cuenta que la ventana, `fzvVaHTML` y `fzvAvance`, solo si la fase ya empezó: en una que viene diría *aún no cierra
+  ninguno* y su fecha, que ya están en la ruta—; y **tu dinero en esta fase** (`pmDineroFase`), con las mismas
+  tarjetas: la última meta que el plan le pone a cada cifra dentro de la fase —en la Fase 1, tu dinero al 31 mar 2027 y
+  la meta de la BBVA, $0 al 30 nov 2026— contra lo de hoy, o contra lo que se guardó al auditar ese mes. **Compacto** (Adán, 25-oct-2026: *"haz las cosas más pequeñas y la letra también, no debemos acaparar
   mucho visualmente, solo lo importante"*): el título a 17 px, las tareas y los textos a 12, las etiquetas a 9.5, las
   pestañas a 11 y los rellenos más cortos, solo en la pantalla —la ventana conserva los suyos—. **Cada tarea, con su
   nombre corto** (`pmCorto`; Adán, 25-oct-2026: *"reduce más los nombres de la lista de las cosas que tengo que
@@ -780,8 +787,8 @@ en pantalla **son las piezas de la ventana de las fases**, con sus mismas clases
   frase por punto; la de la Fase 0, que es un párrafo, partida en sus oraciones y en cada ✅), el checkpoint
   (`pmCheckHTML`: la prueba y sus dos salidas), lo que dejas de hacer (`faseDejaHTML(t, true)`) y los títulos de la
   ruta —todos con su nombre corto y el texto entero en el `title`; la ventana conserva los suyos completos—. Medido a
-  1600×1000: la ruta mide 81 px (antes 89), un mes de 128 a 292 px (antes 171 a 337) y la información general de 192 a
-  287 (antes hasta 520); de 390 a 2048 px ningún texto de la pantalla ni de la ventana queda con «…».
+  1600×1000: la ruta mide 72 px, un mes de 172 a 292 px y la información general de 191 a 281; de 390 a 2048 px ningún
+  texto de la pantalla ni de la ventana queda con «…».
 
 *Tu estrategia de hoy* va arriba del panel de **Deuda cara** y tu dinero, cuenta por cuenta, en el de **Patrimonio**
 (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las
