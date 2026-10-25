@@ -768,7 +768,7 @@ arriba *Tu estrategia de hoy* (ver abajo). En **Deuda cara** y
 la pista es `--r` al 60 %), y el avance de Deuda total se mide sobre lo que nació cada deuda, liquidadas incluidas.
 Son **muy compactos** (Adán: *"en coach plan maestro, las cajas de las cifras que tenemos, hazlas muchísimo más
 pequeñas"*): dos renglones, el nombre en palabras normales con un cuadrito de su color y debajo la cifra a 15 px con
-su barra al lado (`.pm-med-fila`). La frase que explica el porcentaje —*41% pagado · en cero el 15 nov*, *26% menos
+su barra al lado (`.pm-med-fila`). La frase que explica el porcentaje —*3% pagado · en cero el 23 nov*, *26% menos
 que al inicio*, *65% del dinero de la maestría*— va en el `title` de la caja (sin cifras si está en modo privado) y
 en su panel, que se abre al tocarla. **Desde 1400 px van en una sola fila de ocho**: en dos filas, a 2048×1040 la
 columna del día se quedaba corta. Bajo 1400 van de cuatro en cuatro y bajo 900, de dos en dos. Medido: cada caja

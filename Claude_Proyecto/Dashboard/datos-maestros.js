@@ -144,7 +144,7 @@ window.CIFRAS = (function () {
     // como ahorro lo que ya se pagó.
     bbvaFecha: '2026-10-05',
     bbvaInicio: 15000,
-    bbvaSaldoFecha: '2026-10-19',
+    bbvaSaldoFecha: '2026-10-25',
     // Y no cobra intereses (Adán, 6-oct-2026: "bbva no va cobrar intereses, eso déjalo en 0, por
     // que pagaré para no pagar intereses a la tarjeta"): cada mes cubre lo que pide el estado de
     // cuenta para no generarlos. `planBbva` no les suma nada y el Dashboard no se los cuenta.
@@ -300,8 +300,9 @@ window.CIFRAS = (function () {
     // quincena con `planBbva`, desde `PROYECTO.bbvaFecha`, sin intereses (`bbvaSinIntereses`).
     // 14-oct-2026: $9,900 ("el credito de tarjeta de bbva ya bajo a 9,900"), adelante del plan. 19-oct-2026:
     // $8,900 ("aún debo hoy mismo, debo 8,900"): los abonos del 15 y del 19 no pasaron como decía el plan.
+    // 25-oct-2026: $14,500 ("mi deuda de BBVA subió a 14,500"): $5,600 más que el 19.
     // El día del último saldo va en `PROYECTO.bbvaSaldoFecha`.
-    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:8900,        rate:55.7,  min:1500, day:11,start:'2024-01-22', noInterest:0},
+    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:14500,        rate:55.7,  min:1500, day:11,start:'2024-01-22', noInterest:0},
     // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. 55.7 es un supuesto tomado de
     // la BBVA, no un dato medido de esta tarjeta.
     // 2026-09-01: VUELVE A TENER SALDO, y con él vuelve a ser deuda cara. Cuatro compras de ese
@@ -4553,6 +4554,21 @@ window.CIFRAS = (function () {
       hacer: function (f) {
         const pon = function (id, al) { const d = (f.debts || []).find(x => x.id === id); if (d && !d.pagosAl) d.pagosAl = al; };
         pon('d003', '2026-09-21'); pon('d008', '2026-07-01');
+      }
+    },
+    {
+      // 2026-10-25 · "mi deuda de bbva subió a 14,500". El saldo nuevo, dicho hoy: `d001` y su día en
+      // `PROYECTO.bbvaSaldoFecha`; el plan se ancla a él y vuelve a contar desde hoy. Si el plan hubiera restado
+      // solo algún abono después del 19, no pasó así —la tarjeta subió—: se quita. Lo anotado a mano se queda.
+      flag: '_bbva20261025',
+      hacer: function (f) {
+        const tc = (f.debts || []).find(x => x.id === 'd001');
+        if (tc) {
+          tc.balance = 14500; tc.fecha = '2026-10-25'; tc.planAl = '2026-10-25';
+          if (Array.isArray(tc.omitidos)) tc.omitidos = tc.omitidos.filter(o => o.fecha > '2026-10-25');
+        }
+        if (Array.isArray(f.transactions))
+          f.transactions = f.transactions.filter(t => !(t.origen === 'plan' && t.date > '2026-10-19' && t.date <= '2026-10-25'));
       }
     },
   ];
