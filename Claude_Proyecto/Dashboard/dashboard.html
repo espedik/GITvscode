@@ -119,20 +119,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .qa-pill:hover .qa-name{font-weight:700}
 .qa-stat{font-family:var(--mono);font-size:9px;color:var(--g);font-weight:700;white-space:nowrap}
 /* La fila tiene dos escalones. Con nombres y segunda línea entera necesita 1,486 px (16 apps);
-   el contenedor va a 1,515 y, como la fila va centrada, deja de pisar los botones de tema y
-   privacidad (`.qa-acciones`, 91 px pegados a la derecha, fuera del flujo) a partir de 1,668 px →
-   primer umbral en 1,675. Entre 1,525 y 1,675 se queda el NOMBRE y se va lo accesorio: la segunda
+   el contenedor va a 1,515 y, como la fila va centrada, deja de pisar los botones de refrescar,
+   tema y privacidad (`.qa-acciones`, 115 px pegados a la derecha, fuera del flujo) a partir de 1,716 px →
+   primer umbral en 1,720. Entre 1,575 y 1,720 se queda el NOMBRE y se va lo accesorio: la segunda
    línea (`.qa-stat`), el texto «PDF» y parte del relleno. Así la fila baja a 1,341 px y a 1,600
    —la pantalla de Adán— se sigue leyendo cada app (22-oct-2026, al entrar Laptop: "No veo el
    botón de la página"; con un solo umbral en 1,675 se quedaba en iconos y la píldora nueva no se
-   distinguía). Por debajo de 1,525 se quedan solo los iconos, con el nombre en el title: la fila
+   distinguía). Por debajo de 1,575 se quedan solo los iconos, con el nombre en el title: la fila
    se partiría en dos y taparía el slide (la franja empieza fija a 58px). Si entra o sale otra
    app hay que volver a medir los dos escalones — `.qa-grupos` con `flex-wrap:nowrap` y
-   `max-width:none` da el ancho real en una línea, y cada umbral es ese ancho más 2×91 de los
+   `max-width:none` da el ancho real en una línea, y cada umbral es ese ancho más 2×115 de los
    botones (la fila centrada reparte el sobrante a los dos lados). Van DESPUÉS de las reglas
    base de `.qa-pill` y `.qa-sep`: a igual especificidad gana la última, y delante no se aplicaban. */
-@media(max-width:1675px){.qa-stat{display:none}.qa-pill{padding:5px 5px;gap:5px}.qa-sep{margin:0 3px}}
-@media(max-width:1525px){.qa-name{display:none}.qa-pill{padding:5px 7px;gap:6px}.qa-sep{margin:0 4px}}
+@media(max-width:1720px){.qa-stat{display:none}.qa-pill{padding:5px 5px;gap:5px}.qa-sep{margin:0 3px}}
+@media(max-width:1575px){.qa-name{display:none}.qa-pill{padding:5px 7px;gap:6px}.qa-sep{margin:0 4px}}
 /* El PDF de cada negocio, al lado de su píldora (2026-09-21, Adán: "ponme un icono del pdf de cada uno y dame
    los enlaces"; el 22-oct-2026: "los pdfs que están abajo, ponlos mejor al lado de los botones"). No sustituye a la píldora: abre el .pdf real
    en pestaña nueva, y el lector de PDF del navegador ya trae su propio botón de descarga en la
@@ -144,16 +144,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   text-decoration:none;transition:background .15s,color .15s}
 .qa-pdf svg{width:10px;height:10px;stroke-width:2.1;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .qa-pdf:hover{background:rgba(var(--ov),.07);color:var(--text2)}
-@media(max-width:1675px){.qa-pdf span{display:none}.qa-pdf{padding:3px 4px}}
+@media(max-width:1720px){.qa-pdf span{display:none}.qa-pdf{padding:3px 4px}}
 /* Es una .qa-pill más: mismo trazo, mismo hover, mismo tamaño de icono. Solo cambia que
    va anclada al borde y que no lleva texto — lo que hace lo dice su `title`. */
-/* El ojo y el tema van juntos a la derecha de la barra. Antes el ojo era el
-   único y se colocaba solo con `position:absolute`; ahora los dos comparten
-   este carril para que se lean como un par. */
+/* Refrescar, el tema y el ojo van juntos a la derecha de la barra, en este carril, para que se
+   lean como un grupo de controles y no como apps. */
 .qa-acciones{position:absolute;right:16px;top:50%;transform:translateY(-50%);
-  display:flex;align-items:center;gap:5px}
-.priv-btn,.tema-btn{padding:5px 8px;border:1px solid transparent;cursor:pointer;
+  display:flex;align-items:center;gap:3px}
+.priv-btn,.tema-btn,.refr-btn{padding:5px 6px;border:1px solid transparent;cursor:pointer;
   font-family:inherit}
+/* Refrescar: el icono gira mientras la página se recarga. */
+.refr-btn .qa-ico{color:var(--text3)}
+.refr-btn:hover .qa-ico{color:var(--text2)}
+.refr-btn.girando .qa-ico svg{animation:refrGira .7s linear infinite}
+@keyframes refrGira{to{transform:rotate(360deg)}}
 .tema-btn .qa-ico{color:var(--text3)}
 .tema-btn:hover .qa-ico{color:var(--text2)}
 .priv-btn .qa-ico{color:var(--text3)}
@@ -4942,6 +4946,24 @@ function toggleTheme(){
 const fmt=n=>new Intl.NumberFormat('es-MX').format(Math.round(n||0));
 let privado=localStorage.getItem('dash-privado')==='1';
 const money=n=>privado?'$••,•••':(n<0?'-$':'$')+fmt(Math.abs(n));
+// Refrescar (Adán, 25-oct-2026: "no quiero cerrar toda la ventana y abrirla de nuevo para que me agarre los últimos
+// datos cambiados"). Recarga la página entera —así entran también los archivos que cambiaron con un git pull, como un
+// saldo nuevo en datos-maestros.js, y corren sus migraciones— y vuelve a la pantalla donde estabas: la guarda en
+// sessionStorage (`dash-volver`) y el arranque la lee una vez (`pantallaAlVolver`). El hash se quita para que no mande a
+// otra pantalla. Lo que otra app cambia con el Dashboard abierto ya llega solo (evento `storage`); esto cubre lo demás.
+function refrescarDashboard(){
+  const b = document.getElementById('refr-btn'); if(b) b.classList.add('girando');
+  try { sessionStorage.setItem('dash-volver', JSON.stringify({ slide: cur, t: Date.now() })); } catch(e){}
+  if(location.hash) history.replaceState(null, '', location.pathname + location.search);
+  location.reload();
+}
+// La pantalla a la que vuelve un refresco: una sola vez, y solo si es de hace menos de un minuto.
+function pantallaAlVolver(){
+  try {
+    const v = JSON.parse(sessionStorage.getItem('dash-volver') || 'null'); sessionStorage.removeItem('dash-volver');
+    return v && Date.now() - v.t < 60000 && v.slide >= 0 && v.slide < N ? v.slide : null;
+  } catch(e){ return null; }
+}
 function togglePrivado(){
   privado=!privado;
   localStorage.setItem('dash-privado',privado?'1':'0');
@@ -11546,6 +11568,7 @@ const QA_ICO = {
   // el botón no se lea como una pieza de otra familia (Adán, 2026-09-01).
   // La luna y el sol del tema. Mismo trazo que el resto: 24px, sin relleno.
   luna:   '<path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5a8.5 8.5 0 1 0 10.8 10.8z"></path>',
+  refrescar: '<path d="M20 11A8 8 0 0 0 5.3 6.6L3 9"></path><path d="M3 4v5h5"></path><path d="M4 13a8 8 0 0 0 14.7 4.4L21 15"></path><path d="M21 20v-5h-5"></path>',
   sol:    '<circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path>',
   ojo:    '<path d="M2.2 12s3.6-7 9.8-7 9.8 7 9.8 7-3.6 7-9.8 7-9.8-7-9.8-7z"></path><circle cx="12" cy="12" r="3"></circle>',
   ojoOff: '<path d="M9.9 5.2A9.5 9.5 0 0 1 12 5c6.2 0 9.8 7 9.8 7a17 17 0 0 1-2.4 3.3M6.5 6.6A17 17 0 0 0 2.2 12s3.6 7 9.8 7a9.5 9.5 0 0 0 4-.9"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path><path d="M3 3l18 18"></path>'
@@ -11602,6 +11625,11 @@ function renderQuickApps(){
     `<button class="qa-toggle-btn" onclick="toggleQaBar()" aria-label="Mostrar u ocultar accesos directos" title="Mostrar/ocultar accesos directos">🔗 Apps <span class="qa-toggle-chevron">▾</span></button>`+
     `<div class="qa-grupos">${grupos.map(g=>g.map(pill).join('')).join('<span class="qa-sep"></span>')}</div>`+
     `<div class="qa-acciones">`+
+    `<button class="qa-pill refr-btn" id="refr-btn" onclick="refrescarDashboard()"
+       title="Refrescar los datos: vuelve a leer lo que cambiaste en Finanzas y las otras apps, y los archivos si hiciste git pull, sin salir de esta pantalla"
+       aria-label="Refrescar los datos">
+       <span class="qa-ico">${qaSvg('refrescar','currentColor')}</span>
+     </button>`+
     `<button class="qa-pill tema-btn" id="theme-toggle-top" onclick="toggleTheme()"
        title="${qaOscuro()?'Cambiar a modo claro':'Cambiar a modo oscuro'}"
        aria-label="Cambiar entre modo claro y oscuro">
@@ -15728,7 +15756,8 @@ seedTengoViajeIfNeeded();
 seedLogros20260813IfNeeded();
 loadAll();
 tickClock();
-showSlide(_settings.remember&&_settings.lastSlide!=null?_settings.lastSlide:0);
+const _volver=pantallaAlVolver();   // un refresco vuelve a la pantalla donde estabas
+showSlide(_volver!=null?_volver:(_settings.remember&&_settings.lastSlide!=null?_settings.lastSlide:0));
 restartTimer();
 
 // ── Aterrizaje por hash (2026-08-30) ─────────────────────────────────────────

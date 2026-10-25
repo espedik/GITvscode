@@ -560,34 +560,45 @@ del pdf de cada uno"*, y 22-oct-2026: *"los pdfs que están abajo, ponlos mejor 
 Posts no, porque no tiene PDF propio. Al subirlos a la fila, la barra baja de 65 a 54 px. Abre el `.pdf` en pestaña nueva —`Aeroresinas-dossier.pdf`,
 `Heliescala-catalogo.pdf`—, no la web: el lector de PDF del navegador ya trae su propio botón de
 descarga en la barra de herramientas, así que no hace falta uno aparte para cumplir *"cuando esté
-en el pdf debe haber algo para poder descargar ese pdf"*. Por debajo de 1675 px se queda solo el
+en el pdf debe haber algo para poder descargar ese pdf"*. Por debajo de 1720 px se queda solo el
 icono del PDF, sin el texto.
 
 Van en un contenedor con `max-width:1515px`, con 2 px entre píldoras, 7 px de relleno lateral y 4 px a
 cada lado del filete. La fila tiene **dos escalones**, porque a lo ancho de la pantalla compite con
-los botones de tema y privacidad, que van absolutos a la derecha (91 px), y si se partiera en dos
-taparía el slide (que empieza fijo a 58 px):
+los botones de refrescar, tema y privacidad, que van absolutos a la derecha (115 px), y si se partiera
+en dos taparía el slide (que empieza fijo a 58 px):
 
 | Viewport | Qué se ve | Fila medida |
 |---|---|---|
-| más de 1675 px | nombre, segunda línea verde (`.qa-stat`) y «PDF» | 1 486 px |
-| 1525–1675 px | **el nombre**; se van la segunda línea, el texto «PDF» y parte del relleno (5 px) | 1 341 px |
-| menos de 1525 px | solo iconos, con el nombre en `title` | 729 px |
+| más de 1720 px | nombre, segunda línea verde (`.qa-stat`) y «PDF» | 1 486 px |
+| 1575–1720 px | **el nombre**; se van la segunda línea, el texto «PDF» y parte del relleno (5 px) | 1 341 px |
+| menos de 1575 px | solo iconos, con el nombre en `title` | 729 px |
 
 El escalón de en medio existe para que a 1600 px —la pantalla de Adán— se lea cada app: con un solo
-umbral en 1675 se quedaba en iconos y la píldora de Laptop no se distinguía (*"No veo el botón de la
+umbral arriba se quedaba en iconos y la píldora de Laptop no se distinguía (*"No veo el botón de la
 página"*). Cada umbral es la fila medida (`.qa-grupos` con `flex-wrap:nowrap` y `max-width:none`) más
-2×91 de los botones, porque la fila va centrada y reparte el sobrante a los dos lados: **si entra o
-sale una app, volver a medir los dos**. Medido: a 1680 px queda un hueco de 6 px con los botones; a
-1600, de 38 px; a 1526, de 1 px. Los dos `@media` van después de las reglas base de `.qa-pill` y
+2×115 de los botones, porque la fila va centrada y reparte el sobrante a los dos lados: **si entra o
+sale una app, o un botón del carril, volver a medir los dos**. Medido: a 1721 px queda un hueco de
+3 px con los botones; a 1600, de 14 px; a 1576, de 2 px. Los dos `@media` van después de las reglas base de `.qa-pill` y
 `.qa-sep`: a igual especificidad gana la última.
 
-**Privacidad y tema van juntos a la derecha**, en el carril `.qa-acciones`, como dos píldoras
-`qa-pill` iguales de 35 px: el ojo (`priv-btn`; tachado y en rojo con las cifras ocultas, con
-`title` que dice lo que hace) y el tema, cuyo icono **enseña a dónde vas** (sol en oscuro, luna en
-claro; `luna` y `sol` en `QA_ICO`). `toggleTheme()` repinta la barra entera — el botón contiene un
-`<svg>`, no texto. **Ninguno de los dos se pliega** con `.qa-collapsed`: son controles que se usan
-sin entrar a ninguna pantalla, y en móvil la regla `position:static;order:-1` se aplica al par.
+**Refrescar, tema y privacidad van juntos a la derecha**, en el carril `.qa-acciones`, como tres
+píldoras `qa-pill` iguales de 31 px (6 px de relleno, 3 entre ellas; en el teléfono, 35):
+
+- **Refrescar** (`refr-btn`, icono `refrescar`; Adán, 25-oct-2026: *"no quiero cerrar toda la ventana y
+  abrirla de nuevo para que me agarre los últimos datos cambiados"*). `refrescarDashboard()` recarga la
+  página entera —así entran también los archivos que llegan con un `git pull`, como un saldo nuevo en
+  `datos-maestros.js`, y corren sus migraciones— y **vuelve a la pantalla donde estabas**: la guarda en
+  `sessionStorage` (`dash-volver`) y el arranque la lee una sola vez y si es de hace menos de un minuto
+  (`pantallaAlVolver`). Quita el hash de la dirección para que no mande a otra pantalla. Mientras recarga,
+  el icono gira. Lo que otra app cambia con el Dashboard abierto en otra pestaña ya llega solo (evento
+  `storage`); el botón cubre lo demás. Un F5 normal sigue arrancando como siempre.
+- **El tema**, cuyo icono **enseña a dónde vas** (sol en oscuro, luna en claro; `luna` y `sol` en
+  `QA_ICO`). `toggleTheme()` repinta la barra entera — el botón contiene un `<svg>`, no texto.
+- **El ojo** (`priv-btn`), tachado y en rojo con las cifras ocultas, con `title` que dice lo que hace.
+
+**Ninguno se pliega** con `.qa-collapsed`: son controles que se usan sin entrar a ninguna pantalla, y en
+móvil la regla `position:static;order:-1` se aplica a los tres.
 Bajo la barra corre una línea de acento en degradado que la separa del slide oscuro.
 
 ---
