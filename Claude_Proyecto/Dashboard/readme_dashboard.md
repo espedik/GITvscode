@@ -745,8 +745,10 @@ en pantalla **son las piezas de la ventana de las fases**, con sus mismas clases
   que se ve aquí mismo, sin abrir la ventana** (`pmVer`, `_pmVista`; Adán, 22-oct-2026: *"cuando quiero cambiar de mes,
   en los subtabs, no se actualiza la información… solamente quiero que se abran las ventanas cuando des click en alguna
   fase"*). Un mes (`pmMesVistaHtml`) trae, si el anterior cerró
-  sin auditar, el aviso con *Auditar septiembre*, y **tres columnas iguales** (Adán, 25-oct-2026: *"acomoda
-  simétricamente las columnas"*; también en la información general): **lo que tiene que quedar hecho** —las tareas de la
+  sin auditar, el aviso con *Auditar septiembre*, y **columnas iguales** (Adán, 25-oct-2026: *"acomoda
+  simétricamente las columnas"*; también en la información general). Van solo las que traen algo, en partes iguales
+  (`pmColumnas`): la Fase 0 no tiene checkpoint ni cosas de la salida y dejaba huecos en medio; un mes con solo tareas
+  las pone en dos columnas parejas (`.pm-c1`). Las columnas: **lo que tiene que quedar hecho** —las tareas de la
   fase, las que pasaron del mes anterior y las correcciones; hasta cinco y, en el mes de hoy, la primera pendiente con
   *Te toca*—; **para la salida a Alemania** —tres, las
   pendientes primero— y *lo que sostienes todo el mes*; y **tu dinero este mes, en palabras** (`pmCifrasHTML`; Adán,
@@ -773,7 +775,11 @@ en pantalla **son las piezas de la ventana de las fases**, con sus mismas clases
   «…» (Adán: *"no quiero que se corte texto"*), y el texto entero va en el `title` de la fila y en la ventana: *Lee los
   requisitos exactos en el portal de la Esslingen Graduate School (Automotive Systems): idioma, documentos y formato*
   queda en *Lee los requisitos exactos en el portal*. En las 146 tareas de las cinco fases la mediana baja de 68 a 35
-  caracteres y la más larga, de 189 a 56: cada una cabe en un renglón. Lo mismo con lo que sostienes. Medido a
+  caracteres y la más larga, de 189 a 56: cada una cabe en un renglón. **Con el mismo formato en las cinco fases**
+  (Adán: *"arregla con el mismo formato la fase 0 y las demás fases"*): lo que sostienes, la meta (`pmMetaHTML`: una
+  frase por punto; la de la Fase 0, que es un párrafo, partida en sus oraciones y en cada ✅), el checkpoint
+  (`pmCheckHTML`: la prueba y sus dos salidas), lo que dejas de hacer (`faseDejaHTML(t, true)`) y los títulos de la
+  ruta —todos con su nombre corto y el texto entero en el `title`; la ventana conserva los suyos completos—. Medido a
   1600×1000: la ruta mide 81 px (antes 89), un mes de 128 a 292 px (antes 171 a 337) y la información general de 192 a
   287 (antes hasta 520); de 390 a 2048 px ningún texto de la pantalla ni de la ventana queda con «…».
 

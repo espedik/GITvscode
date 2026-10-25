@@ -1529,6 +1529,12 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .pm-mes .fzm-aviso .ce-btn{padding:3px 9px;font-size:10.5px}
 /* Tres columnas iguales (Adán, 25-oct-2026: "acomoda simétricamente las columnas"), en el mes y en la información general. */
 .pm-mes-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start}
+/* Solo van las columnas que traen algo, repartidas en partes iguales: la Fase 0 no tiene checkpoint ni cosas de la
+   salida, y dejaba una columna vacía en medio. Con una sola, su lista va en dos columnas parejas. */
+.pm-mes-3.pm-c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.pm-mes-3.pm-c1{grid-template-columns:minmax(0,1fr)}
+.pm-c1 .pm-filas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:20px}
+.pm-mes .fz-ol li{cursor:default}
 /* La información general en la pantalla, en corto: la meta, el checkpoint con sus dos salidas una bajo otra, cómo va
    y lo que dejas de hacer, en una columna y sin cortar texto. */
 .pm-gen .fz-p{margin:0 0 5px;font-size:12px}
@@ -1576,9 +1582,10 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .pmc-p em.bien{color:var(--g)}
 .pmc-p em.mal{color:var(--r)}
 .pmc-p em.va{color:var(--w)}
-@media(max-width:1180px){.pm-mes-3{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.pm-mes-3>:last-child{grid-column:1/-1}
+@media(max-width:1180px){.pm-mes-3{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.pm-mes-3>:nth-child(3){grid-column:1/-1}
+  .pm-mes-3.pm-c1{grid-template-columns:minmax(0,1fr)}
   .pm-ruta .fz-est{display:flex}.pm-ruta .fz-est-f{font-size:11px}}
-@media(max-width:760px){.pm-mes-3{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:760px){.pm-mes-3,.pm-mes-3.pm-c2{grid-template-columns:minmax(0,1fr)}.pm-c1 .pm-filas{grid-template-columns:minmax(0,1fr)}}
 
 
 /* Lista de Compras */
@@ -9431,7 +9438,7 @@ function fzRutaHtml(enPantalla){
     return '<button type="button" class="fz-est '+e+(i===activa?' is-activa':'')+'" data-fase="'+i+'" onclick="'+(enPantalla?'cfbFase':'kpiFaseTab')+'('+i+')" '+
       'title="'+esc(String(f.explica||f.meta||f.title).replace(/<[^>]*>/g,''))+'" style="--fc:'+CAL_FASE_COLOR[i]+'">'+
       '<span class="fz-est-n">'+f.tag+(e==='curso'?' <em class="fz-chip">HOY</em>':'')+'</span>'+
-      '<span class="fz-est-t">'+esc(f.title)+'</span>'+
+      '<span class="fz-est-t">'+(enPantalla ? pmCorto(f.title) : esc(f.title))+'</span>'+
       '<span class="fz-est-f">'+dC(f.start)+' → '+dC(f.end)+'</span>'+
       (DF ? '<span class="fz-est-b"><i style="width:'+Math.max(2,Math.min(100,DF.pct)).toFixed(1)+'%"></i></span>' : '')+
       '<span class="fz-est-e">'+(e==='hecha' ? meses(f)+' meses · ✓ cerrada' : DF ? 'día '+DF.corrido+' de '+DF.largo+' · quedan '+DF.quedan+' días' : meses(f)+' meses · '+falta(f))+'</span></button>';
@@ -9497,7 +9504,9 @@ function pmMesHtml(){
 }
 // Las tareas en la pantalla, con nombre corto (Adán, 25-oct-2026: "reduce más los nombres de la lista de las cosas que
 // tengo que hacer"): la idea principal —lo que va antes del primer «: », « —», «; » o de la segunda oración, sin
-// paréntesis— y, si aún pasa de 48 caracteres, hasta la primera coma (o «y»), o antes de una preposición; nunca con «…».
+// paréntesis— y, si aún pasa de 48 caracteres, hasta la primera coma (o «y»); si pasa de 58, antes de un complemento
+// («con», «desde»…) o de una preposición; sin palabras colgando al final y nunca con «…». Lo usan las tareas, lo que
+// sostienes, la meta y el checkpoint de cada fase, y los títulos de la ruta.
 // El texto completo va en el título de la fila y en la ventana de las fases. En las 146 tareas de las cinco fases la
 // mediana baja de 68 a 35 caracteres y la más larga, de 189 a 56.
 function pmCorto(html){
@@ -9513,12 +9522,15 @@ function pmCorto(html){
     const en = re => [...s.matchAll(re)].map(m => m.index).find(k => k >= 18 && k <= MAX + 6);
     const c = en(/,\s/g) !== undefined ? en(/,\s/g) : en(/\sy\s/g); if(c !== undefined) s = s.slice(0, c);
   }
-  if(s.length > MAX + 6){
-    const c = [...s.matchAll(/\s(?:en|de|del|con|para|a|al|por|desde|hasta)\s/g)].map(m => m.index).filter(k => k >= 22 && k <= MAX + 4);
-    if(c.length) s = s.slice(0, c[c.length - 1]);
+  if(s.length > MAX + 10){   // antes de un complemento («con», «desde»…) o de la última preposición que quepa
+    const en = re => [...s.matchAll(re)].map(m => m.index).filter(k => k >= 22 && k <= MAX + 8);
+    const c1 = en(/\s(?:con|desde|hasta|por)\s/g), c2 = en(/\s(?:en|de|del|a|al)\s/g);
+    if(c1.length) s = s.slice(0, c1[0]); else if(c2.length) s = s.slice(0, c2[c2.length - 1]);
   }
-  if(s.length > MAX + 6){ const k = s.search(/:\s/); if(k >= 5) s = s.slice(0, k); }   // último recurso: su rótulo
-  return esc(ico + s.replace(/[.,;:\s—]+$/, ''));
+  if(s.length > MAX + 10){ const k = s.search(/:\s/); if(k >= 5) s = s.slice(0, k); }   // último recurso: su rótulo
+  // Sin una «y» ni una preposición colgando al final («el depa entregado a fin de enero y»).
+  s = s.replace(/[.,;:\s—]+$/, '').replace(/\s+(?:y|e|o|u|ni|pero|que|con|de|del|en|a|al|para|por)$/i, '');
+  return esc(ico + s);
 }
 // Un mes de la fase en la pantalla: el de hoy, o el que se eligió en su pestaña.
 function pmMesVistaHtml(i, ym, tabs){
@@ -9567,33 +9579,61 @@ function pmMesVistaHtml(i, ym, tabs){
     : e === 'pend' ? '<div class="fzm-aviso"><span>⚠ <b>'+fzmNombre(ym)+'</b> cerró sin auditar.</span>'+
       '<button type="button" class="ce-btn" onclick="cfbAbrir('+i+',\''+ym+'\')">Auditar '+fzmMesMin(ym)+'</button></div>' : '';
   const salidaOrden = deSalida.slice().sort((x, y) => hecha(x) - hecha(y));
-  const col1 = '<div><div class="fzc-g"><span>Lo que tiene que quedar hecho</span><span>'+deFase.filter(hecha).length+' de '+deFase.length+'</span></div>'+
-    (deFase.length ? (_pmTodo.fase ? deFase : deFase.slice(0, VER)).map(fila).join('') : '<div class="fzc-vacio">Este mes no trae tareas propias.</div>')+
-    (deFase.length > VER ? mas('fase', '→', 'Y '+(deFase.length - VER)+' más') : '')+'</div>';
-  const col2 = '<div>'+(deSalida.length ? '<div class="fzc-g"><span>Para la salida a Alemania</span><span>'+deSalida.filter(hecha).length+' de '+deSalida.length+'</span></div>'+
+  const verMes = '<button type="button" class="pm-mas" onclick="cfbAbrir('+i+',\''+ym+'\')"><span>Ver el mes completo en la ventana</span><b>→</b></button>';
+  const P2 = Object.assign({}, P, { metas: (P.metas || []).filter(m => m.k !== 'liquido') }), cifras = pmCifrasHTML(P2, a, e, cerrable, ym);
+  const col2 = (deSalida.length ? '<div class="fzc-g"><span>Para la salida a Alemania</span><span>'+deSalida.filter(hecha).length+' de '+deSalida.length+'</span></div>'+
       (_pmTodo.salida ? salidaOrden : salidaOrden.slice(0, SAL)).map(fila).join('')+
       (deSalida.length > SAL ? mas('salida', '→', 'Y '+(deSalida.length - SAL)+' más para la salida') : '') : '')+
-    (F.habitos.length ? mas('sost', sost+' de '+F.habitos.length, 'Lo que sostienes todo el mes')+(_pmTodo.sost ? F.habitos.map(filaH).join('') : '') : '')+'</div>';
-  const P2 = Object.assign({}, P, { metas: (P.metas || []).filter(m => m.k !== 'liquido') });
-  const col3 = '<div>'+pmCifrasHTML(P2, a, e, cerrable, ym)+'<button type="button" class="pm-mas" onclick="cfbAbrir('+i+',\''+ym+'\')"><span>Ver el mes completo en la ventana</span><b>→</b></button></div>';
+    (F.habitos.length ? mas('sost', sost+' de '+F.habitos.length, 'Lo que sostienes todo el mes')+(_pmTodo.sost ? F.habitos.map(filaH).join('') : '') : '');
+  // Sin cifras, «Ver el mes completo» va al pie de las tareas.
+  const col1 = '<div class="fzc-g"><span>Lo que tiene que quedar hecho</span><span>'+deFase.filter(hecha).length+' de '+deFase.length+'</span></div>'+
+    '<div class="pm-filas">'+(deFase.length ? (_pmTodo.fase ? deFase : deFase.slice(0, VER)).map(fila).join('') : '<div class="fzc-vacio">Este mes no trae tareas propias.</div>')+'</div>'+
+    (deFase.length > VER ? mas('fase', '→', 'Y '+(deFase.length - VER)+' más') : '')+(cifras ? '' : verMes);
   return '<div class="pm-mes-cab"><div class="fzm-cab-t">'+fzmNombre(ym)+chip+'<span class="fzm-cab-s">'+
       f.tag+' · del 1 al '+fin.getDate()+' de '+fzmMesMin(ym)+' · '+estado+'</span>'+pmVolverBtn()+'</div>'+tabs+'</div>'+
-    aviso+'<div class="pm-mes-3">'+col1+col2+col3+'</div>';
+    aviso+pmColumnas([col1, col2, cifras ? cifras+verMes : '']);
 }
 // La información general de la fase en la pantalla: la meta, el checkpoint y lo que se deja, y cómo va.
 function pmGenHtml(i, tabs){
   const f = PHASES[i], MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
   const dC = d => d.getDate()+' '+MC[d.getMonth()]+' '+d.getFullYear();
   const av = fzvAvance(i);
-  const col1 = '<div>'+kpiSec('🎯 La meta al '+dC(f.end))+faseMetaHTML(f.meta)+'</div>';
-  const col2 = '<div>'+(f.checkpoint ? faseCheckHTML(f.checkpoint) : '')+'</div>';
+  const col1 = kpiSec('🎯 La meta al '+dC(f.end))+pmMetaHTML(f.meta);
+  const col2 = f.checkpoint ? pmCheckHTML(f.checkpoint) : '';
   // Cómo va, solo si la fase ya empezó: en una que viene diría «aún no cierra ninguno» y su fecha, que ya están en la ruta.
   const empezo = new Date() >= f.start;
-  const col3 = '<div>'+(empezo ? fzvVaHTML(i, av, ym => 'cfbAbrir('+i+',\''+ym+'\')') : '')+(f.deja ? faseDejaHTML(f.deja) : '')+
-    '<button type="button" class="pm-mas" onclick="cfbAbrir('+i+',\'gen\')"><span>Ver la fase completa en la ventana</span><b>→</b></button></div>';
+  const col3 = (empezo ? fzvVaHTML(i, av, ym => 'cfbAbrir('+i+',\''+ym+'\')') : '')+(f.deja ? faseDejaHTML(f.deja, true) : '')+
+    '<button type="button" class="pm-mas" onclick="cfbAbrir('+i+',\'gen\')"><span>Ver la fase completa en la ventana</span><b>→</b></button>';
   return '<div class="pm-mes-cab"><div class="fzm-cab-t">'+f.tag+' <em class="fz-chip">INFORMACIÓN GENERAL</em><span class="fzm-cab-s">'+
       esc(f.title)+' · '+dC(f.start)+' → '+dC(f.end)+'</span>'+pmVolverBtn()+'</div>'+tabs+'</div>'+
-    '<div class="pm-mes-3 pm-gen">'+col1+col2+col3+'</div>';
+    pmColumnas([col1, col2, col3], 'pm-gen');
+}
+// Las columnas del bloque: solo las que traen algo, en partes iguales (Adán, 25-oct-2026: "arregla con el mismo formato
+// la fase 0 y las demás fases"). La Fase 0 no tiene checkpoint ni cosas de la salida y dejaba huecos en medio.
+function pmColumnas(cols, cls){
+  const llenas = cols.filter(c => c && String(c).replace(/<[^>]*>/g, '').trim());
+  return '<div class="pm-mes-3'+(cls ? ' '+cls : '')+(llenas.length < 3 ? ' pm-c'+Math.max(1, llenas.length) : '')+'">'+
+    llenas.map(c => '<div>'+c+'</div>').join('')+'</div>';
+}
+// La meta de la fase en la pantalla: una frase corta por punto (pmCorto), con el texto entero en su título. La de la Fase 0
+// es un párrafo —cerró, con lo que logró y lo que pasó a la Fase 1—: se parte en sus oraciones y en cada ✅.
+function pmMetaHTML(meta){
+  const m = String(meta || ''), partes = m.split(/<b>\d+\)<\/b>\s*/);
+  const items = partes.length >= 3 ? partes.slice(1)
+    : m.replace(/\s+y\s+(?=✅)/g, '. ').split(/(?<=\.)\s+(?=[A-ZÁÉÍÓÚÑ¿¡]|✅)/u);
+  return '<ol class="fz-ol">'+items.map(x => x.replace(/[;.\s]+$/, '')).filter(Boolean).map(x =>
+    '<li title="'+esc(x.replace(/<[^>]*>/g, ''))+'">'+pmCorto(x)+'</li>').join('')+'</ol>';
+}
+// El checkpoint en la pantalla: cuándo, la prueba y sus dos salidas, cada una con nombre corto y el texto entero en su título.
+function pmCheckHTML(t){
+  const fr = String(t || '').split(/(?<=\.)\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/);
+  const prim = fr.shift() || '', k = prim.indexOf(':');
+  const cuando = k > 0 && k < 60 ? prim.slice(0, k) : '', prueba = cuando ? prim.slice(k + 1).trim() : prim;
+  const rama = x => /^(Si no\b|Sin )/.test(x) ? ' mal' : /^Si /.test(x) ? ' ok' : '';
+  const tt = x => ' title="'+esc(String(x).replace(/<[^>]*>/g, ''))+'"';
+  return kpiSec('🚩 Checkpoint')+'<div class="fzk"><div class="fzk-cab">'+(cuando ? '<div class="fzk-cuando">'+cuando+'</div>' : '')+
+    '<div class="fzk-prueba"'+tt(prueba)+'>'+fzCap(pmCorto(prueba))+'</div></div>'+
+    (fr.length ? '<div class="fzk-ramas">'+fr.map(x => '<div class="fzk-r'+rama(x)+'"'+tt(x)+'>'+pmCorto(x)+'</div>').join('')+'</div>' : '')+'</div>';
 }
 // Lo que sostienes, palomeado desde la pantalla: lo guarda la ficha del mes y se repinta aquí.
 function pmSostuve(ym, id, on, i){
@@ -13122,12 +13162,14 @@ function faseCheckHTML(t){
     (fr.length?'<div class="fzk-ramas">'+fr.map(x=>'<div class="fzk-r'+rama(x)+'">'+x+'</div>').join('')+'</div>':'')+'</div>';
 }
 // Lo que se deja de hacer, una frase por renglón: lo de antes de los dos puntos manda.
-function faseDejaHTML(t){
+// `corto` (la pantalla): la cabeza de cada una con su nombre corto (pmCorto); la entera, en el título.
+function faseDejaHTML(t, corto){
   const fr=String(t||'').split(/(?<=\.)\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/).map(x=>x.replace(/^Y\s+/,'').trim()).filter(Boolean);
   return kpiSec('🚫 Lo que dejas de hacer')+'<div class="fzd">'+fr.map(function(x){
     const k=x.indexOf(':'), cab=k>0&&k<80?x.slice(0,k):x.replace(/\.$/,''), resto=k>0&&k<80?x.slice(k+1).trim():'';
     // El porqué va también en el título: la pantalla enseña solo la cabeza de cada una.
-    return '<div class="fzd-i"'+(resto?' title="'+esc(fzCap(resto).replace(/<[^>]*>/g,''))+'"':'')+'><span class="fzd-x">✕</span><div><b>'+fzCap(cab)+'</b>'+(resto?'<span>'+fzCap(resto)+'</span>':'')+'</div></div>';
+    const tit=corto?fzCap(x).replace(/<[^>]*>/g,''):resto?fzCap(resto).replace(/<[^>]*>/g,''):'';
+    return '<div class="fzd-i"'+(tit?' title="'+esc(tit)+'"':'')+'><span class="fzd-x">✕</span><div><b>'+(corto?fzCap(pmCorto(cab)):fzCap(cab))+'</b>'+(resto?'<span>'+fzCap(resto)+'</span>':'')+'</div></div>';
   }).join('')+'</div>';
 }
 function faseMetaHTML(meta){
