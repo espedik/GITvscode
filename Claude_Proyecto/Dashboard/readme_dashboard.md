@@ -1375,10 +1375,13 @@ cierre del plan: los próximos 15 meses ocupan el 58 % del ancho y de ahí al ci
 marcado. El punto lleva el estado (ámbar en marcha, gris sin empezar, hueco en pausa) y un anillo rojo si tiene
 pasos atrasados; las que caen casi juntas van en un grupo —el cierre del plan junta Hong Kong, la empresa, el depa
 y el Cupra— y cada nombre abre su panel. Las etiquetas van en tres carriles para no encimarse; en el teléfono,
-solo el icono. **Dos columnas en las dos listas**: seis fichas en tres filas cada una, las logradas al final de
-corto plazo. Medido a 2048×1040: la franja mide 208 px (Adán, 21-oct-2026: *"hazlo 1/3 más grande a lo
-alto"*), con la línea del tiempo a 132 px y sus carriles a 28, y ninguna lista desplaza; las 7 etiquetas no chocan a
-2560, 1920, 1600, 1366 ni 390.
+solo el icono. **Hoy** es una línea cian que cruza las metas, el eje y las fases, con el día escrito arriba en una
+etiqueta sólida (*HOY · 25 OCT*), y **las fechas del pie** van a 10.5 px en el gris de texto —cada tres meses hasta el
+corte y cada año desde él, el del corte incluido—; las fases, a 9 px (Adán, 25-oct-2026: *"no se ven claramente las
+fechas ni la fecha del día de hoy"*). **Dos columnas en las dos listas**: seis fichas en tres filas cada una, las logradas al final de
+corto plazo. Medido a 2048×1040: la franja mide 224 px (Adán, 21-oct-2026: *"hazlo 1/3 más grande a lo
+alto"*), con la línea del tiempo a 138 px y sus carriles a 28, y ninguna lista desplaza; ni las 7 etiquetas, ni las
+fechas del pie, ni la de hoy chocan a 2560, 2048, 1600, 1366, 1024 ni 390 (entre fechas del pie, 77 px a 1600 y 7 a 390).
 
 **El dinero real** de la Maestría es una barra continua en `--ac2`, distinta de las marcas de
 paso, con la cifra (`$2,500 ahorrado`): `METAS_MONEYBAR.maestria.short`; `.lbl` va en el `title`.
