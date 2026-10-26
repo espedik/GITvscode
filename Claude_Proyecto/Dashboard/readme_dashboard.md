@@ -1657,10 +1657,15 @@ lleva foto (`apFotoSk()`, la misma de *Hoy aprendes*).
 | **Las 12 fichas** (`#skGrid`) | Seis por fila, por retorno —peso por lo que falta: dónde una hora sube más tu nivel—. Cada una: su foto; arriba su **nivel** (`45/100`) y, si toca, *FOCO · 4 H* con los ángulos encendidos, *EN PAUSA* o, si conserva horas, *PAUSA · SOLO 0,5 H* (la foto se apaga); abajo el nombre, el escalón (`skLevel()`), la barra del nivel y **lo que toca esta semana** (el tramo del foco o el `mant` de las demás); debajo, una marca por paso de su ruta y `hechos/total` |
 | **El plan de foco** (`#skPlan`) | Un tramo de `CIFRAS.HAB_FOCO` por habilidad, ancho según los meses que dura: foto, fechas, horas, el entregable y *Ahora · N días*, *Pasó* o *Desde…*. Tocar uno abre su ruta. *Ajustar en Coach →* |
 
-**La ventana** (`abrirSkillDetalle(id)`) es la de Habilidades Base (`pintarDetailOverlay`, ver *El panel
-de detalle*): el temario es la ruta de `APRENDIZAJE` (`habPasos()`); cada paso, **Qué hacer**, la caja **Por
-qué este paso** y **Con qué** (el libro con su portada y *Qué es*, o el recurso con `pfRecursoHtml()`), que
-`skillDetalle()` arma en el formato de las fichas (`cajas` y `boton`). En Recursos (`lado`): **tu nivel** con
+**La ventana** (`abrirSkillDetalle(id)`) es la de Habilidades Base y Mis Metas (`pintarDetailOverlay`, ver *El
+panel de detalle*) **con su misma distribución** (Adán, 26-oct-2026: *"en coach habilidades mejora el diseño y déjalo como los demás, misma distribución, y mejora el contenido de todos, más cosas gráficas, más explicaciones, más fotos"*): el temario se pliega
+(`md-contraible`) y arriba van *Tema N de M* y *Temas*. El temario es la ruta de `APRENDIZAJE` (`habPasos()`) y cada
+paso se lee como una ficha de Mis Metas, en el formato que arma `skillDetalle()`: **Qué hacer**; **la foto**, ancha
+(`ancha`), con su pie y su crédito —autor · fuente · licencia— (`Dashboard/fotos-habilidades/`, 68 fotos de Rawpixel,
+Flickr y StockSnap con licencia libre, a 1280 px); **tres cifras** grandes; **En detalle**, tres puntos numerados con
+el método, y tres cajas: **Por qué este paso**, **Tu caso** (cian) y **el error común** (ámbar); al final, **Con
+qué** (el libro con su portada y *Qué es*, o el recurso con `pfRecursoHtml()`). El contenido vive en el maestro
+(`APRENDIZAJE_DETALLE`, por el nombre del paso) y el control 45 exige que ningún paso se quede sin él. En Recursos (`lado`): **tu nivel** con
 la marca del siguiente escalón y cuánto sube el general, **esta semana**, **se demuestra con** (`prueba`),
 **por qué esta habilidad** (`porQue`), **dónde estás** (`desc`), **dónde se practica** y los libros de su
 ruta. Arriba de todo, en la del foco y en la de la habilidad del libro, **tu libro del mes** (`lmLadoHtml()`, ver

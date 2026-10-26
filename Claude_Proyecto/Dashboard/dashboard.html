@@ -2410,6 +2410,7 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .md-foto figcaption{font-size:12.5px;line-height:1.5;color:var(--text3)}
 .md-foto figcaption a{color:var(--text3);white-space:nowrap;text-decoration:underline;text-decoration-color:rgba(var(--ov),.3);text-underline-offset:2px}
 .md-foto figcaption a:hover{color:var(--cy)}
+.md-foto-cred{white-space:nowrap;opacity:.8}
 .md-cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;max-width:880px}
 .md-cifra{display:flex;flex-direction:column;gap:6px;padding:14px 16px;border-radius:8px;border:1px solid rgba(var(--cy-rgb),.22);background:rgba(var(--cy-rgb),.05)}
 .md-cifra b{font-family:var(--font-title);font-size:clamp(22px,2vw,30px);font-weight:700;line-height:1;color:var(--text);letter-spacing:-.01em}
@@ -11799,7 +11800,7 @@ function calcOVRcon(id, valor){
 // y si mañana IA o Datos entran al foco, el slide ya sabe mostrarlas.
 function habPasos(id){
   const a = APRENDIZAJE[id]; if(!a) return [];
-  if(a.subs) return a.subs.map(x => ({ n: x.n, q: x.q, c: x.c, r: x.r, k: x.corto }));
+  if(a.subs) return a.subs.map(x => ({ n: x.n, q: x.q, c: x.c, r: x.r, k: x.corto, foto: x.foto, cred: x.cred, pie: x.pie, cifras: x.cifras, list: x.list }));
   // Los recursos de la habilidad, tal cual: `pfRecursosHtml` sabe pintarlos.
   const r = (a.recursos || []).slice(0, 2);
   return [
@@ -11995,7 +11996,10 @@ function skillDetalle(id){
       t: p.n,
       d: p.c ? `<span class="md-lbl md-d-lbl">Qué hacer</span>${p.c}` : '',
       cajas: p.q ? [{ lbl: 'Por qué este paso', txt: p.q }] : [],
-      boton: skConQue(p)
+      boton: skConQue(p),
+      // Lo que enseña cada paso, como una ficha de Mis Metas: la foto ancha con su pie y su crédito, tres cifras
+      // grandes y «En detalle», con «Tu caso» y el error común en sus cajas.
+      foto: p.foto ? 'fotos-habilidades/' + p.foto : '', ancha: true, cred: p.cred, pie: p.pie, cifras: p.cifras, list: p.list
     }))
   };
 }
@@ -13279,7 +13283,7 @@ function mdPintar(){
   const info=dict&&dict[id]; if(!info) return;
   const conPlan=dict===META_DETALLE&&!!META_PLAN[id];
   const ov=document.getElementById('metaDetailOverlay');
-  const contraible=dict===HABILIDAD_DETALLE||dict===META_DETALLE;   // Habilidades Base y Mis Metas contraen el temario
+  const contraible=dict===HABILIDAD_DETALLE||dict===META_DETALLE||dict===SKILL_DETALLE;   // Habilidades Base, Mis Metas y Coach · Habilidades contraen el temario
   ov.classList.toggle('md-contraible',contraible);
   ov.classList.toggle('md-temario-min',contraible&&!mdEstado.temario);
   if(conPlan&&mdEstado.i<0){ mdPintarPlan(); return; }
@@ -13392,8 +13396,8 @@ function mdPintar(){
   // la figura se quita sola) y un renglón de cifras grandes: lo que hace que un paso se recuerde.
   const fotoWeb=!!p.foto&&/^https?:/.test(p.foto);
   const fuente=fotoWeb&&p.foto.includes('Special:FilePath/')?p.foto.replace('Special:FilePath/','File:').replace(/\?.*$/,''):'';
-  const fotoHtml=p.foto?`<figure class="md-foto${fotoWeb?'':' md-foto-loc'}${p.alta?' md-foto-alta':''}"><img src="${p.foto}" alt="${esc(p.pie||mdLimpiaTitulo(p.t))}" loading="lazy" onerror="this.closest('figure').remove()">${
-    p.pie||fuente?`<figcaption>${p.pie?esc(p.pie):''}${fuente?` <a href="${fuente}" target="_blank" rel="noopener">Foto: Wikimedia Commons ↗</a>`:''}</figcaption>`:''}</figure>`:'';
+  const fotoHtml=p.foto?`<figure class="md-foto${fotoWeb||p.ancha?'':' md-foto-loc'}${p.alta?' md-foto-alta':''}"><img src="${p.foto}" alt="${esc(p.pie||mdLimpiaTitulo(p.t))}" loading="lazy" onerror="this.closest('figure').remove()">${
+    p.pie||fuente||p.cred?`<figcaption>${p.pie?esc(p.pie):''}${fuente?` <a href="${fuente}" target="_blank" rel="noopener">Foto: Wikimedia Commons ↗</a>`:''}${p.cred?` <span class="md-foto-cred">Foto: ${esc(p.cred)}</span>`:''}</figcaption>`:''}</figure>`:'';
   const cifrasHtml=(p.cifras||[]).length?`<div class="md-cifras">${p.cifras.map(([v,l])=>`<div class="md-cifra"><b>${v}</b><span>${l}</span></div>`).join('')}</div>`:'';
   const imgCls=p.imgTipo==='diagrama'?'md-paso-img is-diagram':'md-paso-img';
   const imgHtml=p.img?`<img class="${imgCls}" src="${p.img}" alt="${esc(p.t)}" loading="lazy">`:'';

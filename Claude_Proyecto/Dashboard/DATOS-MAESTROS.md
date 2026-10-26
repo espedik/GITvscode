@@ -478,6 +478,8 @@ rutina y que ningún otro archivo vuelva a escribir las horas de sueño a mano.
 
 ### La versión corta de cada paso
 
+**Lo que enseña cada paso en su ventana** vive en `APRENDIZAJE_DETALLE` (en `datos-maestros.js`, junto a las rutas), por habilidad y por el nombre del paso: su foto (`foto`, en `Dashboard/fotos-habilidades/`) con su crédito (`cred`: autor · fuente · licencia), el pie que la ata al paso (`pie`), tres cifras (`cifras`) y «En detalle» (`list`: tres puntos del método, un «Tu caso:» y un «⚠️ Error común:»). Se mezcla en cada paso al cargar; las cifras que viven en el maestro van como `{{marcador}}`. Un paso nuevo o renombrado llega con lo suyo: el control 45 lo exige, igual que la foto en disco.
+
 Cada paso de una ruta (`APRENDIZAJE[hab].subs[]`) trae, además de su texto largo (`c`), su instrucción corta y revisada (`corto`): una frase completa y en palabras de todos los días, que es lo que enseña la tarjeta *Ejercicio de …* de Mi Día. Un paso nuevo llega con su `corto`; el control 34 del verificador lo exige.
 
 ### Los recursos de las rutas de habilidad

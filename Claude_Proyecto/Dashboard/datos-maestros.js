@@ -1526,7 +1526,7 @@ window.CIFRAS = (function () {
       subs: [
         { n: 'Págate primero', corto: 'El día que cobras, manda primero tu ahorro a tu cuenta de inversión y gasta solo lo que queda.',
           q: 'El ahorro que sale el día que entra el dinero es el único que sobrevive al mes. Todo lo que ahorres es para Alemania.',
-          c: 'El 15 —y desde febrero también el 1—, lo que va a GBM sale en cuanto entra la quincena, antes de pagar o comprar nada. Lo que queda es lo que puedes gastar: Tu estrategia de hoy, en el Plan Maestro, te dice cuánto al día.',
+          c: 'El 15 —y desde febrero también el 1—, lo que va a GBM sale en cuanto entra la quincena, antes de pagar o comprar nada. Lo que queda es lo que puedes gastar: Tu estrategia de hoy —al tocar la cifra de Deuda cara en el Plan Maestro— te dice cuánto al día.',
           r: [
             { t: 'libro', id: 'iWillTeach' },
           ] },
@@ -1715,7 +1715,7 @@ window.CIFRAS = (function () {
           ] },
         { n: 'Cortar la rumia con una acción pequeña', corto: 'Cuando lleves 10 minutos dándole vueltas a algo, haz la acción más pequeña que lo mueva: un mensaje, una línea, una búsqueda.',
           q: 'Pensar mucho un problema que no se mueve no es analizar: es girar.',
-          c: 'Cuando notes que llevas 10 minutos dando vueltas a lo mismo, haz <b>la cosa más pequeña</b> que lo mueva: un mensaje, una línea, una búsqueda. No la solución completa. La acción corta la rumia mejor que cualquier raz onamiento.',
+          c: 'Cuando notes que llevas 10 minutos dando vueltas a lo mismo, haz <b>la cosa más pequeña</b> que lo mueva: un mensaje, una línea, una búsqueda. No la solución completa. La acción corta la rumia mejor que cualquier razonamiento.',
           r: [
             { t: 'libro', id: 'practicing' },
           ] },
@@ -1870,6 +1870,1811 @@ window.CIFRAS = (function () {
       ],
     },
   };
+
+  /* ── Lo que enseña cada paso de las rutas, en su ventana ──
+     Adán, 26-oct-2026: "mejora el contenido de todos, más cosas gráficas, más explicaciones, más fotos".
+     Por habilidad y por el nombre del paso (`n`): la foto, en Dashboard/fotos-habilidades/, con su crédito (`cred`:
+     autor · fuente · licencia); el pie que la ata al paso; tres cifras grandes, y «En detalle»: cómo se hace, con un
+     «Tu caso:» y un «⚠️ Error común:», que la ventana pone en sus cajas. Se mezcla en cada paso al cargar; el control
+     45 del verificador avisa si a un paso le falta lo suyo, si una foto no está en disco o si un detalle se quedó sin
+     paso. Las cifras que viven en el maestro van como {{marcador}}. */
+  const APRENDIZAJE_DETALLE = {
+    "ia": {
+      "El syllabus, capítulo por capítulo": {
+        "foto": "ia-1.jpg",
+        "cred": "Alex E. Proimos · Flickr · CC BY-NC 2.0",
+        "pie": "Una sesión, un capítulo: el syllabus se lee para contestar con sus palabras, no para entenderlo a grandes rasgos.",
+        "cifras": [
+          [
+            "5",
+            "capítulos del syllabus"
+          ],
+          [
+            "16 de 46",
+            "puntos vale el capítulo 2"
+          ],
+          [
+            "1",
+            "capítulo por sesión"
+          ]
+        ],
+        "list": [
+          "<b>Lee con un objetivo:</b> antes de abrir el capítulo, mira sus objetivos de aprendizaje; cada pregunta del examen sale de uno de ellos.",
+          "<b>Cierra el libro y escribe:</b> cinco ideas en una tarjeta, sin mirar. Lo que no puedes escribir de memoria todavía no lo sabes, aunque lo hayas subrayado.",
+          "<b>Usa sus palabras:</b> el examen premia el término exacto del syllabus —<i>few-shot</i>, <i>prompt chaining</i>, <i>hallucination</i>—, no tu forma de decirlo en el trabajo.",
+          "Tu caso: los capítulos, en orden y con el que toca leer resaltado, están en la ventana del Examen ISTQB CT-GenAI; la pregunta del día repasa lo que lees.",
+          "⚠️ Error común: releer el capítulo en vez de contestar preguntas. Releer se siente productivo; recordar sin mirar es lo que fija."
+        ]
+      },
+      "El simulacro como termómetro": {
+        "foto": "ia-2.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "El reloj no miente: saber que sabes no es lo mismo que contestar todo el examen a tiempo.",
+        "cifras": [
+          [
+            "34 de 46",
+            "para presentar, dos veces seguidas"
+          ],
+          [
+            "30",
+            "el corte para aprobar"
+          ],
+          [
+            "1",
+            "simulacro completo por semana"
+          ]
+        ],
+        "list": [
+          "<b>Con reloj y de una sentada:</b> un simulacro en pedazos no te dice si llegas al final con la cabeza fresca.",
+          "<b>Cada fallo a la lista:</b> la pregunta, su sección del syllabus y por qué elegiste la otra. La lista de fallos es tu temario de la semana siguiente.",
+          "<b>Mira la tendencia, no un número:</b> dos simulacros seguidos arriba de 34 valen más que uno de 40 después de uno de 28.",
+          "Tu caso: el simulacro vive en Mis Metas y guarda cada intento; Coach · Habilidades te dice cuántos llevas y si ya cumples para presentar.",
+          "⚠️ Error común: repetir el mismo simulacro hasta aprenderte las respuestas. Sube el número y no sube lo que sabes: alterna los dos bancos de preguntas."
+        ]
+      },
+      "Una prueba con IA que puedas enseñar": {
+        "foto": "ia-3.jpg",
+        "cred": "jaguarmena · Flickr · CC BY 2.0",
+        "pie": "Lo que se enseña en una entrevista de validación: un requisito real, lo que propuso la IA y lo que tú corregiste.",
+        "cifras": [
+          [
+            "1",
+            "requisito: un frenado de emergencia"
+          ],
+          [
+            "20",
+            "casos que le pides al modelo"
+          ],
+          [
+            "1",
+            "README que dice cuáles estaban mal"
+          ]
+        ],
+        "list": [
+          "<b>Empieza por el requisito, no por el modelo:</b> escribe en dos líneas qué debe hacer la función —frenar sola ante un obstáculo, por ejemplo— y con qué entradas.",
+          "<b>Revisa los casos uno por uno:</b> marca los correctos, los repetidos, los imposibles y los que faltan —límites, falla de un sensor, lluvia—. Esa tabla es el trabajo.",
+          "<b>Cuenta lo que encontraste:</b> en el README, en inglés, cuántos casos útiles dio el modelo, qué se le escapó y qué instrucción mejoró el resultado.",
+          "Tu caso: llevas seis años probando ADAS y HIL; pocos candidatos a un Werkstudent tienen un ejemplo tan cercano a lo que hace el equipo.",
+          "⚠️ Error común: publicar lo que generó el modelo sin tu revisión. Lo que vale es tu criterio sobre la salida, no la salida."
+        ]
+      },
+      "Automatiza una tarea tuya": {
+        "foto": "ia-4.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Lo que repites cada semana es lo primero que se automatiza: libera horas y te da un caso real que contar.",
+        "cifras": [
+          [
+            "1",
+            "tarea que repites cada semana"
+          ],
+          [
+            "< 1 h",
+            "para automatizarla"
+          ],
+          [
+            "× 4",
+            "veces que te la ahorras al mes"
+          ]
+        ],
+        "list": [
+          "<b>Elige por frecuencia:</b> lo que haces cada semana con los mismos pasos —pasar gastos, armar un reporte, renombrar archivos— rinde más que lo que haces una vez al año.",
+          "<b>Escribe los pasos a mano primero:</b> si no los puedes listar, no los puedes automatizar. La lista es la mitad del trabajo.",
+          "<b>Mide el antes y el después:</b> minutos por vez y veces por mes. Ese número es lo que cuentas en la entrevista.",
+          "Tu caso: ya automatizaste este Dashboard con Claude Code; lo siguiente es algo de tu trabajo que no toque datos de un cliente.",
+          "⚠️ Error común: pasar una tarde automatizando algo que te quita cinco minutos al año. Si no se repite, no se automatiza."
+        ]
+      },
+      "Lo que no se le delega a la IA": {
+        "foto": "ia-5.jpg",
+        "cred": "stockcatalog · Flickr · CC BY 2.0",
+        "pie": "La IA propone; tú respondes por lo que se entrega. Revisar con criterio es parte del trabajo, no un extra.",
+        "cifras": [
+          [
+            "0",
+            "datos de un cliente en un modelo público"
+          ],
+          [
+            "100 %",
+            "de las salidas, revisadas"
+          ],
+          [
+            "3",
+            "riesgos: alucinación, datos y sesgo"
+          ]
+        ],
+        "list": [
+          "<b>Alucinaciones:</b> un modelo inventa con la misma seguridad con la que acierta. Todo dato, cita o número que te dé se comprueba en su fuente.",
+          "<b>Datos:</b> lo que pegas en un modelo público puede salir de tu control. Código, requisitos y resultados de un cliente solo van a herramientas aprobadas por la empresa.",
+          "<b>Sesgo:</b> un modelo repite los patrones con los que se entrenó; en pruebas, eso es casos parecidos entre sí y huecos en los raros.",
+          "Tu caso: antes de usar IA con algo de ALTEN, pregunta qué herramientas están permitidas; esa pregunta, hecha a tiempo, te cuida el trabajo.",
+          "⚠️ Error común: revisar la salida de la IA con menos cuidado que el trabajo de un compañero porque «se ve bien». Se ve bien siempre."
+        ]
+      }
+    },
+    "ingles": {
+      "Tu nivel real es el de hablar bajo presión": {
+        "foto": "ingles-1.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "El micrófono es el diagnóstico más honesto: dos minutos sin guion dicen más que el certificado.",
+        "cifras": [
+          [
+            "2 min",
+            "grabándote sin guion"
+          ],
+          [
+            "B2",
+            "lo que dice tu IELTS 6.0"
+          ],
+          [
+            "0",
+            "pausas largas: la meta"
+          ]
+        ],
+        "list": [
+          "<b>Graba sin preparar:</b> pon el teléfono a grabar y contesta «tell me about yourself» de corrido, sin notas.",
+          "<b>Escúchate con una hoja:</b> anota cada pausa larga, cada «eh» y cada vez que se nota que traduces del español. Esos tres números son tu nivel real.",
+          "<b>Repite la misma pregunta una semana después:</b> si bajaron las pausas, subiste; el certificado no te lo va a decir.",
+          "Tu caso: lees y escribes inglés técnico a diario; el hueco está en hablar sin preparar, justo lo que piden la maestría y el Werkstudent.",
+          "⚠️ Error común: medirte por lo que entiendes. Entender es el oído; una entrevista evalúa lo que dices."
+        ]
+      },
+      "La carta de motivación de Esslingen": {
+        "foto": "ingles-2.jpg",
+        "cred": "Wim Mulder · Flickr · CC BY-NC-SA 2.0",
+        "pie": "Tu primera entrevista es por escrito: una página que decide si vales una plaza.",
+        "cifras": [
+          [
+            "1",
+            "página"
+          ],
+          [
+            "3",
+            "párrafos: por qué, qué traes, qué sigue"
+          ],
+          [
+            "1",
+            "borrador por semana"
+          ]
+        ],
+        "list": [
+          "<b>Primero, por qué ese programa:</b> Automotive Systems en Esslingen, en la región de Stuttgart y su industria; nada que sirva para cualquier universidad.",
+          "<b>Después, lo que traes:</b> HIL, ADAS y validación en Ford, Continental, Bosch y ALTEN, con un resultado concreto por empresa.",
+          "<b>Al final, qué quieres después:</b> el Werkstudent y el puesto al que apuntas; el comité busca a alguien que sabe a dónde va.",
+          "Tu caso: tus años en la industria son tu ventaja frente a recién egresados; la carta tiene que dejarlo claro en los primeros diez segundos.",
+          "⚠️ Error común: contar tu vida en orden cronológico. El comité lee decenas: lo importante va primero."
+        ]
+      },
+      "El vocabulario de TU trabajo primero": {
+        "foto": "ingles-3.jpg",
+        "cred": "This is Engineering image library · Flickr · CC BY-NC-ND 2.0",
+        "pie": "No necesitas inglés general: necesitas explicar tus decisiones técnicas sin buscar la palabra.",
+        "cifras": [
+          [
+            "40",
+            "términos de tu trabajo"
+          ],
+          [
+            "90 %",
+            "de tu jornada cubierta"
+          ],
+          [
+            "3",
+            "frases por término"
+          ]
+        ],
+        "list": [
+          "<b>Saca la lista de tu día real:</b> reuniones, correos y revisiones de ALTEN; anota las palabras que dudarías al decir en voz alta.",
+          "<b>Practica frases, no palabras:</b> «the trade-off here is…», «this edge case fails when…», «the root cause was…». La frase entera es lo que sale bajo presión.",
+          "<b>Dilas en voz alta en el coche:</b> tres frases por término; repetir entrena la boca, que es donde está tu hueco.",
+          "Tu caso: el inglés que te van a pedir es el de explicar arquitectura, sensores y decisiones técnicas, no el de un examen general.",
+          "⚠️ Error común: estudiar listas de vocabulario general. Cuarenta términos tuyos rinden más que mil palabras de libro."
+        ]
+      },
+      "Simulacros de entrevista de verdad": {
+        "foto": "ingles-4.jpg",
+        "cred": "Alan Cleaver · Flickr · CC BY 2.0",
+        "pie": "Ensayar en voz alta es la única forma de que la entrevista real no sea la primera.",
+        "cifras": [
+          [
+            "1",
+            "sesión a la semana"
+          ],
+          [
+            "3",
+            "preguntas que siempre salen"
+          ],
+          [
+            "2 min",
+            "por respuesta"
+          ]
+        ],
+        "list": [
+          "<b>Las tres que siempre salen:</b> un proyecto del que estés orgulloso, un conflicto técnico y por qué esa empresa. Prepara los puntos, nunca el texto.",
+          "<b>Contesta con estructura:</b> la situación, lo que hiciste tú y el resultado con un número, en dos minutos.",
+          "<b>Grábalo y escúchalo:</b> en cada sesión, una sola cosa a corregir para la siguiente.",
+          "Tu caso: el Werkstudent y la maestría empiezan con una entrevista en inglés; llegar con cuatro simulacros hechos cambia cómo te ves.",
+          "⚠️ Error común: memorizar respuestas. Se nota en la primera repregunta y te quedas sin nada."
+        ]
+      },
+      "Pensar en inglés durante el manejo": {
+        "foto": "ingles-5.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Tus horas al volante son tu bloque más grande de tiempo libre: el coche es tu laboratorio de idiomas.",
+        "cifras": [
+          [
+            "1",
+            "frase repetida en voz alta por trayecto"
+          ],
+          [
+            "0",
+            "pantallas: solo audio"
+          ],
+          [
+            "2",
+            "cosas a la vez: la habilidad y el idioma"
+          ]
+        ],
+        "list": [
+          "<b>Escucha y repite:</b> pausa el podcast después de una frase útil y dila en voz alta; solo escuchar entrena el oído, que ya tienes.",
+          "<b>Narra lo que haces:</b> describe en inglés el tráfico, la ruta y lo que harás mañana. Es práctica de hablar sin preparar.",
+          "<b>Elige audio de tu sector:</b> conducción autónoma, pruebas, ingeniería; así el vocabulario es el de tu trabajo.",
+          "Tu caso: Qué escuchar mientras manejas ya te pone el audio de la semana; en inglés te sirve doble: la habilidad y el idioma de la maestría.",
+          "⚠️ Error común: seguir repitiendo frases con un pasajero. Tu calificación en Didi es parte del ingreso: baja el volumen o pausa."
+        ]
+      },
+      "Cero traducción en el trabajo": {
+        "foto": "ingles-6.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "El idioma se aprende usándolo en lo que ya haces: el entorno en inglés trabaja por ti todo el día.",
+        "cifras": [
+          [
+            "0",
+            "horas extra de estudio"
+          ],
+          [
+            "4",
+            "cosas que pasas a inglés"
+          ],
+          [
+            "1",
+            "idioma para pensar el trabajo"
+          ]
+        ],
+        "list": [
+          "<b>Cambia el idioma de lo que ya usas:</b> el sistema, el editor, el teléfono y tus herramientas de trabajo.",
+          "<b>Escribe en inglés lo que es tuyo:</b> notas técnicas, mensajes de commit y tu lista de pendientes.",
+          "<b>Lee la documentación original:</b> nada de traducir la página; si una palabra no sale, búscala y sigue.",
+          "Tu caso: ya lees y escribes inglés técnico todos los días; el paso es dejar de traducir en la cabeza, que es lo que te hace lento al hablar.",
+          "⚠️ Error común: cambiar todo de golpe y regresarlo a la semana. Empieza por el editor y el teléfono; lo demás, cuando ya no te estorbe."
+        ]
+      }
+    },
+    "codigo": {
+      "Qué te pide el puesto que quieres": {
+        "foto": "codigo-1.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Los anuncios son el temario: dicen exactamente qué te van a pedir.",
+        "cifras": [
+          [
+            "5",
+            "anuncios de Werkstudent"
+          ],
+          [
+            "5",
+            "requisitos que se repiten"
+          ],
+          [
+            "1",
+            "marca: lo que ya resuelves sin buscar"
+          ]
+        ],
+        "list": [
+          "<b>Busca en la región correcta:</b> Werkstudent de validación, HIL o ADAS en la región de Stuttgart: Bosch, Mercedes-Benz, Porsche y sus proveedores.",
+          "<b>Subraya lo que se repite:</b> si cinco de cinco piden Python y pytest, ese es el temario; lo que sale una vez, no.",
+          "<b>Marca lo que ya haces:</b> en cada requisito, ¿podrías resolver un ejercicio mañana sin buscar? Lo que no marques, en orden de frecuencia, es tu ruta.",
+          "Tu caso: con la Mecatrónica del IPN y seis años de validación ya cubres CAN, HIL y pruebas; el hueco suele estar en escribir Python desde cero y en CI.",
+          "⚠️ Error común: estudiar un lenguaje o un curso porque está de moda. Si los anuncios no lo piden, no es para este año."
+        ]
+      },
+      "Tests antes que features": {
+        "foto": "codigo-2.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Primero la lista de lo que debe cumplirse, después el código: la prueba te obliga a decir qué esperas.",
+        "cifras": [
+          [
+            "1",
+            "prueba antes del arreglo"
+          ],
+          [
+            "3",
+            "casos: normal, límite y falla"
+          ],
+          [
+            "0",
+            "código sin prueba en producción"
+          ]
+        ],
+        "list": [
+          "<b>Escribe primero lo que esperas:</b> una prueba que falla porque el arreglo todavía no existe. Si no sabes qué escribir, todavía no entiendes el problema.",
+          "<b>Haz el arreglo mínimo:</b> lo justo para que la prueba pase; después limpia el código con la prueba como red.",
+          "<b>Cubre el límite y la falla:</b> un caso normal, uno en el borde —cero, el máximo, el valor vacío— y uno que debe fallar con un error claro.",
+          "Tu caso: en automotive el código sin prueba no llega a producción; hacerlo así en ALTEN es lo que separa a un junior de un senior en una revisión.",
+          "⚠️ Error común: escribir la prueba después y a la medida del código. Así solo confirma lo que ya hiciste, errores incluidos."
+        ]
+      },
+      "pytest de verdad": {
+        "foto": "codigo-3.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "pytest es el estándar para automatizar pruebas en Python y aparece en casi todos los anuncios de validación.",
+        "cifras": [
+          [
+            "1",
+            "función de control"
+          ],
+          [
+            "3",
+            "tipos de caso: normal, límite y falla"
+          ],
+          [
+            "1",
+            "pipeline que las corre en cada commit"
+          ]
+        ],
+        "list": [
+          "<b>Empieza simple:</b> un archivo <i>test_*.py</i>, funciones que empiezan con <i>test_</i> y <i>assert</i>; pytest las encuentra solo.",
+          "<b>Usa parametrize:</b> la misma prueba con muchos valores —velocidades, distancias, ganancias del PID— en una sola función.",
+          "<b>Fixtures para lo que se repite:</b> el modelo del vehículo o los datos del sensor se preparan una vez y se reusan en cada prueba.",
+          "Tu caso: un PID o la lógica de un frenado de emergencia simulado es justo lo que prueba tu equipo; en Python y con CI es lo que piden los anuncios.",
+          "⚠️ Error común: pruebas que dependen del orden en que corren. Cada una debe poder correr sola y dar el mismo resultado."
+        ]
+      },
+      "Un proyecto que se pueda enseñar": {
+        "foto": "codigo-4.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "En la entrevista pesa más un proyecto tuyo, explicado bien, que diez cursos terminados.",
+        "cifras": [
+          [
+            "1",
+            "proyecto pequeño y terminado"
+          ],
+          [
+            "3",
+            "piezas: pruebas, CI y README"
+          ],
+          [
+            "2 min",
+            "para explicarlo en una entrevista"
+          ]
+        ],
+        "list": [
+          "<b>Pequeño y completo:</b> un nodo que lee datos de un sensor, los filtra y decide algo; mejor terminado que grande.",
+          "<b>Con pruebas y CI:</b> GitHub Actions corre las pruebas en cada commit y pone la insignia verde en el README.",
+          "<b>Un README que explica la decisión difícil:</b> qué opciones había, cuál elegiste y por qué. Es lo que lee un reclutador técnico.",
+          "Tu caso: el repositorio público es el entregable del foco de Código en tu plan y lo que vas a enseñar para el Werkstudent.",
+          "⚠️ Error común: diez proyectos a medias. Uno terminado y razonado vale más que todos juntos."
+        ]
+      },
+      "Leer código ajeno a propósito": {
+        "foto": "codigo-5.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Se aprende más leyendo un buen repositorio que escribiendo tres tuyos.",
+        "cifras": [
+          [
+            "1",
+            "archivo entero a la semana"
+          ],
+          [
+            "1",
+            "idea que copiarías"
+          ],
+          [
+            "12",
+            "ideas nuevas en tres meses"
+          ]
+        ],
+        "list": [
+          "<b>Elige un repositorio serio de tu campo:</b> Autoware o ROS 2, código que usan equipos de verdad.",
+          "<b>Lee un archivo completo:</b> de arriba abajo, preguntándote por qué está hecho así; las pruebas del mismo módulo te dicen qué se esperaba.",
+          "<b>Anota una idea:</b> un patrón, un nombre, una forma de manejar errores. Una por semana.",
+          "Tu caso: ya diriges código con IA; leer código bueno es lo que te da el criterio para saber si lo que te propone está bien.",
+          "⚠️ Error común: hojear muchos archivos. Uno entendido a fondo enseña más que veinte vistos por encima."
+        ]
+      },
+      "Media hora diaria, no seis el domingo": {
+        "foto": "codigo-6.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Programar es memoria muscular: media hora diaria le gana a seis horas el domingo.",
+        "cifras": [
+          [
+            "30 min",
+            "al día"
+          ],
+          [
+            "15 h",
+            "al mes"
+          ],
+          [
+            "1",
+            "ejercicio por sesión"
+          ]
+        ],
+        "list": [
+          "<b>Siempre a la misma hora:</b> el bloque de la mañana antes de ALTEN; sin decidirlo cada día, no hay nada que negociar.",
+          "<b>Un ejercicio por sesión:</b> pequeño y terminado; mañana se empieza donde quedó.",
+          "<b>Sin IA la primera vez:</b> escríbelo tú y luego compáralo con lo que te propone la IA; ahí está el aprendizaje.",
+          "Tu caso: tu bloque de la mañana ya está en Mi Día; usarlo a diario cuenta más que una maratón.",
+          "⚠️ Error común: compensar los días perdidos con una sesión larga el fin de semana. La memoria muscular se hace con frecuencia, no con horas juntas."
+        ]
+      }
+    },
+    "network": {
+      "Tu red real, en una hoja": {
+        "foto": "network-1.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Sin lista, «hacer networking» es un deseo; con veinte nombres escritos es un plan.",
+        "cifras": [
+          [
+            "20",
+            "nombres de tu campo"
+          ],
+          [
+            "1 año",
+            "sin hablar: los que van primero"
+          ],
+          [
+            "5",
+            "columnas por persona"
+          ]
+        ],
+        "list": [
+          "<b>Cinco columnas:</b> nombre, dónde lo conociste, qué hace hoy, cuándo hablaron por última vez y qué le puedes ofrecer.",
+          "<b>Saca nombres de tu historia:</b> Ford, Continental, Bosch, Google, ALTEN, el IPN y la gente que conociste en Stuttgart.",
+          "<b>Ordena por fecha:</b> los que pasan de un año sin hablar son tu trabajo de las próximas semanas.",
+          "Tu caso: ya tienes red en las empresas a las que quieres llegar; lo que falta es tenerla escrita y cuidarla con un ritmo.",
+          "⚠️ Error común: hacer la lista con los de más cargo. Sirve más quien te vio trabajar y te contesta."
+        ]
+      },
+      "Las cartas de recomendación, ya": {
+        "foto": "network-2.jpg",
+        "cred": "LarimdaME · Flickr · CC BY-NC 2.0",
+        "pie": "Una carta tarda semanas: se pide pronto, con fecha y con un borrador en la mano.",
+        "cifras": [
+          [
+            "2",
+            "cartas que pide Esslingen"
+          ],
+          [
+            "3",
+            "cosas tuyas que pides que mencionen"
+          ],
+          [
+            "1",
+            "borrador que ofreces"
+          ]
+        ],
+        "list": [
+          "<b>Elige a quien te vio trabajar:</b> un jefe de Bosch o de ALTEN y un líder técnico o profesor; el cargo pesa menos que los detalles que pueden contar.",
+          "<b>Pídela con un correo corto:</b> para qué es, la fecha límite y tres cosas concretas tuyas que te gustaría que mencione.",
+          "<b>Ofrece un borrador:</b> casi todos lo agradecen y la carta sale a tiempo y con lo que importa.",
+          "Tu caso: la solicitud a Esslingen tiene fecha; si las cartas se piden tarde, todo se atrasa con ellas.",
+          "⚠️ Error común: pedirla sin fecha. «Cuando puedas» quiere decir nunca."
+        ]
+      },
+      "Reactivar sin pedir nada": {
+        "foto": "network-3.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Tres líneas sin pedir nada: así existe la red el día que la necesitas.",
+        "cifras": [
+          [
+            "5",
+            "mensajes esta semana"
+          ],
+          [
+            "3",
+            "líneas cada uno"
+          ],
+          [
+            "0",
+            "favores pedidos"
+          ]
+        ],
+        "list": [
+          "<b>Algo útil para esa persona:</b> un artículo de su tema, una noticia de su empresa, una herramienta que le ahorra trabajo.",
+          "<b>Una felicitación concreta:</b> por un cambio de puesto o un proyecto, con un detalle que demuestre que lo leíste.",
+          "<b>Una pregunta sobre algo suyo:</b> cómo le fue con el lanzamiento que mencionó; la gente contesta lo que le interesa.",
+          "Tu caso: tu hoja te dice a quién le toca; con cinco a la semana, en un mes reactivas a toda tu lista de veinte.",
+          "⚠️ Error común: aparecer solo cuando necesitas algo. Se nota siempre y quema el contacto."
+        ]
+      },
+      "Stuttgart antes de llegar": {
+        "foto": "network-4.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "La ciudad de Mercedes-Benz y de Bosch: llegar con contactos hechos cambia el primer invierno.",
+        "cifras": [
+          [
+            "1",
+            "videollamada al mes"
+          ],
+          [
+            "5",
+            "personas que ya te conocen al llegar"
+          ],
+          [
+            "20 min",
+            "por llamada"
+          ]
+        ],
+        "list": [
+          "<b>Empieza por lo que ya tienes:</b> los líderes de Bosch con los que trabajaste y los mexicanos que viven en Stuttgart.",
+          "<b>Pide 20 minutos, no un favor:</b> «quiero entender cómo se busca Werkstudent allá»; una pregunta concreta se contesta, una petición abierta no.",
+          "<b>Anota y agradece:</b> lo que aprendiste va a tu hoja y, una semana después, mandas algo útil de vuelta.",
+          "Tu caso: llegar con cinco personas que ya te conocen cambia el primer invierno y la búsqueda de trabajo.",
+          "⚠️ Error común: pedir trabajo en la primera llamada. Primero se aprende; la recomendación llega sola cuando hay confianza."
+        ]
+      },
+      "La pregunta que abre puertas": {
+        "foto": "network-5.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "La conversación informal vale más que la formal: una buena pregunta abre la puerta que un CV no abre.",
+        "cifras": [
+          [
+            "1",
+            "pregunta"
+          ],
+          [
+            "2",
+            "conversaciones antes de tu primera entrevista"
+          ],
+          [
+            "20 min",
+            "cada una"
+          ]
+        ],
+        "list": [
+          "<b>La pregunta:</b> «¿qué te habría gustado saber antes de entrar?». Casi nadie se niega y casi todos contestan algo que no sale en ninguna oferta.",
+          "<b>Luego escucha:</b> el equipo, cómo se trabaja y qué valoran en un Werkstudent; anota las palabras que usan.",
+          "<b>Cierra con una puerta abierta:</b> «¿hay alguien más con quien me recomiendes hablar?». Una conversación lleva a la siguiente.",
+          "Tu caso: con dos de estas conversaciones llegas a tu primera entrevista de Werkstudent hablando como alguien de adentro.",
+          "⚠️ Error común: convertirla en una entrevista disfrazada. Si preguntas por vacantes, la otra persona se pone a la defensiva."
+        ]
+      },
+      "Una hora al mes, en el calendario": {
+        "foto": "network-6.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Una hora al mes sostiene una red; cero horas la disuelve en un año.",
+        "cifras": [
+          [
+            "1 h",
+            "al mes"
+          ],
+          [
+            "3",
+            "personas a quienes escribes"
+          ],
+          [
+            "12 h",
+            "al año sostienen tu red"
+          ]
+        ],
+        "list": [
+          "<b>Ponla como cita fija:</b> el mismo día del mes y a la misma hora; el bloque reservado es el sistema.",
+          "<b>Tres cosas en esa hora:</b> revisar la hoja, escribir a tres personas y añadir a quien conociste ese mes.",
+          "<b>Una nota por conversación:</b> qué le preocupa y qué le sirvió; el mes siguiente tienes de qué hablar.",
+          "Tu caso: tu red ya existe; una hora al mes la mantiene viva hasta que llegues a Stuttgart.",
+          "⚠️ Error común: depender de la memoria. Sin bloque fijo, esto se cae en dos semanas."
+        ]
+      }
+    },
+    "finanzas": {
+      "Págate primero": {
+        "foto": "finanzas-1.jpg",
+        "cred": "Images_of_Money · Flickr · CC BY 2.0",
+        "pie": "Lo primero que sale de la quincena es lo tuyo: el ahorro que se aparta el día que entra es el único que sobrevive al mes.",
+        "cifras": [
+          [
+            "1º",
+            "el ahorro, antes de cualquier gasto"
+          ],
+          [
+            "1",
+            "transferencia programada"
+          ],
+          [
+            "0",
+            "pesos «de lo que sobre»"
+          ]
+        ],
+        "list": [
+          "<b>El ahorro sale primero:</b> el día que entra la quincena, lo que va a tu plan se transfiere antes de pagar o comprar cualquier cosa.",
+          "<b>Lo que queda es tu presupuesto:</b> ya no hay que ver cuánto sobra; lo que hay en la cuenta es lo que puedes gastar.",
+          "<b>Prográmalo:</b> una transferencia automática no depende de tu ánimo del día.",
+          "Tu caso: Qué invertir hoy te dice si esa quincena va a la BBVA o a GBM; págate primero es seguir ese orden el mismo día que entra el dinero.",
+          "⚠️ Error común: ahorrar lo que sobra a fin de mes. Casi nunca sobra."
+        ]
+      },
+      "Saber a dónde se va tu dinero": {
+        "foto": "finanzas-2.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Cada recibo cuenta: lo que no anotas el mismo día no existe a fin de mes.",
+        "cifras": [
+          [
+            "30",
+            "días seguidos anotando"
+          ],
+          [
+            "5",
+            "categorías"
+          ],
+          [
+            "3",
+            "las que mueven el 80 %"
+          ]
+        ],
+        "list": [
+          "<b>Anota el mismo día:</b> el gasto chico que no anotas hoy ya no existe el domingo, y los chicos son justo los que no ves.",
+          "<b>Cinco categorías bastan:</b> fijos, comida, transporte, deuda y gusto. Más categorías es más tiempo y la misma información.",
+          "<b>Al día 30, ordena:</b> de mayor a menor, y mira solo las tres primeras; ahí está lo que puedes mover.",
+          "Tu caso: tu app de Finanzas ya registra y suma por categoría; no necesitas otra herramienta, solo anotar el mismo día.",
+          "⚠️ Error común: recortar antes de medir. Sin el dato real, cualquier recorte es adivinar."
+        ]
+      },
+      "Presupuestar sobre ingreso variable": {
+        "foto": "finanzas-3.jpg",
+        "cred": "Images_of_Money · Flickr · CC BY 2.0",
+        "pie": "Con un ingreso que cambia, se presupuesta sobre el mes malo, no sobre el bueno.",
+        "cifras": [
+          [
+            "3",
+            "meses para sacar tu mínimo"
+          ],
+          [
+            "1",
+            "número: el mínimo, no el promedio"
+          ],
+          [
+            "0",
+            "pesos de lo extra al gasto"
+          ]
+        ],
+        "list": [
+          "<b>Saca tu mínimo:</b> el peor de tus últimos tres meses, sumando tu sueldo y Didi. Ese es el ingreso sobre el que presupuestas.",
+          "<b>Lo extra tiene destino fijo:</b> todo lo que entre arriba del mínimo va a tu plan —la BBVA mientras exista, después GBM— el mismo día.",
+          "<b>Con Didi, cada lunes:</b> lo que dejó la semana se aparta antes de tocarlo.",
+          "Tu caso: tu sueldo es fijo y Didi cambia cada semana; presupuestar sobre el promedio es lo que hace que un mes flojo te descuadre.",
+          "⚠️ Error común: gastar el mes bueno como si fuera el normal. El mes malo llega después y encuentra la cuenta vacía."
+        ]
+      },
+      "Decidir con la cabeza fría": {
+        "foto": "finanzas-4.jpg",
+        "cred": "Photos By Dlee · Flickr · CC BY-NC-ND 2.0",
+        "pie": "Casi ninguna mala decisión de dinero viene de las matemáticas: viene de decidir con prisa.",
+        "cifras": [
+          [
+            "72 h",
+            "entre querer y comprar"
+          ],
+          [
+            "$2,000",
+            "desde ahí aplica la regla"
+          ],
+          [
+            "1",
+            "razón escrita por decisión grande"
+          ]
+        ],
+        "list": [
+          "<b>La regla de las 72 horas:</b> lo que cuesta más de $2,000 espera tres días; si sigues queriéndolo, cómpralo sin culpa.",
+          "<b>No decidas cansado:</b> de noche, con prisa o después de ver lo que compró otro; ahí se toman casi todas las malas compras.",
+          "<b>Escribe la razón:</b> antes de una decisión grande, una línea con el porqué; releerla en seis meses te enseña más que cualquier libro.",
+          "Tu caso: los MSI y los saldos de la BBVA no vinieron de no saber hacer cuentas, sino de decidir rápido; la regla mecánica decide por ti.",
+          "⚠️ Error común: «es una oferta, se acaba hoy». La prisa es parte de la venta."
+        ]
+      },
+      "Calcular el costo real de la deuda": {
+        "foto": "finanzas-5.jpg",
+        "cred": "cafecredit · Flickr · CC BY 2.0",
+        "pie": "La tasa que anuncian no es lo que pagas: el CAT sí.",
+        "cifras": [
+          [
+            "CAT",
+            "el costo real: tasa, comisiones y seguros"
+          ],
+          [
+            "1º",
+            "la deuda de tasa más alta"
+          ],
+          [
+            "MSI",
+            "un pago fijo que ya vendiste"
+          ]
+        ],
+        "list": [
+          "<b>Lee el CAT en tu estado de cuenta:</b> incluye intereses, comisiones y seguros; es el único número con el que puedes comparar dos créditos.",
+          "<b>Ordena por tasa:</b> el mínimo en todas y todo lo extra a la de tasa más alta (avalancha). La bola de nieve —el saldo más chico primero— solo gana en motivación.",
+          "<b>Antes de un MSI:</b> calcula qué parte de tu excedente mensual compromete y por cuántos meses; esa parte ya no es tuya.",
+          "Tu caso: la BBVA es tu deuda cara; el plan la paga quincena a quincena y Qué invertir hoy te dice cuánto toca.",
+          "⚠️ Error común: pagar solo el mínimo. En una tarjeta, casi todo el mínimo se va en intereses."
+        ]
+      },
+      "El colchón dentro de la cuenta": {
+        "foto": "finanzas-6.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Un colchón que no se toca: es lo que evita que un imprevisto regrese a la tarjeta.",
+        "cifras": [
+          [
+            "1 mes",
+            "de tus fijos: {{fijosTotal}}"
+          ],
+          [
+            "28 días",
+            "CETES: se saca en uno o dos días"
+          ],
+          [
+            "0",
+            "retiros que no sean emergencia"
+          ]
+        ],
+        "list": [
+          "<b>Cuánto:</b> un mes de tus fijos; es lo que evita volver a la tarjeta cuando algo se rompe.",
+          "<b>Dónde:</b> CETES a 28 días en cetesdirecto; rinde, no tiene comisión y se saca en uno o dos días hábiles.",
+          "<b>Qué es emergencia:</b> la salud, el auto, un gasto que no podías prever; un viaje o una oferta no lo son.",
+          "Tu caso: el fondo de emergencia es el primer paso de la ruta del dinero, antes de invertir; Qué invertir hoy lo cuenta con tu saldo real.",
+          "⚠️ Error común: tenerlo en la cuenta de débito. Lo que se ve disponible se gasta."
+        ]
+      },
+      "Leer tu propio balance": {
+        "foto": "finanzas-7.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "El número que importa no es tu quincena: es lo que tienes menos lo que debes.",
+        "cifras": [
+          [
+            "1",
+            "vez al mes"
+          ],
+          [
+            "A − P",
+            "activos menos pasivos"
+          ],
+          [
+            "↑",
+            "cada mes, rumbo al millón"
+          ]
+        ],
+        "list": [
+          "<b>Activos:</b> efectivo, fondo, lo que tienes en GBM y el valor de lo que es tuyo, como el BYD.",
+          "<b>Pasivos:</b> lo que debes: la tarjeta, lo que queda del auto y cualquier MSI.",
+          "<b>Compara mes contra mes:</b> la quincena dice cómo fluye el dinero; el balance dice si estás construyendo algo.",
+          "Tu caso: el Dashboard ya calcula tu patrimonio neto; tu trabajo es mirarlo una vez al mes, no cada día.",
+          "⚠️ Error común: confundir un buen mes de ingresos con avanzar. Si el balance no sube, no avanzaste."
+        ]
+      },
+      "Entender tus impuestos": {
+        "foto": "finanzas-8.jpg",
+        "cred": "401(K) 2013 · Flickr · CC BY-SA 2.0",
+        "pie": "Los papeles del SAT en orden: no saber las reglas cuesta en multas y en deducciones que se quedan en la mesa.",
+        "cifras": [
+          [
+            "Abril",
+            "la declaración anual"
+          ],
+          [
+            "4",
+            "deducciones que suelen olvidarse"
+          ],
+          [
+            "1",
+            "constancia de situación fiscal"
+          ]
+        ],
+        "list": [
+          "<b>Lo deducible:</b> gastos médicos y dentales, lentes, colegiaturas y aportaciones voluntarias al retiro, cada uno con su tope.",
+          "<b>La declaración anual:</b> en abril; si tienes deducciones o ingresos además del sueldo, conviene presentarla.",
+          "<b>Antes de irte:</b> qué le avisa al SAT una persona que deja de vivir en México; se averigua antes, no después.",
+          "Tu caso: empieza por tu constancia de situación fiscal en el portal del SAT; ahí está tu situación real.",
+          "⚠️ Error común: pagar en efectivo un gasto deducible. Sin pago electrónico y factura, no cuenta."
+        ]
+      }
+    },
+    "inversion": {
+      "Saber cuándo NO invertir": {
+        "foto": "inversion-1.jpg",
+        "cred": "Clover Autrey · Flickr · CC BY 2.0",
+        "pie": "Antes de invertir hay dos altos: el fondo completo y la deuda cara en cero.",
+        "cifras": [
+          [
+            "1",
+            "fondo de emergencia completo"
+          ],
+          [
+            "2",
+            "deuda cara en cero"
+          ],
+          [
+            "3",
+            "invertir"
+          ]
+        ],
+        "list": [
+          "<b>El orden no se negocia:</b> primero el fondo, luego la deuda cara y al final invertir; ninguna inversión razonable rinde lo que cobra una tarjeta.",
+          "<b>Por qué:</b> una tarjeta cobra arriba de 30 % al año y un buen año de bolsa da alrededor de 10 %; invertir con deuda viva es perder la diferencia.",
+          "<b>La parte difícil:</b> respetarlo cuando el mercado sube y da comezón saltarse un paso.",
+          "Tu caso: Qué invertir hoy aplica esta regla a tu saldo real cada vez que lo abres y te dice qué paso toca.",
+          "⚠️ Error común: «solo un poquito» en algo que está subiendo. Ese poquito sale de pagar la deuda más tarde."
+        ]
+      },
+      "Conocer los instrumentos mexicanos": {
+        "foto": "inversion-2.jpg",
+        "cred": "Dennis S. Hurd · Flickr · CC0 1.0",
+        "pie": "No puedes repartir entre cosas que no distingues: cada instrumento tiene un para qué.",
+        "cifras": [
+          [
+            "3",
+            "datos de cada uno: plazo, riesgo e impuestos"
+          ],
+          [
+            "28 días",
+            "el CETE más corto"
+          ],
+          [
+            "0",
+            "comisión en cetesdirecto"
+          ]
+        ],
+        "list": [
+          "<b>CETES:</b> deuda del gobierno a 28, 91, 182 o 364 días; el riesgo más bajo en pesos, y se compran sin comisión en cetesdirecto.",
+          "<b>Índices:</b> un ETF como VOO compra las 500 empresas grandes de EE. UU. de una vez; en GBM se compra en el SIC.",
+          "<b>Bonos M y Udibonos:</b> deuda del gobierno a plazos largos; el Udibono sube con la inflación.",
+          "Tu caso: ya usas CETES y VOO en GBM, y tuviste BTC; añade solo lo que entiendas y revisa tu Afore, que es inversión aunque no lo parezca.",
+          "⚠️ Error común: comprar algo porque rindió mucho el año pasado sin saber qué es. Si no lo puedes explicar en una frase, no lo compres."
+        ]
+      },
+      "Interés compuesto y horizonte": {
+        "foto": "inversion-3.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Lo que mueve el interés compuesto no es la tasa: es el tiempo.",
+        "cifras": [
+          [
+            "72 ÷ 9",
+            "≈ 8 años para duplicar al 9 %"
+          ],
+          [
+            "8–10 %",
+            "anual: un supuesto conservador"
+          ],
+          [
+            "2030",
+            "tu horizonte"
+          ]
+        ],
+        "list": [
+          "<b>La regla del 72:</b> 72 entre la tasa anual da los años para duplicar; al 9 %, tu dinero se duplica en unos ocho años.",
+          "<b>Hazlo con tus números:</b> lo que aportas al mes, un rendimiento conservador y los años hasta 2030.",
+          "<b>Repítelo con un año menos:</b> la diferencia en pesos es lo que cuesta posponer; verla es lo que hace que no te saltes un mes.",
+          "Tu caso: tu meta del millón tiene fecha; el tiempo que queda es el motor más fuerte que tienes.",
+          "⚠️ Error común: perseguir un punto más de rendimiento en vez de empezar antes. El tiempo pesa más que la tasa."
+        ]
+      },
+      "Escribir tu asignación objetivo": {
+        "foto": "inversion-4.jpg",
+        "cred": "ccPixs.com · Flickr · CC BY 2.0",
+        "pie": "Tres porcentajes escritos una vez deciden por ti cuando el mercado te está gritando.",
+        "cifras": [
+          [
+            "3",
+            "porcentajes que suman 100"
+          ],
+          [
+            "50 %",
+            "la caída que debes poder ver sin vender"
+          ],
+          [
+            "1",
+            "renglón escrito con fecha"
+          ]
+        ],
+        "list": [
+          "<b>Renta fija:</b> CETES; lo estable, lo que te deja dormir.",
+          "<b>Renta variable:</b> un índice global o del S&P 500; el motor de largo plazo.",
+          "<b>Riesgo alto:</b> una porción chica, como BTC; nunca más de lo que puedas ver caer a la mitad sin tocarlo.",
+          "Tu caso: con la asignación escrita, cada compra del lunes deja de ser una decisión y pasa a ser rellenar el porcentaje que quedó abajo.",
+          "⚠️ Error común: cambiar los porcentajes cada vez que el mercado se mueve. Se escriben una vez y se revisan una vez al año."
+        ]
+      },
+      "Aportar periódicamente y automatizarlo": {
+        "foto": "inversion-5.jpg",
+        "cred": "Images_of_Money · Flickr · CC BY 2.0",
+        "pie": "Aportar lo mismo cada periodo quita la decisión de en medio: el método más aburrido es el que funciona.",
+        "cifras": [
+          [
+            "1",
+            "monto fijo"
+          ],
+          [
+            "1",
+            "día fijo"
+          ],
+          [
+            "12",
+            "meses seguidos sin saltarte uno"
+          ]
+        ],
+        "list": [
+          "<b>Monto y día fijos:</b> lo mismo cada periodo; compras más cuando cae y menos cuando sube, sin adivinar.",
+          "<b>Súbelo con el ingreso:</b> cuando sube el sueldo o termina una deuda, el aporte sube; nunca lo bajas por cómo se ve el mercado.",
+          "<b>Prográmalo:</b> si el aporte depende de que te acuerdes, depende de tu ánimo.",
+          "Tu caso: ya tienes el bloque de GBM de los lunes; la meta es aburrida a propósito: doce meses seguidos.",
+          "⚠️ Error común: esperar «el momento». Nadie lo sabe; aportar siempre le gana a adivinar."
+        ]
+      },
+      "Ver las comisiones antes que el rendimiento": {
+        "foto": "inversion-6.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "El rendimiento no lo controlas; el costo sí.",
+        "cifras": [
+          [
+            "1 %",
+            "al año parece poco"
+          ],
+          [
+            "≈ 1/5",
+            "de lo acumulado en 20 años"
+          ],
+          [
+            "0.03 %",
+            "lo que cobra VOO al año"
+          ]
+        ],
+        "list": [
+          "<b>Comisión de administración:</b> anual y sobre todo tu saldo; es la que más pesa.",
+          "<b>Por operación:</b> lo que te cobra la casa cada vez que compras o vendes.",
+          "<b>El spread:</b> la diferencia entre el precio de compra y el de venta; en dólares y en cripto puede ser grande.",
+          "Tu caso: compara el mismo índice en dos casas antes de comprarlo; la diferencia entre 0.03 % y 1.5 % al año es llegar o no al millón en 2030.",
+          "⚠️ Error común: elegir un fondo por lo que rindió el año pasado. El rendimiento pasado no se repite; la comisión sí."
+        ]
+      },
+      "Aguantar sin vender": {
+        "foto": "inversion-7.jpg",
+        "cred": "metal-crow · Flickr · CC BY-NC 2.0",
+        "pie": "En la tormenta no se decide: se ejecuta lo que escribiste con el mar en calma.",
+        "cifras": [
+          [
+            "30 %",
+            "la caída para la que escribes tu plan"
+          ],
+          [
+            "1",
+            "vez por semana que miras precios"
+          ],
+          [
+            "0",
+            "ventas por pánico"
+          ]
+        ],
+        "list": [
+          "<b>Escribe hoy qué harás:</b> con el mercado tranquilo, una línea: «si cae 30 %, no vendo y sigo aportando».",
+          "<b>Mira menos:</b> precios una vez por semana, en tu bloque del lunes; abrir la app a diario solo te hace sentir cada caída.",
+          "<b>Recuerda la historia:</b> el S&P 500 perdió más de la mitad entre 2007 y 2009, y en 2020 se desplomó en semanas; quien no vendió se recuperó.",
+          "Tu caso: tu asignación y esta línea escrita van juntas; en la caída no se decide, se ejecuta.",
+          "⚠️ Error común: vender abajo «para no perder más» y volver a comprar arriba. Es la forma más común de perder dinero en bolsa."
+        ]
+      },
+      "Rebalancear una vez al año": {
+        "foto": "inversion-8.jpg",
+        "cred": "Sepehr Ehsani · Flickr · CC BY-NC-ND 2.0",
+        "pie": "La balanza vuelve al centro: rebalancear es vender caro y comprar barato, lo contrario del instinto.",
+        "cifras": [
+          [
+            "1",
+            "vez al año"
+          ],
+          [
+            "5 pts",
+            "de desvío para actuar"
+          ],
+          [
+            "0",
+            "ventas: rebalanceas con aportes"
+          ]
+        ],
+        "list": [
+          "<b>Compara con lo escrito:</b> una vez al año, pon junto a cada porcentaje objetivo el que tienes hoy.",
+          "<b>Si algo se desvió más de 5 puntos:</b> manda las aportaciones nuevas a lo que quedó abajo hasta emparejar.",
+          "<b>Vende solo si hace falta:</b> rebalancear con aportes no genera impuestos ni comisiones.",
+          "Tu caso: con aportes cada lunes, rebalancear es decidir a dónde va el siguiente, no vender nada.",
+          "⚠️ Error común: dejar que lo que más subió se quede con todo. Tu cartera termina más arriesgada de lo que decidiste."
+        ]
+      },
+      "Saber qué impuestos pagas al invertir": {
+        "foto": "inversion-9.jpg",
+        "cred": "scribbletaylor · Flickr · CC BY-NC 2.0",
+        "pie": "El rendimiento que ves no es el que te queda: los impuestos van en la cuenta desde el principio.",
+        "cifras": [
+          [
+            "10 %",
+            "de ISR sobre la ganancia en bolsa"
+          ],
+          [
+            "Abril",
+            "cuando las constancias valen oro"
+          ],
+          [
+            "1",
+            "carpeta para todas las constancias"
+          ]
+        ],
+        "list": [
+          "<b>Deuda (CETES):</b> se retiene un impuesto anual sobre el capital; lo ves en tu constancia.",
+          "<b>Acciones y ETF en bolsa:</b> 10 % sobre la ganancia cuando vendes; la pérdida también se reporta.",
+          "<b>Cripto:</b> la ganancia se suma a tus demás ingresos y paga con tu tasa normal.",
+          "Tu caso: guarda las constancias anuales de GBM y de cetesdirecto en la misma carpeta desde ahora.",
+          "⚠️ Error común: ver el rendimiento como si fuera lo que te queda. Lo que te queda es después de impuestos y comisiones."
+        ]
+      }
+    },
+    "datos": {
+      "Python y pandas con tus datos": {
+        "foto": "datos-1.jpg",
+        "cred": "kenteegardin · Flickr · CC BY-SA 2.0",
+        "pie": "El hueco es de herramienta, no de criterio: ya sabes qué preguntarle a los datos.",
+        "cifras": [
+          [
+            "2–3 h",
+            "los módulos de Kaggle Learn"
+          ],
+          [
+            "1",
+            "cuaderno con tus gastos"
+          ],
+          [
+            "2",
+            "preguntas: por categoría y por semana"
+          ]
+        ],
+        "list": [
+          "<b>Primero los módulos cortos:</b> Python y pandas de Kaggle Learn; ejercicios en el navegador, sin instalar nada.",
+          "<b>En paralelo, tus datos:</b> exporta tus gastos de Finanzas a CSV y cárgalos con <i>pandas.read_csv</i>.",
+          "<b>Dos preguntas:</b> cuánto gastas por categoría (<i>groupby</i>) y por semana (<i>resample</i>); con eso ya usaste lo esencial.",
+          "Tu caso: ya sabes qué preguntarle a los datos; el hueco es de herramienta: soltarte de Excel.",
+          "⚠️ Error común: practicar con datos de ejemplo que no te importan. Con los tuyos llegas al final porque quieres la respuesta."
+        ]
+      },
+      "Un tablero que responda una pregunta": {
+        "foto": "datos-2.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Un tablero sin pregunta es decoración.",
+        "cifras": [
+          [
+            "1",
+            "pregunta por tablero"
+          ],
+          [
+            "3",
+            "gráficas, no más"
+          ],
+          [
+            "½",
+            "del tiempo tarda el segundo"
+          ]
+        ],
+        "list": [
+          "<b>Escribe la pregunta arriba:</b> «¿en qué semana del mes se me va el dinero?»; todo lo que no la contesta, sobra.",
+          "<b>Tres gráficas bastan:</b> la respuesta, el detalle que la explica y una tendencia.",
+          "<b>Hazlo dos veces:</b> el segundo, con otros datos tuyos, tarda la mitad; esa caída es la señal de que ya es hábito.",
+          "Tu caso: ya armaste los tableros de este sistema; Looker Studio es lo mismo en una herramienta que piden los anuncios.",
+          "⚠️ Error común: meter todas las gráficas que se pueden. Nadie lee un tablero que no contesta algo."
+        ]
+      },
+      "Contar lo que dicen los datos": {
+        "foto": "datos-3.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "En una revisión convence quien explica el dato, no quien lo tiene.",
+        "cifras": [
+          [
+            "1",
+            "gráfica"
+          ],
+          [
+            "3",
+            "frases"
+          ],
+          [
+            "1",
+            "persona que te dice qué entendió"
+          ]
+        ],
+        "list": [
+          "<b>Empieza por la conclusión:</b> la primera frase dice qué pasó; la gráfica lo demuestra.",
+          "<b>Una gráfica, un mensaje:</b> quita lo que distrae —rejillas, colores de más— y resalta solo la línea que importa.",
+          "<b>Prueba con alguien:</b> enséñala y pregunta qué entendió; si no coincide con tu primera frase, se rehace.",
+          "Tu caso: tus resultados de validación son el material perfecto, siempre sin datos del cliente.",
+          "⚠️ Error común: enseñar la tabla completa y esperar que el otro saque la conclusión. Nadie lo hace."
+        ]
+      },
+      "SQL, diez minutos al día": {
+        "foto": "datos-4.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "SQL se olvida si no se usa: diez minutos diarios le ganan a tres horas al mes.",
+        "cifras": [
+          [
+            "10 min",
+            "al día"
+          ],
+          [
+            "30",
+            "días seguidos"
+          ],
+          [
+            "0",
+            "consultas copiadas"
+          ]
+        ],
+        "list": [
+          "<b>El orden de SQLZoo:</b> SELECT básico, WHERE, funciones de agregado y JOIN; un tema por semana.",
+          "<b>Teclea cada consulta:</b> copiar y pegar no deja nada; teclear deja la sintaxis en los dedos.",
+          "<b>Predice el resultado:</b> antes de correrla, di qué filas esperas; si no coincide, ahí aprendes.",
+          "Tu caso: diez minutos caben en cualquier hueco del día; treinta días seguidos y SQL deja de ser un pendiente.",
+          "⚠️ Error común: tres horas un domingo y nada el resto del mes. Lo que no se usa a diario se olvida."
+        ]
+      },
+      "Teclear, no mirar": {
+        "foto": "datos-5.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Si no lo tecleaste, no lo aprendiste.",
+        "cifras": [
+          [
+            "1",
+            "ejercicio por video"
+          ],
+          [
+            "100 %",
+            "tecleado por ti"
+          ],
+          [
+            "1 sem",
+            "dura lo que solo viste"
+          ]
+        ],
+        "list": [
+          "<b>Video y editor lado a lado:</b> pausa, teclea y corre; no avances hasta que tu versión funcione.",
+          "<b>Cambia los datos:</b> el mismo ejercicio con tus datos te obliga a entenderlo, no a copiarlo.",
+          "<b>Rómpelo a propósito:</b> cambia algo y mira qué error sale; leer errores es la mitad del oficio.",
+          "Tu caso: con IA ejecutas lo que quieres; teclear tú es lo que te da soltura cuando no la tienes a mano, como en una prueba técnica.",
+          "⚠️ Error común: ver tutoriales completos «para entender primero». Sin teclear, se olvida en una semana."
+        ]
+      }
+    },
+    "mente": {
+      "Lo alto no se mantiene solo": {
+        "foto": "mente-1.jpg",
+        "cred": "U.S. Department of Agriculture · Rawpixel · CC0 1.0",
+        "pie": "Lo que te sostiene hay que nombrarlo: lo alto se cae por descuido, no por un golpe.",
+        "cifras": [
+          [
+            "3",
+            "cosas que te sostienen"
+          ],
+          [
+            "1",
+            "la primera que se cae"
+          ],
+          [
+            "1",
+            "que blindas este mes"
+          ]
+        ],
+        "list": [
+          "<b>Escribe las tres:</b> por ejemplo dormir, entrenar y tener un plan; las que de verdad te sostienen, no las ideales.",
+          "<b>Busca la primera que se cae:</b> piensa en tu último mes difícil; ¿qué dejaste primero? Esa es la que hay que blindar.",
+          "<b>Blíndala con un sistema:</b> una hora fija, una alarma, algo que no dependa de las ganas; un sistema aguanta el mes difícil, la motivación no.",
+          "Tu caso: rehiciste el plan dos veces sin abandonarlo; tu fuerza es la resiliencia, y lo que la baja son tus dos metas de conducta.",
+          "⚠️ Error común: creer que lo alto ya no necesita mantenimiento. Es lo primero que se descuida porque «ya está bien»."
+        ]
+      },
+      "El sueño es la palanca, no la fuerza de voluntad": {
+        "foto": "mente-2.jpg",
+        "cred": "elizabeth lies · StockSnap · CC0 1.0",
+        "pie": "La memoria se fija dormido: dormir no compite con estudiar, es parte de estudiar.",
+        "cifras": [
+          [
+            "{{horasSueno}}",
+            "de sueño en tu rutina"
+          ],
+          [
+            "{{horaDormir}}",
+            "luz fuera"
+          ],
+          [
+            "14",
+            "noches seguidas para medir"
+          ]
+        ],
+        "list": [
+          "<b>La hora de dormir es una cita:</b> luz fuera a tu hora aunque la app no quede terminada; lo que no cupo se parte para mañana.",
+          "<b>Nada de pantalla en la cama:</b> el celular fuera del cuarto, que además es tu meta de conducta.",
+          "<b>Mide en el gimnasio:</b> después de dos semanas compara la energía de tus sesiones; se nota ahí antes que en ningún otro lado.",
+          "Tu caso: tu rutina te da justo el mínimo de sueño; cada noche que se alarga caes debajo, y la mitad de lo que parece falta de disciplina es cansancio.",
+          "⚠️ Error común: «recuperar» el fin de semana. El sueño perdido no se paga con un día largo; se paga con una hora fija."
+        ]
+      },
+      "Terapia antes de irte": {
+        "foto": "mente-3.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Llegar con herramientas: la terapia se empieza antes del primer invierno, no durante.",
+        "cifras": [
+          [
+            "4",
+            "sesiones antes de la mudanza"
+          ],
+          [
+            "3",
+            "temas: soledad, estrés y sueño"
+          ],
+          [
+            "0 €",
+            "la asesoría del Studierendenwerk"
+          ]
+        ],
+        "list": [
+          "<b>Ve con un objetivo:</b> no a «ver qué sale», sino a armar un plan para la soledad, el estrés y el sueño del primer invierno.",
+          "<b>Cuatro sesiones para empezar:</b> salir con herramientas concretas y sabiendo a quién acudir allá.",
+          "<b>Allá ya hay apoyo:</b> el Studierendenwerk da asesoría psicológica gratis a estudiantes; búscalo desde el primer mes.",
+          "Tu caso: mudarte solo a otro país es de los cambios más fuertes; llegar con herramientas es más fácil que construirlas en febrero, con ocho horas de luz.",
+          "⚠️ Error común: esperar a sentirte mal para buscar ayuda. Allá, con el idioma y la distancia, cuesta más empezar."
+        ]
+      },
+      "La deuda pesa en la cabeza, no sólo en la cartera": {
+        "foto": "mente-4.jpg",
+        "cred": "robtxgal · Flickr · CC BY 2.0",
+        "pie": "Una deuda con fecha de fin es un problema con plazo, no una amenaza difusa.",
+        "cifras": [
+          [
+            "1",
+            "vez al mes miras la deuda"
+          ],
+          [
+            "1",
+            "fecha de fin"
+          ],
+          [
+            "0",
+            "vistazos diarios"
+          ]
+        ],
+        "list": [
+          "<b>Mira el número real una vez al mes:</b> cuánto debes y cuánto bajó; el Dashboard ya lo calcula.",
+          "<b>Ponle fecha:</b> una deuda con fecha de fin es un problema con plazo; sin fecha es una amenaza que pesa todo el día.",
+          "<b>Cuenta cada abono:</b> ver que el número baja es lo que quita el ruido de fondo.",
+          "Tu caso: Qué invertir hoy te dice el día en que el plan termina de pagar la BBVA; esa es tu fecha.",
+          "⚠️ Error común: no mirar para no sentirte mal. Lo que no se mira crece en la cabeza."
+        ]
+      },
+      "Cortar la rumia con una acción pequeña": {
+        "foto": "mente-5.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "El primer escalón: la acción corta la rumia mejor que cualquier razonamiento.",
+        "cifras": [
+          [
+            "10 min",
+            "dando vueltas: la señal"
+          ],
+          [
+            "1",
+            "acción pequeña"
+          ],
+          [
+            "2 min",
+            "lo que tarda"
+          ]
+        ],
+        "list": [
+          "<b>Reconoce la señal:</b> diez minutos pensando lo mismo sin una idea nueva es rumia, no análisis.",
+          "<b>Haz la cosa más pequeña:</b> un mensaje, una línea, una búsqueda; algo que se pueda hacer en dos minutos.",
+          "<b>Después decide si sigues:</b> casi siempre la acción cambia el problema, y lo que parecía enorme se vuelve un paso.",
+          "Tu caso: cuando el plan se mueve —un saldo, una fecha—, tu mejor respuesta ha sido rehacerlo; la acción pequeña es la versión diaria de eso.",
+          "⚠️ Error común: esperar a tener la solución completa para moverte. Mientras tanto, la cabeza sigue girando."
+        ]
+      },
+      "Una revisión corta cada domingo": {
+        "foto": "mente-6.jpg",
+        "cred": "tonyduckles · Flickr · CC BY-NC-SA 2.0",
+        "pie": "Diez minutos por escrito: lo que no se revisa se repite.",
+        "cifras": [
+          [
+            "10 min",
+            "a la semana"
+          ],
+          [
+            "3",
+            "preguntas"
+          ],
+          [
+            "1",
+            "cambio para la semana que viene"
+          ]
+        ],
+        "list": [
+          "<b>Qué salió bien:</b> una o dos cosas, con el dato; reconocerlo es lo que sostiene la racha.",
+          "<b>Qué se cayó:</b> sin castigo, solo el hecho y por qué.",
+          "<b>Lo único que cambias:</b> una sola cosa para la semana que viene; más de una no se cumple.",
+          "Tu caso: Hábitos y el Plan Maestro ya dicen qué hiciste en la semana; la revisión es mirarlos diez minutos y escribir.",
+          "⚠️ Error común: hacerla de memoria y en la cabeza. Escribirla es lo que hace que la semana siguiente sea distinta."
+        ]
+      }
+    },
+    "liderazgo": {
+      "Dónde está tu techo": {
+        "foto": "liderazgo-1.jpg",
+        "cred": "U.S. Embassy Jerusalem · Flickr · CC BY 2.0",
+        "pie": "Lo que separa a un buen líder de uno muy bueno no es técnica: es tener la conversación que cuesta.",
+        "cifras": [
+          [
+            "3",
+            "conversaciones que evitas"
+          ],
+          [
+            "1",
+            "frase por conversación"
+          ],
+          [
+            "2",
+            "techos posibles: valentía o claridad"
+          ]
+        ],
+        "list": [
+          "<b>Escribe las tres:</b> en el trabajo, en un proyecto y en casa; las que llevas semanas posponiendo.",
+          "<b>Una frase cada una:</b> qué dirías si la tuvieras mañana, no la conversación entera.",
+          "<b>Léelas juntas:</b> si las frases salen claras y aun así no las tienes, tu techo es de valentía; si no sabes qué decir, es de claridad.",
+          "Tu caso: en Bosch dirigiste a tu equipo y te eligieron para Stuttgart; tu techo no es técnico, está en las conversaciones difíciles.",
+          "⚠️ Error común: tenerlas sin prepararlas. Una conversación difícil improvisada casi siempre sale peor que la que no se tuvo."
+        ]
+      },
+      "Separar el hecho de la historia": {
+        "foto": "liderazgo-2.jpg",
+        "cred": "Nguyen Nguyen · StockSnap · CC0 1.0",
+        "pie": "Casi todo conflicto viene de contar la historia como si fuera el hecho.",
+        "cifras": [
+          [
+            "2",
+            "columnas"
+          ],
+          [
+            "2",
+            "líneas para el hecho"
+          ],
+          [
+            "1",
+            "conversación que abre con el hecho"
+          ]
+        ],
+        "list": [
+          "<b>Columna 1, el hecho:</b> lo que habría grabado una cámara: «llegó 20 minutos tarde a tres juntas este mes».",
+          "<b>Columna 2, tu historia:</b> lo que concluiste: «no le importa el proyecto». Casi siempre es más larga.",
+          "<b>Abre con el hecho y pregunta:</b> «noté esto, ¿qué está pasando?»; la otra persona te da su historia y muchas veces cambia la tuya.",
+          "Tu caso: hazlo por escrito con una de tus tres conversaciones antes de tenerla.",
+          "⚠️ Error común: abrir con la historia («no te importa»). La otra persona defiende su intención y nunca llegan al hecho."
+        ]
+      },
+      "Liderar sin el puesto": {
+        "foto": "liderazgo-3.jpg",
+        "cred": "Startup Stock Photos · StockSnap · CC0 1.0",
+        "pie": "El liderazgo que se ve en una entrevista es el que ejerces sin el puesto.",
+        "cifras": [
+          [
+            "1",
+            "cosa rota que nadie ha tomado"
+          ],
+          [
+            "1",
+            "frase para contarlo"
+          ],
+          [
+            "0",
+            "personas a cargo necesarias"
+          ]
+        ],
+        "list": [
+          "<b>Busca lo que todos ven y nadie toma:</b> una documentación vieja, un proceso de revisión confuso, una prueba que siempre falla.",
+          "<b>Arréglalo y deja el sistema:</b> no solo el arreglo; que no se vuelva a romper.",
+          "<b>Cuéntalo en una frase:</b> qué estaba roto, qué hiciste y qué cambió, con un número si lo hay.",
+          "Tu caso: es tu respuesta a «háblame de una vez que lideraste» en cada entrevista de Werkstudent.",
+          "⚠️ Error común: esperar el puesto para liderar. Nadie te lo da sin haberte visto hacerlo antes."
+        ]
+      },
+      "Dar retroalimentación que no duela": {
+        "foto": "liderazgo-4.jpg",
+        "cred": "U.S. Embassy Jerusalem · Flickr · CC BY 2.0",
+        "pie": "Decir algo difícil sin romper la relación: hecho, efecto y propuesta.",
+        "cifras": [
+          [
+            "3",
+            "partes: hecho, efecto y propuesta"
+          ],
+          [
+            "0",
+            "«siempre» y «nunca»"
+          ],
+          [
+            "1",
+            "prueba esta semana, con algo pequeño"
+          ]
+        ],
+        "list": [
+          "<b>El hecho:</b> qué pasó, concreto y reciente; nada de «siempre» ni «nunca».",
+          "<b>El efecto:</b> qué provocó en el trabajo o en ti: «tuvimos que rehacer la prueba».",
+          "<b>La propuesta:</b> qué harías distinto la próxima vez, y pregunta qué opina.",
+          "Tu caso: pruébalo esta semana con algo pequeño en el trabajo; practicar en lo pequeño es lo que te deja usarlo en lo grande.",
+          "⚠️ Error común: el sándwich de elogio, crítica y elogio. La gente aprende a esperar el golpe y deja de creer el elogio."
+        ]
+      },
+      "Una conversación pendiente al mes": {
+        "foto": "liderazgo-5.jpg",
+        "cred": "photosteve101 · Flickr · CC BY 2.0",
+        "pie": "Una conversación pendiente al mes: el hábito que sube tu techo sin quemarte.",
+        "cifras": [
+          [
+            "1",
+            "al mes"
+          ],
+          [
+            "12",
+            "al año"
+          ],
+          [
+            "1",
+            "cita en el calendario"
+          ]
+        ],
+        "list": [
+          "<b>Elige la siguiente de tu lista:</b> la que más pesa o la más fácil, pero una.",
+          "<b>Ponle fecha y hora:</b> como cualquier cita, y prepárala con el hecho y la historia separados.",
+          "<b>Después, una nota:</b> cómo salió y qué aprendiste para la siguiente.",
+          "Tu caso: tu lista de tres se revisa cada mes; doce conversaciones al año cambian cómo te ven sin desgastarte.",
+          "⚠️ Error común: querer tenerlas todas de una vez. Quemarse tampoco es liderar."
+        ]
+      }
+    },
+    "copy": {
+      "Qué te falta, exactamente": {
+        "foto": "copy-1.jpg",
+        "cred": "AlaskaTeacher · Flickr · CC BY-NC-ND 2.0",
+        "pie": "Escribes claro; lo que falta es pedir algo al final.",
+        "cifras": [
+          [
+            "5",
+            "textos tuyos revisados"
+          ],
+          [
+            "1",
+            "frase que pide algo concreto"
+          ],
+          [
+            "3 de 5",
+            "sin petición: ese es el hueco"
+          ]
+        ],
+        "list": [
+          "<b>Reúne cinco textos tuyos:</b> un correo a un reclutador, un mensaje a un cliente, tu perfil de LinkedIn, un post.",
+          "<b>Subraya la petición:</b> la frase donde le pides al lector algo concreto: contestar, agendar, revisar.",
+          "<b>Cuenta:</b> si en tres de cinco no hay ninguna, ese es tu hueco entero; no es la redacción.",
+          "Tu caso: generas ideas y ganchos con facilidad; lo que falta es cerrar cada texto con lo que quieres que pase.",
+          "⚠️ Error común: terminar con «quedo atento». No le dice a nadie qué hacer."
+        ]
+      },
+      "Una promesa por texto": {
+        "foto": "copy-2.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Un texto, una promesa: si no cabe en una línea, todavía no sabes qué estás escribiendo.",
+        "cifras": [
+          [
+            "1",
+            "lector"
+          ],
+          [
+            "1",
+            "acción que quieres"
+          ],
+          [
+            "1",
+            "línea antes de escribir"
+          ]
+        ],
+        "list": [
+          "<b>Antes de escribir, una línea:</b> quién lo lee y qué quiero que haga.",
+          "<b>Todo se mide contra esa línea:</b> lo que no ayuda a esa acción, sale.",
+          "<b>El título promete eso y nada más:</b> un texto que promete tres cosas no promete ninguna.",
+          "Tu caso: aplícalo primero a tu perfil de LinkedIn, que es el texto tuyo que más gente ve.",
+          "⚠️ Error común: escribir para todos. Un texto para todos no mueve a nadie."
+        ]
+      },
+      "Reescribe tu perfil de LinkedIn": {
+        "foto": "copy-3.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Lo primero que ve un reclutador: el titular dice lo que resuelves, no solo tu puesto.",
+        "cifras": [
+          [
+            "220",
+            "caracteres del titular"
+          ],
+          [
+            "3",
+            "líneas del «acerca de»"
+          ],
+          [
+            "1",
+            "resultado con número"
+          ]
+        ],
+        "list": [
+          "<b>El titular:</b> lo que resuelves y lo que buscas, en inglés: «Validation engineer · HIL & ADAS · open to Werkstudent in the Stuttgart region».",
+          "<b>El «acerca de», en tres líneas:</b> qué haces, un resultado con número y cómo contactarte.",
+          "<b>La experiencia, en logros:</b> qué cambió porque estuviste tú, no la lista de tareas del puesto.",
+          "Tu caso: es lo primero que ve un reclutador de Stuttgart, y hoy describe un puesto, no un resultado.",
+          "⚠️ Error común: un titular con solo el cargo y la empresa. Así te encuentran por lo que haces hoy, no por lo que buscas."
+        ]
+      },
+      "El correo frío de 5 líneas": {
+        "foto": "copy-4.jpg",
+        "cred": "Ed Yourdon · Flickr · CC BY-NC-SA 2.0",
+        "pie": "Cinco líneas que se contestan: corto, concreto y con una salida fácil.",
+        "cifras": [
+          [
+            "5",
+            "líneas"
+          ],
+          [
+            "3",
+            "correos esta semana"
+          ],
+          [
+            "1",
+            "salida fácil al final"
+          ]
+        ],
+        "list": [
+          "<b>Línea 1, por qué a esa persona:</b> algo suyo —un post, un proyecto, su equipo—, nunca genérico.",
+          "<b>Líneas 2 y 3, tú:</b> qué haces en una frase y un resultado concreto.",
+          "<b>Líneas 4 y 5, la petición y la salida:</b> qué le pides, fácil de contestar, y «si no es el momento, sin problema».",
+          "Tu caso: es el formato que más te va a servir este año: reclutadores, proyectos y referencias para Stuttgart.",
+          "⚠️ Error común: contar tu historia completa en el primer correo. El primero solo tiene que conseguir una respuesta."
+        ]
+      },
+      "Leer en voz alta antes de enviar": {
+        "foto": "copy-5.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "El filtro más barato que existe: donde te tropiezas al leer en voz alta, sobra algo.",
+        "cifras": [
+          [
+            "30 s",
+            "lo que cuesta"
+          ],
+          [
+            "80 %",
+            "de lo que te marcaría un editor"
+          ],
+          [
+            "1",
+            "tropiezo = algo que sobra"
+          ]
+        ],
+        "list": [
+          "<b>Léelo en voz alta y completo:</b> no en la cabeza; la voz no se salta palabras.",
+          "<b>Donde te trabes, corta:</b> una frase que no se puede decir de corrido tampoco se lee bien.",
+          "<b>Quita una palabra por frase:</b> casi siempre sobra un adverbio o un «que».",
+          "Tu caso: antes de mandar la carta de Esslingen o un correo a un reclutador, este filtro de 30 segundos es obligatorio.",
+          "⚠️ Error común: revisarlo justo después de escribirlo. Deja pasar unos minutos y léelo como si fuera de otro."
+        ]
+      }
+    },
+    "ventas": {
+      "Vender lo que no usas a su precio": {
+        "foto": "ventas-1.jpg",
+        "cred": "John Beagle · Flickr · CC BY 2.0",
+        "pie": "Lo que no usas también es dinero: fotos con luz, precio con margen y respuesta rápida.",
+        "cifras": [
+          [
+            "3",
+            "anuncios iguales para fijar el precio"
+          ],
+          [
+            "+10 %",
+            "de margen para negociar"
+          ],
+          [
+            "< 1 h",
+            "para contestar"
+          ]
+        ],
+        "list": [
+          "<b>Fotos con luz de día:</b> fondo limpio, el objeto completo y sus detalles; la foto vende antes que el texto.",
+          "<b>El precio:</b> busca tres anuncios iguales, toma el de en medio y súbele 10 % para tener margen.",
+          "<b>Contesta rápido:</b> en Marketplace vende el primero que contesta; en menos de una hora.",
+          "Tu caso: cada peso de lo que vendes va a tu plan; es la venta que hoy sí rinde.",
+          "⚠️ Error común: bajar el precio al primer «¿lo menos?». Pregunta cuánto ofrece; muchas veces ofrece más de lo que ibas a bajar."
+        ]
+      },
+      "El seguimiento es la venta": {
+        "foto": "ventas-2.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Casi ninguna venta cierra en el primer contacto: el seguimiento es la venta.",
+        "cifras": [
+          [
+            "1 · 3 · 7",
+            "días para el seguimiento"
+          ],
+          [
+            "3–5",
+            "contactos para cerrar"
+          ],
+          [
+            "0",
+            "presión"
+          ]
+        ],
+        "list": [
+          "<b>Día 1:</b> «¿te quedó alguna duda?»; corto y útil.",
+          "<b>Día 3:</b> algo nuevo: otra foto, un dato, una hora en que puedes entregarlo.",
+          "<b>Día 7:</b> el cierre amable: «te lo aparto hasta el viernes y después lo libero».",
+          "Tu caso: anota quién respondió y en qué contacto; en un mes sabrás cuál te funciona.",
+          "⚠️ Error común: rendirte después del primer mensaje sin respuesta. La mayoría cierra entre el tercero y el quinto."
+        ]
+      },
+      "Negociar tu sueldo en euros": {
+        "foto": "ventas-3.jpg",
+        "cred": "flazingo_photos · Flickr · CC BY-SA 2.0",
+        "pie": "Quien dice el número primero pone el ancla: tú preguntas el rango.",
+        "cifras": [
+          [
+            "1",
+            "rango del puesto en la región"
+          ],
+          [
+            "1",
+            "número mínimo, por escrito"
+          ],
+          [
+            "0",
+            "veces que dices tu número primero"
+          ]
+        ],
+        "list": [
+          "<b>Investiga el rango:</b> lo que paga ese puesto en la región de Stuttgart; para un Werkstudent, la tarifa por hora del sector.",
+          "<b>Escribe tu mínimo:</b> antes de cualquier llamada, el número debajo del cual dices que no.",
+          "<b>Pregunta primero:</b> «¿cuál es el rango previsto para el puesto?»; quien dice el número primero pone el ancla.",
+          "Tu caso: ya negociaste tu sueldo al cambiar de Ford, Continental y Bosch; es la misma habilidad, en euros.",
+          "⚠️ Error común: aceptar en la misma llamada. Agradece, pide un día y contesta por escrito."
+        ]
+      },
+      "Una oferta que se pueda comprar": {
+        "foto": "ventas-4.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Se empieza por la oferta, no por el anuncio: si no cabe en una frase, no está terminada.",
+        "cifras": [
+          [
+            "1",
+            "frase"
+          ],
+          [
+            "3",
+            "partes: para quién, qué resultado y en cuánto tiempo"
+          ],
+          [
+            "0",
+            "anuncios antes de la oferta"
+          ]
+        ],
+        "list": [
+          "<b>Para quién:</b> el cliente exacto, no «todos los que lo necesiten».",
+          "<b>Qué resultado:</b> lo que obtiene el cliente, no lo que haces tú.",
+          "<b>En cuánto tiempo:</b> un plazo concreto hace creíble la oferta.",
+          "Tu caso: cuando el negocio de tu papá vuelva al plan, se empieza por esta frase, no por el anuncio.",
+          "⚠️ Error común: anunciar antes de tener clara la oferta. Se gasta en llegar a gente que no sabe qué le ofreces."
+        ]
+      }
+    },
+    "marketing": {
+      "Dejar el negocio en piloto automático": {
+        "foto": "marketing-1.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Lo que tu papá pueda publicar sin ti: doce posts listos y la forma de hacerlo.",
+        "cifras": [
+          [
+            "12",
+            "posts listos"
+          ],
+          [
+            "1",
+            "QR de WhatsApp"
+          ],
+          [
+            "1",
+            "post publicado juntos"
+          ]
+        ],
+        "list": [
+          "<b>Doce posts completos:</b> foto, texto y fecha de cada uno; nada que haya que inventar el día.",
+          "<b>El dossier y el QR:</b> en manos de tu papá, impresos y en su teléfono.",
+          "<b>Publica uno con él:</b> que vea cada paso y que el siguiente lo haga él.",
+          "Tu caso: las plantillas de Posts ya están en el proyecto; falta programarlas y entregarlas.",
+          "⚠️ Error común: dejar todo listo y no enseñar a usarlo. Un sistema que solo tú sabes mover se detiene cuando te vas."
+        ]
+      },
+      "Una métrica antes de gastar": {
+        "foto": "marketing-2.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Sin medir no sabes si un post funciona o solo se ve bien.",
+        "cifras": [
+          [
+            "3",
+            "números por post: vistas, comentarios y mensajes"
+          ],
+          [
+            "1",
+            "formato que repites al mes"
+          ],
+          [
+            "$0",
+            "gastados antes de medir"
+          ]
+        ],
+        "list": [
+          "<b>Anota los tres números:</b> vistas, comentarios y mensajes de cada post, en una tabla sencilla.",
+          "<b>El que manda es mensajes:</b> las vistas no pagan; un mensaje es alguien que preguntó.",
+          "<b>Al mes, decide:</b> repite el formato que más mensajes trajo y deja el que menos.",
+          "Tu caso: con la tabla de un mes sabes qué funciona en el negocio de tu papá antes de gastar un peso.",
+          "⚠️ Error común: medir por «me gusta». Se ven bien y no traen clientes."
+        ]
+      },
+      "Un canal a la vez": {
+        "foto": "marketing-3.jpg",
+        "cred": "Autor desconocido · Rawpixel · CC0 1.0",
+        "pie": "Tres redes a medias no traen un cliente: una, cuatro semanas seguidas.",
+        "cifras": [
+          [
+            "1",
+            "canal"
+          ],
+          [
+            "4",
+            "semanas seguidas"
+          ],
+          [
+            "0",
+            "redes abiertas a medias"
+          ]
+        ],
+        "list": [
+          "<b>Elige donde ya están los clientes:</b> pregunta a los clientes de hoy dónde los encontraron o dónde pasan el tiempo.",
+          "<b>Cuatro semanas seguidas:</b> con un calendario fijo; un canal necesita constancia para mostrar resultados.",
+          "<b>Después, evalúa:</b> con la tabla de mensajes; si funciona, se queda; si no, se cambia, no se suma otro.",
+          "Tu caso: para el negocio de tu papá, un canal bien llevado vale más que tres que nadie atiende.",
+          "⚠️ Error común: abrir todas las redes el primer día. Ninguna recibe lo que necesita."
+        ]
+      }
+    }
+  };
+  Object.keys(APRENDIZAJE_DETALLE).forEach(function (id) {
+    ((APRENDIZAJE[id] || {}).subs || []).forEach(function (s) { Object.assign(s, APRENDIZAJE_DETALLE[id][s.n] || {}); });
+  });
 
   /* ── LISTA DE COMPRAS ──────────────────────────────────────────────────────────────────────
      El catálogo por pasillos. Su contenido se armó a mano cruzando `RECETAS` de comida.html,
@@ -5695,6 +7500,7 @@ window.CIFRAS = (function () {
     didiAlAhorro: didiAlAhorro, GRUPOS_SUELDO: GRUPOS_SUELDO, rutinasDesglose: rutinasDesglose,
     costoSalida: costoSalida,
     APRENDIZAJE: APRENDIZAJE,
+    APRENDIZAJE_DETALLE: APRENDIZAJE_DETALLE,
     LISTA_COMPRAS: LISTA_COMPRAS,
     RUTINA_PIEL: RUTINA_PIEL,
     RUTINA_PELO: RUTINA_PELO,
