@@ -328,7 +328,10 @@ sigue: nada sale al azar.
 - **El libro del mes** (`libroMes()`, en `dash_libromes_v1`; Adán, 26-oct-2026: *"cuando toque alguna habilidad que tenga que ver con un libro, cámbiala mes a mes, por ejemplo este mes compré Hábitos Atómicos y quiero leerlo todo el mes y ya a final de mes debes recomendarme otro de acuerdo a la habilidad"*): el
   ejercicio de Coach · Habilidades va paso a paso, pero el libro dura el mes entero, aunque avances o cambies de paso.
   Uno que empiezas después del día 20 cuenta para el mes siguiente —los días que sobran son de ventaja: *Atomic
-  Habits*, empezado el 26 de octubre, es el de noviembre—. **El que sigue** (`lmSiguiente()`) sale de la ruta del foco
+  Habits*, empezado el 26 de octubre, es el de noviembre—. **Lo que dices que lees manda**: `PROYECTO.libroEnCurso`,
+  en el maestro, se pone una vez como libro del mes (bandera `dicho`, con su id y su fecha) sobre lo que se eligió
+  solo, aunque la ruta del ejercicio sea otra; lo que muevas después no se revierte. Sin libro dicho, el primero
+  sale como el que sigue. **El que sigue** (`lmSiguiente()`) sale de la ruta del foco
   (`aprendeFoco()`) en el orden de sus pasos y, si ya no le quedan libros sin leer, de las siguientes en el orden de
   Coach (`habConRuta()`), sin las que están en pausa; ↻ *Otro* pasa al siguiente candidato (`lmOtro()`). En la última
   semana la tarjeta ya lo dice, para que alcances a comprarlo; el día 1 entra solo y el de antes pasa a los leídos.

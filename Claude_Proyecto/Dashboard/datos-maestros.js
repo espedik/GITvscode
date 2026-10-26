@@ -166,6 +166,12 @@ window.CIFRAS = (function () {
     // proyecto y no filtra ninguna pantalla.
     escuelaAleman:   'Cenlex Santo Tomás',
     kapitelAleman:   10,
+    // ── El libro que está leyendo ──
+    // Lo que Adán dice que lee manda sobre lo que el Dashboard eligió solo (26-oct-2026: "este mes compré Hábitos
+    // Atómicos y quiero leerlo todo el mes"). El Dashboard lo pone UNA vez como libro del mes (`libroMes()`; el id y
+    // la fecha son la bandera) y lo que él mueva después con «Otro» o «Empezarlo ya» no se revierte. Cuando diga que
+    // empezó otro, se cambia aquí: `id` es el de la biblioteca y `desde`, el día que lo empezó.
+    libroEnCurso:    { id: 'atomicHabits', desde: '2026-10-26' },
     // La meta diaria de proteína. Estaba escrita a mano en las 3 subtareas de la whey y en
     // el catálogo de salud.html; ahora la citan como {{proteinaMeta}}.
     proteinaMeta:    186,

@@ -7293,10 +7293,26 @@ function lmCandidatos(st){
   return out;
 }
 function lmSiguiente(st){ const c = lmCandidatos(st); return (st.sig && c.find(x => x.id === st.sig)) || c[0] || null; }
+// De qué ruta es un libro: la del foco si lo trae; si no, la primera que lo tenga.
+function lmSkDe(id){
+  const tiene = s => habLibrosRuta(habPasos(s.id)).some(l => l.id === id), f = aprendeFoco();
+  if(f && tiene(f)) return f.id;
+  const s = habConRuta().concat(SK).find(tiene);
+  return s ? s.id : (f ? f.id : '');
+}
 function libroMes(){
   const st = rawGet(LIBROMES_KEY, null) || {}, hoy = new Date(), ym = lmYm(hoy);
   st.leidos = st.leidos || [];
   let cambio = false, nuevoMes = false;
+  // Lo que dices que lees manda (`PROYECTO.libroEnCurso`, en el maestro) sobre lo que se eligió solo: se aplica una
+  // vez por libro y fecha, antes del cambio de mes, así que uno de un mes que ya pasó se va directo a los leídos.
+  const dicho = window.CIFRAS && CIFRAS.PROYECTO && CIFRAS.PROYECTO.libroEnCurso, marca = dicho ? dicho.id + '@' + dicho.desde : '';
+  if(dicho && habLibro(dicho.id) && st.dicho !== marca){
+    if(st.actual && st.actual.fin && st.actual.id !== dicho.id) st.leidos.push({ id: st.actual.id, sk: st.actual.sk, mes: st.actual.mes, fin: st.actual.fin });
+    st.leidos = st.leidos.filter(x => x.id !== dicho.id);
+    st.actual = { id: dicho.id, sk: lmSkDe(dicho.id), desde: dicho.desde, mes: lmMesDe(lmFecha(dicho.desde)) };
+    st.dicho = marca; delete st.sig; cambio = true;
+  }
   if(st.actual && (st.actual.mes < ym || !habLibro(st.actual.id))){
     if(habLibro(st.actual.id)) st.leidos.push({ id: st.actual.id, sk: st.actual.sk, mes: st.actual.mes, fin: st.actual.fin || null });
     st.actual = null; nuevoMes = cambio = true;

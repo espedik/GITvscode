@@ -436,6 +436,10 @@ tabla, en verde. Lo que recorte va a GBM.
 | `{{kcalMeta}}` | 3115 | Meta diaria de calorías del Plan Masa Muscular (≈325 sobre el mantenimiento). Con `carbsMeta` (404 g) y `grasaMeta` (86 g), que viven a su lado en `PROYECTO`: las leen Comida y la semilla de Salud |
 | `{{kapitelAleman}}` | 10 | El capítulo que cursa en Cenlex. Dato del proyecto; no filtra ninguna pantalla |
 
+**El libro que lee** (`PROYECTO.libroEnCurso`: *Atomic Habits*, desde el 26-oct-2026). No es marcador: el Dashboard lo
+pone una vez como libro del mes de Coach · Habilidades (`libroMes()`) y manda sobre lo que se eligió solo; cuando
+Adán diga que empezó otro, se cambia aquí con su fecha.
+
 ### La rutina diaria
 
 `RUTINA_TASKS` — **56 bloques** con sus subtareas: el horario completo de los 7 días. No es un
