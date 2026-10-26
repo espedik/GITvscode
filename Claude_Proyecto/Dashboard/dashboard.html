@@ -1140,41 +1140,73 @@ span.fza-chip:not(.on){opacity:.45}
    indicadores de arriba, los 4") — mismo criterio que la ronda anterior: el espacio que se
    libera aquí es el que gana la cuadrícula de fotos de metas de abajo. */
 
-/* Overlay de detalle de la barra de edad — "Ritmo real" (2026-08-10, pedido explícito: "cuando
-   des click pon otra barra mas o menos como linea de tiempo de las cosas que ya debo conseguir...
-   de los 31 a 32 años pon como un deadline en la barra"). Por cada meta de corto/mediano plazo, una
-   mini-barra compara EL RITMO QUE DEBERÍAS LLEVAR (marcador, % del año ya transcurrido) contra TU
-   AVANCE REAL (relleno, % del checklist real ya marcado) — mismo lenguaje visual que .img-goal-pbar
-   (barra delgada, relleno redondeado), reusado aquí en vez de inventar un componente nuevo. */
-.edad-pace-block{margin-bottom:12px;padding:12px 14px;background:linear-gradient(135deg,rgba(0,224,192,.08),rgba(0,224,192,.01));border:1px solid rgba(0,224,192,.18);border-radius:12px}
-.edad-pace-intro{font-size:11.5px;color:var(--text2);line-height:1.5;margin-bottom:12px}
-/* 2026-08-12 — las clases de la versión vieja (.edad-pace-row/-head/-name/-status/-bar/-fill/
-   -marker/-nums y las 4 .status-*) se borraron con ella: pintaban 5 barras idénticas de un dato
-   que no medía nada real. Las reemplazan estas 2 piezas — hitos con cuenta regresiva y cifras
-   medidas en dinero. */
-/* Hito con fecha real y días restantes. El número se pone rojo abajo de 60 días, que es cuando
-   deja de ser "algún día" y pasa a ser algo que hay que atender esta semana. */
-.edad-hito{padding:9px 11px;border-radius:10px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.09);border-left:3px solid var(--cy);margin-bottom:8px}
-.edad-hito:last-child{margin-bottom:0}
-.edad-hito-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.edad-hito-t{font-size:12.5px;font-weight:800;color:var(--text)}
-.edad-hito-d{font-size:12px;font-weight:800;font-family:var(--mono);color:var(--cy);white-space:nowrap}
-.edad-hito-d.urge{color:var(--w)}
-.edad-hito-f{font-size:10px;color:var(--text3);margin-top:1px}
-.edad-hito-meta{font-size:11px;color:var(--text2);line-height:1.5;margin-top:5px}
-/* Cifras medidas con datos de Finanzas. `sin-dato` se atenúa a propósito: que se vea distinto de
-   una cifra real evita que un "Sin medir" se lea como si fuera un valor. */
-.edad-medidos{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
-.edad-medido{padding:9px 11px;border-radius:10px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.09)}
-.edad-medido.sin-dato{opacity:.55}
-.edad-medido-t{font-size:10.5px;font-weight:700;color:var(--text2)}
-.edad-medido-v{font-size:16px;font-weight:900;font-family:var(--mono);color:var(--text);margin-top:3px}
-.edad-medido.sin-dato .edad-medido-v{font-size:13px;color:var(--text3)}
-.edad-medido-s{font-size:10px;color:var(--text3);margin-top:2px;line-height:1.4}
-/* El cierre dejó de ser un reclamo en rojo: ahora es la conclusión accionable, así que va en el
-   color de acento y sin cursiva de cita. */
-.edad-rigor{margin-top:0;padding:13px 16px;background:linear-gradient(135deg,rgba(0,224,192,.09),rgba(0,224,192,.01));border:1px solid rgba(0,224,192,.24);border-radius:12px;font-size:12.5px;line-height:1.65;color:var(--text2)}
-.edad-rigor b{color:var(--text)}
+/* ─── Tu año (abrirKpi('edad'), taDetalle) ───
+   Adán, 25-oct-2026: "esta página no tiene nada de información relevante ni un buen diseño, arregla todo de esta ventana". Un panel como los de los medidores: arriba tres
+   tarjetas —cuánto te queda del año, cómo van tus pasos contra el año y lo siguiente—, la línea del año con hoy y cada
+   fecha, lo que tienes que lograr antes de cumplir años con foto, fecha, avance y lo siguiente, y lo que ya lograste. */
+.ta{display:flex;flex-direction:column;gap:16px}
+.ta-top{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.ta-c{display:flex;flex-direction:column;gap:7px;min-width:0;padding:14px 16px;border-radius:14px;
+  background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.1)}
+.ta-k{font-size:13px;font-weight:700;color:var(--text2)}
+.ta-big{font-family:var(--mono);font-size:30px;font-weight:700;line-height:1.05;color:var(--text)}
+.ta-big small{margin-left:6px;font-family:var(--font);font-size:14px;font-weight:600;color:var(--text3)}
+.ta-s{font-size:13px;line-height:1.45;color:var(--text2)}
+.ta-s b{color:var(--text)}
+.ta-s.mal b{color:var(--r)}
+.ta-s.bien b{color:var(--g)}
+.ta-bar{position:relative;height:8px;border-radius:4px;background:rgba(var(--ov),.1)}
+.ta-bar>i{display:block;height:100%;border-radius:4px;background:var(--cy)}
+.ta-bar>em{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;border-radius:1px;background:var(--text2)}
+.ta-sec{font-size:15px;font-weight:700;color:var(--text);margin:2px 0 -4px}
+.ta-sec small{margin-left:8px;font-size:12.5px;font-weight:500;color:var(--text3)}
+.ta-linea{position:relative;height:166px;margin:0 10px}
+.ta-eje{position:absolute;left:0;right:0;bottom:30px;height:3px;border-radius:2px;background:rgba(var(--ov),.14)}
+.ta-eje>i{display:block;height:100%;border-radius:2px;background:var(--cy)}
+.ta-mes{position:absolute;bottom:6px;transform:translateX(-50%);font-family:var(--mono);font-size:11px;color:var(--text3);white-space:nowrap}
+.ta-hoy{position:absolute;bottom:22px;width:2px;height:126px;margin-left:-1px;background:linear-gradient(var(--cy),rgba(var(--cy-rgb),.25))}
+.ta-hoy span{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:10.5px;
+  font-weight:700;color:var(--cy);white-space:nowrap}
+.ta-m{position:absolute;bottom:31px;width:0;height:0;--mc:var(--cy)}
+.ta-m.fase{--mc:var(--w)}.ta-m.hito{--mc:var(--p)}.ta-m.bbva{--mc:var(--r)}.ta-m.cumple{--mc:var(--g)}
+.ta-m>i{position:absolute;left:-6px;bottom:-5px;width:12px;height:12px;border-radius:50%;background:var(--mc);box-shadow:0 0 0 3px var(--card-solid,var(--bg))}
+.ta-m.ya>i{background:var(--g)}
+.ta-m::before{content:'';position:absolute;left:-.5px;bottom:7px;width:1px;height:calc(10px + var(--l)*30px);
+  background:color-mix(in srgb,var(--mc) 55%,transparent)}
+.ta-m>span{position:absolute;bottom:calc(16px + var(--l)*30px);left:-3px;display:flex;align-items:baseline;gap:6px;white-space:nowrap;
+  padding:2px 7px;border-radius:5px;border-left:2px solid var(--mc);background:rgba(var(--ov),.06);font-size:12px;font-weight:700;color:var(--text)}
+.ta-m.der>span{left:auto;right:-3px;border-left:0;border-right:2px solid var(--mc)}
+.ta-m>span small{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--text3)}
+.ta-m.ya>span{color:var(--text3);font-weight:600}
+.ta-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.ta-card{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:104px minmax(0,1fr);gap:14px;min-width:0;
+  padding:12px;border-radius:14px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.1);transition:border-color .15s,background .15s}
+.ta-card:hover{border-color:rgba(var(--cy-rgb),.5);background:rgba(var(--cy-rgb),.05)}
+.ta-card:focus-visible{outline:2px solid var(--cy);outline-offset:2px}
+.ta-img{width:104px;height:104px;border-radius:10px;object-fit:cover;background:rgba(var(--ov),.08)}
+.ta-cc{display:flex;flex-direction:column;gap:5px;min-width:0}
+.ta-ck{font-family:var(--mono);font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)}
+.ta-ct{font-size:15px;font-weight:700;line-height:1.3;color:var(--text)}
+.ta-f{font-size:12.5px;font-weight:600;color:var(--text2)}
+.ta-f.pronto{color:var(--w)}.ta-f.tarde{color:var(--r)}
+.ta-p{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text3)}
+.ta-p .ta-bar{flex:1;height:5px}
+.ta-p b{font-family:var(--mono);color:var(--text)}
+.ta-p .atras{color:var(--r);font-weight:700}
+.ta-sig{font-size:12.5px;line-height:1.4;color:var(--text2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ta-sig b{color:var(--text)}
+.ta-cifras{display:flex;gap:16px}
+.ta-cifras span{display:flex;flex-direction:column;font-size:11px;color:var(--text3)}
+.ta-cifras b{font-family:var(--mono);font-size:15px;color:var(--text)}
+.ta-logros{display:flex;flex-wrap:wrap;gap:8px}
+.ta-logro{display:inline-flex;align-items:baseline;gap:7px;padding:7px 13px;border-radius:999px;font-size:13px;
+  background:rgba(var(--g-rgb),.1);border:1px solid rgba(var(--g-rgb),.22);color:var(--text)}
+.ta-logro b{color:var(--g)}
+.ta-logro small{font-size:11.5px;color:var(--text3)}
+.ta-vacio{font-size:13px;color:var(--text3)}
+@media(max-width:1180px){.ta-top,.ta-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.ta-top,.ta-grid{grid-template-columns:minmax(0,1fr)}.ta-linea,.ta-sec-linea{display:none}
+  .ta-card{grid-template-columns:76px minmax(0,1fr)}.ta-img{width:76px;height:76px}}
 
 /* ─── HUD — 2 barras flotantes VERTICALES, una por borde (2026-08-07: antes era 1 sola
    franja horizontal abajo, dividida en 2 mitades L/R; Adán pidió explícitamente que cada
@@ -2188,8 +2220,8 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* ─── Panel de detalle — diseño "Tres apartados" (2026-09-13) ───
-   Lo comparten Mis Metas (abrirMetaDetalle), Habilidades Base (abrirHabilidadDetalle) y Tu año
-   (abrirEdadDetalle); los ids del DOM son los mismos para los tres.
+   Lo comparten Mis Metas (abrirMetaDetalle) y Habilidades Base (abrirHabilidadDetalle); los ids del
+   DOM son los mismos para los dos. Tu año va en el panel de los medidores (taDetalle).
    Adán, 2026-09-13: "se me hace muy pequeño y no organizado, debe ser que abarque más tamaño de
    pantalla y además tenga apartados definidos muy bien, quiero un diseño elegante". Elegido en un
    canvas (diseno-ficha/) frente a dos direcciones más. Lo que cambia respecto al "Estudio" de agosto:
@@ -4783,8 +4815,8 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   <!-- Diseño "Tres apartados" (2026-09-13, elegido en diseno-ficha/ frente a dos direcciones más):
        la tarjeta ocupa casi toda la pantalla y se parte en TEMARIO · EL PASO · RECURSOS, con la
        frase en la cabecera y el pie a lo ancho. Los ids se conservan porque los usan
-       abrirMetaDetalle(), abrirHabilidadDetalle() y abrirEdadDetalle(): el cambio no toca a
-       ninguna de las tres. El CSS está en el bloque "Panel de detalle" de arriba. -->
+       abrirMetaDetalle() y abrirHabilidadDetalle(): el cambio no toca a ninguna de las
+       dos. El CSS está en el bloque "Panel de detalle" de arriba. -->
   <div class="meta-detail-card">
     <div class="md-head">
       <div class="meta-detail-hero" id="metaDetailHero"></div>
@@ -6392,120 +6424,128 @@ function edadInfo(){
   return {edad,edadSig:edad+1,ultimoCumple,siguienteCumple,pct,diasFaltan,diasPasados};
 }
 const FECHA_LARGA={day:'numeric',month:'long',year:'numeric'};
-// Checklist del detalle de la barra de edad ("cuando haga click en la barra abre... que cosas ya
-// debo lograr") — reusa las metas REALES ya documentadas de Fase 0/1/2 del Plan Maestro (PHASES,
-// arriba) cuyas fechas caen dentro de la ventana de edad actual (de un 1 de julio al siguiente,
-// ver NACIMIENTO arriba) — no se inventa contenido nuevo: son las mismas 3 metas que ya se muestran en el
-// slide "Coach · Plan Maestro", re-empaquetadas como cronología de "qué debo lograr antes de
-// cumplir años". Checklist propio (`edad_checklist_v1`) — marcar aquí no marca nada en Coach, son
-// hitos de fase completa, no las tareas semana a semana que sí vive allá.
-const EDAD_DETALLE={
-  edad:{pasos:[
-    {t:`${PHASES[0].tag} — vence ${PHASES[0].end.toLocaleDateString('es-MX',FECHA_LARGA)}`, d:PHASES[0].meta},
-    {t:`${PHASES[1].tag} — vence ${PHASES[1].end.toLocaleDateString('es-MX',FECHA_LARGA)}`, d:PHASES[1].meta},
-    {t:`${PHASES[2].tag} arranca — ${PHASES[2].start.toLocaleDateString('es-MX',FECHA_LARGA)}`, d:PHASES[2].meta},
-  ]}
-};
-// (Aquí vivió `METAS_CORTO_MEDIANO` — una copia de los 5 ids/íconos de `cortoMediano` que existía
-// solo para que la versión vieja de pintarEdadPace() pudiera pintar una fila por meta con su
-// `detailPct()`. Al reescribir ese bloque el 2026-08-12 quedó sin un solo uso, así que se borró
-// en vez de dejar una duplicación más que mantener sincronizada a mano.)
-// Compara, meta por meta, EL RITMO QUE DEBERÍAS LLEVAR (marcador = % del año ya transcurrido,
-// edadInfo().pct) contra TU AVANCE REAL (relleno = % del checklist real ya marcado, detailPct())
-// — pedido explícito: "de los 31 a 32 años pon como un deadline en la barra para conseguir las
-// cosas que quiero en corto y mediano plazo". Reescribe #metaDetailMoneybar (compartido con las
-// tarjetas de metas con foto, que lo usan para la barra de dinero de BYD/Maestría — aquí no hay
-// dinero, se reusa el mismo slot vacío para esta pieza en su lugar). Se llama DESPUÉS de
-// pintarDetailOverlay() en abrirEdadDetalle()/toggleEdadChecklist() porque esa función siempre
-// deja ese div en '' si no le pasan moneyInfo — si se llamara antes, quedaría borrado.
-// Reescrito el 2026-08-12 — Adán, viendo esta pantalla: "esto no me aporta nada, mejorala".
-// Tenía razón, y el problema era de fondo, no de redacción:
-//   1) Pintaba 5 renglones IDÉNTICOS ("0% avanzado · ritmo esperado 12% · ⚠️ Atrasado 12pts").
-//      Repetir el mismo número 5 veces no informa: ocupaba media pantalla para decir una cosa.
-//   2) Medía CASILLAS MARCADAS, no avance real. `detailPct()` cuenta cuántos ítems del checklist
-//      tocó — si nunca abre esos checklists da 0% para siempre, aunque su deuda esté bajando de
-//      verdad. La propia frase lo admitía ("marcar un checklist no es lo mismo que lograrlo"),
-//      o sea que el bloque sabía que su dato no servía y aun así regañaba con él.
-//   3) Ignoraba los datos DUROS que la app ya lee en vivo de Finanzas: deuda cara, fondo de
-//      emergencia, fondo de Maestría. Decir "BYD 0%" teniendo el saldo real es simplemente falso.
-//   4) Cerraba con una frase de culpa no accionable ("todavía no empezaste").
-// Ahora muestra 3 cosas que sí cambian y sí se pueden usar: los deadlines reales que caen dentro
-// de esta ventana de edad con sus días restantes, el avance medido en dinero real, y una sola
-// conclusión concreta. Lo que no tiene dato duro se dice "sin medir" en vez de inventar un 0%.
-function pintarEdadPace(){
-  const ei=edadInfo();
-  const hoy=new Date(); hoy.setHours(0,0,0,0);
-  const dias=d=>Math.round((d-hoy)/86400000);
-
-  // ── 1. Deadlines reales dentro de esta ventana de edad (de un cumpleaños al siguiente) ──
-  // La decisión de la maestría es un hito del maestro (CALENDARIO.hitos), con su fecha y su regla.
-  const hDec=((window.CIFRAS&&CIFRAS.CALENDARIO.hitos)||[]).find(x=>x.txt==='Decisión Maestría');
-  const hitos=[
-    {t:`${PHASES[0].tag} cierra`, f:PHASES[0].end, d:PHASES[0].meta},
-    {t:`${PHASES[1].tag} cierra`, f:PHASES[1].end, d:PHASES[1].meta},
-    hDec?{t:hDec.txt, f:new Date(hDec.fecha+'T00:00:00'), d:hDec.sub}:null,
-  ].filter(h=>h&&h.f>hoy&&h.f<=ei.siguienteCumple).sort((a,b)=>a.f-b.f);
-
-  // ── 2. Avance MEDIDO (dinero real de Finanzas), no casillas marcadas ──
-  const num=v=>typeof v==='number'&&isFinite(v);
-  const deudas=D.fin.debts||[];
-  // Solo tarjetas de crédito: `/banamex/i` a secas también matchea "Apple Watch MSI (TC Banamex)",
-  // y si la tarjeta se borra o se renombra, el MSI del reloj pasaba a hacerse pasar por ella.
-  const bd=n=>deudas.find(x=>new RegExp(n,'i').test(x.name||'')&&(!x.type||x.type==='credit_card'));
-  const bana=bd('banamex'), bbva=bd('bbva');
-  const deudaCara=(bana?bana.balance||0:0)+(bbva?bbva.balance||0:0);
-  const hayDeuda=!!(bana||bbva);
-  const ef=D.fin.emergencyFund||0;
-  const goalMae=(D.fin.goals||[]).find(g=>g.id==='g001'||/maestr/i.test(g.name||''));
-  // 2026-08-23: el fondo de la maestria se compone en vivo (ver fondoMaestria()), ya no se lee
-  // de `goalMae.current` — esa cifra estaba escrita a mano y dejaba fuera el Bitcoin.
-  const fmMae=fondoMaestria();
-  const medidos=[
-    // El subtítulo nombra solo las tarjetas que TODAVÍA deben: desde que Banamex quedó en $0
-    // (13 ago 2026), decir "restante en Banamex + BBVA" sugería que las dos siguen vivas.
-    {ico:'💳',t:'Deuda cara',      hay:hayDeuda||!!logro('banamex-liquidada'), val:money(deudaCara), sub:deudaCara<=0?'Liquidada 🎉':'restante en '+[bana&&bana.balance>0?'Banamex':null,bbva&&bbva.balance>0?'BBVA':null].filter(Boolean).join(' + '), falta:'Regístrala en Finanzas para medirla aquí'},
-    {ico:'🆘',t:'Fondo de emergencia', hay:ef>0, val:money(ef),        sub:`en CETES · de ${money(_metaFondo())} · ${Math.min(100,Math.round(ef/_metaFondo()*100))}%`, falta:'Aún en $0 — es el primer paso de Fase 0'},
-    {ico:'🎓',t:'Fondo Maestría',  hay:fmMae.total>0, val:money(fmMae.total), sub:goalMae&&goalMae.target?`de ${money(goalMae.target)} · ${fmMae.comps.length} piezas`:`${fmMae.comps.length} piezas sumadas`, falta:'Créala en Finanzas → Metas'},
-  ];
-
-  // ── 3. Una sola conclusión, construida con el dato más urgente que exista ──
-  const prox=hitos[0];
-  let cierre;
-  if(prox){
-    const n=dias(prox.f);
-    cierre=`Lo más cercano que tienes enfrente es <b>${prox.t}</b>, en <b>${n} día${n===1?'':'s'}</b>. Antes de cumplir ${ei.edadSig} te quedan ${ei.diasFaltan} días — de esos, solo ${n} para este hito.`;
-  } else {
-    cierre=`No queda ningún hito del Plan Maestro dentro de esta ventana. Te faltan ${ei.diasFaltan} días para cumplir ${ei.edadSig}: es tiempo para adelantar, no para esperar.`;
+/* ── TU AÑO ─────────────────────────────────────────────────────────────────────────────────────
+   Adán, 25-oct-2026: "esta página no tiene nada de información relevante ni un buen diseño, arregla todo de esta ventana": era una ficha
+   de estudio con un «temario» de tres fases y «Marcar como dominado». Ahora es un panel como los de los medidores
+   (abrirKpi('edad') → taDetalle): lo que tienes que lograr antes de cumplir años —las metas con plan que vencen en el
+   año, el cierre de las fases, la BBVA en cero y las decisiones del calendario—, cada cosa con su fecha, su avance real
+   y lo siguiente; la línea del año con hoy, y lo que ya lograste desde el último cumpleaños. Nada se escribe aquí: sale
+   de META_PLAN (metaPlan), PHASES, CIFRAS.planBbva, CALENDARIO.hitos, cortesSalidaDash y la libreta de logros. */
+function taItems(ei){
+  const hoy = mpHoy(), dentro = d => d && d > ei.ultimoCumple && d <= ei.siguienteCumple;
+  const checks = rawGet('coach_checks_v1', {}) || {}, out = [];
+  const limpio = s => String(s || '').replace(/<[^>]*>/g, '').replace(/\u2705/g, '').trim();
+  const metas = METAS_TODAS.length ? METAS_TODAS : Object.keys(META_PLAN).map(id => ({ id: id, t: META_PLAN[id].meta, img: '', epi: '' }));
+  metas.forEach(function(m){
+    const mp = metaPlan(m.id); if(!mp || !mp.fecha || !dentro(mp.fecha.d)) return;
+    const img = m.img ? String(m.img).replace(/([?&]w=)\d+/, (_, a) => a + '480') : '';
+    out.push({ tipo: 'meta', k: 'Meta', t: m.t, d: mp.fecha.d, fTxt: mpFechaTxt(mp.fecha, true), falta: mpFalta(mp.fecha),
+      hechos: mp.hechos, total: mp.total, atras: mp.pasos.filter(p => !p.hecho && p.est === 'tarde').length,
+      sig: mp.sig ? limpio(mp.sig.t) : '', sigF: mp.sig ? mp.sig.fTxt : '', listo: mp.total > 0 && mp.hechos >= mp.total,
+      img: img ? { u: img, c: 'Foto de la meta' } : null,
+      abrir: m.img ? "cerrarKpi();abrirMetaDetalle('"+m.id+"','"+m.img+"','"+(m.epi || '')+"')" : '' });
+  });
+  PHASES.forEach(function(f, i){
+    const fin = new Date(f.end); fin.setHours(0,0,0,0); if(!dentro(fin)) return;
+    const T = f.semanas || [], hechas = T.filter(s => ctHecha(s, checks)).length, sig = T.find(s => !ctHecha(s, checks));
+    const x = { d: fin, mes: false };
+    out.push({ tipo: 'fase', k: f.tag+' · cierra', t: limpio(f.title), d: fin, fTxt: mpFechaTxt(x, true), falta: mpFalta(x),
+      hechos: hechas, total: T.length, atras: 0, sig: sig ? limpio(fzmPartir(sig.txt).t) : '', sigF: '',
+      listo: fin <= hoy, img: apFoto('fase-calendario'), abrir: "abrirKpi('fases');kpiFaseTab("+i+")" });
+  });
+  const B = bbvaPlan();
+  if(B && dentro(B.fin)){
+    const E = CIFRAS.bbvaEstado ? CIFRAS.bbvaEstado() : null, AB = CIFRAS.avanceBbva(D.fin);
+    const hk = hoyLocal(), sa = (B.abonos || []).filter(a => !a.hecho && a.fecha >= hk)[0];
+    const x = { d: B.fin, mes: false };
+    out.push({ tipo: 'bbva', k: 'Deuda', t: 'La BBVA en cero', d: B.fin, fTxt: mpFechaTxt(x, true), falta: mpFalta(x),
+      pct: AB && AB.pct, cifras: E ? [[money(E.saldo), 'por pagar'], [Math.round((AB && AB.pct) || 0)+' %', 'pagado']] : null,
+      sig: sa ? 'Abona '+money(sa.monto)+' el '+mpFechaTxt(mpFecha(sa.fecha), true) : '', sigF: '', listo: false,
+      img: apFoto('fase-tarjeta'), abrir: "abrirKpi('deudacara')" });
   }
-
-  document.getElementById('metaDetailMoneybar').innerHTML=`
-    <div class="edad-pace-block">
-      <div class="edad-pace-intro">Llevas <b style="color:var(--cy)">${ei.diasPasados} días</b> de este año y te quedan <b style="color:var(--cy)">${ei.diasFaltan}</b>. Esto es lo que cae dentro de esa ventana:</div>
-      ${hitos.length?hitos.map(h=>{
-        const n=dias(h.f);
-        const urgente=n<=60;
-        return `<div class="edad-hito">
-          <div class="edad-hito-top">
-            <span class="edad-hito-t">${h.t}</span>
-            <span class="edad-hito-d ${urgente?'urge':''}">${n} días</span>
-          </div>
-          <div class="edad-hito-f">${h.f.toLocaleDateString('es-MX',FECHA_LARGA)}</div>
-          <div class="edad-hito-meta">${h.d}</div>
-        </div>`;
-      }).join(''):'<div class="edad-hito"><div class="edad-hito-meta">Ningún hito del Plan Maestro vence antes de tu próximo cumpleaños.</div></div>'}
-
-      <div class="edad-pace-intro" style="margin-top:14px">Y esto es lo que sí está <b style="color:var(--cy)">medido con dinero real</b> de Finanzas — no con casillas marcadas:</div>
-      <div class="edad-medidos">
-        ${medidos.map(m=>`
-          <div class="edad-medido${m.hay?'':' sin-dato'}">
-            <div class="edad-medido-t">${m.ico} ${m.t}</div>
-            <div class="edad-medido-v">${m.hay?m.val:'Sin medir'}</div>
-            <div class="edad-medido-s">${m.hay?m.sub:m.falta}</div>
-          </div>`).join('')}
-      </div>
-    </div>
-    <div class="edad-rigor">${cierre}</div>
-  `;
+  ((window.CIFRAS && CIFRAS.CALENDARIO && CIFRAS.CALENDARIO.hitos) || []).forEach(function(h){
+    const x = mpFecha(h.fecha); if(!x || !dentro(x.d)) return;
+    const ym = h.fecha.slice(0,7), c = cortesSalidaDash().find(z => z.mes === ym);
+    const pm = CIFRAS.PROYECCION && CIFRAS.PROYECCION.meses.find(z => z.mes === ym);
+    out.push({ tipo: 'hito', k: 'Decisión', t: h.txt, d: x.d, fTxt: mpFechaTxt(x, true), falta: mpFalta(x),
+      cifras: c ? [[money(c.pide), 'pide en GBM'], [pm ? money(pm.alemania) : '—', 'da tu ritmo']] : null,
+      sig: limpio(h.sub), sigF: '', listo: x.d <= hoy, img: apFoto('meta-esslingen'), abrir: "abrirKpi('maestria')" });
+  });
+  return out.sort((a, b) => a.d - b.d);
+}
+// Lo que ya lograste desde el último cumpleaños: las fases que cerraron, las metas completas y los logros de la libreta.
+function taLogros(ei, hechos){
+  const MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const dT = d => d.getDate()+' '+MC[d.getMonth()];
+  const out = hechos.map(x => ({ t: x.tipo === 'fase' ? x.k.replace(' · cierra', '')+' cerrada' : x.t, f: [x.d] }));
+  const L = logrosLoad();
+  Object.keys(L).forEach(function(id){
+    const f = vecesLogro(id).map(s => new Date(s+'T00:00:00')).filter(d => d > ei.ultimoCumple && d <= mpHoy());
+    if(f.length) out.push({ t: L[id].txt || id, f: f });
+  });
+  return out.map(x => ({ t: x.t, d: x.f[x.f.length-1], txt: x.f.map(dT).join(' y ') })).sort((a, b) => a.d - b.d);
+}
+function taDetalle(){
+  const ei = edadInfo(), hoy = mpHoy(), todos = taItems(ei);
+  const vienen = todos.filter(x => !x.listo), hechos = todos.filter(x => x.listo);
+  const logros = taLogros(ei, hechos);
+  const conP = vienen.filter(x => x.total), pH = conP.reduce((s, x) => s + x.hechos, 0), pT = conP.reduce((s, x) => s + x.total, 0);
+  const atras = vienen.reduce((s, x) => s + (x.atras || 0), 0), pctP = pT ? Math.round(pH / pT * 100) : 0;
+  const prox = vienen.find(x => x.d >= hoy);
+  const MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const dL = d => d.toLocaleDateString('es-MX', FECHA_LARGA);
+  // 1) Tres tarjetas: el año, tus pasos contra el año y lo siguiente.
+  const top = '<div class="ta-top">'+
+    '<div class="ta-c"><span class="ta-k">Te quedan</span><span class="ta-big">'+ei.diasFaltan+'<small>días para cumplir '+ei.edadSig+'</small></span>'+
+      '<span class="ta-bar"><i style="width:'+ei.pct+'%"></i></span>'+
+      '<span class="ta-s">Llevas <b>'+ei.diasPasados+' días</b> de tu año '+ei.edad+' ('+ei.pct+' %). Cumples '+ei.edadSig+' el '+dL(ei.siguienteCumple)+'.</span></div>'+
+    '<div class="ta-c"><span class="ta-k">Tus pasos de este año</span><span class="ta-big">'+pH+'<small>de '+pT+' pasos</small></span>'+
+      '<span class="ta-bar" title="La raya es lo que va del año"><i style="width:'+pctP+'%;background:var(--g)"></i><em style="left:'+ei.pct+'%"></em></span>'+
+      '<span class="ta-s '+(atras ? 'mal' : 'bien')+'">El año va en '+ei.pct+' % y tus pasos en '+pctP+' %. '+
+        (atras ? '<b>'+atras+' paso'+(atras === 1 ? '' : 's')+' con la fecha ya pasada</b>: empieza por ahí.' : '<b>Ninguno atrasado.</b>')+'</span></div>'+
+    '<div class="ta-c"><span class="ta-k">Lo siguiente</span>'+
+      (prox ? '<span class="ta-big" style="font-size:22px;font-family:var(--font)">'+esc(prox.t)+'</span>'+
+        '<span class="ta-s"><b>'+prox.fTxt+'</b> · '+prox.falta.txt+(prox.sig ? '. '+esc(prox.sig) : '')+'</span>'
+      : '<span class="ta-s">Nada más vence antes de tu cumpleaños.</span>')+'</div>'+
+  '</div>';
+  // 2) La línea del año: de un cumpleaños al siguiente, con hoy y cada fecha.
+  const ini = ei.ultimoCumple, fin = ei.siguienteCumple, pos = d => Math.max(0, Math.min(100, (d - ini) / (fin - ini) * 100));
+  let meses = '';
+  for(let k = 0; k <= 12; k++){ const m = new Date(ini.getFullYear(), ini.getMonth() + k, 1); if(m < ini || m > fin) continue;
+    meses += '<span class="ta-mes" style="left:'+pos(m).toFixed(2)+'%">'+MC[m.getMonth()]+(m.getMonth() === 0 ? ' '+m.getFullYear() : '')+'</span>'; }
+  const marcas = vienen.map(x => ({ x: x, ya: false })).concat(hechos.map(x => ({ x: x, ya: true })))
+    .sort((a, b) => a.x.d - b.x.d).map(function(o, n){
+      const p = pos(o.x.d), dT = o.x.d.getDate()+' '+MC[o.x.d.getMonth()];
+      return '<span class="ta-m '+o.x.tipo+(o.ya ? ' ya' : '')+(p > 70 ? ' der' : '')+'" style="left:'+p.toFixed(2)+'%;--l:'+(n % 3)+'"><i></i>'+
+        '<span>'+(o.ya ? '✓ ' : '')+esc(o.x.tipo === 'fase' ? o.x.k.replace(' · cierra', '') : o.x.t.length > 26 ? o.x.t.slice(0, 24)+'…' : o.x.t)+'<small>'+dT+'</small></span></span>';
+    }).join('')+
+    '<span class="ta-m cumple der" style="left:100%;--l:0"><i></i><span>Cumples '+ei.edadSig+'<small>'+fin.getDate()+' '+MC[fin.getMonth()]+'</small></span></span>';
+  const linea = '<div class="ta-linea"><div class="ta-eje"><i style="width:'+ei.pct+'%"></i></div>'+meses+
+    '<span class="ta-hoy" style="left:'+pos(hoy).toFixed(2)+'%"><span>Hoy</span></span>'+marcas+'</div>';
+  // 3) Lo que tienes que lograr: una tarjeta por cosa, con su foto, su fecha, su avance y lo siguiente.
+  const tarjeta = function(x){
+    const est = x.falta && x.falta.est === 'tarde' ? 'tarde' : x.falta && (x.falta.est === 'pronto' || x.falta.est === 'hoy') ? 'pronto' : '';
+    const pct = x.total ? Math.round(x.hechos / x.total * 100) : 0;
+    return '<button type="button" class="ta-card"'+(x.abrir ? ' onclick="'+x.abrir+'"' : '')+' title="'+esc(x.t)+'">'+
+      (x.img ? apImg(x.img, 'ta-img') : '<span class="ta-img"></span>')+
+      '<span class="ta-cc"><span class="ta-ck">'+esc(x.k)+'</span><span class="ta-ct">'+esc(x.t)+'</span>'+
+        '<span class="ta-f '+est+'">'+x.fTxt+' · '+x.falta.txt+'</span>'+
+        (x.total ? '<span class="ta-p"><b>'+x.hechos+' de '+x.total+'</b>'+(x.tipo === 'fase' ? ' tareas' : ' pasos')+
+            '<span class="ta-bar"><i style="width:'+pct+'%;background:var(--g)"></i></span>'+(x.atras ? '<span class="atras">'+x.atras+' atrasado'+(x.atras === 1 ? '' : 's')+'</span>' : '')+'</span>' : '')+
+        (x.cifras ? '<span class="ta-cifras'+(privado ? ' fin-hidden' : '')+'">'+x.cifras.map(c => '<span><b>'+c[0]+'</b>'+c[1]+'</span>').join('')+'</span>' : '')+
+        (x.sig ? '<span class="ta-sig">'+(x.tipo === 'hito' ? '' : '<b>Sigue:</b> ')+esc(x.sig)+(x.sigF ? ' · '+x.sigF : '')+'</span>' : '')+
+      '</span></button>';
+  };
+  const lista = vienen.length ? '<div class="ta-grid">'+vienen.map(tarjeta).join('')+'</div>'
+    : '<div class="ta-vacio">Nada más vence antes de tu cumpleaños: es tiempo para adelantar lo que sigue.</div>';
+  const ya = logros.length ? '<div class="ta-logros">'+logros.map(l => '<span class="ta-logro"><b>✓</b>'+esc(l.t)+'<small>'+l.txt+'</small></span>').join('')+'</div>'
+    : '<div class="ta-vacio">Todavía nada cerrado desde tu cumpleaños.</div>';
+  return { titulo: '🎂 Tu año '+ei.edad+' → '+ei.edadSig,
+    sub: 'Del '+dL(ini)+' al '+dL(fin)+': lo que tienes que lograr antes de cumplir '+ei.edadSig+', cuándo vence cada cosa y cómo vas.',
+    html: '<div class="ta">'+top+
+      '<div class="ta-sec ta-sec-linea">Tu año, mes a mes<small>cada punto es una fecha; toca una tarjeta para abrir su plan</small></div>'+linea+
+      '<div class="ta-sec">Lo que tienes que lograr antes de cumplir '+ei.edadSig+'<small>'+vienen.length+', de la más cercana a la más lejana</small></div>'+lista+
+      '<div class="ta-sec">Lo que ya lograste este año<small>desde el '+dL(ini)+'</small></div>'+ya+'</div>' };
 }
 
 // ── FINANZAS derivadas ───────────────────────────────────────────────────
@@ -10005,7 +10045,7 @@ function cerrarDidi(){document.getElementById('didiOverlay')?.classList.remove('
 //   · Días ya vividos apagados y meses cerrados con trama diagonal.
 //   · Ritmo requerido — lo que falta del fondo de emergencia entre los días que
 //     quedan de fase. Es dinero real de Finanzas, no casillas marcadas: la misma
-//     regla que ya seguía pintarEdadPace().
+//     regla que sigue Tu año (taDetalle).
 //
 // NADA de esto trae fechas escritas a mano aquí. Los cierres y arranques de fase
 // salen de PHASES; la última cuota de cada MSI vivo sale de `balance / min` sobre las
@@ -12775,6 +12815,8 @@ function mgLineaHtml(metas){
     '</div>';
 }
 let METAS_MONEYBAR={};
+// Las metas de Mis Metas (corto, mediano y largo plazo), con su foto: las lee Tu año (taItems).
+let METAS_TODAS=[];
 // ══════════════════════════════════════════════════════════════════════════
 // PANEL DE DETALLE — diseño "Estudio" (2026-08-23)
 // ══════════════════════════════════════════════════════════════════════════
@@ -12972,8 +13014,8 @@ function mdIr(k){
   mdEstado.i=Math.max(min,Math.min(info.pasos.length-1,k));
   mdPintar();
 }
-// Marcar usa la MISMA función de siempre (toggleMetaChecklist / toggleHabilidadChecklist /
-// toggleEdadChecklist), que guarda en localStorage y repinta la tarjeta de atrás. Se la llama por
+// Marcar usa la MISMA función de siempre (toggleMetaChecklist / toggleHabilidadChecklist), que guarda
+// en localStorage y repinta la tarjeta de atrás. Se la llama por
 // nombre porque cada tipo de detalle tiene la suya.
 function mdMarcar(){
   if(mdEstado.i<0) return;   // en «Tu plan» cada paso se palomea en su renglón
@@ -13018,30 +13060,8 @@ function cerrarMetaDetalle(){
   document.getElementById('metaDetailOverlay').classList.remove('open');
   restartTimer();
 }
-// Reusa el mismo overlay de detalle que las metas con foto (mismo DOM, mismo cerrarMetaDetalle) —
-// aquí el "hero" es un degradado en vez de una foto (no hay una imagen real que represente "tu
-// edad"), y el checklist viene de EDAD_DETALLE (arriba, construido con datos reales de PHASES).
-function abrirEdadDetalle(){
-  const info=edadInfo();
-  const hero=document.getElementById('metaDetailHero');
-  hero.style.backgroundImage='none';
-  hero.style.background='linear-gradient(135deg, rgba(0,224,192,.4), rgba(0,224,192,.08))';
-  document.getElementById('metaDetailTitle').textContent=`🎂 ${info.edad} → ${info.edadSig} años`;
-  document.getElementById('metaDetailFrase').textContent=`Del ${info.ultimoCumple.toLocaleDateString('es-MX',FECHA_LARGA)} al ${info.siguienteCumple.toLocaleDateString('es-MX',FECHA_LARGA)} — ${info.pct}% de tu año ${info.edad} recorrido, faltan ${info.diasFaltan} días para cumplir ${info.edadSig}.`;
-  document.getElementById('metaDetailEyebrow').textContent='Tu año '+info.edad;
-  pintarDetailOverlay(EDAD_DETALLE,'edad_checklist_v1','edad','toggleEdadChecklist',null);
-  pintarEdadPace();
-  document.getElementById('metaDetailOverlay').classList.add('open');
-  clearInterval(timer);
-}
-function toggleEdadChecklist(id,idx){
-  const store=rawGet('edad_checklist_v1',{});
-  if(!store[id]) store[id]={};
-  store[id][idx]=!store[id][idx];
-  rawSet('edad_checklist_v1',store);
-  pintarDetailOverlay(EDAD_DETALLE,'edad_checklist_v1',id,'toggleEdadChecklist',null);
-  pintarEdadPace();
-}
+// La barra de edad de Mis Metas abre Tu año en el panel de los medidores (taDetalle).
+function abrirEdadDetalle(){ abrirKpi('edad'); }
 // ══════════════════════════════════════════════════════════════════════════
 // DETALLE DE LOS MEDIDORES DE MIS METAS (2026-08-19)
 // ══════════════════════════════════════════════════════════════════════════
@@ -14013,6 +14033,7 @@ function kpiAcomodar(body){
 }
 
 function kpiDetalle(id){
+  if(id==='edad') return taDetalle();
   const F=D.fin||{}, debts=F.debts||[], inv=F.investments||[];
   const ef=+F.emergencyFund||0, metaEf=_metaFondo();
   const g=kpiGastoMensual();
@@ -14521,6 +14542,7 @@ function renderMetasSlide(){
     {id:'spacex',c:'SpaceX',ico:'🚀',t:'Lanzamiento de SpaceX',img:'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?w=800&q=80&auto=format&fit=crop'},
     {id:'cupra',c:'Cupra',ico:'🚙',t:'Cupra Formentor',img:'https://images.unsplash.com/photo-1655288808681-17caed2fc987?w=800&q=80&auto=format&fit=crop'}
   ];
+  METAS_TODAS=cortoMediano.map(m=>Object.assign({epi:'Corto y mediano plazo'},m)).concat(largoExtras.map(m=>Object.assign({epi:'Largo plazo'},m)));
   // ── Los pasos reales de una meta ──────────────────────────────────────────
   // `detailPct()` devuelve solo el porcentaje, y un 33% no dice si faltan dos pasos o diez.
   // Esto devuelve las tres cifras y es lo que alimenta tanto las marcas de la ficha como el
@@ -14599,7 +14621,7 @@ function renderMetasSlide(){
   // Barra de edad (2026-08-10) — justo debajo de los medidores (las 4 estadísticas económicas
   // de arriba), dentro de "Corto & mediano plazo" tal como se pidió. Clic abre el mismo overlay
   // de detalle que las tarjetas con foto, con la cronología real de qué debo lograr (ver
-  // abrirEdadDetalle()/EDAD_DETALLE arriba).
+  // abrirEdadDetalle() → taDetalle(), arriba).
   // ── La franja de instrumentos ─────────────────────────────────────────────
   // El avance del conjunto se mide en PASOS, no promediando porcentajes: promediar le daba
   // el mismo peso a "Básico 5 de alemán" (1 paso) que al Hyrox (15), así que marcar la meta
@@ -15940,9 +15962,7 @@ fixTasaTCIfNeeded();
 // Las cifras compartidas se releen DESPUÉS de los fix*IfNeeded() de arriba: el módulo leyó
 // localStorage al cargarse, antes que ellos. (Su propia migración, la de datos-maestros, ya
 // corrió dentro del módulo; este refresco es por las que siguen viviendo aquí.)
-// EDAD_DETALLE copia el `meta` de cada fase al cargar, ANTES de que PHASES pase por aquí: sin
-// esta llamada, el panel de Tu año enseñaba «{{fondoMeta}}» a la vista.
-if(window.CIFRAS){ CIFRAS.refrescar(); cifrarLiterales(PHASES); cifrarLiterales(META_DETALLE); cifrarLiterales(META_PLAN); cifrarLiterales(EDAD_DETALLE); cifrarLiterales(APRENDIZAJE); cifrarLiterales(HABILIDAD_DETALLE); }
+if(window.CIFRAS){ CIFRAS.refrescar(); cifrarLiterales(PHASES); cifrarLiterales(META_DETALLE); cifrarLiterales(META_PLAN); cifrarLiterales(APRENDIZAJE); cifrarLiterales(HABILIDAD_DETALLE); }
 fixMiercolesNatacionIfNeeded();
 fixRutina20260812IfNeeded();
 fixRutina20261010IfNeeded();

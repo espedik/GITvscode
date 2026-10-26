@@ -1405,7 +1405,7 @@ lista de salida y Coach.
 **La franja de instrumentos** (`#metasBay`) trae el avance del conjunto **en pasos**, no
 promediando porcentajes (promediar daba el mismo peso a una meta de 1 paso que al Hyrox de 15),
 **la línea del tiempo de las metas** (`mgLineaHtml`) y los cuatro conteos; la regla de edad va dentro,
-separada por filete. La línea pone cada meta que falta en su fecha, sobre las fases del Plan Maestro, de hoy al
+separada por filete, y abre *Tu año* (ver abajo). La línea pone cada meta que falta en su fecha, sobre las fases del Plan Maestro, de hoy al
 cierre del plan: los próximos 15 meses ocupan el 58 % del ancho y de ahí al cierre el resto, con el corte
 marcado. El punto lleva el estado (ámbar en marcha, gris sin empezar, hueco en pausa) y un anillo rojo si tiene
 pasos atrasados; las que caen casi juntas van en un grupo —el cierre del plan junta Hong Kong, la empresa, el depa
@@ -1417,6 +1417,24 @@ fechas ni la fecha del día de hoy"*). **Dos columnas en las dos listas**: seis 
 corto plazo. Medido a 2048×1040: la franja mide 224 px (Adán, 21-oct-2026: *"hazlo 1/3 más grande a lo
 alto"*), con la línea del tiempo a 138 px y sus carriles a 28, y ninguna lista desplaza; ni las 7 etiquetas, ni las
 fechas del pie, ni la de hoy chocan a 2560, 2048, 1600, 1366, 1024 ni 390 (entre fechas del pie, 77 px a 1600 y 7 a 390).
+
+**Tu año** (`abrirEdadDetalle()` → `abrirKpi('edad')` → `taDetalle()`; Adán, 25-oct-2026: *"esta página no tiene
+nada de información relevante ni un buen diseño, arregla todo de esta ventana"*) va en el panel de los medidores:
+- arriba, tres tarjetas: **te quedan** *249 días para cumplir 32* con la barra del año; **tus pasos de este año**
+  —*0 de 44*, la barra de los pasos con una raya en lo que va del año y cuántos pasos tienen la fecha ya pasada— y
+  **lo siguiente**, lo que vence primero con su fecha y su paso;
+- **tu año, mes a mes**: de un cumpleaños al siguiente, con la línea de hoy y cada fecha en su punto, en tres
+  carriles —las metas en cian, las fases en ámbar, las decisiones en morado, la BBVA en rojo y *Cumples 32* al
+  final—; lo ya cerrado, con ✓;
+- **lo que tienes que lograr antes de cumplir 32**, una tarjeta por cosa con su foto, de la más cercana a la más
+  lejana: las metas con plan que vencen en el año (`metaPlan`: sus pasos, los atrasados y el siguiente), el cierre
+  de las fases (sus tareas y la siguiente), la BBVA en cero (`CIFRAS.planBbva`: lo que falta y el próximo abono) y
+  las decisiones del calendario (`CALENDARIO.hitos`, con lo que pide su corte y lo que da tu ritmo, de
+  `cortesSalidaDash`). Tocar una abre su plan: la ficha de la meta, la ventana de las fases o el panel de Deuda
+  cara o de la Maestría;
+- **lo que ya lograste este año**: las fases cerradas y los logros de la libreta desde el cumpleaños.
+Las metas las lee de `METAS_TODAS`, que llena `renderMetasSlide()`. Medido a 2048×1040: cabe sin desplazarse;
+a 1366 y en el teléfono desplaza por dentro, y en el teléfono se oculta la línea.
 
 **El dinero real** de la Maestría es una barra continua en `--ac2`, distinta de las marcas de
 paso, con la cifra (`$2,500 ahorrado`): `METAS_MONEYBAR.maestria.short`; `.lbl` va en el `title`.
@@ -1534,9 +1552,9 @@ cualquier recurso que sea una serie.
 
 ## El panel de detalle — "tres apartados"
 
-El overlay que abre una ficha de Habilidades Base, una habilidad de En qué invertir tu tiempo, una meta de Mis Metas o Tu año
-(`#metaDetailOverlay`; `pintarDetailOverlay()` → `mdPintar()`, **los tres comparten los mismos
-ids**: al tocarlo se verifican los tres). Diseño de `diseno-ficha/`.
+El overlay que abre una ficha de Habilidades Base, una habilidad de En qué invertir tu tiempo o una meta de Mis Metas
+(`#metaDetailOverlay`; `pintarDetailOverlay()` → `mdPintar()`, **comparten los mismos ids**: al tocarlo se
+verifican todos). Tu año ya no va aquí: es un panel de los medidores (ver Mis Metas). Diseño de `diseno-ficha/`.
 
 **La tarjeta ocupa el 96 % del ancho y el 94 % del alto** (tope 1920 px): 1536×940 a 1600×1000,
 1311×722 a 1366×768.
@@ -1545,7 +1563,7 @@ ids**: al tocarlo se verifican los tres). Diseño de `diseno-ficha/`.
 |---|---|---|
 | **Temario** | 300 px | Un paso por fila, número o ✓ verde, el activo en cian. Un filete separa los de cierre (Practicarlo, Qué leer, Ya lo dominas) |
 | **El paso** | el resto | `Paso N de M` · título en Fraunces 34 px · la idea (`d`) 16.5 px · **En detalle**: los puntos como libro mayor numerado (`01`, `02`…) · los apartados |
-| **Recursos** | 300 px | Videos (`Para escucharlo`), la barra de dinero de la Maestría, el ritmo y el avance real de una meta, el bloque de Tu año, y **Tu avance** con el siguiente pendiente como botón |
+| **Recursos** | 300 px | Videos (`Para escucharlo`), la barra de dinero de la Maestría, el ritmo y el avance real de una meta y **Tu avance** con el siguiente pendiente como botón |
 
 **En Habilidades Base y Mis Metas el temario va contraído** (Adán: *"contrae el menú y pon 2 botones, uno de
 avance y otro de retroceso para los temas, esto para ahorrar espacio y quede mejor visualmente"*; después,
@@ -1557,7 +1575,7 @@ fechas* (sus pasos hechos y el siguiente) y sigue con *Lo que necesitas saber ·
 vuelve al plan. ☰ vuelve a abrir la columna (`mdTemario(true)`) y *‹ Contraer*, en su cabecera, la cierra; al
 cerrar la ficha vuelve contraído. El paso gana los 300 px: 1234 px de ancho en 1600×1000. Hasta 1180 px,
 contraído, Recursos se queda al lado a 260 px en vez de bajar, y el paso usa todo el alto. En qué invertir tu
-tiempo y Tu año siguen con la columna.
+tiempo sigue con la columna.
 
 Cabecera: frase de la ficha en cursiva y el avance en grande (`7 / 16 · Dominados · 44 %`). Pie a
 lo ancho: **Marcar como dominado**, un punto por paso (tocable) y Anterior / Siguiente.
@@ -1579,8 +1597,7 @@ de Habilidades Base) sigue igual, al final.
 **Tamaños.** Hasta 1180 px Recursos baja bajo el temario (260 px). En el celular los tres se
 apilan y la ficha desplaza como una sola página: temario en tira de chips, frase a dos líneas,
 puntos del pie ocultos, Marcar y Siguiente a 44 px. Se verifica en 1600, 1366, 1024 y 390, en los
-dos temas, con una ficha de mapas (Citas), una de serie (Vino), una con barra de dinero (la Maestría) y
-Tu año.
+dos temas, con una ficha de mapas (Citas), una de serie (Vino) y una con barra de dinero (la Maestría).
 
 ---
 

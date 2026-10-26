@@ -71,7 +71,7 @@ no dependen del Dashboard; la barra de apps del Dashboard las agrupa aparte.
 | `radarp_<id>` × 12 | Coach | Dashboard (`SK[].val`) |
 | `coach_referente` | Coach (qué referente se ve en *Tus referentes*) | nadie |
 | `coach-theme` | Dashboard, Coach, Finanzas, CuidadoPersonal y Vestimenta | Clave compartida de tema claro/oscuro (Entrevistas, Heliescala y Aeroresinas tienen la suya) |
-| `dash-aprende-v1`, `dash-lista-compras`, `dash-lista-tengo`, `dash-logros-v1`, `dash-rail-abierto`, `dash-settings`, `dash-privado`, `metas_checklist_v1`, `metas_plan_v1`, `dash-agenda-oculta`, `habilidades_checklist_v1`, `edad_checklist_v1`, `examen_genai_v1` | Dashboard | nadie |
+| `dash-aprende-v1`, `dash-lista-compras`, `dash-lista-tengo`, `dash-logros-v1`, `dash-rail-abierto`, `dash-settings`, `dash-privado`, `metas_checklist_v1`, `metas_plan_v1`, `dash-agenda-oculta`, `habilidades_checklist_v1`, `examen_genai_v1` | Dashboard | nadie |
 | `dash-habitos-v1` | Dashboard (`habitos.js`) | Coach, solo lectura: la cuenta de «Cero alcohol» de *Tus referentes* (`refRacha()`) |
 | `voc_estado_v1` | Alemán (`vocabulario.html`: la sección, la subsección y los filtros donde te quedaste) | nadie |
 | `aleman_k10_v1` | Alemán (`k10-interactivo.js`: cada ejercicio del Kapitel 10 con sus aciertos y su fecha) | el inicio de Alemán (`index.html`), por lección |
