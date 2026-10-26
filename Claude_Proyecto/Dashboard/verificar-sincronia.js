@@ -2867,6 +2867,36 @@ function promptsDeLoTocado() {
   else ok.push('Las rutas de Coach · Habilidades: los ' + n + ' pasos con su foto, su crédito, tres cifras, «En detalle», su sesión, lo que se copia y tres subtemas');
 })();
 
+/* ── 46. Cada palabra de Alemán de hoy con su ícono ─────────────────────────────────────────────────────────
+   Adán, 26-oct-2026: "pon imágenes de muy alta calidad en cada tarjeta, en tamaño pequeño". Cada palabra de
+   ALEMAN_VOCAB tiene su ícono en ALEMAN_ICONOS (Aleman/vocab-iconos.js), por su tema y su `de`, y cada subtema el
+   suyo, que cubre a una palabra mientras no tenga el propio; cada archivo está en Aleman/iconos/ y no sobra ninguno.
+   Una palabra nueva sin ícono, un archivo que falta o uno que nadie usa salen aquí. */
+(function () {
+  let V, I;
+  try { V = require('../Aleman/vocab-datos.js'); I = require('../Aleman/vocab-iconos.js'); }
+  catch (e) { problemas.push('No se pueden leer los íconos de Alemán: ' + e.message); return; }
+  const dir = path.join(RAIZ, 'Aleman', 'iconos'), usados = {}, malos = [];
+  const usa = function (s, quien) { if (!s) return; usados[s + '.webp'] = 1; if (!fs.existsSync(path.join(dir, s + '.webp'))) malos.push(quien + ' usa ' + s + '.webp, que no está en Aleman/iconos/'); };
+  Object.keys(V.cats || {}).forEach(function (c) {
+    const C = I[c];
+    if (!C) { malos.push('el tema ' + c + ' no tiene íconos'); return; }
+    usa(C._, c);
+    Object.keys((V.cats[c] || {}).subs || {}).forEach(function (s) { if (!(C.subs || {})[s]) malos.push(c + '/' + s + ' sin ícono de subtema'); });
+    Object.keys(C.subs || {}).forEach(function (s) { usa(C.subs[s], c + '/' + s); });
+    Object.keys(C.pal || {}).forEach(function (w) {
+      usa(C.pal[w], c + ' · ' + w);
+      if (!(V.voc || []).some(function (x) { return x.cat === c && x.de === w; })) malos.push(c + ' · «' + w + '» tiene ícono pero ya no es una palabra del tema');
+    });
+  });
+  const sinPropio = (V.voc || []).filter(function (w) { return !((I[w.cat] || {}).pal || {})[w.de]; });
+  if (sinPropio.length) malos.push(sinPropio.length + ' palabras sin su ícono: ' + sinPropio.slice(0, 5).map(function (w) { return w.cat + ' · ' + w.de; }).join(', '));
+  const sobran = fs.existsSync(dir) ? fs.readdirSync(dir).filter(function (f) { return !usados[f]; }) : [];
+  if (sobran.length) malos.push('archivos en Aleman/iconos/ que nadie usa: ' + sobran.slice(0, 8).join(', '));
+  if (malos.length) problemas.push('Los íconos de Alemán de hoy (' + malos.length + '): ' + malos.slice(0, 6).join('; '));
+  else ok.push('Alemán de hoy: las ' + (V.voc || []).length + ' palabras con su ícono, ' + Object.keys(usados).length + ' archivos en Aleman/iconos/');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

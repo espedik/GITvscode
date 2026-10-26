@@ -417,6 +417,7 @@ Las lecciones, el vocabulario y la gramática existen para que Adán entienda y 
 ## Al modificar estas páginas
 - El vocabulario vive en vocab-datos.js y toda sección nueva necesita su familia.
 - Las lecciones, en lecciones-datos.js: una lección nueva es su página y su entrada ahí, con su foto y, si es del Kapitel, sus ejercicios.
+- Cada palabra del vocabulario lleva su ícono en vocab-iconos.js: uno que ancle el significado —la imagen y la palabra juntas se recuerdan mejor que la palabra sola—, nunca un adorno; una palabra nueva llega con el suyo.
 - Todo alemán que se publique va revisado: un artículo o una terminación mal enseñados se aprenden mal.
 - Prioridad al Kapitel actual.`
     },

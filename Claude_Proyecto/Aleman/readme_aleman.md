@@ -26,6 +26,7 @@ la ventana del Dashboard*).
 | Compartido | `styles.css`, `leccion.js`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js`, `oscuro.js` | La plantilla de las lecciones (ver abajo), estilos y motores; `oscuro.js`, el modo oscuro dentro del Dashboard |
 | **Lecciones** | `lecciones-datos.js` | El catálogo de las 41: título, foto con su crédito, ejercicios del Kapitel y la regla de qué lección toca. Lo leen el inicio y Mi Día — ver abajo |
 | **Vocabulario** | `vocab-datos.js`, `vocab.css`, `vocab.js` | Los datos, el diseño y el motor de `vocabulario.html`. Mi Día lee los datos — ver abajo |
+| **Íconos de las palabras** | `vocab-iconos.js`, `iconos/` | Un ícono por palabra para las tarjetas de *Alemán de hoy* del Dashboard (Adán, 26-oct-2026: *"pon imágenes de muy alta calidad en cada tarjeta, en tamaño pequeño"*): los Fluent Emoji en 3D de Microsoft (licencia MIT), 694 archivos WebP de 128 px, 2.7 MB en total. `ALEMAN_ICONOS` va por tema: el de cada palabra (`pal`, por su `de`), el de cada subtema (`subs`) y el del tema (`_`), que cubren a una palabra nueva mientras no tenga el suyo. Una palabra nueva llega con su ícono: el control 46 del verificador lo exige, igual que el archivo en `iconos/` |
 
 ---
 

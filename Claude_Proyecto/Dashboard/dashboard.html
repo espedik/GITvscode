@@ -52,6 +52,7 @@
      y la lección que toca, de su catálogo de lecciones (Aleman/lecciones-datos.js). El Dashboard no copia
      ninguno: tocar la tarjeta abre su ventana, con la palabra y la lección en su propia página. -->
 <script src="../Aleman/vocab-datos.js"></script>
+<script src="../Aleman/vocab-iconos.js"></script>
 <script src="../Aleman/lecciones-datos.js"></script>
 <!-- La biblioteca de ejercicios (EJ_DB), la misma de CuidadoPersonal/ejercicio.html: nombre,
      imagen, técnica paso a paso y error de cada uno. La ficha que se abre al tocar un ejercicio
@@ -3677,6 +3678,13 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .alv-wc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--gen,rgba(var(--ov),.22))}
 .alv-wc-top{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:26px;font-family:var(--mono);font-size:9.5px;
   font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)}
+/* La palabra con su ícono a la derecha (`alemanIcono`): un Fluent Emoji en 3D, pequeño, que ancla el significado. */
+.alv-wc-cab{display:flex;align-items:flex-start;gap:12px}
+.alv-wc-pal{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.alv-wc-ico{flex:none;width:56px;height:56px;margin-top:-2px;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,0,0,.18))}
+/* Una palabra compuesta larga (Meldebescheinigung, Wohnungsgeberbestätigung) baja de tamaño para caber entera junto al ícono. */
+.alv-wc-de.largo{font-size:21px}
+.alv-wc-de.muylargo{font-size:17px}
 .alv-wc-de{font-family:var(--font-title);font-size:26px;font-weight:600;line-height:1.15;letter-spacing:-.01em;color:var(--text);overflow-wrap:anywhere}
 .alv-art{font-weight:700;color:var(--gen,var(--text2))}
 .alv-wc-es{font-size:15px;line-height:1.35;color:var(--text2)}
@@ -3712,6 +3720,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .alv-t{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;min-height:430px;padding:42px 36px 30px;border-radius:20px;
   background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.12);text-align:center;overflow:hidden}
 .alv-t::before{content:'';position:absolute;left:0;right:0;top:0;height:6px;background:var(--gen,rgba(var(--ov),.22))}
+.alv-t-ico{width:72px;height:72px;object-fit:contain;filter:drop-shadow(0 6px 12px rgba(0,0,0,.2))}
 .alv-t-tipo{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
 .alv-t-es{font-size:32px;font-weight:700;line-height:1.3;color:var(--text)}
 .alv-t.vuelta .alv-t-es{font-size:16px;font-weight:600;color:var(--text3)}
@@ -8331,12 +8340,29 @@ function alemanVocabCabHtml(ws, rep){
 }
 // Una palabra en su tarjeta: el color de su género a la izquierda, qué es y su nivel, la palabra con su artículo
 // y su audio, la traducción, la gramática, el ejemplo traducido y el uso o fallo típico.
+// El ícono de una palabra (`ALEMAN_ICONOS`, de Aleman/vocab-iconos.js): el suyo, o el de su subtema, o el de su tema.
+function alemanIcono(w){
+  const I = (typeof ALEMAN_ICONOS !== 'undefined' && w) ? ALEMAN_ICONOS[w.cat] : null; if(!I) return '';
+  const s = (I.pal || {})[w.de] || (I.subs || {})[w.sub] || I._;
+  return s ? '../Aleman/iconos/' + s + '.webp' : '';
+}
+function alemanIconoHtml(w, cls){
+  const u = alemanIcono(w);
+  return u ? `<img class="${cls}" src="${u}" alt="" loading="lazy" decoding="async" onerror="this.remove()">` : '';
+}
+// La palabra más larga de la tarjeta decide su tamaño: de 14 letras en adelante baja a 21 px y de 20 en adelante, a 17.
+function alemanLargo(w){
+  const n = Math.max.apply(null, String(w.de || '').split(/[\s\/]+/).map(x => x.length));
+  return n >= 20 ? ' muylargo' : n >= 14 ? ' largo' : '';
+}
 function alemanTarjetaHtml(w){
   const ex = alemanEjemplo(w), gram = alemanGram(w), V = alVocab(), sub = V ? ((V.cats[w.cat] || {}).subs || {})[w.sub] || '' : '';
   return `<article class="alv-wc ${alemanGenero(w)}">
       <div class="alv-wc-top"><span>${sub ? `<b>${esc(sub)}</b> · ` : ''}${esc(AL_TIPO[w.tipo] || '')}${w.niv ? ' · ' + esc(w.niv) : ''}</span>${alemanOirBtn(alemanArtTxt(w) + w.de)}</div>
-      <div class="alv-wc-de" lang="de">${alemanArtHtml(w)}${esc(w.de)}</div>
-      <div class="alv-wc-es">${esc(w.es)}</div>
+      <div class="alv-wc-cab"><div class="alv-wc-pal">
+        <div class="alv-wc-de${alemanLargo(w)}" lang="de">${alemanArtHtml(w)}${esc(w.de)}</div>
+        <div class="alv-wc-es">${esc(w.es)}</div>
+      </div>${alemanIconoHtml(w, 'alv-wc-ico')}</div>
       ${gram ? `<div class="alv-wc-gram">${gram}</div>` : ''}
       ${ex ? `<div class="alv-wc-ex">${alemanOirBtn(ex)}<span><span lang="de">${esc(ex)}</span>${w.esEx ? `<small>${esc(w.esEx)}</small>` : ''}</span></div>` : ''}
       ${w.uso ? `<div class="alv-wc-uso"><b>Ojo</b>${esc(w.uso)}</div>` : ''}
@@ -8405,6 +8431,7 @@ function alemanPracticaHtml(){
   return `<div class="alv-pr">
       <div class="alv-pr-cab"><span class="alv-k c">Practicar · ${p.i + 1} de ${n}</span><span class="alv-pr-barra"><i style="width:${Math.round(p.i / n * 100)}%"></i></span><button type="button" class="alv-pr-x" onclick="alemanPracticaSalir()">Terminar</button></div>
       <div class="alv-t ${alemanGenero(w)}${p.vuelta ? ' vuelta' : ''}">
+        ${alemanIconoHtml(w, 'alv-t-ico')}
         <div class="alv-t-tipo">${esc(AL_TIPO[w.tipo] || '')} · ${nueva ? 'de hoy' : 'repaso'}</div>
         <div class="alv-t-es">${esc(w.es)}</div>
         ${p.vuelta ? `<div class="alv-t-de" lang="de"><span>${alemanArtHtml(w)}${esc(w.de)}</span>${alemanOirBtn(alemanArtTxt(w) + w.de)}</div>
