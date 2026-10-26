@@ -3387,6 +3387,22 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .iqv-dia i.mal{background:var(--r)}
 .iqv-dia i.nada{width:10px;height:2px;margin-top:3px;border-radius:2px;background:rgba(var(--ov),.18)}
 .iqv-caps{display:flex;flex-direction:column;gap:1px}
+/* Los capítulos que lees: el que toca, resaltado en el color del examen; los leídos, en verde y tachados. */
+.iqv-lee .iqv-lc{display:grid;grid-template-columns:auto 22px minmax(0,1fr) auto;align-items:center;gap:8px;padding:7px 9px;margin:0 -4px;border-radius:9px}
+.iqv-lc input{width:15px;height:15px;margin:0;accent-color:var(--g);cursor:pointer}
+.iqv-lc-n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-family:var(--mono);
+  font-size:11.5px;font-weight:800;background:rgba(var(--ov),.08);color:var(--text2)}
+.iqv-lc-t{display:flex;flex-direction:column;gap:1px;min-width:0}
+.iqv-lc-t b{font-size:12.5px;font-weight:600;line-height:1.3;color:var(--text)}
+.iqv-lc-t small{font-size:11px;color:var(--text3)}
+.iqv-lc-t a{color:var(--p);font-weight:600}
+.iqv-lc-f{font-size:11px;color:var(--text3);text-align:right;white-space:nowrap}
+.iqv-lc.toca{background:rgba(127,79,184,.12);box-shadow:inset 0 0 0 1.5px var(--p)}
+.iqv-lc.toca .iqv-lc-n{background:var(--p);color:#fff}
+.iqv-lc.toca .iqv-lc-f{color:var(--p);font-weight:700}
+.iqv-lc-f em{display:block;font-style:normal;font-size:12px;font-weight:800;color:var(--p)}
+.iqv-lc.ok .iqv-lc-t b{color:var(--text3);text-decoration:line-through}
+.iqv-lc.ok .iqv-lc-f{color:var(--g);font-weight:700}
 .iqv-cap{display:grid;grid-template-columns:22px minmax(0,1fr) 34px 56px;column-gap:10px;row-gap:5px;align-items:center;padding:7px 9px;border-radius:9px}
 .iqv-cap.on{background:color-mix(in srgb,var(--c) 12%,transparent)}
 .iqv-cap.cab{padding-top:0;padding-bottom:2px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
@@ -3660,6 +3676,15 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 .cd-regla{margin-top:3px;font-size:12.5px;line-height:1.55;color:var(--text2)}
 .cd-regla b{color:var(--text);font-weight:650}
 .cd-caps{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+/* Hoy, lo que sigue y cómo se decide: tres partes con su etiqueta. Lo que sigue va numerado, con su cuándo a la derecha. */
+.cd-et{display:block;margin-bottom:3px;font-family:var(--mono);font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)}
+.cd-sig{margin-top:9px;padding:8px 11px;border-radius:10px;background:color-mix(in srgb,var(--fc) 8%,transparent);border:1px solid color-mix(in srgb,var(--fc) 22%,transparent)}
+.cd-sig ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.cd-sig li{font-size:12.5px;line-height:1.35;color:var(--text)}
+.cd-sig li::marker{color:var(--fc);font-weight:700}
+.cd-sig li span{display:inline}
+.cd-sig li small{margin-left:6px;font-size:11px;color:var(--text3);white-space:nowrap}
+.cd-regla .cd-et{margin-top:9px}
 .cd-cap{padding:4px 9px;border-radius:8px;font-family:var(--mono);font-size:10.5px;color:var(--text2);background:rgba(var(--ov),.05)}
 .cd-cap b{color:var(--text)}
 .cd-cap.on{background:color-mix(in srgb,var(--fc) 16%,transparent);color:var(--text)}
@@ -7490,7 +7515,7 @@ function aprendeOtra(slot){
 // (`dash-avance-v1.paso`). La ruta abierta en En qué invertir tu tiempo es para mirarla: no lo cambia.
 function aprendeFoco(){
   const id = (rawGet(AVANCE_KEY, {}) || {}).paso;
-  const s = id ? SK.find(x => x.id === id && habPasos(x.id).length) : null;
+  const s = id ? SK.find(x => x.id === id && !x.porExamen && habPasos(x.id).length) : null;
   return s || habRecomendada() || (typeof habFocoActual === 'function' ? habFocoActual() : null);
 }
 // Alemán, en el orden de Coach. La meta: el A2 que pide Esslingen —hasta que empieza la Fase 2 del Plan
@@ -8322,6 +8347,43 @@ function iqPreguntaHtml(q, hecha){
     ${pie}${exp}
   </div></section>`;
 }
+/* Los capítulos del syllabus que lees, todos, en el orden del plan del CT-GenAI (META_PLAN.istqbgenai, sus pasos
+   «Capítulo N leído» con su fecha): el primero sin leer es el que toca y va resaltado (Adán, 26-oct-2026: "ponme los
+   capítulos del GenAI que debo leer, pero ponme todos de una sola, resáltame cuál debe ser"). Cada uno con sus
+   objetivos, lo que vale en el examen y la página donde empieza en el PDF (CT_GENAI_SYLLABUS, copia local). */
+function iqLectura(){
+  const mp = typeof metaPlan === 'function' ? metaPlan('istqbgenai') : null; if(!mp) return [];
+  const X = window.EXAMEN_GENAI || {}, S = window.CT_GENAI_SYLLABUS || null, pts = istqbPuntosCap();
+  const objs = c => (X.blueprint || []).filter(b => String(b.lo).indexOf('GenAI-' + c + '.') === 0).length;
+  const pag = c => { if(!S || !S.secciones) return 0;
+    const ps = Object.keys(S.secciones).filter(k => k.split('.')[0] === String(c)).map(k => +S.secciones[k].pag).filter(Boolean);
+    return ps.length ? Math.min.apply(null, ps) : 0; };
+  const caps = mp.pasos.map(p => { const m = /^Cap[ií]tulo (\d+) le[ií]do/.exec(String(p.t || '').replace(/<[^>]*>/g, ''));
+    return m ? { c: +m[1], k: p.k, fTxt: p.fTxt, est: p.est, hecho: p.hecho } : null; }).filter(Boolean);
+  const toca = caps.find(x => !x.hecho);
+  return caps.map(x => { const pg = pag(x.c);
+    return Object.assign(x, { nom: (X.capitulos || {})[x.c] || '', objs: objs(x.c), pts: pts[x.c] || 0, pag: pg, toca: x === toca,
+      url: S ? (S.pdf || S.fuente) + (pg ? '#page=' + pg : '') : '' }); });
+}
+// Marcar un capítulo como leído es palomear su paso en el plan del CT-GenAI (metas_plan_v1, el mismo de Mis Metas).
+function iqCapLeido(k){
+  const st = rawGet('metas_plan_v1', {}) || {}; st.istqbgenai = st.istqbgenai || {};
+  if(st.istqbgenai[k]) delete st.istqbgenai[k]; else st.istqbgenai[k] = true;
+  rawSet('metas_plan_v1', st);
+  istqbPintar(); if(typeof renderHeroAprender === 'function') renderHeroAprender();
+}
+function iqLeeHtml(){
+  const L = iqLectura(); if(!L.length) return '';
+  const M = (window.EXAMEN_GENAI || {}).meta || {};
+  return `<div class="iqv-bq iqv-lee"><div class="iqv-et">Los capítulos que lees · ${L.filter(x => x.hecho).length} de ${L.length} leídos</div>` +
+    L.map(x => `<div class="iqv-lc${x.hecho ? ' ok' : ''}${x.toca ? ' toca' : ''}">` +
+      `<input type="checkbox"${x.hecho ? ' checked' : ''} onchange="iqCapLeido(${x.k})" aria-label="Capítulo ${x.c} leído" title="Marcar como leído">` +
+      `<span class="iqv-lc-n">${x.c}</span>` +
+      `<span class="iqv-lc-t"><b>${esc(x.nom)}</b><small>${x.objs} objetivos · ${x.pts} de ${M.puntos || 46} puntos` +
+        `${x.url ? ` · <a href="${x.url}" target="_blank" rel="noopener">abrir${x.pag ? ' en la página ' + x.pag : ''}</a>` : ''}</small></span>` +
+      `<span class="iqv-lc-f">${x.hecho ? '✓ leído' : x.toca ? `<em>Lee este</em>${x.est === 'tarde' ? 'era para el ' : 'antes del '}${x.fTxt}` : 'antes del ' + x.fTxt}</span></div>`).join('') +
+    '</div>';
+}
 function iqVasHtml(q){
   const X = window.EXAMEN_GENAI || {}, M = X.meta || {}, S = habSimulacro(), t = cdTarea('a1-7'), hoyK = hoyLocal(), LET = 'ABCD';
   const ints = (rawGet('examen_genai_v1', {}) || {}).intentos || [];
@@ -8364,7 +8426,7 @@ function iqVasHtml(q){
       (h.q.why ? `<p>${h.q.why}</p>` : '') + (window.ctGenaiSeccion ? ctGenaiSeccion(h.q) : '') + '</div></details>').join('') +
       (fallos.length > 6 ? `<p class="iqv-dato">Y ${fallos.length - 6} más de días anteriores.</p>` : '')
     : `<p class="iqv-vacio">${H.length ? 'Ninguna fallada todavía.' : 'Aún no contestas ninguna.'} Lo que falles aparece aquí con la buena, su porqué y su sección.</p>`;
-  return `<aside class="iqv-col iqv-vas" aria-label="Cómo vas">
+  return `<aside class="iqv-col iqv-vas" aria-label="Cómo vas">${iqLeeHtml()}
     <div class="iqv-bq"><div class="iqv-et">Tu meta${mes ? ' · presentas en ' + mes : ''}</div>
       <p class="iqv-meta">El simulacro en <b>${S.meta} de ${S.max}</b> o más, dos veces seguidas${M.corte ? ` · el corte oficial es ${M.corte}` : ''}.</p>
       ${sim}<button type="button" class="iqv-btn2" onclick="istqbAlSimulacro()">Simulacro completo →</button></div>
@@ -8445,11 +8507,11 @@ function comoDecideHtml(){
   // 2 · El plan de Coach: la fase en curso y el foco de habilidades.
   const t = plan.tramo, sig = plan.siguiente;
   const planHtml = (fase ? li(`<b>${esc(fase.tag)}</b> · ${esc(fase.title)}`, `${cdFecha(fase.start)} – ${cdFecha(fase.end)}`, false, apFoto('de-dinero')) : '')
-    + (t ? li(`<b>Foco: ${esc(skN(t.id))}</b>, ${t.horas} h a la semana. ${esc(t.semana)} Entregable: <b>${esc(t.entregable)}</b>`, `${cdMes(t.desde)} – ${cdMes(t.hasta)}`, false, apFotoSk(t.id)) : '')
+    + (t ? li(`<b>Foco: ${esc(skN(t.id))}</b>, ${t.horas} h a la semana. ${esc(t.semana)} Entregable: <b>${esc(t.entregable)}</b>${(SK.find(s => s.id === t.id) || {}).porExamen ? '. Se trabaja con la pregunta del día y los capítulos del examen, no con ejercicios' : ''}`, `${cdMes(t.desde)} – ${cdMes(t.hasta)}`, false, apFotoSk(t.id)) : '')
     + (sig ? li(`Después: <b>${esc(skN(sig.id))}</b> — ${esc(sig.entregable)}`, cdMes(sig.desde), false, apFotoSk(sig.id)) : '');
 
   // 3 · Subir tus habilidades: las que más mueven tu nivel por hora (peso × lo que les falta), sin las de pausa.
-  const habs = SK.filter(s => !s.pausa).map(s => ({ s, r: skRetorno(s) })).sort((a, b) => b.r - a.r).slice(0, 5)
+  const habs = SK.filter(s => !s.pausa && !s.porExamen).map(s => ({ s, r: skRetorno(s) })).sort((a, b) => b.r - a.r).slice(0, 5)
     .map(x => li(`<b>${esc(x.s.name)}</b> · nivel ${x.s.val}, peso ×${x.s.w}`, `retorno ${x.r}`, false, apFotoSk(x.s.id))).join('');
 
   // Tarjeta por tarjeta.
@@ -8512,9 +8574,60 @@ function comoDecideHtml(){
       <div class="cd-capa"><div class="cd-capa-k"><b>2</b>El plan de Coach</div>${planHtml}</div>
       <div class="cd-capa"><div class="cd-capa-k"><b>3</b>Coach · Habilidades: lo que más sube tu nivel</div>${habs}</div>
     </div>
-    <div class="gbm-sec">Tarjeta por tarjeta, lo de hoy</div>
-    <div class="cd-filas">${filas.map(r => `<div class="cd-fila" style="--fc:${r.c}">${apImg(r.foto, 'cd-foto')}<div class="cd-fila-c"><div class="cd-fila-k">${r.k}</div><div class="cd-hoy">${r.hoy}</div><div class="cd-regla">${r.regla}</div>${r.extra || ''}</div></div>`).join('')}</div>
+    <div class="gbm-sec">Tarjeta por tarjeta: lo de hoy, lo que sigue y cómo se decide</div>
+    <div class="cd-filas">${filas.map(r => { const sig = cdSigue(r.k);
+      return `<div class="cd-fila" style="--fc:${r.c}">${apImg(r.foto, 'cd-foto')}<div class="cd-fila-c"><div class="cd-fila-k">${r.k}</div>` +
+        `<div class="cd-hoy"><span class="cd-et">Hoy</span>${r.hoy}</div>` +
+        (sig.length ? `<div class="cd-sig"><span class="cd-et">Lo que sigue</span><ol>${sig.map(s => `<li><span>${s.t}</span>${s.c ? `<small>${s.c}</small>` : ''}</li>`).join('')}</ol></div>` : '') +
+        `<div class="cd-regla"><span class="cd-et">Cómo se decide</span>${r.regla}</div>${r.extra || ''}</div></div>`; }).join('')}</div>
     <div class="cd-pie">«Siguiente» y ↻ siguen este mismo orden, nunca el azar. Lo que cambias tú queda marcado como <b>elegida por ti</b> y «↺» vuelve a lo de Coach. Las metas, las fases, el foco y los niveles se cambian en Coach; este panel los lee de ahí.</div>`;
+}
+/* Lo que sigue en cada tarjeta, en el orden de Coach (Adán, 26-oct-2026: "lo que me interesa es saber qué seguirá
+   después y además cómo decides qué va"). Sale de las mismas funciones que eligen lo de hoy: las lecciones que quedan
+   del Kapitel y los temas de las palabras con los días que les quedan; los audiolibros de las semanas que vienen; los
+   próximos abonos a la BBVA, el día en que queda en cero y lo que va a GBM después; los capítulos por leer; los pasos
+   que siguen de la ruta y la habilidad de después; los pasos que siguen de la guía y las guías de después. */
+function cdSigue(k){
+  const out = [], hk = hoyLocal(), nDias = n => n + (n === 1 ? ' día' : ' días');
+  try {
+    if(/^Alemán/.test(k)){
+      const tl = alemanLeccionHoy(), Lc = alLecciones();
+      if(tl && Lc){ const kk = Lc.kapitel(), dat = Lc.datos();
+        (kk ? Lc.delGrupo(kk.id) : []).filter(l => { if(l === tl.l) return false; const a = Lc.avance(l, dat); return !a || a.hechos < a.total; })
+          .slice(0, 2).forEach(l => out.push({ t: esc(alNumTxt(l.num)) + ' · ' + esc(l.de), c: 'cuando termines la de hoy' })); }
+      const V = (typeof alVocab === 'function') ? alVocab() : null;
+      if(V){ const salio = new Set((((rawGet(APRENDE_KEY, {}) || {}).salio || {}).de) || []), quedan = {}, orden = [];
+        aprendeOrdenAleman().forEach(w => { if(salio.has(w.de)) return; if(!(w.cat in quedan)){ quedan[w.cat] = 0; orden.push(w.cat); } quedan[w.cat]++; });
+        orden.slice(0, 3).forEach((c, j) => out.push({ t: 'Palabras: ' + esc((V.cats[c] || {}).label || c),
+          c: nDias(Math.ceil(quedan[c] / AL_VOC_DIA)) + (j === 0 ? ' más' : '') })); }
+    } else if(/^Qué escuchar/.test(k)){
+      const d = didiHoy(); if(d && d.libro){ const L = d.libros || [], n = d.libro.it.n, i = L.findIndex(x => x.it.n === n);
+        (i >= 0 ? L.slice(i + 1) : L).filter(x => x.it.n !== n).slice(0, 3)
+          .forEach((x, j) => out.push({ t: esc(x.it.n), c: j === 0 ? 'la semana que entra' : 'en ' + (j + 1) + ' semanas' })); }
+    } else if(/^Qué invertir/.test(k)){
+      const B = bbvaPlan();
+      if(B){ (B.abonos || []).filter(a => !a.hecho && a.fecha >= hk).slice(0, 3)
+          .forEach(a => out.push({ t: money(a.monto) + ' a la BBVA' + (CE_DE[a.de] ? ': ' + esc(CE_DE[a.de]) : ''), c: mpFechaTxt(mpFecha(a.fecha), true) }));
+        out.push({ t: 'La BBVA queda en cero', c: mpFechaTxt({ d: B.fin, mes: false }, true) });
+        const fm = new Date(B.fin.getFullYear(), B.fin.getMonth() + 1, 1), G = CIFRAS.desgloseMes(fzmYM(fm));
+        if(G) out.push({ t: 'Todo a GBM: ' + money(G.dia1) + ' el 1 y ' + money(G.dia15) + ' el 15', c: 'desde ' + MP_MES[fm.getMonth()] }); }
+    } else if(/^Examen/.test(k)){
+      iqLectura().filter(x => !x.hecho).slice(0, 3).forEach(x => out.push({ t: 'Leer el capítulo ' + x.c + ': ' + esc(IQ_CAP_LLANO[x.c] || x.nom),
+        c: (x.est === 'tarde' ? 'era para el ' : 'antes del ') + x.fTxt }));
+    } else if(/^Coach · Habilidades/.test(k)){
+      const foco = aprendeFoco(); if(foco){ const pasos = habPasos(foco.id), st = habFocoLoad(); let i = st.paso[foco.id] || 0; if(i < 0 || i >= pasos.length) i = 0;
+        pasos.slice(i + 1, i + 3).forEach((p, j) => out.push({ t: esc(p.n), c: 'paso ' + (i + 2 + j) + ' de ' + pasos.length }));
+        const R = habConRuta(), nx = R[R.indexOf(foco) + 1] || null, rec = habRecomendada();
+        if(rec && rec.id !== foco.id) out.push({ t: 'La de Coach: ' + esc(rec.name), c: '«↺» en la tarjeta vuelve a ella' });
+        else if(nx) out.push({ t: 'Después de esta ruta: ' + esc(nx.name), c: 'la que sigue en el orden de Coach' }); }
+    } else if(/^Habilidades Base/.test(k)){
+      const ec = hbEnCurso(), x = ec.actual; if(x){ const info = HABILIDAD_DETALLE[x.h.id], store = (rawGet('habilidades_checklist_v1', {})[x.h.id]) || {};
+        (info ? info.pasos.map((p, j) => ({ p, j })).filter(o => !store[o.j]).slice(1, 3) : [])
+          .forEach(o => out.push({ t: esc(mdLimpiaTitulo(o.p.t)), c: 'paso ' + (o.j + 1) + ' de ' + info.pasos.length }));
+        ec.lista.filter(y => y !== x).slice(0, 2).forEach(y => out.push({ t: 'Después: ' + esc(y.h.t), c: y.hechos + ' de ' + y.total + ' pasos' })); }
+    }
+  } catch(e){ console.error('cdSigue', k, e); }
+  return out;
 }
 // Mientras está abierto, Mi Día no rota: la rotación vuelve al cerrarlo.
 function abrirComoDecide(){
@@ -11412,12 +11525,14 @@ function habPlanHoy(){
   if(i < 0) i = P.findIndex(t => ym < t.desde);
   return { tramo: i >= 0 ? P[i] : null, siguiente: i >= 0 ? (P[i + 1] || null) : null, todos: P };
 }
+// Una habilidad con `porExamen` (la IA) no entra: se sube con el examen ISTQB CT-GenAI —la pregunta del día y los
+// capítulos del syllabus—, no con su ruta de ejercicios (Adán, 26-oct-2026: "esa habilidad no me interesa subirla, de momento la abarcaremos con las preguntas diarias de GenAI").
 function habCandidatas(){
   const h = habPlanHoy();
-  const plan = [h.tramo, h.siguiente].filter(Boolean).map(t => SK.find(s => s.id === t.id)).filter(Boolean);
+  const plan = [h.tramo, h.siguiente].filter(Boolean).map(t => SK.find(s => s.id === t.id)).filter(s => s && !s.porExamen);
   if(plan.length) return plan;
   return Object.keys(APRENDIZAJE).filter(id => !PRIORIDAD_EXCLUIDAS.includes(id))
-    .map(id => SK.find(s => s.id === id)).filter(Boolean)
+    .map(id => SK.find(s => s.id === id)).filter(s => s && !s.porExamen)
     .sort((a, b) => skRetorno(b) - skRetorno(a)).slice(0, PRIORIDAD_N);
 }
 // Cuándo es el foco de una habilidad en el plan, en palabras: "de dic 2026 a ene 2027".
@@ -11444,7 +11559,7 @@ function habRecomendada(){ const c = habCandidatas(); return c.length ? c[0] : n
 // plan (la de esta semana y la que sigue) y después las demás, por retorno.
 function habConRuta(){
   const plan = habCandidatas().filter(s => habPasos(s.id).length);
-  return plan.concat(SK.filter(s => habPasos(s.id).length && !plan.includes(s)).sort((a, b) => skRetorno(b) - skRetorno(a)));
+  return plan.concat(SK.filter(s => habPasos(s.id).length && !s.porExamen && !plan.includes(s)).sort((a, b) => skRetorno(b) - skRetorno(a)));
 }
 // Para title="": el texto de APRENDIZAJE trae <b> y comillas dobles ("Influence", "$100M
 // Offers"), que romperían el atributo si se metieran tal cual.
@@ -11577,7 +11692,7 @@ function skillDetalle(id){
         `<button class="hf-tomo" onclick="pfAbrirId('libros','${lib.id}')" title="${habAttr(lib.t)} — ${habAttr(lib.a)}"><img src="${lib.portada || ''}" alt="${habAttr(lib.t)}" loading="lazy"></button>`).join('')}</div></div>` : '');
   return {
     titulo: s.name, frase,
-    eyebrow: foco ? 'El foco de hoy' : pausa ? 'En pausa' : tramo ? 'Su foco: ' + habTramoTxt(tramo) : 'En mantenimiento',
+    eyebrow: s.porExamen ? 'Se sube con el examen ISTQB CT-GenAI' : foco ? 'El foco de hoy' : pausa ? 'En pausa' : tramo ? 'Su foco: ' + habTramoTxt(tramo) : 'En mantenimiento',
     lado,
     pasos: pasos.map(p => ({
       t: p.n,

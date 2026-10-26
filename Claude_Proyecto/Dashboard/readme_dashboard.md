@@ -333,8 +333,13 @@ sigue: nada sale al azar.
 **«Cómo lo decide Coach»** (`#comoDecideOverlay`, `comoDecideHtml()`), ancho —hasta 1680 px, el 96 % de la ventana—: arriba, en tres columnas y con una foto en cada renglón, lo que manda y en qué
 orden —tus metas con fecha (`CD_METAS`: ids de tareas de la Fase 1, con su mes y tachadas si ya están en
 `coach_checks_v1`), el plan (la fase y el foco con su entregable) y las cinco habilidades con más
-retorno—; abajo, tarjeta por tarjeta con su foto, lo de hoy con su regla, la tabla de capítulos del ISTQB y lo que
-sigue en Habilidades Base, **en la misma rejilla que Hoy aprendes en Mi Día** (Adán, 25-oct-2026: *"ordénalos de la
+retorno, sin la IA—; abajo, tarjeta por tarjeta con su foto, en tres partes con su etiqueta: **hoy**, **lo que sigue** y **cómo
+se decide** (Adán, 26-oct-2026: *"lo que me interesa es saber qué seguirá después y además cómo decides qué va"*). Lo que sigue (`cdSigue`) sale de las mismas funciones que
+eligen: las lecciones que quedan del Kapitel y los temas de las palabras con los días que les quedan; los audiolibros de
+las semanas que vienen; los próximos abonos a la BBVA, la fecha en que el plan termina de pagarla y lo que va a GBM después; los
+capítulos del CT-GenAI por leer con su fecha; los pasos que siguen de la ruta y, si la elegiste tú, cuál es la de Coach;
+los pasos que siguen de la guía y las guías de después. Debajo de la del examen, la tabla de capítulos por puntos en
+juego. Todo **en la misma rejilla que Hoy aprendes en Mi Día** (Adán, 25-oct-2026: *"ordénalos de la
 misma forma que están originalmente en Mi Día, para no revolverlos"*): 3×2 —Alemán de hoy, Qué escuchar mientras
 manejas y Qué invertir hoy arriba; Examen ISTQB CT-GenAI, Coach · Habilidades y Habilidades Base abajo—, 2×3 bajo
 1180 px y una columna bajo 760, como allá. Las capas van en una columna bajo 1180 px. Sale de las mismas funciones que eligen. Mientras está abierto Mi Día no rota y
@@ -368,7 +373,12 @@ capítulo y si es el que más tiene.
   **el porqué** y **lo que dice el syllabus** (`ctGenaiFuente`, con su objetivo): la sección, cada frase textual con su
   página del PDF y *Abrir el syllabus en la página N*. Antes de contestar no hay nada que la responda: primero se
   recuerda y después se lee.
-- **Cómo vas** (`iqVasHtml`), en 420 px: **tu meta** —presentar en el mes de la tarea a1-7 con el simulacro en su meta
+- **Cómo vas** (`iqVasHtml`), en 420 px: arriba, **los capítulos que lees** (`iqLeeHtml`, `iqLectura`; Adán, 26-oct-2026:
+  *"ponme los capítulos del GenAI que debo leer, pero ponme todos de una sola, resáltame cuál debe ser"*): los cinco, en el orden del plan del CT-GenAI —sus pasos *Capítulo N leído* de
+  `META_PLAN.istqbgenai`, con su fecha—, cada uno con sus objetivos, lo que vale en el examen y *abrir en la página N*
+  del PDF local (`CT_GENAI_SYLLABUS`); **el primero sin leer va resaltado** con *Lee este* y su fecha (*era para el sáb 24
+  oct* si ya pasó), los leídos en verde y tachados, y la casilla los marca (`iqCapLeido`: el mismo paso del plan en
+  `metas_plan_v1`, el de Mis Metas); luego **tu meta** —presentar en el mes de la tarea a1-7 con el simulacro en su meta
   dos veces seguidas, la regla de `habSimulacro()`—, tus últimos diez simulacros en barras contra la meta y el corte,
   y *Simulacro completo →* (`istqbAlSimulacro()`); **esta semana**, una marca por respuesta, con lo contestado del
   banco y tu acierto; **dónde están los puntos**, cada capítulo en una línea con su nombre en llano, lo que llevas
@@ -1644,7 +1654,11 @@ mantenimiento*). `CIFRAS.HAB_FOCO` es una lista de tramos —IA de oct 2026 a en
 enero), Inglés de feb a mar 2027 (la solicitud a Esslingen, que cierra el 31 de marzo), Código de abr a may 2027 (el proyecto
 para el Werkstudent) y Networking de jun a ago 2027— con horas, el paso de la semana, el
 entregable y cuándo cambia. `habPlanHoy()` da el tramo de hoy y el siguiente; `habCandidatas()`
-son esos dos (si el plan ya terminó, manda el retorno). Mi Día va con el foco del plan (`aprendeFoco()`) o
+son esos dos (si el plan ya terminó, manda el retorno), **sin las que llevan `porExamen`**: la IA se sube con el
+examen ISTQB CT-GenAI —la pregunta del día y los capítulos del syllabus—, no con su ruta de ejercicios (Adán,
+26-oct-2026: *"esa habilidad no me interesa subirla, de momento la abarcaremos con las preguntas diarias de
+GenAI"*). Por eso, de octubre a enero, la de Coach es la del tramo siguiente, Inglés; tampoco entra en «Siguiente»
+(`habConRuta`) ni en las de más retorno, y su ruta dice *Se sube con el examen ISTQB CT-GenAI*. Mi Día va con el foco del plan (`aprendeFoco()`) o
 con la que eligió ahí con «Siguiente». Los `{{marcadores}}` de las rutas se resuelven al cargar
 (`cifrarLiterales(APRENDIZAJE)`).
 
