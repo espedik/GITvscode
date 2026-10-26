@@ -281,8 +281,9 @@ foco. Las dos elecciones se guardan en `dash-avance-v1`, que también decide «S
 alemán, la del tema de su vocabulario o de su familia (`apFotoAleman()`; en su ventana, la lección lleva la suya,
 `apFotoLeccion()`, de `Aleman/fotos/`); el examen, la de su capítulo; el audiolibro y el ejercicio, la portada
 del libro (`apFotoLibro()`) o, sin libro, la de su habilidad (`apFotoSk()`; Networking, Ventas, Liderazgo,
-Finanzas y Mentalidad usan la de su ficha de Habilidades Base); la guía, la suya, y *Tu dinero hoy*, la de su
-paso. La bandera es CSS (`.flag-de`): el emoji 🇩🇪 sale como «DE» en Windows.
+Finanzas y Mentalidad usan la de su ficha de Habilidades Base); la guía, la suya, y *Qué invertir hoy*, la de
+su paso: la planta que crece de las monedas mientras pagas la tarjeta y la gráfica de bolsa en la laptop cuando toca
+invertir (`inv-crece`, `inv-bolsa`, de Rawpixel, CC0, a 720 px; Adán, 26-oct-2026: *"usa una mucho mejor foto"*). La bandera es CSS (`.flag-de`): el emoji 🇩🇪 sale como «DE» en Windows.
 
 **La rejilla se acomoda a su propio ancho** (es el contenedor `aprende`): desde 760 px, 3×2, con la foto arriba a
 todo lo ancho —un libro, en su 2:3 sobre su propia portada desenfocada— y los controles encima de ella; desde

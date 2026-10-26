@@ -7594,6 +7594,10 @@ const AP_FOTOS = {
   'fase-tailandia': "Phillie Casablanca · Flickr · BY 2.0",
   'fase-tarjeta': "Finder.com · Flickr · BY 2.0",
   'fase-tarjeta-cortada': "Plusea · Flickr · BY 2.0",
+  // Qué invertir hoy (Adán, 26-oct-2026: "usa una mucho mejor foto"): la planta que crece de las monedas mientras
+  // pagas la tarjeta, y la gráfica de bolsa en la laptop cuando toca invertir. A 720 px, para que se vean nítidas.
+  'inv-crece': "Autor desconocido · Rawpixel · CC0 1.0",
+  'inv-bolsa': "Autor desconocido · Rawpixel · CC0 1.0",
   'fase-visa': "Blueground Images · Flickr · BY 2.0"
 };
 const AP_FOTO_HB = { network: 'networking', ventas: 'persuadir', liderazgo: 'sacarmejor', finanzas: 'dinero', mente: 'meditar' };
@@ -10911,7 +10915,7 @@ function pasoInversionHoy(){
   const faltaEf = Math.max(0, metaEf-ef);
   let color, que, titulo, origen = '', porque, hoy, nota, notaIco, fondo, foto;
   if(bbvaSaldo > 0){
-    color = 'var(--r)'; foto = 'fase-tarjeta-cortada';
+    color = 'var(--r)'; foto = 'inv-crece';
     que = 'Tu plan para juntar el dinero de Alemania: primero liquidas la tarjeta de crédito y después inviertes.';
     titulo = deHoy.length ? 'Hoy: paga '+mon(sumHoy)+' a tu tarjeta BBVA' : 'Hoy no te toca pagar la tarjeta';
     origen = deHoy.length ? (ORIGEN[deHoy[0].de]||'') : (resto[0] ? 'Tu siguiente pago es el <b>'+diaCorto(resto[0].fecha)+'</b>: '+mon(resto[0].monto)+'.' : '');
@@ -10921,7 +10925,7 @@ function pasoInversionHoy(){
     notaIco = 'sigue'; nota = 'Después: invertir cada quincena en GBM, tu cuenta de inversiones.';
     fondo = 'Tu fondo para emergencias se queda como está: <b>'+mon(ef)+'</b> en CETES.';
   }else{
-    color = 'var(--g)'; foto = 'sk-inversion';
+    color = 'var(--g)'; foto = 'inv-bolsa';
     que = 'Tu plan para juntar el dinero de Alemania: ya sin deuda de tarjeta, todo lo que ahorras se invierte.';
     titulo = 'Hoy sí inviertes: todo va a GBM';
     porque = 'Lo que te sobra de cada quincena y lo que apartas de Didi va a tu cuenta de inversiones en GBM.'+(faltaEf>0?' Los primeros <b>'+mon(faltaEf)+'</b> completan tu fondo para emergencias.':'');
