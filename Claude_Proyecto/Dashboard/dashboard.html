@@ -2399,7 +2399,6 @@ body.rail-on{--pad-rail:max(6vw,230px)}
   -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'/><circle cx='12' cy='10' r='3'/></svg>") center/contain no-repeat;
           mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'/><circle cx='12' cy='10' r='3'/></svg>") center/contain no-repeat}
 .mapa:hover::after{color:var(--cy)}
-.md-paso-img{display:block;width:auto;max-width:min(100%,520px);max-height:260px;object-fit:cover;border-radius:6px}
 /* La foto de un paso (.md-foto): ancha y recortada a 16:7; las locales (480 px) y las verticales, en un marco más chico
    para que no se pixelen ni pierdan lo importante. Las cifras (.md-cifras): el dato grande y lo que significa. */
 .md-foto{margin:0;display:flex;flex-direction:column;gap:7px;max-width:880px}
@@ -2417,7 +2416,6 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .md-cifra{display:flex;flex-direction:column;gap:6px;padding:14px 16px;border-radius:8px;border:1px solid rgba(var(--cy-rgb),.22);background:rgba(var(--cy-rgb),.05)}
 .md-cifra b{font-family:var(--font-title);font-size:clamp(22px,2vw,30px);font-weight:700;line-height:1;color:var(--text);letter-spacing:-.01em}
 .md-cifra span{font-size:12.5px;line-height:1.4;color:var(--text2)}
-.md-paso-img.is-diagram{max-height:320px;max-width:min(100%,420px);object-fit:contain;background:#fff;padding:10px}
 .md-paso-link{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;padding:10px 16px;border-radius:6px;
   font-size:12.5px;font-weight:800;color:var(--cy);text-decoration:none;
   background:rgba(var(--cy-rgb),.1);border:1px solid rgba(var(--cy-rgb),.24)}
@@ -2852,8 +2850,6 @@ body.rail-on{--pad-rail:max(6vw,230px)}
   .md-nav-prev{width:44px;padding:0;justify-content:center}
   .md-nav-prev span{display:none}
 }
-/* Las imágenes de un paso (.md-paso-img, .is-diagram) se estilan en el bloque "Panel de detalle": foto
-   recortada a 260px de alto; diagrama completo sobre fondo blanco, porque su detalle SÍ es el contenido. */
 
 /* ─── LA FICHA DE UN EJERCICIO — la misma que abre Ejercicio (verEjercicio): imagen, tipo y equipo,
    músculos, lo que te toca en la rutina, cómo se hace, el error típico, tu historial y qué hacer si
@@ -13713,8 +13709,6 @@ function mdPintar(){
   const copiaHtml=p.copia&&(p.copia.l||[]).length?`<div class="md-copia">
       <div class="md-copia-hd"><span class="md-lbl">Para copiar</span><b>${esc(p.copia.t||'')}</b><button type="button" class="md-copia-btn" onclick="mdCopiar(this)">Copiar</button></div>
       <pre class="md-copia-x">${p.copia.l.map(esc).join('\n')}</pre></div>`:'';
-  const imgCls=p.imgTipo==='diagrama'?'md-paso-img is-diagram':'md-paso-img';
-  const imgHtml=p.img?`<img class="${imgCls}" src="${p.img}" alt="${esc(p.t)}" loading="lazy">`:'';
   const linkHtml=p.href?`<a class="md-paso-link" href="${p.href}" target="_blank" rel="noopener">${esc(p.label||'Ver más')} ↗</a>`:'';
   // Un paso puede traer un botón que dispara algo de la propia app en vez de abrir
   // un enlace: lo usa el simulacro del CT-GenAI. Es HTML nuestro, no de fuera.
@@ -13729,7 +13723,7 @@ function mdPintar(){
     </div>`;
   // Con `fotoLado` (Coach · Habilidades) la foto va a la derecha de qué hacer y sus cifras, y no a lo ancho.
   const arriba=p.fotoLado&&fotoHtml?`<div class="md-paso-top"><div class="md-paso-top-x">${hdHtml}${cifrasHtml}</div>${fotoHtml}</div>`:hdHtml+fotoHtml+cifrasHtml;
-  cuerpo.innerHTML=`${arriba}${sesionHtml}${ledgerHtml}${mapasHtml}${subtemasHtml}${apHtml}${copiaHtml}${imgHtml}${linkHtml}${botonHtml}`;
+  cuerpo.innerHTML=`${arriba}${sesionHtml}${ledgerHtml}${mapasHtml}${subtemasHtml}${apHtml}${copiaHtml}${linkHtml}${botonHtml}`;
   cuerpo.scrollTop=0;   // cambiar de paso empieza arriba, no a media lectura del anterior
 
   // ── PIE ───────────────────────────────────────────────────────────────────

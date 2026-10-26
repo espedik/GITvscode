@@ -1880,10 +1880,19 @@ function impactoDelCambio() {
     [/\b(corregido|documentado|verificado|actualizado|añadido|agregado|nuevo) (el )?20\d\d-\d\d-\d\d\b/i, 'cambio fechado — eso va en el mensaje del commit'],
   ];
 
-  // Todo lo que hay en el proyecto: fuentes (.html/.js/.css fuera de diseno-*) y nombres de archivo.
+  // Todo lo que hay en el proyecto: fuentes (.html/.js/.css fuera de diseno-*) y nombres de archivo, también los que
+  // un .gitignore declara: derivados que no se suben (inversion-contexto.json, plan-de-inversiones.html) y que en una
+  // copia recién clonada no existen, así que sin esto el control falla o pasa según la máquina.
   const fuentes = [], nombres = new Set([path.basename(RAIZ)]), docs = [];
   (function listar(dir) {
     for (const e of fs.readdirSync(path.join(RAIZ, dir), { withFileTypes: true })) {
+      if (e.name === '.gitignore') {
+        leer(dir ? dir + '/.gitignore' : '.gitignore').split(/\r?\n/).forEach(l => {
+          const f = l.trim().replace(/^\/|\/$/g, ''); if (!f || f.charAt(0) === '#' || /[*?!]/.test(f)) return;
+          const b = path.basename(f); nombres.add(b); nombres.add(b.replace(/\.[a-z0-9]+$/i, ''));
+        });
+        continue;
+      }
       if (e.name.charAt(0) === '.' || e.name === 'node_modules') continue;
       const rel = dir ? dir + '/' + e.name : e.name;
       nombres.add(e.name); nombres.add(e.name.replace(/\.[a-z0-9]+$/i, '')); nombres.add(e.name.split('.')[0]);

@@ -1194,7 +1194,9 @@ El **control 17** vigila lo que `pfEnlazar` no puede: que los nombres de la guí
 El **control 23** vigila los `.md`: que **no vuelvan a ser diario** (encabezados fechados,
 "hasta el 2026-…", "antes era…", "mismo día)") y que **todo el código que citan exista** — cada
 identificador en `código` (ids, clases, funciones, claves) se busca en los `.html/.js/.css` del
-proyecto y en los nombres de archivo; lo que no aparece de ninguna forma es un fantasma y sale
+proyecto y en los nombres de archivo, incluidos los que declara un `.gitignore` (derivados que no se suben, como
+`inversion-contexto.json`, y que en una copia recién clonada no existen: sin ellos el resultado dependería de la
+máquina); lo que no aparece de ninguna forma es un fantasma y sale
 con archivo y línea. Las excepciones (`addInitScript` de Playwright, la bandera construida
 `finanzasmx_v2_v`) llevan su razón, y una excepción que deje de hacer falta también se avisa.
 
