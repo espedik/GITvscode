@@ -2005,7 +2005,6 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .md-sk-bar{height:5px;border-radius:3px;background:rgba(var(--ov),.09);position:relative}
 .md-sk-bar i{display:block;height:100%;border-radius:3px}
 .md-sk-bar u{position:absolute;top:-3px;bottom:-3px;width:2px;border-radius:1px;background:rgba(var(--ov),.5);text-decoration:none}
-.md-sk-libros{display:flex;gap:8px;flex-wrap:wrap}
 /* El libro del mes, arriba de Recursos en la ventana de la habilidad */
 .md-sk.lm{padding:12px 13px;border-radius:8px;background:rgba(var(--w-rgb),.07);border:1px solid rgba(var(--w-rgb),.3)}
 .md-sk.lm .md-lbl{color:var(--w)}
@@ -2603,6 +2602,105 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .mpr-vacio{padding:10px 12px;border-radius:5px;border:1px dashed rgba(var(--ov),.2);font-size:12px;line-height:1.5;color:var(--text3)}
 .mpr-nota{font-size:12px;line-height:1.5;color:var(--text2)}
 .mpr-nota b{color:var(--text)}
+/* «Tu ruta» de una habilidad de Coach · Habilidades (`skResumenHtml`, el -1 del temario): el papel, la prueba y lo
+   siguiente arriba; la ruta como tarjetas con la foto de cada paso; tu nivel escalón por escalón junto a por qué esta
+   habilidad y dónde estás; dónde se practica y sus libros. Es lo que llenaba la columna de Recursos. */
+.skr-sig{font-family:inherit;text-align:left;cursor:pointer;color:inherit;transition:border-color .15s,background .15s}
+.skr-sig:hover{border-color:rgba(var(--cy-rgb),.55);background:rgba(var(--cy-rgb),.1)}
+.skr .mp-top{grid-template-columns:repeat(3,minmax(0,1fr))}
+.skr-ruta{display:grid;grid-template-columns:repeat(var(--n,5),minmax(0,1fr));gap:12px;padding-top:12px}
+.skr-p{display:flex;flex-direction:column;gap:6px;padding:0 0 12px;text-align:left;cursor:pointer;font-family:inherit;color:var(--text);
+  border-radius:8px;overflow:hidden;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.09);transition:border-color .15s,transform .15s}
+.skr-p:hover{border-color:rgba(var(--cy-rgb),.5);transform:translateY(-2px)}
+.skr-p.sig{border-color:rgba(var(--cy-rgb),.5)}
+.skr-ph{flex:none;position:relative;display:block;aspect-ratio:16/9;overflow:hidden;background:rgba(var(--ov),.06)}
+.skr-ph img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}
+.skr-p.hecho .skr-ph img{filter:saturate(.35) brightness(.75)}
+.skr-n{position:absolute;left:8px;top:8px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:11px;font-weight:700;color:#fff;background:rgba(0,0,0,.6)}
+.skr-p.hecho .skr-n{background:var(--g);color:#05050a}
+.skr-p.sig .skr-n{background:var(--cy);color:#05050a}
+.skr-ph em{position:absolute;right:8px;top:8px;padding:2px 7px;border-radius:4px;font-style:normal;font-family:var(--mono);font-size:9.5px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;color:#05050a;background:var(--cy)}
+.skr-t{padding:0 12px;font-size:13.5px;font-weight:700;line-height:1.3}
+.skr-c{padding:0 12px;font-size:12px;line-height:1.45;color:var(--text2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.skr-m{margin-top:auto;padding:2px 12px 0;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--text3)}
+.skr-dos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+.skr-cajas{display:flex;flex-direction:column;gap:12px}
+.md-tucaso.neutra{background:rgba(var(--ov),.035);border-color:rgba(var(--ov),.1)}
+.md-tucaso.neutra .md-tucaso-lbl{color:var(--text3)}
+.skr-nivel{display:flex;flex-direction:column;gap:10px;padding-top:12px}
+.skr-nv{display:flex;align-items:baseline;gap:8px}
+.skr-nv b{font-family:var(--font-title);font-size:40px;font-weight:700;line-height:1;color:var(--text)}
+.skr-nv span{font-family:var(--mono);font-size:12px;color:var(--text3)}
+.skr-escala{position:relative;display:flex;gap:2px;height:14px;margin-top:8px}
+.skr-tramo{min-width:0;border-radius:3px;background:color-mix(in srgb,var(--c) 25%,transparent)}
+.skr-tramo.aqui{background:var(--c)}
+.skr-esc-l{display:flex;gap:2px;margin-top:-4px}
+.skr-esc-l em{min-width:0;padding-left:2px;font-style:normal;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.03em;color:var(--text3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.skr-esc-l em.aqui{color:var(--text)}
+.skr-tu,.skr-meta{position:absolute;top:-6px;bottom:-6px;width:3px;margin-left:-1.5px;border-radius:2px;background:var(--text)}
+.skr-meta{width:0;margin-left:0;border-radius:0;background:none;border-left:2px dashed var(--cy)}
+.skr-nivel p,.skr-p-txt{margin:0;font-size:14px;line-height:1.6;color:var(--text2)}
+.skr-nivel p b{color:var(--text)}
+.skr-p-txt{padding-top:12px}
+.skr-libros{display:flex;flex-wrap:wrap;gap:10px;padding-top:12px}
+.skr-lib{display:flex;align-items:center;gap:10px;width:min(100%,250px);padding:6px 10px 6px 6px;text-align:left;cursor:pointer;font-family:inherit;color:var(--text);
+  border-radius:6px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.09)}
+.skr-lib:hover{border-color:rgba(var(--cy-rgb),.45)}
+.skr-lib img{flex:none;width:44px;height:64px;object-fit:cover;border-radius:3px;background:rgba(var(--ov),.08)}
+.skr-lib span{display:flex;flex-direction:column;gap:3px;min-width:0}
+.skr-lib b{font-size:12.5px;line-height:1.3}
+.skr-lib small{font-size:11px;color:var(--text3)}
+/* El paso de una habilidad: la foto al lado de qué hacer y sus cifras (`fotoLado`), en 3:2 para que se vea entera; la
+   sesión en minutos (`.md-ses`) y lo que se copia (`.md-copia`), con su botón. */
+.md-paso-top,.md-ses,.md-copia,.skr{flex:none}
+.md-paso-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,42%);gap:28px;align-items:start;padding-bottom:20px;border-bottom:1px solid rgba(var(--ov),.1)}
+.md-paso-top-x{display:flex;flex-direction:column;gap:16px;min-width:0}
+.md-paso-top .md-paso-hd{border-bottom:none;padding-bottom:0}
+.md-paso-top .md-foto{max-width:none}
+.md-paso-top .md-foto img{aspect-ratio:3/2}
+.md-paso-top .md-cifras{grid-template-columns:repeat(3,minmax(0,1fr))}
+.md-ses{display:flex;flex-direction:column;gap:12px;padding:16px 18px;border-radius:8px;background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.09)}
+.md-ses .s0{--sc:var(--cy-rgb)}
+.md-ses .s1{--sc:var(--g-rgb)}
+.md-ses .s2{--sc:var(--w-rgb)}
+.md-ses-hd{display:flex;align-items:baseline;gap:10px}
+.md-ses-hd b{font-family:var(--mono);font-size:13px;color:var(--text)}
+.md-ses-bar{display:flex;gap:3px;height:26px}
+.md-ses-bar i{min-width:50px;display:flex;align-items:center;padding:0 8px;border-radius:4px;font-style:normal;background:rgba(var(--sc),.28)}
+.md-ses-bar i b{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--text);white-space:nowrap}
+.md-ses-pasos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.md-ses-p{display:flex;flex-direction:column;gap:5px;padding-left:11px;border-left:3px solid rgba(var(--sc),.75)}
+.md-ses-k{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
+.md-ses-x{font-size:14px;line-height:1.55;color:var(--text2)}
+.md-ses-sale{display:flex;gap:10px;align-items:flex-start;padding-top:12px;border-top:1px solid rgba(var(--ov),.08)}
+.md-ses-ok{flex:none;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#05050a;background:var(--g)}
+.md-ses-sale div{display:flex;flex-direction:column;gap:3px}
+.md-ses-sale p{margin:0;font-size:14.5px;line-height:1.55;color:var(--text)}
+.md-copia{border-radius:8px;overflow:hidden;border:1px solid rgba(var(--cy-rgb),.24);background:rgba(var(--cy-rgb),.04)}
+.md-copia-hd{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(var(--cy-rgb),.16)}
+.md-copia-hd .md-lbl{flex:none;color:var(--cy)}
+.md-copia-hd b{flex:1;min-width:0;font-size:14px;color:var(--text)}
+.md-copia-btn{flex:none;height:30px;padding:0 12px;border-radius:5px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;color:var(--cy);
+  background:rgba(var(--cy-rgb),.1);border:1px solid rgba(var(--cy-rgb),.35)}
+.md-copia-btn:hover{background:rgba(var(--cy-rgb),.2)}
+.md-copia-btn.ok{color:var(--g);border-color:rgba(var(--g-rgb),.45);background:rgba(var(--g-rgb),.12)}
+.md-copia-x{margin:0;padding:14px 16px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;font-size:12.5px;line-height:1.7;color:var(--text2);white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:1100px){
+  .skr-ruta{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+  .md-paso-top{grid-template-columns:minmax(0,1fr)}
+  .md-paso-top .md-foto img{aspect-ratio:16/9}
+  .skr-dos{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:820px){
+  .skr .mp-top{grid-template-columns:minmax(0,1fr)}
+  .md-ses-pasos{grid-template-columns:minmax(0,1fr)}
+  .skr-ruta{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .md-paso-top .md-cifras{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .md-copia-hd{flex-wrap:wrap}
+}
 @media(max-width:760px){
   .mp-top{grid-template-columns:minmax(0,1fr)}
   .mp-sis{grid-template-columns:minmax(0,1fr);gap:3px}
@@ -7436,7 +7534,7 @@ function pasoSemanaHtml(){
     : `${rt.cuando}, hasta la pág. <b>${rt.pag}</b>`}</span></span>`;
   return apTarjeta({ c:'var(--w)', mat:'Coach · Habilidades',
     ctl:apCtl('paso','Habilidad',propia?esc(rec.name):''),
-    foto:apFotoLibro(libro?libro.id:(r&&r.id), foco.id), ico:foco.icon, abrir:`aprendeVisto('paso');abrirSkillDetalle('${foco.id}')`,
+    foto:apFotoLibro(libro?libro.id:(r&&r.id), foco.id), ico:foco.icon, abrir:`aprendeVisto('paso');abrirSkillDetalle('${foco.id}',1)`,
     titulo:`Abrir la ruta de ${habAttr(foco.name)}${rt?` · tu libro del mes: ${habAttr(rt.lib.t)}`:lib?` · con ${habAttr(lib.t)}`:''}`,
     txt: apCuerpo({ sub: `Ejercicio de ${esc(nom)}${propia?' · elegido por ti':''}${rt ? ` · libro del mes: <i>${esc(rt.lib.t)}</i>` : lib ? ` · con el libro <i>${esc(lib.t)}</i>` : ' · un paso a la vez'}`,
       big: p.k ? esc(p.n) : hacer, bigTxt: !p.k, det: p.k ? hacer : '',
@@ -11800,7 +11898,8 @@ function calcOVRcon(id, valor){
 // y si mañana IA o Datos entran al foco, el slide ya sabe mostrarlas.
 function habPasos(id){
   const a = APRENDIZAJE[id]; if(!a) return [];
-  if(a.subs) return a.subs.map(x => ({ n: x.n, q: x.q, c: x.c, r: x.r, k: x.corto, foto: x.foto, cred: x.cred, pie: x.pie, cifras: x.cifras, list: x.list }));
+  if(a.subs) return a.subs.map(x => ({ n: x.n, q: x.q, c: x.c, r: x.r, k: x.corto, foto: x.foto, cred: x.cred, pie: x.pie, cifras: x.cifras, list: x.list,
+    sesion: x.sesion, sale: x.sale, copia: x.copia }));
   // Los recursos de la habilidad, tal cual: `pfRecursosHtml` sabe pintarlos.
   const r = (a.recursos || []).slice(0, 2);
   return [
@@ -11936,9 +12035,12 @@ function habSincronizaPaso(id){
 }
 
 // ── La ventana de una habilidad: la misma de Habilidades Base (`pintarDetailOverlay`), con la ruta de
-//    APRENDIZAJE como temario. Cada paso: qué hacer, por qué este paso y con qué (el libro o el recurso);
-//    a la derecha, el plan de la habilidad —su nivel, esta semana, con qué se demuestra, por qué esta
-//    habilidad, dónde estás, dónde se practica y los libros de su ruta—.
+//    APRENDIZAJE como temario. Abre en «Tu ruta» (`resumen`, el -1 del temario, como «Tu plan» de una meta): su papel
+//    en el plan, con qué se demuestra y lo siguiente; los pasos con su foto; tu nivel escalón por escalón; por qué esta
+//    habilidad y dónde estás; dónde se practica y sus libros. Cada paso: qué hacer con sus cifras y su foto al lado, tu
+//    sesión en minutos, «En detalle», sus cajas, lo que se copia y con qué. A la derecha solo va lo que se mira desde
+//    cualquier paso —tu libro del mes, tu nivel y esta semana— (Adán, 26-oct-2026: "la columna de la derecha se ve muy
+//    saturada de información").
 const SKILL_DETALLE = {};
 function skPapel(s){
   const H = habPlanHoy(), tramo = H.todos.find(t => t.id === s.id) || null;
@@ -11964,6 +12066,61 @@ function skConQue(p){
     </div>`;
   }).join('');
 }
+// Tu nivel, escalón por escalón: los seis tramos de skLevel() sobre 0–100, dónde estás y el siguiente escalón.
+function skNivelHtml(s){
+  const meta = skSiguienteEscalon(s.val), cortes = [0].concat(SK_ESCALONES);
+  const T = cortes.slice(0, -1).map((a, k) => { const b = cortes[k + 1], lv = skLevel(a);
+    return { a, b, lv, aqui: s.val >= a && (s.val < b || b === 100), nom: lv.l.charAt(0) + lv.l.slice(1).toLowerCase() }; });
+  const tramos = T.map(x => `<span class="skr-tramo${x.aqui ? ' aqui' : ''}" style="flex:${x.b - x.a};--c:${x.lv.c}" title="${x.nom}: de ${x.a} a ${x.b}"></span>`).join('');
+  const nombres = T.map(x => `<em class="${x.aqui ? 'aqui' : ''}" style="flex:${x.b - x.a}" title="${x.nom}: de ${x.a} a ${x.b}">${x.nom}</em>`).join('');
+  return `<div class="skr-nivel">
+      <div class="skr-nv"><b>${s.val}</b><span>/100 · ${skLevel(s.val).l.toLowerCase()}</span></div>
+      <div class="skr-escala">${tramos}<i class="skr-tu" style="left:${s.val}%" title="Tú: ${s.val}"></i>${meta > s.val ? `<i class="skr-meta" style="left:${meta}%" title="El siguiente escalón: ${meta}"></i>` : ''}</div>
+      <div class="skr-esc-l">${nombres}</div>
+      <p>${meta > s.val ? `Llevarla de <b>${s.val} a ${meta}</b> sube tu nivel general de <b>${calcOVR()} a ${calcOVRcon(s.id, meta)}</b>.` : 'Está en lo más alto.'}
+        Pesa ×${s.w} y rinde ${skRetorno(s)}: el retorno ordena tu mantenimiento.</p>
+    </div>`;
+}
+// «Tu ruta»: lo que dice la habilidad entera, a lo ancho y con las fotos de sus pasos.
+function skResumenHtml(id){
+  const s = SK.find(x => x.id === id), pasos = habPasos(id), st = habPasosStore()[id] || {};
+  const { tramo, foco, pausa } = skPapel(s);
+  const total = pasos.length, hechos = pasos.filter((_, k) => st[k]).length, sig = pasos.findIndex((_, k) => !st[k]);
+  const horas = h => String(h).replace('.', ',') + ' h a la semana';
+  const papel = s.porExamen ? ['Se sube con el examen', 'ISTQB CT-GenAI: la pregunta del día y los capítulos del syllabus']
+    : foco ? ['El foco de hoy', `${horas(tramo.horas)} · faltan ${habDiasA(tramo.hasta)} días de su tramo`]
+    : pausa ? ['En pausa', 'por decisión tuya' + (s.mant && s.mant.h ? ' · conserva ' + horas(s.mant.h) : '')]
+    : tramo ? ['Su foco llega ' + habTramoTxt(tramo), horas(tramo.horas)]
+    : ['En mantenimiento', s.mant && s.mant.h ? horas(s.mant.h) : 'sin horas fijas'];
+  const prueba = s.prueba || (tramo && tramo.entregable) || '';
+  const libros = habLibrosRuta(pasos);
+  const caja = (lbl, txt, cls) => txt ? `<div class="md-tucaso${cls ? ' ' + cls : ''}"><div class="md-tucaso-lbl">${lbl}</div><div class="md-tucaso-txt">${txt}</div></div>` : '';
+  const min = p => (p.sesion || []).reduce((a, x) => a + x[0], 0);
+  return `<div class="mp skr">
+    <div class="mp-top">
+      <div class="mp-box"><span class="md-lbl">Su papel en el plan</span><b>${esc(papel[0])}</b><small>${esc(papel[1])}</small></div>
+      <div class="mp-box"><span class="md-lbl">Se demuestra con</span><b>${prueba}</b></div>
+      ${sig >= 0 ? `<button type="button" class="mp-box mp-sig pronto skr-sig" onclick="mdIr(${sig})"><span class="md-lbl">Lo siguiente · paso ${sig + 1}</span><b>${esc(pasos[sig].n)}</b><small>Abrir el paso →</small></button>`
+        : `<div class="mp-box mp-sig hecho"><span class="md-lbl">Lo siguiente</span><b>Ruta completa</b><small>los ${total} pasos dominados</small></div>`}
+    </div>
+    <div class="mp-sec">
+      <div class="mp-sec-hd"><span class="md-lbl">Tu ruta</span><small>${hechos} de ${total} dominados · toca un paso para abrirlo</small></div>
+      <div class="skr-ruta" style="--n:${total <= 4 ? 4 : total <= 6 ? total : Math.ceil(total / 2)}">${pasos.map((p, k) => `<button type="button" class="skr-p${st[k] ? ' hecho' : ''}${k === sig ? ' sig' : ''}" onclick="mdIr(${k})" title="${habAttr(p.n)}">
+        <span class="skr-ph">${p.foto ? `<img src="fotos-habilidades/${p.foto}" alt="" loading="lazy" onerror="this.remove()">` : ''}<span class="skr-n">${st[k] ? '✓' : k + 1}</span>${k === sig ? '<em>Sigue</em>' : ''}</span>
+        <span class="skr-t">${esc(p.n)}</span>${p.k ? `<span class="skr-c">${esc(p.k)}</span>` : ''}${min(p) ? `<span class="skr-m">Sesión de ${min(p)} min</span>` : ''}
+      </button>`).join('')}</div>
+    </div>
+    <div class="skr-dos">
+      <div class="mp-sec"><div class="mp-sec-hd"><span class="md-lbl">Tu nivel, escalón por escalón</span><small>la raya punteada es el siguiente</small></div>${skNivelHtml(s)}</div>
+      <div class="skr-cajas">${caja('Por qué esta habilidad', s.porQue)}${caja('Dónde estás', s.desc, 'neutra')}</div>
+    </div>
+    ${s.practica || libros.length ? `<div class="skr-dos">
+      ${s.practica ? `<div class="mp-sec"><div class="mp-sec-hd"><span class="md-lbl">Dónde se practica</span></div><p class="skr-p-txt">${s.practica}</p></div>` : ''}
+      ${libros.length ? `<div class="mp-sec"><div class="mp-sec-hd"><span class="md-lbl">Los libros de esta ruta</span><small>toca uno para ver de qué trata</small></div>
+        <div class="skr-libros">${libros.map(lib => `<button type="button" class="skr-lib" onclick="pfAbrirId('libros','${lib.id}')"><img src="${lib.portada || ''}" alt="" loading="lazy"><span><b>${esc(lib.t)}</b><small>${esc(lib.a)}</small></span></button>`).join('')}</div></div>` : ''}
+    </div>` : ''}
+  </div>`;
+}
 function skillDetalle(id){
   const s = SK.find(x => x.id === id), pasos = habPasos(id);
   if(!s || !pasos.length) return null;
@@ -11975,38 +12132,38 @@ function skillDetalle(id){
   const semana = foco ? `<b>${tramo.horas} h</b> a la semana: ${tramo.semana}`
     : (s.mant ? (s.mant.h ? `<b>${String(s.mant.h).replace('.', ',')} h</b> a la semana: ` : '') + s.mant.txt : '');
   const bloque = (lbl, txt, cls) => txt ? `<div class="md-sk${cls ? ' ' + cls : ''}"><span class="md-lbl">${lbl}</span><p>${txt}</p></div>` : '';
-  const libros = habLibrosRuta(pasos);
   const lmAqui = (aprendeFoco() || {}).id === id || (libroMes().actual || {}).sk === id;
+  // A la derecha, solo lo que se consulta desde cualquier paso; lo demás de la habilidad vive en «Tu ruta».
   const lado = (lmAqui ? lmLadoHtml() : '') + `<div class="md-sk"><span class="md-lbl">Tu nivel</span>
-      <div class="md-sk-nv"><b>${s.val}</b><span>/100 · ${lv.l.toLowerCase()} · pesa ×${s.w} · rinde ${skRetorno(s)}</span></div>
+      <div class="md-sk-nv"><b>${s.val}</b><span>/100 · ${lv.l.toLowerCase()}</span></div>
       <div class="md-sk-bar"><i style="width:${s.val}%;background:${lv.c}"></i><u style="left:${meta}%"></u></div>
-      <p>Llevarla de <b>${s.val} a ${meta}</b> sube tu nivel general a <b>${calcOVRcon(s.id, meta)}</b>. Sube con evidencia, no con sensación.</p></div>`
-    + bloque('Esta semana', semana, foco ? 'foco' : '')
-    + bloque('Se demuestra con', s.prueba || (tramo && tramo.entregable))
-    + bloque('Por qué esta habilidad', s.porQue)
-    + bloque('Dónde estás', s.desc)
-    + bloque('Dónde se practica', s.practica)
-    + (libros.length ? `<div class="md-sk"><span class="md-lbl">Los libros de esta ruta</span><div class="md-sk-libros">${libros.map(lib =>
-        `<button class="hf-tomo" onclick="pfAbrirId('libros','${lib.id}')" title="${habAttr(lib.t)} — ${habAttr(lib.a)}"><img src="${lib.portada || ''}" alt="${habAttr(lib.t)}" loading="lazy"></button>`).join('')}</div></div>` : '');
+      <p>${meta > s.val ? `Llevarla a <b>${meta}</b> sube tu nivel general a <b>${calcOVRcon(s.id, meta)}</b>.` : 'Está en lo más alto.'}</p></div>`
+    + bloque('Esta semana', semana, foco ? 'foco' : '');
   return {
     titulo: s.name, frase,
     eyebrow: s.porExamen ? 'Se sube con el examen ISTQB CT-GenAI' : foco ? 'El foco de hoy' : pausa ? 'En pausa' : tramo ? 'Su foco: ' + habTramoTxt(tramo) : 'En mantenimiento',
     lado,
+    resumen: () => skResumenHtml(id),
     pasos: pasos.map(p => ({
       t: p.n,
       d: p.c ? `<span class="md-lbl md-d-lbl">Qué hacer</span>${p.c}` : '',
       cajas: p.q ? [{ lbl: 'Por qué este paso', txt: p.q }] : [],
       boton: skConQue(p),
-      // Lo que enseña cada paso, como una ficha de Mis Metas: la foto ancha con su pie y su crédito, tres cifras
-      // grandes y «En detalle», con «Tu caso» y el error común en sus cajas.
-      foto: p.foto ? 'fotos-habilidades/' + p.foto : '', ancha: true, cred: p.cred, pie: p.pie, cifras: p.cifras, list: p.list
+      // Lo que enseña cada paso, como una ficha de Mis Metas —la foto con su pie y su crédito, tres cifras y «En
+      // detalle», con «Tu caso» y el error común en sus cajas—, la foto al lado de qué hacer (`fotoLado`), y su práctica:
+      // la sesión en minutos, cómo sabes que salió y lo que se copia.
+      foto: p.foto ? 'fotos-habilidades/' + p.foto : '', ancha: true, fotoLado: true, cred: p.cred, pie: p.pie, cifras: p.cifras, list: p.list,
+      sesion: p.sesion, sale: p.sale, copia: p.copia
     }))
   };
 }
-function abrirSkillDetalle(id){
+// La pantalla abre en «Tu ruta»; Mi Día (`alPaso`), en el paso de la semana: el primero sin dominar.
+function abrirSkillDetalle(id, alPaso){
   habPasosStore();
   const info = skillDetalle(id); if(!info) return;
+  info.alPaso = !!alPaso;
   SKILL_DETALLE[id] = info;
+  if(alPaso) mdEstado.id = '';
   const f = typeof apFotoSk === 'function' ? apFotoSk(id) : null;
   const hero = document.getElementById('metaDetailHero');
   hero.style.background = ''; hero.style.backgroundImage = f ? `url('${f.u}')` : 'none';
@@ -12894,6 +13051,13 @@ function mdTemaBar(i,min,max,etq,titulo,hecho){
     <button class="md-tema-b" onclick="mdIr(${i+1})"${i>=max?' disabled':''} aria-label="Tema siguiente" title="Tema siguiente">›</button>`;
 }
 function mdIxPlan(on){
+  const info=mdEstado.dict&&mdEstado.dict[mdEstado.id];
+  if(info&&info.resumen){   // una habilidad de Coach: «Tu ruta» va primero y los pasos debajo
+    const st=(rawGet(mdEstado.storeKey,{})[mdEstado.id])||{}, n=info.pasos.length, h=info.pasos.filter((_,k)=>st[k]).length;
+    return `<button class="md-ix md-ix-plan${on?' on':''}${n&&h===n?' hecho':''}" onclick="mdIr(-1)">
+      <span class="md-ix-n">▶</span><span class="md-ix-t">Tu ruta<small>${h} de ${n} pasos dominados</small></span>
+    </button><div class="md-ix-h">Los pasos</div>`;
+  }
   const mp=mdEstado.dict===META_DETALLE?metaPlan(mdEstado.id):null; if(!mp) return '';
   return `<button class="md-ix md-ix-plan${on?' on':''}${mp.hechos===mp.total?' hecho':''}" onclick="mdIr(-1)">
       <span class="md-ix-n">▶</span><span class="md-ix-t">Tu plan, con fechas<small>${mp.hechos} de ${mp.total} pasos${mp.sig?' · sigue el '+esc(mp.sig.fTxt):''}</small></span>
@@ -12960,6 +13124,54 @@ function mdPintarPlan(){
   const navs=document.querySelectorAll('.md-acciones .md-nav');
   if(navs[0]) navs[0].disabled=true;
   if(navs[1]) navs[1].disabled=!info.pasos.length;
+}
+// El panel en «Tu ruta» de una habilidad de Coach · Habilidades (`info.resumen`): como «Tu plan» de una meta, sin
+// «Marcar» ni puntos; el cuerpo lo arma `skResumenHtml` y Recursos queda con lo que se consulta desde cualquier paso.
+function mdPintarResumen(){
+  const id=mdEstado.id, info=mdEstado.dict&&mdEstado.dict[id]; if(!info) return;
+  const pasos=info.pasos, total=pasos.length, store=(rawGet(mdEstado.storeKey,{})[id])||{};
+  const done=pasos.filter((_,k)=>store[k]).length, pct=total?Math.round(done/total*100):0;
+  document.getElementById('metaDetailOverlay').classList.add('md-plan-on');
+  mdTemaBar(-1,-1,total-1,'Tu ruta',`${done} de ${total} pasos dominados`,total>0&&done===total);
+  document.getElementById('metaDetailBarFill').style.width=pct+'%';
+  document.getElementById('metaDetailBarNum').innerHTML=`${done}<small>/ ${total}</small>`;
+  document.getElementById('metaDetailProgLbl').textContent=`Dominados · ${pct} %`;
+  document.getElementById('metaDetailMoneybar').innerHTML='';
+  document.getElementById('metaDetailVideo').innerHTML=info.lado||'';
+  document.getElementById('metaDetailAvance').innerHTML=mdAvanceHtml(pasos,store,!!info.lado);
+  document.getElementById('metaDetailIndiceN').textContent=`${total} ${total===1?'paso':'pasos'}`;
+  document.getElementById('metaDetailIndice').innerHTML=mdIxPlan(true)+pasos.map((x,k)=>
+    `<button class="md-ix${store[k]?' hecho':''}" onclick="mdIr(${k})"><span class="md-ix-n">${store[k]?'✓':(k+1)}</span><span class="md-ix-t">${esc(mdLimpiaTitulo(x.t))}</span></button>`).join('');
+  const cuerpo=document.getElementById('metaDetailSteps');
+  cuerpo.innerHTML=info.resumen();
+  cuerpo.scrollTop=0;
+  document.getElementById('metaDetailDots').innerHTML='';
+  const navs=document.querySelectorAll('.md-acciones .md-nav');
+  if(navs[0]) navs[0].disabled=true;
+  if(navs[1]) navs[1].disabled=!total;
+}
+// Tu avance, en Recursos: dominados, pendientes y el siguiente pendiente como botón (es a donde se retoma; con 16 pasos
+// hace falta un punto de entrada que no sea recorrer el temario).
+function mdAvanceHtml(pasos,store,hair){
+  const total=pasos.length, done=pasos.filter((_,k)=>store[k]).length, sig=pasos.findIndex((_,k)=>!store[k]);
+  return `
+    ${hair?'<div class="md-hair"></div>':''}
+    <div class="md-rec-hd"><span class="md-lbl">Tu avance</span></div>
+    <div class="md-avance">
+      <div><b class="ok">${done}</b><span class="md-lbl">Dominados</span></div>
+      <div><b>${total-done}</b><span class="md-lbl">Pendientes</span></div>
+    </div>
+    ${sig<0?'<div class="md-avance-nota">Ficha completa: los '+total+' pasos están dominados.</div>'
+      :`<button class="md-sig" onclick="mdIr(${sig})"><span class="md-lbl">Siguiente pendiente</span><span>${sig+1} · ${esc(mdLimpiaTitulo(pasos[sig].t))}</span></button>`}`;
+}
+// «Copiar» de un bloque «Para copiar»: el texto tal cual al portapapeles; si el navegador no lo deja, el respaldo de
+// siempre, con un textarea.
+function mdCopiar(btn){
+  const pre=btn.closest('.md-copia').querySelector('pre'), txt=pre?pre.textContent:'';
+  const listo=()=>{ btn.textContent='✓ Copiado'; btn.classList.add('ok'); setTimeout(()=>{ btn.textContent='Copiar'; btn.classList.remove('ok'); },1600); };
+  const respaldo=()=>{ const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); try{ if(document.execCommand('copy')) listo(); }catch(e){} ta.remove(); };
+  if(navigator.clipboard&&window.isSecureContext) navigator.clipboard.writeText(txt).then(listo,respaldo); else respaldo();
 }
 // ══ Lo que el panel de una meta enseña además del plan ═════════════════════════════════════════════════
 // Adán, 20-oct-2026: "falta mucho contenido para las metas, pero debe ser contenido muuuy muy útil si no ni lo
@@ -13260,7 +13472,8 @@ function pintarDetailOverlay(dataDict,storeKey,id,toggleFnName,moneyInfo){
     const st=(rawGet(storeKey,{})[id])||{};
     const primero=info.pasos.findIndex((_,k)=>!st[k]);
     // Una meta con plan abre en él (META_PLAN): lo primero es qué hacer y cuándo, no el temario.
-    mdEstado.i=(dataDict===META_DETALLE&&META_PLAN[id])?-1:(primero<0?0:primero);
+    // Una habilidad de Coach abre en «Tu ruta», salvo que llegue de Mi Día a su paso de la semana (`alPaso`).
+    mdEstado.i=((dataDict===META_DETALLE&&META_PLAN[id])||(info.resumen&&!info.alPaso))?-1:(primero<0?0:primero);
   }
   mdEstado.dict=dataDict; mdEstado.storeKey=storeKey; mdEstado.id=id; mdEstado.toggle=toggleFnName;
   mdEstado.money=moneyInfo||null;
@@ -13281,12 +13494,12 @@ const MD_SVG_AVISO='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" 
 function mdPintar(){
   const {dict,storeKey,id}=mdEstado;
   const info=dict&&dict[id]; if(!info) return;
-  const conPlan=dict===META_DETALLE&&!!META_PLAN[id];
+  const conPlan=(dict===META_DETALLE&&!!META_PLAN[id])||!!info.resumen;   // «Tu plan» de una meta o «Tu ruta» de una habilidad
   const ov=document.getElementById('metaDetailOverlay');
   const contraible=dict===HABILIDAD_DETALLE||dict===META_DETALLE||dict===SKILL_DETALLE;   // Habilidades Base, Mis Metas y Coach · Habilidades contraen el temario
   ov.classList.toggle('md-contraible',contraible);
   ov.classList.toggle('md-temario-min',contraible&&!mdEstado.temario);
-  if(conPlan&&mdEstado.i<0){ mdPintarPlan(); return; }
+  if(conPlan&&mdEstado.i<0){ if(info.resumen) mdPintarResumen(); else mdPintarPlan(); return; }
   ov.classList.remove('md-plan-on');
   const pasos=info.pasos, total=pasos.length;
   const store=(rawGet(storeKey,{})[id])||{};
@@ -13297,7 +13510,7 @@ function mdPintar(){
   const p=pasos[i], hecho=!!store[i];
 
   // En una meta, «‹» desde el primer tema vuelve a «Tu plan» (el -1).
-  mdTemaBar(i,conPlan?-1:0,total-1,conPlan?`Lo que necesitas saber · ${i+1} de ${total}`:`Tema ${i+1} de ${total}`,mdLimpiaTitulo(p.t),hecho);
+  mdTemaBar(i,conPlan?-1:0,total-1,conPlan&&!info.resumen?`Lo que necesitas saber · ${i+1} de ${total}`:`Tema ${i+1} de ${total}`,mdLimpiaTitulo(p.t),hecho);
 
   // Cabecera: el avance, en grande
   document.getElementById('metaDetailBarFill').style.width=pct+'%';
@@ -13342,16 +13555,7 @@ function mdPintar(){
 
   // Tu avance: dominados, pendientes, y el siguiente paso pendiente como botón (es a donde se
   // retoma; con 16 pasos hace falta un punto de entrada que no sea recorrer el temario).
-  const sig=pasos.findIndex((_,k)=>!store[k]);
-  document.getElementById('metaDetailAvance').innerHTML=`
-    ${(mb||vids.length||info.lado)?'<div class="md-hair"></div>':''}
-    <div class="md-rec-hd"><span class="md-lbl">Tu avance</span></div>
-    <div class="md-avance">
-      <div><b class="ok">${done}</b><span class="md-lbl">Dominados</span></div>
-      <div><b>${total-done}</b><span class="md-lbl">Pendientes</span></div>
-    </div>
-    ${sig<0?'<div class="md-avance-nota">Ficha completa: los '+total+' pasos están dominados.</div>'
-      :`<button class="md-sig" onclick="mdIr(${sig})"><span class="md-lbl">Siguiente pendiente</span><span>${sig+1} · ${esc(mdLimpiaTitulo(pasos[sig].t))}</span></button>`}`;
+  document.getElementById('metaDetailAvance').innerHTML=mdAvanceHtml(pasos,store,!!(mb||vids.length||info.lado));
 
   // ── TEMARIO ───────────────────────────────────────────────────────────────
   const iSep=pasos.findIndex((x,k)=>k>0&&mdEsCierre(x.t));
@@ -13399,6 +13603,21 @@ function mdPintar(){
   const fotoHtml=p.foto?`<figure class="md-foto${fotoWeb||p.ancha?'':' md-foto-loc'}${p.alta?' md-foto-alta':''}"><img src="${p.foto}" alt="${esc(p.pie||mdLimpiaTitulo(p.t))}" loading="lazy" onerror="this.closest('figure').remove()">${
     p.pie||fuente||p.cred?`<figcaption>${p.pie?esc(p.pie):''}${fuente?` <a href="${fuente}" target="_blank" rel="noopener">Foto: Wikimedia Commons ↗</a>`:''}${p.cred?` <span class="md-foto-cred">Foto: ${esc(p.cred)}</span>`:''}</figcaption>`:''}</figure>`:'';
   const cifrasHtml=(p.cifras||[]).length?`<div class="md-cifras">${p.cifras.map(([v,l])=>`<div class="md-cifra"><b>${v}</b><span>${l}</span></div>`).join('')}</div>`:'';
+  // La sesión de un paso de Coach · Habilidades (`sesion`, `sale`): una barra con sus tres tiempos en minutos y, debajo,
+  // qué se hace en cada uno y cómo sabes que salió.
+  const ses=p.sesion||[], SES_K=['Arranca','El bloque','Cierra'];
+  let t0=0;
+  const sesionHtml=ses.length?`<div class="md-ses">
+      <div class="md-ses-hd"><span class="md-lbl">Tu sesión</span><b>${ses.reduce((a,x)=>a+x[0],0)} min</b></div>
+      <div class="md-ses-bar" aria-hidden="true">${ses.map(([m],k)=>`<i class="s${k}" style="flex:${m}"><b>${m} min</b></i>`).join('')}</div>
+      <div class="md-ses-pasos">${ses.map(([m,txt],k)=>{ const a=t0; t0+=m;
+        return `<div class="md-ses-p s${k}"><span class="md-ses-k">${SES_K[k]||''} · min ${a} a ${t0}</span><span class="md-ses-x">${txt}</span></div>`; }).join('')}</div>
+      ${p.sale?`<div class="md-ses-sale"><span class="md-ses-ok">✓</span><div><span class="md-lbl">Sale bien si</span><p>${p.sale}</p></div></div>`:''}
+    </div>`:'';
+  // Lo que se usa tal cual (`copia`): un guion, una plantilla, un código. El botón lo deja en el portapapeles.
+  const copiaHtml=p.copia&&(p.copia.l||[]).length?`<div class="md-copia">
+      <div class="md-copia-hd"><span class="md-lbl">Para copiar</span><b>${esc(p.copia.t||'')}</b><button type="button" class="md-copia-btn" onclick="mdCopiar(this)">Copiar</button></div>
+      <pre class="md-copia-x">${p.copia.l.map(esc).join('\n')}</pre></div>`:'';
   const imgCls=p.imgTipo==='diagrama'?'md-paso-img is-diagram':'md-paso-img';
   const imgHtml=p.img?`<img class="${imgCls}" src="${p.img}" alt="${esc(p.t)}" loading="lazy">`:'';
   const linkHtml=p.href?`<a class="md-paso-link" href="${p.href}" target="_blank" rel="noopener">${esc(p.label||'Ver más')} ↗</a>`:'';
@@ -13406,13 +13625,15 @@ function mdPintar(){
   // un enlace: lo usa el simulacro del CT-GenAI. Es HTML nuestro, no de fuera.
   const botonHtml=p.boton||'';
   const cuerpo=document.getElementById('metaDetailSteps');
-  cuerpo.innerHTML=`
+  const hdHtml=`
     <div class="md-paso-hd">
       <div class="md-paso-n"><span class="md-lbl">Paso ${i+1} de ${total}</span>${hecho?'<i></i><span class="md-lbl" style="color:var(--g)">Dominado</span>':''}</div>
       <div class="md-paso-t">${mdLimpiaTitulo(p.t)}</div>
       <div class="md-paso-d">${p.d}</div>
-    </div>
-    ${fotoHtml}${cifrasHtml}${ledgerHtml}${mapasHtml}${apHtml}${imgHtml}${linkHtml}${botonHtml}`;
+    </div>`;
+  // Con `fotoLado` (Coach · Habilidades) la foto va a la derecha de qué hacer y sus cifras, y no a lo ancho.
+  const arriba=p.fotoLado&&fotoHtml?`<div class="md-paso-top"><div class="md-paso-top-x">${hdHtml}${cifrasHtml}</div>${fotoHtml}</div>`:hdHtml+fotoHtml+cifrasHtml;
+  cuerpo.innerHTML=`${arriba}${sesionHtml}${ledgerHtml}${mapasHtml}${apHtml}${copiaHtml}${imgHtml}${linkHtml}${botonHtml}`;
   cuerpo.scrollTop=0;   // cambiar de paso empieza arriba, no a media lectura del anterior
 
   // ── PIE ───────────────────────────────────────────────────────────────────
@@ -13434,7 +13655,7 @@ addEventListener('resize',()=>{
 function mdTemario(abierto){ mdEstado.temario=abierto; mdPintar(); }
 function mdIr(k){
   const info=mdEstado.dict&&mdEstado.dict[mdEstado.id]; if(!info) return;
-  const min=(mdEstado.dict===META_DETALLE&&META_PLAN[mdEstado.id])?-1:0;   // -1 = la vista «Tu plan»
+  const min=((mdEstado.dict===META_DETALLE&&META_PLAN[mdEstado.id])||info.resumen)?-1:0;   // -1 = «Tu plan» o «Tu ruta»
   mdEstado.i=Math.max(min,Math.min(info.pasos.length-1,k));
   mdPintar();
 }

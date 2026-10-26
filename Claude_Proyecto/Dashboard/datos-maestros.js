@@ -3672,8 +3672,826 @@ window.CIFRAS = (function () {
       }
     }
   };
-  Object.keys(APRENDIZAJE_DETALLE).forEach(function (id) {
-    ((APRENDIZAJE[id] || {}).subs || []).forEach(function (s) { Object.assign(s, APRENDIZAJE_DETALLE[id][s.n] || {}); });
+  /* ── La práctica de cada paso: la sesión, cómo sabes que salió y lo que se copia ──
+     Adán, 26-oct-2026: "agrega más contenido… cosas súper útiles, porque solo me pones info superficial". Por habilidad
+     y por el nombre del paso, como APRENDIZAJE_DETALLE: `sesion`, la sesión en minutos —[minutos, qué haces], en tres
+     tiempos: cómo arrancas, el bloque y con qué cierras (el prompt de la página: "qué hacer en los primeros diez
+     minutos, cómo sabe que salió y qué deja hecho")—; `sale`, el criterio de que salió, y `copia`, lo que se usa tal
+     cual —un guion, una plantilla, un código, una lista— con su título (`t`) y sus renglones (`l`), en texto plano.
+     Se mezcla en cada paso al cargar; el control 45 del verificador exige los tres. */
+  const APRENDIZAJE_PRACTICA = {
+    ia: {
+      "El syllabus, capítulo por capítulo": {
+        sesion: [[10, "Abre el capítulo en sus objetivos de aprendizaje y convierte cada uno en una pregunta: «¿qué es…?», «¿cuándo conviene…?»."],
+                 [35, "Lee buscando la respuesta a esas preguntas; marca solo los términos en inglés que el syllabus define."],
+                 [15, "Cierra el PDF: llena la tarjeta de memoria y contesta en el simulacro las preguntas de ese capítulo."]],
+        sale: "Llenas la tarjeta sin mirar y aciertas al menos 4 de cada 5 preguntas del capítulo.",
+        copia: { t: "La tarjeta de cada capítulo", l: [
+          "Capítulo __ · fecha __",
+          "1. Término: ______ = su definición del syllabus, en una línea",
+          "2. Término: ______ = …",
+          "3. Cuándo se usa: ______ · cuándo NO: ______",
+          "4. El riesgo que menciona: ______",
+          "5. Un ejemplo de pruebas de tu trabajo: ______",
+          "Preguntas falladas → su sección: ______"] } },
+      "El simulacro como termómetro": {
+        sesion: [[5, "Celular en otro cuarto, reloj a la vista y la hoja de fallos al lado."],
+                 [60, "El simulacro completo, de una sentada y con el tiempo del examen; marca con «?» lo que contestaste dudando."],
+                 [20, "Revisa fallos y dudas: de cada uno, su sección del syllabus y por qué la otra opción era la correcta."]],
+        sale: "Terminas antes del reloj, con 34 o más, y cada fallo queda anotado con su sección.",
+        copia: { t: "La hoja de fallos", l: [
+          "Simulacro #__ · fecha __ · puntos __ de 46 · tiempo __ min",
+          "Pregunta | Sección del syllabus | Elegí | Correcta | Por qué me equivoqué",
+          "__ | __ | __ | __ | no conocía el término / leí mal / dudé entre dos",
+          "Las 3 secciones con más fallos = mis sesiones de la semana:",
+          "1. ______   2. ______   3. ______"] } },
+      "Una prueba con IA que puedas enseñar": {
+        sesion: [[10, "Escribe el requisito en dos líneas: qué hace la función, con qué entradas y en qué condiciones."],
+                 [30, "Pide los casos con el prompt de abajo y clasifica cada uno: correcto, repetido, imposible o falta."],
+                 [20, "Escribe el README en inglés: qué dio el modelo, qué se le escapó y qué instrucción lo mejoró."]],
+        sale: "Tu tabla dice cuántos casos útiles dio el modelo y encontraste al menos tres que faltaban.",
+        copia: { t: "El prompt para pedir casos de prueba", l: [
+          "Role: You are a senior test engineer for automotive ADAS functions.",
+          "Requirement: <el requisito en dos líneas; p. ej., Autonomous Emergency Braking>",
+          "Inputs and ranges: <speed 0–130 km/h, distance to obstacle 0–150 m, …>",
+          "Task: Generate test cases as a table: ID | precondition | inputs | expected result | technique.",
+          "Techniques: boundary values, equivalence classes and fault injection.",
+          "Include: sensor failure, degraded weather and at least 3 negative cases.",
+          "Do not invent requirements; list every assumption separately."] } },
+      "Automatiza una tarea tuya": {
+        sesion: [[10, "Elige la tarea que repites cada semana con los mismos pasos y mide cuánto tardas hoy."],
+                 [10, "Escribe los pasos a mano, del disparador al resultado, en la ficha de abajo."],
+                 [40, "Arma la automatización con n8n o un script de Python y pruébala con el caso de esta semana."]],
+        sale: "La tarea corre sin ti y anotaste los minutos que te ahorra al mes.",
+        copia: { t: "La ficha de la automatización", l: [
+          "Tarea: ______ · se repite __ veces al mes · tardo __ min",
+          "Disparador: cuándo arranca (una hora, un correo, un archivo nuevo)",
+          "Paso 1: ______",
+          "Paso 2: ______",
+          "Paso 3: ______",
+          "Resultado: qué queda hecho y dónde",
+          "Ahorro: __ min × __ veces = __ min al mes",
+          "Para la entrevista: «Automaticé ____, que me tomaba __ min a la semana, con ____.»"] } },
+      "Lo que no se le delega a la IA": {
+        sesion: [[10, "Pregunta a tu líder, o busca en la intranet, qué herramientas de IA están aprobadas en {{empleador}} y con qué datos."],
+                 [20, "Toma una salida de IA de esta semana y pásala por la lista de abajo, punto por punto."],
+                 [10, "Escribe tu regla en tres líneas: qué nunca pegas, qué siempre compruebas y quién revisa."]],
+        sale: "Sabes qué herramientas están aprobadas y cada salida que usas pasó la lista.",
+        copia: { t: "La lista antes de usar una salida de IA", l: [
+          "☐ ¿Pegué datos de un cliente, código o requisitos fuera de una herramienta aprobada? Si sí, para.",
+          "☐ Cada número, norma o cita: ¿lo comprobé en su fuente?",
+          "☐ ¿Faltan casos raros? Límites, fallas, combinaciones.",
+          "☐ ¿Lo revisé como revisaría el trabajo de alguien nuevo en el equipo?",
+          "☐ ¿Queda claro qué hizo la IA y qué revisé yo?"] } },
+    },
+    ingles: {
+      "Tu nivel real es el de hablar bajo presión": {
+        sesion: [[5, "Teléfono a grabar, sin notas: «Tell me about yourself», dos minutos de corrido."],
+                 [15, "Escúchate con una hoja: cuenta pausas largas, muletillas y frases que se notan traducidas."],
+                 [10, "Contesta otra vez con la estructura de abajo, graba y compara los tres números."]],
+        sale: "Tienes tus tres números de hoy y la segunda grabación trae menos pausas que la primera.",
+        copia: { t: "Tell me about yourself, en 90 segundos", l: [
+          "Present: I'm a validation engineer at {{empleador}}, working on HIL testing for ADAS functions.",
+          "Past: Over the last six years I've validated automotive software at Ford, Continental and Bosch, where I led a test team in Stuttgart.",
+          "Proof: <un resultado con número: «I cut regression time from __ to __ by automating __»>",
+          "Future: Now I want to go deeper into systems with the Automotive Systems master's in Esslingen, and work as a Werkstudent in validation.",
+          "Close: That's why this role caught my attention: ______."] } },
+      "La carta de motivación de Esslingen": {
+        sesion: [[10, "Lee la página del programa y anota tres cosas concretas que te atan a él: su enfoque, un laboratorio, la región."],
+                 [35, "Escribe el borrador en los cuatro párrafos de abajo, de corrido y sin pulir."],
+                 [15, "Léelo en voz alta, corta un 10 % y mándalo a quien lo critique sin piedad."]],
+        sale: "Una página, cuatro párrafos, y en las dos primeras líneas ya se lee por qué Esslingen.",
+        copia: { t: "La carta en cuatro párrafos", l: [
+          "1. The hook (3–4 lines): why Automotive Systems at Esslingen, with one specific detail of the program and of the Stuttgart region.",
+          "2. What I bring (6–8 lines): six years of validation, HIL and ADAS at Ford, Continental, Bosch and {{empleador}}; one result with a number per company.",
+          "3. Why now (3–4 lines): the gap the master's closes —systems engineering, the German industry— and how you will fund it.",
+          "4. After the degree (3–4 lines): a Werkstudent role in validation, then a full-time role in the region, and what you add to the cohort.",
+          "Closing line: I would welcome the opportunity to bring my industry experience to the program."] } },
+      "El vocabulario de TU trabajo primero": {
+        sesion: [[15, "Repasa los correos y las juntas de la semana y anota los términos que dudarías al decir."],
+                 [20, "Por cada término, una frase completa tuya, como las de abajo."],
+                 [10, "Dilas en voz alta tres veces; mañana, en el coche, sin mirar."]],
+        sale: "Llevas 40 términos con su frase y dices 30 sin mirar.",
+        copia: { t: "Tus primeras frases de trabajo", l: [
+          "The trade-off here is latency versus accuracy.",
+          "This edge case fails when the sensor signal drops for more than 100 ms.",
+          "The root cause was a timing issue in the CAN message, not the algorithm.",
+          "We need to deprecate this test bench configuration by Q2.",
+          "Can we align on the acceptance criteria before we start testing?",
+          "The regression suite covers most requirements; the gap is in fault injection.",
+          "I'd push back on that: if the requirement is ambiguous, the test is ambiguous too.",
+          "Let me walk you through the test results."] } },
+      "Simulacros de entrevista de verdad": {
+        sesion: [[5, "Elige tres preguntas de la lista y pon el teléfono a grabar."],
+                 [25, "Contesta cada una con STAR en dos minutos, solo con tus puntos, sin texto escrito."],
+                 [15, "Escucha, anota una sola cosa a corregir y repite la peor respuesta una vez más."]],
+        sale: "Cada respuesta dura menos de dos minutos y termina con un resultado con número.",
+        copia: { t: "Las preguntas que siempre salen", l: [
+          "Tell me about a project you're proud of.",
+          "Describe a technical conflict and how you resolved it.",
+          "Tell me about a time a test you designed found a critical bug.",
+          "Why this company? Why Germany?",
+          "What's your biggest weakness? (una real, con lo que haces para corregirla)",
+          "STAR: Situation (1 frase) · Task (1 frase) · Action, lo que hiciste TÚ (3 frases) · Result, con número",
+          "Para ganar tiempo: That's a good question — let me think of the best example."] } },
+      "Pensar en inglés durante el manejo": {
+        sesion: [[5, "Antes de arrancar, deja listo el episodio de Qué escuchar."],
+                 [40, "Escucha y pausa después de cada frase útil: dila en voz alta dos veces. Con pasajero, solo escuchas."],
+                 [5, "Al estacionarte, narra en inglés lo que harás mañana, en 30 segundos."]],
+        sale: "Repetiste al menos diez frases en voz alta y narraste sin pausas largas.",
+        copia: { t: "Frases para narrar al volante", l: [
+          "Traffic is heavy on ___ because ___.",
+          "I'm taking ___ instead of ___ to avoid ___.",
+          "Tomorrow I need to ___, so first I'll ___.",
+          "The main risk this week is ___; my plan B is ___.",
+          "If I had to explain my job to a kid, I'd say ___."] } },
+      "Cero traducción en el trabajo": {
+        sesion: [[10, "Cambia a inglés el idioma del teléfono y del editor (en VS Code: Configure Display Language)."],
+                 [10, "Escribe en inglés la lista de pendientes de mañana y tus próximos commits."],
+                 [10, "Lee en inglés la documentación de lo que usas hoy; si una palabra no sale, búscala y sigue."]],
+        sale: "Una semana con el teléfono y el editor en inglés, sin regresarlos.",
+        copia: { t: "Plantillas para escribir en inglés todo el día", l: [
+          "Commit: fix(can): handle timeout when the ECU response exceeds 200 ms",
+          "Commit: test(aeb): add boundary cases for 0 and 130 km/h",
+          "To-do: Follow up with ___ on ___ by ___.",
+          "Note: Decision: ___ · Why: ___ · Next step: ___",
+          "Email: Quick update: ___ is done; ___ is blocked by ___. I'll update you by ___."] } },
+    },
+    codigo: {
+      "Qué te pide el puesto que quieres": {
+        sesion: [[15, "Busca cinco anuncios: «Werkstudent Validierung», «Werkstudent HiL», «Working student ADAS testing», región Stuttgart."],
+                 [20, "Pasa cada requisito a la tabla de abajo y cuenta en cuántos anuncios sale."],
+                 [10, "Marca lo que resolverías mañana sin buscar; los «no» más repetidos son tu ruta."]],
+        sale: "La tabla con cinco anuncios y tres huecos ordenados por frecuencia.",
+        copia: { t: "La tabla de requisitos", l: [
+          "Requisito | Anuncios que lo piden (de 5) | ¿Lo resuelvo mañana sin buscar? | Con qué lo demuestro",
+          "Python | _/5 | sí / no | ______",
+          "pytest | _/5 | sí / no | ______",
+          "CAN / CANoe | _/5 | sí / no | ______",
+          "HiL / dSPACE | _/5 | sí / no | ______",
+          "CI (GitHub Actions, Jenkins) | _/5 | sí / no | ______",
+          "Alemán (el nivel que piden) | _/5 | ______ | ______",
+          "Mi ruta = los «no» con más anuncios, en orden."] } },
+      "Tests antes que features": {
+        sesion: [[10, "Escribe en una frase qué debe pasar después del arreglo: la entrada y el resultado esperado."],
+                 [20, "Escribe la prueba y córrela: tiene que fallar, y por la razón correcta."],
+                 [20, "Haz el arreglo mínimo hasta que pase y limpia el código con la prueba en verde."]],
+        sale: "La prueba falló antes del arreglo, pasa después y cubre un caso límite.",
+        copia: { t: "El ciclo, en pytest", l: [
+          "# 1. Rojo: la prueba dice lo que esperas",
+          "def test_frena_si_el_choque_es_en_menos_de_1_5_s():",
+          "    assert decidir_frenado(velocidad_kmh=50, distancia_m=8) is True",
+          "",
+          "# 2. Verde: el arreglo mínimo",
+          "def decidir_frenado(velocidad_kmh, distancia_m):",
+          "    ttc = distancia_m / (velocidad_kmh / 3.6)   # tiempo al choque, en segundos",
+          "    return ttc < 1.5",
+          "",
+          "# 3. El límite: falla (división entre cero) hasta que el arreglo cubra el auto detenido",
+          "def test_auto_detenido_no_frena():",
+          "    assert decidir_frenado(velocidad_kmh=0, distancia_m=8) is False"] } },
+      "pytest de verdad": {
+        sesion: [[10, "Crea test_pid.py con una primera prueba que pase: pytest la encuentra solo."],
+                 [30, "Pasa los casos a parametrize —normal, límites y falla— y añade un fixture."],
+                 [15, "Sube el workflow de abajo y comprueba que GitHub Actions corre en verde."]],
+        sale: "Al hacer push, GitHub Actions corre tus pruebas y el README enseña la insignia en verde.",
+        copia: { t: "parametrize, fixture y CI", l: [
+          "import pytest",
+          "from control import pid_salida   # kp*error + ki*integral + kd*derivada",
+          "",
+          "@pytest.fixture",
+          "def ganancias():",
+          "    return {\"kp\": 1.2, \"ki\": 0.1, \"kd\": 0.05}",
+          "",
+          "@pytest.mark.parametrize(\"error, esperado\", [(0, 0), (1, 1.2), (-1, -1.2)])",
+          "def test_proporcional(ganancias, error, esperado):",
+          "    assert pid_salida(error, integral=0, derivada=0, **ganancias) == pytest.approx(esperado)",
+          "",
+          "# .github/workflows/test.yml",
+          "on: [push]",
+          "jobs:",
+          "  test:",
+          "    runs-on: ubuntu-latest",
+          "    steps:",
+          "      - uses: actions/checkout@v4",
+          "      - uses: actions/setup-python@v5",
+          "        with:",
+          "          python-version: \"3.12\"",
+          "      - run: pip install pytest",
+          "      - run: pytest -q"] } },
+      "Un proyecto que se pueda enseñar": {
+        sesion: [[10, "Escribe el alcance en tres renglones: qué entra, qué sale y qué decide."],
+                 [40, "Avanza una sola pieza —la lectura, el filtro, la decisión o las pruebas— y haz commit."],
+                 [10, "Anota en el README la decisión difícil de hoy, aunque sea en borrador."]],
+        sale: "Cada sesión cierra con un commit y el README crece con una decisión explicada.",
+        copia: { t: "El README que lee un reclutador", l: [
+          "# Sensor filter for emergency braking (demo)",
+          "What it does: reads radar distance at 20 Hz, filters the noise and decides when to brake.",
+          "Why: <una frase con tu experiencia en validación>",
+          "How to run: pip install -r requirements.txt && pytest",
+          "Design decision: Kalman filter vs moving average → chose ___ because ___ (trade-off: ___).",
+          "Tests: __ cases — nominal, boundaries, sensor dropout. CI: GitHub Actions.",
+          "What I'd do next: ___"] } },
+      "Leer código ajeno a propósito": {
+        sesion: [[5, "Elige un archivo de 200 a 400 líneas de Autoware o ROS 2, y su archivo de pruebas."],
+                 [35, "Léelo de arriba abajo; de cada función, una línea: qué hace y por qué así."],
+                 [10, "Anota una idea que copiarías y dónde la usarías esta semana."]],
+        sale: "Explicas el archivo en tres frases y tienes una idea nueva anotada.",
+        copia: { t: "La ficha de lectura", l: [
+          "Repositorio y archivo: ______ (__ líneas)",
+          "Qué resuelve, en una frase: ______",
+          "Cómo maneja los errores: ______",
+          "Un nombre o un patrón que me gustó: ______",
+          "Qué espera su prueba (test_*): ______",
+          "La idea que copio, y dónde: ______"] } },
+      "Media hora diaria, no seis el domingo": {
+        sesion: [[5, "Abre el ejercicio donde quedó ayer: la nota del final te dice qué sigue."],
+                 [20, "Escríbelo tú, sin IA."],
+                 [5, "Compáralo con lo que propone la IA y deja la nota para mañana."]],
+        sale: "Cinco mañanas de cinco con su sesión, cada una con su nota para la siguiente.",
+        copia: { t: "La nota del final de cada sesión", l: [
+          "Fecha: __ · Ejercicio: ______",
+          "Lo terminé: sí / no · Lo escribí sin IA: sí / no",
+          "Qué me trabó: ______",
+          "Lo que la IA hizo distinto, y si era mejor: ______",
+          "Mañana empiezo por: ______"] } },
+    },
+    network: {
+      "Tu red real, en una hoja": {
+        sesion: [[15, "Recorre LinkedIn, WhatsApp y tu correo por empresa: Ford, Continental, Bosch, {{empleador}}, el IPN."],
+                 [20, "Llena la hoja con 20 nombres y la fecha del último contacto."],
+                 [5, "Ordena por fecha y marca los cinco que pasan de un año."]],
+        sale: "Veinte nombres con fecha y cinco marcados para escribirles esta semana.",
+        copia: { t: "Las columnas de tu hoja", l: [
+          "Nombre | Empresa hoy | Dónde nos conocimos | Último contacto | Qué le puedo ofrecer | Siguiente paso",
+          "Ej.: ____ | Bosch, Stuttgart | proyecto HIL, 20__ | mar 2025 | un artículo de su tema | mensaje sin pedir nada",
+          "Regla: más de 12 meses sin hablar → a la lista de esta semana."] } },
+      "Las cartas de recomendación, ya": {
+        sesion: [[10, "Elige a tus dos: un jefe que te vio trabajar y un líder técnico o profesor."],
+                 [20, "Adapta el correo de abajo para cada uno, con tres hechos concretos tuyos."],
+                 [10, "Ofrece el borrador y pon en tu calendario el recordatorio a una semana."]],
+        sale: "Los dos correos salen hoy, con fecha límite, y los dos aceptan o te dan otro nombre.",
+        copia: { t: "El correo para pedir la carta", l: [
+          "Asunto: ¿Me ayudarías con una carta de recomendación para mi maestría en Alemania?",
+          "Hola ____: voy a aplicar a {{maestriaEscuela}}, que empieza el {{maestriaInicio}}.",
+          "Me ayudaría mucho una carta tuya, en inglés, porque me viste trabajar en ____.",
+          "Si puedes mencionar: 1) ____ 2) ____ 3) ____ (hechos, con su resultado).",
+          "La necesito antes del ____. Si te sirve, te mando un borrador para que lo ajustes.",
+          "Si no es buen momento, lo entiendo perfectamente. ¡Gracias!"] } },
+      "Reactivar sin pedir nada": {
+        sesion: [[10, "De tu hoja, toma los cinco más viejos y busca algo suyo reciente: un post, su empresa, un cambio."],
+                 [20, "Escribe los cinco mensajes con las plantillas: tres líneas y sin pedir nada."],
+                 [5, "Anota en la hoja la fecha de hoy y qué mandaste."]],
+        sale: "Cinco mensajes enviados y al menos dos respuestas en la semana.",
+        copia: { t: "Tres mensajes que no piden nada", l: [
+          "Útil: «Vi este artículo sobre ____ y me acordé de lo que hacían en ____. Por si te sirve: (link). ¡Saludos!»",
+          "Felicitación: «¡Felicidades por ____! Vi que ahora estás en ____, se oye muy interesante. ¿Qué tal el cambio?»",
+          "Pregunta: «Oye, ¿cómo les fue con ____ que mencionaste? Me quedé con la curiosidad.»"] } },
+      "Stuttgart antes de llegar": {
+        sesion: [[10, "Elige a una persona: alguien de Bosch con quien trabajaste o un mexicano en Stuttgart."],
+                 [10, "Mándale la petición de abajo: 20 minutos y una pregunta concreta."],
+                 [25, "En la llamada, tres preguntas: escuchas, anotas y cierras con «¿con quién más me recomiendas hablar?»."]],
+        sale: "Una llamada al mes desde marzo, anotada en tu hoja con lo que aprendiste.",
+        copia: { t: "La petición y las preguntas", l: [
+          "Mensaje: «Hola ____, me mudo a Stuttgart el {{maestriaInicio}} para la maestría en Esslingen. ¿Tendrías 20 minutos en las próximas dos semanas? Quiero entender cómo se busca un Werkstudent en validación allá.»",
+          "1. ¿Cómo encontraste tu primer trabajo allá y qué te funcionó?",
+          "2. ¿Qué equipos contratan Werkstudent en pruebas o HIL?",
+          "3. ¿Qué nivel de alemán piden de verdad en el día a día?",
+          "Cierre: ¿con quién más me recomiendas hablar?"] } },
+      "La pregunta que abre puertas": {
+        sesion: [[10, "Elige a dos personas que trabajan donde quieres entrar y mándales la petición."],
+                 [20, "En la conversación, la pregunta y las de seguimiento de abajo; tú hablas el 20 %."],
+                 [10, "Anota las palabras que usan y manda un agradecimiento con algo útil."]],
+        sale: "Dos conversaciones antes de tu primera entrevista de Werkstudent, y una presentación a alguien más.",
+        copia: { t: "La conversación, en cinco preguntas", l: [
+          "1. ¿Qué te habría gustado saber antes de entrar?",
+          "2. ¿Cómo es una semana normal en tu equipo?",
+          "3. ¿Qué tiene el Werkstudent al que luego contratan?",
+          "4. ¿Qué herramientas usan todos los días?",
+          "5. ¿Hay alguien más con quien me recomiendes hablar?"] } },
+      "Una hora al mes, en el calendario": {
+        sesion: [[15, "Revisa la hoja: quién pasó de seis meses, quién respondió, a quién conociste este mes."],
+                 [30, "Escribe a tres personas con las plantillas de «Reactivar sin pedir nada»."],
+                 [15, "Añade a los nuevos y una nota de cada conversación del mes."]],
+        sale: "La cita está en tu calendario los próximos doce meses y este mes escribiste a tres personas.",
+        copia: { t: "La cita fija", l: [
+          "Título: Red · 1 h · el primer sábado de cada mes",
+          "Minuto 0 a 15: revisar la hoja (fechas, respuestas, nuevos)",
+          "Minuto 15 a 45: tres mensajes (útil, felicitación o pregunta)",
+          "Minuto 45 a 60: añadir a los nuevos y una nota por conversación",
+          "Indicador: contactos con menos de seis meses sin hablar: __ de __"] } },
+    },
+    finanzas: {
+      "Págate primero": {
+        sesion: [[10, "En la app de {{bancoSueldo}}, programa la transferencia recurrente del día 15."],
+                 [10, "Haz lo mismo con la del día 1 y revisa a dónde va: a la tarjeta BBVA mientras tenga saldo; después, a {{broker}}."],
+                 [10, "Anota en Finanzas lo que queda para gastar y divídelo entre los días de la quincena."]],
+        sale: "Las dos transferencias están programadas y el día que entra la quincena salen solas.",
+        copia: { t: "Tu calendario de págate primero", l: [
+          "Día 1: {{ahorroDia1}} sale en cuanto entra la quincena.",
+          "Día 15: {{ahorroDia15}} sale en cuanto entra la quincena.",
+          "Didi: {{didiAhorro}} al mes, apartado cada lunes.",
+          "A dónde: a la tarjeta BBVA mientras tenga saldo; después, a {{broker}}.",
+          "Lo que queda en la cuenta ÷ los días de la quincena = tu tope diario."] } },
+      "Saber a dónde se va tu dinero": {
+        sesion: [[2, "Al pagar, anota el gasto en Finanzas en ese momento: monto, categoría y una palabra."],
+                 [5, "En la noche, revisa contra tu banca móvil que estén todos los del día."],
+                 [15, "El día 30, ordena las cinco categorías de mayor a menor y elige un recorte en la primera."]],
+        sale: "Treinta días seguidos sin hueco, y un recorte con su monto en la categoría más alta.",
+        copia: { t: "Las cinco categorías y el cierre del día 30", l: [
+          "Fijos (renta, servicios, suscripciones): $____",
+          "Comida (súper y fuera): $____",
+          "Transporte (gasolina, casetas, mantenimiento): $____",
+          "Deuda (abonos): $____",
+          "Gusto (todo lo demás): $____",
+          "Las tres primeras: 1) ____ 2) ____ 3) ____",
+          "Un recorte: en ____ bajo $____ al mes haciendo ____."] } },
+      "Presupuestar sobre ingreso variable": {
+        sesion: [[15, "Saca de Finanzas lo que entró en cada uno de los últimos tres meses: sueldo más Didi."],
+                 [15, "Toma el más bajo y arma con él el presupuesto del mes, con la plantilla."],
+                 [5, "Fija la regla: lo que entre arriba del mínimo va a tu plan el mismo día."]],
+        sale: "El presupuesto del mes cuadra con tu peor mes, y lo extra de Didi salió el lunes.",
+        copia: { t: "El presupuesto sobre tu mínimo", l: [
+          "Mes 1: $____ · Mes 2: $____ · Mes 3: $____ → el mínimo: $____",
+          "Fijos: {{fijosTotal}}",
+          "Ahorro, págate primero: $____",
+          "Comida: $____",
+          "Gasto personal: $____",
+          "El mínimo − todo lo anterior = $____ (tiene que ser cero o más)",
+          "Regla: cada peso arriba del mínimo va al plan el mismo día."] } },
+      "Decidir con la cabeza fría": {
+        sesion: [[2, "Cuando quieras algo de más de $2,000, anótalo en la lista de abajo con fecha y hora."],
+                 [3, "Escribe en una línea para qué lo quieres y qué dejarías de hacer con ese dinero."],
+                 [5, "A las 72 horas, relee: si sigue valiendo, cómpralo sin culpa; si no, táchalo."]],
+        sale: "Cada compra grande del mes pasó por la lista, y al menos una se tachó.",
+        copia: { t: "La lista de las 72 horas", l: [
+          "Qué: ______ · Precio: $____ · Fecha y hora: ______",
+          "Para qué: ______",
+          "Con ese dinero dejo de: ______",
+          "Lo decido el: ______ (72 horas después)",
+          "Decisión: compro / no compro · Por qué: ______"] } },
+      "Calcular el costo real de la deuda": {
+        sesion: [[10, "Abre el estado de cuenta de cada deuda y copia el saldo, la tasa anual y el CAT."],
+                 [10, "Ordénalas en la tabla, de mayor a menor CAT."],
+                 [10, "Calcula con la fórmula de abajo cuánto te cuesta cada una al mes."]],
+        sale: "Sabes el CAT de cada deuda, el orden de pago y cuánto te cuesta al mes la más cara.",
+        copia: { t: "Tus deudas y su costo al mes", l: [
+          "Deuda | Saldo | Tasa anual | CAT | Mínimo | Costo al mes",
+          "Interés del mes ≈ saldo × tasa anual ÷ 12",
+          "Ej.: $10,000 × 60 % ÷ 12 = $500 al mes, solo de intereses.",
+          "Orden de pago (avalancha): el mínimo a todas y todo lo extra a la de CAT más alto.",
+          "Antes de un MSI: mensualidad ÷ tu excedente del mes = __ % comprometido por __ meses."] } },
+      "El colchón dentro de la cuenta": {
+        sesion: [[10, "Calcula tu colchón: un mes de fijos, {{fijosTotal}}."],
+                 [10, "Compáralo con lo que tienes hoy en CETES: lo ves en Finanzas o en Qué invertir hoy."],
+                 [10, "Escribe la regla de abajo y decide de qué quincena sale lo que falta."]],
+        sale: "El colchón vive en CETES, aparte de la cuenta del día a día, y tiene su regla escrita.",
+        copia: { t: "La regla del colchón", l: [
+          "Cuánto: un mes de fijos = {{fijosTotal}}.",
+          "Dónde: CETES a 28 días en cetesdirecto; se sacan en 24 a 48 horas.",
+          "Sí es emergencia: la salud, el {{auto}}, una reparación o un gasto que no podía prever.",
+          "No es emergencia: un viaje, una oferta, un regalo, «me lo merezco».",
+          "Si lo uso: lo repongo con la quincena siguiente, antes que cualquier otro ahorro."] } },
+      "Leer tu propio balance": {
+        sesion: [[5, "El primer domingo del mes, abre Patrimonio en el Dashboard."],
+                 [10, "Copia tus activos y tus pasivos a la tabla de abajo."],
+                 [5, "Compara con el mes pasado y escribe una frase: por qué subió o bajó."]],
+        sale: "Doce meses seguidos anotados, y el número sube en la mayoría.",
+        copia: { t: "Tu balance de cada mes", l: [
+          "Mes: ______",
+          "Activos: efectivo $____ + CETES $____ + {{broker}} $____ + {{auto}} $____ = $____",
+          "Pasivos: tarjeta $____ + auto $____ + MSI $____ = $____",
+          "Patrimonio = activos − pasivos = $____",
+          "Contra el mes pasado: +/− $____ · Por qué: ______"] } },
+      "Entender tus impuestos": {
+        sesion: [[10, "Entra al portal del SAT con tu RFC y descarga tu constancia de situación fiscal."],
+                 [15, "Revisa tu régimen y si tus gastos médicos del año tienen factura a tu RFC."],
+                 [10, "Llena la lista de abajo y pon abril en tu calendario para la declaración anual."]],
+        sale: "Tienes tu constancia, sabes tu régimen y hay una carpeta con las facturas deducibles del año.",
+        copia: { t: "Tu lista fiscal del año", l: [
+          "☐ Constancia de situación fiscal descargada (régimen: ______)",
+          "☐ Facturas de gastos médicos, dentales y lentes a mi RFC, pagadas con tarjeta o transferencia",
+          "☐ Constancias anuales de {{broker}} y cetesdirecto",
+          "☐ Didi: ¿me retiene impuestos y me da constancia? ______",
+          "☐ Declaración anual: en abril; recordatorio el 1 de abril",
+          "☐ Antes de irme: cómo y cuándo se avisa al SAT el cambio de residencia"] } },
+    },
+    inversion: {
+      "Saber cuándo NO invertir": {
+        sesion: [[5, "Abre Qué invertir hoy y mira en qué escalón del orden estás."],
+                 [10, "Llena la escalera de abajo con tus números de hoy."],
+                 [5, "Escribe la siguiente acción: a qué va la próxima quincena."]],
+        sale: "Sabes en qué escalón estás, y la próxima quincena va al que toca, no al que da comezón.",
+        copia: { t: "La escalera, con tus números", l: [
+          "1. Fondo de emergencia: $____ de $____ (los dos números te los da Qué invertir hoy) → ¿completo? sí / no",
+          "2. Deuda cara, la tarjeta: $____ → ¿sin saldo? sí / no",
+          "3. Invertir: solo si 1 y 2 dicen sí.",
+          "La cuenta que lo explica: una tarjeta cobra más de 30 % al año; un buen año de bolsa da cerca de 10 %.",
+          "Mi próxima quincena va a: ______"] } },
+      "Conocer los instrumentos mexicanos": {
+        sesion: [[10, "Elige un instrumento de la tabla y lee su ficha en Banxico o en cetesdirecto."],
+                 [15, "Llena sus datos: para qué, plazo, riesgo e impuesto."],
+                 [5, "Explícalo en voz alta en una frase; si no te sale, no lo compras."]],
+        sale: "La tabla completa con lo que usas, y cada instrumento cabe en una frase tuya.",
+        copia: { t: "Tu tabla de instrumentos", l: [
+          "Instrumento | Para qué | Plazo | Riesgo | Impuesto",
+          "CETES | colchón y renta fija | 28 a 364 días | muy bajo | retención anual sobre el capital",
+          "VOO, en el SIC de {{broker}} | crecer a largo plazo | años | medio a alto | 10 % de la ganancia al vender",
+          "Udibonos | protegerte de la inflación | 3 a 30 años | bajo | retención anual",
+          "Bitcoin | apuesta chica | sin plazo | muy alto | la ganancia se suma a tu ingreso",
+          "Afore | tu retiro | hasta los 65 | según tu Siefore | lo voluntario es deducible, con tope"] } },
+      "Interés compuesto y horizonte": {
+        sesion: [[10, "Junta tus números: cuánto aportas al mes, desde cuándo y hasta cuándo."],
+                 [15, "Haz la cuenta en una hoja de cálculo con la fórmula de abajo."],
+                 [5, "Repítela con un año menos de aportes y escribe la diferencia en pesos."]],
+        sale: "Tienes dos números —con y sin un año de aportes— y la diferencia escrita.",
+        copia: { t: "La cuenta, en una hoja de cálculo", l: [
+          "=VF(tasa_anual/12; meses; -aporte_mensual; -saldo_de_hoy)",
+          "Tu aporte: tu ahorro del mes, {{ahorroMesDepa}} con depa o {{ahorroMesCasa}} en casa.",
+          "Ej.: =VF(9%/12; 60; -aporte; 0) = lo que juntas en cinco años al 9 % anual.",
+          "Regla del 72: 72 ÷ la tasa = los años para duplicar; al 9 %, unos ocho.",
+          "La lección: un año menos no son doce aportes menos; son doce aportes más todo lo que habrían rendido."] } },
+      "Escribir tu asignación objetivo": {
+        sesion: [[10, "Mira lo que tienes hoy en {{broker}}, CETES y Bitcoin y saca tus porcentajes actuales."],
+                 [15, "Decide tus tres porcentajes objetivo con la regla de abajo."],
+                 [5, "Escríbelos con fecha en un renglón y guárdalo junto a tu regla para las caídas."]],
+        sale: "Un renglón con tres porcentajes que suman 100, con fecha, y la próxima compra ya sabe a dónde va.",
+        copia: { t: "Tu asignación, en un renglón", l: [
+          "Asignación al __/__/____: CETES __ % · índice __ % · riesgo alto __ % = 100 %",
+          "Regla del riesgo alto: nunca más de lo que puedas ver caer a la mitad sin tocarlo.",
+          "Cada compra va a la parte que esté más abajo de su porcentaje.",
+          "Se revisa una vez al año (el ______), no cuando el mercado se mueve."] } },
+      "Aportar periódicamente y automatizarlo": {
+        sesion: [[10, "Decide el monto y el día: el lunes de {{broker}} y el día que entra la quincena."],
+                 [10, "Programa la transferencia y, si tu casa de bolsa lo permite, la compra recurrente."],
+                 [5, "Pon en el calendario cuándo subes el monto: cuando suba el ingreso."]],
+        sale: "El aporte sale sin que lo decidas, y llevas la cuenta de meses seguidos sin saltarte uno.",
+        copia: { t: "Tu regla de aportes", l: [
+          "Monto: $____ · Día: ______ · A: ______",
+          "Sube cuando: sube el sueldo, termina una deuda o cambia tu etapa (en casa, {{ahorroMesCasa}} al mes).",
+          "Nunca baja por: cómo se ve el mercado.",
+          "Meses seguidos sin saltarme uno: __ de 12"] } },
+      "Ver las comisiones antes que el rendimiento": {
+        sesion: [[10, "Elige lo que vas a comprar y busca sus tres costos en dos casas de bolsa."],
+                 [10, "Llena la tabla y haz la cuenta de veinte años de abajo."],
+                 [5, "Quédate con la opción más barata del MISMO índice."]],
+        sale: "Antes de cada compra sabes cuánto cuesta al año, y elegiste la versión más barata.",
+        copia: { t: "Cuánto pesa una comisión", l: [
+          "Instrumento | Casa | Administración al año | Por operación | Spread",
+          "Lo que se lleva en 20 años ≈ 1 − (1 − comisión)^20 de lo acumulado",
+          "Al 0.03 % anual se va cerca del 0.6 %; al 1 %, cerca del 18 %; al 1.5 %, cerca del 26 %.",
+          "Regla: mismo índice, misma exposición → gana el más barato."] } },
+      "Aguantar sin vender": {
+        sesion: [[10, "Mira la gráfica del S&P 500 de 2007 a 2013 y la de 2020: cuánto cayó y cuánto tardó en volver."],
+                 [10, "Escribe tu regla para las caídas con la plantilla."],
+                 [5, "Quita del teléfono las alertas de precios y deja la revisión para el lunes."]],
+        sale: "Tu regla está escrita junto a tu asignación, y solo abres la app el lunes.",
+        copia: { t: "Tu regla para las caídas", l: [
+          "Si mi cartera cae 10 %: no hago nada y sigo aportando.",
+          "Si cae 30 %: no vendo; el aporte del lunes va a lo que quedó más abajo.",
+          "Si cae 50 %: releo esta hoja y mi asignación antes de abrir la app.",
+          "Solo vendo si cambia mi plan —una fecha o una meta—, nunca por el precio.",
+          "Firmado el __/__/____, con el mercado tranquilo."] } },
+      "Rebalancear una vez al año": {
+        sesion: [[10, "Saca el valor de cada parte: {{broker}}, CETES y Bitcoin."],
+                 [10, "Calcula el porcentaje de hoy y cuánto se desvía de tu asignación."],
+                 [10, "Decide a dónde van los aportes de los próximos meses hasta emparejar."]],
+        sale: "Ninguna parte se desvía más de 5 puntos, y lo arreglaste con aportes, sin vender.",
+        copia: { t: "La cuenta del rebalanceo", l: [
+          "Parte | Objetivo % | Valor hoy | % hoy | Desviación",
+          "CETES | __ | $____ | __ | __",
+          "Índice | __ | $____ | __ | __",
+          "Riesgo alto | __ | $____ | __ | __",
+          "Lo que le falta a una parte: objetivo % × el total − su valor de hoy = $____",
+          "Si una se desvía más de 5 puntos, los aportes van a la que quedó abajo."] } },
+      "Saber qué impuestos pagas al invertir": {
+        sesion: [[10, "Crea la carpeta «Impuestos 20__» y descarga las constancias del año pasado de {{broker}} y cetesdirecto."],
+                 [10, "Lee en cada constancia los intereses reales, la retención y las ganancias o pérdidas."],
+                 [10, "Llena la lista de abajo para la declaración de abril."]],
+        sale: "Tus constancias están en una carpeta y sabes qué va en tu declaración.",
+        copia: { t: "Lo que buscas en cada constancia", l: [
+          "CETES y deuda: el interés real y la retención del año → a la declaración anual.",
+          "Acciones y ETF del SIC: la ganancia o pérdida neta del año → 10 % de ISR sobre la ganancia.",
+          "Dividendos: el monto y lo que ya te retuvieron.",
+          "Cripto: compra, venta y ganancia de cada operación; se suma a tus ingresos.",
+          "Todo en la carpeta «Impuestos 20__», antes de abril."] } },
+    },
+    datos: {
+      "Python y pandas con tus datos": {
+        sesion: [[10, "Exporta tus gastos de Finanzas a CSV y ábrelo en un cuaderno de Kaggle o de Colab."],
+                 [35, "Un módulo corto de Kaggle Learn —Pandas: grouping and sorting— y aplícalo a tu CSV."],
+                 [10, "Contesta las dos preguntas con el código de abajo y anota la respuesta."]],
+        sale: "Tu cuaderno contesta cuánto gastas por categoría y por semana, con tus datos.",
+        copia: { t: "Las dos preguntas, en pandas", l: [
+          "import pandas as pd",
+          "df = pd.read_csv(\"gastos.csv\", parse_dates=[\"fecha\"])   # ajusta los nombres a tus columnas",
+          "",
+          "# 1. ¿En qué categoría se va más?",
+          "df.groupby(\"categoria\")[\"monto\"].sum().sort_values(ascending=False)",
+          "",
+          "# 2. ¿Cuánto por semana?",
+          "df.set_index(\"fecha\")[\"monto\"].resample(\"W\").sum()"] } },
+      "Un tablero que responda una pregunta": {
+        sesion: [[10, "Escribe la pregunta arriba de la hoja y sube tu CSV a Google Sheets."],
+                 [30, "En Looker Studio, conecta la hoja y arma las tres gráficas de abajo."],
+                 [10, "Enséñaselo a alguien: ¿contesta la pregunta en diez segundos?"]],
+        sale: "Alguien que no conoce tus datos contesta la pregunta en diez segundos viendo el tablero.",
+        copia: { t: "El tablero, en tres piezas", l: [
+          "Título = la pregunta: ¿En qué semana del mes se me va el dinero?",
+          "Gráfica 1, la respuesta: barras con el gasto de cada semana del mes (1 a 5).",
+          "Gráfica 2, el porqué: barras apiladas por categoría dentro de cada semana.",
+          "Gráfica 3, la tendencia: línea del gasto semanal de los últimos tres meses.",
+          "Campo calculado, la semana del mes: CEIL(DAY(fecha) / 7)"] } },
+      "Contar lo que dicen los datos": {
+        sesion: [[10, "Elige un resultado de pruebas sin datos del cliente y escribe la conclusión en una frase."],
+                 [20, "Haz una sola gráfica que la demuestre: sin rejilla, todo en gris menos lo que importa."],
+                 [10, "Escribe las tres frases de abajo y enséñaselo a alguien."]],
+        sale: "Quien lo ve repite tu conclusión con sus palabras sin que se la expliques.",
+        copia: { t: "Las tres frases", l: [
+          "1. Qué pasó: «El __ % de las pruebas de ____ falló en ____.»",
+          "2. Por qué importa: «Eso significa ____ para ____.»",
+          "3. Qué propones: «Recomiendo ____ antes de ____.»",
+          "El título de la gráfica es la frase 1, no «Resultados de pruebas»."] } },
+      "SQL, diez minutos al día": {
+        sesion: [[2, "Abre SQLZoo donde te quedaste ayer."],
+                 [6, "Dos o tres ejercicios: antes de correr cada consulta, di qué filas esperas."],
+                 [2, "Anota en tu racha el día y el tema."]],
+        sale: "Treinta días seguidos, y escribes sin mirar un JOIN con GROUP BY.",
+        copia: { t: "Las cuatro consultas que cubren casi todo", l: [
+          "SELECT name, population FROM world WHERE continent = 'Europe' ORDER BY population DESC;",
+          "SELECT continent, COUNT(*), SUM(population) FROM world GROUP BY continent;",
+          "SELECT continent FROM world GROUP BY continent HAVING SUM(population) > 100000000;",
+          "SELECT goal.player, goal.gtime FROM goal JOIN game ON goal.matchid = game.id WHERE game.team1 = 'GER';"] } },
+      "Teclear, no mirar": {
+        sesion: [[10, "Video y editor lado a lado; pausa cada vez que el instructor escribe."],
+                 [30, "Teclea, corre y cambia los datos por los tuyos."],
+                 [10, "Rompe algo a propósito y lee el error completo."]],
+        sale: "El ejercicio funciona con tus datos y explicas un error que provocaste tú.",
+        copia: { t: "Las reglas del tutorial", l: [
+          "1. No avanzo el video hasta que mi versión corre.",
+          "2. Cambio los datos: el mismo ejercicio con mi CSV.",
+          "3. Rompo una cosa y leo el error: qué línea, qué tipo, qué esperaba.",
+          "Al final: lo que hoy ya escribo sin mirar: ______"] } },
+    },
+    mente: {
+      "Lo alto no se mantiene solo": {
+        sesion: [[10, "Escribe las tres cosas que hoy te sostienen."],
+                 [10, "Piensa en tu último mes difícil: ¿cuál dejaste primero? Márcala."],
+                 [10, "Arma su escudo con la plantilla: hora fija, señal y plan B."]],
+        sale: "Lo primero que se te cae tiene hora fija, alarma y una versión mínima para el día malo.",
+        copia: { t: "El escudo de lo que se cae primero", l: [
+          "Lo que me sostiene: 1) ____ 2) ____ 3) ____",
+          "Lo primero que dejo cuando el mes se pone duro: ____",
+          "Su hora fija: ____ · Su señal (alarma, lugar): ____",
+          "Su versión mínima para el día malo: ____ (ej.: 20 min en vez de 60)",
+          "Si fallo dos días seguidos: ____"] } },
+      "El sueño es la palanca, no la fuerza de voluntad": {
+        sesion: [[5, "A las {{horaRutinaNoche}}, el celular se queda cargando fuera del cuarto."],
+                 [30, "La rutina sin pantalla: piel, suplementos y la meditación de las {{horaMeditacion}}."],
+                 [5, "Luz fuera a las {{horaDormir}}, y anota a qué hora apagaste."]],
+        sale: "Catorce noches seguidas con luz fuera a las {{horaDormir}}, y la segunda semana se nota en el gimnasio.",
+        copia: { t: "Tu bitácora de dos semanas", l: [
+          "Noche | Luz fuera | Celular fuera del cuarto | Energía en el gym (1 a 5)",
+          "Lun __ | __:__ | sí / no | __",
+          "Regla: lo que no cupo en la media hora de la app de las {{horaApp}} se parte para mañana.",
+          "Meta: {{horasSueno}} cada noche, de las {{horaDormir}} a las {{horaDespertar}}."] } },
+      "Terapia antes de irte": {
+        sesion: [[15, "Busca dos opciones: un psicólogo con enfoque cognitivo-conductual, o lo que cubra tu seguro de gastos médicos."],
+                 [10, "Agenda la primera sesión y escribe tus tres objetivos con la plantilla."],
+                 [5, "Guarda desde hoy cómo pedir la asesoría psicológica del Studierendenwerk para tu primer mes allá."]],
+        sale: "La primera sesión está agendada y llevas tus tres objetivos escritos.",
+        copia: { t: "Lo que llevas a la primera sesión", l: [
+          "Objetivo 1, la soledad: un plan para el primer invierno lejos de mi familia.",
+          "Objetivo 2, el estrés: qué hago cuando se juntan la maestría, el trabajo y el dinero.",
+          "Objetivo 3, el sueño: cómo sostener {{horasSueno}} con un horario nuevo.",
+          "Pregunta: ¿qué señales me dicen que tengo que pedir ayuda allá?",
+          "Allá: la asesoría psicológica del Studierendenwerk es gratis para estudiantes."] } },
+      "La deuda pesa en la cabeza, no sólo en la cartera": {
+        sesion: [[5, "El primer domingo del mes, abre el panel de Deuda cara del Plan Maestro."],
+                 [5, "Anota cuánto debías el mes pasado, cuánto debes hoy y cuánto bajó."],
+                 [5, "Escribe la fecha en que el plan termina de pagar la tarjeta y una frase de cómo te sientes."]],
+        sale: "Tres meses seguidos con el número anotado y la fecha de fin a la vista.",
+        copia: { t: "La hoja de la deuda", l: [
+          "Mes | Debía | Debo hoy | Bajó | Cómo me siento (1 a 5)",
+          "El día en que el plan termina de pagar la tarjeta: {{bbvaCero}}",
+          "Lo que haré ese día con lo que hoy va a la tarjeta: ______"] } },
+      "Cortar la rumia con una acción pequeña": {
+        sesion: [[1, "Nota la señal: diez minutos con la misma idea y nada nuevo."],
+                 [2, "Escribe la acción de dos minutos con la plantilla, y hazla ya."],
+                 [2, "Decide: ¿sigo con esto ahora o lo agendo? Escribe la hora."]],
+        sale: "La idea que giraba termina en una acción hecha o en una cita con hora.",
+        copia: { t: "Las tres preguntas que cortan la rumia", l: [
+          "¿Qué me preocupa, en una frase? ______",
+          "¿Qué es lo más pequeño que lo mueve en dos minutos? Un mensaje, una búsqueda, una línea: ______",
+          "¿Cuándo lo vuelvo a ver? Día y hora: ______",
+          "Si no depende de mí, lo escribo y lo suelto hasta esa hora."] } },
+      "Una revisión corta cada domingo": {
+        sesion: [[3, "Abre Hábitos y el Plan Maestro: qué marcaste esta semana."],
+                 [5, "Escribe las respuestas de abajo."],
+                 [2, "Pon el cambio de la semana en tu calendario del lunes."]],
+        sale: "Diez domingos seguidos por escrito, cada uno con un solo cambio.",
+        copia: { t: "La revisión de diez minutos", l: [
+          "Semana del __ al __",
+          "Salió bien, con su dato: ______",
+          "Se cayó, sin castigo, el hecho y por qué: ______",
+          "Lo único que cambio la semana que viene: ______",
+          "¿Cumplí el cambio de la semana pasada? sí / no"] } },
+    },
+    liderazgo: {
+      "Dónde está tu techo": {
+        sesion: [[10, "Escribe las tres conversaciones que llevas posponiendo."],
+                 [10, "De cada una, la frase con la que la abrirías mañana."],
+                 [5, "Léelas juntas y marca: ¿me falta valentía o claridad?"]],
+        sale: "Tres frases claras escritas, y sabes cuál de las dos cosas te frena.",
+        copia: { t: "Tus tres conversaciones", l: [
+          "Trabajo · con ____ · lo que diría: «____» · ¿desde cuándo la evito? ____",
+          "Proyecto · con ____ · lo que diría: «____»",
+          "Casa · con ____ · lo que diría: «____»",
+          "Mi techo es de valentía (sé qué decir y no lo digo) o de claridad (no sé qué decir)."] } },
+      "Separar el hecho de la historia": {
+        sesion: [[10, "Elige una de las tres y escribe la columna del hecho: lo que grabaría una cámara."],
+                 [10, "Escribe la columna de tu historia: lo que concluiste."],
+                 [10, "Arma la apertura con la plantilla y ensáyala en voz alta."]],
+        sale: "Tu apertura usa solo hechos y termina en una pregunta.",
+        copia: { t: "La apertura que no pone a nadie a la defensiva", l: [
+          "El hecho: «Noté que ____ (cuándo, cuántas veces).»",
+          "Tu historia, dicha como historia: «Me quedé pensando que ____, pero no sé si es así.»",
+          "La pregunta: «¿Cómo lo ves tú? ¿Qué está pasando?»",
+          "Lo que no se dice: «siempre», «nunca», «no te importa»."] } },
+      "Liderar sin el puesto": {
+        sesion: [[10, "Lista tres cosas rotas en tu equipo que todos ven y nadie toma."],
+                 [40, "Elige la de más impacto y menos permiso necesario, y arregla su primera parte."],
+                 [10, "Escribe la respuesta STAR con su número y cuéntaselo a tu líder."]],
+        sale: "Lo que arreglaste tiene un sistema para no volver a romperse, y tu respuesta lleva un número.",
+        copia: { t: "Tu respuesta a «háblame de una vez que lideraste»", l: [
+          "Situation: In my team at {{empleador}}, ____ was broken and nobody owned it.",
+          "Task: I took it on without being asked.",
+          "Action: I ____, ____ and documented ____ so it wouldn't break again.",
+          "Result: ____ went from __ to __ (horas, fallas, tiempo de revisión)."] } },
+      "Dar retroalimentación que no duela": {
+        sesion: [[5, "Elige algo pequeño y reciente de esta semana."],
+                 [5, "Escribe las tres partes con la plantilla."],
+                 [5, "Dilo en privado y en persona, y cierra preguntando qué opina."]],
+        sale: "Lo dijiste en menos de un minuto, sin «siempre» ni «nunca», y la otra persona propuso algo.",
+        copia: { t: "Hecho, efecto y propuesta", l: [
+          "El hecho: «En la revisión del martes, el reporte llegó sin los casos de falla.»",
+          "El efecto: «Tuvimos que rehacer la prueba y la entrega se movió un día.»",
+          "La propuesta: «¿Te parece si la próxima vez los revisamos juntos el lunes?»",
+          "El cierre: «¿Cómo lo ves?»"] } },
+      "Una conversación pendiente al mes": {
+        sesion: [[10, "Elige la siguiente de tu lista y prepárala: el hecho, tu historia y la apertura."],
+                 [20, "Tenla en la fecha que agendaste."],
+                 [5, "Escribe la nota: cómo salió y qué cambias para la siguiente."]],
+        sale: "Una conversación al mes, cada una con su nota: doce al año.",
+        copia: { t: "La nota después de la conversación", l: [
+          "Fecha: __ · Con: ____ · Tema: ____",
+          "Cómo abrí: ____",
+          "Lo que dijo la otra persona que yo no sabía: ____",
+          "El acuerdo: ____ · Cuándo lo revisamos: ____",
+          "La próxima vez cambio: ____"] } },
+    },
+    copy: {
+      "Qué te falta, exactamente": {
+        sesion: [[5, "Reúne tus cinco últimos textos importantes."],
+                 [10, "Subraya en cada uno la petición concreta; si no hay, márcalo."],
+                 [10, "Reescribe el final de los que no piden nada, con la plantilla."]],
+        sale: "Los cinco textos terminan con una petición que se contesta con un sí, un no o una fecha.",
+        copia: { t: "Cómo cerrar un texto", l: [
+          "Mal: «Quedo atento a sus comentarios.»",
+          "Bien: «¿Le parece si hablamos 15 minutos el jueves a las 10?»",
+          "Bien: «¿Me confirma antes del viernes si avanzo con la opción B?»",
+          "Bien: «Si le interesa, conteste con un sí y le mando el detalle.»",
+          "Regla: el último renglón dice qué hacer, cuándo y cómo."] } },
+      "Una promesa por texto": {
+        sesion: [[5, "Antes de escribir, llena las dos líneas de abajo."],
+                 [20, "Escribe el texto: cada frase tiene que ayudar a esa acción."],
+                 [5, "Tacha lo que no ayuda y revisa que el título prometa eso y nada más."]],
+        sale: "Quien lo lee puede decir en una frase qué le pediste.",
+        copia: { t: "Las dos líneas antes de escribir", l: [
+          "Lo lee: ______ (una persona concreta: «un reclutador de Bosch en Stuttgart»)",
+          "Quiero que: ______ (una acción: «me escriba para una llamada»)",
+          "La promesa: «Te muestro ____ para que ____.»",
+          "Si no cabe en una línea, todavía no sé qué estoy escribiendo."] } },
+      "Reescribe tu perfil de LinkedIn": {
+        sesion: [[15, "Mira tres perfiles de ingenieros de validación en Stuttgart: su titular y su «acerca de»."],
+                 [25, "Reescribe en inglés tu titular y tu «acerca de» con la plantilla."],
+                 [15, "Pasa cada puesto de tareas a logros: qué cambió porque estuviste tú."]],
+        sale: "Tu titular dice qué resuelves y qué buscas, y cada puesto trae al menos un logro con número.",
+        copia: { t: "Titular y «acerca de», en inglés", l: [
+          "Headline: Validation Engineer · HIL & ADAS · Python test automation · Open to Werkstudent roles in Stuttgart",
+          "About, line 1: I validate automotive software —HIL, ADAS and test automation— at {{empleador}}, after Ford, Continental and Bosch.",
+          "About, line 2: <un resultado con número: «I reduced regression time by __ % by automating ____»>",
+          "About, line 3: Starting the Automotive Systems master's in Esslingen on {{maestriaInicio}}. Let's talk: ____",
+          "Un puesto, como logro: «Automated ____ with Python, cutting ____ from __ h to __ h per release.»"] } },
+      "El correo frío de 5 líneas": {
+        sesion: [[10, "Elige a tres personas y busca algo suyo reciente."],
+                 [20, "Escribe los tres correos con la plantilla; ninguno pasa de cinco líneas."],
+                 [5, "Léelos en voz alta y mándalos hoy."]],
+        sale: "Tres correos enviados esta semana y al menos una respuesta.",
+        copia: { t: "El correo de cinco líneas, en inglés", l: [
+          "Subject: Question about Werkstudent roles in ____ (su equipo)",
+          "Hi ____, I read your post about ____ — the part on ____ was spot on.",
+          "I'm a validation engineer (HIL, ADAS) at {{empleador}}, moving to Stuttgart for a master's at Esslingen.",
+          "Last year I ____ (un resultado con número).",
+          "Would you have 15 minutes in the next two weeks to tell me how your team hires working students?",
+          "If it's not a good time, no worries at all. Thanks!"] } },
+      "Leer en voz alta antes de enviar": {
+        sesion: [[1, "Deja pasar unos minutos después de escribir."],
+                 [2, "Léelo completo en voz alta y marca donde te trabes."],
+                 [2, "Corta: una palabra por frase y la frase donde te trabaste."]],
+        sale: "Ningún texto importante sale sin pasar por tu voz.",
+        copia: { t: "Lo que se corta casi siempre", l: [
+          "«Quería comentarle que…» → dilo directo.",
+          "«Realmente», «básicamente», «de alguna manera» → fuera.",
+          "«Con el fin de» → «para».",
+          "«Llevar a cabo» → «hacer».",
+          "Dos ideas en una frase con «que… que…» → dos frases."] } },
+    },
+    ventas: {
+      "Vender lo que no usas a su precio": {
+        sesion: [[15, "Fotos con luz de día: el objeto completo, sus detalles y lo que incluya (caja, cargador)."],
+                 [10, "Busca tres anuncios iguales, toma el de en medio y súbele 10 %."],
+                 [10, "Publica con la plantilla y activa las notificaciones para contestar en menos de una hora."]],
+        sale: "Publicado hoy, cada mensaje contestado en menos de una hora, y vendido arriba de tu mínimo.",
+        copia: { t: "El anuncio que vende", l: [
+          "Título: marca + modelo + estado; ej.: «Monitor Dell 27 pulgadas 4K, como nuevo, con caja»",
+          "Línea 1: qué es y por qué lo vendes («lo cambié por uno más grande»).",
+          "Línea 2: su estado real, con cualquier detalle que tenga.",
+          "Línea 3: qué incluye.",
+          "Línea 4: entrega (punto y horario) y forma de pago.",
+          "A «¿lo menos?»: «¿Cuánto me ofreces?». Tu mínimo, escrito antes de publicar: $____"] } },
+      "El seguimiento es la venta": {
+        sesion: [[5, "Revisa quién preguntó y no compró en los últimos siete días."],
+                 [10, "A cada uno, el mensaje del día que le toca."],
+                 [5, "Anota quién respondió y en qué contacto."]],
+        sale: "Nadie que preguntó se quedó sin su seguimiento, y sabes en qué contacto cierras más.",
+        copia: { t: "Los tres mensajes de seguimiento", l: [
+          "Día 1: «¡Hola! ¿Te quedó alguna duda del ____? Te puedo mandar más fotos.»",
+          "Día 3: «Te comparto una foto del ____ funcionando. Lo puedo entregar el ____ en ____.»",
+          "Día 7: «Te lo aparto hasta el viernes; después lo libero. ¿Te funciona?»",
+          "La tabla: Persona | Día 1 | Día 3 | Día 7 | ¿Compró? | ¿En cuál?"] } },
+      "Negociar tu sueldo en euros": {
+        sesion: [[15, "Busca el rango del puesto en la región: Glassdoor, StepStone, Kununu y la tabla del convenio de la IG Metall, si la empresa lo tiene."],
+                 [10, "Escribe tu mínimo y tu objetivo."],
+                 [10, "Ensaya en voz alta las frases de abajo, en inglés y en alemán."]],
+        sale: "Tienes el rango, tu mínimo y tu objetivo por escrito, y dices las frases sin dudar.",
+        copia: { t: "Las frases para la llamada", l: [
+          "Primero el rango: «What's the salary range planned for this position?» · «Welche Gehaltsspanne ist für die Stelle vorgesehen?»",
+          "Si insisten: «Based on the market for this role in Stuttgart, I'm looking at ____ to ____.»",
+          "Para ganar tiempo: «Thank you — could I have a day to review the full offer?»",
+          "Por escrito: «I'm very excited about the role. Could we get closer to ____?»",
+          "Tu mínimo: €____ · tu objetivo: €____ · el Werkstudent que cuenta el plan: {{werkstudentEur}} al mes, neto"] } },
+      "Una oferta que se pueda comprar": {
+        sesion: [[10, "Habla con tu papá: ¿quién es su mejor cliente y qué problema le resolvió?"],
+                 [15, "Escribe la oferta con la plantilla, en tres versiones."],
+                 [5, "Léele las tres a un cliente y quédate con la que entienda a la primera."]],
+        sale: "La oferta cabe en una frase y un cliente la repite con sus palabras.",
+        copia: { t: "La oferta en una frase", l: [
+          "Para [cliente exacto] que [problema], [negocio] le da [resultado] en [plazo], o [garantía].",
+          "Prueba 1: ¿se entiende sin explicarla?",
+          "Prueba 2: ¿dice un resultado y no un servicio?",
+          "Prueba 3: ¿el plazo es una fecha o un número, no «rápido»?"] } },
+    },
+    marketing: {
+      "Dejar el negocio en piloto automático": {
+        sesion: [[15, "Elige los doce posts de las plantillas de Posts y ponle fecha a cada uno: uno por semana."],
+                 [30, "Deja cada uno completo —foto, texto y fecha— en una carpeta compartida con tu papá."],
+                 [15, "Publica uno con él, paso a paso; el siguiente lo hace él."]],
+        sale: "Tu papá publica el segundo post sin ti.",
+        copia: { t: "La guía para tu papá", l: [
+          "1. Abre la carpeta «Posts» y busca el de esta semana: tiene la fecha en el nombre.",
+          "2. Copia el texto y descarga la foto.",
+          "3. En la app, toca «+», elige la foto y pega el texto.",
+          "4. Publícalo el día que dice el nombre, entre las 7 y las 9 de la noche.",
+          "5. Contesta cada mensaje el mismo día; si preguntan el precio, manda el dossier.",
+          "Si algo falla, mándame una captura por WhatsApp."] } },
+      "Una métrica antes de gastar": {
+        sesion: [[5, "Cada lunes, abre las estadísticas de los posts de la semana."],
+                 [5, "Anota vistas, comentarios y mensajes en la tabla."],
+                 [5, "Al cerrar el mes: ¿qué formato trajo más mensajes? Ese se repite."]],
+        sale: "Un mes de tabla completa y una decisión: qué formato se repite y cuál se deja.",
+        copia: { t: "La tabla de cada post", l: [
+          "Fecha | Formato (foto, video, carrusel) | Tema | Vistas | Comentarios | Mensajes",
+          "La que manda: mensajes ÷ vistas × 100 = __ %",
+          "Al mes: repito ____ (el de más mensajes) · dejo ____ (el de menos)"] } },
+      "Un canal a la vez": {
+        sesion: [[15, "Pregunta a cinco clientes dónde los encontró tu papá o dónde pasan su tiempo."],
+                 [10, "Elige el canal con más respuestas y escribe el calendario de cuatro semanas."],
+                 [5, "Pon en el calendario la evaluación del día 28."]],
+        sale: "Cuatro semanas seguidas en un solo canal, y una decisión tomada con la tabla de mensajes.",
+        copia: { t: "El calendario de cuatro semanas", l: [
+          "Canal: ______ (el que más nombraron los clientes)",
+          "Semana 1: dos posts · tema: ____",
+          "Semana 2: dos posts · tema: ____",
+          "Semana 3: dos posts · tema: ____",
+          "Semana 4: dos posts · tema: ____",
+          "Día 28: ¿trajo mensajes? Se queda o se cambia; no se suma otro canal."] } },
+    },
+  };
+  Object.keys(APRENDIZAJE).forEach(function (id) {
+    ((APRENDIZAJE[id] || {}).subs || []).forEach(function (s) {
+      Object.assign(s, (APRENDIZAJE_DETALLE[id] || {})[s.n] || {}, (APRENDIZAJE_PRACTICA[id] || {})[s.n] || {});
+    });
   });
 
   /* ── LISTA DE COMPRAS ──────────────────────────────────────────────────────────────────────
@@ -7501,6 +8319,7 @@ window.CIFRAS = (function () {
     costoSalida: costoSalida,
     APRENDIZAJE: APRENDIZAJE,
     APRENDIZAJE_DETALLE: APRENDIZAJE_DETALLE,
+    APRENDIZAJE_PRACTICA: APRENDIZAJE_PRACTICA,
     LISTA_COMPRAS: LISTA_COMPRAS,
     RUTINA_PIEL: RUTINA_PIEL,
     RUTINA_PELO: RUTINA_PELO,

@@ -1605,7 +1605,7 @@ verifican todos). Tu año ya no va aquí: es un panel de los medidores (ver Mis 
 |---|---|---|
 | **Temario** | 300 px | Un paso por fila, número o ✓ verde, el activo en cian. Un filete separa los de cierre (Practicarlo, Qué leer, Ya lo dominas) |
 | **El paso** | el resto | `Paso N de M` · título en Fraunces 34 px · la idea (`d`) 16.5 px · **En detalle**: los puntos como libro mayor numerado (`01`, `02`…) · los apartados |
-| **Recursos** | 300 px | Videos (`Para escucharlo`), la barra de dinero de la Maestría, el ritmo y el avance real de una meta y **Tu avance** con el siguiente pendiente como botón |
+| **Recursos** | 300 px | Videos (`Para escucharlo`), la barra de dinero de la Maestría, el ritmo y el avance real de una meta, lo que una habilidad de Coach pone en `lado` y **Tu avance** con el siguiente pendiente como botón (`mdAvanceHtml`) |
 
 **En Habilidades Base y Mis Metas el temario va contraído** (Adán: *"contrae el menú y pon 2 botones, uno de
 avance y otro de retroceso para los temas, esto para ahorrar espacio y quede mejor visualmente"*; después,
@@ -1634,7 +1634,8 @@ del archivo, donde están autor y licencia; si la foto no carga, `onerror` quita
 a 16:7 y hasta 880 px; las locales (`.md-foto-loc`, de 480 px) a 3:2 y 480 px, para no pixelarse; con
 `alta:1` (fotos verticales) el marco pasa a 4:3 (`.md-foto-alta`). `cifras: [[valor, qué es], …]` pinta
 un renglón de datos grandes (`.md-cifras`); en el celular, de dos en dos. El paso que trae `img` (las
-de Habilidades Base) sigue igual, al final.
+de Habilidades Base) sigue igual, al final. Un paso con `fotoLado` (las rutas de Coach · Habilidades) pone la foto a la
+derecha de qué hacer y sus cifras (`.md-paso-top`), en 3:2; bajo 1100 px vuelve a ir a lo ancho, en 16:9.
 
 **Tamaños.** Hasta 1180 px Recursos baja bajo el temario (260 px). En el celular los tres se
 apilan y la ficha desplaza como una sola página: temario en tira de chips, frase a dos líneas,
@@ -1659,18 +1660,33 @@ lleva foto (`apFotoSk()`, la misma de *Hoy aprendes*).
 
 **La ventana** (`abrirSkillDetalle(id)`) es la de Habilidades Base y Mis Metas (`pintarDetailOverlay`, ver *El
 panel de detalle*) **con su misma distribución** (Adán, 26-oct-2026: *"en coach habilidades mejora el diseño y déjalo como los demás, misma distribución, y mejora el contenido de todos, más cosas gráficas, más explicaciones, más fotos"*): el temario se pliega
-(`md-contraible`) y arriba van *Tema N de M* y *Temas*. El temario es la ruta de `APRENDIZAJE` (`habPasos()`) y cada
-paso se lee como una ficha de Mis Metas, en el formato que arma `skillDetalle()`: **Qué hacer**; **la foto**, ancha
-(`ancha`), con su pie y su crédito —autor · fuente · licencia— (`Dashboard/fotos-habilidades/`, 68 fotos de Rawpixel,
-Flickr y StockSnap con licencia libre, a 1280 px); **tres cifras** grandes; **En detalle**, tres puntos numerados con
-el método, y tres cajas: **Por qué este paso**, **Tu caso** (cian) y **el error común** (ámbar); al final, **Con
-qué** (el libro con su portada y *Qué es*, o el recurso con `pfRecursoHtml()`). El contenido vive en el maestro
-(`APRENDIZAJE_DETALLE`, por el nombre del paso) y el control 45 exige que ningún paso se quede sin él. En Recursos (`lado`): **tu nivel** con
-la marca del siguiente escalón y cuánto sube el general, **esta semana**, **se demuestra con** (`prueba`),
-**por qué esta habilidad** (`porQue`), **dónde estás** (`desc`), **dónde se practica** y los libros de su
-ruta. Arriba de todo, en la del foco y en la de la habilidad del libro, **tu libro del mes** (`lmLadoHtml()`, ver
-*Lo decide Coach*). La frase de la cabecera dice su papel en el plan: el foco de hoy con su entregable y sus días, cuándo
-llega su foco, en mantenimiento o en pausa.
+(`md-contraible`) y arriba van *Tema N de M* y *Temas*. El temario es la ruta de `APRENDIZAJE` (`habPasos()`), y
+**abre en «Tu ruta»**, el -1 del temario, igual que una meta abre en *Tu plan* (`skResumenHtml`, pintado por
+`mdPintarResumen`; Adán, 26-oct-2026: *"la columna de la derecha se ve muy saturada de información"*): arriba, **su
+papel en el plan**, **se demuestra con** (`prueba`) y **lo siguiente**, que abre el primer paso sin dominar; **la
+ruta** como tarjetas con la foto de cada paso, su versión corta (`corto`) y los minutos de su sesión, en columnas que
+llenan la fila (cuatro para tres pasos, una por paso hasta seis y en dos filas desde siete); **tu nivel, escalón por
+escalón** (`skNivelHtml`: los seis tramos de `skLevel()` sobre 0–100, tú y el siguiente escalón punteado, y cuánto
+sube el nivel general) junto a **por qué esta habilidad** (`porQue`) y **dónde estás** (`desc`); y **dónde se
+practica** con **los libros de su ruta**, con portada, título y autor. Mi Día la abre en el paso de la semana
+(`abrirSkillDetalle(id, 1)`); ‹ desde el primer paso vuelve a *Tu ruta*.
+
+**Cada paso** se lee como una ficha de Mis Metas, en el formato que arma `skillDetalle()`: arriba, **Qué hacer** y
+**tres cifras** grandes con **la foto al lado** (`fotoLado`), en 3:2 para que se vea entera, con su pie y su crédito
+—autor · fuente · licencia— (`Dashboard/fotos-habilidades/`, 68 fotos de Rawpixel, Flickr y StockSnap con licencia
+libre, a 1280 px); debajo, **tu sesión** (`sesion`): una barra con sus tres tiempos en minutos —*Arranca*, *El
+bloque*, *Cierra*— y qué se hace en cada uno, con **sale bien si** (`sale`); **En detalle**, tres puntos numerados con
+el método; tres cajas: **Por qué este paso**, **Tu caso** (cian) y **el error común** (ámbar); **Para copiar**
+(`copia`): el guion, la plantilla, el código o la lista que se usa tal cual, con su botón (`mdCopiar`); y al final,
+**Con qué** (el libro con su portada y *Qué es*, o el recurso con `pfRecursoHtml()`). El contenido vive en el maestro
+(`APRENDIZAJE_DETALLE` y `APRENDIZAJE_PRACTICA`, por el nombre del paso) y el control 45 exige que ningún paso se quede
+sin él. En Recursos (`lado`) queda solo lo que se consulta desde cualquier paso: **tu libro del mes** en la del foco y
+en la de la habilidad del libro (`lmLadoHtml()`, ver *Lo decide Coach*), **tu nivel** con la marca del siguiente
+escalón y **esta semana**, y debajo *Tu avance* (`mdAvanceHtml`). Medido a 2048×1040 en las 12 habilidades: la
+columna llevaba de 807 a 1,440 caracteres y de 896 a 1,403 px en 785 visibles —en todas había que desplazarla—; ahora
+lleva de 244 a 659 y cabe en diez; en Inglés y Mentalidad, con el libro del mes, sobran 30 px. El primer paso pasa de
+1,000–1,550 caracteres a 1,800–2,400. La frase de la cabecera dice su papel en el plan: el foco de hoy con su
+entregable y sus días, cuándo llega su foco, en mantenimiento o en pausa.
 
 **Cada paso se marca como dominado**, igual que una ficha (`toggleSkillPaso()`, en `dash_habpasos_v1`). La
 primera vez se siembra con lo que ya habías avanzado con «Siguiente paso»: los pasos anteriores al tuyo
