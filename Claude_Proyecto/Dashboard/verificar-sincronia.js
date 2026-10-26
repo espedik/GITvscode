@@ -2897,6 +2897,45 @@ function promptsDeLoTocado() {
   else ok.push('Alemán de hoy: las ' + (V.voc || []).length + ' palabras con su ícono, ' + Object.keys(usados).length + ' archivos en Aleman/iconos/');
 })();
 
+/* ── 47. La práctica de cada paso de Habilidades Base ───────────────────────────────────────────────────────
+   Adán, 26-oct-2026: "lo de coach habilidades, haz lo mismo para habilidades base". HB_PRACTICA
+   (Dashboard/habilidades-base-practica.js) le suma a cada paso de HABILIDAD_DETALLE, por su título exacto, su sesión
+   de tres tiempos, cómo sabes que salió, tres subtemas y su ícono (Dashboard/iconos-base/); los de cierre (Qué leer,
+   Ya lo dominas) llevan solo el ícono. Un paso sin su práctica, un título que cambió en la ficha, un ícono que falta,
+   un archivo que nadie usa o la etiqueta <script> que se perdió salen aquí. */
+(function () {
+  let P;
+  try { delete require.cache[require.resolve('./habilidades-base-practica.js')]; P = require('./habilidades-base-practica.js'); }
+  catch (e) { problemas.push('No se puede leer Dashboard/habilidades-base-practica.js: ' + e.message); return; }
+  const HD = evaluar(literal(dash, 'const HABILIDAD_DETALLE=', '{')) || {};
+  const dir = path.join(RAIZ, 'Dashboard', 'iconos-base'), usados = {}, malos = [];
+  let n = 0, nSub = 0;
+  if (dash.indexOf('<script src="habilidades-base-practica.js"></script>') < 0) malos.push('dashboard.html ya no carga habilidades-base-practica.js');
+  Object.keys(HD).forEach(function (id) {
+    const pp = P[id] || {}, ts = (HD[id].pasos || []).map(function (p) { return p.t; });
+    if (!P[id]) { malos.push(id + ' no tiene práctica'); return; }
+    ts.forEach(function (t) {
+      const x = pp[t]; n++;
+      if (!x) { malos.push(id + ' · «' + t + '» sin práctica'); return; }
+      if (!x.ic) malos.push(id + ' · «' + t + '» sin ícono');
+      else { usados[x.ic + '.webp'] = 1; if (!fs.existsSync(path.join(dir, x.ic + '.webp'))) malos.push(id + ' · «' + t + '» usa ' + x.ic + '.webp, que no está en Dashboard/iconos-base/'); }
+      if (/Ya lo dominas|Qué leer/.test(t)) return;
+      if ((x.sesion || []).length !== 3 || x.sesion.some(function (s) { return !(s[0] > 0) || !s[1]; })) malos.push(id + ' · «' + t + '» sin sus tres tiempos');
+      if (!x.sale) malos.push(id + ' · «' + t + '» sin «sale bien si»');
+      const sub = x.subtemas || []; nSub += sub.length;
+      if (sub.length < 3 || sub.some(function (s) { return !s.t || !s.d || (s.l || []).length < 2; })) malos.push(id + ' · «' + t + '» sin tres subtemas completos');
+      if (x.copia && !(x.copia.t && (x.copia.l || []).length)) malos.push(id + ' · «' + t + '» con «Para copiar» vacío');
+    });
+    Object.keys(pp).forEach(function (t) { if (ts.indexOf(t) < 0) malos.push(id + ' · «' + t + '» ya no es un paso de la ficha'); });
+  });
+  Object.keys(P).forEach(function (id) { if (!HD[id]) malos.push('HB_PRACTICA.' + id + ' no es una ficha de HABILIDAD_DETALLE'); });
+  const sobran = fs.existsSync(dir) ? fs.readdirSync(dir).filter(function (f) { return !usados[f]; }) : [];
+  if (sobran.length) malos.push('archivos en Dashboard/iconos-base/ que nadie usa: ' + sobran.slice(0, 8).join(', '));
+  if (!n) problemas.push('no pude leer los pasos de HABILIDAD_DETALLE');
+  else if (malos.length) problemas.push('La práctica de Habilidades Base (' + malos.length + '): ' + malos.slice(0, 6).join('; '));
+  else ok.push('Habilidades Base: los ' + n + ' pasos con su ícono y su práctica (' + nSub + ' subtemas), ' + Object.keys(usados).length + ' íconos en Dashboard/iconos-base/');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

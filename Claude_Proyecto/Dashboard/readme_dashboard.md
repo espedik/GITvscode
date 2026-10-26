@@ -17,7 +17,7 @@ en una página.
 
 | Archivo | Qué es |
 |---|---|
-| `dashboard.html` | La app: HTML, CSS y JS en un archivo (**1.4 MB**, ~13 500 líneas). Nunca se abre entero: este readme es el mapa |
+| `dashboard.html` | La app: HTML, CSS y JS en un archivo (**1.7 MB**, ~16 800 líneas). Nunca se abre entero: este readme es el mapa |
 | `datos-maestros.js` | **Fuente única** de las variables del proyecto. Lo cargan también Coach y Finanzas |
 | `DATOS-MAESTROS.md` | Índice del proyecto: catálogo de variables, mapa de apps, cómo se corrige un saldo |
 | `verificar-sincronia.js` | Comprueba que nada se haya vuelto a duplicar. Lo corre un hook al final de cada turno; sale con código 1 si algo falla |
@@ -28,6 +28,7 @@ en una página.
 | `syllabus/` (**fuera de git**) | La copia local del syllabus CT-GenAI LATAM: el PDF y `ct-genai-syllabus.js`, el texto de cada sección con su página. Su aviso de derechos solo permite reproducirlo en parte y para uso privado, así que no va al repositorio público (`.gitignore`) |
 | `sin-zoom.js` | Bloqueo del zoom en táctil. Lo cargan las seis apps |
 | `prompt-pagina.js` · `prompts-paginas.js` | El icono de la brújula que llevan **todas** las páginas del proyecto y los prompts que abre: el especialista que gobierna cada una (ver `DATOS-MAESTROS.md` → *El prompt de cada página*). En el Dashboard va fijo arriba a la izquierda, donde la barra de apps deja la esquina libre |
+| `habilidades-base-practica.js` · `iconos-base/` | La práctica de cada paso de Habilidades Base (`HB_PRACTICA`: sesión, «sale bien si», subtemas, «Para copiar») y sus 224 íconos 3D (Fluent Emoji de Microsoft, MIT, 160 px en WebP). Ver *Habilidades Base* |
 | `fotos-aprende/` | Las 41 fotos de *Hoy aprendes* y, las `fase-*` (13), de *Por qué esta fase* (480 px, de Openverse: StockSnap, Flickr y Rawpixel); su crédito va en `AP_FOTOS` y sale en el `title` de cada una |
 | `diseno-*/` | Los canvas de cada rediseño: `Main.dc.html` (lo elegido) y las direcciones descartadas al lado |
 | `readme_dashboard.md` | Este archivo |
@@ -1558,6 +1559,28 @@ Cada ficha lleva `✅ Ya lo dominas cuando…` con criterios comprobables, `⚠�
 `Tu caso`/`Ejemplo`/`Plantilla` y `📚 Qué leer`. Las fotos son de Unsplash, verificadas con curl
 **y vistas** antes de elegirlas.
 
+**La ventana de una ficha es la de Coach · Habilidades** (Adán, 26-oct-2026: *"lo de coach habilidades, haz lo mismo
+para habilidades base"*). Abre en **«Tu ruta»**, el -1 del temario (`hbResumenHtml`, pintado por `mdPintarResumen`):
+arriba, **para qué te sirve** (`hbPlan()`: cuándo le toca en el plan de Coach y por qué), **tu práctica** (cuántas
+sesiones y horas suma la ficha y cuántos subtemas trae) y **lo siguiente**, que abre el primer paso sin dominar; **la
+ruta** como tarjetas, una por paso, con su ícono 3D, sus minutos y sus subtemas (`.hbr-ruta`, en columnas que llenan
+la fila: hasta diez a 2048 px, ocho a 1600, seis a 1366, cuatro en una tableta y dos en el celular); **lo que toca**,
+la sesión del paso siguiente, junto a **ya lo dominas cuando…** (los criterios del paso de cierre); y **qué leer**, si
+la ficha lo trae. Recursos queda con los videos y *Tu avance*. Mi Día la abre en el paso que toca
+(`abrirHabilidadDetalle(id, img, 1)`) y ‹ desde el primer paso vuelve a *Tu ruta*.
+
+**Cada paso** suma, sobre su idea y su «En detalle», **tu sesión** (tres tiempos en minutos con qué se hace en cada
+uno y **sale bien si**), **tres subtemas** a fondo —el concepto, de dónde sale y tres claves que se aplican esa
+semana—, y **Para copiar** cuando hay algo que se usa tal cual (un guion, una lista, una receta, una tabla: 92 pasos).
+Su ícono va junto al título; el paso que trae `img` la pone a la derecha de qué hacer (`fotoLado`), en 3:2, y los
+diagramas (nudos, RCP, cortes) sobre blanco y enteros (`diag`, `.md-foto-diag`). Los de cierre (*Qué leer*, *Ya lo
+dominas*) llevan solo el ícono. Todo vive en `Dashboard/habilidades-base-practica.js` (`HB_PRACTICA`, por ficha y por
+el título exacto del paso: 344 sesiones, 1,032 subtemas, unas 87,600 palabras) y se suma a `HABILIDAD_DETALLE` al
+cargar, sin tocar `pasos`: el número de pasos y el avance guardado siguen iguales. Las fichas de vino, coctelería y
+citas se practican sin tomar —vinos sin alcohol, versiones vírgenes, oler y escupir—, por la meta de alcohol en curso.
+El control 47 del verificador exige que ningún paso se quede sin su práctica, que cada título siga existiendo y que
+cada ícono esté en `Dashboard/iconos-base/` sin que sobre ninguno.
+
 **«SIGUIENTE» marca la ficha en curso de `hbEnCurso()`**, la misma que enseña *Hoy aprendes* en Mi Día:
 la que Adán eligió ahí con «Siguiente» (`dash-avance-v1`) mientras siga a medias o sin empezar; si
 no, la primera del orden de Coach (`HB_PLAN`: lo que pide la fase en curso, lo de antes de irte, lo de
@@ -1620,7 +1643,7 @@ el diccionario es `HABILIDAD_DETALLE` o `META_DETALLE`: la columna se va y arrib
 tema (`#metaDetailTema`, `.md-tema`, la pinta `mdTemaBar()`): ‹ tema anterior, el tema con su título (✓ verde
 si está dominado), **☰ Temas** y tema siguiente ›. En una meta con plan la barra empieza en *Tu plan, con
 fechas* (sus pasos hechos y el siguiente) y sigue con *Lo que necesitas saber · N de M*: ‹ desde el primer tema
-vuelve al plan. ☰ vuelve a abrir la columna (`mdTemario(true)`) y *‹ Contraer*, en su cabecera, la cierra; al
+vuelve al plan; una ficha de Habilidades Base o una habilidad de Coach empieza igual, en *Tu ruta*. ☰ vuelve a abrir la columna (`mdTemario(true)`) y *‹ Contraer*, en su cabecera, la cierra; al
 cerrar la ficha vuelve contraído. El paso gana los 300 px: 1234 px de ancho en 1600×1000. Hasta 1180 px,
 contraído, Recursos se queda al lado a 260 px en vez de bajar, y el paso usa todo el alto. En qué invertir tu
 tiempo sigue con la columna.
@@ -1639,9 +1662,11 @@ su `pie`. Si la dirección es de Wikimedia (`Special:FilePath/…?width=1280`), 
 del archivo, donde están autor y licencia; si la foto no carga, `onerror` quita la figura. Las web van
 a 16:7 y hasta 880 px; las locales (`.md-foto-loc`, de 480 px) a 3:2 y 480 px, para no pixelarse; con
 `alta:1` (fotos verticales) el marco pasa a 4:3 (`.md-foto-alta`). `cifras: [[valor, qué es], …]` pinta
-un renglón de datos grandes (`.md-cifras`); en el celular, de dos en dos. El paso que trae `img` (las
-de Habilidades Base) sigue igual, al final. Un paso con `fotoLado` (las rutas de Coach · Habilidades) pone la foto a la
-derecha de qué hacer y sus cifras (`.md-paso-top`), en 3:2; bajo 1100 px vuelve a ir a lo ancho, en 16:9.
+un renglón de datos grandes (`.md-cifras`); en el celular, de dos en dos. Un paso con `fotoLado` (las rutas de Coach
+· Habilidades y los pasos de Habilidades Base que traen `img`, que se vuelve `foto` al cargar) pone la foto a la derecha
+de qué hacer y sus cifras (`.md-paso-top`), en 3:2; bajo 1100 px vuelve a ir a lo ancho, en 16:9, y si no carga, el
+texto toma el ancho. Sin foto, el ícono del paso (`ic`) va junto al título (`.md-paso-ic`). La sesión (`mdSesionHtml`)
+y los videos de Recursos (`mdVideosHtml`) son funciones aparte porque también los pinta *Tu ruta*.
 
 **Tamaños.** Hasta 1180 px Recursos baja bajo el temario (260 px). En el celular los tres se
 apilan y la ficha desplaza como una sola página: temario en tira de chips, frase a dos líneas,

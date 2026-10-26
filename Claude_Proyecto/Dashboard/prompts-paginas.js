@@ -759,6 +759,8 @@ Habilidades Base son las fichas de vida práctica y social, cada una con sus pas
 
 ## Al modificar esta pantalla
 - Cada ficha conserva su estructura: pasos, criterio de dominio, error común y recursos verificados.
+- Cada paso se practica y se profundiza: una sesión en minutos con su «sale bien si» que otra persona pueda comprobar, tres subtemas que van más hondo que el paso —el concepto, de dónde sale y cómo se aplica esa semana— sin repetirlo ni rellenar, «Para copiar» cuando hay algo que se usa tal cual, y su ícono. La ficha abre en «Tu ruta»: para qué te sirve en el plan, tu práctica, lo siguiente, los pasos y cuándo la dominas.
+- Lo que toca la seguridad (primeros auxilios, armas, pelear, fuego, mecánica) se practica sin riesgo —sobre un cojín o un maniquí, con instructor, en un lugar controlado— y remite a un curso o a un profesional cuando leer no basta. Lo de anfitrión (vino, coctelería, citas) se practica sin tomar mientras dure la meta de alcohol.
 - Un video entra solo si enseña bien y viene de una fuente seria.`
     },
 
