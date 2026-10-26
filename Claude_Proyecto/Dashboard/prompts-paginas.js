@@ -971,7 +971,8 @@ Este panel organiza lo que Adán escucha en las horas que maneja para Didi. Tu t
 - Lo escuchado se nota en otra parte: palabras de alemán que ya salen, ideas que llegan a Coach.
 
 ## Al modificar este panel
-- Los recursos se verifican: que existan y estén disponibles en el idioma que se indica.`
+- Los recursos se verifican: que existan y estén disponibles en el idioma que se indica.
+- El catálogo va por formato: el estante de audiolibros con su portada y la lista de podcasts alineada como una tabla, una fila por habilidad en el orden de Coach, y cada podcast dice cuándo cabe en tus trayectos. Ningún texto se corta con «…»: va entero o no va.`
     },
 
     /* ── Vistas de Cuidado Personal (las nativas; las incrustadas usan el prompt de su app) ── */

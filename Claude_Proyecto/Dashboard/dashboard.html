@@ -2117,28 +2117,46 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .dd-links.grande{gap:8px}
 .dd-links.grande a{padding:8px 14px;border-radius:10px;background:rgba(var(--ov),.08);color:var(--text);font-size:13px}
 .dd-links.grande a.dd-spo{background:var(--cy);color:#04201c}
-/* El catálogo, en el orden del plan */
-/* Columnas que se reparten la altura (como un tablero de notas): con una rejilla, la fila del
-   español —ocho audios— dejaba huecos al lado y el panel desplazaba el doble. El orden se lee
-   de arriba abajo, columna por columna. */
-.dd-grupos{columns:360px 4;column-gap:18px}
-.dd-grupos>.dd-grupo{break-inside:avoid;margin-bottom:18px}
-.dd-grupo{display:flex;flex-direction:column;gap:10px;min-width:0;padding:18px 20px;border-radius:16px;
-  background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.08)}
-.dd-grupo.foco{border-color:rgba(var(--o-rgb),.45)}
-.dd-grupo-h{display:flex;align-items:baseline;gap:10px}
-.dd-grupo-n{font-size:17px;font-weight:800;color:var(--text)}
-.dd-grupo-v{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--text3)}
-.dd-chip{margin-left:auto;padding:3px 8px;border-radius:6px;background:rgba(var(--o-rgb),.15);color:var(--o);
+/* El catálogo, por formato: el estante de audiolibros y la lista de podcasts, una fila por habilidad con su
+   etiqueta a la izquierda. Cada texto va entero, sin «…». */
+.dd-filas{display:flex;flex-direction:column;padding:2px 22px;border-radius:16px;background:rgba(var(--ov),.03);
+  border:1px solid rgba(var(--ov),.08)}
+.dd-fila{display:grid;grid-template-columns:210px minmax(0,1fr);gap:24px;padding:16px 0}
+.dd-fila+.dd-fila{border-top:1px solid rgba(var(--ov),.08)}
+.dd-fila-h{display:flex;flex-direction:column;gap:6px;min-width:0}
+.dd-fila-t{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px}
+.dd-fila-n{font-size:17px;font-weight:800;color:var(--text)}
+.dd-fila-v{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--text3)}
+.dd-fila-h p{margin:0;font-size:12.5px;line-height:1.45;color:var(--text3)}
+.dd-chip{padding:3px 8px;border-radius:6px;background:rgba(var(--o-rgb),.15);color:var(--o);
   font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
-.dd-why{margin:0;font-size:12.5px;line-height:1.45;color:var(--text3)}
-.dd-item{display:grid;grid-template-columns:84px minmax(0,1fr);gap:12px;padding-top:10px;border-top:1px solid rgba(var(--ov),.08)}
-.dd-item-l{display:flex;flex-direction:column;gap:5px;align-items:flex-start}
-.dd-fit{font-family:var(--mono);font-size:10px;color:var(--text3)}
-.dd-item-b{display:flex;flex-direction:column;gap:3px;min-width:0}
-.dd-item-n{font-size:14px;font-weight:700;line-height:1.3;color:var(--text)}
-.dd-item-n span{font-weight:500;color:var(--text3)}
-.dd-item-d{font-size:12.5px;line-height:1.45;color:var(--text2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dd-marca{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cy)}
+/* El estante: portada, título, autor, de qué trata y dónde escucharlo */
+.dd-libros{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.dd-libro{display:grid;grid-template-columns:68px minmax(0,1fr);gap:16px;padding:14px;border-radius:14px;
+  background:rgba(var(--ov),.04);border:1px solid transparent}
+.dd-libro.marca{border-color:rgba(var(--cy-rgb),.4);background:rgba(var(--cy-rgb),.06)}
+.dd-libro-p{width:68px;aspect-ratio:2/3;object-fit:cover;border-radius:5px;background:rgba(var(--ov),.08);
+  box-shadow:0 6px 16px rgba(0,0,0,.22)}
+.dd-libro-b{display:flex;flex-direction:column;gap:3px;min-width:0}
+.dd-libro-t{font-size:15px;font-weight:800;line-height:1.25;color:var(--text)}
+.dd-libro-a{font-size:12.5px;color:var(--text2)}
+.dd-libro-d{margin:5px 0 8px;font-size:12.5px;line-height:1.45;color:var(--text2)}
+.dd-libro .dd-links{margin-top:auto}
+/* La lista: tipo, nombre, de qué trata, cuándo cabe y dónde escucharlo, alineados como una tabla */
+.dd-pods{display:flex;flex-direction:column}
+.dd-pod{display:grid;grid-template-columns:84px minmax(180px,250px) minmax(0,1fr) 160px 210px;
+  grid-template-areas:"tag n d c l";gap:6px 18px;align-items:center;padding:11px 10px;margin:0 -10px;border-radius:10px}
+.dd-pod+.dd-pod{border-top:1px solid rgba(var(--ov),.06)}
+.dd-pod.marca{background:rgba(var(--cy-rgb),.07)}
+.dd-pod-tag{grid-area:tag;display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+.dd-pod-n{grid-area:n;display:flex;flex-direction:column;gap:2px;min-width:0}
+.dd-pod-n b{font-size:14px;line-height:1.3;color:var(--text)}
+.dd-pod-n span{font-size:12.5px;color:var(--text3)}
+.dd-pod-d{grid-area:d;font-size:12.5px;line-height:1.45;color:var(--text2)}
+.dd-pod-c{grid-area:c;display:flex;flex-direction:column;gap:2px;font-size:12px;line-height:1.35;color:var(--text3)}
+.dd-pod-c b{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text2)}
+.dd-pod .dd-links{grid-area:l;flex-wrap:nowrap}
 .didi-tag{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.06em;padding:3px 7px;border-radius:6px;white-space:nowrap}
 .didi-t-audio{background:rgba(167,139,250,.18);color:#c4b5fd}
 .didi-t-pod{background:rgba(34,211,238,.16);color:#67e8f9}
@@ -2154,9 +2172,24 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .dd-pausa summary b{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
 .dd-pausa summary em{margin-left:auto;font-style:normal;font-weight:700;color:var(--text2)}
 .dd-pausa[open] summary{margin-bottom:14px}
+.dd-pausa .dd-filas{background:none}
 .dd-pausa .dd-ocultar,.dd-pausa[open] .dd-ver{display:none}
 .dd-pausa[open] .dd-ocultar{display:inline}
 @media(max-width:1500px){.dd-hero{grid-template-columns:repeat(2,minmax(0,1fr))}.dd-card.libro{grid-column:1/-1}}
+/* En pantallas medianas la etiqueta de la fila va arriba y cada renglón de la lista se parte en dos */
+@media(max-width:1500px){
+  .dd-fila{grid-template-columns:1fr;gap:12px}
+  .dd-libros{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .dd-libro{grid-template-columns:56px minmax(0,1fr);gap:12px}
+  .dd-libro-p{width:56px}
+  .dd-libro .dd-links{gap:4px 10px}
+  .dd-pod{grid-template-columns:84px minmax(0,1fr) 210px;grid-template-areas:"tag n c" "tag d l";align-items:start}
+}
+/* La columna de tus trayectos se queda a la vista mientras bajas por el catálogo, si cabe entera */
+@media(min-width:1101px) and (min-height:1000px){
+  .dd-rail{position:sticky;top:0;align-self:start;border-right:0}
+  .dd-main{border-left:1px solid rgba(var(--ov),.08)}
+}
 @media(max-width:1100px){.dd{grid-template-columns:1fr}.dd-rail{order:2;border-right:0;border-top:1px solid rgba(var(--ov),.08)}}
 @media(max-width:820px){
   .didi-overlay{padding:0}                      /* a pantalla completa: 4vw de margen es tirar ancho */
@@ -2176,9 +2209,11 @@ body.rail-on{--pad-rail:max(6vw,230px)}
   .dd-hero{grid-template-columns:1fr}
   .dd-card.libro{grid-template-columns:84px minmax(0,1fr);gap:14px;padding:16px}
   .dd-portada{width:84px}
-  .dd-grupos{columns:1}
-  .dd-item{grid-template-columns:1fr;gap:6px}
-  .dd-item-l{flex-direction:row;align-items:center}
+  .dd-filas{padding:2px 14px}
+  .dd-libros{grid-template-columns:1fr}
+  .dd-pod{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"tag c" "n n" "d d" "l l";gap:6px 12px}
+  .dd-pod-tag{flex-direction:row;align-items:center}
+  .dd-pod-c{flex-direction:row;flex-wrap:wrap;gap:2px 8px;align-items:baseline}
   .dd-links a{padding:4px 0}                     /* área táctil usable con el pulgar */
 }
 
@@ -9941,7 +9976,7 @@ const didiApple = (tipo,q) => tipo==='pod' ? didiApP(q) : didiApB(q);
 // `largo:true`: podcasts de una hora o más. Van a los turnos largos del fin de semana, no a los
 // tramos cortos; «Al volante» de Hoy aprendes los reparte así.
 const DIDI_AUDIO=[
-  {sk:'network', why:'Tu foco de la semana. Son los tres libros de tu ruta: escucharlos al volante adelanta el paso sin quitarle una hora al día.', items:[
+  {sk:'network', why:'Son los tres libros de tu ruta de Networking: escucharlos al volante adelanta la ruta sin quitarle una hora al día.', items:[
     {tipo:'audio', lib:'designingLife', n:'Designing Your Life — Bill Burnett y Dave Evans', trata:'«Diseña tu vida»: cómo decidir tu carrera como lo haría un diseñador, probando ideas pequeñas antes de dar el salto.', d:'Design thinking aplicado a tu carrera: su capítulo de entrevistas de prototipo es la base de «la pregunta que abre puertas». 6 h 18 min, leído por sus autores.', q:'Designing Your Life Bill Burnett Dave Evans'},
     {tipo:'audio', lib:'neverEatAlone', n:'Never Eat Alone — Keith Ferrazzi', trata:'«Nunca comas solo»: cómo construir tu red de contactos antes de necesitarla, ayudando primero.', d:'El método para tener la red antes de necesitarla: tu lista, a quién llamar y cuándo. 11 h 11 min.', q:'Never Eat Alone Keith Ferrazzi'},
     {tipo:'audio', lib:'giveAndTake', n:'Give and Take — Adam Grant', trata:'«Dar y recibir»: por qué a quien ayuda sin pedir nada a cambio le va mejor en el trabajo.', d:'Por qué los que dan primero terminan con mejores redes: la idea detrás de reactivar sin pedir nada. 11 h 50 min; en español es «Dar y recibir».', q:'Give and Take Adam Grant'},
@@ -9955,7 +9990,7 @@ const DIDI_AUDIO=[
   ]},
   {sk:'finanzas', why:'Tu diagnóstico dice que el hueco no es de conocimiento sino de hábito: revisas gastos de forma reactiva. Estos tres atacan justo eso.', items:[
     {tipo:'audio', lib:'iWillTeach', n:'I Will Teach You to Be Rich — Ramit Sethi', trata:'«Te enseñaré a ser rico»: un sistema para que tu ahorro, tus pagos y tu inversión se hagan solos.', d:'Sistema de automatización de finanzas personales. Es el primer recurso que ya tenías listado en Finanzas.', q:'I Will Teach You to Be Rich Ramit Sethi'},
-    {tipo:'audio', lib:'psychMoney', n:'Psicología del Dinero — Morgan Housel', trata:'Por qué decidimos mal con el dinero aunque sepamos la teoría, y cómo evitarlo.', d:'Por qué la gente toma malas decisiones con dinero aunque sepa la teoría. Hay edición en español.', q:'Psicologia del Dinero Morgan Housel'},
+    {tipo:'audio', lib:'psychMoney', n:'The Psychology of Money — Morgan Housel', trata:'«Psicología del dinero»: por qué decidimos mal con el dinero aunque sepamos la teoría, y cómo evitarlo.', d:'Por qué la gente toma malas decisiones con dinero aunque sepa la teoría. Hay edición en español.', q:'The Psychology of Money Morgan Housel'},
     {tipo:'audio', lib:'millionaireNextDoor', n:'The Millionaire Next Door — Thomas Stanley', trata:'«El millonario de al lado»: los millonarios reales se hicieron gastando poco, no ganando mucho.', d:'El patrimonio real se construye con gasto bajo, no con ingreso alto. Antídoto directo al error de los MSI.', q:'The Millionaire Next Door Thomas Stanley'},
     {tipo:'pod', n:'I Will Teach You To Be Rich — Ramit Sethi', trata:'Conversaciones reales con parejas sobre sus deudas y sus gastos: aprendes de sus errores.', d:'Sesiones reales con parejas y sus finanzas. Escuchar los errores ajenos pega más que la teoría.', q:'I Will Teach You To Be Rich podcast Ramit Sethi'},
   ]},
@@ -9983,11 +10018,11 @@ const DIDI_AUDIO=[
 // contenido en el idioma en que no tiene que traducir mientras maneja.
 const DIDI_ESPANOL=[
   {tipo:'audio', lib:'psychMoney', n:'Psicología del Dinero — Morgan Housel', d:'El de Finanzas, en su edición en español. Si solo escuchas uno de esta lista, que sea este: es el más fácil de seguir sin cuaderno.', q:'Psicologia del Dinero Morgan Housel audiolibro'},
-  {tipo:'audio', lib:'influence', n:'Influencia — Robert Cialdini', d:'El de Ventas (tu 15/100) en español. Los 6 principios pierden poco en la traducción porque son historias.', q:'Influencia Robert Cialdini audiolibro español'},
-  {tipo:'audio', lib:'padreRico', n:'Padre Rico, Padre Pobre — Robert Kiyosaki', d:'Discutido y simplificado, pero es el que instala la distinción activo/pasivo — la misma que separa tu deuda del BYD de tu portafolio en GBM.', q:'Padre Rico Padre Pobre Kiyosaki audiolibro'},
+  {tipo:'audio', lib:'influence', n:'Influencia — Robert Cialdini', d:'El de Ventas, en su edición en español. Los seis principios pierden poco en la traducción porque son historias.', q:'Influencia Robert Cialdini audiolibro español'},
+  {tipo:'audio', lib:'padreRico', n:'Padre Rico, Padre Pobre — Robert Kiyosaki', d:'Discutido y simplificado, pero es el que enseña la diferencia entre un activo, lo que te deja dinero cada mes, y un pasivo, lo que te lo quita.', q:'Padre Rico Padre Pobre Kiyosaki audiolibro'},
   {tipo:'pod', n:'Libros para Emprendedores — Luis Ramos', d:'Resúmenes de un libro de negocios por episodio. La forma más rápida de cubrir mucho terreno mientras manejas.', q:'Libros para Emprendedores Luis Ramos'},
-  {tipo:'pod', n:'Cracks Podcast — Oso Trava', d:'Entrevistas a emprendedores, mexicano. Contexto de negocio en México, que es donde vas a vender.', q:'Cracks Podcast Oso Trava'},
-  {tipo:'pod', n:'Dementes — Diego Barrazas', d:'Historias de fundadores mexicanos contadas largo. Encaja en los turnos de fin de semana.', q:'Dementes podcast Diego Barrazas'},
+  {tipo:'pod', largo:true, n:'Cracks Podcast — Oso Trava', d:'Entrevistas largas con emprendedores mexicanos y gente que destaca en su campo: cómo piensan y cómo trabajan.', q:'Cracks Podcast Oso Trava'},
+  {tipo:'pod', largo:true, n:'Dementes — Diego Barrazas', d:'Historias de fundadores mexicanos contadas largo, de una hora o más.', q:'Dementes podcast Diego Barrazas'},
   {tipo:'pod', n:'Tengo un Plan — Sergio Beguería y Juan Domínguez', d:'Finanzas personales e inversión en español, sin jerga. El complemento natural de tu bloque de GBM de los lunes.', q:'Tengo un Plan podcast finanzas'},
   {tipo:'pod', n:'Whitepaper — Jorge Combe', d:'Negocios y tecnología en México. Útil para Marketing e IA sin cambiar de idioma.', q:'Whitepaper podcast Jorge Combe'},
 ];
@@ -10003,19 +10038,69 @@ const DIDI_ALEMAN=[
 
 const DIDI_TAG={audio:{c:'didi-t-audio',l:'AUDIOLIBRO'},pod:{c:'didi-t-pod',l:'PODCAST'},yt:{c:'didi-t-yt',l:'YOUTUBE'}};
 
-// Un audio del catálogo: su tipo, si es largo o corto, título y autor, por qué y dónde escucharlo.
-function didiItemHtml(it){
-  const tag = DIDI_TAG[it.tipo] || DIDI_TAG.audio;
+// El catálogo va por formato (Adán, 26-oct-2026: "acomoda muchísimo mejor los podcast, las listas, se ve muy mal
+// así"): el estante de audiolibros y la lista de podcasts y canales, una fila por habilidad con su etiqueta a la
+// izquierda. Cada texto va entero —el de qué trata (`trata`) o, en el alemán y el español, su descripción—, nunca
+// cortado con «…».
+// Un audiolibro del estante: la portada de la biblioteca (`habLibro()`), título, autor, de qué trata y dónde escucharlo.
+function didiLibroHtml(it, marca){
   const [t, a] = String(it.n).split(' — ');
-  const largo = it.tipo === 'audio' || !!it.largo;
-  return `<div class="dd-item">
-      <div class="dd-item-l"><span class="didi-tag ${tag.c}">${tag.l}</span><span class="dd-fit">${largo ? 'largo' : 'corto'}</span></div>
-      <div class="dd-item-b">
-        <span class="dd-item-n">${t}${a ? ` <span>${a}</span>` : ''}</span>
-        <span class="dd-item-d">${it.d}</span>
+  const lib = it.lib && typeof habLibro === 'function' ? habLibro(it.lib) : null;
+  return `<div class="dd-libro${marca ? ' marca' : ''}">
+      ${lib && lib.portada ? `<img class="dd-libro-p" src="${lib.portada}" alt="" loading="lazy">` : '<span class="dd-libro-p"></span>'}
+      <div class="dd-libro-b">
+        ${marca ? `<span class="dd-marca">${marca}</span>` : ''}
+        <span class="dd-libro-t">${t}</span>
+        ${a ? `<span class="dd-libro-a">${a}</span>` : ''}
+        <span class="dd-libro-d">${it.trata || it.d}</span>
         ${didiLinks(it)}
       </div>
     </div>`;
+}
+// Un renglón de la lista: el tipo, el nombre y quién lo hace, de qué trata, cuándo cabe en tus trayectos y dónde
+// escucharlo. Las columnas son fijas para que todos los renglones queden alineados, como una tabla.
+function didiPodHtml(it, cu, marca){
+  const tag = DIDI_TAG[it.tipo] || DIDI_TAG.pod, [t, a] = String(it.n).split(' — ');
+  return `<div class="dd-pod${marca ? ' marca' : ''}">
+      <span class="dd-pod-tag"><span class="didi-tag ${tag.c}">${tag.l}</span>${marca ? `<span class="dd-marca">${marca}</span>` : ''}</span>
+      <span class="dd-pod-n"><b>${t}</b>${a ? `<span>${a}</span>` : ''}</span>
+      <span class="dd-pod-d">${it.trata || it.d}</span>
+      <span class="dd-pod-c"><b>${it.largo ? 'Largo, 1 h o más' : 'Corto'}</b><span>${it.largo ? cu.largo : cu.corto}</span></span>
+      ${didiLinks(it)}
+    </div>`;
+}
+// Cuándo cabe un podcast, de tus trayectos (`didiViajes()`): el corto, en el tramo corto de la noche entre semana;
+// el largo, en los turnos de una hora o más.
+function didiCuandoCabe(v){
+  let corto = ''; const dias = [];
+  v.grupos.forEach(g => g.tramos.forEach(x => {
+    if(x.min >= 60){ if(dias.indexOf(g.dia) === -1) dias.push(g.dia); }
+    else if(!corto && minutosDe(x.hora) >= 720) corto = g.dia + ', ' + x.hora;
+  }));
+  const ds = dias.map((x, i) => i ? x.toLowerCase() : x);
+  const largo = ds.length > 1 ? ds.slice(0, -1).join(', ') + ' y ' + ds[ds.length - 1] : (ds[0] || '');
+  return { corto: corto || 'Los tramos cortos', largo: largo || 'Los turnos largos' };
+}
+// La etiqueta de una fila: la habilidad con su nivel vivo de SK (o el alemán y el español) y, la primera vez que
+// sale en el catálogo, su porqué.
+function didiFilaH(g, foco, conPorque){
+  const s = g.sk ? SK.find(x => x.id === g.sk) : null;
+  const nivel = s ? `<span class="dd-fila-v" style="color:${skLevel(s.val).c}">${s.val}/100</span>` : (g.nota ? `<span class="dd-fila-v">${g.nota}</span>` : '');
+  const esFoco = !!(foco && s && s.id === foco.id);
+  return `<div class="dd-fila-h"><div class="dd-fila-t"><span class="dd-fila-n">${s ? s.name : g.nombre}</span>${nivel}${esFoco ? '<span class="dd-chip">Tu foco</span>' : ''}</div>
+      ${conPorque ? `<p>${g.why}</p>` : ''}</div>`;
+}
+// El estante y la lista de unos grupos, en su orden. Lo que dice «Esta semana» arriba lleva su marca: el audiolibro
+// de la semana y lo de hoy (`hoy`: el podcast y el alemán).
+function didiCatalogoHtml(grupos, foco, cu, libroSem, hoy){
+  const esLibro = it => it.tipo === 'audio';
+  const conLibros = grupos.filter(g => g.items.some(esLibro)), conPods = grupos.filter(g => g.items.some(it => !esLibro(it)));
+  return {
+    estante: conLibros.map(g => `<div class="dd-fila">${didiFilaH(g, foco, true)}
+      <div class="dd-libros">${g.items.filter(esLibro).map(it => didiLibroHtml(it, g.sk && (it.lib || it.n) === libroSem ? 'Esta semana' : '')).join('')}</div></div>`).join(''),
+    lista: conPods.map(g => `<div class="dd-fila">${didiFilaH(g, foco, conLibros.indexOf(g) === -1)}
+      <div class="dd-pods">${g.items.filter(it => !esLibro(it)).map(it => didiPodHtml(it, cu, hoy.indexOf(it) !== -1 ? 'Hoy' : '')).join('')}</div></div>`).join(''),
+  };
 }
 // Dónde escucharlo. Apple no va en los canales de YouTube: ni Books ni Podcasts los tienen.
 function didiLinks(it, grande){
@@ -10078,17 +10163,6 @@ function didiLibroDelPaso(){
 // El alemán de hoy: uno de DIDI_ALEMAN, distinto cada día.
 function didiAlemanHoy(){
   return (typeof DIDI_ALEMAN !== 'undefined' && DIDI_ALEMAN.length) ? DIDI_ALEMAN[diaCorrido() % DIDI_ALEMAN.length] : null;
-}
-// Una tarjeta del catálogo. Las de las 12 habilidades llevan su nivel vivo de SK; el foco, su marca.
-function didiGrupoHtml(g, foco){
-  const s = g.sk ? SK.find(x => x.id === g.sk) : null;
-  const nivel = s ? `<span class="dd-grupo-v" style="color:${skLevel(s.val).c}">${s.val}/100</span>` : (g.nota ? `<span class="dd-grupo-v">${g.nota}</span>` : '');
-  const esFoco = !!(foco && s && s.id === foco.id);
-  return `<div class="dd-grupo${esFoco ? ' foco' : ''}">
-      <div class="dd-grupo-h"><span class="dd-grupo-n">${s ? s.name : g.nombre}</span>${nivel}${esFoco ? '<span class="dd-chip">Esta semana</span>' : ''}</div>
-      <p class="dd-why">${g.why}</p>
-      ${g.items.map(didiItemHtml).join('')}
-    </div>`;
 }
 // Esta semana: el audiolibro (el del paso, si está en el catálogo), el episodio de hoy y tu alemán.
 function didiSemanaHtml(){
@@ -10161,20 +10235,28 @@ function abrirDidi(){
     <div class="dd-reglas"><span class="dd-lbl">Al volante</span>${reglas.map(r => `<p>${r}</p>`).join('')}</div>`;
   const extra = [
     { nombre: 'Alemán', nota: 'para la maestría', why: 'Quince minutos al día, un poco por encima de tu nivel: caben en el tramo de la noche.', items: DIDI_ALEMAN },
-    { nombre: 'En español', nota: 'cuando el inglés canse', why: 'Los audiolibros son la edición en español de títulos de arriba; mismo contenido, sin traducir de cabeza.', items: DIDI_ESPANOL },
+    { nombre: 'En español', nota: 'cuando el inglés canse', why: 'Dos audiolibros son la edición en español de libros de arriba —el mismo contenido, sin traducir de cabeza—; los podcasts son de negocios y finanzas.', items: DIDI_ESPANOL },
   ];
   const nPausa = pausa.reduce((n, g) => n + g.items.length, 0);
+  const cu = didiCuandoCabe(v), d = didiHoy(), libroSem = d && d.libro ? didiId(d.libro) : null;
+  const cat = didiCatalogoHtml(activos.concat(extra), foco, cu, libroSem, [d && d.pod ? d.pod.it : null, didiAlemanHoy()]);
+  const catP = didiCatalogoHtml(pausa, foco, cu, null, []);
   body.innerHTML = `<div class="dd">
       <aside class="dd-rail">${rail}</aside>
       <div class="dd-main">
         <section class="dd-sec"><span class="dd-lbl">Esta semana</span>${didiSemanaHtml()}</section>
         <section class="dd-sec">
-          <div class="dd-lbl-fila"><span class="dd-lbl">Todo el catálogo · en el orden de tu plan</span>
-            <span class="dd-leyenda">largo: audiolibros y episodios de una hora o más, para la mañana y el fin de semana · corto: para la noche</span></div>
-          <div class="dd-grupos">${activos.map(g => didiGrupoHtml(g, foco)).join('')}${extra.map(g => didiGrupoHtml(g, foco)).join('')}</div>
-          ${pausa.length ? `<details class="dd-pausa"><summary><b>En pausa</b><span>${pausa.map(g => { const s = SK.find(x => x.id === g.sk); return (s ? s.name : g.sk) + ' (' + g.items.length + ')'; }).join(' · ')} — siguen aquí para cuando vuelvan al plan</span><em><span class="dd-ver">Mostrar los ${nPausa}</span><span class="dd-ocultar">Ocultar</span></em></summary>
-            <div class="dd-grupos">${pausa.map(g => didiGrupoHtml(g, foco)).join('')}</div></details>` : ''}
+          <div class="dd-lbl-fila"><span class="dd-lbl">Audiolibros · en el orden de tu plan</span>
+            <span class="dd-leyenda">Uno por semana: para las mañanas de entre semana y los turnos largos del fin de semana</span></div>
+          <div class="dd-filas">${cat.estante}</div>
         </section>
+        <section class="dd-sec">
+          <div class="dd-lbl-fila"><span class="dd-lbl">Podcasts y canales · en el orden de tu plan</span>
+            <span class="dd-leyenda">Los cortos caben en la noche entre semana; los largos, de una hora o más, en los turnos del fin de semana</span></div>
+          <div class="dd-filas">${cat.lista}</div>
+        </section>
+        ${pausa.length ? `<details class="dd-pausa"><summary><b>En pausa</b><span>${pausa.map(g => { const s = SK.find(x => x.id === g.sk); return (s ? s.name : g.sk) + ' (' + g.items.length + ')'; }).join(' · ')} — siguen aquí para cuando vuelvan al plan</span><em><span class="dd-ver">Mostrar los ${nPausa}</span><span class="dd-ocultar">Ocultar</span></em></summary>
+          <div class="dd-filas">${catP.estante}${catP.lista}</div></details>` : ''}
       </div>
     </div>`;
   ov.classList.add('open');
