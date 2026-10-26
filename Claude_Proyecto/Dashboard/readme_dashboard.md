@@ -333,8 +333,11 @@ sigue: nada sale al azar.
 **«Cómo lo decide Coach»** (`#comoDecideOverlay`, `comoDecideHtml()`), ancho —hasta 1680 px, el 96 % de la ventana—: arriba, en tres columnas y con una foto en cada renglón, lo que manda y en qué
 orden —tus metas con fecha (`CD_METAS`: ids de tareas de la Fase 1, con su mes y tachadas si ya están en
 `coach_checks_v1`), el plan (la fase y el foco con su entregable) y las cinco habilidades con más
-retorno—; abajo, en dos columnas, tarjeta por tarjeta con su foto, lo de hoy con su regla, la tabla de capítulos del ISTQB
-y lo que sigue en Habilidades Base. Bajo 1180 px, todo a una columna. Sale de las mismas funciones que eligen. Mientras está abierto Mi Día no rota y
+retorno—; abajo, tarjeta por tarjeta con su foto, lo de hoy con su regla, la tabla de capítulos del ISTQB y lo que
+sigue en Habilidades Base, **en la misma rejilla que Hoy aprendes en Mi Día** (Adán, 25-oct-2026: *"ordénalos de la
+misma forma que están originalmente en Mi Día, para no revolverlos"*): 3×2 —Alemán de hoy, Qué escuchar mientras
+manejas y Qué invertir hoy arriba; Examen ISTQB CT-GenAI, Coach · Habilidades y Habilidades Base abajo—, 2×3 bajo
+1180 px y una columna bajo 760, como allá. Las capas van en una columna bajo 1180 px. Sale de las mismas funciones que eligen. Mientras está abierto Mi Día no rota y
 la brújula del prompt se oculta; se cierra con ✕, clic fuera o Escape.
 
 Medido con la fecha simulada, 40 días seguidos desde el 10 de octubre de 2026 sin estudiar ni contestar

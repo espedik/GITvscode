@@ -3646,7 +3646,10 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 .cd-mini.libro{width:26px;object-position:top}
 .cd-li.ok>span:first-child{text-decoration:line-through;opacity:.6}
 .cd-cuando{flex:none;font-family:var(--mono);font-size:10.5px;color:var(--text3);white-space:nowrap}
-.cd-filas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}
+/* Tarjeta por tarjeta, en la misma rejilla que Hoy aprendes en Mi Día —3×2, y 2×3 bajo 1180 px—, para que cada una
+   quede donde está allá (Adán, 25-oct-2026: "ordénalos de la misma forma que están originalmente en Mi Día, para no
+   revolverlos"). */
+.cd-filas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:28px}
 .cd-fila{display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-top:1px solid rgba(var(--ov),.08)}
 .cd-foto{flex:none;width:104px;height:104px;border-radius:12px;object-fit:cover;box-shadow:0 4px 14px rgba(0,0,0,.16)}
 .cd-foto.libro{width:70px;object-position:top}
@@ -3662,7 +3665,8 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 .cd-cap.on{background:color-mix(in srgb,var(--fc) 16%,transparent);color:var(--text)}
 .cd-pie{margin-top:6px;padding-top:12px;border-top:1px solid rgba(var(--ov),.08);font-size:12px;line-height:1.5;color:var(--text3)}
 .cd-pie b{color:var(--text2)}
-@media(max-width:1180px){.cd-capas,.cd-filas{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:1180px){.cd-capas{grid-template-columns:minmax(0,1fr)}.cd-filas{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.cd-filas{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:700px){.cd-foto{width:72px;height:72px}.cd-foto.libro{width:48px}.cd-li{flex-wrap:wrap}.cd-cuando{flex-basis:100%;padding-left:47px}}
 /* Hábitos de hoy. Caben todos sin desplazar (Adán: "haz más pequeñas las letras para que quepan
    todos los hábitos sin hacer scroll down"): letra chica con el ancla debajo y, si ni así cabe la
