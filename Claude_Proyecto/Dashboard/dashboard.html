@@ -2006,6 +2006,19 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .md-sk-bar i{display:block;height:100%;border-radius:3px}
 .md-sk-bar u{position:absolute;top:-3px;bottom:-3px;width:2px;border-radius:1px;background:rgba(var(--ov),.5);text-decoration:none}
 .md-sk-libros{display:flex;gap:8px;flex-wrap:wrap}
+/* El libro del mes, arriba de Recursos en la ventana de la habilidad */
+.md-sk.lm{padding:12px 13px;border-radius:8px;background:rgba(var(--w-rgb),.07);border:1px solid rgba(var(--w-rgb),.3)}
+.md-sk.lm .md-lbl{color:var(--w)}
+.lm-libro{display:grid;grid-template-columns:46px minmax(0,1fr);gap:11px;align-items:center}
+.lm-libro b{display:block;font-size:14px;line-height:1.25;color:var(--text)}
+.lm-libro span{display:block;margin-top:2px;font-size:12px;line-height:1.4;color:var(--text3)}
+.lm-libro.chico{grid-template-columns:36px minmax(0,1fr)}
+.lm-libro.chico .hf-tomo img{width:36px;height:54px}
+.lm-btns{display:flex;gap:6px;flex-wrap:wrap}
+.md-sk.lm .hf-btn{height:32px;padding:0 12px;font-size:12px;gap:6px}
+.md-sk.lm .hf-btn svg{width:13px;height:13px}
+.lm-sig{display:flex;flex-direction:column;gap:8px;margin-top:6px;padding-top:11px;border-top:1px solid rgba(var(--w-rgb),.25)}
+.md-sk p.lm-hecho{color:var(--g);font-weight:700}
 .md-paso .hf-libro,.md-paso .hf-res{margin-top:16px;max-width:66ch}
 .hab-lbl{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
 .hf-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:10px;font-family:inherit;font-size:12.5px;font-weight:800;
@@ -3191,6 +3204,10 @@ button.ap-c-ir:hover .ap-de,button.ap-c-ir:hover .ap-t,button.ap-c-ir:hover .ap-
 .ap-pie b{color:var(--text2);font-weight:600}
 .ap-pie .ap-seg{flex:0 0 34%;margin:0}
 .ap-pie svg{flex:none;width:13px;height:13px}
+.ap-pie .ap-pie-lib{margin-left:auto;display:inline-flex;align-items:center;gap:6px;min-width:0;text-align:right}
+/* Si no cabe en una línea, la página del libro baja entera a la derecha, sin partir «Paso 1 de 6» */
+.ap-pie:has(.ap-pie-lib){flex-wrap:wrap;row-gap:3px}
+.ap-pie:has(.ap-pie-lib)>span{white-space:nowrap}
 /* La versión corta de un bloque largo: solo sale cuando el bloque completo no cabe (`apAjustar()`). */
 .ap-c-txt .ap-alt{display:none}
 /* El texto que se puede recortar (`.ap-cl`), por líneas y con «…»: tres como mucho; dos los títulos,
@@ -5516,6 +5533,7 @@ function rpPaso(t, it, hecho){
       if(aviso || (t.producto && /\bNO\b/.test(plano))){ clase = 'aviso'; img = `<span class="rp-img ico">${RP_ICO.aviso}</span>`; }
       const txt = plano.replace(/^⚠️?\s*/, ''), g = txt.indexOf(' — ');
       nombre = g > 0 ? `${esc(txt.slice(0, g))}<span class="rp-det"> — ${esc(txt.slice(g + 3))}</span>` : esc(txt);
+      if(it.sec === 'Lectura'){ const lt = lmLecturaTxt(); if(lt) nombre = `${esc(g > 0 ? txt.slice(0, g) : txt)}: ${lt}`; }
     }
   }
   if(!t.producto) img = '';
@@ -7246,6 +7264,142 @@ function apPunto(html, cls){
 // El nombre de una habilidad dicho para quien no conoce la app: «copy» no le dice nada a nadie.
 const SK_LLANO = { copy: 'escritura persuasiva', codigo: 'programación', datos: 'análisis de datos' };
 function skLlano(s){ return !s ? '' : SK_LLANO[s.id] || (/^[A-ZÁÉÍÓÚÑ]{2,}$/.test(s.name) ? s.name : s.name.toLowerCase()); }
+// ── El libro del mes (Adán, 26-oct-2026: "cuando toque alguna habilidad que tenga que ver con un libro, cámbiala
+//    mes a mes, por ejemplo este mes compré Hábitos Atómicos y quiero leerlo todo el mes y ya a final de mes debes
+//    recomendarme otro de acuerdo a la habilidad"). El ejercicio de Coach · Habilidades va paso a paso; el libro va
+//    aparte y dura el mes entero, aunque avances o cambies de paso. Vive en `dash_libromes_v1`: el de ahora
+//    ({id, sk, desde, mes, fin}), los leídos y, si lo cambiaste con ↻, el que sigue (`sig`). Uno que empiezas después
+//    del día 20 cuenta para el mes siguiente: los días que sobran son de ventaja. Al cambiar el mes entra solo el que
+//    sigue y, en la última semana, la tarjeta ya lo dice, para que alcances a comprarlo. El que sigue sale de la ruta
+//    del foco (`aprendeFoco()`) y, si ya no le quedan libros, de las siguientes en el orden de Coach (`habConRuta()`),
+//    sin las que están en pausa. El ritmo sale del bloque de lectura de tu rutina: la subtarea «Lectura» del cierre
+//    del día, con sus días, su hora y sus minutos.
+const LIBROMES_KEY = 'dash_libromes_v1';
+const LM_MES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const LM_DIA = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+function lmYm(d){ return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); }
+function lmIso(d){ return lmYm(d) + '-' + String(d.getDate()).padStart(2, '0'); }
+function lmFecha(s){ const p = String(s).split('-').map(Number); return new Date(p[0], p[1] - 1, p[2] || 1); }
+function lmMesDe(d){ return lmYm(d.getDate() > 20 ? new Date(d.getFullYear(), d.getMonth() + 1, 1) : d); }
+function lmMesTxt(ym){ return LM_MES[+String(ym).slice(5, 7) - 1]; }
+function lmFin(ym){ const p = String(ym).split('-').map(Number); return new Date(p[0], p[1], 0); }
+function lmFinTxt(ym){ const f = lmFin(ym); return f.getDate() + ' de ' + LM_MES[f.getMonth()]; }
+function lmSigMes(ym){ const f = lmFin(ym); return lmYm(new Date(f.getFullYear(), f.getMonth() + 1, 1)); }
+function lmCandidatos(st){
+  const ya = new Set((st.leidos || []).map(x => x.id).concat(st.actual ? [st.actual.id] : []));
+  const foco = aprendeFoco(), out = [];
+  [foco].concat(habConRuta().filter(s => s !== foco && !PRIORIDAD_EXCLUIDAS.includes(s.id))).filter(Boolean).forEach(s =>
+    habLibrosRuta(habPasos(s.id)).forEach(l => { if(!ya.has(l.id) && !out.some(x => x.id === l.id)) out.push({ id: l.id, sk: s.id }); }));
+  return out;
+}
+function lmSiguiente(st){ const c = lmCandidatos(st); return (st.sig && c.find(x => x.id === st.sig)) || c[0] || null; }
+function libroMes(){
+  const st = rawGet(LIBROMES_KEY, null) || {}, hoy = new Date(), ym = lmYm(hoy);
+  st.leidos = st.leidos || [];
+  let cambio = false, nuevoMes = false;
+  if(st.actual && (st.actual.mes < ym || !habLibro(st.actual.id))){
+    if(habLibro(st.actual.id)) st.leidos.push({ id: st.actual.id, sk: st.actual.sk, mes: st.actual.mes, fin: st.actual.fin || null });
+    st.actual = null; nuevoMes = cambio = true;
+  }
+  if(!st.actual){
+    const c = lmSiguiente(st);
+    if(c){ st.actual = { id: c.id, sk: c.sk, desde: nuevoMes ? ym + '-01' : lmIso(hoy), mes: nuevoMes ? ym : lmMesDe(hoy) }; delete st.sig; cambio = true; }
+  }
+  if(cambio) rawSet(LIBROMES_KEY, st);
+  return st;
+}
+// El bloque de lectura de tu rutina: la tarea que trae la subtarea «Lectura» (el cierre del día).
+function lmBloque(){
+  const t = RUTINA_TASKS.find(x => (x.subtareas || []).some(s => s.sec === 'Lectura'));
+  const s = t ? t.subtareas.find(x => x.sec === 'Lectura') : null, m = s ? String(s.txt).match(/(\d+)\s*minutos/) : null;
+  return t ? { dias: t.dias, hora: t.hora, min: m ? +m[1] : 30 } : null;
+}
+// Los días de lectura en palabras: «de lunes a viernes» si van seguidos.
+function lmDiasTxt(dias){
+  const o = dias.map(d => (d + 6) % 7).sort((a, b) => a - b).map(k => (k + 1) % 7);
+  const seguidos = o.every((d, i) => !i || (o[i - 1] + 1) % 7 === d);
+  return seguidos && o.length > 2 ? 'de ' + LM_DIA[o[0]] + ' a ' + LM_DIA[o[o.length - 1]]
+    : o.length > 1 ? 'el ' + o.slice(0, -1).map(d => LM_DIA[d]).join(', ') + ' y ' + LM_DIA[o[o.length - 1]] : 'el ' + LM_DIA[o[0]];
+}
+// Hasta qué página vas un día (`fecha`; hoy si no se da): las páginas del libro repartidas entre los días de lectura,
+// del día en que lo empezaste al último de su mes. Si ese día no toca leer, la del siguiente día de lectura.
+function lmRitmo(st, fecha){
+  const a = st && st.actual, lib = a ? habLibro(a.id) : null;
+  if(!lib) return null;
+  const B = lmBloque(), dias = B ? B.dias : [0, 1, 2, 3, 4, 5, 6];
+  const ini = lmFecha(a.desde), fin = lmFin(a.mes), dia = fecha ? lmFecha(fecha) : new Date(); dia.setHours(0, 0, 0, 0);
+  let total = 0, hasta = 0;
+  for(let x = new Date(ini); x <= fin; x.setDate(x.getDate() + 1)) if(dias.includes(x.getDay())){ total++; if(x <= dia) hasta++; }
+  const pags = lib.pags || 0, lee = dias.includes(dia.getDay()), pag = k => Math.min(pags, Math.round(pags * k / Math.max(total, 1)));
+  const prox = new Date(dia); if(!lee) for(let k = 0; k < 7; k++){ prox.setDate(prox.getDate() + 1); if(dias.includes(prox.getDay())) break; }
+  return { lib, B, pags, lee, total, porDia: total ? Math.ceil(pags / total) : pags, pag: pag(lee ? hasta : hasta + 1),
+    cuando: lee ? 'Hoy' : 'El ' + LM_DIA[prox.getDay()], pct: pags ? Math.round(pag(hasta) / pags * 100) : 0,
+    quedan: Math.round((fin - dia) / 864e5), terminado: !!a.fin };
+}
+// Por qué ese libro sigue: de qué ruta sale y con qué paso va.
+function lmPorque(c){
+  const s = SK.find(x => x.id === c.sk), pasos = habPasos(c.sk);
+  const k = pasos.findIndex(p => (Array.isArray(p.r) ? p.r : []).some(r => r && r.t === 'libro' && r.id === c.id));
+  return `De tu ruta de ${esc(skLlano(s))}${k >= 0 ? `, el libro del paso ${k + 1}: ${esc(pasos[k].n)}` : ''}.`;
+}
+function lmRepinta(){
+  if(typeof renderHeroAprender === 'function') renderHeroAprender();
+  if(typeof renderDia === 'function') renderDia();
+  const ov = document.getElementById('metaDetailOverlay');
+  if(ov && ov.classList.contains('open') && mdEstado.dict === SKILL_DETALLE && mdEstado.id){
+    const info = skillDetalle(mdEstado.id);
+    if(info){ SKILL_DETALLE[mdEstado.id] = info; pintarDetailOverlay(SKILL_DETALLE, HABPASOS_KEY, mdEstado.id, 'toggleSkillPaso', null); }
+  }
+}
+// «Ya lo terminé» lo marca con la fecha (y otra vez, lo desmarca); sigue siendo el de su mes hasta que el mes cambie
+// o empieces el siguiente.
+function lmTerminar(){
+  const st = libroMes(); if(!st.actual) return;
+  if(st.actual.fin) delete st.actual.fin; else st.actual.fin = today();
+  rawSet(LIBROMES_KEY, st); lmRepinta();
+}
+// ↻: otro de los candidatos para el mes que sigue.
+function lmOtro(){
+  const st = libroMes(), c = lmCandidatos(st); if(c.length < 2) return;
+  const k = c.findIndex(x => x.id === (lmSiguiente(st) || {}).id);
+  st.sig = c[(k + 1) % c.length].id; rawSet(LIBROMES_KEY, st); lmRepinta();
+}
+// «Empezarlo ya»: el que sigue pasa a ser el de ahora desde hoy. El de antes, si lo terminaste, va a los leídos; si
+// no, vuelve a la lista para otro mes.
+function lmEmpezar(){
+  const st = libroMes(), c = lmSiguiente(st); if(!c) return;
+  if(st.actual && st.actual.fin) st.leidos.push({ id: st.actual.id, sk: st.actual.sk, mes: st.actual.mes, fin: st.actual.fin });
+  const hoy = new Date(); st.actual = { id: c.id, sk: c.sk, desde: lmIso(hoy), mes: lmMesDe(hoy) }; delete st.sig;
+  rawSet(LIBROMES_KEY, st); lmRepinta();
+}
+// En la ventana de la habilidad, arriba de Recursos: el libro del mes con su ritmo y «Ya lo terminé», y el que sigue
+// con ↻ y «Empezarlo ya».
+function lmLadoHtml(){
+  const st = libroMes(), rt = lmRitmo(st); if(!rt) return '';
+  const a = st.actual, sig = lmSiguiente(st), ls = sig ? habLibro(sig.id) : null, B = rt.B;
+  const ritmo = rt.terminado
+    ? `<p class="lm-hecho">✓ Lo terminaste el ${lmFecha(a.fin).getDate()} de ${LM_MES[lmFecha(a.fin).getMonth()]}.</p>`
+    : `<div class="md-sk-bar"><i style="width:${rt.pct}%;background:var(--w)"></i></div>
+      <p><b>${rt.cuando}, hasta la página ${rt.pag}</b> de ${rt.pags}: unas ${rt.porDia} páginas ${B ? `${B.hora >= '18:00' ? 'cada noche' : 'cada día'} ${lmDiasTxt(B.dias)}, en tus ${B.min} minutos de lectura de las ${B.hora}` : 'al día'}. Lo tienes hasta el ${lmFinTxt(a.mes)}.</p>`;
+  return `<div class="md-sk lm">
+      <span class="md-lbl">Tu libro de ${lmMesTxt(a.mes)}</span>
+      <div class="lm-libro"><button type="button" class="hf-tomo" onclick="pfAbrirId('libros','${a.id}')" title="De qué trata, qué dice y cuándo leerlo"><img src="${rt.lib.portada || ''}" alt="" loading="lazy"></button>
+        <div><b>${esc(rt.lib.t)}</b><span>${esc(rt.lib.a)} · ${rt.pags} páginas</span></div></div>
+      ${ritmo}
+      <div class="lm-btns"><button type="button" class="hf-btn" onclick="lmTerminar()">${rt.terminado ? 'Aún no lo termino' : AP_ICO.hecho + 'Ya lo terminé'}</button></div>
+      ${ls ? `<div class="lm-sig"><span class="md-lbl">El de ${lmMesTxt(lmSigMes(a.mes))}</span>
+        <div class="lm-libro chico"><button type="button" class="hf-tomo" onclick="pfAbrirId('libros','${sig.id}')" title="De qué trata, qué dice y cuándo leerlo"><img src="${ls.portada || ''}" alt="" loading="lazy"></button>
+          <div><b>${esc(ls.t)}</b><span>${lmPorque(sig)}</span></div></div>
+        <div class="lm-btns"><button type="button" class="hf-btn" onclick="lmOtro()" title="Otro libro de tu plan para el mes que sigue">${AP_ICO.volver}Otro</button><button type="button" class="hf-btn" onclick="lmEmpezar()" title="Empezar este desde hoy">Empezarlo ya</button></div></div>` : ''}
+    </div>`;
+}
+// El paso «Lectura» del cierre del día, en la agenda: el libro del mes y hasta qué página, el día que se mira.
+function lmLecturaTxt(){
+  const st = libroMes(), dow = new Date().getDay();
+  const f = diaSemanaSel !== null && diaSemanaSel !== dow ? semanaActual()[diaSemanaSel] : null, rt = lmRitmo(st, f);
+  if(!rt) return '';
+  return `<b>${esc(rt.lib.t)}</b><span class="rp-det"> — ${rt.terminado ? 'ya lo terminaste' : 'hasta la página ' + rt.pag + ' de ' + rt.pags}</span>`;
+}
 function pasoSemanaHtml(){
   if(typeof habFocoActual!=='function') return '';
   const foco=aprendeFoco(); if(!foco) return '';
@@ -7256,13 +7410,20 @@ function pasoSemanaHtml(){
   const lib=r?habLibro(r.id):null;
   const rec=habRecomendada(), propia=!!rec&&rec.id!==foco.id, nom=skLlano(foco);
   const hacer=p.k||String(p.c||'').split(/(?<=[.!?])\s/)[0];
+  // El libro del mes manda en la foto y en la línea de arriba: es el mismo todo el mes, aunque cambie el paso.
+  const lm=libroMes(), rt=lmRitmo(lm), lmSig=rt?lmSiguiente(lm):null, lmLs=lmSig?habLibro(lmSig.id):null;
+  const libro=rt?rt.lib:lib;
+  const lmPie=!rt?'':`<span class="ap-pie-lib">${AP_ICO.libro}<span>${rt.terminado
+    ? `Terminado${lmLs?` · sigue <b>${esc(lmLs.t)}</b>`:''}`
+    : rt.quedan<7&&lmLs ? `En ${lmMesTxt(lmSigMes(lm.actual.mes))}: <b>${esc(lmLs.t)}</b>`
+    : `${rt.cuando}, hasta la pág. <b>${rt.pag}</b>`}</span></span>`;
   return apTarjeta({ c:'var(--w)', mat:'Coach · Habilidades',
     ctl:apCtl('paso','Habilidad',propia?esc(rec.name):''),
-    foto:apFotoLibro(r&&r.id, foco.id), ico:foco.icon, abrir:`aprendeVisto('paso');abrirSkillDetalle('${foco.id}')`,
-    titulo:`Abrir la ruta de ${habAttr(foco.name)}${lib?` · con ${habAttr(lib.t)}`:''}`,
-    txt: apCuerpo({ sub: `Ejercicio de ${esc(nom)}${propia?' · elegido por ti':''}${lib ? ` · con el libro <i>${esc(lib.t)}</i>` : ' · un paso a la vez'}`,
+    foto:apFotoLibro(libro?libro.id:(r&&r.id), foco.id), ico:foco.icon, abrir:`aprendeVisto('paso');abrirSkillDetalle('${foco.id}')`,
+    titulo:`Abrir la ruta de ${habAttr(foco.name)}${rt?` · tu libro del mes: ${habAttr(rt.lib.t)}`:lib?` · con ${habAttr(lib.t)}`:''}`,
+    txt: apCuerpo({ sub: `Ejercicio de ${esc(nom)}${propia?' · elegido por ti':''}${rt ? ` · libro del mes: <i>${esc(rt.lib.t)}</i>` : lib ? ` · con el libro <i>${esc(lib.t)}</i>` : ' · un paso a la vez'}`,
       big: p.k ? esc(p.n) : hacer, bigTxt: !p.k, det: p.k ? hacer : '',
-      pie: `${apTramos(pasos.length, j=>j<i, i)}<span>Paso <b>${i+1} de ${pasos.length}</b></span>` }) });
+      pie: `${apTramos(pasos.length, j=>j<i, i)}<span>Paso <b>${i+1} de ${pasos.length}</b></span>${lmPie}` }) });
 }
 // La idea de cada paso de las guías que tocan primero (HB_PLAN: networking, persuadir y dinero), en una frase
 // revisada: es lo que enseña la tarjeta de Habilidades para la vida en Mi Día. Un paso por renglón, en el orden de
@@ -8618,12 +8779,14 @@ function comoDecideHtml(){
   if(foco){
     const pasos = habPasos(foco.id), st = habFocoLoad(); let i = st.paso[foco.id] || 0; if(i < 0 || i >= pasos.length) i = 0;
     const libP = pasos[i] && (Array.isArray(pasos[i].r) ? pasos[i].r : []).find(x => x && x.t === 'libro');
-    filas.push({ k: 'Coach · Habilidades · el ejercicio de hoy', c: 'var(--w)', foto: apFotoLibro(libP && libP.id, foco.id), hoy: `${esc(foco.name)} · ${esc(pasos[i] ? pasos[i].n : '')} <span>paso ${i + 1} de ${pasos.length}</span>`,
+    const lmS = libroMes(), lmR = lmRitmo(lmS);
+    filas.push({ k: 'Coach · Habilidades · el ejercicio de hoy', c: 'var(--w)', foto: apFotoLibro(lmR ? lmR.lib.id : (libP && libP.id), foco.id), hoy: `${esc(foco.name)} · ${esc(pasos[i] ? pasos[i].n : '')} <span>paso ${i + 1} de ${pasos.length}</span>`,
       regla: (rec && rec.id !== foco.id ? [['La elegiste tú', `Con «Siguiente». La de Coach es <b>${esc(rec.name)}</b>: «↺» en la tarjeta vuelve a ella.`]] : [])
         .concat(t && (SK.find(s => s.id === t.id) || {}).porExamen
           ? [['La de Coach', `El foco del plan, de ${cdMes(t.desde)} a ${cdMes(t.hasta)}, es <b>${esc(skN(t.id))}</b>, que va con el examen: por eso va la que sigue${rec ? `, <b>${esc(rec.name)}</b>` : ''}.`]]
           : [['La de Coach', `El foco del plan${t ? `, de ${cdMes(t.desde)} a ${cdMes(t.hasta)}` : ''}${rec ? `: <b>${esc(rec.name)}</b>` : ''}.`]])
-        .concat([['Paso a paso', 'Su ruta, al ritmo que la avanzas en Coach · Habilidades.']]) });
+        .concat([['Paso a paso', 'Su ruta, al ritmo que la avanzas en Coach · Habilidades.'],
+          ['El libro del mes', `Uno al mes, aparte de los pasos${lmR ? `: <b>${esc(lmR.lib.t)}</b>, hasta el ${lmFinTxt(lmS.actual.mes)}` : ''}. El que sigue sale de tu ruta de ${esc(skLlano(foco))} y, si ya no le quedan, de la siguiente en el orden de Coach; en la última semana te lo dice, para que alcances a comprarlo.`]]) });
   }
   const ec = hbEnCurso();
   if(ec.actual){
@@ -8683,6 +8846,8 @@ function cdSigue(k){
       iqLectura().filter(x => !x.hecho).slice(0, 3).forEach(x => out.push({ t: 'Leer el capítulo ' + x.c + ': ' + esc(IQ_CAP_LLANO[x.c] || x.nom),
         c: (x.est === 'tarde' ? 'era para el ' : 'antes del ') + x.fTxt }));
     } else if(/^Coach · Habilidades/.test(k)){
+      const lmS = libroMes(), lmN = lmS.actual ? lmSiguiente(lmS) : null, lmL = lmN ? habLibro(lmN.id) : null;
+      if(lmL) out.push({ t: 'Libro de ' + lmMesTxt(lmSigMes(lmS.actual.mes)) + ': ' + esc(lmL.t), c: 'desde el 1 de ' + lmMesTxt(lmSigMes(lmS.actual.mes)) });
       const foco = aprendeFoco(); if(foco){ const pasos = habPasos(foco.id), st = habFocoLoad(); let i = st.paso[foco.id] || 0; if(i < 0 || i >= pasos.length) i = 0;
         pasos.slice(i + 1, i + 3).forEach((p, j) => out.push({ t: esc(p.n), c: 'paso ' + (i + 2 + j) + ' de ' + pasos.length }));
         const R = habConRuta(), nx = R[R.indexOf(foco) + 1] || null, rec = habRecomendada();
@@ -11794,7 +11959,8 @@ function skillDetalle(id){
     : (s.mant ? (s.mant.h ? `<b>${String(s.mant.h).replace('.', ',')} h</b> a la semana: ` : '') + s.mant.txt : '');
   const bloque = (lbl, txt, cls) => txt ? `<div class="md-sk${cls ? ' ' + cls : ''}"><span class="md-lbl">${lbl}</span><p>${txt}</p></div>` : '';
   const libros = habLibrosRuta(pasos);
-  const lado = `<div class="md-sk"><span class="md-lbl">Tu nivel</span>
+  const lmAqui = (aprendeFoco() || {}).id === id || (libroMes().actual || {}).sk === id;
+  const lado = (lmAqui ? lmLadoHtml() : '') + `<div class="md-sk"><span class="md-lbl">Tu nivel</span>
       <div class="md-sk-nv"><b>${s.val}</b><span>/100 · ${lv.l.toLowerCase()} · pesa ×${s.w} · rinde ${skRetorno(s)}</span></div>
       <div class="md-sk-bar"><i style="width:${s.val}%;background:${lv.c}"></i><u style="left:${meta}%"></u></div>
       <p>Llevarla de <b>${s.val} a ${meta}</b> sube tu nivel general a <b>${calcOVRcon(s.id, meta)}</b>. Sube con evidencia, no con sensación.</p></div>`

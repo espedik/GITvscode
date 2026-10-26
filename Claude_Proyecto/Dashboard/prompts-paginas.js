@@ -825,6 +825,7 @@ Esta pantalla responde una sola pregunta: **¿en qué va la siguiente hora de ap
 
 ## Al modificar esta pantalla
 - **Los datos viven en el maestro**: niveles, pesos, porqué, prueba, mantenimiento y dónde se practica, en SK; el plan de foco, en HAB_FOCO; las rutas, en APRENDIZAJE; los libros, en la biblioteca. Coach y el Dashboard los pintan de ahí; un dato copiado en el HTML es un error.
+- **Un libro al mes, aparte de los pasos**: el ejercicio avanza paso a paso; el libro dura el mes entero y se cierra antes de empezar otro. El siguiente sale de la ruta del foco, en el orden de sus pasos, y se anuncia en la última semana para que dé tiempo de comprarlo; el ritmo de páginas sale del bloque de lectura de la rutina, no de una cifra escrita a mano.
 - **El foco lo pone el plan**: cambiar de foco es cambiar HAB_FOCO junto con la fase de Coach, nunca fijar un orden en la pantalla.
 - **Un nivel cambia solo con evidencia**: se reescribe su descripción con el hecho que lo justifica. Un peso cambia solo si cambia el plan, y entonces se revisan los doce juntos.
 - **Cada paso nuevo de una ruta** trae nombre, por qué, qué hacer —objetivo, criterio y entregable— y con qué: un recurso verificado, con su nota; un libro entra por su ficha de la biblioteca.

@@ -68,7 +68,7 @@ Todas comparten origen porque se abren con `file://`.
 forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
-y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta),
+y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta), `dash_libromes_v1` (el libro del mes: el de ahora, los leídos y el que sigue si lo cambiaste),
 `habilidades_checklist_v1`, `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-inversion-v1` (pestaña, perfil elegido y monto de *Qué
 invertir hoy*).
 
@@ -260,7 +260,7 @@ traigan su frase de qué trata.
 | **Qué escuchar mientras manejas** | *Audiolibro y podcast · de Thomas Stanley* | El libro, con su título en español (busca en Spotify) | De qué trata | *El libro, a las 07:40; hoy también, un video de IA* | La foto y *Qué escuchar*: su panel (`abrirDidi()`); ↻, el siguiente libro |
 | **Qué invertir hoy** | *Tu dinero hoy, según tu plan para irte a Alemania* | La acción en su color: *Paga … a tu tarjeta BBVA* (rojo), *Hoy no toca pagar la tarjeta* o *Hoy sí inviertes en GBM* (verde) | De qué se trata el plan y tus cifras: *Primero liquidas la tarjeta y después inviertes: debes $8,900 y queda en cero el 15 nov* | *Mientras tengas deuda, no compres inversiones* o el siguiente pago | El panel *Qué invertir hoy* (`abrirGBM()`). Sale de `pasoInversionHoy()` (`corto`, `det`, `pie`), la regla del panel; todo por `money()` |
 | **Examen ISTQB CT-GenAI** | *La pregunta del día · lo presentas en ene 2027 · vale 2 puntos* | El tema de la pregunta, corto: *Cómo pedirle cosas a la IA* | De qué trata el capítulo (`IQ_CAP_TRATA`); contestada, el resultado va arriba (*✓ correcta*) | Tu marcador de la semana | Su ventana, con la pregunta completa (`abrirIstqb()`) |
-| **Coach · Habilidades** —la habilidad del plan (`aprendeFoco()`)— | *Ejercicio de mentalidad · con el libro Atomic Habits* | El nombre del paso: *Lo alto no se mantiene solo* | Su instrucción corta (`corto`) | Los tramos y *Paso 1 de 6*; arriba, «‹» / «Siguiente ›» | Su ruta (`abrirSkillDetalle()`) |
+| **Coach · Habilidades** —la habilidad del plan (`aprendeFoco()`)— | *Ejercicio de mentalidad · libro del mes: Atomic Habits*; la foto es la portada del libro del mes | El nombre del paso: *Lo alto no se mantiene solo* | Su instrucción corta (`corto`) | Los tramos y *Paso 1 de 6* y, a la derecha, la página del libro: *Hoy, hasta la pág. 12* (*El lunes…* si hoy no lees); en la última semana del mes, *En diciembre: Why We Sleep*, y *Terminado · sigue…* si ya lo acabaste; arriba, «‹» / «Siguiente ›» | Su ruta (`abrirSkillDetalle()`) |
 | **Habilidades Base** | *Habilidades para la vida · guía paso a paso* | El nombre de la guía | La idea del paso que toca | Los tramos y *Paso 1 de 20*; arriba, «‹» / «Siguiente ›» | La guía completa (`abrirHabilidadDetalle()`) |
 
 **Arriba**, *🎓 Hoy aprendes*, «Cómo lo decide Coach» (`abrirComoDecide()`), la fecha y *N de 6 hechas*, con
@@ -315,7 +315,7 @@ sigue: nada sale al azar.
 | **Audiolibro y podcast** | El foco de Hoy aprendes (`aprendeFoco()`: el del plan o el que eligió con «Siguiente» en el paso de la semana), luego el siguiente foco del plan y las demás por retorno; lo que está en pausa no entra. Si el foco tiene menos de dos opciones, se completa con lo que sigue. El audiolibro es de la semana: se decide el primer día que lo ves y se queda hasta el lunes aunque el orden cambie a media semana —el del paso de la semana si su libro está en el catálogo o, si no, el primero del orden que todavía no te haya tocado—; ↻ pasa al siguiente y también vale la semana. El podcast, el siguiente cada día | `didiHoy()`, `didiGruposOrden()`, `didiLibroSemana()` |
 | **Tu dinero hoy** | No es un orden de estudio: es el paso del Plan Maestro para tu dinero de hoy, la misma regla que su panel (`pasoInversionHoy()`): la BBVA quincena a quincena hasta dejarla sin saldo —hoy no compras nada más— y después todo a GBM, con los primeros pesos al fondo de emergencia. El BYD se paga con su mensualidad. Lo que abonas hoy y los abonos que siguen salen de la misma ruta que el Plan Maestro (`CIFRAS.planBbva`) | `pasoInversionHoy()`, `invertirHoyHtml()` |
 | **Examen de certificación** (ISTQB) | El capítulo con más puntos en juego —lo que vale en el examen (`EXAMEN_GENAI.blueprint`: el 2 vale 16 de 46) por lo que falta de acierto ahí; con menos de tres respuestas cuenta la mitad— y, dentro, las de 2 puntos. Las contestadas no vuelven | `aprendeOrdenIstqb()`, `istqbEnJuego()` |
-| **Ejercicio de habilidad** (el paso de la semana) | El foco del plan para hoy (`habRecomendada()`), paso a paso | `aprendeFoco()` |
+| **Ejercicio de habilidad** (el paso de la semana) | El foco del plan para hoy (`habRecomendada()`), paso a paso. **El libro va aparte, uno por mes** (abajo, *El libro del mes*) | `aprendeFoco()`, `libroMes()` |
 | **Habilidades para la vida** (Habilidades Base) | `HB_PLAN`: lo que pide la Fase 1 (Networking por las cartas de recomendación, Persuadir por la palanca de ingreso, Dinero), lo de antes de irte, lo de Alemania y lo demás; vino, coctelería y citas esperan mientras dure la meta de alcohol. El grupo se mueve con la fase (`hbRango()`) y, a igual grupo, va primero la ya empezada | `hbEnCurso()` |
 
 - **Sin repetir**: lo que salió vive en `dash-aprende-v1` → `salio`. Las palabras no vuelven hasta recorrer
@@ -325,6 +325,22 @@ sigue: nada sale al azar.
   queda con su ✓. Con otra fecha se empieza en limpio.
 - **Lo que sigue**: *Audiolibro y podcast* enseña, donde cabe, los audiolibros de las próximas semanas
   (`didiLibrosLuego()`) y el alemán, en su ventana, el tema que sigue mañana (`alemanTemaLuego()`), sin apuntarlo como salido.
+- **El libro del mes** (`libroMes()`, en `dash_libromes_v1`; Adán, 26-oct-2026: *"cuando toque alguna habilidad que tenga que ver con un libro, cámbiala mes a mes, por ejemplo este mes compré Hábitos Atómicos y quiero leerlo todo el mes y ya a final de mes debes recomendarme otro de acuerdo a la habilidad"*): el
+  ejercicio de Coach · Habilidades va paso a paso, pero el libro dura el mes entero, aunque avances o cambies de paso.
+  Uno que empiezas después del día 20 cuenta para el mes siguiente —los días que sobran son de ventaja: *Atomic
+  Habits*, empezado el 26 de octubre, es el de noviembre—. **El que sigue** (`lmSiguiente()`) sale de la ruta del foco
+  (`aprendeFoco()`) en el orden de sus pasos y, si ya no le quedan libros sin leer, de las siguientes en el orden de
+  Coach (`habConRuta()`), sin las que están en pausa; ↻ *Otro* pasa al siguiente candidato (`lmOtro()`). En la última
+  semana la tarjeta ya lo dice, para que alcances a comprarlo; el día 1 entra solo y el de antes pasa a los leídos.
+  **El ritmo** (`lmRitmo()`) reparte las páginas de la biblioteca (`pags`) entre los días de lectura de su mes, que
+  salen del bloque de lectura de la rutina (`lmBloque()`: la subtarea *Lectura* del cierre del día, de lunes a viernes
+  a las 21:45, 30 minutos): *Atomic Habits*, 323 páginas en 26 noches, unas 13 por noche. En la ventana de la
+  habilidad, arriba de Recursos (`lmLadoHtml()`): el libro con su barra, *hasta qué página vas hoy* y *Ya lo terminé*
+  (`lmTerminar()`: lo marca y sigue siendo el de su mes), y el del mes que sigue con su porqué —de qué ruta y con qué
+  paso va—, *Otro* y *Empezarlo ya* (`lmEmpezar()`: el que sigue arranca hoy; el de antes, si no lo terminaste,
+  vuelve a la lista). En la agenda, el paso *Lectura* dice el libro y la página del día que miras (`lmLecturaTxt()`).
+  Medido con la fecha simulada: el 31 de octubre (sábado) dice *El lunes, hasta la pág. 75*; el 25 de noviembre, *En
+  diciembre: Why We Sleep*; el 2 de diciembre, *Why We Sleep* desde el 1, hasta la página 31 de 360.
 - **El audiolibro, por semana** (`didiLibroSemana()`): se fija en `dash-aprende-v1` → `semana` con el número de
   semana, y lo que ya salió vive en `salio`. Medido con la fecha simulada del 10 de octubre al 2 de noviembre
   de 2026: el libro no cambia en la semana; ↻ un martes se queda hasta el domingo aunque el miércoles cambies
@@ -340,7 +356,7 @@ por renglón, su nombre corto a la izquierda en el color de la tarjeta —*La le
 *1 · La BBVA*, *2 · GBM*…— y una frase a la derecha (`.cd-rs`; en el teléfono, uno debajo del otro). Lo que sigue (`cdSigue`) sale de las mismas funciones que
 eligen: las lecciones que quedan del Kapitel y los temas de las palabras con los días que les quedan; los audiolibros de
 las semanas que vienen; los próximos abonos a la BBVA, la fecha en que el plan termina de pagarla y lo que va a GBM después; los
-capítulos del CT-GenAI por leer con su fecha; los pasos que siguen de la ruta y, si la elegiste tú, cuál es la de Coach;
+capítulos del CT-GenAI por leer con su fecha; el libro del mes que sigue, los pasos que siguen de la ruta y, si la elegiste tú, cuál es la de Coach;
 los pasos que siguen de la guía y las guías de después. Debajo de la del examen, la tabla de capítulos por puntos en
 juego. Todo **en la misma rejilla que Hoy aprendes en Mi Día** (Adán, 25-oct-2026: *"ordénalos de la
 misma forma que están originalmente en Mi Día, para no revolverlos"*): 3×2 —Alemán de hoy, Qué escuchar mientras
@@ -1644,7 +1660,8 @@ qué este paso** y **Con qué** (el libro con su portada y *Qué es*, o el recur
 `skillDetalle()` arma en el formato de las fichas (`cajas` y `boton`). En Recursos (`lado`): **tu nivel** con
 la marca del siguiente escalón y cuánto sube el general, **esta semana**, **se demuestra con** (`prueba`),
 **por qué esta habilidad** (`porQue`), **dónde estás** (`desc`), **dónde se practica** y los libros de su
-ruta. La frase de la cabecera dice su papel en el plan: el foco de hoy con su entregable y sus días, cuándo
+ruta. Arriba de todo, en la del foco y en la de la habilidad del libro, **tu libro del mes** (`lmLadoHtml()`, ver
+*Lo decide Coach*). La frase de la cabecera dice su papel en el plan: el foco de hoy con su entregable y sus días, cuándo
 llega su foco, en mantenimiento o en pausa.
 
 **Cada paso se marca como dominado**, igual que una ficha (`toggleSkillPaso()`, en `dash_habpasos_v1`). La

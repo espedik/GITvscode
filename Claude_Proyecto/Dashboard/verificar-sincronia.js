@@ -2523,6 +2523,12 @@ function promptsDeLoTocado() {
   audios.forEach(function (g) { (g.items || []).forEach(function (it) { if (!it.trata) sinTrata.push(it.n); }); });
   if (!audios.length) malos.push('no pude leer DIDI_AUDIO');
   if (sinTrata.length) malos.push(sinTrata.length + ' audios sin «de qué trata» (trata, en DIDI_AUDIO): ' + sinTrata.slice(0, 4).join('; '));
+  // El libro del mes saca su ritmo del bloque de lectura de la rutina (`lmBloque()`: la subtarea «Lectura» del cierre
+  // del día, con sus minutos). Si desaparece o pierde los minutos, Coach · Habilidades ya no sabe hasta qué página vas.
+  const rutinaLect = (global.window.CIFRAS && global.window.CIFRAS.rutina) ? global.window.CIFRAS.rutina('') : [];
+  const lect = rutinaLect.map(function (x) { return (x.subtareas || []).filter(function (s) { return s.sec === 'Lectura'; })[0]; }).filter(Boolean)[0];
+  if (!lect) malos.push('la rutina ya no tiene la subtarea «Lectura» de la que el libro del mes saca su ritmo (lmBloque)');
+  else if (!/\d+\s*minutos/.test(lect.txt)) malos.push('la subtarea «Lectura» de la rutina no dice sus minutos: el libro del mes los lee de ahí');
   const HI = evaluar(literal(dash, 'const HB_IDEA =', '{')) || {}, HD = evaluar(literal(dash, 'const HABILIDAD_DETALLE=', '{')) || {};
   Object.keys(HI).forEach(function (id) {
     const n = ((HD[id] || {}).pasos || []).length;
