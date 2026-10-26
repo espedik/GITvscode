@@ -334,7 +334,9 @@ sigue: nada sale al azar.
 orden —tus metas con fecha (`CD_METAS`: ids de tareas de la Fase 1, con su mes y tachadas si ya están en
 `coach_checks_v1`), el plan (la fase y el foco con su entregable) y las cinco habilidades con más
 retorno, sin la IA—; abajo, tarjeta por tarjeta con su foto, en tres partes con su etiqueta: **hoy**, **lo que sigue** y **cómo
-se decide** (Adán, 26-oct-2026: *"lo que me interesa es saber qué seguirá después y además cómo decides qué va"*). Lo que sigue (`cdSigue`) sale de las mismas funciones que
+se decide** (Adán, 26-oct-2026: *"lo que me interesa es saber qué seguirá después y además cómo decides qué va"*). **Cómo se decide** va como lista (*"dale mucho mejor formato, se ve muy mal"*): una regla
+por renglón, su nombre corto a la izquierda en el color de la tarjeta —*La lección*, *Las palabras*, *El repaso*,
+*1 · La BBVA*, *2 · GBM*…— y una frase a la derecha (`.cd-rs`; en el teléfono, uno debajo del otro). Lo que sigue (`cdSigue`) sale de las mismas funciones que
 eligen: las lecciones que quedan del Kapitel y los temas de las palabras con los días que les quedan; los audiolibros de
 las semanas que vienen; los próximos abonos a la BBVA, la fecha en que el plan termina de pagarla y lo que va a GBM después; los
 capítulos del CT-GenAI por leer con su fecha; los pasos que siguen de la ruta y, si la elegiste tú, cuál es la de Coach;

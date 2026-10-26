@@ -3673,7 +3673,15 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 .cd-fila-c{min-width:0}
 .cd-hoy{font-size:14.5px;font-weight:700;line-height:1.35;color:var(--text)}
 .cd-hoy span{font-size:12px;font-weight:500;color:var(--text3);margin-left:4px}
-.cd-regla{margin-top:3px;font-size:12.5px;line-height:1.55;color:var(--text2)}
+.cd-regla{margin-top:3px;font-size:12.5px;line-height:1.5;color:var(--text2)}
+/* «Cómo se decide» como lista (Adán, 26-oct-2026: "dale mucho mejor formato, se ve muy mal"): cada regla en su
+   renglón, el nombre corto a la izquierda en el color de la tarjeta y una frase a la derecha. */
+.cd-rs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.cd-rs li{display:grid;grid-template-columns:104px minmax(0,1fr);gap:12px;padding:6px 0;border-top:1px solid rgba(var(--ov),.07)}
+.cd-rs li:first-child{border-top:0;padding-top:2px}
+.cd-rs li>b{font-size:11.5px;font-weight:700;line-height:1.5;color:var(--fc)}
+.cd-rs li>span{min-width:0}
+@media(max-width:520px){.cd-rs li{grid-template-columns:minmax(0,1fr);gap:1px}}
 .cd-regla b{color:var(--text);font-weight:650}
 .cd-caps{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 /* Hoy, lo que sigue y cómo se decide: tres partes con su etiqueta. Lo que sigue va numerado, con su cuándo a la derecha. */
@@ -8522,28 +8530,38 @@ function comoDecideHtml(){
     const salio = new Set((((rawGet(APRENDE_KEY, {}) || {}).salio || {}).de) || []);
     const delNivel = alemanPalabras().filter(x => x.niv === etapa.nivel), van = delNivel.filter(x => salio.has(x.de)).length;
     const temas = V ? AL_COACH_TEMAS.slice(0, 7).map(c => (V.cats[c] || {}).label || c).join(', ').toLowerCase() : '';
-    const rl = tl ? (tl.elegida
-        ? `La lección la elegiste tú; la del plan es <b>${esc(tl.rec.l.num)} · ${esc(tl.rec.l.de)}</b> y «↺», en su ventana, vuelve a ella. `
-        : `La lección, la del <b>${esc(kc ? kc.label : 'Kapitel')}</b> que ves en clase en ${esc(CIFRAS.texto('{{escuelaAleman}}'))}: la que dejaste a medias o, si no, la siguiente sin terminar, en el orden en que conviene estudiarlo; con todo hecho, el minitest. «Siguiente», en su ventana, recorre el Kapitel, luego el A2 y el A1. `) : '';
-    const rp = vh.length ? `El vocabulario: <b>${AL_VOC_DIA} palabras al día</b>, primero el <b>${etapa.nivel}</b>${etapa.nivel === 'A2' ? `, el certificado que pide Esslingen, hasta la Fase 2 (${cdFecha(etapa.hasta)})` : ', el de la maestría y el trabajo'}. Dentro, lo que vas a necesitar primero al llegar —${esc(temas)}—, luego la casa, la escuela y el trabajo, y lo demás al final. <b>Cada día, un solo tema</b>: el primero de ese orden al que le quedan palabras sin salir; si las del nivel no llegan a diez, se completan con las de otros niveles del mismo tema (van <b>${van} de ${delNivel.length}</b> del ${etapa.nivel}). Y el repaso espaciado: cada una vuelve al día siguiente y, si te la sabes, a los 3, 7, 14 y 30 días; hoy tocan <b>${rh.length}</b>.` : '';
+    const rl = !tl ? [] : tl.elegida
+        ? [['La lección', `La elegiste tú. La del plan es <b>${esc(alNumTxt(tl.rec.l.num))} · ${esc(tl.rec.l.de)}</b>: «↺», en su ventana, vuelve a ella.`]]
+        : [['La lección', `La del <b>${esc(kc ? kc.label : 'Kapitel')}</b> que ves en clase en ${esc(CIFRAS.texto('{{escuelaAleman}}'))}: la que dejaste a medias o la siguiente sin terminar. Con todo hecho, el minitest.`],
+           ['«Siguiente»', 'En su ventana recorre el Kapitel, luego el A2 y el A1.']];
+    const rp = !vh.length ? [] : [
+      ['Las palabras', `<b>${AL_VOC_DIA} al día, de un solo tema</b>: el primero del orden al que le quedan palabras sin salir.`],
+      ['El nivel', `Primero el <b>${etapa.nivel}</b>${etapa.nivel === 'A2' ? `, el que pide Esslingen, hasta la Fase 2 (${cdFecha(etapa.hasta)})` : ', el de la maestría y el trabajo'}: van <b>${van} de ${delNivel.length}</b>.`],
+      ['Los temas', `Lo que necesitas al llegar —${esc(temas)}—; luego la casa, la escuela y el trabajo.`],
+      ['El repaso', `Cada palabra vuelve al día siguiente y, si te la sabes, a los 3, 7, 14 y 30 días. Hoy tocan <b>${rh.length}</b>.`]];
     filas.push({ k: 'Alemán de hoy', c: 'var(--g)', foto: tl ? apFotoLeccion(tl.l) : apFotoAleman(vh[0]),
       hoy: `${tl ? `${esc(alNumTxt(tl.l.num))} · ${esc(tl.l.de)}` : ''}${tl && vh.length ? ' · ' : ''}${vh.length ? `${vh.length} palabras: ${esc(alemanArtTxt(vh[0]))}${esc(vh[0].de)}…` : ''} <span>${vh.length ? `${esc((V.cats[vh[0].cat] || {}).label || '')} · ${esc(vh[0].niv || '')}` : ''}</span>`,
-      regla: rl + rp });
+      regla: rl.concat(rp) });
   }
   const d = didiHoy();
   if(d && d.libro){
     const skDe = it => SK.find(s => s.id === (it && it.g && it.g.sk)) || {}, delPaso = didiLibroDelPaso();
     const delFoco = it => !!foco && it.g && it.g.sk === foco.id, nombre = it => `<b>${esc(skDe(it).name || '')}</b>`;
-    const rLibro = delPaso && d.libro.it.lib === delPaso ? 'El audiolibro es el libro del paso de la semana y se queda hasta el lunes.'
-      : delFoco(d.libro) ? 'El audiolibro, el siguiente del foco que no hayas escuchado: se decide el lunes y se queda toda la semana.'
-      : `${foco ? esc(foco.name) : 'El foco'} no tiene audiolibros en el catálogo: va el de ${nombre(d.libro)}, lo primero del orden de Coach que todavía no te ha tocado. Uno por semana: se decide el lunes y no cambia hasta el siguiente.`;
-    const rPod = !d.pod ? '' : (delFoco(d.pod) ? 'El podcast, el siguiente del foco cada día' : `El podcast, de ${nombre(d.pod)}`) + ' (los de una hora o más, el fin de semana).';
+    const rLibro = delPaso && d.libro.it.lib === delPaso ? 'El libro del paso de la semana de tu ruta.'
+      : delFoco(d.libro) ? 'El siguiente del foco que no hayas escuchado.'
+      : `${foco ? esc(foco.name) : 'El foco'} no tiene audiolibros: va el de ${nombre(d.libro)}, lo primero del orden que no te ha tocado.`;
+    const rPod = !d.pod ? '' : (delFoco(d.pod) ? 'El siguiente del foco, cada día.' : `De ${nombre(d.pod)}, cada día.`) + ' Los de una hora o más, el fin de semana.';
     filas.push({ k: 'Qué escuchar mientras manejas · audiolibro y podcast', c: 'var(--o)', foto: apFotoLibro(d.libro.it.lib, d.libro.g.sk), hoy: `${esc(d.libro.it.n)}${d.pod ? ` <span>· ${esc(d.pod.it.n)}</span>` : ''}`,
-      regla: `Primero lo del foco${foco ? ` (<b>${esc(foco.name)}</b>)` : ''}, luego el siguiente foco del plan y las habilidades con más retorno; lo que Coach tiene en pausa no entra. ${rLibro} ${rPod}` });
+      regla: [['El orden', `Primero lo del foco${foco ? ` (<b>${esc(foco.name)}</b>)` : ''}, luego el siguiente foco del plan y las de más retorno. Lo que está en pausa no entra.`],
+        ['El audiolibro', rLibro], ['Uno por semana', 'Se decide el lunes y no cambia hasta el siguiente.']].concat(rPod ? [['El podcast', rPod]] : []) });
   }
   const pi = pasoInversionHoy();
   filas.push({ k: 'Qué invertir hoy · tu dinero hoy', c: 'var(--cy)', foto: apFoto(pi.foto), hoy: pi.titulo,
-    regla: 'No lo decide el azar ni el mercado: es el orden de tu Plan Maestro, con tus saldos de Finanzas. Primero la tarjeta BBVA, quincena a quincena y sin intereses, hasta dejarla en cero; después, todo a GBM para Alemania, y los primeros pesos completan el fondo de emergencia. El auto no se adelanta: se paga con su mensualidad. Qué comprar en GBM lo dice tu perfil, en el panel.' });
+    regla: [['1 · La BBVA', 'Quincena a quincena y sin intereses, hasta dejarla en cero.'],
+      ['2 · GBM', 'Después, todo para Alemania; los primeros pesos completan el fondo de emergencia.'],
+      ['El auto', 'No se adelanta: se paga con su mensualidad.'],
+      ['Qué comprar', 'Lo dice tu perfil, en el panel de Qué invertir hoy.'],
+      ['De dónde sale', 'Del orden de tu Plan Maestro con tus saldos de Finanzas; nunca del azar ni del mercado.']] });
   const q = istqbPreguntaHoy();
   if(q){
     const pts = istqbPuntosCap(), ac = istqbAciertoCap(), X = window.EXAMEN_GENAI || {}, ex = cdTarea('a1-7');
@@ -8551,22 +8569,32 @@ function comoDecideHtml(){
     const tabla = caps.map(c => { const a = ac[c];
       return `<span class="cd-cap${c === +q.cap ? ' on' : ''}"><b>Cap. ${c}</b> ${pts[c]} pts · ${a && a.n ? `${a.ok} de ${a.n}` : 'sin respuestas'} · ${istqbEnJuego(c, pts, ac).toFixed(1)} en juego</span>`; }).join('');
     filas.push({ k: 'Examen ISTQB CT-GenAI · la pregunta del día', c: 'var(--p)', foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), hoy: `Capítulo ${esc(q.cap)}: ${esc((X.capitulos || {})[q.cap] || '')} <span>${IQ_K_LLANO[q.k] || esc(q.k || '')} · ${q.pts > 1 ? q.pts + ' puntos' : '1 punto'} · objetivo ${esc(q.lo || '')}</span>`,
-      regla: `El examen va en ${ex && ex.s.mes ? cdMes(ex.s.mes) : 'la Fase 1'}${X.meta ? ` (${X.meta.preguntas} preguntas; el corte es ${X.meta.corte} de ${X.meta.puntos})` : ''}. Primero el capítulo con más puntos en juego —lo que vale en el examen por lo que te falta de acierto ahí; con menos de tres respuestas cuenta la mitad— y, dentro, las de 2 puntos. Las que contestas no vuelven.`,
+      regla: [['El examen', `${ex && ex.s.mes ? cdMes(ex.s.mes) : 'En la Fase 1'}${X.meta ? ` · ${X.meta.preguntas} preguntas · el corte es <b>${X.meta.corte} de ${X.meta.puntos}</b>` : ''}.`],
+        ['La pregunta', 'Del capítulo con más puntos en juego: lo que vale en el examen por lo que te falta de acierto ahí (con menos de tres respuestas, la mitad).'],
+        ['Dentro', 'Las de 2 puntos antes que las de 1.'],
+        ['Lo contestado', 'No vuelve; lo que no contestas regresa a la semana.'],
+        ['La lectura', 'Un capítulo tras otro, en el orden del plan y con su fecha.']],
       extra: `<div class="cd-caps">${tabla}</div>` });
   }
   if(foco){
     const pasos = habPasos(foco.id), st = habFocoLoad(); let i = st.paso[foco.id] || 0; if(i < 0 || i >= pasos.length) i = 0;
     const libP = pasos[i] && (Array.isArray(pasos[i].r) ? pasos[i].r : []).find(x => x && x.t === 'libro');
     filas.push({ k: 'Coach · Habilidades · el ejercicio de hoy', c: 'var(--w)', foto: apFotoLibro(libP && libP.id, foco.id), hoy: `${esc(foco.name)} · ${esc(pasos[i] ? pasos[i].n : '')} <span>paso ${i + 1} de ${pasos.length}</span>`,
-      regla: rec && rec.id !== foco.id ? `Lo elegiste tú con «Siguiente». El de Coach es <b>${esc(rec.name)}</b>: «↺» en la tarjeta vuelve a él.`
-        : `El foco del plan para hoy${t ? `, de ${cdMes(t.desde)} a ${cdMes(t.hasta)}` : ''}: su ruta, paso a paso, al ritmo que la avanzas en En qué invertir tu tiempo. ${t ? esc(t.cambio) : ''}` });
+      regla: (rec && rec.id !== foco.id ? [['La elegiste tú', `Con «Siguiente». La de Coach es <b>${esc(rec.name)}</b>: «↺» en la tarjeta vuelve a ella.`]] : [])
+        .concat(t && (SK.find(s => s.id === t.id) || {}).porExamen
+          ? [['La de Coach', `El foco del plan, de ${cdMes(t.desde)} a ${cdMes(t.hasta)}, es <b>${esc(skN(t.id))}</b>, que va con el examen: por eso va la que sigue${rec ? `, <b>${esc(rec.name)}</b>` : ''}.`]]
+          : [['La de Coach', `El foco del plan${t ? `, de ${cdMes(t.desde)} a ${cdMes(t.hasta)}` : ''}${rec ? `: <b>${esc(rec.name)}</b>` : ''}.`]])
+        .concat([['Paso a paso', 'Su ruta, al ritmo que la avanzas en Coach · Habilidades.']]) });
   }
   const ec = hbEnCurso();
   if(ec.actual){
     const x = ec.actual, propia = ec.recomendada && x.h.id !== ec.recomendada.h.id;
-    const luego = ec.lista.filter(y => y !== x).slice(0, 3).map(y => esc(y.h.t)).join(' · ');
     filas.push({ k: 'Habilidades Base · habilidades para la vida', c: 'var(--b)', foto: apFotoHb(x.h), hoy: `${esc(x.h.t)} <span>${x.hechos} de ${x.total} pasos</span>`,
-      regla: `${propia ? `La elegiste tú con «Siguiente»; la de Coach es <b>${esc(ec.recomendada.h.t)}</b>. ` : ''}<b>Por qué:</b> ${esc(hbPlan(x.h.id).para)} El orden: primero lo que pide la fase en curso, luego lo de antes de irte, lo de Alemania y lo demás; a igual prioridad, la que ya empezaste. Lo que choca con tu meta de alcohol espera al final.${luego ? ` Después: ${luego}.` : ''}` });
+      regla: (propia ? [['La elegiste tú', `Con «Siguiente»; la de Coach es <b>${esc(ec.recomendada.h.t)}</b>.`]] : []).concat([
+        ['Por qué esta', esc(hbPlan(x.h.id).para)],
+        ['El orden', 'Primero lo que pide la fase en curso, luego lo de antes de irte, lo de Alemania y lo demás.'],
+        ['A la par', 'La que ya empezaste va antes.'],
+        ['Al final', 'Lo que choca con tu meta de cero alcohol.']]) });
   }
 
   return `<div class="cd-capas">
@@ -8579,7 +8607,8 @@ function comoDecideHtml(){
       return `<div class="cd-fila" style="--fc:${r.c}">${apImg(r.foto, 'cd-foto')}<div class="cd-fila-c"><div class="cd-fila-k">${r.k}</div>` +
         `<div class="cd-hoy"><span class="cd-et">Hoy</span>${r.hoy}</div>` +
         (sig.length ? `<div class="cd-sig"><span class="cd-et">Lo que sigue</span><ol>${sig.map(s => `<li><span>${s.t}</span>${s.c ? `<small>${s.c}</small>` : ''}</li>`).join('')}</ol></div>` : '') +
-        `<div class="cd-regla"><span class="cd-et">Cómo se decide</span>${r.regla}</div>${r.extra || ''}</div></div>`; }).join('')}</div>
+        `<div class="cd-regla"><span class="cd-et">Cómo se decide</span><ul class="cd-rs">${(Array.isArray(r.regla) ? r.regla : [['', r.regla]]).map(x =>
+          `<li><b>${x[0]}</b><span>${x[1]}</span></li>`).join('')}</ul></div>${r.extra || ''}</div></div>`; }).join('')}</div>
     <div class="cd-pie">«Siguiente» y ↻ siguen este mismo orden, nunca el azar. Lo que cambias tú queda marcado como <b>elegida por ti</b> y «↺» vuelve a lo de Coach. Las metas, las fases, el foco y los niveles se cambian en Coach; este panel los lee de ahí.</div>`;
 }
 /* Lo que sigue en cada tarjeta, en el orden de Coach (Adán, 26-oct-2026: "lo que me interesa es saber qué seguirá
