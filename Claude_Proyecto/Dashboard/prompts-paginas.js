@@ -639,7 +639,7 @@ Mi Día es la pantalla que más se usa: la agenda en franjas de mañana, tarde y
 - La agenda sale de la rutina y del calendario del maestro: no se escriben horas a mano.
 - Cada módulo nuevo responde a una pregunta del día; si no, va a otra pantalla.
 - Hoy aprendes nunca elige al azar: cada renglón sigue el orden de Coach y «Cómo lo decide Coach» enseña su porqué. Una regla nueva entra en ese orden y en ese panel.
-- Todo resumen lo entiende alguien que no conoce la app, preciso y conciso: el título nombra la cosa en palabras de todos los días (Alemán, Tu dinero hoy, Examen de certificación), no un apodo interno; debajo, una sola línea dice qué toca hoy, con sus números, y ninguna cifra va sin decir de qué es (nada de K10, Cap. o 1/6 sueltos). La letra puede ser chica; lo que no puede es ser críptico.`
+- Todo resumen lo entiende alguien que no conoce la app, preciso y conciso: el título es el nombre de la página o ventana que abre —el mismo que lleva esa ventana arriba (Alemán de hoy, Qué invertir hoy, Coach · Habilidades, Habilidades Base)—, nunca un apodo interno ni otro nombre; debajo, lo específico y una sola línea dice qué toca hoy, con sus números, y ninguna cifra va sin decir de qué es (nada de K10, Cap. o 1/6 sueltos). La letra puede ser chica; lo que no puede es ser críptico.`
     },
 
     planmaestro: {

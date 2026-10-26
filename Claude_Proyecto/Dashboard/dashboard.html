@@ -1449,6 +1449,10 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .ws-gym-lbl{position:relative;z-index:1;font-size:8px;color:#fff;line-height:1.2;text-align:left;text-shadow:0 1px 3px rgba(0,0,0,.9)}
 .ws-gym-lbl.pend{opacity:.8}
 .hp-title{font-size:10.5px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+/* El nombre de la página que abre el módulo y, debajo, lo específico (Adán, 25-oct-2026: "al menos pon ese título y
+   abajo qué es más específico"). */
+.hp-tt{display:flex;flex-direction:column;gap:1px;min-width:0}
+.hp-tt small{font-size:10.5px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--text3)}
 .hp-empty{font-size:11px;color:var(--text3);text-align:center;padding:6px 0}
 .hp-link{font-size:10px;font-weight:700;color:var(--cy);text-decoration:none;white-space:nowrap}
 
@@ -4623,7 +4627,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
           <div class="tile now-hero dia-ahora reveal d2" id="diaAhoraTile"></div>
           <div class="grid dia-mods reveal d3" id="miDiaSecundarios">
             <div class="tile dia-entrena-tile">
-              <div class="hp-title"><span>🏋️ Entrenas</span><a href="../CuidadoPersonal/ejercicio.html" class="hp-link" id="diaEntrenaLink">Ejercicio →</a></div>
+              <div class="hp-title"><span class="hp-tt">🏋️ Ejercicio<small>Lo que entrenas hoy</small></span><a href="../CuidadoPersonal/ejercicio.html" class="hp-link" id="diaEntrenaLink">Abrir →</a></div>
               <div class="dia-entrena" id="diaEntrenaTxt"></div>
               <!-- La tira de 7 días sigue siendo #heroWeekStrip: renderHero() la pinta y
                    verDiaSemana() la usa para ver otro día en la agenda y en esta tarjeta. -->
@@ -4880,7 +4884,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   <div class="gbm-card iqv-card" role="dialog" aria-modal="true" aria-labelledby="istqbTit">
     <div class="gbm-head">
       <button class="gbm-close" onclick="cerrarIstqb()" aria-label="Cerrar">✕</button>
-      <h2 id="istqbTit">La pregunta del día · ISTQB CT-GenAI</h2>
+      <h2 id="istqbTit">Examen ISTQB CT-GenAI</h2>
       <p id="istqbSub"></p>
     </div>
     <div class="iqv-body" id="istqbBody"></div>
@@ -7069,12 +7073,12 @@ function deAjustar(){
 // mismo — es el mismo toggle que la cuadrícula del slide de Hábitos.
 function renderDiaHabitos(){
   const el=document.getElementById('diaHabitos'); if(!el) return;
-  if(!window.HB||typeof HB.hoy!=='function'){ el.innerHTML='<div class="hp-title"><span>🔗 Hábitos de hoy</span></div><div class="dh-vacio">habitos.js no cargó.</div>'; return; }
+  if(!window.HB||typeof HB.hoy!=='function'){ el.innerHTML='<div class="hp-title"><span class="hp-tt">🔗 Hábitos<small>Los que tocan hoy</small></span></div><div class="dh-vacio">habitos.js no cargó.</div>'; return; }
   const lista=HB.hoy();
   const hechos=lista.filter(h=>h.estado==='hoyok'||h.estado==='ok').length;
   const viva=lista.some(h=>h.racha>=3);
   el.innerHTML=`
-    <div class="hp-title"><span>🔗 Hábitos de hoy</span><a href="javascript:void(0)" class="hp-link" onclick="irASlide('theme-habitos')">Hábitos →</a></div>
+    <div class="hp-title"><span class="hp-tt">🔗 Hábitos<small>Los que tocan hoy</small></span><a href="javascript:void(0)" class="hp-link" onclick="irASlide('theme-habitos')">Abrir →</a></div>
     <div class="dh-hd"><span class="mono"><b>${hechos}</b> de ${lista.length}${viva?' · racha viva':''}</span></div>
     <div class="dh-list">${lista.length?lista.map(h=>{
       const ok=h.estado==='hoyok'||h.estado==='ok';
@@ -7180,11 +7184,11 @@ function pasoSemanaHtml(){
   const lib=r?habLibro(r.id):null;
   const rec=habRecomendada(), propia=!!rec&&rec.id!==foco.id, nom=skLlano(foco);
   const hacer=p.k||String(p.c||'').split(/(?<=[.!?])\s/)[0];
-  return apTarjeta({ c:'var(--w)', mat:`Ejercicio de ${esc(nom)}${propia?' · elegido por ti':''}`,
+  return apTarjeta({ c:'var(--w)', mat:'Coach · Habilidades',
     ctl:apCtl('paso','Habilidad',propia?esc(rec.name):''),
     foto:apFotoLibro(r&&r.id, foco.id), ico:foco.icon, abrir:`aprendeVisto('paso');abrirSkillDetalle('${foco.id}')`,
     titulo:`Abrir la ruta de ${habAttr(foco.name)}${lib?` · con ${habAttr(lib.t)}`:''}`,
-    txt: apCuerpo({ sub: lib ? `Para subir tu nivel · con el libro <i>${esc(lib.t)}</i>` : 'Para subir tu nivel, un paso a la vez',
+    txt: apCuerpo({ sub: `Ejercicio de ${esc(nom)}${propia?' · elegido por ti':''}${lib ? ` · con el libro <i>${esc(lib.t)}</i>` : ' · un paso a la vez'}`,
       big: p.k ? esc(p.n) : hacer, bigTxt: !p.k, det: p.k ? hacer : '',
       pie: `${apTramos(pasos.length, j=>j<i, i)}<span>Paso <b>${i+1} de ${pasos.length}</b></span>` }) });
 }
@@ -7266,10 +7270,10 @@ function fichaEnCursoHtml(){
   const k=info?info.pasos.findIndex((_,j)=>!store[j]):-1;
   const paso=k>=0?info.pasos[k]:null;
   const idea=paso?(HB_IDEA[sig.h.id]||[])[k]||'':'';
-  return apTarjeta({ c:'var(--b)', mat:`Habilidades para la vida${propia?' · elegida por ti':''}`,
+  return apTarjeta({ c:'var(--b)', mat:'Habilidades Base',
     ctl:apCtl('ficha','Ficha',propia?habAttr(ec.recomendada.h.t):''),
     foto:apFotoHb(sig.h), abrir:`aprendeVisto('hb');abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')`, titulo:'Abrir la guía completa',
-    txt: apCuerpo({ sub: 'Guías prácticas, paso a paso', big: esc(sig.h.t),
+    txt: apCuerpo({ sub: `Habilidades para la vida${propia?' · elegida por ti':''} · guía paso a paso`, big: esc(sig.h.t),
       det: paso ? (idea ? esc(idea) : `Hoy: <b>${esc(mdLimpiaTitulo(paso.t))}</b>.`) : 'La terminaste: repásala cuando quieras.',
       pie: `${info?apTramos(info.pasos.length, j=>!!store[j], k):''}<span>Paso <b>${paso?k+1:sig.total} de ${sig.total}</b></span>` }) });
 }
@@ -7697,7 +7701,7 @@ function alemanHoyHtml(vistos){
   if(!a && !t) return '';
   const l = t ? t.l : null, av = t ? t.avance : null, practico = alemanPracticoHoy(), tema = a ? (V.cats[a.cat] || {}) : {};
   const pie = l ? `${av ? apTramos(av.total, j => j < av.hechos, -1) : ''}<span>Lección: <b>${esc(String(l.es).split(':')[0])}</b>${av ? ` · ${av.hechos} de ${av.total}` : ''}</span>` : '';
-  return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA, foto: a ? apFotoAleman(a) : apFotoLeccion(l), mat: 'Alemán',
+  return apFila({ slot: 'de', c: 'var(--g)', marca: AP_BANDERA, foto: a ? apFotoAleman(a) : apFotoLeccion(l), mat: 'Alemán de hoy',
     estado: (vistos.de || practico) ? apEstado(true, '', practico ? '✓ practicaste' : '✓ abierto')
       : `<button type="button" class="ap-estado ir" onclick="aprendeAbrir('de')">Practicar</button>`,
     otra: `Las ${AL_VOC_DIA} palabras siguientes, en el orden de Coach`,
@@ -8140,12 +8144,12 @@ function escucharHoyHtml(vistos){
   const trata = m ? m[2] : (libro.it.trata || ''), autor = String(libro.it.n).split(' — ')[1] || '';
   const cuando = horas.length ? 'a las ' + (finde ? horas.join(' y ') : horas[0]) : (finde ? 'en los turnos largos' : 'en la mañana');
   const estado = vistos.escuchar ? '<span class="ap-estado ok">✓ escuchando</span>'
-    : '<button type="button" class="ap-estado ir" onclick="abrirDidi()">Qué escuchar</button>';
+    : '<button type="button" class="ap-estado ir" onclick="abrirDidi()">Abrir</button>';
   const link = `<a href="${didiSpo(libro.it.q)}" target="_blank" rel="noopener" onclick="aprendeVisto('escuchar');setTimeout(renderHeroAprender,60)" title="Buscar ${habAttr(libro.it.n)} en Spotify">${esc(titulo)}</a>`;
-  return apTarjeta({ c: 'var(--o)', mat: 'Audiolibro y podcast', estado,
+  return apTarjeta({ c: 'var(--o)', mat: 'Qué escuchar mientras manejas', estado,
     ctl: apOtraBtn('escuchar', 'El siguiente audiolibro del foco'), foto: apFotoLibro(libro.it.lib, libro.g.sk),
     abrirFoto: 'abrirDidi()', titulo: 'Abrir Qué escuchar',
-    txt: apCuerpo({ sub: `Para escuchar mientras manejas${autor ? ' · de ' + esc(autor) : ''}`, big: link,
+    txt: apCuerpo({ sub: `Audiolibro y podcast${autor ? ' · de ' + esc(autor) : ''}`, big: link,
       det: trata ? esc(trata.charAt(0).toUpperCase() + trata.slice(1)) : '',
       pie: `${AP_ICO.sigue}<span>El libro, ${esc(cuando)}${pod ? `; hoy también, ${yt ? 'un video' : 'un podcast'}${temaPod ? ' de ' + esc(temaPod) : ''}` : ''}</span>` }) });
 }
@@ -8159,9 +8163,9 @@ function invertirHoyHtml(vistos){
   const p = pasoInversionHoy();
   const estado = vistos.invertir ? '<span class="ap-estado ok">✓ revisado</span>'
     : `<button type="button" class="ap-estado ir" onclick="aprendeAbrir('invertir')">Ver el plan</button>`;
-  return apTarjeta({ c: 'var(--cy)', mat: 'Tu dinero hoy', estado, foto: apFoto(p.foto),
+  return apTarjeta({ c: 'var(--cy)', mat: 'Qué invertir hoy', estado, foto: apFoto(p.foto),
     abrir: "aprendeAbrir('invertir')", titulo: 'Abrir Qué invertir hoy: tu situación, los precios de hoy y qué comprar según tu perfil',
-    txt: apCuerpo({ sub: 'Según tu plan para juntar el dinero de Alemania', big: p.corto, color: p.color, det: p.det,
+    txt: apCuerpo({ sub: 'Tu dinero hoy, según tu plan para irte a Alemania', big: p.corto, color: p.color, det: p.det,
       pie: `${AP_ICO[p.notaIco]}<span>${p.pie}</span>` }) });
 }
 
@@ -8234,9 +8238,9 @@ function istqbHtml(){
   const estado = !hecha ? '<button type="button" class="ap-estado ir" onclick="abrirIstqb()">Responder</button>'
     : `<span class="ap-estado ${hecha.ok ? 'ok' : 'mal'}">${hecha.ok ? '✓ correcta' : '✗ era la ' + 'ABCD'[q.r]}</span>`;
   const vale = (q.pts || 1) === 1 ? '1 punto' : `${q.pts} puntos`;
-  return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), mat: 'Examen de certificación',
+  return apFila({ slot: 'istqb', c: 'var(--p)', marca: AP_PUNTO, foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), mat: 'Examen ISTQB CT-GenAI',
     estado, otra: 'La siguiente pregunta, en el orden de Coach', abrir: 'abrirIstqb()', titulo: 'Contestar la pregunta del día',
-    txt: apCuerpo({ sub: `ISTQB de pruebas con IA${ex && ex.s.mes ? ' · lo presentas en ' + cdMes(ex.s.mes) : ''}${hecha ? '' : ' · una pregunta de ' + vale}`,
+    txt: apCuerpo({ sub: `La pregunta del día${ex && ex.s.mes ? ' · lo presentas en ' + cdMes(ex.s.mes) : ''}${hecha ? '' : ' · vale ' + vale}`,
       big: tema ? esc(tema.charAt(0).toUpperCase() + tema.slice(1)) : 'La pregunta de hoy',
       det: IQ_CAP_TRATA[q.cap] || 'Una pregunta de práctica de este tema.',
       pie: `${AP_ICO.meta}<span>${vas || 'Esta semana aún no contestas ninguna'}</span>` }) });
@@ -8370,7 +8374,7 @@ function iqVasHtml(q){
 function istqbPintar(){
   const q = istqbPreguntaHoy(), b = document.getElementById('istqbBody'); if(!q || !b) return;
   const hecha = istqbHoy(q);
-  document.getElementById('istqbSub').innerHTML = iqPorQue(q);
+  document.getElementById('istqbSub').innerHTML = '<b>La pregunta del día.</b> ' + iqPorQue(q);
   b.innerHTML = iqPreguntaHtml(q, hecha) + iqVasHtml(q);
 }
 // Mientras está abierto, Mi Día no rota: la rotación vuelve al cerrarlo.
@@ -8456,7 +8460,7 @@ function comoDecideHtml(){
         ? `La lección la elegiste tú; la del plan es <b>${esc(tl.rec.l.num)} · ${esc(tl.rec.l.de)}</b> y «↺», en su ventana, vuelve a ella. `
         : `La lección, la del <b>${esc(kc ? kc.label : 'Kapitel')}</b> que ves en clase en ${esc(CIFRAS.texto('{{escuelaAleman}}'))}: la que dejaste a medias o, si no, la siguiente sin terminar, en el orden en que conviene estudiarlo; con todo hecho, el minitest. «Siguiente», en su ventana, recorre el Kapitel, luego el A2 y el A1. `) : '';
     const rp = vh.length ? `El vocabulario: <b>${AL_VOC_DIA} palabras al día</b>, primero el <b>${etapa.nivel}</b>${etapa.nivel === 'A2' ? `, el certificado que pide Esslingen, hasta la Fase 2 (${cdFecha(etapa.hasta)})` : ', el de la maestría y el trabajo'}. Dentro, lo que vas a necesitar primero al llegar —${esc(temas)}—, luego la casa, la escuela y el trabajo, y lo demás al final. <b>Cada día, un solo tema</b>: el primero de ese orden al que le quedan palabras sin salir; si las del nivel no llegan a diez, se completan con las de otros niveles del mismo tema (van <b>${van} de ${delNivel.length}</b> del ${etapa.nivel}). Y el repaso espaciado: cada una vuelve al día siguiente y, si te la sabes, a los 3, 7, 14 y 30 días; hoy tocan <b>${rh.length}</b>.` : '';
-    filas.push({ k: 'Alemán', c: 'var(--g)', foto: tl ? apFotoLeccion(tl.l) : apFotoAleman(vh[0]),
+    filas.push({ k: 'Alemán de hoy', c: 'var(--g)', foto: tl ? apFotoLeccion(tl.l) : apFotoAleman(vh[0]),
       hoy: `${tl ? `${esc(alNumTxt(tl.l.num))} · ${esc(tl.l.de)}` : ''}${tl && vh.length ? ' · ' : ''}${vh.length ? `${vh.length} palabras: ${esc(alemanArtTxt(vh[0]))}${esc(vh[0].de)}…` : ''} <span>${vh.length ? `${esc((V.cats[vh[0].cat] || {}).label || '')} · ${esc(vh[0].niv || '')}` : ''}</span>`,
       regla: rl + rp });
   }
@@ -8468,11 +8472,11 @@ function comoDecideHtml(){
       : delFoco(d.libro) ? 'El audiolibro, el siguiente del foco que no hayas escuchado: se decide el lunes y se queda toda la semana.'
       : `${foco ? esc(foco.name) : 'El foco'} no tiene audiolibros en el catálogo: va el de ${nombre(d.libro)}, lo primero del orden de Coach que todavía no te ha tocado. Uno por semana: se decide el lunes y no cambia hasta el siguiente.`;
     const rPod = !d.pod ? '' : (delFoco(d.pod) ? 'El podcast, el siguiente del foco cada día' : `El podcast, de ${nombre(d.pod)}`) + ' (los de una hora o más, el fin de semana).';
-    filas.push({ k: 'Audiolibro y podcast', c: 'var(--o)', foto: apFotoLibro(d.libro.it.lib, d.libro.g.sk), hoy: `${esc(d.libro.it.n)}${d.pod ? ` <span>· ${esc(d.pod.it.n)}</span>` : ''}`,
+    filas.push({ k: 'Qué escuchar mientras manejas · audiolibro y podcast', c: 'var(--o)', foto: apFotoLibro(d.libro.it.lib, d.libro.g.sk), hoy: `${esc(d.libro.it.n)}${d.pod ? ` <span>· ${esc(d.pod.it.n)}</span>` : ''}`,
       regla: `Primero lo del foco${foco ? ` (<b>${esc(foco.name)}</b>)` : ''}, luego el siguiente foco del plan y las habilidades con más retorno; lo que Coach tiene en pausa no entra. ${rLibro} ${rPod}` });
   }
   const pi = pasoInversionHoy();
-  filas.push({ k: 'Tu dinero hoy', c: 'var(--cy)', foto: apFoto(pi.foto), hoy: pi.titulo,
+  filas.push({ k: 'Qué invertir hoy · tu dinero hoy', c: 'var(--cy)', foto: apFoto(pi.foto), hoy: pi.titulo,
     regla: 'No lo decide el azar ni el mercado: es el orden de tu Plan Maestro, con tus saldos de Finanzas. Primero la tarjeta BBVA, quincena a quincena y sin intereses, hasta dejarla en cero; después, todo a GBM para Alemania, y los primeros pesos completan el fondo de emergencia. El auto no se adelanta: se paga con su mensualidad. Qué comprar en GBM lo dice tu perfil, en el panel.' });
   const q = istqbPreguntaHoy();
   if(q){
@@ -8480,14 +8484,14 @@ function comoDecideHtml(){
     const caps = Object.keys(pts).map(Number).sort((a, b) => istqbEnJuego(b, pts, ac) - istqbEnJuego(a, pts, ac));
     const tabla = caps.map(c => { const a = ac[c];
       return `<span class="cd-cap${c === +q.cap ? ' on' : ''}"><b>Cap. ${c}</b> ${pts[c]} pts · ${a && a.n ? `${a.ok} de ${a.n}` : 'sin respuestas'} · ${istqbEnJuego(c, pts, ac).toFixed(1)} en juego</span>`; }).join('');
-    filas.push({ k: 'Examen de certificación (ISTQB)', c: 'var(--p)', foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), hoy: `Capítulo ${esc(q.cap)}: ${esc((X.capitulos || {})[q.cap] || '')} <span>${IQ_K_LLANO[q.k] || esc(q.k || '')} · ${q.pts > 1 ? q.pts + ' puntos' : '1 punto'} · objetivo ${esc(q.lo || '')}</span>`,
+    filas.push({ k: 'Examen ISTQB CT-GenAI · la pregunta del día', c: 'var(--p)', foto: apFoto('istqb-' + q.cap) || apFotoSk('ia'), hoy: `Capítulo ${esc(q.cap)}: ${esc((X.capitulos || {})[q.cap] || '')} <span>${IQ_K_LLANO[q.k] || esc(q.k || '')} · ${q.pts > 1 ? q.pts + ' puntos' : '1 punto'} · objetivo ${esc(q.lo || '')}</span>`,
       regla: `El examen va en ${ex && ex.s.mes ? cdMes(ex.s.mes) : 'la Fase 1'}${X.meta ? ` (${X.meta.preguntas} preguntas; el corte es ${X.meta.corte} de ${X.meta.puntos})` : ''}. Primero el capítulo con más puntos en juego —lo que vale en el examen por lo que te falta de acierto ahí; con menos de tres respuestas cuenta la mitad— y, dentro, las de 2 puntos. Las que contestas no vuelven.`,
       extra: `<div class="cd-caps">${tabla}</div>` });
   }
   if(foco){
     const pasos = habPasos(foco.id), st = habFocoLoad(); let i = st.paso[foco.id] || 0; if(i < 0 || i >= pasos.length) i = 0;
     const libP = pasos[i] && (Array.isArray(pasos[i].r) ? pasos[i].r : []).find(x => x && x.t === 'libro');
-    filas.push({ k: 'Ejercicio de habilidad', c: 'var(--w)', foto: apFotoLibro(libP && libP.id, foco.id), hoy: `${esc(foco.name)} · ${esc(pasos[i] ? pasos[i].n : '')} <span>paso ${i + 1} de ${pasos.length}</span>`,
+    filas.push({ k: 'Coach · Habilidades · el ejercicio de hoy', c: 'var(--w)', foto: apFotoLibro(libP && libP.id, foco.id), hoy: `${esc(foco.name)} · ${esc(pasos[i] ? pasos[i].n : '')} <span>paso ${i + 1} de ${pasos.length}</span>`,
       regla: rec && rec.id !== foco.id ? `Lo elegiste tú con «Siguiente». El de Coach es <b>${esc(rec.name)}</b>: «↺» en la tarjeta vuelve a él.`
         : `El foco del plan para hoy${t ? `, de ${cdMes(t.desde)} a ${cdMes(t.hasta)}` : ''}: su ruta, paso a paso, al ritmo que la avanzas en En qué invertir tu tiempo. ${t ? esc(t.cambio) : ''}` });
   }
@@ -8495,14 +8499,14 @@ function comoDecideHtml(){
   if(ec.actual){
     const x = ec.actual, propia = ec.recomendada && x.h.id !== ec.recomendada.h.id;
     const luego = ec.lista.filter(y => y !== x).slice(0, 3).map(y => esc(y.h.t)).join(' · ');
-    filas.push({ k: 'Habilidades para la vida', c: 'var(--b)', foto: apFotoHb(x.h), hoy: `${esc(x.h.t)} <span>${x.hechos} de ${x.total} pasos</span>`,
+    filas.push({ k: 'Habilidades Base · habilidades para la vida', c: 'var(--b)', foto: apFotoHb(x.h), hoy: `${esc(x.h.t)} <span>${x.hechos} de ${x.total} pasos</span>`,
       regla: `${propia ? `La elegiste tú con «Siguiente»; la de Coach es <b>${esc(ec.recomendada.h.t)}</b>. ` : ''}<b>Por qué:</b> ${esc(hbPlan(x.h.id).para)} El orden: primero lo que pide la fase en curso, luego lo de antes de irte, lo de Alemania y lo demás; a igual prioridad, la que ya empezaste. Lo que choca con tu meta de alcohol espera al final.${luego ? ` Después: ${luego}.` : ''}` });
   }
 
   return `<div class="cd-capas">
       <div class="cd-capa"><div class="cd-capa-k"><b>1</b>Tus metas con fecha</div>${metas}</div>
       <div class="cd-capa"><div class="cd-capa-k"><b>2</b>El plan de Coach</div>${planHtml}</div>
-      <div class="cd-capa"><div class="cd-capa-k"><b>3</b>Subir tus habilidades</div>${habs}</div>
+      <div class="cd-capa"><div class="cd-capa-k"><b>3</b>Coach · Habilidades: lo que más sube tu nivel</div>${habs}</div>
     </div>
     <div class="gbm-sec">Tarjeta por tarjeta, lo de hoy</div>
     <div class="cd-filas">${filas.map(r => `<div class="cd-fila" style="--fc:${r.c}">${apImg(r.foto, 'cd-foto')}<div class="cd-fila-c"><div class="cd-fila-k">${r.k}</div><div class="cd-hoy">${r.hoy}</div><div class="cd-regla">${r.regla}</div>${r.extra || ''}</div></div>`).join('')}</div>
@@ -11588,7 +11592,7 @@ function abrirSkillDetalle(id){
   hero.style.background = ''; hero.style.backgroundImage = f ? `url('${f.u}')` : 'none';
   document.getElementById('metaDetailTitle').textContent = info.titulo;
   document.getElementById('metaDetailFrase').textContent = info.frase;
-  document.getElementById('metaDetailEyebrow').textContent = 'En qué invertir tu tiempo · ' + info.eyebrow;
+  document.getElementById('metaDetailEyebrow').textContent = 'Coach · Habilidades · ' + info.eyebrow;
   pintarDetailOverlay(SKILL_DETALLE, HABPASOS_KEY, id, 'toggleSkillPaso', null);
   document.getElementById('metaDetailOverlay').classList.add('open');
   clearInterval(timer);
@@ -15473,7 +15477,7 @@ function abrirHabilidadDetalle(id,img){
   document.getElementById('metaDetailHero').style.backgroundImage=`url('${img}')`;
   document.getElementById('metaDetailTitle').textContent=info.titulo;
   document.getElementById('metaDetailFrase').textContent=info.frase;
-  document.getElementById('metaDetailEyebrow').textContent='Valerte por ti mismo';
+  document.getElementById('metaDetailEyebrow').textContent='Habilidades Base';
   pintarDetailOverlay(HABILIDAD_DETALLE,'habilidades_checklist_v1',id,'toggleHabilidadChecklist',null);
   document.getElementById('metaDetailOverlay').classList.add('open');
   clearInterval(timer);
