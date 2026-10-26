@@ -2822,12 +2822,13 @@ function promptsDeLoTocado() {
    APRENDIZAJE trae de APRENDIZAJE_DETALLE (en el maestro, por su nombre) su foto en Dashboard/fotos-habilidades/ con
    su crédito, su pie, tres cifras y «En detalle» con al menos tres puntos, un «Tu caso» y un error común; y de
    APRENDIZAJE_PRACTICA (Adán, el mismo día: "cosas súper útiles, porque solo me pones info superficial") su sesión en
-   tres tiempos con sus minutos, cómo sabes que salió y lo que se copia, con título y renglones. Un paso nuevo o
+   tres tiempos con sus minutos, cómo sabes que salió y lo que se copia, con título y renglones; y de
+   APRENDIZAJE_SUBTEMAS ("información más detallada de más subtemas") tres subtemas con su explicación y sus claves. Un paso nuevo o
    renombrado sin lo suyo, una foto que no está en disco, un detalle o una práctica que ya no tiene paso o una foto
    que nadie usa salen aquí. */
 (function () {
   const C = global.window && global.window.CIFRAS, A = (C && C.APRENDIZAJE) || {}, DET = (C && C.APRENDIZAJE_DETALLE) || {};
-  const PRA = (C && C.APRENDIZAJE_PRACTICA) || {};
+  const PRA = (C && C.APRENDIZAJE_PRACTICA) || {}, SUB = (C && C.APRENDIZAJE_SUBTEMAS) || {};
   const dir = path.join(RAIZ, 'Dashboard', 'fotos-habilidades'), usadas = {}, malos = [];
   let n = 0;
   Object.keys(A).forEach(function (id) {
@@ -2847,10 +2848,13 @@ function promptsDeLoTocado() {
         falta.push('su sesión en tres tiempos, con minutos');
       if (!s.sale) falta.push('cómo sabes que salió');
       if (!s.copia || !s.copia.t || !Array.isArray(s.copia.l) || !s.copia.l.length) falta.push('lo que se copia');
+      const sub = Array.isArray(s.subtemas) ? s.subtemas : [];
+      if (sub.length < 3 || !sub.every(function (x) { return x && x.t && x.d && Array.isArray(x.l) && x.l.length >= 2; }))
+        falta.push('tres subtemas, con su explicación y sus claves');
       if (falta.length) malos.push(id + ' · ' + s.n + ': sin ' + falta.join(', '));
     });
   });
-  [['APRENDIZAJE_DETALLE', DET], ['APRENDIZAJE_PRACTICA', PRA]].forEach(function (par) {
+  [['APRENDIZAJE_DETALLE', DET], ['APRENDIZAJE_PRACTICA', PRA], ['APRENDIZAJE_SUBTEMAS', SUB]].forEach(function (par) {
     Object.keys(par[1]).forEach(function (id) {
       const ns = ((A[id] || {}).subs || []).map(function (s) { return s.n; });
       Object.keys(par[1][id]).forEach(function (k) { if (ns.indexOf(k) < 0) malos.push(par[0] + '.' + id + ' trae «' + k + '», que ya no es un paso de su ruta'); });
@@ -2860,7 +2864,7 @@ function promptsDeLoTocado() {
   if (sobran.length) malos.push('fotos en Dashboard/fotos-habilidades/ que ningún paso usa: ' + sobran.join(', '));
   if (!n) problemas.push('no pude leer los pasos de APRENDIZAJE');
   else if (malos.length) problemas.push('Pasos de las rutas sin todo lo suyo (' + malos.length + '): ' + malos.slice(0, 5).join('; '));
-  else ok.push('Las rutas de Coach · Habilidades: los ' + n + ' pasos con su foto, su crédito, tres cifras, «En detalle», su sesión y lo que se copia');
+  else ok.push('Las rutas de Coach · Habilidades: los ' + n + ' pasos con su foto, su crédito, tres cifras, «En detalle», su sesión, lo que se copia y tres subtemas');
 })();
 
 // ── Salida ──

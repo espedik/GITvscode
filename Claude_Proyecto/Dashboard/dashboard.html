@@ -2679,6 +2679,19 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .md-ses-ok{flex:none;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#05050a;background:var(--g)}
 .md-ses-sale div{display:flex;flex-direction:column;gap:3px}
 .md-ses-sale p{margin:0;font-size:14.5px;line-height:1.55;color:var(--text)}
+/* Los subtemas de un paso (`subtemas`): tres tarjetas con el número del tema, la explicación y sus claves. */
+.md-subs{flex:none;display:flex;flex-direction:column;gap:12px}
+.md-subs-hd{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding-bottom:8px;border-bottom:1px solid rgba(var(--ov),.1)}
+.md-subs-hd small{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--text3)}
+.md-subs-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px;align-items:start}
+.md-sub{display:flex;flex-direction:column;gap:10px;padding:16px 18px 18px;border-radius:8px;background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.09)}
+.md-sub-hd{display:flex;align-items:flex-start;gap:10px}
+.md-sub-n{flex:none;margin-top:1px;padding:3px 7px;border-radius:4px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--cy);background:rgba(var(--cy-rgb),.12)}
+.md-sub-hd b{font-size:15.5px;line-height:1.35;color:var(--text)}
+.md-sub p{margin:0;font-size:14px;line-height:1.62;color:var(--text2)}
+.md-sub ul{margin:0;padding:11px 0 0;list-style:none;display:flex;flex-direction:column;gap:8px;border-top:1px solid rgba(var(--ov),.08)}
+.md-sub li{position:relative;padding-left:17px;font-size:13.5px;line-height:1.55;color:var(--text)}
+.md-sub li::before{content:'';position:absolute;left:2px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--cy)}
 .md-copia{border-radius:8px;overflow:hidden;border:1px solid rgba(var(--cy-rgb),.24);background:rgba(var(--cy-rgb),.04)}
 .md-copia-hd{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(var(--cy-rgb),.16)}
 .md-copia-hd .md-lbl{flex:none;color:var(--cy)}
@@ -2696,6 +2709,7 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 }
 @media(max-width:820px){
   .skr .mp-top{grid-template-columns:minmax(0,1fr)}
+  .md-foto-cred{white-space:normal}   /* un crédito largo se parte en el celular en vez de salirse */
   .md-ses-pasos{grid-template-columns:minmax(0,1fr)}
   .skr-ruta{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
   .md-paso-top .md-cifras{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -11899,7 +11913,7 @@ function calcOVRcon(id, valor){
 function habPasos(id){
   const a = APRENDIZAJE[id]; if(!a) return [];
   if(a.subs) return a.subs.map(x => ({ n: x.n, q: x.q, c: x.c, r: x.r, k: x.corto, foto: x.foto, cred: x.cred, pie: x.pie, cifras: x.cifras, list: x.list,
-    sesion: x.sesion, sale: x.sale, copia: x.copia }));
+    sesion: x.sesion, sale: x.sale, copia: x.copia, subtemas: x.subtemas }));
   // Los recursos de la habilidad, tal cual: `pfRecursosHtml` sabe pintarlos.
   const r = (a.recursos || []).slice(0, 2);
   return [
@@ -12107,7 +12121,7 @@ function skResumenHtml(id){
       <div class="mp-sec-hd"><span class="md-lbl">Tu ruta</span><small>${hechos} de ${total} dominados · toca un paso para abrirlo</small></div>
       <div class="skr-ruta" style="--n:${total <= 4 ? 4 : total <= 6 ? total : Math.ceil(total / 2)}">${pasos.map((p, k) => `<button type="button" class="skr-p${st[k] ? ' hecho' : ''}${k === sig ? ' sig' : ''}" onclick="mdIr(${k})" title="${habAttr(p.n)}">
         <span class="skr-ph">${p.foto ? `<img src="fotos-habilidades/${p.foto}" alt="" loading="lazy" onerror="this.remove()">` : ''}<span class="skr-n">${st[k] ? '✓' : k + 1}</span>${k === sig ? '<em>Sigue</em>' : ''}</span>
-        <span class="skr-t">${esc(p.n)}</span>${p.k ? `<span class="skr-c">${esc(p.k)}</span>` : ''}${min(p) ? `<span class="skr-m">Sesión de ${min(p)} min</span>` : ''}
+        <span class="skr-t">${esc(p.n)}</span>${p.k ? `<span class="skr-c">${esc(p.k)}</span>` : ''}${min(p) ? `<span class="skr-m">Sesión de ${min(p)} min${(p.subtemas || []).length ? ` · ${p.subtemas.length} subtemas` : ''}</span>` : ''}
       </button>`).join('')}</div>
     </div>
     <div class="skr-dos">
@@ -12153,7 +12167,7 @@ function skillDetalle(id){
       // detalle», con «Tu caso» y el error común en sus cajas—, la foto al lado de qué hacer (`fotoLado`), y su práctica:
       // la sesión en minutos, cómo sabes que salió y lo que se copia.
       foto: p.foto ? 'fotos-habilidades/' + p.foto : '', ancha: true, fotoLado: true, cred: p.cred, pie: p.pie, cifras: p.cifras, list: p.list,
-      sesion: p.sesion, sale: p.sale, copia: p.copia
+      sesion: p.sesion, sale: p.sale, copia: p.copia, subtemas: p.subtemas
     }))
   };
 }
@@ -13614,6 +13628,14 @@ function mdPintar(){
         return `<div class="md-ses-p s${k}"><span class="md-ses-k">${SES_K[k]||''} · min ${a} a ${t0}</span><span class="md-ses-x">${txt}</span></div>`; }).join('')}</div>
       ${p.sale?`<div class="md-ses-sale"><span class="md-ses-ok">✓</span><div><span class="md-lbl">Sale bien si</span><p>${p.sale}</p></div></div>`:''}
     </div>`:'';
+  // Los subtemas (`subtemas`): lo que hay que saber a fondo de este paso, cada uno con su explicación y sus claves.
+  const subs=p.subtemas||[];
+  const subtemasHtml=subs.length?`<div class="md-subs">
+      <div class="md-subs-hd"><span class="md-lbl">Subtemas</span><small>${subs.length} temas clave de este paso</small></div>
+      <div class="md-subs-g">${subs.map((s,k)=>`<section class="md-sub">
+        <div class="md-sub-hd"><span class="md-sub-n">${i+1}.${k+1}</span><b>${s.t}</b></div>
+        <p>${s.d}</p>${(s.l||[]).length?`<ul>${s.l.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}
+      </section>`).join('')}</div></div>`:'';
   // Lo que se usa tal cual (`copia`): un guion, una plantilla, un código. El botón lo deja en el portapapeles.
   const copiaHtml=p.copia&&(p.copia.l||[]).length?`<div class="md-copia">
       <div class="md-copia-hd"><span class="md-lbl">Para copiar</span><b>${esc(p.copia.t||'')}</b><button type="button" class="md-copia-btn" onclick="mdCopiar(this)">Copiar</button></div>
@@ -13633,7 +13655,7 @@ function mdPintar(){
     </div>`;
   // Con `fotoLado` (Coach · Habilidades) la foto va a la derecha de qué hacer y sus cifras, y no a lo ancho.
   const arriba=p.fotoLado&&fotoHtml?`<div class="md-paso-top"><div class="md-paso-top-x">${hdHtml}${cifrasHtml}</div>${fotoHtml}</div>`:hdHtml+fotoHtml+cifrasHtml;
-  cuerpo.innerHTML=`${arriba}${sesionHtml}${ledgerHtml}${mapasHtml}${apHtml}${copiaHtml}${imgHtml}${linkHtml}${botonHtml}`;
+  cuerpo.innerHTML=`${arriba}${sesionHtml}${ledgerHtml}${mapasHtml}${subtemasHtml}${apHtml}${copiaHtml}${imgHtml}${linkHtml}${botonHtml}`;
   cuerpo.scrollTop=0;   // cambiar de paso empieza arriba, no a media lectura del anterior
 
   // ── PIE ───────────────────────────────────────────────────────────────────

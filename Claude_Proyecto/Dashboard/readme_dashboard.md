@@ -1664,7 +1664,8 @@ panel de detalle*) **con su misma distribución** (Adán, 26-oct-2026: *"en coac
 **abre en «Tu ruta»**, el -1 del temario, igual que una meta abre en *Tu plan* (`skResumenHtml`, pintado por
 `mdPintarResumen`; Adán, 26-oct-2026: *"la columna de la derecha se ve muy saturada de información"*): arriba, **su
 papel en el plan**, **se demuestra con** (`prueba`) y **lo siguiente**, que abre el primer paso sin dominar; **la
-ruta** como tarjetas con la foto de cada paso, su versión corta (`corto`) y los minutos de su sesión, en columnas que
+ruta** como tarjetas con la foto de cada paso, su versión corta (`corto`), los minutos de su sesión y cuántos subtemas
+trae, en columnas que
 llenan la fila (cuatro para tres pasos, una por paso hasta seis y en dos filas desde siete); **tu nivel, escalón por
 escalón** (`skNivelHtml`: los seis tramos de `skLevel()` sobre 0–100, tú y el siguiente escalón punteado, y cuánto
 sube el nivel general) junto a **por qué esta habilidad** (`porQue`) y **dónde estás** (`desc`); y **dónde se
@@ -1676,11 +1677,14 @@ practica** con **los libros de su ruta**, con portada, título y autor. Mi Día 
 —autor · fuente · licencia— (`Dashboard/fotos-habilidades/`, 68 fotos de Rawpixel, Flickr y StockSnap con licencia
 libre, a 1280 px); debajo, **tu sesión** (`sesion`): una barra con sus tres tiempos en minutos —*Arranca*, *El
 bloque*, *Cierra*— y qué se hace en cada uno, con **sale bien si** (`sale`); **En detalle**, tres puntos numerados con
-el método; tres cajas: **Por qué este paso**, **Tu caso** (cian) y **el error común** (ámbar); **Para copiar**
+el método; **Subtemas** (`subtemas`; Adán, 26-oct-2026: *"quiero información más detallada de más subtemas, pero que
+sean muy importantes y que me ayuden muchísimo"*): tres tarjetas numeradas como el paso —1.1, 1.2, 1.3—, cada una con
+el concepto explicado (de dónde sale y por qué importa) y tres claves que se aplican esa semana; van en tres columnas
+desde unos 1,100 px de ancho para el paso, en dos en una laptop y en una en el celular (`.md-subs`); tres cajas: **Por qué este paso**, **Tu caso** (cian) y **el error común** (ámbar); **Para copiar**
 (`copia`): el guion, la plantilla, el código o la lista que se usa tal cual, con su botón (`mdCopiar`); y al final,
 **Con qué** (el libro con su portada y *Qué es*, o el recurso con `pfRecursoHtml()`). El contenido vive en el maestro
-(`APRENDIZAJE_DETALLE` y `APRENDIZAJE_PRACTICA`, por el nombre del paso) y el control 45 exige que ningún paso se quede
-sin él. En Recursos (`lado`) queda solo lo que se consulta desde cualquier paso: **tu libro del mes** en la del foco y
+(`APRENDIZAJE_DETALLE`, `APRENDIZAJE_PRACTICA` y `APRENDIZAJE_SUBTEMAS`, por el nombre del paso: 204 subtemas,
+unas 13,500 palabras) y el control 45 exige que ningún paso se quede sin él. En Recursos (`lado`) queda solo lo que se consulta desde cualquier paso: **tu libro del mes** en la del foco y
 en la de la habilidad del libro (`lmLadoHtml()`, ver *Lo decide Coach*), **tu nivel** con la marca del siguiente
 escalón y **esta semana**, y debajo *Tu avance* (`mdAvanceHtml`). Medido a 2048×1040 en las 12 habilidades: la
 columna llevaba de 807 a 1,440 caracteres y de 896 a 1,403 px en 785 visibles —en todas había que desplazarla—; ahora

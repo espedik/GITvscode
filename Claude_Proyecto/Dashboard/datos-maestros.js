@@ -4488,9 +4488,993 @@ window.CIFRAS = (function () {
           "Día 28: ¿trajo mensajes? Se queda o se cambia; no se suma otro canal."] } },
     },
   };
+  /* ── Los subtemas de cada paso: lo que hay que saber a fondo ──
+     Adán, 26-oct-2026: "quiero información más detallada de más subtemas, pero que sean muy importantes y que me ayuden
+     muchísimo". Por habilidad y por el nombre del paso, como APRENDIZAJE_DETALLE: tres subtemas, cada uno con su título
+     (`t`), la explicación (`d`) —el concepto, de dónde sale y por qué importa— y sus claves (`l`), concretas y
+     aplicables. Se mezcla en cada paso al cargar como `subtemas`; el control 45 exige tres por paso. */
+  const APRENDIZAJE_SUBTEMAS = {
+    ia: {
+      "El syllabus, capítulo por capítulo": [
+        { t: "El mapa del examen: qué se pregunta y cómo", d: "Cada pregunta del CT-GenAI sale de un objetivo de aprendizaje del syllabus, y cada objetivo tiene un nivel K: K1 es recordar, K2 entender y K3 aplicar. Las de K1 se contestan con la definición exacta; las de K3 te dan un escenario y piden elegir la técnica correcta.", l: [
+          "Empieza por el capítulo de ingeniería de instrucciones: es el que más puntos reparte y el que más usas en el trabajo.",
+          "Para cada objetivo K3, practica con un caso tuyo: un requisito de ADAS y la técnica de prompt que elegirías.",
+          "Los K1 se ganan con tarjetas: el término de un lado y la definición del syllabus del otro."] },
+        { t: "Las partes de una buena instrucción", d: "El syllabus descompone un prompt en piezas: el rol, el contexto, la instrucción, los datos de entrada, las restricciones y el formato de salida. Muchas preguntas te dan un prompt incompleto y preguntan qué pieza falta o cuál mejoraría el resultado.", l: [
+          "Rol: «actúa como ingeniero de pruebas de ADAS»; contexto: el sistema y sus límites.",
+          "Restricciones y formato: «solo casos negativos, en tabla con ID, entrada y resultado esperado».",
+          "Ejercicio: toma tres prompts que hayas usado en el trabajo y marca qué pieza les falta."] },
+        { t: "Las técnicas de prompting que entran al examen", d: "Few-shot es dar ejemplos; chain-of-thought, pedir que razone paso a paso; prompt chaining, encadenar instrucciones donde cada una usa la salida de la anterior; meta-prompting, pedirle al modelo que mejore tu prompt. El examen pregunta cuándo conviene cada una.", l: [
+          "Few-shot: cuando quieres un formato fijo, como los casos de prueba con la plantilla del equipo.",
+          "Chain-of-thought: cuando la tarea pide razonar, como derivar valores límite de un requisito.",
+          "Chaining: cuando la tarea es larga; primero requisitos, luego condiciones, luego casos y al final la revisión."] },
+      ],
+      "El simulacro como termómetro": [
+        { t: "Cómo leer una pregunta de ISTQB", d: "Las preguntas de ISTQB castigan la lectura rápida: una palabra como «MÁS», «NO» o «PRIMERO» cambia la respuesta. Casi siempre hay dos opciones que se descartan rápido y dos plausibles; la diferencia entre las plausibles está en el término exacto del syllabus.", l: [
+          "Ubica la palabra clave del enunciado antes de leer las opciones.",
+          "Descarta las dos que no encajan y compara las que quedan contra la definición literal.",
+          "Si dudas entre dos, elige la que usa el vocabulario del syllabus, no el de tu trabajo diario."] },
+        { t: "El tiempo y el ritmo por pregunta", d: "El examen tiene 40 preguntas y un tiempo fijo. Si presentas en inglés, ISTQB da 25 % más de tiempo a quien no es nativo, pero hay que pedirlo al registrarte. La trampa es atorarse en una pregunta: vale lo mismo que las fáciles.", l: [
+          "Primera vuelta: contesta lo seguro y marca las dudosas; segunda vuelta: solo las marcadas.",
+          "Si una te lleva más de tres minutos, elige la mejor que tengas, márcala y sigue.",
+          "En el simulacro, anota en qué minuto ibas en la pregunta 20: debería ser antes de la mitad del tiempo."] },
+        { t: "El análisis de errores que sube la nota", d: "Cada fallo cae en una de tres causas: no conocías el concepto, lo conocías pero leíste mal, o dudaste entre dos y elegiste mal. Cada causa se arregla distinto; mezclarlas hace que repases lo que ya sabes.", l: [
+          "No lo conocías: vuelve a esa sección del syllabus y haz su tarjeta.",
+          "Leíste mal: es un problema de método, no de estudio; practica ubicar la palabra clave.",
+          "Dudaste entre dos: escribe en una línea por qué la correcta es mejor; ese contraste es lo que pregunta el examen."] },
+      ],
+      "Una prueba con IA que puedas enseñar": [
+        { t: "Las técnicas de diseño que la IA debe cubrir", d: "Un buen conjunto de casos para una función como el frenado de emergencia combina valores límite, clases de equivalencia, tablas de decisión y transiciones de estado. La IA suele cubrir bien los casos nominales y olvidar los límites y las combinaciones.", l: [
+          "Valores límite: justo en, debajo y arriba de cada umbral: velocidad, distancia, tiempo al choque.",
+          "Tabla de decisión: las combinaciones de condiciones, como lluvia con sensor degradado.",
+          "Transiciones: de alerta a frenado parcial, a frenado total y de regreso."] },
+        { t: "Cómo medir qué tan buena fue la IA", d: "Lo que hace valioso tu repositorio es el número: de todo lo que propuso el modelo, cuántos casos eran correctos, cuántos repetidos, cuántos imposibles y cuántos faltaron. Con eso dices algo concreto en una entrevista, no una opinión.", l: [
+          "Precisión: casos correctos ÷ casos propuestos.",
+          "Cobertura: casos correctos ÷ casos que debía haber según tu lista de referencia.",
+          "Compara dos prompts, sin y con few-shot, y reporta cuál mejoró qué."] },
+        { t: "El README que convence a un equipo de validación", d: "Un reclutador técnico lee un README en dos minutos: busca el problema, tu criterio y el resultado. Una tabla de antes y después vale más que tres párrafos.", l: [
+          "Abre con el problema en una frase y el resultado en otra.",
+          "Incluye la tabla de clasificación de casos y los tres que faltaban, con por qué importan.",
+          "Cierra con lo que no le delegarías a la IA y por qué: es lo que demuestra criterio de ingeniero."] },
+      ],
+      "Automatiza una tarea tuya": [
+        { t: "Qué conviene automatizar: la cuenta del retorno", d: "Una automatización vale la pena cuando el tiempo que ahorra en un año supera varias veces lo que tardas en hacerla y mantenerla. La regla práctica: lo que haces al menos cada semana, con los mismos pasos y sin tener que decidir nada.", l: [
+          "Ahorro al año = minutos por vez × veces al año. Si da menos de dos horas, no la hagas.",
+          "Busca tareas de copiar y pegar, renombrar, mover archivos o armar el mismo reporte.",
+          "Lo que pide decidir algo distinto cada vez se queda manual."] },
+        { t: "Tres formas de automatizar, de menos a más código", d: "Sin código, con herramientas como n8n que conectan servicios; con un script corto de Python para archivos y datos; o con IA dentro del flujo para resumir o clasificar texto. Empieza por la más simple que resuelva el problema.", l: [
+          "n8n: un disparador —una hora, un correo— y pasos encadenados; se puede instalar en tu computadora sin pagar.",
+          "Python: pathlib para archivos, pandas para tablas y el Programador de tareas de Windows para que corra solo.",
+          "IA en el flujo: para clasificar o resumir, nunca para decidir sin que tú revises."] },
+        { t: "Que no se rompa: de script a herramienta", d: "Una automatización que falla en silencio es peor que no tenerla. Lo mínimo es que deje registro, que avise cuando algo sale mal y que se pueda correr dos veces sin duplicar nada.", l: [
+          "Registro: que escriba en un archivo qué hizo y cuándo.",
+          "Aviso: si falla, que te mande un correo o un mensaje.",
+          "Correrla dos veces el mismo día no debe crear dos registros."] },
+      ],
+      "Lo que no se le delega a la IA": [
+        { t: "Alucinaciones: por qué pasan y cómo atraparlas", d: "Un modelo predice la palabra más probable, no la verdadera; por eso inventa normas, números y referencias con la misma seguridad con la que acierta. El riesgo crece cuando le pides datos específicos que no le diste.", l: [
+          "Dale la fuente: pega el requisito o la norma y pídele que cite de ahí.",
+          "Pídele que marque lo que no sabe: «si no está en el texto, escribe NO ENCONTRADO».",
+          "Comprueba todo número y toda cita de una norma, como ISO 26262, contra el documento."] },
+        { t: "Privacidad y confidencialidad en el trabajo", d: "Lo que pegas en un servicio público de IA puede guardarse o usarse según sus términos. En automotive, los requisitos y el código de un cliente suelen estar bajo contratos de confidencialidad: una filtración puede costarle el contrato a la empresa y a ti el puesto.", l: [
+          "Antes de usar una herramienta, pregunta si está aprobada y con qué tipo de datos.",
+          "Anonimiza: cambia nombres de proyectos, clientes y valores reales por genéricos.",
+          "Nunca pegues contraseñas, direcciones internas ni datos personales."] },
+        { t: "Sesgo y resultados que cambian", d: "El mismo prompt puede dar resultados distintos cada vez, y el modelo tiende a repetir los patrones comunes de lo que aprendió. En pruebas eso significa casos parecidos entre sí y huecos justo en lo raro, que es donde fallan los sistemas.", l: [
+          "Corre el mismo prompt dos o tres veces y compara: lo que cambia te dice qué tan estable es.",
+          "Pide casos raros de forma explícita: fallas de sensor, datos fuera de rango, combinaciones improbables.",
+          "La revisión humana es parte del proceso: deja escrito quién revisó qué."] },
+      ],
+    },
+    ingles: {
+      "Tu nivel real es el de hablar bajo presión": [
+        { t: "Las tres medidas de tu fluidez", d: "La fluidez se mide con tres números: palabras por minuto —al conversar, entre 120 y 150 suena natural—, pausas de más de dos segundos y muletillas. Con ellos ves el avance semana a semana, que es justo lo que el certificado no dice.", l: [
+          "Transcribe tu grabación con el dictado del teléfono y cuenta las palabras de un minuto.",
+          "Meta realista: bajar las pausas largas a la mitad en un mes.",
+          "Tus muletillas del español se cuelan en inglés: cámbialas por «well», «so» o «let me think»."] },
+        { t: "Shadowing: la técnica que entrena la boca", d: "Shadowing es repetir un audio en voz alta casi al mismo tiempo que lo escuchas, imitando el ritmo y la entonación. Entrena justo lo que falla bajo presión: sacar frases completas sin traducir.", l: [
+          "Usa audios de uno o dos minutos, con transcripción, de gente de tu sector.",
+          "Primero escucha y lee; luego repite con el texto; al final, sin texto.",
+          "Diez minutos al día rinden más que una hora el domingo."] },
+        { t: "Frases puente para ganar tiempo sin traducir", d: "En una entrevista no se nota que pienses; se nota el silencio. Tener frases puente automáticas te da tres o cuatro segundos para ordenar la idea sin regresar al español.", l: [
+          "«That's a great question. Let me think about the best example.»",
+          "«The short answer is…, and the reason is…»",
+          "«Let me put it another way.» Sirve para corregirte sin trabarte."] },
+      ],
+      "La carta de motivación de Esslingen": [
+        { t: "Qué buscan las universidades alemanas en una carta", d: "En Alemania la carta de motivación es corta, concreta y sin adornos: el comité quiere ver que el programa encaja con tu experiencia y con lo que harás después. Las frases genéricas sobre la pasión restan; los hechos suman.", l: [
+          "Una página, de 400 a 600 palabras, salvo que el programa pida otra cosa.",
+          "Nombra materias, laboratorios o líneas de investigación del programa que te interesan, y por qué.",
+          "No repitas el CV: la carta explica las decisiones; el CV las enumera."] },
+        { t: "Convertir tu experiencia en argumentos", d: "Cada empresa de tu historia debe aportar una prueba distinta: una de profundidad técnica, una de liderazgo y una de impacto. Con un número por empresa, la carta deja de ser una lista y se vuelve una historia con dirección.", l: [
+          "Ford o Continental: qué validabas y con qué herramientas, como HIL y CAN.",
+          "Bosch: el equipo que dirigiste y por qué te mandaron a Stuttgart.",
+          "{{empleador}}: qué mejoraste, con un número: tiempo, defectos o cobertura."] },
+        { t: "Los errores que hacen descartar una carta", d: "Los comités leen decenas de cartas y descartan rápido las que parecen copiadas o no dicen por qué ese programa. También pesan los errores de idioma: en un programa en inglés, la carta es tu primera muestra de nivel.", l: [
+          "Usar la misma carta para varias universidades cambiando solo el nombre.",
+          "Empezar con tu infancia o con una cita famosa.",
+          "No pedir revisión: un nativo o un profesor ve lo que tú ya no ves."] },
+      ],
+      "El vocabulario de TU trabajo primero": [
+        { t: "Colocaciones: las palabras que van juntas", d: "Un nativo no elige palabras sueltas: usa combinaciones fijas como «run a test», «raise an issue», «meet a requirement» o «fix a bug». Saber la palabra sin su verbo es lo que hace que una frase suene traducida.", l: [
+          "Anota cada término con el verbo que lo acompaña en tu trabajo.",
+          "Busca la combinación en Google entre comillas: si casi no hay resultados, no se dice así.",
+          "Más ejemplos: «perform a root cause analysis», «sign off the release», «flag a risk»."] },
+        { t: "Repetición espaciada, con frases y no con palabras", d: "La memoria se consolida repasando justo antes de olvidar. Una aplicación como Anki programa los repasos sola; el truco es que cada tarjeta sea una frase tuya, no una palabra con su traducción.", l: [
+          "Frente: la situación en español, como «explicar que la causa no era el algoritmo».",
+          "Reverso: tu frase en inglés: «The root cause was not the algorithm but…».",
+          "Diez minutos al día; Anki decide qué toca repasar."] },
+        { t: "La pronunciación que más confunde en una junta", d: "Algunos sonidos hacen que una palabra técnica no se entienda aunque esté bien elegida: el acento en la sílaba equivocada, la terminación -ed y las vocales largas o cortas. No necesitas acento nativo; necesitas que te entiendan a la primera.", l: [
+          "Acento: «DAY-ta», «a-NA-ly-sis», «en-gi-NEER».",
+          "-ed: «tested» suena «TEST-id», pero «fixed» suena «fixt».",
+          "Escucha en Youglish cómo dicen un término ingenieros de verdad."] },
+      ],
+      "Simulacros de entrevista de verdad": [
+        { t: "STAR bien hecho: el detalle que casi todos fallan", d: "La mayoría cuenta de más la situación y de menos la acción. El entrevistador quiere saber qué hiciste TÚ, no lo que hizo el equipo, y qué cambió, con números.", l: [
+          "Situación y tarea: 20 % del tiempo; acción: 60 %; resultado: 20 %.",
+          "En la acción, «I», no «we»: «I designed…», «I convinced…».",
+          "Cierra con lo que aprendiste: demuestra que reflexionas."] },
+        { t: "Las preguntas técnicas de validación que vas a oír", d: "En un Werkstudent o un puesto de validación automotriz suelen preguntar por tu proceso de pruebas, no solo por herramientas: cómo derivas casos de un requisito, cómo priorizas y cómo reportas un defecto.", l: [
+          "«How do you derive test cases from a requirement?»: valores límite, clases de equivalencia, tablas de decisión.",
+          "«What's the difference between MIL, SIL and HIL?»: dónde corre el software y qué se simula.",
+          "«How would you test an emergency braking function?»: casos nominales, límites, fallas de sensor y clima."] },
+        { t: "Las preguntas que haces tú al final", d: "Al final siempre te preguntan si tienes preguntas, y decir que no resta. Una buena pregunta muestra interés y te da información para decidir.", l: [
+          "«What does a typical week look like for a working student on your team?»",
+          "«How do you measure success for this role in the first three months?»",
+          "«Which tools and test benches would I be working with?»"] },
+      ],
+      "Pensar en inglés durante el manejo": [
+        { t: "Elegir audio que entrene y no solo entretenga", d: "El audio útil está un poco arriba de tu nivel: entiendes casi todo, pero tienes que poner atención. Si lo entiendes sin esfuerzo, es entretenimiento; si te pierdes, es ruido.", l: [
+          "Prefiere conversaciones a monólogos: se parecen más a una entrevista.",
+          "Busca tu sector: conducción autónoma, pruebas de software, sistemas embebidos.",
+          "Sube la velocidad a 1.2 cuando todo te resulte fácil."] },
+        { t: "Narrar: hablar sin preparar todos los días", d: "Describir en voz alta lo que ves y lo que harás es la forma más barata de practicar hablar sin guion. Te obliga a encontrar las palabras al momento, que es lo que pasa en una entrevista.", l: [
+          "Narra en presente lo que ves, en futuro lo que harás y en pasado lo que hiciste hoy.",
+          "Si no sabes una palabra, rodéala en vez de detenerte: «the thing that measures distance».",
+          "Al llegar, apunta las palabras que te faltaron y búscalas."] },
+        { t: "La seguridad y tu calificación primero", d: "Aprender al volante solo funciona si no compite con manejar ni con el pasajero. Tu calificación en Didi es ingreso: un pasajero incómodo cuesta más que un día sin práctica.", l: [
+          "Con pasajero, audio bajo o en pausa; repite en voz alta solo cuando vayas solo.",
+          "Nada de pantallas: el episodio se elige antes de arrancar.",
+          "En tráfico pesado o de noche, solo escucha."] },
+      ],
+      "Cero traducción en el trabajo": [
+        { t: "Por qué traducir te hace lento", d: "Cuando traduces haces dos tareas: pensar la idea en español y convertirla. Bajo presión, la segunda se traba. Usar el inglés en lo que ya haces crea un camino directo entre la idea y la palabra en inglés.", l: [
+          "Lo que lees en inglés, resúmelo en inglés.",
+          "Tus notas de juntas, directo en inglés, aunque salgan imperfectas.",
+          "Si te falta una palabra, descríbela en inglés antes de buscarla."] },
+        { t: "Escribir inglés técnico claro", d: "En documentación y correos técnicos, el inglés claro usa frases cortas, voz activa y el verbo al inicio. Es más fácil de escribir y de leer en equipos donde nadie es nativo, como los de Stuttgart.", l: [
+          "Voz activa: «The test failed», no «It was observed that the test was failing».",
+          "Una idea por frase, y el resultado primero.",
+          "Revisa con LanguageTool o Grammarly antes de mandar."] },
+        { t: "Leer documentación técnica más rápido", d: "La documentación técnica se lee distinto que un libro: primero la estructura y los ejemplos, después el detalle. Leer así en inglés todos los días sube tu velocidad sin estudiar más.", l: [
+          "Empieza por los ejemplos de código o los diagramas.",
+          "Lee la primera línea de cada párrafo: casi siempre dice la idea.",
+          "Las palabras que se repiten en una documentación son tu vocabulario de esa semana."] },
+      ],
+    },
+    codigo: {
+      "Qué te pide el puesto que quieres": [
+        { t: "Qué es un Werkstudent y sus reglas", d: "Un Werkstudent es un estudiante inscrito que trabaja en una empresa mientras estudia. Durante el semestre puede trabajar hasta 20 horas a la semana sin perder ese estatus; en vacaciones, más. Para las empresas es la forma de probar a alguien antes de contratarlo.", l: [
+          "Te pedirán la constancia de inscripción de la universidad (Immatrikulationsbescheinigung).",
+          "Con visa de estudiante de fuera de la UE hay además un tope de días de trabajo al año: revisa el que marque tu permiso.",
+          "Muchos equipos contratan a sus Werkstudenten al terminar la maestría."] },
+        { t: "Las palabras clave en alemán de los anuncios", d: "Muchos anuncios están en alemán aunque el trabajo sea en inglés. Reconocer los términos te deja filtrar rápido y entender qué piden de verdad.", l: [
+          "Validierung y Absicherung: validación; Erprobung: pruebas en vehículo; Prüfstand: banco de pruebas.",
+          "Fahrerassistenzsysteme: sistemas de asistencia (ADAS); Steuergerät: unidad de control (ECU).",
+          "Kenntnisse: conocimientos; wünschenswert: deseable, no obligatorio."] },
+        { t: "De los huecos a un plan de ocho semanas", d: "La tabla de requisitos te da la lista; falta el orden. Prioriza lo que sale en más anuncios y lo que puedes demostrar con un proyecto: un requisito sin prueba visible no cuenta en una entrevista.", l: [
+          "Semanas 1 a 3: el hueco más frecuente, con un ejercicio diario.",
+          "Semanas 4 a 6: el segundo, integrado al proyecto de tu repositorio.",
+          "Semanas 7 y 8: un README que muestre los dos y un simulacro de entrevista técnica."] },
+      ],
+      "Tests antes que features": [
+        { t: "Rojo, verde y refactor: el ciclo de TDD", d: "El desarrollo guiado por pruebas tiene tres pasos: escribes una prueba que falla (rojo), el código mínimo para que pase (verde) y luego limpias el código sin cambiar lo que hace (refactor). La prueba en verde es la red que te deja limpiar sin miedo.", l: [
+          "Una prueba a la vez; si escribes cinco juntas, pierdes el ciclo.",
+          "El paso verde puede ser feo a propósito: la limpieza viene después.",
+          "Si una prueba pasa a la primera, desconfía: quizá no prueba lo que crees."] },
+        { t: "Qué probar: la pirámide de pruebas", d: "Abajo, muchas pruebas unitarias rápidas; en medio, menos pruebas de integración; arriba, pocas pruebas de sistema, lentas y caras. En automotive, la punta es tu HIL; la base es lo que corre en cada commit.", l: [
+          "Unitarias: una función, sin hardware, en milisegundos.",
+          "Integración: varios módulos juntos, con las interfaces simuladas.",
+          "Sistema o HIL: el software real contra el entorno simulado; las más caras, para lo crítico."] },
+        { t: "Cómo encaja con Automotive SPICE e ISO 26262", d: "En automotive el proceso exige verificación trazable: cada requisito con sus pruebas y cada prueba con su resultado. Automotive SPICE lo pide por niveles —verificación de unidades, pruebas de integración y de calificación del software— e ISO 26262 añade rigor según el nivel de seguridad (ASIL).", l: [
+          "Trazabilidad: el ID del requisito en el nombre o en los metadatos de cada prueba.",
+          "Cobertura: a mayor ASIL, mayor cobertura estructural exigida.",
+          "En una entrevista, hablar de trazabilidad y de ASIL te distingue de un programador sin experiencia en el sector."] },
+      ],
+      "pytest de verdad": [
+        { t: "Fixtures: preparar sin repetir", d: "Un fixture es una función que prepara lo que una prueba necesita —un objeto, datos, una conexión— y pytest se la pasa a cada prueba que la pide por su nombre. Su scope dice cada cuánto se crea: por prueba, por módulo o por sesión.", l: [
+          "scope='function', el de siempre: limpio en cada prueba y el más seguro.",
+          "scope='session': una sola vez para todo; útil para algo caro, como cargar un modelo.",
+          "Con yield, lo que va después se ejecuta al terminar, como cerrar una conexión."] },
+        { t: "Simular lo que no tienes: mocks", d: "Cuando el código depende de hardware, de la red o del tiempo, la prueba unitaria lo simula con un mock: un objeto falso que responde lo que tú decides. Así pruebas tu lógica sin el banco de pruebas.", l: [
+          "unittest.mock.patch reemplaza una función durante la prueba.",
+          "Simula un sensor que devuelve un valor fuera de rango y comprueba que tu código lo maneja.",
+          "No simules lo que estás probando: el mock va en las dependencias, no en tu función."] },
+        { t: "Cobertura y marcas: saber qué falta", d: "pytest-cov mide qué líneas y qué ramas ejecutaron tus pruebas. No es un fin —un 100 % con malas aserciones no sirve—, pero señala el código que ninguna prueba toca.", l: [
+          "pytest --cov=control --cov-branch --cov-report=term-missing te dice las líneas sin probar.",
+          "@pytest.mark.slow y pytest -m 'not slow' separan lo rápido de lo lento.",
+          "Una meta sana: todas las ramas de la lógica de decisión, cubiertas."] },
+      ],
+      "Un proyecto que se pueda enseñar": [
+        { t: "Un proyecto que hable de validación", d: "El mejor proyecto para un Werkstudent de validación muestra que sabes probar un sistema, no solo programarlo. Un sistema simulado pequeño, con requisitos escritos, pruebas trazables y un reporte, vale más que una aplicación vistosa.", l: [
+          "Ejemplo: un control de crucero adaptativo simulado, con cinco requisitos y sus pruebas.",
+          "Una matriz de trazabilidad: requisito → prueba → resultado.",
+          "Simula una falla de sensor y muestra cómo la detectan tus pruebas."] },
+        { t: "La estructura de un repositorio profesional", d: "Un repositorio ordenado se entiende en segundos: el código en una carpeta, las pruebas en otra, las dependencias declaradas y la integración continua a la vista. Es lo primero que revisa quien te va a entrevistar.", l: [
+          "src/ para el código, tests/ para las pruebas y docs/ para requisitos y decisiones.",
+          "requirements.txt o pyproject.toml con las versiones fijas.",
+          "La insignia de GitHub Actions y una sección «How to run» de tres comandos."] },
+        { t: "Cómo presentarlo en una entrevista", d: "En una entrevista tienes unos cinco minutos para tu proyecto. Ensaya la explicación como un recorrido: el problema, la arquitectura en un diagrama, una decisión difícil y qué harías distinto.", l: [
+          "Un diagrama de una sola imagen: entradas, procesamiento y salida.",
+          "Un bug real que encontraron tus pruebas, contado como historia.",
+          "La respuesta a «what would you improve?»: siempre la preguntan."] },
+      ],
+      "Leer código ajeno a propósito": [
+        { t: "Cómo leer un repositorio grande", d: "Un repositorio no se lee de arriba abajo: se entra por un punto —el main, el launch file o una prueba— y se sigue un flujo. Las pruebas te dicen qué se esperaba del código antes de entender cómo lo hace.", l: [
+          "Empieza por el README y las carpetas: dónde está cada cosa.",
+          "Elige un flujo: cómo llega el dato del sensor hasta la decisión.",
+          "Usa «Go to definition» del editor y anota la ruta que seguiste."] },
+        { t: "Qué observar en código profesional", d: "Más allá de lo que hace, fíjate en cómo está hecho: los nombres, el manejo de errores, cómo se separan las responsabilidades y cómo se prueba. Ahí está el criterio que quieres copiar.", l: [
+          "Nombres: ¿se entiende la función sin leer su cuerpo?",
+          "Errores: ¿qué pasa con un dato inválido? ¿Se registra, se lanza o se ignora?",
+          "Configuración: ¿qué valores están fijos y cuáles se leen de un archivo?"] },
+        { t: "ROS 2 en pocos conceptos", d: "ROS 2 organiza un robot o un vehículo en nodos que se comunican por tópicos, servicios y acciones. Es la base de Autoware y de muchos proyectos de conducción autónoma; conocerlo te deja leer esos repositorios.", l: [
+          "Nodo: un proceso con una tarea; tópico: un canal donde unos publican y otros se suscriben.",
+          "Mensaje: el tipo de dato de un tópico, como la nube de puntos de un LiDAR.",
+          "Launch file: arranca varios nodos juntos con su configuración."] },
+      ],
+      "Media hora diaria, no seis el domingo": [
+        { t: "Por qué gana la práctica espaciada", d: "El cerebro consolida lo aprendido entre sesiones, sobre todo al dormir. Repartir el mismo tiempo en sesiones cortas diarias deja más que concentrarlo en una sola, y además mantiene vivo el hábito.", l: [
+          "Media hora diaria son unas 15 horas al mes, con más de 20 repasos.",
+          "Lo de una sesión larga el domingo se olvida en buena parte antes del siguiente domingo.",
+          "El día que no puedas, haz cinco minutos: lo que importa es no romper la cadena."] },
+        { t: "De dónde sacar buenos ejercicios", d: "Los ejercicios útiles son pequeños, con una respuesta comprobable y cerca de tu trabajo. Combinar una plataforma de ejercicios con problemas tuyos evita practicar solo cosas abstractas.", l: [
+          "Exercism: ejercicios de Python con pruebas incluidas y revisión gratuita.",
+          "Tu trabajo: reescribe en Python algo que hoy haces a mano.",
+          "Kata de pruebas: escribe las pruebas de una función ya hecha y encuentra su bug."] },
+        { t: "Aprender con IA sin dejar de aprender", d: "La IA acelera, pero si siempre escribe por ti no se te queda nada. La regla que funciona: primero lo intentas tú; después le pides que revise o que proponga otra versión, y comparas.", l: [
+          "Pídele que te explique tu error, no que te dé la solución.",
+          "Pídele un ejercicio parecido al que fallaste.",
+          "Una vez por semana, una sesión sin IA ni autocompletado."] },
+      ],
+    },
+    network: {
+      "Tu red real, en una hoja": [
+        { t: "Lazos débiles: de dónde salen los trabajos", d: "Un estudio clásico de Mark Granovetter encontró que mucha gente consigue trabajo por conocidos lejanos más que por amigos cercanos: los conocidos se mueven en otros círculos y saben de otras oportunidades. Tu hoja debe incluir a esa gente, no solo a tus amigos del trabajo.", l: [
+          "Excompañeros de proyectos de hace años: son lazos débiles valiosos.",
+          "Gente de otras empresas con la que coincidiste en una prueba o una auditoría.",
+          "Profesores y compañeros del IPN que hoy están en la industria."] },
+        { t: "Clasificar: a quién cuidar primero", d: "No toda la red pesa igual para tu plan. Clasifica por qué tan cerca está de lo que buscas —Stuttgart, validación, automotive— y por qué tan buena es la relación.", l: [
+          "A: trabaja en Stuttgart o en una empresa objetivo y te conoce bien.",
+          "B: está en el sector, o te conoce bien pero en otra área.",
+          "C: el resto; con un mensaje al año basta."] },
+        { t: "LinkedIn como tu base de datos", d: "LinkedIn es una agenda que se actualiza sola: te dice dónde trabaja hoy cada persona. Bien usado, te muestra a quién conoces dentro de cada empresa objetivo.", l: [
+          "Busca la empresa y filtra por tus contactos: verás a quién conoces adentro.",
+          "Filtra por ubicación: «Stuttgart Region».",
+          "Revisa tus contactos de segundo grado: alguien de tu hoja te puede presentar."] },
+      ],
+      "Las cartas de recomendación, ya": [
+        { t: "Qué hace fuerte una carta", d: "Una carta pesa por sus detalles, no por sus adjetivos: qué hiciste, cómo lo hiciste y cómo te compara con otros que el recomendador ha visto. Por eso conviene alguien que te vio trabajar de cerca.", l: [
+          "La relación: cuánto tiempo y en qué proyecto te supervisó.",
+          "Ejemplos concretos: un problema que resolviste y su resultado.",
+          "Una comparación: «de los mejores ingenieros con los que he trabajado»."] },
+        { t: "Facilitarle el trabajo a quien la escribe", d: "Quien te recomienda está ocupado; si le das todo listo, la carta sale antes y mejor. Un paquete con tu CV, el programa y tus puntos clave le ahorra horas.", l: [
+          "Mándale tu CV, el enlace del programa y la fecha límite.",
+          "Incluye tres logros que viviste con esa persona, con fechas.",
+          "Pregunta el formato: firmada en papel membretado, en PDF o enviada desde el portal de la universidad."] },
+        { t: "El seguimiento sin ser molesto", d: "Una carta pedida con tiempo y recordada con tacto llega a tiempo. Un recordatorio a mitad del plazo y otro unos días antes es lo normal; nadie se ofende.", l: [
+          "A la mitad del plazo: «¿necesitas algo más de mi parte?».",
+          "A tres días del límite: un mensaje corto con la fecha.",
+          "Al recibirla: agradece, y cuéntale el resultado cuando lo tengas."] },
+      ],
+      "Reactivar sin pedir nada": [
+        { t: "Dar primero", d: "Adam Grant muestra en Give and Take que quienes ayudan sin llevar la cuenta construyen redes más fuertes a largo plazo, siempre que no se dejen explotar. Dar primero hace que, cuando pidas, la otra persona quiera ayudarte.", l: [
+          "Ayudas de cinco minutos: una presentación, un artículo, una recomendación en LinkedIn.",
+          "Comparte algo de tu experiencia que le sirva: una herramienta, una lección.",
+          "Con quien solo toma y nunca da, reciprocidad: no más que eso."] },
+        { t: "Retomar después de años sin hablar", d: "Escribirle a alguien después de mucho tiempo da pena, pero casi todo el mundo lo recibe bien. Lo que funciona es reconocer el tiempo con naturalidad y dar una razón concreta para escribir.", l: [
+          "«Hace mucho que no hablamos; vi que ahora estás en ____ y me dio gusto.»",
+          "Una pregunta fácil de contestar sobre su trabajo actual.",
+          "Nada de pedir en el primer mensaje."] },
+        { t: "El ritmo que mantiene viva una relación", d: "Una relación profesional se sostiene con contactos ligeros y regulares, no con un mensaje largo cada tres años. Con la gente A de tu hoja, cada dos o tres meses; con los demás, una o dos veces al año.", l: [
+          "Usa fechas naturales: un aniversario laboral, un cambio de puesto, un logro de su empresa.",
+          "Anota de qué hablaron para retomar el hilo la próxima vez.",
+          "Comentar con sustancia una publicación suya también cuenta."] },
+      ],
+      "Stuttgart antes de llegar": [
+        { t: "Cómo funciona el trato profesional en Alemania", d: "En Alemania el trato es más formal al inicio: el apellido y el «Sie» hasta que la otra persona proponga el «du», aunque en ingeniería y en inglés suele ser más directo. Se valora la puntualidad y que vayas al punto.", l: [
+          "En una videollamada, conéctate a tiempo y termina en el tiempo que pediste.",
+          "Directo no es grosero: pregunta lo que quieres saber sin rodeos.",
+          "LinkedIn es la red principal; Xing se usa menos, sobre todo en empresas tradicionales."] },
+        { t: "Dónde encontrar a la gente adecuada", d: "Quien más te puede orientar es quien estuvo en tu situación hace dos o tres años: extranjeros que estudiaron en la región y ahora trabajan en automotive.", l: [
+          "En LinkedIn, busca «Hochschule Esslingen» en educación: son exalumnos de tu programa.",
+          "Grupos de mexicanos y latinos en Stuttgart, en Facebook y LinkedIn.",
+          "Comunidades técnicas de la región en Meetup: Python, ROS o testing."] },
+        { t: "Qué preguntar para ahorrarte meses", d: "Una conversación bien preparada te da información que tardarías meses en descubrir solo: cómo es de verdad el mercado, qué valoran y qué errores evitar.", l: [
+          "¿Cuánto alemán necesitaste de verdad para tu primer Werkstudent?",
+          "¿En qué época del año contratan más?",
+          "¿Qué harías distinto si llegaras hoy?"] },
+      ],
+      "La pregunta que abre puertas": [
+        { t: "Cómo pedir la conversación", d: "La petición que funciona es corta, específica y fácil de aceptar: quién eres, por qué esa persona y qué le pides, con un tiempo limitado. «Veinte minutos» se acepta más que «un café».", l: [
+          "Personaliza: menciona algo suyo, como su equipo o una publicación.",
+          "Ofrece dos o tres horarios, o un enlace de calendario.",
+          "Si no contesta, un solo recordatorio a la semana."] },
+        { t: "Escuchar para aprender el idioma del equipo", d: "En estas conversaciones vas a oír cómo llaman a sus procesos, herramientas y problemas. Usar esas mismas palabras en tu CV y en tu entrevista te hace sonar como alguien de adentro.", l: [
+          "Anota las herramientas que mencionen: dSPACE, Vector CANoe, Jenkins, Polarion.",
+          "Anota los problemas que nombren: ahí está lo que valoran.",
+          "Pregunta qué distingue a un buen Werkstudent: la respuesta es tu plan."] },
+        { t: "Convertir la conversación en relación", d: "El agradecimiento y el seguimiento son lo que hace que te recuerden. Un mensaje el mismo día y, semanas después, la noticia de cómo usaste su consejo cierran el círculo.", l: [
+          "El mismo día: agradece y menciona una cosa concreta que te sirvió.",
+          "Cuando apliques su consejo, cuéntaselo.",
+          "Si te recomendó a alguien, avísale cuando hables con esa persona."] },
+      ],
+      "Una hora al mes, en el calendario": [
+        { t: "Un sistema simple de seguimiento", d: "Un sistema de contactos no necesita software: una hoja con la fecha del último contacto y la del siguiente basta. Lo importante es que cada mes te diga a quién escribir.", l: [
+          "Una columna «próximo contacto», según si es A, B o C.",
+          "Cada mes, filtra las fechas vencidas.",
+          "Al terminar la hora, cada persona queda con su siguiente fecha."] },
+        { t: "Qué medir para saber si tu red crece", d: "Una red útil no se mide por número de contactos sino por cuántas relaciones activas tienes donde quieres estar. Dos o tres números al mes te dicen si vas bien.", l: [
+          "Contactos A con menos de tres meses sin hablar.",
+          "Gente nueva en Stuttgart o en empresas objetivo este mes.",
+          "Conversaciones de 20 minutos o más en el mes."] },
+        { t: "Aportar en público", d: "La forma más eficiente de que te conozcan es aportar algo visible: un post útil, una respuesta en un foro, una charla corta. Así te encuentran a ti, en vez de que tú busques a cada persona.", l: [
+          "Escribe en LinkedIn lo que aprendiste en un proyecto de validación.",
+          "Comparte tu repositorio con una explicación de lo que resolviste.",
+          "Comenta con sustancia las publicaciones de gente de tu sector."] },
+      ],
+    },
+    finanzas: {
+      "Págate primero": [
+        { t: "Por qué funciona: el dinero que no ves no se gasta", d: "Gastamos según lo que vemos disponible. Si el ahorro sale antes de que lo veas, ajustas tu gasto a lo que queda casi sin esfuerzo; si esperas a fin de mes, el gasto crece hasta ocupar todo.", l: [
+          "Automatiza el día que cae la quincena, no un día después.",
+          "Usa una cuenta separada para el ahorro, sin tarjeta de débito.",
+          "Empieza con lo que dice tu plan y súbelo cuando suba tu ingreso."] },
+        { t: "Los gastos que no son de cada mes", d: "El seguro del auto, el refrendo, los regalos de diciembre, el mantenimiento: no llegan cada mes, pero siempre llegan. Si no los apartas, rompen el presupuesto del mes en que caen y te mandan a la tarjeta.", l: [
+          "Lista los gastos anuales o semestrales y súmalos.",
+          "Divide el total entre 12 y apártalo cada mes.",
+          "Guárdalo aparte del fondo de emergencia: no es emergencia, es previsible."] },
+        { t: "Cuando un mes no alcanza", d: "Habrá meses que no cuadren. La regla es no tocar primero el ahorro automatizado: recorta lo variable y, solo si no basta, baja el ahorro de ese mes y escribe por qué.", l: [
+          "Primero: comida fuera y gustos.",
+          "Segundo: el ahorro de ese mes; nunca el abono a la deuda cara.",
+          "Tercero: anota la causa; si se repite tres meses, el plan necesita cambiar."] },
+      ],
+      "Saber a dónde se va tu dinero": [
+        { t: "Gastos hormiga: cómo encontrarlos", d: "Los gastos pequeños y frecuentes —cafés, botanas, envíos, suscripciones— se pierden porque ninguno duele solo. Sumados en un mes suelen ser una de las categorías más grandes.", l: [
+          "Filtra en Finanzas los gastos menores de $200 del mes y súmalos.",
+          "Revisa las suscripciones del estado de cuenta: ¿las usas todas?",
+          "Multiplica por 12: el número del año es el que motiva el cambio."] },
+        { t: "Fijos, variables y de gusto", d: "No todos los gastos se mueven igual. Los fijos —renta, servicios— cambian con decisiones grandes; los variables —comida, gasolina— con hábitos; los de gusto, con decisiones del día.", l: [
+          "Fijos: negocia o cambia una vez y ahorras cada mes.",
+          "Variables: un tope por semana se controla mejor que uno por mes.",
+          "Gusto: decide de antemano cuánto, y sin culpa dentro de eso."] },
+        { t: "Revisar el mes en quince minutos", d: "Una revisión corta al cerrar el mes vale más que registrar perfecto. Tres preguntas bastan para aprender del mes y ajustar el siguiente.", l: [
+          "¿Cuál fue la categoría más alta, y era la que esperabas?",
+          "¿Qué gasto no volverías a hacer?",
+          "¿Qué ajustas para el mes que viene, en una sola acción?"] },
+      ],
+      "Presupuestar sobre ingreso variable": [
+        { t: "Vivir con el dinero del mes pasado", d: "La meta de quien tiene ingreso variable es pagar el mes actual con lo que ganó el mes anterior. Con un mes de gastos guardado, los meses flojos dejan de ser una crisis.", l: [
+          "Junta un mes de gastos en una cuenta aparte, distinta del fondo de emergencia.",
+          "Lo que entra cada mes va a esa cuenta, y de ahí sale el presupuesto del siguiente.",
+          "Lo que sobre del mes bueno va al plan."] },
+        { t: "Cuánto deja de verdad una hora de Didi", d: "Lo que cobras en Didi no es lo que ganas: hay que restar gasolina, desgaste del auto, mantenimiento y comisiones. Tu ganancia neta por hora te dice si una hora de manejo vale más que una de estudio o de descanso.", l: [
+          "Neto por hora = (lo cobrado − gasolina − desgaste estimado) ÷ horas manejadas.",
+          "Desgaste: llantas, servicios y depreciación; estímalo por kilómetro.",
+          "Compara ese número con lo que vale una hora de tu plan de carrera."] },
+        { t: "Repartir cada ingreso extra", d: "Un ingreso extra sin destino se diluye en gastos pequeños. Decidir el reparto de antemano hace que cada peso extra empuje el plan.", l: [
+          "Mientras haya deuda cara, todo el extra va a la deuda.",
+          "Sin deuda cara, casi todo al ahorro de la salida y una parte chica a gusto, para sostener el hábito.",
+          "Escribe el reparto y aplícalo el mismo día que entra el dinero."] },
+      ],
+      "Decidir con la cabeza fría": [
+        { t: "Los sesgos que más dinero cuestan", d: "La economía conductual documentó errores que todos repetimos: preferir lo de hoy aunque cueste más mañana, compararnos con otros y dejarnos llevar por la urgencia. Ponerles nombre ayuda a reconocerlos a tiempo.", l: [
+          "Sesgo del presente: pagar a meses porque hoy duele menos.",
+          "Anclaje: un «antes $5,000, hoy $3,000» te hace sentir que ahorras.",
+          "Escasez fabricada: «últimas piezas» o «solo hoy», para que no lo pienses."] },
+        { t: "El precio en horas de tu trabajo", d: "Traducir un precio a horas de trabajo lo vuelve concreto. Con tu ingreso del mes y tus horas sabes cuántas horas cuesta cada compra.", l: [
+          "Tu hora = ingreso neto del mes ÷ horas trabajadas en el mes.",
+          "Precio ÷ tu hora = las horas de trabajo que cuesta.",
+          "Pregúntate: ¿cambiaría esas horas por esto?"] },
+        { t: "Las decisiones grandes, por escrito", d: "En compras grandes, cambios de trabajo o inversiones, escribir la decisión antes de tomarla mejora el juicio y te deja aprender después. Annie Duke lo llama separar la calidad de la decisión de la suerte del resultado.", l: [
+          "Qué decido, qué alternativas tenía y qué espero que pase.",
+          "Qué información me faltaba y qué me haría cambiar de opinión.",
+          "Relee la nota en seis meses y anota qué aprendiste."] },
+      ],
+      "Calcular el costo real de la deuda": [
+        { t: "Tasa, CAT y lo que de verdad pagas", d: "La tasa de interés es solo una parte: el CAT, Costo Anual Total, suma intereses y comisiones, y es el número con el que el Banco de México pide comparar créditos. En tarjetas, además, se cobra IVA sobre los intereses.", l: [
+          "Compara siempre por CAT, no por tasa ni por mensualidad.",
+          "El IVA de los intereses no está en la tasa: súmalo a tu cuenta.",
+          "Tu estado de cuenta trae la tasa, el CAT y los intereses del periodo."] },
+        { t: "El pago mínimo y el pago para no generar intereses", d: "Tu estado de cuenta trae dos números clave: el pago mínimo, que apenas cubre intereses y un poco de capital, y el pago para no generar intereses, que es el saldo del periodo. Pagar solo el mínimo puede alargar una deuda años.", l: [
+          "Paga el «pago para no generar intereses» en cuanto puedas: así eres totalero y no pagas intereses.",
+          "Si no alcanzas, paga lo más que puedas arriba del mínimo.",
+          "Muchos estados de cuenta dicen cuánto tardarías pagando solo el mínimo: léelo una vez."] },
+        { t: "Meses sin intereses: cuándo sí y cuándo no", d: "Los MSI no cobran intereses si pagas cada mensualidad a tiempo, pero ocupan tu línea de crédito y comprometen tu flujo de los meses siguientes. El riesgo es acumular varios hasta que la suma ahogue la quincena.", l: [
+          "Sí: una compra planeada, con el dinero ya apartado, para no descapitalizarte.",
+          "No: si la suma de tus mensualidades pasa del 10 % de tu ingreso del mes (regla práctica).",
+          "Lleva una lista de tus MSI activos con su fecha de fin."] },
+      ],
+      "El colchón dentro de la cuenta": [
+        { t: "Cuánto fondo necesitas de verdad", d: "La recomendación común va de tres a seis meses de gastos, pero el número depende de qué tan estable es tu ingreso y de qué otros respaldos tienes. Con ingreso variable o una mudanza en puerta, conviene ir hacia arriba.", l: [
+          "Mínimo: un mes de fijos; meta: tres meses de gastos.",
+          "El colchón de la salida a Alemania es aparte del de emergencia.",
+          "Allá, la cuenta bloqueada no es fondo de emergencia: libera una cantidad fija por mes."] },
+        { t: "CETES para el fondo: cómo funcionan", d: "Los CETES son deuda del gobierno federal que se compra con descuento y se paga a su valor completo al vencer; la diferencia es tu rendimiento. En cetesdirecto se compran desde $100, sin comisiones, y pueden reinvertirse solos.", l: [
+          "Plazo de 28 días para el fondo: se recupera rápido.",
+          "Activa la reinversión automática para no dejar el dinero quieto.",
+          "Si los necesitas antes del vencimiento, puedes venderlos y el dinero llega en uno o dos días hábiles."] },
+        { t: "Reponer el fondo después de usarlo", d: "Usar el fondo en una emergencia real es justo para lo que existe; el error es no reponerlo. La regla: se repone antes que cualquier otro ahorro.", l: [
+          "Calcula lo que usaste y divídelo entre las quincenas que tardarás.",
+          "Mientras se repone, pausa los gustos grandes.",
+          "Anota qué pasó: si era previsible, va a la lista de gastos que no son de cada mes."] },
+      ],
+      "Leer tu propio balance": [
+        { t: "Activos que valen y activos que se deprecian", d: "No todo lo que tienes conserva su valor. El efectivo y las inversiones lo mantienen o lo aumentan; un auto pierde una parte cada año. En tu balance, el auto cuenta a su valor de venta de hoy, no al que pagaste.", l: [
+          "El valor del {{auto}}: busca anuncios del mismo modelo y año, y toma el de en medio.",
+          "Actualízalo cada seis meses, no cada mes.",
+          "Separa el patrimonio líquido —lo que puedes usar pronto— del total."] },
+        { t: "La tasa de ahorro: el número que manda", d: "Tu tasa de ahorro es la parte de tu ingreso que se queda como patrimonio. En los primeros años pesa mucho más en tus metas que el rendimiento de tus inversiones.", l: [
+          "Tasa de ahorro = (ingreso − gasto) ÷ ingreso.",
+          "Mídela cada mes; el promedio de tres meses es el que importa.",
+          "Subirla cinco puntos suele adelantar una meta más que buscar mejor rendimiento."] },
+        { t: "Cómo leer una caída del patrimonio", d: "Un mes con el patrimonio abajo no siempre es malo: puede ser una inversión que bajó, un gasto planeado o la depreciación del auto. Lo importante es separar la causa y ver la tendencia de varios meses.", l: [
+          "Caída por el mercado: no pide acción si tu plan sigue igual.",
+          "Caída por un gasto: revisa si estaba previsto.",
+          "Caída por deuda nueva: es la única que pide un cambio inmediato."] },
+      ],
+      "Entender tus impuestos": [
+        { t: "Deducciones personales: qué entra y el tope", d: "En tu declaración anual puedes deducir gastos médicos, dentales, de psicología y nutrición, lentes graduados, primas de seguros de gastos médicos e intereses reales de un crédito hipotecario, entre otros. El total tiene un tope: el menor entre el 15 % de tus ingresos del año y cinco UMA anuales.", l: [
+          "Pagados con tarjeta, transferencia o cheque: en efectivo no cuentan.",
+          "Con factura a tu RFC y el uso de CFDI de gastos médicos.",
+          "Las colegiaturas, de preescolar a bachillerato, y las aportaciones voluntarias al retiro tienen sus propios límites."] },
+        { t: "Cuándo te conviene presentar la declaración anual", d: "Si solo tienes sueldo de un patrón y ganas menos de 400 mil pesos al año, normalmente no estás obligado; pero presentarla con deducciones puede darte saldo a favor. Si tienes otros ingresos —intereses, venta de acciones, plataformas— revisa si te obliga.", l: [
+          "En abril, entra a la declaración del SAT: trae tus ingresos y tus facturas precargados.",
+          "Revisa que estén tus deducciones; si falta una, pide la factura.",
+          "El saldo a favor se deposita en tu cuenta, a veces en días."] },
+        { t: "Antes de irte a vivir fuera", d: "Si dejas de ser residente fiscal en México existe un aviso de cambio de residencia que se presenta ante el SAT antes de irte. Si te toca o no depende de dónde quede el centro de tus intereses; confírmalo con un contador.", l: [
+          "Renueva tu e.firma antes de irte: vence cada cuatro años y sin ella no haces casi ningún trámite.",
+          "Guarda tu constancia de situación fiscal y las declaraciones de los últimos cinco años.",
+          "Lleva tu caso a un contador: estudiante en el extranjero, con o sin ingresos en México."] },
+      ],
+    },
+    inversion: {
+      "Saber cuándo NO invertir": [
+        { t: "La cuenta que decide: tu deuda contra el rendimiento", d: "Pagar una deuda es una inversión con rendimiento garantizado igual a su tasa. Si tu tarjeta cobra más de 30 % al año, abonarle es ganar ese 30 % sin riesgo, algo que ninguna inversión razonable ofrece.", l: [
+          "Deuda arriba de 15 % al año: pagarla le gana a casi cualquier inversión.",
+          "Deuda barata, como un crédito de auto a tasa baja, puede convivir con invertir.",
+          "Compara siempre después de impuestos y comisiones."] },
+        { t: "El orden completo de operaciones", d: "Más allá del fondo y la deuda, el orden sano es: lo esencial cubierto, colchón, deuda cara en cero, fondo completo y después invertir a largo plazo. Cada paso protege al siguiente.", l: [
+          "1. Lo esencial cubierto y un mes de colchón.",
+          "2. Deuda cara en cero.",
+          "3. Fondo completo; metas cercanas en renta fija y largo plazo en índices."] },
+        { t: "Cuando el mercado sube y da comezón", d: "El momento más peligroso para saltarse el orden es cuando todos hablan de lo que subió. El miedo a quedarse fuera empuja a comprar caro y con dinero que no debería estar invertido.", l: [
+          "Si una inversión es tema de conversación general, probablemente ya subió.",
+          "Escribe la regla: nada nuevo hasta que la deuda esté en cero.",
+          "Lleva una lista de ideas para cuando toque invertir: anotarlas quita la urgencia."] },
+      ],
+      "Conocer los instrumentos mexicanos": [
+        { t: "Deuda del gobierno: CETES, Bonos M y Udibonos", d: "El gobierno emite deuda a distintos plazos. Los CETES son de corto plazo y se compran con descuento; los Bonos M pagan una tasa fija cada seis meses; los Udibonos están en UDIS y suben con la inflación. Todos se compran sin comisión en cetesdirecto.", l: [
+          "CETES: liquidez y colchón.",
+          "Bonos M: tasa fija; si las tasas del mercado bajan, su precio sube, y al revés.",
+          "Udibonos: protegen tu poder de compra a largo plazo."] },
+        { t: "ETF e índices desde México", d: "Un ETF es un fondo que cotiza en bolsa y replica un índice, como el S&P 500. En México se compran en el SIC, el Sistema Internacional de Cotizaciones, desde casas como {{broker}}, en pesos y sin abrir cuenta en el extranjero.", l: [
+          "Revisa el costo anual del ETF: VOO cobra 0.03 %.",
+          "Un ETF global, como VT, reparte el riesgo entre miles de empresas de muchos países.",
+          "El tipo de cambio cuenta: un ETF en dólares sube o baja también con el peso."] },
+        { t: "La Afore: la inversión que ya tienes", d: "Tu Afore recibe las aportaciones obligatorias de tu sueldo y las invierte en una Siefore según tu edad. Puedes revisar su rendimiento neto, cambiarte a una que rinda más y hacer aportaciones voluntarias que se deducen.", l: [
+          "Consulta tu saldo y tu Afore en la app AforeMóvil.",
+          "Compara el rendimiento neto que publica la CONSAR antes de elegir.",
+          "Las aportaciones voluntarias se deducen en tu declaración, con su propio límite."] },
+      ],
+      "Interés compuesto y horizonte": [
+        { t: "Nominal contra real: la inflación se come una parte", d: "Un rendimiento de 10 % con inflación de 4 % te deja cerca de 6 % real: eso es lo que crece tu poder de compra. Planear con rendimientos nominales hace que tus metas parezcan más cerca de lo que están.", l: [
+          "Rendimiento real ≈ rendimiento nominal − inflación.",
+          "Para metas a cinco años o más, planea con rendimiento real.",
+          "Los Udibonos y los índices de largo plazo tienden a proteger contra la inflación."] },
+        { t: "Cerca de la meta, el riesgo cambia", d: "Si tu meta tiene fecha, una caída fuerte justo antes duele más que una al principio. Por eso el dinero que vas a usar en uno o dos años no debería estar en bolsa, aunque en promedio rinda más.", l: [
+          "Meta a menos de dos años: renta fija.",
+          "Meta de dos a cinco años: una mezcla que pasa a renta fija conforme se acerca la fecha.",
+          "El dinero de tu salida a Alemania tiene fecha: no debería estar en algo que pueda caer 30 % el mes antes."] },
+        { t: "Aportar más le gana a buscar más rendimiento", d: "En los primeros años tus aportaciones pesan mucho más que el rendimiento. Subir lo que aportas acelera tus metas más que encontrar un instrumento que rinda un punto más.", l: [
+          "Con poco capital, un punto extra de rendimiento son pocos pesos al año.",
+          "Un aumento de sueldo dirigido al ahorro cambia toda la trayectoria.",
+          "El rendimiento empieza a pesar más cuando el capital ya es grande."] },
+      ],
+      "Escribir tu asignación objetivo": [
+        { t: "Cómo elegir los porcentajes", d: "La asignación depende de tu horizonte, de cuánto puedes ver caer sin vender y de tus metas. Un punto de partida: en renta fija, el dinero que usarás en los próximos dos años; en índices, el de largo plazo.", l: [
+          "Pregúntate cuánto podrías ver caer tu cartera sin vender: ese es tu límite de riesgo.",
+          "Separa por metas: la salida, el colchón y el largo plazo.",
+          "Empieza simple: dos o tres partes bastan."] },
+        { t: "Diversificar de verdad", d: "Diversificar no es tener muchas cosas, sino cosas que no se mueven igual. Diez acciones de tecnología de Estados Unidos están menos diversificadas que un solo ETF global.", l: [
+          "Por país: no todo en un solo mercado.",
+          "Por tipo: renta fija y renta variable.",
+          "Por moneda: pesos, dólares y, para tu plan, euros."] },
+        { t: "Tu política de inversión en una página", d: "Los inversionistas institucionales escriben una política que dice qué hacen y qué no, para no decidir con emociones. La tuya cabe en una página y te protege de ti mismo.", l: [
+          "Tus metas, con fecha y monto.",
+          "Tu asignación objetivo y cuándo rebalanceas.",
+          "Qué haces si el mercado cae, y qué no harás nunca."] },
+      ],
+      "Aportar periódicamente y automatizarlo": [
+        { t: "Aportar cada mes o invertir todo de una vez", d: "Con una cantidad grande, invertir todo de una vez gana en promedio, porque el mercado sube más veces de las que baja; pero aportar por partes reduce el arrepentimiento, y es lo natural cuando el dinero llega cada quincena.", l: [
+          "Si el dinero llega cada mes, aportar cada mes es lo lógico.",
+          "Con una cantidad grande y miedo a entrar, repártela en tres a seis meses.",
+          "Lo peor es esperar «el momento perfecto» con el dinero quieto."] },
+        { t: "Que la compra no dependa de tu ánimo", d: "Algunas casas de bolsa permiten programar compras recurrentes. Si la tuya no lo tiene, una transferencia automática más un bloque fijo en tu semana hacen lo mismo.", l: [
+          "Programa la transferencia el día que entra la quincena.",
+          "Ten escrito qué comprar según tu asignación.",
+          "La compra toma cinco minutos en tu bloque del lunes."] },
+        { t: "Subir el aporte sin sentirlo", d: "Cada aumento de ingreso es la oportunidad de subir el ahorro antes de acostumbrarte a gastarlo. Richard Thaler y Shlomo Benartzi lo probaron con «Save More Tomorrow»: comprometer de antemano una parte de los aumentos futuros.", l: [
+          "Decide hoy: la mitad de cada aumento va al aporte.",
+          "Cuando termines de pagar la tarjeta, ese abono se vuelve aporte.",
+          "Escríbelo en el plan para que pase solo."] },
+      ],
+      "Ver las comisiones antes que el rendimiento": [
+        { t: "Dónde se esconden los costos", d: "Además de la comisión del fondo puede haber comisión por operación, el IVA de esa comisión, el tipo de cambio que te aplican y la diferencia entre el precio de compra y el de venta. Juntos pueden duplicar el costo que ves.", l: [
+          "Revisa una vez la tabla de comisiones de tu casa de bolsa.",
+          "En dólares, compara el tipo de cambio que te dan con el del día.",
+          "Menos operaciones, menos costos: compra en bloques, no a diario."] },
+        { t: "Fondos de banco contra ETF", d: "Muchos fondos de inversión de bancos cobran entre 1 % y 2.5 % al año y casi nunca le ganan a su índice después de costos. Un ETF que replica el mismo índice cobra una fracción.", l: [
+          "Busca en el prospecto la «comisión por administración».",
+          "Compara su rendimiento con el de su índice, no con el de otros fondos.",
+          "Si en cinco años no le gana a su índice, no hay razón para pagar más."] },
+        { t: "El efecto acumulado de una comisión", d: "Una comisión parece pequeña porque se expresa en porcentaje al año, pero se cobra sobre todo tu saldo, cada año. A largo plazo es de las pocas cosas que sí controlas.", l: [
+          "Compara dos opciones del mismo índice con la cuenta de «Para copiar».",
+          "Revisa tus costos totales una vez al año.",
+          "Prefiere lo simple: menos capas, menos comisiones."] },
+      ],
+      "Aguantar sin vender": [
+        { t: "La brecha del comportamiento", d: "Estudios de Morningstar como «Mind the Gap» muestran que el inversionista promedio gana menos que los fondos en los que invierte, porque compra después de que suben y vende después de que bajan. La diferencia es puro comportamiento.", l: [
+          "El rendimiento del fondo no es el tuyo si entras y sales.",
+          "Los mejores días del mercado suelen llegar justo después de los peores.",
+          "Quedarte invertido es una habilidad, no pasividad."] },
+        { t: "Qué hacer en una caída, paso a paso", d: "En una caída, el primer impulso es hacer algo. Un protocolo escrito convierte la emoción en una lista de pasos que no incluye vender por pánico.", l: [
+          "Paso 1: no abras la app más de una vez al día.",
+          "Paso 2: relee tu política de inversión y tu asignación.",
+          "Paso 3: si toca aportar, aporta a lo que quedó más abajo."] },
+        { t: "Cuándo sí vender", d: "Vender no es malo; vender por miedo sí. Hay razones válidas: necesitas el dinero para una meta cercana, tu asignación se desvió mucho o cambió la razón por la que compraste.", l: [
+          "Meta cercana: pasa a renta fija con anticipación, no el último mes.",
+          "Rebalanceo: vende lo que subió de más, con calma y en su fecha.",
+          "Error de inversión: si ya no la entiendes o cambió su razón de ser."] },
+      ],
+      "Rebalancear una vez al año": [
+        { t: "Por calendario o por bandas", d: "Hay dos formas comunes: revisar en una fecha fija una vez al año, o actuar solo cuando una parte se sale de una banda, por ejemplo cinco puntos. Las dos funcionan; lo importante es decidir la regla antes.", l: [
+          "Calendario: fácil de recordar; elige un mes tranquilo.",
+          "Bandas: reacciona solo a movimientos grandes.",
+          "Combinadas: revisas en la fecha y actúas solo si hay desviación."] },
+        { t: "Rebalancear con aportes, sin vender", d: "La forma más barata de rebalancear es dirigir el dinero nuevo a lo que quedó abajo. No pagas impuestos ni comisiones de venta, y con aportes cada quincena suele bastar.", l: [
+          "Calcula cuánto le falta a cada parte para llegar a su porcentaje.",
+          "Manda los aportes a la que más le falte.",
+          "Vende solo si la desviación es tan grande que los aportes no alcanzan."] },
+        { t: "El impuesto de vender para rebalancear", d: "Vender lo que subió genera una ganancia, y en acciones o ETF del SIC pagas 10 % de ISR sobre ella. Por eso conviene rebalancear con aportes y vender solo lo necesario.", l: [
+          "Antes de vender, calcula la ganancia y su impuesto.",
+          "Las pérdidas de otra posición pueden compensar ganancias del año.",
+          "Guarda los comprobantes para tu declaración."] },
+      ],
+      "Saber qué impuestos pagas al invertir": [
+        { t: "Interés real y retención", d: "En instrumentos de deuda pagas impuesto sobre el interés real: lo que rindió por encima de la inflación. Durante el año la institución retiene un porcentaje sobre tu capital, que cuenta como pago a cuenta en tu declaración.", l: [
+          "Tu constancia anual dice el interés real y la retención.",
+          "Si el interés real fue bajo, la retención puede quedarte a favor.",
+          "Presentar la declaración te deja recuperar esa diferencia."] },
+        { t: "Ganancias en bolsa: el 10 %", d: "La venta de acciones y ETF en la bolsa mexicana, incluido el SIC, paga 10 % de ISR sobre la ganancia neta del año; tu casa de bolsa te da la constancia con el cálculo. Las pérdidas se restan de las ganancias.", l: [
+          "La ganancia se calcula con el costo de compra actualizado por inflación.",
+          "Las pérdidas compensan ganancias de ese año y de los siguientes, con sus reglas.",
+          "Se declara en la anual aunque ya tengas la constancia."] },
+        { t: "Dividendos: la otra parte del impuesto", d: "Los dividendos también pagan impuesto: los de empresas mexicanas llevan una retención adicional de 10 %, y los de empresas extranjeras suelen tener retención en su país de origen. Tu constancia trae los montos y lo que ya se retuvo.", l: [
+          "Revisa en tu constancia los dividendos y su retención.",
+          "Lo retenido en el extranjero puede acreditarse, con sus reglas.",
+          "Si no quieres recibir dividendos, hay ETF que los reinvierten solos."] },
+      ],
+    },
+    datos: {
+      "Python y pandas con tus datos": [
+        { t: "Las cinco operaciones que hacen casi todo", d: "Casi todo análisis con pandas usa cinco cosas: filtrar filas, elegir columnas, agrupar y resumir, ordenar y unir tablas. Dominar esas cinco te deja contestar la mayoría de las preguntas.", l: [
+          "Filtrar: df[df['monto'] > 500]",
+          "Agrupar: df.groupby('categoria')['monto'].agg(['sum', 'mean', 'count'])",
+          "Unir: pd.merge(gastos, categorias, on='categoria')"] },
+        { t: "Limpiar datos: donde se va el tiempo real", d: "Los datos reales vienen sucios: fechas como texto, montos con símbolos, categorías escritas de varias formas. Limpiar suele ser más de la mitad del trabajo, y hacerlo con código lo vuelve repetible.", l: [
+          "Fechas: pd.to_datetime(df['fecha'], dayfirst=True)",
+          "Montos: df['monto'].str.replace('[$,]', '', regex=True).astype(float)",
+          "Categorías: df['categoria'].str.strip().str.lower()"] },
+        { t: "Cuadernos: Kaggle, Colab o tu computadora", d: "Un cuaderno mezcla código, resultados y notas: es ideal para explorar. Kaggle y Google Colab corren en el navegador sin instalar nada; en tu computadora, VS Code abre cuadernos con la extensión de Jupyter.", l: [
+          "Para empezar, Colab con tu CSV subido.",
+          "Para tu repositorio: guarda el cuaderno y un script .py con lo que funcionó.",
+          "Pon arriba de cada celda qué pregunta contesta."] },
+      ],
+      "Un tablero que responda una pregunta": [
+        { t: "La gráfica correcta para cada pregunta", d: "Cada pregunta tiene su gráfica: comparar categorías pide barras; una tendencia en el tiempo, líneas; las partes de un total, barras apiladas. Las gráficas de pastel con muchas partes casi nunca son la mejor opción.", l: [
+          "Comparar: barras horizontales, de mayor a menor.",
+          "Tendencia: una línea con el tiempo completo en el eje.",
+          "Distribución: un histograma, para ver cómo se reparten los montos."] },
+        { t: "Filtros y controles útiles", d: "Un buen tablero deja que quien lo ve cambie el periodo o la categoría sin romperlo. Pocos controles bien elegidos valen más que muchos.", l: [
+          "Un control de rango de fechas arriba.",
+          "Un filtro de categoría que mueva todas las gráficas.",
+          "Valores por defecto que contesten la pregunta principal sin tocar nada."] },
+        { t: "El tablero como pieza de portafolio", d: "Un tablero publicado con datos tuyos o públicos es una prueba visible de que sabes trabajar con datos. Para validación, un tablero de resultados de pruebas simuladas muestra justo lo que hace un equipo.", l: [
+          "Datos públicos o simulados, nunca de tu empresa.",
+          "Publícalo con un enlace de solo lectura.",
+          "En tu repositorio, explica la pregunta, la fuente y la decisión que permite tomar."] },
+      ],
+      "Contar lo que dicen los datos": [
+        { t: "La estructura de una explicación con datos", d: "Cole Nussbaumer Knaflic propone pensar primero en el mensaje y en quién lo escucha, y después en la gráfica. La estructura más útil: el contexto en una frase, el hallazgo, por qué importa y qué propones.", l: [
+          "Contexto: «Corrimos 400 pruebas de regresión en la versión 2.3.»",
+          "Hallazgo: «Falló el 12 %, todas en el módulo de frenado.»",
+          "Propuesta: «Recomiendo revisar el cambio de calibración antes de liberar.»"] },
+        { t: "Quitar lo que distrae", d: "Cada elemento que no ayuda al mensaje compite por atención: rejillas, bordes, leyendas lejanas, colores de más. Quitar es lo que hace que una gráfica se entienda en segundos.", l: [
+          "Sin bordes ni rejillas pesadas; si hace falta, una rejilla tenue.",
+          "Etiqueta directo sobre la línea en vez de usar leyenda.",
+          "Un solo color fuerte para lo importante; lo demás en gris."] },
+        { t: "El mensaje según quién escucha", d: "Un gerente quiere la decisión; un ingeniero, el detalle técnico. El mismo análisis se cuenta distinto según quién lo recibe.", l: [
+          "Gerencia: la conclusión y el riesgo primero; el detalle, en un anexo.",
+          "Equipo técnico: el método, los datos y sus limitaciones.",
+          "Cliente: el impacto en su producto y los siguientes pasos."] },
+      ],
+      "SQL, diez minutos al día": [
+        { t: "El orden en que SQL ejecuta una consulta", d: "Escribes SELECT primero, pero la base de datos ejecuta en otro orden: FROM y JOIN, luego WHERE, GROUP BY, HAVING, SELECT y al final ORDER BY. Entenderlo explica muchos errores, como no poder usar en el WHERE un alias del SELECT.", l: [
+          "WHERE filtra filas antes de agrupar; HAVING filtra grupos después.",
+          "Un alias del SELECT sí se puede usar en ORDER BY.",
+          "Si una consulta da resultados raros, léela en el orden en que se ejecuta."] },
+        { t: "Los JOIN y cuándo usar cada uno", d: "INNER JOIN devuelve solo lo que coincide en las dos tablas; LEFT JOIN conserva todo lo de la izquierda aunque no tenga pareja. Elegir mal es la causa más común de resultados que parecen correctos pero tienen filas de menos.", l: [
+          "INNER: las pruebas que tienen resultado.",
+          "LEFT: todos los requisitos, tengan o no prueba; los NULL son los huecos.",
+          "Cuenta las filas antes y después de un JOIN para detectar duplicados."] },
+        { t: "Funciones de ventana: el siguiente nivel", d: "Las funciones de ventana calculan sobre grupos de filas sin juntarlas: rankings, acumulados, comparaciones con el registro anterior. Salen en entrevistas de datos y resuelven en una línea lo que antes pedía varias consultas.", l: [
+          "ROW_NUMBER() OVER (PARTITION BY categoria ORDER BY monto DESC): el ranking dentro de cada categoría.",
+          "SUM(monto) OVER (ORDER BY fecha): el acumulado.",
+          "LAG(monto) OVER (ORDER BY fecha): el valor anterior, para ver cambios."] },
+      ],
+      "Teclear, no mirar": [
+        { t: "La ilusión de saber", d: "Ver a alguien resolver algo te hace sentir que sabes hacerlo; es la ilusión de competencia. Solo al intentarlo sin ayuda descubres lo que no sabes, y ese es el momento en que se aprende.", l: [
+          "Después de cada video, ciérralo y reprodúcelo de memoria.",
+          "Si te atoras, mira solo esa parte y vuelve a cerrar.",
+          "Al día siguiente, rehazlo sin ver nada."] },
+        { t: "Leer un mensaje de error", d: "Un error de Python dice qué pasó y dónde: el tipo de error, el mensaje y la línea. Leerlo de abajo hacia arriba te lleva a la causa en la mayoría de los casos.", l: [
+          "La última línea: el tipo —KeyError, TypeError— y el mensaje.",
+          "Las de arriba: el camino de llamadas hasta tu código.",
+          "Un KeyError en pandas casi siempre es una columna mal escrita."] },
+        { t: "Proyectos pequeños en vez de cursos largos", d: "Un curso largo sin proyecto se olvida; un proyecto pequeño con una pregunta real obliga a usar lo aprendido. Alterna: un tema del curso y su aplicación a tus datos esa misma semana.", l: [
+          "Una pregunta real: ¿en qué meses gasto más en comida?",
+          "Las herramientas: lo que acabas de ver en el curso.",
+          "El entregable: un cuaderno con la respuesta y una gráfica."] },
+      ],
+    },
+    mente: {
+      "Lo alto no se mantiene solo": [
+        { t: "Sistemas, no metas", d: "James Clear lo resume así: no subes al nivel de tus metas, caes al nivel de tus sistemas. La meta dice a dónde vas; el sistema —la hora fija, el lugar, la señal— es lo que te lleva en los días difíciles.", l: [
+          "Cada hábito clave con su hora, su lugar y su señal.",
+          "Hazlo fácil: deja listo el entorno la noche anterior.",
+          "Mide el sistema —¿lo hice?— más que el resultado del día."] },
+        { t: "La versión mínima: no romper la cadena", d: "En un día malo el objetivo no es hacerlo bien, sino no dejar de hacerlo. Una versión mínima definida de antemano —diez minutos en vez de una hora— mantiene la racha y la identidad.", l: [
+          "Define la versión mínima de cada hábito clave.",
+          "Regla: nunca dos días seguidos sin hacerlo.",
+          "La versión mínima cuenta como hecho; no es trampa."] },
+        { t: "Las señales tempranas de que algo se cae", d: "Antes de que un hábito se pierda hay señales: lo pospones, lo acortas, lo haces más tarde. Detectarlas a tiempo es mucho más fácil que reconstruir el hábito después.", l: [
+          "Dos días seguidos pospuesto: alerta.",
+          "Una semana más corta de lo normal: revisa qué cambió.",
+          "En la revisión del domingo, mira primero lo que cambió de hora."] },
+      ],
+      "El sueño es la palanca, no la fuerza de voluntad": [
+        { t: "Qué hace el sueño por tu memoria y tu cuerpo", d: "Dormir consolida lo aprendido en el día, repara el músculo y regula el apetito y el ánimo. Con menos sueño del que necesitas bajan la atención, la fuerza y el autocontrol, aunque no lo notes.", l: [
+          "El sueño profundo fija lo que estudiaste; el REM, las habilidades y las emociones.",
+          "Dos semanas durmiendo seis horas afectan la atención casi como una noche sin dormir.",
+          "Lo que repasas antes de dormir se fija mejor si duermes completo."] },
+        { t: "La cafeína, el alcohol y la luz", d: "La cafeína tarda unas cinco horas en bajar a la mitad: un café a las cuatro de la tarde sigue actuando a medianoche. El alcohol ayuda a dormirse pero fragmenta el sueño y reduce el REM. La luz de las pantallas retrasa tu reloj interno.", l: [
+          "Último café antes de las dos de la tarde.",
+          "Alcohol lejos de la hora de dormir; mejor nada entre semana.",
+          "Luz baja y cálida en la última hora; luz natural fuerte en la mañana."] },
+        { t: "Si no puedes dormir", d: "La terapia cognitivo-conductual para el insomnio es el tratamiento de primera línea. Una de sus reglas: si llevas unos veinte minutos despierto en la cama, levántate y haz algo tranquilo con luz baja hasta que tengas sueño.", l: [
+          "La misma hora de despertar todos los días, también el fin de semana.",
+          "La cama solo para dormir: nada de celular ni de trabajo.",
+          "Si el problema dura semanas, búscalo con un especialista."] },
+      ],
+      "Terapia antes de irte": [
+        { t: "Cómo elegir terapeuta", d: "La relación con el terapeuta predice buena parte del resultado. Busca formación en un enfoque con evidencia, como la terapia cognitivo-conductual o la de aceptación y compromiso, y a alguien con quien te sientas cómodo hablando.", l: [
+          "Pregunta por su enfoque y su experiencia con cambios de vida o migración.",
+          "Date dos o tres sesiones para evaluar la relación.",
+          "La terapia en línea funciona y te deja seguir con la misma persona desde Alemania."] },
+        { t: "El choque cultural y sus etapas", d: "Quien se muda de país suele pasar por etapas: luna de miel, frustración, ajuste y adaptación. Saber que la frustración es normal, y que suele llegar en los primeros meses, ayuda a no tomarla como fracaso.", l: [
+          "Luna de miel: todo es nuevo y emociona.",
+          "Frustración: el idioma, los trámites y la soledad pesan; a ti te coincide con el invierno.",
+          "Ajuste: rutinas y amigos nuevos; ahí rinde el plan que armaste en terapia."] },
+        { t: "El invierno alemán: luz y ánimo", d: "En Stuttgart, en diciembre hay unas ocho horas de luz y muchos días nublados. La falta de luz afecta el ánimo y el sueño; prepararse funciona mejor que aguantar.", l: [
+          "Sal a la luz natural en la mañana, aunque esté nublado.",
+          "Pregúntale a tu médico por la vitamina D: en invierno conviene revisarla.",
+          "A muchas personas les ayuda una lámpara de luz brillante en la mañana; consúltalo antes de usarla."] },
+      ],
+      "La deuda pesa en la cabeza, no sólo en la cartera": [
+        { t: "Por qué la deuda cansa", d: "Sendhil Mullainathan y Eldar Shafir mostraron en Escasez que las preocupaciones de dinero ocupan atención y te dejan menos para todo lo demás. No es falta de voluntad: es una carga real, y se aligera al tener un plan con fecha.", l: [
+          "Un plan escrito con fecha libera parte de esa carga.",
+          "Mirar el avance una vez al mes basta.",
+          "Revisar el saldo varias veces al día alimenta la preocupación."] },
+        { t: "Celebrar los hitos de la deuda", d: "Una deuda larga se sostiene mejor con hitos intermedios: la mitad pagada, el último abono. Reconocerlos refuerza lo que te llevó ahí.", l: [
+          "Marca hitos: 25 %, 50 %, 75 % y el último abono.",
+          "Celebra con algo que no genere deuda nueva.",
+          "Cuéntaselo a alguien: decirlo lo hace real."] },
+        { t: "Qué hacer el día que termines de pagar", d: "El día que termines, el dinero que iba a la deuda queda libre. Si no tiene destino se va en gastos; si lo rediriges ese mismo día, tu ahorro sube sin que cambie tu nivel de vida.", l: [
+          "Programa ese mismo monto hacia tu inversión.",
+          "Decide qué haces con la tarjeta: cancelarla o dejarla sin uso.",
+          "Escribe lo que aprendiste para no repetir el ciclo."] },
+      ],
+      "Cortar la rumia con una acción pequeña": [
+        { t: "Rumiar no es resolver", d: "Rumiar es repetir un problema sin avanzar; resolver produce un siguiente paso. La pregunta que los separa: ¿en los últimos diez minutos apareció una idea nueva o una acción? Si no, estás rumiando.", l: [
+          "Rumiar: «¿y si sale mal?», una y otra vez.",
+          "Resolver: «¿qué es lo peor probable y qué haría?».",
+          "Cambia el «por qué me pasa» por el «qué hago ahora»."] },
+        { t: "El rato fijo para preocuparte", d: "Una técnica de la terapia cognitivo-conductual es agendar un rato fijo para preocuparte, unos quince minutos al día. Si la preocupación aparece fuera de ese horario, la anotas y la dejas para su cita.", l: [
+          "Elige una hora lejos de la de dormir.",
+          "Durante el día, anota la preocupación en una línea.",
+          "En la cita, decide: ¿hay una acción? Si no, se suelta."] },
+        { t: "Planes «si… entonces…»", d: "Peter Gollwitzer mostró que decidir de antemano qué harás cuando aparezca una señal —«si pasa esto, entonces hago aquello»— aumenta mucho la probabilidad de hacerlo. Sirve para cortar la rumia antes de que empiece.", l: [
+          "«Si llevo diez minutos dándole vueltas, entonces mando el mensaje o escribo la línea.»",
+          "«Si me despierto pensando en el trabajo, entonces lo anoto y vuelvo a dormir.»",
+          "Escribe tres de estos y léelos el domingo."] },
+      ],
+      "Una revisión corta cada domingo": [
+        { t: "El formato que dura años", d: "Una revisión funciona si es corta, escrita y siempre igual. Diez minutos con las mismas preguntas se sostienen años; una revisión de una hora se abandona en un mes.", l: [
+          "El mismo lugar y la misma hora cada domingo.",
+          "Las mismas preguntas: lo que salió, lo que se cayó y lo único que cambias.",
+          "Guárdalas juntas para releerlas cada trimestre."] },
+        { t: "Revisar sin castigarte", d: "Una revisión que se vuelve juicio se acaba evitando. Tratarte como tratarías a un amigo no baja la exigencia: la investigación de Kristin Neff muestra que facilita retomar después de fallar.", l: [
+          "Describe lo que pasó como si le hubiera pasado a otra persona.",
+          "Pregunta qué lo hizo difícil, no qué está mal contigo.",
+          "Termina con la acción, no con el juicio."] },
+        { t: "La revisión de cada trimestre", d: "Cada tres meses, relee tus revisiones de los domingos. Lo que se repite —el mismo hábito que se cae, la misma causa— es lo que de verdad hay que cambiar.", l: [
+          "Cuenta qué causa se repite más.",
+          "Elige un solo cambio grande para el trimestre.",
+          "Compáralo con el Plan Maestro: ¿vas al ritmo de tu fase?"] },
+      ],
+    },
+    liderazgo: {
+      "Dónde está tu techo": [
+        { t: "Por qué evitamos las conversaciones difíciles", d: "Las evitamos porque esperamos que salgan mal: conflicto, rechazo, dañar la relación. Pero no tenerlas también cuesta, y ese costo crece en silencio: el problema sigue y la relación se desgasta igual.", l: [
+          "Calcula el costo de callar: ¿qué pasa si esto sigue seis meses así?",
+          "Separa el miedo a la conversación del problema real.",
+          "Una conversación difícil bien preparada casi nunca sale tan mal como imaginas."] },
+        { t: "Valentía o claridad: cuál te falta", d: "Si sabes exactamente qué decir y no lo dices, te falta valentía: se trabaja con exposición gradual, empezando por conversaciones pequeñas. Si no sabes qué decir, te falta claridad: se trabaja escribiendo los hechos y lo que quieres lograr.", l: [
+          "Valentía: empieza por la conversación de menor riesgo de tu lista.",
+          "Claridad: escribe qué quieres para ti, para la otra persona y para la relación.",
+          "Las dos mejoran practicando, no pensando más."] },
+        { t: "El objetivo antes de hablar", d: "En Conversaciones cruciales, la pregunta antes de hablar es qué quieres de verdad: para ti, para la otra persona y para la relación. Si tu objetivo se vuelve ganar, la conversación se rompe.", l: [
+          "Escribe en una frase el resultado que buscas.",
+          "Si notas que quieres tener la razón, regresa a esa frase.",
+          "Busca un propósito común: algo que los dos quieran."] },
+      ],
+      "Separar el hecho de la historia": [
+        { t: "Del hecho a la reacción", d: "Conversaciones cruciales describe cómo pasamos de ver algo a reaccionar: vemos un hecho, nos contamos una historia, sentimos una emoción y actuamos. Si cambias la historia, cambian la emoción y la reacción.", l: [
+          "El hecho: lo que observaste.",
+          "La historia: la interpretación que le añadiste.",
+          "La pregunta: ¿qué otra historia explicaría el mismo hecho?"] },
+        { t: "Cómo decir lo difícil sin cerrar el diálogo", d: "El mismo libro propone un orden: compartir los hechos, contar tu historia, preguntar por la del otro, hablar con tentatividad y animarlo a que te contradiga. Así dices lo difícil sin que el otro se cierre.", l: [
+          "Los hechos primero: no se discuten.",
+          "Tu historia como hipótesis: «empiezo a pensar que…».",
+          "La invitación: «¿tú lo ves distinto?»."] },
+        { t: "Mantener la seguridad en la conversación", d: "Cuando alguien se siente atacado, se defiende o se calla. Restaurar la seguridad —aclarar tu intención, disculparte si hace falta— permite regresar al tema.", l: [
+          "Señales: silencio, sarcasmo, cambio de tema, tono alto.",
+          "Contraste: «no quiero decir que…; lo que sí quiero decir es que…».",
+          "Si se rompe, pausa y regresa a lo que los dos quieren."] },
+      ],
+      "Liderar sin el puesto": [
+        { t: "Influir sin autoridad", d: "Sin jerarquía, la influencia viene de la credibilidad, de la reciprocidad y de entender qué le importa a cada persona. Allan Cohen y David Bradford lo explican como un intercambio: ofreces lo que el otro valora.", l: [
+          "Identifica qué le importa a cada parte: tiempo, reconocimiento, menos riesgo.",
+          "Ofrece primero: ayuda que les quite trabajo.",
+          "La credibilidad se construye cumpliendo siempre lo pequeño."] },
+        { t: "Cómo proponer un cambio en tu equipo", d: "Una propuesta se acepta más fácil si llega con el problema medido, una solución pequeña para probar y la forma de deshacerla. Pedir un piloto asusta menos que pedir un cambio permanente.", l: [
+          "El problema, con un número: horas perdidas, fallas, retrabajo.",
+          "Un piloto de dos semanas con su criterio de éxito.",
+          "Comparte el crédito: invita a otros a mejorarlo."] },
+        { t: "Documentar tu impacto", d: "Lo que no se documenta no existe en una evaluación ni en una entrevista. Un registro de logros con fecha y número te da material para tu CV y para negociar.", l: [
+          "Una nota por logro: qué, cuándo, impacto y quién lo vio.",
+          "Revísala cada mes y antes de cada evaluación.",
+          "Convierte los mejores en respuestas STAR."] },
+      ],
+      "Dar retroalimentación que no duela": [
+        { t: "Situación, comportamiento, impacto", d: "El Center for Creative Leadership propone describir la situación concreta, el comportamiento que se vio y su impacto. Evita juzgar a la persona y hace que la retroalimentación sirva.", l: [
+          "Situación: «en la revisión del martes».",
+          "Comportamiento: «el reporte no traía los casos de falla».",
+          "Impacto: «tuvimos que repetir la prueba»."] },
+        { t: "Franqueza radical: que te importe y decirlo", d: "Kim Scott la define como importarte la persona y retarla de frente al mismo tiempo. Sin lo primero es agresión; sin lo segundo es empatía ruinosa: callarte para no incomodar.", l: [
+          "Elogio específico y frecuente; crítica en privado y pronto.",
+          "Pide retroalimentación tú primero: das el ejemplo.",
+          "Si dudas en decir algo importante, pregúntate a quién proteges callando."] },
+        { t: "Recibir retroalimentación sin defenderte", d: "La reacción natural ante una crítica es explicar por qué no tienen razón. Escuchar primero, agradecer y pedir un ejemplo te da información y muestra madurez.", l: [
+          "Escucha completo antes de responder.",
+          "Pregunta: «¿me das un ejemplo?».",
+          "Agradece, y decide después qué cambias."] },
+      ],
+      "Una conversación pendiente al mes": [
+        { t: "Preparar una conversación difícil en diez minutos", d: "No hace falta una hora: diez minutos de preparación por escrito cambian el resultado. Lo esencial es el objetivo, los hechos, la apertura y la pregunta.", l: [
+          "El objetivo: qué quieres para ti, para el otro y para la relación.",
+          "Los hechos y la apertura: tus dos primeras frases.",
+          "La pregunta y el acuerdo: qué propones al final."] },
+        { t: "El momento y el lugar", d: "La misma conversación sale distinta según cuándo y dónde. En privado, con tiempo, sin interrupciones y nunca en medio de un problema que está ardiendo.", l: [
+          "En privado, nunca frente a otros.",
+          "Con tiempo: no cinco minutos antes de una junta.",
+          "Si el tema es emocional, deja que baje la temperatura, pero no semanas."] },
+        { t: "Cerrar con acuerdos claros", d: "Muchas conversaciones buenas terminan sin acuerdo, y el problema regresa. Cerrar con quién hace qué, para cuándo y cuándo lo revisan convierte la conversación en un cambio.", l: [
+          "Resume en voz alta lo acordado.",
+          "Fija una fecha para revisarlo.",
+          "Si es de trabajo, mándalo por escrito."] },
+      ],
+    },
+    copy: {
+      "Qué te falta, exactamente": [
+        { t: "La llamada a la acción", d: "Una llamada a la acción dice qué hacer, cuándo y cómo, y es fácil de cumplir. Cuanto más concreta y pequeña, más gente responde.", l: [
+          "Concreta: «respóndeme con un día y una hora».",
+          "Pequeña: pedir 15 minutos funciona mejor que pedir una hora.",
+          "Una sola: dos peticiones en un mensaje dividen la respuesta."] },
+        { t: "Escribir para quien lee", d: "El error de fondo es escribir lo que quieres decir en vez de lo que el lector necesita para actuar. Antes de escribir, piensa qué sabe ya, qué le falta y qué le preocupa.", l: [
+          "Lo que ya sabe: no lo repitas.",
+          "Lo que le falta: el dato que necesita para decidir.",
+          "Lo que le preocupa: respóndelo antes de que lo pregunte."] },
+        { t: "La primera línea decide", d: "Casi todo el mundo decide en la primera línea si sigue leyendo. En correos, mensajes y posts, la primera línea dice para qué es el mensaje.", l: [
+          "Correo: el propósito en el asunto y en la primera frase.",
+          "LinkedIn: la primera línea es lo único que se ve antes de «ver más».",
+          "Mensaje: primero la petición, después el contexto."] },
+      ],
+      "Una promesa por texto": [
+        { t: "Dos estructuras probadas: AIDA y PAS", d: "AIDA —atención, interés, deseo, acción— y PAS —problema, agitación, solución— son estructuras clásicas para textos que buscan una acción. Sirven de esqueleto, no de plantilla rígida.", l: [
+          "AIDA: un gancho, por qué importa, qué gana el lector y qué hacer.",
+          "PAS: el problema, por qué duele y cómo se resuelve.",
+          "Úsalas en los posts del negocio de tu papá y en tu perfil."] },
+        { t: "Beneficios, no características", d: "Una característica dice qué es; un beneficio dice qué gana el lector. La gente decide por los beneficios y se justifica con las características.", l: [
+          "Característica: «seis años de validación HIL».",
+          "Beneficio: «llego probando desde el primer día, sin curva de aprendizaje».",
+          "Pregunta «¿y eso qué?» hasta llegar al beneficio."] },
+        { t: "Frases cortas y palabras simples", d: "Un texto claro se lee rápido y todos lo entienden igual: frases de menos de veinte palabras, palabras comunes y un solo tema por párrafo.", l: [
+          "Revisa la legibilidad con un editor como Hemingway Editor.",
+          "Cambia palabras largas por cortas: «utilizar» por «usar».",
+          "Un párrafo, una idea."] },
+      ],
+      "Reescribe tu perfil de LinkedIn": [
+        { t: "Cómo te encuentran los reclutadores", d: "Los reclutadores buscan por palabras clave: el puesto, las herramientas y la ubicación. Si tu titular y tu experiencia no traen las palabras que buscan, no apareces aunque seas el candidato ideal.", l: [
+          "Incluye: validation, HIL, ADAS, Python, test automation, CAN.",
+          "Ubicación y disponibilidad: Stuttgart, desde septiembre de 2027.",
+          "Repite las palabras clave en tus puestos, de forma natural."] },
+        { t: "La experiencia como logros", d: "Cada puesto debe tener tres o cuatro logros con número, no una lista de responsabilidades. La fórmula: verbo de acción, qué hiciste y el resultado medible.", l: [
+          "«Designed 120 HIL test cases for an AEB function, finding 8 critical defects before release.»",
+          "«Led a team of __ engineers in Stuttgart to deliver ____.»",
+          "«Automated ____ in Python, reducing ____ by __ %.»"] },
+        { t: "Las señales de que buscas", d: "LinkedIn te deja marcar que estás abierto a oportunidades, visible solo para reclutadores o para todos. Con un titular claro, aumenta los mensajes que recibes.", l: [
+          "Activa «Open to work» solo para reclutadores mientras sigas en tu trabajo.",
+          "Indica el tipo de puesto: working student, validation engineer.",
+          "Pide dos o tres recomendaciones a antiguos jefes."] },
+      ],
+      "El correo frío de 5 líneas": [
+        { t: "La personalización que hace que respondan", d: "Un correo frío genérico se ignora. Una línea que demuestre que conoces algo de esa persona —su proyecto, su publicación, su equipo— multiplica las respuestas.", l: [
+          "Revisa su actividad reciente en LinkedIn.",
+          "Menciona algo específico, no «me impresiona tu trayectoria».",
+          "Conecta su trabajo con el tuyo en una frase."] },
+        { t: "El asunto que se abre", d: "El asunto decide si se abre el correo. Corto, específico y sin sonar a publicidad funciona mejor.", l: [
+          "Menos de seis palabras.",
+          "Específico: «Question about HIL testing at your team».",
+          "Sin mayúsculas, sin signos de exclamación y sin «urgente»."] },
+        { t: "El seguimiento, donde llegan las respuestas", d: "Muchas respuestas llegan al segundo o tercer correo, no al primero. Un seguimiento corto a la semana, sin reproches, es normal y esperado.", l: [
+          "Seguimiento 1, a los cinco o siete días: una línea, respondiendo a tu propio correo.",
+          "Seguimiento 2, a las dos semanas: aporta algo nuevo.",
+          "Después, para y pasa a otra persona."] },
+      ],
+      "Leer en voz alta antes de enviar": [
+        { t: "Editar en tres pasadas", d: "Editar todo a la vez no funciona. Tres pasadas cortas, cada una con un objetivo, atrapan más errores: estructura, claridad y detalle.", l: [
+          "Pasada 1: ¿el mensaje principal está arriba?",
+          "Pasada 2: corta palabras y frases que sobran.",
+          "Pasada 3: ortografía, nombres y números."] },
+        { t: "El tono según el canal", d: "Un correo formal, un WhatsApp y un post piden tonos distintos. Leer en voz alta te deja escuchar si el tono es el correcto para quien lo recibe.", l: [
+          "Correo a un reclutador: profesional y directo.",
+          "WhatsApp a un cliente: cercano pero claro.",
+          "LinkedIn: conversacional y con datos."] },
+        { t: "Revisar un texto en inglés", d: "Los errores más comunes de quien habla español al escribir en inglés son los falsos amigos, las preposiciones y el orden de las palabras. Una lista corta de tus errores frecuentes te ahorra la mayoría.", l: [
+          "Falsos amigos: «actually» no es «actualmente»; «eventually» no es «eventualmente».",
+          "Preposiciones: «depend on», «responsible for», «interested in».",
+          "LanguageTool o Grammarly como segunda revisión."] },
+      ],
+    },
+    ventas: {
+      "Vender lo que no usas a su precio": [
+        { t: "Fotos que venden", d: "La foto es lo primero, y casi lo único, que se ve en Marketplace. Luz natural, fondo limpio, el objeto completo y los detalles que dan confianza hacen que se venda más rápido y a mejor precio.", l: [
+          "Luz de ventana, sin flash; fondo liso.",
+          "Una foto general, una de cada lado y una de cada detalle o defecto.",
+          "Si trae caja o accesorios, una foto con todo junto."] },
+        { t: "Vender y entregar con seguridad", d: "Las estafas más comunes en ventas entre personas son los pagos falsos y los comprobantes editados. Entregar en lugares públicos y confirmar el pago en tu banca antes de soltar el artículo evita casi todos los problemas.", l: [
+          "Entrega en lugares públicos y concurridos, de día.",
+          "Confirma el depósito en la app de tu banco, no en una captura de pantalla.",
+          "Desconfía de quien paga de más y te pide la diferencia."] },
+        { t: "Cuándo bajar el precio", d: "Si en una semana nadie escribe, el problema es el precio o las fotos; si escriben pero nadie compra, es la negociación o la entrega. Ajusta según la señal, no por impaciencia.", l: [
+          "Sin mensajes en siete días: baja 10 % o mejora las fotos.",
+          "Muchas preguntas y ninguna venta: revisa tus respuestas y tu disponibilidad.",
+          "Vuelve a publicar el anuncio para que aparezca arriba otra vez."] },
+      ],
+      "El seguimiento es la venta": [
+        { t: "Por qué la gente no responde", d: "Casi nunca es un no: es olvido, duda o falta de tiempo. Un buen seguimiento resuelve la duda o facilita la decisión, en vez de solo presionar.", l: [
+          "Olvido: un recordatorio amable.",
+          "Duda: más información, otra foto, una garantía.",
+          "Tiempo: una opción concreta de entrega."] },
+        { t: "Influir sin trampas", d: "Robert Cialdini describe principios como la reciprocidad, la prueba social, la escasez y el compromiso. Usados con honestidad ayudan a decidir; con trampas, queman la relación.", l: [
+          "Prueba social: «ya vendí otro igual y el comprador quedó contento».",
+          "Escasez real: «hay otra persona interesada», solo si es verdad.",
+          "Compromiso: un apartado pequeño hace que la gente cumpla."] },
+        { t: "Registrar para mejorar", d: "Anotar cada contacto te muestra qué funciona: en qué mensaje cierras, a qué hora responden más y qué preguntas se repiten. Las preguntas repetidas van al anuncio.", l: [
+          "Tasa de cierre: ventas ÷ personas que preguntaron.",
+          "Las tres preguntas más comunes, contestadas en la descripción.",
+          "La hora en que más responden: publica a esa hora."] },
+      ],
+      "Negociar tu sueldo en euros": [
+        { t: "Bruto, neto y lo que te queda", d: "En Alemania el sueldo se negocia en bruto. Del bruto salen impuestos y seguridad social; como Werkstudent pagas mucho menos de seguridad social, porque mientras respetes el límite de horas solo cotizas al seguro de pensiones.", l: [
+          "Pregunta siempre si la cifra es bruta por mes, bruta por año o por hora.",
+          "Usa una calculadora Brutto-Netto alemana para ver tu neto.",
+          "El límite de 20 horas a la semana durante el semestre es el que protege ese beneficio."] },
+        { t: "Tu mejor alternativa", d: "En una negociación, tu fuerza viene de tu mejor alternativa si no hay acuerdo: otra oferta, seguir buscando, otro plan. Conocerla y mejorarla antes de negociar te da la seguridad para pedir.", l: [
+          "Escribe tu alternativa real: ¿qué haces si te dicen que no?",
+          "Mejórala: aplica a varios puestos a la vez.",
+          "Si tu alternativa es débil, no la menciones."] },
+        { t: "Más allá del sueldo", d: "Si el sueldo tiene poco margen, hay otras cosas negociables: las horas, días de trabajo remoto, presupuesto de formación, la fecha de inicio o una revisión a los seis meses.", l: [
+          "Formación: cursos o certificaciones pagadas.",
+          "Flexibilidad: un horario compatible con tus clases.",
+          "Revisión: «¿podemos revisar el sueldo a los seis meses con estos objetivos?»."] },
+      ],
+      "Una oferta que se pueda comprar": [
+        { t: "La ecuación de valor", d: "Alex Hormozi propone que el valor que percibe el cliente sube con el resultado que sueña y con la probabilidad de lograrlo, y baja con el tiempo de espera y el esfuerzo que le pide. Una oferta mejora si mueve cualquiera de las cuatro.", l: [
+          "Resultado: qué obtiene el cliente, en sus palabras.",
+          "Probabilidad: testimonios, garantía, casos.",
+          "Tiempo y esfuerzo: entrega rápida y menos trabajo para el cliente."] },
+        { t: "El cliente ideal", d: "Una oferta para todos no le habla a nadie. Definir al cliente ideal —quién es, qué problema tiene y cuánto le cuesta— hace que el mensaje salga solo.", l: [
+          "Mira a los mejores clientes de hoy: ¿qué tienen en común?",
+          "Escribe su problema con las palabras que usan ellos.",
+          "Calcula cuánto les cuesta el problema: es tu referencia para el precio."] },
+        { t: "Garantías que reducen el riesgo", d: "Una garantía pasa el riesgo del cliente al vendedor y aumenta las ventas cuando el producto cumple. Tiene que ser concreta y fácil de entender.", l: [
+          "De resultado: «si no ____, te devolvemos ____».",
+          "De tiempo: «entregado en __ días o con descuento».",
+          "Solo promete lo que puedes cumplir siempre."] },
+      ],
+    },
+    marketing: {
+      "Dejar el negocio en piloto automático": [
+        { t: "El calendario de contenido", d: "Un calendario de contenido define qué se publica, cuándo y para qué. Hecho una vez por trimestre, quita la pregunta diaria de qué publicar.", l: [
+          "Temas fijos por semana: producto, cliente, detrás de cámaras, oferta.",
+          "Las fechas importantes del año para el negocio.",
+          "Un objetivo por post: mensajes, visitas o que los conozcan."] },
+        { t: "Producir en lote", d: "Crear el contenido un día al mes, todo junto, es mucho más eficiente que hacerlo a diario: fotos, textos y programación en una sola sesión.", l: [
+          "Un día para las fotos de todo el mes.",
+          "Textos con plantillas que se reutilizan.",
+          "Programa en Meta Business Suite para Facebook e Instagram."] },
+        { t: "WhatsApp Business: el canal que cierra", d: "En un negocio local, muchas ventas terminan en WhatsApp. WhatsApp Business permite un catálogo, respuestas rápidas y mensajes de ausencia, sin costo.", l: [
+          "Un catálogo con fotos y precios de lo principal.",
+          "Respuestas rápidas para las preguntas de siempre.",
+          "Etiquetas para saber quién preguntó, quién compró y a quién darle seguimiento."] },
+      ],
+      "Una métrica antes de gastar": [
+        { t: "Métricas de vanidad y métricas que importan", d: "Seguidores y «me gusta» se ven bien pero no pagan. En un negocio local importan los mensajes, las visitas y las ventas que trae cada publicación.", l: [
+          "Vanidad: seguidores, «me gusta», alcance.",
+          "Importan: mensajes, llamadas, cotizaciones, ventas.",
+          "Pregúntale siempre al cliente cómo los encontró."] },
+        { t: "Probar antes de pagar anuncios", d: "Los anuncios amplifican lo que ya funciona; no arreglan lo que no funciona. Primero encuentra el post que trae mensajes sin pagar y luego promociónalo con poco presupuesto.", l: [
+          "Promociona solo posts que ya trajeron mensajes.",
+          "Empieza con un presupuesto chico al día y en una zona cercana.",
+          "Mide el costo por mensaje y compáralo con lo que deja una venta."] },
+        { t: "Cuánto puedes pagar por un cliente", d: "Un negocio sano sabe cuánto le deja un cliente y cuánto le cuesta conseguirlo. Si conseguirlo cuesta más de lo que deja, cada venta pierde dinero.", l: [
+          "Lo que deja un cliente = margen por venta × las veces que vuelve a comprar.",
+          "Costo por cliente = gasto en anuncios ÷ clientes nuevos.",
+          "Regla práctica: que el cliente deje al menos tres veces lo que costó conseguirlo."] },
+      ],
+      "Un canal a la vez": [
+        { t: "Elegir el canal por el cliente, no por la moda", d: "El mejor canal es donde los clientes ya pasan su tiempo y donde compran cosas parecidas. En un negocio local suelen ser Facebook, WhatsApp y Google Maps antes que la red de moda.", l: [
+          "Pregunta a los clientes dónde buscan este tipo de servicio.",
+          "Revisa dónde están los competidores que venden bien.",
+          "Piensa en Google Maps: la gente busca «cerca de mí»."] },
+        { t: "El perfil de empresa en Google", d: "Un perfil de empresa en Google aparece en Maps y en las búsquedas locales. Con fotos, horario, reseñas y respuestas, trae clientes sin publicar a diario.", l: [
+          "Crea o reclama el perfil con la dirección exacta.",
+          "Pide reseñas a los clientes contentos y contéstalas todas.",
+          "Mantén al día fotos y horarios: Google favorece los perfiles activos."] },
+        { t: "Una frecuencia que se pueda sostener", d: "Un canal crece con constancia, no con picos. Es mejor publicar dos veces por semana durante un año que diez veces en una semana y después nada.", l: [
+          "Elige la frecuencia que tu papá pueda sostener sin ti.",
+          "La semana que no se pueda, publica algo simple, no nada.",
+          "Evalúa cada mes, no cada día."] },
+      ],
+    },
+  };
   Object.keys(APRENDIZAJE).forEach(function (id) {
     ((APRENDIZAJE[id] || {}).subs || []).forEach(function (s) {
       Object.assign(s, (APRENDIZAJE_DETALLE[id] || {})[s.n] || {}, (APRENDIZAJE_PRACTICA[id] || {})[s.n] || {});
+      const sub = (APRENDIZAJE_SUBTEMAS[id] || {})[s.n]; if (sub) s.subtemas = sub;
     });
   });
 
@@ -8320,6 +9304,7 @@ window.CIFRAS = (function () {
     APRENDIZAJE: APRENDIZAJE,
     APRENDIZAJE_DETALLE: APRENDIZAJE_DETALLE,
     APRENDIZAJE_PRACTICA: APRENDIZAJE_PRACTICA,
+    APRENDIZAJE_SUBTEMAS: APRENDIZAJE_SUBTEMAS,
     LISTA_COMPRAS: LISTA_COMPRAS,
     RUTINA_PIEL: RUTINA_PIEL,
     RUTINA_PELO: RUTINA_PELO,
