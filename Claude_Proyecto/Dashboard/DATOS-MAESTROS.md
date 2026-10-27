@@ -994,7 +994,8 @@ Qué revisa:
 
 - Que **nadie haya vuelto a incrustar** ninguna de las seis estructuras en un HTML en vez de
   leerla del maestro. Es la guardia de la Regla 1.
-- `GYM_RUTINA_DEFAULT` contra `ejercicio.html`, que sigue siendo un respaldo duplicado.
+- `GYM_RUTINA_DEFAULT` contra `ejercicio.html`, que sigue siendo un respaldo duplicado: día por día, con su nombre,
+  su foco y sus ejercicios (series, repeticiones, unidad y descanso).
 - Que Coach **genere** las fases del maestro (solo la Fase 0, cerrada, sigue escrita a mano: el control 3 falla si otra fase, sus tareas o sus fechas vuelven a escribirse en Coach) y que las prioridades de `APRENDIZAJE` aparezcan en su HTML.
 - **La salida a Alemania y la proyección**: ids de `SALIDA` únicos y distintos de las tareas de fase, cada pendiente con su mes y cada costo con importe, Coach pintándolas desde el maestro, y la proyección llegando al millón antes del cierre de la última fase. Pasado `rentaHasta`, avisa si la renta sigue contando en los fijos. Cada cobro lleva un `grupo` del desglose; el calendario y la proyección apartan lo mismo cada mes y ningún mes deja el gasto personal en negativo; la meta `g001` que siembra Finanzas es lo que cuesta irse, redondeado; la comida del plan (`SUPUESTOS.comida`, `comidaEnCasa`) es la que dan la lista de compras y las recetas de desayuno del Dashboard. Avisa si un fijo cambia y el ahorro de cada quincena deja de cuadrar con el tope de gasto personal.
 - Las cifras que ya tienen variable pero siguen escritas a mano.

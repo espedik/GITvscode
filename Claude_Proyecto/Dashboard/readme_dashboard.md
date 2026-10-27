@@ -203,11 +203,14 @@ de dos. El AHORA mide 34 vh como mucho —desde 1000 px de alto, hasta 372 px, p
 mañana quepa con su línea de dosis— y, si ni así cabe, `pintarBloqueDetalle()` le pone
 **`.apretado`**: cada paso en una línea, con la imagen más chica, sin la línea de abajo y el *Qué es*
 en su icono, y la indicación de cada ejercicio en una línea; en pantallas de 940 px de alto o menos,
-además, recupera el tope de 34 vh. Se vuelve a decidir al cambiar el tamaño de la ventana. Es
+además, recupera el tope de 34 vh. Si aun apretado no cabe —el gym con siete ejercicios, la caminadora y el abdomen
+incluidos—, **`.muy-apretado`** lo pone en tres columnas, sin la indicación (está en su ficha, al tocar el ejercicio) y
+con la imagen de 32 px. Se vuelve a decidir al cambiar el tamaño de la ventana. Es
 contenedor (`ahora`): angosto en escritorio (menos de 1000 px), cada paso enseña solo su nombre. En el
 celular va en una columna y sin tope, con el nombre en dos líneas. Medido con las rutinas de la mañana
 (de 9 a 13 pasos) y de la noche: a 2048×1040, 2560×1440, 1920×1080 y 1600×1000 caben enteras, con su
-línea de dosis; a 1440×900, 1366×768 y 1280×800, apretadas y sin desplazar.
+línea de dosis; a 1440×900, 1366×768 y 1280×800, apretadas y sin desplazar. Los seis días de gym, de 5 a 7
+ejercicios, caben sin desplazar de 2048×1040 a 390 px; el lunes y el sábado van `.muy-apretado` desde 1440×900.
 
 ### Los módulos
 

@@ -130,11 +130,15 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   // y con ella el control se quedaba en el aviso de "no se pudo extraer" sin comparar nada.
   const B = evaluar(literal(ejer, 'rutina: {', '{'));
   if (!A || !B) { avisos.push('GYM_RUTINA_DEFAULT: no se pudo extraer; comprobar a mano'); return; }
+  // Cada día entero —nombre, tipo, foco y ejercicios con sus series, repeticiones, unidad y descanso—; `peso`, que
+  // ejercicio.html lleva en 0 y el Dashboard no, no cuenta.
   const dias = [0, 1, 2, 3, 4, 5, 6];
-  const na = dias.map(d => A[d] && A[d].nombre), nb = dias.map(d => B[d] && B[d].nombre);
-  if (JSON.stringify(na) === JSON.stringify(nb)) ok.push('GYM_RUTINA_DEFAULT — los 7 días coinciden con ejercicio.html');
-  else problemas.push('GYM_RUTINA_DEFAULT DISTINTO de ejercicio.html\n     dash     : ' +
-    JSON.stringify(na) + '\n     ejercicio: ' + JSON.stringify(nb));
+  const dia = (R, d) => R[d] && JSON.stringify({ nombre: R[d].nombre, tipo: R[d].tipo, foco: R[d].foco,
+    ejercicios: (R[d].ejercicios || []).map(x => ({ id: x.id, series: x.series, reps: x.reps, unidad: x.unidad || '', descanso: x.descanso })) });
+  const distintos = dias.filter(d => dia(A, d) !== dia(B, d));
+  if (!distintos.length) ok.push('GYM_RUTINA_DEFAULT — los 7 días coinciden con ejercicio.html: nombre, foco y ejercicios');
+  else problemas.push('GYM_RUTINA_DEFAULT DISTINTO de ejercicio.html en ' + distintos.map(d => 'el día ' + d + ' (' + ((A[d] || B[d] || {}).nombre || '') + ')').join(', ') +
+    '\n     dash     : ' + distintos.map(d => dia(A, d)).join('\n                ').slice(0, 300) + '\n     ejercicio: ' + distintos.map(d => dia(B, d)).join('\n                ').slice(0, 300));
 })();
 
 /* ── 3. El texto del plan: maestro ↔ el HTML de Coach ─────────────────────────────────────────

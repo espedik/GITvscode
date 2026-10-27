@@ -62,16 +62,22 @@ Los propios van en `S.ejerciciosCustom` y `getAllEj()` los combina con `EJ_DB` e
 A la medida de las tres metas de Adán (2026-10-10: *"miércoles de natación ya no existe, redefine mi
 rutina sabiendo lo que quiero lograr: mejor condición física, bajar grasa en panza, aumentar masa
 muscular en brazos"*). `S.rutina` indexado por día (0 = domingo). El bloque es de hora y media entre semana (de
-18:35 a 20:05, tras el CENLEX, y sin ducha: te cambias en 15 minutos) y el sábado (de 07:35 a 09:05); las rutinas de
-abajo se armaron para 50 y 60 minutos:
+18:35 a 20:05, tras el CENLEX, y sin ducha: te cambias en 15 minutos) y el sábado (de 07:35 a 09:05); cada día llena
+de 48 a 62 minutos según la estimación de la propia app (`ejMinSerie`).
 
-| Día | Rutina | `tipo` | Ejercicios |
+**La base de cada día** (Adán, 27-oct-2026: *"en caminadora siempre de inicio en todos los días"*, y el abdomen al
+final, *"intercaladas según como coach diga para no sobresaturarme de ejercicio"*): de lunes a sábado se arranca con
+**17 minutos de caminadora** (`e051`), y el **abdomen cierra lunes, miércoles y viernes**, con un día de por medio para
+que se recupere; martes, jueves y sábado descansa. Lo explica la tarjeta *La base de cada día* del carril derecho
+(`ejBaseHtml()`), que lee los minutos y los días de la rutina, no de un texto.
+
+| Día | Rutina | `tipo` | Ejercicios (tras la caminadora) |
 |---|---|---|---|
-| Lunes | Espalda + Bíceps | `halar` | Jalón al Pecho 4×10, Remo en Polea Baja 3×10, Curl con Barra 4×8 (el pesado), Curl Martillo 3×12, Face Pull 3×15 |
-| Martes | Piernas + Core | `piernas` | **Todo en máquina o con apoyo**: Hack Squat 4×10 (primero), Prensa, Curl Femoral, Extensión, Pantorrilla y Plancha 3×45 s |
-| Miércoles | Condición — Intervalos | `cardio` | Bici 8×(1 min fuerte / 1 min suave) tras 5 min suaves, Battle Ropes 5×30 s, Elíptica 12 min a ritmo de conversación, Dead Bug 3×10. Bajo impacto |
+| Lunes | Espalda + Bíceps | `halar` | Jalón al Pecho 4×10, Remo en Polea Baja 3×10, Curl con Barra 4×8 (el pesado), Curl Martillo 3×12, Pájaros 3×15 y, de cierre, Crunch 3×15 |
+| Martes | Piernas | `piernas` | **Todo en máquina o con apoyo**: Hack Squat 4×10 (primero), Prensa, Curl Femoral, Extensión y Pantorrilla |
+| Miércoles | Condición — Intervalos | `cardio` | Bici 8×(1 min fuerte / 1 min suave), Battle Ropes 5×30 s, Elíptica 12 min a ritmo de conversación y, de cierre, Dead Bug 3×10 y Plancha 3×45 s. Bajo impacto |
 | Jueves | Pecho + Hombro + Tríceps | `empuje` | Fondos 4×8 (el compuesto), Press de Hombros con Mancuernas 3×10, Elevaciones Laterales 3×15, Pushdown 4×12, Extensión sobre Cabeza 3×12 |
-| Viernes | Cardio largo + Core | `core` | Correr suave 30 min (cinta inclinada si la rodilla molesta), Elevación de Piernas, Crunch, Plancha |
+| Viernes | Cardio largo + Core | `core` | Correr suave 30 min (cinta inclinada si la rodilla molesta) y, de cierre, Elevación de Piernas, Crunch y Plancha |
 | Sábado | Brazos + Pecho | `brazos` | Press de Banca 4×8, Curl Scott, Patada de Tríceps, Curl con Mancuerna, Fondos en Banco, Elíptica 15 min |
 | Domingo | Descanso activo | `descanso` | Caminata 30 min opcional |
 
@@ -83,11 +89,12 @@ largo del viernes; la grasa de la panza, del déficit en la comida más ese card
 reducción localizada no existe**: los abdominales fortalecen el músculo, la grasa baja con déficit
 calórico + cardio. Ese aviso vive una sola vez en `EJ_AVISO` y se pinta en el carril derecho. Los
 ejercicios retirados por Adán (Press francés, Búlgara, Rueda abdominal, Oblicuos con cable,
-Sentadilla con barra, Zancadas, Peso muerto rumano, Hip thrust) y los cinco de natación siguen en la
+Sentadilla con barra, Zancadas, Peso muerto rumano, Hip thrust; el Face Pull, que dejó su lugar a los Pájaros —el
+mismo trabajo para la parte de atrás del hombro, con su dibujo—) y los cinco de natación siguen en la
 biblioteca por si los quiere de vuelta.
 
 **Los 7 `foco` y las 7 listas son idénticos carácter por carácter a `GYM_RUTINA_DEFAULT` de
-`Dashboard/dashboard.html`** (el verificador compara los 7 días): las dos apps comparten
+`Dashboard/dashboard.html`** (el control 2 del verificador compara cada día entero: nombre, foco y ejercicios): las dos apps comparten
 migraciones y clave, y la primera que Adán abra es la que escribe.
 
 ## Modelo de datos — `localStorage['mirutina_v1']`
@@ -129,6 +136,10 @@ propia, una sola pasada, **solo tocan un día si sigue siendo exactamente el def
 - `fixRutina20261010IfNeeded()` — bandera `mirutina_v1_semana_20261010`: la semana de condición,
   espalda y brazo. Aplica los días de `RUTINA_DEFAULT_20261010` a los que sigan llamándose como un
   default anterior (`RUTINA_PREVIOS_20261010`, todos los nombres de antes).
+- `fixRutina20261027IfNeeded()` — bandera `mirutina_v1_base_20261027`: la base de cada día (caminadora y abdomen) y
+  los Pájaros. Como los nombres no cambiaron —salvo el martes—, no compara por nombre sino por la **firma** de cada día
+  (`rutinaFirma`: los mismos ejercicios con las mismas series y repeticiones que `RUTINA_FIRMA_20261010`); un día que
+  Adán editó no se toca.
 - `fixRutina20260812IfNeeded()` — bandera `mirutina_v1_pierna_abs_natacion_v3`, aplica los días
   de `RUTINA_DEFAULT_20260812` (copia profunda del default **antes** de que `load()` lo pise).
   Cada tanda de cambios a la rutina **bumpea la bandera** y acepta como "todavía default" los
@@ -151,7 +162,8 @@ Adán abra el Dashboard sin haber abierto esta app.
    error en rojo y **una fila por serie con casilla y campo de kg** (`ejToggleSet`, `ejSetKg` →
    `S.sesiones`). Marcar una serie arranca el cronómetro de descanso con los segundos de ese
    ejercicio (`ejArrancaCrono`, `ejCrono = {id, fin, total}`). "llevas ~21 min" es una
-   estimación —series marcadas × (descanso + 40 s)—, no un cronómetro de sesión: no hay `t0`
+   estimación —series marcadas × lo que dura cada una (`ejMinSerie`: el cardio, sus minutos; la plancha, sus
+   segundos; una de repeticiones, su descanso + 40 s)—, no un cronómetro de sesión: no hay `t0`
    guardado, y meterlo en `S.sesiones` rompería los cuatro recorridos por id.
 3. **Carril derecho** — cronómetro, progresión contra la última vez que hizo ese ejercicio
    (`ejProgresionHtml`, `ejUltimo`), la regla de cuándo subir de peso (`EJ_SUBIR`) y `EJ_AVISO`.
