@@ -969,7 +969,9 @@ concepto de la semana que cae un día concreto también lo elige.
 
 La columna dice **lo que pagas ese día** —comer y los pagos que caen, con el total del día—, lo cargado a una tarjeta
 y lo que anotaste. No lleva los cobros que siguen (Adán, 27-oct-2026: *"quita la sección de lo que viene, eso solo me
-confunde"*): los próximos pagos ya están en las celdas del mes y en la semana. Tu estrategia y tu dinero no van aquí (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las cantidades"*):
+confunde"*): los próximos pagos ya están en las celdas del mes y en la semana. Sus filas son compactas (`.ct-ev`:
+unos 18 px de alto, letra de 10 px y el importe siempre en un renglón; Adán, 27-oct-2026: *"todas las cifras de ese
+día, hazlas muchísimo más pequeñas"*), y lo anotado por categoría va al mismo tamaño. Tu estrategia y tu dinero no van aquí (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las cantidades"*):
 la estrategia, con sus botones, va arriba del panel de **Deuda cara**, y tu dinero, cuenta por cuenta, en el de
 **Patrimonio**. Lo que te queda y de dónde sale lo dice la semana.
 

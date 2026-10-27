@@ -4267,9 +4267,16 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .ct-cat-n i{width:8px;height:8px;border-radius:2px;flex-shrink:0}
 .ct-cat-b{height:4px;border-radius:2px;background:rgba(var(--ov),.07);overflow:hidden}
 .ct-cat-b i{display:block;height:100%;border-radius:2px}
-.ct-ev{display:flex;align-items:flex-start;gap:8px;padding:7px 10px;border-radius:9px;
+/* Las filas de Ese día, compactas (Adán, 27-oct-2026: "todas las cifras de ese día, hazlas muchísimo más
+   pequeñas"): unos 18 px de alto con letra de 10, y el importe nunca se parte en dos renglones. */
+.ct-ev{display:flex;align-items:flex-start;gap:6px;padding:1px 7px;border-radius:6px;line-height:1.35;
   background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.07)}
-.ct-ev i{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.ct-ev i{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.ct-ev .ct-num{white-space:nowrap}
+/* Lo anotado por categoría va al mismo tamaño; la semana conserva el suyo. */
+.ct-dia .ct-cat-n{font-size:10px}
+.ct-dia .ct-cat-n i{width:6px;height:6px}
+.ct-dia .ct-cat-b{height:3px}
 .ct-vacio{font-size:11px;color:var(--text3);padding:6px 0}
 /* Tu estrategia de hoy (arriba del panel de Deuda cara): la BBVA con su saldo vivo, lo que toca mandarle,
    lo previsto sin anotar y el tope de gasto; con la tarjeta en cero, cancelarla y todo a GBM. */
@@ -9825,19 +9832,19 @@ function renderCoachTablero(){
       '<span class="ct-tit">'+dowSel.charAt(0).toUpperCase()+dowSel.slice(1)+' '+nSel+'</span>'+
     '</div><span class="ct-num" style="font-size:9.5px;color:'+(dd===0?'var(--cy)':'var(--text3)')+';white-space:nowrap">'+cuenta+'</span></div>'+
 
-    '<div style="display:flex;flex-direction:column;gap:6px">'+
+    '<div style="display:flex;flex-direction:column;gap:3px">'+
       '<span class="ct-lbl">Lo que pagas el '+nSel+'</span>'+
       (comeDia>0
         ? '<div class="ct-ev"'+(TIEMPOS ? ' title="'+esc(TIEMPOS.map(x=>x.n+' '+money(x.m)).join(' · '))+'"' : '')+'>'+
           '<i style="background:#ef4444"></i>'+
           '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
-          '<span style="font-size:11.5px;font-weight:600">Comer<span style="font-weight:400;color:var(--text3)"> · '+(COMEX.casa ? 'tu desayuno; comida y cena, en casa' : 'desayuno, comida y cena')+'</span></span>'+
-          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;color:var(--text2)">−'+money(comeDia)+'</span></span></div>'
+          '<span style="font-size:10px;font-weight:600">Comer<span style="font-weight:400;color:var(--text3)"> · '+(COMEX.casa ? 'tu desayuno; comida y cena, en casa' : 'desayuno, comida y cena')+'</span></span>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10px;font-weight:700;color:var(--text2)">−'+money(comeDia)+'</span></span></div>'
         : '')+
       H.pagos.map(a=>'<div class="ct-ev"><i style="background:'+ctColor(a.t)+'"></i>'+
         '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
-        '<span style="font-size:11.5px;font-weight:600">'+esc(a.t)+'</span>'+
-        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;color:var(--text2)">−'+money(a.monto)+'</span></span></div>').join('')+
+        '<span style="font-size:10px;font-weight:600">'+esc(a.t)+'</span>'+
+        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10px;font-weight:700;color:var(--text2)">−'+money(a.monto)+'</span></span></div>').join('')+
       /* Y lo que ya se gastó de verdad ese día, con el borde punteado que lo distingue de un
          cobro programado: uno es un compromiso que va a caer, el otro ya cayó. Los dos restan
          igual, y hasta hoy estos solo salían más abajo, fuera de la cuenta. */
@@ -9846,18 +9853,18 @@ function renderCoachTablero(){
          Lo comprado a crédito va en su propio bloque, debajo del total, porque no resta hoy. */
       (H.extras||[]).filter(t=>!t.credito).map(t=>'<div class="ct-ev" style="border-style:dashed"><i style="background:'+(CT_COLOR[t.cat]||'#94a3b8')+'"></i>'+
         '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
-        '<span style="font-size:11.5px;font-weight:600">'+esc(t.desc)+
+        '<span style="font-size:10px;font-weight:600">'+esc(t.desc)+
         '<span style="font-weight:400;color:var(--text3)"> · '+esc(t.cat||'')+'</span></span>'+
-        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;color:var(--text2)">−'+money(+t.amount||0)+'</span></span></div>').join('')+
+        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10px;font-weight:700;color:var(--text2)">−'+money(+t.amount||0)+'</span></span></div>').join('')+
       (H.ent>0
         ? '<div class="ct-ev" style="border-color:rgba(var(--g-rgb),.28);background:rgba(var(--g-rgb),.07)"><i style="background:var(--g)"></i>'+
           '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
-          '<span style="font-size:11.5px;font-weight:600">Entra tu nómina</span>'+
-          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;color:var(--g)">+'+money(H.ent)+'</span></span></div>'
+          '<span style="font-size:10px;font-weight:600">Entra tu nómina</span>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10px;font-weight:700;color:var(--g)">+'+money(H.ent)+'</span></span></div>'
         : '')+
-      '<div style="display:flex;align-items:baseline;justify-content:space-between;padding:2px 11px 0">'+
-        '<span style="font-size:10.5px;color:var(--text3)">total del día</span>'+
-        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700;color:var(--r)">−'+money(H.sale)+'</span></div>'+
+      '<div style="display:flex;align-items:baseline;justify-content:space-between;padding:2px 8px 0">'+
+        '<span style="font-size:9.5px;color:var(--text3)">total del día</span>'+
+        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10.5px;font-weight:700;color:var(--r)">−'+money(H.sale)+'</span></div>'+
     '</div>'+
     (function(){
       /* Lo comprado a crédito NO resta del día: sube el saldo de la tarjeta y lo cobra su mínimo,
@@ -9876,17 +9883,17 @@ function renderCoachTablero(){
             (d.id==='d001'?' (va en '+money(+d.balance||0)+': súmalo al próximo abono)'
               :d.day?' (mínimo '+money(+d.min||0)+' el '+d.day+')':'')).join(' y ')+'.'
         : 'No sale hoy: lo cobra el mínimo de la tarjeta.';
-      return '<div style="display:flex;flex-direction:column;gap:6px;padding-top:11px;'+
+      return '<div style="display:flex;flex-direction:column;gap:3px;padding-top:9px;'+
         'border-top:1px solid rgba(var(--ov),.07)">'+
         '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
           '<span class="ct-lbl">Cargaste a la tarjeta el '+nSel+'</span>'+
-          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:11px;color:var(--text3)">'+money(tot)+'</span></div>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10px;color:var(--text3)">'+money(tot)+'</span></div>'+
         cred.map(t=>'<div class="ct-ev" style="border-style:dashed;opacity:.72"><i style="background:'+(CT_COLOR[t.cat]||'#94a3b8')+'"></i>'+
           '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
-          '<span style="font-size:11.5px;font-weight:600">'+esc(t.desc)+
+          '<span style="font-size:10px;font-weight:600">'+esc(t.desc)+
           '<span style="font-weight:400;color:var(--text3)"> · '+esc(t.cat||'')+'</span></span>'+
-          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;color:var(--text3)">'+money(+t.amount||0)+'</span></span></div>').join('')+
-        '<span style="font-size:10px;color:var(--text3);line-height:1.45">'+pie+'</span></div>';
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10px;font-weight:700;color:var(--text3)">'+money(+t.amount||0)+'</span></span></div>').join('')+
+        '<span style="font-size:9.5px;color:var(--text3);line-height:1.4">'+pie+'</span></div>';
     })()+
 
     // Tu estrategia de hoy y tu dinero no van aquí: los desglosan los medidores de arriba —la estrategia, con sus botones,
@@ -9899,7 +9906,7 @@ function renderCoachTablero(){
           const porCat = {};
           mvSel.filter(t=>t.type==='expense').forEach(t=>{ porCat[t.cat] = (porCat[t.cat]||0) + (+t.amount||0); });
           const cats = Object.keys(porCat).sort((a,b)=>porCat[b]-porCat[a]);
-          return '<div style="display:flex;flex-direction:column;gap:7px;padding-top:11px;border-top:1px solid rgba(var(--ov),.07)">'+
+          return '<div style="display:flex;flex-direction:column;gap:4px;padding-top:9px;border-top:1px solid rgba(var(--ov),.07)">'+
             '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
               '<span class="ct-lbl">Lo que anotaste ese día · por categoría</span>'+
               '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10px;color:var(--text3)">'+
@@ -9908,7 +9915,7 @@ function renderCoachTablero(){
               const col = CT_COLOR[c] || '#94a3b8';
               return '<div class="ct-cat"><div class="ct-cat-h">'+
                 '<span class="ct-cat-n"><i style="background:'+col+'"></i>'+esc(c)+'</span>'+
-                '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700">'+money(porCat[c])+'</span></div>'+
+                '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10px;font-weight:700">'+money(porCat[c])+'</span></div>'+
                 '<div class="ct-cat-b"><i style="width:'+Math.round(porCat[c]/(gSel||1)*100)+'%;background:'+col+'"></i></div></div>';
             }).join('')+'</div>';
         })()
