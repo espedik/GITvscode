@@ -3006,9 +3006,9 @@ body.rail-on{--pad-rail:max(6vw,230px)}
   .qa-bar.qa-collapsed .qa-toggle-btn{padding-right:86px}
   /* "cambiar de slide" (‹, puntos, ›) se oculta en celular — pedido explícito: "abajo estan
      amontonados lo que hace de cambiar de slide y lo que te lleva directo a que pagina de
-     dashboard quieres... ocultes la de cambiar slide". Cambiar de slide en celular ya se hace
-     por swipe (ver el listener de touch más abajo en el JS) o tocando un ícono de #hudNav
-     (salto directo), así que ‹/puntos/› quedan redundantes y solo ocupaban espacio. ▶/⏸ NO se
+     dashboard quieres... ocultes la de cambiar slide". Cambiar de slide se hace
+     tocando un ícono de #hudNav (salto directo; deslizar no cambia de pantalla), así que
+     ‹/puntos/› quedan redundantes y solo ocupaban espacio. ▶/⏸ NO se
      oculta — sigue siendo el único botón que arranca la rotación automática (ver `playing`
      arriba, arranca en `false`). */
   .hud-slidenav{display:none}
@@ -16634,53 +16634,8 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape') closeAllPanels();
   if(/^[1-9]$/.test(e.key) && +e.key <= N) goTo(+e.key - 1);
 });
-// Swipe táctil (iPad/iPhone) — un dedo, izq/der cambia de pantalla, igual que las flechas del teclado.
-// Solo se dispara si el gesto es más horizontal que vertical, para no pelearse con el scroll
-// vertical normal del contenido de la pantalla (necesario en tablet/celular, ver @media arriba).
-//
-// 2026-08-28 · Adán, sobre la cinta de Mi Día: "cuando deslizo aquí en mi iPad, se mueve de
-// página y no quiero eso, quiero ver las otras tareas". El gesto nacía dentro de la tira de
-// fichas, burbujeaba hasta #slides y cambiaba de pantalla — así que en tablet no había forma
-// de llegar a los bloques que no cabían en la primera vista.
-//
-// La regla: si el dedo empieza dentro de algo que TIENE scroll horizontal propio, ese gesto es
-// suyo. Se resuelve mirando el DOM en el momento del toque, no con una lista de clases: hoy son
-// siete tiras (la cinta, las pestañas de meses y de la lista de compras, el vocabulario de
-// alemán, el índice de los .md, las tablas y los bloques de código) y la que se añada mañana
-// queda cubierta sin tocar esto.
-(function(){
-  const slidesEl=document.getElementById('slides');
-  let touchStartX=0, touchStartY=0, touching=false;
-
-  // Solo cuenta si de verdad hay algo que desplazar: un contenedor con overflow-x:auto cuyo
-  // contenido cabe entero no le quita el swipe a nadie.
-  function enTiraHorizontal(el){
-    for(let n=el; n && n!==slidesEl; n=n.parentElement){
-      if(n.nodeType!==1) continue;
-      const ox=getComputedStyle(n).overflowX;
-      if((ox==='auto'||ox==='scroll') && n.scrollWidth > n.clientWidth+1) return true;
-    }
-    return false;
-  }
-
-  slidesEl.addEventListener('touchstart',e=>{
-    if(e.touches.length!==1) return; // ignora pellizcar/zoom con 2 dedos
-    if(enTiraHorizontal(e.target)) { touching=false; return; }
-    touching=true;
-    touchStartX=e.touches[0].clientX;
-    touchStartY=e.touches[0].clientY;
-  },{passive:true});
-  slidesEl.addEventListener('touchend',e=>{
-    if(!touching) return;
-    touching=false;
-    const dx=e.changedTouches[0].clientX-touchStartX;
-    const dy=e.changedTouches[0].clientY-touchStartY;
-    const UMBRAL=50;
-    if(Math.abs(dx)>UMBRAL && Math.abs(dx)>Math.abs(dy)){
-      if(dx<0) nextSlide(); else prevSlide();
-    }
-  },{passive:true});
-})();
+// Sin swipe entre pantallas: se cambia de pantalla solo tocando un botón (‹ ›, los íconos de pantalla o el menú ☰).
+// Adán, 27-oct-2026: "quita los gestos touch de cambiar de página deslizando, eso entorpece muchas cosas".
 
 window.addEventListener('storage',()=>{loadAll();if(window.CIFRAS)CIFRAS.refrescar();RENDERS[cur]();renderQuickApps();});
 

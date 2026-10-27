@@ -78,8 +78,11 @@ invertir hoy*).
 ## Las 7 pantallas
 
 Cada una es un `<section class="slide theme-…">` con `data-i`. Rotan solas cada 3 minutos; se
-navega con las flechas, el rail, el menú ☰ o deslizando en táctil. `irASlide(cls)` salta a una
-**por su clase** y lee su `data-i`: si se reordenan, los saltos siguen llegando.
+navega con las flechas, el rail o el menú ☰. **Deslizar no cambia de pantalla**: en táctil se cambia
+solo tocando un botón (Adán, 27-oct-2026: *"quita los gestos touch de cambiar de página deslizando,
+eso entorpece muchas cosas"*), así que el dedo queda libre para el scroll y las tiras horizontales.
+`irASlide(cls)` salta a una **por su clase** y lee su `data-i`: si se reordenan, los saltos siguen
+llegando.
 
 | Tema | Pantalla | Qué muestra | Prompt |
 |---|---|---|---|
@@ -665,7 +668,7 @@ El bloqueo va por eventos, en un archivo que cargan las seis apps:
 | Ctrl+rueda | cancela `wheel` con `ctrlKey` |
 
 El doble toque va por CSS y no cancelando `touchend`, porque eso **rompería los clicks**. Todo lo
-de un dedo sigue vivo: scroll, swipe entre pantallas, taps. El meta se cerró igual en las seis
+de un dedo sigue vivo: scroll y taps. El meta se cerró igual en las seis
 apps: manda en Android y escritorio.
 
 ## Qué invertir hoy — plantilla fija, datos de Claude

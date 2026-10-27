@@ -19,8 +19,8 @@
        rompería, porque el navegador ya no sintetiza el click.
 
    Lo que se conserva, y por eso el bloqueo mira SIEMPRE cuántos dedos hay:
-   scroll vertical, scroll horizontal de las tiras, swipe entre pantallas y
-   taps normales usan UN dedo. Ninguno pasa por aquí.
+   scroll vertical, scroll horizontal de las tiras y taps normales usan UN
+   dedo. Ninguno pasa por aquí.
 
    Se carga desde cada app con <script src="../Dashboard/sin-zoom.js"></script>
    (sin prefijo en el propio Dashboard), igual que datos-maestros.js: una sola
@@ -41,7 +41,7 @@
   });
 
   // El pellizco en el resto. Un solo dedo nunca entra aquí, así que el scroll
-  // y el swipe siguen exactamente igual de fluidos.
+  // sigue exactamente igual de fluido.
   document.addEventListener('touchmove', function (e) {
     if (e.touches.length > 1) e.preventDefault();
   }, { passive: false });
