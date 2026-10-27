@@ -214,10 +214,11 @@ Estructura vigente, sin las horas exactas (esas están en el maestro, que es don
 
 - **Lun–Vie**: despertar → construir esta aplicación → ducha (con o sin lavado de cabello según el
   día) → skincare y minoxidil AM → **Didi con direccionamiento camino a ALTEN** → jornada en ALTEN
-  (con la compra de comida en el descanso) → Didi corta de la tarde → gimnasio → bloque de
-  habilidad (Mar/Jue) → Didi de la noche → el bloque del Plan Maestro (1h15 en la tarea de la fase que toca) → cena y preparar la
-  comida de mañana → lectura → diario → skincare y minoxidil PM → planear mañana → meditación →
-  segundo bloque de la aplicación → dormir.
+  (con la compra de comida en el descanso) → clase de alemán en el CENLEX → gimnasio (hora y media, sin
+  ducha: te cambias) → Didi de la noche → el bloque del Plan Maestro (una hora en la tarea de la fase que te toca)
+  → cena y preparar la comida de mañana → cierre del día en 15 minutos (lectura, diario y plan de mañana) →
+  segundo bloque de la aplicación (el martes, Negociar tu ingreso; el jueves, Finanzas) → skincare y minoxidil
+  PM, en 15 minutos → dormir.
 - **Lunes**, además: revisión de la Bolsa GBM por la mañana. Solo invierte al inicio de semana.
 - **Sábado y domingo**: días de ingreso, con dos turnos largos de Didi (mañana y tarde-noche). El
   domingo cierra la semana con finanzas, checkpoint del Plan Maestro y diario, comprimidos al final.

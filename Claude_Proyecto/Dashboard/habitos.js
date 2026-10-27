@@ -86,7 +86,7 @@
   const SEMILLA = [
     /* `flex:true`: toca de lunes a viernes, pero se puede marcar cualquier día.
        Adán rompe la rutina a veces y lo hace en fin de semana; ese extra suma. */
-    { id:'app',    nombre:'Construir esta app',     ancla:'10 min antes de arrancar · y de 22:30 a 23:00', hora:'06:43', color:'#22d3ee', ico:'codigo', dow:[1,2,3,4,5], flex:true,
+    { id:'app',    nombre:'Construir esta app',     ancla:'10 min antes de arrancar · y de 22:35 a 23:05 lun, mié y vie', hora:'06:43', color:'#22d3ee', ico:'codigo', dow:[1,2,3,4,5], flex:true,
       pasos:[
         'Por la mañana, 10 min: abre el proyecto y anota UNA mejora concreta para hoy.',
         'De {{horaApp}} a {{horaRutinaNoche}}: constrúyela, pruébala en el navegador y súbela a GitHub. Es la última pantalla del día.',
@@ -109,28 +109,29 @@
         'Sales de ALTEN a las 16:40 y manejas unos 20 min al CENLEX.',
         'Clase de 17:00 a 18:00 · vas por el Kapitel {{kapitelAleman}}.',
         'Lleva anotadas las 3 palabras que no te salieron en la clase anterior.',
-        'A las 18:00, del CENLEX al gimnasio: unos 15 min.'
+        'A las 18:00, del CENLEX al gimnasio: unos 35 min.'
       ] },
     /* `gym:true`: la ficha lee el día de GYM_RUTINA_DEFAULT que toca hoy (nombre y
        foco) en vez de copiarlo aquí. El detalle de cada ejercicio vive en Ejercicio. Toca los días
        con sesión de esa rutina —de lunes a sábado; el domingo es descanso—: el control 35 del
        verificador los compara. */
-    { id:'gym',    nombre:'Gimnasio',               ancla:'Tras el CENLEX · el sábado a las 07:35',      hora:'18:15', color:'#ff8a3d', ico:'pesa',   dow:[1,2,3,4,5,6], gym:true,
+    { id:'gym',    nombre:'Gimnasio',               ancla:'Tras el CENLEX · el sábado a las 07:35',      hora:'18:35', color:'#ff8a3d', ico:'pesa',   dow:[1,2,3,4,5,6], gym:true,
       pasos:['Series, reps y peso de cada ejercicio: en Ejercicio, en la barra de arriba.'] },
-    { id:'fase0',  nombre:'Plan Maestro · 1h15',    ancla:'La tarea de la fase que toca esta semana', hora:'20:00', color:'#8b5cf6', ico:'diana',  dow:[1,2,3,4,5], flex:true,
+    { id:'fase0',  nombre:'Plan Maestro · 1 h',     ancla:'La tarea de la fase que te toca',          hora:'20:50', color:'#8b5cf6', ico:'diana',  dow:[1,2,3,4,5], flex:true,
       pasos:[
-        '1h15 de avance en la tarea de la fase que toca esta semana: la marca el tablero del Plan Maestro.',
-        'Antes de empezar, decide qué vas a tener hecho a las 21:15. Una cosa, no tres.',
+        'Una hora en la tarea de la fase que te toca: la que el tablero del Plan Maestro marca con «Te toca» y Mi Día enseña al abrir el bloque.',
+        'Lunes, miércoles y jueves, la primera media hora es del CT-GenAI: un objetivo del syllabus.',
+        'Antes de empezar, decide qué vas a tener hecho al terminar la hora. Una cosa, no tres.',
         'Sin Didi ni celular en este bloque: es el único hueco de trabajo profundo del día.'
       ] },
     /* `rutina` + `sec`: la ficha enseña las subtareas de ese bloque de RUTINA_TASKS,
        solo la sección indicada. Aquí, la lectura del cierre del día. */
-    { id:'leer',   nombre:'Leer 10 páginas',        ancla:'En el cierre del día',                        hora:'21:45', color:'#b06eff', ico:'libro',  dow:'todos', rutina:'wd-cierre', sec:'Lectura',
-      pasos:['10 páginas es el mínimo para marcarlo; el bloque completo son 30 min.'] },
-    { id:'piel',   nombre:'Rutina de la noche',     ancla:'Piel, minoxidil y suplementos',               hora:'23:00', color:'#fb7185', ico:'chispa', dow:'todos', rutina:'wd-pm' },
+    { id:'leer',   nombre:'Leer 10 páginas',        ancla:'En el cierre del día',                        hora:'22:20', color:'#b06eff', ico:'libro',  dow:'todos', rutina:'wd-cierre', sec:'Lectura',
+      pasos:['10 páginas, unos 10 minutos: es la lectura del cierre del día, que dura 15.'] },
+    { id:'piel',   nombre:'Rutina de la noche',     ancla:'Piel, minoxidil y suplementos',               hora:'23:05', color:'#fb7185', ico:'chispa', dow:'todos', rutina:'wd-pm' },
     { id:'sueno',  nombre:'Dormir 7 h',             ancla:'Luz fuera a las 23:40',                       hora:'23:40', color:'#818cf8', ico:'luna',   dow:'todos',
       pasos:[
-        'Pantallas fuera a las {{horaRutinaNoche}}, al cerrar la app: la rutina de la noche y la meditación van sin celular.',
+        'Pantallas fuera a las {{horaRutinaNoche}}: la rutina de la noche va sin celular, y lo que queda hasta la luz fuera es para que se seque el minoxidil.',
         'Luz fuera a las {{horaDormir}}: son {{horasSueno}} hasta las {{horaDespertar}}, justo el mínimo. Cada media hora que te pases se nota al día siguiente.',
         'Celular fuera del cuarto: es lo que hace que despertar sin snooze funcione.'
       ] },
@@ -158,7 +159,7 @@
      La regla de todas: lo que Adán editó a mano manda. Un hábito se considera
      "suyo" si su nombre o su anclaje no son los que le puso la semilla anterior
      — entonces se le añade solo lo nuevo (la hora) y no se le toca nada más. */
-  const MIG = 12;
+  const MIG = 13;
   const RETIRADOS = { 2: ['azucar', 'gasto'], 3: ['pasos'], 4: ['snooze', 'diario'], 5: ['nata'], 7: ['genai', 'medi'] };
   /* Los días que traía la semilla anterior. La migración 11 le devuelve el miércoles al Gimnasio:
      era natación, y desde el 10-oct-2026 son intervalos en el gym (Adán, 15-oct-2026: "aparece que no
@@ -169,9 +170,10 @@
   const PREVIO = {
     gym:   [['Gimnasio', '19:00 · después de comer'], ['Gimnasio', 'Tras el CENLEX · el sábado a las 07:35']],
     nata:  [['Natación', 'Miércoles, 20:00'], ['Natación', 'Alberca del Fitsi Buenavista']],
-    app:   [['Construir esta app', '10 min antes de arrancar · y de 23:30 a 00:00'], ['Construir esta app', '10 min antes de arrancar · y de 22:30 a 23:00']],
+    app:   [['Construir esta app', '10 min antes de arrancar · y de 23:30 a 00:00'], ['Construir esta app', '10 min antes de arrancar · y de 22:30 a 23:00'],
+            ['Construir esta app', '10 min antes de arrancar · y de 22:35 a 23:05 lun, mié y vie']],
     fase0: [['Fase 0 · 1h15', 'Negocio de tu papá o plantilla GBM'], ['Plan Maestro · 1h15', 'Primer ingreso real: negocio de tu papá o plantilla GBM'],
-            ['Plan Maestro · 1h15', 'La tarea de la fase que toca esta semana']],
+            ['Plan Maestro · 1h15', 'La tarea de la fase que toca esta semana'], ['Plan Maestro · 1 h', 'La tarea de la fase que te toca']],
     ale:   [['Alemán · 15 min', 'Antes del café'], ['Clase de alemán', 'CENLEX · ESCA Santo Tomás, hasta las 18:00']],
     linkedin: [['Post de Aeroresinas en LinkedIn', 'Al llegar a ALTEN, antes del correo · 20 min']],
     leer:  [['Leer 10 páginas', 'Al acostarme'], ['Leer 10 páginas', 'En el cierre del día']],
@@ -189,19 +191,36 @@
                'Foto real + tres líneas: qué se hizo, en qué aeronave (sin nombrar al cliente) y qué problema resolvió.',
                'Cierra con una puerta: el WhatsApp o el correo de Aeroresinas, o la pregunta que abre conversación.',
                'Publica desde la página de empresa y comparte desde el perfil de tu papá; responde los comentarios ese mismo día. 20 min y fuera.'],
-    fase0: ['1h15 de avance en la prioridad activa: el negocio de tu papá o la plantilla GBM.',
-            'Antes de empezar, decide qué vas a tener hecho a las 21:15. Una cosa, no tres.',
-            'Sin Didi ni celular en este bloque: es el único hueco de trabajo profundo del día.'],
+    fase0: [['1h15 de avance en la prioridad activa: el negocio de tu papá o la plantilla GBM.',
+             'Antes de empezar, decide qué vas a tener hecho a las 21:15. Una cosa, no tres.',
+             'Sin Didi ni celular en este bloque: es el único hueco de trabajo profundo del día.'],
+            /* Migración 13 (2026-10-27): el gimnasio pasa a hora y media y el Plan Maestro a una hora. */
+            ['1h15 de avance en la tarea de la fase que toca esta semana: la marca el tablero del Plan Maestro.',
+             'Antes de empezar, decide qué vas a tener hecho a las 21:15. Una cosa, no tres.',
+             'Sin Didi ni celular en este bloque: es el único hueco de trabajo profundo del día.']],
+    ale:   [['Sales de ALTEN a las 16:40 y manejas unos 20 min al CENLEX.',
+             'Clase de 17:00 a 18:00 · vas por el Kapitel {{kapitelAleman}}.',
+             'Lleva anotadas las 3 palabras que no te salieron en la clase anterior.',
+             'A las 18:00, del CENLEX al gimnasio: unos 15 min.']],
+    leer:  [['10 páginas es el mínimo para marcarlo; el bloque completo son 30 min.']],
     /* Migración 10 (2026-10-13): la noche se reordenó para dormir 7 h. */
     app:   ['Por la mañana, 10 min: abre el proyecto y anota UNA mejora concreta para hoy.',
             'De 23:30 a 00:00: constrúyela, pruébala en el navegador y súbela a GitHub.',
             'Si no cabe en 30 min, pártela. Lo que suba hoy tiene que funcionar.'],
-    sueno: ['Apaga pantallas en cuanto cierres la app: entre 00:00 y 01:00.',
-            'Son 5h40 a 6h40 de sueño hasta las 06:40. Cada media hora que te pases se nota al día siguiente.',
-            'Celular fuera del cuarto: es lo que hace que despertar sin snooze funcione.']
+    sueno: [['Apaga pantallas en cuanto cierres la app: entre 00:00 y 01:00.',
+             'Son 5h40 a 6h40 de sueño hasta las 06:40. Cada media hora que te pases se nota al día siguiente.',
+             'Celular fuera del cuarto: es lo que hace que despertar sin snooze funcione.'],
+            ['Pantallas fuera a las {{horaRutinaNoche}}, al cerrar la app: la rutina de la noche y la meditación van sin celular.',
+             'Luz fuera a las {{horaDormir}}: son {{horasSueno}} hasta las {{horaDespertar}}, justo el mínimo. Cada media hora que te pases se nota al día siguiente.',
+             'Celular fuera del cuarto: es lo que hace que despertar sin snooze funcione.']]
+  };
+  /* Un hábito puede traer una versión de pasos o varias ([[...], [...]]): cualquiera de ellas, intacta, toma la nueva. */
+  const pasosPrevios = function (id) {
+    const p = PASOS_PREVIOS[id];
+    return !p ? [] : Array.isArray(p[0]) ? p : [p];
   };
   /* La hora que traía la semilla anterior: si sigue en esa, toma la nueva; si Adán la movió, manda la suya. */
-  const HORAS_PREVIAS = { sueno: ['23:59'], piel: ['22:30'] };
+  const HORAS_PREVIAS = { sueno: ['23:59'], piel: ['22:30', '23:00'], gym: ['18:15'], fase0: ['20:00'], leer: ['21:45'] };
   const intacto = function (h) {
     const p = PREVIO[h.id];
     if (!p) return false;
@@ -318,7 +337,7 @@
           if (h.hora === undefined) h.hora = sem.hora;
           else if (HORAS_PREVIAS[h.id] && HORAS_PREVIAS[h.id].indexOf(h.hora) !== -1) h.hora = sem.hora;
           if (h.pasos === undefined && sem.pasos) h.pasos = sem.pasos.slice();
-          else if (sem.pasos && PASOS_PREVIOS[h.id] && JSON.stringify(h.pasos) === JSON.stringify(PASOS_PREVIOS[h.id])) h.pasos = sem.pasos.slice();
+          else if (sem.pasos && pasosPrevios(h.id).some(function (p) { return JSON.stringify(h.pasos) === JSON.stringify(p); })) h.pasos = sem.pasos.slice();
           if (h.rutina === undefined && sem.rutina) { h.rutina = sem.rutina; if (sem.sec) h.sec = sem.sec; }
           if (h.gym === undefined && sem.gym) h.gym = true;
           if (h.flex === undefined && sem.flex) h.flex = true;

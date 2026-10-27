@@ -133,9 +133,10 @@ Dentro, una fila por bloque de `RUTINA_TASKS`: **la hora de inicio y la de fin**
 *"simplifica todos los títulos de mañana, tarde y noche y pon claramente la hora de inicio y fin de
 cada actividad"*). El título es el `corto` del maestro (`tituloCorto`; los de ejercicio, el nombre
 de la rutina real hasta el guion); el completo va en el `title` de la fila y en el AHORA. El fin
-sale de `finDeBloque` con el bloque que sigue **en el día**, no en la franja —el gym de las 18:15
-termina a las 19:00, que ya es de la noche—, y el último (dormir) termina cuando arranca el día
-siguiente. **El bloque en curso va en verde con los minutos que le quedan**, los hechos apagados y
+sale de `finDeBloque`: su `dur`, o el bloque que sigue **en el día**, no en la franja; el último (dormir) termina
+cuando arranca el día siguiente. **Cada bloque va en la franja donde pasa la mayor parte de su tiempo**
+(`agFranjaBloque`; Adán: *"el bloque del día va más en la noche"*): el ejercicio de 18:35 a 20:05 sale en la Noche
+aunque empiece antes de las 19:00, y dormir, que cruza la medianoche, en la franja de su hora. **El bloque en curso va en verde con los minutos que le quedan**, los hechos apagados y
 tachados. La pinta `pintarAgendaDia()` desde `renderDia()` con `finDeBloque`, `rtDur`,
 `leafItems`, `tituloBloque` y `tituloCorto`.
 
@@ -143,10 +144,12 @@ Arriba: la fecha, el reloj en grande (abre el calendario del año) y el resumen
 `0 de 21 bloques hechos · quedan 4h 50m`; abajo, **Marcar el bloque actual** (`quickMarkDone()`) y
 *Coach →*. **Tocar una fila** abre ese bloque en el AHORA (`tocarBloque(id)` → `cintaSel`); **tocar
 un día de la tira de 7** (`verDiaSemana`) cambia la agenda y la tarjeta Entrenas a ese día; tocarlo otra vez vuelve a hoy. La fila activa se trae a la
-vista con `scrollIntoView`.
+vista arriba de su franja, para que se vea lo que sigue, y si es la última de su franja también se abre la
+siguiente: a las 18:05, *Al gimnasio* al pie de la Tarde y el ejercicio arriba de la Noche (con las franjas
+abiertas, el ejercicio quedaba escondido bajo *Al gimnasio*).
 
 Medido a 1600 px y a 390 px con las tres franjas abiertas: ningún título cortado ni fila desbordada
-en martes (23 bloques), sábado (13) y domingo (14).
+en martes (20 bloques), sábado (12) y domingo (13).
 
 **Se oculta a la izquierda**, como el rail (Adán: *"la sección donde viene mi horario día a día igual hazla
 que se oculte a la izquierda"*): el tirador de arriba a la derecha (`toggleAgenda()`) la pliega a una tira de
@@ -177,6 +180,13 @@ bloque es de Didi —`esDidi()`: el que empieza por «Didi»; el descanso que so
 **Mientras manejas** con lo mismo que *Audiolibro y podcast* de Hoy aprendes (`didiHoy()`): el audiolibro de la
 semana en el primer bloque y el podcast del día en los demás; el fin de semana, el audiolibro. Y el
 enlace a *Qué escuchar*.
+
+**La hora del Plan Maestro dice qué hacer** (`pmBloqueHtml`; Adán, 27-oct-2026: *"aquí ni sé qué debo hacer,
+describe mejor pero en el recuadro principal"*). Se parte en tramos con su hora: primero lo que le piden las metas ese
+día —las entradas de `META_PLAN` con `bloque:'wd11'`, `dias` y `min`: el CT-GenAI, lunes, miércoles y jueves, la
+primera media hora, con su paso siguiente de Mis Metas— y el resto, **Te toca**: la primera tarea de la fase sin
+palomear del mes, la misma que marca el tablero, con su detalle, su casilla *Ya quedó* (`pmCheck`, la misma de
+siempre) y *Ver el mes en el Plan Maestro*. En el celular, *Después, …* va en su propio renglón.
 
 **Cabe sin desplazar** (Adán: *"aquí no quiero hacer scroll down, ponlo como en 2 columnas y que se
 vea muy bien"*). El título es el corto (`tituloCorto`) y lo que el completo dice después del guion
@@ -341,7 +351,7 @@ sigue: nada sale al azar.
   semana la tarjeta ya lo dice, para que alcances a comprarlo; el día 1 entra solo y el de antes pasa a los leídos.
   **El ritmo** (`lmRitmo()`) reparte las páginas de la biblioteca (`pags`) entre los días de lectura de su mes, que
   salen del bloque de lectura de la rutina (`lmBloque()`: la subtarea *Lectura* del cierre del día, de lunes a viernes
-  a las 21:45, 30 minutos): *Atomic Habits*, 323 páginas en 26 noches, unas 13 por noche. En la ventana de la
+  a las 22:20, 10 minutos): *Atomic Habits*, 323 páginas en 26 noches, unas 13 por noche. En la ventana de la
   habilidad, arriba de Recursos (`lmLadoHtml()`): el libro con su barra, *hasta qué página vas hoy* y *Ya lo terminé*
   (`lmTerminar()`: lo marca y sigue siendo el de su mes), y el del mes que sigue con su porqué —de qué ruta y con qué
   paso va—, *Otro* y *Empezarlo ya* (`lmEmpezar()`: el que sigue arranca hoy; el de antes, si no lo terminaste,
@@ -1361,8 +1371,9 @@ que usa el overlay de detalle.
 **Cada meta tiene un plan que se ejecuta** (`META_PLAN`; Adán: *"las metas, corto, mediano y largo,
 no me ayudan a nada, no me das la suficiente información para ejecutar estos planes"*). Lo pide el
 prompt de Mis Metas: resultado medible + fecha + sistema, y un siguiente paso con fecha. Por meta:
-`meta` (el resultado), `fecha`, `sistema` (cuándo y qué, en bloques que ya tiene la rutina:
-gym 18:15, *Negociar tu ingreso* el martes 19:00, el Plan Maestro 20:00, el descanso de ALTEN
+`meta` (el resultado), `fecha`, `sistema` (cuándo y qué, en bloques que ya tiene la rutina —sus horas
+salen de `{{horaGym}}` y `{{horaPlanMaestro}}`, y una entrada con `bloque`, `dias` y `min` se enseña también en el
+AHORA de ese bloque—: gym 18:35, *Negociar tu ingreso* el martes 22:35, el Plan Maestro 20:50, el descanso de ALTEN
 de las 13:00, la revisión del sábado 14:40; nunca el domingo, que es de Didi, ni la última hora
 de la noche, que es del sueño), `pasos` con fecha, `vas`
 (cómo sabes que vas bien) y `si` (qué haces si te atrasas). Las fechas no se copian: `{tarea}` toma
@@ -1903,7 +1914,7 @@ marcas o más, y si hasta el peor pasa del 80 % lo dice en verde. Mira los últi
 Los nueve de `SEMILLA` salen de `RUTINA_TASKS`: Construir esta app, Posts del negocio de tu papá
 (lun/mié/vie, `flex`, en el hueco del CT-GenAI: Aeroresinas y Heliescala en LinkedIn y Facebook, con la app
 Posts; la migración 12 le cambió nombre y pasos, y el plan de cada fase lo pide), Clase de alemán,
-Gimnasio, Plan Maestro · 1h15, Leer 10 páginas, Rutina de la noche, Dormir 7 h, Agua 3 litros. Cada
+Gimnasio, Plan Maestro · 1 h, Leer 10 páginas, Rutina de la noche, Dormir 7 h, Agua 3 litros. Cada
 uno lleva `hora` y **la lista se pinta ordenada por ella** (se ordena una copia; el orden guardado
 es el de creación). La hora se edita en la ficha (`time`).
 
@@ -1915,12 +1926,14 @@ semilla anterior; unos días puestos a mano no se tocan) y el **control 35** com
 los de la rutina, para que el próximo cambio de rutina no vuelva a dejar un día sin marcar.
 
 **La noche está ordenada para dormir 7 h** (Adán, 13-oct-2026: *"corrige el tiempo de sueño"*):
-Construir esta app de `{{horaApp}}` a `{{horaRutinaNoche}}` —la última pantalla del día—, la rutina de
-la noche, la meditación de las `{{horaMeditacion}}` y *Dormir 7 h* con *Luz fuera a las 23:40*. Los
+Construir esta app de `{{horaApp}}` a `{{horaRutinaNoche}}` —la última pantalla del día; lunes, miércoles y
+viernes, porque martes y jueves ese hueco es de *Negociar tu ingreso* y de *Finanzas*—, la rutina de la noche en 15
+minutos y *Dormir 7 h* con *Luz fuera a las 23:40*; los 20 minutos entre las dos son los que pide el minoxidil para
+secar antes de acostarte. Los
 pasos de esos hábitos citan los marcadores del maestro; el nombre, el anclaje y la hora van escritos
 porque Adán los puede editar, y el **control 31** comprueba que la semilla diga lo mismo que la rutina.
-La migración 10 movió la hora, el anclaje y los pasos de los que seguían como los dejó la semilla
-anterior (`HORAS_PREVIAS`, `PASOS_PREVIOS`); los que Adán editó, no. La cuadrícula desplaza por
+Cada migración mueve la hora, el anclaje y los pasos de los que siguen como los dejó una semilla anterior
+(`HORAS_PREVIAS`, `PREVIO` y `PASOS_PREVIOS`, que guarda una versión de los pasos o varias); los que Adán editó, no. La cuadrícula desplaza por
 dentro cuando no caben los diez y su borde de abajo se desvanece mientras haya más (`marcarDesborde()`).
 
 **`flex:true`**: toca ciertos días pero **se puede marcar cualquier día** (Construir esta app y el

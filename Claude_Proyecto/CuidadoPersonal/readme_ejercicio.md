@@ -61,8 +61,9 @@ Los propios van en `S.ejerciciosCustom` y `getAllEj()` los combina con `EJ_DB` e
 
 A la medida de las tres metas de Adán (2026-10-10: *"miércoles de natación ya no existe, redefine mi
 rutina sabiendo lo que quiero lograr: mejor condición física, bajar grasa en panza, aumentar masa
-muscular en brazos"*). `S.rutina` indexado por día (0 = domingo); entre semana caben 50 minutos
-(18:15–19:05, tras el CENLEX) y el sábado 60:
+muscular en brazos"*). `S.rutina` indexado por día (0 = domingo). El bloque es de hora y media entre semana (de
+18:35 a 20:05, tras el CENLEX, y sin ducha: te cambias en 15 minutos) y el sábado (de 07:35 a 09:05); las rutinas de
+abajo se armaron para 50 y 60 minutos:
 
 | Día | Rutina | `tipo` | Ejercicios |
 |---|---|---|---|

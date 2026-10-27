@@ -461,14 +461,16 @@ el corto del nombre de la rutina real (`tituloCorto` en el Dashboard).
 **La noche de lunes a viernes sí tiene marcadores**, porque la citan Coach, Cuidado Personal, los
 hábitos y las fichas del Dashboard. Salen de los bloques de `RUTINA_TASKS` por su id, así que
 mover un bloque los mueve a todos. La noche está ordenada para dormir 7 h (Adán, 13-oct-2026:
-*"corrige el tiempo de sueño"*): la app es la última pantalla y lo que sigue va sin celular.
+*"corrige el tiempo de sueño"*): la app es la última pantalla y lo que sigue va sin celular. Los de la tarde, el
+gimnasio y el Plan Maestro, los citan Mis Metas y Coach.
 
 | Marcador | Valor hoy | Bloque |
 |---|---|---|
 | `{{horaDespertar}}` | 06:40 | `wd01` |
-| `{{horaApp}}` | 22:30 — Construir esta app, media hora | `wd-app-pm` |
-| `{{horaRutinaNoche}}` | 23:00 — piel, minoxidil y suplementos, sin pantalla | `wd-pm` |
-| `{{horaMeditacion}}` | 23:30 | `wd20` |
+| `{{horaGym}}` | 18:35 — el ejercicio, hora y media, de lunes a viernes | `e1` |
+| `{{horaPlanMaestro}}` | 20:50 — una hora en la tarea de la fase | `wd11` |
+| `{{horaApp}}` | 22:35 — Construir esta app, media hora | `wd-app-pm` |
+| `{{horaRutinaNoche}}` | 23:05 — piel, minoxidil y suplementos, 15 min sin pantalla | `wd-pm` |
 | `{{horaDormir}}` | 23:40 — luz fuera | `wd21` |
 | `{{horasSueno}}` | 7 h — de `wd21` a `wd01` | derivada |
 

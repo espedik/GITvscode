@@ -3256,6 +3256,23 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 @media(max-width:900px){.rp-paso:not(.nota):not(.aviso) .rp-n{white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}}
 @media(min-height:1000px){.dia-ahora{max-height:max(34vh,372px)}}
 .blq-sig{font-size:12.5px;color:var(--text3);text-align:right;min-width:0}
+/* La hora del Plan Maestro en el AHORA (`pmBloqueHtml`): cada parte con su rango de horas, qué se hace y su paso. */
+.pmb{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.pmb-p{display:grid;grid-template-columns:92px minmax(0,1fr);gap:12px;align-items:start;padding:8px 12px;border-radius:11px;
+  background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.08)}
+.pmb-h{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--text3);padding-top:2px;white-space:nowrap}
+.pmb-c{display:flex;flex-direction:column;gap:3px;min-width:0}
+.pmb-c>b{font-size:14px;line-height:1.3;color:var(--text)}
+.pmb-d{font-size:12px;line-height:1.4;color:var(--text2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.pmb-sig{font-size:11.5px;color:var(--text3)}
+.pmb-sig b{color:var(--text2);font-weight:600}
+.pmb-acc{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:3px}
+.pmb-ok{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);cursor:pointer}
+.pmb-ir{border:0;background:none;padding:0;font:inherit;font-size:12px;font-weight:700;color:var(--cy);cursor:pointer}
+.dia-ahora.apretado .pmb-d{-webkit-line-clamp:2}
+@media(max-width:600px){.pmb-p{grid-template-columns:minmax(0,1fr);gap:3px}}
+/* En el celular, «Después, …» va en su propio renglón: junto a los botones quedaba una columna de una palabra. */
+@media(max-width:600px){.dia-ahora .blq-sig{order:-1;flex:1 0 100%!important;text-align:left}}
 .blq-sig b{color:var(--text2);font-weight:700}
 /* Mientras manejas: solo cuando el bloque abierto es de Didi. El catálogo entero sigue en el
    overlay de "Qué escuchar". */
@@ -7041,6 +7058,7 @@ function pintarBloqueDetalle(tareas, anchor, done, esHoy){
     </div>
     <div class="blq-txt">${esc(tituloCorto(t,dowB))}${detalle?`<span class="blq-det">${esc(detalle)}</span>`:''}</div>
     ${t.gym?gymBloqueHtml(diaSemanaSel!==null?diaSemanaSel:new Date().getDay())
+           :t.id==='wd11'?pmBloqueHtml(t,dowB)
            :((!t.fijo&&t.subtareas)?pasosHtml(t,leaves,done):'')}
     ${t.fijo?'<div class="blq-nota">Este bloque no se marca: es horario fijo.</div>':''}
     ${escucharHtml(t)}
@@ -7061,6 +7079,33 @@ function pintarBloqueDetalle(tareas, anchor, done, esHoy){
 // La rutina de gym dentro del panel: los mismos ejercicios, series, pesos y consejos que el panel
 // de abajo, más la imagen de cada uno (de EJ_DB por ejInfo; no todos tienen). Clic en la
 // imagen o en el nombre abre su ficha completa (verFichaEjercicio).
+// Qué se hace en la hora del Plan Maestro (Adán, 27-oct-2026: "aquí ni sé qué debo hacer, describe mejor pero en el
+// recuadro principal"). Primero lo que le piden las metas ese día —las de META_PLAN con `bloque:'wd11'`: el CT-GenAI,
+// lunes, miércoles y jueves, la primera media hora, con su paso siguiente— y el resto, la tarea de la fase que te toca:
+// la primera sin palomear del mes, la misma que el tablero marca con «Te toca», con su detalle y su casilla.
+function pmBloqueHtml(t,dow){
+  const C=window.CIFRAS; if(!C||!C.planMes||typeof fzmFicha!=='function') return '';
+  const hm=m=>String(Math.floor(m/60)%24).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+  const ini=minutosDe(t.hora), fin=ini+(t.dur||60), partes=[];
+  let m=ini;
+  Object.keys(META_PLAN).forEach(id=>(META_PLAN[id].sistema||[]).forEach(s=>{
+    if(s.bloque!==t.id||!(s.dias||[]).includes(dow)) return;
+    const mp=metaPlan(id), sig=mp&&mp.sig;
+    partes.push(`<div class="pmb-p"><span class="pmb-h">${hm(m)}–${hm(m+s.min)}</span><div class="pmb-c">
+      <b>${esc(s.t||(mp?mp.P.meta:''))}</b><span class="pmb-d">${esc(s.q)}</span>
+      ${sig?`<span class="pmb-sig">Lo siguiente: <b>${esc(sig.t)}</b>${sig.cuando?' · '+esc((sig.est==='tarde'&&/^hace /.test(sig.cuando)?'venció ':'')+sig.cuando):''}</span>`:''}</div></div>`);
+    m+=s.min;
+  }));
+  const checks=rawGet('coach_checks_v1',{})||{}, F=fzmFicha(C.planMes(fzmYM(new Date())),fzmAud());
+  const tarea=F.tareas.filter(x=>x.grupo==='fase'||x.grupo==='pasa'||x.grupo==='correccion').find(x=>!ctHecha(x,checks));
+  const p=tarea?fzmPartir(tarea.txt):null;
+  partes.push(`<div class="pmb-p"><span class="pmb-h">${hm(m)}–${hm(fin)}</span><div class="pmb-c">${p
+    ?`<b>Te toca: ${p.t}</b>${p.d?`<span class="pmb-d" title="${esc(String(p.d).replace(/<[^>]*>/g,''))}">${p.d}</span>`:''}
+      <span class="pmb-acc"><label class="pmb-ok"><input type="checkbox" onchange="pmCheck('${tarea.id}',this.checked);renderDia()"> Ya quedó</label>
+      <button type="button" class="pmb-ir" onclick="irASlide('theme-coach')">Ver el mes en el Plan Maestro →</button></span>`
+    :`<b>Las tareas de la fase de este mes ya están hechas</b><span class="pmb-d">Usa la hora en lo que sostienes todo el mes, o adelanta la del mes que sigue en el Plan Maestro.</span>`}</div></div>`);
+  return `<div class="pmb">${partes.join('')}</div>`;
+}
 function gymBloqueHtml(dow){
   const r=gymDelDia(dow);
   if(!r) return '<div class="blq-nota">Sin rutina configurada para ese día.</div>';
@@ -7146,6 +7191,16 @@ const AG_FRANJAS=[
 // `agFrAuto` recuerda si el usuario ya decidió; hasta entonces manda la franja en curso.
 let agFrAbiertas=null, agFrAuto=true;
 function agFranjaDe(hora){ const m=minutosDe(hora); return (AG_FRANJAS.find(f=>m>=f.desde&&m<f.hasta)||AG_FRANJAS[2]).k; }
+// Un bloque va a la franja donde pasa la mayor parte de su tiempo (Adán, 27-oct-2026: "el bloque del día va más en la
+// noche"): el ejercicio de 18:35 a 20:05 es de la noche aunque empiece antes de las 19:00. Dormir, que cruza la
+// medianoche, se queda en la franja de su hora.
+function agFranjaBloque(t,tareas){
+  const a=minutosDe(t.hora), f=finDeBloque(t,tareas[tareas.indexOf(t)+1]||null), b=f?minutosDe(f):a;
+  if(b<=a) return agFranjaDe(t.hora);
+  let k=null, max=-1;
+  AG_FRANJAS.forEach(fr=>{ const n=Math.min(b,fr.hasta)-Math.max(a,fr.desde); if(n>max){ max=n; k=fr.k; } });
+  return k;
+}
 function toggleFranja(k){
   if(!agFrAbiertas) agFrAbiertas=new Set();
   agFrAuto=false;
@@ -7161,17 +7216,20 @@ function pintarAgendaDia(tareas, anchor, done, esHoy){
   const fin=minutosDe(tareas[tareas.length-1].hora)+30;
   const ahoraMin=minutosDe(horaAhora());
   const selId=cintaSel||(anchor?anchor.id:null);
-  const kSel=selId?(tareas.find(t=>t.id===selId)||{}).hora:null;
+  const tSel=selId?tareas.find(t=>t.id===selId)||null:null, frSel=tSel?agFranjaBloque(tSel,tareas):null;
   // Sin elección del usuario se abre la franja del bloque en curso; y si el día no es
   // hoy, la primera que tenga bloques, para no dejar el panel en blanco.
   if(agFrAuto||!agFrAbiertas){
-    const kAuto=kSel?agFranjaDe(kSel):agFranjaDe(tareas[0].hora);
+    const kAuto=frSel||agFranjaBloque(tareas[0],tareas);
     agFrAbiertas=new Set([kAuto]);
+    // Si el bloque es el último de su franja, lo que sigue está en la otra: se abre también.
+    const tSig=tSel?tareas[tareas.indexOf(tSel)+1]:null;
+    if(tSig) agFrAbiertas.add(agFranjaBloque(tSig,tareas));
   }
   let hechos=0;
   const filaHtml=(t,i,arr)=>{
-    // El fin sale del bloque que sigue en el DÍA, no en la franja: el gym de las 18:15 termina con
-    // el de las 19:00, que ya es de la noche. El último (dormir) termina cuando arranca el siguiente día.
+    // El fin sale de su `dur` o del bloque que sigue en el DÍA, no en la franja. El último (dormir) termina
+    // cuando arranca el siguiente día.
     const sig=tareas[tareas.indexOf(t)+1]||(rutinaTareasDelDia((dow+1)%7)||[])[0]||null;
     const meta=CAT_META[t.cat]||{ico:'•',label:t.cat,c:'#565a72'};
     const hecho=!t.fijo&&leafItems(t).every(it=>done.includes(it.id));
@@ -7191,13 +7249,13 @@ function pintarAgendaDia(tareas, anchor, done, esHoy){
   };
   const CHEVRON='<svg class="ch" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
   el.innerHTML=AG_FRANJAS.map(fr=>{
-    const dentro=tareas.filter(t=>agFranjaDe(t.hora)===fr.k);
+    const dentro=tareas.filter(t=>agFranjaBloque(t,tareas)===fr.k);
     if(!dentro.length) return '';
     const hechosFr=dentro.filter(t=>!t.fijo&&leafItems(t).every(it=>done.includes(it.id))).length;
     hechos+=hechosFr;
     const marcablesFr=dentro.filter(t=>!t.fijo).length;
     const abierta=agFrAbiertas.has(fr.k);
-    const viva=esHoy&&kSel&&agFranjaDe(kSel)===fr.k;
+    const viva=esHoy&&frSel===fr.k;
     const pts=dentro.map(t=>{
       if(t.fijo) return '<span class="pt fijo"></span>';
       const ok=leafItems(t).every(it=>done.includes(it.id));
@@ -7219,19 +7277,25 @@ function pintarAgendaDia(tareas, anchor, done, esHoy){
   const faltaMin=esHoy?Math.max(0,fin-ahoraMin):0;
   if(res) res.innerHTML=`<b>${hechos}</b> de ${marcables} bloques hechos${esHoy?' · '+(faltaMin>0?'quedan '+Math.floor(faltaMin/60)+'h '+(faltaMin%60)+'m':'día cerrado'):' · '+DIAS_LARGO[dow]}`;
   pintarAgendaMini(tareas, anchor, done, esHoy, hechos, marcables);
-  // La fila activa a la vista: dentro de una franja abierta también puede quedar fuera.
+  // La fila activa a la vista y arriba de su franja, para que se vea también lo que sigue: con las franjas abiertas,
+  // el ejercicio quedaba escondido debajo de «Al gimnasio». Si la franja no desplaza por dentro, basta con traerla.
   const act=el.querySelector('.ag-row.ahora, .ag-row.sel');
-  if(act&&act.scrollIntoView) act.scrollIntoView({block:'nearest'});
+  if(act){
+    const body=act.closest('.ag-fr-body');
+    if(body&&body.scrollHeight>body.clientHeight+1) body.scrollTop+=act.getBoundingClientRect().top-body.getBoundingClientRect().top-4;
+    else if(act.scrollIntoView) act.scrollIntoView({block:'nearest'});
+  }
 }
 // La agenda plegada: la hora, un punto por bloque en sus tres franjas y el ✓ del bloque actual. Tocar un
 // punto abre ese bloque en el AHORA, como tocar su fila.
 function pintarAgendaMini(tareas, anchor, done, esHoy, hechos, marcables){
   const el = document.getElementById('diaAgendaMini'); if(!el) return;
   const dow = diaSemanaSel !== null ? diaSemanaSel : new Date().getDay();
-  const selId = cintaSel || (anchor ? anchor.id : null), kSel = selId ? (tareas.find(t => t.id === selId) || {}).hora : null;
+  const selId = cintaSel || (anchor ? anchor.id : null), tSel = selId ? tareas.find(t => t.id === selId) || null : null;
+  const frSel = tSel ? agFranjaBloque(tSel, tareas) : null;
   const frs = AG_FRANJAS.map(fr => {
-    const dentro = tareas.filter(t => agFranjaDe(t.hora) === fr.k); if(!dentro.length) return '';
-    const viva = esHoy && kSel && agFranjaDe(kSel) === fr.k;
+    const dentro = tareas.filter(t => agFranjaBloque(t, tareas) === fr.k); if(!dentro.length) return '';
+    const viva = esHoy && frSel === fr.k;
     const pts = dentro.map(t => {
       const ok = !t.fijo && leafItems(t).every(it => done.includes(it.id));
       const cls = (t.fijo ? ' fijo' : '') + (ok ? ' ok' : '') + (esHoy && anchor && t.id === anchor.id ? ' ahora' : (t.id === selId ? ' sel' : ''));
@@ -12881,7 +12945,7 @@ const META_PLAN={
     meta:'Aprobar el CT-GenAI con 30 de 46 puntos o más (el corte oficial, 65 %)',
     fecha:{tarea:'a1-7'},
     sistema:[
-      {c:'Lun · Mié · Jue · 20:00–20:45',q:'Los primeros 45 minutos del bloque del Plan Maestro: un objetivo GenAI-x.y.z del syllabus. Lo lees y escribes en una línea qué pide saber.'},
+      {c:'Lun · Mié · Jue · desde las {{horaPlanMaestro}}',bloque:'wd11',dias:[1,3,4],min:30,t:'El CT-GenAI',q:'La primera media hora del bloque del Plan Maestro: un objetivo GenAI-x.y.z del syllabus. Lo lees y escribes en una línea qué pide saber.'},
       {c:'Diario',q:'La pregunta del ISTQB en Hoy aprendes: contéstala antes de ver el porqué y lee la cita del syllabus.'},
       {c:'Sábado · 15:30–16:30',q:'Desde el 19 de diciembre, un simulacro completo de 60 minutos, en el tiempo libre antes del Didi de la tarde.'}
     ],
@@ -12906,8 +12970,8 @@ const META_PLAN={
     meta:'Terminar tu primer HYROX (Men Open, individual) corriendo los 8 km: sin caminar los últimos dos',
     fecha:{clave:'hyroxFecha'},
     sistema:[
-      {c:'Mié · 18:15',q:'Los intervalos de tu rutina (bici, cuerdas y elíptica): el motor del Hyrox.'},
-      {c:'Vie · 18:15',q:'Cardio largo y core. Desde el 4 de enero, carrera con estaciones: 1 km corriendo y una estación, repetido.'},
+      {c:'Mié · {{horaGym}}',q:'Los intervalos de tu rutina (bici, cuerdas y elíptica): el motor del Hyrox.'},
+      {c:'Vie · {{horaGym}}',q:'Cardio largo y core. Desde el 4 de enero, carrera con estaciones: 1 km corriendo y una estación, repetido.'},
       {c:'Lun · Mar · Jue · Sáb',q:'La fuerza de tu rutina: de ahí salen el trineo, las zancadas y los wall balls.'}
     ],
     pasos:[
@@ -12947,7 +13011,7 @@ const META_PLAN={
     fecha:{clave:'maestriaInicio'},
     sistema:[
       {c:'Lun a vie · 17:00–18:00',q:'Alemán en el CENLEX: Esslingen pide el A2.'},
-      {c:'Lun a vie · 20:00–21:15',q:'El bloque del Plan Maestro: la tarea de la fase que toca esta semana.'},
+      {c:'Lun a vie · {{horaPlanMaestro}}',q:'El bloque del Plan Maestro: una hora en la tarea de la fase que te toca.'},
       {c:'Día 1 y día 15',q:'El ahorro a GBM el día que entra el sueldo, antes de gastar.'}
     ],
     pasos:[{tarea:'a1-4'},{tarea:'a1-5'},{tarea:'a1-10'},{tarea:'a1-12'},{tarea:'a2-2'},{tarea:'a2-4'},{tarea:'a2-5'},{tarea:'a2-6'},{tarea:'a2-9'},{tarea:'a3-1'}],
@@ -15841,7 +15905,7 @@ const HABILIDAD_DETALLE={
       {t:'Las cuatro palancas del sueño, en orden de impacto',d:'Si solo vas a cambiar una cosa, empieza por la primera. Están ordenadas por lo que de verdad mueve la aguja:',list:['<b>1. Hora fija</b> de acostarte y levantarte, <b>incluidos los fines de semana</b>. Tu reloj interno responde a la regularidad más que a la cantidad. Dormir de 1 a 8 todos los días descansa más que dormir de 11 a 7 unos días y de 2 a 9 otros.','<b>2. Cuarto oscuro y fresco</b>: 18-20 °C. El cuerpo necesita bajar su temperatura para entrar en sueño profundo, y un cuarto caliente lo impide.','<b>3. Nada de pantallas 30-60 minutos antes.</b> No es solo la luz: es el contenido, que te deja la cabeza acelerada.','<b>4. Luz de sol en los primeros 30-60 minutos del día.</b> Es lo que ajusta el reloj y hace que a la noche te dé sueño a la hora correcta. Diez minutos afuera valen más que cualquier suplemento.']},
       {t:'Cafeína: la cuenta que casi nadie hace',d:'La cafeína tiene una <b>vida media de 5 a 6 horas</b>: eso significa que la mitad sigue en tu cuerpo pasado ese tiempo.',list:['Un café a las <b>4 pm</b> todavía te está afectando a las <b>10 pm</b>, con la mitad de la dosis en el sistema. No te impide dormir, pero <b>reduce el sueño profundo</b>, que es donde se repara el músculo.','Regla práctica: <b>corta el café después de las 2-3 pm</b>. Es el cambio con mejor relación esfuerzo/resultado de toda esta habilidad, y se nota en menos de una semana.','Cuidado con lo que no parece café: té negro, refrescos de cola, bebidas energéticas y el pre-entreno. El pre-entreno de una sesión de noche es una noche mal dormida garantizada.','Si lo usas para aguantar Didi, tenlo claro: no estás produciendo energía, estás <b>adelantando la del día siguiente</b>.']},
       {t:'Alcohol: no es un somnífero',d:'Es la confusión más extendida sobre el descanso, y a ti te importa por el gym:',list:['Te duerme más rápido, sí — y luego <b>destruye la fase profunda</b>, que es justo donde se repara el músculo y se consolida lo que aprendiste.','Una noche de copas es <b>una noche de recuperación perdida</b>, aunque hayas dormido ocho horas. Por eso amaneces cansado después de dormir mucho.','También deshidrata, y la deshidratación por sí sola empeora el rendimiento del día siguiente.','No es una prohibición: es saber que el sábado de copas se paga en el entrenamiento del lunes, y decidirlo con esa información.']},
-      {t:'El ritual antes de dormir',d:'Tu rutina de la noche y la meditación de las {{horaMeditacion}} ya son esto, y van sin pantalla. Un ritual fijo —<b>el mismo orden todas las noches</b>— le dice a tu cuerpo que ya casi es hora, y concilias el sueño más rápido.',list:['Que sea corto y repetible: 15-20 minutos bastan. Un ritual de una hora no sobrevive a una semana complicada.','El orden importa más que el contenido. Mismo orden, misma hora, todas las noches — incluso los días que llegas tarde, aunque sea la versión corta.','Lo que sí funciona dentro: bajar luces, dejar el celular fuera del cuarto, anotar lo pendiente de mañana (sacarlo de la cabeza al papel es lo que corta la rumiación), y estirar o meditar.','<b>No te los saltes cuando se complica el día.</b> Es exactamente cuando más los necesitas, y es exactamente cuando se abandonan.']},
+      {t:'El ritual antes de dormir',d:'Tu rutina de la noche de las {{horaRutinaNoche}} ya es esto, y va sin pantalla. Un ritual fijo —<b>el mismo orden todas las noches</b>— le dice a tu cuerpo que ya casi es hora, y concilias el sueño más rápido.',list:['Que sea corto y repetible: 15-20 minutos bastan. Un ritual de una hora no sobrevive a una semana complicada.','El orden importa más que el contenido. Mismo orden, misma hora, todas las noches — incluso los días que llegas tarde, aunque sea la versión corta.','Lo que sí funciona dentro: bajar luces, dejar el celular fuera del cuarto, anotar lo pendiente de mañana (sacarlo de la cabeza al papel es lo que corta la rumiación), y estirar o meditar.','<b>No te los saltes cuando se complica el día.</b> Es exactamente cuando más los necesitas, y es exactamente cuando se abandonan.']},
       {t:'La siesta, bien hecha',d:'Sirve, pero tiene reglas estrictas y romperlas te deja peor que no dormir nada:',list:['<b>20 minutos máximo, y antes de las 4 pm.</b>','Pasando los 30 minutos entras en sueño profundo, y despertar de ahí te deja aturdido una hora — es la sensación de haber dormido mal en la tarde.','Después de las 4 pm te roba presión de sueño para la noche, que es justo lo que no te sobra.','El truco del café-siesta: café e inmediatamente 20 minutos de siesta. La cafeína tarda ese tiempo en hacer efecto, así que despiertas justo cuando entra. Úsalo solo temprano.']},
       {t:'Descanso activo: no todo es quedarte quieto',d:'Algunas formas de descanso recuperan más que el sillón, y esto es medible en cómo te sientes al día siguiente:',list:['Una <b>caminata sin celular</b> o 10 minutos de estiramiento recuperan más que quedarte scrolleando. Pruébalo una semana y compara.','Tu <b>domingo de descanso activo</b> ya está en la rutina y es una caminata de 30 minutos: respétalo como lo que es —parte del plan—, no como "el día que no fui al gym".','⚠️ Error más común: convertirlo en otro entrenamiento. Si tu caminata del domingo termina con pulsaciones de gym, <b>no fue recuperación, fue una séptima sesión</b>.','El scroll no es descanso. Es entretenimiento de baja calidad que no repara nada y que además te quita horas de sueño sin que te des cuenta.']},
       {t:'Al menos un día completo sin gym',d:'No es opcional y no es pereza: es cuando el músculo de verdad se repara.',list:['Entrenar es el <b>estímulo</b>; el crecimiento ocurre en las 24-72 horas siguientes, y solo si duermes y comes.','Sin ese día, se acumula fatiga en tendones y articulaciones, que es donde llegan las lesiones que te sacan un mes entero.','Si tu semana ya trae Didi, ALTEN y el negocio, tu día de descanso del gym <b>no debería ser también el día más cargado de todo lo demás</b>.','La prueba de que lo necesitas: si tu fuerza en los mismos ejercicios lleva tres semanas sin moverse pese a entrenar igual o más, ese es el aviso.']},
@@ -16190,7 +16254,7 @@ const HABILIDAD_DETALLE={
       {t:'Tu primera sesión, minuto a minuto',d:'Cinco minutos. Así de concreto:',list:['<b>0:00</b> — Siéntate, pon un temporizador de 5 minutos (con sonido suave) y cierra los ojos.','<b>0:00-0:30</b> — Tres respiraciones profundas, exhalando largo. Es la transición, no la meditación.','<b>0:30-4:30</b> — <b>Respira normal</b>, sin controlar nada. Lleva la atención a <b>dónde sientes la respiración</b>: las fosas nasales, el pecho o el abdomen. Elige un punto y quédate ahí.','<b>Cuando notes que te fuiste</b> —y te vas a ir muchas veces— di mentalmente <i>"pensando"</i>, sin regañarte, y vuelve a la respiración. Eso es todo.','<b>4:30-5:00</b> — Antes de abrir los ojos, nota el cuerpo entero y los sonidos. Abre despacio.','Al terminar, resiste la tentación de evaluar si "estuvo bien". No hay sesiones buenas o malas; hay sesiones hechas y sesiones no hechas.']},
       {t:'Contar respiraciones: el andamio para empezar',d:'Si la respiración sola se te escapa, esta técnica da algo concreto a lo que agarrarse:',list:['Inhala, exhala, cuenta <b>uno</b>. Inhala, exhala, <b>dos</b>. Hasta <b>diez</b>, y vuelves a empezar.','Si te pierdes o llegas a doce sin darte cuenta, <b>vuelves al uno</b>. Sin drama: perderte es el ejercicio.','La primera semana casi nadie llega a diez limpio. Eso es normal y es dato, no fracaso.','Cuando contar ya no haga falta —porque la atención se sostiene sola—, suéltalo y quédate solo con la respiración.']},
       {t:'Qué hacer con los pensamientos',d:'La parte que más confunde, y tiene una técnica precisa:',list:['<b>No luches con ellos.</b> Empujar un pensamiento lo hace más fuerte. Es como decirte "no pienses en un elefante".','<b>Etiquétalos</b>, suavemente: <i>"pensando"</i>, <i>"planeando"</i>, <i>"recordando"</i>, <i>"preocupación"</i>. Poner nombre crea distancia, y con la distancia el pensamiento pierde fuerza.','La imagen que funciona: los pensamientos son <b>nubes que pasan</b> y tú eres el cielo. No tienes que hacer nada con ellos, solo dejar de perseguirlos.','Si aparece algo urgente que no quieres olvidar, <b>ten papel al lado</b> y anótalo en dos palabras. Sacarlo de la cabeza es más eficaz que intentar retenerlo.','⚠️ Error más común: enojarte contigo por distraerte. El enojo es otro pensamiento y te distrae más. La instrucción es <b>volver, con amabilidad</b>.']},
-      {t:'Cuándo y cuánto',d:'Las dos preguntas prácticas:',list:['<b>La constancia le gana a la duración, sin discusión.</b> Cinco minutos diarios valen infinitamente más que treinta minutos un domingo.','<b>Progresión</b>: semana 1-2, cinco minutos. Semana 3-4, diez. Mes 2, quince. No subas hasta que el nivel anterior se sienta cómodo.','<b>La mañana es mejor</b> para la mayoría: la mente está menos cargada y el día no ha tenido oportunidad de robarte el hueco.','<b>Tu caso</b>: ya tienes el bloque de las <b>{{horaMeditacion}}</b>, entre la rutina de la noche y la luz fuera. Funciona —cierra el día y prepara el sueño—, pero si la app se alarga es el primero que se salta. Considera mover cinco minutos a la mañana: el bloque que se hace es mejor que el bloque ideal.','Ánclalo a algo que ya hagas siempre: después de lavarte los dientes, antes del café. Un hábito nuevo pegado a uno viejo sobrevive; uno suelto, no.']},
+      {t:'Cuándo y cuánto',d:'Las dos preguntas prácticas:',list:['<b>La constancia le gana a la duración, sin discusión.</b> Cinco minutos diarios valen infinitamente más que treinta minutos un domingo.','<b>Progresión</b>: semana 1-2, cinco minutos. Semana 3-4, diez. Mes 2, quince. No subas hasta que el nivel anterior se sienta cómodo.','<b>La mañana es mejor</b> para la mayoría: la mente está menos cargada y el día no ha tenido oportunidad de robarte el hueco.','<b>Tu caso</b>: tu noche ya no tiene bloque de meditación —la rutina de la noche son 15 minutos y luz fuera a las <b>{{horaDormir}}</b>—. Si la retomas, que sean cinco minutos por la mañana, pegados a algo que ya haces: el bloque que se hace es mejor que el bloque ideal.','Ánclalo a algo que ya hagas siempre: después de lavarte los dientes, antes del café. Un hábito nuevo pegado a uno viejo sobrevive; uno suelto, no.']},
       {t:'Los cuatro obstáculos y qué hacer con cada uno',d:'Son predecibles, le pasan a todo el mundo, y cada uno tiene respuesta:',list:['<b>"No tengo tiempo"</b> — cinco minutos. Si de verdad no hay cinco minutos, hay un problema de agenda, no de meditación. Empieza con tres.','<b>"Lo hago mal, no puedo parar de pensar"</b> — es la señal de que lo estás haciendo <b>bien</b>: te estás dando cuenta de cuánto piensas, que antes ni notabas.','<b>Sueño</b> — muy común, sobre todo si duermes poco. Ojos entreabiertos, siéntate más erguido, o cambia la hora. Se cruza con tu habilidad de <i>Recuperarte</i>: meditar no sustituye dormir.','<b>Inquietud o aburrimiento</b> — quédate y obsérvala. El aburrimiento es una sensación como cualquier otra, y notarlo sin levantarte <b>es</b> el entrenamiento.','<b>El abandono</b> — casi siempre a las dos o tres semanas, cuando pasa la novedad y no se ven resultados. Ahí el compromiso es con la práctica, no con el resultado.']},
       {t:'Escaneo corporal',d:'La segunda técnica que vale la pena, y la mejor para dormir:',list:['Recorre el cuerpo <b>por partes</b>, de los pies a la cabeza, notando lo que hay sin intentar cambiarlo — calor, presión, hormigueo, o nada.','<b>No busques relajarte.</b> La instrucción es <b>notar</b>. La relajación llega como efecto secundario, y perseguirla la ahuyenta.','Diez a veinte minutos, aunque sirve en cinco haciendo tres zonas grandes.','Es la técnica que mejor funciona <b>acostado antes de dormir</b>, y encaja perfecto con tu ritual de la noche.','También entrena algo útil: notar la tensión de hombros y mandíbula <b>antes</b> de que se convierta en dolor.']},
       {t:'Meditación caminando',d:'Para los días en que sentarte es imposible, y para quien no aguanta la quietud:',list:['La atención va a <b>las plantas de los pies</b>: el contacto, el peso que se traslada, el levantar y apoyar.','Ritmo <b>más lento de lo normal</b>, sin ir a ningún lado en particular. Diez o quince pasos, das la vuelta, y vuelves.','Cuando te distraigas, <b>vuelves a los pies</b>. Mismo ejercicio, distinto objeto.','Encaja con tu <b>caminata del domingo</b>: los primeros diez minutos sin celular y con la atención en los pies convierten un paseo en práctica.']},

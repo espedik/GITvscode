@@ -6717,7 +6717,7 @@ const HB_PRACTICA = {
           "Atiéndelo después, con tiempo.",
           "Si son obsesivos o angustiantes, busca apoyo."] }] },
     "Cuándo y cuánto": { ic: "spiral-calendar",
-      sesion: [[2, "Elige tu ancla: después de lavarte los dientes o antes del café, o tu bloque de las {{horaMeditacion}}."],
+      sesion: [[2, "Elige tu ancla: después de lavarte los dientes o antes del café."],
                [5, "Medita cinco minutos justo después de esa ancla."],
                [2, "Escribe tu progresión de las próximas semanas: 5, 10 y 15 minutos."]],
       sale: "Meditaste pegado a un hábito existente y tu progresión está escrita.",

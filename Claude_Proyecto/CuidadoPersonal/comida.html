@@ -991,7 +991,7 @@ function renderRutinaMuscular(){
   const sec=document.getElementById('s-rutina'); if(!sec) return;
   const M=(window.CIFRAS&&CIFRAS.PROYECTO)||{};
   // Las metas, del maestro (PROYECTO); los totales de cada comida se suman de sus alimentos; las horas
-  // de la comida y la cena salen de la rutina (descanso de ALTEN y la cena de las 21:15).
+  // de la comida y la cena salen de la rutina (el descanso de ALTEN y la cena de la rutina).
   const tCal=M.kcalMeta||3115,tProt=M.proteinaMeta||186,tCarb=M.carbsMeta||404,tGra=M.grasaMeta||86;
   const RT=(window.CIFRAS&&CIFRAS.rutina)?CIFRAS.rutina():[];
   const horaDe=(id,resp)=>{const t=RT.find(x=>x.id===id);return t?t.hora:resp;};

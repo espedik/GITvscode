@@ -231,8 +231,8 @@ de `guiaEnSecciones()` con `formCardId` nulo. Lo único que guarda es lo de su t
 primera sección: ~28 h/semana al volante (UV lateral, deslumbramiento LED), 10-12 h de pantalla
 (se parpadea hasta 66 % menos) y el sueño que le da su rutina —las horas salen de `{{horaApp}}`, `{{horaDormir}}` y `{{horasSueno}}`, que `deStepHtml()` resuelve—. Secciones: exposición · fatiga visual digital
 · ojo seco · al volante · exámenes · nutrición · ojeras · señales de alarma · qué comprar. Conecta
-con lo que ya existe (el Omega 3 de la mañana cubre parte del ojo seco; la compresa térmica va en
-la meditación de las 23:00; el fondo de ojo dilatado, un día sin Didi después) y desmonta
+con lo que ya existe (el Omega 3 de la mañana cubre parte del ojo seco; la compresa térmica va al
+terminar la rutina de la noche, mientras se seca el minoxidil; el fondo de ojo dilatado, un día sin Didi después) y desmonta
 creencias: las gotas "para el rojo" son vasoconstrictores, un lente oscuro sin UV400 es peor que
 nada, los lentes amarillos no mejoran la visión nocturna.
 
