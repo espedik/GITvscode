@@ -4201,7 +4201,6 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
    "el calendario hazlo la mitad de la altura que actualmente tiene"), lleva al pie a dónde va el dinero ese mes. */
 .coach-tablero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);
   gap:12px;align-items:stretch;flex:1;min-height:376px}
-.ct-viene{display:flex;flex-direction:column;gap:4px;padding-top:11px;border-top:1px solid rgba(var(--ov),.07)}
 .ct-dinero{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:auto;padding-top:10px;
   border-top:1px solid rgba(var(--ov),.09)}
 .ct-dinero span{display:flex;flex-direction:column;gap:2px;font-size:11px;color:var(--text3);min-width:0}
@@ -9913,26 +9912,7 @@ function renderCoachTablero(){
                 '<div class="ct-cat-b"><i style="width:'+Math.round(porCat[c]/(gSel||1)*100)+'%;background:'+col+'"></i></div></div>';
             }).join('')+'</div>';
         })()
-      : '')+
-
-    // Lo que viene: los próximos cinco cobros después de ese día (ctAgenda), y si el mes ya no trae, los del siguiente;
-    // cada uno abre su día. Es lo que el tablero tiene que decir —qué pago viene— y llena la columna cuando el día trae poco.
-    (function(){
-      const sig = [], ymSig = fzmMesSig(ctYM), nSig = new Date(+ymSig.slice(0,4), +ymSig.slice(5,7), 0).getDate();
-      for(let d = nSel+1; d <= nDias && sig.length < 5; d++) ctAgenda(d).forEach(function(a){ if(sig.length < 5) sig.push({ ym: ctYM, d: d, a: a }); });
-      for(let d = 1; d <= nSig && sig.length < 5; d++) ctAgenda(d, ymSig).forEach(function(a){ if(sig.length < 5) sig.push({ ym: ymSig, d: d, a: a }); });
-      if(!sig.length) return '';
-      const MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-      return '<div class="ct-viene"><span class="ct-lbl">Lo que viene</span>'+sig.map(function(x){
-        const f = new Date(+x.ym.slice(0,4), +x.ym.slice(5,7)-1, x.d), dw = DOWN[(f.getDay()+6)%7].slice(0,3);
-        const k = x.ym+'-'+String(x.d).padStart(2,'0'), otro = x.ym !== ctYM;
-        return '<button type="button" class="ct-cat" onclick="'+(otro ? 'ctYM=\''+x.ym+'\';' : '')+'ctVerDia(\''+k+'\')" title="Ver el día '+x.d+'"><div class="ct-cat-h">'+
-          '<span class="ct-cat-n"><i style="background:'+(x.a.entra ? 'var(--g)' : ctColor(x.a.t))+'"></i>'+esc(x.a.t)+
-          '<em style="font-style:normal;font-size:9.5px;color:var(--text3);margin-left:3px;white-space:nowrap">'+dw+' '+x.d+(otro ? ' '+MC[f.getMonth()] : '')+'</em></span>'+
-          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;color:'+(x.a.entra ? 'var(--g)' : 'var(--text2)')+'">'+
-          (x.a.entra ? '+' : '−')+money(x.a.monto)+'</span></div></button>';
-      }).join('')+'</div>';
-    })();
+      : '');
 
   // ── Columna 3: la semana ──
   /* Las semanas del tablero son bloques de siete días desde el 1 (1–7, 8–14, 15–21, 22–28 y el resto), siempre dentro de
