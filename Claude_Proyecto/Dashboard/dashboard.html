@@ -7081,7 +7081,7 @@ function pintarBloqueDetalle(tareas, anchor, done, esHoy){
 // imagen o en el nombre abre su ficha completa (verFichaEjercicio).
 // Qué se hace en la hora del Plan Maestro (Adán, 27-oct-2026: "aquí ni sé qué debo hacer, describe mejor pero en el
 // recuadro principal"). Primero lo que le piden las metas ese día —las de META_PLAN con `bloque:'wd11'`: el CT-GenAI,
-// lunes, miércoles y jueves, la primera media hora, con su paso siguiente— y el resto, la tarea de la fase que te toca:
+// lunes, miércoles y jueves, los primeros 15 minutos, con su paso siguiente— y el resto, la tarea de la fase que te toca:
 // la primera sin palomear del mes, la misma que el tablero marca con «Te toca», con su detalle y su casilla.
 function pmBloqueHtml(t,dow){
   const C=window.CIFRAS; if(!C||!C.planMes||typeof fzmFicha!=='function') return '';
@@ -7096,6 +7096,7 @@ function pmBloqueHtml(t,dow){
       ${sig?`<span class="pmb-sig">Lo siguiente: <b>${esc(sig.t)}</b>${sig.cuando?' · '+esc((sig.est==='tarde'&&/^hace /.test(sig.cuando)?'venció ':'')+sig.cuando):''}</span>`:''}</div></div>`);
     m+=s.min;
   }));
+  if(m>=fin) return `<div class="pmb">${partes.join('')}</div>`;
   const checks=rawGet('coach_checks_v1',{})||{}, F=fzmFicha(C.planMes(fzmYM(new Date())),fzmAud());
   const tarea=F.tareas.filter(x=>x.grupo==='fase'||x.grupo==='pasa'||x.grupo==='correccion').find(x=>!ctHecha(x,checks));
   const p=tarea?fzmPartir(tarea.txt):null;
@@ -12945,7 +12946,7 @@ const META_PLAN={
     meta:'Aprobar el CT-GenAI con 30 de 46 puntos o más (el corte oficial, 65 %)',
     fecha:{tarea:'a1-7'},
     sistema:[
-      {c:'Lun · Mié · Jue · desde las {{horaPlanMaestro}}',bloque:'wd11',dias:[1,3,4],min:30,t:'El CT-GenAI',q:'La primera media hora del bloque del Plan Maestro: un objetivo GenAI-x.y.z del syllabus. Lo lees y escribes en una línea qué pide saber.'},
+      {c:'Lun · Mié · Jue · desde las {{horaPlanMaestro}}',bloque:'wd11',dias:[1,3,4],min:15,t:'El CT-GenAI',q:'Los primeros 15 minutos del bloque del Plan Maestro: un objetivo GenAI-x.y.z del syllabus. Lo lees y escribes en una línea qué pide saber.'},
       {c:'Diario',q:'La pregunta del ISTQB en Hoy aprendes: contéstala antes de ver el porqué y lee la cita del syllabus.'},
       {c:'Sábado · 15:30–16:30',q:'Desde el 19 de diciembre, un simulacro completo de 60 minutos, en el tiempo libre antes del Didi de la tarde.'}
     ],
@@ -13011,7 +13012,7 @@ const META_PLAN={
     fecha:{clave:'maestriaInicio'},
     sistema:[
       {c:'Lun a vie · 17:00–18:00',q:'Alemán en el CENLEX: Esslingen pide el A2.'},
-      {c:'Lun a vie · {{horaPlanMaestro}}',q:'El bloque del Plan Maestro: una hora en la tarea de la fase que te toca.'},
+      {c:'Lun a vie · {{horaPlanMaestro}}',q:'El bloque del Plan Maestro: media hora en la tarea de la fase que te toca.'},
       {c:'Día 1 y día 15',q:'El ahorro a GBM el día que entra el sueldo, antes de gastar.'}
     ],
     pasos:[{tarea:'a1-4'},{tarea:'a1-5'},{tarea:'a1-10'},{tarea:'a1-12'},{tarea:'a2-2'},{tarea:'a2-4'},{tarea:'a2-5'},{tarea:'a2-6'},{tarea:'a2-9'},{tarea:'a3-1'}],

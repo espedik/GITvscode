@@ -117,11 +117,11 @@
        verificador los compara. */
     { id:'gym',    nombre:'Gimnasio',               ancla:'Tras el CENLEX · el sábado a las 07:35',      hora:'18:35', color:'#ff8a3d', ico:'pesa',   dow:[1,2,3,4,5,6], gym:true,
       pasos:['Series, reps y peso de cada ejercicio: en Ejercicio, en la barra de arriba.'] },
-    { id:'fase0',  nombre:'Plan Maestro · 1 h',     ancla:'La tarea de la fase que te toca',          hora:'20:50', color:'#8b5cf6', ico:'diana',  dow:[1,2,3,4,5], flex:true,
+    { id:'fase0',  nombre:'Plan Maestro · 30 min',  ancla:'La tarea de la fase que te toca',          hora:'21:20', color:'#8b5cf6', ico:'diana',  dow:[1,2,3,4,5], flex:true,
       pasos:[
-        'Una hora en la tarea de la fase que te toca: la que el tablero del Plan Maestro marca con «Te toca» y Mi Día enseña al abrir el bloque.',
-        'Lunes, miércoles y jueves, la primera media hora es del CT-GenAI: un objetivo del syllabus.',
-        'Antes de empezar, decide qué vas a tener hecho al terminar la hora. Una cosa, no tres.',
+        'Media hora en la tarea de la fase que te toca: la que el tablero del Plan Maestro marca con «Te toca» y Mi Día enseña al abrir el bloque.',
+        'Lunes, miércoles y jueves, los primeros 15 minutos son del CT-GenAI: un objetivo del syllabus.',
+        'Antes de empezar, decide qué vas a tener hecho al terminar. Una cosa, no tres.',
         'Sin Didi ni celular en este bloque: es el único hueco de trabajo profundo del día.'
       ] },
     /* `rutina` + `sec`: la ficha enseña las subtareas de ese bloque de RUTINA_TASKS,
@@ -159,7 +159,7 @@
      La regla de todas: lo que Adán editó a mano manda. Un hábito se considera
      "suyo" si su nombre o su anclaje no son los que le puso la semilla anterior
      — entonces se le añade solo lo nuevo (la hora) y no se le toca nada más. */
-  const MIG = 13;
+  const MIG = 14;
   const RETIRADOS = { 2: ['azucar', 'gasto'], 3: ['pasos'], 4: ['snooze', 'diario'], 5: ['nata'], 7: ['genai', 'medi'] };
   /* Los días que traía la semilla anterior. La migración 11 le devuelve el miércoles al Gimnasio:
      era natación, y desde el 10-oct-2026 son intervalos en el gym (Adán, 15-oct-2026: "aparece que no
@@ -173,7 +173,8 @@
     app:   [['Construir esta app', '10 min antes de arrancar · y de 23:30 a 00:00'], ['Construir esta app', '10 min antes de arrancar · y de 22:30 a 23:00'],
             ['Construir esta app', '10 min antes de arrancar · y de 22:35 a 23:05 lun, mié y vie']],
     fase0: [['Fase 0 · 1h15', 'Negocio de tu papá o plantilla GBM'], ['Plan Maestro · 1h15', 'Primer ingreso real: negocio de tu papá o plantilla GBM'],
-            ['Plan Maestro · 1h15', 'La tarea de la fase que toca esta semana'], ['Plan Maestro · 1 h', 'La tarea de la fase que te toca']],
+            ['Plan Maestro · 1h15', 'La tarea de la fase que toca esta semana'], ['Plan Maestro · 1 h', 'La tarea de la fase que te toca'],
+            ['Plan Maestro · 30 min', 'La tarea de la fase que te toca']],
     ale:   [['Alemán · 15 min', 'Antes del café'], ['Clase de alemán', 'CENLEX · ESCA Santo Tomás, hasta las 18:00']],
     linkedin: [['Post de Aeroresinas en LinkedIn', 'Al llegar a ALTEN, antes del correo · 20 min']],
     leer:  [['Leer 10 páginas', 'Al acostarme'], ['Leer 10 páginas', 'En el cierre del día']],
@@ -197,6 +198,11 @@
             /* Migración 13 (2026-10-27): el gimnasio pasa a hora y media y el Plan Maestro a una hora. */
             ['1h15 de avance en la tarea de la fase que toca esta semana: la marca el tablero del Plan Maestro.',
              'Antes de empezar, decide qué vas a tener hecho a las 21:15. Una cosa, no tres.',
+             'Sin Didi ni celular en este bloque: es el único hueco de trabajo profundo del día.'],
+            /* Migración 14 (2026-10-27): Didi pasa a una hora y el Plan Maestro a media. */
+            ['Una hora en la tarea de la fase que te toca: la que el tablero del Plan Maestro marca con «Te toca» y Mi Día enseña al abrir el bloque.',
+             'Lunes, miércoles y jueves, la primera media hora es del CT-GenAI: un objetivo del syllabus.',
+             'Antes de empezar, decide qué vas a tener hecho al terminar la hora. Una cosa, no tres.',
              'Sin Didi ni celular en este bloque: es el único hueco de trabajo profundo del día.']],
     ale:   [['Sales de ALTEN a las 16:40 y manejas unos 20 min al CENLEX.',
              'Clase de 17:00 a 18:00 · vas por el Kapitel {{kapitelAleman}}.',
@@ -220,7 +226,7 @@
     return !p ? [] : Array.isArray(p[0]) ? p : [p];
   };
   /* La hora que traía la semilla anterior: si sigue en esa, toma la nueva; si Adán la movió, manda la suya. */
-  const HORAS_PREVIAS = { sueno: ['23:59'], piel: ['22:30', '23:00'], gym: ['18:15'], fase0: ['20:00'], leer: ['21:45'] };
+  const HORAS_PREVIAS = { sueno: ['23:59'], piel: ['22:30', '23:00'], gym: ['18:15'], fase0: ['20:00', '20:50'], leer: ['21:45'] };
   const intacto = function (h) {
     const p = PREVIO[h.id];
     if (!p) return false;

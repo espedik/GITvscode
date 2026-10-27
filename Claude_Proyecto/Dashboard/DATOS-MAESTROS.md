@@ -468,7 +468,7 @@ gimnasio y el Plan Maestro, los citan Mis Metas y Coach.
 |---|---|---|
 | `{{horaDespertar}}` | 06:40 | `wd01` |
 | `{{horaGym}}` | 18:35 — el ejercicio, hora y media, de lunes a viernes | `e1` |
-| `{{horaPlanMaestro}}` | 20:50 — una hora en la tarea de la fase | `wd11` |
+| `{{horaPlanMaestro}}` | 21:20 — media hora en la tarea de la fase | `wd11` |
 | `{{horaApp}}` | 22:35 — Construir esta app, media hora | `wd-app-pm` |
 | `{{horaRutinaNoche}}` | 23:05 — piel, minoxidil y suplementos, 15 min sin pantalla | `wd-pm` |
 | `{{horaDormir}}` | 23:40 — luz fuera | `wd21` |

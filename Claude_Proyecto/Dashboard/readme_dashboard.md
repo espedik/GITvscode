@@ -181,10 +181,10 @@ bloque es de Didi —`esDidi()`: el que empieza por «Didi»; el descanso que so
 semana en el primer bloque y el podcast del día en los demás; el fin de semana, el audiolibro. Y el
 enlace a *Qué escuchar*.
 
-**La hora del Plan Maestro dice qué hacer** (`pmBloqueHtml`; Adán, 27-oct-2026: *"aquí ni sé qué debo hacer,
+**El bloque del Plan Maestro dice qué hacer** (`pmBloqueHtml`; Adán, 27-oct-2026: *"aquí ni sé qué debo hacer,
 describe mejor pero en el recuadro principal"*). Se parte en tramos con su hora: primero lo que le piden las metas ese
-día —las entradas de `META_PLAN` con `bloque:'wd11'`, `dias` y `min`: el CT-GenAI, lunes, miércoles y jueves, la
-primera media hora, con su paso siguiente de Mis Metas— y el resto, **Te toca**: la primera tarea de la fase sin
+día —las entradas de `META_PLAN` con `bloque:'wd11'`, `dias` y `min`: el CT-GenAI, lunes, miércoles y jueves, los
+primeros 15 minutos, con su paso siguiente de Mis Metas— y el resto, **Te toca**: la primera tarea de la fase sin
 palomear del mes, la misma que marca el tablero, con su detalle, su casilla *Ya quedó* (`pmCheck`, la misma de
 siempre) y *Ver el mes en el Plan Maestro*. En el celular, *Después, …* va en su propio renglón.
 
@@ -1373,7 +1373,7 @@ no me ayudan a nada, no me das la suficiente información para ejecutar estos pl
 prompt de Mis Metas: resultado medible + fecha + sistema, y un siguiente paso con fecha. Por meta:
 `meta` (el resultado), `fecha`, `sistema` (cuándo y qué, en bloques que ya tiene la rutina —sus horas
 salen de `{{horaGym}}` y `{{horaPlanMaestro}}`, y una entrada con `bloque`, `dias` y `min` se enseña también en el
-AHORA de ese bloque—: gym 18:35, *Negociar tu ingreso* el martes 22:35, el Plan Maestro 20:50, el descanso de ALTEN
+AHORA de ese bloque—: gym 18:35, *Negociar tu ingreso* el martes 22:35, el Plan Maestro 21:20, el descanso de ALTEN
 de las 13:00, la revisión del sábado 14:40; nunca el domingo, que es de Didi, ni la última hora
 de la noche, que es del sueño), `pasos` con fecha, `vas`
 (cómo sabes que vas bien) y `si` (qué haces si te atrasas). Las fechas no se copian: `{tarea}` toma
@@ -1914,7 +1914,7 @@ marcas o más, y si hasta el peor pasa del 80 % lo dice en verde. Mira los últi
 Los nueve de `SEMILLA` salen de `RUTINA_TASKS`: Construir esta app, Posts del negocio de tu papá
 (lun/mié/vie, `flex`, en el hueco del CT-GenAI: Aeroresinas y Heliescala en LinkedIn y Facebook, con la app
 Posts; la migración 12 le cambió nombre y pasos, y el plan de cada fase lo pide), Clase de alemán,
-Gimnasio, Plan Maestro · 1 h, Leer 10 páginas, Rutina de la noche, Dormir 7 h, Agua 3 litros. Cada
+Gimnasio, Plan Maestro · 30 min, Leer 10 páginas, Rutina de la noche, Dormir 7 h, Agua 3 litros. Cada
 uno lleva `hora` y **la lista se pinta ordenada por ella** (se ordena una copia; el orden guardado
 es el de creación). La hora se edita en la ficha (`time`).
 

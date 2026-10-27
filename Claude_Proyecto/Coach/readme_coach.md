@@ -215,7 +215,7 @@ Estructura vigente, sin las horas exactas (esas están en el maestro, que es don
 - **Lun–Vie**: despertar → construir esta aplicación → ducha (con o sin lavado de cabello según el
   día) → skincare y minoxidil AM → **Didi con direccionamiento camino a ALTEN** → jornada en ALTEN
   (con la compra de comida en el descanso) → clase de alemán en el CENLEX → gimnasio (hora y media, sin
-  ducha: te cambias) → Didi de la noche → el bloque del Plan Maestro (una hora en la tarea de la fase que te toca)
+  ducha: te cambias) → una hora de Didi → el bloque del Plan Maestro (media hora en la tarea de la fase que te toca)
   → cena y preparar la comida de mañana → cierre del día en 15 minutos (lectura, diario y plan de mañana) →
   segundo bloque de la aplicación (el martes, Negociar tu ingreso; el jueves, Finanzas) → skincare y minoxidil
   PM, en 15 minutos → dormir.
