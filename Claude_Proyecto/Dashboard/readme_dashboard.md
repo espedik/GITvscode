@@ -915,7 +915,8 @@ día —lo programado, lo anotado de contado y comer: la misma suma que la serie
 que manda (`ctColor`; *cena* va como palabra: *quincena* la contiene y la BBVA salía con el color de la cena).
 Borde ámbar el día que entra la nómina. La columna es un contenedor (`.ct-cal`, `container-type`): bajo 640 px de
 ancho —una pantalla de 1600 o de 1366— la celda deja el punto de color y el importe, y bajo 430 —el teléfono—, el
-día y la barra. Las flechas ‹ › cambian de mes; **al abrir un mes que no es el actual se elige el primer día con
+día y la barra. Las flechas ‹ › cambian de mes (`.ct-nav`): botones de 36 px, y de 44 en el celular —el mínimo
+cómodo para el dedo—, con la flecha en SVG; **al abrir un mes que no es el actual se elige el primer día con
 movimiento**.
 
 Al pie de las celdas, mientras dure el plan en México: **a dónde va el dinero ese mes** (`.ct-dinero`), en tres cifras: *A la BBVA en octubre* —todo lo que le toca ese mes: de las quincenas, de Didi y el mínimo (`planBbva`)—, *A GBM* —los cobros con `ahorro` del calendario más lo que Didi aparta, de `desgloseMes`— y *Lo que trae Didi, al mes* (`didiMes`). Es la misma cuenta que la proyección de Coach.

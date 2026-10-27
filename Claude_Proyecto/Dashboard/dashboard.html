@@ -4212,7 +4212,7 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 .ct-dia{border-color:rgba(var(--cy-rgb),.32);background:rgba(var(--cy-rgb),.04)}
 .ct-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 /* El titulo no se envuelve: "Septiembre 2026" no puede empujar a las flechas. */
-.ct-cal .ct-h{align-items:center;min-height:26px}
+.ct-cal .ct-h{align-items:center;min-height:36px}
 .ct-cal .ct-tit{white-space:nowrap;flex-shrink:0}
 .ct-cal .ct-nav{flex-shrink:0}
 .ct-tit{font-family:var(--font-title);font-size:18px;font-weight:700;line-height:1.15}
@@ -4297,11 +4297,20 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
 .ce-btn.sec{background:rgba(var(--ov),.09);color:var(--text2)}
 .ce-btn:hover{filter:brightness(1.08)}
-.ct-nav{display:flex;gap:4px}
-.ct-nav button{width:22px;height:22px;border-radius:7px;border:1px solid rgba(var(--ov),.12);
-  background:rgba(var(--ov),.04);color:var(--text2);cursor:pointer;font-family:inherit;
-  font-size:12px;display:flex;align-items:center;justify-content:center;padding:0}
-.ct-nav button:hover{background:rgba(var(--ov),.1);color:var(--text)}
+/* Las flechas del mes: 36 px, y 44 en el celular, el mínimo cómodo para el dedo (Adán, 27-oct-2026: "son muy
+   pequeños, hazlos más grandes"). La flecha es un SVG para que quede centrada a cualquier tamaño. */
+.ct-nav{display:flex;gap:6px}
+.ct-nav button{width:36px;height:36px;border-radius:10px;border:1px solid rgba(var(--ov),.16);
+  background:rgba(var(--ov),.05);color:var(--text2);cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;padding:0}
+.ct-nav button svg{width:18px;height:18px}
+.ct-nav button:hover{background:rgba(var(--ov),.11);color:var(--text)}
+.ct-nav button:active{transform:scale(.94)}
+@media(max-width:820px){
+  .ct-nav{gap:8px}
+  .ct-nav button{width:44px;height:44px;border-radius:12px}
+  .ct-nav button svg{width:20px;height:20px}
+}
 /* Por debajo de 1180px las columnas se apilan y el tablero deja de caber en la
    pantalla: medido a 390px, 579px de tablero mas la banda de fase contra 754 de alto
    util. El slide recorta lo que sobra (overflow:hidden), asi que ahi el scroll pasa al
@@ -9789,8 +9798,10 @@ function renderCoachTablero(){
         '<span class="ct-lbl">Elige el día</span>'+
         '<span class="ct-tit">'+MESN[M-1]+' '+Y+'</span>'+
       '</div>'+
-      '<span class="ct-nav"><button onclick="ctVerMes(-1)" title="Mes anterior">‹</button>'+
-      '<button onclick="ctVerMes(1)" title="Mes siguiente">›</button></span>'+
+      '<span class="ct-nav"><button onclick="ctVerMes(-1)" title="Mes anterior" aria-label="Mes anterior">'+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>'+
+      '<button onclick="ctVerMes(1)" title="Mes siguiente" aria-label="Mes siguiente">'+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button></span>'+
     '</div>'+
     '<div class="ct-mes">'+['L','M','M','J','V','S','D'].map(x=>'<span class="ct-dow">'+x+'</span>').join('')+'</div>'+
     '<div class="ct-mes ct-celdas">'+celdas+'</div>'+
