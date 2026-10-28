@@ -383,11 +383,105 @@ const HB_VISUAL = {
         cifras: [['20 min', 'al mes, el mismo día'], ['5', 'preguntas'], ['4 h', 'al año: la actividad mejor pagada de tu calendario']] }
     }
   },
+  manejar: {
+    graf: { tipo: 'linea', k: 'La distancia para detenerte', t: 'A 100 km/h necesitas casi 100 metros para parar; mojado, 140',
+      sub: 'Lo que avanzas mientras reaccionas (1.5 s) más lo que tarda en frenar el coche. El frenado crece con el cuadrado de la velocidad: al doble de velocidad, cuatro veces más largo.',
+      u: 'm', uy: 'm', x: ['30', '40', '50', '60', '70', '80', '90', '100', '110', '120 km/h'],
+      series: [{ n: 'Asfalto seco', v: [18, 26, 35, 45, 57, 69, 83, 98, 114, 131] }, { n: 'Asfalto mojado', v: [21, 32, 45, 60, 77, 96, 117, 140, 165, 192] }],
+      marcas: [{ i: 7, txt: '98 m' }, { i: 7, s: 1, txt: '140 m' }],
+      fuente: 'Cálculo físico: reacción de 1.5 s y fricción de 0.7 en asfalto seco y de 0.4 en mojado, valores típicos con llantas en buen estado.' },
+    quiz: [
+      { q: 'En seco, ¿cuánta distancia guardas con el coche de adelante?', p: 1, ok: 1,
+        ops: ['Un coche de largo', 'Tres segundos: cuentas desde que pasa un punto fijo', 'Diez metros'], por: 'Tres segundos sirven a cualquier velocidad porque la distancia crece sola. Con lluvia, seis.' },
+      { q: 'En un charco, el volante se siente ligero: es aquaplaning. ¿Qué haces?', p: 5, ok: 0,
+        ops: ['Sueltas el acelerador y mantienes el volante recto hasta que agarre', 'Frenas fuerte', 'Giras para salir del agua'], por: 'Frenar o girar sobre el agua es lo que hace que el coche se vaya. Soltar y esperar devuelve el agarre.' },
+      { q: 'Frenas de emergencia y el pedal vibra y hace ruido. ¿Qué haces?', p: 6, ok: 2,
+        ops: ['Sueltas un poco: algo está fallando', 'Bombeas el freno', 'Sigues pisando a fondo; si hace falta, giras al mismo tiempo'], por: 'Es el ABS trabajando. Mucha gente suelta por el susto justo cuando más necesita frenar.' },
+      { q: 'En una curva, la parte de atrás del coche se va hacia un lado. ¿Qué haces?', p: 6, ok: 0,
+        ops: ['Miras hacia donde quieres ir y giras el volante hacia allá', 'Frenas a fondo', 'Giras al lado contrario de donde quieres ir'], por: 'Es el contravolante: las manos siguen a la mirada, así que la mirada es la instrucción.' },
+      { q: 'A 100 km/h en seco, contando la reacción, ¿cuántos metros necesitas para detenerte?', p: 1, ok: 1,
+        ops: ['Unos 30', 'Casi 100', 'Unos 50'], por: 'Unos 42 m mientras reaccionas y 56 m frenando. Mojado, unos 140.' },
+      { q: 'Chocaste y nadie está herido. ¿Qué va primero?', p: 9, ok: 2,
+        ops: ['Discutir de quién fue la culpa', 'Mover los coches para no estorbar', 'Intermitentes y triángulo, y salir del carril si el coche se mueve'], por: 'Primero que no te choquen a ti. Después el 911 si hay heridos, el seguro, las fotos y nada de admitir culpa.' },
+      { q: '¿Qué estilo le da más autonomía a tu BYD?', p: 3, ok: 1,
+        ops: ['Acelerar fuerte y frenar tarde', 'Velocidad constante y soltar temprano para que regenere', 'Aire acondicionado al máximo con las ventanas cerradas'], por: 'En un eléctrico, acelerar y frenar a cada rato cuesta más que en uno de gasolina; soltar temprano recupera energía.' },
+      { q: 'Arrancas un estándar en subida. ¿Qué te evita irte para atrás?', p: 2, ok: 2,
+        ops: ['Acelerar mucho antes de soltar el clutch', 'Sostener el coche con el clutch', 'Freno de mano puesto, subir al punto de mordida y soltarlo cuando el coche quiera avanzar'], por: 'Sostener el coche con el clutch es lo que más lo destruye; el freno de mano hace ese trabajo.' }
+    ],
+    pasos: {
+      'Por qué esto te importa más que a otros': { foto: 'manejar-1.jpg', cred: 'Alexander-93 · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'El BYD Seagull: en México se vende como Dolphin Mini y en Europa como Dolphin Surf. Es tu herramienta de trabajo y tu activo más caro.',
+        cifras: [['1', 'herramienta de trabajo y tu activo más caro: el coche'], ['3', 'costos que baja manejar bien: combustible, mantenimiento y accidentes'], ['Estándar', 'lo que vas a manejar en Alemania']] },
+      'Manejo defensivo: las reglas que sí evitan choques': { foto: 'manejar-2.jpg', cred: 'Michael Rivera · Wikimedia Commons · CC BY 4.0',
+        pie: 'Una cámara de tablero en un cruce: mirar lejos, 12 a 15 segundos adelante, te da tiempo de ver el problema antes de llegar a él.',
+        cifras: [['3 s', 'de distancia con el de adelante; 6 con lluvia'], ['12–15 s', 'hacia adelante: hasta dónde miras'], ['1', 'vía de escape, siempre']],
+        calc: { k: 'Calcúlalo', fn: 'frenado', t: 'Cuántos metros necesitas para detenerte',
+          sub: 'Mueve la velocidad, el piso y tu tiempo de reacción. Distraído —con el celular— tu reacción se alarga: muévelo y mira lo que cuesta.',
+          campos: [{ k: 'vel', t: 'Velocidad', min: 20, max: 130, paso: 5, v: 60, u: 'km/h' }, { k: 'mu', t: 'Piso', v: 0.7, ops: [[0.7, 'Asfalto seco'], [0.4, 'Asfalto mojado'], [0.25, 'Con lodo, aceite o grava suelta']] },
+                   { k: 'reac', t: 'Tu tiempo de reacción', min: 0.8, max: 3, paso: 0.1, v: 1.5, u: 's' }],
+          fuente: 'Distancia de reacción = velocidad × tiempo; de frenado = velocidad² ÷ (2 × fricción × gravedad). Fricciones típicas con llantas en buen estado.' } },
+      'Manejar estándar, paso a paso': { foto: 'manejar-3.jpg', cred: 'Robert Basic from Germany · Wikimedia Commons · CC BY-SA 2.0',
+        pie: 'La palanca de seis velocidades y reversa. Lo difícil no es la palanca: es el punto de mordida del clutch.',
+        cifras: [['1', 'punto de mordida: el 90 % de manejar estándar'], ['1.ª', 'la única velocidad para arrancar'], ['3', 'errores que destruyen el clutch']],
+        graf: { tipo: 'asi', k: 'Lo que cuida el clutch', t: 'Tres costumbres que lo destruyen y su cambio',
+          datos: [['El pie apoyado en el pedal del clutch', 'El pie en el descansapiés'], ['Sostener el coche en subida con el clutch', 'Sostenerlo con el freno o el freno de mano'], ['Arrancar en segunda por costumbre', 'Arrancar siempre en primera']],
+          fuente: 'El método de este paso.' } },
+      'Las diferencias del eléctrico': { foto: 'manejar-4.jpg', cred: 'CEphoto, Uwe Aranas · Wikimedia Commons · CC BY-SA 3.0',
+        pie: 'Un punto de carga en Colonia, Alemania. Manejar suave y constante rinde más que cualquier carga extra.',
+        cifras: [['0 s', 'tarda la fuerza en llegar: acelera de inmediato'], ['Constante', 'la velocidad que más autonomía te da'], ['LFP', 'tu batería: aguanta bien la carga completa']] },
+      'Manejar para gastar menos': { foto: 'manejar-5.jpg', cred: 'Antti · Wikimedia Commons · CC BY 2.0',
+        pie: 'Un manómetro de llantas: revisar la presión cada dos semanas es el mantenimiento más barato que existe.',
+        cifras: [['10–40 %', 'más gasta el manejo agresivo en ciudad'], ['0.2 %', 'de rendimiento pierdes por cada psi que les falta a tus llantas'], ['2 semanas', 'entre una revisión de presión y la siguiente']],
+        graf: { tipo: 'barras', k: 'Lo que cuesta manejar agresivo', t: 'Acelerar y frenar de golpe puede costarte hasta 40 % de rendimiento',
+          sub: 'Cuánto baja el rendimiento con aceleraciones y frenadas bruscas. En tráfico de ciudad —donde manejas Didi— es donde más se nota.',
+          u: '%', datos: [['En tráfico de ciudad', 40, 'hasta 40 %'], ['En carretera', 30, 'hasta 30 %']], dest: [0],
+          fuente: 'Departamento de Energía de EE. UU., fueleconomy.gov, «Driving More Efficiently»: entre 10 y 40 % en ciudad y entre 15 y 30 % en carretera.' } },
+      'Lluvia, noche y niebla': { foto: 'manejar-6.jpg', cred: 'Oregon Department of Transportation · Wikimedia Commons · CC BY 2.0',
+        pie: 'Los primeros minutos de lluvia son los más resbalosos: el agua levanta el aceite del pavimento.',
+        cifras: [['10–15 min', 'los primeros de lluvia: los más resbalosos'], ['6 s', 'de distancia con lluvia'], ['0', 'frenadas o volantazos en un aquaplaning']],
+        graf: { tipo: 'barras', k: 'El piso mojado', t: 'A 80 km/h, mojado necesitas 27 metros más para parar',
+          sub: 'Distancia total para detenerte a 80 km/h, con 1.5 s de reacción. La diferencia es casi el largo de seis coches.',
+          u: 'm', datos: [['Asfalto seco', 69], ['Asfalto mojado', 96]], dest: [1],
+          fuente: 'Cálculo físico con fricción de 0.7 en seco y de 0.4 en mojado.' } },
+      'Derrapes y emergencias': { foto: 'manejar-7.jpg', cred: 'Johann H. Addicks · Wikimedia Commons · GFDL 1.2',
+        pie: 'Un curso de manejo seguro en pista mojada: los derrapes se practican así, nunca en la calle.',
+        cifras: [['3 s', 'donde se decide todo'], ['A fondo', 'el freno con ABS, aunque vibre'], ['1', 'instrucción: mira hacia donde quieres ir']],
+        quiz: [{ sit: 'Vas en una curva mojada y sientes que la parte de atrás se desliza hacia la derecha.', q: '¿Hacia dónde giras el volante?', ok: 1,
+          ops: ['Hacia la izquierda, para compensar', 'Hacia donde quieres que vaya el coche, mirando hacia allá', 'No lo mueves y frenas a fondo'],
+          por: 'Si la cola se va a la derecha, el frente apunta a la izquierda: giras hacia el camino que quieres seguir, que aquí es a la derecha, y miras hacia allá.' }] },
+      'Otros vehículos': { foto: 'manejar-8.jpg', cred: 'Laimis B · Wikimedia Commons · CC BY 3.0',
+        pie: 'Equipo completo desde el primer día: casco integral, chamarra, guantes y botas.',
+        cifras: [['4', 'piezas de equipo en moto: casco integral, chamarra, guantes y botas'], ['Derecha', 'tiene prioridad en los cruces sin señal en Alemania'], ['Izquierda', 'de la autopista alemana: solo para rebasar']],
+        graf: { tipo: 'tabla', k: 'Cada vehículo, lo suyo', t: 'Lo distinto de cada uno y cómo se practica', dest: 2,
+          cols: ['Vehículo', 'Lo distinto', 'Cómo se practica'],
+          filas: [['Moto', 'La curva de riesgo más alta', 'Curso formal y equipo completo desde el primer día'], ['Camioneta o SUV', 'Más punto ciego, frena más largo, vuelca más fácil', 'Anticipando más y con más distancia'], ['Con remolque', 'En reversa va al lado contrario de donde giras', 'En un estacionamiento vacío, antes de necesitarlo'], ['Estándar en pendiente', 'La prueba real de que sabes manual', 'En una calle empinada y vacía, sin prisa'], ['En Alemania', 'Prioridad de la derecha; la izquierda de la autopista es para rebasar', 'Con las reglas por escrito antes de llegar']],
+          fuente: 'El método de este paso; las reglas alemanas, del Código de Circulación (StVO).' } },
+      'Qué revisar y cada cuándo': { foto: 'manejar-9.jpg', cred: 'U.S. Army USAG-RP by Linda Lambiotte · Wikimedia Commons · dominio público',
+        pie: 'La prueba de la moneda: si se ve todo el borde, al dibujo de la llanta ya no le queda agarre.',
+        cifras: [['2 semanas', 'presión de llantas y niveles'], ['10,000 km', 'o un año: llantas, frenos y filtro'], ['1', 'moneda para medir el dibujo de la llanta']],
+        graf: { tipo: 'tiempo', k: 'Tu calendario', t: 'Qué revisas y cada cuánto', dest: [0],
+          datos: [['Cada 2 semanas', 'Presión y niveles', 'Incluida la llanta de refacción.'], ['Cada mes', 'Dibujo, luces y limpiadores', 'La moneda en el dibujo de la llanta.'], ['Cada 10,000 km o al año', 'Rotación, frenos y filtro de cabina', 'Y en tu eléctrico, el enfriamiento de la batería.'], ['Siempre a bordo', 'Lo de emergencia', 'Gato, cables, triángulos, chaleco, botiquín y linterna.']],
+          fuente: 'El método de este paso; confirma los intervalos en el manual de tu BYD.' } },
+      'Si tienes un accidente': { foto: 'manejar-10.jpg', cred: 'Roulex 45 · Wikimedia Commons · CC BY-SA 3.0',
+        pie: 'El triángulo, lejos del coche: avisa a los que vienen antes de que lleguen al choque.',
+        cifras: [['911', 'antes que a nadie si hay heridos'], ['5', 'pasos, en orden'], ['0', 'culpas que admites en el momento']],
+        graf: { tipo: 'tiempo', k: 'El orden', t: 'Bajo estrés no se improvisa', dest: [0],
+          datos: [['1', 'Seguridad', 'Intermitentes, triángulo y fuera del carril si el coche se mueve.'], ['2', 'Heridos', 'Llama al 911 antes que a nadie.'], ['3', 'Tu seguro', 'Espera al ajustador sin mover los coches si hay discusión.'], ['4', 'Fotos y datos', 'Posición, daños, placas, póliza y testigos.'], ['5', 'Nada de culpas', 'No admitas ni firmes lo que no entiendas.']],
+          fuente: 'El método de este paso. Con Didi, repórtalo además en la app: su seguro tiene sus plazos.' } }
+    }
+  },
 };
 
 /* Las calculadoras de Habilidades Base: cada una recibe los valores de sus deslizadores y devuelve tres cifras, a veces una
    gráfica (`graf`, del mismo formato que las de los pasos) y una nota. Usan hbPesos y hbPesosCorto de dashboard.html. */
 const HB_CALC = {
+  // Reacción (velocidad × tiempo) más frenado (v² ÷ 2μg), contra los tres segundos de distancia a esa velocidad.
+  frenado(v) {
+    const m = v.vel / 3.6, r = m * v.reac, f = m * m / (2 * v.mu * 9.81), tres = m * 3, tot = r + f, k = x => Math.round(x) + ' m';
+    return { cifras: [[k(tot), 'para detenerte por completo'], [k(r), 'recorres antes de tocar el freno'], [k(tres), 'son tus tres segundos de distancia a esa velocidad']],
+      graf: { tipo: 'barras', u: 'm', datos: [['Mientras reaccionas', r, k(r)], ['Mientras frenas', f, k(f)], ['Tus tres segundos de distancia', tres, k(tres)]], dest: [0, 1] },
+      nota: tot > tres ? 'Parar te toma más que tus tres segundos: esa distancia no es para frenar en seco, es para <b>reaccionar a tiempo</b> si el de adelante frena. Con piso malo o distraído, aléjate más.' : 'Tus tres segundos alcanzan para reaccionar y frenar. Con lluvia, duplica la distancia.' };
+  },
   // Con un precio (1 + p) veces más alto, el mismo ingreso sale con 1 / (1 + p) del trabajo.
   precio(v) {
     const p = v.sube / 100, igual = 1 / (1 + p), libre = 1 - igual;
