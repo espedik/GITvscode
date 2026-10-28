@@ -2910,43 +2910,103 @@ function promptsDeLoTocado() {
   else ok.push('Alemán de hoy: las ' + (V.voc || []).length + ' palabras con su ícono, ' + Object.keys(usados).length + ' archivos en Aleman/iconos/');
 })();
 
-/* ── 47. La práctica de cada paso de Habilidades Base ───────────────────────────────────────────────────────
+/* ── 47. Habilidades Base: la práctica de cada paso, y lo que se ve y se toca ────────────────────────────────
    Adán, 26-oct-2026: "lo de coach habilidades, haz lo mismo para habilidades base". HB_PRACTICA
    (Dashboard/habilidades-base-practica.js) le suma a cada paso de HABILIDAD_DETALLE, por su título exacto, su sesión
-   de tres tiempos, cómo sabes que salió, tres subtemas y su ícono (Dashboard/iconos-base/); los de cierre (Qué leer,
-   Ya lo dominas) llevan solo el ícono. Un paso sin su práctica, un título que cambió en la ficha, un ícono que falta,
-   un archivo que nadie usa o la etiqueta <script> que se perdió salen aquí. */
+   de tres tiempos, cómo sabes que salió y tres subtemas; los de cierre (Qué leer, Ya lo dominas) no llevan.
+   Y el 27-oct-2026: "no me gusta con emojis… quiero imágenes de calidad, gráficas, contenido diferente, interactivo".
+   HB_VISUAL (Dashboard/habilidades-base-visual.js) le da a cada paso de una ficha su foto real en Dashboard/fotos-base/
+   con su crédito y su pie, y tres cifras; a la ficha, su gráfica y su «Ponte a prueba» de cinco preguntas o más; y
+   revisa que cada gráfica sea de un tipo que la ventana sabe pintar, que cada calculadora tenga su función y que cada
+   pregunta apunte a una respuesta y a un paso que existen. Una ficha a medias, una foto que no está o que nadie usa, un
+   emoji en un título o una etiqueta, o una etiqueta <script> que se perdió salen aquí; las fichas que todavía no tienen
+   lo suyo salen como aviso, en el orden del plan de Coach, para seguir en la siguiente sesión. */
 (function () {
-  let P;
-  try { delete require.cache[require.resolve('./habilidades-base-practica.js')]; P = require('./habilidades-base-practica.js'); }
-  catch (e) { problemas.push('No se puede leer Dashboard/habilidades-base-practica.js: ' + e.message); return; }
+  let P, VV;
+  try {
+    delete require.cache[require.resolve('./habilidades-base-practica.js')]; P = require('./habilidades-base-practica.js');
+    delete require.cache[require.resolve('./habilidades-base-visual.js')]; VV = require('./habilidades-base-visual.js');
+  } catch (e) { problemas.push('No se pueden leer los datos de Habilidades Base: ' + e.message); return; }
+  const V = VV.HB_VISUAL || {}, CALC = VV.HB_CALC || {};
   const HD = evaluar(literal(dash, 'const HABILIDAD_DETALLE=', '{')) || {};
-  const dir = path.join(RAIZ, 'Dashboard', 'iconos-base'), usados = {}, malos = [];
-  let n = 0, nSub = 0;
-  if (dash.indexOf('<script src="habilidades-base-practica.js"></script>') < 0) malos.push('dashboard.html ya no carga habilidades-base-practica.js');
+  const BASE = evaluar(literal(dash, 'const HABILIDADES_BASE=', '[')) || [];
+  const dir = path.join(RAIZ, 'Dashboard', 'fotos-base'), usadas = {}, malos = [];
+  const EMO = /\p{Extended_Pictographic}/u, cierre = function (t) { return /^(?:Ya lo dominas|Qué leer)/.test(t); };
+  const TIPOS = ['barras', 'columnas', 'linea', 'escala', 'partes', 'capas', 'tiempo', 'matriz', 'tabla', 'asi'];
+  let n = 0, nSub = 0, nFoto = 0, nGraf = 0, nQuiz = 0, nToca = 0;
+  ['habilidades-base-practica.js', 'habilidades-base-visual.js'].forEach(function (f) {
+    if (dash.indexOf('<script src="' + f + '"') < 0) malos.push('dashboard.html ya no carga ' + f);
+  });
+  if (/iconos-base\//.test(dash)) malos.push('dashboard.html todavía pinta íconos de Dashboard/iconos-base/');
+  BASE.forEach(function (h) { if (h.ico || EMO.test(h.t || '')) malos.push('la ficha ' + h.id + ' lleva emoji'); });
+  const graf = function (g, quien) {
+    [].concat(g || []).forEach(function (x) {
+      nGraf++;
+      if (!x || TIPOS.indexOf(x.tipo) < 0) malos.push(quien + ': una gráfica de tipo «' + (x && x.tipo) + '», que la ventana no sabe pintar');
+      else if (!x.t || !x.fuente) malos.push(quien + ': una gráfica sin título o sin fuente');
+    });
+  };
+  const quiz = function (Q, quien, total) {
+    (Q || []).forEach(function (q, j) {
+      nQuiz++;
+      if (!q.q || !Array.isArray(q.ops) || !(q.ok >= 0 && q.ok < q.ops.length)) malos.push(quien + ': la pregunta ' + (j + 1) + ' no apunta a una respuesta');
+      if (q.p != null && !(q.p >= 0 && q.p < total)) malos.push(quien + ': la pregunta ' + (j + 1) + ' remite a un paso que no existe');
+      if (!q.por && !(q.fb && q.fb[q.ok])) malos.push(quien + ': la pregunta ' + (j + 1) + ' no explica por qué');
+    });
+  };
   Object.keys(HD).forEach(function (id) {
-    const pp = P[id] || {}, ts = (HD[id].pasos || []).map(function (p) { return p.t; });
-    if (!P[id]) { malos.push(id + ' no tiene práctica'); return; }
+    const pp = P[id] || {}, ts = (HD[id].pasos || []).map(function (p) { return p.t; }), v = V[id];
     ts.forEach(function (t) {
-      const x = pp[t]; n++;
+      n++;
+      if (EMO.test(t)) malos.push(id + ' · «' + t + '» lleva emoji en el título');
+      if (cierre(t)) return;
+      const x = pp[t];
       if (!x) { malos.push(id + ' · «' + t + '» sin práctica'); return; }
-      if (!x.ic) malos.push(id + ' · «' + t + '» sin ícono');
-      else { usados[x.ic + '.webp'] = 1; if (!fs.existsSync(path.join(dir, x.ic + '.webp'))) malos.push(id + ' · «' + t + '» usa ' + x.ic + '.webp, que no está en Dashboard/iconos-base/'); }
-      if (/Ya lo dominas|Qué leer/.test(t)) return;
       if ((x.sesion || []).length !== 3 || x.sesion.some(function (s) { return !(s[0] > 0) || !s[1]; })) malos.push(id + ' · «' + t + '» sin sus tres tiempos');
       if (!x.sale) malos.push(id + ' · «' + t + '» sin «sale bien si»');
       const sub = x.subtemas || []; nSub += sub.length;
       if (sub.length < 3 || sub.some(function (s) { return !s.t || !s.d || (s.l || []).length < 2; })) malos.push(id + ' · «' + t + '» sin tres subtemas completos');
       if (x.copia && !(x.copia.t && (x.copia.l || []).length)) malos.push(id + ' · «' + t + '» con «Para copiar» vacío');
     });
+    (HD[id].pasos || []).forEach(function (p) { if (p.label && EMO.test(p.label)) malos.push(id + ' · la etiqueta «' + p.label + '» lleva emoji'); });
     Object.keys(pp).forEach(function (t) { if (ts.indexOf(t) < 0) malos.push(id + ' · «' + t + '» ya no es un paso de la ficha'); });
+    if (!v) return;
+    const vp = v.pasos || {};
+    Object.keys(vp).forEach(function (t) { if (ts.indexOf(t) < 0) malos.push('HB_VISUAL.' + id + ' · «' + t + '» ya no es un paso de la ficha'); });
+    if (EMO.test(JSON.stringify(v))) malos.push('HB_VISUAL.' + id + ' lleva emoji');
+    ts.forEach(function (t, k) {
+      const x = vp[t] || {}, quien = id + ' · paso ' + (k + 1);
+      if (!cierre(t)) {
+        const falta = [];
+        if (!x.foto) falta.push('foto');
+        else { nFoto++; usadas[x.foto] = 1; if (!fs.existsSync(path.join(dir, x.foto))) falta.push('la foto ' + x.foto + ' en disco'); }
+        if (x.foto && !x.cred) falta.push('el crédito de la foto');
+        if (!x.pie) falta.push('pie');
+        if (!Array.isArray(x.cifras) || x.cifras.length !== 3 || x.cifras.some(function (c) { return !c[0] || !c[1]; })) falta.push('tres cifras');
+        if (falta.length) malos.push(quien + ' sin ' + falta.join(', '));
+      }
+      graf(x.graf, quien);
+      if (x.graf || x.calc || x.ritmo || x.quiz) nToca++;
+      [].concat(x.calc || []).forEach(function (c) { if (!c.fn || typeof CALC[c.fn] !== 'function') malos.push(quien + ': la calculadora «' + c.fn + '» no está en HB_CALC'); });
+      [].concat(x.ritmo || []).forEach(function (r) { if (!(r.bpm > 0) && !(r.fases || []).length) malos.push(quien + ': un ritmo sin tempo ni fases'); });
+      quiz(x.quiz, quien, ts.length);
+    });
+    if (!v.graf) malos.push(id + ' sin la gráfica de la ficha'); else graf(v.graf, id);
+    if ((v.quiz || []).length < 5) malos.push(id + ' sin su «Ponte a prueba» de cinco preguntas o más'); else quiz(v.quiz, id, ts.length);
   });
   Object.keys(P).forEach(function (id) { if (!HD[id]) malos.push('HB_PRACTICA.' + id + ' no es una ficha de HABILIDAD_DETALLE'); });
-  const sobran = fs.existsSync(dir) ? fs.readdirSync(dir).filter(function (f) { return !usados[f]; }) : [];
-  if (sobran.length) malos.push('archivos en Dashboard/iconos-base/ que nadie usa: ' + sobran.slice(0, 8).join(', '));
-  if (!n) problemas.push('no pude leer los pasos de HABILIDAD_DETALLE');
-  else if (malos.length) problemas.push('La práctica de Habilidades Base (' + malos.length + '): ' + malos.slice(0, 6).join('; '));
-  else ok.push('Habilidades Base: los ' + n + ' pasos con su ícono y su práctica (' + nSub + ' subtemas), ' + Object.keys(usados).length + ' íconos en Dashboard/iconos-base/');
+  Object.keys(V).forEach(function (id) { if (!HD[id]) malos.push('HB_VISUAL.' + id + ' no es una ficha de HABILIDAD_DETALLE'); });
+  const sobran = fs.existsSync(dir) ? fs.readdirSync(dir).filter(function (f) { return !usadas[f]; }) : [];
+  if (sobran.length) malos.push('fotos en Dashboard/fotos-base/ que ningún paso usa: ' + sobran.slice(0, 8).join(', '));
+  if (!n) { problemas.push('no pude leer los pasos de HABILIDAD_DETALLE'); return; }
+  if (malos.length) problemas.push('Habilidades Base (' + malos.length + '): ' + malos.slice(0, 6).join('; '));
+  else ok.push('Habilidades Base: los ' + n + ' pasos con su práctica (' + nSub + ' subtemas), sin emojis; ' + Object.keys(V).length + ' de ' +
+    Object.keys(HD).length + ' fichas con foto en cada paso (' + nFoto + '), ' + nGraf + ' gráficas, ' + nQuiz + ' preguntas y ' + nToca + ' pasos con algo que se toca');
+  // Las que faltan, en el orden del plan de Coach (HB_PLAN) y después las demás: lo que sigue en la próxima sesión.
+  const PL = evaluar(literal(dash, 'const HB_PLAN = ', '{')) || {}, plan = Object.keys(PL), todas = Object.keys(HD);
+  const rango = function (id) { const k = plan.indexOf(id); return k < 0 ? 100 + todas.indexOf(id) : PL[id].cuando === 'espera' ? 200 + k : k; };
+  const faltan = todas.filter(function (id) { return !V[id]; }).sort(function (a, b) { return rango(a) - rango(b); });
+  if (faltan.length) avisos.push('Habilidades Base · ' + faltan.length + ' de ' + Object.keys(HD).length + ' fichas sin sus fotos, cifras, gráficas y «Ponte a prueba» (HB_VISUAL); siguen: ' + faltan.join(', '));
 })();
 
 // ── Salida ──

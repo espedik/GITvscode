@@ -1,13 +1,13 @@
 /* La práctica de cada paso de Habilidades Base (Adán, 26-oct-2026: "lo de coach habilidades, haz lo mismo para habilidades
    base"). Por ficha (el id de HABILIDAD_DETALLE) y por el título exacto del paso, lo que dashboard.html le suma al cargar:
    `sesion` —tres tiempos en minutos: arranca, el bloque y cierra—, `sale` —cómo sabes que salió—, `subtemas` —tres, cada
-   uno con su explicación y tres claves—, `copia` —el guion, la plantilla o la lista que se usa tal cual— y `ic`, su ícono
-   en Dashboard/iconos-base/ (Fluent Emoji 3D de Microsoft, licencia MIT, github.com/microsoft/fluentui-emoji). Los pasos de
-   cierre (Qué leer, Ya lo dominas) llevan solo el ícono. No cambia los pasos ni su número: el avance guardado sigue igual.
-   El control 47 del verificador avisa si un paso se queda sin su práctica, si un título ya no existe o si falta un ícono. */
+   uno con su explicación y tres claves— y `copia` —el guion, la plantilla o la lista que se usa tal cual—. Los pasos de
+   cierre (Qué leer, Ya lo dominas) no llevan práctica. La foto, las cifras, las gráficas y lo interactivo de cada paso
+   viven en habilidades-base-visual.js. No cambia los pasos ni su número: el avance guardado sigue igual. El control 47 del
+   verificador avisa si un paso se queda sin su práctica o si un título ya no existe. */
 const HB_PRACTICA = {
   citas: {
-    "Primero: qué cita es": { ic: "thinking-face",
+    "Primero: qué cita es": {
       sesion: [[5, "Piensa en la próxima salida que tengas o quieras proponer y contesta por escrito las tres preguntas: cuánto se conocen, si hay que hablar o hacer algo, y cuánto ruido aguantan."],
                [10, "Con esas tres respuestas elige el tipo de plan: café corto, comida de día, cena, terraza, copas o un plan con actividad."],
                [5, "Escribe el plan en una línea con su duración esperada y su salida fácil."]],
@@ -25,7 +25,7 @@ const HB_PRACTICA = {
           "Pide mesa lejos de la barra y de la cocina.",
           "Comer a las 2 es más tranquilo que cenar a las 9.",
           "Si al llegar no se oyen, cambia de mesa o de lugar sin pena."] }] },
-    "Primera cita — café y salida fácil": { ic: "hot-beverage",
+    "Primera cita — café y salida fácil": {
       sesion: [[5, "Elige uno de los cuatro cafés según la zona de los dos y cómo quieres que se sienta: corto, sentado, informal o de especialidad."],
                [10, "Revisa en el mapa qué hay caminando cerca para alargar si va bien —un parque, una librería, otro café—."],
                [5, "Escribe la invitación concreta: día, hora, lugar y cuánto tiempo tienes."]],
@@ -46,7 +46,7 @@ const HB_PRACTICA = {
           "Llega diez minutos antes y escoge mesa.",
           "Celular guardado, no boca abajo sobre la mesa.",
           "Saluda con su nombre y una sonrisa; el resto es conversación."] }] },
-    "Comer bien de día": { ic: "fork-and-knife-with-plate",
+    "Comer bien de día": {
       sesion: [[5, "Elige uno de los cuatro lugares y averigua si se reserva y con cuánta anticipación."],
                [10, "Reserva o anota el día para reservar, y busca qué hay caminando cerca para después de comer."],
                [5, "Anota el lugar en tu lista de citas con zona, si se reserva y para qué tipo de cita sirve."]],
@@ -64,7 +64,7 @@ const HB_PRACTICA = {
           "Pregunta antes si le gusta probar cosas raras.",
           "Ve con hambre y pide porciones pequeñas en varios puestos.",
           "Ten un café cerca para sentarse a hablar después."] }] },
-    "Cenar sin quedar mal": { ic: "candle",
+    "Cenar sin quedar mal": {
       sesion: [[5, "Memoriza los cuatro nombres de esta lista con su zona y qué tienen de especial."],
                [15, "Elige tus tres de cabecera para cena y averigua de cada uno cuánta anticipación pide la reserva y si tiene valet."],
                [5, "Guarda los tres en una nota «Cenas» con esos datos."]],
@@ -82,7 +82,7 @@ const HB_PRACTICA = {
           "«Para mí un agua de jamaica» o «¿qué tienen sin alcohol?».",
           "Si te preguntan, una frase basta: «ahorita no estoy tomando».",
           "No presiones a la otra persona: que pida lo que quiera."] }] },
-    "Terrazas — cuando la vista es el plan": { ic: "sunset",
+    "Terrazas — cuando la vista es el plan": {
       sesion: [[5, "Elige una terraza de la lista según el plan: atardecer y conversación, vista del Centro o terminar la noche."],
                [10, "Revisa la hora de la puesta de sol del día que piensas ir y llama o reserva pidiendo mesa en la baranda."],
                [5, "Si es temporada de lluvias, ten un plan B bajo techo a cinco minutos."]],
@@ -100,7 +100,7 @@ const HB_PRACTICA = {
           "Desde la Torre Latinoamericana: el Palacio de Bellas Artes, la Alameda.",
           "Desde el Centro: la Catedral y el Templo Mayor.",
           "Una historia de la ciudad bien contada vale más que un dato de guía."] }] },
-    "Cuando la ocasión lo pide": { ic: "glowing-star",
+    "Cuando la ocasión lo pide": {
       sesion: [[5, "Decide cuál de las dos ocasiones del año lo merece: un aniversario, un logro, un cumpleaños."],
                [15, "Revisa cómo y cuándo abren reservaciones en Pujol y Quintonil y pon un recordatorio para el día que abren."],
                [5, "Separa el presupuesto en tu plan de Finanzas para no pagarlo con tarjeta sin plan."]],
@@ -118,7 +118,7 @@ const HB_PRACTICA = {
           "Apártalo como meta con fecha en Finanzas.",
           "Págalo de contado, no a meses sin plan.",
           "Una vez al año bien hecha vale más que muchas a medias."] }] },
-    "Copas — la segunda parte": { ic: "tropical-drink",
+    "Copas — la segunda parte": {
       sesion: [[5, "Elige un bar de la lista que sirva para hablar, no para gritar."],
                [10, "Revisa si se reserva y si tienen carta sin alcohol; mientras dure tu meta, que sea un requisito."],
                [5, "Ubica el bar a menos de diez minutos de dónde cenarán."]],
@@ -136,7 +136,7 @@ const HB_PRACTICA = {
           "Una o dos bebidas, no la noche entera.",
           "Ofrece llevar o pedir el coche de regreso.",
           "Cierra con un plan concreto para la próxima vez si fue bien."] }] },
-    "Citas que no son comer": { ic: "admission-tickets",
+    "Citas que no son comer": {
       sesion: [[5, "Elige un plan de la lista según lo que le gusta a la otra persona: arte, historia, algo ruidoso o algo tranquilo."],
                [15, "Revisa horarios y reservas —la Casa Barragán solo con visita guiada—, compra boletos si aplica y elige un lugar cerca para comer después."],
                [5, "Prepara dos preguntas sobre el lugar para abrir la conversación."]],
@@ -154,7 +154,7 @@ const HB_PRACTICA = {
           "Úsalos de segunda o tercera cita, no de primera.",
           "Combínalos con un lugar tranquilo para hablar después.",
           "Llega temprano para tener buenos lugares."] }] },
-    "La logística que nadie ve": { ic: "clipboard",
+    "La logística que nadie ve": {
       sesion: [[5, "Copia la lista de logística en una nota y revisa la próxima cita contra ella."],
                [10, "Haz lo que falte: reserva, confirma, revisa el estacionamiento o el valet, y anota tu plan B a cinco minutos."],
                [5, "El día de la cita, confirma por teléfono o mensaje y sal con margen para llegar diez minutos antes."]],
@@ -179,10 +179,9 @@ const HB_PRACTICA = {
           "Pregunta cómo regresa antes de que termine la noche.",
           "Ofrece pedir el coche; si acepta, espera a que llegue.",
           "Un mensaje de «¿llegaste bien?» cierra la noche con cuidado."] }] },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   networking: {
-    "Qué es y qué no es": { ic: "handshake",
+    "Qué es y qué no es": {
       sesion: [[5, "Cuenta en tu celular a cuántas personas podrías escribirles mañana sin que les pareciera raro; anota el número y la fecha."],
                [15, "Sepáralas en tres grupos —cercanos, conocidos con trato y gente que solo te ubica— y marca a cinco con quienes la relación se enfrió."],
                [5, "Elige a una de esas cinco y escríbele hoy un mensaje que no pida nada."]],
@@ -200,7 +199,7 @@ const HB_PRACTICA = {
           "Si tu primer mensaje lleva una petición, es venta.",
           "Si a la tercera charla no sabes qué le preocupa al otro, estás hablando de más.",
           "La prueba: ¿le escribirías aunque nunca pudiera ayudarte? Si no, todavía no es relación."] }] },
-    "El mito del extrovertido": { ic: "ear",
+    "El mito del extrovertido": {
       sesion: [[5, "Elige el próximo evento, clase o junta con gente nueva y decide tu hora de llegada: 15 minutos antes."],
                [20, "Prepara tres preguntas abiertas y la historia corta de en qué andas metido; ensáyalas en voz alta."],
                [5, "Escribe la meta del evento: dos conversaciones buenas y dos nombres anotados."]],
@@ -218,7 +217,7 @@ const HB_PRACTICA = {
           "Uno o dos eventos al mes bastan si sigues a la gente que conociste.",
           "Decide la hora de salida antes de llegar.",
           "Prefiere formatos con actividad —talleres, deporte, clases—: la actividad conversa por ti."] }] },
-    "La fuerza de los vínculos débiles": { ic: "linked-paperclips",
+    "La fuerza de los vínculos débiles": {
       sesion: [[5, "Abre tus contactos de LinkedIn y del celular."],
                [15, "Haz una lista de 10 vínculos débiles —excompañeros, gente de cursos, de {{empleador}} en otras sedes, conocidos en Alemania— con dónde está cada uno hoy."],
                [5, "Elige dos y escríbeles para retomar el contacto, sin pedir nada."]],
@@ -236,7 +235,7 @@ const HB_PRACTICA = {
           "Reconoce el tiempo sin rodeos: «hace años que no hablamos, me acordé de ti por…».",
           "Da un motivo concreto y reciente.",
           "No pidas nada en ese primer mensaje."] }] },
-    "Dar antes de pedir — pero con criterio": { ic: "wrapped-gift",
+    "Dar antes de pedir — pero con criterio": {
       sesion: [[5, "Escribe tres cosas que a ti te cuestan poco y a otros les valen mucho."],
                [15, "Elige a dos personas de tu red y hazles un favor de cinco minutos: un dato, un enlace, una presentación o una revisión."],
                [5, "Anota a quién le diste qué —no para cobrar, para no repetir y recordar—."]],
@@ -254,7 +253,7 @@ const HB_PRACTICA = {
           "Pregunta antes de ayudar: «¿qué te serviría más ahorita?».",
           "Lo que vas sabiendo de la maestría y del alemán es oro para quien empieza ese camino.",
           "Ayuda donde eres raro; en lo común, cualquiera puede."] }] },
-    "Tu inventario: qué tienes tú para dar": { ic: "card-file-box",
+    "Tu inventario: qué tienes tú para dar": {
       sesion: [[5, "Copia las cinco cosas de este paso en una nota del celular."],
                [15, "Para cada una, escribe cómo ayudarías a alguien en 5 o en 30 minutos."],
                [5, "Piensa en tres personas de tu red y apunta qué le darías a cada una."]],
@@ -278,7 +277,7 @@ const HB_PRACTICA = {
           "Tu plantilla de finanzas, tu lista de trámites o un prompt de pruebas.",
           "Tenlos en una carpeta lista para mandar.",
           "Cada uno es también un motivo para escribirle a alguien sin pedirle nada."] }] },
-    "La lista de 20": { ic: "clipboard",
+    "La lista de 20": {
       sesion: [[5, "Abre una hoja con las cinco columnas: nombre, qué hace, por qué te interesa, qué puedes darle y último contacto."],
                [20, "Llena las 20 filas mezclando automotriz, software e IA, finanzas y Alemania; deja en blanco lo que no sepas."],
                [5, "Pon un recordatorio cada tres meses para revisarla."]],
@@ -302,7 +301,7 @@ const HB_PRACTICA = {
           "Ninguna área debe pasar de la mitad de la lista.",
           "Incluye al menos tres personas que ya vivan en Alemania.",
           "Una de fuera de tu mundo —salud, arte, negocios— te da lo que ningún colega."] }] },
-    "Cómo presentarte en 20 segundos": { ic: "microphone",
+    "Cómo presentarte en 20 segundos": {
       sesion: [[5, "Escribe tu presentación con la fórmula: el problema que resuelves, para quién y un gancho."],
                [15, "Grábate diciéndola tres veces y escúchate; recorta lo que suene a CV. Arma también la versión técnica y la de una frase."],
                [5, "Úsala con alguien esta semana y anota qué te preguntó."]],
@@ -324,7 +323,7 @@ const HB_PRACTICA = {
           "Gremio: términos técnicos y una pregunta sobre su sistema.",
           "Fuera del gremio: la imagen y una pregunta sobre su trabajo.",
           "Sin interés: una frase y «¿y tú en qué andas?»."] }] },
-    "Entrar en una conversación que ya empezó": { ic: "speech-balloon",
+    "Entrar en una conversación que ya empezó": {
       sesion: [[5, "Antes del evento repasa la mecánica: grupo abierto, el hueco, escuchar 20 segundos y una pregunta sobre lo que dijeron."],
                [30, "En el evento entra a dos grupos abiertos con esa mecánica y habla una vez en la fila de la comida o de la barra."],
                [5, "Al salir anota los nombres y qué funcionó."]],
@@ -342,7 +341,7 @@ const HB_PRACTICA = {
           "«¿Qué te pareció lo que dijo de…?»",
           "«¿Sabes si después hay otra sesión?»",
           "La pregunta simple funciona más que la ingeniosa."] }] },
-    "Las preguntas que abren y las que cierran": { ic: "red-question-mark",
+    "Las preguntas que abren y las que cierran": {
       sesion: [[5, "Escribe cinco preguntas abiertas que te sirvan en cualquier conversación de trabajo."],
                [20, "Úsalas en dos conversaciones reales —un café, una junta, un viaje de Didi— con la regla: tu siguiente pregunta sale de su última respuesta."],
                [5, "Anota qué pregunta abrió más y qué supiste del otro."]],
@@ -360,7 +359,7 @@ const HB_PRACTICA = {
           "Responde en 30 a 60 segundos, no en cinco minutos.",
           "Incluye un detalle que dé pie a preguntar.",
           "Cierra con «¿y tú?» o con una pregunta relacionada."] }] },
-    "Cómo salir sin quedar mal": { ic: "waving-hand",
+    "Cómo salir sin quedar mal": {
       sesion: [[5, "Escribe dos frases de salida con la fórmula: cierra con valor y di lo que sigue."],
                [20, "En tu próximo evento o reunión úsalas al menos una vez; antes de irte, pide el dato de contacto."],
                [5, "Esa misma noche cumple lo que dejaste pendiente: el artículo, el enlace."]],
@@ -382,7 +381,7 @@ const HB_PRACTICA = {
           "«Te presento a Ana, ella también anda en temas de IA».",
           "Funciona mejor si conoces un poco a los dos.",
           "Quédate un minuto después de presentarlos y luego despídete."] }] },
-    "La regla de las 48 horas": { ic: "hourglass-not-done",
+    "La regla de las 48 horas": {
       sesion: [[5, "Haz la lista de la gente que conociste en los últimos dos días, con un detalle de cada una."],
                [15, "Escríbele a cada una el mensaje de tres partes: dónde se conocieron, algo específico que dijo y algo que le mandas sin que lo pida."],
                [5, "Pasa los datos a tu lista o a la nota de cada contacto."]],
@@ -405,7 +404,7 @@ const HB_PRACTICA = {
           "Si te dio su WhatsApp, úsalo; si no, LinkedIn con nota.",
           "En Alemania, correo y LinkedIn pesan más que WhatsApp para lo profesional.",
           "Un mensaje corto se lee; uno largo se deja «para después»."] }] },
-    "El ping trimestral": { ic: "spiral-calendar",
+    "El ping trimestral": {
       sesion: [[5, "Crea un recordatorio que se repita cada tres meses con tu lista de 20."],
                [15, "Haz el primer ping a cinco personas usando los cinco tipos: artículo, felicitación, presentación, seguimiento con memoria o comida."],
                [5, "Anota en la lista la fecha y el tipo de ping de cada uno."]],
@@ -423,7 +422,7 @@ const HB_PRACTICA = {
           "Cambia el «felicidades» automático por una línea tuya.",
           "Comenta con sustancia algo que publicó.",
           "Una felicitación por un logro vale más que una de cumpleaños."] }] },
-    "LinkedIn sin hacer el ridículo": { ic: "briefcase",
+    "LinkedIn sin hacer el ridículo": {
       sesion: [[5, "Abre tu perfil en vista pública y léelo como un reclutador de Stuttgart."],
                [25, "Reescribe en inglés el titular y el «Acerca de» con las palabras que buscaría: ADAS, HIL, Python, ISTQB y tu nivel de alemán."],
                [5, "Agenda tu primera publicación corta para dentro de dos semanas."]],
@@ -445,7 +444,7 @@ const HB_PRACTICA = {
           "Estructura: el problema, lo que intentaste, lo que aprendiste.",
           "De 100 a 200 palabras.",
           "Nada confidencial de tu empresa ni de sus clientes."] }] },
-    "Presentar a dos personas (bien hecho)": { ic: "bridge-at-night",
+    "Presentar a dos personas (bien hecho)": {
       sesion: [[5, "Piensa en dos personas de tu red a las que les serviría conocerse."],
                [15, "Escríbele a cada una por separado el mensaje de doble consentimiento."],
                [5, "Si las dos aceptan, manda la presentación y retírate de la conversación."]],
@@ -466,7 +465,7 @@ const HB_PRACTICA = {
           "A las dos semanas: «¿lograron hablar?».",
           "Si funcionó, te lo agradecen dos veces.",
           "Si no, aprendes a elegir mejor la próxima."] }] },
-    "Pedir: tarde, concreto y fácil de conceder": { ic: "raised-hand",
+    "Pedir: tarde, concreto y fácil de conceder": {
       sesion: [[5, "Define una petición real que tengas hoy: un contacto, una revisión, una carta de recomendación."],
                [15, "Escríbela concreta, con salida fácil y fecha, y mándala a alguien a quien ya le hayas dado antes."],
                [5, "Cuando te respondan, agradece y anota cuándo le contarás cómo salió."]],
@@ -490,7 +489,7 @@ const HB_PRACTICA = {
           "Pide con al menos un mes de anticipación.",
           "Manda tus logros con fechas y números.",
           "Ofrece un borrador si lo prefiere y agradece en cuanto la envíe."] }] },
-    "Dónde practicarlo en CDMX": { ic: "round-pushpin",
+    "Dónde practicarlo en CDMX": {
       sesion: [[5, "Elige dos lugares de la lista que quepan en tu horario de este mes."],
                [20, "Busca la próxima fecha de cada uno —Meetup, Eventbrite, el Goethe— y regístrate en uno."],
                [5, "Agenda el evento con tu meta escrita: dos conversaciones y dos mensajes antes de 48 horas."]],
@@ -508,7 +507,7 @@ const HB_PRACTICA = {
           "Únete a una comunidad de mexicanos en Alemania y a una de testing automotriz.",
           "Responde donde sabes: así te conocen.",
           "Propón una llamada de 20 minutos a quien te interese."] }] },
-    "Los cinco errores que matan una red": { ic: "warning",
+    "Los cinco errores que matan una red": {
       sesion: [[5, "Lee los cinco errores y califícate del 1 al 5 en cada uno, con honestidad."],
                [15, "Elige el peor y escribe una acción concreta para corregirlo esta semana, por ejemplo: anotar tres datos de cada contacto el mismo día."],
                [5, "Ponla como recordatorio diario por siete días."]],
@@ -526,7 +525,7 @@ const HB_PRACTICA = {
           "Planea el segundo contacto en cuanto haces el primero.",
           "Un mensaje cada tres meses mantiene viva la relación.",
           "Mide cuántas relaciones siguen activas, no cuántas empezaste."] }] },
-    "Tu plan de 90 días": { ic: "bullseye",
+    "Tu plan de 90 días": {
       sesion: [[5, "Pon en tu calendario las doce semanas del plan, una tarea por semana."],
                [20, "Haz hoy la de la semana 1: tu lista de 20, tu presentación y tu número de partida."],
                [5, "Agenda el día 90 para volver a contar tu número."]],
@@ -544,11 +543,9 @@ const HB_PRACTICA = {
           "Día 30: ¿qué evento dio más?",
           "Día 60: ¿qué tipo de ping tuvo más respuesta?",
           "Con eso armas el plan del siguiente trimestre."] }] },
-    "📚 Qué leer, en qué orden": { ic: "books" },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   persuadir: {
-    "De dónde sale esto": { ic: "brain",
+    "De dónde sale esto": {
       sesion: [[5, "Escribe tres decisiones de esta semana en las que dijiste que sí casi sin pensar: una compra, un favor, una suscripción."],
                [15, "Para cada una, anota qué te empujó: alguien te dio algo antes, todos lo hacían, alguien con autoridad lo dijo, se iba a acabar."],
                [5, "Escribe en una línea la regla ética del paso: solo se señala lo que ya es cierto."]],
@@ -566,7 +563,7 @@ const HB_PRACTICA = {
           "Usa cifras exactas y comprobables.",
           "Si no sabes algo, dilo; te cree más en lo que sí sabes.",
           "La reputación se construye en años y se pierde en una frase."] }] },
-    "La diferencia real entre influir y manipular": { ic: "balance-scale",
+    "La diferencia real entre influir y manipular": {
       sesion: [[5, "Piensa en algo que quieres conseguir pronto de otra persona: un aumento, un favor, una venta."],
                [15, "Pasa tu argumento por las tres preguntas: ¿es verdad?, ¿le conviene?, ¿lo harías a la luz? Reescribe lo que no pase."],
                [5, "Tacha cualquier frase que no podrías sostener si el otro la verificara."]],
@@ -584,7 +581,7 @@ const HB_PRACTICA = {
           "Prisa + secreto + emoción = señal de alarma.",
           "Pide la información por escrito.",
           "Una buena propuesta aguanta 24 horas de reflexión."] }] },
-    "1 · Reciprocidad": { ic: "wrapped-gift",
+    "1 · Reciprocidad": {
       sesion: [[5, "Elige a una persona con la que quieras una mejor relación de trabajo."],
                [10, "Dale algo inesperado y personalizado: un dato que le sirve, una ayuda concreta, un reconocimiento por escrito."],
                [5, "No pidas nada esta semana; anota cómo cambió el trato."]],
@@ -602,7 +599,7 @@ const HB_PRACTICA = {
           "Deja pasar tiempo entre dar y pedir.",
           "Da en público el reconocimiento; en privado la ayuda.",
           "Lo personalizado vale más que lo caro."] }] },
-    "2 · Compromiso y coherencia": { ic: "writing-hand",
+    "2 · Compromiso y coherencia": {
       sesion: [[5, "Elige una meta tuya de este mes y escríbela en una frase concreta y con fecha."],
                [10, "Hazla pública con alguien que te importe: cuéntasela o mándasela por escrito."],
                [5, "Marca en tu calendario el día que le contarás si la cumpliste."]],
@@ -620,7 +617,7 @@ const HB_PRACTICA = {
           "Describe tu meta como identidad: «soy alguien que ahorra».",
           "Cada día cumplido refuerza esa identidad.",
           "Un día fallado no la rompe; dos seguidos empiezan a hacerlo."] }] },
-    "3 · Prueba social": { ic: "clapping-hands",
+    "3 · Prueba social": {
       sesion: [[5, "Piensa en algo que quieres proponer en el trabajo o vender."],
                [15, "Junta prueba social real y cercana: cuántos lo usan, quién en tu misma situación lo probó, un mensaje real de alguien a quien le sirvió."],
                [5, "Reescribe tu propuesta empezando por esa prueba, no por tus adjetivos."]],
@@ -638,7 +635,7 @@ const HB_PRACTICA = {
           "Pide permiso para usar el testimonio con nombre.",
           "Que incluya el antes, el después y el tiempo.",
           "Un video o una captura real vale más que un texto tuyo."] }] },
-    "4 · Autoridad": { ic: "graduation-cap",
+    "4 · Autoridad": {
       sesion: [[5, "Escribe tus tres credenciales más relevantes para tu próxima conversación importante: certificados, años, resultados."],
                [15, "Redacta cómo las mencionarás de forma natural, más una debilidad pequeña y cierta que admitirás antes del argumento fuerte."],
                [5, "Ensáyalo en voz alta una vez."]],
@@ -656,7 +653,7 @@ const HB_PRACTICA = {
           "Lleva rangos de sueldo de tu puesto de fuentes serias.",
           "Cuantifica tus resultados: defectos encontrados, tiempo ahorrado.",
           "Tu ISTQB y la certificación en IA son señales de valor concreto."] }] },
-    "5 · Simpatía": { ic: "smiling-face-with-smiling-eyes",
+    "5 · Simpatía": {
       sesion: [[5, "Elige a alguien con quien vayas a hablar esta semana."],
                [15, "Antes de la charla, busca tres coincidencias reales (ciudad, carrera, intereses) y prepara un elogio específico y sincero."],
                [5, "Después, anota qué coincidencia abrió más la conversación."]],
@@ -674,7 +671,7 @@ const HB_PRACTICA = {
           "Pide un favor pequeño y fácil: una recomendación, un consejo.",
           "Agradece de forma específica.",
           "No abuses: un favor, no una lista."] }] },
-    "6 · Escasez": { ic: "hourglass-done",
+    "6 · Escasez": {
       sesion: [[5, "Revisa una compra o inversión que estés considerando y anota si te la ofrecen con prisa o con cupo limitado."],
                [15, "Aplica la regla: espera 24 horas, busca la misma oferta en otro lado y verifica si la escasez es real."],
                [5, "Decide con calma y anota qué decidiste y por qué."]],
@@ -692,7 +689,7 @@ const HB_PRACTICA = {
           "Menciona plazos reales con fecha.",
           "Si tienes alternativa, dila sin amenazar.",
           "Nunca inventes una oferta que no tienes."] }] },
-    "7 · Unidad": { ic: "people-hugging",
+    "7 · Unidad": {
       sesion: [[5, "Piensa en tres personas a quienes quieres convencer de algo y escribe qué grupo comparten contigo."],
                [10, "Reescribe tu petición usando ese «nosotros» con verdad: «los que trabajamos en…», «los que estamos aprendiendo alemán…»."],
                [5, "Usa la versión con «nosotros» en una conversación real."]],
@@ -710,7 +707,7 @@ const HB_PRACTICA = {
           "Pregunta «¿qué me aconsejarías?» en vez de «¿qué opinas?».",
           "Incorpora algo de su consejo y díselo.",
           "Quien aconseja se siente parte del resultado."] }] },
-    "El momento pesa tanto como el mensaje": { ic: "alarm-clock",
+    "El momento pesa tanto como el mensaje": {
       sesion: [[5, "Elige una petición importante que vas a hacer pronto."],
                [15, "Diseña lo que pasará justo antes: qué pregunta harás para que el otro piense en el problema que tu propuesta resuelve."],
                [5, "Elige el momento del día y el lugar donde la persona está más tranquila."]],
@@ -728,7 +725,7 @@ const HB_PRACTICA = {
           "Presenta tu propuesta con el encuadre que sea verdadero y claro.",
           "Cuando te presenten algo, tradúcelo al encuadre contrario.",
           "Las cifras absolutas evitan engaños de porcentaje."] }] },
-    "Negociar · Etiquetar": { ic: "label",
+    "Negociar · Etiquetar": {
       sesion: [[5, "Escribe tres etiquetas listas para usar: «parece que…», «suena a que…», «da la impresión de que…»."],
                [15, "En una conversación tensa o de trabajo, etiqueta una emoción del otro y quédate en silencio cuatro segundos."],
                [5, "Anota qué dijo después del silencio que no habría dicho de otro modo."]],
@@ -746,7 +743,7 @@ const HB_PRACTICA = {
           "Etiqueta lo positivo para reforzarlo.",
           "Etiqueta lo negativo para desactivarlo.",
           "Nunca uses etiquetas para burlarte."] }] },
-    "Negociar · Espejear": { ic: "mirror",
+    "Negociar · Espejear": {
       sesion: [[5, "Repasa la técnica: repetir de una a tres palabras con tono de pregunta y callar."],
                [15, "Úsala tres veces en conversaciones distintas del día, solo cuando aparezca algo que quieres entender."],
                [5, "Anota qué te contaron después de cada espejo."]],
@@ -764,7 +761,7 @@ const HB_PRACTICA = {
           "Cuenta mentalmente hasta cuatro.",
           "No suavices tu propuesta mientras esperas.",
           "Deja que el otro hable primero después del silencio."] }] },
-    "Negociar · Preguntas calibradas": { ic: "red-question-mark",
+    "Negociar · Preguntas calibradas": {
       sesion: [[5, "Escribe cinco preguntas calibradas que empiecen con «cómo» o «qué» para una negociación real que tengas pronto."],
                [15, "Ensaya en voz alta cómo responderías a un «no» con «¿cómo se supone que haga eso?» y «¿qué es lo más importante para ti en esto?»."],
                [5, "Usa al menos una en una conversación de trabajo esta semana."]],
@@ -788,7 +785,7 @@ const HB_PRACTICA = {
           "Investiga el rango del mercado antes.",
           "Da cifras precisas, no redondas.",
           "Incluye cosas que no son dinero: capacitación, días, horario."] }] },
-    "Negociar · Buscar el \"no\"": { ic: "no-entry",
+    "Negociar · Buscar el \"no\"": {
       sesion: [[5, "Escribe dos preguntas tuyas de esta semana que buscan un sí y reescríbelas para buscar un no."],
                [15, "Úsalas en conversaciones reales y practica resumir la postura del otro hasta que te diga «así es»."],
                [5, "Anota cómo cambió el tono cuando el otro se sintió con el control."]],
@@ -806,7 +803,7 @@ const HB_PRACTICA = {
           "Si dice «sí» con duda, pregunta.",
           "No uses ese porcentaje como regla general.",
           "La coherencia entre lo que dices y cómo lo dices da credibilidad."] }] },
-    "Practicarlo esta semana": { ic: "spiral-calendar",
+    "Practicarlo esta semana": {
       sesion: [[5, "Pon en tu calendario el ejercicio de cada día de la semana, de lunes a domingo."],
                [15, "Haz hoy el del día y anota en tres líneas qué pasó."],
                [5, "Al cierre de la semana, elige la técnica que más te sirvió y repítela la siguiente."]],
@@ -831,7 +828,7 @@ const HB_PRACTICA = {
           "¿Qué esperaba que pasara?",
           "¿Qué pasó en realidad y por qué?",
           "¿Qué haré distinto la próxima vez?"] }] },
-    "Cómo defenderte cuando te los aplican": { ic: "shield",
+    "Cómo defenderte cuando te los aplican": {
       sesion: [[5, "Busca una promoción de inversión, un curso o un seguro que te hayan ofrecido."],
                [15, "Identifica qué principios usa —escasez, prueba social, autoridad— y verifica sus datos en una fuente independiente."],
                [5, "Escribe tu regla personal de defensa en una frase y ponla donde decides compras."]],
@@ -855,11 +852,9 @@ const HB_PRACTICA = {
           "Compras grandes: espera 72 horas.",
           "Quita la tarjeta guardada de las apps de compras.",
           "Si después de esperar lo sigues queriendo, cómpralo tranquilo."] }] },
-    "📚 Qué leer, en qué orden": { ic: "books" },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   relacionarte: {
-    "El libro que no envejeció": { ic: "open-book",
+    "El libro que no envejeció": {
       sesion: [[5, "Piensa en tus últimas tres conversaciones y anota cuánto tiempo hablaste tú y cuánto el otro."],
                [15, "En la próxima conversación del día, propónte que el otro hable más que tú y que salga sintiéndose importante."],
                [5, "Anota qué le preguntaste y qué te contó que no sabías."]],
@@ -877,7 +872,7 @@ const HB_PRACTICA = {
           "Si no te interesa alguien, busca qué podría interesarte de él.",
           "Las preguntas genuinas salen de la curiosidad, no del guion.",
           "Mejor callar que elogiar en falso."] }] },
-    "Las tres reglas que sostienen todo lo demás": { ic: "classical-building",
+    "Las tres reglas que sostienen todo lo demás": {
       sesion: [[5, "Elige un día de esta semana para hacer la prueba de cero críticas y cero quejas en voz alta."],
                [15, "Durante el día, cada vez que vayas a criticar o quejarte, cámbialo por una pregunta o por un reconocimiento específico."],
                [5, "En la noche cuenta cuántas veces lo lograste y cuántas se te escapó."]],
@@ -895,7 +890,7 @@ const HB_PRACTICA = {
           "Escribe en una frase qué gana el otro.",
           "Empieza la petición por su beneficio, no por el tuyo.",
           "Si no gana nada, pide algo más pequeño o da primero."] }] },
-    "Seis formas de agradar": { ic: "smiling-face-with-hearts",
+    "Seis formas de agradar": {
       sesion: [[5, "Elige dos de las seis formas que menos practicas."],
                [15, "Aplícalas en tres conversaciones del día: por ejemplo, usar el nombre dos veces y preguntar por algo que le apasiona."],
                [5, "Anota cómo reaccionó cada persona."]],
@@ -913,7 +908,7 @@ const HB_PRACTICA = {
           "«¿Qué es lo que más disfrutas de eso?».",
           "«¿Cómo empezaste en eso?».",
           "Escucha la respuesta completa antes de contar tu experiencia."] }] },
-    "Escuchar de verdad — los tres niveles": { ic: "ear",
+    "Escuchar de verdad — los tres niveles": {
       sesion: [[5, "Elige una conversación de hoy donde practicarás el nivel 3."],
                [20, "Durante la charla, cuenta tres segundos antes de responder y pregunta por lo que hay debajo: qué siente, qué le preocupa."],
                [5, "Al terminar, escribe tres cosas concretas que aprendiste del otro."]],
@@ -931,7 +926,7 @@ const HB_PRACTICA = {
           "Guarda el celular, no lo pongas boca abajo en la mesa.",
           "Mira a la persona, no a la pantalla.",
           "Si tienes que contestar, dilo y pide un momento."] }] },
-    "Empezar bien una conversación": { ic: "speech-balloon",
+    "Empezar bien una conversación": {
       sesion: [[5, "Prepara dos frases de arranque basadas en lo que compartes con la gente del lugar al que vas hoy."],
                [15, "Úsalas con una persona nueva, ancla su nombre y cédele el primer turno largo."],
                [5, "Si hay seguimiento, escribe un mensaje que empiece con su nombre y mencione algo que dijo."]],
@@ -949,7 +944,7 @@ const HB_PRACTICA = {
           "El miedo al rechazo es mayor que el rechazo real.",
           "Una pregunta amable casi siempre se recibe bien.",
           "En Didi, en una fila o en el gym hay oportunidades diarias."] }] },
-    "Recordar nombres y detalles (sin memoria prodigiosa)": { ic: "card-index",
+    "Recordar nombres y detalles (sin memoria prodigiosa)": {
       sesion: [[5, "Repasa el sistema: repetir, asociar, anotar."],
                [15, "Úsalo con tres personas que conozcas esta semana; asocia cada nombre a una imagen ridícula."],
                [5, "Esa misma noche anota en su contacto dónde se conocieron, a qué se dedica y un detalle personal."]],
@@ -967,7 +962,7 @@ const HB_PRACTICA = {
           "Cuando te lo digan, deja de pensar en tu presentación.",
           "Si no lo oíste bien, pregunta en el momento.",
           "Repítelo en voz alta en ese mismo instante."] }] },
-    "Cuando hay desacuerdo": { ic: "handshake",
+    "Cuando hay desacuerdo": {
       sesion: [[5, "Piensa en un desacuerdo actual o reciente con alguien."],
                [15, "Escribe la postura del otro mejor de lo que él la diría y tres puntos en los que sí coinciden."],
                [5, "En la próxima conversación del tema, empieza por esos puntos y por su postura, y pregunta si la entendiste bien."]],
@@ -985,7 +980,7 @@ const HB_PRACTICA = {
           "«Tienes razón en eso, me equivoqué».",
           "Sin justificaciones largas.",
           "Después, sigue con lo que sí sostienes."] }] },
-    "Criticar sin romper nada": { ic: "left-speech-bubble",
+    "Criticar sin romper nada": {
       sesion: [[5, "Piensa en una observación incómoda que tengas pendiente con alguien."],
                [15, "Escríbela con la estructura: lo que valoras (verdadero), un error tuyo parecido, el problema concreto con «y», y una pregunta para resolverlo."],
                [5, "Léela en voz alta y quita cualquier «pero» y cualquier juicio sobre la persona."]],
@@ -1008,7 +1003,7 @@ const HB_PRACTICA = {
           "Busca un momento a solas.",
           "Si fue en público, la disculpa también.",
           "Nunca por mensaje de grupo."] }] },
-    "Las conversaciones que sí importan": { ic: "locked-with-key",
+    "Las conversaciones que sí importan": {
       sesion: [[5, "Elige una conversación importante que estés evitando."],
                [15, "Prepárala con la fórmula: el contraste (lo que no quieres y lo que sí), los hechos, tu interpretación como interpretación y una pregunta."],
                [10, "Tenla. Si ves silencio, ataque o broma para desviar, regresa a la seguridad antes de seguir con el tema."]],
@@ -1031,7 +1026,7 @@ const HB_PRACTICA = {
           "Si sientes calor en la cara o el pulso alto, pide una pausa.",
           "Respira lento: exhalar más largo que inhalar calma el cuerpo.",
           "Retoma cuando los dos puedan pensar."] }] },
-    "Pedir perdón de verdad": { ic: "folded-hands",
+    "Pedir perdón de verdad": {
       sesion: [[5, "Piensa en una disculpa que debas o que diste mal."],
                [15, "Escríbela con sus cuatro partes: lo que hiciste, su efecto, sin «pero», y lo que harás distinto."],
                [5, "Dila en persona o por llamada; si es por escrito, que sea breve y sin justificaciones."]],
@@ -1054,7 +1049,7 @@ const HB_PRACTICA = {
           "Asume solo lo que sí te toca.",
           "Sin autocastigo en voz alta.",
           "Breve, clara y con acción."] }] },
-    "Mantener las relaciones que ya tienes": { ic: "seedling",
+    "Mantener las relaciones que ya tienes": {
       sesion: [[5, "Haz una lista de diez personas importantes con quienes no hablas hace más de tres meses."],
                [15, "Mándales a tres un mensaje sin motivo o con algo concreto que te recordó a ellas."],
                [5, "Pon un recordatorio para las siguientes tres la próxima semana."]],
@@ -1072,7 +1067,7 @@ const HB_PRACTICA = {
           "Define con tu familia un día y hora de llamada.",
           "Mensajes de voz cortos sienten más cercanos que texto.",
           "Anota cumpleaños y fechas importantes en el calendario."] }] },
-    "Practicarlo esta semana": { ic: "spiral-calendar",
+    "Practicarlo esta semana": {
       sesion: [[5, "Pon en tu calendario el ejercicio de cada día."],
                [15, "Haz el de hoy y anota en tres líneas qué pasó."],
                [5, "El domingo, responde: ¿de quién sabes hoy tres cosas que no sabías el lunes?"]],
@@ -1098,11 +1093,9 @@ const HB_PRACTICA = {
           "Si fallaste un día, retoma al siguiente sin castigarte.",
           "Pregúntate qué aprendiste, no qué tan mal estuvo.",
           "La constancia importa más que la perfección."] }] },
-    "📚 Qué leer, en qué orden": { ic: "books" },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   sacarmejor: {
-    "El experimento que lo demuestra": { ic: "seedling",
+    "El experimento que lo demuestra": {
       sesion: [[5, "Escribe los nombres de tres personas con quienes trabajas o convives a diario."],
                [15, "Junto a cada nombre, anota con honestidad qué esperas de ella en una palabra y una conducta tuya que lo deja ver: el tiempo que le das, el tono, lo que le delegas."],
                [5, "Elige a la persona de quien esperas menos y escribe una conducta que cambiarás con ella esta semana."]],
@@ -1120,7 +1113,7 @@ const HB_PRACTICA = {
           "El efecto es real pero no mágico.",
           "Pesa más con gente nueva en el equipo o en un rol nuevo.",
           "Tú eres esa persona con poder para alguien más."] }] },
-    "Empieza por lo que esperas": { ic: "label",
+    "Empieza por lo que esperas": {
       sesion: [[5, "Elige a alguien con quien te frustras y escribe la etiqueta que le tienes."],
                [15, "Busca y anota tres evidencias concretas que contradigan esa etiqueta: algo que hizo bien, algo que resolvió, alguien que lo valora."],
                [5, "Decide cómo harás visible una de esas evidencias: díselo esta semana."]],
@@ -1138,7 +1131,7 @@ const HB_PRACTICA = {
           "Compara a la persona con ella misma hace tres meses, no con otros.",
           "Nombra el progreso cuando lo veas.",
           "Da tareas que le cuesten un poco, no que le sobren."] }] },
-    "Multiplicadores y disminuidores": { ic: "chart-increasing",
+    "Multiplicadores y disminuidores": {
       sesion: [[5, "Lee las conductas de multiplicador y disminuidor y marca cuáles haces tú."],
                [15, "En tu próxima junta o conversación de trabajo, haz una pregunta difícil, aguanta el silencio y pide la opinión de quien menos habla."],
                [5, "Mide qué porcentaje del tiempo hablaste y anótalo."]],
@@ -1156,7 +1149,7 @@ const HB_PRACTICA = {
           "Mide en una junta de la semana.",
           "Si pasa del 30 %, la siguiente vez habla al final.",
           "Cuenta cuántas preguntas hiciste frente a cuántas afirmaciones."] }] },
-    "Preguntar en vez de responder": { ic: "red-question-mark",
+    "Preguntar en vez de responder": {
       sesion: [[5, "Escribe las siete preguntas en una tarjeta o en una nota del celular."],
                [20, "En una conversación donde alguien te pide ayuda, usa al menos tres de las siete antes de dar ninguna respuesta."],
                [5, "Anota qué respuesta encontró la persona sola."]],
@@ -1182,7 +1175,7 @@ const HB_PRACTICA = {
           "Cambia «¿has pensado en…?» por «¿qué opciones ves?».",
           "Si tu pregunta se contesta con sí o no, ábrela.",
           "Tu opinión, si la dices, que sea como opinión y al final."] }] },
-    "Aguantar el silencio": { ic: "zipper-mouth-face",
+    "Aguantar el silencio": {
       sesion: [[5, "Elige una conversación importante del día."],
                [15, "Después de cada pregunta importante, cuenta hasta siete en tu cabeza antes de decir nada."],
                [5, "Anota qué dijo la persona después del silencio."]],
@@ -1200,7 +1193,7 @@ const HB_PRACTICA = {
           "Respira mientras cuentas.",
           "Mantén la mirada amable, no fija.",
           "Si el silencio se alarga mucho, reformula la pregunta, no la contestes."] }] },
-    "Franqueza radical: el feedback que sirve": { ic: "gem-stone",
+    "Franqueza radical: el feedback que sirve": {
       sesion: [[5, "Piensa en una observación que llevas tiempo callando por no incomodar."],
                [15, "Escribe primero por qué te importa esa persona y después la observación concreta; revisa que no caiga en empatía ruinosa ni en agresividad."],
                [5, "Agenda cuándo se la dirás, en privado y esta semana."]],
@@ -1218,7 +1211,7 @@ const HB_PRACTICA = {
           "Dos minutos justo después valen más que una hora al mes.",
           "Pequeño y frecuente, no grande y raro.",
           "Lo mismo con el elogio."] }] },
-    "Cómo dar feedback sin que se cierre": { ic: "speech-balloon",
+    "Cómo dar feedback sin que se cierre": {
       sesion: [[5, "Elige una observación pendiente y escríbela con la estructura: permiso, hecho, efecto, pregunta, acuerdo."],
                [15, "Dala en una conversación privada; deja que la persona hable después de tu pregunta."],
                [5, "Anota el acuerdo que salió de su boca y la fecha para revisarlo."]],
@@ -1242,7 +1235,7 @@ const HB_PRACTICA = {
           "No discutas los hechos; pregunta por su versión.",
           "Etiqueta la emoción.",
           "Si se cierra, propón seguir otro día."] }] },
-    "Qué mueve de verdad a la gente": { ic: "rocket",
+    "Qué mueve de verdad a la gente": {
       sesion: [[5, "Elige a una persona de tu equipo o de tu familia con quien trabajas en algo."],
                [15, "Diseña cómo darle autonomía (el resultado, no el método), maestría (un reto un poco arriba de su nivel) y propósito (a quién ayuda su trabajo)."],
                [5, "Dile una de las tres esta semana."]],
@@ -1260,7 +1253,7 @@ const HB_PRACTICA = {
           "Cuéntale a tu equipo quién usa lo que prueban.",
           "En ADAS: cada defecto encontrado es un accidente que no pasa.",
           "Comparte los mensajes de agradecimiento de clientes o usuarios."] }] },
-    "Elogiar el esfuerzo, no el talento": { ic: "flexed-biceps",
+    "Elogiar el esfuerzo, no el talento": {
       sesion: [[5, "Escribe tres elogios de talento que sueles decir («eres un crack», «qué inteligente»)."],
                [15, "Conviértelos en elogios de proceso, específicos y verdaderos, y usa uno hoy con alguien."],
                [5, "Anota la reacción de la persona."]],
@@ -1278,7 +1271,7 @@ const HB_PRACTICA = {
           "Cambia «soy malo para» por «todavía no domino».",
           "Celebra tu estrategia, no tu talento.",
           "Los errores son información, no veredicto."] }] },
-    "Cuatro preguntas que abren a cualquiera": { ic: "key",
+    "Cuatro preguntas que abren a cualquiera": {
       sesion: [[5, "Copia las cuatro preguntas en una nota."],
                [20, "Úsalas en una conversación de al menos 15 minutos con alguien cercano: tu papá, un compañero o un amigo."],
                [5, "Anota la respuesta a la cuarta pregunta y pon un recordatorio para mencionarla en un mes."]],
@@ -1301,7 +1294,7 @@ const HB_PRACTICA = {
           "Lleva dos preguntas preparadas a cada entrevista.",
           "Escucha si hablan de personas o solo de procesos.",
           "Las respuestas te dicen si vas a crecer ahí."] }] },
-    "Cuando alguien no está rindiendo": { ic: "magnifying-glass-tilted-left",
+    "Cuando alguien no está rindiendo": {
       sesion: [[5, "Piensa en alguien cuyo desempeño te preocupa."],
                [15, "Clasifica la causa: ¿no sabe, no puede o no quiere? Escribe la evidencia de cada una y la pregunta que harías para confirmarlo."],
                [5, "Decide la acción según la causa: enseñar, quitar un obstáculo o conversar sobre motivación."]],
@@ -1319,7 +1312,7 @@ const HB_PRACTICA = {
           "«He notado que esta semana te ha costado, ¿todo bien?».",
           "No exijas detalles.",
           "Ofrece algo concreto: un plazo, un cambio de tarea."] }] },
-    "Aplícalo esta semana con tu papá": { ic: "older-person",
+    "Aplícalo esta semana con tu papá": {
       sesion: [[5, "Prepara las cuatro preguntas y un reconocimiento sincero de algo que tu papá hace bien en su negocio."],
                [30, "Platica con él sobre el negocio: pregunta, escucha sin corregir y aguanta los silencios; si ves algo, pregúntalo en vez de afirmarlo."],
                [5, "Al final, dile en voz alta lo que hace bien. Anota qué mejora propuso él."]],
@@ -1337,7 +1330,7 @@ const HB_PRACTICA = {
           "Sé específico: qué hace bien y por qué lo admiras.",
           "Dilo sin un «pero» después.",
           "Repítelo de vez en cuando, no solo una vez."] }] },
-    "Practicarlo esta semana": { ic: "spiral-calendar",
+    "Practicarlo esta semana": {
       sesion: [[5, "Pon en tu calendario el ejercicio de cada día."],
                [15, "Haz el de hoy y anota el resultado en tres líneas."],
                [5, "El fin de semana, busca tres evidencias que contradigan la etiqueta que le tienes a alguien."]],
@@ -1362,11 +1355,9 @@ const HB_PRACTICA = {
           "Ancla cada ejercicio a una junta o charla que ya existe.",
           "Hazlo tan pequeño que no puedas fallar.",
           "Celebra cuando lo hagas."] }] },
-    "📚 Qué leer, en qué orden": { ic: "books" },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   leerpersonas: {
-    "Primero la línea base, después la señal": { ic: "straight-ruler",
+    "Primero la línea base, después la señal": {
       sesion: [[5, "Elige a dos personas con las que hablarás hoy."],
                [15, "En los primeros minutos de charla trivial, anota mentalmente su línea base: postura, manos, mirada y velocidad al hablar."],
                [5, "Después, escribe la línea base de cada una y un cambio que notaste cuando el tema se puso serio."]],
@@ -1384,7 +1375,7 @@ const HB_PRACTICA = {
           "Compara a la persona con ella misma en la misma situación.",
           "Toma en cuenta cansancio, hambre y prisa.",
           "Actualiza la línea base si cambia el contexto."] }] },
-    "De los pies a la cabeza: el cuerpo dice a dónde quiere ir": { ic: "foot",
+    "De los pies a la cabeza: el cuerpo dice a dónde quiere ir": {
       sesion: [[5, "Elige una junta, clase o reunión de hoy."],
                [15, "Durante cinco minutos mira solo pies y torsos: anota quién apunta hacia el centro y quién hacia la salida."],
                [5, "Compara tus notas con lo que cada uno dijo o hizo después."]],
@@ -1402,7 +1393,7 @@ const HB_PRACTICA = {
           "Observa hacia dónde gira el torso al hablar cada persona.",
           "Recargarse de golpe en un tema es más informativo que la postura fija.",
           "Objetos que se acomodan entre dos personas son barrera."] }] },
-    "Manos, cuello y ojos: comodidad o incomodidad": { ic: "raised-back-of-hand",
+    "Manos, cuello y ojos: comodidad o incomodidad": {
       sesion: [[5, "Repasa la lista de pacificadores: cuello, muslos, collar, cuello de la camisa, labios."],
                [15, "En una conversación de trabajo, nota qué tema hace aparecer un pacificador en tu interlocutor y en ti."],
                [5, "Anota el tema y el gesto; no saques conclusiones de culpa."]],
@@ -1420,7 +1411,7 @@ const HB_PRACTICA = {
           "Nota cuándo te tocas el cuello o la cara.",
           "Apoya los pies en el suelo y suelta los hombros.",
           "Una exhalación larga baja la tensión en segundos."] }] },
-    "La cara: siete emociones que se ven igual en todo el mundo": { ic: "grinning-face-with-smiling-eyes",
+    "La cara: siete emociones que se ven igual en todo el mundo": {
       sesion: [[5, "Busca un video de entrevista o un fragmento de serie con primeros planos."],
                [15, "Míralo sin sonido y anota cada emoción que veas; distingue sonrisas de Duchenne y sociales."],
                [5, "Míralo con sonido y compara: ¿cuántas acertaste?"]],
@@ -1438,7 +1429,7 @@ const HB_PRACTICA = {
           "Nota si aparece al hablar de una persona concreta.",
           "No respondas con lo mismo.",
           "Busca entender qué lo provocó."] }] },
-    "La voz y las palabras: lo que se dice sin querer": { ic: "speaker-high-volume",
+    "La voz y las palabras: lo que se dice sin querer": {
       sesion: [[5, "Elige una llamada o conversación por mensaje de hoy."],
                [15, "Fíjate en cambios de tono, velocidad, pausas, distancia en el lenguaje y si te hacen preguntas de vuelta."],
                [5, "Anota la parte de la conversación donde cambió la voz o el lenguaje."]],
@@ -1456,7 +1447,7 @@ const HB_PRACTICA = {
           "Compara con su forma habitual de escribir.",
           "Respuestas cada vez más cortas y lentas indican distancia.",
           "No leas de más un mensaje: pregunta en persona."] }] },
-    "Los rasgos: los Cinco Grandes, el único modelo que sí predice": { ic: "puzzle-piece",
+    "Los rasgos: los Cinco Grandes, el único modelo que sí predice": {
       sesion: [[5, "Haz un test de los Cinco Grandes con base científica (por ejemplo, el IPIP-NEO de acceso libre)."],
                [15, "Lee tus resultados y escribe cómo se ve cada rasgo tuyo en tu trabajo y tus relaciones."],
                [5, "Estima los rasgos de dos personas cercanas y anota la evidencia de conducta de cada estimación."]],
@@ -1474,7 +1465,7 @@ const HB_PRACTICA = {
           "A quien es muy amable, pregúntale qué le preocupa, no si está de acuerdo.",
           "Al introvertido, manda el tema antes de la junta.",
           "Al de baja Responsabilidad, acuerdos por escrito y recordatorios."] }] },
-    "Lo que la gente repite es lo que es": { ic: "repeat-button",
+    "Lo que la gente repite es lo que es": {
       sesion: [[5, "Piensa en una persona nueva en tu vida: un compañero, un posible socio, alguien que estás conociendo."],
                [15, "Escribe lo que has visto de ella en las cinco pruebas: cómo trata al que no le sirve, cómo habla de los de antes, promesas chicas, éxito ajeno y presión."],
                [5, "Marca qué pruebas no has visto todavía: eso es lo que aún no sabes de esa persona."]],
@@ -1492,7 +1483,7 @@ const HB_PRACTICA = {
           "Anota quién cumple lo pequeño.",
           "Cumple tú lo pequeño: es lo que más se nota.",
           "Si no vas a poder, avisa antes, no después."] }] },
-    "La actitud en una conversación: abierto, cerrado o resistiendo": { ic: "door",
+    "La actitud en una conversación: abierto, cerrado o resistiendo": {
       sesion: [[5, "Prepara una etiqueta para usar si alguien está resistiendo: «parece que algo de esto no te termina de convencer»."],
                [15, "En una propuesta o conversación de trabajo, clasifica minuto a minuto si el otro está abierto, cerrado o resistiendo; si resiste, usa la etiqueta."],
                [5, "Anota qué salió después de la etiqueta y qué siguiente paso concreto quedó."]],
@@ -1510,7 +1501,7 @@ const HB_PRACTICA = {
           "Agradece la objeción.",
           "Pregunta qué la resolvería.",
           "Resume y confirma antes de responder."] }] },
-    "Interés y desinterés: la lectura que más vas a usar": { ic: "eyes",
+    "Interés y desinterés: la lectura que más vas a usar": {
       sesion: [[5, "Repasa los racimos de interés y de desinterés."],
                [20, "En tres conversaciones del día, cuenta las señales de cada racimo; cuando veas dos de desinterés, cierra con elegancia."],
                [5, "Anota en cuál cerraste a tiempo y cómo reaccionó la otra persona."]],
@@ -1528,7 +1519,7 @@ const HB_PRACTICA = {
           "Fíjate si te habla en futuro.",
           "Si te pregunta disponibilidad, hay interés real.",
           "No lo des por hecho: la decisión llega después."] }] },
-    "Mentiras: lo que sí sirve y lo que es mito": { ic: "lying-face",
+    "Mentiras: lo que sí sirve y lo que es mito": {
       sesion: [[5, "Repasa los mitos y lo que sí sirve: detalle, carga cognitiva y verificación."],
                [15, "En una conversación donde algo no te cuadre, pide detalles sensoriales y que te cuente una parte en otro orden; luego verifica un dato concreto."],
                [5, "Anota si verificaste algo y qué encontraste, sin acusar a nadie."]],
@@ -1546,7 +1537,7 @@ const HB_PRACTICA = {
           "No persigas las mentiras sociales.",
           "Concentra tu atención donde hay dinero, seguridad o compromiso.",
           "Ahí, verifica siempre."] }] },
-    "Leer una sala en treinta segundos": { ic: "office-building",
+    "Leer una sala en treinta segundos": {
       sesion: [[5, "Antes de tu próxima junta o evento, prepárate para observar treinta segundos antes de hablar."],
                [15, "Identifica a quién miran cuando alguien habla, quién está abierto y quién cerrado, y qué alianzas se ven."],
                [5, "Anota quién decide de verdad y si coincide con el puesto."]],
@@ -1564,7 +1555,7 @@ const HB_PRACTICA = {
           "En Alemania, di las cosas claras y con datos.",
           "Allá un «no» directo no es agresión.",
           "Prepárate para discusiones largas antes de decidir."] }] },
-    "Los sesgos que te hacen leer mal (los tuyos)": { ic: "face-with-monocle",
+    "Los sesgos que te hacen leer mal (los tuyos)": {
       sesion: [[5, "Piensa en un juicio reciente que hiciste de alguien."],
                [15, "Revísalo contra los sesgos: confirmación, halo, atribución y proyección; escribe una explicación alternativa para su conducta."],
                [5, "Decide qué dato necesitarías para confirmar o descartar tu juicio."]],
@@ -1582,7 +1573,7 @@ const HB_PRACTICA = {
           "Pon un porcentaje a tus lecturas.",
           "Busca información que lo suba o lo baje.",
           "Nunca el 100 % por un gesto."] }] },
-    "Aplicarlo donde ya estás: junta, entrevista, negociación, Didi": { ic: "oncoming-taxi",
+    "Aplicarlo donde ya estás: junta, entrevista, negociación, Didi": {
       sesion: [[5, "Elige uno de los cinco escenarios que tengas esta semana."],
                [20, "Aplica la lectura del paso: línea base, cambios, interés o desinterés; ajusta lo que haces según lo que veas."],
                [5, "Anota qué cambiaste gracias a la lectura y qué resultado tuvo."]],
@@ -1600,7 +1591,7 @@ const HB_PRACTICA = {
           "Saluda y deja que el pasajero marque el tono.",
           "Si va con prisa, ruta rápida y poca charla.",
           "Si conversa, pregunta y escucha."] }] },
-    "Practicarlo esta semana": { ic: "spiral-calendar",
+    "Practicarlo esta semana": {
       sesion: [[5, "Pon en tu calendario el ejercicio de cada día."],
                [15, "Haz el de hoy y anota lo que observaste y si lo pudiste comprobar."],
                [5, "Lleva la cuenta de tus etiquetas acertadas: ese número es tu nivel real."]],
@@ -1622,11 +1613,9 @@ const HB_PRACTICA = {
           "Dos minutos sin sonido, adivina, comprueba con sonido.",
           "Elige escenas de negociación o de pareja.",
           "Hazlo en alemán y entrenas el idioma también."] }] },
-    "📚 Qué leer, en qué orden": { ic: "books" },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   leermujeres: {
-    "Antes de todo: no es un código, es una persona": { ic: "person",
+    "Antes de todo: no es un código, es una persona": {
       sesion: [[5, "Escribe en tres líneas las tres bases de Manson aplicadas a ti hoy: qué vida tienes, qué te cuesta decir y dónde usas indirectas."],
                [15, "Elige una cosa de tu vida que harías aunque nadie la viera y una conversación pendiente donde vas a decir lo que quieres sin rodeos."],
                [5, "Escribe la regla del consentimiento con tus palabras: qué es un sí claro y qué no lo es."]],
@@ -1644,7 +1633,7 @@ const HB_PRACTICA = {
           "Pregunta con naturalidad: «¿te late?», «¿estás bien?».",
           "Si duda, para; si dice que no, para sin reclamos.",
           "El alcohol nubla el consentimiento: ante la duda, no."] }] },
-    "Cómo saber si le interesas: las señales, en racimo": { ic: "eyes",
+    "Cómo saber si le interesas: las señales, en racimo": {
       sesion: [[5, "Repasa las cinco familias de señales: mirada, cuerpo, autoatención, contacto y conversación."],
                [20, "En un evento o reunión, observa sin acercarte cómo las personas muestran interés entre sí; anota racimos, no señales sueltas."],
                [5, "Escribe la pregunta que te protege del error: ¿se comportaría igual con cualquier otro?"]],
@@ -1662,7 +1651,7 @@ const HB_PRACTICA = {
           "¿Pregunta más ahora que al principio?",
           "¿Se acerca o se aleja con los minutos?",
           "¿Propone ella algo para después?"] }] },
-    "Las señales de que no — y cómo aceptarlas bien": { ic: "waving-hand",
+    "Las señales de que no — y cómo aceptarlas bien": {
       sesion: [[5, "Escribe tres respuestas cortas y amables para retirarte ante un no suave."],
                [15, "Repasa una situación pasada donde insististe después de un no suave y escribe cómo la habrías cerrado bien."],
                [5, "Guarda tus tres frases en el celular para tenerlas a mano."]],
@@ -1684,7 +1673,7 @@ const HB_PRACTICA = {
           "Pide cosas pequeñas donde el no no cuesta nada.",
           "Cuenta tus noes: muestran que lo estás intentando.",
           "Cada no bien recibido te hace más seguro."] }] },
-    "Acercarte a alguien que no conoces sin ser el pesado": { ic: "speech-balloon",
+    "Acercarte a alguien que no conoces sin ser el pesado": {
       sesion: [[5, "Elige un lugar donde acercarse es natural: una clase, un evento, una fila."],
                [10, "Si hay señal de interés y contexto adecuado, saluda con una frase verdadera y corta, y lee los primeros treinta segundos."],
                [5, "Sea cual sea la respuesta, cierra tú: con tu número si fue bien, con una despedida amable si no."]],
@@ -1702,7 +1691,7 @@ const HB_PRACTICA = {
           "Cinco minutos y cierra.",
           "Ofrece tu contacto: «si quieres seguir la plática, este es mi número».",
           "Si te escribe, ahí empieza."] }] },
-    "La primera cita: leer si quiere una segunda, y qué hacer": { ic: "hot-beverage",
+    "La primera cita: leer si quiere una segunda, y qué hacer": {
       sesion: [[5, "Antes de la cita, escribe las preguntas de Ury: ¿cómo me sentí conmigo?, ¿me reí?, ¿me dio curiosidad?, ¿me sentí escuchado?"],
                [10, "Después de la cita, contéstalas con honestidad y anota las señales que viste de interés o desinterés."],
                [5, "Si fue bien, pide la segunda cita concreta; si no, cierra con amabilidad y sin insistir."]],
@@ -1720,7 +1709,7 @@ const HB_PRACTICA = {
           "Pregunta por lo que la emociona, no solo por lo que hace.",
           "Comparte algo verdadero de ti.",
           "No conviertas la cita en entrevista: alterna."] }] },
-    "Cuando te cuenta un problema: escuchar o resolver": { ic: "ear",
+    "Cuando te cuenta un problema: escuchar o resolver": {
       sesion: [[5, "Escribe la pregunta y tenla presente: «¿quieres que te ayude a resolverlo o que te escuche?»."],
                [15, "La próxima vez que alguien cercano te cuente un problema, pregúntala y haz exactamente lo que te diga, aunque veas la solución."],
                [5, "Anota cómo terminó la conversación y qué te costó."]],
@@ -1738,7 +1727,7 @@ const HB_PRACTICA = {
           "«Se me ocurren dos opciones, ¿cuál te late más?».",
           "Pregunta qué ya intentó.",
           "Ofrece ayuda concreta, no solo ideas."] }] },
-    "Cuando dice \"estoy bien\" y no está bien": { ic: "pensive-face",
+    "Cuando dice \"estoy bien\" y no está bien": {
       sesion: [[5, "Escribe la frase de apertura suave que usarás: «Te siento callada. No tienes que contarme ahora, pero aquí estoy cuando quieras»."],
                [15, "La próxima vez que veas a alguien cercano con señales de no estar bien, dila y quédate cerca haciendo algo a su lado."],
                [5, "Al día siguiente, vuelve con un «¿cómo amaneciste?»."]],
@@ -1756,7 +1745,7 @@ const HB_PRACTICA = {
           "Primero escucha todo, sin interrumpir.",
           "«Tienes razón en que…» antes de cualquier explicación.",
           "Pregunta qué necesita para que no se repita."] }] },
-    "Cuando se molesta contigo: los cuatro jinetes y sus antídotos": { ic: "horse",
+    "Cuando se molesta contigo: los cuatro jinetes y sus antídotos": {
       sesion: [[5, "Escribe los cuatro jinetes y su antídoto en una tarjeta."],
                [15, "Revisa tu última discusión con alguien cercano y marca qué jinetes usaste tú; reescribe esa conversación con los antídotos."],
                [5, "Acuerda contigo una frase de pausa para cuando te inundes: «dame veinte minutos y regreso»."]],
@@ -1779,7 +1768,7 @@ const HB_PRACTICA = {
           "No todo conflicto tiene solución definitiva.",
           "Busca entender el sueño o valor detrás de su postura.",
           "Acuerden convivir con la diferencia sin desprecio."] }] },
-    "Cuando se enfría de repente": { ic: "snowflake",
+    "Cuando se enfría de repente": {
       sesion: [[5, "Escribe el mensaje honesto de una sola vez: «Te siento más lejos estos días. Si algo cambió prefiero saberlo, sin problema.»"],
                [15, "Si estás en esa situación, mándalo y suelta el celular; si no, escribe qué harías con tu semana en lugar de perseguir."],
                [5, "Planea tres actividades tuyas para los próximos días que no dependan de ella."]],
@@ -1797,7 +1786,7 @@ const HB_PRACTICA = {
           "Mantén tus rutinas aunque estés triste.",
           "Pasa tiempo con gente que te quiere.",
           "Tu proyecto de Alemania sigue: no lo pongas en pausa por esto."] }] },
-    "Cuando te pica, te vacila o te pone a prueba": { ic: "winking-face",
+    "Cuando te pica, te vacila o te pone a prueba": {
       sesion: [[5, "Escribe tres comentarios burlones que te han dicho y cómo reaccionaste."],
                [15, "Reescribe tus respuestas con ligereza y sin defenderte; luego distingue cuáles eran juego y cuáles desprecio."],
                [5, "Decide qué harás si es desprecio: nombrarlo una vez y no seguir el juego."]],
@@ -1815,7 +1804,7 @@ const HB_PRACTICA = {
           "«Esa broma delante de tus amigas no me gustó».",
           "Observa si cambia o si te dice exagerado.",
           "El desprecio repetido es señal de alarma, no de coqueteo."] }] },
-    "El apego: por qué reacciona así (y por qué tú también)": { ic: "anchor",
+    "El apego: por qué reacciona así (y por qué tú también)": {
       sesion: [[5, "Haz el test de estilos de apego del libro de Levine o una versión en línea basada en la escala ECR."],
                [15, "Escribe tu resultado, tu última conducta de protesta o de alejamiento, y qué harías distinto hoy."],
                [5, "Elige una práctica para esta semana: tolerar la incertidumbre o quedarte un poco más."]],
@@ -1833,7 +1822,7 @@ const HB_PRACTICA = {
           "«Me ayuda mucho que me avises si vas a llegar tarde».",
           "Dilo una vez, sin reproche.",
           "Su respuesta te dice si puede darte lo que necesitas."] }] },
-    "Lo cotidiano: los gestos pequeños que sostienen todo": { ic: "two-hearts",
+    "Lo cotidiano: los gestos pequeños que sostienen todo": {
       sesion: [[5, "Repasa qué es una oferta de conexión: cualquier comentario que espera reacción."],
                [15, "Hoy, con tu familia o personas cercanas, cuenta las ofertas que te hacen y responde a todas volteando, con una pregunta o un comentario."],
                [5, "Anota cuántas recibiste y cuántas respondiste."]],
@@ -1851,7 +1840,7 @@ const HB_PRACTICA = {
           "Crea un ritual diario pequeño.",
           "Uno semanal más largo.",
           "Protégelos del celular."] }] },
-    "Señales de alarma que no debes leer como \"intensidad\"": { ic: "police-car-light",
+    "Señales de alarma que no debes leer como \"intensidad\"": {
       sesion: [[5, "Lee la lista de señales de alarma y marca las que has visto en relaciones pasadas, en ella o en ti."],
                [15, "Escribe qué harías hoy distinto: cómo nombrarlo una vez y qué observarías después."],
                [5, "Si reconociste alguna en ti, escribe la conducta concreta que vas a dejar de hacer."]],
@@ -1869,7 +1858,7 @@ const HB_PRACTICA = {
           "En emergencia: 911.",
           "Línea Mujeres CDMX: 55 5658 1111.",
           "Si reconoces control en ti, la terapia funciona."] }] },
-    "Practicarlo esta semana": { ic: "spiral-calendar",
+    "Practicarlo esta semana": {
       sesion: [[5, "Pon en tu calendario el ejercicio de cada día."],
                [15, "Haz el de hoy con las personas que ya están en tu vida y anota qué pasó."],
                [5, "El fin de semana, haz la observación de una pareja durante cinco minutos y anota ofertas, respuestas y desprecio."]],
@@ -1894,11 +1883,9 @@ const HB_PRACTICA = {
           "Diez minutos de escritura libre a la semana.",
           "Qué pasó, qué sentí, qué haría distinto.",
           "Léelo un mes después: verás tu avance."] }] },
-    "📚 Qué leer, en qué orden": { ic: "books" },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   caracter: {
-    "Tímido no es lo mismo que sin carácter": { ic: "lion",
+    "Tímido no es lo mismo que sin carácter": {
       sesion: [[5, "Escribe en dos columnas qué parte de ti es introversión (energía) y qué parte es timidez (miedo al juicio)."],
                [15, "Elige un acto pequeño de valor para hoy —hablar primero, pedir algo, dar tu opinión— y hazlo aunque tiembles."],
                [5, "Anota cómo te sentiste antes y después, del 0 al 10."]],
@@ -1916,7 +1903,7 @@ const HB_PRACTICA = {
           "Usa tu observación: llega a las juntas con el análisis hecho.",
           "Habla menos, pero con sustancia.",
           "No te compares con el más ruidoso."] }] },
-    "Lo que sí controlas, y lo que no": { ic: "control-knobs",
+    "Lo que sí controlas, y lo que no": {
       sesion: [[5, "Piensa en lo que más te preocupa esta semana."],
                [15, "Haz las dos columnas en papel: lo que controlas y lo que no. Para cada cosa de la primera, una acción concreta."],
                [5, "Haz hoy la primera acción y suelta lo de la segunda columna."]],
@@ -1942,7 +1929,7 @@ const HB_PRACTICA = {
           "Cambia «me pasó» por «¿qué puedo hacer ahora?».",
           "Registra lo que lograste por tu esfuerzo.",
           "No caigas en el extremo de culparte por todo."] }] },
-    "Exposición: el músculo de la incomodidad": { ic: "ladder",
+    "Exposición: el músculo de la incomodidad": {
       sesion: [[5, "Escribe tu escalera de diez situaciones que te dan miedo, del 2 al 9."],
                [15, "Sube hoy el primer peldaño: antes, anota cuánto crees que va a doler (0-10); haz la situación sin conductas de seguridad."],
                [5, "Anota cuánto dolió de verdad y compara con tu predicción."]],
@@ -1966,7 +1953,7 @@ const HB_PRACTICA = {
           "Antes: «creo que se van a reír» (80 % de seguro).",
           "Después: «nadie se rió» (lo que pasó).",
           "Revisa tu hoja cada domingo."] }] },
-    "Decidir: primero rápido, en lo pequeño": { ic: "stopwatch",
+    "Decidir: primero rápido, en lo pequeño": {
       sesion: [[5, "Pon en tu celular un contador para las decisiones que tomes hoy sin consultar."],
                [15, "Durante el día, toma diez decisiones sin preguntar «¿tú qué harías?»; cuando informes, usa «voy a hacer X; si sabes algo que lo cambie, dime»."],
                [5, "En la noche cuenta cuántas fueron y cuántas veces sentiste el impulso de consultar."]],
@@ -1984,7 +1971,7 @@ const HB_PRACTICA = {
           "Cambia preguntas de permiso por decisiones con salida.",
           "Explica en una frase por qué.",
           "Escucha la información nueva y ajusta si hace falta."] }] },
-    "Las decisiones difíciles: un método, no un salto": { ic: "compass",
+    "Las decisiones difíciles: un método, no un salto": {
       sesion: [[5, "Elige una decisión difícil que tengas pendiente."],
                [20, "Pásala por el método WRAP: amplía opciones, pruébala en pequeño, aplica el 10/10/10 y pon un cable trampa."],
                [5, "Escribe la decisión, su fecha y el cable trampa en una hoja."]],
@@ -2010,7 +1997,7 @@ const HB_PRACTICA = {
           "Tres a cinco criterios, con peso del 1 al 5.",
           "Puntúa cada opción del 1 al 10.",
           "Si el resultado te incomoda, revisa qué criterio olvidaste."] }] },
-    "La decisión que nadie quiere tomar": { ic: "crossed-swords",
+    "La decisión que nadie quiere tomar": {
       sesion: [[5, "Identifica la decisión incómoda que todos evitan en tu trabajo o en el negocio de tu papá."],
                [15, "Junta los números y escribe la decisión, la razón y el plan; prepara cómo comunicarlo claro y el mismo día."],
                [10, "Comunícala de frente a quien corresponda y anota la reacción."]],
@@ -2028,7 +2015,7 @@ const HB_PRACTICA = {
           "Lugar privado y tiempo suficiente.",
           "La noticia en la primera o segunda frase, sin rodeos.",
           "Después, atiende la reacción y presenta el plan."] }] },
-    "Cómo hablan los que lideran": { ic: "studio-microphone",
+    "Cómo hablan los que lideran": {
       sesion: [[5, "Escribe una propuesta de trabajo en tres frases: propongo, la razón, ¿qué se nos escapa?"],
                [15, "Grábate diciéndola: más despacio, más grave, final hacia abajo y sin amortiguadores. Repite hasta que suene firme."],
                [5, "Úsala en tu próxima junta en los primeros cinco minutos."]],
@@ -2046,7 +2033,7 @@ const HB_PRACTICA = {
           "Pausa antes de tu idea principal.",
           "Pausa después de una cifra importante.",
           "No llenes las pausas con «eh» o «este»."] }] },
-    "Decir las cosas de frente sin agredir": { ic: "right-facing-fist",
+    "Decir las cosas de frente sin agredir": {
       sesion: [[5, "Elige algo que te molestó dos veces y no has dicho."],
                [15, "Escríbelo con hecho, efecto y petición; ensáyalo en voz alta sin «perdón que te lo diga»."],
                [10, "Dilo en privado y en persona en las próximas 48 horas; aguanta la reacción sin retirar lo dicho."]],
@@ -2069,7 +2056,7 @@ const HB_PRACTICA = {
           "Regla de las dos veces: a la segunda, se habla.",
           "Dilo mientras todavía estás tranquilo.",
           "Una conversación pequeña evita una pelea grande."] }] },
-    "No dejarte intimidar": { ic: "shield",
+    "No dejarte intimidar": {
       sesion: [[5, "Practica cinco veces el suspiro fisiológico: dos inhalaciones cortas por la nariz y una exhalación larga por la boca."],
                [15, "Ensaya en voz alta las frases del paso: pausa, voz baja, nombrar la táctica y preguntar «¿cuál es el dato?»."],
                [5, "Escribe tu alternativa (MAAN) para la situación de presión más probable de tu semana."]],
@@ -2087,7 +2074,7 @@ const HB_PRACTICA = {
           "Documenta: fecha, qué pasó, testigos.",
           "Usa los canales de la empresa (Recursos Humanos, comité).",
           "Tu salud y tu dignidad son lo primero."] }] },
-    "La preparación es el ochenta por ciento del valor": { ic: "memo",
+    "La preparación es el ochenta por ciento del valor": {
       sesion: [[5, "Elige la próxima conversación importante: una junta, una negociación, una entrevista."],
                [20, "Escribe tus tres objeciones probables con su respuesta, haz un pre-mortem de diez minutos y prepara tu dato clave."],
                [5, "Ensaya en voz alta la frase de apertura dos veces."]],
@@ -2114,7 +2101,7 @@ const HB_PRACTICA = {
           "Tres logros con números de los últimos doce meses.",
           "El rango de mercado para tu puesto y experiencia.",
           "Qué más vale para ti: capacitación, horario, certificaciones."] }] },
-    "Disciplina es libertad: el carácter se forja en lo pequeño": { ic: "alarm-clock",
+    "Disciplina es libertad: el carácter se forja en lo pequeño": {
       sesion: [[5, "Elige tres promesas pequeñas para los próximos siete días: hora de levantarte, gym, una tarea difícil primero."],
                [15, "Hoy cumple las tres y haz lo difícil antes de las 10 de la mañana."],
                [5, "Marca en tu cuadrícula de hábitos cada promesa cumplida como evidencia."]],
@@ -2132,7 +2119,7 @@ const HB_PRACTICA = {
           "Convierte decisiones repetidas en reglas.",
           "Diseña tu entorno: el celular lejos, la ropa del gym lista.",
           "No negocies contigo en el momento."] }] },
-    "Liderar siendo introvertido: no tienes que ser el que más habla": { ic: "owl",
+    "Liderar siendo introvertido: no tienes que ser el que más habla": {
       sesion: [[5, "Agenda en tu semana una conversación de quince minutos uno a uno con una persona clave de tu trabajo."],
                [15, "Prepárala: dos preguntas buenas y lo que quieres que salga. En la junta grupal, habla una vez en los primeros cinco minutos."],
                [5, "Después, escribe por correo la decisión o el resumen con el siguiente paso."]],
@@ -2150,7 +2137,7 @@ const HB_PRACTICA = {
           "Planea tu recarga después de días sociales.",
           "Un paseo, música o silencio de 20 minutos.",
           "Protege ese tiempo como una cita."] }] },
-    "Aguantar no caerle bien a todos": { ic: "mountain",
+    "Aguantar no caerle bien a todos": {
       sesion: [[5, "Piensa en una decisión que tomaste o vas a tomar que no le gusta a alguien."],
                [15, "Escribe por qué es correcta; separa las críticas con hecho y alternativa del ruido con adjetivos."],
                [5, "Decide qué crítica vas a considerar y cuál vas a agradecer y soltar."]],
@@ -2168,7 +2155,7 @@ const HB_PRACTICA = {
           "Escribe tres a cinco nombres.",
           "Pide su opinión antes de decisiones grandes.",
           "Las críticas del resto, agradécelas sin cargarlas."] }] },
-    "Aplicarlo donde ya estás": { ic: "round-pushpin",
+    "Aplicarlo donde ya estás": {
       sesion: [[5, "Elige uno de los cinco escenarios de este paso que vivas esta semana."],
                [20, "Aplica la técnica que le toca: hablar temprano en la junta, decidir en el negocio, calmar a un pasajero, responder corto en la entrevista o fechar tu decisión pendiente."],
                [5, "Anota lo que hiciste y lo que pasó."]],
@@ -2186,7 +2173,7 @@ const HB_PRACTICA = {
           "«No lo he usado; lo que sí he hecho es ______».",
           "«Lo abordaría así: ______».",
           "Termina con un ejemplo de algo que aprendiste rápido."] }] },
-    "Practicarlo esta semana": { ic: "spiral-calendar",
+    "Practicarlo esta semana": {
       sesion: [[5, "Pon en tu calendario el ejercicio de cada día."],
                [15, "Haz el de hoy y anota qué tanto te incomodó y qué pasó."],
                [5, "El fin de semana, escribe tu decisión pendiente con el método y compártela con alguien."]],
@@ -2211,11 +2198,9 @@ const HB_PRACTICA = {
           "Una línea por cada acto de valor.",
           "Léelo antes de una situación difícil.",
           "Míralo un mes después: verás el cambio."] }] },
-    "📚 Qué leer, en qué orden": { ic: "books" },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   nadar: {
-    "Qué significa saber nadar": { ic: "person-swimming",
+    "Qué significa saber nadar": {
       sesion: [[5, "En la alberca, sin calentar mucho, mide tu punto de partida: cuántos metros de crol continuo nadas sin parar."],
                [15, "Prueba la flotación vertical: cuánto tiempo aguantas sin agotarte. Luego nada 25 m contando brazadas."],
                [5, "Anota los tres números —metros continuos, minutos de flotación y brazadas por largo— con la fecha."]],
@@ -2233,7 +2218,7 @@ const HB_PRACTICA = {
           "Úsala en tu día de recuperación activa.",
           "Nadar suave después de pesas ayuda a soltar.",
           "Alterna estilos para equilibrar los músculos."] }] },
-    "Comodidad en el agua y respiración": { ic: "bubbles",
+    "Comodidad en el agua y respiración": {
       sesion: [[5, "Parado en lo bajo: 20 burbujas, cara dentro exhalando por la nariz, cara fuera inhalando por la boca."],
                [20, "Flotación de estrella boca abajo y boca arriba, tres veces cada una; luego flotación vertical en lo hondo junto a la orilla, subiendo de 1 a 2 minutos."],
                [5, "Termina con 10 burbujas lentas y relajadas."]],
@@ -2251,7 +2236,7 @@ const HB_PRACTICA = {
           "No avances a lo hondo hasta sentirte cómodo en lo bajo.",
           "Ten siempre la orilla o el carril a mano al principio.",
           "Una clase con instructor acelera mucho el proceso."] }] },
-    "La posición del cuerpo": { ic: "straight-ruler",
+    "La posición del cuerpo": {
       sesion: [[10, "Calienta 200 m suave a tu ritmo, en cualquier estilo."],
                [25, "Seis deslizamientos en streamline desde la pared, midiendo hasta dónde llegas; luego cuatro con patada suave, presionando el pecho hacia abajo para subir caderas."],
                [5, "Anota tu mejor distancia de deslizamiento."]],
@@ -2269,7 +2254,7 @@ const HB_PRACTICA = {
           "Empuja con las dos piernas y cuerpo en flecha.",
           "Aguanta el deslizamiento hasta perder velocidad.",
           "Empieza a patear justo antes de frenarte."] }] },
-    "La patada": { ic: "foot",
+    "La patada": {
       sesion: [[10, "Calienta 200 m suave."],
                [25, "4 × 25 m de patada con tabla y 4 × 25 m de patada de lado sin tabla, con un brazo estirado; tobillos sueltos y patada desde la cadera."],
                [10, "5 minutos de estiramiento de tobillos y cuádriceps fuera del agua."]],
@@ -2287,7 +2272,7 @@ const HB_PRACTICA = {
           "Usa aletas cortas, no de buceo.",
           "Úsalas en ejercicios de técnica, no en toda la sesión.",
           "Quítalas y compara cómo se siente."] }] },
-    "La brazada de crol": { ic: "flexed-biceps",
+    "La brazada de crol": {
       sesion: [[10, "Calienta 200 m suave."],
                [25, "4 × 25 m de crol a un brazo (el otro adelante), 4 × 25 m con puños cerrados y 4 × 25 m normal enfocando el codo alto y la rotación."],
                [5, "Cuenta las brazadas del último largo y anótalas."]],
@@ -2305,7 +2290,7 @@ const HB_PRACTICA = {
           "Catch-up: mejora el tiempo de la brazada.",
           "Puños cerrados: mejora el agarre con el antebrazo.",
           "Arrastrar dedos: mejora la recuperación."] }] },
-    "Respirar mientras nadas crol": { ic: "lungs",
+    "Respirar mientras nadas crol": {
       sesion: [[10, "Calienta 200 m suave con burbujas continuas."],
                [25, "6 × 25 m de patada de lado girando para respirar; luego 6 × 25 m de crol respirando cada 3, con una gafa dentro y una fuera."],
                [5, "Anota cuántos largos completaste respirando cada 3 sin levantar la cabeza."]],
@@ -2323,7 +2308,7 @@ const HB_PRACTICA = {
           "Practica el lado débil con patada de lado.",
           "Respira cada 3 en series cortas al principio.",
           "En series largas puedes alternar cada 2 y cada 3."] }] },
-    "Los otros tres estilos": { ic: "water-wave",
+    "Los otros tres estilos": {
       sesion: [[10, "Calienta 200 m de crol suave."],
                [25, "4 × 25 m de dorso, 4 × 25 m de pecho con deslizamiento largo y 2 × 25 m de patada de mariposa (ondulación) con aletas si tienes."],
                [5, "Termina con 100 m de dorso suave para descansar nadando."]],
@@ -2341,7 +2326,7 @@ const HB_PRACTICA = {
           "Empieza con ondulación bajo el agua con aletas.",
           "Movimiento desde el pecho, no solo desde las rodillas.",
           "Úsala en la salida de cada pared."] }] },
-    "Estructura de una sesión": { ic: "clipboard",
+    "Estructura de una sesión": {
       sesion: [[10, "Calentamiento: 300 m suave alternando crol y dorso."],
                [30, "Técnica 400 m (patada, un brazo, puños) y serie principal: 8 × 50 m con 20 segundos de descanso."],
                [5, "Vuelta a la calma 200 m suave y anota brazadas por largo de la serie."]],
@@ -2365,7 +2350,7 @@ const HB_PRACTICA = {
           "Pregunta la dirección del carril antes de entrar.",
           "Si te alcanzan, cede en la pared.",
           "Descansa en una esquina, no en medio de la pared."] }] },
-    "Progresión realista": { ic: "chart-increasing",
+    "Progresión realista": {
       sesion: [[5, "Ubica en qué semana de la progresión estás según tus números."],
                [15, "Escribe tu meta para las próximas cuatro semanas y las sesiones que necesitas para llegar."],
                [5, "Busca y agenda una clase con entrenador, aunque sea una sola, para que revise tu técnica."]],
@@ -2383,7 +2368,7 @@ const HB_PRACTICA = {
           "Si llevas un mes sin mejorar, cambia la sesión.",
           "Agregar una segunda sesión semanal acelera mucho.",
           "Revisa el descanso y el sueño."] }] },
-    "Seguridad en el agua": { ic: "ring-buoy",
+    "Seguridad en el agua": {
       sesion: [[5, "Repasa las reglas: nunca solo en aguas abiertas, corrientes de retorno, ahogamiento silencioso y «alcanza, lanza, rema»."],
                [15, "Ve un video sobre cómo identificar corrientes de retorno y otro sobre cómo se ve un ahogamiento real."],
                [5, "Escribe qué harías si te atrapa una corriente y si ves a alguien ahogándose."]],
@@ -2401,7 +2386,7 @@ const HB_PRACTICA = {
           "Primero grita por ayuda y llama al 911.",
           "Lanza algo que flote con una cuerda si puedes.",
           "Si entras, lleva algo que flote entre tú y la persona."] }] },
-    "Cuidar el hombro": { ic: "adhesive-bandage",
+    "Cuidar el hombro": {
       sesion: [[5, "Después de nadar, cinco minutos de estiramiento de hombros, pecho y espalda."],
                [15, "En tu siguiente día de gym, tres series de rotación externa con banda, face pulls y remo con escápula activa."],
                [5, "Anota si sentiste molestia en el hombro al nadar y en qué parte de la brazada."]],
@@ -2419,10 +2404,9 @@ const HB_PRACTICA = {
           "Si duele, nada menos y más despacio.",
           "Revisa el codo alto y la rotación.",
           "Si el dolor sigue más de dos semanas, consulta a un fisioterapeuta."] }] },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   cocinar: {
-    "Por qué esto te importa": { ic: "man-cook",
+    "Por qué esto te importa": {
       sesion: [[5, "Revisa en Finanzas cuánto gastaste en comida fuera y a domicilio el mes pasado."],
                [15, "Elige tres comidas de la semana que vas a cocinar en lugar de pedir y anota los ingredientes."],
                [5, "Escribe tus cinco platillos meta: los que quieres que te salgan bien siempre."]],
@@ -2440,7 +2424,7 @@ const HB_PRACTICA = {
           "Aprende recetas con ingredientes que hay allá.",
           "Prácticas de lote: te salvan en semanas de exámenes.",
           "Cocinar para tus compañeros también hace red."] }] },
-    "Los cinco principios que sustituyen a cien recetas": { ic: "salt",
+    "Los cinco principios que sustituyen a cien recetas": {
       sesion: [[5, "Prepara un plato sencillo que sueles hacer, sin la sal final."],
                [15, "Pruébalo y corrige con un principio a la vez: sal, luego ácido, luego grasa; prueba después de cada ajuste y nota la diferencia."],
                [5, "Anota qué cambió más el sabor."]],
@@ -2458,7 +2442,7 @@ const HB_PRACTICA = {
           "Jitomate asado o en lata da umami a una salsa.",
           "Un poco de queso duro o soya profundiza un guiso.",
           "Los caldos hechos en casa son una base de umami."] }] },
-    "Las cuatro técnicas base": { ic: "shallow-pan-of-food",
+    "Las cuatro técnicas base": {
       sesion: [[5, "Prepara verduras en trozos parejos y una pieza de carne seca."],
                [20, "Saltea las verduras en sartén muy caliente sin llenarla y sella la carne sin moverla hasta que se despegue sola."],
                [5, "Compara: ¿doraron o se cocieron en su jugo? Anota qué ajustarías."]],
@@ -2476,7 +2460,7 @@ const HB_PRACTICA = {
           "Usa cortes como chambarete, pecho o espaldilla.",
           "Dora primero, luego líquido y fuego bajo.",
           "Está listo cuando se deshace con un tenedor."] }] },
-    "Tres recetas para empezar": { ic: "cooking",
+    "Tres recetas para empezar": {
       sesion: [[5, "Elige una de las tres recetas y ten todo listo antes de prender la estufa."],
                [20, "Hazla siguiendo la clave del paso: huevos a fuego bajo, pasta terminada en la salsa con agua de cocción, o pollo con piel sin mover."],
                [5, "Anota qué salió bien y qué cambiarías la próxima vez."]],
@@ -2500,7 +2484,7 @@ const HB_PRACTICA = {
           "Repite cada receta tres veces en dos semanas.",
           "Cambia una variable cada vez.",
           "Anota en una nota tu versión final."] }] },
-    "Cortar bien": { ic: "kitchen-knife",
+    "Cortar bien": {
       sesion: [[5, "Revisa que el cuchillo esté afilado y que la tabla no se mueva (pon un trapo húmedo debajo)."],
                [20, "Corta tres cebollas: una en juliana, una en brunoise y una en rodajas, con agarre de pinza y mano en garra."],
                [5, "Compara la uniformidad de los trozos y guarda la cebolla para la comida de la semana."]],
@@ -2518,7 +2502,7 @@ const HB_PRACTICA = {
           "Nunca en el lavavajillas.",
           "Nunca cortes sobre vidrio, mármol o plato.",
           "Usa la chaira antes de cada uso."] }] },
-    "Mise en place: por qué los profesionales no se atoran": { ic: "bento-box",
+    "Mise en place: por qué los profesionales no se atoran": {
       sesion: [[5, "Lee completa la receta que harás hoy."],
                [20, "Antes de prender el fuego, pica, mide y acomoda todo en tazones; ten trapo, bote de desperdicio y basura a mano."],
                [5, "Cocina y limpia mientras esperas cada paso; al terminar, la cocina debe quedar casi limpia."]],
@@ -2536,7 +2520,7 @@ const HB_PRACTICA = {
           "Llena el fregadero con agua jabonosa al empezar.",
           "Lava utensilios en cada espera.",
           "Guarda ingredientes en cuanto los terminas de usar."] }] },
-    "La despensa que resuelve cualquier cena": { ic: "canned-food",
+    "La despensa que resuelve cualquier cena": {
       sesion: [[5, "Revisa tu despensa y refri contra la lista del paso y marca lo que falta."],
                [15, "Haz la lista de compra solo con lo faltante y súmala a tu siguiente visita al súper."],
                [10, "Con lo que ya tienes, prepara una cena de quince minutos (por ejemplo, pasta con ajo, aceite y queso)."]],
@@ -2560,7 +2544,7 @@ const HB_PRACTICA = {
           "Compra especias en cantidades pequeñas.",
           "Guárdalas lejos de la estufa.",
           "Tuesta las enteras en sartén seca antes de molerlas."] }] },
-    "Cocinar por lotes": { ic: "pot-of-food",
+    "Cocinar por lotes": {
       sesion: [[15, "Arranca las bases que tardan: frijol o lentejas en olla, arroz, pollo cocido y verduras al horno."],
                [60, "Mientras se cocinan, porciona, deja enfriar y guarda en recipientes con etiqueta y fecha; decide qué platillos armarás cada día."],
                [10, "Limpia y anota en el Plan Semanal de Comida qué comida sale de cada base."]],
@@ -2586,7 +2570,7 @@ const HB_PRACTICA = {
           "Una proteína, un carbohidrato, dos verduras y una salsa.",
           "Cambia la salsa para cambiar el plato.",
           "Agrega algo fresco al servir."] }] },
-    "Los errores que arruinan la comida": { ic: "fire",
+    "Los errores que arruinan la comida": {
       sesion: [[5, "Repasa los cinco errores y elige el que más cometes."],
                [20, "Cocina algo cuidando específicamente ese error: sartén caliente, no llenar, sal, no mover, secar."],
                [5, "Prueba y anota si notaste la diferencia."]],
@@ -2604,7 +2588,7 @@ const HB_PRACTICA = {
           "Salado: agrega más ingrediente base o papa en guisos.",
           "Aguado: reduce destapado.",
           "Quemado: no raspes el fondo; pásalo a otra olla."] }] },
-    "Lo que todo cocinero debe saber": { ic: "thermometer",
+    "Lo que todo cocinero debe saber": {
       sesion: [[5, "Escribe las temperaturas internas seguras y pégalas en el refri."],
                [15, "Si tienes termómetro de sonda, úsalo en la próxima carne; si no, agrégalo a tu lista de compras."],
                [5, "Separa una tabla para carne cruda y otra para verdura, y márcalas."]],
@@ -2629,7 +2613,7 @@ const HB_PRACTICA = {
           "Planea: pásalo al refri un día antes.",
           "Agua fría en bolsa cerrada si hay prisa.",
           "Lo descongelado en microondas se cocina de inmediato."] }] },
-    "Un platillo difícil de verdad": { ic: "hot-pepper",
+    "Un platillo difícil de verdad": {
       sesion: [[15, "Asa los chiles poblanos al fuego directo hasta ampollarlos, súdalos en bolsa y pélalos; prepara el relleno."],
                [40, "Rellena, enharina, monta las claras a punto de nieve, incorpora las yemas, capea justo antes y fríe a la temperatura correcta."],
                [10, "Escurre sobre rejilla, sirve con caldillo de jitomate y anota qué mejorarías."]],
@@ -2647,11 +2631,9 @@ const HB_PRACTICA = {
           "Aprende un platillo de temporada al año.",
           "Compra lo que abunda: es más barato y sabe mejor.",
           "En Alemania, la temporada de espárragos (Spargelzeit) es en primavera."] }] },
-    "📚 Qué leer / ver": { ic: "books" },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   armas: {
-    "Antes de nada: el marco legal en México": { ic: "balance-scale",
+    "Antes de nada: el marco legal en México": {
       sesion: [[5, "Lee el artículo 10 constitucional y ubica la Ley Federal de Armas de Fuego y Explosivos en el sitio oficial de la Cámara de Diputados."],
                [15, "Escribe con tus palabras la diferencia entre poseer y portar, quién otorga cada permiso y por qué solo se compra en la tienda de la SEDENA."],
                [5, "Anota las tres conductas que son delito federal: portar sin permiso, comprar fuera del canal legal y tener calibres reservados."]],
@@ -2669,7 +2651,7 @@ const HB_PRACTICA = {
           "El camino legal es lento por diseño.",
           "Cualquier atajo ofrecido por terceros es ilegal.",
           "La responsabilidad empieza antes de tocar un arma."] }] },
-    "El camino legal, en orden": { ic: "identification-card",
+    "El camino legal, en orden": {
       sesion: [[5, "Busca en el directorio de la SEDENA los clubes de tiro registrados más cercanos a ti."],
                [15, "Llama o escribe a dos: pregunta requisitos de membresía, si rentan armas, si dan clase de seguridad para principiantes y horarios."],
                [5, "Haz la lista de documentos que te pedirían y marca los que ya tienes."]],
@@ -2687,7 +2669,7 @@ const HB_PRACTICA = {
           "Suma el costo anual real, no solo el arma.",
           "Piensa qué harías con ella al mudarte.",
           "Practicar en el club sin comprar es perfectamente válido."] }] },
-    "Las cuatro reglas de seguridad": { ic: "shield",
+    "Las cuatro reglas de seguridad": {
       sesion: [[5, "Escribe las cuatro reglas de memoria, en orden."],
                [15, "Para cada regla, escribe un ejemplo de accidente que habría evitado y por qué se necesitan al menos dos fallas para una tragedia."],
                [5, "Repítelas en voz alta hasta decirlas sin pensar."]],
@@ -2710,7 +2692,7 @@ const HB_PRACTICA = {
           "Dedo recto sobre el armazón, siempre.",
           "Se entrena con un instructor hasta que sea automático.",
           "Obsérvalo en las películas: casi nadie lo hace bien."] }] },
-    "La regla adicional en casa": { ic: "locked-with-key",
+    "La regla adicional en casa": {
       sesion: [[5, "Si alguna vez tienes un arma, define dónde estaría la caja fuerte y dónde las municiones por separado."],
                [15, "Investiga opciones de cajas fuertes certificadas de acceso rápido y qué norma de seguridad cumplen."],
                [5, "Escribe tus reglas de casa: descargada, bajo llave, munición aparte, nadie más conoce la combinación."]],
@@ -2728,7 +2710,7 @@ const HB_PRACTICA = {
           "Nunca escondida: siempre bajo llave.",
           "Combinación que solo tú conoces.",
           "Cuando hay visitas, revisa que todo esté cerrado."] }] },
-    "Anatomía y tipos, lo básico": { ic: "nut-and-bolt",
+    "Anatomía y tipos, lo básico": {
       sesion: [[5, "Busca un diagrama de las partes de una pistola semiautomática y uno de un revólver."],
                [15, "Haz tarjetas con cada parte y su función; repásalas hasta nombrarlas sin ver."],
                [5, "Escribe en una línea por qué el .22 es el calibre para aprender."]],
@@ -2746,7 +2728,7 @@ const HB_PRACTICA = {
           "Más peso del arma = menos retroceso sentido.",
           "Más calibre = más retroceso.",
           "Aprende primero con poco retroceso."] }] },
-    "Fundamentos de puntería": { ic: "bullseye",
+    "Fundamentos de puntería": {
       sesion: [[5, "Con un instructor en el club, repasa los cinco fundamentos antes de disparar."],
                [20, "Practica postura, empuñadura y alineación de miras con el arma verificada descargada y bajo supervisión; luego tira series lentas de 5 disparos a 5 metros."],
                [5, "Mide el tamaño de tu grupo y anota qué fundamento te falló."]],
@@ -2764,7 +2746,7 @@ const HB_PRACTICA = {
           "Presión lenta y constante, recta hacia atrás.",
           "Deja que el disparo te sorprenda.",
           "Mantén el gatillo atrás un momento después del disparo."] }] },
-    "Tu primera vez en el club": { ic: "ear",
+    "Tu primera vez en el club": {
       sesion: [[5, "Prepara lo que llevarás: identificación, ropa cómoda con cuello cerrado, zapato cerrado, y pregunta si prestan protección auditiva y visual."],
                [30, "Toma la clase con instructor: manejo, carga, descarga y comandos; dispara con .22 a 5 metros."],
                [5, "Anota los comandos del campo y lo que te corrigió el instructor."]],
@@ -2782,7 +2764,7 @@ const HB_PRACTICA = {
           "«Alto el fuego»: dedo fuera, arma apuntando al frente.",
           "«Descargar y mostrar»: abrir y dejar verificar.",
           "Pregunta todo lo que no entiendas antes de empezar."] }] },
-    "Los errores del principiante": { ic: "warning",
+    "Los errores del principiante": {
       sesion: [[5, "Revisa en el blanco de tu última sesión dónde se desviaron los disparos."],
                [20, "Con el instructor, practica en seco bajo supervisión la presión del gatillo con la moneda sobre el cañón, y una serie lenta con un cartucho inerte mezclado."],
                [5, "Anota si el arma se movió con el cartucho inerte: eso te dice si anticipas."]],
@@ -2800,7 +2782,7 @@ const HB_PRACTICA = {
           "Series cortas de cinco, analizando cada una.",
           "Para cuando dejas de concentrarte.",
           "Anota qué corregiste en cada serie."] }] },
-    "La cultura de la seguridad": { ic: "construction",
+    "La cultura de la seguridad": {
       sesion: [[5, "Repasa las cinco conductas de la cultura de seguridad."],
                [15, "En tu próxima visita al club, verifica tú mismo cada arma que te entreguen, aunque el instructor ya lo haya hecho, y observa cómo lo hacen los tiradores con experiencia."],
                [5, "Anota cualquier conducta insegura que hayas visto y cómo la manejó el club."]],
@@ -2818,7 +2800,7 @@ const HB_PRACTICA = {
           "Cero alcohol antes de ir al club.",
           "Si estás muy cansado o tomaste medicamentos, no tires.",
           "Lo mismo al manejar después."] }] },
-    "Tipos de práctica y qué te da cada una": { ic: "notebook",
+    "Tipos de práctica y qué te da cada una": {
       sesion: [[5, "Prepara tu libreta de tiro con columnas: fecha, arma, munición, distancia, tamaño del grupo y qué corregiste."],
                [25, "En el club, haz una sesión estructurada: series lentas de precisión, luego grupos de cinco medidos."],
                [5, "Anota el tamaño de tus grupos y el patrón de desvíos."]],
@@ -2840,7 +2822,7 @@ const HB_PRACTICA = {
           "Las armas de aire comprimido son una buena entrada.",
           "Se practica en interiores y a 10 metros.",
           "Entrena concentración que sirve fuera del club."] }] },
-    "Limpieza y mantenimiento": { ic: "soap",
+    "Limpieza y mantenimiento": {
       sesion: [[5, "Pide en el club una demostración de limpieza con un arma de renta."],
                [20, "Con supervisión: descarga y verifica tres veces, munición fuera; limpia cañón con varilla y parches, cepilla y aplica poco aceite."],
                [5, "Anota el procedimiento en orden para tenerlo a la mano."]],
@@ -2864,7 +2846,7 @@ const HB_PRACTICA = {
           "Una gota en rieles y puntos de fricción.",
           "Limpia el exceso con un trapo.",
           "Nada de aceite dentro del cañón al disparar."] }] },
-    "Ética y responsabilidad": { ic: "folded-hands",
+    "Ética y responsabilidad": {
       sesion: [[5, "Lee de nuevo la jerarquía de la ficha de Defensa personal: evitar, desescalar, escapar."],
                [15, "Escribe tu postura personal sobre tener o no un arma, con las razones y las obligaciones que aceptarías."],
                [5, "Comenta tu postura con alguien de confianza y escucha su opinión."]],
@@ -2882,10 +2864,9 @@ const HB_PRACTICA = {
           "Puedes disfrutar el deporte sin poseer.",
           "Tu seguridad depende más de tus hábitos que de un objeto.",
           "Revisa tu decisión cuando cambie tu vida."] }] },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   pelear: {
-    "La jerarquía: evitar, desescalar, escapar, pelear": { ic: "stop-sign",
+    "La jerarquía: evitar, desescalar, escapar, pelear": {
       sesion: [[5, "Escribe las cuatro etapas en orden y una situación de tu vida diaria donde aplicaría cada una."],
                [15, "Revisa tus rutas y horarios habituales —gym, trabajo, Didi— y anota dos cambios que reducen riesgo: otra calle, otra hora, otro lugar para esperar."],
                [5, "Escribe tu regla ante un asalto con arma: entregar todo y salir."]],
@@ -2903,7 +2884,7 @@ const HB_PRACTICA = {
           "Activa «Encontrar mi dispositivo» y el respaldo.",
           "Ten los teléfonos de tus bancos a mano.",
           "Una cartera señuelo con poco efectivo es una opción."] }] },
-    "Conciencia situacional": { ic: "eyes",
+    "Conciencia situacional": {
       sesion: [[5, "Al salir hoy, guarda el celular y camina en amarillo: atento y relajado."],
                [15, "En cada lugar al que entres, localiza las salidas; en el coche, deja espacio para salir del carril al detenerte."],
                [5, "En la noche, anota cuántas salidas recuerdas de cada lugar donde estuviste."]],
@@ -2921,7 +2902,7 @@ const HB_PRACTICA = {
           "Si algo te incomoda, cambia de lugar sin pena.",
           "No subas a un elevador con alguien que te da mala espina.",
           "Ser descortés es mejor que ser víctima."] }] },
-    "Desescalar con la voz y el cuerpo": { ic: "open-hands",
+    "Desescalar con la voz y el cuerpo": {
       sesion: [[5, "Practica frente al espejo la postura: manos abiertas a la altura del pecho, pies en guardia suave, voz baja."],
                [15, "Ensaya en voz alta tres frases de desescalada: etiquetar la emoción, dar la razón y dar salida."],
                [5, "Escribe tu regla en el tráfico: ventana arriba y seguir."]],
@@ -2943,7 +2924,7 @@ const HB_PRACTICA = {
           "Pregúntate: ¿qué gano si «gano»?",
           "Deja que el otro se quede con la última palabra.",
           "Vete con tu salud y tu futuro intactos."] }] },
-    "Guardia y distancia": { ic: "leg",
+    "Guardia y distancia": {
       sesion: [[5, "Adopta la guardia frente al espejo: pie dominante atrás, rodillas suaves, manos junto a la cara, barbilla metida."],
                [15, "Cinco minutos de desplazamiento adelante, atrás y a los lados sin cruzar los pies, en rondas de un minuto."],
                [5, "Termina con estiramiento de piernas y anota cómo se sintió el equilibrio."]],
@@ -2961,7 +2942,7 @@ const HB_PRACTICA = {
           "Rondas de 2 minutos con 1 de descanso.",
           "Salta sobre las puntas, no sobre los talones.",
           "Varía: un pie, dos pies, alternando."] }] },
-    "Los pocos golpes que valen la pena": { ic: "boxing-glove",
+    "Los pocos golpes que valen la pena": {
       sesion: [[5, "Calienta hombros, cadera y muñecas."],
                [20, "En costal o sombra, rondas de 2 minutos: jab, recto de atrás con giro de cadera, y combinación jab-recto; luego rodillazos al costal."],
                [5, "Estira y anota qué golpe sentiste con más técnica."]],
@@ -2979,7 +2960,7 @@ const HB_PRACTICA = {
           "La mano regresa a la cara tan rápido como salió.",
           "La otra mano no se mueve de su lugar.",
           "Practica frente al espejo para verlo."] }] },
-    "Salir de un agarre": { ic: "handshake",
+    "Salir de un agarre": {
       sesion: [[5, "Busca una clase de prueba o un compañero de entrenamiento para practicar con supervisión."],
                [20, "Con un compañero, practica despacio la salida de muñeca por el pulgar, la de abrazo por detrás y la de agarre de ropa, diez veces cada una."],
                [5, "Repite cada una más rápido y anota cuál te cuesta más."]],
@@ -2997,7 +2978,7 @@ const HB_PRACTICA = {
           "Empieza al 30 % de velocidad.",
           "Comunica cuando algo duele: se suelta de inmediato.",
           "Sube la resistencia solo cuando salga limpio."] }] },
-    "Qué disciplina entrenar": { ic: "martial-arts-uniform",
+    "Qué disciplina entrenar": {
       sesion: [[5, "Busca tres gimnasios de boxeo, muay thai o jiu-jitsu a menos de 15 minutos de tu casa o trabajo."],
                [15, "Compara horarios con tu rutina, pregunta por clase de prueba y anota el costo mensual."],
                [5, "Agenda una clase de prueba esta semana en el que mejor encaje."]],
@@ -3015,7 +2996,7 @@ const HB_PRACTICA = {
           "Compromete un mínimo de tres meses.",
           "Dos clases por semana son suficientes.",
           "Revisa a los tres meses si sigue encajando."] }] },
-    "El sparring es la parte que no se puede saltar": { ic: "person-fencing",
+    "El sparring es la parte que no se puede saltar": {
       sesion: [[5, "Pregunta a tu instructor cuándo estás listo para tu primer sparring ligero y qué protección necesitas."],
                [20, "Haz tu primer sparring técnico al 30 % de intensidad: rondas de dos minutos con un compañero experimentado."],
                [5, "Anota qué pasó con tu respiración, tu guardia y tu visión cuando recibiste un golpe."]],
@@ -3033,7 +3014,7 @@ const HB_PRACTICA = {
           "Mantén los ojos abiertos detrás de la guardia.",
           "Exhala al recibir un golpe al cuerpo.",
           "Si te abrumas, pide tiempo y respira."] }] },
-    "La condición física decide la pelea": { ic: "running-shoe",
+    "La condición física decide la pelea": {
       sesion: [[5, "Calienta 5 minutos de trote suave o cuerda."],
                [15, "Intervalos: 10 rondas de 30 segundos al máximo (golpes al costal, burpees o sprints) con 30 segundos de descanso."],
                [5, "Ejercicios de cuello y core: planchas y puente de cuello suave; estira."]],
@@ -3051,7 +3032,7 @@ const HB_PRACTICA = {
           "Isométricos de cuello con la mano, suaves.",
           "Planchas frontales y laterales.",
           "Rotaciones con banda o polea para el tronco."] }] },
-    "La ley y las consecuencias": { ic: "balance-scale",
+    "La ley y las consecuencias": {
       sesion: [[5, "Lee qué dice el Código Penal de tu entidad sobre la legítima defensa."],
                [15, "Escribe tres ejemplos: uno que sí es legítima defensa, uno que se pasa de la proporción y uno de persecución."],
                [5, "Guarda en tu celular los pasos a seguir después de un incidente: 911, quedarte, testigos, cámaras, reporte en Didi."]],
@@ -3076,7 +3057,7 @@ const HB_PRACTICA = {
           "Instala una dashcam que grabe adelante y la cabina.",
           "Guarda el video en cuanto pase algo.",
           "Pide a los comercios el video el mismo día."] }] },
-    "Tu plan de 12 semanas": { ic: "spiral-calendar",
+    "Tu plan de 12 semanas": {
       sesion: [[5, "Pon en tu calendario las cinco etapas del plan con fechas concretas."],
                [15, "Haz hoy lo de las semanas 1 y 2: elige tus rutas, guarda el celular al caminar y localiza salidas."],
                [5, "Agenda la búsqueda de gimnasio para la semana 3."]],
@@ -3094,10 +3075,9 @@ const HB_PRACTICA = {
           "Rondas completas sin bajar la guardia.",
           "Intervalos completados.",
           "Situaciones evitadas o desescaladas."] }] },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   decirno: {
-    "Por qué cuesta tanto": { ic: "anxious-face-with-sweat",
+    "Por qué cuesta tanto": {
       sesion: [[5, "Recuerda las últimas tres veces que dijiste que sí sin querer."],
                [15, "Para cada una, escribe qué miedo pesó más: conflicto, perder la relación o perder la oportunidad, y qué te costó en tiempo o dinero."],
                [5, "Escribe cuál es tu miedo principal y qué tarea te toca según el paso."]],
@@ -3115,7 +3095,7 @@ const HB_PRACTICA = {
           "Antes de aceptar: ¿a qué le estoy quitando tiempo?",
           "Traduce cada sí a horas o pesos.",
           "Tus metas también merecen tu sí."] }] },
-    "La fórmula de tres partes": { ic: "memo",
+    "La fórmula de tres partes": {
       sesion: [[5, "Escribe tu versión de la fórmula: agradecimiento, negativa clara y cierre."],
                [10, "Dila en voz alta diez veces hasta que salga natural, sin «es que» ni explicaciones."],
                [5, "Guárdala en una nota del celular y úsala en la siguiente petición que no quieras aceptar."]],
@@ -3137,7 +3117,7 @@ const HB_PRACTICA = {
           "Firme en el qué, amable en el cómo.",
           "Mira a los ojos al decirlo.",
           "Agradece de verdad que pensaron en ti."] }] },
-    "Di el \"no\" al principio, no al final": { ic: "up-arrow",
+    "Di el \"no\" al principio, no al final": {
       sesion: [[5, "Busca un mensaje reciente donde dijiste que no con rodeos."],
                [10, "Reescríbelo con la negativa en la primera línea y el contexto después."],
                [5, "Aplica el formato en el próximo correo o mensaje de negativa."]],
@@ -3155,7 +3135,7 @@ const HB_PRACTICA = {
           "«Leider kann ich das nicht übernehmen» = lamentablemente no puedo encargarme.",
           "La cortesía va en el saludo y la despedida, no en rodeos.",
           "Los rodeos pueden parecer falta de claridad."] }] },
-    "Las tres muletillas que convierten un no en un quizá": { ic: "exclamation-question-mark",
+    "Las tres muletillas que convierten un no en un quizá": {
       sesion: [[5, "Escribe las tres muletillas en un papel y pégalo donde lo veas."],
                [15, "Durante el día, cada vez que vayas a decir «por ahora», «déjame ver» o «tal vez después» sin intención real, cámbialo por un no claro."],
                [5, "En la noche, cuenta cuántas veces lo lograste."]],
@@ -3173,7 +3153,7 @@ const HB_PRACTICA = {
           "Pon fecha o condición concreta.",
           "Cumple si te vuelven a buscar.",
           "Si no piensas hacerlo nunca, no lo ofrezcas."] }] },
-    "Practica donde no cuesta nada": { ic: "seedling",
+    "Practica donde no cuesta nada": {
       sesion: [[5, "Practica en voz alta, solo, tu frase de negativa tres veces."],
                [15, "Di un no limpio en una situación de bajo riesgo: un vendedor, una encuesta, una promoción, una invitación sin importancia."],
                [5, "Anota en tu registro la situación y si cediste o no."]],
@@ -3195,7 +3175,7 @@ const HB_PRACTICA = {
           "Anota en el momento o esa misma noche.",
           "Incluye las veces que cediste, sin juzgarte.",
           "Revisa el registro cada domingo."] }] },
-    "Encuentra tus dos o tres puntos débiles": { ic: "magnifying-glass-tilted-left",
+    "Encuentra tus dos o tres puntos débiles": {
       sesion: [[5, "Revisa tu registro de las últimas dos semanas."],
                [15, "Agrupa las veces que cediste por persona, tipo de petición y hora del día; identifica tus dos o tres puntos débiles."],
                [5, "Escribe la frase preparada para cada punto débil."]],
@@ -3213,7 +3193,7 @@ const HB_PRACTICA = {
           "Suma tus gastos pequeños de un mes en Finanzas.",
           "Define un tope mensual para cooperaciones y salidas.",
           "Cuando se llena, la respuesta es no."] }] },
-    "La frase que compra tiempo": { ic: "hourglass-not-done",
+    "La frase que compra tiempo": {
       sesion: [[5, "Escribe tu frase para comprar tiempo con fecha: «déjame revisarlo y te confirmo mañana a las ______»."],
                [10, "Úsala ante la siguiente petición inesperada y no respondas en el momento."],
                [5, "Al día siguiente, contesta a la hora prometida, aunque sea un no."]],
@@ -3231,7 +3211,7 @@ const HB_PRACTICA = {
           "Pon un recordatorio al decir la frase.",
           "Contesta antes de que te pregunten.",
           "Un no a tiempo es mejor que un silencio."] }] },
-    "Cuando insisten: el disco rayado": { ic: "optical-disk",
+    "Cuando insisten: el disco rayado": {
       sesion: [[5, "Escribe tu frase de disco rayado: «Te entiendo, y aun así no voy a poder»."],
                [15, "Practica con alguien de confianza que insista con argumentos distintos; tú repites la misma frase con calma, sin nuevas razones."],
                [5, "Anota cuántas veces te sentiste tentado a explicar y no lo hiciste."]],
@@ -3249,7 +3229,7 @@ const HB_PRACTICA = {
           "Dilo con calma, no con enojo.",
           "Pregunta, no acuses.",
           "Si sigue, termina la conversación con amabilidad."] }] },
-    "Separa el no a la persona del no a la petición": { ic: "red-heart",
+    "Separa el no a la persona del no a la petición": {
       sesion: [[5, "Piensa en alguien querido a quien te cuesta decir que no."],
                [15, "Escribe tu negativa con la estructura: afecto explícito a la persona + no concreto a la petición + alternativa si existe."],
                [5, "Úsala la próxima vez que esa persona te pida algo que no quieres."]],
@@ -3267,7 +3247,7 @@ const HB_PRACTICA = {
           "Ofrece solo lo que de verdad quieres dar.",
           "Que la alternativa sea concreta.",
           "No ofrezcas para calmar tu culpa."] }] },
-    "Con la familia — el caso más difícil en México": { ic: "house",
+    "Con la familia — el caso más difícil en México": {
       sesion: [[5, "Revisa en Finanzas tus compromisos del mes: deudas, ahorro, metas; anótalos como «dinero ya comprometido»."],
                [15, "Escribe tu respuesta a la petición familiar más probable usando el compromiso concreto y una alternativa que sí puedes dar."],
                [5, "Decide de antemano tu tope de apoyo familiar del mes, si lo hay."]],
@@ -3290,7 +3270,7 @@ const HB_PRACTICA = {
           "Comparte tu meta: «estoy ahorrando para la maestría».",
           "Muéstrales tus fechas si ayuda.",
           "Celebra con ellos cuando la cumplas."] }] },
-    "Decir que no en el trabajo": { ic: "briefcase",
+    "Decir que no en el trabajo": {
       sesion: [[5, "Haz la lista de tus tareas activas en el trabajo con su prioridad y fecha."],
                [15, "Ante la siguiente petición extra, responde con la frase de priorización y deja que tu jefe decida qué se mueve."],
                [5, "Anota la decisión que tomó y cómo quedó tu carga."]],
@@ -3312,7 +3292,7 @@ const HB_PRACTICA = {
           "Junta ejemplos concretos con fechas.",
           "Propón: rotación, otro responsable o ajuste de rol.",
           "Hazlo en una reunión, no en un pasillo."] }] },
-    "La prueba del \"sí absoluto\"": { ic: "thumbs-up",
+    "La prueba del \"sí absoluto\"": {
       sesion: [[5, "Piensa en una invitación o compromiso pendiente de responder."],
                [10, "Aplica las tres pruebas: ¿es un «¡claro que sí!»?, ¿qué le dirías a un amigo?, ¿sientes alivio o peso al imaginarlo mañana?"],
                [5, "Responde según el resultado, hoy."]],
@@ -3330,7 +3310,7 @@ const HB_PRACTICA = {
           "Pregúntate en tercera persona.",
           "Imagina que se lo cuentas a un amigo.",
           "Escucha tu propio consejo."] }] },
-    "Decirte que no a ti mismo": { ic: "mobile-phone-off",
+    "Decirte que no a ti mismo": {
       sesion: [[5, "Escribe tus tres «sí» impulsivos más frecuentes: scroll, compras, proyectos nuevos."],
                [15, "Para cada uno, decide una regla de antemano y un obstáculo: app con límite, tarjeta fuera de las apps, lista de proyectos en espera."],
                [5, "Activa hoy al menos uno de los obstáculos."]],
@@ -3348,7 +3328,7 @@ const HB_PRACTICA = {
           "Automatiza el ahorro el día de pago.",
           "Bloquea apps en tus horas de estudio.",
           "Sal sin tarjeta de crédito si vas de paseo."] }] },
-    "Mide el resultado, no la sensación": { ic: "bar-chart",
+    "Mide el resultado, no la sensación": {
       sesion: [[5, "Abre tu registro de negativas y Finanzas del mes."],
                [15, "Cuenta tus no del mes, revisa gastos fuera de plan y compara tus bloques de gym y estudio cumplidos contra el mes pasado."],
                [5, "Escribe tus tres números del mes y el objetivo del siguiente."]],
@@ -3373,11 +3353,9 @@ const HB_PRACTICA = {
           "Marca cada no en tu registro como logro.",
           "Revisa la lista cuando dudes de tu avance.",
           "Comparte con alguien de confianza tu progreso."] }] },
-    "📚 Qué leer": { ic: "books" },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   dinero: {
-    "Por qué las tres a la vez": { ic: "money-bag",
+    "Por qué las tres a la vez": {
       sesion: [[5, "Escribe las tres ramas —generar, administrar, hacer crecer— y califícate del 1 al 10 en cada una."],
                [15, "Para la rama con menor calificación, escribe una acción concreta para este mes."],
                [5, "Agenda esa acción en tu calendario con fecha."]],
@@ -3395,7 +3373,7 @@ const HB_PRACTICA = {
           "No inviertas antes de tener fondo de emergencia.",
           "La deuda cara va antes que la inversión.",
           "Cada etapa sostiene a la siguiente."] }] },
-    "Las tres formas de generar (y su techo)": { ic: "chart-increasing",
+    "Las tres formas de generar (y su techo)": {
       sesion: [[5, "Lista tus fuentes de ingreso actuales y clasifícalas: tiempo, resultado o activo."],
                [20, "Calcula cuánto te deja de verdad una hora de Didi: ingreso bruto menos gasolina o carga, mantenimiento y desgaste estimado."],
                [5, "Escribe el siguiente paso de tu Plan Maestro para pasar de tiempo a resultado."]],
@@ -3420,7 +3398,7 @@ const HB_PRACTICA = {
           "Define el alcance exacto y lo que no incluye.",
           "Precio fijo publicado.",
           "Documenta el proceso para repetirlo igual."] }] },
-    "Sube el precio antes de subir las horas": { ic: "up-right-arrow",
+    "Sube el precio antes de subir las horas": {
       sesion: [[5, "Escribe tu precio actual por proyecto o servicio y cuánto tiempo te toma."],
                [15, "Investiga precios de mercado de servicios parecidos y define tu nuevo precio para clientes nuevos, más tu política de anticipo."],
                [5, "Escríbelo en una tarifa de una página."]],
@@ -3445,7 +3423,7 @@ const HB_PRACTICA = {
           "«Para ese presupuesto puedo hacer ______».",
           "Nunca bajes sin quitar algo.",
           "Descuentos solo por pago anticipado o volumen."] }] },
-    "Registrar: lo que no se mide no se controla": { ic: "ledger",
+    "Registrar: lo que no se mide no se controla": {
       sesion: [[5, "Abre Finanzas y revisa los gastos de la última semana."],
                [15, "Registra lo que falte, categoriza todo (fijo, variable, deuda, ahorro) y anota los dos números de memoria: gasto mínimo mensual y fondo de emergencia."],
                [5, "Pon un recordatorio semanal fijo para la revisión."]],
@@ -3463,7 +3441,7 @@ const HB_PRACTICA = {
           "Suma tus gastos menores a $100 de un mes.",
           "Multiplícalo por doce.",
           "Elige cuáles conservar y cuáles cortar."] }] },
-    "Págate a ti primero": { ic: "coin",
+    "Págate a ti primero": {
       sesion: [[5, "Revisa el día en que cae tu sueldo y en qué cuentas lo recibes."],
                [15, "Programa una transferencia automática ese mismo día: un porcentaje al ahorro y el pago de deuda, antes de cualquier gasto."],
                [5, "Escribe tu regla para el próximo aumento: la mitad va directo al ahorro."]],
@@ -3481,7 +3459,7 @@ const HB_PRACTICA = {
           "Una cuenta para gastos del mes.",
           "Otra para emergencias.",
           "Otra para metas con nombre y fecha."] }] },
-    "El fondo de emergencia": { ic: "umbrella",
+    "El fondo de emergencia": {
       sesion: [[5, "Calcula tu gasto mínimo mensual real con los datos de Finanzas."],
                [15, "Multiplícalo por 3 y por 6 para tus dos metas; revisa cuánto llevas y en qué instrumento está."],
                [5, "Define cuánto aportarás al mes hasta completar la primera meta."]],
@@ -3499,7 +3477,7 @@ const HB_PRACTICA = {
           "Investiga el monto vigente que pide la embajada.",
           "Calcula tu gasto mínimo allá.",
           "Separa ese ahorro del fondo de emergencia de México."] }] },
-    "La deuda cara primero, y por qué": { ic: "credit-card",
+    "La deuda cara primero, y por qué": {
       sesion: [[5, "Lista todas tus deudas con su saldo, tasa anual y pago mínimo."],
                [15, "Ordénalas por tasa (avalancha) y decide cuánto excedente mensual va a la primera; calcula en qué mes queda liquidada."],
                [5, "Programa el pago del excedente para el día de pago."]],
@@ -3523,7 +3501,7 @@ const HB_PRACTICA = {
           "Revisa la leyenda «si solo pagas el mínimo…».",
           "Paga siempre más del mínimo.",
           "El pago para no generar intereses es la meta en tarjetas sin deuda."] }] },
-    "Los MSI no son dinero gratis": { ic: "receipt",
+    "Los MSI no son dinero gratis": {
       sesion: [[5, "Suma en Finanzas todos tus meses sin intereses activos y cuánto pagas al mes por ellos."],
                [15, "Calcula qué porcentaje de tu excedente mensual se va en MSI y hasta qué mes."],
                [5, "Escribe tu regla para futuros MSI: solo si el total ya está apartado."]],
@@ -3541,7 +3519,7 @@ const HB_PRACTICA = {
           "Aparta el total el primer mes.",
           "Ponlo en CETES y paga mes a mes.",
           "Solo para compras que ya estaban en tu plan."] }] },
-    "Cuándo empezar a invertir (y en qué orden)": { ic: "ladder",
+    "Cuándo empezar a invertir (y en qué orden)": {
       sesion: [[5, "Ubica en cuál de los cuatro peldaños estás hoy."],
                [15, "Escribe qué te falta para pasar al siguiente y en qué fecha estimas lograrlo."],
                [5, "Elige un tema de inversión para aprender este mes mientras subes de peldaño."]],
@@ -3559,7 +3537,7 @@ const HB_PRACTICA = {
           "Un concepto por semana.",
           "Fuentes sin conflicto de interés: Banxico, CONDUSEF.",
           "Practica con montos pequeños antes de los grandes."] }] },
-    "Interés compuesto: el número que hay que interiorizar": { ic: "seedling",
+    "Interés compuesto: el número que hay que interiorizar": {
       sesion: [[5, "Abre una calculadora de interés compuesto (o una hoja de cálculo)."],
                [15, "Calcula tres escenarios con tu aportación posible: 10, 20 y 30 años; y uno de tu deuda más cara creciendo si no la pagas."],
                [5, "Anota cuánto del resultado es aportación y cuánto rendimiento."]],
@@ -3577,7 +3555,7 @@ const HB_PRACTICA = {
           "Empieza aunque sea con poco.",
           "Aumenta la aportación cuando suba tu ingreso.",
           "No interrumpas: los años perdidos no se recuperan."] }] },
-    "Empieza aburrido y barato": { ic: "turtle",
+    "Empieza aburrido y barato": {
       sesion: [[5, "Revisa en tu cuenta de inversión qué instrumentos tienes y su comisión anual."],
                [15, "Escribe tu asignación objetivo en porcentajes (por ejemplo, deuda y renta variable) y el monto fijo mensual de aportación."],
                [5, "Programa la aportación automática o un recordatorio el mismo día cada mes."]],
@@ -3602,7 +3580,7 @@ const HB_PRACTICA = {
           "Una vez al año, misma fecha.",
           "O cuando una parte se desvíe más de 5 puntos.",
           "Usa las aportaciones nuevas para rebalancear sin vender."] }] },
-    "Conoce los instrumentos mexicanos": { ic: "bank",
+    "Conoce los instrumentos mexicanos": {
       sesion: [[5, "Entra a cetesdirecto y revisa las tasas de CETES a 28, 91, 182 y 364 días."],
                [15, "Haz una tabla con cada instrumento: plazo, riesgo y cómo paga impuestos; revisa en qué SIEFORE está tu Afore y su comisión."],
                [5, "Anota qué instrumento usarías para cada una de tus metas."]],
@@ -3620,7 +3598,7 @@ const HB_PRACTICA = {
           "Tu meta en Alemania será en euros.",
           "Diversificar monedas reduce un riesgo.",
           "No especules con el tipo de cambio."] }] },
-    "Impuestos: lo que casi nadie te dice": { ic: "classical-building",
+    "Impuestos: lo que casi nadie te dice": {
       sesion: [[5, "Revisa en el portal del SAT tu régimen fiscal actual y tus obligaciones."],
                [15, "Calcula cuánto de tus ingresos de Didi o freelance del último mes correspondería a impuestos y abre una cuenta separada para apartarlo."],
                [5, "Agenda una consulta con un contador si vas a facturar."]],
@@ -3638,7 +3616,7 @@ const HB_PRACTICA = {
           "Pide factura de tus gastos médicos y de educación.",
           "Revisa tu declaración precargada en el SAT.",
           "Presenta en abril aunque te salga saldo a favor."] }] },
-    "Protegerte de fraudes": { ic: "police-car-light",
+    "Protegerte de fraudes": {
       sesion: [[5, "Entra al buscador de la CONDUSEF (SIPRES) y al padrón de la CNBV y aprende a verificar una institución."],
                [15, "Verifica dos instituciones donde tienes o piensas tener dinero."],
                [5, "Escribe tu regla de las 24 horas y las cinco señales de alarma en una nota."]],
@@ -3664,7 +3642,7 @@ const HB_PRACTICA = {
           "Usa solo plataformas reguladas y conocidas.",
           "Prueba retirar una cantidad pequeña antes de meter más.",
           "Desconfía de «asesores» que te contactan por redes."] }] },
-    "El error que deshace todo": { ic: "collision",
+    "El error que deshace todo": {
       sesion: [[5, "Revisa los últimos seis meses: ¿sacaste dinero de inversiones para gastos o dejaste de aportar algún mes?"],
                [15, "Si pasó, identifica por qué y qué parte del sistema falló: fondo de emergencia, presupuesto o gasto imprevisto."],
                [5, "Escribe la regla que lo evita la próxima vez."]],
@@ -3682,7 +3660,7 @@ const HB_PRACTICA = {
           "Baja el monto, no lo detengas.",
           "Retoma el monto normal en cuanto puedas.",
           "El hábito vale más que la cantidad."] }] },
-    "Tu revisión mensual, en 20 minutos": { ic: "spiral-calendar",
+    "Tu revisión mensual, en 20 minutos": {
       sesion: [[5, "Agenda tu revisión mensual: mismo día cada mes, con Finanzas abierta."],
                [10, "Contesta las cinco preguntas del paso con los datos reales del mes."],
                [5, "Cancela o ajusta al menos un gasto fijo que ya no uses y anota tu decisión del mes."]],
@@ -3708,11 +3686,9 @@ const HB_PRACTICA = {
           "Compara el avance con el plan del mes.",
           "Si vas atrasado, ajusta ahora.",
           "Mira tu meta en Mis Metas para verla moverse."] }] },
-    "📚 Qué leer, en qué orden": { ic: "books" },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   manejar: {
-    "Por qué esto te importa más que a otros": { ic: "automobile",
+    "Por qué esto te importa más que a otros": {
       sesion: [[5, "Revisa en el tablero del BYD tu consumo promedio (kWh/100 km) y tus kilómetros del último mes."],
                [15, "Calcula cuánto te cuesta al mes la energía y el mantenimiento, y cuántas horas manejas a la semana entre trabajo y Didi."],
                [5, "Anota tu consumo actual como línea base para comparar en un mes."]],
@@ -3730,7 +3706,7 @@ const HB_PRACTICA = {
           "Manejo suave = menos desgaste.",
           "Mantenimiento preventivo = menos días parado.",
           "Un buen seguro es parte del costo de trabajar."] }] },
-    "Manejo defensivo: las reglas que sí evitan choques": { ic: "shield",
+    "Manejo defensivo: las reglas que sí evitan choques": {
       sesion: [[5, "Antes de arrancar, repasa las cinco reglas: 3 segundos, mirar lejos, vía de escape, revisar con la cabeza y asumir que no te vieron."],
                [30, "En tu próximo trayecto o turno, aplica la regla de los 3 segundos y nombra en voz baja tu vía de escape en cada parada."],
                [5, "Al terminar, anota cuántas veces tuviste que corregir la distancia."]],
@@ -3748,7 +3724,7 @@ const HB_PRACTICA = {
           "Revisa espejos cada 5 a 8 segundos.",
           "Mira lejos y luego cerca, no solo cerca.",
           "En intersecciones, mira a ambos lados aunque tengas verde."] }] },
-    "Manejar estándar, paso a paso": { ic: "gear",
+    "Manejar estándar, paso a paso": {
       sesion: [[5, "Consigue un coche estándar prestado o renta una clase en una escuela de manejo, en un lugar amplio y vacío."],
                [40, "Practica en plano: encontrar el punto de mordida, arrancar sin acelerador, cambiar a segunda y tercera, frenar y parar; luego arranques en pendiente suave con freno de mano."],
                [10, "Anota cuántas veces se apagó el motor y en qué maniobra."]],
@@ -3766,7 +3742,7 @@ const HB_PRACTICA = {
           "Domina estándar antes de irte.",
           "Investiga el canje de licencia según tu caso.",
           "Una licencia «solo automático» limita tus opciones allá."] }] },
-    "Las diferencias del eléctrico": { ic: "battery",
+    "Las diferencias del eléctrico": {
       sesion: [[5, "Revisa en el BYD el modo de frenado regenerativo y el consumo del último viaje."],
                [20, "Haz un trayecto conocido anticipando: suelta el acelerador temprano, velocidad constante y clima moderado; anota el consumo."],
                [5, "Compara con tu consumo habitual y configura el límite de carga diaria al 80 %."]],
@@ -3784,7 +3760,7 @@ const HB_PRACTICA = {
           "Preclimatiza mientras está conectado.",
           "Usa ventilación antes que aire acondicionado al máximo.",
           "Planea la autonomía con margen en clima extremo."] }] },
-    "Manejar para gastar menos": { ic: "fuel-pump",
+    "Manejar para gastar menos": {
       sesion: [[5, "Revisa la presión de las cuatro llantas y la de refacción y ajústala a la indicada en la puerta."],
                [20, "Durante una semana aplica manejo suave y anticipado; con Didi, planea zonas y horarios para reducir kilómetros vacíos."],
                [5, "Al final de la semana compara consumo y kilómetros vacíos contra la semana anterior."]],
@@ -3802,7 +3778,7 @@ const HB_PRACTICA = {
           "Conoce las horas y zonas de más demanda.",
           "Espera estacionado en lugar de dar vueltas.",
           "Mide tu porcentaje de kilómetros con pasajero."] }] },
-    "Lluvia, noche y niebla": { ic: "cloud-with-rain",
+    "Lluvia, noche y niebla": {
       sesion: [[5, "Revisa limpiaparabrisas, luces y profundidad del dibujo de tus llantas."],
                [15, "Repasa en voz alta qué harás ante aquaplaning, niebla y deslumbramiento; ajusta la altura de tus faros si es posible."],
                [5, "Anota en tu celular la regla: primeros 15 minutos de lluvia, distancia doble."]],
@@ -3820,7 +3796,7 @@ const HB_PRACTICA = {
           "Revisa en el manual la profundidad máxima de vadeo.",
           "Ante inundación, busca otra ruta.",
           "Si el agua entra al coche, llévalo a revisar."] }] },
-    "Derrapes y emergencias": { ic: "collision",
+    "Derrapes y emergencias": {
       sesion: [[5, "Repasa las respuestas: derrape trasero (mirar y contravolante), frontal (soltar y enderezar), ABS (pisar a fondo y girar)."],
                [20, "En un estacionamiento vacío y seguro, a baja velocidad, haz una frenada fuerte para sentir el ABS sin soltar el pedal."],
                [5, "Investiga un curso de manejo de emergencia o pista de práctica cerca de ti."]],
@@ -3838,7 +3814,7 @@ const HB_PRACTICA = {
           "Busca escuelas de manejo defensivo o avanzado.",
           "Practica solo en lugares cerrados y seguros.",
           "Nunca practiques derrapes en la calle."] }] },
-    "Otros vehículos": { ic: "motorcycle",
+    "Otros vehículos": {
       sesion: [[5, "Elige un vehículo distinto que quieras aprender: moto, camioneta, remolque o estándar en pendiente."],
                [20, "Investiga dónde aprenderlo con instructor, cuánto cuesta y qué equipo necesitas."],
                [5, "Lee las tres reglas de manejo en Alemania y anota cuáles son nuevas para ti."]],
@@ -3856,7 +3832,7 @@ const HB_PRACTICA = {
           "Prioridad a la derecha si no hay señal.",
           "Izquierda de la Autobahn solo para rebasar.",
           "Revisa la Umweltplakette antes de entrar a una ciudad."] }] },
-    "Qué revisar y cada cuándo": { ic: "wrench",
+    "Qué revisar y cada cuándo": {
       sesion: [[5, "Haz la revisión quincenal: presión de llantas (con refacción) y niveles."],
                [15, "Haz la mensual: dibujo de llantas con la moneda, luces y limpiaparabrisas; revisa que el kit de emergencia esté completo."],
                [5, "Pon recordatorios en el calendario para las revisiones quincenal, mensual y anual."]],
@@ -3880,7 +3856,7 @@ const HB_PRACTICA = {
           "Que grabe en bucle y guarde eventos por impacto.",
           "Revisa que la tarjeta de memoria funcione.",
           "Avisa a los pasajeros si graba la cabina."] }] },
-    "Si tienes un accidente": { ic: "ambulance",
+    "Si tienes un accidente": {
       sesion: [[5, "Guarda en tu celular el número de tu aseguradora, tu número de póliza y el procedimiento de Didi para incidentes."],
                [15, "Escribe la lista del paso en una nota de acceso rápido y revisa que tus triángulos y chaleco estén en el coche."],
                [5, "Toma una foto de tu póliza y tarjeta de circulación y guárdala en el celular."]],
@@ -3905,10 +3881,9 @@ const HB_PRACTICA = {
           "Primero tu seguridad.",
           "No muevas al herido sin necesidad.",
           "Si sabes, aplica primeros auxilios básicos mientras llega la ambulancia."] }] },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   recuperar: {
-    "Por qué esto es una habilidad": { ic: "battery",
+    "Por qué esto es una habilidad": {
       sesion: [[5, "Anota a qué hora te dormiste y despertaste los últimos siete días."],
                [15, "Calcula tu promedio de horas y compáralo con tus semanas de mejor y peor rendimiento en el gym y el estudio."],
                [5, "Escribe una sola decisión de descanso para esta semana."]],
@@ -3926,7 +3901,7 @@ const HB_PRACTICA = {
           "No manejes Didi con sueño acumulado.",
           "La somnolencia al volante es tan peligrosa como el alcohol.",
           "Si cabeceas, para y descansa."] }] },
-    "Tu dato real y qué significa": { ic: "bar-chart",
+    "Tu dato real y qué significa": {
       sesion: [[5, "Revisa tus horas reales de sueño de la última semana y compáralas con las de tu rutina ({{horasSueno}})."],
                [15, "Identifica qué noches te desviaste y qué lo causó: trabajo, Didi, celular, estudio."],
                [5, "Pon una alarma para cerrar la compu a la hora que te permite apagar la luz a las {{horaDormir}}."]],
@@ -3944,7 +3919,7 @@ const HB_PRACTICA = {
           "Mira horas y regularidad, no las fases exactas.",
           "Combina el dato con cómo te sientes.",
           "No revises la app a media noche."] }] },
-    "Las cuatro palancas del sueño, en orden de impacto": { ic: "bed",
+    "Las cuatro palancas del sueño, en orden de impacto": {
       sesion: [[5, "Revisa tu cuarto: temperatura, luz de la calle, ruido y aparatos encendidos."],
                [15, "Haz un cambio en cada palanca: hora fija incluso el fin de semana, cuarto más oscuro y fresco, celular fuera 30 minutos antes, y sol en la mañana."],
                [5, "Anota cómo dormiste las siguientes tres noches."]],
@@ -3962,7 +3937,7 @@ const HB_PRACTICA = {
           "Unos días antes, duerme y despierta más temprano.",
           "Al llegar, sol en la mañana y nada de siestas largas.",
           "Cuenta con unos días de adaptación antes de algo importante."] }] },
-    "Cafeína: la cuenta que casi nadie hace": { ic: "hot-beverage",
+    "Cafeína: la cuenta que casi nadie hace": {
       sesion: [[5, "Anota todo lo que tomas con cafeína en un día normal y a qué hora: café, té, refresco, pre-entreno."],
                [15, "Fija tu hora límite (2 o 3 pm) y reemplaza lo que tomas después por opciones sin cafeína."],
                [5, "Durante una semana, anota tu calidad de sueño para comparar."]],
@@ -3980,7 +3955,7 @@ const HB_PRACTICA = {
           "Si entrenas de noche, usa pre-entreno sin cafeína.",
           "Revisa la etiqueta: algunos tienen mucha.",
           "Entrenar bien dormido rinde más que con estimulante."] }] },
-    "Alcohol: no es un somnífero": { ic: "prohibited",
+    "Alcohol: no es un somnífero": {
       sesion: [[5, "Revisa en tu registro de hábitos tu meta de alcohol y cómo vas."],
                [15, "Si alguna vez tomaste antes de dormir, compara cómo dormiste y cómo entrenaste al día siguiente contra un día sin alcohol."],
                [5, "Escribe la regla que sostiene tu meta: qué pides en una reunión en vez de alcohol."]],
@@ -3998,7 +3973,7 @@ const HB_PRACTICA = {
           "Ten tu bebida de cabecera: agua mineral con limón, un mocktail.",
           "Si preguntan: «ahorita no estoy tomando».",
           "Sé el que maneja: es la excusa perfecta."] }] },
-    "El ritual antes de dormir": { ic: "candle",
+    "El ritual antes de dormir": {
       sesion: [[5, "Escribe tu ritual de 15 a 20 minutos en orden: luces bajas, celular fuera, pendientes al papel, estiramiento o meditación."],
                [15, "Hazlo hoy completo, a la misma hora, y deja el celular cargando fuera del cuarto."],
                [5, "Mañana, anota cuánto tardaste en dormirte."]],
@@ -4022,7 +3997,7 @@ const HB_PRACTICA = {
           "Inhala 4 segundos, exhala 6 a 8.",
           "Cinco a diez minutos en la cama.",
           "Si la mente se va, vuelve a contar."] }] },
-    "La siesta, bien hecha": { ic: "zzz",
+    "La siesta, bien hecha": {
       sesion: [[5, "Elige un día de esta semana con un hueco antes de las 4 pm."],
                [20, "Toma una siesta de 20 minutos con alarma; si quieres probar el café-siesta, toma el café justo antes."],
                [5, "Anota cómo te sentiste al despertar y cómo dormiste esa noche."]],
@@ -4040,7 +4015,7 @@ const HB_PRACTICA = {
           "Con insomnio, sin siestas.",
           "Nunca después de las 4 pm.",
           "Si la necesitas a diario, revisa tus noches."] }] },
-    "Descanso activo: no todo es quedarte quieto": { ic: "person-walking",
+    "Descanso activo: no todo es quedarte quieto": {
       sesion: [[5, "Elige una actividad de descanso activo: caminar sin celular, estirar o nadar suave."],
                [20, "Hazla a intensidad baja: deberías poder conversar sin jadear."],
                [5, "Compara cómo te sientes contra una tarde de scroll y anótalo."]],
@@ -4058,7 +4033,7 @@ const HB_PRACTICA = {
           "Pon límite de tiempo a las apps.",
           "Sustituye un rato de scroll por una caminata.",
           "Fíjate cómo te sientes después de cada uno."] }] },
-    "Al menos un día completo sin gym": { ic: "couch-and-lamp",
+    "Al menos un día completo sin gym": {
       sesion: [[5, "Revisa tu semana y elige tu día sin gym, que no sea el más cargado de trabajo y Didi."],
                [15, "Márcalo en el calendario como descanso y planea algo ligero: caminar, estirar, una actividad que disfrutes."],
                [5, "Anota tus cargas de los principales ejercicios para ver si suben en las próximas semanas."]],
@@ -4076,7 +4051,7 @@ const HB_PRACTICA = {
           "Cada 4-6 semanas, una semana más ligera.",
           "Menos series, mismo ejercicio.",
           "Úsala también en semanas de mucho trabajo."] }] },
-    "Dolor normal o señal de alarma": { ic: "adhesive-bandage",
+    "Dolor normal o señal de alarma": {
       sesion: [[5, "Escribe las características del dolor normal y del de alarma en una nota."],
                [15, "Revisa cualquier molestia que tengas hoy y clasifícala: dónde, cuándo apareció, si mejora o empeora con el movimiento."],
                [5, "Si es de alarma y lleva varios días, agenda una consulta."]],
@@ -4094,7 +4069,7 @@ const HB_PRACTICA = {
           "Califica el dolor del 0 al 10.",
           "Más de 4 o que empeora al día siguiente: baja carga.",
           "Ante la duda, consulta a un fisioterapeuta."] }] },
-    "Los dos tipos de cansancio": { ic: "tired-face",
+    "Los dos tipos de cansancio": {
       sesion: [[5, "Califica tu cansancio físico y mental del 1 al 10 al terminar el día."],
                [15, "Elige una acción para cada uno: para el físico, sueño o descanso del gym; para el mental, un bloque sin celular ni pendientes."],
                [5, "Anota cómo amaneciste al día siguiente."]],
@@ -4112,7 +4087,7 @@ const HB_PRACTICA = {
           "Automatiza lo repetitivo.",
           "Planea la semana el domingo.",
           "Deja menos decisiones para la noche."] }] },
-    "Señales tempranas de que te estás quemando": { ic: "fire",
+    "Señales tempranas de que te estás quemando": {
       sesion: [[5, "Repasa la lista de señales y marca las que reconoces en las últimas dos semanas."],
                [15, "Si marcas dos o más, escribe qué bajarás la próxima semana: horas de Didi, un proyecto, una obligación."],
                [5, "Comparte con alguien de confianza cómo estás."]],
@@ -4130,7 +4105,7 @@ const HB_PRACTICA = {
           "Baja una demanda: un turno de Didi menos.",
           "Suma un recurso: ayuda, descanso, apoyo.",
           "Pide apoyo antes de llegar al límite."] }] },
-    "Descanso planeado contra descanso forzado": { ic: "spiral-calendar",
+    "Descanso planeado contra descanso forzado": {
       sesion: [[5, "Abre tu calendario de las próximas cuatro semanas."],
                [15, "Bloquea tus descansos como citas: noches de sueño completo, un día sin gym, una tarde sin pendientes por semana."],
                [5, "Pon alertas para que nadie (ni tú) los ocupe."]],
@@ -4148,7 +4123,7 @@ const HB_PRACTICA = {
           "Ponle nombre en el calendario.",
           "No lo muevas salvo emergencia real.",
           "Si lo mueves, reagéndalo de inmediato."] }] },
-    "Tu revisión de los domingos": { ic: "clipboard",
+    "Tu revisión de los domingos": {
       sesion: [[5, "Abre tus registros de sueño y entrenamiento de la semana."],
                [10, "Contesta las cuatro preguntas del paso con datos reales."],
                [5, "Decide tu foco de descanso de la semana que empieza."]],
@@ -4173,11 +4148,9 @@ const HB_PRACTICA = {
           "Compara cuatro semanas seguidas.",
           "Busca patrones: qué días duermes peor.",
           "Ataca el patrón, no el día suelto."] }] },
-    "📚 Qué leer": { ic: "books" },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   modales: {
-    "Para qué sirven de verdad": { ic: "man-in-tuxedo",
+    "Para qué sirven de verdad": {
       sesion: [[5, "Piensa en tres situaciones próximas donde los modales importan: una comida de trabajo, una reunión familiar, una cena."],
                [15, "Para cada una, escribe qué te pone nervioso y qué harías para que los demás estén cómodos."],
                [5, "Escribe la regla madre en una línea: haz que el otro quede bien."]],
@@ -4195,7 +4168,7 @@ const HB_PRACTICA = {
           "En Alemania, usa «Herr/Frau» y apellido al principio.",
           "Espera a que te ofrezcan tutear («duzen»).",
           "La puntualidad es respeto, no rigidez."] }] },
-    "Presentarte y presentar a otros": { ic: "handshake",
+    "Presentarte y presentar a otros": {
       sesion: [[5, "Ensaya frente al espejo tu presentación: de pie, contacto visual, nombre completo, mano firme."],
                [15, "Escribe cómo presentarías a dos personas de tu entorno con un dato de cada una, empezando por la de mayor jerarquía."],
                [5, "Usa la fórmula en tu siguiente presentación real."]],
@@ -4218,7 +4191,7 @@ const HB_PRACTICA = {
           "Usa el título si lo tiene, sobre todo por escrito.",
           "En correos: «Sehr geehrter Herr Dr. ______».",
           "Observa cómo se dirigen los demás."] }] },
-    "La mesa: dónde está cada cosa": { ic: "fork-and-knife-with-plate",
+    "La mesa: dónde está cada cosa": {
       sesion: [[5, "Busca una imagen de una mesa formal puesta y estúdiala dos minutos."],
                [15, "Pon la mesa completa en casa: platos, cubiertos de fuera hacia dentro, copa a la derecha, pan a la izquierda; practica el truco b-d con las manos."],
                [5, "Siéntate y coloca la servilleta en el regazo como lo harías en un restaurante."]],
@@ -4236,7 +4209,7 @@ const HB_PRACTICA = {
           "Espera a que el anfitrión empiece o lo indique.",
           "En mesas grandes, cuando ya sirvieron a tus vecinos.",
           "Si el anfitrión dice que empieces, empieza."] }] },
-    "Comer sin llamar la atención": { ic: "shallow-pan-of-food",
+    "Comer sin llamar la atención": {
       sesion: [[5, "Repasa la lista corta: boca cerrada, un bocado a la vez, sin codos, probar antes de salar, pan con la mano."],
                [15, "En tu siguiente comida, revisa a propósito cada punto de la lista."],
                [5, "Anota el punto que más te cuesta y practícalo en las siguientes tres comidas."]],
@@ -4254,7 +4227,7 @@ const HB_PRACTICA = {
           "En una cena de negocios, pide algo fácil.",
           "Pasta larga: enrolla pocos hilos con el tenedor.",
           "Tacos y comida con la mano: está bien si es el contexto."] }] },
-    "Los dos códigos de cubiertos": { ic: "fork-and-knife",
+    "Los dos códigos de cubiertos": {
       sesion: [[5, "Pon la mesa con cubiertos para un plato principal."],
                [20, "Come tu comida principal en estilo continental: tenedor en la izquierda boca abajo, cuchillo en la derecha, sin cambiar de mano."],
                [5, "Al terminar, deja los cubiertos en señal de terminado y practica la de pausa."]],
@@ -4272,7 +4245,7 @@ const HB_PRACTICA = {
           "Di «Guten Appetit» al empezar.",
           "Manos visibles sobre la mesa.",
           "Las papas no se cortan con cuchillo en la tradición alemana: se aplastan con el tenedor."] }] },
-    "Ser un buen invitado": { ic: "wrapped-gift",
+    "Ser un buen invitado": {
       sesion: [[5, "Revisa tu próximo compromiso social y confirma tu asistencia si no lo has hecho."],
                [15, "Decide qué llevarás y a qué hora saldrás para llegar puntual; prepara tu mensaje de agradecimiento del día siguiente."],
                [5, "Pon un recordatorio para mandar el agradecimiento."]],
@@ -4290,7 +4263,7 @@ const HB_PRACTICA = {
           "Menciona algo concreto de la reunión.",
           "Mándalo al día siguiente.",
           "Corto y sincero vale más que largo."] }] },
-    "Ser un buen anfitrión": { ic: "house-with-garden",
+    "Ser un buen anfitrión": {
       sesion: [[5, "Planea una reunión pequeña: quién, cuándo y qué servirás."],
                [15, "Pregunta alergias al invitar, prepara bebida y botana antes de la hora y decide a quién presentarás con quién."],
                [5, "Anota la lista de tareas del día para que todo esté listo antes de que llegue el primero."]],
@@ -4315,7 +4288,7 @@ const HB_PRACTICA = {
           "El café o el postre anuncian el final.",
           "Acompaña a los invitados a la puerta.",
           "Agradece que vinieron."] }] },
-    "Brindar": { ic: "clinking-glasses",
+    "Brindar": {
       sesion: [[5, "Escribe un brindis de menos de un minuto para alguien cercano: algo específico de esa persona y el deseo final."],
                [10, "Ensáyalo en voz alta de pie, con un vaso en la mano, mirando a puntos distintos del cuarto."],
                [5, "Practica decir «Prost» y «Zum Wohl» y la regla de mirar a los ojos al chocar."]],
@@ -4338,7 +4311,7 @@ const HB_PRACTICA = {
           "Menos de un minuto.",
           "Una anécdota concreta, no una lista de cualidades.",
           "Termina con la frase de brindis y la copa arriba."] }] },
-    "El celular": { ic: "mobile-phone-off",
+    "El celular": {
       sesion: [[5, "Antes de tu próxima comida o reunión, decide dónde estará tu celular: guardado o fuera de la mesa."],
                [20, "Haz la comida completa sin sacarlo; si esperas algo importante, avísalo al inicio."],
                [5, "Anota cuántas veces sentiste el impulso de revisarlo y cuántas personas sacaron el suyo."]],
@@ -4356,7 +4329,7 @@ const HB_PRACTICA = {
           "Propón el juego en reuniones con amigos.",
           "En familia, una regla de cero celulares en la cena.",
           "Da el ejemplo tú primero."] }] },
-    "Vestir para la ocasión": { ic: "necktie",
+    "Vestir para la ocasión": {
       sesion: [[5, "Revisa tu guía de Vestimenta y tu clóset: ¿tienes un conjunto casual de negocios y uno formal completos?"],
                [15, "Arma los dos conjuntos completos, revisa que estén limpios, planchados y que te queden bien; anota lo que falta."],
                [5, "Pon en tu lista de compras lo que falte, priorizando la talla correcta."]],
@@ -4374,7 +4347,7 @@ const HB_PRACTICA = {
           "Entrevista: traje oscuro sencillo.",
           "Día a día: casual cuidado.",
           "Invierno: abrigo de calidad y zapatos impermeables."] }] },
-    "Conversación de mesa": { ic: "speech-balloon",
+    "Conversación de mesa": {
       sesion: [[5, "Prepara tres temas seguros para tu próxima comida: un viaje, comida, algo que la gente disfrute."],
                [20, "En la comida, alterna con tus dos vecinos y haz al menos una pregunta a quien hable menos."],
                [5, "Anota qué tema funcionó mejor."]],
@@ -4392,7 +4365,7 @@ const HB_PRACTICA = {
           "Si surge un tema delicado, escucha sin debatir.",
           "Cambia de tema con una pregunta abierta.",
           "Nunca preguntes cuánto gana alguien."] }] },
-    "Practicarlo": { ic: "spiral-calendar",
+    "Practicarlo": {
       sesion: [[5, "Pon en tu calendario las cuatro semanas del plan."],
                [20, "Haz hoy la de la semana 1: una cena en casa con la mesa completa y estilo continental."],
                [5, "Anota qué te costó y qué salió natural."]],
@@ -4410,10 +4383,9 @@ const HB_PRACTICA = {
           "Elige a alguien a quien admires en eventos sociales.",
           "Observa cómo saluda, conversa y se despide.",
           "Copia un detalle a la vez."] }] },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   fogata: {
-    "El triángulo del fuego": { ic: "fire",
+    "El triángulo del fuego": {
       sesion: [[5, "Dibuja el triángulo del fuego y escribe en cada lado cómo lo das y cómo lo quitas."],
                [15, "En un asador o anafre en un lugar seguro, enciende una vela o un poco de yesca y prueba quitar cada elemento: tapar (oxígeno), separar (combustible), agua (calor)."],
                [5, "Anota qué viste con cada prueba y apaga todo por completo."]],
@@ -4431,7 +4403,7 @@ const HB_PRACTICA = {
           "Nunca agua en aceite hirviendo: tápalo.",
           "Nunca agua en un fuego eléctrico.",
           "Ten un extintor ABC en casa y en el coche."] }] },
-    "Los tres materiales, en orden": { ic: "wood",
+    "Los tres materiales, en orden": {
       sesion: [[5, "Junta los tres materiales: yesca, astillas del grosor de un lápiz a un dedo y leña de muñeca."],
                [15, "Sepáralos en tres montones y junta el triple de yesca y astillas de lo que crees que necesitas; prueba la leña golpeando dos piezas."],
                [5, "Prepara una yesca casera: algodón con vaselina en una bolsa sellada."]],
@@ -4449,7 +4421,7 @@ const HB_PRACTICA = {
           "La leña seca pesa menos y suena hueca.",
           "Tiene grietas en los extremos.",
           "Nunca cortes árboles vivos para leña."] }] },
-    "Preparar el sitio": { ic: "camping",
+    "Preparar el sitio": {
       sesion: [[5, "Antes de tu próxima salida, investiga si en la zona hay veda de fuego o restricciones."],
                [15, "En el sitio, limpia un círculo de 2 metros hasta tierra mineral, revisa ramas arriba y ten el agua lista antes de encender."],
                [5, "Si hay un anillo de fuego existente, úsalo; si no, decide si conviene una estufa de campamento."]],
@@ -4467,7 +4439,7 @@ const HB_PRACTICA = {
           "Para cocinar, la estufa es más rápida y segura.",
           "Úsala donde no se permiten fogatas.",
           "Guarda la fogata para cuando el sitio lo permita."] }] },
-    "Tres montajes que funcionan": { ic: "building-construction",
+    "Tres montajes que funcionan": {
       sesion: [[5, "En un asador o anillo seguro, prepara materiales para tres montajes."],
                [25, "Arma un tipi, enciéndelo y apágalo; luego una cabaña con tipi dentro; luego un lean-to contra un tronco. Observa cuál prende y dura más."],
                [5, "Anota para qué usarías cada uno y apaga por completo."]],
@@ -4485,7 +4457,7 @@ const HB_PRACTICA = {
           "Capas: gruesa abajo, fina arriba, yesca en la cima.",
           "Arde sola por horas.",
           "Buena para cuando quieres atender otras cosas."] }] },
-    "Encenderlo": { ic: "sparkler",
+    "Encenderlo": {
       sesion: [[5, "Prepara la estructura y revisa de dónde viene el viento."],
                [15, "Enciende con un solo cerillo por abajo y del lado del viento; no lo toques el primer minuto y sopla en la base si hace falta."],
                [10, "Practica con el ferrocerio: rasca hacia la yesca, no la barra hacia afuera, hasta encender."]],
@@ -4503,7 +4475,7 @@ const HB_PRACTICA = {
           "Más yesca de lo normal.",
           "Sopla suave y constante.",
           "Protege la llama del viento con el cuerpo."] }] },
-    "Fuego con leña mojada": { ic: "cloud-with-rain",
+    "Fuego con leña mojada": {
       sesion: [[5, "Después de un día de lluvia, busca leña muerta en pie y ramas bajo protección."],
                [25, "Parte la leña para llegar al corazón seco, haz tres plumas con navaja y levanta la base con dos troncos; enciende."],
                [5, "Anota qué funcionó y apaga por completo."]],
@@ -4521,7 +4493,7 @@ const HB_PRACTICA = {
           "Busca ramas muertas que no tocan el suelo.",
           "Revisa bajo árboles densos y salientes de roca.",
           "Lleva yesca seca en bolsa sellada siempre."] }] },
-    "Mantenerla": { ic: "wood",
+    "Mantenerla": {
       sesion: [[5, "Enciende un fuego y prepara leña de tres grosores a mano."],
                [25, "Mantenlo 30 minutos añadiendo leña gradualmente sobre la brasa; observa cómo cambia con leña fina separada y gruesa junta."],
                [5, "Anota cuánta leña usaste y apaga por completo."]],
@@ -4539,7 +4511,7 @@ const HB_PRACTICA = {
           "Nombra a un responsable del fuego.",
           "Agua siempre a la mano.",
           "Si te vas, apágalo por completo."] }] },
-    "Apagarla bien — la parte que casi nadie hace": { ic: "droplet",
+    "Apagarla bien — la parte que casi nadie hace": {
       sesion: [[5, "Deja de alimentar el fuego 30 minutos antes y esparce las brasas."],
                [15, "Aplica agua poco a poco y revuelve las cenizas con un palo; repite hasta que deje de silbar."],
                [5, "Haz la prueba del dorso de la mano y revisa el borde del círculo."]],
@@ -4563,7 +4535,7 @@ const HB_PRACTICA = {
           "Calcula al menos un garrafón para una fogata pequeña.",
           "Ten una cubeta o recipiente.",
           "Si no hay agua, tierra y arena revolviendo mucho."] }] },
-    "No dejar rastro": { ic: "litter-in-bin-sign",
+    "No dejar rastro": {
       sesion: [[5, "Lee los siete principios de «No dejar rastro» (Leave No Trace)."],
                [15, "En tu siguiente salida, aplica los relacionados con el fuego: anillo existente, leña muerta caída, nada de basura en el fuego, sitio como estaba."],
                [5, "Toma una foto del sitio antes y después para comparar."]],
@@ -4581,7 +4553,7 @@ const HB_PRACTICA = {
           "No dejes restos de comida.",
           "Guarda la comida cerrada.",
           "No alimentes animales silvestres."] }] },
-    "Practicarlo": { ic: "spiral-calendar",
+    "Practicarlo": {
       sesion: [[5, "Agenda las cuatro sesiones del plan en las próximas semanas."],
                [25, "Haz hoy la primera: fuego con un solo cerillo en un asador o lugar controlado, sin líquidos."],
                [5, "Apágalo por completo con la prueba de la mano y anota qué mejorar."]],
@@ -4599,7 +4571,7 @@ const HB_PRACTICA = {
           "Tres formas de encender.",
           "Yesca siempre seca y sellada.",
           "Revisa el kit antes de cada salida."] }] },
-    "Cocinar sobre el fuego": { ic: "roasted-sweet-potato",
+    "Cocinar sobre el fuego": {
       sesion: [[5, "Prepara papas o verduras envueltas en doble capa de aluminio con sal y aceite."],
                [30, "Enciende, espera el lecho de brasa con ceniza gris, arma dos zonas y cocina las papas entre las brasas, girándolas."],
                [10, "Pruébalas con un palillo, sírvelas y apaga el fuego por completo."]],
@@ -4617,7 +4589,7 @@ const HB_PRACTICA = {
           "Hielera con hielo y separada de bebidas.",
           "Carne cruda bien cerrada y abajo.",
           "Cocina el pollo hasta 74 °C."] }] },
-    "Fuego para calentarse y pasar la noche": { ic: "night-with-stars",
+    "Fuego para calentarse y pasar la noche": {
       sesion: [[5, "Revisa los riesgos: nunca fuego en espacios cerrados ni casas de campaña."],
                [20, "Arma un fuego con pared reflectora de troncos del lado contrario a donde te sientas y prueba la diferencia de calor."],
                [5, "Anota cuánto cambió el calor y apaga por completo antes de dormir."]],
@@ -4635,7 +4607,7 @@ const HB_PRACTICA = {
           "Aislante entre tú y el suelo.",
           "Gorro y calcetines secos para dormir.",
           "Una botella de agua caliente dentro del saco."] }] },
-    "Los cinco errores que apagan una fogata": { ic: "warning",
+    "Los cinco errores que apagan una fogata": {
       sesion: [[5, "Repasa los cinco errores y elige el que más cometes."],
                [20, "En tu próxima práctica, enciende cuidando a propósito ese error: astillas, espacio, leña seca, no tocar, cantidad."],
                [5, "Anota si encendió a la primera y apaga por completo."]],
@@ -4653,10 +4625,9 @@ const HB_PRACTICA = {
           "Tres montones antes de encender.",
           "El triple de lo que crees.",
           "Leña gruesa cerca pero no encima."] }] },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   vino: {
-    "Qué es saber de vino (y qué no)": { ic: "wine-glass",
+    "Qué es saber de vino (y qué no)": {
       sesion: [[5, "Escribe las cuatro metas prácticas del paso: pedir bien, servir bien, saber por qué te gusta y reconocer un vino picado."],
                [15, "Ve el primer episodio de la serie de la ficha o lee la carta de vinos de un restaurante que conozcas en línea e identifica uvas, regiones y rango de precio."],
                [5, "Anota tres preguntas que te gustaría poder responder sobre vino."]],
@@ -4674,7 +4645,7 @@ const HB_PRACTICA = {
           "Cada vino cuenta de dónde viene.",
           "Es tema de conversación universal.",
           "Aprende la historia, no solo los nombres."] }] },
-    "Las cinco uvas que resuelven casi todo": { ic: "grapes",
+    "Las cinco uvas que resuelven casi todo": {
       sesion: [[5, "Haz una tarjeta por uva con: tinto o blanco, cuerpo, rasgo principal y con qué comida va."],
                [15, "En una tienda o en línea, busca una botella de cada uva y lee sus etiquetas: región, añada, notas del productor."],
                [5, "Repasa las tarjetas hasta decir de memoria con qué va cada uva."]],
@@ -4698,7 +4669,7 @@ const HB_PRACTICA = {
           "Trocken: seco.",
           "Halbtrocken o feinherb: algo dulce.",
           "Spätlese, Auslese: más dulces y concentrados."] }] },
-    "Cómo catarlo, en cuatro pasos": { ic: "eye",
+    "Cómo catarlo, en cuatro pasos": {
       sesion: [[5, "Sirve dos copas de jugo de uva o vino sin alcohol de estilos distintos sobre un fondo blanco."],
                [15, "Haz los cuatro pasos con cada una: vista, olfato antes y después de girar, boca (acidez, tanino, cuerpo) y final; si es vino, escupe."],
                [5, "Anota las diferencias entre las dos con palabras simples."]],
@@ -4723,7 +4694,7 @@ const HB_PRACTICA = {
           "Huele frutas y especias con los ojos cerrados.",
           "Intenta nombrarlas sin ver.",
           "Repite con mezclas de dos aromas."] }] },
-    "Las cuatro palabras que necesitas": { ic: "label",
+    "Las cuatro palabras que necesitas": {
       sesion: [[5, "Escribe las cuatro palabras con su definición: seco/dulce, ácido, tanino, cuerpo."],
                [15, "Prueba ejemplos sin alcohol de cada sensación: limón (ácido), té negro muy cargado (tanino), agua contra leche entera (cuerpo), jugo de uva (dulce)."],
                [5, "Escribe la frase para pedir en un restaurante con tus preferencias."]],
@@ -4745,7 +4716,7 @@ const HB_PRACTICA = {
           "Frutal no significa dulce.",
           "La acidez equilibra el dulzor.",
           "Si quieres seco de verdad, pídelo con esa palabra."] }] },
-    "Temperatura: el error número uno": { ic: "thermometer",
+    "Temperatura: el error número uno": {
       sesion: [[5, "Escribe la tabla de temperaturas: tinto ligero, tinto con cuerpo, blanco, espumoso."],
                [15, "Haz la prueba con una bebida sin alcohol aromática (jugo de uva tinto): pruébala a temperatura ambiente y después de 20 minutos en el refrigerador."],
                [5, "Anota la diferencia de aroma y sabor."]],
@@ -4769,7 +4740,7 @@ const HB_PRACTICA = {
           "El frío reduce la percepción de dulce.",
           "El calor aumenta aromas y amargor.",
           "Prueba siempre a la temperatura en que se servirá."] }] },
-    "La copa y el servicio": { ic: "wine-glass",
+    "La copa y el servicio": {
       sesion: [[5, "Consigue una copa de tinto de tamaño medio y una copa pequeña o vaso."],
                [15, "Sirve la misma bebida aromática sin alcohol en ambas, un tercio de la copa, gírala tomándola por el tallo y compara el aroma."],
                [5, "Practica servir y girar la botella un cuarto de vuelta al terminar para que no gotee."]],
@@ -4787,7 +4758,7 @@ const HB_PRACTICA = {
           "Poco jabón y buen enjuague.",
           "Seca con paño de microfibra.",
           "Huele la copa vacía antes de servir."] }] },
-    "Descorchar sin sufrir": { ic: "bottle-with-popping-cork",
+    "Descorchar sin sufrir": {
       sesion: [[5, "Consigue un sacacorchos de mesero de dos tiempos y una botella con corcho (puede ser una vacía con corcho reinsertado o un vino sin alcohol)."],
                [15, "Practica cinco veces: cortar la cápsula, clavar en el centro, primer escalón, segundo escalón y sacar a mano sin «pop»."],
                [5, "Practica el agarre de un espumoso: sujetar el corcho y girar la botella a 45°, sin apuntar a nadie (puede ser con una sidra sin alcohol)."]],
@@ -4805,7 +4776,7 @@ const HB_PRACTICA = {
           "Espiral larga y con punta centrada.",
           "Dos escalones de palanca.",
           "La navaja corta por debajo del labio."] }] },
-    "Decantar y airear": { ic: "amphora",
+    "Decantar y airear": {
       sesion: [[5, "Sirve una bebida aromática sin alcohol (o el vino que sirvas a invitados) en dos copas."],
                [20, "Deja una en reposo 20 minutos y huele la otra recién servida; compara los aromas al minuto 0 y al minuto 20."],
                [5, "Anota cómo cambió y practica servir despacio contra la luz, como si dejaras un sedimento en la botella."]],
@@ -4823,7 +4794,7 @@ const HB_PRACTICA = {
           "Botella abierta parada: casi nada.",
           "Copa o jarra: sí.",
           "Prueba antes y después para decidir."] }] },
-    "Maridar sin complicarte": { ic: "cheese-wedge",
+    "Maridar sin complicarte": {
       sesion: [[5, "Escribe las tres reglas y la del picante en una tarjeta."],
                [20, "Para tres comidas de tu semana, escribe qué vino sugerirías a un invitado y por qué, y qué bebida sin alcohol servirías tú."],
                [5, "Compara tus elecciones con una tabla de maridaje confiable."]],
@@ -4841,7 +4812,7 @@ const HB_PRACTICA = {
           "Té frío con comida grasa (tanino y acidez).",
           "Agua de jamaica con comida mexicana (acidez).",
           "Kombucha con platos ligeros."] }] },
-    "Vino mexicano": { ic: "cactus",
+    "Vino mexicano": {
       sesion: [[5, "Ubica en un mapa las cinco zonas: Valle de Guadalupe, Querétaro, Coahuila, Aguascalientes y Zacatecas."],
                [15, "Investiga tres bodegas mexicanas reconocidas y su vino más representativo, y lee sobre el Nebbiolo mexicano."],
                [5, "Escribe tres datos de vino mexicano para una conversación de mesa, y uno del Riesling alemán."]],
@@ -4859,7 +4830,7 @@ const HB_PRACTICA = {
           "La altura da noches frías y acidez.",
           "Querétaro: espumosos de buena calidad.",
           "Ruta del vino a pocas horas de CDMX."] }] },
-    "Pedir vino en un restaurante": { ic: "fork-and-knife-with-plate",
+    "Pedir vino en un restaurante": {
       sesion: [[5, "Busca en línea la carta de vinos de un restaurante que te guste."],
                [15, "Practica los cuatro pasos: elige un rango señalando, describe lo que buscas con las cuatro palabras y anota qué revisarías de la etiqueta."],
                [5, "Escribe la frase para devolver un vino defectuoso sin drama."]],
@@ -4877,7 +4848,7 @@ const HB_PRACTICA = {
           "Puedes oler el sorbo de comprobación sin beber.",
           "O pide a otro comensal que lo pruebe.",
           "Tu bebida sin alcohol, pedida con naturalidad."] }] },
-    "Reconocer un vino picado": { ic: "nauseated-face",
+    "Reconocer un vino picado": {
       sesion: [[5, "Repasa los tres defectos: corcho (TCA), oxidado y avinagrado."],
                [15, "Deja una copa de vino tinto barato (o jugo de uva) abierta tres días para olerla oxidada, y huele vinagre y cartón mojado como referencias."],
                [5, "Escribe la frase para devolverlo y desecha la muestra."]],
@@ -4895,7 +4866,7 @@ const HB_PRACTICA = {
           "Olor a vinagre o quitaesmalte.",
           "Se devuelve sin discusión.",
           "En casa, úsalo para cocinar si no está muy avanzado."] }] },
-    "Guardar y abrir después": { ic: "file-cabinet",
+    "Guardar y abrir después": {
       sesion: [[5, "Revisa dónde guardas o guardarías botellas en casa: luz, temperatura y vibración."],
                [15, "Elige el mejor lugar: oscuro, estable, lejos de la cocina y del refrigerador; acomoda las botellas acostadas."],
                [5, "Si tienes vino abierto para cocinar, ciérralo y guárdalo en el refrigerador con la fecha."]],
@@ -4913,10 +4884,9 @@ const HB_PRACTICA = {
           "Usa vino que tomarías, no uno defectuoso grave.",
           "Desglasa la sartén para recoger sabores.",
           "Cocción larga: queda muy poco alcohol."] }] },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   coctel: {
-    "La estructura de todo coctel": { ic: "cocktail-glass",
+    "La estructura de todo coctel": {
       sesion: [[5, "Escribe la ecuación: fuerte + ácido + dulce (o fuerte + dulce + amargo) y tres clásicos de cada familia."],
                [15, "Haz una versión sin alcohol con la misma ecuación: té negro frío o agua mineral como base, limón y jarabe; ajusta probando."],
                [5, "Anota la proporción que te gustó."]],
@@ -4934,7 +4904,7 @@ const HB_PRACTICA = {
           "Té negro o de hierbas da estructura.",
           "Jengibre aporta picor que imita el alcohol.",
           "Un toque salino realza los sabores."] }] },
-    "Lo que necesitas para empezar": { ic: "toolbox",
+    "Lo que necesitas para empezar": {
       sesion: [[5, "Revisa qué tienes en casa: frasco con tapa, medidor, colador, exprimidor, cuchara larga."],
                [15, "Haz la lista de lo que falta, con el jigger como prioridad, y prepara hielo en moldes grandes."],
                [5, "Calibra tu jigger: verifica con una taza medidora cuántos mililitros tiene cada lado."]],
@@ -4952,7 +4922,7 @@ const HB_PRACTICA = {
           "Moldes de silicón para cubos grandes.",
           "Hielo nuevo, no el que lleva semanas.",
           "Mucho hielo en la coctelera."] }] },
-    "Jarabe natural: la base que todo el mundo compra hecha": { ic: "honey-pot",
+    "Jarabe natural: la base que todo el mundo compra hecha": {
       sesion: [[5, "Calienta agua y mide la misma cantidad de azúcar."],
                [10, "Disuelve el azúcar, deja enfriar y embotella en un frasco limpio con etiqueta y fecha."],
                [10, "Haz una variante: jarabe de jengibre con unas rebanadas en infusión 20 minutos."]],
@@ -4975,7 +4945,7 @@ const HB_PRACTICA = {
           "Infusiona en caliente y cuela.",
           "Prueba cada 5 minutos para no pasarte.",
           "Etiqueta y guarda en frío."] }] },
-    "Agitar o revolver": { ic: "spoon",
+    "Agitar o revolver": {
       sesion: [[5, "Prepara dos bebidas sin alcohol: una con cítrico y otra transparente (por ejemplo, té frío con un toque de jarabe)."],
                [15, "Agita la de cítrico 15 segundos fuerte y revuelve la transparente 25 segundos; mide cuánto líquido ganaron por dilución."],
                [5, "Compara textura, temperatura y aspecto."]],
@@ -4993,7 +4963,7 @@ const HB_PRACTICA = {
           "Primero sin hielo, luego con hielo.",
           "Usa huevos frescos y de confianza.",
           "Aquafaba como sustituto."] }] },
-    "Clásico 1 · Margarita": { ic: "cocktail-glass",
+    "Clásico 1 · Margarita": {
       sesion: [[5, "Exprime limones frescos, prepara la copa fría y media orilla de sal."],
                [15, "Prepara la margarita para un invitado con la plantilla, midiendo; para ti, la versión sin alcohol con jarabe de agave, limón, agua mineral y la media orilla de sal."],
                [5, "Prueba la tuya y ajusta ácido o dulce; anota la proporción."]],
@@ -5014,7 +4984,7 @@ const HB_PRACTICA = {
           "Humedece el borde por fuera con limón.",
           "Sal solo por fuera, no dentro de la copa.",
           "Media orilla para dar opción."] }] },
-    "Clásico 2 · Old Fashioned": { ic: "tumbler-glass",
+    "Clásico 2 · Old Fashioned": {
       sesion: [[5, "Prepara un cubo grande de hielo, cáscara de naranja y vaso bajo."],
                [15, "Practica la técnica del Old Fashioned con una versión sin alcohol (té negro fuerte o destilado sin alcohol + jarabe + bitters sin alcohol si consigues), revolviendo 30 segundos y exprimiendo la cáscara."],
                [5, "Observa la nube de aceite al exprimir la cáscara y anota la receta."]],
@@ -5038,7 +5008,7 @@ const HB_PRACTICA = {
           "Corta la cáscara sin mucha parte blanca (amarga).",
           "Exprime con la piel hacia el vaso.",
           "Pasa la cáscara por el borde."] }] },
-    "Clásico 3 · Negroni": { ic: "orange-circle",
+    "Clásico 3 · Negroni": {
       sesion: [[5, "Lee la plantilla 1:1:1 y la variante suave."],
                [15, "Practica la técnica con una versión sin alcohol: aperitivo amargo sin alcohol o agua tónica con un toque de jarabe de naranja y bitters sin alcohol, revuelto con hielo y con cáscara."],
                [5, "Anota la proporción y guarda el vermut, si tienes, en el refrigerador."]],
@@ -5061,7 +5031,7 @@ const HB_PRACTICA = {
           "Empieza con versiones menos amargas.",
           "La exposición repetida cambia el gusto.",
           "Combina amargo con algo de dulce al inicio."] }] },
-    "Clásico 4 · Daiquiri": { ic: "lime",
+    "Clásico 4 · Daiquiri": {
       sesion: [[5, "Exprime limones y prepara jarabe simple y una copa fría."],
                [15, "Practica el balance con la plantilla sin alcohol: 25 ml limón, 20 ml jarabe y 60 ml de agua fría o té blanco; agita fuerte y ajusta de 5 en 5 ml."],
                [5, "Anota la proporción exacta que te dio el mejor balance."]],
@@ -5084,7 +5054,7 @@ const HB_PRACTICA = {
           "Prueba siempre antes de servir.",
           "Ajusta en pequeños incrementos.",
           "Anota los ajustes que funcionaron."] }] },
-    "Clásico 5 · Highball perfecto": { ic: "cup-with-straw",
+    "Clásico 5 · Highball perfecto": {
       sesion: [[5, "Enfría un vaso alto y prepara mucho hielo y un refresco bien frío."],
                [15, "Haz un highball sin alcohol: tónica o ginger ale con jarabe de jengibre y limón, con las cuatro reglas: vaso lleno de hielo, base primero, refresco por la cuchara y una sola vuelta."],
                [5, "Compara con uno hecho sin las reglas: notarás la diferencia de gas y frío."]],
@@ -5107,7 +5077,7 @@ const HB_PRACTICA = {
           "Lo simple se nota más cuando está bien hecho.",
           "Cada detalle cuenta.",
           "Aplica igual a las versiones sin alcohol."] }] },
-    "De qué está hecho cada destilado": { ic: "alembic",
+    "De qué está hecho cada destilado": {
       sesion: [[5, "Haz una tabla con cada destilado: materia prima, si reposa en barrica y de dónde es."],
                [15, "Lee etiquetas en una tienda o en línea: tequila 100 % agave, mezcal artesanal o ancestral, whisky bourbon o escocés."],
                [5, "Escribe tres datos para explicar en una reunión la diferencia entre tequila y mezcal."]],
@@ -5125,7 +5095,7 @@ const HB_PRACTICA = {
           "Artesanal y ancestral: procesos tradicionales.",
           "Agaves silvestres tardan años en madurar.",
           "Pregunta por el agave y el maestro mezcalero."] }] },
-    "Dos más para el repertorio · Whisky Sour y Mojito": { ic: "herb",
+    "Dos más para el repertorio · Whisky Sour y Mojito": {
       sesion: [[5, "Prepara hierbabuena fresca, limón, jarabe y agua mineral."],
                [15, "Haz un mojito sin alcohol (virgen): golpea la hierbabuena con la palma, limón, jarabe, hielo picado y agua mineral; prueba también un sour sin alcohol con aquafaba y dry shake."],
                [5, "Anota cuál te gustó más y su proporción."]],
@@ -5147,7 +5117,7 @@ const HB_PRACTICA = {
           "A sorbos, nunca de un trago.",
           "Huele antes de probar.",
           "Para ti, la técnica sirve para catar sin tomar."] }] },
-    "Hielo, cítricos y hierbas": { ic: "ice",
+    "Hielo, cítricos y hierbas": {
       sesion: [[5, "Pon agua hervida y enfriada en moldes grandes para hielo transparente."],
                [15, "Exprime limones a temperatura ambiente rodándolos antes; practica cortar cáscaras sin parte blanca y exprimirlas sobre un vaso para ver la nube de aceite."],
                [5, "Guarda las hierbas con el tallo en agua, como flores, en el refrigerador."]],
@@ -5165,7 +5135,7 @@ const HB_PRACTICA = {
           "Tallos en agua, como flores.",
           "Albahaca mejor fuera del refri.",
           "Lava justo antes de usar."] }] },
-    "Ser el que sirve": { ic: "bellhop-bell",
+    "Ser el que sirve": {
       sesion: [[5, "Elige los dos tragos que vas a dominar y una bebida sin alcohol estrella."],
                [15, "Planea una reunión: lista de preparación previa (jarabe, cítricos, hielo, copas en el congelador) y las dos preguntas para cada invitado."],
                [5, "Escribe tu menú de bebidas en una tarjeta para mostrarlo."]],
@@ -5189,7 +5159,7 @@ const HB_PRACTICA = {
           "Una bebida sin alcohol tan cuidada como las demás.",
           "Mismo vaso, mismo hielo, misma decoración.",
           "Que nadie tenga que explicar por qué no toma."] }] },
-    "Beber con cabeza": { ic: "brain",
+    "Beber con cabeza": {
       sesion: [[5, "Revisa tu meta de no tomar en Hábitos y cómo vas."],
                [15, "Escribe tu plan para reuniones: qué bebida sin alcohol pides o sirves, quién maneja y qué respondes si te ofrecen."],
                [5, "Comparte tu plan con alguien que va a estar en la próxima reunión."]],
@@ -5207,10 +5177,9 @@ const HB_PRACTICA = {
           "Respuesta simple: «ahorita no estoy tomando».",
           "Ten tu bebida favorita sin alcohol.",
           "Registra cómo duermes y entrenas: es tu motivación."] }] },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   nudos: {
-    "Cuatro conceptos antes del primer nudo": { ic: "knot",
+    "Cuatro conceptos antes del primer nudo": {
       sesion: [[5, "Consigue un tramo de cuerda de 1.5 a 2 metros y de 6 a 8 mm de grosor."],
                [15, "Con la cuerda en la mano, señala chicote y firme, haz un seno y una coca, y haz un nudo simple dejando 10 cm de cabo de seguridad."],
                [5, "Guarda la cuerda donde la veas todos los días."]],
@@ -5228,7 +5197,7 @@ const HB_PRACTICA = {
           "Tope: ocho.",
           "Gaza: as de guía.",
           "Unión: llano y vuelta de escota; amarre: ballestrinque y medios cotes."] }] },
-    "Nudo 1 — As de guía (bowline): el aro fijo que nunca se aprieta": { ic: "knot",
+    "Nudo 1 — As de guía (bowline): el aro fijo que nunca se aprieta": {
       sesion: [[5, "Repasa los cuatro pasos con la historia del conejo."],
                [15, "Haz el as de guía 10 veces seguidas; luego 3 alrededor de tu cintura y 3 con los ojos cerrados."],
                [5, "Cuelga un peso (una mochila) del aro y comprueba que no se cierra y que se desata fácil después."]],
@@ -5246,7 +5215,7 @@ const HB_PRACTICA = {
           "Remata con un medio cote si la carga es intermitente.",
           "Deja siempre cabo de seguridad.",
           "No lo uses para escalada."] }] },
-    "Nudo 2 — Ocho (figure eight): el tope que no deja que la cuerda se escape": { ic: "infinity",
+    "Nudo 2 — Ocho (figure eight): el tope que no deja que la cuerda se escape": {
       sesion: [[5, "Repasa los tres pasos del ocho."],
                [15, "Hazlo 10 veces; luego jala fuerte y comprueba que se desata con facilidad, comparándolo con un nudo simple apretado."],
                [5, "Pon un ocho en el extremo de una cuerda que pase por un agujero (un cordón de mochila)."]],
@@ -5264,7 +5233,7 @@ const HB_PRACTICA = {
           "Si tus lazadas quedan verticales, está mal.",
           "Cambia la dirección de la segunda vuelta.",
           "Quedarán horizontales y firmes."] }] },
-    "Nudo 3 — Llano o rizo (square knot): unir dos cuerdas del MISMO grosor": { ic: "linked-paperclips",
+    "Nudo 3 — Llano o rizo (square knot): unir dos cuerdas del MISMO grosor": {
       sesion: [[5, "Repasa la regla: izquierda sobre derecha, derecha sobre izquierda."],
                [15, "Hazlo 10 veces y compáralo con un nudo de vieja; luego intenta zafarlo con dos cuerdas de distinto grosor para ver por qué falla."],
                [5, "Úsalo para cerrar una bolsa o un paquete esta semana."]],
@@ -5282,7 +5251,7 @@ const HB_PRACTICA = {
           "Pensado para desatarse rápido.",
           "No para estar sometido a cargas fuertes.",
           "Su historia explica su uso."] }] },
-    "Nudo 4 — Vuelta de escota (sheet bend): unir dos cuerdas de DISTINTO grosor": { ic: "link",
+    "Nudo 4 — Vuelta de escota (sheet bend): unir dos cuerdas de DISTINTO grosor": {
       sesion: [[5, "Consigue dos cuerdas de distinto grosor."],
                [15, "Haz la vuelta de escota 10 veces; revisa que las dos puntas queden del mismo lado y prueba a jalar."],
                [5, "Haz la vuelta de escota doble (una vuelta más) para cuerdas muy distintas o resbalosas."]],
@@ -5300,7 +5269,7 @@ const HB_PRACTICA = {
           "Para cargas serias, una sola cuerda es mejor.",
           "Si unes, usa el nudo adecuado.",
           "Revisa la unión antes de cargar."] }] },
-    "Nudo 5 — Ballestrinque (clove hitch): amarrar a un poste en 2 segundos": { ic: "construction",
+    "Nudo 5 — Ballestrinque (clove hitch): amarrar a un poste en 2 segundos": {
       sesion: [[5, "Usa un poste, una pata de silla o un tubo."],
                [15, "Haz el ballestrinque 10 veces rodeando el poste y 5 veces con la versión de dos bucles en el aire."],
                [5, "Mueve la carga de lado a lado para ver cómo puede aflojarse, y remátalo con un medio cote."]],
@@ -5318,7 +5287,7 @@ const HB_PRACTICA = {
           "Inicio de los amarres de palos.",
           "Útil para construir con troncos.",
           "Practica un amarre cuadrado después."] }] },
-    "Nudo 6 — Dos medios cotes (two half hitches): el amarre seguro que sí aguanta": { ic: "anchor",
+    "Nudo 6 — Dos medios cotes (two half hitches): el amarre seguro que sí aguanta": {
       sesion: [[5, "Usa una argolla o un poste."],
                [15, "Haz los dos medios cotes 10 veces, con los dos cotes en la misma dirección; prueba la versión con una vuelta redonda extra al poste."],
                [5, "Cuelga algo y deja el amarre un día; revisa que no se haya aflojado."]],
@@ -5336,7 +5305,7 @@ const HB_PRACTICA = {
           "Usa cintas anchas para proteger los árboles.",
           "Ángulo de unos 30 grados en las cuerdas.",
           "Prueba la carga con cuidado antes de acostarte."] }] },
-    "Nudo 7 — Nudo tensor (taut-line / Midshipman's hitch): tensa y se ajusta con la mano": { ic: "camping",
+    "Nudo 7 — Nudo tensor (taut-line / Midshipman's hitch): tensa y se ajusta con la mano": {
       sesion: [[5, "Clava una estaca o usa la pata de una mesa como anclaje."],
                [15, "Haz el nudo tensor 10 veces y practica deslizarlo para tensar y aflojar; cuelga algo ligero y comprueba que se traba."],
                [5, "Úsalo para tender una cuerda de ropa o tensar una lona."]],
@@ -5354,7 +5323,7 @@ const HB_PRACTICA = {
           "Mismo principio de fricción.",
           "Uso en escalada: solo con formación.",
           "Para campamento basta el tensor."] }] },
-    "Nudo 8 — Nudo de camionero (trucker's hitch): el que multiplica tu fuerza x3": { ic: "articulated-lorry",
+    "Nudo 8 — Nudo de camionero (trucker's hitch): el que multiplica tu fuerza x3": {
       sesion: [[5, "Prepara una cuerda suficientemente larga y dos puntos de anclaje (dos patas de mesa o un rack)."],
                [20, "Haz el nudo de camionero completo 5 veces: amarre, ojal, pasar por el anclaje, tensar y rematar con dos medios cotes."],
                [5, "Amarra algo real (una caja a una carretilla o a un rack) y comprueba que no se mueve."]],
@@ -5372,7 +5341,7 @@ const HB_PRACTICA = {
           "Ojal de as de guía o con mosquetón.",
           "Revisa el desgaste en esa zona.",
           "No uses cuerdas viejas para cargas pesadas."] }] },
-    "Fase final — Cómo practicarlos para que de verdad te sirvan (constante, repaso mensual)": { ic: "repeat-button",
+    "Fase final — Cómo practicarlos para que de verdad te sirvan (constante, repaso mensual)": {
       sesion: [[5, "Elige los dos nudos de esta semana."],
                [15, "Haz cada uno 10 veces seguidas; termina con 3 a ciegas o con las manos detrás de la espalda."],
                [5, "Agenda el repaso mensual de los ocho nudos (10 minutos)."]],
@@ -5399,7 +5368,7 @@ const HB_PRACTICA = {
           "Practica con escenarios, no solo con nudos.",
           "Pregúntate: ¿qué necesito, aro, tope o amarre?",
           "Revisa la tabla de qué nudo usar."] }] },
-    "Cuidar la cuerda": { ic: "thread",
+    "Cuidar la cuerda": {
       sesion: [[5, "Revisa tu cuerda pasándola por las manos de punta a punta."],
                [15, "Busca zonas planas, duras o deshilachadas; sella los extremos si están abiertos (con encendedor en sintética o cinta)."],
                [5, "Enróllala suelta, sin nudos, y guárdala seca y lejos del sol."]],
@@ -5417,7 +5386,7 @@ const HB_PRACTICA = {
           "Daño visible: retírala.",
           "Carga extrema: retírala de usos críticos.",
           "Úsala para tareas sin riesgo."] }] },
-    "Cómo practicarlos para que se queden": { ic: "backpack",
+    "Cómo practicarlos para que se queden": {
       sesion: [[5, "Pon un cordón de 1.5 metros en tu mochila o escritorio."],
                [15, "En un rato muerto del día, haz el nudo de la semana hasta lograrlo en menos de 10 segundos sin mirar."],
                [5, "Usa un nudo en una tarea real esta semana."]],
@@ -5435,10 +5404,9 @@ const HB_PRACTICA = {
           "Busca un uso real cada semana.",
           "Ofrece ayuda cuando alguien amarre algo.",
           "En campamentos, sé quien amarra."] }] },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   mecanica: {
-    "Antes de tocar nada: seguridad": { ic: "construction-worker",
+    "Antes de tocar nada: seguridad": {
       sesion: [[5, "Revisa que tengas en el coche triángulos, chaleco y linterna."],
                [15, "Practica en tu estacionamiento: intermitentes, colocar triángulos a la distancia correcta, ponerte el chaleco y bajar del coche por el lado contrario al tráfico."],
                [5, "Guarda el número de asistencia de tu seguro en el celular y en papel en la guantera."]],
@@ -5456,7 +5424,7 @@ const HB_PRACTICA = {
           "Evalúa: velocidad del tráfico, visibilidad, espacio.",
           "Si dudas, llama a asistencia.",
           "Tu vida vale más que el tiempo perdido."] }] },
-    "Lo que siempre debe ir en el coche": { ic: "toolbox",
+    "Lo que siempre debe ir en el coche": {
       sesion: [[5, "Saca todo lo que tienes en la cajuela."],
                [15, "Compara con la lista: gato, llave (prueba que encaje en tus birlos), refacción con aire, arrancador o cables, triángulos, chaleco, linterna, guantes, botiquín, agua, póliza."],
                [5, "Anota lo que falta y cómpralo esta semana."]],
@@ -5481,7 +5449,7 @@ const HB_PRACTICA = {
           "Lee qué incluye tu asistencia vial.",
           "Guarda el número en papel y en el celular.",
           "Pregunta los límites de kilómetros de grúa."] }] },
-    "Fase 1 — Cambiar una llanta ponchada, paso a paso completo": { ic: "wheel",
+    "Fase 1 — Cambiar una llanta ponchada, paso a paso completo": {
       sesion: [[5, "En tu estacionamiento, de día, con piso plano: freno de mano, cuñas y herramientas listas."],
                [30, "Cambia una llanta completa siguiendo el orden: aflojar en estrella con el coche en el piso, levantar en el punto correcto, cambiar, apretar a mano, bajar y apretar en estrella."],
                [10, "Vuelve a poner la llanta original, revisa la presión y anota cuánto tardaste."]],
@@ -5506,7 +5474,7 @@ const HB_PRACTICA = {
           "Revisa si tu coche trae refacción o kit.",
           "El sellador sirve para pinchazos pequeños en la banda.",
           "Run-flat: velocidad y distancia limitadas."] }] },
-    "Fase 2 — Pasar corriente (jump start), en el orden exacto": { ic: "high-voltage",
+    "Fase 2 — Pasar corriente (jump start), en el orden exacto": {
       sesion: [[5, "Abre el cofre y ubica la batería de 12 V, sus terminales y un punto de metal desnudo para la tierra."],
                [15, "Practica la secuencia en seco, sin conectar: rojo al muerto, rojo al bueno, negro al bueno, negro a metal; y el orden inverso para quitar."],
                [5, "Si tienes arrancador portátil, lee su manual y revisa su carga."]],
@@ -5529,7 +5497,7 @@ const HB_PRACTICA = {
           "Recibir corriente: según el manual.",
           "Dar corriente: generalmente no.",
           "El arrancador portátil es la opción más segura."] }] },
-    "Fase 3 — Revisar y rellenar los 4 fluidos vitales (revisión mensual)": { ic: "droplet",
+    "Fase 3 — Revisar y rellenar los 4 fluidos vitales (revisión mensual)": {
       sesion: [[5, "Con el motor frío y el coche en plano, abre el cofre y ubica cada depósito con el manual."],
                [15, "Revisa los niveles que apliquen a tu coche (en el BYD: refrigerante, líquido de frenos y limpiaparabrisas) y rellena el limpiaparabrisas."],
                [5, "Anota los niveles y la fecha en tu registro del coche."]],
@@ -5547,7 +5515,7 @@ const HB_PRACTICA = {
           "Nivel entre las marcas mín y máx.",
           "Lechoso: posible problema de junta.",
           "Cámbialo según kilometraje y tiempo."] }] },
-    "Fase 4 — Qué hacer si el auto se sobrecalienta en plena marcha": { ic: "thermometer",
+    "Fase 4 — Qué hacer si el auto se sobrecalienta en plena marcha": {
       sesion: [[5, "Ubica en el tablero de tu coche el indicador o luz de temperatura y lo que dice el manual."],
                [15, "Escribe la secuencia: calefacción al máximo, orillarse, apagar, esperar 20-30 min con el cofre abierto, revisar sin abrir caliente, decidir grúa."],
                [5, "Guarda la secuencia en tu celular junto al número de asistencia."]],
@@ -5571,7 +5539,7 @@ const HB_PRACTICA = {
           "Si limita potencia, estaciónate y revisa.",
           "No cargues rápido con alerta de temperatura.",
           "Llama a asistencia de la marca."] }] },
-    "Fase 5 — Cambiar un fusible quemado": { ic: "electric-plug",
+    "Fase 5 — Cambiar un fusible quemado": {
       sesion: [[5, "Ubica las cajas de fusibles de tu coche con el manual y busca el diagrama."],
                [15, "Saca un fusible (por ejemplo, el del encendedor o la toma de 12 V) con el extractor, revísalo a la luz y vuelve a ponerlo."],
                [5, "Compra un juego de fusibles de repuesto de los amperajes de tu coche y guárdalo en la guantera."]],
@@ -5589,7 +5557,7 @@ const HB_PRACTICA = {
           "Desconecta los accesorios de ese circuito.",
           "Si sigue, a un electricista automotriz.",
           "Nunca subas el amperaje."] }] },
-    "Fase 6 — Leer las luces de advertencia del tablero": { ic: "police-car-light",
+    "Fase 6 — Leer las luces de advertencia del tablero": {
       sesion: [[5, "Abre la sección de testigos del manual de tu coche."],
                [15, "Haz tarjetas con las luces principales de tu tablero: símbolo, color, significado y qué hacer (parar ya o agendar taller)."],
                [5, "Al encender el coche, observa qué luces se prenden un momento en la autoprueba."]],
@@ -5612,7 +5580,7 @@ const HB_PRACTICA = {
           "Lee la sección de testigos de tu BYD.",
           "Alta tensión: no toques nada, llama a la marca.",
           "Potencia limitada: estaciónate y revisa."] }] },
-    "Fase 7 — Kit de emergencia y seguridad en la carretera (constante)": { ic: "sos-button",
+    "Fase 7 — Kit de emergencia y seguridad en la carretera (constante)": {
       sesion: [[5, "Revisa la fecha de la última revisión de tu kit."],
                [15, "Verifica fusibles, carga del arrancador, aire de la refacción, pilas de la linterna y caducidad del botiquín."],
                [5, "Agenda la próxima revisión del kit en tres meses."]],
@@ -5630,7 +5598,7 @@ const HB_PRACTICA = {
           "Ángeles Verdes: marca el 078 en carreteras federales.",
           "Tu aseguradora: asistencia vial.",
           "Lluvia, noche o tráfico intenso: pide ayuda."] }] },
-    "Lo específico de tu eléctrico": { ic: "battery",
+    "Lo específico de tu eléctrico": {
       sesion: [[5, "Lee la sección de mantenimiento del manual de tu BYD."],
                [15, "Anota el calendario oficial: líquido de frenos, refrigerante de batería, filtro de cabina, rotación, revisión de 12 V."],
                [5, "Agenda tu próxima revisión según el kilometraje actual."]],
@@ -5648,7 +5616,7 @@ const HB_PRACTICA = {
           "Evita dejarla al 100 % mucho tiempo (salvo indicación del fabricante).",
           "Estaciona a la sombra en calor extremo.",
           "Carga lenta cuando puedas."] }] },
-    "Qué revisar y cada cuándo": { ic: "spiral-calendar",
+    "Qué revisar y cada cuándo": {
       sesion: [[5, "Crea un registro del coche: fecha, kilometraje y servicio realizado."],
                [15, "Haz hoy la revisión de dos semanas y del mes: presión de cinco llantas, dibujo con la moneda, luces y limpiaparabrisas."],
                [5, "Programa recordatorios recurrentes para cada revisión."]],
@@ -5671,7 +5639,7 @@ const HB_PRACTICA = {
           "Guarda facturas de cada servicio.",
           "Anota kilometraje y fecha.",
           "Fotos del estado del coche antes de rentarlo."] }] },
-    "Cuándo NO lo arregles tú": { ic: "stop-sign",
+    "Cuándo NO lo arregles tú": {
       sesion: [[5, "Lee la lista de reparaciones que no se hacen en la calle."],
                [15, "Busca y guarda el contacto de un taller de confianza para tu marca y de un servicio de grúa."],
                [5, "Escribe tu regla personal: si no sé volver a montarlo, no lo desarmo."]],
@@ -5689,10 +5657,9 @@ const HB_PRACTICA = {
           "Presupuesto por escrito.",
           "Pide ver las piezas cambiadas.",
           "Pregunta por la garantía del trabajo."] }] },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   auxilios: {
-    "Lo primero de todo: la escena y el protocolo": { ic: "health-worker",
+    "Lo primero de todo: la escena y el protocolo": {
       sesion: [[5, "Escribe los cinco pasos del protocolo en una tarjeta: escena, consciencia, ayuda dirigida, respiración, actuar."],
                [15, "Ensaya en voz alta una llamada al 911 con los cuatro datos, en un caso imaginario en tu calle, usando referencias reales."],
                [5, "Guarda en el celular tus datos médicos de emergencia y los de tu familia."]],
@@ -5716,7 +5683,7 @@ const HB_PRACTICA = {
           "Guantes de nitrilo en el botiquín.",
           "Evalúa la escena antes de acercarte.",
           "Si no es seguro, llama y espera."] }] },
-    "Tu botiquín, el de casa y el del coche": { ic: "adhesive-bandage",
+    "Tu botiquín, el de casa y el del coche": {
       sesion: [[5, "Revisa tu botiquín de casa y el del coche."],
                [15, "Compara con la lista, tira lo caducado y anota lo que falta; agrega la libreta con teléfonos y padecimientos de tu familia."],
                [5, "Busca la fecha del próximo curso de primeros auxilios de la Cruz Roja en CDMX."]],
@@ -5740,7 +5707,7 @@ const HB_PRACTICA = {
           "iPhone: app Salud > Ficha médica.",
           "Android: información de emergencia en ajustes.",
           "Incluye contactos de emergencia."] }] },
-    "Fase 1 — RCP (reanimación cardiopulmonar), adulto: la maniobra que más vidas salva": { ic: "anatomical-heart",
+    "Fase 1 — RCP (reanimación cardiopulmonar), adulto: la maniobra que más vidas salva": {
       sesion: [[5, "Pon «Stayin' Alive» o un metrónomo a 110 por minuto."],
                [15, "Sobre un cojín firme o un maniquí (nunca sobre una persona), practica la postura —manos al centro del pecho, brazos rectos, hombros arriba— y cinco series de 30 compresiones al ritmo."],
                [5, "Ensaya en voz alta la secuencia completa: comprobar, pedir ayuda y DEA, comprimir, no parar."]],
@@ -5765,7 +5732,7 @@ const HB_PRACTICA = {
           "Enciéndelo y sigue la voz.",
           "Pecho descubierto y seco para los parches.",
           "Nadie toca a la persona durante el análisis y la descarga."] }] },
-    "Fase 2 — Atragantamiento (maniobra de Heimlich): consciente, tú mismo solo, y bebés": { ic: "face-with-open-mouth",
+    "Fase 2 — Atragantamiento (maniobra de Heimlich): consciente, tú mismo solo, y bebés": {
       sesion: [[5, "Repasa las señales: no puede hablar, toser ni respirar, manos al cuello."],
                [15, "Con un compañero, sin aplicar fuerza, practica la posición: detrás, pie entre los suyos, puño arriba del ombligo; luego ubica en ti el punto del auto-Heimlich y una silla para apoyarte."],
                [5, "Ve un video oficial (Cruz Roja) de la técnica en bebés y repasa sus diferencias."]],
@@ -5783,7 +5750,7 @@ const HB_PRACTICA = {
           "Revisión médica después de la maniobra.",
           "Vigila dolor abdominal o tos persistente.",
           "En bebés, siempre a revisión."] }] },
-    "Fase 3 — Hemorragias graves: control de sangrado que no para": { ic: "drop-of-blood",
+    "Fase 3 — Hemorragias graves: control de sangrado que no para": {
       sesion: [[5, "Prepara una toalla, una venda elástica y, si tienes, un torniquete comercial."],
                [15, "Practica en tu propio muslo (sin apretar fuerte) la presión directa con la toalla y el vendaje compresivo; si tienes torniquete, practica colocarlo flojo en el brazo de un compañero siguiendo sus instrucciones, sin apretar."],
                [5, "Busca un curso de «Stop the Bleed» o de control de hemorragias cerca de ti."]],
@@ -5801,7 +5768,7 @@ const HB_PRACTICA = {
           "Acuéstala y abrígala.",
           "No le des de comer ni de beber.",
           "Háblale para vigilar su consciencia."] }] },
-    "Fase 4 — Quemaduras: el tratamiento correcto según el grado": { ic: "fire",
+    "Fase 4 — Quemaduras: el tratamiento correcto según el grado": {
       sesion: [[5, "Haz una tabla con los tres grados: cómo se ven, qué hacer y cuándo llamar al 911."],
                [15, "Revisa tu cocina: dónde está el agua corriente más cercana, si tienes gasas limpias y qué remedios caseros tienes que no debes usar."],
                [5, "Guarda el número del centro de toxicología o de emergencias para quemaduras químicas."]],
@@ -5825,7 +5792,7 @@ const HB_PRACTICA = {
           "Primero corta la corriente.",
           "No toques a la persona si sigue conectada.",
           "Siempre al médico, aunque se vea leve."] }] },
-    "Fase 5 — Convulsiones: qué hacer durante y qué hacer justo después": { ic: "stopwatch",
+    "Fase 5 — Convulsiones: qué hacer durante y qué hacer justo después": {
       sesion: [[5, "Escribe qué hacer durante y después de una convulsión, y los criterios para llamar al 911."],
                [15, "Practica la posición de recuperación con un compañero o familiar (con su permiso), varias veces, hasta que salga fluida."],
                [5, "Explica a alguien de tu casa por qué no se mete nada en la boca."]],
@@ -5847,7 +5814,7 @@ const HB_PRACTICA = {
           "Háblale con calma y explícale qué pasó.",
           "Protege su privacidad.",
           "Nada de comida o bebida hasta que esté alerta."] }] },
-    "Fase 6 — Reacción alérgica severa (anafilaxia): puede matar en minutos": { ic: "syringe",
+    "Fase 6 — Reacción alérgica severa (anafilaxia): puede matar en minutos": {
       sesion: [[5, "Escribe las señales de alarma de anafilaxia."],
                [15, "Ve un video oficial del fabricante sobre el uso del autoinyector (o practica con un entrenador sin aguja si alguien de tu entorno tiene uno)."],
                [5, "Pregunta en tu familia y tu trabajo si alguien tiene alergias graves y dónde guarda su autoinyector."]],
@@ -5865,7 +5832,7 @@ const HB_PRACTICA = {
           "Mejorar no significa estar a salvo.",
           "Observación hospitalaria tras anafilaxia.",
           "Ten un segundo autoinyector si fue recetado."] }] },
-    "Fase 7 — Heridas menores, desmayo, y cuándo esto no basta (constante)": { ic: "face-with-head-bandage",
+    "Fase 7 — Heridas menores, desmayo, y cuándo esto no basta (constante)": {
       sesion: [[5, "Escribe la lista de cuándo llamar al 911 sin dudar."],
                [15, "Practica con un compañero levantar las piernas para un desmayo y la posición de recuperación; aprende la prueba de derrame cerebral (cara, brazos, habla, tiempo)."],
                [5, "Revisa que en tu botiquín haya lo necesario para curar una cortada."]],
@@ -5888,7 +5855,7 @@ const HB_PRACTICA = {
           "Bordes separados o profunda: médico.",
           "Objeto sucio u oxidado: pregunta por el tétanos.",
           "Lava con agua abundante antes de cubrir."] }] },
-    "Lo legal en México y el miedo a ayudar": { ic: "balance-scale",
+    "Lo legal en México y el miedo a ayudar": {
       sesion: [[5, "Escribe las cuatro reglas: pedir consentimiento, no exceder tu capacitación, quedarte y entregar información."],
                [15, "Ensaya la frase de consentimiento y lo que dirías a los paramédicos al llegar."],
                [5, "Anota en una frase por qué no hacer nada es el mayor riesgo."]],
@@ -5911,7 +5878,7 @@ const HB_PRACTICA = {
           "No des medicamentos que no son de la persona.",
           "No muevas a alguien con posible lesión de columna salvo peligro.",
           "Si no sabes, llama y acompaña."] }] },
-    "Practicarlo de verdad": { ic: "graduation-cap",
+    "Practicarlo de verdad": {
       sesion: [[5, "Busca e inscríbete en el próximo curso presencial de primeros auxilios y RCP de la Cruz Roja o un centro certificado."],
                [15, "Ubica los DEA de los lugares donde pasas tiempo: trabajo, gym, centros comerciales, metro; anótalos."],
                [5, "Agenda enseñar lo básico a tu familia: llamada al 911 y RCP con las manos."]],
@@ -5929,10 +5896,9 @@ const HB_PRACTICA = {
           "Emergencias en Alemania y la UE: 112.",
           "Para la licencia alemana se pide curso de primeros auxilios.",
           "Tu curso en México te prepara para el de allá."] }] },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   brujula: {
-    "Por qué sigue valiendo la pena": { ic: "compass",
+    "Por qué sigue valiendo la pena": {
       sesion: [[5, "Sin ver el celular, señala dónde está el norte desde tu casa y anota cómo lo dedujiste."],
                [15, "Compruébalo con la brújula del celular y anota qué ventanas de tu casa dan a cada punto cardinal."],
                [5, "Escribe tres situaciones donde una brújula te sirve en la ciudad."]],
@@ -5950,7 +5916,7 @@ const HB_PRACTICA = {
           "Sur: más sol en invierno.",
           "Norte: luz pareja y fresca.",
           "En Alemania, pregunta la orientación (Ausrichtung)."] }] },
-    "Las partes de la brújula": { ic: "compass",
+    "Las partes de la brújula": {
       sesion: [[5, "Consigue una brújula de placa base (o usa una imagen detallada si aún no la tienes)."],
                [10, "Señala y nombra cada parte: placa, flecha de viaje, limbo, aguja, flecha de orientación (el establo)."],
                [5, "Gira el limbo y practica «el rojo en el establo» apuntando a distintos objetos."]],
@@ -5968,7 +5934,7 @@ const HB_PRACTICA = {
           "Civil: grados (0 a 360).",
           "Militar: milésimas.",
           "Norte 0°, este 90°, sur 180°, oeste 270°."] }] },
-    "Los tres nortes": { ic: "globe-showing-americas",
+    "Los tres nortes": {
       sesion: [[5, "Busca la declinación magnética actual de CDMX en la calculadora en línea de la NOAA."],
                [15, "Calcula cuántos metros te desvías en 1, 5 y 10 km si ignoras esa declinación (unos 17 m por grado por km)."],
                [5, "Si tu brújula tiene ajuste de declinación, configúralo."]],
@@ -5986,7 +5952,7 @@ const HB_PRACTICA = {
           "1° ≈ 17 m por km.",
           "Los errores se acumulan con la distancia.",
           "Por eso se usan puntos intermedios."] }] },
-    "Tomar un rumbo hacia algo que ves": { ic: "bullseye",
+    "Tomar un rumbo hacia algo que ves": {
       sesion: [[5, "En un parque, elige un objetivo visible a unos 200 metros."],
                [15, "Toma el rumbo con los cuatro pasos y camina usando puntos intermedios, sin mirar la brújula todo el tiempo."],
                [5, "Comprueba con el GPS qué tan cerca llegaste y anota el error."]],
@@ -6004,7 +5970,7 @@ const HB_PRACTICA = {
           "Puntos intermedios más cercanos.",
           "Una persona como referencia móvil.",
           "Cuenta pasos para controlar la distancia."] }] },
-    "El rumbo inverso: volver por donde viniste": { ic: "counterclockwise-arrows-button",
+    "El rumbo inverso: volver por donde viniste": {
       sesion: [[5, "Toma un rumbo hacia un punto y anótalo."],
                [15, "Camina hasta él, calcula de memoria el rumbo inverso y regresa siguiéndolo."],
                [5, "Comprueba qué tan cerca quedaste de tu punto de partida."]],
@@ -6022,7 +5988,7 @@ const HB_PRACTICA = {
           "Voltea en cada cruce importante.",
           "Memoriza referencias del regreso.",
           "Toma una foto de las bifurcaciones."] }] },
-    "Orientar el mapa": { ic: "world-map",
+    "Orientar el mapa": {
       sesion: [[5, "Imprime o abre un mapa de un parque o zona que conozcas."],
                [15, "Oriéntalo con la brújula: borde alineado con el norte del mapa, gira juntos hasta que la aguja apunte al norte; identifica tres elementos del terreno en el mapa."],
                [5, "Gira el mapa al revés y nota cómo pierde sentido: vuelve a orientarlo."]],
@@ -6040,7 +6006,7 @@ const HB_PRACTICA = {
           "Dobla el mapa para que se vea tu zona.",
           "Pulgar sobre tu posición.",
           "Muévelo conforme avanzas."] }] },
-    "Triangulación: saber dónde estás": { ic: "triangular-ruler",
+    "Triangulación: saber dónde estás": {
       sesion: [[5, "En un lugar alto donde sepas tu ubicación, identifica dos o tres referencias que aparezcan en el mapa."],
                [20, "Toma el rumbo a cada una, calcula los rumbos inversos y trázalos en el mapa desde cada referencia."],
                [5, "Compara el cruce con tu ubicación real y mide el error."]],
@@ -6058,7 +6024,7 @@ const HB_PRACTICA = {
           "Brújula ajustada o corrige a mano.",
           "Revisa si el mapa usa norte verdadero o de cuadrícula.",
           "Practica con ubicaciones conocidas."] }] },
-    "Orientarte sin brújula": { ic: "sun",
+    "Orientarte sin brújula": {
       sesion: [[5, "Al mediodía, sal al sol y observa hacia dónde apunta tu sombra."],
                [10, "Prueba el método del reloj y compáralo con la brújula del celular."],
                [10, "Una noche despejada, busca la Osa Mayor y localiza la estrella Polar."]],
@@ -6076,7 +6042,7 @@ const HB_PRACTICA = {
           "En verano, el sol pasa casi por encima.",
           "Úsalo con cuidado de mayo a julio.",
           "En Alemania el sol siempre va al sur al mediodía."] }] },
-    "Si te pierdes de verdad": { ic: "sos-button",
+    "Si te pierdes de verdad": {
       sesion: [[5, "Escribe el protocolo STOP y la regla de avisar a dónde vas."],
                [15, "Crea una plantilla de aviso para tus salidas al monte: ruta, hora de regreso, contacto, qué hacer si no regresas."],
                [5, "Mete en tu mochila de excursión un silbato, linterna y una manta térmica."]],
@@ -6100,7 +6066,7 @@ const HB_PRACTICA = {
           "Modo avión y brillo mínimo.",
           "Comparte ubicación en cuanto tengas señal.",
           "El 911 funciona aunque no tengas saldo."] }] },
-    "Practicarlo en la ciudad y en el monte": { ic: "mountain",
+    "Practicarlo en la ciudad y en el monte": {
       sesion: [[5, "Elige un parque grande de CDMX para tu primera práctica."],
                [25, "Calibra tu paso: cuenta los pasos dobles en 100 metros; luego toma un rumbo y camina 200 pasos siguiéndolo."],
                [5, "Comprueba con el GPS y anota tu calibración de pasos."]],
@@ -6118,7 +6084,7 @@ const HB_PRACTICA = {
           "Empieza por rutas marcadas.",
           "Lleva agua, abrigo y protección solar.",
           "En altura, sube despacio."] }] },
-    "Leer un mapa topográfico": { ic: "snow-capped-mountain",
+    "Leer un mapa topográfico": {
       sesion: [[5, "Descarga del INEGI un mapa topográfico de una zona que conozcas, como el Ajusco."],
                [15, "Identifica curvas de nivel juntas y separadas, una barranca (V hacia arriba) y una loma; mide una distancia con la escala."],
                [5, "Calcula el desnivel de una ruta contando curvas y multiplicando por la equidistancia."]],
@@ -6136,7 +6102,7 @@ const HB_PRACTICA = {
           "Descárgalas gratis en el sitio del INEGI.",
           "Imprímelas a escala real.",
           "Combínalas con apps de senderismo."] }] },
-    "Navegar de verdad: las técnicas que usan los que saben": { ic: "hiking-boot",
+    "Navegar de verdad: las técnicas que usan los que saben": {
       sesion: [[5, "En un mapa, planea una ruta corta con un punto de ataque y un sesgo deliberado."],
                [20, "Recórrela en un parque grande, aplicando las dos técnicas y rodeando un obstáculo con giros de 90° y conteo de pasos."],
                [5, "Anota qué técnica te ahorró más tiempo o errores."]],
@@ -6154,7 +6120,7 @@ const HB_PRACTICA = {
           "Divide la ruta en tramos.",
           "Un objetivo a la vez.",
           "Confirma tu posición al final de cada tramo."] }] },
-    "Lo que hay que llevar y evitar": { ic: "backpack",
+    "Lo que hay que llevar y evitar": {
       sesion: [[5, "Revisa tu mochila de excursión contra la lista."],
                [15, "Prueba la interferencia: toma un rumbo y acerca el celular, una navaja y la hebilla a la brújula; observa cuánto se mueve la aguja."],
                [5, "Mete el mapa en una bolsa impermeable y agrega silbato y batería externa."]],
@@ -6172,10 +6138,9 @@ const HB_PRACTICA = {
           "Descarga la ruta y el mapa antes.",
           "Batería externa siempre.",
           "Practica también sin el celular."] }] },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   asado: {
-    "Prender el carbón sin líquido": { ic: "fire",
+    "Prender el carbón sin líquido": {
       sesion: [[5, "Prepara la chimenea de encendido (o la pirámide) con papel abajo y carbón arriba."],
                [20, "Enciende el papel y espera sin tocar hasta que el carbón esté cubierto de ceniza gris."],
                [5, "Anota cuántos minutos tardó y qué carbón usaste."]],
@@ -6193,7 +6158,7 @@ const HB_PRACTICA = {
           "Cubos de cera natural.",
           "Ocote en astillas.",
           "Papel con un poco de aceite de cocina."] }] },
-    "Las dos zonas: el concepto que lo cambia todo": { ic: "left-right-arrow",
+    "Las dos zonas: el concepto que lo cambia todo": {
       sesion: [[5, "Acomoda todo el carbón encendido en una mitad del asador."],
                [15, "Haz la prueba de la mano en cada zona y anota los segundos; asa una pieza pequeña sellando en la zona caliente y terminando en la fría con tapa."],
                [5, "Anota qué temperatura sentiste en cada zona y cómo quedó la pieza."]],
@@ -6211,7 +6176,7 @@ const HB_PRACTICA = {
           "Abrir: más calor.",
           "Cerrar parcialmente: menos calor.",
           "Nunca cierres todo si quieres que siga encendido."] }] },
-    "Elegir el corte": { ic: "cut-of-meat",
+    "Elegir el corte": {
       sesion: [[5, "Ve a una carnicería y pide ver arrachera, ribeye y new york."],
                [15, "Compara grosor y marmoleo, pregunta al carnicero cuál recomienda para asar y pide el corte de al menos 2.5 cm de grosor."],
                [5, "Anota el corte, el precio por kilo y el grosor que compraste."]],
@@ -6229,7 +6194,7 @@ const HB_PRACTICA = {
           "Pide el grosor exacto.",
           "Pregunta qué está bueno esta semana.",
           "Regresa y comenta cómo te quedó."] }] },
-    "Sal, marinada y temperatura de partida": { ic: "salt",
+    "Sal, marinada y temperatura de partida": {
       sesion: [[5, "Saca la carne del refrigerador 40 minutos antes de asar."],
                [15, "Sala con al menos 40 minutos de anticipación (o justo antes), seca la superficie con papel y prepara una marinada solo si es un corte duro."],
                [5, "Anota cuánto tiempo salaste y cómo quedó la costra."]],
@@ -6247,7 +6212,7 @@ const HB_PRACTICA = {
           "Marinada corta para cortes delgados.",
           "Máximo unas horas con ácido.",
           "Sécala antes de asar para que dore."] }] },
-    "Asar y saber cuándo está": { ic: "thermometer",
+    "Asar y saber cuándo está": {
       sesion: [[5, "Ten listos pinzas, termómetro de sonda y un plato limpio para la carne cocida."],
                [20, "Asa el corte sin moverlo hasta que se despegue; mide en la parte más gruesa y retira 3-4 grados antes del punto que quieres."],
                [5, "Anota temperatura de retiro, temperatura final después del reposo y el punto obtenido."]],
@@ -6270,7 +6235,7 @@ const HB_PRACTICA = {
           "Centro de la parte más gruesa.",
           "Lejos del hueso.",
           "De lado en cortes delgados."] }] },
-    "Reposo y corte — los dos últimos errores": { ic: "kitchen-knife",
+    "Reposo y corte — los dos últimos errores": {
       sesion: [[5, "Retira la carne a una tabla limpia y tápala sin apretar."],
                [10, "Mientras reposa, identifica la dirección de la fibra y prepara el cuchillo afilado."],
                [10, "Corta contra la fibra en tiras en ángulo y termina con sal en escamas; compara con un trozo cortado a favor de la fibra."]],
@@ -6288,7 +6253,7 @@ const HB_PRACTICA = {
           "Al final, sobre la carne cortada.",
           "Poca cantidad: es intensa.",
           "La sal de Colima es una excelente opción mexicana."] }] },
-    "Lo que acompaña": { ic: "hot-pepper",
+    "Lo que acompaña": {
       sesion: [[5, "Prepara cebollitas, nopales, chiles y los ingredientes de la salsa."],
                [20, "Ásalos en orden aprovechando el fuego alto antes de la carne; asa jitomate, chile, ajo y cebolla para la salsa."],
                [5, "Muele la salsa con sal y prueba; anota la proporción."]],
@@ -6311,7 +6276,7 @@ const HB_PRACTICA = {
           "Tanta verdura como carne.",
           "Salsa con acidez para cortar la grasa.",
           "Tortillas recién calentadas en el asador."] }] },
-    "Mantén tu cuchillo afilado": { ic: "kitchen-knife",
+    "Mantén tu cuchillo afilado": {
       sesion: [[5, "Revisa el filo con la prueba del papel."],
                [20, "Si tienes piedra, remójala, afila con ángulo constante de 15-20° en grano grueso y luego fino; si no, usa la chaira cinco pasadas por lado."],
                [5, "Repite la prueba del papel y anota el resultado."]],
@@ -6329,7 +6294,7 @@ const HB_PRACTICA = {
           "Siente la rebaba con cuidado, desde el lomo hacia el filo.",
           "Cambia de lado cuando aparezca en toda la longitud.",
           "Termina con pasadas ligeras alternadas."] }] },
-    "Seguridad e higiene": { ic: "soap",
+    "Seguridad e higiene": {
       sesion: [[5, "Prepara dos juegos de pinzas y tablas: uno para crudo y otro para cocido."],
                [15, "Organiza tu estación de asado: crudo de un lado, cocido del otro, platos separados y termómetro a la mano."],
                [5, "Al terminar, limpia la parrilla caliente con cepillo y apaga el carbón por completo."]],
@@ -6347,7 +6312,7 @@ const HB_PRACTICA = {
           "Máximo 2 horas fuera; 1 si hace calor.",
           "Ensaladas y salsas con mayonesa, a la sombra y en frío.",
           "Guarda las sobras pronto."] }] },
-    "Otras carnes en el asador": { ic: "poultry-leg",
+    "Otras carnes en el asador": {
       sesion: [[5, "Elige una carne nueva para probar: pollo, costillas, chorizo o pescado."],
                [40, "Cocínala con su regla: pollo directo e indirecto hasta 74 °C, costillas lentas con tapa, chorizo en zona media, pescado en parrilla muy aceitada."],
                [5, "Anota tiempos, temperaturas y resultado."]],
@@ -6365,7 +6330,7 @@ const HB_PRACTICA = {
           "Pescado de carne firme: robalo, huachinango, atún.",
           "Seca bien la piel.",
           "Voltea una sola vez con espátula."] }] },
-    "Cocina de fuego indirecto y ahumado": { ic: "cloud",
+    "Cocina de fuego indirecto y ahumado": {
       sesion: [[10, "Monta el asador para indirecto con poco carbón y una charola con agua en la zona fría; remoja astillas de madera."],
                [60, "Ahuma algo pequeño (pollo o costillas) entre 110 y 135 °C con humo azul, controlando con las ventilas y agregando astillas."],
                [10, "Anota temperatura, tiempo, madera usada y cómo salió."]],
@@ -6383,7 +6348,7 @@ const HB_PRACTICA = {
           "Mezquite con moderación.",
           "Frutales para pollo y cerdo.",
           "Nunca madera tratada o de pino."] }] },
-    "Planear una carne asada para varios": { ic: "spiral-calendar",
+    "Planear una carne asada para varios": {
       sesion: [[5, "Define cuántas personas, hora de comer y menú."],
                [15, "Calcula carne (250-300 g por persona), carbón (1 kg por cada 4) y haz la lista de compras y el orden de la parrilla."],
                [5, "Haz tu cronograma: hora de encender (40 minutos antes), verduras, cortes gruesos y delgados."]],
@@ -6408,10 +6373,9 @@ const HB_PRACTICA = {
           "Queso panela o de asar, hongos, elotes.",
           "Aguas frescas y bebidas sin alcohol.",
           "Pregunta por restricciones al invitar."] }] },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   reparaciones: {
-    "Las herramientas que resuelven el 90%": { ic: "toolbox",
+    "Las herramientas que resuelven el 90%": {
       sesion: [[5, "Saca las herramientas que tienes y ponlas sobre la mesa."],
                [15, "Compáralas con la lista y anota lo que falta, priorizando taladro, detector y multímetro."],
                [5, "Organiza todo en una caja con lugar fijo para cada herramienta."]],
@@ -6437,7 +6401,7 @@ const HB_PRACTICA = {
           "Al rentar, revisa qué debes reparar al salir.",
           "Tapar agujeros de taquetes es lo más común.",
           "Allá el voltaje es 230 V: tus herramientas de México no sirven sin transformador."] }] },
-    "Seguridad antes de cualquier cosa": { ic: "safety-vest",
+    "Seguridad antes de cualquier cosa": {
       sesion: [[5, "Localiza la llave de paso general del agua de tu casa y la de cada mueble."],
                [15, "Ubica tu tablero eléctrico y etiqueta qué controla cada interruptor, probando uno por uno."],
                [5, "Revisa dónde está la llave del gas y escribe qué harías si hueles gas."]],
@@ -6455,7 +6419,7 @@ const HB_PRACTICA = {
           "Huele gas: no enciendas ni apagues nada.",
           "Cierra la llave, abre ventanas, sal.",
           "Llama al técnico o al 911 desde afuera."] }] },
-    "Taladrar y colgar algo que aguante": { ic: "framed-picture",
+    "Taladrar y colgar algo que aguante": {
       sesion: [[5, "Elige qué vas a colgar y su peso aproximado."],
                [20, "Detecta cables y tubos, identifica la pared, elige broca y taquete, marca la profundidad, perfora recto y limpia el polvo; coloca y prueba."],
                [5, "Revisa que esté nivelado y firme; anota qué taquete usaste."]],
@@ -6473,7 +6437,7 @@ const HB_PRACTICA = {
           "Lentes de protección siempre.",
           "Cubrebocas si perforas mucho.",
           "Captura el polvo al perforar."] }] },
-    "Electricidad básica: cambiar un contacto o un apagador": { ic: "electric-plug",
+    "Electricidad básica: cambiar un contacto o un apagador": {
       sesion: [[5, "Baja el interruptor del circuito y comprueba con probador que no hay corriente."],
                [20, "Quita la placa, toma foto, desconecta, conecta el nuevo igual con tornillos firmes y vuelve a montar."],
                [5, "Sube la corriente, prueba con un aparato y anota el circuito en tu tablero."]],
@@ -6491,7 +6455,7 @@ const HB_PRACTICA = {
           "Aprieta firme los tornillos.",
           "Cable sin aislante solo lo necesario.",
           "Contacto caliente o que huele: revísalo."] }] },
-    "Plomería 1: fugas de llave y de coladera": { ic: "droplet",
+    "Plomería 1: fugas de llave y de coladera": {
       sesion: [[5, "Cierra la llave de paso del mueble, abre la llave para vaciar y pon un balde debajo."],
                [20, "Desarma la llave, revisa empaque o cartucho, compra la pieza igual (lleva la vieja) y vuelve a armar."],
                [5, "Abre el paso y revisa que no gotee; anota la pieza que usaste."]],
@@ -6509,7 +6473,7 @@ const HB_PRACTICA = {
           "Teflón en rosca macho, en el sentido de apriete.",
           "3 a 5 vueltas.",
           "Conexiones con empaque: sin teflón."] }] },
-    "Plomería 2: caños tapados y el sifón": { ic: "plunger",
+    "Plomería 2: caños tapados y el sifón": {
       sesion: [[5, "Pon un balde bajo el sifón del fregadero o lavabo."],
                [15, "Afloja las tuercas a mano, saca la U, límpiala, revisa los empaques y vuelve a montarla."],
                [5, "Deja correr agua caliente y revisa que no haya fugas."]],
@@ -6527,7 +6491,7 @@ const HB_PRACTICA = {
           "Ventosa primero.",
           "Sonda para tapones profundos.",
           "Enzimáticos para mantenimiento."] }] },
-    "Plomería 3: el WC": { ic: "toilet",
+    "Plomería 3: el WC": {
       sesion: [[5, "Quita la tapa del tanque y observa un ciclo de descarga y llenado."],
                [15, "Pon unas gotas de colorante en el tanque, espera 15 minutos sin jalar: si aparece color en la taza, el sapo fuga. Ajusta el flotador si llena de más."],
                [5, "Si el sapo fuga, anota su modelo para comprar el repuesto."]],
@@ -6545,7 +6509,7 @@ const HB_PRACTICA = {
           "Solo papel higiénico.",
           "Bote de basura junto al WC.",
           "Las toallitas no se desintegran."] }] },
-    "Paredes: tapar agujeros y pintar": { ic: "paintbrush",
+    "Paredes: tapar agujeros y pintar": {
       sesion: [[5, "Elige una pared con agujeros pequeños y prepara pasta, espátula, lija y cinta de pintor."],
                [25, "Resana los agujeros, deja secar, lija, limpia el polvo, cubre bordes con cinta y pinta dos manos finas cortando primero los bordes con brocha."],
                [5, "Retira la cinta con la pintura algo fresca y limpia las herramientas."]],
@@ -6563,7 +6527,7 @@ const HB_PRACTICA = {
           "Si la mancha regresa, hay humedad.",
           "Busca la fuente antes de pintar.",
           "Ventila baños y cocinas."] }] },
-    "Puertas, chapas y muebles": { ic: "door",
+    "Puertas, chapas y muebles": {
       sesion: [[5, "Recorre tu casa buscando puertas que rechinan o rozan, chapas duras y muebles flojos."],
                [20, "Arregla tres: lubrica bisagras, aprieta tornillos (palillo con pegamento si giran en falso), grafito en una chapa."],
                [5, "Anota qué arreglaste y qué queda pendiente."]],
@@ -6581,7 +6545,7 @@ const HB_PRACTICA = {
           "Retira el viejo por completo.",
           "Superficie seca y limpia con alcohol.",
           "24 horas sin agua."] }] },
-    "Cuándo llamar a un profesional": { ic: "construction-worker",
+    "Cuándo llamar a un profesional": {
       sesion: [[5, "Escribe tu lista de lo que nunca haces solo: gas, tablero, estructura, fugas en muro."],
                [15, "Busca y guarda el contacto de un electricista, un plomero y un técnico de gas de confianza, con recomendaciones."],
                [5, "Escribe las preguntas que harás antes de contratar."]],
@@ -6605,10 +6569,9 @@ const HB_PRACTICA = {
           "Pide recomendaciones.",
           "Compara dos presupuestos en trabajos grandes.",
           "No pagues todo por adelantado."] }] },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
   meditar: {
-    "Qué es y qué NO es": { ic: "man-in-lotus-position",
+    "Qué es y qué NO es": {
       sesion: [[1, "Siéntate con la espalda erguida y pon un temporizador."],
                [3, "Atención en la respiración; cada vez que notes que te fuiste, cuenta una «repetición» y vuelve."],
                [1, "Anota cuántas repeticiones contaste, sin juzgar el número."]],
@@ -6626,7 +6589,7 @@ const HB_PRACTICA = {
           "MBSR: 8 semanas, estudiado en clínicas.",
           "No requiere creencias.",
           "Es entrenamiento de atención."] }] },
-    "Qué mejora en concreto": { ic: "brain",
+    "Qué mejora en concreto": {
       sesion: [[2, "Escribe del 1 al 10 cómo están hoy tu atención, tu reactividad y tu tensión física."],
                [5, "Medita cinco minutos con atención en la respiración."],
                [2, "Pon un recordatorio para repetir la evaluación en 30 días."]],
@@ -6644,7 +6607,7 @@ const HB_PRACTICA = {
           "Nota la emoción antes de actuar.",
           "Una respiración crea el espacio.",
           "Elige la respuesta."] }] },
-    "La postura": { ic: "chair",
+    "La postura": {
       sesion: [[2, "Siéntate en una silla con los pies planos y la espalda sin recargar."],
                [5, "Ajusta: hilo desde la coronilla, barbilla metida, hombros y mandíbula sueltos; mantén la postura respirando tranquilo."],
                [1, "Nota qué parte del cuerpo se tensó y anótalo."]],
@@ -6662,7 +6625,7 @@ const HB_PRACTICA = {
           "Separa ligeramente los dientes.",
           "Deja caer los hombros.",
           "Revisa la tensión en el semáforo."] }] },
-    "Tu primera sesión, minuto a minuto": { ic: "stopwatch",
+    "Tu primera sesión, minuto a minuto": {
       sesion: [[1, "Siéntate, temporizador de cinco minutos con sonido suave, ojos cerrados."],
                [4, "Tres respiraciones largas y luego respiración normal, atención en un punto; cuando te vayas, «pensando» y vuelve."],
                [1, "Nota el cuerpo y los sonidos antes de abrir los ojos; marca la sesión en tu cuadrícula de hábitos."]],
@@ -6680,7 +6643,7 @@ const HB_PRACTICA = {
           "Hecha = buena.",
           "Las sesiones difíciles entrenan más.",
           "Registra solo si la hiciste."] }] },
-    "Contar respiraciones: el andamio para empezar": { ic: "abacus",
+    "Contar respiraciones: el andamio para empezar": {
       sesion: [[1, "Siéntate y prepara un temporizador de cinco minutos."],
                [5, "Cuenta las exhalaciones del 1 al 10 y vuelve a empezar; si te pierdes, vuelve al 1."],
                [1, "Anota cuántas veces llegaste a 10 sin perderte."]],
@@ -6698,7 +6661,7 @@ const HB_PRACTICA = {
           "Registra los ciclos completos.",
           "Compara semanas, no días.",
           "Mejorar no es la meta, es la consecuencia."] }] },
-    "Qué hacer con los pensamientos": { ic: "cloud",
+    "Qué hacer con los pensamientos": {
       sesion: [[1, "Siéntate con una libreta al lado."],
                [8, "Medita etiquetando los pensamientos (planeando, recordando, preocupación) y vuelve; si algo urgente aparece, anótalo en dos palabras."],
                [1, "Revisa qué etiqueta apareció más."]],
@@ -6716,7 +6679,7 @@ const HB_PRACTICA = {
           "Anótalo y suéltalo.",
           "Atiéndelo después, con tiempo.",
           "Si son obsesivos o angustiantes, busca apoyo."] }] },
-    "Cuándo y cuánto": { ic: "spiral-calendar",
+    "Cuándo y cuánto": {
       sesion: [[2, "Elige tu ancla: después de lavarte los dientes o antes del café."],
                [5, "Medita cinco minutos justo después de esa ancla."],
                [2, "Escribe tu progresión de las próximas semanas: 5, 10 y 15 minutos."]],
@@ -6734,7 +6697,7 @@ const HB_PRACTICA = {
           "Mañana: más constante para muchos.",
           "Noche: ayuda a dormir.",
           "Elige la que cumplas."] }] },
-    "Los cuatro obstáculos y qué hacer con cada uno": { ic: "construction",
+    "Los cuatro obstáculos y qué hacer con cada uno": {
       sesion: [[2, "Identifica cuál de los cuatro obstáculos te ha frenado más."],
                [5, "Medita aplicando la respuesta a ese obstáculo: tres minutos si no hay tiempo, ojos entreabiertos si hay sueño, observar la inquietud si aparece."],
                [2, "Escribe tu plan para el día que quieras abandonar."]],
@@ -6752,7 +6715,7 @@ const HB_PRACTICA = {
           "Espera el bajón de motivación.",
           "Comprométete con la práctica, no con el resultado.",
           "Mide al final de las ocho semanas."] }] },
-    "Escaneo corporal": { ic: "x-ray",
+    "Escaneo corporal": {
       sesion: [[1, "Acuéstate o siéntate cómodo, temporizador de diez minutos."],
                [8, "Recorre el cuerpo de pies a cabeza notando sensaciones sin cambiarlas: pies, piernas, cadera, abdomen, pecho, manos, brazos, hombros, cuello, cara."],
                [1, "Nota en qué zonas había tensión y anótalas."]],
@@ -6770,7 +6733,7 @@ const HB_PRACTICA = {
           "Tensa 5 segundos, suelta 10.",
           "De pies a cabeza.",
           "Útil antes de dormir o tras un día pesado."] }] },
-    "Meditación caminando": { ic: "person-walking",
+    "Meditación caminando": {
       sesion: [[1, "Busca un pasillo o espacio de 10 a 15 pasos."],
                [8, "Camina despacio con la atención en las plantas de los pies; al final, gira con atención y regresa; cuando te distraigas, vuelve a los pies."],
                [1, "Nota cómo te sientes comparado con la meditación sentado."]],
@@ -6788,7 +6751,7 @@ const HB_PRACTICA = {
           "Celular guardado en el trayecto.",
           "Atención a los pies y al entorno.",
           "Combina con conciencia situacional."] }] },
-    "Llevarlo al día": { ic: "vertical-traffic-light",
+    "Llevarlo al día": {
       sesion: [[2, "Elige tres momentos fijos del día para una respiración consciente: un semáforo, antes de una junta, las primeras cucharadas de la comida."],
                [5, "Medita cinco minutos y luego pon recordatorios para esos tres momentos."],
                [2, "En la noche, anota cuántas veces lo hiciste y si cambió alguna reacción."]],
@@ -6806,7 +6769,7 @@ const HB_PRACTICA = {
           "Primeras tres cucharadas sin pantalla.",
           "Nota sabor, textura y temperatura.",
           "Deja los cubiertos entre bocados."] }] },
-    "Apps y recursos, sin depender de ellos": { ic: "mobile-phone",
+    "Apps y recursos, sin depender de ellos": {
       sesion: [[2, "Instala una app con temporizador (por ejemplo, Insight Timer) y configura campana de inicio y fin."],
                [7, "Haz una meditación guiada de introducción y otra sin guía, solo con temporizador."],
                [1, "Anota cuál te costó más y por qué."]],
@@ -6824,8 +6787,6 @@ const HB_PRACTICA = {
           "Primero practica, luego lee.",
           "Una app basta.",
           "Desactiva notificaciones que no sean el recordatorio."] }] },
-    "📚 Qué leer": { ic: "books" },
-    "✅ Ya lo dominas cuando…": { ic: "check-mark-button" }
   },
 };
 if (typeof module !== 'undefined' && module.exports) module.exports = HB_PRACTICA;

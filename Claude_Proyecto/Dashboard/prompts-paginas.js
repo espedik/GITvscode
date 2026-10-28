@@ -754,12 +754,16 @@ Habilidades Base son las fichas de vida práctica y social, cada una con sus pas
 - La ficha de primeros auxilios y la de meditar se cruzan con Salud.
 
 ## Cómo sabes que funciona
-- Fichas dominadas por trimestre, con su criterio cumplido de verdad.
+- Fichas dominadas por trimestre, con su criterio cumplido de verdad: los criterios de «Ya lo dominas» palomeados uno por uno.
+- Sesiones anotadas cada semana en «Tu práctica»: Adán practica, no solo lee.
+- Su resultado en «Ponte a prueba» sube de una vuelta a la siguiente.
 - Adán usa la habilidad en su vida: la receta, la reparación, la conversación difícil que antes evitaba.
 
 ## Al modificar esta pantalla
 - Cada ficha conserva su estructura: pasos, criterio de dominio, error común y recursos verificados.
-- Cada paso se practica y se profundiza: una sesión en minutos con su «sale bien si» que otra persona pueda comprobar, tres subtemas que van más hondo que el paso —el concepto, de dónde sale y cómo se aplica esa semana— sin repetirlo ni rellenar, «Para copiar» cuando hay algo que se usa tal cual, y su ícono. La ficha abre en «Tu ruta»: para qué te sirve en el plan, tu práctica, lo siguiente, los pasos y cuándo la dominas.
+- Nada de emojis ni íconos: cada paso lleva una foto real de lo que enseña, con su crédito y un pie que la ata al paso, y tres cifras que se recuerdan.
+- Cada paso se practica y se profundiza: una sesión en minutos con su «sale bien si» que otra persona pueda comprobar, tres subtemas que van más hondo que el paso —el concepto, de dónde sale y cómo se aplica esa semana— sin repetirlo ni rellenar, y «Para copiar» cuando hay algo que se usa tal cual. La ficha abre en «Tu ruta»: para qué te sirve en el plan, tu práctica, lo siguiente, los pasos con su foto, su gráfica, «Ponte a prueba» y cuándo la dominas.
+- Lo que el texto no puede enseñar va en una gráfica con su fuente (un estudio, una ley, una cuenta; si es criterio, lo dice), en una calculadora, en un ritmo para practicar o en un escenario que dice qué pasa con cada respuesta. Cada ficha cierra con su gráfica y un «Ponte a prueba» de cinco preguntas o más, y cada pregunta remite al paso que la explica. Un dato que no se puede respaldar no entra.
 - Lo que toca la seguridad (primeros auxilios, armas, pelear, fuego, mecánica) se practica sin riesgo —sobre un cojín o un maniquí, con instructor, en un lugar controlado— y remite a un curso o a un profesional cuando leer no basta. Lo de anfitrión (vino, coctelería, citas) se practica sin tomar mientras dure la meta de alcohol.
 - Un video entra solo si enseña bien y viene de una fuente seria.`
     },
