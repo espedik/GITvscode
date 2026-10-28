@@ -1168,7 +1168,8 @@ window.CIFRAS = (function () {
     g.personal = g.sueldo - g.ahorro - GRUPOS_SUELDO.reduce(function (a, x) {
       return x[0] === 'sueldo' || x[0] === 'ahorro' || x[0] === 'personal' ? a : a + g[x[0]];
     }, 0);
-    const didi = didiAlAhorro(mes, ultimo) - deDidi;
+    // A GBM solo va lo de Didi de los lunes que caen después de que la BBVA queda en cero (lunesDidiGbm).
+    const didi = lunesDidiGbm(mes).length ? didiAlAhorro(mes, ultimo) - deDidi : 0;
     return { mes: mes, casa: casa, g: g, items: items, cetes: cetes, dia1: dia1, dia15: dia15, didi: didi, ahorro: g.ahorro + didi };
   }
   // Lo que cuestan al mes sus rutinas de piel, cabello y suplementos: el mismo número que pintan
@@ -9168,17 +9169,28 @@ window.CIFRAS = (function () {
     return { total: total, restantes: restantes, pagadas: total && restantes != null ? Math.max(0, total - restantes) : null,
              siguiente: restantes ? sig : null, ultima: restantes ? new Date(sig.getFullYear(), sig.getMonth() + restantes - 1, dia) : null };
   }
+  /* Los lunes de un mes en que lo de Didi va a GBM: los que no llevan abono de Didi a la tarjeta y caen después de que
+     la BBVA queda en cero (`planBbva().fin`). Mientras tenga saldo, lo de Didi va a ella y no a GBM (Adán, 28-oct-2026:
+     "¿de dónde sacas que en octubre deposito a GBM? eso es después de liquidar BBVA"): lo que sobra de repartir el
+     apartado del mes entre sus lunes —$38 en octubre— se queda contigo. */
+  function lunesDidiGbm(ym) {
+    const p = ym.split('-').map(Number), n = new Date(p[0], p[1], 0).getDate(), B = planBbva(), out = [];
+    const cero = B.fin ? fechaLocal(B.fin) : '';
+    for (let dia = 1; dia <= n; dia++) {
+      if (new Date(p[0], p[1] - 1, dia).getDay() !== 1) continue;
+      const k = ym + '-' + String(dia).padStart(2, '0');
+      if ((cero && k <= cero) || B.abonos.some(function (a) { return a.fecha === k && a.de === 'didi'; })) continue;
+      out.push(k);
+    }
+    return out;
+  }
   /* Lo de Didi que llega a GBM cada lunes de un mes: lo que el plan del mes le deja a GBM
      (`desgloseMes(mes).didi`: lo que Didi aparta menos lo que se lleva la BBVA), repartido entre los lunes
-     que no van a la tarjeta. Una sola regla para la proyección día a día y el plan de inversiones de
-     Finanzas: la suma del mes es la de `desgloseMes`. */
+     de `lunesDidiGbm`. Una sola regla para la proyección día a día y el plan de inversiones de Finanzas: la
+     suma del mes es la de `desgloseMes`. */
   function didiGbmLunes(ym) {
-    const p = ym.split('-').map(Number), n = new Date(p[0], p[1], 0).getDate(), B = planBbva(), out = {};
-    const dDidi = desgloseMes(ym).didi, lunes = [];
-    for (let dia = 1; dia <= n; dia++) if (new Date(p[0], p[1] - 1, dia).getDay() === 1) lunes.push(ym + '-' + String(dia).padStart(2, '0'));
-    if (!(dDidi >= 1) || !lunes.length) return out;
-    const libres = lunes.filter(function (k) { return !B.abonos.some(function (a) { return a.fecha === k && a.de === 'didi'; }); });
-    const usa = libres.length ? libres : [lunes[lunes.length - 1]];
+    const out = {}, dDidi = desgloseMes(ym).didi, usa = lunesDidiGbm(ym);
+    if (!(dDidi >= 1) || !usa.length) return out;
     usa.forEach(function (k) { out[k] = Math.round(dDidi / usa.length * 100) / 100; });
     return out;
   }

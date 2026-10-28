@@ -308,13 +308,13 @@ pero el nombre de la variable se queda corto.
 | `{{gastoPersonalCasa}}` | $7,255 — lo mismo en casa | derivada |
 | `{{cuidadoMes}}` | $4,624 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
 | `{{recorteRutinas}}` | $1,880 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $857 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
-| `{{alemaniaMarzo}}` | $123,932 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
+| `{{alemaniaMarzo}}` | $123,894 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
 | `{{salidaAgosto}}` | $324,284 — lo que pide la salida completa en agosto de 2027: la cuenta bloqueada, la reserva del BYD, el colchón y la colegiatura del primer semestre (`cortes.salida.pide`) | derivada; se mueve con `PROYECTO.eurMxn` |
-| `{{extraSalida}}` | $11,795 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
-| `{{marzoParaSalida}}` | $182,905 — lo que tendría GBM al cerrar la Fase 1 con ese ingreso nuevo: el punto de control del 31 de marzo | derivada |
-| `{{mayoParaSalida}}` | $256,894 — lo mismo el día de decidir (`PROYECTO.maestriaDecision`) | derivada |
+| `{{extraSalida}}` | $11,798 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
+| `{{marzoParaSalida}}` | $182,886 — lo que tendría GBM al cerrar la Fase 1 con ese ingreso nuevo: el punto de control del 31 de marzo | derivada |
+| `{{mayoParaSalida}}` | $256,883 — lo mismo el día de decidir (`PROYECTO.maestriaDecision`) | derivada |
 | `{{salida2028}}` | «sobran …» o «faltan …»: la salida completa si se mueve a septiembre de 2028 (`desfase: 12`, `fmt: 'txt'`) | derivada |
-| `{{alemaniaJunio}}` | $200,838 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
+| `{{alemaniaJunio}}` | $200,800 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
 | `{{bbvaCero}}` | 23 nov 2026 — el día que la BBVA queda en cero con `planBbva` (`fmt: 'fecha'`) | derivada |
 | `{{bbvaIntereses}}` | $0 — lo que costaría en intereses llegar a cero; en 0 con `PROYECTO.bbvaSinIntereses` | derivada |
 | `{{bbvaRuta}}` | «el lunes 26, $1,154 de Didi; … el domingo 15 nov, $6,950 de la quincena y el lunes 16 nov, $1,154 de Didi; y 1 abono más»: los abonos que le quedan a la BBVA, desde hoy (`bbvaRutaTxt`, `fmt: 'txt'`) | derivada de `planBbva` |
@@ -373,7 +373,10 @@ y de la última: una sola cuenta para Finanzas.
 
 **Lo que va a GBM cada semana: `gbmMes(ym)`**: el envío de cada quincena (los cobros `ahorro` de
 `agendaDia`), lo de Didi de los lunes —`didiGbmLunes(ym)`: lo que `desgloseMes` le deja a GBM, repartido
-entre los lunes que no van a la tarjeta, la misma regla de `estadoDia`—, las ventas del plan, el depósito
+entre los lunes de `lunesDidiGbm(ym)`: los que caen después del día en que el plan liquida la BBVA (`planBbva().fin`) y no llevan
+abono de Didi a la tarjeta, la misma regla de `estadoDia`. Mientras la BBVA tenga saldo no va nada de Didi a
+GBM (Adán: *"eso es después de liquidar BBVA"*): lo que el apartado del mes no alcanza a mandar a la tarjeta
+se queda contigo—, las ventas del plan, el depósito
 que regresa y los abonos de la BBVA desde el último saldo dicho. Lo pinta el plan de inversiones de
 Finanzas. **`presupuestoFijo(cat, ym)`**: el límite de una categoría de Finanzas que el plan conoce
 (renta y aporte, servicios, suscripciones, comida, rutinas y deudas), de `desgloseMes`.
