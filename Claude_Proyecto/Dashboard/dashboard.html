@@ -3853,6 +3853,30 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .iqv-lc-f em{display:block;font-style:normal;font-size:12px;font-weight:800;color:var(--p)}
 .iqv-lc.ok .iqv-lc-t b{color:var(--text3);text-decoration:line-through}
 .iqv-lc.ok .iqv-lc-f{color:var(--g);font-weight:700}
+/* El nombre del capítulo abre el PDF en su página; debajo, sus subtemas (`iqSubsHtml`), agrupados por su x.y. */
+.iqv-lc-a{font-size:12.5px;font-weight:600;line-height:1.3;color:var(--text);text-decoration:underline;text-decoration-color:rgba(var(--ov),.25);text-underline-offset:3px}
+.iqv-lc-a:hover{color:var(--p);text-decoration-color:var(--p)}
+.iqv-lc.ok .iqv-lc-a{color:var(--text3);text-decoration:line-through}
+.iqv-subs{margin:0 0 6px 34px}
+.iqv-subs summary{cursor:pointer;font-size:11px;color:var(--text3);padding:3px 0;list-style-position:inside}
+.iqv-subs summary b{color:var(--text2)}
+.iqv-subs[open] summary{margin-bottom:3px}
+.iqv-sg{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text3);margin:7px 0 3px;line-height:1.35}
+.iqv-sg b{color:var(--p);margin-right:3px}
+.iqv-st{display:grid;grid-template-columns:auto 34px minmax(0,1fr) auto;align-items:start;gap:7px;padding:5px 6px;border-radius:8px}
+.iqv-st input{width:14px;height:14px;margin:2px 0 0;accent-color:var(--g);cursor:pointer}
+.iqv-st-n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3);padding-top:1px}
+.iqv-st-t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.iqv-st-t a,.iqv-st-t>b{font-size:12px;font-weight:600;line-height:1.3;color:var(--text);text-decoration:underline;text-decoration-color:rgba(var(--ov),.22);text-underline-offset:3px}
+.iqv-st-t a:hover{color:var(--p);text-decoration-color:var(--p)}
+.iqv-st-t small{font-size:10.5px;line-height:1.4;color:var(--text3)}
+.iqv-st-t small i{font-style:normal;font-weight:700;color:var(--text2)}
+.iqv-st-t small b.ok{color:var(--g)}
+.iqv-st-t small b.mal{color:var(--r)}
+.iqv-st-f{font-size:11px;color:var(--g);font-weight:700;white-space:nowrap}
+.iqv-st-f em{font-style:normal;color:var(--p);font-weight:800}
+.iqv-st.sig{background:rgba(127,79,184,.10);box-shadow:inset 0 0 0 1px rgba(127,79,184,.45)}
+.iqv-st.ok .iqv-st-t a,.iqv-st.ok .iqv-st-t>b{color:var(--text3);text-decoration:line-through}
 .iqv-cap{display:grid;grid-template-columns:22px minmax(0,1fr) 34px 56px;column-gap:10px;row-gap:5px;align-items:center;padding:7px 9px;border-radius:9px}
 .iqv-cap.on{background:color-mix(in srgb,var(--c) 12%,transparent)}
 .iqv-cap.cab{padding-top:0;padding-bottom:2px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
@@ -9089,20 +9113,44 @@ function iqPreguntaHtml(q, hecha){
 /* Los capítulos del syllabus que lees, todos, en el orden del plan del CT-GenAI (META_PLAN.istqbgenai, sus pasos
    «Capítulo N leído» con su fecha): el primero sin leer es el que toca y va resaltado (Adán, 26-oct-2026: "ponme los
    capítulos del GenAI que debo leer, pero ponme todos de una sola, resáltame cuál debe ser"). Cada uno con sus
-   objetivos, lo que vale en el examen y la página donde empieza en el PDF (CT_GENAI_SYLLABUS, copia local). */
+   objetivos, lo que vale en el examen y la página donde empieza en el PDF.
+   Cada capítulo se parte en sus subtemas (Adán, 28-oct-2026: "cuando haga click en cada capítulo, ábreme el pdf en ese
+   capítulo en específico, pero además divídelo en subtemas"): las secciones x.y.z del syllabus, una por objetivo del
+   examen, agrupadas por su x.y, cada una con su página, su objetivo, su nivel K, lo que vale, las preguntas del banco y
+   tu acierto en ellas. La página sale de `secciones` del banco, que siempre está; el PDF, de la copia local
+   (CT_GENAI_SYLLABUS) o, sin ella —en el iPad o en la página publicada—, del oficial (`meta.syllabusUrl`). */
+function iqPdf(pag){
+  const S = window.CT_GENAI_SYLLABUS || null, M = (window.EXAMEN_GENAI || {}).meta || {};
+  const base = (S && (S.pdf || S.fuente)) || M.syllabusUrl || '';
+  return base ? base + (pag ? '#page=' + pag : '') : '';
+}
+// Los subtemas leídos, por sección: { '2.2.1': '2026-10-28' }, junto a lo demás de Hoy aprendes.
+const iqSubLeidos = () => ((rawGet(APRENDE_KEY, {}) || {}).genaiLeido) || {};
 function iqLectura(){
   const mp = typeof metaPlan === 'function' ? metaPlan('istqbgenai') : null; if(!mp) return [];
-  const X = window.EXAMEN_GENAI || {}, S = window.CT_GENAI_SYLLABUS || null, pts = istqbPuntosCap();
-  const objs = c => (X.blueprint || []).filter(b => String(b.lo).indexOf('GenAI-' + c + '.') === 0).length;
-  const pag = c => { if(!S || !S.secciones) return 0;
-    const ps = Object.keys(S.secciones).filter(k => k.split('.')[0] === String(c)).map(k => +S.secciones[k].pag).filter(Boolean);
-    return ps.length ? Math.min.apply(null, ps) : 0; };
+  const X = window.EXAMEN_GENAI || {}, SEC = X.secciones || {}, pts = istqbPuntosCap(), leidos = iqSubLeidos();
+  const bp = {}; (X.blueprint || []).forEach(b => { bp[String(b.lo).replace(/^GenAI-/, '')] = b; });
+  // Tu acierto por objetivo: lo contestado en la pregunta del día, por el objetivo de cada pregunta del banco.
+  const loDe = {}, ac = {}, r = istqbRespuestas();
+  istqbBanco().forEach(q => { loDe[q.id] = String(q.lo || '').replace(/^GenAI-/, ''); });
+  for(const k in r) r[k].forEach(x => { const lo = x && loDe[x.id]; if(!lo) return; ac[lo] = ac[lo] || { n: 0, ok: 0 }; ac[lo].n++; if(x.ok) ac[lo].ok++; });
+  const banco = {}; istqbBanco().forEach(q => { const lo = loDe[q.id]; banco[lo] = (banco[lo] || 0) + 1; });
+  const orden = (a, b) => { const x = a.split('.').map(Number), y = b.split('.').map(Number);
+    for(let i = 0; i < 3; i++){ if((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) - (y[i] || 0); } return 0; };
   const caps = mp.pasos.map(p => { const m = /^Cap[ií]tulo (\d+) le[ií]do/.exec(String(p.t || '').replace(/<[^>]*>/g, ''));
     return m ? { c: +m[1], k: p.k, fTxt: p.fTxt, est: p.est, hecho: p.hecho } : null; }).filter(Boolean);
   const toca = caps.find(x => !x.hecho);
-  return caps.map(x => { const pg = pag(x.c);
-    return Object.assign(x, { nom: (X.capitulos || {})[x.c] || '', objs: objs(x.c), pts: pts[x.c] || 0, pag: pg, toca: x === toca,
-      url: S ? (S.pdf || S.fuente) + (pg ? '#page=' + pg : '') : '' }); });
+  return caps.map(x => {
+    const ks = Object.keys(SEC).filter(k => k.split('.')[0] === String(x.c)).sort(orden);
+    const pg = ks.length ? Math.min.apply(null, ks.map(k => +SEC[k].pag).filter(Boolean)) : 0;
+    const subs = ks.filter(k => k.split('.').length === 3).map(k => { const b = bp[k] || {};
+      return { k: k, g: k.split('.').slice(0, 2).join('.'), t: SEC[k].t, pag: +SEC[k].pag || 0, url: iqPdf(+SEC[k].pag),
+        obj: (X.objetivos || {})['GenAI-' + k] || '', nivel: b.k || '', vale: (b.pts || 1) * (b.n || 1), preg: b.n || 0,
+        banco: banco[k] || 0, ac: ac[k] || null, leido: !!leidos[k] }; });
+    const grupos = {}; ks.filter(k => k.split('.').length === 2).forEach(k => { grupos[k] = SEC[k].t; });
+    const sig = subs.find(s => !s.leido) || null;
+    return Object.assign(x, { nom: (X.capitulos || {})[x.c] || '', objs: subs.length, pts: pts[x.c] || 0, pag: pg, toca: x === toca,
+      url: iqPdf(pg), subs: subs, grupos: grupos, leidos: subs.filter(s => s.leido).length, sig: sig }); });
 }
 // Marcar un capítulo como leído es palomear su paso en el plan del CT-GenAI (metas_plan_v1, el mismo de Mis Metas).
 function iqCapLeido(k){
@@ -9111,16 +9159,54 @@ function iqCapLeido(k){
   rawSet('metas_plan_v1', st);
   istqbPintar(); if(typeof renderHeroAprender === 'function') renderHeroAprender();
 }
+// Un subtema leído se guarda con su fecha. Con el último de su capítulo, el capítulo queda leído en el plan.
+function iqSubLeido(k){
+  const st = rawGet(APRENDE_KEY, {}) || {}, L = st.genaiLeido = st.genaiLeido || {};
+  if(L[k]) delete L[k]; else L[k] = hoyLocal();
+  rawSet(APRENDE_KEY, st);
+  const cap = iqLectura().find(x => x.c === +k.split('.')[0]);
+  // Con el capítulo leído se abren los subtemas del que sigue (iqLeeHtml abre el que toca).
+  if(cap && L[k] && !cap.hecho && cap.subs.length && cap.leidos === cap.subs.length){ iqSubAbiertos = null; iqCapLeido(cap.k); return; }
+  istqbPintar(); if(typeof renderHeroAprender === 'function') renderHeroAprender();
+}
+// Qué capítulos enseñan sus subtemas: el que toca, abierto de entrada; los demás, cuando se tocan. Vive en memoria.
+let iqSubAbiertos = null;
+function iqSubToggle(c, abierto){
+  if(!iqSubAbiertos) iqSubAbiertos = new Set();
+  if(abierto) iqSubAbiertos.add(c); else iqSubAbiertos.delete(c);
+}
+function iqSubsHtml(x){
+  let g = '';
+  return x.subs.map(s => {
+    const cab = s.g !== g && x.grupos[s.g] ? `<div class="iqv-sg"><b>${s.g}</b> ${esc(x.grupos[s.g])}</div>` : ''; g = s.g;
+    // «1 pregunta de memoria de 1 punto», «1 caso práctico de 2 puntos»: el tipo de pregunta en llano (IQ_K_LLANO).
+    const tipo = String(IQ_K_LLANO[s.nivel] || 'pregunta'), uno = s.vale / (s.preg || 1);
+    const tipos = s.preg === 1 ? tipo : tipo.replace(/^pregunta /, 'preguntas ').replace(/^caso práctico$/, 'casos prácticos');
+    const examen = s.preg ? `${s.preg} ${tipos} de ${uno} ${uno === 1 ? 'punto' : 'puntos'} en el examen` : '';
+    const tuyo = s.ac ? ` · llevas <b class="${s.ac.ok / s.ac.n >= .65 ? 'ok' : 'mal'}">${s.ac.ok} de ${s.ac.n}</b>` : s.banco ? ` · ${s.banco} en el banco, sin contestar` : '';
+    const sig = x.toca && s === x.sig;
+    return cab + `<div class="iqv-st${s.leido ? ' ok' : ''}${sig ? ' sig' : ''}">` +
+      `<input type="checkbox"${s.leido ? ' checked' : ''} onchange="iqSubLeido('${s.k}')" aria-label="Subtema ${s.k} leído" title="Marcar como leído">` +
+      `<span class="iqv-st-n">${s.k}</span>` +
+      `<span class="iqv-st-t">${s.url ? `<a href="${s.url}" target="_blank" rel="noopener" title="Abrir el syllabus en la página ${s.pag}">${esc(s.t)}</a>` : `<b>${esc(s.t)}</b>`}` +
+        (s.obj ? `<small class="iqv-st-o"><i title="${esc(IQ_K[s.nivel] ? IQ_K[s.nivel][0] + ': ' + IQ_K[s.nivel][1] : '')}">${esc(s.nivel)}</i> ${esc(s.obj)}</small>` : '') +
+        `<small>${examen}${tuyo}${s.pag ? ` · página ${s.pag}` : ''}</small></span>` +
+      `<span class="iqv-st-f">${s.leido ? '✓' : sig ? '<em>Sigue</em>' : ''}</span></div>`;
+  }).join('');
+}
 function iqLeeHtml(){
   const L = iqLectura(); if(!L.length) return '';
   const M = (window.EXAMEN_GENAI || {}).meta || {};
+  if(!iqSubAbiertos){ iqSubAbiertos = new Set(); const t = L.find(x => x.toca); if(t) iqSubAbiertos.add(t.c); }
   return `<div class="iqv-bq iqv-lee"><div class="iqv-et">Los capítulos que lees · ${L.filter(x => x.hecho).length} de ${L.length} leídos</div>` +
     L.map(x => `<div class="iqv-lc${x.hecho ? ' ok' : ''}${x.toca ? ' toca' : ''}">` +
       `<input type="checkbox"${x.hecho ? ' checked' : ''} onchange="iqCapLeido(${x.k})" aria-label="Capítulo ${x.c} leído" title="Marcar como leído">` +
       `<span class="iqv-lc-n">${x.c}</span>` +
-      `<span class="iqv-lc-t"><b>${esc(x.nom)}</b><small>${x.objs} objetivos · ${x.pts} de ${M.puntos || 46} puntos` +
-        `${x.url ? ` · <a href="${x.url}" target="_blank" rel="noopener">abrir${x.pag ? ' en la página ' + x.pag : ''}</a>` : ''}</small></span>` +
-      `<span class="iqv-lc-f">${x.hecho ? '✓ leído' : x.toca ? `<em>Lee este</em>${x.est === 'tarde' ? 'era para el ' : 'antes del '}${x.fTxt}` : 'antes del ' + x.fTxt}</span></div>`).join('') +
+      `<span class="iqv-lc-t">${x.url ? `<a class="iqv-lc-a" href="${x.url}" target="_blank" rel="noopener" title="Abrir el syllabus en el capítulo ${x.c}${x.pag ? ', página ' + x.pag : ''}">${esc(x.nom)}</a>` : `<b>${esc(x.nom)}</b>`}` +
+        `<small>${x.objs} subtemas · ${x.pts} de ${M.puntos || 46} puntos${x.pag ? ' · desde la página ' + x.pag : ''}</small></span>` +
+      `<span class="iqv-lc-f">${x.hecho ? '✓ leído' : x.toca ? `<em>Lee este</em>${x.est === 'tarde' ? 'era para el ' : 'antes del '}${x.fTxt}` : 'antes del ' + x.fTxt}</span></div>` +
+      (x.subs.length ? `<details class="iqv-subs"${iqSubAbiertos.has(x.c) ? ' open' : ''} ontoggle="iqSubToggle(${x.c},this.open)">` +
+        `<summary>Subtemas <b>${x.leidos} de ${x.subs.length}</b> leídos</summary>${iqSubsHtml(x)}</details>` : '')).join('') +
     '</div>';
 }
 function iqVasHtml(q){

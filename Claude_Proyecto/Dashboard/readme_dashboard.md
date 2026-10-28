@@ -415,10 +415,17 @@ capítulo y si es el que más tiene.
   recuerda y después se lee.
 - **Cómo vas** (`iqVasHtml`), en 420 px: arriba, **los capítulos que lees** (`iqLeeHtml`, `iqLectura`; Adán, 26-oct-2026:
   *"ponme los capítulos del GenAI que debo leer, pero ponme todos de una sola, resáltame cuál debe ser"*): los cinco, en el orden del plan del CT-GenAI —sus pasos *Capítulo N leído* de
-  `META_PLAN.istqbgenai`, con su fecha—, cada uno con sus objetivos, lo que vale en el examen y *abrir en la página N*
-  del PDF local (`CT_GENAI_SYLLABUS`); **el primero sin leer va resaltado** con *Lee este* y su fecha (*era para el sáb 24
-  oct* si ya pasó), los leídos en verde y tachados, y la casilla los marca (`iqCapLeido`: el mismo paso del plan en
-  `metas_plan_v1`, el de Mis Metas); luego **tu meta** —presentar en el mes de la tarea a1-7 con el simulacro en su meta
+  `META_PLAN.istqbgenai`, con su fecha—, cada uno con sus subtemas, lo que vale en el examen y la página donde empieza;
+  **tocar su nombre abre el syllabus en esa página** (`iqPdf`: la copia local `CT_GENAI_SYLLABUS` o, sin ella —en el iPad
+  o en la página publicada—, el PDF oficial de `meta.syllabusUrl`; la página sale de `secciones` del banco, que siempre
+  está). **El primero sin leer va resaltado** con *Lee este* y su fecha (*era para el sáb 24 oct* si ya pasó), los leídos
+  en verde y tachados, y la casilla los marca (`iqCapLeido`: el mismo paso del plan en `metas_plan_v1`, el de Mis Metas).
+  **Cada capítulo se parte en sus subtemas** (`iqSubsHtml`; Adán, 28-oct-2026: *"divídelo en subtemas también para
+  separarlo más"*): las 37 secciones x.y.z del syllabus, una por objetivo del examen, agrupadas bajo su x.y, cada una con
+  su enlace a su página, su objetivo con su nivel K, cuántas preguntas y de qué tipo salen de ella en el examen
+  (*1 caso práctico de 2 puntos*) y lo que llevas contestado de ella en la pregunta del día. Los del capítulo que toca se
+  abren solos y el primero sin leer dice *Sigue*; cada uno se palomea aparte (`iqSubLeido`, en `genaiLeido` de
+  `dash-aprende-v1`, con su fecha) y con el último el capítulo queda leído en el plan y se abren los del siguiente; luego **tu meta** —presentar en el mes de la tarea a1-7 con el simulacro en su meta
   dos veces seguidas, la regla de `habSimulacro()`—, tus últimos diez simulacros en barras contra la meta y el corte,
   y *Simulacro completo →* (`istqbAlSimulacro()`); **esta semana**, una marca por respuesta, con lo contestado del
   banco y tu acierto; **dónde están los puntos**, cada capítulo en una línea con su nombre en llano, lo que llevas
