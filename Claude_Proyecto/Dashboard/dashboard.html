@@ -4484,14 +4484,16 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
    "el calendario hazlo la mitad de la altura que actualmente tiene"), lleva al pie a dónde va el dinero ese mes. */
 .coach-tablero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);
   gap:12px;align-items:stretch;flex:1;min-height:376px}
-/* Los totales, bajo las fechas: un renglón para la semana del día elegido y otro para el mes (`.ct-tot-f`). */
-.ct-tot{margin-top:auto;padding-top:8px;border-top:1px solid rgba(var(--ov),.09);display:flex;flex-direction:column;gap:5px}
-.ct-tot-f{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px}
-.ct-tot-f:empty{display:none}
-.ct-tot-k{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--p);white-space:nowrap}
-.ct-tot-f.mes .ct-tot-k{color:var(--text2)}
-.ct-tot-f>span:not(.ct-tot-k){font-size:10px;color:var(--text3);white-space:nowrap}
-.ct-tot-f b{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--text);margin-left:3px}
+/* Las cifras del mes, bajo las fechas: dos renglones de tres —el dinero del mes y a dónde va—, cada cifra con su nombre a
+   la izquierda y el importe a la derecha, alineados en columnas. En el teléfono, el nombre arriba del importe, en las
+   mismas tres columnas. Sin título: el mes ya lo
+   dice el del calendario. */
+.ct-tot{margin-top:auto;padding-top:8px;border-top:1px solid rgba(var(--ov),.09)}
+.ct-tot-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 14px}
+.ct-tot-g span{display:flex;align-items:baseline;justify-content:space-between;gap:6px;min-width:0}
+.ct-tot-g i{font-style:normal;font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ct-tot-g b{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--text);white-space:nowrap}
+@container (max-width:430px){.ct-tot-g{gap:6px 10px}.ct-tot-g span{flex-direction:column;align-items:flex-start;gap:0}}
 .ct-col{border-radius:15px;border:1px solid var(--card-br);background:var(--card);
   padding:15px 16px;display:flex;flex-direction:column;gap:11px;min-width:0;
   min-height:0;overflow-y:auto;scrollbar-gutter:stable}
@@ -10151,11 +10153,8 @@ function renderCoachTablero(){
   const dd = Math.round((new Date(Y,M-1,nSel) - new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate()))/86400000);
   const cuenta = dd===0?'hoy':dd===1?'mañana':dd===-1?'ayer':dd>0?('en '+dd+' días'):('hace '+(-dd)+' días');
 
-  /* Todo sale de la MISMA serie (ctTramo): el tramo arranca en cero el día de la nómina; lo que entró y salió hasta un
-     día da el modelo, y si dijiste tu saldo real un día del tramo, la diferencia entre el modelo y ese saldo es el ajuste
-     —lo que se fue sin anotar, o lo que tenías de más—. La semana lo cuenta igual. */
+  /* Todo sale de la MISMA serie (ctTramo): lo que sale en unos días del tramo es la suma de su serie. */
   const sumaS = (f, k) => T.serie.filter(f).reduce((s, p) => s + p[k], 0);
-  const ajR = T.ancla ? T.serie.filter(p => p.d <= T.ancla.dia).reduce((s, p) => s + p.ent - p.sale, 0) - T.ancla.saldo : 0;
   // Lo que sale en unos días del tramo, concepto por concepto y de la misma serie: la lista de la semana suma
   // exactamente lo que resta, comida incluida.
   const conceptos = function(f){
@@ -10197,6 +10196,11 @@ function renderCoachTablero(){
   const enPlan = !!(window.CIFRAS && CIFRAS.PROYECCION && ctYM >= CIFRAS.PROYECCION.supuestos.desde && ctYM <= CIFRAS.PROYECTO.ultimoMesMexico);
   const didiAh = enPlan && CIFRAS.desgloseMes ? Math.max(0, CIFRAS.desgloseMes(ctYM).didi) : 0;
   const bbvaMes = enPlan && CIFRAS.planBbva ? CIFRAS.planBbva().abonos.filter(a=>a.fecha.slice(0,7)===ctYM).reduce((s,a)=>s+a.monto,0) : 0;
+  // El dinero del mes, de la misma cuenta que las barras de cada día (saleDe): lo que entra y lo que sale.
+  let entMes = 0, saleMes = 0;
+  for(let d=1; d<=nDias; d++){ entMes += saleDe[d].ent; saleMes += saleDe[d].sale; }
+  const ctTotCel = (lbl, v, signo, col, tit) => '<span title="'+esc(tit)+'"><i>'+lbl+'</i><b class="ct-num'+(privado?' fin-hidden':'')+'"'+
+    (col ? ' style="color:'+col+'"' : '')+'>'+(signo || (v < 0 ? '−' : ''))+money(Math.abs(Math.round(v)))+'</b></span>';
 
   // Importes de celda: en miles con un decimal desde $1,000 (20.5k, 6.7k), enteros abajo (650).
   const kC = v => v >= 1000 ? (Math.round(v/100)/10)+'k' : String(Math.round(v));
@@ -10234,17 +10238,20 @@ function renderCoachTablero(){
     '</div>'+
     '<div class="ct-mes">'+['L','M','M','J','V','S','D'].map(x=>'<span class="ct-dow">'+x+'</span>').join('')+'</div>'+
     '<div class="ct-mes ct-celdas">'+celdas+'</div>'+
-    // Los totales, bajo las fechas (Adán, 28-oct-2026: "los totales totales… ahí pon todo lo total que me interesan"): la
-    // semana del día elegido —la pinta la columna de la semana, que es la que la calcula— y, mientras dure el plan en
-    // México, a dónde va el dinero ese mes: a la BBVA (de las quincenas, de Didi y el mínimo, CIFRAS.planBbva), a GBM
-    // (los cobros con `ahorro` y lo que aparta Didi) y lo que trae Didi.
-    '<div class="ct-tot"><div class="ct-tot-f" id="ctTotSem"></div>'+
-    (enPlan ? '<div class="ct-tot-f mes" title="Lo que sobra de cada quincena y lo de Didi van primero a la BBVA hasta dejarla en cero; lo que queda, a GBM">'+
-      '<span class="ct-tot-k">'+MESN[M-1]+'</span>'+
-      '<span>A la BBVA<b class="'+(privado?'fin-hidden':'')+'" style="color:var(--w)">'+money(bbvaMes)+'</b></span>'+
-      '<span>A GBM<b class="'+(privado?'fin-hidden':'')+'" style="color:var(--g)">'+money(ahorroMes + didiAh)+'</b></span>'+
-      '<span>Didi trae al mes<b class="'+(privado?'fin-hidden':'')+'">'+money(CIFRAS.n('didiMes') || 0)+'</b></span></div>' : '')+
-    '</div>';
+    // Bajo las fechas, solo las cifras del mes (Adán, 28-oct-2026: "lo de abajo del calendario solo son cifras del mes, no
+    // de la semana y además ordénalas mejor"), en dos renglones de tres: el dinero del mes —lo que entra, lo que sale, de
+    // la misma cuenta que las barras de los días, y lo que te queda— y, mientras dure el plan en México, a dónde va: a la
+    // BBVA (de las quincenas, de Didi y el mínimo, CIFRAS.planBbva), a GBM (los cobros con `ahorro` y lo que aparta Didi)
+    // y lo que trae Didi.
+    // El mes ya lo dice el título del calendario: el pie no lo repite.
+    '<div class="ct-tot"><div class="ct-tot-g">'+
+      ctTotCel('Entra', entMes, '+', 'var(--g)', 'Tus quincenas del mes')+
+      ctTotCel('Sale', saleMes, '−', 'var(--r)', 'Lo programado, lo anotado de contado y comer: lo que suman las barras de los días')+
+      ctTotCel('Te queda', entMes - saleMes, '', entMes - saleMes >= 0 ? 'var(--p)' : 'var(--r)', 'Lo que entra menos lo que sale')+
+      (enPlan ? (bbvaMes > 0 ? ctTotCel('A la BBVA', bbvaMes, '', 'var(--w)', 'Lo que sobra de cada quincena, lo de Didi y el mínimo, hasta dejarla en cero') : '')+
+        ctTotCel('A GBM', ahorroMes + didiAh, '', 'var(--g)', 'Los envíos de las quincenas y lo que aparta Didi')+
+        ctTotCel('Didi trae', CIFRAS.n('didiMes') || 0, '', '', 'Lo que trae Didi al mes, aparte de tu sueldo') : '')+
+    '</div></div>';
 
   // ── Columna 2: el día ──
   // Primero lo que pagas ESE día, que es lo accionable; despues de donde sale el saldo,
@@ -10351,38 +10358,16 @@ function renderCoachTablero(){
 
   // ── Columna 3: la semana ──
   /* Las semanas del tablero son bloques de siete días desde el 1 (1–7, 8–14, 15–21, 22–28 y el resto), siempre dentro de
-     una quincena; el cierre se nombra con su día real («el miércoles 14»). La resta sale de la MISMA serie que el riel
-     (ctTramo): lo que traías, lo que entró, lo que sale —la lista de abajo, concepto por concepto, que suma lo mismo— y,
-     si tu saldo real cae en la semana, la diferencia con el modelo. Adán, 21-oct-2026: "revisa bien bien las métricas de
-     los números para que todo cuadre": la resta arrancaba en el saldo real del 19 y la lista era de toda la semana. */
+     una quincena. Lo que sale en la semana es la MISMA serie que el resto del tablero (ctTramo), y sus secciones suman
+     exactamente eso. */
   const sem = ctSemDe(nSel);
   const wIni = Math.max(T.ini, (sem-1)*7+1), wFin = Math.min(T.fin, sem >= 5 ? nDias : sem*7);
   const enSem = p => p.d >= wIni && p.d <= wFin;
-  const wSerie = T.serie.filter(enSem);
-  const wTraias = wIni > T.ini ? (T.serie.filter(p => p.d === wIni-1)[0] || {saldo:0}).saldo : 0;
-  const wEntro = sumaS(enSem, 'ent'), wSalio = sumaS(enSem, 'sale');
-  const wAj = T.ancla && T.ancla.dia >= wIni && T.ancla.dia <= wFin ? ajR : 0;
-  const wCierre = wSerie.length ? wSerie[wSerie.length-1].saldo : wTraias;
+  const wSalio = sumaS(enSem, 'sale');
   const wC = conceptos(enSem), wConc = wC.orden;
   // Dónde cae hoy respecto a la semana: un mes que ya pasó está todo atrás; uno que viene, todo adelante.
   const hoyD = hoyK.slice(0,7) === ctYM ? +hoyK.slice(8) : (hoyK.slice(0,7) > ctYM ? 99 : 0);
   const wPasada = wFin < hoyD, wFutura = wIni > hoyD;
-  const wDiasEnt = wSerie.filter(p => p.ent > 0).map(p => p.d);
-
-  // Los totales de la semana van bajo las fechas del calendario (Adán, 28-oct-2026: "los totales totales esos solo me
-  // interesan los que aparecen abajo de las fechas del calendario, ahí pon todo lo total"): lo que traías, lo que
-  // entró, lo que sale, lo que se fue sin anotar y con cuánto cierras. La misma resta de siempre, de la serie.
-  const wCel = (lbl, num, tit) => '<span'+(tit ? ' title="'+esc(tit)+'"' : '')+'>'+lbl+num+'</span>';
-  const wB = (v, signo, col) => '<b class="ct-num'+(privado?' fin-hidden':'')+'"'+(col ? ' style="color:'+col+'"' : '')+'>'+
-    (signo || (v < 0 ? '−' : ''))+money(Math.abs(Math.round(v)))+'</b>';
-  const totEl = document.getElementById('ctTotSem');
-  if(totEl) totEl.innerHTML =
-    '<span class="ct-tot-k">'+(wPasada || wFutura ? 'Esa semana' : 'Esta semana')+' · '+ctRango(wIni, wFin)+'</span>'+
-    (wIni > T.ini ? wCel('Traías', wB(wTraias), 'Lo que te quedó el '+(wIni-1)) : '')+
-    (wEntro ? wCel('Entró', wB(wEntro, '+', 'var(--g)'), 'Tu nómina, el '+wDiasEnt.join(' y ')) : '')+
-    wCel((wPasada ? 'Salió' : 'Sale'), wB(wSalio, '−', 'var(--r)'), 'Lo que suman las secciones de la semana')+
-    (Math.abs(wAj) >= 1 ? wCel(wAj > 0 ? 'Sin anotar' : 'De más', wB(wAj, wAj > 0 ? '−' : '+'), 'La diferencia con tu saldo real del '+T.ancla.dia) : '')+
-    wCel((wPasada ? 'Cerraste el ' : 'Cierras el ')+wFin, wB(wCierre, '', wCierre >= 0 ? 'var(--p)' : 'var(--r)'), (wPasada ? 'Cerraste el ' : 'Cierras el ')+ctDiaNombre(wFin));
 
   // En la columna, solo los gastos de la semana por sección, con las filas compactas de Ese día (Adán, 28-oct-2026:
   // "hazlo igual de pequeño que en las cifras de ese día, pero aquí solo dame los totales de gastos de la semana
@@ -10408,6 +10393,9 @@ function renderCoachTablero(){
           '<span style="font-size:10px;font-weight:600;min-width:0">'+CT_SECC[s]+'<span style="font-weight:400;color:var(--text3)"> · '+esc(lista)+'</span></span>'+
           '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10px;font-weight:700;color:var(--text2)">−'+money(S.v)+'</span></span></div>';
       }).join('') : '<span class="ct-vacio">Nada programado esta semana.</span>')+
+      (sOrden.length ? '<div style="display:flex;align-items:baseline;justify-content:space-between;padding:2px 8px 0">'+
+        '<span style="font-size:9.5px;color:var(--text3)">total de la semana</span>'+
+        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10.5px;font-weight:700;color:var(--r)">−'+money(wSalio)+'</span></div>' : '')+
     '</div>';
 }
 
