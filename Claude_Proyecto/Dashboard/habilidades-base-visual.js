@@ -10,6 +10,8 @@
                            calc  — una calculadora: campos con deslizador u opciones y su función en HB_CALC
                            ritmo — un tempo (bpm, ciclo, pausa) o una respiración (fases [nombre, segundos, up|down|hold])
                            quiz  — preguntas del paso; con `sit` son escenarios y `fb` dice qué pasa con cada respuesta
+   HB_CALC, las funciones de las calculadoras; HB_DATO, los números de Adán que una gráfica necesita (sus horas de sueño,
+   su hora de dormir), leídos del maestro con CIFRAS.texto y nunca copiados.
    Toda gráfica dice su fuente; lo que es criterio y no estudio lo dice también. dashboard.html lo suma a cada paso al cargar
    sin tocar `pasos`. El control 47 del verificador exige foto, crédito, pie y tres cifras en cada paso de una ficha que esté
    aquí, más su gráfica y su prueba, y avisa cuáles fichas faltan, en el orden del plan de Coach. */
@@ -470,6 +472,105 @@ const HB_VISUAL = {
           fuente: 'El método de este paso. Con Didi, repórtalo además en la app: su seguro tiene sus plazos.' } }
     }
   },
+  recuperar: {
+    graf: { tipo: 'escala', k: 'Tus horas de sueño', t: 'Tu rutina está justo en el borde del rango',
+      sub: 'Las horas que necesita la mayoría de los adultos, y dónde cae tu noche de lunes a viernes. Cada noche que la app se alarga, caes debajo.',
+      min: 4, max: 10, u: 'h', zonas: [[4, 6, 'Deuda que se nota', 'alto'], [6, 7, 'Debajo del rango', 'medio'], [7, 9, 'Donde rinde la mayoría', 'ok'], [9, 10, 'Más de lo que hace falta', 'neutro']],
+      marcas: [['sueno', 'Tu rutina: {{horasSueno}}']],
+      fuente: 'Hirshkowitz y otros, recomendación de la National Sleep Foundation, <i>Sleep Health</i> 1 (2015): de 7 a 9 horas para adultos de 26 a 64 años. Tus horas salen de tu rutina, de {{horaDormir}} a {{horaDespertar}}.' },
+    quiz: [
+      { q: 'Te tomas un americano a las 4 pm. ¿Cuánto sigue en tu cuerpo a las 10 pm?', p: 3, ok: 1,
+        ops: ['Nada: ya pasó el efecto', 'Casi la mitad', 'Una décima parte'], por: 'La cafeína tarda de 5 a 6 horas en bajar a la mitad: no te impide dormir, pero te quita sueño profundo.' },
+      { q: 'Si solo cambias una cosa, ¿cuál mueve más tu sueño?', p: 2, ok: 0,
+        ops: ['Dormir y despertar a la misma hora, también el fin de semana', 'Un suplemento para dormir', 'Dormir más los domingos'], por: 'El reloj interno responde a la regularidad más que a la cantidad.' },
+      { q: '¿Cómo es una siesta que ayuda?', p: 6, ok: 2,
+        ops: ['Una hora después de comer', 'La que el cuerpo pida, a cualquier hora', '20 minutos o menos, y antes de las 4 pm'], por: 'Pasando los 30 minutos entras en sueño profundo y despiertas aturdido; después de las 4 te roba sueño de la noche.' },
+      { q: 'Te duele la rodilla, punzante, desde la mitad del entrenamiento, y empeora al usarla.', p: 9, ok: 1,
+        ops: ['Es normal: muévete suave y sigue', 'Es alarma: paras y, si no cede en unos días, ves a alguien', 'La calientas y sigues'], por: 'Agudo, en la articulación, durante el ejercicio y peor al usarla: las cuatro señales de alarma.' },
+      { q: 'Dormiste bien y aun así no tienes ganas de nada. ¿Qué te falta?', p: 10, ok: 0,
+        ops: ['Desconexión real: es cansancio mental', 'Más horas de sueño', 'Más café'], por: 'El cansancio mental no se resuelve durmiendo: necesita tiempo sin celular, sin pendientes y sin pensar en el plan.' },
+      { q: '¿Qué hace el alcohol con tu noche?', p: 4, ok: 2,
+        ops: ['Te ayuda a dormir mejor', 'Nada, si duermes ocho horas', 'Te duerme más rápido y rompe la segunda mitad de la noche'], por: 'Por eso amaneces cansado aunque hayas dormido mucho; con tu meta de cero alcohol, cada noche cuenta completa.' },
+      { q: '¿Cuál es la señal más fiable de que te estás quemando?', p: 11, ok: 1,
+        ops: ['Tener sueño en la tarde', 'Perder las ganas de cosas que sí disfrutabas', 'Tener más hambre'], por: 'Con tres señales a la vez, la semana siguiente se planea al revés: primero el descanso.' },
+      { q: 'Tu fuerza lleva tres semanas sin subir aunque entrenas igual o más. ¿Qué haces?', p: 8, ok: 0,
+        ops: ['Bajas la carga y te aseguras un día completo sin gym', 'Entrenas un día más', 'Cambias de rutina'], por: 'El músculo crece en las 24 a 72 horas después de entrenar, y solo si duermes y comes: estancarte entrenando más es el aviso.' }
+    ],
+    pasos: {
+      'Por qué esto es una habilidad': { foto: 'recuperar-1.jpg', cred: 'Kurt Kaiser · Wikimedia Commons · CC0 1.0',
+        pie: 'Una cama, nada más: descansar bien es un conjunto de decisiones que, sin pensarlas, se toman mal.',
+        cifras: [['3', 'frentes a la vez: ALTEN, Didi y tu plan'], ['4 > 6', 'días de gym durmiendo bien rinden más que seis durmiendo mal'], ['1', 'cosa que no se recorta cuando el día se aprieta: el sueño']] },
+      'Tu dato real y qué significa': { foto: 'recuperar-2.jpg', cred: 'Santeri Viinamäki · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'El despertador manda menos que la hora a la que apagas: tu rutina te da {{horasSueno}}, justo el borde.',
+        cifras: [['{{horasSueno}}', 'te da tu rutina de lunes a viernes'], ['7–9 h', 'el rango donde rinde la mayoría'], ['5 de 5', 'noches a la hora: la meta del mes']] },
+      'Las cuatro palancas del sueño, en orden de impacto': { foto: 'recuperar-3.jpg', cred: 'ilovebutter from Houston, TX, USA · Wikimedia Commons · CC BY 2.0',
+        pie: 'Un cuarto oscuro y fresco: el cuerpo necesita enfriarse para entrar en sueño profundo.',
+        cifras: [['1.ª', 'palanca: la misma hora todos los días'], ['18–20 °C', 'en el cuarto'], ['30–60 min', 'sin pantallas antes de dormir']],
+        graf: { tipo: 'escala', k: 'La temperatura del cuarto', t: 'Para entrar en sueño profundo, el cuerpo necesita enfriarse',
+          sub: 'Un cuarto caliente le impide bajar la temperatura, y el sueño profundo llega tarde o no llega.',
+          min: 14, max: 26, u: '°C', zonas: [[14, 18, 'Fresco', 'neutro'], [18, 20, 'Para dormir', 'ok'], [20, 26, 'Caliente: cuesta el sueño profundo', 'alto']],
+          fuente: 'Kazue Okamoto-Mizuno y Koh Mizuno, «Effects of thermal environment on sleep and circadian rhythm», <i>Journal of Physiological Anthropology</i> 31 (2012); el rango, de esta ficha.' } },
+      'Cafeína: la cuenta que casi nadie hace': { foto: 'recuperar-4.jpg', cred: 'Tim Sackton from Somerville, MA · Wikimedia Commons · CC BY-SA 2.0',
+        pie: 'Un café de las 4 pm sigue casi a la mitad en tu cuerpo a las 10: el último va antes de las 2 o las 3.',
+        cifras: [['5–6 h', 'tarda en irse la mitad de la cafeína'], ['14–15 h', 'la hora de corte para el último café'], ['Casi ½', 'de un café de las 4 pm sigue en ti a las 10 pm']],
+        calc: { k: 'Calcúlalo', fn: 'cafeina', t: 'Cuánta cafeína te queda a la hora de dormir',
+          sub: 'Con tu hora de dormir de la rutina ({{horaDormir}}). Mueve la hora y la bebida.',
+          campos: [{ k: 'hora', t: 'A qué hora la tomas', min: 7, max: 21, paso: 0.5, v: 16, reloj: true }, { k: 'mg', t: 'Qué tomas', v: 95, ops: [[95, 'Café americano, ≈95 mg'], [65, 'Espresso, ≈65 mg'], [47, 'Té negro, ≈47 mg'], [34, 'Refresco de cola, ≈34 mg'], [80, 'Bebida energética chica, ≈80 mg'], [200, 'Pre-entreno, ≈200 mg']] },
+                   { k: 'vida', t: 'Vida media (varía de persona a persona)', min: 4, max: 7, paso: 0.5, v: 5.5, u: 'h' }],
+          fuente: 'Vida media de la cafeína en adultos sanos, de 4 a 6 horas: Institute of Medicine, <i>Caffeine for the Sustainment of Mental Task Performance</i> (2001). Contenido por bebida, aproximado: USDA FoodData Central.' } },
+      'Alcohol: no es un somnífero': { foto: 'recuperar-5.jpg', cred: 'Kurt Kaiser · Wikimedia Commons · CC0 1.0',
+        pie: 'Agua en lugar de copa: el alcohol te duerme rápido y te rompe la segunda mitad de la noche.',
+        cifras: [['Más rápido', 'te duermes con alcohol'], ['Peor', 'duermes la segunda mitad de la noche'], ['0', 'copas: tu meta, y tu noche de recuperación completa']] },
+      'El ritual antes de dormir': { foto: 'recuperar-6.jpg', cred: 'Basile Morin · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'Luces bajas, el celular fuera del cuarto y el mismo orden cada noche: así le avisas al cuerpo que ya es hora.',
+        cifras: [['15–20 min', 'dura el ritual'], ['1', 'orden, todas las noches'], ['{{horaRutinaNoche}}', 'empieza tu rutina de la noche']],
+        ritmo: { k: 'Practícalo aquí', t: 'Respiración lenta para cerrar el día', sub: 'Inhala 4 segundos y exhala 6, unas seis respiraciones por minuto, durante dos minutos. Sigue al círculo.',
+          fases: [['Inhala', 4, 'up'], ['Exhala', 6, 'down']], ciclos: 12,
+          nota: 'La exhalación larga es la que baja las revoluciones: respirar a unas seis por minuto activa el freno del sistema nervioso (Zaccaro y otros, <i>Frontiers in Human Neuroscience</i>, 2018).' } },
+      'La siesta, bien hecha': { foto: 'recuperar-7.jpg', cred: 'studio tdes · Wikimedia Commons · CC BY 2.0',
+        pie: '«Duerme aquí, no al volante»: veinte minutos antes de las 4 pm descansan; manejar con sueño, nunca.',
+        cifras: [['20 min', 'como máximo'], ['16:00', 'la hora límite'], ['10 min', 'la siesta que más rindió en el estudio de Brooks y Lack']],
+        graf: { tipo: 'escala', k: 'Cuánto dura una siesta', t: 'Pasando los 30 minutos despiertas peor que como te acostaste',
+          sub: 'Después de media hora entras en sueño profundo, y salir de ahí te deja aturdido hasta una hora.',
+          min: 0, max: 60, u: 'min', zonas: [[0, 20, 'La siesta que sirve', 'ok'], [20, 30, 'El límite', 'medio'], [30, 60, 'Sueño profundo: despiertas aturdido', 'alto']],
+          fuente: 'Amber Brooks y Leon Lack, «A brief afternoon nap following nocturnal sleep restriction», <i>Sleep</i> 29 (2006): la de 10 minutos rindió más que las de 20 y 30, sin aturdimiento.' } },
+      'Descanso activo: no todo es quedarte quieto': { foto: 'recuperar-8.jpg', cred: 'Jamie Taylor jamiehowardtaylor · Wikimedia Commons · CC0 1.0',
+        pie: 'Una caminata sin celular recupera más que una tarde en el sillón con el teléfono.',
+        cifras: [['30 min', 'de caminata en tu día de descanso'], ['10 min', 'de estiramiento recuperan más que el scroll'], ['0', 'pulsaciones de gym en el descanso']] },
+      'Al menos un día completo sin gym': { foto: 'recuperar-9.jpg', cred: 'Santeri Viinamäki · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'Las mancuernas quietas también son parte del plan: el músculo se repara en las 24 a 72 horas siguientes.',
+        cifras: [['1', 'día completo sin gym, como mínimo'], ['24–72 h', 'después de entrenar: ahí se repara el músculo'], ['3 semanas', 'sin subir de fuerza: el aviso']] },
+      'Dolor normal o señal de alarma': { foto: 'recuperar-10.jpg', cred: 'Shixart1985 · Wikimedia Commons · CC BY 2.0',
+        pie: 'El dolor de articulación, agudo y durante el ejercicio, lo revisa un profesional; el de agujetas se cura moviéndote suave.',
+        cifras: [['24–48 h', 'tarda en aparecer el dolor normal'], ['Articulación', 'donde vive el dolor de alarma'], ['5 min', 'de hombros y espalda después de nadar']],
+        graf: { tipo: 'tabla', k: 'Normal o alarma', t: 'Cuatro preguntas para distinguirlos', dest: 2,
+          cols: ['', 'Normal', 'Alarma'],
+          filas: [['¿Cuándo apareció?', 'De 24 a 48 horas después', 'Durante el ejercicio'], ['¿Cómo se siente?', 'Difuso', 'Agudo o punzante'], ['¿Dónde está?', 'En el músculo', 'En la articulación'], ['¿Qué pasa al moverte?', 'Mejora', 'Empeora'], ['¿Qué haces?', 'Moverte suave', 'Parar; si no cede en unos días, ver a alguien']],
+          fuente: 'El método de este paso: es la guía para decidir, no un diagnóstico.' } },
+      'Los dos tipos de cansancio': { foto: 'recuperar-11.jpg', cred: 'LunaEatsTuna · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'Dormir resuelve el cansancio físico; el mental necesita desconexión real, sin celular ni pendientes.',
+        cifras: [['2', 'tipos de cansancio, y se tratan distinto'], ['0', 'celular en el descanso mental'], ['Unas horas', 'a la semana sin pendientes del negocio']],
+        graf: { tipo: 'tabla', k: 'Físico o mental', t: 'El que no se va durmiendo', dest: 2,
+          cols: ['', 'Físico', 'Mental'],
+          filas: [['Se nota en', 'El cuerpo y el gym', 'Las ganas y la atención'], ['Se resuelve con', 'Sueño y días sin gym', 'Desconexión real'], ['No sirve', 'Seguir entrenando igual', 'Dormir más mirando el celular']],
+          fuente: 'El método de este paso.' } },
+      'Señales tempranas de que te estás quemando': { foto: 'recuperar-12.jpg', cred: 'CIPHR Connect · Wikimedia Commons · CC BY 2.0',
+        pie: 'Trabajar más horas y producir menos es una señal, no una solución.',
+        cifras: [['5', 'señales tempranas'], ['3', 'a la vez: la semana se planea al revés'], ['1', 'la más fiable: perder las ganas de lo que disfrutabas']],
+        quiz: [{ sit: 'Esta semana te irritaste con tu familia, trabajaste más horas que nunca y sientes que avanzaste menos.', q: '¿Qué haces la semana que sigue?', ok: 2,
+          ops: ['Trabajar más horas para recuperar', 'Nada: es una mala racha', 'Planearla al revés: primero el descanso, después lo demás'],
+          por: 'Tres señales a la vez. Cuando trabajas más y produces menos, más horas es justo la respuesta equivocada.' }] },
+      'Descanso planeado contra descanso forzado': { foto: 'recuperar-13.jpg', cred: 'Joakim Berndes · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'El descanso que eliges, agendado como una junta, previene el que te impone el cuerpo.',
+        cifras: [['2', 'formas de descansar: la que eliges y la que te imponen'], ['1', 'bloque en el calendario, como una junta'], ['0', 'opciones donde no descansas y no pasa nada']],
+        graf: { tipo: 'asi', k: 'Las dos formas', t: 'El descanso que eliges previene el que te imponen',
+          datos: [['Una gripe que te tira una semana', 'Una tarde libre agendada'], ['Una lesión que te saca dos meses', 'Un día completo sin gym cada semana'], ['Un bajón que frena el plan entero', 'Unas horas sin pendientes del negocio']],
+          fuente: 'El método de este paso.' } },
+      'Tu revisión de los domingos': { foto: 'recuperar-14.jpg', cred: 'Kristin Hardwick · Wikimedia Commons · CC0 1.0',
+        pie: 'Cinco minutos a la semana para contar tus noches cortas: la deuda de sueño no se siente, pero se cuenta.',
+        cifras: [['5 min', 'a la semana'], ['4', 'preguntas'], ['2', 'noches de menos de 6 h: más que eso, es tu foco']] }
+    }
+  },
 };
 
 /* Las calculadoras de Habilidades Base: cada una recibe los valores de sus deslizadores y devuelve tres cifras, a veces una
@@ -481,6 +582,18 @@ const HB_CALC = {
     return { cifras: [[k(tot), 'para detenerte por completo'], [k(r), 'recorres antes de tocar el freno'], [k(tres), 'son tus tres segundos de distancia a esa velocidad']],
       graf: { tipo: 'barras', u: 'm', datos: [['Mientras reaccionas', r, k(r)], ['Mientras frenas', f, k(f)], ['Tus tres segundos de distancia', tres, k(tres)]], dest: [0, 1] },
       nota: tot > tres ? 'Parar te toma más que tus tres segundos: esa distancia no es para frenar en seco, es para <b>reaccionar a tiempo</b> si el de adelante frena. Con piso malo o distraído, aléjate más.' : 'Tus tres segundos alcanzan para reaccionar y frenar. Con lluvia, duplica la distancia.' };
+  },
+  // La cafeína que queda a tu hora de dormir (la de la rutina, por HB_DATO) con su vida media, y la curva hasta la mañana.
+  cafeina(v) {
+    const dormir = HB_DATO.dormir(), d = (dormir - v.hora + 24) % 24, queda = h => v.mg * Math.pow(0.5, h / v.vida), q = queda(d);
+    const reloj = h => { const m = Math.round(((h % 24) + 24) % 24 * 60); return Math.floor(m / 60) + ':' + String(m % 60).padStart(2, '0'); };
+    // cada 10 minutos, para que tu hora de dormir caiga justo en un punto; el eje solo nombra las horas pares
+    const x = [], s = [], iDormir = Math.round(d * 6);
+    for (let i = 0; i <= Math.round((d + 7) * 6); i++) { const t = (v.hora + i / 6) % 24, m = Math.round(t * 60); x.push(m % 120 === 0 ? reloj(t) : ''); s.push(+queda(i / 6).toFixed(1)); }
+    const bajo = v.hora + v.vida * Math.log2(v.mg / 25);
+    return { cifras: [[Math.round(q) + ' mg', 'siguen en ti a las ' + reloj(dormir) + ', tu hora de dormir'], [Math.round(q / v.mg * 100) + ' %', 'de lo que tomaste'], [reloj(bajo), 'baja de 25 mg, menos que una lata de refresco']],
+      graf: { tipo: 'linea', t: 'La cafeína en tu cuerpo, hora por hora', u: 'mg', uy: 'mg', x, xTodas: true, sinTabla: true, series: [{ n: 'Cafeína', v: s }], area: true, marcas: [{ i: iDormir, txt: 'Te acuestas: ' + Math.round(q) + ' mg' }] },
+      nota: q >= 45 ? 'Es como <b>acostarte con medio café</b> encima: no te impide dormir, pero te quita sueño profundo. Muévela antes de las 2 o 3 pm.' : q >= 25 ? 'Te acuestas con <b>más de lo que trae una lata de refresco de cola</b>: suficiente para quitarte algo de sueño profundo. Si puedes, adelántala una o dos horas.' : 'A esa hora ya queda poco: así se protege el sueño profundo.' };
   },
   // Con un precio (1 + p) veces más alto, el mismo ingreso sale con 1 / (1 + p) del trabajo.
   precio(v) {
@@ -530,4 +643,11 @@ const HB_CALC = {
   }
 };
 
-if (typeof module !== 'undefined' && module.exports) module.exports = { HB_VISUAL, HB_CALC };
+/* Los números de Adán que una gráfica o una calculadora necesita como número, leídos del maestro y nunca copiados: sus horas
+   de sueño y su hora de dormir salen de la rutina ({{horaDormir}} → {{horaDespertar}}). */
+const HB_DATO = {
+  dormir() { const p = CIFRAS.texto('{{horaDormir}}').split(':'); return +p[0] + p[1] / 60; },
+  sueno() { const m = h => { const p = CIFRAS.texto(h).split(':'); return +p[0] * 60 + +p[1]; }; return ((m('{{horaDespertar}}') - m('{{horaDormir}}') + 1440) % 1440) / 60; }
+};
+
+if (typeof module !== 'undefined' && module.exports) module.exports = { HB_VISUAL, HB_CALC, HB_DATO };

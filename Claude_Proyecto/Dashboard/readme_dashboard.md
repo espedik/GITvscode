@@ -1608,7 +1608,7 @@ receta o una tabla: 92 pasos). El paso «Ya lo dominas cuando…» se palomea en
 los subtemas y «Para copiar», por ficha y por el título exacto del paso (344 sesiones, 1,032 subtemas).
 `habilidades-base-visual.js` (`HB_VISUAL`): la foto, su crédito (autor · fuente · licencia), su pie y tres cifras de cada
 paso, más sus gráficas, calculadoras, ritmos y preguntas, y la gráfica y la prueba de cada ficha; `HB_CALC` trae las
-funciones de las calculadoras. Los dos se suman a `HABILIDAD_DETALLE` al cargar sin tocar `pasos`: el número de pasos
+funciones de las calculadoras. `HB_DATO` da como número lo que una gráfica o una calculadora necesita de Adán —sus horas de sueño, su hora de dormir—, leído del maestro y nunca copiado. Los dos se suman a `HABILIDAD_DETALLE` al cargar sin tocar `pasos`: el número de pasos
 y el avance guardado siguen iguales. Las fotos están en `fotos-base/<ficha>-<paso>.jpg`, a 1024 px, de Wikimedia
 Commons y de Openverse (StockSnap, Rawpixel y Flickr) con licencia libre; las busca y las baja `hb-fotos.py`
 (`buscar` arma hojas de contacto para elegirlas a ojo; `bajar` guarda las elegidas con su crédito). Openverse sin
