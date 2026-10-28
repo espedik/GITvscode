@@ -4601,10 +4601,14 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .ct-nav button svg{width:18px;height:18px}
 .ct-nav button:hover{background:rgba(var(--ov),.11);color:var(--text)}
 .ct-nav button:active{transform:scale(.94)}
+/* «Hoy», del mismo alto que las flechas; en cian, el color de hoy, y apagado cuando ya estás en hoy. */
+.ct-nav .ct-hoy{width:auto;min-width:36px;padding:0 12px;font-size:12.5px;font-weight:700;color:var(--cy)}
+.ct-nav .ct-hoy.ya{color:var(--text3)}
 @media(max-width:820px){
   .ct-nav{gap:8px}
   .ct-nav button{width:44px;height:44px;border-radius:12px}
   .ct-nav button svg{width:20px;height:20px}
+  .ct-nav .ct-hoy{width:auto;min-width:44px;padding:0 14px;font-size:14px}
 }
 /* Por debajo de 1180px las columnas se apilan y el tablero deja de caber en la
    pantalla: medido a 390px, 579px de tablero mas la banda de fase contra 754 de alto
@@ -9717,6 +9721,9 @@ function ctVerMes(delta){
   renderCoachTablero();
 }
 function ctVerDia(k){ ctSel = k; renderCoachTablero(); }
+// «Hoy», junto a las flechas (Adán, 28-oct-2026: "pon un botón que me regrese al día de hoy, igual de grande"): lo mismo
+// que entrar a la pantalla, el mes y el día de hoy.
+function ctVerHoy(){ ctYM = null; ctSel = null; renderCoachTablero(); }
 // El nombre de un pago en la celda del mes: «Tarjeta BBVA — lo que sobra de la quincena» → BBVA, «Crédito Automotriz» →
 // Auto, «Ahorro → GBM» → GBM. El nombre completo va en el título de la celda y en la columna del día.
 function ctCorto(t){
@@ -10231,7 +10238,8 @@ function renderCoachTablero(){
         '<span class="ct-lbl">Elige el día</span>'+
         '<span class="ct-tit">'+MESN[M-1]+' '+Y+'</span>'+
       '</div>'+
-      '<span class="ct-nav"><button onclick="ctVerMes(-1)" title="Mes anterior" aria-label="Mes anterior">'+
+      '<span class="ct-nav"><button class="ct-hoy'+(ctYM === hoyK.slice(0,7) && ctSel === hoyK ? ' ya' : '')+'" onclick="ctVerHoy()" title="Volver al día de hoy" aria-label="Volver al día de hoy">Hoy</button>'+
+      '<button onclick="ctVerMes(-1)" title="Mes anterior" aria-label="Mes anterior">'+
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>'+
       '<button onclick="ctVerMes(1)" title="Mes siguiente" aria-label="Mes siguiente">'+
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button></span>'+

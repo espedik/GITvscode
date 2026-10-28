@@ -940,7 +940,8 @@ que manda (`ctColor`; *cena* va como palabra: *quincena* la contiene y la BBVA s
 Borde ámbar el día que entra la nómina. La columna es un contenedor (`.ct-cal`, `container-type`): bajo 640 px de
 ancho —una pantalla de 1600 o de 1366— la celda deja el punto de color y el importe, y bajo 430 —el teléfono—, el
 día y la barra. Las flechas ‹ › cambian de mes (`.ct-nav`): botones de 36 px, y de 44 en el celular —el mínimo
-cómodo para el dedo—, con la flecha en SVG; **al abrir un mes que no es el actual se elige el primer día con
+cómodo para el dedo—, con la flecha en SVG. A su izquierda, **Hoy** (`ctVerHoy`), del mismo alto: regresa al mes y al
+día de hoy, como entrar a la pantalla; va en cian y se apaga cuando ya estás en hoy. **Al abrir un mes que no es el actual se elige el primer día con
 movimiento**.
 
 **Al pie de las celdas, solo las cifras del mes** (`.ct-tot`; Adán, 28-oct-2026: *"lo de abajo del calendario solo
