@@ -8725,13 +8725,13 @@ window.CIFRAS = (function () {
       let monto = c.monto;
       if (c.quincena && c.ahorro && resta > 0) { const x = Math.min(resta, monto); monto -= x; resta -= x; }
       if (c.ahorro && !(monto > 0)) return;
-      out.push({ t: c.txt, monto: monto, entra: !!c.entra, ahorro: !!c.ahorro });
+      out.push({ t: c.txt, monto: monto, entra: !!c.entra, ahorro: !!c.ahorro, grupo: c.grupo });
     });
     tarjeta.forEach(function (a) {
       out.push({ t: a.de === 'minimo' ? 'Tarjeta BBVA — el pago del ' + dia + ', con lo de Didi'
                   : a.de === 'extra' ? 'Tarjeta BBVA — un abono de más'
                   : a.hecho ? 'Tarjeta BBVA — lo que mandaste de la quincena' : 'Tarjeta BBVA — lo que sobra de la quincena',
-                 monto: a.monto, entra: false, tarjeta: true, de: a.de, hecho: !!a.hecho });
+                 monto: a.monto, entra: false, tarjeta: true, de: a.de, hecho: !!a.hecho, grupo: 'deudas' });
     });
     const DEU = (debts && debts.length) ? debts : deudas();
     const hoy = new Date();
@@ -8744,8 +8744,8 @@ window.CIFRAS = (function () {
       if (d.day !== dia || !(+d.balance > 0) || !(+d.min > 0)) return;
       if (d.id === 'd001' && B && B.desde && fecha >= B.desde) return;     // la paga el plan
       if (+d.noInterest > 0 && mes === proximo(d))
-        out.push({ t: d.name + ' — pago total, sin intereses', monto: +d.noInterest, entra: false });
-      else out.push({ t: d.name, monto: +d.min, entra: false });
+        out.push({ t: d.name + ' — pago total, sin intereses', monto: +d.noInterest, entra: false, grupo: 'deudas' });
+      else out.push({ t: d.name, monto: +d.min, entra: false, grupo: 'deudas' });
     });
     return out;
   }

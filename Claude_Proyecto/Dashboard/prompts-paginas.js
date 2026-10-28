@@ -679,7 +679,7 @@ Esta pantalla es el tablero del Plan Maestro: la ruta de las fases, el mes en cu
 - Ningún importe en el código: todo sale del maestro y de Finanzas.
 - Lo que se cuenta en pasado lleva fecha; lo que se afirma en presente coincide con el saldo vivo.
 - El cálculo es uno solo (ctTramo, la serie de la quincena): para gastar, lo que sale cada día en el mes, la resta de la semana y la quincena de tu estrategia salen de la misma serie, y cuadran al peso. Nada de gráficas de relleno: cada número se explica con una cuenta.
-- Tu estrategia de hoy va arriba del panel de Deuda cara, con sus botones, y tu dinero, cuenta por cuenta, en el de Patrimonio: la columna del día dice lo que pagas ese día y lo que anotaste, nada más.
+- Tu estrategia de hoy va arriba del panel de Deuda cara, con sus botones, y tu dinero, cuenta por cuenta, en el de Patrimonio: la columna del día dice lo que pagas ese día y lo que anotaste, nada más; la de la semana, sus gastos por sección, y los totales —de la semana y del mes— van bajo las fechas del calendario.
 - Las cifras de hoy son las mismas en toda la pantalla —el mes en curso y la ventana de las fases—: lo que hay para gastar lo dice la serie de la quincena (ctCifrasHoy).
 - La pantalla no lleva la ruta de deuda ni el riel de la quincena (Adán los quitó): en su lugar van los ocho medidores, que salieron de Mis Metas. Tampoco Te toca esta semana: las tareas del mes se palomean en el mes en curso. Las celdas del calendario miden la mitad que cuando llenaban la columna.
 - Cada medidor sale de los datos vivos, abre su desglose y su porcentaje se explica en una frase.

@@ -74,6 +74,9 @@ Junto a ella viajan sus piezas, para que nadie las reimplemente: `agendaDia`, `p
 `norm`, `yaContado`, `esNomina`, y la regla de la tarjeta: `tarjetaDe` y `movimientoTarjeta` (ver
 *La tarjeta se mueve con lo que se anota*).
 
+Cada cosa que devuelve `agendaDia` lleva su `grupo`: el del cobro del calendario (el renglón del desglose del
+sueldo) o `deudas` para la tarjeta y los mínimos; con él la semana del Plan Maestro reparte sus gastos por sección.
+
 `agendaDia` pone el mínimo de cada deuda en su día, salvo una tarjeta que se paga completa
 (`noInterest`): en su **próximo** pago sale el total para no generar intereses; los meses de
 después siguen con el mínimo, porque esos estados de cuenta todavía no existen. **La BBVA con plan

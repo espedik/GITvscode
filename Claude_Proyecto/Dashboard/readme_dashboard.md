@@ -943,7 +943,14 @@ día y la barra. Las flechas ‹ › cambian de mes (`.ct-nav`): botones de 36 p
 cómodo para el dedo—, con la flecha en SVG; **al abrir un mes que no es el actual se elige el primer día con
 movimiento**.
 
-Al pie de las celdas, mientras dure el plan en México: **a dónde va el dinero ese mes** (`.ct-dinero`), en tres cifras: *A la BBVA en octubre* —todo lo que le toca ese mes: de las quincenas, de Didi y el mínimo (`planBbva`)—, *A GBM* —los cobros con `ahorro` del calendario más lo que Didi aparta, de `desgloseMes`— y *Lo que trae Didi, al mes* (`didiMes`). Es la misma cuenta que la proyección de Coach.
+**Al pie de las celdas van los totales** (`.ct-tot`; Adán, 28-oct-2026: *"los totales totales esos solo me interesan
+los que aparecen abajo de las fechas del calendario, ahí pon todo lo total que me interesan"*), en dos renglones
+compactos. El de **la semana del día elegido** (`#ctTotSem`, lo pinta la columna de la semana, que lo calcula):
+*traías*, *entró*, *sale*, *sin anotar* —la diferencia con tu saldo real— y *cierras el 21 con*; cada uno dice en su
+título de qué es. El del **mes**, mientras dure el plan en México: *A la BBVA* —todo lo que le toca ese mes: de las
+quincenas, de Didi y el mínimo (`planBbva`)—, *A GBM* —los cobros con `ahorro` del calendario más lo que Didi aparta,
+de `desgloseMes`— y *Didi trae al mes* (`didiMes`), la misma cuenta que la proyección de Coach. En un mes de seis
+semanas (noviembre de 2026) la columna desplaza unos 20 px por dentro a 1600 y 1366.
 
 ### La quincena, una sola cuenta (`ctTramo`)
 
@@ -1083,23 +1090,28 @@ Lo que no encaja en ninguna ("Tenis Tommy Hilfiger") es gasto real que la agenda
 banderas suyas y las del maestro (`CIFRAS.MIGRACIONES_FLAGS`), para que una corrección histórica
 no pise un saldo más nuevo que ella.
 
-### La semana: el cierre como una resta
+### La semana: sus gastos por sección
 
-**La resta sale de la serie de la quincena** (`ctTramo`): *traías* —el saldo del día anterior, si la semana no
-arranca la quincena—, *entró tu nómina*, *sale en la semana* —exactamente lo que suma la lista de abajo, concepto
-por concepto— y, si tu saldo real cae en la semana, *se fue sin anotar* o *tenías de más*; la línea final es el
-saldo del último día. Adán, 21-oct-2026: *"revisa bien bien las métricas de los números para que todo cuadre"*
+**La columna dice solo en qué se va la semana, por sección** (Adán, 28-oct-2026: *"hazlo igual de pequeño que en las
+cifras de ese día, pero aquí solo dame los totales de gastos de la semana separado en secciones"*), con las filas
+compactas de *Ese día* (`.ct-ev`): **Deudas**, **Casa y servicios**, **Comida**, **Suscripciones**, **Ahorro a GBM**,
+**Tu familia** y **Lo que anotaste**, de mayor a menor, cada una con su total y lo que lleva en corto (*Deudas · BBVA,
+Auto −$13,650*); el desglose, concepto por concepto y con su día, va en su título. La sección sale del `grupo` de
+cada cobro (`CT_GRUPO_SECC`; los anotados de contado van a *Lo que anotaste* y comer, a *Comida*), y las secciones
+suman exactamente lo que *sale* en los totales de bajo el calendario.
+
+**Los totales de la semana viven bajo las fechas del calendario** (ver *El mes*) y salen de la serie de la quincena
+(`ctTramo`): *traías* —el saldo del día anterior, si la semana no arranca la quincena—, *entró* —tu nómina—, *sale*,
+y, si tu saldo real cae en la semana, *sin anotar* o *de más*; el último es el saldo del último día. Adán, 21-oct-2026: *"revisa bien bien las métricas de los números para que todo cuadre"*
 —la resta arrancaba en el saldo real del 19 y la lista era de toda la semana—. **Las semanas son bloques de siete
 días desde el 1** (1–7, 8–14, 15–21, 22–28 y el resto), siempre dentro de una quincena, así que el cierre se
 nombra con su día real (`ctDiaNombre()`), un tramo de un solo día se dice *el 14* (`ctRango()`), nunca *del 14 al
 14*, y la esquina dice *semana 3 de 5*. Una semana que ya pasó dice *Salió* y *Cerraste*; una que viene, *En qué
 se va a ir*.
 
-Con los datos del 21-oct-2026: *entró tu nómina, el 15* +$20,500, *sale en la semana* −$15,077, *se fue sin anotar
-· tu saldo real del 19* −$1,445 y *cierras el miércoles 21 con* $3,978; la lista —la BBVA $6,950, el auto $6,700,
-comer 7 días $777 y el gym $650— *suman $15,077*. **Cada gasto que cae un día concreto es un botón** que abre ese
-día (y arrastra el calendario y la columna del día), con el día escrito al lado (`Crédito Automotriz · día 15`). Comer no es
-botón: cae los siete días.
+Con los datos del 21-oct-2026, la semana del 15 al 21: *entró* +$20,500, *salió* −$15,077, *sin anotar* −$1,445 y
+*cerraste el 21* con $3,978; por sección, *Deudas* −$13,650 (la BBVA y el auto), *Comida* −$777 (7 días) y
+*Suscripciones* −$650 (el gym), que suman los $15,077.
 
 ### Lo que cuesta comer
 
