@@ -9685,13 +9685,18 @@ function ctMesDetalle(k){
   }
   if(k === 'didi'){
     const mes = +C.n('didiMes') || 0, aparta = C.didiAlAhorro ? C.didiAlAhorro(X.ym) : 0;
-    const aBbva = bbva.filter(a => a.de !== 'quincena').reduce((s,a) => s + a.monto, 0);
+    const aBbva = bbva.filter(a => a.de === 'didi' || a.de === 'minimo').reduce((s,a) => s + a.monto, 0);
     const aGbm = Object.values(C.didiGbmLunes ? C.didiGbmLunes(X.ym) : {}).reduce((s,v) => s + v, 0);
+    // La quincena en que vives de Didi, después de liquidar la BBVA con todo lo que tenías (lunesDidiTuyos).
+    const tuyos = C.lunesDidiTuyos ? C.lunesDidiTuyos(X.ym) : [], aVivir = tuyos.length * aparta * 12 / 52;
     return { titulo:'Lo que trae Didi en '+X.mes, sub:'Aparte de tu sueldo. Lo que apartas va a la BBVA mientras tenga saldo y, después, a GBM; el resto paga la carga del auto y lo tuyo.',
       html:'<div class="kpi-cifra">'+money(mes)+'</div>'+
         kpiSec('A dónde va')+(aBbva >= 1 ? fila('A la BBVA, los lunes y el pago del corte', aBbva) : '')+(aGbm >= 1 ? fila('A GBM, los lunes desde que liquides la BBVA', aGbm) : '')+
-        fila('Lo que te queda para la carga del auto y lo tuyo', mes - aBbva - aGbm)+tot('Lo que trae al mes', mes)+
-        kpiNota('Lo que apartas al mes según tu plan: <b>'+money(aparta)+'</b>.'+(aparta - aBbva - aGbm >= 1 ? ' Lo que no alcanza a ir este mes a la tarjeta —'+money(Math.round(aparta - aBbva - aGbm))+'— se queda contigo: a GBM solo va una vez que liquides la BBVA.' : '')) };
+        (aVivir >= 1 ? fila('Para vivir la quincena después de liquidarla · lunes '+tuyos.map(f => +f.slice(8)).join(' y '), aVivir) : '')+
+        fila('Lo que te queda para la carga del auto y lo tuyo', mes - aBbva - aGbm - aVivir)+tot('Lo que trae al mes', mes)+
+        kpiNota('Lo que apartas al mes según tu plan: <b>'+money(aparta)+'</b>.'+
+          (aVivir >= 1 ? ' La liquidas con todo lo que tienes, así que lo que apartarías esos lunes es para vivir; desde el siguiente, a GBM.'
+           : aparta - aBbva - aGbm >= 1 ? ' Lo que no alcanza a ir este mes a la tarjeta —'+money(Math.round(aparta - aBbva - aGbm))+'— se queda contigo: a GBM solo va una vez que liquides la BBVA.' : '')) };
   }
   return null;
 }
@@ -10027,7 +10032,10 @@ function ctEstrategiaHtml(T, H, faltaR, mv, didiR, hastaR){
   const pM = ym.split('-').map(Number), sig = new Date(pM[0], pM[1], 1);
   const ymSig = sig.getFullYear()+'-'+String(sig.getMonth()+1).padStart(2,'0');
   const G = CIFRAS.desgloseMes(ymSig);
-  const aGbm = num(G.dia1)+' el 1 y '+num(G.dia15)+' el 15, más '+num(CIFRAS.didiAlAhorro(ymSig))+' de Didi al mes';
+  // La quincena en que vives de Didi después de liquidarla (lunesDidiTuyos): esos lunes no va nada a GBM.
+  const tuyos = CIFRAS.lunesDidiTuyos ? CIFRAS.lunesDidiTuyos(ym).concat(CIFRAS.lunesDidiTuyos(ymSig)).filter(k => k >= hoyLocal()) : [];
+  const aGbm = num(G.dia1)+' el 1 y '+num(G.dia15)+' el 15, más '+num(CIFRAS.didiAlAhorro(ymSig))+' de Didi al mes'+
+    (tuyos.length ? '; los lunes '+tuyos.map(k => +k.slice(8)).join(' y ')+', lo de Didi es para vivir' : '');
 
   // Lo que el plan restó solo hoy y los dos días de antes, con «Corregir» y «No lo mandé». Si con el
   // abono completo la quincena no cierra, sugiere lo que la deja en cero, no en rojo.
@@ -11838,9 +11846,10 @@ function pasoInversionHoy(){
   const B = bbvaPlan(), bbvaFin = B ? B.fin.toLocaleDateString('es-MX',{day:'numeric',month:'short'}) : '';
   // Los abonos que faltan, de la misma ruta que el Plan Maestro (`CIFRAS.planBbva`): el de hoy es la acción del día
   // y los que siguen van uno por renglón, con money() para que el modo privado los tape.
-  const hoyK = today(), DE = { quincena: 'de la quincena', didi: 'de Didi', minimo: 'pago mínimo', extra: 'extra' };
+  const hoyK = today(), DE = { quincena: 'de la quincena', didi: 'de Didi', minimo: 'pago mínimo', extra: 'extra', liquida: 'para liquidarla' };
   const ORIGEN = { didi: 'Sale de lo que apartas cada semana de lo que ganas en Didi.', quincena: 'Sale de lo que te sobra de la quincena.',
-    minimo: 'Es el pago mínimo de tu estado de cuenta.', extra: 'Es un pago extra.' };
+    minimo: 'Es el pago mínimo de tu estado de cuenta.', extra: 'Es un pago extra.',
+    liquida: 'Sale de todo lo que tienes en la cuenta y en efectivo; la quincena que sigue vives de Didi.' };
   const pend = B ? B.abonos.filter(a=>!a.hecho && a.fecha>=hoyK) : [], deHoy = pend.filter(a=>a.fecha===hoyK), resto = pend.filter(a=>a.fecha!==hoyK);
   const diaCorto = k => { const p = k.split('-').map(Number), d = new Date(p[0], p[1]-1, p[2]); return DIAS_CORTOS[d.getDay()].toLowerCase()+' '+p[2]+' '+MES_LABEL_FULL[p[1]-1].slice(0,3).toLowerCase(); };
   const sumHoy = deHoy.reduce((t,a)=>t+a.monto,0);

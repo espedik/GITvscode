@@ -355,7 +355,7 @@ Dashboard—:
 | Bloque | De dónde sale |
 |---|---|
 | Próximos pagos · 15 días | `CIFRAS.agendaDia` día por día, más lo que Didi aparta para la BBVA (los abonos `de: 'didi'` de `planBbva`, que no pasan por el calendario); al pie, lo que entra y sale en esos días |
-| La BBVA, quincena a quincena | El saldo vivo (`CIFRAS.bbvaEstado`, el mismo del Plan Maestro y de Mis Metas), lo pagado desde que arrancó su plan (`CIFRAS.avanceBbva`), el día que quedará en cero y los abonos que siguen desde hoy, el de hoy incluido. El saldo que reporte del banco manda: va al maestro como migración |
+| La BBVA, quincena a quincena | El saldo vivo (`CIFRAS.bbvaEstado`, el mismo del Plan Maestro y de Mis Metas), lo pagado desde que arrancó su plan (`CIFRAS.avanceBbva`), el día que quedará en cero y los abonos que siguen desde hoy, el de hoy incluido, cada uno con de dónde sale —el del día que la liquida de un golpe (`PROYECTO.bbvaLiquida`), *para liquidarla, con todo lo que tienes*—. El saldo que reporte del banco manda: va al maestro como migración |
 | A GBM, para Alemania | `CIFRAS.desgloseMes`: este mes, el siguiente y el primero ya sin la BBVA, con lo del día 1, el 15 y Didi; al pie, `{{alemaniaJunio}}` contra la cuenta bloqueada (`{{sperrkonto}}`, `{{junioCorto}}`) |
 
 Cuánto te queda de la quincena día a día no se calcula aquí: es la cuenta de la quincena del Plan Maestro (Dashboard).

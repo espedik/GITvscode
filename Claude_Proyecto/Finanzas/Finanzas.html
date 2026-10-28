@@ -2806,7 +2806,7 @@ function renderQuincena(m){
   const BE=C.bbvaEstado?C.bbvaEstado():null, AB=C.avanceBbva?C.avanceBbva(S):null;
   const resta=BE?BE.saldo:0, fin=BE&&BE.fin?new Date(BE.fin):(plan.fin?new Date(plan.fin):null);
   const sig=(plan.abonos||[]).filter(a=>a.fecha>=hoyIso&&!a.hecho).slice(0,4);
-  const DE={quincena:'de la quincena',didi:'de Didi',minimo:'el pago del mes, con lo de Didi'};
+  const DE={quincena:'de la quincena',didi:'de Didi',minimo:'el pago del mes, con lo de Didi',extra:'un abono de más',liquida:'para liquidarla, con todo lo que tienes'};
   const bbva=(resta>0&&!(BE&&BE.cancelada))?`
       <div class="qn-cifra" style="color:#f59e0b">${fmt(resta)}</div>
       <div class="qn-sub">debes hoy${AB?' · llevas '+fmt(AB.pagado)+' de los '+fmt(AB.inicio)+' con que arrancó su plan':''} · <b>en cero el ${fin?corto(fin):'—'}</b> · ${fmt(plan.intereses||0)} de intereses</div>
