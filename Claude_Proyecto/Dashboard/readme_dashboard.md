@@ -947,21 +947,24 @@ movimiento**.
 **Al pie de las celdas, solo las cifras del mes** (`.ct-tot`; Adán, 28-oct-2026: *"lo de abajo del calendario solo
 son cifras del mes, no de la semana y además ordénalas mejor"*), en dos renglones de tres, cada cifra con su nombre a la
 izquierda y el importe a la derecha (`ctTotCel`; en el teléfono, el nombre arriba). **El dinero del mes**: *Entra* —tus
-quincenas—, *Sale* —lo programado, lo anotado de contado y comer: lo que suman las barras de los días (`saleDe`)— y *Te
-queda*, la resta. **A dónde va**, mientras dure el plan en México: *A la BBVA* —todo lo que le toca ese mes: de las
+quincenas—, *Sale* —lo que pagas y gastas: lo programado, lo anotado de contado y comer, lo que suman las barras de
+los días (`saleDe`) menos lo que mandas a GBM, que no es gasto (Adán: *"no quiero que lo de GBM salga en lo que sale"*)—
+y *Te queda*: lo que entra menos lo que sale y lo que mandas a GBM de tus quincenas. **A dónde va**, mientras dure el plan en México: *A la BBVA* —todo lo que le toca ese mes: de las
 quincenas, de Didi y el mínimo (`planBbva`); no sale el mes que ya no le toca nada—, *A GBM* —los cobros con `ahorro`
 del calendario más lo que Didi aparta, de `desgloseMes`; solo existe desde que el plan liquida la BBVA (Adán: *"eso es después de
 liquidar BBVA"*), así que no sale mientras el mes no mande nada— y *Didi trae* (`didiMes`), la misma cuenta que la
 proyección de Coach. Sin título: el mes lo dice el del calendario. En octubre de 2026: entra $41,000 y sale $45,925
 —$13,346 son lo que pagas a la BBVA el 31, de un golpe y con todo lo que tienes—, así que *Te queda* sale en rojo, −$4,925:
-lo pone tu dinero, no la quincena. En un mes de seis semanas (noviembre de 2026) la columna desplaza 18 px por dentro a 1600 y 1366.
+lo pone tu dinero, no la quincena. En noviembre: entra $41,000, sale $23,839, van a GBM $11,692 —$9,000 de las
+quincenas y $2,692 de Didi— y te quedan $8,161. En un mes de seis semanas (noviembre de 2026) la columna desplaza 18 px por dentro a 1600 y 1366.
 
 **Cada cifra se toca y abre su desglose** (Adán: *"en lo que sale, cuando haga click, desglósame las cantidades, al
 igual que las demás"*), en la ventana de los medidores: cada celda es un botón `.ct-tot-c` que llama
 `abrirKpi('mes-<cifra>')`, y `kpiDetalle` lo manda a `ctMesDetalle`. Lee lo que el tablero acaba de pintar, que
 `renderCoachTablero` deja en `CT_MES` —cada concepto del mes con su sección de `CT_SECC` y sus días, y las quincenas—,
 así que el desglose suma exactamente lo que dice la cifra. *Sale* va por sección, de la que más pesa a la que menos,
-con su barra y cada concepto con sus días; *Entra*, quincena por quincena; *Te queda*, la cuenta; *A la BBVA*, abono por
+con su barra y cada concepto con sus días, sin la de ahorro a GBM; *Entra*, quincena por quincena; *Te queda*, la cuenta
+—entra, sale y lo de tus quincenas a GBM—; *A la BBVA*, abono por
 abono de `planBbva` con su origen (`ABONO_DE`) y el día en que el plan la liquida; *A GBM*, lo de tus quincenas y lo de Didi
 lunes por lunes (`didiGbmLunes`); *Didi trae*, a dónde va: a la BBVA, a GBM y lo que te queda para la carga y lo tuyo.
 

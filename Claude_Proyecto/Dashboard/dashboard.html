@@ -9650,9 +9650,10 @@ function ctMesDetalle(k){
   const bbva = (C.planBbva ? C.planBbva().abonos : []).filter(a => a.fecha.slice(0,7) === X.ym);
   if(k === 'sale'){
     const secc = {};
-    Object.keys(X.conc).forEach(t => { const c = X.conc[t]; (secc[c.s] = secc[c.s] || { v:0, cs:[] }).v += c.v; secc[c.s].cs.push(c); });
+    // Lo que mandas a GBM no es gasto: va en «A GBM».
+    Object.keys(X.conc).forEach(t => { const c = X.conc[t]; if(c.s === 'ahorro') return; (secc[c.s] = secc[c.s] || { v:0, cs:[] }).v += c.v; secc[c.s].cs.push(c); });
     const orden = Object.keys(secc).sort((a,b) => secc[b].v - secc[a].v);
-    return { titulo:'Lo que sale en '+X.mes, sub:'Lo programado, lo anotado de contado y comer: lo mismo que suman las barras de los días del calendario.',
+    return { titulo:'Lo que sale en '+X.mes, sub:'Lo que pagas y gastas: lo programado, lo anotado de contado y comer. Lo que mandas a GBM no es gasto: va en «A GBM».',
       html:'<div class="kpi-cifra" style="color:'+R+'">−'+money(Math.round(X.sale))+'</div>'+
         '<div class="kpi-cifra-sub">de '+money(Math.round(X.ent))+' que entran · '+orden.length+' secciones</div>'+
         orden.map(s => kpiSec(CT_SECC[s]+' · '+money(Math.round(secc[s].v)))+
@@ -9662,10 +9663,11 @@ function ctMesDetalle(k){
   if(k === 'entra') return { titulo:'Lo que entra en '+X.mes, sub:'Tus quincenas. Didi va aparte: lo que trae se ve en «Didi trae».',
     html:'<div class="kpi-cifra" style="color:'+V+'">+'+money(Math.round(X.ent))+'</div>'+
       kpiSec('Quincena por quincena')+X.entradas.map(e => fila(esc(e.t)+' · '+fecha(X.ym+'-'+String(e.d).padStart(2,'0')), e.v)).join('')+tot('En el mes', X.ent) };
-  if(k === 'queda') return { titulo:'Lo que te queda en '+X.mes, sub:'Lo que entra menos todo lo que sale del calendario: lo que tienes para lo que no está en el plan.',
-    html:'<div class="kpi-cifra" style="color:'+(X.ent - X.sale >= 0 ? P : R)+'">'+(X.ent - X.sale < 0 ? '−' : '')+money(Math.abs(Math.round(X.ent - X.sale)))+'</div>'+
-      kpiSec('La cuenta')+fila('Entra', X.ent, ' style="color:'+V+'"')+fila('Sale', -X.sale, ' style="color:'+R+'"')+tot('Te queda', X.ent - X.sale)+
-      kpiNota('«Sale» ya incluye lo que el plan manda a la BBVA de cada quincena y a GBM; lo de Didi va aparte.') };
+  if(k === 'queda') return { titulo:'Lo que te queda en '+X.mes, sub:'Lo que entra menos lo que sale y lo que mandas a GBM de tus quincenas: lo que tienes para lo que no está en el plan.',
+    html:'<div class="kpi-cifra" style="color:'+(X.queda >= 0 ? P : R)+'">'+cifra(X.queda)+'</div>'+
+      kpiSec('La cuenta')+fila('Entra', X.ent, ' style="color:'+V+'"')+fila('Sale', -X.sale, ' style="color:'+R+'"')+
+      (X.gbmQ >= 1 ? fila('A GBM, de tus quincenas', -X.gbmQ, ' style="color:'+V+'"') : '')+tot('Te queda', X.queda)+
+      kpiNota('«Sale» incluye lo que el plan manda a la BBVA de cada quincena. Lo de Didi no pasa por aquí: lo que aparta va a la BBVA o a GBM.') };
   if(k === 'bbva'){
     const fin = C.planBbva().fin;
     return { titulo:'A la BBVA en '+X.mes, sub:'Abono por abono, del plan para dejarla en cero sin intereses.',
@@ -10261,7 +10263,7 @@ function renderCoachTablero(){
   const mesConc = {}, mesEnt = [];
   for(let d=1; d<=nDias; d++){
     const ag = ctAgenda(d);
-    const cosas = ag.filter(a=>!a.entra).map(a=>({t:a.t, m:+a.monto||0, s:CT_GRUPO_SECC[a.grupo]||'otros'}))
+    const cosas = ag.filter(a=>!a.entra).map(a=>({t:a.t, m:+a.monto||0, s:a.ahorro ? 'ahorro' : CT_GRUPO_SECC[a.grupo]||'otros'}))
       .concat(ctExtras(d, ctYM, MOV, _fijosMes).filter(t=>!t.credito).map(t=>({t:t.desc||t.cat||'Gasto', m:+t.amount||0, s:'anotado'})))
       .sort((a,b)=>b.m-a.m);
     cosas.forEach(c => { const x = mesConc[c.t] = mesConc[c.t] || { t:c.t, s:c.s, v:0, dias:[] }; x.v += c.m; x.dias.push(d); });
@@ -10280,12 +10282,15 @@ function renderCoachTablero(){
   const enPlan = !!(window.CIFRAS && CIFRAS.PROYECCION && ctYM >= CIFRAS.PROYECCION.supuestos.desde && ctYM <= CIFRAS.PROYECTO.ultimoMesMexico);
   const didiAh = enPlan && CIFRAS.desgloseMes ? Math.max(0, CIFRAS.desgloseMes(ctYM).didi) : 0;
   const bbvaMes = enPlan && CIFRAS.planBbva ? CIFRAS.planBbva().abonos.filter(a=>a.fecha.slice(0,7)===ctYM).reduce((s,a)=>s+a.monto,0) : 0;
-  // El dinero del mes, de la misma cuenta que las barras de cada día (saleDe): lo que entra y lo que sale.
-  let entMes = 0, saleMes = 0;
-  for(let d=1; d<=nDias; d++){ entMes += saleDe[d].ent; saleMes += saleDe[d].sale; }
+  // El dinero del mes, de la misma cuenta que las barras de cada día (saleDe): lo que entra y lo que sale. Lo que mandas a GBM
+  // sale de tu cuenta, pero no es gasto (Adán, 28-oct-2026: "no quiero que lo de GBM salga en lo que sale"): va en «A GBM»
+  // y se resta en «Te queda», que sigue siendo lo que entra menos todo lo que se va.
+  let entMes = 0, movMes = 0;
+  for(let d=1; d<=nDias; d++){ entMes += saleDe[d].ent; movMes += saleDe[d].sale; }
+  const saleMes = movMes - ahorroMes, quedaMes = entMes - movMes;
   if(comeDia > 0) mesConc['Comer'] = { t:'Comer · '+nDias+' días', s:'comida', v:comeDia*nDias, dias:[] };
-  CT_MES = { ym:ctYM, nombre:MESN[M-1]+' '+Y, mes:MESN[M-1].toLowerCase(), ent:entMes, sale:saleMes, conc:mesConc, entradas:mesEnt,
-             enPlan:enPlan, bbva:bbvaMes, gbm:ahorroMes + didiAh };
+  CT_MES = { ym:ctYM, nombre:MESN[M-1]+' '+Y, mes:MESN[M-1].toLowerCase(), ent:entMes, sale:saleMes, gbmQ:ahorroMes, queda:quedaMes,
+             conc:mesConc, entradas:mesEnt, enPlan:enPlan, bbva:bbvaMes, gbm:ahorroMes + didiAh };
   // Cada cifra se toca y abre su desglose, como los medidores (abrirKpi → kpiDetalle → ctMesDetalle).
   const ctTotCel = (lbl, v, signo, col, tit, k) => '<button type="button" class="ct-tot-c" onclick="abrirKpi(\'mes-'+k+'\')" title="'+esc(tit)+' · tócala para ver el desglose">'+
     '<i>'+lbl+'</i><b class="ct-num'+(privado?' fin-hidden':'')+'"'+
@@ -10336,8 +10341,8 @@ function renderCoachTablero(){
     // El mes ya lo dice el título del calendario: el pie no lo repite.
     '<div class="ct-tot"><div class="ct-tot-g">'+
       ctTotCel('Entra', entMes, '+', 'var(--g)', 'Tus quincenas del mes', 'entra')+
-      ctTotCel('Sale', saleMes, '−', 'var(--r)', 'Lo programado, lo anotado de contado y comer: lo que suman las barras de los días', 'sale')+
-      ctTotCel('Te queda', entMes - saleMes, '', entMes - saleMes >= 0 ? 'var(--p)' : 'var(--r)', 'Lo que entra menos lo que sale', 'queda')+
+      ctTotCel('Sale', saleMes, '−', 'var(--r)', 'Lo que pagas y gastas: lo programado, lo anotado de contado y comer; lo que mandas a GBM va aparte', 'sale')+
+      ctTotCel('Te queda', quedaMes, '', quedaMes >= 0 ? 'var(--p)' : 'var(--r)', 'Lo que entra menos lo que sale y lo que mandas a GBM de tus quincenas', 'queda')+
       // A GBM no va nada mientras la BBVA tenga saldo (Adán, 28-oct-2026: "eso es después de liquidar BBVA"): la cifra
       // sale el mes en que algo llega de verdad, y la de la BBVA, mientras le toque algo.
       (enPlan ? (bbvaMes > 0 ? ctTotCel('A la BBVA', bbvaMes, '', 'var(--w)', 'Lo que sobra de cada quincena, lo de Didi y el mínimo, hasta dejarla en cero', 'bbva') : '')+
