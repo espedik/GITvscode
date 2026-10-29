@@ -18,6 +18,9 @@ import io, json, os, re, sys, tempfile, time, urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 from threading import Semaphore
 import requests
+import socket, urllib3.util.connection as _conexion
+# Solo IPv4: en esta red cada conexión por IPv6 se queda 21 s esperando antes de caer a IPv4.
+_conexion.allowed_gai_family = lambda: socket.AF_INET
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
