@@ -49,7 +49,19 @@ def limpio(html):
     if m: t = m.group(1)
     t = re.split(r'\s+-\s+Wikimedia Commons|\s+\(Chữ|\s*\(talk\)|\s+-\s+\S+@\S+|\s*\S+@\S+', t)[0].strip()   # sin correos
     if not t or re.search(r'unknown author|anonymous|desconocido', t, re.I): return 'Autor desconocido'
-    return t[:60].strip()
+    return credito_militar(re.sub(r'^User:', '', t[:60].strip()))
+
+RAMAS = {'Air Force': 'Fuerza Aérea', 'Army': 'Ejército', 'Navy': 'Marina', 'Marine Corps': 'Cuerpo de Marines', 'Coast Guard': 'Guardia Costera'}
+GRADOS = (r'(?:(?:Senior |Staff |Tech(?:nical)? |Master |Chief |First |1st |2nd |Sgt\.? |Sergeant |Pfc\.? |Spc\.? |Cpl\.? |Lance '
+          r'|Airman |Petty Officer |Officer |Class |Mass Communication Specialist |Capt\.? |Lt\.? |Seaman |Private |Specialist )+)')
+def credito_militar(a):
+    # «U.S. Air Force photo by Senior Airman Milton Hamilton» → «Milton Hamilton, Fuerza Aérea de EE. UU.»
+    m = re.match(r'^U\.S\. (Air Force|Army|Navy|Marine Corps|Coast Guard) photo(?: by)?\s*(.*)$', a)
+    if not m: return a
+    rama = RAMAS[m.group(1)] + ' de EE. UU.'
+    nombre = re.sub('^' + GRADOS, '', m.group(2)).strip(' .')
+    if len(nombre) < 4 or re.search(r'\d|\[|null|Courtesy', nombre) or len(nombre.split()) > 4: return rama
+    return nombre + ', ' + rama
 
 def commons(q, n=14):
     def pide():
