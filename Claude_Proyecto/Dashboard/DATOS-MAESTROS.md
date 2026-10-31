@@ -143,7 +143,7 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{servicios}}` | $1,075 | Plan AT&T + internet + gas (la mitad: es bimestral) + luz/agua |
 | `{{suscripciones}}` | $1,080 | Gym + Claude Code + iCloud |
 | `{{cetesDia15}}` | $0 | El aporte a CETES del día 15. En 0: el ahorro va todo a GBM (Adán, 5-oct-2026: *"el ahorro no se irá a cetes, se irá a gbm, lo invertiré todo"*). Los CETES que ya tiene siguen siendo su fondo de emergencia |
-| `{{ahorroDia1}}` | $2,050 | Págate primero, con depa: lo que va a GBM el día 1, desde noviembre de 2026 |
+| `{{ahorroDia1}}` | $2,050 | Págate primero, con depa: lo que va a GBM el día 1, desde diciembre de 2026 (la quincena del 1 de noviembre pagó la BBVA) |
 | `{{ahorroDia15}}` | $6,950 | Lo mismo el día 15, con depa |
 | `{{ahorroDia1Casa}}` | $12,100 | En casa de su familia: lo que va a GBM el día 1 |
 | `{{ahorroDia15Casa}}` | $8,900 | En casa: lo que va el día 15. Cada quincena se sostiene sola (Adán: *"eso debe ser cada quincena y deja dinero sobrante para la quincena"*): su sueldo menos los fijos de sus días, la comida de sus días y su parte del gasto personal —sus rutinas y el tope de lo demás (`SUPUESTOS.loDemas`, `loDemasEnCasa`) repartidos por día—, redondeado a cientos hacia abajo con el peor mes de cada etapa. Mientras la BBVA tenga saldo, los cuatro van primero a ella (`planBbva`) |
@@ -155,13 +155,13 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | Marcador | Valor hoy | id |
 |---|---|---|
 | `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $279,363 · $315,800 · $6,700 · 12.99% · 56 (calculado) — baja sola cada día 15 (`aplicarPagosFijos`) | `d003` |
-| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $14,500 · $1,500 · 55.7% | `d001` |
+| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $2,300 · $1,500 · 55.7% | `d001` |
 | `{{banamex}}` `{{banamexMin}}` | $0 · $810 — liquidada el 30-sep-2026 | `d002` |
 | `{{depto}}` | $0 — "por temas de mi apartamento"; pagada entera el 21-sep-2026 | `d012` |
 | `{{iphone}}` | $9,880 — baja sola cada día 1 (`aplicarPagosFijos`) | `d008` |
 | `{{appleWatch}}` `{{appleWatchCuota}}` | $0 · $854 — liquidado: la última cuota era la del 18 sep 2026 | `d004` |
 | `{{zapStylo}}` `{{zapStyloCuota}}` | $0 · $167 — "el de los zapatos", liquidado el 21-sep-2026 | `d009` |
-| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $303,743 · $14,500 · $9,880 | derivadas |
+| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $291,543 · $2,300 · $9,880 | derivadas |
 | `{{minimosDeuda}}` `{{margen}}` | suma de mínimos vivos · lo que sobra al mes | derivadas |
 
 **Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas: `{{autoMeses}}`
@@ -170,17 +170,20 @@ porque el `remainingMonths` del seed (61) no bajaba con el saldo; queda solo com
 falta el pago. De ahí `{{autoAPagar}}` (meses × pago) y `{{autoInteres}}` (lo que cuesta en puro
 interés). El detalle de intereses del Dashboard usa la misma función para cualquier crédito a plazo.
 
-**La BBVA debe $14,500 al 25-oct-2026 y se paga quincena a quincena** desde el 5-oct, cuando debía $15,000 (Adán: *"me estás
+**La BBVA debe $2,300 al 31-oct-2026 y se paga quincena a quincena** desde el 5-oct, cuando debía $15,000 (Adán: *"me estás
 diciendo de pagar mi tarjeta pero ni tengo dinero, eso está mal, eso debe ser cada quincena y deja
 dinero sobrante para la quincena; actualmente debo 15,000 a bbva"*). La Banamex quedó liquidada el
 30-sep-2026. El 19-sep la venta del Bitcoin había dejado la BBVA de $39,000 en $900; el 30-sep iba
 en $10,000 y la pagaba completa; el 5-oct, en $15,000, ya sin con qué pagarla el 11; el 14-oct, en
 $9,900 (*"el credito de tarjeta de bbva ya bajo a 9,900"*), y el 19-oct, en $8,900 (*"aún debo hoy mismo,
 debo 8,900"*): los abonos del 15 y de ese lunes no pasaron como decía el plan. El 25-oct subió a $14,500
-(*"mi deuda de BBVA subió a 14,500"*): $6,754 por encima de lo que el plan esperaba ese día. Cada saldo
+(*"mi deuda de BBVA subió a 14,500"*): $6,754 por encima de lo que el plan esperaba ese día. El 31-oct la pagó
+con la quincena del 1 de noviembre, que le llegó antes, y quedó en $2,300 (*"la BBVA solo queda con saldo de 2300… ya
+me pagaron el pago del mes y con eso pagué la tarjeta"*). Cada saldo
 nuevo que reporta es una entrada de `MIGRACIONES` (`_bbva20261005` además puso `noInterest` en 0 para que
 el 11 no pida el total; `_saldos20261019`, con la tarjeta, puso la cuenta y el efectivo y quitó los abonos
-que el plan había restado solo después del 14; la última es `_bbva20261025`), el saldo en `d001` y su día en
+que el plan había restado solo después del 14; la última es `_saldos20261031`, que también pone la cuenta y el
+efectivo de la quincena del 1 de noviembre), el saldo en `d001` y su día en
 `PROYECTO.bbvaSaldoFecha`. El arranque del plan, `bbvaInicio` ($15,000) el día `bbvaFecha`, no se mueve. **No paga intereses**: cada mes cubre lo que pide el estado de cuenta para no generarlos (Adán, 6-oct-2026: *"bbva no va cobrar intereses, eso déjalo en 0"*); `PROYECTO.bbvaSinIntereses` se lo dice al plan y a `tasaQueCorre` del Dashboard, y la tasa de 55.7% se queda como la del producto. Con Banamex en $0 su mínimo de $810 sale de
 `minimosDeuda` y `margen` sube eso mismo; `deudaCara` es solo la BBVA. En `d001` `total` se queda
 en $39,000: el "pagado real" de las barras de Finanzas sale de ahí.
@@ -198,10 +201,13 @@ el día `PROYECTO.bbvaLiquida`** (Adán, 28-oct-2026: *"en noviembre ya no pagar
 recursos y para sobrevivir esa quincena trabajaré de Didi"*): ese día el plan le abona todo el saldo (`de:
 'liquida'`), de su dinero —la cuenta y el efectivo—, así que `desgloseMes` no lo cuenta contra el ahorro de
 ningún mes; y lo que Didi apartaría los lunes que siguen, hasta `PROYECTO.bbvaDidiTuyoHasta`, es para vivir
-esa quincena (`lunesDidiTuyos`) y no va a GBM. Si ese abono no se manda («No lo mandé») o se queda corto, el
-plan sigue con los lunes de Didi y las quincenas. Con los números de hoy, desde los $14,500 del 25 de
-octubre: $1,154 de Didi el lunes 26 y los $13,346 que quedan el sábado 31; quedará en cero el `{{bbvaCero}}`
-(31 oct 2026) con `{{bbvaIntereses}}` ($0) de intereses. `{{bbvaRuta}}` dice esos abonos
+esa quincena (`lunesDidiTuyos`): esos lunes Didi no va ni a GBM ni a la tarjeta. Un saldo dicho ese día o después
+ya trae la liquidación, y lo que haya quedado lo paga la quincena siguiente. Así pasó: el 31 de octubre pagó con la
+quincena del 1 de noviembre, que le llegó antes (`PROYECTO.quincenaAdelantada`), y quedaron $2,300, que paga la del
+15; quedará en cero el `{{bbvaCero}}` (15 nov 2026) con `{{bbvaIntereses}}` ($0) de intereses. En el calendario, esa
+quincena lleva *Tarjeta BBVA — lo que quedó de esta quincena, pagado el 31 de octubre*: lo que le quedó después de lo
+fijo de ese día ($7,971), con `pagado` porque ya no es un pago por venir y sin mover el plan, porque el saldo dicho ya
+lo trae; y no manda nada a GBM ese día (el envío del 1 arranca en diciembre). `{{bbvaRuta}}` dice esos abonos
 en una frase, desde hoy (`bbvaRutaTxt`): la prosa del Plan Maestro y de Coach lo usa en vez de
 escribir las fechas. En cero se cancela (Adán, 15-oct-2026: *"después que la liquide la cancelo y de ahí nos
 vamos a incrementar números en inversiones"*) y lo que iba a ella va a GBM.
@@ -221,9 +227,9 @@ del plan cuyo día ya llegó se anota en Finanzas —una transacción en Deudas 
 `abono` (de dónde sale), y el saldo de `d001` que baja—. Si ese día ya hay un pago anotado a mano,
 manda el anotado, y un pago a mano posterior responde por lo de antes. `planAl` dice hasta qué día ya
 se aplicó: nada se resta dos veces y lo que se quitó no vuelve. El Dashboard la vuelve a llamar
-cuando cambia el día con la página abierta. El **control 37** vigila las dos llamadas. Así el saldo baja con los días: desde los $14,500 del 25
-de octubre, $13,346 el 26 y $0 el 31. Un saldo dicho el mismo día de un abono (`bbvaSaldoFecha` igual a hoy) es de antes de ese
-abono: el del día no se resta solo, se queda como lo que toca hoy, y «Ya lo mandé» lo anota. Sin datos (el verificador,
+cuando cambia el día con la página abierta. El **control 37** vigila las dos llamadas. Así el saldo baja con los días: desde los $2,300 del 31
+de octubre, $0 el 15 de noviembre. Un saldo dicho el mismo día de un abono (`bbvaSaldoFecha` igual a hoy) es de antes de ese
+abono —salvo el de la liquidación, que ya lo trae—: el del día no se resta solo, se queda como lo que toca hoy, y «Ya lo mandé» lo anota. Sin datos (el verificador,
 un navegador en blanco) es el plan puro desde `bbvaSaldoFecha`, idéntico al de antes. Se calcula
 una vez por día y por lectura de Finanzas (`planCache`): lo piden el calendario y la cuenta de la quincena día por
 día. Con la tarjeta en cero, `fin` es el día en que llegó ahí (su último movimiento).
@@ -312,16 +318,16 @@ pero el nombre de la variable se queda corto.
 | `{{gastoPersonalCasa}}` | $7,255 — lo mismo en casa | derivada |
 | `{{cuidadoMes}}` | $4,624 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
 | `{{recorteRutinas}}` | $1,880 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $857 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
-| `{{alemaniaMarzo}}` | $134,932 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
+| `{{alemaniaMarzo}}` | $130,582 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
 | `{{salidaAgosto}}` | $324,284 — lo que pide la salida completa en agosto de 2027: la cuenta bloqueada, la reserva del BYD, el colchón y la colegiatura del primer semestre (`cortes.salida.pide`) | derivada; se mueve con `PROYECTO.eurMxn` |
-| `{{extraSalida}}` | $10,695 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
-| `{{marzoParaSalida}}` | $188,405 — lo que tendría GBM al cerrar la Fase 1 con ese ingreso nuevo: el punto de control del 31 de marzo | derivada |
-| `{{mayoParaSalida}}` | $260,194 — lo mismo el día de decidir (`PROYECTO.maestriaDecision`) | derivada |
+| `{{extraSalida}}` | $11,130 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
+| `{{marzoParaSalida}}` | $186,230 — lo que tendría GBM al cerrar la Fase 1 con ese ingreso nuevo: el punto de control del 31 de marzo | derivada |
+| `{{mayoParaSalida}}` | $258,889 — lo mismo el día de decidir (`PROYECTO.maestriaDecision`) | derivada |
 | `{{salida2028}}` | «sobran …» o «faltan …»: la salida completa si se mueve a septiembre de 2028 (`desfase: 12`, `fmt: 'txt'`) | derivada |
-| `{{alemaniaJunio}}` | $211,838 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
-| `{{bbvaCero}}` | 31 oct 2026 — el día que la BBVA queda en cero con `planBbva` (`fmt: 'fecha'`) | derivada |
+| `{{alemaniaJunio}}` | $207,488 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
+| `{{bbvaCero}}` | 15 nov 2026 — el día que la BBVA queda en cero con `planBbva` (`fmt: 'fecha'`) | derivada |
 | `{{bbvaIntereses}}` | $0 — lo que costaría en intereses llegar a cero; en 0 con `PROYECTO.bbvaSinIntereses` | derivada |
-| `{{bbvaRuta}}` | «el sábado 31, $13,346 para liquidarla, con todo lo que tienes»: los abonos que le quedan a la BBVA, desde hoy (`bbvaRutaTxt`, `fmt: 'txt'`) | derivada de `planBbva` |
+| `{{bbvaRuta}}` | «el domingo 15 nov, $2,300 de la quincena»: los abonos que le quedan a la BBVA, desde hoy (`bbvaRutaTxt`, `fmt: 'txt'`) | derivada de `planBbva` |
 | `{{junioVeredicto}}` | «faltan … para la cuenta bloqueada» o «alcanza, con … de margen» (`fmt: 'txt'`) | derivada |
 | `{{junioCorto}}` | «faltan …» o «sobran …»: lo mismo en corto, para la cifra grande de las tarjetas de las fases (`fmt: 'txt'`) | derivada |
 | `{{salidaVeredicto}}` | «faltan …» o «sobran …»: lo que pide la salida —cuenta bloqueada, reserva del BYD, colchón y la colegiatura del primer semestre— contra la cuenta a fin de agosto (`fmt: 'txt'`) | derivada |
@@ -399,9 +405,9 @@ lo que bajan el auto (su día, con su interés) y el iPhone. Devuelve el estado 
 `aSalida`, `movs`) y, para hoy, lo que el plan pide hoy (`pendiente`). Hoy es lo real; un día que viene ya cuenta
 lo de hoy, porque proyectar es seguir el plan. El dinero para gastar —la cuenta y el efectivo— no va
 aquí: lo lleva la cuenta de la quincena del Plan Maestro (`ctTramo`), con la comida y lo anotado. Un día que ya pasó, o después de
-`ultimoMesMexico`, devuelve null. Desde los saldos del 25-oct-2026, la proyección pone GBM en $21,692 el
-30 de noviembre —la BBVA se paga de un golpe el sábado 31 de octubre—, en $39,692 el 31 de diciembre, ya pagadas
-las apostillas, y en $126,942 el 31 de marzo, con el depósito ya dentro. Lo usa Finanzas: GBM y los CETES al cerrar la fase y al irte, si sigues el plan. **Sube mes a
+`ultimoMesMexico`, devuelve null. Desde los saldos del 31-oct-2026, la proyección pone GBM en $17,342 el
+30 de noviembre —la BBVA se termina de pagar el 15—, en $35,342 el 31 de diciembre, ya pagadas las apostillas, y
+en $122,592 el 31 de marzo, con el depósito ya dentro. Lo usa Finanzas: GBM y los CETES al cerrar la fase y al irte, si sigues el plan. **Sube mes a
 mes lo mismo que la `PROYECCION`** (control 43); lo que las separa es de dónde arrancan: el plan contó como ahorro
 los $1,990 de la cuenta y el efectivo del 1 oct. Por eso lo que pide una fase y lo que da tu ritmo —el checkpoint
 y la meta de la fase, Mis Metas, la ventana de las fases— salen del plan, y este, de lo de hoy.
@@ -804,7 +810,7 @@ CIFRAS.CALENDARIO.hitos    // [{fecha, txt, sub}] — fechas duras que no salen 
 
 | | Qué trae | De dónde sale el número |
 |---|---|---|
-| `cobros` | Renta día 1, plan AT&T día 1, quincena días 1 y 15, gym día 17. Renta, luz y agua, internet y gas llevan `hasta` (`rentaHasta`): son del depa y terminan con él. Y el plan: el ahorro a GBM el 1 y el 15 (con depa, el del 1 desde noviembre), con `ahorro: true`, y el aporte a su familia el día 1 desde `enCasaDesde`. `grupo` dice a qué renglón del desglose del sueldo va cada uno | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí como dato, no como comentario al lado de la cifra: las apps lo leen. |
+| `cobros` | Renta día 1, plan AT&T día 1, quincena días 1 y 15, gym día 17. Renta, luz y agua, internet y gas llevan `hasta` (`rentaHasta`): son del depa y terminan con él. Y el plan: el ahorro a GBM el 1 y el 15 (con depa, el del 1 desde diciembre: la quincena del 1 de noviembre pagó la BBVA), con `ahorro: true`, y el aporte a su familia el día 1 desde `enCasaDesde`. `grupo` dice a qué renglón del desglose del sueldo va cada uno | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí como dato, no como comentario al lado de la cifra: las apps lo leen. |
 | `hitos` | Decisión Maestría (31 may 2027) y Salida a Alemania (1 sep 2027) | `PROYECTO.maestriaDecision` y `PROYECTO.maestriaInicio`. |
 
 **Regla al agregar: si una fecha se puede derivar de un dato que ya existe, NO va aquí.** Por eso

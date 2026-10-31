@@ -133,7 +133,7 @@ window.CIFRAS = (function () {
     // por día—, redondeado a cientos hacia abajo con el peor mes de cada etapa. Ninguna quincena
     // vive del sobrante de la otra y la tarjeta ya no se paga de golpe el 11: mientras la BBVA tenga
     // saldo, estos envíos van primero a ella (`planBbva`). El verificador avisa si dejan de caber.
-    ahorroDia1:      2050,    // con depa: de noviembre de 2026 a enero de 2027
+    ahorroDia1:      2050,    // con depa: de diciembre de 2026 a enero de 2027 (la del 1 de noviembre pagó la BBVA)
     ahorroDia15:     6950,    // con depa: del 15 de octubre de 2026 a enero de 2027
     ahorroDia1Casa: 12100,    // en casa de tu familia: de enCasaDesde a ultimoMesMexico
     ahorroDia15Casa: 8900,
@@ -144,13 +144,18 @@ window.CIFRAS = (function () {
     // como ahorro lo que ya se pagó.
     bbvaFecha: '2026-10-05',
     bbvaInicio: 15000,
-    bbvaSaldoFecha: '2026-10-25',
+    bbvaSaldoFecha: '2026-10-31',
     // Y se liquida de un golpe (Adán, 28-oct-2026: "en noviembre ya no pagaré BBVA… voy a pagar con todos mis
     // recursos y para sobrevivir esa quincena trabajaré de Didi"): el día `bbvaLiquida` el plan le abona todo lo
-    // que quede, de su dinero —la cuenta y el efectivo, no el ahorro de las quincenas—, y lo que Didi apartaría
-    // los lunes hasta `bbvaDidiTuyoHasta` es para vivir esa quincena: no va a GBM (`lunesDidiTuyos`).
+    // que quede, de su dinero —la cuenta y el efectivo, no el ahorro de las quincenas—. Un saldo dicho ese día ya
+    // trae la liquidación: el 31-oct pagó con la quincena del 1 de noviembre, que le llegó antes, y quedaron
+    // $2,300. Hasta `bbvaDidiTuyoHasta` vive de Didi: ni lo que Didi apartaría los lunes va a la tarjeta ni a GBM
+    // (`lunesDidiTuyos`), y lo que quedó lo paga la quincena siguiente, la del 15.
     bbvaLiquida: '2026-10-31',
     bbvaDidiTuyoHasta: '2026-11-14',
+    // La quincena que le llegó antes y pagó la BBVA (Adán, 31-oct-2026: "ya me pagaron el pago del mes y con eso pagué
+    // la tarjeta"): lo que le quedaba después de lo fijo de ese día ya se fue a la tarjeta el día de `bbvaLiquida`.
+    quincenaAdelantada: '2026-11-01',
     // Y no cobra intereses (Adán, 6-oct-2026: "bbva no va cobrar intereses, eso déjalo en 0, por
     // que pagaré para no pagar intereses a la tarjeta"): cada mes cubre lo que pide el estado de
     // cuenta para no generarlos. `planBbva` no les suma nada y el Dashboard no se los cuenta.
@@ -252,9 +257,10 @@ window.CIFRAS = (function () {
       // Plan Maestro — el ahorro de cada quincena a GBM (PROYECTO.ahorroDia1…) y el aporte a la casa.
       // `ahorro: true`: sale de la cuenta del día a día pero sigue siendo tuyo, así que el balance
       // mensual no lo cuenta como gasto. Mientras la BBVA tenga saldo, lo de ese día va primero a
-      // ella: `agendaDia` lo parte con `planBbva`. El 1 de octubre de 2026 ya había pasado.
+      // ella: `agendaDia` lo parte con `planBbva`. El 1 de octubre de 2026 ya había pasado, y la quincena del 1 de
+      // noviembre llegó antes y pagó la BBVA el 31 de octubre (Adán, 31-oct-2026): el envío del 1 arranca en diciembre.
       { dia:  1, txt: 'Ahorro → GBM', grupo: 'ahorro', ahorro: true, quincena: true,
-        get monto() { return PROYECTO.ahorroDia1; }, desde: '2026-11', get hasta() { return PROYECTO.rentaHasta; } },
+        get monto() { return PROYECTO.ahorroDia1; }, desde: '2026-12', get hasta() { return PROYECTO.rentaHasta; } },
       { dia: 15, txt: 'Ahorro → GBM', grupo: 'ahorro', ahorro: true, quincena: true,
         get monto() { return PROYECTO.ahorroDia15; }, desde: '2026-10', get hasta() { return PROYECTO.rentaHasta; } },
       { dia:  1, txt: 'Ahorro → GBM', grupo: 'ahorro', ahorro: true, quincena: true,
@@ -314,7 +320,7 @@ window.CIFRAS = (function () {
     // $8,900 ("aún debo hoy mismo, debo 8,900"): los abonos del 15 y del 19 no pasaron como decía el plan.
     // 25-oct-2026: $14,500 ("mi deuda de BBVA subió a 14,500"): $5,600 más que el 19.
     // El día del último saldo va en `PROYECTO.bbvaSaldoFecha`.
-    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:14500,        rate:55.7,  min:1500, day:11,start:'2024-01-22', noInterest:0},
+    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:2300,         rate:55.7,  min:1500, day:11,start:'2024-01-22', noInterest:0},
     // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. 55.7 es un supuesto tomado de
     // la BBVA, no un dato medido de esta tarjeta.
     // 2026-09-01: VUELVE A TENER SALDO, y con él vuelve a ser deuda cara. Cuatro compras de ese
@@ -537,7 +543,7 @@ window.CIFRAS = (function () {
        hitos:[{f:"31 mar 2027",t:"Cierra la solicitud de Esslingen",s:"completa: CV, carta de motivación y las dos de recomendación",foto:"meta-esslingen"},
               {f:"Junio 2027",t:"La cuenta bloqueada y la visa",v:"{{salidaJunio}}",s:"en la cuenta a mediados de mes",foto:"de-dinero"},
               {f:"Agosto 2027",t:"La salida completa",v:"{{salidaAgosto}}",s:"con la colegiatura del 1er semestre, la reserva del BYD y el colchón",foto:"fase-avion"}]},
-      {tipo:"paso",t:"Primero la BBVA",foto:"fase-tarjeta",cifras:[{v:"{{tcBbva}}",l:"lo que debes"},{v:"{{bbvaCero}}",l:"en cero, sin intereses"}],d:"debes {{tcBbva}}. Lo que sobra de cada quincena y lo de Didi de cada lunes van a la tarjeta, y lo que quede lo pagas de un golpe con todo lo que tienes, hasta dejarla en cero el {{bbvaCero}}, sin intereses: {{bbvaRuta}}. La quincena que sigue vives de Didi."},
+      {tipo:"paso",t:"Primero la BBVA",foto:"fase-tarjeta",cifras:[{v:"{{tcBbva}}",l:"lo que debes"},{v:"{{bbvaCero}}",l:"en cero, sin intereses"}],d:"debes {{tcBbva}}. La pagaste de un golpe con todo lo que tenías y lo que quedó lo paga la quincena siguiente, hasta dejarla en cero el {{bbvaCero}}, sin intereses: {{bbvaRuta}}. Esa quincena vives de Didi."},
       {tipo:"paso",t:"Después, todo a GBM",foto:"fase-alcancia",cifras:[{v:"{{ahorroMesDepa}}",l:"al mes, hasta enero"},{v:"{{ahorroMesCasa}}",l:"al mes, desde febrero"}],d:"cada quincena se sostiene sola. Hasta enero mandas {{ahorroDia1}} el 1 y {{ahorroDia15}} el 15, más {{didiAhorro}} de Didi; desde febrero, sin renta y en casa de tu familia ({{aporteCasa}} de aporte, y comes en casa), {{ahorroDia1Casa}} el 1 y {{ahorroDia15Casa}} el 15, más {{didiAhorroMas}} de Didi. El aguinaldo paga el seguro del BYD y no entra."},
       {tipo:"riesgo",t:"Con ese ritmo",foto:"sk-inversion",cifras:[{v:"{{junioCorto}}",l:"en junio, para la cuenta bloqueada"},{v:"{{salidaVeredicto}}",l:"en agosto, para la salida completa"}],d:"en junio {{junioVeredicto}} y en agosto {{salidaVeredicto}}, aun mandando cada quincena completa y lo de Didi cada lunes."},
       {tipo:"palanca",t:"Lo cierra el ingreso, no el recorte",foto:"istqb-5",cifras:[{v:"{{recorteRutinas}}",l:"lo que dan tus rutinas al mes",tono:"gris"},{v:"+{{extraSalida}}",l:"de ingreso nuevo al mes, de noviembre a agosto"},{v:"{{marzoParaSalida}}",l:"en GBM el 31 de marzo, con él"}],d:"tus rutinas pueden dar {{recorteRutinas}} al mes y las ventas ya están contadas. Hacen falta unos {{extraSalida}} más al mes, de noviembre a agosto —un aumento, un puesto mejor pagado o freelance de pruebas en lugar de horas de Didi—, y con ellos GBM llega a {{marzoParaSalida}} el 31 de marzo."},
@@ -558,7 +564,7 @@ window.CIFRAS = (function () {
       {id:"m1-4",cuando:"Lunes, miércoles y viernes",txt:"Los posts del negocio de tu papá, sin falta. El de Aeroresinas —reparación de helicópteros— y el de Heliescala —helicópteros a escala—, listos en la app Posts: en LinkedIn y su versión corta en Facebook. Hasta enero los publicas tú, 20 min al llegar a {{empleador}}; desde febrero, tu papá, y tú revisas cada lunes que salieron. Cada uno cierra con el WhatsApp de su web: el cliente que llega ya sabe dónde escribir."},
      ],
      semanas:[
-      {id:"a1-1",mes:"2026-10",txt:"Liquida la BBVA de un golpe el {{bbvaCero}}. Lo que sobra de cada quincena y lo de Didi de cada lunes van a la tarjeta y no a GBM, y lo que quede lo pagas con todo lo que tienes —{{bbvaRuta}}—; la quincena que sigue vives de Didi. Desde ahí, lo que pagues con ella lo pagas en la misma quincena."},
+      {id:"a1-1",mes:"2026-10",txt:"Deja la BBVA en cero el {{bbvaCero}}. La pagaste de un golpe con todo lo que tenías y lo que quedó lo paga la quincena siguiente —{{bbvaRuta}}—; esa quincena vives de Didi. Desde ahí, lo que pagues con ella lo pagas en la misma quincena."},
       {id:"a1-2",mes:"2026-10",txt:"Abre tu cuenta de GBM para Alemania, aparte del día a día. En cuanto la BBVA quede en cero, lo que sobra de cada quincena va ahí el día que entra el sueldo —{{ahorroDia1}} el 1 y {{ahorroDia15}} el 15— y lo de Didi cada lunes, hasta juntar {{didiAhorro}} al mes."},
       {id:"a1-18",mes:"2026-10",txt:"Decide tu palanca de ingreso este mes. Septiembre de 2027 pide {{extraSalida}} más al mes desde noviembre, y la de ese tamaño es el sueldo: pide el aumento en {{empleador}} con números —lo que haces en Ford y el CT-GenAI que presentas en enero— o aplica a puestos que paguen más, remotos o en un Tier 1. Freelance de pruebas en lugar de horas de Didi también suma, después de revisar tu contrato. Cada peso, a GBM el día que entra."},
       {id:"a1-4",mes:"2026-10",txt:"Pide las dos cartas de recomendación. Un jefe de Bosch, Continental o ALTEN y un líder técnico o profesor: en inglés y firmadas."},
@@ -1067,10 +1073,13 @@ window.CIFRAS = (function () {
       // Lo que toca ese día: completar el pago del día de corte, lo de Didi del lunes y la quincena.
       const toca = [];
       if (dia === diaPago && k > 0 && ciclo < min) toca.push({ de: 'minimo', m: min - ciclo });
-      if (k > 0 && d.getDay() === 1) toca.push({ de: 'didi', m: didiAlAhorro(ym) * 12 / 52 });
+      // La quincena que vive de Didi después de liquidarla (`bbvaDidiTuyoHasta`), lo de Didi no va a la tarjeta.
+      const vivesDeDidi = P.bbvaLiquida && hoyEs > P.bbvaLiquida && hoyEs <= P.bbvaDidiTuyoHasta;
+      if (k > 0 && d.getDay() === 1 && !vivesDeDidi) toca.push({ de: 'didi', m: didiAlAhorro(ym) * 12 / 52 });
       if (dia === 1 || dia === 15) toca.push({ de: 'quincena', m: envioQuincena(dia, ym) });
       // El día que la liquida (`bbvaLiquida`), todo lo que quede, de su dinero; hoy, lo que debía antes de lo ya pagado.
-      if (k > 0 && hoyEs === P.bbvaLiquida) toca.push({ de: 'liquida', m: (conVivo && hoyEs === hoyK ? saldo + (pagos[hoyEs] || 0) : saldo) + acum });
+      // Un saldo dicho ese día o después ya la trae.
+      if (k > 0 && hoyEs === P.bbvaLiquida && !(P.bbvaSaldoFecha >= P.bbvaLiquida)) toca.push({ de: 'liquida', m: (conVivo && hoyEs === hoyK ? saldo + (pagos[hoyEs] || 0) : saldo) + acum });
       const pagado = pagos[hoyEs] || 0;
       if (pagado > 0) {
         // Lo pagado, repartido en lo que tocaba —primero la quincena, después el pago del corte y al
@@ -8197,6 +8206,31 @@ window.CIFRAS = (function () {
           f.transactions = f.transactions.filter(t => !(t.origen === 'plan' && t.date > '2026-10-19' && t.date <= '2026-10-25'));
       }
     },
+    {
+      // 2026-10-31 · "la BBVA solo queda con saldo de 2300, y yendo en mi tarjeta de débito 1300, ya me pagaron el pago
+      // del mes y con eso pagué la tarjeta… trabajaré de Didi para solventarlo"; la renta y lo del día 1 ya pagados y $600
+      // en efectivo. La quincena del 1 de noviembre llegó antes y pagó la BBVA: la tarjeta queda en $2,300 (`d001`, su día
+      // en `PROYECTO.bbvaSaldoFecha`), y lo que el plan restó solo después del 25 no pasó así: se quita. La cuenta
+      // (`ac013`) y el efectivo (`ac014`) son lo que tiene para la quincena del 1 al 14, con la nómina y lo del día 1 ya
+      // dentro: van con fecha del 1 de noviembre, como `_cuenta20261001`, para que el riel del Plan Maestro se ancle ahí.
+      flag: '_saldos20261031',
+      hacer: function (f) {
+        const tc = (f.debts || []).find(x => x.id === 'd001');
+        if (tc) {
+          tc.balance = 2300; tc.fecha = '2026-10-31'; tc.planAl = '2026-10-31';
+          if (Array.isArray(tc.omitidos)) tc.omitidos = tc.omitidos.filter(o => o.fecha > '2026-10-31');
+        }
+        if (Array.isArray(f.transactions))
+          f.transactions = f.transactions.filter(t => !(t.origen === 'plan' && t.date > '2026-10-25' && t.date <= '2026-10-31'));
+        if (!Array.isArray(f.activos)) f.activos = [];
+        const pon = function (id, nombre, v) {
+          let a = f.activos.find(x => x.id === id);
+          if (!a) { a = { id: id, name: nombre, type: 'liquido', notes: '' }; f.activos.push(a); }
+          a.value = v; a.fecha = '2026-11-01';
+        };
+        pon('ac013', 'Cuenta BBVA', 1300); pon('ac014', 'Efectivo', 600);
+      }
+    },
   ];
 
   /* Las seis compras del 1-sep-2026, en un solo sitio: las usa la migración de arriba para el
@@ -8763,6 +8797,15 @@ window.CIFRAS = (function () {
         out.push({ t: d.name + ' — pago total, sin intereses', monto: +d.noInterest, entra: false, grupo: 'deudas' });
       else out.push({ t: d.name, monto: +d.min, entra: false, grupo: 'deudas' });
     });
+    // La quincena que llegó antes (`PROYECTO.quincenaAdelantada`): lo que le quedó después de lo de ese día pagó la BBVA
+    // el día que la liquidó. Ya está en el saldo dicho, así que no mueve el plan; `pagado` dice que no es un pago por venir.
+    if (fecha === PROYECTO.quincenaAdelantada && PROYECTO.bbvaLiquida) {
+      const q = out.reduce(function (s, c) { return s + (c.entra ? 1 : -1) * (+c.monto || 0); }, 0);
+      const pl = PROYECTO.bbvaLiquida.split('-').map(Number);
+      if (q >= 1) out.push({ t: 'Tarjeta BBVA — lo que quedó de esta quincena, pagado el ' +
+        new Date(pl[0], pl[1] - 1, pl[2]).toLocaleDateString('es-MX', { day: 'numeric', month: 'long' }),
+        monto: q, entra: false, tarjeta: true, pagado: true, de: 'adelantada', grupo: 'deudas' });
+    }
     return out;
   }
 
@@ -9201,9 +9244,8 @@ window.CIFRAS = (function () {
     return out;
   }
   /* Los lunes en que lo de Didi es para vivir: los de después de liquidar la BBVA (`bbvaLiquida`) hasta
-     `bbvaDidiTuyoHasta`, la quincena que Adán vive de Didi porque la liquidó con todo lo que tenía (28-oct-2026:
-     "para sobrevivir esa quincena trabajaré de Didi"). Un lunes en que lo de Didi todavía va a la tarjeta —no
-     la liquidó entera, o dijo «No lo mandé»— sigue siendo de la tarjeta. */
+     `bbvaDidiTuyoHasta`, la quincena que Adán vive de Didi porque la pagó con todo lo que tenía (28-oct-2026:
+     "para sobrevivir esa quincena trabajaré de Didi"). Esos lunes Didi no va a la tarjeta (`planBbva`) ni a GBM. */
   function lunesDidiTuyos(ym) {
     const P = PROYECTO;
     if (!P.bbvaLiquida || !P.bbvaDidiTuyoHasta) return [];

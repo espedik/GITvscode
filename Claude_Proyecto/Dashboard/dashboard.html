@@ -9986,7 +9986,10 @@ function ctQuincenaPlan(T, ym, nSel, nDias){
   const minDidi = window.CIFRAS && CIFRAS.planBbva ? CIFRAS.planBbva().abonos.filter(function(a){
     return a.de === 'minimo' && a.fecha.slice(0,7) === ym && +a.fecha.slice(8) >= iniR && +a.fecha.slice(8) <= T.fin;
   }).reduce(function(s,a){ return s + a.monto; }, 0) : 0;
-  return { falta: Math.max(0, -T.cierre), didi: Math.round(didiLibre * Math.max(0, T.fin - nSel) / 30.4 + minDidi),
+  // La quincena en que vives de Didi (lunesDidiTuyos), lo que apartarías esos lunes también es tuyo.
+  const tuyos = window.CIFRAS && CIFRAS.lunesDidiTuyos ? CIFRAS.lunesDidiTuyos(ym).filter(function(k){
+    return +k.slice(8) > nSel && +k.slice(8) <= T.fin; }).length * CIFRAS.didiAlAhorro(ym) * 12 / 52 : 0;
+  return { falta: Math.max(0, -T.cierre), didi: Math.round(didiLibre * Math.max(0, T.fin - nSel) / 30.4 + minDidi + tuyos),
            hasta: T.fin >= nDias ? 'al día 1' : 'al '+(T.fin+1) };
 }
 // La estrategia de hoy, sea cual sea el día que el tablero tenga elegido: la pinta el panel de Deuda cara.

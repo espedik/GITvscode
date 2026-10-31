@@ -2789,7 +2789,7 @@ function renderQuincena(m){
   for(let i=0;i<15;i++){
     const d=new Date(hoy); d.setDate(d.getDate()+i);
     const iso=C.fechaLocal(d);
-    (C.agendaDia(d.getDate(),iso.slice(0,7),S.debts)||[]).forEach(x=>pagos.push({d:d,t:x.t,monto:+x.monto||0,
+    (C.agendaDia(d.getDate(),iso.slice(0,7),S.debts)||[]).filter(x=>!x.pagado).forEach(x=>pagos.push({d:d,t:x.t,monto:+x.monto||0,
       tipo:x.entra?'entra':x.ahorro?'gbm':x.tarjeta?'bbva':''}));
     (plan.abonos||[]).filter(a=>a.de==='didi'&&a.fecha===iso)
       .forEach(a=>pagos.push({d:d,t:'Tarjeta BBVA — lo que aparta Didi',monto:a.monto,tipo:'bbva'}));
@@ -3831,8 +3831,8 @@ function seedData() {
       {id:'ac010',name:'iPhone 15 Pro Max',      type:'electronico',value:15000,  notes:'Valor estimado de mercado secundario'},
       {id:'ac011',name:'iPhone 12 Mini',         type:'electronico',value:3600,   notes:'Valor estimado de mercado secundario'},
       {id:'ac012',name:'Pantalla 50 pulgadas',   type:'electronico',value:5000,   notes:'TV / pantalla'},
-      {id:'ac013',name:'Cuenta BBVA',            type:'liquido',    value:1700,   fecha:'2026-10-19', notes:'Saldo disponible en cuenta'},
-      {id:'ac014',name:'Efectivo',               type:'liquido',    value:2500,   fecha:'2026-10-19', notes:'Dinero en efectivo'},
+      {id:'ac013',name:'Cuenta BBVA',            type:'liquido',    value:1300,   fecha:'2026-11-01', notes:'Saldo disponible en cuenta'},
+      {id:'ac014',name:'Efectivo',               type:'liquido',    value:600,    fecha:'2026-11-01', notes:'Dinero en efectivo'},
     ],
     // Las operaciones de BTC salen del maestro desde el 2026-09-16 (CIFRAS.BTC_SEED), igual
     // que las deudas: vivían solo aquí, o sea en un navegador. Copia profunda: lo que Adán

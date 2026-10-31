@@ -829,9 +829,9 @@ en pantalla **son las piezas de la ventana de las fases**, con sus mismas clases
   25-oct-2026: *"las cifras de dinero que están ahí no son claras"*). **Tiene el mismo formato en cada mes y en cada
   fase** (`pmDineroTarjeta`, `.pm-dinero`; Adán: *"lo de mi dinero debe tener el mismo formato en las demás fases"*):
   una tarjeta para tu dinero y otra para tu tarjeta BBVA mientras el plan le ponga meta, cada una con la cifra real en
-  grande —la de hoy o, en un mes auditado, la que se guardó al auditar— y, debajo, *El plan espera $0 al 31 oct* y
+  grande —la de hoy o, en un mes auditado, la que se guardó al auditar— y, debajo, *El plan espera $0 al 30 nov* y
   cómo vas contra eso: *✓ llevas $1,506 más de lo que pide* en verde; mientras no cierra —el mes en curso, aunque ya se
-  pueda auditar, o uno que viene— lo que falta, en ámbar (*te falta bajarla $13,346 antes del 31 oct*, *te faltan
+  pueda auditar, o uno que viene— lo que falta, en ámbar (*te falta bajarla $2,300 antes del 30 nov*, *te faltan
   $153,548 para el 31 may 2027*), porque el abono o el ahorro que falta puede llegar; y con el mes cerrado, *✗ quedaste
   … arriba* en rojo. La fecha lleva el año cuando no es el de hoy (`pmAl`). Un mes de la Fase 0, anterior al plan de
   dinero, enseña lo de hoy y que el plan arranca en octubre de 2026 (`pmDineroAntes`). La cuenta es la de la ficha de la
@@ -887,7 +887,7 @@ arriba *Tu estrategia de hoy* (ver abajo). En **Deuda cara** y
 la pista es `--r` al 60 %), y el avance de Deuda total se mide sobre lo que nació cada deuda, liquidadas incluidas.
 Son **muy compactos** (Adán: *"en coach plan maestro, las cajas de las cifras que tenemos, hazlas muchísimo más
 pequeñas"*): dos renglones, el nombre en palabras normales con un cuadrito de su color y debajo la cifra a 15 px con
-su barra al lado (`.pm-med-fila`). La frase que explica el porcentaje —*3% pagado · en cero el 31 oct*, *26% menos
+su barra al lado (`.pm-med-fila`). La frase que explica el porcentaje —*85% pagado · en cero el 15 nov*, *26% menos
 que al inicio*, *65% del dinero de la maestría*— va en el `title` de la caja (sin cifras si está en modo privado) y
 en su panel, que se abre al tocarla. **Desde 1400 px van en una sola fila de ocho**: en dos filas, a 2048×1040 la
 columna del día se quedaba corta. Bajo 1400 van de cuatro en cuatro y bajo 900, de dos en dos. Medido: cada caja
@@ -926,7 +926,7 @@ septiembre; en el presupuesto mensual entra por la mitad, `gasMensual`). El veri
 que **todo gasto fijo de `PROYECTO` con importe caiga algún día de `CALENDARIO.cobros`**: un
 servicio nuevo sin día ya no sale de la cuenta sin que ninguna pantalla lo vea.
 
-Desde octubre de 2026 el calendario trae también **el plan**: el ahorro de cada quincena a GBM (en verde, `ahorro: true`) y, desde febrero de 2027, el aporte a tu familia del día 1. Salen de la quincena como cualquier cobro, así que lo que te queda (*Para gastar*) ya es tu gasto personal. **Mientras la BBVA tenga saldo**, lo que sobra de la quincena va a ella: el día 1 y el 15 sale *Tarjeta BBVA — lo que sobra de la quincena* y el envío a GBM de ese día baja en lo mismo; el día de pago, *el pago del 11, con lo de Didi* —lo que pide el estado de cuenta para no generar intereses—. Un día con el pago anotado dice lo que se mandó: *lo que mandaste de la quincena*, o *un abono de más*. El día que la liquida de un golpe (`PROYECTO.bbvaLiquida`) sale *Tarjeta BBVA — liquidarla, con todo lo que tienes*, por todo el saldo. Ya no se pinta el total de la tarjeta el día 11 (Adán: *"me estás diciendo de pagar mi tarjeta pero ni tengo dinero… eso debe ser cada quincena"*).
+Desde octubre de 2026 el calendario trae también **el plan**: el ahorro de cada quincena a GBM (en verde, `ahorro: true`) y, desde febrero de 2027, el aporte a tu familia del día 1. Salen de la quincena como cualquier cobro, así que lo que te queda (*Para gastar*) ya es tu gasto personal. **Mientras la BBVA tenga saldo**, lo que sobra de la quincena va a ella: el día 1 y el 15 sale *Tarjeta BBVA — lo que sobra de la quincena* y el envío a GBM de ese día baja en lo mismo; el día de pago, *el pago del 11, con lo de Didi* —lo que pide el estado de cuenta para no generar intereses—. Un día con el pago anotado dice lo que se mandó: *lo que mandaste de la quincena*, o *un abono de más*. El día que la liquida de un golpe (`PROYECTO.bbvaLiquida`) sale *Tarjeta BBVA — liquidarla, con todo lo que tienes*, por todo el saldo, y la quincena que le llegó antes para pagarla (`PROYECTO.quincenaAdelantada`), *lo que quedó de esta quincena, pagado el 31 de octubre*. Ya no se pinta el total de la tarjeta el día 11 (Adán: *"me estás diciendo de pagar mi tarjeta pero ni tengo dinero… eso debe ser cada quincena"*).
 
 ### El mes
 
@@ -953,10 +953,10 @@ y *Te queda*: lo que entra menos lo que sale y lo que mandas a GBM de tus quince
 quincenas, de Didi y el mínimo (`planBbva`); no sale el mes que ya no le toca nada—, *A GBM* —los cobros con `ahorro`
 del calendario más lo que Didi aparta, de `desgloseMes`; solo existe desde que el plan liquida la BBVA (Adán: *"eso es después de
 liquidar BBVA"*), así que no sale mientras el mes no mande nada— y *Didi trae* (`didiMes`), la misma cuenta que la
-proyección de Coach. Sin título: el mes lo dice el del calendario. En octubre de 2026: entra $41,000 y sale $45,925
-—$13,346 son lo que pagas a la BBVA el 31, de un golpe y con todo lo que tienes—, así que *Te queda* sale en rojo, −$4,925:
-lo pone tu dinero, no la quincena. En noviembre: entra $41,000, sale $23,839, van a GBM $11,692 —$9,000 de las
-quincenas y $2,692 de Didi— y te quedan $8,161. En un mes de seis semanas (noviembre de 2026) la columna desplaza 18 px por dentro a 1600 y 1366.
+proyección de Coach. Sin título: el mes lo dice el del calendario. En octubre de 2026: entra $41,000, sale $32,579 y te
+quedan $8,421. En noviembre: entra $41,000 y sale $34,110 —$7,971 son lo que quedó de la quincena del 1, que pagó la
+BBVA el 31 de octubre, y $2,300 lo que le queda a la tarjeta, el 15—; van a GBM $7,342 —$4,650 de la quincena del 15
+y $2,692 de Didi— y te quedan $2,240. En un mes de seis semanas (noviembre de 2026) la columna desplaza 18 px por dentro a 1600 y 1366.
 
 **Cada cifra se toca y abre su desglose** (Adán: *"en lo que sale, cuando haga click, desglósame las cantidades, al
 igual que las demás"*), en la ventana de los medidores: cada celda es un botón `.ct-tot-c` que llama
@@ -991,7 +991,8 @@ con su fecha; si lo edita en Finanzas, `saveActivo` pone la fecha sola.
 **Cuando la quincena no cierra, la estrategia da el plan** (prompt de Plan Maestro: el hueco previsto se resuelve
 antes de que llegue): cuánto falta para llegar al 15 (o al día 1), cuánto trae Didi de aquí al cierre al ritmo de
 `didiMes` menos lo que ya aparta, más —si el pago del 11 de la BBVA cae en el tramo— lo que Didi aparta para él,
-porque la serie ya lo resta; y si lo cubre o cuánto falta aún. Si cierra, *te sobran $287 al día hasta el 31:
+porque la serie ya lo resta, y, en la quincena en que vives de Didi después de liquidarla (`lunesDidiTuyos`), lo que
+apartarías esos lunes; y si lo cubre o cuánto falta aún. Si cierra, *te sobran $287 al día hasta el 31:
 cierras la quincena con $2,868* —lo que sobra al cierre entre los días que quedan—. La BBVA con plan sale con sus
 abonos de `planBbva`, no con su mínimo ni su total (ver `agendaDia` en `DATOS-MAESTROS.md`).
 
