@@ -1998,13 +1998,14 @@
       <hr class="divider">
 
       <p class="fs-13 mb-12" style="line-height:1.7;">Hay dos versiones de tu "patrimonio neto" y solo una importa para tu meta:</p>
+      <!-- Las dos, de hoy: CIFRAS.patrimonio(), la misma cuenta que Finanzas y el Plan Maestro (las llena pintarFasesPlan). -->
       <div class="grid-2" style="margin-bottom:12px;">
-        <div class="stat-badge" style="min-width:auto;"><span class="num">$231,770</span><span>Neto TOTAL (con auto + gadgets) — espejismo</span></div>
-        <div class="stat-badge" style="min-width:auto;border-color:rgba(204,0,0,.4);"><span class="num neg">-$308,830</span><span>Líquido/invertible REAL — el único que importa</span></div>
+        <div class="stat-badge" style="min-width:auto;"><span class="num" id="diagNeto">—</span><span>Neto TOTAL hoy (con auto + gadgets) — espejismo</span></div>
+        <div class="stat-badge" style="min-width:auto;border-color:rgba(204,0,0,.4);"><span class="num neg" id="diagLiquido">—</span><span>Líquido/invertible REAL hoy — el único que importa</span></div>
       </div>
       <p class="fs-13" style="line-height:1.7;color:var(--muted);">
         Sumando el BYD Dolphin Mini y tus gadgets (laptop gaming, iPhones, PS5, monitores, etc.), tu patrimonio neto
-        total se ve razonable, pero es un espejismo: esos $540,600 en activos físicos no pagan una colegiatura ni
+        total se ve razonable, pero es un espejismo: esos <span id="diagBienes">—</span> en activos físicos no pagan una colegiatura ni
         capitalizan un negocio, se deprecian y varios siguen financiados. Tu patrimonio líquido/invertible real
         (efectivo + inversiones − deuda total, lo único que de verdad puedes mover) te dice la verdad: hoy estás
         financieramente por debajo de cero. Este es el único número que de verdad hay que subir para tener libertad
@@ -2873,12 +2874,12 @@
     <div class="card span-2" id="pf14dias">
       <h3 class="fw-700 mb-12">Próximos 14 días — esto empieza hoy, no "cuando tenga tiempo"</h3>
       <p class="fs-13 text-muted mb-12">Tu patrón es abandonar cuando no ves avance rápido. Estas <span id="pfCount">10</span> acciones son deliberadamente pequeñas y concretas para que en 2 semanas ya tengas evidencia de movimiento real. Las 3 primeras son <strong>las prioridades de la Fase 1, en ese orden</strong>.</p>
-      <div class="check-item"><input type="checkbox" id="pf13"><label for="pf13"><strong>Prioridad 1:</strong> la TC BBVA ({{tcBbva}}), quincena a quincena y no de golpe: {{bbvaRuta}}. Quedará en cero el {{bbvaCero}}, sin intereses</label></div>
+      <div class="check-item"><input type="checkbox" id="pf13"><label for="pf13"><strong>Prioridad 1:</strong> la TC BBVA ({{tcBbva}}): {{bbvaRuta}}. Quedará en cero el {{bbvaCero}}, sin intereses, y ese día la cancelas</label></div>
       <div class="check-item"><input type="checkbox" id="pf14"><label for="pf14"><strong>Prioridad 2:</strong> abrir tu cuenta de GBM para Alemania, aparte del día a día: desde el 15 nov, lo que sobra de cada quincena va ahí antes de gastar</label></div>
       <div class="check-item"><input type="checkbox" id="pf23"><label for="pf23"><strong>Prioridad 3:</strong> decidir tu palanca de ingreso —septiembre de 2027 pide {{extraSalida}} más al mes desde noviembre—: el aumento en {{empleador}}, un puesto mejor pagado o freelance de pruebas. El martes, en tu bloque de negociación, escribe tus logros con números y el rango que vas a pedir</label></div>
       <div class="check-item"><input type="checkbox" id="pf21"><label for="pf21">Revisar la fecha de tu IELTS (6.0): vale dos años y tiene que seguir vigente en enero, al mandar la solicitud, y en junio, en la cita de visa</label></div>
       <div class="check-item"><input type="checkbox" id="pf19"><label for="pf19">Pedir las dos cartas de recomendación para Esslingen (un jefe y un líder técnico o profesor, en inglés)</label></div>
-      <div class="check-item"><input type="checkbox" id="pf22"><label for="pf22">Apartar lo de Didi cada lunes: {{didiAhorro}} al mes, a la BBVA hasta el {{bbvaCero}} y después a GBM, aparte de lo que gastas en el auto</label></div>
+      <div class="check-item"><input type="checkbox" id="pf22"><label for="pf22">Apartar lo de Didi cada lunes: {{didiAhorro}} al mes, a GBM en cuanto la BBVA quede en cero ({{bbvaCero}}), aparte de lo que gastas en el auto</label></div>
       <div class="check-item"><input type="checkbox" id="pf16"><label for="pf16">Ponerle tope a la BBVA: lo que pagues con ella se paga en la misma quincena, dentro de tu gasto personal ({{gastoPersonalDepa}} al mes); apagarla desde la app al llegar al tope</label></div>
       <div class="check-item"><input type="checkbox" id="pf3"><label for="pf3">Hacer inventario de lo que no usas (PS5, control, monitores, iPad) y publicarlo en Marketplace: va a GBM</label></div>
       <div class="check-item"><input type="checkbox" id="pf15"><label for="pf15">Anotar la fecha del examen ISTQB CT-GenAI (agendado con Brightest) y hacer el examen de muestra esta semana</label></div>
@@ -4811,6 +4812,11 @@
     // La brecha: lo que falta para el millón, al ritmo que pide la fecha.
     const br = document.getElementById('brechaMillon');
     const P = window.CIFRAS && CIFRAS.datos ? CIFRAS.patrimonio() : null;
+    // Las dos versiones del patrimonio del diagnóstico, de hoy: eran las del 18 jul 2026 escritas a mano.
+    if (P) {
+      const pon = function (id, v) { const e = document.getElementById(id); if (e) e.textContent = mx(v); };
+      pon('diagNeto', P.neto); pon('diagLiquido', P.liquido); pon('diagBienes', P.bienes);
+    }
     if (br && P) {
       const falta = 1000000 - P.liquido;
       const mesesQ = Math.max(1, Math.round((meta - hoyPM) / msDia / 30.44));

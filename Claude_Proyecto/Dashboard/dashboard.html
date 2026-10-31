@@ -9944,13 +9944,22 @@ function ctTramo(nSel, nDias, mov, ym){
 // que caen dentro del tramo [ini, fin] del mes YM, sumados y anclados al día más reciente. Adán,
 // 19-oct-2026: "tengo en mi tarjeta de débito 1,700 y 2500 en efectivo".
 function ctAnclaReal(YM, ini, fin){
+  /* La quincena que llegó antes (CIFRAS.PROYECTO.quincenaAdelantada; Adán, 31-oct-2026: "ya me pagaron el pago del mes y
+     con eso pagué la tarjeta"): su tramo arranca con el saldo que dijiste la víspera, que ya la traía con lo fijo de
+     ese día pagado. Sin esto, el 1 de noviembre arrancaba de cero y no contaba lo que tenías. */
+  const qa=window.CIFRAS&&CIFRAS.PROYECTO?CIFRAS.PROYECTO.quincenaAdelantada:'', k0=YM+'-'+String(ini).padStart(2,'0');
+  let vispera='';
+  if(qa&&qa===k0){ const p=k0.split('-').map(Number), d=new Date(p[0],p[1]-1,p[2]-1);
+    vispera=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
   const acts=((D.fin&&D.fin.activos)||[]).filter(function(a){
-    if(a.type!=='liquido'||!/^\d{4}-\d{2}-\d{2}$/.test(a.fecha||'')||a.fecha.slice(0,7)!==YM) return false;
+    if(a.type!=='liquido'||!/^\d{4}-\d{2}-\d{2}$/.test(a.fecha||'')) return false;
+    if(a.fecha===vispera) return true;
+    if(a.fecha.slice(0,7)!==YM) return false;
     const d=+a.fecha.slice(8,10); return d>=ini&&d<=fin;
   });
   if(!acts.length) return null;
   const f=acts.map(a=>a.fecha).sort().pop();
-  return { dia:+f.slice(8,10), saldo:acts.reduce((x,a)=>x+(+a.value||0),0), fecha:f,
+  return { dia:f===vispera?ini:+f.slice(8,10), saldo:acts.reduce((x,a)=>x+(+a.value||0),0), fecha:f,
            nombre:acts.map(a=>a.name||'Cuenta').join(' y ') };
 }
 

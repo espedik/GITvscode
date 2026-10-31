@@ -1,7 +1,8 @@
 # Finanzas.html — referencia
 
 App de finanzas personales en un solo archivo HTML (~5 600 líneas, 376 KB). Chart.js 4.4 para
-gráficas, `localStorage['finanzasmx_v2']` para persistencia, todo en MXN. Es **la fuente de los
+gráficas —sin internet no llega, y un `Chart` de reemplazo que solo sabe `destroy` deja la pantalla entera sin
+ellas en vez de cortarla en la primera—, `localStorage['finanzasmx_v2']` para persistencia, todo en MXN. Es **la fuente de los
 saldos** del proyecto: lo que escribe aquí lo leen el Dashboard y Coach.
 
 **Su prompt**: la clave `finanzas` de [`prompts-paginas.js`](../Dashboard/prompts-paginas.js) —el icono de la brújula, arriba a la izquierda—. Es el especialista que gobierna cada cambio de esta página (`CLAUDE.md` → Regla 6).
@@ -354,7 +355,7 @@ Dashboard—:
 
 | Bloque | De dónde sale |
 |---|---|
-| Próximos pagos · 15 días | `CIFRAS.agendaDia` día por día —sin lo que ya se pagó antes (`pagado`: la quincena que llegó antes y pagó la BBVA)—, más lo que Didi aparta para la BBVA (los abonos `de: 'didi'` de `planBbva`, que no pasan por el calendario); al pie, lo que entra y sale en esos días |
+| Próximos pagos · 15 días | `CIFRAS.agendaDia` día por día —sin lo que ya pasó antes de su día (`pagado`: el de la quincena que llegó antes, con lo fijo ya pagado)—, más lo que Didi aparta para la BBVA (los abonos `de: 'didi'` de `planBbva`, que no pasan por el calendario); al pie, lo que entra y sale en esos días |
 | La BBVA, quincena a quincena | El saldo vivo (`CIFRAS.bbvaEstado`, el mismo del Plan Maestro y de Mis Metas), lo pagado desde que arrancó su plan (`CIFRAS.avanceBbva`), el día que quedará en cero y los abonos que siguen desde hoy, el de hoy incluido, cada uno con de dónde sale —el del día que la liquida de un golpe (`PROYECTO.bbvaLiquida`), *para liquidarla, con todo lo que tienes*—. El saldo que reporte del banco manda: va al maestro como migración |
 | A GBM, para Alemania | `CIFRAS.desgloseMes`: este mes, el siguiente y el primero ya sin la BBVA, con lo del día 1, el 15 y Didi; al pie, `{{alemaniaJunio}}` contra la cuenta bloqueada (`{{sperrkonto}}`, `{{junioCorto}}`) |
 

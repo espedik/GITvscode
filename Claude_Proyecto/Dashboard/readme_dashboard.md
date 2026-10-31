@@ -982,7 +982,9 @@ con $2,868. La cuenta cuadra al peso en 17 días de cinco meses.
 **El saldo real manda sobre el modelo.** Los activos líquidos de Finanzas —la Cuenta BBVA (`ac013`) y el
 Efectivo (`ac014`)— llevan la `fecha` de su saldo; los que caen dentro del tramo se suman y
 `ctAnclaReal()` ancla la serie en el más reciente: ese día vale lo que tienes para gastar y de ahí en
-adelante se resta lo previsto (antes de esa fecha sigue el modelo). La cuenta lo dice (*se fue sin anotar · tu
+adelante se resta lo previsto (antes de esa fecha sigue el modelo). La quincena que llegó antes
+(`PROYECTO.quincenaAdelantada`, la del 1 de noviembre de 2026) arranca con el saldo que dijiste la víspera, que ya la
+traía con lo fijo de ese día pagado: sin eso empezaba de cero y no contaba lo que tenías. La cuenta lo dice (*se fue sin anotar · tu
 saldo real del 19*). Adán,
 21-sep-2026: *"esa cifra está mal, ya te había dicho que me quedan 1200"*, y el 19-oct-2026: *"tengo en
 mi tarjeta de débito 1,700 y 2500 en efectivo"*. Cuando reporta un saldo, va al maestro como migración

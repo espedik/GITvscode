@@ -318,7 +318,8 @@ window.CIFRAS = (function () {
     // quincena con `planBbva`, desde `PROYECTO.bbvaFecha`, sin intereses (`bbvaSinIntereses`).
     // 14-oct-2026: $9,900 ("el credito de tarjeta de bbva ya bajo a 9,900"), adelante del plan. 19-oct-2026:
     // $8,900 ("aún debo hoy mismo, debo 8,900"): los abonos del 15 y del 19 no pasaron como decía el plan.
-    // 25-oct-2026: $14,500 ("mi deuda de BBVA subió a 14,500"): $5,600 más que el 19.
+    // 25-oct-2026: $14,500 ("mi deuda de BBVA subió a 14,500"): $5,600 más que el 19. 31-oct-2026: $2,300 ("la BBVA
+    // solo queda con saldo de 2300"): la pagó con la quincena del 1 de noviembre, que le llegó antes.
     // El día del último saldo va en `PROYECTO.bbvaSaldoFecha`.
     {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:2300,         rate:55.7,  min:1500, day:11,start:'2024-01-22', noInterest:0},
     // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. 55.7 es un supuesto tomado de
@@ -492,7 +493,9 @@ window.CIFRAS = (function () {
      la semana, el entregable que lo demuestra y cuándo y por qué cambia el foco. El Dashboard
      recomienda el tramo de hoy; Adán puede abrir cualquier otra ruta. */
   const HAB_FOCO = [
-    { id: 'ia', desde: '2026-10', hasta: '2027-01', horas: 4, semana: 'Dos sesiones del syllabus, martes y jueves, y el simulacro del viernes, con reloj: las tres en el bloque de la noche del Plan Maestro. El domingo es de Didi.', entregable: 'El ISTQB CT-GenAI aprobado.', cambio: 'Al presentar el CT-GenAI en enero, el foco pasa a Inglés: la solicitud a Esslingen, que cierra el 31 de marzo.' },
+    // Lo mismo que su plan en Mis Metas (META_PLAN.istqbgenai) y que cabe en la media hora del Plan Maestro: tres veces
+    // 15 minutos, la pregunta de cada día y, desde el 19 de diciembre, el simulacro de 60 minutos del sábado.
+    { id: 'ia', desde: '2026-10', hasta: '2027-01', horas: 2, semana: 'Lunes, miércoles y jueves, los primeros 15 minutos del Plan Maestro de la noche: un objetivo del syllabus. Cada día, la pregunta del ISTQB en Hoy aprendes, y desde el 19 de diciembre, un simulacro de 60 minutos el sábado a las 15:30. El domingo es de Didi.', entregable: 'El ISTQB CT-GenAI aprobado.', cambio: 'Al presentar el CT-GenAI en enero, el foco pasa a Inglés: la solicitud a Esslingen, que cierra el 31 de marzo.' },
     { id: 'ingles', desde: '2027-02', hasta: '2027-03', horas: 4, semana: 'Un borrador de la carta de motivación y un simulacro de entrevista grabado.', entregable: 'La solicitud a Esslingen enviada, en inglés, antes del 31 de marzo.', cambio: 'Con la solicitud enviada, el foco pasa a Código: el proyecto para el Werkstudent.' },
     { id: 'codigo', desde: '2027-04', hasta: '2027-05', horas: 4, semana: 'Media hora diaria en tu proyecto, un commit por sesión.', entregable: 'Tu repositorio de pruebas en Python, público.', cambio: 'Con el proyecto publicado, el foco pasa a Networking: el Werkstudent se busca desde junio.' },
     { id: 'network', desde: '2027-06', hasta: '2027-08', horas: 2, semana: 'Cinco aplicaciones a Werkstudent y tres mensajes a tu red de Stuttgart.', entregable: 'Tres conversaciones en Stuttgart y tus aplicaciones enviadas.', cambio: 'En Alemania manda la maestría: el foco lo decide el semestre.' },
@@ -8211,8 +8214,9 @@ window.CIFRAS = (function () {
       // del mes y con eso pagué la tarjeta… trabajaré de Didi para solventarlo"; la renta y lo del día 1 ya pagados y $600
       // en efectivo. La quincena del 1 de noviembre llegó antes y pagó la BBVA: la tarjeta queda en $2,300 (`d001`, su día
       // en `PROYECTO.bbvaSaldoFecha`), y lo que el plan restó solo después del 25 no pasó así: se quita. La cuenta
-      // (`ac013`) y el efectivo (`ac014`) son lo que tiene para la quincena del 1 al 14, con la nómina y lo del día 1 ya
-      // dentro: van con fecha del 1 de noviembre, como `_cuenta20261001`, para que el riel del Plan Maestro se ancle ahí.
+      // (`ac013`) y el efectivo (`ac014`) son lo que tiene hoy y para la quincena del 1 al 14, con la nómina y lo del
+      // día 1 ya dentro: van con la fecha de hoy, y el riel del Plan Maestro ancla en ellos el cierre de octubre y el
+      // arranque de la quincena que llegó antes (`ctAnclaReal`, `PROYECTO.quincenaAdelantada`).
       flag: '_saldos20261031',
       hacer: function (f) {
         const tc = (f.debts || []).find(x => x.id === 'd001');
@@ -8226,9 +8230,19 @@ window.CIFRAS = (function () {
         const pon = function (id, nombre, v) {
           let a = f.activos.find(x => x.id === id);
           if (!a) { a = { id: id, name: nombre, type: 'liquido', notes: '' }; f.activos.push(a); }
-          a.value = v; a.fecha = '2026-11-01';
+          a.value = v; a.fecha = '2026-10-31';
         };
         pon('ac013', 'Cuenta BBVA', 1300); pon('ac014', 'Efectivo', 600);
+      }
+    },
+    {
+      // 2026-10-31 · Un navegador que aplicó `_saldos20261031` cuando ponía la cuenta y el efectivo con fecha del 1 de
+      // noviembre: la fecha es la del día en que Adán los dijo, el 31, y así el riel ancla también el cierre de octubre.
+      flag: '_saldosFecha20261031',
+      hacer: function (f) {
+        (f.activos || []).forEach(function (a) {
+          if ((a.id === 'ac013' || a.id === 'ac014') && a.fecha === '2026-11-01') a.fecha = '2026-10-31';
+        });
       }
     },
   ];
@@ -8804,7 +8818,10 @@ window.CIFRAS = (function () {
       const pl = PROYECTO.bbvaLiquida.split('-').map(Number);
       if (q >= 1) out.push({ t: 'Tarjeta BBVA — lo que quedó de esta quincena, pagado el ' +
         new Date(pl[0], pl[1] - 1, pl[2]).toLocaleDateString('es-MX', { day: 'numeric', month: 'long' }),
-        monto: q, entra: false, tarjeta: true, pagado: true, de: 'adelantada', grupo: 'deudas' });
+        monto: q, entra: false, tarjeta: true, de: 'adelantada', grupo: 'deudas' });
+      // La quincena ya entró y lo fijo de ese día ya se pagó (Adán, 31-oct-2026: la renta y lo del día 1, "ya están
+      // pagados"): nada de ese día es un pago por venir.
+      out.forEach(function (c) { c.pagado = true; });
     }
     return out;
   }
@@ -8821,8 +8838,12 @@ window.CIFRAS = (function () {
     // $2,746 en la otra, que es justo lo que este archivo existe para evitar.
     try { localStorage.setItem(COME_KEY, String(+v)); } catch (e) {}
   }
+  // Lo que cuesta comer un día según la lista de compras, que guarda el Dashboard; en un navegador que todavía no lo
+  // abrió, la comida del plan (`SUPUESTOS.comida`, que el verificador cuadra con la lista), para que Finanzas no la deje fuera del mes.
   function comeDia() {
-    try { return +localStorage.getItem(COME_KEY) || 0; } catch (e) { return 0; }
+    let v = 0;
+    try { v = +localStorage.getItem(COME_KEY) || 0; } catch (e) { v = 0; }
+    return v || SUPUESTOS.comida / 30.4;
   }
 
   /* La serie de los últimos `n` meses hasta `hastaYM` (incluido). `opts.tx` y `opts.debts`

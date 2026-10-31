@@ -65,7 +65,8 @@ Lo que cuesta comer se **deriva de la lista de compras**, cuyos precios viven en
 `dashboard.html` (153 KB que no tiene sentido cargar en las tres apps). El Dashboard lo
 calcula y lo deja con `CIFRAS.guardarComeDia()`; Finanzas lo lee con `CIFRAS.comeDia()`. Es
 una **caché de un dato que se calcula en un solo sitio**, no una segunda copia. Si nunca se
-abrió el Dashboard en ese navegador vale 0 y la comida no entra —mejor faltar que inventar—.
+abrió el Dashboard en ese navegador vale la comida del plan (`SUPUESTOS.comida` entre 30.4, la misma lista que el
+verificador cuadra): sin eso, los gastos del mes de Finanzas salían $3,441 abajo de los del calendario.
 En casa de su familia (de `PROYECTO.enCasaDesde` al último mes en México) comer es solo su
 desayuno: `SUPUESTOS.comidaEnCasa` al mes. Lo decide `comerEnMes(ym, come)`, que usa también el
 tablero del Dashboard.
@@ -183,7 +184,7 @@ me pagaron el pago del mes y con eso pagué la tarjeta"*). Cada saldo
 nuevo que reporta es una entrada de `MIGRACIONES` (`_bbva20261005` además puso `noInterest` en 0 para que
 el 11 no pida el total; `_saldos20261019`, con la tarjeta, puso la cuenta y el efectivo y quitó los abonos
 que el plan había restado solo después del 14; la última es `_saldos20261031`, que también pone la cuenta y el
-efectivo de la quincena del 1 de noviembre), el saldo en `d001` y su día en
+efectivo del 31 de octubre —`_saldosFecha20261031` les corrige la fecha a un navegador que los tenía con la del 1—), el saldo en `d001` y su día en
 `PROYECTO.bbvaSaldoFecha`. El arranque del plan, `bbvaInicio` ($15,000) el día `bbvaFecha`, no se mueve. **No paga intereses**: cada mes cubre lo que pide el estado de cuenta para no generarlos (Adán, 6-oct-2026: *"bbva no va cobrar intereses, eso déjalo en 0"*); `PROYECTO.bbvaSinIntereses` se lo dice al plan y a `tasaQueCorre` del Dashboard, y la tasa de 55.7% se queda como la del producto. Con Banamex en $0 su mínimo de $810 sale de
 `minimosDeuda` y `margen` sube eso mismo; `deudaCara` es solo la BBVA. En `d001` `total` se queda
 en $39,000: el "pagado real" de las barras de Finanzas sale de ahí.
@@ -206,8 +207,9 @@ ya trae la liquidación, y lo que haya quedado lo paga la quincena siguiente. As
 quincena del 1 de noviembre, que le llegó antes (`PROYECTO.quincenaAdelantada`), y quedaron $2,300, que paga la del
 15; quedará en cero el `{{bbvaCero}}` (15 nov 2026) con `{{bbvaIntereses}}` ($0) de intereses. En el calendario, esa
 quincena lleva *Tarjeta BBVA — lo que quedó de esta quincena, pagado el 31 de octubre*: lo que le quedó después de lo
-fijo de ese día ($7,971), con `pagado` porque ya no es un pago por venir y sin mover el plan, porque el saldo dicho ya
-lo trae; y no manda nada a GBM ese día (el envío del 1 arranca en diciembre). `{{bbvaRuta}}` dice esos abonos
+fijo de ese día ($7,971), sin mover el plan, porque el saldo dicho ya lo trae; y no manda nada a GBM ese día (el
+envío del 1 arranca en diciembre). Todo lo de ese día lleva `pagado` —la quincena ya entró y la renta, el plan de datos,
+la luz y el iPhone ya se pagaron—: Finanzas no lo pone en sus próximos pagos. `{{bbvaRuta}}` dice esos abonos
 en una frase, desde hoy (`bbvaRutaTxt`): la prosa del Plan Maestro y de Coach lo usa en vez de
 escribir las fechas. En cero se cancela (Adán, 15-oct-2026: *"después que la liquide la cancelo y de ahí nos
 vamos a incrementar números en inversiones"*) y lo que iba a ella va a GBM.

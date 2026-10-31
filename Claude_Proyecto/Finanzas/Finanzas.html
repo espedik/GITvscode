@@ -21,6 +21,9 @@
 <!-- Lo que recomienda Qué invertir hoy (lo escribe Claude con inversion-actualizar.ps1): el plan de inversiones lo pinta -->
 <script src="../Dashboard/inversion-hoy.js" onerror="this.remove()"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<!-- Sin internet Chart.js no llega, y la primera gráfica tumbaba el resto de la pantalla (después de «Próximos pagos» no
+     se pintaba nada). Sin él, las gráficas no se dibujan y todo lo demás sí; `killChart` solo les pide `destroy`. -->
+<script>if(typeof window.Chart==='undefined') window.Chart=function(){ return { destroy:function(){} }; };</script>
 <!-- La fuente se carga SIN bloquear el pintado (2026-08-23). Antes era un `@import` dentro
      del <style>: el navegador no lo descubría hasta parsear el CSS y, mientras Google no
      contestaba, no pintaba nada — con la conexión lenta o caída, la página se quedaba
@@ -2166,7 +2169,7 @@ function renderIndicatorsHTML(src) {
     <div class="g2" style="margin-bottom:4px">
       ${C2('🆘','Fondo de emergencia (CETES)',`${fmt(src.emergencyFund||0)} — ${(efPct2*100).toFixed(0)}% de meta`,
         '(Fondo emergencia + Líquidos) ÷ Gasto mensual promedio',
-        `Meta: ${fmt(efGoal2)} · Ahorrado: ${fmt(src.emergencyFund||0)} · Cobertura: ${emergM2.toFixed(2)} meses de gastos.`,
+        `Meta: ${fmt(efGoal2)} · Ahorrado: ${fmt(src.emergencyFund||0)} · Cobertura: ${(avgExp2>0?(src.emergencyFund||0)/avgExp2:0).toFixed(2)} meses de gastos.`,
         '✅ Meta completa (≥100%) — Excelente &nbsp;·&nbsp; 🟡 Meta al 50–75% — Buen avance &nbsp;·&nbsp; ⚠️ Meta al 25–50% — En progreso &nbsp;·&nbsp; 🔴 &lt;25% — Inicio',
         efPct2>=1?chip2('Meta alcanzada ✅','var(--success)'):efPct2>=0.75?chip2(`${(efPct2*100).toFixed(0)}% de meta`,'#3b82f6'):efPct2>=0.5?chip2(`${(efPct2*100).toFixed(0)}% de meta`,'var(--warning)'):chip2(`${(efPct2*100).toFixed(0)}% de meta`,'var(--danger)'))}
       ${C2('💧','Ratio de Liquidez',liqRatio2!==null?`${liqRatio2.toFixed(2)}x`:'N/A',
@@ -3831,8 +3834,8 @@ function seedData() {
       {id:'ac010',name:'iPhone 15 Pro Max',      type:'electronico',value:15000,  notes:'Valor estimado de mercado secundario'},
       {id:'ac011',name:'iPhone 12 Mini',         type:'electronico',value:3600,   notes:'Valor estimado de mercado secundario'},
       {id:'ac012',name:'Pantalla 50 pulgadas',   type:'electronico',value:5000,   notes:'TV / pantalla'},
-      {id:'ac013',name:'Cuenta BBVA',            type:'liquido',    value:1300,   fecha:'2026-11-01', notes:'Saldo disponible en cuenta'},
-      {id:'ac014',name:'Efectivo',               type:'liquido',    value:600,    fecha:'2026-11-01', notes:'Dinero en efectivo'},
+      {id:'ac013',name:'Cuenta BBVA',            type:'liquido',    value:1300,   fecha:'2026-10-31', notes:'Saldo disponible en cuenta'},
+      {id:'ac014',name:'Efectivo',               type:'liquido',    value:600,    fecha:'2026-10-31', notes:'Dinero en efectivo'},
     ],
     // Las operaciones de BTC salen del maestro desde el 2026-09-16 (CIFRAS.BTC_SEED), igual
     // que las deudas: vivían solo aquí, o sea en un navegador. Copia profunda: lo que Adán
