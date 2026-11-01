@@ -2060,6 +2060,94 @@ const HB_VISUAL = {
         cifras: [['0', 'metal cerca al tomar un rumbo'], ['Avión', 'el modo del celular: el GPS sigue funcionando'], ['3', 'pitidos de silbato: auxilio']] }
     }
   },
+  asado: {
+    graf: { tipo: 'escala', k: 'El punto de la carne', t: 'Cada término es una temperatura, no una corazonada',
+      sub: 'Temperatura en el centro de un corte entero de res, medida con termómetro de sonda. Saca la carne 3 o 4 grados antes: sigue subiendo mientras reposa.',
+      min: 45, max: 76, u: '°C', zonas: [[45, 52, 'Crudo', 'neutro'], [52, 57, 'Rojo', 'info'], [57, 63, 'Medio rojo', 'ok'], [63, 68, 'Medio', 'medio'], [68, 71, 'Tres cuartos', 'medio'], [71, 76, 'Bien cocido', 'alto']],
+      cortes: [52, 57, 63, 68, 71], marcas: [[63, 'Lo seguro según el USDA para cortes enteros']],
+      fuente: 'Los términos, de esta ficha; el mínimo seguro para cortes enteros de res (63 °C con 3 minutos de reposo), del USDA. La carne molida va siempre a 71 °C.' },
+    quiz: [
+      { q: '¿Cómo sabes que el carbón ya está listo?', p: 0, ok: 1,
+        ops: ['Cuando tiene llama alta', 'Cuando está cubierto de ceniza gris', 'A los 5 minutos de encenderlo'], por: 'Negro o con llama todavía no. Y nunca con líquido para encender ni gasolina.' },
+      { q: 'Un corte grueso se está quemando por fuera y sigue crudo adentro. ¿Qué haces?', p: 1, ok: 0,
+        ops: ['Lo pasas a la zona fría para que se termine sin quemarse', 'Lo cortas para ver', 'Le echas agua al carbón'], por: 'Con dos zonas puedes rescatar cualquier cosa. Sin ellas solo tienes un ajuste: quemar.' },
+      { q: '¿Cuándo salas la carne?', p: 3, ok: 2,
+        ops: ['10 minutos antes', 'A la mitad de la cocción', '40 minutos o más antes, o justo al ponerla'], por: 'A los 10 minutos la sal ya sacó el jugo y no ha tenido tiempo de reabsorberlo.' },
+      { q: 'La quieres en medio rojo, 57 °C. ¿A cuántos grados la sacas del fuego?', p: 4, ok: 1,
+        ops: ['A 57 °C', 'A 53 o 54 °C', 'A 60 °C'], por: 'Sigue subiendo 3 o 4 grados mientras reposa.' },
+      { q: '¿Cómo cortas la arrachera ya asada?', p: 5, ok: 0,
+        ops: ['Contra la fibra, en tiras', 'A lo largo de la fibra', 'En cubos'], por: 'Contra la fibra cortas los músculos en pedazos cortos: la misma carne se siente mucho más suave.' },
+      { q: '¿Con qué volteas la carne?', p: 4, ok: 2,
+        ops: ['Con un tenedor', 'Con un cuchillo', 'Con pinzas'], por: 'Cada agujero del tenedor es jugo perdido.' },
+      { q: 'Pusiste la carne cruda en un plato. ¿Dónde sirves la carne ya asada?', p: 8, ok: 1,
+        ops: ['En el mismo plato', 'En un plato limpio, y con pinzas distintas', 'Da igual si ya está cocida'], por: 'La contaminación cruzada es el riesgo real de una carne asada.' },
+      { q: 'Vienen 12 personas y hay guarniciones. ¿Cuánta carne compras?', p: 11, ok: 0,
+        ops: ['Unos 3 a 3.5 kg', 'Unos 6 kg', 'Unos 1.5 kg'], por: 'De 250 a 300 g por persona con guarniciones; 400 g si la carne es lo único.' }
+    ],
+    pasos: {
+      'Prender el carbón sin líquido': { foto: 'asado-1.jpg', cred: 'Joshmt · Wikimedia Commons · CC BY 2.5',
+        pie: 'Una chimenea de encendido: papel abajo, carbón arriba y en 15 o 20 minutos está listo, sin líquido.',
+        cifras: [['Gris', 'la ceniza que dice que está listo'], ['15–20 min', 'tarda una chimenea de encendido'], ['0', 'líquidos ni gasolina']] },
+      'Las dos zonas: el concepto que lo cambia todo': { foto: 'asado-2.jpg', cred: 'Owen Kelly · Wikimedia Commons · CC BY 3.0',
+        pie: 'El carbón de un solo lado y una charola del otro: la zona caliente para sellar y la fría para terminar.',
+        cifras: [['2', 'zonas: caliente y fría'], ['12 cm', 'sobre la parrilla para la prueba de la mano'], ['2–3 s', 'aguantas sobre fuego alto']],
+        graf: { tipo: 'tabla', k: 'La prueba de la mano', t: 'Cuántos segundos aguantas la mano a 12 cm de la parrilla', dest: 1,
+          cols: ['Aguantas', 'El fuego', 'Para qué'],
+          filas: [['2 a 3 s', 'Alto, más de 250 °C', 'Sellar cortes y dorar'], ['4 a 5 s', 'Medio', 'Pollo, verduras y chorizo'], ['6 a 8 s', 'Bajo', 'Terminar cortes gruesos y cocciones lentas']],
+          fuente: 'El método de este paso.' } },
+      'Elegir el corte': { foto: 'asado-3.jpg', cred: 'Benacer At Work · Wikimedia Commons · CC BY 3.0',
+        pie: 'El marmoleo: las vetas de grasa dentro del músculo dan más sabor y jugo que el nombre del corte.',
+        cifras: [['2.5 cm', 'de grosor como mínimo'], ['Marmoleo', 'pesa más que el nombre del corte'], ['1', 'corte que perdona errores: el ribeye']],
+        graf: { tipo: 'tabla', k: 'Los cortes', t: 'Cuál comprar según lo que vas a hacer', dest: 2,
+          cols: ['Corte', 'Cómo es', 'Cómo se cocina'],
+          filas: [['Arrachera', 'Sabor intenso y fibra marcada', 'Rápido y a fuego alto; se corta contra la fibra'], ['Ribeye', 'Mucha grasa infiltrada: perdona errores', 'Sellar y terminar en la zona fría'], ['New York o sirloin', 'Magro y sabroso', 'Fuego alto, sin pasarse'], ['Diezmillo o aguja', 'Barato y duro', 'No es para asar rápido: cocción larga o ahumado']],
+          fuente: 'El método de este paso.' } },
+      'Sal, marinada y temperatura de partida': { foto: 'asado-4.jpg', cred: 'Autor desconocido · Rawpixel · CC0 1.0',
+        pie: 'Sal de grano y pimienta: con un buen corte, no hace falta más.',
+        cifras: [['40 min', 'antes, o justo al ponerla: la sal'], ['30–45 min', 'fuera del refri antes de asar'], ['Seca', 'la superficie: así dora']] },
+      'Asar y saber cuándo está': { foto: 'asado-5.jpg', cred: 'Marina de EE. UU. · Wikimedia Commons · dominio público',
+        pie: 'Sellar en la zona caliente y no mover la carne: se despega sola cuando ya tiene costra.',
+        cifras: [['1', 'vuelta en cortes normales'], ['3–4 °C', 'antes del objetivo la sacas'], ['0', 'piquetes de tenedor']],
+        calc: { k: 'Calcúlalo', fn: 'punto', t: 'A qué temperatura la sacas', sub: 'Elige el término que quieres.',
+          campos: [{ k: 't', t: 'El término', v: 57, ops: [[52, 'Rojo, 52 °C'], [57, 'Medio rojo, 57 °C'], [63, 'Medio, 63 °C'], [68, 'Tres cuartos, 68 °C'], [71, 'Bien cocido, 71 °C']] }],
+          fuente: 'La carne sube de 3 a 4 °C mientras reposa; un corte grueso puede subir hasta 5.' } },
+      'Reposo y corte — los dos últimos errores': { foto: 'asado-6.jpg', cred: 'Wikiuser100 · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'Cortada contra la fibra, después del reposo: así la misma carne se siente más suave.',
+        cifras: [['5–10 min', 'de reposo'], ['90°', 'contra la fibra'], ['45°', 'de inclinación para tiras más anchas']],
+        graf: { tipo: 'asi', k: 'Al final', t: 'Donde se arruina carne bien asada',
+          datos: [['Cortarla al bajarla del fuego', 'Dejarla reposar de 5 a 10 minutos, tapada sin apretar'], ['Cortar a lo largo de la fibra', 'Cortar contra la fibra'], ['Cortarla toda y dejarla esperando', 'Cortar y servir de inmediato']],
+          fuente: 'El método de este paso.' } },
+      'Lo que acompaña': { foto: 'asado-7.jpg', cred: 'Rish Richard · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'Carnita asada con cebollitas y nopales: las verduras van primero, mientras el fuego está más alto.',
+        cifras: [['4', 'clásicos: cebollitas, nopales, toreados y salsa asada'], ['1.º', 'las verduras, con el fuego más alto'], ['1', 'molcajete para la salsa del mismo asador']] },
+      'Mantén tu cuchillo afilado': { foto: 'asado-8.jpg', cred: 'Didriks · Wikimedia Commons · CC BY 2.0',
+        pie: 'La piedra afila quitando material; la chaira solo endereza el filo. Un cuchillo afilado corta una hoja de papel.',
+        cifras: [['≠', 'chaira no es piedra: una alinea, la otra afila'], ['15–20°', 'el ángulo para afilar'], ['1', 'hoja de papel: la prueba']],
+        graf: { tipo: 'tabla', k: 'Chaira o piedra', t: 'Dos herramientas, dos trabajos', dest: 1,
+          cols: ['', 'Chaira', 'Piedra'],
+          filas: [['Qué hace', 'Endereza el filo doblado', 'Quita material y hace un filo nuevo'], ['Cada cuándo', 'Antes de cada uso', 'Cada pocos meses'], ['Cómo', 'Unas pasadas a cada lado', 'Remojada, grano grueso y luego fino, ángulo fijo']],
+          fuente: 'El método de este paso.' } },
+      'Seguridad e higiene': { foto: 'asado-9.jpg', cred: 'Autor desconocido · Rawpixel · CC0 1.0',
+        pie: 'Una parrilla limpia: se cepilla en caliente, justo al terminar. En frío no sale.',
+        cifras: [['2', 'tablas y pinzas: crudo y cocido'], ['71 °C', 'la carne molida'], ['74 °C', 'el pollo']] },
+      'Otras carnes en el asador': { foto: 'asado-10.jpg', cred: 'orchidgalore · Wikimedia Commons · CC BY 2.0',
+        pie: 'Pollo en el asador: piel abajo en la zona directa y termina en la indirecta hasta 74 °C.',
+        cifras: [['Indirecta', 'la zona de las costillas'], ['Piel abajo', 'el pollo, primero'], ['1', 'vuelta al pescado, con la parrilla muy limpia']],
+        graf: { tipo: 'tabla', k: 'Cada carne, su regla', t: 'Dónde va en la parrilla y cuándo está', dest: 2,
+          cols: ['Carne', 'Zona', 'Cuándo está'],
+          filas: [['Pollo', 'Directa para dorar la piel, luego indirecta', '74 °C en la parte más gruesa'], ['Costillas de cerdo', 'Indirecta, baja y lenta', 'Cuando el hueso asoma y la carne cede'], ['Chorizo', 'Media, girándolo', 'Dorado parejo, sin reventarse'], ['Pescado', 'Directa, parrilla limpia y aceitada', 'Se separa en láminas']],
+          fuente: 'El método de este paso; las temperaturas, del USDA.' } },
+      'Cocina de fuego indirecto y ahumado': { foto: 'asado-11.jpg', cred: 'Thogru · Wikimedia Commons · CC BY-SA 3.0',
+        pie: 'Costillas ahumadas: bajas y lentas, entre 110 y 135 °C, con humo casi transparente.',
+        cifras: [['110–135 °C', 'para ahumar'], ['30 min', 'de remojo para las astillas'], ['Azul', 'el humo bueno; blanco y espeso, amarga']] },
+      'Planear una carne asada para varios': { foto: 'asado-12.jpg', cred: 'Carol M Highsmith · Rawpixel · CC0 1.0',
+        pie: 'Un asador grande para muchos: verduras y chorizo primero, cortes después, y el carbón encendido 40 minutos antes.',
+        cifras: [['250–300 g', 'de carne por persona con guarniciones'], ['1 kg', 'de carbón por cada 4 personas'], ['40 min', 'antes de servir enciendes el carbón']],
+        calc: { k: 'Calcúlalo', fn: 'carneasada', t: 'Cuánto comprar', sub: 'Pon cuántos vienen y si habrá guarniciones.',
+          campos: [{ k: 'n', t: 'Personas', min: 2, max: 40, paso: 1, v: 10, u: 'personas' }, { k: 'g', t: '¿Hay guarniciones?', v: 275, ops: [[275, 'Sí: 250 a 300 g por persona'], [400, 'No: 400 g por persona']] }],
+          fuente: 'Las cantidades de este paso.' } }
+    }
+  },
 };
 
 /* Las calculadoras de Habilidades Base: cada una recibe los valores de sus deslizadores y devuelve tres cifras, a veces una
@@ -2115,6 +2203,18 @@ const HB_CALC = {
     const r = v.rumbo < 180 ? v.rumbo + 180 : v.rumbo - 180;
     return { cifras: [[r + '°', 'tu rumbo de regreso'], [(v.rumbo < 180 ? '+' : '−') + '180°', v.rumbo < 180 ? 'sumaste: era menor de 180' : 'restaste: era de 180 o más'], [v.rumbo + '°', 'tu rumbo de ida']],
       nota: 'Anótalo al salir, en el celular o en un papel: es lo que te devuelve al coche si todo lo demás falla.' };
+  },
+  // Asado: a cuántos grados se saca la carne para el término que quieres (sube de 3 a 4 °C al reposar).
+  punto(v) {
+    const t = +v.t, nom = { 52: 'rojo', 57: 'medio rojo', 63: 'medio', 68: 'tres cuartos', 71: 'bien cocido' }[t] || '';
+    return { cifras: [[(t - 4) + '–' + (t - 3) + ' °C', 'la sacas del fuego'], [t + ' °C', 'llega mientras reposa: ' + nom], ['5–10 min', 'de reposo antes de cortar']],
+      nota: t < 63 ? 'Por debajo de 63 °C solo en <b>cortes enteros</b> de res: nunca en carne molida, que va a 71 °C.' : 'Ya pasaste los 63 °C que el USDA considera seguros para un corte entero.' };
+  },
+  // Asado para varios: carne por persona según haya o no guarniciones, y 1 kg de carbón por cada 4.
+  carneasada(v) {
+    const kg = v.n * v.g / 1000, carbon = Math.ceil(v.n / 4);
+    return { cifras: [[kg.toLocaleString('es-MX', { maximumFractionDigits: 1 }) + ' kg', 'de carne'], [carbon + ' kg', 'de carbón, como mínimo'], ['40 min', 'antes de servir enciendes']],
+      nota: 'Compra un poco de más si hay quien come mucho: sobra mejor que falte, y lo que queda se vuelve tacos al día siguiente.' };
   },
   // Con un precio (1 + p) veces más alto, el mismo ingreso sale con 1 / (1 + p) del trabajo.
   precio(v) {
