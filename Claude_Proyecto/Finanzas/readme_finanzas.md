@@ -274,18 +274,19 @@ iban $14,295 a la bolsa mientras el plan los mandaba a la BBVA. `renderGBM()`:
 
 - **Tabs de meses** (actual + 4; `setGbmMonth`).
 - **A dónde va tu ahorro** (`CIFRAS.gbmMes(mes)`, el mismo calendario del Dashboard y de Coach): lo que va
-  a GBM ese mes —lo de cada quincena, lo de Didi de los lunes, las ventas del plan y el depósito que
-  regresa—, lo que va a la BBVA y el día que quedará en cero, esta semana, y las cuatro semanas (1–7, 8–14,
-  15–21, 22–fin) con cada envío y su día. Mientras la BBVA tenga saldo lo dice: a la bolsa no va nada
-  hasta que quede en cero.
+  a GBM ese mes —lo de cada quincena, lo de Didi de los lunes (lo mismo cada semana) y el depósito que
+  regresa; ventas no hay: Adán no vende nada de lo suyo—, lo que va a la BBVA y el día que quedará en cero, esta
+  semana, y las cuatro semanas (1–7, 8–14, 15–21, 22–fin) con cada envío y su día; los lunes en que lo de Didi es
+  para vivir salen en gris. Mientras la BBVA tenga saldo lo dice: a la bolsa no va nada hasta que quede en cero, y
+  la quincena en que vive de Didi, que lo que le queda lo paga la quincena siguiente.
 - **En qué va** —el perfil *seguro* de Qué invertir hoy (`window.INVERSION_HOY`, `Dashboard/inversion-hoy.js`,
   la misma fuente del Dashboard): el dinero de Alemania se usa en meses y va en deuda de corto plazo. Cada
   activo con su porcentaje y lo que le toca de la semana o del mes, dónde se compra, por qué y qué vigilar;
   la fecha en que se investigó y, con más de siete días, en rojo, que se actualice antes de comprar;
   *Abrir Qué invertir hoy →* lleva al panel del Dashboard (`dashboard.html#invertir`).
-- **El portafolio** (las posiciones de `investments`, KPIs, mejor y peor, la tabla por tipo), **En GBM si
-  sigues el plan** —al cerrar la fase y al irte, de `CIFRAS.estadoDia`, sin rendimiento en México— y lo
-  de esta semana a GBM; el bloque de CETES y `renderBtcHistory()` al final.
+- **El portafolio** (las posiciones de `investments`, KPIs, mejor y peor, la tabla por tipo), **GBM y tus
+  CETES si sigues el plan** —al cerrar la fase y al irte, de `CIFRAS.estadoDia`, sin rendimiento en México: la misma
+  cifra que la proyección del Plan Maestro y que «Lo que dice tu plan»— y lo de esta semana a GBM; el bloque de CETES y `renderBtcHistory()` al final.
 
 `setEmergencyFund` (sincroniza `ef-001`) y `maybeRefreshIndicators()` (solo si `s-indicators` está activa).
 **Sin uso**: `S.didiMonthly`, `setDidiMonthly()` y `S.weeklyLeftover` siguen en el estado para no romper
@@ -359,7 +360,7 @@ Dashboard—:
 |---|---|
 | Próximos pagos · 15 días | `CIFRAS.agendaDia` día por día —sin lo que ya pasó antes de su día (`pagado`: el de la quincena que llegó antes, con lo fijo ya pagado)—, más lo que Didi aparta para la BBVA (los abonos `de: 'didi'` de `planBbva`, que no pasan por el calendario); al pie, lo que entra y sale en esos días |
 | La BBVA, quincena a quincena | El saldo vivo (`CIFRAS.bbvaEstado`, el mismo del Plan Maestro y de Mis Metas), lo pagado desde que arrancó su plan (`CIFRAS.avanceBbva`), el día que quedará en cero y los abonos que siguen desde hoy, el de hoy incluido, cada uno con de dónde sale —el del día que la liquida de un golpe (`PROYECTO.bbvaLiquida`), *para liquidarla, con todo lo que tienes*—. El saldo que reporte del banco manda: va al maestro como migración |
-| A GBM, para Alemania | `CIFRAS.desgloseMes`: este mes, el siguiente y el primero ya sin la BBVA, con lo del día 1, el 15 y Didi; al pie, `{{alemaniaJunio}}` contra la cuenta bloqueada (`{{sperrkonto}}`, `{{junioCorto}}`) |
+| A GBM, para Alemania | `CIFRAS.desgloseMes`: este mes, el siguiente y el primero ya sin la BBVA; la cifra grande es la de ese primero en promedio (`promedio: true`, la de `{{ahorroMesDepa}}`), con lo del día 1, el 15 y Didi y lo que Didi aparta cada lunes (`didiSemana`); al pie, `{{alemaniaJunio}}` contra la cuenta bloqueada (`{{sperrkonto}}`, `{{junioCorto}}`) |
 
 Cuánto te queda de la quincena día a día no se calcula aquí: es la cuenta de la quincena del Plan Maestro (Dashboard).
 
@@ -368,7 +369,8 @@ este mes — previsto*: los apartados de `CIFRAS.desgloseMes` con los nombres de
 `CIFRAS.GRUPOS_SUELDO`.
 
 `renderSpecials(freeMonth, refDate)`: **Maestría** —la barra segmentada de lo que ya tienes y
-**Lo que dice tu plan** (`maePlanHTML`): lo que piden junio y agosto contra lo que habrá con tu ritmo, lo
+**Lo que dice tu plan** (`maePlanHTML`): lo que piden junio —la cuenta bloqueada, contra lo que tendrías ya
+pagada la visa, así que la resta da lo que dice que falta— y agosto contra lo que habrá con tu ritmo, lo
 que GBM y los CETES tendrán al cerrar la fase si sigues el plan, el ingreso nuevo que cierra el hueco y
 la fecha que el ahorro sí paga; es la proyección de Coach y del Plan Maestro, sin un modelo propio ni
 rendimiento supuesto— y **Hoja de Ruta de Deudas** (las cuotas con su última fecha de `CIFRAS.cuotas`, el

@@ -6923,7 +6923,7 @@ const FRASES_MOTIVACION=[
   'Compararte con la quincena 50 de alguien más solo te da excusa para rendirte en tu quincena 1. No lo hagas.',
   'Pedir las dos cartas de recomendación "cuando tengas tiempo" nunca va a pasar. Escribe hoy el correo: es el primer ladrillo de la solicitud.',
   'Buscar la idea perfecta es una forma elegante de no empezar. Prueba la que ya tienes, hoy, aunque sea pequeña.',
-  'Un plan perfecto sin probar no vale nada. Publica hoy en Marketplace una cosa que ya no usas: esa venta pequeña sí es información real.',
+  'Un plan perfecto sin probar no vale nada. Publica hoy el post del negocio de tu papá: un mensaje de un cliente real vale más que diez ideas.',
   // Trabajo en ALTEN / carrera
   'Ya sabes encontrar el error antes de que truene — te lo enseñaron Bosch y Continental. Exígete usar esa misma disciplina con cada gasto, antes de que truene tu quincena.',
   'El régimen fiscal ya está resuelto, así que ya no es pretexto: si tu palanca de ingreso es freelance, facturas desde el primer cobro.',
@@ -9696,9 +9696,8 @@ function ctMesDetalle(k){
         kpiSec('A dónde va')+(aBbva >= 1 ? fila('A la BBVA, los lunes y el pago del corte', aBbva) : '')+(aGbm >= 1 ? fila('A GBM, los lunes desde que liquides la BBVA', aGbm) : '')+
         (aVivir >= 1 ? fila('Para vivir la quincena después de liquidarla · lunes '+tuyos.map(f => +f.slice(8)).join(' y '), aVivir) : '')+
         fila('Lo que te queda para la carga del auto y lo tuyo', mes - aBbva - aGbm - aVivir)+tot('Lo que trae al mes', mes)+
-        kpiNota('Lo que apartas al mes según tu plan: <b>'+money(aparta)+'</b>.'+
-          (aVivir >= 1 ? ' La liquidas con todo lo que tienes, así que lo que apartarías esos lunes es para vivir; desde el siguiente, a GBM.'
-           : aparta - aBbva - aGbm >= 1 ? ' Lo que no alcanza a ir este mes a la tarjeta —'+money(Math.round(aparta - aBbva - aGbm))+'— se queda contigo: a GBM solo va una vez que liquides la BBVA.' : '')) };
+        kpiNota('Apartas <b>'+money(C.didiSemana ? C.didiSemana(X.ym) : aparta*12/52)+'</b> cada lunes, '+money(aparta)+' al mes en promedio: un mes con cinco lunes junta más.'+
+          (aVivir >= 1 ? ' La liquidaste con todo lo que tenías, así que lo de esos lunes es para vivir; desde el siguiente, a GBM.' : '')) };
   }
   return null;
 }

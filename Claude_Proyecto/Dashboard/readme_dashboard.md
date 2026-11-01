@@ -1043,13 +1043,13 @@ al maestro (`CIFRAS.cifrasHoy(f, gastar)`) lo que la serie de la quincena dice q
 —en la pantalla y en la ventana, con la misma `fzmCifrasHTML`— miden igual (*$21,291*). El control 42 vigila
 que nadie más llame a `cifrasHoy`.
 
-**El plan y tu dinero un día no son lo mismo, y cada uno va en su sitio.** Lo que pide la fase y lo que da tu ritmo
-salen del plan (`PROYECCION`, desde la foto del 1 oct): la meta y el checkpoint de la fase, Mis Metas y las barras
-de la ventana de las fases dicen *$129,532 en GBM el 31 de marzo*. `estadoDia` —tu dinero un día, que usa Finanzas—
-proyecta desde lo de hoy y separa GBM y los CETES ($121,504 y $6,000): la diferencia son los $1,990 de la cuenta y el
-efectivo que la foto contó como ahorro y $38 de Didi de un lunes que ya pasó. Mes a mes los dos suben igual —lo
-que llega a GBM, las ventas, el depósito y lo que cuesta la salida— y lo vigila el control 43: `estadoDia` no
-restaba los costos de la salida y el 31 de marzo traía $6,000 de más (las apostillas de diciembre).
+**El plan y tu dinero un día dan la misma cifra.** Lo que pide la fase y lo que da tu ritmo salen del plan
+(`PROYECCION`, desde la foto del 1 oct): la meta y el checkpoint de la fase, Mis Metas y las barras de la ventana de
+las fases dicen *$109,362 el 31 de marzo*, GBM con los CETES. `estadoDia` —tu dinero un día, que usa Finanzas—
+proyecta desde lo de hoy y da lo mismo: GBM con el depósito, $103,362, y los CETES, $6,000. La foto ya no cuenta como
+ahorro la cuenta y el efectivo del 1 oct, que eran para gastar. Mes a mes los dos suben igual —lo que llega a GBM, el
+depósito y lo que cuesta la salida— y lo vigila el control 43: `estadoDia` no restaba los costos de la salida y el 31
+de marzo traía $6,000 de más (las apostillas de diciembre).
 
 ### Tu estrategia de hoy
 

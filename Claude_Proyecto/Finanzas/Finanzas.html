@@ -1452,7 +1452,8 @@ function renderGBM() {
   const INV=window.INVERSION_HOY, PS=INV&&INV.perfiles&&INV.perfiles.seguro;
   const genD=INV&&INV._meta&&INV._meta.generado?new Date(INV._meta.generado):null;
   const diasInv=genD?Math.round((new Date(realNow).setHours(0,0,0,0)-new Date(genD).setHours(0,0,0,0))/86400000):null;
-  // Si sigues el plan: GBM y los CETES al cerrar la fase y al irte (CIFRAS.estadoDia).
+  // Si sigues el plan: GBM y los CETES al cerrar la fase y al irte (CIFRAS.estadoDia). Las dos juntas, como la proyección
+  // del Plan Maestro y como «Lo que dice tu plan» del inicio: el 31 de marzo es una sola cifra en las tres pantallas.
   const fase=C&&C.PHASES?C.PHASES.find(f=>realNow>=f.start&&realNow<=f.end):null;
   const EF=fase&&C.estadoDia?C.estadoDia(C.fechaLocal(fase.end)):null;
   const ultM=C&&C.PROYECTO&&C.PROYECTO.ultimoMesMexico, ultD=ultM?new Date(+ultM.slice(0,4),+ultM.slice(5,7),0):null;
@@ -1582,17 +1583,19 @@ function renderGBM() {
           <div class="ts tm">en GBM al cerrar la fase</div>`}
         </div>
       </div>
-      ${G.aBbva>0&&isCurrentM?`<div class="alert a-warn" style="margin:0 0 12px;font-size:12px">Mientras la BBVA tenga saldo, lo que sobra de cada quincena y lo de Didi van a ella: a la bolsa empieza a ir dinero cuando quede en cero${ceroTxt?', el '+ceroTxt:''}. Ninguna inversión le gana a una tarjeta al 55.7 % anual.</div>`:''}
+      ${G.aBbva>0&&isCurrentM?`<div class="alert a-warn" style="margin:0 0 12px;font-size:12px">${G.semanas.some(w=>w.vivir&&w.vivir.length)
+        ?`La liquidaste con todo lo que tenías: lo que le queda lo paga la quincena${ceroTxt?' del '+ceroTxt:''}, y hasta entonces lo de Didi es para vivir. A la bolsa empieza a ir dinero cuando quede en cero.`
+        :`Mientras la BBVA tenga saldo, lo que sobra de cada quincena y lo de Didi van a ella: a la bolsa empieza a ir dinero cuando quede en cero${ceroTxt?', el '+ceroTxt:''}.`} Ninguna inversión le gana a una tarjeta al 55.7 % anual.</div>`:''}
       <div class="g4" style="gap:8px">
         ${G.semanas.map(w=>{
-          const items=w.gbm.map(x=>({...x,k:'gbm'})).concat(w.bbva.map(x=>({...x,k:'bbva'}))).sort((a,b)=>a.dia-b.dia);
+          const items=w.gbm.map(x=>({...x,k:'gbm'})).concat(w.bbva.map(x=>({...x,k:'bbva'})),(w.vivir||[]).map(x=>({...x,k:'vivir'}))).sort((a,b)=>a.dia-b.dia);
           return `<div style="border-radius:10px;padding:11px 12px;background:${w.n===semHoy?'rgba(0,212,255,.07)':'rgba(var(--ov),.03)'};border:1px solid ${w.n===semHoy?'rgba(0,212,255,.3)':'rgba(var(--ov),.08)'}">
             <div class="flex jb aic" style="margin-bottom:6px"><span style="font-size:11px;font-weight:800;color:var(--text)">Semana ${w.n}</span>
               <span class="ts tm">${w.n===semHoy?'<b style="color:var(--primary)">HOY</b> · ':''}días ${w.ini} al ${w.fin}</span></div>
             <div style="font-size:17px;font-weight:900;color:${w.aGbm>0?'var(--primary)':'var(--text3)'}">${fmt(w.aGbm)} <span class="ts tm" style="font-weight:600">a GBM</span></div>
             ${w.aBbva>0?`<div style="font-size:12px;font-weight:700;color:var(--warning);margin-top:2px">${fmt(w.aBbva)} <span class="ts tm" style="font-weight:600">a la BBVA</span></div>`:''}
             <div style="display:flex;flex-direction:column;gap:3px;margin-top:7px">
-              ${items.length?items.map(x=>`<div class="flex jb" style="gap:8px;font-size:11px;color:var(--text2)"><span>día ${x.dia} · ${x.k==='bbva'?'BBVA, ':''}${x.t}</span><b style="white-space:nowrap;color:${x.k==='bbva'?'var(--warning)':'var(--text)'}">${fmt(x.mxn)}</b></div>`).join('')
+              ${items.length?items.map(x=>`<div class="flex jb" style="gap:8px;font-size:11px;color:${x.k==='vivir'?'var(--text3)':'var(--text2)'}"><span>día ${x.dia} · ${x.k==='bbva'?'BBVA, ':''}${x.t}</span><b style="white-space:nowrap;color:${x.k==='bbva'?'var(--warning)':x.k==='vivir'?'var(--text3)':'var(--text)'}">${fmt(x.mxn)}</b></div>`).join('')
                 :'<div class="ts tm">Nada esta semana: lo que entra se va en lo fijo y en tu gasto.</div>'}
             </div>
           </div>`;}).join('')}
@@ -1736,15 +1739,15 @@ function renderGBM() {
 
         <!-- Proyección -->
         <div class="card" style="padding:14px;border-color:rgba(0,212,255,.2)">
-          <div style="font-size:9px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">📈 En GBM, si sigues el plan</div>
+          <div style="font-size:9px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">📈 GBM y tus CETES, si sigues el plan</div>
           <div style="display:flex;flex-direction:column;gap:8px">
             <div style="background:rgba(0,212,255,.06);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center">
               <div style="font-size:11px;color:var(--text3)">Al cerrar la ${fase?fase.tag:'fase'}${fase?' · '+fase.end.getDate()+' '+MC3[fase.end.getMonth()]:''}</div>
-              <div style="font-size:15px;font-weight:800;color:var(--primary)">${EF?fmt(Math.round(EF.gbm)):'—'}</div>
+              <div style="font-size:15px;font-weight:800;color:var(--primary)">${EF?fmt(Math.round(EF.gbm+EF.cetes)):'—'}</div>
             </div>
             <div style="background:rgba(0,232,122,.07);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center">
               <div style="font-size:11px;color:var(--text3)">Al irte${ultD?' · '+ultD.getDate()+' '+MC3[ultD.getMonth()]+' '+ultD.getFullYear():''}</div>
-              <div style="font-size:15px;font-weight:800;color:var(--success)">${EA?fmt(Math.round(EA.gbm)):'—'}</div>
+              <div style="font-size:15px;font-weight:800;color:var(--success)">${EA?fmt(Math.round(EA.gbm+EA.cetes)):'—'}</div>
             </div>
           </div>
         </div>
@@ -2828,11 +2831,13 @@ function renderQuincena(m){
   let x=sigYM(m); filasGbm.push([x,C.desgloseMes(x)]);
   const conBbva=f=>!!(f[1].g&&f[1].g.tarjeta>0);
   if(conBbva(filasGbm[1])) for(let i=0;i<14;i++){ x=sigYM(x); const d=C.desgloseMes(x); if(!(d.g&&d.g.tarjeta>0)){ filasGbm.push([x,d]); break; } }
-  const ult=filasGbm[filasGbm.length-1], crucero=ult[1];
+  // El primero sin BBVA, en promedio (el mes tipo de su etapa): lo de Didi va cada lunes y un mes con cinco junta más que
+  // uno con cuatro, así que la cifra «al mes» es la del Plan Maestro y Coach ({{ahorroMesDepa}}), no la de ese mes.
+  const ult=filasGbm[filasGbm.length-1], crucero=C.desgloseMes(ult[0],undefined,{promedio:true});
   const Mayus=t=>t[0].toUpperCase()+t.slice(1);
   const gbm=`
       <div class="qn-cifra" style="color:var(--purple)">${fmt(crucero.ahorro||0)}<span style="font-size:12px;font-weight:700;color:var(--text3)"> al mes</span></div>
-      <div class="qn-sub">en ${nombreMes(ult[0])}${conBbva(filasGbm[0])?', ya sin la BBVA':''}: el día 1 ${fmt(crucero.dia1||0)}, el 15 ${fmt(crucero.dia15||0)} y Didi ${fmt(crucero.didi||0)}</div>
+      <div class="qn-sub">en promedio desde ${nombreMes(ult[0])}${conBbva(filasGbm[0])?', ya sin la BBVA':''}: el día 1 ${fmt(crucero.dia1||0)}, el 15 ${fmt(crucero.dia15||0)} y Didi ${fmt(crucero.didi||0)}${C.didiSemana?' —'+fmt(C.didiSemana(ult[0]))+' cada lunes—':''}</div>
       ${filasGbm.map(f=>`<div class="qn-fila"><span>${f[0]===m?'Este mes':Mayus(nombreMes(f[0]))}${conBbva(f)?' · lo demás va a la BBVA':''}</span><b>${fmt(f[1].ahorro||0)}</b></div>`).join('')}
       ${C.n?`<div class="qn-tot"><span>Junio de 2027, a este ritmo</span><span><b>${fmt(+C.n('alemaniaJunio')||0)}</b> de los ${fmt(+C.n('sperrkonto')||0)} de la cuenta bloqueada · <b style="color:var(--warning)">${C.n('junioCorto')}</b></span></div>`:''}`;
 
@@ -3092,7 +3097,7 @@ function maePlanHTML(){
   const ini=C.PROYECTO&&C.PROYECTO.maestriaInicio?new Date(C.PROYECTO.maestriaInicio+'T12:00:00'):null;
   const tarde=ini?MC[ini.getMonth()]+' '+(ini.getFullYear()+1):'';
   return `<div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;margin:6px 0 2px">📅 Lo que dice tu plan</div>
-    ${fila('Junio de 2027 · la cuenta bloqueada y la visa piden', T('salidaJunio'), 'a fin de junio tendrías '+T('alemaniaJunio')+': '+T('junioVeredicto'), mal(T('junioCorto'))?'#f97316':'var(--success)')}
+    ${fila('Junio de 2027 · la cuenta bloqueada pide', T('sperrkonto'), 'a fin de junio tendrías '+T('alemaniaJunio')+', ya pagada la visa: '+T('junioVeredicto'), mal(T('junioCorto'))?'#f97316':'var(--success)')}
     ${fila('Agosto de 2027 · la salida completa pide', T('salidaAgosto'), 'con la colegiatura, la reserva del BYD y el colchón; con tu ritmo, '+T('salidaVeredicto'), mal(T('salidaVeredicto'))?'#f97316':'var(--success)')}
     ${E?fila('Al cerrar la '+ph.tag+' · '+ph.end.getDate()+' '+MC[ph.end.getMonth()], fmt(Math.round(E.gbm+E.cetes)), 'GBM y tus CETES si sigues el plan; el checkpoint pide '+T('marzoParaSalida')):''}
     ${fila('Lo que cierra el hueco', '+'+T('extraSalida')+'/mes', 'de ingreso nuevo hasta que te vas: un aumento, un puesto mejor pagado o freelance de pruebas en lugar de horas de Didi')}
