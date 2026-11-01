@@ -2326,6 +2326,168 @@ const HB_VISUAL = {
         cifras: [['Acostadas', 'las botellas cerradas'], ['3–5 días', 'aguanta una abierta en el refrigerador'], ['1', 'peor lugar: encima del refrigerador']] }
     }
   },
+  coctel: {
+    graf: { tipo: 'partes', k: 'La ecuación', t: 'Casi todo clásico es fuerte, ácido y dulce en la misma proporción',
+      sub: 'Las partes de una Margarita: 60, 30 y 20 ml. Si un trago sabe plano, le falta ácido; si sabe agresivo, le falta dulce o dilución. En la versión sin alcohol, el «fuerte» es agua mineral, té frío o un destilado 0.0.',
+      u: 'ml', datos: [['Fuerte', 60, '60 ml', 'el destilado, o su sustituto sin alcohol'], ['Ácido', 30, '30 ml', 'limón recién exprimido'], ['Dulce', 20, '20 ml', 'licor o jarabe']],
+      fuente: 'La plantilla de la Margarita de esta ficha.' },
+    quiz: [
+      { q: 'Un trago te sabe plano y pesado. ¿Qué le falta?', p: 0, ok: 1,
+        ops: ['Más hielo', 'Ácido: unas gotas más de limón', 'Más destilado'], por: 'El ácido es lo que hace que sepa vivo. Si sabe agresivo, al revés: le falta dulce o dilución.' },
+      { q: '¿Cuándo se agita y cuándo se revuelve?', p: 3, ok: 0,
+        ops: ['Se agita si lleva cítrico, jugo, crema o huevo; se revuelve si todo es transparente', 'Siempre se agita', 'Se revuelve si lleva limón'], por: 'Agitar enfría, diluye y airea; revolver enfría y diluye sin enturbiar.' },
+      { q: '¿Cuánto tiempo se agita?', p: 3, ok: 2,
+        ops: ['3 segundos', 'Un minuto', '12 a 15 segundos, fuerte, hasta que la coctelera queme de fría'], por: 'Un coctel bien hecho lleva de 20 a 25 % de agua del hielo. Casi todos se quedan cortos.' },
+      { q: '¿Por qué jarabe y no azúcar?', p: 2, ok: 1,
+        ops: ['Porque es más dulce', 'Porque el azúcar granulada no se disuelve en frío y queda en el fondo', 'Porque dura más'], por: 'Partes iguales de azúcar y agua caliente: tres minutos y dura un mes en el refrigerador.' },
+      { q: '¿Qué herramienta es la más importante para empezar?', p: 1, ok: 0,
+        ops: ['El jigger, para medir', 'Una coctelera de lujo', 'Una licuadora'], por: 'Medir a ojo es la diferencia principal entre un trago casero y uno de bar.' },
+      { q: 'En un highball, ¿cómo cuidas el gas?', p: 8, ok: 2,
+        ops: ['Revolviendo mucho', 'Con poco hielo', 'Vaso frío lleno de hielo y una sola vuelta con la cuchara'], por: 'Más hielo se derrite más lento; revolver mucho saca el gas.' },
+      { q: 'Vas a servir en una reunión. ¿Qué preparas antes?', p: 12, ok: 0,
+        ops: ['Jarabe, cítricos exprimidos, hielo de sobra y una opción sin alcohol igual de bien hecha', 'Diez recetas distintas', 'Nada: se improvisa'], por: 'Dos tragos dominados valen más que diez a medias, y el buen anfitrión no se queda atrapado en la cocina.' },
+      { q: 'Con tu meta de cero alcohol, ¿cómo practicas esta habilidad?', p: 13, ok: 1,
+        ops: ['No se puede', 'Sirviendo, y probando tú la versión sin alcohol con la misma técnica', 'Tomando solo los fines de semana'], por: 'Jarabe, ácido, dilución y hielo son iguales en la versión sin alcohol: esa es la que pruebas tú.' }
+    ],
+    pasos: {
+      'La estructura de todo coctel': { foto: 'coctel-1.jpg', cred: 'Achim Schleuning · Wikimedia Commons · CC BY-SA 3.0 de',
+        pie: 'Los ingredientes de un Hemingway Daiquiri: ron, jarabe, licor de marrasquino, toronja y limón. Fuerte, ácido y dulce, la misma ecuación de siempre.',
+        cifras: [['3', 'partes: fuerte, ácido y dulce'], ['1', 'cuarta opcional: amargo'], ['0', 'recetas que memorizar si entiendes la ecuación']] },
+      'Lo que necesitas para empezar': { foto: 'coctel-2.jpg', cred: 'Mangomix · Wikimedia Commons · CC BY-SA 3.0',
+        pie: 'Las herramientas de una barra: coctelera, jigger, colador, exprimidor y cuchara son las cinco que necesitas; el resto es lujo.',
+        cifras: [['5', 'herramientas: coctelera, jigger, colador, exprimidor y cuchara'], ['1', 'la más importante: el jigger'], ['Grande', 'el hielo, y mucho']] },
+      'Jarabe natural: la base que todo el mundo compra hecha': { foto: 'coctel-3.jpg', cred: 'Autor desconocido · Rawpixel · CC0 1.0',
+        pie: 'Azúcar: con la misma cantidad de agua caliente se vuelve el jarabe de toda la ficha.',
+        cifras: [['1:1', 'azúcar y agua caliente'], ['3 min', 'para hacerlo'], ['1 mes', 'dura en el refrigerador']] },
+      'Agitar o revolver': { foto: 'coctel-4.jpg', cred: 'SKopp · Wikimedia Commons · CC BY 4.0',
+        pie: 'Revolviendo en un vaso mezclador con hielo, con el jigger al lado: así se hacen los tragos que llevan todo transparente.',
+        cifras: [['12–15 s', 'se agita'], ['20–30 s', 'se revuelve'], ['20–25 %', 'de agua del hielo lleva un buen coctel']],
+        graf: { tipo: 'tabla', k: 'Agitar o revolver', t: 'Depende de lo que lleva el trago', dest: 1,
+          cols: ['', 'Agitar', 'Revolver'],
+          filas: [['Cuándo', 'Lleva cítrico, jugo, crema o huevo', 'Todo es transparente'], ['Qué hace', 'Enfría, diluye y airea', 'Enfría y diluye sin enturbiar'], ['Cuánto', '12 a 15 segundos, fuerte', '20 a 30 segundos'], ['Ejemplos', 'Margarita, Daiquiri, Whisky Sour', 'Negroni, Old Fashioned']],
+          fuente: 'El método de este paso.' } },
+      'Clásico 1 · Margarita': { foto: 'coctel-5.jpg', cred: 'Autor desconocido · Rawpixel · CC0 1.0',
+        pie: 'Una Margarita en copa, con sal en la orilla y una rueda de limón.',
+        cifras: [['60 / 30 / 20', 'ml de fuerte, limón y dulce'], ['15 s', 'agitando'], ['½', 'del borde con sal: quien no quiera, bebe del otro lado']] },
+      'Clásico 2 · Old Fashioned': { foto: 'coctel-6.jpg', cred: 'Erich Wagner · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'Un Old Fashioned sobre un solo cubo grande, con cáscara de naranja: el hielo grande enfría sin aguar de más.',
+        cifras: [['1', 'cubo grande de hielo'], ['30 s', 'revolviendo en el mismo vaso'], ['1', 'cáscara de naranja exprimida encima']] },
+      'Clásico 3 · Negroni': { foto: 'coctel-7.jpg', cred: 'Geoff Peters · Wikimedia Commons · CC BY 2.0',
+        pie: 'Un Negroni con media rueda de naranja: tres ingredientes en partes iguales, revuelto, nunca agitado.',
+        cifras: [['1:1:1', 'partes iguales'], ['3', 'ingredientes'], ['Semanas', 'dura el vermut abierto, en el refrigerador']] },
+      'Clásico 4 · Daiquiri': { foto: 'coctel-8.jpg', cred: 'Will Shenton · Wikimedia Commons · CC BY-SA 3.0',
+        pie: 'Un Daiquiri clásico en copa fría: sin hielo en la copa y sin licuadora.',
+        cifras: [['60 / 25 / 20', 'ml de fuerte, limón y jarabe'], ['0', 'hielo en la copa ni licuadora'], ['3', 'ingredientes: no hay dónde esconder un mal balance']] },
+      'Clásico 5 · Highball perfecto': { foto: 'coctel-9.jpg', cred: 'Davidnuescheler · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'Un highball con limón: vaso lleno de hielo hasta arriba y una sola vuelta con la cuchara.',
+        cifras: [['1:3', 'fuerte y mezclador'], ['1', 'vuelta con la cuchara'], ['Lleno', 'de hielo hasta arriba']],
+        graf: { tipo: 'asi', k: 'Un highball', t: 'Parece que no tiene técnica, y la tiene',
+          datos: [['Vaso tibio con dos hielos', 'Vaso frío lleno de hielo'], ['Revolver mucho', 'Una sola vuelta'], ['El mezclador tibio', 'El mezclador frío, servido por un lado del vaso']],
+          fuente: 'El método de este paso.' } },
+      'De qué está hecho cada destilado': { foto: 'coctel-10.jpg', cred: 'Jay8085 · Wikimedia Commons · CC BY 2.0',
+        pie: 'Agave azul: el único con el que se hace el tequila.',
+        cifras: [['Agave azul', 'el único del tequila'], ['Cualquier agave', 'puede ser mezcal'], ['Horno de tierra', 'de ahí sale el humo del mezcal']],
+        graf: { tipo: 'tabla', k: 'Los destilados', t: 'De qué está hecho cada uno', dest: 1,
+          cols: ['Destilado', 'De qué', 'Lo que lo distingue'],
+          filas: [['Whisky', 'Granos: cebada, maíz o centeno', 'Siempre reposa en barrica'], ['Tequila', 'Solo agave azul', 'Denominación de origen: Jalisco y alrededores'], ['Mezcal', 'Cualquier agave', 'Se cuece en horno de tierra: sabe a humo'], ['Ron', 'Caña de azúcar o melaza', 'Del claro al añejo'], ['Ginebra', 'Alcohol neutro con enebro', 'El sabor del enebro y otras botánicas']],
+          fuente: 'Normas oficiales mexicanas del tequila (NOM-006-SCFI) y del mezcal (NOM-070-SCFI).' } },
+      'Dos más para el repertorio · Whisky Sour y Mojito': { foto: 'coctel-11.jpg', cred: 'JIP · Wikimedia Commons · CC BY-SA 3.0',
+        pie: 'Un Mojito: la hierbabuena se golpea con la palma, no se machaca, y la soda va al final.',
+        cifras: [['2', 'clásicos más'], ['Palma', 'para golpear la hierbabuena, no machacarla'], ['1', 'versión sin alcohol del Mojito: la misma con soda']] },
+      'Hielo, cítricos y hierbas': { foto: 'coctel-12.jpg', cred: 'Lusilier · Wikimedia Commons · CC BY-SA 3.0',
+        pie: 'El centro blanco de este hielo es aire atrapado: con agua hervida y congelada despacio, el hielo sale transparente.',
+        cifras: [['Hervida', 'el agua del hielo transparente'], ['Recién', 'exprimidos los cítricos'], ['½', 'del aroma está en la cáscara']] },
+      'Ser el que sirve': { foto: 'coctel-13.jpg', cred: 'Autor desconocido · Rawpixel · CC0 1.0',
+        pie: 'Dos tragos sin alcohol con fruta y hierbas: la opción sin alcohol merece la misma técnica que las demás.',
+        cifras: [['2', 'tragos dominados, no diez a medias'], ['2', 'preguntas: ¿dulce o seco? ¿con o sin cítrico?'], ['1', 'opción sin alcohol igual de bien hecha']],
+        calc: { k: 'Decídelo aquí', fn: 'virgen', t: 'La versión sin alcohol de cada clásico', sub: 'Misma técnica, misma estructura, sin el destilado.',
+          campos: [{ k: 'trago', t: 'El clásico', v: 'margarita', ops: [['margarita', 'Margarita'], ['daiquiri', 'Daiquiri'], ['mojito', 'Mojito'], ['highball', 'Highball'], ['negroni', 'Negroni'], ['oldfashioned', 'Old Fashioned']] }],
+          fuente: 'Las plantillas de esta ficha con el destilado cambiado por agua mineral, té frío o un destilado 0.0; los bitters llevan alcohol y se omiten.' } },
+      'Beber con cabeza': { foto: 'coctel-14.jpg', cred: 'Krzysztof Puszczyński · StockSnap · CC0 1.0',
+        pie: 'Un vaso de agua: uno entre trago y trago, y es lo primero que ofrece un buen anfitrión.',
+        cifras: [['0', 'tragos si vas a manejar'], ['1', 'vaso de agua entre trago y trago'], ['Sirviendo', 'como practicas tú, con tu meta de cero alcohol']],
+        graf: { tipo: 'asi', k: 'El buen anfitrión', t: 'Lo que parece generosidad y lo que lo es',
+          datos: [['Servir tragos cargados', 'Servir tragos balanceados'], ['Insistir con «otra»', 'Ofrecer agua y la opción sin alcohol sin preguntar dos veces'], ['Dejar que alguien maneje después', 'Pedirle un Didi o que se quede']],
+          fuente: 'El método de este paso.' } }
+    }
+  },
+  citas: {
+    graf: { tipo: 'matriz', k: 'Qué cita es', t: 'El lugar lo decide la cita, no lo bueno que es el lugar',
+      sub: 'Dos preguntas acomodan casi cualquier cita: cuánto se conocen y si conviene tener algo que hacer. Para una primera cita, abajo a la izquierda.',
+      y: 'Ya se conocen', x: 'Hay algo que hacer',
+      cuad: [['Cenar o platicar largo', 'Una cena de tres nombres memorizados: Máximo, Lardo o Blanco Colima. La conversación ya fluye.'], ['Una experiencia', 'Xochimilco entre semana, la Casa Barragán o una terraza al atardecer. Se recuerda años.'],
+             ['Café con salida fácil', 'Rosetta, Café Nin o Blend Station. Se termina en 40 minutos sin que nadie quede mal.', 1], ['Algo que mirar', 'Un museo, la lucha o un mercado: el silencio deja de ser incómodo porque hay de qué hablar.']],
+      fuente: 'Las tres preguntas del primer paso de esta ficha.' },
+    quiz: [
+      { q: 'Primera cita con alguien que conociste hace poco. ¿Qué propones?', p: 1, ok: 1,
+        ops: ['Una cena de tres tiempos en el mejor restaurante que conoces', 'Un café corto, de día, con opción de caminar a otro lado si va bien', 'Una fiesta con tus amigos'], por: 'Corto y con salida fácil: si va bien, se alarga; si no, se acaba sin drama.' },
+      { q: 'La conversación todavía cuesta. ¿Qué plan quita presión?', p: 7, ok: 2,
+        ops: ['Una cena larga frente a frente', 'Un bar ruidoso', 'Un museo, la lucha o un mercado: algo que mirar'], por: 'Con algo que mirar, el silencio deja de ser incómodo y la conversación sale sola.' },
+      { q: 'Quieres llevarla a Pujol para su cumpleaños, dentro de dos semanas. ¿Qué pasa?', p: 5, ok: 0,
+        ops: ['Lo más seguro es que ya no haya mesa: se reserva con meses', 'Llegas sin reserva y te sientan', 'Reservas el mismo día'], por: 'Los dos mejores de la ciudad se reservan con semanas o meses. Esa es la parte que la gente descubre tarde.' },
+      { q: 'Reservaste una terraza al atardecer. ¿Qué pides al reservar?', p: 4, ok: 1,
+        ops: ['La mesa más escondida', 'Mesa en la baranda, y preguntar qué pasa si llueve', 'Nada: te sientan donde sea'], por: 'Desde el fondo no se ve nada, y de junio a septiembre la lluvia te manda adentro sin avisar.' },
+      { q: 'Es el día de la cita. ¿Qué haces antes de salir?', p: 8, ok: 2,
+        ops: ['Nada: ya reservaste', 'Buscar un lugar nuevo por si acaso', 'Confirmar la reserva y tener un plan B a cinco minutos caminando'], por: 'Muchos restaurantes de CDMX liberan la mesa a los 15 minutos. Un segundo nombre en el bolsillo resuelve la noche.' },
+      { q: '¿A qué hora llegas?', p: 8, ok: 0,
+        ops: ['Diez minutos antes que la otra persona', 'Justo a la hora', 'Cinco minutos tarde, para no parecer ansioso'], por: 'Que nadie tenga que esperar solo en una banqueta.' },
+      { q: 'Van a un bar de coctelería y tu meta es cero alcohol. ¿Qué pides?', p: 6, ok: 1,
+        ops: ['Lo mismo que la otra persona, por no desentonar', 'Un coctel sin alcohol de la carta, sin dar explicaciones', 'Nada'], por: 'Los bares serios hacen la versión sin alcohol con la misma técnica. Pedirla con naturalidad no se nota.' },
+      { q: 'Te funcionó un lugar. ¿Lo repites?', p: 9, ok: 0,
+        ops: ['Sí: repetir lo que funcionó es parte de dominarlo', 'No: siempre hay que sorprender', 'Solo si no se te ocurre otro'], por: 'Dominarlo es tener tres nombres por categoría y repetir el que funcionó porque funcionó.' }
+    ],
+    pasos: {
+      'Primero: qué cita es': { foto: 'citas-1.jpg', cred: 'ProtoplasmaKid · Wikimedia Commons · CC BY-SA 3.0',
+        pie: 'El camellón de Álvaro Obregón, en la Roma: medio barrio de esta ficha está a unas cuadras de aquí.',
+        cifras: [['3', 'preguntas antes de reservar nada'], ['40 min', 'dura un café: salida fácil para los dos'], ['Ruido', 'el enemigo si quieres conocer a alguien']],
+        calc: { k: 'Decídelo aquí', fn: 'lugar', t: 'Tres lugares para la cita que tienes', sub: 'Salen de las listas de esta ficha; cada uno enlaza a su mapa en el paso donde aparece.',
+          campos: [{ k: 'cita', t: 'Qué cita es', v: 'primera', ops: [['primera', 'Primera cita'], ['conociendo', 'Se están conociendo'], ['celebrar', 'Celebrar algo']] },
+                   { k: 'plan', t: 'Qué conviene', v: 'platicar', ops: [['platicar', 'Platicar'], ['hacer', 'Hacer algo']] },
+                   { k: 'hora', t: 'Cuándo', v: 'dia', ops: [['dia', 'De día'], ['noche', 'De noche']] }],
+          fuente: 'Los lugares de esta ficha, acomodados con sus tres preguntas. Sin precios ni horarios: cambian solos; confírmalos al reservar.' } },
+      'Primera cita — café y salida fácil': { foto: 'citas-2.jpg', cred: 'Tbhotch · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'La Panadería Rosetta, en la calle de Puebla: pequeña, bonita y perfecta para algo corto.',
+        cifras: [['4', 'cafés en Roma Norte, Condesa y Juárez'], ['De día', 'o tarde temprano'], ['0', 'manteles largos en una primera cita']] },
+      'Comer bien de día': { foto: 'citas-3.jpg', cred: 'Phyrexian · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'Pitahayas en el Mercado de San Juan: se come de pie, se prueban cosas raras y la conversación sale sola.',
+        cifras: [['Luz', 'y menos presión que en la noche'], ['Días', 'antes se reserva Contramar'], ['De pie', 'se come en el Mercado de San Juan: da conversación sola']] },
+      'Cenar sin quedar mal': { foto: 'citas-4.jpg', cred: 'Armando Castillejos · Wikimedia Commons · CC0 1.0',
+        pie: 'El restaurante Rosetta, en una casona de la Roma: de los más bonitos de la ciudad, y se reserva con semanas.',
+        cifras: [['3', 'nombres memorizados bastan'], ['Semanas', 'antes se reserva Rosetta'], ['2', 'del mismo equipo: Rosetta y Lardo']] },
+      'Terrazas — cuando la vista es el plan': { foto: 'citas-5.jpg', cred: 'Luisalvaz · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'Bellas Artes desde la Torre Latinoamericana: en Miralto, piso 41, la vista hace la mitad del trabajo.',
+        cifras: [['Piso 41', 'de la Torre Latinoamericana: Miralto'], ['Baranda', 'la mesa que pides al reservar'], ['Jun–sep', 'temporada de lluvias: pregunta por el plan si llueve']],
+        graf: { tipo: 'asi', k: 'Una terraza', t: 'La mitad del motivo de ir es la vista: no la regales',
+          datos: [['Reservar sin pedir nada', 'Pedir mesa en la baranda al reservar'], ['Llegar cuando ya oscureció', 'Llegar antes de que se ponga el sol'], ['Ir en julio sin plan B', 'Preguntar si tienen techo o un lugar adentro']],
+          fuente: 'El método de este paso.' } },
+      'Cuando la ocasión lo pide': { foto: 'citas-6.jpg', cred: 'Nan Palmero · Wikimedia Commons · CC BY 2.0',
+        pie: 'Un plato de pulpo en Pujol: para un aniversario o para celebrar algo de verdad, nunca para una primera cita.',
+        cifras: [['2', 'de los mejores restaurantes del mundo, en Polanco'], ['Meses', 'antes se reserva Pujol'], ['0', 'primeras citas aquí: son para celebrar']],
+        graf: { tipo: 'tabla', k: 'Con cuánto tiempo reservar', t: 'Lo que arruina la noche si no lo sabes', dest: 1,
+          cols: ['Cuánto antes', 'Lugares de esta ficha'],
+          filas: [['Meses', 'Pujol y Quintonil'], ['Semanas', 'Rosetta, para cenar'], ['Con anticipación', 'Contramar, con días; la Casa Estudio Luis Barragán, solo en visita guiada'], ['Siempre con reserva', 'Máximo Bistrot, Handshake y Hanky Panky, que te da la dirección al reservar'], ['Llegas y ya', 'Los cafés, el Mercado de San Juan, la Cineteca y los museos']],
+          fuente: 'Lo que dice cada lugar en esta ficha. Cuando el lugar acepta llegar sin reserva, reservar igual te ahorra la espera.' } },
+      'Copas — la segunda parte': { foto: 'citas-7.jpg', cred: 'LittleT889 · Wikimedia Commons · CC BY 4.0',
+        pie: 'La Licorería Limantour, en la Roma: el bar que puso a la ciudad en el mapa de la coctelería.',
+        cifras: [['Nº 1', 'de la lista mundial de bares: Handshake'], ['Barra', 'sin ruido para hablar: Baltra'], ['0', 'alcohol para ti: pides la versión sin alcohol']],
+        graf: { tipo: 'asi', k: 'Con tu meta de cero alcohol', t: 'El bar es el lugar, no lo que se toma',
+          datos: [['Pedir lo mismo que la otra persona por no desentonar', 'Pedir un coctel sin alcohol de la carta, sin explicaciones'], ['Evitar los bares y quedarte sin plan', 'Ir al bar por la barra, la música y la conversación'], ['Alargar la noche de copa en copa', 'Proponer el siguiente lugar: un postre o una caminata']],
+          fuente: 'Tu meta de cero alcohol, aplicada a este paso.' } },
+      'Citas que no son comer': { foto: 'citas-8.jpg', cred: 'Juan Carlos Fonseca Mata · Wikimedia Commons · CC BY-SA 3.0',
+        pie: 'Una trajinera en Xochimilco: varias horas de conversación, mejor entre semana o temprano.',
+        cifras: [['1 h', 'se recorre el Museo Jumex'], ['2', 'salas de Antropología, no el museo entero'], ['Viernes', 'de lucha en la Arena México']],
+        graf: { tipo: 'barras', k: 'Cuánto dura cada plan', t: 'Elige la duración según cuánto se conocen',
+          sub: 'Horas aproximadas, sin contar el traslado. Lo corto deja salida fácil; lo largo es para cuando ya hay confianza.',
+          u: 'h', datos: [['Café', 0.7, '40 min'], ['Museo Jumex', 1, '1 h'], ['Antropología, dos salas', 1.5, '1 ½ h'], ['Lucha libre', 2, '2 h'], ['Xochimilco en trajinera', 3, '3 h o más']],
+          fuente: 'Lo que dice esta ficha del café, del Jumex y de Xochimilco; la lucha y Antropología, el tiempo típico de una función y de dos salas.' } },
+      'La logística que nadie ve': { foto: 'citas-9.jpg', cred: 'ProtoplasmaKid · Wikimedia Commons · CC BY-SA 3.0',
+        pie: 'El camellón de Amsterdam, en la Condesa: el plan B a cinco minutos caminando casi siempre está en una calle así.',
+        cifras: [['15 min', 'y muchos restaurantes liberan la mesa'], ['10 min', 'antes llegas tú'], ['5 min', 'caminando, tu plan B']],
+        graf: { tipo: 'tiempo', k: 'La noche, en orden', t: 'Lo de alrededor del lugar', dest: [1],
+          datos: [['Días antes', 'Reserva', 'Aunque acepten sin reserva; pregunta por valet en Roma, Condesa y Polanco.'], ['El mismo día', 'Confirma', 'Y ten un segundo nombre a cinco minutos caminando.'], ['10 min antes', 'Llega tú primero', 'Que nadie espere solo en la banqueta.'], ['Al final', 'Paga sin espectáculo', 'Pide la cuenta discretamente o déjala resuelta antes.']],
+          fuente: 'El método de este paso.' } }
+    }
+  },
 };
 
 /* Las calculadoras de Habilidades Base: cada una recibe los valores de sus deslizadores y devuelve tres cifras, a veces una
@@ -2405,6 +2567,46 @@ const HB_CALC = {
       quesos: ['Tinto con cuerpo', 'Cabernet Sauvignon', 'Los quesos curados aguantan el tanino.']
     }[v.plato] || ['', '', ''];
     return { cifras: [[M[0], 'el estilo'], [M[1], 'la uva para pedir'], ['Sin alcohol', 'también existe: pide la versión 0.0 si la hay']], nota: M[2] };
+  },
+  // Coctelería: la versión sin alcohol de cada clásico, con la misma estructura y la misma técnica.
+  virgen(v) {
+    const R = {
+      margarita: [['Agua mineral', '60 ml, bien fría, en lugar del tequila'], ['30 / 20 ml', 'de limón y de jarabe de agave'], ['15 s', 'agitando; sal en media orilla']],
+      daiquiri: [['Agua mineral', '60 ml en lugar del ron'], ['25 / 20 ml', 'de limón y de jarabe'], ['Agitar', 'fuerte y colar en copa fría']],
+      mojito: [['Soda', 'al final, en lugar del ron'], ['Hierbabuena', 'golpeada, con limón y jarabe'], ['Vaso alto', 'construido sobre hielo']],
+      highball: [['Tónica', 'o ginger ale, unos 150 ml'], ['Limón', 'o pepino, o una ramita de romero'], ['1 vuelta', 'en vaso frío lleno de hielo']],
+      negroni: [['Jamaica', '30 ml de té concentrado: el color y el ácido'], ['Toronja', '30 ml de jugo y 15 ml de jarabe'], ['Revolver', 'con hielo y cáscara de naranja']],
+      oldfashioned: [['Té negro', '60 ml, fuerte y frío, en lugar del whisky'], ['Jarabe', 'una cucharadita, y cáscara de naranja'], ['Sin bitters', 'llevan alcohol; revuelto sobre un cubo grande']]
+    }[v.trago] || [['', ''], ['', ''], ['', '']];
+    return { cifras: R, nota: 'Misma ecuación, mismo hielo, misma dilución: si la versión sin alcohol te sale bien balanceada, la de tus invitados también.' };
+  },
+  // Citas: tres lugares de la ficha según qué cita es, qué conviene y a qué hora; sin precios ni horarios.
+  lugar(v) {
+    const L = {
+      primera: {
+        platicar: { dia: [['Blend Station', 'Condesa · informal y luminoso'], ['Café Nin', 'Juárez · mesas de verdad para hablar sin prisa'], ['Cardinal Casa de Café', 'Juárez · si le gusta el café, ganas puntos']],
+          noche: [['Terraza Cha Cha Chá', 'Juárez · la vista del Ángel hace la mitad del trabajo'], ['Miralto', 'Centro · piso 41, vale aunque solo suban un rato'], ['Lardo', 'Condesa · comer muy bien sin formalidad']] },
+        hacer: { dia: [['Museo Jumex', 'Polanco · se recorre en una hora'], ['Mercado de San Juan', 'Centro · se prueban cosas raras de pie'], ['Museo Nacional de Antropología', 'Chapultepec · dos salas, no el museo entero']],
+          noche: [['Arena México', 'Doctores · lucha libre los viernes'], ['Cineteca Nacional', 'Xoco · y la terraza para hablar después'], ['Miralto', 'Centro · la ciudad entera abajo']] }
+      },
+      conociendo: {
+        platicar: { dia: [['Contramar', 'Roma Norte · solo a la hora de la comida; reserva con días'], ['Fonda Fina', 'Roma Norte · ambiente relajado'], ['Merotoro', 'Condesa · sala tranquila']],
+          noche: [['Máximo Bistrot', 'Roma Norte · impresiona sin ser solemne'], ['Lardo', 'Condesa · mediterráneo informal'], ['Blanco Colima', 'Roma Norte · casona con varios ambientes']] },
+        hacer: { dia: [['Xochimilco', 'mejor entre semana o temprano'], ['El Mayor', 'Centro · comer después del Templo Mayor'], ['Casa Estudio Luis Barragán', 'Tacubaya · solo con reserva y visita guiada']],
+          noche: [['Arena México', 'Doctores · ruidoso y divertidísimo'], ['Cineteca Nacional', 'Xoco · cine que no llega a las salas comerciales'], ['Terraza Cha Cha Chá', 'Juárez · al atardecer']] }
+      },
+      celebrar: {
+        platicar: { dia: [['Quintonil', 'Polanco · reserva con mucha antelación'], ['Pujol', 'Polanco · se reserva con meses'], ['Balcón del Zócalo', 'Centro · mesa en la orilla, frente a la Catedral']],
+          noche: [['Pujol', 'Polanco · el mole madre; se reserva con meses'], ['Quintonil', 'Polanco · sala pequeña'], ['Rosetta', 'Roma Norte · reserva con semanas']] },
+        hacer: { dia: [['Casa Estudio Luis Barragán', 'Tacubaya · patrimonio de la humanidad'], ['Xochimilco', 'una trajinera con comida a bordo'], ['Balcón del Zócalo', 'Centro · comer frente a la plaza']],
+          noche: [['Toledo Rooftop', 'Cuauhtémoc · la más íntima de la lista'], ['Miralto', 'Centro · la vista más alta del Centro'], ['Rosetta', 'Roma Norte · de los más bonitos de la ciudad']] }
+      }
+    };
+    const N = { primera: 'Corto y con salida fácil: si va bien, caminan a otro lado; si no, se acaba sin drama.',
+      conociendo: 'Reserva aunque acepten sin reserva, confírmala el mismo día y ten un plan B a cinco minutos.',
+      celebrar: 'Pujol y Quintonil se reservan con meses: si la fecha importa, aparta hoy.' };
+    const r = ((L[v.cita] || L.primera)[v.plan] || {})[v.hora] || [];
+    return { cifras: r.map(x => [x[0], x[1]]), nota: N[v.cita] || '' };
   },
   // Con un precio (1 + p) veces más alto, el mismo ingreso sale con 1 / (1 + p) del trabajo.
   precio(v) {
