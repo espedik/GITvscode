@@ -338,7 +338,8 @@ el 16), así que los importes son los del maestro; pide confirmación si ya exis
 
 `setDashMonth(ym)` → `renderDashboard()`: tabs de meses (actual → diciembre), banner de
 proyección para meses futuros con cargar/quitar recurrentes, fondo de emergencia inline, 4 KPIs
-(Balance, Ingresos, Gastos, Activos), la tarjeta del mes (abajo) y llama a `renderInsights`
+(Balance, Ingresos, Gastos y Activos —todos los activos, de `CIFRAS.patrimonio()`: lo mismo que el total de
+Patrimonio; ahí iban solo las inversiones—), la tarjeta del mes (abajo) y llama a `renderInsights`
 (Patrimonio Neto, Dinero Libre, DTI, Tasa de Ahorro), `renderDashCharts`, `renderSpecials`,
 `renderSubscriptions`, `renderRecent` (últimas 7), `renderAlerts` (presupuestos ≥ 70 %).
 
@@ -349,7 +350,8 @@ la Maestría salía «alcanzable» y la tasa de ahorro en 100 %. El balance dice
 personal*: ese no está previsto. Los meses futuros siguen con `getMonthProjection`.
 
 **Tu quincena** (`renderQuincena(m)`, en `#d-income`, solo el mes actual; los demás meses llevan el
-desglose de ingresos): la quincena en curso y cuándo entra la siguiente, un botón *Registrar un
+desglose de ingresos): la quincena en curso y cuándo entra la siguiente —la que llegó antes
+(`PROYECTO.quincenaAdelantada`) dice el día en que entró y que pagó la BBVA y lo fijo de su día—, un botón *Registrar un
 gasto* (`openTxModal()`) y tres bloques, todos del maestro —lo mismo que pinta el calendario del
 Dashboard—:
 
@@ -416,7 +418,9 @@ por su cuenta después no se lo revierte. **Las nuevas van a `MIGRACIONES` en
 `finanzasmx_v2` existe en las dos apps** (Dashboard la replica) porque Adán suele abrir el
 Dashboard primero.
 
-`init()`: `seedData()` → `load()` → migraciones → crea `ef-001` si falta → `dashMonth = nowYM()` →
+`init()`: `seedData()` → los abonos del plan y las mensualidades que ya tocaron (`CIFRAS.aplicarPlanBbva`,
+`aplicarPagosFijos`: en un navegador en blanco la semilla llega después de que el maestro los aplicó, y la primera
+vez Finanzas daba la deuda y el patrimonio de ayer) → `load()` → migraciones → crea `ef-001` si falta → `dashMonth = nowYM()` →
 fecha del topbar → `f-month` → listener de resize (`#menuBtn` bajo 640 px) → `renderDashboard()` →
 auto-fetch del precio BTC si tiene más de 15 minutos y hay historial.
 

@@ -8910,7 +8910,8 @@ window.CIFRAS = (function () {
           pal: ['didi', 'uber', 'viajes'], txCat: 'Freelance/Honorarios' },
         { t: 'Vale de despensa', tipo: 'inc', cat: '__entra', monto: PROYECTO.siVale,
           pal: ['vale', 'sivale'] },
-        { t: 'Comer', tipo: 'exp', cat: 'comida', monto: comerEnMes(k, come) * nDias,
+        // Al peso por día, como lo pinta cada día el calendario del Dashboard: el mes cuadra con el suyo.
+        { t: 'Comer', tipo: 'exp', cat: 'comida', monto: Math.round(comerEnMes(k, come)) * nDias,
           pal: ['comer', 'comida', 'despensa', 'super', 'supermercado', 'mandado', 'alimentacion'] }
       ].filter(function (x) { return +x.monto > 0; });
 

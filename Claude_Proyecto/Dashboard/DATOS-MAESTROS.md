@@ -40,7 +40,8 @@ Cada mes se arma en **dos capas**:
 1. **Lo previsto** — lo que ya se sabe y no cambia: las dos quincenas, la renta, el crédito
    del auto, los servicios y los mínimos de las tarjetas (de `CALENDARIO.cobros` y del
    `day`/`min` de cada deuda), más los tres que van por **total mensual** y no tienen día:
-   Didi, el vale y lo que cuesta comer.
+   Didi, el vale y lo que cuesta comer —al peso por día, como lo pinta el calendario del Dashboard, así que
+   los gastos del mes de Finanzas y el *Sale* del Plan Maestro dan lo mismo—.
    Lo que se aparta —el ahorro de cada quincena, cobros con `ahorro: true`— **no es
    gasto**: no suma a los gastos, pero se queda en la lista contra la que `yaContado` compara, para
    que una transacción que lo anote no se cuente encima.

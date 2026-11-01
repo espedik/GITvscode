@@ -2786,6 +2786,8 @@ function renderQuincena(m){
   const finMes=new Date(hoy.getFullYear(),hoy.getMonth()+1,0).getDate();
   const sigQ=q1?new Date(hoy.getFullYear(),hoy.getMonth(),15):new Date(hoy.getFullYear(),hoy.getMonth()+1,1);
   const quinc=P.sueldoQuinc||Math.round((P.sueldo||0)/2);
+  // La quincena que llegó antes (PROYECTO.quincenaAdelantada): entró el día que se liquidó la BBVA y con ella se pagó.
+  const PQ=C.PROYECTO||{}, adelQ=PQ.quincenaAdelantada===C.fechaLocal(new Date(hoy.getFullYear(),hoy.getMonth(),q1?1:15))&&PQ.bbvaLiquida?fIso(PQ.bbvaLiquida):null;
 
   // 1. Próximos pagos: 15 días
   const pagos=[];
@@ -2838,7 +2840,7 @@ function renderQuincena(m){
     <div class="card" style="padding:16px 20px">
       <div class="qn-cab">
         <h3>💰 Tu quincena</h3>
-        <p>Del ${q1?1:15} al ${q1?14:finMes} de ${DM[hoy.getMonth()]} · entraron <b>${fmt(quinc)}</b> el día ${q1?1:15} · la siguiente, el <b>${corto(sigQ)}</b>.</p>
+        <p>Del ${q1?1:15} al ${q1?14:finMes} de ${DM[hoy.getMonth()]} · entraron <b>${fmt(quinc)}</b> ${adelQ?'el <b>'+corto(adelQ)+'</b>, antes de tiempo: pagaron la BBVA y lo fijo del día '+(q1?1:15):'el día '+(q1?1:15)} · la siguiente, el <b>${corto(sigQ)}</b>.</p>
         <button class="btn btn-p btn-sm" onclick="openTxModal()">+ Registrar un gasto</button>
       </div>
       <div class="qn-grid">
@@ -3000,7 +3002,7 @@ function renderDashboard() {
     </div>
     <div class="card">
       <div class="card-title">📈 Activos Totales</div>
-      <div class="card-val tc-p">${fmt(totInv)}</div>
+      <div class="card-val tc-p">${fmt(window.CIFRAS&&CIFRAS.patrimonio?(()=>{const P=CIFRAS.patrimonio(S);return P.neto+P.deuda;})():totInv)}</div>
       <div class="card-sub">Deuda total: ${fmt(totDebt)}</div>
     </div>`;
 
@@ -4974,6 +4976,12 @@ function delBtc(id) {
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 function init() {
   seedData();
+  // En un navegador en blanco la semilla llega después de que el maestro aplicó lo del día (todavía no había datos):
+  // los abonos del plan y las mensualidades que ya tocaron se aplican aquí, antes de pintar. Sin esto, la primera vez
+  // Finanzas daba la deuda y el patrimonio de ayer y el Dashboard los de hoy. Con datos no hace nada: ya se aplicaron.
+  if(window.CIFRAS&&CIFRAS.aplicarPlanBbva&&CIFRAS.aplicarPagosFijos){
+    try{ if(CIFRAS.aplicarPlanBbva()+CIFRAS.aplicarPagosFijos()) CIFRAS.refrescar(); }catch(e){}
+  }
   load();
   // Migración: actualizar meta maestría de 300k → 500k
   const _maeGoal=S.goals.find(g=>g.id==='g001');
