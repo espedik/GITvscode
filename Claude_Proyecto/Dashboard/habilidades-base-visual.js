@@ -1971,6 +1971,95 @@ const HB_VISUAL = {
           nota: 'Cuando te salga sin mirar, hazlo con los ojos cerrados: así lo vas a necesitar de noche o con prisa.' } }
     }
   },
+  brujula: {
+    graf: { tipo: 'columnas', k: 'Por qué importa un grado', t: 'Un error pequeño de rumbo se vuelve enorme con la distancia',
+      sub: 'Metros que te desvías al caminar 10 km con un rumbo equivocado por unos cuantos grados. Ignorar la declinación del centro de México, unos 4°, ya te saca casi 700 m.',
+      u: 'm', datos: [['1°', 175, '175 m'], ['2°', 349, '349 m'], ['4°', 699, '699 m'], ['5°', 875, '875 m'], ['10°', 1763, '1.8 km']], dest: [2],
+      fuente: 'Trigonometría: desvío = distancia × tangente del error. La declinación, del modelo magnético mundial de NOAA.' },
+    quiz: [
+      { q: 'Viniste con rumbo 60°. ¿Con qué rumbo regresas?', p: 4, ok: 1,
+        ops: ['120°', '240°', '300°'], por: 'El rumbo inverso: si es menor de 180, sumas 180; si es mayor, restas 180.' },
+      { q: 'Y si viniste con rumbo 250°, ¿con cuál regresas?', p: 4, ok: 0,
+        ops: ['70°', '430°', '110°'], por: 'Como es mayor de 180, restas: 250 − 180 = 70°.' },
+      { q: '¿A dónde apunta la aguja roja de la brújula?', p: 2, ok: 2,
+        ops: ['Al norte verdadero', 'Al norte del mapa', 'Al norte magnético, que no es el mismo que el verdadero'], por: 'La diferencia es la declinación: en el centro de México, unos 4° al este.' },
+      { q: 'Te desorientaste en el monte. ¿Qué es lo primero?', p: 8, ok: 0,
+        ops: ['Detenerte y sentarte: STOP', 'Caminar más rápido para encontrar el camino', 'Bajar por cualquier barranca'], por: 'Casi todos empeoran su situación por seguir caminando. Siéntate, piensa, observa y planea; si no hay plan con información, quédate.' },
+      { q: '¿Cómo sabes dónde estás con la brújula y el mapa?', p: 6, ok: 1,
+        ops: ['Mirando el sol', 'Con el rumbo a dos referencias que ves y encuentras en el mapa: donde se cruzan sus líneas, estás tú', 'Contando pasos'], por: 'Es la triangulación. Practícala un día que sí sepas dónde estás.' },
+      { q: 'Tomas un rumbo junto al coche y la aguja se mueve rara. ¿Qué pasa?', p: 12, ok: 2,
+        ops: ['La brújula se descompuso', 'Hay mucha altura', 'El metal desvía la aguja: aléjate del coche, la navaja y el celular'], por: 'Unos metros lejos del coche y sin metal en la mano, la lectura vuelve a ser buena.' },
+      { q: '¿Es fiable el musgo para saber dónde está el norte?', p: 7, ok: 1,
+        ops: ['Sí, siempre crece del lado norte', 'No: crece donde hay sombra y humedad, que depende del lugar', 'Solo en México'], por: 'Es un mito. El sol, un reloj de manecillas o la estrella polar sirven más.' },
+      { q: 'En un mapa 1:50,000, ¿cuánto es 1 cm?', p: 10, ok: 0,
+        ops: ['500 m', '50 m', '5 km'], por: '50,000 cm son 500 m. Es la escala de la mayoría de las cartas topográficas del INEGI.' }
+    ],
+    pasos: {
+      'Por qué sigue valiendo la pena': { foto: 'brujula-1.jpg', cred: 'Kenneth Allen · Wikimedia Commons · CC BY-SA 2.0',
+        pie: 'Una brújula de placa base sobre el pasto: sin pilas, sin señal y sin actualizaciones.',
+        cifras: [['60 g', 'pesa una brújula'], ['0', 'pilas, satélites o señal'], ['2', 'mejor que uno: GPS y brújula']] },
+      'Las partes de la brújula': { foto: 'brujula-2.jpg', cred: 'Tiia Monto · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'La placa transparente con reglas, el limbo de 360° y la flecha de dirección: las partes que vas a usar.',
+        cifras: [['5', 'partes'], ['360°', 'en el limbo'], ['Roja', 'la punta que va al norte magnético']],
+        graf: { tipo: 'tabla', k: 'Las partes', t: 'Qué hace cada una', dest: 1,
+          cols: ['Parte', 'Qué hace'],
+          filas: [['Placa base', 'Transparente y con reglas: mide sobre el mapa'], ['Flecha de dirección', 'Apunta a donde vas'], ['Limbo', 'El anillo de 360° que giras'], ['Aguja', 'La punta roja va al norte magnético'], ['Flecha de orientación', 'El «establo» donde metes la aguja roja']],
+          fuente: 'Una brújula de placa base, como las Silva o Suunto.' } },
+      'Los tres nortes': { foto: 'brujula-3.jpg', cred: 'Gabriel Fredrick Sindahnai · Wikimedia Commons · CC BY 4.0',
+        pie: 'La punta roja de la aguja va al norte magnético, que en el centro de México está unos 4° al este del verdadero.',
+        cifras: [['3', 'nortes: verdadero, magnético y de cuadrícula'], ['≈ 4° E', 'la declinación en el centro de México'], ['87 m', 'te desvías por kilómetro con 5° de error']],
+        calc: { k: 'Calcúlalo', fn: 'desvio', t: 'Cuánto te desvías si ignoras unos grados',
+          sub: 'Mueve el error de rumbo y lo que caminas.',
+          campos: [{ k: 'grados', t: 'Error de rumbo', min: 1, max: 15, paso: 1, v: 4, u: '°' }, { k: 'km', t: 'Lo que caminas', min: 1, max: 20, paso: 0.5, v: 10, u: 'km' }],
+          fuente: 'Desvío = distancia × tangente del error.' } },
+      'Tomar un rumbo hacia algo que ves': { foto: 'brujula-4.jpg', cred: 'Servicio de Pesca y Vida Silvestre de EE. UU. · Wikimedia Commons · dominio público',
+        pie: 'Tomar un rumbo: la flecha hacia el objetivo, el limbo hasta meter el rojo en el establo, y leer el número.',
+        cifras: [['4', 'pasos'], ['«El rojo en el establo»', 'la frase que lo resume'], ['1', 'punto visible en la línea, para no zigzaguear']],
+        graf: { tipo: 'tiempo', k: 'El rumbo', t: 'Cuatro pasos', dest: [1],
+          datos: [['1', 'Apunta', 'La flecha de dirección hacia el objetivo.'], ['2', 'Gira el limbo', 'Hasta que el rojo quede en el establo.'], ['3', 'Lee', 'El número en el índice: tu rumbo.'], ['4', 'Camina', 'Hacia un punto visible en esa línea.']],
+          fuente: 'El método de este paso.' } },
+      'El rumbo inverso: volver por donde viniste': { foto: 'brujula-5.jpg', cred: 'Hermann · Wikimedia Commons · CC0 1.0',
+        pie: 'De regreso por el mismo camino: el rumbo de ida más o menos 180°.',
+        cifras: [['180°', 'que sumas o restas'], ['1', 'rumbo anotado al salir'], ['0', 'pérdidas en una caminata de ida y vuelta']],
+        calc: { k: 'Calcúlalo', fn: 'inverso', t: 'Tu rumbo de regreso', sub: 'Pon el rumbo con el que saliste.',
+          campos: [{ k: 'rumbo', t: 'Rumbo de ida', min: 0, max: 359, paso: 1, v: 60, u: '°' }],
+          fuente: 'Si es menor de 180, sumas 180; si es mayor o igual, restas 180.' } },
+      'Orientar el mapa': { foto: 'brujula-6.jpg', cred: 'Alex Andrews · StockSnap · CC0 1.0',
+        pie: 'Una brújula sobre el mapa: alineas sus líneas norte-sur y giras los dos juntos hasta que coincidan con el terreno.',
+        cifras: [['1', 'línea norte-sur del mapa con el borde de la placa'], ['Juntos', 'giran el mapa y la brújula'], ['=', 'el mapa coincide con el terreno']] },
+      'Triangulación: saber dónde estás': { foto: 'brujula-7.jpg', cred: 'Frankemann · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'Desde una cumbre se ven cerros y lagos que también están en el mapa: con dos de ellos, triangulas dónde estás.',
+        cifras: [['2 o 3', 'referencias visibles'], ['1', 'cruce de líneas: ahí estás'], ['Inverso', 'el rumbo que trazas en el mapa']],
+        graf: { tipo: 'tiempo', k: 'Triangular', t: 'Dos referencias bastan', dest: [3],
+          datos: [['1', 'Dos puntos', 'Que veas y encuentres en el mapa.'], ['2', 'Sus rumbos', 'Con la brújula, a cada uno.'], ['3', 'Las líneas', 'Desde cada punto, su rumbo inverso.'], ['4', 'El cruce', 'Ahí estás.']],
+          fuente: 'El método de este paso.' } },
+      'Orientarte sin brújula': { foto: 'brujula-8.jpg', cred: 'TedQuackenbush · Wikimedia Commons · CC BY-SA 3.0',
+        pie: 'Las estrellas giran alrededor de la polar: si la encuentras, ahí está el norte.',
+        cifras: [['Este', 'por donde sale el sol, aproximado'], ['5×', 'la distancia entre las dos estrellas de la Osa Mayor hasta la polar'], ['0', 'confianza en el musgo']] },
+      'Si te pierdes de verdad': { foto: 'brujula-9.jpg', cred: 'Oficina de Administración de Tierras de EE. UU. · Wikimedia Commons · dominio público',
+        pie: 'En un bosque cerrado todo se parece: STOP antes de seguir caminando.',
+        cifras: [['STOP', 'siéntate, piensa, observa y planea'], ['3', 'pitidos: la señal de auxilio'], ['1', 'aviso a alguien de a dónde vas y a qué hora vuelves']],
+        graf: { tipo: 'tiempo', k: 'STOP', t: 'El protocolo que vale más que cualquier técnica', dest: [0],
+          datos: [['S', 'Siéntate', 'Deja de caminar.'], ['T', 'Piensa', '¿Cuándo supiste dónde estabas por última vez?'], ['O', 'Observa', 'Mapa, brújula y referencias grandes.'], ['P', 'Planea', 'Y si no hay plan con información, quédate.']],
+          fuente: 'Protocolo STOP de búsqueda y rescate, que enseñan los servicios de parques y de protección civil.' } },
+      'Practicarlo en la ciudad y en el monte': { foto: 'brujula-10.jpg', cred: 'Juan Carlos Fonseca Mata · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'El Lago de la Luna, en el Nevado de Toluca: un buen lugar para la caminata de prueba, navegando con mapa y brújula.',
+        cifras: [['4', 'ejercicios, en orden'], ['60–70', 'pasos dobles en 100 m, más o menos: mide los tuyos'], ['0', 'celular en la mano al practicar']] },
+      'Leer un mapa topográfico': { foto: 'brujula-11.jpg', cred: 'Internet Archive Book Images · Wikimedia Commons · sin restricciones conocidas',
+        pie: 'Cómo un cerro se vuelve curvas de nivel: juntas son pendiente fuerte; separadas, suave.',
+        cifras: [['1:50,000', 'la escala de la mayoría de las cartas del INEGI'], ['500 m', 'por cada centímetro'], ['Juntas', 'las curvas de nivel: pendiente fuerte']],
+        graf: { tipo: 'tabla', k: 'Los colores', t: 'Qué significa cada color de un mapa topográfico', dest: 1,
+          cols: ['Color', 'Qué marca'],
+          filas: [['Verde', 'Vegetación'], ['Azul', 'Agua: ríos, lagos y arroyos'], ['Café', 'Las curvas de nivel'], ['Negro', 'Construcciones y caminos']],
+          fuente: 'Simbología de las cartas topográficas del INEGI.' } },
+      'Navegar de verdad: las técnicas que usan los que saben': { foto: 'brujula-12.jpg', cred: 'Caumasee · Wikimedia Commons · CC BY-SA 4.0',
+        pie: 'Una corredora de orientación en su punto de control: llegar a un punto pequeño apuntando a uno grande primero.',
+        cifras: [['1', 'punto de ataque grande antes del objetivo chico'], ['Sesgo', 'a un lado, a propósito'], ['90°', 'para rodear un obstáculo contando pasos']] },
+      'Lo que hay que llevar y evitar': { foto: 'brujula-13.jpg', cred: 'Oficina de Administración de Tierras de EE. UU. · Wikimedia Commons · dominio público',
+        pie: 'Lo que se lleva: mapa protegido, brújula, celular en modo avión con batería extra, silbato y botiquín.',
+        cifras: [['0', 'metal cerca al tomar un rumbo'], ['Avión', 'el modo del celular: el GPS sigue funcionando'], ['3', 'pitidos de silbato: auxilio']] }
+    }
+  },
 };
 
 /* Las calculadoras de Habilidades Base: cada una recibe los valores de sus deslizadores y devuelve tres cifras, a veces una
@@ -2014,6 +2103,18 @@ const HB_CALC = {
     const sw = v.braz + v.seg, por100 = v.seg * 4, m = Math.floor(por100 / 60), s = Math.round(por100 % 60);
     return { cifras: [[String(sw), 'tu SWOLF en 25 m'], [m + ':' + String(s).padStart(2, '0'), 'tu ritmo por 100 m'], [(25 / v.braz).toLocaleString('es-MX', { maximumFractionDigits: 2 }) + ' m', 'avanzas con cada brazada']],
       nota: sw > 60 ? 'Empieza por la posición del cuerpo y el deslizamiento: bajar brazadas es más fácil que bajar segundos.' : sw > 45 ? 'Vas bien. Anótalo hoy y compáralo en un mes: si baja con el mismo esfuerzo, tu técnica mejoró.' : 'Muy eficiente: cuida que no sea a costa de cansarte en el segundo largo.' };
+  },
+  // Desvío lateral por un error de rumbo: distancia × tangente del error.
+  desvio(v) {
+    const m = v.km * 1000 * Math.tan(v.grados * Math.PI / 180), txt = m >= 1000 ? (m / 1000).toLocaleString('es-MX', { maximumFractionDigits: 1 }) + ' km' : Math.round(m) + ' m';
+    return { cifras: [[txt, 'te desvías al final'], [Math.round(m / v.km) + ' m', 'por cada kilómetro'], [v.grados + '°', 'de error de rumbo']],
+      nota: m > 200 ? 'Más de lo que alcanzas a ver en el monte: por eso se corrige la declinación y se toma el rumbo lejos de cualquier metal.' : 'Poco, pero suma: en una caminata larga, revisa el rumbo en cada punto visible.' };
+  },
+  // El rumbo de regreso: si es menor de 180 se suma 180; si no, se resta.
+  inverso(v) {
+    const r = v.rumbo < 180 ? v.rumbo + 180 : v.rumbo - 180;
+    return { cifras: [[r + '°', 'tu rumbo de regreso'], [(v.rumbo < 180 ? '+' : '−') + '180°', v.rumbo < 180 ? 'sumaste: era menor de 180' : 'restaste: era de 180 o más'], [v.rumbo + '°', 'tu rumbo de ida']],
+      nota: 'Anótalo al salir, en el celular o en un papel: es lo que te devuelve al coche si todo lo demás falla.' };
   },
   // Con un precio (1 + p) veces más alto, el mismo ingreso sale con 1 / (1 + p) del trabajo.
   precio(v) {
