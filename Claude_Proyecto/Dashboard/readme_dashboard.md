@@ -88,7 +88,7 @@ llegando.
 | Tema | Pantalla | Qué muestra | Prompt |
 |---|---|---|---|
 | `theme-dia` | **Mi Día** | La principal. Agenda del día, el AHORA y cuatro módulos | `midia` |
-| `theme-coach` | **Plan Maestro** | Fase activa, los 8 medidores del dinero y el tablero mes / día / semana | `planmaestro` |
+| `theme-coach` | **Plan Maestro** | La ruta de las fases, el mes en curso con su auditoría, los 8 medidores del dinero y el tablero mes / día / semana | `planmaestro` |
 | `theme-metas` | **Mis Metas** | La línea del tiempo de las metas y 12 metas con su plan | `metas` |
 | `theme-basicas` | **Habilidades Base** | 27 fichas de vida práctica con sus videos. **Única fuente**: la sección equivalente de Coach se eliminó | `basicas` |
 | `theme-skills` | **En qué invertir tu tiempo** | La interfaz de Habilidades Base: sus indicadores, las 12 habilidades como fichas y el plan de foco; cada una abre su ruta en la ventana de detalle | `skills` |
@@ -798,82 +798,157 @@ tokens procesados (11.4 k de salida), medido; las búsquedas son el grueso, y el
 La pantalla 2, de arriba abajo: su rótulo pequeño, *Coach · Plan Maestro*; **la ruta de las cinco fases**; **el mes en
 curso**; **los ocho medidores** del dinero y del plan, y tres columnas: **el mes, el día que toques y la semana a la que
 pertenece**. Diseño: Main de `diseno-planmaestro/` (Adán, 22-oct-2026: *"el diseño de las fases del dashboard no me
-gusta porque no me muestra info útil, y además cuando doy click me muestra la otra información, pero como que eso no
-cuadra… arregla todo el diseño, deja el calendario y lo de las cifras"*). Lo que no cuadraba: la banda de antes resumía
-la fase con su propio diseño (*2 de 11*, meses con *8 tareas*) y la ventana enseñaba otra cosa. Ahora la ruta y el mes
-en pantalla **son las piezas de la ventana de las fases**, con sus mismas clases y funciones.
+gusta porque no me muestra info útil… arregla todo el diseño, deja el calendario y lo de las cifras"*). **Todo lo de
+las fases se ve y se hace aquí, sin ventana aparte** (Adán, 1-nov-2026: una ventana con lo mismo *"es muy
+redundante"*): cambiar de fase, de mes y auditar ocurre en su lugar.
 
-- **La ruta** (`#coachFaseBand`, `fzRutaHtml(true)`): la misma de la ventana —una tarjeta por fase con su color, su
-  nombre y sus fechas en un renglón, su título y cómo va: *2 meses · ✓ cerrada*, *día 21 de 182 · quedan 161 días*
-  con su barra en la fase en curso, *empieza en 5 meses*—; el porqué de la fase (`explica`) va en su título. **Tocar una
-  la enseña debajo, aquí mismo, sin ventana** (`cfbFase`; Adán, 25-oct-2026: *"en las fases ya no abras una ventana, ahí
-  mismo cuando des click en alguna fase ahí mismo muéstrame la información"*): la marcada en la ruta es la que se ve
-  (`_pmFase`, null mientras sea la de hoy). En la ventana, `fzRutaHtml(false)` cambia de fase (`kpiFaseTab`), y solo la
-  ruta de la ventana: la de la pantalla no se mueve.
-- **El mes en curso, o la fase que tocaste** (`#pmMes`, `pmMesHtml()`, pintado con la ruta por `pmPintar()` en el color de
-  la fase que se ve). La fase de hoy abre en el mes de hoy; otra fase, en su *Información general*, con sus meses en
-  pestañas y **← Volver a hoy** (`pmVolverHoy`) junto al título. El mes es la ficha del mes de la ventana en corto. Arriba su nombre y su estado
-  (*ESTE MES*, *AUDITADO*, *SIN AUDITAR*), la fase, sus días y cuándo se audita (*se audita desde el 25 · en 4 días*), y
-  sus pestañas —*Información general* y los meses de la fase, con el punto de su auditoría—. **Las pestañas cambian lo
-  que se ve aquí mismo, sin abrir la ventana** (`pmVer`, `_pmVista`; Adán, 22-oct-2026: *"cuando quiero cambiar de mes,
-  en los subtabs, no se actualiza la información… solamente quiero que se abran las ventanas cuando des click en alguna
-  fase"*). Un mes (`pmMesVistaHtml`) trae, si el anterior cerró
-  sin auditar, el aviso con *Auditar septiembre*, y **columnas iguales** (Adán, 25-oct-2026: *"acomoda
-  simétricamente las columnas"*; también en la información general). Van solo las que traen algo (`pmColumnas`): la
-  Fase 0 no tiene checkpoint ni cosas de la salida y dejaba huecos en medio. Con dos, la de tu dinero conserva el ancho
-  de un tercio, como en las demás fases, y las tareas van en dos columnas parejas en el resto (`.pm-c2`); con una sola,
-  también (`.pm-c1`). Las columnas: **lo que tiene que quedar hecho** —las tareas de la
-  fase, las que pasaron del mes anterior y las correcciones; hasta cinco y, en el mes de hoy, la primera pendiente con
-  *Te toca*—; **para la salida a Alemania** —tres, las
-  pendientes primero— y *lo que sostienes todo el mes*; y **tu dinero, en palabras** (`pmCifrasHTML`; Adán,
-  25-oct-2026: *"las cifras de dinero que están ahí no son claras"*). **Tiene el mismo formato en cada mes y en cada
-  fase** (`pmDineroTarjeta`, `.pm-dinero`; Adán: *"lo de mi dinero debe tener el mismo formato en las demás fases"*):
-  una tarjeta para tu dinero y otra para tu tarjeta BBVA mientras el plan le ponga meta, cada una con la cifra real en
-  grande —la de hoy o, en un mes auditado, la que se guardó al auditar— y, debajo, *El plan espera $0 al 30 nov* y
-  cómo vas contra eso: *✓ llevas $1,506 más de lo que pide* en verde; mientras no cierra —el mes en curso, aunque ya se
-  pueda auditar, o uno que viene— lo que falta, en ámbar (*te falta bajarla $2,300 antes del 30 nov*, *te faltan
-  $153,548 para el 31 may 2027*), porque el abono o el ahorro que falta puede llegar; y con el mes cerrado, *✗ quedaste
-  … arriba* en rojo. La fecha lleva el año cuando no es el de hoy (`pmAl`). Un mes de la Fase 0, anterior al plan de
-  dinero, enseña lo de hoy y que el plan arranca en octubre de 2026 (`pmDineroAntes`). La cuenta es la de la ficha de la
-  ventana (`fzmCifrasDatos`, que también dibuja `fzmCifrasHTML`), así que nunca dicen cosas distintas; sin el
-  patrimonio líquido (Adán, 21-oct-2026: *"quita la información del checkpoint, lo de patrimonio líquido, el auto y el
-  iPhone"*). Bajo 1180 px, cuando tu dinero pasa a lo ancho, sus tarjetas van de dos en dos. Las tareas se palomean aquí mismo, en la misma casilla que la ventana y Mi Día: el mes
-  de hoy en la semana de hoy (`pmCheck`), otro mes como lo hace su ficha (`fzmCheck`); un mes ya auditado enseña lo que
-  quedó, sin casilla. *Y 3 más…* y *Lo que sostienes* se despliegan en su lugar (`pmDespliega`); *Ver el mes completo en
-  la ventana* y *Auditar* son lo único que la abre. **La información general** (`pmGenHtml`) es la de la ventana en
-  corto, en las mismas tres columnas que el mes (`.pm-gen`): la meta de la fase y lo que dejas de hacer, en fichas con
-  solo su cabeza y el porqué en su `title`; el checkpoint con sus dos salidas y cómo va —el mismo bloque y la misma
-  cuenta que la ventana, `fzvVaHTML` y `fzvAvance`, solo si la fase ya empezó: en una que viene diría *aún no cierra
-  ninguno* y su fecha, que ya están en la ruta—; y **tu dinero en esta fase** (`pmDineroFase`), con las mismas
-  tarjetas: la última meta que el plan le pone a cada cifra dentro de la fase —en la Fase 1, tu dinero al 31 mar 2027 y
-  la meta de la BBVA, $0 al 30 nov 2026— contra lo de hoy, o contra lo que se guardó al auditar ese mes. **Compacto** (Adán, 25-oct-2026: *"haz las cosas más pequeñas y la letra también, no debemos acaparar
-  mucho visualmente, solo lo importante"*): el título a 17 px, las tareas y los textos a 12, las etiquetas a 9.5, las
-  pestañas a 11 y los rellenos más cortos, solo en la pantalla —la ventana conserva los suyos—. **Cada tarea, con su
-  nombre corto** (`pmCorto`; Adán, 25-oct-2026: *"reduce más los nombres de la lista de las cosas que tengo que
-  hacer"*): la idea principal —lo que va antes del primer «: », « —», «; » o de la segunda oración, sin paréntesis— y, si
-  aún pasa de 48 caracteres, hasta la primera coma (o «y») o antes de una preposición. Es una frase completa, nunca con
-  «…» (Adán: *"no quiero que se corte texto"*), y el texto entero va en el `title` de la fila y en la ventana: *Lee los
-  requisitos exactos en el portal de la Esslingen Graduate School (Automotive Systems): idioma, documentos y formato*
-  queda en *Lee los requisitos exactos en el portal*. En las 146 tareas de las cinco fases la mediana baja de 68 a 35
-  caracteres y la más larga, de 189 a 56: cada una cabe en un renglón. **Con el mismo formato en las cinco fases**
-  (Adán: *"arregla con el mismo formato la fase 0 y las demás fases"*): lo que sostienes, la meta (`pmMetaHTML`: una
-  frase por punto; la de la Fase 0, que es un párrafo, partida en sus oraciones y en cada ✅), el checkpoint
-  (`pmCheckHTML`: la prueba y sus dos salidas), lo que dejas de hacer (`faseDejaHTML(t, true)`) y los títulos de la
-  ruta —todos con su nombre corto y el texto entero en el `title`; la ventana conserva los suyos completos—. Medido a
-  1600×1000: la ruta mide 72 px, un mes de 172 a 292 px y la información general de 191 a 281; de 390 a 2048 px ningún
-  texto de la pantalla ni de la ventana queda con «…».
+- **La ruta** (`#coachFaseBand`, `fzRutaHtml()`): una tarjeta por fase con su color, su nombre y sus fechas en un
+  renglón, su título y cómo va: *2 meses · ✓ cerrada*, *día 21 de 182 · quedan 161 días* con su barra en la fase en
+  curso, *empieza en 5 meses*—; el porqué de la fase (`explica`) va en su `title`. **Tocar una la enseña debajo,
+  aquí mismo** (`cfbFase`; Adán, 25-oct-2026: *"en las fases ya no abras una ventana, ahí mismo cuando des click en
+  alguna fase ahí mismo muéstrame la información"*): la marcada en la ruta es la que se ve (`_pmFase`, null mientras
+  sea la de hoy). Bajo 1180 px se desplaza de lado.
+- **El mes en curso, o la fase que tocaste** (`#pmMes`, `pmMesHtml()`, pintado con la ruta por `pmPintar()` en el
+  color de la fase que se ve). La fase de hoy abre en el mes de hoy; otra fase, en su *Información general*, con
+  **← Volver a hoy** (`pmVolverHoy`) junto al título. Arriba el nombre y el estado (*ESTE MES*, *AUDITADO · 92*,
+  *SIN AUDITAR*), la fase, sus días y cuándo se audita (*se audita desde el 25 · en 4 días*), y las pestañas
+  (`.fzm-tabs`): *Información general* y los meses de la fase agrupados por año, cada uno con el punto de su
+  auditoría —verde auditado, rojo ya cerró sin auditar, el color de la fase el de hoy—. **Las pestañas cambian lo que
+  se ve aquí mismo** (`pmVer`, `_pmVista`; Adán, 22-oct-2026: *"cuando quiero cambiar de mes, en los subtabs, no se
+  actualiza la información"*).
+- **Un mes** (`pmMesVistaHtml`) trae, si el anterior cerró sin auditar, el aviso con *Auditar octubre* (o *Seguir
+  con la auditoría* si va a medias), y **columnas iguales** (Adán, 25-oct-2026: *"acomoda simétricamente las
+  columnas"*; también en la información general). Van solo las que traen algo (`pmColumnas`): la Fase 0 no tiene
+  checkpoint ni cosas de la salida y dejaba huecos en medio. Con dos, la de tu dinero conserva el ancho de un tercio,
+  como en las demás fases, y las tareas van en dos columnas parejas en el resto (`.pm-c2`); con una sola, también
+  (`.pm-c1`). Las columnas: **lo que tiene que quedar hecho** —las tareas de la fase, las que pasaron del mes
+  anterior y las correcciones de su auditoría; hasta cinco y, en el mes de hoy, la primera pendiente con *Te toca*—;
+  **para la salida a Alemania** —tres, las pendientes primero— y *lo que sostienes todo el mes*; y **tu dinero, en
+  palabras** (`pmCifrasHTML`; Adán, 25-oct-2026: *"las cifras de dinero que están ahí no son claras"*).
+- **Tu dinero tiene el mismo formato en cada mes y en cada fase** (`pmDineroTarjeta`, `.pm-dinero`; Adán: *"lo de mi
+  dinero debe tener el mismo formato en las demás fases"*): una tarjeta para tu dinero y otra para tu tarjeta BBVA
+  mientras el plan le ponga meta, cada una con la cifra real en grande —la de hoy o, en un mes auditado, la que se
+  guardó al auditar— y, debajo, *El plan espera $0 al 30 nov* y cómo vas contra eso: *✓ llevas $1,506 más de lo que
+  pide* en verde; mientras no cierra —el mes en curso, aunque ya se pueda auditar, o uno que viene— lo que falta, en
+  ámbar (*te falta bajarla $2,300 antes del 30 nov*, *te faltan $153,548 para el 31 may 2027*), porque el abono o el
+  ahorro que falta puede llegar; y con el mes cerrado, *✗ quedaste … arriba* en rojo. La fecha lleva el año cuando no
+  es el de hoy (`pmAl`). Un mes de la Fase 0, anterior al plan de dinero, enseña lo de hoy y que el plan arranca en
+  octubre de 2026 (`pmDineroAntes`). La cuenta (`fzmCifrasDatos`) tiene la misma fuente y la misma regla que la
+  auditoría, así que nunca dicen cosas distintas; sin el patrimonio líquido (Adán, 21-oct-2026: *"quita la
+  información del checkpoint, lo de patrimonio líquido, el auto y el iPhone"*). Bajo 1180 px, cuando tu dinero pasa
+  a lo ancho, sus tarjetas van de dos en dos.
+- **Las tareas se palomean aquí mismo**, en la misma casilla que Mi Día (`coach_checks_v1`): el mes de hoy en la
+  semana de hoy (`pmCheck`), otro mes con `fzmCheck`; un mes ya auditado enseña lo que quedó (✅, ◐ o ❌), sin
+  casilla. *Y 3 más…* y *Lo que sostienes* se despliegan en su lugar (`pmDespliega`).
+- **La auditoría, al pie del mes** (`pmAudHtml`, `.pm-aud`): mientras no toca, nada —la cabecera ya dice desde
+  cuándo—; desde siete días antes de que acabe el mes, *Ya se puede auditar: cinco pasos, todos con opciones* con
+  **Auditar noviembre**, o *Tu auditoría de noviembre va a medias* con **Seguir con la auditoría**; auditado,
+  *🧾 Auditado el 1 de noviembre · 92 mes cumplido* con **Ver la auditoría** y **Reabrir**. Un mes que cerró sin
+  auditar lo dice su aviso, con su botón. Todos la abren **en el lugar del mes** (ver *Los meses de cada fase y su
+  auditoría*).
+- **La información general** (`pmGenHtml`), en las mismas tres columnas que el mes (`.pm-gen`): la meta de la fase y
+  lo que dejas de hacer, en fichas con solo su cabeza y el porqué en su `title`; el checkpoint con sus dos salidas y
+  **cómo va la fase** (`fzvVaHTML`, `fzvAvance`: meses auditados, tareas cumplidas hasta hoy, la calificación de los
+  meses y lo que sigue —*Auditar septiembre*, que abre esa auditoría aquí, o la fecha de la próxima—), solo si la
+  fase ya empezó: en una que viene diría *aún no cierra ninguno* y su fecha, que ya están en la ruta; y **tu dinero
+  en esta fase** (`pmDineroFase`), con las mismas tarjetas: la última meta que el plan le pone a cada cifra dentro de
+  la fase —en la Fase 1, tu dinero al 31 mar 2027 y la meta de la BBVA, $0 al 30 nov 2026— contra lo de hoy, o contra
+  lo que se guardó al auditar ese mes.
+- **Compacto** (Adán, 25-oct-2026: *"haz las cosas más pequeñas y la letra también, no debemos acaparar mucho
+  visualmente, solo lo importante"*): el título a 17 px, las tareas y los textos a 12, las etiquetas a 9.5, las
+  pestañas a 11 y los rellenos cortos.
+- **Cada tarea, con su nombre corto** (`pmCorto`; Adán, 25-oct-2026: *"reduce más los nombres de la lista de las
+  cosas que tengo que hacer"*): la idea principal —lo que va antes del primer «: », « —», «; » o de la segunda
+  oración, sin paréntesis— y, si aún pasa de 48 caracteres, hasta la primera coma (o «y») o antes de una
+  preposición. Es una frase completa, nunca con «…» (Adán: *"no quiero que se corte texto"*), y el texto entero va
+  en el `title` de la fila y en la auditoría: *Lee los requisitos exactos en el portal de la Esslingen Graduate
+  School (Automotive Systems): idioma, documentos y formato* queda en *Lee los requisitos exactos en el portal*. En
+  las 146 tareas de las cinco fases la mediana baja de 68 a 35 caracteres y la más larga, de 189 a 56: cada una cabe
+  en un renglón.
+- **Con el mismo formato en las cinco fases** (Adán: *"arregla con el mismo formato la fase 0 y las demás fases"*):
+  lo que sostienes, la meta (`pmMetaHTML`: una frase por punto; la de la Fase 0, que es un párrafo, partida en sus
+  oraciones y en cada ✅), el checkpoint (`pmCheckHTML`: la prueba y sus dos salidas), lo que dejas de hacer
+  (`faseDejaHTML(t, true)`) y los títulos de la ruta, todos con su nombre corto y el texto entero en el `title`.
+
+Medido a 1600×1000, en los 65 meses de las cinco fases: la ruta mide 69 px, un mes de 144 a 260 px y la información
+general de 163 a 273; de 390 a 2048 px ningún texto de la ruta ni del mes queda con «…» y no hay desborde lateral, en
+claro y en oscuro.
 
 *Tu estrategia de hoy* va arriba del panel de **Deuda cara** y tu dinero, cuenta por cuenta, en el de **Patrimonio**
 (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las
 cantidades"*). Sin la ruta de deuda, el riel de la quincena ni *Te toca esta semana*.
 
-Medido a 2048×1040: la ruta mide 72 px, el mes en curso 292, los medidores 46 y el tablero 445, con las tres columnas
+Un mes de cada etapa renglón por renglón —lo que entra, lo que sale y lo que llega a GBM— lo enseña Coach en cada fase
+(*💰 Tu ahorro en esta fase*), y GBM contra cada corte de la salida, el panel de la **Maestría** (`kpiCortesHTML`).
+
+Medido a 2048×1040: la ruta mide 69 px, el mes en curso 260, los medidores 44 y el tablero 467, con las tres columnas
 sin desplazarse. El tablero no baja de 376 px: en una pantalla más baja (1366×768) la página baja en vez de
 aplastarlo. Bajo 1180 px el mes en curso va en dos columnas y bajo 760, en una; a 390 px no hay desplazamiento
 horizontal.
 
-La ventana de las fases (`abrirKpi('fases')`, en `kpiDetalle`) lleva fechas, estado, meta, el porqué en tarjetas, el
-checkpoint y el checklist de cada mes leído de `coach_checks_v1`. En las fases que pasan en México, **💰 Tu ahorro en esta fase** (`faseAhorroHTML`): un mes de cada etapa —con depa y en casa de tu familia— renglón por renglón, cada uno abrible con su desglose, y GBM al cerrar cada mes en barras contra lo que pide cada corte de la salida que cae en la fase (`cortesSalidaDash`: el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la salida completa); el mismo desglose que Coach. El título del módulo Fase de Mi Día abre la misma ventana.
+### Los meses de cada fase y su auditoría
+
+Adán, 18-oct-2026: *"en cada fase debes crear diferentes subtabs de los meses y poner la información,
+también debe ir como información general… al terminar cada mes debemos auditar qué cosas se cumplieron
+y qué cosas no… en todas las fases cada mes tiene un plan completo"*, y que la auditoría *"deben ser
+checklist o cifras"*, con la información bien acomodada y no *"mucho pero nada a la vez"*; y *"la auditoría
+es con los checklist, no un text box… ve cómo hacerle para auditar bien bien"*. Por eso **cada mes lleva lo único
+que se audita —su checklist y sus cifras—**, todos los meses lo llevan desde el principio, y **se audita como lo
+haría un auditor**: en cinco pasos, todo con opciones y nada de texto libre.
+
+**Lo que lleva un mes** sale de `CIFRAS.planMes(mes)` (ver `DATOS-MAESTROS.md`) y de lo que dejó la auditoría
+anterior (`fzmFicha`): *lo que tiene que quedar hecho* —las tareas de la fase y lo que viene de antes, con su marca
+*de octubre*—, *para la salida a Alemania*, *lo que sostienes todo el mes* —lo de cada semana o cada mes (`mensual`),
+el foco de aprendizaje y lo de toda la fase— y las metas del mes (`metas`). Las tareas usan las casillas de
+`coach_checks_v1` (`pmCheck` y `fzmCheck` → `toggleFaseCheck`); lo sostenido se marca por mes (`fzmSostuve`) y no se
+puede marcar un mes que no ha empezado. Las cifras se miden con lo real de hoy (`ctCifrasHoy`) o con la foto que se
+guardó al auditar; a media quincena no se pintan de rojo —todavía falta lo que el plan pone después—; desde la
+última semana del mes, sí.
+
+**La auditoría se abre en el lugar del mes** (`pmAuditar(i, mes)`, `FZA_ABIERTA`): desde el aviso de un mes que cerró
+sin auditar, desde su renglón al pie del mes (`pmAudHtml`) o desde *cómo va la fase*; si el mes es de otra fase, la
+pantalla pasa a esa fase. Arriba lleva **← Volver a octubre** (`fzaVolver`), el título y el marcador de la
+calificación, y cada respuesta repinta solo su caja (`fzmPintar`). Un mes auditado se abre en solo lectura con *Ver
+la auditoría* (`pmAuditar(i, mes, 1)`).
+
+**Los cinco pasos** (`fzaHTML`):
+
+1. **Verifica tus datos**: antes de calificar, que lo anotado sea verdad. Una casilla por cada control, con
+   lo que hoy dice Finanzas al lado (`fzaDatos`): los movimientos anotados del mes, el saldo de la cuenta,
+   lo que se debe de la BBVA y lo de CETES, GBM e inversiones. Si algo no cuadra, se corrige en Finanzas.
+2. **Cada tarea**: *✅ Cumplida*, *◐ A medias* o *❌ No*; si no, **¿por qué?** (*sin tiempo*, *sin dinero*,
+   *dependía de alguien*, *se me olvidó*, *ya no aplica*) y **¿y ahora?** (*pasa al mes siguiente* o *no
+   va*). Lo que trae su casilla marcada entra como cumplida; en una fase que ya cerró, lo no cumplido de
+   entrada no va —el plan ya lo movió— (`fzmDecDef`).
+3. **Lo que sostienes**: *siempre*, *casi siempre*, *a veces* o *nunca* (lo marcado durante el mes entra
+   como *siempre*).
+4. **Las cifras**: la meta contra lo real; la que no llegó pide **¿qué pasó?** (*gasté de más*, *entró
+   menos*, *un gasto fuera del plan*, *el plan no era realista*, *aún no se refleja*).
+5. **Lo que corriges**: acciones que salen de las causas marcadas (`FZA_POR`, `FZA_CAUSA`, y una para lo que
+   se sostuvo a veces o nunca), cada una con su porqué; se marca a cuáles se compromete y **se vuelven
+   tareas del mes siguiente** (*Lo que corriges*, con su casilla).
+
+Cada respuesta se guarda al tocarla (`fzaTarea`, `fzaHabito`, `fzaCifra`, `fzaDato`, `fzaCorr`) y
+`fzaEvalua` cuenta lo que falta. **La calificación** sale solo con todo contestado: las tareas pesan la
+mitad (cumplida 1, a medias ½), lo sostenido un cuarto (siempre 1, casi siempre ¾, a veces 0.4) y las
+cifras otro cuarto; lo que *ya no aplica* no cuenta. 85 o más es *mes cumplido*, de 60 a 84 *a medias* y
+menos, *no se cumplió*. **Cerrar la auditoría** (`fzaCerrar`) deja cada tarea cumplida (con su casilla
+marcada), pasada o fuera, guarda la foto de las cifras si es hasta diez días después del cierre, la
+calificación y las correcciones, y la pantalla vuelve al mes con su renglón de auditado; **Reabrir**
+(`fzmReabrir`) vuelve a la auditoría con lo contestado.
+
+**Lo que pasa al mes siguiente y lo que se corrige** (`planArrastradas`) aparecen en el primer mes sin
+auditar después del que los dejó —aunque se audite en desorden—, y
+ahí se vuelven a auditar; un mes auditado conserva la lista que se auditó. Por mes, en
+`plan_auditoria_v1`: `siempre` (lo sostenido durante el mes), `aud` (las respuestas: `datos`, `t`, `h`, `c`,
+`corr`) y, al cerrar, `cerrado`, `tareas` (`ok`, `pasa` o `no`), `cifras` (`real`, `meta`, `medido`),
+`califica` y `correcciones` (cada una con su texto y un id que dice el mes y la causa); `reabierto` al reabrir. El **control 38** del
+verificador vigila que los 63 meses de las fases 1 a 4 tengan plan completo y sus cifras, y que los `id` de
+`mensual` no choquen.
+
+Medido a 1600×1000 y a 2048×1040: la auditoría de octubre mide 1672 px de alto; al abrirla, el slide se desplaza por
+dentro hasta su principio (`scrollIntoView`). Sin desborde lateral a 2048, 1600, 1366 ni 390 px, en claro y en
+oscuro.
 
 ### Los ocho medidores
 
@@ -1040,12 +1115,12 @@ La banda decía *Tu dinero $21,513* y la columna del día *$21,291* (Adán, 21-o
 métricas de los números para que todo cuadre"*): una tomaba el efectivo de Finanzas del día en que lo dijiste y la
 otra la serie de la quincena, con lo previsto desde entonces. Ahora todo el Dashboard pide lo de hoy a `ctCifrasHoy()`, que le pasa
 al maestro (`CIFRAS.cifrasHoy(f, gastar)`) lo que la serie de la quincena dice que hay para gastar: las cifras del mes
-—en la pantalla y en la ventana, con la misma `fzmCifrasHTML`— miden igual (*$21,291*). El control 42 vigila
+—en la pantalla (`pmCifrasHTML`) y en su auditoría— miden igual (*$21,291*). El control 42 vigila
 que nadie más llame a `cifrasHoy`.
 
 **El plan y tu dinero un día dan la misma cifra.** Lo que pide la fase y lo que da tu ritmo salen del plan
-(`PROYECCION`, desde la foto del 1 oct): la meta y el checkpoint de la fase, Mis Metas y las barras de la ventana de
-las fases dicen *$109,362 el 31 de marzo*, GBM con los CETES. `estadoDia` —tu dinero un día, que usa Finanzas—
+(`PROYECCION`, desde la foto del 1 oct): la meta y el checkpoint de la fase, Mis Metas y el panel de
+la Maestría dicen *$109,362 el 31 de marzo*, GBM con los CETES. `estadoDia` —tu dinero un día, que usa Finanzas—
 proyecta desde lo de hoy y da lo mismo: GBM con el depósito, $103,362, y los CETES, $6,000. La foto ya no cuenta como
 ahorro la cuenta y el efectivo del 1 oct, que eran para gastar. Mes a mes los dos suben igual —lo que llega a GBM, el
 depósito y lo que cuesta la salida— y lo vigila el control 43: `estadoDia` no restaba los costos de la salida y el 31
@@ -1151,8 +1226,8 @@ tiempo es el resto y no un promedio; si se añaden, se afina solo.
 ### Las tareas de la fase
 
 No van en el tablero (Adán, 21-oct-2026, sobre *Te toca esta semana*: *"también elimina esto"*): se palomean en el
-mes en curso de la pantalla (`pmCheck`), en la ficha de su mes en la ventana de las fases o en el módulo Fase de Mi
-Día. `toggleFaseCheck(id, estado, semana)` guarda en `coach_checks_v1` en qué semana se cerró cada una
+mes de la pantalla (`pmCheck` el de hoy, `fzmCheck` otro) o en el *Te toca* del bloque del Plan Maestro en Mi
+Día, que también usa `pmCheck`. `toggleFaseCheck(id, estado, semana)` guarda en `coach_checks_v1` en qué semana se cerró cada una
 (`"2026-08#5"`); Mi Día marca siempre en la semana de hoy. Lo que la auditoría del mes anterior pasó a este
 (`planArrastradas`) aparece en el primer mes sin auditar.
 
@@ -1168,7 +1243,7 @@ desmiente— vive en `DATOS-MAESTROS.md`; el control 22 la comprueba en la prosa
 
 ### Medidas
 
-A 2048×1040 el tablero se queda con los 378 px que dejan la ruta, el mes en curso y los medidores, y sus tres columnas
+A 2048×1040 el tablero se queda con los 467 px que dejan la ruta, el mes en curso y los medidores, y sus tres columnas
 miden lo mismo (`align-items:stretch`, `flex:1`, nunca menos de 376 px). Cada una conserva su `overflow-y:auto`. El
 slide de Coach scrollea **por dentro** (`.theme-coach .slide-inner`), no la página.
 
@@ -1235,8 +1310,8 @@ visualmente"*). Cada `kpiDetalle` escribe su HTML de corrido con `kpiSec`, `kpiB
 `kpiAcomodar()` lo reparte al abrir: `.kpi-cifra` y su sub arriba a lo ancho (`.kpi-hero`, cifra hasta 36 px) y cada
 sección con lo que le sigue en un `.kpi-grupo` dentro de `.kpi-cols` —columnas CSS que no parten un grupo: una sección
 va a una columna, dos a dos y, desde 1400 px, tres o más a tres (`.kpi-cols-3`); bajo 1024 px todo a una—. La letra, las
-barras (6 px) y los espacios son los compactos de `#kpiOverlay:not(.kpi-fases)`: la ventana de las fases conserva los
-suyos. Además de lo de antes, cada panel dice: **Fondo**, cuántos meses de tus fijos (`fijosTotal`) cubre y que el plan
+barras (6 px) y los espacios son los compactos de `#kpiOverlay`. Además de lo de antes, cada panel dice: **Fondo**,
+cuántos meses de tus fijos (`fijosTotal`) cubre y que el plan
 no le aporta mientras `cetesDia15` sea 0; **Deuda cara**, los abonos que faltan (`bbvaRuta`); **Maestría**, los cortes
 de la salida con lo que espera la proyección en GBM y lo que falta —la misma cuenta que Mis Metas— (`kpiCortesHTML`);
 **Patrimonio**, lo que espera la trayectoria al cierre de cada fase y el mes del millón (`kpiTrayectoriaHTML`); **Total
@@ -1244,156 +1319,6 @@ invertido**, lo que gana o pierde cada pieza, el Bitcoin aparte y lo que entra c
 en cero cada una y lo que pagas entre todas (`kpiDeudaFinHTML`, `minimosDeuda`); y **Camino a 2031**, las fases en el
 tiempo (`kpiFasesTiempoHTML`). Medido en 1600×1000, con los datos de Finanzas: el fondo ocupa 440 px de alto, el
 patrimonio 743 (antes 940, con desplazamiento) y ninguno de los ocho se desplaza; a 390 px, sin desbordes.
-
-**Las fases son la excepción**: en vez de las 2 columnas de `.kpi-cols`, una **ruta** y un panel por
-fase (Adán, 3-oct-2026: *"sé muy claro en las fechas… mejora el diseño
-de donde me muestras todas las fases"*). `.fases-tabs` es un solo hijo de `#kpiBody`, así que
-`kpiAcomodar()` lo mete en un único `.kpi-grupo` a ancho completo. Y es **la más grande**: `abrirKpi`
-pone `.kpi-fases` en el overlay solo para ella (Adán: *"haz más grande la ventana de Las 5 fases del
-Plan Maestro"*), y desde 641 px la ventana va a 12 px del borde —99 % × 98 % en 1600×1000, 1576×976
-px—. La letra va solo un punto arriba del panel XL (Adán: *"la letra hazla más pequeña para que se
-vea mejor"*): tareas a 13.5 px, textos a 14, la fase a 27 y la tabla del ahorro a 12.5; en 1600×1000
-caben tres meses de tareas sin desplazarse. Mientras está abierta se oculta la brújula del prompt
-(`.pp-btn`), que si no cae sobre su esquina. Los otros siete medidores siguen con el panel XL.
-
-- **La ruta** (`.fz-ruta`, `fzRutaHtml`: la misma de la pantalla, con la barra de la fase en curso): una estación por fase (`.fz-est`), con el color de la fase en el
-  calendario (`CAL_FASE_COLOR`), el título, el rango de fechas (`1 oct 2026 → 31 mar 2027`), lo que
-  dura y cómo va: *✓ cerrada*, *quedan 179 días* (con el chip HOY) o *empieza en 6 meses*. Bajo
-  1180 px se desplaza de lado y `kpiFaseVer()` la lleva a la fase elegida. `kpiFaseTab(i)` cambia de
-  fase sin volver a pintar.
-- **La cabecera de la fase** (`.fz-cab`): el título y tres casillas —Empieza, Termina y Dura— con las
-  fechas escritas completas, la barra de días y *vas en el día 3 de 182 · quedan 179 días* (lo hecho se
-  cuenta por mes, en sus fichas).
-- **Debajo, las subpestañas de la fase** (`.fzm-tabs`): **Información general** y un mes por pestaña, cada
-  uno con su ficha (ver *Los meses de cada fase y su auditoría*). Las piezas de abajo son de la
-  información general.
-- **💡 Por qué esta fase** (`faseRazonesHTML`) pinta los bloques `razones` de la fase en el maestro
-  (Adán, sobre el párrafo que había: *"esto no está bien diseñado, hazlo mejor visualmente e
-  impactante"*). Arriba, la frase que manda (`.fzr-lema`, en Fraunces con la raya del color de la
-  fase); luego la ruta de fotos (`.fzr-ruta`): las tres fechas de la Fase 1 con lo que piden, el orden
-  admisión → cuenta bloqueada → visa → vuelo de la Fase 2, los dos supuestos de la Fase 3 sumados con
-  +, las metas de la Fase 4; y las tarjetas de dos en dos (`.fzr-card`): foto, qué es (*Paso 1*, *El
-  riesgo*, *Lo que lo cierra*, *Plan B*, *La regla*, *Lo logrado*), el título, las cifras grandes con
-  su etiqueta y la frase. El riesgo va en rojo, lo que lo cierra en verde, el plan B en ámbar y la
-  regla en azul; una cifra «faltan…» sale roja y una «sobran…» verde, así que el color sigue al dato.
-- **🚩 Checkpoint** (`faseCheckHTML`): lo de antes de los dos puntos es el cuándo, en su casilla; la
-  primera frase, la prueba; las que siguen, sus salidas (*Si llega…* en verde, *Si no…* o *Sin…* en
-  rojo). **🚫 Lo que dejas de hacer** (`faseDejaHTML`): una frase por renglón, con lo de antes de los
-  dos puntos en negritas.
-- **El dinero de la fase** (`faseAhorroHTML`, en las fases que pasan en México): la tabla de un mes de
-  cada etapa, con cada renglón abrible (ver *El desglose de un renglón*); **📊 GBM al cerrar cada mes** en
-  barras (`.fzg`), con la línea roja de lo que pide cada corte que cae en la fase —los de
-  `cortesSalidaDash`, los mismos que el dinero de la salida de Mis Metas: el cierre de la Fase 1, el día
-  de decidir, la cuenta bloqueada y la salida completa— y debajo lo que falta o lo que sobra (*faltan
-  $56,173* en marzo; en la Fase 2, *$78,642* en mayo, *$43,546* en junio y *$112,346* en agosto), y el
-  patrimonio que espera la trayectoria (`liquido`).
-
-Abre en la fase en curso (o la siguiente sin empezar, o la última si el plan ya cerró), en la
-pestaña del mes de hoy; las otras fases abren en su información general. El subtítulo va del arranque
-del plan a la fecha del millón (`finDelPlan()`). La ventana es opaca, como la del alemán.
-
-### Los meses de cada fase y su auditoría
-
-Adán, 18-oct-2026: *"en cada fase debes crear diferentes subtabs de los meses y poner la información,
-también debe ir como información general… al terminar cada mes debemos auditar qué cosas se cumplieron
-y qué cosas no… en todas las fases cada mes tiene un plan completo"*, y que la auditoría *"deben ser
-checklist o cifras"*, con la información bien acomodada y no *"mucho pero nada a la vez"*; y *"la auditoría
-es con los checklist, no un text box… ve cómo hacerle para auditar bien bien"*. Por eso **cada mes es una
-ficha con lo único que se audita —su checklist y sus cifras—**, todos los meses la llevan desde el
-principio, y **se audita como lo haría un auditor**: en cinco pasos, todo con opciones y nada de texto
-libre.
-
-**Las pestañas** (`fzmTabsHTML`): *Información general* y los meses agrupados por año, cada uno con el
-punto de su auditoría —verde auditado, rojo ya cerró sin auditar, el color de la fase el de hoy—.
-`fzmVer(i, vista)` cambia de pestaña; un mes se pinta al abrirlo (`fzmPintar`, que además deja al día su
-punto y la información general, oculta mientras se ve un mes).
-
-**La información general** (`fzvGeneralHTML`), en bandas, de lo que se actúa a lo que se explica: la meta,
-el checkpoint y **cómo va la fase** (meses auditados, tareas cumplidas hasta hoy, la calificación de los
-meses y lo que sigue: *Auditar septiembre* o la próxima auditoría); las **fichas de los meses**
-(`.fzv-mes`: tareas cumplidas —o *lo de cada mes*, si el mes no trae tareas— y su estado, con la calificación si ya
-se auditó), que abren su mes; GBM al cerrar cada mes en barras, lo que dejas de hacer y lo de toda la fase; y
-**plegados** el porqué y un mes de cada etapa renglón por renglón (`faseAhorroHTML` devuelve sus partes por
-separado). Las rutinas ya no son una sección aparte: van dentro de su renglón.
-
-### El desglose de un renglón
-
-Adán, 21-oct-2026: *"🧴 Tus rutinas, producto por producto, esto no debe ser otra sección, debe estar en Un mes
-de cada etapa, renglón por renglón, pero en la sección que corresponde: al hacer click, que te desglose todo eso
-y se expanda"*. En la tabla de la fase y en *Renglón por renglón* de cada mes, un renglón con desglose lleva ▸ y
-se abre ahí mismo, en las mismas columnas (`faRenglon` → `faAbrir`, también con Enter; cada grupo es su `<tbody>`).
-Lo que trae cada uno sale de `faDetalle(k, ds)` y suma exacto lo que dice su renglón:
-
-| Renglón | Al abrirlo | De dónde |
-|---|---|---|
-| Luz, agua, internet y gas · Gym, Claude Code e iCloud | cobro por cobro (el gas, a su promedio en el mes tipo y completo en sus meses) | `desgloseMes().items` |
-| Comida | desayuno, comida y cena; en casa, tu desayuno y los otros dos *en casa* | `ctComida().tiempos` × 30.4; el último cierra con lo que falta |
-| BYD, la mensualidad | a capital (lo que baja el saldo ese mes en la proyección) e intereses | `PROYECCION.meses[].auto` |
-| Tus rutinas | piel, cabello y suplementos, producto por producto, y **dónde recortar** en verde | `CIFRAS.rutinasDesglose()`, `faRecorteHTML` |
-
-Con depa: $135 + $200 + $90 = $425; el BYD, $3,756 a capital y $2,944 de intereses; comer, $821 + $704 + $1,854
-= $3,379, y las rutinas, $683 + $2,811 + $1,130 = $4,624.
-
-**La ficha del mes** (`faseMesHTML`), con todo de `CIFRAS.planMes(mes)` (ver `DATOS-MAESTROS.md`). Arriba,
-el mes y sus tres números: tareas hechas, lo sostenido y las cifras. Si el mes anterior cerró sin auditar,
-un aviso lleva a él.
-
-- **✅ El checklist** (izquierda): *Lo que tiene que quedar hecho* —las tareas de la fase y lo que viene de
-  antes, con su marca *de octubre*—, *Para la salida a Alemania* y *Lo que sostienes todo el mes* —lo de
-  cada semana o cada mes (`mensual`), el foco de aprendizaje y lo de toda la fase—. Cada renglón muestra
-  su primera frase con un ›; el detalle se abre al tocarlo y, cerrado, no ocupa lugar ni se corta con puntos
-  suspensivos (`fzmPartir`; lo de cada mes también se parte así). Las tareas usan las
-  casillas de `coach_checks_v1` (`fzmCheck` → `toggleFaseCheck`); lo sostenido se marca por mes
-  (`fzmSostuve`) y no se puede marcar un mes que no ha empezado.
-- **🔢 Las cifras** (derecha, `fzmCifrasHTML`): las metas del mes (`metas`) con lo real de hoy
-  (`ctCifrasHoy`; la misma función pinta las cifras del mes en curso de la pantalla) o la foto al auditar. A media quincena no se pintan de rojo —todavía falta lo que
-  el plan pone después—; desde la última semana del mes, sí.
-- **🧾 La auditoría** (`fzmCierreHTML`): por venir, una línea con la fecha; desde siete días antes de que
-  acabe el mes (y vencida, en rojo), **Auditar octubre** la abre en el lugar de la ficha. Auditada: la
-  calificación con su veredicto, cuántas tareas quedaron cumplidas, pasaron o no van, las causas contadas
-  y lo que se corrige el mes siguiente, con **Ver la auditoría** (en solo lectura) y **Reabrir**.
-- **💰 El dinero** y **📅 las fechas**, en renglones cortos: el ahorro con lo que entra y sale, qué va a GBM
-  el 1 y el 15, los abonos de la BBVA desde el último saldo dicho, lo propio de ese mes y el renglón por
-  renglón plegado, con el desglose de ese mes en cada renglón; el cierre y el checkpoint de la fase, los hitos,
-  el cambio de foco y lo que se paga.
-
-**La auditoría, paso a paso** (`fzaHTML`, en el lugar de la ficha mientras se audita; `FZA_ABIERTA`):
-
-1. **Verifica tus datos**: antes de calificar, que lo anotado sea verdad. Una casilla por cada control, con
-   lo que hoy dice Finanzas al lado (`fzaDatos`): los movimientos anotados del mes, el saldo de la cuenta,
-   lo que se debe de la BBVA y lo de CETES, GBM e inversiones. Si algo no cuadra, se corrige en Finanzas.
-2. **Cada tarea**: *✅ Cumplida*, *◐ A medias* o *❌ No*; si no, **¿por qué?** (*sin tiempo*, *sin dinero*,
-   *dependía de alguien*, *se me olvidó*, *ya no aplica*) y **¿y ahora?** (*pasa al mes siguiente* o *no
-   va*). Lo que trae su casilla marcada entra como cumplida; en una fase que ya cerró, lo no cumplido de
-   entrada no va —el plan ya lo movió— (`fzmDecDef`).
-3. **Lo que sostienes**: *siempre*, *casi siempre*, *a veces* o *nunca* (lo marcado durante el mes entra
-   como *siempre*).
-4. **Las cifras**: la meta contra lo real; la que no llegó pide **¿qué pasó?** (*gasté de más*, *entró
-   menos*, *un gasto fuera del plan*, *el plan no era realista*, *aún no se refleja*).
-5. **Lo que corriges**: acciones que salen de las causas marcadas (`FZA_POR`, `FZA_CAUSA`, y una para lo que
-   se sostuvo a veces o nunca), cada una con su porqué; se marca a cuáles se compromete y **se vuelven
-   tareas del mes siguiente** (*Lo que corriges*, con su casilla).
-
-Cada respuesta se guarda al tocarla (`fzaTarea`, `fzaHabito`, `fzaCifra`, `fzaDato`, `fzaCorr`) y
-`fzaEvalua` cuenta lo que falta. **La calificación** sale solo con todo contestado: las tareas pesan la
-mitad (cumplida 1, a medias ½), lo sostenido un cuarto (siempre 1, casi siempre ¾, a veces 0.4) y las
-cifras otro cuarto; lo que *ya no aplica* no cuenta. 85 o más es *mes cumplido*, de 60 a 84 *a medias* y
-menos, *no se cumplió*. **Cerrar la auditoría** (`fzaCerrar`) deja cada tarea cumplida (con su casilla
-marcada), pasada o fuera, guarda la foto de las cifras si es hasta diez días después del cierre, la
-calificación y las correcciones; **Reabrir** (`fzmReabrir`) vuelve a la auditoría con lo contestado.
-
-**Lo que pasa al mes siguiente y lo que se corrige** (`planArrastradas`) aparecen en el primer mes sin
-auditar después del que los dejó —aunque se audite en desorden—, y
-ahí se vuelven a auditar; un mes auditado conserva la lista que se auditó. Por mes, en
-`plan_auditoria_v1`: `siempre` (lo sostenido durante el mes), `aud` (las respuestas: `datos`, `t`, `h`, `c`,
-`corr`) y, al cerrar, `cerrado`, `tareas` (`ok`, `pasa` o `no`), `cifras` (`real`, `meta`, `medido`),
-`califica` y `correcciones` (cada una con su texto y un id que dice el mes y la causa); `reabierto` al reabrir. El **control 38** del
-verificador vigila que los 63 meses de las fases 1 a 4 tengan plan completo y sus cifras, y que los `id` de
-`mensual` no choquen.
-
-Medido a 2048×1040: la ficha de octubre mide 1124 px de alto, la información general 1092 y la auditoría
-1682 (se desplaza dentro de la ventana); sin desborde lateral a 2048, 1600, 1366 ni 390 px, en claro y en
-oscuro.
 
 El medidor **Patrimonio hacia $1M** (en el Plan Maestro) es todo lo suyo menos las deudas (`patrimonioNeto()`, que delega en `CIFRAS.patrimonio()` —la misma fórmula de Coach—: inversiones, fondo,
 Bitcoin a precio de hoy, efectivo y cuenta, y los bienes), la misma cifra que el Patrimonio Neto de
@@ -1495,7 +1420,7 @@ de 1 px, texto en tinta y cada valor también fuera del tooltip):
 |---|---|---|
 | ISTQB CT-GenAI | Cada simulacro en columnas contra el corte y tu meta, y las preguntas de Hoy aprendes de 14 días, una celda por día | `examen_genai_v1.intentos`, `habSimulacro()`, `istqbRespuestas()` |
 | Hyrox | Las sesiones de gym de las últimas 8 semanas contra los días de tu rutina | `gymSesiones()` y la rutina de Ejercicio |
-| Maestría | El GBM que proyecta el plan al cerrar cada mes hasta irte contra lo que pide cada corte —el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la salida completa—, con lo que falta o sobra en cada uno —los mismos cortes y cifras que la ventana de las fases—; tu dinero hoy contra lo que el plan pide al cerrar el mes, con la definición de la banda, y el alemán (la lección y el vocabulario del nivel) | `CIFRAS.PROYECCION`, `cortesSalidaDash()`, `ctCifrasHoy()` |
+| Maestría | El GBM que proyecta el plan al cerrar cada mes hasta irte contra lo que pide cada corte —el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la salida completa—, con lo que falta o sobra en cada uno —los mismos cortes y cifras que el panel de la Maestría—; tu dinero hoy contra lo que el plan pide al cerrar el mes, con la definición de la banda, y el alemán (la lección y el vocabulario del nivel) | `CIFRAS.PROYECCION`, `cortesSalidaDash()`, `ctCifrasHoy()` |
 | Torneo de ajedrez | Lo que queda de tu sistema antes de la fecha: los sábados de partidas y los días de puzzles | el plan |
 | Las de largo plazo | Tu patrimonio líquido contra la trayectoria del millón hasta la fecha de la meta, con hoy y la meta marcados: es lo que las habilita | `CIFRAS.PROYECCION.meses`, `patrimonioLiquido()` |
 
@@ -1535,7 +1460,7 @@ nada de información relevante ni un buen diseño, arregla todo de esta ventana"
   lejana: las metas con plan que vencen en el año (`metaPlan`: sus pasos, los atrasados y el siguiente), el cierre
   de las fases (sus tareas y la siguiente), la BBVA en cero (`CIFRAS.planBbva`: lo que falta y el próximo abono) y
   las decisiones del calendario (`CALENDARIO.hitos`, con lo que pide su corte y lo que da tu ritmo, de
-  `cortesSalidaDash`). Tocar una abre su plan: la ficha de la meta, la ventana de las fases o el panel de Deuda
+  `cortesSalidaDash`). Tocar una abre su plan: la ficha de la meta, la fase en el Plan Maestro o el panel de Deuda
   cara o de la Maestría;
 - **lo que ya lograste este año**: las fases cerradas y los logros de la libreta desde el cumpleaños.
 Las metas las lee de `METAS_TODAS`, que llena `renderMetasSlide()`. Medido a 2048×1040: cabe sin desplazarse;

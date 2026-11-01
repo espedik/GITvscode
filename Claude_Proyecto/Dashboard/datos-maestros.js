@@ -682,7 +682,7 @@ window.CIFRAS = (function () {
       {id:"a4-8",cont:true,txt:"Cada aumento, primero al ahorro. El nivel de vida sube después que el patrimonio, no antes."},
     ]},
   ];
-  // «Por qué esta fase», en bloques (`razones`) que el Dashboard pinta como tarjetas: `lema` (la
+  // «Por qué esta fase», en bloques (`razones`): `lema` (la
   // frase que manda), `ruta` (sus `hitos` con fecha, cifra y foto; `une` dice si van en orden →
   // o si son condiciones +), `paso`, `riesgo`, `palanca`, `planb`, `regla` y `logro`, cada uno con
   // su título `t`, sus `cifras` grandes y su frase `d`. La `foto` es un archivo de
@@ -837,8 +837,9 @@ window.CIFRAS = (function () {
      aprendizaje (`HAB_FOCO`), el dinero de la proyección (`PROYECCION.meses`: lo que entra y sale,
      el ahorro, GBM y el patrimonio al cerrar), los abonos de la BBVA y las fechas que caen en él:
      el arranque y el cierre de la fase, su checkpoint, los hitos de las rutas de las fases y el
-     cambio de foco. Lo pinta la ventana de las fases del Dashboard, una pestaña por mes, y ahí
-     mismo se audita al cerrarlo. */
+     cambio de foco. El Plan Maestro del Dashboard pinta lo que se hace y se audita —las tareas, lo
+     de la salida, lo que se sostiene y las cifras (`metas`)—, un mes por pestaña, y ahí mismo se
+     audita al cerrarlo. */
   const MESES_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
   // El mes ('AAAA-MM') y el día, si lo trae, de una fecha escrita: «31 mar 2027», «Junio 2027».
   function mesDeTexto(s) {

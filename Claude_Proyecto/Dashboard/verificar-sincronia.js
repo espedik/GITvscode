@@ -2631,13 +2631,13 @@ function promptsDeLoTocado() {
 })();
 
 /* ── 38. Cada mes de cada fase tiene su plan completo ───────────────────────────────────────────────
-   Adán, 18-oct-2026: "en todas las fases cada mes tiene un plan completo". La ventana de las fases pinta un
-   mes por pestaña con CIFRAS.planMes: lo que tiene que quedar hecho, lo de todo el mes, el foco, el dinero y
-   las fechas, y ahí se audita al cerrarlo. Desde la Fase 1, un mes sin el dinero de la proyección o con menos
+   Adán, 18-oct-2026: "en todas las fases cada mes tiene un plan completo". El Plan Maestro pinta un mes por
+   pestaña con CIFRAS.planMes —lo que tiene que quedar hecho, lo de todo el mes, el foco y sus cifras— y ahí
+   mismo se audita al cerrarlo. Desde la Fase 1, un mes sin el dinero de la proyección o con menos
    de tres cosas que hacer es un mes vacío. Los `id` de `mensual` son el contrato con la auditoría
    (`plan_auditoria_v1`): no se repiten ni chocan con los de las tareas. */
 (function () {
-  if (!global.window || !global.window.CIFRAS || !global.window.CIFRAS.planMes) { problemas.push('El maestro ya no exporta planMes: la ventana de las fases se queda sin el plan de cada mes'); return; }
+  if (!global.window || !global.window.CIFRAS || !global.window.CIFRAS.planMes) { problemas.push('El maestro ya no exporta planMes: el Plan Maestro se queda sin el plan de cada mes'); return; }
   const C = global.window.CIFRAS, ym = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
   const flojos = [], ids = {}, dup = [];
   let meses = 0;
@@ -2783,7 +2783,7 @@ function promptsDeLoTocado() {
       mal.push('cifrasHoy con gastar no cambia solo el efectivo: ' + JSON.stringify(b));
   }
   if (mal.length) problemas.push('Las cifras de hoy no salen de una sola cuenta:\n     ' + mal.join('\n     '));
-  else ok.push('Cifras de hoy: las cifras del mes, en la pantalla y en la ventana de las fases, miden con ctCifrasHoy() (la cuenta de la quincena dice lo que hay para gastar)');
+  else ok.push('Cifras de hoy: las cifras del mes, en la pantalla y en su auditoría, miden con ctCifrasHoy() (la cuenta de la quincena dice lo que hay para gastar)');
 })();
 
 /* ── 43. Tu dinero un día sube como el plan ──────────────────────────────────────────────────────────────

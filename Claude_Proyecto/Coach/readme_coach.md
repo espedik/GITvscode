@@ -365,7 +365,7 @@ dedicas la mitad"): es el suelo optimista, no una previsión.
 ## El Plan Maestro de `#perfil` — sale del maestro
 
 Las fases **no están escritas aquí**: `pintarFasesPlan()` las genera de `CIFRAS.PHASES` al cargar,
-con el mismo texto que pinta la ventana de fases del Dashboard. Solo la **Fase 0** (cerrada el 30 sep
+con el mismo texto que el Plan Maestro del Dashboard. Solo la **Fase 0** (cerrada el 30 sep
 2026) sigue como HTML a mano, con sus casillas `s0-*`. Mientras las fases vivieron escritas en los dos
 sitios, Coach siguió hablando de los $3,145/mes liberados y de la plantilla GBM cuando el plan ya era
 otro.
