@@ -807,6 +807,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .fzc-item>input{margin-top:2px;width:15px;height:15px;flex:none;accent-color:var(--g);cursor:pointer}
 .fzc-ico{width:16px;flex:none;text-align:center;font-size:13px;line-height:1.4}
 .fzc-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:13.5px;line-height:1.42}
+.fzc-sub{font-size:11.5px;line-height:1.45;color:var(--text2);font-weight:500}
+.fzc-med{align-self:flex-start;font-style:normal;font-size:10.5px;font-weight:800;padding:1px 7px;border-radius:4px;margin-top:3px;white-space:nowrap}
+.fzc-med.ok{background:rgba(var(--g-rgb,0,167,88),.14);color:var(--g,#00a758)}.fzc-med.medias{background:rgba(var(--w-rgb,168,121,10),.16);color:var(--w,#a8790a)}.fzc-med.no{background:rgba(var(--r-rgb,200,30,58),.13);color:var(--r,#c81e3a)}
 .fzc-tx[onclick]{cursor:pointer}
 .fzc-tx>b{font-weight:600;color:var(--text)}
 .fzc-k{font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--fc);filter:brightness(.8);margin-right:6px}
@@ -10415,7 +10418,8 @@ function pmMesVistaHtml(i, ym, tabs){
   const fila = function(t){
     const p = fzmPartir(t.txt), plano = String(p.t).replace(/<[^>]*>/g, '');
     const de = t.grupo === 'pasa' && t.de ? 'de '+fzmMesMin(t.de) : t.grupo === 'correccion' && t.de ? 'de la auditoría de '+fzmMesMin(t.de) : '';
-    const tx = '<span class="fzc-tx"><b>'+(t.ico ? t.ico+' ' : '')+pmCorto(p.t)+'</b></span>'+(de ? '<em class="fzc-tag">'+de+'</em>' : '');
+    const sub = t.pasosMeta ? '<span class="fzc-sub">'+t.pasosMeta.map(x => (x.hecho ? '✓ ' : '')+esc(String(x.t).split(' — ')[0].replace(/\.$/, ''))+' · '+esc(x.fTxt)).join('<br>')+'</span>' : '';
+    const tx = '<span class="fzc-tx"><b>'+(t.ico ? t.ico+' ' : '')+pmCorto(p.t)+'</b>'+sub+'</span>'+(de ? '<em class="fzc-tag">'+de+'</em>' : '');
     if(auditado){   // ya auditado: lo que quedó, sin casilla
       const x = fzaResTarea(a, t, checks);
       return '<div class="fzc-item'+(x.r === 'ok' ? ' ok' : '')+'" title="'+esc(plano)+'"><span class="fzc-ico">'+(x.r === 'ok' ? '✅' : x.r === 'medias' ? '◐' : '❌')+'</span>'+tx+'</div>';
@@ -10428,11 +10432,11 @@ function pmMesVistaHtml(i, ym, tabs){
   const filaH = function(h){
     if(auditado){
       const n = fzaNivel(a, h);
-      return '<div class="fzc-item'+(n === 'siempre' || n === 'casi' ? ' ok' : '')+'" title="'+esc(String(h.t).replace(/<[^>]*>/g, ''))+'"><span class="fzc-ico">'+(n === 'nunca' ? '❌' : n === 'aveces' ? '◐' : '✅')+'</span><span class="fzc-tx"><b>'+pmCorto(h.t)+'</b></span></div>';
+      return '<div class="fzc-item'+(n === 'siempre' || n === 'casi' ? ' ok' : '')+'" title="'+esc(String(h.t).replace(/<[^>]*>/g, ''))+'"><span class="fzc-ico">'+(n === 'nunca' ? '❌' : n === 'aveces' ? '◐' : '✅')+'</span><span class="fzc-tx"><b>'+pmCorto(h.t)+'</b>'+fzmMedidaHTML(fzmMedida(h, ym))+'</span></div>';
     }
     const ok = !!(a.siempre || {})[h.id], empezo = ym <= fzmYM(hoyD);
     return '<label class="fzc-item'+(ok ? ' ok' : '')+'" title="'+esc(String(h.t).replace(/<[^>]*>/g, ''))+'"><input type="checkbox"'+(ok ? ' checked' : '')+(empezo ? '' : ' disabled title="Se marca cuando empiece el mes"')+
-      ' onchange="pmSostuve(\''+ym+'\',\''+h.id+'\',this.checked,'+i+')"><span class="fzc-tx"><b>'+pmCorto(h.t)+'</b></span></label>';
+      ' onchange="pmSostuve(\''+ym+'\',\''+h.id+'\',this.checked,'+i+')"><span class="fzc-tx"><b>'+pmCorto(h.t)+'</b>'+fzmMedidaHTML(fzmMedida(h, ym))+'</span></label>';
   };
   const mas = (k, n, txt) => '<button type="button" class="pm-mas" onclick="pmDespliega(\''+k+'\')"><span>'+(_pmTodo[k] ? 'Ver menos' : txt)+'</span><b>'+(_pmTodo[k] ? '↑' : n)+'</b></button>';
   const VER = 5, SAL = 3;
@@ -14262,7 +14266,7 @@ function fzmTareaPorId(id){
     const a = fzmAud()[String(id).slice(4, 11)], c = a && (a.correcciones || []).find(x => x.id === id);
     return c ? { id: id, txt: c.txt } : null;
   }
-  for(const f of PHASES){ const s = (f.semanas||[]).find(x => x.id === id); if(s) return { id: id, txt: s.txt }; }
+  for(const f of PHASES){ const s = (f.semanas||[]).find(x => x.id === id); if(s) return { id: id, txt: s.txt, mes: s.mes, mp: s.mp }; }
   for(const b of ((window.CIFRAS && CIFRAS.SALIDA && CIFRAS.SALIDA.bloques) || [])){
     const x = b.items.find(y => y.id === id); if(x) return { id: id, txt: x.txt, ico: b.ico };
   }
@@ -14286,7 +14290,7 @@ function planArrastradas(ym){
 function fzmTareas(P, A){
   const a = (A || fzmAud())[P.mes], vistas = {}, out = [];
   const grupoDe = id => String(id).indexOf('cor-') === 0 ? 'correccion' : P.salida.some(x => x.id === id) ? 'salida' : P.tareas.some(x => x.id === id) ? 'fase' : 'pasa';
-  const pon = (t, grupo) => { if(!t || vistas[t.id]) return; vistas[t.id] = 1; out.push(Object.assign({ grupo: grupo }, t)); };
+  const pon = (t, grupo) => { if(!t || vistas[t.id]) return; vistas[t.id] = 1; out.push(Object.assign({ grupo: grupo }, fzmConMeta(t))); };
   if(fzmAuditado(a)){ Object.keys(a.tareas).forEach(id => pon(fzmTareaPorId(id), grupoDe(id))); return out; }
   P.tareas.forEach(t => pon(t, 'fase'));
   planArrastradas(P.mes).forEach(t => pon(t, grupoDe(t.id)));
@@ -14296,6 +14300,26 @@ function fzmTareas(P, A){
 // Lo que no se cumplió pasa al mes siguiente, salvo en una fase que ya cerró: ahí el plan ya lo movió a la
 // fase que sigue, y de entrada no va.
 const fzmDecDef = ym => { const j = fzmFaseDe(ym); return j >= 0 && PHASES[j].end < new Date() ? 'no' : 'pasa'; };
+/* Una tarea con `mp` (el CT-GenAI de cada mes) trae los pasos de ese mes del plan de su meta en Mis Metas
+   (META_PLAN, por metaPlan): las fechas viven allá y aquí solo se leen. Adán, 1-nov-2026: "lo que no estás
+   poniendo es preparación para lo de genai". Van debajo de la tarea en el mes y en el detalle de la auditoría. */
+function fzmConMeta(t){
+  if(!t || !t.mp || !t.mes || typeof metaPlan !== 'function') return t;
+  const mp = metaPlan(t.mp); if(!mp) return t;
+  const del = mp.pasos.filter(p => !p.tarea && p.f && !p.f.mes && fzmYM(p.f.d) === t.mes);
+  if(!del.length) return t;
+  const lista = del.map(p => String(p.t).split(' — ')[0].replace(/\.$/, '')+' ('+p.fTxt+')');
+  return Object.assign({}, t, { txt: t.txt+' Este mes, de su plan: '+lista.join('; ')+'.', pasosMeta: del });
+}
+/* Lo que se sostiene y tiene hábito (`habito` en `mensual`) se mide con Hábitos (HB.resumen): los días hechos de
+   los que tocaban en ese mes. Adán, 1-nov-2026: "lo de mis hábitos debes poner estadísticas". */
+function fzmMedida(h, ym){
+  if(!h || !h.habito || !window.HB || typeof HB.resumen !== 'function' || ym > fzmYM(new Date())) return null;
+  let R; try{ R = HB.resumen(ym); }catch(e){ return null; }
+  const x = R && R.habitos.find(y => y.id === h.habito);
+  return x && x.tot ? x : null;
+}
+const fzmMedidaHTML = x => x ? '<em class="fzc-med '+(x.pct >= 80 ? 'ok' : x.pct >= 60 ? 'medias' : 'no')+'" title="Lo que marcaste en Hábitos este mes">Hábitos: '+x.ok+' de '+x.tot+(x.tot === 1 ? ' día' : ' días')+' · '+x.pct+' %</em>' : '';
 // La primera frase es el título; lo demás, el detalle, que se abre al tocarlo.
 function fzmPartir(txt){
   const t = fzmTx(txt), m = t.match(/^(.{12,}?[.!?])\s+(.+)$/);
@@ -14304,7 +14328,7 @@ function fzmPartir(txt){
 // La ficha de un mes: lo que tiene que quedar hecho y lo que se sostiene todo el mes —lo de cada semana o
 // cada mes, el foco de aprendizaje y lo de toda la fase—.
 function fzmFicha(P, A){
-  const habitos = P.mensual.map(x => Object.assign({ id: x.id, k: x.cuando }, fzmPartir(x.txt)))
+  const habitos = P.mensual.map(x => Object.assign({ id: x.id, k: x.cuando, habito: x.habito }, fzmPartir(x.txt)))
     .concat(P.foco ? [{ id: 'foco-'+P.foco.id, k: 'Tu foco', t: P.foco.nombre+', '+P.foco.horas+' h a la semana.',
                         d: fzmTx(P.foco.semana)+' Lo que lo demuestra: '+fzmTx(P.foco.entregable) }] : [])
     .concat(P.siempre.map(x => Object.assign({ id: x.id, k: 'Toda la fase' }, fzmPartir(x.txt))));
@@ -14558,7 +14582,7 @@ function fzaHTML(i, ym, ro){
   }).join('') : '<div class="fza-vacio">Este mes no trae tareas.</div>';
   const s3 = F.habitos.map(function(h){
     const v = (au.h || {})[h.id] || ((a.siempre || {})[h.id] ? 'siempre' : '');
-    return '<div class="fza-fila"><div class="fza-q">'+(h.k ? '<em class="fzc-k">'+esc(h.k)+'</em>' : '')+'<b>'+h.t+'</b></div>'+
+    return '<div class="fza-fila"><div class="fza-q">'+(h.k ? '<em class="fzc-k">'+esc(h.k)+'</em>' : '')+'<b>'+h.t+'</b>'+fzmMedidaHTML(fzmMedida(h, ym))+'</div>'+
       '<div class="fza-ops">'+FZA_HAB.map(o => btn(v === o.k, o.t, 'fzaHabito('+Y+','+fzmQ(h.id)+','+fzmQ(o.k)+','+i+')', o.k === 'nunca' ? 'no' : o.k === 'aveces' ? 'medias' : 'ok')).join('')+'</div></div>';
   }).join('');
   const foto = fzmAuditado(a) ? fzmFoto(a) : null, vivo = !foto && fzaPuedeMedir(ym) ? ctCifrasHoy() : null;

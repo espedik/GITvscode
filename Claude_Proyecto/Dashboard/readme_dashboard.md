@@ -905,6 +905,15 @@ puede marcar un mes que no ha empezado. Las cifras se miden con lo real de hoy (
 guardó al auditar; a media quincena no se pintan de rojo —todavía falta lo que el plan pone después—; desde la
 última semana del mes, sí.
 
+**Ligado, no copiado** (Adán, 1-nov-2026: *"lo que no estás poniendo es preparación para lo de genai, ganar dinero,
+dejar de rentar, enfocarme en no tomar alcohol"*). Una tarea con `mp` —el CT-GenAI de cada mes— trae debajo los pasos
+de ese mes del plan de su meta en Mis Metas, con su fecha (`fzmConMeta`, leídos de `META_PLAN` por `metaPlan`): las
+fechas viven allá. Lo que se sostiene con `habito` lleva al lado lo que dice Hábitos de ese mes —*Hábitos: 26 de 31
+días · 84 %*—, en el mes y en el paso 3 de la auditoría (`fzmMedida`, de `HB.resumen`), para contestar *siempre* o
+*casi siempre* con el dato. Lo de cada mes con `desde` solo se pide desde ese mes (`planMes`): lo nuevo no se le exige a
+un mes que ya se estaba auditando. El control 48 vigila que la meta tenga pasos fechados en el mes de la tarea y que el
+hábito exista.
+
 **La auditoría se abre en el lugar del mes** (`pmAuditar(i, mes)`, `FZA_ABIERTA`): desde el aviso de un mes que cerró
 sin auditar, desde su renglón al pie del mes (`pmAudHtml`) o desde *cómo va la fase*; si el mes es de otra fase, la
 pantalla pasa a esa fase. Arriba lleva **← Volver a octubre** (`fzaVolver`), el título y el marcador de la
@@ -1901,6 +1910,23 @@ con su %, barra en color de estado (rojo < 60, amarillo < 80, verde) y `hechos/t
 fondo cian; la media punteada en un carril propio a la derecha. Al lado, el **hallazgo**: el peor
 día y el hábito que más cae ese día (`acum[w].hab[id]`), y el mejor. Solo entran días con dos
 marcas o más, y si hasta el peor pasa del 80 % lo dice en verde. Mira los últimos 90 días.
+
+### El cierre del mes
+
+Adán, 1-nov-2026: *"lo de mis hábitos debes poner estadísticas, por ejemplo ya acabé octubre y no me dice nada de
+estadísticas finales de eso y como un resumen de cómo puedo mejorar"*. `resumenMes(ym)` cuenta de cada hábito los días
+hechos de los que tocaban (los extras de un flexible suman; hoy sin marcar todavía no cuenta), su racha más larga del
+mes, los días que se cayó, las veces que falló dos seguidas y cómo le fue cada día de la semana; del mes, el total, los
+días redondos, cada semana (1–7, 8–14…) y el mes anterior para comparar. `consejosMes` lo convierte en hasta cinco
+consejos, cada uno con el dato que lo justifica: cero alcohol (qué días se rompió y si fue en fin de semana), lo que no
+se marcó ni un día, el más bajo de los que sí se hacen (qué día se le cae), el que más veces falló dos seguidas, cómo
+terminó el mes por semanas y, siempre que lo haya, uno de lo que funcionó (la mayor subida contra el mes anterior).
+
+Los primeros diez días del mes la cabecera trae *Cierre de octubre · 73 %* (`HB.cierre(ym)`), y un mes pasado lo
+resume al pie, en lugar del aviso de ayer (`cierreMiniHTML`). La ventana (`pintarCierre`, en la capa de la ficha, hasta
+1500 px) lleva el titular, cinco cifras —el mes, contra el anterior, días redondos, la racha más larga y cero alcohol—,
+cada hábito con su barra, su cambio y su racha (tocarlo abre su ficha en ese mes, `HB.cierreFicha`), el mes por semana
+y por día de la semana, y *Cómo mejorar en noviembre*. El Plan Maestro lee lo mismo con `HB.resumen(ym)`.
 
 ### Los hábitos siguen el horario
 

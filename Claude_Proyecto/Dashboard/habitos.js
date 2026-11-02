@@ -552,6 +552,133 @@
     return { ok: ok, tot: tot, pct: tot ? Math.round(ok / tot * 100) : 0, redondos: redondos };
   }
 
+  /* ── El cierre de un mes ───────────────────────────────────────────────
+     Adán, 1-nov-2026: "lo de mis hábitos debes poner estadísticas, por ejemplo ya acabé octubre y no me dice
+     nada de estadísticas finales de eso y como un resumen de cómo puedo mejorar". `resumenMes('2026-10')` da,
+     de cada hábito, los días hechos de los que tocaban (los extras de un flexible suman; hoy sin marcar
+     todavía no cuenta), su racha más larga del mes, los días que se cayó, cuántas veces falló dos veces
+     seguidas y cómo le fue por día de la semana; del mes, el total, los días redondos, cada semana y el mes
+     anterior para comparar. `consejosMes` lo convierte en qué hacer el mes que entra, siempre con el dato
+     que lo justifica. Lo usan el cierre (HB.cierre) y, por HB.resumen, el mes y la auditoría del Plan Maestro. */
+  const DOW_C = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+  const ymDe = function (d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); };
+  const baseDe = function (ym) { const p = ym.split('-').map(Number); return new Date(p[0], p[1] - 1, 1); };
+  const pctDe = function (ok, tot) { return tot ? Math.round(ok / tot * 100) : null; };
+  function resumenMes(ym, sinAnterior) {
+    if (!S) cargar();
+    const base = baseDe(ym), dias = diasDelMes(base);
+    const H = S.def.map(function (h) {
+      let ok = 0, tot = 0, run = 0, best = 0, dobles = 0, cayoAntes = false;
+      const fallos = [], dow = [0, 0, 0, 0, 0, 0, 0].map(function () { return { ok: 0, tot: 0 }; });
+      dias.forEach(function (f) {
+        const e = estado(h, f);
+        if (neutro(e) || e === 'fut' || e === 'hoy') return;
+        const w = desdeISO(f).getDay();
+        tot++; dow[w].tot++;
+        if (logrado(e)) { ok++; dow[w].ok++; run++; if (run > best) best = run; cayoAntes = false; }
+        else { run = 0; fallos.push(f); if (cayoAntes) dobles++; cayoAntes = true; }
+      });
+      return { id: h.id, nombre: h.nombre, color: h.color, ico: h.ico, ancla: h.ancla || '', hora: h.hora || '',
+               ok: ok, tot: tot, pct: pctDe(ok, tot), rachaMax: best, fallos: fallos, dobles: dobles, dow: dow };
+    });
+    let ok = 0, tot = 0, redondos = 0;
+    H.forEach(function (x) { ok += x.ok; tot += x.tot; });
+    const semanas = [];
+    dias.forEach(function (f, i) {
+      const k = Math.floor(i / 7);
+      if (!semanas[k]) semanas[k] = { desde: f, hasta: f, ok: 0, tot: 0 };
+      semanas[k].hasta = f;
+      let todo = true, alguno = false;
+      S.def.forEach(function (h) {
+        const e = estado(h, f);
+        if (neutro(e) || e === 'fut' || e === 'hoy') return;
+        alguno = true; semanas[k].tot++;
+        if (logrado(e)) semanas[k].ok++; else todo = false;
+      });
+      if (alguno && todo) redondos++;
+    });
+    semanas.forEach(function (w) { w.pct = pctDe(w.ok, w.tot); });
+    const dow = [0, 0, 0, 0, 0, 0, 0].map(function (z, w) {
+      let o = 0, t = 0; H.forEach(function (x) { o += x.dow[w].ok; t += x.dow[w].tot; });
+      return { w: w, ok: o, tot: t, pct: pctDe(o, t) };
+    });
+    const antYm = ymDe(new Date(base.getFullYear(), base.getMonth() - 1, 1));
+    const ant = sinAnterior ? null : resumenMes(antYm, true);
+    const mejorRacha = H.reduce(function (a, x) { return x.rachaMax > a.rachaMax ? x : a; }, { rachaMax: 0, nombre: '' });
+    return { ym: ym, nombre: MESES[base.getMonth()], anio: base.getFullYear(), cerrado: ym < ymDe(new Date()),
+             habitos: H, ok: ok, tot: tot, pct: pctDe(ok, tot), redondos: redondos, semanas: semanas, dow: dow,
+             mejorRacha: mejorRacha, ant: ant && ant.tot ? ant : null };
+  }
+  const corto = function (f) { const d = desdeISO(f); return DOW_C[d.getDay()] + ' ' + d.getDate(); };
+  const yLista = function (a) { return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' y ' + a[a.length - 1]; };
+  const esAlcohol = function (x) { return x.id === 'alcohol' || /alcohol/i.test(x.nombre); };
+  // Qué hacer el mes que entra: cada consejo sale de un dato del mes, en este orden de peso.
+  function consejosMes(R) {
+    const out = [], usados = {};
+    const conDatos = R.habitos.filter(function (x) { return x.tot >= 5; });
+    // 1. El alcohol, primero: es la conducta que sostiene a todo lo demás.
+    const al = conDatos.filter(esAlcohol)[0];
+    if (al) {
+      usados[al.id] = 1;
+      if (!al.fallos.length) out.push({ tono: 'g', t: 'Cero alcohol: el mes completo', d: al.tot + ' de ' + al.tot + ' días. Lo que hiciste este mes es la plantilla del siguiente.' });
+      else {
+        const n = al.fallos.length, finde = al.fallos.filter(function (f) { const w = desdeISO(f).getDay(); return w === 5 || w === 6 || w === 0; }).length;
+        out.push({ tono: al.pct >= 90 ? 'w' : 'r', t: 'Cero alcohol: ' + al.ok + ' de ' + al.tot + ' días',
+          d: 'Se rompió ' + (n === 1 ? 'una vez' : n + ' veces') + ': ' + yLista(al.fallos.map(corto)) + '. ' +
+             (finde * 2 >= n ? finde + ' de ' + n + ' en viernes, sábado o domingo: el fin de semana es donde se decide. Antes de salir, decide qué vas a pedir y a qué hora te vas.'
+                             : 'No hay un día fijo: piensa qué pasó cada vez —con quién estabas, a qué hora— y ten la respuesta lista antes de la próxima.') +
+             ' Tu racha más larga del mes: ' + al.rachaMax + ' días.' });
+      }
+    }
+    // 2. Lo que no se marcó nunca: o no se hizo o no se anota.
+    conDatos.filter(function (x) { return !x.ok && !usados[x.id]; }).slice(0, 2).forEach(function (x) {
+      usados[x.id] = 1;
+      out.push({ tono: 'r', t: x.nombre + ': 0 de ' + x.tot,
+        d: 'No se marcó ni un día: o no lo hiciste o no lo anotas. Si lo haces, márcalo al terminar; si no, su ancla' +
+           (x.ancla ? ' («' + esc(x.ancla) + '»)' : '') + ' no está funcionando: pégalo justo después de algo que ya haces sin falta.' });
+    });
+    // 3. El más bajo de los que sí se hacen: dónde se cae.
+    const bajo = conDatos.filter(function (x) { return x.ok && x.pct < 80 && !usados[x.id]; }).sort(function (a, b) { return a.pct - b.pct; })[0];
+    if (bajo) {
+      usados[bajo.id] = 1;
+      const porDia = [0, 0, 0, 0, 0, 0, 0]; bajo.fallos.forEach(function (f) { porDia[desdeISO(f).getDay()]++; });
+      const max = Math.max.apply(null, porDia), peores = DOW_ORDEN.filter(function (w) { return max >= 2 && porDia[w] === max; });
+      const finde = peores.length && peores.every(function (w) { return w === 6 || w === 0; });
+      out.push({ tono: 'w', t: bajo.nombre + ': ' + bajo.pct + ' %, ' + bajo.ok + ' de ' + bajo.tot,
+        d: (peores.length ? 'Los ' + yLista(peores.map(function (w) { return DOW_LARGO[w]; })) + ' se te cae: ' + (max * peores.length) + ' de sus ' + bajo.fallos.length + ' fallos. ' : 'Los fallos van repartidos en la semana. ') +
+           (finde ? 'El fin de semana no tiene la rutina de entre semana: ponle una hora fija ese día.'
+                  : 'Ese día algo le gana: muévelo antes de eso o haz la versión mínima —la mitad, pero hecha— para no romper la cadena.') });
+    }
+    // 4. Nunca dos veces seguidas.
+    const dos = conDatos.filter(function (x) { return x.ok && x.dobles >= 2 && !usados[x.id]; }).sort(function (a, b) { return b.dobles - a.dobles; })[0];
+    if (dos) {
+      usados[dos.id] = 1;
+      out.push({ tono: 'w', t: 'Nunca falles dos veces seguidas',
+        d: dos.nombre + ' se cayó dos días seguidos ' + dos.dobles + ' veces. El primer fallo es un accidente; el segundo es el principio de dejarlo: el día después de fallar, hazlo aunque sea en su versión mínima.' });
+    }
+    // 5. Lo que funcionó: la mejor subida contra el mes anterior, o lo que ya es automático.
+    if (R.ant) {
+      const sube = conDatos.map(function (x) {
+        const a = R.ant.habitos.filter(function (y) { return y.id === x.id; })[0];
+        return a && a.tot >= 5 ? { x: x, a: a, d: x.pct - a.pct } : null;
+      }).filter(function (z) { return z && z.d >= 15; }).sort(function (a, b) { return b.d - a.d; })[0];
+      if (sube) out.push({ tono: 'g', t: sube.x.nombre + ': de ' + sube.a.pct + ' % a ' + sube.x.pct + ' %',
+        d: 'Lo que cambiaste funciona' + (sube.x.ancla ? ' —«' + esc(sube.x.ancla) + '»—' : '') + ': una señal fija, siempre a la misma hora. Copia esa fórmula en el que más te cuesta.' });
+    } else {
+      const top = conDatos.filter(function (x) { return x.pct >= 90; }).sort(function (a, b) { return b.pct - a.pct; })[0];
+      if (top) out.push({ tono: 'g', t: top.nombre + ': ' + top.pct + ' %', d: 'Ya es automático. Lo que lo sostiene' + (top.ancla ? ' —«' + esc(top.ancla) + '»—' : '') + ' es el modelo para los demás.' });
+    }
+    // 6. Cómo terminó el mes: la primera semana completa contra la última.
+    const sem = R.semanas.filter(function (w) { return w.tot >= 10; });
+    if (sem.length >= 3) {
+      const a = sem[0], b = sem[sem.length - 1], dlt = b.pct - a.pct;
+      if (dlt <= -15) out.push({ tono: 'w', t: 'Se fue apagando', d: 'La primera semana cerraste el ' + a.pct + ' % y la última el ' + b.pct + ' %. Al arrancar el mes que entra, repasa las anclas antes de que se enfríen.' });
+      else if (dlt >= 15) out.push({ tono: 'g', t: 'Fuiste de menos a más', d: 'La primera semana cerraste el ' + a.pct + ' % y la última el ' + b.pct + ' %: llegas con inercia al mes que entra.' });
+    }
+    const bien = out.filter(function (c) { return c.tono === 'g'; }), mal = out.filter(function (c) { return c.tono !== 'g'; });
+    return mal.slice(0, bien.length ? 4 : 5).concat(bien.slice(0, 1));
+  }
+
   const esc = function (s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
@@ -709,6 +836,14 @@
     );
 
     const finMes = new Date(mesVisto.getFullYear(), mesVisto.getMonth() + 1, 1) <= new Date();
+    /* El cierre: de un mes que ya terminó se ve al pie, en lugar del aviso de ayer; y los primeros diez días
+       del mes, la cabecera trae el botón del cierre del anterior. */
+    const ymVisto = ymDe(mesVisto), ymHoy = ymDe(new Date());
+    const ymAnt = ymDe(new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1));
+    const Rv = ymVisto < ymHoy ? resumenMes(ymVisto) : null;
+    const Ra = ymVisto === ymHoy && new Date().getDate() <= 10 ? resumenMes(ymAnt, true) : null;
+    const btnCierre = Ra && Ra.tot ? '<button class="hb2-sync hb2-cierre-b" onclick="HB.cierre(\'' + ymAnt + '\')" title="Las estadísticas finales de ' + Ra.nombre + ' y cómo mejorar">' +
+      ICO_CIERRE + '<span>Cierre de ' + Ra.nombre + ' · ' + Ra.pct + ' %</span></button>' : '';
 
     raiz.innerHTML =
       /* ── Cabecera ─────────────────────────────────────────────────── */
@@ -719,7 +854,7 @@
             '<span class="hb2-linea"></span></div>' +
           fraseHTML() +
         '</div>' +
-        '<div class="hb2-hd-r">' +
+        '<div class="hb2-hd-r">' + btnCierre +
           '<button class="hb2-sync" onclick="HB.sync()" title="Junta las marcas de tu iPad y de tu PC">' +
             ICO_SYNC + '<span>Sincronizar</span></button>' +
           '<div class="hb2-panel hb2-mes">' +
@@ -773,7 +908,7 @@
 
       /* ── Pie ──────────────────────────────────────────────────────── */
       '<div class="hb2-pie">' +
-        aviso +
+        (Rv && Rv.tot ? cierreMiniHTML(Rv) : aviso) +
         '<div class="hb2-panel hb2-hoy">' +
           '<div class="hb2-hoy-n"><span class="hb2-k">Lo de hoy</span>' +
             '<span><b>' + hechosHoy + '</b><i>/' + deHoy.length + '</i></span>' +
@@ -783,6 +918,91 @@
         '</div>' +
       '</div>';
     if (typeof marcarDesborde === 'function') requestAnimationFrame(function () { marcarDesborde(raiz.querySelector('.hb2-filasw')); });
+  }
+
+  /* ── El cierre de un mes: el panel corto del pie y la ventana completa ─── */
+  const tonoDe = function (pct) { return pct === null ? 'var(--text3)' : (pct < 60 ? 'var(--r)' : (pct < 80 ? 'var(--w)' : 'var(--g)')); };
+  const rgbDe = function (pct) { return pct < 60 ? 'var(--r-rgb)' : (pct < 80 ? 'var(--w-rgb)' : 'var(--g-rgb)'); };
+  const contra = function (R) {
+    if (!R.ant || R.pct === null) return '';
+    const d = R.pct - R.ant.pct;
+    return (d > 0 ? '+' : '') + d + ' puntos contra ' + R.ant.nombre + ' (' + R.ant.pct + ' %)';
+  };
+  function cierreMiniHTML(R) {
+    return '<div class="hb2-panel hb2-aviso hb2-cierre-mini">' +
+      '<div class="hb2-aviso-h" style="color:var(--cy)">' + ICO_CIERRE + '<span>Cierre de ' + R.nombre + '</span></div>' +
+      '<div class="hb2-cm-n"><b style="color:' + tonoDe(R.pct) + '">' + R.pct + ' %</b><i>' + R.ok + ' de ' + R.tot + (R.ant ? ' · ' + contra(R) : '') + '</i></div>' +
+      '<button class="hb2-b hb2-cm-b" onclick="HB.cierre(\'' + R.ym + '\')">Ver el cierre y cómo mejorar</button>' +
+    '</div>';
+  }
+  function pintarCierre(ym) {
+    const ov = document.getElementById('hb2Ficha');
+    if (!ov) return;
+    const R = resumenMes(ym), C = consejosMes(R);
+    const al = R.habitos.filter(function (x) { return esAlcohol(x) && x.tot; })[0];
+    const kpis = [
+      ['Del mes', R.pct + ' %', R.ok + ' de ' + R.tot + ' que tocaban', tonoDe(R.pct)],
+      [R.ant ? 'Contra ' + R.ant.nombre : 'Mes anterior', R.ant ? ((R.pct - R.ant.pct > 0 ? '+' : '') + (R.pct - R.ant.pct)) : '—', R.ant ? 'puntos · ' + R.ant.nombre + ' cerró en ' + R.ant.pct + ' %' : 'sin datos para comparar', R.ant ? (R.pct >= R.ant.pct ? 'var(--g)' : 'var(--r)') : 'var(--text3)'],
+      ['Días redondos', String(R.redondos), 'todo lo que tocaba, hecho', 'var(--p)'],
+      ['Racha más larga', R.mejorRacha.rachaMax + ' días', esc(R.mejorRacha.nombre), 'var(--o)'],
+    ].concat(al ? [['Cero alcohol', al.ok + ' de ' + al.tot, al.fallos.length ? 'se rompió ' + al.fallos.length + (al.fallos.length === 1 ? ' vez' : ' veces') : 'el mes completo', tonoDe(al.pct)]] : []);
+    const kpiH = kpis.map(function (k) {
+      return '<div class="hb2-panel hb2-ck"><span class="hb2-k">' + k[0] + '</span><b style="color:' + k[3] + '">' + k[1] + '</b><i>' + k[2] + '</i></div>';
+    }).join('');
+    const filas = R.habitos.filter(function (x) { return x.tot; }).sort(function (a, b) { return b.pct - a.pct || b.ok - a.ok; }).map(function (x) {
+      const a = R.ant && R.ant.habitos.filter(function (y) { return y.id === x.id; })[0];
+      const d = a && a.tot >= 5 ? x.pct - a.pct : null;
+      return '<button class="hb2-cr" onclick="HB.cierreFicha(\'' + x.id + '\',\'' + R.ym + '\')" title="Ver la ficha de ' + esc(x.nombre) + '">' +
+        '<span class="hb2-cr-n">' + svgIco(x.ico, x.color, 13) + '<span>' + esc(x.nombre) + '</span></span>' +
+        '<span class="hb2-cr-bar"><u style="width:' + Math.max(x.pct, 1.5) + '%;background:rgba(' + rgbDe(x.pct) + ',.8)"></u></span>' +
+        '<b style="color:' + tonoDe(x.pct) + '">' + x.pct + ' %</b>' +
+        '<span class="hb2-cr-c">' + x.ok + '/' + x.tot + '</span>' +
+        '<span class="hb2-cr-d" style="color:' + (d === null ? 'var(--text3)' : d >= 0 ? 'var(--g)' : 'var(--r)') + '">' + (d === null ? '—' : (d > 0 ? '▲ +' : d < 0 ? '▼ ' : '= ') + d) + '</span>' +
+        '<span class="hb2-cr-r">' + x.rachaMax + ' d</span>' +
+      '</button>';
+    }).join('');
+    const mini = function (arr, etiqueta) {
+      return '<div class="hb2-cmini">' + arr.map(function (w) {
+        return '<div class="hb2-cm-col" title="' + esc(etiqueta(w)) + ': ' + (w.pct === null ? 'sin datos' : w.ok + ' de ' + w.tot) + '">' +
+          '<span style="color:' + tonoDe(w.pct) + '">' + (w.pct === null ? '—' : w.pct) + '</span>' +
+          '<i><u style="height:' + (w.pct === null ? 2 : Math.max(w.pct, 3)) + '%;background:' + (w.pct === null ? 'rgba(var(--ov),.08)' : 'rgba(' + rgbDe(w.pct) + ',.75)') + '"></u></i>' +
+          '<em>' + etiqueta(w) + '</em></div>';
+      }).join('') + '</div>';
+    };
+    const semH = mini(R.semanas, function (w) { return desdeISO(w.desde).getDate() + '–' + desdeISO(w.hasta).getDate(); });
+    const dowH = mini(DOW_ORDEN.map(function (w) { return R.dow[w]; }), function (w) { return DOW_C[w.w]; });
+    const sig = MESES[new Date(R.anio, baseDe(R.ym).getMonth() + 1, 1).getMonth()];
+    ov.innerHTML =
+      '<div class="hb2-ficha-card hb2-cierre" onclick="event.stopPropagation()">' +
+        '<button class="hb2-x" onclick="HB.cerrarFicha()" aria-label="Cerrar">✕</button>' +
+        '<div class="hb2-eyebrow"><span class="hb2-dot"></span><span class="hb2-k" style="color:var(--cy)">Cierre del mes · hábitos</span><span class="hb2-linea"></span></div>' +
+        '<div class="hb2-ficha-t"><span>' + R.nombre.charAt(0).toUpperCase() + R.nombre.slice(1) + ' ' + R.anio + ' en números</span></div>' +
+        '<div class="hb2-c-lead">' + (R.cerrado ? 'Cerró' : 'Va') + ' en <b style="color:' + tonoDe(R.pct) + '">' + R.pct + ' %</b>: ' + R.ok + ' de ' + R.tot + ' días que tocaban' + (R.ant ? ', ' + contra(R) : '') + '.</div>' +
+        '<div class="hb2-cks">' + kpiH + '</div>' +
+        '<div class="hb2-c-cols">' +
+          '<div class="hb2-c-der">' +
+          '<div class="hb2-panel hb2-c-p">' +
+            '<span class="hb2-k" style="color:var(--cy)">Cada hábito</span>' +
+            '<div class="hb2-ficha-sub">Días hechos de los que tocaban · contra ' + (R.ant ? R.ant.nombre : 'el mes anterior') + ' · racha más larga del mes. Toca uno para ver su ficha.</div>' +
+            '<div class="hb2-crs">' + filas + '</div>' +
+          '</div>' +
+            '<div class="hb2-c-dos">' +
+              '<div class="hb2-panel hb2-c-p"><span class="hb2-k" style="color:var(--cy)">Por semana</span>' + semH + '</div>' +
+              '<div class="hb2-panel hb2-c-p"><span class="hb2-k" style="color:var(--cy)">Por día de la semana</span>' + dowH + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="hb2-c-der">' +
+            '<div class="hb2-panel hb2-c-p">' +
+              '<span class="hb2-k" style="color:var(--cy)">Cómo mejorar en ' + sig + '</span>' +
+              '<div class="hb2-cons">' + (C.length ? C.map(function (c) {
+                return '<div class="hb2-con hb2-con-' + c.tono + '"><b>' + esc(c.t) + '</b><span>' + c.d + '</span></div>';
+              }).join('') : '<div class="hb2-ficha-sub">Nada que corregir: todo pasó del 80 %.</div>') + '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="hb2-ficha-sub" style="margin-top:12px">Cuenta solo los días que tocaba cada hábito; lo que un hábito flexible hizo de más, suma. Los consejos salen de estos mismos datos.</div>' +
+      '</div>';
+    ov.classList.add('open');
   }
 
   /* ── Gráfica 1 · El anillo: el titular del mes ───────────────────────── */
@@ -1181,6 +1401,7 @@
   };
   const ICO_ALERTA = sv('<path d="M12 3.5 22 20H2L12 3.5Z"/><path d="M12 10v4.5M12 17.3v.2"/>', 2);
   const ICO_ESCUDO = sv('<path d="M12 3 20 6v6c0 4.4-3.2 7.8-8 9-4.8-1.2-8-4.6-8-9V6l8-3Z"/><path d="M8.8 12.2l2.2 2.2 4.2-4.4"/>');
+  const ICO_CIERRE = sv('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>', 2);
   const ICO_MAS = sv('<path d="M12 5v14M5 12h14"/>', 2);
   const ICO_SYNC = sv('<path d="M4.5 10a7.5 7.5 0 0 1 13.2-3.6L20 8.5"/><path d="M20 4v4.5h-4.5"/>' +
                       '<path d="M19.5 14a7.5 7.5 0 0 1-13.2 3.6L4 15.5"/><path d="M4 20v-4.5h4.5"/>');
@@ -1337,6 +1558,10 @@
       if (fichaId) pintarFicha();
     },
     ficha: function (id) { fichaId = id; pintarFicha(); },
+    cierre: function (ym) { if (!S) cargar(); fichaId = null; pintarCierre(ym); },
+    // Desde el cierre, la ficha del hábito se abre en ese mes.
+    cierreFicha: function (id, ym) { mesVisto = baseDe(ym); pintar(); fichaId = id; pintarFicha(); },
+    resumen: function (ym) { return resumenMes(ym); },
     cerrarFicha: function () {
       const ov = document.getElementById('hb2Ficha');
       if (ov) { ov.classList.remove('open'); ov.innerHTML = ''; }
@@ -1997,6 +2222,54 @@
 .hb2-sync-code{font-family:var(--mono);font-size:10.5px;word-break:break-all;min-height:64px}
 .hb2-sync-msg{margin-top:14px;padding:11px 13px;border-radius:9px;font-size:12px;line-height:1.55;color:var(--text);
   background:rgba(var(--g-rgb),.08);border:1px solid rgba(var(--g-rgb),.25)}
+/* El cierre del mes (HB.cierre): la ventana ancha, su panel corto al pie y el botón de la cabecera */
+.hb2-cierre-b{border-color:rgba(var(--p-rgb,176,110,255),.35);color:var(--p);background:rgba(176,110,255,.08)}
+.hb2-cierre-mini .hb2-cm-n{display:flex;align-items:baseline;gap:9px;margin:2px 0 6px;flex-wrap:wrap}
+.hb2-cierre-mini .hb2-cm-n b{font-family:var(--mono);font-size:24px;line-height:1}
+.hb2-cierre-mini .hb2-cm-n i{font-style:normal;font-size:11px;color:var(--text2)}
+.hb2-cm-b{margin-top:7px;padding:6px 11px;font-size:11px}
+.hb2-ficha-card.hb2-cierre{max-width:1500px}
+.hb2-c-lead{font-size:14px;line-height:1.5;color:var(--text2);margin:4px 0 14px}
+.hb2-cks{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:12px}
+.hb2-ck{padding:11px 14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.hb2-ck b{font-family:var(--mono);font-size:26px;line-height:1.05}
+.hb2-ck i{font-style:normal;font-size:11px;color:var(--text2);line-height:1.35}
+.hb2-c-cols{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:12px;align-items:start}
+.hb2-c-der{display:flex;flex-direction:column;gap:12px;min-width:0}
+.hb2-c-dos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hb2-c-p{padding:13px 15px;min-width:0}
+.hb2-crs{display:flex;flex-direction:column;margin-top:8px}
+.hb2-cr{display:grid;grid-template-columns:minmax(0,190px) minmax(60px,1fr) 46px 48px 54px 38px;align-items:center;gap:10px;
+  padding:7px 4px;border:0;border-bottom:1px solid rgba(var(--ov),.06);background:none;color:var(--text);cursor:pointer;text-align:left;font:inherit}
+.hb2-cr:hover{background:rgba(var(--ov),.04)}
+.hb2-cr-n{display:flex;align-items:center;gap:7px;min-width:0;font-size:12.5px;font-weight:600}
+.hb2-cr-n span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hb2-cr-bar{height:8px;border-radius:4px;background:rgba(var(--ov),.07);overflow:hidden}
+.hb2-cr-bar u{display:block;height:100%;border-radius:4px}
+.hb2-cr b{font-family:var(--mono);font-size:13px;text-align:right}
+.hb2-cr-c,.hb2-cr-d,.hb2-cr-r{font-family:var(--mono);font-size:11px;color:var(--text2);text-align:right}
+.hb2-cons{display:flex;flex-direction:column;gap:9px;margin-top:9px}
+.hb2-con{padding:9px 12px;border-left:3px solid var(--w);background:rgba(var(--w-rgb),.06);border-radius:0 8px 8px 0;display:flex;flex-direction:column;gap:3px}
+.hb2-con b{font-size:13px;color:var(--text)}
+.hb2-con span{font-size:12px;line-height:1.5;color:var(--text2)}
+.hb2-con-r{border-left-color:var(--r);background:rgba(var(--r-rgb),.07)}
+.hb2-con-g{border-left-color:var(--g);background:rgba(var(--g-rgb),.06)}
+.hb2-cmini{display:flex;gap:6px;align-items:stretch;height:118px;margin-top:9px}
+.hb2-cm-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.hb2-cm-col span{font-family:var(--mono);font-size:10.5px;font-weight:700}
+.hb2-cm-col i{flex:1;width:100%;max-width:30px;display:flex;align-items:flex-end;background:rgba(var(--ov),.04);border-radius:4px}
+.hb2-cm-col u{display:block;width:100%;border-radius:4px}
+.hb2-cm-col em{font-style:normal;font-family:var(--mono);font-size:9.5px;color:var(--text3);white-space:nowrap}
+@media (max-width:1100px){ .hb2-c-cols{grid-template-columns:1fr} }
+@media (max-width:640px){
+  .hb2-c-dos{grid-template-columns:1fr}
+  .hb2-ficha-card.hb2-cierre{padding:20px 15px}
+  .hb2-cr{grid-template-columns:minmax(0,1fr) 44px 50px;gap:7px}
+  .hb2-cr-bar,.hb2-cr-r,.hb2-cr-c{display:none}
+  .hb2-cks{grid-template-columns:1fr 1fr}
+  .hb2-ck:last-child:nth-child(odd){grid-column:1/-1}
+  .hb2-ck b{font-size:21px}
+}
 @media (max-width:640px){ .hb2-sync span{display:none} }
 `;
 

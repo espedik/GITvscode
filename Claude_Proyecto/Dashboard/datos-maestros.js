@@ -496,7 +496,7 @@ window.CIFRAS = (function () {
     // Lo mismo que su plan en Mis Metas (META_PLAN.istqbgenai) y que cabe en la media hora del Plan Maestro: tres veces
     // 15 minutos, la pregunta de cada día y, desde el 19 de diciembre, el simulacro de 60 minutos del sábado.
     { id: 'ia', desde: '2026-10', hasta: '2027-01', horas: 2, semana: 'Lunes, miércoles y jueves, los primeros 15 minutos del Plan Maestro de la noche: un objetivo del syllabus. Cada día, la pregunta del ISTQB en Hoy aprendes, y desde el 19 de diciembre, un simulacro de 60 minutos el sábado a las 15:30. El domingo es de Didi.', entregable: 'El ISTQB CT-GenAI aprobado.', cambio: 'Al presentar el CT-GenAI en enero, el foco pasa a Inglés: la solicitud a Esslingen, que cierra el 31 de marzo.' },
-    { id: 'ingles', desde: '2027-02', hasta: '2027-03', horas: 4, semana: 'Un borrador de la carta de motivación y un simulacro de entrevista grabado.', entregable: 'La solicitud a Esslingen enviada, en inglés, antes del 31 de marzo.', cambio: 'Con la solicitud enviada, el foco pasa a Código: el proyecto para el Werkstudent.' },
+    { id: 'ingles', desde: '2027-02', hasta: '2027-03', horas: 4, semana: 'Pulir la carta de motivación que ya tienes, con el CT-GenAI aprobado, y un simulacro de entrevista grabado.', entregable: 'La solicitud a Esslingen enviada, en inglés, antes del 31 de marzo.', cambio: 'Con la solicitud enviada, el foco pasa a Código: el proyecto para el Werkstudent.' },
     { id: 'codigo', desde: '2027-04', hasta: '2027-05', horas: 4, semana: 'Media hora diaria en tu proyecto, un commit por sesión.', entregable: 'Tu repositorio de pruebas en Python, público.', cambio: 'Con el proyecto publicado, el foco pasa a Networking: el Werkstudent se busca desde junio.' },
     { id: 'network', desde: '2027-06', hasta: '2027-08', horas: 2, semana: 'Cinco aplicaciones a Werkstudent y tres mensajes a tu red de Stuttgart.', entregable: 'Tres conversaciones en Stuttgart y tus aplicaciones enviadas.', cambio: 'En Alemania manda la maestría: el foco lo decide el semestre.' },
   ];
@@ -540,10 +540,10 @@ window.CIFRAS = (function () {
       {id:"s0-7",mes:"2026-09",txt:"Cada peso extra, en orden fijo: fondo de emergencia y después la BBVA. Desde el 5 oct 2026 la BBVA la pagan las quincenas y lo de Didi."},
     ]},
     {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Solicitud enviada y el ahorro en marcha",
-     meta:"Al 31 mar 2027: <b>1)</b> la solicitud a {{maestriaEscuela}} enviada completa —el IELTS (6.0) y el pasaporte ya los tienes; faltan las dos cartas de recomendación, el CV y la carta de motivación—; <b>2)</b> el depa entregado a fin de enero y, desde febrero, en casa de tu familia; <b>3)</b> la BBVA en cero desde el {{bbvaCero}} y, desde ahí, lo que pagues con ella saldado en la misma quincena: ni un peso de interés; <b>4)</b> el ISTQB CT-GenAI aprobado; <b>5)</b> la fecha de salida decidida con el saldo de GBM: {{marzoParaSalida}} sostiene septiembre de 2027 —tu ritmo da {{alemaniaMarzo}} y la diferencia es el ingreso nuevo, {{extraSalida}} al mes desde noviembre—; con menos, te vas en septiembre de 2028, con todo pagado.",
+     meta:"Al 31 mar 2027: <b>1)</b> la solicitud a {{maestriaEscuela}} enviada completa —el IELTS (6.0), el pasaporte, el CV y la carta de motivación ya los tienes; faltan las dos cartas de recomendación y postularte—; <b>2)</b> el depa entregado a fin de enero y, desde febrero, en casa de tu familia; <b>3)</b> la BBVA en cero desde el {{bbvaCero}} y, desde ahí, lo que pagues con ella saldado en la misma quincena: ni un peso de interés; <b>4)</b> el ISTQB CT-GenAI aprobado; <b>5)</b> la fecha de salida decidida con el saldo de GBM: {{marzoParaSalida}} sostiene septiembre de 2027 —tu ritmo da {{alemaniaMarzo}} y la diferencia es el ingreso nuevo, {{extraSalida}} al mes desde noviembre—; con menos, te vas en septiembre de 2028, con todo pagado.",
      razones:[
       {tipo:"ruta",t:"Para irte en septiembre de 2027 todo converge en tres fechas",d:"el 31 mar 2027 cierra la solicitud de Esslingen; en junio, la cuenta bloqueada y la visa piden {{salidaJunio}}, y en agosto la salida completa —con la colegiatura del primer semestre, la reserva del BYD y el colchón— pide {{salidaAgosto}} en la cuenta.",
-       hitos:[{f:"31 mar 2027",t:"Cierra la solicitud de Esslingen",s:"completa: CV, carta de motivación y las dos de recomendación",foto:"meta-esslingen"},
+       hitos:[{f:"31 mar 2027",t:"Cierra la solicitud de Esslingen",s:"completa, con las dos cartas de recomendación",foto:"meta-esslingen"},
               {f:"Junio 2027",t:"La cuenta bloqueada y la visa",v:"{{salidaJunio}}",s:"en la cuenta a mediados de mes",foto:"de-dinero"},
               {f:"Agosto 2027",t:"La salida completa",v:"{{salidaAgosto}}",s:"con la colegiatura del 1er semestre, la reserva del BYD y el colchón",foto:"fase-avion"}]},
       {tipo:"paso",t:"Primero la BBVA",foto:"fase-tarjeta",cifras:[{v:"{{tcBbva}}",l:"lo que debes"},{v:"{{bbvaCero}}",l:"en cero, sin intereses"}],d:"debes {{tcBbva}}. La pagaste de un golpe con todo lo que tenías y lo que quedó lo paga la quincena siguiente, hasta dejarla en cero el {{bbvaCero}}, sin intereses: {{bbvaRuta}}. Esa quincena vives de Didi."},
@@ -564,7 +564,11 @@ window.CIFRAS = (function () {
       // Adán, 21-oct-2026: "no dejes de lado lo de publicar en LinkedIn o FB acerca de la empresa de mi papá de reparar
       // helicópteros y vender helicópteros a escala, esto es muy necesario porque si llega un cliente, nos ahorraremos mucho
       // tiempo y ganaremos mucho dinero". Los posts salen de la app Posts; el hábito «Posts del negocio de tu papá» los marca.
-      {id:"m1-4",cuando:"Lunes, miércoles y viernes",txt:"Los posts del negocio de tu papá, sin falta. El de Aeroresinas —reparación de helicópteros— y el de Heliescala —helicópteros a escala—, listos en la app Posts: en LinkedIn y su versión corta en Facebook. Hasta enero los publicas tú, 20 min al llegar a {{empleador}}; desde febrero, tu papá, y tú revisas cada lunes que salieron. Cada uno cierra con el WhatsApp de su web: el cliente que llega ya sabe dónde escribir."},
+      {id:"m1-4",cuando:"Lunes, miércoles y viernes",habito:"linkedin",txt:"Los posts del negocio de tu papá, sin falta. El de Aeroresinas —reparación de helicópteros— y el de Heliescala —helicópteros a escala—, listos en la app Posts: en LinkedIn y su versión corta en Facebook. Hasta enero los publicas tú, 20 min al llegar a {{empleador}}; desde febrero, tu papá, y tú revisas cada lunes que salieron. Cada uno cierra con el WhatsApp de su web: el cliente que llega ya sabe dónde escribir."},
+      // `desde`: lo que entró a medio plan no se le pide a un mes anterior (octubre ya se estaba auditando). `habito`: el
+      // hábito que lo mide; el mes y su auditoría enseñan cuántos días de los que tocaban se marcaron.
+      {id:"m1-5",cuando:"Cada martes",desde:"2026-11",txt:"Negociar tu ingreso, 30 min en el bloque de las 22:35. Un logro nuevo con número a tu caso, el rango del mercado al día y una solicitud o un seguimiento enviado."},
+      {id:"m1-6",cuando:"Todos los días",desde:"2026-11",habito:"alcohol",txt:"Cero alcohol, marcado en Hábitos cada noche. Viernes y sábado, con plan: antes de salir decides qué pides —agua mineral, té o un coctel sin alcohol— y a qué hora te vas; si el plan es solo beber, propones otro. El cierre del mes en Hábitos te dice qué días se rompió."},
      ],
      semanas:[
       {id:"a1-1",mes:"2026-10",txt:"Deja la BBVA en cero el {{bbvaCero}}. La pagaste de un golpe con todo lo que tenías y lo que quedó lo paga la quincena siguiente —{{bbvaRuta}}—; esa quincena vives de Didi. Desde ahí, lo que pagues con ella lo pagas en la misma quincena."},
@@ -572,8 +576,21 @@ window.CIFRAS = (function () {
       {id:"a1-18",mes:"2026-10",txt:"Decide tu palanca de ingreso este mes. Septiembre de 2027 pide {{extraSalida}} más al mes desde noviembre, y la de ese tamaño es el sueldo: pide el aumento en {{empleador}} con números —lo que haces en Ford y el CT-GenAI que presentas en enero— o aplica a puestos que paguen más, remotos o en un Tier 1. Freelance de pruebas en lugar de horas de Didi también suma, después de revisar tu contrato. Cada peso, a GBM el día que entra."},
       {id:"a1-4",mes:"2026-10",txt:"Pide las dos cartas de recomendación. Un jefe de Bosch, Continental o ALTEN y un líder técnico o profesor: en inglés y firmadas."},
       {id:"a1-19",mes:"2026-10",txt:"Arranca hoy los posts del negocio de tu papá. La app Posts trae listo el de cada día de Aeroresinas y de Heliescala: publica el de hoy de las dos en LinkedIn y en Facebook, y sigue lunes, miércoles y viernes. Un cliente que llega por un post ya vio el trabajo y escribe directo al WhatsApp de la web: menos tiempo para cerrarlo."},
-      {id:"a1-5",mes:"2026-11",txt:"La ventana de Esslingen abre el 4 nov. Arma la solicitud: CV europeo, carta de motivación, título y certificado del IPN."},
-      {id:"a1-7",mes:"2027-01",txt:"Presenta el ISTQB CT-GenAI en enero. Llega con el simulacro de Mis Metas en 34 de 46 o más, dos veces seguidas: el corte oficial es 30."},
+      {id:"a1-5",mes:"2026-11",txt:"La ventana de Esslingen abre el 4 nov: crea tu cuenta en el portal y sube lo que ya tienes. CV, carta de motivación, IELTS, pasaporte, título y certificado del IPN; solo quedan las dos cartas de recomendación."},
+      {id:"a1-7",mes:"2027-01",mp:"istqbgenai",txt:"Presenta el ISTQB CT-GenAI en enero. Llega con el simulacro de Mis Metas en 34 de 46 o más, dos veces seguidas: el corte oficial es 30."},
+      // Adán, 1-nov-2026: "hay varias cosas de los checklist de fase 1 que son como muy pobres… lo de la maestría ya lo tengo,
+      // solamente falta postularme y pedir cartas de recomendación y pues obviamente el dinero, lo que no estás poniendo es
+      // preparación para lo de genai, ganar dinero, dejar de rentar, enfocarme en no tomar alcohol". Las del CT-GenAI llevan
+      // `mp`: el Plan Maestro pinta debajo los pasos de ese mes del plan de Mis Metas (META_PLAN.istqbgenai), sin copiarlos.
+      {id:"a1-20",mes:"2026-11",mp:"istqbgenai",txt:"El CT-GenAI de noviembre, con su plan de Mis Metas. Los 15 minutos de lunes, miércoles y jueves en el Plan Maestro, y la pregunta diaria de Hoy aprendes."},
+      {id:"a1-21",mes:"2026-11",txt:"Ejecuta tu palanca de ingreso. Con el caso que armas los martes en Negociar tu ingreso —logros con números y el rango del mercado—, pide la reunión del aumento en {{empleador}} o manda tus primeras cinco solicitudes a puestos que paguen más. Septiembre de 2027 pide {{extraSalida}} más al mes."},
+      {id:"a1-22",mes:"2026-11",txt:"Revisa el contrato del depa. La fecha de término, con cuántos días hay que avisar y cómo se devuelve el depósito: lo entregas a fin de enero y desde febrero ya no pagas renta."},
+      {id:"a1-23",mes:"2026-12",mp:"istqbgenai",txt:"El CT-GenAI de diciembre, con su plan de Mis Metas. Termina el syllabus y haz el primer simulacro completo: lo que salga bajo el 65 % por capítulo, a releer en enero."},
+      {id:"a1-24",mes:"2026-12",txt:"Las dos cartas de recomendación, firmadas y en PDF, antes de las vacaciones. Si alguna no llega, pídesela esa misma semana a tu tercera opción: en enero la gente regresa tarde."},
+      {id:"a1-25",mes:"2026-12",txt:"Cierra tu negociación de ingreso antes de fin de año. El aumento por escrito o dos procesos en entrevista; si nada avanza, freelance de pruebas en lugar de horas de Didi, después de revisar tu contrato. Cada peso nuevo, a GBM el día que entra."},
+      {id:"a1-26",mes:"2026-12",txt:"Avisa por escrito que entregas el depa el 31 de enero. Con la anticipación que pide tu contrato; y acuerda con tu familia el día que llegas y los {{aporteCasa}} al mes de aporte."},
+      {id:"a1-27",mes:"2027-01",txt:"Con el CT-GenAI aprobado, vuelve a negociar. Ponlo en tu CV y en LinkedIn la misma semana y úsalo en la reunión o en tus solicitudes: es tu argumento nuevo para el ingreso."},
+      {id:"a1-28",mes:"2027-01",txt:"Haz la lista de la mudanza la primera semana de enero. Qué llevas a casa de tu familia, dónde va cada cosa y quién te ayuda el día de la entrega."},
       {id:"a1-9",mes:"2026-12",txt:"El aguinaldo paga el seguro del BYD el día que llega: no entra al plan."},
       {id:"a1-10",mes:"2027-02",txt:"Manda la solicitud completa a Esslingen en febrero, con el CT-GenAI ya en tu CV. No esperes a marzo: cierra el 31 y la respuesta llega antes de fin de mayo."},
       {id:"a1-11",mes:"2027-01",txt:"Entrega el depa a fin de mes y recupera el depósito. Lo que no te llevas a casa de tu familia —muebles, electrodomésticos, cocina— se vende: a GBM."},
@@ -880,7 +897,7 @@ window.CIFRAS = (function () {
       tareas: f ? (f.semanas || []).filter(function (x) { return x.mes === ym; }) : [],
       salida: salida,
       siempre: f ? (f.semanas || []).filter(function (x) { return x.cont; }) : [],
-      mensual: (f && f.mensual) || [],
+      mensual: ((f && f.mensual) || []).filter(function (x) { return !x.desde || ym >= x.desde; }),
       foco: foco ? Object.assign({ nombre: sk ? sk.name : foco.id }, foco) : null,
       dinero: PROYECCION.meses.filter(function (m) { return m.mes === ym; })[0] || null,
       costos: SALIDA.costos.filter(function (c) { return c.mes === ym; })

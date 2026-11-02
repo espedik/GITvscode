@@ -3030,6 +3030,35 @@ function promptsDeLoTocado() {
   if (faltan.length) avisos.push('Habilidades Base · ' + faltan.length + ' de ' + Object.keys(HD).length + ' fichas sin sus fotos, cifras, gráficas y «Ponte a prueba» (HB_VISUAL); siguen: ' + faltan.join(', '));
 })();
 
+/* ── 48. La fase ligada: lo de Mis Metas y lo de Hábitos, leído, no copiado ───────────────────────────────────
+   Adán, 1-nov-2026: "lo que no estás poniendo es preparación para lo de genai… lo de mis hábitos debes poner
+   estadísticas". Una tarea de fase con `mp` pinta debajo los pasos de ese mes del plan de su meta (META_PLAN, en
+   dashboard.html, por fzmConMeta): si la meta no existe o no tiene pasos fechados ese mes, la tarea sale sola. Lo que
+   se sostiene con `habito` se mide con Hábitos (HB.resumen, por fzmMedida): el hábito tiene que estar en la semilla
+   de habitos.js. Y el cierre de cada mes vive en Hábitos (HB.cierre). */
+(function () {
+  if (!global.window || !global.window.CIFRAS) return;   // el control 4 ya avisó
+  const malos = [], C = global.window.CIFRAS, h = leer('Dashboard/dashboard.html'), hb = leer('Dashboard/habitos.js');
+  let nMp = 0, nHab = 0;
+  (C.PHASES || []).forEach(function (f) {
+    (f.semanas || []).filter(function (t) { return t.mp; }).forEach(function (t) {
+      nMp++;
+      const i = h.indexOf('\n  ' + t.mp + ':{\n    meta:') >= 0 ? h.indexOf('\n  ' + t.mp + ':{\n    meta:') : h.indexOf('\n  ' + t.mp + ':{\r\n    meta:');
+      if (i < 0) { malos.push(t.id + ': su meta «' + t.mp + '» no está en META_PLAN'); return; }
+      const bloque = h.slice(i, h.indexOf('\n  },', i) > i ? h.indexOf('\n  },', i) : i + 6000);
+      if (!t.mes || bloque.indexOf("f:'" + t.mes + '-') < 0) malos.push(t.id + ': el plan de «' + t.mp + '» no tiene pasos fechados en ' + t.mes);
+    });
+    (f.mensual || []).filter(function (x) { return x.habito; }).forEach(function (x) {
+      nHab++;
+      if (!new RegExp("id: *'" + x.habito + "'").test(hb)) malos.push(x.id + ': el hábito «' + x.habito + '» no está en la semilla de habitos.js');
+    });
+  });
+  if (h.indexOf('function fzmConMeta(') < 0 || h.indexOf('function fzmMedida(') < 0) malos.push('dashboard.html ya no tiene fzmConMeta o fzmMedida');
+  if (hb.indexOf('resumen: function') < 0 || hb.indexOf('cierre: function') < 0 || hb.indexOf('function consejosMes(') < 0) malos.push('habitos.js ya no tiene el cierre del mes (HB.resumen, HB.cierre, consejosMes)');
+  if (malos.length) problemas.push('La fase ligada a Mis Metas y a Hábitos:\n     ' + malos.join('\n     '));
+  else ok.push('Fases: ' + nMp + ' tareas traen los pasos de su mes del plan de Mis Metas y ' + nHab + ' cosas que se sostienen se miden con Hábitos; el cierre de cada mes, con sus consejos, está en Hábitos');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];
