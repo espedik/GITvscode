@@ -3088,6 +3088,32 @@ function promptsDeLoTocado() {
   else ok.push('Fases: ' + nMp + ' tareas traen los pasos de su mes del plan de Mis Metas y ' + nHab + ' cosas que se sostienen se miden con Hábitos; el cierre de cada mes, con sus consejos, está en Hábitos');
 })();
 
+/* ── 49. Cada dispositivo sabe qué versión tiene ────────────────────────────────────────────────────────
+   Adán, 2-nov-2026: "pon cuál es la última vez que se subió un commit… a veces no sé cuándo mi app está actualizada
+   porque mi iPad tarda en jalar cambios". El hook de pre-commit corre version-escribir.js, que deja en version.js la
+   hora de cada commit; Mi Día la enseña junto a la semana (pintarVersion) y la compara con el último commit de GitHub.
+   Se vigilan las piezas y que el último commit haya llevado su hora: uno hecho sin el hook (una sesión en la nube sin
+   core.hooksPath, una edición en GitHub) deja version.js atrás, y el iPad diría que hay uno más nuevo aunque esté al día. */
+(function () {
+  const leerSi = rel => { try { return leer(rel); } catch (e) { return ''; } };
+  const malos = [], h = leer('Dashboard/dashboard.html'), hook = leerSi('.githooks/pre-commit');
+  const ver = leerSi('Dashboard/version.js'), m = ver.match(/"commit":\s*"([^"]+)"/);
+  if (!leerSi('Dashboard/version-escribir.js')) malos.push('falta Dashboard/version-escribir.js');
+  if (hook.indexOf('version-escribir.js') < 0) malos.push('el hook de pre-commit ya no corre version-escribir.js');
+  if (!m || isNaN(new Date(m[1]))) malos.push('Dashboard/version.js no trae la hora del commit (window.APP_VERSION.commit)');
+  if (h.indexOf('<script src="version.js"') < 0) malos.push('dashboard.html ya no carga version.js');
+  if (h.indexOf('function pintarVersion()') < 0 || h.indexOf('id="diaVersion"') < 0) malos.push('Mi Día ya no enseña el último commit (pintarVersion, #diaVersion)');
+  if (malos.length) { problemas.push('El último commit de cada dispositivo:\n     ' + malos.join('\n     ')); return; }
+  let head = null;
+  try {
+    head = require('child_process').execSync('git log -1 --format=%cI', { cwd: RAIZ, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+  } catch (e) { /* sin git: no se compara */ }
+  if (head && (new Date(head) - new Date(m[1])) / 1000 > 120)
+    avisos.push('El último commit (' + head + ') salió sin su hora en version.js (' + m[1] + '): se hizo sin el hook. ' +
+      'Actívalo con git config core.hooksPath Claude_Proyecto/.githooks; el siguiente commit lo pone al día.');
+  ok.push('Versión: cada commit deja su hora en version.js (hook de pre-commit) y Mi Día la compara con GitHub');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

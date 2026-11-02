@@ -9,5 +9,7 @@
 raiz="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
 if command -v node >/dev/null 2>&1; then
   node "$raiz/Claude_Proyecto/Dashboard/habitos-exportar.js" --add || true
+  # Y la hora de este commit, para que cada dispositivo sepa qué versión tiene (Mi Día la enseña junto a la semana).
+  node "$raiz/Claude_Proyecto/Dashboard/version-escribir.js" --add || true
 fi
 exit 0

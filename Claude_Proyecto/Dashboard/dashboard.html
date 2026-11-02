@@ -45,6 +45,8 @@
 <script src="auditoria-sync.js" onerror="this.remove()"></script>
 <!-- Los saldos de Finanzas de la PC —sin movimientos ni notas—, para el dispositivo que no tiene Finanzas (finCargar). -->
 <script src="finanzas-sync.js" onerror="this.remove()"></script>
+<!-- La hora del último commit de esta copia, que el hook de pre-commit escribe (version-escribir.js): Mi Día la enseña junto a la semana. -->
+<script src="version.js" onerror="this.remove()"></script>
 <script src="habitos.js"></script>
 <script src="examen-genai-data.js"></script>
 <script src="examen-genai-data-b.js"></script>
@@ -3262,6 +3264,17 @@ body.rail-on{--pad-rail:max(6vw,230px)}
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .dia-topbar .hero-frase .txt::before{content:'“'}.dia-topbar .hero-frase .txt::after{content:'”'}
 .dia-sem{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);white-space:nowrap}
+/* Junto a la semana, el último commit que trae este dispositivo (pintarVersion): «✓ al día» en verde si GitHub no tiene
+   uno más nuevo; si lo tiene, en ámbar y se toca para recargar. */
+.dia-sem-w{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:4px 16px;min-width:0}
+.dia-ver{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);white-space:nowrap}
+.dia-ver:empty{display:none}
+/* En pantalla angosta la semana se oculta y la franja de la frase queda bajo la agenda: el último commit va arriba, bajo la fecha. */
+.dia-ver-m{display:none}
+.dia-ver b{font-weight:700}
+.dia-ver-ok{color:var(--g)}
+.dia-ver-sin{color:var(--w)}
+.dia-ver-nueva{all:unset;cursor:pointer;color:var(--w);text-decoration:underline;text-underline-offset:2px}
 /* El AHORA: tarjeta propia, sin el tope de 44vh de antes; lo largo (subtareas, gym) desplaza dentro. */
 .dia-ahora{flex:none;padding:18px 24px 16px!important;max-height:34vh;overflow-y:auto;scrollbar-width:thin;border-left-width:3px;container:ahora / inline-size}
 .dia-ahora .blq-head{gap:10px;margin-bottom:8px}
@@ -4124,6 +4137,8 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
   .dia-ahora{max-height:none;overflow:visible}
   .dia-topbar{grid-template-columns:1fr}
   .dia-sem{display:none}
+  .dia-sem-w{display:none}
+  .dia-ver-m:not(:empty){display:block;white-space:normal;margin-top:4px}
   .dia-mods,#miDiaSecundarios{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none}
   #miDiaSecundarios>.tile{overflow:visible}
   .dh-list{flex:none}
@@ -4965,6 +4980,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
               <span class="dia-reloj" id="diaClock">00:00</span>
             </div>
             <span class="dia-agenda-res" id="diaAgendaRes"></span>
+            <span class="dia-ver dia-ver-m" id="diaVersionM"></span>
           </div>
           <div id="diaTimelineTitle" style="display:none;align-items:center;gap:8px;font-size:11.5px;font-weight:700;color:var(--text2)"></div>
           <div class="dia-agenda-l" id="diaAgenda"></div>
@@ -4979,7 +4995,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
         <div class="dia-der">
           <div class="dia-topbar reveal d1">
             <div class="hero-frase" id="heroFrase"></div>
-            <span class="dia-sem" id="diaSemana"></span>
+            <div class="dia-sem-w"><span class="dia-sem" id="diaSemana"></span><span class="dia-ver" id="diaVersion"></span></div>
           </div>
           <!-- pintarBloqueDetalle() escribe aquí el bloque de la hora actual, o el que toques en
                la agenda. -->
@@ -7012,12 +7028,52 @@ function hasFinData(){return (D.fin.transactions||[]).length+(D.fin.debts||[]).l
 
 // ══════════════════════════════════════════════════════════════════════════
 // RENDER — una función por pantalla
+// El último commit que trae este dispositivo, junto a la semana (Adán, 2-nov-2026: "pon cuál es la última vez que se
+// subió un commit… a veces no sé cuándo mi app está actualizada porque mi iPad tarda en jalar cambios"). La hora sale de
+// version.js, que el hook de pre-commit escribe en cada commit; se compara con el último commit de main en GitHub (el
+// repositorio es público: la consulta no lleva sesión). Si GitHub tiene uno más nuevo, este dispositivo no lo ha jalado;
+// si este es más nuevo, es la PC con un commit sin subir. Se consulta al abrir y, con la app a la vista, cada 10 minutos;
+// sin red, queda solo la hora.
+const APP_REPO = 'espedik/GITvscode';
+let _verGit = null, _verGitT = 0;
+function verFecha(iso){
+  const d = new Date(iso); if(isNaN(d)) return '';
+  const h = new Date(), ayer = new Date(h.getFullYear(), h.getMonth(), h.getDate() - 1);
+  const mismo = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  const MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const hm = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  return (mismo(d, h) ? 'hoy' : mismo(d, ayer) ? 'ayer' : d.getDate() + ' ' + MC[d.getMonth()]) + ' ' + hm;
+}
+function verGitHub(){
+  if(Date.now() - _verGitT < 600000 || typeof fetch !== 'function') return;
+  _verGitT = Date.now();
+  fetch('https://api.github.com/repos/' + APP_REPO + '/commits?sha=main&per_page=1', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(j => { const c = j && j[0] && j[0].commit; if(c && c.committer){ _verGit = c.committer.date; pintarVersion(); } })
+    .catch(() => {});
+}
+function pintarVersion(){
+  const els = ['diaVersion', 'diaVersionM'].map(id => document.getElementById(id)).filter(Boolean); if(!els.length) return;
+  const v = window.APP_VERSION && APP_VERSION.commit;
+  if(!v){ els.forEach(el => { el.innerHTML = ''; }); return; }
+  const dif = _verGit ? (new Date(_verGit) - new Date(v)) / 1000 : 0;
+  const estado = !_verGit ? ''
+    : dif > 120 ? ` · <button type="button" class="dia-ver-nueva" onclick="location.reload()" title="Recarga para jalarlo; GitHub tarda unos minutos en publicarlo">hay uno más nuevo, ${esc(verFecha(_verGit))} ↻</button>`
+    : dif < -120 ? ' · <b class="dia-ver-sin" title="Este commit todavía no está en GitHub: falta el push">sin subir a GitHub</b>'
+    : ' · <b class="dia-ver-ok" title="GitHub no tiene nada más nuevo">✓ al día</b>';
+  els.forEach(el => {
+    el.innerHTML = 'Último commit · ' + esc(verFecha(v)) + estado;
+    el.title = 'La versión que tiene este dispositivo: la hora de su último commit, comparada con el último commit en GitHub.';
+  });
+}
+document.addEventListener('visibilitychange', () => { if(!document.hidden) verGitHub(); });
 function renderDia(){
   const {tareasHoy,actual,siguiente}=rutinaAhoraSiguiente();
   const doneHoy=(D.rut.completado||{})[today()]||[];
 
   document.getElementById('diaFecha').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
   const semEl=document.getElementById('diaSemana'); if(semEl) semEl.textContent=`Semana ${semanaISO(new Date())} · día ${diaDelAnio()}`;
+  pintarVersion(); verGitHub();
   // El bloque "Ahora mismo" ya no repite las subtareas aquí (2026-08-08, unificación con Hero):
   // con las 2 pantallas fusionadas, la línea de tiempo de abajo queda a la vista en el mismo
   // slide, con la tarjeta "ahora" ya resaltada (.rt2-now) y sus subtareas completas — mostrarlas

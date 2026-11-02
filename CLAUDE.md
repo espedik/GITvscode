@@ -143,6 +143,11 @@ marcas del Chrome de esta PC y, si cambiaron, agrega `Dashboard/habitos-sync.js`
 vea en la página publicada. Que ese archivo aparezca en un commit que no habla de hábitos es eso, no un error. Si
 no encuentra Chrome lo dice en una línea y el commit sigue.
 
+**Y la hora del commit.** El mismo hook escribe `Dashboard/version.js` con la hora de cada commit: es el *Último commit*
+que Mi Día enseña junto a la semana y compara con GitHub, para saber si el iPad ya jaló lo último. **En una sesión en la
+nube se activa el hook antes del primer commit** (`git config core.hooksPath Claude_Proyecto/.githooks`); si no, el
+control 49 del verificador lo avisa.
+
 **Si hay trabajo pendiente de días previos sin commitear**, se pregunta el alcance antes de subir, pero recomendando subir todo lo pendiente.
 
 **Lo que no se sube nunca**: archivos temporales, respaldos (`*.bak`, `*.PREV.html`, `*.tmp`) y scripts de un solo uso — esos viven en el scratchpad de la sesión, no en el repo.

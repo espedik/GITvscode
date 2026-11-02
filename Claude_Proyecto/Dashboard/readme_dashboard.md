@@ -22,6 +22,7 @@ en una página.
 | `DATOS-MAESTROS.md` | Índice del proyecto: catálogo de variables, mapa de apps, cómo se corrige un saldo |
 | `verificar-sincronia.js` | Comprueba que nada se haya vuelto a duplicar. Lo corre un hook al final de cada turno; sale con código 1 si algo falla |
 | `habitos.js` | La pantalla de Hábitos entera: semilla, motor de rachas, migraciones, pintado y estilos |
+| `version.js` · `version-escribir.js` | La hora del último commit de esta copia (`window.APP_VERSION.commit`), que el hook de pre-commit escribe con `version-escribir.js` en cada commit; Mi Día la enseña junto a la semana (ver *Tu iPad y tu PC*) |
 | `inversion-hoy.js` · `inversion-alto.js` · `inversion-superalto.js` · `inversion-prompt.js` · `inversion-alto-prompt.js` · `inversion-superalto-prompt.js` · `inversion-esquema.json` · `inversion-apuesta-esquema.json` · `inversion-actualizar.ps1` (+ `.bat`) · `inversion-instalar.bat` | *Qué invertir hoy*: los datos que escribe Claude (perfiles, riesgo alto y súper alto), los tres prompts, los dos esquemas de respuesta (perfiles; apuestas) y el puente que los une (ver su sección) |
 | `ficha.js` · `ficha.css` | El panel de ficha de producto (`pfAbrirId`, `pfPorNombre`, `.lc-info`) que usan la Lista de Compras y la rutina |
 | `examen-genai.js` · `examen-genai-data.js` (A, 79 preguntas) · `examen-genai-data-b.js` (B, 77) | El simulacro ISTQB CT-GenAI: motor y los dos bancos |
@@ -30,7 +31,7 @@ en una página.
 | `graficas-svg.js` | Las gráficas de las páginas sueltas (Laptop y Actriz IA): barras, rangos, columnas apiladas con meta, línea con umbrales, barra segmentada y dispersión (`GSVG`), con la paleta categórica validada (`--s1`…`--s5`), tooltip, leyenda y la tabla de datos debajo |
 | `prompt-pagina.js` · `prompts-paginas.js` | El icono de la brújula que llevan **todas** las páginas del proyecto y los prompts que abre: el especialista que gobierna cada una (ver `DATOS-MAESTROS.md` → *El prompt de cada página*). En el Dashboard va fijo arriba a la izquierda, donde la barra de apps deja la esquina libre |
 | `habilidades-base-practica.js` · `habilidades-base-visual.js` · `fotos-base/` · `hb-fotos.py` | Habilidades Base: la práctica de cada paso (`HB_PRACTICA`: sesión, «sale bien si», subtemas, «Para copiar»), lo que se ve y se toca (`HB_VISUAL`: foto, cifras, gráficas, calculadoras, ritmos y «Ponte a prueba»; `HB_CALC`), las fotos de cada paso a 1024 px y la herramienta que las busca y las baja con su crédito. Ver *Habilidades Base* |
-| `fotos-aprende/` | Las 41 fotos de *Hoy aprendes* y, las `fase-*` (13), de *Por qué esta fase* (480 px, de Openverse: StockSnap, Flickr y Rawpixel); su crédito va en `AP_FOTOS` y sale en el `title` de cada una |
+| `fotos-aprende/` | Las 41 fotos de *Hoy aprendes* y las `fase-*` (13), que nombran los bloques `razones` de las fases en el maestro —*Tu año* enseña `fase-calendario` y `fase-tarjeta`— (480 px, de Openverse: StockSnap, Flickr y Rawpixel); su crédito va en `AP_FOTOS` y sale en el `title` de cada una |
 | `diseno-*/` | Los canvas de cada rediseño: `Main.dc.html` (lo elegido) y las direcciones descartadas al lado |
 | `readme_dashboard.md` | Este archivo |
 
@@ -175,7 +176,8 @@ o un monto escrito.
 
 ### El AHORA
 
-La tarjeta de la derecha, bajo la frase del día y `Semana 37 · día 256`. La pinta
+La tarjeta de la derecha, bajo la frase del día, `Semana 37 · día 256` y el último commit que trae este dispositivo
+(`pintarVersion`, ver *Tu iPad y tu PC*). La pinta
 `pintarBloqueDetalle()`: el bloque de la hora actual o el tocado en la agenda, con sus subtareas
 o la rutina de gym; **Después, 21:00 · Cena ligera** (el que sigue, con su título corto) y, si el
 bloque es de Didi —`esDidi()`: el que empieza por «Didi»; el descanso que solo lo nombra no cuenta—,
@@ -2087,6 +2089,16 @@ notas, presupuestos e historial no salen. En un dispositivo sin Finanzas propia,
 lectura: nada la escribe en `finanzasmx_v2`— y *Tu dinero* lleva la etiqueta *cifras de tu PC al …* (`finRepoNota`).
 Medido con los datos reales: los ocho medidores del Plan Maestro salen iguales que en la PC. El control 39 revisa
 también que el archivo no lleve movimientos, notas ni descripciones.
+
+**Y cada dispositivo dice qué versión tiene** (Adán, 2-nov-2026: *"pon cuál es la última vez que se subió un commit, esto
+debido a que a veces no sé cuándo mi app está actualizada porque mi iPad tarda en jalar cambios"*). El mismo hook corre
+`version-escribir.js`, que deja en `version.js` la hora de cada commit (`window.APP_VERSION = {commit}`) y lo agrega al commit.
+Mi Día la enseña junto a la semana —*Último commit · hoy 20:31*— y la compara con el último commit de `main` en GitHub
+(`verGitHub`: la API pública, sin sesión, al abrir y cada 10 minutos con la app a la vista): *✓ al día* en verde; *hay uno
+más nuevo, hoy 21:05 ↻* en ámbar, que recarga al tocarlo —GitHub tarda unos minutos en publicarlo—; o *sin subir a GitHub*,
+la PC con un commit sin push. Sin red, queda solo la hora. Bajo 900 px, donde la semana se oculta y la frase queda bajo la
+agenda, la línea va arriba, bajo la fecha (`#diaVersionM`). El **control 49** vigila las piezas y avisa si el último commit
+se hizo sin el hook: entonces `version.js` queda atrás y el iPad diría que hay uno más nuevo aunque esté al día.
 
 ---
 
