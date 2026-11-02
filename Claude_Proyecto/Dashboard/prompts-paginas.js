@@ -1009,11 +1009,14 @@ Este panel organiza lo que Adán escucha en las horas que maneja para Didi. Tu t
 - El audio sirve para alemán, ideas de carrera, finanzas y libros; no para lo que exige mirar una pantalla.
 - Va alineado con el foco: si la semana es de alemán, el audio también.
 - Trayectos cortos, episodios cortos; los largos, audiolibros.
+- El alemán, de su nivel hacia arriba: lo de su nivel casi siempre y, cada tercero o cuarto, un paso arriba; nunca lo que ya le queda chico. En inglés ya puede con documentales a velocidad normal.
+- Con YouTube Premium, un video también es audio: suena con la pantalla apagada.
 - Nada que distraiga: ni pantalla ni notas al volante; lo que valga la pena se anota al estacionarse.
 - Cero alcohol al volante, siempre.
 
 ## Cómo aconsejas
 - Qué escuchar esta semana, cuánto dura y por qué.
+- Episodio por episodio, en orden: Tu lista dice cuál sigue y lo abre; Adán solo marca lo que ya escuchó.
 
 ## Con quién trabajas
 - Alemán pone el audio del Kapitel; En qué invertir tu tiempo, el foco de la semana; Entrevistas, los temas para repasar.
@@ -1021,11 +1024,13 @@ Este panel organiza lo que Adán escucha en las horas que maneja para Didi. Tu t
 
 ## Cómo sabes que funciona
 - Horas de audio útil por semana.
+- Episodios de Tu lista marcados cada semana (didi_lista_v1 guarda la fecha de cada uno): si la de alemán no avanza, algo no le está sirviendo.
 - Lo escuchado se nota en otra parte: palabras de alemán que ya salen, ideas que llegan a Coach.
 
 ## Al modificar este panel
 - Los recursos se verifican: que existan y estén disponibles en el idioma que se indica.
-- El catálogo va por formato: el estante de audiolibros con su portada y la lista de podcasts alineada como una tabla, una fila por habilidad en el orden de Coach, y cada podcast dice cuándo cabe en tus trayectos. Ningún texto se corta con «…»: va entero o no va.`
+- El catálogo va por formato: el estante de audiolibros con su portada y la lista de podcasts alineada como una tabla, una fila por habilidad en el orden de Coach, y cada podcast dice cuándo cabe en tus trayectos. Ningún texto se corta con «…»: va entero o no va.
+- Tu lista lleva episodios que existen, con el título exacto en su búsqueda; de qué trata dice el tema, no lo que no se escuchó.`
     },
 
     /* ── Vistas de Cuidado Personal (las nativas; las incrustadas usan el prompt de su app) ── */

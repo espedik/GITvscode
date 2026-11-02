@@ -1777,15 +1777,16 @@ semana* arriba— es la dirección Main de `diseno-escuchar/`, y el catálogo va
 
 **A lo grande** (Adán: *"hazla en pantalla más grande que abarque más ancho y alto"*): hasta 2200 px
 de ancho y el 94 % del alto, como los paneles de los KPI; el cuerpo desplaza por dentro. A 2048×1040 (su
-pantalla) mide 1966×978 y el cuerpo, 874 px de alto con 2250 de contenido; en el teléfono va a pantalla completa
+pantalla) mide 1966×978 y el cuerpo, 878 px de alto con 3080 de contenido; en el teléfono va a pantalla completa
 y a una columna, con el título a todo lo ancho y las dos cifras debajo.
 
 | Zona | Qué lleva |
 |---|---|
-| **Esta semana**, arriba | `didiSemanaHtml()`: el audiolibro de la semana —fijo de lunes a domingo (`didiLibroSemana()`): el del paso de la semana cuando su libro está en el catálogo (`didiLibroDelPaso()`) o el primero del orden que no te haya tocado; con la portada de la biblioteca (`habLibro()`)—, el episodio de hoy y el alemán de hoy (`didiAlemanHoy()`), con Spotify, Apple y YouTube. Es lo mismo que dice *Al volante* (`didiHoy()`) |
-| **Tus trayectos**, a la izquierda | `didiViajes()`: los bloques de la rutina que empiezan por «Didi» (`esDidi()`) con su duración hasta el bloque siguiente, los días iguales juntos, qué cabe en cada trayecto y el total de la semana (27 h 30, el mismo de la franja). Debajo, las reglas al volante, con el nivel de inglés vivo de `SK`. Desde 1101 px de ancho y 1000 de alto se queda a la vista mientras bajas por el catálogo (`position:sticky`; mide 824 px y el cuerpo, 874), así no queda una columna vacía |
+| **Esta semana**, arriba | `didiSemanaHtml()`: el audiolibro de la semana —fijo de lunes a domingo (`didiLibroSemana()`): el del paso de la semana cuando su libro está en el catálogo (`didiLibroDelPaso()`) o el primero del orden que no te haya tocado; con la portada de la biblioteca (`habLibro()`)—, y el episodio de hoy, con Spotify, Apple y YouTube. Es lo mismo que dice *Al volante* (`didiHoy()`). El alemán no va aquí: es lo siguiente de *Tu lista*, justo debajo |
+| **Tu lista, en orden**, debajo | `didiListaHtml()` (Adán, 2-nov-2026: *"no sé si puedas hacerme una playlist para todos estos o me ordenes episodios, etc pero desde mi app"*): una columna por idioma con su avance (*3 de 24*), **lo siguiente** en grande —serie, nivel, de qué trata, ▶ YouTube (o Spotify, Apple y YouTube si es podcast) y **✓ Ya lo escuché**, que pasa al que sigue (`didiListaMarca()`)—, los tres que vienen y, plegada, la lista completa, donde se marca o desmarca cualquiera. Lo escuchado vive en `didi_lista_v1` (`{id: fecha}`), en este navegador; lo siguiente es el primero sin marcar (`didiListaSig()`). Al marcar se repinta solo la lista y la completa sigue abierta si lo estaba. Lado a lado desde 1301 px; abajo, una sobre otra |
+| **Tus trayectos**, a la izquierda | `didiViajes()`: los bloques de la rutina que empiezan por «Didi» (`esDidi()`) con su duración hasta el bloque siguiente, los días iguales juntos, qué cabe en cada trayecto y el total de la semana (27 h 30, el mismo de la franja). Debajo, las reglas al volante, con el nivel de inglés vivo de `SK`. Desde 1101 px de ancho y 1000 de alto se queda a la vista mientras bajas por el catálogo (`position:sticky`; mide 807 px y el cuerpo, 878), así no queda una columna vacía |
 | **Audiolibros**, debajo | El estante (`didiCatalogoHtml()`, `didiLibroHtml()`): una fila por habilidad en el orden de Coach (`didiGruposOrden()`: el foco de Hoy aprendes —`aprendeFoco()`— con su marca *Tu foco*, luego el siguiente foco del plan y las demás por retorno, `skRetorno()`) y al final *En español*. A la izquierda de cada fila, su etiqueta (`didiFilaH()`): la habilidad con su nivel vivo de `SK` y su porqué; a la derecha, sus libros, cada uno con la portada de la biblioteca (`habLibro()`), título, autor, de qué trata (`trata`, entero) y dónde escucharlo (`didiLinks()`). El de la semana lleva *Esta semana*. Las tarjetas llenan la fila sea cual sea su número (`auto-fit`) |
-| **Podcasts y canales**, debajo | La lista (`didiPodHtml()`), con las mismas filas por habilidad, después el alemán (`DIDI_ALEMAN`) y el español (`DIDI_ESPANOL`); el porqué solo sale aquí si la habilidad no tiene libros (IA, alemán). Cada renglón en columnas fijas, alineado como una tabla: el tipo, el nombre y quién lo hace, de qué trata, **cuándo cabe** (`didiCuandoCabe()`, de tus trayectos: *Corto · Lunes a viernes, 19:30* o *Largo, 1 h o más · Sábado y domingo*) y dónde escucharlo. Lo que dice *Esta semana* —el podcast y el alemán de hoy— va marcado *Hoy*. Bajo 1500 px cada renglón se parte en dos y la etiqueta va arriba; en el teléfono, apilado |
+| **Podcasts y canales**, debajo | La lista (`didiPodHtml()`), con las mismas filas por habilidad, después el alemán (`DIDI_ALEMAN`), el inglés (`DIDI_INGLES`) y el español (`DIDI_ESPANOL`); el porqué solo sale aquí si la habilidad no tiene libros (IA, alemán). Cada renglón en columnas fijas, alineado como una tabla: el tipo, el nombre y quién lo hace, de qué trata, **cuándo cabe** (`didiCuandoCabe()`, de tus trayectos: *Corto · Lunes a viernes, 19:30* o *Largo, 1 h o más · Sábado y domingo*) y dónde escucharlo. Lo que dice *Esta semana* —el podcast y el alemán de hoy— va marcado *Hoy*. Bajo 1500 px cada renglón se parte en dos y la etiqueta va arriba; en el teléfono, apilado |
 | **En pausa**, al final | Plegado (`.dd-pausa`): el estante y la lista de lo que está en pausa (Ventas, Marketing), con el mismo formato |
 
 **Los datos.** `DIDI_AUDIO` agrupa por habilidad y cada audiolibro apunta a su ficha de la biblioteca
@@ -1793,8 +1794,17 @@ y a una columna, con el título a todo lo ancho y las dos cifras debajo.
 van con su título original (*The Psychology of Money*) y su nombre en español al inicio de `trata`; las ediciones
 en español van en *En español* (`DIDI_ESPANOL`), que el alemán y el español describen con `d`. Los porqués no
 llevan la calificación escrita: la tarjeta la lee viva de `SK`. Networking trae los tres
-libros de su ruta y el alemán, tres podcasts para quien aprende: nivel y duración comprobados, como
-pide el prompt. Los enlaces son búsquedas, no episodios, para que no caduquen.
+libros de su ruta. El alemán va de su nivel hacia arriba (Adán: *"mi nivel es A2 principiante… Coffee Break German
+es muy básico para mí, me está gustando Easy German"*): Super Easy German y el Deutschlandlabor de la DW y el
+Goethe-Institut (A2), Slow German (A2–B1), el Easy German Podcast (B1) y DW Doku para cuando el B1 fluya. El inglés,
+documentales de DW Documentary y Acquired. Las series que solo están en YouTube llevan `soloYt` y abren solo
+YouTube. Los enlaces son búsquedas, no episodios, para que no caduquen.
+
+**La lista** (`DIDI_LISTA`) trae 24 episodios de alemán y 10 de inglés, cada uno con `id` (la llave de lo escuchado),
+`serie`, `nivel`, `tipo` (`yt` o `pod`), `n`, `d` y `q`, la búsqueda del título exacto; `largo` en los de una hora o más.
+En el alemán, cada tercero o cuarto sube un paso (B1) y lo demás es A2. Los títulos se comprobaron en noviembre de
+2026 en listados de los episodios; las descripciones dicen el tema, no lo que no se pudo escuchar. Lo vigila el
+verificador: ids únicos y ningún campo vacío.
 
 
 ---

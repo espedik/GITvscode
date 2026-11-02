@@ -2536,6 +2536,17 @@ function promptsDeLoTocado() {
   audios.forEach(function (g) { (g.items || []).forEach(function (it) { if (!it.trata) sinTrata.push(it.n); }); });
   if (!audios.length) malos.push('no pude leer DIDI_AUDIO');
   if (sinTrata.length) malos.push(sinTrata.length + ' audios sin «de qué trata» (trata, en DIDI_AUDIO): ' + sinTrata.slice(0, 4).join('; '));
+  // Tu lista, en orden (Adán, 2-nov-2026: "ordéname episodios… desde mi app"): cada episodio con id único —es la llave
+  // de lo escuchado en `didi_lista_v1`—, su serie, su nivel, de qué trata y qué buscar; un video o un podcast.
+  const listaD = evaluar(literal(dash, 'const DIDI_LISTA=', '[')) || [], idsL = {}, flojosL = [];
+  if (!listaD.length) malos.push('no pude leer DIDI_LISTA (Tu lista, en orden)');
+  listaD.forEach(function (L) { (L.items || []).forEach(function (x) {
+    if (idsL[x.id]) flojosL.push(x.id + ' repetido'); idsL[x.id] = 1;
+    const falta = ['id', 'serie', 'nivel', 'n', 'd', 'q'].filter(function (k) { return !x[k]; });
+    if (['yt', 'pod'].indexOf(x.tipo) < 0) falta.push('tipo yt o pod');
+    if (falta.length) flojosL.push((x.n || x.id || '?') + ': falta ' + falta.join(', '));
+  }); });
+  if (flojosL.length) malos.push('Tu lista, en orden (DIDI_LISTA): ' + flojosL.slice(0, 4).join('; '));
   // El libro del mes saca su ritmo del bloque de lectura de la rutina (`lmBloque()`: la subtarea «Lectura» del cierre
   // del día, con sus minutos). Si desaparece o pierde los minutos, Coach · Habilidades ya no sabe hasta qué página vas.
   const rutinaLect = (global.window.CIFRAS && global.window.CIFRAS.rutina) ? global.window.CIFRAS.rutina('') : [];

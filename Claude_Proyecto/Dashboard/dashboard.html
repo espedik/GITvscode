@@ -1872,17 +1872,15 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .dd-reglas p{margin:0;font-size:12.5px;line-height:1.5;color:var(--text2)}
 .dd-reglas b{color:var(--text)}
 /* Esta semana: la respuesta antes que el catálogo */
-.dd-hero{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr);gap:18px}
+.dd-hero{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px}
 .dd-card{display:flex;flex-direction:column;gap:8px;min-width:0;padding:20px 22px;border-radius:16px;
   background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.08)}
 .dd-card.libro{display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;border-color:rgba(var(--cy-rgb),.35)}
-.dd-card.aleman{border-color:rgba(var(--g-rgb),.3)}
 .dd-portada{width:120px;aspect-ratio:2/3;object-fit:cover;border-radius:6px;background:rgba(var(--ov),.08);
   box-shadow:0 10px 26px rgba(0,0,0,.35)}
 .dd-card-col{display:flex;flex-direction:column;gap:8px;min-width:0}
 .dd-cuando{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
 .dd-card.libro .dd-cuando{color:var(--cy)}
-.dd-card.aleman .dd-cuando{color:var(--g)}
 .dd-titulo{font-size:clamp(17px,1.4vw,22px);font-weight:800;line-height:1.2;color:var(--text)}
 .dd-card.libro .dd-titulo{font-family:var(--font-title);font-weight:600;font-size:clamp(22px,1.9vw,30px)}
 .dd-autor{font-size:13.5px;color:var(--text2)}
@@ -1953,7 +1951,48 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .dd-pausa .dd-filas{background:none}
 .dd-pausa .dd-ocultar,.dd-pausa[open] .dd-ver{display:none}
 .dd-pausa[open] .dd-ocultar{display:inline}
-@media(max-width:1500px){.dd-hero{grid-template-columns:repeat(2,minmax(0,1fr))}.dd-card.libro{grid-column:1/-1}}
+/* Tu lista, en orden (didiListaHtml): una columna por idioma con su avance, lo siguiente en grande con «Ya lo
+   escuché», los tres que vienen y la lista completa plegada. El color es el de su idioma: verde el alemán, cian el inglés. */
+.dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.dl-col{--dlc:var(--g);--dlc-rgb:var(--g-rgb);display:flex;flex-direction:column;gap:12px;min-width:0;padding:18px 20px;border-radius:16px;
+  background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.08)}
+.dl-col.en{--dlc:var(--cy);--dlc-rgb:var(--cy-rgb)}
+.dl-cab{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px}
+.dl-cab b{font-size:17px;font-weight:800;color:var(--text)}
+.dl-cab span{font-size:12.5px;color:var(--text3)}
+.dl-cab em{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--dlc)}
+.dl-barra{height:5px;border-radius:3px;background:rgba(var(--ov),.08);overflow:hidden}
+.dl-barra i{display:block;height:100%;border-radius:3px;background:var(--dlc)}
+.dl-sig{display:flex;flex-direction:column;gap:7px;padding:16px 18px;border-radius:14px;background:rgba(var(--dlc-rgb),.07);
+  border:1px solid rgba(var(--dlc-rgb),.3)}
+.dl-sig .dd-cuando{color:var(--dlc)}
+.dl-sig-s{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;font-size:12.5px;color:var(--text2)}
+.dl-sig-acc{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:4px}
+.dl-ya{all:unset;cursor:pointer;padding:8px 14px;border-radius:10px;border:1px solid rgba(var(--dlc-rgb),.45);color:var(--dlc);
+  font-size:13px;font-weight:700}
+.dl-ya:hover{background:rgba(var(--dlc-rgb),.12)}
+.dl-luego{display:flex;flex-direction:column;gap:4px}
+.dl-ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.dl-li{display:grid;grid-template-columns:30px minmax(0,1fr) 30px;gap:10px;align-items:center;padding:7px 0}
+.dl-li+.dl-li{border-top:1px solid rgba(var(--ov),.06)}
+.dl-chk{all:unset;box-sizing:border-box;cursor:pointer;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3);border:1px solid rgba(var(--ov),.2)}
+.dl-li.sig .dl-chk{border-color:var(--dlc);color:var(--dlc)}
+.dl-li.ok .dl-chk{background:var(--dlc);border-color:var(--dlc);color:#04201c}
+.dl-li-t{display:flex;flex-direction:column;gap:1px;min-width:0}
+.dl-li-t b{font-size:13.5px;line-height:1.3;color:var(--text)}
+.dl-li-t span{font-size:11.5px;color:var(--text3)}
+.dl-li.ok .dl-li-t b{color:var(--text3)}
+.dl-li-ir{justify-self:end;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;text-decoration:none;font-size:12px;
+  color:var(--dlc);background:rgba(var(--dlc-rgb),.1)}
+.dl-todo summary{cursor:pointer;list-style:none;font-size:12.5px;font-weight:700;color:var(--text2)}
+.dl-todo summary::-webkit-details-marker{display:none}
+.dl-todo summary::after{content:' ↓'}
+.dl-todo[open] summary::after{content:' ↑'}
+.dl-todo[open] summary{margin-bottom:6px}
+:root[data-theme="light"] .dl-li.ok .dl-chk{color:#fff}
+@media(max-width:1300px){.dl{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:1500px){.dd-hero{grid-template-columns:minmax(0,1fr)}}
 /* En pantallas medianas la etiqueta de la fila va arriba y cada renglón de la lista se parte en dos */
 @media(max-width:1500px){
   .dd-fila{grid-template-columns:1fr;gap:12px}
@@ -1993,6 +2032,10 @@ body.rail-on{--pad-rail:max(6vw,230px)}
   .dd-pod-tag{flex-direction:row;align-items:center}
   .dd-pod-c{flex-direction:row;flex-wrap:wrap;gap:2px 8px;align-items:baseline}
   .dd-links a{padding:4px 0}                     /* área táctil usable con el pulgar */
+  .dl-col{padding:14px}
+  .dl-chk{width:32px;height:32px}
+  .dl-li{grid-template-columns:36px minmax(0,1fr) 36px}
+  .dl-li-ir{width:34px;height:34px}
 }
 
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}}
@@ -10706,13 +10749,68 @@ const DIDI_ESPANOL=[
   {tipo:'pod', n:'Whitepaper — Jorge Combe', d:'Negocios y tecnología en México. Útil para Marketing e IA sin cambiar de idioma.', q:'Whitepaper podcast Jorge Combe'},
 ];
 
-// Alemán para la maestría (prompt de Qué escuchar: "el audio sirve para alemán…"; el de Alemán:
-// "un poco por encima de su nivel"). Podcasts para quien aprende, comprobados el 2026-10-07: nivel
-// y duración salen de sus fichas. No es una de las 12 habilidades: va en su propia tarjeta.
+// Alemán para la maestría (prompt de Qué escuchar: "el audio sirve para alemán…"; el de Alemán: "un poco por encima de
+// su nivel"). Vas en A2 (Adán, 2-nov-2026: "mi nivel es A2 principiante… Coffee Break German es muy básico para mí, me
+// está gustando Easy German"): lo de tu nivel —Super Easy German y el Deutschlandlabor de la DW— y, un paso arriba, el
+// Easy German Podcast. Las series; los episodios, en orden, van en DIDI_LISTA.
 const DIDI_ALEMAN=[
-  {tipo:'pod', n:'Slow German — Annik Rubens', d:'Alemán hablado despacio, de A1 a B2, con la transcripción en su página. Episodios cortos.', q:'Slow German Annik Rubens'},
-  {tipo:'pod', n:'Coffee Break German', d:'Un profesor nativo y un alumno; cada temporada sube un nivel, de principiante a intermedio alto. 15–20 min.', q:'Coffee Break German'},
-  {tipo:'pod', n:'Easy German Podcast — Manuel y Cari', d:'Conversación en alemán real, de intermedio en adelante: un poco por encima de tu nivel, que es donde se aprende. ~35 min.', q:'Easy German Podcast'},
+  {tipo:'yt', soloYt:true, n:'Super Easy German — Easy German', d:'La serie para principiantes de Easy German: situaciones de todos los días habladas despacio, con subtítulos en alemán e inglés.', q:'Super Easy German'},
+  {tipo:'yt', soloYt:true, n:'Das Deutschlandlabor — DW y Goethe-Institut', d:'Veinte episodios para quien empieza en A2: cada uno, un tema de Alemania —el auto, el dinero, la mentalidad, la escuela—.', q:'Das Deutschlandlabor DW'},
+  {tipo:'pod', n:'Easy German Podcast — Manuel y Cari', d:'Conversación en alemán real, de intermedio en adelante: un poco por encima de tu nivel, que es donde se aprende. El que ya te está gustando.', q:'Easy German Podcast'},
+  {tipo:'pod', n:'Slow German — Annik Rubens', d:'Alemán hablado despacio sobre la vida y la historia de Alemania, con la transcripción en su página. Episodios cortos.', q:'Slow German Annik Rubens'},
+  {tipo:'yt', soloYt:true, n:'DW Doku — DW', d:'Documentales de la DW en alemán, a velocidad nativa: para cuando el Easy German Podcast ya te fluya.', q:'DW Doku'},
+];
+// Documentales en inglés (Adán: "documentales… al igual que en inglés"). Tu inglés ya es B2: van a velocidad normal y
+// de lo que vas a vivir —Alemania, los autos, las baterías—. Los episodios, en orden, van en DIDI_LISTA.
+const DIDI_INGLES=[
+  {tipo:'yt', soloYt:true, n:'DW Documentary — DW', d:'Documentales de la DW en inglés, de 12 a 45 minutos: Alemania, su industria y quienes llegan a trabajar ahí.', q:'DW Documentary'},
+  {tipo:'pod', largo:true, n:'Acquired — Ben Gilbert y David Rosenthal', d:'La historia completa de una empresa en cada episodio, de tres horas o más. Empieza por Porsche.', q:'Acquired podcast'},
+];
+
+// Tu lista, en orden (Adán, 2-nov-2026: "no sé si puedas hacerme una playlist para todos estos o me ordenes episodios,
+// pero desde mi app"). Un episodio tras otro, de tu nivel hacia arriba: la app sabe en cuál vas (`didi_lista_v1`), lo
+// abre en YouTube —con Premium suena con la pantalla apagada— y al marcarlo pasa al siguiente. En el alemán, cada
+// tercero o cuarto sube un paso (B1); lo demás es A2. Los títulos se comprobaron en noviembre de 2026; los enlaces
+// buscan el título exacto, para que no caduquen.
+const DIDI_LISTA=[
+  {id:'de', t:'Alemán', sub:'De A2 a B1, rumbo a tu Goethe A2', items:[
+    {id:'dl09',  serie:'Das Deutschlandlabor · DW', nivel:'A2', tipo:'yt',  n:'Folge 9: Auto', d:'Los alemanes y el auto, en alemán para A2: el tema de tu carrera.', q:'Das Deutschlandlabor Folge 9 Auto'},
+    {id:'seg304', serie:'Super Easy German 304', nivel:'A2', tipo:'yt', n:'Wohnungsbesichtigung in Slow German', d:'Cómo es ir a ver un departamento en Alemania, en alemán despacio: lo que vas a hacer en Esslingen.', q:'Wohnungsbesichtigung in Slow German Super Easy German 304'},
+    {id:'dl12',  serie:'Das Deutschlandlabor · DW', nivel:'A2', tipo:'yt',  n:'Folge 12: Geld', d:'Los alemanes y el dinero, en alemán para A2: el tema de tu plan.', q:'Das Deutschlandlabor Folge 12 Geld'},
+    {id:'sg307', serie:'Slow German · SG 307', nivel:'A2–B1', tipo:'pod', n:'Arbeitslos in Deutschland', d:'Qué pasa en Alemania cuando alguien se queda sin trabajo, hablado despacio.', q:'Slow German Arbeitslos in Deutschland SG 307'},
+    {id:'egp294', serie:'Easy German Podcast 294', nivel:'B1', tipo:'pod', n:'Eine Liste mit Listen', d:'Un paso arriba: Manuel y Cari, a velocidad real, con un tema ligero —listas—.', q:'Easy German Podcast 294 Eine Liste mit Listen'},
+    {id:'dl16',  serie:'Das Deutschlandlabor · DW', nivel:'A2', tipo:'yt',  n:'Folge 16: Mentalität', d:'Cómo son los alemanes, en alemán para A2: lo que vas a notar al llegar.', q:'Das Deutschlandlabor Folge 16 Mentalität'},
+    {id:'seg168', serie:'Super Easy German 168', nivel:'A2', tipo:'yt', n:'Talking to Your Landlord in German', d:'Hablar con el casero en alemán, despacio: lo vas a necesitar con tu primer departamento.', q:'Talking to Your Landlord in German Super Easy German 168'},
+    {id:'dl06',  serie:'Das Deutschlandlabor · DW', nivel:'A2', tipo:'yt',  n:'Folge 6: Wohnen', d:'Cómo viven los alemanes, en alemán para A2: va con la visita al departamento.', q:'Das Deutschlandlabor Folge 6 Wohnen'},
+    {id:'seg236', serie:'Super Easy German 236', nivel:'A2', tipo:'yt', n:'Ordering in a Restaurant in Slow German', d:'Pedir en un restaurante, de la mesa a la cuenta, en alemán despacio.', q:'Ordering in a Restaurant in Slow German Super Easy German 236'},
+    {id:'eg298', serie:'Easy German 298', nivel:'B1', tipo:'yt', n:'What Berliners like about their apartments', d:'Un paso arriba: entrevistas en la calle de Berlín, alemán real de gente real.', q:'What Berliners like about their apartments Easy German 298'},
+    {id:'dl07',  serie:'Das Deutschlandlabor · DW', nivel:'A2', tipo:'yt',  n:'Folge 7: Organisation', d:'La fama alemana de organizarlo todo, en alemán para A2.', q:'Das Deutschlandlabor Folge 7 Organisation'},
+    {id:'sg310', serie:'Slow German · SG 310', nivel:'A2–B1', tipo:'pod', n:'Die Olympischen Spiele und Deutschland', d:'Alemania y los Juegos Olímpicos, una historia hablada despacio.', q:'Slow German Die Olympischen Spiele und Deutschland SG 310'},
+    {id:'dl11',  serie:'Das Deutschlandlabor · DW', nivel:'A2', tipo:'yt',  n:'Folge 11: Müll', d:'La basura y el reciclaje en Alemania, en alemán para A2.', q:'Das Deutschlandlabor Folge 11 Müll'},
+    {id:'seg240', serie:'Super Easy German 240', nivel:'A2', tipo:'yt', n:'Asking for Directions in Slow German', d:'Preguntar cómo llegar y entender la respuesta.', q:'Asking for Directions in Slow German Super Easy German 240'},
+    {id:'egp580', serie:'Easy German Podcast 580', nivel:'B1', tipo:'pod', n:'Niveau ist keine Hautcreme', d:'Un paso arriba: Manuel cuenta su sistema para deshacerse de lo que ya no usa cada año.', q:'Easy German Podcast 580 Niveau ist keine Hautcreme'},
+    {id:'dl10',  serie:'Das Deutschlandlabor · DW', nivel:'A2', tipo:'yt',  n:'Folge 10: Migration', d:'La migración a Alemania, en alemán para A2: tu historia, contada por otros.', q:'Das Deutschlandlabor Folge 10 Migration'},
+    {id:'seg263', serie:'Super Easy German 263', nivel:'A2', tipo:'yt', n:'Emotions in Slow German', d:'Decir cómo te sientes, en alemán despacio.', q:'Emotions in Slow German Super Easy German 263'},
+    {id:'dl01',  serie:'Das Deutschlandlabor · DW', nivel:'A2', tipo:'yt',  n:'Folge 1: Schule', d:'La escuela en Alemania, en alemán para A2.', q:'Das Deutschlandlabor Folge 1 Schule'},
+    {id:'sg308', serie:'Slow German · SG 308', nivel:'A2–B1', tipo:'pod', n:'Ignaz Semmelweis, Retter der Mütter', d:'El médico que descubrió que lavarse las manos salvaba vidas.', q:'Slow German Ignaz Semmelweis Retter der Mütter SG 308'},
+    {id:'dl05',  serie:'Das Deutschlandlabor · DW', nivel:'A2', tipo:'yt',  n:'Folge 5: Wandern', d:'Salir a caminar al campo, la costumbre alemana, en alemán para A2.', q:'Das Deutschlandlabor Folge 5 Wandern'},
+    {id:'seg305', serie:'Super Easy German 305', nivel:'A2', tipo:'yt', n:'Jobcenter in Slow German', d:'Qué hace el Jobcenter, en alemán despacio.', q:'Jobcenter in Slow German Super Easy German 305'},
+    {id:'dl17',  serie:'Das Deutschlandlabor · DW', nivel:'A2', tipo:'yt',  n:'Folge 17: Kälte', d:'El frío en Alemania, en alemán para A2: lo que te espera en invierno.', q:'Das Deutschlandlabor Folge 17 Kälte'},
+    {id:'sg306', serie:'Slow German · SG 306', nivel:'A2–B1', tipo:'pod', n:'Gute deutsche Podcasts', d:'Qué podcasts alemanes escuchar después: tu siguiente lista, recomendada en alemán.', q:'Slow German Gute deutsche Podcasts SG 306'},
+    {id:'egp692', serie:'Easy German Podcast 692', nivel:'B1', tipo:'pod', n:'Gottlos', d:'Un paso arriba: la palabra que los jóvenes usan para decir que algo está buenísimo.', q:'Easy German Podcast 692 Gottlos'},
+  ]},
+  {id:'en', t:'Inglés', sub:'Documentales de lo que vas a vivir', items:[
+    {id:'dw-fachkraft', serie:'DW Documentary', nivel:'B2', tipo:'yt', n:'Germany’s skilled labor shortage — The international search for workers', d:'Dos profesionistas, de Brasil y de Túnez, arman su carrera en Alemania: el camino que vas a hacer. Unos 28 minutos.', q:'Germany\'s skilled labor shortage The international search for workers DW Documentary'},
+    {id:'dw-autos', serie:'DW Documentary', nivel:'B2', tipo:'yt', n:'Will Germany’s car industry survive?', d:'La industria de tu carrera frente al auto eléctrico, con expertos y exdirectivos de las armadoras.', q:'Will Germany\'s car industry survive DW Documentary'},
+    {id:'dw-buro', serie:'DW Documentary', nivel:'B2', tipo:'yt', n:'Migrants facing German bureaucracy', d:'Lo que piden de idioma para trabajar, con el caso de una cuidadora colombiana. Unos 12 minutos.', q:'Migrants facing German bureaucracy DW Documentary'},
+    {id:'dw-obsesion', serie:'DW Documentary', nivel:'B2', tipo:'yt', n:'The German obsession with cars', d:'De la motorización de la posguerra a la industria de miles de millones de hoy.', q:'The German obsession with cars DW Documentary'},
+    {id:'dw-baterias', serie:'DW Documentary', nivel:'B2', tipo:'yt', n:'EV battery manufacturing — Why Europe can’t keep up', d:'Por qué Europa va detrás de China en baterías, con la quiebra de Northvolt. 28 minutos.', q:'EV battery manufacturing Why Europe can\'t keep up DW Documentary'},
+    {id:'dw-empleo', serie:'DW Documentary', nivel:'B2', tipo:'yt', n:'Germany’s skilled labor shortage — Helping migrants find work', d:'Los obstáculos de un extranjero que busca trabajo en Alemania, y quién le ayuda. Unos 28 minutos.', q:'Germany\'s skilled labor shortage Helping migrants find work DW Documentary'},
+    {id:'dw-litio', serie:'DW Documentary', nivel:'B2', tipo:'yt', n:'From smartphones to e-cars — How important is the lithium-ion battery?', d:'La batería de litio, del celular al auto eléctrico, y la IA que revisa las baterías usadas.', q:'From smartphones to e-cars How important is the lithium-ion battery DW Documentary'},
+    {id:'dw-verde', serie:'DW Documentary', nivel:'B2', tipo:'yt', n:'Green start-ups — Saving the climate and securing prosperity', d:'Startups alemanas de economía verde; una usa IA para separar el plástico. 26 minutos.', q:'Green start-ups Saving the climate and securing prosperity DW Documentary'},
+    {id:'dw-enfermera', serie:'DW Documentary', nivel:'B2', tipo:'yt', n:'A nurse moves to Germany', d:'Una enfermera de Namibia se muda a trabajar a un hospital alemán: lo bueno y lo difícil.', q:'A nurse moves to Germany DW Documentary'},
+    {id:'acq-porsche', serie:'Acquired', nivel:'B2', tipo:'pod', largo:true, n:'Porsche (with Doug DeMuro)', d:'La historia de Porsche: Ferdinand Porsche y el Escarabajo, el Cayenne y la pelea con Volkswagen. 3 h 23 min: para un turno largo.', q:'Acquired Porsche with Doug DeMuro'},
+  ]},
 ];
 
 const DIDI_TAG={audio:{c:'didi-t-audio',l:'AUDIOLIBRO'},pod:{c:'didi-t-pod',l:'PODCAST'},yt:{c:'didi-t-yt',l:'YOUTUBE'}};
@@ -10783,8 +10881,72 @@ function didiCatalogoHtml(grupos, foco, cu, libroSem, hoy){
 }
 // Dónde escucharlo. Apple no va en los canales de YouTube: ni Books ni Podcasts los tienen.
 function didiLinks(it, grande){
+  if(it.soloYt) return `<span class="dd-links${grande ? ' grande' : ''}"><a class="dd-spo" href="${didiYt(it.q)}" target="_blank" rel="noopener">▶ YouTube ↗</a></span>`;
   return `<span class="dd-links${grande ? ' grande' : ''}"><a class="dd-spo" href="${didiSpo(it.q)}" target="_blank" rel="noopener">Spotify ↗</a>${it.tipo === 'yt' ? ''
     : `<a href="${didiApple(it.tipo, it.q)}" target="_blank" rel="noopener" title="${it.tipo === 'pod' ? 'Apple Podcasts' : 'Apple Books'}">Apple ↗</a>`}<a href="${didiYt(it.q)}" target="_blank" rel="noopener">YouTube ↗</a></span>`;
+}
+
+// Tu lista, en orden: lo que ya escuchaste vive en `didi_lista_v1` ({id: 'AAAA-MM-DD'}) y lo siguiente es el primero
+// de la lista que no has marcado. Al marcarlo se repinta la lista, con la lista completa abierta si lo estaba.
+const DIDI_LISTA_KEY = 'didi_lista_v1';
+function didiListaVistos(){ return rawGet(DIDI_LISTA_KEY, {}) || {}; }
+function didiListaSig(L, vistos){
+  const v = vistos || didiListaVistos(), k = L.items.findIndex(x => !v[x.id]);
+  return k < 0 ? null : { it: L.items[k], i: k };
+}
+function didiListaMarca(id, on){
+  const v = didiListaVistos();
+  if(on === undefined) on = !v[id];
+  if(on) v[id] = hoyLocal(); else delete v[id];
+  rawSet(DIDI_LISTA_KEY, v);
+  didiListaPinta();
+}
+function didiListaPinta(){
+  const a = document.getElementById('didiLista');
+  if(a){
+    const abiertas = [...a.querySelectorAll('details.dl-todo[open]')].map(d => d.dataset.l);
+    a.innerHTML = didiListaHtml();
+    abiertas.forEach(l => { const d = a.querySelector('details.dl-todo[data-l="'+l+'"]'); if(d) d.open = true; });
+  }
+}
+// Dónde escucharlo: un video, en YouTube; un podcast, en Spotify, Apple Podcasts y YouTube.
+function didiListaLinks(it, grande){
+  const yt = `<a${it.tipo === 'yt' ? ' class="dd-spo"' : ''} href="${didiYt(it.q)}" target="_blank" rel="noopener">${it.tipo === 'yt' ? '▶ YouTube' : 'YouTube'} ↗</a>`;
+  return `<span class="dd-links${grande ? ' grande' : ''}">${it.tipo === 'yt' ? yt
+    : `<a class="dd-spo" href="${didiSpo(it.q)}" target="_blank" rel="noopener">Spotify ↗</a><a href="${didiApP(it.q)}" target="_blank" rel="noopener" title="Apple Podcasts">Apple ↗</a>${yt}`}</span>`;
+}
+// Lo siguiente de una lista, en grande: qué es, de qué trata, dónde abrirlo y «Ya lo escuché», que pasa al que sigue.
+function didiListaSigHtml(it, cuando){
+  return `<span class="dd-cuando">${cuando}</span>
+      <span class="dl-sig-s"><span class="didi-tag ${DIDI_TAG[it.tipo].c}">${DIDI_TAG[it.tipo].l}${it.largo ? ' · LARGO' : ''}</span>${esc(it.serie)} · ${it.nivel}</span>
+      <span class="dd-titulo">${esc(it.n)}</span>
+      <p class="dd-por">${esc(it.d)}</p>
+      <div class="dl-sig-acc">${didiListaLinks(it, true)}<button type="button" class="dl-ya" onclick="didiListaMarca('${it.id}',true)">✓ Ya lo escuché</button></div>`;
+}
+const DIDI_LISTA_FIN = {
+  de: 'Sigue con los episodios del Deutschlandlabor que no están aquí y con el Easy German Podcast cada semana; cuando te fluya, DW Doku.',
+  en: 'Sigue con lo que suba DW Documentary y con otra historia de Acquired.',
+};
+// Una columna por idioma: cuántos llevas, lo siguiente, los tres que vienen y, plegada, la lista completa, donde se
+// marca o se desmarca cualquiera.
+function didiListaHtml(){
+  const v = didiListaVistos();
+  return '<div class="dl">'+DIDI_LISTA.map(function(L){
+    const n = L.items.length, hechos = L.items.filter(x => v[x.id]).length, s = didiListaSig(L, v);
+    const fila = (x, k) => { const ok = !!v[x.id], es = !!s && s.i === k;
+      return `<li class="dl-li${ok ? ' ok' : ''}${es ? ' sig' : ''}"><button type="button" class="dl-chk" onclick="didiListaMarca('${x.id}')" aria-pressed="${ok}" title="${ok ? 'Quitar la marca' : 'Marcar como escuchado'}">${ok ? '✓' : k + 1}</button>
+        <span class="dl-li-t"><b>${esc(x.n)}</b><span>${esc(x.serie)} · ${x.nivel}${x.largo ? ' · largo' : ''}</span></span>
+        <a class="dl-li-ir" href="${x.tipo === 'yt' ? didiYt(x.q) : didiSpo(x.q)}" target="_blank" rel="noopener" title="${x.tipo === 'yt' ? 'Abrir en YouTube' : 'Abrir en Spotify'}">${x.tipo === 'yt' ? '▶' : '♪'}</a></li>`; };
+    const luego = s ? L.items.map((x, k) => ({ x, k })).filter(o => o.k > s.i && !v[o.x.id]).slice(0, 3) : [];
+    return `<div class="dl-col ${L.id}">
+        <div class="dl-cab"><b>${L.t}</b><span>${L.sub}</span><em>${hechos} de ${n}</em></div>
+        <div class="dl-barra"><i style="width:${Math.round(hechos / n * 100)}%"></i></div>
+        <div class="dl-sig${s ? '' : ' fin'}">${s ? didiListaSigHtml(s.it, 'Lo siguiente · el ' + (s.i + 1) + ' de ' + n)
+          : `<span class="dd-titulo">Terminaste la lista</span><p class="dd-por">${DIDI_LISTA_FIN[L.id] || ''}</p>`}</div>
+        ${luego.length ? `<div class="dl-luego"><span class="dd-lbl">Después</span><ol class="dl-ol">${luego.map(o => fila(o.x, o.k)).join('')}</ol></div>` : ''}
+        <details class="dl-todo" data-l="${L.id}"><summary>La lista completa · ${n}</summary><ol class="dl-ol">${L.items.map(fila).join('')}</ol></details>
+      </div>`;
+  }).join('')+'</div>';
 }
 
 
@@ -10839,20 +11001,16 @@ function didiLibroDelPaso(){
   const r = (pasos[i].r || []).find(x => x && x.t === 'libro');
   return r ? r.id : null;
 }
-// El alemán de hoy: uno de DIDI_ALEMAN, distinto cada día.
-function didiAlemanHoy(){
-  return (typeof DIDI_ALEMAN !== 'undefined' && DIDI_ALEMAN.length) ? DIDI_ALEMAN[diaCorrido() % DIDI_ALEMAN.length] : null;
-}
-// Esta semana: el audiolibro (el del paso, si está en el catálogo), el episodio de hoy y tu alemán.
+// Esta semana: el audiolibro (el del paso, si está en el catálogo) y el episodio de hoy. Tu alemán va en Tu lista,
+// justo debajo: el siguiente episodio de la lista de alemán.
 function didiSemanaHtml(){
-  const d = didiHoy(), al = didiAlemanHoy();
+  const d = didiHoy();
   if(!d || !d.libro) return '';
   const it = d.libro.it, [t, a] = String(it.n).split(' — ');
   const lib = it.lib && typeof habLibro === 'function' ? habLibro(it.lib) : null;
   const delPaso = it.lib && it.lib === didiLibroDelPaso();
   const donde = d.finde ? (d.horas.length ? d.horas.join(' y ') + ' · los turnos largos' : 'Los turnos largos') : (d.horas[0] ? 'L–V ' + d.horas[0] + ' · y los turnos del fin de semana' : '');
   const pod = d.pod ? d.pod.it : null, [pt, pa] = pod ? String(pod.n).split(' — ') : [];
-  const [lt, la] = al ? String(al.n).split(' — ') : [];
   return `<div class="dd-hero">
       <div class="dd-card libro">
         ${lib && lib.portada ? `<img class="dd-portada" src="${lib.portada}" alt="" loading="lazy">` : ''}
@@ -10872,14 +11030,6 @@ function didiSemanaHtml(){
         ${pa ? `<span class="dd-autor">${pa}</span>` : ''}
         <p class="dd-por">${pod.d}</p>
         ${didiLinks(pod, true)}
-      </div>` : ''}
-      ${al ? `<div class="dd-card aleman">
-        <span class="dd-cuando">Tu alemán de hoy</span>
-        <span class="didi-tag ${DIDI_TAG.pod.c}" style="align-self:flex-start">PODCAST · corto</span>
-        <span class="dd-titulo">${lt}</span>
-        ${la ? `<span class="dd-autor">${la}</span>` : ''}
-        <p class="dd-por">${al.d}</p>
-        ${didiLinks(al, true)}
       </div>` : ''}
     </div>`;
 }
@@ -10913,17 +11063,23 @@ function abrirDidi(){
     </div>
     <div class="dd-reglas"><span class="dd-lbl">Al volante</span>${reglas.map(r => `<p>${r}</p>`).join('')}</div>`;
   const extra = [
-    { nombre: 'Alemán', nota: 'para la maestría', why: 'Quince minutos al día, un poco por encima de tu nivel: caben en el tramo de la noche.', items: DIDI_ALEMAN },
+    { nombre: 'Alemán', nota: 'vas en A2', why: 'Lo de tu nivel todos los días y, cada tanto, algo un poco por encima —el Easy German Podcast—, que es donde se aprende. Los episodios, en orden, van en Tu lista.', items: DIDI_ALEMAN },
+    { nombre: 'Inglés', nota: 'documentales', why: 'Tu inglés ya da para documentales a velocidad normal: de lo que vas a vivir —Alemania, los autos, las baterías—. Los episodios, en orden, van en Tu lista.', items: DIDI_INGLES },
     { nombre: 'En español', nota: 'cuando el inglés canse', why: 'Dos audiolibros son la edición en español de libros de arriba —el mismo contenido, sin traducir de cabeza—; los podcasts son de negocios y finanzas.', items: DIDI_ESPANOL },
   ];
   const nPausa = pausa.reduce((n, g) => n + g.items.length, 0);
   const cu = didiCuandoCabe(v), d = didiHoy(), libroSem = d && d.libro ? didiId(d.libro) : null;
-  const cat = didiCatalogoHtml(activos.concat(extra), foco, cu, libroSem, [d && d.pod ? d.pod.it : null, didiAlemanHoy()]);
+  const cat = didiCatalogoHtml(activos.concat(extra), foco, cu, libroSem, [d && d.pod ? d.pod.it : null]);
   const catP = didiCatalogoHtml(pausa, foco, cu, null, []);
   body.innerHTML = `<div class="dd">
       <aside class="dd-rail">${rail}</aside>
       <div class="dd-main">
         <section class="dd-sec"><span class="dd-lbl">Esta semana</span>${didiSemanaHtml()}</section>
+        <section class="dd-sec">
+          <div class="dd-lbl-fila"><span class="dd-lbl">Tu lista, en orden</span>
+            <span class="dd-leyenda">Lo siguiente se abre en YouTube —con Premium suena con la pantalla apagada—; al terminarlo, márcalo y pasa al que sigue</span></div>
+          <div id="didiLista">${didiListaHtml()}</div>
+        </section>
         <section class="dd-sec">
           <div class="dd-lbl-fila"><span class="dd-lbl">Audiolibros · en el orden de tu plan</span>
             <span class="dd-leyenda">Uno por semana: para las mañanas de entre semana y los turnos largos del fin de semana</span></div>
