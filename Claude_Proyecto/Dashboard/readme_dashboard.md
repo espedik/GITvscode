@@ -70,7 +70,7 @@ Todas comparten origen porque se abren con `file://`.
 forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
-y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta), `dash_libromes_v1` (el libro del mes: el de ahora, los leídos y el que sigue si lo cambiaste),
+y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases) y `plan_auditoria_sinc` (cuándo se tocó cada mes aquí, para traer la de la PC), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta), `dash_libromes_v1` (el libro del mes: el de ahora, los leídos y el que sigue si lo cambiaste),
 `habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-inversion-v1` (pestaña, perfil elegido y monto de *Qué
 invertir hoy*).
 
@@ -940,7 +940,8 @@ calificación y las correcciones, y la pantalla vuelve al mes con su renglón de
 **Lo que pasa al mes siguiente y lo que se corrige** (`planArrastradas`) aparecen en el primer mes sin
 auditar después del que los dejó —aunque se audite en desorden—, y
 ahí se vuelven a auditar; un mes auditado conserva la lista que se auditó. Por mes, en
-`plan_auditoria_v1`: `siempre` (lo sostenido durante el mes), `aud` (las respuestas: `datos`, `t`, `h`, `c`,
+`plan_auditoria_v1` (y la hora en que se tocó cada mes, en `plan_auditoria_sinc`: con ella llega la de la PC a los
+otros dispositivos, ver *Tu iPad y tu PC*): `siempre` (lo sostenido durante el mes), `aud` (las respuestas: `datos`, `t`, `h`, `c`,
 `corr`) y, al cerrar, `cerrado`, `tareas` (`ok`, `pasa` o `no`), `cifras` (`real`, `meta`, `medido`),
 `califica` y `correcciones` (cada una con su texto y un id que dice el mes y la causa); `reabierto` al reabrir. El **control 38** del
 verificador vigila que los 63 meses de las fases 1 a 4 tengan plan completo y sus cifras, y que los `id` de
@@ -2028,6 +2029,15 @@ nada desde la última vez, queda **igual a la PC** —también lo desmarcado—;
 **funde** como el código de Sincronizar, sin perder nada. El **control 39** del verificador vigila las
 piezas. El repositorio es público: lo que viaja ahí —los nombres de los hábitos y sus marcas— se puede
 leer sin sesión, como `datos-maestros.js`.
+
+**La auditoría de cada mes viaja igual** (Adán, 1-nov-2026: *"sube los datos de mis hábitos y auditoría"*).
+El mismo `habitos-exportar.js` lee `plan_auditoria_v1` y escribe `auditoria-sync.js`
+(`window.AUDITORIA_SYNC = {exportado, meses, datos}`, un mes por línea) con la hora en que se tocó cada mes en
+la PC: `plan_auditoria_sinc`, que `fzmTocado` anota en cada guardado de `fzmGuardaAud`. El Dashboard lo carga
+junto a `habitos-sync.js`, y la primera lectura de la auditoría (`fzmAud` → `fzmDelRepo`) trae **mes por mes**
+solo el que es más nuevo que el de este dispositivo: lo que se auditó en el iPad después no se pisa, los meses
+que solo tiene el iPad se quedan y la PC no se reimporta a sí misma. Al cerrar un mes viajan también sus
+cifras (`real` y `meta`), públicas como las de `datos-maestros.js`. El control 39 vigila estas piezas también.
 
 ---
 

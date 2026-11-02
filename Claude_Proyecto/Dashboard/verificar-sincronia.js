@@ -2658,12 +2658,15 @@ function promptsDeLoTocado() {
   else ok.push('Fases: los ' + meses + ' meses de las fases 1 a 4 tienen plan completo —tareas o rutina, el dinero de la proyección y sus cifras para auditar—, con ids únicos');
 })();
 
-/* ── 39. Los hábitos de la PC llegan a los otros dispositivos ───────────────────────────────────────
+/* ── 39. Los hábitos y la auditoría de la PC llegan a los otros dispositivos ─────────────────────────
    Adán, 19-oct-2026: "crea un hook que actualice esa info que tenemos aquí, que cada día cuando haga algún
    commit, de cualquier cosa se actualicen los hábitos". El hook de pre-commit (.githooks/pre-commit, activo
    con core.hooksPath) corre habitos-exportar.js, que escribe habitos-sync.js con las marcas del Chrome de la
    PC; el Dashboard lo carga antes de habitos.js, y habitos.js lo trae (delRepo) y deja la hora de lo que se
-   toca en cada dispositivo (tocado). Si una pieza falta, el iPad deja de recibir los hábitos sin que se note. */
+   toca en cada dispositivo (tocado). El mismo script escribe auditoria-sync.js con plan_auditoria_v1 (Adán,
+   1-nov-2026: "sube los datos de mis hábitos y auditoría"); el Dashboard lo carga, fzmDelRepo trae cada mes más
+   nuevo y fzmTocado anota la hora de cada mes que se guarda. Si una pieza falta, el iPad deja de recibir los
+   hábitos o la auditoría sin que se note. */
 (function () {
   const malos = [];
   const existe = rel => fs.existsSync(path.join(RAIZ, rel));
@@ -2683,10 +2686,28 @@ function promptsDeLoTocado() {
       else det = d.def.length + ' hábitos y ' + Object.keys(d.marcas).length + ' días, exportados el ' + X.exportado.slice(0, 10);
     } catch (e) { malos.push('habitos-sync.js no se puede leer: ' + e.message); }
   }
+  if (h.indexOf('<script src="auditoria-sync.js"') === -1) malos.push('dashboard.html ya no carga auditoria-sync.js');
+  if (h.indexOf('function fzmDelRepo()') === -1 || h.indexOf('window.AUDITORIA_SYNC') === -1) malos.push('dashboard.html ya no trae la auditoría de auditoria-sync.js (fzmDelRepo)');
+  if (!/const fzmAud = \(\) => \{ fzmDelRepo\(\);/.test(h)) malos.push('fzmAud ya no pasa por fzmDelRepo: la auditoría de la PC no llega');
+  if (!/const fzmGuardaAud = A => \{ try\{ fzmTocado\(/.test(h)) malos.push('fzmGuardaAud dejó de anotar la hora de cada mes (fzmTocado)');
+  if (leer('Dashboard/habitos-exportar.js').indexOf('auditoria-sync.js') === -1) malos.push('habitos-exportar.js ya no escribe auditoria-sync.js');
+  let detA = 'auditoría todavía sin exportar';
+  if (existe('Dashboard/auditoria-sync.js')) {
+    try {
+      const w = {}; new Function('window', leer('Dashboard/auditoria-sync.js'))(w);
+      const X = w.AUDITORIA_SYNC, d = X && X.datos, M = X && X.meses;
+      if (!X || !/^\d{4}-\d{2}-\d{2}T/.test(X.exportado || '') || !d || typeof d !== 'object' || !M || typeof M !== 'object') malos.push('auditoria-sync.js no tiene la forma {exportado, meses, datos}');
+      else {
+        const sin = Object.keys(d).filter(ym => !/^\d{4}-\d{2}$/.test(ym) || !/^\d{4}-\d{2}-\d{2}T/.test(M[ym] || ''));
+        if (sin.length) malos.push('auditoria-sync.js: meses sin la hora en que se tocaron: ' + sin.join(', '));
+        else detA = 'auditoría de ' + (Object.keys(d).join(', ') || 'ningún mes');
+      }
+    } catch (e) { malos.push('auditoria-sync.js no se puede leer: ' + e.message); }
+  }
   let ruta = '';
   try { ruta = require('child_process').execSync('git config --get core.hooksPath', { cwd: RAIZ, encoding: 'utf8' }).trim(); } catch (e) { ruta = ''; }
-  if (malos.length) problemas.push('Hábitos a los otros dispositivos:\n     ' + malos.join('\n     '));
-  else ok.push('Hábitos: el hook de pre-commit los exporta y el Dashboard los trae (' + det + ')' + (ruta ? '' : ' — en esta copia falta activar el hook: git config core.hooksPath Claude_Proyecto/.githooks'));
+  if (malos.length) problemas.push('Hábitos y auditoría a los otros dispositivos:\n     ' + malos.join('\n     '));
+  else ok.push('Hábitos y auditoría: el hook de pre-commit los exporta y el Dashboard los trae (' + det + '; ' + detA + ')' + (ruta ? '' : ' — en esta copia falta activar el hook: git config core.hooksPath Claude_Proyecto/.githooks'));
 })();
 
 /* ── 40. Finanzas no se queda atrás ──────────────────────────────────────────────────────────────────

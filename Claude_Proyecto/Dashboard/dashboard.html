@@ -41,6 +41,8 @@
      <section> vacio, el tema de color y la entrada en RENDERS/SLIDE_MENU_META. -->
 <!-- Las marcas de hábitos de la PC, que el hook de pre-commit deja aquí para los otros dispositivos (habitos.js las trae) -->
 <script src="habitos-sync.js" onerror="this.remove()"></script>
+<!-- La auditoría de cada mes de las fases, de la PC: la exporta el mismo hook (habitos-exportar.js) y la trae fzmDelRepo. -->
+<script src="auditoria-sync.js" onerror="this.remove()"></script>
 <script src="habitos.js"></script>
 <script src="examen-genai-data.js"></script>
 <script src="examen-genai-data-b.js"></script>
@@ -14208,8 +14210,37 @@ function kpiPaso(titulo, texto, color){
    (planArrastradas). Se audita en la pantalla del Plan Maestro, en el lugar del mes (pmAuditar). */
 const FZM_KEY = 'plan_auditoria_v1';
 const FZM_ESTADO = { ok:'auditado', pend:'sin auditar', hoy:'en curso', fut:'por venir' };
-const fzmAud = () => rawGet(FZM_KEY, {}) || {};
-const fzmGuardaAud = A => { try{ rawSet(FZM_KEY, A); }catch(e){} };
+/* La auditoría en tus otros dispositivos (Adán, 1-nov-2026: "sube los datos de mis hábitos y auditoría"). Cada
+   commit en la PC copia `plan_auditoria_v1` a `auditoria-sync.js` (el hook, `habitos-exportar.js`), que llega como
+   `window.AUDITORIA_SYNC = {exportado, meses, datos}`; `meses` es cuándo se tocó cada mes en la PC y aquí
+   `plan_auditoria_sinc` guarda cuándo se tocó cada mes en este dispositivo (`fzmTocado`, en cada guardado). La
+   primera lectura (`fzmDelRepo`) trae cada mes solo si el de la PC es más nuevo: lo que se auditó aquí después no
+   se pisa, los meses que solo tiene este dispositivo se quedan y la PC no se reimporta a sí misma. */
+const FZM_SINC = 'plan_auditoria_sinc';
+let fzmRepoVisto = false;
+function fzmDelRepo(){
+  if(fzmRepoVisto) return; fzmRepoVisto = true;
+  const X = window.AUDITORIA_SYNC, d = X && X.datos, M = (X && X.meses) || {};
+  if(!d || typeof d !== 'object') return;
+  const A = rawGet(FZM_KEY, {}) || {}, S = rawGet(FZM_SINC, {}) || {}, loc = S.meses || {};
+  let trae = false;
+  Object.keys(d).forEach(ym => {
+    const t = M[ym] || X.exportado || '';
+    if(!t || !d[ym] || typeof d[ym] !== 'object' || (loc[ym] && t <= loc[ym])) return;
+    A[ym] = d[ym]; loc[ym] = t; trae = true;
+  });
+  if(trae) try{ rawSet(FZM_KEY, A); S.meses = loc; rawSet(FZM_SINC, S); }catch(e){}
+}
+function fzmTocado(antes, A){
+  const S = rawGet(FZM_SINC, {}) || {}, loc = S.meses || {}, ahora = new Date().toISOString();
+  let toco = false;
+  new Set(Object.keys(antes).concat(Object.keys(A))).forEach(ym => {
+    if(JSON.stringify(antes[ym]) !== JSON.stringify(A[ym])){ loc[ym] = ahora; toco = true; }
+  });
+  if(toco){ S.meses = loc; rawSet(FZM_SINC, S); }
+}
+const fzmAud = () => { fzmDelRepo(); return rawGet(FZM_KEY, {}) || {}; };
+const fzmGuardaAud = A => { try{ fzmTocado(rawGet(FZM_KEY, {}) || {}, A); rawSet(FZM_KEY, A); }catch(e){} };
 const fzmYM = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
 const fzmMesSig = ym => { const p = ym.split('-').map(Number); return fzmYM(new Date(p[0], p[1], 1)); };
 const fzmMesAnt = ym => { const p = ym.split('-').map(Number); return fzmYM(new Date(p[0], p[1]-2, 1)); };
