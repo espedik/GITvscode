@@ -134,6 +134,70 @@ h2{font-family:var(--title);font-size:clamp(24px,2.6vw,32px);line-height:1.1;mar
 
 footer{padding:40px 0 60px;color:var(--text3);font-size:12.5px}
 
+/* ── Fotos, el mapa del dinero y la sección de TikTok ─────────────────────────────────────── */
+figure{margin:0;position:relative;overflow:hidden;border-radius:12px;background:rgba(var(--ov),.05)}
+figure img{display:block;width:100%;height:100%;object-fit:cover}
+figcaption{position:absolute;left:0;right:0;bottom:0;padding:16px 10px 5px;font-size:10.5px;color:rgba(255,255,255,.82);background:linear-gradient(transparent,rgba(0,0,0,.66))}
+#equipoFoto figure{height:170px;margin-bottom:14px}
+.proy-foto{height:120px;margin:-16px -16px 4px -13px;border-radius:12px 12px 0 0}
+.apuesta-foto{height:130px;margin:-18px -18px 12px;border-radius:13px 13px 0 0}
+.det-foto{width:84px;height:84px;flex:none;border-radius:12px}
+.p{font-size:13.5px;color:var(--text2);margin:4px 0 10px}
+.cuenta{font-family:var(--mono);font-size:12.5px;color:var(--text3);margin-top:10px;line-height:1.5}
+.fuente{font-size:11.5px;color:var(--text3);margin-top:10px;line-height:1.5}
+.fuente a{color:var(--text3)}
+.k{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.mapa{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start}
+.mapa.uno{grid-template-columns:minmax(0,1fr)}
+.atajos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:22px}
+.atajo{display:flex;flex-direction:column;gap:4px;padding:13px 14px;text-decoration:none;color:var(--text);transition:border-color .15s}
+.atajo:hover{border-color:var(--cy)}
+.atajo b{font-size:13.5px;line-height:1.35}
+@media(max-width:600px){.atajos{grid-template-columns:minmax(0,1fr)}}
+.mapa>.card,.graf{padding:16px 18px}
+.graf h3,.card h3{margin:0 0 4px;font-size:16px}
+.leyenda-cats{display:flex;flex-wrap:wrap;gap:6px 14px;margin:6px 0 4px;font-size:12px;color:var(--text2)}
+.leyenda-cats span{display:inline-flex;align-items:center;gap:6px}
+.leyenda-cats i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.tk-h{font-size:19px;margin:30px 0 12px;font-family:var(--title)}
+.tk-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:22px;align-items:center}
+.tk-hero .tesis{font-size:16.5px;line-height:1.62;color:var(--text2);margin:0}
+.tk-fotos{display:grid;grid-template-columns:1fr 1fr;gap:10px;height:260px}
+.tk-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px}
+.tk-stat{padding:14px 16px}
+.tk-stat b{display:block;font-family:var(--mono);font-size:26px;line-height:1.1;margin-top:4px;color:var(--cy)}
+.tk-stat p{margin:5px 0 0;font-size:12.5px;color:var(--text2)}
+.tabla{width:100%;border-collapse:collapse;font-size:13px}
+.tabla th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--br)}
+.tabla td{padding:9px 10px;border-bottom:1px solid rgba(var(--ov),.06);vertical-align:top;color:var(--text2)}
+.tabla td:first-child{color:var(--text);font-weight:700;white-space:nowrap}
+.scrollx{overflow-x:auto}
+.tk-flujo{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;counter-reset:fl}
+.tk-paso{padding:14px 15px;position:relative}
+.tk-paso::before{counter-increment:fl;content:counter(fl);font-family:var(--mono);font-weight:700;color:var(--cy);font-size:13px}
+.tk-paso b{display:block;font-size:14.5px;margin:2px 0 4px}
+.tk-paso p{margin:0;font-size:12.5px;color:var(--text2);line-height:1.45}
+.tk-paso .t{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tk-in{display:flex;flex-direction:column;gap:5px;font-size:12.5px;font-weight:700;color:var(--text2);max-width:260px;margin-top:6px}
+.tk-in input{height:36px;border-radius:9px;border:1px solid var(--br);background:var(--bg2);color:var(--text);font:inherit;font-size:14px;padding:0 10px}
+.tk-costo{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:12px}
+.tk-costo>b{font-family:var(--mono);font-size:30px;color:var(--ok)}
+.tk-costo span{font-size:13px;color:var(--text2)}
+.tk-nicho #tkNichoFoto figure{height:150px;margin:-2px 0 12px}
+.tk-ideas{margin:8px 0 0;padding-left:20px;columns:2;column-gap:24px;font-size:13px;color:var(--text2)}
+.tk-ideas li{margin:3px 0;break-inside:avoid}
+.avance-tk{display:flex;align-items:center;gap:10px;margin:8px 0 6px}
+.avance-tk .barra{flex:1}
+.tk-paso-r{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid rgba(var(--ov),.06);cursor:pointer}
+.tk-paso-r input{margin-top:3px;width:17px;height:17px;accent-color:var(--cy);flex:none}
+.tk-paso-r b{display:block;font-size:14px}
+.tk-paso-r span{display:block;font-size:12.5px;color:var(--text2)}
+.tk-paso-r.ok b{text-decoration:line-through;color:var(--text3)}
+#tkReglas{margin-top:14px}
+@media(max-width:1100px){.tk-flujo{grid-template-columns:repeat(3,minmax(0,1fr))}.tk-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1000px){.mapa,.tk-hero{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.tk-flujo,.tk-stats{grid-template-columns:minmax(0,1fr)}.tk-ideas{columns:1}.tk-fotos{height:180px}}
+
 /* ── El detalle de un proyecto ────────────────────────────────────────────────────────── */
 .ov{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.6);backdrop-filter:blur(6px)}
 .ov.open{display:flex}
@@ -170,6 +234,7 @@ footer{padding:40px 0 60px;color:var(--text3);font-size:12.5px}
 @media(max-width:600px){
   .wrap{padding:0 16px}
   header.top{padding:10px 16px}
+  .marca small{display:none}
   .top nav .nav-sec{display:none}
   .piezas,.ruta{grid-template-columns:minmax(0,1fr)}
   .poder{flex-direction:column;gap:2px}
@@ -193,7 +258,9 @@ footer{padding:40px 0 60px;color:var(--text3);font-size:12.5px}
   <div class="marca">💻 Laptop <small>proyectos que pagan</small></div>
   <nav>
     <a class="nav-sec" href="#meta">La meta</a>
+    <a class="nav-sec" href="#mapa">El mapa</a>
     <a class="nav-sec" href="#apuestas">Tus apuestas</a>
+    <a class="nav-sec" href="#tiktok">TikTok con IA</a>
     <a class="nav-sec" href="#proyectos">Todos</a>
     <a href="../Dashboard/dashboard.html">← Dashboard</a>
     <button type="button" class="btn-ico" id="btnTema" onclick="cambiarTema()">Tema</button>
@@ -207,8 +274,14 @@ footer{padding:40px 0 60px;color:var(--text3);font-size:12.5px}
       <h1>Que la laptop<br>se pague sola</h1>
       <p class="sub">Proyectos de 3D, render, video, IA y código que puedes hacer con tu equipo, con cuánto deja cada uno al mes —y la cuenta a la vista—, por dónde empezar y qué no te conviene.</p>
       <div class="poderes" id="poderes"></div>
+      <div class="atajos">
+        <a class="card atajo" href="#mapa"><span class="k">El mapa del dinero</span><b>Qué deja cada proyecto y qué tan rápido</b></a>
+        <a class="card atajo" href="#tiktok"><span class="k">Lo nuevo</span><b>Videos con IA en tu laptop, para TikTok</b></a>
+        <a class="card atajo" href="#apuestas"><span class="k">Por dónde empezar</span><b>Tus tres mejores apuestas y su ruta</b></a>
+      </div>
     </div>
     <div class="card equipo">
+      <div id="equipoFoto"></div>
       <div class="equipo-mod"><b id="equipoModelo"></b><span class="chip" style="--c:var(--cy)">tu equipo</span></div>
       <div class="piezas" id="piezas"></div>
       <p class="equipo-nota" id="equipoNota"></p>
@@ -235,6 +308,16 @@ footer{padding:40px 0 60px;color:var(--text3);font-size:12.5px}
     </div>
   </section>
 
+  <section id="mapa">
+    <div class="eyebrow">El mapa del dinero</div>
+    <h2>Qué deja cada proyecto, y qué tan rápido</h2>
+    <p class="sub">Cada barra va de lo mínimo a lo máximo que deja al mes con unas 8 horas a la semana; la línea es lo que pide tu plan. A la derecha, lo que paga cada hora contra lo que tarda el primer pago: arriba a la izquierda está lo que conviene.</p>
+    <div class="mapa">
+      <div class="card graf"><h3>Pesos al mes, de lo mínimo a lo máximo</h3><div class="leyenda-cats" id="leyCats"></div><div id="gRangos"></div></div>
+      <div class="card graf"><h3>Lo que paga la hora contra lo que tarda el primer pago</h3><p class="p">Tus tres apuestas, marcadas y con nombre; pasa el cursor por los demás puntos para ver cuál es.</p><div id="gDisp"></div></div>
+    </div>
+  </section>
+
   <section id="apuestas">
     <div class="eyebrow">Por dónde empezar</div>
     <h2>Tus tres mejores apuestas</h2>
@@ -246,6 +329,45 @@ footer{padding:40px 0 60px;color:var(--text3);font-size:12.5px}
     <div class="eyebrow">90 días</div>
     <h2 id="rutaTitulo">La ruta de la primera apuesta</h2>
     <div class="ruta" id="rutaTramos"></div>
+  </section>
+
+  <section id="tiktok">
+    <div class="eyebrow">Lo nuevo</div>
+    <h2>Videos con IA en tu laptop, para TikTok</h2>
+    <div class="tk-hero">
+      <p class="tesis" id="tkTesis"></p>
+      <div class="tk-fotos" id="tkFotos"></div>
+    </div>
+    <div class="tk-stats" id="tkStats"></div>
+
+    <h3 class="tk-h">Qué modelos caben en tu GPU</h3>
+    <div class="mapa uno">
+      <div class="card graf"><h3>Memoria de video que pide cada modelo</h3><p class="p">La línea es la de tu RTX 4090: 16 GB.</p><div id="gVram"></div></div>
+      <div class="card scrollx"><table class="tabla"><thead><tr><th>Modelo</th><th>Qué hace</th><th>Para qué te sirve</th><th>Licencia</th></tr></thead><tbody id="tkModelos"></tbody></table></div>
+    </div>
+
+    <h3 class="tk-h">Un video de un minuto, de la idea a publicarlo</h3>
+    <div class="tk-flujo" id="tkFlujo"></div>
+    <div class="mapa" style="margin-top:14px">
+      <div class="card graf"><h3>Tu tiempo por video</h3><p class="p" id="tkTiempoTxt"></p><div id="gTiempo"></div></div>
+      <div class="card graf"><h3>Lo que cuesta un video</h3><p class="p" id="tkLuzTxt"></p>
+        <label class="tk-in">Precio de la luz, pesos por kWh <input type="number" id="tkKwh" min="0.5" max="8" step="0.1" oninput="pintarLuz()"></label>
+        <div class="tk-costo"><b id="tkCosto">—</b><span>de luz por video · <b id="tkCostoMes">—</b> al mes con 12 videos</span></div>
+        <p class="cuenta" id="tkLuzCuenta"></p></div>
+    </div>
+
+    <h3 class="tk-h">Lo que puede pagar al mes, con 12 videos</h3>
+    <div class="mapa">
+      <div class="card graf"><h3>Tres momentos de la cuenta</h3><p class="p">Pagos de TikTok por vistas, afiliados y un patrocinio, contra lo que pide tu plan.</p><div id="gEsc"></div><p class="cuenta" id="tkEscCuenta"></p></div>
+      <div class="card" id="tkEscTxt"></div>
+    </div>
+
+    <div class="mapa" style="margin-top:14px">
+      <div class="card tk-nicho"><div id="tkNichoFoto"></div><span class="k">El nicho que te conviene</span><h3 id="tkNichoT"></h3><p class="p" id="tkNichoD"></p><ol class="tk-ideas" id="tkIdeas"></ol></div>
+      <div class="card"><span class="k">La ruta de 30 días</span><div class="avance-tk"><div class="barra"><i id="tkAvBarra" style="width:0"></i></div><b class="mono" id="tkAvTxt"></b></div><div id="tkRuta"></div></div>
+    </div>
+    <div class="avisos" id="tkReglas"></div>
+    <p class="fuente" id="tkFuentes"></p>
   </section>
 
   <section id="proyectos">
@@ -282,6 +404,7 @@ footer{padding:40px 0 60px;color:var(--text3);font-size:12.5px}
 </div>
 
 <script src="../Dashboard/datos-maestros.js"></script>
+<script src="../Dashboard/graficas-svg.js"></script>
 <script src="proyectos.js"></script>
 <script>
 const L = window.LAPTOP, CF = window.CIFRAS;
@@ -356,9 +479,9 @@ function calcular(){
 function pintarTop(){
   $('top3').innerHTML = L.top.map((x, i) => {
     const p = L.proyectos.find(q => q.id === x.id); if(!p) return '';
-    return '<div class="card apuesta" style="--c:' + cat(p).c + '" onclick="abrirDet(\'' + p.id + '\')" role="button" tabindex="0">' +
+    return '<div class="card apuesta" style="--c:' + cat(p).c + '" onclick="abrirDet(\'' + p.id + '\')" role="button" tabindex="0">' + foto(fotoDe(p), 'apuesta-foto') +
       '<span class="n">' + (i + 1) + '</span><span class="chip" style="--c:' + cat(p).c + '">' + esc(cat(p).t) + '</span>' +
-      '<h3>' + p.ico + ' ' + esc(p.t) + '</h3><p>' + esc(x.porque) + '</p>' + dineroHtml(p, cuenta(p)) + '</div>';
+      '<h3>' + esc(p.t) + '</h3><p>' + esc(x.porque) + '</p>' + dineroHtml(p, cuenta(p)) + '</div>';
   }).join('');
   const R = L.ruta, p = L.proyectos.find(q => q.id === R.para);
   $('rutaTitulo').textContent = 'La ruta de 90 días: ' + (p ? p.t.toLowerCase() : '');
@@ -384,7 +507,7 @@ function pintarGrid(){
   $('grid').innerHTML = L2.map(p => {
     const c = cuenta(p);
     return '<button type="button" class="card proy" style="--c:' + cat(p).c + '" onclick="abrirDet(\'' + p.id + '\')">' +
-      '<div class="proy-cab"><span class="proy-ico">' + p.ico + '</span><div><h3>' + esc(p.t) + '</h3></div></div>' +
+      foto(fotoDe(p), 'proy-foto') + '<div class="proy-cab"><div><h3>' + esc(p.t) + '</h3></div></div>' +
       '<p>' + esc(p.gancho) + '</p>' +
       '<div class="datos"><span class="chip" style="--c:' + cat(p).c + '">' + esc(cat(p).t) + '</span><span class="chip">⏱ ' + esc(p.primer) + '</span>' + difHtml(p.dificultad) + '</div>' +
       '<div class="proy-pie">' + dineroHtml(p, c) + (c && !p.pasivo ? '<span class="mono" style="font-size:12px;color:var(--text3)">' + pesos(c.porHora) + '/h</span>' : '') + '</div></button>';
@@ -409,7 +532,7 @@ function abrirDet(id){
   const num = (k, v) => '<div><span>' + k + '</span><b>' + v + '</b></div>';
   $('det').style.setProperty('--c', C.c);
   $('det').innerHTML =
-    '<div class="det-cab"><span style="font-size:34px;line-height:1">' + p.ico + '</span><div><span class="chip" style="--c:' + C.c + '">' + esc(C.t) + '</span>' +
+    '<div class="det-cab">' + foto(fotoDe(p), 'det-foto', true) + '<div><span class="chip" style="--c:' + C.c + '">' + esc(C.t) + '</span>' +
       '<h2>' + esc(p.t) + '</h2><p>' + esc(p.gancho) + '</p></div><button type="button" class="det-x" onclick="cerrarDet()" aria-label="Cerrar">✕</button></div>' +
     '<div class="det-body">' +
       '<div class="det-dinero">' + dineroHtml(p, c) + (c ? '<div class="cuenta"><b>La cuenta:</b> ' + esc(c.txt) + '.</div>' : '') + '</div>' +
@@ -431,6 +554,89 @@ function abrirDet(id){
 function cerrarDet(){ $('detOv').classList.remove('open'); }
 addEventListener('keydown', e => { if(e.key === 'Escape') cerrarDet(); });
 
+/* ── Fotos: de LAPTOP.fotos (fotos/), por proyecto o por su categoría ──────────────────────── */
+const fotoDe = p => (L.fotoProy || {})[p.id] || (L.fotoCat || {})[p.cat] || null;
+function foto(k, cls, sinPie){
+  const f = k && L.fotos && L.fotos[k];
+  return f ? '<figure class="' + (cls || '') + '"><img src="' + esc(f.src) + '" alt="" loading="lazy">' + (sinPie ? '' : '<figcaption>' + esc(f.cred) + '</figcaption>') + '</figure>' : '';
+}
+
+/* ── El mapa del dinero: rangos al mes y pesos por hora contra semanas al primer pago ─────── */
+const CAT_S = { '3d': 1, video: 2, ia: 3, ing: 4, pasivo: 5 };
+function pintarMapa(){
+  const G = window.GSVG; if(!G) return;
+  $('equipoFoto').innerHTML = foto('equipo');
+  const conCifra = L.proyectos.filter(p => cuenta(p)).sort((a, b) => cuenta(b).max - cuenta(a).max);
+  $('leyCats').innerHTML = Object.keys(L.cats).filter(k => conCifra.some(p => p.cat === k)).map(k => '<span><i style="background:var(--s' + CAT_S[k] + ')"></i>' + esc(L.cats[k].t) + '</span>').join('') +
+    (META ? '<span><i style="background:var(--text2);width:2px;height:12px"></i>lo que pide tu plan</span>' : '');
+  G.rangos($('gRangos'), { filas: conCifra.map(p => ({ k: p.t.length > 38 ? p.t.slice(0, 36) + '…' : p.t, min: cuenta(p).min, max: cuenta(p).max, s: CAT_S[p.cat] || 1 })),
+    fmt: v => '$' + (v >= 1000 ? (v / 1000).toLocaleString('es-MX', { maximumFractionDigits: 1 }) + 'k' : Math.round(v)), meta: META || null, izq: 250, titulo: 'Pesos al mes por proyecto' });
+  const activos = conCifra.filter(p => !p.pasivo), top = L.top.map(t => t.id);
+  G.dispersion($('gDisp'), { puntos: activos.map(p => ({ k: p.t, x: semanas(p.primer), y: Math.round(cuenta(p).porHora), s: top.indexOf(p.id) >= 0 ? 2 : 1, grande: top.indexOf(p.id) >= 0, etiqueta: top.indexOf(p.id) >= 0 })),
+    fmtX: v => Math.round(v) + ' sem', fmtY: v => '$' + Math.round(v), xTxt: 'semanas al primer pago', yTxt: 'pesos por hora', alto: 330, titulo: 'Pesos por hora contra semanas al primer pago' });
+}
+
+/* ── TikTok con IA, en tu laptop ─────────────────────────────────────────────────────────── */
+const TK = L.tiktok, LSL = 'laptop_v1';
+let SL = { tiktok: {}, kwh: null };
+try { const g = JSON.parse(localStorage.getItem(LSL) || 'null'); if (g) SL = Object.assign(SL, g); } catch(e) {}
+const guardarSL = () => { try { localStorage.setItem(LSL, JSON.stringify(SL)); } catch(e) {} };
+function pintarTiktok(){
+  const G = window.GSVG; if(!TK) return;
+  $('tkTesis').textContent = TK.tesis;
+  $('tkFotos').innerHTML = foto('tiktok') + foto('gpu');
+  const minTot = TK.flujo.reduce((a, x) => a + x.min, 0), gpuTot = TK.flujo.reduce((a, x) => a + x.gpu, 0);
+  const caben = TK.modelos.filter(m => m.vram <= 16).length;
+  $('tkStats').innerHTML = [
+    [caben + ' de ' + TK.modelos.length, 'modelos de video caben en tus 16 GB', 'dos holgados y dos al límite'],
+    [Math.round(minTot / 6) / 10 + ' h', 'tuyas por video de un minuto', 'guion, imágenes, voz, edición y publicar'],
+    [Math.round(gpuTot / 6) / 10 + ' h', 'de la laptop sola, de noche', '10 a 12 clips de 5 s, a ojo de 6 a 10 min cada uno'],
+    ['$0', 'en créditos de video', 'solo la luz: lo calcula la tarjeta de abajo'],
+  ].map(x => '<div class="card tk-stat"><span class="k">' + esc(x[1]) + '</span><b>' + esc(x[0]) + '</b><p>' + esc(x[2]) + '</p></div>').join('');
+  $('tkModelos').innerHTML = TK.modelos.map(m => '<tr><td>' + esc(m.k) + '</td><td>' + esc(m.que) + '</td><td>' + esc(m.uso) + '</td><td>' + esc(m.lic) + '</td></tr>').join('');
+  if (G) G.rangos($('gVram'), { filas: TK.modelos.map(m => ({ k: m.k, min: 0, max: m.vram, s: m.vram < 16 ? 3 : 4 })), fmt: v => Math.round(v) + ' GB', meta: 16, izq: 190, titulo: 'Memoria de video por modelo' });
+  $('tkFlujo').innerHTML = TK.flujo.map(x => '<div class="card tk-paso"><b>' + esc(x.k) + '</b><p>' + esc(x.d) + '</p><div class="t">' +
+    (x.min ? '<span class="chip">' + x.min + ' min tuyos</span>' : '') + (x.gpu ? '<span class="chip" style="--c:var(--cy)">' + x.gpu + ' min de GPU</span>' : '') + '</div></div>').join('');
+  $('tkTiempoTxt').textContent = minTot + ' minutos tuyos por video; las ' + Math.round(gpuTot / 6) / 10 + ' h de GPU corren solas, de noche.';
+  if (G) G.segmentos($('gTiempo'), { partes: TK.flujo.filter(x => x.min).map((x, i) => ({ k: x.k, v: x.min, s: i + 1 })), fmt: v => v + ' min', titulo: 'Tu tiempo por video' });
+  if (SL.kwh == null) SL.kwh = TK.luz.kwh;
+  $('tkKwh').value = SL.kwh;
+  pintarLuz();
+  // Tres momentos de la cuenta: pagos de TikTok, afiliados y patrocinio, en pesos al mes.
+  const E = TK.escenarios, vid = 12;
+  const tt = E.map(e => FX ? Math.round(e.vistas * vid / 1000 * e.usdMil * FX) : 0), af = E.map(e => e.afiliados), pa = E.map(e => FX ? Math.round(e.patrocinios * TK.patrocinioUsd * FX) : 0);
+  if (G) G.columnas($('gEsc'), { cats: E.map(e => e.k), fmt: v => '$' + Math.round(v).toLocaleString('es-MX'), meta: META || null, metaTxt: META ? 'tu meta: ' + pesos(META) : '', alto: 250,
+    series: [{ k: 'Pagos de TikTok', s: 1, datos: tt }, { k: 'Afiliados', s: 2, datos: af }, { k: 'Patrocinio', s: 3, datos: pa }], titulo: 'Lo que puede pagar al mes' });
+  $('tkEscCuenta').textContent = 'TikTok: 12 videos × vistas por video × US$' + E[1].usdMil.toFixed(2) + ' por mil × $' + (FX ? FX.toFixed(2) : '—') +
+    ' · patrocinio: US$' + TK.patrocinioUsd + ' por video, el centro del rango de US$200 a 800 · afiliados: tarifa sugerida.';
+  $('tkEscTxt').innerHTML = '<span class="k">Qué pasa en cada momento</span>' + E.map((e, i) => '<div style="margin-top:12px"><b>' + esc(e.k) + ' · ' + e.vistas.toLocaleString('es-MX') + ' vistas por video</b><p class="p" style="margin:3px 0 0">' + esc(e.d) +
+    ' Te deja ' + pesos(tt[i] + af[i] + pa[i]) + ' al mes.</p></div>').join('') +
+    '<p class="p" style="margin-top:14px">La conclusión: el video con IA no es el negocio, es la herramienta. El dinero llega por el nicho —marcas de autos y refacciones— y por lo que hagas con las mismas tomas: tu actriz de IA y los comerciales para negocios.</p>';
+  $('tkNichoFoto').innerHTML = foto('auto');
+  $('tkNichoT').textContent = TK.nicho.t; $('tkNichoD').textContent = TK.nicho.d;
+  $('tkIdeas').innerHTML = TK.nicho.ideas.map(x => '<li>' + esc(x) + '</li>').join('');
+  pintarTkRuta();
+  $('tkReglas').innerHTML = TK.reglas.map(x => '<div class="card aviso" style="--c:var(--cy)"><b>' + esc(x.t) + '</b><p>' + esc(x.d) + '</p></div>').join('');
+  $('tkFuentes').innerHTML = 'Fuentes, revisadas en noviembre de 2026 (los tiempos por clip son estimaciones; mide los tuyos en el paso 2): ' +
+    TK.fuentes.map(f => '<a href="' + esc(f.url) + '" target="_blank" rel="noopener">' + esc(f.t) + '</a>').join(' · ');
+}
+function pintarLuz(){
+  const v = +$('tkKwh').value || TK.luz.kwh; SL.kwh = v; guardarSL();
+  const kwh = TK.luz.watts / 1000 * TK.luz.horas, c = kwh * v;
+  $('tkLuzTxt').textContent = TK.luz.d;
+  $('tkCosto').textContent = '$' + c.toFixed(2);
+  $('tkCostoMes').textContent = '$' + Math.round(c * 12);
+  $('tkLuzCuenta').textContent = TK.luz.watts + ' W × ' + TK.luz.horas + ' h = ' + kwh.toFixed(2) + ' kWh × $' + v.toFixed(2) + ' = $' + c.toFixed(2) + ' por video.';
+}
+function pintarTkRuta(){
+  const h = TK.ruta.filter(x => SL.tiktok[x.id]).length;
+  $('tkAvBarra').style.width = (h / TK.ruta.length * 100) + '%';
+  $('tkAvTxt').textContent = h + ' de ' + TK.ruta.length;
+  $('tkRuta').innerHTML = TK.ruta.map((x, i) => '<label class="tk-paso-r' + (SL.tiktok[x.id] ? ' ok' : '') + '"><input type="checkbox"' + (SL.tiktok[x.id] ? ' checked' : '') +
+    ' onchange="marcarTk(\'' + x.id + '\', this.checked)"><div><b>' + (i + 1) + '. ' + esc(x.t) + '</b><span>' + esc(x.d) + '</span></div></label>').join('');
+}
+function marcarTk(id, on){ if(on) SL.tiktok[id] = CF && CF.fechaLocal ? CF.fechaLocal() : new Date().toLocaleDateString('en-CA'); else delete SL.tiktok[id]; guardarSL(); pintarTkRuta(); }
+
 /* ── Tema ────────────────────────────────────────────────────────────────────────────────── */
 function cambiarTema(){
   const t = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
@@ -440,7 +646,7 @@ function cambiarTema(){
 }
 function pintarTema(){ $('btnTema').textContent = document.documentElement.getAttribute('data-theme') === 'light' ? '🌙 Oscuro' : '☀️ Claro'; }
 
-pintarEquipo(); pintarMeta(); pintarTop(); pintarFiltros(); pintarGrid(); pintarAvisos(); pintarTema();
+pintarEquipo(); pintarMeta(); pintarMapa(); pintarTop(); pintarTiktok(); pintarFiltros(); pintarGrid(); pintarAvisos(); pintarTema();
 </script>
 <script src="../Dashboard/prompt-pagina.js" data-pagina="laptop" data-host="header.top"></script>
 </body>

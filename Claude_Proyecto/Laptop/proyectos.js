@@ -232,6 +232,16 @@ var LAPTOP = {
       fuente: 'Requisitos del Programa de Socios de YouTube.', url: 'https://support.google.com/youtube/answer/72851' },
 
     // ── IA en tu GPU ────────────────────────────────────────────────────────────────────
+    { id: 'tiktok-ia', cat: 'ia', ico: '🎬', t: 'Videos con IA para TikTok, hechos en tu laptop', sinRango: true,
+      gancho: 'Tomas generadas en tu GPU, de noche, sin pagar créditos, para un canal de ingeniería automotriz explicada.',
+      primer: '2 a 4 meses', inversion: '$0: ComfyUI y los modelos abiertos son gratis; solo la luz', dificultad: 2,
+      pasos: ['Instala ComfyUI Desktop y genera un clip con Wan 2.2 5B', 'Mide cuánto tarda en tu laptop', 'Arma un video de 60 a 75 s sin publicarlo', 'Publica tres a la semana durante un mes y mide'],
+      laptop: 'Los modelos de video abiertos piden de 8 a 16 GB de memoria de video: tu RTX 4090 de 16 GB los corre todos, algunos al límite.',
+      software: ['ComfyUI Desktop', 'Wan 2.2 y HunyuanVideo 1.5', 'Flux para las imágenes iniciales', 'DaVinci Resolve'],
+      vender: ['Pagos de TikTok con 10,000 seguidores', 'Afiliados de herramientas y refacciones', 'Patrocinios de marcas del ramo automotriz'],
+      ojo: 'El pago por vistas es bajo: el dinero está en el nicho y en las marcas. Etiqueta de IA siempre.',
+      sinergia: 'Las mismas tomas sirven para tu actriz de IA y para los posts del negocio de tu papá.',
+      fuente: 'La sección «Videos con IA en tu laptop», más abajo en esta página.' },
     { id: 'fotos-ia', cat: 'ia', ico: '🖼️', t: 'Fotos de producto con IA',
       gancho: 'Del producto en la mesa de la cocina a la foto de campaña: fondos, escenas y modelos generados en tu laptop.',
       precio: [5, 15], por: 'por imagen (en paquetes de 10 a 30)', unidades: [20, 80], de: 'imágenes al mes', horas: 0.5, comision: 0,
@@ -404,5 +414,78 @@ var LAPTOP = {
       { s: 'Semanas 7 y 8', t: 'Salir a vender', d: 'Servicio en Fiverr con 3 paquetes y 20 mensajes directos a marcas con un render de su producto.' },
       { s: 'Semanas 9 a 12', t: 'Los primeros pagos', d: 'Tres trabajos cobrados y tres reseñas. Con eso, sube el precio y suma las animaciones.' }
     ]
-  }
+  },
+  // Las fotos de la página, en fotos/ (la de 3D y render es una réplica real de Heliescala). La tarjeta de cada proyecto
+  // usa la de su id en `fotoProy` o la de su categoría en `fotoCat`.
+  fotos: {
+    edicion: { src: "fotos/edicion.jpg", cred: "David Oakes · Wikimedia Commons · CC BY-SA 3.0", alt: "Consolas de corrección de color" },
+    gpu: { src: "fotos/gpu.jpg", cred: "ZMASLO · Wikimedia Commons · CC BY 3.0", alt: "Una tarjeta gráfica GeForce RTX 4090" },
+    codigo: { src: "fotos/codigo.jpg", cred: "Martin Vorel · Wikimedia Commons · CC BY-SA 4.0", alt: "Código en una pantalla" },
+    impresion: { src: "fotos/impresion.jpg", cred: "MukhtaromST · Wikimedia Commons · CC0 1.0", alt: "Una impresora 3D imprimiendo" },
+    tiktok: { src: "fotos/tiktok.jpg", cred: "Solen Feyissa · Wikimedia Commons · CC BY-SA 2.0", alt: "La app de TikTok en un celular" },
+    auto: { src: "fotos/auto.jpg", cred: "Retired electrician · Wikimedia Commons · CC0 1.0", alt: "Un BYD cargando" },
+    equipo: { src: "fotos/equipo.jpg", cred: "P1898 · Wikimedia Commons · CC BY 4.0", alt: "Una laptop para juegos" },
+    heli3d: { src: "../Heliescala/fotos/fondo-blanco/bell407.jpg", cred: "Heliescala · el negocio de tu papá", alt: "Dos réplicas del Bell 407 sobre fondo blanco" },
+  },
+  fotoCat: { '3d': 'heli3d', video: 'edicion', ia: 'gpu', ing: 'codigo', pasivo: 'impresion' },
+  fotoProy: { 'tiktok-ia': 'tiktok' },
+  // Adán, 2-nov-2026: "quiero indagar en hacer videos con IA, pero con el hardware de mi PC, videos para TikTok". Los
+  // modelos de video abiertos que caben en sus 16 GB, el flujo de un video de un minuto, lo que tarda y lo que cuesta,
+  // lo que puede pagar y la ruta de 30 días. Revisado en noviembre de 2026: los modelos y sus licencias cambian.
+  tiktok: {
+    tesis: 'Tu RTX 4090 genera video con modelos abiertos, sin pagar créditos: un clip de 5 segundos tarda, a ojo, de 6 a 10 minutos en tu laptop, y un video de un minuto lleva 10 a 12 clips, que se generan de noche mientras duermes. Lo que lo vuelve dinero no es el pago de TikTok, que es poco por cada mil vistas: es un nicho donde sabes más que casi todos —la ingeniería automotriz explicada en español— y las marcas que pagan por llegar a esa gente.',
+    // `vram`: GB que pide en ComfyUI con sus ajustes de memoria; tu GPU tiene 16.
+    modelos: [
+      { k: 'Wan 2.2 · 5B', vram: 8, que: 'Texto o imagen a video, 5 s a 720p', uso: 'El primero que instalas: cabe holgado y es la base de casi todos los flujos de ComfyUI.', lic: 'Apache 2.0: uso comercial libre.' },
+      { k: 'HunyuanVideo 1.5', vram: 14, que: 'Clips de 5 s; 1080p con superresolución', uso: 'La mejor calidad que cabe en 16 GB, descargando parte a la RAM. Para las tomas principales.', lic: 'Licencia comunitaria de Tencent: no se puede usar en la Unión Europea. Te sirve en México; en Alemania, ya no.' },
+      { k: 'Wan 2.2 · 14B cuantizado', vram: 16, que: '5 s a 480–720p, mejor movimiento', uso: 'En GGUF, al límite de tu memoria: más lento, pero se mueve mejor que el de 5B.', lic: 'Apache 2.0: uso comercial libre.' },
+      { k: 'LTX-2.3 destilado', vram: 16, que: 'Video y audio en el mismo paso', uso: 'Apretado en 16 GB con la versión destilada o cuantizada; útil cuando el sonido importa.', lic: 'Licencia propia de Lightricks: revisa el límite de ingresos para uso comercial.' },
+    ],
+    // Un video de 60 a 75 s, paso a paso. `min`: minutos tuyos; `gpu`: minutos de la laptop sola.
+    flujo: [
+      { k: 'Guion', min: 15, gpu: 0, d: 'Claude escribe 60 a 75 s en 10 a 12 tomas, cada una descrita en una línea: encuadre, qué se ve, qué se mueve.' },
+      { k: 'Imágenes', min: 20, gpu: 15, d: 'La imagen inicial de cada toma con Flux en ComfyUI, con la misma estética; si sale la actriz, con su LoRA.' },
+      { k: 'Video', min: 5, gpu: 120, d: 'Imagen a video en cola, de noche: Wan 2.2 o HunyuanVideo, 5 s por toma. Conectada a la corriente y sobre una base con ventilación.' },
+      { k: 'Voz', min: 10, gpu: 0, d: 'Tu propia voz grabada es lo más auténtico y lo que el algoritmo premia; si no, una voz sintética con licencia comercial.' },
+      { k: 'Edición', min: 40, gpu: 0, d: 'DaVinci Resolve: cortes, subtítulos grandes, música de la biblioteca de TikTok y exportación vertical 9:16.' },
+      { k: 'Publicar', min: 5, gpu: 0, d: 'Con la etiqueta de contenido generado con IA, a la misma hora siempre, y el gancho escrito en la portada.' },
+    ],
+    // El consumo de la laptop generando video y el precio de la luz, para el costo de cada video.
+    luz: { watts: 230, horas: 2.5, kwh: 3.0, d: 'La laptop entera gira en unos 230 W generando video. A $3.00 por kWh —el escalón alto de la tarifa doméstica de la CFE; el básico cuesta menos— cada video cuesta unos pesos de luz. Es una estimación, no una medición: mídelo con tu medidor si quieres el número exacto.' },
+    // Lo que puede pagar al mes con 12 videos, en tres momentos. Supuestos de blogs de la industria: rangos, no promesas.
+    escenarios: [
+      { k: 'Arranque', vistas: 3000, usdMil: 0, afiliados: 0, patrocinios: 0, d: 'Menos de 10,000 seguidores: TikTok todavía no paga; el valor es aprender qué retiene.' },
+      { k: 'Crece', vistas: 20000, usdMil: 0.8, afiliados: 1500, patrocinios: 0, d: 'Con 10,000 seguidores entran los pagos por vistas de videos de un minuto o más, y los primeros afiliados.' },
+      { k: 'Despegó', vistas: 60000, usdMil: 0.8, afiliados: 4000, patrocinios: 1, d: 'Con 10,000 a 50,000 seguidores fieles, un video patrocinado al mes paga de US$200 a 800.' },
+    ],
+    patrocinioUsd: 400,
+    nicho: { t: 'Ingeniería automotriz, explicada en 60 segundos', d: 'Es tu oficio: lo puedes explicar bien y nadie te puede copiar el criterio. YouTube y TikTok castigan el contenido de plantilla y los personajes de IA que dan consejos de salud o dinero; esto no es ninguna de las dos. Las tomas con IA ilustran lo que tú explicas.',
+      ideas: ['Cómo una batería LFP del BYD aguanta más ciclos', 'Qué ve un auto con ADAS cuando frena solo', 'Por qué se cristalizan las balatas', 'Qué hace un ingeniero de validación en un día', 'Híbrido, eléctrico o de gasolina: la cuenta de 5 años', 'Cómo se prueba un auto antes de venderse', 'Qué significa cada luz del tablero', 'Por qué los eléctricos pesan tanto', 'Cómo funciona el frenado regenerativo', 'El sensor que más falla y cuánto cuesta'] },
+    reglas: [
+      { t: 'Etiqueta de IA en cada video', d: 'TikTok la pide para contenido realista hecho con IA y baja el alcance de lo que detecta sin ella.' },
+      { t: 'Nada de plantilla', d: 'Desde julio de 2026, YouTube saca de la monetización el contenido genérico o de plantilla. Tu explicación es lo que lo hace propio.' },
+      { t: 'Ninguna persona real', d: 'Ni caras de famosos ni de conocidos, ni voces clonadas sin permiso.' },
+      { t: 'Licencias, antes de cobrar', d: 'Wan 2.2 es Apache 2.0; HunyuanVideo no se puede usar en la Unión Europea; LTX-2.3 tiene su propio límite. Revisa la ficha de cada modelo.' },
+      { t: 'Música de la biblioteca', d: 'La de TikTok o con licencia: una canción ajena te silencia el video o te lo baja.' },
+      { t: 'Tu laptop primero', d: 'Generar de noche la calienta horas: conectada, en una base con ventilación y con los respiraderos libres.' },
+    ],
+    // La ruta de 30 días; cada paso se palomea y se guarda en localStorage['laptop_v1'].
+    ruta: [
+      { id: 't1', t: 'Instala ComfyUI Desktop y pon al día los drivers de NVIDIA', d: 'Con el flujo de ejemplo de Wan 2.2 5B, genera tu primer clip de 5 s.' },
+      { id: 't2', t: 'Mide tu laptop', d: 'Cuánto tarda un clip a 480p y a 720p, conectada y en modo Turbo de Armoury Crate. Anótalo: es tu número real, no el de los blogs.' },
+      { id: 't3', t: 'Elige el nicho y escribe 10 ideas con Claude', d: 'Empieza por las diez de abajo; quédate con las tres que mejor sabes explicar.' },
+      { id: 't4', t: 'Arma tu primer video completo, sin publicarlo', d: 'De 60 a 75 s: 12 tomas, tu voz, subtítulos. Míralo al día siguiente como lo vería un desconocido.' },
+      { id: 't5', t: 'Abre la cuenta y publica tres videos la primera semana', d: 'Con la etiqueta de IA y siempre a la misma hora.' },
+      { id: 't6', t: 'Tres videos por semana, tres semanas', d: 'Anota vistas, retención y seguidores de cada uno.' },
+      { id: 't7', t: 'Día 30: decide con números', d: 'Repite el formato del video que más retuvo. Si nada pasó de 1,000 vistas, cambia el gancho antes que el nicho.' },
+    ],
+    fuentes: [
+      { t: 'Generación de video local: Wan, LTX-2.3 y más (Insider LLM)', url: 'https://insiderllm.com/guides/local-ai-video-generation/' },
+      { t: 'Los mejores modelos de video abiertos de 2026 (Thunder Compute)', url: 'https://www.thundercompute.com/blog/best-open-source-ai-video-generation-models' },
+      { t: 'Wan 2.2, LTX-2 y HunyuanVideo en local (Local AI Master)', url: 'https://localaimaster.com/blog/local-ai-video-generation' },
+      { t: 'Cómo monetizar TikTok sin cara: seis formas (Faceless)', url: 'https://faceless.my/tiktok/monetize-faceless-tiktok/' },
+      { t: 'Nichos de TikTok sin cara y lo que paga cada uno (Fluxnote)', url: 'https://fluxnote.io/guides/best-niches-faceless-tiktok-2026' },
+      { t: 'YouTube aclara su política de contenido inauténtico (TechCrunch, julio de 2026)', url: 'https://techcrunch.com/2026/07/20/youtube-clarifies-policies-around-ai-slop-and-upsetting-videos/' },
+    ],
+  },
 };

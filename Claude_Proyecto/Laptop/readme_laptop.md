@@ -18,7 +18,9 @@ esta página (`CLAUDE.md` → Regla 6).
 | | Qué tiene |
 |---|---|
 | `laptop.html` | El molde, el CSS y el comportamiento. Ni un proyecto escrito aquí |
-| `proyectos.js` | **Todo** el contenido en `LAPTOP`: el equipo, las categorías, las tres apuestas, los 19 proyectos, la ruta de 90 días y las listas de aviso |
+| `proyectos.js` | **Todo** el contenido en `LAPTOP`: el equipo, las categorías, las tres apuestas, los 20 proyectos, la ruta de 90 días, las listas de aviso, las fotos (`fotos`, `fotoCat`, `fotoProy`) y la sección de TikTok con IA (`tiktok`) |
+| `fotos/` | Las fotos de la página a 900 px, de Wikimedia Commons con su crédito; la de 3D y render es una réplica real de Heliescala (`../Heliescala/fotos/`). Actriz IA usa también las de hardware y video |
+| `../Dashboard/graficas-svg.js` | Las gráficas (`GSVG`), compartidas con Actriz IA |
 
 Carga `../Dashboard/datos-maestros.js` para dos datos del plan: el ingreso nuevo que pide la salida
 (`{{extraSalida}}`, con `CIFRAS.n`) y el dólar para planear (`PROYECTO.usdMxn`). Sin el maestro la página
@@ -32,7 +34,9 @@ sigue en pie, pero sin pesos ni meta.
 | La meta | `#meta`, `calcular()` | El ingreso nuevo del plan en grande y una **calculadora**: proyecto y horas a la semana → pesos al mes contra la meta. Las horas tienen tope: pasadas las que el mercado compra al mes (`hMax`), no suman |
 | Tus tres apuestas | `#top3` | `LAPTOP.top`, con el porqué de cada una: renders de producto (Heliescala como cliente cero), animaciones técnicas (su nicho de mecatrónica) y QA con IA (la mejor tarifa por hora desde el primer mes) |
 | La ruta de 90 días | `#rutaTramos` | `LAPTOP.ruta`: cinco tramos de la primera apuesta, de Blender desde cero a los primeros pagos |
-| El catálogo | `#filtros`, `#grid` | Los 19 proyectos con filtro por categoría y orden (más dinero, primer pago más pronto, más fácil). Cada tarjeta abre su detalle |
+| El mapa del dinero | `#mapa`, `pintarMapa()` | Los proyectos con cifra en rangos de pesos al mes —de lo mínimo a lo máximo, por categoría— contra la meta del plan, y la dispersión de pesos por hora contra semanas al primer pago, con las tres apuestas marcadas |
+| Videos con IA para TikTok | `#tiktok`, `pintarTiktok()` | Adán, 2-nov-2026: *"quiero indagar en hacer videos con IA, pero con el hardware de mi PC, videos para TikTok"*. Qué modelos de video abiertos caben en sus 16 GB (Wan 2.2, HunyuanVideo 1.5, LTX-2.3) con su licencia, el flujo de un video de un minuto con minutos tuyos y de GPU, lo que cuesta en luz (`pintarLuz`, con el precio del kWh editable), lo que puede pagar en tres momentos contra la meta, el nicho (ingeniería automotriz explicada) con diez ideas, las reglas y la ruta de 30 días con casillas (`marcarTk`) |
+| El catálogo | `#filtros`, `#grid` | Los 20 proyectos con filtro por categoría y orden (más dinero, primer pago más pronto, más fácil). Cada tarjeta abre su detalle |
 | Lo que no te conviene · Antes de cobrar · Cuida tu laptop | `#noConviene`, `#antes`, `#cuidado` | Rentar la GPU, minar, canales hechos en masa; el contrato de ALTEN, el SAT, cobrar en dólares, las licencias y el permiso de estudiante en Alemania; Armoury Crate, ventilación, batería, OLED, renders de noche y respaldos |
 
 **El detalle** (`#detOv`, `abrirDet()`): lo que deja al mes con **la cuenta** escrita
@@ -58,4 +62,6 @@ empieza con unas 8 horas a la semana: el pie de la página dice que ninguno es u
 - Un proyecto nuevo es una entrada en `LAPTOP.proyectos` con su `cat`, sus rangos, sus `pasos`, dónde
   venderlo, su `ojo` y su `fuente`; la página lo pinta, lo filtra y lo ordena sola.
 - El dólar se cambia en el maestro (`PROYECTO.usdMxn`), nunca aquí.
-- Comparte el tema con el Dashboard, Coach y Finanzas (`coach-theme` en `localStorage`); no guarda nada más.
+- Comparte el tema con el Dashboard, Coach y Finanzas (`coach-theme` en `localStorage`) y guarda en `laptop_v1` la ruta de 30 días de TikTok (`tiktok`: `{id: fecha}`) y el precio de la luz (`kwh`). Ninguna otra app lo lee.
+- Cada tarjeta lleva la foto de su proyecto (`fotoProy`) o de su categoría (`fotoCat`), con su crédito en el detalle; ya no van emojis.
+- Lo de TikTok —modelos, licencias, umbrales y pagos por vistas— se vuelve a revisar cada tres meses: cambia rápido. Los tiempos por clip son estimaciones hasta que Adán mida los suyos (paso 2 de su ruta).

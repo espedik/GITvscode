@@ -175,7 +175,8 @@ function finanzas(f, r) {
     goals: tomar(f.goals, ['id', 'name', 'icon', 'target', 'current', 'date']),
     // El Bitcoin, en un solo lote: lo que tienes y lo que te costó, sin cada compra.
     btcHistory: btc.btc || btc.usd ? [{ id: 'total', btc: +btc.btc.toFixed(8), usd: Math.round(btc.usd) }] : [],
-    currentBtcPrice: +f.currentBtcPrice || 0, usdMxn: +f.usdMxn || 0, emergencyFund: +f.emergencyFund || 0,
+    currentBtcPrice: +f.currentBtcPrice || 0, usdMxn: +f.usdMxn || 0,
+    emergencyFund: +f.emergencyFund || 0,
   };
   const gastar = r && typeof r.gastar === 'number' ? Math.round(r.gastar) : null, fecha = (r && r.fecha) || null;
   const antes = previo(SALIDA_FIN);

@@ -2802,8 +2802,12 @@ function promptsDeLoTocado() {
    `cifrasHoy` y que el maestro cambie el efectivo por `gastar` sin tocar lo demás. */
 (function () {
   const mal = [], C = global.window && global.window.CIFRAS;
-  sinComentarios(dash).split('\n').forEach(function (l) {
-    if (/\bcifrasHoy\s*\(/.test(l) && !/CIFRAS\.cifrasHoy\(D\.fin,\s*ctTramo\(/.test(l))
+  // ctCifrasHoy es la única que llama al maestro: con la cuenta de la quincena (ctTramo) o, en un dispositivo sin Finanzas,
+  // con la que guardó la PC (FIN_REPO.gastar, finanzas-sync.js). Fuera de ella, nadie.
+  const cuerpo = (dash.match(/function ctCifrasHoy\(\)\{[\s\S]*?\n\}/) || [''])[0];
+  if (!/ctTramo\(/.test(cuerpo) || !/CIFRAS\.cifrasHoy\(D\.fin/.test(cuerpo)) mal.push('ctCifrasHoy ya no le pasa al maestro lo que dice la cuenta de la quincena (ctTramo)');
+  sinComentarios(cuerpo ? dash.replace(cuerpo, '') : dash).split('\n').forEach(function (l) {
+    if (/\bcifrasHoy\s*\(/.test(l))
       mal.push('dashboard.html le pide las cifras de hoy al maestro por su cuenta: usa ctCifrasHoy()\n        ' + l.trim().slice(0, 110));
   });
   if (!/function ctCifrasHoy\(\)\{/.test(dash)) mal.push('dashboard.html ya no tiene ctCifrasHoy()');

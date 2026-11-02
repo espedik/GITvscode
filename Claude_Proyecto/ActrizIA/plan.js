@@ -76,10 +76,10 @@ window.ACTRIZ = {
 
   // Las herramientas, por etapa. El precio es de octubre de 2026 y cambia: verifícalo antes de pagar.
   herramientas: [
-    { etapa: 'Su cara, siempre la misma', nube: 'Higgsfield con Soul ID: una identidad que se reusa en cada imagen y video', precio: 'Desde US$15 al mes', local: 'Un LoRA entrenado en tu laptop con ai-toolkit u OneTrainer sobre Flux.2 Klein, que cabe en 16 GB; ComfyUI para generar', f: [6, 8] },
-    { etapa: 'Video con personas', nube: 'Kling: el más citado para personajes que hablan y tomas encadenadas', precio: 'Plan estándar de unos US$7 a 10 al mes', local: 'Wan 2.2 en ComfyUI para tomas de relleno, con resolución baja por la memoria', f: [6, 7] },
-    { etapa: 'Tomas de cine', nube: 'Veo 3.1 para la toma especial de cada episodio', precio: 'Unos US$0.40 por segundo con audio', local: '—', f: [6] },
-    { etapa: 'Su voz', nube: 'ElevenLabs con Voice Design: una voz que no existe', precio: 'Plan de entrada de unos US$5 al mes', local: '—', f: [] },
+    { etapa: 'Su cara, siempre la misma', nube: 'Higgsfield con Soul ID: una identidad que se reusa en cada imagen y video', precio: 'Desde US$15 al mes', usd: 15, local: 'Un LoRA entrenado en tu laptop con ai-toolkit u OneTrainer sobre Flux.2 Klein, que cabe en 16 GB; ComfyUI para generar', f: [6, 8] },
+    { etapa: 'Video con personas', nube: 'Kling: el más citado para personajes que hablan y tomas encadenadas', precio: 'Plan estándar de unos US$7 a 10 al mes', usd: 8.5, local: 'Wan 2.2 en ComfyUI para tomas de relleno, con resolución baja por la memoria', f: [6, 7] },
+    { etapa: 'Tomas de cine', nube: 'Veo 3.1 para la toma especial de cada episodio', precio: 'Unos US$0.40 por segundo con audio', usd: 0, uso: 'opcional: solo la toma especial, si cabe en el tope', local: '—', f: [6] },
+    { etapa: 'Su voz', nube: 'ElevenLabs con Voice Design: una voz que no existe', precio: 'Plan de entrada de unos US$5 al mes', usd: 5, local: '—', f: [] },
     { etapa: 'Guion', nube: 'Claude: la biblia del personaje, los episodios y los guiones de los comerciales', precio: 'Ya lo tienes', local: '—', f: [] },
     { etapa: 'Edición', nube: 'DaVinci Resolve o CapCut: cortes, subtítulos y los tres formatos (9:16, 1:1, 16:9)', precio: 'Gratis', local: 'DaVinci corre en tu laptop con la GPU', f: [] },
   ],
@@ -166,6 +166,43 @@ window.ACTRIZ = {
     { dia: 90, t: 'Cobra más de lo que gasta', d: 'Al menos un cliente pagado y los ingresos acumulados por arriba de lo gastado en herramientas.', min: { clientes: 1 }, ingresosVsGastos: true },
   ],
 
+  // El modelo de 12 meses: los supuestos que la página deja mover. Es un escenario, no una promesa: lo real lo dice la
+  // bitácora. `fmt`: mes, n, pesos, pct o usd. La página calcula, mes a mes, comerciales, colaboraciones y pagos de TikTok.
+  modelo: {
+    meses: 12,
+    seguidoresIni: 300,   // al terminar el mes 2, con doce piezas publicadas
+    vistasPorSeguidor: 3, // vistas al mes por cada seguidor, para estimar los pagos de TikTok
+    umbralMarcas: 10000, umbralTikTok: 10000, umbralClub: 5000,
+    supuestos: [
+      { k: 'primerCliente', t: 'Mes del primer comercial pagado', v: 3, min: 1, max: 6, paso: 1, fmt: 'mes', d: 'La ruta lo pone en las semanas 9 y 10, el mes 3.' },
+      { k: 'ritmo', t: 'Comerciales al mes, ya con ritmo', v: 4, min: 0, max: 12, paso: 1, fmt: 'n', d: 'Se llega sumando uno por mes desde el primero. El embudo dice cuántos mensajes pide.' },
+      { k: 'precio', t: 'Precio por comercial', v: 2500, min: 1500, max: 6000, paso: 250, fmt: 'pesos', d: 'Tarifa sugerida: el paquete Comercial. Sube desde el tercer cliente.' },
+      { k: 'crec', t: 'Crecimiento semanal de seguidores', v: 8, min: 2, max: 15, paso: 1, fmt: 'pct', d: 'Desde 300 seguidores al terminar el mes 2. Cámbialo por el tuyo con cuatro semanas de bitácora.' },
+      { k: 'colab', t: 'Precio por colaboración pagada', v: 2000, min: 0, max: 10000, paso: 500, fmt: 'pesos', d: 'Una al mes desde los 10,000 seguidores. Tarifa sugerida.' },
+      { k: 'rpm', t: 'Lo que paga TikTok por mil vistas', v: 0.8, min: 0.3, max: 1.5, paso: 0.1, fmt: 'usd', d: 'Blogs de la industria lo ponen entre US$0.60 y 1.20 en tecnología. Vistas al mes: tres veces tus seguidores.', f: [11] },
+      { k: 'gasto', t: 'Herramientas al mes', v: 700, min: 0, max: 1500, paso: 50, fmt: 'pesos', d: 'El tope del proyecto.' },
+    ],
+  },
+
+  // Cómo se arma un episodio de 70 segundos, en segundos.
+  episodio: [
+    { k: 'Gancho', v: 2, d: 'El conflicto antes que la presentación.' },
+    { k: 'Planteamiento', v: 13, d: 'Quién es y qué quiere hoy.' },
+    { k: 'Conflicto', v: 35, d: 'Lo que se lo impide: una sola cosa.' },
+    { k: 'Giro', v: 11, d: 'Decide, y no sale como esperaba.' },
+    { k: 'Pregunta', v: 9, d: '«¿Tú qué harías?»: los comentarios traen el siguiente.' },
+  ],
+
+  // Las horas de la semana, antes y después de empezar a vender.
+  horas: [
+    { t: 'Semanas 1 a 8', partes: [['Producción', 2.5], ['Edición', 1.5], ['Comunidad', 1.75]] },
+    { t: 'Desde la semana 9', partes: [['Producción', 1.5], ['Edición', 1.5], ['Comunidad', 1.75], ['Venta', 1]] },
+  ],
+
+  // El embudo de venta: supuestos para empezar; la bitácora los corrige.
+  embudo: { mensajes: 20, respuesta: 0.15, interes: 0.4, cierre: 0.35,
+    d: 'Supuestos para empezar: de cada 100 mensajes con un comercial de muestra hecho con su producto, contestan 15, 6 quieren cotización y 2 compran. Con veinte mensajes a la semana salen unos dos clientes al mes. Cámbialos por los tuyos con tu bitácora.' },
+
   // Las reglas que no se rompen.
   reglas: [
     { t: 'Siempre dice que es IA', d: 'Etiqueta de perfil en Instagram, etiqueta de IA en cada video de TikTok y la declaración de contenido sintético en YouTube. Sin ellas se pierde alcance o la cuenta.', f: [9, 2, 3] },
@@ -180,6 +217,23 @@ window.ACTRIZ = {
     { t: 'Nada comprado', d: 'Ni seguidores, ni likes, ni bots: arruinan la retención y las marcas lo detectan en el kit de medios.' },
   ],
 
+  // Las fotos de la página: las de cine viven en fotos/; las de hardware y video, en ../Laptop/fotos/, y la del taller, en Heliescala.
+  // Cada una con su crédito (autor · fuente · licencia), que la página enseña sobre la foto y en el pie.
+  fotos: {
+    set: { src: "fotos/set.jpg", cred: "Capt. Corinna Jones, Fuerza Aérea de EE. UU. · Wikimedia Commons · dominio público", alt: "Un equipo de filmación con su cámara" },
+    comercial: { src: "fotos/comercial.jpg", cred: "Mblegacy · Wikimedia Commons · CC0 1.0", alt: "Un estudio con pantalla verde y luces" },
+    celular: { src: "fotos/celular.jpg", cred: "Raimond Spekking · Wikimedia Commons · CC BY-SA 4.0", alt: "Alguien grabando con el celular en un estabilizador" },
+    ringlight: { src: "fotos/ringlight.jpg", cred: "W.carter · Wikimedia Commons · CC BY-SA 4.0", alt: "Un aro de luz para grabar" },
+    micro: { src: "fotos/micro.jpg", cred: "Will Fisher · Wikimedia Commons · CC BY-SA 2.0", alt: "Un micrófono de estudio" },
+    contrato: { src: "fotos/contrato.jpg", cred: "Blogtrepreneur · Wikimedia Commons · CC BY 2.0", alt: "Un contrato y una pluma" },
+    claqueta: { src: "fotos/claqueta.jpg", cred: "Mattbr · Wikimedia Commons · CC BY 2.0", alt: "Una claqueta de cine" },
+    edicion: { src: "../Laptop/fotos/edicion.jpg", cred: "David Oakes · Wikimedia Commons · CC BY-SA 3.0", alt: "Consolas de corrección de color" },
+    gpu: { src: "../Laptop/fotos/gpu.jpg", cred: "ZMASLO · Wikimedia Commons · CC BY 3.0", alt: "Una tarjeta gráfica GeForce RTX 4090" },
+    codigo: { src: "../Laptop/fotos/codigo.jpg", cred: "Martin Vorel · Wikimedia Commons · CC BY-SA 4.0", alt: "Código en una pantalla" },
+    auto: { src: "../Laptop/fotos/auto.jpg", cred: "Retired electrician · Wikimedia Commons · CC0 1.0", alt: "Un BYD cargando" },
+    heli: { src: "../Heliescala/fotos/taller/flota.jpg", cred: "Heliescala · el taller de tu papá", alt: "Réplicas de helicóptero en el taller" },
+  },
+
   // Las fuentes de las cifras (los `f` de arriba). Revisadas en octubre de 2026.
   fuentes: [
     { t: 'Aitana López (Wikipedia)', url: 'https://en.wikipedia.org/wiki/Aitana_L%C3%B3pez' },
@@ -193,5 +247,6 @@ window.ACTRIZ = {
     { t: 'Entrenar un LoRA de personaje en 2026 (Tech Insider)', url: 'https://tech-insider.org/train-custom-ai-image-lora-2026/' },
     { t: 'Instagram corta el alcance a perfiles de IA sin etiqueta (TechRepublic)', url: 'https://techrepublic.com/article/news-instagram-ai-generated-profile-label-recommendations/' },
     { t: 'Influencers: régimen fiscal y obligaciones (IDC, enero de 2026)', url: 'https://idconline.mx/fiscal-contable/2026/01/21/influencers-regimen-fiscal-y-obligaciones' },
+    { t: 'Nichos de TikTok sin cara y lo que paga cada uno (Fluxnote, 2026)', url: 'https://fluxnote.io/guides/best-niches-faceless-tiktok-2026' },
   ],
 };
