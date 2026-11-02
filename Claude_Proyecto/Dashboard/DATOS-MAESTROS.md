@@ -887,6 +887,7 @@ que añade un registro lo hace **por id y solo si falta**: así el navegador que
 | `Aeroresinas/`, `Heliescala/` | `aeroresinas.html`, `heliescala.html` + `dossier.html` | Las dos webs públicas del negocio del papá de Adán | solo tema e idioma |
 | `Posts/` | `posts.html` + `plantillas.js` | Plantillas de LinkedIn para las dos empresas, armadas con los `datos.js` de sus webs (no con el maestro) | `posts-*`, `coach-theme` |
 | `Laptop/` | `laptop.html` + `proyectos.js` | 19 proyectos para que la laptop pague sola (3D, video, IA y código), con lo que deja cada uno al mes y su cuenta | solo `coach-theme` |
+| `ActrizIA/` | `actriz.html` + `plan.js` | La actriz digital creada con IA: cómo cobra, la ruta de 90 días, la venta de comerciales y la bitácora contra el ingreso que pide el plan | `actriz_v1`, `coach-theme` |
 
 Detalle por app en su propio `readme_<app>.md`; el mapa completo de claves y conexiones está en
 [`../README.md`](../README.md).

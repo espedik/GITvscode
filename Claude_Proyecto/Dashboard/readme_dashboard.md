@@ -615,8 +615,9 @@ Cada app lleva un **SVG de trazo** de 24×24 (`QA_ICO`), mismo grosor y terminac
 no servían (la bandera de Alemán sale como `DE` en Windows). Colores medidos contra los dos
 fondos: peor contraste 5.43 en oscuro y 1.92 en claro.
 
-**Cuatro grupos** separados por filete fino, 16 píldoras: lo que administras (Coach, Finanzas y **Laptop**, los proyectos para
-que la laptop pague sola — ver `../Laptop/readme_laptop.md`);
+**Cuatro grupos** separados por filete fino, 17 píldoras: lo que administras (Coach, Finanzas, **Laptop**, los proyectos para
+que la laptop pague sola — ver `../Laptop/readme_laptop.md` —, y **Actriz IA**, la actriz digital creada con IA que Adán
+empieza en paralelo, con su claqueta rosa y `en paralelo` de segunda línea — ver `../ActrizIA/readme_actriz.md`);
 el cuerpo —las ocho pestañas de Cuidado Personal en su orden: Skincare, Cabello, Ojos, Dentista,
 Salud, Ejercicio, Comida, Vestimenta—; lo que estudias (Alemán y Entrevistas: Alemán entra por su
 hub `index.html`, que ya lleva a lecciones, vocabulario y gramática, así que esas tres no tienen
@@ -633,26 +634,27 @@ del pdf de cada uno"*, y 22-oct-2026: *"los pdfs que están abajo, ponlos mejor 
 Posts no, porque no tiene PDF propio. Al subirlos a la fila, la barra baja de 65 a 54 px. Abre el `.pdf` en pestaña nueva —`Aeroresinas-dossier.pdf`,
 `Heliescala-catalogo.pdf`—, no la web: el lector de PDF del navegador ya trae su propio botón de
 descarga en la barra de herramientas, así que no hace falta uno aparte para cumplir *"cuando esté
-en el pdf debe haber algo para poder descargar ese pdf"*. Por debajo de 1720 px se queda solo el
+en el pdf debe haber algo para poder descargar ese pdf"*. Por debajo de 1805 px se queda solo el
 icono del PDF, sin el texto.
 
-Van en un contenedor con `max-width:1515px`, con 2 px entre píldoras, 7 px de relleno lateral y 4 px a
+Van en un contenedor con `max-width:1590px`, con 2 px entre píldoras, 7 px de relleno lateral y 4 px a
 cada lado del filete. La fila tiene **dos escalones**, porque a lo ancho de la pantalla compite con
 los botones de refrescar, tema y privacidad, que van absolutos a la derecha (115 px), y si se partiera
 en dos taparía el slide (que empieza fijo a 58 px):
 
 | Viewport | Qué se ve | Fila medida |
 |---|---|---|
-| más de 1720 px | nombre, segunda línea verde (`.qa-stat`) y «PDF» | 1 486 px |
-| 1575–1720 px | **el nombre**; se van la segunda línea, el texto «PDF» y parte del relleno (5 px) | 1 341 px |
-| menos de 1575 px | solo iconos, con el nombre en `title` | 729 px |
+| más de 1805 px | nombre, segunda línea verde (`.qa-stat`) y «PDF» | 1 575 px |
+| 1596–1805 px | **el nombre**; se van la segunda línea, el texto «PDF» y parte del relleno (4 px, y 2 px a cada lado del filete) | 1 366 px |
+| menos de 1596 px | solo iconos, con el nombre en `title` | 770 px |
 
 El escalón de en medio existe para que a 1600 px —la pantalla de Adán— se lea cada app: con un solo
 umbral arriba se quedaba en iconos y la píldora de Laptop no se distinguía (*"No veo el botón de la
 página"*). Cada umbral es la fila medida (`.qa-grupos` con `flex-wrap:nowrap` y `max-width:none`) más
 2×115 de los botones, porque la fila va centrada y reparte el sobrante a los dos lados: **si entra o
-sale una app, o un botón del carril, volver a medir los dos**. Medido: a 1721 px queda un hueco de
-3 px con los botones; a 1600, de 14 px; a 1576, de 2 px. Los dos `@media` van después de las reglas base de `.qa-pill` y
+sale una app, o un botón del carril, volver a medir los dos**. Medido con Actriz IA: a 2048 px queda un hueco de
+122 px con los botones; a 1806, de 1 px; a 1600, de 2 px; a 1596, de 0. Al entrar Actriz IA, el relleno del escalón de en
+medio bajó de 5 a 4 px para que a 1600 px se sigan leyendo los nombres. Los dos `@media` van después de las reglas base de `.qa-pill` y
 `.qa-sep`: a igual especificidad gana la última.
 
 **Refrescar, tema y privacidad van juntos a la derecha**, en el carril `.qa-acciones`, como tres
