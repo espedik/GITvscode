@@ -43,6 +43,8 @@
 <script src="habitos-sync.js" onerror="this.remove()"></script>
 <!-- La auditoría de cada mes de las fases, de la PC: la exporta el mismo hook (habitos-exportar.js) y la trae fzmDelRepo. -->
 <script src="auditoria-sync.js" onerror="this.remove()"></script>
+<!-- Los saldos de Finanzas de la PC —sin movimientos ni notas—, para el dispositivo que no tiene Finanzas (finCargar). -->
+<script src="finanzas-sync.js" onerror="this.remove()"></script>
 <script src="habitos.js"></script>
 <script src="examen-genai-data.js"></script>
 <script src="examen-genai-data-b.js"></script>
@@ -5548,10 +5550,30 @@ function toast(msg){
 // Aquí solo se usan id/name/icon/val/w; el maestro trae además full/cat/desc para el panel de Coach.
 const SK = window.CIFRAS ? CIFRAS.SK : [];
 
+/* Finanzas en un dispositivo que no la tiene (el iPad). Adán, 2-nov-2026: en el iPad las cifras del Plan Maestro salían
+   en «Sin datos», porque `finanzasmx_v2` solo vive en el Chrome de la PC; eligió subir solo las cifras resumidas, sin sus
+   movimientos. Cada commit en la PC escribe `finanzas-sync.js` (el hook, `habitos-exportar.js`) con los saldos —deudas,
+   fondo, inversiones, activos y el Bitcoin en un solo lote— y lo que queda en la cuenta de la quincena (`gastar`, que
+   aquí guarda `ctCifrasHoy` en `fin_resumen_v1`). Donde no hay Finanzas propia se usa esa copia, de solo lectura: nada
+   la escribe en `finanzasmx_v2`, así que el día que se abra Finanzas en ese dispositivo, mandan sus datos. */
+let FIN_REPO = null;
+function finCargar(){
+  FIN_REPO = null;
+  const loc = tryParse('finanzasmx_v2', null);
+  if(loc) return loc;
+  const X = window.FINANZAS_SYNC, d = X && X.datos;
+  if(d && Array.isArray(d.debts)){
+    FIN_REPO = X;
+    return Object.assign({ transactions: [], budgets: [], goals: [], investments: [], activos: [], btcHistory: [], emergencyFund: 0 }, JSON.parse(JSON.stringify(d)));
+  }
+  return { transactions: [], debts: [], goals: [], investments: [], emergencyFund: 0 };
+}
+// La fecha de las cifras que llegaron de la PC, para decirlo donde se enseñan.
+const finRepoNota = () => FIN_REPO ? 'cifras de tu PC al '+new Date((FIN_REPO.fecha || FIN_REPO.exportado.slice(0, 10))+'T12:00:00').toLocaleDateString('es-MX', { day: 'numeric', month: 'short' }) : '';
 let D={};
 function loadAll(){
   D={
-    fin: tryParse('finanzasmx_v2',{transactions:[],debts:[],goals:[],investments:[],emergencyFund:0}),
+    fin: finCargar(),
     sal: tryParse('misalud_v1',{alimentos:[],ejercicios:[],medidas:[],agua:{},metas:{caloriasD:2000,proteina:150},perfil:{peso:0}}),
     sk: tryParse('skincare_v1',{perfil:{tipo:'grasa',preocupaciones:[],rasurado:'no_aplica',presupuesto:'medio',notas:''}}),
     ca: tryParse('cabello_v1',{perfil:{tipo:'lacio',grosor:'fino',cuero:'graso',preocupaciones:[],caidaPatron:'no_seguro',presupuesto:'medio',notas:''}}),
@@ -9727,7 +9749,11 @@ function ctAnclaReal(YM, ini, fin){
 function ctCifrasHoy(){
   if(!window.CIFRAS || !CIFRAS.cifrasHoy) return {};
   const hk = hoyLocal(), ym = hk.slice(0,7), nd = new Date(+ym.slice(0,4), +ym.slice(5,7), 0).getDate();
-  return CIFRAS.cifrasHoy(D.fin, ctTramo(+hk.slice(8), nd, ctMovs(ym), ym).hoy.saldo);
+  if(FIN_REPO) return CIFRAS.cifrasHoy(D.fin, typeof FIN_REPO.gastar === 'number' ? FIN_REPO.gastar : undefined);
+  const g = ctTramo(+hk.slice(8), nd, ctMovs(ym), ym).hoy.saldo;
+  // Lo que queda en la cuenta de la quincena, para que el hook lo lleve a los otros dispositivos (finanzas-sync.js).
+  if(g !== ctCifrasHoy.ult){ ctCifrasHoy.ult = g; try{ rawSet('fin_resumen_v1', { gastar: g, fecha: hk }); }catch(e){} }
+  return CIFRAS.cifrasHoy(D.fin, g);
 }
 
 /* ── TU ESTRATEGIA DE HOY ─────────────────────────────────────────────────────────────────────
@@ -14448,7 +14474,7 @@ function pmDineroAntes(titulo, de){
 }
 // Un mes: sus metas contra lo de hoy —también si el mes viene: cuánto falta para llegar— o contra lo que se guardó al auditarlo.
 function pmCifrasHTML(P, a, e, cerrable, ym){
-  const titulo = '<div class="fzc-g"><span>Tu dinero '+(e === 'hoy' ? 'este mes' : 'en '+fzmMesMin(ym))+'</span></div>';
+  const titulo = '<div class="fzc-g"><span>Tu dinero '+(e === 'hoy' ? 'este mes' : 'en '+fzmMesMin(ym))+'</span>'+(FIN_REPO ? '<em class="fzc-tag">'+finRepoNota()+'</em>' : '')+'</div>';
   const D = fzmCifrasDatos(P, a, e, cerrable), p0 = ((window.CIFRAS.PROYECCION || {}).meses || [])[0];
   if(!D) return p0 && ym < p0.mes ? pmDineroAntes(titulo, 'Este mes') : '';
   const hoy = e === 'fut' ? ctCifrasHoy() : {}, cerro = !!D.foto || e === 'pend';

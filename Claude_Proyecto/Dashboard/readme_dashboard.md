@@ -70,7 +70,7 @@ Todas comparten origen porque se abren con `file://`.
 forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
-y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases) y `plan_auditoria_sinc` (cuándo se tocó cada mes aquí, para traer la de la PC), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta), `dash_libromes_v1` (el libro del mes: el de ahora, los leídos y el que sigue si lo cambiaste),
+y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases) y `plan_auditoria_sinc` (cuándo se tocó cada mes aquí, para traer la de la PC), `fin_resumen_v1` (lo que queda en la quincena, para `finanzas-sync.js`), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta), `dash_libromes_v1` (el libro del mes: el de ahora, los leídos y el que sigue si lo cambiaste),
 `habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-inversion-v1` (pestaña, perfil elegido y monto de *Qué
 invertir hoy*).
 
@@ -2066,6 +2066,16 @@ junto a `habitos-sync.js`, y la primera lectura de la auditoría (`fzmAud` → `
 solo el que es más nuevo que el de este dispositivo: lo que se auditó en el iPad después no se pisa, los meses
 que solo tiene el iPad se quedan y la PC no se reimporta a sí misma. Al cerrar un mes viajan también sus
 cifras (`real` y `meta`), públicas como las de `datos-maestros.js`. El control 39 vigila estas piezas también.
+
+**Y los saldos de Finanzas** (Adán, 2-nov-2026: en el iPad las cifras del Plan Maestro salían en «Sin datos», porque
+`finanzasmx_v2` solo vive en el Chrome de la PC; eligió subir solo las cifras resumidas, sin sus movimientos). El mismo
+exportador escribe `finanzas-sync.js` (`window.FINANZAS_SYNC = {exportado, fecha, gastar, datos}`) con las deudas, las
+inversiones, los activos —sin notas—, las metas, el fondo y el Bitcoin sumado en un solo lote, más `gastar`: lo que queda
+en la cuenta de la quincena, que `ctCifrasHoy` guarda en `fin_resumen_v1` cada vez que cambia en la PC. Movimientos,
+notas, presupuestos e historial no salen. En un dispositivo sin Finanzas propia, `finCargar` usa esa copia —de solo
+lectura: nada la escribe en `finanzasmx_v2`— y *Tu dinero* lleva la etiqueta *cifras de tu PC al …* (`finRepoNota`).
+Medido con los datos reales: los ocho medidores del Plan Maestro salen iguales que en la PC. El control 39 revisa
+también que el archivo no lleve movimientos, notas ni descripciones.
 
 ---
 

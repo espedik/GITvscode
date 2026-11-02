@@ -17,6 +17,11 @@
    tu PC* en readme_dashboard.md). Cada archivo se escribe solo si lo suyo cambió, y con `--add`
    queda listo para el commit en curso.
 
+   Y los saldos de Finanzas (Adán, 2-nov-2026: en el iPad las cifras del Plan Maestro salían en «Sin datos»; eligió
+   subir solo las cifras resumidas, sin sus movimientos): de `finanzasmx_v2` salen únicamente las deudas, el fondo,
+   las inversiones, los activos y el Bitcoin sumado en un solo lote —ni movimientos, ni notas, ni historial—, más lo
+   que queda en la cuenta de la quincena que el Dashboard guarda en `fin_resumen_v1`. Van a `finanzas-sync.js`.
+
    Nunca detiene un commit: si no encuentra Chrome, el perfil o la clave, lo dice en una línea y sale
    con 0. `HABITOS_CHROME` y `HABITOS_PERFIL` cambian la ruta de Chrome y la de su perfil.
 
@@ -27,9 +32,12 @@ const fs = require('fs'), path = require('path'), os = require('os'), { spawnSyn
 
 const SALIDA = path.join(__dirname, 'habitos-sync.js');
 const SALIDA_AUD = path.join(__dirname, 'auditoria-sync.js');
+const SALIDA_FIN = path.join(__dirname, 'finanzas-sync.js');
 const CLAVE = 'dash-habitos-v1', CLAVE_AUD = 'plan_auditoria_v1', CLAVE_SINC = 'plan_auditoria_sinc';
+const CLAVE_FIN = 'finanzasmx_v2', CLAVE_RES = 'fin_resumen_v1';
 const di = m => console.log('hábitos · ' + m);
 const da = m => console.log('auditoría · ' + m);
+const df = m => console.log('finanzas · ' + m);
 
 function chrome() {
   const env = process.env, c = [env.HABITOS_CHROME,
@@ -155,14 +163,48 @@ function auditoria(a, sinc) {
   agregar(SALIDA_AUD, da);
 }
 
+// Solo los campos que hacen las cifras: nada de notas, movimientos ni historial.
+const tomar = (arr, campos) => (Array.isArray(arr) ? arr : []).map(x => { const o = {}; campos.forEach(k => { if (x && x[k] !== undefined) o[k] = x[k]; }); return o; });
+function finanzas(f, r) {
+  if (!f || !Array.isArray(f.debts)) return df('el Chrome de esta PC no tiene Finanzas todavía');
+  const btc = (f.btcHistory || []).reduce((a, x) => ({ btc: a.btc + (+x.btc || 0), usd: a.usd + (+x.usd || 0) }), { btc: 0, usd: 0 });
+  const datos = {
+    debts: tomar(f.debts, ['id', 'name', 'type', 'total', 'balance', 'rate', 'min', 'day', 'start', 'noInterest', 'fecha', 'planAl', 'omitidos']),
+    investments: tomar(f.investments, ['id', 'name', 'type', 'invested', 'value', 'date', 'rate']),
+    activos: tomar(f.activos, ['id', 'name', 'type', 'value']),
+    goals: tomar(f.goals, ['id', 'name', 'icon', 'target', 'current', 'date']),
+    // El Bitcoin, en un solo lote: lo que tienes y lo que te costó, sin cada compra.
+    btcHistory: btc.btc || btc.usd ? [{ id: 'total', btc: +btc.btc.toFixed(8), usd: Math.round(btc.usd) }] : [],
+    currentBtcPrice: +f.currentBtcPrice || 0, usdMxn: +f.usdMxn || 0, emergencyFund: +f.emergencyFund || 0,
+  };
+  const gastar = r && typeof r.gastar === 'number' ? Math.round(r.gastar) : null, fecha = (r && r.fecha) || null;
+  const antes = previo(SALIDA_FIN);
+  if (antes && JSON.stringify(antes.datos) === JSON.stringify(datos) && antes.gastar === gastar) return df('sin cambios');
+  const L = [];
+  L.push('/* Los saldos de Finanzas de la PC, para el dispositivo que no tiene Finanzas: deudas, fondo, inversiones, activos y el');
+  L.push('   Bitcoin en un lote, más lo que queda en la quincena. Sin movimientos ni notas. Lo escribe el hook de pre-commit');
+  L.push('   (Dashboard/habitos-exportar.js): no se edita a mano. */');
+  L.push('window.FINANZAS_SYNC = {');
+  L.push('  "exportado": ' + JSON.stringify(new Date().toISOString()) + ',');
+  L.push('  "fecha": ' + JSON.stringify(fecha) + ',');
+  L.push('  "gastar": ' + JSON.stringify(gastar) + ',');
+  L.push('  "datos": ' + JSON.stringify(datos, null, 1).replace(/\n/g, '\n  '));
+  L.push('};');
+  fs.writeFileSync(SALIDA_FIN + '.tmp', L.join('\n') + '\n', 'utf8');
+  fs.renameSync(SALIDA_FIN + '.tmp', SALIDA_FIN);
+  df('al día · ' + datos.debts.length + ' deudas, ' + datos.activos.length + ' activos, ' + datos.investments.length + ' inversiones');
+  agregar(SALIDA_FIN, df);
+}
+
 (function () {
   try {
     const exe = chrome(), ldb = perfil();
     if (!exe) return di('no encontré Chrome; no se exportó nada');
     if (!ldb) return di('no encontré el perfil de Chrome; no se exportó nada');
-    const v = leer(exe, ldb, [CLAVE, CLAVE_AUD, CLAVE_SINC]);
+    const v = leer(exe, ldb, [CLAVE, CLAVE_AUD, CLAVE_SINC, CLAVE_FIN, CLAVE_RES]);
     try { habitos(v[CLAVE]); } catch (e) { di('no se exportó: ' + e.message); }
     try { auditoria(v[CLAVE_AUD], v[CLAVE_SINC]); } catch (e) { da('no se exportó: ' + e.message); }
+    try { finanzas(v[CLAVE_FIN], v[CLAVE_RES]); } catch (e) { df('no se exportó: ' + e.message); }
   } catch (e) {
     di('no se exportó: ' + e.message);
   }

@@ -1,6 +1,7 @@
 #!/bin/sh
 # Antes de cada commit, las marcas de hábitos del Chrome de esta PC van a
-# Claude_Proyecto/Dashboard/habitos-sync.js y la auditoría de cada mes a auditoria-sync.js, que el iPad
+# Claude_Proyecto/Dashboard/habitos-sync.js, la auditoría de cada mes a auditoria-sync.js y los saldos de
+# Finanzas —sin movimientos— a finanzas-sync.js, que el iPad
 # y los demás dispositivos leen en la página publicada (Adán, 19-oct-2026: "cada día cuando haga algún
 # commit, de cualquier cosa se actualicen los hábitos"; 1-nov-2026: "sube los datos de mis hábitos y
 # auditoría"). Lo hace Dashboard/habitos-exportar.js. Nunca detiene un commit.

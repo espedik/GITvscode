@@ -2704,10 +2704,24 @@ function promptsDeLoTocado() {
       }
     } catch (e) { malos.push('auditoria-sync.js no se puede leer: ' + e.message); }
   }
+  // Los saldos de Finanzas para el iPad (Adán, 2-nov-2026: «En el iPad» las cifras salían en «Sin datos»; solo cifras
+  // resumidas, sin movimientos): finanzas-sync.js no puede llevar movimientos, notas ni descripciones.
+  if (h.indexOf('<script src="finanzas-sync.js"') === -1 || h.indexOf('function finCargar()') === -1) malos.push('dashboard.html ya no trae los saldos de la PC (finanzas-sync.js, finCargar)');
+  if (leer('Dashboard/habitos-exportar.js').indexOf('finanzas-sync.js') === -1) malos.push('habitos-exportar.js ya no escribe finanzas-sync.js');
+  let detF = 'Finanzas todavía sin exportar';
+  if (existe('Dashboard/finanzas-sync.js')) {
+    try {
+      const txt = leer('Dashboard/finanzas-sync.js'), w = {}; new Function('window', txt)(w);
+      const X = w.FINANZAS_SYNC, d = X && X.datos;
+      if (!X || !d || !Array.isArray(d.debts)) malos.push('finanzas-sync.js no tiene la forma {exportado, gastar, datos: {debts…}}');
+      else if (d.transactions || /"(notes|desc|amount|transactions|indicatorHistory)"/.test(txt)) malos.push('finanzas-sync.js lleva movimientos, notas o historial: solo van saldos (el repositorio es público)');
+      else detF = d.debts.length + ' deudas, ' + (d.activos || []).length + ' activos y el fondo';
+    } catch (e) { malos.push('finanzas-sync.js no se puede leer: ' + e.message); }
+  }
   let ruta = '';
   try { ruta = require('child_process').execSync('git config --get core.hooksPath', { cwd: RAIZ, encoding: 'utf8' }).trim(); } catch (e) { ruta = ''; }
   if (malos.length) problemas.push('Hábitos y auditoría a los otros dispositivos:\n     ' + malos.join('\n     '));
-  else ok.push('Hábitos y auditoría: el hook de pre-commit los exporta y el Dashboard los trae (' + det + '; ' + detA + ')' + (ruta ? '' : ' — en esta copia falta activar el hook: git config core.hooksPath Claude_Proyecto/.githooks'));
+  else ok.push('Hábitos y auditoría: el hook de pre-commit los exporta y el Dashboard los trae (' + det + '; ' + detA + '; ' + detF + ')' + (ruta ? '' : ' — en esta copia falta activar el hook: git config core.hooksPath Claude_Proyecto/.githooks'));
 })();
 
 /* ── 40. Finanzas no se queda atrás ──────────────────────────────────────────────────────────────────
