@@ -827,24 +827,24 @@ redundante"*): cambiar de fase, de mes y auditar ocurre en su lugar.
 - **Un mes** (`pmMesVistaHtml`) trae, si el anterior cerró sin auditar, el aviso con *Auditar octubre* (o *Seguir
   con la auditoría* si va a medias), y **columnas iguales** (Adán, 25-oct-2026: *"acomoda simétricamente las
   columnas"*; también en la información general). Van solo las que traen algo (`pmColumnas`): la Fase 0 no tiene
-  checkpoint ni cosas de la salida y dejaba huecos en medio. Con dos, la de tu dinero conserva el ancho de un tercio,
+  checkpoint ni cosas de la salida y dejaba huecos en medio. Con dos, la tercera conserva el ancho de un tercio,
   como en las demás fases, y las tareas van en dos columnas parejas en el resto (`.pm-c2`); con una sola, también
-  (`.pm-c1`). Las columnas: **lo que tiene que quedar hecho** —las tareas de la fase, las que pasaron del mes
-  anterior y las correcciones de su auditoría; hasta cinco y, en el mes de hoy, la primera pendiente con *Te toca*—;
-  **para la salida a Alemania** —tres, las pendientes primero— y *lo que sostienes todo el mes*; y **tu dinero, en
-  palabras** (`pmCifrasHTML`; Adán, 25-oct-2026: *"las cifras de dinero que están ahí no son claras"*).
-- **Tu dinero tiene el mismo formato en cada mes y en cada fase** (`pmDineroTarjeta`, `.pm-dinero`; Adán: *"lo de mi
-  dinero debe tener el mismo formato en las demás fases"*): una tarjeta para tu dinero y otra para tu tarjeta BBVA
+  (`.pm-c1`). Las columnas: **lo que tiene que quedar hecho** —solo lo que falta: las tareas de la fase, las que
+  pasaron del mes anterior y las correcciones de su auditoría; hasta cinco y, en el mes de hoy, la primera con *Te
+  toca*—; **para la salida a Alemania** —tres de las que faltan— y *lo que sostienes todo el mes*; y **lo que ya
+  hiciste**: lo palomeado del mes, de la fase y de la salida (con la etiqueta *salida*), con la misma casilla para
+  desmarcarlo —auditado, con su ✅— y la auditoría al pie. Ahí iba tu dinero del mes (Adán, 3-nov-2026: *"quita esta
+  sección y pon solo las cosas que ya hemos hecho ahí mismo donde quitaste lo de la imagen"*). Los encabezados cuentan
+  lo hecho de lo total (*3 de 8*); cuando no falta nada, *✓ Todo lo de este mes ya quedó hecho*.
+- **Tu dinero, en la información general de la fase** (`pmDineroFase`, `pmDineroTarjeta`, `.pm-dinero`; Adán, 25-oct-2026:
+  *"las cifras de dinero que están ahí no son claras"*): una tarjeta para tu dinero y otra para tu tarjeta BBVA
   mientras el plan le ponga meta, cada una con la cifra real en grande —la de hoy o, en un mes auditado, la que se
   guardó al auditar— y, debajo, *El plan espera $0 al 30 nov* y cómo vas contra eso: *✓ llevas $1,506 más de lo que
-  pide* en verde; mientras no cierra —el mes en curso, aunque ya se pueda auditar, o uno que viene— lo que falta, en
-  ámbar (*te falta bajarla $2,300 antes del 30 nov*, *te faltan $153,548 para el 31 may 2027*), porque el abono o el
-  ahorro que falta puede llegar; y con el mes cerrado, *✗ quedaste … arriba* en rojo. La fecha lleva el año cuando no
-  es el de hoy (`pmAl`). Un mes de la Fase 0, anterior al plan de dinero, enseña lo de hoy y que el plan arranca en
-  octubre de 2026 (`pmDineroAntes`). La cuenta (`fzmCifrasDatos`) tiene la misma fuente y la misma regla que la
-  auditoría, así que nunca dicen cosas distintas; sin el patrimonio líquido (Adán, 21-oct-2026: *"quita la
-  información del checkpoint, lo de patrimonio líquido, el auto y el iPhone"*). Bajo 1180 px, cuando tu dinero pasa
-  a lo ancho, sus tarjetas van de dos en dos.
+  pide* en verde; mientras no cierra lo que falta, en ámbar (*te faltan $153,548 para el 31 may 2027*), porque el abono
+  o el ahorro que falta puede llegar; y cerrado, *✗ quedaste … arriba* en rojo. La fecha lleva el año cuando no es el
+  de hoy (`pmAl`). Una fase anterior al plan de dinero (la 0) enseña lo de hoy y que el plan arranca en octubre de 2026
+  (`pmDineroAntes`). En el iPad, su título lleva *cifras de tu PC al …* (`finRepoNota`). Bajo 1180 px, cuando pasa a lo
+  ancho, sus tarjetas van de dos en dos.
 - **Las tareas se palomean aquí mismo**, en la misma casilla que Mi Día (`coach_checks_v1`): el mes de hoy en la
   semana de hoy (`pmCheck`), otro mes con `fzmCheck`; un mes ya auditado enseña lo que quedó (✅, ◐ o ❌), sin
   casilla. *Y 3 más…* y *Lo que sostienes* se despliegan en su lugar (`pmDespliega`).
@@ -1133,7 +1133,7 @@ La banda decía *Tu dinero $21,513* y la columna del día *$21,291* (Adán, 21-o
 métricas de los números para que todo cuadre"*): una tomaba el efectivo de Finanzas del día en que lo dijiste y la
 otra la serie de la quincena, con lo previsto desde entonces. Ahora todo el Dashboard pide lo de hoy a `ctCifrasHoy()`, que le pasa
 al maestro (`CIFRAS.cifrasHoy(f, gastar)`) lo que la serie de la quincena dice que hay para gastar: las cifras del mes
-—en la pantalla (`pmCifrasHTML`) y en su auditoría— miden igual (*$21,291*). El control 42 vigila
+—en la información general de la fase (`pmDineroFase`) y en la auditoría— miden igual (*$21,291*). El control 42 vigila
 que nadie más llame a `cifrasHoy`.
 
 **El plan y tu dinero un día dan la misma cifra.** Lo que pide la fase y lo que da tu ritmo salen del plan

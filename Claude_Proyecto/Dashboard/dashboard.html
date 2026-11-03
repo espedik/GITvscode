@@ -1373,7 +1373,7 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .pm-aud .ce-btn{padding:5px 11px;font-size:11.5px}
 .pm-mas:hover{color:var(--text)}
 .pm-mas b{font-family:var(--mono);color:var(--text)}
-/* Tu dinero en palabras, igual en cada mes y en cada fase (`pmDineroTarjeta`; Adán: "las cifras de dinero que están ahí
+/* Tu dinero en palabras, en la información general de cada fase (`pmDineroTarjeta`; Adán: "las cifras de dinero que están ahí
    no son claras"): la cifra real en grande y, debajo, lo que el plan espera y cómo vas contra eso, con su color. */
 .pmc{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:10px;align-items:start;padding:6px 10px 7px;margin-bottom:5px;
   border-radius:9px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.07)}
@@ -10504,8 +10504,9 @@ function pmVolverBtn(){ return _pmFase != null ? '<button type="button" class="p
 
 /* ── EL MES EN CURSO, EN PANTALLA ─────────────────────────────────────────────────────────────
    El nombre y sus pestañas, el aviso si el mes anterior cerró sin auditar, lo que tiene que quedar hecho —se palomea
-   aquí mismo, en la misma casilla que Mi Día—, lo de la salida a Alemania y lo que sostienes, las cifras del mes
-   (pmCifrasHTML, sin el patrimonio líquido: Adán, 21-oct-2026) y su auditoría, que se abre en el lugar del mes
+   aquí mismo, en la misma casilla que Mi Día—, lo de la salida a Alemania y lo que sostienes, lo que ya hiciste (Adán,
+   3-nov-2026: "quita esta sección y pon solo las cosas que ya hemos hecho ahí mismo"; ahí iba tu dinero del mes) y su
+   auditoría, que se abre en el lugar del mes
    (pmAuditar). Las pestañas cambian lo que se ve aquí mismo (Adán, 22-oct-2026: "cuando quiero cambiar de mes, en los
    subtabs, no se actualiza la información"): `_pmVista` es null (el mes de hoy, o la información general si la fase
    que se ve no es la de hoy), 'gen' u otro mes de la fase. «Y N más» y «Lo que sostienes» se despliegan en su lugar
@@ -10584,7 +10585,8 @@ function pmMesVistaHtml(i, ym, tabs){
   const primera = esHoy ? deFase.find(t => !hecha(t)) : null;
   const fila = function(t){
     const p = fzmPartir(t.txt), plano = String(p.t).replace(/<[^>]*>/g, '');
-    const de = t.grupo === 'pasa' && t.de ? 'de '+fzmMesMin(t.de) : t.grupo === 'correccion' && t.de ? 'de la auditoría de '+fzmMesMin(t.de) : '';
+    const de = t.grupo === 'pasa' && t.de ? 'de '+fzmMesMin(t.de) : t.grupo === 'correccion' && t.de ? 'de la auditoría de '+fzmMesMin(t.de)
+      : t.grupo === 'salida' && hecha(t) ? 'salida' : '';
     const sub = t.pasosMeta ? '<span class="fzc-sub">'+t.pasosMeta.map(x => (x.hecho ? '✓ ' : '')+esc(String(x.t).split(' — ')[0].replace(/\.$/, ''))+' · '+esc(x.fTxt)).join('<br>')+'</span>' : '';
     const tx = '<span class="fzc-tx"><b>'+(t.ico ? t.ico+' ' : '')+pmCorto(p.t)+'</b>'+sub+'</span>'+(de ? '<em class="fzc-tag">'+de+'</em>' : '');
     if(auditado){   // ya auditado: lo que quedó, sin casilla
@@ -10616,20 +10618,26 @@ function pmMesVistaHtml(i, ym, tabs){
       '<button type="button" class="ce-btn" onclick="pmAuditar('+jAnt+',\''+ant+'\')">'+((A[ant] || {}).aud ? 'Seguir con la auditoría' : 'Auditar '+fzmMesMin(ant))+'</button></div>'
     : e === 'pend' ? '<div class="fzm-aviso"><span>⚠ <b>'+fzmNombre(ym)+'</b> cerró sin auditar.</span>'+
       '<button type="button" class="ce-btn" onclick="pmAuditar('+i+',\''+ym+'\')">'+(a.aud ? 'Seguir con la auditoría' : 'Auditar '+fzmMesMin(ym))+'</button></div>' : '';
-  const salidaOrden = deSalida.slice().sort((x, y) => hecha(x) - hecha(y));
   const aud = pmAudHtml(i, ym, e, a, cerrable);
-  const P2 = Object.assign({}, P, { metas: (P.metas || []).filter(m => m.k !== 'liquido') }), cifras = pmCifrasHTML(P2, a, e, cerrable, ym);
-  const col2 = (deSalida.length ? '<div class="fzc-g"><span>Para la salida a Alemania</span><span>'+deSalida.filter(hecha).length+' de '+deSalida.length+'</span></div>'+
-      (_pmTodo.salida ? salidaOrden : salidaOrden.slice(0, SAL)).map(fila).join('')+
-      (deSalida.length > SAL ? mas('salida', '→', 'Y '+(deSalida.length - SAL)+' más para la salida') : '') : '')+
+  // Lo que falta en las dos primeras columnas; lo hecho —de la fase y de la salida— en la tercera, donde iba tu dinero
+  // del mes, con la misma casilla para desmarcarlo (o, auditado, con su ✅).
+  const faltaFase = deFase.filter(t => !hecha(t)), faltaSal = deSalida.filter(t => !hecha(t));
+  const hechos = deFase.filter(hecha).concat(deSalida.filter(hecha));
+  const col2 = (deSalida.length ? '<div class="fzc-g"><span>Para la salida a Alemania</span><span>'+(deSalida.length - faltaSal.length)+' de '+deSalida.length+'</span></div>'+
+      (faltaSal.length ? (_pmTodo.salida ? faltaSal : faltaSal.slice(0, SAL)).map(fila).join('') : '<div class="fzc-vacio">✓ Lo de la salida de este mes ya quedó hecho.</div>')+
+      (faltaSal.length > SAL ? mas('salida', '→', 'Y '+(faltaSal.length - SAL)+' más para la salida') : '') : '')+
     (F.habitos.length ? mas('sost', sost+' de '+F.habitos.length, 'Lo que sostienes todo el mes')+(_pmTodo.sost ? F.habitos.map(filaH).join('') : '') : '');
-  // Sin cifras, la auditoría va al pie de las tareas.
-  const col1 = '<div class="fzc-g"><span>Lo que tiene que quedar hecho</span><span>'+deFase.filter(hecha).length+' de '+deFase.length+'</span></div>'+
-    '<div class="pm-filas">'+(deFase.length ? (_pmTodo.fase ? deFase : deFase.slice(0, VER)).map(fila).join('') : '<div class="fzc-vacio">Este mes no trae tareas propias.</div>')+'</div>'+
-    (deFase.length > VER ? mas('fase', '→', 'Y '+(deFase.length - VER)+' más') : '')+(cifras ? '' : aud);
+  const col1 = '<div class="fzc-g"><span>Lo que tiene que quedar hecho</span><span>'+(deFase.length - faltaFase.length)+' de '+deFase.length+'</span></div>'+
+    '<div class="pm-filas">'+(!deFase.length ? '<div class="fzc-vacio">Este mes no trae tareas propias.</div>'
+      : faltaFase.length ? (_pmTodo.fase ? faltaFase : faltaFase.slice(0, VER)).map(fila).join('') : '<div class="fzc-vacio">✓ Todo lo de este mes ya quedó hecho.</div>')+'</div>'+
+    (faltaFase.length > VER ? mas('fase', '→', 'Y '+(faltaFase.length - VER)+' más') : '');
+  const col3 = '<div class="fzc-g"><span>Lo que ya hiciste</span><span>'+hechos.length+'</span></div>'+
+    (hechos.length ? (_pmTodo.hecho ? hechos : hechos.slice(0, VER)).map(fila).join('')
+      : '<div class="fzc-vacio">'+(e === 'fut' ? 'Este mes todavía no empieza.' : 'Todavía nada marcado este mes.')+'</div>')+
+    (hechos.length > VER ? mas('hecho', '→', 'Y '+(hechos.length - VER)+' más') : '')+aud;
   return '<div class="pm-mes-cab"><div class="fzm-cab-t">'+fzmNombre(ym)+chip+'<span class="fzm-cab-s">'+
       f.tag+' · del 1 al '+fin.getDate()+' de '+fzmMesMin(ym)+' · '+estado+'</span>'+pmVolverBtn()+'</div>'+tabs+'</div>'+
-    aviso+pmColumnas([col1, col2, cifras ? cifras+aud : '']);
+    aviso+pmColumnas([col1, col2, col3]);
 }
 // La información general de la fase en la pantalla: la meta y lo que se deja, el checkpoint y cómo va, y tu dinero.
 function pmGenHtml(i, tabs){
@@ -14726,33 +14734,12 @@ function fzaResTarea(a, t, checks){
   return v === 'ok' ? { r:'ok' } : v ? { r:'no', sigue: v } : { r: ctHecha(t, checks) ? 'ok' : 'no', sigue: 'pasa' };
 }
 const fzaNivel = (a, h) => (a && a.aud && a.aud.h || {})[h.id] || ((a && a.siempre || {})[h.id] ? 'siempre' : 'nunca');
-// Las cifras del mes, calculadas una sola vez: la meta de la proyección, lo real (hoy, o la foto al auditar) y si se
-// llegó. Las dibuja la pantalla (pmCifrasHTML); la auditoría mide con la misma fuente y la misma regla (fzmEnMeta). A media
-// quincena no se pinta de rojo: falta lo que el plan
-// pone después. `juzga`: el mes ya se puede auditar o está auditado.
-function fzmCifrasDatos(P, a, e, cerrable){
-  const M = P.metas || []; if(!M.length) return null;
-  const foto = e === 'ok' ? fzmFoto(a) : null;
-  const vivo = !foto && (e === 'hoy' || e === 'pend') ? ctCifrasHoy() : null;
-  const juzga = !!foto || (!!vivo && cerrable);
-  const filas = M.map(function(m){
-    const meta = foto && typeof foto.meta[m.k] === 'number' ? foto.meta[m.k] : m.meta;
-    const real = foto ? foto.real[m.k] : vivo ? vivo[m.k] : null, tiene = typeof real === 'number';
-    const dif = tiene ? (m.mas ? real - meta : meta - real) : 0, bien = dif >= -0.5;
-    const causa = foto && !bien ? FZA_CAUSA.find(o => o.k === (a.aud && a.aud.c || {})[m.k]) : null;
-    return { m: m, meta: meta, real: real, tiene: tiene, dif: dif, bien: bien, causa: causa };
-  });
-  const pie = foto ? 'Medidas el '+fzmDia(foto.medido)+'.' : e === 'ok' ? 'Sin foto de cifras: se auditó más de diez días después del cierre.'
-    : e === 'fut' ? 'Es lo que la proyección pone al cerrar el mes; lo real se mide al auditarlo.'
-    : 'Lo real se guarda al auditar el mes, hasta diez días después de que cierre.';
-  return { filas: filas, foto: foto, juzga: juzga, pie: pie };
-}
-// Tu dinero en la pantalla, en palabras y con el mismo formato en cada mes y en cada fase (Adán, 25-oct-2026: "las
-// cifras de dinero que están ahí no son claras" y "lo de mi dinero debe tener el mismo formato en las demás fases"):
+// Tu dinero en la información general de la fase, en palabras (Adán, 25-oct-2026: "las cifras de dinero que están ahí no
+// son claras"; el del mes se quitó el 3-nov-2026: "quita esta sección y pon solo las cosas que ya hemos hecho"):
 // cada tarjeta lleva la cifra real en grande —la de hoy, o la que se guardó al auditar—, debajo lo que el plan espera y
 // cómo vas contra eso. Mientras no cierra —el mes en curso o uno que viene— lo que falta va en ámbar, no en rojo: el
 // abono o el ahorro que falta puede llegar; cerrado, cómo quedó. Antes del plan de dinero (la Fase 0), lo de hoy y el
-// aviso de cuándo arranca. Mismas cuentas que la ficha (fzmCifrasDatos).
+// aviso de cuándo arranca.
 const PM_CIFRA = { dinero: ['Tu dinero', 'efectivo, CETES, GBM y el depósito'], bbva: ['Tu tarjeta BBVA', 'lo que debes'] };
 const pmAl = ym => { const d = fzmFinMes(ym);
   return d.getDate()+' '+MES_LABEL_FULL[d.getMonth()].slice(0,3).toLowerCase()+(d.getFullYear() !== new Date().getFullYear() ? ' '+d.getFullYear() : ''); };
@@ -14776,23 +14763,13 @@ function pmDineroAntes(titulo, de){
   return '<div class="fzm-blk pm-dinero">'+titulo+Object.keys(PM_CIFRA).map(k => pmDineroTarjeta({ k: k }, hoy[k], 'hoy')).join('')+
     (p0 ? '<p class="pmc-nota">'+de+' es anterior al plan de dinero, que arranca en '+fzmMesMin(p0.mes)+' de '+p0.mes.slice(0,4)+'.</p>' : '')+'</div>';
 }
-// Un mes: sus metas contra lo de hoy —también si el mes viene: cuánto falta para llegar— o contra lo que se guardó al auditarlo.
-function pmCifrasHTML(P, a, e, cerrable, ym){
-  const titulo = '<div class="fzc-g"><span>Tu dinero '+(e === 'hoy' ? 'este mes' : 'en '+fzmMesMin(ym))+'</span>'+(FIN_REPO ? '<em class="fzc-tag">'+finRepoNota()+'</em>' : '')+'</div>';
-  const D = fzmCifrasDatos(P, a, e, cerrable), p0 = ((window.CIFRAS.PROYECCION || {}).meses || [])[0];
-  if(!D) return p0 && ym < p0.mes ? pmDineroAntes(titulo, 'Este mes') : '';
-  const hoy = e === 'fut' ? ctCifrasHoy() : {}, cerro = !!D.foto || e === 'pend';
-  const cuando = D.foto ? 'al auditar' : e === 'ok' ? 'sin foto' : 'hoy';
-  const sinFoto = e === 'ok' && !D.foto ? 'Se auditó más de diez días después del cierre.' : '';
-  return '<div class="fzm-blk pm-dinero">'+titulo+D.filas.map(x => pmDineroTarjeta(x.m, x.tiene ? x.real : hoy[x.m.k], cuando, x.meta, pmAl(ym), cerro,
-    x.causa ? x.causa.t : sinFoto)).join('')+'</div>';
-}
 // La fase: la última meta que el plan le pone a cada cifra dentro de ella —tu dinero al cerrarla; la BBVA, el mes en que
 // queda en cero— contra lo de hoy, o contra lo que se guardó al auditar ese mes si ya cerró.
 function pmDineroFase(i){
   const C = window.CIFRAS, A = fzmAud(), hoy = ctCifrasHoy(), ult = {};
   fzmMeses(PHASES[i]).forEach(ym => (C.planMes(ym).metas || []).forEach(m => { if(PM_CIFRA[m.k]) ult[m.k] = { m: m, ym: ym }; }));
-  const titulo = '<div class="fzc-g"><span>Tu dinero en esta fase</span></div>', ks = Object.keys(PM_CIFRA).filter(k => ult[k]);
+  const titulo = '<div class="fzc-g"><span>Tu dinero en esta fase</span>'+(FIN_REPO ? '<em class="fzc-tag">'+finRepoNota()+'</em>' : '')+'</div>',
+    ks = Object.keys(PM_CIFRA).filter(k => ult[k]);
   if(!ks.length) return pmDineroAntes(titulo, 'Esta fase');
   return '<div class="fzm-blk pm-dinero">'+titulo+ks.map(function(k){
     const x = ult[k], e = fzmEstado(x.ym, A), foto = e === 'ok' ? fzmFoto(A[x.ym]) : null;
