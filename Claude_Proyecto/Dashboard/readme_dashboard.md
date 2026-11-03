@@ -836,15 +836,8 @@ redundante"*): cambiar de fase, de mes y auditar ocurre en su lugar.
   desmarcarlo —auditado, con su ✅— y la auditoría al pie. Ahí iba tu dinero del mes (Adán, 3-nov-2026: *"quita esta
   sección y pon solo las cosas que ya hemos hecho ahí mismo donde quitaste lo de la imagen"*). Los encabezados cuentan
   lo hecho de lo total (*3 de 8*); cuando no falta nada, *✓ Todo lo de este mes ya quedó hecho*.
-- **Tu dinero, en la información general de la fase** (`pmDineroFase`, `pmDineroTarjeta`, `.pm-dinero`; Adán, 25-oct-2026:
-  *"las cifras de dinero que están ahí no son claras"*): una tarjeta para tu dinero y otra para tu tarjeta BBVA
-  mientras el plan le ponga meta, cada una con la cifra real en grande —la de hoy o, en un mes auditado, la que se
-  guardó al auditar— y, debajo, *El plan espera $0 al 30 nov* y cómo vas contra eso: *✓ llevas $1,506 más de lo que
-  pide* en verde; mientras no cierra lo que falta, en ámbar (*te faltan $153,548 para el 31 may 2027*), porque el abono
-  o el ahorro que falta puede llegar; y cerrado, *✗ quedaste … arriba* en rojo. La fecha lleva el año cuando no es el
-  de hoy (`pmAl`). Una fase anterior al plan de dinero (la 0) enseña lo de hoy y que el plan arranca en octubre de 2026
-  (`pmDineroAntes`). En el iPad, su título lleva *cifras de tu PC al …* (`finRepoNota`). Bajo 1180 px, cuando pasa a lo
-  ancho, sus tarjetas van de dos en dos.
+- **Ni el mes ni la información general llevan tarjetas de dinero contra el plan** (Adán, 3-nov-2026): las cifras
+  viven en los ocho medidores y en la auditoría de cada mes.
 - **Las tareas se palomean aquí mismo**, en la misma casilla que Mi Día (`coach_checks_v1`): el mes de hoy en la
   semana de hoy (`pmCheck`), otro mes con `fzmCheck`; un mes ya auditado enseña lo que quedó (✅, ◐ o ❌), sin
   casilla. *Y 3 más…* y *Lo que sostienes* se despliegan en su lugar (`pmDespliega`).
@@ -858,10 +851,10 @@ redundante"*): cambiar de fase, de mes y auditar ocurre en su lugar.
   lo que dejas de hacer, en fichas con solo su cabeza y el porqué en su `title`; el checkpoint con sus dos salidas y
   **cómo va la fase** (`fzvVaHTML`, `fzvAvance`: meses auditados, tareas cumplidas hasta hoy, la calificación de los
   meses y lo que sigue —*Auditar septiembre*, que abre esa auditoría aquí, o la fecha de la próxima—), solo si la
-  fase ya empezó: en una que viene diría *aún no cierra ninguno* y su fecha, que ya están en la ruta; y **tu dinero
-  en esta fase** (`pmDineroFase`), con las mismas tarjetas: la última meta que el plan le pone a cada cifra dentro de
-  la fase —en la Fase 1, tu dinero al 31 mar 2027 y la meta de la BBVA, $0 al 30 nov 2026— contra lo de hoy, o contra
-  lo que se guardó al auditar ese mes.
+  fase ya empezó: en una que viene diría *aún no cierra ninguno* y su fecha, que ya están en la ruta; y **lo que ya
+  hiciste en esta fase** (`pmHechoFase`; Adán, 3-nov-2026: *"en las demás fases también"*; ahí iba tu dinero en la
+  fase): lo palomeado de cada mes —o lo cumplido, si se auditó—, sin repetir una tarea que pasó de un mes a otro, con
+  el mes en que quedó hecha (*salida · oct*), en solo lectura: se marca y se desmarca en su mes. Seis y *Y N más*.
 - **Compacto** (Adán, 25-oct-2026: *"haz las cosas más pequeñas y la letra también, no debemos acaparar mucho
   visualmente, solo lo importante"*): el título a 17 px, las tareas y los textos a 12, las etiquetas a 9.5, las
   pestañas a 11 y los rellenos cortos.
@@ -1133,7 +1126,7 @@ La banda decía *Tu dinero $21,513* y la columna del día *$21,291* (Adán, 21-o
 métricas de los números para que todo cuadre"*): una tomaba el efectivo de Finanzas del día en que lo dijiste y la
 otra la serie de la quincena, con lo previsto desde entonces. Ahora todo el Dashboard pide lo de hoy a `ctCifrasHoy()`, que le pasa
 al maestro (`CIFRAS.cifrasHoy(f, gastar)`) lo que la serie de la quincena dice que hay para gastar: las cifras del mes
-—en la información general de la fase (`pmDineroFase`) y en la auditoría— miden igual (*$21,291*). El control 42 vigila
+—los medidores y la auditoría del mes— miden igual (*$21,291*). El control 42 vigila
 que nadie más llame a `cifrasHoy`.
 
 **El plan y tu dinero un día dan la misma cifra.** Lo que pide la fase y lo que da tu ritmo salen del plan
@@ -2089,7 +2082,7 @@ exportador escribe `finanzas-sync.js` (`window.FINANZAS_SYNC = {exportado, fecha
 inversiones, los activos —sin notas—, las metas, el fondo y el Bitcoin sumado en un solo lote, más `gastar`: lo que queda
 en la cuenta de la quincena, que `ctCifrasHoy` guarda en `fin_resumen_v1` cada vez que cambia en la PC. Movimientos,
 notas, presupuestos e historial no salen. En un dispositivo sin Finanzas propia, `finCargar` usa esa copia —de solo
-lectura: nada la escribe en `finanzasmx_v2`— y *Tu dinero* lleva la etiqueta *cifras de tu PC al …* (`finRepoNota`).
+lectura: nada la escribe en `finanzasmx_v2`—.
 Medido con los datos reales: los ocho medidores del Plan Maestro salen iguales que en la PC. El control 39 revisa
 también que el archivo no lleve movimientos, notas ni descripciones.
 
