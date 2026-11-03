@@ -326,7 +326,23 @@ los primeros 3 del mes siguiente con la etiqueta del mes que cerró (`cerrarMesA
 `tomadaEl`); se toma una sola vez y ya nadie la toca. Un mes sin foto en esos días se queda con la que tenía y
 se ve como «foto del 21 sep, no del cierre» (`tipoFoto`: `curso`, `cierre`, `parcial` o `estimado`;
 `etiquetaFoto`). Las pestañas lo dicen (🔒 cierre, ◐ con su fecha, 🕓 estimado) y el aviso de cada mes compara su
-score con el de hoy. Octubre de 2026 se reparó con `_cierreOct20261102` (`MIGRACIONES` del maestro): su foto era
+score con el de hoy.
+
+**Cada mes que termina se congela y ya no se toca** (Adán, 2-nov-2026: *"cada vez que termine un mes guardas esas
+cifras y no las vuelves a tocar, solo con fines de lectura, esto también para los demás indicadores"*). Cada foto
+guarda su `medida` (todo lo que enseña su pestaña, `IND_MEDIDA`/`medidaDe`); al pasar el mes, `congelarMeses()` le
+pone `congelado` (la fecha) y desde ahí `medirIndicadores()` devuelve esa medida tal cual: ni el sueldo de hoy, ni la
+meta del fondo de hoy, ni una fórmula nueva la mueven (una foto sin congelar se mide con su propio `BASE_INC` y su meta
+`ef-001`). Nada la descongela: `cerrarMesAnterior` se la salta, el import no la pisa (salvo un estimado) y el relleno
+crea meses nuevos sin tocar los que hay.
+
+**Las cifras de cada mes** (`cifrasMesHTML`, arriba de cada pestaña, la de hoy y las guardadas): patrimonio neto (con
+lo que tienes y lo que debes), deuda total, dinero líquido y score, cada una contra el mes anterior; si ese mes no tiene
+cierre, se avisa. **Mes a mes** (`mesAMesHTML`, después del score): una tabla de solo lectura con todos los meses,
+qué es cada uno y el cambio contra el anterior; tocar un mes abre su pestaña. En el celular, cada mes es un bloque. Las
+dos leen `cifrasDe()`, la misma medición que la pestaña.
+
+Octubre de 2026 se reparó con `_cierreOct20261102` (`MIGRACIONES` del maestro): su foto era
 del 13 y la del 2 de noviembre —con los saldos al 31— se había guardado como noviembre. Es el archivo histórico
 del proyecto y el dato vive solo aquí: por eso el import lo fusiona en vez de pisarlo.
 
@@ -339,8 +355,8 @@ mueve el mismo estado (`JUGAR`), así se suman. Se ve así (Adán, 2-nov-2026: *
 clases `.msc-*`): una frase con el score, la letra y cuánto falta para la siguiente; **la barra de la letra** (franjas
 F-D-C-B-A, lo de hoy lleno y hasta dónde llegas con las jugadas de tu plan, rayado; en el celular eso va en una leyenda);
 **una tarjeta por jugada** —cuánto en grande, el score antes y después, una frase de por qué, qué partes del score suben
-y cómo hacerlo, con *Ya va en tu plan* o *Choca con tu plan*—; y **cuatro cifras contra el cierre del mes anterior**
-(score, patrimonio, lo que debes y dinero líquido, cada una con su cambio y lo de antes).
+y cómo hacerlo, con *Ya va en tu plan* o *Choca con tu plan*—. El mes contra el anterior va arriba, en las cifras
+del mes.
 
 ---
 

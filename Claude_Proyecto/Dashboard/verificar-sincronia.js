@@ -3137,8 +3137,18 @@ function promptsDeLoTocado() {
   if (cuerpo('cerrarMesAnterior').indexOf('cierre:true') < 0) malos.push('cerrarMesAnterior() ya no marca el cierre (cierre:true)');
   if ((f.match(/tipoFoto\(/g) || []).length < 5) malos.push('las pestañas o el aviso del mes ya no dicen si la foto es cierre o de media de mes (tipoFoto)');
   if (f.indexOf('mejoraScoreHTML(src)') < 0) malos.push('el mes en curso ya no enseña cómo subir el score (mejoraScoreHTML)');
+  // Y cada mes que termina se congela: su pestaña lee lo que guardó y ya nada lo mueve (Adán, 2-nov-2026: "cada vez que
+  // termine un mes guardas esas cifras y no las vuelves a tocar… esto también para los demás indicadores").
+  if (!/if \(src && src\.medida\)/.test(cuerpo('medirIndicadores'))) malos.push('medirIndicadores() vuelve a calcular un mes congelado: debe devolver su medida');
+  if (cuerpo('fotoIndicadores').indexOf('medida: medidaDe(') < 0) malos.push('fotoIndicadores() ya no guarda la medida del mes (medidaDe)');
+  if (f.indexOf('function congelarMeses(') < 0 || auto.indexOf('congelarMeses(') < 0) malos.push('los meses que terminan ya no se congelan (congelarMeses en autoSaveCurrentMonthSnapshot)');
+  if (cuerpo('cerrarMesAnterior').indexOf('prev.congelado') < 0) malos.push('cerrarMesAnterior() podría pisar un mes congelado');
+  if (f.indexOf('const _fijo=y&&y.congelado') < 0) malos.push('importar un respaldo podría pisar un mes congelado');
+  const vista = cuerpo('renderIndicatorsHTML');
+  if (vista.indexOf('cifrasMesHTML(src)') < 0 || vista.indexOf('mesAMesHTML(') < 0) malos.push('cada mes ya no enseña su patrimonio neto y su deuda total (cifrasMesHTML) o falta la tabla mes a mes (mesAMesHTML)');
+  if (/_maeHoy\(/.test(vista)) malos.push('renderIndicatorsHTML() lee la maestría de hoy (_maeHoy): un mes cerrado usa la suya (maeBase2)');
   if (malos.length) problemas.push('Indicadores de Finanzas, mes contra mes:\n     ' + malos.join('\n     '));
-  else ok.push('Indicadores de Finanzas: una sola medición para la pantalla y la foto de cada mes, el cierre se toma una vez y cada pestaña dice si es cierre; el mes en curso dice cómo subir el score');
+  else ok.push('Indicadores de Finanzas: una sola medición para la pantalla y la foto de cada mes; cada mes se cierra una vez, se congela y ya no se toca; cada mes enseña su patrimonio neto y su deuda total contra el anterior, y el mes en curso dice cómo subir el score');
 })();
 
 // ── Salida ──

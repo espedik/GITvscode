@@ -490,8 +490,8 @@ select option{background:var(--surface-solid);color:var(--text)}
 }
 /* ── Cómo subir tu score (Indicadores, mes en curso): la barra de la letra, las jugadas y el mes contra el cierre.
    Los colores de cada letra son los del score; en el tema claro, un paso más oscuro para que se lean sobre blanco. ── */
-.msc{--msc-f:#d0264f;--msc-d:#d9620c;--msc-c:#b58900;--msc-b:#2f6fdb;--msc-a:#0a8a4e;--msc-ok:#0a8a4e;--msc-mal:#d0264f}
-:root[data-theme="dark"] .msc{--msc-f:#ff3b6b;--msc-d:#f97316;--msc-c:#ffd93d;--msc-b:#3b82f6;--msc-a:#00e87a;--msc-ok:#00e87a;--msc-mal:#ff3b6b}
+.msc,.imes{--msc-f:#d0264f;--msc-d:#d9620c;--msc-c:#b58900;--msc-b:#2f6fdb;--msc-a:#0a8a4e;--msc-ok:#0a8a4e;--msc-mal:#d0264f}
+:root[data-theme="dark"] .msc,:root[data-theme="dark"] .imes{--msc-f:#ff3b6b;--msc-d:#f97316;--msc-c:#ffd93d;--msc-b:#3b82f6;--msc-a:#00e87a;--msc-ok:#00e87a;--msc-mal:#ff3b6b}
 .msc-cab h3{margin:0 0 6px;font-size:16px;font-weight:800;color:var(--text)}
 .msc-cab p{margin:0;font-size:13px;color:var(--text2);line-height:1.55;max-width:880px}
 .msc-cab p b{color:var(--text)}
@@ -532,16 +532,37 @@ select option{background:var(--surface-solid);color:var(--text)}
 .msc-rub > span{font-size:10.5px;font-weight:700;color:var(--text3)}
 .msc-rub div{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--text2)}
 .msc-rub div b{color:var(--text);font-variant-numeric:tabular-nums}
-.msc-sec{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);margin:22px 0 10px}
-.msc-aviso{font-size:12px;color:var(--text2);margin:-4px 0 10px}
-.msc-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-@media(max-width:820px){.msc-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.msc-tile{border:1px solid rgba(var(--ov),.09);border-radius:12px;padding:12px 14px;min-width:0}
-.msc-tl{font-size:11.5px;color:var(--text2)}
-.msc-tv{font-size:21px;font-weight:800;color:var(--text);margin:4px 0;font-variant-numeric:tabular-nums}
-.msc-td{font-size:11.5px;color:var(--text3);line-height:1.45}
-.msc-d{font-weight:800;color:var(--text2)}
 .msc-pie{font-size:11px;color:var(--text3);margin-top:14px}
+/* ── Indicadores: las cifras de cada mes (patrimonio neto, deuda total, dinero líquido y score) y la tabla mes a mes ── */
+.imes{margin-bottom:14px}
+.imes-cab{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin-bottom:12px}
+.imes-cab h3{margin:0;font-size:15px;font-weight:800;color:var(--text)}
+.imes-cab span{font-size:12px;color:var(--text2)}
+.imes-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media(max-width:820px){.imes-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.imes-t{border:1px solid rgba(var(--ov),.09);border-radius:12px;padding:12px 14px;min-width:0;background:rgba(var(--ov),.02)}
+.imes-l{font-size:11.5px;font-weight:700;color:var(--text2)}
+.imes-v{font-size:24px;font-weight:800;color:var(--text);margin:5px 0 3px;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.imes-v small{font-size:13px;font-weight:600;color:var(--text3)}
+.imes-s{font-size:11.5px;color:var(--text3);line-height:1.5}
+.imes-d{font-weight:800}
+.imes-nota{font-size:12px;color:var(--text2);margin:-4px 0 10px}
+.imes-tabla{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums}
+.imes-tabla th{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);text-align:right;padding:6px 10px;border-bottom:1px solid rgba(var(--ov),.1);white-space:nowrap}
+.imes-tabla td{padding:8px 10px;border-bottom:1px solid rgba(var(--ov),.06);text-align:right;color:var(--text);white-space:nowrap;vertical-align:top}
+.imes-tabla th:nth-child(-n+2),.imes-tabla td:nth-child(-n+2){text-align:left}
+.imes-tabla td:nth-child(2){color:var(--text2)}
+.imes-tabla tbody tr{cursor:pointer}
+.imes-tabla tbody tr:hover{background:rgba(var(--ov),.04)}
+.imes-tabla tbody tr.imes-act{background:color-mix(in srgb,var(--primary) 9%,transparent)}
+.imes-tabla td small{display:block;font-size:10.5px;font-weight:700;margin-top:2px}
+@media(max-width:640px){
+  .imes-tabla,.imes-tabla tbody{display:block;width:auto;min-width:0}
+  .imes-tabla thead{display:none}
+  .imes-tabla tbody tr{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;padding:12px 6px;border-bottom:1px solid rgba(var(--ov),.08)}
+  .imes-tabla td{display:block;padding:0;border:0;text-align:left!important;white-space:normal}
+  .imes-tabla td[data-l]::before{content:attr(data-l);display:block;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text3);margin-bottom:1px}
+}
 /* ── Tu quincena (tablero, mes actual): próximos pagos, la BBVA hasta cero y lo que va a GBM ── */
 .qn-cab{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-bottom:14px}
 .qn-cab h3{margin:0;font-size:15px;font-weight:800;color:var(--text)}
@@ -1974,10 +1995,32 @@ function puntuarIndicadores(m) {
   return { sc, score: Math.round(sc.dti*.28+sc.savings*.24+sc.emerg*.20+sc.d2a*.16+sc.solvency*.12) };
 }
 // Lo que muestra la pestaña de una foto: si guardó su estado completo, se mide igual que la pantalla.
-const medirFoto = snap => snap && snap.debts ? medirIndicadores(snap) : null;
+const medirFoto = snap => snap && (snap.medida || snap.debts) ? medirIndicadores(snap) : null;
+/* Lo que se congela de cada mes al cerrarlo (`medida`): todo lo que enseña su pestaña. Desde ahí la pestaña lo lee tal
+   cual y ya no lo recalcula: ni el sueldo de hoy, ni la meta del fondo de hoy, ni una fórmula nueva lo mueven. */
+const IND_MEDIDA = ['BASE_INC','liqActivos','finActivos','fisActivos','btcHeld2','btcValue2','totalActivos','totalPasivos','netWorth2',
+  'totalMinPay2','totalInvested2','avgExp2','_avgExpIsEst2','dti2','savRate2','d2a2','solvency2','d2i2','emergM2','efGoal2','efPct2',
+  'liqRatio2','inv2inc2','roi2','maeBase2','mPct2','sc2','score2'];
+function medidaDe(M) {
+  const o = {}; IND_MEDIDA.forEach(k => { o[k] = M[k]; });
+  o.maeTarget = (M.maestria2 && M.maestria2.target) || 500000;
+  return JSON.parse(JSON.stringify(o));
+}
+// Las cifras de cabecera de un mes (sin foto: las de hoy), siempre de la misma medición que su pestaña.
+function cifrasDe(snap) {
+  const m = snap ? medirFoto(snap) : medirIndicadores(S);
+  return m ? { score: m.score2, nw: m.netWorth2, pas: m.totalPasivos, act: m.totalActivos, liq: m.liqActivos }
+           : { score: snap.score, nw: snap.netWorth, pas: snap.totalPasivos, act: snap.totalActivos, liq: snap.liqActivos };
+}
 const scoreDe = snap => { const m = medirFoto(snap); return m ? m.score2 : (snap||{}).score; };
 function medirIndicadores(src, ahora) {
-  const BASE_INC = _PG().sueldo;
+  if (src && src.medida) {
+    const m = src.medida;
+    return Object.assign({ now2: new Date((src.savedAt || CIFRAS.fechaLocal()) + 'T12:00:00'), isSnapshot: true, srcDebts: src.debts || [],
+      past3_2: [], _msiEst2: 0, _fixedFloor2: 0, _fallback2: 0, maestria2: { target: m.maeTarget } }, m);
+  }
+  // Una foto sin congelar se mide con el sueldo y la meta del fondo que tenía, no con los de hoy.
+  const BASE_INC = (src.savedAt && src.BASE_INC) || _PG().sueldo;
   const now2 = ahora || new Date();
   // Para la vista live, auto-calcular saldos de MSI y auto según tiempo transcurrido.
   // Para snapshots (tienen savedAt), usar datos tal como fueron guardados.
@@ -2018,7 +2061,7 @@ function medirIndicadores(src, ahora) {
   const solvency2   = totalPasivos>0?totalActivos/totalPasivos:99;
   const d2i2        = totalPasivos/(BASE_INC*12);
   const emergM2     = avgExp2>0?liqActivos/avgExp2:0;
-  const efGoal2     = _metaFondo();
+  const efGoal2     = (src.savedAt && ((src.goals||[]).find(g=>g.id==='ef-001')||{}).target) || _metaFondo();
   const efPct2      = Math.min(1,(src.emergencyFund||0)/efGoal2);
   const liqRatio2   = totalMinPay2>0?liqActivos/totalMinPay2:null;
   const inv2inc2    = finActivos/(BASE_INC*12);
@@ -2118,6 +2161,7 @@ function renderIndicatorsHTML(src) {
   const auto2=srcDebts.find(d=>d.type==='car'&&d.balance>0);
 
   return `
+    ${cifrasMesHTML(src)}
     <div class="card card-hi" style="margin-bottom:14px">
       <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
         <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
@@ -2134,6 +2178,7 @@ function renderIndicatorsHTML(src) {
       </div>
     </div>
     ${isSnapshot ? '' : mejoraScoreHTML(src)}
+    ${mesAMesHTML(isSnapshot ? src.month : 'live')}
 
     ${goals2.length?`<div class="card" style="margin-bottom:14px;border-left:4px solid var(--primary);background:rgba(0,212,255,.03)">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
@@ -2146,7 +2191,7 @@ function renderIndicatorsHTML(src) {
       <div style="display:flex;flex-direction:column;gap:9px">
         ${goals2.map(g=>{
           const isMae=g.id==='g001'||g.icon==='🎓';
-          const cur=isMae?_maeHoy(src):(g.current||0);
+          const cur=isMae?maeBase2:(g.current||0);
           const pct=g.target>0?Math.min(100,cur/g.target*100):0;
           const col=pct>=100?'var(--success)':pct>=75?'#3b82f6':pct>=50?'var(--warning)':'var(--danger)';
           const falta=Math.max(0,(g.target||0)-cur);
@@ -2328,6 +2373,65 @@ function renderIndicatorsHTML(src) {
     </div>`;
 }
 
+/* ── LAS CIFRAS DE CADA MES Y LA TABLA MES A MES ───────────────────────────────────────────────────────────
+   Adán, 2-nov-2026: "en indicadores en todos los meses pon mi patrimonio neto, ahí también es un claro indicativo, y
+   también mi deuda total… los meses no se tienen que interponer entre sí y no se debe perder información". Arriba de
+   cada mes (el de hoy y los guardados), su patrimonio neto, su deuda total, su dinero líquido y su score, cada uno
+   contra el mes anterior; y después del score, la tabla de todos los meses. Todo sale de `cifrasDe`: un mes cerrado
+   enseña lo que congeló (`congelarMeses`) y el de hoy, lo que se mide ahora. */
+const _MESES_L = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const _pesosE = n => (n < 0 ? '−$' : '$') + Math.abs(Math.round(n || 0)).toLocaleString('es-MX');
+function _cambio(d, subeBien, f, umbral) {
+  if (Math.abs(d) < umbral) return '<span class="imes-d" style="color:var(--text2)">= igual</span>';
+  return `<span class="imes-d" style="color:var(--msc-${(subeBien ? d > 0 : d < 0) ? 'ok' : 'mal'})">${d > 0 ? '▲' : '▼'} ${f(Math.abs(d))}</span>`;
+}
+function cifrasMesHTML(src) {
+  const vivo = !src.savedAt, mes = vivo ? _ymDe(new Date()) : src.month;
+  const [y, m] = mes.split('-').map(Number);
+  const prevKey = _ymDe(new Date(y, m - 2, 1)), mesPrev = _MESES_L[+prevKey.slice(5) - 1];
+  const prev = (S.indicatorHistory || []).find(s => s.month === prevKey);
+  const c = cifrasDe(vivo ? null : src), p = prev ? cifrasDe(prev) : null;
+  const letra = sc => sc >= 85 ? 'A' : sc >= 70 ? 'B' : sc >= 55 ? 'C' : sc >= 40 ? 'D' : 'F';
+  const nombre = sc => sc >= 85 ? 'Excelente' : sc >= 70 ? 'Bueno' : sc >= 55 ? 'Aceptable' : sc >= 40 ? 'Atención' : 'Crítico';
+  const Prev = mesPrev.replace(/^./, x => x.toUpperCase());
+  const tile = (l, v, extra, d, subeBien, f, umbral, antes) => `<div class="imes-t"><div class="imes-l">${l}</div><div class="imes-v">${v}</div>
+    <div class="imes-s">${extra}</div>
+    ${p ? `<div class="imes-s">${_cambio(d, subeBien, f, umbral)} contra ${mesPrev}</div><div class="imes-s">${Prev}: ${antes}</div>` : '<div class="imes-s">Primer mes registrado</div>'}</div>`;
+  const estado = vivo ? 'en curso: se vuelve a medir cada vez que abres la app'
+    : `${etiquetaFoto(src)} · ${src.congelado ? 'congelado, solo lectura: ya no se vuelve a tocar' : 'solo lectura'}`;
+  const tp = tipoFoto(prev);
+  return `<div class="card imes">
+    <div class="imes-cab"><h3>📌 Tus cifras de ${_MESES_L[m - 1]} ${y}</h3><span>${estado}</span></div>
+    ${p && tp !== 'cierre' ? `<p class="imes-nota">⚠ Se compara con ${tp === 'estimado' ? 'un estimado' : 'la ' + etiquetaFoto(prev)} de ${mesPrev}: tómalo con cuidado.</p>` : ''}
+    <div class="imes-tiles">
+      ${tile('Patrimonio neto', _pesosE(c.nw), `Tienes ${_pesosE(c.act)}, debes ${_pesosE(c.pas)}`, p ? c.nw - p.nw : 0, true, _pesosE, 1, p ? _pesosE(p.nw) : '')}
+      ${tile('Deuda total', _pesosE(c.pas), 'Todo, con el auto', p ? c.pas - p.pas : 0, false, _pesosE, 1, p ? _pesosE(p.pas) : '')}
+      ${tile('Dinero líquido', _pesosE(c.liq), 'Cuenta, efectivo y fondo', p ? c.liq - p.liq : 0, true, _pesosE, 1, p ? _pesosE(p.liq) : '')}
+      ${tile('Score financiero', `${Math.round(c.score)} <small>/100 · ${letra(c.score)}</small>`, nombre(c.score), p ? c.score - p.score : 0, true, v => String(Math.round(v)), 0.5, p ? String(Math.round(p.score)) : '')}
+    </div>
+  </div>`;
+}
+function mesAMesHTML(activo) {
+  const hoyKey = _ymDe(new Date());
+  const filas = [{ month: hoyKey, vivo: true, c: cifrasDe(null) }]
+    .concat((S.indicatorHistory || []).filter(s => s.month < hoyKey).map(s => ({ month: s.month, snap: s, c: cifrasDe(s) })))
+    .sort((a, b) => b.month.localeCompare(a.month));
+  if (filas.length < 2) return '';
+  const qué = f => f.vivo ? '📊 en curso' : { cierre: '🔒 cierre', parcial: '◐ foto del ' + _fechaCorta(f.snap.savedAt), estimado: '🕓 estimado' }[tipoFoto(f.snap)] || '';
+  const celda = (v, ant, subeBien, f, umbral) => `${f(v)}${ant == null ? '' : `<small>${_cambio(v - ant, subeBien, f, umbral)}</small>`}`;
+  return `<div class="card imes">
+    <div class="imes-cab"><h3>🗓️ Mes a mes</h3><span>Cada mes se congela al cerrar y ya no se toca: solo lectura. Toca un mes para verlo completo.</span></div>
+    <div style="overflow-x:auto"><table class="imes-tabla">
+      <thead><tr><th>Mes</th><th>Qué es</th><th>Patrimonio neto</th><th>Deuda total</th><th>Dinero líquido</th><th>Score</th></tr></thead>
+      <tbody>${filas.map((f, i) => { const a = filas[i + 1] ? filas[i + 1].c : null, k = f.vivo ? 'live' : f.month;
+        return `<tr class="${activo === k ? 'imes-act' : ''}" onclick="switchIndMonth('${k}')">
+          <td><b>${_MESES_L[+f.month.slice(5) - 1].replace(/^./, x => x.toUpperCase())} ${f.month.slice(0, 4)}</b></td><td>${qué(f)}</td>
+          <td data-l="Patrimonio neto">${celda(f.c.nw, a && a.nw, true, _pesosE, 1)}</td><td data-l="Deuda total">${celda(f.c.pas, a && a.pas, false, _pesosE, 1)}</td>
+          <td data-l="Dinero líquido">${celda(f.c.liq, a && a.liq, true, _pesosE, 1)}</td><td data-l="Score">${celda(Math.round(f.c.score), a && Math.round(a.score), true, v => String(Math.round(v)), 0.5)}</td></tr>`; }).join('')}
+      </tbody></table></div>
+  </div>`;
+}
+
 /* ── CÓMO SUBIR EL SCORE ESTE MES ──────────────────────────────────────────────────────────────────────────
    Adán, 2-nov-2026: "pon qué debería hacer para mejorar mi score respecto al mes actual, una muy buena recomendación, ya
    que ahí tienes los datos muy concretos"; y luego: "mejora la presentación… ponlo más entendible y presentable".
@@ -2336,7 +2440,7 @@ function renderIndicatorsHTML(src) {
    o sumar ahorro nuevo a GBM. Cada jugada mueve el mismo estado (`JUGAR`: activos, deuda, fondo, dinero a la mano y
    mínimos), así se pueden sumar: la barra enseña la letra de hoy y hasta dónde llegas con las jugadas de tu plan.
    Primero va lo que el plan ya pide y, dentro de eso, más puntos por cada peso; liquidar una deuda que no es la BBVA
-   choca con la salida y se dice. Abajo, el mes en curso contra el cierre del anterior. */
+   choca con la salida y se dice. El mes contra el anterior va arriba, en las cifras del mes (`cifrasMesHTML`). */
 function mejoraScoreHTML(src) {
   const M = medirIndicadores(src), now = new Date();
   const gasto = M.avgExp2, meta = M.efGoal2;
@@ -2434,28 +2538,8 @@ function mejoraScoreHTML(src) {
   };
   const jugadas = ops.length ? `<div class="msc-jugadas">${ops.map(tarjeta).join('')}</div>`
     : `<p class="msc-txt" style="margin-top:14px">Ningún movimiento de este mes cambia de escalón tu score: sostén el plan y vuelve a medir al cierre.</p>`;
-  // Contra el cierre del mes anterior (o lo que haya, dicho como es), medido igual que su pestaña.
-  const prevKey = _ymDe(new Date(now.getFullYear(), now.getMonth() - 1, 1));
-  const prev = (S.indicatorHistory || []).find(s => s.month === prevKey);
-  const mesPrev = MN[+prevKey.slice(5) - 1], tipo = tipoFoto(prev), MP = medirFoto(prev);
-  const pv = prev && (MP ? { score: MP.score2, nw: MP.netWorth2, pas: MP.totalPasivos, liq: MP.liqActivos }
-                         : { score: prev.score, nw: prev.netWorth, pas: prev.totalPasivos, liq: prev.liqActivos });
-  const tile = (lbl, hoy, antes, f, umbral, subeBien) => {
-    const d = hoy - antes, igual = Math.abs(d) < umbral, bien = subeBien ? d > 0 : d < 0;
-    return `<div class="msc-tile"><div class="msc-tl">${lbl}</div><div class="msc-tv">${f(hoy)}</div>
-      <div class="msc-td">${igual ? '<span class="msc-d">= igual</span>' : `<span class="msc-d" style="color:var(--msc-${bien ? 'ok' : 'mal'})">${d > 0 ? '▲' : '▼'} ${f(Math.abs(d))}</span>`}</div>
-      <div class="msc-td">en ${mesPrev}: ${f(antes)}</div></div>`;
-  };
-  const comp = prev ? `<div class="msc-sec">Contra ${tipo === 'cierre' ? 'el cierre de ' + mesPrev : 'la ' + etiquetaFoto(prev) + ' de ' + mesPrev}</div>
-    ${tipo !== 'cierre' ? `<p class="msc-aviso">⚠ Esa foto no es el cierre del mes: compárala con cuidado.</p>` : ''}
-    <div class="msc-tiles">
-      ${tile('Score', ahora, pv.score, v => String(Math.round(v)), 0.5, true)}
-      ${tile('Patrimonio neto', M.netWorth2, pv.nw, pesos, 1, true)}
-      ${tile('Lo que debes', P, pv.pas, pesos, 1, false)}
-      ${tile('Dinero líquido', liq, pv.liq, pesos, 1, true)}
-    </div>` : '';
   return `<div class="card msc" style="margin-bottom:14px">
-    ${cab}${medidor}${jugadas}${comp}
+    ${cab}${medidor}${jugadas}
     <div class="msc-pie">Cada monto es el mínimo que sube un escalón, calculado con las mismas fórmulas de tu score y tus saldos de hoy.</div>
   </div>`;
 }
@@ -2567,7 +2651,21 @@ function fotoIndicadores(ahora) {
     currentBtcPrice: S.currentBtcPrice||0,
     usdMxn:          S.usdMxn||19.5,
     didiMonthly:     S.didiMonthly||0,
+    // Todo lo que enseña su pestaña, para congelarlo al cerrar el mes
+    medida: medidaDe(M),
   };
+}
+/* Cada mes que ya terminó se congela una vez (`congelado`: el día en que se congeló): si no traía su `medida`, se mide
+   con su propio estado guardado y desde ahí se lee tal cual. Adán, 2-nov-2026: "cada vez que termine un mes guardas esas
+   cifras y no las vuelves a tocar, solo con fines de lectura, esto también para los demás indicadores". Nada lo
+   descongela: ni el cierre (`cerrarMesAnterior` se salta un mes congelado), ni un respaldo que se importe, ni el relleno. */
+function congelarMeses(now) {
+  const hoyKey = _ymDe(now), hoy = CIFRAS.fechaLocal(now);
+  (S.indicatorHistory||[]).forEach(snap => {
+    if (snap.month >= hoyKey || snap.congelado) return;
+    if (!snap.medida && snap.debts) snap.medida = medidaDe(medirIndicadores(snap));
+    snap.congelado = hoy;
+  });
 }
 // Qué es la foto de un mes: 'curso' (el mes de hoy), 'cierre', 'parcial' (de media de mes) o 'estimado' (relleno).
 function tipoFoto(snap) {
@@ -2591,7 +2689,7 @@ function etiquetaFoto(snap) {
 function cerrarMesAnterior(now) {
   const prevKey = _ymDe(new Date(now.getFullYear(), now.getMonth()-1, 1));
   const prev = S.indicatorHistory.find(s=>s.month===prevKey);
-  if(now.getDate() > IND_CIERRE_DIAS || (prev && tipoFoto(prev) === 'cierre')) return;
+  if(now.getDate() > IND_CIERRE_DIAS || (prev && (tipoFoto(prev) === 'cierre' || prev.congelado))) return;
   const hoy = CIFRAS.fechaLocal(now);
   S.indicatorHistory = S.indicatorHistory.filter(s=>s.month!==prevKey);
   S.indicatorHistory.push(Object.assign(fotoIndicadores(now), { month:prevKey, savedAt:hoy, cierre:true, tomadaEl:hoy }));
@@ -2606,6 +2704,7 @@ function autoSaveCurrentMonthSnapshot() {
   S.indicatorHistory.push(Object.assign(fotoIndicadores(now), { month:monthKey, savedAt:CIFRAS.fechaLocal(now) }));
   S.indicatorHistory.sort((a,b)=>a.month.localeCompare(b.month));
   backfillMissingMonthSnapshots();
+  congelarMeses(now);
   save();
 }
 
@@ -2642,6 +2741,7 @@ function backfillMissingMonthSnapshots() {
       filled.savedAt = CIFRAS.fechaLocal();
       filled.backfilled = true;
       filled.backfilledFrom = byMonth[cursor].backfilled ? byMonth[cursor].backfilledFrom : cursor;
+      delete filled.cierre; delete filled.tomadaEl; delete filled.congelado;
       byMonth[next] = filled;
       S.indicatorHistory.push(filled);
       changed = true;
@@ -3803,9 +3903,11 @@ function importData(input) {
         (data.indicatorHistory||[]).forEach(s=>{
           if(!s||!s.month) return;
           const y=_hist[s.month];
-          // Y un cierre (`tipoFoto`) nunca lo pisa una foto que no lo es.
+          // Un mes congelado (`congelarMeses`) no lo pisa nada, salvo un estimado, que era copia del anterior; y un
+          // cierre (`tipoFoto`) nunca lo pisa una foto que no lo es.
+          const _fijo=y&&y.congelado&&tipoFoto(y)!=='estimado';
           const _ci=x=>tipoFoto(x)==='cierre'?1:0;
-          if(!y || _ci(s)>_ci(y) || (_ci(s)===_ci(y) && (s.savedAt||'') >= (y.savedAt||''))) _hist[s.month]=s;
+          if(!y || (!_fijo && (_ci(s)>_ci(y) || (_ci(s)===_ci(y) && (s.savedAt||'') >= (y.savedAt||''))))) _hist[s.month]=s;
         });
         S={transactions:[],budgets:[],debts:[],goals:[],investments:[],activos:[],btcHistory:[],currentBtcPrice:0,usdMxn:19.5,btcLastFetch:'',...data};
         S.indicatorHistory=Object.keys(_hist).sort().map(m=>_hist[m]);
