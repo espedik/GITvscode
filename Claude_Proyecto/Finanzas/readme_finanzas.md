@@ -334,8 +334,13 @@ del proyecto y el dato vive solo aquí: por eso el import lo fusiona en vez de p
 fórmulas prueba tres palancas y de cada una el monto más chico que sube un escalón algún rubro: meter dinero al
 fondo de emergencia (CETES), sumar ahorro nuevo a las inversiones y liquidar una deuda (de la más chica a la más
 grande). Va primero lo que el plan ya pide —la BBVA, el ahorro de la quincena (`ahorroDia1/15` o los de casa)— y,
-dentro de eso, más puntos por peso; liquidar otra deuda se dice, pero choca con la salida y no va primero. Al
-lado, el mes en curso contra el cierre del anterior: score, patrimonio, deuda y dinero líquido.
+dentro de eso, más puntos por peso; liquidar otra deuda se dice, pero choca con la salida y no va primero. Cada jugada
+mueve el mismo estado (`JUGAR`), así se suman. Se ve así (Adán, 2-nov-2026: *"ponlo más entendible y presentable"*;
+clases `.msc-*`): una frase con el score, la letra y cuánto falta para la siguiente; **la barra de la letra** (franjas
+F-D-C-B-A, lo de hoy lleno y hasta dónde llegas con las jugadas de tu plan, rayado; en el celular eso va en una leyenda);
+**una tarjeta por jugada** —cuánto en grande, el score antes y después, una frase de por qué, qué partes del score suben
+y cómo hacerlo, con *Ya va en tu plan* o *Choca con tu plan*—; y **cuatro cifras contra el cierre del mes anterior**
+(score, patrimonio, lo que debes y dinero líquido, cada una con su cambio y lo de antes).
 
 ---
 

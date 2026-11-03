@@ -488,6 +488,60 @@ select option{background:var(--surface-solid);color:var(--text)}
   pre,code{max-width:100%;overflow-x:auto}
   img,video,canvas{max-width:100%;height:auto}
 }
+/* ── Cómo subir tu score (Indicadores, mes en curso): la barra de la letra, las jugadas y el mes contra el cierre.
+   Los colores de cada letra son los del score; en el tema claro, un paso más oscuro para que se lean sobre blanco. ── */
+.msc{--msc-f:#d0264f;--msc-d:#d9620c;--msc-c:#b58900;--msc-b:#2f6fdb;--msc-a:#0a8a4e;--msc-ok:#0a8a4e;--msc-mal:#d0264f}
+:root[data-theme="dark"] .msc{--msc-f:#ff3b6b;--msc-d:#f97316;--msc-c:#ffd93d;--msc-b:#3b82f6;--msc-a:#00e87a;--msc-ok:#00e87a;--msc-mal:#ff3b6b}
+.msc-cab h3{margin:0 0 6px;font-size:16px;font-weight:800;color:var(--text)}
+.msc-cab p{margin:0;font-size:13px;color:var(--text2);line-height:1.55;max-width:880px}
+.msc-cab p b{color:var(--text)}
+.msc-medidor{margin:34px 0 4px}
+.msc-barra{position:relative;height:14px}
+.msc-zona{position:absolute;top:0;bottom:0;border-radius:4px}
+.msc-llena{position:absolute;left:0;top:3px;height:8px;border-radius:4px}
+.msc-extra{position:absolute;top:3px;height:8px;border-radius:0 4px 4px 0;opacity:.8;
+  background-image:repeating-linear-gradient(135deg,currentColor 0 3px,transparent 3px 6px)}
+.msc-marca{position:absolute;top:-5px;bottom:-5px;width:2px;border-radius:1px;background:var(--text)}
+.msc-et{position:absolute;bottom:20px;font-size:11.5px;white-space:nowrap;color:var(--text2)}
+.msc-et b{font-size:16px;font-weight:800;color:var(--text)}
+.msc-letras{position:relative;height:18px;margin-top:6px;font-size:11px;font-weight:800}
+.msc-letras span{position:absolute;transform:translateX(-50%);color:var(--text3)}
+.msc-letras span.msc-aqui{color:var(--text)}
+.msc-ley{display:none;gap:6px 16px;flex-wrap:wrap;font-size:11.5px;color:var(--text2);margin-top:4px}
+.msc-ley i{display:inline-block;width:14px;height:8px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.msc-ley i.msc-rayas{background-image:repeating-linear-gradient(135deg,currentColor 0 3px,transparent 3px 6px)}
+.msc-ley b{color:var(--text)}
+@media(max-width:640px){.msc-et.msc-plan{display:none}.msc-ley{display:flex}}
+.msc-jugadas{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px;margin-top:18px}
+.msc-j{display:flex;flex-direction:column;gap:9px;border:1px solid rgba(var(--ov),.09);border-radius:12px;padding:14px 16px;background:rgba(var(--ov),.02);min-width:0}
+.msc-j.msc-top{border-color:color-mix(in srgb,var(--msc-ok) 45%,transparent);background:color-mix(in srgb,var(--msc-ok) 6%,transparent)}
+.msc-jcab{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.msc-n{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text2)}
+.msc-chip{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;color:var(--text)}
+.msc-chip.ok{background:color-mix(in srgb,var(--msc-ok) 16%,transparent)}
+.msc-chip.ojo{background:color-mix(in srgb,var(--msc-c) 22%,transparent)}
+.msc-jt{font-size:15px;font-weight:800;color:var(--text);line-height:1.3}
+.msc-monto{font-size:28px;font-weight:800;color:var(--text);line-height:1;font-variant-numeric:tabular-nums}
+.msc-monto small{font-size:12.5px;font-weight:600;color:var(--text2);margin-left:6px}
+.msc-pts{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--text2)}
+.msc-pts b{color:var(--text);font-size:16px}
+.msc-mas{font-weight:800;color:var(--text);background:color-mix(in srgb,var(--msc-ok) 18%,transparent);padding:2px 9px;border-radius:20px;font-size:12px}
+.msc-txt{font-size:12.5px;color:var(--text2);line-height:1.5;margin:0}
+.msc-txt b{color:var(--text)}
+.msc-rub{border-top:1px solid rgba(var(--ov),.07);padding-top:8px;display:flex;flex-direction:column;gap:4px}
+.msc-rub > span{font-size:10.5px;font-weight:700;color:var(--text3)}
+.msc-rub div{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--text2)}
+.msc-rub div b{color:var(--text);font-variant-numeric:tabular-nums}
+.msc-sec{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);margin:22px 0 10px}
+.msc-aviso{font-size:12px;color:var(--text2);margin:-4px 0 10px}
+.msc-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media(max-width:820px){.msc-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.msc-tile{border:1px solid rgba(var(--ov),.09);border-radius:12px;padding:12px 14px;min-width:0}
+.msc-tl{font-size:11.5px;color:var(--text2)}
+.msc-tv{font-size:21px;font-weight:800;color:var(--text);margin:4px 0;font-variant-numeric:tabular-nums}
+.msc-td{font-size:11.5px;color:var(--text3);line-height:1.45}
+.msc-d{font-weight:800;color:var(--text2)}
+.msc-pie{font-size:11px;color:var(--text3);margin-top:14px}
 /* ── Tu quincena (tablero, mes actual): próximos pagos, la BBVA hasta cero y lo que va a GBM ── */
 .qn-cab{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-bottom:14px}
 .qn-cab h3{margin:0;font-size:15px;font-weight:800;color:var(--text)}
@@ -2276,19 +2330,28 @@ function renderIndicatorsHTML(src) {
 
 /* ── CÓMO SUBIR EL SCORE ESTE MES ──────────────────────────────────────────────────────────────────────────
    Adán, 2-nov-2026: "pon qué debería hacer para mejorar mi score respecto al mes actual, una muy buena recomendación, ya
-   que ahí tienes los datos muy concretos". Con las mismas fórmulas del score (`puntuarIndicadores`) se prueba, para cada
-   palanca, el monto más chico que sube de escalón algún rubro: meter dinero al fondo de emergencia (CETES), sumar ahorro
-   nuevo a tus inversiones o liquidar una deuda para bajar tus mínimos. Gana la que más puntos da por cada peso, y la que
-   choca con el plan (abonos extra a una deuda que no es la BBVA: cada peso extra va a la salida) se dice y no se recomienda
-   primero. Arriba, cómo vas contra el cierre del mes anterior —si es cierre— para saber cuánto mejoraste. */
+   que ahí tienes los datos muy concretos"; y luego: "mejora la presentación… ponlo más entendible y presentable".
+   Con las mismas fórmulas del score (`puntuarIndicadores`) se prueba, para cada palanca, el monto más chico que sube de
+   escalón algún rubro: liquidar una deuda (de la más chica a la más grande), meter dinero al fondo de emergencia (CETES)
+   o sumar ahorro nuevo a GBM. Cada jugada mueve el mismo estado (`JUGAR`: activos, deuda, fondo, dinero a la mano y
+   mínimos), así se pueden sumar: la barra enseña la letra de hoy y hasta dónde llegas con las jugadas de tu plan.
+   Primero va lo que el plan ya pide y, dentro de eso, más puntos por cada peso; liquidar una deuda que no es la BBVA
+   choca con la salida y se dice. Abajo, el mes en curso contra el cierre del anterior. */
 function mejoraScoreHTML(src) {
   const M = medirIndicadores(src), now = new Date();
-  const base = { dti: M.dti2, savRate: M.savRate2, emM: M.emergM2, efPct: M.efPct2, d2a: M.d2a2, sol: M.solvency2 };
-  const ahora = puntuarIndicadores(base).score;
-  const A = M.totalActivos, P = M.totalPasivos, EF = src.emergencyFund || 0, meta = M.efGoal2, gasto = M.avgExp2, liq = M.liqActivos;
-  const con = (x, campo) => puntuarIndicadores(Object.assign({}, base, campo(x))).score;
-  const fondo = x => ({ emM: gasto > 0 ? (liq + x) / gasto : 0, efPct: Math.min(1, (EF + x) / meta), d2a: (A + x) > 0 ? P / (A + x) * 100 : 100, sol: P > 0 ? (A + x) / P : 99 });
-  const ahorro = x => ({ d2a: (A + x) > 0 ? P / (A + x) * 100 : 100, sol: P > 0 ? (A + x) / P : 99 });
+  const gasto = M.avgExp2, meta = M.efGoal2;
+  const est0 = { A: M.totalActivos, P: M.totalPasivos, EF: src.emergencyFund || 0, liq: M.liqActivos, min: M.totalMinPay2 };
+  const medir = e => ({ dti: e.min / M.BASE_INC * 100, savRate: M.savRate2, emM: gasto > 0 ? e.liq / gasto : 0,
+    efPct: Math.min(1, e.EF / meta), d2a: e.A > 0 ? e.P / e.A * 100 : 100, sol: e.P > 0 ? e.A / e.P : 99 });
+  const puntos = e => puntuarIndicadores(medir(e));
+  const JUGAR = {
+    deuda:  (e, d) => Object.assign({}, e, { P: e.P - d.balance, min: e.min - d.min }),
+    fondo:  (e, x) => Object.assign({}, e, { A: e.A + x, EF: e.EF + x, liq: e.liq + x }),
+    ahorro: (e, x) => Object.assign({}, e, { A: e.A + x }),
+  };
+  const P0 = puntos(est0), ahora = P0.score, m0 = medir(est0);
+  const { A, P, EF, liq } = est0;
+  const pesos = n => '$' + Math.round(n || 0).toLocaleString('es-MX');
   const r100 = x => Math.ceil(x / 100) * 100;
   // Los montos que cruzan un escalón, de cada palanca; se queda el más chico que sube el score.
   const cand = [];
@@ -2298,74 +2361,102 @@ function mejoraScoreHTML(src) {
   [1, 1.5, 2, 3].forEach(t => { const x = r100(t * P - A + 1); cand.push(['fondo', x]); cand.push(['ahorro', x]); });
   const mejor = {};
   cand.filter(c => c[1] > 0).sort((a, b) => a[1] - b[1]).forEach(c => {
-    if (mejor[c[0]]) return;
-    const sc = con(c[1], c[0] === 'fondo' ? fondo : ahorro);
-    if (sc > ahora) mejor[c[0]] = { x: c[1], score: sc };
+    if (!mejor[c[0]] && puntos(JUGAR[c[0]](est0, c[1])).score > ahora) mejor[c[0]] = c[1];
   });
-  // Liquidar una deuda: de la más chica a la más grande, la primera que mueve el score.
-  const deudas = (M.srcDebts || []).filter(d => d.balance > 0 && d.min > 0).sort((a, b) => a.balance - b.balance);
-  for (const d of deudas) {
-    const sc = puntuarIndicadores(Object.assign({}, base, { dti: (M.totalMinPay2 - d.min) / M.BASE_INC * 100, d2a: A > 0 ? (P - d.balance) / A * 100 : 0, sol: (P - d.balance) > 0 ? A / (P - d.balance) : 99 })).score;
-    if (sc > ahora) { mejor.deuda = { x: Math.round(d.balance), score: sc, d }; break; }
-  }
+  for (const d of (M.srcDebts || []).filter(d => d.balance > 0 && d.min > 0).sort((a, b) => a.balance - b.balance))
+    if (puntos(JUGAR.deuda(est0, d)).score > ahora) { mejor.deuda = d; break; }
   const esBbva = d => d && (d.id === 'd001' || /bbva/i.test(d.name || ''));
   // Lo que el plan manda a GBM cada quincena (PROYECTO.ahorroDia1/15, o los de casa de tu familia desde enCasaDesde).
   const PG = _PG(), enCasa = PG.enCasaDesde && _ymDe(now) >= PG.enCasaDesde;
   const q1 = (enCasa ? PG.ahorroDia1Casa : PG.ahorroDia1) || 0, q15 = (enCasa ? PG.ahorroDia15Casa : PG.ahorroDia15) || 0;
   const meses = x => { const n = q1 + q15 > 0 ? Math.ceil(x / (q1 + q15)) : 0; return n ? `${n} ${n === 1 ? 'mes' : 'meses'}` : ''; };
+  const jugada = (k, v, o) => { const p = puntos(JUGAR[k](est0, v)); return Object.assign({ k, v, score: p.score, sc: p.sc, x: k === 'deuda' ? v.balance : v }, o); };
   const ops = [];
-  if (mejor.fondo) ops.push({ k: 'fondo', x: mejor.fondo.x, score: mejor.fondo.score, plan: true,
-    t: `Mete ${fmt(mejor.fondo.x)} más a tu fondo de emergencia en CETES`,
-    d: `Tu fondo tiene ${fmt(EF)} de ${fmt(meta)} (${Math.round(Math.min(1, EF / meta) * 100)} %) y tu dinero a la mano cubre ${(M.emergM2 || 0).toFixed(1)} meses de gasto. Sale del ahorro de tu quincena: ${q15 >= mejor.fondo.x ? `de los ${fmt(q15)} que mandas el 15, pon esa parte en CETES y no en acciones` : `pon esa parte en CETES y no en acciones`}.` });
-  if (mejor.ahorro) ops.push({ k: 'ahorro', x: mejor.ahorro.x, score: mejor.ahorro.score, plan: true,
-    t: `Suma ${fmt(mejor.ahorro.x)} de ahorro nuevo a tus inversiones`,
-    d: `Tu deuda es el ${Math.round(M.d2a2)} % de lo que tienes y tus activos cubren ${M.solvency2.toFixed(2)} veces lo que debes; con ese ahorro cruzas el siguiente escalón.` +
-       (meses(mejor.ahorro.x) ? ` Tu plan manda ${q1 ? fmt(q1) + ' el 1 y ' : ''}${fmt(q15)} el 15 a GBM: si no lo sacas, llegas en unos ${meses(mejor.ahorro.x)}.` : '') });
-  if (mejor.deuda) ops.push({ k: 'deuda', x: mejor.deuda.x, score: mejor.deuda.score, plan: esBbva(mejor.deuda.d),
-    t: `Liquida ${mejor.deuda.d.name} (${fmt(mejor.deuda.x)})`,
-    d: `Tus pagos mínimos son el ${Math.round(M.dti2)} % de tu sueldo; sin esa deuda bajan ${fmt(mejor.deuda.d.min)} al mes.` +
-       (esBbva(mejor.deuda.d) ? ' Ya va en tu plan: la próxima quincena la paga antes de mandar nada a GBM.' : ' Ojo: choca con tu plan —cada peso extra va a la salida a Alemania—, por eso no va primero.') });
+  if (mejor.deuda) { const d = mejor.deuda, bb = esBbva(d);
+    ops.push(jugada('deuda', d, { plan: bb, t: `Liquida ${d.name}`, u: 'lo que queda',
+      por: `Tus pagos mínimos bajan del ${Math.round(m0.dti)} % al ${Math.round(medir(JUGAR.deuda(est0, d)).dti)} % de tu sueldo: ${pesos(d.min)} menos cada mes.`,
+      como: bb ? 'Ya va en tu plan: la próxima quincena la paga antes de mandar nada a GBM.'
+               : 'Cada peso extra va a la salida a Alemania: hazlo solo si te sobra después de lo demás.' })); }
+  if (mejor.fondo) { const x = mejor.fondo;
+    ops.push(jugada('fondo', x, { plan: true, t: 'Completa tu fondo de emergencia', u: 'más a CETES',
+      por: `Tu fondo pasa de ${pesos(EF)} a ${pesos(EF + x)}: el ${Math.round(Math.min(1, (EF + x) / meta) * 100)} % de tu meta de ${pesos(meta)}.`,
+      como: q15 >= x ? `De los ${pesos(q15)} que mandas a GBM el 15, pon ${pesos(x)} en CETES y no en acciones.`
+                     : 'Pon esa parte del ahorro de tu quincena en CETES y no en acciones.' })); }
+  if (mejor.ahorro) { const x = mejor.ahorro, n = meses(x);
+    ops.push(jugada('ahorro', x, { plan: true, t: 'Suma ahorro a tus inversiones', u: 'nuevos en GBM',
+      por: `Lo que debes pasa del ${Math.round(m0.d2a)} % al ${Math.round(medir(JUGAR.ahorro(est0, x)).d2a)} % de lo que tienes.`,
+      como: n ? `Es lo que tu plan ya manda a GBM (${q1 ? pesos(q1) + ' el 1 y ' : ''}${pesos(q15)} el 15): llegas en unos ${n} si no lo sacas.`
+              : 'Ahorro nuevo que entre a GBM y se quede ahí.' })); }
   // Primero lo que el plan ya pide; dentro de eso, más puntos por cada peso.
   ops.sort((a, b) => (b.plan - a.plan) || ((b.score - ahora) / b.x - (a.score - ahora) / a.x));
-  const grado = sc => sc >= 85 ? 'A' : sc >= 70 ? 'B' : sc >= 55 ? 'C' : sc >= 40 ? 'D' : 'F';
-  // Contra el cierre del mes anterior (o lo que haya, dicho como es).
+  // Las jugadas del plan, juntas: hasta dónde llega la barra.
+  const delPlan = ops.filter(o => o.plan);
+  const conPlan = delPlan.length ? puntos(delPlan.reduce((e, o) => JUGAR[o.k](e, o.v), est0)).score : ahora;
+
+  const ZONAS = [[0, 40, 'F', 'crítico'], [40, 55, 'D', 'atención'], [55, 70, 'C', 'aceptable'], [70, 85, 'B', 'bueno'], [85, 101, 'A', 'excelente']];
+  const zona = sc => ZONAS.find(z => sc >= z[0] && sc < z[1]);
+  const color = sc => `var(--msc-${zona(sc)[2].toLowerCase()})`;
+  const sig = ZONAS.find(z => z[0] > ahora);
+  const MN = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const mesHoy = MN[now.getMonth()];
+  const cab = `<div class="msc-cab"><h3>🎯 Cómo subir tu score en ${mesHoy}</h3>
+    <p>Hoy tienes <b>${ahora} de 100 (${zona(ahora)[2]}, ${zona(ahora)[3]})</b>.${sig ? ` Te faltan <b>${sig[0] - ahora} ${sig[0] - ahora === 1 ? 'punto' : 'puntos'}</b> para la ${sig[2]}.` : ''}
+    ${conPlan > ahora ? ` Si haces ${delPlan.length > 1 ? 'las ' + delPlan.length + ' jugadas' : 'la jugada'} de tu plan llegas a <b>${conPlan} (${zona(conPlan)[2]})</b>.` : ''}
+    ${ops.length ? ' Van en orden: primero lo que tu plan ya pide y, de eso, lo que más sube por cada peso.' : ''}</p></div>`;
+  const plan = conPlan > ahora;
+  const medidor = `<div class="msc-medidor">
+    <div class="msc-barra" role="img" aria-label="Score de hoy ${ahora} de 100${plan ? '; con tu plan, ' + conPlan : ''}">
+      ${ZONAS.map(z => { const fin = Math.min(z[1], 100);
+        return `<div class="msc-zona" title="${z[2]}, ${z[3]}: de ${z[0]} a ${fin === 100 ? 100 : fin - 1} puntos" style="left:calc(${z[0]}% + ${z[0] ? 1 : 0}px);width:calc(${fin - z[0]}% - ${z[0] ? 2 : 1}px);background:color-mix(in srgb,var(--msc-${z[2].toLowerCase()}) 30%,transparent)"></div>`; }).join('')}
+      <div class="msc-llena" style="width:${ahora}%;background:${color(ahora)}"></div>
+      ${plan ? `<div class="msc-extra" style="left:${ahora}%;width:${conPlan - ahora}%;color:${color(conPlan)}"></div>
+      <div class="msc-marca" style="left:calc(${conPlan}% - 1px);opacity:.55" title="Con las jugadas de tu plan: ${conPlan}"></div>
+      <div class="msc-et msc-plan" style="left:min(${conPlan}%,calc(100% - 112px));padding-left:7px">Con tu plan <b>${conPlan}</b></div>` : ''}
+      <div class="msc-marca" style="left:calc(${ahora}% - 1px)" title="Hoy: ${ahora}"></div>
+      <div class="msc-et" style="left:${ahora}%;transform:translateX(-100%);padding-right:7px">Hoy <b>${ahora}</b></div>
+    </div>
+    <div class="msc-letras">${ZONAS.map(z => `<span class="${zona(ahora) === z ? 'msc-aqui' : ''}" style="left:${(z[0] + Math.min(z[1], 100)) / 2}%">${z[2]}</span>`).join('')}</div>
+    ${plan ? `<div class="msc-ley"><span><i style="background:${color(ahora)}"></i>Hoy <b>${ahora}</b></span><span style="color:${color(conPlan)}"><i class="msc-rayas"></i><span style="color:var(--text2)">Con tu plan <b>${conPlan}</b></span></span></div>` : ''}
+  </div>`;
+  const NOMBRE = { dti: 'Carga de deuda', savings: 'Tasa de ahorro', emerg: 'Fondo de emergencia', d2a: 'Deuda vs activos', solvency: 'Solvencia' };
+  const tarjeta = (o, i) => {
+    const sube = Object.keys(NOMBRE).filter(k => o.sc[k] !== P0.sc[k]);
+    return `<div class="msc-j${i === 0 ? ' msc-top' : ''}">
+      <div class="msc-jcab"><span class="msc-n">${i + 1} · ${i === 0 ? 'La mejor jugada' : 'También'}</span>
+        <span class="msc-chip ${o.plan ? 'ok' : 'ojo'}">${o.plan ? '✓ Ya va en tu plan' : '⚠ Choca con tu plan'}</span></div>
+      <div class="msc-jt">${o.t}</div>
+      <div class="msc-monto">${pesos(o.x)}<small>${o.u}</small></div>
+      <div class="msc-pts">Tu score <b>${ahora}</b> → <b>${o.score}</b><span class="msc-mas">+${o.score - ahora} ${o.score - ahora === 1 ? 'punto' : 'puntos'}</span>${zona(o.score) !== zona(ahora) ? `<span>sube a ${zona(o.score)[2]}</span>` : ''}</div>
+      <p class="msc-txt">${o.por}</p>
+      ${sube.length ? `<div class="msc-rub"><span>Lo que sube de tu score (cada parte, sobre 100)</span>${sube.map(k => `<div><span>${NOMBRE[k]}</span><b>${P0.sc[k]} → ${o.sc[k]}</b></div>`).join('')}</div>` : ''}
+      <p class="msc-txt"><b>Cómo:</b> ${o.como}</p>
+    </div>`;
+  };
+  const jugadas = ops.length ? `<div class="msc-jugadas">${ops.map(tarjeta).join('')}</div>`
+    : `<p class="msc-txt" style="margin-top:14px">Ningún movimiento de este mes cambia de escalón tu score: sostén el plan y vuelve a medir al cierre.</p>`;
+  // Contra el cierre del mes anterior (o lo que haya, dicho como es), medido igual que su pestaña.
   const prevKey = _ymDe(new Date(now.getFullYear(), now.getMonth() - 1, 1));
   const prev = (S.indicatorHistory || []).find(s => s.month === prevKey);
-  const MN = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-  const mesPrev = MN[+prevKey.slice(5) - 1], mesHoy = MN[now.getMonth()];
-  const fila = (k, a, b, fmtv, mejorSiSube) => {
-    const dlt = b - a, bien = mejorSiSube ? dlt >= 0 : dlt <= 0;
-    return `<div style="display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid rgba(var(--ov),.06);font-size:12px">
-      <span style="color:var(--text2)">${k}</span><span style="font-family:monospace">${fmtv(a)} → <b>${fmtv(b)}</b>
-      <span style="color:${Math.abs(dlt) < 0.5 ? 'var(--text3)' : bien ? 'var(--success)' : 'var(--danger)'};margin-left:6px">${Math.abs(dlt) < 0.5 ? '=' : (dlt > 0 ? '▲ ' : '▼ ') + fmtv(Math.abs(dlt))}</span></span></div>`;
-  };
-  const tipo = tipoFoto(prev), MP = medirFoto(prev);
-  // Del mes anterior, lo mismo que enseña su pestaña (medido con medirIndicadores), no otra cuenta.
+  const mesPrev = MN[+prevKey.slice(5) - 1], tipo = tipoFoto(prev), MP = medirFoto(prev);
   const pv = prev && (MP ? { score: MP.score2, nw: MP.netWorth2, pas: MP.totalPasivos, liq: MP.liqActivos }
                          : { score: prev.score, nw: prev.netWorth, pas: prev.totalPasivos, liq: prev.liqActivos });
-  const comp = prev ? `<div style="flex:1;min-width:260px">
-      <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:6px">Contra ${tipo === 'cierre' ? 'el cierre de ' + mesPrev : 'la ' + etiquetaFoto(prev) + ' de ' + mesPrev}</div>
-      ${tipo !== 'cierre' ? `<div style="font-size:10.5px;color:var(--warning);margin-bottom:6px">Esa foto no es el cierre del mes: compárala con cuidado.</div>` : ''}
-      ${fila('Score', pv.score, ahora, v => Math.round(v), true)}
-      ${fila('Patrimonio neto', pv.nw, M.netWorth2, v => fmt(v), true)}
-      ${fila('Lo que debes', pv.pas, P, v => fmt(v), false)}
-      ${fila('Dinero líquido', pv.liq, liq, v => fmt(v), true)}
+  const tile = (lbl, hoy, antes, f, umbral, subeBien) => {
+    const d = hoy - antes, igual = Math.abs(d) < umbral, bien = subeBien ? d > 0 : d < 0;
+    return `<div class="msc-tile"><div class="msc-tl">${lbl}</div><div class="msc-tv">${f(hoy)}</div>
+      <div class="msc-td">${igual ? '<span class="msc-d">= igual</span>' : `<span class="msc-d" style="color:var(--msc-${bien ? 'ok' : 'mal'})">${d > 0 ? '▲' : '▼'} ${f(Math.abs(d))}</span>`}</div>
+      <div class="msc-td">en ${mesPrev}: ${f(antes)}</div></div>`;
+  };
+  const comp = prev ? `<div class="msc-sec">Contra ${tipo === 'cierre' ? 'el cierre de ' + mesPrev : 'la ' + etiquetaFoto(prev) + ' de ' + mesPrev}</div>
+    ${tipo !== 'cierre' ? `<p class="msc-aviso">⚠ Esa foto no es el cierre del mes: compárala con cuidado.</p>` : ''}
+    <div class="msc-tiles">
+      ${tile('Score', ahora, pv.score, v => String(Math.round(v)), 0.5, true)}
+      ${tile('Patrimonio neto', M.netWorth2, pv.nw, pesos, 1, true)}
+      ${tile('Lo que debes', P, pv.pas, pesos, 1, false)}
+      ${tile('Dinero líquido', liq, pv.liq, pesos, 1, true)}
     </div>` : '';
-  const top = ops[0];
-  return `<div class="card" style="margin-bottom:14px;border-left:4px solid var(--success)">
-    <div style="font-size:13px;font-weight:800;color:var(--success);margin-bottom:10px">🎯 Cómo subir tu score en ${mesHoy}</div>
-    <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start">
-      <div style="flex:1.4;min-width:280px">
-        ${top ? `<div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;font-weight:700">La mejor jugada</div>
-          <div style="font-size:18px;font-weight:800;margin:4px 0 6px;color:var(--text)">${top.t}</div>
-          <div style="font-size:14px;margin-bottom:6px">Tu score pasa de <b>${ahora} (${grado(ahora)})</b> a <b style="color:var(--success)">${top.score} (${grado(top.score)})</b>: +${top.score - ahora} puntos.</div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.55">${top.d}</div>
-          ${ops.slice(1).map(o => `<div style="margin-top:10px;padding-top:8px;border-top:1px dashed rgba(var(--ov),.1);font-size:12px;color:var(--text2)"><b style="color:var(--text)">También:</b> ${o.t} → ${o.score} (+${o.score - ahora}). ${o.d}</div>`).join('')}`
-        : `<div style="font-size:14px;color:var(--text2)">Ningún movimiento de este mes cambia de escalón tu score: sostén el plan y vuelve a medir al cierre.</div>`}
-        <div style="font-size:10.5px;color:var(--text3);margin-top:10px">Calculado con las mismas fórmulas del score y tus saldos de hoy; cada monto es el más chico que sube un escalón.</div>
-      </div>
-      ${comp}
-    </div>
+  return `<div class="card msc" style="margin-bottom:14px">
+    ${cab}${medidor}${jugadas}${comp}
+    <div class="msc-pie">Cada monto es el mínimo que sube un escalón, calculado con las mismas fórmulas de tu score y tus saldos de hoy.</div>
   </div>`;
 }
 
