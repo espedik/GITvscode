@@ -8259,6 +8259,24 @@ window.CIFRAS = (function () {
         });
       }
     },
+    {
+      // 2026-11-02 · El historial de Indicadores de Finanzas guardaba de cada mes la foto del último día en que se abrió la
+      // app: la de octubre era del 13 (la BBVA en $15,000) y la del 2 de noviembre —con los saldos al 31 de octubre— quedaba
+      // como noviembre. Adán: "siento que en oct y nov te confundiste de cifras históricas y guardaste mal las cifras, esto
+      // nunca debe volver a pasar". Octubre toma la foto del 2-nov como su cierre; noviembre se vuelve a medir solo, como mes
+      // en curso. La regla que lo evita desde ahora vive en Finanzas.html (`cerrarMesAnterior`).
+      flag: '_cierreOct20261102',
+      hacer: function (f) {
+        const H = f.indicatorHistory || [];
+        const oct = H.filter(function (x) { return x.month === '2026-10'; })[0];
+        const nov = H.filter(function (x) { return x.month === '2026-11'; })[0];
+        if (!nov || !(nov.savedAt <= '2026-11-03') || (oct && (oct.cierre || oct.savedAt >= '2026-10-29'))) return;
+        const c = JSON.parse(JSON.stringify(nov));
+        c.month = '2026-10'; c.cierre = true; c.tomadaEl = nov.savedAt; c.nota = 'con los saldos al 31 de octubre';
+        f.indicatorHistory = H.filter(function (x) { return x.month !== '2026-10' && x.month !== '2026-11'; }).concat([c])
+          .sort(function (x, y) { return x.month < y.month ? -1 : 1; });
+      }
+    },
   ];
 
   /* Las seis compras del 1-sep-2026, en un solo sitio: las usa la migración de arriba para el

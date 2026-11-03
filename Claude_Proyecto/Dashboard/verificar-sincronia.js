@@ -3114,6 +3114,33 @@ function promptsDeLoTocado() {
   ok.push('Versión: cada commit deja su hora en version.js (hook de pre-commit) y Mi Día la compara con GitHub');
 })();
 
+/* ── 50. Indicadores de Finanzas: cada mes con su cierre, medido como se ve ─────────────────────────────────
+   Adán, 2-nov-2026: "crea una regla de no confundir cifras entre meses… esto nunca debe volver a pasar, porque si no
+   nunca sabré qué tanto mejoré respecto al mes anterior". De cada mes quedaba la foto del último día en que se abrió
+   la app (la de octubre era del 13) y se calculaba con otra cuenta que la pantalla. Se vigila que haya UNA medición
+   (`medirIndicadores`, con el puntaje en `puntuarIndicadores`, la única copia de la fórmula), que la foto del mes la
+   use (`fotoIndicadores`), que el mes anterior se cierre una sola vez (`cerrarMesAnterior`) y que cada pestaña diga
+   si es cierre o una foto de media de mes (`tipoFoto`). Y la tarjeta de cómo subir el score (`mejoraScoreHTML`). */
+(function () {
+  const f = finz, malos = [];
+  const cuerpo = nombre => { const i = f.indexOf('function ' + nombre + '('); if (i < 0) return ''; const j = f.indexOf('\nfunction ', i + 10); return f.slice(i, j < 0 ? i + 6000 : j); };
+  ['puntuarIndicadores', 'medirIndicadores', 'fotoIndicadores', 'tipoFoto', 'cerrarMesAnterior', 'mejoraScoreHTML'].forEach(n => {
+    if (f.indexOf('function ' + n + '(') < 0) malos.push('Finanzas.html ya no tiene ' + n + '()');
+  });
+  const formula = (f.match(/\*\.28\s*\+/g) || []).length;
+  if (formula !== 1) malos.push('la fórmula del score aparece ' + formula + ' veces en Finanzas.html: va solo en puntuarIndicadores()');
+  if (!/const \{[^}]*score2[^}]*\} = medirIndicadores\(src\)/.test(cuerpo('renderIndicatorsHTML'))) malos.push('renderIndicatorsHTML() ya no mide con medirIndicadores()');
+  if (cuerpo('fotoIndicadores').indexOf('medirIndicadores(') < 0) malos.push('fotoIndicadores() ya no mide con medirIndicadores(): la foto guardaría otra cifra que la pantalla');
+  const auto = cuerpo('autoSaveCurrentMonthSnapshot');
+  if (auto.indexOf('cerrarMesAnterior(') < 0 || auto.indexOf('fotoIndicadores(') < 0) malos.push('autoSaveCurrentMonthSnapshot() ya no cierra el mes anterior o no guarda con fotoIndicadores()');
+  if (/\.reduce\(/.test(auto)) malos.push('autoSaveCurrentMonthSnapshot() vuelve a sumar por su cuenta: mide con medirIndicadores()');
+  if (cuerpo('cerrarMesAnterior').indexOf('cierre:true') < 0) malos.push('cerrarMesAnterior() ya no marca el cierre (cierre:true)');
+  if ((f.match(/tipoFoto\(/g) || []).length < 5) malos.push('las pestañas o el aviso del mes ya no dicen si la foto es cierre o de media de mes (tipoFoto)');
+  if (f.indexOf('mejoraScoreHTML(src)') < 0) malos.push('el mes en curso ya no enseña cómo subir el score (mejoraScoreHTML)');
+  if (malos.length) problemas.push('Indicadores de Finanzas, mes contra mes:\n     ' + malos.join('\n     '));
+  else ok.push('Indicadores de Finanzas: una sola medición para la pantalla y la foto de cada mes, el cierre se toma una vez y cada pestaña dice si es cierre; el mes en curso dice cómo subir el score');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

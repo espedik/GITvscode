@@ -296,8 +296,12 @@ datos guardados.
 
 ## Módulo: Indicadores Financieros
 
-`renderIndicators()` calcula 9 indicadores sobre `BASE_INC` (sueldo; Si Vale excluido), activos
-financieros (inversiones + BTC en MXN), líquidos y físicos, y pasivos (suma de `balance`):
+`renderIndicators()` enseña 9 indicadores sobre `BASE_INC` (sueldo; Si Vale excluido), activos
+financieros (inversiones + BTC en MXN), líquidos y físicos, y pasivos (suma de `balance`). **Se miden en un
+solo sitio, `medirIndicadores(src, ahora)`**, y el puntaje en `puntuarIndicadores()` (la única copia de la
+fórmula): lo usan la pantalla (`renderIndicatorsHTML`), la foto de cada mes (`fotoIndicadores`) y la tarjeta
+de cómo subir el score, así lo guardado es lo mismo que se ve. Una foto con su estado completo se vuelve a
+medir igual (`medirFoto`, `scoreDe`):
 
 | Indicador | Fórmula | Verde | Amarillo | Rojo |
 |---|---|---|---|---|
@@ -314,12 +318,24 @@ financieros (inversiones + BTC en MXN), líquidos y físicos, y pasivos (suma de
 **Score 0-100 con letra A-F**: DTI 28 %, ahorro 24 %, fondo 20 %, deuda vs activos 16 %,
 solvencia 12 %. Barra de progreso de la Maestría contra `_metaMaestria()`.
 
-**Snapshots mensuales congelados (`S.indicatorHistory`)**: `autoSaveCurrentMonthSnapshot()`
-guarda/sobrescribe al abrir la sección el snapshot del **mes actual** (`{month, score, savedAt,
-…}`); los meses cerrados quedan congelados y aparecen como tabs 🔒 (`switchIndMonth`), con
-comparación "entonces vs. hoy". No hay botón que lo anuncie: aparecen tabs conforme pasan los
-meses. Es el archivo histórico del proyecto y el dato vive solo aquí: por eso el import lo
-fusiona en vez de pisarlo.
+**Cada mes con su cierre (`S.indicatorHistory`)** (Adán, 2-nov-2026: *"crea una regla de no confundir
+cifras entre meses… esto nunca debe volver a pasar, porque si no nunca sabré qué tanto mejoré respecto al mes
+anterior"*). `autoSaveCurrentMonthSnapshot()` vuelve a medir el **mes en curso** cada vez que se abre la app.
+El **cierre** de un mes es la foto de sus últimos 3 días (`IND_CIERRE_DIAS`) o, si no se abrió entonces, la de
+los primeros 3 del mes siguiente con la etiqueta del mes que cerró (`cerrarMesAnterior`, con `cierre:true` y
+`tomadaEl`); se toma una sola vez y ya nadie la toca. Un mes sin foto en esos días se queda con la que tenía y
+se ve como «foto del 21 sep, no del cierre» (`tipoFoto`: `curso`, `cierre`, `parcial` o `estimado`;
+`etiquetaFoto`). Las pestañas lo dicen (🔒 cierre, ◐ con su fecha, 🕓 estimado) y el aviso de cada mes compara su
+score con el de hoy. Octubre de 2026 se reparó con `_cierreOct20261102` (`MIGRACIONES` del maestro): su foto era
+del 13 y la del 2 de noviembre —con los saldos al 31— se había guardado como noviembre. Es el archivo histórico
+del proyecto y el dato vive solo aquí: por eso el import lo fusiona en vez de pisarlo.
+
+**Cómo subir tu score este mes** (`mejoraScoreHTML`, solo en el mes en curso, debajo del score). Con las mismas
+fórmulas prueba tres palancas y de cada una el monto más chico que sube un escalón algún rubro: meter dinero al
+fondo de emergencia (CETES), sumar ahorro nuevo a las inversiones y liquidar una deuda (de la más chica a la más
+grande). Va primero lo que el plan ya pide —la BBVA, el ahorro de la quincena (`ahorroDia1/15` o los de casa)— y,
+dentro de eso, más puntos por peso; liquidar otra deuda se dice, pero choca con la salida y no va primero. Al
+lado, el mes en curso contra el cierre del anterior: score, patrimonio, deuda y dinero líquido.
 
 ---
 
@@ -393,8 +409,8 @@ El desglose solo muestra categorías con movimientos.
 ## Módulo: Export / Import
 
 `exportData()` descarga `finanzas_YYYY-MM-DD.json`. `importData(input)` reemplaza `S` tras
-confirmar, **con una excepción: `indicatorHistory` se FUSIONA por `month`** (gana el `savedAt`
-más reciente): el histórico mensual es lo único que no se puede reconstruir, y restaurar un
+confirmar, **con una excepción: `indicatorHistory` se FUSIONA por `month`** (gana el cierre y, entre
+dos iguales, el `savedAt` más reciente): el histórico mensual es lo único que no se puede reconstruir, y restaurar un
 respaldo viejo borraba meses que el navegador sí tenía. Un import nunca quita meses.
 
 ---
