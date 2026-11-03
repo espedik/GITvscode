@@ -1016,16 +1016,18 @@ Desde octubre de 2026 el calendario trae también **el plan**: el ahorro de cada
 
 ### El mes
 
-Las celdas del mes miden la mitad que cuando llenaban la columna (Adán, 21-oct-2026: *"el calendario hazlo la mitad
-de la altura que actualmente tiene"*): 36 px de alto (`.ct-celdas`). Cada celda dice **lo que
-sale ese día con su nombre y su importe** —lo que más pesa, *Renta 11.3k*, en un renglón; el nombre corto sale de
-`ctCorto`, y lo demás va en el título y en la columna del día— y **lo que entra** en verde
-(*+20.5k*, en miles con un decimal), con su **barra vertical** pegada al borde derecho: su alto es lo que sale ese
+**El calendario es chico** (Adán, 3-nov-2026: *"en elige tu día, el calendario hazlo mucho más pequeño"*; antes,
+21-oct-2026: *"hazlo la mitad de la altura"*): su columna mide 0.62 de las otras dos (`.coach-tablero`), 421 px a 2048
+en vez de 700 y nunca menos de 280, y sus celdas, 30 px de alto (`.ct-celdas`; 34 en el teléfono). Cada celda dice
+**lo que sale ese día** —lo que más pesa con su punto de color y su importe, *• 11.3k*; con el calendario ancho, también
+su nombre (`ctCorto`) y **lo que entra** en verde (*+20.5k*); lo demás va en el título y en la columna del día— con su
+**barra vertical** pegada al borde derecho: su alto es lo que sale ese
 día —lo programado, lo anotado de contado y comer: la misma suma que la serie de la quincena— y su color, el del concepto
 que manda (`ctColor`; *cena* va como palabra: *quincena* la contiene y la BBVA salía con el color de la cena).
 Borde ámbar el día que entra la nómina. La columna es un contenedor (`.ct-cal`, `container-type`): bajo 640 px de
-ancho —una pantalla de 1600 o de 1366— la celda deja el punto de color y el importe, y bajo 430 —el teléfono—, el
-día y la barra. Las flechas ‹ › cambian de mes (`.ct-nav`): botones de 36 px, y de 44 en el celular —el mínimo
+ancho la celda deja el nombre, bajo 480 lo que entra —a 2048 queda el punto de color y el importe— y bajo 380 —el
+teléfono o una pantalla de 1366—, el día y la barra; y bajo 300 —1366—, las flechas van en su propio renglón y las
+celdas bajan a 24 px, para que las cifras del mes quepan sin desplazar la columna. Las flechas ‹ › cambian de mes (`.ct-nav`): botones de 36 px, y de 44 en el celular —el mínimo
 cómodo para el dedo—, con la flecha en SVG. A su izquierda, **Hoy** (`ctVerHoy`), del mismo alto: regresa al mes y al
 día de hoy, como entrar a la pantalla; va en cian y se apaga cuando ya estás en hoy. **Al abrir un mes que no es el actual se elige el primer día con
 movimiento**.
