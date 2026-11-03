@@ -348,6 +348,15 @@ cierre, se avisa. **Mes a mes** (`mesAMesHTML`, después del score): una tabla d
 qué es cada uno y el cambio contra el anterior; tocar un mes abre su pestaña. En el celular, cada mes es un bloque. Las
 dos leen `cifrasDe()`, la misma medición que la pestaña.
 
+**El estilo de las tres secciones nuevas** (las cifras del mes, cómo subir tu score y mes a mes) es el de las que ya
+estaban —Metas de Ahorro, Tarjetas y créditos, Crédito Automotriz— (Adán, 3-nov-2026: *"no tienen los mismos estilos
+futuristas que los demás"*). Clases `.ind-*`: `.ind-sec` (borde de acento a la izquierda y fondo tintado; `--acc` es el
+RGB de la sección: morado las cifras, verde el score, cian mes a mes), `.ind-cab` con su `.ind-ico` (cuadro de color con
+brillo), `.ind-tit` y `.ind-sub`; `.ind-chip` (chip con borde, `--c`); `.ind-k` (mosaico tintado con línea de neón arriba;
+`--k`) con su cifra `.ind-kv` en Space Grotesk y con brillo (`.ind-grad`, el degradado cian→morado del patrimonio).
+Los acentos están en `IND_RGB`; `_chip()`, `_chipCambio()` y `_chipFoto()` arman los chips. En el tema claro, el texto
+de los chips y las cifras toma un paso más oscuro de su mismo color.
+
 Octubre de 2026 se reparó con `_cierreOct20261102` (`MIGRACIONES` del maestro): su foto era
 del 13 y la del 2 de noviembre —con los saldos al 31— se había guardado como noviembre. Es el archivo histórico
 del proyecto y el dato vive solo aquí: por eso el import lo fusiona en vez de pisarlo.
@@ -358,10 +367,12 @@ fondo de emergencia (CETES), sumar ahorro nuevo a las inversiones y liquidar una
 grande). Va primero lo que el plan ya pide —la BBVA, el ahorro de la quincena (`ahorroDia1/15` o los de casa)— y,
 dentro de eso, más puntos por peso; liquidar otra deuda se dice, pero choca con la salida y no va primero. Cada jugada
 mueve el mismo estado (`JUGAR`), así se suman. Se ve así (Adán, 2-nov-2026: *"ponlo más entendible y presentable"*;
-clases `.msc-*`): una frase con el score, la letra y cuánto falta para la siguiente; **la barra de la letra** (franjas
+clases `.msc-*` sobre `.ind-*`): en la cabecera, chips con el score de hoy, cuánto falta para la siguiente letra y hasta
+dónde llegas con tu plan; **la barra de la letra** (franjas
 F-D-C-B-A, lo de hoy lleno y hasta dónde llegas con las jugadas de tu plan, rayado; en el celular eso va en una leyenda);
 **una tarjeta por jugada** —cuánto en grande, el score antes y después, una frase de por qué, qué partes del score suben
-y cómo hacerlo, con *Ya va en tu plan* o *Choca con tu plan*—. El mes contra el anterior va arriba, en las cifras
+(cada una con su barra: lo de hoy y, más claro, lo que gana) y cómo hacerlo, con *Ya va en tu plan* o *Choca con tu
+plan*—. El mes contra el anterior va arriba, en las cifras
 del mes.
 
 ---
