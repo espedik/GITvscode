@@ -1054,7 +1054,7 @@ así que el desglose suma exactamente lo que dice la cifra. *Sale* va por secci�
 con su barra y cada concepto con sus días, sin la de ahorro a GBM; *Entra*, quincena por quincena; *Te queda*, la cuenta
 —entra, sale y lo de tus quincenas a GBM—; *A la BBVA*, abono por
 abono de `planBbva` con su origen (`ABONO_DE`) y el día en que el plan la liquida; *A GBM*, lo de tus quincenas y lo de Didi
-lunes por lunes (`didiGbmLunes`); *Didi trae*, a dónde va: a la BBVA, a GBM y lo que te queda para la carga y lo tuyo.
+lunes por lunes (`didiGbmLunes`); *Didi trae*, a dónde va: a la BBVA, a GBM y lo que te queda para la carga y lo tuyo —si lo que apartas pasa de lo que trae (desde febrero de 2027, $10,000 contra los $6,000 que trae en promedio), lo dice en rojo en vez de dar un saldo negativo—.
 
 ### La quincena, una sola cuenta (`ctTramo`)
 

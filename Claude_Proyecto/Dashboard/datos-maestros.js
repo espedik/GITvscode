@@ -67,7 +67,7 @@ window.CIFRAS = (function () {
     // ── Ingresos ── (el sueldo, 17 veces en 2 apps; Didi, 92 en 4)
     sueldo:        41000,     // bruto mensual en ALTEN, quincenal a BBVA
     sueldoQuinc:   20500,
-    didiMes:       11200,     // ~$400/día × 28 días, semanal
+    didiMes:        6000,     // lo que de verdad trae Didi al mes, en promedio (Adán, 3-nov-2026: "promedio he sacado 6,000 al mes"; antes se suponían $11,200, ~$400/día × 28)
     // Lo que Didi pone en GBM, no lo que factura (Adán, 3-oct-2026): "de octubre
     // a febrero puedo juntar de Didi 5000 al mes" y "desde febrero empezaré a trabajar más de Didi
     // y puedo sacar 10,000 cada mes y eso meterlo a ahorro". Lo demás de Didi paga la carga del

@@ -59,7 +59,7 @@ Dos reglas que costaron una vuelta cada una:
   `yaContado` cazaba `Quincena ALTEN` pero se le escapaban `Sueldo` o `Nómina`, y cada uno
   sumaba $20,500 de más.
 - **Los tres mensuales llevan su propia comprobación**, porque `yaContado` compara importes y
-  un cobro de Didi de $2,800 no se parece a los $11,200 del mes. Si el mes trae algo anotado
+  un cobro de Didi de $2,800 no se parece a los $6,000 del mes. Si el mes trae algo anotado
   que caiga en sus palabras o su categoría, **manda lo anotado**.
 
 Lo que cuesta comer se **deriva de la lista de compras**, cuyos precios viven en
@@ -133,11 +133,11 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 |---|---|---|
 | `{{sueldo}}` | $41,000 | Bruto mensual ALTEN, quincenal a BBVA |
 | `{{sueldoQuinc}}` | $20,500 | |
-| `{{didiMes}}` | $11,200 | ~$400/día × 28, cobro semanal |
+| `{{didiMes}}` | $6,000 | Lo que trae Didi al mes en promedio, dicho por Adán el 3-nov-2026 (antes se suponían $11,200, ~$400/día × 28) |
 | `{{didiAhorro}}` | $5,000 | Lo que Didi aparta al mes, en promedio —cada lunes lo mismo, 12 entre 52 (`didiSemana`: $1,153.85), así que un mes con cinco lunes junta más—: a la BBVA mientras tenga saldo, después a GBM; los lunes de la quincena después de liquidarla, para vivir (`lunesDidiTuyos`). De octubre de 2026 a enero de 2027 (dicho por Adán) |
 | `{{didiAhorroMas}}` | $10,000 | Lo mismo desde `PROYECTO.didiMasDesde` (febrero de 2027), cuando trabaja más horas. El último mes en México va la mitad (`didiAlAhorro`) |
 | `{{siVale}}` | $940 | Vale de despensa |
-| `{{ingresoTotal}}` | $53,140 | Derivada: sueldo + Didi + Si Vale |
+| `{{ingresoTotal}}` | $47,940 | Derivada: sueldo + Didi + Si Vale |
 | `{{renta}}` | $11,250 | Día 1 · hasta enero de 2027 (`PROYECTO.rentaHasta`): el depa se entrega a fin de mes y desde febrero la renta es ahorro |
 | `{{aporteCasa}}` | $3,000 | Día 1, a su familia, de `PROYECTO.enCasaDesde` (el mes siguiente a `rentaHasta`) a `PROYECTO.ultimoMesMexico`. En casa come ahí y solo paga su desayuno |
 | `{{gym}}` `{{gymNombre}}` | $650 · Total Pass | Día 17 |

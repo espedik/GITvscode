@@ -243,6 +243,9 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
     'original (oct. 2027, $500,000)',              // foto histórica: la meta ANTES de reagendarse
     '$15,000–',                                    // rangos de costos del catálogo de negocios de Coach, no la BBVA
     'más que $15,000 parados',                     // el ejemplo de rotación de ese mismo catálogo
+    '$6,000–',                                     // rangos de precios del catálogo de negocios de Coach, no lo que trae Didi
+    '$1,500 – $6,000+',                            // honorarios de un contador, en Coach
+    'y $6,000 en un gimnasio',                     // lo que factura una máquina expendedora, en ese catálogo
   ];
   let total = 0;
   const filas = [];
@@ -277,9 +280,9 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
     const n = C.n(k);
     if (typeof n === 'number' && Number.isInteger(n) && n >= 1000) VALS[n] = k;
   });
-  // 3000, 5000 y 10000 (el aporte a la casa y lo que aparta Didi) son también tiempos en ms, escalas
-  // de gráficas y precios sueltos: esas variables se vigilan por su marcador, no por su número.
-  const AMBIGUOS = ['1500', '3000', '4000', '5000', '10000', '15000'];   // dosis de vitaminas, cuotas de ahorro, precios sueltos, la inversión de los negocios de Coach
+  // 3000, 5000, 6000 y 10000 (el aporte a la casa, lo que aparta y lo que trae Didi) son también tiempos en ms, escalas
+  // de gráficas, granos de lija y precios sueltos: esas variables se vigilan por su marcador, no por su número.
+  const AMBIGUOS = ['1500', '3000', '4000', '5000', '6000', '10000', '15000'];   // dosis de vitaminas, cuotas de ahorro, precios sueltos, la inversión de los negocios de Coach
   const hallazgos = [];
   for (const [rel, src] of APPS.concat([['Dashboard/datos-maestros.js', maestro]])) {
     const limpio = sinComentarios(src);

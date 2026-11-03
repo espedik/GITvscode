@@ -9605,9 +9605,11 @@ function ctMesDetalle(k){
       html:'<div class="kpi-cifra">'+money(mes)+'</div>'+
         kpiSec('A dónde va')+(aBbva >= 1 ? fila('A la BBVA, los lunes y el pago del corte', aBbva) : '')+(aGbm >= 1 ? fila('A GBM, los lunes desde que liquides la BBVA', aGbm) : '')+
         (aVivir >= 1 ? fila('Para vivir la quincena después de liquidarla · lunes '+tuyos.map(f => +f.slice(8)).join(' y '), aVivir) : '')+
-        fila('Lo que te queda para la carga del auto y lo tuyo', mes - aBbva - aGbm - aVivir)+tot('Lo que trae al mes', mes)+
+        (mes - aBbva - aGbm - aVivir >= 0 ? fila('Lo que te queda para la carga del auto y lo tuyo', mes - aBbva - aGbm - aVivir)
+          : fila('<span style="color:var(--r)">Lo que apartas pasa de lo que trae</span>', mes - aBbva - aGbm - aVivir))+tot('Lo que trae al mes', mes)+
         kpiNota('Apartas <b>'+money(C.didiSemana ? C.didiSemana(X.ym) : aparta*12/52)+'</b> cada lunes, '+money(aparta)+' al mes en promedio: un mes con cinco lunes junta más.'+
-          (aVivir >= 1 ? ' La liquidaste con todo lo que tenías, así que lo de esos lunes es para vivir; desde el siguiente, a GBM.' : '')) };
+          (aVivir >= 1 ? ' La liquidaste con todo lo que tenías, así que lo de esos lunes es para vivir; desde el siguiente, a GBM.' : '')+
+          (mes - aBbva - aGbm - aVivir < 0 ? ' <b>Con lo que trae Didi en promedio no alcanza</b> para lo que el plan aparta: o trabajas más horas, o el plan aparta menos.' : '')) };
   }
   return null;
 }
@@ -9941,7 +9943,8 @@ function ctEstrategiaHtml(T, H, faltaR, mv, didiR, hastaR){
   const ext = (H && H.extras) || [];
   const cHoy = ext.filter(t => t.credito && (ctTarjetaDe(t)||{}).id === 'd001').reduce((s,t) => s + (+t.amount||0), 0);
   const iHoy = (mv||[]).filter(t => t.type === 'income' && !CIFRAS.esNomina(t)).reduce((s,t) => s + (+t.amount||0), 0);
-  const didiMes = CIFRAS.n('didiMes') || 0, pctDidi = didiMes > 0 ? CIFRAS.didiAlAhorro(ym) / didiMes : 0;
+  // Nunca más del 100 %: desde febrero de 2027 el plan aparta $10,000 de Didi y Didi trae $6,000 en promedio (3-nov-2026).
+  const didiMes = CIFRAS.n('didiMes') || 0, pctDidi = didiMes > 0 ? Math.min(1, CIFRAS.didiAlAhorro(ym) / didiMes) : 0;
   const destino = E.saldo > 0 ? 'para la BBVA' : 'para GBM';
   const nHoy = +hoyK.slice(8);
   const quincena = T.cierre < 0
