@@ -23,6 +23,7 @@ Sé honesto con las caídas históricas (VOO -34 % en 2020, -25 % en 2022; BTC -
 Reglas para los dos: 2 a 4 activos por perfil; los pct de un perfil suman exactamente 100; todo comprable desde GBM+ o Cetesdirecto; nada de apalancamiento, opciones, cripto distinta de BTC/ETH ni SOFIPOs sin seguro. Cada activo dice DÓNDE se compra, POR QUÉ va en ese perfil, QUÉ VIGILAR y cuál es SU riesgo concreto.
 
 LARGOS Y ESTILO
+- Escribe para alguien que nunca ha invertido: frases cortas y sin jerga; si usas un término (stop, ETF, dividendo, comps), explícalo en la misma frase. Cada activos[].porque dice, en simple, por qué comprarías eso con este perfil.
 - Español de México, tuteo, directo, sin promesas. Sin "consulta a un asesor" ni disclaimers: la plantilla ya lo pone.
 - lema ≤ 40 caracteres · paraQuien ≤ 160 · horizonte ≤ 30 · caidaMax ≤ 120 · resumen ≤ 260 · esteMes ≤ 220.
 - activos[].porque ≤ 220 · vigilar ≤ 140 · riesgo ≤ 140 · donde ≤ 40 · tipo ≤ 40.

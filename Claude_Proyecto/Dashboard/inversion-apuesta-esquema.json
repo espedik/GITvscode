@@ -24,7 +24,7 @@
         "empresa": {"type":"string"}, "ticker": {"type":"string"}, "bolsa": {"type":"string"}, "sector": {"type":"string"},
         "precio": {"type":"number"}, "moneda": {"type":"string"}, "fechaDato": {"type":"string"},
         "maximo52": {"type":"number"}, "caidaDesdeMax": {"type":"number"},
-        "porQueCayo": {"type":"string"}, "tesis": {"type":"string"},
+        "porQueCayo": {"type":"string"}, "tesis": {"type":"string"}, "enSimple": {"type":"string"},
         "catalizadores": {"type":"array","items":{"type":"string"}},
         "entrada": {"type":"string"},
         "objetivo": {"type":"number"}, "objetivoPct": {"type":"number"},
@@ -34,7 +34,7 @@
         "invalida": {"type":"string"},
         "senales": {"type":"array","items":{"$ref":"#/$defs/senal"}}
       },
-      "required": ["empresa","ticker","bolsa","sector","precio","moneda","fechaDato","maximo52","caidaDesdeMax","porQueCayo","tesis","catalizadores","entrada","objetivo","objetivoPct","stop","stopPct","plazo","riesgos","invalida","senales"]
+      "required": ["empresa","ticker","bolsa","sector","precio","moneda","fechaDato","maximo52","caidaDesdeMax","porQueCayo","tesis","enSimple","catalizadores","entrada","objetivo","objetivoPct","stop","stopPct","plazo","riesgos","invalida","senales"]
     },
     "alternativas": {"type":"array","items":{"$ref":"#/$defs/alternativa"}},
     "reglas": {"type":"array","items":{"type":"string"}},
