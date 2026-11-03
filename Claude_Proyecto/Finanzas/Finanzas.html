@@ -2402,8 +2402,6 @@ function cifrasMesHTML(src) {
   const tp = tipoFoto(prev);
   return `<div class="card imes">
     <div class="imes-cab"><h3>📌 Tus cifras de ${_MESES_L[m - 1]} ${y}</h3><span>${estado}</span></div>
-    ${src.reconstruido ? (() => { const o = src.original ? cifrasDe(src.original) : null;
-      return `<p class="imes-nota">🔧 Reconstruido el ${_fechaCorta(src.reconstruido)} con ${src.fuente || 'tus saldos'}${o ? ` Antes decía: patrimonio ${_pesosE(o.nw)}, deuda ${_pesosE(o.pas)}, score ${Math.round(o.score)}; se guardó aparte.` : ''}</p>`; })() : ''}
     ${p && tp !== 'cierre' ? `<p class="imes-nota">⚠ Se compara con ${tp === 'estimado' ? 'un estimado' : 'la ' + etiquetaFoto(prev)} de ${mesPrev}: tómalo con cuidado.</p>` : ''}
     <div class="imes-tiles">
       ${tile('Patrimonio neto', _pesosE(c.nw), `Tienes ${_pesosE(c.act)}, debes ${_pesosE(c.pas)}`, p ? c.nw - p.nw : 0, true, _pesosE, 1, p ? _pesosE(p.nw) : '')}
@@ -2419,7 +2417,7 @@ function mesAMesHTML(activo) {
     .concat((S.indicatorHistory || []).filter(s => s.month < hoyKey).map(s => ({ month: s.month, snap: s, c: cifrasDe(s) })))
     .sort((a, b) => b.month.localeCompare(a.month));
   if (filas.length < 2) return '';
-  const qué = f => f.vivo ? '📊 en curso' : ({ cierre: '🔒 cierre', parcial: '◐ foto del ' + _fechaCorta(f.snap.savedAt), estimado: '🕓 estimado' }[tipoFoto(f.snap)] || '') + (f.snap.reconstruido ? ' · reconstruido' : '');
+  const qué = f => f.vivo ? '📊 en curso' : ({ cierre: '🔒 cierre', parcial: '◐ foto del ' + _fechaCorta(f.snap.savedAt), estimado: '🕓 estimado' }[tipoFoto(f.snap)] || '');
   // Tu avance: del primer cierre de verdad (ni estimado ni foto de media de mes) a hoy.
   const base = filas.slice().reverse().find(f => !f.vivo && tipoFoto(f.snap) === 'cierre'), hoy = filas[0].c;
   const avance = base ? (() => {
@@ -2671,7 +2669,8 @@ function fotoIndicadores(ahora) {
    descongela: ni el cierre (`cerrarMesAnterior` se salta un mes congelado), ni un respaldo que se importe, ni el relleno.
    La única excepción es una corrección pedida por Adán, como migración del maestro: guarda lo de antes en `original`,
    dice de dónde salen las cifras (`fuente`, `reconstruido`) y le quita `medida` y `congelado` para que se mida y se
-   congele de nuevo aquí (`_historial20261102`, 2-nov-2026: "siento que las cifras se revolvieron… necesito ver mi avance"). */
+   congele de nuevo aquí (`_historial20261102`, 2-nov-2026: "siento que las cifras se revolvieron… necesito ver mi avance").
+   En pantalla se ve como cualquier cierre: el original y la fuente se guardan, no se enseñan ("no quiero cifras de más"). */
 function congelarMeses(now) {
   const hoyKey = _ymDe(now), hoy = CIFRAS.fechaLocal(now);
   (S.indicatorHistory||[]).forEach(snap => {
@@ -2698,7 +2697,7 @@ function tipoFoto(snap) {
 const _fechaCorta = f => { const d=new Date(f+'T12:00:00'); return d.getDate()+' '+['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][d.getMonth()]; };
 function etiquetaFoto(snap) {
   const t = tipoFoto(snap);
-  return t === 'cierre' ? 'cierre' + (snap.reconstruido ? ' reconstruido con tus saldos' : snap.tomadaEl ? ' · tomado el ' + _fechaCorta(snap.tomadaEl) : '')
+  return t === 'cierre' ? 'cierre' + (snap.tomadaEl ? ' · tomado el ' + _fechaCorta(snap.tomadaEl) : '')
        : t === 'parcial' ? 'foto del ' + _fechaCorta(snap.savedAt) + ', no del cierre'
        : t === 'estimado' ? 'estimado' : 'en curso';
 }

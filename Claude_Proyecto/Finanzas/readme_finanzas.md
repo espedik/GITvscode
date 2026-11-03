@@ -336,8 +336,9 @@ meta del fondo de hoy, ni una fórmula nueva la mueven (una foto sin congelar se
 `ef-001`). Nada la descongela: `cerrarMesAnterior` se la salta, el import no la pisa (salvo un estimado) y el relleno
 crea meses nuevos sin tocar los que hay. **La única excepción** es una corrección pedida por Adán, como migración del
 maestro: guarda lo de antes en `original`, dice de dónde salen las cifras (`fuente`, `reconstruido`) y le quita `medida`
-y `congelado` para que aquí se mida y se congele de nuevo; la pestaña lo cuenta («Reconstruido… Antes decía…») y el
-verificador exige el `original` a cualquier migración que toque el historial. Así se reconstruyeron agosto, septiembre y
+y `congelado` para que aquí se mida y se congele de nuevo. En pantalla se ve como cualquier cierre —sin aviso, sin
+fuente y sin lo que decía antes (Adán: *"solo deja cifras reconstruidas, no quiero cifras de más"*)—; el verificador
+exige el `original` a cualquier migración que toque el historial. Así se reconstruyeron agosto, septiembre y
 octubre de 2026 (`_historial20261102`): cada cierre es el último saldo que Adán dijo en o antes del último día del mes,
 con las mensualidades fijas en su día; arriba de la tabla mes a mes va **tu avance** desde el primer cierre.
 

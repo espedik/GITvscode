@@ -3153,7 +3153,6 @@ function promptsDeLoTocado() {
   mae.slice(iM, fM).split("flag: '").slice(1).forEach(function (b) {
     if (b.indexOf('indicatorHistory') >= 0 && b.indexOf('.original =') < 0) malos.push('la migración ' + b.slice(0, b.indexOf("'")) + ' toca el historial de Indicadores sin guardar lo de antes (original)');
   });
-  if (vista.indexOf('cifrasMesHTML') < 0 || f.indexOf('src.reconstruido') < 0) malos.push('un mes corregido ya no dice de dónde salen sus cifras ni qué decía antes (src.reconstruido)');
   if (malos.length) problemas.push('Indicadores de Finanzas, mes contra mes:\n     ' + malos.join('\n     '));
   else ok.push('Indicadores de Finanzas: una sola medición para la pantalla y la foto de cada mes; cada mes se cierra una vez, se congela y ya no se toca; cada mes enseña su patrimonio neto y su deuda total contra el anterior, y el mes en curso dice cómo subir el score');
 })();
