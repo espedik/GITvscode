@@ -2402,6 +2402,8 @@ function cifrasMesHTML(src) {
   const tp = tipoFoto(prev);
   return `<div class="card imes">
     <div class="imes-cab"><h3>📌 Tus cifras de ${_MESES_L[m - 1]} ${y}</h3><span>${estado}</span></div>
+    ${src.reconstruido ? (() => { const o = src.original ? cifrasDe(src.original) : null;
+      return `<p class="imes-nota">🔧 Reconstruido el ${_fechaCorta(src.reconstruido)} con ${src.fuente || 'tus saldos'}${o ? ` Antes decía: patrimonio ${_pesosE(o.nw)}, deuda ${_pesosE(o.pas)}, score ${Math.round(o.score)}; se guardó aparte.` : ''}</p>`; })() : ''}
     ${p && tp !== 'cierre' ? `<p class="imes-nota">⚠ Se compara con ${tp === 'estimado' ? 'un estimado' : 'la ' + etiquetaFoto(prev)} de ${mesPrev}: tómalo con cuidado.</p>` : ''}
     <div class="imes-tiles">
       ${tile('Patrimonio neto', _pesosE(c.nw), `Tienes ${_pesosE(c.act)}, debes ${_pesosE(c.pas)}`, p ? c.nw - p.nw : 0, true, _pesosE, 1, p ? _pesosE(p.nw) : '')}
@@ -2417,10 +2419,18 @@ function mesAMesHTML(activo) {
     .concat((S.indicatorHistory || []).filter(s => s.month < hoyKey).map(s => ({ month: s.month, snap: s, c: cifrasDe(s) })))
     .sort((a, b) => b.month.localeCompare(a.month));
   if (filas.length < 2) return '';
-  const qué = f => f.vivo ? '📊 en curso' : { cierre: '🔒 cierre', parcial: '◐ foto del ' + _fechaCorta(f.snap.savedAt), estimado: '🕓 estimado' }[tipoFoto(f.snap)] || '';
+  const qué = f => f.vivo ? '📊 en curso' : ({ cierre: '🔒 cierre', parcial: '◐ foto del ' + _fechaCorta(f.snap.savedAt), estimado: '🕓 estimado' }[tipoFoto(f.snap)] || '') + (f.snap.reconstruido ? ' · reconstruido' : '');
+  // Tu avance: del primer cierre de verdad (ni estimado ni foto de media de mes) a hoy.
+  const base = filas.slice().reverse().find(f => !f.vivo && tipoFoto(f.snap) === 'cierre'), hoy = filas[0].c;
+  const avance = base ? (() => {
+    const mB = _MESES_L[+base.month.slice(5) - 1], dDeuda = hoy.pas - base.c.pas, dNw = hoy.nw - base.c.nw;
+    const pct = base.c.pas > 0 ? Math.round(-dDeuda / base.c.pas * 100) : 0;
+    return `<p class="imes-nota" style="margin:0 0 12px;font-size:13px">Desde el cierre de ${mB}: tu deuda ${_cambio(dDeuda, false, _pesosE, 1)}${pct > 0 ? ` (${pct} % menos)` : ''}, tu patrimonio ${_cambio(dNw, true, _pesosE, 1)} y tu dinero líquido ${_cambio(hoy.liq - base.c.liq, true, _pesosE, 1)}.</p>`;
+  })() : '';
   const celda = (v, ant, subeBien, f, umbral) => `${f(v)}${ant == null ? '' : `<small>${_cambio(v - ant, subeBien, f, umbral)}</small>`}`;
   return `<div class="card imes">
     <div class="imes-cab"><h3>🗓️ Mes a mes</h3><span>Cada mes se congela al cerrar y ya no se toca: solo lectura. Toca un mes para verlo completo.</span></div>
+    ${avance}
     <div style="overflow-x:auto"><table class="imes-tabla">
       <thead><tr><th>Mes</th><th>Qué es</th><th>Patrimonio neto</th><th>Deuda total</th><th>Dinero líquido</th><th>Score</th></tr></thead>
       <tbody>${filas.map((f, i) => { const a = filas[i + 1] ? filas[i + 1].c : null, k = f.vivo ? 'live' : f.month;
@@ -2658,12 +2668,19 @@ function fotoIndicadores(ahora) {
 /* Cada mes que ya terminó se congela una vez (`congelado`: el día en que se congeló): si no traía su `medida`, se mide
    con su propio estado guardado y desde ahí se lee tal cual. Adán, 2-nov-2026: "cada vez que termine un mes guardas esas
    cifras y no las vuelves a tocar, solo con fines de lectura, esto también para los demás indicadores". Nada lo
-   descongela: ni el cierre (`cerrarMesAnterior` se salta un mes congelado), ni un respaldo que se importe, ni el relleno. */
+   descongela: ni el cierre (`cerrarMesAnterior` se salta un mes congelado), ni un respaldo que se importe, ni el relleno.
+   La única excepción es una corrección pedida por Adán, como migración del maestro: guarda lo de antes en `original`,
+   dice de dónde salen las cifras (`fuente`, `reconstruido`) y le quita `medida` y `congelado` para que se mida y se
+   congele de nuevo aquí (`_historial20261102`, 2-nov-2026: "siento que las cifras se revolvieron… necesito ver mi avance"). */
 function congelarMeses(now) {
   const hoyKey = _ymDe(now), hoy = CIFRAS.fechaLocal(now);
   (S.indicatorHistory||[]).forEach(snap => {
     if (snap.month >= hoyKey || snap.congelado) return;
-    if (!snap.medida && snap.debts) snap.medida = medidaDe(medirIndicadores(snap));
+    if (!snap.medida && snap.debts) {
+      const M = medirIndicadores(snap);
+      snap.medida = medidaDe(M);
+      Object.assign(snap, { score: M.score2, sc: M.sc2, netWorth: M.netWorth2, totalActivos: M.totalActivos, totalPasivos: M.totalPasivos, liqActivos: M.liqActivos });
+    }
     snap.congelado = hoy;
   });
 }
@@ -2681,7 +2698,7 @@ function tipoFoto(snap) {
 const _fechaCorta = f => { const d=new Date(f+'T12:00:00'); return d.getDate()+' '+['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][d.getMonth()]; };
 function etiquetaFoto(snap) {
   const t = tipoFoto(snap);
-  return t === 'cierre' ? 'cierre' + (snap.tomadaEl ? ' · tomado el ' + _fechaCorta(snap.tomadaEl) : '')
+  return t === 'cierre' ? 'cierre' + (snap.reconstruido ? ' reconstruido con tus saldos' : snap.tomadaEl ? ' · tomado el ' + _fechaCorta(snap.tomadaEl) : '')
        : t === 'parcial' ? 'foto del ' + _fechaCorta(snap.savedAt) + ', no del cierre'
        : t === 'estimado' ? 'estimado' : 'en curso';
 }

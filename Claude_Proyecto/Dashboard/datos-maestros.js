@@ -8273,8 +8273,45 @@ window.CIFRAS = (function () {
         if (!nov || !(nov.savedAt <= '2026-11-03') || (oct && (oct.cierre || oct.savedAt >= '2026-10-29'))) return;
         const c = JSON.parse(JSON.stringify(nov));
         c.month = '2026-10'; c.cierre = true; c.tomadaEl = nov.savedAt; c.nota = 'con los saldos al 31 de octubre';
+        if (oct) c.original = JSON.parse(JSON.stringify(oct));   // la foto del 13 no se pierde
         f.indicatorHistory = H.filter(function (x) { return x.month !== '2026-10' && x.month !== '2026-11'; }).concat([c])
           .sort(function (x, y) { return x.month < y.month ? -1 : 1; });
+      }
+    },
+    {
+      // 2026-11-02 · "de los meses anteriores siento que las cifras se revolvieron, busca en anteriores commits, en serio
+      // necesito ver mi avance". Se revisaron los saldos que Adán dijo, commit por commit, contra lo guardado de cada mes:
+      //   · Agosto (foto del 1-sep) está bien —la BBVA en $32,100 es la de su primer abono, el 30 de agosto—, salvo el
+      //     iPhone: Finanzas no descontaba sus mensualidades hasta el 19-oct (`_mensualidades20261019`) y seguía en los
+      //     $11,361.54 de julio. Al 31 de agosto, con el pago del 1, eran $10,867.56.
+      //   · Septiembre era la foto del 21 —la BBVA en $900 y la Banamex en $3,900—, no el cierre: el 30 dijo BBVA $10,000
+      //     y Banamex $0 (`_tarjetas20260930`). Y el iPhone, con los pagos de agosto y septiembre: $10,373.58.
+      //   · Octubre (la foto del 2-nov) ya traía el pago del iPhone del 1 de noviembre: al 31 eran $9,879.60.
+      // Cada cierre es el último saldo dicho en o antes de su último día, con las mensualidades fijas en su día. Lo de antes
+      // se guarda en `original` (no se pierde nada) y Finanzas lo vuelve a medir y a congelar al abrirse (`congelarMeses`).
+      // Es la única forma de tocar un mes congelado: una corrección pedida por Adán, con su original y su `fuente`.
+      flag: '_historial20261102',
+      hacer: function (f) {
+        const H = f.indicatorHistory || [];
+        const CIERRES = {
+          '2026-08': { deudas: { d008: 10867.56 },
+            fuente: 'tus saldos del 1 de septiembre —la BBVA en $32,100, tras tu primer abono del 30 de agosto— y el iPhone con su pago del 1 de agosto, que entonces no se descontaba.' },
+          '2026-09': { deudas: { d001: 10000, d002: 0, d008: 10373.58 },
+            fuente: 'tus tarjetas al 30 de septiembre (BBVA $10,000 y Banamex $0, dichas ese día), el auto en $283,000 (21 de septiembre, con su pago del 15) y el iPhone con sus pagos de agosto y septiembre; la cuenta ($1,200) y el efectivo, los últimos que dijiste. Antes era la foto del 21 de septiembre.' },
+          '2026-10': { deudas: { d008: 9879.60 }, soloSi: function (s) { return s.cierre || s.savedAt >= '2026-10-29'; },
+            fuente: 'tus saldos del 31 de octubre (BBVA $2,300, cuenta $1,300 y efectivo $600) y el iPhone antes de su pago del 1 de noviembre.' },
+        };
+        Object.keys(CIERRES).forEach(function (mes) {
+          const s = H.filter(function (x) { return x.month === mes; })[0], c = CIERRES[mes];
+          if (!s || s.reconstruido || s.backfilled || !Array.isArray(s.debts) || (c.soloSi && !c.soloSi(s))) return;
+          const original = JSON.parse(JSON.stringify(s));
+          Object.keys(c.deudas).forEach(function (id) {
+            const d = s.debts.filter(function (x) { return x.id === id; })[0];
+            if (d) d.balance = c.deudas[id];
+          });
+          s.original = original; s.reconstruido = '2026-11-02'; s.fuente = c.fuente; s.cierre = true;
+          delete s.medida; delete s.congelado;
+        });
       }
     },
   ];

@@ -3147,6 +3147,13 @@ function promptsDeLoTocado() {
   const vista = cuerpo('renderIndicatorsHTML');
   if (vista.indexOf('cifrasMesHTML(src)') < 0 || vista.indexOf('mesAMesHTML(') < 0) malos.push('cada mes ya no enseña su patrimonio neto y su deuda total (cifrasMesHTML) o falta la tabla mes a mes (mesAMesHTML)');
   if (/_maeHoy\(/.test(vista)) malos.push('renderIndicatorsHTML() lee la maestría de hoy (_maeHoy): un mes cerrado usa la suya (maeBase2)');
+  // Un mes congelado solo se corrige con una migración del maestro que guarde lo de antes (`original`) y diga de dónde
+  // salen las cifras (`fuente`): Adán, 2-nov-2026, "no se debe perder información".
+  const mae = leer('Dashboard/datos-maestros.js'), iM = mae.indexOf('const MIGRACIONES = ['), fM = mae.indexOf('\n  ];', iM);
+  mae.slice(iM, fM).split("flag: '").slice(1).forEach(function (b) {
+    if (b.indexOf('indicatorHistory') >= 0 && b.indexOf('.original =') < 0) malos.push('la migración ' + b.slice(0, b.indexOf("'")) + ' toca el historial de Indicadores sin guardar lo de antes (original)');
+  });
+  if (vista.indexOf('cifrasMesHTML') < 0 || f.indexOf('src.reconstruido') < 0) malos.push('un mes corregido ya no dice de dónde salen sus cifras ni qué decía antes (src.reconstruido)');
   if (malos.length) problemas.push('Indicadores de Finanzas, mes contra mes:\n     ' + malos.join('\n     '));
   else ok.push('Indicadores de Finanzas: una sola medición para la pantalla y la foto de cada mes; cada mes se cierra una vez, se congela y ya no se toca; cada mes enseña su patrimonio neto y su deuda total contra el anterior, y el mes en curso dice cómo subir el score');
 })();
