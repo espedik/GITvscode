@@ -674,9 +674,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    propio span con tamaño fijo chico, y estas 4 tarjetas/su barra (no el .pbar/.tile genérico que
    se usa en el resto del Dashboard) más compactas para ganar el alto que le faltaba a las metas
    de abajo. */
-/* En una sola fila de ocho desde 1400 px: en dos filas, a 2048×1040 la columna del día se quedaba 34 px corta. */
-#pmMedidores.grid{gap:6px;grid-template-columns:repeat(7,minmax(0,1fr));margin-bottom:6px;flex-shrink:0}
-@media(max-width:1400px){#pmMedidores.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* Seis en una sola fila desde 1400 px —en dos filas, a 2048×1040 la columna del día se quedaba corta—; debajo, dos filas
+   de tres, y bajo 900 px, tres de dos: siempre filas completas, sin huecos. */
+#pmMedidores.grid{gap:6px;grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:6px;flex-shrink:0}
+@media(max-width:1400px){#pmMedidores.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:900px){#pmMedidores.grid{grid-template-columns:repeat(2,minmax(0,1fr))}#pmMedidores .tile:last-child:nth-child(odd){grid-column:1/-1}}
 #pmMedidores .tile{position:relative;display:flex;flex-direction:column;gap:1px;padding:5px 10px 6px;border-radius:9px;box-shadow:none}
 /* Dos renglones: el nombre, y la cifra con su barra al lado. La frase que explica el porcentaje va en el title de la
@@ -14135,18 +14136,6 @@ function kpiTrayectoriaHTML(){
       esc(f.title)+' · patrimonio líquido, hipótesis')).join('')+'</div>'+
     (window.CIFRAS?kpiNota('La proyección cruza el millón en <b>'+CIFRAS.v('mesMillon')+'</b>.'):'');
 }
-// Las fases en el tiempo: cuánto dura cada una y cuánto va de la que corre.
-function kpiFasesTiempoHTML(){
-  const hoy=new Date(); hoy.setHours(0,0,0,0);
-  const dC=d=>d.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
-  return kpiSec('🗓️ Las fases en el tiempo')+'<div class="kpi-desglose">'+PHASES.map(function(f){
-    const DF=CIFRAS.diasFase(f,hoy), e=hoy>f.end?'hecha':hoy>=f.start?'curso':'despues';
-    const pct=e==='hecha'?100:e==='curso'?DF.corrido/DF.largo*100:0, m=Math.round((f.start-hoy)/(86400000*30.44));
-    return kpiBarra(f.tag+' · '+esc(f.title), dC(f.start)+' → '+dC(f.end), pct, e==='hecha'?'var(--g)':'var(--p)',
-      e==='hecha'?'Cerrada · '+DF.largo+' días':e==='curso'?'En curso · día <b>'+DF.corrido+'</b> de '+DF.largo+' · quedan <b>'+DF.quedan+' días</b>':
-      'Empieza en '+(m<1?Math.max(0,Math.round((f.start-hoy)/86400000))+' días':m+(m===1?' mes':' meses'))+' · dura '+DF.largo+' días');
-  }).join('')+'</div>';
-}
 // Cuándo queda en cero cada deuda: la BBVA con su plan quincena a quincena; un crédito con lo que le queda a su pago
 // (CIFRAS.mesesRestantes). De la que acaba primero a la última.
 function kpiDeudaFinHTML(debts){
@@ -14985,27 +14974,11 @@ function kpiDetalle(id){
       kpiNota('Las de tasa 0 (MSI, crédito del coche si aplica) <b>no son urgentes pero sí comprometen tu excedente</b> cada mes. Cuentan para el flujo aunque no para los intereses.')};
   }
 
-  if(id==='meta2030'){
-    const ini=new Date(2026,6,18), fin=finDelPlan(), hoy=new Date();
-    const total=fin-ini, ido=Math.max(0,hoy-ini);
-    const pct=Math.min(100,ido/total*100);
-    const dias=Math.max(0,CIFRAS.diasHasta(fin));
-    return {titulo:'⏳ Camino a '+fin.getFullYear(), sub:'Cuánto tiempo llevas y cuánto queda para la meta del millón.',
-      html:
-      '<div class="kpi-cifra" style="color:'+P+'">'+dias.toLocaleString('es-MX')+' <span style="font-size:14px;color:var(--text3)">días</span></div>'+
-      '<div class="kpi-cifra-sub">Del 18-jul-2026 al '+fin.toLocaleDateString('es-MX',FECHA_LARGA)+' · llevas <b>'+Math.round(pct)+'%</b> del tiempo</div>'+
-      kpiSec('📊 Tiempo recorrido')+
-      '<div class="kpi-desglose">'+kpiBarra('Del plan completo', Math.round(pct)+'%', pct, P,
-        'Quedan '+Math.round(dias/30.4)+' meses · '+(dias/365).toFixed(1)+' años')+'</div>'+
-      kpiFasesTiempoHTML()+
-      (window.CIFRAS?kpiNota('La proyección cruza el millón en <b>'+CIFRAS.v('mesMillon')+'</b>.'):'')+
-      kpiNota('El tiempo corre igual se aproveche o no. Es el único recurso del plan que no se puede recuperar — por eso el interés compuesto premia empezar, no acertar.')};
-  }
   return null;
 }
 
-/* Los siete medidores del dinero y del plan: el fondo, la maestría, el patrimonio, los intereses,
-   lo invertido, la deuda total y el camino al cierre del plan. Van en el Plan Maestro, entre el mes en curso
+/* Los seis medidores del dinero: el fondo, la maestría, el patrimonio, los intereses, lo invertido y la
+   deuda total (Camino a 2031 se quitó: Adán, 17-nov-2026). Van en el Plan Maestro, entre el mes en curso
    y el tablero (Adán, 21-oct-2026: "todo esto, ponlo en lo que acabas de quitar y quítalo de mis metas"); cada
    uno abre su desglose (abrirKpi → kpiDetalle). */
 function renderMedidores(){
@@ -15041,8 +15014,6 @@ function renderMedidores(){
   const deudaTotPctKpi=deudaTotIniKpi>0?Math.max(0,Math.min(100,(1-deudaTotKpi/deudaTotIniKpi)*100)):0;
   // En las deudas la barra va verde (pagado) sobre rojo (lo que falta): así se ve el avance.
   const PISTA_ROJA='color-mix(in srgb,var(--r) 60%,transparent)';
-  const diasA2030=Math.max(0,CIFRAS.diasHasta(finDelPlan()));
-  const pct2030=Math.min(100,Math.max(0,(new Date()-new Date(2026,6,18))/(finDelPlan()-new Date(2026,6,18))*100));
 
   const tiles=[
     {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/metaFondo*100),sub:Math.round(Math.min(100,ef/metaFondo*100))+'% · en CETES · meta '+money(metaFondo),c:'var(--w)',id:'fondo'},
@@ -15057,7 +15028,6 @@ function renderMedidores(){
     {ico:'🔥',lbl:'Intereses este mes',val:hasFinData()?money(interesMesKpi):'Sin datos',pct:interesPctKpi,sub:interesMesKpi>0?`${Math.round(interesPctKpi)}% menos que al inicio`:(hasFinData()?'Sin deuda con interés 🎉':'Abre Finanzas una vez para cargarlos'),c:'var(--r)',id:'intereses'},
     {ico:'📈',lbl:'Total invertido',val:money(totalInvKpi),pct:fmMae.total>0?Math.min(100,totalInvKpi/fmMae.total*100):0,sub:fmMae.total>0?`${Math.round(totalInvKpi/fmMae.total*100)}% del dinero de la maestría`:(D.fin.investments||[]).filter(i=>(+i.value||+i.invested||0)>0).map(i=>esc(i.name||'Inversión')).join(' + '),c:'var(--cy)',id:'invertido'},
     {ico:'🧾',lbl:'Deuda total',val:hasFinData()?money(deudaTotKpi):'Sin datos',pct:deudaTotPctKpi,sub:deudaTotKpi>0?`${Math.round(deudaTotPctKpi)}% pagado · ${money(deudaCaraBalKpi)} con interés`:(hasFinData()?'Sin deudas vivas 🎉':'Abre Finanzas una vez para cargarlas'),c:'var(--r)',fill:'var(--g)',track:PISTA_ROJA,id:'deudatotal'},
-    {ico:'⏳',lbl:'Camino a '+finDelPlan().getFullYear(),val:diasA2030.toLocaleString('es-MX')+' días',pct:pct2030,sub:`${Math.round(pct2030)}% del plan recorrido`,c:'var(--p)',id:'meta2030'}
   ];
   const el=document.getElementById('pmMedidores'); if(!el) return;
   el.innerHTML=tiles.map(x=>`

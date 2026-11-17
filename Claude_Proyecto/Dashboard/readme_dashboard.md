@@ -91,7 +91,7 @@ llegando.
 | Tema | Pantalla | Qué muestra | Prompt |
 |---|---|---|---|
 | `theme-dia` | **Mi Día** | La principal. Agenda del día, el AHORA y cuatro módulos | `midia` |
-| `theme-coach` | **Plan Maestro** | La ruta de las fases, el mes en curso con su auditoría, los 7 medidores del dinero y el tablero mes / día / semana | `planmaestro` |
+| `theme-coach` | **Plan Maestro** | La ruta de las fases, el mes en curso con su auditoría, los 6 medidores del dinero y el tablero mes / día / semana | `planmaestro` |
 | `theme-metas` | **Mis Metas** | La línea del tiempo de las metas y 12 metas con su plan | `metas` |
 | `theme-basicas` | **Habilidades Base** | 27 fichas de vida práctica con sus videos. **Única fuente**: la sección equivalente de Coach se eliminó | `basicas` |
 | `theme-skills` | **En qué invertir tu tiempo** | La interfaz de Habilidades Base: sus indicadores, las 12 habilidades como fichas y el plan de foco; cada una abre su ruta en la ventana de detalle | `skills` |
@@ -775,7 +775,7 @@ sin desbordes ni errores, y Finanzas enseña el mismo reparto que se guardó aqu
 ## El tablero del Plan Maestro
 
 La pantalla 2, de arriba abajo: su rótulo pequeño, *Coach · Plan Maestro*; **la ruta de las cinco fases**; **el mes en
-curso**; **los siete medidores** del dinero y del plan, y tres columnas: **el mes, el día que toques y la semana a la que
+curso**; **los seis medidores** del dinero, y tres columnas: **el mes, el día que toques y la semana a la que
 pertenece**. Diseño: Main de `diseno-planmaestro/` (Adán, 22-oct-2026: *"el diseño de las fases del dashboard no me
 gusta porque no me muestra info útil… arregla todo el diseño, deja el calendario y lo de las cifras"*). **Todo lo de
 las fases se ve y se hace aquí, sin ventana aparte** (Adán, 1-nov-2026: una ventana con lo mismo *"es muy
@@ -808,7 +808,7 @@ redundante"*): cambiar de fase, de mes y auditar ocurre en su lugar.
   sección y pon solo las cosas que ya hemos hecho ahí mismo donde quitaste lo de la imagen"*). Los encabezados cuentan
   lo hecho de lo total (*3 de 8*); cuando no falta nada, *✓ Todo lo de este mes ya quedó hecho*.
 - **Ni el mes ni la información general llevan tarjetas de dinero contra el plan** (Adán, 3-nov-2026): las cifras
-  viven en los siete medidores y en la auditoría de cada mes.
+  viven en los seis medidores y en la auditoría de cada mes.
 - **Las tareas se palomean aquí mismo**, en la misma casilla que Mi Día (`coach_checks_v1`): el mes de hoy en la
   semana de hoy (`pmCheck`), otro mes con `fzmCheck`; un mes ya auditado enseña lo que quedó (✅, ◐ o ❌), sin
   casilla. *Y 3 más…* y *Lo que sostienes* se despliegan en su lugar (`pmDespliega`).
@@ -932,14 +932,15 @@ Medido a 1600×1000 y a 2048×1040: la auditoría de octubre mide 1672 px de alt
 dentro hasta su principio (`scrollIntoView`). Sin desborde lateral a 2048, 1600, 1366 ni 390 px, en claro y en
 oscuro.
 
-### Los siete medidores
+### Los seis medidores
 
 Entre el mes en curso y el tablero, donde estaban la ruta de deuda y el riel (Adán, 21-oct-2026: *"todo esto,
 ponlo en lo que acabas de quitar y quítalo de mis metas"*): **Fondo de emergencia, Fondo Maestría, Patrimonio hacia
-$1M, Intereses este mes, Total invertido, Deuda total y Camino a 2031** (`#pmMedidores`, `tiles` en
-`renderMedidores()`, que pinta `renderCoach()`; el precio del Bitcoin los refresca). No lleva Deuda cara (Adán,
-17-nov-2026: *"elimina lo de deuda cara, ya por fin no tengo deudas de tarjetas de crédito, solo mi crédito
-automotriz"*): lo que queda por pagar lo dice **Deuda total**. Cada uno lleva el porcentaje en su línea de detalle y
+$1M, Intereses este mes, Total invertido y Deuda total** (`#pmMedidores`, `tiles` en `renderMedidores()`, que pinta
+`renderCoach()`; el precio del Bitcoin los refresca). No lleva Deuda cara (Adán, 17-nov-2026: *"elimina lo de deuda
+cara, ya por fin no tengo deudas de tarjetas de crédito, solo mi crédito automotriz"*): lo que queda por pagar lo dice
+**Deuda total**. Tampoco Camino a 2031 (Adán, 17-nov-2026: *"quita la barra y contenido de camino a 2031 y ajusta el
+tamaño de las demás en lo que sobra de espacio"*): la fecha del millón la dice **Patrimonio hacia $1M**. Cada uno lleva el porcentaje en su línea de detalle y
 abre su desglose (`abrirKpi` → `kpiDetalle`, ver Mis Metas); el de **Total invertido** lleva arriba *Tu estrategia de
 hoy* (ver abajo). En **Deuda total** la barra es verde sobre rojo: lo verde es lo pagado y lo rojo lo que falta
 (`fill`/`track` del tile; la pista es `--r` al 60 %), medido sobre lo que nació cada deuda, liquidadas incluidas.
@@ -947,10 +948,10 @@ Son **muy compactos** (Adán: *"en coach plan maestro, las cajas de las cifras q
 pequeñas"*): dos renglones, el nombre en palabras normales con un cuadrito de su color y debajo la cifra a 15 px con
 su barra al lado (`.pm-med-fila`). La frase que explica el porcentaje —*26% menos que al inicio*, *65% del dinero de
 la maestría*— va en el `title` de la caja (sin cifras si está en modo privado) y en su panel, que se abre al tocarla.
-**Desde 1400 px van en una sola fila de siete**: en dos filas, a 2048×1040 la columna del día se quedaba corta. Bajo
-1400 van de cuatro en cuatro y bajo 900, de dos en dos, con el último a lo ancho. Medido: cada caja mide 45 px de alto
-y la fila 45 px a 2048×1040 y a 1600×1000 (96 px en dos filas a 1366×768); ningún nombre ni cifra se corta de 390 a
-2048 px.
+**Desde 1400 px van en una sola fila de seis**: en dos filas, a 2048×1040 la columna del día se quedaba corta. Bajo
+1400 van en dos filas de tres y bajo 900, en tres de dos: siempre filas completas, sin huecos. Medido: cada caja mide
+44 px de alto y 320 px de ancho a 2048×1040, 245 a 1600×1000, 418 a 1366×768 (dos filas, 95 px) y 178 a 390 px (tres
+filas, 145 px); ningún nombre ni cifra se corta de 390 a 2048 px.
 
 **Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se paga completa
 cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle y en el desglose de Patrimonio, que la
@@ -1326,7 +1327,7 @@ desplaza al mes de hoy solo cuando hay una columna.
 
 ## Mis Metas — "panel de trayectoria"
 
-Los siete medidores del dinero y del plan no van aquí: viven en el Plan Maestro (ver *Los siete medidores*), y
+Los seis medidores del dinero no van aquí: viven en el Plan Maestro (ver *Los seis medidores*), y
 los paneles que abren, abajo.
 
 **El panel de cada medidor es ancho y compacto** (`.gbm-card.kpi-card`: `min(1560px, 96vw)` de ancho y alto
@@ -1342,8 +1343,7 @@ no le aporta mientras `cetesDia15` sea 0; **Maestría**, los cortes
 de la salida con lo que espera la proyección en GBM y lo que falta —la misma cuenta que Mis Metas— (`kpiCortesHTML`);
 **Patrimonio**, lo que espera la trayectoria al cierre de cada fase y el mes del millón (`kpiTrayectoriaHTML`); **Total
 invertido**, tu estrategia de hoy y tus inversiones compra por compra (ver *Total invertido, compra por compra*); **Deuda total**, cuándo queda
-en cero cada una y lo que pagas entre todas (`kpiDeudaFinHTML`, `minimosDeuda`); y **Camino a 2031**, las fases en el
-tiempo (`kpiFasesTiempoHTML`). Medido en 1600×1000, con los datos de Finanzas: el fondo ocupa 440 px de alto, el
+en cero cada una y lo que pagas entre todas (`kpiDeudaFinHTML`, `minimosDeuda`). Medido en 1600×1000, con los datos de Finanzas: el fondo ocupa 440 px de alto, el
 patrimonio 743 y ninguno se desplaza (Total invertido, con su formulario, sí a 1366×768); a 390 px, sin desbordes.
 
 El medidor **Patrimonio hacia $1M** (en el Plan Maestro) es todo lo suyo menos las deudas (`patrimonioNeto()`, que delega en `CIFRAS.patrimonio()` —la misma fórmula de Coach—: inversiones, fondo,
@@ -1353,7 +1353,7 @@ dice aparte el líquido sin bienes (`patrimonioLiquido()`), que es el número qu
 abono. El punto de partida con bienes (18-jul-2026, $231,770) solo sirve para decir cuánto ha
 sumado desde entonces.
 La meta del millón se fecha con el cierre de la última fase (`finDelPlan()`): el medidor dice
-`meta 31 dic 2031` y el de tiempo se llama `Camino a 2031`, los dos leídos de `PHASES`.
+`meta 31 dic 2031`, leído de `PHASES`.
 
 Clases `.mg-*`; de la familia anterior `.img-goal-*` solo sobreviven `.img-goal-pbar` y `-fill`,
 que usa el overlay de detalle.
@@ -2097,7 +2097,7 @@ inversiones, los activos —sin notas—, las metas, el fondo y el Bitcoin sumad
 en la cuenta de la quincena, que `ctCifrasHoy` guarda en `fin_resumen_v1` cada vez que cambia en la PC. Movimientos,
 notas, presupuestos e historial no salen. En un dispositivo sin Finanzas propia, `finCargar` usa esa copia —de solo
 lectura: nada la escribe en `finanzasmx_v2`—.
-Medido con los datos reales: los siete medidores del Plan Maestro salen iguales que en la PC. El control 39 revisa
+Medido con los datos reales: los medidores del Plan Maestro salen iguales que en la PC. El control 39 revisa
 también que el archivo no lleve movimientos, notas ni descripciones.
 
 **Y cada dispositivo dice qué versión tiene** (Adán, 2-nov-2026: *"pon cuál es la última vez que se subió un commit, esto
