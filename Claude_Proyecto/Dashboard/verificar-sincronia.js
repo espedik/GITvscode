@@ -3156,8 +3156,9 @@ function promptsDeLoTocado() {
    Adán, 17-nov-2026: "en qué invertir hoy también depende de la IA y eso ya no lo quiero… ponle la habilidad de que me
    muestre noticias concretas de recomendaciones en qué invertir, ya no quiero depender de mi suscripción a Claude". El
    panel lee el plan (CIFRAS.gbmMes), tu reparto (finanzasmx_v2.reparto o CIFRAS.REPARTO_BASE) y las noticias de Google
-   Noticias que el hook de pre-commit deja en noticias-inversion.js. Se vigila que nada vuelva a llamar a Claude, que las
-   piezas sigan conectadas y, como aviso, que las noticias no tengan más de tres días. */
+   Noticias que el hook de pre-commit deja en noticias-inversion.js y que una tarea de GitHub publica cada 4 horas en la
+   rama datos-noticias. Se vigila que nada vuelva a llamar a Claude, que las piezas sigan conectadas y, como aviso, que
+   el archivo del último commit no tenga más de una semana (el panel usa el más nuevo de los dos). */
 (function () {
   const malos = [], leerSi = rel => { try { return leer(rel); } catch (e) { return ''; } };
   const h = leer('Dashboard/dashboard.html'), hook = leerSi('.githooks/pre-commit'), C = global.window && global.window.CIFRAS;
@@ -3168,15 +3169,18 @@ function promptsDeLoTocado() {
   });
   if (!leerSi('Dashboard/noticias-actualizar.js')) malos.push('falta Dashboard/noticias-actualizar.js');
   if (hook.indexOf('noticias-actualizar.js') < 0) malos.push('el hook de pre-commit ya no trae las noticias (noticias-actualizar.js)');
+  const wf = leerSi('../.github/workflows/noticias-inversion.yml');
+  if (!/cron:/.test(wf) || wf.indexOf('noticias-actualizar.js') < 0 || wf.indexOf('datos-noticias') < 0) malos.push('la tarea de GitHub que trae las noticias cada 4 horas ya no está o no publica en datos-noticias (.github/workflows/noticias-inversion.yml)');
+  if (h.indexOf("/datos-noticias/noticias.json") < 0) malos.push('Qué invertir hoy ya no lee las noticias de la rama datos-noticias');
   if (!C || !Array.isArray(C.REPARTO_BASE) || !C.REPARTO_BASE.length) malos.push('el maestro ya no exporta REPARTO_BASE');
   else if (Math.abs(C.REPARTO_BASE.reduce(function (s, x) { return s + (+x.pct || 0); }, 0) - 100) > 0.01) malos.push('REPARTO_BASE no suma 100 %');
   if (leerSi('Dashboard/habitos-exportar.js').indexOf('reparto: tomar(f.reparto') < 0) malos.push('la copia de Finanzas ya no lleva tu reparto al iPad (habitos-exportar.js)');
   if (malos.length) { problemas.push('Qué invertir hoy, sin IA:\n     ' + malos.join('\n     ')); return; }
   const m = /"generado":\s*"([^"]+)"/.exec(leerSi('Dashboard/noticias-inversion.js'));
   const dias = m ? Math.floor((new Date() - new Date(m[1])) / 86400000) : null;
-  if (dias === null) avisos.push('Qué invertir hoy · todavía no hay noticias: llegan con el siguiente commit en la PC (noticias-actualizar.js)');
-  else if (dias > 3) avisos.push('Qué invertir hoy · las noticias son de hace ' + dias + ' días: se actualizan con tu siguiente commit en la PC');
-  ok.push('Qué invertir hoy sin IA: el plan, tu reparto y las noticias de Google Noticias' + (dias !== null ? ' (de hace ' + dias + ' días)' : ''));
+  if (dias === null) avisos.push('Qué invertir hoy · noticias-inversion.js no existe: lo escribe el siguiente commit en la PC');
+  else if (dias > 7) avisos.push('Qué invertir hoy · noticias-inversion.js es de hace ' + dias + ' días: el panel usa las de GitHub si son más nuevas; el siguiente commit lo pone al día');
+  ok.push('Qué invertir hoy sin IA: el plan, tu reparto y las noticias de Google Noticias, del último commit' + (dias !== null ? ' (de hace ' + dias + ' días)' : '') + ' y de GitHub cada 4 horas');
 })();
 
 // ── Salida ──

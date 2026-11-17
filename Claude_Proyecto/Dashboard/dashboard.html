@@ -11694,6 +11694,7 @@ async function abrirGBM(){
   ov.classList.add('open');
   clearInterval(timer);
   renderGBMPanel();          // pinta ya con lo local
+  qiPedirNoticias();         // y las noticias de GitHub, si son más nuevas
   cargarPreciosGBM();        // y rellena lo de red cuando llegue
 }
 function cerrarGBM(){ document.getElementById('gbmOverlay')?.classList.remove('open'); }
@@ -11827,7 +11828,29 @@ function qiReparto(){
   const r = qiRepartoEsTuyo() ? D.fin.reparto : ((window.CIFRAS && CIFRAS.REPARTO_BASE) || []);
   return r.filter(x => x && x.n && +x.pct > 0);
 }
-function qiNoticias(){ const N = window.NOTICIAS_INVERSION; return N && Array.isArray(N.items) && N.items.length ? N : null; }
+// Las noticias, de dos lados: las del último commit (noticias-inversion.js, del hook de la PC) y las que una tarea de
+// GitHub publica cada 4 horas en la rama datos-noticias (Adán: "eso de cada 4 hrs estaría bien"). Se usan las más
+// nuevas; las de GitHub se piden al abrir el panel (qiPedirNoticias) y la última que llegó se guarda en
+// `dash-noticias-v1` para verla sin red.
+const QI_NOT_KEY = 'dash-noticias-v1';
+let _qiRemotas = null, _qiPedidas = 0;
+function qiNoticias(){
+  let guardadas = null; try{ guardadas = JSON.parse(localStorage.getItem(QI_NOT_KEY) || 'null'); }catch(e){}
+  const ok = x => x && Array.isArray(x.items) && x.items.length && x.generado;
+  return [window.NOTICIAS_INVERSION, _qiRemotas, guardadas].filter(ok)
+    .sort((a, b) => String(b.generado).localeCompare(String(a.generado)))[0] || null;
+}
+function qiPedirNoticias(){
+  if(Date.now() - _qiPedidas < 600000 || typeof fetch !== 'function') return;
+  _qiPedidas = Date.now();
+  fetch('https://raw.githubusercontent.com/' + APP_REPO + '/datos-noticias/noticias.json?t=' + Math.floor(Date.now() / 600000), { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(j => {
+      if(!j || !Array.isArray(j.items) || !j.items.length) return;
+      _qiRemotas = j; try{ localStorage.setItem(QI_NOT_KEY, JSON.stringify(j)); }catch(e){}
+      const el = document.getElementById('qiNoticias'); if(el) el.innerHTML = qiNoticiasHtml();
+    }).catch(() => {});
+}
 function qiHace(iso){
   const min = Math.max(0, Math.round((Date.now() - new Date(iso)) / 60000)), d = Math.round(min / 1440);
   return min < 60 ? 'hace ' + min + ' min' : min < 1440 ? 'hace ' + Math.round(min / 60) + ' h' : 'hace ' + d + (d === 1 ? ' día' : ' días');
@@ -11911,14 +11934,14 @@ function qiTemaVer(id){ _qiTema = id; const el = document.getElementById('qiNoti
 function qiNoticiasHtml(){
   const N = qiNoticias();
   if(!N) return '<div class="qi-sec-cab"><span class="qi-lbl">Noticias para invertir</span></div>'+
-    '<p class="qi-vacio">Todavía no hay noticias en este dispositivo: llegan con tu siguiente commit desde la PC, que las trae de Google Noticias. '+
+    '<p class="qi-vacio">Todavía no hay noticias en este dispositivo: llegan de GitHub cada 4 horas, con internet, y con cada commit de tu PC. '+
     'Mientras, <a href="'+qiGoogle('"en qué invertir" México', 14)+'" target="_blank" rel="noopener">búscalas en Google Noticias ↗</a>.</p>';
   const temas = (N.temas || []).filter(t => N.items.some(i => i.tema === t.id));
   const t = temas.find(x => x.id === _qiTema) || temas[0];
   const items = N.items.filter(i => i.tema === t.id);
-  const viejas = Date.now() - new Date(N.generado) > 3 * 86400000;
+  const viejas = Date.now() - new Date(N.generado) > 86400000;
   return '<div class="qi-sec-cab"><span class="qi-lbl">Noticias para invertir</span>'+
-      '<span class="qi-sec-s'+(viejas ? ' viejo' : '')+'">de Google Noticias, '+qiHace(N.generado)+(viejas ? ' · se actualizan con tu siguiente commit' : '')+'</span></div>'+
+      '<span class="qi-sec-s'+(viejas ? ' viejo' : '')+'">de Google Noticias, '+qiHace(N.generado)+(viejas ? ' · se actualizan cada 4 horas cuando hay internet' : '')+'</span></div>'+
     '<div class="qi-temas" role="tablist">'+temas.map(x => '<button type="button" role="tab" class="qi-tema'+(x === t ? ' on' : '')+'" onclick="qiTemaVer(\''+x.id+'\')">'+
       esc(x.t)+' <i>'+N.items.filter(i => i.tema === x.id).length+'</i></button>').join('')+'</div>'+
     '<div class="qi-ns">'+items.map(i => '<a class="qi-n" href="'+esc(i.u)+'" target="_blank" rel="noopener">'+

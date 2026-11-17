@@ -1,0 +1,38 @@
+# Las noticias de inversión de «Qué invertir hoy», sin IA (Adán, 17-nov-2026: "ya no quiero depender de mi
+# suscripción a Claude"; y sobre actualizarlas sin commit: "eso de cada 4 hrs estaría bien").
+# Cada 4 horas lee Google Noticias con Claude_Proyecto/Dashboard/noticias-actualizar.js y publica noticias.json
+# en la rama datos-noticias; el Dashboard lo lee de ahí, en la PC y en el iPad, y usa el más nuevo entre ese y el
+# que deja el hook de pre-commit. La rama lleva un solo commit que se reescribe en cada corrida: main no se toca y
+# la historia no crece. Si Google no trae noticias, la tarea falla sin publicar y se queda lo anterior.
+name: Noticias de inversión
+on:
+  schedule:
+    - cron: '23 */4 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: noticias-inversion
+  cancel-in-progress: true
+jobs:
+  noticias:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Leer Google Noticias
+        run: |
+          node Claude_Proyecto/Dashboard/noticias-actualizar.js --ya --json "$RUNNER_TEMP/noticias.json"
+          test -s "$RUNNER_TEMP/noticias.json"
+      - name: Publicar en la rama datos-noticias
+        run: |
+          git checkout -q --orphan datos-noticias
+          git rm -rq --cached .
+          cp "$RUNNER_TEMP/noticias.json" noticias.json
+          git add noticias.json
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -qm "Noticias de inversión $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -qf origin datos-noticias

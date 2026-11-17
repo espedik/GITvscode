@@ -23,7 +23,7 @@ en una página.
 | `verificar-sincronia.js` | Comprueba que nada se haya vuelto a duplicar. Lo corre un hook al final de cada turno; sale con código 1 si algo falla |
 | `habitos.js` | La pantalla de Hábitos entera: semilla, motor de rachas, migraciones, pintado y estilos |
 | `version.js` · `version-escribir.js` | La hora del último commit de esta copia (`window.APP_VERSION.commit`), que el hook de pre-commit escribe con `version-escribir.js` en cada commit; Mi Día la enseña junto a la semana (ver *Tu iPad y tu PC*) |
-| `noticias-actualizar.js` · `noticias-inversion.js` | Las noticias de *Qué invertir hoy*: el script que el hook de pre-commit corre en la PC para leer Google Noticias y el archivo que escribe (`window.NOTICIAS_INVERSION`), que el panel carga con `<script src>` |
+| `noticias-actualizar.js` · `noticias-inversion.js` | Las noticias de *Qué invertir hoy*: el script que lee Google Noticias —lo corren la tarea de GitHub cada 4 horas (`.github/workflows/noticias-inversion.yml`, rama `datos-noticias`) y el hook de pre-commit de la PC— y el archivo que deja el hook (`window.NOTICIAS_INVERSION`), que el panel carga con `<script src>` |
 | `ficha.js` · `ficha.css` | El panel de ficha de producto (`pfAbrirId`, `pfPorNombre`, `.lc-info`) que usan la Lista de Compras y la rutina |
 | `examen-genai.js` · `examen-genai-data.js` (A, 79 preguntas) · `examen-genai-data-b.js` (B, 77) | El simulacro ISTQB CT-GenAI: motor y los dos bancos |
 | `syllabus/` (**fuera de git**) | La copia local del syllabus CT-GenAI LATAM: el PDF y `ct-genai-syllabus.js`, el texto de cada sección con su página. Su aviso de derechos solo permite reproducirlo en parte y para uso privado, así que no va al repositorio público (`.gitignore`) |
@@ -73,8 +73,8 @@ forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
 y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases) y `plan_auditoria_sinc` (cuándo se tocó cada mes aquí, para traer la de la PC), `fin_resumen_v1` (lo que queda en la quincena, para `finanzas-sync.js`), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta), `dash_libromes_v1` (el libro del mes: el de ahora, los leídos y el que sigue si lo cambiaste),
-`habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`. Tu reparto de *Qué invertir hoy* no es clave propia: vive en Finanzas
-(`finanzasmx_v2.reparto`).
+`habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-noticias-v1` (las últimas noticias de *Qué invertir hoy* que llegaron de GitHub). Tu
+reparto no es clave propia: vive en Finanzas (`finanzasmx_v2.reparto`).
 
 ---
 
@@ -713,7 +713,7 @@ entera.
 | **Este mes a GBM, según tu plan** (`qiMesHtml`) | Lo que el plan manda a GBM en el mes, lo que va a la BBVA si aún le toca, y cada envío con su día y de dónde sale (*15 nov · $4,650 · Ahorro → GBM*); los que pasaron, apagados, y el que sigue, en cian | `CIFRAS.gbmMes(mes)`, el mismo calendario del Plan de Inversiones de Finanzas |
 | **Qué comprar con eso** (`qiRepartoHtml`) | Una barra con el reparto y un renglón por cosa: qué, dónde se compra, por qué, su porcentaje y sus pesos de este mes. Dice si es *tu reparto* o *el reparto de base del plan: escribe el tuyo* | `finanzasmx_v2.reparto`, o `CIFRAS.REPARTO_BASE` mientras no exista |
 | **Cambiar mi reparto** (`qiEditar` → `qiEditorHtml`) | En su lugar, un renglón por cosa con qué, dónde y %, ✕ para quitarlo, *+ Otro renglón* y la suma en vivo (`qiCampo`: escribir no repinta, para no perder el foco); **Guardar** solo se activa cuando suman 100 % (`qiGuardar`). Solo donde Finanzas es propia (`tiEditable`): en el iPad, una nota dice que se cambia en la PC | escribe `finanzasmx_v2.reparto` |
-| **Noticias para invertir** (`qiNoticiasHtml`) | Una pestaña por tema con cuántas trae (`qiTemaVer`) y sus titulares: primero los que recomiendan algo, con la etiqueta *Recomienda*, cada uno con su medio y *hace 2 h*, y abre la nota en otra pestaña. Debajo, *Ver más de «tema» en Google Noticias ↗* con la misma búsqueda (`qiGoogle`). Si tienen más de tres días, la cabecera lo dice en naranja; sin noticias, cómo llegan y la búsqueda directa | `window.NOTICIAS_INVERSION` (`noticias-inversion.js`) |
+| **Noticias para invertir** (`qiNoticiasHtml`) | Una pestaña por tema con cuántas trae (`qiTemaVer`) y sus titulares: primero los que recomiendan algo, con la etiqueta *Recomienda*, cada uno con su medio y *hace 2 h*, y abre la nota en otra pestaña. Debajo, *Ver más de «tema» en Google Noticias ↗* con la misma búsqueda (`qiGoogle`). Si tienen más de un día, la cabecera lo dice en naranja; sin noticias, cómo llegan y la búsqueda directa | la rama `datos-noticias` o `noticias-inversion.js`, la más nueva |
 | Columna de al lado (`qiLadoHtml`) | *Precios ahora*: Bitcoin y dólar en vivo (`cargarPreciosGBM()`, CoinGecko y open.er-api; cada uno falla por separado); *Lo que llevas invertido*, con **Registrar una compra →**, que abre Total invertido (ver *Total invertido, compra por compra*); *Dónde comprar* (`GBM_LINKS`: GBM+, sus fondos, Cetesdirecto y el FIX de Banxico), y *La regla*: comprar el día que llega el dinero; las noticias informan y el reparto decide | local + `finanzasmx_v2.investments` |
 
 **Tu reparto vive en Finanzas** (`finanzasmx_v2.reparto = [{n, donde, pct, porque}]`): el *En qué va* del Plan de
@@ -721,18 +721,27 @@ Inversiones de Finanzas lee el mismo, y la copia que sube cada commit (`habitos-
 base (`CIFRAS.REPARTO_BASE`, en el maestro) es GBMF2, el fondo de liquidez diaria de GBM, al 100 %: el dinero de la
 salida a Alemania se usa en meses y va donde se saca al día y con riesgo bajo.
 
-**Las noticias las trae el hook de pre-commit de la PC** (`noticias-actualizar.js`): el navegador no puede leer
-Google Noticias directo (CORS), y los lectores de RSS gratuitos que lo harían, medidos el 17 nov 2026, fallan: uno
-responde que Google lo limita o que hace falta una llave, el otro no contesta. Node desde la PC sí puede. Hace una
-búsqueda por tema en Google Noticias (México, en español): **Recomendaciones** (*dónde invertir*, *en qué invertir*,
-*conviene invertir*… de los últimos 30 días, solo titulares que recomiendan algo), **CETES y tasas** (7 días), **Bolsa
-y ETFs** (7 días) y **Cripto** (3 días). Deja solo medios de México —cualquier dominio `.mx` y GBM, Bloomberg Línea,
-Investing.com México, UnoTV, Milenio y El CEO; en cripto, cualquiera que no sea de otro país—, quita lo de otros
-países y lo repetido, y guarda 12 por tema en `noticias-inversion.js` (`{generado, temas, items: [{t, u, f, fuente,
-dominio, tema, rec}]}`). Si las que hay tienen menos de una hora no vuelve a pedirlas, y sin red o sin noticias deja
-las anteriores: nunca detiene un commit. Las búsquedas viven solo en el script: el panel toma los temas del archivo.
-Medido el 17 nov 2026 con las búsquedas reales: 35 titulares, 3 de recomendaciones, 8 de CETES, 12 de bolsa y 12 de
-cripto. Google permite su RSS para un lector personal y no comercial, que es este uso.
+**Las noticias llegan por dos lados, y el panel usa las más nuevas** (`qiNoticias`). Una **tarea de GitHub**
+(`.github/workflows/noticias-inversion.yml`, Adán: *"eso de cada 4 hrs estaría bien"*) corre `noticias-actualizar.js`
+cada 4 horas y publica el resultado en la rama `datos-noticias` (`noticias.json`, un solo commit que se reescribe: main
+no se toca); el panel lo pide al abrirse (`qiPedirNoticias`, de raw.githubusercontent.com, como mucho cada 10 minutos)
+y guarda la última que llegó en `dash-noticias-v1` para verla sin red. Y **el hook de pre-commit de la PC** corre el
+mismo script y deja `noticias-inversion.js`, que el panel carga con `<script src>`: es el respaldo cuando no hay red.
+El navegador no puede leer Google Noticias directo (CORS), y los lectores de RSS gratuitos que lo harían, medidos el 17
+nov 2026, fallan: uno responde que Google lo limita o que hace falta una llave, el otro no contesta. Node, desde la PC
+o desde GitHub, sí puede.
+
+El script hace una búsqueda por tema en Google Noticias (México, en español): **Recomendaciones** (*dónde invertir*,
+*en qué invertir*, *conviene invertir*… de los últimos 30 días, solo titulares que recomiendan algo), **CETES y tasas**
+(7 días), **Bolsa y ETFs** (7 días) y **Cripto** (3 días). Deja solo medios de México —cualquier dominio `.mx` y GBM,
+Bloomberg Línea, Investing.com México, UnoTV, Milenio y El CEO; en cripto, cualquiera que no sea de otro país—, quita
+lo de otros países y lo repetido, y guarda 12 por tema (`{generado, temas, items: [{t, u, f, fuente, dominio, tema,
+rec}]}`). Desde la PC, si las que hay tienen menos de una hora no vuelve a pedirlas, y sin red o sin noticias deja las
+anteriores: nunca detiene un commit; en GitHub, sin noticias la tarea falla sin publicar y se queda lo anterior. Las
+búsquedas viven solo en el script: el panel toma los temas del archivo. Si las noticias que enseña tienen más de un
+día, la cabecera lo dice en naranja. Medido el 17 nov 2026 con las búsquedas reales: 35 titulares, 3 de
+recomendaciones, 8 de CETES, 12 de bolsa y 12 de cripto. Google permite su RSS para un lector personal y no
+comercial, que es este uso.
 
 **En la tarjeta de Mi Día no cambia nada de fondo**: `pasoInversionHoy()` sigue diciendo, con los saldos de Finanzas,
 si hoy toca pagar la tarjeta o invertir, y ahora remite al reparto. Medido a 1600×1000 y 390×844, en claro y en oscuro:

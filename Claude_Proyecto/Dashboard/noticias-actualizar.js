@@ -10,7 +10,9 @@
    escribe `Dashboard/noticias-inversion.js`:
      window.NOTICIAS_INVERSION = { generado, temas: [{id, t, q, dias}], items: [{t, u, f, fuente, dominio, tema, rec}] }
    `rec` marca un titular que recomienda algo («dónde invertir», «conviene», «¿es momento de comprar?»…).
-   Qué invertir hoy lo carga con <script src>, en la PC y —con el push— en el iPad. Las búsquedas viven solo
+   Qué invertir hoy lo carga con <script src>, en la PC y —con el push— en el iPad. Además, una tarea de GitHub
+   (.github/workflows/noticias-inversion.yml) lo corre cada 4 horas y publica el JSON en la rama `datos-noticias`;
+   el panel usa el más nuevo de los dos, así hay noticias frescas aunque no haya commit. Las búsquedas viven solo
    aquí: el panel toma los nombres de los temas del propio archivo. El navegador no puede leer Google
    Noticias directo (CORS) y los lectores de RSS gratuitos fallan o piden llave; Node desde la PC, sí.
 
@@ -19,6 +21,7 @@
      node Dashboard/noticias-actualizar.js                 # escribe noticias-inversion.js si tiene más de una hora
      node Dashboard/noticias-actualizar.js --add           # y lo agrega al commit (así lo llama el hook)
      node Dashboard/noticias-actualizar.js --ya            # aunque tenga menos de una hora
+     node Dashboard/noticias-actualizar.js --ya --json x   # y el JSON puro en x (así lo llama la tarea de GitHub)
      NOTICIAS_DIR=carpeta node Dashboard/noticias-actualizar.js --ya   # lee <tema>.xml de una carpeta (pruebas)
    Nunca detiene un commit: sin red o sin noticias, lo dice en una línea y deja el archivo anterior.
    ═══════════════════════════════════════════════════════════════════════════════════════════════ */
@@ -98,5 +101,8 @@ function previo() {
     '   (Dashboard/noticias-actualizar.js): no se edita a mano. */\nwindow.NOTICIAS_INVERSION = ' + JSON.stringify(datos, null, 1) + ';\n', 'utf8');
   fs.renameSync(SALIDA + '.tmp', SALIDA);
   di(items.length + ' titulares en ' + conNoticias + ' temas');
+  // La tarea de GitHub (cada 4 horas) pide además el JSON puro, que publica en la rama datos-noticias.
+  const j = args.indexOf('--json');
+  if (j >= 0 && args[j + 1]) { fs.writeFileSync(args[j + 1], JSON.stringify(datos) + '\n', 'utf8'); di('JSON en ' + args[j + 1]); }
   if (args.indexOf('--add') >= 0) require('child_process').spawnSync('git', ['add', SALIDA], { stdio: 'ignore' });
 })().catch(e => di('no se pudo: ' + e.message));
