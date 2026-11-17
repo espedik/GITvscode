@@ -4305,7 +4305,7 @@ window.CIFRAS = (function () {
           "Pregunta: ¿qué señales me dicen que tengo que pedir ayuda allá?",
           "Allá: la asesoría psicológica del Studierendenwerk es gratis para estudiantes."] } },
       "La deuda pesa en la cabeza, no sólo en la cartera": {
-        sesion: [[5, "El primer domingo del mes, abre el panel de Deuda cara del Plan Maestro."],
+        sesion: [[5, "El primer domingo del mes, abre el panel de Deuda total del Plan Maestro."],
                  [5, "Anota cuánto debías el mes pasado, cuánto debes hoy y cuánto bajó."],
                  [5, "Escribe la fecha en que el plan termina de pagar la tarjeta y una frase de cómo te sientes."]],
         sale: "Tres meses seguidos con el número anotado y la fecha de fin a la vista.",

@@ -681,9 +681,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    se usa en el resto del Dashboard) más compactas para ganar el alto que le faltaba a las metas
    de abajo. */
 /* En una sola fila de ocho desde 1400 px: en dos filas, a 2048×1040 la columna del día se quedaba 34 px corta. */
-#pmMedidores.grid{gap:6px;grid-template-columns:repeat(8,minmax(0,1fr));margin-bottom:6px;flex-shrink:0}
+#pmMedidores.grid{gap:6px;grid-template-columns:repeat(7,minmax(0,1fr));margin-bottom:6px;flex-shrink:0}
 @media(max-width:1400px){#pmMedidores.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:900px){#pmMedidores.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){#pmMedidores.grid{grid-template-columns:repeat(2,minmax(0,1fr))}#pmMedidores .tile:last-child:nth-child(odd){grid-column:1/-1}}
 #pmMedidores .tile{position:relative;display:flex;flex-direction:column;gap:1px;padding:5px 10px 6px;border-radius:9px;box-shadow:none}
 /* Dos renglones: el nombre, y la cifra con su barra al lado. La frase que explica el porcentaje va en el title de la
    caja y en su desglose, que se abre al tocarla. */
@@ -692,6 +692,36 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 #pmMedidores .lbl{min-width:0;display:flex;align-items:center;gap:5px;font-size:11px;line-height:1.25;font-weight:600;letter-spacing:0;text-transform:none;
   color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #pmMedidores .lbl i{width:6px;height:6px;border-radius:2px;flex-shrink:0}
+/* Total invertido, compra por compra (kpiDetalle('invertido'), tiFormHtml): cada inversión en un renglón —cuándo, qué,
+   cuánto metiste y cuánto vale— con Editar y Borrar, y debajo el formulario para agregar o corregir una. */
+.ti-lista{display:flex;flex-direction:column;border-radius:12px;border:1px solid rgba(var(--ov),.09);overflow:hidden}
+.ti-fila{display:grid;grid-template-columns:96px minmax(0,1fr) auto auto;gap:4px 12px;align-items:center;padding:8px 12px;font-size:12.5px}
+.ti-fila+.ti-fila{border-top:1px solid rgba(var(--ov),.07)}
+.ti-fila.edita{background:rgba(var(--cy-rgb),.08)}
+.ti-f{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.ti-n{display:flex;flex-direction:column;min-width:0}
+.ti-n b{color:var(--text);overflow-wrap:anywhere}
+.ti-n i{font-style:normal;font-size:11px;color:var(--text3)}
+.ti-m{text-align:right;line-height:1.35;color:var(--text2);white-space:nowrap}
+.ti-m b{color:var(--text)}
+.ti-m em{font-style:normal;font-weight:700}
+.ti-m em.ok{color:var(--g)}
+.ti-m em.mal{color:var(--r)}
+.ti-acc{display:flex;gap:6px}
+.ti-acc .ce-btn{padding:4px 9px;font-size:11.5px}
+.ti-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px;margin-top:10px;padding:12px 14px;border-radius:12px;
+  background:rgba(var(--ov),.035);border:1px dashed rgba(var(--ov),.18)}
+.ti-form-t{grid-column:1/-1;font-size:12px;font-weight:800;color:var(--text)}
+.ti-form label{display:flex;flex-direction:column;gap:3px;min-width:0;font-size:11px;font-weight:700;color:var(--text3)}
+.ti-form label.ancho{grid-column:1/-1}
+.ti-form input,.ti-form select{width:100%;box-sizing:border-box;padding:7px 9px;border-radius:8px;border:1px solid rgba(var(--ov),.18);
+  background:rgba(var(--ov),.05);color:var(--text);font:inherit;font-size:13px;font-weight:500}
+.ti-form-acc{grid-column:1/-1;display:flex;gap:8px;justify-content:flex-end}
+@media(max-width:640px){
+  .ti-fila{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"f m" "n m" "acc acc"}
+  .ti-f{grid-area:f}.ti-n{grid-area:n}.ti-m{grid-area:m}.ti-acc{grid-area:acc;justify-content:flex-end}
+  .ti-form{grid-template-columns:minmax(0,1fr)}
+}
 #pmMedidores .big-num{flex:none;font-size:15px;line-height:1.1;white-space:nowrap}
 /* ─── Medidores clicables (2026-08-19) ───
    Los 4 (ahora 8) medidores eran de solo lectura: un número sin de dónde sale. Ahora
@@ -4378,7 +4408,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .ct-dia .ct-cat-n i{width:6px;height:6px}
 .ct-dia .ct-cat-b{height:3px}
 .ct-vacio{font-size:11px;color:var(--text3);padding:6px 0}
-/* Tu estrategia de hoy (arriba del panel de Deuda cara): la BBVA con su saldo vivo, lo que toca mandarle,
+/* Tu estrategia de hoy (arriba del panel de Total invertido): la BBVA con su saldo vivo, lo que toca mandarle,
    lo previsto sin anotar y el tope de gasto; con la tarjeta en cero, cancelarla y todo a GBM. */
 .ce-caja{display:flex;flex-direction:column;gap:7px;padding:11px 12px;border-radius:12px;
   background:rgba(var(--w-rgb),.05);border:1px solid rgba(var(--w-rgb),.24)}
@@ -6909,7 +6939,7 @@ function taItems(ei){
     out.push({ tipo: 'bbva', k: 'Deuda', t: 'La BBVA en cero', d: B.fin, fTxt: mpFechaTxt(x, true), falta: mpFalta(x),
       pct: AB && AB.pct, cifras: E ? [[money(E.saldo), 'por pagar'], [Math.round((AB && AB.pct) || 0)+' %', 'pagado']] : null,
       sig: sa ? 'Abona '+money(sa.monto)+' el '+mpFechaTxt(mpFecha(sa.fecha), true) : '', sigF: '', listo: false,
-      img: apFoto('fase-tarjeta'), abrir: "abrirKpi('deudacara')" });
+      img: apFoto('fase-tarjeta'), abrir: "abrirKpi('deudatotal')" });
   }
   ((window.CIFRAS && CIFRAS.CALENDARIO && CIFRAS.CALENDARIO.hitos) || []).forEach(function(h){
     const x = mpFecha(h.fecha); if(!x || !dentro(x.d)) return;
@@ -9892,7 +9922,7 @@ function ctCifrasHoy(){
    Adán, 15-oct-2026: "debe actualizarse lo de tarjeta de bbva solito, en base a cuánto gasto y
    cuánto gano cada día, después que la liquide la cancelo y de ahí nos vamos a incrementar números
    en inversiones, recuerda que cada día debo tener una estrategia para seguir bien en los números".
-   Va arriba del panel de Deuda cara (kpiDetalle, ctEstrategiaHoyHtml; Adán, 21-oct-2026: "esta info va en las
+   Va arriba del panel de Total invertido (kpiDetalle, ctEstrategiaHoyHtml; Adán, 21-oct-2026: "esta info va en las
    cifras que están arriba cuando das click, ahí se desglosan las cantidades"): qué mandar
    hoy a la BBVA —el plan ya lo restó solo (CIFRAS.aplicarPlanBbva), y aquí se corrige si no fue
    así—, cuánto se puede gastar sin romper la quincena y, con la tarjeta en cero, cancelarla y pasar
@@ -9916,7 +9946,7 @@ function ctQuincenaPlan(T, ym, nSel, nDias){
   return { falta: Math.max(0, -T.cierre), didi: Math.round(didiLibre * Math.max(0, T.fin - nSel) / 30.4 + minDidi + tuyos),
            hasta: T.fin >= nDias ? 'al día 1' : 'al '+(T.fin+1) };
 }
-// La estrategia de hoy, sea cual sea el día que el tablero tenga elegido: la pinta el panel de Deuda cara.
+// La estrategia de hoy, sea cual sea el día que el tablero tenga elegido: la pinta el panel de Total invertido.
 function ctEstrategiaHoyHtml(){
   const k = hoyLocal(), ym = k.slice(0,7), n = +k.slice(8);
   const nDias = new Date(+ym.slice(0,4), +ym.slice(5,7), 0).getDate();
@@ -10060,7 +10090,61 @@ function ceGuardar(F){
   detectarLogros();
   RENDERS[cur]();
   const ov = document.getElementById('kpiOverlay');
-  if(ov && ov.classList.contains('open') && ov.dataset.kpi === 'deudacara') abrirKpi('deudacara');
+  if(ov && ov.classList.contains('open') && ov.dataset.kpi){
+    const body = ov.querySelector('.gbm-body'), y = body ? body.scrollTop : 0;
+    abrirKpi(ov.dataset.kpi); if(body) body.scrollTop = y;
+  }
+}
+/* Tus inversiones, desde el panel de Total invertido: agregar una compra, corregirla o borrarla. Escriben en
+   `finanzasmx_v2.investments` con la forma de Finanzas ({id, name, type, invested, value, date, rate}), así que
+   Finanzas · Inversiones enseña lo mismo y lo que se edita allá llega aquí; ceGuardar repinta el medidor y el panel.
+   Solo donde Finanzas es propia: la copia de la PC (FIN_REPO) es de solo lectura. */
+const TI_TIPOS = [['fondos','Fondo de inversión'],['acciones','Acciones o ETF'],['cetes','CETES'],['deuda','Deuda o bonos'],
+  ['crypto','Cripto'],['inmuebles','Inmuebles'],['otro','Otro']];
+let _tiEdit = null;
+function tiEditable(){ return !FIN_REPO && !!tryParse('finanzasmx_v2', null); }
+function tiFecha(k){ return k ? new Date(String(k).slice(0,10)+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'}) : 'sin fecha'; }
+function tiFormHtml(ed){
+  const v = x => x != null && x !== '' ? esc(String(x)) : '';
+  return '<form class="ti-form" onsubmit="tiGuardar(event)">'+
+    '<span class="ti-form-t">'+(ed ? 'Editar · '+esc(ed.name || 'Inversión') : 'Agregar una compra')+'</span>'+
+    '<label><span>Cuándo</span><input type="date" name="qf" value="'+(ed ? v(ed.date) : hoyLocal())+'" required></label>'+
+    '<label class="ancho"><span>Qué compraste</span><input type="text" name="qn" value="'+(ed ? v(ed.name) : '')+'" placeholder="p. ej. VOO, GBMF2, CETES 28 días" required></label>'+
+    '<label><span>Tipo</span><select name="qt">'+TI_TIPOS.map(x => '<option value="'+x[0]+'"'+((ed ? ed.type : 'fondos') === x[0] ? ' selected' : '')+'>'+x[1]+'</option>').join('')+'</select></label>'+
+    '<label><span>Cuánto metiste</span><input type="number" name="qm" min="0.01" step="0.01" inputmode="decimal" value="'+(ed ? v(ed.invested) : '')+'" required></label>'+
+    '<label><span>Vale hoy</span><input type="number" name="qv" min="0" step="0.01" inputmode="decimal" value="'+(ed ? v(ed.value) : '')+'" placeholder="lo que metiste"></label>'+
+    '<span class="ti-form-acc"><button type="submit" class="ce-btn">'+(ed ? 'Guardar cambios' : 'Agregar')+'</button>'+
+      (ed ? '<button type="button" class="ce-btn sec" onclick="tiCancelar()">Cancelar</button>' : '')+'</span></form>';
+}
+function tiGuardar(ev){
+  if(ev) ev.preventDefault();
+  const f = ev && ev.target, F = rawGet('finanzasmx_v2', null);
+  if(!f || !F || FIN_REPO) return;
+  const name = f.qn.value.trim(), invested = Math.round((parseFloat(f.qm.value) || 0) * 100) / 100, valor = parseFloat(f.qv.value);
+  if(!name){ f.qn.focus(); return; }
+  if(!(invested > 0)){ f.qm.focus(); return; }
+  const datos = { name, type: f.qt.value, invested, value: valor >= 0 ? Math.round(valor * 100) / 100 : invested, date: f.qf.value || hoyLocal() };
+  if(f.qv.value === '') datos.value = invested;
+  F.investments = F.investments || [];
+  const i = _tiEdit ? F.investments.findIndex(x => x.id === _tiEdit) : -1;
+  if(i >= 0) F.investments[i] = Object.assign({}, F.investments[i], datos);
+  else F.investments.push(Object.assign({ id: Date.now().toString(36) + Math.random().toString(36).slice(2), rate: 0 }, datos));
+  _tiEdit = null;
+  ceGuardar(F);
+}
+function tiEditar(id){
+  _tiEdit = id; abrirKpi('invertido');
+  const f = document.querySelector('#kpiBody .ti-form');
+  if(f){ f.scrollIntoView({ block: 'nearest' }); const q = f.querySelector('input[name="qm"]'); if(q) q.focus(); }
+}
+function tiCancelar(){ _tiEdit = null; abrirKpi('invertido'); }
+function tiBorrar(id){
+  const F = rawGet('finanzasmx_v2', null); if(!F || FIN_REPO) return;
+  const x = (F.investments || []).find(i => i.id === id); if(!x) return;
+  if(!confirm('¿Borrar '+(x.name || 'esta inversión')+' ('+tiFecha(x.date)+', '+money(+x.invested || 0)+')? También se borra en Finanzas.')) return;
+  F.investments = F.investments.filter(i => i.id !== id);
+  if(_tiEdit === id) _tiEdit = null;
+  ceGuardar(F);
 }
 // Deshace lo último que se anotó hoy desde aquí: quita la transacción y devuelve el saldo.
 function bbvaDeshacer(){
@@ -10357,7 +10441,7 @@ function renderCoachTablero(){
     })()+
 
     // Tu estrategia de hoy y tu dinero no van aquí: los desglosan los medidores de arriba —la estrategia, con sus botones,
-    // en el panel de Deuda cara; el dinero, en el de Patrimonio— (Adán, 21-oct-2026: "esta info va en las cifras que
+    // en el panel de Total invertido; el dinero, en el de Patrimonio— (Adán, 21-oct-2026: "esta info va en las cifras que
     // están arriba cuando das click, ahí se desglosan las cantidades").
 
 
@@ -14975,7 +15059,7 @@ function abrirKpi(id){
   ov.classList.add('open');
   clearInterval(timer);
 }
-function cerrarKpi(){ document.getElementById('kpiOverlay')?.classList.remove('open'); }
+function cerrarKpi(){ _tiEdit = null; document.getElementById('kpiOverlay')?.classList.remove('open'); }
 // El panel es XL (Adán, 21-sep-2026: "todas las ventanas iguales a estas debes hacerlas lo más
 // grande posible"): la cifra grande arriba a lo ancho y las secciones repartidas en dos columnas.
 // Cada kpiDetalle sigue escribiendo su HTML de corrido; esto solo lo agrupa: .kpi-cifra y
@@ -15008,8 +15092,6 @@ function kpiDetalle(id){
   const pat=patrimonioNeto();
   const totalInv=inv.reduce((a,i)=>a+(+i.value||+i.invested||0),0);
   const deudaTot=debts.reduce((a,d)=>a+(+d.balance||0),0);
-  const deudaCara=debts.filter(d=>d.rate>0&&d.balance>0&&d.type==='credit_card');
-  const deudaCaraBal=deudaCara.reduce((a,d)=>a+d.balance,0);
   const V='var(--g)', O='var(--o)', R='var(--r)', C='var(--cy)', P='var(--p)', W='var(--w)';
   // Lo que falta por pagar, detrás de lo pagado en verde.
   const PISTA_R='color-mix(in srgb,var(--r) 60%,transparent)';
@@ -15039,34 +15121,6 @@ function kpiDetalle(id){
       (window.CIFRAS&&!(+CIFRAS.n('cetesDia15'))?kpiSec('🧭 Qué hace el plan con él')+
         kpiPaso('Hoy el plan no le aporta','El día 15 van <b>'+CIFRAS.v('cetesDia15')+'</b> a CETES: todo el ahorro —<b>'+CIFRAS.v('ahorroMesDepa')+'</b> al mes con depa, <b>'+CIFRAS.v('ahorroMesCasa')+'</b> en casa de tu familia— va a GBM para la salida. El fondo se queda como está: es el colchón para un imprevisto.',C):'')+
       kpiNota('Guárdalo donde puedas sacarlo en 24-48 h — CETES a 28 días o cuenta de ahorro. Nunca en algo que pueda valer menos justo el día que lo necesitas.')};
-  }
-
-  if(id==='deudacara'){
-    const filas=deudaCara.map(d=>{
-      const pagado=d.total>0?(1-d.balance/d.total)*100:0;
-      const interesMes=d.balance*(tasaQueCorre(d)/100)/12;
-      return kpiBarra(esc(d.name), money(d.balance)+(d.total>0?' · '+Math.round(pagado)+'% pagado':''), pagado, V,
-        (tasaQueCorre(d)>0?'Tasa '+d.rate+'% anual · te cuesta <b>'+money(interesMes)+' al mes</b> solo en intereses'+(d.id==='d001'&&bbvaPlan()?' · '+bbvaPlanTxt():''):(d.id==='d001'&&bbvaPlan()?'Q'+bbvaPlanTxt().slice(1):'La pagas completa cada mes · <b>sin intereses</b>'))+(d.total>0?' · pagado '+money(d.total-d.balance)+' de '+money(d.total):''), PISTA_R);
-    }).join('');
-    const interesTotal=deudaCara.reduce((a,d)=>a+d.balance*(tasaQueCorre(d)/100)/12,0);
-    return {titulo:'💳 Deuda cara', sub:'Cada saldo con su tasa, y lo que te cuesta cada mes que sigue vivo.',
-      html:
-      '<div class="kpi-cifra" style="color:'+R+'">'+money(deudaCaraBal)+'</div>'+
-      '<div class="kpi-cifra-sub">'+deudaCara.length+' tarjeta'+(deudaCara.length===1?'':'s')+' con saldo · <b>'+money(interesTotal)+' al mes</b> solo en intereses</div>'+
-      // Tu estrategia de hoy: qué mandar a la BBVA, con Corregir, No lo mandé y Abonar, y la quincena en una frase.
-      ctEstrategiaHoyHtml()+
-      kpiSec('📊 Deuda por deuda')+
-      '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">Sin deudas con interés registradas. 🎉</div>')+'</div>'+
-      (deudaCaraBal>0&&bbvaPlan()&&window.CIFRAS&&CIFRAS.v('bbvaRuta')?kpiSec('🗓️ Los abonos que faltan')+
-        kpiNota(fzCap(CIFRAS.v('bbvaRuta'))+'. Con el último queda en <b>$0</b>.'):'')+
-      (deudaCaraBal>0?
-        kpiSec('🎯 Cómo atacarla')+
-        kpiPaso('Método avalancha','Ordena por <b>tasa</b>, no por saldo, y mete todo el excedente en la de arriba mientras pagas el mínimo en las demás. Es el que menos intereses te cuesta; la "bola de nieve" (de menor a mayor saldo) solo gana en motivación.',R)+
-        (interesTotal>=1
-          ?kpiNota('Cada '+money(1000)+' extra que abonas hoy te ahorra unos <b>'+money(1000*((deudaCara[0]&&tasaQueCorre(deudaCara[0])||45)/100))+' al año</b> de intereses a la tasa de tu deuda más cara. Ninguna inversión razonable le gana a eso.')
-          :kpiNota('Hoy no te cobra intereses: pagas lo que pide el estado de cuenta. Un abono extra la deja en cero antes, pero no te ahorra intereses — el plan la termina '+(bbvaPlan()?'el <b>'+bbvaPlan().fin.toLocaleDateString('es-MX',{day:'numeric',month:'long'})+'</b>':'quincena a quincena')+'.'))
-        :kpiSec('🎯 Estado')+kpiPaso('Sin deuda cara ✅','Ya no hay saldo con interés. El excedente va completo a fondo o inversión.',V))+
-      (vecesLogro('banamex-liquidada').length?kpiNota('🏅 Ya lo lograste '+(vecesLogro('banamex-liquidada').length>1?vecesLogro('banamex-liquidada').length+' veces: <b>la tarjeta Banamex quedó en $0 el '+vecesLogro('banamex-liquidada').map(f=>new Date(f+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short'})).join(' y otra vez el ')+'</b>, y sigue liquidada.':'una vez: <b>la tarjeta Banamex quedó liquidada el '+fechaUltimoLogro('banamex-liquidada')+'</b>.')+' El mismo método sirve para la que queda.'):'')};
   }
 
   // 2026-08-23 — reescrito entero. Antes este panel leia `goal.current` (la cifra a mano de
@@ -15280,17 +15334,46 @@ function kpiDetalle(id){
       kpiNota('🏅 Ya bajaste este número una vez de golpe: <b>liquidar la Banamex el 13-ago-2026</b> apagó su parte de intereses para siempre; y el <b>19-sep-2026</b> la BBVA bajó de $39,000 a $900 con la venta del Bitcoin, que eran ~$1,800 al mes de interés que ya no pagas.')};
   }
 
+  // Total invertido: tu estrategia de hoy —lo que toca mandar a GBM— y tus inversiones compra por compra, que aquí se
+  // agregan, se corrigen y se borran (Adán, 17-nov-2026: "añadiré mis inversiones en GBM, cuándo, cuánto y qué compré…
+  // debe ser lo más autónomo posible, editar, eliminar"). Viven en `finanzasmx_v2.investments`, las mismas de Finanzas ·
+  // Inversiones: lo que cambies aquí o allá es el mismo dato. Donde Finanzas es la copia de la PC (el iPad), se ven pero
+  // no se editan: esa copia se rehace en cada commit.
   if(id==='invertido'){
-    const filas=inv.map(i=>{
-      const v=+i.value||+i.invested||0, met=+i.invested||0, gan=met>0&&+i.value?(+i.value)-met:null;
-      return kpiBarra(esc(i.name), money(v), totalInv>0?v/totalInv*100:0, C, (totalInv>0?Math.round(v/totalInv*100)+'% de tu portafolio':'')+
-        (gan!==null&&Math.abs(gan)>=1?' · metiste '+money(met)+', '+(gan>=0?'gana ':'pierde ')+'<b>'+money(Math.abs(gan))+'</b> ('+(gan>=0?'+':'−')+Math.abs(gan/met*100).toFixed(1)+'%)':''));
+    const editable=tiEditable(), metido=inv.reduce((a,i)=>a+(+i.invested||0),0), dif=totalInv-metido;
+    const tipoTxt=t=>(TI_TIPOS.find(x=>x[0]===t)||[0,'Otro'])[1];
+    const compras=inv.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))).map(i=>{
+      const met=+i.invested||0, v=+i.value||met, gan=v-met;
+      return '<div class="ti-fila'+(_tiEdit===i.id?' edita':'')+'"><span class="ti-f">'+tiFecha(i.date)+'</span>'+
+        '<span class="ti-n"><b>'+esc(i.name||'Inversión')+'</b><i>'+tipoTxt(i.type)+'</i></span>'+
+        '<span class="ti-m">metiste <b>'+money(met)+'</b><br>vale <b>'+money(v)+'</b>'+
+          (met>0&&Math.abs(gan)>=1?' <em class="'+(gan>=0?'ok':'mal')+'">'+(gan>=0?'+':'−')+money(Math.abs(gan))+'</em>':'')+'</span>'+
+        (editable?'<span class="ti-acc"><button type="button" class="ce-btn sec" onclick="tiEditar(\''+i.id+'\')">Editar</button>'+
+          '<button type="button" class="ce-btn sec" onclick="tiBorrar(\''+i.id+'\')">Borrar</button></span>':'')+'</div>';
+    }).join('');
+    // El portafolio: cada instrumento con lo de todas sus compras sumado.
+    const porNombre={};
+    inv.forEach(i=>{ const k=String(i.name||'Inversión').trim(), x=porNombre[k]||(porNombre[k]={v:0,m:0,n:0});
+      x.v+=(+i.value||+i.invested||0); x.m+=(+i.invested||0); x.n++; });
+    const filas=Object.keys(porNombre).sort((a,b)=>porNombre[b].v-porNombre[a].v).map(k=>{
+      const x=porNombre[k], gan=x.m>0?x.v-x.m:null;
+      return kpiBarra(esc(k)+(x.n>1?' · '+x.n+' compras':''), money(x.v), totalInv>0?x.v/totalInv*100:0, C, (totalInv>0?Math.round(x.v/totalInv*100)+'% de tu portafolio':'')+
+        (gan!==null&&Math.abs(gan)>=1?' · metiste '+money(x.m)+', '+(gan>=0?'gana ':'pierde ')+'<b>'+money(Math.abs(gan))+'</b> ('+(gan>=0?'+':'−')+Math.abs(gan/x.m*100).toFixed(1)+'%)':''));
     }).join('');
     const btcI=btcInfo();
-    return {titulo:'📈 Total invertido', sub:'Cuánto tienes trabajando y cómo está repartido.',
+    return {titulo:'📈 Total invertido', sub:'Lo que tienes trabajando, compra por compra: qué compraste, cuándo, cuánto metiste y cuánto vale hoy.',
       html:
       '<div class="kpi-cifra" style="color:'+C+'">'+money(totalInv)+'</div>'+
-      '<div class="kpi-cifra-sub">'+inv.length+' instrumento'+(inv.length===1?'':'s')+' registrado'+(inv.length===1?'':'s')+' en Finanzas</div>'+
+      '<div class="kpi-cifra-sub">'+inv.length+' inversi'+(inv.length===1?'ón':'ones')+' en Finanzas · metiste <b>'+money(metido)+'</b>'+
+        (Math.abs(dif)>=1?' · '+(dif>=0?'ganan ':'pierden ')+'<b>'+money(Math.abs(dif))+'</b>':'')+'</div>'+
+      // Tu estrategia de hoy: sin tarjeta que pagar, lo que va a GBM hoy y este mes (ctEstrategiaHtml).
+      ctEstrategiaHoyHtml()+
+      kpiSec('🧾 Tus inversiones, compra por compra')+
+      '<div class="ti-lista">'+(compras||'<div class="gbm-vacio">Todavía no hay inversiones registradas.</div>')+'</div>'+
+      (editable?tiFormHtml(_tiEdit?inv.find(i=>i.id===_tiEdit):null)
+        :kpiNota(FIN_REPO?'En este dispositivo tus cifras son la copia de tu PC'+(FIN_REPO.fecha?' del '+tiFecha(FIN_REPO.fecha):'')+
+          ': las compras se agregan y se editan en tu PC y llegan aquí con el siguiente commit.'
+          :'Abre Finanzas una vez en este navegador para registrar aquí tus compras.'))+
       kpiSec('📊 Tu portafolio hoy')+
       '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">Todavía no hay inversiones registradas en Finanzas.</div>')+'</div>'+
       (btcI.mxn>0?kpiNota('Aparte tienes <b>'+money(btcI.mxn)+'</b> en Bitcoin ('+btcI.held.toFixed(6)+' BTC a precio de hoy). No suma aquí: está en el Fondo Maestría y en el Patrimonio.'):'')+
@@ -15336,11 +15419,7 @@ function kpiDetalle(id){
   return null;
 }
 
-function metaDebtInfo(matcher){
-  const d=(D.fin.debts||[]).find(matcher);
-  return d?{balance:d.balance||0,total:d.total||d.balance||0,found:true,cancelada:d.cancelada||null}:{balance:0,total:0,found:false};
-}
-/* Los ocho medidores del dinero y del plan: el fondo, la deuda cara, la maestría, el patrimonio, los intereses,
+/* Los siete medidores del dinero y del plan: el fondo, la maestría, el patrimonio, los intereses,
    lo invertido, la deuda total y el camino al cierre del plan. Van en el Plan Maestro, entre el mes en curso
    y el tablero (Adán, 21-oct-2026: "todo esto, ponlo en lo que acabas de quitar y quítalo de mis metas"); cada
    uno abre su desglose (abrirKpi → kpiDetalle). */
@@ -15348,9 +15427,6 @@ function renderMedidores(){
   // La meta del fondo sale de datos-maestros.js: este KPI se arma en JS y no pasa por
   // cifrarLiterales(), asi que se lee la variable directo en vez de escribir el numero.
   const metaFondo = _metaFondo();
-  // Solo la tarjeta, no cualquier deuda que mencione al banco (ver metaDebtInfo).
-  const bana=metaDebtInfo(d=>/banamex/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
-  const bbva=metaDebtInfo(d=>/bbva/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
   const goalMae=(D.fin.goals||[]).find(g=>g.id==='g001'||/maestr/i.test(g.name||''));
   // El fondo se suma en vivo de sus piezas
   // reales —fondo de emergencia, inversiones y Bitcoin— en vez de leer la foto vieja de
@@ -15358,14 +15434,6 @@ function renderMedidores(){
   const fmMae=fondoMaestria();
   const maeTgt=(goalMae&&+goalMae.target)||0;
 
-  const deudaCaraBal=bana.balance+bbva.balance, deudaCaraTot=bana.total+bbva.total;
-  const deudaCaraTieneDatos=bana.found||bbva.found;
-  // Con solo la BBVA viva, su avance es el de su plan quincena a quincena (CIFRAS.avanceBbva), el mismo
-  // que enseña el Plan Maestro; con la Banamex también viva, lo pagado sobre lo que nacieron las dos.
-  const AB=CIFRAS.avanceBbva(D.fin), soloBbva=bbva.balance>0&&!(bana.balance>0);
-  const deudaCaraPct=soloBbva?AB.pct:deudaCaraTot>0?Math.max(0,Math.min(100,(1-deudaCaraBal/deudaCaraTot)*100)):0;
-  const deudaCaraSub=soloBbva?Math.round(AB.pct)+'% pagado'+(bbvaPlan()?' · en cero el '+bbvaPlan().fin.toLocaleDateString('es-MX',{day:'numeric',month:'short'}):'')
-    :Math.round(deudaCaraPct)+'% pagado de '+money(deudaCaraTot);
 
   const ef=D.fin.emergencyFund||0;
   const pat=patrimonioNeto();
@@ -15393,8 +15461,6 @@ function renderMedidores(){
 
   const tiles=[
     {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/metaFondo*100),sub:Math.round(Math.min(100,ef/metaFondo*100))+'% · en CETES · meta '+money(metaFondo),c:'var(--w)',id:'fondo'},
-    // La etiqueta lista solo las tarjetas con saldo vivo.
-    {ico:'💳',lbl:'Deuda cara'+(deudaCaraBal>0?' ('+[bana.balance>0?'Banamex':null,bbva.balance>0?'BBVA':null].filter(Boolean).join('+')+')':''),val:deudaCaraTieneDatos?money(deudaCaraBal):'Sin datos',pct:deudaCaraTieneDatos?deudaCaraPct:0,sub:deudaCaraTieneDatos?(deudaCaraBal<=0?'100% · Liquidada 🎉':deudaCaraSub):'Regístralas en Finanzas',c:'var(--r)',fill:'var(--g)',track:PISTA_ROJA,id:'deudacara'},
     {ico:'🎓',lbl:'Fondo Maestría',val:fmMae.total>0?money(fmMae.total):'Sin datos',pct:maeTgt>0?Math.min(100,fmMae.total/maeTgt*100):0,sub:maeTgt>0?`${Math.round(Math.min(100,fmMae.total/maeTgt*100))}% · Meta: ${money(maeTgt)}${fmMae.btc.mxn>0?` · ${Math.round(fmMae.btc.mxn/fmMae.total*100)}% en BTC`:''}`:'Meta en Finanzas → Metas',c:'var(--cy)',id:'maestria'},
     {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:Math.round(patPct)+'% del millón · meta '+finDelPlan().toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'}),c:'var(--g)',id:'patrimonio'},
     // 4 medidores nuevos (2026-08-19, "tambien si puedes agregar mas, hazlo"). Los 4 salen de
@@ -17177,7 +17243,11 @@ document.addEventListener('keydown',e=>{
 // Sin swipe entre pantallas: se cambia de pantalla solo tocando un botón (‹ ›, los íconos de pantalla o el menú ☰).
 // Adán, 27-oct-2026: "quita los gestos touch de cambiar de página deslizando, eso entorpece muchas cosas".
 
-window.addEventListener('storage',()=>{loadAll();if(window.CIFRAS)CIFRAS.refrescar();RENDERS[cur]();renderQuickApps();});
+window.addEventListener('storage',()=>{loadAll();if(window.CIFRAS)CIFRAS.refrescar();RENDERS[cur]();renderQuickApps();
+  // El panel abierto (Total invertido, por ejemplo) se repinta con lo de Finanzas, salvo mientras escribes en él.
+  const ov=document.getElementById('kpiOverlay');
+  if(ov&&ov.classList.contains('open')&&ov.dataset.kpi&&!ov.contains(document.activeElement&&document.activeElement.closest('form'))) abrirKpi(ov.dataset.kpi);
+});
 
 // ── Reloj vivo ───────────────────────────────────────────────────────────
 let lastSync=Date.now();
