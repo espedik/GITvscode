@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - name: Leer Google Noticias
         run: |
           node Claude_Proyecto/Dashboard/noticias-actualizar.js --ya --json "$RUNNER_TEMP/noticias.json"
@@ -30,7 +30,8 @@ jobs:
       - name: Publicar en la rama datos-noticias
         run: |
           git checkout -q --orphan datos-noticias
-          git rm -rq --cached .
+          # -f: el script también reescribe Dashboard/noticias-inversion.js en esta copia; aquí no se publica.
+          git rm -rqf --cached .
           cp "$RUNNER_TEMP/noticias.json" noticias.json
           git add noticias.json
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
