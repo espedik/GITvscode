@@ -391,8 +391,11 @@ llevan abono de Didi a la tarjeta ni son de la quincena en que vive de Didi (`lu
 `estadoDia`. Mientras la BBVA tenga saldo no va nada de Didi a GBM (Adán: *"eso es después de liquidar BBVA"*)—, un
 ingreso aparte de `SUPUESTOS.extras` si lo hubiera (hoy ninguno: no vende nada de lo suyo), el depósito que regresa y
 los abonos de la BBVA desde el último saldo dicho. Los lunes en que lo de Didi es para vivir van aparte en cada
-semana (`vivir`): no suman a GBM, pero se dice a dónde fue. Lo pinta el plan de inversiones de
-Finanzas. **`presupuestoFijo(cat, ym)`**: el límite de una categoría de Finanzas que el plan conoce
+semana (`vivir`): no suman a GBM, pero se dice a dónde fue. Lo pintan el plan de inversiones de
+Finanzas y *Qué invertir hoy* del Dashboard. **En qué va: `REPARTO_BASE`**: el reparto de base —GBMF2, el fondo de
+liquidez diaria de GBM, al 100 %: el dinero de la salida se usa en meses—, que Qué invertir hoy y Finanzas usan
+mientras Adán no escribe el suyo (`finanzasmx_v2.reparto`, que se edita en Qué invertir hoy). Nada de esto lo escribe
+una IA (Adán, 17-nov-2026: *"ya no quiero depender de mi suscripción a Claude"*). **`presupuestoFijo(cat, ym)`**: el límite de una categoría de Finanzas que el plan conoce
 (renta y aporte, servicios, suscripciones, comida, rutinas y deudas), de `desgloseMes`.
 
 **Tu dinero un día, de lo de hoy en adelante: `estadoDia(fecha)`** (Adán, 19-oct-2026: *"conforme
@@ -1219,8 +1222,8 @@ El **control 17** vigila lo que `pfEnlazar` no puede: que los nombres de la guí
 El **control 23** vigila los `.md`: que **no vuelvan a ser diario** (encabezados fechados,
 "hasta el 2026-…", "antes era…", "mismo día)") y que **todo el código que citan exista** — cada
 identificador en `código` (ids, clases, funciones, claves) se busca en los `.html/.js/.css` del
-proyecto y en los nombres de archivo, incluidos los que declara un `.gitignore` (derivados que no se suben, como
-`inversion-contexto.json`, y que en una copia recién clonada no existen: sin ellos el resultado dependería de la
+proyecto y en los nombres de archivo, incluidos los que declara un `.gitignore` (lo que no se sube, como
+`plan-de-inversiones.html`, y que en una copia recién clonada no existe: sin ellos el resultado dependería de la
 máquina); lo que no aparece de ninguna forma es un fantasma y sale
 con archivo y línea. Las excepciones (`addInitScript` de Playwright, la bandera construida
 `finanzasmx_v2_v`) llevan su razón, y una excepción que deje de hacer falta también se avisa.

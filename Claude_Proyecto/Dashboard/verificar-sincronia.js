@@ -1888,7 +1888,7 @@ function impactoDelCambio() {
   ];
 
   // Todo lo que hay en el proyecto: fuentes (.html/.js/.css fuera de diseno-*) y nombres de archivo, también los que
-  // un .gitignore declara: derivados que no se suben (inversion-contexto.json, plan-de-inversiones.html) y que en una
+  // un .gitignore declara: lo que no se sube (plan-de-inversiones.html, syllabus/) y que en una
   // copia recién clonada no existen, así que sin esto el control falla o pasa según la máquina.
   const fuentes = [], nombres = new Set([path.basename(RAIZ)]), docs = [];
   (function listar(dir) {
@@ -2747,8 +2747,8 @@ function promptsDeLoTocado() {
    escritos a mano y una resiembra que borraba los datos. Cada uno vuelve a fallar aquí. */
 (function () {
   const F = leer('Finanzas/Finanzas.html'), M = leer('Dashboard/datos-maestros.js'), mal = [];
-  if (/WEEKLY_PICKS\s*=/.test(F)) mal.push('Finanzas volvió a tener su propia lista de acciones (WEEKLY_PICKS): la da Qué invertir hoy');
-  if (F.indexOf('../Dashboard/inversion-hoy.js') === -1) mal.push('Finanzas ya no carga inversion-hoy.js (Qué invertir hoy)');
+  if (/WEEKLY_PICKS\s*=/.test(F)) mal.push('Finanzas volvió a tener su propia lista de acciones (WEEKLY_PICKS): lo dice tu reparto');
+  if (F.indexOf('REPARTO_BASE') === -1 || F.indexOf('S.reparto') === -1) mal.push('«En qué va» de Finanzas ya no lee tu reparto (S.reparto, o CIFRAS.REPARTO_BASE)');
   if (/0\.10\s*\/\s*12|\*\s*1\.15\b|monthGBMCalc|scE_mo/.test(F)) mal.push('Finanzas volvió a proyectar con un modelo propio (sobrante estimado o rendimiento supuesto): la proyección es la del maestro');
   if (F.indexOf('CIFRAS.gbmMes') === -1) mal.push('el plan de inversiones de Finanzas ya no sale de CIFRAS.gbmMes');
   if (/Debe según el plan|debe hoy según tu plan/.test(F) || F.indexOf('CIFRAS.bbvaEstado') === -1 && F.indexOf('C.bbvaEstado') === -1) mal.push('Finanzas volvió a contar la BBVA con lo que el plan suponía, no con su saldo vivo (bbvaEstado)');
@@ -2766,14 +2766,6 @@ function promptsDeLoTocado() {
   if (M.indexOf('function aplicarPagosFijos') === -1) mal.push('el maestro ya no tiene aplicarPagosFijos');
   if (mal.length) problemas.push('Finanzas se puede volver a quedar atrás:\n     ' + mal.join('\n     '));
   else ok.push('Finanzas al día: sin listas ni proyecciones propias, la BBVA con su saldo vivo, las mensualidades solas, una sola cuenta de las cuotas, los presupuestos fijos del plan y una resiembra que no borra');
-  // Lo que Claude investiga para Qué invertir hoy envejece: se avisa (actualizarlo cuesta una corrida de Claude).
-  ['inversion-hoy.js', 'inversion-alto.js', 'inversion-superalto.js'].forEach(function (f) {
-    try {
-      const m = /"generado"\s*:\s*"(\d{4}-\d{2}-\d{2})/.exec(leer('Dashboard/' + f));
-      const dias = m ? Math.round((new Date() - new Date(m[1] + 'T12:00:00')) / 86400000) : null;
-      if (dias != null && dias > 14) avisos.push('Qué invertir hoy · ' + f + ' se investigó hace ' + dias + ' días: actualízalo antes de comprar (el botón 🤖 del panel o inversion-actualizar.ps1)');
-    } catch (e) {}
-  });
 })();
 
 /* ── 41. Cada meta de Mis Metas tiene su ficha y su plan ──────────────────────────────────────────────
@@ -3158,6 +3150,33 @@ function promptsDeLoTocado() {
   });
   if (malos.length) problemas.push('Indicadores de Finanzas, mes contra mes:\n     ' + malos.join('\n     '));
   else ok.push('Indicadores de Finanzas: una sola medición para la pantalla y la foto de cada mes; cada mes se cierra una vez, se congela y ya no se toca; cada mes enseña su patrimonio neto y su deuda total contra el anterior, y el mes en curso dice cómo subir el score');
+})();
+
+/* ── 50. Qué invertir hoy, sin IA ───────────────────────────────────────────────────────────────────────────
+   Adán, 17-nov-2026: "en qué invertir hoy también depende de la IA y eso ya no lo quiero… ponle la habilidad de que me
+   muestre noticias concretas de recomendaciones en qué invertir, ya no quiero depender de mi suscripción a Claude". El
+   panel lee el plan (CIFRAS.gbmMes), tu reparto (finanzasmx_v2.reparto o CIFRAS.REPARTO_BASE) y las noticias de Google
+   Noticias que el hook de pre-commit deja en noticias-inversion.js. Se vigila que nada vuelva a llamar a Claude, que las
+   piezas sigan conectadas y, como aviso, que las noticias no tengan más de tres días. */
+(function () {
+  const malos = [], leerSi = rel => { try { return leer(rel); } catch (e) { return ''; } };
+  const h = leer('Dashboard/dashboard.html'), hook = leerSi('.githooks/pre-commit'), C = global.window && global.window.CIFRAS;
+  if (/claudeinv:|invPedirClaude|INVERSION_(HOY|ALTO|SUPERALTO)|inversion-(hoy|alto|superalto|prompt)/.test(h)) malos.push('dashboard.html vuelve a depender de lo que escribe Claude (claudeinv, INVERSION_*, inversion-*.js)');
+  if (h.indexOf('<script src="noticias-inversion.js"') < 0) malos.push('dashboard.html ya no carga noticias-inversion.js');
+  ['function renderGBMPanel()', 'function qiReparto()', 'function qiNoticiasHtml()', 'C.gbmMes(ym)'].forEach(function (k) {
+    if (h.indexOf(k) < 0) malos.push('Qué invertir hoy perdió ' + k);
+  });
+  if (!leerSi('Dashboard/noticias-actualizar.js')) malos.push('falta Dashboard/noticias-actualizar.js');
+  if (hook.indexOf('noticias-actualizar.js') < 0) malos.push('el hook de pre-commit ya no trae las noticias (noticias-actualizar.js)');
+  if (!C || !Array.isArray(C.REPARTO_BASE) || !C.REPARTO_BASE.length) malos.push('el maestro ya no exporta REPARTO_BASE');
+  else if (Math.abs(C.REPARTO_BASE.reduce(function (s, x) { return s + (+x.pct || 0); }, 0) - 100) > 0.01) malos.push('REPARTO_BASE no suma 100 %');
+  if (leerSi('Dashboard/habitos-exportar.js').indexOf('reparto: tomar(f.reparto') < 0) malos.push('la copia de Finanzas ya no lleva tu reparto al iPad (habitos-exportar.js)');
+  if (malos.length) { problemas.push('Qué invertir hoy, sin IA:\n     ' + malos.join('\n     ')); return; }
+  const m = /"generado":\s*"([^"]+)"/.exec(leerSi('Dashboard/noticias-inversion.js'));
+  const dias = m ? Math.floor((new Date() - new Date(m[1])) / 86400000) : null;
+  if (dias === null) avisos.push('Qué invertir hoy · todavía no hay noticias: llegan con el siguiente commit en la PC (noticias-actualizar.js)');
+  else if (dias > 3) avisos.push('Qué invertir hoy · las noticias son de hace ' + dias + ' días: se actualizan con tu siguiente commit en la PC');
+  ok.push('Qué invertir hoy sin IA: el plan, tu reparto y las noticias de Google Noticias' + (dias !== null ? ' (de hace ' + dias + ' días)' : ''));
 })();
 
 // ── Salida ──

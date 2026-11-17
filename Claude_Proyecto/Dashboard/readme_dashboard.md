@@ -23,7 +23,7 @@ en una página.
 | `verificar-sincronia.js` | Comprueba que nada se haya vuelto a duplicar. Lo corre un hook al final de cada turno; sale con código 1 si algo falla |
 | `habitos.js` | La pantalla de Hábitos entera: semilla, motor de rachas, migraciones, pintado y estilos |
 | `version.js` · `version-escribir.js` | La hora del último commit de esta copia (`window.APP_VERSION.commit`), que el hook de pre-commit escribe con `version-escribir.js` en cada commit; Mi Día la enseña junto a la semana (ver *Tu iPad y tu PC*) |
-| `inversion-hoy.js` · `inversion-alto.js` · `inversion-superalto.js` · `inversion-prompt.js` · `inversion-alto-prompt.js` · `inversion-superalto-prompt.js` · `inversion-esquema.json` · `inversion-apuesta-esquema.json` · `inversion-actualizar.ps1` (+ `.bat`) · `inversion-instalar.bat` | *Qué invertir hoy*: los datos que escribe Claude (perfiles, riesgo alto y súper alto), los tres prompts, los dos esquemas de respuesta (perfiles; apuestas) y el puente que los une (ver su sección) |
+| `noticias-actualizar.js` · `noticias-inversion.js` | Las noticias de *Qué invertir hoy*: el script que el hook de pre-commit corre en la PC para leer Google Noticias y el archivo que escribe (`window.NOTICIAS_INVERSION`), que el panel carga con `<script src>` |
 | `ficha.js` · `ficha.css` | El panel de ficha de producto (`pfAbrirId`, `pfPorNombre`, `.lc-info`) que usan la Lista de Compras y la rutina |
 | `examen-genai.js` · `examen-genai-data.js` (A, 79 preguntas) · `examen-genai-data-b.js` (B, 77) | El simulacro ISTQB CT-GenAI: motor y los dos bancos |
 | `syllabus/` (**fuera de git**) | La copia local del syllabus CT-GenAI LATAM: el PDF y `ct-genai-syllabus.js`, el texto de cada sección con su página. Su aviso de derechos solo permite reproducirlo en parte y para uso privado, así que no va al repositorio público (`.gitignore`) |
@@ -73,8 +73,8 @@ forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
 y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases) y `plan_auditoria_sinc` (cuándo se tocó cada mes aquí, para traer la de la PC), `fin_resumen_v1` (lo que queda en la quincena, para `finanzas-sync.js`), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta), `dash_libromes_v1` (el libro del mes: el de ahora, los leídos y el que sigue si lo cambiaste),
-`habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-inversion-v1` (pestaña, perfil elegido y monto de *Qué
-invertir hoy*).
+`habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`. Tu reparto de *Qué invertir hoy* no es clave propia: vive en Finanzas
+(`finanzasmx_v2.reparto`).
 
 ---
 
@@ -697,107 +697,46 @@ El doble toque va por CSS y no cancelando `touchend`, porque eso **rompería los
 de un dedo sigue vivo: scroll y taps. El meta se cerró igual en las seis
 apps: manda en Android y escritorio.
 
-## Qué invertir hoy — plantilla fija, datos de Claude
+## Qué invertir hoy — sin IA
 
-Se abre desde la tarjeta *Tu dinero hoy* de Mi Día (`invertirHoyHtml()` → `abrirGBM()`) o con
-`dashboard.html#invertir`, cualquier día de la semana, y ocupa casi toda la pantalla, 97 % × 97 % (Adán: *"haz la ventana mucho más grande"*; a 2048×1040, 1987×1009)
-(`.gbm-card.inv-card`; las clases `.gbm-*` las comparte el panel de los medidores del Plan Maestro, que
-lleva su propio modificador `.kpi-card`). Adán, 21-sep-2026: *"hazla lo más grande posible… una
-especie de plantilla… claude solo se encargará de la información y la plantilla no se modificará
-visualmente, entonces solo se gastan tokens en información"*.
-
-**La plantilla y los datos van separados.** La plantilla es `renderGBMPanel()` más el CSS `.inv-*`:
-nunca cambia al actualizar. Los datos son tres archivos cargados justo después del maestro, cada
-uno con su botón 🤖 y su `_meta` (cuándo, qué modelo, tokens, vueltas, segundos):
-`inversion-hoy.js` (`window.INVERSION_HOY`: mercado, los perfiles segura y medio y las fuentes), `inversion-alto.js` (`window.INVERSION_ALTO`: la compra a la baja de Riesgo alto) e
-`inversion-superalto.js` (`window.INVERSION_SUPERALTO`: la apuesta de Riesgo súper alto). Si un
-archivo falta, su zona lo dice y todo lo demás sigue con lo local.
-
-**Simple, con el porqué de cada cosa** (Adán, 2-nov-2026: *"no es nada claro, déjalo más simple, cada tab debe ser
-más simple y explicación por qué invertirías en cada cosa"*; antes, 20-oct-2026: *"está sobresaturada de información"*).
-Las cuatro pestañas siguen el mismo orden: para qué sirve en una frase (`INV_PERFILES[].para`, también bajo el
-nombre de la pestaña), qué comprar con el dinero del mes —una tarjeta por cosa (`invCosaHtml()`) con cuánto, **qué es**
-en palabras de quien nunca ha invertido (`INV_QUE_ES`, buscado por ticker, nombre o tipo; lo que no reconoce no lo
-inventa), **por qué lo compras** (el porqué de Claude), **qué puede salir mal** y dónde se compra—, y al final tu paso del
-mes y qué esperar. El análisis largo de Claude no se pierde: va plegado en *Más detalle* (`invMas()`). Medido a 2048×1040: la pestaña segura pasó de 5,348 caracteres
-a 2,743 y ya no desplaza; la de riesgo alto, de 6,927 a 3,497, y tampoco; la de súper alto desplaza 76 px. La
-pestaña llena el alto de la ventana: las cajas de las gráficas crecen con ella y la de 12 meses se estira.
+Se abre desde la tarjeta *Qué invertir hoy* de Mi Día (`invertirHoyHtml()` → `abrirGBM()`), desde *Tu estrategia de
+hoy* o con `dashboard.html#invertir`, y ocupa casi toda la pantalla, 97 % × 97 % (`.gbm-card.inv-card`; las clases
+`.gbm-*` las comparte el panel de los medidores del Plan Maestro). **Nada de lo que enseña lo escribe una IA** (Adán,
+17-nov-2026: *"en qué invertir hoy también depende de la IA y eso ya no lo quiero, redesign esa sección y mejor busca
+una página o ponle la habilidad de que me muestre noticias concretas de recomendaciones en qué invertir, ya no quiero
+depender de mi suscripción a Claude"*): el dinero sale del plan, qué comprar lo decide su reparto y las noticias, de
+Google Noticias. `renderGBMPanel()` pinta dos columnas (`.qi`); bajo 1100 px, una sola, con la ventana desplazándose
+entera.
 
 | Zona | Qué pinta | De dónde |
 |---|---|---|
-| Cuatro pestañas | 🛡️ Inversión segura (`--g`), ⚖️ Riesgo medio (`--w`), 🔥 Riesgo alto (`--o`) y 🎲 Riesgo súper alto (`--r`), con lema y riesgo 1-5 en puntos; `invTab()` recuerda la abierta. Las dos últimas son *apuestas* (`INV_PERFILES[].apuesta`) | `perfiles.seguro/medio` · `INVERSION_ALTO` · `INVERSION_SUPERALTO` |
-| Un perfil (segura, medio) | El lema y para quién es; tres datos en palabras (rinde al año, riesgo con `INV_RIESGO_TXT`, cuánto dejarlo); *Qué comprar con tus $… de este mes, y por qué*: la barra del reparto (`invBarraHtml()`) y una tarjeta por activo; *Tu paso de este mes* y *Qué esperar en un año*, en una frase con el rango de `invEn12()` y una barra de lo que pones contra lo que rinde. Plegado: el resumen, por qué, en contra, reglas y qué vigilar de cada activo | el perfil + el monto |
-| Una apuesta (alto, súper alto) | `invApuestaHtml(modo)`, la misma plantilla para las dos: su botón *🤖 Investigar hoy* —solo reescribe esa pestaña— con la fecha de lo investigado; *Cómo funciona* en tres frases (meta y límite); la empresa con su precio y su caída; dos cajas en pesos —*si sube a su meta, ganas* y *si baja a tu límite, vendes y pierdes*—; *Por qué la comprarías* (`enSimple` de Claude o, en datos viejos, la primera frase de la tesis), lo que la puede hacer subir (tres) y cuándo vender antes; y el reparto del mes con una tarjeta por cosa. **La escala** (`invEscalaHtml()`): *vendes aquí*, hoy, meta y máximo, con lo que perderías o ganarías en pesos a cada lado de hoy —la frase o la cifra sola según el ancho real de la zona, con una container query— y la franja de entrada si Claude la dio con números; *Por qué puede rebotar*, *Lo que la puede hacer subir* y *Vende si pasa esto*, y el reparto fijo del mes (`invReglaSA()`: `{{especulacionMes}}` al mes → `{{cetesDia15}}` a CETES, `{{especulacionBtcPct}}` % a Bitcoin y el resto a **una sola empresa a la baja**, con ≈ acciones y ≈ ₿ al precio de hoy; lo que va en 0 % no sale en la tabla). Plegado: por qué cayó, riesgos, reglas, señales, las otras dos candidatas y las fuentes. Lo que cambia entre las dos (`INV_APUESTA_TXT`) es el texto, el color y el prompt: **alto** pide una empresa sólida —líder de su sector, rentable, capitalización mayor a 20,000 M USD— a la baja por una razón temporal (Adán, 21-sep-2026: *"igualita que el de riesgo súper alto con las mismas cifras, pero… empresas un poco más confiables, igual comprar a la baja"*); **súper alto**, una de altísimo riesgo | `INVERSION_ALTO` / `INVERSION_SUPERALTO` |
-| ☆ Usar este perfil | Guarda la asignación objetivo (`invElegirPerfil()`); la barra lateral la muestra y deja de avisar que falta. Con una apuesta, muestra la regla fija y el ticker del día | `dash-inversion-v1` |
-| Barra lateral | A la vista, BTC y USD/MXN en vivo (`cargarPreciosGBM()`) con la tasa de CETES, tu perfil elegido y dónde comprar (`GBM_LINKS`); plegados, *El mercado y tu situación* (las señales, el resumen de Claude, la deuda con interés y el portafolio), la compra rápida y las fuentes | local + `mercado` |
+| **Este mes a GBM, según tu plan** (`qiMesHtml`) | Lo que el plan manda a GBM en el mes, lo que va a la BBVA si aún le toca, y cada envío con su día y de dónde sale (*15 nov · $4,650 · Ahorro → GBM*); los que pasaron, apagados, y el que sigue, en cian | `CIFRAS.gbmMes(mes)`, el mismo calendario del Plan de Inversiones de Finanzas |
+| **Qué comprar con eso** (`qiRepartoHtml`) | Una barra con el reparto y un renglón por cosa: qué, dónde se compra, por qué, su porcentaje y sus pesos de este mes. Dice si es *tu reparto* o *el reparto de base del plan: escribe el tuyo* | `finanzasmx_v2.reparto`, o `CIFRAS.REPARTO_BASE` mientras no exista |
+| **Cambiar mi reparto** (`qiEditar` → `qiEditorHtml`) | En su lugar, un renglón por cosa con qué, dónde y %, ✕ para quitarlo, *+ Otro renglón* y la suma en vivo (`qiCampo`: escribir no repinta, para no perder el foco); **Guardar** solo se activa cuando suman 100 % (`qiGuardar`). Solo donde Finanzas es propia (`tiEditable`): en el iPad, una nota dice que se cambia en la PC | escribe `finanzasmx_v2.reparto` |
+| **Noticias para invertir** (`qiNoticiasHtml`) | Una pestaña por tema con cuántas trae (`qiTemaVer`) y sus titulares: primero los que recomiendan algo, con la etiqueta *Recomienda*, cada uno con su medio y *hace 2 h*, y abre la nota en otra pestaña. Debajo, *Ver más de «tema» en Google Noticias ↗* con la misma búsqueda (`qiGoogle`). Si tienen más de tres días, la cabecera lo dice en naranja; sin noticias, cómo llegan y la búsqueda directa | `window.NOTICIAS_INVERSION` (`noticias-inversion.js`) |
+| Columna de al lado (`qiLadoHtml`) | *Precios ahora*: Bitcoin y dólar en vivo (`cargarPreciosGBM()`, CoinGecko y open.er-api; cada uno falla por separado); *Lo que llevas invertido*, con **Registrar una compra →**, que abre Total invertido (ver *Total invertido, compra por compra*); *Dónde comprar* (`GBM_LINKS`: GBM+, sus fondos, Cetesdirecto y el FIX de Banxico), y *La regla*: comprar el día que llega el dinero; las noticias informan y el reparto decide | local + `finanzasmx_v2.investments` |
 
-**Los colores de las gráficas** (`--iv1` azul, `--iv2` naranja, `--iv3` morado y `--iv4` ámbar, en `.inv-card`)
-pasaron el validador de paleta de la guía de visualización en los dos temas; los acentos del tablero en oscuro son
-demasiado claros para una gráfica, por eso el tema oscuro lleva sus propios tonos. Cada activo conserva su color en
-todas las pestañas (`invColores()`): CETES azul, Bitcoin ámbar y los demás, los libres en orden.
+**Tu reparto vive en Finanzas** (`finanzasmx_v2.reparto = [{n, donde, pct, porque}]`): el *En qué va* del Plan de
+Inversiones de Finanzas lee el mismo, y la copia que sube cada commit (`habitos-exportar.js`) lo lleva al iPad. El de
+base (`CIFRAS.REPARTO_BASE`, en el maestro) es GBMF2, el fondo de liquidez diaria de GBM, al 100 %: el dinero de la
+salida a Alemania se usa en meses y va donde se saca al día y con riesgo bajo.
 
-Los porcentajes de cada activo se normalizan por si Claude no cerró en 100; el monto al mes de
-segura y medio se edita en la misma línea del reparto (`invMontoHtml()`, guardado en
-`dash-inversion-v1`) y, si Adán no ha escrito uno, es `{{ahorroMesDepa}}`, lo que el plan manda a GBM
-en un mes con depa (`{{especulacionMes}}` es solo de las apuestas). Todas las cantidades
-propias pasan por `money()`, así el modo privado también las tapa. Con datos de Claude de **más de
-7 días**, la cabecera lo dice en naranja (`invDiasViejo()`): una semana es mucho para precios. El
-contexto que viaja a Claude lleva el dinero de la maestría de `CIFRAS.fondoMaestria()` y la deuda con
-interés de `CIFRAS.deudasConInteres()` (la BBVA no: no le corre interés).
+**Las noticias las trae el hook de pre-commit de la PC** (`noticias-actualizar.js`): el navegador no puede leer
+Google Noticias directo (CORS), y los lectores de RSS gratuitos que lo harían, medidos el 17 nov 2026, fallan: uno
+responde que Google lo limita o que hace falta una llave, el otro no contesta. Node desde la PC sí puede. Hace una
+búsqueda por tema en Google Noticias (México, en español): **Recomendaciones** (*dónde invertir*, *en qué invertir*,
+*conviene invertir*… de los últimos 30 días, solo titulares que recomiendan algo), **CETES y tasas** (7 días), **Bolsa
+y ETFs** (7 días) y **Cripto** (3 días). Deja solo medios de México —cualquier dominio `.mx` y GBM, Bloomberg Línea,
+Investing.com México, UnoTV, Milenio y El CEO; en cripto, cualquiera que no sea de otro país—, quita lo de otros
+países y lo repetido, y guarda 12 por tema en `noticias-inversion.js` (`{generado, temas, items: [{t, u, f, fuente,
+dominio, tema, rec}]}`). Si las que hay tienen menos de una hora no vuelve a pedirlas, y sin red o sin noticias deja
+las anteriores: nunca detiene un commit. Las búsquedas viven solo en el script: el panel toma los temas del archivo.
+Medido el 17 nov 2026 con las búsquedas reales: 35 titulares, 3 de recomendaciones, 8 de CETES, 12 de bolsa y 12 de
+cripto. Google permite su RSS para un lector personal y no comercial, que es este uso.
 
-**En esta pantalla no aparece nada del fondo de emergencia** (Adán, 21-sep-2026: *"quita todo lo
-que tenga que ver con lo del fondo de emergencia"*): ni la regla fondo → deuda → invertir en
-grande, ni la barra del fondo, ni la nota de CETES; el prompt de los perfiles tampoco la lleva y el
-contexto no manda el fondo. La regla sigue viva solo en su tarjeta de Mi Día (`invertirHoyHtml()`
-sobre `pasoInversionHoy()`).
-
-**Los botones 🤖.** `invPedirClaude(modo)` arma el contexto y navega a
-`claudeinv://<ruta>?ctx=<base64url>` (`INV_MODOS`: *actualizar* para segura y medio, *alto* y
-*superalto* para cada apuesta). El de los perfiles (`invContexto()`) lleva ingresos, fijos, monto al
-mes, aporte fijo a CETES, deudas con tasa, inversiones, efectivo, precios, la maestría (siempre con su
-fecha de inicio, del maestro: el prompt no la escribe), fase y perfil elegido — unos 500 tokens; el de una apuesta (`invContextoApuesta(modo)`) lleva la regla del maestro con sus pesos ya
-en pesos, los precios y la empresa anterior de esa pestaña, para que Claude diga si sigue vigente.
-Windows abre
-`inversion-actualizar.ps1` (registrado en `HKCU\Software\Classes\claudeinv` por
-`inversion-instalar.bat`, sin administrador), que corre `claude -p` con salida estructurada (el
-esquema de ese modo: `inversion-esquema.json` para los perfiles, `inversion-apuesta-esquema.json`
-para las dos apuestas), solo herramientas de web (búsqueda para los perfiles, limitada a 3 por el
-prompt; búsqueda y lectura de páginas para las apuestas, que el prompt obliga a usar entre 6 y 12
-veces con esfuerzo medio: Adán, 21-sep-2026, *"no quiero que se gasten muchos tokens"*) y un system prompt corto — 13.7 k tokens de sistema medidos contra 27.6 k
-con el de Claude Code —, valida la respuesta y reescribe el `.js` de ese modo con temporal y
-renombrado, así un fallo deja el anterior intacto. La página no puede
-leer archivos desde `file://`, pero sí recargar un `<script>`: `invEsperar()` lo reinyecta cada 5 s
-y, cuando `_meta.generado` cambia, repinta y avisa con un toast. Sin protocolo (iPad, otra máquina)
-*copiar el contexto* deja en el portapapeles el encargo para pegarlo en cualquier sesión de Claude
-Code; `inversion-actualizar.bat` repite la última petición de los perfiles con el contexto guardado
-en `inversion-contexto.json` (las apuestas guardan el suyo en `inversion-alto-contexto.json` e
-`inversion-superalto-contexto.json`; ninguno se sube: son derivados). Si Opus responde con su
-límite de sesión, el `.ps1` reintenta una vez con Sonnet y `_meta.modelo` lo deja anotado.
-
-**Ver el prompt.** *ver el prompt* (`invVerPrompt(modo)`) abre `#invPromptOv` con el texto exacto que
-sale hacia Claude: el prompt de ese modo más el contexto de este momento, con su tamaño en
-caracteres y tokens aproximados, y un botón para copiarlo. Por eso los prompts viven en
-`inversion-prompt.js`, `inversion-alto-prompt.js` e `inversion-superalto-prompt.js` (un literal de
-plantilla en `window.*`) y
-no en un `.txt`: desde `file://` la página solo puede cargarlos con `<script src>`, y el `.ps1` lee
-el mismo texto entre los acentos graves — un dato una sola vez. Dentro no puede haber acentos
-graves ni `${`.
-
-**Qué piden los prompts.** El de los perfiles (segura y medio): repartir el monto al mes del
-contexto sin cuestionarlo, usar sus números, 2-4 activos por perfil comprables en GBM+ / Cetesdirecto /
-un exchange para BTC, cada uno con dónde, por qué, qué vigilar y su riesgo concreto, y largos
-máximos por campo para que la plantilla no se deforme. El de riesgo alto: una empresa sólida (líder
-o top 3 de su sector, rentable los últimos 4 trimestres, deuda neta / EBITDA menor a 3, capitalización
-mayor a 20,000 M USD) entre -15 % y -40 % desde su máximo de 52 semanas por una razón temporal, con
-catalizadores para recuperar en 1-6 meses, objetivo +15 a +30 % y stop -10 a -15 %. El de súper alto (Adán, 21-sep-2026: *"siempre debe ser una empresa
-que esté a la baja y así cuando suba ganar dinero… debe investigarlo muy muy bien para que gane
-dinero"*): una sola acción real comprable desde GBM+, caída fuerte desde el máximo de 52 semanas
-por una razón identificable y exagerada, catalizadores fechados para rebotar en semanas o pocos
-meses, capitalización mayor a 1,000 M USD, nada de penny stocks, SPACs ni apalancados; comparar
-tres candidatas, verificar la elegida en dos fuentes, y dar entrada, objetivo, stop, plazo, riesgos,
-lo que invalida la tesis y señales con dato. Una corrida con Opus y 3 búsquedas: 152 s y 92.7 k
-tokens procesados (11.4 k de salida), medido; las búsquedas son el grueso, y el script acepta
--SinBusqueda para pedirla de memoria cuando solo cambian los saldos.
+**En la tarjeta de Mi Día no cambia nada de fondo**: `pasoInversionHoy()` sigue diciendo, con los saldos de Finanzas,
+si hoy toca pagar la tarjeta o invertir, y ahora remite al reparto. Medido a 1600×1000 y 390×844, en claro y en oscuro:
+sin desbordes ni errores, y Finanzas enseña el mismo reparto que se guardó aquí.
 
 ---
 

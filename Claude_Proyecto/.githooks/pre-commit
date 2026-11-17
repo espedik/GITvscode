@@ -11,5 +11,7 @@ if command -v node >/dev/null 2>&1; then
   node "$raiz/Claude_Proyecto/Dashboard/habitos-exportar.js" --add || true
   # Y la hora de este commit, para que cada dispositivo sepa qué versión tiene (Mi Día la enseña junto a la semana).
   node "$raiz/Claude_Proyecto/Dashboard/version-escribir.js" --add || true
+  # Y las noticias de inversión de Google Noticias para Qué invertir hoy, si las que hay tienen más de una hora.
+  node "$raiz/Claude_Proyecto/Dashboard/noticias-actualizar.js" --add || true
 fi
 exit 0

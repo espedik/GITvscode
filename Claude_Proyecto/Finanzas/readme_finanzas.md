@@ -25,6 +25,7 @@ S = {
   debts:          [],       // deudas
   goals:          [],       // ef-001 (fondo) y g001 (maestría); ya no hay pantalla de metas
   investments:    [],       // inversiones
+  reparto:        [],       // tu reparto de Qué invertir hoy: [{n, donde, pct, porque}]; lo edita el Dashboard
   activos:        [],       // activos físicos y líquidos
   btcHistory:     [],       // compras y ventas de BTC
   currentBtcPrice: 0,       // precio actual BTC en USD
@@ -279,11 +280,11 @@ iban $14,295 a la bolsa mientras el plan los mandaba a la BBVA. `renderGBM()`:
   semana, y las cuatro semanas (1–7, 8–14, 15–21, 22–fin) con cada envío y su día; los lunes en que lo de Didi es
   para vivir salen en gris. Mientras la BBVA tenga saldo lo dice: a la bolsa no va nada hasta que quede en cero, y
   la quincena en que vive de Didi, que lo que le queda lo paga la quincena siguiente.
-- **En qué va** —el perfil *seguro* de Qué invertir hoy (`window.INVERSION_HOY`, `Dashboard/inversion-hoy.js`,
-  la misma fuente del Dashboard): el dinero de Alemania se usa en meses y va en deuda de corto plazo. Cada
-  activo con su porcentaje y lo que le toca de la semana o del mes, dónde se compra, por qué y qué vigilar;
-  la fecha en que se investigó y, con más de siete días, en rojo, que se actualice antes de comprar;
-  *Abrir Qué invertir hoy →* lleva al panel del Dashboard (`dashboard.html#invertir`).
+- **En qué va** —tu reparto (`S.reparto`, el mismo que se edita en Qué invertir hoy del Dashboard; sin él, el de
+  base del plan, `CIFRAS.REPARTO_BASE`): el dinero de Alemania se usa en meses y va donde se saca al día y con riesgo
+  bajo. Cada renglón con su porcentaje y lo que le toca de la semana o del mes, dónde se compra y por qué. Nada lo
+  escribe una IA; *Cambiarlo en Qué invertir hoy →* (o *Escribir el tuyo*) lleva al panel del Dashboard
+  (`dashboard.html#invertir`).
 - **El portafolio** (las posiciones de `investments`, KPIs, mejor y peor, la tabla por tipo), **GBM y tus
   CETES si sigues el plan** —al cerrar la fase y al irte, de `CIFRAS.estadoDia`, sin rendimiento en México: la misma
   cifra que la proyección del Plan Maestro y que «Lo que dice tu plan»— y lo de esta semana a GBM; el bloque de CETES y `renderBtcHistory()` al final.

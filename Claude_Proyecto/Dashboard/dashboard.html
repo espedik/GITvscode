@@ -20,14 +20,8 @@
      Plan Maestro vienen de aquí, no escritos a mano. El mapa está en DATOS-MAESTROS.md -->
 <link rel="stylesheet" href="ficha.css">
 <script src="datos-maestros.js"></script>
-<!-- Lo que Claude escribe para "Qué invertir hoy" (ver inversion-actualizar.ps1). Si falta, el panel lo dice. -->
-<script src="inversion-hoy.js"></script>
-<script src="inversion-alto.js"></script>
-<script src="inversion-superalto.js"></script>
-<!-- Los prompts van en .js para que la página pueda mostrarlos ("ver el prompt"); el .ps1 lee el mismo texto. -->
-<script src="inversion-prompt.js"></script>
-<script src="inversion-alto-prompt.js"></script>
-<script src="inversion-superalto-prompt.js"></script>
+<!-- Las noticias de Qué invertir hoy, de Google Noticias: las escribe el hook de pre-commit (noticias-actualizar.js). -->
+<script src="noticias-inversion.js" onerror="this.remove()"></script>
 <script src="ficha.js"></script>
 <!-- Simulacro del examen ISTQB CT-GenAI (paso 6 de la ficha de la meta `istqbgenai`).
      Dos bancos de preguntas hermanos - Examen A (79) y Examen B (77), que cubren el
@@ -4674,332 +4668,105 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   .gbm-body{padding:12px 14px 28px}
   .gbm-links{grid-template-columns:1fr}
 }
-/* ─── "QUÉ INVERTIR HOY" — plantilla fija, datos de Claude ──────────────────────────────────────────
-   La plantilla vive aquí y en renderGBMPanel(); lo que cambia cada semana vive en inversion-hoy.js,
-   inversion-alto.js e inversion-superalto.js. Adán, 20-oct-2026: "está sobresaturada de información, debe ser
-   muy precisa y concreta todo, si puedes añadir gráficas mejor": arriba, lo que decide la compra y tres
-   gráficas; el análisis largo, plegado (`.inv-mas`). Las clases .gbm-* las comparte el panel de KPIs de Mis
-   Metas (#kpiOverlay): el tamaño XL va en .inv-card, un modificador que solo lleva este panel.
-   Los colores de los activos (--iv1 azul, --iv2 naranja, --iv3 morado, --iv4 ámbar) pasaron el validador de
-   paleta de la guía de visualización en los dos temas (sobre #f2f2f6 y #0b0b12): los acentos del tablero en
-   oscuro son demasiado claros para una gráfica, por eso el tema oscuro lleva sus propios tonos. */
-/* Casi toda la pantalla (Adán: "haz la ventana mucho más grande"): 97 % por 97 %, con la capa casi sin margen. */
+/* ─── «QUÉ INVERTIR HOY», SIN IA ────────────────────────────────────────────────────────────────────────────
+   renderGBMPanel(): a la izquierda el mes a GBM con sus envíos, tu reparto en pesos y las noticias por tema; a la
+   derecha los precios en vivo, lo que llevas invertido, dónde comprar y la regla. Casi toda la pantalla (Adán: "haz la
+   ventana mucho más grande"): 97 % por 97 %. Las clases .gbm-* las comparte el panel de los medidores (#kpiOverlay). */
 #gbmOverlay{padding:1.5vh 1.5vw}
-.gbm-card.inv-card{width:97vw;max-width:none;height:97vh;max-height:97vh;display:flex;flex-direction:column;overflow:hidden;
-  --iv1:#3b82f6;--iv2:#d9631a;--iv3:#a066f0;--iv4:#b08a12}
-:root[data-theme="light"] .gbm-card.inv-card{--iv1:#2563eb;--iv2:#b8632c;--iv3:#7f4fb8;--iv4:#a8790a}
+.gbm-card.inv-card{width:97vw;max-width:none;height:97vh;max-height:97vh;display:flex;flex-direction:column;overflow:hidden}
 .inv-card .inv-head{display:flex;align-items:flex-start;gap:16px;padding:14px 56px 12px 22px;flex-shrink:0}
 .inv-head-txt{flex:1;min-width:0}
-.inv-head-acc{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
-.inv-btn-claude{display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:12px;font-weight:800;cursor:pointer;
-  padding:8px 14px;border-radius:11px;border:1px solid rgba(var(--cy-rgb),.45);color:var(--cy);
-  background:rgba(var(--cy-rgb),.1);transition:background .15s,transform .15s}
-.inv-btn-claude:hover{background:rgba(var(--cy-rgb),.18);transform:translateY(-1px)}
-.inv-btn-claude:disabled{opacity:.55;cursor:wait;transform:none}
-.inv-estado{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.03em;text-align:right;max-width:420px;line-height:1.35}
-.inv-estado.inv-viejo{color:var(--o)}
-.inv-estado.wait{color:var(--w)}.inv-estado.err{color:var(--r)}.inv-estado.ok{color:var(--g)}
-.inv-ayuda{font-size:10px;color:var(--text3)}
-.inv-ayuda a{color:var(--text2);text-decoration:underline dotted;cursor:pointer}
-/* Dos columnas que desplazan por separado: la pestaña a la izquierda, los precios y tu situación a la derecha. */
-.inv-card .inv-body{flex:1;min-height:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr) 400px;overflow:hidden}
-.inv-main{overflow-y:auto;padding:16px 26px 26px;display:flex;flex-direction:column}
-/* La pestaña llena el alto de la ventana: las cajas de las gráficas crecen y la de 12 meses se estira con ellas. */
-.inv-panel{flex:1 0 auto;display:flex;flex-direction:column}
-.inv-side{overflow-y:auto;padding:16px 22px 26px;border-left:1px solid rgba(var(--ov),.08);background:rgba(var(--ov),.025)}
-.inv-side .gbm-sec:first-child{margin-top:0}
-
-/* El monto al mes va en la misma línea del reparto de segura y medio: una cifra editable en mono. */
-.inv-monto{display:inline-flex;align-items:baseline;gap:1px;font-family:var(--mono);font-weight:800;font-size:13px;color:var(--text)}
-.inv-monto input{font:inherit;width:78px;background:transparent;border:none;border-bottom:1px dashed rgba(var(--ov),.35);color:var(--text);padding:0 2px;outline:none}
-.inv-monto input:focus{border-bottom-color:var(--cy)}
-.inv-monto input::-webkit-outer-spin-button,.inv-monto input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-
-/* Las cuatro pestañas: cada una es un perfil con su color. */
-.inv-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
-.inv-tab{font:inherit;text-align:left;cursor:pointer;border-radius:13px;padding:9px 13px;
-  background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.09);border-top:3px solid rgba(var(--ov),.12);
-  transition:background .15s,transform .15s,border-color .15s}
-.inv-tab:hover{background:rgba(var(--ov),.07);transform:translateY(-1px)}
-.inv-tab.on{background:color-mix(in srgb,var(--c) 12%,transparent);border-color:color-mix(in srgb,var(--c) 40%,transparent);border-top-color:var(--c)}
-.inv-tab-n{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:900;color:var(--text)}
-.inv-tab.on .inv-tab-n{color:var(--c)}
-.inv-tab-l{font-size:11px;color:var(--text2);margin-top:2px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
-.inv-dots{font-family:var(--mono);letter-spacing:1px;font-size:11px;color:var(--c);white-space:nowrap}
-
-/* La cabecera de la pestaña: el lema y para quién es, y una fila de cifras cortas. */
-.inv-perfil{--c:var(--cy);flex:1 0 auto;display:flex;flex-direction:column}
-.inv-pf-cab{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,760px);gap:24px;align-items:center;margin-bottom:14px}
-.inv-pf-lema{font-family:var(--font-title);font-size:clamp(22px,1.8vw,32px);font-weight:700;line-height:1.12;color:var(--text);margin-bottom:5px}
-.inv-pf-lema i{color:var(--c);font-style:normal}
-.inv-pf-para{font-size:13.5px;color:var(--text2);line-height:1.5}
-.inv-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.inv-kpis-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-.inv-kpi{border-radius:11px;padding:8px 11px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.07);min-width:0}
-.inv-kpi>span{display:block;font-size:11.5px;font-weight:600;color:var(--text3);margin-bottom:2px}
-.inv-kpi b{display:block;font-size:19px;font-weight:700;color:var(--text);line-height:1.2}
-.inv-kpi b.txt{font-size:13.5px;font-weight:600;line-height:1.3}
-.inv-kpi b .inv-dots{font-size:14px}
-.inv-kpi small{display:block;font-size:10px;color:var(--text3);margin-top:2px;line-height:1.3}
-
-/* Lo que haces este mes: la acción, en una franja del color del perfil. */
-.inv-mes{display:flex;flex-direction:column;gap:3px;margin-top:auto;padding:12px 16px;border-radius:12px;font-size:14px;line-height:1.5;color:var(--text);
-  background:color-mix(in srgb,var(--c) 9%,transparent);border:1px solid color-mix(in srgb,var(--c) 28%,transparent)}
-.inv-mes>b{font-size:12.5px;font-weight:800;color:var(--text)}
-.inv-dos .inv-rt{margin-bottom:14px}
-
-/* Las cajas de las gráficas: el reparto y la proyección lado a lado; la escala de una apuesta a todo lo ancho. */
-.inv-dos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;flex:1 0 auto}
-.inv-dos>.inv-caja{display:flex;flex-direction:column}
-.inv-dos .inv-proy{flex:1 1 auto;grid-template-rows:minmax(170px,1fr) auto}
-.inv-caja{border-radius:14px;padding:14px 18px 16px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.08);min-width:0}
-/* Simple (2-nov-2026): para qué es, una tarjeta por cosa con qué es y por qué, tu paso y qué esperar */
-.inv-s-cab{margin-bottom:12px}
-.inv-s-para{margin:2px 0 10px;font-size:14.5px;line-height:1.55;color:var(--text2);max-width:980px}
-.inv-s-chips{display:flex;flex-wrap:wrap;gap:8px}
-.inv-s-chips>span{display:flex;flex-direction:column;gap:2px;padding:8px 13px;border-radius:11px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08)}
-.inv-s-chips small{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
-.inv-s-chips b{font-size:14.5px;color:var(--text)}
-.inv-cosas{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px;margin-top:12px}
-.inv-cosa{border-radius:12px;padding:12px 14px;background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.08);border-top:3px solid var(--a);display:flex;flex-direction:column;gap:8px}
-.inv-cosa-cab{display:flex;align-items:flex-start;gap:9px}
-.inv-cosa-cab>i{width:10px;height:10px;border-radius:2px;background:var(--a);margin-top:6px;flex:none}
-.inv-cosa-n{flex:1;min-width:0}
-.inv-cosa-n b{font-size:15px;color:var(--text)}
-.inv-cosa-m{text-align:right}
-.inv-cosa-m b{display:block;font-family:var(--font-mono,var(--mono));font-size:20px;color:var(--text)}
-.inv-cosa-m span{font-size:11.5px;color:var(--text3)}
-.inv-cosa-f span{display:block;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:2px}
-.inv-cosa-f p{margin:0;font-size:13.5px;line-height:1.5;color:var(--text2)}
-.inv-cosa-f.mal span{color:var(--r)}
-.inv-cosa-d{margin-top:auto;font-size:12.5px;color:var(--text3);padding-top:6px;border-top:1px dashed rgba(var(--ov),.1)}
-.inv-cosa-d b{color:var(--text2)}
-.inv-s-dos{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px;margin:12px 0;align-items:start}
-.inv-s-paso p,.inv-s-12 p{margin:4px 0 0;font-size:14.5px;line-height:1.55;color:var(--text)}
-.inv-s-12 small{display:block;margin-top:8px;font-size:12px;color:var(--text3)}
-.inv-s-bar{display:flex;gap:2px;height:12px;margin-top:10px}
-.inv-s-bar i{display:block;border-radius:3px}
-.inv-s-bar .apo,.inv-s-ley .apo{background:rgba(var(--ov),.28)}
-.inv-s-bar .ren,.inv-s-ley .ren{background:var(--g)}
-.inv-s-ley{display:flex;gap:14px;margin-top:6px;font-size:12px;color:var(--text2)}
-.inv-s-ley span{display:inline-flex;align-items:center;gap:6px}
-.inv-s-ley i{display:inline-block;width:10px;height:10px;border-radius:2px}
-.inv-s-explica{margin:4px 0 12px;padding:11px 14px;border-radius:12px;background:rgba(var(--c-rgb),.07);border:1px solid rgba(var(--c-rgb),.25);font-size:14px;line-height:1.55;color:var(--text2)}
-.inv-s-explica>b:first-child{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--c);margin-bottom:3px}
-.inv-s-explica b{color:var(--text)}
-.inv-s-sale{border-radius:14px;padding:14px 18px;display:flex;flex-direction:column;gap:4px}
-.inv-s-sale span{font-size:13px;color:var(--text2)}
-.inv-s-sale b{font-family:var(--font-mono,var(--mono));font-size:24px}
-.inv-s-sale small{font-size:12px;color:var(--text3)}
-.inv-s-sale.gana{background:rgba(var(--g-rgb),.08);border:1px solid rgba(var(--g-rgb),.3)}
-.inv-s-sale.gana b{color:var(--g)}
-.inv-s-sale.pierde{background:rgba(var(--r-rgb),.07);border:1px solid rgba(var(--r-rgb),.3)}
-.inv-s-sale.pierde b{color:var(--r)}
-.inv-caja+.inv-tres,.inv-tres+.inv-caja{margin-top:12px}
-.inv-caja-t{display:flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap;font-size:14.5px;font-weight:800;color:var(--text);margin-bottom:10px}
-.inv-caja-t small{font-weight:500;font-size:12px;color:var(--text3)}
-
-/* El reparto: barra apilada de 12 px con 2 px de aire entre tramos y las puntas redondeadas, y su tabla. */
-.inv-rb{display:flex;gap:2px;height:14px;margin-bottom:10px}
-.inv-rb i{flex:1 1 0;min-width:3px;background:var(--a)}
-.inv-rb i:first-child{border-radius:4px 0 0 4px}.inv-rb i:last-child{border-radius:0 4px 4px 0}.inv-rb i:only-child{border-radius:4px}
-.inv-rt-f{display:grid;grid-template-columns:10px minmax(0,1fr) 60px 90px minmax(0,110px);gap:12px;align-items:center;padding:9px 0;
-  border-top:1px solid rgba(var(--ov),.07);font-size:13px;color:var(--text2)}
-.inv-rt-f:first-child{border-top:0}
-.inv-rt-sw{width:10px;height:10px;border-radius:3px;background:var(--a)}
-.inv-rt-n{min-width:0;display:flex;align-items:center;gap:3px 7px;flex-wrap:wrap}
-.inv-rt-n b{font-size:14px;font-weight:700;color:var(--text)}
-.inv-rt-n small{flex-basis:100%;font-size:11.5px;color:var(--text3);line-height:1.3}
-.inv-rt-pct,.inv-rt-m{font-family:var(--mono);font-weight:700;color:var(--text);text-align:right;font-variant-numeric:tabular-nums}
-.inv-rt-d{font-size:12px;color:var(--text3);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.inv-ac-tk{font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--text2);border:1px solid rgba(var(--ov),.2);border-radius:6px;padding:1px 6px}
-
-/* Cuánto tendrías en 12 meses: una columna por mes (22 px como mucho), lo que aportas en gris y lo que rinde
-   encima en verde —la ganancia, como en la escala de las apuestas; el color del perfil chocaba con el ámbar de
-   Bitcoin en Riesgo medio—, con 2 px de aire; rejilla de 1 px y el valor de cada mes en su tooltip. */
-.inv-proy-tot{font-size:28px;font-weight:700;color:var(--text);line-height:1.1}
-.inv-proy-ley{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:var(--text2);margin:5px 0 12px}
-.inv-proy-ley i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:-1px;background:var(--a)}
-.inv-proy-ley b{font-family:var(--mono);color:var(--text)}
-.inv-proy{display:grid;grid-template-columns:56px minmax(0,1fr);grid-template-rows:170px auto;column-gap:8px}
-.inv-proy-y{position:relative}
-.inv-proy-y em{position:absolute;right:0;transform:translateY(50%);font-style:normal;font-size:11px;color:var(--text3);white-space:nowrap;font-variant-numeric:tabular-nums}
-.inv-proy-plot{position:relative;border-bottom:1px solid rgba(var(--ov),.2)}
-.inv-proy-g{position:absolute;left:0;right:0;height:0;border-top:1px solid rgba(var(--ov),.08)}
-.inv-proy-cols{position:absolute;inset:0;display:flex}
-.inv-proy-c{position:relative;flex:1 1 0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:2px;outline:none}
-.inv-proy-c i{display:block;width:min(24px,62%);flex:none}
-.inv-proy-c i:first-child{border-radius:4px 4px 0 0}
-.inv-proy-c .ren{background:var(--g);min-height:2px}
-.inv-proy-c .apo{background:rgba(var(--ov),.24)}
-.inv-proy-c:hover .apo,.inv-proy-c:focus-visible .apo{background:rgba(var(--ov),.36)}
-.inv-proy-c:hover::after,.inv-proy-c:focus-visible::after{content:attr(data-tip);position:absolute;top:-6px;left:50%;transform:translate(-50%,-100%);z-index:3;
-  white-space:pre;padding:7px 10px;border-radius:9px;background:var(--bg);border:1px solid rgba(var(--ov),.16);box-shadow:0 8px 24px rgba(0,0,0,.25);
-  font-size:11px;line-height:1.5;color:var(--text);pointer-events:none}
-.inv-proy-c.izq:hover::after,.inv-proy-c.izq:focus-visible::after{left:0;transform:translateY(-100%)}
-.inv-proy-c.der:hover::after,.inv-proy-c.der:focus-visible::after{left:auto;right:0;transform:translateY(-100%)}
-.inv-proy-x{grid-column:2;display:flex}
-.inv-proy-x span{flex:1 1 0;text-align:center;font-size:11px;color:var(--text3);padding-top:5px}
-.inv-proy-nota{font-size:11.5px;color:var(--text3);margin-top:6px}
-
-/* La escala de una apuesta: stop, hoy, objetivo y el máximo de 52 semanas sobre una pista; a la izquierda de hoy,
-   lo que perderías y a la derecha lo que ganarías (además del color, lo dicen el texto y el lado). */
-.inv-esc{padding:32px 4px 40px}
-.inv-esc-pista{position:relative;height:32px;border-radius:7px;background:rgba(var(--ov),.05)}
-.inv-esc-z{position:absolute;top:0;bottom:0;display:flex;align-items:center;justify-content:center;overflow:hidden;container-type:inline-size}
-.inv-esc-z.pierde{background:rgba(var(--r-rgb),.16)}
-.inv-esc-z.gana{background:rgba(var(--g-rgb),.16)}
-.inv-esc-z em{font-style:normal;font-size:12.5px;font-weight:700;color:var(--text);white-space:nowrap}
-.inv-esc-z.pierde em{margin-right:12px}.inv-esc-z.gana em{margin-left:12px}
-.inv-esc-z em .l{display:none}
-@container (min-width:190px){.inv-esc-z em .l{display:inline}.inv-esc-z em .c{display:none}}
-@container (max-width:69.98px){.inv-esc-z em{display:none}}
-.inv-esc-ent{position:absolute;bottom:0;height:5px;border-radius:2px;background:rgba(var(--ov),.5)}
-.inv-esc-m{position:absolute;top:0;bottom:0;width:0}
-.inv-esc-m i{position:absolute;top:-4px;bottom:-4px;left:-1px;width:2px;border-radius:1px;background:var(--text3)}
-.inv-esc-m.stop i{background:var(--r)}
-.inv-esc-m.obj i{background:var(--g)}
-.inv-esc-m.hoy i{top:50%;bottom:auto;left:-7px;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:var(--text);box-shadow:0 0 0 2px var(--bg)}
-.inv-esc-m>b,.inv-esc-m>span{position:absolute;left:0;transform:translateX(-50%);white-space:nowrap;font-size:12px}
-.inv-esc-m>b{top:calc(100% + 8px);font-weight:700;color:var(--text)}
-.inv-esc-m>span{top:calc(100% + 23px);font-family:var(--mono);color:var(--text2)}
-.inv-esc-m.hoy>b{top:auto;bottom:calc(100% + 19px)}
-.inv-esc-m.hoy>span{top:auto;bottom:calc(100% + 5px);font-weight:700;color:var(--text)}
-.inv-esc-m.izq>b,.inv-esc-m.izq>span{transform:none}
-.inv-esc-m.der>b,.inv-esc-m.der>span{transform:translateX(-100%)}
-.inv-esc-ent-t{display:flex;gap:10px;font-size:13px;line-height:1.45;color:var(--text2)}
-.inv-esc-ent-t b{flex:none;color:var(--text)}
-
-/* Las apuestas: su cabecera con el botón, la empresa con tres cifras y el resto como en los perfiles. */
-.inv-sa-top{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start;margin-bottom:8px}
-.inv-sa-acc{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
-.inv-btn-sa{border-color:rgba(var(--c-rgb),.5);color:var(--c);background:rgba(var(--c-rgb),.1)}
-.inv-btn-sa:hover{background:rgba(var(--c-rgb),.18)}
-.inv-ap-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,720px);gap:20px;align-items:center;margin-bottom:14px}
-.inv-sa-nombre{font-family:var(--font-title);font-size:clamp(22px,1.8vw,32px);font-weight:700;line-height:1.1;color:var(--text);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.inv-sa-nombre .inv-ac-tk{font-size:12px}
-.inv-sa-bolsa{font-size:12.5px;color:var(--text3);margin-top:4px}
-.inv-caja-rep{margin-top:12px}
-
-/* Tres columnas cortas (la tesis, lo que la mueve, cuándo vender) y lo que va dentro del análisis plegado. */
-.inv-tres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.inv-col{border-radius:13px;padding:13px 16px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.07)}
-.inv-col-t{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:7px}
-.inv-col ul,.inv-col ol{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:5px}
-.inv-col li{font-size:13px;line-height:1.5;color:var(--text2)}
-.inv-col li::marker{color:var(--c);font-weight:800}
-.inv-col-p{margin:0;font-size:13px;line-height:1.55;color:var(--text2)}
-.inv-col-r{border-color:rgba(var(--r-rgb),.35);background:rgba(var(--r-rgb),.06)}
-.inv-col-r .inv-col-p{color:var(--text)}
-.inv-activos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
-.inv-activo{border-radius:13px;padding:11px 13px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.07);border-left:3px solid var(--a)}
-.inv-ac-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:4px}
-.inv-ac-nombre{font-size:13px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
-.inv-ac-pct{font-family:var(--mono);font-size:15px;font-weight:800;color:var(--text);flex-shrink:0}
-.inv-ac-row{display:grid;grid-template-columns:62px 1fr;gap:8px;font-size:12px;line-height:1.45;color:var(--text2);padding:4px 0;border-top:1px solid rgba(var(--ov),.06)}
-.inv-ac-k{font-size:11px;font-weight:700;color:var(--text3)}
-.inv-ac-riesgo span:last-child{color:var(--text)}
-.inv-sub{font-size:12px;font-weight:800;color:var(--text);margin:14px 0 7px}
-.inv-sa-alts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.inv-sa-alt{border-radius:13px;padding:11px 13px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.07)}
-.inv-sa-alt-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--text);margin-bottom:4px}
-.inv-sa-alt-p{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text2)}
-
-/* «El análisis completo» y lo plegado de la barra lateral: un renglón que se abre. */
-.inv-mas{margin-top:12px;border-radius:12px;border:1px solid rgba(var(--ov),.09);background:rgba(var(--ov),.025)}
-.inv-mas>summary{cursor:pointer;list-style:none;padding:12px 16px;font-size:13px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:9px}
-.inv-mas>summary::-webkit-details-marker{display:none}
-.inv-mas>summary::before{content:'▸';color:var(--text3);transition:transform .15s}
-.inv-mas[open]>summary::before{transform:rotate(90deg)}
-.inv-mas>summary:hover{color:var(--text)}
-.inv-mas-in{padding:2px 14px 14px}
-.inv-mas-in>p{margin:0 0 10px;font-size:12.5px;line-height:1.55;color:var(--text2)}
-.inv-mas-s{margin-top:10px}
-.inv-mas-s>summary{padding:8px 12px;font-size:11.5px}
-.inv-mas-s .inv-mas-in{padding:0 12px 12px}
-.inv-mas-s .inv-mas-in>p{font-size:11.5px}
-
-.inv-pf-foot{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid rgba(var(--ov),.08)}
-.inv-elegir{font:inherit;font-size:12px;font-weight:800;cursor:pointer;padding:8px 14px;border-radius:11px;
-  border:1px solid color-mix(in srgb,var(--c) 45%,transparent);color:var(--c);background:color-mix(in srgb,var(--c) 10%,transparent)}
-.inv-elegir:hover{background:color-mix(in srgb,var(--c) 18%,transparent)}
-.inv-elegir.on{background:var(--c);color:var(--bg);border-color:var(--c)}
-.inv-disc{flex:1;min-width:220px;font-size:11px;color:var(--text3);line-height:1.35}
-.inv-vacio{border-radius:16px;padding:34px 26px;text-align:center;border:1px dashed rgba(var(--ov),.2);color:var(--text2);font-size:13px;line-height:1.55}
-.inv-vacio b{display:block;font-family:var(--font-title);font-size:22px;color:var(--text);margin-bottom:8px}
-
-/* Barra lateral: precios, el mercado en señales, tu situación y dónde comprar. */
-.inv-precios{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
-.inv-precios .gbm-precio{padding:8px 9px}
-.inv-precios .gbm-precio b{font-size:14px}
-.inv-senales{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
-.inv-senales li{display:grid;grid-template-columns:8px 1fr;gap:8px;align-items:start;font-size:12.5px;line-height:1.4;color:var(--text2)}
-.inv-senales li::before{content:'';width:8px;height:8px;border-radius:50%;margin-top:4px;background:var(--text3)}
-.inv-senales li.ok::before{background:var(--g)}.inv-senales li.alerta::before{background:var(--o)}
-.inv-senales li b{color:var(--text)}
-.inv-senales-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 16px}
-.inv-objetivo{margin-top:8px;padding:10px 12px;border-radius:11px;border:1px solid color-mix(in srgb,var(--c) 35%,transparent);background:color-mix(in srgb,var(--c) 8%,transparent)}
-.inv-objetivo-t{font-size:10.5px;font-weight:600;color:var(--text3);margin-bottom:3px}
-.inv-objetivo-n{font-size:13px;font-weight:900;color:var(--c)}
-.inv-objetivo-r{font-family:var(--mono);font-size:11px;color:var(--text2);margin-top:3px;line-height:1.4}
-.inv-links{display:flex;flex-direction:column}
-.inv-links a{display:flex;flex-direction:column;padding:7px 2px;border-top:1px solid rgba(var(--ov),.07);font-size:13px;font-weight:700;color:var(--cy);text-decoration:none}
-.inv-links a:first-child{border-top:0}
-.inv-links a:hover{text-decoration:underline}
-.inv-links a span{font-size:11.5px;font-weight:500;color:var(--text3)}
-.inv-fuentes{display:flex;flex-direction:column;gap:3px}
-.inv-fuentes a{font-size:10.5px;color:var(--text3);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.inv-fuentes a:hover{color:var(--cy);text-decoration:underline}
-.inv-fuentes a::before{content:'↗ ';color:var(--cy)}
-.inv-fuentes-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px 14px}
-
-/* El visor del prompt: lo que sale hacia Claude, tal cual, con el contexto de este momento. */
-.inv-prompt-ov{position:absolute;inset:0;z-index:5;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:3vh 3vw;opacity:0;pointer-events:none;transition:opacity .18s}
-.inv-prompt-ov.open{opacity:1;pointer-events:auto}
-.inv-prompt-card{width:min(1440px,100%);max-height:100%;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;
-  background:var(--card);border:1px solid rgba(var(--ov),.14);box-shadow:0 24px 70px rgba(0,0,0,.5)}
-.inv-prompt-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(var(--ov),.1)}
-.inv-prompt-head>div{flex:1;min-width:0}
-.inv-prompt-head b{display:block;font-size:13px;color:var(--text)}
-.inv-prompt-head small{display:block;font-size:10.5px;color:var(--text3);margin-top:2px}
-.inv-prompt-head .gbm-close{position:static}
-.inv-prompt-txt{margin:0;padding:14px 18px 20px;overflow:auto;font-family:var(--mono);font-size:11.5px;line-height:1.55;color:var(--text2);white-space:pre-wrap;word-break:break-word}
-
-@media(max-width:1440px){
-  .inv-pf-cab,.inv-ap-hero{grid-template-columns:1fr}
-  .inv-dos .inv-proy{grid-template-rows:minmax(120px,1fr) auto}
-}
-@media(max-width:1280px){
-  .inv-card .inv-body{grid-template-columns:minmax(0,1fr) 320px}
-  .inv-sa-top{grid-template-columns:1fr}
-  .inv-sa-acc{align-items:flex-start}
-  .inv-sa-acc .inv-estado{text-align:left}
-}
+.inv-card .inv-body{flex:1;min-height:0;padding:0;overflow:hidden}
+.qi{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,360px);height:100%;min-height:0}
+.qi-main{display:flex;flex-direction:column;gap:18px;padding:18px 22px 28px;overflow-y:auto;min-width:0}
+.qi-lado{display:flex;flex-direction:column;gap:18px;padding:18px 20px 28px;overflow-y:auto;border-left:1px solid rgba(var(--ov),.08)}
+.qi-sec{display:flex;flex-direction:column;gap:9px;min-width:0}
+.qi-sec-cab{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px}
+.qi-sec-cab .ce-btn{margin-left:auto;padding:5px 11px;font-size:12px}
+.qi-lbl{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.qi-sec-s{font-size:12px;color:var(--text3)}
+.qi-sec-s.viejo{color:var(--o)}
+.qi-nota,.qi-vacio{margin:0;font-size:12.5px;line-height:1.5;color:var(--text3)}
+.qi-vacio a{color:var(--cy)}
+/* Este mes a GBM y sus envíos: el que sigue en cian, los que pasaron apagados. */
+.qi-hoy{display:flex;flex-direction:column;gap:3px;padding:12px 16px;border-radius:14px;border-left:4px solid var(--c);background:color-mix(in srgb,var(--c) 8%,transparent)}
+.qi-hoy b{font-size:16px;color:var(--text)}
+.qi-hoy span{font-size:12.5px;line-height:1.45;color:var(--text2)}
+.qi-mes{display:flex;flex-direction:column;gap:10px;padding:16px 18px;border-radius:16px;background:rgba(var(--cy-rgb),.06);border:1px solid rgba(var(--cy-rgb),.25)}
+.qi-mes-cab{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 14px}
+.qi-mes-n{font-family:var(--mono);font-size:clamp(24px,2.2vw,32px);font-weight:800;color:var(--cy)}
+.qi-mes-s{font-size:12.5px;color:var(--text3)}
+.qi-envios{display:flex;flex-wrap:wrap;gap:8px}
+.qi-env{display:flex;flex-direction:column;gap:1px;min-width:120px;padding:8px 12px;border-radius:11px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.1)}
+.qi-env i{font-style:normal;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3)}
+.qi-env b{font-family:var(--mono);font-size:15px;color:var(--text)}
+.qi-env em{font-style:normal;font-size:11.5px;color:var(--text3)}
+.qi-env.sig{border-color:rgba(var(--cy-rgb),.5);background:rgba(var(--cy-rgb),.1)}
+.qi-env.sig i{color:var(--cy)}
+.qi-env.paso{opacity:.5}
+/* Tu reparto: la barra del total y un renglón por cosa, con su porcentaje y sus pesos de este mes. */
+.qi-barra{display:flex;gap:2px;height:10px;border-radius:5px;overflow:hidden;background:rgba(var(--ov),.08)}
+.qi-barra i{display:block;height:100%}
+.qi-rs{display:flex;flex-direction:column;border-radius:12px;border:1px solid rgba(var(--ov),.09)}
+.qi-r{display:grid;grid-template-columns:10px minmax(0,1fr) 64px 110px;gap:12px;align-items:center;padding:10px 14px}
+.qi-r+.qi-r{border-top:1px solid rgba(var(--ov),.07)}
+.qi-r-c{width:10px;height:10px;border-radius:3px}
+.qi-r-n{display:flex;flex-direction:column;min-width:0}
+.qi-r-n b{font-size:14px;color:var(--text)}
+.qi-r-n i{font-style:normal;font-size:12px;line-height:1.4;color:var(--text3)}
+.qi-r-p{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--text2);text-align:right}
+.qi-r-m{font-family:var(--mono);font-size:15px;color:var(--text);text-align:right}
+.qi-ed{display:flex;flex-direction:column;gap:8px}
+.qi-ed-f{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 90px auto;gap:8px;align-items:center}
+.qi-ed input{width:100%;box-sizing:border-box;padding:8px 10px;border-radius:9px;border:1px solid rgba(var(--ov),.18);background:rgba(var(--ov),.05);color:var(--text);font:inherit;font-size:13px}
+.qi-ed-p{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text3)}
+.qi-ed-f .ce-btn{padding:6px 10px}
+.qi-ed-pie{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.qi-ed-suma{margin-left:auto;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--o)}
+.qi-ed-suma.ok{color:var(--g)}
+/* Las noticias: pestañas por tema y una lista de titulares; lo que recomienda algo lleva su etiqueta. */
+.qi-temas{display:flex;flex-wrap:wrap;gap:6px}
+.qi-tema{font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;padding:6px 12px;border-radius:9px;border:1px solid rgba(var(--ov),.14);background:transparent;color:var(--text2)}
+.qi-tema i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--text3)}
+.qi-tema.on{border-color:rgba(var(--cy-rgb),.55);background:rgba(var(--cy-rgb),.12);color:var(--text)}
+.qi-ns{display:flex;flex-direction:column;border-radius:12px;border:1px solid rgba(var(--ov),.09)}
+.qi-n{display:flex;flex-direction:column;gap:3px;padding:10px 14px;text-decoration:none;color:inherit}
+.qi-n+.qi-n{border-top:1px solid rgba(var(--ov),.07)}
+.qi-n:hover{background:rgba(var(--ov),.04)}
+.qi-n em{align-self:flex-start;font-style:normal;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:2px 7px;border-radius:5px;background:rgba(var(--g-rgb),.14);color:var(--g)}
+.qi-n b{font-size:14px;line-height:1.35;color:var(--text)}
+.qi-n span{font-size:11.5px;color:var(--text3)}
+.qi-mas{align-self:flex-start;font-size:12.5px;font-weight:700;color:var(--cy);text-decoration:none}
+/* La columna de al lado. */
+.qi-precios{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qi-precios>div{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:11px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.09)}
+.qi-precios span{font-size:11px;font-weight:700;color:var(--text3)}
+.qi-precios b{font-family:var(--mono);font-size:14px;color:var(--text)}
+.qi-precios small{display:block;font-size:11px;color:var(--text3)}
+.qi-lleva{font-family:var(--mono);font-size:22px;color:var(--text)}
+.qi-lado .ce-btn{align-self:flex-start}
+.qi-links{display:flex;flex-direction:column;gap:6px}
+.qi-links a{display:flex;flex-direction:column;gap:1px;padding:9px 12px;border-radius:10px;text-decoration:none;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.09)}
+.qi-links b{font-size:13px;color:var(--cy)}
+.qi-links span{font-size:11.5px;color:var(--text3)}
+.qi-regla{margin:0;padding:12px 14px;border-radius:12px;font-size:12.5px;line-height:1.5;color:var(--text2);background:rgba(var(--w-rgb),.07);border:1px solid rgba(var(--w-rgb),.25)}
+.qi-regla b{color:var(--text)}
 @media(max-width:1100px){
-  .inv-dos,.inv-tres{grid-template-columns:1fr}
+  .qi{grid-template-columns:minmax(0,1fr);height:auto}
+  .inv-card .inv-body{overflow-y:auto}
+  .qi-main,.qi-lado{overflow:visible}
+  .qi-lado{border-left:0;border-top:1px solid rgba(var(--ov),.08)}
 }
 @media(max-width:860px){
-  .inv-card .inv-body{display:block;overflow-y:auto}
-  .inv-main,.inv-side{overflow:visible}
-  .inv-side{border-left:none;border-top:1px solid rgba(var(--ov),.08)}
-  .inv-activos,.inv-senales-2,.inv-sa-alts,.inv-fuentes-2{grid-template-columns:1fr}
-  .inv-kpis,.inv-kpis-3{grid-template-columns:1fr 1fr}
-}
-@media(max-width:640px){
-  #gbmOverlay{padding:0}
   .gbm-card.inv-card{width:100%;height:100%;max-height:100%}
-  .inv-card .inv-head{padding:12px 48px 10px 14px;flex-direction:column;gap:8px}
-  .inv-head-acc{align-items:flex-start}
-  .inv-estado{text-align:left}
-  .inv-main,.inv-side{padding:12px 14px 24px}
-  .inv-tabs{grid-template-columns:1fr 1fr;gap:5px}
-  .inv-tab{padding:9px 8px}
-  .inv-tab-l{display:none}
-  .inv-tab-n{font-size:11.5px}
-  .inv-rt-f{grid-template-columns:10px minmax(0,1fr) 46px 70px}
-  .inv-rt-d{display:none}
-  .inv-prompt-ov{padding:0}
-  .inv-prompt-card{border-radius:0;height:100%}
+  .inv-card .inv-head{padding:12px 48px 10px 54px}
+  .qi-main,.qi-lado{padding:14px 14px 22px}
+  .qi-r{grid-template-columns:10px minmax(0,1fr) auto;grid-template-areas:"c n m" "c n p"}
+  .qi-r-c{grid-area:c}.qi-r-n{grid-area:n}.qi-r-m{grid-area:m}.qi-r-p{grid-area:p}
+  .qi-ed-f{grid-template-columns:minmax(0,1fr) 80px auto;grid-template-areas:"n p x" "d d d"}
+  .qi-ed-f>input:first-child{grid-area:n}.qi-ed-f>input:nth-child(2){grid-area:d}.qi-ed-p{grid-area:p}.qi-ed-f>.ce-btn{grid-area:x}
+  .qi-env{min-width:0;flex:1 1 calc(50% - 4px)}
 }
 </style>
 <script>
@@ -5366,16 +5133,15 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 </div>
 
 <!-- ─── PANEL DE INVERSIÓN DEL LUNES (2026-08-18) — se abre desde el bloque de GBM ─── -->
-<!-- ─── QUÉ INVERTIR HOY — plantilla XL de tres perfiles; los datos los escribe Claude en inversion-hoy.js ─── -->
+<!-- ─── QUÉ INVERTIR HOY — sin IA: el mes a GBM, tu reparto y las noticias del día (renderGBMPanel) ─── -->
 <div class="gbm-overlay" id="gbmOverlay" onclick="if(event.target===this) cerrarGBM()">
   <div class="gbm-card inv-card">
     <div class="gbm-head inv-head">
       <button class="gbm-close" onclick="cerrarGBM()" aria-label="Cerrar">✕</button>
       <div class="inv-head-txt">
         <h2>📈 Qué invertir hoy</h2>
-        <p>Elige una pestaña: cada una es una forma distinta de invertir el dinero del mes. Ves qué comprar, cuánto y por qué; el análisis largo va plegado.</p>
+        <p>Sin IA: lo que tu plan manda a GBM este mes, en qué va según tu reparto y las noticias para invertir, de medios de México.</p>
       </div>
-      <div class="inv-head-acc" id="invHeadAcc"></div>
     </div>
     <div class="gbm-body inv-body" id="gbmBody"></div>
   </div>
@@ -8909,7 +8675,7 @@ function invertirHoyHtml(vistos){
   const estado = vistos.invertir ? '<span class="ap-estado ok">✓ revisado</span>'
     : `<button type="button" class="ap-estado ir" onclick="aprendeAbrir('invertir')">Ver el plan</button>`;
   return apTarjeta({ c: 'var(--cy)', mat: 'Qué invertir hoy', estado, foto: apFoto(p.foto),
-    abrir: "aprendeAbrir('invertir')", titulo: 'Abrir Qué invertir hoy: tu situación, los precios de hoy y qué comprar según tu perfil',
+    abrir: "aprendeAbrir('invertir')", titulo: 'Abrir Qué invertir hoy: lo que va a GBM este mes, qué comprar según tu reparto y las noticias del día',
     txt: apCuerpo({ sub: 'Tu dinero hoy, según tu plan para irte a Alemania', big: p.corto, color: p.color, det: p.det,
       pie: `${AP_ICO[p.notaIco]}<span>${p.pie}</span>` }) });
 }
@@ -9330,7 +9096,7 @@ function comoDecideHtml(){
     regla: [['1 · La BBVA', 'Quincena a quincena y sin intereses, hasta dejarla en cero.'],
       ['2 · GBM', 'Después, todo para Alemania; los primeros pesos completan el fondo de emergencia.'],
       ['El auto', 'No se adelanta: se paga con su mensualidad.'],
-      ['Qué comprar', 'Lo dice tu perfil, en el panel de Qué invertir hoy.'],
+      ['Qué comprar', 'Lo dice tu reparto, en el panel de Qué invertir hoy.'],
       ['De dónde sale', 'Del orden de tu Plan Maestro con tus saldos de Finanzas; nunca del azar ni del mercado.']] });
   const q = istqbPreguntaHoy();
   if(q){
@@ -11915,9 +11681,9 @@ function renderCalendario(){
 //  · Tu portafolio y tu excedente salen de finanzasmx_v2 (localStorage), que es
 //    donde ya vive tu dinero real — no se duplica aquí.
 const GBM_LINKS = [
-  { t: 'GBM+ · tu portafolio', u: 'https://gbm.com/', d: 'Entra y ejecuta la compra' },
-  { t: 'VOO · precio en vivo', u: 'https://www.google.com/finance/quote/VOO:NYSEARCA', d: 'El dato que no se puede traer aquí' },
-  { t: 'CETES Directo', u: 'https://www.cetesdirecto.com/', d: 'Tasa vigente y compra a 28 días' },
+  { t: 'GBM+ · tu cuenta', u: 'https://gbm.com/', d: 'Entra y ejecuta la compra' },
+  { t: 'Fondos de GBM', u: 'https://gbm.com/soluciones-de-inversion/fondos/', d: 'GBMF2 y los demás, con su rendimiento' },
+  { t: 'CETES Directo', u: 'https://www.cetesdirecto.com/', d: 'Tasa vigente y compra desde $100' },
   { t: 'Banxico · tipo de cambio FIX', u: 'https://www.banxico.org.mx/tipcamb/tipCamMIAction.do', d: 'El oficial, para comparar' },
 ];
 
@@ -12029,7 +11795,7 @@ function pasoInversionHoy(){
     que = 'Tu plan para juntar el dinero de Alemania: ya sin deuda de tarjeta, todo lo que ahorras se invierte.';
     titulo = 'Hoy sí inviertes: todo va a GBM';
     porque = 'Lo que te sobra de cada quincena y lo que apartas de Didi va a tu cuenta de inversiones en GBM.'+(faltaEf>0?' Los primeros <b>'+mon(faltaEf)+'</b> completan tu fondo para emergencias.':'');
-    hoy = 'Reparte según tu perfil de inversión, <b>sin pensarlo dos veces</b>.';
+    hoy = 'Sigue tu reparto, <b>sin pensarlo dos veces</b>.';
     notaIco = 'meta'; nota = 'El auto no se adelanta: se paga con su mensualidad normal.';
     fondo = faltaEf>0 ? '' : 'Tu fondo para emergencias está completo: <b>'+mon(ef)+'</b> en CETES.';
   }
@@ -12039,616 +11805,151 @@ function pasoInversionHoy(){
     ? 'Primero liquidas la tarjeta y después inviertes: '+(deHoy.length ? 'con este pago te quedarán <b>'+mon(Math.max(0, bbvaSaldo-sumHoy))+'</b>' : 'debes <b>'+mon(bbvaSaldo)+'</b>')+(bbvaFin ? ' y queda en cero el <b>'+bbvaFin+'</b>.' : '.')
     : 'Ya sin deuda de tarjeta, lo que te sobra de la quincena y de Didi va a tu cuenta de inversiones.';
   const pie = bbvaSaldo > 0 ? (deHoy.length || !resto[0] ? 'Mientras tengas deuda, no compres inversiones' : 'Siguiente pago: <b>'+diaCorto(resto[0].fecha)+'</b>, '+mon(resto[0].monto))
-    : 'Reparte según tu perfil, sin pensarlo dos veces';
+    : 'Sigue tu reparto, sin pensarlo dos veces';
   return {F, inv, ef, metaEf, totalInv, cetes, deudaCara, mon, color, que, titulo, origen, porque, hoy, nota, notaIco, fondo, foto, corto, det, pie, abonos: bbvaSaldo > 0 ? abonos : []};
 }
 
-// ─── "Qué invertir hoy" — la plantilla y los datos van separados ─────────────────────────
-// La plantilla (renderGBMPanel y el CSS .inv-*) es fija. Lo que cambia de una semana a otra vive
-// en dos archivos que escribe Claude Code a través de inversion-actualizar.ps1:
-//   · inversion-hoy.js (window.INVERSION_HOY): mercado y los perfiles segura y medio.
-//   · inversion-hoy.js trae solo segura y medio; riesgo alto y súper alto son "apuestas": una sola
-//     empresa a la baja, con la misma regla fija del maestro, la misma plantilla (invApuestaHtml) y
-//     el mismo esquema, pero cada una con su prompt, su archivo y su botón: inversion-alto.js
-//     (window.INVERSION_ALTO, empresas sólidas) e inversion-superalto.js (window.INVERSION_SUPERALTO,
-//     altísimo riesgo). Adán: "exclusivamente en riesgo súper alto ahí modificará la información";
-//     "riesgo alto igualita que el de riesgo súper alto… empresas un poco más confiables".
-// Así una actualización cuesta los tokens de la información y ninguno de la interfaz. Adán,
-// 21-sep-2026: "claude solo se encargará de la información y la plantilla no se modificará
-// visualmente, entonces solo se gastan tokens en información".
-//
-// Cada botón 🤖 navega a claudeinv://<modo>?ctx=<base64url del contexto>. Windows abre el .ps1
-// (registrado en HKCU por inversion-instalar.bat), que corre `claude -p` y reescribe el .js de
-// ese modo. La página no puede leer archivos (file://), pero sí volver a cargar un <script>:
-// invEsperar() lo reinyecta cada 5 s hasta que _meta.generado cambia y entonces se repinta solo.
-// Los prompts viven en inversion-prompt.js e inversion-superalto-prompt.js por lo mismo: la
-// página los muestra ("ver el prompt") y solo puede cargarlos con <script src>.
-// En esta pantalla no aparece nada del fondo de emergencia (Adán, 21-sep-2026: "quita todo lo que
-// tenga que ver con lo del fondo de emergencia"): ni la regla de pasos en grande, ni la barra ni la nota
-// de CETES. La regla sigue viva en la tarjeta Qué invertir hoy de Mi Día (pasoInversionHoy).
-const INV_KEY = 'dash-inversion-v1';   // {tab, perfil, monto} — pestaña abierta, perfil elegido, monto al mes
-const INV_PERFILES = [
-  { id:'seguro',    nombre:'Inversión segura',  ico:'🛡️', color:'var(--g)', rgb:'var(--g-rgb)', para:'Para el dinero que no puedes arriesgar' },
-  { id:'medio',     nombre:'Riesgo medio',      ico:'⚖️', color:'var(--w)', rgb:'var(--w-rgb)', para:'Para hacer crecer tu dinero en 10 años' },
-  { id:'alto',      nombre:'Riesgo alto',       ico:'🔥', color:'var(--o)', rgb:'var(--o-rgb)', apuesta:true, para:'Una empresa grande que hoy está barata' },
-  { id:'superalto', nombre:'Riesgo súper alto', ico:'🎲', color:'var(--r)', rgb:'var(--r-rgb)', apuesta:true, para:'Una apuesta: puede ganar mucho o perder' },
-];
-/* Qué es cada cosa que se compra, en palabras de alguien que nunca ha invertido (Adán, 2-nov-2026: "en qué invertir hoy no
-   es nada claro, déjalo más simple, cada tab debe ser más simple y explicación por qué invertirías en cada cosa"). Va al lado
-   del «por qué» de Claude en cada tarjeta. Se busca por el ticker, el nombre o el tipo del activo; lo que no reconoce, no lo
-   inventa: la tarjeta queda solo con el porqué. */
-const INV_QUE_ES = [
-  [/CETES/i, 'Le prestas dinero al gobierno de México por 28 días y te lo regresa con interés. Es lo más seguro que hay en pesos.'],
-  [/BONDDIA|deuda.*liquidez|fondo de deuda|deuda gubernamental/i, 'Un fondo que junta el dinero de muchas personas y se lo presta al gobierno a muy corto plazo. Lo puedes sacar cualquier día hábil.'],
-  [/\bVOO\b|S&P ?500|IVVPESO/i, 'Un solo instrumento que compra las 500 empresas más grandes de Estados Unidos. Si a esas empresas les va bien con los años, a ti también.'],
-  [/\bQQQ\b|Nasdaq/i, 'Un solo instrumento con las 100 empresas de tecnología más grandes de Estados Unidos. Crece más que el resto y también cae más.'],
-  [/\bBTC\b|Bitcoin/i, 'Una moneda digital que no controla ningún banco. Sube y baja muchísimo: por eso solo va una parte chica.'],
-  [/oro|gold|\bGLD\b/i, 'Oro, o un instrumento que sigue su precio. Suele aguantar cuando todo lo demás cae.'],
-  [/ETF|fondo/i, 'Un instrumento que compra muchas empresas o bonos a la vez: no dependes de que a una sola le vaya bien.'],
-];
-function invQueEs(a){
-  const t = [a.ticker, a.nombre, a.tipo].filter(Boolean).join(' ');
-  const r = INV_QUE_ES.find(x => x[0].test(t));
-  return r ? r[1] : '';
+// ─── «Qué invertir hoy», sin IA ───────────────────────────────────────────────────────────────────────────────
+// Adán, 17-nov-2026: "en qué invertir hoy también depende de la IA y eso ya no lo quiero, redesign esa sección…
+// ponle la habilidad de que me muestre noticias concretas de recomendaciones en qué invertir, ya no quiero depender
+// de mi suscripción a Claude". Nada de este panel lo escribe una IA:
+//   · El dinero de este mes a GBM y sus envíos salen del plan (CIFRAS.gbmMes), el mismo calendario de Finanzas.
+//   · Qué comprar lo decide tu reparto (`finanzasmx_v2.reparto`, o CIFRAS.REPARTO_BASE mientras no escribas el tuyo):
+//     cada renglón con su porcentaje se vuelve pesos de este mes. Se edita aquí donde Finanzas es propia (la PC) y
+//     viaja al iPad con la copia de Finanzas.
+//   · Las noticias son de Google Noticias, por tema (noticias-inversion.js, que el hook de pre-commit actualiza en la
+//     PC): primero lo que recomienda algo, solo medios de México.
+//   · Los precios del Bitcoin y del dólar, en vivo (cargarPreciosGBM), y dónde comprar (GBM_LINKS).
+let _qiTema = null, _qiBorrador = null;
+const QI_COL = ['var(--cy)', 'var(--p)', 'var(--o)', 'var(--w)', 'var(--g)', 'var(--b)'];
+function qiRepartoEsTuyo(){ return !!(D.fin && Array.isArray(D.fin.reparto) && D.fin.reparto.length); }
+function qiReparto(){
+  const r = qiRepartoEsTuyo() ? D.fin.reparto : ((window.CIFRAS && CIFRAS.REPARTO_BASE) || []);
+  return r.filter(x => x && x.n && +x.pct > 0);
 }
-// El riesgo de 1 a 5, en palabras.
-const INV_RIESGO_TXT = ['', 'casi nulo', 'bajo', 'medio: en un mal año puede caer', 'alto', 'muy alto'];
-const INV_ACTIVO_COLORES = ['var(--cy)', 'var(--p)', 'var(--b)', 'var(--w)', 'var(--o)'];
-// Los dos modos del puente: qué archivo escribe cada uno, qué variable expone y su prompt.
-const INV_MODOS = {
-  perfiles:  { ruta:'actualizar', archivo:'inversion-hoy.js',       variable:'INVERSION_HOY',       prompt:'INVERSION_PROMPT',           promptArchivo:'inversion-prompt.js',           estado:'invEstado',   boton:'invBtnClaude', nombre:'los perfiles segura y medio' },
-  alto:      { ruta:'alto',       archivo:'inversion-alto.js',      variable:'INVERSION_ALTO',      prompt:'INVERSION_ALTO_PROMPT',      promptArchivo:'inversion-alto-prompt.js',      estado:'invEstadoAlto', boton:'invBtnAlto',   nombre:'la compra a la baja de riesgo alto' },
-  superalto: { ruta:'superalto',  archivo:'inversion-superalto.js', variable:'INVERSION_SUPERALTO', prompt:'INVERSION_SUPERALTO_PROMPT', promptArchivo:'inversion-superalto-prompt.js', estado:'invEstadoSA', boton:'invBtnSA',     nombre:'la apuesta de riesgo súper alto' },
-};
-function invPref(){ return rawGet(INV_KEY, {}) || {}; }
-function invPrefSet(patch){ rawSet(INV_KEY, Object.assign(invPref(), patch)); }
-function invDatos(){ const d = window.INVERSION_HOY; return (d && d.perfiles) ? d : null; }
-function invDatosApuesta(modo){ const M = INV_MODOS[modo]; const d = M && window[M.variable]; return (d && d.principal && d.principal.ticker) ? d : null; }
-function invPerfilDef(id){ return INV_PERFILES.find(p => p.id === id) || INV_PERFILES[1]; }
-function invTabActual(){ const p = invPref(); return invPerfilDef(p.tab || p.perfil || 'medio').id; }
-// El monto al mes con el que se calculan los repartos de segura y medio: el que Adán escribió en la
-// línea del reparto; si no, lo que destina al mes según el maestro (nunca un número a mano). Las
-// apuestas (alto y súper alto) no lo usan: su reparto es la regla fija.
-// Sin cifra propia, el monto de los perfiles es lo que el plan manda a GBM en un mes con depa
-// ({{ahorroMesDepa}}); `especulacionMes` es solo de las apuestas (riesgo alto y súper alto).
-function invMontoMensual(){
-  const p = invPref();
-  if(+p.monto > 0) return +p.monto;
-  return (window.CIFRAS && +CIFRAS.n('ahorroMesDepa')) || +_PG().especulacionMes || 0;
+function qiNoticias(){ const N = window.NOTICIAS_INVERSION; return N && Array.isArray(N.items) && N.items.length ? N : null; }
+function qiHace(iso){
+  const min = Math.max(0, Math.round((Date.now() - new Date(iso)) / 60000)), d = Math.round(min / 1440);
+  return min < 60 ? 'hace ' + min + ' min' : min < 1440 ? 'hace ' + Math.round(min / 60) + ' h' : 'hace ' + d + (d === 1 ? ' día' : ' días');
 }
-// La regla fija de las dos apuestas, del maestro: al mes, CETES fijos, un % a BTC y el resto a una empresa.
-function invReglaSA(){
-  const P = _PG();
-  const mes = +P.especulacionMes || 0, cetes = +P.cetesDia15 || 0, btcPct = +P.especulacionBtcPct || 0;
-  const btc = Math.round(mes * btcPct / 100), resto = Math.max(0, mes - cetes - btc);
-  return { mes, cetes, cetesPct: mes ? cetes / mes * 100 : 0, btc, btcPct, resto, restoPct: mes ? resto / mes * 100 : 0 };
-}
-function invMontoCambia(v){ invPrefSet({ monto: Math.max(0, Math.round(+v || 0)) }); renderGBMPanel(); cargarPreciosGBM(); }
-function invTab(id){ invPrefSet({ tab: id }); renderGBMPanel(); cargarPreciosGBM(); }
-function invElegirPerfil(id){ invPrefSet({ perfil: invPref().perfil === id ? '' : id }); renderGBMPanel(); cargarPreciosGBM(); }
-function invDots(n){ n = Math.max(0, Math.min(5, Math.round(+n || 0))); return '●'.repeat(n) + '○'.repeat(5 - n); }
-function invPct(x){ return (Math.round(+x * 10) / 10).toLocaleString('es-MX') + ' %'; }
-function invNum(x, dec){ return (+x || 0).toLocaleString('es-MX', { minimumFractionDigits: dec == null ? 2 : dec, maximumFractionDigits: dec == null ? 2 : dec }); }
-// Valor futuro de aportar M al mes durante 12 meses a una tasa anual r: la fórmula de la anualidad.
-function invEn12(M, rAnual){ const i = (+rAnual || 0) / 100 / 12; if(!i) return M * 12; return M * ((Math.pow(1 + i, 12) - 1) / i); }
-function invFechaCorta(iso){
-  const f = new Date(iso); if(isNaN(f)) return '';
-  return f.toLocaleDateString('es-MX', { day:'numeric', month:'short' }) + ' ' + f.toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' });
-}
-function invFechaLarga(iso){
-  const f = new Date(iso); if(isNaN(f)) return '';
-  return f.toLocaleDateString('es-MX', { weekday:'long', day:'numeric', month:'long', year:'numeric' }) + ', ' + f.toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' });
-}
-function invModeloCorto(m){ m = String(m || ''); return /opus/i.test(m) ? 'Opus' : /sonnet/i.test(m) ? 'Sonnet' : /haiku/i.test(m) ? 'Haiku' : (m || 'Claude'); }
-// Días desde que Claude escribió los datos; con más de 7 la cabecera lo dice en naranja (el prompt
-// del panel: toda cifra de mercado lleva su fecha, y una semana es mucho para precios).
-function invDiasViejo(m){ return m && m.generado ? -CIFRAS.diasHasta(new Date(m.generado)) : null; }
-function invMetaTxt(m, verbo){
-  if(!m) return '';
-  const dv = invDiasViejo(m);
-  if(dv > 7) return verbo + ' ' + invFechaCorta(m.generado) + ' · hace ' + dv + ' días: actualízalo antes de comprar';
-  return verbo + ' ' + invFechaCorta(m.generado) + ' · ' + invModeloCorto(m.modelo) + (m.tokens ? ' · ' + fmt(m.tokens) + ' tokens' : '') + (m.turnos ? ' · ' + m.turnos + ' vueltas' : '') + (m.segundos ? ' · ' + m.segundos + ' s' : '');
+function qiGoogle(q, dias){ return 'https://news.google.com/search?q=' + encodeURIComponent(q + (dias ? ' when:' + dias + 'd' : '')) + '&hl=es-419&gl=MX&ceid=MX:es-419'; }
+
+// Este mes a GBM: lo que manda el plan y cada envío con su día; el de hoy, marcado.
+function qiMesHtml(){
+  const C = window.CIFRAS; if(!C || !C.gbmMes) return '';
+  const k = hoyLocal(), ym = k.slice(0, 7), hoyN = +k.slice(8), G = C.gbmMes(ym);
+  const MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'], mes = MC[+ym.slice(5) - 1];
+  const envios = G.semanas.flatMap(w => w.gbm || []).filter(e => +e.mxn > 0).sort((a, b) => a.dia - b.dia);
+  const sig = envios.find(e => e.dia >= hoyN);
+  return '<div class="qi-mes"><div class="qi-mes-cab"><span class="qi-lbl">Este mes a GBM, según tu plan</span>'+
+      '<b class="qi-mes-n">'+money(G.aGbm)+'</b>'+
+      (G.aBbva > 0 ? '<span class="qi-mes-s">y '+money(G.aBbva)+' a la BBVA</span>' : '')+'</div>'+
+    '<div class="qi-envios">'+envios.map(e => '<span class="qi-env'+(e.dia < hoyN ? ' paso' : e === sig ? ' sig' : '')+'">'+
+      '<i>'+(e.dia === hoyN ? 'hoy' : e.dia+' '+mes)+'</i><b>'+money(e.mxn)+'</b><em>'+esc(e.t)+'</em></span>').join('')+'</div></div>';
 }
 
-// Lo que se le manda a Claude para segura y medio: los mismos números que ya pinta el panel, en
-// JSON corto. Nada de leer archivos del lado de Claude — el contexto viaja en el enlace y cuesta
-// ~500 tokens. Sin el fondo de emergencia: esta pantalla no lo trata.
-function invContexto(){
-  const { F, inv } = pasoInversionHoy();
-  const P = _PG(), hoy = new Date();
-  const maes = (F.goals || []).find(g => g.id === 'g001');
-  const ph = (typeof activePhase === 'function') ? activePhase() : null;
-  const fmtF = d => d instanceof Date ? d.toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' }) : '';
-  return {
-    fecha: CIFRAS.fechaLocal(hoy),
-    edad: P.nacimiento ? Math.floor((hoy - new Date(P.nacimiento)) / 31557600000) : null,
-    ciudad: P.ciudad || '', empleador: P.empleador || '',
-    ingresosMes: { sueldo: +P.sueldo || 0, didi: +P.didiMes || 0, siVale: +P.siVale || 0 },
-    fijosMes: Math.round(+P.fijosTotal || 0),
-    montoMes: invMontoMensual(), cetesFijoMes: +P.cetesDia15 || 0,
-    deudas: (F.debts || []).filter(d => +d.balance > 0).map(d => ({ nombre: d.name, saldo: Math.round(+d.balance), tasa: +d.rate || 0, minimo: +d.min || 0 })),
-    inversiones: inv.map(i => ({ nombre: i.name, tipo: i.type || '', valor: Math.round(+i.value || +i.invested || 0) })),
-    efectivo: (F.activos || []).filter(a => a.type === 'liquido' && +a.value > 0).map(a => ({ nombre: a.name, valor: Math.round(+a.value) })),
-    precios: { btcUsd: +F.currentBtcPrice || null, usdMxn: +F.usdMxn || null },
-    // La fecha de la maestría va siempre, del maestro: el prompt de los perfiles la lee de aquí.
-    maestria: Object.assign({ inicio: P.maestriaInicio || '' }, maes ? { ahorrado: Math.round(CIFRAS.fondoMaestria(F).total), meta: Math.round(+maes.target || 0) } : {}),
-    fase: ph ? (ph.tag + ' · ' + ph.title + ' (' + fmtF(ph.start) + ' – ' + fmtF(ph.end) + ')') : '',
-    perfilElegido: invPref().perfil || null,
-  };
+// En qué va: tu reparto, cada renglón en pesos de este mes. Con «Cambiar mi reparto», el editor en su lugar.
+function qiRepartoHtml(){
+  const C = window.CIFRAS, ym = hoyLocal().slice(0, 7), monto = C && C.gbmMes ? C.gbmMes(ym).aGbm : 0;
+  const editable = tiEditable();
+  if(_qiBorrador && editable) return qiEditorHtml();
+  const R = qiReparto(), tot = R.reduce((s, x) => s + (+x.pct || 0), 0) || 100;
+  const barra = '<div class="qi-barra">'+R.map((x, i) => '<i style="width:'+((+x.pct || 0) / tot * 100).toFixed(2)+'%;background:'+QI_COL[i % QI_COL.length]+'"></i>').join('')+'</div>';
+  const filas = R.map((x, i) => { const pct = (+x.pct || 0) / tot * 100;
+    return '<div class="qi-r"><span class="qi-r-c" style="background:'+QI_COL[i % QI_COL.length]+'"></span>'+
+      '<span class="qi-r-n"><b>'+esc(x.n)+'</b><i>'+esc([x.donde, x.porque].filter(Boolean).join(' · '))+'</i></span>'+
+      '<span class="qi-r-p">'+(Math.round(pct * 10) / 10).toLocaleString('es-MX')+' %</span><b class="qi-r-m">'+money(monto * pct / 100)+'</b></div>'; }).join('');
+  return '<div class="qi-sec"><div class="qi-sec-cab"><span class="qi-lbl">Qué comprar con eso</span>'+
+      '<span class="qi-sec-s">'+(qiRepartoEsTuyo() ? 'tu reparto' : 'el reparto de base del plan: escribe el tuyo')+'</span>'+
+      (editable ? '<button type="button" class="ce-btn sec" onclick="qiEditar()">Cambiar mi reparto</button>' : '')+'</div>'+
+    barra+'<div class="qi-rs">'+filas+'</div>'+
+    (editable ? '' : '<p class="qi-nota">Tu reparto se cambia en tu PC y llega aquí con el siguiente commit.</p>')+'</div>';
 }
-// El contexto de una apuesta: la regla fija con sus pesos ya calculados, los precios y la apuesta
-// anterior de esa pestaña (para que Claude diga si sigue vigente o si hoy hay una mejor).
-function invContextoApuesta(modo){
-  const { F } = pasoInversionHoy();
-  const R = invReglaSA(), hoy = new Date(), ant = invDatosApuesta(modo);
-  return {
-    perfil: modo,
-    fecha: CIFRAS.fechaLocal(hoy),
-    hora: hoy.toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' }),
-    ciudad: _PG().ciudad || '', broker: 'GBM+', exchangeBtc: 'Bitso',
-    reglaMes: { totalMxn: R.mes, cetesMxn: R.cetes, cetesPct: Math.round(R.cetesPct * 10) / 10, btcMxn: R.btc, btcPct: R.btcPct, empresaMxn: R.resto, empresaPct: Math.round(R.restoPct * 10) / 10 },
-    precios: { btcUsd: +F.currentBtcPrice || null, usdMxn: +F.usdMxn || null },
-    anterior: ant ? { empresa: ant.principal.empresa, ticker: ant.principal.ticker, precio: ant.principal.precio, moneda: ant.principal.moneda, elegidaEl: (ant._meta && ant._meta.generado) || '' } : null,
-  };
+function qiEditorHtml(){
+  const B = _qiBorrador, suma = B.reduce((s, x) => s + (parseFloat(x.pct) || 0), 0), ok = Math.abs(suma - 100) < 0.01;
+  const campo = (i, k, ph, tipo) => '<input type="'+(tipo || 'text')+'"'+(tipo === 'number' ? ' min="0" max="100" step="1" inputmode="decimal"' : '')+
+    ' value="'+esc(B[i][k] == null ? '' : String(B[i][k]))+'" placeholder="'+ph+'" oninput="qiCampo('+i+',\''+k+'\',this.value)">';
+  return '<div class="qi-sec"><div class="qi-sec-cab"><span class="qi-lbl">Tu reparto</span>'+
+      '<span class="qi-sec-s">qué compras y qué parte del dinero de cada mes va a cada cosa</span></div>'+
+    '<div class="qi-ed">'+B.map((x, i) => '<div class="qi-ed-f">'+campo(i, 'n', 'Qué: GBMF2, CETES 28 días, VOO…')+
+      campo(i, 'donde', 'Dónde: GBM+, Cetesdirecto')+'<label class="qi-ed-p">'+campo(i, 'pct', '%', 'number')+'<span>%</span></label>'+
+      '<button type="button" class="ce-btn sec" onclick="qiQuitar('+i+')" aria-label="Quitar">✕</button></div>').join('')+'</div>'+
+    '<div class="qi-ed-pie"><button type="button" class="ce-btn sec" onclick="qiAgregar()">+ Otro renglón</button>'+
+      '<span class="qi-ed-suma'+(ok ? ' ok' : '')+'" id="qiSuma">Suman '+(Math.round(suma * 10) / 10)+' %'+(ok ? '' : ' · deben sumar 100')+'</span>'+
+      '<button type="button" class="ce-btn sec" onclick="qiCancelar()">Cancelar</button>'+
+      '<button type="button" class="ce-btn" onclick="qiGuardar()"'+(ok ? '' : ' disabled')+' id="qiGuardarBtn">Guardar</button></div></div>';
 }
-function invBase64url(txt){
-  return btoa(unescape(encodeURIComponent(txt))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+function qiEditar(){ _qiBorrador = qiReparto().map(x => ({ n: x.n, donde: x.donde || '', pct: +x.pct || 0, porque: x.porque || '' })); qiPintarReparto(); }
+function qiCancelar(){ _qiBorrador = null; qiPintarReparto(); }
+function qiAgregar(){ if(_qiBorrador){ _qiBorrador.push({ n: '', donde: 'GBM+', pct: 0 }); qiPintarReparto(); } }
+function qiQuitar(i){ if(_qiBorrador){ _qiBorrador.splice(i, 1); qiPintarReparto(); } }
+// Al escribir no se repinta el editor (perdería el foco): solo la suma y el botón.
+function qiCampo(i, k, v){
+  if(!_qiBorrador || !_qiBorrador[i]) return;
+  _qiBorrador[i][k] = k === 'pct' ? v : v;
+  const suma = _qiBorrador.reduce((s, x) => s + (parseFloat(x.pct) || 0), 0), ok = Math.abs(suma - 100) < 0.01;
+  const s = document.getElementById('qiSuma'), b = document.getElementById('qiGuardarBtn');
+  if(s){ s.textContent = 'Suman '+(Math.round(suma * 10) / 10)+' %'+(ok ? '' : ' · deben sumar 100'); s.classList.toggle('ok', ok); }
+  if(b) b.disabled = !ok;
 }
-const _invPoll = {};
-function invEstado(modo, msg, clase){
-  const e = document.getElementById(INV_MODOS[modo].estado); if(!e) return;
-  e.textContent = msg; e.className = 'inv-estado' + (clase ? ' ' + clase : '');
+// Se guarda en Finanzas (`finanzasmx_v2.reparto`): así lo lee también su Plan de Inversiones y viaja al iPad.
+function qiGuardar(){
+  const F = rawGet('finanzasmx_v2', null); if(!_qiBorrador || !F || FIN_REPO) return;
+  const R = _qiBorrador.map(x => ({ n: String(x.n || '').trim(), donde: String(x.donde || '').trim(), pct: Math.round((parseFloat(x.pct) || 0) * 100) / 100, porque: x.porque || undefined }))
+    .filter(x => x.n && x.pct > 0);
+  if(!R.length || Math.abs(R.reduce((s, x) => s + x.pct, 0) - 100) > 0.01) return;
+  F.reparto = R;
+  try{ rawSet('finanzasmx_v2', F); }catch(e){ return; }
+  D.fin = F; if(window.CIFRAS) CIFRAS.refrescar();
+  _qiBorrador = null; qiPintarReparto();
+  toast('✅ Tu reparto quedó guardado');
 }
-function invPedirClaude(modo){
-  modo = INV_MODOS[modo] ? modo : 'perfiles';
-  const M = INV_MODOS[modo];
-  // El protocolo solo existe en Windows (el .ps1 vive en esta PC): en el iPad se copia el encargo.
-  if(!/Win/i.test(navigator.platform || navigator.userAgent)){
-    invCopiarContexto(modo);
-    invEstado(modo, 'Aquí no hay Claude Code: el contexto quedó copiado, pégalo en Claude Code en la PC.', 'wait');
-    return;
-  }
-  const btn = document.getElementById(M.boton); if(btn) btn.disabled = true;
-  invEstado(modo, modo !== 'perfiles'
-    ? '⏳ Se abrió una ventana de PowerShell: Claude está investigando en la web, tarda 3-6 min. Puedes seguir usando el Dashboard.'
-    : '⏳ Se abrió una ventana de PowerShell: Claude está pensando, tarda 1-3 min. Puedes seguir usando el Dashboard.', 'wait');
-  invEsperar(modo);
-  const ctx = modo === 'perfiles' ? invContexto() : invContextoApuesta(modo);
-  location.href = 'claudeinv://' + M.ruta + '?ctx=' + invBase64url(JSON.stringify(ctx));
-}
-function invEsperar(modo){
-  const M = INV_MODOS[modo];
-  clearInterval(_invPoll[modo]);
-  const meta = () => (window[M.variable] && window[M.variable]._meta && window[M.variable]._meta.generado) || '';
-  const antes = meta(), t0 = Date.now();
-  _invPoll[modo] = setInterval(() => {
-    if(Date.now() - t0 > 10 * 60 * 1000){
-      clearInterval(_invPoll[modo]);
-      const btn = document.getElementById(M.boton); if(btn) btn.disabled = false;
-      invEstado(modo, 'No llegó nada en 10 min. ¿Se abrió PowerShell? Si no, instala el protocolo (una vez) o copia el contexto y pégalo en Claude Code.', 'err');
-      return;
-    }
-    const s = document.createElement('script');
-    s.src = M.archivo + '?v=' + Date.now();
-    s.onload = () => {
-      s.remove();
-      if(meta() && meta() !== antes){
-        clearInterval(_invPoll[modo]);
-        renderGBMPanel(); cargarPreciosGBM();
-        toast('🤖 Claude actualizó ' + M.nombre);
-      }
-    };
-    s.onerror = () => s.remove();
-    document.head.appendChild(s);
-  }, 5000);
-}
-// El texto exacto que recibe Claude: el prompt del .js más el contexto. Es lo que muestra "ver el
-// prompt" y lo que se copia sin protocolo (iPad, otra máquina), con el encargo de dónde guardarlo.
-function invPromptCompleto(modo){
-  const M = INV_MODOS[modo];
-  const ctx = modo === 'perfiles' ? invContexto() : invContextoApuesta(modo);
-  const p = String(window[M.prompt] || ('(no se cargó ' + M.promptArchivo + ')')).trim();
-  return p + '\n\nCONTEXTO DE ADÁN (JSON, saldos reales de hoy):\n' + JSON.stringify(ctx);
-}
-function invCopiarContexto(modo){
-  modo = INV_MODOS[modo] ? modo : 'perfiles';
-  const M = INV_MODOS[modo];
-  const txt = 'Responde al prompt de abajo y guarda el JSON resultante en Claude_Proyecto/Dashboard/' + M.archivo +
-    ' como window.' + M.variable + ' = {...}; añadiendo _meta:{generado:<ahora en ISO>, modelo:<tu modelo>}. No toques ningún otro archivo.\n\n' + invPromptCompleto(modo);
-  const ok = () => toast('Copiado: pégalo en Claude Code');
-  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, () => toast('No se pudo copiar'));
-  else { const t = document.createElement('textarea'); t.value = txt; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); ok(); }
-}
-function invAyudaInstalar(){ toast('Doble clic en Dashboard/inversion-instalar.bat (una sola vez) y vuelve a pulsar el botón'); }
-// "pon una opción para que pueda ver el prompt que se enviará" (Adán, 21-sep-2026): el texto tal
-// cual sale hacia Claude, con el contexto de este momento.
-function invVerPrompt(modo){
-  modo = INV_MODOS[modo] ? modo : 'perfiles';
-  const M = INV_MODOS[modo];
-  let ov = document.getElementById('invPromptOv');
-  if(!ov){ ov = document.createElement('div'); ov.id = 'invPromptOv'; ov.className = 'inv-prompt-ov'; ov.onclick = e => { if(e.target === ov) invCerrarPrompt(); }; document.getElementById('gbmOverlay').appendChild(ov); }
-  const txt = invPromptCompleto(modo);
-  ov.innerHTML =
-    '<div class="inv-prompt-card">' +
-      '<div class="inv-prompt-head"><div><b>El prompt que se envía · ' + esc(M.nombre) + '</b><small>' + esc(M.promptArchivo) + ' + el contexto de este momento · ' + fmt(txt.length) + ' caracteres ≈ ' + fmt(Math.round(txt.length / 3.6)) + ' tokens</small></div>' +
-        '<button class="inv-btn-claude" onclick="invCopiarPrompt(\'' + modo + '\')">📋 Copiar</button><button class="gbm-close" onclick="invCerrarPrompt()" aria-label="Cerrar">✕</button></div>' +
-      '<pre class="inv-prompt-txt">' + esc(txt) + '</pre>' +
-    '</div>';
-  ov.classList.add('open');
-}
-function invCerrarPrompt(){ const ov = document.getElementById('invPromptOv'); if(ov) ov.classList.remove('open'); }
-function invCopiarPrompt(modo){
-  const txt = invPromptCompleto(modo), ok = () => toast('Prompt copiado');
-  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, () => toast('No se pudo copiar'));
-  else { const t = document.createElement('textarea'); t.value = txt; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); ok(); }
+function qiPintarReparto(){ const el = document.getElementById('qiReparto'); if(el) el.innerHTML = qiRepartoHtml(); }
+
+// Las noticias: una pestaña por tema; en cada uno, primero lo que recomienda algo. Cada titular abre la nota.
+function qiTemaVer(id){ _qiTema = id; const el = document.getElementById('qiNoticias'); if(el) el.innerHTML = qiNoticiasHtml(); }
+function qiNoticiasHtml(){
+  const N = qiNoticias();
+  if(!N) return '<div class="qi-sec-cab"><span class="qi-lbl">Noticias para invertir</span></div>'+
+    '<p class="qi-vacio">Todavía no hay noticias en este dispositivo: llegan con tu siguiente commit desde la PC, que las trae de Google Noticias. '+
+    'Mientras, <a href="'+qiGoogle('"en qué invertir" México', 14)+'" target="_blank" rel="noopener">búscalas en Google Noticias ↗</a>.</p>';
+  const temas = (N.temas || []).filter(t => N.items.some(i => i.tema === t.id));
+  const t = temas.find(x => x.id === _qiTema) || temas[0];
+  const items = N.items.filter(i => i.tema === t.id);
+  const viejas = Date.now() - new Date(N.generado) > 3 * 86400000;
+  return '<div class="qi-sec-cab"><span class="qi-lbl">Noticias para invertir</span>'+
+      '<span class="qi-sec-s'+(viejas ? ' viejo' : '')+'">de Google Noticias, '+qiHace(N.generado)+(viejas ? ' · se actualizan con tu siguiente commit' : '')+'</span></div>'+
+    '<div class="qi-temas" role="tablist">'+temas.map(x => '<button type="button" role="tab" class="qi-tema'+(x === t ? ' on' : '')+'" onclick="qiTemaVer(\''+x.id+'\')">'+
+      esc(x.t)+' <i>'+N.items.filter(i => i.tema === x.id).length+'</i></button>').join('')+'</div>'+
+    '<div class="qi-ns">'+items.map(i => '<a class="qi-n" href="'+esc(i.u)+'" target="_blank" rel="noopener">'+
+      (i.rec ? '<em>Recomienda</em>' : '')+'<b>'+esc(i.t)+'</b><span>'+esc(i.fuente || i.dominio || '')+' · '+qiHace(i.f)+'</span></a>').join('')+'</div>'+
+    '<a class="qi-mas" href="'+qiGoogle(t.q, t.dias)+'" target="_blank" rel="noopener">Ver más de «'+esc(t.t)+'» en Google Noticias ↗</a>';
 }
 
-function invPintarCabecera(d){
-  const acc = document.getElementById('invHeadAcc'); if(!acc) return;
-  const m = d && d._meta;
-  const estado = m ? invMetaTxt(m, 'Claude ·') : (d ? 'Datos de Claude sin fecha' : 'Todavía no le has pedido nada a Claude');
-  acc.innerHTML =
-    '<button class="inv-btn-claude" id="invBtnClaude" onclick="invPedirClaude(\'perfiles\')" title="Manda tus saldos reales a Claude Code y reescribe solo los datos de segura y medio">🤖 Actualizar con Claude</button>' +
-    '<div class="inv-estado' + (invDiasViejo(m) > 7 ? ' inv-viejo' : '') + '" id="invEstado">' + esc(estado) + '</div>' +
-    '<div class="inv-ayuda"><a onclick="invVerPrompt(\'perfiles\')">ver el prompt</a> · ¿No se abre nada? <a onclick="invAyudaInstalar()">instalar el protocolo</a> · <a onclick="invCopiarContexto(\'perfiles\')">copiar el contexto</a></div>';
-}
-
-// El monto al mes, editable en la misma línea del reparto (con el modo privado se tapa).
-function invMontoHtml(monto){
-  return privado
-    ? '<b>$••,•••</b>'
-    : '<b class="inv-monto"><span>$</span><input id="invMontoInput" type="number" step="100" min="0" value="' + monto + '" onchange="invMontoCambia(this.value)" title="Escribe cuánto destinas al mes; con esto se calcula el reparto"></b>';
-}
-function invTabsHtml(d, tab){
-  return '<div class="inv-tabs">' + INV_PERFILES.map(p => {
-    let sub = '';
-    if(p.apuesta){
-      const sa = invDatosApuesta(p.id), dots = p.id === 'alto' ? '●●●●○' : '●●●●●';
-      sub = '<div class="inv-tab-l"><span>' + esc(p.para) + (sa ? ' · ' + esc(sa.principal.ticker) : '') + '</span><span class="inv-dots">' + dots + '</span></div>';
-    }
-    else { const pf = d && d.perfiles[p.id]; sub = '<div class="inv-tab-l"><span>' + esc(p.para) + '</span><span class="inv-dots">' + (pf ? invDots(pf.riesgo) : '') + '</span></div>'; }
-    return '<button class="inv-tab' + (p.id === tab ? ' on' : '') + '" style="--c:' + p.color + '" onclick="invTab(\'' + p.id + '\')">' +
-      '<div class="inv-tab-n"><span>' + p.ico + '</span>' + p.nombre + (invPref().perfil === p.id ? ' <span title="Tu perfil elegido">★</span>' : '') + '</div>' + sub +
-    '</button>';
-  }).join('') + '</div>';
-}
-// ─── La ventana, precisa y con gráficas ───────────────────────────────────────────────────────────
-// Adán, 20-oct-2026: "la sección de Qué invertir hoy está sobresaturada de información, debe ser muy precisa y
-// concreta todo, si puedes añadir gráficas mejor". Arriba va solo lo que decide la compra —cuánto, a qué, qué
-// esperar y qué hacer este mes— con tres gráficas en HTML (sin librerías: el panel abre desde file://); el
-// análisis largo de Claude no se pierde, va plegado en «El análisis completo» (`.inv-mas`). Las gráficas siguen
-// la guía de visualización: barras delgadas con 2 px de aire, rejilla de 1 px, texto en tinta y nunca en el
-// color de la serie, y cada valor también fuera del tooltip. Los colores de los activos (`--iv1..4`, en el CSS)
-// pasaron el validador de paleta en los dos temas, y cada activo conserva el suyo en todas las pestañas: CETES
-// azul y Bitcoin ámbar; los demás toman los libres en orden.
-function invColores(nombres){
-  const fijo = n => /CETES/i.test(n) ? 'var(--iv1)' : /\bBTC\b|BITCOIN/i.test(n) ? 'var(--iv4)' : '';
-  const libres = ['var(--iv2)', 'var(--iv3)', 'var(--iv1)', 'var(--iv4)'].filter(c => !nombres.some(n => fijo(n) === c));
-  let k = 0;
-  return nombres.map(n => fijo(n) || libres[k++ % libres.length]);
-}
-// Una cifra corta con su etiqueta arriba y, si hace falta, su nota abajo.
-function invKpi(k, v, nota, txt){
-  return '<div class="inv-kpi"><span>' + k + '</span><b' + (txt ? ' class="txt"' : '') + '>' + v + '</b>' + (nota ? '<small>' + nota + '</small>' : '') + '</div>';
-}
-// El reparto: una barra apilada (2 px de aire entre tramos) y su tabla, que es a la vez la leyenda y la vista en
-// tabla de la barra: cada activo con su color, su %, sus pesos y dónde se compra; lo que va en 0 % no sale (la regla
-// de la apuesta ya lo dice). `nota` llega ya escapada.
-function invRepartoHtml(items){
-  const vis = items.filter(x => x.pct > 0.05);
-  return '<div class="inv-rb" role="img" aria-label="' + esc(vis.map(x => (x.tk || x.n) + ' ' + invPct(x.pct)).join(', ')) + '">' +
-      vis.map(x => '<i style="--a:' + x.c + ';flex-grow:' + x.pct + '" title="' + esc((x.tk || x.n) + ' · ' + invPct(x.pct) + ' · ' + money(x.monto)) + '"></i>').join('') +
-    '</div>' +
-    '<div class="inv-rt">' + vis.map(x =>
-      '<div class="inv-rt-f" style="--a:' + x.c + '">' +
-        '<i class="inv-rt-sw"></i>' +
-        '<div class="inv-rt-n"><b>' + esc(x.n) + '</b>' + (x.tk && x.tk !== x.n ? '<span class="inv-ac-tk">' + esc(x.tk) + '</span>' : '') + (x.nota ? '<small>' + x.nota + '</small>' : '') + '</div>' +
-        '<span class="inv-rt-pct">' + invPct(x.pct) + '</span>' +
-        '<span class="inv-rt-m">' + money(x.monto) + '</span>' +
-        '<span class="inv-rt-d">' + esc(x.donde || '') + '</span>' +
-      '</div>').join('') + '</div>';
-}
-// El tope del eje: el primer número redondo (1, 1.5, 2, 2.5, 3, 4, 5, 6, 8 o 10 por su potencia de diez) que pasa del valor.
-function invTope(v){
-  if(!(v > 0)) return 1;
-  const e = Math.pow(10, Math.floor(Math.log10(v)));
-  return ([1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10].find(m => m * e >= v) || 10) * e;
-}
-function invMil(v){ return privado ? '' : '$' + (v >= 1e6 ? (v / 1e6).toLocaleString('es-MX', { maximumFractionDigits: 1 }) + ' M' : v ? Math.round(v / 1000).toLocaleString('es-MX') + ' mil' : '0'); }
-// Cuánto tendrías en 12 meses aportando M cada mes: una columna por mes con lo que aportas (gris) y, encima, lo
-// que rinde con la tasa baja del perfil, en verde. El total da el rango con la baja y la alta (`invEn12()`), y cada columna
-// dice su mes al pasar el cursor o con el teclado.
-function invProyHtml(M, r){
-  const i0 = (+r[0] || 0) / 1200, i1 = (+r[1] || 0) / 1200;
-  const fv = (k, i) => i ? M * ((Math.pow(1 + i, k) - 1) / i) : M * k;
-  const fin0 = invEn12(M, r[0]), fin1 = invEn12(M, r[1]), aport = M * 12, tope = invTope(fin1);
-  const h = v => (v / tope * 100).toFixed(2) + '%', hoy = new Date();
-  const mes = k => new Date(hoy.getFullYear(), hoy.getMonth() + k, 1);
-  const rango = (a, b) => '≈ ' + money(a) + (b - a >= 1 ? ' – ' + money(b) : '');
-  let cols = '', xs = '';
-  for(let k = 1; k <= 12; k++){
-    const a = M * k, g0 = Math.max(0, fv(k, i0) - a), g1 = Math.max(0, fv(k, i1) - a), f = mes(k - 1);
-    const tip = 'Mes ' + k + ' · ' + MES_LABEL_FULL[f.getMonth()].toLowerCase() + ' ' + f.getFullYear() + '\nAportas ' + money(a) + '\nTendrías ' + rango(a + g0, a + g1);
-    cols += '<div class="inv-proy-c' + (k >= 11 ? ' der' : k <= 2 ? ' izq' : '') + '" tabindex="0" data-tip="' + esc(tip).replace(/\n/g, '&#10;') + '" aria-label="' + esc(tip.replace(/\n/g, ', ')) + '">' +
-      (g0 > 0 ? '<i class="ren" style="height:' + h(g0) + '"></i>' : '') + '<i class="apo" style="height:' + h(a) + '"></i></div>';
-    xs += '<span>' + MES_LABEL_FULL[f.getMonth()].slice(0, 3).toLowerCase() + '</span>';
-  }
-  const g = [0, 0.5, 1].map(p => '<span class="inv-proy-g" style="bottom:' + p * 100 + '%"></span>').join('');
-  const y = [0, 0.5, 1].map(p => '<em style="bottom:' + p * 100 + '%">' + invMil(tope * p) + '</em>').join('');
-  return '<div class="inv-caja-t">Cuánto tendrías en 12 meses<small>aportando ' + money(M) + ' cada mes</small></div>' +
-    '<div class="inv-proy-tot">' + rango(fin0, fin1) + '</div>' +
-    '<div class="inv-proy-ley"><span style="--a:rgba(var(--ov),.24)"><i></i>Lo que aportas <b>' + money(aport) + '</b></span>' +
-      '<span style="--a:var(--g)"><i></i>Lo que rinde <b>' + rango(fin0 - aport, fin1 - aport) + '</b></span></div>' +
-    '<div class="inv-proy"><div class="inv-proy-y">' + y + '</div><div class="inv-proy-plot">' + g + '<div class="inv-proy-cols">' + cols + '</div></div>' +
-      '<div class="inv-proy-x">' + xs + '</div></div>' +
-    '<div class="inv-proy-nota">Con el rendimiento esperado del perfil, sin impuestos ni comisiones.</div>';
-}
-// Dónde está hoy una apuesta entre el stop y el objetivo: la escala va un poco más allá de los dos y del máximo de
-// 52 semanas; a la izquierda del precio de hoy, lo que perderías si toca el stop y, a la derecha, lo que ganarías
-// si llega al objetivo, en pesos. Si Claude dio la entrada con números («entre $245-$255»), va como una franja.
-function invEscalaHtml(p, R){
-  const precio = +p.precio, stop = +p.stop, obj = +p.objetivo, max = +p.maximo52 || 0;
-  if(!(precio > 0 && stop > 0 && obj > 0)) return '';
-  const lo = Math.min(stop, precio) * 0.96, hi = Math.max(obj, max, precio) * 1.03, x = v => (v - lo) / (hi - lo) * 100;
-  const pr = v => '$' + invNum(v, v >= 100 ? 0 : 2);
-  const m = String(p.entrada || '').replace(/,/g, '').match(/(\d+(?:\.\d+)?)\s*(?:USD|MXN)?\s*(?:-|–|a)\s*\$?(\d+(?:\.\d+)?)/);
-  const ent = m && +m[1] < +m[2] && +m[1] >= stop && +m[2] <= obj ? [+m[1], +m[2]] : null;
-  const pierdes = R.resto * Math.abs(+p.stopPct || 0) / 100, ganas = R.resto * (+p.objetivoPct || 0) / 100;
-  // Cada zona lleva las dos versiones y el CSS enseña la que cabe en su ancho real: la frase (perderías ≈ $2,196),
-  // la cifra sola (−$2,196) para que el punto de hoy no la tape, o nada en una zona muy angosta.
-  const zona = (a, b, cls, txt, corto) => { const w = x(b) - x(a); return '<span class="inv-esc-z ' + cls + '" style="left:' + x(a).toFixed(2) + '%;width:' + w.toFixed(2) + '%"><em><span class="l">' + txt + '</span><span class="c">' + corto + '</span></em></span>'; };
-  const lado = v => x(v) < 7 ? ' izq' : x(v) > 93 ? ' der' : '';
-  const marca = (v, cls, k, sub) => '<span class="inv-esc-m ' + cls + lado(v) + '" style="left:' + x(v).toFixed(2) + '%"><i></i><b>' + k + '</b><span>' + pr(v) + (sub ? ' · ' + sub : '') + '</span></span>';
-  const conMax = max > obj && x(max) - x(obj) > 14;
-  return '<div class="inv-esc" role="img" aria-label="' + esc('Vendes si baja a ' + pr(stop) + ', hoy ' + pr(precio) + ', meta ' + pr(obj) + (max ? ', máximo de 52 semanas ' + pr(max) : '') + '; perderías ' + money(pierdes) + ' o ganarías ' + money(ganas)) + '">' +
-    '<div class="inv-esc-pista">' +
-      zona(stop, precio, 'pierde', 'perderías ≈ ' + money(pierdes), '−' + money(pierdes)) +
-      zona(precio, obj, 'gana', 'ganarías ≈ ' + money(ganas), '+' + money(ganas)) +
-      (ent ? '<span class="inv-esc-ent" style="left:' + x(ent[0]).toFixed(2) + '%;width:' + (x(ent[1]) - x(ent[0])).toFixed(2) + '%" title="Zona de entrada: ' + pr(ent[0]) + ' a ' + pr(ent[1]) + '"></span>' : '') +
-      marca(stop, 'stop', 'Vendes aquí', invNum(p.stopPct, 0) + ' %') +
-      marca(obj, 'obj', 'Meta', '+' + invNum(p.objetivoPct, 0) + ' %') +
-      (conMax ? marca(max, 'max', 'Máximo de 52 semanas', '') : '') +
-      marca(precio, 'hoy', 'Hoy', '') +
-    '</div></div>';
-}
-// El análisis de cada activo, para «El análisis completo»: por qué, qué vigilar y su riesgo.
-function invActivoHtml(a, c){
-  return '<div class="inv-activo" style="--a:' + c + '">' +
-    '<div class="inv-ac-top"><div class="inv-ac-nombre">' + esc(a.nombre) + (a.ticker ? '<span class="inv-ac-tk">' + esc(a.ticker) + '</span>' : '') + '</div>' +
-      '<div class="inv-ac-pct">' + invPct(a.pct) + '</div></div>' +
-    '<div class="inv-ac-row"><span class="inv-ac-k">Por qué</span><span>' + esc(a.porque) + '</span></div>' +
-    '<div class="inv-ac-row"><span class="inv-ac-k">Vigilar</span><span>' + esc(a.vigilar) + '</span></div>' +
-    '<div class="inv-ac-row inv-ac-riesgo"><span class="inv-ac-k">Riesgo</span><span>' + esc(a.riesgo) + '</span></div>' +
-  '</div>';
-}
-function invLista(arr, tag){ return '<' + tag + '>' + (arr || []).map(x => '<li>' + esc(x) + '</li>').join('') + '</' + tag + '>'; }
-function invCol(t, cuerpo, cls){ return '<div class="inv-col' + (cls ? ' ' + cls : '') + '"><div class="inv-col-t">' + t + '</div>' + cuerpo + '</div>'; }
-function invMas(resumen, cuerpo){ return '<details class="inv-mas"><summary>' + resumen + '</summary><div class="inv-mas-in">' + cuerpo + '</div></details>'; }
-function invElegirBtn(id, elegido){
-  return '<button class="inv-elegir' + (elegido ? ' on' : '') + '" onclick="invElegirPerfil(\'' + id + '\')">' + (elegido ? '★ Este es tu perfil elegido' : '☆ Usar este perfil como mi asignación objetivo') + '</button>';
-}
-// Una cosa que se compra: cuánto, qué es en palabras simples, por qué la comprarías, qué puede salir mal y dónde.
-function invCosaHtml(x){
-  const que = x.queEs || '';
-  return '<div class="inv-cosa" style="--a:' + x.c + '">' +
-    '<div class="inv-cosa-cab"><i></i><div class="inv-cosa-n"><b>' + esc(x.n) + '</b>' + (x.tk && x.tk !== x.n ? '<span class="inv-ac-tk">' + esc(x.tk) + '</span>' : '') + '</div>' +
-      '<div class="inv-cosa-m"><b>' + money(x.monto) + '</b><span>' + invPct(x.pct) + ' de lo del mes</span></div></div>' +
-    (que ? '<div class="inv-cosa-f"><span>Qué es</span><p>' + esc(que) + '</p></div>' : '') +
-    (x.porque ? '<div class="inv-cosa-f"><span>Por qué lo compras</span><p>' + esc(x.porque) + '</p></div>' : '') +
-    (x.riesgo ? '<div class="inv-cosa-f mal"><span>Qué puede salir mal</span><p>' + esc(x.riesgo) + '</p></div>' : '') +
-    (x.donde ? '<div class="inv-cosa-d">Se compra en <b>' + esc(x.donde) + '</b>' + (x.nota ? ' · ' + x.nota : '') + '</div>' : '') +
-  '</div>';
-}
-// La barra del reparto, sola: una franja por cosa, con 2 px de aire; la leyenda son las tarjetas de abajo.
-function invBarraHtml(items){
-  const vis = items.filter(x => x.pct > 0.05);
-  return '<div class="inv-rb" role="img" aria-label="' + esc(vis.map(x => (x.tk || x.n) + ' ' + invPct(x.pct)).join(', ')) + '">' +
-    vis.map(x => '<i style="--a:' + x.c + ';flex-grow:' + x.pct + '" title="' + esc((x.tk || x.n) + ' · ' + invPct(x.pct) + ' · ' + money(x.monto)) + '"></i>').join('') + '</div>';
-}
-// Segura y medio, simple (Adán, 2-nov-2026: "no es nada claro, déjalo más simple… y explicación por qué invertirías en
-// cada cosa"): para qué es el perfil en una frase y tres datos; qué comprar con el dinero del mes, una tarjeta por cosa con
-// qué es, por qué y qué puede salir mal; tu paso de este mes y qué esperar en un año, en una frase. El análisis, plegado.
-function invPerfilHtml(d, id){
-  const def = invPerfilDef(id), pf = d.perfiles[id];
-  if(!pf) return invVacioHtml();
-  const monto = invMontoMensual();
-  // Los porcentajes se normalizan por si Claude no cerró en 100: la barra siempre llena el ancho.
-  const suma = (pf.activos || []).reduce((s, a) => s + (+a.pct || 0), 0) || 100;
-  const activos = (pf.activos || []).map(a => Object.assign({}, a, { pct: (+a.pct || 0) * 100 / suma }));
-  const cols = invColores(activos.map(a => a.ticker || a.nombre));
-  const r = Array.isArray(pf.rendAnual) ? pf.rendAnual : [0, 0];
-  const elegido = invPref().perfil === id, riesgo = Math.round(+pf.riesgo || 0);
-  const items = activos.map((a, i) => ({ n: a.nombre, tk: a.ticker, pct: a.pct, monto: monto * a.pct / 100, donde: a.donde, c: cols[i], queEs: invQueEs(a), porque: a.porque, riesgo: a.riesgo }));
-  const fin0 = invEn12(monto, r[0]), fin1 = invEn12(monto, r[1]), aport = monto * 12;
-  const rango = (a, b) => money(a) + (b - a >= 1 ? ' a ' + money(b) : '');
-  const ganaPct = fin1 > 0 ? Math.max(1.5, (fin1 - aport) / fin1 * 100) : 0;
-  return '<div class="inv-perfil" style="--c:' + def.color + ';--c-rgb:' + def.rgb + '">' +
-    '<div class="inv-s-cab">' +
-      '<div class="inv-pf-lema">' + def.ico + ' <i>' + esc(pf.lema) + '</i></div>' +
-      '<p class="inv-s-para">' + esc(pf.paraQuien) + '</p>' +
-      '<div class="inv-s-chips">' +
-        '<span><small>Rinde al año</small><b>' + (+r[0]).toLocaleString('es-MX') + ' a ' + (+r[1]).toLocaleString('es-MX') + ' %</b></span>' +
-        '<span><small>Riesgo</small><b><span class="inv-dots">' + invDots(pf.riesgo) + '</span> ' + esc(INV_RIESGO_TXT[riesgo] || '') + '</b></span>' +
-        '<span><small>Déjalo</small><b>' + esc(pf.horizonte) + '</b></span>' +
-      '</div>' +
-    '</div>' +
-    '<section class="inv-caja">' +
-      '<div class="inv-caja-t">Qué comprar con tus ' + invMontoHtml(monto) + ' de este mes, y por qué<small>cambia la cifra y todo se recalcula</small></div>' +
-      invBarraHtml(items) +
-      '<div class="inv-cosas">' + items.map(invCosaHtml).join('') + '</div>' +
-    '</section>' +
-    '<div class="inv-s-dos">' +
-      (pf.esteMes ? '<section class="inv-caja inv-s-paso"><div class="inv-caja-t">Tu paso de este mes</div><p>' + esc(pf.esteMes) + '</p></section>' : '') +
-      '<section class="inv-caja inv-s-12"><div class="inv-caja-t">Qué esperar en un año</div>' +
-        '<p>Si pones <b>' + money(monto) + '</b> cada mes, en 12 meses tendrías unos <b>' + rango(fin0, fin1) + '</b>: ' + money(aport) + ' que pusiste tú y ' + rango(fin0 - aport, fin1 - aport) + ' que te da la inversión.</p>' +
-        '<div class="inv-s-bar" role="img" aria-label="' + esc('Lo que pones ' + money(aport) + ' y lo que rinde ' + rango(fin0 - aport, fin1 - aport)) + '"><i class="apo" style="flex-grow:' + (100 - ganaPct) + '"></i><i class="ren" style="flex-grow:' + ganaPct + '"></i></div>' +
-        '<div class="inv-s-ley"><span><i class="apo"></i>Lo que pones</span><span><i class="ren"></i>Lo que rinde</span></div>' +
-        '<small>Con lo que el perfil espera rendir al año, sin impuestos ni comisiones. La peor caída posible: ' + esc(String(pf.caidaMax || '').split(/(?<=\.)\s/)[0].replace(/^\S/, c => c.toLowerCase())) + '</small>' +
-      '</section>' +
-    '</div>' +
-    invMas('Más detalle: el análisis completo de Claude',
-      (pf.resumen ? '<p>' + esc(pf.resumen) + '</p>' : '') +
-      '<div class="inv-tres">' + invCol('Por qué este perfil', invLista(pf.porque, 'ul')) + invCol('En contra', invLista(pf.contra, 'ul')) + invCol('Reglas del juego', invLista(pf.reglas, 'ol')) + '</div>' +
-      '<div class="inv-activos">' + activos.map((a, i) => invActivoHtml(a, cols[i])).join('') + '</div>') +
-    '<div class="inv-pf-foot">' + invElegirBtn(id, elegido) +
-      '<span class="inv-disc">Orientación generada por Claude con tus números; no es asesoría regulada. La decisión y el riesgo son tuyos.</span>' +
-    '</div>' +
-  '</div>';
-}
-// Las dos apuestas (riesgo alto y súper alto): regla fija del maestro + la empresa que investigó Claude ese día.
-// Misma plantilla; lo que cambia es el texto, el botón y el archivo.
-const INV_APUESTA_TXT = {
-  alto: {
-    lema: 'La compra a la baja de hoy', breve: 'Una empresa grande y sana que bajó de precio por algo pasajero. La compras barata esperando que regrese a su precio.',
-    vacio: 'Claude busca en Finviz, TradingView, Yahoo Finance y noticias una empresa sólida —líder, rentable, con balance sano— que hoy esté a la baja por una razón temporal, compara tres y te trae la elegida con entrada, objetivo, stop y por qué.',
-    disc: 'Compra a la baja investigada por Claude el día que pulsaste el botón; los precios cambian a cada minuto y el stop no es opcional. No es asesoría regulada: la decisión y la pérdida posible son tuyas.',
-  },
-  superalto: {
-    lema: 'La apuesta de hoy', breve: 'Una empresa más arriesgada que cayó fuerte y puede rebotar en semanas. Puede salir muy bien o mal: por eso va con un límite.',
-    vacio: 'Claude busca en Finviz, TradingView, Yahoo Finance y noticias una empresa real que hoy esté a la baja con catalizadores para rebotar, compara tres y te trae la elegida con entrada, objetivo, stop y por qué.',
-    disc: 'Especulación de altísimo riesgo investigada por Claude el día que pulsaste el botón; los precios cambian a cada minuto y el stop no es opcional. No es asesoría regulada: la decisión y la pérdida posible son tuyas.',
-  },
-};
-// La apuesta: la empresa y tres cifras, la escala de precios con lo que ganarías o perderías, la tesis, lo que la
-// puede mover y cuándo venderla, y el reparto fijo del mes con su tabla; lo demás, plegado.
-function invApuestaHtml(modo){
-  const def = invPerfilDef(modo), M = INV_MODOS[modo], T = INV_APUESTA_TXT[modo], sa = invDatosApuesta(modo), R = invReglaSA();
-  const { F } = pasoInversionHoy();
-  const usdMxn = +F.usdMxn || 0, btcUsd = +F.currentBtcPrice || 0;
-  const elegido = invPref().perfil === modo;
-  const m = sa && sa._meta;
-  const cabecera =
-    '<div class="inv-sa-top">' +
-      '<div class="inv-sa-l"><div class="inv-pf-lema">' + def.ico + ' <i>' + T.lema + '</i></div><div class="inv-pf-para">' + T.breve + '</div></div>' +
-      '<div class="inv-sa-acc">' +
-        '<button class="inv-btn-claude inv-btn-sa" id="' + M.boton + '" onclick="invPedirClaude(\'' + modo + '\')" title="Solo reescribe esta pestaña: Claude investiga hoy qué empresa a la baja comprar">🤖 Investigar hoy</button>' +
-        '<div class="inv-estado' + (invDiasViejo(m) > 7 ? ' inv-viejo' : '') + '" id="' + M.estado + '">' + esc(m ? invMetaTxt(m, 'Investigado el') : 'Todavía no has investigado ninguna empresa') + '</div>' +
-        '<div class="inv-ayuda"><a onclick="invVerPrompt(\'' + modo + '\')">ver el prompt</a> · <a onclick="invCopiarContexto(\'' + modo + '\')">copiar el contexto</a></div>' +
-      '</div>' +
-    '</div>';
-  const estilo = '--c:' + def.color + ';--c-rgb:' + def.rgb;
-  if(!sa) return '<div class="inv-perfil inv-sa" style="' + estilo + '">' + cabecera +
-    '<div class="inv-vacio"><b>Todavía no hay empresa</b>Pulsa <b style="display:inline;font:inherit">🤖 Investigar hoy</b>: ' + T.vacio + ' Tarda 3-6 minutos y solo cambia esta pestaña.</div></div>';
-
-  const p = sa.principal, mon = p.moneda || 'USD';
-  const precioMxn = mon === 'MXN' ? +p.precio : (+p.precio * usdMxn);
-  const acciones = precioMxn > 0 ? R.resto / precioMxn : 0;
-  const btc = (btcUsd > 0 && usdMxn > 0) ? R.btc / (btcUsd * usdMxn) : 0;
-  const pr = x => '$' + invNum(x) + ' ' + esc(mon);
-  const pierdes = R.resto * Math.abs(+p.stopPct || 0) / 100, ganas = R.resto * (+p.objetivoPct || 0) / 100;
-  const simple = p.enSimple || String(p.tesis || '').split(/(?<=\.)\s/)[0];
-  const cosas = [
-    { n: 'CETES', pct: R.cetesPct, monto: R.cetes, donde: 'Cetesdirecto', nota: 'fijo cada mes', c: 'var(--iv1)', queEs: invQueEs({ ticker: 'CETES' }), porque: 'Una parte fija y segura, para que no todo el dinero del mes esté en juego.' },
-    { n: 'Bitcoin', tk: 'BTC', pct: R.btcPct, monto: R.btc, donde: 'Bitso', nota: btc ? '≈ ' + btc.toFixed(5) + ' ₿ al precio de hoy' : '', c: 'var(--iv4)', queEs: invQueEs({ ticker: 'BTC' }), porque: 'Una parte chica que puede subir mucho; si cae, no te mueve el mes.' },
-    { n: p.empresa, tk: p.ticker, pct: R.restoPct, monto: R.resto, donde: 'GBM+', nota: acciones ? '≈ ' + invNum(acciones, 1) + ' acciones' : '', c: 'var(--iv3)', queEs: 'Compras un pedazo de la empresa: ganas si su precio sube y pierdes si baja.', porque: simple, riesgo: (p.riesgos || [])[0] || '' },
-  ].filter(x => x.pct > 0.05);
-  return '<div class="inv-perfil inv-sa" style="' + estilo + '">' + cabecera +
-    '<div class="inv-s-explica"><b>Cómo funciona</b> Compras una empresa que bajó de precio, esperando que vuelva a subir. Antes de comprar decides dos precios: la <b>meta</b>, donde vendes ganando, y tu <b>límite</b>, donde vendes si sigue bajando. Así sabes desde hoy cuánto puedes ganar y cuánto perder.</div>' +
-    '<div class="inv-ap-hero">' +
-      '<div class="inv-ap-emp"><div class="inv-sa-nombre">' + esc(p.empresa) + ' <span class="inv-ac-tk">' + esc(p.ticker) + '</span></div>' +
-        '<div class="inv-sa-bolsa">' + esc(p.sector) + ' · hoy ' + pr(p.precio) + ' · bajó ' + invNum(Math.abs(p.caidaDesdeMax), 0) + ' % desde ' + pr(p.maximo52) + (p.fechaDato ? ' · precio del ' + esc(p.fechaDato) : '') + '</div></div>' +
-    '</div>' +
-    '<div class="inv-s-dos">' +
-      '<div class="inv-s-sale gana"><span>Si sube a su meta, ' + pr(p.objetivo) + ' (+' + invNum(p.objetivoPct, 0) + ' %)</span><b>ganas ≈ ' + money(ganas) + '</b><small>en ' + esc(String(p.plazo || '').replace(/^\S/, c => c.toLowerCase())) + ', con tus ' + money(R.resto) + ' en ' + esc(p.ticker) + '</small></div>' +
-      '<div class="inv-s-sale pierde"><span>Si baja a tu límite, ' + pr(p.stop) + ' (' + invNum(p.stopPct, 0) + ' %)</span><b>vendes y pierdes ≈ ' + money(pierdes) + '</b><small>vender ahí no es opcional: es lo que hace que la pérdida sea chica</small></div>' +
-    '</div>' +
-    '<section class="inv-caja"><div class="inv-caja-t">Dónde está hoy, entre tu límite y la meta</div>' + invEscalaHtml(p, R) + '</section>' +
-    '<div class="inv-tres">' +
-      invCol('Por qué la comprarías', '<p class="inv-col-p">' + esc(simple) + '</p>') +
-      invCol('Lo que la puede hacer subir', invLista((p.catalizadores || []).slice(0, 3), 'ol')) +
-      invCol('Cuándo vender antes', '<p class="inv-col-p">' + esc(p.invalida) + '</p>', 'inv-col-r') +
-    '</div>' +
-    '<section class="inv-caja inv-caja-rep"><div class="inv-caja-t">Qué comprar con tus ' + money(R.mes) + ' de este mes, y por qué<small>la regla fija del plan para esta pestaña</small></div>' +
-      invBarraHtml(cosas) + '<div class="inv-cosas">' + cosas.map(invCosaHtml).join('') + '</div>' +
-      (p.entrada ? '<div class="inv-esc-ent-t"><b>Cómo comprar</b><span>' + esc(p.entrada) + '</span></div>' : '') +
-    '</section>' +
-    invMas('Más detalle: por qué cayó, riesgos, reglas, señales y las otras dos candidatas',
-      (sa.resumen ? '<p>' + esc(sa.resumen) + '</p>' : '') +
-      '<div class="inv-tres">' + invCol('Por qué cayó', '<p class="inv-col-p">' + esc(p.porQueCayo) + '</p>') + invCol('Riesgos', invLista(p.riesgos, 'ul')) + invCol('Reglas de ejecución', invLista(sa.reglas, 'ol')) + '</div>' +
-      '<div class="inv-sub">La tesis completa</div><p>' + esc(p.tesis) + '</p>' +
-      ((p.catalizadores || []).length > 3 ? '<div class="inv-sub">Todo lo que la puede mover</div>' + invLista(p.catalizadores, 'ol') : '') +
-      ((p.senales || []).length ? '<div class="inv-sub">Señales que leyó Claude</div><ul class="inv-senales inv-senales-2">' + p.senales.map(s => '<li class="' + esc(s.tono || 'neutro') + '"><span><b>' + esc(s.t) + '</b> — ' + esc(s.d) + '</span></li>').join('') + '</ul>' : '') +
-      ((sa.alternativas || []).length ? '<div class="inv-sub">Las otras dos que comparó</div><div class="inv-sa-alts">' + sa.alternativas.map(a =>
-        '<div class="inv-sa-alt"><div class="inv-sa-alt-h"><b>' + esc(a.empresa) + '</b><span class="inv-ac-tk">' + esc(a.ticker) + '</span><span class="inv-sa-alt-p">$' + invNum(a.precio) + ' ' + esc(a.moneda || 'USD') + ' · ' + invNum(a.caidaDesdeMax, 0) + ' %</span></div>' +
-        '<div class="inv-ac-row"><span class="inv-ac-k">A favor</span><span>' + esc(a.porque) + '</span></div>' +
-        '<div class="inv-ac-row"><span class="inv-ac-k">Por qué no</span><span>' + esc(a.porQueNo) + '</span></div></div>').join('') + '</div>' : '') +
-      ((sa.fuentes || []).length ? '<div class="inv-sub">Fuentes</div><div class="inv-fuentes inv-fuentes-2">' + sa.fuentes.map(f => '<a href="' + esc(f.u) + '" target="_blank" rel="noopener" title="' + esc(f.u) + '">' + esc(f.t) + '</a>').join('') + '</div>' : '')) +
-    '<div class="inv-pf-foot">' + invElegirBtn(modo, elegido) +
-      '<span class="inv-disc">' + T.disc + '</span>' +
-    '</div>' +
-  '</div>';
-}
-function invVacioHtml(){
-  return '<div class="inv-vacio"><b>Todavía no hay perfiles</b>Pulsa <b style="display:inline;font:inherit">🤖 Actualizar con Claude</b>: la página manda tus saldos reales y en 1-3 minutos aparecen aquí los perfiles segura y medio con su reparto, su porqué y sus reglas.</div>';
-}
-// La barra lateral: los precios de hoy, el mercado en sus señales, tu situación y dónde comprar; el resumen largo
-// de Claude, la compra rápida y las fuentes van plegados.
-function invSideHtml(P, d){
-  const { inv, totalInv, deudaCara, mon } = P;
-  const m = d && d.mercado;
-  const asignacion = inv.length
-    ? inv.map(i => {
-        const v = +i.value || +i.invested || 0;
-        const pct = totalInv ? Math.round(v / totalInv * 100) : 0;
-        return '<div class="gbm-row"><span>' + esc(i.name) + '</span><span class="gbm-mono">' + mon(v) + ' · ' + pct + '%</span></div>';
-      }).join('')
-    : '<div class="gbm-row"><span>Inversiones</span><span class="gbm-mono">ninguna registrada</span></div>';
-  const elegido = invPref().perfil, defE = elegido && invPerfilDef(elegido);
-  let objetivo = '';
-  if(defE && defE.apuesta && defE.id === elegido){
-    const R = invReglaSA(), sa = invDatosApuesta(elegido);
-    objetivo = '<div class="inv-objetivo" style="--c:' + defE.color + '"><div class="inv-objetivo-t">Tu asignación objetivo</div>' +
-      '<div class="inv-objetivo-n">' + defE.ico + ' ' + defE.nombre + ' · ' + money(R.mes) + ' al mes</div>' +
-      '<div class="inv-objetivo-r">' + invPct(R.cetesPct) + ' CETES · ' + invPct(R.btcPct) + ' BTC · ' + invPct(R.restoPct) + ' ' + (sa ? esc(sa.principal.ticker) : 'la empresa del día') + '</div></div>';
-  }else{
-    const pfE = elegido && d && d.perfiles[elegido];
-    objetivo = pfE
-      ? '<div class="inv-objetivo" style="--c:' + invPerfilDef(elegido).color + '"><div class="inv-objetivo-t">Tu asignación objetivo</div>' +
-          '<div class="inv-objetivo-n">' + invPerfilDef(elegido).ico + ' ' + invPerfilDef(elegido).nombre + ' · ' + esc(pfE.lema) + '</div>' +
-          '<div class="inv-objetivo-r">' + (pfE.activos || []).map(a => invPct(a.pct) + ' ' + esc(a.ticker || a.nombre)).join(' · ') + '</div></div>'
-      : '<div class="gbm-nota">⚠️ Sin asignación objetivo: elige un perfil con <b>☆</b> y deja de decidir cada lunes desde cero.</div>';
-  }
-  const plegado = (t, html) => '<details class="inv-mas inv-mas-s"><summary>' + t + '</summary><div class="inv-mas-in">' + html + '</div></details>';
-  const contexto =
-    (m && (m.senales || []).length ? '<div class="gbm-sec">📰 El mercado, en ' + m.senales.length + ' señales</div><ul class="inv-senales">' + m.senales.map(s => '<li class="' + esc(s.tono || 'neutro') + '"><span><b>' + esc(s.t) + '</b> — ' + esc(s.d) + '</span></li>').join('') + '</ul>' + (m.resumen ? '<p>' + esc(m.resumen) + '</p>' : '') : '') +
-    '<div class="gbm-sec">🎯 Tu situación</div>' +
-    '<div class="gbm-row"><span>Deuda con interés</span><span class="gbm-mono" style="color:' + (deudaCara > 0 ? 'var(--r)' : 'var(--g)') + '">' + mon(deudaCara) + '</span></div>' +
-    asignacion + (totalInv ? '<div class="gbm-row gbm-row-tot"><span>Total invertido</span><span class="gbm-mono">' + mon(totalInv) + '</span></div>' : '');
-  // Simple (Adán, 2-nov-2026): a la vista, los precios de hoy, tu perfil y dónde comprar; el mercado, tu situación, la
-  // compra rápida y las fuentes, plegados.
-  return '<div class="gbm-sec">📡 Precios ahora</div>' +
-    '<div class="inv-precios" id="gbmPrecios">' +
-      '<div class="gbm-precio"><span class="gbm-tk">BTC</span><div id="gbmBtc"><b>…</b><small>cargando</small></div></div>' +
-      '<div class="gbm-precio"><span class="gbm-tk">USD/MXN</span><div id="gbmUsd"><b>…</b><small>cargando</small></div></div>' +
-      '<div class="gbm-precio' + (m && m.cetesTasa != null ? '' : ' gbm-precio-off') + '"><span class="gbm-tk">CETES 28 d</span><div>' +
-        (m && m.cetesTasa != null ? '<b>' + (+m.cetesTasa).toLocaleString('es-MX') + ' %</b><small>anual</small>' : '<b>sin dato</b><small>pídeselo a Claude</small>') + '</div></div>' +
-    '</div>' +
-    '<div class="gbm-sec">⭐ Tu perfil</div>' + objetivo +
-    '<div class="gbm-sec">🔗 Dónde comprar</div>' +
-    '<div class="inv-links">' + GBM_LINKS.map(l => '<a href="' + l.u + '" target="_blank" rel="noopener" title="' + esc(l.d) + '">' + l.t + '<span>' + l.d + '</span></a>').join('') + '</div>' +
-    plegado('El mercado y tu situación', contexto) +
-    plegado('La compra rápida, en 20 minutos',
-      '<ol class="gbm-check">' +
-        '<li>Abre GBM+ y mira el saldo disponible (2 min).</li>' +
-        '<li>Abre la pestaña de tu perfil elegido y mira el reparto de hoy (1 min).</li>' +
-        '<li>Si toca invertir: ejecuta según tu perfil, el activo más rezagado primero (5 min).</li>' +
-        '<li>Regístralo en Finanzas → Plan de Inversiones para que el dashboard quede al día (5 min).</li>' +
-        '<li>Cierra la app. <b>No revises precios hasta el próximo lunes</b>: mirar a diario es lo que hace vender en pánico.</li>' +
-      '</ol>') +
-    (d && d.fuentes && d.fuentes.length ? plegado('Fuentes de Claude', '<div class="inv-fuentes">' + d.fuentes.map(f => '<a href="' + esc(f.u) + '" target="_blank" rel="noopener" title="' + esc(f.u) + '">' + esc(f.t) + '</a>').join('') + '</div>') : '');
+// La columna de al lado: precios en vivo, lo que llevas invertido y dónde comprar.
+function qiLadoHtml(){
+  const inv = (D.fin && D.fin.investments) || [], tot = inv.reduce((s, i) => s + (+i.value || +i.invested || 0), 0);
+  return '<div class="qi-sec"><span class="qi-lbl">Precios ahora</span>'+
+      '<div class="qi-precios" id="gbmPrecios"><div><span>Bitcoin</span><div id="gbmBtc"><b>…</b></div></div>'+
+      '<div><span>Dólar</span><div id="gbmUsd"><b>…</b></div></div></div></div>'+
+    '<div class="qi-sec"><span class="qi-lbl">Lo que llevas invertido</span>'+
+      '<b class="qi-lleva">'+money(tot)+'</b><span class="qi-sec-s">'+inv.length+' inversi'+(inv.length === 1 ? 'ón' : 'ones')+' en Finanzas</span>'+
+      '<button type="button" class="ce-btn" onclick="cerrarGBM();abrirKpi(\'invertido\')">Registrar una compra →</button></div>'+
+    '<div class="qi-sec"><span class="qi-lbl">Dónde comprar</span><div class="qi-links">'+GBM_LINKS.map(l =>
+      '<a href="'+l.u+'" target="_blank" rel="noopener"><b>'+l.t+' ↗</b><span>'+l.d+'</span></a>').join('')+'</div></div>'+
+    '<p class="qi-regla"><b>La regla:</b> compra el día que llega el dinero, sin esperar el momento perfecto. Las noticias te informan; '+
+      'tu reparto decide. Cámbialo solo si cambia tu plan, no por un titular.</p>';
 }
 
 function renderGBMPanel(){
   const b = document.getElementById('gbmBody');
   if(!b) return;
-  const P = pasoInversionHoy(), d = invDatos(), tab = invTabActual();
-  invPintarCabecera(d);
-  const panel = invPerfilDef(tab).apuesta ? invApuestaHtml(tab) : (d ? invPerfilHtml(d, tab) : invVacioHtml());
-  b.innerHTML =
-    '<div class="inv-main">' + invTabsHtml(d, tab) +
-      '<div class="inv-panel" id="invPanel">' + panel + '</div>' +
-    '</div>' +
-    '<aside class="inv-side">' + invSideHtml(P, d) + '</aside>';
+  // Lo de hoy con la misma regla que la tarjeta de Mi Día (pasoInversionHoy): si toca pagar la tarjeta o invertir.
+  const P = pasoInversionHoy();
+  const hoy = '<div class="qi-hoy" style="--c:'+P.color+'"><b>'+P.titulo+'</b><span>'+P.porque+'</span></div>';
+  b.innerHTML = '<div class="qi"><div class="qi-main">'+hoy+qiMesHtml()+'<div id="qiReparto">'+qiRepartoHtml()+'</div>'+
+      '<div class="qi-sec" id="qiNoticias">'+qiNoticiasHtml()+'</div></div>'+
+    '<aside class="qi-lado">'+qiLadoHtml()+'</aside></div>';
 }
 
 // ─── Slide de Habilidades — "Foco" (2026-08-23) ─────────────────────────

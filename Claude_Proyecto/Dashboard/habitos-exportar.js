@@ -171,6 +171,8 @@ function finanzas(f, r) {
   const datos = {
     debts: tomar(f.debts, ['id', 'name', 'type', 'total', 'balance', 'rate', 'min', 'day', 'start', 'noInterest', 'fecha', 'planAl', 'omitidos']),
     investments: tomar(f.investments, ['id', 'name', 'type', 'invested', 'value', 'date', 'rate']),
+    // Tu reparto de Qué invertir hoy: qué compras y qué parte del dinero de cada mes va a cada cosa.
+    reparto: tomar(f.reparto, ['n', 'donde', 'pct', 'porque']),
     activos: tomar(f.activos, ['id', 'name', 'type', 'value']),
     goals: tomar(f.goals, ['id', 'name', 'icon', 'target', 'current', 'date']),
     // El Bitcoin, en un solo lote: lo que tienes y lo que te costó, sin cada compra.

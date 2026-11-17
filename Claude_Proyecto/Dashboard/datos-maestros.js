@@ -1153,6 +1153,15 @@ window.CIFRAS = (function () {
     }, 0);
   }
 
+  /* Tu reparto de inversión de base: en qué va el dinero que el plan manda a GBM cada mes, mientras Adán no escribe
+     el suyo (`finanzasmx_v2.reparto`, que se edita en Qué invertir hoy y viaja al iPad con Finanzas). Lo leen Qué
+     invertir hoy y el Plan de Inversiones de Finanzas. El dinero de la salida a Alemania se usa en meses —la cuenta
+     bloqueada y el arranque en 2027—: va donde se puede sacar al día y con riesgo bajo, sin depender de nadie que lo
+     investigue cada semana (Adán, 17-nov-2026: "ya no quiero depender de mi suscripción a Claude"). GBMF2 es el
+     fondo de liquidez diaria de GBM: deuda de corto plazo, sale el mismo día. */
+  const REPARTO_BASE = [
+    { n: 'GBMF2 · fondo de liquidez diaria', pct: 100, donde: 'GBM+', porque: 'Liquidez diaria y riesgo bajo: es dinero que usas en meses.' },
+  ];
   /* El sueldo de un mes en México, renglón por renglón: lo que entra, cada fijo por su `grupo`, el
      auto y el iPhone, la comida, lo que va a GBM (el ahorro de cada
      quincena) y lo que queda: tu gasto personal. Los cobros son los del calendario, los mismos que
@@ -9483,7 +9492,7 @@ window.CIFRAS = (function () {
     PROYECCION: PROYECCION,
     proyectar: proyectar,
     cortesSalida: cortesSalida, desgloseMes: desgloseMes, mesTipo: mesTipo, planMes: planMes, cifrasHoy: cifrasHoy,
-    didiAlAhorro: didiAlAhorro, GRUPOS_SUELDO: GRUPOS_SUELDO, rutinasDesglose: rutinasDesglose,
+    didiAlAhorro: didiAlAhorro, GRUPOS_SUELDO: GRUPOS_SUELDO, rutinasDesglose: rutinasDesglose, REPARTO_BASE: REPARTO_BASE,
     costoSalida: costoSalida,
     APRENDIZAJE: APRENDIZAJE,
     APRENDIZAJE_DETALLE: APRENDIZAJE_DETALLE,
