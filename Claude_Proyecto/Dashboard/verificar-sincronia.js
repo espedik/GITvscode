@@ -3157,8 +3157,10 @@ function promptsDeLoTocado() {
    muestre noticias concretas de recomendaciones en qué invertir, ya no quiero depender de mi suscripción a Claude". El
    panel lee el plan (CIFRAS.gbmMes), tu reparto (finanzasmx_v2.reparto o CIFRAS.REPARTO_BASE) y las noticias de Google
    Noticias que el hook de pre-commit deja en noticias-inversion.js y que una tarea de GitHub publica cada 4 horas en la
-   rama datos-noticias. Se vigila que nada vuelva a llamar a Claude, que las piezas sigan conectadas y, como aviso, que
-   el archivo del último commit no tenga más de una semana (el panel usa el más nuevo de los dos). */
+   rama datos-noticias. Los precios con su gráfica (Adán: "agrega más precios… si es con gráfica mucho mejor") los
+   publica otra tarea cada media hora con la bolsa abierta en la rama datos-precios (precios-actualizar.js, de Yahoo
+   Finanzas). Se vigila que nada vuelva a llamar a Claude, que las piezas sigan conectadas y, como aviso, que el archivo
+   de noticias del último commit no tenga más de una semana (el panel usa el más nuevo de los dos). */
 (function () {
   const malos = [], leerSi = rel => { try { return leer(rel); } catch (e) { return ''; } };
   const h = leer('Dashboard/dashboard.html'), hook = leerSi('.githooks/pre-commit'), C = global.window && global.window.CIFRAS;
@@ -3172,6 +3174,13 @@ function promptsDeLoTocado() {
   const wf = leerSi('../.github/workflows/noticias-inversion.yml');
   if (!/cron:/.test(wf) || wf.indexOf('noticias-actualizar.js') < 0 || wf.indexOf('datos-noticias') < 0) malos.push('la tarea de GitHub que trae las noticias cada 4 horas ya no está o no publica en datos-noticias (.github/workflows/noticias-inversion.yml)');
   if (h.indexOf("/datos-noticias/noticias.json") < 0) malos.push('Qué invertir hoy ya no lee las noticias de la rama datos-noticias');
+  ['function qiPreciosHtml()', 'function qiGraficaHtml(', 'function qiPedirPrecios()', "id=\"qiPrecios\""].forEach(function (k) {
+    if (h.indexOf(k) < 0) malos.push('Precios ahora perdió ' + k);
+  });
+  if (!leerSi('Dashboard/precios-actualizar.js')) malos.push('falta Dashboard/precios-actualizar.js');
+  const wfp = leerSi('../.github/workflows/precios-acciones.yml');
+  if (!/cron:/.test(wfp) || wfp.indexOf('precios-actualizar.js') < 0 || wfp.indexOf('datos-precios') < 0) malos.push('la tarea de GitHub que trae los precios ya no está o no publica en datos-precios (.github/workflows/precios-acciones.yml)');
+  if (h.indexOf("/datos-precios/precios.json") < 0) malos.push('Precios ahora ya no lee la rama datos-precios');
   if (!C || !Array.isArray(C.REPARTO_BASE) || !C.REPARTO_BASE.length) malos.push('el maestro ya no exporta REPARTO_BASE');
   else if (Math.abs(C.REPARTO_BASE.reduce(function (s, x) { return s + (+x.pct || 0); }, 0) - 100) > 0.01) malos.push('REPARTO_BASE no suma 100 %');
   if (leerSi('Dashboard/habitos-exportar.js').indexOf('reparto: tomar(f.reparto') < 0) malos.push('la copia de Finanzas ya no lleva tu reparto al iPad (habitos-exportar.js)');
@@ -3180,7 +3189,7 @@ function promptsDeLoTocado() {
   const dias = m ? Math.floor((new Date() - new Date(m[1])) / 86400000) : null;
   if (dias === null) avisos.push('Qué invertir hoy · noticias-inversion.js no existe: lo escribe el siguiente commit en la PC');
   else if (dias > 7) avisos.push('Qué invertir hoy · noticias-inversion.js es de hace ' + dias + ' días: el panel usa las de GitHub si son más nuevas; el siguiente commit lo pone al día');
-  ok.push('Qué invertir hoy sin IA: el plan, tu reparto y las noticias de Google Noticias, del último commit' + (dias !== null ? ' (de hace ' + dias + ' días)' : '') + ' y de GitHub cada 4 horas');
+  ok.push('Qué invertir hoy sin IA: el plan, tu reparto, las noticias de Google Noticias, del último commit' + (dias !== null ? ' (de hace ' + dias + ' días)' : '') + ' y de GitHub cada 4 horas, y los precios con su gráfica de GitHub cada media hora');
 })();
 
 // ── Salida ──

@@ -4677,7 +4677,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .inv-card .inv-head{display:flex;align-items:flex-start;gap:16px;padding:14px 56px 12px 22px;flex-shrink:0}
 .inv-head-txt{flex:1;min-width:0}
 .inv-card .inv-body{flex:1;min-height:0;padding:0;overflow:hidden}
-.qi{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,360px);height:100%;min-height:0}
+.qi{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,400px);height:100%;min-height:0}
 .qi-main{display:flex;flex-direction:column;gap:18px;padding:18px 22px 28px;overflow-y:auto;min-width:0}
 .qi-lado{display:flex;flex-direction:column;gap:18px;padding:18px 20px 28px;overflow-y:auto;border-left:1px solid rgba(var(--ov),.08)}
 .qi-sec{display:flex;flex-direction:column;gap:9px;min-width:0}
@@ -4739,11 +4739,55 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .qi-n span{font-size:11.5px;color:var(--text3)}
 .qi-mas{align-self:flex-start;font-size:12.5px;font-weight:700;color:var(--cy);text-decoration:none}
 /* La columna de al lado. */
-.qi-precios{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.qi-precios>div{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:11px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.09)}
-.qi-precios span{font-size:11px;font-weight:700;color:var(--text3)}
-.qi-precios b{font-family:var(--mono);font-size:14px;color:var(--text)}
-.qi-precios small{display:block;font-size:11px;color:var(--text3)}
+/* Precios ahora: la tarjeta del que eliges, con su gráfica, y la lista de todos con su línea del periodo. */
+.qi-pg{display:flex;flex-direction:column;gap:5px;padding:14px 14px 12px;border-radius:14px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.09)}
+.qi-pg-cab{display:flex;align-items:baseline;gap:8px}
+.qi-pg-cab b{font-size:15px;color:var(--text)}
+.qi-pg-cab i,.qi-pr-n i{font-style:normal;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--text3)}
+.qi-pg-d{font-size:12px;line-height:1.4;color:var(--text3)}
+.qi-pg-n{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 10px;margin-top:2px}
+.qi-pg-n b{font-family:var(--mono);font-size:24px;font-weight:800;color:var(--text)}
+.qi-pg-n b small{font-size:12px;font-weight:700;color:var(--text3)}
+.qi-pg-s{font-size:11.5px;color:var(--text3)}
+.qi-cb{font-family:var(--mono);font-size:12px;font-weight:700;white-space:nowrap}
+.qi-cb.sube{color:var(--g)}
+.qi-cb.baja{color:var(--r)}
+.qi-rangos{display:flex;gap:6px;margin-top:6px}
+.qi-rangos .qi-tema{padding:4px 11px;font-size:12px}
+.qi-g{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:6px}
+.qi-g-pl{position:relative;height:150px;touch-action:pan-y;cursor:crosshair}
+.qi-g-pl svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.qi-g-ln{fill:none;stroke:var(--cy);stroke-width:2;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.qi-g-ar{fill:var(--cy);opacity:.1}
+.qi-g-gr{stroke:rgba(var(--ov),.12);stroke-width:1;vector-effect:non-scaling-stroke}
+.qi-g-ej{position:relative;min-width:46px}
+.qi-g-ej span{position:absolute;right:0;transform:translateY(-50%);font-family:var(--mono);font-size:10.5px;color:var(--text3);white-space:nowrap}
+.qi-g-x{display:flex;justify-content:space-between;margin-right:54px;font-family:var(--mono);font-size:10.5px;color:var(--text3)}
+.qi-g-pt,.qi-g-hv{position:absolute;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;background:var(--cy);box-shadow:0 0 0 2px var(--bg);pointer-events:none}
+.qi-g-cz{position:absolute;top:0;bottom:0;width:1px;margin-left:-.5px;background:rgba(var(--ov),.4);pointer-events:none}
+.qi-g-cz,.qi-g-hv,.qi-g-tip{display:none}
+.qi-g-pl.cruz .qi-g-cz,.qi-g-pl.cruz .qi-g-hv{display:block}
+.qi-g-pl.cruz .qi-g-tip{display:flex}
+.qi-g-tip{position:absolute;top:2px;transform:translateX(-50%);flex-direction:column;align-items:center;padding:4px 9px;border-radius:8px;pointer-events:none;z-index:2;
+  white-space:nowrap;background:var(--bg);border:1px solid rgba(var(--ov),.18);box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.qi-g-tip b{font-family:var(--mono);font-size:12.5px;color:var(--text)}
+.qi-g-tip span{font-size:10.5px;color:var(--text3)}
+.qi-pg-pie{margin:4px 0 0;font-size:12px;line-height:1.5;color:var(--text2)}
+.qi-prs{display:flex;flex-direction:column;border-radius:12px;border:1px solid rgba(var(--ov),.09);overflow:hidden}
+.qi-pr-cab{display:flex;justify-content:flex-end;padding:7px 12px 5px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
+.qi-pr{display:grid;grid-template-columns:minmax(0,1fr) 60px 96px;gap:10px;align-items:center;padding:8px 12px 8px 9px;font:inherit;text-align:left;cursor:pointer;
+  background:transparent;color:inherit;border:0;border-left:3px solid transparent;border-top:1px solid rgba(var(--ov),.07)}
+.qi-pr:hover{background:rgba(var(--ov),.04)}
+.qi-pr.on{background:rgba(var(--cy-rgb),.08);border-left-color:var(--cy)}
+.qi-pr-n{display:flex;flex-direction:column;min-width:0}
+.qi-pr-n b{font-size:13.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qi-pr-sp{width:60px;height:24px;overflow:visible}
+.qi-pr-sp path{fill:none;stroke:var(--text3);stroke-width:1.5;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.qi-pr.on .qi-pr-sp path{stroke:var(--cy)}
+.qi-pr-v{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+.qi-pr-v b{font-family:var(--mono);font-size:13px;color:var(--text)}
+.qi-pr-v .qi-cb{font-size:11px}
+.qi-pr-v i{font-style:normal;font-size:11px;color:var(--text3)}
 .qi-lleva{font-family:var(--mono);font-size:22px;color:var(--text)}
 .qi-lado .ce-btn{align-self:flex-start}
 .qi-links{display:flex;flex-direction:column;gap:6px}
@@ -5140,7 +5184,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
       <button class="gbm-close" onclick="cerrarGBM()" aria-label="Cerrar">✕</button>
       <div class="inv-head-txt">
         <h2>📈 Qué invertir hoy</h2>
-        <p>Sin IA: lo que tu plan manda a GBM este mes, en qué va según tu reparto y las noticias para invertir, de medios de México.</p>
+        <p>Sin IA: lo que tu plan manda a GBM este mes, en qué va según tu reparto, las noticias para invertir de medios de México y los precios con su gráfica.</p>
       </div>
     </div>
     <div class="gbm-body inv-body" id="gbmBody"></div>
@@ -11699,25 +11743,21 @@ async function abrirGBM(){
 }
 function cerrarGBM(){ document.getElementById('gbmOverlay')?.classList.remove('open'); }
 
-// Precios en vivo. Cada fuente falla por separado: si una se cae, la otra se sigue viendo.
+// Precios en vivo del Bitcoin (CoinGecko) y del dólar (open.er-api, que se actualiza una vez al día: si el de GitHub
+// es más nuevo, manda ese), y los de la bolsa de GitHub (qiPedirPrecios). Cada fuente falla por separado.
 async function cargarPreciosGBM(){
-  const box = document.getElementById('gbmPrecios');
-  if(!box) return;
-  const pon = (id, html) => { const e = document.getElementById(id); if(e) e.innerHTML = html; };
-  // BTC
-  try{
-    const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,mxn');
-    const j = await r.json();
-    pon('gbmBtc', '<b>$'+Number(j.bitcoin.usd).toLocaleString('en-US')+' USD</b><small>$'+Number(j.bitcoin.mxn).toLocaleString('es-MX')+' MXN</small>');
+  if(!document.getElementById('qiPrecios')) return;
+  qiPedirPrecios();
+  const btc = fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,mxn').then(r => r.json()).then(j => {
+    _qiVivo.btc = { v: Number(j.bitcoin.usd), t: Date.now(), vivo: true };
     guardarPrecioBtc(Number(j.bitcoin.usd), Number(j.bitcoin.mxn));
-  }catch(e){ pon('gbmBtc', '<b class="gbm-err">sin conexión</b><small>revísalo en GBM</small>'); }
-  // USD/MXN
-  try{
-    const r = await fetch('https://open.er-api.com/v6/latest/USD');
-    const j = await r.json();
-    const f = new Date(j.time_last_update_utc);
-    pon('gbmUsd', '<b>$'+Number(j.rates.MXN).toFixed(2)+'</b><small>dato del '+f.toLocaleDateString('es-MX',{day:'numeric',month:'short'})+'</small>');
-  }catch(e){ pon('gbmUsd', '<b class="gbm-err">sin conexión</b><small>ver Banxico abajo</small>'); }
+  }).catch(() => {});
+  const usd = fetch('https://open.er-api.com/v6/latest/USD').then(r => r.json()).then(j => {
+    _qiVivo.usd = { v: Number(j.rates.MXN), t: Number(j.time_last_update_unix) * 1000 || Date.now(), vivo: false };
+  }).catch(() => {});
+  await Promise.all([btc, usd]);
+  _qiVivo.listo = true;
+  qiPintarPrecios();
 }
 
 // El fondo de la maestría y el patrimonio se valuaban con `currentBtcPrice`/`usdMxn` de
@@ -11820,7 +11860,8 @@ function pasoInversionHoy(){
 //     viaja al iPad con la copia de Finanzas.
 //   · Las noticias son de Google Noticias, por tema (noticias-inversion.js, que el hook de pre-commit actualiza en la
 //     PC): primero lo que recomienda algo, solo medios de México.
-//   · Los precios del Bitcoin y del dólar, en vivo (cargarPreciosGBM), y dónde comprar (GBM_LINKS).
+//   · Precios ahora: la bolsa (S&P 500, NAFTRAC, NVIDIA, Apple…) con su gráfica, de la rama datos-precios, y el Bitcoin
+//     y el dólar en vivo (cargarPreciosGBM); y dónde comprar (GBM_LINKS).
 let _qiTema = null, _qiBorrador = null;
 const QI_COL = ['var(--cy)', 'var(--p)', 'var(--o)', 'var(--w)', 'var(--g)', 'var(--b)'];
 function qiRepartoEsTuyo(){ return !!(D.fin && Array.isArray(D.fin.reparto) && D.fin.reparto.length); }
@@ -11851,6 +11892,161 @@ function qiPedirNoticias(){
       const el = document.getElementById('qiNoticias'); if(el) el.innerHTML = qiNoticiasHtml();
     }).catch(() => {});
 }
+
+// Los precios (Adán: "agrega más precios… nvidia, Microsoft, Apple, Amazon, etc… si es con gráfica mucho mejor").
+// Los de la bolsa, con su historia, los publica una tarea de GitHub cada media hora con Nueva York abierta en la rama
+// datos-precios (de Yahoo Finanzas, que el navegador no puede leer directo); se piden al abrir el panel y la última
+// copia se guarda en `dash-precios-v1` para verla sin red. El Bitcoin y el dólar además llegan en vivo
+// (cargarPreciosGBM) y, si son más nuevos, mandan. Los símbolos y sus nombres vienen del archivo.
+const QI_PRE_KEY = 'dash-precios-v1';
+const QI_RANGOS = [['1M', 'un mes', 1], ['6M', 'seis meses', 6], ['1A', 'un año', 12], ['5A', 'cinco años', 60]];
+let _qiPrecios = null, _qiPreciosPedidos = 0, _qiVivo = {}, _qiSel = null, _qiRango = '1A', _qiPts = null;
+function qiPreciosDatos(){
+  if(_qiPrecios) return _qiPrecios;
+  try{ const g = JSON.parse(localStorage.getItem(QI_PRE_KEY) || 'null'); if(g && Array.isArray(g.items) && g.items.length) return g; }catch(e){}
+  return null;
+}
+function qiPedirPrecios(){
+  if(Date.now() - _qiPreciosPedidos < 300000 || typeof fetch !== 'function') return;
+  _qiPreciosPedidos = Date.now();
+  fetch('https://raw.githubusercontent.com/' + APP_REPO + '/datos-precios/precios.json?t=' + Math.floor(Date.now() / 300000), { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(j => {
+      if(!j || !Array.isArray(j.items) || !j.items.length) return;
+      _qiPrecios = j; try{ localStorage.setItem(QI_PRE_KEY, JSON.stringify(j)); }catch(e){}
+      qiPintarPrecios();
+    }).catch(() => {});
+}
+// Cada activo con su precio de ahora: el del archivo o, para el Bitcoin y el dólar, el en vivo si es más nuevo.
+function qiActivos(){
+  const P = qiPreciosDatos();
+  const L = P ? P.items.map(x => Object.assign({}, x)) :
+    [{ s: 'BTC-USD', tk: 'BTC', n: 'Bitcoin', tipo: 'cripto', m: 'USD' }, { s: 'MXN=X', tk: 'USD/MXN', n: 'Dólar', tipo: 'divisa', m: 'MXN' }];
+  L.forEach(x => {
+    const v = x.s === 'BTC-USD' ? _qiVivo.btc : x.s === 'MXN=X' ? _qiVivo.usd : null;
+    if(v && v.v > 0 && (!x.t || v.t > new Date(x.t))){ x.p = v.v; x.t = new Date(v.t).toISOString(); x.vivo = v.vivo; }
+  });
+  return L;
+}
+function qiDolar(L){ const u = L.find(x => x.s === 'MXN=X'); return (u && u.p) || (D.fin && +D.fin.usdMxn) || null; }
+// La historia del periodo: los días del último mes, seis meses o año, o las semanas de cinco años. El último punto es el
+// precio de ahora, para que la línea termine donde dice la cifra.
+function qiSerie(a, rango){
+  const R = QI_RANGOS.find(r => r[0] === rango) || QI_RANGOS[2];
+  let s = (R[2] > 12 ? a.w5 : a.d1) || [];
+  if(R[2] <= 12){ const d = new Date(); d.setMonth(d.getMonth() - R[2]); const desde = CIFRAS.fechaLocal(d); s = s.filter(x => x[0] >= desde); }
+  if(s.length && a.p > 0){ s = s.slice(); s[s.length - 1] = [s[s.length - 1][0], a.p]; }
+  return s;
+}
+// El tipo de cambio de una fecha, de la historia del dólar: para decir cuánto cambió en pesos lo que se cotiza en dólares.
+function qiDolarEn(L, fecha, semanas){
+  const u = L.find(x => x.s === 'MXN=X'), s = (u && (semanas ? u.w5 : u.d1)) || [];
+  let v = null; for(const x of s){ if(x[0] <= fecha) v = x[1]; else break; }
+  return v || (s[0] && s[0][1]) || null;
+}
+function qiPrecioTxt(v){
+  if(!(v > 0)) return '—';
+  const dec = v >= 1000 ? 0 : 2;
+  return '$' + v.toLocaleString('es-MX', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+}
+function qiCambio(de, a){ return de > 0 && a > 0 ? (a / de - 1) * 100 : null; }
+function qiCambioHtml(c, txt){
+  if(c == null) return '';
+  return '<span class="qi-cb ' + (c >= 0 ? 'sube' : 'baja') + '">' + (c >= 0 ? '▲ ' : '▼ ') + Math.abs(c).toFixed(1) + '%' + (txt ? ' ' + txt : '') + '</span>';
+}
+function qiFechaTxt(s, anio){ return new Date(s + 'T12:00:00').toLocaleDateString('es-MX', anio ? { day: 'numeric', month: 'short', year: '2-digit' } : { day: 'numeric', month: 'short' }); }
+function qiSparkHtml(s){
+  if(s.length < 2) return '<span class="qi-pr-sp"></span>';
+  const paso = Math.max(1, Math.floor(s.length / 60)), p = s.filter((x, i) => i % paso === 0 || i === s.length - 1);
+  const vs = p.map(x => x[1]), mn = Math.min.apply(null, vs), r = (Math.max.apply(null, vs) - mn) || 1;
+  return '<svg class="qi-pr-sp" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path d="' +
+    p.map((x, i) => (i ? 'L' : 'M') + (i / (p.length - 1) * 100).toFixed(1) + ' ' + (28 - (x[1] - mn) / r * 26).toFixed(1)).join('') + '"/></svg>';
+}
+// La gráfica grande: línea con su relleno, el máximo y el mínimo del periodo a la derecha, y una cruz que sigue el dedo
+// o el ratón con el precio y la fecha de ese día (qiCruz).
+function qiGraficaHtml(a){
+  const pts = qiSerie(a, _qiRango);
+  if(pts.length < 2){ _qiPts = null; return '<p class="qi-nota">Sin historia para la gráfica todavía: llega de GitHub con internet.</p>'; }
+  const vs = pts.map(p => p[1]), mn = Math.min.apply(null, vs), mx = Math.max.apply(null, vs);
+  const pad = (mx - mn) * 0.12 || mx * 0.01, lo = mn - pad, hi = mx + pad, W = 1000, H = 300;
+  _qiPts = { pts, a, lo, hi };
+  const X = i => (i / (pts.length - 1) * W).toFixed(1), Y = v => ((hi - v) / (hi - lo) * H).toFixed(1), pc = v => ((hi - v) / (hi - lo) * 100).toFixed(2) + '%';
+  const lin = pts.map((p, i) => (i ? 'L' : 'M') + X(i) + ' ' + Y(p[1])).join(''), anio = _qiRango !== '1M';
+  const R = QI_RANGOS.find(r => r[0] === _qiRango) || QI_RANGOS[2];
+  return '<div class="qi-g"><div class="qi-g-pl" onpointermove="qiCruz(event,this)" onpointerdown="qiCruz(event,this)" onpointerleave="qiCruz(null,this)" ' +
+      'role="img" aria-label="' + esc(a.n + ' en ' + R[1] + ': de ' + qiPrecioTxt(vs[0]) + ' a ' + qiPrecioTxt(vs[vs.length - 1]) + ' ' + a.m + '; máximo ' + qiPrecioTxt(mx) + ', mínimo ' + qiPrecioTxt(mn)) + '">' +
+      '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true">' +
+        '<line class="qi-g-gr" x1="0" x2="' + W + '" y1="' + Y(mx) + '" y2="' + Y(mx) + '"/><line class="qi-g-gr" x1="0" x2="' + W + '" y1="' + Y(mn) + '" y2="' + Y(mn) + '"/>' +
+        '<path class="qi-g-ar" d="' + lin + 'L' + W + ' ' + H + 'L0 ' + H + 'Z"/><path class="qi-g-ln" d="' + lin + '"/></svg>' +
+      '<i class="qi-g-pt" style="left:100%;top:' + pc(vs[vs.length - 1]) + '"></i><i class="qi-g-cz"></i><i class="qi-g-hv"></i><span class="qi-g-tip"></span></div>' +
+    '<div class="qi-g-ej"><span style="top:' + pc(mx) + '">' + qiPrecioTxt(mx) + '</span><span style="top:' + pc(mn) + '">' + qiPrecioTxt(mn) + '</span></div></div>' +
+    '<div class="qi-g-x"><span>' + qiFechaTxt(pts[0][0], anio) + '</span><span>' + qiFechaTxt(pts[pts.length - 1][0], anio) + '</span></div>';
+}
+function qiCruz(e, g){
+  const P = _qiPts;
+  if(!e || !P){ g.classList.remove('cruz'); return; }
+  const r = g.getBoundingClientRect(), n = P.pts.length - 1;
+  const i = Math.round(Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * n), p = P.pts[i], x = i / n * 100;
+  g.classList.add('cruz');
+  g.querySelector('.qi-g-cz').style.left = x + '%';
+  const hv = g.querySelector('.qi-g-hv'); hv.style.left = x + '%'; hv.style.top = ((P.hi - p[1]) / (P.hi - P.lo) * 100) + '%';
+  const tip = g.querySelector('.qi-g-tip'); tip.style.left = Math.min(80, Math.max(20, x)) + '%';
+  tip.innerHTML = '<b>' + qiPrecioTxt(p[1]) + ' ' + P.a.m + '</b><span>' + (_qiRango === '5A' ? 'semana del ' : '') + qiFechaTxt(p[0], true) + '</span>';
+}
+// Lo que cambió en el periodo y qué tan lejos está de su mejor cierre del año (el mismo que marca la gráfica de un año):
+// lo que enseña cuánto se mueve. En lo que se cotiza
+// en dólares va también en pesos, que es lo que de verdad ganas: si el peso se fortalece, ganas menos.
+function qiPiePrecio(a, L){
+  const s = qiSerie(a, _qiRango); if(s.length < 2) return '';
+  const R = QI_RANGOS.find(r => r[0] === _qiRango) || QI_RANGOS[2], partes = [];
+  const c = qiCambio(s[0][1], s[s.length - 1][1]);
+  let en = 'En ' + R[1] + ': ' + qiCambioHtml(c);
+  if(a.m === 'USD' && a.tipo !== 'divisa'){
+    const f0 = qiDolarEn(L, s[0][0], R[2] > 12), f1 = qiDolar(L);
+    const cp = f0 && f1 ? qiCambio(s[0][1] * f0, s[s.length - 1][1] * f1) : null;
+    if(cp != null) en += ' en dólares, ' + qiCambioHtml(cp) + ' en pesos';
+  }
+  partes.push(en + '.');
+  const top = Math.max.apply(null, qiSerie(a, '1A').map(x => x[1]));
+  if(top > 0 && a.p > 0 && a.tipo !== 'divisa'){
+    const d = (a.p / top - 1) * 100;
+    partes.push(d <= -5 ? 'Está ' + Math.abs(d).toFixed(0) + '% abajo de su mejor cierre del año (' + qiPrecioTxt(top) + '): así se mueve.' : 'Está cerca de su mejor cierre del año (' + qiPrecioTxt(top) + ').');
+  }
+  return '<p class="qi-pg-pie">' + partes.join(' ') + '</p>';
+}
+function qiPreciosHtml(){
+  const P = qiPreciosDatos(), L = qiActivos(), a = L.find(x => x.s === _qiSel) || L[0], dolar = qiDolar(L);
+  const R = QI_RANGOS.find(r => r[0] === _qiRango) || QI_RANGOS[2];
+  const viejo = P && Date.now() - new Date(P.generado) > 86400000, cargando = !_qiVivo.listo;
+  const cab = '<div class="qi-sec-cab"><span class="qi-lbl">Precios ahora</span><span class="qi-sec-s' + (viejo ? ' viejo' : '') + '">' +
+    (P ? 'de Yahoo Finanzas, ' + qiHace(P.generado) + (viejo ? ' · se actualizan cada media hora con la bolsa abierta' : '') : 'Bitcoin y dólar en vivo') + '</span></div>';
+  const quePor = { cripto: 'bitcoin', etf: 'título', accion: 'acción' }[a.tipo] || 'unidad';
+  const sub = [
+    a.tipo === 'divisa' ? 'pesos por dólar' : a.m === 'USD' && dolar && a.p > 0 ? '≈ ' + qiPrecioTxt(a.p * dolar) + ' MXN por ' + quePor : a.m === 'MXN' ? 'en pesos, por ' + quePor : '',
+    a.vivo ? 'en vivo' : a.t ? 'precio de ' + qiHace(a.t) : ''].filter(Boolean).join(' · ');
+  const tarjeta = '<div class="qi-pg">' +
+      '<div class="qi-pg-cab"><b>' + esc(a.n) + '</b><i>' + esc(a.tk || '') + '</i></div>' +
+      (a.d ? '<span class="qi-pg-d">' + esc(a.d) + '</span>' : '') +
+      '<div class="qi-pg-n"><b>' + (a.p > 0 ? qiPrecioTxt(a.p) + ' <small>' + a.m + '</small>' : cargando ? '…' : 'sin conexión') + '</b>' + qiCambioHtml(qiCambio(a.pc, a.p), 'hoy') + '</div>' +
+      (sub ? '<span class="qi-pg-s">' + sub + '</span>' : '') +
+      (P ? '<div class="qi-rangos">' + QI_RANGOS.map(r => '<button type="button" class="qi-tema' + (r[0] === _qiRango ? ' on' : '') + '" onclick="qiPrecioRango(\'' + r[0] + '\')">' + r[0] + '</button>').join('') + '</div>' +
+        qiGraficaHtml(a) + qiPiePrecio(a, L) : '') +
+    '</div>';
+  const lista = '<div class="qi-prs">' + (P ? '<div class="qi-pr-cab">en ' + R[1] + '</div>' : '') + L.map(x => {
+    const s = qiSerie(x, _qiRango), c = s.length > 1 ? qiCambio(s[0][1], s[s.length - 1][1]) : null;
+    return '<button type="button" class="qi-pr' + (x === a ? ' on' : '') + '" aria-pressed="' + (x === a) + '" onclick="qiPrecioSel(\'' + esc(x.s) + '\')">' +
+      '<span class="qi-pr-n"><b>' + esc(x.n) + '</b><i>' + esc(x.tk || '') + '</i></span>' + qiSparkHtml(s) +
+      '<span class="qi-pr-v"><b>' + (x.p > 0 ? qiPrecioTxt(x.p) : cargando ? '…' : '—') + '</b>' + (c == null ? '<i>' + (x.m || '') + '</i>' : qiCambioHtml(c)) + '</span></button>';
+  }).join('') + '</div>';
+  const nota = P ? '' : '<p class="qi-nota">Las acciones (S&amp;P 500, NVIDIA, Apple…) y sus gráficas llegan de GitHub cada media hora con la bolsa abierta: hace falta internet la primera vez.</p>';
+  return cab + tarjeta + lista + nota;
+}
+function qiPintarPrecios(){ const el = document.getElementById('qiPrecios'); if(el) el.innerHTML = qiPreciosHtml(); }
+function qiPrecioSel(s){
+  _qiSel = s; qiPintarPrecios();
+  const c = document.querySelector('#qiPrecios .qi-pg'); if(c && c.getBoundingClientRect().top < 0) c.scrollIntoView({ block: 'start', behavior: 'smooth' });
+}
+function qiPrecioRango(r){ _qiRango = r; qiPintarPrecios(); }
 function qiHace(iso){
   const min = Math.max(0, Math.round((Date.now() - new Date(iso)) / 60000)), d = Math.round(min / 1440);
   return min < 60 ? 'hace ' + min + ' min' : min < 1440 ? 'hace ' + Math.round(min / 60) + ' h' : 'hace ' + d + (d === 1 ? ' día' : ' días');
@@ -11949,12 +12145,10 @@ function qiNoticiasHtml(){
     '<a class="qi-mas" href="'+qiGoogle(t.q, t.dias)+'" target="_blank" rel="noopener">Ver más de «'+esc(t.t)+'» en Google Noticias ↗</a>';
 }
 
-// La columna de al lado: precios en vivo, lo que llevas invertido y dónde comprar.
+// La columna de al lado: los precios con su gráfica, lo que llevas invertido y dónde comprar.
 function qiLadoHtml(){
   const inv = (D.fin && D.fin.investments) || [], tot = inv.reduce((s, i) => s + (+i.value || +i.invested || 0), 0);
-  return '<div class="qi-sec"><span class="qi-lbl">Precios ahora</span>'+
-      '<div class="qi-precios" id="gbmPrecios"><div><span>Bitcoin</span><div id="gbmBtc"><b>…</b></div></div>'+
-      '<div><span>Dólar</span><div id="gbmUsd"><b>…</b></div></div></div></div>'+
+  return '<div class="qi-sec" id="qiPrecios">'+qiPreciosHtml()+'</div>'+
     '<div class="qi-sec"><span class="qi-lbl">Lo que llevas invertido</span>'+
       '<b class="qi-lleva">'+money(tot)+'</b><span class="qi-sec-s">'+inv.length+' inversi'+(inv.length === 1 ? 'ón' : 'ones')+' en Finanzas</span>'+
       '<button type="button" class="ce-btn" onclick="cerrarGBM();abrirKpi(\'invertido\')">Registrar una compra →</button></div>'+

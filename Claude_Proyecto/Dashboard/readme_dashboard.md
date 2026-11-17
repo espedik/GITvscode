@@ -24,6 +24,7 @@ en una página.
 | `habitos.js` | La pantalla de Hábitos entera: semilla, motor de rachas, migraciones, pintado y estilos |
 | `version.js` · `version-escribir.js` | La hora del último commit de esta copia (`window.APP_VERSION.commit`), que el hook de pre-commit escribe con `version-escribir.js` en cada commit; Mi Día la enseña junto a la semana (ver *Tu iPad y tu PC*) |
 | `noticias-actualizar.js` · `noticias-inversion.js` | Las noticias de *Qué invertir hoy*: el script que lee Google Noticias —lo corren la tarea de GitHub cada 4 horas (`.github/workflows/noticias-inversion.yml`, rama `datos-noticias`) y el hook de pre-commit de la PC— y el archivo que deja el hook (`window.NOTICIAS_INVERSION`), que el panel carga con `<script src>` |
+| `precios-actualizar.js` | Los precios de *Qué invertir hoy* con su historia: lee Yahoo Finanzas y escribe `precios.json`. Lo corre la tarea de GitHub cada media hora con la bolsa abierta (`.github/workflows/precios-acciones.yml`) y lo publica en la rama `datos-precios`, de donde lo lee el panel |
 | `ficha.js` · `ficha.css` | El panel de ficha de producto (`pfAbrirId`, `pfPorNombre`, `.lc-info`) que usan la Lista de Compras y la rutina |
 | `examen-genai.js` · `examen-genai-data.js` (A, 79 preguntas) · `examen-genai-data-b.js` (B, 77) | El simulacro ISTQB CT-GenAI: motor y los dos bancos |
 | `syllabus/` (**fuera de git**) | La copia local del syllabus CT-GenAI LATAM: el PDF y `ct-genai-syllabus.js`, el texto de cada sección con su página. Su aviso de derechos solo permite reproducirlo en parte y para uso privado, así que no va al repositorio público (`.gitignore`) |
@@ -73,8 +74,8 @@ forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
 y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases) y `plan_auditoria_sinc` (cuándo se tocó cada mes aquí, para traer la de la PC), `fin_resumen_v1` (lo que queda en la quincena, para `finanzas-sync.js`), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta), `dash_libromes_v1` (el libro del mes: el de ahora, los leídos y el que sigue si lo cambiaste),
-`habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-noticias-v1` (las últimas noticias de *Qué invertir hoy* que llegaron de GitHub). Tu
-reparto no es clave propia: vive en Finanzas (`finanzasmx_v2.reparto`).
+`habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-noticias-v1` y `dash-precios-v1` (las últimas noticias y los últimos precios de *Qué invertir hoy* que llegaron de
+GitHub). Tu reparto no es clave propia: vive en Finanzas (`finanzasmx_v2.reparto`).
 
 ---
 
@@ -714,7 +715,7 @@ entera.
 | **Qué comprar con eso** (`qiRepartoHtml`) | Una barra con el reparto y un renglón por cosa: qué, dónde se compra, por qué, su porcentaje y sus pesos de este mes. Dice si es *tu reparto* o *el reparto de base del plan: escribe el tuyo* | `finanzasmx_v2.reparto`, o `CIFRAS.REPARTO_BASE` mientras no exista |
 | **Cambiar mi reparto** (`qiEditar` → `qiEditorHtml`) | En su lugar, un renglón por cosa con qué, dónde y %, ✕ para quitarlo, *+ Otro renglón* y la suma en vivo (`qiCampo`: escribir no repinta, para no perder el foco); **Guardar** solo se activa cuando suman 100 % (`qiGuardar`). Solo donde Finanzas es propia (`tiEditable`): en el iPad, una nota dice que se cambia en la PC | escribe `finanzasmx_v2.reparto` |
 | **Noticias para invertir** (`qiNoticiasHtml`) | Una pestaña por tema con cuántas trae (`qiTemaVer`) y sus titulares: primero los que recomiendan algo, con la etiqueta *Recomienda*, cada uno con su medio y *hace 2 h*, y abre la nota en otra pestaña. Debajo, *Ver más de «tema» en Google Noticias ↗* con la misma búsqueda (`qiGoogle`). Si tienen más de un día, la cabecera lo dice en naranja; sin noticias, cómo llegan y la búsqueda directa | la rama `datos-noticias` o `noticias-inversion.js`, la más nueva |
-| Columna de al lado (`qiLadoHtml`) | *Precios ahora*: Bitcoin y dólar en vivo (`cargarPreciosGBM()`, CoinGecko y open.er-api; cada uno falla por separado); *Lo que llevas invertido*, con **Registrar una compra →**, que abre Total invertido (ver *Total invertido, compra por compra*); *Dónde comprar* (`GBM_LINKS`: GBM+, sus fondos, Cetesdirecto y el FIX de Banxico), y *La regla*: comprar el día que llega el dinero; las noticias informan y el reparto decide | local + `finanzasmx_v2.investments` |
+| Columna de al lado (`qiLadoHtml`) | **Precios ahora** (`qiPreciosHtml`, ver abajo): la tarjeta del que eliges, con su gráfica, y la lista de todos; *Lo que llevas invertido*, con **Registrar una compra →**, que abre Total invertido (ver *Total invertido, compra por compra*); *Dónde comprar* (`GBM_LINKS`: GBM+, sus fondos, Cetesdirecto y el FIX de Banxico), y *La regla*: comprar el día que llega el dinero; las noticias informan y el reparto decide | la rama `datos-precios`, CoinGecko y open.er-api; `finanzasmx_v2.investments` |
 
 **Tu reparto vive en Finanzas** (`finanzasmx_v2.reparto = [{n, donde, pct, porque}]`): el *En qué va* del Plan de
 Inversiones de Finanzas lee el mismo, y la copia que sube cada commit (`habitos-exportar.js`) lo lleva al iPad. El de
@@ -742,6 +743,28 @@ búsquedas viven solo en el script: el panel toma los temas del archivo. Si las 
 día, la cabecera lo dice en naranja. Medido el 17 nov 2026 con las búsquedas reales: 35 titulares, 3 de
 recomendaciones, 8 de CETES, 12 de bolsa y 12 de cripto. Google permite su RSS para un lector personal y no
 comercial, que es este uso.
+
+**Precios ahora, con su gráfica** (Adán, 17-nov-2026: *"agrega más precios ahora, de diferentes empresas, nvidia,
+Microsoft, Apple, Amazon, etc… si es con gráfica mucho mejor"*). Once, en este orden: S&P 500 (VOO), Bolsa Mexicana
+(NAFTRAC), NVIDIA, Microsoft, Apple, Amazon, Alphabet, Meta, Tesla, Bitcoin y dólar. Arriba, la tarjeta del que eliges
+(`qiPrecioSel`): qué es, su precio con el cambio de hoy, cuánto es en pesos, los periodos 1M · 6M · 1A · 5A
+(`qiPrecioRango`; abre en 1A) y la gráfica (`qiGraficaHtml`): una línea con su relleno, el cierre más alto y el más bajo
+del periodo a la derecha, y una cruz que sigue el ratón o el dedo con el precio y la fecha (`qiCruz`). Debajo
+(`qiPiePrecio`), lo que cambió en el periodo —en lo que se cotiza en dólares, también en pesos, que es lo que de verdad
+ganas: si el peso se fortalece, ganas menos— y qué tan abajo está de su mejor cierre del año, para que se vea cuánto se
+mueve una sola acción. Luego la lista de todos con su línea del periodo, su precio y su cambio en ese periodo; el elegido,
+en cian. Los precios informan; lo que compras lo sigue diciendo tu reparto.
+
+Los de la bolsa los publica una **tarea de GitHub** (`.github/workflows/precios-acciones.yml`) cada media hora con Nueva
+York abierta y una vez al día el fin de semana: corre `precios-actualizar.js`, que lee Yahoo Finanzas sin llave, y deja
+`precios.json` en la rama `datos-precios` (un solo commit que se reescribe). Yahoo no deja que el navegador lo lea directo
+—ni desde `file://` ni desde la página publicada: no da permiso CORS— y raw.githubusercontent.com sí. El panel lo pide al
+abrirse (`qiPedirPrecios`, como mucho cada 5 minutos), guarda la última copia en `dash-precios-v1` y sin red enseña esa.
+El Bitcoin (CoinGecko, al momento) y el dólar (open.er-api, una vez al día) siguen llegando en vivo (`cargarPreciosGBM`)
+y mandan cuando son más nuevos que el archivo. Los símbolos, sus nombres y qué es cada uno viven solo en el script. Si
+llega menos de la mitad de los precios, la tarea falla sin publicar y se queda lo anterior. Medido el 17 nov 2026: 11
+precios en 9 s, 127 KB (34 KB comprimido); la gráfica mide 275 × 150 px en la PC y 264 × 150 px a 390 px, sin
+desbordes ni errores, en claro y en oscuro.
 
 **En la tarjeta de Mi Día no cambia nada de fondo**: `pasoInversionHoy()` sigue diciendo, con los saldos de Finanzas,
 si hoy toca pagar la tarjeta o invertir, y ahora remite al reparto. Medido a 1600×1000 y 390×844, en claro y en oscuro:

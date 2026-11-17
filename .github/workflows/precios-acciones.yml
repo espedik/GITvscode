@@ -1,0 +1,41 @@
+# Los precios de «Qué invertir hoy», con su gráfica (Adán, 17-nov-2026: "agrega más precios ahora, de diferentes
+# empresas, nvidia, Microsoft, Apple, Amazon, etc… si es con gráfica mucho mejor").
+# Cada media hora con la bolsa de Nueva York abierta (y una vez al día el fin de semana, por el bitcoin) lee Yahoo
+# Finanzas con Claude_Proyecto/Dashboard/precios-actualizar.js y publica precios.json en la rama datos-precios; el
+# Dashboard lo lee de ahí, en la PC y en el iPad. El navegador no puede leer Yahoo directo (no da permiso CORS) y
+# raw.githubusercontent.com sí. La rama lleva un solo commit que se reescribe en cada corrida: main no se toca y la
+# historia no crece. Si llega menos de la mitad de los precios, la tarea falla sin publicar y se queda lo anterior.
+name: Precios de acciones
+on:
+  schedule:
+    # 13:07 a 21:37 UTC, lunes a viernes: cubre la sesión de 9:30 a 16:00 de Nueva York con y sin horario de verano.
+    - cron: '7,37 13-21 * * 1-5'
+    - cron: '7 17 * * 0,6'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: precios-acciones
+  cancel-in-progress: true
+jobs:
+  precios:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Leer Yahoo Finanzas
+        run: |
+          node Claude_Proyecto/Dashboard/precios-actualizar.js "$RUNNER_TEMP/precios.json"
+          test -s "$RUNNER_TEMP/precios.json"
+      - name: Publicar en la rama datos-precios
+        run: |
+          git checkout -q --orphan datos-precios
+          git rm -rqf --cached .
+          cp "$RUNNER_TEMP/precios.json" precios.json
+          git add precios.json
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -qm "Precios $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -qf origin datos-precios
