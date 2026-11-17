@@ -3192,6 +3192,42 @@ function promptsDeLoTocado() {
   ok.push('Qué invertir hoy sin IA: el plan, tu reparto, las noticias de Google Noticias, del último commit' + (dias !== null ? ' (de hace ' + dias + ' días)' : '') + ' y de GitHub cada 4 horas, y los precios con su gráfica de GitHub cada media hora');
 })();
 
+/* ── 51. El fondo de emergencia, movimiento por movimiento ──────────────────────────────────────────────────────
+   Adán, 17-nov-2026: "en el fondo de emergencia también déjame hacer aportaciones y eso también se debe reflejar en el
+   de HTML finanzas". Una sola cuenta, la del maestro (fondoMovimiento / fondoBorrar / fondoLista), que usan el panel del
+   Fondo de emergencia del Dashboard y el bloque del fondo de Finanzas. Se prueba con un fondo de juguete —aportar,
+   retirar, corregir y borrar vuelven al saldo de partida— y que las dos apps la llamen y que la copia del iPad lleve los
+   movimientos sin la nota (el archivo se publica). */
+(function () {
+  const malos = [], leerSi = rel => { try { return leer(rel); } catch (e) { return ''; } };
+  const C = global.window && global.window.CIFRAS;
+  if (!C || typeof C.fondoMovimiento !== 'function' || typeof C.fondoBorrar !== 'function' || typeof C.fondoLista !== 'function')
+    malos.push('el maestro ya no exporta fondoMovimiento / fondoBorrar / fondoLista');
+  else {
+    const F = { emergencyFund: 5000, goals: [{ id: 'ef-001', current: 5000 }] };
+    const a = C.fondoMovimiento(F, { amount: 1200, tipo: 'aporte', date: '2026-11-01' });
+    const r = C.fondoMovimiento(F, { amount: 300, tipo: 'retiro', date: '2026-11-02' });
+    if (F.emergencyFund !== 5900 || F.goals[0].current !== 5900) malos.push('aportar 1,200 y retirar 300 de 5,000 no da 5,900 (da ' + F.emergencyFund + ')');
+    C.fondoMovimiento(F, { amount: 1500, tipo: 'aporte', date: '2026-11-01' }, a.id);
+    if (F.emergencyFund !== 6200) malos.push('corregir la aportación a 1,500 no aplica solo la diferencia (da ' + F.emergencyFund + ')');
+    if (!C.fondoMovimiento(F, { amount: 999999, tipo: 'retiro' }).error) malos.push('un retiro mayor que el fondo se anota');
+    const L = C.fondoLista(F);
+    if (L.movs[0].id !== r.id || L.aporto !== 1500 || L.saco !== 300) malos.push('fondoLista no da el más nuevo primero o no suma bien');
+    C.fondoBorrar(F, a.id); C.fondoBorrar(F, r.id);
+    if (F.emergencyFund !== 5000 || F.efAportes.length) malos.push('borrar los dos movimientos no regresa el fondo a 5,000 (da ' + F.emergencyFund + ')');
+  }
+  const h = leer('Dashboard/dashboard.html'), fz = leerSi('Finanzas/Finanzas.html'), ex = leerSi('Dashboard/habitos-exportar.js');
+  ['CIFRAS.fondoMovimiento(', 'CIFRAS.fondoBorrar(', 'CIFRAS.fondoLista('].forEach(function (k) {
+    if (h.indexOf(k) < 0) malos.push('el panel del fondo del Dashboard ya no usa ' + k.slice(0, -1));
+    if (fz.indexOf(k) < 0) malos.push('Finanzas ya no usa ' + k.slice(0, -1));
+  });
+  const exp = /efAportes:\s*tomar\(f\.efAportes,\s*\[([^\]]*)\]\)/.exec(ex);
+  if (!exp) malos.push('la copia del iPad ya no lleva los movimientos del fondo (habitos-exportar.js)');
+  else if (/nota/.test(exp[1])) malos.push('la copia del iPad lleva la nota de los movimientos del fondo, y ese archivo se publica');
+  if (malos.length) { problemas.push('Fondo de emergencia, movimiento por movimiento:\n     ' + malos.join('\n     ')); return; }
+  ok.push('Fondo de emergencia: aportar, retirar, corregir y borrar con una sola cuenta del maestro, en el Dashboard y en Finanzas');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

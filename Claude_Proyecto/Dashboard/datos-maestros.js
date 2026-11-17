@@ -9076,6 +9076,54 @@ window.CIFRAS = (function () {
     return { ef: ef, inversiones: inversiones, inv: inv, btc: btc, btcHeld: held, total: ef + inv + btc };
   }
 
+  /* ── EL FONDO DE EMERGENCIA, MOVIMIENTO POR MOVIMIENTO ──────────────────────────────────────
+     Adán, 2026-11-17: "en el fondo de emergencia también déjame hacer aportaciones y eso también se debe
+     reflejar en el de HTML finanzas… no quiero depender de mi suscripción de Claude". El saldo sigue siendo
+     un solo número —`emergencyFund`, y `current` de la meta ef-001—, el que leen todas las apps: cada
+     aportación lo sube, cada retiro lo baja y queda anotado en `efAportes = [{id, date, amount, tipo, nota}]`
+     (`tipo` 'aporte' o 'retiro'; `amount` siempre en positivo). Corregir uno aplica solo la diferencia y
+     borrarlo lo deshace. El panel del Fondo de emergencia del Dashboard y el de Finanzas llaman a estas dos
+     funciones, así que escriben lo mismo. `F` es el `finanzasmx_v2` que se va a guardar: quien llama guarda.
+     Devuelven el movimiento, o `{error}` si no se puede (sin monto, o un retiro mayor que el fondo). */
+  function fondoSigno(m) { return m && m.tipo === 'retiro' ? -(+m.amount || 0) : (+m.amount || 0); }
+  function fondoAplicar(F, delta) {
+    F.emergencyFund = Math.max(0, Math.round(((+F.emergencyFund || 0) + delta) * 100) / 100);
+    (F.goals || []).forEach(function (g) { if (g.id === 'ef-001') g.current = F.emergencyFund; });
+  }
+  function fondoMovimiento(F, datos, id) {
+    if (!F) return { error: 'Sin datos de Finanzas' };
+    const amount = Math.round((parseFloat(datos && datos.amount) || 0) * 100) / 100;
+    if (!(amount > 0)) return { error: 'Escribe cuánto' };
+    const m = { date: (datos.date || fechaLocal()).slice(0, 10), amount: amount, tipo: datos.tipo === 'retiro' ? 'retiro' : 'aporte',
+      nota: String(datos.nota || '').trim().slice(0, 80) };
+    F.efAportes = Array.isArray(F.efAportes) ? F.efAportes : [];
+    let i = -1;
+    F.efAportes.forEach(function (x, k) { if (id && x.id === id) i = k; });
+    const delta = fondoSigno(m) - (i >= 0 ? fondoSigno(F.efAportes[i]) : 0);
+    if ((+F.emergencyFund || 0) + delta < -0.005)
+      return { error: 'El retiro es mayor que lo que hay en el fondo ($' + (+F.emergencyFund || 0).toLocaleString('es-MX') + ')' };
+    fondoAplicar(F, delta);
+    if (i >= 0) { F.efAportes[i] = Object.assign({}, F.efAportes[i], m); return F.efAportes[i]; }
+    m.id = 'ef' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    F.efAportes.push(m);
+    return m;
+  }
+  // Los movimientos del más nuevo al más viejo (en el mismo día, el último anotado primero) y lo que suman.
+  function fondoLista(F) {
+    const movs = (((F || fin || {}).efAportes) || []).map(function (x, i) { return { m: x, i: i }; })
+      .sort(function (a, b) { return String(b.m.date || '').localeCompare(String(a.m.date || '')) || b.i - a.i; })
+      .map(function (x) { return x.m; });
+    const suma = function (t) { return movs.filter(function (x) { return (x.tipo === 'retiro') === t; }).reduce(function (s, x) { return s + (+x.amount || 0); }, 0); };
+    return { movs: movs, aporto: suma(false), saco: suma(true) };
+  }
+  function fondoBorrar(F, id) {
+    const x = ((F && F.efAportes) || []).filter(function (m) { return m.id === id; })[0];
+    if (!x) return { error: 'Ese movimiento ya no existe' };
+    fondoAplicar(F, -fondoSigno(x));
+    F.efAportes = F.efAportes.filter(function (m) { return m.id !== id; });
+    return x;
+  }
+
   // Los abonos del plan y las mensualidades que ya llegaron se anotan solos (aplicarPlanBbva,
   // aplicarPagosFijos); después, la proyección.
   try { if (aplicarPlanBbva() + aplicarPagosFijos()) leer(); } catch (e) { /* sin localStorage (el verificador): nada que aplicar */ }
@@ -9478,6 +9526,7 @@ window.CIFRAS = (function () {
     mesesRestantes: mesesRestantes,
     patrimonio: patrimonio,
     fondoMaestria: fondoMaestria,
+    fondoMovimiento: fondoMovimiento, fondoBorrar: fondoBorrar, fondoSigno: fondoSigno, fondoLista: fondoLista,
     diasFase: diasFase, diasHasta: diasHasta,
     avanceBbva: avanceBbva, deudasConInteres: deudasConInteres, bbvaEstado: bbvaEstado, estadoDia: estadoDia, bbvaRutaTxt: bbvaRutaTxt, aplicarPagosFijos: aplicarPagosFijos, cuotas: cuotas,
     didiGbmLunes: didiGbmLunes, didiSemana: didiSemana, lunesDidiTuyos: lunesDidiTuyos, gbmMes: gbmMes, presupuestoFijo: presupuestoFijo,

@@ -35,6 +35,7 @@ S = {
   btcHistFetch:   '',       // ISO del último fetch del histórico
   weeklyLeftover:  0,       // sobrante semanal manual para GBM
   emergencyFund:   0,       // fondo de emergencia
+  efAportes:       [],      // sus aportaciones y retiros [{id, date, amount, tipo, nota}]; los anota esta página o el Dashboard
   didiMonthly:     0,       // sin uso desde la UI (código muerto, ver abajo)
   gbmMonth:       '',       // YYYY-MM seleccionado en Plan de Inversiones
   indicatorHistory: []      // snapshots mensuales de indicadores (ver Indicadores)
@@ -71,12 +72,19 @@ instancias de Chart (`chCat`, `chBal`, `chBud`, `chInv`, `chGbmInv`, `chBtcPnl`,
 - **Fondo de emergencia** — meta `ef-001` ("Fondo de emergencia (CETES)"); `EF_TARGET = _metaFondo()`.
   **Son los CETES**, un solo número (`S.emergencyFund`): no hay inversión `type:'cetes'` en
   `investments`, porque los indicadores, el patrimonio y el fondo de la maestría sumaban las dos
-  cosas. Anotar lo que hay en CETES es `setEmergencyFund` (bloque de CETES del plan GBM), que sincroniza `ef-001`; el
-  bloque de CETES del plan GBM lo dice y muestra el saldo.
-  **Ya no recibe aporte**: el ahorro de cada quincena va a GBM (Adán, 5-oct-2026: *"el ahorro no se
+  cosas. El bloque del fondo del Dashboard de esta página (`#d-emergency`) lo enseña con su avance y tiene dos formas
+  de moverlo: el saldo exacto, escrito a mano (`setEmergencyFund`, para poner lo que rindieron los CETES), y debajo
+  **Aportaciones y retiros** (`efFinHtml`; Adán, 17-nov-2026: *"déjame hacer aportaciones y eso también se debe reflejar
+  en el de HTML finanzas"*): *＋ Aportar o retirar* abre el formulario —cuándo, qué fue, cuánto y una nota—, y cada
+  movimiento sale del más nuevo al más viejo con ✏️ para corregirlo y 🗑️ para borrarlo (`askDel`). La cuenta es la del
+  maestro, la misma del panel del Fondo de emergencia del Dashboard: `CIFRAS.fondoMovimiento` / `fondoBorrar` mueven
+  `S.emergencyFund` y `ef-001` y anotan el movimiento en `S.efAportes`; `CIFRAS.fondoLista` da el orden y los totales.
+  Un retiro mayor que el fondo no se anota: lo dice un aviso y el formulario se queda abierto.
+  **El plan no le aporta**: el ahorro de cada quincena va a GBM (Adán, 5-oct-2026: *"el ahorro no se
   irá a cetes, se irá a gbm"*), así que `cetesDia15` vale 0 y, con eso, el plan semanal, el
   calendario del mes, la lista de fijos y el escenario B dejan de enseñar un apartado de CETES; el
-  bloque de CETES solo dice cuánto hay en el fondo y a dónde va el ahorro.
+  bloque de CETES solo dice cuánto hay en el fondo y a dónde va el ahorro. Lo que Adán le mete o le saca por su
+  cuenta es una aportación o un retiro.
 
 ---
 
@@ -289,7 +297,8 @@ iban $14,295 a la bolsa mientras el plan los mandaba a la BBVA. `renderGBM()`:
   CETES si sigues el plan** —al cerrar la fase y al irte, de `CIFRAS.estadoDia`, sin rendimiento en México: la misma
   cifra que la proyección del Plan Maestro y que «Lo que dice tu plan»— y lo de esta semana a GBM; el bloque de CETES y `renderBtcHistory()` al final.
 
-`setEmergencyFund` (sincroniza `ef-001`) y `maybeRefreshIndicators()` (solo si `s-indicators` está activa).
+`setEmergencyFund` (sincroniza `ef-001`), `efFinGuardar` / `efFinBorrar` (las aportaciones y retiros, con el maestro) y
+`maybeRefreshIndicators()` (solo si `s-indicators` está activa).
 **Sin uso**: `S.didiMonthly`, `setDidiMonthly()` y `S.weeklyLeftover` siguen en el estado para no romper
 datos guardados.
 
@@ -393,7 +402,7 @@ el 16), así que los importes son los del maestro; pide confirmación si ya exis
 ## Módulo: Dashboard
 
 `setDashMonth(ym)` → `renderDashboard()`: tabs de meses (actual → diciembre), banner de
-proyección para meses futuros con cargar/quitar recurrentes, fondo de emergencia inline, 4 KPIs
+proyección para meses futuros con cargar/quitar recurrentes, el fondo de emergencia con sus aportaciones y retiros, 4 KPIs
 (Balance, Ingresos, Gastos y Activos —todos los activos, de `CIFRAS.patrimonio()`: lo mismo que el total de
 Patrimonio; ahí iban solo las inversiones—), la tarjeta del mes (abajo) y llama a `renderInsights`
 (Patrimonio Neto, Dinero Libre, DTI, Tasa de Ahorro), `renderDashCharts`, `renderSpecials`,

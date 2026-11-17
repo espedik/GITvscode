@@ -711,6 +711,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .ti-form input,.ti-form select{width:100%;box-sizing:border-box;padding:7px 9px;border-radius:8px;border:1px solid rgba(var(--ov),.18);
   background:rgba(var(--ov),.05);color:var(--text);font:inherit;font-size:13px;font-weight:500}
 .ti-form-acc{grid-column:1/-1;display:flex;gap:8px;justify-content:flex-end}
+.ef-error{grid-column:1/-1;font-size:12px;font-weight:700;color:var(--r)}
+.ef-resumen{font-size:12.5px;color:var(--text2)}
+.ef-resumen b{color:var(--text)}
 @media(max-width:640px){
   .ti-fila{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"f m" "n m" "acc acc"}
   .ti-f{grid-area:f}.ti-n{grid-area:n}.ti-m{grid-area:m}.ti-acc{grid-area:acc;justify-content:flex-end}
@@ -9948,6 +9951,53 @@ function tiEditar(id){
   if(f){ f.scrollIntoView({ block: 'nearest' }); const q = f.querySelector('input[name="qm"]'); if(q) q.focus(); }
 }
 function tiCancelar(){ _tiEdit = null; abrirKpi('invertido'); }
+/* El fondo de emergencia, movimiento por movimiento, desde su panel: aportar, retirar, corregir o borrar. La cuenta es
+   la del maestro (CIFRAS.fondoMovimiento / fondoBorrar), la misma que usa Finanzas: mueve `emergencyFund` y anota el
+   movimiento en `finanzasmx_v2.efAportes`, así que lo que se anota aquí sale en Finanzas y al revés. Solo donde
+   Finanzas es propia (tiEditable); ceGuardar repinta el medidor y el panel. */
+let _efEdit = null;
+function efFormHtml(ed){
+  const v = x => x != null && x !== '' ? esc(String(x)) : '', ret = ed && ed.tipo === 'retiro';
+  return '<form class="ti-form" onsubmit="efGuardar(event)">'+
+    '<span class="ti-form-t">'+(ed ? 'Corregir · '+(ret ? 'retiro' : 'aportación')+' del '+tiFecha(ed.date) : 'Aportar o retirar')+'</span>'+
+    '<label><span>Cuándo</span><input type="date" name="ef_f" value="'+(ed ? v(ed.date) : hoyLocal())+'" required></label>'+
+    '<label><span>Qué fue</span><select name="ef_t"><option value="aporte"'+(ret ? '' : ' selected')+'>Aportación</option>'+
+      '<option value="retiro"'+(ret ? ' selected' : '')+'>Retiro</option></select></label>'+
+    '<label><span>Cuánto</span><input type="number" name="ef_m" min="0.01" step="0.01" inputmode="decimal" value="'+(ed ? v(ed.amount) : '')+'" required></label>'+
+    '<label><span>Nota</span><input type="text" name="ef_n" maxlength="80" value="'+(ed ? v(ed.nota) : '')+'" placeholder="p. ej. de la quincena, CETES 28 días"></label>'+
+    '<span class="ti-form-acc"><button type="submit" class="ce-btn">'+(ed ? 'Guardar cambios' : 'Anotar')+'</button>'+
+      (ed ? '<button type="button" class="ce-btn sec" onclick="efCancelar()">Cancelar</button>' : '')+'</span></form>';
+}
+function efGuardar(ev){
+  if(ev) ev.preventDefault();
+  const f = ev && ev.target, F = rawGet('finanzasmx_v2', null);
+  if(!f || !F || FIN_REPO || !window.CIFRAS) return;
+  const r = CIFRAS.fondoMovimiento(F, { date: f.ef_f.value, tipo: f.ef_t.value, amount: f.ef_m.value, nota: f.ef_n.value }, _efEdit);
+  if(r.error){
+    // El aviso va en el formulario sin repintarlo, para no perder lo que escribiste.
+    let e = f.querySelector('.ef-error');
+    if(!e){ e = document.createElement('span'); e.className = 'ef-error'; f.insertBefore(e, f.querySelector('.ti-form-acc')); }
+    e.textContent = r.error; f.ef_m.focus(); return;
+  }
+  _efEdit = null;
+  ceGuardar(F);
+}
+function efEditar(id){
+  _efEdit = id; abrirKpi('fondo');
+  const f = document.querySelector('#kpiBody form.ti-form');
+  if(f){ f.scrollIntoView({ block: 'nearest' }); const q = f.querySelector('input[name="ef_m"]'); if(q) q.focus(); }
+}
+function efCancelar(){ _efEdit = null; abrirKpi('fondo'); }
+function efBorrar(id){
+  const F = rawGet('finanzasmx_v2', null); if(!F || FIN_REPO || !window.CIFRAS) return;
+  const x = (F.efAportes || []).find(m => m.id === id); if(!x) return;
+  const ret = x.tipo === 'retiro';
+  if(!confirm('¿Borrar '+(ret ? 'el retiro' : 'la aportación')+' del '+tiFecha(x.date)+' ('+money(+x.amount || 0)+')? El fondo '+
+    (ret ? 'sube' : 'baja')+' '+money(+x.amount || 0)+' y también se borra en Finanzas.')) return;
+  if(CIFRAS.fondoBorrar(F, id).error) return;
+  if(_efEdit === id) _efEdit = null;
+  ceGuardar(F);
+}
 function tiBorrar(id){
   const F = rawGet('finanzasmx_v2', null); if(!F || FIN_REPO) return;
   const x = (F.investments || []).find(i => i.id === id); if(!x) return;
@@ -14577,7 +14627,7 @@ function abrirKpi(id){
   ov.classList.add('open');
   clearInterval(timer);
 }
-function cerrarKpi(){ _tiEdit = null; document.getElementById('kpiOverlay')?.classList.remove('open'); }
+function cerrarKpi(){ _tiEdit = null; _efEdit = null; document.getElementById('kpiOverlay')?.classList.remove('open'); }
 // El panel es XL (Adán, 21-sep-2026: "todas las ventanas iguales a estas debes hacerlas lo más
 // grande posible"): la cifra grande arriba a lo ancho y las secciones repartidas en dos columnas.
 // Cada kpiDetalle sigue escribiendo su HTML de corrido; esto solo lo agrupa: .kpi-cifra y
@@ -14619,10 +14669,27 @@ function kpiDetalle(id){
     const mesesCubiertos=g.prom>0?(ef/g.prom):0;
     const rec=Math.round(falta/3/100)*100;
     const fijos=window.CIFRAS?(+CIFRAS.n('fijosTotal')||0):0;
-    return {titulo:'🆘 Fondo de emergencia (CETES)', sub:'Vive en CETES y se vende si hace falta. Cuánto llevas, cuánto te cubre de verdad y qué falta.',
+    // Tus aportaciones y retiros (efAportes), del más nuevo al más viejo, con Editar y Borrar donde Finanzas es propia.
+    const editable=tiEditable(), FL=window.CIFRAS?CIFRAS.fondoLista(F):{movs:[],aporto:0,saco:0}, movs=FL.movs, aporto=FL.aporto, saco=FL.saco;
+    const filasEf=movs.map(m=>{ const ret=m.tipo==='retiro';
+      return '<div class="ti-fila'+(_efEdit===m.id?' edita':'')+'"><span class="ti-f">'+tiFecha(m.date)+'</span>'+
+        '<span class="ti-n"><b>'+(ret?'Retiro':'Aportación')+'</b>'+(m.nota?'<i>'+esc(m.nota)+'</i>':'')+'</span>'+
+        '<span class="ti-m"><em class="'+(ret?'mal':'ok')+'">'+(ret?'−':'+')+money(+m.amount||0)+'</em></span>'+
+        (editable?'<span class="ti-acc"><button type="button" class="ce-btn sec" onclick="efEditar(\''+m.id+'\')">Editar</button>'+
+          '<button type="button" class="ce-btn sec" onclick="efBorrar(\''+m.id+'\')">Borrar</button></span>':'')+'</div>';
+    }).join('');
+    return {titulo:'🆘 Fondo de emergencia (CETES)', sub:'Vive en CETES y se vende si hace falta. Cuánto llevas, lo que le metes o le sacas, cuánto te cubre y qué falta.',
       html:
       '<div class="kpi-cifra" style="color:'+W+'">'+money(ef)+' <span style="font-size:14px;color:var(--text3)">de '+money(metaEf)+'</span></div>'+
       '<div class="kpi-cifra-sub">'+Math.round(pct)+'% de la meta · faltan <b>'+money(falta)+'</b></div>'+
+      kpiSec('🧾 Tus aportaciones y retiros')+
+      (movs.length?'<div class="ef-resumen">Aportaste <b>'+money(aporto)+'</b>'+(saco>0?' · retiraste <b>'+money(saco)+'</b>':'')+' en '+movs.length+' movimiento'+(movs.length===1?'':'s')+'</div>':'')+
+      '<div class="ti-lista">'+(filasEf||'<div class="gbm-vacio">Todavía no hay aportaciones anotadas.</div>')+'</div>'+
+      (editable?efFormHtml(_efEdit?movs.find(m=>m.id===_efEdit):null)+
+        kpiNota('Anota aquí lo que le metes al fondo, no como compra en Total invertido: el fondo y tus inversiones se suman en tu patrimonio y en la maestría, y el mismo dinero contaría dos veces.')
+        :kpiNota(FIN_REPO?'En este dispositivo tus cifras son la copia de tu PC'+(FIN_REPO.fecha?' del '+tiFecha(FIN_REPO.fecha):'')+
+          ': las aportaciones se anotan en tu PC y llegan aquí con el siguiente commit.'
+          :'Abre Finanzas una vez en este navegador para anotar aquí tus aportaciones.'))+
       kpiSec('📊 De dónde sale')+
       '<div class="kpi-desglose">'+
         kpiBarra('Avance hacia los '+money(metaEf), money(ef), pct, W)+
@@ -14637,7 +14704,7 @@ function kpiDetalle(id){
         ? kpiPaso('Complétalo antes que cualquier otra cosa','Te faltan <b>'+money(falta)+'</b>. A <b>'+money(rec)+' al mes</b> lo cierras en 3 meses. Va antes que invertir y antes que abonos extra a deuda: es lo que evita que un imprevisto te regrese a la tarjeta y deshaga meses de avance.',O)
         : kpiPaso('Fondo completo ✅','Ya no aportas aquí. El excedente pasa al siguiente escalón: deuda cara si queda, y si no, inversión.',V))+
       (window.CIFRAS&&!(+CIFRAS.n('cetesDia15'))?kpiSec('🧭 Qué hace el plan con él')+
-        kpiPaso('Hoy el plan no le aporta','El día 15 van <b>'+CIFRAS.v('cetesDia15')+'</b> a CETES: todo el ahorro —<b>'+CIFRAS.v('ahorroMesDepa')+'</b> al mes con depa, <b>'+CIFRAS.v('ahorroMesCasa')+'</b> en casa de tu familia— va a GBM para la salida. El fondo se queda como está: es el colchón para un imprevisto.',C):'')+
+        kpiPaso('Hoy el plan no le aporta','El día 15 van <b>'+CIFRAS.v('cetesDia15')+'</b> a CETES: todo el ahorro —<b>'+CIFRAS.v('ahorroMesDepa')+'</b> al mes con depa, <b>'+CIFRAS.v('ahorroMesCasa')+'</b> en casa de tu familia— va a GBM para la salida. Lo que tú le metas o le saques, anótalo aquí: sale igual en Finanzas.',C):'')+
       kpiNota('Guárdalo donde puedas sacarlo en 24-48 h — CETES a 28 días o cuenta de ahorro. Nunca en algo que pueda valer menos justo el día que lo necesitas.')};
   }
 

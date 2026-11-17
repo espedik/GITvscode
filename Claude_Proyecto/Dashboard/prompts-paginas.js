@@ -179,7 +179,7 @@ Finanzas.html es la fuente de los saldos de todo el proyecto: transacciones, pre
 - El costo real (intereses, comisiones, impuestos) se dice en pesos, no en porcentajes.
 
 ## Con quién trabajas
-- El Plan Maestro del Dashboard lee tus saldos para la cuenta de la quincena y para sus siete medidores, y registra tus inversiones en la misma lista que Finanzas.
+- El Plan Maestro del Dashboard lee tus saldos para la cuenta de la quincena y para sus siete medidores, y registra tus inversiones y las aportaciones a tu fondo de emergencia en las mismas listas que Finanzas.
 - Qué invertir hoy decide en qué instrumento va el excedente que tú liberas.
 - Lista de Compras y Comida explican el gasto de súper; Vestimenta, el de ropa: si se pasan, se ajusta ahí.
 - Coach fija las fases del Plan Maestro que tus números confirman o desmienten.
@@ -728,7 +728,7 @@ Esta pantalla es el tablero del Plan Maestro: la ruta de las fases, el mes en cu
 - Las cifras de hoy son las mismas en toda la pantalla —el mes en curso y su auditoría—: lo que hay para gastar lo dice la serie de la quincena (ctCifrasHoy).
 - La pantalla no lleva la ruta de deuda ni el riel de la quincena (Adán los quitó): en su lugar van los siete medidores, que salieron de Mis Metas; ya no lleva Deuda cara (Adán: «ya por fin no tengo deudas de tarjetas de crédito»). Tampoco Te toca esta semana: las tareas del mes se palomean en el mes en curso. El calendario es chico (Adán: «hazlo mucho más pequeño»): su columna es la más angosta de las tres.
 - Cada medidor sale de los datos vivos, abre su desglose y su porcentaje se explica en una frase.
-- Las inversiones se agregan, se corrigen y se borran en Total invertido sin depender de nadie, y son las mismas de Finanzas: un solo dato, editable desde cualquiera de las dos.
+- Las inversiones se agregan, se corrigen y se borran en Total invertido sin depender de nadie, y son las mismas de Finanzas: un solo dato, editable desde cualquiera de las dos. Lo mismo las aportaciones y retiros del fondo de emergencia, en su panel: los mueve la misma función del maestro que usa Finanzas.
 - Nada abre una ventana para repetir lo que ya está en la pantalla (Adán quitó la de las fases por redundante): lo que tiene más se despliega en su lugar —«Y 3 más», «Lo que sostienes»— y la auditoría ocupa el lugar del mes. Los cortes de la salida son los mismos en el panel de la Maestría y en Mis Metas.
 - Los posts del negocio de su papá —Aeroresinas y Heliescala, en LinkedIn y Facebook— van en el plan de cada fase: no se quitan.
 - La ruta de las fases y el mes en curso son la única vista de las fases, con la misma casilla de cada tarea que Mi Día. El mes en curso dice lo útil —lo que falta por hacer, lo que falta de la salida y lo que ya hiciste (ahí iba tu dinero del mes: Adán lo quitó)—; sus pestañas cambian lo que se ve ahí mismo —otro mes de la fase o su información general: la meta, el checkpoint, cómo va y lo que ya hiciste en la fase (ahí iba tu dinero en la fase: también lo quitó)—; tocar una fase de la ruta la enseña ahí mismo, con un «Volver a hoy»; y la auditoría de un mes se abre en el lugar del mes, con su «← Volver», y al cerrarla el mes queda con su calificación; las cifras del mes y las de su auditoría salen de la misma cuenta. Lo que pide una fase sale del plan (PROYECCION), igual que en Mis Metas.`

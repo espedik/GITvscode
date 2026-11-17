@@ -315,6 +315,26 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .btn-o:hover{background:rgba(var(--ov),.07);color:var(--text);border-color:rgba(var(--ov),.22)}
 .btn-sm{padding:5px 9px;font-size:11px}
 .btn-ico{padding:5px 8px}
+/* Fondo de emergencia: sus aportaciones y retiros (efFinHtml), los mismos que anota el panel del Dashboard. */
+.efm{margin-top:8px;padding:10px 14px;border-radius:10px;border:1px solid rgba(var(--ov),.1);background:rgba(var(--ov),.02);display:flex;flex-direction:column;gap:8px}
+.efm-cab{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;font-size:12px}
+.efm-cab b{color:var(--text)}
+.efm-cab span{color:var(--text3)}
+.efm-cab .btn{margin-left:auto}
+.efm-form{display:grid;grid-template-columns:150px 130px 130px minmax(0,1fr) auto auto;gap:8px;align-items:center}
+.efm-form input,.efm-form select{padding:6px 9px;font-size:12.5px}
+.efm-lista{display:flex;flex-direction:column;max-height:220px;overflow-y:auto}
+.efm-fila{display:grid;grid-template-columns:90px minmax(0,1fr) auto auto auto;gap:8px;align-items:center;padding:5px 4px;font-size:12px;border-top:1px solid rgba(var(--ov),.06)}
+.efm-fila.edita{background:rgba(var(--ov),.05)}
+.efm-f{font-size:11px;color:var(--text3)}
+.efm-n{min-width:0;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.efm-n b{color:var(--text)}
+.efm-m{font-weight:800;white-space:nowrap}
+@media(max-width:640px){
+  .efm-form{grid-template-columns:1fr 1fr}.efm-form input[name="efN"]{grid-column:1/-1}
+  .efm-fila{grid-template-columns:minmax(0,1fr) auto auto auto;grid-template-areas:"f m e b" "n m e b";row-gap:1px}
+  .efm-f{grid-area:f}.efm-n{grid-area:n}.efm-m{grid-area:m}.efm-fila>button:nth-of-type(1){grid-area:e}.efm-fila>button:nth-of-type(2){grid-area:b}
+}
 .theme-toggle-btn{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.12);color:var(--text);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
 .theme-toggle-btn:hover{background:rgba(var(--ov),.09)}
 
@@ -992,7 +1012,7 @@ const _autoMin = () => { const d=(S.debts||[]).find(x=>x.id==='d003'); return (d
 const _maeHoy = f => (window.CIFRAS && CIFRAS.fondoMaestria) ? CIFRAS.fondoMaestria(f || S).total : 0;
 const _metaMaestria = () => { const g=(S.goals||[]).find(x=>x.id==='g001'); return (g&&+g.target)||(window.CIFRAS&&CIFRAS.n('maestriaMeta'))||500000; };
 const _metaFondo = () => { const g=(S.goals||[]).find(x=>x.id==='ef-001'); return (g&&+g.target)||10000; };
-let S = { transactions:[], budgets:[], debts:[], goals:[], investments:[], activos:[], btcHistory:[], btcPriceHist:[], currentBtcPrice:0, usdMxn:19.5, btcLastFetch:'', btcHistFetch:'', weeklyLeftover:0, emergencyFund:0, didiMonthly:0, gbmMonth:'', indicatorHistory:[] };
+let S = { transactions:[], budgets:[], debts:[], goals:[], investments:[], activos:[], btcHistory:[], btcPriceHist:[], currentBtcPrice:0, usdMxn:19.5, btcLastFetch:'', btcHistFetch:'', weeklyLeftover:0, emergencyFund:0, efAportes:[], didiMonthly:0, gbmMonth:'', indicatorHistory:[] };
 let editId = null, confCb = null, payDebtId = null;
 let btcEditId = null, activoEditId = null;
 // La gráfica de BTC se lee en pesos por defecto: es la moneda en la que Adán
@@ -1974,6 +1994,55 @@ function setEmergencyFund(val) {
   save();
   renderDashboard();
   renderIndicators();
+}
+
+// Las aportaciones y retiros del fondo (S.efAportes), los mismos que anota el panel del Fondo de emergencia del Dashboard
+// (Adán, 17-nov-2026: "déjame hacer aportaciones y eso también se debe reflejar en el de HTML finanzas"). La cuenta es la
+// del maestro —CIFRAS.fondoMovimiento / fondoBorrar / fondoLista—: mueve S.emergencyFund y ef-001 y anota el movimiento.
+let efFinEdit = null, efFinAbierto = false;
+function efFinHtml() {
+  if(!window.CIFRAS || !CIFRAS.fondoLista) return '';
+  const L = CIFRAS.fondoLista(S), ed = efFinEdit ? L.movs.find(m=>m.id===efFinEdit) : null, ret = ed && ed.tipo==='retiro';
+  const e = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const filas = L.movs.map(m => { const r = m.tipo==='retiro';
+    return `<div class="efm-fila${efFinEdit===m.id?' edita':''}"><span class="efm-f">${fmtDate(m.date)}</span>
+      <span class="efm-n"><b>${r?'Retiro':'Aportación'}</b>${m.nota?' · '+e(m.nota):''}</span>
+      <span class="efm-m" style="color:${r?'var(--danger)':'var(--success)'}">${r?'−':'+'}${fmt(+m.amount||0)}</span>
+      <button class="btn btn-o btn-sm btn-ico" onclick="efFinEditar('${m.id}')" title="Corregir">✏️</button>
+      <button class="btn btn-o btn-sm btn-ico" onclick="askDel('${r?'el retiro':'la aportación'} del fondo',()=>efFinBorrar('${m.id}'))" title="Eliminar">🗑️</button></div>`; }).join('');
+  const forma = efFinAbierto || ed;
+  return `<div class="efm">
+    <div class="efm-cab"><b>Aportaciones y retiros</b><span>${L.movs.length?'aportaste '+fmt(L.aporto)+(L.saco?' · retiraste '+fmt(L.saco):''):'todavía ninguno'}</span>
+      ${forma?'':'<button class="btn btn-o btn-sm" onclick="efFinAbrir()">＋ Aportar o retirar</button>'}</div>
+    ${forma?`<form class="efm-form" onsubmit="efFinGuardar(event)">
+      <input type="date" name="efF" value="${ed?ed.date:today()}" required>
+      <select name="efT"><option value="aporte"${ret?'':' selected'}>Aportación</option><option value="retiro"${ret?' selected':''}>Retiro</option></select>
+      <input type="number" name="efM" min="0.01" step="0.01" placeholder="Cuánto" value="${ed?ed.amount:''}" required>
+      <input name="efN" maxlength="80" placeholder="Nota (opcional)" value="${ed&&ed.nota?e(ed.nota):''}">
+      <button class="btn btn-s btn-sm" type="submit">${ed?'Guardar':'Anotar'}</button>
+      <button class="btn btn-o btn-sm" type="button" onclick="efFinCerrar()">Cancelar</button>
+    </form>`:''}
+    ${filas?`<div class="efm-lista">${filas}</div>`:''}
+  </div>`;
+}
+function efFinAbrir() { efFinAbierto = true; efFinEdit = null; renderDashboard(); document.querySelector('.efm-form input[name="efM"]')?.focus(); }
+function efFinCerrar() { efFinAbierto = false; efFinEdit = null; renderDashboard(); }
+function efFinEditar(id) { efFinEdit = id; efFinAbierto = false; renderDashboard(); document.querySelector('.efm-form input[name="efM"]')?.focus(); }
+function efFinGuardar(ev) {
+  ev.preventDefault();
+  const f = ev.target;
+  const r = CIFRAS.fondoMovimiento(S, { date: f.efF.value, tipo: f.efT.value, amount: f.efM.value, nota: f.efN.value }, efFinEdit);
+  if(r.error) { toast(r.error); f.efM.focus(); return; }
+  efFinEdit = null; efFinAbierto = false;
+  save(); renderDashboard(); renderIndicators();
+  toast(`Fondo de emergencia: ${r.tipo==='retiro'?'−':'+'}${fmt(r.amount)} · hoy ${fmt(S.emergencyFund)}`);
+}
+function efFinBorrar(id) {
+  const r = CIFRAS.fondoBorrar(S, id);
+  if(r.error) return;
+  if(efFinEdit === id) efFinEdit = null;
+  save(); renderDashboard(); renderIndicators();
+  toast(`Borrado · el fondo queda en ${fmt(S.emergencyFund)}`);
 }
 
 function maybeRefreshIndicators() {
@@ -3351,8 +3420,9 @@ function renderDashboard() {
       <input type="number" value="${efBalance||''}" min="0" max="${EF_TARGET}" step="0.01"
         placeholder="Actualizar saldo..."
         style="width:150px;padding:6px 10px;border:1px solid ${efColor};border-radius:7px;font-size:13px;font-weight:700;color:var(--text);background:rgba(255,255,255,.05);outline:none;font-family:inherit"
+        title="El saldo exacto, con lo que rindieron los CETES. Lo que le metes o le sacas, anótalo abajo como aportación o retiro."
         onchange="setEmergencyFund(this.value)">
-    </div>`;
+    </div>${efFinHtml()}`;
 
   // ── KPIs principales ──
   document.getElementById('d-kpis').innerHTML=`

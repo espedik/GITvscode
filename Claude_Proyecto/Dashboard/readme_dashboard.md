@@ -980,6 +980,27 @@ en Finanzas. **Solo se edita donde Finanzas es propia** (`tiEditable`): en el iP
 Medido con los datos de Finanzas: agregar, corregir y borrar una compra cambia el medidor, el panel y lo que lee
 Finanzas; el panel mide 629 px a 1600×1000 sin desplazarse, y a 390 px no se sale nada de la pantalla.
 
+### Fondo de emergencia, aportación por aportación
+
+Adán, 17-nov-2026: *"en el fondo de emergencia también déjame hacer aportaciones y eso también se debe reflejar en el de
+HTML finanzas, al igual que lo que habíamos hecho, no quiero depender de mi suscripción de Claude"*. El panel
+(`kpiDetalle('fondo')`) lleva, debajo de la cifra, **Tus aportaciones y retiros**: cuánto aportaste y retiraste en total
+(`.ef-resumen`), un renglón por movimiento del más nuevo al más viejo —cuándo, aportación o retiro, la nota y el monto,
+con **Editar** y **Borrar**— y el formulario **Aportar o retirar** (`efFormHtml`: cuándo, qué fue, cuánto y una nota),
+que con **Editar** se llena con ese movimiento y pasa a **Guardar cambios** / **Cancelar**. Un retiro mayor que el fondo
+no se anota: el aviso sale en el formulario (`.ef-error`) sin borrar lo escrito. Una nota pide anotar aquí lo que se le
+mete al fondo y no como compra en Total invertido: el fondo y las inversiones se suman en el patrimonio y en la
+maestría, y el mismo dinero contaría dos veces.
+
+La cuenta es **una sola, la del maestro**: `efGuardar` y `efBorrar` llaman a `CIFRAS.fondoMovimiento` y
+`CIFRAS.fondoBorrar`, que mueven `finanzasmx_v2.emergencyFund` (y `current` de la meta ef-001) y anotan el movimiento en
+`finanzasmx_v2.efAportes`; corregir uno aplica solo la diferencia y borrarlo lo deshace. Finanzas usa las mismas
+funciones en su bloque del fondo, así que lo que se anota en una sale en la otra —con las dos abiertas, el evento
+`storage` repinta la otra sin recargar— y `ceGuardar` repinta el medidor y el panel. Como en Total invertido, **solo se
+edita donde Finanzas es propia** (`tiEditable`): en el iPad los movimientos llegan con la copia de la PC, sin la nota, y
+se ven sin botones. Medido: aportar, retirar, corregir y borrar desde cualquiera de las dos apps deja el fondo, la meta
+ef-001 y el medidor en el mismo número, sin errores ni desbordes a 1600 y a 390 px.
+
 ### De dónde sale cada cosa
 
 Ningún importe está escrito en el código del tablero:
