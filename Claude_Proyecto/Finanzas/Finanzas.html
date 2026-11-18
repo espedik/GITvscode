@@ -17,6 +17,7 @@
      finanzasmx_v2), así que aquí no hace falta para pintar: se carga para que un texto nuevo de
      esta app use los mismos {{marcadores}} que el Dashboard y el Coach, en vez de
      empezar otra copia a mano. Mapa en ../Dashboard/DATOS-MAESTROS.md -->
+<script src="../Dashboard/ajustes-sync.js" onerror="this.remove()"></script>
 <script src="../Dashboard/datos-maestros.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <!-- Sin internet Chart.js no llega, y la primera gráfica tumbaba el resto de la pantalla (después de «Próximos pagos» no
@@ -684,6 +685,7 @@ select option{background:var(--surface-solid);color:var(--text)}
     <div class="topbar-actions">
       <span class="ts tm" id="dateLabel"></span>
       <button class="btn btn-p" onclick="openTxModal()">+ Nueva transacción</button>
+      <a href="../Dashboard/cifras.html" class="theme-toggle-btn" id="btnCifras" title="Mis cifras: cambia tu sueldo, tus fijos, el ahorro de cada quincena y tus metas, y todo el plan se mueve con ellas" aria-label="Mis cifras" style="text-decoration:none">🎚️</a>
       <a href="../Dashboard/dashboard.html" class="theme-toggle-btn" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard" style="text-decoration:none">🚀</a>
       <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
     </div>

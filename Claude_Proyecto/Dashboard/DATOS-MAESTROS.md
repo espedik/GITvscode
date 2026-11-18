@@ -100,14 +100,35 @@ el módulo; el Dashboard le pasa el suyo (`patrimonioNeto()`, `patrimonioLiquido
 
 ---
 
-## Las dos clases de dato
+## Las clases de dato
 
-| | **Constantes** | **Saldos vivos** |
-|---|---|---|
-| Qué son | Sueldo, renta, empleador, fechas clave | Lo que Adán mueve: deudas, ahorro, inversiones |
-| Dónde viven | `PROYECTO` en `datos-maestros.js` | `localStorage['finanzasmx_v2']` |
-| Quién los cambia | **Se editan aquí, a mano** | Adán desde `Finanzas.html`, o una migración |
-| Si cambian | Edita el `.js` y esta tabla | No toques nada: las apps ya lo leen |
+| | **Constantes** | **Tus cifras** | **Saldos vivos** |
+|---|---|---|---|
+| Qué son | Nombres, fechas del plan, textos de las fases | Las constantes que lista `EDITABLES`: sueldo, Didi, fijos, ahorro de cada quincena, tu gasto, lo que cuesta irte, Alemania, metas de salud y el Kapitel | Lo que Adán mueve: deudas, ahorro, inversiones |
+| Dónde viven | `PROYECTO`, `SUPUESTOS` y `SALIDA` en `datos-maestros.js` | El valor del plan, ahí mismo; el tuyo, en `localStorage['maestro_ajustes_v1']` (y `ajustes-sync.js`, el de la PC) | `localStorage['finanzasmx_v2']` |
+| Quién los cambia | **Se editan aquí, a mano** | **Adán, en Mis cifras** (`cifras.html`); el valor del plan, aquí | Adán desde `Finanzas.html`, o una migración |
+| Si cambian | Edita el `.js` y esta tabla | Nada: el maestro lo aplica al cargar | No toques nada: las apps ya lo leen |
+
+**Tus cifras** (Adán, 18-nov-2026: *"revisa qué cifras puedes ponerlas manualmente como editar o agregar, esto para ya
+no depender de Claude… si modificamos una, en general las demás se deben actualizar forzosamente"*). Cada una es una
+línea de `EDITABLES`: grupo, dónde vive (`renta`, `SUPUESTOS.loDemas`, `SALIDA.vuelo`, `meta:ef-001`), unidad y nota.
+`ajAplicar` las pone **al cargar el maestro, justo después de `PROYECTO`, `SALIDA` y `SUPUESTOS`**, antes de que nada
+las lea: los getters, las cuentas de `CLAVES`, el calendario y la proyección salen ya con el valor tuyo, en las once
+páginas que cargan el maestro. Las tablas de este archivo dicen **el valor del plan**; el tuyo lo dice Mis cifras.
+
+- **Solo constantes**: un getter (`servicios`, `fijosTotal`, `sueldoQuinc`) se mueve solo; `sueldoQuinc` es la mitad
+  de `sueldo` y la colegiatura de `SALIDA` lee la de `SUPUESTOS.alemania`, para que cambiar una no deje la otra atrás.
+- **Las fechas del plan no entran**: la salida, la decisión, la entrega del depa y los cierres de fase llevan texto
+  escrito encima. Tampoco los precios del súper ni las recetas.
+- **Cada ajuste guarda el valor del plan con que se hizo** (`base`): si después el plan cambia aquí, manda el plan y el
+  ajuste sale como vencido en Mis cifras.
+- **El ahorro de cada quincena se cuadra solo** (`CIFRAS.ajustes.cuadrar`): si un cambio deja una quincena sin
+  alcanzar, baja su ahorro a cientos con el peor mes de su etapa; un ahorro bajado así (`auto`) vuelve a subir, hasta
+  el del plan, cuando hay espacio. La cuenta es `CIFRAS.quincenas()`, la misma que usa el verificador.
+- **Antes de guardar** `CIFRAS.ajustes.previa(cambios)` pone el cambio en memoria, mide todas las claves antes y
+  después y lo deja como estaba: subir la renta $750 mueve 12 cifras y baja el ahorro del día 1 de $2,050 a $1,300.
+- **Entre dispositivos**: el hook de pre-commit escribe `ajustes-sync.js` (`window.AJUSTES_SYNC`) con los de la PC;
+  cada página lo carga antes del maestro y por cifra gana el cambio más reciente. Lo del iPad se queda en el iPad.
 
 ---
 
@@ -132,7 +153,7 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | Marcador | Valor hoy | Nota |
 |---|---|---|
 | `{{sueldo}}` | $41,000 | Bruto mensual ALTEN, quincenal a BBVA |
-| `{{sueldoQuinc}}` | $20,500 | |
+| `{{sueldoQuinc}}` | $20,500 | Derivada: la mitad de `sueldo` |
 | `{{didiMes}}` | $6,000 | Lo que trae Didi al mes en promedio, dicho por Adán el 3-nov-2026 (antes se suponían $11,200, ~$400/día × 28) |
 | `{{didiAhorro}}` | $5,000 | Lo que Didi aparta al mes, en promedio —cada lunes lo mismo, 12 entre 52 (`didiSemana`: $1,153.85), así que un mes con cinco lunes junta más—: a la BBVA mientras tenga saldo, después a GBM; los lunes de la quincena después de liquidarla, para vivir (`lunesDidiTuyos`). De octubre de 2026 a enero de 2027 (dicho por Adán) |
 | `{{didiAhorroMas}}` | $10,000 | Lo mismo desde `PROYECTO.didiMasDesde` (febrero de 2027), cuando trabaja más horas. El último mes en México va la mitad (`didiAlAhorro`) |
@@ -847,6 +868,10 @@ Es lo que evita que el calendario se congele como se congeló la vieja barra de 
 | `CuidadoPersonal/salud.html` | `<script src="../Dashboard/datos-maestros.js">` | `CIFRAS.SUPLEMENTOS` (siembra la lista y el botiquín) y `CIFRAS.CHEQUEO` |
 | `Aleman/index.html` | `<script src="../Dashboard/datos-maestros.js">` | `{{escuelaAleman}}` en el encabezado del Kapitel 10 (`aplicarDOM`) |
 | `Laptop/laptop.html` | `<script src="../Dashboard/datos-maestros.js">` | La meta de la calculadora (`{{extraSalida}}`), la fecha de la salida y el dólar (`PROYECTO.usdMxn`) |
+| `Dashboard/cifras.html` | `<script src="datos-maestros.js">` | Mis cifras: `CIFRAS.ajustes` (lista, vista previa, cuadrar y guardar) y `CIFRAS.quincenas()` |
+
+Toda página que carga el maestro carga antes `ajustes-sync.js` (con `onerror="this.remove()"`): sin él no vería lo
+que cambiaste en Mis cifras de la PC. Lo exige el control 55.
 
 El Dashboard es donde vive el archivo porque es el centro del proyecto. El alemán vive en su app: el vocabulario en `Aleman/vocab-datos.js`, junto
 con su diseño (`vocab.css`) y su motor (`vocab.js`), y las 41 lecciones en `Aleman/lecciones-datos.js`
@@ -882,6 +907,7 @@ que añade un registro lo hace **por id y solo si falta**: así el navegador que
 | Carpeta | Archivo | Qué es | Su `localStorage` |
 |---|---|---|---|
 | `Dashboard/` | `dashboard.html` | Panel central, "Mi Día" en vivo, agrega todo | *(solo lee, salvo checks de Coach)* |
+| `Dashboard/` | `cifras.html` | Mis cifras: las constantes del plan que cambias tú | `maestro_ajustes_v1` |
 | `Coach/` | `Coach.html` | Plan Maestro, rutina, radar de habilidades | `coach_rutina_v1`, `coach_checks_v1`, `radarp_*` |
 | `Finanzas/` | `Finanzas.html` | Finanzas reales, GBM, BTC, deudas | `finanzasmx_v2` |
 | `CuidadoPersonal/` | `cuidadopersonal.html` + `salud`/`ejercicio`/`comida` | Shell de 8 áreas (Skincare, Cabello, Dentista, Ojos nativas; Salud, Ejercicio, Comida, Vestimenta en iframe) | `skincare_v1`, `cabello_v1`, `dentista_v1`, `misalud_v1`, `mirutina_v1`, `comida_v1` |
@@ -923,6 +949,7 @@ especialidad (las de Finanzas, los módulos de Entrevistas) comparten el de su p
 | `dashboard` | `dashboard.html` — general (rail, barra de apps, rotación). Vistas: `midia` · `planmaestro` · `metas` · `basicas` · `skills` · `lista` · `habitos` (las 7 pantallas) y los paneles `invertir` (Qué invertir hoy) y `didi` (Qué escuchar) |
 | `coach` | `Coach.html` — el modo Personal. Vista: `coachempresa` (el modo Empresa) |
 | `finanzas` | `Finanzas.html` |
+| `cifras` | `cifras.html` (Mis cifras) |
 | `cuidadopersonal` | `cuidadopersonal.html` — general (barra, carril, cabecera). Vistas: `skincare` · `cabello` · `dentista` · `ojos` y las cuatro incrustadas con el de su app |
 | `salud` · `ejercicio` · `comida` | sus tres apps |
 | `vestimenta` | `vestimenta.html` |

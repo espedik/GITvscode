@@ -19,6 +19,7 @@
 <!-- Variables maestras de TODO el proyecto: sueldo, renta, deudas, metas, fechas. Las cuatro
      Plan Maestro vienen de aquí, no escritos a mano. El mapa está en DATOS-MAESTROS.md -->
 <link rel="stylesheet" href="ficha.css">
+<script src="ajustes-sync.js" onerror="this.remove()"></script>
 <script src="datos-maestros.js"></script>
 <!-- Las noticias de Qué invertir hoy, de Google Noticias: las escribe el hook de pre-commit (noticias-actualizar.js). -->
 <script src="noticias-inversion.js" onerror="this.remove()"></script>
@@ -232,6 +233,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 .eyebrow{font-size:clamp(11px,1.1vw,14px);font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--ac1);box-shadow:0 0 12px var(--ac1);animation:pulse 2s ease-in-out infinite}
+.eyebrow .pm-cifras{margin-left:auto;padding:5px 11px;border-radius:999px;border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.04);color:var(--text2);font-size:11px;letter-spacing:.12em;text-decoration:none;white-space:nowrap}
+.eyebrow .pm-cifras:hover{color:var(--text);border-color:rgba(var(--ov),.3)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 .slide-title{font-family:var(--font-title);font-size:clamp(28px,3.6vw,48px);font-weight:600;letter-spacing:-.01em;margin-bottom:clamp(20px,3vh,40px);
   background:linear-gradient(90deg,var(--text),var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -5037,7 +5040,9 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
            salieron de Mis Metas (Adán, 21-oct-2026: "todo esto, ponlo en lo que acabas de quitar y quítalo de mis
            metas"). Lo que te queda es «Para gastar» en la columna del día, y si la quincena cierra, Tu estrategia
            de hoy. El párrafo de `explica` vive en el `title` de cada fase de la ruta. -->
-      <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Plan Maestro</div>
+      <!-- Mis cifras (Adán, 18-nov-2026: "para ya no depender de Claude"): las cifras de este tablero que cambias tú. Va aquí
+           y no en la barra de apps, que a 1600 px y desde 1806 px ya no tiene sitio para otra píldora. -->
+      <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Plan Maestro<a class="pm-cifras" id="pmCifras" href="cifras.html" title="Cambia tu sueldo, tus fijos, el ahorro de cada quincena, lo que cuesta irte y tus metas: todo el plan se mueve con ellas">🎚️ Mis cifras</a></div>
       <div class="pm-ruta reveal d1" id="coachFaseBand"></div>
       <div class="pm-mes reveal d1" id="pmMes"></div>
       <div class="grid g4 reveal d2" id="pmMedidores"></div>

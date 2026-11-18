@@ -52,6 +52,116 @@ window.CIFRAS = (function () {
   const VACIO = '—';
   let fin = null;
 
+  /* ── TUS CIFRAS: las que cambias tú, sin pedírselo a Claude ───────────────────────────────────
+     Adán, 18-nov-2026: "revisa qué cifras puedes ponerlas manualmente como editar o agregar, esto para ya no depender
+     de Claude… si modificamos una, en general las demás se deben actualizar forzosamente". Las constantes de abajo
+     (PROYECTO, los costos de SALIDA, SUPUESTOS) siguen escritas aquí: son el valor del plan. Las que lista EDITABLES se
+     cambian en la página Mis cifras (Dashboard/cifras.html): el cambio se guarda en `maestro_ajustes_v1` y se aplica
+     AL CARGAR este archivo, justo después de cada bloque y antes de que nada lo lea (`ajAplicar`). Así cada derivada
+     —los getters, las cuentas de CLAVES, el calendario, la proyección— y cada app que carga el maestro salen ya con el
+     valor tuyo. Las fechas del plan no están: las fases y la salida están escritas sobre ellas.
+     Cada ajuste guarda el valor del plan con que se hizo (`base`): si después el plan cambia aquí, manda el plan y el
+     ajuste queda como vencido. El hook de pre-commit lleva los de la PC a los otros dispositivos (`ajustes-sync.js`,
+     `window.AJUSTES_SYNC`) y por cada cifra gana el cambio más reciente, de aquí o de allá.
+     g: grupo · k: dónde vive (sin prefijo, en PROYECTO; `SUPUESTOS.…`; `SALIDA.<id>` es el costo de ese id; `meta:<id>`,
+     el objetivo de esa meta en Finanzas) · t: peso, eur, tc (tipo de cambio), porc (0–100), tasa (fracción, se ve
+     en %) o num con su unidad `u` · txt: qué es · nota: lo que hay que saber para cambiarla. */
+  const AJ_KEY = 'maestro_ajustes_v1';
+  const EDITABLES = [
+    { g: 'Lo que entra', k: 'sueldo', t: 'peso', txt: 'Sueldo al mes', nota: 'Lo que deposita tu empleador al mes; cada quincena es la mitad.' },
+    { g: 'Lo que entra', k: 'didiMes', t: 'peso', txt: 'Lo que trae Didi al mes', nota: 'El promedio de un mes normal.' },
+    { g: 'Lo que entra', k: 'didiAhorro', t: 'peso', txt: 'Lo que Didi aparta al mes', nota: 'Hasta que empiezas a manejar más; cada lunes, la parte de su semana.' },
+    { g: 'Lo que entra', k: 'didiAhorroMas', t: 'peso', txt: 'Lo que Didi aparta al mes, manejando más', nota: 'Desde el mes en que manejas más horas.' },
+    { g: 'Lo que entra', k: 'siVale', t: 'peso', txt: 'Vale de despensa' },
+    { g: 'Casa', k: 'renta', t: 'peso', txt: 'Renta del depa', nota: 'El día 1, mientras tengas el depa.' },
+    { g: 'Casa', k: 'aporteCasa', t: 'peso', txt: 'Aporte a tu familia', nota: 'El día 1, cuando vivas en su casa.' },
+    { g: 'Casa', k: 'luzAgua', t: 'peso', txt: 'Luz y agua', nota: 'Del depa.' },
+    { g: 'Casa', k: 'internet', t: 'peso', txt: 'Internet', nota: 'Del depa.' },
+    { g: 'Casa', k: 'gas', t: 'peso', txt: 'Gas, el recibo', nota: 'Llega cada dos meses: al mes pesa la mitad.' },
+    { g: 'Celular y suscripciones', k: 'celular', t: 'peso', txt: 'Plan del celular' },
+    { g: 'Celular y suscripciones', k: 'gym', t: 'peso', txt: 'Gimnasio' },
+    { g: 'Celular y suscripciones', k: 'claudeCode', t: 'peso', txt: 'Claude Code' },
+    { g: 'Celular y suscripciones', k: 'icloud', t: 'peso', txt: 'iCloud' },
+    { g: 'Ahorro de cada quincena', k: 'ahorroDia1', t: 'peso', txt: 'El día 1, con depa', nota: 'Va a la BBVA mientras tenga saldo y después a GBM.' },
+    { g: 'Ahorro de cada quincena', k: 'ahorroDia15', t: 'peso', txt: 'El día 15, con depa' },
+    { g: 'Ahorro de cada quincena', k: 'ahorroDia1Casa', t: 'peso', txt: 'El día 1, en casa' },
+    { g: 'Ahorro de cada quincena', k: 'ahorroDia15Casa', t: 'peso', txt: 'El día 15, en casa' },
+    { g: 'Tu gasto', k: 'SUPUESTOS.loDemas', t: 'peso', txt: 'Lo demás al mes, con depa', nota: 'Ropa, salidas, regalos y compras sueltas: el tope con que se cuadra cada quincena.' },
+    { g: 'Tu gasto', k: 'SUPUESTOS.loDemasEnCasa', t: 'peso', txt: 'Lo demás al mes, en casa' },
+    { g: 'Invertir', k: 'especulacionMes', t: 'peso', txt: 'Riesgo súper alto, al mes', nota: 'La pestaña de Qué invertir hoy.' },
+    { g: 'Invertir', k: 'especulacionBtcPct', t: 'porc', max: 100, txt: 'De eso, a Bitcoin' },
+    { g: 'Metas', k: 'meta:ef-001', t: 'peso', txt: 'Fondo de emergencia, la meta', nota: 'Vive en Finanzas: se cambia donde está Finanzas, en tu PC.' },
+    { g: 'Metas', k: 'meta:g001', t: 'peso', txt: 'Dinero para la maestría, la meta', nota: 'Vive en Finanzas: se cambia donde está Finanzas, en tu PC.' },
+    { g: 'Tipo de cambio', k: 'eurMxn', t: 'tc', txt: 'Euro para planear', nota: 'Un poco arriba del de hoy, para que una subida normal no tumbe la cuenta bloqueada.' },
+    { g: 'Tipo de cambio', k: 'usdMxn', t: 'tc', txt: 'Dólar para planear', nota: 'Un poco abajo del de hoy, para no inflar lo que se cobra en dólares.' },
+    { g: 'Lo que cuesta irte', k: 'SALIDA.apostillas', t: 'peso', txt: 'Apostillas y traducciones' },
+    { g: 'Lo que cuesta irte', k: 'SALIDA.goethe', t: 'peso', txt: 'Examen A2 de alemán' },
+    { g: 'Lo que cuesta irte', k: 'SALIDA.salud', t: 'peso', txt: 'Chequeo, dentista, lentes y medicinas' },
+    { g: 'Lo que cuesta irte', k: 'SALIDA.bloqueada', t: 'eur', txt: 'Cuenta bloqueada', nota: 'El monto lo fija Alemania cada año.' },
+    { g: 'Lo que cuesta irte', k: 'SALIDA.apertura', t: 'eur', txt: 'Abrir la cuenta bloqueada' },
+    { g: 'Lo que cuesta irte', k: 'SALIDA.visa', t: 'peso', txt: 'Visa y servicio de BLS' },
+    { g: 'Lo que cuesta irte', k: 'SALIDA.seguroViaje', t: 'peso', txt: 'Seguro de viaje' },
+    { g: 'Lo que cuesta irte', k: 'SALIDA.vuelo', t: 'peso', txt: 'Vuelo a Stuttgart' },
+    { g: 'Lo que cuesta irte', k: 'SALIDA.ropa', t: 'peso', txt: 'Ropa de invierno y equipo' },
+    { g: 'Lo que cuesta irte', k: 'SALIDA.reservaByd', t: 'peso', txt: 'Reserva del BYD' },
+    { g: 'Lo que cuesta irte', k: 'SALIDA.vivienda', t: 'eur', txt: 'Depósito y primera renta allá' },
+    { g: 'Lo que cuesta irte', k: 'SALIDA.colchon', t: 'eur', txt: 'Colchón de llegada' },
+    { g: 'Allá', k: 'SUPUESTOS.alemania.gasto', t: 'eur', txt: 'Gasto al mes, estudiando' },
+    { g: 'Allá', k: 'SUPUESTOS.alemania.werkstudent', t: 'eur', txt: 'Werkstudent, neto al mes' },
+    { g: 'Allá', k: 'SUPUESTOS.alemania.colegiatura', t: 'eur', txt: 'Colegiatura de cada semestre' },
+    { g: 'Allá', k: 'SUPUESTOS.trabajo.neto', t: 'eur', txt: 'Sueldo neto al titularte' },
+    { g: 'Allá', k: 'SUPUESTOS.trabajo.gasto', t: 'eur', txt: 'Gasto al mes, trabajando' },
+    { g: 'Allá', k: 'SUPUESTOS.byd.rentaNeta', t: 'peso', txt: 'Lo que deja el BYD rentado, al mes' },
+    { g: 'Allá', k: 'SUPUESTOS.rendimiento', t: 'tasa', max: 0.3, txt: 'Rendimiento al año de lo ahorrado' },
+    { g: 'Salud', k: 'proteinaMeta', t: 'num', u: 'g', max: 400, txt: 'Proteína al día' },
+    { g: 'Salud', k: 'kcalMeta', t: 'num', u: 'kcal', max: 6000, txt: 'Calorías al día' },
+    { g: 'Salud', k: 'carbsMeta', t: 'num', u: 'g', max: 900, txt: 'Carbohidratos al día' },
+    { g: 'Salud', k: 'grasaMeta', t: 'num', u: 'g', max: 300, txt: 'Grasa al día' },
+    { g: 'Alemán', k: 'kapitelAleman', t: 'num', max: 40, txt: 'Kapitel en curso' },
+  ];
+  const AJ_DEF = {};   // el valor del plan de cada cifra, antes de tu ajuste
+  let AJ = null;       // tus ajustes, ya fundidos: los de este dispositivo y los que llegaron de la PC
+  function ajRaiz(k) { return k.indexOf('meta:') === 0 ? 'meta' : k.indexOf('SUPUESTOS.') === 0 ? 'SUPUESTOS' : k.indexOf('SALIDA.') === 0 ? 'SALIDA' : 'PROYECTO'; }
+  function ajLugar(k) {
+    const r = ajRaiz(k), p = k.split('.');
+    if (r === 'meta') return null;
+    if (r === 'SALIDA') { const c = SALIDA.costos.filter(function (x) { return x.id === p[1]; })[0]; return c ? { o: c, c: 'eur' in c ? 'eur' : 'mxn' } : null; }
+    let o = r === 'SUPUESTOS' ? SUPUESTOS : PROYECTO;
+    const ruta = r === 'SUPUESTOS' ? p.slice(1) : p;
+    for (let i = 0; i < ruta.length - 1 && o; i++) o = o[ruta[i]];
+    return o ? { o: o, c: ruta[ruta.length - 1] } : null;
+  }
+  function ajLeer(k) {
+    if (ajRaiz(k) === 'meta') { const g = meta(k.slice(5)); return g ? +g.target : null; }
+    const l = ajLugar(k); return l ? l.o[l.c] : undefined;
+  }
+  function ajPoner(k, x) { const l = ajLugar(k); if (l) l.o[l.c] = x; }
+  function ajEditable(k) { return EDITABLES.filter(function (e) { return e.k === k; })[0] || null; }
+  function ajValido(e, x) {
+    if (typeof x !== 'number' || !isFinite(x) || x < 0 || (e.max != null && x > e.max)) return false;
+    return e.t === 'tc' || e.t === 'tasa' ? true : Math.round(x) === x;
+  }
+  // Por cifra, el cambio más reciente: el de este dispositivo o el que trajo la PC.
+  function ajCargar() {
+    const out = {};
+    const toma = function (src) {
+      if (!src || typeof src !== 'object') return;
+      Object.keys(src).forEach(function (k) { const e = src[k]; if (e && e.t && (!out[k] || e.t > out[k].t)) out[k] = e; });
+    };
+    try { toma(((typeof window !== 'undefined' && window.AJUSTES_SYNC) || {}).valores); } catch (e) { /* sin copia de la PC */ }
+    try { const r = localStorage.getItem(AJ_KEY); toma(r ? (JSON.parse(r) || {}).valores : null); } catch (e) { /* sin almacenamiento: el plan tal cual */ }
+    return out;
+  }
+  function ajAplicar(raiz) {
+    if (!AJ) AJ = ajCargar();
+    EDITABLES.forEach(function (e) {
+      if (ajRaiz(e.k) !== raiz) return;
+      const def = ajLeer(e.k), a = AJ[e.k];
+      AJ_DEF[e.k] = def;
+      if (a && !a.quitado && a.base === def && ajValido(e, a.v)) ajPoner(e.k, a.v);
+    });
+  }
+
   /* ── CONSTANTES DEL PROYECTO ───────────────────────────────────────────────────────────────
      Hechos sobre Adán y su plan que estaban escritos a mano en cada app. El número entre
      paréntesis es en cuántas apps aparecía repetido cuando se centralizó (medido el 2026-08-24).
@@ -66,7 +176,7 @@ window.CIFRAS = (function () {
 
     // ── Ingresos ── (el sueldo, 17 veces en 2 apps; Didi, 92 en 4)
     sueldo:        41000,     // bruto mensual en ALTEN, quincenal a BBVA
-    sueldoQuinc:   20500,
+    get sueldoQuinc() { return this.sueldo / 2; },   // la quincena es la mitad: cambiar el sueldo la mueve
     didiMes:        6000,     // lo que de verdad trae Didi al mes, en promedio (Adán, 3-nov-2026: "promedio he sacado 6,000 al mes"; antes se suponían $11,200, ~$400/día × 28)
     // Lo que Didi pone en GBM, no lo que factura (Adán, 3-oct-2026): "de octubre
     // a febrero puedo juntar de Didi 5000 al mes" y "desde febrero empezaré a trabajar más de Didi
@@ -215,6 +325,7 @@ window.CIFRAS = (function () {
     // en $17.76 (Banxico, vía Uno TV); se planea un poco abajo para no inflar lo que entra.
     usdMxn:          17.5,
   };
+  ajAplicar('PROYECTO');
 
   /* ── EL CALENDARIO ────────────────────────────────────────────────────────────────────────
      Lo que el calendario del Dashboard necesita y NO puede derivar solo.
@@ -741,7 +852,7 @@ window.CIFRAS = (function () {
       {id:'ropa',        mes:'2027-08', mxn:8000,  gasta:true,  txt:'Ropa de invierno y equipo (estimado)'},
       {id:'reservaByd',  mes:'2027-08', mxn:13400, gasta:false, txt:'Reserva del BYD: dos mensualidades en CETES'},
       {id:'vivienda',    mes:'2027-08', eur:1000,  gasta:true,  txt:'Depósito y primera renta en Esslingen (estimado)'},
-      {id:'colegiatura', mes:'2027-09', eur:1900,  gasta:true,  txt:'Colegiatura (€1,500) y cuotas del 1er semestre'},
+      {id:'colegiatura', mes:'2027-09', get eur() { return SUPUESTOS.alemania.colegiatura; }, gasta:true,  txt:'Colegiatura (€1,500) y cuotas del 1er semestre'},
       {id:'colchon',     mes:'2027-09', eur:1000,  gasta:false, txt:'Colchón de llegada, fuera de la cuenta bloqueada'},
     ],
     // Lo que tiene que estar en la cuenta a mediados de junio: la cuenta bloqueada y la visa.
@@ -843,6 +954,7 @@ window.CIFRAS = (function () {
       ]},
     ],
   };
+  ajAplicar('SALIDA');
   function costoSalida(c, eur) { return (c.mxn || 0) + (c.eur || 0) * (eur || PROYECTO.eurMxn); }
 
   /* ── El plan de un mes ──────────────────────────────────────────────────────────────────────
@@ -1008,6 +1120,7 @@ window.CIFRAS = (function () {
       rendimiento: 'CETES o fondos indexados sobre lo ahorrado, ya fuera de México. En México el plan no cuenta rendimiento: es la parte conservadora.',
     },
   };
+  ajAplicar('SUPUESTOS');
   function mesDe(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); }
   function mesSiguiente(ym) { const p = ym.split('-').map(Number); return mesDe(new Date(p[0], p[1], 1)); }
   function mesMas(ym, k) { const p = ym.split('-').map(Number); return mesDe(new Date(p[0], p[1] - 1 + k, 1)); }
@@ -1255,6 +1368,35 @@ window.CIFRAS = (function () {
   // El mes tipo de cada etapa: con depa (su último mes) y en casa de su familia (el primero).
   function mesTipo(casa, s) {
     return desgloseMes(casa ? PROYECTO.enCasaDesde : PROYECTO.rentaHasta, s, { promedio: true });
+  }
+
+  /* Cada quincena se sostiene sola (Adán, 5-oct-2026: "eso debe ser cada quincena y deja dinero sobrante para la
+     quincena"). En cada quincena de cada mes en México: el sueldo, menos los fijos de sus días, la comida de sus días y
+     su parte del gasto personal —las rutinas y el tope de lo demás, por día— tiene que alcanzar para lo que manda ese día
+     a GBM o a la BBVA. El mínimo de la BBVA que se paga con Didi no cuenta: no sale del sueldo. Devuelve las quincenas
+     que no alcanzan (`faltan`) y, por etapa y día, el peor mes (`peor`, con lo que sobra y la cifra de ahorro que lo
+     manda). Una sola cuenta: la usan el verificador y Mis cifras, que la vuelve a hacer con tu cambio antes de guardarlo. */
+  const AHORRO_DE = { depa1: 'ahorroDia1', depa15: 'ahorroDia15', casa1: 'ahorroDia1Casa', casa15: 'ahorroDia15Casa' };
+  function quincenas() {
+    const S = SUPUESTOS, cuid = n('cuidadoMes') || 0, peor = {}, faltan = [];
+    proyectar().filter(function (m) { return m.desglose; }).forEach(function (m) {
+      const p = m.mes.split('-').map(Number), nDias = new Date(p[0], p[1], 0).getDate(), casa = m.desglose.casa;
+      const come = comerEnMes(m.mes, S.comida / 30.4);
+      const pers = (cuid + (casa ? S.loDemasEnCasa : S.loDemas)) / nDias;
+      [[1, 14], [15, nDias]].forEach(function (q) {
+        let libre = -(come + pers) * (q[1] - q[0] + 1), envio = 0;
+        for (let d = q[0]; d <= q[1]; d++) agendaDia(d, m.mes, DEUDAS_SEED).forEach(function (x) {
+          if (x.entra) libre += +x.monto || 0;
+          else if (x.ahorro || (x.tarjeta && x.de === 'quincena')) envio += +x.monto || 0;
+          else if (!x.tarjeta) libre -= +x.monto || 0;
+        });
+        if (!(envio > 0)) return;
+        const sobra = libre - envio, k = (casa ? 'casa' : 'depa') + q[0];
+        if (sobra < 0) faltan.push({ mes: m.mes, dia: q[0], casa: casa, envio: Math.round(envio), libre: Math.round(libre) });
+        if (!peor[k] || sobra < peor[k].sobra) peor[k] = { sobra: sobra, mes: m.mes, dia: q[0], casa: casa, clave: AHORRO_DE[k] };
+      });
+    });
+    return { peor: peor, faltan: faltan };
   }
 
   function proyectar(cambios) {
@@ -8485,7 +8627,7 @@ window.CIFRAS = (function () {
     // ── Constantes del proyecto, expuestas como marcadores ──
     // Van por PROYECTO y no por localStorage: no cambian solas, se editan aquí arriba.
     sueldo:        { v: () => PROYECTO.sueldo },
-    sueldoQuinc:   { v: () => PROYECTO.sueldoQuinc },
+    sueldoQuinc:   { dep: ['sueldo'], v: () => PROYECTO.sueldoQuinc },
     didiMes:       { v: () => PROYECTO.didiMes },
     siVale:        { v: () => PROYECTO.siVale },
     ingresoTotal:  { dep: ['sueldo','didiMes','siVale'], v: () => PROYECTO.ingresoTotal },
@@ -8628,6 +8770,131 @@ window.CIFRAS = (function () {
   /* `*deudas` es un comodín: cualquier clave que salga de la lista de deudas mueve a las que
      agregan esa lista. Sin esto, cambiar el saldo del Apple Watch mostraba `deudaTotal` como si
      alguien la hubiera editado a mano, en vez de como lo que es: algo que se movió con él. */
+  /* Lo que es cada derivada, en llano: Mis cifras lo enseña al decir qué se mueve con tu cambio. Una clave sin nombre
+     aquí sale con el suyo. */
+  const NOMBRES = {
+    sueldo: 'Sueldo al mes', didiMes: 'Lo que trae Didi al mes', siVale: 'Vale de despensa', renta: 'Renta del depa', gym: 'Gimnasio',
+    gymNombre: 'Tu gimnasio', aporteCasa: 'Aporte a tu familia', ahorroDia1: 'Ahorro del día 1, con depa', ahorroDia15: 'Ahorro del día 15, con depa',
+    ahorroDia1Casa: 'Ahorro del día 1, en casa', ahorroDia15Casa: 'Ahorro del día 15, en casa', gasCadaMeses: 'Cada cuántos meses llega el gas',
+    sueldoQuinc: 'Cada quincena', ingresoTotal: 'Lo que entra al mes', gasMensual: 'Gas, al mes', servicios: 'Servicios al mes',
+    suscripciones: 'Suscripciones al mes', fijosTotal: 'Fijos al mes', margen: 'Lo que queda tras fijos y mínimos de deuda',
+    minimosDeuda: 'Mínimos de deuda al mes', gastoPersonalDepa: 'Tu gasto personal al mes, con depa',
+    gastoPersonalCasa: 'Tu gasto personal al mes, en casa', ahorroMesDepa: 'A GBM en un mes, con depa',
+    ahorroMesCasa: 'A GBM en un mes, en casa', alemaniaMarzo: 'Para Alemania al cerrar la Fase 1',
+    alemaniaJunio: 'En la cuenta en junio, para la cuenta bloqueada', junioVeredicto: 'La cuenta bloqueada en junio',
+    junioCorto: 'Junio, en corto', salidaVeredicto: 'La salida completa', salidaTotal: 'Lo que cuesta irte',
+    salidaJunio: 'Lo que pide junio', salidaAgosto: 'Lo que pide agosto para irte completo', sperrkonto: 'La cuenta bloqueada, en pesos',
+    sperrkontoEur: 'La cuenta bloqueada, en euros', colegiaturaEur: 'La colegiatura', werkstudentEur: 'El Werkstudent',
+    bydRenta: 'Lo que deja el BYD rentado', extraSalida: 'El ingreso extra que haría falta al mes',
+    marzoParaSalida: 'Con ese ingreso, al cerrar la Fase 1', mayoParaSalida: 'Con ese ingreso, el día de decidir',
+    salida2028: 'Si te vas un año después', mesMillon: 'El mes del millón', bbvaCero: 'La BBVA en cero',
+    bbvaRuta: 'Los abonos que siguen a la BBVA', bbvaIntereses: 'Intereses de la BBVA', cuidadoMes: 'Tus rutinas al mes',
+    recorteRutinas: 'Lo que ahorran los recortes de las rutinas', didiAhorro: 'Lo que Didi aparta al mes',
+    didiAhorroMas: 'Lo que Didi aparta al mes, manejando más', especulacionMes: 'Riesgo súper alto, al mes',
+    especulacionBtcPct: 'De eso, a Bitcoin', proteinaMeta: 'Proteína al día', kcalMeta: 'Calorías al día',
+    kapitelAleman: 'Kapitel en curso', cetesDia15: 'A CETES el día 15', autoMeses: 'Meses que le quedan al auto',
+    autoAPagar: 'Lo que acabas pagando del auto', autoInteres: 'Intereses del auto', fondoMeta: 'Fondo de emergencia, la meta',
+    maestriaMeta: 'Dinero para la maestría, la meta',
+  };
+
+  /* ── TUS CIFRAS, hacia fuera (ver EDITABLES, arriba) ──
+     `lista()`: cada cifra editable con su valor de hoy, el del plan y tu ajuste, si lo hay (o `vencido`: el plan cambió
+     después de tu ajuste y manda el plan). `previa(k, x)`: pone tu cambio en memoria, mide qué se movió de verdad —todas
+     las claves, con su valor antes y después— y cómo quedan las quincenas, y lo deja todo como estaba. `guardar(k, x)`
+     lo escribe (o, para una meta, en Finanzas) y devuelve '' o por qué no; la página recarga para que se aplique al
+     cargar, como en cualquier app. `quitar(k)` vuelve al valor del plan. */
+  function ajLista() {
+    if (!AJ) AJ = ajCargar();
+    return EDITABLES.map(function (e) {
+      const esMeta = ajRaiz(e.k) === 'meta', val = ajLeer(e.k), def = esMeta ? val : AJ_DEF[e.k], a = AJ[e.k];
+      return Object.assign({}, e, {
+        valor: val, plan: def,
+        tuyo: !esMeta && a && !a.quitado && a.base === def && val !== def ? a : null,
+        vencido: !esMeta && a && !a.quitado && a.base !== def ? a : null,
+      });
+    });
+  }
+  function ajFoto() { const o = {}; Object.keys(CLAVES).forEach(function (c) { o[c] = v(c); }); return o; }
+  // Corre `fn` con los cambios puestos en memoria y lo deja todo como estaba.
+  function ajCon(cambios, fn) {
+    const viejos = {};
+    Object.keys(cambios).forEach(function (k) { viejos[k] = ajLeer(k); ajPoner(k, +cambios[k]); });
+    planCache = null;
+    try { return fn(); }
+    finally { Object.keys(viejos).forEach(function (k) { ajPoner(k, viejos[k]); }); planCache = null; }
+  }
+  /* El ahorro de cada quincena no es una fórmula: es lo que cabe. Si un cambio deja una quincena sin alcanzar, aquí
+     baja el ahorro de esa quincena a cientos —con el peor mes de su etapa— hasta que todas alcancen. Y al revés: un
+     ahorro que bajó así (`auto` en su ajuste) vuelve a subir, hasta el del plan, cuando la quincena tiene otra vez
+     espacio —devolver la renta al plan devuelve también el ahorro—. Lo que tú cambiaste a mano no se toca: si es eso
+     lo que no cabe, la página lo dice. */
+  function ajCuadrar(cambios) {
+    const c = Object.assign({}, cambios);
+    for (let i = 0; i < 6; i++) {
+      const q = ajCon(c, quincenas), malos = Object.keys(q.peor).filter(function (k) { return q.peor[k].sobra < 0; });
+      let movi = false;
+      malos.forEach(function (k) {
+        const cl = q.peor[k].clave;
+        if (!cl || cl in cambios) return;
+        const hoy = cl in c ? c[cl] : ajLeer(cl);
+        const nuevo = Math.max(0, Math.floor((hoy + q.peor[k].sobra) / 100) * 100);
+        if (nuevo !== hoy) { c[cl] = nuevo; movi = true; }
+      });
+      if (!malos.length) Object.keys(q.peor).forEach(function (k) {
+        const cl = q.peor[k].clave, a = AJ && AJ[cl];
+        if (!cl || cl in cambios || !a || !a.auto || a.quitado || !(q.peor[k].sobra > 0)) return;
+        const hoy = cl in c ? c[cl] : ajLeer(cl), plan = AJ_DEF[cl], cabe = hoy + q.peor[k].sobra;
+        if (!(hoy < plan)) return;
+        const nuevo = cabe >= plan ? plan : Math.floor(cabe / 100) * 100;
+        if (nuevo > hoy) { c[cl] = nuevo; movi = true; }
+      });
+      if (!movi) break;
+    }
+    return c;
+  }
+  // `previa('renta', 12000)` o `previa({renta: 12000, ahorroDia1: 1300})`.
+  function ajPrevia(k, x) {
+    const cambios = typeof k === 'object' && k ? k : (function () { const o = {}; o[k] = x; return o; })();
+    const ks = Object.keys(cambios);
+    if (!ks.length || ks.some(function (c) { const e = ajEditable(c); return !e || ajRaiz(c) === 'meta' || !ajValido(e, +cambios[c]); })) return null;
+    planCache = null;
+    const antes = ajFoto(), qa = quincenas();
+    const r = ajCon(cambios, function () { return { foto: ajFoto(), q: quincenas() }; });
+    return {
+      movidas: Object.keys(CLAVES).filter(function (c) { return antes[c] !== r.foto[c]; })
+        .map(function (c) { return { k: c, txt: NOMBRES[c] || c, antes: antes[c], despues: r.foto[c] }; }),
+      quincenas: { antes: qa, despues: r.q },
+    };
+  }
+  // `auto`: el cambio no lo escribiste tú, lo ajustó `cuadrar` para que la quincena alcance.
+  function ajGuardar(k, x, auto) {
+    const e = ajEditable(k);
+    x = +x;
+    if (!e) return 'Esa cifra no se cambia aquí.';
+    if (!ajValido(e, x)) return 'Ese valor no cabe: ' + (e.t === 'tc' || e.t === 'tasa' ? 'un número de 0' : 'un número entero de 0') + (e.max != null ? ' a ' + e.max : ' en adelante') + '.';
+    if (ajRaiz(k) === 'meta') {
+      let f = null;
+      try { const r = localStorage.getItem(KEY); f = r ? JSON.parse(r) : null; } catch (er) { f = null; }
+      if (!f || !Array.isArray(f.goals)) return 'Las metas viven en Finanzas, y este dispositivo no la tiene: cámbiala en tu PC.';
+      const g = f.goals.filter(function (y) { return y.id === k.slice(5); })[0];
+      if (!g) return 'No encontré esa meta en Finanzas.';
+      g.target = x;
+      try { localStorage.setItem(KEY, JSON.stringify(f)); } catch (er) { return 'No se pudo guardar en este navegador.'; }
+      leer(); return '';
+    }
+    let d = null;
+    try { d = JSON.parse(localStorage.getItem(AJ_KEY) || 'null'); } catch (er) { d = null; }
+    d = d && typeof d === 'object' ? d : {};
+    d.valores = d.valores && typeof d.valores === 'object' ? d.valores : {};
+    const t = new Date().toISOString();
+    d.valores[k] = x === AJ_DEF[k] ? { quitado: true, t: t } : auto ? { v: x, base: AJ_DEF[k], t: t, auto: true } : { v: x, base: AJ_DEF[k], t: t };
+    d.editado = t;
+    try { localStorage.setItem(AJ_KEY, JSON.stringify(d)); } catch (er) { return 'No se pudo guardar en este navegador.'; }
+    AJ = null;
+    return '';
+  }
+  function ajQuitar(k) { return ajRaiz(k) === 'meta' ? 'Una meta no tiene valor del plan: escribe la que quieras.' : ajGuardar(k, AJ_DEF[k]); }
+
   const DE_DEUDAS = ['autoSaldo','autoTotal','autoPago','autoMeses','tcBbva','tcBbvaMin',
                      'banamex','banamexMin','iphone','appleWatch','zapStylo','zapStyloCuota'];
   function impacto(clave) {
@@ -9580,6 +9847,8 @@ window.CIFRAS = (function () {
     dep: function (k) { return (CLAVES[k] && CLAVES[k].dep) || []; },
     impacto: impacto,
     grafo: grafo,
+    quincenas: quincenas, NOMBRES: NOMBRES,
+    ajustes: { lista: ajLista, previa: ajPrevia, cuadrar: ajCuadrar, guardar: ajGuardar, quitar: ajQuitar, clave: AJ_KEY },
     DEUDAS_SEED: DEUDAS_SEED,
     GASTOS_20260901: GASTOS_20260901,
     MOVIMIENTOS_20260920: MOVIMIENTOS_20260920,

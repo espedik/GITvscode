@@ -22,6 +22,10 @@
    las inversiones, los activos y el Bitcoin sumado en un solo lote —ni movimientos, ni notas, ni historial—, más lo
    que queda en la cuenta de la quincena que el Dashboard guarda en `fin_resumen_v1`. Van a `finanzas-sync.js`.
 
+   Y las cifras de Mis cifras (Adán, 18-nov-2026: "esto para ya no depender de Claude"): lo que cambiaste en
+   `maestro_ajustes_v1` va a `ajustes-sync.js`, que cada página carga antes del maestro. Por cifra, el valor, el del
+   plan con que se hizo y cuándo; una cifra devuelta al plan viaja como `quitado`, para que gane a la vieja del iPad.
+
    Nunca detiene un commit: si no encuentra Chrome, el perfil o la clave, lo dice en una línea y sale
    con 0. `HABITOS_CHROME` y `HABITOS_PERFIL` cambian la ruta de Chrome y la de su perfil.
 
@@ -33,11 +37,13 @@ const fs = require('fs'), path = require('path'), os = require('os'), { spawnSyn
 const SALIDA = path.join(__dirname, 'habitos-sync.js');
 const SALIDA_AUD = path.join(__dirname, 'auditoria-sync.js');
 const SALIDA_FIN = path.join(__dirname, 'finanzas-sync.js');
+const SALIDA_AJ = path.join(__dirname, 'ajustes-sync.js');
 const CLAVE = 'dash-habitos-v1', CLAVE_AUD = 'plan_auditoria_v1', CLAVE_SINC = 'plan_auditoria_sinc';
-const CLAVE_FIN = 'finanzasmx_v2', CLAVE_RES = 'fin_resumen_v1';
+const CLAVE_FIN = 'finanzasmx_v2', CLAVE_RES = 'fin_resumen_v1', CLAVE_AJ = 'maestro_ajustes_v1';
 const di = m => console.log('hábitos · ' + m);
 const da = m => console.log('auditoría · ' + m);
 const df = m => console.log('finanzas · ' + m);
+const dj = m => console.log('mis cifras · ' + m);
 
 function chrome() {
   const env = process.env, c = [env.HABITOS_CHROME,
@@ -201,15 +207,42 @@ function finanzas(f, r) {
   agregar(SALIDA_FIN, df);
 }
 
+// Una cifra por línea: así el historial de git enseña cuál cambió.
+function ajustes(a) {
+  const v = a && a.valores && typeof a.valores === 'object' ? a.valores : null;
+  if (!v || !Object.keys(v).length) return dj('el Chrome de esta PC no tiene cifras cambiadas todavía');
+  const valores = {};
+  Object.keys(v).sort().forEach(k => {
+    const e = v[k];
+    if (e && e.t) valores[k] = e.quitado ? { quitado: true, t: e.t } : Object.assign({ v: e.v, base: e.base, t: e.t }, e.auto ? { auto: true } : {});
+  });
+  const antes = previo(SALIDA_AJ);
+  if (antes && JSON.stringify(antes.valores) === JSON.stringify(valores)) return dj('sin cambios');
+  const ks = Object.keys(valores), L = [];
+  L.push('/* Las cifras que cambiaste en Mis cifras de la PC, para tus otros dispositivos. Lo escribe el hook de pre-commit');
+  L.push('   (Dashboard/habitos-exportar.js) con lo que guarda el Chrome de la PC: no se edita a mano. */');
+  L.push('window.AJUSTES_SYNC = {');
+  L.push('  "exportado": ' + JSON.stringify(a.editado || new Date().toISOString()) + ',');
+  L.push('  "valores": {');
+  ks.forEach((k, i) => L.push('    ' + JSON.stringify(k) + ': ' + JSON.stringify(valores[k]) + (i < ks.length - 1 ? ',' : '')));
+  L.push('  }');
+  L.push('};');
+  fs.writeFileSync(SALIDA_AJ + '.tmp', L.join('\n') + '\n', 'utf8');
+  fs.renameSync(SALIDA_AJ + '.tmp', SALIDA_AJ);
+  dj('al día · ' + ks.filter(k => !valores[k].quitado).length + ' cifra(s) tuya(s)');
+  agregar(SALIDA_AJ, dj);
+}
+
 (function () {
   try {
     const exe = chrome(), ldb = perfil();
     if (!exe) return di('no encontré Chrome; no se exportó nada');
     if (!ldb) return di('no encontré el perfil de Chrome; no se exportó nada');
-    const v = leer(exe, ldb, [CLAVE, CLAVE_AUD, CLAVE_SINC, CLAVE_FIN, CLAVE_RES]);
+    const v = leer(exe, ldb, [CLAVE, CLAVE_AUD, CLAVE_SINC, CLAVE_FIN, CLAVE_RES, CLAVE_AJ]);
     try { habitos(v[CLAVE]); } catch (e) { di('no se exportó: ' + e.message); }
     try { auditoria(v[CLAVE_AUD], v[CLAVE_SINC]); } catch (e) { da('no se exportó: ' + e.message); }
     try { finanzas(v[CLAVE_FIN], v[CLAVE_RES]); } catch (e) { df('no se exportó: ' + e.message); }
+    try { ajustes(v[CLAVE_AJ]); } catch (e) { dj('no se exportó: ' + e.message); }
   } catch (e) {
     di('no se exportó: ' + e.message);
   }

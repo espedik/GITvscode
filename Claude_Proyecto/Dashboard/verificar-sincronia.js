@@ -878,28 +878,16 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
      demás, por día— tiene que alcanzar para lo que manda ese día a GBM o a la BBVA. Si no alcanza es
      un problema; si en el peor mes de su etapa sobran $100 o más, se avisa que cabe mandar más. El
      mínimo de la BBVA que se paga con Didi no cuenta: no sale del sueldo. */
-  const SUP = C.PROYECCION.supuestos, peor = {};
-  C.PROYECCION.meses.filter(m => m.desglose).forEach(function (m) {
-    const p = m.mes.split('-').map(Number), nDias = new Date(p[0], p[1], 0).getDate(), casa = m.desglose.casa;
-    const come = C.comerEnMes(m.mes, SUP.comida / 30.4);
-    const pers = (C.n('cuidadoMes') + (casa ? SUP.loDemasEnCasa : SUP.loDemas)) / nDias;
-    [[1, 14], [15, nDias]].forEach(function (q) {
-      let libre = -(come + pers) * (q[1] - q[0] + 1), envio = 0;
-      for (let d = q[0]; d <= q[1]; d++) C.agendaDia(d, m.mes, C.DEUDAS_SEED).forEach(function (x) {
-        if (x.entra) libre += +x.monto || 0;
-        else if (x.ahorro || (x.tarjeta && x.de === 'quincena')) envio += +x.monto || 0;
-        else if (!x.tarjeta) libre -= +x.monto || 0;
-      });
-      if (!(envio > 0)) return;
-      const sobra = libre - envio, clave = (casa ? 'en casa' : 'con depa') + ', el día ' + q[0];
-      if (sobra < 0) malos.push('     ' + m.mes + ', quincena del ' + q[0] + ': manda $' + Math.round(envio) + ' y solo le quedan $' +
-                                Math.round(libre) + ' después de fijos, comida y su gasto. Baja PROYECTO.ahorroDia… o el tope de lo demás');
-      if (!(clave in peor) || sobra < peor[clave]) peor[clave] = sobra;
-    });
+  // La cuenta vive en el maestro (`CIFRAS.quincenas`): la misma con que Mis cifras cuadra tu cambio antes de guardarlo.
+  const Q = C.quincenas();
+  Q.faltan.forEach(function (f) {
+    malos.push('     ' + f.mes + ', quincena del ' + f.dia + ': manda $' + f.envio + ' y solo le quedan $' + f.libre +
+               ' después de fijos, comida y su gasto. Baja PROYECTO.ahorroDia… o el tope de lo demás');
   });
-  Object.keys(peor).forEach(function (k) {
-    if (peor[k] >= 100) avisos.push('Cada quincena ' + k + ' cabe mandar $' + Math.floor(peor[k] / 100) * 100 +
-      ' más a GBM sin quitarle a su gasto (en el peor mes de su etapa le sobran $' + Math.round(peor[k]) + ').');
+  Object.keys(Q.peor).forEach(function (k) {
+    const x = Q.peor[k], nom = (x.casa ? 'en casa' : 'con depa') + ', el día ' + x.dia;
+    if (x.sobra >= 100) avisos.push('Cada quincena ' + nom + ' cabe mandar $' + Math.floor(x.sobra / 100) * 100 +
+      ' más a GBM sin quitarle a su gasto (en el peor mes de su etapa le sobran $' + Math.round(x.sobra) + ').');
   });
   if (malos.length) problemas.push('La salida a Alemania o la proyección dejaron de cuadrar:\n' + malos.join('\n'));
   else ok.push('Salida a Alemania: ' + ids.length + ' pendientes en ' + S.bloques.length + ' temas y ' + S.costos.length +
@@ -3353,6 +3341,64 @@ function promptsDeLoTocado() {
   const cubre = V.voc.filter(w => M[w.de]).length;
   ok.push('Alemán de hoy: las ' + ids.length + ' lecciones con su resumen; ' + cubre + ' de ' + V.voc.length +
     ' palabras con ejemplos de más, familia y gramática');
+})();
+
+/* ── 55. Mis cifras: lo que cambias tú llega a todas las apps y arrastra lo que depende de ello ──────────────────────
+   Adán, 18-nov-2026: "revisa qué cifras puedes ponerlas manualmente como editar o agregar, esto para ya no depender de
+   Claude… si modificamos una, en general las demás se deben actualizar forzosamente". Las cifras editables viven en
+   EDITABLES del maestro y se aplican al cargarlo. Aquí: que cada una exista y sea una constante (un getter no se puede
+   ajustar: se movería solo), que cada página que carga el maestro cargue antes ajustes-sync.js —o el iPad no ve lo de
+   la PC—, que el hook lo escriba, y que un cambio de verdad mueva sus derivadas y deje las quincenas alcanzando. */
+(function () {
+  if (!global.window || !global.window.CIFRAS || !global.window.CIFRAS.ajustes) {
+    problemas.push('Mis cifras: el maestro ya no trae CIFRAS.ajustes'); return;
+  }
+  const C = global.window.CIFRAS, A = C.ajustes, malos = [];
+  const raiz = k => k.indexOf('SUPUESTOS.') === 0 ? C.PROYECCION.supuestos : C.PROYECTO;
+  const L = A.lista();
+  L.forEach(function (e) {
+    if (e.k.indexOf('meta:') === 0) { if (['ef-001', 'g001'].indexOf(e.k.slice(5)) < 0) malos.push(e.k + ': no es una meta conocida'); return; }
+    if (typeof e.valor !== 'number') { malos.push(e.k + ': no existe en el maestro o no es un número'); return; }
+    if (['peso', 'eur', 'tc', 'porc', 'tasa', 'num'].indexOf(e.t) < 0) malos.push(e.k + ': tipo desconocido ' + e.t);
+    if (e.k.indexOf('SALIDA.') === 0) {
+      const c = C.SALIDA.costos.filter(x => x.id === e.k.slice(7))[0], d = c && Object.getOwnPropertyDescriptor(c, 'eur' in c ? 'eur' : 'mxn');
+      if (!d || d.get) malos.push(e.k + ': es una cuenta, no una constante');
+      return;
+    }
+    const ruta = e.k.indexOf('SUPUESTOS.') === 0 ? e.k.split('.').slice(1) : e.k.split('.');
+    let o = raiz(e.k); for (let i = 0; i < ruta.length - 1; i++) o = o[ruta[i]];
+    const d = Object.getOwnPropertyDescriptor(o, ruta[ruta.length - 1]);
+    if (!d || d.get) malos.push(e.k + ': es una cuenta (getter), no una constante');
+  });
+  // Un cambio de verdad: la renta sube y se mueven los fijos; el ahorro se ajusta y todas las quincenas alcanzan.
+  const renta = C.n('renta'), c = A.cuadrar({ renta: renta + 2000 }), pv = A.previa(c);
+  if (!pv || !pv.movidas.some(m => m.k === 'fijosTotal')) malos.push('cambiar la renta ya no mueve los fijos en la vista previa');
+  else if (pv.quincenas.despues.faltan.length) malos.push('cuadrar la renta deja ' + pv.quincenas.despues.faltan.length + ' quincena(s) sin alcanzar');
+  if (C.n('renta') !== renta) malos.push('la vista previa no dejó la renta como estaba');
+  // Las páginas: ajustes-sync.js antes del maestro, en cada una.
+  const paginas = [];
+  (function recorre(dir) {
+    fs.readdirSync(path.join(RAIZ, dir), { withFileTypes: true }).forEach(function (f) {
+      const rel = dir ? dir + '/' + f.name : f.name;
+      if (f.isDirectory()) { if (!/^(\.|node_modules|diseno-)/.test(f.name)) recorre(rel); }
+      else if (/\.html$/.test(f.name)) paginas.push(rel);
+    });
+  })('');
+  let conMaestro = 0;
+  paginas.forEach(function (rel) {
+    const h = leer(rel), i = h.search(/<script src="(\.\.\/Dashboard\/)?datos-maestros\.js"><\/script>/);
+    if (i < 0) return;
+    conMaestro++;
+    const j = h.search(/<script src="(\.\.\/Dashboard\/)?ajustes-sync\.js"/);
+    if (j < 0 || j > i) malos.push(rel + ': carga el maestro sin cargar antes ajustes-sync.js (no vería lo que cambiaste en la PC)');
+  });
+  if (leer('Dashboard/habitos-exportar.js').indexOf("'ajustes-sync.js'") < 0) malos.push('habitos-exportar.js ya no escribe ajustes-sync.js');
+  const h = leer('Dashboard/cifras.html');
+  if (h.indexOf('data-pagina="cifras"') < 0 || h.indexOf('A.cuadrar(') < 0) malos.push('cifras.html perdió su prompt o el ajuste de las quincenas');
+  if (leer('Dashboard/dashboard.html').indexOf('id="pmCifras" href="cifras.html"') < 0) malos.push('el Plan Maestro del Dashboard ya no lleva a Mis cifras');
+  if (malos.length) { problemas.push('Mis cifras:\n     ' + malos.join('\n     ')); return; }
+  ok.push('Mis cifras: ' + L.length + ' cifras que cambias tú, en ' + conMaestro + ' páginas con ajustes-sync.js antes del maestro; subir la renta $2,000 mueve ' +
+    pv.movidas.length + ' cifras y cuadra ' + (Object.keys(c).length - 1) + ' ahorro(s)');
 })();
 
 // ── Salida ──

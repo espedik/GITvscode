@@ -20,6 +20,7 @@ en una página.
 | `dashboard.html` | La app: HTML, CSS y JS en un archivo (**1.7 MB**, ~16 800 líneas). Nunca se abre entero: este readme es el mapa |
 | `datos-maestros.js` | **Fuente única** de las variables del proyecto. Lo cargan también Coach y Finanzas |
 | `DATOS-MAESTROS.md` | Índice del proyecto: catálogo de variables, mapa de apps, cómo se corrige un saldo |
+| `cifras.html` · `ajustes-sync.js` | **Mis cifras**: las constantes del plan que cambias tú (ver *Mis cifras*, abajo), y las de la PC para tus otros dispositivos, que escribe el hook |
 | `verificar-sincronia.js` | Comprueba que nada se haya vuelto a duplicar. Lo corre un hook al final de cada turno; sale con código 1 si algo falla |
 | `habitos.js` | La pantalla de Hábitos entera: semilla, motor de rachas, migraciones, pintado y estilos |
 | `version.js` · `version-escribir.js` | La hora del último commit de esta copia (`window.APP_VERSION.commit`), que el hook de pre-commit escribe con `version-escribir.js` en cada commit; Mi Día la enseña junto a la semana (ver *Tu iPad y tu PC*) |
@@ -43,7 +44,7 @@ palabra del día y `../Aleman/lecciones-datos.js` —el catálogo de sus 41 lecc
 que se ve en su propia página dentro de la ventana del alemán. Se abre con `file://`, sin servidor ni build; los `<script src="…">` clásicos
 cargan con normalidad (los módulos ES no), y es lo que permite compartir archivos entre carpetas.
 
-Orden de carga: `sin-zoom.js` → `datos-maestros.js` → `ficha.js` → `habitos.js` → los tres del
+Orden de carga: `sin-zoom.js` → `ajustes-sync.js` → `datos-maestros.js` → `ficha.js` → `habitos.js` → los tres del
 examen → `../Aleman/vocab-datos.js` → `habilidades-base-practica.js` → `habilidades-base-visual.js` →
 `../Aleman/lecciones-datos.js`.
 
@@ -73,7 +74,7 @@ Todas comparten origen porque se abren con `file://`.
 forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
-y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases) y `plan_auditoria_sinc` (cuándo se tocó cada mes aquí, para traer la de la PC), `fin_resumen_v1` (lo que queda en la quincena, para `finanzas-sync.js`), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta), `dash_libromes_v1` (el libro del mes: el de ahora, los leídos y el que sigue si lo cambiaste),
+y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases) y `plan_auditoria_sinc` (cuándo se tocó cada mes aquí, para traer la de la PC), `fin_resumen_v1` (lo que queda en la quincena, para `finanzas-sync.js`), `maestro_ajustes_v1` (tus cifras de Mis cifras; la lee el maestro en todas las apps) y `cifras_guardado` (en `sessionStorage`: lo que acabas de guardar en Mis cifras, para decirlo tras recargar), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta), `dash_libromes_v1` (el libro del mes: el de ahora, los leídos y el que sigue si lo cambiaste),
 `habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-istqb-lado` (*Cómo vas* abierto o cerrado en la ventana del ISTQB, en ese dispositivo), `dash-aleman-resumen` (el resumen de la lección de *Alemán de hoy* abierto o cerrado, en ese dispositivo), `dash-noticias-v1` y `dash-precios-v1` (las últimas noticias y los últimos precios de *Qué invertir hoy* que llegaron de
 GitHub). Tu reparto no es clave propia: vive en Finanzas (`finanzasmx_v2.reparto`).
 
@@ -659,6 +660,39 @@ entrada y da falsos solapes de ~20 px: mirar el borde de layout o esperar a que 
 
 ---
 
+## Mis cifras — `cifras.html`
+
+Adán, 18-nov-2026: *"revisa qué cifras puedes ponerlas manualmente como editar o agregar, esto para ya no depender de
+Claude… si modificamos una, en general las demás se deben actualizar forzosamente"*. Una página aparte, con su prompt
+(`cifras`, el controller del modelo del plan), a la que llevan **🎚️ Mis cifras** del Plan Maestro y el 🎚️ de la barra
+de Finanzas. Qué se puede cambiar, su valor del plan y cómo se aplica viven en el maestro (`EDITABLES`, `CIFRAS.ajustes`;
+ver `DATOS-MAESTROS.md` → *Las clases de dato*): la página solo pinta y guarda.
+
+- **Arriba** (`#estado`): cuántas cifras son tuyas de las 50, cómo va cada quincena en su peor mes (*Día 1, con depa:
+  sobran $22 en su peor mes (dic 2026)*; en rojo la que no alcanza), las de un ajuste vencido y que lo de la PC llega
+  al iPad con el siguiente commit.
+- **Las cifras, por grupo** (`#grupos`): Lo que entra, Casa, Celular y suscripciones, Ahorro de cada quincena, Tu
+  gasto, Invertir, Metas, Tipo de cambio, Lo que cuesta irte, Allá, Salud y Alemán. Cada una con su nota, su valor y,
+  si es tuya, la etiqueta *tuya* y *el plan dice …*.
+- **Tocar una abre su editor** (`abrir`): el campo en su unidad —la tasa en %—, *Guardar*, *Volver al plan* si es
+  tuya y *Cancelar*. Al escribir sale la vista previa (`previa`): **lo que se ajusta para que cada quincena alcance**
+  (`A.cuadrar`, en ámbar), **lo que se mueve con ella** con su antes y su después (`A.previa`; `junioVeredicto` no
+  sale porque dice lo mismo que `junioCorto`) y si las cuatro quincenas alcanzan. Si lo que no cabe es la cifra que tú
+  cambiaste, se dice en rojo. Enter guarda y Escape cierra.
+- **Guardar** escribe tu cifra y lo que se cuadró con ella (`auto`) y recarga: el maestro aplica tus cifras al
+  cargar, como en cualquier app. Tras recargar, un aviso dice qué cambió (*✓ Guardado: Renta del depa $11,250 →
+  $12,000; El día 1, con depa $2,050 → $1,300*). **Volver al plan** es otro cambio con su vista previa: regresa la
+  cifra y sube el ahorro que había bajado con ella.
+- **Las metas** (`meta:ef-001`, `meta:g001`) se guardan en `finanzasmx_v2`: solo donde está Finanzas; en el iPad
+  dicen *se cambia en tu PC*.
+- **Abajo, tres cajas**: *Se calculan solas* (`#derivadas`: cada derivada con nombre y de qué sale), *Se cambian en su
+  app* (deudas, fondo, inversiones, Bitcoin, movimientos, hábitos) y *Todavía con Claude* (las fechas del plan, los
+  precios del súper y un ingreso o gasto nuevo, con el porqué).
+
+Medido: renta a $12,000 → el ahorro del día 1 baja a $1,300, se mueven 12 cifras y el Dashboard, Coach y Finanzas leen
+lo mismo al abrirse; *Volver al plan* deja 0 cifras tuyas y el ahorro en $2,050. La vista previa tarda 43 ms. Sin
+desbordes a 1600, en el iPad Pro 11 y a 390. El control 55 vigila las piezas.
+
 ## La barra de apps
 
 Cada app lleva un **SVG de trazo** de 24×24 (`QA_ICO`), mismo grosor y terminaciones; los emojis
@@ -820,7 +854,9 @@ sin desbordes ni errores, y Finanzas enseña el mismo reparto que se guardó aqu
 
 ## El tablero del Plan Maestro
 
-La pantalla 2, de arriba abajo: su rótulo pequeño, *Coach · Plan Maestro*; **la ruta de las cinco fases**; **el mes en
+La pantalla 2, de arriba abajo: su rótulo pequeño, *Coach · Plan Maestro*, con **🎚️ Mis cifras** a la derecha
+(`#pmCifras`, `.pm-cifras`: lleva a `cifras.html`; va aquí y no en la barra de apps, que a 1600 px y desde 1806 px ya no
+tiene sitio para otra píldora); **la ruta de las cinco fases**; **el mes en
 curso**; **los seis medidores** del dinero, y tres columnas: **el mes, el día que toques y la semana a la que
 pertenece**. Diseño: Main de `diseno-planmaestro/` (Adán, 22-oct-2026: *"el diseño de las fases del dashboard no me
 gusta porque no me muestra info útil… arregla todo el diseño, deja el calendario y lo de las cifras"*). **Todo lo de
@@ -2166,6 +2202,11 @@ nada desde la última vez, queda **igual a la PC** —también lo desmarcado—;
 **funde** como el código de Sincronizar, sin perder nada. El **control 39** del verificador vigila las
 piezas. El repositorio es público: lo que viaja ahí —los nombres de los hábitos y sus marcas— se puede
 leer sin sesión, como `datos-maestros.js`.
+
+**Y tus cifras de Mis cifras**: el mismo exportador lee `maestro_ajustes_v1` y escribe `ajustes-sync.js`
+(`window.AJUSTES_SYNC = {exportado, valores}`, una cifra por línea, con su valor, el del plan y cuándo; una devuelta al
+plan viaja como `quitado`). Cada página que carga el maestro lo carga antes, y por cifra gana el cambio más reciente:
+el de la PC o el del iPad. Lo que cambias en el iPad no sube solo: se queda ahí.
 
 **La auditoría de cada mes viaja igual** (Adán, 1-nov-2026: *"sube los datos de mis hábitos y auditoría"*).
 El mismo `habitos-exportar.js` lee `plan_auditoria_v1` y escribe `auditoria-sync.js`

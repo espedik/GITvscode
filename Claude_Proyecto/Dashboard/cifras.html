@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis cifras</title>
+<!--
+  MIS CIFRAS · las cifras del plan que Adán cambia solo, sin pedírselo a Claude.
+
+  Adán, 18-nov-2026: "revisa qué cifras puedes ponerlas manualmente como editar o agregar, esto para ya no depender
+  de Claude… si modificamos una, en general las demás se deben actualizar forzosamente". Qué se puede cambiar, su valor
+  del plan y cómo se aplica viven en el maestro (`EDITABLES` y `CIFRAS.ajustes` en datos-maestros.js); aquí solo hay
+  molde, CSS y comportamiento. Antes de guardar se enseña todo lo que se mueve (`previa`) y, si una quincena deja de
+  alcanzar, el ahorro de esa quincena se ajusta con el cambio (`cuadrar`). El mapa: readme_dashboard.md → Mis cifras.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
+<style>
+/* ── Tokens: los del Dashboard ── */
+:root{
+  --bg:#05050a; --bg2:#0b0b14; --text:#f4f4f8; --text2:#9a9db3; --text3:#8589a8;
+  --ov:255,255,255; --card:rgba(var(--ov),.045); --br:rgba(var(--ov),.1);
+  --font:'Inter',-apple-system,sans-serif; --mono:'Space Grotesk',monospace; --title:'Fraunces',Georgia,serif;
+  --ok:#00e87a; --warn:#ffb63d; --bad:#ff5c5c; --cy:#22d3e6; --ac:#10b981;
+}
+:root[data-theme="light"]{
+  --bg:#f2f2f6; --bg2:#ffffff; --text:#16161a; --text2:#5c5f70; --text3:#63667c;
+  --ov:0,0,0; --card:rgba(255,255,255,.85); --br:rgba(var(--ov),.1);
+  --ok:#00a758; --warn:#a8790a; --bad:#c81e3a; --cy:#07707c; --ac:#047857;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.55;
+  background-image:radial-gradient(1100px 560px at 90% -10%,rgba(16,185,129,.13),transparent 60%),
+                   radial-gradient(900px 500px at -10% 25%,rgba(34,211,230,.07),transparent 60%);background-attachment:fixed}
+a{color:var(--cy)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono)}
+
+/* ── Cabecera ── */
+header.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;padding:12px 24px;
+  background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--br)}
+.marca{display:flex;align-items:baseline;gap:10px;font-weight:800;letter-spacing:-.01em}
+.marca small{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)}
+.top nav{margin-left:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.top nav a,.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:34px;padding:0 12px;border-radius:9px;
+  border:1px solid var(--br);background:var(--card);color:var(--text2);font:inherit;font-size:13px;font-weight:600;text-decoration:none;cursor:pointer}
+.top nav a:hover,.btn:hover{color:var(--text);border-color:rgba(var(--ov),.24)}
+.btn.pri{background:var(--ac);border-color:var(--ac);color:#fff}
+.btn.pri:hover{filter:brightness(1.08);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* ── Arriba ── */
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px;align-items:end;padding:36px 0 18px}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ac)}
+h1{font-family:var(--title);font-size:clamp(32px,4.6vw,54px);line-height:1.03;letter-spacing:-.02em;margin:10px 0 12px}
+h2{font-family:var(--title);font-size:clamp(22px,2.4vw,30px);line-height:1.1;margin:0 0 4px}
+.sub{color:var(--text2);margin:0;max-width:680px}
+.estado{padding:16px 18px;border-radius:16px;background:var(--card);border:1px solid var(--br);display:flex;flex-direction:column;gap:10px}
+.estado-n{display:flex;align-items:baseline;gap:10px}
+.estado-n b{font-family:var(--title);font-size:40px;line-height:1}
+.estado-n span{color:var(--text2);font-size:14px}
+.estado p{margin:0;font-size:13px;color:var(--text2)}
+.q-lista{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.q{font-size:12.5px;padding:6px 9px;border-radius:9px;background:rgba(var(--ov),.035);border:1px solid var(--br);color:var(--text2)}
+.q b{color:var(--text);font-weight:700}
+.q.mal{border-color:color-mix(in srgb,var(--bad) 55%,transparent);color:var(--bad)}
+.q.mal b{color:var(--bad)}
+.vencidos{margin:0;padding:10px 12px;border-radius:10px;border:1px solid color-mix(in srgb,var(--warn) 50%,transparent);color:var(--warn);font-size:13px}
+.aviso{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:40;max-width:min(680px,calc(100vw - 32px));padding:12px 16px;border-radius:12px;
+  background:var(--bg2);border:1px solid color-mix(in srgb,var(--ok) 55%,transparent);box-shadow:0 18px 50px rgba(0,0,0,.35);font-size:14px}
+.aviso[hidden]{display:none}
+
+/* ── Las cifras ── */
+.grupos{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px;padding:8px 0 10px;align-items:start}
+.grupo{background:var(--card);border:1px solid var(--br);border-radius:16px;padding:14px 14px 8px}
+.grupo h3{margin:0 4px 8px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.fila{border-top:1px solid var(--br)}
+.fila:first-of-type{border-top:0}
+.fila-b{display:flex;align-items:center;gap:12px;width:100%;padding:10px 6px;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;border-radius:10px}
+.fila-b:hover{background:rgba(var(--ov),.04)}
+.fila-t{flex:1;min-width:0}
+.fila-t b{display:block;font-size:14.5px;font-weight:600}
+.fila-t small{display:block;font-size:12px;color:var(--text3);line-height:1.4}
+.fila-v{text-align:right;flex:none}
+.fila-v b{font-family:var(--mono);font-size:16px;font-weight:700}
+.fila-v small{display:block;font-size:11.5px;color:var(--text3)}
+.tuya{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ac);border:1px solid color-mix(in srgb,var(--ac) 50%,transparent);vertical-align:2px}
+.fila.abierta .fila-b{background:rgba(var(--ov),.05)}
+
+/* ── El editor ── */
+.ed{padding:4px 6px 14px}
+.ed-in{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ed-campo{display:flex;align-items:center;flex:1;min-width:150px;border:1px solid rgba(var(--ov),.22);border-radius:10px;background:var(--bg2);padding:0 10px}
+.ed-campo span{color:var(--text3);font-family:var(--mono);font-weight:700}
+.ed-campo input{flex:1;min-width:0;border:0;background:none;color:var(--text);font:inherit;font-family:var(--mono);font-size:18px;font-weight:700;padding:9px 6px;outline:none}
+.ed-campo:focus-within{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 22%,transparent)}
+.ed-err{margin:8px 0 0;color:var(--bad);font-size:13px}
+.mueve{margin-top:12px}
+.mueve h4{margin:0 0 6px;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.mueve ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px}
+.mueve li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;font-size:13px;padding:5px 8px;border-radius:8px;background:rgba(var(--ov),.03)}
+.mueve li span{color:var(--text2)}
+.mueve li em{font-style:normal;font-family:var(--mono);font-size:12.5px;text-align:right;margin-left:auto}
+.mueve li em s{color:var(--text3);text-decoration:line-through}
+.mueve li.ajusta{background:color-mix(in srgb,var(--warn) 12%,transparent)}
+.mueve li.ajusta span{color:var(--text)}
+.nota-q{margin:10px 0 0;font-size:13px;padding:8px 10px;border-radius:9px}
+.nota-q.mal{color:var(--bad);border:1px solid color-mix(in srgb,var(--bad) 50%,transparent)}
+.nota-q.bien{color:var(--text2);border:1px solid var(--br)}
+.nada{margin:10px 0 0;font-size:13px;color:var(--text3)}
+
+/* ── Abajo: lo que no se cambia aquí ── */
+.abajo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;padding:22px 0 60px}
+.caja{min-width:0;overflow-wrap:anywhere}
+.caja{background:var(--card);border:1px solid var(--br);border-radius:16px;padding:16px 18px}
+.caja h2{font-size:22px}
+.caja > p{margin:0 0 10px;color:var(--text2);font-size:13.5px}
+.caja ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.caja li{font-size:13px;color:var(--text2);padding:7px 9px;border-radius:9px;background:rgba(var(--ov),.03)}
+.caja li b{color:var(--text)}
+.deriv{display:flex;justify-content:space-between;gap:10px}
+.deriv em{font-style:normal;font-family:var(--mono);font-weight:700;color:var(--text);white-space:nowrap}
+.deriv small{display:block;color:var(--text3);font-size:11.5px}
+
+@media (max-width:1000px){
+  .hero{grid-template-columns:1fr;align-items:start}
+  .abajo{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  header.top{padding:10px 16px}
+  .marca small{display:none}
+  .top nav a span{display:none}
+  .grupos{grid-template-columns:1fr}
+  .q-lista{grid-template-columns:1fr}
+  .fila-v b{font-size:15px}
+}
+</style>
+<script>
+(function(){
+  // Comparte el tema con el Dashboard, Coach y Finanzas: misma clave, mismo criterio.
+  var saved=null; try{ saved=localStorage.getItem('coach-theme'); }catch(e){}
+  var theme=saved||((window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark');
+  document.documentElement.setAttribute('data-theme',theme);
+})();
+</script>
+</head>
+<body>
+<header class="top">
+  <div class="marca">Mis cifras <small>las de tu plan</small></div>
+  <nav aria-label="Ir a">
+    <a href="dashboard.html" title="Volver al Dashboard">← <span>Dashboard</span></a>
+    <a href="../Finanzas/Finanzas.html" title="Saldos, deudas, inversiones y movimientos"><span>Finanzas</span><b aria-hidden="true" class="mono">$</b></a>
+    <button type="button" class="btn" id="btnTema" onclick="cambiarTema()">☀️ Claro</button>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Sin pedírselo a Claude</div>
+      <h1>Cambia un número y todo el plan se mueve con él</h1>
+      <p class="sub">Aquí cambias tú las cifras de base: tu sueldo, Didi, los gastos fijos, el ahorro de cada quincena, lo que
+        cuesta irte y tus metas. Antes de guardar ves todo lo que se mueve con ella; si una quincena deja de alcanzar, el
+        ahorro de esa quincena baja con el cambio. Al guardar, todas las apps lo usan.</p>
+    </div>
+    <div class="estado" id="estado" aria-live="polite"></div>
+  </section>
+
+  <section aria-label="Las cifras que cambias aquí">
+    <div class="grupos" id="grupos"></div>
+  </section>
+
+  <section class="abajo" aria-label="Lo que no se cambia aquí">
+    <div class="caja">
+      <h2>Se calculan solas</h2>
+      <p>No se escriben: salen de las de arriba. Cambia la de la que salen y se mueven.</p>
+      <ul id="derivadas"></ul>
+    </div>
+    <div class="caja">
+      <h2>Se cambian en su app</h2>
+      <p>Son saldos que se mueven cada día con lo que anotas: viven donde se anotan.</p>
+      <ul>
+        <li><b>Deudas y tarjetas</b> — saldo, mínimo, tasa y día de pago: <a href="../Finanzas/Finanzas.html">Finanzas → Deudas</a>. Una compra o un pago anotado la mueve solo.</li>
+        <li><b>Fondo de emergencia</b> — aportaciones y retiros: el panel del fondo en el <a href="dashboard.html">Dashboard</a> o Finanzas.</li>
+        <li><b>Inversiones y compras</b> — Total invertido del <a href="dashboard.html">Dashboard</a> o Finanzas → Inversiones.</li>
+        <li><b>Bitcoin</b> — cada compra, en Finanzas → Bitcoin.</li>
+        <li><b>Gastos e ingresos del día</b> — Finanzas → Transacciones.</li>
+        <li><b>Hábitos, auditoría del mes y tareas</b> — en el Dashboard.</li>
+      </ul>
+    </div>
+    <div class="caja">
+      <h2>Todavía con Claude</h2>
+      <p>Llevan texto escrito encima: cambiar el número dejaría el plan diciendo otra cosa.</p>
+      <ul>
+        <li><b>Las fechas del plan</b> — la salida a Alemania, el día de decidir, la entrega del depa y los cierres de cada fase: las fases están escritas sobre ellas.</li>
+        <li><b>Los precios del súper y las recetas</b> — de ahí sale lo que cuesta comer al mes.</li>
+        <li><b>Un ingreso o un gasto nuevo</b> — necesita su día en el calendario y su renglón en el plan.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<div class="aviso" id="aviso" role="status" hidden></div>
+
+<script src="ajustes-sync.js" onerror="this.remove()"></script>
+<script src="datos-maestros.js"></script>
+<script>
+'use strict';
+const C = window.CIFRAS, A = C && C.ajustes;
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const AVISO_KEY = 'cifras_guardado';
+let abierta = null, tPrev = 0;
+
+// Cómo se ve y se escribe cada tipo: el input va en la unidad que conoces (la tasa, en %).
+const TIPO = {
+  peso:  { pre: '$', ver: x => '$' + Math.round(x).toLocaleString('es-MX'), aIn: x => x, deIn: x => x, paso: 50 },
+  eur:   { pre: '€', ver: x => '€' + Math.round(x).toLocaleString('es-MX'), aIn: x => x, deIn: x => x, paso: 10 },
+  tc:    { pre: '$', ver: x => '$' + (+x).toFixed(2), aIn: x => x, deIn: x => x, paso: 0.05 },
+  porc:  { pre: '%', ver: x => x + ' %', aIn: x => x, deIn: x => x, paso: 1 },
+  tasa:  { pre: '%', ver: x => (x * 100).toLocaleString('es-MX', { maximumFractionDigits: 2 }) + ' %', aIn: x => +(x * 100).toFixed(2), deIn: x => +(x / 100).toFixed(4), paso: 0.5 },
+  num:   { pre: '#', ver: (x, e) => Math.round(x).toLocaleString('es-MX') + (e.u ? ' ' + e.u : ''), aIn: x => x, deIn: x => x, paso: 1 },
+};
+const ver = (e, x) => x == null || x === '' || isNaN(x) ? '—' : TIPO[e.t].ver(+x, e);
+const finanzasAqui = () => { try { return !!localStorage.getItem('finanzasmx_v2'); } catch (x) { return false; } };
+const lista = () => A.lista();
+const porK = k => lista().filter(e => e.k === k)[0];
+const nombre = k => (porK(k) || {}).txt || C.NOMBRES[k] || k;
+const ETAPA = { depa1: 'Día 1, con depa', depa15: 'Día 15, con depa', casa1: 'Día 1, en casa', casa15: 'Día 15, en casa' };
+const mesTxt = ym => { const p = ym.split('-'); return new Date(+p[0], +p[1] - 1, 1).toLocaleDateString('es-MX', { month: 'short', year: 'numeric' }); };
+
+/* ── Arriba: cuántas cifras tuyas hay y si las quincenas alcanzan ── */
+function pintarEstado(){
+  const L = lista(), tuyas = L.filter(e => e.tuyo), venc = L.filter(e => e.vencido), Q = C.quincenas();
+  const qs = Object.keys(ETAPA).filter(k => Q.peor[k]).map(k => {
+    const x = Q.peor[k], mal = x.sobra < 0;
+    return `<div class="q${mal ? ' mal' : ''}">${ETAPA[k]}: <b>${mal ? 'no alcanza por $' + Math.round(-x.sobra).toLocaleString('es-MX') : 'sobran $' + Math.round(x.sobra).toLocaleString('es-MX')}</b> en su peor mes (${mesTxt(x.mes)})</div>`;
+  }).join('');
+  $('estado').innerHTML =
+    `<div class="estado-n"><b>${tuyas.length}</b><span>${tuyas.length === 1 ? 'cifra cambiada por ti' : 'cifras cambiadas por ti'} de ${L.length} que puedes cambiar</span></div>` +
+    `<p>Cada quincena, lo que le queda después de fijos, comida y tu gasto, contra lo que manda a ahorrar:</p><div class="q-lista">${qs}</div>` +
+    (venc.length ? `<p class="vencidos">El plan cambió después de tu ajuste en ${venc.map(e => esc(e.txt)).join(', ')}: manda el plan. Vuelve a ponerla si la quieres distinta.</p>` : '') +
+    `<p>Lo que cambias en la PC llega al iPad con tu siguiente commit; lo que cambias en el iPad se queda en el iPad.</p>`;
+}
+
+/* ── Las cifras, por grupo ── */
+function filaHtml(e){
+  const meta = e.k.indexOf('meta:') === 0;
+  const extra = e.tuyo ? `<small>el plan dice ${ver(e, e.plan)}</small>` : meta && !finanzasAqui() ? '<small>se cambia en tu PC</small>' : '';
+  return `<div class="fila${abierta === e.k ? ' abierta' : ''}" data-k="${esc(e.k)}">
+    <button type="button" class="fila-b" onclick="abrir('${esc(e.k)}')" aria-expanded="${abierta === e.k}">
+      <span class="fila-t"><b>${esc(e.txt)}${e.tuyo ? '<span class="tuya">tuya</span>' : ''}</b>${e.nota ? `<small>${esc(e.nota)}</small>` : ''}</span>
+      <span class="fila-v"><b>${ver(e, e.valor)}</b>${extra}</span>
+    </button>
+    ${abierta === e.k ? edHtml(e) : ''}
+  </div>`;
+}
+function pintarGrupos(){
+  const L = lista(), gs = [];
+  L.forEach(e => { if (gs.indexOf(e.g) < 0) gs.push(e.g); });
+  $('grupos').innerHTML = gs.map(g => `<div class="grupo"><h3>${esc(g)}</h3>${L.filter(e => e.g === g).map(filaHtml).join('')}</div>`).join('');
+}
+
+/* ── El editor de una cifra: escribe, mira qué se mueve, guarda ── */
+function edHtml(e){
+  const meta = e.k.indexOf('meta:') === 0, T = TIPO[e.t], bloq = meta && !finanzasAqui();
+  return `<div class="ed">
+    <div class="ed-in">
+      <label class="ed-campo"><span>${T.pre}</span><input id="edIn" type="number" inputmode="decimal" step="${T.paso}" min="0"${e.max != null ? ` max="${T.aIn(e.max)}"` : ''}
+        value="${e.valor == null ? '' : T.aIn(e.valor)}" aria-label="${esc(e.txt)}" oninput="previa()" onkeydown="if(event.key==='Enter')guardar();if(event.key==='Escape')abrir(null)"${bloq ? ' disabled' : ''}></label>
+      <button type="button" class="btn pri" id="edOk" onclick="guardar()" disabled>Guardar</button>
+      ${e.tuyo ? `<button type="button" class="btn" onclick="volverPlan()">Volver al plan (${ver(e, e.plan)})</button>` : ''}
+      <button type="button" class="btn" onclick="abrir(null)">Cancelar</button>
+    </div>
+    <div id="edMas" aria-live="polite">${bloq ? '<p class="nada">Esta meta vive en Finanzas, que está en tu PC: cámbiala allá y llega aquí con tu siguiente commit.</p>' : '<p class="nada">Escribe el valor nuevo y aquí sale todo lo que se mueve con él.</p>'}</div>
+  </div>`;
+}
+function abrir(k){
+  abierta = abierta === k ? null : k;
+  pintarGrupos();
+  const i = $('edIn'); if (i && !i.disabled) { i.focus(); i.select(); }
+}
+function leerIn(){
+  const e = porK(abierta), i = $('edIn'); if (!e || !i || i.value.trim() === '') return null;
+  return { e: e, x: TIPO[e.t].deIn(+i.value) };
+}
+// Los cambios que se guardarían: el tuyo y, si una quincena deja de alcanzar, el ahorro de esa quincena.
+function cambiosDe(e, x){ const o = {}; o[e.k] = x; return e.k.indexOf('meta:') === 0 ? o : A.cuadrar(o); }
+let PEND = null;
+function previa(){
+  clearTimeout(tPrev);
+  tPrev = setTimeout(function () {
+    const r = leerIn(), box = $('edMas'), ok = $('edOk'); PEND = null; ok.disabled = true;
+    if (!r) { box.innerHTML = '<p class="nada">Escribe el valor nuevo y aquí sale todo lo que se mueve con él.</p>'; return; }
+    const { e, x } = r;
+    if (x === e.valor) { box.innerHTML = '<p class="nada">Es el valor que ya tiene.</p>'; return; }
+    if (e.k.indexOf('meta:') === 0) {
+      PEND = cambiosDe(e, x); ok.disabled = false;
+      box.innerHTML = `<p class="nada">La meta pasa de ${ver(e, e.valor)} a ${ver(e, x)}: se guarda en Finanzas y la leen el Dashboard, Coach y los indicadores.</p>`;
+      return;
+    }
+    const cambios = cambiosDe(e, x), p = A.previa(cambios);
+    if (!p) { box.innerHTML = `<p class="ed-err">Ese valor no cabe${e.max != null ? ': va de 0 a ' + ver(e, e.max) : ''}.</p>`; return; }
+    PEND = cambios; ok.disabled = false;
+    const ajustes = Object.keys(cambios).filter(k => k !== e.k);
+    // `junioVeredicto` dice lo mismo que `junioCorto` con más palabras: con uno basta.
+    const filas = p.movidas.filter(m => m.k !== e.k && ajustes.indexOf(m.k) < 0 && m.k !== 'junioVeredicto');
+    const qd = p.quincenas.despues, malas = Object.keys(qd.peor).filter(k => qd.peor[k].sobra < 0);
+    box.innerHTML =
+      (ajustes.length ? `<div class="mueve"><h4>Para que cada quincena alcance, se ajusta con tu cambio</h4><ul>${ajustes.map(k => {
+        const a = porK(k); return `<li class="ajusta"><span>${esc(nombre(k))}</span><em><s>${ver(a, a.valor)}</s> → ${ver(a, cambios[k])}</em></li>`; }).join('')}</ul></div>` : '') +
+      (filas.length ? `<div class="mueve"><h4>Se mueve con ella · ${filas.length}</h4><ul>${filas.map(m =>
+        `<li><span>${esc(m.txt)}</span><em><s>${esc(m.antes)}</s> → ${esc(m.despues)}</em></li>`).join('')}</ul></div>`
+        : '<p class="nada">No mueve ninguna otra cifra del plan: la usa la app donde aparece.</p>') +
+      (malas.length ? `<p class="nota-q mal">${malas.map(k => ETAPA[k] + ' no alcanza por $' + Math.round(-qd.peor[k].sobra).toLocaleString('es-MX') + ' en ' + mesTxt(qd.peor[k].mes)).join('; ')}. Es la cifra que cambiaste: si la guardas así, esa quincena vive del sobrante de la otra.</p>`
+        : `<p class="nota-q bien">Las cuatro quincenas alcanzan con este cambio.</p>`);
+  }, 160);
+}
+function guardar(){
+  const r = leerIn(); if (!r || !PEND) return;
+  const antes = Object.keys(PEND).map(k => { const e = porK(k); return { k: k, txt: e.txt, de: ver(e, e.valor), a: ver(e, PEND[k]) }; });
+  for (const k of Object.keys(PEND)) {
+    const err = A.guardar(k, PEND[k], k !== r.e.k);
+    if (err) { $('edMas').insertAdjacentHTML('afterbegin', `<p class="ed-err">${esc(err)}</p>`); return; }
+  }
+  try { sessionStorage.setItem(AVISO_KEY, JSON.stringify(antes)); } catch (x) {}
+  // Se recarga: el maestro aplica tus cifras al cargar, igual que en cualquier otra app.
+  location.reload();
+}
+// Volver al plan es un cambio más: pone el valor del plan, enseña lo que se mueve —y el ahorro que regresa— y guardas.
+function volverPlan(){
+  const e = porK(abierta), i = $('edIn'); if (!e || !i) return;
+  i.value = TIPO[e.t].aIn(e.plan); previa(); i.focus();
+}
+
+/* ── Lo que se calcula solo, con de dónde sale ── */
+function pintarDerivadas(){
+  const L = lista(), base = L.map(e => e.k);
+  const ks = C.claves().filter(k => C.NOMBRES[k] && C.dep(k).length && base.indexOf(k) < 0);
+  $('derivadas').innerHTML = ks.map(k => `<li class="deriv"><span>${esc(C.NOMBRES[k])}<small>sale de ${C.dep(k).filter(d => d.charAt(0) !== '*').map(nombre).map(esc).join(', ') || 'tus deudas'}</small></span><em>${esc(C.v(k))}</em></li>`).join('');
+}
+
+/* ── Lo que acabas de guardar, ya aplicado ── */
+function pintarAviso(){
+  let a = null; try { a = JSON.parse(sessionStorage.getItem(AVISO_KEY) || 'null'); sessionStorage.removeItem(AVISO_KEY); } catch (x) {}
+  if (!a || !a.length) return;
+  const el = $('aviso');
+  el.innerHTML = '✓ Guardado: ' + a.map(x => `<b>${esc(x.txt)}</b> ${esc(x.de)} → ${esc(x.a)}`).join('; ') + '. Ya lo usan todas las apps.';
+  el.hidden = false; setTimeout(() => { el.hidden = true; }, 7000);
+}
+
+/* ── Tema ── */
+function cambiarTema(){
+  const t = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  try { localStorage.setItem('coach-theme', t); } catch (x) {}
+  pintarTema();
+}
+function pintarTema(){ $('btnTema').textContent = document.documentElement.getAttribute('data-theme') === 'light' ? '🌙 Oscuro' : '☀️ Claro'; }
+
+if (A) { pintarEstado(); pintarGrupos(); pintarDerivadas(); pintarAviso(); }
+else $('grupos').innerHTML = '<p class="ed-err">No cargó el maestro (datos-maestros.js).</p>';
+pintarTema();
+</script>
+<script src="prompt-pagina.js" data-pagina="cifras" data-host="header.top"></script>
+</body>
+</html>

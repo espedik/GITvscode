@@ -261,9 +261,9 @@ mensualidad daba años de menos—, en Deudas, Indicadores y la hoja de ruta, y 
 La sección «Metas de ahorro» **se quitó** (Adán, 21-sep-2026: *"bórrala"*). Los registros `goals`
 siguen y los leen los indicadores, el Dashboard y el Coach: `ef-001` (el fondo de emergencia, que
 son los CETES; se edita desde el bloque de CETES del plan GBM con `setEmergencyFund`, que la
-sincroniza) y `g001` (la maestría: su `target` vive en el maestro como `{{maestriaMeta}}` y su
-`current` es una foto vieja que ya nadie lee, el fondo se compone en vivo). `init()` sigue creando
-`ef-001` si falta.
+sincroniza) y `g001` (la maestría: su `current` es una foto vieja que ya nadie lee, el fondo se compone
+en vivo). El `target` de las dos se cambia en Mis cifras (`../Dashboard/cifras.html`, grupo Metas), que lo escribe aquí
+en `finanzasmx_v2`. `init()` sigue creando `ef-001` si falta.
 
 ---
 
@@ -598,7 +598,8 @@ Toggle 🌙/☀️ persistido en **`coach-theme`**, la misma clave que Coach y e
 como `data-theme` en `<html>` antes de pintar. Se verifica a **1600 y 390 px**: sidebar tras ☰
 bajo 640 px, tablas con scroll interno, KPIs a una columna, nunca scroll horizontal. El enlace al
 Dashboard (`#btnVolverDash`, 🚀) es un botón `.theme-toggle-btn` en `.topbar-actions`, nunca
-flotante.
+flotante; a su izquierda, 🎚️ (`#btnCifras`) lleva a Mis cifras (`../Dashboard/cifras.html`), donde se cambian el
+sueldo, los fijos, el ahorro de cada quincena y las metas.
 
 ---
 
