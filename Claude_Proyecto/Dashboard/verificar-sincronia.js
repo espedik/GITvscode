@@ -3311,6 +3311,48 @@ function promptsDeLoTocado() {
     ' con su frase textual del programa y su página');
 })();
 
+/* ── 54. Alemán de hoy: todas las lecciones, su resumen, la tabla de los casos y más de cada palabra ─────────────────
+   Adán, 18-nov-2026: "es necesario poner un botón para que te de todas las lecciones disponibles… necesito mucha más
+   información en cada sección". Cada lección trae su resumen (qué aprendes, la regla con ejemplos, los errores típicos)
+   en `Aleman/lecciones-resumen.js`; las palabras, sus ejemplos de más, familia y gramática en `Aleman/vocab-mas.js`.
+   Aquí: que no falte el resumen de ninguna lección, que cada clave de vocab-mas sea una palabra real del vocabulario, y
+   que el Dashboard siga cargando y pintando las piezas. */
+(function () {
+  const malos = [];
+  let C, R, V, M;
+  try {
+    C = require('../Aleman/lecciones-datos.js'); R = require('../Aleman/lecciones-resumen.js');
+    V = require('../Aleman/vocab-datos.js'); M = require('../Aleman/vocab-mas.js');
+  } catch (e) { problemas.push('Alemán de hoy: no cargan el resumen de las lecciones o vocab-mas (' + e.message + ')'); return; }
+  const ids = C.lista.map(l => l.id);
+  ids.forEach(id => {
+    const r = R[id];
+    if (!r) { malos.push(id + ': sin resumen en lecciones-resumen.js'); return; }
+    if (!r.aprendes || !Array.isArray(r.regla) || r.regla.length < 2 || !Array.isArray(r.errores) || r.errores.length < 2)
+      malos.push(id + ': su resumen no trae qué aprendes, al menos 2 reglas y 2 errores típicos');
+  });
+  Object.keys(R).forEach(id => { if (ids.indexOf(id) < 0) malos.push('lecciones-resumen.js trae ' + id + ', que no es una lección'); });
+  const des = new Set(V.voc.map(w => w.de));
+  Object.keys(M).forEach(k => {
+    const e = M[k];
+    V.voc.filter(w => w.de === k).forEach(w => { if ((e.ej || []).some(x => x[0] === w.ex))
+      malos.push('vocab-mas.js: «' + k + '» repite como ejemplo de más el que ya trae la tarjeta'); });
+    if (!des.has(k)) malos.push('vocab-mas.js: «' + k + '» no es una palabra de vocab-datos.js (la clave es su `de` exacto)');
+    if (!e.ej || e.ej.length < 2 || e.ej.some(x => !Array.isArray(x) || x.length !== 2 || !x[0] || !x[1]))
+      malos.push('vocab-mas.js: «' + k + '» no trae sus 2 ejemplos [alemán, español]');
+    if (!e.gram) malos.push('vocab-mas.js: «' + k + '» sin su nota de gramática');
+  });
+  const h = leer('Dashboard/dashboard.html');
+  ['<script src="../Aleman/lecciones-resumen.js"></script>', '<script src="../Aleman/vocab-mas.js"></script>',
+   'function alemanTodasHtml(', 'function alemanResHtml(', 'function alemanCasosTablaHtml(', 'function alemanMasHtml(',
+   'id="alemanTodas"', 'id="alemanRes"', 'id="alemanCasosTabla"']
+    .forEach(c => { if (h.indexOf(c) < 0) malos.push('dashboard.html perdió ' + c); });
+  if (malos.length) { problemas.push('Alemán de hoy (lecciones, resumen, casos y vocabulario de más):\n     ' + malos.slice(0, 15).join('\n     ')); return; }
+  const cubre = V.voc.filter(w => M[w.de]).length;
+  ok.push('Alemán de hoy: las ' + ids.length + ' lecciones con su resumen; ' + cubre + ' de ' + V.voc.length +
+    ' palabras con ejemplos de más, familia y gramática');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

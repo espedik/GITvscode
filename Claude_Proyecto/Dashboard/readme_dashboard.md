@@ -74,7 +74,7 @@ forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
 y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases) y `plan_auditoria_sinc` (cuándo se tocó cada mes aquí, para traer la de la PC), `fin_resumen_v1` (lo que queda en la quincena, para `finanzas-sync.js`), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta), `dash_libromes_v1` (el libro del mes: el de ahora, los leídos y el que sigue si lo cambiaste),
-`habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-istqb-lado` (*Cómo vas* abierto o cerrado en la ventana del ISTQB, en ese dispositivo), `dash-noticias-v1` y `dash-precios-v1` (las últimas noticias y los últimos precios de *Qué invertir hoy* que llegaron de
+`habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-istqb-lado` (*Cómo vas* abierto o cerrado en la ventana del ISTQB, en ese dispositivo), `dash-aleman-resumen` (el resumen de la lección de *Alemán de hoy* abierto o cerrado, en ese dispositivo), `dash-noticias-v1` y `dash-precios-v1` (las últimas noticias y los últimos precios de *Qué invertir hoy* que llegaron de
 GitHub). Tu reparto no es clave propia: vive en Finanzas (`finanzasmx_v2.reparto`).
 
 ---
@@ -505,7 +505,11 @@ palabra —el formulario con su lápiz, la firma, el sello de la cita—, que an
 más baja a 21 px y de 20 o más a 17 (`alemanLargo()`), para caber entera junto al ícono: a 2048, 1600, 1366 y 390 px
 ninguna se parte a media palabra. Sigue su gramática (el plural, o
 las tres formas del verbo con su auxiliar, el régimen, el comparativo, lo raro), el ejemplo traducido y, si lo
-tiene, el uso o fallo típico (*Ojo*). Las tarjetas toman el alto que sobra: a 2048×1040 van cinco por fila y
+tiene, el uso o fallo típico (*Ojo*). Debajo, **lo de más de la palabra** (`alemanMasHtml()`, de `ALEMAN_VOCAB_MAS` en
+`../Aleman/vocab-mas.js`; Adán, 18-nov-2026: *"necesito mucha más información en cada sección"*): dos ejemplos más
+con su audio, *Se dice así* (con qué se combina), *Familia* (palabras de su raíz, sinónimos o contrarios) y
+*Gramática*, una nota de una línea. Lo traen hoy las 132 palabras de Trámites, Piso, Dinero y Salud, los temas que
+salen primero; una palabra sin entrada se ve como antes. Las tarjetas toman el alto que sobra: a 2048×1040 van cinco por fila y
 caben las diez sin desplazar. Al pie, **el repaso de hoy**: lo que ya salió y toca, con el español a la vista
 —tocar una enseña el alemán—.
 
@@ -532,7 +536,15 @@ hoy en la barra de Hoy aprendes, y la tarjeta dice *✓ practicaste*.
 `aleman_k10_v1`, donde lo leen el inicio de Alemán, la lección y esta ventana, que lo cuenta al momento por el
 evento `storage`. Encima va su encabezado (`alemanLecCabHtml()`): por qué toca (*Sigue donde te quedaste*,
 *Empieza el Kapitel 10*, *Elegida por ti*…), un tramo por ejercicio, cuántos llevas y tu último ejercicio, en
-ámbar pasados dos días. Hasta que carga se ve *Abriendo la lección…*. **Con el Dashboard en oscuro, la lección
+ámbar pasados dos días, y **«Todas las lecciones · 41»** (`.alv-todas-b`; Adán: *"es necesario poner un botón para
+que te de todas las lecciones disponibles"*). Ese botón cambia la lección por la lista (`#alemanTodas`,
+`alemanTodasHtml()`): Kapitel 10, A2 y A1, cada lección con su número, título, de qué trata, sus tramos de avance y
+cuál está *Abierta* y cuál es *La del plan*. Tocar una la abre y la deja elegida (`alemanElegirLeccion()`), igual que
+«Siguiente ›». Entre el encabezado y la lección va **su resumen** (`#alemanRes`, `alemanResHtml()`, de
+`ALEMAN_LECCIONES_RESUMEN` en `../Aleman/lecciones-resumen.js`): *Qué aprendes* con tus ejercicios hechos, *La regla*
+con su ejemplo en alemán tras la flecha y *Errores típicos*, tachado lo mal dicho y en verde lo bien dicho. Se
+contrae; abierto o cerrado se recuerda en ese dispositivo (`dash-aleman-resumen`). Hasta que carga se ve
+*Abriendo la lección…*. **Con el Dashboard en oscuro, la lección
 y los casos también**: `leccion.js` lee `coach-theme` y la pinta con `../Aleman/oscuro.js`, que deriva cada color del
 tema claro (ver `../Aleman/readme_aleman.md` → *En oscuro*). El marco (`.alv-lec-marco`) lleva el papel de la página
 en cada tema —oscuro o claro—, para que no asome otro color en el borde ni mientras carga.
@@ -541,8 +553,12 @@ en cada tema —oscuro o claro—, para que no asome otro color en el borde ni m
 sus reglas, y ejemplos"*): la página `casos.html` de la app de Alemán en su propio iframe (`#alemanCasos`, en `.alv-cas`),
 que se carga la primera vez que se abre la pestaña (`alemanTab('casos')`) y que `leccion.js` pone en modo ventana —con
 el encabezado compacto—. Lo que se practica ahí lo guarda la página en `aleman_casos_v1` y la pestaña dice tu mejor ronda
-al momento (evento `storage`); un enlace a una lección desde ahí la abre en la pestaña Lección. Medido a 2048×1040: el
-marco mide 1838×813; a 1366, 1211×562; a 390, 344×695, sin desplazamiento horizontal.
+al momento (evento `storage`); un enlace a una lección desde ahí la abre en la pestaña Lección. A su izquierda va **la tabla de los casos siempre
+a la vista** (`#alemanCasosTabla`, `alemanCasosTablaHtml()`; Adán: *"tabla siempre a la vista"*): qué pregunta
+responde cada caso, el artículo definido y el indefinido en los cuatro casos con los colores del género, los
+pronombres en Akkusativ y Dativ y las preposiciones de cada caso, para consultarla mientras se practica. Mide 400 px
+de ancho y se desplaza sola; bajo 1100 px sube encima de la página, con un 40 % del alto como máximo, y se contrae.
+Medido: a 1600×1000 la tabla mide 400×776; a 390, 368×338, sin desplazamiento horizontal.
 
 **Qué lección toca** lo dice `ALEMAN_LECCIONES.queToca()`, de `../Aleman/lecciones-datos.js`: la misma regla
 que el inicio de Alemán (ver *Lo decide Coach*). **«‹» / «Siguiente ›»** recorren el orden de Coach

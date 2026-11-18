@@ -59,6 +59,8 @@
 <!-- Lo que se ve y se toca en cada paso de Habilidades Base: foto, cifras, gráficas, calculadoras, ritmos y «Ponte a prueba» (HB_VISUAL) -->
 <script src="habilidades-base-visual.js" onerror="this.remove()"></script>
 <script src="../Aleman/lecciones-datos.js"></script>
+<script src="../Aleman/lecciones-resumen.js"></script>
+<script src="../Aleman/vocab-mas.js"></script>
 <!-- La biblioteca de ejercicios (EJ_DB), la misma de CuidadoPersonal/ejercicio.html: nombre,
      imagen, técnica paso a paso y error de cada uno. La ficha que se abre al tocar un ejercicio
      en Mi Día (verFichaEjercicio) sale de aquí. -->
@@ -3819,7 +3821,32 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .alv-body[data-tab="vocab"] .alv-lec,.alv-body[data-tab="leccion"] .alv-voc,
 .alv-body:not([data-tab="casos"]) .alv-cas,.alv-body[data-tab="casos"] .alv-voc,.alv-body[data-tab="casos"] .alv-lec{display:none}
 /* Los casos: la página de la app de Alemán (casos.html) a todo el alto, en modo ventana. */
-.alv-cas{display:flex;flex-direction:column;padding:14px 22px 18px}
+.alv-cas{display:flex;flex-direction:row;gap:16px;padding:14px 22px 18px}
+.alv-cas>.alv-lec-marco{flex:1;min-width:0}
+/* La tabla de los casos, siempre a la vista junto a sus ejercicios (Adán, 18-nov-2026: "necesito mucha más información en
+   cada sección"): artículos, pronombres, qué pregunta responde cada caso, preposiciones, verbos con Dativ y trucos.
+   Bajo 1100 px va arriba, contraíble. */
+.alv-tab{flex:none;width:400px;min-height:0;overflow-y:auto;overscroll-behavior:contain;border-radius:14px;border:1px solid rgba(var(--ov),.12);
+  background:rgba(var(--ov),.03);padding:12px 14px 16px}
+.alv-tab>details>summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.alv-tab>details>summary::-webkit-details-marker{display:none}
+.alv-tab>details>summary::after{content:'▾';font-size:12px;color:var(--text3)}
+.alv-tab>details:not([open])>summary::after{content:'▸'}
+.alv-tab h5{margin:14px 0 6px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--c)}
+.alv-tab table{width:100%;border-collapse:collapse;font-size:12px}
+.alv-tab th,.alv-tab td{padding:4px 5px;text-align:left;border-bottom:1px solid rgba(var(--ov),.08)}
+.alv-tab th{font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--text3)}
+.alv-tab td{color:var(--text)}
+.alv-tab td:first-child{font-weight:700;color:var(--text2)}
+.alv-tab td.der,.alv-tab th.der{color:#3b82f6}
+.alv-tab td.die,.alv-tab th.die{color:#ec4899}
+.alv-tab td.das,.alv-tab th.das{color:#10b981}
+.alv-tab td.pl,.alv-tab th.pl{color:#f97316}
+.alv-tab p,.alv-tab li{margin:0;font-size:12px;line-height:1.5;color:var(--text2)}
+.alv-tab ul{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:3px}
+.alv-tab b{color:var(--text)}
+.alv-tab i{font-style:italic;color:var(--text)}
+@media(max-width:1100px){.alv-cas{flex-direction:column;gap:10px}.alv-tab{width:auto;max-height:40vh}.alv-cas>.alv-lec-marco{min-height:60vh}}
 /* El vocabulario: su encabezado, las tarjetas y el repaso. */
 .alv-voc{overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:18px;padding:20px 24px 28px}
 .alv-voc-cab{display:flex;align-items:center;gap:18px}
@@ -3874,6 +3901,16 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .alv-wc-gram b{font-weight:600;color:var(--text)}
 .alv-wc-ex{display:flex;gap:8px;align-items:flex-start;margin-top:2px;font-size:13.5px;font-style:italic;line-height:1.45;color:var(--text)}
 .alv-wc-ex small{display:block;font-size:12.5px;font-style:normal;color:var(--text3)}
+.alv-wc-mas{display:flex;flex-direction:column;gap:8px;padding-top:8px;border-top:1px dashed rgba(var(--ov),.13)}
+.alv-wc-m{display:flex;flex-direction:column;gap:4px}
+.alv-wc-m>.alv-k{font-size:8.5px}
+.alv-wc-m p{display:flex;gap:8px;align-items:flex-start;margin:0;font-size:12.5px;font-style:italic;line-height:1.45;color:var(--text)}
+.alv-wc-m p small{display:block;font-size:11.5px;font-style:normal;color:var(--text3)}
+.alv-wc-m p .alv-oir{width:20px;height:20px;flex:none}
+.alv-wc-m ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:2px}
+.alv-wc-m li{font-size:12px;line-height:1.45;color:var(--text3)}
+.alv-wc-m li b{font-weight:600;color:var(--text)}
+.alv-wc-m .alv-wc-g{margin:0;font-size:12px;font-style:normal;line-height:1.5;color:var(--text2)}
 .alv-wc-uso{margin-top:auto;padding-top:8px;border-top:1px dashed rgba(var(--ov),.13);font-size:12px;line-height:1.45;color:var(--text2)}
 .alv-wc-uso b{margin-right:6px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--w)}
 .alv-oir{flex:none;display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border-radius:50%;
@@ -3936,6 +3973,49 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .alv-vacio{padding:40px;text-align:center;font-size:13px;color:var(--text3)}
 /* La lección que toca: su encabezado —por qué toca, lo que llevas, cómo pasar a otra— y la lección misma. */
 .alv-lec{display:flex;flex-direction:column;gap:12px;padding:14px 22px 18px}
+/* El resumen de la lección (lecciones-resumen.js): qué aprendes con tus ejercicios, la regla con sus ejemplos y los
+   errores típicos, contraíble; y la lista de todas las lecciones, que ocupa el lugar de la lección mientras está abierta. */
+.alv-res{flex:none}
+.alv-res-d{border-radius:14px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.03)}
+.alv-res-d>summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:12px;padding:10px 14px}
+.alv-res-d>summary::-webkit-details-marker{display:none}
+.alv-res-d>summary::after{content:'▸';margin-left:auto;font-size:12px;color:var(--text3)}
+.alv-res-d[open]>summary::after{content:'▾'}
+.alv-res-ap{min-width:0;font-size:12.5px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alv-res-d[open] .alv-res-ap{display:none}
+.alv-res-g{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.5fr) minmax(0,1fr);gap:16px;padding:0 14px 14px;max-height:min(34vh,320px);overflow-y:auto}
+.alv-res-c{display:flex;flex-direction:column;gap:6px;min-width:0}
+.alv-res-c p,.alv-res-c li{margin:0;font-size:12.5px;line-height:1.5;color:var(--text)}
+.alv-res-c ul{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:5px}
+.alv-res-c i{font-style:italic;color:var(--c)}
+.alv-res-c s{color:var(--r);text-decoration-thickness:1px}
+.alv-res-c li b{color:var(--g)}
+.alv-res-tags{font-size:11.5px;color:var(--text3)}
+.alv-res-av{font-size:12px!important;color:var(--text2)!important}
+.alv-todas{display:none}
+.alv-lec.todas .alv-todas{display:flex;flex-direction:column;gap:16px;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:2px 2px 8px}
+.alv-lec.todas .alv-res,.alv-lec.todas .alv-lec-marco{display:none}
+.alv-todas-cab{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.alv-todas-cab p{margin:3px 0 0;font-size:12.5px;color:var(--text3)}
+.alv-todas-cab .alv-btn{height:36px}
+.alv-tg h4{margin:0 0 8px;font-size:15px;font-weight:800;color:var(--text)}
+.alv-tg h4 span{margin-left:6px;font-size:12px;font-weight:500;color:var(--text3)}
+.alv-tl{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:8px}
+.alv-ti{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:10px;align-items:center;text-align:left;padding:10px 12px;border-radius:12px;
+  border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.03);color:var(--text);font:inherit;cursor:pointer}
+.alv-ti:hover{border-color:var(--c);background:color-mix(in srgb,var(--c) 8%,transparent)}
+.alv-ti.hoy{border-color:var(--c);background:color-mix(in srgb,var(--c) 12%,transparent)}
+.alv-ti-num{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--c)}
+.alv-ti-t{display:flex;flex-direction:column;gap:1px;min-width:0}
+.alv-ti-t b{font-size:13.5px;color:var(--text)}
+.alv-ti-t span{font-size:12px;color:var(--text2)}
+.alv-ti-t i{font-style:normal;font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alv-ti-f{display:flex;flex-direction:column;align-items:flex-end;gap:3px;min-width:64px}
+.alv-ti-f em{font-style:normal;font-size:10.5px;font-weight:800;color:var(--c);white-space:nowrap}
+.alv-ti-f small{font-size:11px;color:var(--text3);white-space:nowrap}
+.alv-ti.ok .alv-ti-f small{color:var(--g);font-weight:700}
+.alv-ti-bar{display:block;width:64px;height:4px;border-radius:2px;background:rgba(var(--ov),.12);overflow:hidden}
+.alv-ti-bar>i{display:block;height:100%;background:var(--g)}
 .alv-lec-cab{flex:none;display:flex;align-items:center;gap:14px;min-width:0}
 .alv-lec-foto{flex:none;width:96px;height:64px;border-radius:10px;object-fit:cover}
 .alv-lec-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
@@ -3980,6 +4060,8 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   .alv-t-de{font-size:32px}
   .alv-pr-cols{grid-template-columns:minmax(0,1fr)}
   .alv-lec,.alv-cas{padding:10px 10px 12px}
+  .alv-res-g{grid-template-columns:minmax(0,1fr);max-height:42vh}
+  .alv-tl{grid-template-columns:minmax(0,1fr)}
   .alv-lec-cab{flex-wrap:wrap;gap:10px}
   .alv-lec-foto{width:64px;height:44px}
   .alv-lec-h{white-space:normal;font-size:16px}
@@ -5208,9 +5290,12 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
       <section class="alv-voc" id="alemanVocab" aria-label="El vocabulario de hoy"></section>
       <section class="alv-lec" aria-label="La lección de hoy">
         <div class="alv-lec-cab" id="alemanLecCab"></div>
+        <div class="alv-res" id="alemanRes"></div>
+        <div class="alv-todas" id="alemanTodas"></div>
         <div class="alv-lec-marco" id="alemanMarco"><iframe id="alemanFrame" title="La lección de hoy, de la app de Alemán" onload="window.alemanCargada&&alemanCargada(this)"></iframe><span class="alv-lec-carga">Abriendo la lección…</span></div>
       </section>
       <section class="alv-cas" aria-label="Los casos: Nominativ, Akkusativ, Dativ y Genitiv">
+        <aside class="alv-tab" id="alemanCasosTabla" aria-label="La tabla de los casos"></aside>
         <div class="alv-lec-marco" id="alemanCasosMarco"><iframe id="alemanCasos" title="Los casos, de la app de Alemán" onload="if(this.dataset.src)this.parentNode.classList.add('lista')"></iframe><span class="alv-lec-carga">Abriendo los casos…</span></div>
       </section>
     </div>
@@ -8408,6 +8493,8 @@ function abrirAleman(tab){
   const ov = document.getElementById('alemanOverlay'); if(!ov) return;
   aprendeVisto('de');
   _alPr = null;
+  const ct = document.getElementById('alemanCasosTabla'); if(ct && !ct.innerHTML) ct.innerHTML = alemanCasosTablaHtml();
+  alemanTodas(false);
   alemanPintar();
   alemanTab(tab || 'vocab');
   ov.classList.add('open'); clearInterval(timer);
@@ -8462,6 +8549,8 @@ function alemanCargada(f){ if(f && f.dataset.src) document.getElementById('alema
 function alemanPintarCab(){
   const el = document.getElementById('alemanLecCab'), t = alemanLeccionHoy();
   if(el) el.innerHTML = t ? alemanLecCabHtml(t) : '';
+  const r = document.getElementById('alemanRes'); if(r) r.innerHTML = t ? alemanResHtml(t) : '';
+  if(_alTodas) alemanTodas(true);
   alemanTabsTxt();
 }
 // El encabezado de la lección: su foto, por qué toca (la regla de `queToca`), lo que llevas y cuándo fue tu
@@ -8478,6 +8567,7 @@ function alemanLecCabHtml(t){
   const ctl = (t.elegida ? `<button type="button" class="ap-av-ant" onclick="alemanLeccionOtra(0)" title="Volver a la del plan: ${habAttr(rec.num + ' · ' + rec.de)}" aria-label="Volver a la del plan">${AP_ICO.volver}</button>` : '')
     + `<button type="button" class="ap-av-ant" onclick="alemanLeccionOtra(-1)" title="La anterior, en el orden de Coach" aria-label="Lección anterior">${AP_ICO.ant}</button>`
     + `<button type="button" class="ap-av-sig" onclick="alemanLeccionOtra(1)" title="¿No te convence? Pasa a la siguiente, en el orden de Coach">Siguiente${AP_ICO.sig}</button>`;
+  const todas = `<button type="button" class="ap-av-sig alv-todas-b" onclick="alemanTodas(true)" title="Ver las ${L.lista.length} lecciones con tu avance y elegir una">Todas las lecciones · ${L.lista.length}</button>`;
   return `${apImg(apFotoLeccion(l), 'alv-lec-foto')}
     <div class="alv-lec-t">
       <div class="alv-k c">Lección de hoy · ${esc(t.ceja)}</div>
@@ -8485,7 +8575,95 @@ function alemanLecCabHtml(t){
       <div class="alv-lec-s">${esc(l.es)}${av ? ` · <b>${av.hechos} de ${av.total}</b> ejercicios` : ' · sus tarjetas y diálogos no guardan avance'}${cuando}${t.elegida ? ` · la del plan: <b>${esc(rec.num)}</b>` : ''}</div>
       ${av ? apTramos(av.total, j => j < av.hechos, -1) : ''}
     </div>
-    <div class="alv-lec-ctl">${ctl}</div>`;
+    <div class="alv-lec-ctl">${todas}${ctl}</div>`;
+}
+/* El resumen de la lección, sobre ella (Adán, 18-nov-2026: "necesito mucha más información en cada sección"; eligió
+   «qué vas a aprender, la regla clave con ejemplos, los errores típicos y tus ejercicios con su avance»): sale de
+   `ALEMAN_LECCIONES_RESUMEN` (Aleman/lecciones-resumen.js). Contraíble; lo que eliges se recuerda en ese dispositivo
+   (`dash-aleman-resumen`). En la regla, el ejemplo tras «→» va en alemán; en los errores, lo mal tachado y lo bien en verde. */
+const AL_RES_KEY = 'dash-aleman-resumen';
+let _alTodas = false;
+function alemanResAbierto(){ try{ const v = localStorage.getItem(AL_RES_KEY); if(v) return v === 'abierto'; }catch(e){} return true; }
+function alemanResToggle(abierto){ try{ localStorage.setItem(AL_RES_KEY, abierto ? 'abierto' : 'cerrado'); }catch(e){} }
+function alemanResHtml(t){
+  const R = (typeof ALEMAN_LECCIONES_RESUMEN !== 'undefined' && ALEMAN_LECCIONES_RESUMEN[t.l.id]) || null; if(!R) return '';
+  const av = t.avance, de = s => esc(s).replace(/\. → (.+)$/, '. → <i lang="de">$1</i>');
+  const err = s => /✗ → /.test(s) ? esc(s).replace(/^(.*?) ✗ → (.*)$/, '<s lang="de">$1</s> → <b lang="de">$2</b>') : esc(s);
+  const ej = av ? `<b>Tus ejercicios: ${av.hechos} de ${av.total} completos</b>${av.tocados > av.hechos ? ` · ${av.tocados - av.hechos} empezados` : ''}${av.fecha ? ' · el último, el ' + iqFecha(av.fecha) : ''}`
+    : 'Esta lección es de tarjetas y diálogos: no guarda avance.';
+  return `<details class="alv-res-d"${alemanResAbierto() ? ' open' : ''} ontoggle="alemanResToggle(this.open)">` +
+    `<summary><span class="alv-k c">Resumen de la lección</span><span class="alv-res-ap">${esc(R.aprendes)}</span></summary>` +
+    `<div class="alv-res-g"><div class="alv-res-c"><div class="alv-k">Qué aprendes</div><p>${esc(R.aprendes)}</p>` +
+      (t.l.tags ? `<p class="alv-res-tags">${esc(t.l.tags)}</p>` : '') + `<p class="alv-res-av">${ej}</p></div>` +
+    `<div class="alv-res-c"><div class="alv-k">La regla</div><ul>${R.regla.map(x => '<li>' + de(x) + '</li>').join('')}</ul></div>` +
+    `<div class="alv-res-c"><div class="alv-k">Errores típicos</div><ul>${R.errores.map(x => '<li>' + err(x) + '</li>').join('')}</ul></div></div></details>`;
+}
+/* Todas las lecciones (Adán: "es necesario poner un botón para que te dé todas las lecciones disponibles"): las 41, por
+   grupo —el Kapitel que ves en clase, el A2 que pide Esslingen y el A1 de base—, cada una con lo que enseña y tu avance.
+   Tocar una la abre aquí y queda elegida (`ALEMAN_LECCIONES.elegir`), hasta que vuelvas a la del plan con «↺». */
+function alemanTodasHtml(t){
+  const L = alLecciones(); if(!L) return '';
+  const datos = L.datos(), rec = t.rec.l, nota = { a2: 'el nivel que pide Esslingen', a1: 'la base' };
+  return `<div class="alv-todas-cab"><div><div class="alv-k c">Todas las lecciones · ${L.lista.length}</div>` +
+      `<p>Toca una para abrirla aquí; queda elegida hasta que vuelvas a la del plan con ↺.</p></div>` +
+      `<button type="button" class="alv-btn alv-otro" onclick="alemanTodas(false)">Volver a la lección</button></div>` +
+    L.grupos.map(g => { const ls = L.delGrupo(g.id); if(!ls.length) return '';
+      return `<section class="alv-tg"><h4>${esc(g.label)}<span>${ls.length} lecciones · ${g.kapitel ? 'lo que ves en clase' : nota[g.id] || ''}</span></h4><div class="alv-tl">` +
+        ls.map(l => { const av = L.avance(l, datos), comp = !!av && av.total > 0 && av.hechos >= av.total;
+          return `<button type="button" class="alv-ti${l === t.l ? ' hoy' : ''}${comp ? ' ok' : ''}" onclick="alemanElegirLeccion('${l.id}')">` +
+            `<span class="alv-ti-num">${esc(l.num)}</span><span class="alv-ti-t"><b lang="de">${esc(l.de)}</b><span>${esc(l.es)}</span><i>${esc(l.tags || '')}</i></span>` +
+            `<span class="alv-ti-f">${l === t.l ? '<em>Abierta</em>' : l === rec ? '<em>La del plan</em>' : ''}` +
+            (av ? `<small>${comp ? '✓ completa' : av.hechos + ' de ' + av.total}</small><i class="alv-ti-bar"><i style="width:${av.pct}%"></i></i>` : '<small>tarjetas y diálogos</small>') +
+            '</span></button>'; }).join('') + '</div></section>'; }).join('');
+}
+function alemanTodas(on){
+  _alTodas = !!on;
+  const s = document.querySelector('#alemanOverlay .alv-lec'), t = alemanLeccionHoy();
+  if(s) s.classList.toggle('todas', _alTodas);
+  const el = document.getElementById('alemanTodas'); if(el) el.innerHTML = _alTodas && t ? alemanTodasHtml(t) : '';
+  if(_alTodas && el) el.scrollTop = 0;
+}
+function alemanElegirLeccion(id){
+  const L = alLecciones(), t = alemanLeccionHoy(), x = L ? L.por(id) : null; if(!x || !t) return;
+  L.elegir(x === t.rec.l ? null : x.id);
+  alemanTodas(false); alemanPintar(); alemanTab('leccion');
+}
+/* La tabla de los casos, junto a sus ejercicios (Adán eligió «una tabla siempre a la vista»): todo lo que se consulta
+   al practicar, fijo. Bajo 1100 px va arriba y se contrae. */
+function alemanCasosTablaHtml(){
+  const fila = (c, xs) => `<tr><td>${c}</td>${xs.map((x, i) => `<td class="${['der', 'die', 'das', 'pl'][i] || ''}" lang="de">${x}</td>`).join('')}</tr>`;
+  const cab = '<tr><th></th><th class="der">masc.</th><th class="die">fem.</th><th class="das">neutro</th><th class="pl">plural</th></tr>';
+  return `<details open><summary><span class="alv-k c">La tabla de los casos</span></summary>
+    <h5>¿Qué caso es?</h5>
+    <ul><li><b>Nominativ</b> — ¿wer? el sujeto: <i lang="de">Der Mann arbeitet.</i></li>
+      <li><b>Akkusativ</b> — ¿wen? ¿was? el objeto directo: <i lang="de">Ich sehe den Mann.</i></li>
+      <li><b>Dativ</b> — ¿wem? el objeto indirecto: <i lang="de">Ich helfe dem Mann.</i></li>
+      <li><b>Genitiv</b> — ¿wessen? de quién: <i lang="de">das Auto des Mannes.</i></li></ul>
+    <h5>Artículo definido</h5>
+    <table>${cab}${fila('Nom.', ['der', 'die', 'das', 'die'])}${fila('Akk.', ['<b>den</b>', 'die', 'das', 'die'])}${fila('Dat.', ['<b>dem</b>', '<b>der</b>', '<b>dem</b>', '<b>den</b> +n'])}${fila('Gen.', ['des +s', 'der', 'des +s', 'der'])}</table>
+    <h5>Artículo indefinido y kein</h5>
+    <table>${cab}${fila('Nom.', ['ein', 'eine', 'ein', 'keine'])}${fila('Akk.', ['<b>einen</b>', 'eine', 'ein', 'keine'])}${fila('Dat.', ['<b>einem</b>', '<b>einer</b>', '<b>einem</b>', '<b>keinen</b> +n'])}${fila('Gen.', ['eines +s', 'einer', 'eines +s', 'keiner'])}</table>
+    <h5>Pronombres</h5>
+    <table><tr><th></th><th>ich</th><th>du</th><th>er</th><th>sie</th><th>es</th><th>wir</th><th>ihr</th><th>sie/Sie</th></tr>
+      <tr><td>Akk.</td><td lang="de">mich</td><td lang="de">dich</td><td lang="de">ihn</td><td lang="de">sie</td><td lang="de">es</td><td lang="de">uns</td><td lang="de">euch</td><td lang="de">sie/Sie</td></tr>
+      <tr><td>Dat.</td><td lang="de">mir</td><td lang="de">dir</td><td lang="de">ihm</td><td lang="de">ihr</td><td lang="de">ihm</td><td lang="de">uns</td><td lang="de">euch</td><td lang="de">ihnen/Ihnen</td></tr></table>
+    <h5>Preposiciones</h5>
+    <ul><li><b>Siempre Akkusativ:</b> <span lang="de">durch, für, gegen, ohne, um, bis</span> — <i lang="de">für meinen Bruder</i></li>
+      <li><b>Siempre Dativ:</b> <span lang="de">aus, bei, mit, nach, seit, von, zu, gegenüber</span> — <i lang="de">mit dem Auto</i></li>
+      <li><b>De doble vía:</b> <span lang="de">an, auf, hinter, in, neben, über, unter, vor, zwischen</span>: ¿wo? (dónde está) → Dativ, ¿wohin? (a dónde va) → Akkusativ — <i lang="de">Das Buch liegt auf dem Tisch. Ich lege es auf den Tisch.</i></li>
+      <li><b>Genitiv</b> (escrito): <span lang="de">wegen, trotz, während, statt</span> — <i lang="de">wegen des Wetters</i></li>
+      <li><b>Contracciones:</b> <span lang="de">im, am, ins, zum, zur, vom, beim</span></li></ul>
+    <h5>Verbos que piden Dativ</h5>
+    <p lang="de">helfen, danken, gefallen, gehören, antworten, gratulieren, schmecken, passen, fehlen, folgen, vertrauen, zuhören, wehtun</p>
+    <p><i lang="de">Das Essen schmeckt mir. Die Jacke gefällt mir.</i></p>
+    <h5>Dos objetos</h5>
+    <p>Con <span lang="de">geben, schenken, zeigen, schicken, erklären, bringen</span>: la persona en Dativ y la cosa en Akkusativ — <i lang="de">Ich schenke meiner Mutter einen Schal.</i></p>
+    <h5>Trucos</h5>
+    <ul><li>En Akkusativ solo cambia el masculino: der → den, ein → einen.</li>
+      <li>El Dativ plural lleva -n también en el sustantivo: <i lang="de">mit den Kindern</i>.</li>
+      <li>Algunos masculinos toman -n en todos los casos menos el Nominativ: <i lang="de">der Kollege → den/dem Kollegen</i>.</li>
+      <li>Después de <span lang="de">sein</span> va Nominativ: <i lang="de">Er ist ein guter Ingenieur.</i></li></ul>
+  </details>`;
 }
 // «‹» (d = −1), «Siguiente ›» (d = 1) y «↺» (d = 0): otra lección en el orden de Coach —el Kapitel en curso,
 // luego el A2 y el A1—; llegar a la del plan, o volver a ella, borra la elección.
@@ -8580,8 +8758,23 @@ function alemanTarjetaHtml(w){
       </div>${alemanIconoHtml(w, 'alv-wc-ico')}</div>
       ${gram ? `<div class="alv-wc-gram">${gram}</div>` : ''}
       ${ex ? `<div class="alv-wc-ex">${alemanOirBtn(ex)}<span><span lang="de">${esc(ex)}</span>${w.esEx ? `<small>${esc(w.esEx)}</small>` : ''}</span></div>` : ''}
+      ${alemanMasHtml(w)}
       ${w.uso ? `<div class="alv-wc-uso"><b>Ojo</b>${esc(w.uso)}</div>` : ''}
     </article>`;
+}
+/* Lo de más de cada palabra (Adán, 18-nov-2026: "necesito mucha más información"; eligió más ejemplos, la familia de la
+   palabra y su gramática): sale de `ALEMAN_VOCAB_MAS` (Aleman/vocab-mas.js), por la palabra. `ej` son frases de uso
+   real con su traducción, `col` cómo se combina, `fam` su familia, sinónimos o contrarios, y `gram` una nota. Las
+   palabras que todavía no lo tienen se ven como antes. */
+function alemanMasHtml(w){
+  const m = (typeof ALEMAN_VOCAB_MAS !== 'undefined' && ALEMAN_VOCAB_MAS[w.de]) || null; if(!m) return '';
+  const par = x => { const i = String(x).indexOf(' — '); return i > 0 ? `<b lang="de">${esc(x.slice(0, i))}</b> — ${esc(x.slice(i + 3))}` : esc(x); };
+  const lista = (t, xs) => xs && xs.length ? `<div class="alv-wc-m"><span class="alv-k">${t}</span><ul>${xs.map(x => '<li>' + par(x) + '</li>').join('')}</ul></div>` : '';
+  return `<div class="alv-wc-mas">` +
+    (m.ej && m.ej.length ? `<div class="alv-wc-m"><span class="alv-k">Más ejemplos</span>${m.ej.map(e =>
+      `<p>${alemanOirBtn(e[0])}<span><span lang="de">${esc(e[0])}</span><small>${esc(e[1])}</small></span></p>`).join('')}</div>` : '') +
+    lista('Se dice así', m.col) + lista('Familia', m.fam) +
+    (m.gram ? `<div class="alv-wc-m"><span class="alv-k">Gramática</span><p class="alv-wc-g">${esc(m.gram)}</p></div>` : '') + '</div>';
 }
 // El repaso: lo que ya salió y toca hoy, cada una con el español a la vista —tocarla enseña el alemán—.
 function alemanRepasoHtml(rep){
