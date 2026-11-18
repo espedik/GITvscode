@@ -2,7 +2,7 @@
    Bitcoin en un lote, más lo que queda en la quincena. Sin movimientos ni notas. Lo escribe el hook de pre-commit
    (Dashboard/habitos-exportar.js): no se edita a mano. */
 window.FINANZAS_SYNC = {
-  "exportado": "2026-11-18T06:13:40.444Z",
+  "exportado": "2026-11-18T06:26:05.251Z",
   "fecha": "2026-11-03",
   "gastar": 1298,
   "datos": {
@@ -140,7 +140,7 @@ window.FINANZAS_SYNC = {
      "name": "BITCOIN",
      "type": "crypto",
      "invested": 2880,
-     "value": 2880,
+     "value": 2854.37,
      "date": "2026-11-17",
      "rate": 0
     }
@@ -262,8 +262,8 @@ window.FINANZAS_SYNC = {
      "usd": 5485
     }
    ],
-   "currentBtcPrice": 74691,
-   "usdMxn": 18.53,
+   "currentBtcPrice": 64606,
+   "usdMxn": 18.45,
    "emergencyFund": 6000,
    "efAportes": []
   }

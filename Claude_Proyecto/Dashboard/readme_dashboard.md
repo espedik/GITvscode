@@ -969,11 +969,13 @@ estrategia de hoy* —sin tarjeta que pagar, lo que va a GBM hoy y este mes—; 
 diferencia, con **Editar** y **Borrar**); el formulario **Agregar una compra** (`tiFormHtml`: cuándo, qué precio
 sigue, qué compraste, tipo, cuánto metiste y cuánto vale hoy —o, si sigue un precio, cuánto compraste—; vacío, vale
 lo que metiste), que con **Editar** se llena con esa compra y pasa a **Guardar cambios** / **Cancelar**; **Tu portafolio hoy**, cada instrumento con lo de todas sus
-compras sumado y su parte del total; el Bitcoin aparte, lo que entra cada mes y lo que falta.
+compras sumado y su parte del total —el Bitcoin, con lo que vale todo el que tienes—, lo que entra cada mes y lo que
+falta. **Lo invertido son tus inversiones más tu Bitcoin**: la cifra del panel y el medidor (`totalInvKpi`) suman las
+dos cosas.
 
-Las compras **son las inversiones de Finanzas**: `tiGuardar`, `tiEditar` y `tiBorrar` escriben en
-`finanzasmx_v2.investments` con la misma forma que Finanzas · Inversiones (`{id, name, type, invested, value, date,
-rate}`, los tipos de `TI_TIPOS`), y `ceGuardar` repinta el medidor y el panel. Lo que se agrega aquí sale en
+Las compras **son las de Finanzas**: `tiGuardar`, `tiEditar` y `tiBorrar` escriben en `finanzasmx_v2.investments` con
+la misma forma que Finanzas · Inversiones (`{id, name, type, invested, value, date, rate}`, los tipos de `TI_TIPOS`),
+salvo el Bitcoin, y `ceGuardar` repinta el medidor y el panel. Lo que se agrega aquí sale en
 Finanzas y lo que se edita allá llega aquí: con las dos abiertas, el evento `storage` repinta la otra —el panel
 abierto también, salvo mientras se escribe en su formulario—. Borrar pide confirmación y dice que también se borra
 en Finanzas. **Solo se edita donde Finanzas es propia** (`tiEditable`): en el iPad, que usa la copia de la PC
@@ -984,17 +986,30 @@ Finanzas; el panel mide 629 px a 1600×1000 sin desplazarse, y a 390 px no se sa
 **Una compra que sigue su precio vale lo de hoy sola** (Adán, 18-nov-2026: *"puse bitcoin cuánto compré en pesos
 mexicanos, pero puedes saber de acuerdo al día cuánto vale actualmente… esta info sale en qué invertir hoy en las
 gráficas"*). *Sigue el precio de* liga la compra a uno de los activos de **Precios ahora** (`tiActivos`: todos menos el
-dólar) y la guarda en `sym` (`'BTC-USD'`, `'NVDA'`, `'VOO'`…). Con el cierre del día de la compra y el dólar de ese día
-(`tiPrecioMxn`: la historia diaria de un año o, más atrás, la semanal de cinco) se sabe cuánto compraste (`qty`); si
-escribes la cantidad exacta que dice GBM o Bitso, manda esa (`qtyManual`). Vale hoy = cantidad × precio de ahora ×
-dólar de ahora, y `tiRevaluar` lo escribe en `value`, así que Finanzas, el medidor y el patrimonio dicen la misma
-cifra. Lo pone al día al arrancar con los precios guardados (`tiArranque`), cuando llegan los de GitHub o el Bitcoin
-en vivo (`tiPreciosLlegaron`, que mientras escribes en el formulario solo guarda) y al abrir el panel
-(`tiPedirPrecios`). Escribir el nombre propone el activo (`tiAutoSym`: «BITCOIN», «BTC», «NVIDIA» por palabra
-completa) y pone el tipo; una compra de cripto o acciones sin `sym` —de antes o agregada en Finanzas— se liga sola si
-su nombre lo dice, y *No: escribo cuánto vale* (`sym: ''`) la deja a mano. El renglón dice cuánto tienes en cian
-(*Cripto · 0.002398 BTC*). Medido con los precios reales del 18 nov 2026: $2,880 de Bitcoin del 17 nov son 0.002398
-BTC y valen $2,852 (−$28); a 1600 y 390 px, sin desbordes ni errores.
+dólar) y la guarda en `sym` (`'NVDA'`, `'VOO'`, `'NAFTRACISHRS.MX'`…). Con el cierre del día de la compra y el dólar de
+ese día (`tiPrecioDia`: la historia diaria de un año o, más atrás, la semanal de cinco) se sabe cuánto compraste
+(`qty`); si escribes la cantidad exacta que dice GBM o Bitso, manda esa (`qtyManual`). Vale hoy = cantidad × precio de
+ahora × dólar de ahora, y `tiRevaluar` lo escribe en `value`, así que Finanzas, el medidor y el patrimonio dicen la
+misma cifra. Lo pone al día al arrancar con los precios guardados (`tiArranque`), cuando llegan los de GitHub o el
+Bitcoin en vivo (`tiPreciosLlegaron`, que mientras escribes en el formulario solo guarda) y al abrir el panel
+(`tiPedirPrecios`). Escribir el nombre propone el activo (`tiAutoSym`: «Bitcoin», «BTC», «NVIDIA» por palabra
+completa) y pone el tipo; una compra de acciones sin `sym` —de antes o agregada en Finanzas— se liga sola si su nombre
+lo dice, y *No: escribo cuánto vale* (`sym: ''`) la deja a mano. El renglón dice cuánto tienes en cian (*Cripto ·
+0.002398 BTC*).
+
+**El Bitcoin tiene una sola libreta, la de la gráfica de Finanzas** (Adán, 18-nov-2026: *"también debe actualizarse en
+la gráfica… de Finanzas en plan de inversiones, entonces la info va enlazada… dejaremos de depender de Claude"*). Una
+compra con *Sigue el precio de: Bitcoin* no es una inversión: `tiGuardar` la anota en `btcHistory` con
+`CIFRAS.btcCompra` —los pesos, el precio en dólares y el dólar de ese día (`tiBtcDia`), o la cantidad exacta
+(`btcExacto`)—, la misma que dibuja la gráfica, llena la tabla y suma el patrimonio y la maestría. Sus renglones son las
+operaciones desde la última vez que el Bitcoin quedó en cero (`tiBtcAbiertas`, con **Editar** y **Borrar** por
+`'btc:' + id`; una venta sale sin botones: se edita en Finanzas), y lo que haya quedado de antes cuenta en lo que vale
+con una nota. El Bitcoin que llegue como inversión —de antes o de Finanzas · Inversiones— se muda solo
+(`CIFRAS.btcDeInversiones`, en `tiRevaluar`), y el precio del Bitcoin y el dólar de Finanzas se ponen al día con los de
+Precios ahora cuando son más nuevos. Medido con los precios reales del 18 nov 2026 y el Dashboard y Finanzas abiertos a
+la vez: los $2,880 del 17 nov son 0.002398 BTC y valen $2,852 (−$29); salen en la tabla y en la gráfica de Finanzas con
+su marca +$2,880; una compra nueva aquí o un «BTC Bitso» anotado en Finanzas llega al otro lado sin recargar, y
+corregir con la cantidad exacta o borrar, también. A 1600 y 390 px, sin desbordes ni errores.
 
 ### Fondo de emergencia, aportación por aportación
 

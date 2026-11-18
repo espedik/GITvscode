@@ -9124,6 +9124,66 @@ window.CIFRAS = (function () {
     return x;
   }
 
+  /* ── EL BITCOIN, UNA SOLA LIBRETA ───────────────────────────────────────────────────────────
+     Adán, 2026-11-18: "agrego bitcoin manualmente, pero también debe actualizarse en la gráfica… de Finanzas en plan
+     de inversiones, entonces la info va enlazada". Todo el Bitcoin vive en `btcHistory` —la gráfica y la tabla de
+     Finanzas, el patrimonio, la maestría y el Total invertido del Dashboard lo leen de ahí—, nunca como inversión.
+     btcCompra anota una compra en pesos: `c = {date, mxn, btc?, btcPrice?, fx?, notes?}`. Con `btc` (la cantidad
+     que dice el exchange) el precio sale de ahí (`btcExacto`); si no, la cantidad sale del `btcPrice` de ese día
+     (USD por ₿) o, sin él, del de ahora. `fx` es el dólar de ese día. Quien llama guarda. Devuelve la compra o
+     `{error}`. */
+  function btcCompra(F, c, id) {
+    if (!F) return { error: 'Sin datos de Finanzas' };
+    c = c || {};
+    const mxn = Math.round((parseFloat(c.mxn) || 0) * 100) / 100;
+    if (!(mxn > 0)) return { error: 'Escribe cuánto metiste' };
+    const fx = +c.fx > 0 ? +c.fx : (+F.usdMxn || 19.5), usd = mxn / fx;
+    let btc = +c.btc > 0 ? +c.btc : 0, precio = +c.btcPrice > 0 ? +c.btcPrice : (+F.currentBtcPrice || 0);
+    if (btc > 0) precio = usd / btc;
+    else if (precio > 0) btc = usd / precio;
+    else return { error: 'Todavía no tengo el precio del Bitcoin: escribe cuánto BTC compraste' };
+    const o = { date: String(c.date || fechaLocal()).slice(0, 10), usd: Math.round(usd * 10000) / 10000,   // 4 decimales: usd × fx vuelve a tus pesos
+      btcPrice: Math.round(precio * 100) / 100, btc: +btc.toFixed(8), fx: Math.round(fx * 10000) / 10000,
+      tipo: 'compra', btcExacto: +c.btc > 0 };
+    if (c.notes != null) o.notes = String(c.notes).trim().slice(0, 80);
+    F.btcHistory = Array.isArray(F.btcHistory) ? F.btcHistory : [];
+    let i = -1;
+    F.btcHistory.forEach(function (x, k) { if (id && x.id === id) i = k; });
+    if (i >= 0) { F.btcHistory[i] = Object.assign({}, F.btcHistory[i], o); return F.btcHistory[i]; }
+    o.id = 'btc' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    F.btcHistory.push(o);
+    return o;
+  }
+  function btcBorrar(F, id) {
+    const x = ((F && F.btcHistory) || []).filter(function (h) { return h.id === id; })[0];
+    if (!x) return { error: 'Esa operación ya no existe' };
+    F.btcHistory = F.btcHistory.filter(function (h) { return h.id !== id; });
+    return x;
+  }
+  // Una inversión que es Bitcoin: ligada a su precio (`sym`) o, sin ligar, de cripto y con «Bitcoin» o «BTC» en el nombre.
+  function btcEsInversion(i) {
+    return !!i && (i.sym === 'BTC-USD' || (i.sym === undefined && i.type === 'crypto' &&
+      /(^|[^a-z0-9])(bitcoin|btc)($|[^a-z0-9])/i.test(String(i.name || ''))));
+  }
+  // Muda a `btcHistory` el Bitcoin anotado como inversión (en Finanzas · Inversiones, o de antes). `precioDe(fecha)`
+  // puede dar `{btcPrice, fx}` de ese día —el Dashboard los tiene—; sin él, la cantidad que ya se calculó (`qty`) o el
+  // precio de ahora. Devuelve cuántas mudó; quien llama guarda.
+  function btcDeInversiones(F, precioDe) {
+    if (!F || !Array.isArray(F.investments)) return 0;
+    let n = 0;
+    F.investments = F.investments.filter(function (i) {
+      if (!btcEsInversion(i)) return true;
+      const d = (precioDe && i.date && precioDe(i.date)) || {};
+      const r = btcCompra(F, { date: i.date, mxn: +i.invested || +i.value, fx: d.fx, btcPrice: d.btcPrice,
+        btc: i.qtyManual || !(+d.btcPrice > 0) ? i.qty : 0 });
+      if (r.error) return true;
+      if (!i.qtyManual) r.btcExacto = false;
+      n++;
+      return false;
+    });
+    return n;
+  }
+
   // Los abonos del plan y las mensualidades que ya llegaron se anotan solos (aplicarPlanBbva,
   // aplicarPagosFijos); después, la proyección.
   try { if (aplicarPlanBbva() + aplicarPagosFijos()) leer(); } catch (e) { /* sin localStorage (el verificador): nada que aplicar */ }
@@ -9527,6 +9587,7 @@ window.CIFRAS = (function () {
     patrimonio: patrimonio,
     fondoMaestria: fondoMaestria,
     fondoMovimiento: fondoMovimiento, fondoBorrar: fondoBorrar, fondoSigno: fondoSigno, fondoLista: fondoLista,
+    btcCompra: btcCompra, btcBorrar: btcBorrar, btcEsInversion: btcEsInversion, btcDeInversiones: btcDeInversiones,
     diasFase: diasFase, diasHasta: diasHasta,
     avanceBbva: avanceBbva, deudasConInteres: deudasConInteres, bbvaEstado: bbvaEstado, estadoDia: estadoDia, bbvaRutaTxt: bbvaRutaTxt, aplicarPagosFijos: aplicarPagosFijos, cuotas: cuotas,
     didiGbmLunes: didiGbmLunes, didiSemana: didiSemana, lunesDidiTuyos: lunesDidiTuyos, gbmMes: gbmMes, presupuestoFijo: presupuestoFijo,

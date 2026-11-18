@@ -271,7 +271,10 @@ sincroniza) y `g001` (la maestría: su `target` vive en el maestro como `{{maest
 
 `openInvModal(id)` (tipos `cetes | fondos | acciones | crypto | inmuebles | deuda | otro`),
 `saveInv()` (`value` = `invested` si no se da), `delInv(id)`; los tres refrescan GBM si está
-activo e indicadores.
+activo e indicadores. **El Bitcoin no es una inversión**: uno anotado aquí (Cripto, con «Bitcoin» o «BTC» en el nombre)
+se muda a su libreta, `btcHistory`, con su gráfica (`btcMudar`, con `CIFRAS.btcDeInversiones`, al guardar, al abrir y
+cuando el Dashboard escribe). Una inversión que sigue un precio de Precios ahora (`sym`, `qty`) la valúa el Total
+invertido del Dashboard: su `value` cambia solo.
 
 ---
 
@@ -511,6 +514,12 @@ comparado contra su foto del 18-jul-2026 (−$308,830); el Dashboard lo enseña 
 ---
 
 ## Módulo: Bitcoin
+
+**Es la única libreta del Bitcoin** (Adán, 18-nov-2026: *"agrego bitcoin manualmente, pero también debe actualizarse en
+la gráfica… la info va enlazada"*). Lo que se anota en el Total invertido del Dashboard llega aquí como compra
+(`CIFRAS.btcCompra`: `usd` con 4 decimales para que `usd × fx` vuelva a los pesos, `btcPrice` y `fx` del día, y
+`btcExacto` si se escribió la cantidad), y lo que se anota o corrige aquí sale allá: con las dos abiertas, el evento
+`storage` repinta la otra.
 
 **Un punto por día**, eje temporal lineal en milisegundos, pesos por defecto, y cada aportación
 con su línea vertical y su monto. Lo que eso evita: un eje categórico por compra dibuja el orden

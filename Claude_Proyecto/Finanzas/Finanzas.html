@@ -1109,7 +1109,7 @@ function nav(s) {
 // releen y se repinta lo abierto, antes de que el próximo save() de esta pestaña los pise.
 window.addEventListener('storage', e=>{
   if(e.key!==KEY) return;
-  load(); if(window.CIFRAS&&CIFRAS.refrescar) CIFRAS.refrescar();
+  load(); btcMudar(); if(window.CIFRAS&&CIFRAS.refrescar) CIFRAS.refrescar();
   const s=SECS.find(x=>document.getElementById(`s-${x}`).classList.contains('active'));
   if(s) RENDERS[s]?.();
 });
@@ -1525,6 +1525,15 @@ function openInvModal(id=null) {
   document.getElementById('mo-inv').classList.add('open');
 }
 
+// El Bitcoin vive en btcHistory —la gráfica y la tabla del Plan de Inversiones—, nunca como inversión: si se anota como
+// inversión aquí (tipo Cripto, «Bitcoin» o «BTC» en el nombre) o llega así del Total invertido del Dashboard, se muda con
+// la cuenta del maestro (CIFRAS.btcDeInversiones), la misma que usa el Dashboard. Devuelve cuántas mudó.
+function btcMudar(sinGuardar){
+  if(!(window.CIFRAS&&CIFRAS.btcDeInversiones)) return 0;
+  const n=CIFRAS.btcDeInversiones(S);
+  if(n&&!sinGuardar) save();
+  return n;
+}
 function saveInv() {
   const name=document.getElementById('i-name').value.trim();
   const invested=parseFloat(document.getElementById('i-inv').value)||0;
@@ -1535,7 +1544,7 @@ function saveInv() {
     rate:parseFloat(document.getElementById('i-rate').value)||0};
   if(editId){const i=S.investments.findIndex(x=>x.id===editId);if(i>=0)S.investments[i]={...S.investments[i],...data};}
   else S.investments.push({id:uid(),...data});
-  save(); closeMo('mo-inv'); if(document.getElementById('s-gbm').classList.contains('active')) renderGBM(); toast('✅ Inversión guardada'); maybeRefreshIndicators();
+  const _btc=btcMudar(true); save(); closeMo('mo-inv'); if(document.getElementById('s-gbm').classList.contains('active')) renderGBM(); toast(_btc?'₿ Anotado en tu Bitcoin, en su gráfica':'✅ Inversión guardada'); maybeRefreshIndicators();
 }
 
 function delInv(id){S.investments=S.investments.filter(i=>i.id!==id);save();if(document.getElementById('s-gbm').classList.contains('active'))renderGBM();toast('🗑️ Eliminado');maybeRefreshIndicators();}
@@ -5429,6 +5438,7 @@ function init() {
     try{ if(CIFRAS.aplicarPlanBbva()+CIFRAS.aplicarPagosFijos()) CIFRAS.refrescar(); }catch(e){}
   }
   load();
+  btcMudar();
   // Migración: actualizar meta maestría de 300k → 500k
   const _maeGoal=S.goals.find(g=>g.id==='g001');
   if(_maeGoal&&_maeGoal.target===300000){_maeGoal.target=500000;save();}

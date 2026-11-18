@@ -3228,6 +3228,47 @@ function promptsDeLoTocado() {
   ok.push('Fondo de emergencia: aportar, retirar, corregir y borrar con una sola cuenta del maestro, en el Dashboard y en Finanzas');
 })();
 
+/* ── 52. El Bitcoin, una sola libreta ───────────────────────────────────────────────────────────────────────────
+   Adán, 18-nov-2026: "agrego bitcoin manualmente, pero también debe actualizarse en la gráfica… de Finanzas en plan de
+   inversiones, entonces la info va enlazada". Todo el Bitcoin vive en `btcHistory` (la gráfica y la tabla de Finanzas);
+   una compra de Bitcoin anotada como inversión —en Total invertido o en Finanzas · Inversiones— se muda ahí con la
+   cuenta del maestro (btcCompra / btcDeInversiones). Se prueba con unos datos de juguete: la compra en pesos vuelve a
+   sus pesos, la cantidad exacta manda, la inversión se muda y el dinero de la maestría no cuenta dos veces; y que las
+   dos apps llamen a esas funciones. */
+(function () {
+  const malos = [], leerSi = rel => { try { return leer(rel); } catch (e) { return ''; } };
+  const C = global.window && global.window.CIFRAS;
+  if (!C || ['btcCompra', 'btcBorrar', 'btcDeInversiones', 'fondoMaestria'].some(k => typeof C[k] !== 'function'))
+    malos.push('el maestro ya no exporta btcCompra / btcBorrar / btcDeInversiones');
+  else {
+    const F = { usdMxn: 18.4, currentBtcPrice: 65000, btcHistory: [],
+      investments: [{ id: 'd', name: 'Depósito', type: 'otro', invested: 11250, value: 11250 },
+        { id: 'b', name: 'BITCOIN', type: 'crypto', invested: 2880, value: 2880, date: '2026-11-17' }] };
+    const n = C.btcDeInversiones(F, () => ({ btcPrice: 64855.84, fx: 18.5178 }));
+    const h = F.btcHistory[0];
+    if (n !== 1 || F.investments.length !== 1 || !h) malos.push('una compra de Bitcoin anotada como inversión no se muda a btcHistory');
+    else {
+      if (Math.abs(h.usd * h.fx - 2880) > 0.01) malos.push('la compra de $2,880 no vuelve a sus pesos (usd × fx = ' + (h.usd * h.fx).toFixed(2) + ')');
+      if (Math.abs(h.btc - 2880 / (64855.84 * 18.5178)) > 1e-8) malos.push('la cantidad no sale del precio y el dólar del día de la compra');
+      const M = C.fondoMaestria(F);
+      if (Math.abs(M.inv - 11250) > 0.01 || Math.abs(M.btc - h.btc * 65000 * 18.4) > 0.01) malos.push('la maestría cuenta el Bitcoin dos veces o no lo cuenta');
+      const r = C.btcCompra(F, { date: '2026-11-17', mxn: 2880, btc: 0.0025, fx: 18.5178 }, h.id);
+      if (r.btc !== 0.0025 || !r.btcExacto || F.btcHistory.length !== 1) malos.push('corregir con la cantidad exacta no la respeta o duplica la compra');
+      C.btcBorrar(F, h.id);
+      if (F.btcHistory.length) malos.push('btcBorrar no borra');
+    }
+    if (C.btcDeInversiones({ investments: [{ id: 'x', name: 'Bitcoin', type: 'crypto', sym: '', invested: 100 }] }))
+      malos.push('una inversión marcada «No: escribo cuánto vale» (sym vacío) se muda');
+  }
+  const h = leer('Dashboard/dashboard.html'), fz = leerSi('Finanzas/Finanzas.html');
+  ['CIFRAS.btcCompra(', 'CIFRAS.btcBorrar(', 'CIFRAS.btcDeInversiones('].forEach(k => {
+    if (h.indexOf(k) < 0) malos.push('Total invertido del Dashboard ya no usa ' + k.slice(0, -1));
+  });
+  if (fz.indexOf('CIFRAS.btcDeInversiones(') < 0) malos.push('Finanzas ya no muda a su libreta el Bitcoin anotado como inversión');
+  if (malos.length) { problemas.push('El Bitcoin, una sola libreta:\n     ' + malos.join('\n     ')); return; }
+  ok.push('El Bitcoin, una sola libreta: lo que anotas en Total invertido o en Finanzas va a la gráfica de Bitcoin, con el precio y el dólar de su día');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

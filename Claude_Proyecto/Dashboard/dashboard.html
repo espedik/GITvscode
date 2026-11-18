@@ -9927,22 +9927,25 @@ const TI_TIPOS = [['fondos','Fondo de inversión'],['acciones','Acciones o ETF']
 let _tiEdit = null;
 function tiEditable(){ return !FIN_REPO && !!tryParse('finanzasmx_v2', null); }
 function tiFecha(k){ return k ? new Date(String(k).slice(0,10)+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'}) : 'sin fecha'; }
-/* Una compra puede seguir el precio de un activo de Precios ahora (`sym`: 'BTC-USD', 'NVDA', 'VOO'…). Con el cierre del
-   día de la compra y el dólar de ese día se sabe cuánto compraste (`qty`, o la cantidad exacta si la escribes:
-   `qtyManual`), y vale hoy = esa cantidad × el precio de ahora × el dólar de ahora (Adán, 18-nov-2026: "puse bitcoin
-   cuánto compré en pesos mexicanos… puedes saber de acuerdo al día cuánto vale actualmente"). tiRevaluar escribe ese
-   valor en `finanzasmx_v2.investments[].value`, así que Finanzas, el medidor y el patrimonio dicen lo mismo. */
+/* Una compra puede seguir el precio de un activo de Precios ahora (`sym`: 'NVDA', 'VOO', 'NAFTRACISHRS.MX'…). Con el
+   cierre del día de la compra y el dólar de ese día se sabe cuánto compraste (`qty`, o la cantidad exacta si la
+   escribes: `qtyManual`), y vale hoy = esa cantidad × el precio de ahora × el dólar de ahora (Adán, 18-nov-2026: "puse
+   bitcoin cuánto compré en pesos mexicanos… puedes saber de acuerdo al día cuánto vale actualmente"). tiRevaluar
+   escribe ese valor en `finanzasmx_v2.investments[].value`, así que Finanzas, el medidor y el patrimonio dicen lo mismo.
+   El Bitcoin no es una inversión: vive en `btcHistory`, la libreta de la gráfica de Bitcoin de Finanzas, y se anota con
+   CIFRAS.btcCompra (Adán: "también debe actualizarse en la gráfica… de Finanzas en plan de inversiones, la info va
+   enlazada"). Aquí salen sus compras desde la última vez que quedó en cero (tiBtcAbiertas). */
 function tiActivos(){ return qiActivos().filter(a => a.tipo !== 'divisa'); }
-function tiNorm(s){ return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+function tiNorm(s){ return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
 // El activo que nombra una compra («BITCOIN», «BTC», «NVIDIA», «VOO»…), por palabra completa; null si ninguno.
 function tiActivoDe(nombre, L){
   const n = tiNorm(nombre); if(!n) return null;
   const pal = x => new RegExp('(^|[^a-z0-9])' + tiNorm(x).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '($|[^a-z0-9])').test(n);
   return (L || tiActivos()).find(a => a.tipo !== 'divisa' && (pal(a.tk) || pal(a.n))) || null;
 }
-// Precio en pesos: el de ahora o, con fecha, el cierre de ese día (o del último antes) con el dólar de ese día. La
-// historia diaria cubre un año; más atrás, la semanal de cinco.
-function tiPrecioMxn(a, L, fecha){
+// El precio de un activo, en su moneda, y el dólar: los de ahora o, con fecha, el cierre de ese día (o del último antes)
+// con el dólar de ese día. La historia diaria cubre un año; más atrás, la semanal de cinco.
+function tiPrecioDia(a, L, fecha){
   if(!a) return null;
   let p = a.p, fx = a.m === 'MXN' ? 1 : qiDolar(L);
   if(fecha && fecha < hoyLocal()){
@@ -9951,19 +9954,33 @@ function tiPrecioMxn(a, L, fecha){
     p = v;
     if(a.m !== 'MXN') fx = qiDolarEn(L, fecha, sem) || fx;
   }
-  return p > 0 && fx > 0 ? p * fx : null;
+  return p > 0 && fx > 0 ? { p, fx } : null;
+}
+function tiPrecioMxn(a, L, fecha){ const d = tiPrecioDia(a, L, fecha); return d ? d.p * d.fx : null; }
+// El Bitcoin de un día para CIFRAS.btcCompra: dólares por ₿ y el dólar de ese día.
+function tiBtcDia(fecha, L){
+  L = L || qiActivos();
+  const d = tiPrecioDia(L.find(x => x.s === 'BTC-USD'), L, fecha);
+  return d ? { btcPrice: d.p, fx: d.fx } : null;
 }
 function tiCantTxt(q, a){
   const n = q >= 1 ? q.toLocaleString('es-MX', { maximumFractionDigits: 4 }) : q.toLocaleString('es-MX', { maximumSignificantDigits: 4 });
   return n + ' ' + (a.tipo === 'cripto' ? a.tk : (a.tipo === 'etf' ? 'títulos' : 'acciones') + ' de ' + a.tk);
 }
-// Pone al día las compras que siguen un precio; true si cambió algo. Una compra de cripto o acciones sin `sym` (de
-// antes, o agregada en Finanzas) se liga sola si su nombre dice qué es; `sym: ''` es «No: escribo cuánto vale».
+// Pone al día lo que vale cada compra; true si cambió algo. El Bitcoin anotado como inversión se muda a su libreta;
+// el precio del Bitcoin y el dólar de Finanzas se ponen al día si los de Precios ahora son más nuevos. Una compra de
+// acciones sin `sym` (de antes, o agregada en Finanzas) se liga sola si su nombre dice qué es; `sym: ''` es «No:
+// escribo cuánto vale».
 function tiRevaluar(F){
   const L = qiActivos(); let cambio = false;
+  if(window.CIFRAS && CIFRAS.btcDeInversiones && CIFRAS.btcDeInversiones(F, f => tiBtcDia(f, L))) cambio = true;
+  const b = L.find(x => x.s === 'BTC-USD'), dol = qiDolar(L);
+  if((F.btcHistory || []).length && b && b.p > 0 && b.t && (!F.btcLastFetch || new Date(b.t) > new Date(F.btcLastFetch))){
+    F.currentBtcPrice = b.p; if(dol > 0) F.usdMxn = Math.round(dol * 100) / 100; F.btcLastFetch = b.t; cambio = true;
+  }
   (F.investments || []).forEach(i => {
     if(i.sym === undefined && (i.type === 'crypto' || i.type === 'acciones')){
-      const a = tiActivoDe(i.name, L.filter(x => x.tipo !== 'divisa'));
+      const a = tiActivoDe(i.name, L.filter(x => x.tipo !== 'divisa' && x.s !== 'BTC-USD'));
       if(a){ i.sym = a.s; cambio = true; }
     }
     if(!i.sym) return;
@@ -9984,9 +10001,30 @@ function tiSigueTxt(i){
   const a = qiActivos().find(x => x.s === i.sym); if(!a) return '';
   return i.qty > 0 ? ' · <span class="ti-sigue" title="Vale hoy sale del precio de ' + esc(a.n) + ' de ahora">' + tiCantTxt(i.qty, a) + '</span>' : '';
 }
+// Las operaciones del Bitcoin que tienes ahora: las de después de la última vez que quedó en (casi) cero. `resto` es
+// lo que quedó de antes (unas fracciones tras vender todo), que cuenta en lo que vale pero no es una compra de ahora.
+function tiBtcAbiertas(F){
+  const h = ((F && F.btcHistory) || []).map((x, k) => ({ x, k }))
+    .sort((a, b) => String(a.x.date || '').localeCompare(String(b.x.date || '')) || a.k - b.k);
+  let acc = 0, desde = 0;
+  h.forEach((o, j) => { acc += +o.x.btc || 0; if(acc < 0.0001) desde = j + 1; });
+  const resto = h.slice(0, desde).reduce((s, o) => s + (+o.x.btc || 0), 0);
+  return { ops: h.slice(desde).map(o => o.x), resto: Math.max(0, resto) };
+}
+// Lo que se edita: una inversión por su id, o una compra de Bitcoin ('btc:' + su id en btcHistory) con la forma del formulario.
+function tiEditObj(F, key){
+  if(!key || !F) return null;
+  if(key.indexOf('btc:') === 0){
+    const h = (F.btcHistory || []).find(x => x.id === key.slice(4)); if(!h) return null;
+    return { name: 'Bitcoin', type: 'crypto', sym: 'BTC-USD', date: h.date, qty: Math.abs(+h.btc || 0), qtyManual: !!h.btcExacto,
+      invested: Math.round((+h.usd || 0) * (+h.fx || +F.usdMxn || 19.5) * 100) / 100 };
+  }
+  return (F.investments || []).find(i => i.id === key) || null;
+}
 function tiFormHtml(ed){
   const v = x => x != null && x !== '' ? esc(String(x)) : '', L = tiActivos(), sym = ed ? (ed.sym || '') : '';
-  const a = sym ? L.find(x => x.s === sym) : null, pn = a ? tiPrecioMxn(a, qiActivos()) : null;
+  const a = sym ? L.find(x => x.s === sym) : null, bI = btcInfo();
+  const pn = a ? (sym === 'BTC-USD' && bI.price > 0 ? bI.price * bI.fx : tiPrecioMxn(a, qiActivos())) : null;
   const opc = '<option value="">No: escribo cuánto vale</option>' + L.map(x => '<option value="' + esc(x.s) + '"' + (x.s === sym ? ' selected' : '') + '>' + esc(x.n + ' (' + x.tk + ')') + '</option>').join('') +
     (sym && !a ? '<option value="' + esc(sym) + '" selected>' + esc(sym) + '</option>' : '');
   const hoy = a && ed.qty > 0 && pn ? 'Hoy: <b>' + tiCantTxt(ed.qty, a) + '</b> a <b>' + money(pn) + '</b> por ' + (a.tipo === 'cripto' ? a.tk : a.tipo === 'etf' ? 'título' : 'acción') + ' = <b>' + money(ed.qty * pn) + '</b>. ' : '';
@@ -9999,7 +10037,7 @@ function tiFormHtml(ed){
     '<label><span>Cuánto metiste (pesos)</span><input type="number" name="qm" min="0.01" step="0.01" inputmode="decimal" value="'+(ed ? v(ed.invested) : '')+'" required></label>'+
     '<label class="ti-vale"><span>Vale hoy</span><input type="number" name="qv" min="0" step="0.01" inputmode="decimal" value="'+(ed && !sym ? v(ed.value) : '')+'" placeholder="lo que metiste"></label>'+
     '<label class="ti-cant"><span>Cuánto compraste <em>(opcional)</em></span><input type="number" name="qc" min="0" step="any" inputmode="decimal" value="'+(ed && ed.qtyManual ? v(ed.qty) : '')+'" placeholder="'+(ed && ed.qty > 0 && !ed.qtyManual ? v(ed.qty) : 'la calculo yo')+'"></label>'+
-    '<p class="ti-auto">' + hoy + 'Vale hoy se calcula solo: con el precio del día de la compra sé cuánto compraste y, con el de hoy, cuánto vale. Si sabes la cantidad exacta (la dice GBM o Bitso), escríbela.</p>'+
+    '<p class="ti-auto">' + hoy + 'Vale hoy se calcula solo: con el precio del día de la compra sé cuánto compraste y, con el de hoy, cuánto vale. Si sabes la cantidad exacta (la dice GBM o Bitso), escríbela. El Bitcoin se anota en la gráfica de Bitcoin de Finanzas.</p>'+
     '<span class="ti-form-acc"><button type="submit" class="ce-btn">'+(ed ? 'Guardar cambios' : 'Agregar')+'</button>'+
       (ed ? '<button type="button" class="ce-btn sec" onclick="tiCancelar()">Cancelar</button>' : '')+'</span></form>';
 }
@@ -10014,48 +10052,73 @@ function tiSymCambia(f, toco){
   f.classList.toggle('liga', !!s);
   if(a) f.qt.value = a.tipo === 'cripto' ? 'crypto' : 'acciones';
 }
+// Un aviso en el formulario, sin repintarlo, para no perder lo escrito.
+function tiAviso(f, txt){
+  let e = f.querySelector('.ef-error');
+  if(!e){ e = document.createElement('span'); e.className = 'ef-error'; f.insertBefore(e, f.querySelector('.ti-form-acc')); }
+  e.textContent = txt;
+}
 function tiGuardar(ev){
   if(ev) ev.preventDefault();
   const f = ev && ev.target, F = rawGet('finanzasmx_v2', null);
   if(!f || !F || FIN_REPO) return;
   const name = f.qn.value.trim(), invested = Math.round((parseFloat(f.qm.value) || 0) * 100) / 100, valor = parseFloat(f.qv.value);
-  const sym = f.qs ? f.qs.value : '', cant = f.qc ? parseFloat(f.qc.value) : NaN;
+  const sym = f.qs ? f.qs.value : '', cant = f.qc ? parseFloat(f.qc.value) : NaN, date = f.qf.value || hoyLocal();
   if(!name){ f.qn.focus(); return; }
   if(!(invested > 0)){ f.qm.focus(); return; }
+  const ek = _tiEdit || '', eBtc = ek.indexOf('btc:') === 0 ? ek.slice(4) : null, eInv = ek && !eBtc ? ek : null;
   F.investments = F.investments || [];
-  const i = _tiEdit ? F.investments.findIndex(x => x.id === _tiEdit) : -1;
-  const datos = { name, type: f.qt.value, invested, sym, date: f.qf.value || hoyLocal(),
-    value: sym ? (i >= 0 && +F.investments[i].value > 0 ? +F.investments[i].value : invested) : (f.qv.value !== '' && valor >= 0 ? Math.round(valor * 100) / 100 : invested) };
-  let x;
-  if(i >= 0) x = F.investments[i] = Object.assign({}, F.investments[i], datos);
-  else F.investments.push(x = Object.assign({ id: Date.now().toString(36) + Math.random().toString(36).slice(2), rate: 0 }, datos));
-  // La cantidad se recalcula con el precio del día salvo que la escribas tú.
-  if(sym && cant > 0){ x.qty = cant; x.qtyManual = true; } else { delete x.qty; delete x.qtyManual; }
+  if(sym === 'BTC-USD' && window.CIFRAS && CIFRAS.btcCompra){
+    // El Bitcoin va a su libreta, la de la gráfica de Finanzas, con el precio y el dólar del día de la compra.
+    const d = tiBtcDia(date) || {};
+    const r = CIFRAS.btcCompra(F, { date, mxn: invested, btc: cant > 0 ? cant : 0, btcPrice: d.btcPrice, fx: d.fx }, eBtc);
+    if(r.error){ tiAviso(f, r.error); return; }
+    if(eInv) F.investments = F.investments.filter(x => x.id !== eInv);
+  } else {
+    if(eBtc && window.CIFRAS) CIFRAS.btcBorrar(F, eBtc);
+    const i = eInv ? F.investments.findIndex(x => x.id === eInv) : -1;
+    const datos = { name, type: f.qt.value, invested, sym, date,
+      value: sym ? (i >= 0 && +F.investments[i].value > 0 ? +F.investments[i].value : invested) : (f.qv.value !== '' && valor >= 0 ? Math.round(valor * 100) / 100 : invested) };
+    let x;
+    if(i >= 0) x = F.investments[i] = Object.assign({}, F.investments[i], datos);
+    else F.investments.push(x = Object.assign({ id: Date.now().toString(36) + Math.random().toString(36).slice(2), rate: 0 }, datos));
+    // La cantidad se recalcula con el precio del día salvo que la escribas tú.
+    if(sym && cant > 0){ x.qty = cant; x.qtyManual = true; } else { delete x.qty; delete x.qtyManual; }
+  }
   tiRevaluar(F);
   _tiEdit = null;
   ceGuardar(F);
 }
-// Llegaron precios (de GitHub o el Bitcoin en vivo): pone al día lo que vale cada compra ligada. Mientras escribes en el
+function tiEscribiendo(){ const act = document.activeElement; return !!(act && act.closest && act.closest('#kpiBody .ti-form')); }
+// El panel de Total invertido abierto se repinta con lo último, salvo mientras escribes en su formulario.
+function tiRepintar(){
+  const ov = document.getElementById('kpiOverlay');
+  if(!ov || !ov.classList.contains('open') || ov.dataset.kpi !== 'invertido' || tiEscribiendo()) return;
+  const body = ov.querySelector('.gbm-body'), y = body ? body.scrollTop : 0;
+  abrirKpi('invertido'); if(body) body.scrollTop = y;
+}
+// Llegaron precios (de GitHub o el Bitcoin en vivo): pone al día lo que vale cada compra. Mientras escribes en el
 // formulario solo guarda, sin repintar, para no perder lo escrito.
 function tiPreciosLlegaron(){
   const F = rawGet('finanzasmx_v2', null);
-  if(!F || FIN_REPO || !tiRevaluar(F)) return;
-  const act = document.activeElement;
-  if(act && act.closest && act.closest('#kpiBody .ti-form')){ try{ rawSet('finanzasmx_v2', F); }catch(e){ return; } D.fin = F; if(window.CIFRAS) CIFRAS.refrescar(); return; }
+  if(!F || FIN_REPO) return false;
+  if(!tiRevaluar(F)){ tiRepintar(); return false; }
+  if(tiEscribiendo()){ try{ rawSet('finanzasmx_v2', F); }catch(e){ return false; } D.fin = F; if(window.CIFRAS) CIFRAS.refrescar(); return true; }
   ceGuardar(F);
+  return true;
 }
 let _tiBtcPedido = 0;
 function tiPedirPrecios(){
   qiPedirPrecios();
   if(Date.now() - _tiBtcPedido > 300000 && (!_qiVivo.btc || Date.now() - _qiVivo.btc.t > 300000)){ _tiBtcPedido = Date.now(); qiPedirBtc().then(tiPreciosLlegaron); }
 }
-// Al arrancar: con los precios guardados pone al día lo que vale cada compra antes del primer pintado, y si hay compras
-// ligadas pide los de ahora.
+// Al arrancar: con los precios guardados pone al día lo que vale cada compra —y muda el Bitcoin a su libreta— antes del
+// primer pintado; si hay compras ligadas o Bitcoin, pide los precios de ahora.
 function tiArranque(){
   const F = rawGet('finanzasmx_v2', null);
   if(!F || FIN_REPO) return;
   if(tiRevaluar(F)){ try{ rawSet('finanzasmx_v2', F); D.fin = F; if(window.CIFRAS) CIFRAS.refrescar(); }catch(e){} }
-  if((F.investments || []).some(i => i.sym)) tiPedirPrecios();
+  if((F.investments || []).some(i => i.sym) || tiBtcAbiertas(F).ops.length) tiPedirPrecios();
 }
 function tiEditar(id){
   _tiEdit = id; abrirKpi('invertido');
@@ -10112,9 +10175,15 @@ function efBorrar(id){
 }
 function tiBorrar(id){
   const F = rawGet('finanzasmx_v2', null); if(!F || FIN_REPO) return;
-  const x = (F.investments || []).find(i => i.id === id); if(!x) return;
-  if(!confirm('¿Borrar '+(x.name || 'esta inversión')+' ('+tiFecha(x.date)+', '+money(+x.invested || 0)+')? También se borra en Finanzas.')) return;
-  F.investments = F.investments.filter(i => i.id !== id);
+  if(String(id).indexOf('btc:') === 0){
+    const h = (F.btcHistory || []).find(x => x.id === id.slice(4)); if(!h || !window.CIFRAS) return;
+    if(!confirm('¿Borrar la compra de Bitcoin del '+tiFecha(h.date)+' ('+money((+h.usd || 0) * (+h.fx || +F.usdMxn || 19.5))+', '+Math.abs(+h.btc || 0).toFixed(6)+' BTC)? También se borra de la gráfica de Bitcoin de Finanzas.')) return;
+    CIFRAS.btcBorrar(F, h.id);
+  } else {
+    const x = (F.investments || []).find(i => i.id === id); if(!x) return;
+    if(!confirm('¿Borrar '+(x.name || 'esta inversión')+' ('+tiFecha(x.date)+', '+money(+x.invested || 0)+')? También se borra en Finanzas.')) return;
+    F.investments = F.investments.filter(i => i.id !== id);
+  }
   if(_tiEdit === id) _tiEdit = null;
   ceGuardar(F);
 }
@@ -15031,43 +15100,56 @@ function kpiDetalle(id){
   // Inversiones: lo que cambies aquí o allá es el mismo dato. Donde Finanzas es la copia de la PC (el iPad), se ven pero
   // no se editan: esa copia se rehace en cada commit.
   if(id==='invertido'){
-    const editable=tiEditable(), metido=inv.reduce((a,i)=>a+(+i.invested||0),0), dif=totalInv-metido;
+    // Lo invertido es tus inversiones de Finanzas más tu Bitcoin (su libreta, btcHistory, la de la gráfica de Finanzas).
+    const editable=tiEditable(), btcI=btcInfo(), BA=tiBtcAbiertas(F), btcV=Math.max(0,btcI.mxn), pBtc=btcI.price*btcI.fx;
+    const fxDe=h=>+h.fx||btcI.fx, esVenta=h=>h.tipo==='venta'||+h.btc<0;
+    const btcCompras=BA.ops.filter(h=>!esVenta(h));
+    const btcMet=BA.ops.reduce((a,h)=>a+(esVenta(h)?-1:1)*(+h.usd||0)*fxDe(h),0);
+    const totalTI=totalInv+btcV, metido=inv.reduce((a,i)=>a+(+i.invested||0),0)+Math.max(0,btcMet), dif=totalTI-metido;
     const tipoTxt=t=>(TI_TIPOS.find(x=>x[0]===t)||[0,'Otro'])[1];
-    const compras=inv.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))).map(i=>{
-      const met=+i.invested||0, v=+i.value||met, gan=v-met;
-      return '<div class="ti-fila'+(_tiEdit===i.id?' edita':'')+'"><span class="ti-f">'+tiFecha(i.date)+'</span>'+
-        '<span class="ti-n"><b>'+esc(i.name||'Inversión')+'</b><i>'+tipoTxt(i.type)+tiSigueTxt(i)+'</i></span>'+
-        '<span class="ti-m">metiste <b>'+money(met)+'</b><br>vale <b>'+money(v)+'</b>'+
-          (met>0&&Math.abs(gan)>=1?' <em class="'+(gan>=0?'ok':'mal')+'">'+(gan>=0?'+':'−')+money(Math.abs(gan))+'</em>':'')+'</span>'+
-        (editable?'<span class="ti-acc"><button type="button" class="ce-btn sec" onclick="tiEditar(\''+i.id+'\')">Editar</button>'+
-          '<button type="button" class="ce-btn sec" onclick="tiBorrar(\''+i.id+'\')">Borrar</button></span>':'')+'</div>';
-    }).join('');
-    // El portafolio: cada instrumento con lo de todas sus compras sumado.
+    const mHtml=(met,v)=>'metiste <b>'+money(met)+'</b><br>vale <b>'+money(v)+'</b>'+
+      (met>0&&Math.abs(v-met)>=1?' <em class="'+(v-met>=0?'ok':'mal')+'">'+(v-met>=0?'+':'−')+money(Math.abs(v-met))+'</em>':'');
+    const filasTI=inv.map(i=>{ const met=+i.invested||0; return {date:i.date, key:i.id, name:i.name||'Inversión', sub:tipoTxt(i.type)+tiSigueTxt(i), m:mHtml(met,+i.value||met)}; });
+    BA.ops.forEach(h=>{
+      const q=Math.abs(+h.btc||0), mx=(+h.usd||0)*fxDe(h), cant=tiCantTxt(q,{tipo:'cripto',tk:'BTC'});
+      filasTI.push(esVenta(h)
+        ?{date:h.date, key:null, name:'Bitcoin · venta', sub:'Cripto · '+cant+' · se edita en Finanzas', m:'te dieron <b>'+money(mx)+'</b>'}
+        :{date:h.date, key:h.id==='total'?null:'btc:'+h.id, name:'Bitcoin', sub:'Cripto · <span class="ti-sigue" title="Vale hoy sale del precio del Bitcoin de ahora">'+cant+'</span>', m:mHtml(mx,pBtc>0?q*pBtc:mx)});
+    });
+    const compras=filasTI.sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))).map(o=>
+      '<div class="ti-fila'+(o.key&&_tiEdit===o.key?' edita':'')+'"><span class="ti-f">'+tiFecha(o.date)+'</span>'+
+        '<span class="ti-n"><b>'+esc(o.name)+'</b><i>'+o.sub+'</i></span>'+
+        '<span class="ti-m">'+o.m+'</span>'+
+        (editable&&o.key?'<span class="ti-acc"><button type="button" class="ce-btn sec" onclick="tiEditar(\''+o.key+'\')">Editar</button>'+
+          '<button type="button" class="ce-btn sec" onclick="tiBorrar(\''+o.key+'\')">Borrar</button></span>':'')+'</div>').join('');
+    // El portafolio: cada instrumento con lo de todas sus compras sumado; el Bitcoin, con lo que vale todo el que tienes.
     const porNombre={};
     inv.forEach(i=>{ const k=String(i.name||'Inversión').trim(), x=porNombre[k]||(porNombre[k]={v:0,m:0,n:0});
       x.v+=(+i.value||+i.invested||0); x.m+=(+i.invested||0); x.n++; });
+    if(btcV>0){ const x=porNombre['Bitcoin']||(porNombre['Bitcoin']={v:0,m:0,n:0}); x.v+=btcV; x.m+=Math.max(0,btcMet); x.n+=btcCompras.length; }
     const filas=Object.keys(porNombre).sort((a,b)=>porNombre[b].v-porNombre[a].v).map(k=>{
       const x=porNombre[k], gan=x.m>0?x.v-x.m:null;
-      return kpiBarra(esc(k)+(x.n>1?' · '+x.n+' compras':''), money(x.v), totalInv>0?x.v/totalInv*100:0, C, (totalInv>0?Math.round(x.v/totalInv*100)+'% de tu portafolio':'')+
+      return kpiBarra(esc(k)+(x.n>1?' · '+x.n+' compras':''), money(x.v), totalTI>0?x.v/totalTI*100:0, C, (totalTI>0?Math.round(x.v/totalTI*100)+'% de tu portafolio':'')+
         (gan!==null&&Math.abs(gan)>=1?' · metiste '+money(x.m)+', '+(gan>=0?'gana ':'pierde ')+'<b>'+money(Math.abs(gan))+'</b> ('+(gan>=0?'+':'−')+Math.abs(gan/x.m*100).toFixed(1)+'%)':''));
     }).join('');
-    const btcI=btcInfo();
+    const nI=inv.length+btcCompras.length;
     return {titulo:'📈 Total invertido', sub:'Lo que tienes trabajando, compra por compra: qué compraste, cuándo, cuánto metiste y cuánto vale hoy.',
       html:
-      '<div class="kpi-cifra" style="color:'+C+'">'+money(totalInv)+'</div>'+
-      '<div class="kpi-cifra-sub">'+inv.length+' inversi'+(inv.length===1?'ón':'ones')+' en Finanzas · metiste <b>'+money(metido)+'</b>'+
+      '<div class="kpi-cifra" style="color:'+C+'">'+money(totalTI)+'</div>'+
+      '<div class="kpi-cifra-sub">'+nI+' compra'+(nI===1?'':'s')+' en Finanzas · metiste <b>'+money(metido)+'</b>'+
         (Math.abs(dif)>=1?' · '+(dif>=0?'ganan ':'pierden ')+'<b>'+money(Math.abs(dif))+'</b>':'')+'</div>'+
       // Tu estrategia de hoy: sin tarjeta que pagar, lo que va a GBM hoy y este mes (ctEstrategiaHtml).
       ctEstrategiaHoyHtml()+
       kpiSec('🧾 Tus inversiones, compra por compra')+
       '<div class="ti-lista">'+(compras||'<div class="gbm-vacio">Todavía no hay inversiones registradas.</div>')+'</div>'+
-      (editable?tiFormHtml(_tiEdit?inv.find(i=>i.id===_tiEdit):null)
+      (BA.resto>0&&pBtc>0&&BA.resto*pBtc>=1?kpiNota('Tu Bitcoin incluye '+BA.resto.toFixed(6)+' BTC ('+money(BA.resto*pBtc)+') que te quedaron de antes.'):'')+
+      (editable?tiFormHtml(tiEditObj(F,_tiEdit))
         :kpiNota(FIN_REPO?'En este dispositivo tus cifras son la copia de tu PC'+(FIN_REPO.fecha?' del '+tiFecha(FIN_REPO.fecha):'')+
           ': las compras se agregan y se editan en tu PC y llegan aquí con el siguiente commit.'
           :'Abre Finanzas una vez en este navegador para registrar aquí tus compras.'))+
       kpiSec('📊 Tu portafolio hoy')+
       '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">Todavía no hay inversiones registradas en Finanzas.</div>')+'</div>'+
-      (btcI.mxn>0?kpiNota('Aparte tienes <b>'+money(btcI.mxn)+'</b> en Bitcoin ('+btcI.held.toFixed(6)+' BTC a precio de hoy). No suma aquí: está en el Fondo Maestría y en el Patrimonio.'):'')+
+      (btcV>0?kpiNota('Tu Bitcoin es el de la gráfica de Bitcoin del Plan de Inversiones de Finanzas: lo que anotas aquí sale allá y lo de allá sale aquí, con el mismo precio.'):'')+
       (window.CIFRAS?kpiSec('💸 Lo que entra cada mes')+
         kpiPaso('El ahorro del plan va a GBM','Con depa llegan <b>'+CIFRAS.v('ahorroMesDepa')+'</b> al mes (lo del 1, lo del 15 y Didi); en casa de tu familia, <b>'+CIFRAS.v('ahorroMesCasa')+'</b>. Al cerrar la Fase 1 la proyección espera <b>'+CIFRAS.v('alemaniaMarzo')+'</b> en GBM; con el ingreso nuevo, <b>'+CIFRAS.v('marzoParaSalida')+'</b>.',C):'')+
       kpiSec('🎯 Lo que falta')+
@@ -15122,7 +15204,7 @@ function renderMedidores(){
   const interesMesKpi=conTasa.reduce((a,d)=>a+(+d.balance||0)*(d.rate/100)/12,0);
   const interesIniKpi=conTasa.reduce((a,d)=>a+(+d.total||+d.balance||0)*(d.rate/100)/12,0);
   const interesPctKpi=interesIniKpi>0?Math.max(0,Math.min(100,(1-interesMesKpi/interesIniKpi)*100)):100;
-  const totalInvKpi=(D.fin.investments||[]).reduce((a,i)=>a+(+i.value||+i.invested||0),0);
+  const totalInvKpi=(D.fin.investments||[]).reduce((a,i)=>a+(+i.value||+i.invested||0),0)+Math.max(0,btcInfo().mxn);   // el Bitcoin es parte de lo invertido (su libreta, btcHistory)
   const deudaTotKpi=(D.fin.debts||[]).reduce((a,d)=>a+(+d.balance||0),0);
   const deudaCaraBalKpi=CIFRAS.deudasConInteres(D.fin).reduce((a,d)=>a+d.balance,0);
   // Lo pagado de TODA la deuda, sobre lo que nació cada una (las liquidadas también cuentan): la
