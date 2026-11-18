@@ -458,6 +458,7 @@ entrevistas.html es el temario: arquitectura, protocolos (CAN, LIN, Ethernet, XC
 - La estructura de datos y el orden de carga están en Entrevistas/CLAUDE.md y se respetan.
 - El contenido técnico es exacto y vigente (versiones de normas, ISTQB actual); lo dudoso se verifica.
 - Cada tema nuevo trae su quiz.
+- En la ventana del ISTQB del Dashboard el simulacro completo se empieza desde arriba, y cada pregunta trae su glosario: lo que se pregunta se explica al contestar, y lo que se presenta como del programa es su frase textual, con su página.
 - Cada tema de Python abre con su explicación en llano —qué es, para qué sirve, lo que importa— antes de la jerga: un tema nuevo trae la suya en js/data-python-intro.js.`
     },
 

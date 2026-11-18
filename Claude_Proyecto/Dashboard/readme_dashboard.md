@@ -26,7 +26,7 @@ en una página.
 | `noticias-actualizar.js` · `noticias-inversion.js` | Las noticias de *Qué invertir hoy*: el script que lee Google Noticias —lo corren la tarea de GitHub cada 4 horas (`.github/workflows/noticias-inversion.yml`, rama `datos-noticias`) y el hook de pre-commit de la PC— y el archivo que deja el hook (`window.NOTICIAS_INVERSION`), que el panel carga con `<script src>` |
 | `precios-actualizar.js` | Los precios de *Qué invertir hoy* con su historia: lee Yahoo Finanzas y escribe `precios.json`. Lo corre la tarea de GitHub cada media hora con la bolsa abierta (`.github/workflows/precios-acciones.yml`) y lo publica en la rama `datos-precios`, de donde lo lee el panel |
 | `ficha.js` · `ficha.css` | El panel de ficha de producto (`pfAbrirId`, `pfPorNombre`, `.lc-info`) que usan la Lista de Compras y la rutina |
-| `examen-genai.js` · `examen-genai-data.js` (A, 79 preguntas) · `examen-genai-data-b.js` (B, 77) | El simulacro ISTQB CT-GenAI: motor y los dos bancos |
+| `examen-genai.js` · `examen-genai-data.js` (A, 79 preguntas) · `examen-genai-data-b.js` (B, 77) · `examen-genai-glosario.js` (64 términos) | El simulacro ISTQB CT-GenAI: motor, los dos bancos y el glosario de las preguntas |
 | `syllabus/` (**fuera de git**) | La copia local del syllabus CT-GenAI LATAM: el PDF y `ct-genai-syllabus.js`, el texto de cada sección con su página. Su aviso de derechos solo permite reproducirlo en parte y para uso privado, así que no va al repositorio público (`.gitignore`) |
 | `sin-zoom.js` | Bloqueo del zoom en táctil. Lo cargan las seis apps |
 | `graficas-svg.js` | Las gráficas de las páginas sueltas (Laptop y Actriz IA): barras, rangos, columnas apiladas con meta, línea con umbrales, barra segmentada y dispersión (`GSVG`), con la paleta categórica validada (`--s1`…`--s5`), tooltip, leyenda y la tabla de datos debajo |
@@ -404,38 +404,53 @@ simulacro (`istqbMarcador()`).
 Tocarla abre su ventana, `#istqbOverlay` (`abrirIstqb()`): tan ancha y alta como la del alemán —hasta 1900 px, el
 96 % del ancho y el 92 % del alto— y opaca. Adán, 22-oct-2026: *"está muy saturada de información, quita la más
 innecesaria, las preguntas hazlas más pequeñas pero dale un mejor formato de texto"*. Por eso lleva **dos columnas**
-(`istqbPintar()`) y bajo el título una sola línea con por qué Coach la eligió (`iqPorQue`): los puntos en juego de su
-capítulo y si es el que más tiene.
+(`istqbPintar()`) bajo una franja a todo lo ancho, y bajo el título una sola línea con por qué Coach la eligió
+(`iqPorQue`): los puntos en juego de su capítulo y si es el que más tiene.
 
+- **El simulacro completo, arriba** (`istqbSimHtml`; Adán, 18-nov-2026: *"diferentes tipos de examen completo y mostrar
+  la opción al principio de la ventana… no me da la opción de iniciar la simulación del examen completo"*): sus cuatro
+  juegos —Examen A, Examen B, Mezcla y Tus fallos, ver *El simulacro del ISTQB CT-GenAI*—, cada uno en un botón con lo
+  que es (el de Tus fallos, cuántas fallaste y cuántas no has visto), y el reloj: 75 minutos, tu caso, o 60
+  (`istqbReloj`). **Tocar un juego empieza el examen** ahí mismo (`istqbSimulacro` → `XGenAI.iniciar`, con lo que dice
+  `XGenAI.estado()`). Si hay uno a medias va primero *Reanudar*, con lo que llevas y el tiempo que queda
+  (`istqbAlSimulacro()`), y empezar otro pide confirmar, porque ese se pierde.
 - **La pregunta** (`iqPreguntaHtml`), en una hoja centrada de 820 px (`.iqv-hoja`). Arriba, en etiquetas, su capítulo
   con el nombre oficial, su nivel K —el `title` dice qué pide ese nivel y cuántos puntos trae el examen de él (`IQ_K`,
   `iqKExamen`)— y lo que vale. Si trae caso, **el caso va aparte**, en su recuadro, y **la pregunta debajo, en
-  negrita** (`iqPartes`: se parte en su último «¿»; 72 de las 156 traen caso). Las palabras clave van subrayadas en el
-  color de la ventana. La pregunta mide 16 px y las opciones 14. Se contesta tocando una opción o con 1 a 4 (o A a D),
-  y **cada pregunta se contesta una vez**: la primera respuesta es la que cuenta, como en el examen. Contestada, la
-  buena en verde con *Correcta*, la tuya en rojo con *Tu respuesta*, *Siguiente pregunta* (también Enter) y, debajo,
-  **el porqué** y **lo que dice el syllabus** (`ctGenaiFuente`, con su objetivo): la sección, cada frase textual con su
-  página del PDF y *Abrir el syllabus en la página N*. Antes de contestar no hay nada que la responda: primero se
-  recuerda y después se lee.
-- **Cómo vas** (`iqVasHtml`), en 420 px: arriba, **los capítulos que lees** (`iqLeeHtml`, `iqLectura`; Adán, 26-oct-2026:
-  *"ponme los capítulos del GenAI que debo leer, pero ponme todos de una sola, resáltame cuál debe ser"*): los cinco, en el orden del plan del CT-GenAI —sus pasos *Capítulo N leído* de
-  `META_PLAN.istqbgenai`, con su fecha—, cada uno con sus subtemas, lo que vale en el examen y la página donde empieza;
-  **tocar su nombre abre el syllabus en esa página** (`iqPdf`: la copia local `CT_GENAI_SYLLABUS` o, sin ella —en el iPad
-  o en la página publicada—, el PDF oficial de `meta.syllabusUrl`; la página sale de `secciones` del banco, que siempre
-  está). **El primero sin leer va resaltado** con *Lee este* y su fecha (*era para el sáb 24 oct* si ya pasó), los leídos
-  en verde y tachados, y la casilla los marca (`iqCapLeido`: el mismo paso del plan en `metas_plan_v1`, el de Mis Metas).
-  **Cada capítulo se parte en sus subtemas** (`iqSubsHtml`; Adán, 28-oct-2026: *"divídelo en subtemas también para
-  separarlo más"*): las 37 secciones x.y.z del syllabus, una por objetivo del examen, agrupadas bajo su x.y, cada una con
-  su enlace a su página, su objetivo con su nivel K, cuántas preguntas y de qué tipo salen de ella en el examen
-  (*1 caso práctico de 2 puntos*) y lo que llevas contestado de ella en la pregunta del día. Los del capítulo que toca se
-  abren solos y el primero sin leer dice *Sigue*; cada uno se palomea aparte (`iqSubLeido`, en `genaiLeido` de
-  `dash-aprende-v1`, con su fecha) y con el último el capítulo queda leído en el plan y se abren los del siguiente; luego **tu meta** —presentar en el mes de la tarea a1-7 con el simulacro en su meta
-  dos veces seguidas, la regla de `habSimulacro()`—, tus últimos diez simulacros en barras contra la meta y el corte,
-  y *Simulacro completo →* (`istqbAlSimulacro()`); **esta semana**, una marca por respuesta, con lo contestado del
-  banco y tu acierto; **dónde están los puntos**, cada capítulo en una línea con su nombre en llano, lo que llevas
-  bien y sus puntos en juego (`istqbEnJuego`: lo que vale por lo que te falta de acierto, el orden de Coach), y **lo
-  que fallaste** (`istqbHistorial()`), las seis más recientes con la buena, la tuya, el porqué y su sección: la ruta de
-  IA pide que cada pregunta fallada vaya a una lista con su sección del syllabus.
+  negrita** (`iqPartes`: se parte en su último «¿»; 72 de las 156 traen caso). La pregunta mide 16 px y las opciones
+  14. Se contesta tocando una opción o con 1 a 4 (o A a D), y **cada pregunta se contesta una vez**: la primera
+  respuesta es la que cuenta, como en el examen. Contestada, la buena en verde con *Correcta*, la tuya en rojo con *Tu
+  respuesta*, *Siguiente pregunta* (también Enter) y, debajo del glosario, **el porqué** y **lo que dice el syllabus**
+  (`ctGenaiFuente`, con su objetivo): la sección, cada frase textual con su página del PDF y *Abrir el syllabus en la
+  página N*. Antes de contestar no hay nada que la responda: primero se recuerda y después se lee.
+- **El glosario de la pregunta** (`ctGenaiTerminos`, de examen-genai.js; Adán, 18-nov-2026: *"abajo de cada pregunta y
+  su respuesta debemos tener el glosario de las palabras que se ocupan en la pregunta, para entender conforme a la
+  marcha… subrayar de otro color las palabras claves y que tenga el mismo color en el glosario"*). Los términos del
+  temario que salen en el caso o en la pregunta van subrayados, y el glosario va debajo de las opciones: cada término
+  con una línea en llano y, si el programa trae una frase que lo explica, esa frase textual con su página. Los tres más
+  específicos (los que salen en menos preguntas) llevan color —azul, amarillo y magenta: la terna que pasa la
+  validación de paleta en claro y en oscuro sin confundirse con el verde de *Correcta* ni el rojo de *Tu respuesta*— y
+  el mismo color en su renglón del glosario; los demás, gris; hasta seis por pregunta. **Lo que se pregunta se explica
+  al contestar** —el término en negritas, el de la misma sección del programa o el que sostiene su cita—: antes dice
+  *Es lo que te preguntan*. Contestada, el glosario suma los términos de las opciones.
+- **Cómo vas** (`iqVasHtml`), en 420 px: arriba, **los capítulos que lees** (`iqLeeHtml`, `iqLectura`), los cinco en el
+  orden del plan del CT-GenAI —sus pasos *Capítulo N leído* de `META_PLAN.istqbgenai`, con su fecha—, **contraídos**
+  (Adán, 18-nov-2026: *"los capítulos que leo deben estar contraídos y tener info solamente necesaria"*): una línea por
+  capítulo con su número, de qué trata en llano (`IQ_CAP_LLANO`, el nombre oficial en su `title`) y cómo va —*Lee este*
+  el primero sin leer, *3 de 10* los demás y *✓ leído*, en verde y tachado, los leídos—. Al tocarlo se abre (`.iqv-cl`):
+  su nombre oficial con el enlace al syllabus en su página (`iqPdf`: la copia local `CT_GENAI_SYLLABUS` o, sin ella —en
+  el iPad o en la página publicada—, el PDF oficial de `meta.syllabusUrl`), lo que vale y para cuándo es, la casilla
+  *Capítulo leído* (`iqCapLeido`: el mismo paso del plan en `metas_plan_v1`, el de Mis Metas) y sus subtemas
+  (`iqSubsHtml`): las 37 secciones x.y.z del syllabus, cada una con su casilla (`iqSubLeido`, en `genaiLeido` de
+  `dash-aprende-v1`, con su fecha), su número y su título, que abre el PDF en su página; el primero sin leer del
+  capítulo que toca dice *Sigue*. Con el último subtema, el capítulo queda leído en el plan. Todos empiezan contraídos
+  y se abren al tocarlos (`iqSubToggle`). Luego **tu meta** —presentar en el mes de la tarea a1-7 con el simulacro en su
+  meta dos veces seguidas, la regla de `habSimulacro()`— con tus últimos diez simulacros en barras contra la meta y el
+  corte; **esta semana**, una marca por respuesta, con lo contestado del banco y tu acierto; **dónde están los puntos**,
+  cada capítulo en una línea con su nombre en llano, lo que llevas bien y sus puntos en juego (`istqbEnJuego`: lo que
+  vale por lo que te falta de acierto, el orden de Coach), y **lo que fallaste** (`istqbHistorial()`), las seis más
+  recientes con la buena, la tuya, el porqué y su sección: la ruta de IA pide que cada pregunta fallada vaya a una lista
+  con su sección del syllabus.
 
 Se quitaron la foto del capítulo, el recuadro de *Al contestar*, la lista de las secciones del capítulo con lo que
 llevas en cada una y el plan de la meta (vive en Mis Metas): repetían lo de otra parte o se usaban poco, y empujaban
@@ -443,10 +458,11 @@ la pregunta fuera de la vista.
 
 Mientras la ventana está abierta, Mi Día no rota, las teclas no lo mueven por detrás (`istqbTecla`) y la brújula
 enseña el prompt de Entrevistas (la vista `#istqbOverlay.open`); se cierra con ✕, clic fuera o Escape. Bajo 1100 px
-va en una columna, con *Cómo vas* debajo, y bajo 640 px a pantalla completa, sin brújula. Medido: a 2048×1040 la
-ventana mide 1884×957 y sus columnas 1462 y 420 px; a 1600×900, 1472×828 (1050 y 420); a 1366×768, 1257×707 (835 y
-420), y la pregunta con caso cabe entera sin desplazar; a 1024 y a 390, una columna. Sin desplazamiento horizontal en
-ninguno, en claro y en oscuro.
+va en una columna, con *Cómo vas* debajo y la franja del simulacro desplazándose con todo, y bajo 640 px a pantalla
+completa, sin brújula, con los juegos de dos en dos. Medido: la franja mide 98 px; a 1600×1000 las columnas miden 1050
+y 420 px y la pregunta con caso, sus opciones y su glosario caben sin desplazar; a 1366×768, 835 y 420, y la pregunta
+con caso y sus opciones caben (el glosario, al bajar); a 1100×800, 590 y 420; a 390, una columna. Sin desplazamiento
+horizontal en ninguno, en claro y en oscuro.
 
 Las respuestas viven en `dash-aprende-v1` → `istqb`, una lista por fecha local (`hoyLocal()`) de
 `{id, e, ok}`; una fecha con un objeto suelto es del primer formato y se lee igual. Se quedan los
@@ -1556,20 +1572,30 @@ El reparto sigue las *Exam Structure Tables v1.0*:
 Las 6 K3 valen 2 puntos, las 34 K1/K2 valen 1; corte oficial 30 (65 %). Reloj de 75 minutos (los
 60 oficiales + 25 % por idioma) o 60.
 
-**Tres juegos**: **A** (79), **B** (77) —mismo temario por caras distintas, como los exámenes de
-muestra A y B de ISTQB— y **Mezcla** (156). 0 enunciados y 0 respuestas correctas idénticas entre
+**Cuatro juegos**: **A** (79), **B** (77) —mismo temario por caras distintas, como los exámenes de
+muestra A y B de ISTQB—, **Mezcla** (156) y **Tus fallos** (los 156: en cada objetivo van primero las variantes que
+fallaste la última vez que las viste —en la pregunta del día o en un simulacro, que guarda qué acertó en
+`intentos[].r`—, luego las que no has visto y al final las que acertaste; `debiles()`). 0 enunciados y 0 respuestas correctas idénticas entre
 bancos, ids sin solape. Cada intento recorre el blueprint objetivo por objetivo, elige variantes
 al azar y baraja preguntas y opciones (300 exámenes simulados: 300 combinaciones distintas).
-**Durante el examen solo se ve número y valor**; capítulo, objetivo y nivel K se guardan para la
-revisión, que pone bajo cada porqué el objetivo y lo que dice el syllabus (`fuenteHtml()`, publicado como
+**Durante el examen solo se ve número y valor**, sin términos marcados ni glosario, como en el real; capítulo,
+objetivo y nivel K se guardan para la revisión, que marca los términos de cada pregunta, pone su glosario bajo las
+opciones (`terminos`, publicado como `ctGenaiTerminos`) y bajo cada porqué el objetivo y lo que dice el syllabus (`fuenteHtml()`, publicado como
 `ctGenaiFuente`; un examen guardado antes de que hubiera citas las toma del banco por su id).
 
 **Es una capa propia** (`#xg-overlay`, clases `.xg-*`) porque `mdPintar()` repinta el cuerpo del
 panel entero al cambiar de paso y un examen incrustado perdería el DOM y el temporizador. Usa las
 variables de tema del dashboard. Se guarda en `localStorage['examen_genai_v1']`: `curso` (el
 examen a medias con el **instante** de finalización, para reanudar con el tiempo real que quedaba)
-e `intentos` (puntos, %, minutos, desglose por capítulo y **qué juego**). Los bloques de arranque
-—juego y reloj— van arriba, bajo los cuatro datos del examen. Para que un paso dispare algo de la
+e `intentos` (puntos, %, minutos, desglose por capítulo, **qué juego** y qué acertó en cada pregunta). Los bloques de
+arranque —el juego y *▶ Empezar · 75 minutos* o *60 minutos*— van arriba, bajo los cuatro datos del examen; la ventana
+de la pregunta del día también lo empieza (`XGenAI.iniciar(juego, minutos)`, con lo que enseña de `XGenAI.estado()`).
+
+**El glosario de las preguntas** (`examen-genai-glosario.js`, `EXAMEN_GENAI_GLOSARIO`): 64 términos del programa, cada
+uno con cómo se reconoce en el texto, su sección, una línea en llano y —51 de ellos— la frase textual del programa que
+lo explica, con su página, tomada de las citas de los bancos; los compuestos van antes que los sencillos («prompt de
+sistema» antes que «prompt»). La línea en llano es explicación, no cita. El control 53 del verificador comprueba que
+cada cita sea textual y de su página, y que cada término salga en alguna pregunta. Para que un paso dispare algo de la
 app, `mdPintar()` pinta `paso.boton` (HTML nuestro, detrás de `linkHtml`) con `.md-paso-btn`.
 
 ---

@@ -41,13 +41,14 @@
   const SETS = {
     A:  { n: 'Examen A', d: 'El primer juego de preguntas' },
     B:  { n: 'Examen B', d: 'El segundo, sin repetir ningún ángulo del A' },
-    AB: { n: 'Mezcla', d: 'Los dos bancos a la vez: la prueba más dura' }
+    AB: { n: 'Mezcla', d: 'Los dos bancos a la vez: la prueba más dura' },
+    D:  { n: 'Tus fallos', d: 'Primero las que fallaste y las que no has visto' }
   };
   function bancoDe(s) {
     const a = D().banco;
     const b = (window.EXAMEN_GENAI_B && window.EXAMEN_GENAI_B.banco) || [];
     if (s === 'B') return b.length ? b : a;
-    if (s === 'AB') return a.concat(b);
+    if (s === 'AB' || s === 'D') return a.concat(b);
     return a;
   }
   function haySetB() { return !!(window.EXAMEN_GENAI_B && window.EXAMEN_GENAI_B.banco.length); }
@@ -184,13 +185,146 @@
     return links ? `<span class="sy-links">${links}</span>` : '';
   };
 
+
+  /* ── El glosario de cada pregunta ─────────────────────────────────────────────────────────────────
+     Adán, 18-nov-2026: "abajo de cada pregunta y su respuesta debemos tener el glosario de las palabras que se ocupan
+     en la pregunta, para entender conforme a la marcha… subrayar de otro color las palabras claves y que tenga el
+     mismo color en el glosario". Busca en el enunciado —el caso y la pregunta— los términos de
+     EXAMEN_GENAI_GLOSARIO (examen-genai-glosario.js); ya contestada, también en las opciones. Los tres más
+     específicos del enunciado (los que salen en menos preguntas de los bancos) llevan color —azul, amarillo y
+     magenta: la terna que pasa la validación de paleta en claro y en oscuro sin parecerse al verde de «correcta» ni
+     al rojo de «tu respuesta»—; los demás, gris. Cada término va subrayado en su color en el texto y con el mismo
+     color en el glosario, que va debajo de las opciones: su línea en llano y, si el programa trae una frase que lo
+     explique, esa frase textual con su página.
+     Antes de contestar no se define lo que se pregunta —el término en negritas del enunciado, el de la misma sección
+     del programa que la pregunta o el que la sostiene con su cita—: dice «es lo que te preguntan» y se explica al
+     contestar. Primero se recuerda y después se lee. Lo usan la pregunta del día de Mi Día y la revisión del
+     simulacro (`window.ctGenaiTerminos`); durante el examen no, como en el real. */
+  const GL_MAX = 6, GL_COLORES = 3, glRe = {};
+  function glRegex(e) {
+    return glRe[e.re] || (glRe[e.re] = new RegExp('(?<![\\p{L}\\p{N}])(?:' + e.re + ')(?![\\p{L}\\p{N}])', 'giu'));
+  }
+  // El texto de un HTML, tramo por tramo (las etiquetas no se tocan), con si va dentro de negritas.
+  function glTramos(html, fn) {
+    let b = 0;
+    return String(html || '').split(/(<[^>]+>)/).map(s => {
+      if (s.charAt(0) === '<') { if (/^<b[\s>]/i.test(s)) b++; else if (/^<\/b>/i.test(s)) b = Math.max(0, b - 1); return s; }
+      return fn(s, b > 0);
+    }).join('');
+  }
+  // Cada aparición de un término en un tramo; en una misma posición gana el primero del glosario (los compuestos).
+  function glBuscar(s, G, cb) {
+    let i = 0, out = '';
+    while (i < s.length) {
+      let mejor = null;
+      G.forEach(e => {
+        const re = glRegex(e); re.lastIndex = i;
+        const m = re.exec(s);
+        if (m && m[0] && (!mejor || m.index < mejor.m.index)) mejor = { m: m, e: e };
+      });
+      if (!mejor) { out += s.slice(i); break; }
+      out += s.slice(i, mejor.m.index) + cb(mejor.m[0], mejor.e);
+      i = mejor.m.index + mejor.m[0].length;
+    }
+    return out;
+  }
+  function terminos(q, contestada) {
+    const G = window.EXAMEN_GENAI_GLOSARIO || [];
+    if (!q || !G.length) return { marca: h => h, html: '', n: 0 };
+    const vistos = new Map();
+    let pos = 0, enunciado = true;
+    const ver = h => glTramos(h, (s, bold) => glBuscar(s, G, (t, e) => {
+      const v = vistos.get(e);
+      if (!v) vistos.set(e, { e: e, bold: bold, pos: pos++, enQ: enunciado });
+      else if (bold) v.bold = true;
+      return t;
+    }));
+    ver(q.q);
+    enunciado = false;
+    if (contestada) (q.o || []).forEach(ver);
+    const L = Array.from(vistos.values()).slice(0, GL_MAX);
+    // Los colores, en el orden en que se leen, a los tres más específicos del enunciado.
+    const conColor = L.filter(v => v.enQ).sort((a, b) => (a.e.n || 0) - (b.e.n || 0)).slice(0, GL_COLORES).sort((a, b) => a.pos - b.pos);
+    L.forEach(v => { v.c = conColor.indexOf(v) + 1; });
+    const refs = String(q.ref || '').split('·').map(s => s.trim()).filter(Boolean), citas = q.cita || [];
+    L.forEach(v => { v.pregunta = v.bold || (!!v.e.ref && refs.indexOf(v.e.ref) >= 0) || (!!v.e.cita && citas.indexOf(v.e.cita) >= 0); });
+    const marca = h => glTramos(h, s => glBuscar(s, G, (t, e) => {
+      const v = vistos.get(e);
+      return v && L.indexOf(v) >= 0 ? `<span class="gl-t gl-c${v.c}">${t}</span>` : t;
+    }));
+    const d = D() || {}, loc = window.CT_GENAI_SYLLABUS;
+    const pdf = n => ((loc && loc.pdf) || (d.meta && d.meta.syllabusUrl) || '') + '#page=' + n;
+    const items = L.map(v => {
+      const e = v.e, luego = !contestada && v.pregunta;
+      return `<div class="gl-i gl-c${v.c}${luego ? ' luego' : ''}"><dt>${esc(e.t)}</dt><dd>` + (luego
+        ? '<span class="gl-luego">Es lo que te preguntan: se explica al contestar.</span>'
+        : `<span class="gl-llano">${esc(e.llano)}</span>` + (e.cita ? `<span class="gl-cita">«${esc(e.cita)}» ` +
+            `<a href="${pdf(e.pag)}" target="_blank" rel="noopener" title="Abrir el syllabus en la página ${e.pag}">Syllabus, pág. ${e.pag}</a></span>` : '')) +
+        '</dd></div>';
+    }).join('');
+    return { marca: marca, n: L.length,
+      html: L.length ? `<div class="gl"><div class="gl-tit">Glosario de esta pregunta</div><dl class="gl-l">${items}</dl></div>` : '' };
+  }
+  const GL_CSS = `
+:root{--gl1:#3987e5;--gl2:#c98500;--gl3:#d55181}
+:root[data-theme="light"]{--gl1:#2a78d6;--gl2:#eda100;--gl3:#e87ba4}
+.gl-c0{--gc:rgba(var(--ov),.38)}
+.gl-c1{--gc:var(--gl1)}
+.gl-c2{--gc:var(--gl2)}
+.gl-c3{--gc:var(--gl3)}
+.gl-t{text-decoration:underline;text-decoration-color:var(--gc);text-decoration-thickness:3px;text-underline-offset:4px;
+  text-decoration-skip-ink:none;background:color-mix(in srgb,var(--gc) 13%,transparent);border-radius:3px;padding:0 1px}
+.gl-t.gl-c0{text-decoration-thickness:1.5px;text-decoration-style:dotted;background:none}
+.gl{display:flex;flex-direction:column;gap:10px;padding:14px 16px 15px;border-radius:12px;border:1px solid rgba(var(--ov),.1);
+  background:rgba(var(--ov),.025)}
+.gl-tit{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.gl-l{margin:0;display:flex;flex-direction:column;gap:10px}
+.gl-i{display:grid;grid-template-columns:minmax(110px,180px) minmax(0,1fr);gap:3px 14px;padding:1px 0 1px 11px;border-left:4px solid var(--gc)}
+.gl-i dt{font-size:13px;font-weight:700;line-height:1.45;color:var(--text)}
+.gl-i dd{margin:0;display:flex;flex-direction:column;gap:3px;min-width:0}
+.gl-llano{font-size:13px;line-height:1.55;color:var(--text)}
+.gl-cita{font-size:11.5px;line-height:1.55;font-style:italic;color:var(--text3)}
+.gl-cita a{font-style:normal;font-weight:700;color:var(--text2);white-space:nowrap}
+.gl-luego{font-size:12px;line-height:1.5;color:var(--text3)}
+@media(max-width:640px){.gl-i{grid-template-columns:minmax(0,1fr)}}`;
+  (function () { const st = document.createElement('style'); st.textContent = GL_CSS; document.head.appendChild(st); })();
+  window.ctGenaiTerminos = terminos;
+
+  /* ── «Tus fallos»: lo que fallaste y lo que no has visto, primero ─────────────────────────────────
+     Adán, 18-nov-2026: "diferentes tipos de examen completo". El mismo examen de 40 preguntas y 46 puntos con el reparto
+     oficial, pero en cada objetivo elige primero las variantes que fallaste la última vez que las viste —en la pregunta
+     del día (`dash-aprende-v1` → istqb) o en un simulacro (`intentos[].r`)—, luego las que nunca has visto y al final
+     las que acertaste. */
+  function debiles() {
+    const ult = {};
+    const pon = (id, t, ok) => { if (!ult[id] || ult[id].t <= t) ult[id] = { t: t, ok: ok }; };
+    try {
+      const r = (JSON.parse(localStorage.getItem('dash-aprende-v1')) || {}).istqb || {};
+      Object.keys(r).forEach(f => {
+        const t = new Date(f + 'T12:00:00').getTime();
+        [].concat(r[f]).forEach(x => { if (x && x.id) pon(x.id, t, !!x.ok); });
+      });
+    } catch (e) { /* sin preguntas del día */ }
+    (guardado().intentos || []).forEach(it => Object.keys(it.r || {}).forEach(id => pon(id, it.fecha || 0, !!it.r[id])));
+    const peso = {};
+    let fallaste = 0, sinVer = 0;
+    bancoDe('AB').forEach(q => {
+      const u = ult[q.id];
+      peso[q.id] = !u ? 1 : u.ok ? 0 : 2;
+      if (!u) sinVer++; else if (!u.ok) fallaste++;
+    });
+    return { peso: peso, fallaste: fallaste, sinVer: sinVer };
+  }
+
   /* ── Armar un examen conforme al blueprint ──────────────────────────── */
   function armar(minutos, set) {
     const d = D();
     const banco = bancoDe(set);
     const preguntas = [];
+    const peso = set === 'D' ? debiles().peso : null;
     d.blueprint.forEach(b => {
-      const variantes = barajar(banco.filter(q => q.lo === b.lo));
+      let variantes = barajar(banco.filter(q => q.lo === b.lo));
+      if (peso) variantes = variantes.sort((x, y) => (peso[y.id] || 0) - (peso[x.id] || 0));
       variantes.slice(0, b.n).forEach(q => {
         const correcta = q.o[q.r];
         const ops = barajar(q.o);
@@ -242,7 +376,8 @@
     g.intentos = (g.intentos || []).concat([{
       fecha: resultado.fecha, pts: pts, max: d.meta.puntos, pct: resultado.pct,
       aprobado: resultado.aprobado, ms: usados, minutos: ex.minutos, set: ex.set || 'A',
-      caps: Object.keys(caps).reduce((a, c) => { a[c] = caps[c].pts + '/' + caps[c].max; return a; }, {})
+      caps: Object.keys(caps).reduce((a, c) => { a[c] = caps[c].pts + '/' + caps[c].max; return a; }, {}),
+      r: ex.preguntas.reduce((a, q, i) => { a[q.id] = ex.resp[i] === q.r ? 1 : 0; return a; }, {})
     }]).slice(-40);
     delete g.curso;
     guardar(g);
@@ -299,6 +434,7 @@
     }).join('');
 
     const mejor = hist.length ? Math.max.apply(null, hist.map(t => t.pct)) : null;
+    const deb = debiles();
 
     return `
     <div class="xg-inicio">
@@ -333,22 +469,23 @@
             <button class="xg-set${setElegido === k ? ' on' : ''}" onclick="XGenAI.elegirSet('${k}')">
               <b>${esc(SETS[k].n)}</b>
               <span>${esc(SETS[k].d)}</span>
-              <i>${bancoDe(k).length} preguntas en banco</i>
+              <i>${k === 'D' ? deb.fallaste + ' que fallaste · ' + deb.sinVer + ' sin ver' : bancoDe(k).length + ' preguntas en banco'}</i>
             </button>`).join('')}
         </div>
-        <p class="xg-nota">Los tres arman el mismo examen: 40 preguntas y 46 puntos con el reparto
+        <p class="xg-nota">Los cuatro arman el mismo examen: 40 preguntas y 46 puntos con el reparto
         oficial. Cambia de dónde salen. Ninguna pregunta del <b>Examen B</b> repite el ángulo de una
-        del A — es el mismo temario visto por la otra cara.</p>
+        del A — es el mismo temario visto por la otra cara. <b>Tus fallos</b> usa los dos bancos y pone
+        primero las que fallaste la última vez —en la pregunta del día o en un simulacro— y las que no has visto.</p>
       </div>` : ''}
 
       <div class="xg-arranque">
-        <div class="xg-arranque-t">Elige el reloj${haySetB() ? ` · vas a hacer el <b>${esc(SETS[setElegido].n)}</b>` : ''}</div>
+        <div class="xg-arranque-t">Empieza el examen${haySetB() ? ` · <b>${esc(SETS[setElegido].n)}</b>` : ''}</div>
         <div class="xg-arranque-b">
           <button class="xg-b xg-b-p" onclick="XGenAI.empezar(75)">
-            <b>75 minutos</b><span>Tu caso: +25% por presentar en un idioma que no es el tuyo</span>
+            <b>▶ Empezar · 75 minutos</b><span>Tu caso: +25% por presentar en un idioma que no es el tuyo</span>
           </button>
           <button class="xg-b" onclick="XGenAI.empezar(60)">
-            <b>60 minutos</b><span>El tiempo oficial base, si quieres apretar</span>
+            <b>▶ Empezar · 60 minutos</b><span>El tiempo oficial base, si quieres apretar</span>
           </button>
         </div>
       </div>
@@ -522,7 +659,7 @@
       .filter(x => !filtroFallos || !x.ok);
 
     const items = lista.map(x => {
-      const q = x.q, i = x.i;
+      const q = x.q, i = x.i, T = terminos(q, true);
       const ops = q.o.map((t, k) => {
         let cls = '';
         if (k === q.r) cls = ' correcta';
@@ -542,8 +679,9 @@
           <span class="xg-tag">${q.k}</span>
           <span class="xg-rev-v ${x.ok ? 'ok' : 'no'}">${x.ok ? '✓ acertada' : (ex.resp[i] === null ? '— sin responder' : '✕ fallada')}</span>
         </div>
-        <div class="xg-q">${q.q}</div>
+        <div class="xg-q">${T.marca(q.q)}</div>
         <div class="xg-rops">${ops}</div>
+        ${T.html}
         <div class="xg-why"><b>Por qué:</b> ${q.why}
           <span class="xg-ref">Syllabus, sección ${esc(q.ref)}</span></div>
         ${fuenteHtml(q)}
@@ -604,6 +742,26 @@
       armar(min, setElegido);
       vista = 'test';
       pintar();
+    },
+
+    // Empezar directo desde fuera (la ventana de la pregunta del día): abre el simulacro y arranca ese juego con ese reloj.
+    iniciar: function (set, min) {
+      if (!SETS[set] || !D()) return;
+      const g = guardado();
+      if (g.curso && g.curso.finEn > Date.now() &&
+          !confirm('Tienes un examen a medias. Si empiezas otro, ese se pierde. ¿Empezar uno nuevo?')) { API.abrir(); return; }
+      API.abrir();
+      setElegido = set;
+      API.empezar(min === 60 ? 60 : 75);
+    },
+    // Lo que enseña arriba la ventana de la pregunta del día: los juegos, cuántas trae cada uno y el examen a medias.
+    estado: function () {
+      const g = guardado(), c = g.curso && g.curso.finEn > Date.now() ? g.curso : null, deb = debiles();
+      return {
+        sets: Object.keys(SETS).filter(k => haySetB() || k === 'A').map(k => ({ k: k, n: SETS[k].n, d: SETS[k].d, banco: bancoDe(k).length })),
+        debiles: { fallaste: deb.fallaste, sinVer: deb.sinVer },
+        curso: c ? { set: c.set || 'A', quedanMs: c.finEn - Date.now(), resp: c.resp.filter(x => x !== null).length, n: c.preguntas.length } : null
+      };
     },
 
     reanudar: function () {

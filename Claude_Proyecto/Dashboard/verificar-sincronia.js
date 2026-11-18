@@ -3269,6 +3269,48 @@ function promptsDeLoTocado() {
   ok.push('El Bitcoin, una sola libreta: lo que anotas en Total invertido o en Finanzas va a la gráfica de Bitcoin, con el precio y el dólar de su día');
 })();
 
+/* ── 53. El examen ISTQB: el simulacro empieza arriba y cada pregunta trae su glosario ──────────────────────────────
+   Adán, 18-nov-2026: "diferentes tipos de examen completo y mostrar la opción al principio de la ventana… no me da la
+   opción de iniciar la simulación del examen completo… abajo de cada pregunta y su respuesta… el glosario… subrayar de
+   otro color las palabras claves… los capítulos que leo deben estar contraídos". El glosario no inventa: cada `cita` es
+   una frase textual de las citas de los bancos (ya comprobadas contra el PDF) y con su misma página; cada término se
+   reconoce (su expresión compila) y sale en alguna pregunta. Y que las piezas sigan conectadas. */
+(function () {
+  const malos = [], leerSi = rel => { try { return leer(rel); } catch (e) { return ''; } }, w = {};
+  try {
+    new Function('window', leer('Dashboard/examen-genai-data.js') + '\n' + leer('Dashboard/examen-genai-data-b.js') + '\n' +
+      leer('Dashboard/examen-genai-glosario.js'))(w);
+  } catch (e) { problemas.push('Examen ISTQB: no cargan los bancos o el glosario (' + e.message + ')'); return; }
+  const G = w.EXAMEN_GENAI_GLOSARIO || [], B = ((w.EXAMEN_GENAI || {}).banco || []).concat((w.EXAMEN_GENAI_B || {}).banco || []);
+  const citas = {};
+  B.forEach(q => (q.cita || []).forEach((c, i) => { (citas[c] = citas[c] || new Set()).add((q.pag || [])[i]); }));
+  if (G.length < 40) malos.push('el glosario trae solo ' + G.length + ' términos');
+  let conCita = 0;
+  const sinUso = [];
+  G.forEach(e => {
+    let re;
+    try { re = new RegExp('(?<![\\p{L}\\p{N}])(?:' + e.re + ')(?![\\p{L}\\p{N}])', 'iu'); } catch (x) { malos.push('«' + e.t + '»: su expresión no compila'); return; }
+    if (!e.t || !e.llano) malos.push('«' + (e.t || '?') + '»: sin nombre o sin su línea en llano');
+    if (e.cita) {
+      conCita++;
+      if (!citas[e.cita]) malos.push('«' + e.t + '»: su cita no es una frase textual de los bancos');
+      else if (!citas[e.cita].has(e.pag)) malos.push('«' + e.t + '»: su cita no está en la página ' + e.pag);
+    }
+    if (!B.some(q => re.test((q.q + ' ' + q.o.join(' ')).replace(/<[^>]+>/g, '')))) sinUso.push(e.t);
+  });
+  if (sinUso.length) malos.push('términos que no salen en ninguna pregunta: ' + sinUso.join(', '));
+  const h = leer('Dashboard/dashboard.html'), x = leerSi('Dashboard/examen-genai.js');
+  if (h.indexOf('<script src="examen-genai-glosario.js"></script>') < 0) malos.push('dashboard.html ya no carga examen-genai-glosario.js');
+  [['window.ctGenaiTerminos', x, 'examen-genai.js'], ['iniciar: function', x, 'examen-genai.js'], ['estado: function', x, 'examen-genai.js'],
+   ["n: 'Tus fallos'", x, 'examen-genai.js'], ['terminos(q, true)', x, 'la revisión del simulacro'],
+   ['ctGenaiTerminos(q, !!hecha)', h, 'la pregunta del día'], ['function istqbSimHtml()', h, 'la ventana del ISTQB'],
+   ['XGenAI.iniciar(k, _iqReloj)', h, 'la ventana del ISTQB'], ['<details class="iqv-cl', h, 'los capítulos que lees']]
+    .forEach(c => { if (c[1].indexOf(c[0]) < 0) malos.push(c[2] + ' perdió ' + c[0]); });
+  if (malos.length) { problemas.push('Examen ISTQB (simulacro arriba y glosario):\n     ' + malos.join('\n     ')); return; }
+  ok.push('Examen ISTQB: el simulacro empieza arriba con sus ' + 4 + ' juegos; glosario de ' + G.length + ' términos, ' + conCita +
+    ' con su frase textual del programa y su página');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

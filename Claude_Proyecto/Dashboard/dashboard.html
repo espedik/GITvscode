@@ -44,6 +44,7 @@
 <script src="habitos.js"></script>
 <script src="examen-genai-data.js"></script>
 <script src="examen-genai-data-b.js"></script>
+<script src="examen-genai-glosario.js"></script>
 <!-- Copia LOCAL del syllabus CT-GenAI (fuera de git: su aviso de derechos solo permite reproducirlo en parte y para
      uso privado). Si no está, las preguntas enlazan el PDF oficial en la página de cada cita. -->
 <script src="syllabus/ct-genai-syllabus.js" onerror="this.remove()"></script>
@@ -3588,7 +3589,23 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .iqv-card .gbm-head{flex:none;padding:16px 64px 14px 26px}
 .iqv-card .gbm-head p{margin-top:3px;font-size:13px;line-height:1.5;color:var(--text3)}
 .iqv-card .gbm-head p b{color:var(--text)}
-.iqv-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,420px)}
+.iqv-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,420px);grid-template-rows:auto minmax(0,1fr)}
+/* Arriba, a todo lo ancho, el simulacro completo (istqbSimHtml): sus juegos, cada uno empieza con un toque, y el reloj. */
+.iqv-simbar{grid-column:1/-1;display:flex;flex-direction:column;gap:9px;padding:12px 26px 14px;border-bottom:1px solid rgba(var(--ov),.08);
+  background:rgba(var(--ov),.02)}
+.iqs-cab{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px}
+.iqs-d{font-size:12px;color:var(--text3)}
+.iqs-reloj{margin-left:auto;display:inline-flex;border:1px solid rgba(var(--ov),.16);border-radius:9px;overflow:hidden}
+.iqs-reloj button{font:inherit;font-size:12px;font-weight:600;padding:5px 11px;border:0;background:transparent;color:var(--text2);cursor:pointer}
+.iqs-reloj button+button{border-left:1px solid rgba(var(--ov),.16)}
+.iqs-reloj button.on{background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--text)}
+.iqs-sets{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px}
+.iqs-b{font:inherit;text-align:left;display:flex;align-items:baseline;gap:8px;min-width:0;padding:8px 13px;border-radius:11px;cursor:pointer;
+  border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.03);color:var(--text)}
+.iqs-b b{flex:none;font-size:13.5px;font-weight:700;color:var(--text);white-space:nowrap}
+.iqs-b span{min-width:0;font-size:11.5px;line-height:1.4;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iqs-b:hover{border-color:var(--c);background:color-mix(in srgb,var(--c) 10%,transparent)}
+.iqs-b.medias{border-color:var(--c);background:color-mix(in srgb,var(--c) 15%,transparent)}
 .iqv-col{min-width:0;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:28px 32px 36px}
 .iqv-col+.iqv-col{border-left:1px solid rgba(var(--ov),.08)}
 .iqv-bq{display:flex;flex-direction:column;gap:9px}
@@ -3597,7 +3614,8 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .iqv-dato b{color:var(--text2)}
 .iqv-dato b.ok{color:var(--g)}
 /* La pregunta. De qué es, en etiquetas; el caso aparte, en su recuadro, y la pregunta en negrita debajo: más pequeñas
-   que antes (16 px la pregunta, 14 las opciones) pero con jerarquía, y las palabras clave subrayadas en su color. */
+   que antes (16 px la pregunta, 14 las opciones) pero con jerarquía. Los términos del glosario van subrayados, cada uno
+   en su color (`ctGenaiTerminos`, en examen-genai.js), y el glosario va debajo de las opciones. */
 .iqv-hoja{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
 .iqv-chips{display:flex;flex-wrap:wrap;gap:6px}
 .iqv-chip{display:inline-flex;align-items:baseline;gap:7px;padding:4px 11px;border-radius:999px;border:1px solid rgba(var(--ov),.09);
@@ -3608,8 +3626,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   background:color-mix(in srgb,var(--c) 7%,transparent)}
 .iqv-caso p{margin:0;font-size:14px;line-height:1.65;color:var(--text2)}
 .iqv-q{margin:0;font-size:16px;font-weight:700;line-height:1.5;letter-spacing:-.005em;color:var(--text)}
-.iqv-q b,.iqv-caso b{font-weight:800;color:var(--text);padding:0 1px;
-  background:linear-gradient(transparent 60%,color-mix(in srgb,var(--c) 32%,transparent) 0)}
+.iqv-q b,.iqv-caso b{font-weight:800;color:var(--text)}
 .iqv-ops{display:flex;flex-direction:column;gap:8px}
 .iqv-op{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:12px;align-items:start;width:100%;text-align:left;padding:11px 14px;
   border-radius:11px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.03);color:var(--text);font:inherit;
@@ -3657,9 +3674,6 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .iqv-sim-l span{position:absolute;right:0;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3)}
 .iqv-sim-l.meta span{bottom:2px;color:var(--g)}
 .iqv-sim-l.corte span{top:2px}
-.iqv-btn2{align-self:flex-start;height:34px;padding:0 14px;border-radius:9px;border:1px solid var(--c);background:color-mix(in srgb,var(--c) 12%,transparent);
-  color:var(--text);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
-.iqv-btn2:hover{background:color-mix(in srgb,var(--c) 22%,transparent)}
 .iqv-dias{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .iqv-dia{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px 8px;border-radius:9px;background:rgba(var(--ov),.04)}
 .iqv-dia.hoy{background:color-mix(in srgb,var(--c) 13%,transparent)}
@@ -3671,46 +3685,41 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .iqv-dia i.mal{background:var(--r)}
 .iqv-dia i.nada{width:10px;height:2px;margin-top:3px;border-radius:2px;background:rgba(var(--ov),.18)}
 .iqv-caps{display:flex;flex-direction:column;gap:1px}
-/* Los capítulos que lees: el que toca, resaltado en el color del examen; los leídos, en verde y tachados. */
-.iqv-lee .iqv-lc{display:grid;grid-template-columns:auto 22px minmax(0,1fr) auto;align-items:center;gap:8px;padding:7px 9px;margin:0 -4px;border-radius:9px}
-.iqv-lc input{width:15px;height:15px;margin:0;accent-color:var(--g);cursor:pointer}
+/* Los capítulos que lees, contraídos (Adán, 18-nov-2026: "los capítulos que leo deben estar contraídos y tener info
+   solamente necesaria"): una línea por capítulo —su número, de qué trata en llano y cómo va—; al abrirlo, el capítulo en
+   el syllabus, lo que vale, para cuándo es, la casilla de leído y sus subtemas, cada uno con su casilla y su enlace a la
+   página. El que toca, en el color del examen; los leídos, en verde y tachados. */
+.iqv-cl{margin:0 -4px;border-radius:10px}
+.iqv-cl>summary{display:grid;grid-template-columns:22px minmax(0,1fr) auto 10px;align-items:center;gap:9px;padding:7px 9px;border-radius:10px;
+  cursor:pointer;list-style:none}
+.iqv-cl>summary::-webkit-details-marker{display:none}
+.iqv-cl>summary::after{content:'▸';font-size:11px;color:var(--text3);transition:transform .15s}
+.iqv-cl[open]>summary::after{transform:rotate(90deg)}
+.iqv-cl>summary:hover{background:rgba(var(--ov),.05)}
 .iqv-lc-n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-family:var(--mono);
   font-size:11.5px;font-weight:800;background:rgba(var(--ov),.08);color:var(--text2)}
-.iqv-lc-t{display:flex;flex-direction:column;gap:1px;min-width:0}
-.iqv-lc-t b{font-size:12.5px;font-weight:600;line-height:1.3;color:var(--text)}
-.iqv-lc-t small{font-size:11px;color:var(--text3)}
-.iqv-lc-t a{color:var(--p);font-weight:600}
-.iqv-lc-f{font-size:11px;color:var(--text3);text-align:right;white-space:nowrap}
-.iqv-lc.toca{background:rgba(127,79,184,.12);box-shadow:inset 0 0 0 1.5px var(--p)}
-.iqv-lc.toca .iqv-lc-n{background:var(--p);color:#fff}
-.iqv-lc.toca .iqv-lc-f{color:var(--p);font-weight:700}
-.iqv-lc-f em{display:block;font-style:normal;font-size:12px;font-weight:800;color:var(--p)}
-.iqv-lc.ok .iqv-lc-t b{color:var(--text3);text-decoration:line-through}
-.iqv-lc.ok .iqv-lc-f{color:var(--g);font-weight:700}
-/* El nombre del capítulo abre el PDF en su página; debajo, sus subtemas (`iqSubsHtml`), agrupados por su x.y. */
-.iqv-lc-a{font-size:12.5px;font-weight:600;line-height:1.3;color:var(--text);text-decoration:underline;text-decoration-color:rgba(var(--ov),.25);text-underline-offset:3px}
-.iqv-lc-a:hover{color:var(--p);text-decoration-color:var(--p)}
-.iqv-lc.ok .iqv-lc-a{color:var(--text3);text-decoration:line-through}
-.iqv-subs{margin:0 0 6px 34px}
-.iqv-subs summary{cursor:pointer;font-size:11px;color:var(--text3);padding:3px 0;list-style-position:inside}
-.iqv-subs summary b{color:var(--text2)}
-.iqv-subs[open] summary{margin-bottom:3px}
-.iqv-sg{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text3);margin:7px 0 3px;line-height:1.35}
-.iqv-sg b{color:var(--p);margin-right:3px}
-.iqv-st{display:grid;grid-template-columns:auto 34px minmax(0,1fr) auto;align-items:start;gap:7px;padding:5px 6px;border-radius:8px}
-.iqv-st input{width:14px;height:14px;margin:2px 0 0;accent-color:var(--g);cursor:pointer}
-.iqv-st-n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3);padding-top:1px}
-.iqv-st-t{display:flex;flex-direction:column;gap:2px;min-width:0}
-.iqv-st-t a,.iqv-st-t>b{font-size:12px;font-weight:600;line-height:1.3;color:var(--text);text-decoration:underline;text-decoration-color:rgba(var(--ov),.22);text-underline-offset:3px}
+.iqv-cl-t{min-width:0;font-size:12.5px;font-weight:600;line-height:1.3;color:var(--text)}
+.iqv-cl-f{font-size:11px;color:var(--text3);white-space:nowrap}
+.iqv-cl-f em{font-style:normal;font-weight:800;color:var(--p)}
+.iqv-cl.toca>summary{background:rgba(127,79,184,.12);box-shadow:inset 0 0 0 1.5px var(--p)}
+.iqv-cl.toca .iqv-lc-n{background:var(--p);color:#fff}
+.iqv-cl.ok .iqv-cl-t{color:var(--text3);text-decoration:line-through}
+.iqv-cl.ok .iqv-cl-f{color:var(--g);font-weight:700}
+.iqv-cl-d{display:flex;flex-direction:column;gap:4px;padding:6px 4px 10px 35px}
+.iqv-cl-acc{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin-bottom:4px;font-size:11.5px;line-height:1.45;color:var(--text3)}
+.iqv-cl-acc a{font-weight:700;color:var(--p);text-decoration:none}
+.iqv-cl-acc a:hover{text-decoration:underline}
+.iqv-cl-acc label{display:inline-flex;align-items:center;gap:5px;cursor:pointer;color:var(--text2)}
+.iqv-cl-acc input,.iqv-st input{width:14px;height:14px;margin:0;accent-color:var(--g);cursor:pointer}
+.iqv-st{display:grid;grid-template-columns:auto 34px minmax(0,1fr) auto;align-items:center;gap:7px;padding:4px 6px;border-radius:8px}
+.iqv-st-n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3)}
+.iqv-st-t{min-width:0;font-size:12px;font-weight:600;line-height:1.3}
+.iqv-st-t a,.iqv-st-t b{color:var(--text);text-decoration:underline;text-decoration-color:rgba(var(--ov),.22);text-underline-offset:3px}
 .iqv-st-t a:hover{color:var(--p);text-decoration-color:var(--p)}
-.iqv-st-t small{font-size:10.5px;line-height:1.4;color:var(--text3)}
-.iqv-st-t small i{font-style:normal;font-weight:700;color:var(--text2)}
-.iqv-st-t small b.ok{color:var(--g)}
-.iqv-st-t small b.mal{color:var(--r)}
 .iqv-st-f{font-size:11px;color:var(--g);font-weight:700;white-space:nowrap}
 .iqv-st-f em{font-style:normal;color:var(--p);font-weight:800}
 .iqv-st.sig{background:rgba(127,79,184,.10);box-shadow:inset 0 0 0 1px rgba(127,79,184,.45)}
-.iqv-st.ok .iqv-st-t a,.iqv-st.ok .iqv-st-t>b{color:var(--text3);text-decoration:line-through}
+.iqv-st.ok .iqv-st-t a,.iqv-st.ok .iqv-st-t b{color:var(--text3);text-decoration:line-through}
 .iqv-cap{display:grid;grid-template-columns:22px minmax(0,1fr) 34px 56px;column-gap:10px;row-gap:5px;align-items:center;padding:7px 9px;border-radius:9px}
 .iqv-cap.on{background:color-mix(in srgb,var(--c) 12%,transparent)}
 .iqv-cap.cab{padding-top:0;padding-bottom:2px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
@@ -3737,7 +3746,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .iqv-fallo-r>b{color:var(--g)}
 .iqv-fallo-tu>b{color:var(--r)}
 @media(max-width:1099px){
-  .iqv-body{grid-template-columns:minmax(0,1fr);grid-auto-rows:max-content;align-content:start;overflow-y:auto;overscroll-behavior:contain}
+  .iqv-body{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-auto-rows:max-content;align-content:start;overflow-y:auto;overscroll-behavior:contain}
   .iqv-col{overflow:visible;min-height:auto}
   .iqv-col+.iqv-col{border-left:0;border-top:1px solid rgba(var(--ov),.08)}
   .iqv-vas{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));align-items:start}
@@ -3747,6 +3756,11 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   .gbm-card.iqv-card{width:100%;height:100%}
   .iqv-card .gbm-head{padding:12px 52px 10px 14px}
   .iqv-col{padding:16px 14px 22px}
+  .iqv-simbar{padding:10px 14px 12px}
+  .iqs-sets{grid-template-columns:1fr 1fr}
+  .iqs-b{flex-direction:column;align-items:stretch;gap:2px}
+  .iqs-b span{white-space:normal}
+  .iqs-reloj{margin-left:0}
   .iqv-vas{gap:18px}
   .iqv-q{font-size:15.5px}
   .iqv-caso{padding:11px 13px 12px}
@@ -8817,8 +8831,10 @@ function istqbHtml(){
 // "está muy saturada de información, quita la más innecesaria, las preguntas hazlas más pequeñas pero dale un mejor
 // formato de texto". Se fueron la foto del capítulo, el recuadro de «Al contestar», la lista de secciones del capítulo y
 // el plan de la meta (vive en Mis Metas); el nivel K va en su etiqueta y el objetivo, con el syllabus, al contestar.
+//   · Arriba, el simulacro completo (`istqbSimHtml`): sus juegos, que empiezan con un toque, y el reloj.
 //   · La pregunta (`iqPreguntaHtml`), en una hoja centrada: de qué capítulo es, su nivel y lo que vale, en etiquetas; el
-//     caso aparte y la pregunta debajo (`iqPartes`), y las cuatro opciones —también con 1–4 o A–D—. Contestada, la buena
+//     caso aparte y la pregunta debajo (`iqPartes`), con sus términos subrayados en su color, las cuatro opciones —también
+//     con 1–4 o A–D— y el glosario de esos términos (`ctGenaiTerminos`, de examen-genai.js). Contestada, la buena
 //     en verde y la tuya en rojo, cada una con su etiqueta, «Siguiente pregunta» (Enter) y, debajo, el porqué y lo que
 //     dice el syllabus (`ctGenaiFuente`). Antes de contestar no hay nada que la responda: primero se recuerda y después
 //     se lee.
@@ -8863,6 +8879,8 @@ function iqPartes(h){
 }
 function iqPreguntaHtml(q, hecha){
   const X = window.EXAMEN_GENAI || {}, LET = 'ABCD', K = IQ_K[q.k], kx = iqKExamen(q.k), p = iqPartes(q.q);
+  // Los términos del glosario: subrayados en su color en el caso y la pregunta, y su glosario debajo de las opciones.
+  const T = window.ctGenaiTerminos ? ctGenaiTerminos(q, !!hecha) : { marca: h => h, html: '' };
   const vale = (q.pts || 1) === 1 ? '1 punto' : q.pts + ' puntos';
   const kTit = K ? `${K[0]}: ${K[1]}.${kx.n && X.meta ? ` El examen trae ${kx.n} de estas, ${kx.pts} de sus ${X.meta.puntos} puntos.` : ''}` : '';
   const ops = q.o.map((o, i) => {
@@ -8880,10 +8898,10 @@ function iqPreguntaHtml(q, hecha){
   return `<section class="iqv-col iqv-preg" aria-label="La pregunta"><div class="iqv-hoja">
     <div class="iqv-chips"><span class="iqv-chip cap"><b>Cap. ${esc(q.cap)}</b>${esc((X.capitulos || {})[q.cap] || '')}</span>` +
       `<span class="iqv-chip" title="${habAttr(kTit)}"><b>${esc(q.k)}</b>${K ? K[0] : ''}</span><span class="iqv-chip">${vale}</span></div>
-    ${p.caso ? `<div class="iqv-caso"><span class="iqv-et">El caso</span><p>${p.caso}</p></div>` : ''}
-    <h3 class="iqv-q">${p.preg}</h3>
+    ${p.caso ? `<div class="iqv-caso"><span class="iqv-et">El caso</span><p>${T.marca(p.caso)}</p></div>` : ''}
+    <h3 class="iqv-q">${T.marca(p.preg)}</h3>
     <div class="iqv-ops">${ops}</div>
-    ${pie}${exp}
+    ${pie}${T.html}${exp}
   </div></section>`;
 }
 /* Los capítulos del syllabus que lees, todos, en el orden del plan del CT-GenAI (META_PLAN.istqbgenai, sus pasos
@@ -8941,51 +8959,41 @@ function iqSubLeido(k){
   if(L[k]) delete L[k]; else L[k] = hoyLocal();
   rawSet(APRENDE_KEY, st);
   const cap = iqLectura().find(x => x.c === +k.split('.')[0]);
-  // Con el capítulo leído se abren los subtemas del que sigue (iqLeeHtml abre el que toca).
-  if(cap && L[k] && !cap.hecho && cap.subs.length && cap.leidos === cap.subs.length){ iqSubAbiertos = null; iqCapLeido(cap.k); return; }
+  // Con el último subtema, el capítulo queda leído en el plan.
+  if(cap && L[k] && !cap.hecho && cap.subs.length && cap.leidos === cap.subs.length){ iqCapLeido(cap.k); return; }
   istqbPintar(); if(typeof renderHeroAprender === 'function') renderHeroAprender();
 }
-// Qué capítulos enseñan sus subtemas: el que toca, abierto de entrada; los demás, cuando se tocan. Vive en memoria.
+// Qué capítulos están abiertos: todos empiezan contraídos y se abren al tocarlos. Vive en memoria.
 let iqSubAbiertos = null;
 function iqSubToggle(c, abierto){
   if(!iqSubAbiertos) iqSubAbiertos = new Set();
   if(abierto) iqSubAbiertos.add(c); else iqSubAbiertos.delete(c);
 }
 function iqSubsHtml(x){
-  let g = '';
   return x.subs.map(s => {
-    const cab = s.g !== g && x.grupos[s.g] ? `<div class="iqv-sg"><b>${s.g}</b> ${esc(x.grupos[s.g])}</div>` : ''; g = s.g;
-    // «1 pregunta de memoria de 1 punto», «1 caso práctico de 2 puntos»: el tipo de pregunta en llano (IQ_K_LLANO).
-    const tipo = String(IQ_K_LLANO[s.nivel] || 'pregunta'), uno = s.vale / (s.preg || 1);
-    const tipos = s.preg === 1 ? tipo : tipo.replace(/^pregunta /, 'preguntas ').replace(/^caso práctico$/, 'casos prácticos');
-    const examen = s.preg ? `${s.preg} ${tipos} de ${uno} ${uno === 1 ? 'punto' : 'puntos'} en el examen` : '';
-    const tuyo = s.ac ? ` · llevas <b class="${s.ac.ok / s.ac.n >= .65 ? 'ok' : 'mal'}">${s.ac.ok} de ${s.ac.n}</b>` : s.banco ? ` · ${s.banco} en el banco, sin contestar` : '';
     const sig = x.toca && s === x.sig;
-    return cab + `<div class="iqv-st${s.leido ? ' ok' : ''}${sig ? ' sig' : ''}">` +
+    return `<div class="iqv-st${s.leido ? ' ok' : ''}${sig ? ' sig' : ''}">` +
       `<input type="checkbox"${s.leido ? ' checked' : ''} onchange="iqSubLeido('${s.k}')" aria-label="Subtema ${s.k} leído" title="Marcar como leído">` +
       `<span class="iqv-st-n">${s.k}</span>` +
-      `<span class="iqv-st-t">${s.url ? `<a href="${s.url}" target="_blank" rel="noopener" title="Abrir el syllabus en la página ${s.pag}">${esc(s.t)}</a>` : `<b>${esc(s.t)}</b>`}` +
-        (s.obj ? `<small class="iqv-st-o"><i title="${esc(IQ_K[s.nivel] ? IQ_K[s.nivel][0] + ': ' + IQ_K[s.nivel][1] : '')}">${esc(s.nivel)}</i> ${esc(s.obj)}</small>` : '') +
-        `<small>${examen}${tuyo}${s.pag ? ` · página ${s.pag}` : ''}</small></span>` +
+      `<span class="iqv-st-t">${s.url ? `<a href="${s.url}" target="_blank" rel="noopener" title="Abrir el syllabus en la página ${s.pag}">${esc(s.t)}</a>` : `<b>${esc(s.t)}</b>`}</span>` +
       `<span class="iqv-st-f">${s.leido ? '✓' : sig ? '<em>Sigue</em>' : ''}</span></div>`;
   }).join('');
 }
 function iqLeeHtml(){
   const L = iqLectura(); if(!L.length) return '';
   const M = (window.EXAMEN_GENAI || {}).meta || {};
-  if(!iqSubAbiertos){ iqSubAbiertos = new Set(); const t = L.find(x => x.toca); if(t) iqSubAbiertos.add(t.c); }
+  if(!iqSubAbiertos) iqSubAbiertos = new Set();
   return `<div class="iqv-bq iqv-lee"><div class="iqv-et">Los capítulos que lees · ${L.filter(x => x.hecho).length} de ${L.length} leídos</div>` +
-    L.map(x => `<div class="iqv-lc${x.hecho ? ' ok' : ''}${x.toca ? ' toca' : ''}">` +
-      `<input type="checkbox"${x.hecho ? ' checked' : ''} onchange="iqCapLeido(${x.k})" aria-label="Capítulo ${x.c} leído" title="Marcar como leído">` +
-      `<span class="iqv-lc-n">${x.c}</span>` +
-      `<span class="iqv-lc-t">${x.url ? `<a class="iqv-lc-a" href="${x.url}" target="_blank" rel="noopener" title="Abrir el syllabus en el capítulo ${x.c}${x.pag ? ', página ' + x.pag : ''}">${esc(x.nom)}</a>` : `<b>${esc(x.nom)}</b>`}` +
-        `<small>${x.objs} subtemas · ${x.pts} de ${M.puntos || 46} puntos${x.pag ? ' · desde la página ' + x.pag : ''}</small></span>` +
-      `<span class="iqv-lc-f">${x.hecho ? '✓ leído' : x.toca ? `<em>Lee este</em>${x.est === 'tarde' ? 'era para el ' : 'antes del '}${x.fTxt}` : 'antes del ' + x.fTxt}</span></div>` +
-      (x.subs.length ? `<details class="iqv-subs"${iqSubAbiertos.has(x.c) ? ' open' : ''} ontoggle="iqSubToggle(${x.c},this.open)">` +
-        `<summary>Subtemas <b>${x.leidos} de ${x.subs.length}</b> leídos</summary>${iqSubsHtml(x)}</details>` : '')).join('') +
+    L.map(x => `<details class="iqv-cl${x.hecho ? ' ok' : ''}${x.toca ? ' toca' : ''}"${iqSubAbiertos.has(x.c) ? ' open' : ''} ontoggle="iqSubToggle(${x.c},this.open)">` +
+      `<summary><span class="iqv-lc-n">${x.c}</span><span class="iqv-cl-t" title="${habAttr(x.nom)}">${esc(IQ_CAP_LLANO[x.c] || x.nom)}</span>` +
+        `<span class="iqv-cl-f">${x.hecho ? '✓ leído' : x.toca ? '<em>Lee este</em>' : x.subs.length ? x.leidos + ' de ' + x.subs.length : ''}</span></summary>` +
+      `<div class="iqv-cl-d"><div class="iqv-cl-acc">` +
+        (x.url ? `<a href="${x.url}" target="_blank" rel="noopener" title="Abrir el syllabus en el capítulo ${x.c}">${esc(x.nom)}${x.pag ? ' · pág. ' + x.pag : ''} ↗</a>` : `<b>${esc(x.nom)}</b>`) +
+        `<span>${x.pts} de ${M.puntos || 46} puntos${x.hecho || !x.fTxt ? '' : ' · ' + (x.est === 'tarde' ? 'era para el ' : 'antes del ') + x.fTxt}</span>` +
+        `<label><input type="checkbox"${x.hecho ? ' checked' : ''} onchange="iqCapLeido(${x.k})"> Capítulo leído</label></div>` +
+        iqSubsHtml(x) + '</div></details>').join('') +
     '</div>';
-}
-function iqVasHtml(q){
+}function iqVasHtml(q){
   const X = window.EXAMEN_GENAI || {}, M = X.meta || {}, S = habSimulacro(), t = cdTarea('a1-7'), hoyK = hoyLocal(), LET = 'ABCD';
   const ints = (rawGet('examen_genai_v1', {}) || {}).intentos || [];
   // La meta: presentar en el mes de la tarea con el simulacro en su meta dos veces seguidas.
@@ -9030,7 +9038,7 @@ function iqVasHtml(q){
   return `<aside class="iqv-col iqv-vas" aria-label="Cómo vas">${iqLeeHtml()}
     <div class="iqv-bq"><div class="iqv-et">Tu meta${mes ? ' · presentas en ' + mes : ''}</div>
       <p class="iqv-meta">El simulacro en <b>${S.meta} de ${S.max}</b> o más, dos veces seguidas${M.corte ? ` · el corte oficial es ${M.corte}` : ''}.</p>
-      ${sim}<button type="button" class="iqv-btn2" onclick="istqbAlSimulacro()">Simulacro completo →</button></div>
+      ${sim}</div>
     <div class="iqv-bq"><div class="iqv-et">Esta semana${n7 ? ` · ${ok7} de ${n7} bien` : ''}</div><div class="iqv-dias">${semana}</div>
       <p class="iqv-dato">Contestadas <b>${H.length} de ${istqbBanco().length}</b> del banco${H.length ? ` · aciertas el <b>${Math.round(okT / H.length * 100)} %</b>` : ''}</p></div>
     <div class="iqv-bq"><div class="iqv-et">Dónde están los puntos</div><div class="iqv-caps">${capsHtml}</div>
@@ -9038,11 +9046,37 @@ function iqVasHtml(q){
     <div class="iqv-bq"><div class="iqv-et">Lo que fallaste${fallos.length ? ' · ' + fallos.length : ''}</div>${fHtml}</div>
   </aside>`;
 }
+/* El simulacro completo, arriba de la ventana (Adán, 18-nov-2026: "diferentes tipos de examen completo y mostrar la
+   opción al principio de la ventana… no me da la opción de iniciar la simulación del examen completo"): sus juegos —A, B,
+   la mezcla y «Tus fallos»— y el reloj, 75 minutos (tu caso, +25 % por idioma) o 60. Tocar un juego empieza el examen
+   ahí mismo (XGenAI.iniciar); si hay uno a medias, va primero con «Reanudar». Lo que dice cada juego sale del simulacro
+   (XGenAI.estado). */
+let _iqReloj = 75;
+function istqbSimHtml(){
+  if(!window.XGenAI || !XGenAI.estado) return '';
+  const E = XGenAI.estado(), M = (window.EXAMEN_GENAI || {}).meta || {};
+  const mm = ms => { const t = Math.max(0, Math.floor(ms / 1000)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
+  const nom = k => (E.sets.find(s => s.k === k) || {}).n || k;
+  const medias = E.curso ? `<button type="button" class="iqs-b medias" onclick="istqbAlSimulacro()"><b>▶ Reanudar · ${esc(nom(E.curso.set))}</b>` +
+    `<span>llevas ${E.curso.resp} de ${E.curso.n} · te quedan ${mm(E.curso.quedanMs)}</span></button>` : '';
+  const sets = E.sets.map(s => `<button type="button" class="iqs-b" onclick="istqbSimulacro('${s.k}')" title="${habAttr(s.n + ': ' + s.d)}"><b>▶ ${esc(s.n)}</b>` +
+    `<span>${s.k === 'D' ? E.debiles.fallaste + ' que fallaste · ' + E.debiles.sinVer + ' sin ver' : esc(s.d)}</span></button>`).join('');
+  return `<div class="iqs-cab"><span class="iqv-et">Simulacro completo</span>` +
+    `<span class="iqs-d">${M.preguntas || 40} preguntas · ${M.puntos || 46} puntos · apruebas con ${M.corte || 30} · empieza al tocar un juego</span>` +
+    `<span class="iqs-reloj" role="group" aria-label="El reloj del examen">${[[75, '75 min · tu caso'], [60, '60 min · oficial']].map(r =>
+      `<button type="button" class="${_iqReloj === r[0] ? 'on' : ''}" aria-pressed="${_iqReloj === r[0]}" onclick="istqbReloj(${r[0]})">${r[1]}</button>`).join('')}</span></div>` +
+    `<div class="iqs-sets">${medias}${sets}</div>`;
+}
+function istqbReloj(m){ _iqReloj = m === 60 ? 60 : 75; const el = document.getElementById('istqbSim'); if(el) el.innerHTML = istqbSimHtml(); }
+function istqbSimulacro(k){
+  document.getElementById('istqbOverlay')?.classList.remove('open');
+  if(window.XGenAI && XGenAI.iniciar) XGenAI.iniciar(k, _iqReloj);
+}
 function istqbPintar(){
   const q = istqbPreguntaHoy(), b = document.getElementById('istqbBody'); if(!q || !b) return;
   const hecha = istqbHoy(q);
   document.getElementById('istqbSub').innerHTML = '<b>La pregunta del día.</b> ' + iqPorQue(q);
-  b.innerHTML = iqPreguntaHtml(q, hecha) + iqVasHtml(q);
+  b.innerHTML = `<div class="iqv-simbar" id="istqbSim">${istqbSimHtml()}</div>` + iqPreguntaHtml(q, hecha) + iqVasHtml(q);
 }
 // Mientras está abierto, Mi Día no rota: la rotación vuelve al cerrarlo.
 function abrirIstqb(){
