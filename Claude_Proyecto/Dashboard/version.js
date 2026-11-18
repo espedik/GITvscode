@@ -1,3 +1,3 @@
 /* La hora del último commit de esta copia. La escribe el hook de pre-commit
    (Dashboard/version-escribir.js) antes de cada commit: no se edita a mano. */
-window.APP_VERSION = { "commit": "2026-11-18T17:17:01.927Z" };
+window.APP_VERSION = { "commit": "2026-11-18T17:47:53.059Z" };

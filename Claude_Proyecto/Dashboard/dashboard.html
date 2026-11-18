@@ -3587,52 +3587,53 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .gbm-card.iqv-card{width:min(1900px,96vw);height:92vh;display:flex;flex-direction:column;overflow:hidden;
   background:linear-gradient(rgba(var(--ov),.035),rgba(var(--ov),.035)),var(--bg)}
 .iqv-card .gbm-head{flex:none;padding:16px 64px 14px 26px}
-.iqv-card .gbm-head p{margin-top:3px;font-size:13px;line-height:1.5;color:var(--text3)}
+.iqv-card .gbm-head p{margin-top:3px;font-size:12px;line-height:1.5;color:var(--text3)}
 .iqv-card .gbm-head p b{color:var(--text)}
 .iqv-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,420px);grid-template-rows:auto minmax(0,1fr)}
 /* Arriba, a todo lo ancho, el simulacro completo (istqbSimHtml): sus juegos, cada uno empieza con un toque, y el reloj. */
 .iqv-simbar{grid-column:1/-1;display:flex;flex-direction:column;gap:9px;padding:12px 26px 14px;border-bottom:1px solid rgba(var(--ov),.08);
   background:rgba(var(--ov),.02)}
 .iqs-cab{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px}
-.iqs-d{font-size:12px;color:var(--text3)}
+.iqs-d{font-size:11px;color:var(--text3)}
 .iqs-reloj{margin-left:auto;display:inline-flex;border:1px solid rgba(var(--ov),.16);border-radius:9px;overflow:hidden}
-.iqs-reloj button{font:inherit;font-size:12px;font-weight:600;padding:5px 11px;border:0;background:transparent;color:var(--text2);cursor:pointer}
+.iqs-reloj button{font:inherit;font-size:11px;font-weight:600;padding:5px 11px;border:0;background:transparent;color:var(--text2);cursor:pointer}
 .iqs-reloj button+button{border-left:1px solid rgba(var(--ov),.16)}
 .iqs-reloj button.on{background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--text)}
-.iqs-sets{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px}
+.iqs-sets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media(max-width:1000px){.iqs-sets{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .iqs-b{font:inherit;text-align:left;display:flex;align-items:baseline;gap:8px;min-width:0;padding:8px 13px;border-radius:11px;cursor:pointer;
   border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.03);color:var(--text)}
-.iqs-b b{flex:none;font-size:13.5px;font-weight:700;color:var(--text);white-space:nowrap}
-.iqs-b span{min-width:0;font-size:11.5px;line-height:1.4;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iqs-b b{flex:none;font-size:12.5px;font-weight:700;color:var(--text);white-space:nowrap}
+.iqs-b span{min-width:0;font-size:11px;line-height:1.4;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .iqs-b:hover{border-color:var(--c);background:color-mix(in srgb,var(--c) 10%,transparent)}
-.iqs-b.medias{border-color:var(--c);background:color-mix(in srgb,var(--c) 15%,transparent)}
+.iqs-b.medias{grid-column:1/-1;border-color:var(--c);background:color-mix(in srgb,var(--c) 15%,transparent)}
 .iqv-col{min-width:0;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:28px 32px 36px}
 .iqv-col+.iqv-col{border-left:1px solid rgba(var(--ov),.08)}
 .iqv-bq{display:flex;flex-direction:column;gap:9px}
 .iqv-et{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
-.iqv-dato,.iqv-vacio{margin:0;font-size:12px;line-height:1.55;color:var(--text3)}
+.iqv-dato,.iqv-vacio{margin:0;font-size:11.5px;line-height:1.55;color:var(--text3)}
 .iqv-dato b{color:var(--text2)}
 .iqv-dato b.ok{color:var(--g)}
 /* La pregunta. De qué es, en etiquetas; el caso aparte, en su recuadro, y la pregunta en negrita debajo: más pequeñas
-   que antes (16 px la pregunta, 14 las opciones) pero con jerarquía. Los términos del glosario van subrayados, cada uno
+   que antes (14.5 px la pregunta, 13 las opciones) pero con jerarquía. Los términos del glosario van subrayados, cada uno
    en su color (`ctGenaiTerminos`, en examen-genai.js), y el glosario va debajo de las opciones. */
-.iqv-hoja{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.iqv-hoja{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
 .iqv-chips{display:flex;flex-wrap:wrap;gap:6px}
 .iqv-chip{display:inline-flex;align-items:baseline;gap:7px;padding:4px 11px;border-radius:999px;border:1px solid rgba(var(--ov),.09);
-  background:rgba(var(--ov),.05);font-size:11.5px;font-weight:600;line-height:1.4;color:var(--text2)}
+  background:rgba(var(--ov),.05);font-size:11px;font-weight:600;line-height:1.4;color:var(--text2)}
 .iqv-chip b{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--c);white-space:nowrap}
 .iqv-chip.cap{color:var(--text)}
-.iqv-caso{display:flex;flex-direction:column;gap:6px;padding:13px 17px 14px;border-left:3px solid var(--c);border-radius:0 12px 12px 0;
+.iqv-caso{display:flex;flex-direction:column;gap:5px;padding:11px 15px 12px;border-left:3px solid var(--c);border-radius:0 12px 12px 0;
   background:color-mix(in srgb,var(--c) 7%,transparent)}
-.iqv-caso p{margin:0;font-size:14px;line-height:1.65;color:var(--text2)}
-.iqv-q{margin:0;font-size:16px;font-weight:700;line-height:1.5;letter-spacing:-.005em;color:var(--text)}
+.iqv-caso p{margin:0;font-size:13px;line-height:1.6;color:var(--text2)}
+.iqv-q{margin:0;font-size:14.5px;font-weight:700;line-height:1.5;letter-spacing:-.005em;color:var(--text)}
 .iqv-q b,.iqv-caso b{font-weight:800;color:var(--text)}
 .iqv-ops{display:flex;flex-direction:column;gap:8px}
-.iqv-op{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:12px;align-items:start;width:100%;text-align:left;padding:11px 14px;
+.iqv-op{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:11px;align-items:start;width:100%;text-align:left;padding:9px 13px;
   border-radius:11px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.03);color:var(--text);font:inherit;
-  font-size:14px;line-height:1.55;cursor:pointer;transition:border-color .15s,background .15s}
-.iqv-op>b{display:flex;align-items:center;justify-content:center;width:26px;height:26px;margin-top:-2px;border-radius:8px;font-family:var(--mono);
-  font-size:12px;color:var(--text2);background:rgba(var(--ov),.08);transition:background .15s,color .15s}
+  font-size:13px;line-height:1.5;cursor:pointer;transition:border-color .15s,background .15s}
+.iqv-op>b{display:flex;align-items:center;justify-content:center;width:24px;height:24px;margin-top:-2px;border-radius:8px;font-family:var(--mono);
+  font-size:11px;color:var(--text2);background:rgba(var(--ov),.08);transition:background .15s,color .15s}
 .iqv-op>em{align-self:center;font-style:normal;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
 .iqv-op:not(:disabled):hover{border-color:var(--c);background:color-mix(in srgb,var(--c) 8%,transparent)}
 .iqv-op:not(:disabled):hover>b{background:var(--c);color:var(--bg)}
@@ -3644,25 +3645,42 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .iqv-op.mal>b{background:var(--r);color:#fff}
 .iqv-op.mal>em{color:var(--r)}
 .iqv-op.apagada{opacity:.5}
-.iqv-nota{margin:0;font-size:12px;line-height:1.6;color:var(--text3)}
+.iqv-nota{margin:0;font-size:11.5px;line-height:1.6;color:var(--text3)}
 .iqv-nota kbd{font-family:var(--mono);font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;border:1px solid rgba(var(--ov),.18);color:var(--text2)}
-.iqv-res{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 14px;padding:10px 12px 10px 16px;border-radius:12px;font-size:14px;font-weight:800}
-.iqv-res .alv-btn{height:34px;padding:0 14px;border-radius:10px;font-size:13px}
+.iqv-res{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 14px;padding:10px 12px 10px 16px;border-radius:12px;font-size:13px;font-weight:800}
+.iqv-res .alv-btn{height:32px;padding:0 13px;border-radius:10px;font-size:12px}
 .iqv-res.ok{color:var(--g);background:rgba(var(--g-rgb),.08)}
 .iqv-res.mal{color:var(--r);background:rgba(var(--r-rgb),.07)}
 /* Contestada: el porqué y lo que dice el syllabus (`.sy-*`, con su objetivo), debajo de la pregunta. */
 .iqv-exp{display:flex;flex-direction:column;gap:14px;padding-top:18px;border-top:1px solid rgba(var(--ov),.08)}
 .iqv-why{display:flex;flex-direction:column;gap:7px}
-.iqv-why>div{font-size:14px;line-height:1.7;color:var(--text)}
+.iqv-why>div{font-size:13px;line-height:1.65;color:var(--text)}
 .iqv-why b{font-weight:700}
 .iqv-fuente .sy{margin:0;padding:13px 17px 12px}
-.iqv-fuente .sy-lo{font-size:12.5px}
+.iqv-fuente .sy-lo{font-size:11.5px}
 .iqv-fuente .sy-nota{display:none}
-.iqv-fuente .sy-sec{font-size:13px}
-.iqv-fuente .sy-f,.iqv-fuente .sy-det p{font-size:13.5px;line-height:1.65}
+.iqv-fuente .sy-sec{font-size:12px}
+.iqv-fuente .sy-f,.iqv-fuente .sy-det p{font-size:12.5px;line-height:1.6}
 /* Cómo vas: la meta y los simulacros, la semana, dónde están los puntos y lo que fallaste. */
-.iqv-vas{display:flex;flex-direction:column;gap:24px;padding:24px 24px 32px;background:rgba(var(--ov),.018)}
-.iqv-meta{margin:0;font-size:13px;line-height:1.55;color:var(--text2)}
+.iqv-vas{display:flex;flex-direction:column;gap:14px;padding:20px 22px 30px;background:rgba(var(--ov),.018)}
+.iqv-vas-c{display:flex;flex-direction:column;gap:22px}
+/* Cómo vas se contrae (Adán, 18-nov-2026: "del lado derecho hazlo contraíble así para evitar ruido visual en mi iPad"):
+   su botón (`istqbLado()`) lo cierra a una franja de 46 px con «Cómo vas» y su resumen en vertical —bajo 1100 px, a un
+   renglón— y la pregunta se queda con todo el ancho. Empieza cerrado en el iPad (pantalla táctil) y en pantallas de
+   menos de 1200 px; lo que eliges se recuerda en ese dispositivo (`dash-istqb-lado`). */
+.iqv-vas-tog{display:flex;align-items:center;gap:8px;width:100%;padding:0 0 2px;border:0;background:transparent;color:var(--text2);
+  font:inherit;text-align:left;cursor:pointer}
+.iqv-vas-tog b{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c);white-space:nowrap}
+.iqv-vas-tog span{flex:1;min-width:0;font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iqv-vas-tog i{flex:none;font-style:normal;font-size:16px;line-height:1;color:var(--text3);transition:transform .15s}
+.iqv-vas-tog:hover b{text-decoration:underline}
+.iqv-body.lado-cerrado{grid-template-columns:minmax(0,1fr) 46px}
+.lado-cerrado .iqv-vas{padding:14px 0;overflow:hidden}
+.lado-cerrado .iqv-vas-c{display:none}
+.lado-cerrado .iqv-vas-tog{flex-direction:column;justify-content:flex-start;gap:12px;height:100%;padding:0}
+.lado-cerrado .iqv-vas-tog b,.lado-cerrado .iqv-vas-tog span{writing-mode:vertical-rl;flex:none}
+.lado-cerrado .iqv-vas-tog i{order:-1;transform:rotate(180deg)}
+.iqv-meta{margin:0;font-size:12px;line-height:1.55;color:var(--text2)}
 .iqv-meta b{color:var(--text)}
 .iqv-sim{position:relative;display:flex;align-items:flex-end;gap:6px;height:90px;margin:16px 0 16px;padding-right:62px;border-bottom:1px solid rgba(var(--ov),.16)}
 .iqv-sim-b{position:relative;flex:1 1 0;max-width:34px;border-radius:5px 5px 0 0;background:var(--r)}
@@ -3698,7 +3716,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .iqv-cl>summary:hover{background:rgba(var(--ov),.05)}
 .iqv-lc-n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-family:var(--mono);
   font-size:11.5px;font-weight:800;background:rgba(var(--ov),.08);color:var(--text2)}
-.iqv-cl-t{min-width:0;font-size:12.5px;font-weight:600;line-height:1.3;color:var(--text)}
+.iqv-cl-t{min-width:0;font-size:12px;font-weight:600;line-height:1.3;color:var(--text)}
 .iqv-cl-f{font-size:11px;color:var(--text3);white-space:nowrap}
 .iqv-cl-f em{font-style:normal;font-weight:800;color:var(--p)}
 .iqv-cl.toca>summary{background:rgba(127,79,184,.12);box-shadow:inset 0 0 0 1.5px var(--p)}
@@ -3706,14 +3724,14 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .iqv-cl.ok .iqv-cl-t{color:var(--text3);text-decoration:line-through}
 .iqv-cl.ok .iqv-cl-f{color:var(--g);font-weight:700}
 .iqv-cl-d{display:flex;flex-direction:column;gap:4px;padding:6px 4px 10px 35px}
-.iqv-cl-acc{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin-bottom:4px;font-size:11.5px;line-height:1.45;color:var(--text3)}
+.iqv-cl-acc{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin-bottom:4px;font-size:11px;line-height:1.45;color:var(--text3)}
 .iqv-cl-acc a{font-weight:700;color:var(--p);text-decoration:none}
 .iqv-cl-acc a:hover{text-decoration:underline}
 .iqv-cl-acc label{display:inline-flex;align-items:center;gap:5px;cursor:pointer;color:var(--text2)}
 .iqv-cl-acc input,.iqv-st input{width:14px;height:14px;margin:0;accent-color:var(--g);cursor:pointer}
 .iqv-st{display:grid;grid-template-columns:auto 34px minmax(0,1fr) auto;align-items:center;gap:7px;padding:4px 6px;border-radius:8px}
 .iqv-st-n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3)}
-.iqv-st-t{min-width:0;font-size:12px;font-weight:600;line-height:1.3}
+.iqv-st-t{min-width:0;font-size:11.5px;font-weight:600;line-height:1.3}
 .iqv-st-t a,.iqv-st-t b{color:var(--text);text-decoration:underline;text-decoration-color:rgba(var(--ov),.22);text-underline-offset:3px}
 .iqv-st-t a:hover{color:var(--p);text-decoration-color:var(--p)}
 .iqv-st-f{font-size:11px;color:var(--g);font-weight:700;white-space:nowrap}
@@ -3749,7 +3767,14 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   .iqv-body{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-auto-rows:max-content;align-content:start;overflow-y:auto;overscroll-behavior:contain}
   .iqv-col{overflow:visible;min-height:auto}
   .iqv-col+.iqv-col{border-left:0;border-top:1px solid rgba(var(--ov),.08)}
-  .iqv-vas{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));align-items:start}
+  .iqv-vas-c{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));align-items:start}
+  .iqv-body.lado-cerrado{grid-template-columns:minmax(0,1fr)}
+  .lado-cerrado .iqv-vas{padding:14px 32px}
+  .lado-cerrado .iqv-vas-tog{flex-direction:row;height:auto}
+  .lado-cerrado .iqv-vas-tog b,.lado-cerrado .iqv-vas-tog span{writing-mode:horizontal-tb}
+  .lado-cerrado .iqv-vas-tog span{flex:1}
+  .iqv-vas-tog i{transform:rotate(90deg)}
+  .lado-cerrado .iqv-vas-tog i{order:0;transform:none}
 }
 @media(max-width:640px){
   body:has(#istqbOverlay.open) .pp-btn{visibility:hidden}
@@ -3761,11 +3786,12 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   .iqs-b{flex-direction:column;align-items:stretch;gap:2px}
   .iqs-b span{white-space:normal}
   .iqs-reloj{margin-left:0}
-  .iqv-vas{gap:18px}
-  .iqv-q{font-size:15.5px}
+  .iqv-vas-c{gap:18px}
+  .lado-cerrado .iqv-vas{padding:12px 14px}
+  .iqv-q{font-size:14px}
   .iqv-caso{padding:11px 13px 12px}
-  .iqv-caso p{font-size:13.5px}
-  .iqv-op{gap:10px;padding:10px 12px;font-size:13.5px}
+  .iqv-caso p{font-size:12.5px}
+  .iqv-op{gap:10px;padding:9px 11px;font-size:12.5px}
 }
 /* El alemán de hoy (#alemanOverlay, `abrirAleman()`): dos pestañas a todo lo ancho. Vocabulario: las palabras
    de hoy en tarjetas —el artículo en el color de su género, los de la app de Alemán—, «Practicar» y el repaso.
@@ -8993,7 +9019,8 @@ function iqLeeHtml(){
         `<label><input type="checkbox"${x.hecho ? ' checked' : ''} onchange="iqCapLeido(${x.k})"> Capítulo leído</label></div>` +
         iqSubsHtml(x) + '</div></details>').join('') +
     '</div>';
-}function iqVasHtml(q){
+}
+function iqVasHtml(q){
   const X = window.EXAMEN_GENAI || {}, M = X.meta || {}, S = habSimulacro(), t = cdTarea('a1-7'), hoyK = hoyLocal(), LET = 'ABCD';
   const ints = (rawGet('examen_genai_v1', {}) || {}).intentos || [];
   // La meta: presentar en el mes de la tarea con el simulacro en su meta dos veces seguidas.
@@ -9035,7 +9062,12 @@ function iqLeeHtml(){
       (h.q.why ? `<p>${h.q.why}</p>` : '') + (window.ctGenaiSeccion ? ctGenaiSeccion(h.q) : '') + '</div></details>').join('') +
       (fallos.length > 6 ? `<p class="iqv-dato">Y ${fallos.length - 6} más de días anteriores.</p>` : '')
     : `<p class="iqv-vacio">${H.length ? 'Ninguna fallada todavía.' : 'Aún no contestas ninguna.'} Lo que falles aparece aquí con la buena, su porqué y su sección.</p>`;
-  return `<aside class="iqv-col iqv-vas" aria-label="Cómo vas">${iqLeeHtml()}
+  // El resumen del botón que la contrae: capítulos leídos y cómo va la semana.
+  const Lc = iqLectura(), resumen = (Lc.length ? `${Lc.filter(x => x.hecho).length} de ${Lc.length} capítulos leídos · ` : '') +
+    (n7 ? `${ok7} de ${n7} bien esta semana` : 'sin respuestas esta semana');
+  return `<aside class="iqv-col iqv-vas" aria-label="Cómo vas"><button type="button" class="iqv-vas-tog" onclick="istqbLado()" ` +
+    `aria-expanded="${!istqbLadoCerrado()}" aria-controls="istqbVasC" title="Mostrar u ocultar Cómo vas"><b>Cómo vas</b><span>${resumen}</span><i>›</i></button>
+    <div class="iqv-vas-c" id="istqbVasC">${iqLeeHtml()}
     <div class="iqv-bq"><div class="iqv-et">Tu meta${mes ? ' · presentas en ' + mes : ''}</div>
       <p class="iqv-meta">El simulacro en <b>${S.meta} de ${S.max}</b> o más, dos veces seguidas${M.corte ? ` · el corte oficial es ${M.corte}` : ''}.</p>
       ${sim}</div>
@@ -9044,7 +9076,7 @@ function iqLeeHtml(){
     <div class="iqv-bq"><div class="iqv-et">Dónde están los puntos</div><div class="iqv-caps">${capsHtml}</div>
       <p class="iqv-dato">En juego: lo que vale el capítulo por lo que te falta de acierto en él (con menos de tres respuestas, la mitad).</p></div>
     <div class="iqv-bq"><div class="iqv-et">Lo que fallaste${fallos.length ? ' · ' + fallos.length : ''}</div>${fHtml}</div>
-  </aside>`;
+  </div></aside>`;
 }
 /* El simulacro completo, arriba de la ventana (Adán, 18-nov-2026: "diferentes tipos de examen completo y mostrar la
    opción al principio de la ventana… no me da la opción de iniciar la simulación del examen completo"): sus juegos —A, B,
@@ -9077,6 +9109,21 @@ function istqbPintar(){
   const hecha = istqbHoy(q);
   document.getElementById('istqbSub').innerHTML = '<b>La pregunta del día.</b> ' + iqPorQue(q);
   b.innerHTML = `<div class="iqv-simbar" id="istqbSim">${istqbSimHtml()}</div>` + iqPreguntaHtml(q, hecha) + iqVasHtml(q);
+  b.classList.toggle('lado-cerrado', istqbLadoCerrado());
+}
+// Cómo vas, abierto o cerrado: lo que elegiste en este dispositivo; si no has elegido, cerrado en el iPad (pantalla
+// táctil) y en pantallas de menos de 1200 px, para que la pregunta no tenga ruido al lado.
+const IQ_LADO_KEY = 'dash-istqb-lado';
+function istqbLadoCerrado(){
+  try{ const v = localStorage.getItem(IQ_LADO_KEY); if(v) return v === 'cerrado'; }catch(e){}
+  return !!(window.matchMedia && matchMedia('(pointer: coarse)').matches) || innerWidth < 1200;
+}
+function istqbLado(){
+  const b = document.getElementById('istqbBody'); if(!b) return;
+  const cerrado = !b.classList.contains('lado-cerrado');
+  b.classList.toggle('lado-cerrado', cerrado);
+  const t = b.querySelector('.iqv-vas-tog'); if(t) t.setAttribute('aria-expanded', String(!cerrado));
+  try{ localStorage.setItem(IQ_LADO_KEY, cerrado ? 'cerrado' : 'abierto'); }catch(e){}
 }
 // Mientras está abierto, Mi Día no rota: la rotación vuelve al cerrarlo.
 function abrirIstqb(){

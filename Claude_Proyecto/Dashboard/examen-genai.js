@@ -275,17 +275,17 @@
 .gl-t{text-decoration:underline;text-decoration-color:var(--gc);text-decoration-thickness:3px;text-underline-offset:4px;
   text-decoration-skip-ink:none;background:color-mix(in srgb,var(--gc) 13%,transparent);border-radius:3px;padding:0 1px}
 .gl-t.gl-c0{text-decoration-thickness:1.5px;text-decoration-style:dotted;background:none}
-.gl{display:flex;flex-direction:column;gap:10px;padding:14px 16px 15px;border-radius:12px;border:1px solid rgba(var(--ov),.1);
+.gl{display:flex;flex-direction:column;gap:8px;padding:12px 14px 13px;border-radius:12px;border:1px solid rgba(var(--ov),.1);
   background:rgba(var(--ov),.025)}
 .gl-tit{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
-.gl-l{margin:0;display:flex;flex-direction:column;gap:10px}
+.gl-l{margin:0;display:flex;flex-direction:column;gap:8px}
 .gl-i{display:grid;grid-template-columns:minmax(110px,180px) minmax(0,1fr);gap:3px 14px;padding:1px 0 1px 11px;border-left:4px solid var(--gc)}
-.gl-i dt{font-size:13px;font-weight:700;line-height:1.45;color:var(--text)}
+.gl-i dt{font-size:12px;font-weight:700;line-height:1.45;color:var(--text)}
 .gl-i dd{margin:0;display:flex;flex-direction:column;gap:3px;min-width:0}
-.gl-llano{font-size:13px;line-height:1.55;color:var(--text)}
-.gl-cita{font-size:11.5px;line-height:1.55;font-style:italic;color:var(--text3)}
+.gl-llano{font-size:12px;line-height:1.5;color:var(--text)}
+.gl-cita{font-size:11px;line-height:1.5;font-style:italic;color:var(--text3)}
 .gl-cita a{font-style:normal;font-weight:700;color:var(--text2);white-space:nowrap}
-.gl-luego{font-size:12px;line-height:1.5;color:var(--text3)}
+.gl-luego{font-size:11.5px;line-height:1.5;color:var(--text3)}
 @media(max-width:640px){.gl-i{grid-template-columns:minmax(0,1fr)}}`;
   (function () { const st = document.createElement('style'); st.textContent = GL_CSS; document.head.appendChild(st); })();
   window.ctGenaiTerminos = terminos;

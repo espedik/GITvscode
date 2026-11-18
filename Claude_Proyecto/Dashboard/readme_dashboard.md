@@ -74,7 +74,7 @@ forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
 y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases) y `plan_auditoria_sinc` (cuándo se tocó cada mes aquí, para traer la de la PC), `fin_resumen_v1` (lo que queda en la quincena, para `finanzas-sync.js`), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta), `dash_libromes_v1` (el libro del mes: el de ahora, los leídos y el que sigue si lo cambiaste),
-`habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-noticias-v1` y `dash-precios-v1` (las últimas noticias y los últimos precios de *Qué invertir hoy* que llegaron de
+`habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-istqb-lado` (*Cómo vas* abierto o cerrado en la ventana del ISTQB, en ese dispositivo), `dash-noticias-v1` y `dash-precios-v1` (las últimas noticias y los últimos precios de *Qué invertir hoy* que llegaron de
 GitHub). Tu reparto no es clave propia: vive en Finanzas (`finanzasmx_v2.reparto`).
 
 ---
@@ -410,15 +410,16 @@ innecesaria, las preguntas hazlas más pequeñas pero dale un mejor formato de t
 - **El simulacro completo, arriba** (`istqbSimHtml`; Adán, 18-nov-2026: *"diferentes tipos de examen completo y mostrar
   la opción al principio de la ventana… no me da la opción de iniciar la simulación del examen completo"*): sus cuatro
   juegos —Examen A, Examen B, Mezcla y Tus fallos, ver *El simulacro del ISTQB CT-GenAI*—, cada uno en un botón con lo
-  que es (el de Tus fallos, cuántas fallaste y cuántas no has visto), y el reloj: 75 minutos, tu caso, o 60
+  que es (el de Tus fallos, cuántas fallaste y cuántas no has visto), de cuatro en fila o, bajo 1000 px, de dos en dos,
+  y el reloj: 75 minutos, tu caso, o 60
   (`istqbReloj`). **Tocar un juego empieza el examen** ahí mismo (`istqbSimulacro` → `XGenAI.iniciar`, con lo que dice
-  `XGenAI.estado()`). Si hay uno a medias va primero *Reanudar*, con lo que llevas y el tiempo que queda
+  `XGenAI.estado()`). Si hay uno a medias va primero *Reanudar*, a todo lo ancho, con lo que llevas y el tiempo que queda
   (`istqbAlSimulacro()`), y empezar otro pide confirmar, porque ese se pierde.
 - **La pregunta** (`iqPreguntaHtml`), en una hoja centrada de 820 px (`.iqv-hoja`). Arriba, en etiquetas, su capítulo
   con el nombre oficial, su nivel K —el `title` dice qué pide ese nivel y cuántos puntos trae el examen de él (`IQ_K`,
   `iqKExamen`)— y lo que vale. Si trae caso, **el caso va aparte**, en su recuadro, y **la pregunta debajo, en
-  negrita** (`iqPartes`: se parte en su último «¿»; 72 de las 156 traen caso). La pregunta mide 16 px y las opciones
-  14. Se contesta tocando una opción o con 1 a 4 (o A a D), y **cada pregunta se contesta una vez**: la primera
+  negrita** (`iqPartes`: se parte en su último «¿»; 72 de las 156 traen caso). La pregunta mide 14.5 px y las opciones
+  13 (Adán, 18-nov-2026: *"reduce el tamaño de la letra"*; el caso, el porqué y el glosario, 13 y 12). Se contesta tocando una opción o con 1 a 4 (o A a D), y **cada pregunta se contesta una vez**: la primera
   respuesta es la que cuenta, como en el examen. Contestada, la buena en verde con *Correcta*, la tuya en rojo con *Tu
   respuesta*, *Siguiente pregunta* (también Enter) y, debajo del glosario, **el porqué** y **lo que dice el syllabus**
   (`ctGenaiFuente`, con su objetivo): la sección, cada frase textual con su página del PDF y *Abrir el syllabus en la
@@ -433,7 +434,11 @@ innecesaria, las preguntas hazlas más pequeñas pero dale un mejor formato de t
   el mismo color en su renglón del glosario; los demás, gris; hasta seis por pregunta. **Lo que se pregunta se explica
   al contestar** —el término en negritas, el de la misma sección del programa o el que sostiene su cita—: antes dice
   *Es lo que te preguntan*. Contestada, el glosario suma los términos de las opciones.
-- **Cómo vas** (`iqVasHtml`), en 420 px: arriba, **los capítulos que lees** (`iqLeeHtml`, `iqLectura`), los cinco en el
+- **Cómo vas** (`iqVasHtml`), en 420 px y **contraíble** (`istqbLado`; Adán, 18-nov-2026: *"del lado derecho hazlo
+  contraíble así para evitar ruido visual en mi iPad"*): su botón, arriba, dice *Cómo vas* con los capítulos leídos y
+  cómo va la semana; cerrado, la columna queda en una franja de 46 px con eso en vertical —bajo 1100 px, en un
+  renglón— y la pregunta toma todo el ancho. Empieza cerrado en el iPad (pantalla táctil) y en pantallas de menos de
+  1200 px, y abierto en la PC; lo que eliges se recuerda en ese dispositivo (`dash-istqb-lado`). Dentro, arriba, **los capítulos que lees** (`iqLeeHtml`, `iqLectura`), los cinco en el
   orden del plan del CT-GenAI —sus pasos *Capítulo N leído* de `META_PLAN.istqbgenai`, con su fecha—, **contraídos**
   (Adán, 18-nov-2026: *"los capítulos que leo deben estar contraídos y tener info solamente necesaria"*): una línea por
   capítulo con su número, de qué trata en llano (`IQ_CAP_LLANO`, el nombre oficial en su `title`) y cómo va —*Lee este*
@@ -459,9 +464,10 @@ la pregunta fuera de la vista.
 Mientras la ventana está abierta, Mi Día no rota, las teclas no lo mueven por detrás (`istqbTecla`) y la brújula
 enseña el prompt de Entrevistas (la vista `#istqbOverlay.open`); se cierra con ✕, clic fuera o Escape. Bajo 1100 px
 va en una columna, con *Cómo vas* debajo y la franja del simulacro desplazándose con todo, y bajo 640 px a pantalla
-completa, sin brújula, con los juegos de dos en dos. Medido: la franja mide 98 px; a 1600×1000 las columnas miden 1050
-y 420 px y la pregunta con caso, sus opciones y su glosario caben sin desplazar; a 1366×768, 835 y 420, y la pregunta
-con caso y sus opciones caben (el glosario, al bajar); a 1100×800, 590 y 420; a 390, una columna. Sin desplazamiento
+completa, sin brújula. Medido: la franja mide 96 px en la PC y 157 en el iPad vertical; a 1600×1000 las columnas miden
+1050 y 420 px y la pregunta con caso, sus opciones y su glosario caben sin desplazar; a 1366×768, 835 y 420, y el
+glosario asoma al pie; en el iPad horizontal (1194×834) *Cómo vas* empieza cerrado y la pregunta mide 1051 px —677
+abierto—; en el vertical (834×1194) y a 390, una columna con *Cómo vas* en un renglón al final. Sin desplazamiento
 horizontal en ninguno, en claro y en oscuro.
 
 Las respuestas viven en `dash-aprende-v1` → `istqb`, una lista por fecha local (`hoyLocal()`) de
