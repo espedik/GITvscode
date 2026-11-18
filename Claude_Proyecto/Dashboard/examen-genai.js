@@ -194,8 +194,8 @@
      específicos del enunciado (los que salen en menos preguntas de los bancos) llevan color —azul, amarillo y
      magenta: la terna que pasa la validación de paleta en claro y en oscuro sin parecerse al verde de «correcta» ni
      al rojo de «tu respuesta»—; los demás, gris. Cada término va subrayado en su color en el texto y con el mismo
-     color en el glosario, que va debajo de las opciones: su línea en llano y, si el programa trae una frase que lo
-     explique, esa frase textual con su página.
+     color en el glosario, que va debajo de las opciones: qué es en llano, un ejemplo de pruebas y, si el programa trae
+     una frase que lo explique, esa frase textual con su página.
      Antes de contestar no se define lo que se pregunta —el término en negritas del enunciado, el de la misma sección
      del programa que la pregunta o el que la sostiene con su cita—: dice «es lo que te preguntan» y se explica al
      contestar. Primero se recuerda y después se lee. Lo usan la pregunta del día de Mi Día y la revisión del
@@ -258,7 +258,7 @@
       const e = v.e, luego = !contestada && v.pregunta;
       return `<div class="gl-i gl-c${v.c}${luego ? ' luego' : ''}"><dt>${esc(e.t)}</dt><dd>` + (luego
         ? '<span class="gl-luego">Es lo que te preguntan: se explica al contestar.</span>'
-        : `<span class="gl-llano">${esc(e.llano)}</span>` + (e.cita ? `<span class="gl-cita">«${esc(e.cita)}» ` +
+        : `<span class="gl-llano">${esc(e.llano)}</span>` + (e.ej ? `<span class="gl-ej"><b>Ejemplo:</b> ${esc(e.ej)}</span>` : '') + (e.cita ? `<span class="gl-cita">«${esc(e.cita)}» ` +
             `<a href="${pdf(e.pag)}" target="_blank" rel="noopener" title="Abrir el syllabus en la página ${e.pag}">Syllabus, pág. ${e.pag}</a></span>` : '')) +
         '</dd></div>';
     }).join('');
@@ -283,6 +283,8 @@
 .gl-i dt{font-size:12px;font-weight:700;line-height:1.45;color:var(--text)}
 .gl-i dd{margin:0;display:flex;flex-direction:column;gap:3px;min-width:0}
 .gl-llano{font-size:12px;line-height:1.5;color:var(--text)}
+.gl-ej{font-size:11.5px;line-height:1.5;color:var(--text2)}
+.gl-ej b{font-weight:700;color:var(--text)}
 .gl-cita{font-size:11px;line-height:1.5;font-style:italic;color:var(--text3)}
 .gl-cita a{font-style:normal;font-weight:700;color:var(--text2);white-space:nowrap}
 .gl-luego{font-size:11.5px;line-height:1.5;color:var(--text3)}

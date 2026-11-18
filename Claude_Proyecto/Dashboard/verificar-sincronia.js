@@ -3290,7 +3290,7 @@ function promptsDeLoTocado() {
   G.forEach(e => {
     let re;
     try { re = new RegExp('(?<![\\p{L}\\p{N}])(?:' + e.re + ')(?![\\p{L}\\p{N}])', 'iu'); } catch (x) { malos.push('«' + e.t + '»: su expresión no compila'); return; }
-    if (!e.t || !e.llano) malos.push('«' + (e.t || '?') + '»: sin nombre o sin su línea en llano');
+    if (!e.t || !e.llano || e.llano.length < 60 || !e.ej) malos.push('«' + (e.t || '?') + '»: sin nombre, sin su explicación completa en llano o sin ejemplo');
     if (e.cita) {
       conCita++;
       if (!citas[e.cita]) malos.push('«' + e.t + '»: su cita no es una frase textual de los bancos');

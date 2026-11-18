@@ -428,7 +428,9 @@ innecesaria, las preguntas hazlas más pequeñas pero dale un mejor formato de t
   su respuesta debemos tener el glosario de las palabras que se ocupan en la pregunta, para entender conforme a la
   marcha… subrayar de otro color las palabras claves y que tenga el mismo color en el glosario"*). Los términos del
   temario que salen en el caso o en la pregunta van subrayados, y el glosario va debajo de las opciones: cada término
-  con una línea en llano y, si el programa trae una frase que lo explica, esa frase textual con su página. Los tres más
+  con qué es y por qué importa al probar, en llano, un ejemplo de pruebas —casi siempre automotriz— y, si el programa
+  trae una frase que lo explica, esa frase textual con su página (Adán: *"hay algunas palabras del glosario que no
+  están explicadas con más detalle y no se comprende del todo"*). Los tres más
   específicos (los que salen en menos preguntas) llevan color —azul, amarillo y magenta: la terna que pasa la
   validación de paleta en claro y en oscuro sin confundirse con el verde de *Correcta* ni el rojo de *Tu respuesta*— y
   el mismo color en su renglón del glosario; los demás, gris; hasta seis por pregunta. **Lo que se pregunta se explica
@@ -1598,7 +1600,7 @@ arranque —el juego y *▶ Empezar · 75 minutos* o *60 minutos*— van arriba,
 de la pregunta del día también lo empieza (`XGenAI.iniciar(juego, minutos)`, con lo que enseña de `XGenAI.estado()`).
 
 **El glosario de las preguntas** (`examen-genai-glosario.js`, `EXAMEN_GENAI_GLOSARIO`): 64 términos del programa, cada
-uno con cómo se reconoce en el texto, su sección, una línea en llano y —51 de ellos— la frase textual del programa que
+uno con cómo se reconoce en el texto, su sección, su explicación en llano, un ejemplo (`ej`) y —51 de ellos— la frase textual del programa que
 lo explica, con su página, tomada de las citas de los bancos; los compuestos van antes que los sencillos («prompt de
 sistema» antes que «prompt»). La línea en llano es explicación, no cita. El control 53 del verificador comprueba que
 cada cita sea textual y de su página, y que cada término salga en alguna pregunta. Para que un paso dispare algo de la
