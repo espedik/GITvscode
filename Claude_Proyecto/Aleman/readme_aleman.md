@@ -124,7 +124,8 @@ ventana del alemán, y `leccion.js` la reconoce enmarcada: pone `.embebida` en `
 quita la barra, «Anterior/Siguiente», el pie y la brújula —la ventana trae su título, cómo pasar a otra
 lección y la brújula del Dashboard con este mismo prompt—, y el panel de práctica sube hasta arriba. Un
 enlace a otra página se lo pide a la ventana con `postMessage`: otra lección se abre ahí mismo y una
-página que no es lección (el vocabulario, la gramática), aparte; Escape cierra la ventana. Lo que se
+página que no es lección (el vocabulario, la gramática), aparte; Escape cierra la ventana. También le avisa
+cuánto se ha bajado (tipo `scroll`, una vez por cuadro), para que la ventana pliegue su encabezado. Lo que se
 practica ahí se guarda en `aleman_k10_v1`, igual que aquí. Abierta sola, la lección no cambia.
 
 **En oscuro, si el Dashboard va en oscuro** (Adán, 22-oct-2026: *"agrega el modo oscuro a todo lo que esté

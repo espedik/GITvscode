@@ -543,7 +543,12 @@ cuál está *Abierta* y cuál es *La del plan*. Tocar una la abre y la deja eleg
 «Siguiente ›». Entre el encabezado y la lección va **su resumen** (`#alemanRes`, `alemanResHtml()`, de
 `ALEMAN_LECCIONES_RESUMEN` en `../Aleman/lecciones-resumen.js`): *Qué aprendes* con tus ejercicios hechos, *La regla*
 con su ejemplo en alemán tras la flecha y *Errores típicos*, tachado lo mal dicho y en verde lo bien dicho. Se
-contrae; abierto o cerrado se recuerda en ese dispositivo (`dash-aleman-resumen`). Hasta que carga se ve
+contrae; abierto o cerrado se recuerda en ese dispositivo (`dash-aleman-resumen`). **Al bajar por la lección, el
+encabezado y el resumen se pliegan** (`.plegada`, `alemanPliega()`; Adán: *"me quita mucho campo visual, cuando haga
+scroll down quiero que también se mueva"*): la lección avisa cuánto bajó, 40 px abajo los pliega y 40 px arriba —o
+volver al principio— los regresa. Lo que llega en el medio segundo siguiente a un cambio no cuenta: al fondo de la
+página, plegar agranda el marco y el navegador mueve el desplazamiento solo. Medido: el marco de la lección pasa
+de 426 a 776 px de alto a 1600×1000, de 235 a 623 en el iPad Pro 11 horizontal y de 183 a 705 a 390. Hasta que carga se ve
 *Abriendo la lección…*. **Con el Dashboard en oscuro, la lección
 y los casos también**: `leccion.js` lee `coach-theme` y la pinta con `../Aleman/oscuro.js`, que deriva cada color del
 tema claro (ver `../Aleman/readme_aleman.md` → *En oscuro*). El marco (`.alv-lec-marco`) lleva el papel de la página

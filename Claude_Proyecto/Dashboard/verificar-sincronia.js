@@ -3347,6 +3347,8 @@ function promptsDeLoTocado() {
    'function alemanTodasHtml(', 'function alemanResHtml(', 'function alemanCasosTablaHtml(', 'function alemanMasHtml(',
    'id="alemanTodas"', 'id="alemanRes"', 'id="alemanCasosTabla"']
     .forEach(c => { if (h.indexOf(c) < 0) malos.push('dashboard.html perdió ' + c); });
+  if (h.indexOf('function alemanPliega(') < 0 || h.indexOf("if(m.tipo === 'scroll')") < 0) malos.push('dashboard.html ya no pliega el encabezado de la lección al bajar (alemanPliega)');
+  if (leer('Aleman/leccion.js').indexOf("tipo: 'scroll'") < 0) malos.push('leccion.js ya no avisa a la ventana cuánto se bajó (tipo scroll)');
   if (malos.length) { problemas.push('Alemán de hoy (lecciones, resumen, casos y vocabulario de más):\n     ' + malos.slice(0, 15).join('\n     ')); return; }
   const cubre = V.voc.filter(w => M[w.de]).length;
   ok.push('Alemán de hoy: las ' + ids.length + ' lecciones con su resumen; ' + cubre + ' de ' + V.voc.length +

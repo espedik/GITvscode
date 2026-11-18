@@ -54,6 +54,12 @@
     avisa({ tipo: 'abrir', href: href });
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') avisa({ tipo: 'cerrar' }); });
+  // Cuánto se ha bajado, una vez por cuadro: la ventana pliega su encabezado al bajar y lo regresa al subir.
+  var pend = false;
+  window.addEventListener('scroll', function () {
+    if (pend) return; pend = true;
+    requestAnimationFrame(function () { pend = false; avisa({ tipo: 'scroll', y: Math.round(window.scrollY || 0) }); });
+  }, { passive: true });
 })();
 
 (function () {
