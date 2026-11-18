@@ -715,6 +715,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .ef-error{grid-column:1/-1;font-size:12px;font-weight:700;color:var(--r)}
 .ef-resumen{font-size:12.5px;color:var(--text2)}
 .ef-resumen b{color:var(--text)}
+/* Una compra que sigue su precio (sym): en lugar de «Vale hoy» pide la cantidad, opcional, y dice cómo se calcula. */
+.ti-form .ti-cant,.ti-form .ti-auto{display:none}
+.ti-form.liga .ti-cant{display:flex}
+.ti-form.liga .ti-auto{display:block}
+.ti-form.liga .ti-vale{display:none}
+.ti-form label em{font-style:normal;font-weight:500}
+.ti-auto{grid-column:1/-1;margin:0;font-size:11.5px;line-height:1.45;color:var(--text2)}
+.ti-auto b{color:var(--text)}
+.ti-sigue{color:var(--cy)}
 @media(max-width:640px){
   .ti-fila{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"f m" "n m" "acc acc"}
   .ti-f{grid-area:f}.ti-n{grid-area:n}.ti-m{grid-area:m}.ti-acc{grid-area:acc;justify-content:flex-end}
@@ -9918,33 +9927,135 @@ const TI_TIPOS = [['fondos','Fondo de inversión'],['acciones','Acciones o ETF']
 let _tiEdit = null;
 function tiEditable(){ return !FIN_REPO && !!tryParse('finanzasmx_v2', null); }
 function tiFecha(k){ return k ? new Date(String(k).slice(0,10)+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'}) : 'sin fecha'; }
+/* Una compra puede seguir el precio de un activo de Precios ahora (`sym`: 'BTC-USD', 'NVDA', 'VOO'…). Con el cierre del
+   día de la compra y el dólar de ese día se sabe cuánto compraste (`qty`, o la cantidad exacta si la escribes:
+   `qtyManual`), y vale hoy = esa cantidad × el precio de ahora × el dólar de ahora (Adán, 18-nov-2026: "puse bitcoin
+   cuánto compré en pesos mexicanos… puedes saber de acuerdo al día cuánto vale actualmente"). tiRevaluar escribe ese
+   valor en `finanzasmx_v2.investments[].value`, así que Finanzas, el medidor y el patrimonio dicen lo mismo. */
+function tiActivos(){ return qiActivos().filter(a => a.tipo !== 'divisa'); }
+function tiNorm(s){ return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+// El activo que nombra una compra («BITCOIN», «BTC», «NVIDIA», «VOO»…), por palabra completa; null si ninguno.
+function tiActivoDe(nombre, L){
+  const n = tiNorm(nombre); if(!n) return null;
+  const pal = x => new RegExp('(^|[^a-z0-9])' + tiNorm(x).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '($|[^a-z0-9])').test(n);
+  return (L || tiActivos()).find(a => a.tipo !== 'divisa' && (pal(a.tk) || pal(a.n))) || null;
+}
+// Precio en pesos: el de ahora o, con fecha, el cierre de ese día (o del último antes) con el dólar de ese día. La
+// historia diaria cubre un año; más atrás, la semanal de cinco.
+function tiPrecioMxn(a, L, fecha){
+  if(!a) return null;
+  let p = a.p, fx = a.m === 'MXN' ? 1 : qiDolar(L);
+  if(fecha && fecha < hoyLocal()){
+    const sem = !(a.d1 && a.d1.length && a.d1[0][0] <= fecha), s = (sem ? a.w5 : a.d1) || [];
+    let v = null; for(const x of s){ if(x[0] <= fecha) v = x[1]; else break; }
+    p = v;
+    if(a.m !== 'MXN') fx = qiDolarEn(L, fecha, sem) || fx;
+  }
+  return p > 0 && fx > 0 ? p * fx : null;
+}
+function tiCantTxt(q, a){
+  const n = q >= 1 ? q.toLocaleString('es-MX', { maximumFractionDigits: 4 }) : q.toLocaleString('es-MX', { maximumSignificantDigits: 4 });
+  return n + ' ' + (a.tipo === 'cripto' ? a.tk : (a.tipo === 'etf' ? 'títulos' : 'acciones') + ' de ' + a.tk);
+}
+// Pone al día las compras que siguen un precio; true si cambió algo. Una compra de cripto o acciones sin `sym` (de
+// antes, o agregada en Finanzas) se liga sola si su nombre dice qué es; `sym: ''` es «No: escribo cuánto vale».
+function tiRevaluar(F){
+  const L = qiActivos(); let cambio = false;
+  (F.investments || []).forEach(i => {
+    if(i.sym === undefined && (i.type === 'crypto' || i.type === 'acciones')){
+      const a = tiActivoDe(i.name, L.filter(x => x.tipo !== 'divisa'));
+      if(a){ i.sym = a.s; cambio = true; }
+    }
+    if(!i.sym) return;
+    const a = L.find(x => x.s === i.sym); if(!a) return;
+    if(!(i.qty > 0)){
+      const pf = tiPrecioMxn(a, L, i.date); if(!pf || !(+i.invested > 0)) return;
+      i.qty = +(+i.invested / pf).toPrecision(8); cambio = true;
+    }
+    const pn = tiPrecioMxn(a, L); if(!pn) return;
+    const v = Math.round(i.qty * pn * 100) / 100;
+    if(Math.abs(v - (+i.value || 0)) >= 0.01){ i.value = v; cambio = true; }
+  });
+  return cambio;
+}
+// Lo que dice el renglón de una compra ligada: cuánto tienes, en cian (va al precio de hoy).
+function tiSigueTxt(i){
+  if(!i.sym) return '';
+  const a = qiActivos().find(x => x.s === i.sym); if(!a) return '';
+  return i.qty > 0 ? ' · <span class="ti-sigue" title="Vale hoy sale del precio de ' + esc(a.n) + ' de ahora">' + tiCantTxt(i.qty, a) + '</span>' : '';
+}
 function tiFormHtml(ed){
-  const v = x => x != null && x !== '' ? esc(String(x)) : '';
-  return '<form class="ti-form" onsubmit="tiGuardar(event)">'+
+  const v = x => x != null && x !== '' ? esc(String(x)) : '', L = tiActivos(), sym = ed ? (ed.sym || '') : '';
+  const a = sym ? L.find(x => x.s === sym) : null, pn = a ? tiPrecioMxn(a, qiActivos()) : null;
+  const opc = '<option value="">No: escribo cuánto vale</option>' + L.map(x => '<option value="' + esc(x.s) + '"' + (x.s === sym ? ' selected' : '') + '>' + esc(x.n + ' (' + x.tk + ')') + '</option>').join('') +
+    (sym && !a ? '<option value="' + esc(sym) + '" selected>' + esc(sym) + '</option>' : '');
+  const hoy = a && ed.qty > 0 && pn ? 'Hoy: <b>' + tiCantTxt(ed.qty, a) + '</b> a <b>' + money(pn) + '</b> por ' + (a.tipo === 'cripto' ? a.tk : a.tipo === 'etf' ? 'título' : 'acción') + ' = <b>' + money(ed.qty * pn) + '</b>. ' : '';
+  return '<form class="ti-form' + (sym ? ' liga' : '') + '"' + (ed ? ' data-toc="1"' : '') + ' onsubmit="tiGuardar(event)">'+
     '<span class="ti-form-t">'+(ed ? 'Editar · '+esc(ed.name || 'Inversión') : 'Agregar una compra')+'</span>'+
     '<label><span>Cuándo</span><input type="date" name="qf" value="'+(ed ? v(ed.date) : hoyLocal())+'" required></label>'+
-    '<label class="ancho"><span>Qué compraste</span><input type="text" name="qn" value="'+(ed ? v(ed.name) : '')+'" placeholder="p. ej. VOO, GBMF2, CETES 28 días" required></label>'+
+    '<label><span>Sigue el precio de</span><select name="qs" onchange="tiSymCambia(this.form,true)">' + opc + '</select></label>'+
+    '<label class="ancho"><span>Qué compraste</span><input type="text" name="qn" value="'+(ed ? v(ed.name) : '')+'" placeholder="p. ej. Bitcoin, VOO, GBMF2, CETES 28 días" oninput="tiAutoSym(this.form)" required></label>'+
     '<label><span>Tipo</span><select name="qt">'+TI_TIPOS.map(x => '<option value="'+x[0]+'"'+((ed ? ed.type : 'fondos') === x[0] ? ' selected' : '')+'>'+x[1]+'</option>').join('')+'</select></label>'+
-    '<label><span>Cuánto metiste</span><input type="number" name="qm" min="0.01" step="0.01" inputmode="decimal" value="'+(ed ? v(ed.invested) : '')+'" required></label>'+
-    '<label><span>Vale hoy</span><input type="number" name="qv" min="0" step="0.01" inputmode="decimal" value="'+(ed ? v(ed.value) : '')+'" placeholder="lo que metiste"></label>'+
+    '<label><span>Cuánto metiste (pesos)</span><input type="number" name="qm" min="0.01" step="0.01" inputmode="decimal" value="'+(ed ? v(ed.invested) : '')+'" required></label>'+
+    '<label class="ti-vale"><span>Vale hoy</span><input type="number" name="qv" min="0" step="0.01" inputmode="decimal" value="'+(ed && !sym ? v(ed.value) : '')+'" placeholder="lo que metiste"></label>'+
+    '<label class="ti-cant"><span>Cuánto compraste <em>(opcional)</em></span><input type="number" name="qc" min="0" step="any" inputmode="decimal" value="'+(ed && ed.qtyManual ? v(ed.qty) : '')+'" placeholder="'+(ed && ed.qty > 0 && !ed.qtyManual ? v(ed.qty) : 'la calculo yo')+'"></label>'+
+    '<p class="ti-auto">' + hoy + 'Vale hoy se calcula solo: con el precio del día de la compra sé cuánto compraste y, con el de hoy, cuánto vale. Si sabes la cantidad exacta (la dice GBM o Bitso), escríbela.</p>'+
     '<span class="ti-form-acc"><button type="submit" class="ce-btn">'+(ed ? 'Guardar cambios' : 'Agregar')+'</button>'+
       (ed ? '<button type="button" class="ce-btn sec" onclick="tiCancelar()">Cancelar</button>' : '')+'</span></form>';
+}
+// Al escribir el nombre, propone el activo que nombra, hasta que eliges uno a mano (data-toc).
+function tiAutoSym(f){
+  if(!f || f.dataset.toc) return;
+  const a = tiActivoDe(f.qn.value); f.qs.value = a ? a.s : ''; tiSymCambia(f, false);
+}
+function tiSymCambia(f, toco){
+  if(toco) f.dataset.toc = '1';
+  const s = f.qs.value, a = s ? tiActivos().find(x => x.s === s) : null;
+  f.classList.toggle('liga', !!s);
+  if(a) f.qt.value = a.tipo === 'cripto' ? 'crypto' : 'acciones';
 }
 function tiGuardar(ev){
   if(ev) ev.preventDefault();
   const f = ev && ev.target, F = rawGet('finanzasmx_v2', null);
   if(!f || !F || FIN_REPO) return;
   const name = f.qn.value.trim(), invested = Math.round((parseFloat(f.qm.value) || 0) * 100) / 100, valor = parseFloat(f.qv.value);
+  const sym = f.qs ? f.qs.value : '', cant = f.qc ? parseFloat(f.qc.value) : NaN;
   if(!name){ f.qn.focus(); return; }
   if(!(invested > 0)){ f.qm.focus(); return; }
-  const datos = { name, type: f.qt.value, invested, value: valor >= 0 ? Math.round(valor * 100) / 100 : invested, date: f.qf.value || hoyLocal() };
-  if(f.qv.value === '') datos.value = invested;
   F.investments = F.investments || [];
   const i = _tiEdit ? F.investments.findIndex(x => x.id === _tiEdit) : -1;
-  if(i >= 0) F.investments[i] = Object.assign({}, F.investments[i], datos);
-  else F.investments.push(Object.assign({ id: Date.now().toString(36) + Math.random().toString(36).slice(2), rate: 0 }, datos));
+  const datos = { name, type: f.qt.value, invested, sym, date: f.qf.value || hoyLocal(),
+    value: sym ? (i >= 0 && +F.investments[i].value > 0 ? +F.investments[i].value : invested) : (f.qv.value !== '' && valor >= 0 ? Math.round(valor * 100) / 100 : invested) };
+  let x;
+  if(i >= 0) x = F.investments[i] = Object.assign({}, F.investments[i], datos);
+  else F.investments.push(x = Object.assign({ id: Date.now().toString(36) + Math.random().toString(36).slice(2), rate: 0 }, datos));
+  // La cantidad se recalcula con el precio del día salvo que la escribas tú.
+  if(sym && cant > 0){ x.qty = cant; x.qtyManual = true; } else { delete x.qty; delete x.qtyManual; }
+  tiRevaluar(F);
   _tiEdit = null;
   ceGuardar(F);
+}
+// Llegaron precios (de GitHub o el Bitcoin en vivo): pone al día lo que vale cada compra ligada. Mientras escribes en el
+// formulario solo guarda, sin repintar, para no perder lo escrito.
+function tiPreciosLlegaron(){
+  const F = rawGet('finanzasmx_v2', null);
+  if(!F || FIN_REPO || !tiRevaluar(F)) return;
+  const act = document.activeElement;
+  if(act && act.closest && act.closest('#kpiBody .ti-form')){ try{ rawSet('finanzasmx_v2', F); }catch(e){ return; } D.fin = F; if(window.CIFRAS) CIFRAS.refrescar(); return; }
+  ceGuardar(F);
+}
+let _tiBtcPedido = 0;
+function tiPedirPrecios(){
+  qiPedirPrecios();
+  if(Date.now() - _tiBtcPedido > 300000 && (!_qiVivo.btc || Date.now() - _qiVivo.btc.t > 300000)){ _tiBtcPedido = Date.now(); qiPedirBtc().then(tiPreciosLlegaron); }
+}
+// Al arrancar: con los precios guardados pone al día lo que vale cada compra antes del primer pintado, y si hay compras
+// ligadas pide los de ahora.
+function tiArranque(){
+  const F = rawGet('finanzasmx_v2', null);
+  if(!F || FIN_REPO) return;
+  if(tiRevaluar(F)){ try{ rawSet('finanzasmx_v2', F); D.fin = F; if(window.CIFRAS) CIFRAS.refrescar(); }catch(e){} }
+  if((F.investments || []).some(i => i.sym)) tiPedirPrecios();
 }
 function tiEditar(id){
   _tiEdit = id; abrirKpi('invertido');
@@ -11796,19 +11907,24 @@ function cerrarGBM(){ document.getElementById('gbmOverlay')?.classList.remove('o
 
 // Precios en vivo del Bitcoin (CoinGecko) y del dólar (open.er-api, que se actualiza una vez al día: si el de GitHub
 // es más nuevo, manda ese), y los de la bolsa de GitHub (qiPedirPrecios). Cada fuente falla por separado.
-async function cargarPreciosGBM(){
-  if(!document.getElementById('qiPrecios')) return;
-  qiPedirPrecios();
-  const btc = fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,mxn').then(r => r.json()).then(j => {
+// El Bitcoin en vivo (CoinGecko): para Precios ahora y para valuar las compras de Total invertido.
+function qiPedirBtc(){
+  return fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,mxn').then(r => r.json()).then(j => {
     _qiVivo.btc = { v: Number(j.bitcoin.usd), t: Date.now(), vivo: true };
     guardarPrecioBtc(Number(j.bitcoin.usd), Number(j.bitcoin.mxn));
   }).catch(() => {});
+}
+async function cargarPreciosGBM(){
+  if(!document.getElementById('qiPrecios')) return;
+  qiPedirPrecios();
+  const btc = qiPedirBtc();
   const usd = fetch('https://open.er-api.com/v6/latest/USD').then(r => r.json()).then(j => {
     _qiVivo.usd = { v: Number(j.rates.MXN), t: Number(j.time_last_update_unix) * 1000 || Date.now(), vivo: false };
   }).catch(() => {});
   await Promise.all([btc, usd]);
   _qiVivo.listo = true;
   qiPintarPrecios();
+  tiPreciosLlegaron();
 }
 
 // El fondo de la maestría y el patrimonio se valuaban con `currentBtcPrice`/`usdMxn` de
@@ -11965,7 +12081,7 @@ function qiPedirPrecios(){
     .then(j => {
       if(!j || !Array.isArray(j.items) || !j.items.length) return;
       _qiPrecios = j; try{ localStorage.setItem(QI_PRE_KEY, JSON.stringify(j)); }catch(e){}
-      qiPintarPrecios();
+      qiPintarPrecios(); tiPreciosLlegaron();
     }).catch(() => {});
 }
 // Cada activo con su precio de ahora: el del archivo o, para el Bitcoin y el dólar, el en vivo si es más nuevo.
@@ -14613,6 +14729,7 @@ function abrirKpi(id){
   document.getElementById('kpiBody').innerHTML=info.html;
   kpiAcomodar(document.getElementById('kpiBody'));
   ov.dataset.kpi=id;
+  if(id==='invertido') tiPedirPrecios();
   ov.classList.add('open');
   clearInterval(timer);
 }
@@ -14919,7 +15036,7 @@ function kpiDetalle(id){
     const compras=inv.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))).map(i=>{
       const met=+i.invested||0, v=+i.value||met, gan=v-met;
       return '<div class="ti-fila'+(_tiEdit===i.id?' edita':'')+'"><span class="ti-f">'+tiFecha(i.date)+'</span>'+
-        '<span class="ti-n"><b>'+esc(i.name||'Inversión')+'</b><i>'+tipoTxt(i.type)+'</i></span>'+
+        '<span class="ti-n"><b>'+esc(i.name||'Inversión')+'</b><i>'+tipoTxt(i.type)+tiSigueTxt(i)+'</i></span>'+
         '<span class="ti-m">metiste <b>'+money(met)+'</b><br>vale <b>'+money(v)+'</b>'+
           (met>0&&Math.abs(gan)>=1?' <em class="'+(gan>=0?'ok':'mal')+'">'+(gan>=0?'+':'−')+money(Math.abs(gan))+'</em>':'')+'</span>'+
         (editable?'<span class="ti-acc"><button type="button" class="ce-btn sec" onclick="tiEditar(\''+i.id+'\')">Editar</button>'+
@@ -16871,6 +16988,7 @@ seedMetasLogradasIfNeeded();
 seedTengoViajeIfNeeded();
 seedLogros20260813IfNeeded();
 loadAll();
+tiArranque();
 tickClock();
 const _volver=pantallaAlVolver();   // un refresco vuelve a la pantalla donde estabas
 showSlide(_volver!=null?_volver:(_settings.remember&&_settings.lastSlide!=null?_settings.lastSlide:0));

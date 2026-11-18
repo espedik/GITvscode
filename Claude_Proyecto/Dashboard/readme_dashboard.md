@@ -966,9 +966,9 @@ editar, eliminar… todas estas cifras deben estar entrelazadas con la info de H
 (`kpiDetalle('invertido')`) lleva, de arriba abajo: la cifra con lo que metiste y lo que ganan o pierden; *Tu
 estrategia de hoy* —sin tarjeta que pagar, lo que va a GBM hoy y este mes—; **Tus inversiones, compra por compra**
 (`.ti-fila`, de la más nueva a la más vieja: cuándo, qué, de qué tipo, cuánto metiste, cuánto vale hoy y la
-diferencia, con **Editar** y **Borrar**); el formulario **Agregar una compra** (`tiFormHtml`: cuándo, qué
-compraste, tipo, cuánto metiste y cuánto vale hoy; vacío, vale lo que metiste), que con **Editar** se llena con esa
-compra y pasa a **Guardar cambios** / **Cancelar**; **Tu portafolio hoy**, cada instrumento con lo de todas sus
+diferencia, con **Editar** y **Borrar**); el formulario **Agregar una compra** (`tiFormHtml`: cuándo, qué precio
+sigue, qué compraste, tipo, cuánto metiste y cuánto vale hoy —o, si sigue un precio, cuánto compraste—; vacío, vale
+lo que metiste), que con **Editar** se llena con esa compra y pasa a **Guardar cambios** / **Cancelar**; **Tu portafolio hoy**, cada instrumento con lo de todas sus
 compras sumado y su parte del total; el Bitcoin aparte, lo que entra cada mes y lo que falta.
 
 Las compras **son las inversiones de Finanzas**: `tiGuardar`, `tiEditar` y `tiBorrar` escriben en
@@ -980,6 +980,21 @@ en Finanzas. **Solo se edita donde Finanzas es propia** (`tiEditable`): en el iP
 (`FIN_REPO`), las compras se ven sin botones y una nota dice que se editan en la PC y llegan con el siguiente commit.
 Medido con los datos de Finanzas: agregar, corregir y borrar una compra cambia el medidor, el panel y lo que lee
 Finanzas; el panel mide 629 px a 1600×1000 sin desplazarse, y a 390 px no se sale nada de la pantalla.
+
+**Una compra que sigue su precio vale lo de hoy sola** (Adán, 18-nov-2026: *"puse bitcoin cuánto compré en pesos
+mexicanos, pero puedes saber de acuerdo al día cuánto vale actualmente… esta info sale en qué invertir hoy en las
+gráficas"*). *Sigue el precio de* liga la compra a uno de los activos de **Precios ahora** (`tiActivos`: todos menos el
+dólar) y la guarda en `sym` (`'BTC-USD'`, `'NVDA'`, `'VOO'`…). Con el cierre del día de la compra y el dólar de ese día
+(`tiPrecioMxn`: la historia diaria de un año o, más atrás, la semanal de cinco) se sabe cuánto compraste (`qty`); si
+escribes la cantidad exacta que dice GBM o Bitso, manda esa (`qtyManual`). Vale hoy = cantidad × precio de ahora ×
+dólar de ahora, y `tiRevaluar` lo escribe en `value`, así que Finanzas, el medidor y el patrimonio dicen la misma
+cifra. Lo pone al día al arrancar con los precios guardados (`tiArranque`), cuando llegan los de GitHub o el Bitcoin
+en vivo (`tiPreciosLlegaron`, que mientras escribes en el formulario solo guarda) y al abrir el panel
+(`tiPedirPrecios`). Escribir el nombre propone el activo (`tiAutoSym`: «BITCOIN», «BTC», «NVIDIA» por palabra
+completa) y pone el tipo; una compra de cripto o acciones sin `sym` —de antes o agregada en Finanzas— se liga sola si
+su nombre lo dice, y *No: escribo cuánto vale* (`sym: ''`) la deja a mano. El renglón dice cuánto tienes en cian
+(*Cripto · 0.002398 BTC*). Medido con los precios reales del 18 nov 2026: $2,880 de Bitcoin del 17 nov son 0.002398
+BTC y valen $2,852 (−$28); a 1600 y 390 px, sin desbordes ni errores.
 
 ### Fondo de emergencia, aportación por aportación
 

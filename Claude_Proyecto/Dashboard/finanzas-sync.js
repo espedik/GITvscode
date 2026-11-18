@@ -2,7 +2,7 @@
    Bitcoin en un lote, más lo que queda en la quincena. Sin movimientos ni notas. Lo escribe el hook de pre-commit
    (Dashboard/habitos-exportar.js): no se edita a mano. */
 window.FINANZAS_SYNC = {
-  "exportado": "2026-11-03T06:15:55.905Z",
+  "exportado": "2026-11-18T06:13:40.444Z",
   "fecha": "2026-11-03",
   "gastar": 1298,
   "datos": {
@@ -12,14 +12,14 @@ window.FINANZAS_SYNC = {
      "name": "Tarjeta BBVA",
      "type": "credit_card",
      "total": 39000,
-     "balance": 2300,
+     "balance": 0,
      "rate": 55.7,
      "min": 1500,
      "day": 11,
      "start": "2024-01-22",
      "noInterest": 0,
-     "fecha": "2026-10-31",
-     "planAl": "2026-11-03",
+     "fecha": "2026-11-18",
+     "planAl": "2026-11-18",
      "omitidos": []
     },
     {
@@ -39,12 +39,12 @@ window.FINANZAS_SYNC = {
      "name": "Crédito Automotriz",
      "type": "car",
      "total": 315800,
-     "balance": 279363.48,
+     "balance": 275687.59,
      "rate": 12.99,
      "min": 6700,
      "day": 15,
      "start": "2026-01-01",
-     "fecha": "2026-10-15"
+     "fecha": "2026-11-15"
     },
     {
      "id": "d004",
@@ -134,8 +134,18 @@ window.FINANZAS_SYNC = {
      "value": 11250,
      "date": "2024-01-01",
      "rate": 0
+    },
+    {
+     "id": "mwlpvva2i2szqfntyk",
+     "name": "BITCOIN",
+     "type": "crypto",
+     "invested": 2880,
+     "value": 2880,
+     "date": "2026-11-17",
+     "rate": 0
     }
    ],
+   "reparto": [],
    "activos": [
     {
      "id": "ac001",
@@ -252,8 +262,9 @@ window.FINANZAS_SYNC = {
      "usd": 5485
     }
    ],
-   "currentBtcPrice": 76434,
-   "usdMxn": 18.58,
-   "emergencyFund": 6000
+   "currentBtcPrice": 74691,
+   "usdMxn": 18.53,
+   "emergencyFund": 6000,
+   "efAportes": []
   }
 };
