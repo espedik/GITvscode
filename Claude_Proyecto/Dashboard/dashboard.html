@@ -3675,7 +3675,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .iqv-vas-tog i{flex:none;font-style:normal;font-size:16px;line-height:1;color:var(--text3);transition:transform .15s}
 .iqv-vas-tog:hover b{text-decoration:underline}
 .iqv-body.lado-cerrado{grid-template-columns:minmax(0,1fr) 46px}
-.lado-cerrado .iqv-vas{padding:14px 0;overflow:hidden}
+.lado-cerrado .iqv-vas{padding:14px 0}
 .lado-cerrado .iqv-vas-c{display:none}
 .lado-cerrado .iqv-vas-tog{flex-direction:column;justify-content:flex-start;gap:12px;height:100%;padding:0}
 .lado-cerrado .iqv-vas-tog b,.lado-cerrado .iqv-vas-tog span{writing-mode:vertical-rl;flex:none}
@@ -9115,15 +9115,19 @@ function istqbPintar(){
 // táctil) y en pantallas de menos de 1200 px, para que la pregunta no tenga ruido al lado.
 const IQ_LADO_KEY = 'dash-istqb-lado';
 function istqbLadoCerrado(){
+  if(_iqLadoMem) return _iqLadoMem === 'cerrado';
   try{ const v = localStorage.getItem(IQ_LADO_KEY); if(v) return v === 'cerrado'; }catch(e){}
   return !!(window.matchMedia && matchMedia('(pointer: coarse)').matches) || innerWidth < 1200;
 }
+// Al abrir o cerrar se repinta la ventana entera: en el Safari del iPad, una columna que se destapa sin repintarse se
+// queda sin desplazamiento táctil (Adán: "al expandirlo no puedo hacer scroll down").
+let _iqLadoMem = null;
 function istqbLado(){
   const b = document.getElementById('istqbBody'); if(!b) return;
   const cerrado = !b.classList.contains('lado-cerrado');
-  b.classList.toggle('lado-cerrado', cerrado);
-  const t = b.querySelector('.iqv-vas-tog'); if(t) t.setAttribute('aria-expanded', String(!cerrado));
-  try{ localStorage.setItem(IQ_LADO_KEY, cerrado ? 'cerrado' : 'abierto'); }catch(e){}
+  _iqLadoMem = cerrado ? 'cerrado' : 'abierto';
+  try{ localStorage.setItem(IQ_LADO_KEY, _iqLadoMem); }catch(e){}
+  istqbPintar();
 }
 // Mientras está abierto, Mi Día no rota: la rotación vuelve al cerrarlo.
 function abrirIstqb(){

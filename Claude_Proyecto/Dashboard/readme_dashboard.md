@@ -440,7 +440,8 @@ innecesaria, las preguntas hazlas más pequeñas pero dale un mejor formato de t
   contraíble así para evitar ruido visual en mi iPad"*): su botón, arriba, dice *Cómo vas* con los capítulos leídos y
   cómo va la semana; cerrado, la columna queda en una franja de 46 px con eso en vertical —bajo 1100 px, en un
   renglón— y la pregunta toma todo el ancho. Empieza cerrado en el iPad (pantalla táctil) y en pantallas de menos de
-  1200 px, y abierto en la PC; lo que eliges se recuerda en ese dispositivo (`dash-istqb-lado`). Dentro, arriba, **los capítulos que lees** (`iqLeeHtml`, `iqLectura`), los cinco en el
+  1200 px, y abierto en la PC; lo que eliges se recuerda en ese dispositivo (`dash-istqb-lado`). Abrirla o cerrarla repinta la ventana: en el
+  Safari del iPad, una columna que se destapa sin repintarse se queda sin desplazamiento táctil. Dentro, arriba, **los capítulos que lees** (`iqLeeHtml`, `iqLectura`), los cinco en el
   orden del plan del CT-GenAI —sus pasos *Capítulo N leído* de `META_PLAN.istqbgenai`, con su fecha—, **contraídos**
   (Adán, 18-nov-2026: *"los capítulos que leo deben estar contraídos y tener info solamente necesaria"*): una línea por
   capítulo con su número, de qué trata en llano (`IQ_CAP_LLANO`, el nombre oficial en su `title`) y cómo va —*Lee este*
