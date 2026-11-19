@@ -3463,6 +3463,46 @@ function promptsDeLoTocado() {
   ok.push('Tus datos fuera de la PC: ' + n + ' páginas cargan datos-sync.js y datos-pc.js antes que todo; datos-sync.js solo con claves del proyecto; el peso, de los dos registros');
 })();
 
+/* ── 57. Un crédito a plazo, completo, y sus abonos a capital ─────────────────────────────────────────────────────
+   Adán, 19-nov-2026: "falta cuánto pagaría de intereses en 7 años que es mi crédito… no puedo actualizar si doy
+   aportaciones extra… si hago aportaciones debes ver cuánto se reducen intereses". Una sola cuenta en el maestro
+   (prestamoSimular / prestamoResumen / prestamoAbono / prestamoAbonoBorrar / prestamoDatos) que usan Deuda total del
+   Dashboard y «Pagar» de Finanzas. Se prueba con un crédito de juguete con la fórmula de la anualidad: sin abonos se
+   acaba en sus pagos exactos, un abono baja el saldo y los intereses, corregirlo aplica solo la diferencia, borrarlo lo
+   devuelve, y un saldo dicho deja `pagosAl` en hoy para que las mensualidades sigan solas desde ahí. */
+(function () {
+  const C = global.window && global.window.CIFRAS, malos = [];
+  const f = ['prestamoSimular', 'prestamoHechos', 'prestamoResumen', 'prestamoAbono', 'prestamoAbonoBorrar', 'prestamoDatos'];
+  if (!C || f.some(k => typeof C[k] !== 'function')) { problemas.push('Crédito a plazo: el maestro ya no exporta ' + f.join(' / ')); return; }
+  // 100,000 a 12% anual con la cuota de 24 meses (4,707.35): sin abonos, 24 pagos y 12,976.40 de interés.
+  const d = { id: 'x', name: 'Prueba', type: 'car', total: 100000, balance: 100000, rate: 12, min: 4707.35, day: 15, start: '2026-01-01', plazo: 24, pagosAl: '2026-01-01' };
+  const s = C.prestamoSimular(d, {});
+  if (s.meses !== 24 || Math.abs(s.interes - 12976.4) > 1) malos.push('100,000 a 12% en 24 cuotas de 4,707.35 da ' + s.meses + ' pagos y ' + s.interes + ' de interés (deben ser 24 y 12,976.40)');
+  const a = C.prestamoSimular(d, { extra: 10000 });
+  if (!(a.meses < 24 && a.interes < s.interes)) malos.push('un abono de 10,000 no acorta el crédito ni baja el interés');
+  const F = { debts: [JSON.parse(JSON.stringify(d))], transactions: [] }, x = F.debts[0];
+  const ab = C.prestamoAbono(F, { id: 'x', amount: 10000, date: '2026-02-01', nota: 'prueba' });
+  if (ab.error || x.balance !== 90000 || !ab.prestamo || ab.prestamo.delta !== -10000 || ab.origen !== 'abono') malos.push('prestamoAbono no baja el saldo o no deja la transacción con prestamo.delta');
+  C.prestamoAbono(F, { id: 'x', amount: 12000, date: '2026-02-01' }, ab.id);
+  if (x.balance !== 88000 || F.transactions.length !== 1) malos.push('corregir el abono a 12,000 no aplica solo la diferencia (saldo ' + x.balance + ')');
+  if (!C.prestamoAbono(F, { id: 'x', amount: 999999 }).error) malos.push('se anota un abono mayor que lo que se debe');
+  const R = C.prestamoResumen(x, F);
+  if (R.abonado !== 12000 || !R.contrato || R.contrato.plazo !== 24 || R.escenarios.length !== 3 || !(R.porMil.ahorra > 0)) malos.push('prestamoResumen no trae los abonos, el contrato o lo que ahorra abonar');
+  C.prestamoAbonoBorrar(F, ab.id);
+  if (x.balance !== 100000 || F.transactions.length) malos.push('borrar el abono no devuelve el saldo');
+  C.prestamoDatos(F, 'x', { saldo: 95000, rate: 13, plazo: 30 });
+  if (x.balance !== 95000 || x.rate !== 13 || x.plazo !== 30 || x.pagosAl !== C.fechaLocal()) malos.push('prestamoDatos no deja el saldo dicho con pagosAl de hoy, la tasa o el plazo');
+  const h = leer('Dashboard/dashboard.html'), fz = leer('Finanzas/Finanzas.html');
+  ['CIFRAS.prestamoResumen(', 'CIFRAS.prestamoAbono(', 'CIFRAS.prestamoAbonoBorrar(', 'CIFRAS.prestamoDatos(', 'function kpiPrestamoHTML('].forEach(k => {
+    if (h.indexOf(k) < 0) malos.push('Deuda total del Dashboard ya no usa ' + k.replace(/\($/, ''));
+  });
+  if (fz.indexOf('CIFRAS.prestamoAbono(') < 0) malos.push('«Pagar» de Finanzas ya no anota el abono con la cuenta del maestro');
+  const auto = (C.DEUDAS_SEED || []).filter(z => z.id === 'd003')[0];
+  if (!auto || !(auto.plazo > 0)) malos.push('el auto (d003) no tiene su plazo en DEUDAS_SEED');
+  if (malos.length) { problemas.push('Crédito a plazo y abonos a capital:\n     ' + malos.join('\n     ')); return; }
+  ok.push('Crédito a plazo: intereses, contrato y abonos a capital con una sola cuenta del maestro, en Deuda total y en Finanzas');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

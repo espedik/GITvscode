@@ -452,7 +452,7 @@ window.CIFRAS = (function () {
     // libreta de logros solo guardaba la primera; la ruta del Plan Maestro enseña la última y cuántas.
     {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:0,          rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0, liquidaciones:['2026-08-13','2026-09-30']},
     // Saldo reportado por Adán: $299,000 (24-ago) → $292,000 → $293,000 (25-ago-2026) → $283,000 (21-sep-2026).
-    {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:279363.48, rate:12.99, min:6700, day:15, start:'2026-01-01', remainingMonths:61, pagosAl:'2026-10-15'},
+    {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:279363.48, rate:12.99, min:6700, day:15, start:'2026-01-01', remainingMonths:61, pagosAl:'2026-10-15', plazo:84},
     // Liquidado: la última cuota era la del 18 sep 2026 y Adán la dio por pagada el 21-sep-2026.
     {id:'d004',name:'Apple Watch MSI (TC Banamex)',  type:'other',      total:10248,     balance:0,        rate:0,     min:854,  day:18,start:'2025-09-16'},
     // d005 (Vuelo Viva Aerobus) y d006 (Mercado Libre) se ELIMINARON el 13 ago 2026: Adán
@@ -8484,6 +8484,16 @@ window.CIFRAS = (function () {
         });
       }
     },
+    {
+      // 2026-11-19 · "falta cuánto pagaría de intereses en 7 años que es mi crédito, me quedan 6 años". El plazo del
+      // contrato (`plazo`, en mensualidades) no estaba en ningún lado: de él salen la última mensualidad del contrato y lo
+      // que cuesta el crédito entero (prestamoResumen). Solo si falta: si Adán lo corrige en Deuda total, manda el suyo.
+      flag: '_plazoAuto20261119',
+      hacer: function (f) {
+        const d = (f.debts || []).find(function (x) { return x.id === 'd003'; });
+        if (d && !(+d.plazo > 0)) d.plazo = 84;
+      }
+    },
   ];
 
   /* Las seis compras del 1-sep-2026, en un solo sitio: las usa la migración de arriba para el
@@ -9719,13 +9729,134 @@ window.CIFRAS = (function () {
   function cuotas(d, hoy) {
     const min = +(d && d.min) || 0, bal = Math.max(0, +(d && d.balance) || 0), dia = +(d && d.day) || 1;
     const h = hoy ? new Date(hoy) : new Date(); h.setHours(0, 0, 0, 0);
-    const total = +d.total > 0 && min > 0 ? Math.round(+d.total / min) : 0;
+    // Con `plazo` (un crédito con contrato, como el auto) las cuotas son las del contrato; sin él, lo prestado entre el pago.
+    const total = +d.plazo > 0 ? +d.plazo : +d.total > 0 && min > 0 ? Math.round(+d.total / min) : 0;
     const restantes = bal > 0 && min > 0 ? (+d.rate > 0 ? mesesRestantes(d) : Math.ceil(bal / min - 1e-9)) : 0;
     let sig = new Date(h.getFullYear(), h.getMonth(), dia);
     if (sig < h || (d.pagosAl && fechaLocal(sig) <= d.pagosAl)) sig = new Date(h.getFullYear(), h.getMonth() + 1, dia);
-    return { total: total, restantes: restantes, pagadas: total && restantes != null ? Math.max(0, total - restantes) : null,
+    const hechas = +d.plazo > 0 ? prestamoHechos(d, fechaLocal(h)) : null;
+    return { total: total, restantes: restantes, pagadas: hechas != null ? hechas : total && restantes != null ? Math.max(0, total - restantes) : null,
              siguiente: restantes ? sig : null, ultima: restantes ? new Date(sig.getFullYear(), sig.getMonth() + restantes - 1, dia) : null };
   }
+  /* ── UN CRÉDITO A PLAZO, COMPLETO, Y SUS ABONOS A CAPITAL ─────────────────────────────────────────────────────
+     Adán, 19-nov-2026, sobre Deuda total: "falta cuánto pagaría de intereses en 7 años que es mi crédito… además no
+     puedo actualizar si doy aportaciones extra… cada mes obligatorio tengo que pagar 6,700, ese debe ser automático, pero
+     si hago aportaciones debes ver cuánto se reducen intereses". La mensualidad ya se anota sola (aplicarPagosFijos).
+     Aquí, una sola cuenta que usan el Dashboard y Finanzas:
+       · prestamoSimular(d, o)  — mes a mes con la tasa y la mensualidad: cuántos pagos faltan y cuánto interés; `o` puede
+                                  traer un abono hoy (`extra`), uno cada mes (`extraMes`) u otro saldo (`saldo`);
+       · prestamoHechos(d)      — cuántas mensualidades van desde `start` (en su día de pago, hasta hoy);
+       · prestamoResumen(d, F)  — todo lo del panel: la próxima mensualidad partida en interés y capital, lo que ya pagaste
+                                  de interés, lo que falta, cuándo terminas, el contrato (`plazo`) y cuánto te ahorra abonar;
+       · prestamoAbono(F, a, id) / prestamoAbonoBorrar(F, id) — un abono extra: todo va a capital, queda en Deudas como
+                                  «Abono a capital» con `prestamo: {id, delta}` (borrarlo en Finanzas lo devuelve, como
+                                  una mensualidad) y la siguiente mensualidad ya cobra interés sobre el saldo menor;
+       · prestamoDatos(F, id, v) — corregir con el estado de cuenta: saldo (un saldo dicho: manda desde hoy y las
+                                  mensualidades siguen solas desde ahí), tasa, mensualidad, plazo y día de pago.
+     Quien llama guarda. */
+  function prestamoR2(x) { return Math.round(x * 100) / 100; }
+  function prestamoSimular(d, o) {
+    o = o || {};
+    const r = (+d.rate || 0) / 100 / 12, P = (+d.min || 0) + Math.max(0, +o.extraMes || 0);
+    let B = Math.max(0, (o.saldo != null ? +o.saldo : +d.balance || 0) - Math.max(0, +o.extra || 0)), interes = 0, pagado = 0, n = 0;
+    if (B > 0.005 && !(P > B * r)) return { nunca: true, meses: null, interes: null, pagado: null };
+    while (B > 0.005 && n < 1200) { const i = B * r, pago = Math.min(B + i, P); B = B + i - pago; interes += i; pagado += pago; n++; }
+    return { nunca: false, meses: n, interes: prestamoR2(interes), pagado: prestamoR2(pagado) };
+  }
+  // El día de pago de la mensualidad número `k` (1 = la primera) desde `start`.
+  function prestamoDia(d, k) {
+    const s = String(d.start || '').split('-').map(Number), dia = +d.day || s[2] || 1;
+    if (!s[0]) return null;
+    const m0 = s[1] - 1 + (s[2] > dia ? 1 : 0);
+    return new Date(s[0], m0 + k - 1, Math.min(dia, new Date(s[0], m0 + k, 0).getDate()));
+  }
+  function prestamoHechos(d, hoyK) {
+    if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d.start || '')) return null;
+    const tope = hoyK || fechaLocal();
+    let n = 0;
+    for (let k = 1; k <= 1200; k++) { const f = prestamoDia(d, k); if (!f || fechaLocal(f) > tope) break; n = k; }
+    return n;
+  }
+  function prestamoResumen(d, F) {
+    F = F || fin || {};
+    const r = (+d.rate || 0) / 100 / 12, saldo = Math.max(0, +d.balance || 0), pago = +d.min || 0, dia = +d.day || 1;
+    const C = cuotas(d), sig = C.siguiente;
+    const enMes = function (n) { return sig && n ? new Date(sig.getFullYear(), sig.getMonth() + n - 1, Math.min(dia, new Date(sig.getFullYear(), sig.getMonth() + n, 0).getDate())) : null; };
+    const base = prestamoSimular(d, {});
+    const ahorro = function (o) {
+      const s = prestamoSimular(d, o);
+      if (base.nunca || s.nunca) return { nunca: true };
+      return { meses: s.meses, menos: base.meses - s.meses, interes: s.interes, ahorra: prestamoR2(base.interes - s.interes), fin: enMes(s.meses) };
+    };
+    const abonos = ((F && F.transactions) || []).filter(function (t) { return t.origen === 'abono' && t.prestamo && t.prestamo.id === d.id; })
+      .sort(function (a, b) { return String(b.date || '').localeCompare(String(a.date || '')); });
+    const abonado = prestamoR2(abonos.reduce(function (s, t) { return s + (+t.amount || 0); }, 0));
+    const hechos = prestamoHechos(d);
+    const capitalPagado = +d.total > 0 ? Math.max(0, +d.total - saldo) : null;
+    // Lo que pagaste de interés: lo que salió (mensualidades y abonos) menos lo que bajó lo que debes.
+    const interesPagado = hechos != null && capitalPagado != null ? Math.max(0, prestamoR2(hechos * pago + abonado - capitalPagado)) : null;
+    const plazo = +d.plazo || 0, ultimaContrato = plazo ? prestamoDia(d, plazo) : null;
+    const interesSig = prestamoR2(saldo * r), capitalSig = prestamoR2(Math.max(0, Math.min(saldo + interesSig, pago) - interesSig));
+    return {
+      saldo: saldo, tasa: +d.rate || 0, pago: pago, dia: dia, siguiente: sig, interesSig: interesSig, capitalSig: capitalSig,
+      hechos: hechos, capitalPagado: capitalPagado, interesPagado: interesPagado, proy: base, fin: enMes(base.meses),
+      interesTotal: interesPagado != null && !base.nunca ? prestamoR2(interesPagado + base.interes) : null,
+      contrato: plazo ? { plazo: plazo, ultima: ultimaContrato, faltan: hechos != null ? Math.max(0, plazo - hechos) : null,
+        total: prestamoR2(plazo * pago), interes: +d.total > 0 ? prestamoR2(plazo * pago - +d.total) : null } : null,
+      abonos: abonos, abonado: abonado, ahorro: ahorro,
+      escenarios: [5000, 10000, 20000].map(function (x) { return Object.assign({ x: x }, ahorro({ extra: x })); }),
+      mensual: Object.assign({ x: 1000 }, ahorro({ extraMes: 1000 })), porMil: ahorro({ extra: 1000 }),
+    };
+  }
+  function prestamoAbono(F, a, txId) {
+    if (!F || !Array.isArray(F.debts)) return { error: 'Sin datos de Finanzas' };
+    a = a || {};
+    const d = F.debts.filter(function (x) { return x.id === a.id; })[0];
+    if (!d) return { error: 'Esa deuda ya no existe' };
+    const x = prestamoR2(parseFloat(a.amount) || 0);
+    if (!(x > 0)) return { error: 'Escribe cuánto abonaste' };
+    F.transactions = Array.isArray(F.transactions) ? F.transactions : [];
+    let i = -1;
+    F.transactions.forEach(function (t, k) { if (txId && t.id === txId) i = k; });
+    const yaBajo = i >= 0 ? -(+((F.transactions[i].prestamo || {}).delta) || 0) : 0;   // lo que ese abono ya había bajado
+    const disponible = prestamoR2((+d.balance || 0) + yaBajo);
+    if (x > disponible + 0.005) return { error: 'Es más de lo que debes (' + fmt(disponible) + ')' };
+    d.balance = prestamoR2(disponible - x); d.fecha = fechaLocal();
+    const nota = String(a.nota || '').trim().slice(0, 80);
+    const t = { type: 'expense', desc: 'Abono a capital: ' + d.name, amount: x, date: String(a.date || fechaLocal()).slice(0, 10), cat: 'Deudas',
+      notes: (nota || 'Abono extra') + ' — todo a capital', nota: nota, prestamo: { id: d.id, delta: -x }, origen: 'abono' };
+    if (i >= 0) { F.transactions[i] = Object.assign({}, F.transactions[i], t); return F.transactions[i]; }
+    t.id = 'abono' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    F.transactions.push(t);
+    return t;
+  }
+  function prestamoAbonoBorrar(F, txId) {
+    const t = ((F && F.transactions) || []).filter(function (x) { return x.id === txId; })[0];
+    if (!t) return { error: 'Ese abono ya no existe' };
+    const d = t.prestamo && (F.debts || []).filter(function (x) { return x.id === t.prestamo.id; })[0];
+    if (d) { d.balance = prestamoR2((+d.balance || 0) - (+t.prestamo.delta || 0)); d.fecha = fechaLocal(); }
+    F.transactions = F.transactions.filter(function (x) { return x.id !== txId; });
+    return t;
+  }
+  function prestamoDatos(F, id, v) {
+    const d = F && (F.debts || []).filter(function (x) { return x.id === id; })[0];
+    if (!d) return { error: 'Esa deuda ya no existe' };
+    v = v || {};
+    const num = function (k, min, max) { const x = parseFloat(v[k]); return isFinite(x) && x >= min && x <= max ? x : null; };
+    const rate = num('rate', 0, 100), min = num('min', 1, 1e7), plazo = num('plazo', 1, 600), day = num('day', 1, 31), saldo = num('saldo', 0, 1e8);
+    if (v.rate != null && v.rate !== '' && rate == null) return { error: 'La tasa va de 0 a 100 %' };
+    if (v.min != null && v.min !== '' && min == null) return { error: 'Escribe la mensualidad' };
+    if (rate != null) d.rate = rate;
+    if (min != null) d.min = prestamoR2(min);
+    if (plazo != null) d.plazo = Math.round(plazo);
+    if (day != null) d.day = Math.round(day);
+    if (saldo != null && prestamoR2(saldo) !== prestamoR2(+d.balance || 0)) {
+      const hoyK = fechaLocal();
+      d.balance = prestamoR2(saldo); d.fecha = hoyK; d.saldoAl = hoyK; d.pagosAl = hoyK;
+    }
+    return d;
+  }
+
   /* Los lunes de un mes en que lo de Didi va a GBM: los que no llevan abono de Didi a la tarjeta y caen después de que
      la BBVA queda en cero (`planBbva().fin`). Mientras tenga saldo, lo de Didi va a ella y no a GBM (Adán, 28-oct-2026:
      "¿de dónde sacas que en octubre deposito a GBM? eso es después de liquidar BBVA"): lo que sobra de repartir el
@@ -9880,6 +10011,8 @@ window.CIFRAS = (function () {
     fondoMaestria: fondoMaestria,
     fondoMovimiento: fondoMovimiento, fondoBorrar: fondoBorrar, fondoSigno: fondoSigno, fondoLista: fondoLista,
     btcCompra: btcCompra, btcBorrar: btcBorrar, btcEsInversion: btcEsInversion, btcDeInversiones: btcDeInversiones,
+    prestamoSimular: prestamoSimular, prestamoHechos: prestamoHechos, prestamoResumen: prestamoResumen,
+    prestamoAbono: prestamoAbono, prestamoAbonoBorrar: prestamoAbonoBorrar, prestamoDatos: prestamoDatos,
     diasFase: diasFase, diasHasta: diasHasta,
     avanceBbva: avanceBbva, deudasConInteres: deudasConInteres, bbvaEstado: bbvaEstado, estadoDia: estadoDia, bbvaRutaTxt: bbvaRutaTxt, aplicarPagosFijos: aplicarPagosFijos, cuotas: cuotas,
     didiGbmLunes: didiGbmLunes, didiSemana: didiSemana, lunesDidiTuyos: lunesDidiTuyos, gbmMes: gbmMes, presupuestoFijo: presupuestoFijo,

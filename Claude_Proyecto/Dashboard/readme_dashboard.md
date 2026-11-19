@@ -1037,6 +1037,33 @@ la maestría*— va en el `title` de la caja (sin cifras si está en modo privad
 44 px de alto y 320 px de ancho a 2048×1040, 245 a 1600×1000, 418 a 1366×768 (dos filas, 95 px) y 178 a 390 px (tres
 filas, 145 px); ningún nombre ni cifra se corta de 390 a 2048 px.
 
+**Deuda total, con cada crédito completo** (Adán, 19-nov-2026: *"falta cuánto pagaría de intereses en 7 años que es mi
+crédito… no puedo actualizar si doy aportaciones extra… cada mes obligatorio tengo que pagar 6,700, ese debe ser
+automático, pero si hago aportaciones debes ver cuánto se reducen intereses… debes tener mucha más info ahí"*). Debajo de
+las deudas por tasa, cada crédito a plazo con interés —el auto— lleva cuatro secciones (`kpiPrestamoHTML`), todas con las
+cuentas del maestro (`CIFRAS.prestamoResumen`):
+
+- **Completo** (`.pr-grid`, `.pr-dato`): lo que falta y el capital ya pagado; la próxima mensualidad partida en interés y
+  capital —se anota sola, `CIFRAS.aplicarPagosFijos`—; cuándo terminas; los intereses ya pagados (lo que pagaste menos lo
+  que bajó el saldo), los que faltan y el total. Y **el contrato** (`plazo`, 84 en el auto): la última mensualidad, cuánto
+  pagas en total y cuánto de eso son intereses y cargos; si el contrato y los datos de hoy no terminan en el mismo mes, lo
+  dice en naranja y pide comparar con el estado de cuenta.
+- **Si abonas extra** (`.pr-tabla`): cuánto interés ahorra cada $1,000 abonados hoy y $1,000 extra al mes, y $5,000,
+  $10,000 y $20,000 hoy con su nueva fecha y los meses de menos. La mensualidad sigue igual y se termina antes.
+- **Anotar un abono a capital** (`prAbonoGuardar`, `data-pr="abono"`): cuándo, cuánto y una nota, con la vista previa
+  mientras se escribe (`prPrevia`); los abonos debajo con **Editar** y **Borrar** (`prAbonoEditar`, `prAbonoBorrar`). Van a
+  `finanzasmx_v2.transactions` como «Abono a capital» con `prestamo: {id, delta}` y `origen: 'abono'`: Finanzas los lista
+  y borrar uno allá también devuelve el saldo; la siguiente mensualidad ya cobra interés sobre el saldo menor.
+- **Tus datos del crédito** (`prDatosGuardar`, `data-pr="datos"`): saldo, tasa, mensualidad, plazo y día de pago,
+  corregidos con el estado de cuenta (`CIFRAS.prestamoDatos`). Un saldo escrito manda desde hoy (`saldoAl`, `pagosAl`).
+
+Solo donde Finanzas es propia (`tiEditable`); en el iPad se ve sin formularios. Medido con los datos de Finanzas a
+2048×1040: el panel cabe sin desplazarse; el auto da $2,984 de interés y $3,716 a capital en la mensualidad del 15 de
+diciembre, ≈ $33,588 de intereses en 11 mensualidades, $91,182 por pagar y fin en junio 2031, contra un contrato de 84
+que acaba en diciembre 2032 ($247,000 de intereses y cargos): 18 mensualidades de diferencia que el panel señala. Un abono
+de $10,000 baja el saldo a $265,688 y ahorra $7,874 y 2 meses; corregirlo, borrarlo o anotarlo desde «Pagar» de Finanzas
+mueve lo mismo en las dos apps. A 390 px, sin desbordes. El **control 57** prueba la cuenta con un crédito de juguete.
+
 **Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se paga completa
 cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle y en el desglose de Patrimonio, que la
 marcan "sin intereses". La BBVA tampoco paga intereses mientras Adán cubre lo que pide el estado de cuenta

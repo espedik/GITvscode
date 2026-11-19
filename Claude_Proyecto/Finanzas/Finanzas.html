@@ -1488,7 +1488,10 @@ function openPayModal(debtId) {
   payDebtId=debtId;
   const d=S.debts.find(x=>x.id===debtId);
   document.getElementById('pay-name').textContent=d?.name||'';
-  document.getElementById('pay-amount').value=d?.min||'';
+  // Un crédito a plazo ya paga solo su mensualidad: aquí va un abono extra, así que el monto empieza vacío.
+  const aPlazoAuto=d&&d.type!=='credit_card'&&d.pagosAl;
+  document.getElementById('pay-amount').value=aPlazoAuto?'':(d?.min||'');
+  document.getElementById('pay-amount').placeholder=aPlazoAuto?'Abono extra a capital: la mensualidad se anota sola':'0.00';
   document.getElementById('pay-date').value=today();
   document.getElementById('mo-pay').classList.add('open');
 }
@@ -1498,16 +1501,25 @@ function savePayment() {
   const date=document.getElementById('pay-date').value;
   if(!amount||!date) return alert('Completa los campos.');
   const i=S.debts.findIndex(d=>d.id===payDebtId);
+  let abono=false;
   if(i>=0){
     const d=S.debts[i], antes=+d.balance||0;
-    d.balance=Math.max(0,antes-amount); d.fecha=today();
-    const t={id:uid(),type:'expense',desc:`Pago: ${d.name}`,amount,date,cat:'Deudas',notes:''};
-    // En una tarjeta, lo que bajó: borrar el pago lo devuelve (la regla de las transacciones solo
-    // conoce tarjetas, por eso las demás deudas no la llevan).
-    if(d.type==='credit_card') t.tarjeta={id:d.id,delta:Math.round((d.balance-antes)*100)/100};
-    S.transactions.push(t);
+    // Un crédito a plazo (el auto, el iPhone): su mensualidad se anota sola (CIFRAS.aplicarPagosFijos), así que lo que se
+    // paga aquí es un abono a capital, con la misma cuenta que Deuda total del Dashboard (CIFRAS.prestamoAbono): todo baja
+    // el saldo y borrarlo lo devuelve.
+    if(d.type!=='credit_card'&&d.pagosAl&&window.CIFRAS&&CIFRAS.prestamoAbono){
+      const r=CIFRAS.prestamoAbono(S,{id:d.id,date,amount});
+      if(r.error) return alert(r.error);
+      abono=true;
+    } else {
+      d.balance=Math.max(0,antes-amount); d.fecha=today();
+      const t={id:uid(),type:'expense',desc:`Pago: ${d.name}`,amount,date,cat:'Deudas',notes:''};
+      // En una tarjeta, lo que bajó: borrar el pago lo devuelve.
+      if(d.type==='credit_card') t.tarjeta={id:d.id,delta:Math.round((d.balance-antes)*100)/100};
+      S.transactions.push(t);
+    }
   }
-  save(); closeMo('mo-pay'); renderDebts(); toast('✅ Pago registrado');
+  save(); closeMo('mo-pay'); renderDebts(); toast(abono?'✅ Abono a capital anotado: la mensualidad se anota sola':'✅ Pago registrado');
   if(document.getElementById('s-dashboard').classList.contains('active')) renderDashboard();
   maybeRefreshIndicators();
 }

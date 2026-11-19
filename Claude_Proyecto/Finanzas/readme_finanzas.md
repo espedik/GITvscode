@@ -236,6 +236,12 @@ vuelve a poner; corregir el monto mueve el capital en lo mismo. `saveDebt()` le 
 deuda a plazo nueva o con saldo nuevo (`aPlazo`). Con `pagosAl`, `autoBalance` deja el saldo guardado
 —ya trae cada cuota—; sin él, sigue calculando `total − meses × cuota` como respaldo.
 
+**«Pagar» en un crédito a plazo es un abono a capital** (Adán, 19-nov-2026: *"si hago aportaciones debes ver cuánto se
+reducen intereses"*): en una deuda con `pagosAl` que no es tarjeta —el auto, el iPhone— la mensualidad ya se anota sola,
+así que `openPayModal` deja el monto vacío y `savePayment` llama a `CIFRAS.prestamoAbono`, la misma cuenta de Deuda total
+del Dashboard: todo baja el saldo, queda como «Abono a capital» con `prestamo` y borrarlo lo devuelve (`tarjetaDeshace`).
+El plazo del contrato (`plazo`) y lo que ahorra abonar se ven en Deuda total del Dashboard.
+
 **Lo que falta de cada una, con una sola cuenta**: la última cuota y las que van salen de
 `CIFRAS.cuotas(d)` en la hoja de ruta y en las suscripciones (daban jun, ago y sep de 2028 para el mismo
 iPhone); los meses del auto, de `CIFRAS.mesesRestantes` —con su interés: dividir el saldo entre la

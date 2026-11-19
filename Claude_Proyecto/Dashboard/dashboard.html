@@ -723,6 +723,23 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .ef-error{grid-column:1/-1;font-size:12px;font-weight:700;color:var(--r)}
 .ef-resumen{font-size:12.5px;color:var(--text2)}
 .ef-resumen b{color:var(--text)}
+/* Deuda total: un crédito a plazo, completo (kpiPrestamoHTML): sus cifras en cajas, lo que ahorra abonar en una tabla y la
+   vista previa de un abono mientras se escribe. */
+.pr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:9px}
+.pr-dato{padding:9px 11px;border-radius:10px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.08);min-width:0}
+.pr-dato span{display:block;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text3)}
+.pr-dato b{display:block;font-size:17px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums;margin:2px 0 1px}
+.pr-dato i{display:block;font-style:normal;font-size:11.5px;line-height:1.35;color:var(--text2)}
+.pr-dato.int b{color:var(--r)}
+.pr-dato.ok b{color:var(--g)}
+.pr-tabla{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums;margin-bottom:4px}
+.pr-tabla th{text-align:left;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text3);padding:0 6px 6px}
+.pr-tabla td{padding:7px 6px;border-top:1px solid rgba(var(--ov),.08);color:var(--text2)}
+.pr-tabla td b{color:var(--text)}
+.pr-tabla td.ok{color:var(--g);font-weight:800}
+.pr-previa{grid-column:1/-1;margin:0;font-size:12px;line-height:1.45;color:var(--text2)}
+.pr-previa b{color:var(--g)}
+@media(max-width:640px){ .pr-grid{grid-template-columns:minmax(0,1fr)} }
 /* Una compra que sigue su precio (sym): en lugar de «Vale hoy» pide la cantidad, opcional, y dice cómo se calcula. */
 .ti-form .ti-cant,.ti-form .ti-auto{display:none}
 .ti-form.liga .ti-cant{display:flex}
@@ -15114,7 +15131,126 @@ function abrirKpi(id){
   ov.classList.add('open');
   clearInterval(timer);
 }
-function cerrarKpi(){ _tiEdit = null; _efEdit = null; document.getElementById('kpiOverlay')?.classList.remove('open'); }
+function cerrarKpi(){ _tiEdit = null; _efEdit = null; _prEdit = null; document.getElementById('kpiOverlay')?.classList.remove('open'); }
+/* Deuda total: un crédito a plazo, completo (Adán, 19-nov-2026: "falta cuánto pagaría de intereses en 7 años que es mi
+   crédito… no puedo actualizar si doy aportaciones extra… si hago aportaciones debes ver cuánto se reducen intereses…
+   debes tener mucha más info ahí"). Las cuentas son las del maestro —CIFRAS.prestamoResumen, prestamoAbono,
+   prestamoAbonoBorrar, prestamoDatos—, las mismas que usa Finanzas: lo que se anota aquí sale allá y al revés. La
+   mensualidad se anota sola (CIFRAS.aplicarPagosFijos); aquí van los abonos extra, que van todos a capital, y los datos
+   del crédito corregidos con el estado de cuenta. Solo donde Finanzas es propia (tiEditable). */
+let _prEdit = null;
+function prMes(x){ return x ? x.toLocaleDateString('es-MX',{month:'short',year:'numeric'}) : '—'; }
+function prDia(x){ return x ? x.toLocaleDateString('es-MX',{day:'numeric',month:'short'}) : '—'; }
+function prMeses(n){ return n + (n === 1 ? ' mes' : ' meses'); }
+const PR_PREVIA = 'Todo va a capital: la siguiente mensualidad ya cobra interés sobre el saldo menor. Escribe cuánto y aquí sale cuánto te ahorras.';
+function kpiPrestamoHTML(d, F){
+  if(!window.CIFRAS || !CIFRAS.prestamoResumen) return '';
+  const R = CIFRAS.prestamoResumen(d, F), editable = tiEditable(), nom = esc(d.name);
+  const dato = (cls, l, v, s) => '<div class="pr-dato'+(cls ? ' '+cls : '')+'"><span>'+l+'</span><b>'+v+'</b>'+(s ? '<i>'+s+'</i>' : '')+'</div>';
+  let h = kpiSec('🚗 '+nom+', completo')+'<div class="pr-grid">'+
+    dato('', 'Te falta pagar', money(R.saldo), +d.total > 0 ? 'de '+money(+d.total)+' · ya pagaste '+money(R.capitalPagado)+' de capital' : '')+
+    dato('', 'Próxima mensualidad', money(R.pago), R.siguiente ? prDia(R.siguiente)+': '+money(R.interesSig)+' de interés y '+money(R.capitalSig)+' a capital. Se anota sola.' : '')+
+    dato('', 'Terminas', R.proy.nunca ? 'nunca' : prMes(R.fin), R.proy.nunca ? 'la mensualidad no cubre ni el interés' : R.proy.meses+' mensualidades más')+
+    dato('int', 'Intereses ya pagados', R.interesPagado != null ? '≈ '+money(R.interesPagado) : '—', R.hechos != null ? 'en '+R.hechos+' mensualidades'+(R.abonado > 0 ? ' y '+money(R.abonado)+' de abonos' : '')+': lo que pagaste menos lo que bajó tu saldo' : '')+
+    dato('int', 'Intereses que faltan', R.proy.nunca ? '—' : money(R.proy.interes), 'si pagas solo la mensualidad')+
+    dato('int', 'Intereses en total', R.interesTotal != null ? money(R.interesTotal) : '—', 'lo que te cuesta el crédito con tus datos de hoy')+
+  '</div>';
+  if(R.contrato){
+    const K = R.contrato, dif = K.faltan != null && !R.proy.nunca ? K.faltan - R.proy.meses : 0, choca = Math.abs(dif) > 2;
+    h += kpiPaso('Tu contrato: '+K.plazo+' mensualidades, la última en '+prMes(K.ultima),
+      K.plazo+' × '+money(R.pago)+' = <b>'+money(K.total)+'</b>'+(K.interes != null ? ' por '+money(+d.total)+' prestados: <b>'+money(K.interes)+' de intereses y cargos</b>' : '')+
+      '. Llevas '+R.hechos+'; según el contrato faltan '+K.faltan+'.'+
+      (choca ? ' <b>Con tu saldo, tu tasa y tu mensualidad de hoy acabarías en '+prMes(R.fin)+', '+Math.abs(dif)+' mensualidades '+(dif > 0 ? 'antes' : 'después')+'.</b> Las dos cosas no pueden ser ciertas: compara el saldo insoluto y la tasa de tu estado de cuenta con <i>Tus datos del crédito</i>. Si tu mensualidad lleva IVA del interés o un seguro, a capital va menos de lo que parece.' : ''),
+      choca ? 'var(--o)' : 'var(--r)');
+  }
+  if(!R.proy.nunca){
+    const fila = e => '<tr><td><b>'+money(e.x)+'</b> hoy</td><td><b>'+prMes(e.fin)+'</b></td><td>'+(e.menos > 0 ? prMeses(e.menos)+' antes' : 'igual')+'</td><td class="ok">'+money(e.ahorra)+'</td></tr>';
+    h += kpiSec('💸 Si abonas extra')+'<div class="pr-grid">'+
+      dato('ok', 'Cada '+money(1000)+' que abonas hoy', money(R.porMil.ahorra), 'menos de intereses: rinde lo que cobra tu crédito, '+R.tasa+'% al año, sin riesgo')+
+      dato('ok', money(1000)+' extra cada mes', money(R.mensual.ahorra), 'menos de intereses; terminas en '+prMes(R.mensual.fin)+', '+prMeses(R.mensual.menos)+' antes')+'</div>'+
+      '<table class="pr-tabla"><thead><tr><th>Abono</th><th>Terminas</th><th>Antes</th><th>Te ahorras</th></tr></thead><tbody>'+R.escenarios.map(fila).join('')+'</tbody></table>'+
+      kpiNota('Tu mensualidad sigue en '+money(R.pago)+' y terminas antes. Si prefieres pagar menos cada mes, pídeselo a tu banco y cambia la mensualidad en <i>Tus datos del crédito</i>. Lo que abones ya no se puede sacar: antes, que tu plan de la salida siga cubierto.');
+  }
+  if(editable){
+    const ed = _prEdit ? R.abonos.find(t => t.id === _prEdit) : null, v = x => x != null && x !== '' ? esc(String(x)) : '';
+    h += kpiSec('➕ Anotar un abono a capital')+
+      '<form class="ti-form" data-pr="abono" onsubmit="prAbonoGuardar(event,\''+d.id+'\')">'+
+        '<span class="ti-form-t">'+(ed ? 'Corregir · abono del '+tiFecha(ed.date) : 'Un pago aparte de la mensualidad')+'</span>'+
+        '<label><span>Cuándo</span><input type="date" name="pa_f" value="'+(ed ? v(ed.date) : hoyLocal())+'" required></label>'+
+        '<label><span>Cuánto</span><input type="number" name="pa_m" min="1" step="0.01" inputmode="decimal" value="'+(ed ? v(ed.amount) : '')+'" oninput="prPrevia(this,\''+d.id+'\')" required></label>'+
+        '<label class="ancho"><span>Nota</span><input type="text" name="pa_n" maxlength="80" value="'+(ed ? v(ed.nota) : '')+'" placeholder="p. ej. del aguinaldo"></label>'+
+        '<p class="pr-previa" data-prev>'+PR_PREVIA+'</p>'+
+        '<span class="ti-form-acc"><button type="submit" class="ce-btn">'+(ed ? 'Guardar cambios' : 'Anotar abono')+'</button>'+
+          (ed ? '<button type="button" class="ce-btn sec" onclick="prAbonoCancelar()">Cancelar</button>' : '')+'</span></form>';
+  }
+  if(R.abonos.length){
+    h += (editable ? '' : kpiSec('➕ Tus abonos a capital'))+'<div class="ti-lista" style="margin-top:10px">'+R.abonos.map(t =>
+      '<div class="ti-fila'+(_prEdit === t.id ? ' edita' : '')+'"><span class="ti-f">'+tiFecha(t.date)+'</span>'+
+        '<span class="ti-n"><b>Abono a capital</b><i>'+esc(t.nota || 'sin nota')+'</i></span>'+
+        '<span class="ti-m"><b>'+money(+t.amount || 0)+'</b></span>'+
+        (editable ? '<span class="ti-acc"><button type="button" class="ce-btn sec" onclick="prAbonoEditar(\''+t.id+'\')">Editar</button>'+
+          '<button type="button" class="ce-btn sec" onclick="prAbonoBorrar(\''+t.id+'\')">Borrar</button></span>' : '')+'</div>').join('')+'</div>'+
+      kpiNota('Llevas <b>'+money(R.abonado)+'</b> abonados aparte de la mensualidad. Salen en Finanzas como «Abono a capital»: borrar uno allá también devuelve el saldo.');
+  }
+  if(editable){
+    h += kpiSec('⚙️ Tus datos del crédito')+
+      '<form class="ti-form" data-pr="datos" onsubmit="prDatosGuardar(event,\''+d.id+'\')">'+
+        '<span class="ti-form-t">Corrígelos con tu estado de cuenta</span>'+
+        '<label><span>Saldo que debes hoy</span><input type="number" name="pd_s" min="0" step="0.01" inputmode="decimal" value="'+R.saldo.toFixed(2)+'"></label>'+
+        '<label><span>Tasa anual (%)</span><input type="number" name="pd_t" min="0" max="100" step="0.01" inputmode="decimal" value="'+R.tasa+'"></label>'+
+        '<label><span>Mensualidad</span><input type="number" name="pd_m" min="1" step="0.01" inputmode="decimal" value="'+R.pago+'"></label>'+
+        '<label><span>Plazo (mensualidades)</span><input type="number" name="pd_p" min="1" max="600" step="1" value="'+(+d.plazo || '')+'" placeholder="p. ej. 84"></label>'+
+        '<label><span>Día de pago</span><input type="number" name="pd_d" min="1" max="31" step="1" value="'+R.dia+'"></label>'+
+        '<p class="pr-previa">El saldo que escribas manda desde hoy y las mensualidades se siguen anotando solas desde ahí. Es el mismo crédito de Finanzas.</p>'+
+        '<span class="ti-form-acc"><button type="submit" class="ce-btn">Guardar</button></span></form>';
+  } else h += kpiNota(FIN_REPO ? 'En este dispositivo es la copia de tu PC: los abonos y los datos del crédito se anotan en tu PC.' : 'Abre Finanzas una vez en este navegador para anotar abonos.');
+  return h;
+}
+function prAbonoGuardar(ev, id){
+  if(ev) ev.preventDefault();
+  const f = ev && ev.target, F = rawGet('finanzasmx_v2', null);
+  if(!f || !F || FIN_REPO || !window.CIFRAS) return;
+  const r = CIFRAS.prestamoAbono(F, { id, date: f.pa_f.value, amount: f.pa_m.value, nota: f.pa_n.value }, _prEdit);
+  if(r.error){ tiAviso(f, r.error); f.pa_m.focus(); return; }
+  _prEdit = null;
+  ceGuardar(F);
+}
+function prAbonoEditar(txId){
+  _prEdit = txId; abrirKpi('deudatotal');
+  const f = document.querySelector('#kpiBody form[data-pr="abono"]');
+  if(f){ f.scrollIntoView({ block: 'nearest' }); f.pa_m.focus(); prPrevia(f.pa_m, (((D.fin.transactions || []).find(t => t.id === txId) || {}).prestamo || {}).id); }
+}
+function prAbonoCancelar(){ _prEdit = null; abrirKpi('deudatotal'); }
+function prAbonoBorrar(txId){
+  const F = rawGet('finanzasmx_v2', null); if(!F || FIN_REPO || !window.CIFRAS) return;
+  const t = (F.transactions || []).find(x => x.id === txId); if(!t) return;
+  if(!confirm('¿Borrar el abono del '+tiFecha(t.date)+' ('+money(+t.amount || 0)+')? Lo que debes sube '+money(+t.amount || 0)+' y también se borra en Finanzas.')) return;
+  CIFRAS.prestamoAbonoBorrar(F, txId);
+  if(_prEdit === txId) _prEdit = null;
+  ceGuardar(F);
+}
+// Mientras escribes cuánto: cuándo terminarías y cuánto interés te ahorras. Al corregir un abono, se mide contra el saldo
+// sin ese abono.
+function prPrevia(inp, id){
+  const f = inp && inp.form, p = f && f.querySelector('[data-prev]'), x = parseFloat(inp.value);
+  const d = (D.fin.debts || []).find(z => z.id === id);
+  if(!p || !d || !window.CIFRAS) return;
+  if(!(x > 0)){ p.textContent = PR_PREVIA; return; }
+  const t = _prEdit ? (D.fin.transactions || []).find(z => z.id === _prEdit) : null;
+  const base = t ? Object.assign({}, d, { balance: (+d.balance || 0) + (+t.amount || 0) }) : d;
+  if(x > (+base.balance || 0) + 0.005){ p.textContent = 'Es más de lo que debes ('+money(+base.balance || 0)+').'; return; }
+  const a = CIFRAS.prestamoResumen(base, D.fin).ahorro({ extra: x });
+  p.innerHTML = a.nunca ? 'Con ese saldo la mensualidad no cubre el interés.' :
+    'Con '+money(x)+': terminas en <b>'+prMes(a.fin)+'</b>'+(a.menos > 0 ? ', '+prMeses(a.menos)+' antes,' : '')+' y te ahorras <b>'+money(a.ahorra)+'</b> de intereses.';
+}
+function prDatosGuardar(ev, id){
+  if(ev) ev.preventDefault();
+  const f = ev && ev.target, F = rawGet('finanzasmx_v2', null);
+  if(!f || !F || FIN_REPO || !window.CIFRAS) return;
+  const r = CIFRAS.prestamoDatos(F, id, { saldo: f.pd_s.value, rate: f.pd_t.value, min: f.pd_m.value, plazo: f.pd_p.value, day: f.pd_d.value });
+  if(r.error){ tiAviso(f, r.error); return; }
+  ceGuardar(F);
+}
 // El panel es XL (Adán, 21-sep-2026: "todas las ventanas iguales a estas debes hacerlas lo más
 // grande posible"): la cifra grande arriba a lo ancho y las secciones repartidas en dos columnas.
 // Cada kpiDetalle sigue escribiendo su HTML de corrido; esto solo lo agrupa: .kpi-cifra y
@@ -15481,8 +15617,10 @@ function kpiDetalle(id){
       '<div class="kpi-cifra-sub">'+debts.filter(d=>d.balance>0).length+' deuda(s) viva(s) · '+money(CIFRAS.deudasConInteres(F).reduce((a,d)=>a+d.balance,0))+' con interés</div>'+
       kpiSec('📊 Ordenadas por tasa (la de arriba primero)')+
       '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">Sin deudas registradas. 🎉</div>')+'</div>'+
+      // Cada crédito a plazo con interés (el auto), completo: sus intereses, su contrato, lo que ahorra abonar y los abonos.
+      debts.filter(d=>+d.balance>0&&+d.rate>0&&+d.min>0&&d.type!=='credit_card').map(d=>kpiPrestamoHTML(d,F)).join('')+
       kpiDeudaFinHTML(debts)+
-      kpiNota('Las de tasa 0 (MSI, crédito del coche si aplica) <b>no son urgentes pero sí comprometen tu excedente</b> cada mes. Cuentan para el flujo aunque no para los intereses.')};
+      kpiNota('Las de tasa 0 (meses sin intereses, como el iPhone) no generan intereses, pero <b>sí comprometen tu excedente</b> cada mes.')};
   }
 
   return null;
