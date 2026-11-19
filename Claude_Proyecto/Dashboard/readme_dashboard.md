@@ -2227,6 +2227,15 @@ lectura: nada la escribe en `finanzasmx_v2`—.
 Medido con los datos reales: los medidores del Plan Maestro salen iguales que en la PC. El control 39 revisa
 también que el archivo no lleve movimientos, notas ni descripciones.
 
+**Sin que nadie haga un commit: con un doble clic o cada noche** (Adán, 18-nov-2026: *"agregué esta compra de bitcoin,
+pero mi git no registró nada… recuerda que debemos ya no depender de Claude esta app"*). Lo que se anota en el navegador
+no es un archivo: git no lo ve hasta que el exportador lo copia, y eso solo pasaba dentro de un commit. Doble clic en
+`Claude_Proyecto/subir-mis-datos.bat` corre `subir-mis-datos.js`: trae lo último de GitHub, corre `habitos-exportar.js
+--add` y, si algo cambió, hace el commit (*Mis datos de la PC: saldos de Finanzas…*) y el push; si no, dice que no hay
+nada nuevo. Si ya había algo preparado para otro commit, no lo mezcla: avisa y se detiene. `subir-mis-datos.bat
+/instalar` registra la tarea de Windows **Subir mis datos**, que lo corre cada noche a las 23:30 —o al prender la PC si
+estaba apagada—, y `/quitar` la borra.
+
 **Y cada dispositivo dice qué versión tiene** (Adán, 2-nov-2026: *"pon cuál es la última vez que se subió un commit, esto
 debido a que a veces no sé cuándo mi app está actualizada porque mi iPad tarda en jalar cambios"*). El mismo hook corre
 `version-escribir.js`, que deja en `version.js` la hora de cada commit (`window.APP_VERSION = {commit}`) y lo agrega al commit.
