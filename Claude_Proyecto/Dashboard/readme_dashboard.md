@@ -2227,15 +2227,19 @@ quincena, que `ctCifrasHoy` guarda en `fin_resumen_v1` cada vez que cambia en la
 lectura (nada la escribe en `finanzasmx_v2`). Medido con los datos reales del 18 nov 2026: 144 movimientos, 10 deudas y 7
 operaciones de Bitcoin, 116 KB. El control 39 revisa que lleve los movimientos.
 
-**Y en `git status`, como cualquier archivo** (Adán, 18-nov-2026: *"yo quiero usar el git status y que me marque los
-cambios de esa cifra y ya con git add . y git commit -m quiero subirlos"*). Git no tiene un hook para `status`, así que
-`Claude_Proyecto/git-status-datos.sh` define en Git Bash una función `git` que, antes de cada `git status` dentro de
-GITvscode, corre `habitos-exportar.js` sin `--add`: si algo cambió en el navegador, el `*-sync.js` que le toca queda
-modificado y `git status` lo marca; `git add .` y `git commit -m` lo suben como cualquier cambio (el hook de pre-commit
-vuelve a exportar por si algo cambió entre medio). Fuera de GITvscode, git es el de siempre. Se activa una vez, desde
-Git Bash, con las dos líneas que trae el archivo (una en el .bashrc y otra en el
-.bash_profile de tu carpeta personal). Medido: la copia tarda 1.1 s por `git status`; un cambio de $1,500 a $1,600 en una compra de Bitcoin
-salió como `M Claude_Proyecto/Dashboard/finanzas-sync.js`. El panel de Git de VS Code no la usa: ahí, abre Git Bash.
+**Y en `git status`, como cualquier archivo, sin correr nada** (Adán, 18-nov-2026: *"yo quiero usar el git status y que
+me marque los cambios de esa cifra y ya con git add . y git commit -m quiero subirlos… no quiero correr ese comando cada
+vez"*). Git no tiene un hook para `status`, pero sí un monitor de archivos: `core.fsmonitor` apunta a
+`.githooks/fsmonitor-datos`, que git corre antes de `git status`, `git add`, `git diff` y del panel de Git de VS Code. Corre
+`habitos-exportar.js` sin `--add` —si algo cambió en el navegador, el `*-sync.js` que le toca queda modificado— y le dice
+a git que revise todo como siempre (`/`, el protocolo del monitor). Así `git status` lo marca en esa misma salida, y
+`git add .` y `git commit -m` lo suben como cualquier cambio. Como mucho exporta una vez cada 3 segundos (VS Code pregunta
+seguido; la marca va en `.git/fsmonitor-datos.ultimo`), y el `git add` del propio exportador no lo vuelve a disparar
+(`DATOS_EXPORTANDO`). **Se activa solo**: el hook de pre-commit pone `core.fsmonitor` si esta copia no lo tiene, y el
+control 39 avisa si falta. La primera vez, git estrena el monitor sin llamarlo; desde el segundo `git status`, siempre.
+Medido: un solo `git status` —desde la raíz o desde `Dashboard/`— tarda 1.2 s y marcó
+`M Claude_Proyecto/Dashboard/finanzas-sync.js` con el cambio de $1,500 a $1,600 de una compra de Bitcoin; otro enseguida,
+0.4 s.
 
 **Sin que nadie haga un commit: `git datos`, un doble clic o cada noche** (Adán, 18-nov-2026: *"agregué esta compra de
 bitcoin, pero mi git no registró nada… recuerda que debemos ya no depender de Claude esta app"*). Lo que se anota en el

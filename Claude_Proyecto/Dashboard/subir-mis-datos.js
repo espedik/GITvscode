@@ -17,6 +17,7 @@
 const { execFileSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+process.env.DATOS_EXPORTANDO = '1';   // sus git pull/commit no disparan el monitor: ya exporta él
 
 const RAIZ = path.resolve(__dirname, '..', '..');
 const git = (...a) => execFileSync('git', a, { cwd: RAIZ, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();

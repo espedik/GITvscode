@@ -32,6 +32,8 @@
      node Dashboard/habitos-exportar.js --add    # y los agrega al commit (así lo llama el hook)
    ══════════════════════════════════════════════════════════════════════════════════════════ */
 const fs = require('fs'), path = require('path'), os = require('os'), { spawnSync } = require('child_process');
+// Su propio `git add` no vuelve a disparar el monitor de archivos (.githooks/fsmonitor-datos), que también exporta.
+process.env.DATOS_EXPORTANDO = '1';
 
 const SALIDA = path.join(__dirname, 'habitos-sync.js');
 const SALIDA_AUD = path.join(__dirname, 'auditoria-sync.js');

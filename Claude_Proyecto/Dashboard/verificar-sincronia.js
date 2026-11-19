@@ -2722,6 +2722,12 @@ function promptsDeLoTocado() {
   }
   let ruta = '';
   try { ruta = require('child_process').execSync('git config --get core.hooksPath', { cwd: RAIZ, encoding: 'utf8' }).trim(); } catch (e) { ruta = ''; }
+  // El monitor que hace aparecer los datos del navegador en `git status` (Adán, 18-nov-2026: "no quiero correr ese comando cada vez").
+  if (!existe('.githooks/fsmonitor-datos')) malos.push('falta .githooks/fsmonitor-datos: git status ya no marcaría tus datos del navegador');
+  else if (leer('.githooks/pre-commit').indexOf('core.fsmonitor') === -1) malos.push('el hook de pre-commit ya no activa el monitor de archivos (core.fsmonitor)');
+  let fsm = '';
+  try { fsm = require('child_process').execSync('git config --get core.fsmonitor', { cwd: RAIZ, encoding: 'utf8' }).trim(); } catch (e) { fsm = ''; }
+  if (ruta && !/fsmonitor-datos$/.test(fsm)) avisos.push('Tus datos del navegador · en esta copia git status todavía no los marca: el siguiente commit activa el monitor (core.fsmonitor)');
   if (malos.length) problemas.push('Hábitos y auditoría a los otros dispositivos:\n     ' + malos.join('\n     '));
   else ok.push('Hábitos y auditoría: el hook de pre-commit los exporta y el Dashboard los trae (' + det + '; ' + detA + '; ' + detF + ')' + (ruta ? '' : ' — en esta copia falta activar el hook: git config core.hooksPath Claude_Proyecto/.githooks'));
 })();

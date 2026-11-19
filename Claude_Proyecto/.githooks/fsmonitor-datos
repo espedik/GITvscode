@@ -1,0 +1,27 @@
+#!/bin/sh
+# Tus datos del navegador aparecen solos en `git status`.
+#
+# Adán, 18-nov-2026: "yo quiero usar el git status y que me marque los cambios de esa cifra y ya con git add . y git
+# commit -m quiero subirlos… no quiero correr ese comando cada vez". Lo que anotas en el Dashboard y en Finanzas vive
+# dentro de Chrome, no en un archivo. Git no tiene un hook para `status`, pero sí un monitor de archivos
+# (core.fsmonitor) que corre antes de `git status`, `git add`, `git diff` y del panel de Git de VS Code: este. Copia lo
+# del navegador a Dashboard/finanzas-sync.js (todo Finanzas), habitos-sync.js, auditoria-sync.js y ajustes-sync.js
+# —solo si cambió— y le dice a git que revise todo como siempre ("/"). Tarda un segundo, como mucho una vez cada
+# 3 segundos (VS Code pregunta seguido), y nunca detiene a git.
+#
+# Lo activa solo el hook de pre-commit (git config core.fsmonitor <este archivo>); a mano:
+#   git config core.fsmonitor "$(pwd)/Claude_Proyecto/.githooks/fsmonitor-datos"
+dir=$(cd "$(dirname "$0")" && pwd)
+raiz=$(dirname "$(dirname "$dir")")
+marca="$raiz/.git/fsmonitor-datos.ultimo"
+ahora=$(date +%s)
+ultimo=$(cat "$marca" 2>/dev/null || echo 0)
+case "$ultimo" in ''|*[!0-9]*) ultimo=0 ;; esac
+# DATOS_EXPORTANDO: el exportador mismo llama a `git add`; ahí no se vuelve a exportar.
+if [ -z "$DATOS_EXPORTANDO" ] && [ $((ahora - ultimo)) -ge 3 ] && command -v node >/dev/null 2>&1; then
+  echo "$ahora" > "$marca" 2>/dev/null
+  DATOS_EXPORTANDO=1 node "$raiz/Claude_Proyecto/Dashboard/habitos-exportar.js" >/dev/null 2>&1
+fi
+# Protocolo del monitor: "/" = puede haber cambiado cualquier cosa, revisa todo (lo normal de git).
+if [ "$1" = "2" ]; then printf 'datos\0/\0'; else printf '/\0'; fi
+exit 0

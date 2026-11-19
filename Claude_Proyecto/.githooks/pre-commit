@@ -7,6 +7,9 @@
 # auditoría"). Lo hace Dashboard/habitos-exportar.js. Nunca detiene un commit.
 # Se activa una vez por clon: git config core.hooksPath Claude_Proyecto/.githooks
 raiz="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+# Y el monitor de archivos que hace aparecer tus datos del navegador en `git status` (.githooks/fsmonitor-datos):
+# si esta copia del repositorio no lo tiene, se activa aquí, sin que nadie corra nada.
+[ -n "$(git config --get core.fsmonitor)" ] || git config core.fsmonitor "$raiz/Claude_Proyecto/.githooks/fsmonitor-datos"
 if command -v node >/dev/null 2>&1; then
   node "$raiz/Claude_Proyecto/Dashboard/habitos-exportar.js" --add || true
   # Y la hora de este commit, para que cada dispositivo sepa qué versión tiene (Mi Día la enseña junto a la semana).
