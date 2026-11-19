@@ -733,6 +733,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .pr-dato.int b{color:var(--r)}
 .pr-dato.ok b{color:var(--g)}
 .pr-grid .pr-dato:last-child:nth-child(odd){grid-column:1/-1}
+/* Intereses este mes: la mensualidad partida (interés, IVA y seguros, lo que baja la deuda) en una barra con su leyenda. */
+.in-pila{display:flex;height:16px;border-radius:8px;overflow:hidden;background:rgba(var(--ov),.06);margin:4px 0 10px}
+.in-pila i{display:block;height:100%}
+.in-ley{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.in-ley-i{padding:9px 11px;border-radius:10px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.08);min-width:0}
+.in-ley-i span{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text3)}
+.in-ley-i span i{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+.in-ley-i b{display:block;font-size:19px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums;margin-top:3px}
+.in-ley-i em{font-style:normal;font-size:12px;color:var(--text2)}
+.in-int{color:var(--r)}
+.in-meses{font-size:11px;color:var(--text3)}
+.pr-tabla tr.in-tot td{border-top:2px solid rgba(var(--ov),.18)}
+@media(max-width:640px){ .in-ley{grid-template-columns:minmax(0,1fr)} }
 .pr-tabla{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums;margin-bottom:4px}
 .pr-tabla th{text-align:left;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text3);padding:0 6px 6px}
 .pr-tabla td{padding:7px 6px;border-top:1px solid rgba(var(--ov),.08);color:var(--text2)}
@@ -775,7 +788,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    posible"): mismo tamaño que Qué invertir hoy. La cifra va arriba a lo ancho y las secciones se
    reparten en dos columnas (kpiAcomodar); cada .kpi-grupo no se parte entre columnas. */
 /* Alto automático hasta el 94 %: un medidor con dos secciones no necesita una tarjeta vacía de 940 px. */
-.gbm-card.kpi-card{width:min(1560px,96vw);max-height:94vh;display:flex;flex-direction:column;overflow:hidden}
+.gbm-card.kpi-card{width:min(1900px,96vw);max-height:94vh;display:flex;flex-direction:column;overflow:hidden}
 .kpi-card .gbm-head{flex-shrink:0}
 .kpi-card .gbm-body{flex:1;min-height:0;overflow-y:auto;padding:20px 28px 32px}
 .kpi-hero{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(var(--ov),.08)}
@@ -794,27 +807,40 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .kpi-card .gbm-paso-d{font-size:14px;line-height:1.5}
 .kpi-card .gbm-nota{font-size:13px;line-height:1.5;padding:10px 13px}
 .kpi-card .gbm-vacio{font-size:13px}
-/* Los paneles de los medidores, en compacto (Adán, 22-oct-2026: "agrega más información, pero reduce el tamaño de todo
-   para que quede mejor visualmente"): letra, barras y espacios más chicos y, desde 1400 px, tres columnas. La ventana de
-   las fases tiene sus propios tamaños y no cambia. */
-#kpiOverlay .kpi-card .gbm-body{padding:14px 22px 22px}
-#kpiOverlay .kpi-hero{gap:3px;margin-bottom:12px;padding-bottom:10px}
-#kpiOverlay .kpi-card .kpi-cifra{font-size:clamp(26px,2.4vw,36px)}
-#kpiOverlay .kpi-card .kpi-cifra span{font-size:12px!important}
-#kpiOverlay .kpi-card .kpi-cifra-sub{font-size:12px}
-#kpiOverlay .kpi-cols{column-gap:26px}
+/* Los paneles de los medidores: casi toda la pantalla y con aire (Adán, 19-nov-2026: "todas esas ventanas hazlas más
+   grandes, porque hay mucho ruido visual"): 96 % de ancho hasta 1900 px —como la ventana del alemán— y alto mínimo del
+   72 %, letra y espacios para leerse sin esfuerzo, y desde 1400 px tres columnas. La ventana de las fases tiene sus
+   propios tamaños y no cambia. */
+#kpiOverlay .gbm-card.kpi-card{min-height:min(72vh,780px)}
+#kpiOverlay .kpi-card .gbm-body{padding:22px 34px 30px}
+#kpiOverlay .kpi-hero{gap:5px;margin-bottom:18px;padding-bottom:16px}
+#kpiOverlay .kpi-card .kpi-cifra{font-size:clamp(30px,2.8vw,46px)}
+#kpiOverlay .kpi-card .kpi-cifra span{font-size:14px!important;font-family:var(--font);font-weight:600}
+#kpiOverlay .kpi-card .kpi-cifra-sub{font-size:14px;line-height:1.5}
+#kpiOverlay .kpi-cols{column-gap:40px}
 @media(min-width:1400px){#kpiOverlay .kpi-cols-3{columns:3}}
-#kpiOverlay .kpi-grupo{margin-bottom:12px}
-#kpiOverlay .kpi-card .kpi-desglose{gap:8px}
-#kpiOverlay .kpi-card .gbm-sec{font-size:10px;margin-bottom:6px}
-#kpiOverlay .kpi-card .kpi-linea-top{font-size:12.5px}
-#kpiOverlay .kpi-card .kpi-linea-nota{font-size:11px;margin-top:2px}
-#kpiOverlay .kpi-card .gbm-bar{height:6px;margin-top:4px}
-#kpiOverlay .kpi-card .gbm-paso{padding:9px 12px}
-#kpiOverlay .kpi-card .gbm-paso-t{font-size:13.5px}
-#kpiOverlay .kpi-card .gbm-paso-d{font-size:12.5px;line-height:1.45}
-#kpiOverlay .kpi-card .gbm-nota{font-size:12px;line-height:1.45;padding:7px 10px}
-#kpiOverlay .kpi-card .gbm-vacio{font-size:12px}
+#kpiOverlay .kpi-grupo{margin-bottom:22px}
+#kpiOverlay .kpi-card .kpi-desglose{gap:12px}
+#kpiOverlay .kpi-card .gbm-sec{font-size:11.5px;margin-bottom:10px}
+#kpiOverlay .kpi-card .kpi-linea-top{font-size:14px}
+#kpiOverlay .kpi-card .kpi-linea-nota{font-size:12.5px;margin-top:3px}
+#kpiOverlay .kpi-card .gbm-bar{height:8px;margin-top:6px}
+#kpiOverlay .kpi-card .gbm-paso{padding:13px 16px;margin-bottom:12px}
+#kpiOverlay .kpi-card .gbm-paso-t{font-size:15px}
+#kpiOverlay .kpi-card .gbm-paso-d{font-size:14px;line-height:1.55}
+#kpiOverlay .kpi-card .gbm-nota{font-size:13px;line-height:1.55;padding:10px 13px}
+#kpiOverlay .kpi-card .gbm-vacio{font-size:13px}
+#kpiOverlay .pr-grid{gap:10px;margin-bottom:12px}
+#kpiOverlay .pr-dato{padding:11px 13px}
+#kpiOverlay .pr-dato span{font-size:11px}
+#kpiOverlay .pr-dato b{font-size:20px}
+#kpiOverlay .pr-dato i{font-size:12.5px;line-height:1.45}
+#kpiOverlay .pr-tabla{font-size:13.5px}
+#kpiOverlay .pr-tabla td{padding:8px 7px}
+#kpiOverlay .ti-fila{font-size:13.5px;padding:10px 14px}
+#kpiOverlay .ti-form{gap:10px 14px;padding:14px 16px}
+#kpiOverlay .ti-form label{font-size:12px}
+#kpiOverlay .ti-form input,#kpiOverlay .ti-form select{font-size:14px;padding:8px 10px}
 @media(max-width:1024px){ .kpi-cols{columns:1} }
 @media(max-width:640px){ .gbm-card.kpi-card{width:100%;height:100%;max-height:100%} .kpi-card .gbm-body{padding:12px 14px 28px} .kpi-card .kpi-linea-top,.kpi-card .gbm-paso-d,.kpi-card .gbm-nota{font-size:12.5px} }
 /* La ruta de las fases del Plan Maestro (Adán, 3-oct-2026: "sé muy claro en las fechas… mejora el diseño de donde me
@@ -15488,75 +15514,57 @@ function kpiDetalle(id){
   }
 
   if(id==='intereses'){
-    const conTasa=debts.filter(d=>tasaQueCorre(d)>0);
+    // Adán, 19-nov-2026: "también actualiza lo de intereses de este mes, pon más info". Los créditos a plazo salen de las
+    // cuentas del maestro (CIFRAS.prestamoResumen: la mensualidad partida, la tabla año por año y lo que ahorra abonar),
+    // las mismas de Deuda total; una tarjeta con saldo y tasa, con su pago contra su interés.
+    const conTasa=debts.filter(d=>tasaQueCorre(d)>0&&+d.balance>0);
     const mesInt=conTasa.reduce((a,d)=>a+(+d.balance||0)*(d.rate/100)/12,0);
     const iniInt=conTasa.reduce((a,d)=>a+(+d.total||+d.balance||0)*(d.rate/100)/12,0);
     const bajada=iniInt>0?(1-mesInt/iniInt)*100:100;
-    // Qué pasa si abonas $1,000 extra a la deuda de tasa más alta.
-    const peor=conTasa.slice().sort((a,b)=>b.rate-a.rate)[0];
-    const ahorro1k=peor?1000*(peor.rate/100):0;
-    const filas=conTasa.filter(d=>d.balance>0).sort((a,b)=>b.rate-a.rate).map(d=>{
-      const im=d.balance*(d.rate/100)/12;
-      return kpiBarra(esc(d.name)+' · '+d.rate+'%', money(im)+'/mes', mesInt>0?im/mesInt*100:0, R,
-        'Sobre un saldo de '+money(d.balance)+' · '+money(im*12)+' al año');
-    }).join('');
-    return {titulo:'🔥 Intereses que pagas al mes', sub:'Lo que cuesta la deuda solo por existir, antes de bajar un peso del saldo.',
-      html:
-      '<div class="kpi-cifra" style="color:'+(mesInt>0?R:V)+'">'+money(mesInt)+' <span style="font-size:14px;color:var(--text3)">al mes</span></div>'+
-      '<div class="kpi-cifra-sub">'+money(mesInt*12)+' al año si el saldo no se mueve'+(mesInt>0?' · es dinero que <b>no</b> baja tu deuda':'')+'</div>'+
-      kpiSec('📊 Quién cobra qué')+
-      '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">No pagas intereses. 🎉</div>')+'</div>'+
-      (iniInt>0?kpiSec('📉 Lo que ya dejaste de pagar')+
-        '<div class="kpi-desglose">'+kpiBarra('Reducción desde el saldo original', Math.round(bajada)+'%', bajada, V,
-          'Cuando debías el total pagabas '+money(iniInt)+'/mes de intereses. Hoy pagas '+money(mesInt)+' — <b>'+money(iniInt-mesInt)+' menos cada mes</b>.')+'</div>':'')+
-      // El hallazgo que ningún medidor decía: si el pago mensual no supera al interés, el saldo
-      // no baja nunca. Se compara `min` (el pago programado) contra el interés de esa misma deuda.
-      // Dos tipos de deuda que NO se juzgan igual (2026-08-19, tras el aviso de Adán sobre el
-      // crédito del coche). Una tarjeta es revolvente: su pago mínimo puede no amortizar nada y
-      // eso es una alarma. Un crédito a plazo trae `remainingMonths` y su mensualidad ya está
-      // calculada para liquidarlo en esa fecha — decirle "tardarías años" es ignorar el dato que
-      // la propia deuda tiene y sonar la alarma donde no la hay.
-      (function(){
-        const conPago=conTasa.filter(d=>d.balance>0&&+d.min>0);
-        if(!conPago.length) return '';
-        return kpiSec('📆 Tu pago contra tu interés, deuda por deuda')+conPago.map(d=>{
-          const im=d.balance*(d.rate/100)/12, pg=+d.min, baja=pg-im;
-          const cuota=n=>{ const i=(d.rate/100)/12; return d.balance*i/(1-Math.pow(1+i,-n)); };
-          // Los meses que quedan salen del saldo, la tasa y el pago de HOY (CIFRAS.mesesRestantes):
-          // el `remainingMonths` escrito a mano decía 61 aunque el saldo bajara.
-          const meses=(d.type==='car'||d.type==='loan')?(CIFRAS.mesesRestantes(d)||0):0;
-          if(d.balance<=pg){
-            // Debe menos que su pago: el próximo la cierra. Aquí no hay ritmo que calcular.
-            return kpiPaso(esc(d.name)+' · un pago más y se acaba',
-              'Debes <b>'+money(d.balance)+'</b> y tu pago programado es '+money(pg)+': el próximo pago la deja en $0. Este mes te cuesta <b>'+money(im)+'</b> de intereses, el último.',
-              'var(--g)');
-          }
-
-          if(meses>0){
-            // Crédito a plazo: la pregunta útil no es "cuándo acaba" (ya se sabe), sino cuánto
-            // de lo que falta es interés y qué se ahorra adelantándolo.
-            const fin=new Date(); fin.setMonth(fin.getMonth()+meses);
-            const totalRest=pg*meses, interesRest=Math.max(0,totalRest-d.balance);
-            return kpiPaso(esc(d.name)+' · pagas '+money(pg)+' al mes',
-              'De ese pago, <b>'+money(im)+' son intereses</b> y <b>'+money(baja)+' bajan el saldo</b> — y va según lo pactado: te quedan <b>'+meses+' pagos</b>, hasta <b>'+fin.toLocaleDateString('es-MX',{month:'long',year:'numeric'})+'</b>.',
-              'var(--b)')+
-              kpiNota('De aquí al final pagarás <b>'+money(totalRest)+'</b>, de los cuales <b>'+money(interesRest)+' son intereses</b>. Adelantar pagos aquí sí ahorra, pero <b>menos que en la tarjeta</b>: '+d.rate+'% contra la tasa de tus tarjetas. Primero la cara.');
-          }
-          // Revolvente
-          return kpiPaso(esc(d.name)+' · pagas '+money(pg)+' al mes',
-            baja>0
-              ? 'De ese pago, <b>'+money(im)+' son intereses</b> y solo <b>'+money(baja)+' bajan el saldo</b>. Sin plazo pactado, a este ritmo tardarías <b>'+Math.ceil(Math.log(pg/(pg-im))/Math.log(1+(d.rate/100)/12))+' meses</b> en liquidarla.'
-              : 'De ese pago, <b>'+money(im)+' son intereses</b>: no baja el saldo <b>ni un peso</b>. Llevas pagando desde '+(d.start||'hace tiempo')+' y debes lo mismo que el primer día — todo se va en renta del dinero.',
-            baja>0?'var(--o)':'var(--r)')+
-            kpiNota('Para cerrarla de verdad: <b>'+money(cuota(24))+'/mes en 2 años</b>, o '+money(cuota(12))+'/mes en 1. Cualquier peso por encima de '+money(im)+' es el único que trabaja para ti.');
-        }).join('');
-      })()+
-      (mesInt>0?
-        kpiSec('🎯 Cómo bajarlo')+
-        kpiPaso('Cada abono extra vale doble','Abonar <b>'+money(1000)+'</b> a '+(peor?esc(peor.name):'tu deuda más cara')+' te ahorra <b>'+money(ahorro1k)+' al año</b> de intereses, para siempre. No hay inversión que te dé ese rendimiento garantizado: por eso la deuda cara va antes que invertir.',R)+
-        kpiNota('Ordena siempre por <b>tasa</b>, no por saldo. Pagar primero la deuda chica se siente mejor, pero pagar primero la cara cuesta menos dinero.')
-        :kpiPaso('Sin intereses ✅','No hay deuda con tasa cobrándote. Todo lo que abones a partir de aquí baja saldo, no intereses.',V))+
-      kpiNota('🏅 Ya bajaste este número una vez de golpe: <b>liquidar la Banamex el 13-ago-2026</b> apagó su parte de intereses para siempre; y el <b>19-sep-2026</b> la BBVA bajó de $39,000 a $900 con la venta del Bitcoin, que eran ~$1,800 al mes de interés que ya no pagas.')};
+    const PR=window.CIFRAS&&CIFRAS.prestamoResumen?conTasa.filter(d=>d.type!=='credit_card'&&+d.min>0).map(d=>({d:d,R:CIFRAS.prestamoResumen(d,F)})):[];
+    const tarjetas=conTasa.filter(d=>!PR.some(x=>x.d===d));
+    const cargosMes=PR.reduce((a,x)=>a+x.R.cargos,0);
+    const prox12=PR.reduce((a,x)=>a+x.R.tabla.slice(0,12).reduce((s,t)=>s+t.interes,0),0)+tarjetas.reduce((a,d)=>a+(+d.balance||0)*(d.rate/100),0);
+    const col={i:'var(--r)',c:'var(--o)',k:'var(--g)'};
+    let h='<div class="kpi-cifra" style="color:'+(mesInt>0?R:V)+'">'+money(mesInt)+' <span style="font-size:14px;color:var(--text3)">de intereses este mes</span></div>'+
+      '<div class="kpi-cifra-sub">'+(mesInt>0?money(mesInt/30)+' al día'+(cargosMes>0?' · más '+money(cargosMes)+' de IVA y seguros':'')+' · <b>'+money(prox12)+'</b> de intereses en los próximos 12 meses · dinero que no baja tu deuda':'No pagas intereses')+'</div>';
+    PR.forEach(function(x){
+      const d=x.d, Q=x.R, t=Q.tabla[0];
+      if(!t) return;
+      const pago=t.interes+t.cargos+t.capital, pc=v=>pago>0?v/pago*100:0;
+      const parte=(c,l,v)=>'<div class="in-ley-i"><span><i style="background:'+col[c]+'"></i>'+l+'</span><b>'+money(v)+'</b><em>'+Math.round(pc(v))+'% de tu mensualidad</em></div>';
+      const en12=Q.tabla[12]||Q.tabla[Q.tabla.length-1];
+      h+=kpiSec('🧩 Tu mensualidad del '+prDia(t.fecha)+', partida · '+esc(d.name))+
+        '<div class="in-pila" role="img" aria-label="'+esc('De '+money(pago)+': '+money(t.interes)+' de interés, '+money(t.cargos)+' de IVA y seguros y '+money(t.capital)+' a tu deuda')+'">'+
+          '<i style="width:'+pc(t.interes)+'%;background:'+col.i+'"></i>'+(t.cargos>0?'<i style="width:'+pc(t.cargos)+'%;background:'+col.c+'"></i>':'')+
+          '<i style="width:'+pc(t.capital)+'%;background:'+col.k+'"></i></div>'+
+        '<div class="in-ley">'+parte('i','Interés',t.interes)+(t.cargos>0?parte('c','IVA y seguros',t.cargos):'')+parte('k','Baja tu deuda',t.capital)+'</div>'+
+        kpiNota('El interés es lo que debes × '+d.rate+'% ÷ 12: cada mes que tu saldo baja, baja el interés y más de tu mensualidad va a tu deuda. En '+prMes(en12.fecha)+' serán <b>'+money(en12.interes)+'</b> de interés y '+money(en12.capital)+' a tu deuda.');
+      h+=kpiSec('📅 Año por año, hasta que acabes')+
+        '<table class="pr-tabla"><thead><tr><th>Año</th><th>Interés</th>'+(Q.cargos>0?'<th>IVA y seguros</th>':'')+'<th>Baja tu deuda</th><th>Debes al cerrar</th></tr></thead><tbody>'+
+        Q.porAnio.map(a=>'<tr><td><b>'+a.anio+'</b>'+(a.meses<12?' <span class="in-meses">'+a.meses+' '+(a.meses===1?'mes':'meses')+'</span>':'')+'</td>'+
+          '<td class="in-int">'+money(a.interes)+'</td>'+(Q.cargos>0?'<td>'+money(a.cargos)+'</td>':'')+'<td>'+money(a.capital)+'</td><td><b>'+money(a.saldo)+'</b></td></tr>').join('')+
+        '<tr class="in-tot"><td><b>Total</b></td><td class="in-int"><b>'+money(Q.proy.interes)+'</b></td>'+(Q.cargos>0?'<td><b>'+money(Q.cargosFaltan)+'</b></td>':'')+
+          '<td><b>'+money(Q.saldo)+'</b></td><td>acabas en '+prMes(Q.fin)+'</td></tr></tbody></table>';
+      const a10=Q.ahorro({extra:10000}), sup=window.CIFRAS&&CIFRAS.PROYECCION&&CIFRAS.PROYECCION.supuestos, rend=sup?+sup.rendimiento:0;
+      h+=kpiSec('💸 Cómo bajarlo')+
+        kpiPaso('Cada '+money(1000)+' que abonas',
+          'Tu interés baja <b>'+money(1000*d.rate/100/12)+' cada mes</b> desde la siguiente mensualidad y te ahorras <b>'+money(Q.porMil.ahorra)+'</b> en todo el crédito. '+
+          'Con '+money(10000)+': '+money(10000*d.rate/100/12)+' menos al mes, <b>'+money(a10.ahorra)+'</b> en total y acabas '+(a10.menos>0?prMeses(a10.menos)+' antes':'igual')+'.'+
+          (tiEditable()?' <button type="button" class="ce-btn sec" onclick="abrirKpi(\'deudatotal\')">Anotar un abono →</button>':''), 'var(--g)')+
+        kpiNota('Abonar rinde lo que cobra tu crédito, <b>'+d.rate+'% al año, sin riesgo</b>'+(rend>0?'; tu plan supone '+(Math.round(rend*1000)/10)+'% al año en lo que inviertes':'')+'. Pero lo abonado ya no se saca: tu dinero de la salida a Alemania va primero.');
+    });
+    // Una tarjeta con saldo y tasa es revolvente: su pago mínimo puede no bajar nada.
+    tarjetas.forEach(function(d){
+      const im=(+d.balance||0)*(d.rate/100)/12, pg=+d.min||0, baja=pg-im;
+      h+=kpiSec('💳 '+esc(d.name)+' · '+d.rate+'%')+kpiPaso('Pagas '+money(pg)+' al mes',
+        baja>0?'De ese pago, <b>'+money(im)+' son intereses</b> y <b>'+money(baja)+' bajan tu saldo</b>.':'De ese pago, <b>'+money(im)+' son intereses</b>: no baja tu saldo ni un peso.',
+        baja>0?'var(--o)':'var(--r)');
+    });
+    if(iniInt>0) h+=kpiSec('📉 Lo que ya bajó')+'<div class="kpi-desglose">'+kpiBarra('Desde que empezaste a deber', Math.round(bajada)+'% menos', bajada, V,
+      'Cuando debías '+money(conTasa.reduce((a,d)=>a+(+d.total||+d.balance||0),0))+' pagabas '+money(iniInt)+' de intereses al mes; hoy, '+money(mesInt)+': <b>'+money(iniInt-mesInt)+' menos cada mes</b>.')+'</div>';
+    if(!conTasa.length) h+=kpiPaso('Sin intereses ✅','No hay deuda con tasa cobrándote: todo lo que abones baja saldo, no intereses.',V);
+    return {titulo:'🔥 Intereses este mes', sub:'Lo que cuesta tu deuda solo por existir, mes a mes, y cómo bajarlo.', html:h};
   }
 
   // Total invertido: tu estrategia de hoy —lo que toca mandar a GBM— y tus inversiones compra por compra, que aquí se

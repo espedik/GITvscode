@@ -1074,6 +1074,17 @@ seguros, y cada $1,000 abonados ahorra $1,242. Un abono de $10,000 baja el saldo
 corregirlo, borrarlo o anotarlo desde «Pagar» de Finanzas mueve lo mismo en las dos apps. A 390 px, sin desbordes. El
 **control 57** prueba la cuenta con un crédito de juguete.
 
+**Intereses este mes, completo** (Adán, 19-nov-2026: *"también actualiza lo de intereses de este mes, pon más info"*).
+Arriba, el interés del mes, cuánto es al día, el IVA y los seguros que salen con la mensualidad y el interés de los
+próximos 12 meses. Por cada crédito a plazo, con las cuentas del maestro (`CIFRAS.prestamoResumen`, `prestamoTabla`):
+**la mensualidad partida** —una barra (`.in-pila`) con interés, IVA y seguros y lo que baja la deuda, y su leyenda
+(`.in-ley`) con el monto y el % de cada parte—, cuánto será el interés en un año; **año por año hasta que acabes**
+(`porAnio`): interés, IVA y seguros, lo que baja la deuda y lo que debes al cerrar cada año, con su total; y **cómo
+bajarlo**: cuánto baja el interés de cada mes y cuánto ahorras con $1,000 y $10,000 abonados, con **Anotar un abono →**
+que abre Deuda total, y la comparación con lo que el plan supone que rinde lo invertido. Una tarjeta con saldo y tasa
+sale con su pago contra su interés. Medido con los datos de Finanzas y $1,313 de IVA y seguros: $2,984 de interés este
+mes ($99 al día), $34,032 en los próximos 12 meses; el interés de cada año baja de $33,700 (2027) a $5,606 (2032).
+
 **Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se paga completa
 cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle y en el desglose de Patrimonio, que la
 marcan "sin intereses". La BBVA tampoco paga intereses mientras Adán cubre lo que pide el estado de cuenta
@@ -1481,14 +1492,16 @@ desplaza al mes de hoy solo cuando hay una columna.
 Los seis medidores del dinero no van aquí: viven en el Plan Maestro (ver *Los seis medidores*), y
 los paneles que abren, abajo.
 
-**El panel de cada medidor es ancho y compacto** (`.gbm-card.kpi-card`: `min(1560px, 96vw)` de ancho y alto
-automático hasta el 94 %; Adán, 21-sep-2026: *"todas las ventanas iguales a estas debes hacerlas lo más grande
-posible"*, y 22-oct-2026: *"agrega más información, pero reduce el tamaño de todo para que quede mejor
-visualmente"*). Cada `kpiDetalle` escribe su HTML de corrido con `kpiSec`, `kpiBarra`, `kpiPaso` y `kpiNota`;
+**El panel de cada medidor ocupa casi toda la pantalla y tiene aire** (`.gbm-card.kpi-card`: `min(1900px, 96vw)` de
+ancho, como la ventana del alemán, alto mínimo del 72 % y máximo del 94 %; Adán, 19-nov-2026: *"todas esas ventanas
+hazlas más grandes, porque hay mucho ruido visual"*): letra de 14 px en lo que se lee, secciones con 40 px entre
+columnas y 22 entre grupos, cajas y tablas (`.pr-*`, `.ti-*`) un punto más grandes dentro de `#kpiOverlay`. Medido a
+2048×1040: las seis ventanas miden 1884 px de ancho y ninguna se desplaza; a 1600 px, Patrimonio y Deuda total bajan
+10 y 63 px; a 390, pantalla completa. Cada `kpiDetalle` escribe su HTML de corrido con `kpiSec`, `kpiBarra`, `kpiPaso` y `kpiNota`;
 `kpiAcomodar()` lo reparte al abrir: `.kpi-cifra` y su sub arriba a lo ancho (`.kpi-hero`, cifra hasta 36 px) y cada
 sección con lo que le sigue en un `.kpi-grupo` dentro de `.kpi-cols` —columnas CSS que no parten un grupo: una sección
 va a una columna, dos a dos y, desde 1400 px, tres o más a tres (`.kpi-cols-3`); bajo 1024 px todo a una—. La letra, las
-barras (6 px) y los espacios son los compactos de `#kpiOverlay`. Además de lo de antes, cada panel dice: **Fondo**,
+barras (8 px) y los espacios son los de `#kpiOverlay`. Además de lo de antes, cada panel dice: **Fondo**,
 cuántos meses de tus fijos (`fijosTotal`) cubre y que el plan
 no le aporta mientras `cetesDia15` sea 0; **Maestría**, los cortes
 de la salida con lo que espera la proyección en GBM y lo que falta —la misma cuenta que Mis Metas— (`kpiCortesHTML`);

@@ -3472,7 +3472,7 @@ function promptsDeLoTocado() {
    devuelve, y un saldo dicho deja `pagosAl` en hoy para que las mensualidades sigan solas desde ahí. */
 (function () {
   const C = global.window && global.window.CIFRAS, malos = [];
-  const f = ['prestamoSimular', 'prestamoHechos', 'prestamoResumen', 'prestamoAbono', 'prestamoAbonoBorrar', 'prestamoDatos'];
+  const f = ['prestamoSimular', 'prestamoTabla', 'prestamoHechos', 'prestamoResumen', 'prestamoAbono', 'prestamoAbonoBorrar', 'prestamoDatos'];
   if (!C || f.some(k => typeof C[k] !== 'function')) { problemas.push('Crédito a plazo: el maestro ya no exporta ' + f.join(' / ')); return; }
   // 100,000 a 12% anual con la cuota de 24 meses (4,707.35): sin abonos, 24 pagos y 12,976.40 de interés.
   const d = { id: 'x', name: 'Prueba', type: 'car', total: 100000, balance: 100000, rate: 12, min: 4707.35, day: 15, start: '2026-01-01', plazo: 24, pagosAl: '2026-01-01' };
@@ -3488,12 +3488,15 @@ function promptsDeLoTocado() {
   if (!C.prestamoAbono(F, { id: 'x', amount: 999999 }).error) malos.push('se anota un abono mayor que lo que se debe');
   const R = C.prestamoResumen(x, F);
   if (R.abonado !== 12000 || !R.contrato || R.contrato.plazo !== 24 || R.escenarios.length !== 3 || !(R.porMil.ahorra > 0)) malos.push('prestamoResumen no trae los abonos, el contrato o lo que ahorra abonar');
+  // La tabla año por año de Intereses este mes suma lo mismo que la simulación.
+  const T = C.prestamoTabla(x), sumaI = T.reduce((a, t) => a + t.interes, 0), sumaA = (R.porAnio || []).reduce((a, y) => a + y.interes, 0);
+  if (!T.length || Math.abs(sumaI - R.proy.interes) > 1 || Math.abs(sumaA - R.proy.interes) > 1 || T[T.length - 1].saldo !== 0) malos.push('la tabla mes a mes o año por año no suma el interés de la simulación');
   C.prestamoAbonoBorrar(F, ab.id);
   if (x.balance !== 100000 || F.transactions.length) malos.push('borrar el abono no devuelve el saldo');
   C.prestamoDatos(F, 'x', { saldo: 95000, rate: 13, plazo: 30 });
   if (x.balance !== 95000 || x.rate !== 13 || x.plazo !== 30 || x.pagosAl !== C.fechaLocal()) malos.push('prestamoDatos no deja el saldo dicho con pagosAl de hoy, la tasa o el plazo');
   const h = leer('Dashboard/dashboard.html'), fz = leer('Finanzas/Finanzas.html');
-  ['CIFRAS.prestamoResumen(', 'CIFRAS.prestamoAbono(', 'CIFRAS.prestamoAbonoBorrar(', 'CIFRAS.prestamoDatos(', 'function kpiPrestamoHTML('].forEach(k => {
+  ['CIFRAS.prestamoResumen(', 'CIFRAS.prestamoAbono(', 'CIFRAS.prestamoAbonoBorrar(', 'CIFRAS.prestamoDatos(', 'function kpiPrestamoHTML(', 'Q.porAnio', 'class="in-pila"'].forEach(k => {
     if (h.indexOf(k) < 0) malos.push('Deuda total del Dashboard ya no usa ' + k.replace(/\($/, ''));
   });
   if (fz.indexOf('CIFRAS.prestamoAbono(') < 0) malos.push('«Pagar» de Finanzas ya no anota el abono con la cuenta del maestro');

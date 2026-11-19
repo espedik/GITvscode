@@ -9779,6 +9779,32 @@ window.CIFRAS = (function () {
     while (B > 0.005 && n < 1200) { const i = B * r, pago = Math.min(B + i, P); B = B + i - pago; interes += i; pagado += pago; n++; }
     return { nunca: false, meses: n, interes: prestamoR2(interes), pagado: prestamoR2(pagado) };
   }
+  /* Mes a mes, desde la próxima mensualidad: su fecha, el interés, el IVA y los seguros, lo que baja la deuda y lo que se
+     debe después. Y por año: lo que lleva el panel de Intereses este mes (Adán, 19-nov-2026: "también actualiza lo de
+     intereses de este mes, pon más info"). `o` como en prestamoSimular. */
+  function prestamoTabla(d, o) {
+    o = o || {};
+    const r = (+d.rate || 0) / 100 / 12, cargos = Math.max(0, +d.cargos || 0);
+    const P = (+d.min || 0) - cargos + Math.max(0, +o.extraMes || 0), dia = +d.day || 1, sig = cuotas(d).siguiente, out = [];
+    let B = Math.max(0, (o.saldo != null ? +o.saldo : +d.balance || 0) - Math.max(0, +o.extra || 0));
+    if (!sig || (B > 0.005 && !(P > B * r))) return out;
+    for (let n = 1; B > 0.005 && n <= 1200; n++) {
+      const i = B * r, aDeuda = Math.min(B + i, P) - i;
+      B = Math.max(0, B - aDeuda);
+      const y = sig.getFullYear(), m = sig.getMonth() + n - 1;
+      out.push({ fecha: new Date(y, m, Math.min(dia, new Date(y, m + 1, 0).getDate())), interes: prestamoR2(i), cargos: cargos,
+                 capital: prestamoR2(aDeuda), saldo: prestamoR2(B) });
+    }
+    return out;
+  }
+  function prestamoPorAnio(tabla) {
+    const A = {};
+    tabla.forEach(function (x) {
+      const k = x.fecha.getFullYear(), a = A[k] || (A[k] = { anio: k, meses: 0, interes: 0, cargos: 0, capital: 0, saldo: 0 });
+      a.meses++; a.interes += x.interes; a.cargos += x.cargos; a.capital += x.capital; a.saldo = x.saldo;
+    });
+    return Object.keys(A).sort().map(function (k) { const a = A[k]; ['interes', 'cargos', 'capital'].forEach(function (c) { a[c] = prestamoR2(a[c]); }); return a; });
+  }
   // El día de pago de la mensualidad número `k` (1 = la primera) desde `start`.
   function prestamoDia(d, k) {
     const s = String(d.start || '').split('-').map(Number), dia = +d.day || s[2] || 1;
@@ -9837,6 +9863,7 @@ window.CIFRAS = (function () {
         alCredito: alCredito != null ? prestamoR2(alCredito) : null,
         cargosSugeridos: alCredito != null && pago - alCredito >= 1 ? Math.round(pago - alCredito) : null } : null,
       abonos: abonos, abonado: abonado, ahorro: ahorro,
+      tabla: base.nunca ? [] : prestamoTabla(d), porAnio: base.nunca ? [] : prestamoPorAnio(prestamoTabla(d)),
       escenarios: [5000, 10000, 20000].map(function (x) { return Object.assign({ x: x }, ahorro({ extra: x })); }),
       mensual: Object.assign({ x: 1000 }, ahorro({ extraMes: 1000 })), porMil: ahorro({ extra: 1000 }),
     };
@@ -10050,7 +10077,7 @@ window.CIFRAS = (function () {
     fondoMaestria: fondoMaestria,
     fondoMovimiento: fondoMovimiento, fondoBorrar: fondoBorrar, fondoSigno: fondoSigno, fondoLista: fondoLista,
     btcCompra: btcCompra, btcBorrar: btcBorrar, btcEsInversion: btcEsInversion, btcDeInversiones: btcDeInversiones,
-    prestamoSimular: prestamoSimular, prestamoHechos: prestamoHechos, prestamoResumen: prestamoResumen,
+    prestamoSimular: prestamoSimular, prestamoHechos: prestamoHechos, prestamoResumen: prestamoResumen, prestamoTabla: prestamoTabla,
     prestamoAbono: prestamoAbono, prestamoAbonoBorrar: prestamoAbonoBorrar, prestamoDatos: prestamoDatos,
     diasFase: diasFase, diasHasta: diasHasta,
     avanceBbva: avanceBbva, deudasConInteres: deudasConInteres, bbvaEstado: bbvaEstado, estadoDia: estadoDia, bbvaRutaTxt: bbvaRutaTxt, aplicarPagosFijos: aplicarPagosFijos, cuotas: cuotas,
