@@ -2233,8 +2233,8 @@ cambios de esa cifra y ya con git add . y git commit -m quiero subirlos"*). Git 
 GITvscode, corre `habitos-exportar.js` sin `--add`: si algo cambió en el navegador, el `*-sync.js` que le toca queda
 modificado y `git status` lo marca; `git add .` y `git commit -m` lo suben como cualquier cambio (el hook de pre-commit
 vuelve a exportar por si algo cambió entre medio). Fuera de GITvscode, git es el de siempre. Se activa una vez, desde
-Git Bash, con las dos líneas que trae el archivo (`source` en `~/.bashrc` y la carga de `~/.bashrc` en
-`~/.bash_profile`). Medido: la copia tarda 1.1 s por `git status`; un cambio de $1,500 a $1,600 en una compra de Bitcoin
+Git Bash, con las dos líneas que trae el archivo (una en el .bashrc y otra en el
+.bash_profile de tu carpeta personal). Medido: la copia tarda 1.1 s por `git status`; un cambio de $1,500 a $1,600 en una compra de Bitcoin
 salió como `M Claude_Proyecto/Dashboard/finanzas-sync.js`. El panel de Git de VS Code no la usa: ahí, abre Git Bash.
 
 **Sin que nadie haga un commit: `git datos`, un doble clic o cada noche** (Adán, 18-nov-2026: *"agregué esta compra de
