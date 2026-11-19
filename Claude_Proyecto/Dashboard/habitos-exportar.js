@@ -17,9 +17,8 @@
    tu PC* en readme_dashboard.md). Cada archivo se escribe solo si lo suyo cambió, y con `--add`
    queda listo para el commit en curso.
 
-   Y los saldos de Finanzas (Adán, 2-nov-2026: en el iPad las cifras del Plan Maestro salían en «Sin datos»; eligió
-   subir solo las cifras resumidas, sin sus movimientos): de `finanzasmx_v2` salen únicamente las deudas, el fondo,
-   las inversiones, los activos y el Bitcoin sumado en un solo lote —ni movimientos, ni notas, ni historial—, más lo
+   Y todo Finanzas (Adán, 18-nov-2026: "todos los datos de finanzas", sin cifrar, sabiendo que el repositorio es
+   público): `finanzasmx_v2` tal cual —movimientos, notas, presupuestos, cada compra de Bitcoin, el historial—, más lo
    que queda en la cuenta de la quincena que el Dashboard guarda en `fin_resumen_v1`. Van a `finanzas-sync.js`.
 
    Y las cifras de Mis cifras (Adán, 18-nov-2026: "esto para ya no depender de Claude"): lo que cambiaste en
@@ -169,32 +168,19 @@ function auditoria(a, sinc) {
   agregar(SALIDA_AUD, da);
 }
 
-// Solo los campos que hacen las cifras: nada de notas, movimientos ni historial.
-const tomar = (arr, campos) => (Array.isArray(arr) ? arr : []).map(x => { const o = {}; campos.forEach(k => { if (x && x[k] !== undefined) o[k] = x[k]; }); return o; });
+// Todo Finanzas, tal cual (Adán, 18-nov-2026: "haz que pueda hacer esos cambios yo mismo con comandos de git, pero
+// todos los datos de finanzas"; eligió subirlo sin cifrar sabiendo que el repositorio es público): movimientos, notas,
+// presupuestos, cada compra de Bitcoin, las aportaciones del fondo y el historial de indicadores.
 function finanzas(f, r) {
   if (!f || !Array.isArray(f.debts)) return df('el Chrome de esta PC no tiene Finanzas todavía');
-  const btc = (f.btcHistory || []).reduce((a, x) => ({ btc: a.btc + (+x.btc || 0), usd: a.usd + (+x.usd || 0) }), { btc: 0, usd: 0 });
-  const datos = {
-    debts: tomar(f.debts, ['id', 'name', 'type', 'total', 'balance', 'rate', 'min', 'day', 'start', 'noInterest', 'fecha', 'planAl', 'omitidos']),
-    investments: tomar(f.investments, ['id', 'name', 'type', 'invested', 'value', 'date', 'rate']),
-    // Tu reparto de Qué invertir hoy: qué compras y qué parte del dinero de cada mes va a cada cosa.
-    reparto: tomar(f.reparto, ['n', 'donde', 'pct', 'porque']),
-    activos: tomar(f.activos, ['id', 'name', 'type', 'value']),
-    goals: tomar(f.goals, ['id', 'name', 'icon', 'target', 'current', 'date']),
-    // El Bitcoin, en un solo lote: lo que tienes y lo que te costó, sin cada compra.
-    btcHistory: btc.btc || btc.usd ? [{ id: 'total', btc: +btc.btc.toFixed(8), usd: Math.round(btc.usd) }] : [],
-    currentBtcPrice: +f.currentBtcPrice || 0, usdMxn: +f.usdMxn || 0,
-    emergencyFund: +f.emergencyFund || 0,
-    // Las aportaciones y retiros del fondo, sin la nota.
-    efAportes: tomar(f.efAportes, ['id', 'date', 'amount', 'tipo']),
-  };
+  const datos = JSON.parse(JSON.stringify(f));
   const gastar = r && typeof r.gastar === 'number' ? Math.round(r.gastar) : null, fecha = (r && r.fecha) || null;
   const antes = previo(SALIDA_FIN);
   if (antes && JSON.stringify(antes.datos) === JSON.stringify(datos) && antes.gastar === gastar) return df('sin cambios');
   const L = [];
-  L.push('/* Los saldos de Finanzas de la PC, para el dispositivo que no tiene Finanzas: deudas, fondo, inversiones, activos y el');
-  L.push('   Bitcoin en un lote, más lo que queda en la quincena. Sin movimientos ni notas. Lo escribe el hook de pre-commit');
-  L.push('   (Dashboard/habitos-exportar.js): no se edita a mano. */');
+  L.push('/* Todo Finanzas de la PC (finanzasmx_v2, tal cual: movimientos, notas, presupuestos, Bitcoin compra por compra…), más');
+  L.push('   lo que queda en la quincena. Respaldo en git y copia para el dispositivo que no tiene Finanzas. Lo escribe');
+  L.push('   Dashboard/habitos-exportar.js (el hook de pre-commit, subir-mis-datos o git datos): no se edita a mano. */');
   L.push('window.FINANZAS_SYNC = {');
   L.push('  "exportado": ' + JSON.stringify(new Date().toISOString()) + ',');
   L.push('  "fecha": ' + JSON.stringify(fecha) + ',');
@@ -203,7 +189,8 @@ function finanzas(f, r) {
   L.push('};');
   fs.writeFileSync(SALIDA_FIN + '.tmp', L.join('\n') + '\n', 'utf8');
   fs.renameSync(SALIDA_FIN + '.tmp', SALIDA_FIN);
-  df('al día · ' + datos.debts.length + ' deudas, ' + datos.activos.length + ' activos, ' + datos.investments.length + ' inversiones');
+  df('al día · todo Finanzas: ' + (datos.transactions || []).length + ' movimientos, ' + datos.debts.length + ' deudas, ' +
+    (datos.investments || []).length + ' inversiones, ' + (datos.btcHistory || []).length + ' operaciones de Bitcoin');
   agregar(SALIDA_FIN, df);
 }
 

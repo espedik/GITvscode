@@ -2706,8 +2706,8 @@ function promptsDeLoTocado() {
       }
     } catch (e) { malos.push('auditoria-sync.js no se puede leer: ' + e.message); }
   }
-  // Los saldos de Finanzas para el iPad (Adán, 2-nov-2026: «En el iPad» las cifras salían en «Sin datos»; solo cifras
-  // resumidas, sin movimientos): finanzas-sync.js no puede llevar movimientos, notas ni descripciones.
+  // Todo Finanzas para el iPad y como respaldo en git (Adán, 18-nov-2026: "todos los datos de finanzas", sin cifrar, sabiendo
+  // que el repositorio es público): finanzas-sync.js lleva finanzasmx_v2 tal cual, con sus movimientos.
   if (h.indexOf('<script src="finanzas-sync.js"') === -1 || h.indexOf('function finCargar()') === -1) malos.push('dashboard.html ya no trae los saldos de la PC (finanzas-sync.js, finCargar)');
   if (leer('Dashboard/habitos-exportar.js').indexOf('finanzas-sync.js') === -1) malos.push('habitos-exportar.js ya no escribe finanzas-sync.js');
   let detF = 'Finanzas todavía sin exportar';
@@ -2716,8 +2716,8 @@ function promptsDeLoTocado() {
       const txt = leer('Dashboard/finanzas-sync.js'), w = {}; new Function('window', txt)(w);
       const X = w.FINANZAS_SYNC, d = X && X.datos;
       if (!X || !d || !Array.isArray(d.debts)) malos.push('finanzas-sync.js no tiene la forma {exportado, gastar, datos: {debts…}}');
-      else if (d.transactions || /"(notes|desc|amount|transactions|indicatorHistory)"/.test(txt)) malos.push('finanzas-sync.js lleva movimientos, notas o historial: solo van saldos (el repositorio es público)');
-      else detF = d.debts.length + ' deudas, ' + (d.activos || []).length + ' activos y el fondo';
+      else if (!Array.isArray(d.transactions)) malos.push('finanzas-sync.js no lleva todo Finanzas (le faltan los movimientos): corre `git datos`');
+      else detF = 'todo Finanzas: ' + d.transactions.length + ' movimientos, ' + d.debts.length + ' deudas';
     } catch (e) { malos.push('finanzas-sync.js no se puede leer: ' + e.message); }
   }
   let ruta = '';
@@ -3171,7 +3171,7 @@ function promptsDeLoTocado() {
   if (h.indexOf("/datos-precios/precios.json") < 0) malos.push('Precios ahora ya no lee la rama datos-precios');
   if (!C || !Array.isArray(C.REPARTO_BASE) || !C.REPARTO_BASE.length) malos.push('el maestro ya no exporta REPARTO_BASE');
   else if (Math.abs(C.REPARTO_BASE.reduce(function (s, x) { return s + (+x.pct || 0); }, 0) - 100) > 0.01) malos.push('REPARTO_BASE no suma 100 %');
-  if (leerSi('Dashboard/habitos-exportar.js').indexOf('reparto: tomar(f.reparto') < 0) malos.push('la copia de Finanzas ya no lleva tu reparto al iPad (habitos-exportar.js)');
+  if (leerSi('Dashboard/habitos-exportar.js').indexOf('const datos = JSON.parse(JSON.stringify(f));') < 0) malos.push('la copia de Finanzas ya no lleva todo Finanzas —con tu reparto— al iPad (habitos-exportar.js)');
   if (malos.length) { problemas.push('Qué invertir hoy, sin IA:\n     ' + malos.join('\n     ')); return; }
   const m = /"generado":\s*"([^"]+)"/.exec(leerSi('Dashboard/noticias-inversion.js'));
   const dias = m ? Math.floor((new Date() - new Date(m[1])) / 86400000) : null;
@@ -3209,9 +3209,8 @@ function promptsDeLoTocado() {
     if (h.indexOf(k) < 0) malos.push('el panel del fondo del Dashboard ya no usa ' + k.slice(0, -1));
     if (fz.indexOf(k) < 0) malos.push('Finanzas ya no usa ' + k.slice(0, -1));
   });
-  const exp = /efAportes:\s*tomar\(f\.efAportes,\s*\[([^\]]*)\]\)/.exec(ex);
-  if (!exp) malos.push('la copia del iPad ya no lleva los movimientos del fondo (habitos-exportar.js)');
-  else if (/nota/.test(exp[1])) malos.push('la copia del iPad lleva la nota de los movimientos del fondo, y ese archivo se publica');
+  // La copia del iPad lleva todo Finanzas tal cual (Adán, 18-nov-2026: "todos los datos de finanzas"), con los movimientos del fondo.
+  if (ex.indexOf('const datos = JSON.parse(JSON.stringify(f));') < 0) malos.push('la copia del iPad ya no lleva los movimientos del fondo (habitos-exportar.js ya no copia todo Finanzas)');
   if (malos.length) { problemas.push('Fondo de emergencia, movimiento por movimiento:\n     ' + malos.join('\n     ')); return; }
   ok.push('Fondo de emergencia: aportar, retirar, corregir y borrar con una sola cuenta del maestro, en el Dashboard y en Finanzas');
 })();

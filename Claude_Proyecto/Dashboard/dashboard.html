@@ -5629,12 +5629,11 @@ function toast(msg){
 // Aquí solo se usan id/name/icon/val/w; el maestro trae además full/cat/desc para el panel de Coach.
 const SK = window.CIFRAS ? CIFRAS.SK : [];
 
-/* Finanzas en un dispositivo que no la tiene (el iPad). Adán, 2-nov-2026: en el iPad las cifras del Plan Maestro salían
-   en «Sin datos», porque `finanzasmx_v2` solo vive en el Chrome de la PC; eligió subir solo las cifras resumidas, sin sus
-   movimientos. Cada commit en la PC escribe `finanzas-sync.js` (el hook, `habitos-exportar.js`) con los saldos —deudas,
-   fondo, inversiones, activos y el Bitcoin en un solo lote— y lo que queda en la cuenta de la quincena (`gastar`, que
-   aquí guarda `ctCifrasHoy` en `fin_resumen_v1`). Donde no hay Finanzas propia se usa esa copia, de solo lectura: nada
-   la escribe en `finanzasmx_v2`, así que el día que se abra Finanzas en ese dispositivo, mandan sus datos. */
+/* Finanzas en un dispositivo que no la tiene (el iPad): `finanzasmx_v2` solo vive en el Chrome de la PC. Cada subida
+   (`git datos`, subir-mis-datos.bat o el hook de cada commit: `habitos-exportar.js`) escribe `finanzas-sync.js` con todo
+   Finanzas tal cual —Adán, 18-nov-2026: "todos los datos de finanzas"— y lo que queda en la cuenta de la quincena
+   (`gastar`, que aquí guarda `ctCifrasHoy` en `fin_resumen_v1`). Donde no hay Finanzas propia se usa esa copia, de solo
+   lectura: nada la escribe en `finanzasmx_v2`, así que el día que se abra Finanzas en ese dispositivo, mandan sus datos. */
 let FIN_REPO = null;
 function finCargar(){
   FIN_REPO = null;

@@ -6,10 +6,11 @@
    (el hook de pre-commit). Este script hace ese commit por ti:
 
      1. trae lo último de GitHub (si no puede, sigue con lo de esta PC),
-     2. corre habitos-exportar.js --add: hábitos, auditoría, saldos de Finanzas —con el Bitcoin— y Mis cifras,
+     2. corre habitos-exportar.js --add: hábitos, auditoría, todo Finanzas —movimientos, Bitcoin…— y Mis cifras,
      3. si algo cambió, hace el commit y el push; si no, lo dice y no hace nada.
 
-   Se usa con doble clic en Claude_Proyecto/subir-mis-datos.bat, o solo cada noche con la tarea de Windows
+   Se usa con `git datos` (alias de este clon: git config alias.datos '!node Claude_Proyecto/Dashboard/subir-mis-datos.js'),
+   con doble clic en Claude_Proyecto/subir-mis-datos.bat, o solo cada noche con la tarea de Windows
    «Subir mis datos» (subir-mis-datos.bat /instalar la registra). Si ya había algo preparado para un commit (git add de
    otra cosa), no lo mezcla: avisa y se detiene. */
 'use strict';
@@ -20,7 +21,7 @@ const fs = require('fs');
 const RAIZ = path.resolve(__dirname, '..', '..');
 const git = (...a) => execFileSync('git', a, { cwd: RAIZ, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 const preparado = () => git('diff', '--cached', '--name-only').split('\n').filter(Boolean);
-const QUE = { 'habitos-sync.js': 'hábitos', 'auditoria-sync.js': 'auditoría', 'finanzas-sync.js': 'saldos de Finanzas',
+const QUE = { 'habitos-sync.js': 'hábitos', 'auditoria-sync.js': 'auditoría', 'finanzas-sync.js': 'Finanzas',
   'ajustes-sync.js': 'mis cifras' };
 
 function main() {

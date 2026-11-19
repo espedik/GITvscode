@@ -1,5 +1,5 @@
 @echo off
-rem Sube a GitHub lo que anotas en el navegador de esta PC (habitos, auditoria, saldos de Finanzas con el Bitcoin, mis cifras).
+rem Sube a GitHub lo que anotas en el navegador de esta PC (habitos, auditoria, todo Finanzas, mis cifras). Igual que: git datos
 rem   Doble clic ............................ lo sube ahora
 rem   subir-mis-datos.bat /instalar ......... lo sube solo cada noche a las 23:30 (tarea de Windows "Subir mis datos")
 rem   subir-mis-datos.bat /quitar ........... quita esa tarea

@@ -2217,21 +2217,24 @@ solo el que es más nuevo que el de este dispositivo: lo que se auditó en el iP
 que solo tiene el iPad se quedan y la PC no se reimporta a sí misma. Al cerrar un mes viajan también sus
 cifras (`real` y `meta`), públicas como las de `datos-maestros.js`. El control 39 vigila estas piezas también.
 
-**Y los saldos de Finanzas** (Adán, 2-nov-2026: en el iPad las cifras del Plan Maestro salían en «Sin datos», porque
-`finanzasmx_v2` solo vive en el Chrome de la PC; eligió subir solo las cifras resumidas, sin sus movimientos). El mismo
-exportador escribe `finanzas-sync.js` (`window.FINANZAS_SYNC = {exportado, fecha, gastar, datos}`) con las deudas, las
-inversiones, los activos —sin notas—, las metas, el fondo y el Bitcoin sumado en un solo lote, más `gastar`: lo que queda
-en la cuenta de la quincena, que `ctCifrasHoy` guarda en `fin_resumen_v1` cada vez que cambia en la PC. Movimientos,
-notas, presupuestos e historial no salen. En un dispositivo sin Finanzas propia, `finCargar` usa esa copia —de solo
-lectura: nada la escribe en `finanzasmx_v2`—.
-Medido con los datos reales: los medidores del Plan Maestro salen iguales que en la PC. El control 39 revisa
-también que el archivo no lleve movimientos, notas ni descripciones.
+**Y todo Finanzas** (Adán, 18-nov-2026: *"haz que pueda hacer esos cambios yo mismo con comandos de git, pero todos los
+datos de finanzas"*; eligió subirlo sin cifrar, sabiendo que el repositorio es público y que cualquiera puede leerlo). El
+mismo exportador escribe `finanzas-sync.js` (`window.FINANZAS_SYNC = {exportado, fecha, gastar, datos}`) con
+`finanzasmx_v2` tal cual —movimientos, notas, presupuestos, deudas, inversiones, activos, metas, el fondo con sus
+aportaciones, cada compra de Bitcoin y el historial de indicadores— más `gastar`: lo que queda en la cuenta de la
+quincena, que `ctCifrasHoy` guarda en `fin_resumen_v1` cada vez que cambia en la PC. Es el respaldo de Finanzas en git
+—cada subida queda en el historial— y la copia del dispositivo sin Finanzas propia: ahí `finCargar` la usa de solo
+lectura (nada la escribe en `finanzasmx_v2`). Medido con los datos reales del 18 nov 2026: 144 movimientos, 10 deudas y 7
+operaciones de Bitcoin, 116 KB. El control 39 revisa que lleve los movimientos.
 
-**Sin que nadie haga un commit: con un doble clic o cada noche** (Adán, 18-nov-2026: *"agregué esta compra de bitcoin,
-pero mi git no registró nada… recuerda que debemos ya no depender de Claude esta app"*). Lo que se anota en el navegador
-no es un archivo: git no lo ve hasta que el exportador lo copia, y eso solo pasaba dentro de un commit. Doble clic en
-`Claude_Proyecto/subir-mis-datos.bat` corre `subir-mis-datos.js`: trae lo último de GitHub, corre `habitos-exportar.js
---add` y, si algo cambió, hace el commit (*Mis datos de la PC: saldos de Finanzas…*) y el push; si no, dice que no hay
+**Sin que nadie haga un commit: `git datos`, un doble clic o cada noche** (Adán, 18-nov-2026: *"agregué esta compra de
+bitcoin, pero mi git no registró nada… recuerda que debemos ya no depender de Claude esta app"*). Lo que se anota en el
+navegador no es un archivo: git no lo ve hasta que el exportador lo copia, y eso solo pasaba dentro de un commit —y un
+`git commit` sin nada preparado se detiene en *nothing to commit* antes de llevárselo—. **`git datos`** (un alias de
+este clon: `git config alias.datos '!node Claude_Proyecto/Dashboard/subir-mis-datos.js'`) o doble clic en
+`Claude_Proyecto/subir-mis-datos.bat` corren `subir-mis-datos.js`: trae lo último de GitHub, corre `habitos-exportar.js
+--add` —y agrega los `*-sync.js` que ya estaban escritos sin subir— y, si algo cambió, hace el commit (*Mis datos de la
+PC: Finanzas…*) y el push; si no, dice que no hay
 nada nuevo. Si ya había algo preparado para otro commit, no lo mezcla: avisa y se detiene. `subir-mis-datos.bat
 /instalar` registra la tarea de Windows **Subir mis datos**, que lo corre cada noche a las 23:30 —o al prender la PC si
 estaba apagada—, y `/quitar` la borra.
