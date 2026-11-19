@@ -2227,6 +2227,16 @@ quincena, que `ctCifrasHoy` guarda en `fin_resumen_v1` cada vez que cambia en la
 lectura (nada la escribe en `finanzasmx_v2`). Medido con los datos reales del 18 nov 2026: 144 movimientos, 10 deudas y 7
 operaciones de Bitcoin, 116 KB. El control 39 revisa que lleve los movimientos.
 
+**Y en `git status`, como cualquier archivo** (Adán, 18-nov-2026: *"yo quiero usar el git status y que me marque los
+cambios de esa cifra y ya con git add . y git commit -m quiero subirlos"*). Git no tiene un hook para `status`, así que
+`Claude_Proyecto/git-status-datos.sh` define en Git Bash una función `git` que, antes de cada `git status` dentro de
+GITvscode, corre `habitos-exportar.js` sin `--add`: si algo cambió en el navegador, el `*-sync.js` que le toca queda
+modificado y `git status` lo marca; `git add .` y `git commit -m` lo suben como cualquier cambio (el hook de pre-commit
+vuelve a exportar por si algo cambió entre medio). Fuera de GITvscode, git es el de siempre. Se activa una vez, desde
+Git Bash, con las dos líneas que trae el archivo (`source` en `~/.bashrc` y la carga de `~/.bashrc` en
+`~/.bash_profile`). Medido: la copia tarda 1.1 s por `git status`; un cambio de $1,500 a $1,600 en una compra de Bitcoin
+salió como `M Claude_Proyecto/Dashboard/finanzas-sync.js`. El panel de Git de VS Code no la usa: ahí, abre Git Bash.
+
 **Sin que nadie haga un commit: `git datos`, un doble clic o cada noche** (Adán, 18-nov-2026: *"agregué esta compra de
 bitcoin, pero mi git no registró nada… recuerda que debemos ya no depender de Claude esta app"*). Lo que se anota en el
 navegador no es un archivo: git no lo ve hasta que el exportador lo copia, y eso solo pasaba dentro de un commit —y un
