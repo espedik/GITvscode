@@ -20,6 +20,8 @@
      Plan Maestro vienen de aquí, no escritos a mano. El mapa está en DATOS-MAESTROS.md -->
 <link rel="stylesheet" href="ficha.css">
 <script src="ajustes-sync.js" onerror="this.remove()"></script>
+<!-- Todo Finanzas de la PC (finanzas-sync.js): va antes del maestro, que fuera de la PC lo aplica (finPcAplicar). -->
+<script src="finanzas-sync.js" onerror="this.remove()"></script>
 <script src="datos-maestros.js"></script>
 <!-- Las noticias de Qué invertir hoy, de Google Noticias: las escribe el hook de pre-commit (noticias-actualizar.js). -->
 <script src="noticias-inversion.js" onerror="this.remove()"></script>
@@ -38,8 +40,6 @@
 <script src="habitos-sync.js" onerror="this.remove()"></script>
 <!-- La auditoría de cada mes de las fases, de la PC: la exporta el mismo hook (habitos-exportar.js) y la trae fzmDelRepo. -->
 <script src="auditoria-sync.js" onerror="this.remove()"></script>
-<!-- Los saldos de Finanzas de la PC —sin movimientos ni notas—, para el dispositivo que no tiene Finanzas (finCargar). -->
-<script src="finanzas-sync.js" onerror="this.remove()"></script>
 <!-- La hora del último commit de esta copia, que el hook de pre-commit escribe (version-escribir.js): Mi Día la enseña junto a la semana. -->
 <script src="version.js" onerror="this.remove()"></script>
 <script src="habitos.js"></script>
@@ -5633,19 +5633,24 @@ const SK = window.CIFRAS ? CIFRAS.SK : [];
    (`git datos`, subir-mis-datos.bat o el hook de cada commit: `habitos-exportar.js`) escribe `finanzas-sync.js` con todo
    Finanzas tal cual —Adán, 18-nov-2026: "todos los datos de finanzas"— y lo que queda en la cuenta de la quincena
    (`gastar`, que aquí guarda `ctCifrasHoy` en `fin_resumen_v1`). Donde no hay Finanzas propia se usa esa copia, de solo
-   lectura: nada la escribe en `finanzasmx_v2`, así que el día que se abra Finanzas en ese dispositivo, mandan sus datos. */
+   lectura. Fuera de la PC manda siempre esa copia (Adán, 18-nov-2026: "¿por qué en mi iPad no se ven las cosas que
+   invertí?"): el maestro la pone en `finanzasmx_v2` cada vez que llega una más nueva (`finPcAplicar`), y aquí se
+   marca como copia (FIN_REPO) para que no se edite donde la siguiente la reemplazaría. */
 let FIN_REPO = null;
 function finCargar(){
   FIN_REPO = null;
   const loc = tryParse('finanzasmx_v2', null);
+  const X = window.FINANZAS_SYNC, d = X && X.datos, hayCopia = !!(d && Array.isArray(d.debts));
+  if(hayCopia && window.CIFRAS && CIFRAS.ES_PC === false) FIN_REPO = X;
   if(loc) return loc;
-  const X = window.FINANZAS_SYNC, d = X && X.datos;
-  if(d && Array.isArray(d.debts)){
+  if(hayCopia){
     FIN_REPO = X;
     return Object.assign({ transactions: [], budgets: [], goals: [], investments: [], activos: [], btcHistory: [], emergencyFund: 0 }, JSON.parse(JSON.stringify(d)));
   }
   return { transactions: [], debts: [], goals: [], investments: [], emergencyFund: 0 };
 }
+// Fuera de la PC, al abrir: la copia más nueva, sin la caché de GitHub Pages; si llegó una, se vuelve a cargar con ella.
+if(window.CIFRAS && CIFRAS.finPcRefrescar) CIFRAS.finPcRefrescar(() => location.reload());
 // La fecha de las cifras que llegaron de la PC, para decirlo donde se enseñan.
 let D={};
 function loadAll(){
@@ -15169,7 +15174,7 @@ function kpiDetalle(id){
       '<div class="ti-lista">'+(filasEf||'<div class="gbm-vacio">Todavía no hay aportaciones anotadas.</div>')+'</div>'+
       (editable?efFormHtml(_efEdit?movs.find(m=>m.id===_efEdit):null)+
         kpiNota('Anota aquí lo que le metes al fondo, no como compra en Total invertido: el fondo y tus inversiones se suman en tu patrimonio y en la maestría, y el mismo dinero contaría dos veces.')
-        :kpiNota(FIN_REPO?'En este dispositivo tus cifras son la copia de tu PC'+(FIN_REPO.fecha?' del '+tiFecha(FIN_REPO.fecha):'')+
+        :kpiNota(FIN_REPO?'En este dispositivo tus cifras son la copia de tu PC'+(FIN_REPO.exportado||FIN_REPO.fecha?' del '+tiFecha(CIFRAS.fechaLocal(new Date(FIN_REPO.exportado||FIN_REPO.fecha))):'')+
           ': las aportaciones se anotan en tu PC y llegan aquí con el siguiente commit.'
           :'Abre Finanzas una vez en este navegador para anotar aquí tus aportaciones.'))+
       kpiSec('📊 De dónde sale')+
@@ -15451,7 +15456,7 @@ function kpiDetalle(id){
       '<div class="ti-lista">'+(compras||'<div class="gbm-vacio">Todavía no hay inversiones registradas.</div>')+'</div>'+
       (BA.resto>0&&pBtc>0&&BA.resto*pBtc>=1?kpiNota('Tu Bitcoin incluye '+BA.resto.toFixed(6)+' BTC ('+money(BA.resto*pBtc)+') que te quedaron de antes.'):'')+
       (editable?tiFormHtml(tiEditObj(F,_tiEdit))
-        :kpiNota(FIN_REPO?'En este dispositivo tus cifras son la copia de tu PC'+(FIN_REPO.fecha?' del '+tiFecha(FIN_REPO.fecha):'')+
+        :kpiNota(FIN_REPO?'En este dispositivo tus cifras son la copia de tu PC'+(FIN_REPO.exportado||FIN_REPO.fecha?' del '+tiFecha(CIFRAS.fechaLocal(new Date(FIN_REPO.exportado||FIN_REPO.fecha))):'')+
           ': las compras se agregan y se editan en tu PC y llegan aquí con el siguiente commit.'
           :'Abre Finanzas una vez en este navegador para registrar aquí tus compras.'))+
       kpiSec('📊 Tu portafolio hoy')+

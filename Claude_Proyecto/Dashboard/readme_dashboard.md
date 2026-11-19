@@ -2223,8 +2223,16 @@ mismo exportador escribe `finanzas-sync.js` (`window.FINANZAS_SYNC = {exportado,
 `finanzasmx_v2` tal cual —movimientos, notas, presupuestos, deudas, inversiones, activos, metas, el fondo con sus
 aportaciones, cada compra de Bitcoin y el historial de indicadores— más `gastar`: lo que queda en la cuenta de la
 quincena, que `ctCifrasHoy` guarda en `fin_resumen_v1` cada vez que cambia en la PC. Es el respaldo de Finanzas en git
-—cada subida queda en el historial— y la copia del dispositivo sin Finanzas propia: ahí `finCargar` la usa de solo
-lectura (nada la escribe en `finanzasmx_v2`). Medido con los datos reales del 18 nov 2026: 144 movimientos, 10 deudas y 7
+—cada subida queda en el historial— y **lo que manda fuera de la PC** (Adán, 18-nov-2026: *"¿por qué en mi iPad no se ven
+las cosas que invertí?"*: el iPad ya tenía su propio Finanzas de una vez que lo abrió, y la copia solo entraba donde no
+había nada). El Dashboard y Finanzas cargan `finanzas-sync.js` antes del maestro, y fuera de la PC —la PC es la que abre
+los archivos con file:// (`CIFRAS.ES_PC`)— el maestro pone la copia en `finanzasmx_v2` cada vez que llega una más nueva
+que la última aplicada (`finPcAplicar`, `fin_pc_aplicada`); al abrir, además, la pide sin la caché de GitHub Pages
+(`finPcRefrescar`, que guarda hasta 10 minutos) y, si trae una nueva, recarga con ella. Ahí `finCargar` la marca como
+copia (`FIN_REPO`): Total invertido se ve sin Editar ni Borrar, con la nota de la fecha de la copia, y Finanzas avisa que
+lo que se cambie ahí se reemplaza con la siguiente. En la PC no cambia nada. Medido sirviendo la carpeta por HTTP con un
+Finanzas viejo guardado: el Dashboard y Finanzas enseñan las dos compras de Bitcoin, la de nvidia y los 143 movimientos;
+en file://, `fin_pc_aplicada` ni se escribe. Medido con los datos reales del 18 nov 2026: 144 movimientos, 10 deudas y 7
 operaciones de Bitcoin, 116 KB. El control 39 revisa que lleve los movimientos.
 
 **Y en `git status`, como cualquier archivo, sin correr nada** (Adán, 18-nov-2026: *"yo quiero usar el git status y que

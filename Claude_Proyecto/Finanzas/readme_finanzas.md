@@ -267,6 +267,13 @@ en `finanzasmx_v2`. `init()` sigue creando `ef-001` si falta.
 
 ---
 
+## Fuera de la PC (el iPad)
+
+Finanzas se edita en la PC (file://). Fuera de ella, la página carga `../Dashboard/finanzas-sync.js` antes del maestro, que
+pone esa copia en `finanzasmx_v2` cada vez que llega una más nueva (`finPcAplicar`); al abrir pide la más reciente
+(`CIFRAS.finPcRefrescar`) y avisa con un toast que lo que se cambie ahí se reemplaza con la siguiente que se suba desde la
+PC. Ver *Y todo Finanzas* en `readme_dashboard.md`.
+
 ## Módulo: Inversiones
 
 `openInvModal(id)` (tipos `cetes | fondos | acciones | crypto | inmuebles | deuda | otro`),

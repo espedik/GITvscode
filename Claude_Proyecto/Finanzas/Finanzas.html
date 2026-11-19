@@ -18,6 +18,8 @@
      esta app use los mismos {{marcadores}} que el Dashboard y el Coach, en vez de
      empezar otra copia a mano. Mapa en ../Dashboard/DATOS-MAESTROS.md -->
 <script src="../Dashboard/ajustes-sync.js" onerror="this.remove()"></script>
+<!-- Todo Finanzas de la PC: fuera de la PC (el iPad), el maestro lo pone en finanzasmx_v2 cada vez que llega uno más nuevo. -->
+<script src="../Dashboard/finanzas-sync.js" onerror="this.remove()"></script>
 <script src="../Dashboard/datos-maestros.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <!-- Sin internet Chart.js no llega, y la primera gráfica tumbaba el resto de la pantalla (después de «Próximos pagos» no
@@ -5441,6 +5443,11 @@ function init() {
   }
   load();
   btcMudar();
+  // Fuera de la PC (el iPad) Finanzas es la copia de la PC: se avisa y, si GitHub ya tiene una más nueva, se carga.
+  if(window.CIFRAS&&CIFRAS.ES_PC===false&&window.FINANZAS_SYNC){
+    setTimeout(()=>toast('Copia de tu PC: lo que cambies aquí se reemplaza con la siguiente que subas desde la PC'),800);
+    CIFRAS.finPcRefrescar(()=>location.reload());
+  }
   // Migración: actualizar meta maestría de 300k → 500k
   const _maeGoal=S.goals.find(g=>g.id==='g001');
   if(_maeGoal&&_maeGoal.target===300000){_maeGoal.target=500000;save();}

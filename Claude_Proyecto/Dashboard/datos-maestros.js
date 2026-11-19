@@ -8981,8 +8981,38 @@ window.CIFRAS = (function () {
     return o;
   }
 
+  /* ── FUERA DE LA PC, MANDA LA COPIA DE LA PC ─────────────────────────────────────────────────
+     Adán, 18-nov-2026: "¿por qué en mi iPad no se ven las cosas que invertí?". Finanzas se edita en la PC (el Chrome que
+     abre los archivos con file://) y viaja entera en `finanzas-sync.js` (FINANZAS_SYNC). Antes, un dispositivo que ya
+     tenía su propio `finanzasmx_v2` —por haber abierto Finanzas una vez— la ignoraba para siempre. Ahora, fuera de la
+     PC, cada copia más nueva que la última aplicada (`fin_pc_aplicada`) reemplaza `finanzasmx_v2`, así el Dashboard, Finanzas
+     y Coach del iPad dicen lo mismo que la PC. En la PC (file://) no hace nada. `finPcRefrescar(alLlegar)` pide el archivo
+     sin caché —GitHub Pages lo guarda hasta 10 minutos— y, si trae una copia nueva, la aplica y llama a `alLlegar`. */
+  const ES_PC = typeof location === 'undefined' || location.protocol === 'file:';
+  function finPcAplicar(X) {
+    if (ES_PC || !X || !X.exportado || !X.datos || !Array.isArray(X.datos.debts)) return false;
+    let ya = '';
+    try { ya = localStorage.getItem('fin_pc_aplicada') || ''; } catch (e) { return false; }
+    if (ya >= X.exportado) return false;
+    try { localStorage.setItem(KEY, JSON.stringify(X.datos)); localStorage.setItem('fin_pc_aplicada', X.exportado); } catch (e) { return false; }
+    return true;
+  }
+  function finPcRefrescar(alLlegar) {
+    if (ES_PC || typeof fetch !== 'function' || typeof document === 'undefined') return;
+    const s = document.querySelector('script[src*="finanzas-sync.js"]');
+    const url = (s && s.src) || 'finanzas-sync.js';
+    fetch(url.split('?')[0] + '?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : ''; }).then(function (txt) {
+      if (!txt) return;
+      const w = {};
+      new Function('window', txt)(w);
+      if (finPcAplicar(w.FINANZAS_SYNC)) { global_finSync(w.FINANZAS_SYNC); migrar(); leer(); if (alLlegar) alLlegar(); }
+    }).catch(function () {});
+  }
+  function global_finSync(X) { if (typeof window !== 'undefined') window.FINANZAS_SYNC = X; }
+
   // Las migraciones van ANTES de la primera lectura: así todo lo que venga después —esta misma
-  // caché, y el load() de la app que nos cargó— ya ve los saldos corregidos.
+  // caché, y el load() de la app que nos cargó— ya ve los saldos corregidos. Fuera de la PC, antes de todo, su copia.
+  finPcAplicar(typeof window !== 'undefined' ? window.FINANZAS_SYNC : null);
   migrar();
   leer();
   if (typeof document !== 'undefined') {
@@ -9889,6 +9919,6 @@ window.CIFRAS = (function () {
     PESO: PESO,
     PROYECTO: PROYECTO,
     CALENDARIO: CALENDARIO,
-    get datos() { return fin; }
+    get datos() { return fin; }, ES_PC: ES_PC, finPcRefrescar: finPcRefrescar
   };
 })();
