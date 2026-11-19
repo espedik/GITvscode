@@ -23,7 +23,7 @@ const RAIZ = path.resolve(__dirname, '..', '..');
 const git = (...a) => execFileSync('git', a, { cwd: RAIZ, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 const preparado = () => git('diff', '--cached', '--name-only').split('\n').filter(Boolean);
 const QUE = { 'habitos-sync.js': 'hábitos', 'auditoria-sync.js': 'auditoría', 'finanzas-sync.js': 'Finanzas',
-  'ajustes-sync.js': 'mis cifras' };
+  'ajustes-sync.js': 'mis cifras', 'datos-sync.js': 'demás datos (Alemán, rutina, salud, metas…)' };
 
 function main() {
   if (preparado().length) {

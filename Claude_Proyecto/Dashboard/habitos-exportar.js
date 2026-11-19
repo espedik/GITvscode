@@ -59,8 +59,9 @@ function perfil() {
   return ldb && fs.existsSync(ldb) ? ldb : null;
 }
 
-// Lee las claves de una COPIA del almacenamiento, con Chrome invisible y un --user-data-dir propio.
-// Devuelve {clave: valor ya leído de JSON, o null si no está}.
+// Lee una COPIA del almacenamiento, con Chrome invisible y un --user-data-dir propio.
+// Devuelve {clave: valor ya leído de JSON, o null si no está} de las claves pedidas y, en `crudo`, todas las claves
+// tal cual (para datos-sync.js, que solo deja pasar las del proyecto).
 function leer(exe, ldb, claves) {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'habitos-'));
   try {
@@ -69,7 +70,7 @@ function leer(exe, ldb, claves) {
     for (const f of fs.readdirSync(ldb)) if (f !== 'LOCK') fs.copyFileSync(path.join(ldb, f), path.join(dest, f));
     const html = path.join(tmp, 'leer.html');
     fs.writeFileSync(html, '<!doctype html><meta charset="utf-8"><body><script>' +
-      'var o = {};' + JSON.stringify(claves) + '.forEach(function (k) { o[k] = localStorage.getItem(k); });' +
+      'var o = {}; for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); o[k] = localStorage.getItem(k); }' +
       'document.body.textContent = "@@" + btoa(unescape(encodeURIComponent(JSON.stringify(o)))) + "@@";</script>');
     const r = spawnSync(exe, ['--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
       '--disable-extensions', '--user-data-dir=' + path.join(tmp, 'perfil'), '--dump-dom',
@@ -78,6 +79,7 @@ function leer(exe, ldb, claves) {
     if (!m) throw new Error('Chrome no devolvió nada' + (r.error ? ' (' + r.error.message + ')' : ''));
     const o = JSON.parse(Buffer.from(m[1], 'base64').toString('utf8')), v = {};
     claves.forEach(k => { try { v[k] = o[k] ? JSON.parse(o[k]) : null; } catch (e) { v[k] = null; } });
+    Object.defineProperty(v, 'crudo', { value: o });
     return v;
   } finally {
     try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (e) { /* una carpeta temporal que queda no importa */ }
@@ -222,7 +224,79 @@ function ajustes(a) {
   agregar(SALIDA_AJ, dj);
 }
 
-(function () {
+/* ── TODO LO DEMÁS: datos-sync.js ──────────────────────────────────────────────────────────────────────────────
+   Adán, 18-nov-2026: "ahora esto para las demás cifras, pero todas, no quiero que haya errores". Además de hábitos,
+   auditoría, Finanzas y Mis cifras —que tienen su archivo—, cada dato que guardan las apps en el navegador: Alemán,
+   Coach, la rutina, Salud, Comida, la lista de compras, metas, logros, Cuidado personal, Vestimenta, Posts, Entrevistas…
+   Solo pasan las claves que USA EL CÓDIGO DEL PROYECTO (clavesDelProyecto: el Chrome guarda en el mismo sitio lo de
+   cualquier archivo que se abra con file://, y nada ajeno —un estado de cuenta, por ejemplo— debe llegar al repositorio
+   público), más sus banderas (`clave_algo`: las migraciones que ya corrieron, para que otro dispositivo no las repita
+   sobre la copia), menos las preferencias de pantalla y las cachés (NO_VIAJAN). Una clave por línea, con la hora en que
+   cambió (`cambiado`); una que desapareció de la PC viaja como `borrado`. Lo aplica datos-pc.js fuera de la PC. */
+const SALIDA_DATOS = path.join(__dirname, 'datos-sync.js');
+const dd = m => console.log('demás datos · ' + m);
+const PROPIOS = [CLAVE, CLAVE_AUD, CLAVE_SINC, CLAVE_FIN, CLAVE_RES, CLAVE_AJ];   // viajan en su propio archivo
+const NO_VIAJAN = new Set(['coach-theme', 'theme', 'sidebar-collapsed', 'aero-idioma', 'aero-tema', 'heli-idioma',
+  'heli-tema', 'btc_cur', 'dash-agenda-oculta', 'dash-istqb-lado', 'dash-rail-abierto', 'dash-settings', 'dash-privado',
+  'posts-empresa', 'cifras_guardado', 'dash-noticias-v1', 'dash-precios-v1', 'dash-aleman-resumen', 'fin_pc_aplicada',
+  'datos_pc_aplicado', 'datos_pc_pedido']);
+function clavesDelProyecto() {
+  const raiz = path.join(__dirname, '..'), out = new Set(), arch = [];
+  (function rec(d) {
+    for (const n of fs.readdirSync(d)) {
+      const p = path.join(d, n), st = fs.statSync(p);
+      if (st.isDirectory()) { if (!/^(diseno-|fotos|syllabus|node_modules|\.)/.test(n)) rec(p); }
+      else if (/\.(html|js)$/.test(n) && !/-sync\.js$|\.PREV\.|examen-genai-data|noticias-inversion|vocab-datos/.test(n)) arch.push(p);
+    }
+  })(raiz);
+  const pats = [/localStorage\.(?:getItem|setItem|removeItem)\(\s*['"`]([A-Za-z0-9_\-:.]+)['"`]/g,
+    /(?:tryParse|rawGet|rawSet)\(\s*['"`]([A-Za-z0-9_\-:.]+)['"`]/g,
+    /\b[A-Z_]*KEY[A-Z_0-9]*\s*=\s*['"`]([A-Za-z0-9_\-:.]+)['"`]/g, /\bLS_[A-Z_]*\s*=\s*['"`]([A-Za-z0-9_\-:.]+)['"`]/g];
+  for (const f of arch) { const t = fs.readFileSync(f, 'utf8'); for (const re of pats) { let m; re.lastIndex = 0; while ((m = re.exec(t))) if (m[1].length > 3) out.add(m[1]); } }
+  return out;
+}
+function viaja(k, del) {
+  if (NO_VIAJAN.has(k) || PROPIOS.indexOf(k) !== -1 || /_respaldo$/.test(k)) return false;
+  if (del.has(k)) return true;
+  for (const b of del) if (b.endsWith('_') ? k.startsWith(b) : k.startsWith(b + '_')) return true;
+  for (const b of PROPIOS) if (k.startsWith(b + '_')) return true;
+  return false;
+}
+function datos(crudo) {
+  const del = clavesDelProyecto(), ahora = new Date().toISOString();
+  const antes = (previo(SALIDA_DATOS) || {}).claves || {}, claves = {};
+  Object.keys(crudo).filter(k => viaja(k, del)).sort().forEach(k => {
+    const raw = crudo[k];
+    let valor = raw, json = false;
+    try { valor = JSON.parse(raw); json = true; } catch (e) { valor = raw; }
+    const a = antes[k], igual = a && !a.borrado && a.json === json && JSON.stringify(a.valor) === JSON.stringify(valor);
+    claves[k] = { cambiado: igual ? a.cambiado : ahora, json: json, valor: valor };
+  });
+  // Lo que ya no está en la PC se borra también en los demás dispositivos.
+  Object.keys(antes).forEach(k => { if (!claves[k]) claves[k] = antes[k].borrado ? antes[k] : { cambiado: ahora, borrado: true }; });
+  const ks = Object.keys(claves).sort();
+  if (ks.length === Object.keys(antes).length && ks.every(k => antes[k] && antes[k].cambiado === claves[k].cambiado)) return dd('sin cambios');
+  const L = [];
+  L.push('/* Todo lo demás que las apps guardan en el navegador de la PC —Alemán, Coach, la rutina, Salud, Comida, la lista de');
+  L.push('   compras, metas, logros, Cuidado personal, Vestimenta, Posts, Entrevistas…—, una clave por línea con la hora en que');
+  L.push('   cambió. Lo escribe Dashboard/habitos-exportar.js (git status, git add y el hook de pre-commit) y lo aplica');
+  L.push('   Dashboard/datos-pc.js fuera de la PC: no se edita a mano. */');
+  L.push('window.DATOS_SYNC = {');
+  L.push('  "exportado": ' + JSON.stringify(ks.map(k => claves[k].cambiado).sort().pop() || ahora) + ',');
+  L.push('  "claves": {');
+  ks.forEach((k, i) => L.push('    ' + JSON.stringify(k) + ': ' + JSON.stringify(claves[k]) + (i < ks.length - 1 ? ',' : '')));
+  L.push('  }');
+  L.push('};');
+  fs.writeFileSync(SALIDA_DATOS + '.tmp', L.join('\n') + '\n', 'utf8');
+  fs.renameSync(SALIDA_DATOS + '.tmp', SALIDA_DATOS);
+  const vivas = ks.filter(k => !claves[k].borrado).length;
+  dd('al día · ' + vivas + ' claves' + (ks.length > vivas ? ', ' + (ks.length - vivas) + ' borrada(s)' : ''));
+  agregar(SALIDA_DATOS, dd);
+}
+
+// Las reglas de qué viaja, para el verificador (control 56): requerido como módulo, no exporta nada.
+module.exports = { viaja: viaja, clavesDelProyecto: clavesDelProyecto, NO_VIAJAN: NO_VIAJAN, PROPIOS: PROPIOS };
+if (require.main === module) (function () {
   try {
     const exe = chrome(), ldb = perfil();
     if (!exe) return di('no encontré Chrome; no se exportó nada');
@@ -232,6 +306,7 @@ function ajustes(a) {
     try { auditoria(v[CLAVE_AUD], v[CLAVE_SINC]); } catch (e) { da('no se exportó: ' + e.message); }
     try { finanzas(v[CLAVE_FIN], v[CLAVE_RES]); } catch (e) { df('no se exportó: ' + e.message); }
     try { ajustes(v[CLAVE_AJ]); } catch (e) { dj('no se exportó: ' + e.message); }
+    try { datos(v.crudo); } catch (e) { dd('no se exportó: ' + e.message); }
   } catch (e) {
     di('no se exportó: ' + e.message);
   }

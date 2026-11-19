@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 <!-- Sin zoom en táctil, con el resto de gestos intactos. Safari ignora user-scalable, así que el bloqueo va por eventos. -->
+<!-- Fuera de la PC (el iPad), tus datos son los de la PC: datos-pc.js aplica Finanzas y todo lo demás antes que la página. -->
+<script src="../Dashboard/finanzas-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-pc.js"></script>
 <script src="../Dashboard/sin-zoom.js"></script>
 <title>Deutsch — inicio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">

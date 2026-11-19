@@ -230,6 +230,9 @@
 </div>
 <footer class="footer"><p>A2 · 04 — Präteritum</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
 
+<!-- Fuera de la PC (el iPad), tus datos son los de la PC: datos-pc.js aplica todo lo demás antes que la página. -->
+<script src="../Dashboard/datos-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-pc.js"></script>
 <script src="flashcards.js"></script>
 <script>
 initFlashcards('fc-a2-04', [

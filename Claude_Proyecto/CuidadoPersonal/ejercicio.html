@@ -444,6 +444,9 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 <!-- El material comun de las 8 areas: velos de blanco con desenfoque.
      Va despues del <style> para ganar por orden. Ver vidrio.css. -->
 <link rel="stylesheet" href="vidrio.css">
+<!-- Fuera de la PC (el iPad), tus datos son los de la PC: datos-pc.js aplica todo lo demás antes que la página. -->
+<script src="../Dashboard/datos-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-pc.js"></script>
 <script>
 (function () {
   var saved = localStorage.getItem('coach-theme');

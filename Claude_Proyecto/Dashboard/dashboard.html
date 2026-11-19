@@ -12,6 +12,10 @@
      se monta sobre el home indicator del iPhone (2026-08-19, reportado por Adán). -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <!-- Sin zoom en táctil, con el resto de gestos intactos. Safari ignora user-scalable, así que el bloqueo va por eventos. -->
+<!-- Fuera de la PC (el iPad), tus datos son los de la PC: datos-pc.js aplica Finanzas y todo lo demás antes que la página. -->
+<script src="finanzas-sync.js" onerror="this.remove()"></script>
+<script src="datos-sync.js" onerror="this.remove()"></script>
+<script src="datos-pc.js"></script>
 <script src="sin-zoom.js"></script>
 <title>JARVIS — Dashboard</title>
 <meta name="description" content="Salvapantallas de mando: rotación automática de pantallas con lo más importante y pendiente de Coach, Finanzas y el resto de mis proyectos.">
@@ -20,8 +24,6 @@
      Plan Maestro vienen de aquí, no escritos a mano. El mapa está en DATOS-MAESTROS.md -->
 <link rel="stylesheet" href="ficha.css">
 <script src="ajustes-sync.js" onerror="this.remove()"></script>
-<!-- Todo Finanzas de la PC (finanzas-sync.js): va antes del maestro, que fuera de la PC lo aplica (finPcAplicar). -->
-<script src="finanzas-sync.js" onerror="this.remove()"></script>
 <script src="datos-maestros.js"></script>
 <!-- Las noticias de Qué invertir hoy, de Google Noticias: las escribe el hook de pre-commit (noticias-actualizar.js). -->
 <script src="noticias-inversion.js" onerror="this.remove()"></script>
@@ -5634,7 +5636,7 @@ const SK = window.CIFRAS ? CIFRAS.SK : [];
    Finanzas tal cual —Adán, 18-nov-2026: "todos los datos de finanzas"— y lo que queda en la cuenta de la quincena
    (`gastar`, que aquí guarda `ctCifrasHoy` en `fin_resumen_v1`). Donde no hay Finanzas propia se usa esa copia, de solo
    lectura. Fuera de la PC manda siempre esa copia (Adán, 18-nov-2026: "¿por qué en mi iPad no se ven las cosas que
-   invertí?"): el maestro la pone en `finanzasmx_v2` cada vez que llega una más nueva (`finPcAplicar`), y aquí se
+   invertí?"): datos-pc.js la pone en `finanzasmx_v2` cada vez que llega una más nueva, y aquí se
    marca como copia (FIN_REPO) para que no se edite donde la siguiente la reemplazaría. */
 let FIN_REPO = null;
 function finCargar(){
@@ -5649,8 +5651,6 @@ function finCargar(){
   }
   return { transactions: [], debts: [], goals: [], investments: [], emergencyFund: 0 };
 }
-// Fuera de la PC, al abrir: la copia más nueva, sin la caché de GitHub Pages; si llegó una, se vuelve a cargar con ella.
-if(window.CIFRAS && CIFRAS.finPcRefrescar) CIFRAS.finPcRefrescar(() => location.reload());
 // La fecha de las cifras que llegaron de la PC, para decirlo donde se enseñan.
 let D={};
 function loadAll(){

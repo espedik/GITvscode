@@ -138,6 +138,10 @@ h2{font-family:var(--title);font-size:clamp(22px,2.4vw,30px);line-height:1.1;mar
   .fila-v b{font-size:15px}
 }
 </style>
+<!-- Fuera de la PC (el iPad), tus datos son los de la PC: datos-pc.js aplica Finanzas y todo lo demás antes que la página. -->
+<script src="finanzas-sync.js" onerror="this.remove()"></script>
+<script src="datos-sync.js" onerror="this.remove()"></script>
+<script src="datos-pc.js"></script>
 <script>
 (function(){
   // Comparte el tema con el Dashboard, Coach y Finanzas: misma clave, mismo criterio.

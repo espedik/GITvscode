@@ -215,6 +215,9 @@ b{font-weight:600}
 <body>
 <div id="doc"></div>
 
+<!-- Fuera de la PC (el iPad), tus datos son los de la PC: datos-pc.js aplica todo lo demás antes que la página. -->
+<script src="../Dashboard/datos-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-pc.js"></script>
 <script src="datos.js"></script>
 <script>
 const IDIOMA = /[?&]en\b/.test(location.search) ? 'en' : 'es';

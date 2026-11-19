@@ -223,6 +223,10 @@ footer li{margin:3px 0}
   .tabla td:first-child{width:auto}
 }
 </style>
+<!-- Fuera de la PC (el iPad), tus datos son los de la PC: datos-pc.js aplica Finanzas y todo lo demás antes que la página. -->
+<script src="../Dashboard/finanzas-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-pc.js"></script>
 <script>
 (function(){
   // Comparte el tema con el Dashboard, Coach, Finanzas y Laptop: misma clave, mismo criterio.

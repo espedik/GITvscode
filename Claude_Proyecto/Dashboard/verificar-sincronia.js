@@ -3359,7 +3359,7 @@ function promptsDeLoTocado() {
     problemas.push('Mis cifras: el maestro ya no trae CIFRAS.ajustes'); return;
   }
   const C = global.window.CIFRAS, A = C.ajustes, malos = [];
-  const raiz = k => k.indexOf('SUPUESTOS.') === 0 ? C.PROYECCION.supuestos : C.PROYECTO;
+  const raiz = k => k.indexOf('SUPUESTOS.') === 0 ? C.PROYECCION.supuestos : k.indexOf('PESO.') === 0 ? C.PESO : C.PROYECTO;
   const L = A.lista();
   L.forEach(function (e) {
     if (e.k.indexOf('meta:') === 0) { if (['ef-001', 'g001'].indexOf(e.k.slice(5)) < 0) malos.push(e.k + ': no es una meta conocida'); return; }
@@ -3370,7 +3370,7 @@ function promptsDeLoTocado() {
       if (!d || d.get) malos.push(e.k + ': es una cuenta, no una constante');
       return;
     }
-    const ruta = e.k.indexOf('SUPUESTOS.') === 0 ? e.k.split('.').slice(1) : e.k.split('.');
+    const ruta = e.k.indexOf('SUPUESTOS.') === 0 || e.k.indexOf('PESO.') === 0 ? e.k.split('.').slice(1) : e.k.split('.');
     let o = raiz(e.k); for (let i = 0; i < ruta.length - 1; i++) o = o[ruta[i]];
     const d = Object.getOwnPropertyDescriptor(o, ruta[ruta.length - 1]);
     if (!d || d.get) malos.push(e.k + ': es una cuenta (getter), no una constante');
@@ -3404,6 +3404,63 @@ function promptsDeLoTocado() {
   if (malos.length) { problemas.push('Mis cifras:\n     ' + malos.join('\n     ')); return; }
   ok.push('Mis cifras: ' + L.length + ' cifras que cambias tú, en ' + conMaestro + ' páginas con ajustes-sync.js antes del maestro; subir la renta $2,000 mueve ' +
     pv.movidas.length + ' cifras y cuadra ' + (Object.keys(c).length - 1) + ' ahorro(s)');
+})();
+
+/* ── 56. Tus datos, iguales fuera de la PC ─────────────────────────────────────────────────────────────────────────
+   Adán, 18-nov-2026: "ahora esto para las demás cifras, pero todas, no quiero que haya errores, además si modifico una
+   cifra, debe actualizar todo lo que va entorno a esa cifra". Todo lo que las apps guardan en el navegador de la PC viaja:
+   Finanzas en finanzas-sync.js y lo demás en datos-sync.js, que datos-pc.js aplica fuera de la PC antes que cada página.
+   Aquí: que CADA página cargue datos-sync.js y datos-pc.js antes que cualquier otro script —y finanzas-sync.js antes del
+   maestro donde lo usa—; que datos-sync.js solo lleve claves del proyecto y nada de preferencias ni cachés (el repositorio
+   es público y el Chrome guarda en el mismo sitio lo de cualquier archivo); que el maestro ya no aplique Finanzas por su
+   cuenta (una sola lógica); y que el peso salga de los pesajes del maestro y de los de Salud, con la meta en Mis cifras. */
+(function () {
+  const malos = [], existe = rel => fs.existsSync(path.join(RAIZ, rel));
+  let X = null;
+  try { X = require(path.join(RAIZ, 'Dashboard', 'habitos-exportar.js')); } catch (e) { malos.push('habitos-exportar.js no se puede leer como módulo: ' + e.message); }
+  const paginas = [];
+  (function recorre(dir) {
+    fs.readdirSync(path.join(RAIZ, dir), { withFileTypes: true }).forEach(function (f) {
+      const rel = dir ? dir + '/' + f.name : f.name;
+      if (f.isDirectory()) { if (!/^(\.|node_modules|diseno-|fotos|syllabus)/.test(f.name)) recorre(rel); }
+      else if (/\.html$/.test(f.name) && !/\.PREV\./.test(f.name)) paginas.push(rel);
+    });
+  })('');
+  let n = 0;
+  paginas.forEach(function (rel) {
+    const h = leer(rel);
+    if (h.indexOf('prompt-pagina.js') < 0) return;   // solo las páginas del proyecto
+    n++;
+    const pos = re => h.search(re), pc = pos(/<script src="(\.\.\/Dashboard\/)?datos-pc\.js"><\/script>/), ds = pos(/<script src="(\.\.\/Dashboard\/)?datos-sync\.js"/);
+    if (pc < 0 || ds < 0) { malos.push(rel + ': no carga datos-sync.js y datos-pc.js (en el iPad vería sus propios datos, no los de la PC)'); return; }
+    if (ds > pc) malos.push(rel + ': carga datos-pc.js antes que datos-sync.js');
+    const primero = h.search(/<script\b/), antes = h.slice(primero, pc);
+    if (/<script(?![^>]*(?:datos-sync|finanzas-sync)\.js)[^>]*>/.test(antes))
+      malos.push(rel + ': hay un script antes de datos-pc.js (leería los datos del iPad antes de ponerle los de la PC)');
+    const ma = pos(/<script src="(\.\.\/Dashboard\/)?datos-maestros\.js"><\/script>/), fz = pos(/<script src="(\.\.\/Dashboard\/)?finanzas-sync\.js"/);
+    if (ma >= 0 && (fz < 0 || fz > pc)) malos.push(rel + ': usa el maestro y no carga finanzas-sync.js antes de datos-pc.js (en el iPad, Finanzas vieja)');
+  });
+  if (existe('Dashboard/datos-sync.js') && X) {
+    try {
+      const w = {}; new Function('window', leer('Dashboard/datos-sync.js'))(w);
+      const D = w.DATOS_SYNC, del = X.clavesDelProyecto();
+      if (!D || !D.claves) malos.push('datos-sync.js no tiene la forma {exportado, claves}');
+      else Object.keys(D.claves).forEach(function (k) {
+        if (!X.viaja(k, del)) malos.push('datos-sync.js lleva «' + k + '», que no es un dato del proyecto o no debe viajar (repositorio público)');
+        const c = D.claves[k]; if (!c || !/^\d{4}-\d{2}-\d{2}T/.test(c.cambiado || '')) malos.push('datos-sync.js: «' + k + '» sin la hora en que cambió');
+      });
+    } catch (e) { malos.push('datos-sync.js no se puede leer: ' + e.message); }
+  }
+  const pcjs = existe('Dashboard/datos-pc.js') ? leer('Dashboard/datos-pc.js') : '';
+  if (!pcjs || pcjs.indexOf("location.protocol === 'file:'") < 0 || pcjs.indexOf('datos_pc_aplicado') < 0 || pcjs.indexOf('fin_pc_aplicada') < 0)
+    malos.push('datos-pc.js falta o ya no aplica la copia de la PC (por clave y Finanzas) solo fuera de la PC');
+  const ma = leer('Dashboard/datos-maestros.js');
+  if (/localStorage\.setItem\('fin_pc_aplicada'/.test(ma)) malos.push('el maestro vuelve a aplicar Finanzas por su cuenta: eso vive solo en datos-pc.js');
+  const C = global.window && global.window.CIFRAS;
+  if (!C || !C.PESO || !('todos' in C.PESO)) malos.push('CIFRAS.PESO ya no junta los pesajes del maestro y los de Salud (PESO.todos)');
+  if (C && C.ajustes && !C.ajustes.lista().some(function (e) { return e.k === 'PESO.metaKg'; })) malos.push('la meta de peso ya no se cambia en Mis cifras (PESO.metaKg)');
+  if (malos.length) { problemas.push('Tus datos fuera de la PC:\n     ' + malos.slice(0, 20).join('\n     ')); return; }
+  ok.push('Tus datos fuera de la PC: ' + n + ' páginas cargan datos-sync.js y datos-pc.js antes que todo; datos-sync.js solo con claves del proyecto; el peso, de los dos registros');
 })();
 
 // ── Salida ──

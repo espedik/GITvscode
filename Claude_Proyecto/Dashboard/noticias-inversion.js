@@ -1,7 +1,7 @@
 /* Las noticias de inversión de Qué invertir hoy, de Google Noticias. Las escribe el hook de pre-commit
    (Dashboard/noticias-actualizar.js): no se edita a mano. */
 window.NOTICIAS_INVERSION = {
- "generado": "2026-11-19T04:49:33.025Z",
+ "generado": "2026-11-19T06:00:54.365Z",
  "temas": [
   {
    "id": "recomendaciones",
@@ -120,6 +120,24 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
+   "t": "Bernstein identifica las mejores acciones de equipos para chips en China",
+   "u": "https://news.google.com/rss/articles/CBMixwFBVV95cUxOMHRDc1VNdlhROWxvUktOTnc3LXlpMFpIb3hCNXliNloyM3I5emxSMkhBaHFsRVVsNmhYOUdhZEpZRUNzenMtcmtXMlZ1alE0bklqRnVmemlqa0pOZ1ZaZFkxOHRObkNjTGdCMUtUQzRlQmhDenJQXzl5eEE4VEg0ZTkzdUJwQkdtZ01IbXdSUHZvdGFfMHJKQkhEQ25FZE9BNDZnU2liWmZsRXFSUEhuT3ZRY2ROaTV2NElzWVBCa3pnaVlnU3g4?oc=5",
+   "f": "2026-11-19T05:39:23.000Z",
+   "fuente": "Investing.com México - Finanzas, Bolsa y Forex",
+   "dominio": "mx.investing.com",
+   "tema": "bolsa",
+   "rec": true
+  },
+  {
+   "t": "¿Comprar GTA 6 o invertir en sus acciones? Las recomendaciones y advertencias de expertos",
+   "u": "https://news.google.com/rss/articles/CBMixwFBVV95cUxQQjJGVUhUM1ktWHYtSmlzcGNvWmFJV1Blc3c4cGR4T3VhM0kwamM3RjkwbWp2cHB3bGM1eTB4RE9UNGZSaVdMa2Y1ZWtSTXU3dUgyOVBzRDZNbEg2YThRTlFYQk9DeXU5Rzl0eHEwUFpBMjJycUdmYmVyQnpFcWpkWU9OLXgzUkJjUDZOWEhEYjRiT2g2Yjc2b085SzRYZXZmM1BKWGg1aUFiVW9uVlVrTlZVLXV5VzVETzVOX3doeEdXako3ODFB0gHbAUFVX3lxTE9XWDcybHlIZkItSEM2eWx5RjZtaHNUZDlwY1h2UWoyWV9oODRpVlYzMVJDclNiVlY1b3RmTlFJOHdrSFV4eVVnM2l4M1lyQnpvQkE0d3Q3SWIxZzJaTTlUMTh3SldOUVQxQzZtSUhfLTJXelRkMENjamxJQ0dWeTc4eURub21WVDlFc1JXLU9oZjd1Q01OLXVFTW5qR0N1T25VNVdHNmppdE84ZWNkeUl6WVFMZHFmT00taFNtNkhIdzFZRFZob2RuWTlqVXRQNHNRQjRNd3U2RmlRNA?oc=5",
+   "f": "2026-11-19T05:00:00.000Z",
+   "fuente": "Bloomberg Línea",
+   "dominio": "bloomberglinea.com",
+   "tema": "bolsa",
+   "rec": true
+  },
+  {
    "t": "Nvidia cae tras salida de Jensen Huang ¿Es momento para comprar acciones?",
    "u": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQNG13ZHV3TjdXUHVHS2t3eDNZUWc1UW1SX0taYjgtMmVYbFRVYjNoSER3V1JWQTBkWVlEd3o0aU5zUkpvWmlkRGFoNGExdGFoYldxQ0RaaVlhRFpicjhQMEl4UjN2aHhkMnJrMWh0REE1TDNwcktmdXBYRk5CSDNtQ1J2QksyUzhPcjd3QjllWGhTLUJac01JVW9qXzBsMDNMaGpIdNIBsgFBVV95cUxNSjQ3UENVeUtYTXZYVm9PYXZtaFVWeV91Q1NaSXlSTGFXRVZuaXpfVzh0LTVjaG91eDZDOXRMb0dGckhWVzZmNVRDNkZrckhSOEE3WnJBOUtmcjZWWFMtMzJKLWpzak41VXYxcktseVYwQnRaZVhycTlmQmlBTDFOWWhCNU52Zjg4UVBtdDNoMVJuQzZQZHVkVFVDV0drWGlCZE5ERkpMWUw3ODYwX200TG1B?oc=5",
    "f": "2026-11-12T23:35:00.000Z",
@@ -192,15 +210,6 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "Opciones sobre acciones de Anthropic podrían comenzar a cotizar el lunes y se espera que registren una fuerte demanda",
-   "u": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxNY0FtUllMZEdpUHdTTkRFa0NjcGlFX0tnZlgyZ01wdGxNUVduQUhqVndFQ0tLYmlJQUdvZWhGNmpqS0lQTVBVWmhtVTV6NzMweXBNWE04b3hySEVtMFJCOHhBazYzakZxT0FkbGs4Mkg2S3F5U1FpaWhWRzNFUmJfdGJMazVCS2xPWVdNZ0p5dS1WbDEyYThQQ3JvakFiMVlOUE9jRGlMd1dzd19aU0dINjBGRFZCUFRJWnVtR1k2aWlwNjFFZ2lUMnB6dVJPRG5JVU5yZzkwRQ?oc=5",
-   "f": "2026-11-18T19:11:00.000Z",
-   "fuente": "Forbes México",
-   "dominio": "forbes.com.mx",
-   "tema": "bolsa",
-   "rec": false
-  },
-  {
    "t": "Nvidia duplicó sus ingresos y así puedes comprar sus acciones desde México",
    "u": "https://news.google.com/rss/articles/CBMibkFVX3lxTE52bGMyZnp4MVppcXYyQ0ZWWnRDc3hfTkJHUHQtelVacVpPb3k0ZGJmdVVNcFhkTzFWRWNja21HMGZ6Ym9KUjI1bVQyQzAxNkkzX25PSlJldENyV01IVllNZFE3V05MS2lJaG5zZnNn?oc=5",
    "f": "2026-11-18T17:42:00.000Z",
@@ -215,15 +224,6 @@ window.NOTICIAS_INVERSION = {
    "f": "2026-11-18T15:28:00.000Z",
    "fuente": "La Jornada",
    "dominio": "jornada.com.mx",
-   "tema": "bolsa",
-   "rec": false
-  },
-  {
-   "t": "Acciones de TJX Companies Inc suben tras superar estimados de ganancias",
-   "u": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOek9tZVd2b0pZU25vOXJnYV9oc0ZzdlZ0cEVZcTgwT0lTenk4VGF2N19kblFhRFltRmhBX1RKS3FuTkpRMXloeDRuT3RMNkd3RDFfQkZUWVFiY01sanlKM2FJYWtBamRYbFBGVFBJcVltbUVzLTFlMUJEdDRMb3VCZ1hnZVptTVp0eEY0Q2tSREx4a18yWjR2OG1vWENYcm1IempmNkNvQndLQkh1S0ZVWS1yX3lZaHEtOWxFenZxNi0?oc=5",
-   "f": "2026-11-18T13:03:38.000Z",
-   "fuente": "Investing.com México - Finanzas, Bolsa y Forex",
-   "dominio": "mx.investing.com",
    "tema": "bolsa",
    "rec": false
   },
@@ -282,7 +282,7 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "Predicción de bitcoin: las actas de la Fed presionan al BTC",
+   "t": "Predicción de bitcoin: las actas de la Fed contemplan «más de 25 puntos básicos» y el BTC cae a 62.700 dólares",
    "u": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5uU1QzZ0cyRlZMLTFpUWRfYkZ2QXhQTDB5QlNuNUNnbm9MbTRpU0x5S1V0aDlvVWlLYW5iZnlHLWZNRUx1Qldlc1NobE9YMUVOMUpvYUd3TGhFa3RLcHlaR1VHQW8yREJhNEtMVDgtTFRYNHgxVkZFbFFaN0pJV3c?oc=5",
    "f": "2026-11-18T23:24:15.000Z",
    "fuente": "CryptoTicker.io",

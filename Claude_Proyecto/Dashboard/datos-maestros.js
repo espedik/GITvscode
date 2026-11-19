@@ -113,6 +113,7 @@ window.CIFRAS = (function () {
     { g: 'Allá', k: 'SUPUESTOS.trabajo.gasto', t: 'eur', txt: 'Gasto al mes, trabajando' },
     { g: 'Allá', k: 'SUPUESTOS.byd.rentaNeta', t: 'peso', txt: 'Lo que deja el BYD rentado, al mes' },
     { g: 'Allá', k: 'SUPUESTOS.rendimiento', t: 'tasa', max: 0.3, txt: 'Rendimiento al año de lo ahorrado' },
+    { g: 'Salud', k: 'PESO.metaKg', t: 'num', u: 'kg', max: 250, txt: 'Tu meta de peso', nota: 'Salud, el Dashboard y Coach miden contra ella.' },
     { g: 'Salud', k: 'proteinaMeta', t: 'num', u: 'g', max: 400, txt: 'Proteína al día' },
     { g: 'Salud', k: 'kcalMeta', t: 'num', u: 'kcal', max: 6000, txt: 'Calorías al día' },
     { g: 'Salud', k: 'carbsMeta', t: 'num', u: 'g', max: 900, txt: 'Carbohidratos al día' },
@@ -121,13 +122,13 @@ window.CIFRAS = (function () {
   ];
   const AJ_DEF = {};   // el valor del plan de cada cifra, antes de tu ajuste
   let AJ = null;       // tus ajustes, ya fundidos: los de este dispositivo y los que llegaron de la PC
-  function ajRaiz(k) { return k.indexOf('meta:') === 0 ? 'meta' : k.indexOf('SUPUESTOS.') === 0 ? 'SUPUESTOS' : k.indexOf('SALIDA.') === 0 ? 'SALIDA' : 'PROYECTO'; }
+  function ajRaiz(k) { return k.indexOf('meta:') === 0 ? 'meta' : k.indexOf('SUPUESTOS.') === 0 ? 'SUPUESTOS' : k.indexOf('SALIDA.') === 0 ? 'SALIDA' : k.indexOf('PESO.') === 0 ? 'PESO' : 'PROYECTO'; }
   function ajLugar(k) {
     const r = ajRaiz(k), p = k.split('.');
     if (r === 'meta') return null;
     if (r === 'SALIDA') { const c = SALIDA.costos.filter(function (x) { return x.id === p[1]; })[0]; return c ? { o: c, c: 'eur' in c ? 'eur' : 'mxn' } : null; }
-    let o = r === 'SUPUESTOS' ? SUPUESTOS : PROYECTO;
-    const ruta = r === 'SUPUESTOS' ? p.slice(1) : p;
+    let o = r === 'SUPUESTOS' ? SUPUESTOS : r === 'PESO' ? PESO : PROYECTO;
+    const ruta = r === 'SUPUESTOS' || r === 'PESO' ? p.slice(1) : p;
     for (let i = 0; i < ruta.length - 1 && o; i++) o = o[ruta[i]];
     return o ? { o: o, c: ruta[ruta.length - 1] } : null;
   }
@@ -6231,14 +6232,32 @@ window.CIFRAS = (function () {
       { fecha: '2026-09-02', kg: 75, nota: 'Punto de partida al fijar la meta de 80 kg' },
       { fecha: '2026-09-13', kg: 78, nota: 'Dicho al pedir la gráfica de IMC por edad' },
     ],
-    get ultimo()  { const r = this.registros.slice().sort(function (a, b) { return a.fecha < b.fecha ? 1 : -1; }); return r[0] || null; },
+    // Los de aquí y los que anotes en Salud (`misalud_v1.medidas`, Adán 18-nov-2026: "si modifico una cifra, debe
+    // actualizar todo lo que va entorno a esa cifra"): el más reciente es tu peso de hoy en todas las apps. Si caen en la
+    // misma fecha, gana el de aquí. Salud siembra solo `registros` (los de aquí van protegidos); lo demás lee `todos`.
+    get todos()   { return pesoTodos(this.registros); },
+    get ultimo()  { const r = this.todos.slice().sort(function (a, b) { return a.fecha < b.fecha ? 1 : -1; }); return r[0] || null; },
     get actualKg() { return this.ultimo ? this.ultimo.kg : 0; },
-    get inicioKg() { const r = this.registros.slice().sort(function (a, b) { return a.fecha > b.fecha ? 1 : -1; }); return r[0] ? r[0].kg : 0; },
+    get inicioKg() { const r = this.todos.slice().sort(function (a, b) { return a.fecha > b.fecha ? 1 : -1; }); return r[0] ? r[0].kg : 0; },
     get faltanKg() { return this.actualKg ? Math.round((this.metaKg - this.actualKg) * 10) / 10 : 0; },
     // IMC = kg / m². La OMS lo lee igual de los 20 a los 65: sano de 18.5 a 24.9.
     get imc()      { const m = this.alturaCm / 100; return this.actualKg ? Math.round(this.actualKg / (m * m) * 10) / 10 : 0; },
-    get cinturaUltima() { const r = this.registros.filter(function (x) { return x.cintura; }).sort(function (a, b) { return a.fecha < b.fecha ? 1 : -1; }); return r[0] || null; },
+    get cinturaUltima() { const r = this.todos.filter(function (x) { return x.cintura; }).sort(function (a, b) { return a.fecha < b.fecha ? 1 : -1; }); return r[0] || null; },
   };
+  function pesoTodos(base) {
+    let S = null;
+    try { S = typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('misalud_v1') || 'null') : null; } catch (e) { S = null; }
+    const fechas = {}; base.forEach(function (r) { fechas[r.fecha] = true; });
+    const app = ((S && S.medidas) || []).filter(function (m) {
+      return m && !m.maestro && +m.peso > 0 && /^\d{4}-\d{2}-\d{2}$/.test(m.fecha || '') && !fechas[m.fecha];
+    }).map(function (m) {
+      const o = { fecha: m.fecha, kg: +m.peso, nota: m.notas || 'Anotado en Salud', app: true };
+      ['cintura', 'cadera', 'pecho', 'brazo', 'muslo', 'grasa'].forEach(function (k) { if (+m[k] > 0) o[k] = +m[k]; });
+      return o;
+    });
+    return base.concat(app);
+  }
+  ajAplicar('PESO');
 
   // ─── Los precios del súper ─────────────────────────────────────────────────────
   // Vivían en dashboard.html; están aquí porque de ellos sale también el costo de cada receta del
@@ -8981,38 +9000,12 @@ window.CIFRAS = (function () {
     return o;
   }
 
-  /* ── FUERA DE LA PC, MANDA LA COPIA DE LA PC ─────────────────────────────────────────────────
-     Adán, 18-nov-2026: "¿por qué en mi iPad no se ven las cosas que invertí?". Finanzas se edita en la PC (el Chrome que
-     abre los archivos con file://) y viaja entera en `finanzas-sync.js` (FINANZAS_SYNC). Antes, un dispositivo que ya
-     tenía su propio `finanzasmx_v2` —por haber abierto Finanzas una vez— la ignoraba para siempre. Ahora, fuera de la
-     PC, cada copia más nueva que la última aplicada (`fin_pc_aplicada`) reemplaza `finanzasmx_v2`, así el Dashboard, Finanzas
-     y Coach del iPad dicen lo mismo que la PC. En la PC (file://) no hace nada. `finPcRefrescar(alLlegar)` pide el archivo
-     sin caché —GitHub Pages lo guarda hasta 10 minutos— y, si trae una copia nueva, la aplica y llama a `alLlegar`. */
+  /* Fuera de la PC (el iPad) manda la copia de la PC: Finanzas, sus banderas y lo demás los aplica Dashboard/datos-pc.js,
+     que cada página carga antes que este archivo. `ES_PC` es la PC: la que abre los archivos con file://. */
   const ES_PC = typeof location === 'undefined' || location.protocol === 'file:';
-  function finPcAplicar(X) {
-    if (ES_PC || !X || !X.exportado || !X.datos || !Array.isArray(X.datos.debts)) return false;
-    let ya = '';
-    try { ya = localStorage.getItem('fin_pc_aplicada') || ''; } catch (e) { return false; }
-    if (ya >= X.exportado) return false;
-    try { localStorage.setItem(KEY, JSON.stringify(X.datos)); localStorage.setItem('fin_pc_aplicada', X.exportado); } catch (e) { return false; }
-    return true;
-  }
-  function finPcRefrescar(alLlegar) {
-    if (ES_PC || typeof fetch !== 'function' || typeof document === 'undefined') return;
-    const s = document.querySelector('script[src*="finanzas-sync.js"]');
-    const url = (s && s.src) || 'finanzas-sync.js';
-    fetch(url.split('?')[0] + '?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : ''; }).then(function (txt) {
-      if (!txt) return;
-      const w = {};
-      new Function('window', txt)(w);
-      if (finPcAplicar(w.FINANZAS_SYNC)) { global_finSync(w.FINANZAS_SYNC); migrar(); leer(); if (alLlegar) alLlegar(); }
-    }).catch(function () {});
-  }
-  function global_finSync(X) { if (typeof window !== 'undefined') window.FINANZAS_SYNC = X; }
 
   // Las migraciones van ANTES de la primera lectura: así todo lo que venga después —esta misma
-  // caché, y el load() de la app que nos cargó— ya ve los saldos corregidos. Fuera de la PC, antes de todo, su copia.
-  finPcAplicar(typeof window !== 'undefined' ? window.FINANZAS_SYNC : null);
+  // caché, y el load() de la app que nos cargó— ya ve los saldos corregidos.
   migrar();
   leer();
   if (typeof document !== 'undefined') {
@@ -9919,6 +9912,6 @@ window.CIFRAS = (function () {
     PESO: PESO,
     PROYECTO: PROYECTO,
     CALENDARIO: CALENDARIO,
-    get datos() { return fin; }, ES_PC: ES_PC, finPcRefrescar: finPcRefrescar
+    get datos() { return fin; }, ES_PC: ES_PC
   };
 })();

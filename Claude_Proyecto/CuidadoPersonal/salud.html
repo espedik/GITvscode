@@ -10,6 +10,10 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mi Salud & Nutrición</title>
+<!-- Fuera de la PC (el iPad), tus datos son los de la PC: datos-pc.js aplica Finanzas y todo lo demás antes que la página. -->
+<script src="../Dashboard/finanzas-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-pc.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <!-- La fuente se carga SIN bloquear el pintado (2026-08-23). Antes era un `@import` dentro
      del <style>: el navegador no lo descubría hasta parsear el CSS y, mientras Google no
@@ -975,7 +979,7 @@ function sdPesoHtml(){
              :(falta<0?'Est\u00e1s <b style="color:var(--o)">'+Math.abs(falta)+' kg</b> por encima de la meta de <b>'+obj+' kg</b>.'
                      :'<b style="color:var(--g)">Est\u00e1s en tu meta.</b>'))+
       ' Con un solo pesaje no hay progreso que dibujar: la barra aparece con el segundo.'+
-      ' <span class="tm">La meta la fija <b>Dashboard/datos-maestros.js</b> (<code>PESO.metaKg</code>).</span></div>';
+      ' <span class="tm">La meta se cambia en <b>Mis cifras</b> (Dashboard/cifras.html).</span></div>';
   }else{
     // Mi Comida ya dice que el objetivo es GANAR masa muscular, con super\u00e1vit cal\u00f3rico. Lo que
     // falta es el n\u00famero, as\u00ed que se ofrecen tres saltos razonables desde el peso de hoy en vez
@@ -1140,7 +1144,7 @@ function renderIMCEdad(){
   const cint=list.find(m=>m.cintura)||null;
   const ii=imcLabel(imc);
   const alTope=imc?+(24.9-imc).toFixed(1):0;
-  const metaTxt=!meta?'Sin meta: se fija en <b>Dashboard/datos-maestros.js</b> (<code>PESO.metaKg</code>).'
+  const metaTxt=!meta?'Sin meta: se fija en <b>Mis cifras</b> (Dashboard/cifras.html).'
     :(imcMeta>24.9?`Sale <b>${(meta-pMax).toFixed(1)} kg por encima</b> de la tabla. Si es músculo, no importa: la que manda es la cintura.`
       :(imcMeta<18.5?'Queda <b>por debajo</b> del rango sano.':'Queda <b>dentro</b> del rango sano.'));
   el.innerHTML=`
@@ -1416,7 +1420,7 @@ function renderMetas() {
           <div class="fr">
             <div class="fg" style="margin:0"><label>⚖️ Peso objetivo (kg)</label>
               <input type="number" value="${m.pesoObj||''}" placeholder="65" step="0.1" onchange="updateMeta('pesoObj',parseFloat(this.value)||0)">
-              <div class="ts tm" style="margin-top:4px">Lo fija <b>Dashboard/datos-maestros.js</b> (<code>PESO.metaKg</code>): lo que cambies aquí vuelve a ${(window.CIFRAS&&CIFRAS.PESO)?CIFRAS.PESO.metaKg+' kg':'su valor'} al recargar.</div></div>
+              <div class="ts tm" style="margin-top:4px">Se cambia en <b>Mis cifras</b> (<a href="../Dashboard/cifras.html">Dashboard/cifras.html</a>), para que Salud, el Dashboard y Coach midan contra la misma: aquí vuelve a ${(window.CIFRAS&&CIFRAS.PESO)?CIFRAS.PESO.metaKg+' kg':'su valor'} al recargar.</div></div>
             <div class="fg" style="margin:0"><label>📅 Fecha objetivo</label>
               <input type="date" value="${m.fechaObj||''}" onchange="updateMeta('fechaObj',this.value)"></div>
           </div>

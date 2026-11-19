@@ -10,6 +10,10 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 <!-- Sin zoom en táctil, con el resto de gestos intactos. Safari ignora user-scalable, así que el bloqueo va por eventos. -->
+<!-- Fuera de la PC (el iPad), tus datos son los de la PC: datos-pc.js aplica Finanzas y todo lo demás antes que la página. -->
+<script src="../Dashboard/finanzas-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-pc.js"></script>
 <script src="../Dashboard/sin-zoom.js"></script>
 <title>Mis Finanzas MX</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
@@ -18,8 +22,6 @@
      esta app use los mismos {{marcadores}} que el Dashboard y el Coach, en vez de
      empezar otra copia a mano. Mapa en ../Dashboard/DATOS-MAESTROS.md -->
 <script src="../Dashboard/ajustes-sync.js" onerror="this.remove()"></script>
-<!-- Todo Finanzas de la PC: fuera de la PC (el iPad), el maestro lo pone en finanzasmx_v2 cada vez que llega uno más nuevo. -->
-<script src="../Dashboard/finanzas-sync.js" onerror="this.remove()"></script>
 <script src="../Dashboard/datos-maestros.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <!-- Sin internet Chart.js no llega, y la primera gráfica tumbaba el resto de la pantalla (después de «Próximos pagos» no
@@ -5443,10 +5445,9 @@ function init() {
   }
   load();
   btcMudar();
-  // Fuera de la PC (el iPad) Finanzas es la copia de la PC: se avisa y, si GitHub ya tiene una más nueva, se carga.
+  // Fuera de la PC (el iPad) Finanzas es la copia de la PC (la pone Dashboard/datos-pc.js): se avisa.
   if(window.CIFRAS&&CIFRAS.ES_PC===false&&window.FINANZAS_SYNC){
     setTimeout(()=>toast('Copia de tu PC: lo que cambies aquí se reemplaza con la siguiente que subas desde la PC'),800);
-    CIFRAS.finPcRefrescar(()=>location.reload());
   }
   // Migración: actualizar meta maestría de 300k → 500k
   const _maeGoal=S.goals.find(g=>g.id==='g001');

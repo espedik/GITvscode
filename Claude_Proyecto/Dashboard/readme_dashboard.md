@@ -21,6 +21,7 @@ en una página.
 | `datos-maestros.js` | **Fuente única** de las variables del proyecto. Lo cargan también Coach y Finanzas |
 | `DATOS-MAESTROS.md` | Índice del proyecto: catálogo de variables, mapa de apps, cómo se corrige un saldo |
 | `cifras.html` · `ajustes-sync.js` | **Mis cifras**: las constantes del plan que cambias tú (ver *Mis cifras*, abajo), y las de la PC para tus otros dispositivos, que escribe el hook |
+| `datos-sync.js` · `datos-pc.js` | **Tus datos fuera de la PC**: todo lo que las apps guardan en el navegador de la PC (menos Finanzas, hábitos, auditoría y Mis cifras, que tienen su archivo) y el script que, en cada página y antes que todo, lo aplica fuera de la PC junto con Finanzas (ver *Tu iPad y tu PC*) |
 | `verificar-sincronia.js` | Comprueba que nada se haya vuelto a duplicar. Lo corre un hook al final de cada turno; sale con código 1 si algo falla |
 | `habitos.js` | La pantalla de Hábitos entera: semilla, motor de rachas, migraciones, pintado y estilos |
 | `version.js` · `version-escribir.js` | La hora del último commit de esta copia (`window.APP_VERSION.commit`), que el hook de pre-commit escribe con `version-escribir.js` en cada commit; Mi Día la enseña junto a la semana (ver *Tu iPad y tu PC*) |
@@ -668,11 +669,12 @@ Claude… si modificamos una, en general las demás se deben actualizar forzosam
 de Finanzas. Qué se puede cambiar, su valor del plan y cómo se aplica viven en el maestro (`EDITABLES`, `CIFRAS.ajustes`;
 ver `DATOS-MAESTROS.md` → *Las clases de dato*): la página solo pinta y guarda.
 
-- **Arriba** (`#estado`): cuántas cifras son tuyas de las 50, cómo va cada quincena en su peor mes (*Día 1, con depa:
+- **Arriba** (`#estado`): cuántas cifras son tuyas de las 51, cómo va cada quincena en su peor mes (*Día 1, con depa:
   sobran $22 en su peor mes (dic 2026)*; en rojo la que no alcanza), las de un ajuste vencido y que lo de la PC llega
   al iPad con el siguiente commit.
 - **Las cifras, por grupo** (`#grupos`): Lo que entra, Casa, Celular y suscripciones, Ahorro de cada quincena, Tu
-  gasto, Invertir, Metas, Tipo de cambio, Lo que cuesta irte, Allá, Salud y Alemán. Cada una con su nota, su valor y,
+  gasto, Invertir, Metas, Tipo de cambio, Lo que cuesta irte, Allá, Salud —con tu meta de peso (`PESO.metaKg`), la que
+  miden Salud, el Dashboard, Coach y Comida— y Alemán. Cada una con su nota, su valor y,
   si es tuya, la etiqueta *tuya* y *el plan dice …*.
 - **Tocar una abre su editor** (`abrir`): el campo en su unidad —la tasa en %—, *Guardar*, *Volver al plan* si es
   tuya y *Cancelar*. Al escribir sale la vista previa (`previa`): **lo que se ajusta para que cada quincena alcance**
@@ -2225,15 +2227,34 @@ aportaciones, cada compra de Bitcoin y el historial de indicadores— más `gast
 quincena, que `ctCifrasHoy` guarda en `fin_resumen_v1` cada vez que cambia en la PC. Es el respaldo de Finanzas en git
 —cada subida queda en el historial— y **lo que manda fuera de la PC** (Adán, 18-nov-2026: *"¿por qué en mi iPad no se ven
 las cosas que invertí?"*: el iPad ya tenía su propio Finanzas de una vez que lo abrió, y la copia solo entraba donde no
-había nada). El Dashboard y Finanzas cargan `finanzas-sync.js` antes del maestro, y fuera de la PC —la PC es la que abre
-los archivos con file:// (`CIFRAS.ES_PC`)— el maestro pone la copia en `finanzasmx_v2` cada vez que llega una más nueva
-que la última aplicada (`finPcAplicar`, `fin_pc_aplicada`); al abrir, además, la pide sin la caché de GitHub Pages
-(`finPcRefrescar`, que guarda hasta 10 minutos) y, si trae una nueva, recarga con ella. Ahí `finCargar` la marca como
+había nada). Cada página que usa el maestro carga `finanzas-sync.js` al principio, y fuera de la PC —la PC es la que
+abre los archivos con file:// (`CIFRAS.ES_PC`)— `datos-pc.js` pone la copia en `finanzasmx_v2` cada vez que llega una
+más nueva que la última aplicada (`fin_pc_aplicada`), después de las banderas de sus migraciones (ver *Y todo lo
+demás*, abajo); al abrir, además, la pide sin la caché de GitHub Pages (que la guarda hasta 10 minutos) y, si trae una
+nueva, recarga con ella. Ahí `finCargar` la marca como
 copia (`FIN_REPO`): Total invertido se ve sin Editar ni Borrar, con la nota de la fecha de la copia, y Finanzas avisa que
 lo que se cambie ahí se reemplaza con la siguiente. En la PC no cambia nada. Medido sirviendo la carpeta por HTTP con un
 Finanzas viejo guardado: el Dashboard y Finanzas enseñan las dos compras de Bitcoin, la de nvidia y los 143 movimientos;
 en file://, `fin_pc_aplicada` ni se escribe. Medido con los datos reales del 18 nov 2026: 144 movimientos, 10 deudas y 7
 operaciones de Bitcoin, 116 KB. El control 39 revisa que lleve los movimientos.
+
+**Y todo lo demás** (Adán, 18-nov-2026: *"ahora esto para las demás cifras, pero todas, no quiero que haya errores"*). El
+mismo exportador escribe `datos-sync.js` (`window.DATOS_SYNC = {exportado, claves}`) con cada dato que las apps guardan
+en el navegador de la PC —Alemán, Coach, la rutina, Salud, Comida, la lista de compras, metas, logros, Cuidado personal,
+Vestimenta, Posts, Entrevistas…—, una clave por línea con la hora en que cambió (`cambiado`); una que desapareció de la
+PC viaja como `borrado`. **Solo pasan las claves que usa el código del proyecto** (`clavesDelProyecto`, que lo busca en
+cada `.html` y `.js` al exportar: el Chrome guarda en el mismo sitio lo de cualquier archivo abierto con file://, y nada
+ajeno debe llegar al repositorio público), más sus banderas (`clave_algo`, como `finanzasmx_v2_banamex9k` o
+`mirutina_v1_base_20261027`: las migraciones que ya corrieron en la PC, para que otro dispositivo no las repita sobre su
+copia y pise un saldo), menos las preferencias de pantalla y las cachés (`NO_VIAJAN`: tema, idioma, barra, precios,
+noticias…). **Cada página del proyecto carga `datos-sync.js` y `datos-pc.js` antes que cualquier otro script**, y
+fuera de la PC `datos-pc.js` pone cada clave que la PC cambió desde la última vez (`datos_pc_aplicado`, por clave): una
+que solo cambió el iPad se queda. Lo que se anota en el iPad no sube: se anota en la PC. Medido con un iPad lleno de
+datos viejos —otra rutina, otro peso, Finanzas sin banderas— en diez páginas (Dashboard, Finanzas, Coach, Salud,
+Ejercicio, Comida, Alemán, Mis cifras, Vestimenta y Posts): las 66 claves quedaron iguales a la PC, las diez deudas
+también —ninguna migración vieja pisó un saldo— y la clave que solo tenía el iPad se quedó; sin errores. 34 KB. El
+**control 56** vigila que cada página lo cargue primero, que `datos-sync.js` solo lleve claves del proyecto y que el
+maestro no vuelva a aplicar Finanzas por su cuenta.
 
 **Y en `git status`, como cualquier archivo, sin correr nada** (Adán, 18-nov-2026: *"yo quiero usar el git status y que
 me marque los cambios de esa cifra y ya con git add . y git commit -m quiero subirlos… no quiero correr ese comando cada

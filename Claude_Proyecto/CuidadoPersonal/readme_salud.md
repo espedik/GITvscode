@@ -71,8 +71,13 @@ el enlace al Dashboard (`#btnVolverDash`, 🚀) es otro botón de esa clase. Exp
   maestro → app): un pesaje anotado a mano se conserva, pero en la misma fecha gana el del
   maestro; los sembrados llevan `maestro:true`, id `'maestro-FECHA'` y **🔒 en vez del bote** en la
   tabla (borrarlos no serviría, vuelven al recargar). `S.metas.pesoObj` y `S.perfil.altura` se
-  reescriben desde el maestro y Perfil y metas lo dice. **Un pesaje nuevo se anota en el
-  maestro**, no aquí. La edad sale de `CIFRAS.PROYECTO.nacimiento` (`edadHoy()`).
+  reescriben desde el maestro y Perfil y metas lo dice. **Un pesaje nuevo se anota aquí**, en Peso &
+  Medidas (Adán, 18-nov-2026: *"si modifico una cifra, debe actualizar todo lo que va entorno a esa cifra"*):
+  `CIFRAS.PESO.todos` junta los de `registros` con los de `S.medidas` que no son del maestro (en la misma fecha
+  gana el del maestro), y de ahí salen `ultimo`, `actualKg`, `imc`, `faltanKg`, `inicioKg` y `cinturaUltima`, así
+  que el peso de hoy es el mismo en Salud, el Dashboard, Coach y Comida. **La meta** (`PESO.metaKg`) se cambia en
+  Mis cifras (`Dashboard/cifras.html`). Medido: un pesaje de 79.4 kg anotado aquí y la meta a 82 kg en Mis cifras
+  salen iguales en Salud, el Dashboard y Comida. La edad sale de `CIFRAS.PROYECTO.nacimiento` (`edadHoy()`).
 
 ## IMC por edad — dónde estás y a dónde vas
 
