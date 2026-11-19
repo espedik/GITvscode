@@ -3513,6 +3513,23 @@ function promptsDeLoTocado() {
   ok.push('Crédito a plazo: intereses, contrato y abonos a capital con una sola cuenta del maestro, en Deuda total y en Finanzas');
 })();
 
+/* ── 58. Las pantallas del Dashboard se desplazan con el dedo en el iPad ─────────────────────────────────────────────
+   Adán, 19-nov-2026: "en Dashboard en varias páginas no puedo hacer scroll Down". Dos trampas de Safari en iOS que
+   Chromium no tiene, así que ninguna prueba en el navegador las ve: (1) un `filter` —aunque sea blur(0)— o un
+   `transform` en la pantalla activa deja sin desplazar con el dedo a la pantalla y a sus paneles; la activa termina en
+   `none`. (2) Un elemento que pasa de overflow:hidden a auto por una clase no se vuelve desplazable hasta repintarse;
+   ninguna pantalla gana su scroll al recibir `.active`: lo tiene siempre. */
+(function () {
+  const h = leer('Dashboard/dashboard.html'), malos = [];
+  const reglas = h.match(/(^|[}\s])\.slide\.active\{[^}]*\}/g) || [];
+  if (!reglas.some(r => /transform:none/.test(r) && /filter:none/.test(r))) malos.push('la pantalla activa (.slide.active) ya no termina en transform:none y filter:none');
+  reglas.forEach(r => { if (/filter:(?!none)/.test(r) || /transform:(?!none)/.test(r)) malos.push('.slide.active vuelve a llevar filter o transform: ' + r.trim().slice(0, 90)); });
+  const toggles = h.match(/\.slide(\.[\w-]+)*\.active(\.[\w-]+)*\{[^}]*overflow[^}]*\}/g) || [];
+  toggles.forEach(r => malos.push('una pantalla gana su scroll al activarse (iOS no lo toma): ' + r.slice(0, 90)));
+  if (malos.length) { problemas.push('El scroll de las pantallas en el iPad:\n     ' + malos.join('\n     ')); return; }
+  ok.push('Pantallas del Dashboard: la activa sin filter ni transform, y ninguna gana su scroll al activarse (iPad)');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

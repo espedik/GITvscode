@@ -106,6 +106,15 @@ brújula enseña el de la pantalla activa (`section.slide.theme-….active`), y 
 `dashboard` rige lo común: rail, barra de apps, rotación y diseño. Una pantalla nueva entra con
 su prompt y su línea en `vistas`, o el control 24 lo marca.
 
+**El scroll en el iPad.** Las pantallas están hechas para caber, con sus paneles desplazables por dentro; el Plan
+Maestro (siempre) y todas bajo 1024 px se desplazan enteras. Dos trampas de Safari en iOS que Chromium no tiene —y
+que por eso ninguna prueba en el navegador ve— dejaban el dedo sin bajar (Adán, 19-nov-2026: *"en Dashboard en varias
+páginas no puedo hacer scroll Down"*): la pantalla activa terminaba en `transform:scale(1)` y `filter:blur(0)`, y un
+`filter` en la pantalla o en el ancestro de un panel traba el desplazamiento táctil; y las que se desplazan lo ganaban
+al recibir `.active`, y iOS no vuelve desplazable un elemento que pasa de `overflow:hidden` a `auto` por una clase hasta
+repintarlo. Ahora la activa termina en `transform:none` y `filter:none` —se ve igual y la entrada anima igual— y el
+scroll es de la pantalla siempre (`.slide.theme-coach`; bajo 1024 px, `.slide`). El control 58 lo vigila.
+
 Cada pantalla se pinta con su entrada en `RENDERS[i]`, que `showSlide(i)` llama al entrar.
 **Ninguna tiene tope de ancho**: `.slide-inner` no lleva `max-width`, así que usan lo que deja el
 padding del slide (1440 px a 1600 de ancho, 1728 a 1920) y lo que es lectura pone su propio tope

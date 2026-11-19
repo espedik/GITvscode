@@ -196,7 +196,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   transition:opacity 1.3s cubic-bezier(.22,.61,.36,1), transform 1.8s cubic-bezier(.22,.61,.36,1), filter 1.3s ease;
   pointer-events:none; overflow:hidden;
 }
-.slide.active{opacity:1;transform:scale(1);filter:blur(0);pointer-events:auto;z-index:2}
+/* La activa termina en `none`, no en scale(1) y blur(0): se ve igual, pero en Safari del iPad un `filter` —aunque
+   sea blur(0)— en la pantalla o en el ancestro de un panel deja el dedo sin poder desplazar (Adán, 19-nov-2026: "en
+   varias páginas no puedo hacer scroll down"). La animación de entrada es la misma: `none` se interpola. */
+.slide.active{opacity:1;transform:none;filter:none;pointer-events:auto;z-index:2}
 .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;filter:blur(100px);opacity:.2;pointer-events:none;z-index:0}
 .slide::before{width:58vmax;height:58vmax;top:-22%;left:-14%;background:var(--ac1);animation:driftA 24s ease-in-out infinite alternate}
 .slide::after{width:50vmax;height:50vmax;bottom:-24%;right:-12%;background:var(--ac2);animation:driftB 28s ease-in-out infinite alternate}
@@ -1381,8 +1384,10 @@ body.rail-on{--pad-rail:max(6vw,230px)}
    plan de la fase completo —encabezado, ruta de deuda y el checklist entero— y en 720-900 px de
    alto no entra. Darle el alto sobrante al checklist (primer intento) no servía: en esas alturas
    no hay sobrante, así que se quedaba en 0 px. `overscroll-behavior:contain` evita que el scroll
-   se propague al carrusel cuando se llega al final de la lista. */
-.slide.theme-coach.active{overflow-y:auto;overscroll-behavior:contain}
+   se propague al carrusel cuando se llega al final de la lista. Es desplazable SIEMPRE, no solo con `.active`:
+   Safari del iPad no vuelve desplazable un elemento que pasa de overflow:hidden a auto por una clase hasta que se
+   repinta entero, y el dedo se quedaba sin bajar. */
+/* La regla vive con las demás de `.slide.theme-coach`, más abajo: `overflow-y:auto` siempre, no al activarse. */
 /* En pantallas de poca altura el hero de la fase cede espacio: es un encabezado, y el checklist
    es la parte con la que de verdad se trabaja. El texto explicativo se limita a 3 líneas — sigue
    completo en el `title`, no se pierde. */
@@ -3044,7 +3049,8 @@ body.rail-on{--pad-rail:max(6vw,230px)}
      .hud-side más abajo), así que aquí se vuelve a un padding puramente proporcional; con el
      piso fijo, un iPhone angosto se hubiera quedado con casi todo el ancho como padding. */
   .slide{padding:5vh 6vw;align-items:flex-start}
-  .slide.active{overflow-y:auto;-webkit-overflow-scrolling:touch}
+  /* Todas, siempre desplazables —no al recibir .active: ver `.slide.theme-coach`—. Las inactivas no reciben el dedo. */
+  .slide{overflow-y:auto;-webkit-overflow-scrolling:touch}
   /* +env(): la barra inferior creció con el área segura, y sin este hueco el último
      bloque de cada pantalla quedaba debajo de ella. */
   .slide-inner{height:auto;min-height:100%;padding-bottom:calc(170px + env(safe-area-inset-bottom,0px))}
@@ -4488,7 +4494,7 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 /* `.slide` centra en vertical con align-items:center, asi que el inner mide lo que
    mide su contenido: al cambiar de mes crecia o encogia y arrastraba todo con el.
    Con stretch ocupa el alto entero y el tablero (flex:1) se queda con lo que sobra. */
-.slide.theme-coach{align-items:stretch;overflow:hidden}
+.slide.theme-coach{align-items:stretch;overflow:hidden;overflow-y:auto;overscroll-behavior:contain}   /* desplazable siempre: ver «El slide scrollea» arriba */
 .slide.theme-coach .slide-inner{width:100%}
 .coach-tablero{max-width:100%}
 .slide.theme-coach .slide-inner{justify-content:flex-start}
