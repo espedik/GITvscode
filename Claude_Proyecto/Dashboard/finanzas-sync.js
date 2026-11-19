@@ -2,7 +2,7 @@
    lo que queda en la quincena. Respaldo en git y copia para el dispositivo que no tiene Finanzas. Lo escribe
    Dashboard/habitos-exportar.js (el hook de pre-commit, subir-mis-datos o git datos): no se edita a mano. */
 window.FINANZAS_SYNC = {
-  "exportado": "2026-11-19T05:00:21.683Z",
+  "exportado": "2026-11-19T05:07:39.201Z",
   "fecha": "2026-11-03",
   "gastar": 1298,
   "datos": {
@@ -1715,9 +1715,9 @@ window.FINANZAS_SYNC = {
     },
     {
      "date": "2026-11-18",
-     "usd": 84.5854,
-     "btcPrice": 63504,
-     "btc": 0.00133197,
+     "usd": 79.2988,
+     "btcPrice": 63465,
+     "btc": 0.00124949,
      "fx": 18.9158,
      "tipo": "compra",
      "btcExacto": false,
@@ -3186,9 +3186,9 @@ window.FINANZAS_SYNC = {
      1195105
     ]
    ],
-   "currentBtcPrice": 63504,
+   "currentBtcPrice": 63465,
    "usdMxn": 18.91,
-   "btcLastFetch": "2026-11-19T04:58:00.889Z",
+   "btcLastFetch": "2026-11-19T05:04:31.197Z",
    "btcHistFetch": "2026-11-18T06:14:30.341Z",
    "weeklyLeftover": 0,
    "emergencyFund": 6000,
