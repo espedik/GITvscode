@@ -2,7 +2,7 @@
    lo que queda en la quincena. Respaldo en git y copia para el dispositivo que no tiene Finanzas. Lo escribe
    Dashboard/habitos-exportar.js (el hook de pre-commit, subir-mis-datos o git datos): no se edita a mano. */
 window.FINANZAS_SYNC = {
-  "exportado": "2026-11-19T05:07:39.201Z",
+  "exportado": "2026-11-19T05:20:09.968Z",
   "fecha": "2026-11-03",
   "gastar": 1298,
   "datos": {
@@ -1547,6 +1547,17 @@ window.FINANZAS_SYNC = {
      "value": 11250,
      "date": "2024-01-01",
      "rate": 0
+    },
+    {
+     "id": "mwn3or023q42s7px8xy",
+     "rate": 0,
+     "name": "nvidia",
+     "type": "acciones",
+     "invested": 100,
+     "sym": "NVDA",
+     "date": "2026-11-18",
+     "value": 100,
+     "qty": 0.035019779
     }
    ],
    "activos": [
@@ -3186,9 +3197,9 @@ window.FINANZAS_SYNC = {
      1195105
     ]
    ],
-   "currentBtcPrice": 63465,
+   "currentBtcPrice": 63377,
    "usdMxn": 18.91,
-   "btcLastFetch": "2026-11-19T05:04:31.197Z",
+   "btcLastFetch": "2026-11-19T05:17:46.147Z",
    "btcHistFetch": "2026-11-18T06:14:30.341Z",
    "weeklyLeftover": 0,
    "emergencyFund": 6000,
