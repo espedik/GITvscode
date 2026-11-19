@@ -1,0 +1,2 @@
+# Los scripts de shell de los hooks van con saltos de línea de Unix: el monitor de archivos (fsmonitor-datos) lo corre sh.
+Claude_Proyecto/.githooks/fsmonitor-datos text eol=lf
