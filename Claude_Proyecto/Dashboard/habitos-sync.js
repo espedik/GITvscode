@@ -1,7 +1,7 @@
 /* Las marcas de hábitos de la PC, para tus otros dispositivos. Lo escribe el hook de pre-commit
    (Dashboard/habitos-exportar.js) con lo que guarda el Chrome de la PC: no se edita a mano. */
 window.HABITOS_SYNC = {
-  "exportado": "2026-11-10T06:17:49.781Z",
+  "exportado": "2026-11-19T05:36:27.567Z",
   "datos": {
     "desde": "2026-09-11",
     "mig": 14,
@@ -72,7 +72,15 @@ window.HABITOS_SYNC = {
       "2026-11-06": {"ale":1,"fase0":1,"sueno":1,"agua":3},
       "2026-11-08": {"alcohol":1,"agua":3,"sueno":1,"app":1},
       "2026-11-09": {"app":1,"ale":1,"gym":1,"fase0":1,"leer":1,"piel":1,"sueno":1,"agua":3,"alcohol":1},
-      "2026-11-10": {"app":1}
+      "2026-11-10": {"app":1,"ale":1,"gym":1,"fase0":1,"piel":1,"sueno":1,"agua":3,"alcohol":1},
+      "2026-11-11": {"app":1,"ale":1,"gym":1,"fase0":1,"piel":1,"sueno":1,"agua":3,"alcohol":1},
+      "2026-11-12": {"app":1,"ale":1,"gym":1,"fase0":1,"piel":1,"sueno":1,"agua":3,"alcohol":1},
+      "2026-11-13": {"app":1,"ale":1,"sueno":1,"agua":3,"alcohol":1},
+      "2026-11-14": {"sueno":1,"agua":3,"alcohol":1},
+      "2026-11-15": {"sueno":1,"agua":3,"alcohol":1},
+      "2026-11-16": {"gym":1,"fase0":1,"piel":1,"sueno":1,"agua":3,"alcohol":1},
+      "2026-11-17": {"app":1,"ale":1,"agua":3,"alcohol":1},
+      "2026-11-18": {"app":1,"alcohol":1}
     }
   }
 };
