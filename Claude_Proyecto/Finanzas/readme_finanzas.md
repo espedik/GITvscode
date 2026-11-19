@@ -240,7 +240,9 @@ deuda a plazo nueva o con saldo nuevo (`aPlazo`). Con `pagosAl`, `autoBalance` d
 reducen intereses"*): en una deuda con `pagosAl` que no es tarjeta —el auto, el iPhone— la mensualidad ya se anota sola,
 así que `openPayModal` deja el monto vacío y `savePayment` llama a `CIFRAS.prestamoAbono`, la misma cuenta de Deuda total
 del Dashboard: todo baja el saldo, queda como «Abono a capital» con `prestamo` y borrarlo lo devuelve (`tarjetaDeshace`).
-El plazo del contrato (`plazo`) y lo que ahorra abonar se ven en Deuda total del Dashboard.
+El plazo del contrato (`plazo`), la primera mensualidad (`start`) y lo que ahorra abonar se ven en Deuda total del
+Dashboard. Una deuda con `cargos` —el IVA del interés y los seguros que salen con la mensualidad— los anota aparte en su
+mensualidad automática: no bajan el saldo.
 
 **Lo que falta de cada una, con una sola cuenta**: la última cuota y las que van salen de
 `CIFRAS.cuotas(d)` en la hoja de ruta y en las suscripciones (daban jun, ago y sep de 2028 para el mismo

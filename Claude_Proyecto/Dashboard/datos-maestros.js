@@ -452,7 +452,7 @@ window.CIFRAS = (function () {
     // libreta de logros solo guardaba la primera; la ruta del Plan Maestro enseña la última y cuántas.
     {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:0,          rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0, liquidaciones:['2026-08-13','2026-09-30']},
     // Saldo reportado por Adán: $299,000 (24-ago) → $292,000 → $293,000 (25-ago-2026) → $283,000 (21-sep-2026).
-    {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:279363.48, rate:12.99, min:6700, day:15, start:'2026-01-01', remainingMonths:61, pagosAl:'2026-10-15', plazo:84},
+    {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:279363.48, rate:12.99, min:6700, day:15, start:'2026-03-15', remainingMonths:61, pagosAl:'2026-10-15', plazo:84},
     // Liquidado: la última cuota era la del 18 sep 2026 y Adán la dio por pagada el 21-sep-2026.
     {id:'d004',name:'Apple Watch MSI (TC Banamex)',  type:'other',      total:10248,     balance:0,        rate:0,     min:854,  day:18,start:'2025-09-16'},
     // d005 (Vuelo Viva Aerobus) y d006 (Mercado Libre) se ELIMINARON el 13 ago 2026: Adán
@@ -8494,6 +8494,20 @@ window.CIFRAS = (function () {
         if (d && !(+d.plazo > 0)) d.plazo = 84;
       }
     },
+    {
+      // 2026-11-19 · "son 7 años y compré el carro en febrero del 2026"; la primera mensualidad, en marzo. `start` es el
+      // día de la primera mensualidad: de él salen cuántas van y la última del contrato (feb 2033). Y los dos pagos del
+      // seed de Finanzas del 1 de enero y del 1 de febrero (s059, s048) no existieron: el carro aún no era suyo. Solo esos
+      // dos, por su id y si siguen como los dejó el seed.
+      flag: '_autoInicio20261119',
+      hacer: function (f) {
+        const d = (f.debts || []).find(function (x) { return x.id === 'd003'; });
+        if (d) { d.start = '2026-03-15'; if (!(+d.plazo > 0)) d.plazo = 84; }
+        if (Array.isArray(f.transactions)) f.transactions = f.transactions.filter(function (t) {
+          return !((t.id === 's059' && t.date === '2026-01-01') || (t.id === 's048' && t.date === '2026-02-01')) || +t.amount !== 6700;
+        });
+      }
+    },
   ];
 
   /* Las seis compras del 1-sep-2026, en un solo sitio: las usa la migración de arriba para el
@@ -8582,7 +8596,8 @@ window.CIFRAS = (function () {
      del Dashboard; `remainingMonths` queda solo como respaldo cuando falta el pago. */
   function mesesRestantes(d) {
     if (!d) return null;
-    const B = +d.balance || 0, P = +d.min || 0, r = (+d.rate || 0) / 100 / 12;
+    // `cargos`: lo de cada mensualidad que no es interés ni capital (IVA del interés, seguros): no baja la deuda.
+    const B = +d.balance || 0, P = (+d.min || 0) - Math.max(0, +d.cargos || 0), r = (+d.rate || 0) / 100 / 12;
     if (B <= 0) return 0;
     if (P <= 0) return d.remainingMonths != null ? +d.remainingMonths : null;
     if (r <= 0) return Math.ceil(B / P);
@@ -9709,11 +9724,12 @@ window.CIFRAS = (function () {
         const id = 'fijo-' + kd + '-' + d.id;
         if (tx.some(function (t) { return t.id === id; })) continue;
         const interes = Math.round((+d.balance) * (+d.rate || 0) / 100 / 12 * 100) / 100;
-        const pago = Math.round(Math.min(+d.balance + interes, +d.min) * 100) / 100;
-        const capital = Math.round((pago - interes) * 100) / 100;
+        const cargos = Math.max(0, +d.cargos || 0);   // IVA del interés y seguros: salen con la mensualidad, no bajan la deuda
+        const pago = Math.round(Math.min(+d.balance + interes + cargos, +d.min) * 100) / 100;
+        const capital = Math.max(0, Math.round((pago - interes - cargos) * 100) / 100);
         d.balance = Math.max(0, Math.round((+d.balance - capital) * 100) / 100);
         tx.push({ id: id, type: 'expense', desc: 'Pago: ' + d.name, amount: pago, date: kd, cat: 'Deudas',
-                  notes: 'Mensualidad' + (interes > 0 ? ' — ' + fmt(interes) + ' de interés y ' + fmt(capital) + ' a capital' : '') + ' (del plan: se anotó sola)',
+                  notes: 'Mensualidad' + (interes > 0 ? ' — ' + fmt(interes) + ' de interés' + (cargos > 0 ? ', ' + fmt(cargos) + ' de IVA y seguros' : '') + ' y ' + fmt(capital) + ' a capital' : '') + ' (del plan: se anotó sola)',
                   prestamo: { id: d.id, delta: -capital }, origen: 'plan', abono: 'mensualidad' });
         d.fecha = kd; n++;
       }
@@ -9757,7 +9773,7 @@ window.CIFRAS = (function () {
   function prestamoR2(x) { return Math.round(x * 100) / 100; }
   function prestamoSimular(d, o) {
     o = o || {};
-    const r = (+d.rate || 0) / 100 / 12, P = (+d.min || 0) + Math.max(0, +o.extraMes || 0);
+    const r = (+d.rate || 0) / 100 / 12, P = (+d.min || 0) - Math.max(0, +d.cargos || 0) + Math.max(0, +o.extraMes || 0);
     let B = Math.max(0, (o.saldo != null ? +o.saldo : +d.balance || 0) - Math.max(0, +o.extra || 0)), interes = 0, pagado = 0, n = 0;
     if (B > 0.005 && !(P > B * r)) return { nunca: true, meses: null, interes: null, pagado: null };
     while (B > 0.005 && n < 1200) { const i = B * r, pago = Math.min(B + i, P); B = B + i - pago; interes += i; pagado += pago; n++; }
@@ -9780,6 +9796,7 @@ window.CIFRAS = (function () {
   function prestamoResumen(d, F) {
     F = F || fin || {};
     const r = (+d.rate || 0) / 100 / 12, saldo = Math.max(0, +d.balance || 0), pago = +d.min || 0, dia = +d.day || 1;
+    const cargos = Math.max(0, +d.cargos || 0);
     const C = cuotas(d), sig = C.siguiente;
     const enMes = function (n) { return sig && n ? new Date(sig.getFullYear(), sig.getMonth() + n - 1, Math.min(dia, new Date(sig.getFullYear(), sig.getMonth() + n, 0).getDate())) : null; };
     const base = prestamoSimular(d, {});
@@ -9793,16 +9810,32 @@ window.CIFRAS = (function () {
     const abonado = prestamoR2(abonos.reduce(function (s, t) { return s + (+t.amount || 0); }, 0));
     const hechos = prestamoHechos(d);
     const capitalPagado = +d.total > 0 ? Math.max(0, +d.total - saldo) : null;
-    // Lo que pagaste de interés: lo que salió (mensualidades y abonos) menos lo que bajó lo que debes.
-    const interesPagado = hechos != null && capitalPagado != null ? Math.max(0, prestamoR2(hechos * pago + abonado - capitalPagado)) : null;
+    // Lo que pagaste de interés: lo que salió (mensualidades y abonos) menos lo que bajó lo que debes y menos el IVA y los
+    // seguros de esas mensualidades.
+    const calc = hechos != null && capitalPagado != null ? Math.max(0, prestamoR2(hechos * (pago - cargos) + abonado - capitalPagado)) : null;
+    // Lo mínimo que pagaste de interés: el saldo nunca fue menor que hoy. Si la cuenta da menos, lo prestado (`total`) o el
+    // saldo no son los del contrato: no se enseña una cifra imposible, se enseña el mínimo.
+    const interesMin = hechos != null ? prestamoR2(hechos * saldo * r) : null;
+    const interesPagado = calc != null && interesMin != null && calc >= interesMin * 0.97 ? calc : null;
     const plazo = +d.plazo || 0, ultimaContrato = plazo ? prestamoDia(d, plazo) : null;
-    const interesSig = prestamoR2(saldo * r), capitalSig = prestamoR2(Math.max(0, Math.min(saldo + interesSig, pago) - interesSig));
+    const interesSig = prestamoR2(saldo * r), capitalSig = prestamoR2(Math.max(0, Math.min(saldo + interesSig + cargos, pago) - interesSig - cargos));
+    // Lo que tendría que ir a interés y capital cada mes para terminar justo cuando dice el contrato: la diferencia con la
+    // mensualidad es lo que se va en IVA y seguros, si el contrato y el saldo son los buenos.
+    const faltanK = plazo && hechos != null ? Math.max(0, plazo - hechos) : 0;
+    const alCredito = faltanK && r > 0 ? saldo * r / (1 - Math.pow(1 + r, -faltanK)) : null;
     return {
       saldo: saldo, tasa: +d.rate || 0, pago: pago, dia: dia, siguiente: sig, interesSig: interesSig, capitalSig: capitalSig,
       hechos: hechos, capitalPagado: capitalPagado, interesPagado: interesPagado, proy: base, fin: enMes(base.meses),
       interesTotal: interesPagado != null && !base.nunca ? prestamoR2(interesPagado + base.interes) : null,
+      interesMin: interesMin, cuadra: interesPagado != null,
+      cargos: cargos, cargosFaltan: base.nunca ? null : prestamoR2(cargos * base.meses),
       contrato: plazo ? { plazo: plazo, ultima: ultimaContrato, faltan: hechos != null ? Math.max(0, plazo - hechos) : null,
-        total: prestamoR2(plazo * pago), interes: +d.total > 0 ? prestamoR2(plazo * pago - +d.total) : null } : null,
+        total: prestamoR2(plazo * pago), interes: +d.total > 0 ? prestamoR2(plazo * pago - +d.total) : null,
+        // Lo que falta según el contrato: lo seguro, porque no depende de lo prestado.
+        faltaPagar: hechos != null ? prestamoR2(Math.max(0, plazo - hechos) * pago) : null,
+        faltaCosto: hechos != null ? prestamoR2(Math.max(0, Math.max(0, plazo - hechos) * pago - saldo)) : null,
+        alCredito: alCredito != null ? prestamoR2(alCredito) : null,
+        cargosSugeridos: alCredito != null && pago - alCredito >= 1 ? Math.round(pago - alCredito) : null } : null,
       abonos: abonos, abonado: abonado, ahorro: ahorro,
       escenarios: [5000, 10000, 20000].map(function (x) { return Object.assign({ x: x }, ahorro({ extra: x })); }),
       mensual: Object.assign({ x: 1000 }, ahorro({ extraMes: 1000 })), porMil: ahorro({ extra: 1000 }),
@@ -9844,12 +9877,18 @@ window.CIFRAS = (function () {
     v = v || {};
     const num = function (k, min, max) { const x = parseFloat(v[k]); return isFinite(x) && x >= min && x <= max ? x : null; };
     const rate = num('rate', 0, 100), min = num('min', 1, 1e7), plazo = num('plazo', 1, 600), day = num('day', 1, 31), saldo = num('saldo', 0, 1e8);
+    const cargos = num('cargos', 0, 1e7), total = num('total', 1, 1e8);
+    if (cargos != null && cargos >= (min != null ? min : +d.min || 0)) return { error: 'El IVA y los seguros no pueden ser toda la mensualidad' };
     if (v.rate != null && v.rate !== '' && rate == null) return { error: 'La tasa va de 0 a 100 %' };
     if (v.min != null && v.min !== '' && min == null) return { error: 'Escribe la mensualidad' };
     if (rate != null) d.rate = rate;
     if (min != null) d.min = prestamoR2(min);
     if (plazo != null) d.plazo = Math.round(plazo);
     if (day != null) d.day = Math.round(day);
+    if (cargos != null) d.cargos = prestamoR2(cargos);
+    if (total != null) d.total = prestamoR2(total);
+    // La primera mensualidad ('AAAA-MM'): `start` es su día de pago.
+    if (/^\d{4}-\d{2}$/.test(String(v.inicio || ''))) d.start = v.inicio + '-' + String(+d.day || 1).padStart(2, '0');
     if (saldo != null && prestamoR2(saldo) !== prestamoR2(+d.balance || 0)) {
       const hoyK = fechaLocal();
       d.balance = prestamoR2(saldo); d.fecha = hoyK; d.saldoAl = hoyK; d.pagosAl = hoyK;

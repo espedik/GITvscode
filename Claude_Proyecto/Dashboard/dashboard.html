@@ -732,6 +732,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .pr-dato i{display:block;font-style:normal;font-size:11.5px;line-height:1.35;color:var(--text2)}
 .pr-dato.int b{color:var(--r)}
 .pr-dato.ok b{color:var(--g)}
+.pr-grid .pr-dato:last-child:nth-child(odd){grid-column:1/-1}
 .pr-tabla{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums;margin-bottom:4px}
 .pr-tabla th{text-align:left;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text3);padding:0 6px 6px}
 .pr-tabla td{padding:7px 6px;border-top:1px solid rgba(var(--ov),.08);color:var(--text2)}
@@ -15151,16 +15152,21 @@ function kpiPrestamoHTML(d, F){
     dato('', 'Te falta pagar', money(R.saldo), +d.total > 0 ? 'de '+money(+d.total)+' · ya pagaste '+money(R.capitalPagado)+' de capital' : '')+
     dato('', 'Próxima mensualidad', money(R.pago), R.siguiente ? prDia(R.siguiente)+': '+money(R.interesSig)+' de interés y '+money(R.capitalSig)+' a capital. Se anota sola.' : '')+
     dato('', 'Terminas', R.proy.nunca ? 'nunca' : prMes(R.fin), R.proy.nunca ? 'la mensualidad no cubre ni el interés' : R.proy.meses+' mensualidades más')+
-    dato('int', 'Intereses ya pagados', R.interesPagado != null ? '≈ '+money(R.interesPagado) : '—', R.hechos != null ? 'en '+R.hechos+' mensualidades'+(R.abonado > 0 ? ' y '+money(R.abonado)+' de abonos' : '')+': lo que pagaste menos lo que bajó tu saldo' : '')+
-    dato('int', 'Intereses que faltan', R.proy.nunca ? '—' : money(R.proy.interes), 'si pagas solo la mensualidad')+
-    dato('int', 'Intereses en total', R.interesTotal != null ? money(R.interesTotal) : '—', 'lo que te cuesta el crédito con tus datos de hoy')+
+    (R.cuadra ? dato('int', 'Intereses ya pagados', '≈ '+money(R.interesPagado), 'en '+R.hechos+' mensualidades'+(R.abonado > 0 ? ' y '+money(R.abonado)+' de abonos' : '')+': lo que pagaste menos lo que bajó tu saldo')
+      : R.interesMin != null ? dato('int', 'Intereses ya pagados', 'más de '+money(R.interesMin), 'en '+R.hechos+' mensualidades: lo mínimo con tu saldo de hoy. Para la cifra exacta, pon en «Tus datos del crédito» lo que te prestaron según tu contrato') : '')+
+    dato('int', 'Intereses que faltan', R.proy.nunca ? '—' : money(R.proy.interes), 'si pagas solo la mensualidad'+(R.cargos > 0 ? ', sin el IVA y los seguros' : ''))+
+    (R.interesTotal != null ? dato('int', 'Intereses en total', money(R.interesTotal), 'lo que te cuesta el crédito con tus datos de hoy') : '')+
+    (R.cargos > 0 ? dato('', 'IVA y seguros', money(R.cargos)+' al mes', 'de cada mensualidad, no bajan tu deuda'+(R.cargosFaltan != null ? ' · '+money(R.cargosFaltan)+' en lo que falta' : '')) : '')+
   '</div>';
   if(R.contrato){
     const K = R.contrato, dif = K.faltan != null && !R.proy.nunca ? K.faltan - R.proy.meses : 0, choca = Math.abs(dif) > 2;
     h += kpiPaso('Tu contrato: '+K.plazo+' mensualidades, la última en '+prMes(K.ultima),
-      K.plazo+' × '+money(R.pago)+' = <b>'+money(K.total)+'</b>'+(K.interes != null ? ' por '+money(+d.total)+' prestados: <b>'+money(K.interes)+' de intereses y cargos</b>' : '')+
-      '. Llevas '+R.hechos+'; según el contrato faltan '+K.faltan+'.'+
-      (choca ? ' <b>Con tu saldo, tu tasa y tu mensualidad de hoy acabarías en '+prMes(R.fin)+', '+Math.abs(dif)+' mensualidades '+(dif > 0 ? 'antes' : 'después')+'.</b> Las dos cosas no pueden ser ciertas: compara el saldo insoluto y la tasa de tu estado de cuenta con <i>Tus datos del crédito</i>. Si tu mensualidad lleva IVA del interés o un seguro, a capital va menos de lo que parece.' : ''),
+      'En '+(K.plazo % 12 ? K.plazo+' meses' : (K.plazo / 12)+' años')+' pagas '+K.plazo+' × '+money(R.pago)+' = <b>'+money(K.total)+'</b>'+(K.interes != null ? ' por '+money(+d.total)+' prestados: <b>'+money(K.interes)+' de intereses y cargos</b>' : '')+
+      '. Llevas '+R.hechos+' y te faltan '+K.faltan+': <b>'+money(K.faltaPagar)+'</b> más, de los que '+money(R.saldo)+' son tu deuda y <b>'+money(K.faltaCosto)+' intereses, IVA y seguros</b>.'+
+      (choca ? ' <b>Con tu saldo, tu tasa y tu mensualidad de hoy acabarías en '+prMes(R.fin)+', '+Math.abs(dif)+' mensualidades '+(dif > 0 ? 'antes' : 'después')+'.</b>'+
+        (K.cargosSugeridos ? ' Para terminar en '+prMes(K.ultima)+', de tus '+money(R.pago)+' irían '+money(K.alCredito)+' a interés y capital y unos <b>'+money(K.cargosSugeridos)+'</b> a otra cosa: el IVA del interés y los seguros, que vienen desglosados en tu estado de cuenta.'+
+          (editable ? ' <button type="button" class="ce-btn sec" onclick="prCargosUsar(\''+d.id+'\','+K.cargosSugeridos+')">Usar '+money(K.cargosSugeridos)+' de IVA y seguros</button>' : '')
+        : ' Las dos cosas no pueden ser ciertas: compara el saldo insoluto y la tasa de tu estado de cuenta con <i>Tus datos del crédito</i>.') : ''),
       choca ? 'var(--o)' : 'var(--r)');
   }
   if(!R.proy.nunca){
@@ -15201,6 +15207,9 @@ function kpiPrestamoHTML(d, F){
         '<label><span>Mensualidad</span><input type="number" name="pd_m" min="1" step="0.01" inputmode="decimal" value="'+R.pago+'"></label>'+
         '<label><span>Plazo (mensualidades)</span><input type="number" name="pd_p" min="1" max="600" step="1" value="'+(+d.plazo || '')+'" placeholder="p. ej. 84"></label>'+
         '<label><span>Día de pago</span><input type="number" name="pd_d" min="1" max="31" step="1" value="'+R.dia+'"></label>'+
+        '<label><span>Primera mensualidad</span><input type="month" name="pd_i" value="'+esc(String(d.start || '').slice(0, 7))+'"></label>'+
+        '<label><span>Lo que te prestaron</span><input type="number" name="pd_l" min="1" step="0.01" inputmode="decimal" value="'+(+d.total || '')+'"></label>'+
+        '<label><span>IVA y seguros de cada mensualidad</span><input type="number" name="pd_c" min="0" step="0.01" inputmode="decimal" value="'+(R.cargos || '')+'" placeholder="0: toda va a interés y capital"></label>'+
         '<p class="pr-previa">El saldo que escribas manda desde hoy y las mensualidades se siguen anotando solas desde ahí. Es el mismo crédito de Finanzas.</p>'+
         '<span class="ti-form-acc"><button type="submit" class="ce-btn">Guardar</button></span></form>';
   } else h += kpiNota(FIN_REPO ? 'En este dispositivo es la copia de tu PC: los abonos y los datos del crédito se anotan en tu PC.' : 'Abre Finanzas una vez en este navegador para anotar abonos.');
@@ -15243,11 +15252,19 @@ function prPrevia(inp, id){
   p.innerHTML = a.nunca ? 'Con ese saldo la mensualidad no cubre el interés.' :
     'Con '+money(x)+': terminas en <b>'+prMes(a.fin)+'</b>'+(a.menos > 0 ? ', '+prMeses(a.menos)+' antes,' : '')+' y te ahorras <b>'+money(a.ahorra)+'</b> de intereses.';
 }
+// La cifra de IVA y seguros que hace que el crédito termine cuando dice el contrato, con un toque (Deuda total).
+function prCargosUsar(id, x){
+  const F = rawGet('finanzasmx_v2', null); if(!F || FIN_REPO || !window.CIFRAS) return;
+  const r = CIFRAS.prestamoDatos(F, id, { cargos: x });
+  if(r.error){ alert(r.error); return; }
+  ceGuardar(F);
+}
 function prDatosGuardar(ev, id){
   if(ev) ev.preventDefault();
   const f = ev && ev.target, F = rawGet('finanzasmx_v2', null);
   if(!f || !F || FIN_REPO || !window.CIFRAS) return;
-  const r = CIFRAS.prestamoDatos(F, id, { saldo: f.pd_s.value, rate: f.pd_t.value, min: f.pd_m.value, plazo: f.pd_p.value, day: f.pd_d.value });
+  const r = CIFRAS.prestamoDatos(F, id, { saldo: f.pd_s.value, rate: f.pd_t.value, min: f.pd_m.value, plazo: f.pd_p.value, day: f.pd_d.value,
+    inicio: f.pd_i.value, cargos: f.pd_c.value === '' ? 0 : f.pd_c.value, total: f.pd_l.value });
   if(r.error){ tiAviso(f, r.error); return; }
   ceGuardar(F);
 }

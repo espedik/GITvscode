@@ -3497,8 +3497,15 @@ function promptsDeLoTocado() {
     if (h.indexOf(k) < 0) malos.push('Deuda total del Dashboard ya no usa ' + k.replace(/\($/, ''));
   });
   if (fz.indexOf('CIFRAS.prestamoAbono(') < 0) malos.push('«Pagar» de Finanzas ya no anota el abono con la cuenta del maestro');
+  // El IVA y los seguros de cada mensualidad (`cargos`) no bajan la deuda: con ellos el crédito dura más.
+  const conCargos = C.prestamoSimular(Object.assign({}, d, { cargos: 500 }), {});
+  if (!(conCargos.meses > s.meses)) malos.push('con IVA y seguros en la mensualidad el crédito no dura más (cargos)');
+  if (C.mesesRestantes(Object.assign({}, d, { cargos: 500 })) !== conCargos.meses) malos.push('mesesRestantes y prestamoSimular no cuentan igual los cargos');
+  C.prestamoDatos(F, 'x', { inicio: '2026-03', cargos: 300, total: 99000 });
+  if (x.start !== '2026-03-15' || x.cargos !== 300 || x.total !== 99000) malos.push('prestamoDatos no guarda la primera mensualidad, los cargos o lo prestado');
+  if (!C.prestamoDatos(F, 'x', { cargos: 999999 }).error) malos.push('se aceptan cargos de toda la mensualidad');
   const auto = (C.DEUDAS_SEED || []).filter(z => z.id === 'd003')[0];
-  if (!auto || !(auto.plazo > 0)) malos.push('el auto (d003) no tiene su plazo en DEUDAS_SEED');
+  if (!auto || !(auto.plazo > 0) || auto.start !== '2026-03-15') malos.push('el auto (d003) no tiene su plazo de 84 ni su primera mensualidad (15 mar 2026) en DEUDAS_SEED');
   if (malos.length) { problemas.push('Crédito a plazo y abonos a capital:\n     ' + malos.join('\n     ')); return; }
   ok.push('Crédito a plazo: intereses, contrato y abonos a capital con una sola cuenta del maestro, en Deuda total y en Finanzas');
 })();

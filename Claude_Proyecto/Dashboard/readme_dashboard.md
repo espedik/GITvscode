@@ -1043,26 +1043,36 @@ automático, pero si hago aportaciones debes ver cuánto se reducen intereses…
 las deudas por tasa, cada crédito a plazo con interés —el auto— lleva cuatro secciones (`kpiPrestamoHTML`), todas con las
 cuentas del maestro (`CIFRAS.prestamoResumen`):
 
-- **Completo** (`.pr-grid`, `.pr-dato`): lo que falta y el capital ya pagado; la próxima mensualidad partida en interés y
-  capital —se anota sola, `CIFRAS.aplicarPagosFijos`—; cuándo terminas; los intereses ya pagados (lo que pagaste menos lo
-  que bajó el saldo), los que faltan y el total. Y **el contrato** (`plazo`, 84 en el auto): la última mensualidad, cuánto
-  pagas en total y cuánto de eso son intereses y cargos; si el contrato y los datos de hoy no terminan en el mismo mes, lo
-  dice en naranja y pide comparar con el estado de cuenta.
+- **Completo** (`.pr-grid`, `.pr-dato`; si las cajas son impares, la última va a lo ancho): lo que falta y el capital ya
+  pagado; la próxima mensualidad partida en interés, IVA y seguros (`cargos`) y capital —se anota sola,
+  `CIFRAS.aplicarPagosFijos`—; cuándo terminas; los intereses ya pagados (lo que pagaste menos lo que bajó el saldo y
+  menos los cargos) **solo si cuadra**: si da menos de lo mínimo posible —el saldo nunca fue menor que hoy—, enseña
+  *más de* ese mínimo y pide lo que te prestaron según el contrato; los que faltan, el total y lo que suman el IVA y los
+  seguros. Y **el contrato** (`plazo` 84 desde la primera mensualidad, `start`): cuánto pagas en los 7 años, cuánto de eso
+  son intereses y cargos, y lo que te falta —mensualidades × pago, de lo que el saldo es deuda y el resto intereses, IVA
+  y seguros—. Si el contrato y los datos de hoy no terminan en el mismo mes, lo dice en naranja con lo que tendría que ir
+  a interés y capital cada mes para terminar a tiempo (`alCredito`) y la diferencia como IVA y seguros
+  (`cargosSugeridos`), con **Usar** para guardarla (`prCargosUsar`).
 - **Si abonas extra** (`.pr-tabla`): cuánto interés ahorra cada $1,000 abonados hoy y $1,000 extra al mes, y $5,000,
   $10,000 y $20,000 hoy con su nueva fecha y los meses de menos. La mensualidad sigue igual y se termina antes.
 - **Anotar un abono a capital** (`prAbonoGuardar`, `data-pr="abono"`): cuándo, cuánto y una nota, con la vista previa
   mientras se escribe (`prPrevia`); los abonos debajo con **Editar** y **Borrar** (`prAbonoEditar`, `prAbonoBorrar`). Van a
   `finanzasmx_v2.transactions` como «Abono a capital» con `prestamo: {id, delta}` y `origen: 'abono'`: Finanzas los lista
   y borrar uno allá también devuelve el saldo; la siguiente mensualidad ya cobra interés sobre el saldo menor.
-- **Tus datos del crédito** (`prDatosGuardar`, `data-pr="datos"`): saldo, tasa, mensualidad, plazo y día de pago,
-  corregidos con el estado de cuenta (`CIFRAS.prestamoDatos`). Un saldo escrito manda desde hoy (`saldoAl`, `pagosAl`).
+- **Tus datos del crédito** (`prDatosGuardar`, `data-pr="datos"`): saldo, tasa, mensualidad, plazo, día de pago, primera
+  mensualidad, lo que te prestaron y el IVA y los seguros de cada mensualidad, corregidos con el estado de cuenta
+  (`CIFRAS.prestamoDatos`). Un saldo escrito manda desde hoy (`saldoAl`, `pagosAl`).
 
-Solo donde Finanzas es propia (`tiEditable`); en el iPad se ve sin formularios. Medido con los datos de Finanzas a
-2048×1040: el panel cabe sin desplazarse; el auto da $2,984 de interés y $3,716 a capital en la mensualidad del 15 de
-diciembre, ≈ $33,588 de intereses en 11 mensualidades, $91,182 por pagar y fin en junio 2031, contra un contrato de 84
-que acaba en diciembre 2032 ($247,000 de intereses y cargos): 18 mensualidades de diferencia que el panel señala. Un abono
-de $10,000 baja el saldo a $265,688 y ahorra $7,874 y 2 meses; corregirlo, borrarlo o anotarlo desde «Pagar» de Finanzas
-mueve lo mismo en las dos apps. A 390 px, sin desbordes. El **control 57** prueba la cuenta con un crédito de juguete.
+Solo donde Finanzas es propia (`tiEditable`); en el iPad se ve sin formularios. El auto se compró en febrero de 2026 y
+su primera mensualidad fue el 15 de marzo (Adán, 19-nov-2026: *"son 7 años y compré el carro en febrero del 2026"*;
+migración `_autoInicio20261119`, que también quitó del seed dos pagos del 1 de enero y del 1 de febrero que no
+existieron). Medido con los datos de Finanzas a 2048×1040, el panel cabe sin desplazarse. Con toda la mensualidad a
+interés y capital el auto terminaba en junio 2031, 20 mensualidades antes que el contrato (febrero 2033), y lo pagado
+de interés no cuadraba (lo mínimo, $26,859 en 9 mensualidades). Con $1,313 de IVA y seguros, la sugerencia, termina en
+febrero 2033: $2,984 de interés y $2,403 a capital el 15 de diciembre, $128,283 de intereses por pagar y $98,475 de IVA y
+seguros, y cada $1,000 abonados ahorra $1,242. Un abono de $10,000 baja el saldo y su vista previa dice lo que ahorra;
+corregirlo, borrarlo o anotarlo desde «Pagar» de Finanzas mueve lo mismo en las dos apps. A 390 px, sin desbordes. El
+**control 57** prueba la cuenta con un crédito de juguete.
 
 **Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se paga completa
 cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle y en el desglose de Patrimonio, que la
