@@ -1,0 +1,94 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-24T21:30:00Z"
+  },
+  "title": "Intereses este mes",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1900,
+      "h": 1000,
+      "title": "A · Cada pago, partido",
+      "is_interactive": true
+    },
+    "OpcionB.dc.html": {
+      "x": 1980,
+      "y": 0,
+      "w": 1900,
+      "h": 1000,
+      "title": "B · Los 55 pagos",
+      "is_interactive": true
+    },
+    "OpcionC.dc.html": {
+      "x": 0,
+      "y": 1400,
+      "w": 1900,
+      "h": 1000,
+      "title": "C · Antes y después",
+      "is_interactive": true
+    },
+    "OpcionD.dc.html": {
+      "x": 1980,
+      "y": 1400,
+      "w": 1900,
+      "h": 1000,
+      "title": "D · Lo mínimo"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "OpcionB.dc.html",
+    "OpcionC.dc.html",
+    "OpcionD.dc.html"
+  ],
+  "notes": {
+    "titulo": {
+      "x": 0,
+      "y": -300,
+      "text": "Intereses este mes: cuatro opciones con tus números del 24 de noviembre",
+      "kind": "title1",
+      "maxW": 3880
+    },
+    "nA": {
+      "x": 0,
+      "y": 1060,
+      "w": 560,
+      "size": "m",
+      "fill": "teal",
+      "text": "A. Cada pago de hoy a que acabas, partido en interés y deuda. Toca un año o prueba pagar más. Contra: es la que más información junta."
+    },
+    "nB": {
+      "x": 1980,
+      "y": 1060,
+      "w": 560,
+      "size": "m",
+      "fill": "blue",
+      "text": "B. Un cuadro por pago que te falta. Si pagas más, los que te ahorras se apagan. Contra: las cifras de cada mes se ven al tocar."
+    },
+    "nC": {
+      "x": 0,
+      "y": 2460,
+      "w": 560,
+      "size": "m",
+      "fill": "yellow",
+      "text": "C. Como vas contra pagar más, año por año. Contra: dice más de lo que podrías hacer que de este mes."
+    },
+    "nD": {
+      "x": 1980,
+      "y": 2460,
+      "w": 560,
+      "size": "m",
+      "fill": "green",
+      "text": "D. Este mes, la línea que baja y qué hacer. Contra: sin simulador ni tabla."
+    }
+  },
+  "designSystems": [],
+  "artifact": "https://claude.ai/artifact/WMQeUYv1JdRdxJdSW6rBMr"
+}

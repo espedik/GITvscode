@@ -1066,11 +1066,11 @@ con su botón** (`.kv-hoy`; naranja si algo pide revisarse), **una gráfica** (`
 | **Fondo** | Para cuántos días te alcanza si te quedas sin trabajo, cuánto falta para cada mes de tu meta, qué tienes a la mano y qué pagarías en un mes sin sueldo (ver *Fondo de emergencia, aportación por aportación*). No lleva la parte de hoy |
 | **Maestría** | Cómo vas hoy contra el plan (`contraPlan`: la proyección al cierre del mes anterior más los envíos a GBM que ya tocaron, contra el fondo, las inversiones y el Bitcoin, sin el depósito), a dónde llegas a tu ritmo (`CIFRAS.ritmoMaestria`), la gráfica con un punto por mes, lo que cuesta irte (`SALIDA.costos`) y qué hacer (ver *El Fondo Maestría*) |
 | **Patrimonio** | Cuándo llegas al millón guardando lo que te queda, la ruta con sus paradas, qué pasa hasta cada una y qué te acerca (ver *El camino al millón*) |
-| **Intereses** | Cuánto al día, en 12 meses y hasta acabar; la próxima mensualidad partida; a dónde va el dinero cada año, y lo que ahorra abonar. Si el contrato y los datos no acaban el mismo mes, lo dice |
+| **Intereses** | Lo que se va en interés este mes y cada día, un cuadro por pago hasta acabar, y cuánto se ahorra pagando más (ver *Los intereses, un cuadro por pago*) |
 | **Total invertido** | Lo que trabaja aparte de lo guardado en el depósito, cuánto ganas o pierdes, lo que el plan mandaba este mes contra lo que registraste, *Tu estrategia de hoy*, los envíos que tocan, las compras con su formulario, *Tu Bitcoin hoy* (el último mes contra tu promedio y cuánto tendría que subir) y en qué ponerlo |
 | **Deuda total** | Cuánto debes mes a mes (`caminoDeuda`, todas juntas) con **dos controles** —abono hoy y extra cada mes— que redibujan la gráfica y dicen cuándo acabas y cuánto ahorras (`simula`, con `prestamoResumen().ahorro`); **Anotar el abono de hoy** lo lleva al formulario. Cada deuda con su siguiente pago y su fin; el abono, los datos del crédito y el contrato, plegados |
 
-**Gráficas** (`lineas`, `columnas`): SVG al tamaño real de su caja, un solo eje, globo con el mes y cada serie al pasar el
+**Gráficas** (`lineas`): SVG al tamaño real de su caja, un solo eje, globo con el mes y cada serie al pasar el
 ratón, el dedo o las flechas del teclado, y sus números también fuera de ella. Azul, naranja y verde (`--kv-1` a `--kv-3`)
 pasan el validador de daltonismo en los dos temas; el verde, el rojo y la flecha solo dicen sube o baja. Dentro de la
 ventana las teclas no mueven las pantallas y **Escape la cierra**. Modo privado tapa también los ejes y los globos.
@@ -1116,6 +1116,21 @@ arriba abajo:
 
 **La cuenta** (`CIFRAS.ritmoMaestria`): un mes que falta crece lo que entra menos lo documentado; el mes en curso va hasta hoy y
 cada cierre corre el punto de partida, así que la línea cambia sola. Didi entra con `didiEn(mes)`. El **control 63** la prueba.
+
+### Los intereses, un cuadro por pago
+
+Adán, 24-nov-2026: *"dame opciones para mejorar esta pantalla"* y *"me gusta la opción B"* (lienzo `diseno-intereses/`).
+`MEDIDORES.intereses` (`.kn`), con el crédito de mayor saldo que cobra interés:
+
+- **La dona**: cuánto de tu próximo pago es interés, en pesos y en porcentaje, y cuánto es al día.
+- **¿Y si pagas más cada mes?** (`MEDIDORES.pagoMas`): cinco opciones con lo que ahorras en cada una.
+- **Los pagos** (`pagosHtml`): una fila por año y un cuadro por mes. Lo naranja es interés, lo gris IVA y seguros (si los hay) y lo azul
+  baja tu deuda; los ya pagados van apagados. Pagando más, los que te ahorras se vuelven verdes con borde punteado. Tocar uno
+  (`MEDIDORES.pagoVe`) dice sus números abajo. Arriba, cuántos faltan, cuándo acabas, el interés que falta y lo que te ahorras.
+- **Abajo**: si el contrato y los datos no acaban el mismo mes (`chocaC`), lo dice y cuánto sería el interés con los `cargos` que harían que
+  cuadre. Si algo más cobra interés (una tarjeta), va en su lista.
+
+Las cuentas son `CIFRAS.prestamoTabla` y `prestamoResumen().ahorro`, las mismas de Deuda total.
 
 ### El camino al millón
 

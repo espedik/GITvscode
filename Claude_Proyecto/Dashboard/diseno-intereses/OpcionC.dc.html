@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Intereses · C</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7fb4f5}a:hover{color:#b4d4fb}
+</style>
+</helmet>
+<div style="width: 1900px; height: 1000px; box-sizing: border-box; padding: 20px 34px 22px; display: flex; flex-direction: column; gap: 14px; background: #11131a; color: #f4f4f8; font-family: Inter, system-ui, sans-serif;">
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1);">
+    <div style="display: flex; flex-direction: column; gap: 2px;"><h1 style="margin: 0; font-size: 22px; font-weight: 800;">Intereses este mes</h1><p style="margin: 0; font-size: 14px; color: #b4b8c7;">Como vas, contra pagar un poco más.</p></div>
+    <span style="font-size: 14px; color: #b4b8c7;">Este mes: <b style="color: #ff9d6b;">$2,984</b> de interés, $99 al día</span>
+  </div>
+
+  <section style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 14px 24px; border-radius: 16px; background: #181b25; border: 1px solid rgba(255,255,255,.1);">
+    <label for="extra" style="font-size: 16px; font-weight: 600; white-space: nowrap;">Pagar más cada mes</label>
+    <input id="extra" type="range" min="0" max="10000" step="250" value="{{e}}" onChange="{{mueve}}" style="flex: 1; height: 44px; margin: 0; accent-color: #00e87a;">
+    <strong style="font-family: 'Space Grotesk', sans-serif; font-size: 30px; min-width: 150px; text-align: right; color: #00e87a;">{{eTxt}}</strong>
+  </section>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;">
+    <section style="display: flex; flex-direction: column; gap: 4px; padding: 18px 26px; border-radius: 18px; background: #241a17; border: 1px solid rgba(255,138,61,.4);"><span style="font-size: 15px; color: #d6d9e3;">Como vas, de interés</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 52px; line-height: 1.05; letter-spacing: -.03em; color: #ff9d6b;">$91,182</strong><span style="font-size: 15px; color: #d6d9e3;">55 pagos, hasta junio de 2031</span></section>
+    <section style="display: flex; flex-direction: column; gap: 4px; padding: 18px 26px; border-radius: 18px; background: #181b25; border: 1px solid rgba(255,255,255,.14);"><span style="font-size: 15px; color: #d6d9e3;">Pagando {{pago}} al mes</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 52px; line-height: 1.05; letter-spacing: -.03em;">{{total}}</strong><span style="font-size: 15px; color: #d6d9e3;">{{n}} pagos, hasta {{fin}}</span></section>
+    <section style="display: flex; flex-direction: column; gap: 4px; padding: 18px 26px; border-radius: 18px; background: #12241f; border: 1px solid rgba(0,232,122,.4);"><span style="font-size: 15px; color: #d6d9e3;">Te ahorras</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 52px; line-height: 1.05; letter-spacing: -.03em; color: #00e87a;">{{ahorra}}</strong><span style="font-size: 15px; color: #d6d9e3;">y acabas {{menos}} antes</span></section>
+  </div>
+
+  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 440px; gap: 14px; flex: 1; min-height: 0;">
+    <section style="display: flex; flex-direction: column; gap: 12px; padding: 20px 28px; border-radius: 18px; background: #181b25; border: 1px solid rgba(255,255,255,.1); min-height: 0;">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px;"><h2 style="margin: 0; font-size: 18px; font-weight: 700;">Interés de cada año</h2><div style="display: flex; gap: 22px; font-size: 14px; color: #b4b8c7;"><span style="display: flex; align-items: center; gap: 8px;"><i style="width: 14px; height: 14px; border-radius: 4px; background: #ff8a3d;"></i>Como vas</span><span style="display: flex; align-items: center; gap: 8px;"><i style="width: 14px; height: 14px; border-radius: 4px; background: #00e87a;"></i>Pagando más</span></div></div>
+      <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 30px; flex: 1; min-height: 0;">
+        <sc-for list="{{anios}}" as="a" hint-placeholder-count="6">
+          <div style="display: flex; flex-direction: column; gap: 8px; min-height: 0;">
+            <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; border-bottom: 1px solid rgba(255,255,255,.2);">
+              <div style="position: relative;"><div style="position: absolute; left: 0; right: 0; bottom: 0; height: {{a.h1}}; border-radius: 8px 8px 0 0; background: #ff8a3d;"></div><b style="position: absolute; left: -10px; right: -10px; bottom: {{a.t1}}; text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: 15px;">{{a.v1}}</b></div>
+              <div style="position: relative;"><div style="position: absolute; left: 0; right: 0; bottom: 0; height: {{a.h2}}; border-radius: 8px 8px 0 0; background: #00e87a;"></div><b style="position: absolute; left: -10px; right: -10px; bottom: {{a.t2}}; text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: 15px; color: #00e87a;">{{a.v2}}</b></div>
+            </div>
+            <span style="text-align: center; font-size: 16px; font-weight: 600;">{{a.t}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <div style="display: flex; flex-direction: column; gap: 14px; min-height: 0;">
+      <section style="display: flex; flex-direction: column; gap: 10px; padding: 18px 24px; border-radius: 18px; background: #181b25; border: 1px solid rgba(255,255,255,.1);">
+        <h2 style="margin: 0; font-size: 17px; font-weight: 700;">Tu pago del 15 de diciembre</h2>
+        <div style="display: flex; gap: 4px; height: 34px;"><div style="width: 45%; border-radius: 8px; background: #ff8a3d; color: #1a0f06; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700;">45%</div><div style="flex: 1; border-radius: 8px; background: #3987e5; color: #050b14; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700;">55%</div></div>
+        <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #d6d9e3;">De $6,700, <b style="color: #ff9d6b;">$2,984</b> son interés y <b style="color: #7fb4f5;">$3,716</b> bajan tu deuda.</p>
+      </section>
+      <section style="display: flex; flex-direction: column; gap: 6px; padding: 18px 24px; border-radius: 18px; background: #181b25; border: 1px solid rgba(255,255,255,.1); flex: 1; min-height: 0;">
+        <h2 style="margin: 0 0 4px; font-size: 17px; font-weight: 700;">Un abono, una sola vez</h2>
+        <sc-for list="{{abonos}}" as="a" hint-placeholder-count="4"><div style="display: grid; grid-template-columns: 90px minmax(0, 1fr) auto; gap: 14px; align-items: baseline; padding: 11px 0; border-top: 1px solid rgba(255,255,255,.1); font-size: 15px;"><b style="font-family: 'Space Grotesk', sans-serif; font-size: 18px;">{{a.x}}</b><span style="color: #b4b8c7;">{{a.m}}</span><b style="color: #00e87a;">ahorras {{a.v}}</b></div></sc-for>
+        <p style="margin: auto 0 0; font-size: 14px; line-height: 1.5; color: #b4b8c7;">Tu ahorro va a la salida: esto es para dinero extra.</p>
+      </section>
+    </div>
+  </div>
+
+  <section style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 13px 24px; border-radius: 16px; background: #181b25; border: 1px solid rgba(255,255,255,.1);">
+    <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #d6d9e3;"><b style="color: #f4f4f8;">Revisa tus datos:</b> tu contrato acaba en febrero de 2033, no en junio de 2031. Con $1,313 de seguros en cada pago, el interés sería $128,283.</p>
+    <button type="button" style="min-height: 44px; padding: 0 20px; border: 0; border-radius: 12px; background: #2b2e3a; color: #f4f4f8; font-family: Inter, system-ui, sans-serif; font-size: 15px; font-weight: 700; white-space: nowrap;">Revisar mis datos</button>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1900,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { e: 1000 }; }
+  renderVals() {
+    const sim = (e, a) => { let s = 275687.59 - (a || 0); const L = []; while (s > 0.5 && L.length < 400) { const i = s * .1299 / 12, c = Math.min(s, 6700 + e - i); s -= c; L.push({ i, c, s }); } return L; };
+    const M = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'], m$ = v => '$' + Math.round(v).toLocaleString('en-US'), tot = q => q.reduce((z, x) => z + x.i, 0), me = v => v + (v === 1 ? ' mes' : ' meses');
+    const e = this.state.e, B = sim(0), L = sim(e), n = L.length, por = Q => { const y = {}; Q.forEach((q, j) => { const a = 2026 + Math.floor((11 + j) / 12); y[a] = (y[a] || 0) + q.i; }); return y; }, yb = por(B), yl = por(L), H = v => v ? Math.max(1.5, v / 37000 * 100) : 0;
+    return { e, mueve: ev => this.setState({ e: +ev.target.value }), eTxt: '+' + m$(e), pago: m$(6700 + e), total: m$(tot(L)), n, fin: M[(10 + n) % 12] + ' de ' + (2026 + Math.floor((10 + n) / 12)), ahorra: m$(tot(B) - tot(L)), menos: me(B.length - n),
+      anios: Object.keys(yb).map(a => ({ t: a, h1: H(yb[a]) + '%', h2: H(yl[a] || 0) + '%', t1: 'calc(' + H(yb[a]) + '% + 6px)', t2: 'calc(' + H(yl[a] || 0) + '% + 6px)', v1: m$(yb[a]), v2: yl[a] ? m$(yl[a]) : 'nada' })),
+      abonos: [5000, 10000, 20000, 50000].map(a => { const s = sim(0, a); return { x: m$(a), m: me(B.length - s.length) + ' antes', v: m$(tot(B) - tot(s)) }; }) };
+  }
+}
+</script>
+</body>
+</html>

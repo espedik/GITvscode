@@ -415,27 +415,55 @@
   const prestamos = F => (F.debts || []).filter(d => +d.balance > 0 && tasaQueCorre(d) > 0 && +d.min > 0 && d.type !== 'credit_card').map(d => ({ d, R: C().prestamoResumen(d, F) }));
   // El contrato y los datos de hoy no acaban en el mismo mes: alguna cifra no es la del estado de cuenta.
   const chocaC = R => !!(R && R.contrato && R.contrato.faltan != null && !R.proy.nunca && Math.abs(R.contrato.faltan - R.proy.meses) > 2);
-  M.intereses = function (F) {
-    const con = (F.debts || []).filter(d => +d.balance > 0 && tasaQueCorre(d) > 0), mes = con.reduce((s, d) => s + d.balance * d.rate / 1200, 0), L = prestamos(F);
-    if (!con.length) return { kv: 'var(--g)', titulo: 'Intereses este mes', sub: '', html: '<div class="kv-fila">' + hero(money(0), '', 'No pagas intereses. Todo lo que abones baja tu deuda.', null) + '</div>' };
-    const doce = L.reduce((s, p) => s + p.R.tabla.slice(0, 12).reduce((a, t) => a + t.interes, 0), 0), p = L[0], R = p && p.R, t = R && R.tabla[0];
-    const total = L.reduce((s, q) => s + (q.R.proy.interes || 0), 0), tarj = con.filter(d => d.type === 'credit_card');
-    let cuerpo = '', listo = null;
-    if (t) {
-      const pago = t.interes + t.cargos + t.capital, partes = [['Interés', t.interes, V.b], ['IVA y seguros', t.cargos, V.c], ['Baja tu deuda', t.capital, V.a]].filter(q => q[1] > 0), a = v => R.ahorro({ extra: v });
-      cuerpo = hoy(t.fecha && C().fechaLocal(t.fecha) === hoyLocal() ? 'Hoy' : 'Sigue', 'El <b>' + prDia(t.fecha) + '</b> pagas <b>' + money(pago) + '</b>: <b>' + money(t.interes) + '</b> se van en interés y <b>' + money(t.capital) + '</b> bajan tu deuda.', chocaC(R) ? 'Ojo: con estos datos acabarías en ' + prMes(R.fin) + ' y tu contrato dice ' + prMes(R.contrato.ultima) + '. Los totales pueden estar cortos.' : 'Se anota solo. Lo único que lo baja es abonar aparte.', (chocaC(R) ? boton('Revisar mis datos', 'abrirKpi(\'deudatotal\')', 1) : '') + boton('Simular un abono', 'abrirKpi(\'deudatotal\')')) +
-        '<div class="kv-fila crece"><section class="kv-c s8"><h3>A dónde va tu dinero cada año</h3><p>' + esc(p.d.name) + ', hasta que acabes en ' + prMes(R.fin) + '.</p>' + grafica('anios') + leyenda(partes.map(q => [q[0], q[2]])) + '</section>' +
-        '<section class="kv-c s4"><h3>Tu mensualidad, partida</h3><p>De cada pago de ' + money(pago) + '.</p><div class="kv-alta">' + partes.map(q => '<i style="flex:' + q[1] + ';background:' + q[2] + '" title="' + q[0] + ': ' + money(q[1]) + '">' + (q[1] / pago > .14 ? Math.round(q[1] / pago * 100) + '%' : '') + '</i>').join('') + '</div>' + lista(partes.map(q => fila(q[0], money(q[1]), '', '', q[2])).join('')) +
-          '<h3 style="margin-top:16px;font-size:16px">Si abonas hoy</h3>' + lista([5000, 10000, 20000].map(v => { const s = a(v); return s.nunca ? '' : fila(money(v), 'ahorras ' + money(s.ahorra), s.menos > 0 ? 'acabas ' + prMeses(s.menos) + ' antes' : 'misma fecha', money(v * p.d.rate / 1200) + ' menos al mes'); }).join('')) + '</section></div>' +
-        '<div class="kv-fila">' + plega('in-tabla', 'Los números, año por año', money(R.proy.interes) + ' de interés en total', tabla(['Año', 'Interés'].concat(R.cargos > 0 ? ['IVA y seguros'] : [], ['Baja tu deuda', 'Debes al cerrar']),
-          R.porAnio.map(q => [q.anio + (q.meses < 12 ? ' (' + plural(q.meses, 'mes', 'meses') + ')' : ''), money(q.interes)].concat(R.cargos > 0 ? [money(q.cargos)] : [], [money(q.capital), money(q.saldo)])), ['Total', money(R.proy.interes)].concat(R.cargos > 0 ? [money(R.cargosFaltan)] : [], [money(R.saldo), '']))) + '</div>';
-      listo = () => columnas('anios', { et: R.porAnio.map(q => String(q.anio)), aria: 'Interés y capital de cada año', series: [{ n: 'Baja tu deuda', c: V.a, v: R.porAnio.map(q => q.capital) }].concat(R.cargos > 0 ? [{ n: 'IVA y seguros', c: V.c, v: R.porAnio.map(q => q.cargos) }] : [], [{ n: 'Interés', c: V.b, v: R.porAnio.map(q => q.interes) }]) });
+  // Un cuadro por pago: `e` es lo que pagarías de más cada mes; `k`, el pago tocado.
+  const pagos = { p: null, e: 0, k: 0 };
+  const PAGO_MAS = [0, 500, 1000, 2000, 5000], mesDe = f => C().fechaLocal(f).slice(0, 7), parteP = (v, t) => t > 0 ? v / t * 100 : 0;
+  function pagosHtml() {
+    const d = pagos.p.d, R = pagos.p.R, base = R.tabla, T = pagos.e ? C().prestamoTabla(d, { extraMes: pagos.e }) : base, n = T.length, s = R.ahorro({ extraMes: pagos.e }), k = Math.min(pagos.k, n - 1), x = T[k], pago = x.interes + x.cargos + x.capital, hechos = R.hechos || 0;
+    const suma = L => L.reduce((z, q) => z + q.interes, 0), ym0 = mesDe(base[0].fecha), ini = mas(ym0, -hechos), fin = mesDe(base[base.length - 1].fecha), en = {}, viejo = {};
+    T.forEach((q, i) => { en[mesDe(q.fecha)] = i; }); base.forEach((q, i) => { viejo[mesDe(q.fecha)] = i; });
+    let filas = '';
+    for (let a = +ini.slice(0, 4); a <= +fin.slice(0, 4); a++) {
+      let cel = '', tot = 0;
+      for (let m = 1; m <= 12; m++) {
+        const ym = a + '-' + String(m).padStart(2, '0'), i = en[ym], q = T[i], nom = MESL[m - 1] + ' de ' + a;
+        if (i != null) { const p = q.interes + q.cargos + q.capital; tot += q.interes; cel += '<button type="button" class="vivo' + (i === k ? ' sel' : '') + '" data-i="' + i + '" style="--p:' + parteP(q.interes, p).toFixed(1) + '%;--q:' + parteP(q.interes + q.cargos, p).toFixed(1) + '%" aria-pressed="' + (i === k) + '" aria-label="Pago de ' + nom + '"><span>' + MES[m - 1] + '</span></button>'; }
+        else if (viejo[ym] != null) cel += '<i class="libre" title="' + nom + ': te lo ahorras"><span>' + MES[m - 1] + '</span></i>';
+        else if (ym >= ini && ym < ym0) cel += '<i class="hecho" title="' + nom + ': pagado"><span>' + MES[m - 1] + '</span></i>';
+        else cel += '<i class="nada"></i>';
+      }
+      const libre = !tot && base.some(q => q.fecha.getFullYear() === a);
+      filas += '<div class="kn-a"><b>' + a + '</b>' + cel + '<div class="t"><strong' + (libre ? ' class="ok"' : '') + '>' + (tot ? money(tot) : libre ? 'nada' : '—') + '</strong><span>de interés</span></div></div>';
     }
-    if (tarj.length) cuerpo += '<div class="kv-fila">' + caja('s12', 'Tarjetas con saldo', 'Una tarjeta cobra mucho más que el auto: primero esto.', lista(tarj.map(d => fila(esc(d.name), money(d.balance * d.rate / 1200) + ' este mes', d.rate + '% al año sobre ' + money(d.balance), '')).join(''))) + '</div>';
-    return { kv: 'var(--r)', titulo: 'Intereses este mes', sub: 'Lo que te cuesta deber, y cómo bajarlo.', html:
-      '<div class="kv-fila">' + hero(money(mes), '', 'Es lo que te cobran por deber ' + money(con.reduce((s, d) => s + +d.balance, 0)) + '. No baja tu deuda.', null) +
-      tiles([['Cada día', money(mes / 30), 'mientras debas lo mismo'], ['En los próximos 12 meses', money(doce), 'si pagas solo la mensualidad'], ['Hasta que acabes', money(total), R ? 'de interés, en ' + plural(R.proy.meses, 'mensualidad', 'mensualidades') : ''],
-        ['En un año, cada mes', R && R.tabla[12] ? money(R.tabla[12].interes) : '—', R && R.tabla[12] ? 'de interés: ' + money(mes - R.tabla[12].interes) + ' menos que hoy' : '']]) + '</div>' + cuerpo, listo };
+    const dato = (t, v, cls) => '<div><span>' + t + '</span><strong' + (cls ? ' class="' + cls + '"' : '') + '>' + v + '</strong></div>';
+    return '<div class="kn-d">' + dato('Te faltan', plural(n, 'pago', 'pagos')) + dato('Acabas en', mesTxt(mesDe(T[n - 1].fecha))) + dato('Interés que falta', money(suma(T)), 'mal') + dato('Te ahorras', pagos.e ? money(s.ahorra) : money(0), pagos.e ? 'ok' : '') + '</div>' +
+      '<div class="kn-g" onclick="const c=event.target.closest(\'[data-i]\');if(c)MEDIDORES.pagoVe(+c.dataset.i)">' + filas + '</div>' +
+      '<div class="kn-pie"><p>El pago de <b>' + MESL[x.fecha.getMonth()] + ' de ' + x.fecha.getFullYear() + '</b>: <b class="mal">' + money(x.interes) + '</b> de interés' + (x.cargos > 0 ? ', ' + money(x.cargos) + ' de IVA y seguros' : '') + ' y <b class="az">' + money(x.capital) + '</b> bajan tu deuda. ' + (x.saldo < 1 ? 'Con ese pago ya no debes nada.' : 'Después debes <b>' + money(x.saldo) + '</b>.') + '</p>' +
+        leyenda([['Interés', V.b]].concat(x.cargos > 0 ? [['IVA y seguros', V.g]] : [], [['Baja tu deuda', 'color-mix(in srgb,var(--kv-1) 45%,var(--kv-caja))']], hechos ? [['Pagado', 'rgba(var(--ov),.14)']] : [], pagos.e ? [['Te lo ahorras', 'var(--g)']] : [])) + '</div>';
+  }
+  const pagosChips = () => PAGO_MAS.map(v => { const s = pagos.p.R.ahorro({ extraMes: v }); return '<button type="button" class="kn-c' + (pagos.e === v ? ' sel' : '') + '" aria-pressed="' + (pagos.e === v) + '" onclick="MEDIDORES.pagoMas(' + v + ')"><span>' + (v ? '+' + money(v) + ' al mes' : 'Como vas') + '</span><b>' + (v ? 'ahorras ' + money(s.ahorra) : money(s.interes) + ' de interés') + '</b></button>'; }).join('');
+  function pintaPagos() {
+    const a = document.getElementById('knPagos'), b = document.getElementById('knChips'); if (a) a.innerHTML = pagosHtml(); if (b) b.innerHTML = pagosChips();
+  }
+  M.pagoMas = function (v) { pagos.e = v; pintaPagos(); const b = document.querySelector('.kn-c.sel'); if (b) b.focus({ preventScroll: true }); };
+  M.pagoVe = function (i) { pagos.k = i; pintaPagos(); const b = document.querySelector('.kn-g .sel'); if (b) b.focus({ preventScroll: true }); };
+  M.intereses = function (F) {
+    const con = (F.debts || []).filter(d => +d.balance > 0 && tasaQueCorre(d) > 0), mes = con.reduce((s, d) => s + d.balance * d.rate / 1200, 0), L = prestamos(F).filter(q => q.R.tabla.length).sort((a, b) => b.d.balance - a.d.balance);
+    if (!con.length) return { kv: 'var(--g)', titulo: 'Intereses este mes', sub: '', html: '<div class="kv-fila">' + hero(money(0), '', 'No pagas intereses. Todo lo que abones baja tu deuda.', null) + '</div>' };
+    const p = L[0], otras = con.filter(d => !p || d.id !== p.d.id);
+    const resto = otras.length ? '<div class="kv-fila">' + caja('s12', p ? 'Lo demás que te cobra interés' : 'Lo que te cobra interés', otras.some(d => d.type === 'credit_card') ? 'Una tarjeta cobra mucho más que el auto: primero esto.' : '', lista(otras.map(d => fila(esc(d.name), money(d.balance * d.rate / 1200) + ' este mes', d.rate + '% al año sobre ' + money(+d.balance), '')).join(''))) + '</div>' : '';
+    if (!p) return { kv: 'var(--o)', titulo: 'Intereses este mes', sub: 'Lo que te cuesta deber.', html: '<div class="kv-fila">' + hero(money(mes), '', 'Es lo que te cobran por deber ' + money(con.reduce((s, d) => s + +d.balance, 0)) + '. No baja tu deuda.', null) + '</div>' + resto };
+    const R = p.R, t = R.tabla[0], pago = t.interes + t.cargos + t.capital, K = R.contrato, c = 2 * Math.PI * 112, arco = (v, desde, col) => v > 0 ? '<circle cx="140" cy="140" r="112" fill="none" stroke="' + col + '" stroke-width="26" stroke-dasharray="' + (c * v / pago).toFixed(1) + ' ' + c.toFixed(1) + '" transform="rotate(' + (-90 + desde / pago * 360).toFixed(1) + ' 140 140)"></circle>' : '';
+    Object.assign(pagos, { p, k: 0 });
+    const pie = chocaC(R) ? '<b>Revisa tus datos:</b> tu contrato acaba en ' + prMes(K.ultima) + ' y con estos datos acabarías en ' + prMes(R.fin) + '.' + (K.cargosSugeridos ? ' Cuadra si unos ' + money(K.cargosSugeridos) + ' de cada pago son IVA y seguros; entonces el interés que falta sería ' + money(C().prestamoSimular(Object.assign({}, p.d, { cargos: K.cargosSugeridos }), {}).interes) + '. Lo dice tu estado de cuenta.' : ' Compara el saldo y la tasa con tu estado de cuenta.')
+      : '<b>La mensualidad se anota sola.</b> Un abono va todo a tu deuda: pruébalo antes de pagarlo.';
+    return { kv: 'var(--o)', titulo: 'Intereses este mes', sub: 'Cada cuadro es un pago de ' + esc(p.d.name) + '. Lo naranja es interés: no baja tu deuda.', html:
+      '<div class="km kn"><div class="kn-b"><div class="kn-i"><section class="kv-c kn-dona"><svg viewBox="0 0 280 280" role="img" aria-label="De tu próximo pago, cuánto es interés"><circle cx="140" cy="140" r="112" fill="none" stroke="var(--kv-1)" stroke-width="26"></circle>' + arco(t.interes, 0, 'var(--kv-2)') + arco(t.cargos, t.interes, 'var(--kv-gris)') +
+          '<text x="140" y="112" class="s">Este mes, de interés</text><text x="140" y="158" class="n">' + money(t.interes) + '</text><text x="140" y="188" class="s">' + Math.round(t.interes / pago * 100) + '% de tu pago</text></svg>' +
+          '<p><b>' + money(t.interes / 30) + ' al día.</b> El ' + prDia(t.fecha) + ' pagas ' + money(pago) + ': ' + money(t.capital) + ' bajan tu deuda' + (t.cargos > 0 ? ' y ' + money(t.cargos) + ' son IVA y seguros' : '') + '.</p></section>' +
+        '<section class="kv-c kn-mas"><h3>¿Y si pagas más cada mes?</h3><div id="knChips">' + pagosChips() + '</div><p class="kv-p">Tu ahorro va a la salida: esto es para dinero extra. Cada ' + money(1000) + ' que abones hoy te ahorra ' + money(R.porMil.ahorra) + '.</p></section></div>' +
+      '<section class="kv-c kn-p" id="knPagos">' + pagosHtml() + '</section></div>' +
+      '<section class="kv-c kn-r' + (chocaC(R) ? ' alto' : '') + '"><p>' + pie + '</p><div class="ac">' + (chocaC(R) ? boton('Revisar mis datos', 'abrirKpi(\'deudatotal\')', 1) : '') + boton('Simular un abono', 'abrirKpi(\'deudatotal\')') + '</div></section></div>' + resto };
   };
 
   // ══ Total invertido ══
@@ -566,17 +594,6 @@
     });
     const cruz = nodo(g.svg, 'line', { y1: g.t, y2: g.h - g.b, stroke: 'var(--kv-gris)', 'stroke-width': 1, opacity: 0 });
     raton(g, n, X, i => { cruz.setAttribute('x1', X(i)); cruz.setAttribute('x2', X(i)); cruz.setAttribute('opacity', .8); globo(g, X(i), o.largo[i], o.series.filter(s => s.v[i] != null).map(s => ({ c: s.c, v: money(s.v[i]), n: s.n }))); }, () => cruz.setAttribute('opacity', 0));
-  }
-  function columnas(id, o) {
-    const g = base(id, o); if (!g) return; guarda(id, columnas, o);
-    const n = o.et.length, tot = o.et.map((_, i) => o.series.reduce((s, q) => s + q.v[i], 0)), Y = ejes(g, 0, Math.max(...tot) * 1.04), ancho = (g.w - g.l - g.r) / n, bw = Math.min(24, ancho * .6), X = i => g.l + ancho * (i + .5), G = [];
-    o.et.forEach((t, i) => {
-      const gr = nodo(g.svg, 'g', {}); G.push(gr); let ac = 0;
-      o.series.forEach((s, k) => { const y1 = Y(ac), y2 = Y(ac + s.v[i]), ult = k === o.series.length - 1, hh = Math.max(0, y1 - y2 - (k ? 2 : 0)), x = X(i) - bw / 2, r = ult ? Math.min(4, hh / 2) : 0; ac += s.v[i]; if (hh < .5) return;
-        nodo(gr, 'path', { d: 'M' + x + ' ' + (y2 + hh) + 'V' + (y2 + r) + 'Q' + x + ' ' + y2 + ' ' + (x + r) + ' ' + y2 + 'H' + (x + bw - r) + 'Q' + (x + bw) + ' ' + y2 + ' ' + (x + bw) + ' ' + (y2 + r) + 'V' + (y2 + hh) + 'Z', fill: s.c }); });
-      nodo(g.svg, 'text', { x: X(i), y: g.h - 7, 'text-anchor': 'middle' }, t);
-    });
-    raton(g, n, X, i => { G.forEach((q, k) => q.setAttribute('opacity', k === i ? 1 : .45)); globo(g, X(i), o.et[i], o.series.slice().reverse().map(s => ({ c: s.c, v: money(s.v[i]), n: s.n }))); }, () => G.forEach(q => q.setAttribute('opacity', 1)));
   }
   function guarda(id, f, o) { graficas = graficas.filter(q => q[0] !== id); graficas.push([id, f, o]); }
   let t = 0;

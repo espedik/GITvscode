@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Intereses · D</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7fb4f5}a:hover{color:#b4d4fb}
+</style>
+</helmet>
+<div style="width: 1900px; height: 1000px; box-sizing: border-box; padding: 20px 34px 26px; display: flex; flex-direction: column; gap: 18px; background: #11131a; color: #f4f4f8; font-family: Inter, system-ui, sans-serif;">
+  <div style="display: flex; flex-direction: column; gap: 2px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1);"><h1 style="margin: 0; font-size: 22px; font-weight: 800;">Intereses este mes</h1><p style="margin: 0; font-size: 14px; color: #b4b8c7;">Lo que te cuesta deber el BYD.</p></div>
+
+  <section style="display: flex; flex-direction: column; gap: 14px; padding: 24px 32px; border-radius: 18px; background: #181b25; border: 1px solid rgba(255,255,255,.1);">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 20px;"><h2 style="margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -.01em;">De los $6,700 que pagas el 15 de diciembre</h2><span style="font-size: 15px; color: #b4b8c7;">Debes $275,688</span></div>
+    <div style="display: flex; gap: 8px; height: 150px;">
+      <div style="width: 44.5%; border-radius: 16px; background: #ff8a3d; color: #1a0f06; display: flex; flex-direction: column; justify-content: center; padding: 0 30px; box-sizing: border-box;"><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 60px; line-height: 1; letter-spacing: -.03em;">$2,984</strong><span style="font-size: 18px; font-weight: 600;">se van en interés: $99 al día</span></div>
+      <div style="flex: 1; border-radius: 16px; background: #3987e5; color: #050b14; display: flex; flex-direction: column; justify-content: center; padding: 0 30px; box-sizing: border-box;"><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 60px; line-height: 1; letter-spacing: -.03em;">$3,716</strong><span style="font-size: 18px; font-weight: 600;">bajan tu deuda</span></div>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 8px; padding: 22px 32px 18px; border-radius: 18px; background: #181b25; border: 1px solid rgba(255,255,255,.1); flex: 1; min-height: 0;">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 20px;"><h2 style="margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -.01em;">Cada mes pagas menos interés</h2><span style="font-size: 15px; color: #b4b8c7;">En total, $91,182 hasta junio de 2031</span></div>
+    <svg viewBox="0 0 1770 400" style="width: 100%; flex: 1; min-height: 0;" role="img" aria-label="El interés de cada mes baja de 2,984 hoy a 54 en junio de 2031">
+      <line x1="20" x2="1750" y1="350" y2="350" stroke="rgba(255,255,255,.3)"></line>
+      <polygon points="{{area}}" fill="#ff8a3d" opacity=".2"></polygon>
+      <polyline points="{{linea}}" fill="none" stroke="#ff8a3d" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"></polyline>
+      <sc-for list="{{puntos}}" as="p" hint-placeholder-count="6"><circle cx="{{p.x}}" cy="{{p.y}}" r="9" fill="#f4f4f8" stroke="#181b25" stroke-width="3"></circle><text x="{{p.x}}" y="{{p.ty}}" text-anchor="middle" font-size="21" font-weight="700" fill="#f4f4f8">{{p.v}}</text><text x="{{p.x}}" y="380" text-anchor="middle" font-size="15" fill="#b4b8c7">{{p.t}}</text></sc-for>
+    </svg>
+  </section>
+
+  <section style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 18px 28px; border-radius: 18px; background: #12241f; border: 1px solid rgba(0,232,122,.35);">
+    <p style="margin: 0; font-size: 18px; line-height: 1.5;"><b>Con $1,000 más al mes</b> te ahorras <b style="color: #00e87a;">$16,198</b> y acabas 9 meses antes. <span style="color: #c3c8d4;">Tu contrato dice feb 2033: revisa tus datos.</span></p>
+    <div style="display: flex; gap: 10px;"><button type="button" style="min-height: 46px; padding: 0 20px; border: 0; border-radius: 12px; background: #2b3a36; color: #f4f4f8; font-family: Inter, system-ui, sans-serif; font-size: 15px; font-weight: 700;">Revisar mis datos</button><button type="button" style="min-height: 46px; padding: 0 20px; border: 0; border-radius: 12px; background: #00e87a; color: #05050a; font-family: Inter, system-ui, sans-serif; font-size: 15px; font-weight: 700;">Simular un abono</button></div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1900,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    let s = 275687.59; const L = []; while (s > 0.5) { const i = s * .1299 / 12, c = Math.min(s, 6700 - i); s -= c; L.push(i); }
+    const X = k => 80 + k / 54 * 1610, Y = v => Math.round(350 - v / 3200 * 300), P = L.map((v, k) => X(k).toFixed(1) + ',' + Y(v));
+    return { linea: P.join(' '), area: X(0) + ',350 ' + P.join(' ') + ' ' + X(54) + ',350', puntos: [[0, 'dic 2026'], [12, 'dic 2027'], [24, 'dic 2028'], [36, 'dic 2029'], [48, 'dic 2030'], [54, 'jun 2031']].map(q => ({ x: X(q[0]), y: Y(L[q[0]]), ty: Y(L[q[0]]) - 20, v: '$' + Math.round(L[q[0]]).toLocaleString('en-US'), t: q[1] })) };
+  }
+}
+</script>
+</body>
+</html>

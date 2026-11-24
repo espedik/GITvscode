@@ -3488,7 +3488,7 @@ function promptsDeLoTocado() {
   C.prestamoDatos(F, 'x', { saldo: 95000, rate: 13, plazo: 30 });
   if (x.balance !== 95000 || x.rate !== 13 || x.plazo !== 30 || x.pagosAl !== C.fechaLocal()) malos.push('prestamoDatos no deja el saldo dicho con pagosAl de hoy, la tasa o el plazo');
   const h = leer('Dashboard/dashboard.html') + leer('Dashboard/medidores.js').replace(/\bC\(\)\./g, 'CIFRAS.'), fz = leer('Finanzas/Finanzas.html');
-  ['CIFRAS.prestamoResumen(', 'CIFRAS.prestamoAbono(', 'CIFRAS.prestamoAbonoBorrar(', 'CIFRAS.prestamoDatos(', 'function prAbonoForm(', 'function prDatosForm(', 'R.porAnio', 'CIFRAS.deudaCamino('].forEach(k => {
+  ['CIFRAS.prestamoResumen(', 'CIFRAS.prestamoAbono(', 'CIFRAS.prestamoAbonoBorrar(', 'CIFRAS.prestamoDatos(', 'function prAbonoForm(', 'function prDatosForm(', 'CIFRAS.prestamoTabla(', 'CIFRAS.deudaCamino('].forEach(k => {
     if (h.indexOf(k) < 0) malos.push('Deuda total del Dashboard ya no usa ' + k.replace(/\($/, ''));
   });
   if (fz.indexOf('CIFRAS.prestamoAbono(') < 0) malos.push('«Pagar» de Finanzas ya no anota el abono con la cuenta del maestro');

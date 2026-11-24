@@ -1,7 +1,7 @@
 /* Las noticias de inversión de Qué invertir hoy, de Google Noticias. Las escribe el hook de pre-commit
    (Dashboard/noticias-actualizar.js): no se edita a mano. */
 window.NOTICIAS_INVERSION = {
- "generado": "2026-11-24T20:04:55.834Z",
+ "generado": "2026-11-24T21:07:23.065Z",
  "temas": [
   {
    "id": "recomendaciones",
@@ -111,11 +111,38 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
+   "t": "Sector de fondos de inversión sigue creciendo",
+   "u": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxONXRsV29UQk9jdWJfSlZHbnlIT3lGVDdGbEtJcHJlVmtna3V6NWItcGNNOFdob3F6bnRhUUtZeDVyWGkwZVdaY1FYWjNpM3dqQ09LVjJqQ3hKUXpNSXMwMG93NEN1LVZGYWMyNDFOWjdpalh6OUtXRVRCQ1Z2YXpXX2V6Q2trTFBtZS1ydkhhbkEzMHVxeE1xaTdTR2JzTlBJaS1wdHZPY1bSAagBQVVfeXFMTjV0bFdvVEJPY3ViX0pWR255SE95RlQ3RmxLSXByZVZrZ2t1ejViLXBjTThXaG9xem50YVFLWXg1clhpMGVXWmNRWFozaTN3akNPS1YyakN4SlF6TUlzMDBvdzRDdS1WRmFjMjQxTlo3aWpYejlLV0VUQkNWdmF6V19lekNra0xQbWUtcnZIYW5BMzB1cXhNcWk3U0dic05QSWktcHR2T2NW?oc=5",
+   "f": "2026-11-24T02:54:46.000Z",
+   "fuente": "El Economista",
+   "dominio": "eleconomista.com.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
    "t": "¿Cuánto ganas con $5,000 pesos en Cetes? Así aumenta tu dinero con la reinversión automática",
    "u": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxNYUtyR2dkWFpuRW5PbGsyVUw3TDJkRVVNMG9idEhNN2w4VFZyY0wwaE5NeEdITFdZUHpITnU5V09RWnVuMnliRG9jQlZKTU9ENUk0QUUtOFBHdlJCT1R5eDBRY2E1UnQ5b0NyQVlrUmtOc3lWNURvNEVDRnlCa25DOXZKQzFoOFIxc3IycTl4UHgyYktXRFlPR2pFcXhGR2lUR3FBVW9EUG9ZU2RoTkF2NXFXYkZ4NERZWm15SzkwZk5pcDYtQjRvQS15eXRrUmZhcFHSAeYBQVVfeXFMUEZ1SHRkbkVSWkRqelZrcDEyV1MyM1ZWeW81aVBoelREVEl4S2hmTlJkYUtSSEMxd21NVFlZYUtudC1NdjNRQkI2NF9pU3RyZ3EtcnJtR2VaQ0VKX0FZWUFlWGpfZ0pLS1pTc1gzQTdqcUlBTktSeHZ5bmliNDhnOXdnS0lQVWI4VDJ1eW5vel9KVkE2RHl0QTE4Q2k4V2R3cjZMMEVxaDBQYlBCWjFSd1BrQS1icmE0QWxsdnRWMGxFQXVIMGpTODJpMUZ0VUV4aHppOFI3WU1LNXlhWU9yS3U0bzJwTFE?oc=5",
    "f": "2026-11-23T20:05:45.000Z",
    "fuente": "DeDinero",
    "dominio": "dedinero.com.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "Cetes: Así quedaron las tasas en la semana del 17 al 24 de noviembre de 2026",
+   "u": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQVHV5Sm9lVWxKaG1IckZmSlF0REhIckg0SWppRldNVVZiSEw5ck5RS3E4M194N0JjNmNkcWFoOFBLQmlXcGEyeWgzYzhpMkhiRUt1bHRYdzRHVlU2X0xSYU44Z0FYZ1FrdEJEN3hOZkkwdHc0YWEtemJpcEJoakRlUmw3WjFWSzg5b0kzcnVWSG9Zd9IBlwFBVV95cUxNUXRfbzQ5Q2o4eGxWQVhmYzBpSC1lU05iUXRhVzFIWE50VDMzdmFYaWY5TTdSZmNyUDZnSnEyYlUwUDBUdlVFX0pFcEZ2QlNvd0tJVmlyZmtWU1czaXhCaWtEQVo4ckVjbFJ2eUlfb2dhRnhjZmkyNXFpUnFSX1dSWlBUQ2g1RXJmam8zYURQNHc0bmdxbXU0?oc=5",
+   "f": "2026-11-23T10:26:30.000Z",
+   "fuente": "Imagen Radio",
+   "dominio": "imagenradio.com.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "Anthropic: claves para inversionistas ante su salida a Bolsa",
+   "u": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQNnFyU2o1VEt4X1pxNVY4WElRN1lRUG5PeW9NN2Ezak9LZTV0VmtaUlRDWlQ0TnBxSEE5V1J6V09kTlJ3a3dzV0hOSC14S2x3N0RsaDRiQWxHTTVxUEtXbEF0V0RsQnB5SEtabHEySHZuTEhEaE83a0pacTNHTU96WUJHWkkxcVUyOHJpSVJqOVc3cFNsd3o1LXVrbDFwMWxNM0pydERobC1iR2kxaDVramxySWpMLU3SAbwBQVVfeXFMTnA3Zk9fQmVMdGh3VUxqYzFhaV9YTHdOdjhCQTlZSllreXNOc3lqLV8wendWUDRVMHVBXzZuOXgwNkFCSy1ER0t4dHI2YVhvNDZUMlAyQVVac1NxRFE3LVd5UGZVZmlmVjV3ZEtzcE9fTUQ3Zi1qSlM0ano5T255dzBVeHYzTTROR0RQUWpuNEdQek1HbndReFJYVmRfX3lkcEhTSnMtc0lFbWVfaVNKY1pPR1YxOWRBTXh5VWo?oc=5",
+   "f": "2026-11-20T23:00:00.000Z",
+   "fuente": "El Economista",
+   "dominio": "eleconomista.com.mx",
    "tema": "cetes",
    "rec": false
   },
@@ -143,6 +170,15 @@ window.NOTICIAS_INVERSION = {
    "f": "2026-11-19T08:00:00.000Z",
    "fuente": "El Financiero",
    "dominio": "elfinanciero.com.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "Subgobernador Omar Mejía defiende recorte en la tasa de Banxico ante el repunte de la inflación; “No hubo sorpresas”",
+   "u": "https://news.google.com/rss/articles/CBMi7wFBVV95cUxNTGJDRDlpMmN5T3BBX0MweXJNMHBhRVBKdEpBMXFKaXlrY1Nsd0tjTG1NSzRSVWZVNFhibWY4NHNpT01NRlN3V21qNVllUVBKZTl3MXNNYm9tYV9OeWVMX083MTJtQmJLUDZ3cnZoa2QzbENWelhhaWlmRnY4a1Y0WTEtN2YxSTNONG1zbFdEN2gweGtVSGtKZDhRaFVSSVVsTTkzbWlkNWNZc2tOb194ejI3ckhKSjBXbWt4Sm9KQ1BnU3AyMkZIUDZVdHB0cW9QMzBGSm43VUdpVDQyYWtxak4xa3RCenhsRWFhQm1LUdIB_AFBVV95cUxOTTktSzJ6dldiOFpybzdBVzBIYVFjVGVpRm5aTkRmMlFUWTVNMTk3TlZKSmxQbW4tcGtJUnVfOWh5RkdkNktFcUNDNURabjdWdVJqVXpidk1Kc0pDSHN6ZkxZR0h1bDVNM3lwRDZGRzliQlA1ZnhqT2NsTVE4VElEWVd2emJBNm1aNmk2WGJnSDJTOWI3UTI1NnRaenJxYVBzRjFsbWlBWF8zNXJWZll5U2tDWEtOMVRsLTU5SjJRdHl2Y1I1SlhQY2dtQUpYR1dCek5aNnFoQVhJREVfZzFnaklhSkVXekhDRzZ5RE5MWmNuakVVVlJ4aHo1NWw?oc=5",
+   "f": "2026-11-18T18:45:00.000Z",
+   "fuente": "Expansión",
+   "dominio": "expansion.mx",
    "tema": "cetes",
    "rec": false
   },
@@ -183,15 +219,6 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "El S&P 500 cambia: SharkNinja entra al índice tras subir casi 100% en 2026, ¿qué impulsa su rally?",
-   "u": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNeUR4dU5QUnhXNWdVN0xueF9ENmQ3bmdtMUhnQWpTVTdfcFFGS2N1ZGdCb0dnRk16aFJJVXhwNW1kMXBzNXBLOVU0ajRvNDRtTHgwcmZBa19McmdCTEtGZFJGVGdCMHNQVVBpV09TYjd5NzFtdDJBR011MkFxT29vMEQzMW5PNE4tNUl0RVo2ZWxUemF2ZzBFM0hxd0dNX1BMblNsZDZBQWY2TkpSN00wOURuRFhMaWZLc2xFYVRnOGlTZzdFZG9vQ0E0TzBTdw?oc=5",
-   "f": "2026-11-24T17:34:22.000Z",
-   "fuente": "Bloomberg Línea",
-   "dominio": "bloomberglinea.com",
-   "tema": "bolsa",
-   "rec": false
-  },
-  {
    "t": "¿Acción completa o fraccionada? Esto debes saber antes de invertir",
    "u": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQTXhjNjVzNXJUMlNtLWIwTndsQUQtMW5BQlNwdjN2U3BmdEg1QTZDUFdoakx4UDUxQWU2d2g5V1ZNa08zX2szNld5N0dxOUhhLTduQlozS3p6Nzc3QV85dDFqcGZLSTFIWjdEYXlFNGpob0NsdDhVNW5ld05DUmdXOE1Xcmh5d0pxVUFHOVNydkdWTDBBVG9Fd0ZzNFNzS3BlZ3pjZUtOamtVdVJBZUMwa1JERGU0M1VRcThN0gHAAUFVX3lxTE55LW1jYnFNTGExQ3lsQXlJUlVxNjFPUFFIYXhSXzVYbmFwRFpnTUsydjRBVTlyTEhKcWE4S0pQcmREQ0Z0ZHNreE5wN1BxVDJwU3ZqLUZla1pBalMwSElnUDd4Mk41THRHdC1oYTJEUkJ6dDZPMkZiM1ZSRVoxNHVFVGVzOXk2ZEU5REhhcGxNYWxFajJ0bm5HTWFjMmdRd1YyanZOTXdaWFNiNlFxTnNrLTh6cV90ZWtDRnIxYkpfVw?oc=5",
    "f": "2026-11-24T17:00:00.000Z",
@@ -210,29 +237,11 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "Bolsa mexicana extiende el repunte; destacan acciones de GAP y Grupo Carso",
-   "u": "https://news.google.com/rss/articles/CBMixgFBVV95cUxObG83blBHRFNScGhYVmR4SndkQllNcWE4U3lLQjJRbDBmTVIzTmNnb0VNNFVBelFzT1phb1h4ekRoNHpsdGNFVkpHbFRremRZQUI1RGQxemNYR2NDVXZvTFdET05ES1ZuRV8xSDlyQ0EtV241dUNMb2NoMWotZFpkdnBQQzhWU3pJNE5kMFp4N3FZcW5pSldiWV9sTUw0Q01jMHRvMXoxS0NvbS1sQXg4OFFmTGlNdWRoMHd0d3Jjd25jMnNfU1HSAcsBQVVfeXFMTjRiMHZPQ19MMnkzSlBNdjd5RXBpSGZOaFhMcVhvcThYNXVPdmUydURDYTNxYzBIaVFZanhKOTV6dXRWRmZnRVExTlc3VVhlRlVfZnlhZkYxQUVydm9Da1A4QjJBS0twcnpIeV85S0p5dEdkSDBvb28tOGlYcnhVT1g3THVtb3dyazkzSHhFUXhpaEVGUzZjWlo1Q3cyYUtKMTdSY1JGTE5TWnctaVVHc0FQRGJGMWYxd2lMTzJIaU96Z0xqOFp6OEl4ZkU?oc=5",
-   "f": "2026-11-24T16:01:01.000Z",
+   "t": "Bolsas mexicanas rompen racha de seis sesiones a la baja",
+   "u": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQSWpJbGlLOWZzOWxhVkxPMGpwYzY0bUkxUHYtd043SEdZMzBkMXRxX3k3SmJkamlyalFNNl8yVHc0VHVQSDFvcFd3QWRMdC1BTlgyckFfTnRyWHRKY18yQXB5WDdWODFXVFFSR0VBMGVDY2dsS0hmdGpLdk1fajk4cnpuaGQ3S3liUUE2UmhZMlVZMHJHaWhhS1ByN25iVXEyekgyRjE1OFlhTG9PUHNWUVhlQ0LSAbQBQVVfeXFMUElqSWxpSzlmczlsYVZMTzBqcGM2NG1JMVB2LXdON0hHWTMwZDF0cV95N0piZGppcmpRTTZfMlR3NFR1UEgxb3BXd0FkTHQtQU5YMnJBX050clh0SmNfMkFweVg3VjgxV1RRUkdFQTBlQ2NnbEtIZnRqS3ZNX2o5OHJ6bmhkN0t5YlFBNlJoWTJVWTByR2loYUtQcjduYlVxMnpIMkYxNThZYUxvT1BzVlFYZUNC?oc=5",
+   "f": "2026-11-24T03:03:07.000Z",
    "fuente": "El Economista",
    "dominio": "eleconomista.com.mx",
-   "tema": "bolsa",
-   "rec": false
-  },
-  {
-   "t": "J.M. Smucker supera estimados del Q2 pero sus acciones caen por guía",
-   "u": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNZncySG5OWUx0Zm9LU18wN0hmd1g1Ukp6eVV5Q2RTUkg1eU51ZFlMdjBvY3ZwTUJtQ1l5MmlEYVFoVmI1Vm8wNDVlaUhUVEQzbFRha0dvcklCejVxSnBmSEg2N2k1T091YlhwV0s4RG1TbkFUVlluUkJRUVVITFpJaHNfSnlzanhfSkRwVFB1M2tTY1FJaEM5Rm0ySVMtT2d4eHFlU2UxbW9tQQ?oc=5",
-   "f": "2026-11-24T12:11:18.000Z",
-   "fuente": "Investing.com México - Finanzas, Bolsa y Forex",
-   "dominio": "mx.investing.com",
-   "tema": "bolsa",
-   "rec": false
-  },
-  {
-   "t": "Mexicanos se aprietan el bolsillo: Walmart, Soriana, Chedraui y La Comer advierten debilidad en el consumo",
-   "u": "https://news.google.com/rss/articles/CBMiywFBVV95cUxNNVZhX2lOZUlYcWt1UTFFVVZXenBtY0FrbjVsQ0tOVUQyTkxkb1pBZ2JWM3ZPbVRaRUZuSGpRSklxa0wxbVhxenV6MVRCbjZ3dEhsUkJDZTcyVnB1MlB6TGhjQW1jUmlTbGFSekljS3Y0VGZhYUpBNUUxLThEWjdHVWs2ZjJiallZaDhxQkFUZ044cHMwcEhfb2Ytd3hKbUtGQlhRYkFpa0RTb1YxWU41dlZnRjR6dEdqdWx3dzJpOG13OVNBakZJMHdiZw?oc=5",
-   "f": "2026-11-24T08:03:07.000Z",
-   "fuente": "EL CEO",
-   "dominio": "elceo.com",
    "tema": "bolsa",
    "rec": false
   },
@@ -246,11 +255,38 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "Las bolsas de valores de México cerraron con subidas; el S&P/BMV IPC ganó un 0.99%",
-   "u": "https://news.google.com/rss/articles/CBMizgFBVV95cUxPcjE4a1pyMTJuek42NldsQTY0TzA5Qm1hOTFXVTlHeTIwZ1k0WWV2TTlxMnE3RWk2QW44YVd3LTJuT0VSUlNkZ1FqSkVzQmU4WEdSOXR3azFpdWFyeF9lVDJ3SDNWejE4d3JUcVdCRlBveFpTRVRzYWdwTUdjNldLUnlMeThDZ0xFbjVtb1NJdEVtVm9iSXVESkZZYzVGbDhNREtKTldqYkE1QklCckxFYk1xYzYtR2JmT2lUVW50d3JtVUdPN2R3OFZxWHlsdw?oc=5",
-   "f": "2026-11-23T21:39:48.000Z",
-   "fuente": "Investing.com México - Finanzas, Bolsa y Forex",
-   "dominio": "mx.investing.com",
+   "t": "Las acciones de Nvidia suben 33% con el regreso de Huang",
+   "u": "https://news.google.com/rss/articles/CBMickFVX3lxTE9XX2psZjhKSUZGelkyRmFldlI0RWpWN3F3c2tlX19yakd4V1lkLTJrVTlTU3BDT09QeHlZR0hvLW1CeGpWVW1IVlk3UDV1OGd1dHFraGp3OVNvdjJkd1ZmaGdha3hGcmRVdzZLR21Fb0Vpdw?oc=5",
+   "f": "2026-11-23T16:04:00.000Z",
+   "fuente": "Jointly News",
+   "dominio": "news.jointly.mx",
+   "tema": "bolsa",
+   "rec": false
+  },
+  {
+   "t": "Acciones de Marvell y Lumentum a la baja",
+   "u": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPRk0yTlgzaHNaMEw3Z19xNFMxcHVJNnFtNUxIeG9LaWZqX3NGdzc5WG1HTkdYaW1NS2NWa3ZYU1VFeHJrcGFjUXFGb3FNMnhJeHVNeWxoWmE2dGRqNWphTllHVFlSUVRqNUNYVm0wa0pUM3lVX3JBUVYzV3JLQ2ZfTTJXLVoxbFRIRHhRWjJGNTR2R2tXXzZiN253aVbSAZwBQVVfeXFMT0ZNMk5YM2hzWjBMN2dfcTRTMXB1STZxbTVMSHhvS2lmal9zRnc3OVhtR05HWGltTUtjVmt2WFNVRXhya3BhY1FxRm9xTTJ4SXh1TXlsaFphNnRkajVqYU5ZR1RZUlFUajVDWFZtMGtKVDN5VV9yQVFWM1dyS0NmX00yVy1aMWxUSER4UVoyRjU0dkdrV182Yjdud2lW?oc=5",
+   "f": "2026-11-23T02:28:33.000Z",
+   "fuente": "El Economista",
+   "dominio": "eleconomista.com.mx",
+   "tema": "bolsa",
+   "rec": false
+  },
+  {
+   "t": "Analistas de Goldman ven oportunidad de entrada en acciones estadounidenses, pero advierten sobre los riesgos",
+   "u": "https://news.google.com/rss/articles/CBMi4wFBVV95cUxOQjVCNUh3YldFYndUMnpPc29LLXJhYk9reFNHaXY1aElwRWJ5U0x2aUY3amNDQjJFVmVkSUVtWGFPOVBHdHR4SHBvWnVYRkxCUkpKX0hKSy1jeFV5cjhkeV8tcjJZZTl6N2lRN0llQTBCRThQbXVBOExjMjZia2tudF9OeDRBQ0lyMjlzSE9TZWhGSENkZHBHZFVyRmppdHFoRk1uX3d1akx6SUVtTTdDeS1VQTVHR29HcDRiSDRHVUVYZnhtZEdDSDdSVFNCazRJRDdiYTRQdnhaLVZUNlpKYjlvWdIB9wFBVV95cUxPT2tUcFNIRXdna0k2dm9UNnozQkZwRVVGQVVjcjFuUmE0UHJoQnZnUzg4VGtRTWdHVllrMElYU3Bfb3B3dUVCNHhMSjNJMDkzT0RxS0dxYkQxMk1qZlU4X2t3bXJuNTdPdEFtSkoxWDVqLUZFZ3IxNnQ0d2VGcXVwVlJJY01BeUtsLVZoSjFPR3pNT0UtQXJMQ3VfbF9PR1lVbERKSlFCOEFMZ3dOYkNXS0swdU9LQjFGcmRlczRWYTZJOGFtZ3YxRzZkc05YVmZEcW5YWF82VDRLMmlVZTA0Z3NSaERselNKcFBHRHYtYnBrRENjX1k4?oc=5",
+   "f": "2026-11-22T19:53:53.000Z",
+   "fuente": "Bloomberg Línea",
+   "dominio": "bloomberglinea.com",
+   "tema": "bolsa",
+   "rec": false
+  },
+  {
+   "t": "Lanza 4 Tech Plus oferta formal para comprar Axtel",
+   "u": "https://news.google.com/rss/articles/CBMigwFBVV95cUxOOG1tOGdkZGNsZzRlSUJtLVRDWmsyemFvOUlkZC12YXFXZzBmQjlJVGttZVRBR0RPeHRlTmxobDA5S3F3aWYxU0FzN1duOVZCVUxQZkk2SzlsbnNOS1ctd09NMUtYcUdZMjZMMnFhNkphTUdhVk5lTVhEdmMtZmxleG1SNA?oc=5",
+   "f": "2026-11-21T10:16:48.000Z",
+   "fuente": "Periódico Zócalo",
+   "dominio": "zocalo.com.mx",
    "tema": "bolsa",
    "rec": false
   },
@@ -260,6 +296,15 @@ window.NOTICIAS_INVERSION = {
    "f": "2026-11-24T19:45:00.000Z",
    "fuente": "iProUP",
    "dominio": "iproup.com",
+   "tema": "cripto",
+   "rec": false
+  },
+  {
+   "t": "Venta masiva de Bitcoin impulsada por una demanda débil y liquidaciones forzadas: 21Shares",
+   "u": "https://news.google.com/rss/articles/CBMib0FVX3lxTFBCT0Fab0FHMWtXbVROWkxvRzd6TGRfYWd2RnZuQTFMRkR1QlFKeDNMRnhKanZlS1FZX3kxd1E2dHZfZnBTeHRCSnppUGF6TzhFdnBHeXVGcXNwNEplSWYyR2ZfaFhhVUxWNlgxd2t0cw?oc=5",
+   "f": "2026-11-24T19:44:23.000Z",
+   "fuente": "TradingView",
+   "dominio": "es.tradingview.com",
    "tema": "cripto",
    "rec": false
   },
@@ -345,20 +390,11 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "Caída de bitcoin hoy: baja de 60.000 dólares y el ether pierde un 7 %, noticias criptomonedas en directo",
-   "u": "https://news.google.com/rss/articles/CBMigwFBVV95cUxONWl2emZOMVRhcmQ1d3JxWUNzMFJRYmVPcVJPUnJ5MlBHRl9Id3VpWjhyWXVpcEtzbWl5eXd1QkZMQlZVNEc2ZEJ0bW1sVDlYZXh0UWdhTzNKOGRSUk5lOHhhVkw1S2tjWjdHQmJsVGlGYTV2dXlXNzJlR1hrNnFOTVZvaw?oc=5",
-   "f": "2026-11-24T15:36:08.000Z",
-   "fuente": "CryptoTicker.io",
-   "dominio": "cryptoticker.io",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "Precio de Dogecoin: carteras medianas compran 290M DOGE",
-   "u": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNQ29EMEtQN1p2OHc1S0wyejZtSF94ejhGWE9BdW84QkJfRWRfa21vLXYxVlFDXzF3eDVOVmxkb19WanIxUjBNMEFzVlhTVXVuQlRFTUp1eDFRNU9xWTI1YWhHRjA5dDZtVDJNSnYzMW1vWkQ3emFLTXdta01EbnN4b2RqdDh2UUcwQ01Fa0U0OURsSUE?oc=5",
-   "f": "2026-11-24T15:24:01.000Z",
-   "fuente": "CryptoTicker.io",
-   "dominio": "cryptoticker.io",
+   "t": "Análisis del precio de Bitcoin: BTC podría quedarse fuera mientras la IA se prepara para una nueva corrida alcista",
+   "u": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNOHBsVHNMUG54QVNWYlZyeFN5N21kNnhKZW1hTWowbzdVWGcxTkVScE56WWYxSkxLWHZaRy0zNHBnOHR5TEZKTThVR1lrWTgyV25TNm0yZ003c08xdDRZdXBaMFVNOU5lb3lIZkl5RG45OVRQOHc3OUk5TjRWZVBlMTRSMHZzSl9LTkcxbElHWlAxVGZHWDFCeFFzWUU3OVNnOXlkQUxTZlpsR2N6cGNBWkdaXzl6SzhSb09yeUltWmNEbV9NQ1FJLTF3?oc=5",
+   "f": "2026-11-24T16:00:25.000Z",
+   "fuente": "CoinDesk",
+   "dominio": "coindesk.com",
    "tema": "cripto",
    "rec": false
   }
