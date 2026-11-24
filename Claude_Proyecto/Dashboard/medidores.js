@@ -74,33 +74,137 @@
   const sigTxt = s => s ? (s.k === hoyLocal() ? 'hoy' : 'el ' + diaTxt(s.k)) + ', ' + money(s.v) : '';
 
   // ══ Fondo de emergencia ══
+  // La pregunta de la ventana: si hoy dejara de entrar dinero, ¿hasta qué día llegas? Las cuentas son del maestro
+  // (gastoEmergencia, recorridoFondo): el calendario de pagos de verdad, no un promedio de movimientos.
+  const ef = { minimo: true, si: [false, false, false], F: null, dia: null, lee: null };
+  const MESL = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  const diaLargo = k => +k.slice(8) + ' de ' + MESL[+k.slice(5, 7) - 1];
+  const celdas = (n, f) => Array.from({ length: n }, (_, i) => '<i class="' + f(i) + '"></i>').join('');
+  const manoDe = x => x.ef + x.liqV + x.btcV;
+  function anillo(p) {
+    const n = 40, r = 82, g = [];
+    for (let i = 0; i < n; i++) {
+      const a = (i / n * 360 - 90) * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
+      g.push('<line x1="' + (100 + c * (r - 9)).toFixed(1) + '" y1="' + (100 + s * (r - 9)).toFixed(1) + '" x2="' + (100 + c * (r + 9)).toFixed(1) + '" y2="' + (100 + s * (r + 9)).toFixed(1) + '"' + (i < Math.round(p / 100 * n) ? ' class="on"' : '') + '/>');
+    }
+    return '<svg viewBox="0 0 200 200" aria-hidden="true">' + g.join('') + '</svg>';
+  }
+  const nombrePago = c => { const p = c.pagos; return p.length ? esc(p[0].t) + (p.length > 1 ? ' y ' + plural(p.length - 1, 'pago más', 'pagos más') : '') : 'la comida'; };
+  function ruta(F) {
+    const x = dinero(F), k = hoyLocal(), corre = v => C().recorridoFondo(v, ef.minimo, k, 30, F.debts), R = { fondo: corre(x.ef), todo: corre(manoDe(x)) };
+    const D = R.fondo.dias, c = R.fondo.corte, ult = D[D.length - 1], grandes = D.filter(d => d.fijo >= ult.acum * .04);
+    const titular = !c ? 'más de ' + D.length + ' días' : R.fondo.cubre ? 'hasta el ' + diaLargo(R.fondo.hasta) : 'ni a mañana';
+    // Los pagos que se rotulan: los grandes, sin encimarse (el más grande gana el lugar).
+    const pins = [];
+    D.map((d, i) => ({ d, i })).filter(o => grandes.indexOf(o.d) >= 0).sort((a, b) => b.d.fijo - a.d.fijo).forEach(o => { if (pins.every(q => Math.abs(q.i - o.i) >= 8)) pins.push(o); });
+    const pin = pins.map(o => { const der = o.i > 17; return '<span class="' + (der ? 'der' : '') + '" style="' + (der ? 'right:' + ((D.length - 1 - o.i) / D.length * 100).toFixed(2) : 'left:' + (o.i / D.length * 100).toFixed(2)) + '%"><b>' + money(o.d.fijo) + '</b><em>' + diaTxt(o.d.fecha) + '<u>, ' + nombrePago(o.d) + '</u></em></span>'; }).join('');
+    const tira = (r, cls) => '<div class="kf-tira ' + cls + '" style="--n:' + D.length + '">' + r.dias.map((d, i) => '<i data-d="' + i + '" class="' + (d.alcanza ? 'on' : r.corte && d.fecha === r.corte.fecha ? 'corte' : '') + '" style="--i:' + i + '"></i>').join('') + '</div>';
+    const carril = (n, v, r, cls) => '<span class="kf-c"><b>' + n + '</b>' + v + '</span>' + tira(r, cls) + '<strong class="kf-n">' + r.cubre + (r.corte ? '' : '+') + '<small>' + (r.cubre === 1 ? 'día' : 'días') + '</small></strong>';
+    const t = R.todo.corte, grande = t && grandes.filter(d => d.fecha > t.fecha)[0];
+    const faltas = !t ? [] : [money(t.falta) + '</b> para pasar el ' + diaTxt(t.fecha)].concat(grande ? [money(Math.max(0, grande.acum - manoDe(x))) + '</b> para pasar el ' + diaTxt(grande.fecha)] : [], [money(R.todo.falta) + '</b> para los ' + D.length + ' días']).map(s => '<b>' + s);
+    ef.lee = { R, base: faltas.length ? 'Juntando todo, te faltan ' + faltas.slice(0, -1).join(', ') + (faltas.length > 1 ? ' y ' : '') + faltas[faltas.length - 1] + '.' : 'Juntando todo, pasas los ' + D.length + ' días completos.' };
+    const modo = (v, n) => '<button type="button" aria-pressed="' + (ef.minimo === v) + '" onclick="MEDIDORES.modoFondo(' + v + ')">' + n + '</button>';
+    return '<div class="kf-top"><div><h3>Si hoy dejaras de ganar, tu fondo te lleva</h3><strong class="kf-tit">' + titular + '</strong>' +
+      '<p>' + (c ? 'El ' + diaLargo(c.fecha) + (c.fijo > 0 ? ' caen <b>' + money(c.fijo) + '</b>: ' + nombrePago(c) : ' ya no alcanza para la comida') + '. Solo con tu fondo te faltan <b>' + money(c.falta) + '</b>.' : 'Con lo que hay pagas todo hasta el ' + diaLargo(ult.fecha) + '.') + '</p></div>' +
+      '<div class="kf-modo" role="group" aria-label="Cómo gastarías">' + modo(true, 'Solo lo indispensable') + modo(false, 'Como vives hoy') + '</div></div>' +
+      '<div class="kf-rej"><span></span><div class="kf-pins">' + pin + '</div><span></span>' +
+      carril('Solo tu fondo', money(x.ef), R.fondo, 'a') + carril('Todo lo que juntas', money(manoDe(x)) + ' en 48 horas', R.todo, 'b') +
+      '<span></span><div class="kf-eje">' + [0, 10, 20, D.length - 1].map(i => '<span>' + diaTxt(D[i].fecha) + '</span>').join('') + '</div><span></span></div>' +
+      '<p class="kf-lee" id="kfLee" aria-live="polite">' + ef.lee.base + '</p>';
+  }
+  function leeDia(i) {
+    const p = document.getElementById('kfLee'); if (!p || !ef.lee || ef.dia === i) return;
+    ef.dia = i;
+    document.querySelectorAll('#kfRuta .kf-tira i.mira').forEach(e => e.classList.remove('mira'));
+    if (i == null) { p.innerHTML = ef.lee.base; return; }
+    const a = ef.lee.R.fondo.dias[i], b = ef.lee.R.todo.dias[i], q = v => v >= 0 ? 'te quedan <b>' + money(v) + '</b>' : 'te faltan <b>' + money(-v) + '</b>';
+    document.querySelectorAll('#kfRuta .kf-tira i[data-d="' + i + '"]').forEach(e => e.classList.add('mira'));
+    p.innerHTML = '<b>' + diaTxt(a.fecha) + '</b>: ' + (a.pagos.length ? nombrePago(a) + ', <b>' + money(a.fijo) + '</b>, más tu gasto del día' : 'solo tu gasto del día, <b>' + money(a.gasto) + '</b>') + '. Con tu fondo ' + q(a.saldo) + '; juntando todo, ' + q(b.saldo) + '.';
+  }
+  function oyeRuta() {
+    const e = document.getElementById('kfRuta'); if (!e) return;
+    e.onpointermove = e.onpointerdown = ev => { const t = ev.target.closest && ev.target.closest('.kf-tira i'); leeDia(t ? +t.dataset.d : null); };
+    e.onpointerleave = () => leeDia(null);
+    e.onkeydown = ev => {
+      const d = ev.target.tagName === 'BUTTON' ? 0 : ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0; if (!d) return;
+      ev.preventDefault(); leeDia(Math.max(0, Math.min(29, (ef.dia == null ? (d > 0 ? -1 : 30) : ef.dia) + d)));
+    };
+  }
+  M.modoFondo = function (v) {
+    const e = document.getElementById('kfRuta'); ef.minimo = v; ef.dia = null; if (!e) return;
+    e.innerHTML = ruta(ef.F); const b = e.querySelector('.kf-modo [aria-pressed="true"]'); if (b) b.focus({ preventScroll: true });
+  };
+  const PREG = [['¿No lo esperabas?', 'El seguro o la tenencia se saben desde antes.'], ['¿No puede esperar?', 'Si aguanta a la quincena, que espere.'], ['¿Sin eso no trabajas o no vives?', 'Salud, carro, techo o comida.']];
+  function preguntas() {
+    const n = ef.si.filter(Boolean).length;
+    return PREG.map((q, i) => '<button type="button" class="kf-q" aria-pressed="' + ef.si[i] + '" onclick="MEDIDORES.emergencia(' + i + ')"><span><b>' + q[0] + '</b>' + q[1] + '</span><em>' + (ef.si[i] ? 'Sí' : 'No') + '</em></button>').join('') +
+      '<div class="kf-ver' + (n === 3 ? ' si' : '') + '"><span>' + (n === 3 ? 'Sí es una emergencia.' : n ? 'Van ' + n + ' de 3: el fondo no se toca.' : 'Toca las que sean ciertas.') + '</span>' +
+      (n === 3 && tiEditable() ? '<button type="button" class="kv-b" onclick="MEDIDORES.sacar()">Anotar retiro</button>' : '') + '</div>';
+  }
+  M.emergencia = function (i) {
+    const e = document.getElementById('kfPreg'); ef.si[i] = !ef.si[i]; if (!e) return;
+    e.innerHTML = preguntas(); const b = e.querySelectorAll('.kf-q')[i]; if (b) b.focus({ preventScroll: true });
+  };
+  const forma = () => document.querySelector('#kpiBody form.ti-form');
+  const llena = (tipo, v) => { const f = forma(); if (!f || !f.ef_m) return; f.ef_t.value = tipo; if (v) f.ef_m.value = v; f.scrollIntoView({ block: 'nearest' }); f.ef_m.focus(); };
+  M.sacar = function () { llena('retiro'); };
+  M.apartar = function (v) { llena('aporte', v); };
+
+  // Cómo se llama cada renglón del mes en la ventana.
+  const EF_NOM = { renta: 'Renta', depa: 'Luz, agua, internet y gas', celular: 'Plan de datos', familia: 'Aporte a tu familia', auto: 'El BYD', iphone: 'El iPhone', comida: 'Comida', suscripciones: 'suscripciones', cuidado: 'rutinas de cuidado', personal: 'ropa, salidas y compras' };
   M.fondo = function (F) {
-    const x = dinero(F), meta = _metaFondo(), falta = Math.max(0, meta - x.ef), g = kpiGastoMensual(), fijos = +C().n('fijosTotal') || 0;
-    const dias = v => v > 0 ? Math.floor(x.ef / (v / 30.4)) : 0, ym = hoyLocal().slice(0, 7);
-    const FL = C().fondoLista(F), editable = tiEditable(), movido = FL.movs.filter(m => String(m.date || '').slice(0, 7) === ym).reduce((s, m) => s + (m.tipo === 'retiro' ? -1 : 1) * (+m.amount || 0), 0);
-    const rapido = x.ef + x.liqV + x.btcV, fLiq = x.liq.map(a => a.fecha).filter(Boolean).sort()[0], alPlan = +C().n('cetesDia15') || 0;
-    const pasos = [['Tu meta', meta, 'un imprevisto chico: una reparación, una consulta'], ['Un mes de lo fijo', fijos, 'renta, servicios, celular y suscripciones'],
-      ['Un mes de tu gasto', g.prom, 'todo lo que gastas en un mes normal'], ['Tres meses de tu gasto', g.prom * 3, 'lo que pide el estándar si te quedas sin sueldo']].filter(p => p[1] > 0).sort((a, b) => a[1] - b[1]);
-    const chip = v => { const n = Math.ceil(falta / v), d = new Date(); d.setDate(d.getDate() + Math.round(n * 15.2)); return boton(money(v) + ' por quincena: ' + MES[d.getMonth()] + ' ' + d.getFullYear(), 'MEDIDORES.apartar(' + v + ')', 1); };
-    const movs = FL.movs.map(m => { const ret = m.tipo === 'retiro';
+    const ov = document.getElementById('kpiOverlay');
+    if (!ov || !ov.classList.contains('open') || ov.dataset.kpi !== 'fondo') { ef.si = [false, false, false]; ef.minimo = true; }
+    ef.F = F; ef.dia = null;
+    const x = dinero(F), k = hoyLocal(), meta = _metaFondo(), falta = Math.max(0, meta - x.ef), p = pct(x.ef, meta), editable = tiEditable(), alPlan = +C().n('cetesDia15') || 0;
+    const prox = mas(k.slice(0, 7), 1), E = C().gastoEmergencia, G = E(prox), P = C().PROYECCION.meses, mano = manoDe(x), conInv = x.ef + x.otrasV + x.btcV, sig = contraPlan(F).sig;
+    const chip = v => { const n = Math.ceil(falta / v), d = new Date(); d.setDate(d.getDate() + Math.round(n * 15.2)); return boton('<b>' + money(v) + '</b> por quincena: ' + MES[d.getMonth()] + ' ' + d.getFullYear(), 'MEDIDORES.apartar(' + v + ')', 1); };
+
+    // Los niveles: lo del fondo, lo invertido encima, y el mes en que el plan lo alcanza con lo que entra a GBM.
+    const nivel = (t, v, f) => {
+      const a = Math.round(pct(x.ef, v) / 5), b = Math.round(pct(conInv, v) / 5), m = P.filter(q => q.mes >= k.slice(0, 7) && q.alemania >= f(q.mes))[0];
+      return '<section class="kv-c kf-niv' + (x.ef >= v ? ' listo' : '') + '"><div><b>' + t + '</b><strong>' + money(v) + '</strong></div><div class="kf-cel">' + celdas(20, i => i < a ? 'on' : i < b ? 'inv' : '') + '</div>' +
+        '<p>' + (x.ef >= v ? 'Ya lo cubre tu fondo.' : 'Le faltan <b>' + money(v - x.ef) + '</b>. ' + (conInv >= v ? 'Contando lo invertido, ya llegas.' : m ? 'Contando lo invertido, llegas en <b>' + mesTxt(m.mes) + '</b>.' : '')) + '</p></section>';
+    };
+    const niveles = [['Tu meta', meta, () => meta], ['Un mes de lo indispensable', G.minimo, m => E(m).minimo], ['Un mes como vives hoy', G.normal, m => E(m).normal], ['Tres meses de lo indispensable', G.minimo * 3, m => E(m).minimo * 3]]
+      .filter(n => n[1] > 0).sort((a, b) => a[1] - b[1]).map(n => nivel(n[0], n[1], n[2])).join('');
+
+    // A la mano, en el orden en que se usa. El saldo de la cuenta lleva su fecha: si es viejo, se dice.
+    const liq = x.liq.filter(a => +a.value > 0);
+    const piezas = liq.map((a, i) => [esc(a.name), +a.value, a.fecha ? 'dicho el ' + diaTxt(a.fecha) : 'hoy mismo', [V.a, V.c, V.g][Math.min(i, 2)]])
+      .concat(x.ef > 0 ? [['Tu fondo en CETES', x.ef, '1 o 2 días hábiles', 'var(--ac)']] : [], x.btcV > 0 ? [['Tu Bitcoin', x.btcV, 'al último', V.b]] : []);
+    const vieja = liq.map(a => a.fecha).filter(Boolean).sort()[0], dv = vieja ? Math.round((new Date(k + 'T12:00') - new Date(vieja + 'T12:00')) / 864e5) : 0;
+    const dinHtml = '<div class="kf-bar">' + piezas.map(q => '<i style="flex:' + Math.max(1, Math.round(q[1])) + ';background:' + q[3] + '"></i>').join('') + '</div>' + lista(piezas.map(q => fila(q[0] + ' <u>' + q[2] + '</u>', money(q[1]), '', '', q[3])).join(''));
+
+    // Un mes sin sueldo: lo que se paga y lo que se apaga.
+    const nom = q => EF_NOM[q.id] || q.t, mayor = (a, b) => b.v - a.v, paga = G.partes.filter(q => !q.apaga).sort(mayor), apaga = G.partes.filter(q => q.apaga).sort(mayor), chicas = paga.slice(3);
+    const renglones = paga.slice(0, 3).map(q => [nom(q), q.v]).concat(chicas.length ? [[chicas.length > 1 ? 'Servicios, datos y lo demás fijo' : nom(chicas[0]), chicas.reduce((s, q) => s + q.v, 0)]] : []);
+    const baja = P.filter(q => q.mes > prox && E(q.mes).minimo < G.minimo * .8).map(q => E(q.mes))[0];
+    const mesHtml = lista(renglones.map(q => fila(q[0], money(q[1]), '', '')).join('') + (apaga.length ? fila('Lo que apagas', '<em class="ok">−' + money(G.recorte) + '</em>', apaga.map(nom).join(', '), '') : ''));
+
+    const FL = C().fondoLista(F), ed = _efEdit ? FL.movs.find(m => m.id === _efEdit) : null;
+    const movs = FL.movs.map(m => {
+      const ret = m.tipo === 'retiro';
       return '<div class="ti-fila' + (_efEdit === m.id ? ' edita' : '') + '"><span class="ti-f">' + tiFecha(m.date) + '</span><span class="ti-n"><b>' + (ret ? 'Retiro' : 'Aportación') + '</b>' + (m.nota ? '<i>' + esc(m.nota) + '</i>' : '') + '</span>' +
         '<span class="ti-m"><em class="' + (ret ? 'mal' : 'ok') + '">' + (ret ? '−' : '+') + money(+m.amount || 0) + '</em></span>' +
-        (editable ? '<span class="ti-acc"><button type="button" class="ce-btn sec" onclick="efEditar(\'' + m.id + '\')">Editar</button><button type="button" class="ce-btn sec" onclick="efBorrar(\'' + m.id + '\')">Borrar</button></span>' : '') + '</div>'; }).join('');
-    return { kv: 'var(--w)', titulo: 'Fondo de emergencia', sub: 'Tu colchón en CETES: cuánto aguanta y qué le falta.', html:
-      '<div class="kv-fila">' + hero(money(x.ef), 'de ' + money(meta), falta > 0 ? 'Llevas <b>' + Math.round(pct(x.ef, meta)) + '%</b>. Te faltan <b>' + money(falta) + '</b> para tu meta.' : 'Meta completa. Lo que sobre va a GBM.', pct(x.ef, meta)) +
-      tiles([['Si hoy dejara de entrar dinero', plural(dias(g.prom), 'día', 'días'), g.prom > 0 ? 'con tu gasto normal, ' + money(g.prom) + ' al mes' : 'sin meses cerrados para medir tu gasto'],
-        ['Pagando solo lo fijo', plural(dias(fijos), 'día', 'días'), money(fijos) + ' al mes que no puedes dejar de pagar'],
-        ['Puedes juntar en 48 horas', money(rapido), 'fondo, cuenta y efectivo' + (fLiq ? ' (dicho el ' + diaTxt(fLiq) + ')' : '') + (x.btcV > 0 ? ', y vendiendo tu Bitcoin' : '')],
-        ['Movido este mes', movido ? signo(movido) : money(0), FL.movs.length ? plural(FL.movs.length, 'movimiento anotado', 'movimientos anotados') + ' en total' : 'todavía no anotas ninguno']]) + '</div>' +
-      (falta > 0 ? hoy('Hoy', alPlan > 0 ? 'Tu plan le mete <b>' + money(alPlan) + '</b> el día 15.' : 'Tu plan no le mete dinero: todo tu ahorro va a GBM.', alPlan > 0 ? '' : 'Lo que juntes en GBM también cuenta como colchón. Si quieres llenarlo aparte, así quedaría:', editable ? [500, 1000, 2000].map(chip).join('') : '')
+        (editable ? '<span class="ti-acc"><button type="button" class="ce-btn sec" onclick="efEditar(\'' + m.id + '\')">Editar</button><button type="button" class="ce-btn sec" onclick="efBorrar(\'' + m.id + '\')">Borrar</button></span>' : '') + '</div>';
+    }).join('');
+
+    return { kv: 'var(--w)', titulo: 'Fondo de emergencia', sub: 'Tu colchón en CETES: hasta qué día aguantas si dejas de ganar, y qué le falta.', listo: oyeRuta, html:
+      '<div class="kf"><div class="kf-a"><section class="kv-c kf-hero"><div class="kf-an" role="img" aria-label="' + Math.round(p) + '% de tu meta">' + anillo(p) + '<div><strong>' + money(x.ef) + '</strong><span>de ' + money(meta) + '</span></div></div>' +
+        '<div class="kf-pc"><strong>' + Math.round(p) + '%</strong><span>' + (falta > 0 ? 'Te faltan <b>' + money(falta) + '</b> para tu meta.' : 'Meta completa. Lo que sobre va a GBM.') + '</span></div></section>' +
+      '<section class="kv-c kf-ruta" id="kfRuta" tabindex="0" aria-label="Los próximos 30 días sin ingresos">' + ruta(F) + '</section></div>' +
+      (falta > 0 ? hoy('Hoy', alPlan > 0 ? 'Tu plan le mete <b>' + money(alPlan) + '</b> el día 15.' : 'Tu plan no le mete dinero: todo tu ahorro va a GBM' + (sig ? ' (el siguiente envío, ' + sigTxt(sig) + ')' : '') + '.',
+        alPlan > 0 ? '' : editable ? 'Si quieres llenarlo aparte, esto es lo que tardas:' : 'Lo que juntas ahí también cuenta como colchón.', editable && !(alPlan > 0) ? [500, 1000, 2000].map(chip).join('') : '')
         : hoy('Listo', 'Tu fondo ya está completo: no le metas más.', 'El ahorro sigue yendo a GBM.')) +
-      '<div class="kv-fila crece">' + caja('s7 kv-reparte', 'Hasta dónde llega tu colchón', 'De lo más chico a lo más seguro. La barra es lo que ya tienes.', lista(pasos.map(p => fila(p[0], money(p[1]), p[2], x.ef >= p[1] ? 'cubierto' : 'faltan ' + money(p[1] - x.ef), '', med(pct(x.ef, p[1])))).join('')),
-        meta < g.prom ? 'Tu meta de ' + money(meta) + ' cubre menos de un mes de tu gasto. Es un buen primer paso, no el final.' : '') +
-      '<section class="kv-c s5"><h3>Meter o sacar dinero</h3><p>Anótalo aquí y sale igual en Finanzas.</p>' + (editable ? efFormHtml(_efEdit ? FL.movs.find(m => m.id === _efEdit) : null) : copia('Se anota')) +
-        (movs ? '<div class="ti-lista" style="margin-top:14px">' + movs + '</div>' : '<h3 class="kv-sub">Antes de sacar, las tres deben ser sí</h3>' + lista(fila('¿No lo esperabas?', '', 'El seguro o la tenencia se saben desde antes: no cuentan.', '') + fila('¿No puede esperar?', '', 'Si aguanta a la quincena, que espere.', '') + fila('¿Sin eso no trabajas o no vives?', '', 'Salud, carro, techo o comida.', ''))) +
-        '<div class="kv-pie">No lo anotes también como compra en Total invertido: el mismo dinero contaría dos veces.</div></section></div>' };
+      '<div class="kf-nivs">' + niveles + '</div>' + leyenda([['en tu fondo', 'var(--ac)'], ['invertido en GBM y Bitcoin: venderlo atrasa tu salida a Alemania', 'var(--kf-inv)']]) +
+      '<div class="kf-d">' +
+        '<section class="kv-c"><h3>A la mano: ' + money(mano) + '</h3><p>En el orden en que se usa.</p>' + dinHtml + (dv > 7 ? '<div class="kv-pie">El saldo de tu cuenta es de hace ' + dv + ' días: ponlo al día en Finanzas.</div>' : '') + '</section>' +
+        '<section class="kv-c"><h3>Un mes sin sueldo: ' + money(G.minimo) + '</h3><p>Lo que pagarías sí o sí.</p>' + mesHtml + (baja ? '<div class="kv-pie">Desde ' + MESL[+baja.mes.slice(5) - 1] + (baja.partes.some(q => q.id === 'renta') ? '' : ', sin renta,') + ' baja a <b>' + money(baja.minimo) + '</b> al mes.</div>' : '') + '</section>' +
+        '<section class="kv-c"><h3>¿De verdad es una emergencia?</h3><p>Antes de sacar, las tres deben ser sí.</p><div class="kf-pregs" id="kfPreg">' + preguntas() + '</div></section>' +
+        '<section class="kv-c kf-form' + (ed ? ' edita' : '') + '"><h3>Meter o sacar dinero</h3><p>Sale igual en Finanzas. No lo anotes también en Total invertido: contaría dos veces.</p>' + (editable ? efFormHtml(ed) : copia('Se anota')) + '</section></div>' +
+      (movs ? plega('fondo-movs', 'Lo que has metido y sacado', plural(FL.movs.length, 'movimiento', 'movimientos') + ': +' + money(FL.aporto) + ', −' + money(FL.saco), '<div class="ti-lista">' + movs + '</div>', 's12', !!_efEdit) : '') + '</div>' };
   };
-  M.apartar = function (v) { const f = document.querySelector('#kpiBody form.ti-form'); if (f && f.ef_m) { f.ef_m.value = v; f.scrollIntoView({ block: 'nearest' }); f.ef_m.focus(); } };
 
   // ══ Fondo Maestría ══
   M.maestria = function (F) {

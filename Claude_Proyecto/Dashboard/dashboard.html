@@ -15069,17 +15069,6 @@ function fzmReabrir(i, ym){
   A[ym].reabierto = true; fzmGuardaAud(A);
   pmAuditar(i, ym);
 }
-// Gasto mensual real: promedio de los gastos de los últimos 3 meses cerrados. Se usa para
-// dimensionar el fondo de emergencia contra la realidad y no contra un número redondo.
-function kpiGastoMensual(){
-  const txs=(D.fin.transactions||[]).filter(t=>t.type==='expense'&&t.date);
-  if(!txs.length) return {prom:0, meses:0};
-  const porMes={};
-  txs.forEach(t=>{ const m=t.date.slice(0,7); porMes[m]=(porMes[m]||0)+(+t.amount||0); });
-  const claves=Object.keys(porMes).sort().slice(-4,-1); // los 3 cerrados, sin el mes en curso
-  if(!claves.length) return {prom:0, meses:0};
-  return {prom: claves.reduce((a,k)=>a+porMes[k],0)/claves.length, meses: claves.length};
-}
 function abrirKpi(id){
   const ov=document.getElementById('kpiOverlay');
   if(!ov) return;

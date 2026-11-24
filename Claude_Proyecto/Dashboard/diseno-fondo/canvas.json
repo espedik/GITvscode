@@ -1,0 +1,76 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-24T18:00:00Z"
+  },
+  "title": "Fondo de emergencia",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1900,
+      "h": 980,
+      "title": "Main · Autonomía en días",
+      "is_interactive": true
+    },
+    "DireccionB.dc.html": {
+      "x": 1980,
+      "y": 0,
+      "w": 1900,
+      "h": 980,
+      "title": "B · Tanque contra cuentas"
+    },
+    "DireccionC.dc.html": {
+      "x": 3960,
+      "y": 0,
+      "w": 1900,
+      "h": 980,
+      "title": "C · Lo mínimo"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "DireccionB.dc.html",
+    "DireccionC.dc.html"
+  ],
+  "notes": {
+    "titulo": {
+      "x": 0,
+      "y": -300,
+      "text": "Fondo de emergencia: tres direcciones (cifras de ejemplo)",
+      "kind": "title1",
+      "maxW": 5860
+    },
+    "nMain": {
+      "x": 0,
+      "y": 1060,
+      "w": 640,
+      "size": "m",
+      "fill": "teal",
+      "text": "Main. La pregunta manda: si hoy dejaras de ganar, ¿hasta qué día llegas? Treinta celdas, una por día, con los pagos reales encima. El interruptor cambia entre lo indispensable y cómo vives hoy. Los niveles cuentan también lo invertido. Las tres preguntas deciden si se puede sacar. Contra: es la más completa, hay que leer dos minutos la primera vez."
+    },
+    "nB": {
+      "x": 1980,
+      "y": 1060,
+      "w": 640,
+      "size": "m",
+      "fill": "blue",
+      "text": "B. Dos barras en la misma escala: lo que pagarías en un mes y lo que tienes a la mano. El hueco es lo que falta. Contra: dice cuánto falta, no qué día se acaba."
+    },
+    "nC": {
+      "x": 3960,
+      "y": 1060,
+      "w": 640,
+      "size": "m",
+      "fill": "yellow",
+      "text": "C. Una fecha, una tira y dos botones. Lo demás se abre si lo pides. Contra: para comparar niveles hay que tocar."
+    }
+  },
+  "designSystems": [],
+  "artifact": "https://claude.ai/artifact/X9jaPzspWejaZTwDcDsR9X"
+}

@@ -1063,7 +1063,7 @@ con su botón** (`.kv-hoy`; naranja si algo pide revisarse), **una gráfica** (`
 
 | Ventana | Lo que responde |
 |---|---|
-| **Fondo** | Cuántos días aguantas con tu gasto y con lo fijo, cuánto juntas en 48 horas, hasta dónde llega el colchón (meta, un mes de lo fijo, un mes y tres de tu gasto) y en cuánto lo llenarías apartando de cada quincena (`apartar` llena el formulario). El plan no le aporta mientras `cetesDia15` sea 0: lo que entra a GBM también cuenta como colchón |
+| **Fondo** | Hasta qué día aguantas si hoy dejas de ganar, qué pago te detiene y cuánto te falta; qué niveles cubres, de dónde sale el dinero, qué pagarías en un mes sin sueldo y si de verdad es una emergencia (ver *Fondo de emergencia, aportación por aportación*). El plan no le aporta mientras `cetesDia15` sea 0: lo que entra a GBM también cuenta como colchón |
 | **Maestría** | Cómo vas hoy contra el plan (`contraPlan`: la proyección al cierre del mes anterior más los envíos a GBM que ya tocaron, contra el fondo, las inversiones y el Bitcoin, sin el depósito), el siguiente envío, la proyección contra los cortes de la salida (`cortesSalidaDash`) y lo que sigue por pagar (`SALIDA.costos`). La meta es lo que cuesta irte entero; el corte de agosto, lo que se tiene en mano entonces |
 | **Patrimonio** | Cuánto cambió desde el último mes cerrado (`indicatorHistory`) y qué lo movió, pieza por pieza; mes a mes; el camino al millón con el dinero líquido de la proyección, y la suma: dinero + cosas − deudas. Avisa si un bien está a precio de compra y de qué día es el saldo de la cuenta |
 | **Intereses** | Cuánto al día, en 12 meses y hasta acabar; la próxima mensualidad partida; a dónde va el dinero cada año, y lo que ahorra abonar. Si el contrato y los datos no acaban el mismo mes, lo dice |
@@ -1149,9 +1149,8 @@ corregir con la cantidad exacta o borrar, también. A 1600 y 390 px, sin desbord
 
 Adán, 17-nov-2026: *"en el fondo de emergencia también déjame hacer aportaciones y eso también se debe reflejar en el de
 HTML finanzas, al igual que lo que habíamos hecho, no quiero depender de mi suscripción de Claude"*. En la ventana
-(`MEDIDORES.fondo`) van el formulario **Aportar o retirar** (`efFormHtml`: cuándo, qué fue, cuánto y una nota) y un renglón
-por movimiento, del más nuevo al más viejo, con **Editar** y **Borrar**; sin movimientos, las tres preguntas de antes de
-sacar. Un retiro mayor que el fondo no se anota: el aviso sale en el formulario (`.ef-error`) sin borrar lo escrito. El pie
+(`MEDIDORES.fondo`, `.kf`), **Meter o sacar dinero** (`efFormHtml`: cuándo, qué fue, cuánto y una nota) va siempre a la vista y
+un renglón por movimiento, del más nuevo al más viejo, con **Editar** y **Borrar**, en *Lo que has metido y sacado* (plegado). Un retiro mayor que el fondo no se anota: el aviso sale en el formulario (`.ef-error`) sin borrar lo escrito. El pie
 pide no anotarlo también como compra en Total invertido: el mismo dinero contaría dos veces.
 
 La cuenta es **una sola, la del maestro**: `efGuardar` y `efBorrar` llaman a `CIFRAS.fondoMovimiento` y
@@ -1162,6 +1161,25 @@ funciones en su bloque del fondo, así que lo que se anota en una sale en la otr
 edita donde Finanzas es propia** (`tiEditable`): en el iPad los movimientos llegan con la copia de la PC, sin la nota, y
 se ven sin botones. Medido: aportar, retirar, corregir y borrar desde cualquiera de las dos apps deja el fondo, la meta
 ef-001 y el medidor en el mismo número, sin errores ni desbordes a 1600 y a 390 px.
+
+La ventana responde una pregunta: *si hoy dejara de entrar dinero, ¿hasta qué día llegas?* (Adán, 24-nov-2026: *"mejórala más
+futurista y más clara de info"*; el lienzo está en `diseno-fondo/`). De arriba abajo:
+
+- **El anillo** (`.kf-hero`, `anillo`): 40 celdas, lo que hay contra la meta.
+- **Los próximos 30 días sin ingresos** (`#kfRuta`, `ruta`): una celda por día, en dos carriles —solo el fondo y todo lo que
+  juntas en 48 horas—, con los pagos grandes rotulados encima y rayado en naranja el día que ya no alcanza. **Solo lo
+  indispensable / Como vives hoy** (`modoFondo`) cambia el gasto. El renglón de abajo (`#kfLee`) dice cuánto falta para pasar
+  cada pago, y el de cualquier día al pasar el ratón, el dedo o las flechas. La cuenta es de `CIFRAS.recorridoFondo`.
+- **Lo de hoy**: el siguiente envío a GBM y en cuánto lo llenarías apartando de cada quincena (`apartar` llena el formulario).
+- **Los niveles** (`.kf-niv`): la meta, un mes de lo indispensable, uno como vives hoy y tres de lo indispensable
+  (`CIFRAS.gastoEmergencia` del mes que sigue). Lo del fondo en amarillo y lo invertido apagado encima, con el mes en que el
+  plan llega (`PROYECCION`); venderlo atrasa la salida, y lo dice.
+- **A la mano**, en el orden en que se usa, con aviso si el saldo dicho tiene más de 7 días; **Un mes sin sueldo**, lo que se
+  paga, lo que se apaga y cuánto baja sin renta; **¿De verdad es una emergencia?** (`emergencia`): con las tres en sí sale
+  *Anotar retiro* (`sacar`), que deja el formulario listo; y **Meter o sacar dinero**.
+
+A 2048×1040 cabe sin desplazarse, con movimientos o sin ellos, en los dos temas; en el iPad va sin formulario y a 390 px todo
+en una columna, sin desbordes. El **control 61** vigila la cuenta.
 
 ### De dónde sale cada cosa
 
