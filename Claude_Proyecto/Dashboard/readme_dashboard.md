@@ -1098,26 +1098,23 @@ proyección debe variar… abajo dame consejos… futurista y muy entendible"* y
 indicadores financieros, ahí llevamos el registro histórico… pero de cada mes en la gráfica"*. `MEDIDORES.maestria` (`.km`), de
 arriba abajo:
 
-- **La respuesta** (`.km-hero`): lo que tendrías en agosto a tu ritmo, contra lo que pide la salida, y si llegas.
-- **Cuatro datos**: lo que llevas en todo, lo que entra cada mes, lo que te quedó contra lo que tocaba (tu ritmo) y lo que hay
-  que juntar al mes.
-- **La gráfica** (`trayecto`): un punto con su cifra por mes —los cierres de Finanzas · Indicadores y hoy en blanco, la
-  proyección en cian—, el plan y lo que se necesita punteados, las cuatro fechas con lo que piden y la línea de lo que falta,
-  lo que ya pasó sombreado, y la venta de Bitcoin dicha en su mes. El globo da las cuatro cifras de cada mes.
-- **El flujo, debajo de la gráfica y alineado con cada mes** (`.km-f`): lo que entra, lo que sale, lo que te queda, lo que pagas
-  de la salida, lo que llevas o tendrías, tu plan y lo que se necesita. *Entra*, *Sale*, *Te queda* y *Llevas* se abren y se contraen (`MEDIDORES.flujo`): de dónde
-  viene, en qué se va, a qué activo entra y en qué está, con cifras que suman exacto (Adán: *"desglósame… para que se contraiga
-  esa sección"* y *"te faltan las cifras que se ingresan cada mes… todo el cashflow"*).
-- **Todo lo que tienes** —bolsa, CETES, Bitcoin, cuenta, efectivo y depósito— y **lo que cuesta irte**, mes por mes
-  (`SALIDA.costos`).
-- **Qué hacer** (`.km-paso`): ponerte al corriente o seguir así, el ingreso nuevo, recortar rutinas y decidir; cambia con tu
-  ritmo y con lo que falta.
-- **Mes a mes, en números** (plegado): la misma gráfica en tabla, con lo que sobra o falta cada mes.
+- **La respuesta** (`.km-hero`): lo que tendrías en agosto guardando lo que te queda, contra lo que pide la salida, y si llegas.
+- **Cuatro datos**: lo que llevas en todo, lo que entra cada mes, lo que te queda y lo que de verdad guardaste este mes contra lo
+  que te quedaba.
+- **La gráfica** (`trayecto`): un punto con su cifra por mes —los cierres de Finanzas · Indicadores y hoy en blanco, lo que
+  tendrías en cian—, el plan y lo que se necesita punteados, las cuatro fechas con lo que piden y lo que falta, lo que ya pasó
+  sombreado y la venta de Bitcoin dicha en su mes.
+- **El flujo, debajo de la gráfica y alineado con cada mes** (`.km-f`): lo que entra, lo que sale, lo que te queda, lo que creció
+  tu dinero, lo que llevas o tendrías, tu plan y lo que se necesita. Los renglones con flecha se abren y se contraen
+  (`MEDIDORES.flujo`), y dentro de *Sale*, los servicios, las suscripciones y las rutinas, producto por producto (Adán:
+  *"desglósame… para que se contraiga esa sección"*). Solo va lo documentado: nada de «lo demás».
+- **Todo lo que tienes** —bolsa, CETES, Bitcoin, cuenta, efectivo y depósito— y **lo que debes tener en agosto**. Los pagos de la
+  salida (apostillas, vuelo, primera renta…) no van en este presupuesto (Adán: *"eso no lo voy a contemplar"*): se dice cuánto
+  suman.
+- **Qué hacer** (`.km-paso`): anotar lo que no aparece o seguir así, el ingreso nuevo, recortar rutinas y decidir.
 
-**El ritmo** es lo que creció todo tu dinero entre lo que tocaba juntar, de tus últimos tres meses medibles con el mes en curso
-hasta hoy; el mes en curso se mide por lo guardado, sin la cuenta ni el efectivo, porque ahí sube el sueldo y baja lo que vives.
-Lo que se paga de la salida no lo mueve, y la quincena que llegó antes cuenta el mes en que la cobró. Al cerrar un mes en Finanzas, su punto entra y la línea cambia sola. El **control
-63** prueba la cuenta.
+**La cuenta** (`CIFRAS.ritmoMaestria`): un mes que falta crece lo que entra menos lo documentado; el mes en curso va hasta hoy y
+cada cierre corre el punto de partida, así que la línea cambia sola. Didi entra con `didiEn(mes)`. El **control 63** la prueba.
 
 **Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se paga completa
 cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle y en el desglose de Patrimonio, que la
@@ -1284,7 +1281,7 @@ así que el desglose suma exactamente lo que dice la cifra. *Sale* va por secci�
 con su barra y cada concepto con sus días, sin la de ahorro a GBM; *Entra*, quincena por quincena; *Te queda*, la cuenta
 —entra, sale y lo de tus quincenas a GBM—; *A la BBVA*, abono por
 abono de `planBbva` con su origen (`ABONO_DE`) y el día en que el plan la liquida; *A GBM*, lo de tus quincenas y lo de Didi
-lunes por lunes (`didiGbmLunes`); *Didi trae*, a dónde va: a la BBVA, a GBM y lo que te queda para la carga y lo tuyo —si lo que apartas pasa de lo que trae (desde febrero de 2027, $10,000 contra los $7,000 que trae), lo dice en rojo en vez de dar un saldo negativo—.
+lunes por lunes (`didiGbmLunes`); *Didi trae*, a dónde va: a la BBVA, a GBM y lo que te queda para la carga y lo tuyo —si lo que apartas pasa de lo que trae (desde febrero de 2027, $10,000 contra los $10,000 que trae), lo dice en rojo en vez de dar un saldo negativo—.
 
 ### La quincena, una sola cuenta (`ctTramo`)
 

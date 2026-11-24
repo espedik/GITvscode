@@ -303,7 +303,7 @@
 .km-nec{padding:14px 20px}
 .km-tot{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .km-tot strong{font-size:22px;font-weight:700;letter-spacing:-.02em}
-.km-lista{display:flex;flex-direction:column;flex:0 1 206px;justify-content:space-between;margin-top:8px}
+.km-lista{display:flex;flex-direction:column;flex:0 0 auto;justify-content:space-between;margin-top:8px}
 .km-cos{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:12px;align-items:baseline;padding:4px 0;border-top:1px solid var(--kv-linea);font-size:14px;line-height:1.4}
 .km-cos span{font-size:13px;color:var(--kv-t2)}
 .km-cos b{font-weight:600}
@@ -320,7 +320,7 @@
 .km-paso .ac{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 .km-paso .kv-b{padding:7px 12px;font-size:13.5px}
 .km-tw{overflow-x:auto}
-.km-f{display:grid;grid-template-columns:148px repeat(var(--n),minmax(0,1fr));font-size:13px;font-variant-numeric:tabular-nums}
+.km-f{display:grid;grid-template-columns:172px repeat(var(--n),minmax(0,1fr));font-size:13px;font-variant-numeric:tabular-nums}
 .km-f>*{padding:3px 2px;border-top:1px solid var(--kv-linea);text-align:center;white-space:nowrap}
 .km-f>b{text-align:left;font-size:13px;font-weight:600;color:var(--kv-t2)}
 .km-f>.h{display:flex;flex-direction:column;border-top:0;font-size:13px;line-height:1.25;color:var(--kv-t2);padding-top:0}
@@ -328,9 +328,13 @@
 .km-f .h i{font-style:normal;font-size:12px;min-height:15px}
 .km-f .h.hoy{color:var(--text);font-weight:700}
 .km-f>.tot{font-weight:700;background:color-mix(in srgb,var(--ac) 8%,transparent)}
-.km-f .sub{display:none;font-size:12.5px;color:var(--kv-t2);padding-top:2px;padding-bottom:2px;background:rgba(var(--ov),.025)}
+.km-f [hidden]{display:none}
+.km-f .sub{font-size:12.5px;color:var(--kv-t2);padding-top:2px;padding-bottom:2px;background:rgba(var(--ov),.025)}
 .km-f>b.sub{padding-left:20px;font-weight:500;font-size:12.5px;overflow:hidden;text-overflow:ellipsis}
-.km-f.ab-entra .s-entra,.km-f.ab-sale .s-sale,.km-f.ab-queda .s-queda,.km-f.ab-llevas .s-llevas{display:block}
+.km-f>b.n2{padding-left:34px}.km-f>b.n3{padding-left:46px}
+.km-f .n2{background:rgba(var(--ov),.05)}.km-f .n3{background:rgba(var(--ov),.075)}
+.km-f b i{font-style:normal}
+.km-f>b.n3{white-space:normal;line-height:1.25}
 .km-f .sub em{font-weight:600}
 .km-mas{display:flex;align-items:center;gap:8px;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;font-weight:700;text-align:left;cursor:pointer;white-space:nowrap}
 .km-mas::before{content:'';width:6px;height:6px;margin-left:2px;border-right:2px solid var(--ac);border-bottom:2px solid var(--ac);transform:rotate(-45deg);flex-shrink:0;transition:transform .15s}

@@ -3603,36 +3603,34 @@ function promptsDeLoTocado() {
   ok.push('Próximos viajes: ' + V.BASE.length + ' viajes con lo que falta, su gasto, sus fuentes y sus fotos; nada en domingo, y el vuelo y el hotel no salen del navegador');
 })();
 
-/* ── 63. A qué ritmo juntas para la maestría ─────────────────────────────────────────────────────────────────────────
-   Adán, 24-nov-2026: "datos reales de cuánto llevo… a ese ritmo que estoy acumulando… la proyección debe variar". Con unos
-   cierres de juguete: cumplir el plan da la cifra del plan, juntar menos baja la proyección, un buen cierre la sube, los
-   cierres salen mes por mes y la ventana usa esta cuenta. */
+/* ── 63. El fondo de la maestría, mes por mes ─────────────────────────────────────────────────────────────────────────
+   Adán, 24-nov-2026: "datos reales de cuánto llevo… la proyección debe variar… esas cifras no están documentadas, deberías
+   quitarlas, y no contemples lo que pagas a la salida". Con unos cierres de juguete: cada desglose suma su total, un mes que
+   falta crece lo que entra menos lo documentado, un buen cierre sube la proyección, el corte pide lo mismo que el plan y la
+   ventana usa esta cuenta. */
 (function () {
   const malos = [], C = global.window && global.window.CIFRAS;
-  if (!C || typeof C.ritmoMaestria !== 'function') malos.push('el maestro ya no exporta ritmoMaestria');
+  if (!C || typeof C.ritmoMaestria !== 'function' || typeof C.didiEn !== 'function') malos.push('el maestro ya no exporta ritmoMaestria / didiEn');
   else {
-    const P = m => C.PROYECCION.meses.filter(x => x.mes === m)[0].alemania;
-    const h = (m, v) => ({ month: m, emergencyFund: v, btcValue: 0, investments: [{ id: 'i004', value: 11250 }], activos: [] });
-    const F = cierres => ({ indicatorHistory: cierres, btcHistory: [], investments: [], emergencyFund: 0, transactions: [], debts: [] });
-    const M = ['2026-10', '2026-11', '2026-12'], justo = M.map(m => h(m, P(m))), k = '2026-12-31', corre = (c, real) => C.ritmoMaestria(F(c), { real: real + 11250, hoy: k });
-    const a = corre(justo.slice(0, 2), P('2026-12')), b = corre(justo.slice(0, 2), P('2026-12') - 3000), c = corre(justo.slice(0, 2), P('2026-12') + 9000), fin = x => x.meses[x.meses.length - 1];
-    if (Math.abs(a.ritmo - 1) > 0.35) malos.push('cumplir el plan no da un ritmo cercano a 100 % (da ' + Math.round(a.ritmo * 100) + ' %)');
-    if (!(fin(b).proy < fin(a).proy && fin(a).proy < fin(c).proy)) malos.push('la proyección no baja al juntar menos o no sube con un buen cierre');
-    if (a.meses[0].mes !== '2026-10' || a.meses[0].real !== P('2026-10') + 11250 || a.meses.filter(x => x.tipo === 'cierre').length !== 2 || fin(a).mes !== C.PROYECCION.cortes.salida.mes) malos.push('los meses de la gráfica no van del primer cierre al corte de la salida');
-    if (a.meses.some((x, i) => i && a.meses[i - 1].mes >= x.mes)) malos.push('los meses de la gráfica no van en orden');
-    if (fin(a).plan !== P(C.PROYECCION.cortes.salida.mes) || a.meses.some(x => x.tipo === 'proy' && !(x.entra > 0))) malos.push('el plan de la salida no es el de la proyección, o un mes que falta no dice lo que entra');
-    const g = C.ritmoMaestria(Object.assign(F(justo.slice(0, 2)), { activos: [{ type: 'liquido', value: 20500 }] }), { real: P('2026-12') + 11250 + 20500, hoy: k });
-    if (Math.abs(g.ritmo - a.ritmo) > 0.01) malos.push('la quincena recién depositada cuenta como ahorro en el ritmo');
-    const sO = o => Object.keys(o).reduce((s, k) => s + o[k], 0);
-    a.meses.forEach(x => {
-      if (Math.abs(sO(x.entraDe) - x.entra) > 0.01 || (x.saleDe && Math.abs(sO(x.saleDe) - x.sale) > 0.01)) malos.push(x.mes + ': el desglose de lo que entra o sale no suma su total');
+    const h = (m, v) => ({ month: m, emergencyFund: v, btcValue: 0, investments: [{ id: 'i004', value: 11250 }], activos: [], debts: [] });
+    const F = { indicatorHistory: [h('2026-10', 6000), h('2026-11', 12000)], btcHistory: [], investments: [], emergencyFund: 0, transactions: [], debts: [] };
+    const corre = real => C.ritmoMaestria(F, { real: real, hoy: '2026-12-31' }), a = corre(30000), b = corre(36000), fin = x => x.meses[x.meses.length - 1], sO = o => Object.keys(o).reduce((s, k) => s + o[k], 0);
+    if (Math.abs(fin(b).proy - fin(a).proy - 6000) > 0.01) malos.push('un buen cierre no sube la proyección lo mismo');
+    if (a.meses[0].mes !== '2026-10' || a.meses.filter(x => x.tipo === 'cierre').length !== 2 || fin(a).mes !== C.PROYECCION.cortes.salida.mes) malos.push('los meses de la gráfica no van del primer cierre al corte de la salida');
+    if (a.meses[0].real !== 17250) malos.push('un cierre no suma todo lo que tenías');
+    a.meses.forEach((x, i) => {
+      if (Math.abs(sO(x.entraDe) - x.entra) > 0.01 || Math.abs(sO(x.saleDe) - x.sale) > 0.01 || Math.abs(x.entra - x.sale - x.queda) > 0.01) malos.push(x.mes + ': el desglose no suma su total');
+      ['suscripciones', 'cuidado', 'depa'].forEach(g => { if (x.saleDe[g] && Math.abs(sO(x.items[g] || {}) - x.saleDe[g]) > 0.01) malos.push(x.mes + ': el detalle de ' + g + ' no suma'); });
       const t = x.tipo === 'proy' ? x.proy : x.real; if (x.activos && Math.abs(sO(x.activos) - t) > 0.01) malos.push(x.mes + ': los activos no suman lo que llevas');
+      if (x.tipo === 'proy' && Math.abs(x.proy - a.meses[i - 1].proy - x.queda) > 0.01) malos.push(x.mes + ': no crece lo que entra menos lo que sale');
+      if ('resto' in x.saleDe) malos.push(x.mes + ': volvió un gasto no documentado');
     });
-    const sin = C.ritmoMaestria(F([]), { real: 5000, hoy: '2026-12-10' }); if (sin.ritmo !== 1) malos.push('sin cierres el ritmo no es el del plan');
+    if (Math.abs(fin(a).nec - Math.max(a.pide, a.finPlan)) > 0.01) malos.push('lo que se necesita al irte no es lo que pide el corte');
+    if (C.didiEn('2026-10') === C.PROYECTO.didiMes || C.didiEn('2027-03') !== C.PROYECTO.didiMes) malos.push('Didi de los meses pasados cambió con el de hoy');
   }
   const m = leer('Dashboard/medidores.js'); if (m.indexOf('.ritmoMaestria(') < 0 || m.indexOf("trayecto('salida'") < 0) malos.push('la ventana del Fondo Maestría ya no usa ritmoMaestria');
-  if (malos.length) { problemas.push('El ritmo de la maestría:\n     ' + malos.join('\n     ')); return; }
-  ok.push('Fondo Maestría: la proyección sale de los cierres de Finanzas y se mueve con cada mes');
+  if (malos.length) { problemas.push('El fondo de la maestría:\n     ' + malos.slice(0, 8).join('\n     ')); return; }
+  ok.push('Fondo Maestría: la proyección sale de los cierres, lo que entra y lo documentado que sale, y se mueve con cada mes');
 })();
 
 /* ── 62. A la mano, editable ────────────────────────────────────────────────────────────────────────────────────────

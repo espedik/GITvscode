@@ -59,7 +59,7 @@ Dos reglas que costaron una vuelta cada una:
   `yaContado` cazaba `Quincena ALTEN` pero se le escapaban `Sueldo` o `Nómina`, y cada uno
   sumaba $20,500 de más.
 - **Los tres mensuales llevan su propia comprobación**, porque `yaContado` compara importes y
-  un cobro de Didi de $2,800 no se parece a los $7,000 del mes. Si el mes trae algo anotado
+  un cobro de Didi de $2,800 no se parece a los $10,000 del mes. Si el mes trae algo anotado
   que caiga en sus palabras o su categoría, **manda lo anotado**.
 
 Lo que cuesta comer se **deriva de la lista de compras**, cuyos precios viven en
@@ -154,11 +154,11 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 |---|---|---|
 | `{{sueldo}}` | $41,000 | Bruto mensual ALTEN, quincenal a BBVA |
 | `{{sueldoQuinc}}` | $20,500 | Derivada: la mitad de `sueldo` |
-| `{{didiMes}}` | $7,000 | Lo que trae Didi al mes, como mínimo (Adán, 24-nov-2026) |
-| `{{didiAhorro}}` | $7,000 | Lo que Didi aparta al mes, en promedio —cada lunes lo mismo, 12 entre 52 (`didiSemana`: $1,615.38), así que un mes con cinco lunes junta más—: a la BBVA mientras tenga saldo, después a GBM; los lunes de la quincena después de liquidarla, para vivir (`lunesDidiTuyos`). De octubre de 2026 a enero de 2027 (dicho por Adán) |
+| `{{didiMes}}` | $10,000 | Lo que trae Didi al mes (Adán, 24-nov-2026); los meses de antes conservan lo que dijo entonces (`didiAntes`, `didiEn(mes)`) |
+| `{{didiAhorro}}` | $10,000 | Lo que Didi aparta al mes, en promedio —cada lunes lo mismo, 12 entre 52 (`didiSemana`: $2,307.69), así que un mes con cinco lunes junta más—: a la BBVA mientras tenga saldo, después a GBM; los lunes de la quincena después de liquidarla, para vivir (`lunesDidiTuyos`). De octubre de 2026 a enero de 2027 (dicho por Adán) |
 | `{{didiAhorroMas}}` | $10,000 | Lo mismo desde `PROYECTO.didiMasDesde` (febrero de 2027), cuando trabaja más horas. El último mes en México va la mitad (`didiAlAhorro`) |
 | `{{siVale}}` | $940 | Vale de despensa |
-| `{{ingresoTotal}}` | $48,940 | Derivada: sueldo + Didi + Si Vale |
+| `{{ingresoTotal}}` | $51,940 | Derivada: sueldo + Didi + Si Vale |
 | `{{renta}}` | $11,250 | Día 1 · hasta enero de 2027 (`PROYECTO.rentaHasta`): el depa se entrega a fin de mes y desde febrero la renta es ahorro |
 | `{{aporteCasa}}` | $3,000 | Día 1, a su familia, de `PROYECTO.enCasaDesde` (el mes siguiente a `rentaHasta`) a `PROYECTO.ultimoMesMexico`. En casa come ahí y solo paga su desayuno |
 | `{{gym}}` `{{gymNombre}}` | $650 · Total Pass | Día 17 |
@@ -337,19 +337,19 @@ pero el nombre de la variable se queda corto.
 | `{{sperrkonto}}` | $249,984 — la cuenta bloqueada, €11,904 al euro del plan | derivada |
 | `{{sperrkontoEur}}` `{{colegiaturaEur}}` `{{werkstudentEur}}` | €11,904 · €1,900 · €1,100 — en euros, como los pide Alemania: la cuenta bloqueada (`SALIDA.costos`), la colegiatura de cada semestre y lo que deja el Werkstudent al mes, neto (`SUPUESTOS.alemania`) (`fmt: 'txt'`) | constantes |
 | `{{bydRenta}}` | $7,500 — lo que deja el BYD rentado al mes, neto (`SUPUESTOS.byd.rentaNeta`) | constante |
-| `{{ahorroMesDepa}}` | $16,000 — lo que llega a GBM en un mes con depa: lo del 1, lo del 15 y Didi | derivada (`mesTipo(false)`) |
+| `{{ahorroMesDepa}}` | $19,000 — lo que llega a GBM en un mes con depa: lo del 1, lo del 15 y Didi | derivada (`mesTipo(false)`) |
 | `{{ahorroMesCasa}}` | $31,000 — lo mismo en casa de su familia: lo del 1, lo del 15 y Didi | derivada (`mesTipo(true)`) |
 | `{{gastoPersonalDepa}}` | $8,022 — lo que queda del sueldo con depa tras los fijos, la comida y el ahorro: su gasto personal, con sus rutinas dentro; lo que pague con tarjeta, saldado en la misma quincena | derivada |
 | `{{gastoPersonalCasa}}` | $7,255 — lo mismo en casa | derivada |
 | `{{cuidadoMes}}` | $4,624 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
 | `{{recorteRutinas}}` | $1,880 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $857 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
-| `{{alemaniaMarzo}}` | $114,438 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
+| `{{alemaniaMarzo}}` | $122,054 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
 | `{{salidaAgosto}}` | $324,284 — lo que pide la salida completa en agosto de 2027: la cuenta bloqueada, la reserva del BYD, el colchón y la colegiatura del primer semestre (`cortes.salida.pide`) | derivada; se mueve con `PROYECTO.eurMxn` |
-| `{{extraSalida}}` | $12,744 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
-| `{{marzoParaSalida}}` | $178,158 — lo que tendría GBM al cerrar la Fase 1 con ese ingreso nuevo: el punto de control del 31 de marzo | derivada |
-| `{{mayoParaSalida}}` | $254,815 — lo mismo el día de decidir (`PROYECTO.maestriaDecision`) | derivada |
+| `{{extraSalida}}` | $11,982 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
+| `{{marzoParaSalida}}` | $181,966 — lo que tendría GBM al cerrar la Fase 1 con ese ingreso nuevo: el punto de control del 31 de marzo | derivada |
+| `{{mayoParaSalida}}` | $257,100 — lo mismo el día de decidir (`PROYECTO.maestriaDecision`) | derivada |
 | `{{salida2028}}` | «sobran …» o «faltan …»: la salida completa si se mueve a septiembre de 2028 (`desfase: 12`, `fmt: 'txt'`) | derivada |
-| `{{alemaniaJunio}}` | $191,344 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
+| `{{alemaniaJunio}}` | $198,960 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
 | `{{bbvaCero}}` | 15 nov 2026 — el día que la BBVA queda en cero con `planBbva` (`fmt: 'fecha'`) | derivada |
 | `{{bbvaIntereses}}` | $0 — lo que costaría en intereses llegar a cero; en 0 con `PROYECTO.bbvaSinIntereses` | derivada |
 | `{{bbvaRuta}}` | «el domingo 15 nov, $2,300 de la quincena»: los abonos que le quedan a la BBVA, desde hoy (`bbvaRutaTxt`, `fmt: 'txt'`) | derivada de `planBbva` |
@@ -1160,7 +1160,7 @@ Ninguna estructura está copiada entre archivos; todas se leen de aquí:
 | `APRENDIZAJE` | 6 prioridades de aprendizaje | `CIFRAS.APRENDIZAJE` |
 | `fondoMovimiento(F, datos, id)` · `fondoBorrar(F, id)` · `fondoLista(F)` | Las aportaciones y retiros del fondo de emergencia: anotar o corregir uno (`datos = {date, amount, tipo, nota}`, `tipo` 'aporte' o 'retiro'), borrarlo, y la lista del más nuevo al más viejo con lo aportado y lo retirado. Mueven `emergencyFund` y `current` de ef-001 y guardan el movimiento en `efAportes`; un retiro mayor que el fondo devuelve `{error}`. Las usan el panel del Fondo de emergencia del Dashboard y el bloque del fondo de Finanzas | `CIFRAS.fondoMovimiento()`, `CIFRAS.fondoBorrar()`, `CIFRAS.fondoLista()` |
 | `saldosPoner(F, vals, k)` · `A_LA_MANO` | Lo que tienes a la mano, dicho por ti: pone la cuenta y el efectivo (`activos` líquidos) con la fecha de ese día y lleva CETES al saldo nuevo con una aportación o un retiro. De ahí salen el patrimonio, lo que queda para gastar en la quincena, los medidores y Coach. La usa *A la mano* en la ventana del Fondo de emergencia | `CIFRAS.saldosPoner()` |
-| `ritmoMaestria(F, {real, hoy})` | A qué ritmo juntas para la maestría y a dónde llegas, con todo el dinero (bolsa, CETES, Bitcoin, cuenta, efectivo y depósito): mes por mes lo que entra y lo que te queda, lo que llevabas en cada cierre de `indicatorHistory`, lo de hoy, el plan, lo que se necesita (`salidaConIngreso`) y lo que tendrías a tu ritmo, el de tus últimos tres meses medibles. Cada cierre lo mueve. Lo pinta la ventana del Fondo Maestría | `CIFRAS.ritmoMaestria()` |
+| `ritmoMaestria(F, {real, hoy})` | El fondo de la maestría mes por mes, con todo el dinero (bolsa, CETES, Bitcoin, cuenta, efectivo y depósito): lo que entra, lo documentado que sale —con suscripciones, servicios y rutinas uno por uno—, lo que te queda, lo que de verdad creció, lo que llevabas en cada cierre de `indicatorHistory`, lo de hoy, lo que tendrías guardando lo que te queda, el plan y lo que se necesita. Sin los pagos de la salida (`fuera`) ni gastos no documentados. Cada cierre mueve el punto de partida. Lo pinta la ventana del Fondo Maestría | `CIFRAS.ritmoMaestria()` |
 | `gastoEmergencia(ym)` | Lo que cuesta vivir sin sueldo: parte el mes del plan (`desgloseMes`) en lo indispensable (`minimo`: renta, servicios, celular, familia, BYD, iPhone y comida) y lo que se apaga (`recorte`: suscripciones, rutinas y lo demás). Nunca se mide con el promedio de los movimientos anotados ni con `fijosTotal`, que deja fuera el BYD y la comida | `CIFRAS.gastoEmergencia()`, `CIFRAS.fondoMeta()` |
 | `btcCompra(F, c, id)` · `btcBorrar(F, id)` · `btcDeInversiones(F, precioDe)` · `btcEsInversion(i)` | El Bitcoin en una sola libreta, `btcHistory` (la gráfica y la tabla de Finanzas): anotar o corregir una compra en pesos (`c = {date, mxn, btc?, btcPrice?, fx?}`; con `btc` manda la cantidad exacta, si no sale del precio de ese día o del de ahora), borrarla, y mudar ahí el Bitcoin anotado como inversión. Las usan el Total invertido del Dashboard y Finanzas; el control 52 las prueba | `CIFRAS.btcCompra()`, `CIFRAS.btcBorrar()`, `CIFRAS.btcDeInversiones()` |
 | `prestamoSimular(d, o)` · `prestamoTabla(d, o)` · `prestamoHechos(d)` · `prestamoResumen(d, F)` · `prestamoAbono(F, a, id)` · `prestamoAbonoBorrar(F, id)` · `prestamoDatos(F, id, v)` | Un crédito a plazo completo (el auto: `plazo` 84 desde la primera mensualidad del 15-mar-2026, `cargos` = IVA y seguros de cada mensualidad, que no bajan la deuda): mes a mes con su tasa y su mensualidad —cuántos pagos faltan y cuánto interés, con un abono hoy (`extra`) o cada mes (`extraMes`)—, cuántas mensualidades van, la tabla mes a mes desde la próxima mensualidad (y por año, `porAnio`, para Intereses este mes), todo lo de Deuda total (la próxima partida en interés y capital, intereses pagados, por pagar y totales, el contrato y lo que ahorra abonar), los abonos a capital (`origen: 'abono'`, con `prestamo` para deshacerlos) y los datos corregidos con el estado de cuenta. Los usan Deuda total del Dashboard y «Pagar» de Finanzas; control 57 | `CIFRAS.prestamoResumen()`, `CIFRAS.prestamoAbono()`, `CIFRAS.prestamoDatos()` |
