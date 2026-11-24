@@ -316,13 +316,14 @@ window.CIFRAS = (function () {
     // La respuesta de Esslingen llega "antes de fin de mayo" (hs-esslingen.de) y la cuenta
     // bloqueada se llena a mediados de junio: ese es el día de decidir la salida, con las dos.
     maestriaDecision: '2027-05-31',
-    // La licencia de piloto privado de helicóptero (Mis Metas), en la moneda en que se paga: Alemania con 45 horas
-    // (hausjournal.net, ejemplo de 2023: formación, examen, radio y médico); San Antonio, Texas, con 40 (la suma de los
-    // renglones de alamohelicoptertours.com, nov 2026), y Estados Unidos con 60, a la mitad de los US$26,000–30,000 que
-    // calcula un instructor (3gheliprep.com, may 2026). La visa de turista de Estados Unidos, US$185 (nov 2026).
-    heliCostoEur:    24335,
-    heliUsaUsd:      16285,
-    heliUsaRealUsd:  28000,
+    // La licencia de piloto privado de helicóptero (Mis Metas), en pesos: el folleto de Aeroanahuac, en Toluca (8-oct-2025).
+    // Inscripción $6,000 y tres mensualidades de $10,000 de teoría; 20 horas de Robinson 44 y 20 de simulador, al precio de
+    // cada hora; y los trámites: $15,050 de la AFAC y la bitácora, $4,000 del examen final y $3,000 del médico (CAAP, sep 2026).
+    heliTeoria:      36000,
+    heliHora:        14800,
+    heliHoraSim:     7600,
+    heliTramites:    22050,
+    // La visa de turista de Estados Unidos, US$185 (nov 2026).
     visaUsaUsd:      185,
     // El euro para planear. El 2-oct-2026 estaba en $20.46 (Infobae); se planea a $21.00 para
     // que una subida normal (su volatilidad anda en ~7 %) no tumbe la cuenta bloqueada.
@@ -8718,12 +8719,19 @@ window.CIFRAS = (function () {
     maestriaInicio:{ v: () => PROYECTO.maestriaInicio,   fmt: 'fecha' },
     // Las fechas del plan, para escribirlas en prosa sin copiarlas: `fecha` las pinta "18 jul 2027".
     decisionMaestria: { v: () => PROYECTO.maestriaDecision, fmt: 'fecha' },
-    // La licencia de helicóptero y la visa de Estados Unidos: en su moneda y en pesos, al cambio del plan.
-    heliCostoEur:  { fmt: 'txt', v: () => '€' + PROYECTO.heliCostoEur.toLocaleString('es-MX') },
-    heliCosto:     { dep: ['heliCostoEur', 'eurMxn'], v: () => Math.round(PROYECTO.heliCostoEur * PROYECTO.eurMxn) },
-    heliUsaUsd:    { fmt: 'txt', v: () => 'US$' + PROYECTO.heliUsaUsd.toLocaleString('es-MX') },
-    heliUsa:       { dep: ['heliUsaUsd', 'usdMxn'], v: () => Math.round(PROYECTO.heliUsaUsd * PROYECTO.usdMxn) },
-    heliUsaReal:   { dep: ['heliUsaRealUsd', 'usdMxn'], v: () => Math.round(PROYECTO.heliUsaRealUsd * PROYECTO.usdMxn) },
+    // La licencia de helicóptero en pesos: el paquete (20 horas de vuelo y 20 de simulador) y lo mismo cambiando 10 o 15 de
+    // simulador por helicóptero, que es lo que suma el artículo 58 (20 con instructor, 10 solo y 5 de travesía solo).
+    heliTeoria:    { v: () => PROYECTO.heliTeoria },
+    heliHora:      { v: () => PROYECTO.heliHora },
+    heliHoraSim:   { v: () => PROYECTO.heliHoraSim },
+    heliTramites:  { v: () => PROYECTO.heliTramites },
+    heliVuelo:     { dep: ['heliHora'], v: () => 20 * PROYECTO.heliHora },
+    heliSimulador: { dep: ['heliHoraSim'], v: () => 20 * PROYECTO.heliHoraSim },
+    heliCosto:     { dep: ['heliTeoria', 'heliHora', 'heliHoraSim', 'heliTramites'], v: () => PROYECTO.heliTeoria + 20 * (PROYECTO.heliHora + PROYECTO.heliHoraSim) + PROYECTO.heliTramites },
+    heliCosto30:   { dep: ['heliTeoria', 'heliHora', 'heliHoraSim', 'heliTramites'], v: () => PROYECTO.heliTeoria + 30 * PROYECTO.heliHora + 10 * PROYECTO.heliHoraSim + PROYECTO.heliTramites },
+    heliCosto35:   { dep: ['heliTeoria', 'heliHora', 'heliHoraSim', 'heliTramites'], v: () => PROYECTO.heliTeoria + 35 * PROYECTO.heliHora + 5 * PROYECTO.heliHoraSim + PROYECTO.heliTramites },
+    heliAnual:     { dep: ['heliHora'], v: () => 12 * PROYECTO.heliHora },
+    // La visa de Estados Unidos, al cambio del plan.
     visaUsa:       { dep: ['visaUsaUsd', 'usdMxn'], v: () => Math.round(PROYECTO.visaUsaUsd * PROYECTO.usdMxn) },
     // El millón se fecha con el cierre de la última fase del Plan Maestro.
     metaMillon:    { v: () => PHASES[PHASES.length - 1].end, fmt: 'fecha' },
@@ -8852,8 +8860,10 @@ window.CIFRAS = (function () {
     especulacionBtcPct: 'De eso, a Bitcoin', proteinaMeta: 'Proteína al día', kcalMeta: 'Calorías al día',
     kapitelAleman: 'Kapitel en curso', cetesDia15: 'A CETES el día 15', autoMeses: 'Meses que le quedan al auto',
     autoAPagar: 'Lo que acabas pagando del auto', autoInteres: 'Intereses del auto', fondoMeta: 'Fondo de emergencia, la meta', fondoMeses: 'Meses que cubre el fondo',
-    maestriaMeta: 'Dinero para la maestría, la meta', heliCosto: 'La licencia de helicóptero, en Alemania',
-    heliUsa: 'La licencia de helicóptero, en Texas', heliUsaReal: 'La licencia de helicóptero en EE. UU., con 60 horas', visaUsa: 'La visa de Estados Unidos',
+    maestriaMeta: 'Dinero para la maestría, la meta', heliCosto: 'La licencia de helicóptero',
+    heliCosto30: 'La licencia de helicóptero, con 30 horas de vuelo', heliCosto35: 'La licencia de helicóptero, con 35 horas de vuelo',
+    heliTeoria: 'La teoría del helicóptero', heliHora: 'La hora de helicóptero', heliHoraSim: 'La hora de simulador de helicóptero', heliVuelo: 'Las 20 horas de helicóptero', heliSimulador: 'Las 20 horas de simulador',
+    heliTramites: 'Los trámites del helicóptero', heliAnual: 'Volar una hora al mes, al año', visaUsa: 'La visa de Estados Unidos',
   };
 
   /* ── TUS CIFRAS, hacia fuera (ver EDITABLES, arriba) ──

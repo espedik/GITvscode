@@ -1063,7 +1063,7 @@ con su botón** (`.kv-hoy`; naranja si algo pide revisarse), **una gráfica** (`
 
 | Ventana | Lo que responde |
 |---|---|
-| **Fondo** | Para cuántos días te alcanza si te quedas sin trabajo, cuánto falta para cada mes de tu meta, qué tienes a la mano y qué pagarías en un mes sin sueldo (ver *Fondo de emergencia, aportación por aportación*). El plan no le aporta mientras `cetesDia15` sea 0 |
+| **Fondo** | Para cuántos días te alcanza si te quedas sin trabajo, cuánto falta para cada mes de tu meta, qué tienes a la mano y qué pagarías en un mes sin sueldo (ver *Fondo de emergencia, aportación por aportación*). No lleva la parte de hoy |
 | **Maestría** | Cómo vas hoy contra el plan (`contraPlan`: la proyección al cierre del mes anterior más los envíos a GBM que ya tocaron, contra el fondo, las inversiones y el Bitcoin, sin el depósito), el siguiente envío, la proyección contra los cortes de la salida (`cortesSalidaDash`) y lo que sigue por pagar (`SALIDA.costos`). La meta es lo que cuesta irte entero; el corte de agosto, lo que se tiene en mano entonces |
 | **Patrimonio** | Cuánto cambió desde el último mes cerrado (`indicatorHistory`) y qué lo movió, pieza por pieza; mes a mes; el camino al millón con el dinero líquido de la proyección, y la suma: dinero + cosas − deudas. Avisa si un bien está a precio de compra y de qué día es el saldo de la cuenta |
 | **Intereses** | Cuánto al día, en 12 meses y hasta acabar; la próxima mensualidad partida; a dónde va el dinero cada año, y lo que ahorra abonar. Si el contrato y los datos no acaban el mismo mes, lo dice |
@@ -1172,8 +1172,7 @@ simple"*). De arriba abajo:
   calendario, sin carriles y sin escenarios.
 - **La meta** es `CIFRAS.fondoMeta()`: `PROYECTO.fondoMeses` (3) meses de lo indispensable del mes que sigue
   (`CIFRAS.gastoEmergencia`), hacia arriba a miles (Adán: *"la meta de fondo de ahorro debe cubrir mis gastos mínimo 3
-  meses"*); sin renta baja sola, y los botones de *Hoy* ya lo cuentan. Los meses se cambian en Mis cifras.
-- **Lo de hoy**: el siguiente envío a GBM y en cuánto lo llenarías apartando de cada quincena (`apartar` llena el formulario).
+  meses"*); sin renta baja sola. Los meses se cambian en Mis cifras.
 - **A la mano se edita ahí mismo**: *Editar* (`editarMano`) cambia los renglones por tres cantidades con su total en vivo, y
   *Guardar* (`guardarMano`) llama a `CIFRAS.saldosPoner`: la cuenta y el efectivo quedan con la fecha de hoy y CETES llega a su
   saldo con una aportación o un retiro, que sale en *Lo que has metido y sacado*. `ceGuardar` repinta la pantalla y la ventana;
@@ -1186,7 +1185,7 @@ simple"*). De arriba abajo:
   que se paga, lo que se apaga y cuánto baja sin renta; y **Meter o sacar dinero**. No lleva las preguntas de emergencia ni
   *lo que juntas* (Adán las quitó).
 
-A 2048×1040 cabe sin desplazarse, con movimientos o sin ellos, en los dos temas; en el iPad va sin formulario y a 390 px todo
+No lleva la barra de *Hoy* (Adán la quitó). A 2048×1040 cabe sin desplazarse, con movimientos o sin ellos, en los dos temas; en el iPad va sin formulario y a 390 px todo
 en una columna, sin desbordes. El **control 61** vigila la cuenta.
 
 ### De dónde sale cada cosa
@@ -1627,23 +1626,31 @@ de 1 px, texto en tinta y cada valor también fuera del tooltip):
 | Meta | Qué enseña | De dónde |
 |---|---|---|
 | ISTQB CT-GenAI | Cada simulacro en columnas contra el corte y tu meta, y las preguntas de Hoy aprendes de 14 días, una celda por día | `examen_genai_v1.intentos`, `habSimulacro()`, `istqbRespuestas()` |
-| SpaceX | Tu probabilidad de ver al menos uno en 4 y 7 días desde California, Florida y Texas, con el ritmo de los últimos 100, y los próximos con su fecha y qué tan firme es | `LANZAMIENTOS` (`lanzamientos.js`) |
+| SpaceX | Solo California: tu probabilidad de ver al menos uno en 4, 7 y 10 días con el ritmo de los últimos 100, y los próximos con su hora de Long Beach, qué tan firme es, si cae de viernes a lunes y cómo se vería desde la playa | `LANZAMIENTOS` (`lanzamientos.js`) |
 | Maestría | El GBM que proyecta el plan al cerrar cada mes hasta irte contra lo que pide cada corte —el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la salida completa—, con lo que falta o sobra en cada uno —los mismos cortes y cifras que el panel de la Maestría—; tu dinero hoy contra lo que el plan pide al cerrar el mes, con la definición de la banda, y el alemán (la lección y el vocabulario del nivel) | `CIFRAS.PROYECCION`, `cortesSalidaDash()`, `ctCifrasHoy()` |
-| Helicóptero | Lo que cuesta la licencia en Texas, en Estados Unidos con 60 horas y en Alemania; lo que pide cada mes volando, qué parte es de lo que la proyección junta ahí y cuántos meses le mueve al millón | `{{heliCosto}}`, `{{heliUsa}}`, `{{heliUsaReal}}`, `CIFRAS.PROYECCION` |
+| Helicóptero | Lo que cuesta con 20, 30 y 35 de las 40 horas en vuelo, en qué se va el paquete (vuelo, simulador, teoría, trámites), lo que pide cada mes apartar, qué parte es de lo que la proyección junta ahí y cuántos meses le mueve al millón | `{{heliCosto}}`, `{{heliCosto30}}`, `{{heliCosto35}}`, `CIFRAS.PROYECCION` |
 | Las de largo plazo | Tu patrimonio líquido contra la trayectoria del millón hasta la fecha de la meta, con hoy y la meta marcados: es lo que las habilita | `CIFRAS.PROYECCION.meses`, `patrimonioLiquido()` |
 
 Sin datos (ni simulacros ni sesiones), su recuadro dice qué va a aparecer ahí. Medido a 2048×1040, en claro y
 en oscuro, con SpaceX, el helicóptero, la maestría, el CT-GenAI y Tailandia: sin errores y sin desborde.
 
 **SpaceX y el helicóptero** (Adán, 23-nov-2026: *"quita lo de ajedrez y el hyrox, pon en mediana ir a ver un lanzamiento de
-SpaceX y otra de ser piloto privado de helicópteros… todas las cosas que me ayuden para lograrlo"*). SpaceX va en marzo de 2027,
-montado en el viaje a Puerto Rico: los vuelos baratos hacen escala en Orlando y la visa es la misma; con fecha firme o no se
-alarga. De los últimos 100 lanzamientos, 58 salieron de California y 38 de Florida, así que la ficha lo dice y la lista viva
-lo pone al día (`LANZAMIENTOS.pedir`, cada 8 horas como mucho; sin internet, lo guardado o la foto del 24-nov-2026). La licencia
-va en junio de 2030, en Alemania: con visa de turista no se puede volar para licencia en Estados Unidos (9 FAM 402.5) y pasar
-esa licencia a la europea pide 100 horas. Los mínimos salen del reglamento de la AFAC (artículos 20, 38, 58 y 59), de 14 CFR
-61.103 y 61.109 y de FCL.210.H. Con 45 horas cuesta 91 % de lo que la proyección junta entre marzo de 2029 y junio de 2030 y
-atrasa el millón 12 meses: lo enseña su panel y **no** está en la PROYECCION, porque se decide en 2029.
+SpaceX y otra de ser piloto privado de helicópteros… todas las cosas que me ayuden para lograrlo"*; 24-nov-2026: *"los
+lanzamientos de SpaceX serían solo los de California ya que tengo familia en Long Beach… lo de piloto de helicópteros, solamente
+quiero opciones en CDMX y dame más info valiosa"*).
+
+- **SpaceX** es un viaje corto a Long Beach entre enero y marzo de 2027, sin hotel, que se compra cuando hay un lanzamiento de
+  Vandenberg con fecha firme de viernes a lunes. `LANZAMIENTOS.pedir` trae los que vienen y los últimos 100 (cada 8 horas como
+  mucho; sin internet, lo guardado o la foto del 24-nov-2026) y se queda con los de California. `sol(iso)` calcula el amanecer y
+  el atardecer de Long Beach con la fórmula de la NOAA, y `vista(iso)` dice si ese día brilla en el crepúsculo (de 10 a 80 minutos
+  después del atardecer o antes del amanecer), es de noche o es de día y toca ir a Lompoc. Se comprobó con el del 10 de junio de
+  2024, que salió 44 minutos después del atardecer y se vio en todo el sur de California.
+- **El helicóptero** son solo escuelas de CDMX, con una advertencia: la teoría sí se toma en la ciudad, pero ninguna vuela dentro
+  de ella (Toluca, Temixco, Mérida o Campeche). El costo sale del folleto de Aeroanahuac; su paquete trae 20 horas de helicóptero y
+  20 de simulador, y el artículo 58 suma de 30 a 35 de vuelo, así que el plan se calcula con 35. La ficha trae cada escuela con su
+  teléfono, el mensaje para cotizar con doce preguntas (`copia`), el médico, Toluca a 2,580 m y las tres ventanas para hacerla. La
+  meta va en diciembre de 2030, en temporada seca: con 35 horas es 78 % de lo que la proyección junta entre marzo de 2029 y
+  entonces. Lo enseña su panel y **no** está en la PROYECCION, porque se decide en 2029.
 
 **La franja de instrumentos** (`#metasBay`) trae el avance del conjunto **en pasos**, no
 promediando porcentajes (promediar daba el mismo peso a una meta de 1 paso que a una de 11),
@@ -1692,13 +1699,17 @@ abre su ventana en el panel de los medidores (`abrirKpi('viaje-…')` → `kpiDe
 
 - **arriba**, la cuenta sobre la foto y cuatro datos (cómo vas, cómo vuelves, el clima, lo que cuesta); debajo, lo siguiente con
   sus botones —el de Kolors lleva la fecha elegida en el enlace—;
-- **lo que se elige** (`elige`): en Guadalajara, el regreso del domingo 6 o del lunes 7, que cambia el gasto, las noches y los días;
-  en Puerto Rico, las fechas, con la luna de la bahía, los días de vacaciones de cada una y *Otras fechas*;
+- **lo que se elige** (`elige`): en Guadalajara, el regreso del lunes 7 —el lunes ya está pedido en ALTEN y es el que conviene— o
+  el del domingo 6, que cambia el gasto, las noches y los días; en Puerto Rico, las fechas, de viernes a lunes de la otra semana (10
+  noches) o de viernes a viernes (7 exactas), con la luna de la bahía, los días de vacaciones de cada una y *Otras fechas*. El
+  hospedaje, el auto, la comida y el día por día salen de las noches: de 1 a 5, de 6 a 9 o 10 en adelante (`nPr`, `autoPr`). Una
+  opción guardada que ya no existe no cuenta;
 - **lo que falta**, con fecha; nunca en domingo. Los pasos sin fecha fija cuentan hacia atrás desde la salida (`antes`);
 - **cuánto cuesta**: lo estimado y, a la derecha, lo que pagaste, que lo sustituye en el total; debajo, qué parte es de tu gasto
   personal del mes (`{{gastoPersonalDepa}}`);
 - **día por día** con foto; los bloques de cómo llegar, moverse y qué hacer si algo falla —el de Guadalajara avisa de los pasos de
-  tus metas que caen esos días (`caen`), y el de Puerto Rico dice qué parte es de lo que falta para la salida—;
+  tus metas que caen esos días (`caen`), y el de Puerto Rico dice qué parte es de lo que falta para la salida (`dinero`) y cuántos
+  domingos de Didi cruza y cuánto es (`didi`: `didiAhorroMas` desde `didiMasDesde`)—;
 - **tu vuelo y tu hotel**, y de dónde sale cada dato, con cuándo se vio.
 
 **Kolors** se consultó en su buscador: sale uno al día, 23:30, de López Mateos y Tenochtitlán; llega a Encuentro Fortuna 6:30, a

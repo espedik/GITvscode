@@ -3556,7 +3556,8 @@ function promptsDeLoTocado() {
    Adán, 23-nov-2026: "arriba pon otra sección de próximos viajes… igual ahí quiero información completa". Cada viaje de
    viajes.js trae lo que falta, lo que cuesta, sus días, sus fuentes y sus fotos; ningún paso cae en domingo (es de Didi) ni
    nombra alcohol; los pasos de una meta que son de un viaje existen; y lo del vuelo y del hotel no llega al repositorio
-   público. La foto de respaldo de los lanzamientos de SpaceX está completa. */
+   público. Los lanzamientos de SpaceX son solo los de California (Adán tiene familia en Long Beach) y el helicóptero, solo en
+   escuelas de CDMX: ni la meta ni su plan mandan a otro lado. */
 (function () {
   const malos = [], h = leer('Dashboard/dashboard.html'), src = leer('Dashboard/viajes.js'), lz = leer('Dashboard/lanzamientos.js');
   ['<link rel="stylesheet" href="viajes.css">', '<script src="viajes.js"></script>', '<script src="lanzamientos.js"></script>'].forEach(t => { if (h.indexOf(t) < 0) malos.push('dashboard.html ya no carga ' + t); });
@@ -3579,8 +3580,8 @@ function promptsDeLoTocado() {
     (v.chips || []).forEach(c => { if (!vistos[c.paso]) malos.push(n + 'la etiqueta «' + c.t + '» apunta a un paso que no existe'); });
     if (!v.gasto.length || !(v.fuentes || []).length || !v.visto) malos.push(n + 'le falta el gasto, las fuentes o cuándo se vieron los precios');
     (v.fuentes || []).forEach(f => { if (!/^https:\/\//.test(f[1])) malos.push(n + 'fuente sin enlace seguro: ' + f[0]); });
-    ops.forEach(op => { [v.foto].concat(v.dias(op).map(d => d.foto)).forEach(f => { if (!require('fs').existsSync(require('path').join(__dirname, f))) malos.push(n + 'falta la foto ' + f); }); });
-    const txt = JSON.stringify([v.q, v.bloques, ops.map(op => [v.dias(op), v.pasos.map(p => v1(p.t, op)), v.gasto.map(g => v1(g.d, op))]), v.elige]);
+    ops.forEach(op => { [v.foto].concat([0, 4, 7, 10].reduce((A, n) => A.concat(v.dias(op, n, null).map(d => d.foto)), [])).forEach(f => { if (!require('fs').existsSync(require('path').join(__dirname, f))) malos.push(n + 'falta la foto ' + f); }); });
+    const txt = JSON.stringify([v.q, v.bloques, ops.map(op => [0, 4, 7, 10].map(n => v.dias(op, n, null)).concat([v.pasos.map(p => v1(p.t, op)), v.gasto.map(g => v1(g.d, op))])), v.elige]);
     if (alcohol.test(txt)) malos.push(n + 'nombra alcohol: ' + txt.match(alcohol)[0]);
   });
   if (V && !(V.BASE || []).length) malos.push('viajes.js se quedó sin viajes');
@@ -3588,7 +3589,15 @@ function promptsDeLoTocado() {
   Object.keys(MP).forEach(id => (MP[id].pasos || []).forEach(p => { if (p.viaje && !(ids[p.viaje[0]] && ids[p.viaje[0]].pasos.some(x => x.id === p.viaje[1]))) malos.push('META_PLAN.' + id + ' apunta al paso ' + p.viaje.join('/') + ', que no existe en viajes.js'); }));
   const EX = require('./habitos-exportar.js');
   ['viajes_privado_v1', 'dash-clima-v1', 'dash-lanzamientos-v1'].forEach(k => { if (!EX.NO_VIAJAN.has(k)) malos.push(k + ' llegaría al repositorio público (NO_VIAJAN, habitos-exportar.js)'); });
-  if (L) { const r = L.FOTO.ritmo; if (!L.FOTO.vienen.length || r.ca + r.fl + r.tx !== r.n) malos.push('la foto de respaldo de los lanzamientos no suma ' + r.n); }
+  if (L) {
+    const r = L.FOTO.ritmo; if (!L.FOTO.vienen.length || !(r.ca > 0 && r.ca <= r.n) || !(r.rec >= 0 && r.rec <= r.ca)) malos.push('la foto de respaldo de los lanzamientos no cuadra');
+    // El 10 de junio de 2024 salió uno 40 minutos después del atardecer y se vio en todo el sur de California.
+    if (L.vista('2024-06-11T03:47:00Z').id !== 'medusa' || L.vista('2026-12-02T20:30:00Z').id !== 'dia' || !L.finde('2026-11-29T04:39:00Z')) malos.push('lanzamientos.js calcula mal la luz o el día de Long Beach');
+  }
+  const DT = evaluar(literal(h, 'const META_DETALLE=', '{')) || {}, sx = JSON.stringify([DT.spacex, MP.spacex]), he = JSON.stringify([DT.helicoptero, MP.helicoptero]);
+  if (/Florida|Texas|Orlando|Titusville|Cañaveral/i.test(sx)) malos.push('la meta de SpaceX vuelve a mandar fuera de California: ' + sx.match(/Florida|Texas|Orlando|Titusville|Cañaveral/i)[0]);
+  if (!/Long Beach/.test(sx) || !/Vandenberg/.test(sx)) malos.push('la meta de SpaceX ya no habla de Long Beach o de Vandenberg');
+  if (/Texas|San Antonio|9 FAM|LBA|BZF/.test(he)) malos.push('la meta del helicóptero vuelve a ofrecer escuelas fuera de CDMX: ' + he.match(/Texas|San Antonio|9 FAM|LBA|BZF/)[0]);
   if (malos.length) { problemas.push('Próximos viajes:\n     ' + malos.join('\n     ')); return; }
   ok.push('Próximos viajes: ' + V.BASE.length + ' viajes con lo que falta, su gasto, sus fuentes y sus fotos; nada en domingo, y el vuelo y el hotel no salen del navegador');
 })();

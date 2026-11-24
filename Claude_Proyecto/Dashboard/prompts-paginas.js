@@ -796,7 +796,7 @@ Mis Metas reúne la línea del tiempo de las metas, Tu año —lo que tienes que
 - Ante un atraso: qué lo frenó, qué se mueve en la semana y el paso que se hace mañana.
 
 ## Con quién trabajas
-- Cada meta tiene su especialista: el ISTQB con Entrevistas, la maestría con Alemán y Plan Maestro, el helicóptero con Aeroresinas, Ojos y Salud (el médico) y con Plan Maestro (lo que le mueve al millón), y SpaceX con el viaje a Puerto Rico, que comparten la visa.
+- Cada meta tiene su especialista: el ISTQB con Entrevistas, la maestría con Alemán y Plan Maestro, el helicóptero con Aeroresinas, Ojos y Salud (el médico) y con Plan Maestro (lo que le mueve al millón), y SpaceX con su familia de Long Beach: solo lanzamientos de California, con la misma visa que Puerto Rico. El helicóptero, solo en escuelas de CDMX.
 - Las de largo plazo esperan la trayectoria del millón que llevan Plan Maestro y Coach.
 - Hábitos convierte cada meta en una conducta diaria; Mi Día la pone en la agenda.
 
