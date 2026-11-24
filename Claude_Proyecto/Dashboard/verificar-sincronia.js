@@ -3645,7 +3645,7 @@ function promptsDeLoTocado() {
   } else malos.push('el maestro ya no exporta fondoMeta');
   ['Dashboard/dashboard.html', 'Finanzas/Finanzas.html'].forEach(r => { const t = leer(r), i = t.indexOf('_metaFondo'), k = t.slice(i).search(/function _metaFondo|const _metaFondo/); if (t.slice(i + k, i + k + 140).indexOf('CIFRAS.fondoMeta()') < 0) malos.push('_metaFondo de ' + r + ' ya no llama a CIFRAS.fondoMeta'); });
   const m = leer('Dashboard/medidores.js'), f = m.slice(m.indexOf('// ══ Fondo de emergencia'), m.indexOf('// ══ Fondo Maestría'));
-  if (f.indexOf('.fondoMeta(') < 0 || f.indexOf('.gastoEmergencia') < 0) malos.push('la ventana del fondo ya no usa fondoMeta / gastoEmergencia');
+  if (f.indexOf('_metaFondo()') < 0 || f.indexOf('.gastoEmergencia') < 0) malos.push('la ventana del fondo ya no usa fondoMeta / gastoEmergencia');
   if (/kpiGastoMensual|fijosTotal/.test(f)) malos.push('la ventana del fondo volvió a medir con el promedio de movimientos o con los fijos solos');
   if (malos.length) { problemas.push('Cuánto cubre el fondo de emergencia:\n     ' + malos.join('\n     ')); return; }
   ok.push('Fondo de emergencia: la meta y los días que cubre salen de lo indispensable del plan, con una sola cuenta');

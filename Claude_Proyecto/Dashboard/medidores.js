@@ -96,7 +96,7 @@
       '<p>Vivir un mes con lo indispensable cuesta <b>' + money(G.minimo) + '</b> y tienes <b>' + money(x.ef) + '</b>. Tu meta es llenar ' + (meses === 1 ? 'la barra.' : 'las ' + meses + ' barras.') + '</p>' +
       '<div class="kf-meses" style="--n:' + meses + '">' + Array.from({ length: meses }, (_, i) => mes(i)).join('') + '</div>';
   }
-  M.apartar = function (v) { const f = document.querySelector('.kf-form form'); if (!f || !f.ef_m) return; f.ef_t.value = 'aporte'; f.ef_m.value = v; f.scrollIntoView({ block: 'nearest' }); f.ef_m.focus(); };
+
 
   // A la mano se edita aquí: los saldos con la fecha de hoy y CETES con su movimiento (CIFRAS.saldosPoner). ceGuardar repinta
   // la pantalla y la ventana, y todo Finanzas viaja a GitHub con el siguiente commit.
@@ -132,17 +132,8 @@
     const ov = document.getElementById('kpiOverlay');
     if (!ov || !ov.classList.contains('open') || ov.dataset.kpi !== 'fondo') { mano.edita = false; mano.aviso = ''; }
     if (_efEdit) mano.edita = false;
-    const x = dinero(F), k = hoyLocal(), meta = _metaFondo(), falta = Math.max(0, meta - x.ef), p = pct(x.ef, meta), editable = tiEditable(), alPlan = +C().n('cetesDia15') || 0;
-    const prox = mas(k.slice(0, 7), 1), E = C().gastoEmergencia, G = E(prox), P = C().PROYECCION.meses, aMano = x.ef + x.liqV, sig = contraPlan(F).sig;
-    // Quincena por quincena (el 1 y el 15), contra la meta de cada mes: sin renta baja.
-    const llegas = v => {
-      let s = x.ef;
-      for (let i = 0; i < 24; i++) { const ym = mas(k.slice(0, 7), Math.floor((i + (+k.slice(8) < 15 ? 1 : 2)) / 2)); s += v; if (s >= C().fondoMeta(ym)) return ym <= C().PROYECTO.ultimoMesMexico ? mesTxt(ym) : ''; }
-      return '';
-    };
-    const chip = v => { const m = llegas(v); return boton('<b>' + money(v) + '</b> por quincena: ' + (m || 'no llega antes de irte'), 'MEDIDORES.apartar(' + v + ')', 1); };
-    const meses = C().PROYECTO.fondoMeses, cambia = P.filter(q => q.mes > k.slice(0, 7) && q.mes <= C().PROYECTO.ultimoMesMexico && C().fondoMeta(q.mes) < meta * .8)[0];
-
+    const x = dinero(F), k = hoyLocal(), meta = _metaFondo(), falta = Math.max(0, meta - x.ef), p = pct(x.ef, meta), editable = tiEditable(), meses = C().PROYECTO.fondoMeses;
+    const prox = mas(k.slice(0, 7), 1), E = C().gastoEmergencia, G = E(prox), P = C().PROYECCION.meses, aMano = x.ef + x.liqV;
     // A la mano, en el orden en que se usa. El saldo de la cuenta lleva su fecha: si es viejo, se dice.
     const liq = x.liq.filter(a => +a.value > 0), piezas = manoLista(F).map(q => [esc(q.n), q.v, q.id === 'cetes' ? '1 o 2 días hábiles' : !q.fecha ? '' : q.fecha === k ? 'de hoy' : 'del ' + diaTxt(q.fecha), q.c]);
     const vieja = liq.map(a => a.fecha).filter(Boolean).sort()[0], dv = vieja ? Math.round((new Date(k + 'T12:00') - new Date(vieja + 'T12:00')) / 864e5) : 0;
@@ -166,9 +157,6 @@
       '<div class="kf"><div class="kf-a"><section class="kv-c kf-hero"><div class="kf-an" role="img" aria-label="' + Math.round(p) + '% de tu meta">' + anillo(p) + '<div><strong>' + money(x.ef) + '</strong><span>de ' + money(meta) + '</span></div></div>' +
         '<div class="kf-pc"><strong>' + Math.round(p) + '%</strong><span>' + (falta > 0 ? 'Te faltan <b>' + money(falta) + '</b> para cubrir ' + plural(meses, 'mes', 'meses') + ' de lo indispensable.' : 'Meta completa. Lo que sobre va a GBM.') + '</span></div></section>' +
       '<section class="kv-c kf-ruta">' + ruta(x, G, meta, meses) + '</section></div>' +
-      (falta > 0 ? hoy('Hoy', alPlan > 0 ? 'Tu plan le mete <b>' + money(alPlan) + '</b> el día 15.' : 'Tu plan no le mete dinero: todo tu ahorro va a GBM' + (sig ? ' (el siguiente envío, ' + sigTxt(sig) + ')' : '') + '.',
-        alPlan > 0 ? '' : editable ? 'Si quieres llenarlo aparte, esto es lo que tardas' + (cambia ? '; en ' + MESL[+cambia.mes.slice(5) - 1] + ' la meta baja a <b>' + money(C().fondoMeta(cambia.mes)) + '</b>, porque desde ' + MESL[+mas(cambia.mes, 1).slice(5) - 1] + ' gastas menos' : '') + ':' : '', editable && !(alPlan > 0) ? [2000, 4000, 6000].map(chip).join('') : '')
-        : hoy('Listo', 'Tu fondo ya está completo: no le metas más.', 'El ahorro sigue yendo a GBM.')) +
       '<div class="kf-d">' +
         '<section class="kv-c kf-mano"><div class="kf-cab"><div><h3>A la mano: ' + money(aMano) + '</h3><p>' + (mano.edita ? 'Escribe lo que tienes hoy.' : 'En el orden en que se usa.') + '</p></div>' + (editable && !mano.edita ? boton('Editar', 'MEDIDORES.editarMano(true)', 1) : '') + '</div>' +
           (mano.edita && editable ? manoForm(F) : dinHtml + (mano.aviso ? '<div class="kv-pie kf-ok">' + mano.aviso + '</div>' : !editable ? copia('Se edita') : dv > 7 ? '<div class="kv-pie">El saldo de tu cuenta es de hace ' + dv + ' días: ponlo al día con Editar.</div>' : '')) + '</section>' +

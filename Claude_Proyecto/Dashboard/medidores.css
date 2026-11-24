@@ -246,9 +246,6 @@
 .kf .kf-form .ti-form label:has([name=ef_n]){grid-column:span 4}
 .kf .kf-form .ti-form ::placeholder{font-size:13px}
 .kf .kf-form .ti-form input,.kf .kf-form .ti-form select{min-height:40px}
-.kf .kv-hoy{padding:7px 18px}
-.kf .kv-hoy .kv-b{font-weight:500}
-.kf .kv-hoy .kv-b b{font-weight:750}
 @media(min-width:1281px){
   .kf-a{min-height:340px}
 }
