@@ -1,0 +1,94 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-24T21:00:00Z"
+  },
+  "title": "Patrimonio hacia el millón",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1900,
+      "h": 1000,
+      "title": "A · La ruta",
+      "is_interactive": true
+    },
+    "OpcionB.dc.html": {
+      "x": 1980,
+      "y": 0,
+      "w": 1900,
+      "h": 1000,
+      "title": "B · Viaje en el tiempo",
+      "is_interactive": true
+    },
+    "OpcionC.dc.html": {
+      "x": 0,
+      "y": 1400,
+      "w": 1900,
+      "h": 1000,
+      "title": "C · Qué movió tu dinero",
+      "is_interactive": true
+    },
+    "OpcionD.dc.html": {
+      "x": 1980,
+      "y": 1400,
+      "w": 1900,
+      "h": 1000,
+      "title": "D · Lo mínimo"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "OpcionB.dc.html",
+    "OpcionC.dc.html",
+    "OpcionD.dc.html"
+  ],
+  "notes": {
+    "titulo": {
+      "x": 0,
+      "y": -300,
+      "text": "Patrimonio hacia el millón: cuatro opciones con tus números del 24 de noviembre",
+      "kind": "title1",
+      "maxW": 3880
+    },
+    "nA": {
+      "x": 0,
+      "y": 1060,
+      "w": 560,
+      "size": "m",
+      "fill": "teal",
+      "text": "A. La línea de hoy al millón, con sus paradas. Toca un año y ves qué pasa hasta ahí. Contra: lo que pasó este mes queda en una tarjeta de abajo."
+    },
+    "nB": {
+      "x": 1980,
+      "y": 1060,
+      "w": 560,
+      "size": "m",
+      "fill": "blue",
+      "text": "B. Mueve la fecha y ves cómo crece lo que tienes y se acaba lo que debes. Contra: un solo momento a la vez, no la línea completa."
+    },
+    "nC": {
+      "x": 0,
+      "y": 2460,
+      "w": 560,
+      "size": "m",
+      "fill": "yellow",
+      "text": "C. De un cierre al siguiente: qué sumó y qué restó, mes por mes. Contra: el camino al millón queda chico."
+    },
+    "nD": {
+      "x": 1980,
+      "y": 2460,
+      "w": 560,
+      "size": "m",
+      "fill": "green",
+      "text": "D. Tres cifras, una línea y qué sigue. Contra: el detalle de cada cosa queda fuera."
+    }
+  },
+  "designSystems": [],
+  "artifact": "https://claude.ai/artifact/Tr24nkeWCffVk8FL8uCkrQ"
+}

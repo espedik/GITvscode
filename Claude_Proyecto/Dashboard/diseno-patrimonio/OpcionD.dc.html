@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Patrimonio · D</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7fb4f5}a:hover{color:#b4d4fb}
+</style>
+</helmet>
+<div style="width: 1900px; height: 1000px; box-sizing: border-box; padding: 20px 34px 26px; display: flex; flex-direction: column; gap: 18px; background: #11131a; color: #f4f4f8; font-family: Inter, system-ui, sans-serif;">
+  <div style="display: flex; flex-direction: column; gap: 2px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1);"><h1 style="margin: 0; font-size: 22px; font-weight: 800;">Patrimonio hacia el millón</h1><p style="margin: 0; font-size: 14px; color: #b4b8c7;">Lo que tienes menos lo que debes.</p></div>
+
+  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr) 40px minmax(0, 1.25fr); gap: 14px; align-items: center;">
+    <section style="display: flex; flex-direction: column; gap: 4px; padding: 20px 28px; border-radius: 18px; background: #181b25; border: 1px solid rgba(255,255,255,.1);"><span style="font-size: 16px; color: #b4b8c7;">Tienes</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 48px; line-height: 1.1; letter-spacing: -.03em;">$563,111</strong><span style="font-size: 14px; color: #b4b8c7;">$22,511 en dinero y $540,600 en cosas</span></section>
+    <span aria-hidden="true" style="font-size: 40px; color: #8a90a0; text-align: center;">−</span>
+    <section style="display: flex; flex-direction: column; gap: 4px; padding: 20px 28px; border-radius: 18px; background: #181b25; border: 1px solid rgba(255,255,255,.1);"><span style="font-size: 16px; color: #b4b8c7;">Debes</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 48px; line-height: 1.1; letter-spacing: -.03em;">$285,073</strong><span style="font-size: 14px; color: #b4b8c7;">El BYD y el iPhone</span></section>
+    <span aria-hidden="true" style="font-size: 40px; color: #8a90a0; text-align: center;">=</span>
+    <section style="display: flex; flex-direction: column; gap: 4px; padding: 20px 28px; border-radius: 18px; background: #12241f; border: 1px solid rgba(0,232,122,.35);"><span style="font-size: 16px; color: #c3c8d4;">Tu patrimonio</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 60px; line-height: 1; letter-spacing: -.03em; color: #00e87a;">$278,038</strong><span style="font-size: 14px; color: #c3c8d4;"><b style="color: #00e87a;">+$9,772</b> este mes, sobre todo por bajar tus deudas</span></section>
+  </div>
+
+  <section style="display: flex; flex-direction: column; gap: 8px; padding: 22px 30px 18px; border-radius: 18px; background: #181b25; border: 1px solid rgba(255,255,255,.1); flex: 1; min-height: 0;">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 20px;"><h2 style="margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -.01em;">Tu dinero llega al millón en agosto de 2031</h2><span style="font-size: 15px; color: #b4b8c7;">Dinero menos deudas, con tu plan. Las cosas no cuentan.</span></div>
+    <svg viewBox="0 0 1770 480" style="width: 100%; flex: 1; min-height: 0;" role="img" aria-label="De menos 262 mil hoy a un millón en agosto de 2031; pasa de cero en mayo de 2029">
+      <line x1="20" x2="1750" y1="{{y0}}" y2="{{y0}}" stroke="rgba(255,255,255,.3)" stroke-dasharray="4 6"></line><text x="20" y="{{y0t}}" font-size="15" fill="#b4b8c7">$0</text>
+      <line x1="20" x2="1750" y1="{{y1}}" y2="{{y1}}" stroke="#ff8a3d" stroke-width="2" stroke-dasharray="8 7"></line><text x="20" y="{{y1t}}" font-size="15" font-weight="600" fill="#ffb07d">El millón</text>
+      <polygon points="{{area}}" fill="#00e87a" opacity=".12"></polygon>
+      <polyline points="{{linea}}" fill="none" stroke="#00e87a" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"></polyline>
+      <sc-for list="{{puntos}}" as="p" hint-placeholder-count="4"><circle cx="{{p.x}}" cy="{{p.y}}" r="9" fill="{{p.c}}" stroke="#181b25" stroke-width="3"></circle><text x="{{p.tx}}" y="{{p.t1}}" text-anchor="{{p.an}}" font-size="20" font-weight="700" fill="#f4f4f8">{{p.v}}</text><text x="{{p.tx}}" y="{{p.t2}}" text-anchor="{{p.an}}" font-size="15" fill="#b4b8c7">{{p.n}}</text></sc-for>
+    </svg>
+  </section>
+
+  <section style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 18px 28px; border-radius: 18px; background: #12241f; border: 1px solid rgba(0,232,122,.35);">
+    <p style="margin: 0; font-size: 18px; line-height: 1.5;"><b>Lo que más te acerca:</b> guardar $5,000 más al mes adelanta el millón 6 meses. Con $1,000, 1 mes.</p>
+    <div style="display: flex; gap: 10px;"><button type="button" style="min-height: 46px; padding: 0 20px; border: 0; border-radius: 12px; background: #2b3a36; color: #f4f4f8; font-family: Inter, system-ui, sans-serif; font-size: 15px; font-weight: 700;">Ver mis deudas</button><button type="button" style="min-height: 46px; padding: 0 20px; border: 0; border-radius: 12px; background: #00e87a; color: #05050a; font-family: Inter, system-ui, sans-serif; font-size: 15px; font-weight: 700;">Registrar una compra</button></div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1900,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const liq = [-262562,-243106,-220625,-186104,-149234,-118230,-89276,-59082,-46850,-44537,-100891,-117405,-110766,-104070,-97320,-90513,-123749,-117028,-110251,-103416,-96524,-89573,-122659,-115785,-108849,-101850,-94788,-87663,-54092,-20324,13641,47806,82172,116740,151512,186488,221670,257059,292658,328466,364487,400720,437168,473832,510713,547812,585132,622674,660439,698429,736645,775089,813762,852666,891802,931181,970811,1010639];
+    const N = liq.length - 1, X = i => 60 + i / N * 1640, Y = v => Math.round(440 - (v + 262562) / 1273201 * 385), P = liq.map((v, i) => X(i).toFixed(1) + ',' + Y(v));
+    return { linea: P.join(' '), area: X(0) + ',460 ' + P.join(' ') + ' ' + X(N) + ',460', y0: Y(0), y0t: Y(0) - 8, y1: Y(1e6), y1t: Y(1e6) - 10,
+      puntos: [[0, '−$262,562', 'hoy', 'start', 14, -26], [10, 'sep 2027', 'empieza la maestría', 'start', 4, 34], [30, 'may 2029', 'tienes más de lo que debes', 'end', -16, -28], [44, 'jul 2030', 'medio millón', 'end', -16, -22], [57, 'ago 2031', 'el millón', 'end', -18, 26]].map((q, k) => { const x = X(q[0]), y = Y(liq[q[0]]); return { x, y, c: k === 4 ? '#ff8a3d' : '#f4f4f8', tx: x + q[4], an: q[3], v: q[1], n: q[2], t1: y + q[5], t2: y + q[5] + 20 }; }) };
+  }
+}
+</script>
+</body>
+</html>

@@ -1065,7 +1065,7 @@ con su botón** (`.kv-hoy`; naranja si algo pide revisarse), **una gráfica** (`
 |---|---|
 | **Fondo** | Para cuántos días te alcanza si te quedas sin trabajo, cuánto falta para cada mes de tu meta, qué tienes a la mano y qué pagarías en un mes sin sueldo (ver *Fondo de emergencia, aportación por aportación*). No lleva la parte de hoy |
 | **Maestría** | Cómo vas hoy contra el plan (`contraPlan`: la proyección al cierre del mes anterior más los envíos a GBM que ya tocaron, contra el fondo, las inversiones y el Bitcoin, sin el depósito), a dónde llegas a tu ritmo (`CIFRAS.ritmoMaestria`), la gráfica con un punto por mes, lo que cuesta irte (`SALIDA.costos`) y qué hacer (ver *El Fondo Maestría*) |
-| **Patrimonio** | Cuánto cambió desde el último mes cerrado (`indicatorHistory`) y qué lo movió, pieza por pieza; mes a mes; el camino al millón con el dinero líquido de la proyección, y la suma: dinero + cosas − deudas. Avisa si un bien está a precio de compra y de qué día es el saldo de la cuenta |
+| **Patrimonio** | Cuándo llegas al millón guardando lo que te queda, la ruta con sus paradas, qué pasa hasta cada una y qué te acerca (ver *El camino al millón*) |
 | **Intereses** | Cuánto al día, en 12 meses y hasta acabar; la próxima mensualidad partida; a dónde va el dinero cada año, y lo que ahorra abonar. Si el contrato y los datos no acaban el mismo mes, lo dice |
 | **Total invertido** | Lo que trabaja aparte de lo guardado en el depósito, cuánto ganas o pierdes, lo que el plan mandaba este mes contra lo que registraste, *Tu estrategia de hoy*, los envíos que tocan, las compras con su formulario, *Tu Bitcoin hoy* (el último mes contra tu promedio y cuánto tendría que subir) y en qué ponerlo |
 | **Deuda total** | Cuánto debes mes a mes (`caminoDeuda`, todas juntas) con **dos controles** —abono hoy y extra cada mes— que redibujan la gráfica y dicen cuándo acabas y cuánto ahorras (`simula`, con `prestamoResumen().ahorro`); **Anotar el abono de hoy** lo lleva al formulario. Cada deuda con su siguiente pago y su fin; el abono, los datos del crédito y el contrato, plegados |
@@ -1116,6 +1116,25 @@ arriba abajo:
 
 **La cuenta** (`CIFRAS.ritmoMaestria`): un mes que falta crece lo que entra menos lo documentado; el mes en curso va hasta hoy y
 cada cierre corre el punto de partida, así que la línea cambia sola. Didi entra con `didiEn(mes)`. El **control 63** la prueba.
+
+### El camino al millón
+
+Adán, 24-nov-2026: *"dame opciones, claras, entendibles y futuristas"* y *"me gusta la opción A"* (lienzo `diseno-patrimonio/`).
+`MEDIDORES.patrimonio` (`.kp`, sobre las piezas `.km` de la maestría), de arriba abajo:
+
+- **La respuesta**: el mes del millón, cuántos faltan, en cuánto vas y cuándo pasas de cero.
+- **Cuatro datos**: tu dinero, lo que debes, tus cosas y, con todo, tu patrimonio. Los tres primeros se abren (`MEDIDORES.patVe`) con
+  su lista. Avisa si el bien más caro está a precio de compra.
+- **La gráfica** (`rutaMillon`): tu dinero menos tus deudas, de tu primer cierre al millón, con la maestría sombreada y las paradas
+  marcadas. Debajo, alineada, una columna por parada de calendario —hoy, los diciembres y el millón—; tocar una (`MEDIDORES.patMes`)
+  cambia el panel de la derecha: **hoy**, qué cambió desde el último cierre; las demás, cuánto crece tu dinero, cuánto baja tu
+  deuda y qué pasa en ese tramo.
+- **Qué hacer**: este mes, la deuda más grande, cuánto adelanta guardar más y cómo vas contra el plan completo.
+
+**La cuenta** (`CIFRAS.caminoMillon`): hasta la salida es el dinero del Fondo Maestría, para que las dos ventanas digan lo mismo;
+después cambia lo que cambia `PROYECCION`, y los pagos de la salida, que allá no van, se descuentan al empezar la maestría. Las
+deudas salen de `CIFRAS.deudaCamino`, la misma de Deuda total. El **control 64** lo prueba. La trayectoria de Mis Metas y la de
+Coach son las del plan completo, y la ventana dice en qué mes llega ese plan.
 
 **Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se paga completa
 cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle y en el desglose de Patrimonio, que la

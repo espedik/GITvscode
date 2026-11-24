@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Patrimonio · B</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7fb4f5}a:hover{color:#b4d4fb}
+</style>
+</helmet>
+<div style="width: 1900px; height: 1000px; box-sizing: border-box; padding: 20px 34px 22px; display: flex; flex-direction: column; gap: 14px; background: #11131a; color: #f4f4f8; font-family: Inter, system-ui, sans-serif;">
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1);">
+    <div style="display: flex; flex-direction: column; gap: 2px;"><h1 style="margin: 0; font-size: 22px; font-weight: 800;">Patrimonio hacia el millón</h1><p style="margin: 0; font-size: 14px; color: #b4b8c7;">Mueve la fecha y mira cómo crece lo que tienes y se acaba lo que debes.</p></div>
+    <span style="font-size: 14px; color: #b4b8c7;">El millón: <b style="color: #00e87a;">agosto de 2031</b>, en 57 meses</span>
+  </div>
+
+  <section style="display: flex; flex-direction: column; gap: 10px; padding: 16px 26px 18px; border-radius: 16px; background: #181b25; border: 1px solid rgba(255,255,255,.1);">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 24px;">
+      <label for="fecha" style="font-size: 16px; font-weight: 600; color: #b4b8c7;">Estás viendo <b style="color: #f4f4f8; font-size: 24px; font-family: 'Space Grotesk', sans-serif; margin-left: 8px;">{{mes}}</b></label>
+      <div style="display: flex; gap: 8px;">
+        <sc-for list="{{saltos}}" as="s" hint-placeholder-count="6"><button type="button" onClick="{{s.pick}}" style="min-height: 44px; padding: 0 18px; border-radius: 12px; border: 1px solid {{s.bd}}; background: {{s.bg}}; color: {{s.co}}; font-family: Inter, system-ui, sans-serif; font-size: 14px; font-weight: 600; cursor: pointer;">{{s.t}}</button></sc-for>
+      </div>
+    </div>
+    <input id="fecha" type="range" min="0" max="57" step="1" value="{{i}}" onChange="{{mueve}}" style="width: 100%; height: 44px; margin: 0; accent-color: #00e87a;">
+    <div style="position: relative; height: 22px; font-size: 13.5px; color: #b4b8c7;"><sc-for list="{{marcas}}" as="m" hint-placeholder-count="6"><span style="position: absolute; left: {{m.x}}; transform: translateX({{m.tr}}); white-space: nowrap;">{{m.t}}</span></sc-for></div>
+  </section>
+
+  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 460px minmax(0, 1fr); gap: 14px; flex: 1; min-height: 0;">
+    <section style="display: flex; flex-direction: column; gap: 12px; padding: 20px 26px; border-radius: 16px; background: #181b25; border: 1px solid rgba(255,255,255,.1);">
+      <div style="display: flex; align-items: baseline; justify-content: space-between;"><h2 style="margin: 0; font-size: 18px; font-weight: 700;">Tu dinero</h2><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 34px; letter-spacing: -.02em;">{{d}}</strong></div>
+      <div style="flex: 1; min-height: 0; position: relative; border-radius: 14px; background: #11131a; overflow: hidden;">
+        <div style="position: absolute; left: 0; right: 0; bottom: 0; height: {{dh}}; background: #3987e5; border-radius: 14px 14px 0 0; transition: height .25s;"></div>
+        <sc-for list="{{lineas}}" as="l" hint-placeholder-count="3"><div style="position: absolute; left: 0; right: 0; bottom: {{l.y}}; border-top: 1px dashed rgba(255,255,255,.28);"><span style="position: absolute; right: 14px; top: 5px; font-size: 13px; color: #f4f4f8; background: #11131a; border-radius: 6px; padding: 1px 7px;">{{l.t}}</span></div></sc-for>
+      </div>
+      <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #b4b8c7; min-height: 42px;">{{dt}}</p>
+    </section>
+
+    <section style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; border-radius: 16px; background: {{cbg}}; border: 1px solid {{cbd}}; text-align: center;">
+      <span style="font-size: 16px; color: #d6d9e3;">Te queda</span>
+      <strong style="font-family: 'Space Grotesk', sans-serif; font-size: 66px; line-height: 1; font-weight: 700; letter-spacing: -.03em; color: {{cco}};">{{r}}</strong>
+      <svg viewBox="0 0 300 168" style="width: 320px; height: 180px;" role="img" aria-label="Avance hacia el millón: {{av}}"><path d="M20 152 A130 130 0 0 1 280 152" fill="none" stroke="#2b2e3a" stroke-width="18" stroke-linecap="round"></path><path d="M20 152 A130 130 0 0 1 280 152" fill="none" stroke="{{cco}}" stroke-width="18" stroke-linecap="round" stroke-dasharray="{{dash}}"></path><text x="150" y="126" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="46" font-weight="700" fill="#f4f4f8">{{av}}</text><text x="150" y="152" text-anchor="middle" font-size="14" fill="#d6d9e3">del camino recorrido</text></svg>
+      <p style="margin: 0; font-size: 17px; line-height: 1.5; font-weight: 600;">{{frase}}</p>
+      <span style="font-size: 14px; color: #d6d9e3;">{{falta}}</span>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 12px; padding: 20px 26px; border-radius: 16px; background: #181b25; border: 1px solid rgba(255,255,255,.1);">
+      <div style="display: flex; align-items: baseline; justify-content: space-between;"><h2 style="margin: 0; font-size: 18px; font-weight: 700;">Lo que debes</h2><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 34px; letter-spacing: -.02em;">{{b}}</strong></div>
+      <div style="flex: 1; min-height: 0; position: relative; border-radius: 14px; background: #11131a; overflow: hidden;">
+        <div style="position: absolute; left: 0; right: 0; bottom: 0; height: {{bh}}; background: #ff8a3d; border-radius: 14px 14px 0 0; transition: height .25s;"></div>
+        <sc-for list="{{lineas}}" as="l" hint-placeholder-count="3"><div style="position: absolute; left: 0; right: 0; bottom: {{l.y}}; border-top: 1px dashed rgba(255,255,255,.28);"><span style="position: absolute; right: 14px; top: 5px; font-size: 13px; color: #f4f4f8; background: #11131a; border-radius: 6px; padding: 1px 7px;">{{l.t}}</span></div></sc-for>
+      </div>
+      <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #b4b8c7; min-height: 42px;">{{bt}}</p>
+    </section>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;">
+    <section style="display: flex; flex-direction: column; gap: 4px; padding: 14px 20px; border-radius: 16px; background: #12241f; border: 1px solid rgba(0,232,122,.35);"><div style="display: flex; justify-content: space-between; gap: 10px;"><span style="font-size: 15px; font-weight: 700;">Este mes</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 18px; color: #00e87a;">+$9,772</strong></div><span style="font-size: 13.5px; line-height: 1.45; color: #c3c8d4;">Deuda +$6,470, Bitcoin +$4,203, cuenta y efectivo −$900.</span></section>
+    <section style="display: flex; flex-direction: column; gap: 4px; padding: 14px 20px; border-radius: 16px; background: #181b25; border: 1px solid rgba(255,255,255,.1);"><div style="display: flex; justify-content: space-between; gap: 10px;"><span style="font-size: 15px; font-weight: 700;">Aparte, tus cosas</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 18px;">$540,600</strong></div><span style="font-size: 13.5px; line-height: 1.45; color: #b4b8c7;">BYD $415,000 a precio de compra, PC $50,000 y 11 cosas más. Con ellas, hoy son $278,038.</span></section>
+    <section style="display: flex; flex-direction: column; gap: 4px; padding: 14px 20px; border-radius: 16px; background: #181b25; border: 1px solid rgba(255,255,255,.1);"><div style="display: flex; justify-content: space-between; gap: 10px;"><span style="font-size: 15px; font-weight: 700;">Para llegar antes</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 18px; color: #00e87a;">6 meses</strong></div><span style="font-size: 13.5px; line-height: 1.45; color: #b4b8c7;">Es lo que adelantas si guardas $5,000 más al mes. Con $1,000, 1 mes.</span></section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1900,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { i: 0 }; }
+  renderVals() {
+    const liq = [-262562,-243106,-220625,-186104,-149234,-118230,-89276,-59082,-46850,-44537,-100891,-117405,-110766,-104070,-97320,-90513,-123749,-117028,-110251,-103416,-96524,-89573,-122659,-115785,-108849,-101850,-94788,-87663,-54092,-20324,13641,47806,82172,116740,151512,186488,221670,257059,292658,328466,364487,400720,437168,473832,510713,547812,585132,622674,660439,698429,736645,775089,813762,852666,891802,931181,970811,1010639];
+    const din = [22511,38746,56977,87208,119746,146377,170915,196652,204383,202152,141211,120064,122027,124000,125983,127975,89879,91691,93512,95342,97182,99031,61285,63451,65628,67815,70013,72223,100824,129569,158457,187490,216668,245992,275462,305080,334846,364761,394825,425040,455405,485923,516593,547416,578394,609526,640815,672259,703861,735621,767539,799618,831856,864256,896818,931181,970811,1010639];
+    const M = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'], i = this.state.i, k = 10 + i, m$ = v => (v < 0 ? '−$' : '$') + Math.round(Math.abs(v)).toLocaleString('en-US');
+    const d = din[i], r = liq[i], b = Math.max(0, d - r), av = Math.max(0, Math.min(1, (r + 262562) / 1262562)), largo = Math.PI * 130, H = v => Math.min(100, v / 1050000 * 100) + '%', pos = r >= 0;
+    const frase = i === 0 ? 'Debes más de lo que tienes en dinero.' : i < 10 ? 'Juntas para irte a la maestría.' : i < 27 ? 'Estudias en Alemania: tu dinero casi no se mueve.' : i < 30 ? 'Ya trabajas y la línea vuelve a subir.' : i < 44 ? 'Ya tienes más de lo que debes.' : i < 55 ? 'Pasaste el medio millón.' : i < 57 ? 'El BYD ya es tuyo.' : 'Llegaste al millón, sin deudas.';
+    return { i, mueve: e => this.setState({ i: +e.target.value }), mes: i ? M[k % 12] + ' de ' + (2026 + Math.floor(k / 12)) : 'hoy, 24 de noviembre',
+      d: m$(d), b: b ? m$(b) : 'nada', r: m$(r), dh: H(d), bh: H(b), lineas: [[1e6, '$1 millón'], [750000, '$750 mil'], [500000, '$500 mil'], [250000, '$250 mil']].map(q => ({ y: q[0] / 1050000 * 100 + '%', t: q[1] })),
+      dt: i ? 'En CETES, GBM y Bitcoin, según tu plan.' : 'Depósito $11,250, CETES $6,000, Bitcoin $4,261 y efectivo $1,000.', bt: i === 0 ? 'El BYD, $275,688, y el iPhone, $9,386.' : b > 12000 && i < 19 ? 'El BYD y el iPhone; cada mensualidad los baja.' : b ? 'Solo queda el BYD.' : 'Ya no debes nada.',
+      av: Math.round(av * 100) + '%', dash: (av * 408).toFixed(0) + ' 900', frase, falta: r < 1e6 ? 'Faltan ' + m$(1e6 - r) + ' para el millón' : 'Lo lograste con $10,639 de sobra', cco: pos ? '#00e87a' : '#ff9d6b', cbg: pos ? '#12241f' : '#241a17', cbd: pos ? 'rgba(0,232,122,.35)' : 'rgba(255,138,61,.35)',
+      saltos: [[0, 'Hoy'], [10, 'Maestría'], [30, 'Pasas de cero'], [44, 'Medio millón'], [55, 'BYD pagado'], [57, 'El millón']].map(q => ({ t: q[1], pick: () => this.setState({ i: q[0] }), bg: i === q[0] ? '#00e87a' : '#11131a', co: i === q[0] ? '#05050a' : '#f4f4f8', bd: i === q[0] ? '#00e87a' : 'rgba(255,255,255,.16)' })),
+      marcas: [[0, 'hoy', '0'], [13, 'dic 2027', '-50%'], [25, 'dic 2028', '-50%'], [37, 'dic 2029', '-50%'], [49, 'dic 2030', '-50%'], [57, 'ago 2031', '-100%']].map(q => ({ x: q[0] / 57 * 100 + '%', t: q[1], tr: q[2] })) };
+  }
+}
+</script>
+</body>
+</html>

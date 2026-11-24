@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Patrimonio · C</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7fb4f5}a:hover{color:#b4d4fb}
+</style>
+</helmet>
+<div style="width: 1900px; height: 1000px; box-sizing: border-box; padding: 20px 34px 22px; display: flex; flex-direction: column; gap: 14px; background: #11131a; color: #f4f4f8; font-family: Inter, system-ui, sans-serif;">
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1);">
+    <div style="display: flex; flex-direction: column; gap: 2px;"><h1 style="margin: 0; font-size: 22px; font-weight: 800;">Patrimonio hacia el millón</h1><p style="margin: 0; font-size: 14px; color: #b4b8c7;">De un cierre al siguiente: qué sumó y qué restó.</p></div>
+    <span style="font-size: 14px; color: #b4b8c7;">El millón: <b style="color: #00e87a;">agosto de 2031</b>, con tu plan</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px;">
+    <sc-for list="{{meses}}" as="m" hint-placeholder-count="4">
+      <button type="button" onClick="{{m.pick}}" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 14px 20px; border-radius: 16px; border: 1px solid {{m.bd}}; background: {{m.bg}}; color: #f4f4f8; font-family: Inter, system-ui, sans-serif; text-align: left; cursor: pointer;"><span style="font-size: 14px; color: #b4b8c7;">{{m.t}}</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 34px; line-height: 1.1; letter-spacing: -.02em;">{{m.v}}</strong><span style="font-size: 14px; font-weight: 700; color: {{m.co}};">{{m.d}}</span></button>
+    </sc-for>
+  </div>
+
+  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 520px; gap: 14px; flex: 1; min-height: 0;">
+    <section style="display: flex; flex-direction: column; gap: 10px; padding: 18px 26px 16px; border-radius: 16px; background: #181b25; border: 1px solid rgba(255,255,255,.1);">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 20px;"><h2 style="margin: 0; font-size: 18px; font-weight: 700;">{{titulo}}</h2><span style="font-size: 14px; color: #b4b8c7;">Verde suma, naranja resta</span></div>
+      <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: repeat({{n}}, minmax(0, 1fr)); gap: 26px; align-items: stretch;">
+        <sc-for list="{{barras}}" as="b" hint-placeholder-count="5">
+          <div style="display: flex; flex-direction: column; gap: 8px; min-height: 0;">
+            <div style="position: relative; flex: 1; min-height: 0; border-bottom: 1px solid rgba(255,255,255,.18);">
+              <div style="position: absolute; left: 0; right: 0; bottom: {{b.y}}; height: {{b.h}}; border-radius: 10px; background: {{b.c}};"></div>
+              <strong style="position: absolute; left: 0; right: 0; bottom: {{b.ty}}; text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: 22px; line-height: 1.2;">{{b.v}}</strong>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 60px; text-align: center;"><b style="font-size: 15px;">{{b.t}}</b><span style="font-size: 13.5px; line-height: 1.4; color: #b4b8c7;">{{b.s}}</span></div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <div style="display: flex; flex-direction: column; gap: 14px; min-height: 0;">
+      <section style="display: flex; flex-direction: column; gap: 8px; padding: 18px 24px; border-radius: 16px; background: #12241f; border: 1px solid rgba(0,232,122,.35);"><span style="font-size: 14px; color: #c3c8d4;">{{quien}}</span><p style="margin: 0; font-size: 18px; line-height: 1.5; font-weight: 600;">{{resumen}}</p></section>
+      <section style="display: flex; flex-direction: column; gap: 12px; padding: 18px 24px; border-radius: 16px; background: #181b25; border: 1px solid rgba(255,255,255,.1); flex: 1; min-height: 0;">
+        <h2 style="margin: 0; font-size: 17px; font-weight: 700;">De qué está hecho hoy</h2>
+        <sc-for list="{{hecho}}" as="h" hint-placeholder-count="6">
+          <div style="display: flex; flex-direction: column; gap: 6px;"><div style="display: flex; justify-content: space-between; gap: 12px; font-size: 15px;"><span style="font-weight: 600;">{{h.t}}</span><b style="font-family: 'Space Grotesk', sans-serif; font-size: 17px;">{{h.v}}</b></div><div style="height: 10px; border-radius: 5px; background: #2b2e3a;"><div style="width: {{h.w}}; height: 100%; border-radius: 5px; background: {{h.c}};"></div></div></div>
+        </sc-for>
+        <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.1); display: flex; justify-content: space-between; align-items: baseline;"><span style="font-size: 15px; font-weight: 700;">Tu patrimonio</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 26px; color: #00e87a;">$278,038</strong></div>
+      </section>
+    </div>
+  </div>
+
+  <section style="display: flex; flex-direction: column; gap: 10px; padding: 16px 26px 14px; border-radius: 16px; background: #181b25; border: 1px solid rgba(255,255,255,.1);">
+    <div style="display: flex; align-items: baseline; justify-content: space-between;"><h2 style="margin: 0; font-size: 17px; font-weight: 700;">Lo que sigue, sin contar tus cosas</h2><span style="font-size: 14px; color: #b4b8c7;">Hoy: −$262,562</span></div>
+    <div style="position: relative; height: 66px; margin: 0 60px;">
+      <div style="position: absolute; left: 0; right: 0; top: 9px; height: 6px; border-radius: 3px; background: #2b2e3a;"></div>
+      <div style="position: absolute; left: 0; width: 2%; top: 9px; height: 6px; border-radius: 3px; background: #00e87a;"></div>
+      <sc-for list="{{paradas}}" as="p" hint-placeholder-count="7"><div style="position: absolute; left: {{p.x}}; top: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 5px; white-space: nowrap;"><i style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 6px solid #181b25; background: {{p.c}};"></i><span style="font-size: 14px; font-weight: 600; line-height: 1.2;">{{p.t}}</span><span style="font-size: 13px; line-height: 1.2; color: #b4b8c7;">{{p.m}}</span></div></sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1900,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { s: 3 }; }
+  renderVals() {
+    const m$ = v => (v < 0 ? '−$' : '$') + Math.round(Math.abs(v)).toLocaleString('en-US'), sg = v => (v < 0 ? '−$' : '+$') + Math.round(Math.abs(v)).toLocaleString('en-US');
+    const D = [
+      { t: 'Cierre de agosto', c: 'agosto', v: 270250 },
+      { t: 'Cierre de septiembre', c: 'septiembre', v: 257334, k: [['Bajaste deuda', 33782, 'Tarjetas y BYD'], ['Tu dinero', -46698, 'Vendiste Bitcoin para pagar']], q: 'En septiembre', r: 'Pagaste $33,782 de deudas, pero usaste $46,698 de tu dinero. Por eso bajaste.' },
+      { t: 'Cierre de octubre', c: 'octubre', v: 268266, k: [['Bajaste deuda', 11831, 'Tarjeta BBVA y BYD'], ['Tu dinero', -899, 'Casi igual']], q: 'En octubre', r: 'Pagaste $11,831 de deudas sin gastar casi nada de tu dinero.' },
+      { t: 'Hoy, 24 de noviembre', c: 'hoy', v: 278038, k: [['Bajaste deuda', 6470, 'BYD, tarjeta e iPhone'], ['Bitcoin', 4202, 'Volviste a comprar'], ['Cuenta y efectivo', -900, 'Te queda $1,000']], q: 'En noviembre', r: 'Lo que más ayudó fue bajar tus deudas. Vas $9,772 arriba de octubre.' }
+    ];
+    const s = Math.max(1, this.state.s), e = D[s], a = D[s - 1], tramos = [{ t: a.t, s: 'punto de partida', v0: 0, v1: a.v, c: '#5b6275', x: m$(a.v) }]; let z = a.v;
+    e.k.forEach(q => { tramos.push({ t: q[0], s: q[2], v0: z, v1: z + q[1], c: q[1] >= 0 ? '#00e87a' : '#ff8a3d', x: sg(q[1]) }); z += q[1]; });
+    tramos.push({ t: e.t, s: 'así quedaste', v0: 0, v1: e.v, c: '#3987e5', x: m$(e.v) });
+    const todos = tramos.flatMap(q => [q.v0, q.v1]).filter(v => v > 0), lo = Math.min(...todos) - (Math.max(...todos) - Math.min(...todos)) * .45, hi = Math.max(...todos), P = v => Math.max(0, (v - lo) / (hi - lo) * 84);
+    return {
+      titulo: 'De ' + a.c + ' a ' + e.c, n: tramos.length, quien: e.q, resumen: e.r,
+      barras: tramos.map(q => { const y0 = P(Math.min(q.v0 || lo, q.v1)), y1 = P(Math.max(q.v0, q.v1)); return { t: q.t, s: q.s, v: q.x, c: q.c, y: y0 + '%', h: Math.max(1.5, y1 - y0) + '%', ty: 'calc(' + y1 + '% + 8px)' }; }),
+      meses: D.map((q, i) => ({ t: q.t, v: m$(q.v), d: i ? sg(q.v - D[i - 1].v) + ' contra ' + D[i - 1].c : 'tu primer cierre', co: !i ? '#b4b8c7' : q.v >= D[i - 1].v ? '#00e87a' : '#ff9d6b', bg: i === s ? '#143329' : '#181b25', bd: i === s ? 'rgba(0,232,122,.55)' : 'rgba(255,255,255,.1)', pick: () => this.setState({ s: Math.max(1, i) }) })),
+      hecho: [['BYD, a precio de compra', 415000, '#3987e5'], ['Tus demás cosas', 125600, '#3987e5'], ['Tu dinero', 22511, '#00e87a'], ['Debes del BYD', -275688, '#ff8a3d'], ['Debes del iPhone', -9386, '#ff8a3d']].map(q => ({ t: q[0], v: m$(q[1]), w: Math.max(1.2, Math.abs(q[1]) / 415000 * 100) + '%', c: q[2] })),
+      paradas: [[0, 'Hoy', 'nov 2026'], [17.5, 'Maestría', 'sep 2027'], [33.3, 'iPhone pagado', 'jun 2028'], [52.6, 'Pasas de cero', 'may 2029'], [77.2, 'Medio millón', 'jul 2030'], [90, 'BYD pagado', 'jun 2031'], [100, 'El millón', 'ago 2031']].map((q, i) => ({ x: q[0] + '%', t: q[1], m: q[2], c: i === 0 ? '#00e87a' : i === 6 ? '#ff8a3d' : '#8a90a0' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

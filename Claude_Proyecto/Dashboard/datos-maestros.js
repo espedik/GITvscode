@@ -9521,6 +9521,60 @@ window.CIFRAS = (function () {
     const toca = suma(gbmMes(ym).semanas, function (w) { return suma(w.gbm, function (x) { return ym + '-' + String(x.dia).padStart(2, '0') <= k ? x.mxn : 0; }); }), pa = plan(mesMas(ym, -1));
     return { meses: meses, pide: corte.pide, fuera: suma(P, function (x) { return x.mes <= sal ? pago(x) : 0; }), finPlan: plan(sal) || 0, hoy: hoy, planHoy: pa != null ? pa + toca : plan(ym) };
   }
+  /* ── LO QUE DEBES, MES POR MES ─ el saldo de todas las deudas al cierre de cada mes, con su mensualidad. `o` ({extra,
+     extraMes}) son abonos a la de mayor interés. Lo leen Deuda total y el camino al millón. */
+  function deudaCamino(f, o) {
+    const F = f || fin || {}, O = o || {}, ds = (F.debts || []).filter(function (d) { return +d.balance > 0 && +d.min > 0; }), peor = ds.filter(function (d) { return d.type !== 'credit_card'; }).sort(function (a, b) { return (b.rate || 0) - (a.rate || 0); })[0];
+    const T = ds.map(function (d) { return prestamoTabla(d, d === peor ? O : {}); }), ym0 = fechaLocal().slice(0, 7), n = Math.min(240, Math.max.apply(null, [0].concat(T.map(function (t) { return t.length; }))));
+    const abona = function (d) { return d === peor ? Math.min(+O.extra || 0, +d.balance) : 0; };
+    // Al cierre de cada mes, el saldo tras su último pago de ese mes: no todas pagan el mismo día.
+    const alCierre = function (d, t, ym) { let s = +d.balance - abona(d); for (const r of t) { if (fechaLocal(r.fecha).slice(0, 7) > ym) break; s = r.saldo; } return Math.max(0, s); };
+    const et = [ym0], por = [ds.map(function (d) { return +d.balance - abona(d); })];
+    for (let i = 1; i <= n; i++) { const ym = mesMas(ym0, i); et.push(ym); por.push(ds.map(function (d, k) { return alCierre(d, T[k], ym); })); }
+    return { et: et, v: por.map(function (q) { return q.reduce(function (s, x) { return s + x; }, 0); }), deudas: ds, por: por, peor: peor, sin: (F.debts || []).filter(function (d) { return +d.balance > 0 && !(+d.min > 0); }).reduce(function (s, d) { return s + +d.balance; }, 0) };
+  }
+  /* ── EL CAMINO AL MILLÓN ─────────────────────────────────────────────────────────────────────
+     Adán eligió la ruta (24-nov-2026, lienzo `diseno-patrimonio/`). Para el millón cuenta tu dinero menos tus deudas (los
+     bienes, no). Hasta el corte de la salida el dinero es el del Fondo Maestría (`ritmoMaestria`): las dos pantallas dicen lo
+     mismo. Después, cada mes cambia lo que cambia en el plan (PROYECCION), y los pagos de la salida (`fuera`), que allá no se
+     cuentan, se descuentan al empezar la maestría. `cruza`, `cero` y `medio` son meses; `adelanta(v)`, los meses que se adelanta
+     el millón guardando `v` más cada mes, sin rendimientos. */
+  function caminoMillon(f, o) {
+    const F = f || fin || {}, R = ritmoMaestria(F, o), D = deudaCamino(F), P = PROYECCION.meses, sal = PROYECCION.cortes.salida.mes, META = 1e6;
+    const hist = {}; (F.indicatorHistory || []).forEach(function (h) { hist[h.month] = (h.debts || []).reduce(function (s, d) { return s + (+d.balance || 0); }, 0); });
+    const hoyYm = (R.meses.filter(function (m) { return m.tipo === 'hoy'; })[0] || {}).mes, total = (F.debts || []).reduce(function (s, d) { return s + (+d.balance || 0); }, 0);
+    const debeEn = function (ym) { if (ym <= hoyYm) return total; const i = D.et.indexOf(ym); return D.sin + (D.v.length ? D.v[i < 0 ? D.v.length - 1 : i] : 0); }, plan = {};
+    P.forEach(function (m) { plan[m.mes] = m; });
+    const out = []; let din = 0;
+    R.meses.forEach(function (m) {
+      const d = m.tipo === 'proy' ? m.proy : m.real; if (d == null) return; din = d;
+      const b = m.tipo === 'cierre' ? hist[m.mes] || 0 : debeEn(m.mes);
+      out.push({ mes: m.mes, tipo: m.tipo, dinero: d, debe: b, queda: d - b });
+    });
+    P.forEach(function (m, i) {
+      if (m.mes <= sal || !i) return;
+      din += m.alemania - P[i - 1].alemania + ((+m.deposito || 0) - (+P[i - 1].deposito || 0)) - (P[i - 1].mes === sal ? R.fuera : 0);
+      const b = debeEn(m.mes); out.push({ mes: m.mes, tipo: 'proy', dinero: din, debe: b, queda: din - b });
+    });
+    const deHoy = out.filter(function (m) { return m.tipo !== 'cierre'; }), pasa = function (v) { const q = deHoy.filter(function (m) { return m.queda >= v; })[0]; return q ? q.mes : null; };
+    // Para cero y medio millón, el mes desde el que ya no vuelves abajo: la maestría baja la línea un tramo.
+    const yaNo = function (v) { for (let i = deHoy.length - 1; i >= 0; i--) if (deHoy[i].queda < v) return i + 1 < deHoy.length ? deHoy[i + 1].mes : null; return null; };
+    const cruza = pasa(META), cero = yaNo(0), medio = yaNo(META / 2);
+    const vehiculo = (F.activos || []).filter(function (a) { return a.type === 'vehiculo'; })[0], paradas = [];
+    if (PROYECTO.maestriaInicio.slice(0, 7) > (hoyYm || '')) paradas.push({ mes: PROYECTO.maestriaInicio.slice(0, 7), t: 'Empieza la maestría', tipo: 'maestria' });
+    paradas.push({ mes: SUPUESTOS.alemania.fin, t: 'Terminas la maestría', tipo: 'fin' });
+    D.deudas.forEach(function (d, k) {
+      let i = -1; for (let j = 1; j < D.por.length && i < 0; j++) if (D.por[j][k] < 1) i = j;
+      if (i > 0) paradas.push({ mes: D.et[i], tipo: 'deuda', t: d.type === 'car' && vehiculo ? vehiculo.name + ' ya es tuyo' : 'Terminas de pagar ' + d.name.replace(/\s*\([^)]*\)/g, '') });
+    });
+    if (cero) paradas.push({ mes: cero, t: 'Tienes más de lo que debes', tipo: 'cero' });
+    if (medio) paradas.push({ mes: medio, t: 'Medio millón', tipo: 'medio' });
+    if (cruza) paradas.push({ mes: cruza, t: 'El millón', tipo: 'millon' });
+    const idx = deHoy.map(function (m) { return m.mes; }).indexOf(cruza), cp = P.filter(function (m) { return m.liquido >= META; })[0];
+    const adelanta = function (v) { if (idx < 0) return 0; const j = deHoy.findIndex(function (m, i) { return m.queda + v * i >= META; }); return idx - j; };
+    return { meses: out, hoy: deHoy[0], cruza: cruza, faltan: idx < 0 ? null : idx, cero: cero, medio: medio, paradas: paradas.sort(function (a, b) { return a.mes < b.mes ? -1 : a.mes > b.mes ? 1 : 0; }),
+      adelanta: adelanta, fuera: R.fuera, salida: sal, maestria: [PROYECTO.maestriaInicio.slice(0, 7), SUPUESTOS.alemania.fin], planCruza: cp ? cp.mes : null, plan: plan, deuda: D };
+  }
   /* ── EL BITCOIN, UNA SOLA LIBRETA ───────────────────────────────────────────────────────────
      Adán, 2026-11-18: "agrego bitcoin manualmente, pero también debe actualizarse en la gráfica… de Finanzas en plan
      de inversiones, entonces la info va enlazada". Todo el Bitcoin vive en `btcHistory` —la gráfica y la tabla de
@@ -10159,7 +10213,7 @@ window.CIFRAS = (function () {
     patrimonio: patrimonio,
     fondoMaestria: fondoMaestria,
     fondoMovimiento: fondoMovimiento, fondoBorrar: fondoBorrar, fondoSigno: fondoSigno, fondoLista: fondoLista,
-    ritmoMaestria: ritmoMaestria, didiEn: didiEn, saldosPoner: saldosPoner, A_LA_MANO: A_LA_MANO, fondoHoy: fondoHoy, gastoEmergencia: gastoEmergencia, fondoMeta: fondoMeta,
+    ritmoMaestria: ritmoMaestria, caminoMillon: caminoMillon, deudaCamino: deudaCamino, didiEn: didiEn, saldosPoner: saldosPoner, A_LA_MANO: A_LA_MANO, fondoHoy: fondoHoy, gastoEmergencia: gastoEmergencia, fondoMeta: fondoMeta,
     btcCompra: btcCompra, btcBorrar: btcBorrar, btcEsInversion: btcEsInversion, btcDeInversiones: btcDeInversiones,
     prestamoSimular: prestamoSimular, prestamoHechos: prestamoHechos, prestamoResumen: prestamoResumen, prestamoTabla: prestamoTabla,
     prestamoAbono: prestamoAbono, prestamoAbonoBorrar: prestamoAbonoBorrar, prestamoDatos: prestamoDatos,

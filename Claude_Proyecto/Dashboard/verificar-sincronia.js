@@ -3488,7 +3488,7 @@ function promptsDeLoTocado() {
   C.prestamoDatos(F, 'x', { saldo: 95000, rate: 13, plazo: 30 });
   if (x.balance !== 95000 || x.rate !== 13 || x.plazo !== 30 || x.pagosAl !== C.fechaLocal()) malos.push('prestamoDatos no deja el saldo dicho con pagosAl de hoy, la tasa o el plazo');
   const h = leer('Dashboard/dashboard.html') + leer('Dashboard/medidores.js').replace(/\bC\(\)\./g, 'CIFRAS.'), fz = leer('Finanzas/Finanzas.html');
-  ['CIFRAS.prestamoResumen(', 'CIFRAS.prestamoAbono(', 'CIFRAS.prestamoAbonoBorrar(', 'CIFRAS.prestamoDatos(', 'function prAbonoForm(', 'function prDatosForm(', 'R.porAnio', 'CIFRAS.prestamoTabla('].forEach(k => {
+  ['CIFRAS.prestamoResumen(', 'CIFRAS.prestamoAbono(', 'CIFRAS.prestamoAbonoBorrar(', 'CIFRAS.prestamoDatos(', 'function prAbonoForm(', 'function prDatosForm(', 'R.porAnio', 'CIFRAS.deudaCamino('].forEach(k => {
     if (h.indexOf(k) < 0) malos.push('Deuda total del Dashboard ya no usa ' + k.replace(/\($/, ''));
   });
   if (fz.indexOf('CIFRAS.prestamoAbono(') < 0) malos.push('«Pagar» de Finanzas ya no anota el abono con la cuenta del maestro');
@@ -3591,6 +3591,29 @@ function promptsDeLoTocado() {
   if (/Texas|San Antonio|9 FAM|LBA|BZF/.test(he)) malos.push('la meta del helicóptero vuelve a ofrecer escuelas fuera de CDMX: ' + he.match(/Texas|San Antonio|9 FAM|LBA|BZF/)[0]);
   if (malos.length) { problemas.push('Próximos viajes:\n     ' + malos.join('\n     ')); return; }
   ok.push('Próximos viajes: ' + V.BASE.length + ' viajes con lo que falta, su gasto, sus fuentes y sus fotos; nada en domingo, y el vuelo y el hotel no salen del navegador');
+})();
+
+/* ── 64. El camino al millón ──────────────────────────────────────────────────────────────────────────────────────────
+   Adán: "te dije que ligaras los datos entre sí". El dinero del camino al millón es el del Fondo Maestría hasta la salida;
+   después cambia lo que cambia el plan, menos los pagos de la salida; cada mes es dinero menos deudas, y la ventana y Deuda
+   total usan estas cuentas. */
+(function () {
+  const malos = [], C = global.window && global.window.CIFRAS;
+  if (!C || typeof C.caminoMillon !== 'function' || typeof C.deudaCamino !== 'function') malos.push('el maestro ya no exporta caminoMillon / deudaCamino');
+  else {
+    const h = (m, v) => ({ month: m, emergencyFund: v, btcValue: 0, investments: [], activos: [], debts: [{ balance: 900 }] });
+    const F = { indicatorHistory: [h('2026-10', 6000)], btcHistory: [], investments: [], emergencyFund: 0, transactions: [], activos: [], debts: [{ id: 'x', name: 'Prueba', balance: 500, min: 0, type: 'loan' }] }, o = { real: 20000, hoy: C.fechaLocal() };
+    const a = C.caminoMillon(F, o), r = C.ritmoMaestria(F, o), P = C.PROYECCION.meses, sal = C.PROYECCION.cortes.salida.mes, en = m => a.meses.filter(x => x.mes === m)[0];
+    r.meses.forEach(x => { const q = en(x.mes), v = x.tipo === 'proy' ? x.proy : x.real; if (v != null && (!q || Math.abs(q.dinero - v) > 0.01)) malos.push(x.mes + ': el dinero no es el del Fondo Maestría'); });
+    a.meses.forEach(x => { if (Math.abs(x.dinero - x.debe - x.queda) > 0.01) malos.push(x.mes + ': no es dinero menos deudas'); });
+    const i = P.findIndex(m => m.mes === sal), d1 = en(P[i + 1].mes).dinero - en(sal).dinero, p1 = P[i + 1].alemania - P[i].alemania - r.fuera;
+    if (Math.abs(d1 - p1) > 0.01) malos.push('al empezar la maestría no se descuentan los pagos de la salida');
+    const c = a.meses.filter(x => x.tipo !== 'cierre' && x.queda >= 1e6)[0]; if ((c ? c.mes : null) !== a.cruza) malos.push('el mes del millón no es el primero que llega');
+    if (a.cruza && (a.adelanta(0) !== 0 || a.adelanta(20000) < a.adelanta(1000))) malos.push('guardar más no adelanta el millón');
+  }
+  const m = leer('Dashboard/medidores.js'); if (m.indexOf('.caminoMillon(') < 0 || m.indexOf("rutaMillon('millon'") < 0 || m.indexOf('C().deudaCamino(') < 0) malos.push('la ventana de Patrimonio o la de Deuda total ya no usan estas cuentas');
+  if (malos.length) { problemas.push('El camino al millón:\n     ' + malos.slice(0, 8).join('\n     ')); return; }
+  ok.push('Camino al millón: el mismo dinero que el Fondo Maestría hasta la salida y, después, lo que cambia el plan');
 })();
 
 /* ── 63. El fondo de la maestría, mes por mes ─────────────────────────────────────────────────────────────────────────

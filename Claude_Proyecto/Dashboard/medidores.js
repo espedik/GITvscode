@@ -304,42 +304,111 @@
   }
 
   // ══ Patrimonio ══
+  const pat = { C: null, st: [], s: 0, ve: '', cambios: [], u: null, F: null };
+  const mesL = ym => MESL[+ym.slice(5) - 1] + ' de ' + ym.slice(0, 4);
+  const barraP = (v, tot, c) => '<i class="km-bl"><u style="width:' + (v > 0 ? Math.max(1.5, pct(v, tot)) : 0) + '%;background:' + c + '"></u></i>';
+  // Lo que pasa hasta la parada elegida: hoy, qué cambió desde el último cierre; las demás, qué crece, qué baja y qué viene.
+  function tramoMillon() {
+    const K = pat.C, st = pat.st, s = st[pat.s], a = st[pat.s - 1], tope = Math.max(1, ...st.map(q => Math.max(q.dinero, q.debe)));
+    const par = (t, v, c) => '<div class="km-li"><b>' + t + '</b><strong>' + (v < 1 ? 'nada' : money(v)) + '</strong>' + barraP(v, tope, c) + '</div>';
+    let txt = '', tit = mesL(s.mes), de = 'Hoy';
+    if (!a) {
+      tit = +hoyLocal().slice(8) + ' de ' + MESL[+hoyLocal().slice(5, 7) - 1];
+      const L = pat.cambios.filter(c => Math.abs(c[1]) >= 1), mx = Math.max(1, ...L.map(c => Math.abs(c[1])));
+      txt = L.length ? '<h4>Qué cambió desde ' + mesL(pat.u.month) + '</h4>' + L.map(c => '<div class="kv-dv"><span>' + c[0] + '</span><span class="z"><i style="' + (c[1] >= 0 ? 'left:50%' : 'right:50%') + ';width:' + Math.max(1.5, Math.abs(c[1]) / mx * 50) + '%;background:' + (c[1] >= 0 ? 'var(--g)' : 'var(--o)') + '"></i></span><strong>' + signo(c[1]) + '</strong></div>').join('') : '<p>' + (pat.u ? 'Nada cambió desde tu último cierre.' : 'Se compara cuando cierre un mes.') + '</p>';
+    } else {
+      de = 'De ' + (pat.s === 1 ? 'hoy' : mesL(a.mes)) + ' a';
+      const d = s.dinero - a.dinero, b = a.debe - s.debe, ini = K.meses.findIndex(m => m.mes === K.maestria[0]), baja = ini > 0 && K.maestria[0] > a.mes && K.maestria[0] <= s.mes ? K.meses[ini - 1].dinero - K.meses[ini].dinero : 0;
+      txt = '<p>Tu dinero ' + (d >= 0 ? 'crece <b>' + money(d) + '</b>' : 'baja <b>' + money(-d) + '</b>') + ' y tu deuda ' + (b >= 0 ? 'baja <b>' + money(b) + '</b>' : 'sube <b>' + money(-b) + '</b>') + '.</p>' +
+        (baja > 0 ? '<p>Al empezar la maestría salen <b>' + money(baja) + '</b>: la colegiatura, el colchón de llegada y los ' + money(K.fuera) + ' de trámites, vuelo y primera renta.</p>' : '');
+    }
+    const L = K.paradas, toca = p => a && p.mes > a.mes && p.mes <= s.mes;
+    return '<div class="kp-tit"><span>' + de + '</span><h3>' + tit + '</h3></div>' + par('Tu dinero', s.dinero, V.a) + par('Lo que debes', s.debe, V.b) + '<div class="kp-q"><b>Te queda</b><strong class="' + (s.queda < 0 ? 'mal' : 'ok') + '">' + (s.queda < 0 ? '−' : '') + money(Math.abs(s.queda)) + '</strong></div>' +
+      '<div class="kp-txt">' + txt + '</div>' + (L.length ? '<div class="kp-par' + (a ? ' el' : '') + '"><h4>Tus paradas</h4>' + L.map(p => '<div' + (toca(p) ? ' class="si"' : '') + '><span>' + mesTxt(p.mes) + '</span><b>' + esc(p.t) + '</b></div>').join('') + '</div>' : '');
+  }
+  const patListas = {
+    dinero: () => { const x = dinero(pat.F); return [['Depósito de la renta', x.deposito, 'regresa al dejar el depa'], ['CETES', x.ef], ['Bitcoin', x.btcV]].concat(x.otras.map(i => [esc(i.name), +i.value || +i.invested || 0]), x.liq.map(q => [esc(q.name), +q.value || 0, q.fecha ? 'dicho el ' + diaTxt(q.fecha) : ''])); },
+    debe: () => (pat.F.debts || []).filter(d => +d.balance > 0).map(d => [esc(d.name), +d.balance, (+d.min > 0 ? money(+d.min) + ' al mes, ' : '') + (d.rate > 0 && tasaQueCorre(d) > 0 ? d.rate + '% al año' : 'sin intereses')]),
+    cosas: () => dinero(pat.F).bienes.map(q => [esc(q.name), +q.value || 0, esc(q.notes || '')])
+  };
+  const patLista = () => pat.ve ? '<div class="kp-lista">' + patListas[pat.ve]().filter(q => q[1] >= 1).sort((a, b) => b[1] - a[1]).map(q => '<div class="km-li"><b>' + q[0] + (q[2] ? ' <u>' + q[2] + '</u>' : '') + '</b><strong>' + money(q[1]) + '</strong></div>').join('') + '</div>' : '';
+  M.patVe = function (k) {
+    pat.ve = pat.ve === k ? '' : k;
+    const d = document.getElementById('kpLista'); if (d) d.innerHTML = patLista();
+    document.querySelectorAll('.kp .kv-tile[data-k]').forEach(b => b.setAttribute('aria-expanded', b.dataset.k === pat.ve));
+  };
+  M.patMes = function (i) {
+    pat.s = i; const d = document.getElementById('kpTramo'); if (d) d.innerHTML = tramoMillon();
+    document.querySelectorAll('.kp-t button').forEach((b, k) => { b.classList.toggle('sel', k === i); b.setAttribute('aria-pressed', k === i); });
+    graficas.filter(q => q[0] === 'millon').forEach(q => q[1](q[0], q[2]));
+  };
+  // La gráfica: tu dinero menos tus deudas, de tu primer cierre al millón. Lo real en blanco, lo que tendrías en verde.
+  const KP = { l: 132, a: 34, b: 66 };
+  function rutaMillon(id, o) {
+    const g = base(id, { aria: 'Tu dinero menos tus deudas, de tu primer cierre al millón' }); if (!g) return; guarda(id, rutaMillon, o);
+    const L = o.L, n = L.length, chico = g.w < 760; g.l = chico ? 58 : KP.l; g.r = 0; g.t = 30; g.b = chico ? 30 : 12;
+    const v = L.map(m => m.queda), Y = ejes(g, Math.min(0, ...v), Math.max(1e6, ...v) * 1.04), ini = chico ? g.l + 8 : g.l + KP.a, fin = g.w - (chico ? 16 : KP.b), X = i => ini + i / Math.max(1, n - 1) * (fin - ini), y0 = Y(0), H = Math.max(0, L.findIndex(m => m.tipo === 'hoy')), en = ym => L.findIndex(m => m.mes === ym);
+    const txt = (x, y, t, at) => nodo(g.svg, 'text', Object.assign({ x, y, class: 'km-x' }, at), t), pts = L.map((m, i) => [X(i), Y(m.queda)]), d = p => p.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join('');
+    const m0 = en(o.K.maestria[0]), m1 = en(o.K.maestria[1]); if (m0 > 0 && m1 > m0) { nodo(g.svg, 'rect', { x: X(m0), y: g.t - 22, width: X(m1) - X(m0), height: g.h - g.b - g.t + 22, class: 'kp-mae' }); txt((X(m0) + X(m1)) / 2, g.t - 4, chico ? 'Maestría' : 'Maestría en Alemania', { 'text-anchor': 'middle', class: 'km-x f' }); }
+    nodo(g.svg, 'line', { x1: g.l, x2: g.w, y1: Y(1e6), y2: Y(1e6), class: 'kp-mil' }); if (!chico) txt(g.l + 10, Y(1e6) - 9, 'El millón', { 'text-anchor': 'start', class: 'km-x o' });
+    // El área, de cero a la línea: naranja abajo, verde arriba.
+    [['var(--kv-2)', Math.max], ['var(--ac)', Math.min]].forEach(q => nodo(g.svg, 'path', { d: 'M' + X(H) + ' ' + y0 + pts.slice(H).map(p => 'L' + p[0].toFixed(1) + ' ' + q[1](p[1], y0).toFixed(1)).join('') + 'L' + X(n - 1) + ' ' + y0 + 'Z', fill: q[0], opacity: .13 }));
+    const sx = X(Math.max(0, en(pat.st[pat.s] ? pat.st[pat.s].mes : ''))); nodo(g.svg, 'line', { x1: sx, x2: sx, y1: g.t - 10, y2: g.h - g.b, class: 'km-hoy' });
+    [[pts.slice(H), 'var(--ac)', 4], [pts.slice(0, H + 1), 'var(--text)', 3]].forEach(q => q[0].length > 1 && nodo(g.svg, 'path', { d: d(q[0]), fill: 'none', stroke: q[1], 'stroke-width': q[2], 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
+    L.slice(0, H).forEach((m, i) => nodo(g.svg, 'circle', { cx: X(i), cy: Y(m.queda), r: 4, fill: 'var(--text)', stroke: 'var(--kv-caja)', 'stroke-width': 2 }));
+    pat.st.forEach((q, k) => { const i = en(q.mes); if (i >= 0) nodo(g.svg, 'circle', { cx: X(i), cy: Y(L[i].queda), r: k === pat.s ? 8 : 5, fill: q.tipo === 'hoy' ? 'var(--text)' : 'var(--ac)', stroke: 'var(--kv-caja)', 'stroke-width': 2 }); });
+    const NOM = { cero: 'pasas de cero', medio: 'medio millón', millon: 'el millón' };
+    if (!chico) { const at = { 'text-anchor': 'end' }; txt(X(H) - 12, Y(L[H].queda) - 30, (L[H].queda < 0 ? '−' : '') + money(Math.abs(L[H].queda)), Object.assign({}, at, { class: 'km-x f' })); txt(X(H) - 12, Y(L[H].queda) - 13, 'hoy', at); }
+    o.K.paradas.forEach(p => {
+      const i = en(p.mes); if (!NOM[p.tipo] || i < 0) return; const x = X(i), y = Y(L[i].queda);
+      nodo(g.svg, 'circle', { cx: x, cy: y, r: 7, fill: 'var(--kv-2)', stroke: 'var(--kv-caja)', 'stroke-width': 2 });
+      if (chico && p.tipo !== 'millon') return;
+      txt(x - 14, y - 26, mesL(p.mes), { 'text-anchor': 'end', class: 'km-x f' }); txt(x - 14, y - 9, NOM[p.tipo], { 'text-anchor': 'end' });
+    });
+    if (chico) { txt(X(H), g.h - 8, 'hoy', { 'text-anchor': 'middle', class: 'km-x f' }); txt(X(n - 1), g.h - 8, mesTxt(L[n - 1].mes), { 'text-anchor': 'end' }); }
+    const cruz = nodo(g.svg, 'line', { y1: g.t, y2: g.h - g.b, stroke: 'var(--kv-gris)', 'stroke-width': 1, opacity: 0 });
+    raton(g, n, X, i => {
+      const m = L[i], p = o.K.plan[m.mes]; cruz.setAttribute('x1', X(i)); cruz.setAttribute('x2', X(i)); cruz.setAttribute('opacity', .8);
+      const sg = q => (q < 0 ? '−' : '') + money(Math.abs(q));
+      globo(g, X(i), mesTxt(m.mes) + (m.tipo === 'cierre' ? ', cierre' : m.tipo === 'hoy' ? ', hoy' : ''), [{ c: 'var(--ac)', v: sg(m.queda), n: 'te queda' }, { c: V.a, v: money(m.dinero), n: 'tu dinero' }, { c: V.b, v: money(m.debe), n: 'debes' }, p && m.tipo === 'proy' && { c: 'var(--kv-gris)', v: sg(p.liquido), n: 'tu plan completo' }].filter(Boolean));
+    }, () => cruz.setAttribute('opacity', 0));
+  }
   M.patrimonio = function (F) {
-    const x = dinero(F), neto = patrimonioNeto(), liquido = patrimonioLiquido(), P = C().PROYECCION.meses, ym = hoyLocal().slice(0, 7);
+    const x = dinero(F), neto = patrimonioNeto(), ym = hoyLocal().slice(0, 7), real = fondoMaestria().total, K = C().caminoMillon(F, { real });
     const H = (F.indicatorHistory || []).filter(h => h.month < ym && isFinite(h.netWorth)).sort((a, b) => a.month < b.month ? -1 : 1), u = H[H.length - 1];
     const val = L => (L || []).reduce((s, i) => s + (+i.value || +i.invested || 0), 0), act = (h, f) => (h.activos || []).filter(f).reduce((s, a) => s + (+a.value || 0), 0);
     let cambios = [];
     if (u) {
       cambios = [['Deudas', u.debts.reduce((s, d) => s + (+d.balance || 0), 0) - x.debe], ['Bitcoin', x.btcV - (+u.btcValue || 0)], ['Otras inversiones', x.otrasV + x.deposito - val(u.investments)],
-        ['CETES', x.ef - (+u.emergencyFund || 0)], ['Cuenta y efectivo', x.liqV - act(u, a => a.type === 'liquido')], ['Bienes', x.bienesV - act(u, a => a.type !== 'liquido')]];
+        ['CETES', x.ef - (+u.emergencyFund || 0)], ['Cuenta y efectivo', x.liqV - act(u, a => a.type === 'liquido')], ['Tus cosas', x.bienesV - act(u, a => a.type !== 'liquido')]];
       const resto = (neto - u.netWorth) - cambios.reduce((s, c) => s + c[1], 0);
       if (Math.abs(resto) >= 1) cambios.push(['Otros', resto]);
       cambios = cambios.sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
     }
-    const dif = u ? neto - u.netWorth : 0, mx = Math.max(1, ...cambios.map(c => Math.abs(c[1]))), mejor = cambios.filter(c => c[1] >= 1)[0], peor = cambios.filter(c => c[1] <= -1)[0];
-    const dicho = x.liq.map(a => a.fecha).filter(Boolean).sort()[0];
-    const tiene = x.ef + x.otrasV + x.deposito + x.btcV + x.liqV, compra = x.bienes.filter(a => /precio de compra/i.test(a.notes || '')).sort((a, b) => b.value - a.value)[0];
-    const camino = P.filter(m => m.mes <= '2031-12'), cruza = P.filter(m => m.liquido >= 1e6)[0];
-    const filas = L => lista(L.filter(q => Math.abs(q[1]) >= 1).sort((a, b) => b[1] - a[1]).map(q => fila(q[0], money(q[1]), q[2] || '', q[3] || '')).join(''));
-    return { kv: 'var(--g)', titulo: 'Patrimonio hacia $1M', sub: 'Todo lo tuyo menos lo que debes, y qué lo está moviendo.', html:
-      '<div class="kv-fila">' + hero(money(neto), '', u ? gana(dif) + ' desde que cerró ' + mesTxt(u.month) + '.' : 'Todavía no hay un mes cerrado para comparar.', null) +
-      tiles([['Tu dinero, sin contar cosas', money(liquido), 'lo que cuenta para el millón de tu plan: dinero menos deudas, sin carro ni aparatos'],
-        ['Tienes en dinero', money(tiene), 'inversiones, CETES, Bitcoin, depósito, cuenta y efectivo'], ['Tienes en cosas', money(x.bienesV), plural(x.bienes.length, 'bien registrado', 'bienes registrados') + ' en Finanzas'],
-        ['Tu plan cruza el millón', cruza ? mesTxt(cruza.mes) : '—', 'si sigues la proyección; es una hipótesis']]) + '</div>' +
-      hoy('Este mes', u ? (dif >= 0 ? 'Subiste <b>' + money(dif) + '</b>.' : 'Bajaste <b>' + money(-dif) + '</b>.') + (mejor ? ' Lo que más ayudó: <b>' + (mejor[0] === 'Deudas' ? 'bajar tus deudas' : mejor[0] === 'Bitcoin' ? 'tu Bitcoin' : mejor[0].toLowerCase()) + '</b>, ' + signo(mejor[1]) + '.' : '') : 'Se compara cuando cierre el mes.',
-        peor ? 'Lo que más restó: ' + (peor[0] === 'Deudas' ? 'tus deudas, que crecieron' : peor[0] === 'Bitcoin' ? 'tu Bitcoin' : peor[0].toLowerCase()) + ', ' + signo(peor[1]) + '.' : 'Nada restó este mes.', boton('Ver mis deudas', 'abrirKpi(\'deudatotal\')', 1) + boton('Registrar una compra', 'abrirKpi(\'invertido\')')) +
-      '<div class="kv-fila crece"><section class="kv-c s4"><h3>Mes a mes</h3><p>Tu patrimonio al cierre de cada mes.</p>' + grafica('mesames') + '</section>' +
-      caja('s4', u ? 'Qué cambió desde ' + MES[+u.month.slice(5, 7) - 1] : 'Qué cambió', 'A la derecha suma, a la izquierda resta.', cambios.length ? cambios.map(c => '<div class="kv-dv"><span>' + c[0] + '</span><span class="z"><i style="' + (c[1] >= 0 ? 'left:50%' : 'right:50%') + ';width:' + (Math.abs(c[1]) < 1 ? 0 : Math.max(1.5, Math.abs(c[1]) / mx * 50)) + '%;background:' + (c[1] >= 0 ? 'var(--g)' : 'var(--r)') + '"></i></span><strong>' + (Math.abs(c[1]) < 1 ? 'igual' : signo(c[1])) + '</strong></div>').join('') : '<p class="kv-p">Se compara cuando cierre un mes.</p>', dicho ? 'Tu cuenta y tu efectivo son lo que dijiste el ' + diaTxt(dicho) + '. Si ya cambiaron, corrígelos en Finanzas.' : '') +
-      '<section class="kv-c s4"><h3>Camino al millón</h3><p>Tu dinero sin contar cosas, según la proyección.</p>' + grafica('millon') + '</section></div>' +
-      '<div class="kv-fila"><section class="kv-c s12"><div class="kv-ec"><div><span>Tienes en dinero</span><b>' + money(tiene) + '</b></div><u>+</u><div><span>Tienes en cosas</span><b>' + money(x.bienesV) + '</b></div><u>−</u><div><span>Debes</span><b>' + money(x.debe) + '</b></div><u>=</u><div><span>Tu patrimonio</span><b>' + money(neto) + '</b></div></div>' +
-        (compra ? '<p class="kv-p" style="margin-top:10px">' + esc(compra.name) + ' está a precio de compra (' + money(+compra.value) + '). Hoy se vendería en menos, así que tu patrimonio real es menor.</p>' : '') + '</section>' +
-      plega('pt-dinero', 'Tu dinero', money(tiene), filas([['Depósito de la renta', x.deposito], ['CETES', x.ef], ['Bitcoin', x.btcV]].concat(x.otras.map(i => [esc(i.name), +i.value || +i.invested || 0]), x.liq.map(a => [esc(a.name), +a.value || 0, a.fecha ? 'dicho el ' + diaTxt(a.fecha) : '']))), 's4') +
-      plega('pt-cosas', 'Tus cosas', money(x.bienesV), filas(x.bienes.map(a => [esc(a.name), +a.value || 0, esc(a.notes || '')])), 's4') +
-      plega('pt-debes', 'Lo que debes', money(x.debe), filas((F.debts || []).filter(d => +d.balance > 0).map(d => [esc(d.name), +d.balance, d.rate > 0 && tasaQueCorre(d) > 0 ? d.rate + '% al año' : 'sin intereses'])), 's4') + '</div>',
-      listo: () => {
-        lineas('mesames', { et: H.map(h => MES[+h.month.slice(5, 7) - 1]).concat('hoy'), largo: H.map(h => 'Cierre de ' + mesTxt(h.month)).concat('Hoy'), aria: 'Patrimonio mes a mes', series: [{ n: 'Patrimonio', c: V.a, v: H.map(h => h.netWorth).concat(neto), fin: 1, marcas: 1 }] });
-        lineas('millon', { et: camino.map(m => m.mes.slice(5) === '12' ? m.mes.slice(0, 4) : ''), largo: camino.map(m => mesTxt(m.mes)), desde: 0, ref: { v: 1e6, t: 'El millón' }, aria: 'Proyección del patrimonio líquido hasta 2031', series: [{ n: 'Tu dinero', c: V.a, v: camino.map(m => m.liquido), area: 1 }] });
-      } };
+    const dif = u ? neto - u.netWorth : 0, mejor = cambios.filter(c => c[1] >= 1)[0], peor = cambios.filter(c => c[1] <= -1)[0], tiene = x.ef + x.otrasV + x.deposito + x.btcV + x.liqV;
+    const compra = x.bienes.filter(a => /precio de compra/i.test(a.notes || '')).sort((a, b) => b.value - a.value)[0], ds = (F.debts || []).filter(d => +d.balance > 0).sort((a, b) => b.balance - a.balance), d0 = ds[0];
+    // Las columnas: hoy, los diciembres y el millón (o el último mes), sin que se encimen.
+    const fin = K.cruza || K.meses[K.meses.length - 1].mes, L = K.meses.filter(m => m.mes <= fin), iH = Math.max(0, L.findIndex(m => m.tipo === 'hoy')), st = L.filter((m, i) => i === iH || i === L.length - 1 || (m.mes.slice(5) === '12' && i - iH >= 8 && L.length - 1 - i >= 6));
+    Object.assign(pat, { C: K, st, cambios, u, F, s: Math.min(pat.s, st.length - 1) });
+    const hoyM = L[iH], a1 = K.adelanta(1000), a5 = K.adelanta(5000), dm = K.planCruza && K.cruza ? (+K.planCruza.slice(0, 4) - +K.cruza.slice(0, 4)) * 12 + +K.planCruza.slice(5) - +K.cruza.slice(5) : 0, finD = d0 ? K.paradas.filter(p => p.tipo === 'deuda').slice(-1)[0] : null, piezas = L2 => L2.filter(q => q[1] >= 1).sort((a, b) => b[1] - a[1]);
+    const n1 = piezas([['depósito', x.deposito], ['CETES', x.ef], ['Bitcoin', x.btcV], ['inversiones', x.otrasV], ['cuenta y efectivo', x.liqV]]), junta = q => q.map(z => z[0] + ' ' + money(z[1])).reduce((t, z, i, l) => t + (i ? (i === l.length - 1 ? (/^h?i/i.test(z) ? ' e ' : ' y ') : ', ') : '') + z, '');
+    const tile = (k, t, v, s) => k ? '<button type="button" class="kv-tile" data-k="' + k + '" aria-expanded="' + (pat.ve === k) + '" onclick="MEDIDORES.patVe(\'' + k + '\')"><span>' + t + '</span><b>' + v + '</b><i>' + s + '</i></button>' : '<div class="kv-tile"><span>' + t + '</span><b>' + v + '</b><i>' + s + '</i></div>';
+    const pasos = [
+      ['Este mes', u ? signo(dif) : '—', u ? (mejor ? 'Lo que más ayudó: <b>' + (mejor[0] === 'Deudas' ? 'bajar tus deudas' : mejor[0] === 'Bitcoin' ? 'tu Bitcoin' : mejor[0].toLowerCase()) + '</b>, ' + signo(mejor[1]) + '.' : 'Nada sumó.') + (peor ? ' Lo que más restó: ' + (peor[0] === 'Deudas' ? 'tus deudas' : peor[0] === 'Bitcoin' ? 'tu Bitcoin' : peor[0].toLowerCase()) + ', ' + signo(peor[1]) + '.' : ' Nada restó.') : 'Se compara cuando cierre el mes.', boton('Registrar una compra', 'abrirKpi(\'invertido\')')],
+      d0 ? ['Tu deuda más grande', money(+d0.balance), esc(d0.name) + (+d0.min > 0 ? ': pagas <b>' + money(+d0.min) + '</b> al mes' : '') + (finD ? ' y acabas en ' + mesL(finD.mes) : '') + '.', boton('Simular un abono', 'abrirKpi(\'deudatotal\')', 1)] : ['Sin deudas', 'bien', 'Todo lo que guardas suma al millón.'],
+      a5 > 0 ? ['Guarda ' + money(5000) + ' más al mes', plural(a5, 'mes', 'meses') + ' antes', 'Es lo que se adelanta el millón, sin contar lo que rinda.' + (a1 > 0 ? ' Con ' + money(1000) + ', ' + plural(a1, 'mes', 'meses') + '.' : '')] : ['Guarda lo que te queda', 'cada mes', 'Es lo que más te acerca al millón.'],
+      ['Contra tu plan completo', dm > 0 ? plural(dm, 'mes', 'meses') + ' antes' : dm < 0 ? plural(-dm, 'mes', 'meses') + ' después' : K.planCruza ? 'igual' : '—', (K.planCruza ? 'Tu plan llega en ' + mesL(K.planCruza) + '. ' : '') + 'Cada cierre de Finanzas mueve la línea y la fecha.']];
+    return { kv: 'var(--g)', titulo: 'Patrimonio hacia $1M', sub: 'Para el millón cuenta tu dinero menos tus deudas. Tus cosas van aparte.', html:
+      '<div class="km kp"><div class="km-a"><section class="kv-c km-hero"><span>' + (K.cruza ? 'Guardando lo que te queda, llegas al millón en' : 'Con estos números todavía no llegas al millón') + '</span><div><strong>' + (K.cruza ? mesL(K.cruza) : '—') + '</strong>' + (K.faltan ? '<em>' + plural(K.faltan, 'mes', 'meses') + '</em>' : '') + '</div>' +
+          '<p>Hoy vas en <b>' + (hoyM.queda < 0 ? '−' : '') + money(Math.abs(hoyM.queda)) + '</b>.' + (K.cero ? ' Desde ' + mesL(K.cero) + ' ya no bajas de cero.' : '') + '</p></section>' +
+        '<div class="kv-tiles">' + tile('dinero', 'Tienes en dinero', money(tiene), n1.length ? junta(n1) : 'todavía nada') + tile('debe', 'Debes', money(x.debe), ds.length ? junta(ds.slice(0, 3).map(d => [esc(d.name.replace(/\s*\([^)]*\)/g, '')), +d.balance])) : 'nada') +
+          tile('cosas', 'Tus cosas', money(x.bienesV), compra ? esc(compra.name) + ' va a precio de compra, ' + money(+compra.value) + ': hoy se vendería en menos' : plural(x.bienes.length, 'bien registrado', 'bienes registrados') + ' en Finanzas') + tile('', 'Con todo, tu patrimonio', money(neto), u ? gana(dif) + ' desde que cerró ' + mesTxt(u.month) : 'se compara cuando cierre un mes') + '</div></div>' +
+      '<div id="kpLista">' + patLista() + '</div>' +
+      '<div class="km-b"><section class="kv-c km-g"><div class="km-cab"><div><h3>Tu camino al millón</h3></div>' + leyenda([['Lo que llevabas', 'var(--text)'], ['Lo que tendrías', 'var(--ac)'], ['Una parada', V.b]]) + '</div>' + grafica('millon') +
+        '<div class="km-tw"><div class="kp-t"><div class="e"><span>Tu dinero</span><span>Debes</span><span>Te queda</span></div>' + st.map((q, k) => '<button type="button" class="' + (k === pat.s ? 'sel' : '') + '" aria-pressed="' + (k === pat.s) + '" style="--f:' + (L.indexOf(q) / Math.max(1, L.length - 1)).toFixed(4) + '" onclick="MEDIDORES.patMes(' + k + ')"><b>' + (k ? mesTxt(q.mes) : 'hoy') + '</b><span>' + money(q.dinero) + '</span><span>' + (q.debe < 1 ? 'nada' : money(q.debe)) + '</span><strong class="' + (q.queda < 0 ? 'mal' : 'ok') + '">' + (q.queda < 0 ? '−' : '') + money(Math.abs(q.queda)) + '</strong></button>').join('') + '</div></div></section>' +
+        '<section class="kv-c km-nec kp-tr" id="kpTramo">' + tramoMillon() + '</section></div>' +
+      '<div class="km-pasos" style="--n:' + pasos.length + '">' + pasos.map((p, i) => '<section class="kv-c km-paso' + (i ? '' : ' uno') + '"><b class="n">' + (i + 1) + '</b><div><div class="t"><h3>' + p[0] + '</h3><strong>' + p[1] + '</strong></div><p>' + p[2] + '</p>' + (p[3] ? '<div class="ac">' + p[3] + '</div>' : '') + '</div></section>').join('') + '</div></div>',
+      listo: () => rutaMillon('millon', { L, K }) };
   };
 
   // ══ Intereses este mes ══
@@ -404,14 +473,7 @@
 
   // ══ Deuda total ══
   // Lo que se debe mes a mes, sumando todas: las de plazo con su tabla, las demás con su pago; `o` es el abono simulado.
-  function caminoDeuda(F, o) {
-    const ds = (F.debts || []).filter(d => +d.balance > 0 && +d.min > 0), peor = ds.filter(d => d.type !== 'credit_card').sort((a, b) => (b.rate || 0) - (a.rate || 0))[0];
-    const T = ds.map(d => C().prestamoTabla(d, d === peor ? o : {})), ym0 = hoyLocal().slice(0, 7), n = Math.min(240, Math.max(0, ...T.map(t => t.length))), out = [ds.reduce((s, d) => s + +d.balance, 0) - (o && o.extra && peor ? Math.min(o.extra, +peor.balance) : 0)];
-    // Al cierre de cada mes, el saldo de cada deuda tras su último pago de ese mes: no todas pagan el mismo día.
-    const alCierre = (d, t, ym) => { let s = Math.max(0, +d.balance - (d === peor ? +o.extra || 0 : 0)); for (const r of t) { if (C().fechaLocal(r.fecha).slice(0, 7) > ym) break; s = r.saldo; } return s; };
-    for (let i = 1; i <= n; i++) out.push(ds.reduce((s, d, k) => s + alCierre(d, T[k], mas(ym0, i)), 0));
-    return { v: out, et: out.map((_, i) => mas(ym0, i)), peor };
-  }
+  const caminoDeuda = (F, o) => C().deudaCamino(F, o);
   function simular() {
     const F = D.fin || {}, p = prestamos(F).sort((a, b) => b.d.rate - a.d.rate)[0]; if (!p) return;
     const q = id => document.getElementById(id), s = p.R.ahorro({ extra: sim.extra, extraMes: sim.mes });
