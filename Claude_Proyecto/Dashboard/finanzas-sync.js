@@ -2,9 +2,9 @@
    lo que queda en la quincena. Respaldo en git y copia para el dispositivo que no tiene Finanzas. Lo escribe
    Dashboard/habitos-exportar.js (el hook de pre-commit, subir-mis-datos o git datos): no se edita a mano. */
 window.FINANZAS_SYNC = {
-  "exportado": "2026-11-19T05:47:04.258Z",
-  "fecha": "2026-11-03",
-  "gastar": 1298,
+  "exportado": "2026-11-24T16:05:15.687Z",
+  "fecha": "2026-11-24",
+  "gastar": 1000,
   "datos": {
    "transactions": [
     {
@@ -926,15 +926,6 @@ window.FINANZAS_SYNC = {
      "notes": "Cobro TC BBVA"
     },
     {
-     "id": "s048",
-     "type": "expense",
-     "desc": "Pago crédito automotriz",
-     "amount": 6700,
-     "date": "2026-02-01",
-     "cat": "Deudas",
-     "notes": ""
-    },
-    {
      "id": "s049",
      "type": "expense",
      "desc": "Pago mínimo TC BBVA",
@@ -1113,15 +1104,6 @@ window.FINANZAS_SYNC = {
      "date": "2026-01-16",
      "cat": "Viajes",
      "notes": "Cobro TC BBVA"
-    },
-    {
-     "id": "s059",
-     "type": "expense",
-     "desc": "Pago crédito automotriz",
-     "amount": 6700,
-     "date": "2026-01-01",
-     "cat": "Deudas",
-     "notes": ""
     },
     {
      "id": "s060",
@@ -1411,7 +1393,7 @@ window.FINANZAS_SYNC = {
      "start": "2024-01-22",
      "noInterest": 0,
      "fecha": "2026-11-18",
-     "planAl": "2026-11-18",
+     "planAl": "2026-11-24",
      "omitidos": [],
      "cancelada": "2026-11-18"
     },
@@ -1436,10 +1418,11 @@ window.FINANZAS_SYNC = {
      "rate": 12.99,
      "min": 6700,
      "day": 15,
-     "start": "2026-01-01",
+     "start": "2026-03-15",
      "remainingMonths": 61,
      "pagosAl": "2026-11-18",
-     "fecha": "2026-11-15"
+     "fecha": "2026-11-19",
+     "plazo": 84
     },
     {
      "id": "d004",
@@ -1526,7 +1509,7 @@ window.FINANZAS_SYNC = {
      "id": "ef-001",
      "name": "Fondo de emergencia (CETES)",
      "icon": "🛡️",
-     "target": 10000,
+     "target": 69000,
      "current": 6000,
      "date": ""
     },
@@ -1547,17 +1530,6 @@ window.FINANZAS_SYNC = {
      "value": 11250,
      "date": "2024-01-01",
      "rate": 0
-    },
-    {
-     "id": "mwn3or023q42s7px8xy",
-     "rate": 0,
-     "name": "nvidia",
-     "type": "acciones",
-     "invested": 100,
-     "sym": "NVDA",
-     "date": "2026-11-18",
-     "value": 100,
-     "qty": 0.035019779
     }
    ],
    "activos": [
@@ -1656,17 +1628,17 @@ window.FINANZAS_SYNC = {
      "id": "ac013",
      "name": "Cuenta BBVA",
      "type": "liquido",
-     "value": 1300,
+     "value": 0,
      "notes": "Saldo disponible en cuenta",
-     "fecha": "2026-10-31"
+     "fecha": "2026-11-24"
     },
     {
      "id": "ac014",
      "name": "Efectivo",
      "type": "liquido",
-     "value": 600,
+     "value": 1000,
      "notes": "Dinero en efectivo",
-     "fecha": "2026-10-31"
+     "fecha": "2026-11-24"
     }
    ],
    "btcHistory": [
@@ -1736,30 +1708,6 @@ window.FINANZAS_SYNC = {
     }
    ],
    "btcPriceHist": [
-    [
-     1763510400000,
-     1703114
-    ],
-    [
-     1763596800000,
-     1680151
-    ],
-    [
-     1763683200000,
-     1600389
-    ],
-    [
-     1763769600000,
-     1572272
-    ],
-    [
-     1763856000000,
-     1564466
-    ],
-    [
-     1763942400000,
-     1605344
-    ],
     [
      1764028800000,
      1622871
@@ -3195,17 +3143,41 @@ window.FINANZAS_SYNC = {
     [
      1794960000000,
      1195105
+    ],
+    [
+     1795046400000,
+     1187803
+    ],
+    [
+     1795132800000,
+     1182358
+    ],
+    [
+     1795219200000,
+     1126840
+    ],
+    [
+     1795305600000,
+     1151831
+    ],
+    [
+     1795392000000,
+     1167277
+    ],
+    [
+     1795478400000,
+     1174191
     ]
    ],
-   "currentBtcPrice": 63278,
-   "usdMxn": 18.9,
-   "btcLastFetch": "2026-11-19T05:43:00.350Z",
-   "btcHistFetch": "2026-11-18T06:14:30.341Z",
+   "currentBtcPrice": 59590,
+   "usdMxn": 19.34,
+   "btcLastFetch": "2026-11-24T16:05:09.221Z",
+   "btcHistFetch": "2026-11-24T05:01:47.734Z",
    "weeklyLeftover": 0,
    "emergencyFund": 6000,
    "efAportes": [],
    "didiMonthly": 0,
-   "gbmMonth": "2027-03",
+   "gbmMonth": "2026-11",
    "indicatorHistory": [
     {
      "month": "2026-08",
@@ -5428,13 +5400,13 @@ window.FINANZAS_SYNC = {
      "congelado": "2026-11-02"
     },
     {
-     "netWorth": 279101.85462257295,
-     "totalActivos": 564175.064622573,
+     "netWorth": 278942.8372157248,
+     "totalActivos": 564016.0472157248,
      "totalPasivos": 285073.21,
      "finActivos": 11250,
      "liqActivos": 7900,
      "fisActivos": 540600,
-     "btcValue": 4425.064622572995,
+     "btcValue": 4266.047215724796,
      "score": 73,
      "sc": {
       "dti": 100,
@@ -5445,9 +5417,9 @@ window.FINANZAS_SYNC = {
      },
      "dti": 17.54629268292683,
      "savRate": 44.04313821138211,
-     "mPct": 5.445996136324873,
-     "d2a": 50.529211210479666,
-     "solvency": 1.9790532566093213,
+     "mPct": 5.406042014001206,
+     "d2a": 50.54345730183901,
+     "solvency": 1.9784954440851343,
      "inv2inc": 0.022865853658536585,
      "roi": 0,
      "emergM": 0.34434191030430816,
@@ -5470,7 +5442,7 @@ window.FINANZAS_SYNC = {
        "start": "2024-01-22",
        "noInterest": 0,
        "fecha": "2026-11-18",
-       "planAl": "2026-11-18",
+       "planAl": "2026-11-24",
        "omitidos": [],
        "cancelada": "2026-11-18"
       },
@@ -5495,10 +5467,11 @@ window.FINANZAS_SYNC = {
        "rate": 12.99,
        "min": 6700,
        "day": 15,
-       "start": "2026-01-01",
+       "start": "2026-03-15",
        "remainingMonths": 61,
        "pagosAl": "2026-11-18",
-       "fecha": "2026-11-15"
+       "fecha": "2026-11-19",
+       "plazo": 84
       },
       {
        "id": "d004",
@@ -5775,8 +5748,8 @@ window.FINANZAS_SYNC = {
       {
        "date": "2026-11-18",
        "usd": 79.2988,
-       "btcPrice": 63430,
-       "btc": 0.00125018,
+       "btcPrice": 63465,
+       "btc": 0.00124949,
        "fx": 18.9158,
        "tipo": "compra",
        "btcExacto": false,
@@ -5784,27 +5757,27 @@ window.FINANZAS_SYNC = {
       }
      ],
      "emergencyFund": 6000,
-     "currentBtcPrice": 63430,
-     "usdMxn": 18.91,
+     "currentBtcPrice": 60364,
+     "usdMxn": 19.16,
      "didiMonthly": 0,
      "medida": {
       "BASE_INC": 41000,
       "liqActivos": 7900,
       "finActivos": 11250,
       "fisActivos": 540600,
-      "btcHeld2": 0.003689209999999996,
-      "btcValue2": 4425.064622572995,
-      "totalActivos": 564175.064622573,
+      "btcHeld2": 0.0036885199999999964,
+      "btcValue2": 4266.047215724796,
+      "totalActivos": 564016.0472157248,
       "totalPasivos": 285073.21,
-      "netWorth2": 279101.85462257295,
+      "netWorth2": 278942.8372157248,
       "totalMinPay2": 7193.98,
       "totalInvested2": 11250,
       "avgExp2": 22942.313333333335,
       "_avgExpIsEst2": false,
       "dti2": 17.54629268292683,
       "savRate2": 44.04313821138211,
-      "d2a2": 50.529211210479666,
-      "solvency2": 1.9790532566093213,
+      "d2a2": 50.54345730183901,
+      "solvency2": 1.9784954440851343,
       "d2i2": 0.579417093495935,
       "emergM2": 0.34434191030430816,
       "efGoal2": 10000,
@@ -5812,8 +5785,8 @@ window.FINANZAS_SYNC = {
       "liqRatio2": 1.0981403896035298,
       "inv2inc2": 0.022865853658536585,
       "roi2": 0,
-      "maeBase2": 21675.064622572994,
-      "mPct2": 5.445996136324873,
+      "maeBase2": 21516.047215724797,
+      "mPct2": 5.406042014001206,
       "sc2": {
        "dti": 100,
        "savings": 100,
@@ -5825,7 +5798,7 @@ window.FINANZAS_SYNC = {
       "maeTarget": 398000
      },
      "month": "2026-11",
-     "savedAt": "2026-11-18"
+     "savedAt": "2026-11-24"
     }
    ],
    "sivaleBalance": 0,
