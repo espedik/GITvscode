@@ -76,11 +76,10 @@
   // ══ Fondo de emergencia ══
   // La pregunta de la ventana: si hoy dejara de entrar dinero, ¿hasta qué día llegas? Las cuentas son del maestro
   // (gastoEmergencia, recorridoFondo): el calendario de pagos de verdad, no un promedio de movimientos.
-  const ef = { minimo: true, si: [false, false, false], F: null, dia: null, lee: null };
+  const ef = { minimo: true, F: null, dia: null, lee: null };
   const MESL = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
   const diaLargo = k => +k.slice(8) + ' de ' + MESL[+k.slice(5, 7) - 1];
   const celdas = (n, f) => Array.from({ length: n }, (_, i) => '<i class="' + f(i) + '"></i>').join('');
-  const manoDe = x => x.ef + x.liqV + x.btcV;
   function anillo(p) {
     const n = 40, r = 82, g = [];
     for (let i = 0; i < n; i++) {
@@ -91,24 +90,24 @@
   }
   const nombrePago = c => { const p = c.pagos; return p.length ? esc(p[0].t) + (p.length > 1 ? ' y ' + plural(p.length - 1, 'pago más', 'pagos más') : '') : 'la comida'; };
   function ruta(F) {
-    const x = dinero(F), k = hoyLocal(), corre = v => C().recorridoFondo(v, ef.minimo, k, 30, F.debts), R = { fondo: corre(x.ef), todo: corre(manoDe(x)) };
-    const D = R.fondo.dias, c = R.fondo.corte, ult = D[D.length - 1], grandes = D.filter(d => d.fijo >= ult.acum * .04);
-    const titular = !c ? 'más de ' + D.length + ' días' : R.fondo.cubre ? 'hasta el ' + diaLargo(R.fondo.hasta) : 'ni a mañana';
+    const x = dinero(F), R = C().recorridoFondo(x.ef, ef.minimo, hoyLocal(), 30, F.debts);
+    const D = R.dias, c = R.corte, ult = D[D.length - 1], grandes = D.filter(d => d.fijo >= ult.acum * .04);
+    const titular = !c ? 'más de ' + D.length + ' días' : R.cubre ? 'hasta el ' + diaLargo(R.hasta) : 'ni a mañana';
     // Los pagos que se rotulan: los grandes, sin encimarse (el más grande gana el lugar).
     const pins = [];
     D.map((d, i) => ({ d, i })).filter(o => grandes.indexOf(o.d) >= 0).sort((a, b) => b.d.fijo - a.d.fijo).forEach(o => { if (pins.every(q => Math.abs(q.i - o.i) >= 8)) pins.push(o); });
     const pin = pins.map(o => { const der = o.i > 17; return '<span class="' + (der ? 'der' : '') + '" style="' + (der ? 'right:' + ((D.length - 1 - o.i) / D.length * 100).toFixed(2) : 'left:' + (o.i / D.length * 100).toFixed(2)) + '%"><b>' + money(o.d.fijo) + '</b><em>' + diaTxt(o.d.fecha) + '<u>, ' + nombrePago(o.d) + '</u></em></span>'; }).join('');
-    const tira = (r, cls) => '<div class="kf-tira ' + cls + '" style="--n:' + D.length + '">' + r.dias.map((d, i) => '<i data-d="' + i + '" class="' + (d.alcanza ? 'on' : r.corte && d.fecha === r.corte.fecha ? 'corte' : '') + '" style="--i:' + i + '"></i>').join('') + '</div>';
-    const carril = (n, v, r, cls) => '<span class="kf-c"><b>' + n + '</b>' + v + '</span>' + tira(r, cls) + '<strong class="kf-n">' + r.cubre + (r.corte ? '' : '+') + '<small>' + (r.cubre === 1 ? 'día' : 'días') + '</small></strong>';
-    const t = R.todo.corte, grande = t && grandes.filter(d => d.fecha > t.fecha)[0];
-    const faltas = !t ? [] : [money(t.falta) + '</b> para pasar el ' + diaTxt(t.fecha)].concat(grande ? [money(Math.max(0, grande.acum - manoDe(x))) + '</b> para pasar el ' + diaTxt(grande.fecha)] : [], [money(R.todo.falta) + '</b> para los ' + D.length + ' días']).map(s => '<b>' + s);
-    ef.lee = { R, base: faltas.length ? 'Juntando todo, te faltan ' + faltas.slice(0, -1).join(', ') + (faltas.length > 1 ? ' y ' : '') + faltas[faltas.length - 1] + '.' : 'Juntando todo, pasas los ' + D.length + ' días completos.' };
+    const tira = r => '<div class="kf-tira" style="--n:' + D.length + '">' + r.dias.map((d, i) => '<i data-d="' + i + '" class="' + (d.alcanza ? 'on' : r.corte && d.fecha === r.corte.fecha ? 'corte' : '') + '" style="--i:' + i + '"></i>').join('') + '</div>';
+    const carril = (n, v, r) => '<span class="kf-c"><b>' + n + '</b>' + v + '</span>' + tira(r) + '<strong class="kf-n">' + r.cubre + (r.corte ? '' : '+') + '<small>' + (r.cubre === 1 ? 'día' : 'días') + '</small></strong>';
+    // Lo que falta para pasar lo que sigue después del corte (lo del corte ya lo dice el encabezado).
+    const grande = c && grandes.filter(d => d.fecha > c.fecha)[0];
+    ef.lee = { R, base: c ? 'Te faltan ' + (grande ? '<b>' + money(Math.max(0, grande.acum - x.ef)) + '</b> para pasar el ' + diaTxt(grande.fecha) + ' y ' : '') + '<b>' + money(R.falta) + '</b> para los ' + D.length + ' días.' : 'Pasas los ' + D.length + ' días completos.' };
     const modo = (v, n) => '<button type="button" aria-pressed="' + (ef.minimo === v) + '" onclick="MEDIDORES.modoFondo(' + v + ')">' + n + '</button>';
     return '<div class="kf-top"><div><h3>Si hoy dejaras de ganar, tu fondo te lleva</h3><strong class="kf-tit">' + titular + '</strong>' +
-      '<p>' + (c ? 'El ' + diaLargo(c.fecha) + (c.fijo > 0 ? ' caen <b>' + money(c.fijo) + '</b>: ' + nombrePago(c) : ' ya no alcanza para la comida') + '. Solo con tu fondo te faltan <b>' + money(c.falta) + '</b>.' : 'Con lo que hay pagas todo hasta el ' + diaLargo(ult.fecha) + '.') + '</p></div>' +
+      '<p>' + (c ? 'El ' + diaLargo(c.fecha) + (c.fijo > 0 ? ' caen <b>' + money(c.fijo) + '</b>: ' + nombrePago(c) : ' ya no alcanza para la comida') + '. Te faltan <b>' + money(c.falta) + '</b>.' : 'Con lo que hay pagas todo hasta el ' + diaLargo(ult.fecha) + '.') + '</p></div>' +
       '<div class="kf-modo" role="group" aria-label="Cómo gastarías">' + modo(true, 'Solo lo indispensable') + modo(false, 'Como vives hoy') + '</div></div>' +
       '<div class="kf-rej"><span></span><div class="kf-pins">' + pin + '</div><span></span>' +
-      carril('Solo tu fondo', money(x.ef), R.fondo, 'a') + carril('Todo lo que juntas', money(manoDe(x)) + ' en 48 horas', R.todo, 'b') +
+      carril('Tu fondo', money(x.ef), R) +
       '<span></span><div class="kf-eje">' + [0, 10, 20, D.length - 1].map(i => '<span>' + diaTxt(D[i].fecha) + '</span>').join('') + '</div><span></span></div>' +
       '<p class="kf-lee" id="kfLee" aria-live="polite">' + ef.lee.base + '</p>';
   }
@@ -117,9 +116,9 @@
     ef.dia = i;
     document.querySelectorAll('#kfRuta .kf-tira i.mira').forEach(e => e.classList.remove('mira'));
     if (i == null) { p.innerHTML = ef.lee.base; return; }
-    const a = ef.lee.R.fondo.dias[i], b = ef.lee.R.todo.dias[i], q = v => v >= 0 ? 'te quedan <b>' + money(v) + '</b>' : 'te faltan <b>' + money(-v) + '</b>';
+    const a = ef.lee.R.dias[i], q = v => v >= 0 ? 'te quedan <b>' + money(v) + '</b>' : 'te faltan <b>' + money(-v) + '</b>';
     document.querySelectorAll('#kfRuta .kf-tira i[data-d="' + i + '"]').forEach(e => e.classList.add('mira'));
-    p.innerHTML = '<b>' + diaTxt(a.fecha) + '</b>: ' + (a.pagos.length ? nombrePago(a) + ', <b>' + money(a.fijo) + '</b>, más tu gasto del día' : 'solo tu gasto del día, <b>' + money(a.gasto) + '</b>') + '. Con tu fondo ' + q(a.saldo) + '; juntando todo, ' + q(b.saldo) + '.';
+    p.innerHTML = '<b>' + diaTxt(a.fecha) + '</b>: ' + (a.pagos.length ? nombrePago(a) + ', <b>' + money(a.fijo) + '</b>, más tu gasto del día' : 'solo tu gasto del día, <b>' + money(a.gasto) + '</b>') + '. Ese día ' + q(a.saldo) + '.';
   }
   function oyeRuta() {
     const e = document.getElementById('kfRuta'); if (!e) return;
@@ -134,45 +133,31 @@
     const e = document.getElementById('kfRuta'); ef.minimo = v; ef.dia = null; if (!e) return;
     e.innerHTML = ruta(ef.F); const b = e.querySelector('.kf-modo [aria-pressed="true"]'); if (b) b.focus({ preventScroll: true });
   };
-  const PREG = [['¿No lo esperabas?', 'El seguro o la tenencia se saben desde antes.'], ['¿No puede esperar?', 'Si aguanta a la quincena, que espere.'], ['¿Sin eso no trabajas o no vives?', 'Salud, carro, techo o comida.']];
-  function preguntas() {
-    const n = ef.si.filter(Boolean).length;
-    return PREG.map((q, i) => '<button type="button" class="kf-q" aria-pressed="' + ef.si[i] + '" onclick="MEDIDORES.emergencia(' + i + ')"><span><b>' + q[0] + '</b>' + q[1] + '</span><em>' + (ef.si[i] ? 'Sí' : 'No') + '</em></button>').join('') +
-      '<div class="kf-ver' + (n === 3 ? ' si' : '') + '"><span>' + (n === 3 ? 'Sí es una emergencia.' : n ? 'Van ' + n + ' de 3: el fondo no se toca.' : 'Toca las que sean ciertas.') + '</span>' +
-      (n === 3 && tiEditable() ? '<button type="button" class="kv-b" onclick="MEDIDORES.sacar()">Anotar retiro</button>' : '') + '</div>';
-  }
-  M.emergencia = function (i) {
-    const e = document.getElementById('kfPreg'); ef.si[i] = !ef.si[i]; if (!e) return;
-    e.innerHTML = preguntas(); const b = e.querySelectorAll('.kf-q')[i]; if (b) b.focus({ preventScroll: true });
-  };
-  const forma = () => document.querySelector('#kpiBody form.ti-form');
-  const llena = (tipo, v) => { const f = forma(); if (!f || !f.ef_m) return; f.ef_t.value = tipo; if (v) f.ef_m.value = v; f.scrollIntoView({ block: 'nearest' }); f.ef_m.focus(); };
-  M.sacar = function () { llena('retiro'); };
-  M.apartar = function (v) { llena('aporte', v); };
+  M.apartar = function (v) { const f = document.querySelector('#kpiBody form.ti-form'); if (!f || !f.ef_m) return; f.ef_t.value = 'aporte'; f.ef_m.value = v; f.scrollIntoView({ block: 'nearest' }); f.ef_m.focus(); };
 
   // Cómo se llama cada renglón del mes en la ventana.
   const EF_NOM = { renta: 'Renta', depa: 'Luz, agua, internet y gas', celular: 'Plan de datos', familia: 'Aporte a tu familia', auto: 'El BYD', iphone: 'El iPhone', comida: 'Comida', suscripciones: 'suscripciones', cuidado: 'rutinas de cuidado', personal: 'ropa, salidas y compras' };
   M.fondo = function (F) {
     const ov = document.getElementById('kpiOverlay');
-    if (!ov || !ov.classList.contains('open') || ov.dataset.kpi !== 'fondo') { ef.si = [false, false, false]; ef.minimo = true; }
+    if (!ov || !ov.classList.contains('open') || ov.dataset.kpi !== 'fondo') { ef.minimo = true; }
     ef.F = F; ef.dia = null;
     const x = dinero(F), k = hoyLocal(), meta = _metaFondo(), falta = Math.max(0, meta - x.ef), p = pct(x.ef, meta), editable = tiEditable(), alPlan = +C().n('cetesDia15') || 0;
-    const prox = mas(k.slice(0, 7), 1), E = C().gastoEmergencia, G = E(prox), P = C().PROYECCION.meses, mano = manoDe(x), conInv = x.ef + x.otrasV + x.btcV, sig = contraPlan(F).sig;
+    const prox = mas(k.slice(0, 7), 1), E = C().gastoEmergencia, G = E(prox), P = C().PROYECCION.meses, mano = x.ef + x.liqV, sig = contraPlan(F).sig;
     const chip = v => { const n = Math.ceil(falta / v), d = new Date(); d.setDate(d.getDate() + Math.round(n * 15.2)); return boton('<b>' + money(v) + '</b> por quincena: ' + MES[d.getMonth()] + ' ' + d.getFullYear(), 'MEDIDORES.apartar(' + v + ')', 1); };
 
-    // Los niveles: lo del fondo, lo invertido encima, y el mes en que el plan lo alcanza con lo que entra a GBM.
-    const nivel = (t, v, f) => {
-      const a = Math.round(pct(x.ef, v) / 5), b = Math.round(pct(conInv, v) / 5), m = P.filter(q => q.mes >= k.slice(0, 7) && q.alemania >= f(q.mes))[0];
+    // Los niveles: lo del fondo y, encima, la cuenta y el efectivo. Lo invertido no cuenta (Adán: «solo va efectivo, cetes y cuenta bbva»).
+    const nivel = (t, v) => {
+      const a = Math.round(pct(x.ef, v) / 5), b = Math.round(pct(mano, v) / 5);
       return '<section class="kv-c kf-niv' + (x.ef >= v ? ' listo' : '') + '"><div><b>' + t + '</b><strong>' + money(v) + '</strong></div><div class="kf-cel">' + celdas(20, i => i < a ? 'on' : i < b ? 'inv' : '') + '</div>' +
-        '<p>' + (x.ef >= v ? 'Ya lo cubre tu fondo.' : 'Le faltan <b>' + money(v - x.ef) + '</b>. ' + (conInv >= v ? 'Contando lo invertido, ya llegas.' : m ? 'Contando lo invertido, llegas en <b>' + mesTxt(m.mes) + '</b>.' : '')) + '</p></section>';
+        '<p>' + (x.ef >= v ? 'Ya lo cubre tu fondo.' : 'Le faltan <b>' + money(v - x.ef) + '</b>' + (mano >= v ? '; con tu cuenta y efectivo, ya llegas.' : mano > x.ef ? '; con tu cuenta y efectivo, <b>' + money(v - mano) + '</b>.' : '.')) + '</p></section>';
     };
-    const niveles = [['Tu meta', meta, () => meta], ['Un mes de lo indispensable', G.minimo, m => E(m).minimo], ['Un mes como vives hoy', G.normal, m => E(m).normal], ['Tres meses de lo indispensable', G.minimo * 3, m => E(m).minimo * 3]]
-      .filter(n => n[1] > 0).sort((a, b) => a[1] - b[1]).map(n => nivel(n[0], n[1], n[2])).join('');
+    const niveles = [['Tu meta', meta], ['Un mes de lo indispensable', G.minimo], ['Un mes como vives hoy', G.normal], ['Tres meses de lo indispensable', G.minimo * 3]]
+      .filter(n => n[1] > 0).sort((a, b) => a[1] - b[1]).map(n => nivel(n[0], n[1])).join('');
 
     // A la mano, en el orden en que se usa. El saldo de la cuenta lleva su fecha: si es viejo, se dice.
     const liq = x.liq.filter(a => +a.value > 0);
     const piezas = liq.map((a, i) => [esc(a.name), +a.value, a.fecha ? 'dicho el ' + diaTxt(a.fecha) : 'hoy mismo', [V.a, V.c, V.g][Math.min(i, 2)]])
-      .concat(x.ef > 0 ? [['Tu fondo en CETES', x.ef, '1 o 2 días hábiles', 'var(--ac)']] : [], x.btcV > 0 ? [['Tu Bitcoin', x.btcV, 'al último', V.b]] : []);
+      .concat(x.ef > 0 ? [['Tu fondo en CETES', x.ef, '1 o 2 días hábiles', 'var(--ac)']] : []);
     const vieja = liq.map(a => a.fecha).filter(Boolean).sort()[0], dv = vieja ? Math.round((new Date(k + 'T12:00') - new Date(vieja + 'T12:00')) / 864e5) : 0;
     const dinHtml = '<div class="kf-bar">' + piezas.map(q => '<i style="flex:' + Math.max(1, Math.round(q[1])) + ';background:' + q[3] + '"></i>').join('') + '</div>' + lista(piezas.map(q => fila(q[0] + ' <u>' + q[2] + '</u>', money(q[1]), '', '', q[3])).join(''));
 
@@ -195,13 +180,12 @@
         '<div class="kf-pc"><strong>' + Math.round(p) + '%</strong><span>' + (falta > 0 ? 'Te faltan <b>' + money(falta) + '</b> para tu meta.' : 'Meta completa. Lo que sobre va a GBM.') + '</span></div></section>' +
       '<section class="kv-c kf-ruta" id="kfRuta" tabindex="0" aria-label="Los próximos 30 días sin ingresos">' + ruta(F) + '</section></div>' +
       (falta > 0 ? hoy('Hoy', alPlan > 0 ? 'Tu plan le mete <b>' + money(alPlan) + '</b> el día 15.' : 'Tu plan no le mete dinero: todo tu ahorro va a GBM' + (sig ? ' (el siguiente envío, ' + sigTxt(sig) + ')' : '') + '.',
-        alPlan > 0 ? '' : editable ? 'Si quieres llenarlo aparte, esto es lo que tardas:' : 'Lo que juntas ahí también cuenta como colchón.', editable && !(alPlan > 0) ? [500, 1000, 2000].map(chip).join('') : '')
+        alPlan > 0 ? '' : editable ? 'Si quieres llenarlo aparte, esto es lo que tardas:' : '', editable && !(alPlan > 0) ? [500, 1000, 2000].map(chip).join('') : '')
         : hoy('Listo', 'Tu fondo ya está completo: no le metas más.', 'El ahorro sigue yendo a GBM.')) +
-      '<div class="kf-nivs">' + niveles + '</div>' + leyenda([['en tu fondo', 'var(--ac)'], ['invertido en GBM y Bitcoin: venderlo atrasa tu salida a Alemania', 'var(--kf-inv)']]) +
+      '<div class="kf-nivs">' + niveles + '</div>' + leyenda([['tu fondo en CETES', 'var(--ac)'], ['tu cuenta y tu efectivo', 'var(--kf-inv)']]) +
       '<div class="kf-d">' +
         '<section class="kv-c"><h3>A la mano: ' + money(mano) + '</h3><p>En el orden en que se usa.</p>' + dinHtml + (dv > 7 ? '<div class="kv-pie">El saldo de tu cuenta es de hace ' + dv + ' días: ponlo al día en Finanzas.</div>' : '') + '</section>' +
         '<section class="kv-c"><h3>Un mes sin sueldo: ' + money(G.minimo) + '</h3><p>Lo que pagarías sí o sí.</p>' + mesHtml + (baja ? '<div class="kv-pie">Desde ' + MESL[+baja.mes.slice(5) - 1] + (baja.partes.some(q => q.id === 'renta') ? '' : ', sin renta,') + ' baja a <b>' + money(baja.minimo) + '</b> al mes.</div>' : '') + '</section>' +
-        '<section class="kv-c"><h3>¿De verdad es una emergencia?</h3><p>Antes de sacar, las tres deben ser sí.</p><div class="kf-pregs" id="kfPreg">' + preguntas() + '</div></section>' +
         '<section class="kv-c kf-form' + (ed ? ' edita' : '') + '"><h3>Meter o sacar dinero</h3><p>Sale igual en Finanzas. No lo anotes también en Total invertido: contaría dos veces.</p>' + (editable ? efFormHtml(ed) : copia('Se anota')) + '</section></div>' +
       (movs ? plega('fondo-movs', 'Lo que has metido y sacado', plural(FL.movs.length, 'movimiento', 'movimientos') + ': +' + money(FL.aporto) + ', −' + money(FL.saco), '<div class="ti-lista">' + movs + '</div>', 's12', !!_efEdit) : '') + '</div>' };
   };

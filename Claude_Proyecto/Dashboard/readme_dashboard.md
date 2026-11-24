@@ -1063,7 +1063,7 @@ con su botón** (`.kv-hoy`; naranja si algo pide revisarse), **una gráfica** (`
 
 | Ventana | Lo que responde |
 |---|---|
-| **Fondo** | Hasta qué día aguantas si hoy dejas de ganar, qué pago te detiene y cuánto te falta; qué niveles cubres, de dónde sale el dinero, qué pagarías en un mes sin sueldo y si de verdad es una emergencia (ver *Fondo de emergencia, aportación por aportación*). El plan no le aporta mientras `cetesDia15` sea 0: lo que entra a GBM también cuenta como colchón |
+| **Fondo** | Hasta qué día aguantas si hoy dejas de ganar, qué pago te detiene y cuánto te falta; qué niveles cubres, qué tienes a la mano y qué pagarías en un mes sin sueldo (ver *Fondo de emergencia, aportación por aportación*). El plan no le aporta mientras `cetesDia15` sea 0: lo que entra a GBM también cuenta como colchón |
 | **Maestría** | Cómo vas hoy contra el plan (`contraPlan`: la proyección al cierre del mes anterior más los envíos a GBM que ya tocaron, contra el fondo, las inversiones y el Bitcoin, sin el depósito), el siguiente envío, la proyección contra los cortes de la salida (`cortesSalidaDash`) y lo que sigue por pagar (`SALIDA.costos`). La meta es lo que cuesta irte entero; el corte de agosto, lo que se tiene en mano entonces |
 | **Patrimonio** | Cuánto cambió desde el último mes cerrado (`indicatorHistory`) y qué lo movió, pieza por pieza; mes a mes; el camino al millón con el dinero líquido de la proyección, y la suma: dinero + cosas − deudas. Avisa si un bien está a precio de compra y de qué día es el saldo de la cuenta |
 | **Intereses** | Cuánto al día, en 12 meses y hasta acabar; la próxima mensualidad partida; a dónde va el dinero cada año, y lo que ahorra abonar. Si el contrato y los datos no acaban el mismo mes, lo dice |
@@ -1166,17 +1166,17 @@ La ventana responde una pregunta: *si hoy dejara de entrar dinero, ¿hasta qué 
 futurista y más clara de info"*; el lienzo está en `diseno-fondo/`). De arriba abajo:
 
 - **El anillo** (`.kf-hero`, `anillo`): 40 celdas, lo que hay contra la meta.
-- **Los próximos 30 días sin ingresos** (`#kfRuta`, `ruta`): una celda por día, en dos carriles —solo el fondo y todo lo que
-  juntas en 48 horas—, con los pagos grandes rotulados encima y rayado en naranja el día que ya no alcanza. **Solo lo
+- **Los próximos 30 días sin ingresos** (`#kfRuta`, `ruta`): una celda por día, solo con el fondo, los pagos
+  grandes rotulados encima y rayado en naranja el día que ya no alcanza. **Solo lo
   indispensable / Como vives hoy** (`modoFondo`) cambia el gasto. El renglón de abajo (`#kfLee`) dice cuánto falta para pasar
   cada pago, y el de cualquier día al pasar el ratón, el dedo o las flechas. La cuenta es de `CIFRAS.recorridoFondo`.
 - **Lo de hoy**: el siguiente envío a GBM y en cuánto lo llenarías apartando de cada quincena (`apartar` llena el formulario).
 - **Los niveles** (`.kf-niv`): la meta, un mes de lo indispensable, uno como vives hoy y tres de lo indispensable
-  (`CIFRAS.gastoEmergencia` del mes que sigue). Lo del fondo en amarillo y lo invertido apagado encima, con el mes en que el
-  plan llega (`PROYECCION`); venderlo atrasa la salida, y lo dice.
-- **A la mano**, en el orden en que se usa, con aviso si el saldo dicho tiene más de 7 días; **Un mes sin sueldo**, lo que se
-  paga, lo que se apaga y cuánto baja sin renta; **¿De verdad es una emergencia?** (`emergencia`): con las tres en sí sale
-  *Anotar retiro* (`sacar`), que deja el formulario listo; y **Meter o sacar dinero**.
+  (`CIFRAS.gastoEmergencia` del mes que sigue). Lo del fondo en amarillo y la cuenta y el efectivo apagados encima.
+- **A la mano**: solo cuenta, efectivo y CETES —ni Bitcoin ni lo invertido cuentan en esta ventana (Adán: *"aquí solo va
+  efectivo, cetes, y cuenta bbva, no va bitcoin"*)—, con aviso si el saldo dicho tiene más de 7 días; **Un mes sin sueldo**, lo
+  que se paga, lo que se apaga y cuánto baja sin renta; y **Meter o sacar dinero**. No lleva las preguntas de emergencia ni
+  *lo que juntas* (Adán las quitó).
 
 A 2048×1040 cabe sin desplazarse, con movimientos o sin ellos, en los dos temas; en el iPad va sin formulario y a 390 px todo
 en una columna, sin desbordes. El **control 61** vigila la cuenta.

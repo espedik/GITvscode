@@ -60,17 +60,11 @@ a{color:#ffd93d}a:hover{color:#fff0a8}
         </div>
         <span></span>
 
-        <span style="font-size: 14px; font-weight: 600;">Solo tu fondo<br><span style="font-size: 13px; font-weight: 400; color: {{c.t2}};">$7,500</span></span>
+        <span style="font-size: 14px; font-weight: 600;">Tu fondo<br><span style="font-size: 13px; font-weight: 400; color: {{c.t2}};">$7,500</span></span>
         <div style="display: grid; grid-template-columns: repeat(30, minmax(0, 1fr)); gap: 3px;">
-          <sc-for list="{{dias}}" as="d" hint-placeholder-count="30"><i style="display: block; height: 34px; border-radius: 4px; background: {{d.a}};"></i></sc-for>
+          <sc-for list="{{dias}}" as="d" hint-placeholder-count="30"><i style="display: block; height: 56px; border-radius: 4px; background: {{d.a}};"></i></sc-for>
         </div>
         <strong style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; text-align: right;">{{nA}} días</strong>
-
-        <span style="font-size: 14px; font-weight: 600;">Todo lo que juntas<br><span style="font-size: 13px; font-weight: 400; color: {{c.t2}};">$15,000 en 48 horas</span></span>
-        <div style="display: grid; grid-template-columns: repeat(30, minmax(0, 1fr)); gap: 3px;">
-          <sc-for list="{{dias}}" as="d" hint-placeholder-count="30"><i style="display: block; height: 34px; border-radius: 4px; background: {{d.b}};"></i></sc-for>
-        </div>
-        <strong style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; text-align: right;">{{nB}} días</strong>
 
         <span></span>
         <div style="display: flex; justify-content: space-between; font-size: 13px; color: {{c.t2}};"><span>11 jun</span><span>20 jun</span><span>30 jun</span><span>10 jul</span></div>
@@ -99,25 +93,15 @@ a{color:#ffd93d}a:hover{color:#fff0a8}
     </sc-for>
   </div>
 
-  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; flex: 1;">
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; flex: 1;">
     <section style="display: flex; flex-direction: column; gap: 12px; padding: 18px 20px; border-radius: 16px; background: {{c.caja}}; border: 1px solid {{c.lin}};">
-      <h2 style="margin: 0; font-size: 16px; font-weight: 700;">De dónde sacas $15,000, en orden</h2>
+      <h2 style="margin: 0; font-size: 16px; font-weight: 700;">A la mano: $11,000</h2>
       <div style="display: flex; gap: 2px; height: 22px;">
-        <i style="flex: 2500; border-radius: 4px; background: {{c.k1}};"></i><i style="flex: 1000; border-radius: 4px; background: {{c.k3}};"></i><i style="flex: 7500; border-radius: 4px; background: {{c.ac}};"></i><i style="flex: 4000; border-radius: 4px; background: {{c.k2}};"></i>
+        <i style="flex: 2500; border-radius: 4px; background: {{c.k1}};"></i><i style="flex: 1000; border-radius: 4px; background: {{c.k3}};"></i><i style="flex: 7500; border-radius: 4px; background: {{c.ac}};"></i>
       </div>
       <sc-for list="{{piezas}}" as="p" hint-placeholder-count="4">
         <div style="display: flex; align-items: center; gap: 10px; font-size: 14.5px;"><i style="width: 11px; height: 11px; border-radius: 3px; background: {{p.f}};"></i><b>{{p.t}}</b><span style="flex: 1; font-size: 13px; color: {{c.t2}};">{{p.d}}</span><strong style="font-variant-numeric: tabular-nums;">{{p.v}}</strong></div>
       </sc-for>
-    </section>
-
-    <section style="display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; border-radius: 16px; background: {{c.caja}}; border: 1px solid {{c.lin}};">
-      <h2 style="margin: 0; font-size: 16px; font-weight: 700;">¿De verdad es una emergencia?</h2>
-      <sc-for list="{{preg}}" as="q" hint-placeholder-count="3">
-        <button type="button" onClick="{{q.cambia}}" aria-pressed="{{q.si}}" style="display: flex; align-items: center; gap: 12px; min-height: 50px; padding: 6px 14px; border-radius: 12px; border: 1px solid {{q.borde}}; background: {{q.fondo}}; color: {{c.t}}; font: inherit; text-align: left; cursor: pointer;">
-          <span style="flex: 1; font-size: 14.5px; font-weight: 650;">{{q.t}}<br><span style="font-size: 13px; font-weight: 400; color: {{c.t2}};">{{q.d}}</span></span><b style="font-size: 14px; color: {{q.col}};">{{q.r}}</b>
-        </button>
-      </sc-for>
-      <span style="font-size: 14px; font-weight: 700; color: {{vCol}};">{{veredicto}}</span>
     </section>
 
     <section style="display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; border-radius: 16px; background: {{c.caja}}; border: 1px solid {{c.lin}};">
@@ -135,7 +119,7 @@ a{color:#ffd93d}a:hover{color:#fff0a8}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"tema":{"editor":"enum","options":["oscuro","claro"],"default":"oscuro"},"$preview":{"width":1900,"height":980}}'>
 class Component extends DCLogic {
-  constructor(p) { super(p); this.state = { modo: 'min', r: [true, true, false] }; }
+  constructor(p) { super(p); this.state = { modo: 'min' }; }
   renderVals() {
     const osc = (this.props.tema ?? 'oscuro') !== 'claro';
     const c = osc ? { sup: '#11131a', caja: '#181b25', lin: 'rgba(255,255,255,.1)', t: '#f4f4f8', t2: '#b4b8c7', ac: '#ffd93d', pista: '#2a2b2c', hoy: '#25241f', hoyB: '#6a5f2c', sobre: '#05050a', k1: '#3987e5', k2: '#d95926', k3: '#199e70', tenue: '#8a7a2e', bien: '#00e87a', mal: '#ff8a3d' }
@@ -143,20 +127,17 @@ class Component extends DCLogic {
     const min = this.state.modo === 'min', dia = min ? 113 : 370, pagos = { 5: ['$5,800', 'Auto'], 21: ['$10,900', 'Renta y servicios'] };
     const costo = { 5: 5800, 21: 10900 };
     const corre = s => { let n = 0; for (let i = 1; i <= 30; i++) { s -= dia + (costo[i] || 0); if (s < 0) break; n = i; } return n; };
-    const nA = corre(7500), nB = corre(15000);
-    const dias = []; for (let i = 1; i <= 30; i++) dias.push({ a: i <= nA ? c.ac : c.pista, b: i <= nB ? c.k1 : c.pista, pago: pagos[i] ? pagos[i][1] : '', monto: pagos[i] ? pagos[i][0] : '', izq: '0', der: 'auto', ali: 'left' });
+    const nA = corre(7500);
+    const dias = []; for (let i = 1; i <= 30; i++) dias.push({ a: i <= nA ? c.ac : c.pista, pago: pagos[i] ? pagos[i][1] : '', monto: pagos[i] ? pagos[i][0] : '', izq: '0', der: 'auto', ali: 'left' });
     const f = n => n <= 20 ? n + 10 + ' de junio' : n - 20 + ' de julio';
     const niv = (t, v, a, b, d) => { const celdas = []; for (let i = 0; i < 20; i++) celdas.push({ f: i < Math.round(a * 20) ? c.ac : i < Math.round(b * 20) ? c.tenue : c.pista }); return { t, v, d, celdas }; };
-    const Q = [['¿No lo esperabas?', 'El seguro o la tenencia se saben desde antes.'], ['¿No puede esperar?', 'Si aguanta a la quincena, que espere.'], ['¿Sin eso no trabajas o no vives?', 'Salud, carro, techo o comida.']];
-    const todas = this.state.r.every(Boolean);
-    return { c, dias, nA, nB, titular: 'hasta el ' + f(nA) + ', ' + nA + ' días', arco: Array(25).fill('10.06 2.5').join(' ') + ' 0 1000',
+    return { c, dias, nA, titular: 'hasta el ' + f(nA) + ', ' + nA + ' días', arco: Array(25).fill('10.06 2.5').join(' ') + ' 0 1000',
       verMin: () => this.setState({ modo: 'min' }), verNor: () => this.setState({ modo: 'nor' }),
       bMin: min ? c.ac : 'transparent', tMin: min ? c.sobre : c.t2, bNor: min ? 'transparent' : c.ac, tNor: min ? c.t2 : c.sobre,
-      niveles: [niv('Tu meta', '$12,000', .62, .96, 'Faltan $4,500. Con lo invertido, en junio.'), niv('Un mes de lo indispensable', '$20,800', .36, .55, 'Con lo que mandas a GBM, en agosto.'),
-        niv('Un mes como vives hoy', '$28,500', .26, .4, 'Con lo que mandas a GBM, en septiembre.'), niv('Tres meses de lo indispensable', '$62,400', .12, .18, 'Con lo que mandas a GBM, en noviembre.')],
-      piezas: [{ t: 'Cuenta', d: 'hoy', v: '$2,500', f: c.k1 }, { t: 'Efectivo', d: 'hoy', v: '$1,000', f: c.k3 }, { t: 'Tu fondo en CETES', d: '1 o 2 días hábiles', v: '$7,500', f: c.ac }, { t: 'Bitcoin', d: 'al último, al precio de hoy', v: '$4,000', f: c.k2 }],
-      preg: Q.map((q, i) => { const si = this.state.r[i]; return { t: q[0], d: q[1], si, r: si ? 'Sí' : 'No', col: si ? c.bien : c.t2, borde: si ? c.bien : c.lin, fondo: c.sup, cambia: () => this.setState({ r: this.state.r.map((x, j) => j === i ? !x : x) }) }; }),
-      veredicto: todas ? 'Sí es: anótalo como retiro.' : 'Todavía no: deja el fondo quieto.', vCol: todas ? c.bien : c.mal };
+      niveles: [niv('Tu meta', '$12,000', .62, .92, 'Le faltan $4,500; con tu cuenta y efectivo, $1,000.'), niv('Un mes de lo indispensable', '$20,800', .36, .53, 'Le faltan $13,300; con tu cuenta y efectivo, $9,800.'),
+        niv('Un mes como vives hoy', '$28,500', .26, .39, 'Le faltan $21,000; con tu cuenta y efectivo, $17,500.'), niv('Tres meses de lo indispensable', '$62,400', .12, .18, 'Le faltan $54,900; con tu cuenta y efectivo, $51,400.')],
+      piezas: [{ t: 'Cuenta', d: 'hoy', v: '$2,500', f: c.k1 }, { t: 'Efectivo', d: 'hoy', v: '$1,000', f: c.k3 }, { t: 'Tu fondo en CETES', d: '1 o 2 días hábiles', v: '$7,500', f: c.ac }] };
+
   }
 }
 </script>
