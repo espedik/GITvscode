@@ -1166,7 +1166,9 @@ La ventana responde una pregunta: *si te quedas sin trabajo, ¿para cuánto te a
 futurista y más clara de info"*; y sobre la tira de 30 días con los pagos encima, *"esto no lo entiendo, pon otra cosa más
 simple"*). De arriba abajo:
 
-- **El anillo** (`.kf-hero`, `anillo`): 40 celdas, lo que hay contra la meta.
+- **El anillo** (`.kf-hero`, `anillo`): 40 celdas, lo que hay contra la meta. Lo que hay es `CIFRAS.fondoHoy()`: la cuenta, el
+  efectivo y los CETES (Adán: *"aquí tengo 7,000 pero no se muestra ese saldo"*); con esa misma cifra van los días, las barras,
+  el medidor, Finanzas y Coach.
 - **Para cuánto alcanza** (`.kf-ruta`, `ruta`): los días en grande (el fondo entre lo indispensable de un día), lo que cuesta un
   mes y **una barra por mes de la meta** (`.kf-bat`): cuántos de sus 30 días cubre y cuánto falta para llegar ahí. Sin
   calendario, sin carriles y sin escenarios.

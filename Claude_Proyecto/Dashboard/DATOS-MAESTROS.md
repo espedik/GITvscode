@@ -330,7 +330,8 @@ pero el nombre de la variable se queda corto.
 
 | Marcador | Valor hoy | Origen |
 |---|---|---|
-| `{{fondo}}` `{{fondoMeta}}` `{{fondoMeses}}` | $6,000 de $69,000 — son los CETES; la meta son 3 meses (`PROYECTO.fondoMeses`, editable en Mis cifras) de lo indispensable del mes que sigue, hacia arriba a miles (`fondoMeta(ym)`): sin renta baja sola. `target` de ef-001 es su copia, la pone `fondoMetaGuardar` al cargar | vivo · derivada |
+| `{{fondoHoy}}` | $7,000 — lo que llevas del fondo de emergencia: la cuenta, el efectivo y los CETES (`fondoHoy(F)`). Contra la meta se compara siempre este | vivo |
+| `{{fondo}}` `{{fondoMeta}}` `{{fondoMeses}}` | $6,000 de $69,000 — `fondo` son solo los CETES; la meta son 3 meses (`PROYECTO.fondoMeses`, editable en Mis cifras) de lo indispensable del mes que sigue, hacia arriba a miles (`fondoMeta(ym)`): sin renta baja sola. `target` de ef-001 es su copia, la pone `fondoMetaGuardar` al cargar | vivo · derivada |
 | `{{salidaTotal}}` | $397,878 — lo que cuesta irse a Alemania, completo (`SALIDA.costos`) | derivada; se mueve con `PROYECTO.eurMxn` |
 | `{{salidaJunio}}` | $254,478 — lo que tiene que estar en la cuenta en junio de 2027: la cuenta bloqueada y la visa | derivada |
 | `{{sperrkonto}}` | $249,984 — la cuenta bloqueada, €11,904 al euro del plan | derivada |

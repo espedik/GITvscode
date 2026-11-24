@@ -1019,6 +1019,8 @@ const _maeHoy = f => (window.CIFRAS && CIFRAS.fondoMaestria) ? CIFRAS.fondoMaest
 const _metaMaestria = () => { const g=(S.goals||[]).find(x=>x.id==='g001'); return (g&&+g.target)||(window.CIFRAS&&CIFRAS.n('maestriaMeta'))||500000; };
 // La meta del fondo es una cuenta del maestro: los meses de lo indispensable que debe cubrir (CIFRAS.fondoMeta).
 const _metaFondo = () => (window.CIFRAS && CIFRAS.fondoMeta()) || 0;
+// Lo que llevas del fondo: la cuenta, el efectivo y los CETES (CIFRAS.fondoHoy). `S.emergencyFund` son solo los CETES.
+const _fondoHoy = () => (window.CIFRAS && CIFRAS.fondoHoy(S)) || 0;
 let S = { transactions:[], budgets:[], debts:[], goals:[], investments:[], activos:[], btcHistory:[], btcPriceHist:[], currentBtcPrice:0, usdMxn:19.5, btcLastFetch:'', btcHistFetch:'', weeklyLeftover:0, emergencyFund:0, efAportes:[], didiMonthly:0, gbmMonth:'', indicatorHistory:[] };
 let editId = null, confCb = null, payDebtId = null;
 let btcEditId = null, activoEditId = null;
@@ -1973,13 +1975,13 @@ function renderGBM() {
           <div>📅 <strong>Cuándo:</strong> Día 15 de cada mes (semana 3), se aparta de la quincena 2 en BBVA débito.</div>
           <div>🏛️ <strong>Dónde:</strong> CETES 28 días en GBM+ — renovación automática, máxima liquidez, sin comisión.</div>
           <div>📈 <strong>Rendimiento:</strong> ~11% anual sobre el capital acumulado. En 12 meses: <strong style="color:var(--success)">${fmt(Math.round(CETES_DIA15*12*1.11))} estimado</strong>.</div>
-          <div>🛡️ <strong>Función:</strong> Es el fondo de emergencia (desde sep 2026): hoy <strong>${fmt(S.emergencyFund||0)}</strong> de ${fmt(_metaFondo())}. Solo se vende ante un imprevisto; nunca se mueve a acciones.</div>
+          <div>🛡️ <strong>Función:</strong> Es parte de tu fondo de emergencia: hoy <strong>${fmt(S.emergencyFund||0)}</strong> en CETES; con tu cuenta y efectivo llevas ${fmt(_fondoHoy())} de ${fmt(_metaFondo())}. Solo se vende ante un imprevisto; nunca se mueve a acciones.</div>
         </div>
       </div>
     </div>`:`
     <div class="card" style="margin-bottom:20px;border-color:rgba(0,232,122,.2);background:rgba(0,232,122,.03)">
       <div class="card-title" style="color:var(--success);margin-bottom:8px">🏛️ CETES — tu fondo de emergencia</div>
-      <div style="font-size:12px;color:var(--text2);line-height:1.7">Hoy <strong>${fmt(S.emergencyFund||0)}</strong> de ${fmt(_metaFondo())}. Ya no recibe aporte: desde el 5 oct de 2026 lo que sobra de cada quincena va primero a la BBVA y, en cuanto quede en cero, a GBM (Plan Maestro). Solo se vende ante un imprevisto.</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.7">Hoy <strong>${fmt(S.emergencyFund||0)}</strong> en CETES; con tu cuenta y efectivo llevas <strong>${fmt(_fondoHoy())}</strong> de ${fmt(_metaFondo())}. Ya no recibe aporte: desde el 5 oct de 2026 lo que sobra de cada quincena va primero a la BBVA y, en cuanto quede en cero, a GBM (Plan Maestro). Solo se vende ante un imprevisto.</div>
     </div>`}
     `;
 
@@ -2063,14 +2065,14 @@ function efFinGuardar(ev) {
   if(r.error) { toast(r.error); f.efM.focus(); return; }
   efFinEdit = null; efFinAbierto = false;
   save(); renderDashboard(); renderIndicators();
-  toast(`Fondo de emergencia: ${r.tipo==='retiro'?'−':'+'}${fmt(r.amount)} · hoy ${fmt(S.emergencyFund)}`);
+  toast(`CETES: ${r.tipo==='retiro'?'−':'+'}${fmt(r.amount)} · hoy ${fmt(S.emergencyFund)}`);
 }
 function efFinBorrar(id) {
   const r = CIFRAS.fondoBorrar(S, id);
   if(r.error) return;
   if(efFinEdit === id) efFinEdit = null;
   save(); renderDashboard(); renderIndicators();
-  toast(`Borrado · el fondo queda en ${fmt(S.emergencyFund)}`);
+  toast(`Borrado · los CETES quedan en ${fmt(S.emergencyFund)}`);
 }
 
 function maybeRefreshIndicators() {
@@ -2182,7 +2184,7 @@ function medirIndicadores(src, ahora) {
   const d2i2        = totalPasivos/(BASE_INC*12);
   const emergM2     = avgExp2>0?liqActivos/avgExp2:0;
   const efGoal2     = (src.savedAt && ((src.goals||[]).find(g=>g.id==='ef-001')||{}).target) || _metaFondo();
-  const efPct2      = Math.min(1,(src.emergencyFund||0)/efGoal2);
+  const efPct2      = Math.min(1,liqActivos/efGoal2);   // la cuenta, el efectivo y los CETES: lo mismo que CIFRAS.fondoHoy
   const liqRatio2   = totalMinPay2>0?liqActivos/totalMinPay2:null;
   const inv2inc2    = finActivos/(BASE_INC*12);
   const roi2        = totalInvested2>0?((finActivos-totalInvested2)/totalInvested2)*100:0;
@@ -2406,9 +2408,9 @@ function renderIndicatorsHTML(src) {
 
     ${sec2('💧 Liquidez y Emergencia','var(--primary)')}
     <div class="g2" style="margin-bottom:4px">
-      ${C2('🆘','Fondo de emergencia (CETES)',`${fmt(src.emergencyFund||0)} — ${(efPct2*100).toFixed(0)}% de meta`,
-        '(Fondo emergencia + Líquidos) ÷ Gasto mensual promedio',
-        `Meta: ${fmt(efGoal2)} · Ahorrado: ${fmt(src.emergencyFund||0)} · Cobertura: ${(avgExp2>0?(src.emergencyFund||0)/avgExp2:0).toFixed(2)} meses de gastos.`,
+      ${C2('🆘','Fondo de emergencia',`${fmt(liqActivos)} — ${(efPct2*100).toFixed(0)}% de meta`,
+        'Cuenta + efectivo + CETES, contra tu meta',
+        `Meta: ${fmt(efGoal2)} · Llevas: ${fmt(liqActivos)} · Cobertura: ${(avgExp2>0?liqActivos/avgExp2:0).toFixed(2)} meses de gastos.`,
         '✅ Meta completa (≥100%) — Excelente &nbsp;·&nbsp; 🟡 Meta al 50–75% — Buen avance &nbsp;·&nbsp; ⚠️ Meta al 25–50% — En progreso &nbsp;·&nbsp; 🔴 &lt;25% — Inicio',
         efPct2>=1?chip2('Meta alcanzada ✅','var(--success)'):efPct2>=0.75?chip2(`${(efPct2*100).toFixed(0)}% de meta`,'#3b82f6'):efPct2>=0.5?chip2(`${(efPct2*100).toFixed(0)}% de meta`,'var(--warning)'):chip2(`${(efPct2*100).toFixed(0)}% de meta`,'var(--danger)'))}
       ${C2('💧','Ratio de Liquidez',liqRatio2!==null?`${liqRatio2.toFixed(2)}x`:'N/A',
@@ -2477,7 +2479,7 @@ function renderIndicatorsHTML(src) {
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">${fmt(Math.round(maeBase2))} <span style="font-size:11px;color:var(--text3);font-weight:400">de ${fmt(maestria2?.target||500000)}</span></div>
         <div class="pbar" style="height:8px;margin-bottom:14px"><div class="pfill" style="width:${mPct2}%;background:linear-gradient(90deg,#00e87a,#3b82f6,#b06eff)"></div></div>
         ${[
-          {l:'🛡️ Fondo de emergencia (CETES)',a:efV2,col:'#00e87a'},
+          {l:'🛡️ CETES del fondo',a:efV2,col:'#00e87a'},
           {l:'🏛️ CETES',a:cetesV2,col:'#3b82f6'},
           {l:'📈 Acciones (bolsa)',a:accV2,col:'#b06eff'},
           {l:'🏠 Dep. renta',a:rentaV2,col:'#f59e0b'},
@@ -2594,7 +2596,7 @@ function mesAMesHTML(activo) {
 function mejoraScoreHTML(src) {
   const M = medirIndicadores(src), now = new Date();
   const gasto = M.avgExp2, meta = M.efGoal2;
-  const est0 = { A: M.totalActivos, P: M.totalPasivos, EF: src.emergencyFund || 0, liq: M.liqActivos, min: M.totalMinPay2 };
+  const est0 = { A: M.totalActivos, P: M.totalPasivos, EF: M.liqActivos, liq: M.liqActivos, min: M.totalMinPay2 };
   const medir = e => ({ dti: e.min / M.BASE_INC * 100, savRate: M.savRate2, emM: gasto > 0 ? e.liq / gasto : 0,
     efPct: Math.min(1, e.EF / meta), d2a: e.A > 0 ? e.P / e.A * 100 : 100, sol: e.P > 0 ? e.A / e.P : 99 });
   const puntos = e => puntuarIndicadores(medir(e));
@@ -3421,7 +3423,7 @@ function renderDashboard() {
 
   // ── Fondo de emergencia ──
   const EF_TARGET = _metaFondo();
-  const efBalance = S.emergencyFund || 0;
+  const efBalance = _fondoHoy();
   const efPct     = Math.min(100, (efBalance / EF_TARGET) * 100);
   const efFalta   = Math.max(0, EF_TARGET - efBalance);
   const efColor   = efPct >= 100 ? 'var(--success)' : efPct >= 50 ? 'var(--warning)' : 'var(--danger)';
@@ -3443,10 +3445,11 @@ function renderDashboard() {
         <div class="pbar" style="height:5px">
           <div class="pfill" style="width:${efPct}%;background:${efColor}"></div>
         </div>
-        <div style="font-size:10px;color:var(--text3);margin-top:3px">Fondo de emergencia · en CETES</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:3px">Fondo de emergencia · cuenta, efectivo y CETES</div>
       </div>
-      <input type="number" value="${efBalance||''}" min="0" max="${EF_TARGET}" step="0.01"
-        placeholder="Actualizar saldo..."
+      <label style="font-size:10px;color:var(--text3)" for="ef-cetes">CETES</label>
+      <input type="number" id="ef-cetes" value="${S.emergencyFund||''}" min="0" step="0.01"
+        placeholder="Saldo de CETES"
         style="width:150px;padding:6px 10px;border:1px solid ${efColor};border-radius:7px;font-size:13px;font-weight:700;color:var(--text);background:rgba(255,255,255,.05);outline:none;font-family:inherit"
         title="El saldo exacto, con lo que rindieron los CETES. Lo que le metes o le sacas, anótalo abajo como aportación o retiro."
         onchange="setEmergencyFund(this.value)">
@@ -3648,7 +3651,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
         const invPalette=['#b06eff','#ffd93d','#06b6d4','#ec4899','#84cc16','#f97316','#10b981'];
         // Construir componentes individuales
         const comps = [
-          ...(efVal>0?[{l:'🛡️ Fondo de emergencia', a:efVal, col:'#00e87a'}]:[]),
+          ...(efVal>0?[{l:'🛡️ CETES', a:efVal, col:'#00e87a'}]:[]),
           ...S.investments.filter(i=>i.type==='cetes'&&(i.value||0)>0).map(i=>({l:'🏛️ '+i.name, a:i.value||0, col:'#3b82f6'})),
           ...S.investments.filter(i=>i.type!=='cetes'&&(i.value||0)>0).map((i,idx)=>({l:'📈 '+i.name, a:i.value||0, col:invPalette[idx%invPalette.length]})),
           ...(btcV>0?[{l:'₿ Bitcoin', a:btcV, col:'#f7931a'}]:[]),
@@ -4374,7 +4377,7 @@ function renderPatrimonio() {
 
   // ── Activos breakdown ──
   const btcPatItem = _btcMXNPat>0 ? [{name:'Bitcoin (BTC)', value:_btcMXNPat, group:'Financiero', color:'#f7931a', icon:'₿'}] : [];
-  const finItems = [...S.investments.map(i=>({name:i.name,value:i.value,group:'Financiero',color:'#00d4ff',icon:'📈'})), ...(_fondoPat>0?[{name:'Fondo de emergencia (CETES)', value:_fondoPat, group:'Financiero', color:'#00e87a', icon:'🛡️'}]:[]), ...btcPatItem];
+  const finItems = [...S.investments.map(i=>({name:i.name,value:i.value,group:'Financiero',color:'#00d4ff',icon:'📈'})), ...(_fondoPat>0?[{name:'CETES', value:_fondoPat, group:'Financiero', color:'#00e87a', icon:'🛡️'}]:[]), ...btcPatItem];
   const fisItems = (S.activos||[]).map(a=>({...a,group:'Físico',color:ACTIVO_COLORS[a.type]||'#64748b',icon:(ACTIVO_TIPOS[a.type]||'📦').split(' ')[0]}));
   const allItems = [...finItems,...fisItems].sort((a,b)=>b.value-a.value);
 
@@ -4382,7 +4385,7 @@ function renderPatrimonio() {
     <div class="card" style="margin-bottom:14px">
       <div class="card-title" style="margin-bottom:14px">📊 Activos Financieros</div>
       <div style="display:flex;flex-direction:column;gap:6px">
-        ${[...S.investments, ...(_fondoPat>0?[{name:'🛡️ Fondo de emergencia (CETES)', value:_fondoPat, _fondo:true}]:[]), ...(_btcMXNPat>0?[{name:'₿ Bitcoin (BTC)', value:_btcMXNPat, _btc:true}]:[])].map(i=>{
+        ${[...S.investments, ...(_fondoPat>0?[{name:'🛡️ CETES', value:_fondoPat, _fondo:true}]:[]), ...(_btcMXNPat>0?[{name:'₿ Bitcoin (BTC)', value:_btcMXNPat, _btc:true}]:[])].map(i=>{
           const pct=totalActivos>0?(i.value/totalActivos)*100:0;
           const col=i._btc?'#f7931a':i._fondo?'#00e87a':'var(--primary)';
           const sub=i._btc?`${_btcHeldPat.toFixed(6)} BTC × $${(S.currentBtcPrice||0).toLocaleString('es-MX')} USD × ${(S.usdMxn||19.5)} MXN`:'';
@@ -4507,7 +4510,7 @@ function renderPatrimonio() {
   const _patInvNames  = S.investments.map(i=>i.name);
   const _patInvVals   = S.investments.map(i=>i.value);
   const _patInvColors = S.investments.map((_,i)=>['#00d4ff','#00e87a','#ffd93d','#b06eff','#ff3b6b'][i%5]);
-  const labels=[..._patInvNames, ...(_fondoPat>0?['🛡️ Fondo de emergencia (CETES)']:[]), ...(_btcMXNPat>0?['₿ Bitcoin']:[]), ...(S.activos||[]).map(a=>a.name)];
+  const labels=[..._patInvNames, ...(_fondoPat>0?['🛡️ CETES']:[]), ...(_btcMXNPat>0?['₿ Bitcoin']:[]), ...(S.activos||[]).map(a=>a.name)];
   const values=[..._patInvVals,  ...(_fondoPat>0?[_fondoPat]:[]), ...(_btcMXNPat>0?[_btcMXNPat]:[]), ...(S.activos||[]).map(a=>a.value)];
   const colors=[..._patInvColors, ...(_fondoPat>0?['#00e87a']:[]),...(_btcMXNPat>0?['#f7931a']:[]),   ...(S.activos||[]).map(a=>ACTIVO_COLORS[a.type]||'#64748b')];
   const ctx=document.getElementById('ch-pat');

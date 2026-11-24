@@ -5749,7 +5749,7 @@ function detectarLogros(){
     const tcBbva=tcPorNombre(/bbva/i);
     if(tcBbva&&tcBbva.balance<=0) registrarLogro('bbva-liquidada','TC BBVA liquidada');
     if(tcBana&&tcBbva&&tcBana.balance<=0&&tcBbva.balance<=0) registrarLogro('deuda-cara-cero','Deuda cara en $0');
-    if((fin.emergencyFund||0)>=_metaFondo()) registrarLogro('fondo-emergencia','Fondo de emergencia completo ({{fondoMeta}})');
+    if(window.CIFRAS&&CIFRAS.fondoHoy(fin)>=_metaFondo()) registrarLogro('fondo-emergencia','Fondo de emergencia completo ({{fondoMeta}})');
     const auto=debts.find(d=>d.type==='car');
     if(auto&&auto.balance<=0) registrarLogro('byd-liquidado','Crédito del BYD Dolphin Mini liquidado');
   }
@@ -7055,7 +7055,7 @@ function fondoMaestria(){
   const M=window.CIFRAS&&CIFRAS.fondoMaestria?CIFRAS.fondoMaestria(F):{ef:0,inversiones:[],btc:0,total:0};
   const comps=[];
   const ef=M.ef;
-  if(ef>0) comps.push({k:'ef',n:'Fondo de emergencia (CETES)',v:ef,c:'var(--w)',
+  if(ef>0) comps.push({k:'ef',n:'CETES',v:ef,c:'var(--w)',
     d:'Cuenta aquí porque así lo suma Finanzas — pero su trabajo es cubrir imprevistos, no pagar la maestría'});
   M.inversiones.forEach(i=>{
     comps.push({k:'inv',n:esc(i.n),v:i.v,c:i.tipo==='cetes'?'var(--b)':i.tipo==='acciones'?'var(--p)':'var(--o)',
@@ -11776,7 +11776,7 @@ function calRitmo(fase){
   if(!fase) return null;
   const DF=CIFRAS.diasFase(fase, calHoy());
   const n=DF.quedan, largo=DF.largo, corrido=DF.corrido;
-  const meta=_metaFondo(), ef=(D.fin&&D.fin.emergencyFund)||0;
+  const meta=_metaFondo(), ef=CIFRAS.fondoHoy(D.fin);
   const falta=meta-ef;
   return {dias:n, falta:falta, meta:meta, ef:ef,
     porDia:(n>0&&falta>0)?Math.ceil(falta/n):0,
@@ -12363,12 +12363,12 @@ function guardarPrecioBtc(usd, mxn){
 function pasoInversionHoy(){
   const F = rawGet('finanzasmx_v2', {}) || {};
   const inv = F.investments || [];
-  const ef = +F.emergencyFund || 0;
+  const ef = window.CIFRAS ? CIFRAS.fondoHoy(F) : 0;   // la cuenta, el efectivo y los CETES
   const metaEf = _metaFondo();
   const totalInv = inv.reduce((s,i)=>s+(+i.value||+i.invested||0), 0);
   // Desde el 20-sep-2026 los CETES SON el fondo de emergencia (`emergencyFund`); ya no hay una
   // inversión CETES aparte que sumar.
-  const cetes = ef;
+  const cetes = +F.emergencyFund || 0;
   // Lo que de verdad cobra interés: la BBVA no (paga lo que pide el estado de cuenta). Ver el maestro.
   const deudaCara = window.CIFRAS ? CIFRAS.deudasConInteres(F).reduce((s,d)=>s+(+d.balance||0),0) : 0;
   const mon = n => money(n);
@@ -12401,7 +12401,7 @@ function pasoInversionHoy(){
       +(bbvaFin?' Si sigues el plan, terminas de pagarla el <b>'+bbvaFin+'</b>, sin pagar intereses.':'');
     hoy = '<b>Mientras tengas esta deuda, no compres inversiones.</b>';
     notaIco = 'sigue'; nota = 'Después: invertir cada quincena en GBM, tu cuenta de inversiones.';
-    fondo = 'Tu fondo para emergencias se queda como está: <b>'+mon(ef)+'</b> en CETES.';
+    fondo = 'Tus CETES se quedan como están: <b>'+mon(cetes)+'</b>, para emergencias.';
   }else{
     color = 'var(--g)'; foto = 'inv-bolsa';
     que = 'Tu plan para juntar el dinero de Alemania: ya sin deuda de tarjeta, todo lo que ahorras se invierte.';
@@ -12409,7 +12409,7 @@ function pasoInversionHoy(){
     porque = 'Lo que te sobra de cada quincena y lo que apartas de Didi va a tu cuenta de inversiones en GBM.';
     hoy = 'Sigue tu reparto, <b>sin pensarlo dos veces</b>.';
     notaIco = 'meta'; nota = 'El auto no se adelanta: se paga con su mensualidad normal.';
-    fondo = faltaEf>0 ? 'Tu fondo para emergencias lleva <b>'+mon(ef)+'</b> de <b>'+mon(metaEf)+'</b>, en CETES.' : 'Tu fondo para emergencias está completo: <b>'+mon(ef)+'</b> en CETES.';
+    fondo = faltaEf>0 ? 'Tu fondo para emergencias lleva <b>'+mon(ef)+'</b> de <b>'+mon(metaEf)+'</b>, entre cuenta, efectivo y CETES.' : 'Tu fondo para emergencias está completo: <b>'+mon(ef)+'</b> entre cuenta, efectivo y CETES.';
   }
   // La tarjeta de Mi Día, en simple: la acción en grande, un detalle que dice de qué se trata el plan y el pie.
   const corto = bbvaSaldo > 0 ? (deHoy.length ? 'Paga '+mon(sumHoy)+' a tu tarjeta BBVA' : 'Hoy no toca pagar la tarjeta') : 'Hoy sí inviertes en GBM';
@@ -15279,7 +15279,7 @@ function renderMedidores(){
   const maeTgt=(goalMae&&+goalMae.target)||0;
 
 
-  const ef=D.fin.emergencyFund||0;
+  const ef=window.CIFRAS?CIFRAS.fondoHoy(D.fin):0;
   const pat=patrimonioNeto();
   const GOAL=1000000;
   const patPct=hasFinData()?Math.min(100,Math.max(0,pat/GOAL*100)):0;
@@ -15302,7 +15302,7 @@ function renderMedidores(){
   const PISTA_ROJA='color-mix(in srgb,var(--r) 60%,transparent)';
 
   const tiles=[
-    {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/metaFondo*100),sub:Math.round(Math.min(100,ef/metaFondo*100))+'% · en CETES · meta '+money(metaFondo),c:'var(--w)',id:'fondo'},
+    {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/metaFondo*100),sub:Math.round(Math.min(100,ef/metaFondo*100))+'% · cuenta, efectivo y CETES · meta '+money(metaFondo),c:'var(--w)',id:'fondo'},
     {ico:'🎓',lbl:'Fondo Maestría',val:fmMae.total>0?money(fmMae.total):'Sin datos',pct:maeTgt>0?Math.min(100,fmMae.total/maeTgt*100):0,sub:maeTgt>0?`${Math.round(Math.min(100,fmMae.total/maeTgt*100))}% · Meta: ${money(maeTgt)}${fmMae.btc.mxn>0?` · ${Math.round(fmMae.btc.mxn/fmMae.total*100)}% en BTC`:''}`:'Meta en Finanzas → Metas',c:'var(--cy)',id:'maestria'},
     {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:Math.round(patPct)+'% del millón · meta '+finDelPlan().toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'}),c:'var(--g)',id:'patrimonio'},
     // 4 medidores nuevos (2026-08-19, "tambien si puedes agregar mas, hazlo"). Los 4 salen de

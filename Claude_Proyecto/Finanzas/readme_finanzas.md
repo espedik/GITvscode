@@ -70,7 +70,8 @@ instancias de Chart (`chCat`, `chBal`, `chBud`, `chInv`, `chGbmInv`, `chBtcPnl`,
   en MXN—, la misma cuenta de `{{maestria}}`, Mis Metas y Coach. `g001` ya no guarda `current`: era un
   número puesto a mano que nadie recalculaba (migración `_maestriaViva20261013`).
 - **Fondo de emergencia** — meta `ef-001` ("Fondo de emergencia (CETES)"); `EF_TARGET = _metaFondo()`, que es
-  `CIFRAS.fondoMeta()`: 3 meses de lo indispensable (`PROYECTO.fondoMeses`). El `target` guardado es una copia.
+  `CIFRAS.fondoMeta()`: 3 meses de lo indispensable (`PROYECTO.fondoMeses`). El `target` guardado es una copia. Lo que llevas es
+  `_fondoHoy()` (`CIFRAS.fondoHoy`): la cuenta, el efectivo y los CETES; `S.emergencyFund` son solo los CETES y es lo que edita su caja.
   **Son los CETES**, un solo número (`S.emergencyFund`): no hay inversión `type:'cetes'` en
   `investments`, porque los indicadores, el patrimonio y el fondo de la maestría sumaban las dos
   cosas. El bloque del fondo del Dashboard de esta página (`#d-emergency`) lo enseña con su avance y tiene dos formas

@@ -8672,6 +8672,8 @@ window.CIFRAS = (function () {
     // ── Ahorro y metas ──
     fondo:         { v: () => (fin && fin.emergencyFund != null ? +fin.emergencyFund : null) },
     fondoMeses:    { v: () => PROYECTO.fondoMeses, fmt: 'num' },
+    // Lo que llevas del fondo: la cuenta, el efectivo y los CETES (`fondoHoy()`). `fondo` son solo los CETES.
+    fondoHoy:      { v: () => (fin ? fondoHoy(fin) : null) },
     // La meta del fondo no se guarda: son `fondoMeses` meses de lo indispensable (`fondoMeta()`, abajo).
     fondoMeta:     { dep: ['fondoMeses','renta','luzAgua','internet','gas','celular','aporteCasa','autoPago'], v: () => fondoMeta() },
     // El dinero de la maestría NO es un campo guardado: es `fondoMaestria()`, la misma cuenta que
@@ -8859,7 +8861,7 @@ window.CIFRAS = (function () {
     didiAhorroMas: 'Lo que Didi aparta al mes, manejando más', especulacionMes: 'Riesgo súper alto, al mes',
     especulacionBtcPct: 'De eso, a Bitcoin', proteinaMeta: 'Proteína al día', kcalMeta: 'Calorías al día',
     kapitelAleman: 'Kapitel en curso', cetesDia15: 'A CETES el día 15', autoMeses: 'Meses que le quedan al auto',
-    autoAPagar: 'Lo que acabas pagando del auto', autoInteres: 'Intereses del auto', fondoMeta: 'Fondo de emergencia, la meta', fondoMeses: 'Meses que cubre el fondo',
+    autoAPagar: 'Lo que acabas pagando del auto', autoInteres: 'Intereses del auto', fondoMeta: 'Fondo de emergencia, la meta', fondoMeses: 'Meses que cubre el fondo', fondoHoy: 'Lo que llevas del fondo de emergencia',
     maestriaMeta: 'Dinero para la maestría, la meta', heliCosto: 'La licencia de helicóptero',
     heliCosto30: 'La licencia de helicóptero, con 30 horas de vuelo', heliCosto35: 'La licencia de helicóptero, con 35 horas de vuelo',
     heliTeoria: 'La teoría del helicóptero', heliHora: 'La hora de helicóptero', heliHoraSim: 'La hora de simulador de helicóptero', heliVuelo: 'Las 20 horas de helicóptero', heliSimulador: 'Las 20 horas de simulador',
@@ -9441,7 +9443,7 @@ window.CIFRAS = (function () {
     F.efAportes.forEach(function (x, k) { if (id && x.id === id) i = k; });
     const delta = fondoSigno(m) - (i >= 0 ? fondoSigno(F.efAportes[i]) : 0);
     if ((+F.emergencyFund || 0) + delta < -0.005)
-      return { error: 'El retiro es mayor que lo que hay en el fondo ($' + (+F.emergencyFund || 0).toLocaleString('es-MX') + ')' };
+      return { error: 'El retiro es mayor que lo que hay en CETES ($' + (+F.emergencyFund || 0).toLocaleString('es-MX') + ')' };
     fondoAplicar(F, delta);
     if (i >= 0) { F.efAportes[i] = Object.assign({}, F.efAportes[i], m); return F.efAportes[i]; }
     m.id = 'ef' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -9462,6 +9464,13 @@ window.CIFRAS = (function () {
     fondoAplicar(F, -fondoSigno(x));
     F.efAportes = F.efAportes.filter(function (m) { return m.id !== id; });
     return x;
+  }
+  /* Lo que llevas del fondo de emergencia, contra su meta: lo que tienes a la mano, o sea la cuenta, el efectivo y los CETES
+     (Adán, 24-nov-2026: "aquí tengo 7,000 pero no se muestra ese saldo, sigue mostrando 6,000"). Toda pantalla que compare
+     el fondo con su meta llama aquí; `emergencyFund` son solo los CETES y así cuentan en el patrimonio y en la maestría. */
+  function fondoHoy(f) {
+    const F = f || fin || {};
+    return (+F.emergencyFund || 0) + (F.activos || []).reduce(function (s, a) { return s + (a.type === 'liquido' ? +a.value || 0 : 0); }, 0);
   }
   /* Lo que tienes a la mano, dicho por ti (Adán, 24-nov-2026: "dame la habilidad de editar lo de la sección a la mano… y
      actualicen esas cifras globalmente… ya no debemos depender de Claude"). `vals` es {id del activo líquido: pesos, cetes:
@@ -10162,7 +10171,7 @@ window.CIFRAS = (function () {
     patrimonio: patrimonio,
     fondoMaestria: fondoMaestria,
     fondoMovimiento: fondoMovimiento, fondoBorrar: fondoBorrar, fondoSigno: fondoSigno, fondoLista: fondoLista,
-    saldosPoner: saldosPoner, A_LA_MANO: A_LA_MANO, gastoEmergencia: gastoEmergencia, fondoMeta: fondoMeta,
+    saldosPoner: saldosPoner, A_LA_MANO: A_LA_MANO, fondoHoy: fondoHoy, gastoEmergencia: gastoEmergencia, fondoMeta: fondoMeta,
     btcCompra: btcCompra, btcBorrar: btcBorrar, btcEsInversion: btcEsInversion, btcDeInversiones: btcDeInversiones,
     prestamoSimular: prestamoSimular, prestamoHechos: prestamoHechos, prestamoResumen: prestamoResumen, prestamoTabla: prestamoTabla,
     prestamoAbono: prestamoAbono, prestamoAbonoBorrar: prestamoAbonoBorrar, prestamoDatos: prestamoDatos,

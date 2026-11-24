@@ -85,15 +85,15 @@
     return '<svg viewBox="0 0 200 200" aria-hidden="true">' + g.join('') + '</svg>';
   }
   // Una barra por mes de la meta: los días que cubre el fondo y lo que falta para completarlo.
-  function ruta(x, G, meta, meses) {
-    const dias = G.minimo > 0 ? Math.floor(x.ef / (G.minimo / 30)) : 0;
+  function ruta(hay, G, meta, meses) {
+    const dias = G.minimo > 0 ? Math.floor(hay / (G.minimo / 30)) : 0;
     const mes = i => {
-      const cubre = Math.max(0, Math.min(30, dias - i * 30)), p = pct(x.ef - i * G.minimo, G.minimo), falta = (i === meses - 1 ? meta : G.minimo * (i + 1)) - x.ef;
+      const cubre = Math.max(0, Math.min(30, dias - i * 30)), p = pct(hay - i * G.minimo, G.minimo), falta = (i === meses - 1 ? meta : G.minimo * (i + 1)) - hay;
       return '<div class="kf-mes' + (falta <= 0 ? ' listo' : '') + '"><div class="kf-mt"><b>Mes ' + (i + 1) + '</b><span>' + (falta <= 0 ? 'Cubierto' : cubre + ' de 30 días') + '</span></div><div class="kf-bat"><i style="width:' + (falta <= 0 ? 100 : p) + '%"></i></div>' +
         '<em>' + (falta <= 0 ? 'Ya lo tienes' : 'Te faltan ' + money(falta) + ' para llegar aquí') + '</em></div>';
     };
     return '<h3>Si te quedas sin trabajo, tu fondo te alcanza para</h3><strong class="kf-tit">' + plural(dias, 'día', 'días') + '</strong>' +
-      '<p>Vivir un mes con lo indispensable cuesta <b>' + money(G.minimo) + '</b> y tienes <b>' + money(x.ef) + '</b>. Tu meta es llenar ' + (meses === 1 ? 'la barra.' : 'las ' + meses + ' barras.') + '</p>' +
+      '<p>Vivir un mes con lo indispensable cuesta <b>' + money(G.minimo) + '</b> y tienes <b>' + money(hay) + '</b> entre cuenta, efectivo y CETES. Tu meta es llenar ' + (meses === 1 ? 'la barra.' : 'las ' + meses + ' barras.') + '</p>' +
       '<div class="kf-meses" style="--n:' + meses + '">' + Array.from({ length: meses }, (_, i) => mes(i)).join('') + '</div>';
   }
 
@@ -132,8 +132,8 @@
     const ov = document.getElementById('kpiOverlay');
     if (!ov || !ov.classList.contains('open') || ov.dataset.kpi !== 'fondo') { mano.edita = false; mano.aviso = ''; }
     if (_efEdit) mano.edita = false;
-    const x = dinero(F), k = hoyLocal(), meta = _metaFondo(), falta = Math.max(0, meta - x.ef), p = pct(x.ef, meta), editable = tiEditable(), meses = C().PROYECTO.fondoMeses;
-    const prox = mas(k.slice(0, 7), 1), E = C().gastoEmergencia, G = E(prox), P = C().PROYECCION.meses, aMano = x.ef + x.liqV;
+    const x = dinero(F), k = hoyLocal(), hay = C().fondoHoy(F), meta = _metaFondo(), falta = Math.max(0, meta - hay), p = pct(hay, meta), editable = tiEditable(), meses = C().PROYECTO.fondoMeses;
+    const prox = mas(k.slice(0, 7), 1), E = C().gastoEmergencia, G = E(prox), P = C().PROYECCION.meses;
     // A la mano, en el orden en que se usa. El saldo de la cuenta lleva su fecha: si es viejo, se dice.
     const liq = x.liq.filter(a => +a.value > 0), piezas = manoLista(F).map(q => [esc(q.n), q.v, q.id === 'cetes' ? '1 o 2 días hábiles' : !q.fecha ? '' : q.fecha === k ? 'de hoy' : 'del ' + diaTxt(q.fecha), q.c]);
     const vieja = liq.map(a => a.fecha).filter(Boolean).sort()[0], dv = vieja ? Math.round((new Date(k + 'T12:00') - new Date(vieja + 'T12:00')) / 864e5) : 0;
@@ -153,16 +153,16 @@
         (editable ? '<span class="ti-acc"><button type="button" class="ce-btn sec" onclick="efEditar(\'' + m.id + '\')">Editar</button><button type="button" class="ce-btn sec" onclick="efBorrar(\'' + m.id + '\')">Borrar</button></span>' : '') + '</div>';
     }).join('');
 
-    return { kv: 'var(--w)', titulo: 'Fondo de emergencia', sub: 'Tu colchón en CETES: para cuánto te alcanza si te quedas sin trabajo, y qué le falta.', html:
-      '<div class="kf"><div class="kf-a"><section class="kv-c kf-hero"><div class="kf-an" role="img" aria-label="' + Math.round(p) + '% de tu meta">' + anillo(p) + '<div><strong>' + money(x.ef) + '</strong><span>de ' + money(meta) + '</span></div></div>' +
+    return { kv: 'var(--w)', titulo: 'Fondo de emergencia', sub: 'Tu cuenta, tu efectivo y tus CETES: para cuánto te alcanzan si te quedas sin trabajo, y qué falta.', html:
+      '<div class="kf"><div class="kf-a"><section class="kv-c kf-hero"><div class="kf-an" role="img" aria-label="' + Math.round(p) + '% de tu meta">' + anillo(p) + '<div><strong>' + money(hay) + '</strong><span>de ' + money(meta) + '</span></div></div>' +
         '<div class="kf-pc"><strong>' + Math.round(p) + '%</strong><span>' + (falta > 0 ? 'Te faltan <b>' + money(falta) + '</b> para cubrir ' + plural(meses, 'mes', 'meses') + ' de lo indispensable.' : 'Meta completa. Lo que sobre va a GBM.') + '</span></div></section>' +
-      '<section class="kv-c kf-ruta">' + ruta(x, G, meta, meses) + '</section></div>' +
+      '<section class="kv-c kf-ruta">' + ruta(hay, G, meta, meses) + '</section></div>' +
       '<div class="kf-d">' +
-        '<section class="kv-c kf-mano"><div class="kf-cab"><div><h3>A la mano: ' + money(aMano) + '</h3><p>' + (mano.edita ? 'Escribe lo que tienes hoy.' : 'En el orden en que se usa.') + '</p></div>' + (editable && !mano.edita ? boton('Editar', 'MEDIDORES.editarMano(true)', 1) : '') + '</div>' +
+        '<section class="kv-c kf-mano"><div class="kf-cab"><div><h3>A la mano: ' + money(hay) + '</h3><p>' + (mano.edita ? 'Escribe lo que tienes hoy.' : 'En el orden en que se usa.') + '</p></div>' + (editable && !mano.edita ? boton('Editar', 'MEDIDORES.editarMano(true)', 1) : '') + '</div>' +
           (mano.edita && editable ? manoForm(F) : dinHtml + (mano.aviso ? '<div class="kv-pie kf-ok">' + mano.aviso + '</div>' : !editable ? copia('Se edita') : dv > 7 ? '<div class="kv-pie">El saldo de tu cuenta es de hace ' + dv + ' días: ponlo al día con Editar.</div>' : '')) + '</section>' +
         '<section class="kv-c"><h3>Un mes sin sueldo: ' + money(G.minimo) + '</h3><p>Lo que pagarías sí o sí.</p>' + mesHtml + (baja ? '<div class="kv-pie">Desde ' + MESL[+baja.mes.slice(5) - 1] + (baja.partes.some(q => q.id === 'renta') ? '' : ', sin renta,') + ' baja a <b>' + money(baja.minimo) + '</b> al mes.</div>' : '') + '</section>' +
-        '<section class="kv-c kf-form' + (ed ? ' edita' : '') + '"><h3>Meter o sacar dinero</h3><p>Sale igual en Finanzas. No lo anotes también en Total invertido: contaría dos veces.</p>' + (editable ? efFormHtml(ed) : copia('Se anota')) + '</section></div>' +
-      (movs ? plega('fondo-movs', 'Lo que has metido y sacado', plural(FL.movs.length, 'movimiento', 'movimientos') + ': +' + money(FL.aporto) + ', −' + money(FL.saco), '<div class="ti-lista">' + movs + '</div>', 's12', !!_efEdit) : '') + '</div>' };
+        '<section class="kv-c kf-form' + (ed ? ' edita' : '') + '"><h3>Meter o sacar de tus CETES</h3><p>Sale igual en Finanzas. No lo anotes también en Total invertido: contaría dos veces.</p>' + (editable ? efFormHtml(ed) : copia('Se anota')) + '</section></div>' +
+      (movs ? plega('fondo-movs', 'Lo que has metido y sacado de CETES', plural(FL.movs.length, 'movimiento', 'movimientos') + ': +' + money(FL.aporto) + ', −' + money(FL.saco), '<div class="ti-lista">' + movs + '</div>', 's12', !!_efEdit) : '') + '</div>' };
   };
 
   // ══ Fondo Maestría ══
@@ -172,7 +172,7 @@
     const sal = cortes[cortes.length - 1], faltaS = sal ? sal.pide - sal.ten : 0, dec = String(C().n('decisionMaestria') || ''), diasDec = Math.max(0, Math.ceil((new Date(dec + 'T12:00:00') - new Date()) / 864e5));
     const meses = P.meses.filter(m => m.mes >= mas(R.ym, -1) && (!sal || m.mes <= sal.mes));
     const pagar = ((C().SALIDA && C().SALIDA.costos) || []).filter(c => c.mes >= R.ym).sort((a, b) => a.mes < b.mes ? -1 : 1).slice(0, 2).map(c => fila(esc(String(c.txt).replace(/ \(.*$/, '').split(':')[0]), money(c.mxn || c.eur * (C().n('eurMxn') || 0)), mesTxt(c.mes), c.gasta ? 'se gasta' : 'sigue siendo tuyo')).join('');
-    const piezas = [['Depósito de la renta', x.deposito, V.a, 'regresa cuando entregues el depa'], ['Fondo de emergencia', x.ef, V.c, 'es tu colchón: si lo usas, esto baja'], ['Bitcoin', x.btcV, V.b, x.btcMet > 0 ? 'metiste ' + money(x.btcMet) + ' · ' + gana(x.btcV - x.btcMet) : '']]
+    const piezas = [['Depósito de la renta', x.deposito, V.a, 'regresa cuando entregues el depa'], ['CETES', x.ef, V.c, 'son parte de tu colchón: si los usas, esto baja'], ['Bitcoin', x.btcV, V.b, x.btcMet > 0 ? 'metiste ' + money(x.btcMet) + ' · ' + gana(x.btcV - x.btcMet) : '']]
       .concat(x.otras.map(i => [esc(i.name || 'Inversión'), +i.value || +i.invested || 0, V.g, 'lo tienes en inversiones'])).filter(q => q[1] > 0).sort((a, b) => b[1] - a[1]);
     return { kv: 'var(--cy)', titulo: 'Fondo Maestría', sub: 'Tu dinero para irte a Esslingen en septiembre de 2027.', html:
       '<div class="kv-fila">' + hero(money(fm.total), meta ? 'de ' + money(meta) + ' que cuesta irte' : '', sal ? 'En ' + mesTxt(sal.mes) + ' debes tener en mano <b>' + money(sal.pide) + '</b>; lo demás ya lo habrás pagado. Con tu ritmo tendrías <b>' + money(sal.ten) + '</b>.' : '', meta ? pct(fm.total, meta) : null) +
@@ -200,7 +200,7 @@
     let cambios = [];
     if (u) {
       cambios = [['Deudas', u.debts.reduce((s, d) => s + (+d.balance || 0), 0) - x.debe], ['Bitcoin', x.btcV - (+u.btcValue || 0)], ['Otras inversiones', x.otrasV + x.deposito - val(u.investments)],
-        ['Fondo de emergencia', x.ef - (+u.emergencyFund || 0)], ['Cuenta y efectivo', x.liqV - act(u, a => a.type === 'liquido')], ['Bienes', x.bienesV - act(u, a => a.type !== 'liquido')]];
+        ['CETES', x.ef - (+u.emergencyFund || 0)], ['Cuenta y efectivo', x.liqV - act(u, a => a.type === 'liquido')], ['Bienes', x.bienesV - act(u, a => a.type !== 'liquido')]];
       const resto = (neto - u.netWorth) - cambios.reduce((s, c) => s + c[1], 0);
       if (Math.abs(resto) >= 1) cambios.push(['Otros', resto]);
       cambios = cambios.sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
@@ -213,7 +213,7 @@
     return { kv: 'var(--g)', titulo: 'Patrimonio hacia $1M', sub: 'Todo lo tuyo menos lo que debes, y qué lo está moviendo.', html:
       '<div class="kv-fila">' + hero(money(neto), '', u ? gana(dif) + ' desde que cerró ' + mesTxt(u.month) + '.' : 'Todavía no hay un mes cerrado para comparar.', null) +
       tiles([['Tu dinero, sin contar cosas', money(liquido), 'lo que cuenta para el millón de tu plan: dinero menos deudas, sin carro ni aparatos'],
-        ['Tienes en dinero', money(tiene), 'inversiones, fondo, Bitcoin, depósito, cuenta y efectivo'], ['Tienes en cosas', money(x.bienesV), plural(x.bienes.length, 'bien registrado', 'bienes registrados') + ' en Finanzas'],
+        ['Tienes en dinero', money(tiene), 'inversiones, CETES, Bitcoin, depósito, cuenta y efectivo'], ['Tienes en cosas', money(x.bienesV), plural(x.bienes.length, 'bien registrado', 'bienes registrados') + ' en Finanzas'],
         ['Tu plan cruza el millón', cruza ? mesTxt(cruza.mes) : '—', 'si sigues la proyección; es una hipótesis']]) + '</div>' +
       hoy('Este mes', u ? (dif >= 0 ? 'Subiste <b>' + money(dif) + '</b>.' : 'Bajaste <b>' + money(-dif) + '</b>.') + (mejor ? ' Lo que más ayudó: <b>' + (mejor[0] === 'Deudas' ? 'bajar tus deudas' : mejor[0] === 'Bitcoin' ? 'tu Bitcoin' : mejor[0].toLowerCase()) + '</b>, ' + signo(mejor[1]) + '.' : '') : 'Se compara cuando cierre el mes.',
         peor ? 'Lo que más restó: ' + (peor[0] === 'Deudas' ? 'tus deudas, que crecieron' : peor[0] === 'Bitcoin' ? 'tu Bitcoin' : peor[0].toLowerCase()) + ', ' + signo(peor[1]) + '.' : 'Nada restó este mes.', boton('Ver mis deudas', 'abrirKpi(\'deudatotal\')', 1) + boton('Registrar una compra', 'abrirKpi(\'invertido\')')) +
@@ -222,7 +222,7 @@
       '<section class="kv-c s4"><h3>Camino al millón</h3><p>Tu dinero sin contar cosas, según la proyección.</p>' + grafica('millon') + '</section></div>' +
       '<div class="kv-fila"><section class="kv-c s12"><div class="kv-ec"><div><span>Tienes en dinero</span><b>' + money(tiene) + '</b></div><u>+</u><div><span>Tienes en cosas</span><b>' + money(x.bienesV) + '</b></div><u>−</u><div><span>Debes</span><b>' + money(x.debe) + '</b></div><u>=</u><div><span>Tu patrimonio</span><b>' + money(neto) + '</b></div></div>' +
         (compra ? '<p class="kv-p" style="margin-top:10px">' + esc(compra.name) + ' está a precio de compra (' + money(+compra.value) + '). Hoy se vendería en menos, así que tu patrimonio real es menor.</p>' : '') + '</section>' +
-      plega('pt-dinero', 'Tu dinero', money(tiene), filas([['Depósito de la renta', x.deposito], ['Fondo de emergencia', x.ef], ['Bitcoin', x.btcV]].concat(x.otras.map(i => [esc(i.name), +i.value || +i.invested || 0]), x.liq.map(a => [esc(a.name), +a.value || 0, a.fecha ? 'dicho el ' + diaTxt(a.fecha) : '']))), 's4') +
+      plega('pt-dinero', 'Tu dinero', money(tiene), filas([['Depósito de la renta', x.deposito], ['CETES', x.ef], ['Bitcoin', x.btcV]].concat(x.otras.map(i => [esc(i.name), +i.value || +i.invested || 0]), x.liq.map(a => [esc(a.name), +a.value || 0, a.fecha ? 'dicho el ' + diaTxt(a.fecha) : '']))), 's4') +
       plega('pt-cosas', 'Tus cosas', money(x.bienesV), filas(x.bienes.map(a => [esc(a.name), +a.value || 0, esc(a.notes || '')])), 's4') +
       plega('pt-debes', 'Lo que debes', money(x.debe), filas((F.debts || []).filter(d => +d.balance > 0).map(d => [esc(d.name), +d.balance, d.rate > 0 && tasaQueCorre(d) > 0 ? d.rate + '% al año' : 'sin intereses'])), 's4') + '</div>',
       listo: () => {

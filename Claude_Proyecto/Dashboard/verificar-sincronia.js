@@ -3644,6 +3644,11 @@ function promptsDeLoTocado() {
     if (C.PROYECTO.fondoMeses < 3 || mt < de || mt - de >= 1000) malos.push('la meta del fondo (' + mt + ') no cubre ' + C.PROYECTO.fondoMeses + ' meses de lo indispensable (' + de + '), con 3 como mínimo');
   } else malos.push('el maestro ya no exporta fondoMeta');
   ['Dashboard/dashboard.html', 'Finanzas/Finanzas.html'].forEach(r => { const t = leer(r), i = t.indexOf('_metaFondo'), k = t.slice(i).search(/function _metaFondo|const _metaFondo/); if (t.slice(i + k, i + k + 140).indexOf('CIFRAS.fondoMeta()') < 0) malos.push('_metaFondo de ' + r + ' ya no llama a CIFRAS.fondoMeta'); });
+  // Lo que llevas: la cuenta, el efectivo y los CETES, con una función en las tres apps (decía 6,000 con 7,000 a la mano).
+  if (!C || typeof C.fondoHoy !== 'function') malos.push('el maestro ya no exporta fondoHoy');
+  else if (C.fondoHoy({ emergencyFund: 6000, activos: [{ type: 'liquido', value: 1000 }, { type: 'liquido', value: 0 }, { type: 'vehiculo', value: 9 }] }) !== 7000) malos.push('fondoHoy no suma la cuenta, el efectivo y los CETES');
+  [['Dashboard/medidores.js', 1], ['Dashboard/dashboard.html', 4], ['Finanzas/Finanzas.html', 1]].forEach(p => { if (leer(p[0]).split('.fondoHoy(').length - 1 < p[1]) malos.push(p[0] + ' ya no mide el fondo con fondoHoy'); });
+  if (leer('Coach/Coach.html').indexOf("n('fondoHoy')") < 0) malos.push('Coach ya no mide el fondo con fondoHoy');
   const m = leer('Dashboard/medidores.js'), f = m.slice(m.indexOf('// ══ Fondo de emergencia'), m.indexOf('// ══ Fondo Maestría'));
   if (f.indexOf('_metaFondo()') < 0 || f.indexOf('.gastoEmergencia') < 0) malos.push('la ventana del fondo ya no usa fondoMeta / gastoEmergencia');
   if (/kpiGastoMensual|fijosTotal/.test(f)) malos.push('la ventana del fondo volvió a medir con el promedio de movimientos o con los fijos solos');
