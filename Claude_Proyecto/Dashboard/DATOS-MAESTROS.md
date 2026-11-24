@@ -357,12 +357,14 @@ pero el nombre de la variable se queda corto.
 | `{{salidaVeredicto}}` | «faltan …» o «sobran …»: lo que pide la salida —cuenta bloqueada, reserva del BYD, colchón y la colegiatura del primer semestre— contra la cuenta a fin de agosto (`fmt: 'txt'`) | derivada |
 | `{{mesMillon}}` | sep 2031 — el mes en que la proyección cruza el millón (`fmt: 'mes'`) | derivada de la PROYECCION |
 | `PROYECTO.eurMxn` | 21.0 — el euro para planear; el 2-oct-2026 estaba en $20.46 | constante |
-| `PROYECTO.usdMxn` | 17.5 — el dólar para planear lo que se cobra en dólares (los proyectos de `Laptop/`); el 8-abr-2026 estaba en $17.76, se planea un poco abajo para no inflar lo que entra | constante |
+| `PROYECTO.usdMxn` | 17.5 — el dólar para planear lo que se cobra en dólares (los proyectos de `Laptop/`) o se paga en dólares (los viajes y la licencia de helicóptero); el 8-abr-2026 estaba en $17.76, se planea un poco abajo para no inflar lo que entra | constante |
 | `{{cetes}}` | $6,000 — el mismo número que `{{fondo}}` | derivada de `fondo` |
 | `{{maestria}}` `{{maestriaMeta}}` | $17,250 de $398,000 — el dinero es `CIFRAS.fondoMaestria()`: el fondo de emergencia (CETES), las inversiones de Finanzas (hoy el depósito de la renta) y el Bitcoin; la meta es lo que cuesta irse (migraciones `_alemania20261003` y `_ahorroReal20261003`) | derivada de lo vivo |
 | `{{maestriaEscuela}}` | Esslingen — Automotive Systems M.Eng. | constante |
 | `{{maestriaInicio}}` `{{decisionMaestria}}` | 1 sep 2027 · 31 may 2027, la decisión (`PROYECTO.maestriaInicio`, `maestriaDecision`) | constantes, con `fmt: 'fecha'` |
-| `{{hyroxSede}}` `{{hyroxFecha}}` | HYROX Guadalajara · 20 mar 2027, el primer Hyrox (`PROYECTO.hyroxSede`, `hyroxFecha`). Lo leen Mis Metas, la lista de salida y Coach | constantes |
+| `{{heliCostoEur}}` `{{heliCosto}}` | €24,335 · $511,035 — la licencia de piloto privado de helicóptero en Alemania, 45 horas (`PROYECTO.heliCostoEur`; ejemplo publicado en 2023). Lo leen Mis Metas y Coach | constante · derivada de `PROYECTO.eurMxn` |
+| `{{heliUsaUsd}}` `{{heliUsa}}` `{{heliUsaReal}}` | US$16,285 · $284,988 · $490,000 — la misma en Texas con 40 horas, y en Estados Unidos con 60 (`PROYECTO.heliUsaUsd`, `heliUsaRealUsd`) | constante · derivadas de `PROYECTO.usdMxn` |
+| `{{visaUsa}}` | $3,238 — la visa de turista de Estados Unidos, US$185 (`PROYECTO.visaUsaUsd`) | derivada de `PROYECTO.usdMxn` |
 | `{{metaMillon}}` | 31 dic 2031 — el cierre de la última fase del Plan Maestro | derivada de `PHASES` |
 
 **El fondo de emergencia son los CETES** (Adán, 20-sep-2026: *"mi fondo de emergencia van a ser los

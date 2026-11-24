@@ -313,12 +313,14 @@ window.CIFRAS = (function () {
     // La respuesta de Esslingen llega "antes de fin de mayo" (hs-esslingen.de) y la cuenta
     // bloqueada se llena a mediados de junio: ese es el día de decidir la salida, con las dos.
     maestriaDecision: '2027-05-31',
-    // El primer Hyrox. El de CDMX (29 oct–1 nov 2026) quedó a tres semanas de la rutina nueva, sin el
-    // bloque de carrera; el siguiente en México que cae en la Fase 1 es Guadalajara, del 19 al 21 de
-    // marzo de 2027 en Expo Guadalajara (hyrox.com, revisado el 11-oct-2026). El sábado es el día:
-    // el domingo es de Didi. Monterrey (16–18 abr 2027) ya cae en la Fase 2, sin viajes.
-    hyroxSede:       'HYROX Guadalajara',
-    hyroxFecha:      '2027-03-20',
+    // La licencia de piloto privado de helicóptero (Mis Metas), en la moneda en que se paga: Alemania con 45 horas
+    // (hausjournal.net, ejemplo de 2023: formación, examen, radio y médico); San Antonio, Texas, con 40 (la suma de los
+    // renglones de alamohelicoptertours.com, nov 2026), y Estados Unidos con 60, a la mitad de los US$26,000–30,000 que
+    // calcula un instructor (3gheliprep.com, may 2026). La visa de turista de Estados Unidos, US$185 (nov 2026).
+    heliCostoEur:    24335,
+    heliUsaUsd:      16285,
+    heliUsaRealUsd:  28000,
+    visaUsaUsd:      185,
     // El euro para planear. El 2-oct-2026 estaba en $20.46 (Infobae); se planea a $21.00 para
     // que una subida normal (su volatilidad anda en ~7 %) no tumbe la cuenta bloqueada.
     eurMxn:          21.0,
@@ -905,7 +907,7 @@ window.CIFRAS = (function () {
         {id:'sa-sal-3', cuando:'2027-05', txt:'Oftalmólogo: graduación nueva y lentes de repuesto.'},
         {id:'sa-sal-4', cuando:'2027-06', txt:'Cartilla de vacunación al día (tétanos, sarampión, hepatitis), con una copia en inglés.'},
         {id:'sa-sal-5', cuando:'2027-07', txt:'Medicamentos que tomes: receta en inglés con el nombre genérico y tres meses de reserva.'},
-        {id:'sa-sal-6', cuando:'cont',    txt:'Gym seis días y tu primer Hyrox —{{hyroxSede}}, el {{hyroxFecha}}—: llegas en forma. Allá, el deporte universitario (Hochschulsport) es barato.'},
+        {id:'sa-sal-6', cuando:'cont',    txt:'Gym seis días: llegas en forma. Allá, el deporte universitario (Hochschulsport) es barato.'},
         {id:'sa-sal-7', cuando:'cont',    txt:'Proteína como hasta hoy ({{proteinaMeta}} g al día): cambiar de país no es razón para perder lo ganado.'},
       ]},
       {id:'mental', ico:'🧠', titulo:'Salud mental', items:[
@@ -8711,8 +8713,13 @@ window.CIFRAS = (function () {
     maestriaInicio:{ v: () => PROYECTO.maestriaInicio,   fmt: 'fecha' },
     // Las fechas del plan, para escribirlas en prosa sin copiarlas: `fecha` las pinta "18 jul 2027".
     decisionMaestria: { v: () => PROYECTO.maestriaDecision, fmt: 'fecha' },
-    hyroxSede:     { v: () => PROYECTO.hyroxSede,  fmt: 'txt' },
-    hyroxFecha:    { v: () => PROYECTO.hyroxFecha, fmt: 'fecha' },
+    // La licencia de helicóptero y la visa de Estados Unidos: en su moneda y en pesos, al cambio del plan.
+    heliCostoEur:  { fmt: 'txt', v: () => '€' + PROYECTO.heliCostoEur.toLocaleString('es-MX') },
+    heliCosto:     { dep: ['heliCostoEur', 'eurMxn'], v: () => Math.round(PROYECTO.heliCostoEur * PROYECTO.eurMxn) },
+    heliUsaUsd:    { fmt: 'txt', v: () => 'US$' + PROYECTO.heliUsaUsd.toLocaleString('es-MX') },
+    heliUsa:       { dep: ['heliUsaUsd', 'usdMxn'], v: () => Math.round(PROYECTO.heliUsaUsd * PROYECTO.usdMxn) },
+    heliUsaReal:   { dep: ['heliUsaRealUsd', 'usdMxn'], v: () => Math.round(PROYECTO.heliUsaRealUsd * PROYECTO.usdMxn) },
+    visaUsa:       { dep: ['visaUsaUsd', 'usdMxn'], v: () => Math.round(PROYECTO.visaUsaUsd * PROYECTO.usdMxn) },
     // El millón se fecha con el cierre de la última fase del Plan Maestro.
     metaMillon:    { v: () => PHASES[PHASES.length - 1].end, fmt: 'fecha' },
     // ── Derivadas que cruzan constantes con saldos vivos ──
@@ -8840,7 +8847,8 @@ window.CIFRAS = (function () {
     especulacionBtcPct: 'De eso, a Bitcoin', proteinaMeta: 'Proteína al día', kcalMeta: 'Calorías al día',
     kapitelAleman: 'Kapitel en curso', cetesDia15: 'A CETES el día 15', autoMeses: 'Meses que le quedan al auto',
     autoAPagar: 'Lo que acabas pagando del auto', autoInteres: 'Intereses del auto', fondoMeta: 'Fondo de emergencia, la meta',
-    maestriaMeta: 'Dinero para la maestría, la meta',
+    maestriaMeta: 'Dinero para la maestría, la meta', heliCosto: 'La licencia de helicóptero, en Alemania',
+    heliUsa: 'La licencia de helicóptero, en Texas', heliUsaReal: 'La licencia de helicóptero en EE. UU., con 60 horas', visaUsa: 'La visa de Estados Unidos',
   };
 
   /* ── TUS CIFRAS, hacia fuera (ver EDITABLES, arriba) ──

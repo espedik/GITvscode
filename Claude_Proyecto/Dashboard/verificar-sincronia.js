@@ -3551,6 +3551,47 @@ function promptsDeLoTocado() {
   ok.push('Las ventanas de los ' + ids.length + ' medidores: cada una con su contenido en medidores.js, fondo opaco y sin cifras a mano');
 })();
 
+/* ── 60. Próximos viajes ─────────────────────────────────────────────────────────────────────────────────────────────
+   Adán, 23-nov-2026: "arriba pon otra sección de próximos viajes… igual ahí quiero información completa". Cada viaje de
+   viajes.js trae lo que falta, lo que cuesta, sus días, sus fuentes y sus fotos; ningún paso cae en domingo (es de Didi) ni
+   nombra alcohol; los pasos de una meta que son de un viaje existen; y lo del vuelo y del hotel no llega al repositorio
+   público. La foto de respaldo de los lanzamientos de SpaceX está completa. */
+(function () {
+  const malos = [], h = leer('Dashboard/dashboard.html'), src = leer('Dashboard/viajes.js'), lz = leer('Dashboard/lanzamientos.js');
+  ['<link rel="stylesheet" href="viajes.css">', '<script src="viajes.js"></script>', '<script src="lanzamientos.js"></script>'].forEach(t => { if (h.indexOf(t) < 0) malos.push('dashboard.html ya no carga ' + t); });
+  if (h.indexOf("VIAJES.ventana(id.slice(6))") < 0 || h.indexOf('VIAJES.seccion()') < 0) malos.push('Mis Metas o kpiDetalle ya no usan viajes.js');
+  let V = null, L = null;
+  const w = {};
+  try { new Function('window', 'money', 'rawGet', 'rawSet', 'mpHoy', 'esc', 'privado', src)(w, n => '$' + n, () => ({}), () => {}, () => new Date(), s => s, false); V = w.VIAJES; } catch (e) { malos.push('viajes.js no se puede leer: ' + e.message); }
+  try { new Function('window', 'localStorage', lz)(w, { getItem: () => null, setItem: () => {} }); L = w.LANZAMIENTOS; } catch (e) { malos.push('lanzamientos.js no se puede leer: ' + e.message); }
+  const dia = k => { const p = String(k).split('-').map(Number), d = new Date(p[0], p[1] - 1, p[2]); return /^\d{4}-\d{2}-\d{2}$/.test(k) && d.getDate() === p[2] ? d : null; };
+  const ids = {}, alcohol = /\b(cerveza|tequila|mezcal|vino|cantina|antro|alcohol|coctel|bar(es)?)\b/i, v1 = (x, op) => typeof x === 'function' ? x(op) : x;
+  (V && V.BASE || []).forEach(function (v) {
+    const n = 'el viaje ' + v.id + ': ';
+    if (ids[v.id]) malos.push(n + 'repetido'); ids[v.id] = v;
+    if (v.ini && (!dia(v.ini) || !dia(v.fin) || v.fin < v.ini)) malos.push(n + 'fechas que no cuadran (' + v.ini + ' a ' + v.fin + ')');
+    const ops = v.elige ? v.elige.L.map(o => o.id) : [''];
+    if (v.elige) v.elige.L.forEach(o => { if (o.ini && (!dia(o.ini) || !dia(o.fin) || o.fin < o.ini)) malos.push(n + 'la opción ' + o.id + ' tiene mal sus fechas'); });
+    if (v.elige && ops.indexOf(v.elige.rec) < 0) malos.push(n + 'recomienda una opción que no existe');
+    const vistos = {};
+    v.pasos.forEach(p => { if (vistos[p.id]) malos.push(n + 'el paso ' + p.id + ' está dos veces'); vistos[p.id] = 1; if (p.f) { const d = dia(p.f); if (!d) malos.push(n + 'fecha inválida en ' + p.id); else if (d.getDay() === 0) malos.push(n + p.id + ' cae en domingo, que es de Didi'); } else if (!p.antes && !p.fijo) malos.push(n + p.id + ' no tiene cuándo'); });
+    (v.chips || []).forEach(c => { if (!vistos[c.paso]) malos.push(n + 'la etiqueta «' + c.t + '» apunta a un paso que no existe'); });
+    if (!v.gasto.length || !(v.fuentes || []).length || !v.visto) malos.push(n + 'le falta el gasto, las fuentes o cuándo se vieron los precios');
+    (v.fuentes || []).forEach(f => { if (!/^https:\/\//.test(f[1])) malos.push(n + 'fuente sin enlace seguro: ' + f[0]); });
+    ops.forEach(op => { [v.foto].concat(v.dias(op).map(d => d.foto)).forEach(f => { if (!require('fs').existsSync(require('path').join(__dirname, f))) malos.push(n + 'falta la foto ' + f); }); });
+    const txt = JSON.stringify([v.q, v.bloques, ops.map(op => [v.dias(op), v.pasos.map(p => v1(p.t, op)), v.gasto.map(g => v1(g.d, op))]), v.elige]);
+    if (alcohol.test(txt)) malos.push(n + 'nombra alcohol: ' + txt.match(alcohol)[0]);
+  });
+  if (V && !(V.BASE || []).length) malos.push('viajes.js se quedó sin viajes');
+  const MP = evaluar(literal(h, 'const META_PLAN=', '{')) || {};
+  Object.keys(MP).forEach(id => (MP[id].pasos || []).forEach(p => { if (p.viaje && !(ids[p.viaje[0]] && ids[p.viaje[0]].pasos.some(x => x.id === p.viaje[1]))) malos.push('META_PLAN.' + id + ' apunta al paso ' + p.viaje.join('/') + ', que no existe en viajes.js'); }));
+  const EX = require('./habitos-exportar.js');
+  ['viajes_privado_v1', 'dash-clima-v1', 'dash-lanzamientos-v1'].forEach(k => { if (!EX.NO_VIAJAN.has(k)) malos.push(k + ' llegaría al repositorio público (NO_VIAJAN, habitos-exportar.js)'); });
+  if (L) { const r = L.FOTO.ritmo; if (!L.FOTO.vienen.length || r.ca + r.fl + r.tx !== r.n) malos.push('la foto de respaldo de los lanzamientos no suma ' + r.n); }
+  if (malos.length) { problemas.push('Próximos viajes:\n     ' + malos.join('\n     ')); return; }
+  ok.push('Próximos viajes: ' + V.BASE.length + ' viajes con lo que falta, su gasto, sus fuentes y sus fotos; nada en domingo, y el vuelo y el hotel no salen del navegador');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

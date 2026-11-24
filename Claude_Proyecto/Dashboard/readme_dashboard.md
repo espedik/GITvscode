@@ -28,6 +28,9 @@ en una página.
 | `noticias-actualizar.js` · `noticias-inversion.js` | Las noticias de *Qué invertir hoy*: el script que lee Google Noticias —lo corren la tarea de GitHub cada 4 horas (`.github/workflows/noticias-inversion.yml`, rama `datos-noticias`) y el hook de pre-commit de la PC— y el archivo que deja el hook (`window.NOTICIAS_INVERSION`), que el panel carga con `<script src>` |
 | `precios-actualizar.js` | Los precios de *Qué invertir hoy* con su historia: lee Yahoo Finanzas y escribe `precios.json`. Lo corre la tarea de GitHub cada media hora con la bolsa abierta (`.github/workflows/precios-acciones.yml`) y lo publica en la rama `datos-precios`, de donde lo lee el panel |
 | `medidores.js` · `medidores.css` | Las ventanas de los seis medidores del Plan Maestro: contenido, gráficas y estilos (ver *Las ventanas de los medidores*) |
+| `viajes.js` · `viajes.css` | Próximos viajes, arriba de Mis Metas, y la ventana de cada uno; las fichas compactas de corto y mediano plazo (ver *Próximos viajes*) |
+| `lanzamientos.js` | Los próximos lanzamientos de SpaceX y tu probabilidad de ver uno, en vivo (Launch Library), para su meta |
+| `fotos-viajes/` | Las fotos de los viajes, de SpaceX y del helicóptero, con su crédito junto a cada uso |
 | `ficha.js` · `ficha.css` | El panel de ficha de producto (`pfAbrirId`, `pfPorNombre`, `.lc-info`) que usan la Lista de Compras y la rutina |
 | `examen-genai.js` · `examen-genai-data.js` (A, 79 preguntas) · `examen-genai-data-b.js` (B, 77) · `examen-genai-glosario.js` (64 términos) | El simulacro ISTQB CT-GenAI: motor, los dos bancos y el glosario de las preguntas |
 | `syllabus/` (**fuera de git**) | La copia local del syllabus CT-GenAI LATAM: el PDF y `ct-genai-syllabus.js`, el texto de cada sección con su página. Su aviso de derechos solo permite reproducirlo en parte y para uso privado, así que no va al repositorio público (`.gitignore`) |
@@ -1515,18 +1518,24 @@ de las 13:00, la revisión del sábado 14:40; nunca el domingo, que es de Didi, 
 de la noche, que es del sueño), `pasos` con fecha, `vas`
 (cómo sabes que vas bien) y `si` (qué haces si te atrasas). Las fechas no se copian: `{tarea}` toma
 fecha y texto de `PHASES` (y se palomea en la MISMA casilla del Plan Maestro, `coach_checks_v1`,
-con la semana de hoy), `{clave}` lee el maestro (`maestriaInicio`, `hyroxFecha`), `{fase}` el
-inicio o el cierre de una fase. Los demás pasos se guardan en `metas_plan_v1`. `metaPlan(id)` lo
+con la semana de hoy), `{clave}` lee el maestro (`maestriaInicio`), `{fase}` el
+inicio o el cierre de una fase y `{viaje:[id, paso]}` es la MISMA casilla de Próximos viajes: la visa se palomea una vez y vale
+para SpaceX y para Puerto Rico. Los demás pasos se guardan en `metas_plan_v1`. `metaPlan(id)` lo
 resuelve todo: el estado de cada paso (`mpFalta`: hoy, esta semana, más adelante o atrasado) y lo
-siguiente. Las metas de la Fase 4 (empresa, depa, Tailandia, Hong Kong, SpaceX, Cupra) van
+siguiente. Las metas de la Fase 4 (empresa, depa, Tailandia, Hong Kong, Cupra) van
 **en pausa** con su fecha de arranque (`pausa`, `desde`): lo que no cabe en la semana se pausa con
 fecha, no se abandona. Las dos logradas (11K y Básico 5) no llevan plan.
 
 **Las logradas no ocupan ficha grande** (Adán: *"las metas ya logradas, haz los iconos mucho más pequeños
 y los demás más grandes"*): `metaHechaHtml()` las saca del deck a una franja al pie de su columna
 (`.mg-hechas`), una ficha chica cada una (`.mg-hecha`: miniatura de 26 px, título y ✓ pasos, borde
-verde) que abre el mismo panel. El alto que dejan se lo reparten las que faltan: en 1600×1000 las
-fichas de corto y mediano plazo miden 188 px y la franja 34.
+verde) que abre el mismo panel.
+
+**Las de corto y mediano plazo van compactas** (`.mg-deck-mini`; Adán: *"las de corto y mediano, hazlas más pequeñas de
+diseño y arriba pon otra sección de próximos viajes"*): la foto a la izquierda con la cuenta, el estado y el título, y a su
+lado las marcas, el resultado y lo que sigue en dos renglones cada uno; el dinero de la maestría comparte el renglón de los
+pasos. A 2048×1040 miden 126 px de alto, y las de los viajes, 248. Con menos de 980 px de alto la columna `.con-viajes`
+desplaza entera y se desvanece abajo.
 
 **La ficha** dice, bajo la foto, la fecha de la meta con el resultado y lo que sigue (`.mg-pl`,
 un renglón cada uno; el texto completo en el `title`), y al pie los pasos y el día de lo siguiente,
@@ -1568,9 +1577,10 @@ técnica o las reglas, los errores comunes (`⚠️`), lo que toca a Adán (`Tu 
 importan en `cifras` y, al cierre, *✅ Ya lo dominas cuando…* con criterios comprobables y *📚 Qué
 leer* donde aplica. 42 temas llevan foto: las de Wikimedia Commons (verificadas por su página de
 archivo) y las locales de `fotos-aprende/`, `../Aeroresinas/fotos/` y `../Heliescala/fotos/`. Las
-dos logradas siguen con un solo paso: uno más las sacaría de *logrado*. Los datos que viven en el
+dos logradas siguen con un solo paso: uno más las sacaría de *logrado*. Un tema con `fotoLado` (los de SpaceX y el
+helicóptero) lleva la foto a la derecha y *En detalle* a su lado, como Habilidades Base. Los datos que viven en el
 maestro van con marcador (`{{colegiaturaEur}}`, `{{sperrkontoEur}}`, `{{werkstudentEur}}`,
-`{{hyroxFecha}}`…); los de Alemania (seguro médico a partir de los 30, 140/280 días de trabajo, los 18
+`{{heliCosto}}`…); los de Alemania (seguro médico a partir de los 30, 140/280 días de trabajo, los 18
 meses para buscar empleo) se comprobaron en fuentes universitarias y oficiales en octubre de 2026.
 
 ### El panel de una meta: la ruta, el ritmo y el avance real
@@ -1591,32 +1601,37 @@ de 1 px, texto en tinta y cada valor también fuera del tooltip):
 | Meta | Qué enseña | De dónde |
 |---|---|---|
 | ISTQB CT-GenAI | Cada simulacro en columnas contra el corte y tu meta, y las preguntas de Hoy aprendes de 14 días, una celda por día | `examen_genai_v1.intentos`, `habSimulacro()`, `istqbRespuestas()` |
-| Hyrox | Las sesiones de gym de las últimas 8 semanas contra los días de tu rutina | `gymSesiones()` y la rutina de Ejercicio |
+| SpaceX | Tu probabilidad de ver al menos uno en 4 y 7 días desde California, Florida y Texas, con el ritmo de los últimos 100, y los próximos con su fecha y qué tan firme es | `LANZAMIENTOS` (`lanzamientos.js`) |
 | Maestría | El GBM que proyecta el plan al cerrar cada mes hasta irte contra lo que pide cada corte —el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la salida completa—, con lo que falta o sobra en cada uno —los mismos cortes y cifras que el panel de la Maestría—; tu dinero hoy contra lo que el plan pide al cerrar el mes, con la definición de la banda, y el alemán (la lección y el vocabulario del nivel) | `CIFRAS.PROYECCION`, `cortesSalidaDash()`, `ctCifrasHoy()` |
-| Torneo de ajedrez | Lo que queda de tu sistema antes de la fecha: los sábados de partidas y los días de puzzles | el plan |
+| Helicóptero | Lo que cuesta la licencia en Texas, en Estados Unidos con 60 horas y en Alemania; lo que pide cada mes volando, qué parte es de lo que la proyección junta ahí y cuántos meses le mueve al millón | `{{heliCosto}}`, `{{heliUsa}}`, `{{heliUsaReal}}`, `CIFRAS.PROYECCION` |
 | Las de largo plazo | Tu patrimonio líquido contra la trayectoria del millón hasta la fecha de la meta, con hoy y la meta marcados: es lo que las habilita | `CIFRAS.PROYECCION.meses`, `patrimonioLiquido()` |
 
 Sin datos (ni simulacros ni sesiones), su recuadro dice qué va a aparecer ahí. Medido a 2048×1040, en claro y
-en oscuro, con el Hyrox, la maestría, el CT-GenAI, el ajedrez y Tailandia: sin errores y sin desborde.
+en oscuro, con SpaceX, el helicóptero, la maestría, el CT-GenAI y Tailandia: sin errores y sin desborde.
 
-**El Hyrox** es `{{hyroxSede}}` el `{{hyroxFecha}}` (Guadalajara, 19–21 mar 2027, en hyrox.com):
-el de CDMX (29 oct–1 nov 2026) quedó a tres semanas de la rutina nueva, y Monterrey (16–18 abr
-2027) cae en la Fase 2, que no lleva viajes. La fecha vive en el maestro; la leen el plan, la
-lista de salida y Coach.
+**SpaceX y el helicóptero** (Adán, 23-nov-2026: *"quita lo de ajedrez y el hyrox, pon en mediana ir a ver un lanzamiento de
+SpaceX y otra de ser piloto privado de helicópteros… todas las cosas que me ayuden para lograrlo"*). SpaceX va en marzo de 2027,
+montado en el viaje a Puerto Rico: los vuelos baratos hacen escala en Orlando y la visa es la misma; con fecha firme o no se
+alarga. De los últimos 100 lanzamientos, 58 salieron de California y 38 de Florida, así que la ficha lo dice y la lista viva
+lo pone al día (`LANZAMIENTOS.pedir`, cada 8 horas como mucho; sin internet, lo guardado o la foto del 24-nov-2026). La licencia
+va en junio de 2030, en Alemania: con visa de turista no se puede volar para licencia en Estados Unidos (9 FAM 402.5) y pasar
+esa licencia a la europea pide 100 horas. Los mínimos salen del reglamento de la AFAC (artículos 20, 38, 58 y 59), de 14 CFR
+61.103 y 61.109 y de FCL.210.H. Con 45 horas cuesta 91 % de lo que la proyección junta entre marzo de 2029 y junio de 2030 y
+atrasa el millón 12 meses: lo enseña su panel y **no** está en la PROYECCION, porque se decide en 2029.
 
 **La franja de instrumentos** (`#metasBay`) trae el avance del conjunto **en pasos**, no
-promediando porcentajes (promediar daba el mismo peso a una meta de 1 paso que al Hyrox de 15),
+promediando porcentajes (promediar daba el mismo peso a una meta de 1 paso que a una de 11),
 **la línea del tiempo de las metas** (`mgLineaHtml`) y los cuatro conteos; la regla de edad va dentro,
 separada por filete, y abre *Tu año* (ver abajo). La línea pone cada meta que falta en su fecha, sobre las fases del Plan Maestro, de hoy al
 cierre del plan: los próximos 15 meses ocupan el 58 % del ancho y de ahí al cierre el resto, con el corte
 marcado. El punto lleva el estado (ámbar en marcha, gris sin empezar, hueco en pausa) y un anillo rojo si tiene
 pasos atrasados; las que caen casi juntas van en un grupo —el cierre del plan junta Hong Kong, la empresa, el depa
-y el Cupra— y cada nombre abre su panel. Las etiquetas van en tres carriles para no encimarse; en el teléfono,
-solo el icono. **Hoy** es una línea cian que cruza las metas, el eje y las fases, con el día escrito arriba en una
+y el Cupra— y cada nombre abre su panel. Los viajes con fecha van en la misma línea (`VIAJES.enLinea`). Las etiquetas van en tres
+carriles para no encimarse y ninguna raya cruza la de otra; en el teléfono, solo el icono. **Hoy** es una línea cian que cruza las metas, el eje y las fases, con el día escrito arriba en una
 etiqueta sólida (*HOY · 25 OCT*), y **las fechas del pie** van a 10.5 px en el gris de texto —cada tres meses hasta el
 corte y cada año desde él, el del corte incluido—; las fases, a 9 px (Adán, 25-oct-2026: *"no se ven claramente las
-fechas ni la fecha del día de hoy"*). **Dos columnas en las dos listas**: seis fichas en tres filas cada una, las logradas al final de
-corto plazo. Medido a 2048×1040: la franja mide 224 px (Adán, 21-oct-2026: *"hazlo 1/3 más grande a lo
+fechas ni la fecha del día de hoy"*). **Dos columnas en las dos listas**: cuatro fichas compactas en corto y mediano plazo, con las logradas al final, y cinco en
+largo plazo. Medido a 2048×1040: la franja mide 224 px (Adán, 21-oct-2026: *"hazlo 1/3 más grande a lo
 alto"*), con la línea del tiempo a 138 px y sus carriles a 28, y ninguna lista desplaza; ni las 7 etiquetas, ni las
 fechas del pie, ni la de hoy chocan a 2560, 2048, 1600, 1366, 1024 ni 390 (entre fechas del pie, 77 px a 1600 y 7 a 390).
 
@@ -1642,6 +1657,34 @@ a 1366 y en el teléfono desplaza por dentro, y en el teléfono se oculta la lí
 paso, con la cifra (`$2,500 ahorrado`): `METAS_MONEYBAR.maestria.short`; `.lbl` va en el `title`.
 
 **El panel de la Maestría** (`kpiDetalle`, `maestria`) enseña la pausa solo mientras siga vigente (`goal.pausadaHasta`); si no, el ritmo que pide la salida —lo que falta entre los meses que quedan hasta `goal.date`—, lo que el plan junta al mes con depa y en casa, el ingreso nuevo que cierra el hueco (`extraSalida`) y el día de decidir con lo que pide la salida completa (`mayoParaSalida`, `salidaVeredicto`); la proyección y la lista de la salida están en Coach.
+
+### Próximos viajes
+
+Arriba de corto y mediano plazo (`VIAJES.seccion()`, en `viajes.js`): una ficha por viaje (`.vj-card`) con su foto, la cuenta de
+días, las fechas, lo que ya está y lo que falta (`.vj-chip`), lo siguiente con su día, cuántos pasos van y lo que cuesta. Tocarla
+abre su ventana en el panel de los medidores (`abrirKpi('viaje-…')` → `kpiDetalle` → `VIAJES.ventana`), con sus piezas `.kv`:
+
+- **arriba**, la cuenta sobre la foto y cuatro datos (cómo vas, cómo vuelves, el clima, lo que cuesta); debajo, lo siguiente con
+  sus botones —el de Kolors lleva la fecha elegida en el enlace—;
+- **lo que se elige** (`elige`): en Guadalajara, el regreso del domingo 6 o del lunes 7, que cambia el gasto, las noches y los días;
+  en Puerto Rico, las fechas, con la luna de la bahía, los días de vacaciones de cada una y *Otras fechas*;
+- **lo que falta**, con fecha; nunca en domingo. Los pasos sin fecha fija cuentan hacia atrás desde la salida (`antes`);
+- **cuánto cuesta**: lo estimado y, a la derecha, lo que pagaste, que lo sustituye en el total; debajo, qué parte es de tu gasto
+  personal del mes (`{{gastoPersonalDepa}}`);
+- **día por día** con foto; los bloques de cómo llegar, moverse y qué hacer si algo falla —el de Guadalajara avisa de los pasos de
+  tus metas que caen esos días (`caen`), y el de Puerto Rico dice qué parte es de lo que falta para la salida—;
+- **tu vuelo y tu hotel**, y de dónde sale cada dato, con cuándo se vio.
+
+**Kolors** se consultó en su buscador: sale uno al día, 23:30, de López Mateos y Tenochtitlán; llega a Encuentro Fortuna 6:30, a
+Reforma – Insurgentes 7:00 y a Oceanía 8:00; $599 el domingo 6 y $549 el lunes 7; el sábado 5 no hay.
+
+**Se guarda** en `viajes_v1` (pasos, elecciones, lo pagado y los viajes propios), que viaja al iPad. Lo del vuelo y del hotel va en
+`viajes_privado_v1`, y las cachés en `dash-clima-v1` y `dash-lanzamientos-v1`: las tres están en `NO_VIAJAN` porque el repositorio es
+público. El clima de los próximos 16 días sale de Open-Meteo (cada 3 horas como mucho); antes, el promedio del mes.
+
+**Agregar viaje** (`.vj-mas`) arma uno propio con su destino y sus fechas, sin tocar el código: su lista, su gasto, su cuenta y su
+pronóstico. Se edita y se borra desde su ventana. Un viaje que ya pasó baja a una línea al pie (`.vj-ya`). El control 60 vigila que
+cada uno traiga lo suyo. Medido a 2560, 2048×1040, 1600, 1180 y 390, en claro y en oscuro: nada se sale y, a 2048×1040, nada desplaza.
 
 ### El simulacro del ISTQB CT-GenAI
 

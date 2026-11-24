@@ -239,7 +239,7 @@ const PROPIOS = [CLAVE, CLAVE_AUD, CLAVE_SINC, CLAVE_FIN, CLAVE_RES, CLAVE_AJ]; 
 const NO_VIAJAN = new Set(['coach-theme', 'theme', 'sidebar-collapsed', 'aero-idioma', 'aero-tema', 'heli-idioma',
   'heli-tema', 'btc_cur', 'dash-agenda-oculta', 'dash-istqb-lado', 'dash-rail-abierto', 'dash-settings', 'dash-privado',
   'posts-empresa', 'cifras_guardado', 'dash-noticias-v1', 'dash-precios-v1', 'dash-aleman-resumen', 'fin_pc_aplicada',
-  'datos_pc_aplicado', 'datos_pc_pedido']);
+  'datos_pc_aplicado', 'datos_pc_pedido', 'viajes_privado_v1', 'dash-clima-v1', 'dash-lanzamientos-v1']);
 function clavesDelProyecto() {
   const raiz = path.join(__dirname, '..'), out = new Set(), arch = [];
   (function rec(d) {

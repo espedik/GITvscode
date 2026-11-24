@@ -24,6 +24,7 @@
      Plan Maestro vienen de aquí, no escritos a mano. El mapa está en DATOS-MAESTROS.md -->
 <link rel="stylesheet" href="ficha.css">
 <link rel="stylesheet" href="medidores.css">
+<link rel="stylesheet" href="viajes.css">
 <script src="ajustes-sync.js" onerror="this.remove()"></script>
 <script src="datos-maestros.js"></script>
 <!-- Las noticias de Qué invertir hoy, de Google Noticias: las escribe el hook de pre-commit (noticias-actualizar.js). -->
@@ -47,6 +48,9 @@
 <script src="version.js" onerror="this.remove()"></script>
 <script src="habitos.js"></script>
 <script src="medidores.js"></script>
+<!-- Próximos viajes y los lanzamientos de SpaceX, en Mis Metas. -->
+<script src="viajes.js"></script>
+<script src="lanzamientos.js"></script>
 <script src="examen-genai-data.js"></script>
 <script src="examen-genai-data-b.js"></script>
 <script src="examen-genai-glosario.js"></script>
@@ -303,7 +307,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    `.img-goal-*` que había aquí:
 
    · EL PORCENTAJE DEJA DE SER EL INDICADOR. Cada ficha enseña una MARCA POR PASO REAL del
-     checklist de esa meta —15 en el Hyrox, 8 en el BYD— y debajo "4 / 9 pasos". Un 33% no
+     checklist de esa meta y debajo "4 / 9 pasos". Un 33% no
      dice si faltan dos pasos o diez; el dato ya vivía en META_DETALLE y no se estaba usando.
      Es el mismo hallazgo que justificó el rediseño de Habilidades Base una semana antes.
    · APARECE EL ESTADO, que era lo que de verdad no se veía: LOGRADA / EN MARCHA / SIN
@@ -6741,7 +6745,7 @@ function fraseDelDia(i){
 //    lograr mis metas pero con exigencia") — ya no son solo tough-love filosófico: cada una
 //    nombra la excusa concreta y exige la acción, en segunda persona directa. Rotan una por
 //    día (no por render, para que no cambien a media pantalla). Todas atadas a hechos reales
-//    de su plan (gym, Hyrox, ajedrez, deudas, GBM, Didi, negocio de su papá, background de
+//    de su plan (gym, SpaceX, helicóptero, deudas, GBM, Didi, negocio de su papá, background de
 //    testing/mecatrónica) — nada genérico de calendario tipo "cree en ti".
 //    Ninguna escribe un saldo, una fecha ni una deuda a mano: lo que cambia va con {{marcadores}},
 //    y la que depende de una deuda viva lleva `si` (ver FRASE_SI): solo entra al sorteo del día
@@ -6769,7 +6773,7 @@ const FRASES_MOTIVACION=[
   'Deja de buscarte en el espejo todos los días. Lo único que necesitas hoy es entrenar, otra vez.',
   'Si esta semana levantaste lo mismo que la pasada, no avanzaste. Exígete un poco más de peso, siempre.',
   'Ocho horas sentado en ALTEN y otras dos al volante: si el gym de hoy se cae, la espalda es la que te cobra la factura a los 40. No la debas.',
-  'El Hyrox no perdona entrenamientos saltados. El cuerpo que necesitas para esa carrera se gana hoy o no se gana.',
+  'El cuerpo no perdona entrenamientos saltados. El que necesitas para pelear en Tailandia se gana hoy o no se gana.',
   'Un día bien comido no compensa nada. Exígete semanas completas, sin una sola excepción.',
   'Cada vaso de agua que no tomas, cada serie que recortas, no se nota hoy — se nota en un año, y para entonces ya es tarde para reclamarte.',
   'Quítate la idea de que dormir menos es aguantar más. Sin tus horas completas, todo lo demás que haces rinde menos.',
@@ -6829,13 +6833,13 @@ const FRASES_MOTIVACION=[
   'Saltarte los 10 minutos de meditación "porque ya es tarde" es exactamente lo que hace que el resto del día se empiece a caer. No te la saltes.',
   'Si no duermes bien hoy, mañana no vas a tener la energía para exigirte la rutina completa. Duerme como si mañana dependiera de eso, porque depende.',
   'Una mala noche se perdona. Que se repita toda la semana no — corta el patrón antes de que te cueste el plan completo.',
-  // Metas específicas (Hyrox, ajedrez, viajes, depa)
-  'El día de la carrera del Hyrox solo cobra lo que ya entrenaste. Si te saltas hoy, ya perdiste algo que ese día no vas a poder recuperar.',
-  'Antes de jugar el torneo de ajedrez que quieres, gánale hoy la partida al aburrimiento de tu rutina. Esa la juegas todos los días.',
+  // Metas específicas (SpaceX, helicóptero, viajes, depa)
+  'El día de tu examen de vuelo solo cobra lo que ya estudiaste. Los quince minutos de hoy son los que ese día no vas a poder recuperar.',
+  'Un cohete se prueba mil veces en tierra antes de despegar una. Tu rutina de hoy es una de esas pruebas.',
   'El Cupra y el depa tienen su fase, y ninguno se adelanta a la maestría. No negocies el orden, ni una sola vez.',
   'Nadie compite afuera del país sin antes sudar un martes cualquiera aquí. Exígete ese kilómetro hoy, no cuando "sí cuente".',
   'El depa no se compra con ganas ni con un buen mes. Se compra con años de decisiones aburridas que no vas a dejar de tomar.',
-  'Pelear en Tailandia o correr un Hyrox afuera no se acerca solo porque lo desees. Se acerca con el entrenamiento de hoy — sin ese, sigue igual de lejos.',
+  'Pelear en Tailandia o pilotear un helicóptero no se acerca solo porque lo desees. Se acerca con lo que hagas hoy — sin eso, sigue igual de lejos.',
   'Un viaje grande se paga negándote hoy los gastos que no importan. Si no puedes con eso, tampoco vas a poder con el viaje.',
   // Cierre / visión largo plazo
   'Tu yo de dentro de 4 años no va a agradecerte las excusas de hoy. Decide algo que sí valga la pena agradecer.',
@@ -13299,75 +13303,6 @@ window.addEventListener('resize',syncSlidesTop);
 // acorde al tema del checklist... y esto para todos". Antes 'empresa' usaba un prefijo de texto
 // "FASE N · Etiqueta — " a mano dentro de cada string; ahora esa etiqueta vive en `t` como el resto.
 const META_DETALLE={
-  ajedrez:{titulo:"Torneo de ajedrez",frase:"Un torneo no lo termina el que más sabe, sino el que no regala piezas. Y eso se entrena en 15 minutos al día.",pasos:[
-      {t:"Cómo funciona un torneo",d:"Casi todos los torneos abiertos usan el <b>sistema suizo</b>: juegas todas las rondas, nadie te elimina y en cada ronda te emparejan con alguien que lleva tus mismos puntos. Perder la primera no te saca: te pone frente a gente de tu nivel.",foto:"https://commons.wikimedia.org/wiki/Special:FilePath/Sergey_Kudrin_at_the_World_Open_chess_tournament.jpg?width=1280",pie:"Una ronda del World Open, uno de los abiertos más grandes de Estados Unidos: cientos de tableros, todos con su reloj.",cifras:[["1","punto por ganar"],["½","por tablas"],["0","por perder, y sigues jugando"]],list:[
-        "Al final se ordena por puntos. Los empates se rompen con lo que diga la convocatoria; el más común es el <b>Buchholz</b>: la suma de los puntos de tus rivales.",
-        "Los ritmos: <b>clásico</b> (60 minutos o más por jugador), <b>rápido</b> (más de 10 y menos de 60) y <b>blitz</b> (10 o menos). Para un primer torneo, el rápido con incremento —un 15+10, por ejemplo— es ideal: se juega en un día y deja tiempo para pensar.",
-        "El <b>incremento</b> (+10) son segundos que se suman a tu reloj en cada jugada. Con él nunca te quedas con cero de golpe si juegas rápido al final.",
-        "Tu caso: la meta no es ganar el torneo, es <b>jugar todas las rondas sin abandonar</b>. En un suizo eso siempre está en tus manos: nadie te puede sacar."]},
-      {t:"Las reglas que te pueden costar una partida",d:"En un torneo hay árbitro y reglas de la FIDE. Ninguna es difícil, pero si no las sabes pierdes partidas que ibas ganando.",foto:"https://commons.wikimedia.org/wiki/Special:FilePath/Chess_clock.jpg?width=1280",pie:"Un reloj de ajedrez analógico: aprietas tu botón con la misma mano con la que moviste y empieza a correr el del rival.",list:[
-        "<b>Pieza tocada, pieza movida.</b> Si tocas a propósito una pieza tuya, la tienes que mover; si tocas una del rival, capturarla si se puede. Para acomodarla sin moverla, di «compongo» antes de tocarla.",
-        "El reloj se aprieta <b>con la misma mano</b> con la que moviste.",
-        "<b>El celular:</b> en la mayoría de los torneos, si suena o lo traes encima en la sala, pierdes la partida. Apagado y en la mochila, o entregado.",
-        "Las tablas se ofrecen <b>después de mover y antes de apretar el reloj</b>. Ofrecerlas una y otra vez molesta al rival y el árbitro lo puede sancionar.",
-        "Anotar las jugadas es obligatorio en partidas clásicas; en rápidas y blitz, normalmente no. Se anota <b>después</b> de mover, nunca antes.",
-        "⚠️ Movimiento ilegal: el primero le da tiempo extra a tu rival; el segundo te cuesta la partida. Repasa el enroque y la captura al paso antes del torneo.",
-        "Si dudas de algo, detén el reloj y llama al árbitro. Es su trabajo y no es de mala educación."],href:"https://handbook.fide.com/chapter/E012023",label:"Leyes del ajedrez · FIDE"},
-      {t:"Lo que sí sube tu nivel: la táctica",d:"A tu nivel, casi todas las partidas se deciden por una pieza que se quedó sin defender o un golpe táctico que nadie vio, no por la estrategia. Por eso los puzzles son el entrenamiento que más rinde.",cifras:[["15-20 min","de puzzles al día"],["5","temas que deciden la mayoría de las partidas"]],list:[
-        "<b>Mejor 15 bien pensados que 50 a ojo.</b> Calcula hasta el final antes de mover; si fallas, entiende por qué antes de pasar al siguiente.",
-        "Los cinco temas que más se repiten: <b>horquilla</b> (atacar dos piezas a la vez), <b>clavada</b>, <b>ataque a la descubierta</b>, <b>pieza sobrecargada</b> (defiende dos cosas y no puede con ambas) y <b>mate en la última fila</b>.",
-        "Lichess te deja entrenar por tema: cuando un tema te cueste, haz 20 seguidos de ese.",
-        "Una vez por semana, <b>Puzzle Storm</b>: tres minutos contra el reloj. Ver rápido también se entrena.",
-        "Tu caso: el bloque ya está en tu descanso de ALTEN, después de comprar la comida. Es justo el rato que hoy se lleva el celular. De noche no: la última hora es para dormir."],href:"https://lichess.org/training/themes",label:"Puzzles por tema · Lichess"},
-      {t:"Antes de cada jugada: la rutina anti-errores",d:"El hábito que más puntos le da a un jugador de club no es saber más aperturas: es revisar antes de soltar la pieza. Diez segundos que salvan partidas.",list:[
-        "<b>¿Qué amenaza su última jugada?</b> Pregúntatelo siempre, antes de pensar en tu plan. La mitad de los errores salen de no hacerse esta pregunta.",
-        "<b>Jaques, capturas y amenazas:</b> primero las tuyas (¿hay algo forzado?), luego las suyas después de tu jugada.",
-        "<b>¿Dejo alguna pieza sin defender?</b> Las piezas sueltas son las que se pierden.",
-        "Cuando veas una buena jugada, busca una mejor. Es el consejo más famoso del ajedrez, atribuido a Emanuel Lasker, campeón del mundo 27 años.",
-        "⚠️ El error más común: jugar rápido cuando ya vas ganando. Ahí es donde más partidas se regalan: la ventaja se cuida, no se celebra."]},
-      {t:"Un repertorio de aperturas simple",d:"No memorices líneas: juega con principios y un repertorio pequeño que entiendas. Repetir siempre lo mismo hace que conozcas las posiciones mejor que tu rival.",list:[
-        "<b>Los principios:</b> controla el centro con peones, saca caballos y alfiles, enroca pronto, no muevas la misma pieza dos veces sin razón y no saques la dama temprano.",
-        "<b>Con blancas:</b> 1.e4 y la Italiana (1.e4 e5 2.Cf3 Cc6 3.Ac4). Planes claros y posiciones que se entienden.",
-        "<b>Con negras:</b> contra 1.e4, 1...e5; contra 1.d4, 1...d5. Simétrico, sano y fácil de jugar.",
-        "Diez partidas tuyas con la misma apertura, revisadas, enseñan más que un libro de aperturas entero.",
-        "⚠️ No caigas en el mate pastor: si el rival saca la dama y el alfil hacia f7 en las primeras jugadas, defiende f7 antes de seguir con tu plan."]},
-      {t:"Los finales que salvan medio punto",d:"Cuando quedan pocas piezas, el que sabe la técnica gana; el que no, empata o pierde posiciones ganadas. Son pocos finales y se aprenden una vez para siempre.",list:[
-        "<b>Mate con dama y con torre</b> contra el rey solo: tienes que darlo sin pensar y sin ahogar.",
-        "<b>Rey y peón contra rey:</b> la <b>oposición</b> (los reyes frente a frente, con una casilla en medio) decide si el peón corona o es tablas.",
-        "<b>Activa tu rey</b> en el final: deja de ser la pieza que se esconde y se vuelve de las más fuertes del tablero.",
-        "<b>Torres detrás de los peones pasados</b>, los tuyos y los del rival.",
-        "⚠️ Ahogado: con mucha ventaja, revisa en cada jugada que el rey rival tenga a dónde moverse. Un ahogado convierte una partida ganada en tablas."],href:"https://lichess.org/practice",label:"Prácticas de mates y finales · Lichess"},
-      {t:"Analiza tus partidas: ahí se aprende",d:"Cada derrota trae una lección. Si no la sacas, la vas a repetir en el torneo.",list:[
-        "Primero <b>tú solo, sin computadora</b>: ¿dónde cambió la partida? ¿qué estabas pensando en ese momento?",
-        "Después, el análisis gratis de Lichess: busca la <b>primera</b> jugada marcada como error grave (??), no todas.",
-        "Lleva una lista del tipo de error: pieza colgada, táctica no vista, apuro de tiempo. Lo que más se repita es lo que entrenas la semana siguiente.",
-        "Tu caso: revísalas como revisas un sistema en el trabajo. Encuentra el punto exacto donde se rompió el plan; no te quedes en «perdí»."]},
-      {t:"Dónde jugar en CDMX",d:"Contra la computadora se aprende; contra gente se compite. Juega en persona antes del torneo para acostumbrarte al reloj, al tablero físico y a los nervios.",list:[
-        "<b>Clubes:</b> el Club de Ajedrez Mercenarios (Col. Del Valle) y el Club de Ajedrez Cuauhtémoc (Tabacalera). Pregunta por sus torneos internos: son el mejor ensayo.",
-        "<b>Gratis y sin compromiso:</b> mesas activas los fines de semana en el Jardín Centenario (Coyoacán) y los domingos en la Alameda Central.",
-        "Juega con reloj desde la primera partida: el manejo del tiempo es la mitad de un torneo."]},
-      {t:"Encontrar y elegir tu torneo",d:"Busca un torneo rápido o amateur avalado, con inscripción abierta y en un solo día. Es más accesible que un clásico largo y te da experiencia real.",list:[
-        "El calendario nacional de torneos amateur está en MéxicoChess.",
-        "<b>FENAMAC</b> (<a href=\"https://fenamac.info/\" target=\"_blank\" rel=\"noopener\">fenamac.info</a>) es el organismo oficial: confirma ahí qué torneos están avalados y sus requisitos de inscripción.",
-        "<b>Acadfac</b> (<a href=\"https://www.acadfac.org.mx/\" target=\"_blank\" rel=\"noopener\">acadfac.org.mx</a>) organiza torneos amateur en la ciudad.",
-        "Los grandes de CDMX, como la <b>Copa Independencia</b> y la <b>Copa Revolución</b>, cambian de fecha y costo cada año: revisa la convocatoria vigente.",
-        "Tu caso: el día ya está en Tu plan. Inscríbete en cuanto abra: tener la fecha pagada es lo que convierte el entrenamiento en compromiso."],href:"https://mexicochess.com/",label:"Calendario de torneos · MéxicoChess"},
-      {t:"El día del torneo",d:"La partida empieza antes de sentarte: llegar descansado, comido y a tiempo vale puntos.",foto:"https://commons.wikimedia.org/wiki/Special:FilePath/TataSteelChess2025.jpg?width=1280",pie:"Los participantes del Tata Steel 2025 en Wijk aan Zee, uno de los torneos más antiguos y prestigiosos. Todos empezaron en un abierto como el tuyo.",list:[
-        "<b>Lleva:</b> identificación, dos plumas, agua, algo de comer entre rondas (plátano, nueces) y un suéter por si la sala está fría.",
-        "Llega <b>30 minutos antes</b>: los emparejamientos se publican en la mesa del árbitro.",
-        "Entre rondas no analices la partida que perdiste: come, camina y despeja. La siguiente empieza de cero.",
-        "Al terminar, da la mano y, en clásicas, firma las dos planillas con el resultado.",
-        "⚠️ Abandonar a media partida por frustración: nunca. Muchas partidas «perdidas» se salvan porque el rival también se equivoca."]},
-      {t:"✅ Ya lo dominas cuando…",d:"Cuatro señales que se pueden comprobar, y ninguna es «ganar el torneo»:",list:[
-        "<b>(1)</b> Jugaste todas las rondas de un torneo presencial, con reloj y árbitro.",
-        "<b>(2)</b> En tus últimas 10 partidas no dejaste una pieza colgada en una sola jugada.",
-        "<b>(3)</b> Haces 20 puzzles seguidos de tu nivel en Lichess sin fallar más de 3.",
-        "<b>(4)</b> Das mate con torre y rey contra el rey solo, sin ahogar, en menos de dos minutos."]},
-      {t:"📚 Qué leer",d:"Tres libros, del más práctico al más profundo:",list:[
-        "<b>Bobby Fischer Teaches Chess</b> · Bobby Fischer — un libro de puzzles que se lee en una tarde y enseña a ver mates.",
-        "<b>Logical Chess: Move by Move</b> · Irving Chernev — partidas completas explicadas jugada por jugada: el porqué de cada movimiento.",
-        "<b>Fundamentos del ajedrez</b> · José Raúl Capablanca — el campeón del mundo explica finales, medio juego y aperturas en el orden correcto: empezando por el final."]},
-    ]},
   istqbgenai:{titulo:"Certificación ISTQB CT-GenAI",frase:"Ya tienes el Foundation Level: esta certificación no te pide empezar de cero, te pide poner nombre a lo que ya haces con IA todos los días.",pasos:[
       {t:"Qué es exactamente",d:"<b>ISTQB® Certified Tester Specialist: Testing with Generative AI (CT-GenAI)</b>. Ojo con la confusión más común: <b>no</b> es la de <i>probar</i> sistemas de IA (esa es la CT-AI). Esta es sobre <b>usar IA generativa para probar mejor</b>, que es justo lo que haces construyendo esta app.",foto:"fotos-aprende/istqb-1.jpg",cifras:[["40","preguntas"],["46","puntos en juego"],["30","para aprobar (65 %)"]],list:[
         "El requisito es el <b>ISTQB Foundation Level (CTFL)</b>. El tuyo es de <b>2025</b> y está en tu perfil de Coach: no necesitas otro curso ni otra credencial.",
@@ -13409,54 +13344,6 @@ const META_DETALLE={
         "<b>(1)</b> Dos simulacros seguidos en modo Mezcla con <b>34 de 46</b> o más.",
         "<b>(2)</b> Ningún capítulo bajo el 65 % en el desglose.",
         "<b>(3)</b> Puedes explicar en una frase, y con un ejemplo tuyo, cada término del vocabulario de este temario."]},
-    ]},
-  hyrox:{titulo:"Primer Hyrox",frase:"Ocho kilómetros, ocho estaciones y un reloj que no se detiene. El Hyrox no premia al más fuerte: premia al que no se rinde, y eso se entrena desde hoy.",pasos:[
-      {t:"Qué es Hyrox",d:"<b>8 km de carrera</b> en 8 tramos de 1 km, y después de cada tramo, una estación de trabajo funcional. Siempre el mismo orden, en cualquier ciudad del mundo: por eso tu tiempo se compara con el de todos.",foto:"https://commons.wikimedia.org/wiki/Special:FilePath/Stockholm_HYROX_run_out.jpg?width=1280",alta:1,pie:"La salida a la pista en el HYROX de Estocolmo. Cada atleta corre su kilómetro y entra a su estación.",cifras:[["8 km","de carrera, en tramos de 1 km"],["8","estaciones, siempre en el mismo orden"],["~1h30","la mediana de Men Open"]],list:[
-        "La zona entre la pista y las estaciones se llama <b>Roxzone</b>. El reloj no se detiene ahí: las transiciones también cuentan.",
-        "Categorías: <b>Open</b> (la tuya), <b>Pro</b> (pesos más altos), <b>Dobles</b> y <b>Relevos</b>.",
-        "Nació en Alemania y hoy se corre en decenas de países: es la misma carrera en Guadalajara que en Alemania."]},
-      {t:"Las 8 estaciones",d:"Peso y distancia oficiales de tu categoría (Men Open) y el tiempo que tarda un atleta promedio en cada una (mediana, temporadas 7 y 8, 395,452 resultados):",list:["SkiErg — 1000 m · promedio 4:29","Sled Push — 50 m con 152 kg · promedio 3:04","Sled Pull — 50 m con 103 kg · promedio 5:03","Burpee Broad Jumps — 80 m · promedio 5:22","Rowing — 1000 m · promedio 4:49","Farmers Carry — 200 m con 2×24 kg · promedio 2:09 (la más rápida)","Sandbag Lunges — 100 m con 20 kg · promedio 5:13","Wall Balls — 100 reps con 6 kg · promedio 6:52 (la más lenta de las 8)"],href:"https://hyroxdatalab.com/articles/average-hyrox-station-times",label:"Promedios reales — HyroxDataLab"},
-      {t:"La técnica de cada estación",d:"Cada estación tiene un truco que ahorra minutos. El principio de todas: <b>ritmo constante, sin paradas largas</b>. Arrancar de nuevo cuesta más que seguir lento.",foto:"fotos-aprende/gym-halar.jpg",alta:1,list:[
-        "<b>SkiErg:</b> caderas atrás, brazos largos y el jalón sale del tronco, no solo de los brazos. Exhala fuerte en cada jalón.",
-        "<b>Sled Push:</b> brazos casi estirados, cuerpo inclinado unos 45°, pasos cortos y constantes. Un trineo que se detiene cuesta el doble moverlo otra vez.",
-        "<b>Sled Pull:</b> mano sobre mano con la cuerda, cadera baja y caminando hacia atrás. El jalón lo hacen las piernas, no la espalda.",
-        "<b>Burpee Broad Jumps:</b> un salto corto y seguro gana a uno largo que te agota. Ritmo fijo desde el primero.",
-        "<b>Rowing:</b> piernas, tronco y brazos al jalar; al revés al volver. Es la estación para bajar pulsaciones sin perder tiempo.",
-        "<b>Farmers Carry:</b> hombros abajo y pasos rápidos y cortos. Si el agarre falla, baja las pesas antes de que se te caigan.",
-        "<b>Sandbag Lunges:</b> la rodilla de atrás tiene que tocar el piso en cada paso; si no, el juez no la cuenta.",
-        "<b>Wall Balls:</b> cadera por debajo de la rodilla y pega en el centro del blanco. Series fijas desde el principio (10 o 15) con descansos cortos, antes de que el cansancio te las imponga.",
-        "⚠️ El error de todos: entrenar carrera y fuerza por separado. La dificultad del Hyrox es correr con las piernas cargadas: entrénalo junto."]},
-      {t:"Tu base ya existe",d:"Fuerza cuatro días, intervalos el miércoles y cardio largo el viernes: es exactamente el motor que pide un Hyrox. Lo que falta es lo específico, y para eso es el bloque de 11 semanas.",foto:"fotos-aprende/gym-intervalos.jpg",alta:1,list:[
-        "La fuerza de tu rutina es la de los trineos, las zancadas y los wall balls.",
-        "Los intervalos del miércoles son el motor para recuperar entre estaciones.",
-        "Desde enero, el viernes cambia el cardio largo por carrera con estaciones."]},
-      {t:"🗓️ Las 11 semanas del bloque específico",d:"Del 4 de enero al día de la carrera. <b>Semanas 1-3:</b> el viernes deja el cardio largo por 6×400 m con 90 s de descanso, y aprendes la técnica de las 3 estaciones que nunca has hecho (SkiErg, trineo, wall balls) sin buscar peso. <b>Semanas 4-5:</b> 4 rondas de «1 km + 1 estación» seguidas y, el sábado 6 de febrero, el medio Hyrox de prueba. <b>Semanas 6-8:</b> parciales al peso de Men Open y, el sábado 27 de febrero, el Hyrox completo de práctica. <b>Semana 9:</b> lo mismo, sin subir. <b>Semanas 10-11:</b> desde el 8 de marzo, todo a la mitad: llegas fresco.",href:"https://hyrox.com/training/",label:"Planes oficiales de entrenamiento HYROX"},
-      {t:"Cómo repartir el esfuerzo el día de la carrera",d:"El error del debutante es salir en el primer kilómetro como si fuera una carrera de 5 km. La carrera se gana en los últimos dos: llega a ellos con algo en el tanque.",cifras:[["km 1","más lento de lo que te pide el cuerpo"],["km 7","igual de rápido que el km 1"]],list:[
-        "Corre cada kilómetro a un ritmo que puedas sostener <b>después del trineo</b>: la meta es que el kilómetro 7 se parezca al 1.",
-        "Los trineos son donde más tiempo se pierde: paso constante, sin pausas largas.",
-        "Al salir de cada estación, los primeros 200 m más suaves: deja que las piernas se acomoden y luego subes.",
-        "En las wall balls, decide las series antes de empezar y cúmplelas."]},
-      {t:"Comer, hidratarte y equiparte",d:"Nada nuevo el día de la carrera: ni comida, ni tenis, ni ropa. Todo lo que uses ese día lo probaste antes en un entrenamiento largo.",list:[
-        "Desayuno unas <b>3 horas antes</b>, alto en carbohidratos y bajo en grasa y fibra: lo mismo que desayunaste antes del Hyrox de práctica.",
-        "Bebe agua en sorbos durante la mañana, sin llenarte justo antes de salir.",
-        "<b>Tenis de correr con suela que agarre</b>: en el trineo, el pie que resbala es tiempo perdido.",
-        "Ropa ajustada que ya usaste: nada que roce en 90 minutos de esfuerzo.",
-        "Tu caso: tu dieta del Plan Masa Muscular ya te da el combustible; la semana de la carrera no la cambies."]},
-      {t:"La fecha y la sede: {{hyroxSede}}",d:"Del <b>19 al 21 de marzo de 2027</b> en <b>Expo Guadalajara</b> (Av. Mariano Otero 1499, Verde Valle), confirmado en hyrox.com el 11 de octubre de 2026. Tu día es el <b>sábado {{hyroxFecha}}</b>: el domingo es de Didi. Elige la ola del sábado si Men Open corre ese día y regresa esa misma noche.",list:[
-        "El precio de atleta <b>todavía no está publicado</b> y sube por oleadas: pide el aviso de venta y compra en la primera.",
-        "El transporte y el hotel salen de tu gasto personal de la quincena, nunca del ahorro de GBM.",
-        "<b>Si Guadalajara no se puede:</b> Monterrey es del 16 al 18 de abril de 2027, pero ya cae en la Fase 2, que no lleva viajes fuera de la lista de salida. HYROX nació en Alemania: allá hay carreras cada temporada, y la de allá puede ser la segunda."],href:"https://hyrox.com/event/hyrox-guadalajara/",label:"HYROX Guadalajara · hyrox.com"},
-      {t:"Las últimas 2 semanas",d:"El trabajo ya está hecho: lo que hagas estas dos semanas no te pone en forma, pero sí te puede cansar. Llegar fresco importa más que un último entrenamiento fuerte.",list:[
-        "Baja el volumen a la mitad y mantén algo de intensidad corta para que las piernas no se duerman.",
-        "Duerme tus horas completas toda la semana, no solo la noche anterior.",
-        "Prepara la mochila dos días antes: tenis, ropa, identificación, boleto y desayuno."]},
-      {t:"Qué tiempo apuntar en tu primera",d:"Un debutante de Men Open que llega entrenado suele terminar entre <b>1h20 y 1h40</b>; la mediana de la categoría ronda 1h30. Para una primera vez, la meta correcta no es un tiempo: es <b>terminar sin caminar los últimos 2 km</b> y sin repeticiones anuladas en wall balls. El tiempo lo persigues en la segunda.",href:"https://hyroxdatalab.com/",label:"Tiempos reales por estación y categoría"},
-      {t:"📅 Todas las fechas en México",d:"El listado oficial con todos los eventos de México, sus fechas y el estado de las inscripciones. Aquí aparecen las sedes nuevas cuando se anuncian: es la página que hay que revisar, no una fecha copiada en este dashboard que puede quedar vieja.",href:"https://mexico.hyrox.com/",label:"HYROX México — eventos y registro"},
-      {t:"✅ Ya lo dominas cuando…",d:"Cuatro señales de que llegas listo:",list:[
-        "<b>(1)</b> Hiciste el Hyrox completo de práctica sin caminar más de un kilómetro.",
-        "<b>(2)</b> En 4 rondas de «1 km + estación», el último kilómetro sale a menos de 30 segundos del primero.",
-        "<b>(3)</b> Haces 100 wall balls válidas con 6 kg en series que decidiste antes de empezar.",
-        "<b>(4)</b> Empujaste el trineo al peso de Men Open los 50 m sin detenerte."]},
     ]},
   cupra:{titulo:"Cupra Formentor",frase:"El Cupra es el premio, no el punto de partida: llega después de la deuda y se paga sin que nadie te cobre intereses.",pasos:[
       {t:"Qué coche es",d:"El <b>Formentor</b> fue el primer modelo diseñado solo para <b>CUPRA</b>, la marca deportiva que nació de SEAT en 2018. Un SUV con techo de coupé, hecho en Martorell, junto a Barcelona, y parte del Grupo Volkswagen.",foto:"https://commons.wikimedia.org/wiki/Special:FilePath/2023_Cupra_Formentor_1.jpg?width=1280",pie:"Un Cupra Formentor 2023.",list:[
@@ -13597,32 +13484,155 @@ const META_DETALLE={
         "El <b>Airport Express</b> te lleva del aeropuerto al centro en 24 minutos.",
         "La guía oficial tiene itinerarios por días, el calendario de festivales y el horario del Symphony of Lights."],href:"https://www.discoverhongkong.com/mx/index.html",label:"Discover Hong Kong · guía oficial en español"},
     ]},
-  spacex:{titulo:"Lanzamiento de SpaceX",frase:"Ver un cohete despegar y, ocho minutos después, volver a aterrizar de pie. De todas tus metas, es de las que menos tiene que esperar.",pasos:[
-      {t:"Qué vas a ver",d:"Un <b>Falcon 9</b> despegando: el cohete que más vuela del mundo. Lo sientes antes de oírlo: el sonido llega segundos después de ver la luz, y el pecho vibra.",foto:"https://commons.wikimedia.org/wiki/Special:FilePath/Falcon_9_-_Starlink_6-103_Launch_(9524394).jpg?width=1280",pie:"Un Falcon 9 despega desde Cabo Cañaveral con satélites Starlink, en 2026.",cifras:[["~70 m","de altura"],["9","motores Merlin en la primera etapa"],["~8 min","del despegue al aterrizaje del propulsor"]],list:[
-        "Los lanzamientos <b>de noche</b> son los más espectaculares: la estela se ilumina con el sol cuando el cohete ya va alto.",
-        "Tu caso: como ingeniero en mecatrónica, vas a ver en vivo el problema de control más famoso de esta década: un propulsor que regresa y aterriza solo."]},
-      {t:"El aterrizaje: lo que hace único a SpaceX",d:"La primera etapa del Falcon 9 regresa y aterriza de pie, para volver a volar. La mayoría aterriza en barcazas en el mar, pero algunas misiones regresan a tierra, cerca de la costa: esas se ven y se oyen.",foto:"https://commons.wikimedia.org/wiki/Special:FilePath/Falcon_9_first_stage_at_LZ-1(two).jpg?width=1280",pie:"Una primera etapa del Falcon 9 en la zona de aterrizaje LZ-1, en Cabo Cañaveral.",list:[
-        "Cuando el propulsor regresa a tierra se escuchan <b>explosiones sónicas</b> en toda la costa: avisan que está llegando.",
-        "Si quieres ver el aterrizaje, elige una misión con regreso a tierra: el calendario lo indica."]},
-      {t:"Dónde se lanza",d:"Tres lugares, y uno es la apuesta segura:",list:[
-        "<b>Florida (Cabo Cañaveral y el Kennedy Space Center):</b> ahí despega la mayoría de los Falcon 9, a veces varias veces por semana. Es donde tienes más oportunidades en un solo viaje.",
-        "<b>California (Vandenberg):</b> lanzamientos hacia órbitas polares, menos frecuentes y muchas veces con niebla.",
-        "<b>Texas (Starbase):</b> el Starship. Despega pocas veces y la fecha cambia mucho."]},
-      {t:"Starship, el más grande jamás construido",d:"Con su propulsor Super Heavy mide más de 120 metros y lleva 33 motores Raptor. Es el cohete más grande y potente que se ha volado. Si te toca un vuelo de prueba, es historia en vivo.",foto:"https://commons.wikimedia.org/wiki/Special:FilePath/Full_Stack_starship.jpg?width=1280",pie:"El Starship completo en la plataforma de Starbase, Texas, días antes de su primer vuelo de prueba.",list:[
-        "El mejor punto público es <b>Isla Blanca Park</b>, en South Padre Island, a unos 8 km del sitio. No hay centro de visitantes oficial.",
-        "<a href=\"https://www.spacelaunchschedule.com/viewing-locations/isla-blanca-park/\" target=\"_blank\" rel=\"noopener\">Isla Blanca Park</a>: llega horas antes, se llena."]},
-      {t:"Dónde verlo en Florida",d:"El <b>Kennedy Space Center</b> tiene la vista más cercana a la plataforma, con boletos especiales para algunos lanzamientos. Y hay lugares gratis desde donde lo ve todo el mundo.",foto:"https://commons.wikimedia.org/wiki/Special:FilePath/Vehicle-Assembly-Building-July-6-2005.jpg?width=1280",pie:"El Vehicle Assembly Building del Kennedy Space Center, donde se armaron los Saturno V del Apolo.",list:[
-        "<b>Space View Park</b>, en Titusville: gratis, con audio en vivo del control de misión.",
-        "<b>Jetty Park</b> y las playas de <b>Cocoa Beach</b>: vista abierta al mar y ambiente de fiesta.",
-        "Aprovecha el viaje para el centro de visitantes del Kennedy: un Saturno V real y el transbordador Atlantis te esperan ahí."],href:"https://www.kennedyspacecenter.com/launches-and-events/see-a-launch/launch-viewing-locations/",label:"Kennedy Space Center — dónde ver"},
-      {t:"Tu visa de Estados Unidos",d:"Con pasaporte mexicano necesitas <b>visa de turista (B1/B2)</b>, aunque vivas en Alemania: la residencia alemana no te da el permiso electrónico que usan los europeos. Si no la tienes, es lo primero: la cita en el consulado puede tardar meses.",foto:"fotos-aprende/fase-visa.jpg",list:[
-        "Revisa la vigencia de tu visa y de tu pasaporte antes de buscar fechas.",
-        "Tu caso: si la tramitas antes de irte a Alemania, la tienes resuelta para toda la Fase 4."]},
-      {t:"No pierdas el viaje: los retrasos",d:"Los lanzamientos se posponen seguido por clima, viento en altura o un sensor: se llaman <i>scrubs</i>. Planea para que uno no te arruine el viaje.",list:[
-        "Deja <b>3 o 4 días de margen</b> en Florida: si se pospone, hay otro intento.",
-        "No compres vuelos ni hospedaje no reembolsables hasta que el lanzamiento esté confirmado («Go»).",
-        "Sigue la fecha en Next Spaceflight y en la página de SpaceX: cambia hasta el último día."],href:"https://nextspaceflight.com/",label:"Next Spaceflight — calendario"},
-      {t:"Cómo encaja en tu plan",d:"No requiere que tu patrimonio esté cerca del millón: solo un viaje bien planeado. Va en la Fase 4: antes de irte, todo el dinero es de la salida; desde Alemania se combina con un viaje a Estados Unidos, de contado."},
+  spacex:{titulo:"Ver un lanzamiento de SpaceX",frase:"Un cohete del alto de un edificio de veinte pisos sube y, ocho minutos después, su propulsor vuelve y aterriza de pie. Se siente en el pecho, no en una pantalla.",pasos:[
+      {t:"Qué vas a ver, minuto a minuto",d:"Un <b>Falcon 9</b>: el cohete que más vuela del mundo. Primero ves la luz; el ruido tarda en llegarte porque viaja a 340 metros por segundo.",foto:"fotos-viajes/sx-noche.jpg",fotoLado:1,ancha:1,pie:"La estela de un Falcon 9 de noche, en una sola foto de larga exposición.",cred:"Nattanon Dungsunenarn · CC0",cifras:[["70 m","de altura"],["~30 s","tarda el ruido si estás a 10 km"],["~8 min","del despegue al aterrizaje"]],list:[
+        "<b>Cero:</b> se encienden nueve motores y el cohete sale de su propia nube.",
+        "<b>Unos 2 minutos y medio:</b> se apaga la primera etapa y se separa; arriba sigue la segunda, camino a la órbita.",
+        "<b>Unos 8 minutos:</b> la primera etapa aterriza de pie, en una barcaza en el mar o en tierra.",
+        "<b>La mejor hora:</b> poco antes de que amanezca o poco después de que oscurece. El sol ilumina la estela y parece una medusa de luz.",
+        "Tu caso: eres ingeniero en mecatrónica. Vas a ver en vivo uno de los problemas de control más difíciles que se han resuelto: frenar y equilibrar de pie un tubo de 40 metros que cae."]},
+      {t:"De dónde despega hoy: ya no es sobre todo Florida",d:"De sus últimos 100 lanzamientos —del 10 de marzo al 23 de noviembre de 2026—, más de la mitad salieron de California. Y cuántos días te quedas decide tu suerte.",foto:"https://commons.wikimedia.org/wiki/Special:FilePath/Falcon_9_-_Starlink_6-103_Launch_(9524394).jpg?width=1280",fotoLado:1,pie:"Un Falcon 9 despega desde Cabo Cañaveral con satélites Starlink, en 2026.",cifras:[["58","de Vandenberg, California"],["38","de Cabo Cañaveral y Kennedy, Florida"],["4","de Starbase, Texas: el Starship"]],list:[
+        "<b>Con ese ritmo, en 4 días</b> hay 59 % de probabilidad de ver uno en California y 44 % en Florida. En 7 días, 79 % y 64 %.",
+        "<b>Florida bajó el ritmo:</b> en los 90 días hasta el 24 de noviembre de 2026 solo salieron 6, contra 18 de California.",
+        "<b>No tienes que memorizarlo:</b> en Tu plan, a la derecha, están los próximos lanzamientos y tu probabilidad. Se ponen al día solos.",
+        "⚠️ El error más común: comprar el vuelo y después buscar lanzamiento. Es al revés: primero la fecha firme, luego el boleto."],href:"https://nextspaceflight.com/launches/",label:"Calendario completo · Next Spaceflight"},
+      {t:"Florida: dónde pararte",d:"La vista más cercana la vende el <b>Kennedy Space Center</b>; gratis se ve desde casi toda la costa. Duerme en Titusville o en Cocoa Beach.",foto:"fotos-viajes/sx-playa.jpg",fotoLado:1,ancha:1,pie:"Un lanzamiento visto desde la playa.",cred:"Michael Seeley · CC BY 2.0 · Wikimedia Commons",cifras:[["5.5 km","del mirador Gantry a la plataforma 40"],["6.3 km","de Banana Creek a la plataforma 39A"],["US$77","la entrada de adulto al Kennedy"]],list:[
+        "<b>Banana Creek</b> (gradas junto al Saturno V): 6.3 km a la plataforma 39A y 10 km a la 40.",
+        "<b>The Gantry:</b> 5.5 km a la 40, pero no abre para la 39A por seguridad. Se paga además de la entrada.",
+        "<b>El jardín del edificio principal:</b> 10.8 km a la 40 y 12 km a la 39A.",
+        "<b>Gratis:</b> Space View Park en Titusville, Jetty Park y las playas de Cocoa Beach. La app <i>Space Coast Launches</i> avisa 2 horas y 5 minutos antes.",
+        "<b>Puedes llevar</b> silla plegable, binoculares, gorra y agua; no pasan hieleras duras, vidrio ni alcohol.",
+        "⚠️ Llega temprano: a las gradas se va en su autobús, después de la revisión, y no reembolsan por llegar tarde."],href:"https://www.kennedyspacecenter.com/launches-and-events/see-a-launch/launch-viewing-locations/",label:"Dónde se ve · Kennedy Space Center"},
+      {t:"California: la base que más lanza",d:"Vandenberg está junto a <b>Lompoc</b>, a unas tres horas en auto de Los Ángeles. De ahí despega hoy la mayoría de los Falcon 9.",foto:"fotos-viajes/sx-california.jpg",fotoLado:1,alta:1,pie:"Un Falcon 9 despega de Vandenberg, con el Pacífico detrás.",cred:"SpaceX · CC0",list:[
+        "<b>El punto más cercano:</b> Ocean Avenue, cerca de la calle 13 y Arguello, a unos 6 km de la plataforma de SpaceX. El estacionamiento se llena temprano.",
+        "<b>Otros dos muy usados:</b> Surf Beach, y Santa Lucia Canyon Road con Victory Road.",
+        "<b>Con niebla,</b> sube a Harris Grade Road: queda más lejos, pero por encima de la bruma.",
+        "⚠️ La niebla: en la costa puedes oír el cohete y no verlo. Revisa el pronóstico la noche anterior."],href:"https://explorelompoc.com/best-places-to-view-a-rocket-launch-in-lompoc/",label:"Dónde verlo · Explore Lompoc"},
+      {t:"Texas: el Starship",d:"Con su propulsor mide más de 120 metros: el cohete más grande que ha volado. El <b>13 de noviembre de 2026</b>, en su vuelo 15, la nave dio unas 14 vueltas a la Tierra y la torre la atrapó al volver, por primera vez. El propulsor se perdió.",foto:"fotos-viajes/sx-starship.jpg",fotoLado:1,alta:1,pie:"El Starship despega de Starbase en su quinto vuelo de prueba.",cred:"Steve Jurvetson · CC BY 2.0 · Wikimedia Commons",cifras:[["15","vuelos hasta noviembre de 2026"],["4","en 2026, uno cada dos meses"],["~8 km","de Isla Blanca a la plataforma"]],list:[
+        "<b>Dónde:</b> Isla Blanca Park, en South Padre Island. Unos US$12 por auto, de 6:00 a 22:00; se llena horas antes.",
+        "<b>Cuándo:</b> el vuelo 16 todavía no tiene fecha. En 2026 voló el 22 de mayo, el 24 de julio, el 28 de septiembre y el 13 de noviembre.",
+        "<b>Cómo llegas:</b> vuelo a Brownsville o a McAllen, y auto. También pide visa.",
+        "⚠️ Desde México, no: en Playa Bagdad se ve a unos 8 km y sin visa, pero Tamaulipas está en nivel 4 (no viajar) de la alerta de Estados Unidos y el 29 de octubre de 2026 hubo bloqueos en Matamoros."],href:"https://www.spacelaunchschedule.com/viewing-locations/isla-blanca-park/",label:"Isla Blanca Park · dónde verlo"},
+      {t:"El aterrizaje: búscalo a propósito",d:"Ver el despegue es la mitad. Si la misión <b>regresa a tierra</b>, el propulsor baja frente a ti y lo anuncian sus explosiones sónicas.",foto:"fotos-viajes/sx-aterrizaje.jpg",fotoLado:1,ancha:1,pie:"Los dos propulsores laterales del Falcon Heavy aterrizan a la vez, en 2018.",cred:"SpaceX · CC0 · Wikimedia Commons",list:[
+        "En el calendario busca <b>RTLS</b>: regresa al sitio de lanzamiento. <b>ASDS</b> es en barcaza, mar adentro: desde la costa no lo ves.",
+        "Las cargas ligeras suelen regresar a tierra; las pesadas, a la barcaza.",
+        "Con un <b>Falcon Heavy</b> pueden volver dos a la vez. Vuela pocas veces: si cae en tus fechas, es el que hay que ver."]},
+      {t:"Tu visa: lo primero y lo que más tarda",d:"Florida, California y Texas piden <b>visa de turista B1/B2</b>. Vivir en Alemania no cambia nada: con pasaporte mexicano no tienes el permiso electrónico de los europeos. Es la misma que pide Puerto Rico.",foto:"fotos-aprende/fase-visa.jpg",fotoLado:1,cifras:[["US$185","la solicitud ({{visaUsa}})"],["4.5 meses","la próxima cita en CDMX"],["< 15 días","en Nogales y Ciudad Juárez"]],list:[
+        "<b>1.</b> Llena el DS-160 en línea y guarda la hoja de confirmación.",
+        "<b>2.</b> Paga y agenda. Al 21 de octubre de 2026, además de las de arriba, Monterrey iba en 3 meses y Guadalajara en 6.5.",
+        "<b>3.</b> Lleva pasaporte vigente, el recibo, una carta de {{empleador}} con tu puesto y sueldo, y recibos de nómina.",
+        "<b>4.</b> Contesta corto y con la verdad: a qué vas, cuántos días, quién paga y a qué regresas.",
+        "Hay un cargo extra de US$250 en la ley que, a noviembre de 2026, no se cobra. Revísalo antes de pagar.",
+        "Tu caso: tramítala desde México, antes de irte. Te sirve para esto, para Puerto Rico y para los viajes que hagas desde Alemania."],href:"https://ais.usvisa-info.com/es-mx/niv",label:"Citas de visa · sitio oficial"},
+      {t:"Leer el calendario: qué tan firme es una fecha",d:"Un lanzamiento pasa por tres estados. De eso depende si compras o esperas.",foto:"fotos-aprende/fase-calendario.jpg",fotoLado:1,cifras:[["Sin día","no compras nada"],["Por confirmar","solo lo que se cancela gratis"],["Firme","compras el vuelo"]],list:[
+        "<b>TBD</b>, sin día fijo: solo se sabe el mes. Si dice el último día del mes a las 0:00, es un relleno.",
+        "<b>TBC</b>, por confirmar: ya hay día, pero se mueve seguido.",
+        "<b>Go</b>, fecha firme: hay ventana y hora. Revísala otra vez la noche anterior.",
+        "<b>NET</b> es «no antes de»: puede moverse para después, nunca para antes."]},
+      {t:"Si lo posponen",d:"Se llaman <i>scrubs</i> y son normales: viento en altura, una nube o un sensor. El viaje se planea contando con uno.",foto:"fotos-viajes/sx-saturno.jpg",fotoLado:1,pie:"Un Saturno V en el Kennedy Space Center: lo que haces el día que se pospone.",cred:"Diego Delso · CC BY-SA 3.0 · Wikimedia Commons",list:[
+        "Deja <b>4 o 5 días</b>: si se cae el primer intento, sueles tener otro.",
+        "Vuelo con cambio y hotel con cancelación gratis. Nada más.",
+        "Los paquetes con vista del Kennedy valen para <b>dos fechas</b> —la programada y una más— y dan una visita extra en 30 días.",
+        "Si avisan antes de abrir, te guardan el paquete o te devuelven los boletos sin usar."],href:"https://www.kennedyspacecenter.com/launches-and-events/see-a-launch/scrub-policy/",label:"Si se pospone · Kennedy Space Center"},
+      {t:"El plan barato: juntarlo con Puerto Rico",d:"Los vuelos baratos a San Juan hacen escala en <b>Orlando</b>, a una hora de Cabo Cañaveral. Con la misma visa y el mismo viaje, son 3 o 4 noches más.",foto:"fotos-viajes/pr-morro.jpg",fotoLado:1,pie:"El Morro, en San Juan: el viaje que ya quieres hacer.",cred:"Godot13 · CC BY-SA 4.0 · Wikimedia Commons",list:[
+        "Busca «varios destinos»: CDMX–Orlando, Orlando–San Juan y San Juan–CDMX. De referencia, el redondo a San Juan con escala cuesta unos $5,664 (Kayak, 20 de noviembre de 2026).",
+        "Duerme en Titusville: ves las plataformas desde la orilla.",
+        "Decide con la lista viva: si en tus días no hay ninguno con fecha firme en Florida, <b>no alargues el viaje</b> y la meta espera.",
+        "Tu caso: antes de irte, cada peso es de la salida. Por eso solo cabe montado en un viaje que ya haces, con tu gasto personal y nunca con el ahorro de GBM."],boton:"<button class=\"md-paso-link md-paso-btn\" onclick=\"cerrarMetaDetalle();abrirKpi('viaje-pr')\">Ver el viaje a Puerto Rico</button>"},
+      {t:"El día: qué llevar y cómo vivirlo",d:"Lo vas a ver unos tres minutos. Que esos tres minutos no se te vayan detrás de una pantalla.",foto:"https://commons.wikimedia.org/wiki/Special:FilePath/Vehicle-Assembly-Building-July-6-2005.jpg?width=1280",fotoLado:1,pie:"El edificio donde se armaron los cohetes del Apolo, en el Kennedy Space Center.",list:[
+        "<b>Lleva</b> binoculares, silla, agua, algo de comer, protector solar y batería externa.",
+        "<b>Elige lugar con horas:</b> hacia el este en Florida, sin edificios ni árboles enfrente.",
+        "<b>Pon la transmisión de SpaceX solo en audio:</b> te dice cada etapa y el aterrizaje.",
+        "<b>Graba los primeros 20 segundos,</b> con el teléfono apoyado, y bájalo. El video oficial siempre será mejor que el tuyo.",
+        "Quédate 10 minutos después: ahí se oyen las explosiones sónicas si el propulsor regresa."]},
+      {t:"✅ Ya lo dominas cuando…",d:"Cuatro señales que se pueden comprobar:",list:[
+        "<b>(1)</b> Tienes visa vigente y sabes cuándo vence.",
+        "<b>(2)</b> Dices, sin ver, qué sede lanza más y qué significa «Go».",
+        "<b>(3)</b> Tienes vuelo con cambio y hotel cancelable para 4 días o más, comprados con fecha firme.",
+        "<b>(4)</b> Lo viste despegar con tus ojos y, si regresó, aterrizar."]},
+      {t:"📚 Qué leer",d:"Tres libros para llegar sabiendo lo que vas a ver:",list:[
+        "<b>Liftoff</b> · Eric Berger — los primeros años de SpaceX, cuando el Falcon 1 falló tres veces y solo quedaba dinero para una más.",
+        "<b>Reentry</b> · Eric Berger — cómo aprendieron a aterrizar y reusar el Falcon 9.",
+        "<b>Ignition!</b> · John D. Clark — la historia, con humor de ingeniero, de cómo se inventaron los combustibles de cohete."]},
+    ]},
+  helicoptero:{titulo:"Piloto privado de helicóptero",frase:"Una licencia no se compra: se vuela hora por hora. Cuarenta y cinco bien voladas separan al que mira helicópteros del que los pilotea.",pasos:[
+      {t:"Qué te deja hacer la licencia",d:"Volar como <b>piloto al mando</b> un helicóptero de hasta 5,700 kg, con familia o amigos a bordo y sin cobrar. Así lo dice el reglamento mexicano; en Europa y Estados Unidos es parecido.",foto:"fotos-viajes/heli-noche.jpg",fotoLado:1,ancha:1,pie:"El tablero de un helicóptero ligero sobre una ciudad al anochecer.",cred:"rawpixel · CC0",cifras:[["40 h","de vuelo como mínimo en México y Estados Unidos"],["45 h","en Europa"],["3 años","dura la licencia mexicana"]],list:[
+        "<b>Sí:</b> volar por gusto, llevar pasajeros sin cobrar y rentar un helicóptero del modelo que tengas habilitado.",
+        "<b>No:</b> cobrar por volar. Para eso es la comercial: 120 horas o más en México y 150 en Estados Unidos.",
+        "Cada modelo se habilita aparte: tu licencia dice cuáles puedes volar.",
+        "Tu caso: quieres volar, no cambiar de carrera. La privada es la tuya."]},
+      {t:"Los tres mandos, y por qué cuesta",d:"Un helicóptero se vuela con las dos manos y los dos pies a la vez. Mover uno obliga a corregir los otros: por eso las primeras horas se van en aprender a quedarse quieto.",foto:"fotos-viajes/heli-r22.jpg",fotoLado:1,ancha:1,pie:"Un Robinson R22, de dos plazas, en vuelo estacionario: de los helicópteros escuela más usados.",cred:"Planespotter1 · CC BY-SA 4.0 · Wikimedia Commons",list:[
+        "<b>Colectivo</b> (mano izquierda): sube y baja. Cambia el ángulo de todas las palas a la vez; en el puño va el acelerador.",
+        "<b>Cíclico</b> (mano derecha): hacia dónde va. Inclina el rotor adelante, atrás o a los lados.",
+        "<b>Pedales:</b> hacia dónde apunta la nariz. Compensan el giro que el rotor principal le da al fuselaje.",
+        "<b>La autorrotación:</b> si se para el motor, el aire que sube mantiene girando el rotor y se aterriza planeando. Es la maniobra que más vas a practicar.",
+        "Tu caso: ingeniero en mecatrónica. Es un sistema de cuatro variables acopladas y con retardo, y el controlador eres tú: mueve poco, espera y corrige."]},
+      {t:"Qué pide cada país",d:"Tres caminos, con sus mínimos oficiales. El mínimo casi nunca alcanza: una escuela de Texas calcula de 55 a 75 horas para la mayoría.",foto:"../Aeroresinas/fotos/real-h145.jpg",fotoLado:1,ancha:1,pie:"Un bimotor con matrícula mexicana, de las fotos de Aeroresinas.",cred:"Aeroresinas",cifras:[["40 h","México · artículo 58"],["40 h","Estados Unidos · 14 CFR 61.109"],["45 h","Alemania · FCL.210.H"]],list:[
+        "<b>México (AFAC):</b> 18 años, mexicano por nacimiento, certificado médico y permiso de formación. De las 40 horas, 20 con instructor, 10 solo y 5 de travesía solo, con una ruta de 180 km y dos aterrizajes; 5 tienen que ser de los últimos dos meses.",
+        "<b>Estados Unidos (FAA):</b> 17 años e inglés. De las 40 horas, 20 con instructor —3 de travesía, 3 de noche y 3 para el examen— y 10 solo.",
+        "<b>Alemania (EASA):</b> 17 años, médico clase 2 y radio. De las 45 horas, 25 con instructor, 10 solo y 5 de travesía, con un vuelo de 185 km y dos aterrizajes; 5 pueden ser en simulador.",
+        "En los tres hay examen teórico y examen de vuelo con un examinador."],href:"https://www.gob.mx/cms/uploads/attachment/file/853104/reglamento-expedicion-permisos-licencias-certificados-capacidad-pta-30082023.pdf",label:"Reglamento mexicano · AFAC (PDF)"},
+      {t:"Cuánto cuesta de verdad",d:"Se paga por hora volada: lo que decide el total es cuántas necesitas. Volar seguido baja las horas; volar salteado las sube.",foto:"fotos-aprende/de-dinero.jpg",fotoLado:1,cifras:[["{{heliCosto}}","en Alemania ({{heliCostoEur}}), al euro de tu plan"],["{{heliUsa}}","en Texas con el mínimo de 40 horas ({{heliUsaUsd}})"],["{{heliUsaReal}}","en Estados Unidos con 60 horas: a la mitad de lo que calcula un instructor (US$26,000 a 30,000)"]],list:[
+        "<b>Alemania, 45 horas:</b> €23,440 de formación, €450 del examen, €120 de la radio y €325 del médico. Es un ejemplo publicado en 2023: pide cotización, hoy será más.",
+        "<b>San Antonio, Texas, 40 horas:</b> el R22 a US$335 la hora (US$13,400), 40 horas de tierra (US$1,960), el escrito (US$175) y el examen (US$750): {{heliUsaUsd}}. Faltan visa, vuelo y hospedaje.",
+        "<b>México:</b> ninguna de las escuelas revisadas publica su precio. Pídelo por escrito y con todo: horas, teoría, examen y helicóptero.",
+        "⚠️ Pagar todo por adelantado: si la escuela cierra, lo pierdes. Paga por bloques de 5 o 10 horas.",
+        "Tu caso: no cabe antes de irte. Con sueldo de ingeniero en Alemania sí, y en Tu plan, a la derecha, está lo que le mueve a tu millón."],href:"https://alamohelicoptertours.com/course-cost-breakdown",label:"Desglose de costos · escuela de San Antonio"},
+      {t:"Dónde te conviene: en Alemania",d:"Vas a vivir ahí, y la licencia europea vale en toda la Unión. Las otras dos rutas tienen una piedra cada una.",foto:"fotos-viajes/heli-r44.jpg",fotoLado:1,ancha:1,pie:"Un Robinson R44 en el aeródromo de Bonn-Hangelar, Alemania.",cred:"Sir James · CC BY 3.0 · Wikimedia Commons",list:[
+        "<b>Estados Unidos:</b> más barato por hora, pero con visa de turista no puedes. La formación que termina en licencia pide visa de estudiante (M o F), y la TSA te revisa antes de empezar (US$140).",
+        "<b>Pasar la de Estados Unidos a la europea</b> pide 100 horas en helicóptero, dos exámenes teóricos y otro de vuelo (así lo exigen Suiza y Suecia). Con 45 no alcanza.",
+        "<b>México:</b> sin visa y en tu idioma, pero te vas en septiembre de 2027 y el dinero es de la salida.",
+        "<b>Si vuelves a México,</b> la AFAC puede convalidar una licencia extranjera (artículo 20 de su reglamento).",
+        "<b>Una escuela para empezar a preguntar:</b> Heli-Flight, en Reichelsheim, cerca de Fráncfort: 100 horas de teoría y días informativos abiertos."],href:"https://heli-flight.de/leistung/flugschule/",label:"Heli-Flight · escuela en Alemania"},
+      {t:"El examen médico: pásalo antes de gastar",d:"Es lo primero que puede decirte que no, y cuesta menos que una hora de vuelo. Hazlo antes de inscribirte.",foto:"fotos-aprende/de-salud.jpg",fotoLado:1,list:[
+        "<b>En Alemania:</b> certificado de clase 2 con un médico aeronáutico. La escuela lo pide el primer día.",
+        "<b>En México, la lista de la AFAC para el inicial:</b> acta, CURP, comprobante de domicilio, identificación, pago y cita; y estudios de menos de un mes: biometría, química de 6 elementos, orina, VIH, antidopaje de 5 sustancias y hemoglobina glucosilada, más una radiografía de tórax.",
+        "<b>Los lentes no te descartan:</b> con la graduación al día y, si usas de contacto, unos de armazón de repuesto.",
+        "Tu caso: tu lista de salida ya trae al oftalmólogo en mayo de 2027. Pide ahí también la prueba de visión de colores."],href:"https://www.gob.mx/cms/uploads/attachment/file/870801/requisitos-medicos-inicial-nov23-15112023.pdf",label:"Requisitos del examen médico · AFAC (PDF)"},
+      {t:"La teoría: nueve materias",d:"En Europa son nueve exámenes y cada uno se aprueba con 75 %. El manual de la FAA, gratis y en inglés, cubre casi todo lo de helicóptero.",foto:"../Aeroresinas/fotos/cabina.jpg",fotoLado:1,alta:1,ancha:1,pie:"La cabina de un helicóptero en el hangar, de las fotos de Aeroresinas.",cred:"Aeroresinas",cifras:[["9","materias"],["75 %","para aprobar cada una"],["18 meses","para aprobarlas todas"]],list:[
+        "Derecho aéreo · factores humanos · meteorología · comunicaciones · principios del vuelo · procedimientos · rendimiento y planeación · conocimiento del helicóptero · navegación.",
+        "Aprobada, la teoría vale <b>24 meses</b> para presentar el vuelo: no la hagas si no vas a volar pronto.",
+        "<b>Empieza gratis</b> con el <i>Helicopter Flying Handbook</i>: aerodinámica, mandos y maniobras son los capítulos que más te ahorran en el aire.",
+        "Tu caso: está en inglés técnico. Quince minutos al día en tu descanso de ALTEN, y también cuenta para tu inglés."],href:"https://www.faa.gov/regulations_policies/handbooks_manuals/aviation/helicopter_flying_handbook",label:"Helicopter Flying Handbook · FAA, gratis"},
+      {t:"La radio: hablar con la torre",d:"Sin licencia de radio no hay vuelo solo. En Alemania se llama <b>BZF</b>: la II es para hablar en alemán; la I, en alemán y en inglés.",foto:"fotos-aprende/de-telefono.jpg",fotoLado:1,list:[
+        "<b>Qué es:</b> un examen de reglas, frases estándar y un diálogo simulado con la torre. En México va dentro del curso y se llama RTAR.",
+        "<b>Cuándo:</b> en tu segundo año en Alemania, con tu alemán en B1. Es barato y es práctica real del idioma.",
+        "<b>Cómo se entrena:</b> el alfabeto aeronáutico y los números de memoria; después, cada frase en voz alta con su respuesta.",
+        "Tu caso: {{escuelaAleman}} hoy, B1 en la maestría y la radio como meta corta de tu alemán."]},
+      {t:"Las 45 horas, en orden",d:"Todas las escuelas siguen más o menos el mismo camino. Saber en qué etapa vas evita pagar horas de más.",foto:"fotos-viajes/heli-cabina.jpg",fotoLado:1,ancha:1,pie:"La vista desde la cabina de un helicóptero ligero.",cred:"World Travel Adventures · CC0 · StockSnap",cifras:[["25 h","con instructor"],["10 h","solo"],["185 km","tu vuelo de travesía"]],list:[
+        "<b>Horas 1 a 10:</b> vuelo recto, giros y, sobre todo, el estacionario: quedarse quieto a un metro del suelo.",
+        "<b>Horas 10 a 20:</b> despegues, aproximaciones, circuitos y autorrotaciones, una tras otra.",
+        "<b>Desde la hora 20:</b> tu primer vuelo solo. En la escuela alemana pide la teoría aprobada y la radio.",
+        "<b>Horas 20 a 40:</b> navegación, espacios reducidos, pendientes y la travesía de 185 km con dos aterrizajes.",
+        "<b>El cierre:</b> repaso y examen de vuelo con un examinador."]},
+      {t:"Cómo no ser una estadística",d:"Los accidentes de helicópteros ligeros se repiten por las mismas causas. Se aprenden antes de volar.",foto:"fotos-viajes/heli-schweizer.jpg",fotoLado:1,pie:"Un Schweizer 300: el modelo escuela de HeliEscuela, en Mérida.",cred:"James, Cheltenham · CC BY-SA 2.0 · Wikimedia Commons",list:[
+        "<b>Mal tiempo:</b> entrar sin querer en nubes. Se da media vuelta o se aterriza; no se sigue «a ver si abre».",
+        "<b>Cables:</b> no se ven hasta que los tienes encima. Se cruza por arriba de los postes.",
+        "<b>Anillo de vórtices:</b> bajar rápido, en vertical y con potencia. Se sale hacia adelante o de lado, no jalando más.",
+        "<b>Poca carga en un Robinson:</b> empujar el cíclico hasta sentirte flotar puede hacer que el rotor golpee el mástil. Se corrige jalando suave, antes de nivelar.",
+        "<b>La prisa:</b> si el plan, el clima o tú no están al cien, ese día no se vuela."]},
+      {t:"Tu ventaja: Aeroresinas",d:"Muy poca gente que quiere volar crece junto a un taller que repara helicópteros. Tú sí: dueños, pilotos y mecánicos son clientes de tu papá.",foto:"../Aeroresinas/fotos/real-sgm.jpg",fotoLado:1,ancha:1,pie:"Un helicóptero en el hangar, de las fotos de Aeroresinas.",cred:"Aeroresinas",list:[
+        "<b>Pide tres cosas:</b> una visita al hangar con un helicóptero abierto, media hora con un piloto y el nombre de la escuela donde aprendió.",
+        "<b>Pregunta lo que no sale en internet:</b> cuántas horas necesitó, en qué helicóptero, cuánto pagó y qué haría distinto.",
+        "<b>Si alguien te sube</b> en un vuelo de mantenimiento o de traslado, acepta. Un paseo turístico compartido cuesta desde $3,500 la media hora.",
+        "<b>También le sirve al negocio:</b> hablar con pilotos y dueños es conocer clientes, y Heliescala les vende la maqueta del suyo.",
+        "Tu caso: empieza por tu papá en diciembre. Es el paso más barato de todos y la puerta ya está abierta."]},
+      {t:"Mantenerla: lo que no se cuenta",d:"Una licencia sin vuelos se vence o se oxida. Cuéntalo antes de empezar, no después.",foto:"../Aeroresinas/fotos/real-h125.jpg",fotoLado:1,ancha:1,pie:"La cola de un H125 en el hangar, de las fotos de Aeroresinas.",cred:"Aeroresinas",list:[
+        "<b>Europa:</b> la habilitación del modelo dura un año y se renueva con horas y un vuelo de comprobación.",
+        "<b>Estados Unidos:</b> revisión con instructor cada 24 meses, y 3 despegues y aterrizajes en 90 días para llevar pasajeros.",
+        "<b>México:</b> la licencia dura 3 años, con el certificado médico vigente.",
+        "<b>La regla que te cuida:</b> si no puedes pagar volar cada mes, todavía no es momento de empezar."]},
+      {t:"✅ Ya lo dominas cuando…",d:"Cinco señales que se pueden comprobar:",list:[
+        "<b>(1)</b> Pasaste el médico y tienes el certificado.",
+        "<b>(2)</b> Explicas los tres mandos, la autorrotación y el anillo de vórtices sin ver notas.",
+        "<b>(3)</b> Tienes tres cotizaciones por escrito, con horas, helicóptero y examen.",
+        "<b>(4)</b> Aprobaste las nueve materias y la radio.",
+        "<b>(5)</b> Volaste solo, hiciste tu travesía de 185 km y pasaste el examen."]},
+      {t:"📚 Qué leer",d:"Cuatro, del gratis al que se lee como novela:",list:[
+        "<b>Helicopter Flying Handbook</b> · FAA — el manual oficial, gratis en PDF. Empieza por aquí.",
+        "<b>Principles of Helicopter Flight</b> · W. J. Wagtendonk — la aerodinámica explicada para quien va a volar.",
+        "<b>Cyclic &amp; Collective</b> · Shawn Coyle — lo que un piloto de pruebas quisiera que supieras.",
+        "<b>Chickenhawk</b> · Robert Mason — memorias de un piloto en Vietnam: la mejor descripción escrita de aprender a volar un helicóptero."]},
     ]},
   maestria:{titulo:"Maestría en Alemania",frase:"La maestría tiene fecha y condición: septiembre de 2027 si el dinero llega; si no, 2028, con todo pagado. Y del otro lado te espera la región automotriz más importante de Europa.",pasos:[
       {t:"La fecha y su condición",d:"Te vas en septiembre de 2027 ({{maestriaInicio}}) si el dinero llega: la pausa terminó, todo el ahorro va a GBM y, con tu ritmo, faltan {{extraSalida}} al mes de ingreso nuevo desde noviembre. Lo que hay que reunir —{{salidaTotal}}— y la lista completa de papeles, salud, ropa y el auto están en Coach → Plan Maestro; el avance de hoy, en el medidor 🎓 Fondo Maestría de esta pantalla.",foto:"fotos-aprende/meta-esslingen.jpg"},
@@ -13677,8 +13687,8 @@ const META_DETALLE={
 //      pasos    [{f, t}] o {tarea}. Se palomean en `metas_plan_v1`; los {tarea} son la MISMA casilla del Plan Maestro
 //               (`coach_checks_v1`), con la fecha y el texto de PHASES: no se copia nada
 //      vas      cómo sabes que vas bien · si: qué haces si te atrasas
-//    Revisado el 11-oct-2026: HYROX en hyrox.com (Guadalajara 19–21 mar 2027, Monterrey 16–18 abr 2027, CDMX
-//    29 oct–1 nov 2026), y los capítulos y objetivos del CT-GenAI en `EXAMEN_GENAI.objetivos`.
+//    Un paso `{viaje:[id, paso]}` es la MISMA casilla de Próximos viajes (viajes.js): la visa de Puerto Rico y la de SpaceX.
+//    Los capítulos y objetivos del CT-GenAI, en `EXAMEN_GENAI.objetivos`; helicóptero y SpaceX, revisados el 24-nov-2026.
 const META_PLAN={
   istqbgenai:{
     meta:'Aprobar el CT-GenAI con 30 de 46 puntos o más (el corte oficial, 65 %)',
@@ -13705,45 +13715,46 @@ const META_PLAN={
     vas:'El examen de muestra A del 17 de octubre es tu línea de partida. Vas bien si cada simulacro sube y los dos de enero pasan de 34 de 46; en el día a día, si aciertas 7 de cada 10 preguntas de Hoy aprendes.',
     si:'Si el 16 de enero sigues bajo 30, pide a Brightest cambiar la fecha antes de presentarlo a ciegas: mejor febrero aprobado que enero reprobado. No más tarde: la solicitud de Esslingen de febrero lo quiere en tu CV.'
   },
-  hyrox:{
-    meta:'Terminar tu primer HYROX (Men Open, individual) corriendo los 8 km: sin caminar los últimos dos',
-    fecha:{clave:'hyroxFecha'},
+  spacex:{
+    meta:'Ver en vivo el despegue de un cohete de SpaceX, con la fecha firme antes de comprar el vuelo',
+    fecha:'2027-03',
     sistema:[
-      {c:'Mié · {{horaGym}}',q:'Los intervalos de tu rutina (bici, cuerdas y elíptica): el motor del Hyrox.'},
-      {c:'Vie · {{horaGym}}',q:'Cardio largo y core. Desde el 4 de enero, carrera con estaciones: 1 km corriendo y una estación, repetido.'},
-      {c:'Lun · Mar · Jue · Sáb',q:'La fuerza de tu rutina: de ahí salen el trineo, las zancadas y los wall balls.'}
+      {c:'Vie · descanso de ALTEN',q:'Cinco minutos: mira los próximos lanzamientos de esta ficha y anota los de Florida que ya tengan fecha firme.'},
+      {c:'Cada quincena',q:'Lo que cueste sale de tu gasto personal: ni del ahorro a GBM ni a meses sin intereses.'}
     ],
     pasos:[
-      {f:'2026-10-12',t:'Pide el aviso de venta de {{hyroxSede}} en hyrox.com (todavía no abre): la primera oleada es la más barata.'},
-      {f:'2026-10-17',t:'Tu prueba de partida, en el gym del sábado: 5 km corriendo, cronometrados. Anota el tiempo.'},
-      {f:'2026-11',t:'Compra tu boleto Men Open en cuanto abra la venta, en la ola del sábado {{hyroxFecha}} si tu categoría corre ese día.'},
-      {f:'2027-01-04',t:'Arranca el bloque específico de 11 semanas: el viernes pasa a carrera con estaciones.'},
-      {f:'2027-01-15',t:'Reserva el transporte: ida el viernes y regreso el sábado {{hyroxFecha}} en la noche. El domingo es de Didi.'},
-      {f:'2027-02-06',t:'Medio Hyrox de prueba en el gym: 4 rondas de 1 km y una estación, cronometrado.'},
-      {f:'2027-02-27',t:'Hyrox completo de práctica: 8 rondas de 1 km y una estación. Los 8 km sin caminar.'},
-      {f:'2027-03-08',t:'Descarga: el volumen a la mitad y nada pesado. Llegar fresco vale más que un último entrenamiento.'},
-      {f:{clave:'hyroxFecha'},t:'{{hyroxSede}}. Corres los 8 km.'}
+      {viaje:['pr','revisa']},
+      {viaje:['pr','cita']},
+      {viaje:['pr','visa']},
+      {f:'2027-01-22',t:'Con el calendario de febrero y marzo, elige 4 días en Florida pegados a Puerto Rico. Si no hay fecha firme, el viaje no se alarga.'},
+      {f:'2027-02-12',t:'Con fecha firme: vuelo con cambio permitido y hotel cancelable en Titusville.'},
+      {f:'2027-03',t:'El lanzamiento: temprano, con binoculares y el teléfono guardado.'}
     ],
-    vas:'Tu 5 km del 17 de octubre es la línea de partida: vas bien si en febrero lo corres 2 minutos más rápido y el medio Hyrox del 6 de febrero lo terminas sin caminar.',
-    si:'Si el 27 de febrero caminas en la práctica, la fecha no se mueve: corres a ritmo de plática y la meta es terminar.'
+    vas:'El 15 de enero tienes la visa y el 12 de febrero hay un lanzamiento con fecha firme que cae en tus días.',
+    si:'Si la visa no llega o no hay fecha firme, la meta se mueve al otoño de 2029, desde Alemania y de contado. El dinero de la salida no se toca por un cohete.'
   },
-  ajedrez:{
-    meta:'Jugar tu primer torneo presencial completo: todas las rondas, sin abandonar',
-    fecha:'2026-12-19',
+  helicoptero:{
+    meta:'Tu licencia de piloto privado de helicóptero, volada en Alemania y pagada sin deuda',
+    fecha:'2030-06',
     sistema:[
-      {c:'Lun a vie · descanso de ALTEN',q:'15 minutos de puzzles en Lichess después de comprar tu comida: el rato que el celular se llevaba.'},
-      {c:'Sábado · 15:30–16:30',q:'Dos partidas rápidas (15+10) en línea, y revisas la que perdiste: dónde se rompió el plan.'}
+      {c:'Lun a vie · descanso de ALTEN',q:'15 minutos del Helicopter Flying Handbook, después de comprar tu comida: es gratis, está en inglés y es media teoría.'},
+      {c:'Último viernes del mes',q:'Explica un capítulo en voz alta, sin verlo. Si no te sale, todavía no lo sabes.'}
     ],
     pasos:[
-      {f:'2026-10-12',t:'Abre tu cuenta en Lichess y resuelve 20 puzzles: anota tu rating de puzzles de partida.'},
-      {f:'2026-10-24',t:'Un sábado en un club presencial (Mercenarios, en la Del Valle, o Cuauhtémoc, en la Tabacalera): juega contra gente.'},
-      {f:'2026-10-31',t:'Elige tu torneo en chess-results.com (filtro México) o en la Federación: un rápido de un solo día, en sábado. Inscríbete y paga.'},
-      {f:'2026-11-28',t:'Un torneo en línea en Lichess (un Arena), para entrenar el reloj.'},
-      {f:'2026-12-19',t:'Tu torneo. Todas las rondas, ganes o pierdas.'},
-      {f:'2026-12-26',t:'Revisa tus partidas del torneo, una por una: dónde se rompió el plan.'}
+      {f:'2026-12-12',t:'Descarga el Helicopter Flying Handbook de la FAA (gratis) y lee el capítulo de aerodinámica.'},
+      {f:'2026-12-19',t:'Pide a tu papá una visita a un hangar y media hora con un piloto que sea cliente de Aeroresinas.'},
+      {f:'2027-01-30',t:'Cotiza por escrito en dos escuelas de México y una de Alemania: horas, helicóptero, examen y total.'},
+      {f:'2027-03-27',t:'Terminas los capítulos de mandos y de maniobras: explicas la autorrotación sin ver notas.'},
+      {f:'2027-05',t:'En tu cita del oftalmólogo, pide la prueba de visión de colores: es el primer filtro del médico.'},
+      {f:'2027-11',t:'En Alemania: visita una escuela en su día informativo y súbete a la cabina.'},
+      {f:'2028-06',t:'El certificado médico de clase 2 y la radio (BZF).'},
+      {f:'2029-03',t:'Con tu primer sueldo de ingeniero, te inscribes y pagas por bloques de horas.'},
+      {f:'2029-09',t:'Las nueve materias de teoría, aprobadas.'},
+      {f:'2029-12',t:'Tu primer vuelo solo.'},
+      {f:'2030-06',t:'La travesía de 185 km, el examen de vuelo y la licencia.'}
     ],
-    vas:'Tu rating de puzzles sube de lo que anotaste el 12 de octubre, y juegas tus dos partidas cada sábado.',
-    si:'Si el 31 de octubre no hay uno en sábado de aquí a diciembre, el primero de enero que lo sea: lo que no se mueve es inscribirte con fecha. Uno en domingo no: el domingo es de Didi.'
+    vas:'Antes de irte: un capítulo al mes y tres cotizaciones en enero. Volando: el primer vuelo solo antes de la hora 25 y el examen antes de la 60.',
+    si:'Si en 2029 el sueldo no da para volar seguido, se espera: con horas salteadas se paga doble. La radio y el médico sí se hacen; la teoría se deja para cuando haya con qué volar.'
   },
   maestria:{
     meta:'Empezar el M.Eng. Automotive Systems en Esslingen con la salida pagada completa',
@@ -13787,7 +13798,7 @@ const META_PLAN={
     meta:'Pelear una pelea amistosa de Muay Thai en un campamento de Tailandia',
     fecha:{tarea:'a4-4'},
     pausa:true, desde:'2030-01-01',
-    sistema:[{c:'Hasta enero de 2030',q:'Tu condición la construye hoy el Hyrox. Las 12 semanas de Muay Thai empiezan en enero de 2030.'}],
+    sistema:[{c:'Hasta enero de 2030',q:'Tu condición la construye hoy el gym. Las 12 semanas de Muay Thai empiezan en enero de 2030.'}],
     pasos:[
       {tarea:'a4-3'},
       {f:'2030-01',t:'Compra el vuelo de abril, el mes más barato, y reserva el campamento: Santai, en Chiang Mai, con alojamiento.'},
@@ -13809,19 +13820,6 @@ const META_PLAN={
     ],
     vas:'El corte de diciembre de 2030 va en la proyección.',
     si:'Si no va, se mueve un año, de contado.'
-  },
-  spacex:{
-    meta:'Ver en vivo un lanzamiento de SpaceX desde Cabo Cañaveral o Starbase',
-    fecha:'2029-10',
-    pausa:true, desde:{fase:'Fase 4',inicio:true},
-    sistema:[{c:'Hasta la Fase 4',q:'Nada: antes de irte, todo el dinero es de la salida. Desde Alemania se combina con un viaje a Estados Unidos.'}],
-    pasos:[
-      {f:'2029-06',t:'Sigue el calendario de lanzamientos y elige uno en Florida para el otoño.'},
-      {f:'2029-09',t:'Con el estatus «Go», vuelo con cambio o reembolsable: nada no reembolsable antes.'},
-      {f:'2029-10',t:'El lanzamiento, desde Space View Park en Titusville: gratis, con el audio del control de misión.'}
-    ],
-    vas:'Va en el primer año de la Fase 4, de contado.',
-    si:'Los lanzamientos se posponen seguido: si se cae, el siguiente de la misma ventana.'
   },
   cupra:{
     meta:'El Cupra Formentor, de contado o con un enganche grande',
@@ -13891,6 +13889,8 @@ function metaPlan(id){
   const P=META_PLAN[id]; if(!P) return null;
   const st=(rawGet('metas_plan_v1',{})||{})[id]||{}, checks=rawGet('coach_checks_v1',{})||{};
   const pasos=P.pasos.map((p,k)=>{
+    const vj=p.viaje?(window.VIAJES&&(VIAJES.viaje(p.viaje[0])||{pasos:[]}).pasos.find(q=>q.id===p.viaje[1])):null;
+    if(p.viaje){ const f=vj&&vj.f?{d:vj.f,mes:false}:null, fa=mpFalta(f); return {k,t:vj?vj.t:'',f,fTxt:mpFechaTxt(f),cuando:fa.txt,est:vj&&vj.hecho?'hecho':fa.est,hecho:!!(vj&&vj.hecho),tarea:null,viaje:p.viaje}; }
     const x=p.tarea?cdTarea(p.tarea):null;
     const t=p.tarea?(x?mpPrimeraFrase(window.CIFRAS?CIFRAS.texto(x.s.txt):x.s.txt):p.tarea):p.t;
     const f=mpFecha(p.tarea?{tarea:p.tarea}:p.f), fa=mpFalta(f), hecho=p.tarea?!!checks[p.tarea]:!!st[k];
@@ -13904,6 +13904,7 @@ function metaPlan(id){
 // (`coach_checks_v1`, con la semana de hoy, como Mi Día), así que el tablero y Coach los ven igual.
 function toggleMetaPlan(id,k){
   const p=META_PLAN[id]&&META_PLAN[id].pasos[k]; if(!p) return;
+  if(p.viaje){ VIAJES.palomea(p.viaje[0],p.viaje[1]); mdPintar(); return; }
   if(p.tarea){
     const checks=rawGet('coach_checks_v1',{})||{}, h=new Date();
     toggleFaseCheck(p.tarea,!checks[p.tarea],h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'#'+ctSemDe(h.getDate()));
@@ -13960,7 +13961,7 @@ function mdPintarPlan(){
     ${mpRitmoHtml(mp)}
     ${mpRealHtml(id,mp)}
     <div class="md-avance-nota">${mp.pausa?`En pausa hasta <b>${esc(mp.desdeTxt)}</b>: lo que no cabe en la semana se pausa con fecha, no se abandona.`
-      :(mp.sig?`Los pasos marcados <b>Plan Maestro</b> son la misma casilla del tablero.`:'Todos los pasos del plan están hechos.')}</div>`;
+      :(mp.sig?(mp.pasos.some(p=>p.viaje)?'Los pasos marcados <b>Próximos viajes</b> son la misma casilla del viaje.':mp.pasos.some(p=>p.tarea)?'Los pasos marcados <b>Plan Maestro</b> son la misma casilla del tablero.':''):'Todos los pasos del plan están hechos.')}</div>`;
   document.getElementById('metaDetailIndiceN').textContent=`${info.pasos.length} ${info.pasos.length===1?'paso':'pasos'}`;
   document.getElementById('metaDetailIndice').innerHTML=mdIxPlan(true)+info.pasos.map((x,k)=>{
     const h=!!((rawGet(mdEstado.storeKey,{})[id]||{})[k]);
@@ -13986,7 +13987,7 @@ function mdPintarPlan(){
         <div class="mp-sec-hd"><span class="md-lbl">Los pasos, con fecha</span><small>${mp.hechos} de ${mp.total} hechos</small></div>
         ${mp.pasos.map(p=>`<button type="button" class="mp-paso ${clase(p)}" onclick="toggleMetaPlan('${id}',${p.k})" aria-pressed="${p.hecho}">
           <span class="mp-chk">${p.hecho?'✓':''}</span><span class="mp-f">${esc(p.fTxt)}</span>
-          <span class="mp-t">${esc(p.t)}${p.tarea?'<i>Plan Maestro</i>':''}</span><span class="mp-c">${p.hecho?'hecho':esc(p.cuando)}</span>
+          <span class="mp-t">${esc(p.t)}${p.tarea?'<i>Plan Maestro</i>':p.viaje?'<i>Próximos viajes</i>':''}</span><span class="mp-c">${p.hecho?'hecho':esc(p.cuando)}</span>
         </button>`).join('')}
       </div>
       <div class="mp-dos">
@@ -14092,9 +14093,9 @@ function mdCopiar(btn){
 // todas con datos que ya existen —lo que no tiene un dato real no se inventa—:
 //   · la ruta (`mpRutaHtml`): los pasos del plan sobre el tiempo, con hoy y la meta marcados;
 //   · el ritmo (`mpRitmoHtml`): la cuenta regresiva y el tiempo que ya pasó contra los pasos hechos;
-//   · el avance real (`mpRealHtml`): los simulacros y las preguntas del CT-GenAI, las sesiones de gym de cada
-//     semana para el Hyrox, el GBM que proyecta el plan contra lo que pide cada corte de la salida para la
-//     maestría, lo que queda de entrenamiento antes del torneo de ajedrez y, en las de largo plazo, tu
+//   · el avance real (`mpRealHtml`): los simulacros y las preguntas del CT-GenAI, los próximos lanzamientos de
+//     SpaceX, el GBM que proyecta el plan contra lo que pide cada corte de la salida para la maestría, lo que
+//     cuesta la licencia de helicóptero y lo que le mueve a tu millón, y, en las de largo plazo, tu
 //     patrimonio contra la trayectoria del millón que las habilita (`CIFRAS.PROYECCION`).
 // Las gráficas siguen la guía de visualización: marcas delgadas, rejilla de 1 px, texto en tinta y cada valor
 // también fuera del tooltip (en su etiqueta o en su tabla).
@@ -14194,27 +14195,6 @@ function mpRealIstqb(){
     '<div class="mpr-nota">'+(n?'<b>'+ok+' de '+n+'</b> bien ('+Math.round(ok/n*100)+' %). La meta es 7 de cada 10.':'Ninguna en 14 días: la de hoy está en Hoy aprendes.')+'</div>';
   return h;
 }
-// El Hyrox: las sesiones de gym de las últimas 8 semanas (lunes a domingo) contra los días de tu rutina.
-function mpRealHyrox(){
-  const rut=(D.gym&&D.gym.rutina&&Object.keys(D.gym.rutina).length)?D.gym.rutina:GYM_RUTINA_DEFAULT;
-  const obj=Object.keys(rut).filter(k=>rut[k]&&rut[k].tipo!=='descanso').length||6;
-  const ses=new Set(gymSesiones().map(s=>s.fecha)), hoy=mpHoy(), lun=new Date(hoy);
-  lun.setDate(hoy.getDate()-((hoy.getDay()+6)%7));
-  const sem=[];
-  for(let w=7;w>=0;w--){
-    const a=new Date(lun); a.setDate(lun.getDate()-7*w);
-    let n=0; for(let d=0;d<7;d++){ const x=new Date(a); x.setDate(a.getDate()+d); if(ses.has(mpK(x))) n++; }
-    sem.push({a,n,actual:w===0});
-  }
-  const tot=sem.reduce((s,w)=>s+w.n,0), prev=sem.slice(0,7), prom=prev.reduce((s,w)=>s+w.n,0)/7;
-  let h='<div class="md-hair"></div><div class="md-rec-hd"><span class="md-lbl">Tus sesiones de gym</span><small>por semana</small></div>';
-  if(!tot) return h+'<div class="mpr-vacio">Tus sesiones de Ejercicio aparecen aquí, semana por semana, contra las '+obj+' de tu rutina: el Hyrox se construye en el gym de cada semana.</div>';
-  return h+mpColsHtml(sem.map(w=>({v:w.n,lbl:w.n,cls:(w.actual?'actual ':'')+(w.n>=obj?'ok':w.n>=obj-1?'medio':'bajo'),
-        tit:'Semana del '+mpDiaMes(w.a)+': '+w.n+' de '+obj+' sesiones'+(w.actual?' (va en curso)':'')})),
-      [{v:obj,cls:'meta',t:'tu rutina '+obj}], Math.max(obj,7), sem.map(w=>w.actual?'esta':mpDiaMes(w.a)),
-      'Sesiones por semana: '+sem.map(w=>w.n).join(', '))+
-    '<div class="mpr-nota">Esta semana, <b>'+sem[7].n+' de '+obj+'</b>; el promedio de las 7 anteriores, '+prom.toLocaleString('es-MX',{maximumFractionDigits:1})+'.</div>';
-}
 // La maestría: el GBM que proyecta el plan al cerrar cada mes hasta irte, contra lo que pide cada corte de la
 // salida (`marzoParaSalida`, `mayoParaSalida` y los dos de `PROYECCION.cortes`), con lo que falta en cada uno;
 // lo que tienes hoy contra lo que el plan espera este mes, y el alemán que pide Esslingen.
@@ -14269,17 +14249,32 @@ function mpRealSalida(){
   }
   return x;
 }
-// El torneo de ajedrez: lo que queda de tu sistema antes de la fecha —los sábados de partidas y los días de puzzles—.
-function mpRealAjedrez(mp){
-  if(!mp.fecha) return '';
-  const hoy=mpHoy(), fin=mp.fecha.d; if(fin<=hoy) return '';
-  let sab=0, lab=0;
-  for(const d=new Date(hoy); d<fin; d.setDate(d.getDate()+1)){ const w=d.getDay(); if(w===6) sab++; else if(w>=1&&w<=5) lab++; }
-  const min=lab*15;
-  return '<div class="md-hair"></div><div class="md-rec-hd"><span class="md-lbl">Antes del torneo</span><small>con tu sistema</small></div>'+
-    '<div class="mpk"><div><b>'+sab+'</b><span>sábados · '+sab*2+' partidas rápidas</span></div>'+
-      '<div><b>'+lab+'</b><span>días de puzzles · '+Math.floor(min/60)+' h '+String(min%60).padStart(2,'0')+' min</span></div></div>'+
-    '<div class="mpr-nota">Quince minutos de puzzles en el descanso de ALTEN y dos partidas cada sábado: el torneo se gana antes.</div>';
+// SpaceX: los próximos lanzamientos y tu probabilidad de ver uno, en vivo (lanzamientos.js).
+function mpRealSpacex(){
+  if(!window.LANZAMIENTOS) return '';
+  LANZAMIENTOS.pedir(()=>{ if(mdEstado.id==='spacex'&&document.getElementById('metaDetailOverlay').classList.contains('open')) mdPintar(); });
+  return LANZAMIENTOS.panel();
+}
+// La licencia de helicóptero: lo que cuesta en cada ruta y lo que le mueve al millón, con la proyección del plan. El
+// pago se reparte entre la inscripción (marzo de 2029) y la meta; desde ahí, el patrimonio va abajo por lo que costó.
+function mpRealHelicoptero(mp){
+  if(!window.CIFRAS||!CIFRAS.PROYECCION||!mp.fecha) return '';
+  const n=k=>+CIFRAS.n(k)||0, cA=n('heliCosto'), cU=n('heliUsa'), cR=n('heliUsaReal'); if(!cA) return '';
+  const ms=CIFRAS.PROYECCION.meses, en=ym=>ms.findIndex(m=>m.mes===ym), kIni=en('2029-03'), kFin=en(mpYM(mp.fecha.d));
+  const nMeses=kIni>0&&kFin>kIni?kFin-kIni+1:0, junta=nMeses?ms[kFin].liquido-ms[kIni-1].liquido:0;
+  const ult=ms[ms.length-1], a12=ms[ms.length-13], paso=a12?(ult.liquido-a12.liquido)/12:0;
+  const llega=meta=>{ const k=ms.findIndex(m=>m.liquido>=meta); return k>=0?k:(paso>0?ms.length-1+Math.ceil((meta-ult.liquido)/paso):null); };
+  const mesDe=k=>{ const p=ms[0].mes.split('-').map(Number), d=new Date(p[0],p[1]-1+k,1); return MP_MES[d.getMonth()]+' '+d.getFullYear(); };
+  const k0=llega(1e6), k1=llega(1e6+cA), mil=v=>mpMil(v).replace(' ','&nbsp;');
+  return '<div class="md-hair"></div><div class="md-rec-hd"><span class="md-lbl">Lo que cuesta</span><small>en pesos, al cambio de tu plan</small></div>'+
+    mpColsHtml([{v:cU,lbl:mil(cU),tit:'Texas con 40 horas: '+money(cU)},{v:cR,lbl:mil(cR),tit:'Estados Unidos con 60 horas: '+money(cR)},{v:cA,lbl:mil(cA),cls:'medio',tit:'Alemania con 45 horas: '+money(cA)}],
+      [],Math.max(cA,cU,cR)*1.2,['Texas, 40 h','EE. UU., 60 h','Alemania'],'Lo que cuesta en cada ruta: '+[cU,cR,cA].map(money).join(', '))+
+    '<div class="mpr-nota">Sin vuelos, visa ni hospedaje. Tu ruta es <b>Alemania</b>.</div>'+
+    (junta>0?'<div class="md-hair"></div><div class="md-rec-hd"><span class="md-lbl">Lo que le mueve a tu plan</span></div>'+
+      '<div class="mps"><div class="mps-f"><span>Cada mes, volando<small>de mar 2029 a '+esc(mesDe(kFin))+': '+nMeses+' meses</small></span><b>'+money(Math.round(cA/nMeses))+'</b></div>'+
+      '<div class="mps-f"><span>De lo que juntarías ahí<small>tu plan suma '+money(Math.round(junta))+'</small></span><b class="'+(cA/junta>.6?'mal':'ok')+'">'+Math.round(cA/junta*100)+' %</b></div>'+
+      (k0!=null&&k1!=null?'<div class="mps-f"><span>Tu millón líquido<small>de '+esc(mesDe(k0))+' a '+esc(mesDe(k1))+'</small></span><b class="mal">+'+(k1-k0)+' meses</b></div>':'')+'</div>'+
+      '<div class="mpr-nota">Se vuela con un ingreso mayor, o se acepta que el millón llegue después. Se decide en 2029, con el sueldo firmado.</div>':'');
 }
 // Las de largo plazo: tu patrimonio líquido contra la trayectoria del millón (`PROYECCION.meses`), hasta la fecha
 // de la meta. Es lo que las habilita: cada una espera su corte de diciembre en la proyección.
@@ -14311,7 +14306,7 @@ function mpRealMillon(mp){
     '<div class="mpr-nota">En '+esc(mpFechaTxt(mp.fecha))+' la proyección pone <b>'+money(fin.liquido)+'</b> líquidos. Hoy vas en <b>'+money(real)+'</b>: '+
       money(Math.abs(dif))+(dif>=0?' arriba':' abajo')+' de lo que el plan espera este mes.</div>';
 }
-const MP_REAL={istqbgenai:mpRealIstqb, hyrox:mpRealHyrox, maestria:mpRealSalida, ajedrez:mpRealAjedrez};
+const MP_REAL={istqbgenai:mpRealIstqb, spacex:mpRealSpacex, maestria:mpRealSalida, helicoptero:mpRealHelicoptero};
 function mpRealHtml(id,mp){ const f=MP_REAL[id]||mpRealMillon; try{ return f(mp,id); }catch(e){ return ''; } }
 
 // ══ La línea del tiempo de Mis Metas ═══════════════════════════════════════════════════════════════════
@@ -14352,7 +14347,7 @@ function mgLineaHtml(metas){
     const tarde=g.ms.some(m=>!m.mp.pausa&&m.mp.sig&&m.mp.sig.est==='tarde');
     const cls=g.ms.some(m=>!m.mp.pausa&&m.est==='on')?'on':g.ms.some(m=>!m.mp.pausa)?'off':'pausa';
     return '<div class="mgl-m '+cls+(tarde?' tarde':'')+(g.der?' der':'')+'" style="left:'+g.px.toFixed(2)+'%;--l:'+g.l+'"><i></i><span>'+
-      g.ms.map(m=>'<button type="button" class="mgl-b" onclick="abrirMetaDetalle(\''+m.id+'\',\''+m.img+'\',\''+m.epi+'\')" title="'+
+      g.ms.map(m=>'<button type="button" class="mgl-b" onclick="'+(m.viaje?'abrirKpi(\''+m.id+'\')':'abrirMetaDetalle(\''+m.id+'\',\''+m.img+'\',\''+m.epi+'\')')+'" title="'+
         esc(m.t+' · '+m.mp.fechaTxt+' · '+m.mp.falta.txt+(m.mp.pausa?' · en pausa hasta '+m.mp.desdeTxt:'')+(!m.mp.pausa&&m.mp.sig&&m.mp.sig.est==='tarde'?' · tiene pasos atrasados':''))+'">'+
         m.ico+'<em> '+esc(m.c||m.t)+'</em></button>').join('<i class="mgl-sep">·</i>')+'<small>'+esc(g.f)+'</small></span></div>';
   }).join('');
@@ -14534,9 +14529,9 @@ function mdPintar(){
       <div class="md-paso-d">${p.d}</div>
     </div>`;
   // Con `fotoLado` (Coach · Habilidades) la foto va a la derecha de qué hacer y sus cifras, y no a lo ancho.
-  // En una ficha de Habilidades Base la idea suele ser corta y lo que enseña el paso está en «En detalle»: sube a la columna
+  // En una ficha de Habilidades Base o una meta la idea suele ser corta y lo que enseña el paso está en «En detalle»: sube a la columna
   // del texto, junto a la foto (que se queda a la vista al bajar), para que no quede un hueco a su lado.
-  const arribaHB=esHB&&p.fotoLado&&fotoHtml&&!domHtml;
+  const arribaHB=(esHB||dict===META_DETALLE)&&p.fotoLado&&fotoHtml&&!domHtml;
   const arriba=p.fotoLado&&fotoHtml?`<div class="md-paso-top${arribaHB?' hb':''}"><div class="md-paso-top-x">${hdHtml}${cifrasHtml}${arribaHB?ledgerHtml:''}</div>${fotoHtml}</div>`:hdHtml+fotoHtml+cifrasHtml;
   cuerpo.innerHTML=`${arriba}${visHtml}${sesionHtml}${domHtml||(arribaHB?'':ledgerHtml)}${asiHtml}${mapasHtml}${subtemasHtml}${apHtml}${quizHtml}${copiaHtml}${linkHtml}${botonHtml}`;
   if(esHB) hbSesTick();
@@ -15220,6 +15215,7 @@ function kpiAcomodar(body){
 function kpiDetalle(id){
   if(id==='edad') return taDetalle();
   if(String(id).indexOf('mes-')===0) return ctMesDetalle(id.slice(4));
+  if(String(id).indexOf('viaje-')===0) return window.VIAJES?VIAJES.ventana(id.slice(6)):null;   // Próximos viajes (viajes.js)
   // Los seis medidores del dinero: sus ventanas viven en medidores.js.
   return window.MEDIDORES && MEDIDORES[id] ? MEDIDORES[id](D.fin||{}) : null;
 }
@@ -15307,8 +15303,8 @@ function renderMetasSlide(){
   // corto/mediano plazo (con las 2 barras: checklist + dinero ahorrado real) y Cupra pasó a largo
   // plazo (recompensa después del BYD, ya no compite por atención con las metas activas de ahora).
   const cortoMediano=[
-    {id:'ajedrez',c:'Ajedrez',ico:'🏆',t:'Torneo de ajedrez',img:'https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=800&q=80&auto=format&fit=crop'},
-    {id:'hyrox',c:'Hyrox',ico:'🏋️',t:'Primer Hyrox',img:'https://images.unsplash.com/photo-1739283180407-21e27d5c0735?w=800&q=80&auto=format&fit=crop'},
+    {id:'spacex',c:'SpaceX',ico:'🚀',t:'Ver un lanzamiento de SpaceX',img:'fotos-viajes/sx-noche.jpg'},
+    {id:'helicoptero',c:'Helicóptero',ico:'🚁',t:'Piloto privado de helicóptero',img:'fotos-viajes/heli-noche.jpg'},
     {id:'maestria',c:'Maestría',ico:'🎓',t:'Maestría en Alemania',img:'https://images.unsplash.com/photo-1627556704302-624286467c65?w=800&q=80&auto=format&fit=crop',money:METAS_MONEYBAR.maestria},
     // Mediano plazo, añadida el 2026-08-19 a petición de Adán. Es la única meta suya que se
     // apoya en una credencial que YA tiene (el CTFL de 2025): no empieza de cero.
@@ -15327,7 +15323,6 @@ function renderMetasSlide(){
     {id:'depa',c:'Depa',ico:'🏙️',t:'Depa en la zona que quieras',img:'https://images.unsplash.com/photo-1594873604892-b599f847e859?w=800&q=80&auto=format&fit=crop'},
     {id:'tailandia',c:'Tailandia',ico:'🥊',t:'Pelear en Tailandia',img:'https://images.unsplash.com/photo-1564097147829-44f8c74a8549?w=800&q=80&auto=format&fit=crop'},
     {id:'hongkong',c:'Hong Kong',ico:'🌃',t:'Rascacielos en Hong Kong',img:'https://images.unsplash.com/photo-1620015092538-e33c665fc181?w=800&q=80&auto=format&fit=crop'},
-    {id:'spacex',c:'SpaceX',ico:'🚀',t:'Lanzamiento de SpaceX',img:'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?w=800&q=80&auto=format&fit=crop'},
     {id:'cupra',c:'Cupra',ico:'🚙',t:'Cupra Formentor',img:'https://images.unsplash.com/photo-1655288808681-17caed2fc987?w=800&q=80&auto=format&fit=crop'}
   ];
   METAS_TODAS=cortoMediano.map(m=>Object.assign({epi:'Corto y mediano plazo'},m)).concat(largoExtras.map(m=>Object.assign({epi:'Largo plazo'},m)));
@@ -15371,7 +15366,7 @@ function renderMetasSlide(){
         <span class="mg-hecha-k">✓ ${p.hechos}/${p.total}</span>
       </div>`; }).join('')}</div>`:'';
   };
-  const metaDeckHtml=(arr,sm,epigrafe)=>`<div class="mg-deck${sm?' mg-deck-sm':''}">${arr.filter(i=>estadoMeta(pasosMeta(i.id),i.id)!=='ok').map(i=>{
+  const metaDeckHtml=(arr,sm,epigrafe)=>`<div class="mg-deck${sm?' mg-deck-sm':' mg-deck-mini'}">${arr.filter(i=>estadoMeta(pasosMeta(i.id),i.id)!=='ok').map(i=>{
     const p=pasosMeta(i.id), est=estadoMeta(p,i.id), mp=metaPlan(i.id);
     const chip=est==='ok'?'LOGRADA':(mp&&mp.pausa?'EN PAUSA':(est==='on'?'EN MARCHA':'SIN EMPEZAR'));
     // Cuánto falta, sobre la foto: el plazo de la meta o, en pausa, desde cuándo arranca.
@@ -15412,8 +15407,7 @@ function renderMetasSlide(){
   // abrirEdadDetalle() → taDetalle(), arriba).
   // ── La franja de instrumentos ─────────────────────────────────────────────
   // El avance del conjunto se mide en PASOS, no promediando porcentajes: promediar le daba
-  // el mismo peso a "Básico 5 de alemán" (1 paso) que al Hyrox (15), así que marcar la meta
-  // más chica movía la aguja tanto como quince sesiones de entrenamiento.
+  // el mismo peso a una meta de 1 paso que a una de 11.
   const todasMetas=[...cortoMediano,...largoExtras].map(m=>({...m,p:pasosMeta(m.id)}));
   const pasosTot=todasMetas.reduce((a,x)=>a+x.p.total,0);
   const pasosHec=todasMetas.reduce((a,x)=>a+x.p.hechos,0);
@@ -15426,7 +15420,7 @@ function renderMetasSlide(){
   const lineaMetas=todasMetas.map(x=>Object.assign({},x,{est:estadoMeta(x.p,x.id),mp:metaPlan(x.id),
     epi:cortoMediano.some(c=>c.id===x.id)?'Corto y mediano plazo':'Largo plazo'}));
   let linea='';
-  try{ linea=mgLineaHtml(lineaMetas); }catch(e){ console.error('mgLineaHtml', e); }
+  try{ linea=mgLineaHtml(lineaMetas.concat(window.VIAJES?VIAJES.enLinea():[])); }catch(e){ console.error('mgLineaHtml', e); }
 
   const ei=edadInfo();
   document.getElementById('metasBay').innerHTML=`
@@ -15459,7 +15453,8 @@ function renderMetasSlide(){
     </div>`;
 
   document.getElementById('metasListas').innerHTML=`
-    <div class="mg-col">
+    <div class="mg-col con-viajes">
+      ${window.VIAJES?VIAJES.seccion():''}
       <div class="mg-col-hd">
         <span class="mg-col-t">🚩 Corto &amp; mediano plazo</span>
         <span class="mg-col-n">${cortoMediano.length} METAS</span>
@@ -16902,7 +16897,7 @@ function marcarDesborde(el){
   if(!el._hayMas){ el._hayMas=1; el.addEventListener('scroll',upd,{passive:true}); }
   upd();
 }
-function marcarDesbordes(){ document.querySelectorAll('.slide.active .mg-deck,.slide.active .hb2-filasw').forEach(marcarDesborde); }
+function marcarDesbordes(){ document.querySelectorAll('.slide.active .mg-deck,.slide.active .con-viajes,.slide.active .hb2-filasw').forEach(marcarDesborde); }
 window.addEventListener('resize',()=>requestAnimationFrame(marcarDesbordes));
 function showSlide(i){
   i=Math.min(Math.max(0,i),N-1);
@@ -17024,6 +17019,8 @@ document.addEventListener('fullscreenchange',()=>{
 });
 
 document.addEventListener('keydown',e=>{
+  // Escape dentro de un campo de una ventana lo suelta (y guarda lo escrito); el siguiente Escape la cierra.
+  if(e.key==='Escape'&&e.target.tagName==='INPUT'&&e.target.closest('#kpiOverlay')){ e.target.blur(); return; }
   if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT') return;
   if(e.key==='Escape'&&document.getElementById('metaDetailOverlay').classList.contains('open')){ cerrarMetaDetalle(); return; }
   if(e.key==='Escape'&&document.getElementById('ejFichaOverlay').classList.contains('open')){ cerrarFichaEjercicio(); return; }

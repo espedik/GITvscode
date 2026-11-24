@@ -1,7 +1,7 @@
 /* Las noticias de inversión de Qué invertir hoy, de Google Noticias. Las escribe el hook de pre-commit
    (Dashboard/noticias-actualizar.js): no se edita a mano. */
 window.NOTICIAS_INVERSION = {
- "generado": "2026-11-24T05:28:33.011Z",
+ "generado": "2026-11-24T06:43:27.844Z",
  "temas": [
   {
    "id": "recomendaciones",
@@ -93,6 +93,24 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
+   "t": "Cetes: Así quedaron las tasas en la semana del 17 al 24 de noviembre de 2026",
+   "u": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQVHV5Sm9lVWxKaG1IckZmSlF0REhIckg0SWppRldNVVZiSEw5ck5RS3E4M194N0JjNmNkcWFoOFBLQmlXcGEyeWgzYzhpMkhiRUt1bHRYdzRHVlU2X0xSYU44Z0FYZ1FrdEJEN3hOZkkwdHc0YWEtemJpcEJoakRlUmw3WjFWSzg5b0kzcnVWSG9Zd9IBlwFBVV95cUxNUXRfbzQ5Q2o4eGxWQVhmYzBpSC1lU05iUXRhVzFIWE50VDMzdmFYaWY5TTdSZmNyUDZnSnEyYlUwUDBUdlVFX0pFcEZ2QlNvd0tJVmlyZmtWU1czaXhCaWtEQVo4ckVjbFJ2eUlfb2dhRnhjZmkyNXFpUnFSX1dSWlBUQ2g1RXJmam8zYURQNHc0bmdxbXU0?oc=5",
+   "f": "2026-11-23T10:26:30.000Z",
+   "fuente": "Imagen Radio",
+   "dominio": "imagenradio.com.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "Anthropic: claves para inversionistas ante su salida a Bolsa",
+   "u": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQNnFyU2o1VEt4X1pxNVY4WElRN1lRUG5PeW9NN2Ezak9LZTV0VmtaUlRDWlQ0TnBxSEE5V1J6V09kTlJ3a3dzV0hOSC14S2x3N0RsaDRiQWxHTTVxUEtXbEF0V0RsQnB5SEtabHEySHZuTEhEaE83a0pacTNHTU96WUJHWkkxcVUyOHJpSVJqOVc3cFNsd3o1LXVrbDFwMWxNM0pydERobC1iR2kxaDVramxySWpMLU3SAbwBQVVfeXFMTnA3Zk9fQmVMdGh3VUxqYzFhaV9YTHdOdjhCQTlZSllreXNOc3lqLV8wendWUDRVMHVBXzZuOXgwNkFCSy1ER0t4dHI2YVhvNDZUMlAyQVVac1NxRFE3LVd5UGZVZmlmVjV3ZEtzcE9fTUQ3Zi1qSlM0ano5T255dzBVeHYzTTROR0RQUWpuNEdQek1HbndReFJYVmRfX3lkcEhTSnMtc0lFbWVfaVNKY1pPR1YxOWRBTXh5VWo?oc=5",
+   "f": "2026-11-20T23:00:00.000Z",
+   "fuente": "El Economista",
+   "dominio": "eleconomista.com.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
    "t": "Aguinaldo 2026: esto ganarías al invertir $3,500 en Cetes durante seis meses",
    "u": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPZnJrMENKMElUNnNaLXFxcy1mcWUxcG1aUzlTOXZobVpxR21lUDAwWnBCeDZLSV82c2w5aHlGdWhjSUtNSDlyb1dXdTUzbWQyb1FkZ2dOQ2VLaFJtTlA5X2RLVVZTd3pNNy10N21ndHFCTl9ia3QwQVQ2YnA2SkxkX1NGZ2U1MTJFQ0x4akxiMXpxd010eDdFWmVlanl3Y0NTdDNnemtkQ2hob3dEVldMUzZqOGNaTGhlQXVBYTdR0gHSAUFVX3lxTE96eHctZzV4YzluTTZ4bUZHY0Rldm1vTlRGQmF4WldUd2JkZjVpaUhFekxxLXU4aFVJRHBiRnNVM0xLS1dSTkxKWXFPZm9nWm05bThzUWJaMldDczQ5RVBSRFdfR01nQVc2VE5LcXhtRmVRQTVaR1BERHA2YmswaHZiSWxoempJYWMtMjkzQ1dSWTY5Q1NVRWdmTXQ2VmFydVFvTjNtZFFXNUdBWGJGbjlMcUNwMTMtU2g2bTY3X2VDZWYxcUVwVkZBQS1QTl83T2V5Zw?oc=5",
    "f": "2026-11-20T12:15:44.000Z",
@@ -125,6 +143,42 @@ window.NOTICIAS_INVERSION = {
    "f": "2026-11-18T18:45:00.000Z",
    "fuente": "Expansión",
    "dominio": "expansion.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "Aguinaldo 2026: 5 consejos de la Profeco para hacer rendir al máximo tu dinero",
+   "u": "https://news.google.com/rss/articles/CBMizAFBVV95cUxNVmhqWjhRTzN4N280R0dlOXE4NkVNTnBCeVVUanRUMklvU0FRMzJXdG1QSm1jbTV0OU9IdWF6bGUzbkFqeENoNG9ZMjc4WTZOYWVOUmRXaVRGZnVDQ2NaUHBHRlR5UkdfazFjeTNLTE1WZzhBV25WMGNLakJkWS1MZXlZeUJuZ1MwNGJ1S0VPUGZFQ3ZkQXVnOXotZEZBcTBUREdrd3JWajFHejdtRmRwbnRnb29tNC13WXFGSzh1NU5QcTVEVmJLWnVPbFI?oc=5",
+   "f": "2026-11-18T01:14:07.000Z",
+   "fuente": "Heraldo Binario",
+   "dominio": "heraldobinario.com.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "Apple, Tesla y más: 5 brokers regulados en México para invertir en acciones desde tu celular",
+   "u": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxOX1FWQnZvdzFseWU1TEswUnp0TDltbW1UTGlZcENqZG04RzU4LUR2Z01pbE9keW51UVl2LTlmSEd0dkxNa2dKYktEeFBvYVBKZUtLOWE5X29yQy1vdkhESmRrQU01dklzNXRsY3RXUmpWWGFHVlhyVWhRSFpVZFJXX05ILVlHQmh4Y3lQVjkxdHdQXzF4bXNiX1BHb2xncG9icWpXbFhiaG02ZUNydzQ1bk5RaTZQMnZReDQ1a0tzUGVTeTdLZkJuUTVCQmJOMWIzZDBKRtIB6AFBVV95cUxPQ1dWZk9KSXdjVmNjTTA0SllzYm5ZN2hXb2ZRcEhVMmd5dkR3NFhGMVhOS1FRbHJ5eHZsM0IzN1lLcVVwRGN2ZUZhNENGaUl5YzFYSUphX1hZM2FlamZFaVJtd2JnN0xHSkxTSGR2UE5ac1VwTEY2UFdPbkVJS1NYZGFaNjNkTlZBb3FGWnZKTzRXYzNPOVZ2UFk4QkJpOTAxdFloc2ZhM1NlUldxUi10Y1VXQ05pVDc3bjBQLVFkQm84bjU3NFlFZmtycVIzSFhLbTlfNUNzSFdjLTRVTXVJc2wxaUxFNzRD?oc=5",
+   "f": "2026-11-17T19:23:03.000Z",
+   "fuente": "DeDinero",
+   "dominio": "dedinero.com.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "Subgobernadora de Banxico afirma que no está clara la duración de pausa en tasa de interés",
+   "u": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOb1U4dngyenNBdWxKWTM3ckdWT3loVTg4aVFTeDlzOXpuRHhoUms3MmZEWktTSlY0ZFRfTEQ4aU5sR3pVMWZyTjQ1cndRMWZuZU4tcVh5WEJ0MmQzZWdMX3lFVzEzaDZ1bGRiXzN1RUlwQ2h5RmZxVWpSZ052Sm8tRkh1OUdkel80UFQ5ZWVxZG0ySy03YjFWa2psX2Y0N18zaVllWV8zX090aDdTUW9WT0cwMA?oc=5",
+   "f": "2026-11-17T18:45:00.000Z",
+   "fuente": "Forbes México",
+   "dominio": "forbes.com.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "Cetes: Así quedaron las tasas en la semana del 10 al 17 de noviembre de 2026",
+   "u": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQZ1M2TEJpb19DT3RwVkJJbzdoUkZPLVdaS1lPS3lFZFVvMGFES2FOWkRoYkVLQkZURG1Cemd5ZHhsYVR3TzFKSlc2RFRCODFidjN0V1lJdmtiYm93U0VxZ3U5LXlWYklGVVNjSXJjZ1dZWXpsS3BBamxMSDhsb0xjeV9HcHlhdFdwaUZxRS1icUpBZ9IBlwFBVV95cUxPTDN4QVM3YjRFdHdoMlBoLXl4M1pOY00ydF8xWGNCZFROTENsOGphZjF4VXBlUGhIbDA2dlhRd3B4QWVOQ0gya1lyckV5ZDV1TGpOSHJpMll1QzhNeDZiVHY0QnMxWHNZcHVLZG1DUVdMdTg4ejJiZkQ0Vi0wQVIwYVI4bV9XelVZUmh4RkZtbld6a2tZSmRv?oc=5",
+   "f": "2026-11-17T08:00:00.000Z",
+   "fuente": "Imagen Radio",
+   "dominio": "imagenradio.com.mx",
    "tema": "cetes",
    "rec": false
   },
@@ -165,15 +219,6 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "Bolsas mexicanas rompen racha de seis sesiones a la baja",
-   "u": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQSWpJbGlLOWZzOWxhVkxPMGpwYzY0bUkxUHYtd043SEdZMzBkMXRxX3k3SmJkamlyalFNNl8yVHc0VHVQSDFvcFd3QWRMdC1BTlgyckFfTnRyWHRKY18yQXB5WDdWODFXVFFSR0VBMGVDY2dsS0hmdGpLdk1fajk4cnpuaGQ3S3liUUE2UmhZMlVZMHJHaWhhS1ByN25iVXEyekgyRjE1OFlhTG9PUHNWUVhlQ0LSAbQBQVVfeXFMUElqSWxpSzlmczlsYVZMTzBqcGM2NG1JMVB2LXdON0hHWTMwZDF0cV95N0piZGppcmpRTTZfMlR3NFR1UEgxb3BXd0FkTHQtQU5YMnJBX050clh0SmNfMkFweVg3VjgxV1RRUkdFQTBlQ2NnbEtIZnRqS3ZNX2o5OHJ6bmhkN0t5YlFBNlJoWTJVWTByR2loYUtQcjduYlVxMnpIMkYxNThZYUxvT1BzVlFYZUNC?oc=5",
-   "f": "2026-11-24T03:03:07.000Z",
-   "fuente": "El Economista",
-   "dominio": "eleconomista.com.mx",
-   "tema": "bolsa",
-   "rec": false
-  },
-  {
    "t": "Regreso de Jensen Huang a Nvidia da certidumbre a proveeduría electrónica de México",
    "u": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQRVJjaDA0MlV6S1hxUlZKYkVacTNlcGZzcWVEQUFKZnJ6ZkY3TmNzLXVTWmREYVpHbmVkTU5haGdTNU9VTFlJNV9jZjJJczFiS2RBQXVySDUxZFlsX1JVNXl2VkltMzhkSjhab0RqcHRMa2VlVVJid1ZyUjNRRlQxV0hxVU1SWEV6RXlMVTlhalhaQdIBkgFBVV95cUxNUGo3cGtTUmN2eEs5N2kwNl83MVFzaTJTY0RMdlVZcUhzQ0V3SjZXR3JHWmRiME04Mkw5ZmI5REFMTF9iQm8zUlEwOTNhNlJ3VUtNcVk4bFAwV0hCV1hlM2hTWU1fY3Uwb3EwLXhXVFViYUMxUFRMS2xjYmNibmRWYmtlVWlQaGhxR1JSclFJZ09NQQ?oc=5",
    "f": "2026-11-23T23:24:35.000Z",
@@ -210,11 +255,11 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "Acciones de Marvell y Lumentum a la baja",
-   "u": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPRk0yTlgzaHNaMEw3Z19xNFMxcHVJNnFtNUxIeG9LaWZqX3NGdzc5WG1HTkdYaW1NS2NWa3ZYU1VFeHJrcGFjUXFGb3FNMnhJeHVNeWxoWmE2dGRqNWphTllHVFlSUVRqNUNYVm0wa0pUM3lVX3JBUVYzV3JLQ2ZfTTJXLVoxbFRIRHhRWjJGNTR2R2tXXzZiN253aVbSAZwBQVVfeXFMT0ZNMk5YM2hzWjBMN2dfcTRTMXB1STZxbTVMSHhvS2lmal9zRnc3OVhtR05HWGltTUtjVmt2WFNVRXhya3BhY1FxRm9xTTJ4SXh1TXlsaFphNnRkajVqYU5ZR1RZUlFUajVDWFZtMGtKVDN5VV9yQVFWM1dyS0NmX00yVy1aMWxUSER4UVoyRjU0dkdrV182Yjdud2lW?oc=5",
-   "f": "2026-11-23T02:28:33.000Z",
-   "fuente": "El Economista",
-   "dominio": "eleconomista.com.mx",
+   "t": "Acciones de Anthropic suben en preapertura tras caída del viernes",
+   "u": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQSE4zZmtCQnNTZE5fTVdjOGFVcEtiQlNJdC1jSk55dWRJcjQzQkl1WFFna0hFUzFkWEoxOTRkNEl1Xzg0ZGVqa281V0RhTlozSDZ2aVhQMEtqd1l2WTZscUo1eXJ2aW8xYW5RMUdkRFZwc0hIWTBRcTZxWl83Qnc0RzRLaUJYVFhLTmJjaWFpVWJYX201TFdKd2IxYnY0QVllM18wS0k5ZFZtOGUwVlNmYWZrOWRsV1FhNTJEWUtn?oc=5",
+   "f": "2026-11-23T15:12:29.000Z",
+   "fuente": "Investing.com México - Finanzas, Bolsa y Forex",
+   "dominio": "mx.investing.com",
    "tema": "bolsa",
    "rec": false
   },
@@ -228,11 +273,20 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "Anthropic: claves para inversionistas ante su salida a Bolsa",
-   "u": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQNnFyU2o1VEt4X1pxNVY4WElRN1lRUG5PeW9NN2Ezak9LZTV0VmtaUlRDWlQ0TnBxSEE5V1J6V09kTlJ3a3dzV0hOSC14S2x3N0RsaDRiQWxHTTVxUEtXbEF0V0RsQnB5SEtabHEySHZuTEhEaE83a0pacTNHTU96WUJHWkkxcVUyOHJpSVJqOVc3cFNsd3o1LXVrbDFwMWxNM0pydERobC1iR2kxaDVramxySWpMLU3SAbwBQVVfeXFMTnA3Zk9fQmVMdGh3VUxqYzFhaV9YTHdOdjhCQTlZSllreXNOc3lqLV8wendWUDRVMHVBXzZuOXgwNkFCSy1ER0t4dHI2YVhvNDZUMlAyQVVac1NxRFE3LVd5UGZVZmlmVjV3ZEtzcE9fTUQ3Zi1qSlM0ano5T255dzBVeHYzTTROR0RQUWpuNEdQek1HbndReFJYVmRfX3lkcEhTSnMtc0lFbWVfaVNKY1pPR1YxOWRBTXh5VWo?oc=5",
-   "f": "2026-11-20T23:00:00.000Z",
-   "fuente": "El Economista",
-   "dominio": "eleconomista.com.mx",
+   "t": "Paso a paso para comprar acciones de Anthropic y cómo aprovechar la salida a bolsa más exitosa de la historia",
+   "u": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxQRzF6YllzaTdXZ3psSjFiUDQtWDZRQXE4bzFvZ0t1UXBrbHh3V0lIWFMzeUxqTW5fRjUzekFON0VqTHJHMU95SVFyb1M2bTd0eXFhbDlWUE44M3liXzdicFowaTVmWDFSd1RzMUF3M3Q5TzhsMzh4UmMtVmp5WDNyWWhCUzE2di11eXBibnhzNDlubHlOSGIyM29UemdpNzNoOXFUSUYtbUp4NjZfQk40ZnVkWUNodFlwZTBIcUtiQmN5R2hYa0tQclZkRlFmUWdHT2l5aDFpSlQxTFRqSkgxNnRxMWjSAfgBQVVfeXFMTlM4Vmxya0pRbU56Mnk0LWtLenVXWXNfR1pfYm5LOTZQSndteDVsaWo0MGprUXRTRFN2U2pyOEZrd1czUktJUG5oaVFUaHpCcUItQ0pyZ1dBRVVWR1FzNzdFN243MDNJQy0wQWxVNnNUTkVPYVJqMmgwbEtIdlNsVzAxYkZON05Hb1VnRU1VV3pFcUFldmViU1JSZHFmcU5UeHFJWkpPaXNhNXlPLUxfTnR3bzFfT3JvQ1d3RTNVeXBralNOZ1Q4dkh2b1FEOGZyLU1JN1dxREZjUnNGdTRHb1k3aFpGZzlEMjVFelBNRmtpcXhFVFJROF8?oc=5",
+   "f": "2026-11-19T17:25:03.000Z",
+   "fuente": "Bloomberg Línea",
+   "dominio": "bloomberglinea.com",
+   "tema": "bolsa",
+   "rec": false
+  },
+  {
+   "t": "Nvidia duplicó sus ingresos y así puedes comprar sus acciones desde México",
+   "u": "https://news.google.com/rss/articles/CBMibkFVX3lxTE52bGMyZnp4MVppcXYyQ0ZWWnRDc3hfTkJHUHQtelVacVpPb3k0ZGJmdVVNcFhkTzFWRWNja21HMGZ6Ym9KUjI1bVQyQzAxNkkzX25PSlJldENyV01IVllNZFE3V05MS2lJaG5zZnNn?oc=5",
+   "f": "2026-11-18T17:42:00.000Z",
+   "fuente": "Jointly News",
+   "dominio": "news.jointly.mx",
    "tema": "bolsa",
    "rec": false
   },
@@ -251,6 +305,15 @@ window.NOTICIAS_INVERSION = {
    "f": "2026-11-24T05:03:34.000Z",
    "fuente": "DiarioBitcoin",
    "dominio": "diariobitcoin.com",
+   "tema": "cripto",
+   "rec": false
+  },
+  {
+   "t": "Steve Eisman dice que las criptomonedas no son \"nada\", pero las stablecoins no",
+   "u": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPdXBNYXdQYno0aF9icVU5Zzl3VEhUeHJhX2dCSEFHbFFHaHVSYlhDX2pRSlgzM1ZOSTFLWlRaVWJJQ1lwNnVrekExWERLSTdCZWFyWGNHQnYzdFd4MjNZbmJQZUlLbmxEQzRTWW5zUFNZaGw4cmdwRTJUZFJsQ1BmVWtLZF9hS1pSY01BMQ?oc=5",
+   "f": "2026-11-24T02:41:43.000Z",
+   "fuente": "CoinMarketCap",
+   "dominio": "coinmarketcap.com",
    "tema": "cripto",
    "rec": false
   },
@@ -332,15 +395,6 @@ window.NOTICIAS_INVERSION = {
    "f": "2026-11-23T21:52:22.000Z",
    "fuente": "Cripto247",
    "dominio": "cripto247.com",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "Monness recorta precio objetivo de Strategy Inc por prima de bitcoin",
-   "u": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNdm9tNDBkaWNxVXdwMjZkV19TOVNWTmxZV1JabHpRM3JGR0xoSnk5WEU4eGlVQ0xZZ2ZpTzVHZFZxdkkzeG9LajJVa1ZyQjhMXzVGOGpHOHdyQTM0LUd3R1FXMnFwX1BIQVExWWFnRXJwbkppVDRmYmgzV2JucURMVEVKQk1VMXJCSnN1cHFURWdtYVpZWThrbGkyT2p2ZmtPakl3ekphWGVTTWREZURkd2JpRC1LVFQ0T1ZYQnNURUI4S2V3RWc?oc=5",
-   "f": "2026-11-23T20:05:20.000Z",
-   "fuente": "Investing.com México - Finanzas, Bolsa y Forex",
-   "dominio": "mx.investing.com",
    "tema": "cripto",
    "rec": false
   }
