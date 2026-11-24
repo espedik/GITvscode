@@ -23,6 +23,7 @@
 <!-- Variables maestras de TODO el proyecto: sueldo, renta, deudas, metas, fechas. Las cuatro
      Plan Maestro vienen de aquí, no escritos a mano. El mapa está en DATOS-MAESTROS.md -->
 <link rel="stylesheet" href="ficha.css">
+<link rel="stylesheet" href="medidores.css">
 <script src="ajustes-sync.js" onerror="this.remove()"></script>
 <script src="datos-maestros.js"></script>
 <!-- Las noticias de Qué invertir hoy, de Google Noticias: las escribe el hook de pre-commit (noticias-actualizar.js). -->
@@ -45,6 +46,7 @@
 <!-- La hora del último commit de esta copia, que el hook de pre-commit escribe (version-escribir.js): Mi Día la enseña junto a la semana. -->
 <script src="version.js" onerror="this.remove()"></script>
 <script src="habitos.js"></script>
+<script src="medidores.js"></script>
 <script src="examen-genai-data.js"></script>
 <script src="examen-genai-data-b.js"></script>
 <script src="examen-genai-glosario.js"></script>
@@ -726,37 +728,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .ef-error{grid-column:1/-1;font-size:12px;font-weight:700;color:var(--r)}
 .ef-resumen{font-size:12.5px;color:var(--text2)}
 .ef-resumen b{color:var(--text)}
-/* Deuda total: un crédito a plazo, completo (kpiPrestamoHTML): sus cifras en cajas, lo que ahorra abonar en una tabla y la
-   vista previa de un abono mientras se escribe. */
-.pr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:9px}
-.pr-dato{padding:9px 11px;border-radius:10px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.08);min-width:0}
-.pr-dato span{display:block;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text3)}
-.pr-dato b{display:block;font-size:17px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums;margin:2px 0 1px}
-.pr-dato i{display:block;font-style:normal;font-size:11.5px;line-height:1.35;color:var(--text2)}
-.pr-dato.int b{color:var(--r)}
-.pr-dato.ok b{color:var(--g)}
-.pr-grid .pr-dato:last-child:nth-child(odd){grid-column:1/-1}
-/* Intereses este mes: la mensualidad partida (interés, IVA y seguros, lo que baja la deuda) en una barra con su leyenda. */
-.in-pila{display:flex;height:16px;border-radius:8px;overflow:hidden;background:rgba(var(--ov),.06);margin:4px 0 10px}
-.in-pila i{display:block;height:100%}
-.in-ley{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.in-ley-i{padding:9px 11px;border-radius:10px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.08);min-width:0}
-.in-ley-i span{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text3)}
-.in-ley-i span i{width:9px;height:9px;border-radius:3px;flex-shrink:0}
-.in-ley-i b{display:block;font-size:19px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums;margin-top:3px}
-.in-ley-i em{font-style:normal;font-size:12px;color:var(--text2)}
-.in-int{color:var(--r)}
-.in-meses{font-size:11px;color:var(--text3)}
-.pr-tabla tr.in-tot td{border-top:2px solid rgba(var(--ov),.18)}
-@media(max-width:640px){ .in-ley{grid-template-columns:minmax(0,1fr)} }
-.pr-tabla{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums;margin-bottom:4px}
-.pr-tabla th{text-align:left;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text3);padding:0 6px 6px}
-.pr-tabla td{padding:7px 6px;border-top:1px solid rgba(var(--ov),.08);color:var(--text2)}
-.pr-tabla td b{color:var(--text)}
-.pr-tabla td.ok{color:var(--g);font-weight:800}
+/* La vista previa de un abono, mientras se escribe (prPrevia). */
 .pr-previa{grid-column:1/-1;margin:0;font-size:12px;line-height:1.45;color:var(--text2)}
 .pr-previa b{color:var(--g)}
-@media(max-width:640px){ .pr-grid{grid-template-columns:minmax(0,1fr)} }
 /* Una compra que sigue su precio (sym): en lugar de «Vale hoy» pide la cantidad, opcional, y dice cómo se calcula. */
 .ti-form .ti-cant,.ti-form .ti-auto{display:none}
 .ti-form.liga .ti-cant{display:flex}
@@ -833,13 +807,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 #kpiOverlay .kpi-card .gbm-paso-d{font-size:14px;line-height:1.55}
 #kpiOverlay .kpi-card .gbm-nota{font-size:13px;line-height:1.55;padding:10px 13px}
 #kpiOverlay .kpi-card .gbm-vacio{font-size:13px}
-#kpiOverlay .pr-grid{gap:10px;margin-bottom:12px}
-#kpiOverlay .pr-dato{padding:11px 13px}
-#kpiOverlay .pr-dato span{font-size:11px}
-#kpiOverlay .pr-dato b{font-size:20px}
-#kpiOverlay .pr-dato i{font-size:12.5px;line-height:1.45}
-#kpiOverlay .pr-tabla{font-size:13.5px}
-#kpiOverlay .pr-tabla td{padding:8px 7px}
 #kpiOverlay .ti-fila{font-size:13.5px;padding:10px 14px}
 #kpiOverlay .ti-form{gap:10px 14px;padding:14px 16px}
 #kpiOverlay .ti-form label{font-size:12px}
@@ -14664,38 +14631,6 @@ function kpiBarra(nom, val, pct, color, nota, pista){
          '<div class="gbm-bar"'+(pista?' style="background:'+pista+'"':'')+'><div class="gbm-bar-f" style="width:'+Math.max(0,Math.min(100,pct))+'%;background:'+color+'"></div></div>'+
          (nota?'<div class="kpi-linea-nota">'+nota+'</div>':'')+'</div>';
 }
-// Los cortes de la salida contra lo que la proyección espera en GBM ese mes, con la misma cuenta que Mis Metas (lo que
-// pide menos `alemania` del mes en CIFRAS.PROYECCION).
-function kpiCortesHTML(){
-  const P=window.CIFRAS&&CIFRAS.PROYECCION, cs=cortesSalidaDash(); if(!P||!cs.length) return '';
-  return kpiSec('🚩 Los cortes de la salida, con tu ritmo')+'<div class="kpi-desglose">'+cs.map(function(c){
-    const m=P.meses.filter(x=>x.mes===c.mes)[0], proy=m?m.alemania:0, falta=c.pide-proy;
-    return kpiBarra(c.t+' · '+MP_MES[+c.mes.slice(5,7)-1]+' '+c.mes.slice(0,4), money(c.pide), c.pide>0?proy/c.pide*100:0, falta>0?'var(--o)':'var(--g)',
-      'La proyección espera <b>'+money(proy)+'</b> en GBM: '+(falta>0?'faltan ':'sobran ')+'<b>'+money(Math.abs(falta))+'</b>');
-  }).join('')+'</div>';
-}
-// Lo que espera la trayectoria de patrimonio líquido al cierre de cada fase (PHASES[].liquido) y el mes del millón.
-function kpiTrayectoriaHTML(){
-  const fs=PHASES.filter(f=>typeof f.liquido==='number'); if(!fs.length) return '';
-  const dC=d=>d.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
-  return kpiSec('🛤️ Lo que espera la trayectoria, fase por fase')+'<div class="kpi-desglose">'+fs.map(f=>
-    kpiBarra(f.tag+' · al '+dC(f.end), (f.liquido<0?'−':'')+money(Math.abs(f.liquido)), Math.max(0,f.liquido)/1000000*100, f.liquido<0?'var(--o)':'var(--g)',
-      esc(f.title)+' · patrimonio líquido, hipótesis')).join('')+'</div>'+
-    (window.CIFRAS?kpiNota('La proyección cruza el millón en <b>'+CIFRAS.v('mesMillon')+'</b>.'):'');
-}
-// Cuándo queda en cero cada deuda: la BBVA con su plan quincena a quincena; un crédito con lo que le queda a su pago
-// (CIFRAS.mesesRestantes). De la que acaba primero a la última.
-function kpiDeudaFinHTML(debts){
-  const hoy=new Date(), fmt=d=>d.toLocaleDateString('es-MX',{month:'long',year:'numeric'});
-  const L=debts.filter(d=>+d.balance>0).map(function(d){
-    if(d.id==='d001'&&bbvaPlan()) return {d:d, fin:bbvaPlan().fin, txt:'quincena a quincena, sin intereses'};
-    const n=window.CIFRAS?CIFRAS.mesesRestantes(d):0; if(!n) return null;
-    const fin=new Date(hoy.getFullYear(),hoy.getMonth()+n,1); return {d:d, fin:fin, txt:n+' pagos de '+money(+d.min||0)};
-  }).filter(Boolean).sort((a,b)=>a.fin-b.fin);
-  if(!L.length) return '';
-  return kpiSec('🏁 Cuándo queda en cero cada una')+L.map(x=>kpiPaso(esc(x.d.name)+' · '+fmt(x.fin), money(+x.d.balance)+' hoy · '+x.txt+'.', x.d.rate>0?'var(--r)':'var(--p)')).join('')+
-    (window.CIFRAS?kpiNota('Entre todas pagas <b>'+CIFRAS.v('minimosDeuda')+' al mes</b>. Cada una que se apaga libera su pago.'):'');
-}
 // El ahorro de una fase en México, un mes de cada etapa —con depa y en casa de tu familia— y la
 // La primera letra en mayúscula: los textos del plan se escriben en minúscula para ir tras dos puntos.
 function fzCap(t){ t=String(t||''); return t.charAt(0).toUpperCase()+t.slice(1); }
@@ -15157,11 +15092,15 @@ function abrirKpi(id){
   if(!info) return;
   document.getElementById('kpiTitulo').textContent=info.titulo;
   document.getElementById('kpiSubtitulo').textContent=info.sub||'';
-  document.getElementById('kpiBody').innerHTML=info.html;
-  kpiAcomodar(document.getElementById('kpiBody'));
+  // Los seis medidores (medidores.js) traen su diseño completo; los demás paneles se reparten en columnas.
+  const body=document.getElementById('kpiBody');
+  body.innerHTML=info.kv?MEDIDORES.pinta(info):info.html;
+  if(!info.kv) kpiAcomodar(body);
+  ov.classList.toggle('kv-on', !!info.kv);
   ov.dataset.kpi=id;
   if(id==='invertido') tiPedirPrecios();
   ov.classList.add('open');
+  if(info.listo) info.listo();
   clearInterval(timer);
 }
 function cerrarKpi(){ _tiEdit = null; _efEdit = null; _prEdit = null; document.getElementById('kpiOverlay')?.classList.remove('open'); }
@@ -15176,76 +15115,31 @@ function prMes(x){ return x ? x.toLocaleDateString('es-MX',{month:'short',year:'
 function prDia(x){ return x ? x.toLocaleDateString('es-MX',{day:'numeric',month:'short'}) : '—'; }
 function prMeses(n){ return n + (n === 1 ? ' mes' : ' meses'); }
 const PR_PREVIA = 'Todo va a capital: la siguiente mensualidad ya cobra interés sobre el saldo menor. Escribe cuánto y aquí sale cuánto te ahorras.';
-function kpiPrestamoHTML(d, F){
-  if(!window.CIFRAS || !CIFRAS.prestamoResumen) return '';
-  const R = CIFRAS.prestamoResumen(d, F), editable = tiEditable(), nom = esc(d.name);
-  const dato = (cls, l, v, s) => '<div class="pr-dato'+(cls ? ' '+cls : '')+'"><span>'+l+'</span><b>'+v+'</b>'+(s ? '<i>'+s+'</i>' : '')+'</div>';
-  let h = kpiSec('🚗 '+nom+', completo')+'<div class="pr-grid">'+
-    dato('', 'Te falta pagar', money(R.saldo), +d.total > 0 ? 'de '+money(+d.total)+' · ya pagaste '+money(R.capitalPagado)+' de capital' : '')+
-    dato('', 'Próxima mensualidad', money(R.pago), R.siguiente ? prDia(R.siguiente)+': '+money(R.interesSig)+' de interés y '+money(R.capitalSig)+' a capital. Se anota sola.' : '')+
-    dato('', 'Terminas', R.proy.nunca ? 'nunca' : prMes(R.fin), R.proy.nunca ? 'la mensualidad no cubre ni el interés' : R.proy.meses+' mensualidades más')+
-    (R.cuadra ? dato('int', 'Intereses ya pagados', '≈ '+money(R.interesPagado), 'en '+R.hechos+' mensualidades'+(R.abonado > 0 ? ' y '+money(R.abonado)+' de abonos' : '')+': lo que pagaste menos lo que bajó tu saldo')
-      : R.interesMin != null ? dato('int', 'Intereses ya pagados', 'más de '+money(R.interesMin), 'en '+R.hechos+' mensualidades: lo mínimo con tu saldo de hoy. Para la cifra exacta, pon en «Tus datos del crédito» lo que te prestaron según tu contrato') : '')+
-    dato('int', 'Intereses que faltan', R.proy.nunca ? '—' : money(R.proy.interes), 'si pagas solo la mensualidad'+(R.cargos > 0 ? ', sin el IVA y los seguros' : ''))+
-    (R.interesTotal != null ? dato('int', 'Intereses en total', money(R.interesTotal), 'lo que te cuesta el crédito con tus datos de hoy') : '')+
-    (R.cargos > 0 ? dato('', 'IVA y seguros', money(R.cargos)+' al mes', 'de cada mensualidad, no bajan tu deuda'+(R.cargosFaltan != null ? ' · '+money(R.cargosFaltan)+' en lo que falta' : '')) : '')+
-  '</div>';
-  if(R.contrato){
-    const K = R.contrato, dif = K.faltan != null && !R.proy.nunca ? K.faltan - R.proy.meses : 0, choca = Math.abs(dif) > 2;
-    h += kpiPaso('Tu contrato: '+K.plazo+' mensualidades, la última en '+prMes(K.ultima),
-      'En '+(K.plazo % 12 ? K.plazo+' meses' : (K.plazo / 12)+' años')+' pagas '+K.plazo+' × '+money(R.pago)+' = <b>'+money(K.total)+'</b>'+(K.interes != null ? ' por '+money(+d.total)+' prestados: <b>'+money(K.interes)+' de intereses y cargos</b>' : '')+
-      '. Llevas '+R.hechos+' y te faltan '+K.faltan+': <b>'+money(K.faltaPagar)+'</b> más, de los que '+money(R.saldo)+' son tu deuda y <b>'+money(K.faltaCosto)+' intereses, IVA y seguros</b>.'+
-      (choca ? ' <b>Con tu saldo, tu tasa y tu mensualidad de hoy acabarías en '+prMes(R.fin)+', '+Math.abs(dif)+' mensualidades '+(dif > 0 ? 'antes' : 'después')+'.</b>'+
-        (K.cargosSugeridos ? ' Para terminar en '+prMes(K.ultima)+', de tus '+money(R.pago)+' irían '+money(K.alCredito)+' a interés y capital y unos <b>'+money(K.cargosSugeridos)+'</b> a otra cosa: el IVA del interés y los seguros, que vienen desglosados en tu estado de cuenta.'+
-          (editable ? ' <button type="button" class="ce-btn sec" onclick="prCargosUsar(\''+d.id+'\','+K.cargosSugeridos+')">Usar '+money(K.cargosSugeridos)+' de IVA y seguros</button>' : '')
-        : ' Las dos cosas no pueden ser ciertas: compara el saldo insoluto y la tasa de tu estado de cuenta con <i>Tus datos del crédito</i>.') : ''),
-      choca ? 'var(--o)' : 'var(--r)');
-  }
-  if(!R.proy.nunca){
-    const fila = e => '<tr><td><b>'+money(e.x)+'</b> hoy</td><td><b>'+prMes(e.fin)+'</b></td><td>'+(e.menos > 0 ? prMeses(e.menos)+' antes' : 'igual')+'</td><td class="ok">'+money(e.ahorra)+'</td></tr>';
-    h += kpiSec('💸 Si abonas extra')+'<div class="pr-grid">'+
-      dato('ok', 'Cada '+money(1000)+' que abonas hoy', money(R.porMil.ahorra), 'menos de intereses: rinde lo que cobra tu crédito, '+R.tasa+'% al año, sin riesgo')+
-      dato('ok', money(1000)+' extra cada mes', money(R.mensual.ahorra), 'menos de intereses; terminas en '+prMes(R.mensual.fin)+', '+prMeses(R.mensual.menos)+' antes')+'</div>'+
-      '<table class="pr-tabla"><thead><tr><th>Abono</th><th>Terminas</th><th>Antes</th><th>Te ahorras</th></tr></thead><tbody>'+R.escenarios.map(fila).join('')+'</tbody></table>'+
-      kpiNota('Tu mensualidad sigue en '+money(R.pago)+' y terminas antes. Si prefieres pagar menos cada mes, pídeselo a tu banco y cambia la mensualidad en <i>Tus datos del crédito</i>. Lo que abones ya no se puede sacar: antes, que tu plan de la salida siga cubierto.');
-  }
-  if(editable){
-    const ed = _prEdit ? R.abonos.find(t => t.id === _prEdit) : null, v = x => x != null && x !== '' ? esc(String(x)) : '';
-    h += kpiSec('➕ Anotar un abono a capital')+
-      '<form class="ti-form" data-pr="abono" onsubmit="prAbonoGuardar(event,\''+d.id+'\')">'+
-        '<span class="ti-form-t">'+(ed ? 'Corregir · abono del '+tiFecha(ed.date) : 'Un pago aparte de la mensualidad')+'</span>'+
-        '<label><span>Cuándo</span><input type="date" name="pa_f" value="'+(ed ? v(ed.date) : hoyLocal())+'" required></label>'+
-        '<label><span>Cuánto</span><input type="number" name="pa_m" min="1" step="0.01" inputmode="decimal" value="'+(ed ? v(ed.amount) : '')+'" oninput="prPrevia(this,\''+d.id+'\')" required></label>'+
-        '<label class="ancho"><span>Nota</span><input type="text" name="pa_n" maxlength="80" value="'+(ed ? v(ed.nota) : '')+'" placeholder="p. ej. del aguinaldo"></label>'+
-        '<p class="pr-previa" data-prev>'+PR_PREVIA+'</p>'+
-        '<span class="ti-form-acc"><button type="submit" class="ce-btn">'+(ed ? 'Guardar cambios' : 'Anotar abono')+'</button>'+
-          (ed ? '<button type="button" class="ce-btn sec" onclick="prAbonoCancelar()">Cancelar</button>' : '')+'</span></form>';
-  }
-  if(R.abonos.length){
-    h += (editable ? '' : kpiSec('➕ Tus abonos a capital'))+'<div class="ti-lista" style="margin-top:10px">'+R.abonos.map(t =>
-      '<div class="ti-fila'+(_prEdit === t.id ? ' edita' : '')+'"><span class="ti-f">'+tiFecha(t.date)+'</span>'+
-        '<span class="ti-n"><b>Abono a capital</b><i>'+esc(t.nota || 'sin nota')+'</i></span>'+
-        '<span class="ti-m"><b>'+money(+t.amount || 0)+'</b></span>'+
-        (editable ? '<span class="ti-acc"><button type="button" class="ce-btn sec" onclick="prAbonoEditar(\''+t.id+'\')">Editar</button>'+
-          '<button type="button" class="ce-btn sec" onclick="prAbonoBorrar(\''+t.id+'\')">Borrar</button></span>' : '')+'</div>').join('')+'</div>'+
-      kpiNota('Llevas <b>'+money(R.abonado)+'</b> abonados aparte de la mensualidad. Salen en Finanzas como «Abono a capital»: borrar uno allá también devuelve el saldo.');
-  }
-  if(editable){
-    h += kpiSec('⚙️ Tus datos del crédito')+
-      '<form class="ti-form" data-pr="datos" onsubmit="prDatosGuardar(event,\''+d.id+'\')">'+
-        '<span class="ti-form-t">Corrígelos con tu estado de cuenta</span>'+
-        '<label><span>Saldo que debes hoy</span><input type="number" name="pd_s" min="0" step="0.01" inputmode="decimal" value="'+R.saldo.toFixed(2)+'"></label>'+
-        '<label><span>Tasa anual (%)</span><input type="number" name="pd_t" min="0" max="100" step="0.01" inputmode="decimal" value="'+R.tasa+'"></label>'+
-        '<label><span>Mensualidad</span><input type="number" name="pd_m" min="1" step="0.01" inputmode="decimal" value="'+R.pago+'"></label>'+
-        '<label><span>Plazo (mensualidades)</span><input type="number" name="pd_p" min="1" max="600" step="1" value="'+(+d.plazo || '')+'" placeholder="p. ej. 84"></label>'+
-        '<label><span>Día de pago</span><input type="number" name="pd_d" min="1" max="31" step="1" value="'+R.dia+'"></label>'+
-        '<label><span>Primera mensualidad</span><input type="month" name="pd_i" value="'+esc(String(d.start || '').slice(0, 7))+'"></label>'+
-        '<label><span>Lo que te prestaron</span><input type="number" name="pd_l" min="1" step="0.01" inputmode="decimal" value="'+(+d.total || '')+'"></label>'+
-        '<label><span>IVA y seguros de cada mensualidad</span><input type="number" name="pd_c" min="0" step="0.01" inputmode="decimal" value="'+(R.cargos || '')+'" placeholder="0: toda va a interés y capital"></label>'+
-        '<p class="pr-previa">El saldo que escribas manda desde hoy y las mensualidades se siguen anotando solas desde ahí. Es el mismo crédito de Finanzas.</p>'+
-        '<span class="ti-form-acc"><button type="submit" class="ce-btn">Guardar</button></span></form>';
-  } else h += kpiNota(FIN_REPO ? 'En este dispositivo es la copia de tu PC: los abonos y los datos del crédito se anotan en tu PC.' : 'Abre Finanzas una vez en este navegador para anotar abonos.');
-  return h;
+// El formulario de un abono y el de los datos del crédito: van en la ventana de Deuda total (medidores.js).
+function prAbonoForm(d, R){
+  const ed = _prEdit ? R.abonos.find(t => t.id === _prEdit) : null, v = x => x != null && x !== '' ? esc(String(x)) : '';
+  return '<form class="ti-form" data-pr="abono" onsubmit="prAbonoGuardar(event,\''+d.id+'\')">'+
+    '<span class="ti-form-t">'+(ed ? 'Corregir · abono del '+tiFecha(ed.date) : 'Un pago aparte de la mensualidad')+'</span>'+
+    '<label><span>Cuándo</span><input type="date" name="pa_f" value="'+(ed ? v(ed.date) : hoyLocal())+'" required></label>'+
+    '<label><span>Cuánto</span><input type="number" name="pa_m" min="1" step="0.01" inputmode="decimal" value="'+(ed ? v(ed.amount) : '')+'" oninput="prPrevia(this,\''+d.id+'\')" required></label>'+
+    '<label class="ancho"><span>Nota</span><input type="text" name="pa_n" maxlength="80" value="'+(ed ? v(ed.nota) : '')+'" placeholder="p. ej. del aguinaldo"></label>'+
+    '<p class="pr-previa" data-prev>'+PR_PREVIA+'</p>'+
+    '<span class="ti-form-acc"><button type="submit" class="ce-btn">'+(ed ? 'Guardar cambios' : 'Anotar abono')+'</button>'+
+      (ed ? '<button type="button" class="ce-btn sec" onclick="prAbonoCancelar()">Cancelar</button>' : '')+'</span></form>';
+}
+function prDatosForm(d, R){
+  return '<form class="ti-form" data-pr="datos" onsubmit="prDatosGuardar(event,\''+d.id+'\')">'+
+    '<span class="ti-form-t">Corrígelos con tu estado de cuenta</span>'+
+    '<label><span>Saldo que debes hoy</span><input type="number" name="pd_s" min="0" step="0.01" inputmode="decimal" value="'+R.saldo.toFixed(2)+'"></label>'+
+    '<label><span>Tasa anual (%)</span><input type="number" name="pd_t" min="0" max="100" step="0.01" inputmode="decimal" value="'+R.tasa+'"></label>'+
+    '<label><span>Mensualidad</span><input type="number" name="pd_m" min="1" step="0.01" inputmode="decimal" value="'+R.pago+'"></label>'+
+    '<label><span>Plazo (mensualidades)</span><input type="number" name="pd_p" min="1" max="600" step="1" value="'+(+d.plazo || '')+'" placeholder="p. ej. 84"></label>'+
+    '<label><span>Día de pago</span><input type="number" name="pd_d" min="1" max="31" step="1" value="'+R.dia+'"></label>'+
+    '<label><span>Primera mensualidad</span><input type="month" name="pd_i" value="'+esc(String(d.start || '').slice(0, 7))+'"></label>'+
+    '<label><span>Lo que te prestaron</span><input type="number" name="pd_l" min="1" step="0.01" inputmode="decimal" value="'+(+d.total || '')+'"></label>'+
+    '<label><span>IVA y seguros de cada mensualidad</span><input type="number" name="pd_c" min="0" step="0.01" inputmode="decimal" value="'+(R.cargos || '')+'" placeholder="0"></label>'+
+    '<p class="pr-previa">El saldo que escribas manda desde hoy y las mensualidades se siguen anotando solas. Es el mismo crédito de Finanzas.</p>'+
+    '<span class="ti-form-acc"><button type="submit" class="ce-btn">Guardar</button></span></form>';
 }
 function prAbonoGuardar(ev, id){
   if(ev) ev.preventDefault();
@@ -15326,335 +15220,8 @@ function kpiAcomodar(body){
 function kpiDetalle(id){
   if(id==='edad') return taDetalle();
   if(String(id).indexOf('mes-')===0) return ctMesDetalle(id.slice(4));
-  const F=D.fin||{}, debts=F.debts||[], inv=F.investments||[];
-  const ef=+F.emergencyFund||0, metaEf=_metaFondo();
-  const g=kpiGastoMensual();
-  const pat=patrimonioNeto();
-  const totalInv=inv.reduce((a,i)=>a+(+i.value||+i.invested||0),0);
-  const deudaTot=debts.reduce((a,d)=>a+(+d.balance||0),0);
-  const V='var(--g)', O='var(--o)', R='var(--r)', C='var(--cy)', P='var(--p)', W='var(--w)';
-  // Lo que falta por pagar, detrás de lo pagado en verde.
-  const PISTA_R='color-mix(in srgb,var(--r) 60%,transparent)';
-
-  if(id==='fondo'){
-    const falta=Math.max(0,metaEf-ef), pct=ef/metaEf*100;
-    const mesesCubiertos=g.prom>0?(ef/g.prom):0;
-    const rec=Math.round(falta/3/100)*100;
-    const fijos=window.CIFRAS?(+CIFRAS.n('fijosTotal')||0):0;
-    // Tus aportaciones y retiros (efAportes), del más nuevo al más viejo, con Editar y Borrar donde Finanzas es propia.
-    const editable=tiEditable(), FL=window.CIFRAS?CIFRAS.fondoLista(F):{movs:[],aporto:0,saco:0}, movs=FL.movs, aporto=FL.aporto, saco=FL.saco;
-    const filasEf=movs.map(m=>{ const ret=m.tipo==='retiro';
-      return '<div class="ti-fila'+(_efEdit===m.id?' edita':'')+'"><span class="ti-f">'+tiFecha(m.date)+'</span>'+
-        '<span class="ti-n"><b>'+(ret?'Retiro':'Aportación')+'</b>'+(m.nota?'<i>'+esc(m.nota)+'</i>':'')+'</span>'+
-        '<span class="ti-m"><em class="'+(ret?'mal':'ok')+'">'+(ret?'−':'+')+money(+m.amount||0)+'</em></span>'+
-        (editable?'<span class="ti-acc"><button type="button" class="ce-btn sec" onclick="efEditar(\''+m.id+'\')">Editar</button>'+
-          '<button type="button" class="ce-btn sec" onclick="efBorrar(\''+m.id+'\')">Borrar</button></span>':'')+'</div>';
-    }).join('');
-    return {titulo:'🆘 Fondo de emergencia (CETES)', sub:'Vive en CETES y se vende si hace falta. Cuánto llevas, lo que le metes o le sacas, cuánto te cubre y qué falta.',
-      html:
-      '<div class="kpi-cifra" style="color:'+W+'">'+money(ef)+' <span style="font-size:14px;color:var(--text3)">de '+money(metaEf)+'</span></div>'+
-      '<div class="kpi-cifra-sub">'+Math.round(pct)+'% de la meta · faltan <b>'+money(falta)+'</b></div>'+
-      kpiSec('🧾 Tus aportaciones y retiros')+
-      (movs.length?'<div class="ef-resumen">Aportaste <b>'+money(aporto)+'</b>'+(saco>0?' · retiraste <b>'+money(saco)+'</b>':'')+' en '+movs.length+' movimiento'+(movs.length===1?'':'s')+'</div>':'')+
-      '<div class="ti-lista">'+(filasEf||'<div class="gbm-vacio">Todavía no hay aportaciones anotadas.</div>')+'</div>'+
-      (editable?efFormHtml(_efEdit?movs.find(m=>m.id===_efEdit):null)+
-        kpiNota('Anota aquí lo que le metes al fondo, no como compra en Total invertido: el fondo y tus inversiones se suman en tu patrimonio y en la maestría, y el mismo dinero contaría dos veces.')
-        :kpiNota(FIN_REPO?'En este dispositivo tus cifras son la copia de tu PC'+(FIN_REPO.exportado||FIN_REPO.fecha?' del '+tiFecha(CIFRAS.fechaLocal(new Date(FIN_REPO.exportado||FIN_REPO.fecha))):'')+
-          ': las aportaciones se anotan en tu PC y llegan aquí con el siguiente commit.'
-          :'Abre Finanzas una vez en este navegador para anotar aquí tus aportaciones.'))+
-      kpiSec('📊 De dónde sale')+
-      '<div class="kpi-desglose">'+
-        kpiBarra('Avance hacia los '+money(metaEf), money(ef), pct, W)+
-        (g.prom>0?kpiBarra('Meses de gastos que te cubre hoy', mesesCubiertos.toFixed(1)+' meses', mesesCubiertos/3*100, mesesCubiertos>=3?V:O,
-          'Tu gasto real es de '+money(g.prom)+'/mes (promedio de '+g.meses+' meses cerrados). El estándar es cubrir de 3 a 6.'):'')+
-        (fijos>0?kpiBarra('Meses de tus gastos fijos que cubre', (ef/fijos).toFixed(1)+' meses', ef/fijos/3*100, ef/fijos>=3?V:O,
-          'Tus fijos son <b>'+money(fijos)+' al mes</b>: renta, servicios y suscripciones. Es lo que no se puede dejar de pagar.'):'')+
-      '</div>'+
-      (g.prom>0&&metaEf<g.prom*3?kpiNota('⚠️ Ojo con la meta: <b>'+money(metaEf)+' no llega a 3 meses</b> de tu gasto real ('+money(g.prom*3)+'). Los '+money(metaEf)+' son un buen primer escalón, pero el fondo terminado para ti está más arriba.'):'')+
-      kpiSec('🎯 Qué hacer')+
-      (falta>0
-        ? kpiPaso('Complétalo antes que cualquier otra cosa','Te faltan <b>'+money(falta)+'</b>. A <b>'+money(rec)+' al mes</b> lo cierras en 3 meses. Va antes que invertir y antes que abonos extra a deuda: es lo que evita que un imprevisto te regrese a la tarjeta y deshaga meses de avance.',O)
-        : kpiPaso('Fondo completo ✅','Ya no aportas aquí. El excedente pasa al siguiente escalón: deuda cara si queda, y si no, inversión.',V))+
-      (window.CIFRAS&&!(+CIFRAS.n('cetesDia15'))?kpiSec('🧭 Qué hace el plan con él')+
-        kpiPaso('Hoy el plan no le aporta','El día 15 van <b>'+CIFRAS.v('cetesDia15')+'</b> a CETES: todo el ahorro —<b>'+CIFRAS.v('ahorroMesDepa')+'</b> al mes con depa, <b>'+CIFRAS.v('ahorroMesCasa')+'</b> en casa de tu familia— va a GBM para la salida. Lo que tú le metas o le saques, anótalo aquí: sale igual en Finanzas.',C):'')+
-      kpiNota('Guárdalo donde puedas sacarlo en 24-48 h — CETES a 28 días o cuenta de ahorro. Nunca en algo que pueda valer menos justo el día que lo necesitas.')};
-  }
-
-  // 2026-08-23 — reescrito entero. Antes este panel leia `goal.current` (la cifra a mano de
-  // Finanzas) y afirmaba que "Finanzas no lo tiene desglosado". Adan reporto lo contrario:
-  // esa suma incluye su Bitcoin. Ver el comentario largo sobre fondoMaestria(), que ahora es
-  // la unica fuente de esta cifra en todo el archivo.
-  if(id==='maestria'){
-    const goal=(F.goals||[]).find(x=>x.id==='g001'||/maestr/i.test(x.name||''));
-    const tgt=(goal&&+goal.target)||(window.CIFRAS&&CIFRAS.n('maestriaMeta'))||500000;
-    const fm=fondoMaestria(), bt=fm.btc;
-    const cur=fm.total, guardado=goal?(+goal.current||0):0;
-    const pct=tgt>0?cur/tgt*100:0, falta=Math.max(0,tgt-cur);
-    const pctDe=v=>cur>0?v/cur*100:0;
-    const btcPct=pctDe(bt.mxn);
-    const plUsd=bt.usdNow-bt.usdIn;
-    const usd=n=>'$'+Math.round(Math.abs(n)).toLocaleString('en-US')+' USD';
-    // Fechas reales de la meta: la pausa y el plazo salen del propio registro, no de un texto.
-    const fReanuda=goal&&goal.pausadaHasta?new Date(goal.pausadaHasta+'T00:00:00'):null;
-    const fMeta=goal&&goal.date?new Date(goal.date+'T00:00:00'):null;
-    const hoy=new Date();
-    const mesesPausa=fReanuda?Math.max(0,Math.round((fReanuda-hoy)/(86400000*30.44))):0;
-    const mesesSalida=fMeta?Math.max(1,Math.round((fMeta-hoy)/(86400000*30.44))):0;
-    const ritmo=mesesSalida?falta/mesesSalida:0;
-    const fmtF=d=>d?d.toLocaleDateString('es-MX',{month:'long',year:'numeric'}):'—';
-    // Cuanto se moveria el fondo si el BTC hace lo que el BTC hace. No es una prediccion: es el
-    // tamano del riesgo que ya esta corriendo, medido con su propio saldo.
-    const caida40=bt.mxn*0.4;
-
-    return {titulo:'🎓 Fondo de la Maestría', sub:'De qué se compone hoy, cuánto de eso se mueve solo, y a qué ritmo tendría que ir.',
-      html:
-      '<div class="kpi-cifra" style="color:'+C+'">'+money(cur)+' <span style="font-size:14px;color:var(--text3)">de '+money(tgt)+'</span></div>'+
-      '<div class="kpi-cifra-sub">'+Math.round(pct)+'% de la meta · faltan <b>'+money(falta)+'</b> · '+fm.comps.length+' pieza'+(fm.comps.length===1?'':'s')+', sumadas en vivo</div>'+
-
-      kpiSec('🔍 De qué se compone, pieza por pieza')+
-      '<div class="kpi-desglose">'+(fm.comps.length
-        ? fm.comps.map(x=>kpiBarra(x.n, money(x.v), pctDe(x.v), x.c, x.d+' · <b>'+Math.round(pctDe(x.v))+'% del fondo</b>')).join('')
-        : '<div class="gbm-vacio">Sin nada registrado todavía en Finanzas.</div>')+'</div>'+
-      kpiNota('Ninguna de estas cifras está escrita a mano: salen de Finanzas → Inversiones, del fondo de emergencia y del historial de compras de BTC, y se vuelven a sumar cada vez que abres esto.')+
-
-      (bt.mxn>0?
-        kpiSec('₿ La pieza que se mueve sola')+
-        kpiPaso('El Bitcoin es el '+Math.round(btcPct)+'% de tu fondo',
-          'Son <b>'+bt.held.toFixed(6)+' BTC</b> de '+bt.compras+' compra'+(bt.compras===1?'':'s')+', valuados a <b>$'+Math.round(bt.price).toLocaleString('en-US')+' USD</b> con el dólar a '+bt.fx.toFixed(2)+' → <b>'+money(bt.mxn)+'</b>. Metiste '+usd(bt.usdIn)+' y hoy valen '+usd(bt.usdNow)+': '+(plUsd>=0?'vas <b>+'+usd(plUsd)+'</b> arriba':'vas <b>−'+usd(plUsd)+'</b> abajo')+'.',
-          '#f7931a')+
-        kpiNota('⚠️ Esto es lo que el panel no te decía antes: <b>una parte grande de tu fondo no la controlas tú</b>. Una caída del 40% —normal en Bitcoin, ya pasó varias veces— le quita <b>'+money(caida40)+'</b> a esta meta en semanas, sin que hagas nada mal. Tu propia regla de Coach lo dice: en lo volátil, solo lo que puedas ver caer sin tocarlo.')+
-        ((bt.diasViejo===null||bt.diasViejo>2)?kpiNota('🕒 El precio que se está usando es el último que guardó Finanzas'+(bt.diasViejo!==null?' hace '+bt.diasViejo+' día'+(bt.diasViejo===1?'':'s'):' (nunca se ha actualizado en línea)')+'. Abre Finanzas → Bitcoin o el panel de inversión del lunes para refrescarlo.'):'')
-        :'')+
-
-      (fm.ef>0?kpiNota('⚠️ <b>Ojo con el doble conteo.</b> Tus '+money(fm.ef)+' de fondo de emergencia están sumados aquí <b>y</b> en el medidor de Fondo de emergencia. Así lo hace Finanzas, pero ese dinero tiene un solo trabajo —cubrir un imprevisto— y si lo usas para eso, la maestría baja. <b>Sin contarlo, este fondo es de '+money(fm.sinEf)+'.</b>'):'')+
-      (fm.dobleCrypto?kpiNota('⚠️ Hay una inversión de tipo <b>Criptomonedas</b> en Finanzas → Inversiones además del historial de compras de BTC. Si es el mismo dinero, está contado dos veces: déjalo en un solo lado.'):'')+
-      (guardado>0&&Math.abs(guardado-cur)>=1?kpiNota('📌 En Finanzas → Metas la meta guarda <b>'+money(guardado)+'</b> escrito a mano. Ese número no se recalcula solo y ya no coincide: hoy el fondo real es <b>'+money(cur)+'</b> ('+(cur>guardado?'+':'−')+money(Math.abs(cur-guardado))+'). Actualízalo ahí, o déjalo sabiendo que la cifra viva es esta.'):'')+
-
-      kpiCortesHTML()+
-      kpiSec('📊 Cómo se reparte la meta')+
-      '<div class="kpi-desglose">'+
-        kpiBarra('Ya lo tienes', money(cur), pct, V, 'Repartido en las '+fm.comps.length+' piezas de arriba')+
-        kpiBarra('Lo que falta', money(falta), 100-pct, O, 'Es '+(cur>0?(falta/cur).toFixed(1):'—')+' veces lo que llevas')+
-      '</div>'+
-
-      // La pausa solo se enseña si sigue vigente: desde el 3-oct-2026 la meta no está en pausa
-      // (salida a Alemania en sep 2027) y lo que cuenta es el ritmo que pide esa fecha.
-      (fReanuda&&fReanuda>hoy?
-        kpiSec('⏸️ Por qué ahora no aportas')+
-        kpiPaso('Decisión tomada, no un olvido','Las aportaciones están <b>pausadas hasta '+fmtF(fReanuda)+'</b>'+(mesesPausa?' (faltan '+mesesPausa+' meses)':'')+' y la meta es <b>'+fmtF(fMeta)+'</b>.',C)
-        :'')+
-      (mesesSalida?
-        kpiSec('📈 El ritmo que pide la salida')+
-        kpiPaso(mesesSalida+' meses hasta '+fmtF(fMeta),'Para juntar los '+money(falta)+' que faltan, en promedio, <b>'+money(ritmo)+' al mes</b>. El plan lo junta con lo que mandas cada quincena y lo que aparta Didi —<b>'+(window.CIFRAS?CIFRAS.v('ahorroMesDepa'):'—')+'</b> al mes hasta enero y <b>'+(window.CIFRAS?CIFRAS.v('ahorroMesCasa'):'—')+'</b> desde febrero, en casa de tu familia—, más lo que vendas y el depósito del depa; lo que no alcanza lo cierra el ingreso nuevo, <b>'+(window.CIFRAS?CIFRAS.v('extraSalida'):'—')+'</b> al mes. El aguinaldo paga el seguro del BYD y no entra.',C)+
-        kpiNota('El día de decidir es el <b>'+(window.CIFRAS?CIFRAS.v('decisionMaestria'):'—')+'</b>, con dos datos: la admisión de Esslingen y <b>'+(window.CIFRAS?CIFRAS.v('mayoParaSalida'):'—')+'</b> en GBM, lo que llena la cuenta bloqueada en junio y paga la salida completa en agosto —con tu ritmo, en agosto '+(window.CIFRAS?CIFRAS.v('salidaVeredicto'):'—')+'—. Si falta uno, se reaplica para septiembre de 2028 y el ahorro sigue. La proyección mes a mes y la lista completa de la salida están en <b>Coach → Plan Maestro</b>.')
-        :'')};
-  }
-
-  if(id==='patrimonio'){
-    // El punto de partida con bienes, la foto del 18-jul-2026 que Coach conserva en #perfil
-    // ("Neto TOTAL (con auto + gadgets)"). Sirve para decir cuánto se ha sumado desde entonces.
-    const START=231770, GOAL=1000000;
-    const avance=pat-START;
-    const meses2030=Math.max(1,Math.round((finDelPlan()-new Date())/(1000*60*60*24*30.4)));
-    const ritmo=(GOAL-pat)/meses2030;
-
-    // Cada peso por su nombre (2026-08-19). Antes eran 3 barras agregadas —"Inversiones",
-    // "Fondo", "Deudas"— y no se veía ni un CETE ni una tarjeta. Ahora sale línea por línea.
-    const activos=F.activos||[];
-    const liquidos=activos.filter(a=>a.type==='liquido');
-    const bienes=activos.filter(a=>a.type!=='liquido');
-    const totalLiq=liquidos.reduce((a,x)=>a+(+x.value||0),0);
-    const totalBienes=bienes.reduce((a,x)=>a+(+x.value||0),0);
-    // El número grande es TODO (patrimonioNeto(): financiero + líquido + bienes − deudas). Aquí
-    // se desglosa en tres listas —lo que tienes, lo que debes, los bienes— y la nota de abajo
-    // enseña la suma tal cual, para que las cifras cuadren a ojo. El Bitcoin va a precio de hoy.
-    const btcP=btcInfo();
-    const tieneHoy=totalInv+ef+totalLiq+btcP.mxn;  // todo lo financiero y lo líquido, sin bienes
-    const escala=Math.max(tieneHoy,deudaTot,1);   // misma escala en las dos listas: comparables
-    const patLiq=patrimonioLiquido();             // lo que se puede invertir sin vender nada
-
-    const filasTengo=[]
-      .concat(inv.map(i=>({n:esc(i.name),v:+i.value||+i.invested||0,c:V,d:'Inversión registrada en Finanzas'})))
-      .concat(ef>0?[{n:'Fondo de emergencia (CETES)',v:ef,c:W,d:'Tu colchón — no se toca para invertir'}]:[])
-      .concat(btcP.mxn>0?[{n:'Bitcoin',v:btcP.mxn,c:'#f7931a',d:btcP.held.toFixed(6)+' BTC a $'+Math.round(btcP.price).toLocaleString('en-US')+' USD — sube y baja con el precio de hoy'}]:[])
-      .concat(liquidos.map(a=>({n:esc(a.name),v:+a.value||0,c:C,d:'Disponible ya, sin vender nada'})))
-      .filter(x=>x.v!==0).sort((a,b)=>b.v-a.v);
-
-    const filasDebo=debts.filter(d=>+d.balance>0).sort((a,b)=>b.balance-a.balance)
-      .map(d=>({n:esc(d.name),v:+d.balance,c:tasaQueCorre(d)>0?R:P,
-        d:(tasaQueCorre(d)>0?'Tasa '+d.rate+'% · te cuesta '+money(d.balance*(d.rate/100)/12)+'/mes'+(d.id==='d001'&&bbvaPlan()?' · '+bbvaPlanTxt():''):(d.id==='d001'&&bbvaPlan()?'Q'+bbvaPlanTxt().slice(1):d.rate>0?'La pagas completa cada mes · sin intereses':'Sin interés'))+
-          ((d.type==='car'||d.type==='loan')&&CIFRAS.mesesRestantes(d)?' · '+CIFRAS.mesesRestantes(d)+' pagos restantes':'')}));
-
-    const filasBienes=bienes.sort((a,b)=>(+b.value||0)-(+a.value||0))
-      .map(a=>({n:esc(a.name),v:+a.value||0,d:a.notes?esc(a.notes):''}));
-
-    return {titulo:'💰 Patrimonio hacia $1M', sub:'Cada peso que suma, cada uno que resta, y a qué ritmo tendrías que ir.',
-      html:
-      '<div class="kpi-cifra" style="color:'+(pat>=0?V:R)+'">'+money(pat)+'</div>'+
-      '<div class="kpi-cifra-sub">Meta: '+money(GOAL)+' el '+finDelPlan().toLocaleDateString('es-MX',FECHA_LARGA)+' · llevas <b>'+Math.round(pat/GOAL*100)+'%</b> del millón · '+(avance>=0?'+':'−')+money(Math.abs(avance))+' desde el 18 jul 2026 ('+money(START)+' con bienes)</div>'+
-
-      kpiSec('🟢 Lo que tienes · '+money(tieneHoy))+
-      '<div class="kpi-desglose">'+(filasTengo.length
-        ? filasTengo.map(x=>kpiBarra(x.n, money(x.v), x.v/escala*100, x.c, x.d)).join('')
-        : '<div class="gbm-vacio">Sin activos financieros registrados.</div>')+'</div>'+
-
-      kpiSec('🔴 Lo que debes · '+money(deudaTot))+
-      '<div class="kpi-desglose">'+(filasDebo.length
-        ? filasDebo.map(x=>kpiBarra(x.n, '−'+money(x.v), x.v/escala*100, x.c, x.d)).join('')
-        : '<div class="gbm-vacio">Sin deudas vivas. 🎉</div>')+'</div>'+
-      kpiNota('<b>'+money(tieneHoy)+' + '+money(totalBienes)+' en bienes − '+money(deudaTot)+' = '+money(pat)+'</b>. Cuenta todo lo tuyo: inversiones, el fondo, Bitcoin a precio de hoy, efectivo y cuenta, y los bienes; menos lo que debes. Es la misma cifra que el Patrimonio Neto de Finanzas.')+
-
-      (filasBienes.length?
-        kpiSec('🚗 Y además tienes en bienes · '+money(totalBienes))+
-        '<div class="kpi-desglose">'+filasBienes.slice(0,8).map(x=>kpiBarra(x.n, money(x.v), x.v/Math.max(totalBienes,1)*100, P, x.d)).join('')+'</div>'+
-        (filasBienes.length>8?kpiNota('Y '+(filasBienes.length-8)+' cosas más registradas en Finanzas → Activos.'):'')+
-        kpiPaso('Sin contar los bienes: '+money(patLiq),
-          'Los bienes <b>sí entran</b> en el número grande, porque son patrimonio real. Pero no son dinero que puedas invertir: no vas a vender el coche ni la PC para llegar al millón. Sin ellos tienes <b>'+money(patLiq)+'</b>, que es lo que de verdad se mueve con cada abono a deuda o cada peso ahorrado — ese es el número que hay que empujar.',
-          patLiq>=0?V:O)
-        :'')+
-
-      kpiTrayectoriaHTML()+
-      kpiSec('📈 El ritmo que pide la meta')+
-      kpiPaso('Para llegar en '+meses2030+' meses','Necesitarías sumar <b>'+money(ritmo)+' al mes</b> de patrimonio — y ojo: <b>pagar deuda cuenta igual que ahorrar</b>, porque mueve el mismo número. Cada peso que le quitas a la tarjeta es un peso de patrimonio.',C)+
-      kpiNota('Este número baja solo conforme la deuda se apaga: no lo leas como una cuota fija, sino como el ritmo de hoy.')};
-  }
-
-  if(id==='intereses'){
-    // Adán, 19-nov-2026: "también actualiza lo de intereses de este mes, pon más info". Los créditos a plazo salen de las
-    // cuentas del maestro (CIFRAS.prestamoResumen: la mensualidad partida, la tabla año por año y lo que ahorra abonar),
-    // las mismas de Deuda total; una tarjeta con saldo y tasa, con su pago contra su interés.
-    const conTasa=debts.filter(d=>tasaQueCorre(d)>0&&+d.balance>0);
-    const mesInt=conTasa.reduce((a,d)=>a+(+d.balance||0)*(d.rate/100)/12,0);
-    const iniInt=conTasa.reduce((a,d)=>a+(+d.total||+d.balance||0)*(d.rate/100)/12,0);
-    const bajada=iniInt>0?(1-mesInt/iniInt)*100:100;
-    const PR=window.CIFRAS&&CIFRAS.prestamoResumen?conTasa.filter(d=>d.type!=='credit_card'&&+d.min>0).map(d=>({d:d,R:CIFRAS.prestamoResumen(d,F)})):[];
-    const tarjetas=conTasa.filter(d=>!PR.some(x=>x.d===d));
-    const cargosMes=PR.reduce((a,x)=>a+x.R.cargos,0);
-    const prox12=PR.reduce((a,x)=>a+x.R.tabla.slice(0,12).reduce((s,t)=>s+t.interes,0),0)+tarjetas.reduce((a,d)=>a+(+d.balance||0)*(d.rate/100),0);
-    const col={i:'var(--r)',c:'var(--o)',k:'var(--g)'};
-    let h='<div class="kpi-cifra" style="color:'+(mesInt>0?R:V)+'">'+money(mesInt)+' <span style="font-size:14px;color:var(--text3)">de intereses este mes</span></div>'+
-      '<div class="kpi-cifra-sub">'+(mesInt>0?money(mesInt/30)+' al día'+(cargosMes>0?' · más '+money(cargosMes)+' de IVA y seguros':'')+' · <b>'+money(prox12)+'</b> de intereses en los próximos 12 meses · dinero que no baja tu deuda':'No pagas intereses')+'</div>';
-    PR.forEach(function(x){
-      const d=x.d, Q=x.R, t=Q.tabla[0];
-      if(!t) return;
-      const pago=t.interes+t.cargos+t.capital, pc=v=>pago>0?v/pago*100:0;
-      const parte=(c,l,v)=>'<div class="in-ley-i"><span><i style="background:'+col[c]+'"></i>'+l+'</span><b>'+money(v)+'</b><em>'+Math.round(pc(v))+'% de tu mensualidad</em></div>';
-      const en12=Q.tabla[12]||Q.tabla[Q.tabla.length-1];
-      h+=kpiSec('🧩 Tu mensualidad del '+prDia(t.fecha)+', partida · '+esc(d.name))+
-        '<div class="in-pila" role="img" aria-label="'+esc('De '+money(pago)+': '+money(t.interes)+' de interés, '+money(t.cargos)+' de IVA y seguros y '+money(t.capital)+' a tu deuda')+'">'+
-          '<i style="width:'+pc(t.interes)+'%;background:'+col.i+'"></i>'+(t.cargos>0?'<i style="width:'+pc(t.cargos)+'%;background:'+col.c+'"></i>':'')+
-          '<i style="width:'+pc(t.capital)+'%;background:'+col.k+'"></i></div>'+
-        '<div class="in-ley">'+parte('i','Interés',t.interes)+(t.cargos>0?parte('c','IVA y seguros',t.cargos):'')+parte('k','Baja tu deuda',t.capital)+'</div>'+
-        kpiNota('El interés es lo que debes × '+d.rate+'% ÷ 12: cada mes que tu saldo baja, baja el interés y más de tu mensualidad va a tu deuda. En '+prMes(en12.fecha)+' serán <b>'+money(en12.interes)+'</b> de interés y '+money(en12.capital)+' a tu deuda.');
-      h+=kpiSec('📅 Año por año, hasta que acabes')+
-        '<table class="pr-tabla"><thead><tr><th>Año</th><th>Interés</th>'+(Q.cargos>0?'<th>IVA y seguros</th>':'')+'<th>Baja tu deuda</th><th>Debes al cerrar</th></tr></thead><tbody>'+
-        Q.porAnio.map(a=>'<tr><td><b>'+a.anio+'</b>'+(a.meses<12?' <span class="in-meses">'+a.meses+' '+(a.meses===1?'mes':'meses')+'</span>':'')+'</td>'+
-          '<td class="in-int">'+money(a.interes)+'</td>'+(Q.cargos>0?'<td>'+money(a.cargos)+'</td>':'')+'<td>'+money(a.capital)+'</td><td><b>'+money(a.saldo)+'</b></td></tr>').join('')+
-        '<tr class="in-tot"><td><b>Total</b></td><td class="in-int"><b>'+money(Q.proy.interes)+'</b></td>'+(Q.cargos>0?'<td><b>'+money(Q.cargosFaltan)+'</b></td>':'')+
-          '<td><b>'+money(Q.saldo)+'</b></td><td>acabas en '+prMes(Q.fin)+'</td></tr></tbody></table>';
-      const a10=Q.ahorro({extra:10000}), sup=window.CIFRAS&&CIFRAS.PROYECCION&&CIFRAS.PROYECCION.supuestos, rend=sup?+sup.rendimiento:0;
-      h+=kpiSec('💸 Cómo bajarlo')+
-        kpiPaso('Cada '+money(1000)+' que abonas',
-          'Tu interés baja <b>'+money(1000*d.rate/100/12)+' cada mes</b> desde la siguiente mensualidad y te ahorras <b>'+money(Q.porMil.ahorra)+'</b> en todo el crédito. '+
-          'Con '+money(10000)+': '+money(10000*d.rate/100/12)+' menos al mes, <b>'+money(a10.ahorra)+'</b> en total y acabas '+(a10.menos>0?prMeses(a10.menos)+' antes':'igual')+'.'+
-          (tiEditable()?' <button type="button" class="ce-btn sec" onclick="abrirKpi(\'deudatotal\')">Anotar un abono →</button>':''), 'var(--g)')+
-        kpiNota('Abonar rinde lo que cobra tu crédito, <b>'+d.rate+'% al año, sin riesgo</b>'+(rend>0?'; tu plan supone '+(Math.round(rend*1000)/10)+'% al año en lo que inviertes':'')+'. Pero lo abonado ya no se saca: tu dinero de la salida a Alemania va primero.');
-    });
-    // Una tarjeta con saldo y tasa es revolvente: su pago mínimo puede no bajar nada.
-    tarjetas.forEach(function(d){
-      const im=(+d.balance||0)*(d.rate/100)/12, pg=+d.min||0, baja=pg-im;
-      h+=kpiSec('💳 '+esc(d.name)+' · '+d.rate+'%')+kpiPaso('Pagas '+money(pg)+' al mes',
-        baja>0?'De ese pago, <b>'+money(im)+' son intereses</b> y <b>'+money(baja)+' bajan tu saldo</b>.':'De ese pago, <b>'+money(im)+' son intereses</b>: no baja tu saldo ni un peso.',
-        baja>0?'var(--o)':'var(--r)');
-    });
-    if(iniInt>0) h+=kpiSec('📉 Lo que ya bajó')+'<div class="kpi-desglose">'+kpiBarra('Desde que empezaste a deber', Math.round(bajada)+'% menos', bajada, V,
-      'Cuando debías '+money(conTasa.reduce((a,d)=>a+(+d.total||+d.balance||0),0))+' pagabas '+money(iniInt)+' de intereses al mes; hoy, '+money(mesInt)+': <b>'+money(iniInt-mesInt)+' menos cada mes</b>.')+'</div>';
-    if(!conTasa.length) h+=kpiPaso('Sin intereses ✅','No hay deuda con tasa cobrándote: todo lo que abones baja saldo, no intereses.',V);
-    return {titulo:'🔥 Intereses este mes', sub:'Lo que cuesta tu deuda solo por existir, mes a mes, y cómo bajarlo.', html:h};
-  }
-
-  // Total invertido: tu estrategia de hoy —lo que toca mandar a GBM— y tus inversiones compra por compra, que aquí se
-  // agregan, se corrigen y se borran (Adán, 17-nov-2026: "añadiré mis inversiones en GBM, cuándo, cuánto y qué compré…
-  // debe ser lo más autónomo posible, editar, eliminar"). Viven en `finanzasmx_v2.investments`, las mismas de Finanzas ·
-  // Inversiones: lo que cambies aquí o allá es el mismo dato. Donde Finanzas es la copia de la PC (el iPad), se ven pero
-  // no se editan: esa copia se rehace en cada commit.
-  if(id==='invertido'){
-    // Lo invertido es tus inversiones de Finanzas más tu Bitcoin (su libreta, btcHistory, la de la gráfica de Finanzas).
-    const editable=tiEditable(), btcI=btcInfo(), BA=tiBtcAbiertas(F), btcV=Math.max(0,btcI.mxn), pBtc=btcI.price*btcI.fx;
-    const fxDe=h=>+h.fx||btcI.fx, esVenta=h=>h.tipo==='venta'||+h.btc<0;
-    const btcCompras=BA.ops.filter(h=>!esVenta(h));
-    const btcMet=BA.ops.reduce((a,h)=>a+(esVenta(h)?-1:1)*(+h.usd||0)*fxDe(h),0);
-    const totalTI=totalInv+btcV, metido=inv.reduce((a,i)=>a+(+i.invested||0),0)+Math.max(0,btcMet), dif=totalTI-metido;
-    const tipoTxt=t=>(TI_TIPOS.find(x=>x[0]===t)||[0,'Otro'])[1];
-    const mHtml=(met,v)=>'metiste <b>'+money(met)+'</b><br>vale <b>'+money(v)+'</b>'+
-      (met>0&&Math.abs(v-met)>=1?' <em class="'+(v-met>=0?'ok':'mal')+'">'+(v-met>=0?'+':'−')+money(Math.abs(v-met))+'</em>':'');
-    const filasTI=inv.map(i=>{ const met=+i.invested||0; return {date:i.date, key:i.id, name:i.name||'Inversión', sub:tipoTxt(i.type)+tiSigueTxt(i), m:mHtml(met,+i.value||met)}; });
-    BA.ops.forEach(h=>{
-      const q=Math.abs(+h.btc||0), mx=(+h.usd||0)*fxDe(h), cant=tiCantTxt(q,{tipo:'cripto',tk:'BTC'});
-      filasTI.push(esVenta(h)
-        ?{date:h.date, key:null, name:'Bitcoin · venta', sub:'Cripto · '+cant+' · se edita en Finanzas', m:'te dieron <b>'+money(mx)+'</b>'}
-        :{date:h.date, key:h.id==='total'?null:'btc:'+h.id, name:'Bitcoin', sub:'Cripto · <span class="ti-sigue" title="Vale hoy sale del precio del Bitcoin de ahora">'+cant+'</span>', m:mHtml(mx,pBtc>0?q*pBtc:mx)});
-    });
-    const compras=filasTI.sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))).map(o=>
-      '<div class="ti-fila'+(o.key&&_tiEdit===o.key?' edita':'')+'"><span class="ti-f">'+tiFecha(o.date)+'</span>'+
-        '<span class="ti-n"><b>'+esc(o.name)+'</b><i>'+o.sub+'</i></span>'+
-        '<span class="ti-m">'+o.m+'</span>'+
-        (editable&&o.key?'<span class="ti-acc"><button type="button" class="ce-btn sec" onclick="tiEditar(\''+o.key+'\')">Editar</button>'+
-          '<button type="button" class="ce-btn sec" onclick="tiBorrar(\''+o.key+'\')">Borrar</button></span>':'')+'</div>').join('');
-    // El portafolio: cada instrumento con lo de todas sus compras sumado; el Bitcoin, con lo que vale todo el que tienes.
-    const porNombre={};
-    inv.forEach(i=>{ const k=String(i.name||'Inversión').trim(), x=porNombre[k]||(porNombre[k]={v:0,m:0,n:0});
-      x.v+=(+i.value||+i.invested||0); x.m+=(+i.invested||0); x.n++; });
-    if(btcV>0){ const x=porNombre['Bitcoin']||(porNombre['Bitcoin']={v:0,m:0,n:0}); x.v+=btcV; x.m+=Math.max(0,btcMet); x.n+=btcCompras.length; }
-    const filas=Object.keys(porNombre).sort((a,b)=>porNombre[b].v-porNombre[a].v).map(k=>{
-      const x=porNombre[k], gan=x.m>0?x.v-x.m:null;
-      return kpiBarra(esc(k)+(x.n>1?' · '+x.n+' compras':''), money(x.v), totalTI>0?x.v/totalTI*100:0, C, (totalTI>0?Math.round(x.v/totalTI*100)+'% de tu portafolio':'')+
-        (gan!==null&&Math.abs(gan)>=1?' · metiste '+money(x.m)+', '+(gan>=0?'gana ':'pierde ')+'<b>'+money(Math.abs(gan))+'</b> ('+(gan>=0?'+':'−')+Math.abs(gan/x.m*100).toFixed(1)+'%)':''));
-    }).join('');
-    const nI=inv.length+btcCompras.length;
-    return {titulo:'📈 Total invertido', sub:'Lo que tienes trabajando, compra por compra: qué compraste, cuándo, cuánto metiste y cuánto vale hoy.',
-      html:
-      '<div class="kpi-cifra" style="color:'+C+'">'+money(totalTI)+'</div>'+
-      '<div class="kpi-cifra-sub">'+nI+' compra'+(nI===1?'':'s')+' en Finanzas · metiste <b>'+money(metido)+'</b>'+
-        (Math.abs(dif)>=1?' · '+(dif>=0?'ganan ':'pierden ')+'<b>'+money(Math.abs(dif))+'</b>':'')+'</div>'+
-      // Tu estrategia de hoy: sin tarjeta que pagar, lo que va a GBM hoy y este mes (ctEstrategiaHtml).
-      ctEstrategiaHoyHtml()+
-      kpiSec('🧾 Tus inversiones, compra por compra')+
-      '<div class="ti-lista">'+(compras||'<div class="gbm-vacio">Todavía no hay inversiones registradas.</div>')+'</div>'+
-      (BA.resto>0&&pBtc>0&&BA.resto*pBtc>=1?kpiNota('Tu Bitcoin incluye '+BA.resto.toFixed(6)+' BTC ('+money(BA.resto*pBtc)+') que te quedaron de antes.'):'')+
-      (editable?tiFormHtml(tiEditObj(F,_tiEdit))
-        :kpiNota(FIN_REPO?'En este dispositivo tus cifras son la copia de tu PC'+(FIN_REPO.exportado||FIN_REPO.fecha?' del '+tiFecha(CIFRAS.fechaLocal(new Date(FIN_REPO.exportado||FIN_REPO.fecha))):'')+
-          ': las compras se agregan y se editan en tu PC y llegan aquí con el siguiente commit.'
-          :'Abre Finanzas una vez en este navegador para registrar aquí tus compras.'))+
-      kpiSec('📊 Tu portafolio hoy')+
-      '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">Todavía no hay inversiones registradas en Finanzas.</div>')+'</div>'+
-      (btcV>0?kpiNota('Tu Bitcoin es el de la gráfica de Bitcoin del Plan de Inversiones de Finanzas: lo que anotas aquí sale allá y lo de allá sale aquí, con el mismo precio.'):'')+
-      (window.CIFRAS?kpiSec('💸 Lo que entra cada mes')+
-        kpiPaso('El ahorro del plan va a GBM','Con depa llegan <b>'+CIFRAS.v('ahorroMesDepa')+'</b> al mes (lo del 1, lo del 15 y Didi); en casa de tu familia, <b>'+CIFRAS.v('ahorroMesCasa')+'</b>. Al cerrar la Fase 1 la proyección espera <b>'+CIFRAS.v('alemaniaMarzo')+'</b> en GBM; con el ingreso nuevo, <b>'+CIFRAS.v('marzoParaSalida')+'</b>.',C):'')+
-      kpiSec('🎯 Lo que falta')+
-      kpiPaso('Una asignación objetivo escrita','Estos porcentajes son <b>el resultado</b> de lo que fuiste comprando, no una decisión. Escribe una sola vez qué reparto quieres (% renta fija / % índice / % cripto) y cada compra deja de ser una decisión: solo rellenas el que quedó abajo.',C)+
-      kpiNota('Es la tarea pendiente #2 de tu habilidad de Inversión — la tienes desglosada en el slide de Habilidades.')};
-  }
-
-  if(id==='deudatotal'){
-    const filas=debts.filter(d=>d.balance>0).sort((a,b)=>(b.rate||0)-(a.rate||0)).map(d=>{
-      const pagado=d.total>0?(1-d.balance/d.total)*100:0;
-      return kpiBarra(esc(d.name)+(d.rate>0?' · '+d.rate+'%':' · sin interés'), money(d.balance)+(d.total>0?' · '+Math.round(pagado)+'% pagado':''), pagado, V,
-        d.total>0?'Pagado '+money(d.total-d.balance)+' de '+money(d.total)+' · faltan '+money(d.balance):'', PISTA_R);
-    }).join('');
-    return {titulo:'🧾 Deuda total', sub:'Todo lo que debes, ordenado por tasa.',
-      html:
-      '<div class="kpi-cifra" style="color:'+R+'">'+money(deudaTot)+'</div>'+
-      '<div class="kpi-cifra-sub">'+debts.filter(d=>d.balance>0).length+' deuda(s) viva(s) · '+money(CIFRAS.deudasConInteres(F).reduce((a,d)=>a+d.balance,0))+' con interés</div>'+
-      kpiSec('📊 Ordenadas por tasa (la de arriba primero)')+
-      '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">Sin deudas registradas. 🎉</div>')+'</div>'+
-      // Cada crédito a plazo con interés (el auto), completo: sus intereses, su contrato, lo que ahorra abonar y los abonos.
-      debts.filter(d=>+d.balance>0&&+d.rate>0&&+d.min>0&&d.type!=='credit_card').map(d=>kpiPrestamoHTML(d,F)).join('')+
-      kpiDeudaFinHTML(debts)+
-      kpiNota('Las de tasa 0 (meses sin intereses, como el iPhone) no generan intereses, pero <b>sí comprometen tu excedente</b> cada mes.')};
-  }
-
-  return null;
+  // Los seis medidores del dinero: sus ventanas viven en medidores.js.
+  return window.MEDIDORES && MEDIDORES[id] ? MEDIDORES[id](D.fin||{}) : null;
 }
 
 /* Los seis medidores del dinero: el fondo, la maestría, el patrimonio, los intereses, lo invertido y la
@@ -17466,6 +17033,8 @@ document.addEventListener('keydown',e=>{
   if(document.getElementById('istqbOverlay').classList.contains('open')){ if(e.key==='Escape') cerrarIstqb(); else istqbTecla(e); return; }
   if(document.getElementById('alemanOverlay').classList.contains('open')){ if(e.key==='Escape') cerrarAleman(); else alemanTecla(e); return; }
   if(e.key==='Escape'&&document.getElementById('comoDecideOverlay').classList.contains('open')){ cerrarComoDecide(); return; }
+  // Con una ventana de medidor abierta, Escape la cierra y las teclas no mueven la pantalla de atrás.
+  if(document.getElementById('kpiOverlay').classList.contains('open')){ if(e.key==='Escape') cerrarKpi(); return; }
   if(e.key==='ArrowRight') nextSlide();
   if(e.key==='ArrowLeft') prevSlide();
   if(e.key===' '){e.preventDefault();togglePlay();}

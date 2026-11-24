@@ -27,6 +27,7 @@ en una página.
 | `version.js` · `version-escribir.js` | La hora del último commit de esta copia (`window.APP_VERSION.commit`), que el hook de pre-commit escribe con `version-escribir.js` en cada commit; Mi Día la enseña junto a la semana (ver *Tu iPad y tu PC*) |
 | `noticias-actualizar.js` · `noticias-inversion.js` | Las noticias de *Qué invertir hoy*: el script que lee Google Noticias —lo corren la tarea de GitHub cada 4 horas (`.github/workflows/noticias-inversion.yml`, rama `datos-noticias`) y el hook de pre-commit de la PC— y el archivo que deja el hook (`window.NOTICIAS_INVERSION`), que el panel carga con `<script src>` |
 | `precios-actualizar.js` | Los precios de *Qué invertir hoy* con su historia: lee Yahoo Finanzas y escribe `precios.json`. Lo corre la tarea de GitHub cada media hora con la bolsa abierta (`.github/workflows/precios-acciones.yml`) y lo publica en la rama `datos-precios`, de donde lo lee el panel |
+| `medidores.js` · `medidores.css` | Las ventanas de los seis medidores del Plan Maestro: contenido, gráficas y estilos (ver *Las ventanas de los medidores*) |
 | `ficha.js` · `ficha.css` | El panel de ficha de producto (`pfAbrirId`, `pfPorNombre`, `.lc-info`) que usan la Lista de Compras y la rutina |
 | `examen-genai.js` · `examen-genai-data.js` (A, 79 preguntas) · `examen-genai-data-b.js` (B, 77) · `examen-genai-glosario.js` (64 términos) | El simulacro ISTQB CT-GenAI: motor, los dos bancos y el glosario de las preguntas |
 | `syllabus/` (**fuera de git**) | La copia local del syllabus CT-GenAI LATAM: el PDF y `ct-genai-syllabus.js`, el texto de cada sección con su página. Su aviso de derechos solo permite reproducirlo en parte y para uso privado, así que no va al repositorio público (`.gitignore`) |
@@ -682,8 +683,8 @@ ver `DATOS-MAESTROS.md` → *Las clases de dato*): la página solo pinta y guard
   sobran $22 en su peor mes (dic 2026)*; en rojo la que no alcanza), las de un ajuste vencido y que lo de la PC llega
   al iPad con el siguiente commit.
 - **Las cifras, por grupo** (`#grupos`): Lo que entra, Casa, Celular y suscripciones, Ahorro de cada quincena, Tu
-  gasto, Invertir, Metas, Tipo de cambio, Lo que cuesta irte, Allá, Salud —con tu meta de peso (`PESO.metaKg`), la que
-  miden Salud, el Dashboard, Coach y Comida— y Alemán. Cada una con su nota, su valor y,
+  gasto, Invertir, Metas, Tipo de cambio, Lo que cuesta irte, Allá, Salud —con tu meta de
+  peso (`PESO.metaKg`), contra la que mide Salud— y Alemán. Cada una con su nota, su valor y,
   si es tuya, la etiqueta *tuya* y *el plan dice …*.
 - **Tocar una abre su editor** (`abrir`): el campo en su unidad —la tasa en %—, *Guardar*, *Volver al plan* si es
   tuya y *Cancelar*. Al escribir sale la vista previa (`previa`): **lo que se ajusta para que cada quincena alcance**
@@ -944,7 +945,7 @@ claro y en oscuro.
 cantidades"*). Sin la ruta de deuda, el riel de la quincena ni *Te toca esta semana*.
 
 Un mes de cada etapa renglón por renglón —lo que entra, lo que sale y lo que llega a GBM— lo enseña Coach en cada fase
-(*💰 Tu ahorro en esta fase*), y GBM contra cada corte de la salida, el panel de la **Maestría** (`kpiCortesHTML`).
+(*💰 Tu ahorro en esta fase*), y GBM contra cada corte de la salida, la ventana de la **Maestría** (`MEDIDORES.maestria`).
 
 Medido a 2048×1040: la ruta mide 69 px, el mes en curso 260, los medidores 44 y el tablero 467, con las tres columnas
 sin desplazarse. El tablero no baja de 376 px: en una pantalla más baja (1366×768) la página baja en vez de
@@ -1046,53 +1047,46 @@ la maestría*— va en el `title` de la caja (sin cifras si está en modo privad
 44 px de alto y 320 px de ancho a 2048×1040, 245 a 1600×1000, 418 a 1366×768 (dos filas, 95 px) y 178 a 390 px (tres
 filas, 145 px); ningún nombre ni cifra se corta de 390 a 2048 px.
 
-**Deuda total, con cada crédito completo** (Adán, 19-nov-2026: *"falta cuánto pagaría de intereses en 7 años que es mi
-crédito… no puedo actualizar si doy aportaciones extra… cada mes obligatorio tengo que pagar 6,700, ese debe ser
-automático, pero si hago aportaciones debes ver cuánto se reducen intereses… debes tener mucha más info ahí"*). Debajo de
-las deudas por tasa, cada crédito a plazo con interés —el auto— lleva cuatro secciones (`kpiPrestamoHTML`), todas con las
-cuentas del maestro (`CIFRAS.prestamoResumen`):
+### Las ventanas de los medidores
 
-- **Completo** (`.pr-grid`, `.pr-dato`; si las cajas son impares, la última va a lo ancho): lo que falta y el capital ya
-  pagado; la próxima mensualidad partida en interés, IVA y seguros (`cargos`) y capital —se anota sola,
-  `CIFRAS.aplicarPagosFijos`—; cuándo terminas; los intereses ya pagados (lo que pagaste menos lo que bajó el saldo y
-  menos los cargos) **solo si cuadra**: si da menos de lo mínimo posible —el saldo nunca fue menor que hoy—, enseña
-  *más de* ese mínimo y pide lo que te prestaron según el contrato; los que faltan, el total y lo que suman el IVA y los
-  seguros. Y **el contrato** (`plazo` 84 desde la primera mensualidad, `start`): cuánto pagas en los 7 años, cuánto de eso
-  son intereses y cargos, y lo que te falta —mensualidades × pago, de lo que el saldo es deuda y el resto intereses, IVA
-  y seguros—. Si el contrato y los datos de hoy no terminan en el mismo mes, lo dice en naranja con lo que tendría que ir
-  a interés y capital cada mes para terminar a tiempo (`alCredito`) y la diferencia como IVA y seguros
-  (`cargosSugeridos`), con **Usar** para guardarla (`prCargosUsar`).
-- **Si abonas extra** (`.pr-tabla`): cuánto interés ahorra cada $1,000 abonados hoy y $1,000 extra al mes, y $5,000,
-  $10,000 y $20,000 hoy con su nueva fecha y los meses de menos. La mensualidad sigue igual y se termina antes.
-- **Anotar un abono a capital** (`prAbonoGuardar`, `data-pr="abono"`): cuándo, cuánto y una nota, con la vista previa
-  mientras se escribe (`prPrevia`); los abonos debajo con **Editar** y **Borrar** (`prAbonoEditar`, `prAbonoBorrar`). Van a
-  `finanzasmx_v2.transactions` como «Abono a capital» con `prestamo: {id, delta}` y `origen: 'abono'`: Finanzas los lista
-  y borrar uno allá también devuelve el saldo; la siguiente mensualidad ya cobra interés sobre el saldo menor.
-- **Tus datos del crédito** (`prDatosGuardar`, `data-pr="datos"`): saldo, tasa, mensualidad, plazo, día de pago, primera
-  mensualidad, lo que te prestaron y el IVA y los seguros de cada mensualidad, corregidos con el estado de cuenta
-  (`CIFRAS.prestamoDatos`). Un saldo escrito manda desde hoy (`saldoAl`, `pagosAl`).
+Adán, 23-nov-2026: *"estos indicadores son los más importantes… quiero que mejores la presentación de todos, el contenido y
+visualmente cómo se ve, debe ser claro y moderno… debe ser contenido relevante para mi día a día"*. Viven en `medidores.js`:
+`kpiDetalle(id)` devuelve `MEDIDORES[id](D.fin)` —`{kv, titulo, sub, html, listo}`—, `abrirKpi` las pinta con
+`MEDIDORES.pinta` y llama a `listo`, que dibuja las gráficas cuando la ventana ya tiene tamaño. **Ninguna cuenta vive
+ahí**: salen del maestro y de las funciones del Dashboard. El fondo es opaco (translúcido, se veía el Dashboard detrás) y
+las seis llevan el mismo orden: **la cifra y lo que significa** (`.kv-hero`), **cuatro datos** (`.kv-tiles`), **lo de hoy
+con su botón** (`.kv-hoy`; naranja si algo pide revisarse), **una gráfica** (`.kv-g`) y **el detalle**, con lo largo plegado
+(`.kv-d`, que recuerda si lo abriste).
 
-Solo donde Finanzas es propia (`tiEditable`); en el iPad se ve sin formularios. El auto se compró en febrero de 2026 y
-su primera mensualidad fue el 15 de marzo (Adán, 19-nov-2026: *"son 7 años y compré el carro en febrero del 2026"*;
-migración `_autoInicio20261119`, que también quitó del seed dos pagos del 1 de enero y del 1 de febrero que no
-existieron). Medido con los datos de Finanzas a 2048×1040, el panel cabe sin desplazarse. Con toda la mensualidad a
-interés y capital el auto terminaba en junio 2031, 20 mensualidades antes que el contrato (febrero 2033), y lo pagado
-de interés no cuadraba (lo mínimo, $26,859 en 9 mensualidades). Con $1,313 de IVA y seguros, la sugerencia, termina en
-febrero 2033: $2,984 de interés y $2,403 a capital el 15 de diciembre, $128,283 de intereses por pagar y $98,475 de IVA y
-seguros, y cada $1,000 abonados ahorra $1,242. Un abono de $10,000 baja el saldo y su vista previa dice lo que ahorra;
-corregirlo, borrarlo o anotarlo desde «Pagar» de Finanzas mueve lo mismo en las dos apps. A 390 px, sin desbordes. El
-**control 57** prueba la cuenta con un crédito de juguete.
+| Ventana | Lo que responde |
+|---|---|
+| **Fondo** | Cuántos días aguantas con tu gasto y con lo fijo, cuánto juntas en 48 horas, hasta dónde llega el colchón (meta, un mes de lo fijo, un mes y tres de tu gasto) y en cuánto lo llenarías apartando de cada quincena (`apartar` llena el formulario). El plan no le aporta mientras `cetesDia15` sea 0: lo que entra a GBM también cuenta como colchón |
+| **Maestría** | Cómo vas hoy contra el plan (`contraPlan`: la proyección al cierre del mes anterior más los envíos a GBM que ya tocaron, contra el fondo, las inversiones y el Bitcoin, sin el depósito), el siguiente envío, la proyección contra los cortes de la salida (`cortesSalidaDash`) y lo que sigue por pagar (`SALIDA.costos`). La meta es lo que cuesta irte entero; el corte de agosto, lo que se tiene en mano entonces |
+| **Patrimonio** | Cuánto cambió desde el último mes cerrado (`indicatorHistory`) y qué lo movió, pieza por pieza; mes a mes; el camino al millón con el dinero líquido de la proyección, y la suma: dinero + cosas − deudas. Avisa si un bien está a precio de compra y de qué día es el saldo de la cuenta |
+| **Intereses** | Cuánto al día, en 12 meses y hasta acabar; la próxima mensualidad partida; a dónde va el dinero cada año, y lo que ahorra abonar. Si el contrato y los datos no acaban el mismo mes, lo dice |
+| **Total invertido** | Lo que trabaja aparte de lo guardado en el depósito, cuánto ganas o pierdes, lo que el plan mandaba este mes contra lo que registraste, *Tu estrategia de hoy*, los envíos que tocan, las compras con su formulario, *Tu Bitcoin hoy* (el último mes contra tu promedio y cuánto tendría que subir) y en qué ponerlo |
+| **Deuda total** | Cuánto debes mes a mes (`caminoDeuda`, todas juntas) con **dos controles** —abono hoy y extra cada mes— que redibujan la gráfica y dicen cuándo acabas y cuánto ahorras (`simula`, con `prestamoResumen().ahorro`); **Anotar el abono de hoy** lo lleva al formulario. Cada deuda con su siguiente pago y su fin; el abono, los datos del crédito y el contrato, plegados |
 
-**Intereses este mes, completo** (Adán, 19-nov-2026: *"también actualiza lo de intereses de este mes, pon más info"*).
-Arriba, el interés del mes, cuánto es al día, el IVA y los seguros que salen con la mensualidad y el interés de los
-próximos 12 meses. Por cada crédito a plazo, con las cuentas del maestro (`CIFRAS.prestamoResumen`, `prestamoTabla`):
-**la mensualidad partida** —una barra (`.in-pila`) con interés, IVA y seguros y lo que baja la deuda, y su leyenda
-(`.in-ley`) con el monto y el % de cada parte—, cuánto será el interés en un año; **año por año hasta que acabes**
-(`porAnio`): interés, IVA y seguros, lo que baja la deuda y lo que debes al cerrar cada año, con su total; y **cómo
-bajarlo**: cuánto baja el interés de cada mes y cuánto ahorras con $1,000 y $10,000 abonados, con **Anotar un abono →**
-que abre Deuda total, y la comparación con lo que el plan supone que rinde lo invertido. Una tarjeta con saldo y tasa
-sale con su pago contra su interés. Medido con los datos de Finanzas y $1,313 de IVA y seguros: $2,984 de interés este
-mes ($99 al día), $34,032 en los próximos 12 meses; el interés de cada año baja de $33,700 (2027) a $5,606 (2032).
+**Gráficas** (`lineas`, `columnas`): SVG al tamaño real de su caja, un solo eje, globo con el mes y cada serie al pasar el
+ratón, el dedo o las flechas del teclado, y sus números también fuera de ella. Azul, naranja y verde (`--kv-1` a `--kv-3`)
+pasan el validador de daltonismo en los dos temas; el verde, el rojo y la flecha solo dicen sube o baja. Dentro de la
+ventana las teclas no mueven las pantallas y **Escape la cierra**. Modo privado tapa también los ejes y los globos.
+
+**El crédito del auto** (Adán, 19-nov-2026: *"son 7 años y compré el carro en febrero del 2026"*; la primera mensualidad,
+el 15 de marzo: migración `_autoInicio20261119`, que también quitó del seed dos pagos del 1 de enero y del 1 de febrero que
+no existieron). La mensualidad se anota sola (`CIFRAS.aplicarPagosFijos`). **Un abono** (`prAbonoForm`, `prAbonoGuardar`,
+con la vista previa de `prPrevia`) va todo a capital: queda en `finanzasmx_v2.transactions` como «Abono a capital» con
+`prestamo: {id, delta}` y `origen: 'abono'`, y borrarlo aquí o en Finanzas devuelve el saldo. **Los datos** (`prDatosForm`,
+`prDatosGuardar`, `CIFRAS.prestamoDatos`) se corrigen con el estado de cuenta; un saldo escrito manda desde hoy
+(`saldoAl`, `pagosAl`). `cargos` es el IVA y los seguros de cada mensualidad, que no bajan la deuda: los restan la
+mensualidad automática, la simulación y la proyección. Si con los datos no acaba cuando dice el contrato, la ventana
+sugiere los `cargos` que harían que cuadre (`cargosSugeridos`, `prCargosUsar`): es un cálculo, no el dato del banco. Los
+intereses ya pagados salen solo si cuadran con lo prestado; si no, el mínimo posible (`interesMin`).
+
+Medido con los datos de Finanzas: a 2048×1040 ninguna se desplaza, en oscuro y en claro; a 1600×1000, entre 0 y 85 px;
+en el iPad y a 390 px se desplazan enteras, sin desbordes. Probado: los controles dan la cifra del maestro; anotar, corregir
+y borrar un abono, aportar al fondo y registrar una compra mueven Finanzas; sin datos no se rompen; en el iPad van sin
+formularios. El **control 57** prueba la cuenta del crédito y el **59**, estas ventanas.
 
 **Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se paga completa
 cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle y en el desglose de Patrimonio, que la
@@ -1103,15 +1097,11 @@ marcan "sin intereses". La BBVA tampoco paga intereses mientras Adán cubre lo q
 
 Adán, 17-nov-2026: *"en total invertido yo lo actualizaré esa cifra y añadiré mis inversiones en GBM, cuándo, cuánto
 y qué compré… ya no debe depender nada de esto de mi suscripción de Claude, debe ser lo más autónomo posible,
-editar, eliminar… todas estas cifras deben estar entrelazadas con la info de HTML finanzas"*. El panel
-(`kpiDetalle('invertido')`) lleva, de arriba abajo: la cifra con lo que metiste y lo que ganan o pierden; *Tu
-estrategia de hoy* —sin tarjeta que pagar, lo que va a GBM hoy y este mes—; **Tus inversiones, compra por compra**
-(`.ti-fila`, de la más nueva a la más vieja: cuándo, qué, de qué tipo, cuánto metiste, cuánto vale hoy y la
-diferencia, con **Editar** y **Borrar**); el formulario **Agregar una compra** (`tiFormHtml`: cuándo, qué precio
-sigue, qué compraste, tipo, cuánto metiste y cuánto vale hoy —o, si sigue un precio, cuánto compraste—; vacío, vale
-lo que metiste), que con **Editar** se llena con esa compra y pasa a **Guardar cambios** / **Cancelar**; **Tu portafolio hoy**, cada instrumento con lo de todas sus
-compras sumado y su parte del total —el Bitcoin, con lo que vale todo el que tienes—, lo que entra cada mes y lo que
-falta. **Lo invertido son tus inversiones más tu Bitcoin**: la cifra del panel y el medidor (`totalInvKpi`) suman las
+editar, eliminar… todas estas cifras deben estar entrelazadas con la info de HTML finanzas"*. En la ventana
+(`MEDIDORES.invertido`), **Tus compras** van de la más nueva a la más vieja (`.ti-fila`: cuándo, qué, cuánto metiste, cuánto
+vale hoy y la diferencia, con **Editar** y **Borrar**), y debajo **Agregar una compra** (`tiFormHtml`: cuándo, qué precio
+sigue, qué compraste, tipo, cuánto metiste y cuánto vale hoy —o, si sigue un precio, cuánto compraste—; vacío, vale lo que
+metiste), que con **Editar** se llena con esa compra y pasa a **Guardar cambios** / **Cancelar**. **Lo invertido son tus inversiones más tu Bitcoin**: la cifra del panel y el medidor (`totalInvKpi`) suman las
 dos cosas.
 
 Las compras **son las de Finanzas**: `tiGuardar`, `tiEditar` y `tiBorrar` escriben en `finanzasmx_v2.investments` con
@@ -1155,14 +1145,11 @@ corregir con la cantidad exacta o borrar, también. A 1600 y 390 px, sin desbord
 ### Fondo de emergencia, aportación por aportación
 
 Adán, 17-nov-2026: *"en el fondo de emergencia también déjame hacer aportaciones y eso también se debe reflejar en el de
-HTML finanzas, al igual que lo que habíamos hecho, no quiero depender de mi suscripción de Claude"*. El panel
-(`kpiDetalle('fondo')`) lleva, debajo de la cifra, **Tus aportaciones y retiros**: cuánto aportaste y retiraste en total
-(`.ef-resumen`), un renglón por movimiento del más nuevo al más viejo —cuándo, aportación o retiro, la nota y el monto,
-con **Editar** y **Borrar**— y el formulario **Aportar o retirar** (`efFormHtml`: cuándo, qué fue, cuánto y una nota),
-que con **Editar** se llena con ese movimiento y pasa a **Guardar cambios** / **Cancelar**. Un retiro mayor que el fondo
-no se anota: el aviso sale en el formulario (`.ef-error`) sin borrar lo escrito. Una nota pide anotar aquí lo que se le
-mete al fondo y no como compra en Total invertido: el fondo y las inversiones se suman en el patrimonio y en la
-maestría, y el mismo dinero contaría dos veces.
+HTML finanzas, al igual que lo que habíamos hecho, no quiero depender de mi suscripción de Claude"*. En la ventana
+(`MEDIDORES.fondo`) van el formulario **Aportar o retirar** (`efFormHtml`: cuándo, qué fue, cuánto y una nota) y un renglón
+por movimiento, del más nuevo al más viejo, con **Editar** y **Borrar**; sin movimientos, las tres preguntas de antes de
+sacar. Un retiro mayor que el fondo no se anota: el aviso sale en el formulario (`.ef-error`) sin borrar lo escrito. El pie
+pide no anotarlo también como compra en Total invertido: el mismo dinero contaría dos veces.
 
 La cuenta es **una sola, la del maestro**: `efGuardar` y `efBorrar` llaman a `CIFRAS.fondoMovimiento` y
 `CIFRAS.fondoBorrar`, que mueven `finanzasmx_v2.emergencyFund` (y `current` de la meta ef-001) y anotan el movimiento en
@@ -1501,30 +1488,17 @@ desplaza al mes de hoy solo cuando hay una columna.
 Los seis medidores del dinero no van aquí: viven en el Plan Maestro (ver *Los seis medidores*), y
 los paneles que abren, abajo.
 
-**El panel de cada medidor ocupa casi toda la pantalla y tiene aire** (`.gbm-card.kpi-card`: `min(1900px, 96vw)` de
-ancho, como la ventana del alemán, alto mínimo del 72 % y máximo del 94 %; Adán, 19-nov-2026: *"todas esas ventanas
-hazlas más grandes, porque hay mucho ruido visual"*): letra de 14 px en lo que se lee, secciones con 40 px entre
-columnas y 22 entre grupos, cajas y tablas (`.pr-*`, `.ti-*`) un punto más grandes dentro de `#kpiOverlay`. Medido a
-2048×1040: las seis ventanas miden 1884 px de ancho y ninguna se desplaza; a 1600 px, Patrimonio y Deuda total bajan
-10 y 63 px; a 390, pantalla completa. Cada `kpiDetalle` escribe su HTML de corrido con `kpiSec`, `kpiBarra`, `kpiPaso` y `kpiNota`;
-`kpiAcomodar()` lo reparte al abrir: `.kpi-cifra` y su sub arriba a lo ancho (`.kpi-hero`, cifra hasta 36 px) y cada
-sección con lo que le sigue en un `.kpi-grupo` dentro de `.kpi-cols` —columnas CSS que no parten un grupo: una sección
-va a una columna, dos a dos y, desde 1400 px, tres o más a tres (`.kpi-cols-3`); bajo 1024 px todo a una—. La letra, las
-barras (8 px) y los espacios son los de `#kpiOverlay`. Además de lo de antes, cada panel dice: **Fondo**,
-cuántos meses de tus fijos (`fijosTotal`) cubre y que el plan
-no le aporta mientras `cetesDia15` sea 0; **Maestría**, los cortes
-de la salida con lo que espera la proyección en GBM y lo que falta —la misma cuenta que Mis Metas— (`kpiCortesHTML`);
-**Patrimonio**, lo que espera la trayectoria al cierre de cada fase y el mes del millón (`kpiTrayectoriaHTML`); **Total
-invertido**, tu estrategia de hoy y tus inversiones compra por compra (ver *Total invertido, compra por compra*); **Deuda total**, cuándo queda
-en cero cada una y lo que pagas entre todas (`kpiDeudaFinHTML`, `minimosDeuda`). Medido en 1600×1000, con los datos de Finanzas: el fondo ocupa 440 px de alto, el
-patrimonio 743 y ninguno se desplaza (Total invertido, con su formulario, sí a 1366×768); a 390 px, sin desbordes.
+**Las ventanas de los seis medidores** están en *Las ventanas de los medidores* (Plan Maestro): `min(1900px, 96vw)` de ancho y
+hasta el 94 % del alto. Los demás paneles de `kpiOverlay` —tu año (`taDetalle`) y los del mes (`ctMesDetalle`)— escriben su
+HTML de corrido con `kpiSec`, `kpiBarra`, `kpiPaso` y `kpiNota`, y `kpiAcomodar()` lo reparte al abrir: `.kpi-cifra` y su sub
+arriba (`.kpi-hero`) y cada sección en un `.kpi-grupo` dentro de `.kpi-cols` —columnas CSS que no parten un grupo: de una a
+tres desde 1400 px (`.kpi-cols-3`); bajo 1024 px, una—.
 
 El medidor **Patrimonio hacia $1M** (en el Plan Maestro) es todo lo suyo menos las deudas (`patrimonioNeto()`, que delega en `CIFRAS.patrimonio()` —la misma fórmula de Coach—: inversiones, fondo,
 Bitcoin a precio de hoy, efectivo y cuenta, y los bienes), la misma cifra que el Patrimonio Neto de
-Finanzas; la barra es el % del millón. El desglose separa lo que tiene, lo que debe y los bienes, y
-dice aparte el líquido sin bienes (`patrimonioLiquido()`), que es el número que se mueve con cada
-abono. El punto de partida con bienes (18-jul-2026, $231,770) solo sirve para decir cuánto ha
-sumado desde entonces.
+Finanzas; la barra es el % del millón. La ventana separa
+el dinero, las cosas y las deudas, y dice aparte el líquido sin bienes (`patrimonioLiquido()`), que es el que cuenta para el
+millón del plan.
 La meta del millón se fecha con el cierre de la última fase (`finDelPlan()`): el medidor dice
 `meta 31 dic 2031`, leído de `PHASES`.
 

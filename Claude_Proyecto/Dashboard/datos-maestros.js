@@ -113,7 +113,7 @@ window.CIFRAS = (function () {
     { g: 'Allá', k: 'SUPUESTOS.trabajo.gasto', t: 'eur', txt: 'Gasto al mes, trabajando' },
     { g: 'Allá', k: 'SUPUESTOS.byd.rentaNeta', t: 'peso', txt: 'Lo que deja el BYD rentado, al mes' },
     { g: 'Allá', k: 'SUPUESTOS.rendimiento', t: 'tasa', max: 0.3, txt: 'Rendimiento al año de lo ahorrado' },
-    { g: 'Salud', k: 'PESO.metaKg', t: 'num', u: 'kg', max: 250, txt: 'Tu meta de peso', nota: 'Salud, el Dashboard y Coach miden contra ella.' },
+    { g: 'Salud', k: 'PESO.metaKg', t: 'num', u: 'kg', max: 250, txt: 'Tu meta de peso', nota: 'Salud mide contra ella.' },
     { g: 'Salud', k: 'proteinaMeta', t: 'num', u: 'g', max: 400, txt: 'Proteína al día' },
     { g: 'Salud', k: 'kcalMeta', t: 'num', u: 'kcal', max: 6000, txt: 'Calorías al día' },
     { g: 'Salud', k: 'carbsMeta', t: 'num', u: 'g', max: 900, txt: 'Carbohidratos al día' },
@@ -1412,6 +1412,7 @@ window.CIFRAS = (function () {
     const costos = SALIDA.costos.map(function (c) { return Object.assign({}, c, { mes: mesMas(c.mes, dm) }); });
     const devuelve = mesSiguiente(P.rentaHasta);
     let cash = f.efectivo, deposito = f.deposito, auto = f.auto, iphone = f.iphone;
+    const autoCargos = Math.max(0, +((deuda('d003') || {}).cargos) || 0);
     const B = planBbva();
     const grupo = function (k) { return GRUPOS_SUELDO.filter(function (x) { return x[0] === k; })[0][1]; };
     const eu = function (n) { return '€' + n.toLocaleString('es-MX'); };
@@ -1431,7 +1432,8 @@ window.CIFRAS = (function () {
       // El auto: el interés es gasto; el capital baja la deuda (no el patrimonio).
       const interes = auto > 0 ? auto * f.autoTasa / 100 / 12 : 0;
       const pagoAuto = auto > 0 ? Math.min(auto + interes, f.autoPago) : 0;
-      auto = Math.max(0, auto + interes - pagoAuto);
+      // `cargos` (IVA del interés y seguros) sale con la mensualidad y no baja la deuda: igual que en prestamoTabla.
+      auto = Math.max(0, auto + interes - Math.max(0, pagoAuto - autoCargos));
       const pagoIphone = Math.min(iphone, f.iphonePago); iphone -= pagoIphone;
       if (enMexico) {
         desglose = desgloseMes(mes, s, { pagoAuto: pagoAuto, pagoIphone: pagoIphone, ultimo: ultimo });

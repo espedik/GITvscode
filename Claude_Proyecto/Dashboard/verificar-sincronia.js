@@ -3210,7 +3210,7 @@ function promptsDeLoTocado() {
     C.fondoBorrar(F, a.id); C.fondoBorrar(F, r.id);
     if (F.emergencyFund !== 5000 || F.efAportes.length) malos.push('borrar los dos movimientos no regresa el fondo a 5,000 (da ' + F.emergencyFund + ')');
   }
-  const h = leer('Dashboard/dashboard.html'), fz = leerSi('Finanzas/Finanzas.html'), ex = leerSi('Dashboard/habitos-exportar.js');
+  const h = leer('Dashboard/dashboard.html') + leerSi('Dashboard/medidores.js').replace(/\bC\(\)\./g, 'CIFRAS.'), fz = leerSi('Finanzas/Finanzas.html'), ex = leerSi('Dashboard/habitos-exportar.js');
   ['CIFRAS.fondoMovimiento(', 'CIFRAS.fondoBorrar(', 'CIFRAS.fondoLista('].forEach(function (k) {
     if (h.indexOf(k) < 0) malos.push('el panel del fondo del Dashboard ya no usa ' + k.slice(0, -1));
     if (fz.indexOf(k) < 0) malos.push('Finanzas ya no usa ' + k.slice(0, -1));
@@ -3495,8 +3495,8 @@ function promptsDeLoTocado() {
   if (x.balance !== 100000 || F.transactions.length) malos.push('borrar el abono no devuelve el saldo');
   C.prestamoDatos(F, 'x', { saldo: 95000, rate: 13, plazo: 30 });
   if (x.balance !== 95000 || x.rate !== 13 || x.plazo !== 30 || x.pagosAl !== C.fechaLocal()) malos.push('prestamoDatos no deja el saldo dicho con pagosAl de hoy, la tasa o el plazo');
-  const h = leer('Dashboard/dashboard.html'), fz = leer('Finanzas/Finanzas.html');
-  ['CIFRAS.prestamoResumen(', 'CIFRAS.prestamoAbono(', 'CIFRAS.prestamoAbonoBorrar(', 'CIFRAS.prestamoDatos(', 'function kpiPrestamoHTML(', 'Q.porAnio', 'class="in-pila"'].forEach(k => {
+  const h = leer('Dashboard/dashboard.html') + leer('Dashboard/medidores.js').replace(/\bC\(\)\./g, 'CIFRAS.'), fz = leer('Finanzas/Finanzas.html');
+  ['CIFRAS.prestamoResumen(', 'CIFRAS.prestamoAbono(', 'CIFRAS.prestamoAbonoBorrar(', 'CIFRAS.prestamoDatos(', 'function prAbonoForm(', 'function prDatosForm(', 'R.porAnio', 'CIFRAS.prestamoTabla('].forEach(k => {
     if (h.indexOf(k) < 0) malos.push('Deuda total del Dashboard ya no usa ' + k.replace(/\($/, ''));
   });
   if (fz.indexOf('CIFRAS.prestamoAbono(') < 0) malos.push('«Pagar» de Finanzas ya no anota el abono con la cuenta del maestro');
@@ -3528,6 +3528,27 @@ function promptsDeLoTocado() {
   toggles.forEach(r => malos.push('una pantalla gana su scroll al activarse (iOS no lo toma): ' + r.slice(0, 90)));
   if (malos.length) { problemas.push('El scroll de las pantallas en el iPad:\n     ' + malos.join('\n     ')); return; }
   ok.push('Pantallas del Dashboard: la activa sin filter ni transform, y ninguna gana su scroll al activarse (iPad)');
+})();
+
+/* ── 59. Las ventanas de los seis medidores ────────────────────────────────────────────────────────────────────────
+   Adán, 23-nov-2026: "estos indicadores son los más importantes… debe ser claro y moderno… contenido relevante para mi
+   día a día". Cada medidor que se toca tiene su ventana en medidores.js, con su parte de hoy; el Dashboard la carga; el
+   fondo es opaco; ninguna cifra en pesos va escrita a mano (salvo los montos de ejemplo de los botones); y lo metido en
+   Bitcoin sale de las compras vivas, no de sumar también lo vendido (decía −$5,497 USD, falso). */
+(function () {
+  const malos = [], lee = rel => { try { return leer(rel); } catch (e) { return ''; } };
+  const h = lee('Dashboard/dashboard.html'), m = lee('Dashboard/medidores.js'), c = lee('Dashboard/medidores.css');
+  if (h.indexOf('<script src="medidores.js"></script>') < 0 || h.indexOf('<link rel="stylesheet" href="medidores.css">') < 0) malos.push('dashboard.html ya no carga medidores.js y medidores.css');
+  const ids = (h.slice(h.indexOf('function renderMedidores()'), h.indexOf("document.getElementById('pmMedidores')")).match(/id:'([a-z]+)'/g) || []).map(x => x.slice(4, -1));
+  if (ids.length < 6) malos.push('no pude leer los medidores de renderMedidores (' + ids.length + ')');
+  ids.forEach(id => { if (m.indexOf('M.' + id + ' = function') < 0) malos.push('el medidor «' + id + '» no tiene ventana en medidores.js'); });
+  if (h.indexOf('MEDIDORES[id](D.fin||{})') < 0 || h.indexOf('MEDIDORES.pinta(info)') < 0 || h.indexOf('info.listo()') < 0) malos.push('kpiDetalle o abrirKpi ya no usan las ventanas de medidores.js');
+  if (!/#kpiOverlay \.gbm-card\.kpi-card,#kpiOverlay \.gbm-head\{background:var\(--kv-sup\)\}/.test(c)) malos.push('el fondo de las ventanas ya no es opaco');
+  if (/\.usdIn\b/.test(m) || m.indexOf('tiBtcAbiertas(F)') < 0) malos.push('lo metido en Bitcoin ya no sale de las compras vivas (tiBtcAbiertas)');
+  if (/\$\d{2,}/.test(m.replace(/\/\*[\s\S]*?\*\//g, ''))) malos.push('hay una cifra en pesos escrita a mano en medidores.js');
+  if (/C\(\)\.v\('(?!decisionMaestria')/.test(m)) malos.push('una cifra del plan sale sin pasar por money(): se vería en modo privado');
+  if (malos.length) { problemas.push('Las ventanas de los medidores:\n     ' + malos.join('\n     ')); return; }
+  ok.push('Las ventanas de los ' + ids.length + ' medidores: cada una con su contenido en medidores.js, fondo opaco y sin cifras a mano');
 })();
 
 // ── Salida ──
