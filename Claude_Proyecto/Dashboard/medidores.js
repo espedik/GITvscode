@@ -74,12 +74,8 @@
   const sigTxt = s => s ? (s.k === hoyLocal() ? 'hoy' : 'el ' + diaTxt(s.k)) + ', ' + money(s.v) : '';
 
   // ══ Fondo de emergencia ══
-  // La pregunta de la ventana: si hoy dejara de entrar dinero, ¿hasta qué día llegas? Las cuentas son del maestro
-  // (gastoEmergencia, recorridoFondo): el calendario de pagos de verdad, no un promedio de movimientos.
-  const ef = { minimo: true, F: null, dia: null, lee: null };
+  // Cuántos días alcanza y cuánto de los meses de la meta. Las cuentas son del maestro (gastoEmergencia, fondoMeta).
   const MESL = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-  const diaLargo = k => +k.slice(8) + ' de ' + MESL[+k.slice(5, 7) - 1];
-  const celdas = (n, f) => Array.from({ length: n }, (_, i) => '<i class="' + f(i) + '"></i>').join('');
   function anillo(p) {
     const n = 40, r = 82, g = [];
     for (let i = 0; i < n; i++) {
@@ -88,59 +84,23 @@
     }
     return '<svg viewBox="0 0 200 200" aria-hidden="true">' + g.join('') + '</svg>';
   }
-  const nombrePago = c => { const p = c.pagos; return p.length ? esc(p[0].t) + (p.length > 1 ? ' y ' + plural(p.length - 1, 'pago más', 'pagos más') : '') : 'la comida'; };
-  function ruta(F) {
-    const x = dinero(F), R = C().recorridoFondo(x.ef, ef.minimo, hoyLocal(), 30, F.debts);
-    const D = R.dias, c = R.corte, ult = D[D.length - 1], grandes = D.filter(d => d.fijo >= ult.acum * .04);
-    const titular = !c ? 'más de ' + D.length + ' días' : R.cubre ? 'hasta el ' + diaLargo(R.hasta) : 'ni a mañana';
-    // Los pagos que se rotulan: los grandes, sin encimarse (el más grande gana el lugar).
-    const pins = [];
-    D.map((d, i) => ({ d, i })).filter(o => grandes.indexOf(o.d) >= 0).sort((a, b) => b.d.fijo - a.d.fijo).forEach(o => { if (pins.every(q => Math.abs(q.i - o.i) >= 8)) pins.push(o); });
-    const pin = pins.map(o => { const der = o.i > 17; return '<span class="' + (der ? 'der' : '') + '" style="' + (der ? 'right:' + ((D.length - 1 - o.i) / D.length * 100).toFixed(2) : 'left:' + (o.i / D.length * 100).toFixed(2)) + '%"><b>' + money(o.d.fijo) + '</b><em>' + diaTxt(o.d.fecha) + '<u>, ' + nombrePago(o.d) + '</u></em></span>'; }).join('');
-    const tira = r => '<div class="kf-tira" style="--n:' + D.length + '">' + r.dias.map((d, i) => '<i data-d="' + i + '" class="' + (d.alcanza ? 'on' : r.corte && d.fecha === r.corte.fecha ? 'corte' : '') + '" style="--i:' + i + '"></i>').join('') + '</div>';
-    const carril = (n, v, r) => '<span class="kf-c"><b>' + n + '</b>' + v + '</span>' + tira(r) + '<strong class="kf-n">' + r.cubre + (r.corte ? '' : '+') + '<small>' + (r.cubre === 1 ? 'día' : 'días') + '</small></strong>';
-    // Lo que falta para pasar lo que sigue después del corte (lo del corte ya lo dice el encabezado).
-    const grande = c && grandes.filter(d => d.fecha > c.fecha)[0];
-    ef.lee = { R, base: c ? 'Te faltan ' + (grande ? '<b>' + money(Math.max(0, grande.acum - x.ef)) + '</b> para pasar el ' + diaTxt(grande.fecha) + ' y ' : '') + '<b>' + money(R.falta) + '</b> para los ' + D.length + ' días.' : 'Pasas los ' + D.length + ' días completos.' };
-    const modo = (v, n) => '<button type="button" aria-pressed="' + (ef.minimo === v) + '" onclick="MEDIDORES.modoFondo(' + v + ')">' + n + '</button>';
-    return '<div class="kf-top"><div><h3>Si hoy dejaras de ganar, tu fondo te lleva</h3><strong class="kf-tit">' + titular + '</strong>' +
-      '<p>' + (c ? 'El ' + diaLargo(c.fecha) + (c.fijo > 0 ? ' caen <b>' + money(c.fijo) + '</b>: ' + nombrePago(c) : ' ya no alcanza para la comida') + '. Te faltan <b>' + money(c.falta) + '</b>.' : 'Con lo que hay pagas todo hasta el ' + diaLargo(ult.fecha) + '.') + '</p></div>' +
-      '<div class="kf-modo" role="group" aria-label="Cómo gastarías">' + modo(true, 'Solo lo indispensable') + modo(false, 'Como vives hoy') + '</div></div>' +
-      '<div class="kf-rej"><span></span><div class="kf-pins">' + pin + '</div><span></span>' +
-      carril('Tu fondo', money(x.ef), R) +
-      '<span></span><div class="kf-eje">' + [0, 10, 20, D.length - 1].map(i => '<span>' + diaTxt(D[i].fecha) + '</span>').join('') + '</div><span></span></div>' +
-      '<p class="kf-lee" id="kfLee" aria-live="polite">' + ef.lee.base + '</p>';
-  }
-  function leeDia(i) {
-    const p = document.getElementById('kfLee'); if (!p || !ef.lee || ef.dia === i) return;
-    ef.dia = i;
-    document.querySelectorAll('#kfRuta .kf-tira i.mira').forEach(e => e.classList.remove('mira'));
-    if (i == null) { p.innerHTML = ef.lee.base; return; }
-    const a = ef.lee.R.dias[i], q = v => v >= 0 ? 'te quedan <b>' + money(v) + '</b>' : 'te faltan <b>' + money(-v) + '</b>';
-    document.querySelectorAll('#kfRuta .kf-tira i[data-d="' + i + '"]').forEach(e => e.classList.add('mira'));
-    p.innerHTML = '<b>' + diaTxt(a.fecha) + '</b>: ' + (a.pagos.length ? nombrePago(a) + ', <b>' + money(a.fijo) + '</b>, más tu gasto del día' : 'solo tu gasto del día, <b>' + money(a.gasto) + '</b>') + '. Ese día ' + q(a.saldo) + '.';
-  }
-  function oyeRuta() {
-    const e = document.getElementById('kfRuta'); if (!e) return;
-    e.onpointermove = e.onpointerdown = ev => { const t = ev.target.closest && ev.target.closest('.kf-tira i'); leeDia(t ? +t.dataset.d : null); };
-    e.onpointerleave = () => leeDia(null);
-    e.onkeydown = ev => {
-      const d = ev.target.tagName === 'BUTTON' ? 0 : ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0; if (!d) return;
-      ev.preventDefault(); leeDia(Math.max(0, Math.min(29, (ef.dia == null ? (d > 0 ? -1 : 30) : ef.dia) + d)));
+  // Una barra por mes de la meta: los días que cubre el fondo y lo que falta para completarlo.
+  function ruta(x, G, meta, meses) {
+    const dias = G.minimo > 0 ? Math.floor(x.ef / (G.minimo / 30)) : 0;
+    const mes = i => {
+      const cubre = Math.max(0, Math.min(30, dias - i * 30)), p = pct(x.ef - i * G.minimo, G.minimo), falta = (i === meses - 1 ? meta : G.minimo * (i + 1)) - x.ef;
+      return '<div class="kf-mes' + (falta <= 0 ? ' listo' : '') + '"><div class="kf-mt"><b>Mes ' + (i + 1) + '</b><span>' + (falta <= 0 ? 'Cubierto' : cubre + ' de 30 días') + '</span></div><div class="kf-bat"><i style="width:' + (falta <= 0 ? 100 : p) + '%"></i></div>' +
+        '<em>' + (falta <= 0 ? 'Ya lo tienes' : 'Te faltan ' + money(falta) + ' para llegar aquí') + '</em></div>';
     };
+    return '<h3>Si te quedas sin trabajo, tu fondo te alcanza para</h3><strong class="kf-tit">' + plural(dias, 'día', 'días') + '</strong>' +
+      '<p>Vivir un mes con lo indispensable cuesta <b>' + money(G.minimo) + '</b> y tienes <b>' + money(x.ef) + '</b>. Tu meta es llenar ' + (meses === 1 ? 'la barra.' : 'las ' + meses + ' barras.') + '</p>' +
+      '<div class="kf-meses" style="--n:' + meses + '">' + Array.from({ length: meses }, (_, i) => mes(i)).join('') + '</div>';
   }
-  M.modoFondo = function (v) {
-    const e = document.getElementById('kfRuta'); ef.minimo = v; ef.dia = null; if (!e) return;
-    e.innerHTML = ruta(ef.F); const b = e.querySelector('.kf-modo [aria-pressed="true"]'); if (b) b.focus({ preventScroll: true });
-  };
   M.apartar = function (v) { const f = document.querySelector('#kpiBody form.ti-form'); if (!f || !f.ef_m) return; f.ef_t.value = 'aporte'; f.ef_m.value = v; f.scrollIntoView({ block: 'nearest' }); f.ef_m.focus(); };
 
   // Cómo se llama cada renglón del mes en la ventana.
   const EF_NOM = { renta: 'Renta', depa: 'Luz, agua, internet y gas', celular: 'Plan de datos', familia: 'Aporte a tu familia', auto: 'El BYD', iphone: 'El iPhone', comida: 'Comida', suscripciones: 'suscripciones', cuidado: 'rutinas de cuidado', personal: 'ropa, salidas y compras' };
   M.fondo = function (F) {
-    const ov = document.getElementById('kpiOverlay');
-    if (!ov || !ov.classList.contains('open') || ov.dataset.kpi !== 'fondo') { ef.minimo = true; }
-    ef.F = F; ef.dia = null;
     const x = dinero(F), k = hoyLocal(), meta = _metaFondo(), falta = Math.max(0, meta - x.ef), p = pct(x.ef, meta), editable = tiEditable(), alPlan = +C().n('cetesDia15') || 0;
     const prox = mas(k.slice(0, 7), 1), E = C().gastoEmergencia, G = E(prox), P = C().PROYECCION.meses, mano = x.ef + x.liqV, sig = contraPlan(F).sig;
     // Quincena por quincena (el 1 y el 15), contra la meta de cada mes: sin renta baja.
@@ -151,15 +111,6 @@
     };
     const chip = v => { const m = llegas(v); return boton('<b>' + money(v) + '</b> por quincena: ' + (m || 'no llega antes de irte'), 'MEDIDORES.apartar(' + v + ')', 1); };
     const meses = C().PROYECTO.fondoMeses, cambia = P.filter(q => q.mes > k.slice(0, 7) && q.mes <= C().PROYECTO.ultimoMesMexico && C().fondoMeta(q.mes) < meta * .8)[0];
-
-    // Los niveles: lo del fondo y, encima, la cuenta y el efectivo. Lo invertido no cuenta (Adán: «solo va efectivo, cetes y cuenta bbva»).
-    const nivel = (t, v) => {
-      const a = Math.round(pct(x.ef, v) / 5), b = Math.round(pct(mano, v) / 5);
-      return '<section class="kv-c kf-niv' + (x.ef >= v ? ' listo' : '') + '"><div><b>' + t + '</b><strong>' + money(v) + '</strong></div><div class="kf-cel">' + celdas(20, i => i < a ? 'on' : i < b ? 'inv' : '') + '</div>' +
-        '<p>' + (x.ef >= v ? 'Ya lo cubre tu fondo.' : 'Le faltan <b>' + money(v - x.ef) + '</b>' + (mano >= v ? '; con tu cuenta y efectivo, ya llegas.' : mano > x.ef ? '; con tu cuenta y efectivo, <b>' + money(v - mano) + '</b>.' : '.')) + '</p></section>';
-    };
-    const niveles = [['Un mes de lo indispensable', G.minimo], ['Dos meses de lo indispensable', G.minimo * 2], ['Tu meta: ' + plural(meses, 'mes', 'meses'), meta], [plural(meses, 'mes', 'meses') + ' como vives hoy', G.normal * meses]]
-      .filter(n => n[1] > 0).sort((a, b) => a[1] - b[1]).map(n => nivel(n[0], n[1])).join('');
 
     // A la mano, en el orden en que se usa. El saldo de la cuenta lleva su fecha: si es viejo, se dice.
     const liq = x.liq.filter(a => +a.value > 0);
@@ -182,14 +133,13 @@
         (editable ? '<span class="ti-acc"><button type="button" class="ce-btn sec" onclick="efEditar(\'' + m.id + '\')">Editar</button><button type="button" class="ce-btn sec" onclick="efBorrar(\'' + m.id + '\')">Borrar</button></span>' : '') + '</div>';
     }).join('');
 
-    return { kv: 'var(--w)', titulo: 'Fondo de emergencia', sub: 'Tu colchón en CETES: hasta qué día aguantas si dejas de ganar, y qué le falta.', listo: oyeRuta, html:
+    return { kv: 'var(--w)', titulo: 'Fondo de emergencia', sub: 'Tu colchón en CETES: para cuánto te alcanza si te quedas sin trabajo, y qué le falta.', html:
       '<div class="kf"><div class="kf-a"><section class="kv-c kf-hero"><div class="kf-an" role="img" aria-label="' + Math.round(p) + '% de tu meta">' + anillo(p) + '<div><strong>' + money(x.ef) + '</strong><span>de ' + money(meta) + '</span></div></div>' +
         '<div class="kf-pc"><strong>' + Math.round(p) + '%</strong><span>' + (falta > 0 ? 'Te faltan <b>' + money(falta) + '</b> para cubrir ' + plural(meses, 'mes', 'meses') + ' de lo indispensable.' : 'Meta completa. Lo que sobre va a GBM.') + '</span></div></section>' +
-      '<section class="kv-c kf-ruta" id="kfRuta" tabindex="0" aria-label="Los próximos 30 días sin ingresos">' + ruta(F) + '</section></div>' +
+      '<section class="kv-c kf-ruta">' + ruta(x, G, meta, meses) + '</section></div>' +
       (falta > 0 ? hoy('Hoy', alPlan > 0 ? 'Tu plan le mete <b>' + money(alPlan) + '</b> el día 15.' : 'Tu plan no le mete dinero: todo tu ahorro va a GBM' + (sig ? ' (el siguiente envío, ' + sigTxt(sig) + ')' : '') + '.',
         alPlan > 0 ? '' : editable ? 'Si quieres llenarlo aparte, esto es lo que tardas' + (cambia ? '; en ' + MESL[+cambia.mes.slice(5) - 1] + ' la meta baja a <b>' + money(C().fondoMeta(cambia.mes)) + '</b>, porque desde ' + MESL[+mas(cambia.mes, 1).slice(5) - 1] + ' gastas menos' : '') + ':' : '', editable && !(alPlan > 0) ? [2000, 4000, 6000].map(chip).join('') : '')
         : hoy('Listo', 'Tu fondo ya está completo: no le metas más.', 'El ahorro sigue yendo a GBM.')) +
-      '<div class="kf-nivs">' + niveles + '</div>' + leyenda([['tu fondo en CETES', 'var(--ac)'], ['tu cuenta y tu efectivo', 'var(--kf-inv)']]) +
       '<div class="kf-d">' +
         '<section class="kv-c"><h3>A la mano: ' + money(mano) + '</h3><p>En el orden en que se usa.</p>' + dinHtml + (dv > 7 ? '<div class="kv-pie">El saldo de tu cuenta es de hace ' + dv + ' días: ponlo al día en Finanzas.</div>' : '') + '</section>' +
         '<section class="kv-c"><h3>Un mes sin sueldo: ' + money(G.minimo) + '</h3><p>Lo que pagarías sí o sí.</p>' + mesHtml + (baja ? '<div class="kv-pie">Desde ' + MESL[+baja.mes.slice(5) - 1] + (baja.partes.some(q => q.id === 'renta') ? '' : ', sin renta,') + ' baja a <b>' + money(baja.minimo) + '</b> al mes.</div>' : '') + '</section>' +

@@ -9453,7 +9453,7 @@ window.CIFRAS = (function () {
     F.efAportes = F.efAportes.filter(function (m) { return m.id !== id; });
     return x;
   }
-  /* Cuánto aguanta el fondo. `gastoEmergencia(ym)` parte el mes del plan (`desgloseMes`) en lo que se paga aunque no
+  /* Lo que cuesta vivir sin sueldo. `gastoEmergencia(ym)` parte el mes del plan (`desgloseMes`) en lo que se paga aunque no
      entre sueldo —`minimo`: renta, servicios, celular, la familia, el BYD, el iPhone y la comida— y lo que se apaga
      —`recorte`: suscripciones, rutinas y lo demás—; `normal` es la suma. No entran el ahorro ni los abonos a la tarjeta.
      El promedio de los movimientos anotados no sirve para esto: mezcla meses sin anotar con pagos grandes de la tarjeta,
@@ -9480,28 +9480,6 @@ window.CIFRAS = (function () {
       const m = fondoMeta();
       if (g && m > 0 && +g.target !== m) { g.target = m; localStorage.setItem(KEY, JSON.stringify(f)); leer(); }
     } catch (e) { /* sin almacenamiento, la meta se calcula igual */ }
-  }
-  /* Día por día, desde mañana y sin que entre un peso: los pagos del calendario (`agendaDia`) el día que caen y la comida
-     —más rutinas y lo demás si `minimo` es falso— repartida entre los días del mes. `cubre` son los días que `dinero`
-     alcanza; `corte`, el primero que ya no, con lo que cae ese día y lo que falta; `falta`, lo que falta para todos. */
-  function recorridoFondo(dinero, minimo, desde, dias, debts) {
-    const p = String(desde || fechaLocal()).split('-').map(Number), out = [], G = {};
-    let saldo = +dinero || 0, cubre = 0, corte = null, gastado = 0;
-    for (let i = 1; i <= (dias || 30); i++) {
-      const d = new Date(p[0], p[1] - 1, p[2] + i), ym = mesDe(d), nd = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
-      const g = G[ym] || (G[ym] = gastoEmergencia(ym));
-      const diario = g.partes.reduce(function (s, x) { return s + (x.id === 'comida' || (!minimo && (x.id === 'cuidado' || x.id === 'personal')) ? x.v : 0); }, 0) / nd;
-      const pagos = agendaDia(d.getDate(), ym, debts).filter(function (c) {
-        return !c.entra && !c.ahorro && !c.pagado && (!c.tarjeta || c.de === 'minimo') && !(minimo && SE_APAGA.indexOf(c.grupo) >= 0);
-      }).map(function (c) { return { t: c.t, v: +c.monto || 0 }; }).sort(function (a, b) { return b.v - a.v; });
-      const fijo = pagos.reduce(function (s, x) { return s + x.v; }, 0), gasto = fijo + diario;
-      saldo -= gasto; gastado += gasto;
-      const alcanza = !corte && saldo >= -0.005;
-      if (alcanza) cubre = i;
-      else if (!corte) corte = { fecha: fechaLocal(d), pagos: pagos, fijo: fijo, falta: -saldo };
-      out.push({ fecha: fechaLocal(d), pagos: pagos, fijo: fijo, gasto: gasto, acum: gastado, saldo: saldo, alcanza: alcanza });
-    }
-    return { dias: out, cubre: cubre, corte: corte, hasta: cubre ? out[cubre - 1].fecha : null, total: gastado, falta: Math.max(0, gastado - (+dinero || 0)) };
   }
 
   /* ── EL BITCOIN, UNA SOLA LIBRETA ───────────────────────────────────────────────────────────
@@ -10142,7 +10120,7 @@ window.CIFRAS = (function () {
     patrimonio: patrimonio,
     fondoMaestria: fondoMaestria,
     fondoMovimiento: fondoMovimiento, fondoBorrar: fondoBorrar, fondoSigno: fondoSigno, fondoLista: fondoLista,
-    gastoEmergencia: gastoEmergencia, recorridoFondo: recorridoFondo, fondoMeta: fondoMeta,
+    gastoEmergencia: gastoEmergencia, fondoMeta: fondoMeta,
     btcCompra: btcCompra, btcBorrar: btcBorrar, btcEsInversion: btcEsInversion, btcDeInversiones: btcDeInversiones,
     prestamoSimular: prestamoSimular, prestamoHechos: prestamoHechos, prestamoResumen: prestamoResumen, prestamoTabla: prestamoTabla,
     prestamoAbono: prestamoAbono, prestamoAbonoBorrar: prestamoAbonoBorrar, prestamoDatos: prestamoDatos,

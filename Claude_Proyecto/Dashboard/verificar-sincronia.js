@@ -3593,22 +3593,17 @@ function promptsDeLoTocado() {
   ok.push('Próximos viajes: ' + V.BASE.length + ' viajes con lo que falta, su gasto, sus fuentes y sus fotos; nada en domingo, y el vuelo y el hotel no salen del navegador');
 })();
 
-/* ── 61. Cuánto aguanta el fondo de emergencia ──────────────────────────────────────────────────────────────────────
+/* ── 61. Cuánto cubre el fondo de emergencia ────────────────────────────────────────────────────────────────────────
    La ventana del fondo decía «gasto normal» con el promedio de los movimientos anotados (un pago grande de la tarjeta y
    meses sin anotar) y «lo fijo» sin el BYD ni la comida. La cuenta es una, del maestro: gastoEmergencia parte el mes del
-   plan y recorridoFondo camina el calendario de pagos. Se prueba que cuadren y que la ventana no tenga otra. */
+   plan y fondoMeta da la meta. Se prueba que cuadren y que la ventana no tenga otra. */
 (function () {
   const malos = [], C = global.window && global.window.CIFRAS;
-  if (!C || typeof C.gastoEmergencia !== 'function' || typeof C.recorridoFondo !== 'function') malos.push('el maestro ya no exporta gastoEmergencia / recorridoFondo');
+  if (!C || typeof C.gastoEmergencia !== 'function') malos.push('el maestro ya no exporta gastoEmergencia');
   else {
     const g = C.gastoEmergencia('2026-12'), D = C.desgloseMes('2026-12').g, suma = Object.keys(D).reduce((s, k) => s + (['sueldo', 'ahorro', 'tarjeta'].indexOf(k) < 0 ? Math.max(0, D[k]) : 0), 0);
     if (Math.abs(g.normal - suma) > 0.01 || Math.abs(g.minimo + g.recorte - g.normal) > 0.01) malos.push('lo indispensable más lo que se apaga no suma el mes del plan (' + g.normal + ' contra ' + suma + ')');
     ['renta', 'auto', 'comida'].forEach(id => { if (!g.partes.some(p => p.id === id && !p.apaga && p.v > 0)) malos.push('«' + id + '» ya no cuenta como indispensable'); });
-    const poco = C.recorridoFondo(6000, true, '2026-11-24', 30), caro = C.recorridoFondo(6000, false, '2026-11-24', 30), todo = C.recorridoFondo(poco.total, true, '2026-11-24', 30);
-    if (poco.dias.length !== 30 || !poco.corte || poco.corte.fecha !== poco.dias[poco.cubre].fecha) malos.push('recorridoFondo no corta el día siguiente al último que alcanza');
-    if (!(caro.total > poco.total) || caro.cubre > poco.cubre) malos.push('vivir como hoy no gasta más que lo indispensable');
-    if (todo.corte || todo.cubre !== 30 || todo.falta > 0.01) malos.push('con el total de los 30 días, recorridoFondo no llega al final');
-    if (Math.abs(poco.falta - (poco.total - 6000)) > 0.01) malos.push('lo que falta para los 30 días no cuadra');
   }
   // La meta: los meses de lo indispensable, una cuenta del maestro que las dos apps llaman, nunca un número guardado.
   if (C && typeof C.fondoMeta === 'function') {
@@ -3617,10 +3612,10 @@ function promptsDeLoTocado() {
   } else malos.push('el maestro ya no exporta fondoMeta');
   ['Dashboard/dashboard.html', 'Finanzas/Finanzas.html'].forEach(r => { const t = leer(r), i = t.indexOf('_metaFondo'), k = t.slice(i).search(/function _metaFondo|const _metaFondo/); if (t.slice(i + k, i + k + 140).indexOf('CIFRAS.fondoMeta()') < 0) malos.push('_metaFondo de ' + r + ' ya no llama a CIFRAS.fondoMeta'); });
   const m = leer('Dashboard/medidores.js'), f = m.slice(m.indexOf('// ══ Fondo de emergencia'), m.indexOf('// ══ Fondo Maestría'));
-  if (f.indexOf('.recorridoFondo(') < 0 || f.indexOf('.gastoEmergencia') < 0) malos.push('la ventana del fondo ya no usa recorridoFondo / gastoEmergencia');
+  if (f.indexOf('.fondoMeta(') < 0 || f.indexOf('.gastoEmergencia') < 0) malos.push('la ventana del fondo ya no usa fondoMeta / gastoEmergencia');
   if (/kpiGastoMensual|fijosTotal/.test(f)) malos.push('la ventana del fondo volvió a medir con el promedio de movimientos o con los fijos solos');
-  if (malos.length) { problemas.push('Cuánto aguanta el fondo de emergencia:\n     ' + malos.join('\n     ')); return; }
-  ok.push('Fondo de emergencia: los días que aguanta salen del plan y del calendario de pagos, con una sola cuenta');
+  if (malos.length) { problemas.push('Cuánto cubre el fondo de emergencia:\n     ' + malos.join('\n     ')); return; }
+  ok.push('Fondo de emergencia: la meta y los días que cubre salen de lo indispensable del plan, con una sola cuenta');
 })();
 
 // ── Salida ──
