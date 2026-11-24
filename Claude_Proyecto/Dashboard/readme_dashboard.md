@@ -1519,8 +1519,8 @@ de la noche, que es del sueño), `pasos` con fecha, `vas`
 (cómo sabes que vas bien) y `si` (qué haces si te atrasas). Las fechas no se copian: `{tarea}` toma
 fecha y texto de `PHASES` (y se palomea en la MISMA casilla del Plan Maestro, `coach_checks_v1`,
 con la semana de hoy), `{clave}` lee el maestro (`maestriaInicio`), `{fase}` el
-inicio o el cierre de una fase y `{viaje:[id, paso]}` es la MISMA casilla de Próximos viajes: la visa se palomea una vez y vale
-para SpaceX y para Puerto Rico. Los demás pasos se guardan en `metas_plan_v1`. `metaPlan(id)` lo
+inicio o el cierre de una fase y `{viaje:[id, paso]}` es la MISMA casilla de Próximos viajes: la visa, que ya tiene, y el vuelo
+se palomean una vez y valen para SpaceX y para Puerto Rico. Los demás pasos se guardan en `metas_plan_v1`. `metaPlan(id)` lo
 resuelve todo: el estado de cada paso (`mpFalta`: hoy, esta semana, más adelante o atrasado) y lo
 siguiente. Las metas de la Fase 4 (empresa, depa, Tailandia, Hong Kong, Cupra) van
 **en pausa** con su fecha de arranque (`pausa`, `desde`): lo que no cabe en la semana se pausa con

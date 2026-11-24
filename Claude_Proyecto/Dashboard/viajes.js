@@ -110,31 +110,29 @@
       id: 'pr', ciudad: 'Puerto Rico', lugar: 'San Juan, Fajardo y Culebra', ini: '', fin: '', sinFecha: 'Febrero o marzo de 2027', color: '#2590b3',
       lat: 18.4655, lon: -66.1057, tz: 'America/Puerto_Rico', limite: '2027-02-04',
       foto: 'fotos-viajes/pr-culebra.jpg', cred: 'Breezy Baldwin · CC BY 2.0 · Wikimedia Commons',
-      q: 'Fuertes, selva, la playa de Flamenco y una bahía que brilla. Todo depende de la visa.',
+      q: 'Fuertes, selva, la playa de Flamenco y una bahía que brilla de noche.',
       elige: {
         k: 'fecha', t: 'Elige tus fechas', rec: 'c', fechas: true,
         p: 'La bahía bioluminiscente se ve mejor sin luna: nueva el 6 de febrero y el 8 de marzo; llena el 20 de febrero y el 22 de marzo. Del 19 al 28 de marzo, no: luna llena y Semana Santa.',
         L: [
-          { id: 'a', t: '4 al 8 de febrero', ini: '2027-02-04', fin: '2027-02-08', b: '3 días de vacaciones', d: 'Jueves a lunes.', si: ['La noche más oscura: luna nueva el 6', 'Febrero: de 22 a 29 °C'], no: ['Recién entregaste el depa', 'La visa tendría que estar lista en enero'] },
+          { id: 'a', t: '4 al 8 de febrero', ini: '2027-02-04', fin: '2027-02-08', b: '3 días de vacaciones', d: 'Jueves a lunes.', si: ['La noche más oscura: luna nueva el 6', 'Febrero: de 22 a 29 °C'], no: ['Recién entregaste el depa, el 31 de enero', 'Es lo más pronto: menos quincenas para juntarlo'] },
           { id: 'b', t: '4 al 8 de marzo', ini: '2027-03-04', fin: '2027-03-08', b: '3 días de vacaciones', d: 'Jueves a lunes.', si: ['Luna nueva el 8: la bahía se ve muy bien', 'Marzo es el mes más seco del año'], no: ['Temporada alta: precios más altos'] },
-          { id: 'c', t: '12 al 15 de marzo', ini: '2027-03-12', fin: '2027-03-15', b: '1 día de vacaciones', d: 'Viernes a lunes, con el puente de Juárez.', si: ['El lunes 15 es feriado: solo pides el viernes', 'Da más tiempo a la visa', 'La luna se oculta cerca de la medianoche'], no: ['Solo 3 noches', 'Temporada alta y puente'] }
+          { id: 'c', t: '12 al 15 de marzo', ini: '2027-03-12', fin: '2027-03-15', b: '1 día de vacaciones', d: 'Viernes a lunes, con el puente de Juárez.', si: ['El lunes 15 es feriado: solo pides el viernes', 'Más quincenas para juntar el gasto', 'La luna se oculta cerca de la medianoche'], no: ['Solo 3 noches', 'Temporada alta y puente'] }
         ]
       },
-      chips: [{ t: 'Visa de EE. UU.', paso: 'visa' }, { t: 'Vuelo', paso: 'vuelo' }, { t: 'Hospedaje', paso: 'hotel' }],
+      chips: [{ t: 'Visa', paso: 'visa' }, { t: 'Vuelo', paso: 'vuelo' }, { t: 'Hospedaje', paso: 'hotel' }],
       pasos: [
-        { id: 'revisa', f: '2026-11-26', t: 'Revisa que tu visa de turista de EE. UU. y tu pasaporte estén vigentes: Puerto Rico pide lo mismo.' },
-        { id: 'cita', f: '2026-12-01', t: 'Si no tienes visa: DS-160, pago de US$185 y cita en Nogales o Ciudad Juárez (menos de 15 días). En CDMX son 4.5 meses: no llega.' },
-        { id: 'fecha', f: '2026-12-11', t: 'Elige la fecha aquí abajo y pide los días en ALTEN por escrito.' },
-        { id: 'visa', f: '2027-01-15', t: 'Visa en la mano. Si este día no la tienes, el viaje se mueve y no compras nada.' },
-        { id: 'vuelo', f: '2027-01-16', t: 'Compra el vuelo con escala en Orlando y cambio permitido: redondo, unos $5,664.' },
-        { id: 'hotel', f: '2027-01-23', t: 'Reserva hospedaje con cancelación gratis en Santurce o en el Viejo San Juan.' },
+        { id: 'visa', t: 'Tu visa de turista de Estados Unidos: ya la tienes.', fijo: true },
+        { id: 'revisa', f: '2026-11-26', t: 'Revisa hasta cuándo valen tu visa y tu pasaporte: tienen que cubrir el viaje completo.' },
+        { id: 'fecha', f: '2026-12-11', t: 'Elige la fecha en esta ventana y pide los días en ALTEN por escrito.' },
+        { id: 'vuelo', f: '2027-01-23', t: 'Compra el vuelo por Orlando con cambio permitido: con noches en Florida si hay lanzamiento a la vista, o redondo (unos $5,664).' },
+        { id: 'hotel', f: '2027-01-30', t: 'Reserva hospedaje con cancelación gratis en Santurce o en el Viejo San Juan.' },
         { id: 'bahia', antes: 21, t: 'Reserva el kayak de la bahía para tu noche más oscura: de US$65 a US$75 por persona.' },
         { id: 'ferry', antes: 14, t: 'Compra el ferry a Culebra en línea: US$2.25 cada viaje, sin reembolso.' },
         { id: 'auto', antes: 14, t: 'Renta el auto solo los días que sales de San Juan. Retienen US$200 o más en tu tarjeta.' },
         { id: 'checkin', antes: 2, t: 'Check-in, pase de abordar y los boletos guardados sin internet.' }
       ],
       gasto: [
-        { id: 'visa', t: 'Visa, si no la tienes', est: () => usd(185), d: 'US$185; escribe 0 si ya la tienes' },
         { id: 'vuelo', t: 'Vuelo redondo', est: 5664, d: 'Con una escala · Kayak, 20 nov' },
         { id: 'hotel', t: 'Hospedaje', est: s => (s === 'c' ? 3 : 4) * usd(68), d: s => (s === 'c' ? 3 : 4) + ' noches a US$68, hostal en Santurce' },
         { id: 'auto', t: 'Auto y su seguro', est: () => 2 * (582 + usd(24)), d: '2 días, desde $582 más seguro' },
@@ -145,12 +143,12 @@
         { id: 'comida', t: 'Comida', est: s => (s === 'c' ? 4 : 5) * usd(30), d: s => (s === 'c' ? 4 : 5) + ' días, con tope de US$30' }
       ],
       tiles: v => [
-        ['Lo primero', 'La visa', 'US$185 · en CDMX tarda 4.5 meses'],
+        ['Visa', 'Ya la tienes', 'Revisa que cubra tus fechas'],
         ['El vuelo', '8 h 38 min', 'Con escala en Orlando; el directo promedia $13,417']
       ],
       acciones: () => [
-        ['Citas de visa', 'https://ais.usvisa-info.com/es-mx/niv'],
-        ['Vuelos a San Juan', 'https://www.kayak.com.mx/vuelos/Ciudad-de-Mexico-Benito-Juarez-Intl-MEX/San-Juan-Luis-Munoz-Marin-Intl-SJU']
+        ['Vuelos a San Juan', 'https://www.kayak.com.mx/vuelos/Ciudad-de-Mexico-Benito-Juarez-Intl-MEX/San-Juan-Luis-Munoz-Marin-Intl-SJU'],
+        ['Hospedaje en San Juan', 'https://www.booking.com/searchresults.es-mx.html?ss=San+Juan+Puerto+Rico&group_adults=1']
       ],
       dias: () => [
         { t: 'Día 1 · Viejo San Juan', foto: 'fotos-viajes/pr-morro.jpg', pie: 'El faro de El Morro', cred: 'Godot13 · CC BY-SA 4.0', L: [
@@ -171,11 +169,11 @@
           ['Orlando', 'Si tu escala es larga, ahí está Cabo Cañaveral: mira abajo.']] }
       ],
       bloques: [
-        { t: 'La visa, en orden', L: [
-          ['Qué pide', 'Pasaporte mexicano y visa de turista B1/B2: las mismas reglas que Estados Unidos.'],
-          ['Cuánto cuesta', 'US$185. Hay un cargo extra de US$250 en la ley, pero a noviembre de 2026 no se cobra: revísalo antes de pagar.'],
-          ['Cuánto tarda', 'La próxima cita: CDMX 4.5 meses, Monterrey 3, Guadalajara 6.5; Nogales y Ciudad Juárez, menos de 15 días (21 de octubre de 2026).', 'https://ais.usvisa-info.com/es-mx/niv'],
-          ['Qué llevas', 'Confirmación del DS-160, pasaporte, recibo del pago, carta de ALTEN con tu puesto y sueldo, y recibos de nómina.']] },
+        { t: 'Para entrar y salir', L: [
+          ['Qué llevas', 'Pasaporte y visa vigentes, y tu regreso comprado: Puerto Rico pide lo mismo que Estados Unidos. Si renovaste pasaporte, lleva también el de la visa.'],
+          ['Migración', 'La pasas en Orlando, en la escala: recoges la maleta y la vuelves a documentar. Deja 3 horas entre vuelos.'],
+          ['De regreso', 'En San Juan, antes de documentar, revisan que no lleves fruta ni plantas frescas.'],
+          ['Tu tarjeta', 'Los fuertes no aceptan efectivo y la renta del auto retiene US$200 o más.']] },
         { t: 'Júntalo con SpaceX', L: [
           ['Por qué', 'Los vuelos baratos a San Juan hacen escala en Orlando, y Orlando está a una hora de Cabo Cañaveral.'],
           ['Cómo', 'Busca «varios destinos»: CDMX–Orlando, Orlando–San Juan y San Juan–CDMX, con 3 o 4 noches en Florida.'],
@@ -185,10 +183,10 @@
           ['Tu dinero', 'dinero'],
           ['Tu calendario', 'El 31 de marzo cierra la solicitud de Esslingen y ese día se mide tu GBM: el viaje no puede comerse ninguna de las dos.'],
           ['Tu domingo', 'Cualquier fecha cruza un domingo de Didi, o sea, una semana de lo que el plan manda a GBM.'],
-          ['Si la visa no sale', 'No pierdes nada: hasta el 15 de enero no se compra ni un boleto.']] }
+          ['Cuándo compras', 'El 23 de enero, ya con el calendario de lanzamientos en la mano. Antes, solo se elige la fecha.']] }
       ],
       clima: ['29 °C', '22 °C', 'De 5 a 7 días con lluvia al mes'],
-      fuentes: [['Vuelos, Kayak', 'https://www.kayak.com.mx/vuelos/Ciudad-de-Mexico-Benito-Juarez-Intl-MEX/San-Juan-Luis-Munoz-Marin-Intl-SJU'], ['Clima y temporadas', 'https://www.puertorico.com/best-times-to-visit'], ['Bahía y luna', 'https://www.puertorico.com/when-is-the-best-time-to-see-bioluminescence'], ['El Yunque', 'https://www.puertorico.com/el-yunque-national-forest'], ['Fuertes de San Juan', 'https://www.nps.gov/saju/planyourvisit/fees.htm'], ['Ferry a Culebra', 'https://puertoricoferry.com/rates/'], ['Rentar auto', 'https://www.puertorico.com/renting-a-car-in-puerto-rico'], ['Esperas de visa', 'https://www.unotv.com/us/actualidad-us/visa-americana-estos-consulados-de-mexico-tienen-menos-espera/']],
+      fuentes: [['Vuelos, Kayak', 'https://www.kayak.com.mx/vuelos/Ciudad-de-Mexico-Benito-Juarez-Intl-MEX/San-Juan-Luis-Munoz-Marin-Intl-SJU'], ['Clima y temporadas', 'https://www.puertorico.com/best-times-to-visit'], ['Bahía y luna', 'https://www.puertorico.com/when-is-the-best-time-to-see-bioluminescence'], ['El Yunque', 'https://www.puertorico.com/el-yunque-national-forest'], ['Fuertes de San Juan', 'https://www.nps.gov/saju/planyourvisit/fees.htm'], ['Ferry a Culebra', 'https://puertoricoferry.com/rates/'], ['Rentar auto', 'https://www.puertorico.com/renting-a-car-in-puerto-rico']],
       visto: 'el 23 de noviembre de 2026'
     }
   ];

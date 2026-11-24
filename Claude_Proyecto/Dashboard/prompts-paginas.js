@@ -803,7 +803,7 @@ Mis Metas reúne la línea del tiempo de las metas, Tu año —lo que tienes que
 ## Cómo sabes que funciona
 - Pasos cerrados por mes, contados en pasos y no en promedios de porcentajes.
 - Toda meta activa tiene un siguiente paso con fecha y ninguno lleva más de una semana vencido.
-- Los indicadores reales suben: los simulacros sobre el corte, el GBM contra cada corte de la salida, los capítulos del manual de vuelo, la visa lista en su fecha.
+- Los indicadores reales suben: los simulacros sobre el corte, el GBM contra cada corte de la salida, los capítulos del manual de vuelo, un lanzamiento con fecha firme en tus días.
 - Cada viaje sale con todo palomeado, y lo que se pagó quedó anotado contra lo estimado.
 - Cada mes del Plan Maestro auditado al cerrarlo.
 
