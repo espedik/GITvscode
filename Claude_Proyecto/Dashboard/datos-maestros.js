@@ -1367,14 +1367,14 @@ window.CIFRAS = (function () {
       const items = g[2].map(function (p) {
         const mes = R.costoMes(p);
         let rec = null;
-        if (p.recorte) {
+        if (p.recorte && !p.noSeCompra) {
           const r = p.recorte, nuevo = r.quitar ? 0 : R.costoMes(Object.assign({}, p, r));
           rec = { n: r.n || '', quitar: !!r.quitar, medico: !!r.medico, txt: r.txt, fuente: r.fuente, mes: nuevo, ahorro: mes - nuevo };
           ahorro += mes - nuevo;
           if (r.medico) medico += mes - nuevo;
         }
         total += mes;
-        return { id: p.id, n: p.n, mes: mes, recorte: rec };
+        return { id: p.id, n: p.n, mes: mes, cada: p.cadaMeses || 1, recorte: rec };
       }).filter(function (x) { return x.mes > 0 || x.recorte; });
       return { grupo: g[0], total: items.reduce(function (a, x) { return a + x.mes; }, 0), items: items };
     });
@@ -5720,6 +5720,8 @@ window.CIFRAS = (function () {
   //   marca   los dos colores del envase real
   //   foto    SOLO si existe foto del producto EXACTO con licencia libre. Cuatro de
   //           los seis no la tienen en ninguna base abierta: esos se dibujan.
+  // `noSeCompra`: Adán dijo que ya no lo compra (24-nov-2026): cuesta $0 y sale de la lista de la compra; sus pasos siguen
+  // en la rutina mientras le quede. `cadaMeses`: cada cuántos meses lo compra; manda sobre lo que duraría con su dosis.
   const RUTINA_PIEL = {
     productos: [
       { id:'limpiador', cat:'Limpiador', n:'CeraVe Limpiador Espumoso (verde)',
@@ -5755,7 +5757,7 @@ window.CIFRAS = (function () {
         am:{ orden:2, min:1,
              uso:'2-3 gotas sobre piel seca, antes del protector. Controla la grasa del día, afina poros y ayuda a desvanecer marcas — y es compatible con todo lo demás, incluido el retinoide.' } },
 
-      { id:'spf', cat:'Protector solar', n:'La Roche-Posay Anthelios Oil Free SPF50',
+      { id:'spf', noSeCompra:true, cat:'Protector solar', n:'La Roche-Posay Anthelios Oil Free SPF50',
         contenido:50, unidad:'ml', dosisDia:1.25, precio:520, tono:'am',
         recorte:{ n:'Neutrogena Ultra Sheer FPS 50+ (88 ml)', precio:295, contenido:88, fuente:'Amazon MX, oct 2026', txt:'El mismo FPS 50 de amplio espectro, con acabado seco. El protector no se deja: se cambia de marca.' },
         ayuda:['manchas','arrugas'], clave:true,
@@ -5850,7 +5852,7 @@ window.CIFRAS = (function () {
     // Cuánto dura un bote con la dosis correcta, y lo que sale al mes. Derivados: si cambia el
     // precio o el tamaño, el botíquin y el total se enteran solos.
     duracionDias: function (p) { return Math.round(p.contenido / p.dosisDia); },
-    costoMes: function (p) { return Math.round(p.precio / (p.contenido / p.dosisDia) * 30); },
+    costoMes: function (p) { return p.noSeCompra ? 0 : Math.round(p.cadaMeses ? p.precio / p.cadaMeses : p.precio / (p.contenido / p.dosisDia) * 30); },
     get costoMesTotal() {
       var t = this;
       return this.productos.filter(function (p) { return !p.opcional; })
@@ -5895,7 +5897,7 @@ window.CIFRAS = (function () {
         tono:'am', clave:true, momento:'seco',
         uso:'<b>5 atomizaciones (1 ml)</b> directo en el <b>cuero cabelludo</b> seco — no en el pelo— y repártelo con los dedos. Masajea 30 segundos y lávate las manos. Es <b>loción, no espuma</b>: sí lleva propilenglicol, así que si te pica o te reseca, baja a una dosis al día antes de abandonarlo. De noche, espera al menos 30 minutos antes de acostarte, para que no se quede en la almohada.' },
 
-      { id:'avodart', cat:'Tratamiento por dentro', n:'Avodart (dutasterida 0,5 mg)',
+      { id:'avodart', cadaMeses:2, cat:'Tratamiento por dentro', n:'Avodart (dutasterida 0,5 mg)',
         frasco:'caja', marca:{a:'#f7f8fa', b:'#b02a37'},
         ficha:{
           activo:'Dutasterida 0,5 mg, un inhibidor de la 5-alfa-reductasa',
@@ -5911,7 +5913,7 @@ window.CIFRAS = (function () {
         uso:'<b>Una cápsula al día</b>, con o sin comida, siempre a la misma hora. Actúa <b>por dentro</b> bloqueando la DHT, que es la hormona que encoge el folículo: no sustituye al minoxidil \u2014 uno frena la caída y el otro empuja el crecimiento. Tarda <b>3 a 6 meses</b> en verse, igual que el minoxidil.',
         aviso:'Es <b>medicamento de receta</b> y para la caída se usa fuera de indicación. Dos cosas que tienes que saber: <b>parte tu PSA a la mitad</b> \u2014 mídelo y dile a quien lo interprete que la tomas \u2014 y si aparecen efectos sexuales o bulto/dolor en el pecho, es motivo de consulta, no de aguantarse. Llévala con un médico, no en solitario.' },
 
-      { id:'pilexil', cat:'Champú anticaída', n:'Pilexil Anticaída 300 ml',
+      { id:'pilexil', cadaMeses:3, cat:'Champú anticaída', n:'Pilexil Anticaída 300 ml',
         foto:'https://images.openbeautyfacts.org/images/products/847/000/174/8768/front_es.6.full.jpg',
         frasco:'botella', marca:{a:'#f4f6f8', b:'#e8590c'},
         ficha:{
@@ -5954,7 +5956,7 @@ window.CIFRAS = (function () {
         champu:true, soloSi:'caspa activa',
         uso:'Masajea el cuero 2-3 minutos y deja actuar antes de enjuagar. <b>Sustituye</b> al Pilexil ese día, nunca se suma.' },
 
-      { id:'acondicionador', cat:'Acondicionador', n:"L'Oréal Elvive Reparación Total 5",
+      { id:'acondicionador', noSeCompra:true, cat:'Acondicionador', n:"L'Oréal Elvive Reparación Total 5",
         frasco:'botella', marca:{a:'#f4f6f8', b:'#8b1a3a'},
         ficha:{
           activo:'Ceramidas y siliconas de aclarado',
@@ -5968,7 +5970,7 @@ window.CIFRAS = (function () {
         momento:'ducha',
         uso:'<b>Solo de medios a puntas</b>, nunca en la raíz: en cabello fino y graso, la raíz se aplana y se engrasa antes. Espera 1-2 minutos y enjuaga con agua fresca — ese minuto es lo que hace que sirva de algo.' },
 
-      { id:'mascarilla', cat:'Mascarilla', n:"Mascarilla L'Oréal Elvive Total Repair 5",
+      { id:'mascarilla', noSeCompra:true, cat:'Mascarilla', n:"Mascarilla L'Oréal Elvive Total Repair 5",
         frasco:'tarro', marca:{a:'#f6f7f9', b:'#8b1a3a'},
         ficha:{
           activo:'Ceramidas en concentraci\u00f3n alta, base m\u00e1s densa que el acondicionador',
@@ -5990,7 +5992,7 @@ window.CIFRAS = (function () {
       // Era el único con momento:'humedo', así que ese paso de la rutina de Cuidado Personal
       // queda con toalla, peine y secado — el render ya filtraba nulos, no hubo que tocarlo.
 
-      { id:'aceite', cat:'Aceite de puntas', n:'Moroccanoil Treatment Light',
+      { id:'aceite', noSeCompra:true, cat:'Aceite de puntas', n:'Moroccanoil Treatment Light',
         frasco:'gotero', marca:{a:'#f5f0e3', b:'#0e4f4f'},
         ficha:{
           activo:'Aceite de arg\u00e1n con siliconas ligeras',
@@ -6050,7 +6052,7 @@ window.CIFRAS = (function () {
     },
     costoMes: function (p) {
       const d = this.duracionDias(p);
-      return d ? Math.round(p.precio / d * 30) : 0;
+      return p.noSeCompra ? 0 : p.cadaMeses ? Math.round(p.precio / p.cadaMeses) : d ? Math.round(p.precio / d * 30) : 0;
     },
     get costoMesTotal() {
       var t = this;
@@ -6113,7 +6115,7 @@ window.CIFRAS = (function () {
           tarda:'No se siente nada, y as\u00ed debe ser. Su trabajo es que no pase nada.'
         },
         envase:90, unidad:'tabletas', porDia:1, precio:350, tono:'teal',
-        recorte:{ quitar:true, fuente:'USPSTF, 2022', txt:'La USPSTF no encontró evidencia suficiente de que un multivitamínico prevenga enfermedad en adultos sanos; la vitamina D y el magnesio ya los tomas aparte.' },
+        recorte:{ quitar:true, fuente:'USPSTF, 2022', txt:'La USPSTF no encontró evidencia suficiente de que un multivitamínico prevenga enfermedad en adultos sanos; la vitamina D ya la tomas aparte.' },
         porQue:'Cubre huecos de micronutrientes los días en que la dieta no es perfecta.',
         ojo:'No sustituye comer variado — es un seguro, no la base de la nutrición.' },
 
@@ -6130,7 +6132,7 @@ window.CIFRAS = (function () {
         porQue:'Antiinflamatorio, apoya la recuperación muscular y la salud cardiovascular.',
         ojo:'Si tienes reflujo, tómalo con una comida grande para evitar el "repique" de sabor a pescado.' },
 
-      { id:'creatina', n:'Creatina monohidratada', dosis:'5 g', momento:'am', cuando:'también sin entrenar',
+      { id:'creatina', noSeCompra:true, n:'Creatina monohidratada', dosis:'5 g', momento:'am', cuando:'también sin entrenar',
         foto:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Creatine_monohydrate_powder.jpg/960px-Creatine_monohydrate_powder.jpg',
         frasco:'polvo', marca:{a:'#f2f4f6', b:'#e8590c'},
         ficha:{
@@ -6144,7 +6146,7 @@ window.CIFRAS = (function () {
         porQue:'El suplemento con más evidencia para fuerza y ganancia de masa muscular.',
         ojo:'No necesita fase de carga, y va <b>todos los días</b>: el efecto es por acumulación. Sube la creatinina en sangre <b>sin daño renal</b> — avisa antes de un perfil renal.' },
 
-      { id:'magnesio', n:'Magnesio (glicinato o citrato)', dosis:'200-400 mg', momento:'pm', cuando:'30-60 min antes de dormir',
+      { id:'magnesio', noSeCompra:true, n:'Magnesio (glicinato o citrato)', dosis:'200-400 mg', momento:'pm', cuando:'30-60 min antes de dormir',
         frasco:'pastillas', marca:{a:'#ffffff', b:'#5f3dc4'},
         ficha:{
           activo:'Magnesio quelado \u2014 glicinato o citrato, nunca \u00f3xido',
@@ -6189,7 +6191,7 @@ window.CIFRAS = (function () {
     },
     costoMes: function (p) {
       const d = this.duracionDias(p);
-      return d ? Math.round(p.precio / d * 30) : 0;
+      return p.noSeCompra ? 0 : p.cadaMeses ? Math.round(p.precio / p.cadaMeses) : d ? Math.round(p.precio / d * 30) : 0;
     },
     get costoMesTotal() {
       var t = this;
@@ -7976,13 +7978,13 @@ window.CIFRAS = (function () {
     // una marca distinta a la que dice la rutina, que es justo lo que pasaba hasta el
     // 2026-09-01 (aquí Isdin, en la rutina La Roche-Posay).
     get skincare() {
-      return RUTINA_PIEL.productos.map(function (p) { return RUTINA_PIEL.textoCompra(p); });
+      return RUTINA_PIEL.productos.filter(function (p) { return !p.noSeCompra; }).map(function (p) { return RUTINA_PIEL.textoCompra(p); });
     },
     // Sale de RUTINA_PELO, incluidos los días: así no puede decir aquí una marca (o un día)
     // y otra en la rutina, que es lo que pasó con skincare. Los 2 de receta van al final
     // porque NO son de mostrador y no forman parte de la rutina diaria.
     get cabello() {
-      return RUTINA_PELO.productos.map(function (p) { return RUTINA_PELO.textoCompra(p); })
+      return RUTINA_PELO.productos.filter(function (p) { return !p.noSeCompra; }).map(function (p) { return RUTINA_PELO.textoCompra(p); })
         .concat([
         // 2026-09-02: este ítem tenía el formato invertido del resto — el nombre DELANTE del
         // guión y la nota detrás — y `lcAmazonQuery()` del Dashboard, que se queda con lo de
@@ -7998,7 +8000,7 @@ window.CIFRAS = (function () {
     },
     // Sale de SUPLEMENTOS: el nombre y el tamaño del envase se escriben una sola vez.
     get suplementos() {
-      return SUPLEMENTOS.lista.map(function (p) { return SUPLEMENTOS.textoCompra(p); });
+      return SUPLEMENTOS.lista.filter(function (p) { return !p.noSeCompra; }).map(function (p) { return SUPLEMENTOS.textoCompra(p); });
     },
     // ── KIT DE HIGIENE (2026-08-15, pedido: "en alguna parte debes poner un kit de higiene super
     // completo, ya sea para viajes o persona, con imagenes y productos que comprar") ────────────
@@ -9587,7 +9589,7 @@ window.CIFRAS = (function () {
       const out = {}, it = {};
       l.forEach(function (x) { out[x.g] = (out[x.g] || 0) + x.v; (it[x.g] = it[x.g] || {})[x.t] = (it[x.g][x.t] || 0) + x.v; });
       out.comida = g.comida * parte; out.cuidado = rut.total * parte;
-      it.cuidado = {}; rut.grupos.forEach(function (q) { q.items.forEach(function (i) { if (i.mes > 0) it.cuidado[q.grupo + '|' + i.n] = i.mes * parte; }); });
+      it.cuidado = {}; rut.grupos.forEach(function (q) { q.items.forEach(function (i) { if (i.mes > 0) it.cuidado[q.grupo + '|' + i.n + (i.cada > 1 ? '|cada ' + i.cada + ' meses' : '')] = i.mes * parte; }); });
       if (tipo !== 'proy' && tarjs[mesMas(m, -1)] != null) out.tarjeta = Math.max(0, tarjs[mesMas(m, -1)] - tarjs[m]);
       return { de: out, items: it };
     };

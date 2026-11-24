@@ -2176,15 +2176,15 @@ function plBotiquinHtml(){
       '<div class="pl-med-b" style="background:'+(PL_TONO[p.tono]||'var(--pl-tx3)')+'"></div>'+
       '<div><div class="pl-med-n">'+plEsc(p.n)+(p.opcional?' <span style="font-weight:600;color:var(--pl-tx3)">(opcional)</span>':'')+'</div>'+
       '<div class="pl-med-s">'+p.contenido+' '+p.unidad+' \u00b7 dura ~'+dur+' d\u00edas</div></div>'+
-      '<div class="pl-med-r">'+der+'<div class="pl-med-p">$'+RP.costoMes(p)+'/mes</div></div></div>';
+      '<div class="pl-med-r">'+der+'<div class="pl-med-p">'+(p.noSeCompra?'ya no lo compras':'$'+RP.costoMes(p)+'/mes'+(p.cadaMeses?', cada '+p.cadaMeses+' meses':''))+'</div></div></div>';
   }).join('');
   const spf=RP.productos.find(p=>p.id==='spf');
   const pc=spf?Math.round(RP.costoMes(spf)/RP.costoMesTotal*100):0;
   return '<div class="pl-card"><div class="pl-card-h"><div class="pl-card-t"><span class="b"></span>Tu botiqu\u00edn</div>'+
     '<div class="pl-card-x">se te acaba en\u2026</div></div>'+filas+
     '<div class="pl-med-tot"><div class="pl-med-tot-l">Costo mensual de tu rutina</div><div class="pl-med-tot-v">$'+RP.costoMesTotal+'</div></div>'+
-    '<div class="pl-nota">Los d\u00edas salen de la dosis correcta, no de la que se usa por costumbre: por eso el protector es <b>el '+pc+
-    '% del gasto</b> \u2014 dos dedos diarios vac\u00edan un bote de 50 ml en '+(spf?RP.duracionDias(spf):40)+' d\u00edas. '+
+    '<div class="pl-nota">Los d\u00edas salen de la dosis correcta, no de la que se usa por costumbre'+(pc>0?': por eso el protector es <b>el '+pc+
+    '% del gasto</b> \u2014 dos dedos diarios vac\u00edan un bote de 50 ml en '+RP.duracionDias(spf)+' d\u00edas. ':'. ')+
     'Toca los d\u00edas para decir que abriste uno; los precios son de referencia y se editan en <b>datos-maestros.js</b>.</div></div>';
 }
 
@@ -2617,7 +2617,7 @@ function peBotiquinHtml(){
       '<div class="pe-med-b" style="background:'+(PE_TONO[p.tono]||'var(--pe-tx3)')+'"></div>'+
       '<div style="min-width:0"><div class="pe-med-n">'+plEsc(p.n)+'</div>'+
       '<div class="pe-med-s">'+p.contenido+' '+p.unidad+' \u00b7 '+cuando+(dur?' \u00b7 dura ~'+dur+' d\u00edas':'')+'</div></div>'+
-      '<div class="pe-med-r">'+der+'<div class="pe-med-p">'+(RP.costoMes(p)?'$'+RP.costoMes(p)+'/mes':'\u2014')+'</div></div></div>';
+      '<div class="pe-med-r">'+der+'<div class="pe-med-p">'+(p.noSeCompra?'ya no lo compras':RP.costoMes(p)?'$'+RP.costoMes(p)+'/mes'+(p.cadaMeses?', cada '+p.cadaMeses+' meses':''):'\u2014')+'</div></div></div>';
   }).join('');
   const mnx=RP.productos.find(p=>p.id==='minoxidil');
   const pc=mnx?Math.round(RP.costoMes(mnx)/RP.costoMesTotal*100):0;

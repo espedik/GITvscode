@@ -1104,10 +1104,11 @@ arriba abajo:
 - **La gráfica** (`trayecto`): un punto con su cifra por mes —los cierres de Finanzas · Indicadores y hoy en blanco, lo que
   tendrías en cian—, el plan y lo que se necesita punteados, las cuatro fechas con lo que piden y lo que falta, lo que ya pasó
   sombreado y la venta de Bitcoin dicha en su mes.
-- **El flujo, debajo de la gráfica y alineado con cada mes** (`.km-f`): lo que entra, lo que sale, lo que te queda, lo que creció
-  tu dinero, lo que llevas o tendrías, tu plan y lo que se necesita. Los renglones con flecha se abren y se contraen
-  (`MEDIDORES.flujo`), y dentro de *Sale*, los servicios, las suscripciones y las rutinas, producto por producto (Adán:
-  *"desglósame… para que se contraiga esa sección"*). Solo va lo documentado: nada de «lo demás».
+- **El flujo, debajo de la gráfica y alineado con cada mes** (`.km-f`): cuatro renglones —entra, sale, te queda, llevas o
+  tendrías—. Al tocar un mes se abre **su desglose** (`.km-det`, `MEDIDORES.mesMae`), que se contrae y pasa al mes de junto:
+  lo que entra, en qué sale —los servicios, las suscripciones y las rutinas se abren producto por producto— y a qué activo va
+  (Adán: *"desglósame… para que se contraiga esa sección"* y, de la tabla con todo junto, *"se ve muy amontonado"*). Solo va lo
+  documentado: nada de «lo demás».
 - **Todo lo que tienes** —bolsa, CETES, Bitcoin, cuenta, efectivo y depósito— y **lo que debes tener en agosto**. Los pagos de la
   salida (apostillas, vuelo, primera renta…) no van en este presupuesto (Adán: *"eso no lo voy a contemplar"*): se dice cuánto
   suman.

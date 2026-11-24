@@ -341,8 +341,8 @@ pero el nombre de la variable se queda corto.
 | `{{ahorroMesCasa}}` | $31,000 — lo mismo en casa de su familia: lo del 1, lo del 15 y Didi | derivada (`mesTipo(true)`) |
 | `{{gastoPersonalDepa}}` | $8,022 — lo que queda del sueldo con depa tras los fijos, la comida y el ahorro: su gasto personal, con sus rutinas dentro; lo que pague con tarjeta, saldado en la misma quincena | derivada |
 | `{{gastoPersonalCasa}}` | $7,255 — lo mismo en casa | derivada |
-| `{{cuidadoMes}}` | $4,624 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
-| `{{recorteRutinas}}` | $1,880 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $857 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
+| `{{cuidadoMes}}` | $2,907 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`); un producto con `noSeCompra` cuesta $0 y sale de la lista de la compra, y uno con `cadaMeses` se compra con esa frecuencia | derivada |
+| `{{recorteRutinas}}` | $1,028 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $428 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
 | `{{alemaniaMarzo}}` | $122,054 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
 | `{{salidaAgosto}}` | $324,284 — lo que pide la salida completa en agosto de 2027: la cuenta bloqueada, la reserva del BYD, el colchón y la colegiatura del primer semestre (`cortes.salida.pide`) | derivada; se mueve con `PROYECTO.eurMxn` |
 | `{{extraSalida}}` | $11,982 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
@@ -684,7 +684,7 @@ CIFRAS.RUTINA_PIEL.deTextoCompra(txt) // y de vuelta: del renglón al producto
 |---|---|---|---|---|
 | CeraVe Limpiador Espumoso (verde) | AM 1 y PM 1 | 236 ml | ~79 d | $99 |
 | The Ordinary Niacinamida 10% + Zinc 1% | AM 2 | 30 ml | ~200 d | $35 |
-| La Roche-Posay Anthelios Oil Free SPF50 | AM 3 | 50 ml | ~40 d | **$390** |
+| La Roche-Posay Anthelios Oil Free SPF50 | AM 3 | 50 ml | ~40 d | ya no lo compra |
 | Differin Adapaleno 0.1% Gel | PM 2 | 45 g | ~180 d | $72 |
 | CeraVe Loción Hidratante Facial PM | PM 3 | 52 ml | ~104 d | $87 |
 | Aztec Secret Indian Healing Clay | opcional | 454 g | ~175 d | $50 |
@@ -765,9 +765,9 @@ Hay **19 siluetas** (`bomba`, `gotero`, `tubo`, `tarro`, `bote`, `botella`, `tel
 `dashboard.html`. Cada producto elige la suya con `frasco` (no `envase`, que en
 `SUPLEMENTOS` ya significa *cuántas cápsulas trae el bote*).
 
-**Los días y el costo NO se escriben**: salen de `contenido / dosisDia`. Por eso el protector se
-lleva casi la mitad del gasto — dos dedos diarios, que es la dosis correcta, vacían un bote de
-50 ml en 40 días. Los `precio` sí son constantes de referencia (farmacia y Amazon MX, sep 2026)
+**Los días y el costo NO se escriben**: salen de `contenido / dosisDia`. Lo que Adán ya no compra lleva
+`noSeCompra` (cuesta $0 y no sale en la lista de la compra; sus pasos siguen en la rutina) y lo que compra cada
+tantos meses, `cadaMeses`, que manda sobre la duración; vale igual en piel, cabello y suplementos. Los `precio` sí son constantes de referencia (farmacia y Amazon MX, sep 2026)
 y se editan aquí.
 
 `LISTA_COMPRAS.skincare` es un **getter sobre esta lista**, no una lista aparte: un producto por
@@ -785,19 +785,19 @@ toca cada día vive aquí y en ningún otro sitio. Se pide desde JS:
 ```js
 CIFRAS.RUTINA_PELO.dia(2)             // martes -> {champu, condicional, nota, mascarilla, ...}
 CIFRAS.RUTINA_PELO.duracionDias(p)    // contenido / (usos por semana / 7)
-CIFRAS.RUTINA_PELO.costoMesTotal      // $2,811 hoy — el NR-11 y el Avodart son $2,460
+CIFRAS.RUTINA_PELO.costoMesTotal      // $1,884 hoy — el NR-11 y el Avodart son $1,680
 ```
 
 | Producto | Cuándo | Tamaño | Dura | Al mes |
 |---|---|---|---|---|
 | Minoxidil 5% NR-11 (Polaris Research) | todos los días, **2 veces** (5 atomizaciones = 1 ml) | 60 ml | ~30 d | **$900** |
-| Avodart (dutasterida 0,5 mg) | todos los días, una cápsula | 30 cápsulas | ~30 d | **$1,560** |
-| Pilexil Anticaída 300 ml | lunes y jueves | 300 ml | ~88 d | $153 |
+| Avodart (dutasterida 0,5 mg) | todos los días, una cápsula | 30 cápsulas | se compra cada 2 meses | **$780** |
+| Pilexil Anticaída 300 ml | lunes y jueves | 300 ml | se compra cada 3 meses | $150 |
 | CeraVe Champú Hidratante sin sulfatos | sábado | 355 ml | ~166 d | $54 |
 | Darrow Doctar (alquitrán) | solo si hay caspa activa | 200 ml | — | — |
-| L'Oréal Elvive Reparación Total 5 | todos menos sábado | 680 ml | ~53 d | $68 |
-| Mascarilla L'Oréal Elvive Total Repair 5 | sábado | 300 ml | ~105 d | $37 |
-| Moroccanoil Treatment Light | cuando lo note áspero | 100 ml | ~700 d | $39 |
+| L'Oréal Elvive Reparación Total 5 | todos menos sábado | 680 ml | ~53 d | ya no lo compra |
+| Mascarilla L'Oréal Elvive Total Repair 5 | sábado | 300 ml | ~105 d | ya no la compra |
+| Moroccanoil Treatment Light | cuando lo note áspero | 100 ml | ~700 d | ya no lo compra |
 | Funda de almohada de satín | una sola vez | — | — | — |
 
 `dias` es **0=domingo…6=sábado**, y `diasCondicionales` marca los que dependen de algo y van en
@@ -818,11 +818,11 @@ el catálogo de `salud.html`) y coincidían de casualidad.
 | Vitamina D3 | AM | 2000-4000 UI | 120 cáps | ~120 d | $55 |
 | Multivitamínico | AM | 1 tableta | 90 tabs | ~90 d | $117 |
 | Omega 3 | AM | 1-2 g EPA+DHA | 120 cáps | ~60 d | $225 |
-| Creatina monohidratada | AM | 5 g | 300 g | ~60 d | $200 |
-| Magnesio (glicinato) | PM | 200-400 mg | 120 cáps | ~60 d | $200 |
+| Creatina monohidratada | AM | 5 g | 300 g | ~60 d | ya no la compra |
+| Magnesio (glicinato) | PM | 200-400 mg | 120 cáps | ~60 d | ya no lo compra |
 | Proteína Whey | PM | 25-30 g, 4 días/sem | 2000 g | ~117 d | $333 |
 
-**$1,130 al mes** — más que el gimnasio y el plan de datos juntos. `LISTA_COMPRAS.suplementos`
+**$730 al mes**. `LISTA_COMPRAS.suplementos`
 es un getter sobre esta lista.
 
 `CHEQUEO` — los **9 análisis** que le tocan y por qué. Varios entran por algo que ya está en el

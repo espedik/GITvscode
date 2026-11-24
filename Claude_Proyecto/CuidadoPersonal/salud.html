@@ -938,7 +938,7 @@ function sdBotiquinHtml(){
     return '<div class="sd-med"><div class="sd-med-b" style="background:'+(SD_TONO[p.tono]||'var(--text3)')+'"></div>'+
       '<div style="min-width:0"><div class="sd-med-n">'+sdEsc(p.n)+'</div>'+
       '<div class="sd-med-s">'+p.envase+' '+p.unidad+' \u00b7 '+sdEsc(p.dosis)+' \u00b7 dura ~'+dur+' d\u00edas</div></div>'+
-      '<div class="sd-med-r">'+der+'<div class="sd-med-p">$'+M.costoMes(p)+'/mes</div></div></div>';
+      '<div class="sd-med-r">'+der+'<div class="sd-med-p">'+(p.noSeCompra?'ya no lo compras':'$'+M.costoMes(p)+'/mes')+'</div></div></div>';
   }).join('');
   const sinAbrir=M.lista.filter(p=>!S.suplementos.abierto[p.id]).length;
   const btn=sinAbrir

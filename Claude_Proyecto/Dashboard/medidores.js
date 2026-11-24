@@ -168,12 +168,43 @@
   // ══ Fondo Maestría ══
   // Lo que llevabas en cada cierre (los de Finanzas · Indicadores), lo de hoy y a dónde llegas guardando lo que te queda: lo que
   // entra menos lo documentado que sale. La cuenta es del maestro (CIFRAS.ritmoMaestria): cada cierre nuevo la mueve.
-  const abiertoF = {};   // qué renglones del flujo están abiertos; se recuerda mientras la página viva
-  M.flujo = function (id, b) {
-    abiertoF[id] = !abiertoF[id]; const g = b.closest('.km-f'); if (!g) return;
-    b.setAttribute('aria-expanded', abiertoF[id]); g.querySelectorAll('[data-g]').forEach(c => { c.hidden = !c.dataset.g.split(' ').every(k => abiertoF[k]); });
-    graficas.slice().forEach(q => q[1](q[0], q[2]));
-  };
+  // El desglose de un mes: el que se toca en la tabla. Se contrae, pasa al mes de junto y recuerda qué gastos dejaste abiertos.
+  const mae = { L: [], mes: '', abre: false, gasto: '' };
+  const NOM_G = Object.assign({}, EF_NOM, { suscripciones: 'Suscripciones', cuidado: 'Rutinas', depa: 'Servicios', familia: 'A tu familia', tarjeta: 'Tarjetas' });
+  const ACT_M = [['bolsa', 'Bolsa (GBM)', V.a], ['cetes', 'CETES', 'var(--w)'], ['btc', 'Bitcoin', V.b], ['liq', 'Cuenta y efectivo', V.c], ['dep', 'Depósito de la renta', V.g]];
+  function desgloseMae() {
+    const L = mae.L, i = L.findIndex(m => m.mes === mae.mes), m = L[i]; if (!m) return '';
+    const nombre = MESL[+m.mes.slice(5) - 1] + ' ' + m.mes.slice(0, 4), estado = m.tipo === 'cierre' ? 'cierre' : m.tipo === 'hoy' ? 'hasta hoy' : 'lo que tendrías', crece = m.tipo === 'proy' ? m.queda : m.crecio;
+    const flecha = (d, t, dib) => '<button type="button" class="km-fl" aria-label="' + t + '"' + (L[i + d] ? ' onclick="MEDIDORES.mesMae(\'' + L[i + d].mes + '\')"' : ' disabled') + '>' + dib + '</button>';
+    const cab = '<div class="km-dc"><button type="button" class="km-dt" aria-expanded="' + mae.abre + '" onclick="MEDIDORES.abreMae()">Desglose de ' + nombre + '<span>' + estado + '</span></button>' +
+      '<div class="km-dr"><span>Entra <b>' + money(m.entra) + '</b></span><span>Sale <b>' + money(m.sale) + '</b></span><span>Te queda <b>' + (m.queda >= 0 ? money(m.queda) : '−' + money(-m.queda)) + '</b></span>' + flecha(-1, 'Mes anterior', '‹') + flecha(1, 'Mes siguiente', '›') + '</div></div>';
+    if (!mae.abre) return cab;
+    const barra = (v, tot, c) => '<i class="km-bl"><u style="width:' + Math.max(1.5, pct(v, tot)) + '%;background:' + c + '"></u></i>', renglon = (t, v, tot, c, nota) => '<div class="km-li"><b>' + t + (nota ? ' <u>' + nota + '</u>' : '') + '</b><strong>' + money(v) + '</strong>' + barra(v, tot, c) + '</div>';
+    const ent = [['Sueldo', 'sueldo'], ['Didi', 'didi'], ['Vale de despensa', 'vale'], ['Otros', 'otros']].map(q => [q[0], m.entraDe[q[1]]]).filter(q => q[1] > 0).sort((a, b) => b[1] - a[1]).map(q => renglon(q[0], q[1], m.entra, V.a)).join('');
+    // En qué sale: de lo más grande a lo más chico; lo que tiene detalle se abre.
+    const prod = (t, v) => { const p = t.split('|'); return '<div class="km-sub"><span>' + esc(p[p.length > 1 && /^cada /.test(p[p.length - 1]) ? p.length - 2 : p.length - 1]) + (/^cada /.test(p[p.length - 1]) ? ' <u>' + p[p.length - 1] + '</u>' : '') + '</span><strong>' + money(v) + '</strong></div>'; };
+    const detalle = k => {
+      const it = m.items[k] || {}, ks = Object.keys(it).sort((a, b) => it[b] - it[a]); if (k !== 'cuidado') return ks.map(x => prod(x, it[x])).join('');
+      return [...new Set(ks.map(x => x.split('|')[0]))].map(g => { const q = ks.filter(x => x.split('|')[0] === g); return '<div><div class="km-gr"><span>' + g + '</span><strong>' + money(q.reduce((s, x) => s + it[x], 0)) + '</strong></div>' + q.map(x => prod(x, it[x])).join('') + '</div>'; }).join('');
+    };
+    const hay = k => m.saleDe[k] >= 1 && (k === 'cuidado' || ((k === 'suscripciones' || k === 'depa') && Object.keys(m.items[k] || {}).length > 1)), sel = hay(mae.gasto) ? mae.gasto : '';
+    const sal = Object.keys(m.saleDe).filter(k => m.saleDe[k] >= 1).sort((a, b) => m.saleDe[b] - m.saleDe[a]).map(k => {
+      const l = '<b>' + (NOM_G[k] || k) + '</b><strong>' + money(m.saleDe[k]) + '</strong>' + barra(m.saleDe[k], m.sale, V.b);
+      return hay(k) ? '<button type="button" class="km-li" data-g="' + k + '" aria-expanded="' + (sel === k) + '" onclick="MEDIDORES.gastoMae(\'' + k + '\')">' + l + '</button>' : '<div class="km-li">' + l + '</div>';
+    }).join('') + '</div>' + (sel ? '<div class="km-pn' + (sel === 'cuidado' ? ' tres' : '') + '">' + detalle(sel) + '</div>' : '');
+    const ant = i > 0 ? L[i - 1].activos : null, total = m.tipo === 'proy' ? m.proy : m.real;
+    const act = m.activos ? ACT_M.map(q => { const v = m.activos[q[0]], d = m.tipo === 'proy' ? (q[0] === 'bolsa' ? m.queda : 0) : ant && m.crecio != null ? v - ant[q[0]] : 0; return Math.abs(v) < 1 && Math.abs(d) < 1 ? '' : '<div class="km-li"><b>' + q[1] + (Math.abs(d) >= 1 ? ' <em class="' + (d >= 0 ? 'ok' : 'mal') + '">' + signo(d) + '</em>' : '') + '</b><strong>' + money(v) + '</strong>' + barra(Math.max(0, v), total, q[2]) + '</div>'; }).join('') : '<p class="kv-p">Sin cierre guardado de ese mes.</p>';
+    const aviso = m.tipo !== 'proy' && crece != null && m.queda - crece > 500 ? '<div class="km-av">Te quedaban ' + money(m.queda) + ' y tu dinero ' + (crece >= 0 ? 'creció ' + money(crece) : 'bajó ' + money(-crece)) + ': <b>' + money(m.queda - crece) + '</b> sin anotar.</div>' : '';
+    return cab + '<div class="km-dg"><section><h4>Entra<strong>' + money(m.entra) + '</strong></h4>' + ent + '</section><section class="dos"><h4>Sale en gastos<strong>' + money(m.sale) + '</strong></h4><div class="km-d2">' + sal + '</section>' +
+      '<section><h4>' + (m.tipo === 'proy' ? 'Tendrías' : 'Tienes en activos') + '<strong>' + money(total) + '</strong></h4>' + act + aviso + '</section></div>';
+  }
+  function pintaMae() {
+    const d = document.getElementById('kmDet'); if (!d) return; d.innerHTML = desgloseMae(); d.classList.toggle('abre', mae.abre);
+    document.querySelectorAll('.km-f [data-m]').forEach(c => c.classList.toggle('sel', mae.abre && c.dataset.m === mae.mes));
+  }
+  M.mesMae = function (mes) { mae.abre = !(mae.abre && mae.mes === mes && document.activeElement && document.activeElement.closest('.km-f')); mae.mes = mes; pintaMae(); const d = document.getElementById('kmDet'); if (mae.abre && d) d.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); };
+  M.abreMae = function () { mae.abre = !mae.abre; pintaMae(); const b = document.querySelector('.km-dt'); if (b) b.focus({ preventScroll: true }); };
+  M.gastoMae = function (k) { mae.gasto = mae.gasto === k ? '' : k; pintaMae(); const b = document.querySelector('.km-li[data-g="' + k + '"]'), q = document.querySelector('.km-pn'); if (b) b.focus({ preventScroll: true }); if (q) q.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); };
   M.maestria = function (F) {
     const R = contraPlan(F), x = R.x, fm = fondoMaestria(), T = C().ritmoMaestria(F, { real: fm.total }), L = T.meses, fin = L[L.length - 1], falta = T.pide - fin.proy, ok = falta <= 0, dif = T.hoy - T.planHoy;
     // Las cuatro fechas: las dos primeras piden lo que toca ese día para llegar al corte; la cuenta bloqueada y el corte, lo suyo.
@@ -195,36 +226,19 @@
     // Los consejos, de lo que toca ya a lo que más mueve; cambian con tu ritmo.
     const pasos = [], bt = boton('Registrar una compra', 'abrirKpi(\'invertido\')') + boton('Qué invertir hoy', 'cerrarKpi();abrirGBM()', 1);
     const sigue = R.sig ? (R.sig.k === R.k ? 'Hoy mandas <b>' + money(R.sig.v) + '</b> a GBM' : 'El <b>' + diaTxt(R.sig.k) + '</b> mandas <b>' + money(R.sig.v) + '</b> a GBM') + ' (' + R.sig.t.charAt(0).toLowerCase() + R.sig.t.slice(1) + ').' : '';
-    if (sinAnotar > 500) pasos.push(['Anota lo que no aparece', money(sinAnotar), 'En ' + nm + ' te quedaban <b>' + money(este.queda) + '</b> y tu dinero creció <b>' + money(Math.max(0, este.crecio)) + '</b>. Lo que no anotes o no guardes, no llega a la proyección.', bt]);
+    if (sinAnotar > 500) pasos.push(['Anota lo que no aparece', money(sinAnotar), 'En ' + nm + ' te quedaban <b>' + money(este.queda) + '</b> y tu dinero creció <b>' + money(Math.max(0, este.crecio)) + '</b>.', bt]);
     else pasos.push(['Sigue así', 'vas bien', 'Guardas lo que te queda. ' + sigue, bt]);
     if (!ok) pasos.push(['Gana o guarda más', '+' + money(falta / Math.max(1, queda.length)) + ' al mes', 'Es lo que falta, repartido de ' + MESL[+queda[0].mes.slice(5) - 1] + ' a ' + MESL[+fin.mes.slice(5) - 1] + ': el aumento por escrito o un freelance de pruebas.']);
     else pasos.push(['Cuida cada envío', sigTxt(R.sig) ? money(R.sig.v) : 'cada quincena', sigue || 'Manda a GBM lo que te queda el día que entra.']);
     if (!ok && D.ahorro > 0) pasos.push(['Recorta tus rutinas', '+' + money(D.ahorro * queda.length) + ' en ' + mesTxt(fin.mes).slice(0, 3), '<b>' + money(D.ahorro) + '</b> al mes en piel, cabello y suplementos, de aquí a agosto. De eso, ' + money(D.medico) + ' los decide tu dermatólogo.']);
     pasos.push(['Decide el ' + diaTxt(dec), plural(diasDec, 'día', 'días'), 'Con la admisión y <b>' + money(mayo) + '</b> te vas. Con menos, irte en septiembre de 2028 te deja ' + (c28.falta > 0 ? 'con ' + money(c28.falta) + ' por juntar.' : '<b>' + money(-c28.falta) + '</b> de sobra.')]);
 
-    // El flujo de cada mes, debajo de la gráfica y alineado con ella.
-    const cel = (h, cls) => '<span class="' + (cls || '') + '">' + h + '</span>', num = n => n == null ? '' : money(n), sg = n => n == null ? '' : '<em class="' + (n >= 0 ? 'ok' : 'mal') + '">' + signo(n) + '</em>', men = n => n == null || Math.abs(n) < 1 ? '' : (n > 0 ? '−' + money(n) : '+' + money(-n));
-    // Cada renglón: su nombre, su cifra por mes y, si se abre, su detalle (que puede abrirse otra vez). `g` son los que deben estar abiertos.
-    const reng = (q, gs, niv) => {
-      const cls = (q.tot ? 'tot ' : '') + (niv ? 'sub n' + niv : ''), at = gs.length ? ' data-g="' + gs.join(' ') + '"' + (gs.every(k => abiertoF[k]) ? '' : ' hidden') : '', det = (q.det || []).filter(d => d.tit || L.some(m => d.f(m) !== ''));
-      return '<b class="' + cls + '"' + at + '>' + (det.length ? '<button type="button" class="km-mas" aria-expanded="' + !!abiertoF[q.id] + '" onclick="MEDIDORES.flujo(\'' + q.id + '\',this)">' + q.t + '</button>' : q.t) + '</b>' +
-        L.map(m => '<span class="' + cls + '"' + at + '>' + q.f(m) + '</span>').join('') + det.map(d => reng(d, gs.concat(q.id), niv + 1)).join('');
-    };
-    const posi = n => n == null || Math.abs(n) < 1 ? '' : money(n), NOM = Object.assign({}, EF_NOM, { suscripciones: 'Suscripciones', cuidado: 'Rutinas', depa: 'Servicios', familia: 'A tu familia', tarjeta: 'Tarjetas' });
-    const ACT = [['bolsa', 'Bolsa (GBM)'], ['cetes', 'CETES'], ['btc', 'Bitcoin'], ['liq', 'Cuenta y efectivo'], ['dep', 'Depósito']];
-    // Los conceptos de un gasto, uno por uno; las rutinas, por grupo y producto.
-    const conc = g => [...new Set([].concat(...L.map(m => Object.keys(m.items[g] || {}))))], uno = (g, k, t) => ({ t, f: m => men((m.items[g] || {})[k]) });
-    const detGasto = g => g === 'cuidado' ? [...new Set(conc(g).map(k => k.split('|')[0]))].map(gr => { const ks = conc(g).filter(k => k.split('|')[0] === gr); return { id: 'rut-' + gr, t: gr, f: m => men(ks.reduce((s, k) => s + ((m.items[g] || {})[k] || 0), 0)), det: ks.map(k => uno(g, k, '<i title="' + esc(k.split('|')[1]) + '">' + esc(k.split('|')[1]) + '</i>')) }; })
-      : g === 'suscripciones' || g === 'depa' ? conc(g).map(k => uno(g, k, esc(k))) : [];
-    // A qué activo entró cada mes: lo que cambió cada uno. En los meses que faltan, lo que te queda va a GBM.
-    const cambio = (k, m) => { const i = L.indexOf(m), a = i > 0 ? L[i - 1].activos : null; if (m.tipo === 'proy') return k === 'bolsa' ? m.queda : null; return a && m.activos && m.crecio != null ? m.activos[k] - a[k] : null; };
-    const flujo = '<div class="km-tw"><div class="km-f" style="--n:' + L.length + '"><b></b>' + L.map(m => cel(MES[+m.mes.slice(5) - 1] + (m.mes.slice(5) === '01' ? ' ' + m.mes.slice(2, 4) : '') + '<i>' + (m.tipo === 'cierre' ? 'cierre' : m.tipo === 'hoy' ? 'a hoy' : '') + '</i>', 'h' + (m.tipo === 'hoy' ? ' hoy' : ''))).join('') +
-      [{ id: 'entra', t: 'Entra', f: m => num(m.entra), det: [['Sueldo', 'sueldo'], ['Didi', 'didi'], ['Vale', 'vale'], ['Otros', 'otros']].map(q => ({ t: q[0], f: m => posi(m.entraDe[q[1]]) })) },
-        { id: 'sale', t: 'Sale en gastos', f: m => men(m.sale), det: ['renta', 'depa', 'celular', 'suscripciones', 'familia', 'auto', 'iphone', 'comida', 'cuidado', 'tarjeta'].map(k => ({ id: 'g-' + k, t: NOM[k], f: m => men(m.saleDe[k]), det: detGasto(k) })) },
-        { t: 'Te queda', f: m => sg(m.queda) },
-        { id: 'activos', t: 'Entra a tus activos', f: m => sg(m.tipo === 'proy' ? m.queda : m.crecio), det: ACT.map(q => ({ t: q[1], f: m => { const n = cambio(q[0], m); return n == null || Math.abs(n) < 1 ? '' : sg(n); } })) },
-        { id: 'llevas', tot: 1, t: 'Llevas o tendrías', f: m => num(m.tipo === 'proy' ? m.proy : m.real), det: ACT.map(q => ({ t: q[1], f: m => posi((m.activos || {})[q[0]]) })) },
-        { t: 'Tu plan', f: m => num(m.plan) }, { t: 'Se necesita', f: m => num(m.nec) }].map(q => reng(q, [], 0)).join('') + '</div></div>';
+    // El flujo de cada mes, debajo de la gráfica y alineado con ella: cuatro renglones; tocar un mes abre su desglose.
+    mae.L = L; if (!L.some(m => m.mes === mae.mes)) mae.mes = (queda[0] || este).mes;
+    const sg = n => '<em class="' + (n >= 0 ? 'ok' : 'mal') + '">' + signo(n) + '</em>', reng = (t, g, cls) => '<b class="' + (cls || '') + '">' + t + '</b>' + L.map(m => '<span data-m="' + m.mes + '" class="' + (cls || '') + (mae.abre && m.mes === mae.mes ? ' sel' : '') + '">' + g(m) + '</span>').join('');
+    const flujo = '<div class="km-tw"><div class="km-f" style="--n:' + L.length + '" onclick="const c=event.target.closest(\'[data-m]\');if(c)MEDIDORES.mesMae(c.dataset.m)"><b></b>' +
+      L.map(m => '<span data-m="' + m.mes + '" class="h' + (m.tipo === 'hoy' ? ' hoy' : '') + (mae.abre && m.mes === mae.mes ? ' sel' : '') + '"><button type="button">' + MES[+m.mes.slice(5) - 1] + (m.mes.slice(5) === '01' ? ' ' + m.mes.slice(2, 4) : '') + '<i>' + (m.tipo === 'cierre' ? 'cierre' : m.tipo === 'hoy' ? 'hoy' : '') + '</i></button></span>').join('') +
+      reng('Entra', m => money(m.entra)) + reng('Sale', m => money(m.sale)) + reng('Te queda', m => sg(m.queda)) + reng('Llevas o tendrías', m => money(m.tipo === 'proy' ? m.proy : m.real || 0), 'tot') + '</div></div>';
 
     return { kv: 'var(--cy)', titulo: 'Fondo Maestría', sub: 'Tu dinero para irte a Esslingen en septiembre de 2027.', html:
       '<div class="km"><div class="km-a"><section class="kv-c km-hero"><span>Guardando lo que te queda, en ' + MESL[+fin.mes.slice(5) - 1] + ' tendrías</span><div><strong>' + money(fin.proy) + '</strong><em>de ' + money(T.pide) + '</em></div>' + med(pct(fin.proy, T.pide)) +
@@ -234,9 +248,10 @@
           ['Te queda cada mes', money(queda[0] ? queda[0].queda : 0), 'lo que entra menos lo documentado' + (salto ? '; desde ' + MESL[+salto.mes.slice(5) - 1] + ', ' + money(salto.queda) : '')],
           ['Guardaste en ' + nm, money(Math.max(0, este.crecio || 0)), este.crecio == null ? 'se mide con tu primer cierre' : sinAnotar > 1 ? 'de ' + money(este.queda) + ' que te quedaban. <em class="mal">' + money(sinAnotar) + ' sin anotar</em>' : '<em class="ok">todo lo que te quedaba</em>']]
           .map(q => '<div class="kv-tile"><span>' + q[0] + '</span><b>' + q[1] + '</b><i>' + q[2] + '</i></div>').join('') + '</div></div>' +
-      '<div class="km-b"><section class="kv-c km-g"><div class="km-cab"><div><h3>Tu camino a la salida</h3><p>Tus cierres de Finanzas y lo que tendrías guardando lo que te queda. Cada cierre mueve la línea.</p></div>' +
+      '<div class="km-b"><section class="kv-c km-g"><div class="km-cab"><div><h3>Tu camino a la salida</h3></div>' +
           leyenda([['Lo que llevas', 'var(--text)', 'l'], ['Lo que tendrías', 'var(--ac)', 'l'], ['Tu plan completo', 'var(--kv-gris)', 'd'], ['Lo que se necesita', 'var(--kv-2)', 'd']]) + '</div>' + grafica('salida') + flujo + '</section>' +
-        '<section class="kv-c km-nec"><div class="km-tot"><h3>Todo lo que tienes</h3><strong>' + money(T.hoy) + '</strong></div>' + listaPiezas + (tiEditable() ? '<div class="km-ed">' + boton('Anotar una compra', 'abrirKpi(\'invertido\')', 1) + boton('Editar cuenta, efectivo y CETES', 'abrirKpi(\'fondo\');MEDIDORES.editarMano(true)', 1) + '</div>' : '') + '<div class="km-tot dos"><h3>Lo que debes tener en ' + mesTxt(fin.mes).slice(0, 3) + '</h3><strong>' + money(T.pide) + '</strong></div><div class="km-lista">' + listaCostos + '</div><div class="kv-pie">No incluye los ' + money(T.fuera) + ' de trámites, vuelo y primera renta: no van en este presupuesto.</div></section></div>' +
+        '<section class="kv-c km-nec"><div class="km-tot"><h3>Todo lo que tienes</h3><strong>' + money(T.hoy) + '</strong></div>' + listaPiezas + (tiEditable() ? '<div class="km-ed">' + boton('Anotar una compra', 'abrirKpi(\'invertido\')', 1) + boton('Editar saldos', 'abrirKpi(\'fondo\');MEDIDORES.editarMano(true)', 1) + '</div>' : '') + '<div class="km-tot dos"><h3>Lo que debes tener en ' + mesTxt(fin.mes).slice(0, 3) + '</h3><strong>' + money(T.pide) + '</strong></div><div class="km-lista">' + listaCostos + '</div><div class="kv-pie">No incluye los ' + money(T.fuera) + ' de trámites, vuelo y primera renta: no van en este presupuesto.</div></section></div>' +
+      '<section class="kv-c km-det' + (mae.abre ? ' abre' : '') + '" id="kmDet">' + desgloseMae() + '</section>' +
       '<div class="km-pasos" style="--n:' + pasos.length + '">' + pasos.map((q, i) => '<section class="kv-c km-paso' + (i ? '' : ' uno') + '"><b class="n">' + (i + 1) + '</b><div><div class="t"><h3>' + q[0] + '</h3><strong>' + q[1] + '</strong></div><p>' + q[2] + '</p>' + (q[3] ? '<div class="ac">' + q[3] + '</div>' : '') + '</div></section>').join('') + '</div>' +
       '</div>',
       listo: () => trayecto('salida', { L, cor, hoy: diaTxt(R.k) }) };
@@ -245,7 +260,7 @@
   // se necesita punteados, y las cuatro fechas con lo que piden.
   function trayecto(id, o) {
     const g = base(id, { aria: 'Lo que llevabas en cada cierre, lo que llevas hoy y lo que tendrías cada mes hasta la salida, contra tu plan y lo que se necesita' }); if (!g) return; guarda(id, trayecto, o);
-    const L = o.L, n = L.length, chico = g.w < 760; g.l = chico ? 52 : 172; g.r = chico ? 16 : 0; g.t = 30; g.b = chico ? 44 : 10;
+    const L = o.L, n = L.length, chico = g.w < 760; g.l = chico ? 52 : 132; g.r = chico ? 16 : 0; g.t = 30; g.b = chico ? 44 : 10;
     const alto = Math.max(...L.map(m => Math.max(m.real || 0, m.proy || 0, m.plan || 0, m.nec || 0)), ...o.cor.map(c => c.pide)), Y = ejes(g, 0, alto * 1.05), X = i => chico ? g.l + 26 + i / (n - 1) * (g.w - g.r - g.l - 52) : g.l + (i + .5) * (g.w - g.l) / n, y0 = Y(0);
     const H = L.findIndex(m => m.tipo === 'hoy'), xh = X(H), en = mes => L.findIndex(m => m.mes === mes), P = (f, desde) => L.map((m, i) => i < (desde || 0) || f(m) == null ? null : [X(i), Y(f(m))]).filter(Boolean);
     const d = p => p.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join(''), linea = (p, at) => p.length > 1 && nodo(g.svg, 'path', Object.assign({ d: d(p), fill: 'none', 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, at));
@@ -272,7 +287,7 @@
       const x = X(i), real = m.tipo !== 'proy', val = real ? m.real : m.proy; if (val == null) return; const y = Y(val);
       nodo(g.svg, 'circle', { cx: x, cy: y, r: m.tipo === 'hoy' ? 7 : 5, fill: real ? 'var(--text)' : 'var(--ac)', stroke: 'var(--kv-caja)', 'stroke-width': 2 });
       if (chico && m.tipo !== 'hoy' && i !== n - 1) return;
-      const abajo = !real && y0 - y > 46; txt(x, abajo ? y + 22 : y - 12, money(val), { class: 'km-x f' + (real ? '' : ' p') });
+      const pasa = o.cor.some(c => c.mes === m.mes && c.pide <= val), abajo = !real && y0 - y > 46 && !(pasa && i !== n - 1); txt(x + (pasa && !abajo ? 8 : 0), abajo ? y + 22 : y - 12, money(val), { class: 'km-x f' + (real ? '' : ' p'), 'text-anchor': pasa && !abajo ? 'end' : 'middle' });
     });
     L.forEach((m, i) => {
       if (m.vendio > 0 && !chico) txt(X(i) + 4, Y(m.real) - 34, 'vendiste Bitcoin: ' + money(m.vendio), { 'text-anchor': 'start' });
