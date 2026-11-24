@@ -9415,7 +9415,10 @@ window.CIFRAS = (function () {
     const precio = +F.currentBtcPrice || 0, fx = +F.usdMxn || 19.5;
     // Vendido todo, el historial deja -0.000000 ₿: nunca resta.
     const btc = Math.max(0, held * precio * fx);
-    return { ef: ef, inversiones: inversiones, inv: inv, btc: btc, btcHeld: held, total: ef + inv + btc };
+    // La cuenta y el efectivo también (Adán, 24-nov-2026: "todo lo que tengo… efectivo, bbva, etc.").
+    const liquidos = (F.activos || []).filter(function (a) { return a.type === 'liquido'; }).map(function (a) { return { id: a.id, n: a.name || 'Cuenta', v: +a.value || 0 }; });
+    const liq = liquidos.reduce(function (s, a) { return s + a.v; }, 0);
+    return { ef: ef, inversiones: inversiones, inv: inv, btc: btc, btcHeld: held, liquidos: liquidos, liq: liq, total: ef + inv + btc + liq };
   }
 
   /* ── EL FONDO DE EMERGENCIA, MOVIMIENTO POR MOVIMIENTO ──────────────────────────────────────
@@ -9534,44 +9537,60 @@ window.CIFRAS = (function () {
   }
 
   /* ── A QUÉ RITMO JUNTAS PARA LA MAESTRÍA ────────────────────────────────────────────────────
-     Adán, 24-nov-2026: "datos reales de cuánto llevo y calcula la proyección de cuánto tendré a ese ritmo… la proyección
-     debe variar… tenemos esta página de indicadores financieros, ahí llevamos el registro histórico de cómo cerraron los
-     meses". Mes por mes, del primer cierre de Finanzas · Indicadores al corte de la salida: `real` (los cierres y hoy: CETES,
-     inversiones sin el depósito y Bitcoin), `plan` (PROYECCION), `nec` (el plan más el ingreso que cierra la salida) y
-     `proy`, lo que tendrías a tu ritmo. `ritmo` es lo que juntaste entre lo que tocaba juntar en tus últimos tres meses
-     medibles, con el mes en curso hasta hoy (`medidos`); sin ninguno, 1. Cada mes que falta suma lo que toca por ese ritmo,
-     más lo fijo: lo que se paga de la salida y el depósito que regresa. El ritmo no pasa de 1.5 (`tope`). `real` es lo de hoy, si quien llama ya lo midió. */
-  function ritmoMaestria(f, real, hoyK) {
-    const F = f || fin || {}, k = hoyK || fechaLocal(), ym = k.slice(0, 7), P = PROYECCION.meses, sal = PROYECCION.cortes.salida.mes;
+     Adán, 24-nov-2026: "datos reales de cuánto llevo y calcula la proyección a ese ritmo… la proyección debe variar… ahí
+     llevamos el registro histórico de cómo cerraron los meses", y "lo que tengo guardado es de todo lo que tengo en mis
+     inversiones a la bolsa, cetes, bitcoin, efectivo, bbva, etc., todo el cashflow". Mes por mes, del primer cierre de
+     Finanzas · Indicadores al corte de la salida, con TODO el dinero (lo de `fondoMaestria`, en los cierres y hoy): `real`,
+     `plan` (PROYECCION) y `nec` (el plan más el ingreso que cierra la salida) con el depósito dentro mientras es suyo, `proy`
+     (lo que tendrías a tu ritmo), `entra` (sueldo, Didi y vale, sin ventas de inversiones) y `queda` (lo que creció tu dinero).
+     `ritmo` es lo que te quedó entre lo que tocaba juntar en tus últimos tres meses medibles, con el mes en curso hasta hoy
+     (`medidos`); sin ninguno, 1, y no pasa de 1.5 (`tope`). El mes en curso se mide por lo que guardaste —CETES, inversiones y
+     Bitcoin—: en la cuenta sube el sueldo y baja lo que vives, y eso no es ahorrar. Cada mes que falta suma lo que toca por
+     ese ritmo (`ahorra`) más lo que se paga de la salida (`salida`); lo demás que entra se gasta (`sale`). */
+  function ritmoMaestria(f, o) {
+    const F = f || fin || {}, O = o || {}, k = O.hoy || fechaLocal(), ym = k.slice(0, 7), P = PROYECCION.meses, sal = PROYECCION.cortes.salida.mes;
     const N = proyectar({ extraMes: salidaConIngreso().mes }), de = function (l, m) { return l.filter(function (x) { return x.mes === m; })[0] || null; };
-    const cierres = {}, vendio = {};
+    const suma = function (l, c) { return (l || []).reduce(function (s, x) { return s + c(x); }, 0); }, liqDe = function (x) { return suma(x.activos, function (a) { return a.type === 'liquido' ? +a.value || 0 : 0; }); };
+    const cierres = {}, liqs = {}, vendio = {}, liqHoy = liqDe(F);
     (F.indicatorHistory || []).forEach(function (h) {
       if (!h || !(h.month < ym)) return;
-      cierres[h.month] = (+h.emergencyFund || 0) + (+h.btcValue || 0) + (h.investments || []).reduce(function (s, i) { return s + (i.id === 'i004' ? 0 : +i.value || 0); }, 0);
+      liqs[h.month] = liqDe(h);
+      cierres[h.month] = (+h.emergencyFund || 0) + (+h.btcValue || 0) + liqDe(h) + suma(h.investments, function (i) { return +i.value || +i.invested || 0; });
     });
     (F.btcHistory || []).forEach(function (b) { if (+b.btc < 0) { const m = String(b.date || '').slice(0, 7); vendio[m] = (vendio[m] || 0) + (+b.usd || 0) * (+b.fx || +F.usdMxn || 0); } });
-    const dep = (F.investments || []).reduce(function (s, i) { return s + (i.id === 'i004' ? +i.value || 0 : 0); }, 0);
-    const hoy = real != null ? real : fondoMaestria(F).total - dep;
+    const hoy = O.real != null ? O.real : fondoMaestria(F).total;
+    const dep = function (m) { const p = de(P, m); return p ? +p.deposito || 0 : 0; };
+    const plan = function (m) { const p = de(P, m); return p ? p.alemania + dep(m) : null; };
     const bruto = function (m) { const p = de(P, m); return p ? +p.desglose.ahorro || 0 : 0; };
-    const fijo = function (m) { const p = de(P, m), a = de(P, mesMas(m, -1)); return p && a ? p.alemania - a.alemania - bruto(m) : 0; };
-    const toca = gbmMes(ym).semanas.reduce(function (s, w) { return s + w.gbm.reduce(function (t, x) { return t + (ym + '-' + String(x.dia).padStart(2, '0') <= k ? x.mxn : 0); }, 0); }, 0);
-    const medidos = Object.keys(cierres).filter(function (m) { return cierres[mesMas(m, -1)] != null && bruto(m) > 0 && de(P, mesMas(m, -1)); })
+    const fijo = function (m) { const a = plan(mesMas(m, -1)), b = plan(m); return a != null && b != null ? b - a - bruto(m) : 0; };
+    const entra = function (m) {
+      const p = de(P, m);
+      if (m > ym && p) return p.desglose.g.sueldo + Math.max(PROYECTO.didiMes, p.desglose.didi) + PROYECTO.siVale;
+      const b = balanceMeses(m, 1, { tx: F.transactions || [], debts: F.debts || [] })[0];
+      // La quincena que llegó antes entró el mes en que la cobró.
+      const ade = PROYECTO.quincenaAdelantada, cobro = PROYECTO.bbvaLiquida, mueve = ade && cobro && ade.slice(0, 7) !== cobro.slice(0, 7) ? (m === cobro.slice(0, 7) ? 1 : m === ade.slice(0, 7) ? -1 : 0) * PROYECTO.sueldoQuinc : 0;
+      return b ? mueve + Object.keys(b.cosas).reduce(function (s, c) { return s + (b.cosas[c].cat === 'Inversiones' ? 0 : b.cosas[c].inc); }, 0) : null;
+    };
+    const toca = suma(gbmMes(ym).semanas, function (w) { return suma(w.gbm, function (x) { return ym + '-' + String(x.dia).padStart(2, '0') <= k ? x.mxn : 0; }); });
+    const medidos = Object.keys(cierres).filter(function (m) { return cierres[mesMas(m, -1)] != null && bruto(m) > 0 && plan(mesMas(m, -1)) != null; })
       .map(function (m) { return { mes: m, gano: cierres[m] - cierres[mesMas(m, -1)] - fijo(m), toca: bruto(m) }; });
-    if (toca > 0 && cierres[mesMas(ym, -1)] != null) medidos.push({ mes: ym, gano: hoy - cierres[mesMas(ym, -1)], toca: toca });
+    if (toca > 0 && cierres[mesMas(ym, -1)] != null) medidos.push({ mes: ym, gano: (hoy - liqHoy) - (cierres[mesMas(ym, -1)] - liqs[mesMas(ym, -1)]), toca: toca });
     medidos.sort(function (a, b) { return a.mes < b.mes ? -1 : 1; });
-    const ult = medidos.slice(-3), suma = function (c) { return ult.reduce(function (s, x) { return s + x[c]; }, 0); };
+    const ult = medidos.slice(-3);
     ult.forEach(function (x) { x.ritmo = Math.max(0, x.gano / x.toca); });
-    const crudo = ult.length ? suma('gano') / suma('toca') : 1, ritmo = Math.max(0, Math.min(1.5, crudo));   // un mes muy bueno no se repite entero
+    const crudo = ult.length ? suma(ult, function (x) { return x.gano; }) / suma(ult, function (x) { return x.toca; }) : 1, ritmo = Math.max(0, Math.min(1.5, crudo));   // un mes muy bueno no se repite entero
     const primero = Object.keys(cierres).sort()[0] || ym, meses = [];
     for (let m = primero, v = null; m <= sal; m = mesMas(m, 1)) {
-      const p = de(P, m), nc = de(N, m), tipo = m < ym ? 'cierre' : m === ym ? 'hoy' : 'proy';
+      const nc = de(N, m), tipo = m < ym ? 'cierre' : m === ym ? 'hoy' : 'proy', ant = cierres[mesMas(m, -1)];
       if (tipo === 'hoy') v = hoy + Math.max(0, bruto(m) - toca) * ritmo;
       else if (tipo === 'proy') v += bruto(m) * ritmo + fijo(m);
-      meses.push({ mes: m, tipo: tipo, real: tipo === 'cierre' ? (cierres[m] != null ? cierres[m] : null) : tipo === 'hoy' ? hoy : null, plan: p ? p.alemania : null,
-        nec: nc && m >= SUPUESTOS.extraDesde ? nc.alemania : null, proy: v, toca: bruto(m), fijo: fijo(m), vendio: vendio[m] || 0 });
+      const real = tipo === 'cierre' ? (cierres[m] != null ? cierres[m] : null) : tipo === 'hoy' ? hoy : null;
+      const en = entra(m), queda = tipo === 'proy' ? bruto(m) * ritmo : real != null && ant != null ? real - ant : null;
+      meses.push({ mes: m, tipo: tipo, real: real, plan: plan(m), nec: nc && m >= SUPUESTOS.extraDesde ? nc.alemania + dep(m) : null, proy: v,
+        entra: en, queda: queda, sale: en != null && queda != null ? en - queda : null, salida: tipo === 'proy' ? fijo(m) : 0, toca: bruto(m), fijo: fijo(m), vendio: vendio[m] || 0 });
     }
-    const fp = de(P, sal);
-    return { ritmo: ritmo, tope: crudo > ritmo, medidos: ult, meses: meses, finPlan: fp ? fp.alemania : 0 };
+    const fp = plan(sal), pa = plan(mesMas(ym, -1));
+    return { ritmo: ritmo, tope: crudo > ritmo, medidos: ult, meses: meses, finPlan: fp || 0, hoy: hoy, planHoy: pa != null ? pa + toca : plan(ym), toca: toca };
   }
   /* ── EL BITCOIN, UNA SOLA LIBRETA ───────────────────────────────────────────────────────────
      Adán, 2026-11-18: "agrego bitcoin manualmente, pero también debe actualizarse en la gráfica… de Finanzas en plan

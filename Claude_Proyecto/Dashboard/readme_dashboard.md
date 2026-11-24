@@ -1099,18 +1099,22 @@ indicadores financieros, ahí llevamos el registro histórico… pero de cada me
 arriba abajo:
 
 - **La respuesta** (`.km-hero`): lo que tendrías en agosto a tu ritmo, contra lo que pide la salida, y si llegas.
-- **Cuatro datos**: lo que llevas (con el depósito aparte), lo que el plan pedía hoy, tu ritmo mes por mes y lo que hay que
-  juntar al mes.
+- **Cuatro datos**: lo que llevas en todo, lo que entra cada mes, lo que te quedó contra lo que tocaba (tu ritmo) y lo que hay
+  que juntar al mes.
 - **La gráfica** (`trayecto`): un punto con su cifra por mes —los cierres de Finanzas · Indicadores y hoy en blanco, la
   proyección en cian—, el plan y lo que se necesita punteados, las cuatro fechas con lo que piden y la línea de lo que falta,
   lo que ya pasó sombreado, y la venta de Bitcoin dicha en su mes. El globo da las cuatro cifras de cada mes.
-- **Lo que cuesta irte**, mes por mes (`SALIDA.costos`).
+- **El flujo, debajo de la gráfica y alineado con cada mes** (`.km-f`): lo que entra, lo que sale, lo que te queda, lo que pagas
+  de la salida, lo que llevas o tendrías, tu plan y lo que se necesita (Adán: *"te faltan las cifras que se ingresan cada mes… todo el cashflow"*).
+- **Todo lo que tienes** —bolsa, CETES, Bitcoin, cuenta, efectivo y depósito— y **lo que cuesta irte**, mes por mes
+  (`SALIDA.costos`).
 - **Qué hacer** (`.km-paso`): ponerte al corriente o seguir así, el ingreso nuevo, recortar rutinas y decidir; cambia con tu
   ritmo y con lo que falta.
 - **Mes a mes, en números** (plegado): la misma gráfica en tabla, con lo que sobra o falta cada mes.
 
-**El ritmo** es lo que juntaste entre lo que tocaba, de tus últimos tres meses medibles con el mes en curso hasta hoy; lo que se
-paga de la salida y el depósito no lo mueven. Al cerrar un mes en Finanzas, su punto entra y la línea cambia sola. El **control
+**El ritmo** es lo que creció todo tu dinero entre lo que tocaba juntar, de tus últimos tres meses medibles con el mes en curso
+hasta hoy; el mes en curso se mide por lo guardado, sin la cuenta ni el efectivo, porque ahí sube el sueldo y baja lo que vives.
+Lo que se paga de la salida no lo mueve, y la quincena que llegó antes cuenta el mes en que la cobró. Al cerrar un mes en Finanzas, su punto entra y la línea cambia sola. El **control
 63** prueba la cuenta.
 
 **Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se paga completa

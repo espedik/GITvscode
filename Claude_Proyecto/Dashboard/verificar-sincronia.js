@@ -2349,6 +2349,7 @@ function promptsDeLoTocado() {
 (function () {
   const PRUEBA = { emergencyFund: 6000, debts: [], goals: [{ id: 'g001', target: 398000, current: 99999 }],
     investments: [{ id: 'i1', name: 'A', type: 'otro', value: 11250 }, { id: 'i2', name: 'B', type: 'cetes', invested: 500 }],
+    activos: [{ id: 'ac013', type: 'liquido', value: 700 }, { id: 'ac014', type: 'liquido', value: 300 }, { id: 'ac001', type: 'vehiculo', value: 9 }],
     btcHistory: [{ btc: 0.01 }], currentBtcPrice: 100000, usdMxn: 18 };
   let C;
   try {
@@ -2356,10 +2357,10 @@ function promptsDeLoTocado() {
     C = new Function('window', 'localStorage', maestro + '; return window.CIFRAS;')({}, ls);
   } catch (e) { problemas.push('El maestro no carga con datos de prueba: ' + e.message); return; }
   if (!C || !C.fondoMaestria) { problemas.push('El maestro ya no exporta fondoMaestria(): {{maestria}} se quedaría sin su cuenta'); return; }
-  const esperado = 6000 + 11250 + 500 + 0.01 * 100000 * 18;
+  const esperado = 6000 + 11250 + 500 + 700 + 300 + 0.01 * 100000 * 18;
   const fx = C.fondoMaestria(PRUEBA).total, marcador = C.n('maestria');
   const malos = [];
-  if (Math.round(fx) !== esperado) malos.push('     fondoMaestria() da ' + fx + ' y debía dar ' + esperado + ' (fondo + inversiones + Bitcoin)');
+  if (Math.round(fx) !== esperado) malos.push('     fondoMaestria() da ' + fx + ' y debía dar ' + esperado + ' (CETES + inversiones + Bitcoin + cuenta y efectivo)');
   if (Math.round(marcador) !== esperado) malos.push('     {{maestria}} da ' + marcador + ' y fondoMaestria() ' + esperado + ': el marcador no sale de la función');
   const LEE = /\b(maestria2?|maes|mae|goalMae|_maeGoal)\??\.current\b/;
   const SUMA = /emergencyFund[^;\n]{0,90}\+[^;\n]{0,90}btc|btc[^;\n]{0,90}\+[^;\n]{0,90}emergencyFund/i;
@@ -3611,15 +3612,18 @@ function promptsDeLoTocado() {
   if (!C || typeof C.ritmoMaestria !== 'function') malos.push('el maestro ya no exporta ritmoMaestria');
   else {
     const P = m => C.PROYECCION.meses.filter(x => x.mes === m)[0].alemania;
-    const h = (m, v) => ({ month: m, emergencyFund: v, btcValue: 0, investments: [{ id: 'i004', value: 11250 }] });
-    const F = cierres => ({ indicatorHistory: cierres, btcHistory: [], investments: [], emergencyFund: 0 });
-    const M = ['2026-10', '2026-11', '2026-12'], justo = M.map(m => h(m, P(m))), k = '2026-12-31', corre = (c, real) => C.ritmoMaestria(F(c), real, k);
+    const h = (m, v) => ({ month: m, emergencyFund: v, btcValue: 0, investments: [{ id: 'i004', value: 11250 }], activos: [] });
+    const F = cierres => ({ indicatorHistory: cierres, btcHistory: [], investments: [], emergencyFund: 0, transactions: [], debts: [] });
+    const M = ['2026-10', '2026-11', '2026-12'], justo = M.map(m => h(m, P(m))), k = '2026-12-31', corre = (c, real) => C.ritmoMaestria(F(c), { real: real + 11250, hoy: k });
     const a = corre(justo.slice(0, 2), P('2026-12')), b = corre(justo.slice(0, 2), P('2026-12') - 3000), c = corre(justo.slice(0, 2), P('2026-12') + 9000), fin = x => x.meses[x.meses.length - 1];
     if (Math.abs(a.ritmo - 1) > 0.35) malos.push('cumplir el plan no da un ritmo cercano a 100 % (da ' + Math.round(a.ritmo * 100) + ' %)');
     if (!(fin(b).proy < fin(a).proy && fin(a).proy < fin(c).proy)) malos.push('la proyección no baja al juntar menos o no sube con un buen cierre');
-    if (a.meses[0].mes !== '2026-10' || a.meses[0].real !== P('2026-10') || a.meses.filter(x => x.tipo === 'cierre').length !== 2 || fin(a).mes !== C.PROYECCION.cortes.salida.mes) malos.push('los meses de la gráfica no van del primer cierre al corte de la salida');
+    if (a.meses[0].mes !== '2026-10' || a.meses[0].real !== P('2026-10') + 11250 || a.meses.filter(x => x.tipo === 'cierre').length !== 2 || fin(a).mes !== C.PROYECCION.cortes.salida.mes) malos.push('los meses de la gráfica no van del primer cierre al corte de la salida');
     if (a.meses.some((x, i) => i && a.meses[i - 1].mes >= x.mes)) malos.push('los meses de la gráfica no van en orden');
-    const sin = C.ritmoMaestria(F([]), 5000, '2026-12-10'); if (sin.ritmo !== 1) malos.push('sin cierres el ritmo no es el del plan');
+    if (fin(a).plan !== P(C.PROYECCION.cortes.salida.mes) || a.meses.some(x => x.tipo === 'proy' && !(x.entra > 0))) malos.push('el plan de la salida no es el de la proyección, o un mes que falta no dice lo que entra');
+    const g = C.ritmoMaestria(Object.assign(F(justo.slice(0, 2)), { activos: [{ type: 'liquido', value: 20500 }] }), { real: P('2026-12') + 11250 + 20500, hoy: k });
+    if (Math.abs(g.ritmo - a.ritmo) > 0.01) malos.push('la quincena recién depositada cuenta como ahorro en el ritmo');
+    const sin = C.ritmoMaestria(F([]), { real: 5000, hoy: '2026-12-10' }); if (sin.ritmo !== 1) malos.push('sin cierres el ritmo no es el del plan');
   }
   const m = leer('Dashboard/medidores.js'); if (m.indexOf('.ritmoMaestria(') < 0 || m.indexOf("trayecto('salida'") < 0) malos.push('la ventana del Fondo Maestría ya no usa ritmoMaestria');
   if (malos.length) { problemas.push('El ritmo de la maestría:\n     ' + malos.join('\n     ')); return; }

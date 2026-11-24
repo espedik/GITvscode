@@ -7063,6 +7063,7 @@ function fondoMaestria(){
   });
   if(M.btc>0) comps.push({k:'btc',n:'Bitcoin',v:M.btc,c:'#f7931a',
     d:b.held.toFixed(6)+' BTC × $'+Math.round(b.price).toLocaleString('en-US')+' USD × '+b.fx.toFixed(2)+' MXN'});
+  (M.liquidos||[]).forEach(a=>{ if(a.v>0) comps.push({k:'liq',n:esc(a.n),v:a.v,c:'var(--cy)',d:'Tu saldo de hoy: se edita en la ventana del Fondo de emergencia'}); });
   const total=M.total;
   // Si alguna vez registra el BTC TAMBIÉN como inversión de tipo `crypto`, estaría contado dos
   // veces: una por la fila de Inversiones y otra por btcHistory. Se detecta, no se adivina.
@@ -14968,7 +14969,7 @@ function fzaDatos(ym){
   if(cta) out.push({ k:'cuenta', t:'El saldo de tu cuenta en Finanzas es el que dice el banco.', ev: esc(cta.name || 'Cuenta')+': '+fzmNum(+cta.value || 0)+(cta.fecha ? ' al '+fzmDia(cta.fecha) : '') });
   const tc = (F.debts || []).find(d => d.id === 'd001');
   if(tc && !tc.cancelada) out.push({ k:'bbva', t:'Lo que debes de la BBVA en Finanzas es lo que dice su app.', ev: 'BBVA: '+fzmNum(+tc.balance || 0) });
-  out.push({ k:'inv', t:'Lo de CETES, GBM y tus inversiones en Finanzas es lo real.', ev: fzmNum(C.fondoMaestria(F).total)+' entre CETES, inversiones y Bitcoin' });
+  out.push({ k:'inv', t:'Lo de CETES, GBM y tus inversiones en Finanzas es lo real.', ev: fzmNum(C.fondoMaestria(F).total-C.fondoMaestria(F).liq)+' entre CETES, inversiones y Bitcoin' });
   return out;
 }
 // Lo que llevan las respuestas de un mes: cuántas faltan, la calificación y las correcciones que salen.

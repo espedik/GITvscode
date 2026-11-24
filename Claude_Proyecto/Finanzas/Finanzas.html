@@ -2484,6 +2484,7 @@ function renderIndicatorsHTML(src) {
           {l:'📈 Acciones (bolsa)',a:accV2,col:'#b06eff'},
           {l:'🏠 Dep. renta',a:rentaV2,col:'#f59e0b'},
           {l:'₿ Bitcoin',a:btcValue2,col:'#f7931a'},
+          {l:'💵 Cuenta y efectivo',a:liqActivos-(src.emergencyFund||0),col:'#00e0c0'},
         ].filter(c=>c.a>0).map(c=>{const p=Math.min(100,(c.a/(maestria2?.target||500000))*100);
           return `<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
             <span style="font-size:11px;color:var(--text2)">${c.l}</span>
@@ -3655,6 +3656,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
           ...S.investments.filter(i=>i.type==='cetes'&&(i.value||0)>0).map(i=>({l:'🏛️ '+i.name, a:i.value||0, col:'#3b82f6'})),
           ...S.investments.filter(i=>i.type!=='cetes'&&(i.value||0)>0).map((i,idx)=>({l:'📈 '+i.name, a:i.value||0, col:invPalette[idx%invPalette.length]})),
           ...(btcV>0?[{l:'₿ Bitcoin', a:btcV, col:'#f7931a'}]:[]),
+          ...(S.activos||[]).filter(a=>a.type==='liquido'&&(a.value||0)>0).map(a=>({l:'💵 '+a.name, a:a.value||0, col:'#00e0c0'})),
         ];
         const maeSum = comps.reduce((s,c)=>s+c.a,0);
         const maePctLocal = Math.min(100,maeSum/maestriaTarget*100);
