@@ -96,13 +96,44 @@
       '<p>Vivir un mes con lo indispensable cuesta <b>' + money(G.minimo) + '</b> y tienes <b>' + money(x.ef) + '</b>. Tu meta es llenar ' + (meses === 1 ? 'la barra.' : 'las ' + meses + ' barras.') + '</p>' +
       '<div class="kf-meses" style="--n:' + meses + '">' + Array.from({ length: meses }, (_, i) => mes(i)).join('') + '</div>';
   }
-  M.apartar = function (v) { const f = document.querySelector('#kpiBody form.ti-form'); if (!f || !f.ef_m) return; f.ef_t.value = 'aporte'; f.ef_m.value = v; f.scrollIntoView({ block: 'nearest' }); f.ef_m.focus(); };
+  M.apartar = function (v) { const f = document.querySelector('.kf-form form'); if (!f || !f.ef_m) return; f.ef_t.value = 'aporte'; f.ef_m.value = v; f.scrollIntoView({ block: 'nearest' }); f.ef_m.focus(); };
+
+  // A la mano se edita aquí: los saldos con la fecha de hoy y CETES con su movimiento (CIFRAS.saldosPoner). ceGuardar repinta
+  // la pantalla y la ventana, y todo Finanzas viaja a GitHub con el siguiente commit.
+  const mano = { edita: false, aviso: '' };
+  const manoLista = F => {
+    const liq = (F.activos || []).filter(a => a.type === 'liquido'), base = C().A_LA_MANO.filter(p => !liq.some(a => a.id === p[0])).map(p => ({ id: p[0], name: p[1], value: 0 }));
+    return liq.concat(base).map((a, i) => ({ id: a.id, n: a.name, v: +a.value || 0, fecha: a.fecha, c: [V.a, V.c, V.g][Math.min(i, 2)] })).concat([{ id: 'cetes', n: 'Tu fondo en CETES', v: +F.emergencyFund || 0, c: 'var(--ac)' }]);
+  };
+  function manoForm(F) {
+    return '<form class="ti-form kf-mf" onsubmit="MEDIDORES.guardarMano(event)" oninput="MEDIDORES.sumaMano(this)">' + manoLista(F).map(q => '<label><span><i style="background:' + q.c + '"></i>' + esc(q.n) + '</span><input type="number" name="' + esc(q.id) + '" min="0" step="0.01" inputmode="decimal" value="' + q.v + '" required></label>').join('') +
+      '<div class="kf-mt2"><span>Total</span><strong>' + money(manoLista(F).reduce((s, q) => s + q.v, 0)) + '</strong></div>' +
+      '<span class="ti-form-acc"><button type="button" class="ce-btn sec" onclick="MEDIDORES.editarMano(false)">Cancelar</button><button type="submit" class="ce-btn">Guardar</button></span></form>';
+  }
+  M.sumaMano = function (f) { const e = f.querySelector('.kf-mt2 strong'); if (e) e.textContent = money([...f.querySelectorAll('input')].reduce((s, i) => s + (+i.value || 0), 0)); };
+  M.editarMano = function (si) { mano.edita = si; mano.aviso = ''; abrirKpi('fondo'); const q = document.querySelector('.kf-mf input'); if (si && q) { q.focus(); q.select(); } };
+  M.guardarMano = function (ev) {
+    ev.preventDefault();
+    const f = ev.target, F = rawGet('finanzasmx_v2', null); if (!F || !tiEditable()) return;
+    const vals = {}; f.querySelectorAll('input').forEach(i => { vals[i.name] = i.value; });
+    const res = C().saldosPoner(F, vals);
+    if (res.error) {
+      let e = f.querySelector('.ef-error'); if (!e) { e = document.createElement('span'); e.className = 'ef-error'; f.insertBefore(e, f.querySelector('.ti-form-acc')); }
+      e.textContent = res.error; return;
+    }
+    mano.edita = false; mano.aviso = res.cambios.length ? 'Guardado: ya cambió en todas tus pantallas. Llega a GitHub con tu siguiente commit.' : 'Guardado con la fecha de hoy. Llega a GitHub con tu siguiente commit.';
+    ceGuardar(F);
+    ctCifrasHoy();   // deja anotado lo que queda para gastar, que viaja con el commit a los otros dispositivos
+  };
 
   // Cómo se llama cada renglón del mes en la ventana.
   const EF_NOM = { renta: 'Renta', depa: 'Luz, agua, internet y gas', celular: 'Plan de datos', familia: 'Aporte a tu familia', auto: 'El BYD', iphone: 'El iPhone', comida: 'Comida', suscripciones: 'suscripciones', cuidado: 'rutinas de cuidado', personal: 'ropa, salidas y compras' };
   M.fondo = function (F) {
+    const ov = document.getElementById('kpiOverlay');
+    if (!ov || !ov.classList.contains('open') || ov.dataset.kpi !== 'fondo') { mano.edita = false; mano.aviso = ''; }
+    if (_efEdit) mano.edita = false;
     const x = dinero(F), k = hoyLocal(), meta = _metaFondo(), falta = Math.max(0, meta - x.ef), p = pct(x.ef, meta), editable = tiEditable(), alPlan = +C().n('cetesDia15') || 0;
-    const prox = mas(k.slice(0, 7), 1), E = C().gastoEmergencia, G = E(prox), P = C().PROYECCION.meses, mano = x.ef + x.liqV, sig = contraPlan(F).sig;
+    const prox = mas(k.slice(0, 7), 1), E = C().gastoEmergencia, G = E(prox), P = C().PROYECCION.meses, aMano = x.ef + x.liqV, sig = contraPlan(F).sig;
     // Quincena por quincena (el 1 y el 15), contra la meta de cada mes: sin renta baja.
     const llegas = v => {
       let s = x.ef;
@@ -113,11 +144,9 @@
     const meses = C().PROYECTO.fondoMeses, cambia = P.filter(q => q.mes > k.slice(0, 7) && q.mes <= C().PROYECTO.ultimoMesMexico && C().fondoMeta(q.mes) < meta * .8)[0];
 
     // A la mano, en el orden en que se usa. El saldo de la cuenta lleva su fecha: si es viejo, se dice.
-    const liq = x.liq.filter(a => +a.value > 0);
-    const piezas = liq.map((a, i) => [esc(a.name), +a.value, a.fecha ? 'dicho el ' + diaTxt(a.fecha) : 'hoy mismo', [V.a, V.c, V.g][Math.min(i, 2)]])
-      .concat(x.ef > 0 ? [['Tu fondo en CETES', x.ef, '1 o 2 días hábiles', 'var(--ac)']] : []);
+    const liq = x.liq.filter(a => +a.value > 0), piezas = manoLista(F).map(q => [esc(q.n), q.v, q.id === 'cetes' ? '1 o 2 días hábiles' : !q.fecha ? '' : q.fecha === k ? 'de hoy' : 'del ' + diaTxt(q.fecha), q.c]);
     const vieja = liq.map(a => a.fecha).filter(Boolean).sort()[0], dv = vieja ? Math.round((new Date(k + 'T12:00') - new Date(vieja + 'T12:00')) / 864e5) : 0;
-    const dinHtml = '<div class="kf-bar">' + piezas.map(q => '<i style="flex:' + Math.max(1, Math.round(q[1])) + ';background:' + q[3] + '"></i>').join('') + '</div>' + lista(piezas.map(q => fila(q[0] + ' <u>' + q[2] + '</u>', money(q[1]), '', '', q[3])).join(''));
+    const dinHtml = '<div class="kf-bar">' + piezas.filter(q => q[1] > 0).map(q => '<i style="flex:' + Math.max(1, Math.round(q[1])) + ';background:' + q[3] + '"></i>').join('') + '</div>' + lista(piezas.map(q => fila(q[0] + ' <u>' + q[2] + '</u>', money(q[1]), '', '', q[3])).join(''));
 
     // Un mes sin sueldo: lo que se paga y lo que se apaga.
     const nom = q => EF_NOM[q.id] || q.t, mayor = (a, b) => b.v - a.v, paga = G.partes.filter(q => !q.apaga).sort(mayor), apaga = G.partes.filter(q => q.apaga).sort(mayor), chicas = paga.slice(3);
@@ -141,7 +170,8 @@
         alPlan > 0 ? '' : editable ? 'Si quieres llenarlo aparte, esto es lo que tardas' + (cambia ? '; en ' + MESL[+cambia.mes.slice(5) - 1] + ' la meta baja a <b>' + money(C().fondoMeta(cambia.mes)) + '</b>, porque desde ' + MESL[+mas(cambia.mes, 1).slice(5) - 1] + ' gastas menos' : '') + ':' : '', editable && !(alPlan > 0) ? [2000, 4000, 6000].map(chip).join('') : '')
         : hoy('Listo', 'Tu fondo ya está completo: no le metas más.', 'El ahorro sigue yendo a GBM.')) +
       '<div class="kf-d">' +
-        '<section class="kv-c"><h3>A la mano: ' + money(mano) + '</h3><p>En el orden en que se usa.</p>' + dinHtml + (dv > 7 ? '<div class="kv-pie">El saldo de tu cuenta es de hace ' + dv + ' días: ponlo al día en Finanzas.</div>' : '') + '</section>' +
+        '<section class="kv-c kf-mano"><div class="kf-cab"><div><h3>A la mano: ' + money(aMano) + '</h3><p>' + (mano.edita ? 'Escribe lo que tienes hoy.' : 'En el orden en que se usa.') + '</p></div>' + (editable && !mano.edita ? boton('Editar', 'MEDIDORES.editarMano(true)', 1) : '') + '</div>' +
+          (mano.edita && editable ? manoForm(F) : dinHtml + (mano.aviso ? '<div class="kv-pie kf-ok">' + mano.aviso + '</div>' : !editable ? copia('Se edita') : dv > 7 ? '<div class="kv-pie">El saldo de tu cuenta es de hace ' + dv + ' días: ponlo al día con Editar.</div>' : '')) + '</section>' +
         '<section class="kv-c"><h3>Un mes sin sueldo: ' + money(G.minimo) + '</h3><p>Lo que pagarías sí o sí.</p>' + mesHtml + (baja ? '<div class="kv-pie">Desde ' + MESL[+baja.mes.slice(5) - 1] + (baja.partes.some(q => q.id === 'renta') ? '' : ', sin renta,') + ' baja a <b>' + money(baja.minimo) + '</b> al mes.</div>' : '') + '</section>' +
         '<section class="kv-c kf-form' + (ed ? ' edita' : '') + '"><h3>Meter o sacar dinero</h3><p>Sale igual en Finanzas. No lo anotes también en Total invertido: contaría dos veces.</p>' + (editable ? efFormHtml(ed) : copia('Se anota')) + '</section></div>' +
       (movs ? plega('fondo-movs', 'Lo que has metido y sacado', plural(FL.movs.length, 'movimiento', 'movimientos') + ': +' + money(FL.aporto) + ', −' + money(FL.saco), '<div class="ti-lista">' + movs + '</div>', 's12', !!_efEdit) : '') + '</div>' };

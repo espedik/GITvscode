@@ -10037,7 +10037,8 @@ function ctTramo(nSel, nDias, mov, ym){
            falta: (hoy.saldo - cierre), libreDia: Math.round(cierre/restan) };
 }
 // Lo que hay de verdad para gastar: los activos líquidos de Finanzas con fecha —la cuenta y el efectivo—
-// que caen dentro del tramo [ini, fin] del mes YM, sumados y anclados al día más reciente. Adán,
+// cuando alguno cae dentro del tramo [ini, fin] del mes YM, anclados al día más reciente. Se suman todos: decir hoy
+// solo lo de la cuenta no borra el efectivo. Adán,
 // 19-oct-2026: "tengo en mi tarjeta de débito 1,700 y 2500 en efectivo".
 function ctAnclaReal(YM, ini, fin){
   /* La quincena que llegó antes (CIFRAS.PROYECTO.quincenaAdelantada; Adán, 31-oct-2026: "ya me pagaron el pago del mes y
@@ -10047,16 +10048,17 @@ function ctAnclaReal(YM, ini, fin){
   let vispera='';
   if(qa&&qa===k0){ const p=k0.split('-').map(Number), d=new Date(p[0],p[1]-1,p[2]-1);
     vispera=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-  const acts=((D.fin&&D.fin.activos)||[]).filter(function(a){
-    if(a.type!=='liquido'||!/^\d{4}-\d{2}-\d{2}$/.test(a.fecha||'')) return false;
+  const liq=((D.fin&&D.fin.activos)||[]).filter(a=>a.type==='liquido');
+  const acts=liq.filter(function(a){
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(a.fecha||'')) return false;
     if(a.fecha===vispera) return true;
     if(a.fecha.slice(0,7)!==YM) return false;
     const d=+a.fecha.slice(8,10); return d>=ini&&d<=fin;
   });
   if(!acts.length) return null;
   const f=acts.map(a=>a.fecha).sort().pop();
-  return { dia:f===vispera?ini:+f.slice(8,10), saldo:acts.reduce((x,a)=>x+(+a.value||0),0), fecha:f,
-           nombre:acts.map(a=>a.name||'Cuenta').join(' y ') };
+  return { dia:f===vispera?ini:+f.slice(8,10), saldo:liq.reduce((x,a)=>x+(+a.value||0),0), fecha:f,
+           nombre:liq.map(a=>a.name||'Cuenta').join(' y ') };
 }
 
 /* Lo de hoy con UNA sola cifra para gastar: la del riel —tu último saldo dicho y lo previsto desde entonces—, no el

@@ -9453,6 +9453,38 @@ window.CIFRAS = (function () {
     F.efAportes = F.efAportes.filter(function (m) { return m.id !== id; });
     return x;
   }
+  /* Lo que tienes a la mano, dicho por ti (Adán, 24-nov-2026: "dame la habilidad de editar lo de la sección a la mano… y
+     actualicen esas cifras globalmente… ya no debemos depender de Claude"). `vals` es {id del activo líquido: pesos, cetes:
+     pesos}. Un saldo es de un día: todos los líquidos quedan con la fecha `k`, porque el riel del Plan Maestro se ancla al
+     último que dijiste. CETES no se escribe encima: la diferencia se anota como aportación o retiro. La cuenta y el
+     efectivo se crean si faltan. Quien llama guarda. Devuelve cuánto cambió cada uno o `{error}`. */
+  const A_LA_MANO = [['ac013', 'Cuenta BBVA'], ['ac014', 'Efectivo']];
+  function saldosPoner(F, vals, k) {
+    if (!F || !vals) return { error: 'Sin datos de Finanzas' };
+    const nuevo = {}, cambios = [], dia = k || fechaLocal(), red = function (x) { return Math.round(x * 100) / 100; };
+    for (const id in vals) {
+      const x = typeof vals[id] === 'number' ? vals[id] : String(vals[id]).trim() === '' ? NaN : Number(vals[id]);
+      if (!isFinite(x) || x < 0) return { error: 'Escribe una cantidad en cada renglón; si no hay nada, 0' };
+      nuevo[id] = red(x);
+    }
+    F.activos = Array.isArray(F.activos) ? F.activos : [];
+    A_LA_MANO.forEach(function (p) {
+      if (nuevo[p[0]] != null && !F.activos.some(function (a) { return a.id === p[0]; })) F.activos.push({ id: p[0], name: p[1], type: 'liquido', value: 0, notes: '' });
+    });
+    F.activos.forEach(function (a) {
+      if (a.type !== 'liquido' || nuevo[a.id] == null) return;
+      const d = red(nuevo[a.id] - (+a.value || 0));
+      if (d) cambios.push({ id: a.id, delta: d });
+      a.value = nuevo[a.id]; a.fecha = dia;
+    });
+    const dc = nuevo.cetes != null ? red(nuevo.cetes - (+F.emergencyFund || 0)) : 0;
+    if (dc) {
+      const r = fondoMovimiento(F, { date: dia, tipo: dc < 0 ? 'retiro' : 'aporte', amount: Math.abs(dc), nota: 'Ajuste al saldo de CETES' });
+      if (r.error) return r;
+      cambios.push({ id: 'cetes', delta: dc });
+    }
+    return { cambios: cambios, fecha: dia };
+  }
   /* Lo que cuesta vivir sin sueldo. `gastoEmergencia(ym)` parte el mes del plan (`desgloseMes`) en lo que se paga aunque no
      entre sueldo —`minimo`: renta, servicios, celular, la familia, el BYD, el iPhone y la comida— y lo que se apaga
      —`recorte`: suscripciones, rutinas y lo demás—; `normal` es la suma. No entran el ahorro ni los abonos a la tarjeta.
@@ -10120,7 +10152,7 @@ window.CIFRAS = (function () {
     patrimonio: patrimonio,
     fondoMaestria: fondoMaestria,
     fondoMovimiento: fondoMovimiento, fondoBorrar: fondoBorrar, fondoSigno: fondoSigno, fondoLista: fondoLista,
-    gastoEmergencia: gastoEmergencia, fondoMeta: fondoMeta,
+    saldosPoner: saldosPoner, A_LA_MANO: A_LA_MANO, gastoEmergencia: gastoEmergencia, fondoMeta: fondoMeta,
     btcCompra: btcCompra, btcBorrar: btcBorrar, btcEsInversion: btcEsInversion, btcDeInversiones: btcDeInversiones,
     prestamoSimular: prestamoSimular, prestamoHechos: prestamoHechos, prestamoResumen: prestamoResumen, prestamoTabla: prestamoTabla,
     prestamoAbono: prestamoAbono, prestamoAbonoBorrar: prestamoAbonoBorrar, prestamoDatos: prestamoDatos,

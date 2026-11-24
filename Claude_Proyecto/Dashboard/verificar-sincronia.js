@@ -3593,6 +3593,30 @@ function promptsDeLoTocado() {
   ok.push('Próximos viajes: ' + V.BASE.length + ' viajes con lo que falta, su gasto, sus fuentes y sus fotos; nada en domingo, y el vuelo y el hotel no salen del navegador');
 })();
 
+/* ── 62. A la mano, editable ────────────────────────────────────────────────────────────────────────────────────────
+   Adán, 24-nov-2026: "dame la habilidad de editar lo de la sección a la mano… y actualicen esas cifras globalmente en mi app…
+   ya no debemos depender de Claude". Con unos datos de juguete: saldosPoner pone los saldos con su día, mueve CETES con un
+   movimiento y el patrimonio cambia lo mismo; la ventana la usa; el riel suma todos los líquidos. */
+(function () {
+  const malos = [], C = global.window && global.window.CIFRAS;
+  if (!C || typeof C.saldosPoner !== 'function') malos.push('el maestro ya no exporta saldosPoner');
+  else {
+    const F = { emergencyFund: 6000, goals: [{ id: 'ef-001', current: 6000 }], activos: [{ id: 'ac013', type: 'liquido', value: 1300, fecha: '2026-10-31' }], debts: [], investments: [], btcHistory: [] };
+    const antes = C.patrimonio(F).liquido, r = C.saldosPoner(F, { ac013: 2000, ac014: '350', cetes: 6500 }, '2026-11-24');
+    const a = id => F.activos.filter(x => x.id === id)[0] || {};
+    if (r.error || a('ac013').value !== 2000 || a('ac014').value !== 350 || a('ac013').fecha !== '2026-11-24' || a('ac014').fecha !== '2026-11-24') malos.push('saldosPoner no deja la cuenta y el efectivo con su cantidad y su día');
+    if (F.emergencyFund !== 6500 || F.goals[0].current !== 6500 || (F.efAportes || []).length !== 1) malos.push('CETES no llega a su saldo con un movimiento anotado');
+    if (Math.round(C.patrimonio(F).liquido - antes) !== 1550) malos.push('el patrimonio no se mueve lo mismo que los saldos');
+    const copia = JSON.stringify(F);
+    if (!C.saldosPoner(F, { ac013: '', cetes: 5 }).error || !C.saldosPoner(F, { ac013: -1 }).error || JSON.stringify(F) !== copia) malos.push('un renglón vacío o negativo se guarda');
+  }
+  const m = leer('Dashboard/medidores.js'), h = leer('Dashboard/dashboard.html');
+  if (m.indexOf('.saldosPoner(') < 0 || m.indexOf('M.guardarMano') < 0) malos.push('la ventana del fondo ya no edita A la mano con saldosPoner');
+  if (h.indexOf('saldo:liq.reduce(') < 0) malos.push('ctAnclaReal ya no suma todos los líquidos: decir la cuenta borraría el efectivo');
+  if (malos.length) { problemas.push('A la mano, editable:\n     ' + malos.join('\n     ')); return; }
+  ok.push('A la mano: cuenta, efectivo y CETES se editan con una sola cuenta del maestro y mueven el patrimonio y la quincena');
+})();
+
 /* ── 61. Cuánto cubre el fondo de emergencia ────────────────────────────────────────────────────────────────────────
    La ventana del fondo decía «gasto normal» con el promedio de los movimientos anotados (un pago grande de la tarjeta y
    meses sin anotar) y «lo fijo» sin el BYD ni la comida. La cuenta es una, del maestro: gastoEmergencia parte el mes del

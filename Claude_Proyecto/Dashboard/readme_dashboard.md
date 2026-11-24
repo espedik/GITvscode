@@ -1174,6 +1174,13 @@ simple"*). De arriba abajo:
   (`CIFRAS.gastoEmergencia`), hacia arriba a miles (Adán: *"la meta de fondo de ahorro debe cubrir mis gastos mínimo 3
   meses"*); sin renta baja sola, y los botones de *Hoy* ya lo cuentan. Los meses se cambian en Mis cifras.
 - **Lo de hoy**: el siguiente envío a GBM y en cuánto lo llenarías apartando de cada quincena (`apartar` llena el formulario).
+- **A la mano se edita ahí mismo**: *Editar* (`editarMano`) cambia los renglones por tres cantidades con su total en vivo, y
+  *Guardar* (`guardarMano`) llama a `CIFRAS.saldosPoner`: la cuenta y el efectivo quedan con la fecha de hoy y CETES llega a su
+  saldo con una aportación o un retiro, que sale en *Lo que has metido y sacado*. `ceGuardar` repinta la pantalla y la ventana;
+  con Finanzas abierta, `storage` la repinta. Mueve el patrimonio, sus gráficas, lo que queda para gastar (`ctAnclaReal` ancla
+  la quincena a ese día y suma todos los líquidos), el Fondo Maestría y Coach. **Sube con cualquier commit**: todo Finanzas se
+  copia a `finanzas-sync.js` al correr `git status`, `git add` o un commit; la ventana lo recuerda al guardar. En el iPad se ve
+  sin editar. El **control 62** lo vigila.
 - **A la mano**: solo cuenta, efectivo y CETES —ni Bitcoin ni lo invertido cuentan en esta ventana (Adán: *"aquí solo va
   efectivo, cetes, y cuenta bbva, no va bitcoin"*)—, con aviso si el saldo dicho tiene más de 7 días; **Un mes sin sueldo**, lo
   que se paga, lo que se apaga y cuánto baja sin renta; y **Meter o sacar dinero**. No lleva las preguntas de emergencia ni

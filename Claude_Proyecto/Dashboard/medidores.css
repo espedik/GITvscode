@@ -227,6 +227,17 @@
 .kf-bar{display:flex;gap:2px;height:16px;margin:10px 0 4px}
 .kf-bar i{border-radius:4px;min-width:4px}
 .kf-d .kv-pie{padding-top:8px}
+.kf-cab{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.kf-cab h3{font-size:16px;font-weight:700;margin:0}
+.kf-cab p{font-size:13.5px;line-height:1.5;color:var(--kv-t2);margin:3px 0 0}
+.kf-ok{color:var(--g)}
+.kf .kf-mf{flex:1;grid-template-columns:minmax(0,1fr);gap:7px;align-content:space-between;margin-top:8px}
+.kf .kf-mf label{flex-direction:row;align-items:center;justify-content:space-between;gap:12px}
+.kf .kf-mf label span{display:flex;align-items:center;gap:8px;font-size:14.5px;color:var(--text)}
+.kf .kf-mf label i{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+.kf .kf-mf label input{width:170px;min-height:40px;text-align:right;font-family:var(--mono);font-size:16px;font-weight:600}
+.kf-mt2{display:flex;justify-content:space-between;align-items:baseline;padding-top:7px;border-top:1px solid var(--kv-linea);font-size:14.5px;font-weight:700}
+.kf-mt2 strong{font-size:18px}
 .kf-form:not(.edita) .ti-form-t{display:none}
 .kf .kf-form .ti-form{flex:1;align-content:space-between;margin-top:10px;gap:8px 12px}
 .kf .kf-form .ti-form{grid-template-columns:repeat(6,minmax(0,1fr))}

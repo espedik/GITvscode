@@ -4838,6 +4838,15 @@
       dCorta(activa.start) + ' – ' + dCorta(activa.end) + '): <strong>' + activa.title + '</strong>. ' + activa.meta;
   }
   pintarFasesPlan();
+  // Si cambian tus saldos en el Dashboard o en Finanzas, Coach se pone al día: lo principal al momento y todo lo demás en
+  // cuanto su pestaña queda atrás (recargar a la vista te movería de lugar).
+  window.addEventListener('storage', function (e) {
+    if (e.key !== 'finanzasmx_v2') return;
+    if (document.hidden) { location.reload(); return; }
+    if (window.CIFRAS) CIFRAS.refrescar();
+    pintarFasesPlan(); pintarProyeccion();
+    document.addEventListener('visibilitychange', function () { if (document.hidden) location.reload(); }, { once: true });
+  });
 
   // ─── TUS REFERENTES — lo vivo de #perfil-referente ────────────────────────────────────────
   // Dos personas que a los 31 dijeron «ya no»: Rich Roll (el alcohol) y Jan Koum (Yahoo). Sus
