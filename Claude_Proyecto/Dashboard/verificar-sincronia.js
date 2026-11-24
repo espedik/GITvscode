@@ -3602,6 +3602,30 @@ function promptsDeLoTocado() {
   ok.push('Próximos viajes: ' + V.BASE.length + ' viajes con lo que falta, su gasto, sus fuentes y sus fotos; nada en domingo, y el vuelo y el hotel no salen del navegador');
 })();
 
+/* ── 63. A qué ritmo juntas para la maestría ─────────────────────────────────────────────────────────────────────────
+   Adán, 24-nov-2026: "datos reales de cuánto llevo… a ese ritmo que estoy acumulando… la proyección debe variar". Con unos
+   cierres de juguete: cumplir el plan da la cifra del plan, juntar menos baja la proyección, un buen cierre la sube, los
+   cierres salen mes por mes y la ventana usa esta cuenta. */
+(function () {
+  const malos = [], C = global.window && global.window.CIFRAS;
+  if (!C || typeof C.ritmoMaestria !== 'function') malos.push('el maestro ya no exporta ritmoMaestria');
+  else {
+    const P = m => C.PROYECCION.meses.filter(x => x.mes === m)[0].alemania;
+    const h = (m, v) => ({ month: m, emergencyFund: v, btcValue: 0, investments: [{ id: 'i004', value: 11250 }] });
+    const F = cierres => ({ indicatorHistory: cierres, btcHistory: [], investments: [], emergencyFund: 0 });
+    const M = ['2026-10', '2026-11', '2026-12'], justo = M.map(m => h(m, P(m))), k = '2026-12-31', corre = (c, real) => C.ritmoMaestria(F(c), real, k);
+    const a = corre(justo.slice(0, 2), P('2026-12')), b = corre(justo.slice(0, 2), P('2026-12') - 3000), c = corre(justo.slice(0, 2), P('2026-12') + 9000), fin = x => x.meses[x.meses.length - 1];
+    if (Math.abs(a.ritmo - 1) > 0.35) malos.push('cumplir el plan no da un ritmo cercano a 100 % (da ' + Math.round(a.ritmo * 100) + ' %)');
+    if (!(fin(b).proy < fin(a).proy && fin(a).proy < fin(c).proy)) malos.push('la proyección no baja al juntar menos o no sube con un buen cierre');
+    if (a.meses[0].mes !== '2026-10' || a.meses[0].real !== P('2026-10') || a.meses.filter(x => x.tipo === 'cierre').length !== 2 || fin(a).mes !== C.PROYECCION.cortes.salida.mes) malos.push('los meses de la gráfica no van del primer cierre al corte de la salida');
+    if (a.meses.some((x, i) => i && a.meses[i - 1].mes >= x.mes)) malos.push('los meses de la gráfica no van en orden');
+    const sin = C.ritmoMaestria(F([]), 5000, '2026-12-10'); if (sin.ritmo !== 1) malos.push('sin cierres el ritmo no es el del plan');
+  }
+  const m = leer('Dashboard/medidores.js'); if (m.indexOf('.ritmoMaestria(') < 0 || m.indexOf("trayecto('salida'") < 0) malos.push('la ventana del Fondo Maestría ya no usa ritmoMaestria');
+  if (malos.length) { problemas.push('El ritmo de la maestría:\n     ' + malos.join('\n     ')); return; }
+  ok.push('Fondo Maestría: la proyección sale de los cierres de Finanzas y se mueve con cada mes');
+})();
+
 /* ── 62. A la mano, editable ────────────────────────────────────────────────────────────────────────────────────────
    Adán, 24-nov-2026: "dame la habilidad de editar lo de la sección a la mano… y actualicen esas cifras globalmente en mi app…
    ya no debemos depender de Claude". Con unos datos de juguete: saldosPoner pone los saldos con su día, mueve CETES con un

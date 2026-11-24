@@ -1,0 +1,94 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-24T18:30:00Z"
+  },
+  "title": "Fondo Maestría",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1900,
+      "h": 1000,
+      "title": "A · Trayectoria",
+      "is_interactive": true
+    },
+    "OpcionB.dc.html": {
+      "x": 1980,
+      "y": 0,
+      "w": 1900,
+      "h": 1000,
+      "title": "B · Cabina",
+      "is_interactive": true
+    },
+    "OpcionC.dc.html": {
+      "x": 0,
+      "y": 1400,
+      "w": 1900,
+      "h": 1000,
+      "title": "C · Mes a mes",
+      "is_interactive": true
+    },
+    "OpcionD.dc.html": {
+      "x": 1980,
+      "y": 1400,
+      "w": 1900,
+      "h": 1000,
+      "title": "D · Lo mínimo"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "OpcionB.dc.html",
+    "OpcionC.dc.html",
+    "OpcionD.dc.html"
+  ],
+  "notes": {
+    "titulo": {
+      "x": 0,
+      "y": -300,
+      "text": "Fondo Maestría: cuatro opciones con tus números del 24 de noviembre",
+      "kind": "title1",
+      "maxW": 3880
+    },
+    "nA": {
+      "x": 0,
+      "y": 1060,
+      "w": 560,
+      "size": "m",
+      "fill": "teal",
+      "text": "A. La gráfica es la protagonista. Mueve «¿Con cuánto cierras noviembre?» y cambia todo: la línea, la cifra y los consejos. Contra: es la que más información pone junta."
+    },
+    "nB": {
+      "x": 1980,
+      "y": 1060,
+      "w": 560,
+      "size": "m",
+      "fill": "blue",
+      "text": "B. Velocímetro de tu ritmo y las cuatro fechas como paradas del viaje. Contra: la gráfica queda más chica."
+    },
+    "nC": {
+      "x": 0,
+      "y": 2460,
+      "w": 560,
+      "size": "m",
+      "fill": "yellow",
+      "text": "C. Cada mes es una columna: lo que pedía el plan y lo que cerraste. Se llena solo con cada cierre. Contra: hoy solo tiene un mes con datos."
+    },
+    "nD": {
+      "x": 1980,
+      "y": 2460,
+      "w": 560,
+      "size": "m",
+      "fill": "green",
+      "text": "D. Una respuesta, la gráfica y tres pasos. Contra: el detalle de lo que cuesta irte queda fuera."
+    }
+  },
+  "designSystems": [],
+  "artifact": "https://claude.ai/artifact/H3LPg9AtA2hjUDbYXqcF24"
+}

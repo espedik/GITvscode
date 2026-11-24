@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Fondo Maestría · D</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7fb4f5}a:hover{color:#b4d4fb}
+</style>
+</helmet>
+<div style="width: 1900px; height: 1000px; box-sizing: border-box; padding: 40px 80px 44px; display: flex; flex-direction: column; gap: 26px; background: #11131a; color: #f4f4f8; font-family: Inter, system-ui, sans-serif;">
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;">
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <h1 style="margin: 0; font-size: 19px; font-weight: 600; color: #b4b8c7;">Fondo Maestría: a tu ritmo, en agosto tendrías</h1>
+      <strong style="font-family: 'Space Grotesk', sans-serif; font-size: 104px; line-height: .95; font-weight: 700; letter-spacing: -.045em;">{{fin}}</strong>
+      <span style="font-size: 20px; color: #b4b8c7;">Necesitas $324,284. <b style="color: #ff9a5c;">Te faltarían {{falta}}.</b></span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, auto); gap: 46px; text-align: right;">
+      <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 15px; color: #b4b8c7;">Llevas hoy</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 38px;">$10,263</strong></div>
+      <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 15px; color: #b4b8c7;">Tocaban hoy</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 38px;">$11,804</strong></div>
+      <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 15px; color: #b4b8c7;">Cumples</span><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 38px; color: #ff9a5c;">73%</strong></div>
+    </div>
+  </div>
+  <svg viewBox="0 0 1740 480" style="width: 100%; flex: 1; min-height: 0;" role="img" aria-label="Lo que llevas, lo que tendrás a tu ritmo y lo que se necesita">
+    <sc-for list="{{ejes}}" as="e" hint-placeholder-count="4"><line x1="80" x2="1720" y1="{{e.y}}" y2="{{e.y}}" stroke="rgba(255,255,255,.08)"></line><text x="68" y="{{e.ty}}" text-anchor="end" font-size="15" fill="#b4b8c7">{{e.t}}</text></sc-for>
+    <sc-for list="{{meses}}" as="m" hint-placeholder-count="11"><text x="{{m.x}}" y="474" text-anchor="middle" font-size="15" fill="#b4b8c7">{{m.t}}</text></sc-for>
+    <polygon points="{{area}}" fill="#3987e5" opacity=".14"></polygon>
+    <polyline points="{{plan}}" fill="none" stroke="#8a90a0" stroke-width="2" stroke-dasharray="7 7"></polyline>
+    <polyline points="{{linea}}" fill="none" stroke="#3987e5" stroke-width="5" stroke-linejoin="round"></polyline>
+    <sc-for list="{{cortes}}" as="c" hint-placeholder-count="4"><circle cx="{{c.x}}" cy="{{c.y}}" r="9" fill="#ff8a3d" stroke="#11131a" stroke-width="3"></circle><text x="{{c.tx}}" y="{{c.t1}}" text-anchor="{{c.an}}" font-size="17" font-weight="700" fill="#f4f4f8">{{c.v}}</text><text x="{{c.tx}}" y="{{c.t2}}" text-anchor="{{c.an}}" font-size="15" fill="#b4b8c7">{{c.n}}</text></sc-for>
+    <circle cx="{{hx}}" cy="{{hy}}" r="9" fill="#00e87a" stroke="#11131a" stroke-width="3"></circle><text x="{{hx}}" y="{{ht}}" text-anchor="middle" font-size="16" font-weight="700" fill="#f4f4f8">hoy, $10,263</text>
+    <text x="1700" y="{{ft}}" text-anchor="end" font-size="17" font-weight="700" fill="#f4f4f8">{{fin}}</text>
+  </svg>
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.14);">
+    <div style="display: flex; flex-direction: column; gap: 5px;"><b style="font-size: 20px;">Esta semana: manda $2,694</b><span style="font-size: 16px; line-height: 1.5; color: #b4b8c7;">$1,154 del 30 de noviembre y los $1,540 atrasados. Vuelves a tu plan.</span></div>
+    <div style="display: flex; flex-direction: column; gap: 5px;"><b style="font-size: 20px;">Antes de fin de año: $13,367 más al mes</b><span style="font-size: 16px; line-height: 1.5; color: #b4b8c7;">El aumento por escrito o un freelance de pruebas. Es lo que cierra el hueco.</span></div>
+    <div style="display: flex; flex-direction: column; gap: 5px;"><b style="font-size: 20px;">El 31 de mayo: decides</b><span style="font-size: 16px; line-height: 1.5; color: #b4b8c7;">Con $252,946 te vas. Con menos, septiembre de 2028 te deja $240,637 de sobra.</span></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"cierre":{"editor":"range","min":6000,"max":26000,"step":100,"default":11100},"$preview":{"width":1900,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const plan = [6000, 12958, 20573, 34189, 75669, 108208, 134838, 159377, 185114, 192845, 190614];
+    const bruto = [0, 0, 13615, 13615, 30231, 32538, 30231, 32538, 30231, 30231, 26769], gasto = [0, 0, 6000, 0, 0, 0, 3600, 8000, 4494, 22500, 29000], dep = [0, 0, 0, 0, 11250, 0, 0, 0, 0, 0, 0];
+    const c = this.props.cierre ?? 11100, r = (c - 6000) / 6958, s = [6000, c]; for (let i = 2; i < 11; i++) s.push(s[i - 1] + bruto[i] * r - gasto[i] + dep[i]);
+    const m$ = v => '$' + Math.round(Math.max(0, v)).toLocaleString('en-US');
+    const X = i => 80 + i * 162, Y = v => Math.round(442 - Math.max(0, Math.min(360000, v)) / 360000 * 424), pts = a => a.map((v, i) => X(i) + ',' + Y(v)).join(' ');
+    return { fin: m$(s[10]), falta: m$(324284 - s[10]), ejes: [0, 100000, 200000, 300000].map(v => ({ y: Y(v), ty: Y(v) + 5, t: v ? '$' + v / 1000 + ' mil' : '$0' })), meses: ['oct', 'nov', 'dic', 'ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago'].map((t, i) => ({ t, x: X(i) })),
+      plan: pts(plan), linea: pts(s), area: X(0) + ',442 ' + pts(s) + ' ' + X(10) + ',442', hx: X(0) + 130, hy: Y(10263), ht: Y(10263) - 20, ft: Y(s[10]) - 18,
+      cortes: [[5, 175043, 'Cierre de la Fase 1'], [7, 252946, 'El día de decidir'], [8, 249984, 'La cuenta bloqueada'], [10, 324284, 'La salida completa']].map(q => { const y = Y(q[1]), der = q[0] === 8; return { x: X(q[0]), y, v: m$(q[1]), n: q[2], tx: X(q[0]) + (der ? 18 : -18), an: der ? 'start' : 'end', t1: y - 2, t2: y + 18 }; }) };
+  }
+}
+</script>
+</body>
+</html>

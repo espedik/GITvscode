@@ -1064,7 +1064,7 @@ con su botón** (`.kv-hoy`; naranja si algo pide revisarse), **una gráfica** (`
 | Ventana | Lo que responde |
 |---|---|
 | **Fondo** | Para cuántos días te alcanza si te quedas sin trabajo, cuánto falta para cada mes de tu meta, qué tienes a la mano y qué pagarías en un mes sin sueldo (ver *Fondo de emergencia, aportación por aportación*). No lleva la parte de hoy |
-| **Maestría** | Cómo vas hoy contra el plan (`contraPlan`: la proyección al cierre del mes anterior más los envíos a GBM que ya tocaron, contra el fondo, las inversiones y el Bitcoin, sin el depósito), el siguiente envío, la proyección contra los cortes de la salida (`cortesSalidaDash`) y lo que sigue por pagar (`SALIDA.costos`). La meta es lo que cuesta irte entero; el corte de agosto, lo que se tiene en mano entonces |
+| **Maestría** | Cómo vas hoy contra el plan (`contraPlan`: la proyección al cierre del mes anterior más los envíos a GBM que ya tocaron, contra el fondo, las inversiones y el Bitcoin, sin el depósito), a dónde llegas a tu ritmo (`CIFRAS.ritmoMaestria`), la gráfica con un punto por mes, lo que cuesta irte (`SALIDA.costos`) y qué hacer (ver *El Fondo Maestría*) |
 | **Patrimonio** | Cuánto cambió desde el último mes cerrado (`indicatorHistory`) y qué lo movió, pieza por pieza; mes a mes; el camino al millón con el dinero líquido de la proyección, y la suma: dinero + cosas − deudas. Avisa si un bien está a precio de compra y de qué día es el saldo de la cuenta |
 | **Intereses** | Cuánto al día, en 12 meses y hasta acabar; la próxima mensualidad partida; a dónde va el dinero cada año, y lo que ahorra abonar. Si el contrato y los datos no acaban el mismo mes, lo dice |
 | **Total invertido** | Lo que trabaja aparte de lo guardado en el depósito, cuánto ganas o pierdes, lo que el plan mandaba este mes contra lo que registraste, *Tu estrategia de hoy*, los envíos que tocan, las compras con su formulario, *Tu Bitcoin hoy* (el último mes contra tu promedio y cuánto tendría que subir) y en qué ponerlo |
@@ -1090,6 +1090,28 @@ Medido con los datos de Finanzas: a 2048×1040 ninguna se desplaza, en oscuro y 
 en el iPad y a 390 px se desplazan enteras, sin desbordes. Probado: los controles dan la cifra del maestro; anotar, corregir
 y borrar un abono, aportar al fondo y registrar una compra mueven Finanzas; sin datos no se rompen; en el iPad van sin
 formularios. El **control 57** prueba la cuenta del crédito y el **59**, estas ventanas.
+
+### El Fondo Maestría
+
+Adán, 24-nov-2026: *"pon más datos de lo que necesito y datos reales de cuánto llevo y calcula la proyección a ese ritmo… la
+proyección debe variar… abajo dame consejos… futurista y muy entendible"* y *"me gusta la opción A… tenemos esta página de
+indicadores financieros, ahí llevamos el registro histórico… pero de cada mes en la gráfica"*. `MEDIDORES.maestria` (`.km`), de
+arriba abajo:
+
+- **La respuesta** (`.km-hero`): lo que tendrías en agosto a tu ritmo, contra lo que pide la salida, y si llegas.
+- **Cuatro datos**: lo que llevas (con el depósito aparte), lo que el plan pedía hoy, tu ritmo mes por mes y lo que hay que
+  juntar al mes.
+- **La gráfica** (`trayecto`): un punto con su cifra por mes —los cierres de Finanzas · Indicadores y hoy en blanco, la
+  proyección en cian—, el plan y lo que se necesita punteados, las cuatro fechas con lo que piden y la línea de lo que falta,
+  lo que ya pasó sombreado, y la venta de Bitcoin dicha en su mes. El globo da las cuatro cifras de cada mes.
+- **Lo que cuesta irte**, mes por mes (`SALIDA.costos`).
+- **Qué hacer** (`.km-paso`): ponerte al corriente o seguir así, el ingreso nuevo, recortar rutinas y decidir; cambia con tu
+  ritmo y con lo que falta.
+- **Mes a mes, en números** (plegado): la misma gráfica en tabla, con lo que sobra o falta cada mes.
+
+**El ritmo** es lo que juntaste entre lo que tocaba, de tus últimos tres meses medibles con el mes en curso hasta hoy; lo que se
+paga de la salida y el depósito no lo mueven. Al cerrar un mes en Finanzas, su punto entra y la línea cambia sola. El **control
+63** prueba la cuenta.
 
 **Los intereses al mes pasan por `tasaQueCorre(d)`**: una deuda con `noInterest` (una tarjeta que se paga completa
 cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle y en el desglose de Patrimonio, que la

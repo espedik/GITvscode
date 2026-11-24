@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Fondo Maestría · C</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7fb4f5}a:hover{color:#b4d4fb}
+</style>
+</helmet>
+<div style="width: 1900px; height: 1000px; box-sizing: border-box; padding: 22px 34px 24px; display: flex; flex-direction: column; gap: 14px; background: #11131a; color: #f4f4f8; font-family: Inter, system-ui, sans-serif;">
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1);">
+    <div style="display: flex; flex-direction: column; gap: 2px;"><h1 style="margin: 0; font-size: 22px; font-weight: 800;">Fondo Maestría</h1><p style="margin: 0; font-size: 14px; color: #b4b8c7;">Cada mes que cierras cambia a dónde llegas.</p></div>
+    <span style="font-size: 16px; color: #b4b8c7;">Llevas <b style="color: #f4f4f8;">$10,263</b> · en agosto tendrías <b style="color: #00e0c0;">{{fin}}</b> · necesitas <b style="color: #ff9a5c;">$324,284</b></span>
+  </div>
+
+  <section style="display: flex; flex-direction: column; gap: 14px; padding: 18px 22px; border-radius: 16px; background: #181b25; border: 1px solid rgba(255,255,255,.1);">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px;"><h2 style="margin: 0; font-size: 17px; font-weight: 700;">Tus cierres de mes</h2><div style="display: flex; gap: 8px;">
+      <button type="button" onClick="{{malo}}" style="min-height: 44px; padding: 0 16px; border: 1px solid {{b0}}; border-radius: 11px; background: #11131a; color: #f4f4f8; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;">Si noviembre cierra igual</button>
+      <button type="button" onClick="{{justo}}" style="min-height: 44px; padding: 0 16px; border: 1px solid {{b1}}; border-radius: 11px; background: #11131a; color: #f4f4f8; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;">Si cumples el plan</button>
+      <button type="button" onClick="{{bueno}}" style="min-height: 44px; padding: 0 16px; border: 1px solid {{b2}}; border-radius: 11px; background: #11131a; color: #f4f4f8; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;">Si cierras con $20,000</button>
+    </div></div>
+    <div style="display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 10px;">
+      <sc-for list="{{cols}}" as="k" hint-placeholder-count="10">
+        <div style="display: flex; flex-direction: column; gap: 6px; padding: 12px; border-radius: 12px; background: #11131a; border: 1px solid {{k.bd}};">
+          <div style="display: flex; align-items: baseline; justify-content: space-between;"><b style="font-size: 15px;">{{k.t}}</b><span style="font-size: 13px; font-weight: 700; color: {{k.col}};">{{k.e}}</span></div>
+          <div style="position: relative; height: 118px; border-radius: 8px; background: #1d212c; overflow: hidden;"><div style="position: absolute; left: 0; right: 0; bottom: 0; height: {{k.hp}}; border-top: 2px dashed #8a90a0;"></div><div style="position: absolute; left: 22%; right: 22%; bottom: 0; height: {{k.hr}}; border-radius: 6px 6px 0 0; background: {{k.bg}};"></div></div>
+          <strong style="font-family: 'Space Grotesk', sans-serif; font-size: 17px;">{{k.v}}</strong>
+          <span style="font-size: 13px; color: #b4b8c7;">plan {{k.p}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 560px; gap: 14px; flex: 1;">
+    <section style="display: flex; flex-direction: column; gap: 8px; padding: 18px 22px 12px; border-radius: 16px; background: #181b25; border: 1px solid rgba(255,255,255,.1);">
+      <h2 style="margin: 0; font-size: 17px; font-weight: 700;">A dónde llegas</h2>
+      <svg viewBox="0 0 1230 400" style="width: 100%; flex: 1; min-height: 0;" role="img" aria-label="Lo acumulado y lo que se necesita">
+        <sc-for list="{{ejes}}" as="e" hint-placeholder-count="4"><line x1="80" x2="1200" y1="{{e.y}}" y2="{{e.y}}" stroke="rgba(255,255,255,.08)"></line><text x="70" y="{{e.ty}}" text-anchor="end" font-size="13" fill="#b4b8c7">{{e.t}}</text></sc-for>
+        <sc-for list="{{meses}}" as="m" hint-placeholder-count="11"><text x="{{m.x}}" y="392" text-anchor="middle" font-size="13" fill="#b4b8c7">{{m.t}}</text></sc-for>
+        <polygon points="{{area}}" fill="#3987e5" opacity=".13"></polygon>
+        <polyline points="{{plan}}" fill="none" stroke="#8a90a0" stroke-width="2" stroke-dasharray="6 6"></polyline>
+        <polyline points="{{linea}}" fill="none" stroke="#3987e5" stroke-width="4" stroke-linejoin="round"></polyline>
+        <sc-for list="{{cortes}}" as="c" hint-placeholder-count="4"><circle cx="{{c.x}}" cy="{{c.y}}" r="7" fill="#ff8a3d" stroke="#181b25" stroke-width="2"></circle><text x="{{c.tx}}" y="{{c.ty}}" text-anchor="{{c.an}}" font-size="14" font-weight="700" fill="#f4f4f8">{{c.v}}</text></sc-for>
+        <text x="1186" y="{{ft}}" text-anchor="end" font-size="16" font-weight="700" fill="#f4f4f8">{{fin}}</text>
+      </svg>
+    </section>
+    <section style="display: flex; flex-direction: column; gap: 14px; padding: 20px 24px; border-radius: 16px; background: #181b25; border: 1px solid rgba(255,255,255,.1);">
+      <h2 style="margin: 0; font-size: 17px; font-weight: 700; color: {{vCol}};">{{veredicto}}</h2>
+      <div style="display: flex; flex-direction: column; justify-content: space-between; flex: 1; gap: 10px;">
+        <sc-for list="{{pasos}}" as="p" hint-placeholder-count="4"><div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 14px; padding: 12px 0; border-top: 1px solid rgba(255,255,255,.09);"><b style="font-size: 16px;">{{p.t}}</b><strong style="font-family: 'Space Grotesk', sans-serif; font-size: 18px; color: #00e0c0;">{{p.v}}</strong><span style="grid-column: 1 / -1; font-size: 14px; line-height: 1.45; color: #b4b8c7;">{{p.d}}</span></div></sc-for>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1900,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { c: 11100 }; }
+  renderVals() {
+    const plan = [6000, 12958, 20573, 34189, 75669, 108208, 134838, 159377, 185114, 192845, 190614];
+    const bruto = [0, 6958, 13615, 13615, 30231, 32538, 30231, 32538, 30231, 30231, 26769], gasto = [0, 0, 6000, 0, 0, 0, 3600, 8000, 4494, 22500, 29000], dep = [0, 0, 0, 0, 11250, 0, 0, 0, 0, 0, 0];
+    const c = this.state.c, r = (c - 6000) / 6958, s = [6000, c]; for (let i = 2; i < 11; i++) s.push(s[i - 1] + bruto[i] * r - gasto[i] + dep[i]);
+    const m$ = v => (v < 0 ? '−$' : '$') + Math.round(Math.abs(v)).toLocaleString('en-US');
+    const X = i => 80 + i * 112, Y = v => Math.round(362 - Math.max(0, Math.min(360000, v)) / 360000 * 344), pts = a => a.map((v, i) => X(i) + ',' + Y(v)).join(' ');
+    const N = ['oct', 'nov', 'dic', 'ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago'], tope = 66000, fin = s[10], falta = 324284 - fin;
+    const cols = N.slice(1).map((t, j) => { const i = j + 1, v = i === 1 ? c - 6000 : bruto[i] * r; return { t, e: i === 1 ? Math.round(r * 100) + '%' : 'por venir', col: i === 1 ? (r >= 1 ? '#00e87a' : '#ff9a5c') : '#b4b8c7', hp: Math.min(96, bruto[i] / tope * 100) + '%', hr: Math.min(100, v / tope * 100) + '%', bg: i === 1 ? (r >= 1 ? '#00e87a' : '#ff8a3d') : '#35506f', v: m$(v), p: m$(bruto[i]), bd: i === 1 ? 'rgba(0,224,192,.5)' : 'rgba(255,255,255,.08)' }; });
+    const on = v => c === v ? '#00e0c0' : 'rgba(255,255,255,.2)';
+    return { cols, fin: m$(fin), malo: () => this.setState({ c: 11100 }), justo: () => this.setState({ c: 12958 }), bueno: () => this.setState({ c: 20000 }), b0: on(11100), b1: on(12958), b2: on(20000),
+      ejes: [0, 100000, 200000, 300000].map(v => ({ y: Y(v), ty: Y(v) + 4, t: v ? '$' + v / 1000 + ' mil' : '$0' })), meses: N.map((t, i) => ({ t, x: X(i) })), plan: pts(plan), linea: pts(s), area: X(0) + ',362 ' + pts(s) + ' ' + X(10) + ',362', ft: Y(fin) - 14,
+      cortes: [[5, 175043], [7, 252946], [8, 249984], [10, 324284]].map(q => ({ x: X(q[0]), y: Y(q[1]), v: m$(q[1]), tx: X(q[0]) + (q[0] === 8 ? 13 : -13), an: q[0] === 8 ? 'start' : 'end', ty: Y(q[1]) + 5 })),
+      veredicto: falta <= 0 ? 'Llegas, y te sobran ' + m$(-falta) : 'A este ritmo te faltan ' + m$(falta), vCol: falta <= 0 ? '#00e87a' : '#ff9a5c',
+      pasos: [{ t: r < 1 ? 'Ponte al corriente' : 'Vas al corriente', v: r < 1 ? '$2,694' : 'listo', d: r < 1 ? '$1,154 del 30 de noviembre y los $1,540 que traes atrasados.' : 'Repite este cierre en diciembre: tocan $13,615.' }, { t: 'Gana más', v: '$13,367 al mes', d: 'El aumento por escrito o un freelance de pruebas. Con tu plan completo, cierra el hueco.' }, { t: 'Recorta tus rutinas', v: '$1,880 al mes', d: 'Son $16,920 más para agosto. De eso, $857 al mes los decide tu dermatólogo.' }, { t: 'Decide en mayo', v: '31 may', d: 'Con menos de $252,946, irte en septiembre de 2028 te deja $240,637 de sobra.' }] };
+  }
+}
+</script>
+</body>
+</html>

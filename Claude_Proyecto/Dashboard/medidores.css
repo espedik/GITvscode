@@ -268,3 +268,73 @@
   .kf-meses{grid-template-columns:minmax(0,1fr)}
   .kf-mes{gap:5px}
 }
+
+/* El Fondo Maestría: a dónde llegas a tu ritmo, la gráfica con un punto por mes, lo que cuesta irte y qué hacer. */
+#kpiOverlay.kv-on .kpi-card .gbm-body:has(.km){padding-top:14px;padding-bottom:18px}
+.km{display:flex;flex-direction:column;gap:12px;flex:1;min-width:0}
+.km strong,.km .kv-tile b{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.km-a{display:grid;grid-template-columns:minmax(0,520px) minmax(0,1fr);gap:12px}
+.km-a .kv-tiles{gap:12px}
+.km .kv-tile{padding:13px 18px}
+.km-hero{justify-content:center;gap:8px;padding:14px 24px;background:radial-gradient(circle at 12% 40%,color-mix(in srgb,var(--ac) 12%,var(--kv-caja)),var(--kv-caja) 62%)}
+.km-hero>span{font-size:15px;font-weight:600;color:var(--kv-t2)}
+.km-hero>div:not(.kv-med){display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.km-hero strong{font-size:50px;line-height:1;font-weight:700;letter-spacing:-.04em}
+.km-hero em{font-style:normal;font-size:16px;color:var(--kv-t2)}
+.km-hero p{margin:0;font-size:15px;font-weight:700}
+.km-hero p.no{color:var(--o)}.km-hero p.si{color:var(--g)}
+.km-b{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,400px);gap:12px;flex:1}
+.km-g{padding:16px 20px 8px}
+.km-cab{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.km-cab h3,.km-tot h3{font-size:16px;font-weight:700;margin:0}
+.km-cab p{font-size:13.5px;line-height:1.5;color:var(--kv-t2);margin:2px 0 0}
+.km-cab .kv-ley{margin:3px 0 0;justify-content:flex-end}
+.kv-ley i.d{width:18px;height:0;border-radius:0;background:none!important;border-top:2px dashed var(--kv-gris)}
+.km-cab .kv-ley span:last-child i.d{border-color:var(--kv-2);border-top-style:dotted}
+.km-g .kv-g{min-height:360px;margin-top:6px}
+.kv-g text.km-x{font-size:13px;fill:var(--kv-t2);paint-order:stroke;stroke:var(--kv-caja);stroke-width:3.5px;stroke-linejoin:round}
+.kv-g text.km-x.f{fill:var(--text);font-weight:700;font-variant-numeric:tabular-nums}
+.kv-g text.km-x.o{fill:var(--o);font-weight:600}
+.kv-g text.km-x.c{font-size:12px}
+.km-past{fill:rgba(var(--ov),.035)}
+.km-area{fill:var(--ac);opacity:.1}
+.km-hoy{stroke:var(--text);stroke-width:1;stroke-dasharray:3 4;opacity:.5}
+.km-gap{stroke:var(--kv-2);stroke-width:1.5;stroke-dasharray:3 5;opacity:.75}
+.km-nec{padding:16px 20px}
+.km-tot{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.km-tot strong{font-size:22px;font-weight:700;letter-spacing:-.02em}
+.km-lista{display:flex;flex-direction:column;flex:1;justify-content:space-between;margin-top:8px}
+.km-cos{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:12px;align-items:baseline;padding:8px 0;border-top:1px solid var(--kv-linea);font-size:14px;line-height:1.4}
+.km-cos span{font-size:13px;color:var(--kv-t2)}
+.km-cos b{font-weight:600}
+.km-pasos{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:12px}
+.km-paso{flex-direction:row;gap:13px;padding:13px 17px}
+.km-paso.uno{background:color-mix(in srgb,var(--ac) 10%,var(--kv-sup));border-color:color-mix(in srgb,var(--ac) 42%,transparent)}
+.km-paso .n{display:flex;align-items:center;justify-content:center;width:32px;height:32px;flex-shrink:0;border-radius:10px;background:var(--ac);color:var(--kv-sobre);font-family:var(--mono);font-size:17px}
+.km-paso>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.km-paso .t{display:flex;align-items:baseline;justify-content:space-between;gap:4px 10px;flex-wrap:wrap}
+.km-paso h3{font-size:15px;font-weight:700;margin:0}
+.km-paso .t strong{font-size:16px;font-weight:700;color:var(--ac)}
+.km-paso p{margin:0;font-size:13.5px;line-height:1.45;color:var(--kv-t2)}
+.km-paso p b{color:var(--text)}
+.km-paso .ac{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.km-paso .kv-b{padding:7px 12px;font-size:13.5px}
+.km .kv-d summary{padding:9px 18px}
+.km-tw{overflow-x:auto}
+.km-t{font-size:13px}
+.km-t th,.km-t td{padding-left:6px;padding-right:6px;white-space:nowrap}
+.km-t th i{display:block;font-style:normal;font-weight:400;font-size:12px}
+@media(max-width:1500px){
+  .km-pasos{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .km-cab{flex-direction:column;gap:6px}
+  .km-cab .kv-ley{justify-content:flex-start}
+}
+@media(max-width:1280px){
+  .km-a,.km-b{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:640px){
+  .km-pasos{grid-template-columns:minmax(0,1fr)}
+  .km-hero strong{font-size:40px}
+  .km-g{padding:14px 10px 6px}
+  .km-g .kv-g{min-height:300px}
+}

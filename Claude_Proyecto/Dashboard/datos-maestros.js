@@ -9533,6 +9533,46 @@ window.CIFRAS = (function () {
     } catch (e) { /* sin almacenamiento, la meta se calcula igual */ }
   }
 
+  /* ── A QUÉ RITMO JUNTAS PARA LA MAESTRÍA ────────────────────────────────────────────────────
+     Adán, 24-nov-2026: "datos reales de cuánto llevo y calcula la proyección de cuánto tendré a ese ritmo… la proyección
+     debe variar… tenemos esta página de indicadores financieros, ahí llevamos el registro histórico de cómo cerraron los
+     meses". Mes por mes, del primer cierre de Finanzas · Indicadores al corte de la salida: `real` (los cierres y hoy: CETES,
+     inversiones sin el depósito y Bitcoin), `plan` (PROYECCION), `nec` (el plan más el ingreso que cierra la salida) y
+     `proy`, lo que tendrías a tu ritmo. `ritmo` es lo que juntaste entre lo que tocaba juntar en tus últimos tres meses
+     medibles, con el mes en curso hasta hoy (`medidos`); sin ninguno, 1. Cada mes que falta suma lo que toca por ese ritmo,
+     más lo fijo: lo que se paga de la salida y el depósito que regresa. El ritmo no pasa de 1.5 (`tope`). `real` es lo de hoy, si quien llama ya lo midió. */
+  function ritmoMaestria(f, real, hoyK) {
+    const F = f || fin || {}, k = hoyK || fechaLocal(), ym = k.slice(0, 7), P = PROYECCION.meses, sal = PROYECCION.cortes.salida.mes;
+    const N = proyectar({ extraMes: salidaConIngreso().mes }), de = function (l, m) { return l.filter(function (x) { return x.mes === m; })[0] || null; };
+    const cierres = {}, vendio = {};
+    (F.indicatorHistory || []).forEach(function (h) {
+      if (!h || !(h.month < ym)) return;
+      cierres[h.month] = (+h.emergencyFund || 0) + (+h.btcValue || 0) + (h.investments || []).reduce(function (s, i) { return s + (i.id === 'i004' ? 0 : +i.value || 0); }, 0);
+    });
+    (F.btcHistory || []).forEach(function (b) { if (+b.btc < 0) { const m = String(b.date || '').slice(0, 7); vendio[m] = (vendio[m] || 0) + (+b.usd || 0) * (+b.fx || +F.usdMxn || 0); } });
+    const dep = (F.investments || []).reduce(function (s, i) { return s + (i.id === 'i004' ? +i.value || 0 : 0); }, 0);
+    const hoy = real != null ? real : fondoMaestria(F).total - dep;
+    const bruto = function (m) { const p = de(P, m); return p ? +p.desglose.ahorro || 0 : 0; };
+    const fijo = function (m) { const p = de(P, m), a = de(P, mesMas(m, -1)); return p && a ? p.alemania - a.alemania - bruto(m) : 0; };
+    const toca = gbmMes(ym).semanas.reduce(function (s, w) { return s + w.gbm.reduce(function (t, x) { return t + (ym + '-' + String(x.dia).padStart(2, '0') <= k ? x.mxn : 0); }, 0); }, 0);
+    const medidos = Object.keys(cierres).filter(function (m) { return cierres[mesMas(m, -1)] != null && bruto(m) > 0 && de(P, mesMas(m, -1)); })
+      .map(function (m) { return { mes: m, gano: cierres[m] - cierres[mesMas(m, -1)] - fijo(m), toca: bruto(m) }; });
+    if (toca > 0 && cierres[mesMas(ym, -1)] != null) medidos.push({ mes: ym, gano: hoy - cierres[mesMas(ym, -1)], toca: toca });
+    medidos.sort(function (a, b) { return a.mes < b.mes ? -1 : 1; });
+    const ult = medidos.slice(-3), suma = function (c) { return ult.reduce(function (s, x) { return s + x[c]; }, 0); };
+    ult.forEach(function (x) { x.ritmo = Math.max(0, x.gano / x.toca); });
+    const crudo = ult.length ? suma('gano') / suma('toca') : 1, ritmo = Math.max(0, Math.min(1.5, crudo));   // un mes muy bueno no se repite entero
+    const primero = Object.keys(cierres).sort()[0] || ym, meses = [];
+    for (let m = primero, v = null; m <= sal; m = mesMas(m, 1)) {
+      const p = de(P, m), nc = de(N, m), tipo = m < ym ? 'cierre' : m === ym ? 'hoy' : 'proy';
+      if (tipo === 'hoy') v = hoy + Math.max(0, bruto(m) - toca) * ritmo;
+      else if (tipo === 'proy') v += bruto(m) * ritmo + fijo(m);
+      meses.push({ mes: m, tipo: tipo, real: tipo === 'cierre' ? (cierres[m] != null ? cierres[m] : null) : tipo === 'hoy' ? hoy : null, plan: p ? p.alemania : null,
+        nec: nc && m >= SUPUESTOS.extraDesde ? nc.alemania : null, proy: v, toca: bruto(m), fijo: fijo(m), vendio: vendio[m] || 0 });
+    }
+    const fp = de(P, sal);
+    return { ritmo: ritmo, tope: crudo > ritmo, medidos: ult, meses: meses, finPlan: fp ? fp.alemania : 0 };
+  }
   /* ── EL BITCOIN, UNA SOLA LIBRETA ───────────────────────────────────────────────────────────
      Adán, 2026-11-18: "agrego bitcoin manualmente, pero también debe actualizarse en la gráfica… de Finanzas en plan
      de inversiones, entonces la info va enlazada". Todo el Bitcoin vive en `btcHistory` —la gráfica y la tabla de
@@ -10171,7 +10211,7 @@ window.CIFRAS = (function () {
     patrimonio: patrimonio,
     fondoMaestria: fondoMaestria,
     fondoMovimiento: fondoMovimiento, fondoBorrar: fondoBorrar, fondoSigno: fondoSigno, fondoLista: fondoLista,
-    saldosPoner: saldosPoner, A_LA_MANO: A_LA_MANO, fondoHoy: fondoHoy, gastoEmergencia: gastoEmergencia, fondoMeta: fondoMeta,
+    ritmoMaestria: ritmoMaestria, saldosPoner: saldosPoner, A_LA_MANO: A_LA_MANO, fondoHoy: fondoHoy, gastoEmergencia: gastoEmergencia, fondoMeta: fondoMeta,
     btcCompra: btcCompra, btcBorrar: btcBorrar, btcEsInversion: btcEsInversion, btcDeInversiones: btcDeInversiones,
     prestamoSimular: prestamoSimular, prestamoHechos: prestamoHechos, prestamoResumen: prestamoResumen, prestamoTabla: prestamoTabla,
     prestamoAbono: prestamoAbono, prestamoAbonoBorrar: prestamoAbonoBorrar, prestamoDatos: prestamoDatos,
