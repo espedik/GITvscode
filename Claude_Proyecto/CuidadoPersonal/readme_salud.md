@@ -54,7 +54,7 @@ el enlace al Dashboard (`#btnVolverDash`, 🚀) es otro botón de esa clase. Exp
    peor que ninguna— sino la barra inicio → meta; con 3 o más, las gráficas.
 5. **Tu botiquín** (`sdBotiquinHtml`, compartido con Suplementos): lo que dura cada envase y
    cuántos días quedan (rojo bajo 14), y el costo mensual.
-6. **Las 5 reglas que sí mueven la aguja** (`.sd-rule`).
+6. **Las 3 reglas que sí mueven la aguja** (`.sd-rule`).
 
 ## Los datos vienen del maestro
 

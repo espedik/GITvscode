@@ -106,7 +106,7 @@ título y 3-4 KPIs reales:
 
 | Área | KPIs |
 |---|---|
-| Skincare | racha de SPF, semana del retinoide, costo al mes |
+| Skincare | racha de la noche, semana del retinoide, costo al mes |
 | Cabello | racha de minoxidil (las dos dosis), mes de minoxidil, costo al mes |
 | Salud | suplementos de hoy, racha, exámenes pendientes, último peso con IMC |
 | Comida | meta de proteína (del maestro), meta de kcal, recetas |
@@ -130,8 +130,8 @@ filas, la noche del pelo (2 pasos) frente al día (9) dejaba media pantalla en b
    las rutinas de ese día, que en hoy se marcan de un clic. Tocar un día muestra su rutina
    (`plVerDia`/`peVerDia`, `peDiaVisto` = null es hoy): los pasos de otro día van en gris,
    `.solo-lectura` y no se marcan —marcar el sábado el martes guardaría el hecho en la fecha de
-   hoy—, con *← volver a hoy*. En el pelo la tira **cambia** (Pilexil unos días, CeraVe y
-   mascarilla el sábado, solo acondicionador los demás); en la piel **no
+   hoy—, con *← volver a hoy*. En el pelo la tira **cambia** (Pilexil unos días, CeraVe
+   el sábado, solo agua los demás); en la piel **no
    cambia ni un día**, y esa es la información: por eso cada columna muestra su conteo (`2 DE 2`).
    Bajo 920 px las 7 columnas pasan a 7 tiras de una línea.
 2. **Las dos rutinas lado a lado**, con insignia de estado (`COMPLETA`, `2 DE 3`, `A LAS 22:30`)
@@ -139,7 +139,7 @@ filas, la noche del pelo (2 pasos) frente al día (9) dejaba media pantalla en b
    marca con un clic y alimenta racha y semana. Los tiempos de espera van como **banda debajo
    del paso**: 20 minutos entre la limpieza y el adapaleno; **4 horas** tras el minoxidil
    (mojarse antes arrastra la dosis). En el pelo, la de día agrupa ducha → pelo húmedo → cuero
-   seco → **la pastilla** (`PE_MOMENTOS`; el Avodart es lo único que no se aplica en el pelo y
+   seco → **la pastilla** (`PE_MOMENTOS`; el Avodart, lunes, miércoles y viernes, es lo único que no se aplica en el pelo y
    tiene momento propio, con un `aviso` que no cuenta como paso: receta, fuera de indicación,
    **parte el PSA a la mitad** — por eso `CHEQUEO.psa` es `prioritario`).
 3. **Tu botiquín**: lo que dura cada bote, el costo al mes y **cuántos días quedan** (rojo bajo
@@ -147,8 +147,7 @@ filas, la noche del pelo (2 pasos) frente al día (9) dejaba media pantalla en b
 4. **Las reglas** numeradas (*las que sí mueven la aguja* / *lo que arruina el resultado*, donde
    el shedding del mes 2-4 es el error nº 5 y la caída notoria reciente abre la lista con marca
    de aviso) y **qué puede ir con qué** como matriz: en la piel, ingredientes; en el pelo,
-   horarios (mojarse dentro de las 4 h) y sustituciones (Darrow en lugar de Pilexil, mascarilla
-   en lugar de acondicionador, nunca los dos champús medicados en el mismo día).
+   horarios (mojarse dentro de las 4 h) y sustituciones (Darrow en lugar de Pilexil, nunca los dos champús medicados en el mismo día).
 
 **Los productos no viven aquí**: `CIFRAS.RUTINA_PIEL` y `CIFRAS.RUTINA_PELO` de
 `datos-maestros.js`, la misma fuente que la rutina del Dashboard. La lista de la compra, el
@@ -163,8 +162,8 @@ avisos, no la marca del bote.
 // localStorage['skincare_v1']
 { perfil:{ tipo, preocupaciones:[], rasurado, presupuesto, notas },
   retinoideDesde:'2026-06-01'|null,                                  // semana y peldaño
-  hechos:{ '2026-09-01':{ am:['limpiador','niacinamida','spf'], pm:[…] } },
-  abierto:{ spf:'2026-08-01', … } }                                  // cuándo abrió cada bote
+  hechos:{ '2026-09-01':{ am:['limpiador','niacinamida'], pm:[…] } },
+  abierto:{ retinoide:'2026-08-01', … } }                                  // cuándo abrió cada bote
 // localStorage['cabello_v1']
 { perfil:{ tipo, grosor, cuero, preocupaciones:[], caidaPatron, presupuesto, notas },
   minoxidilDesde:'2026-05-01'|null,                                  // mes y fase

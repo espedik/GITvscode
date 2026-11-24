@@ -513,10 +513,10 @@ window.CIFRAS = (function () {
   const RUTINA_TASKS = [
     {id:"wd01",dias:[1,2,3,4,5],hora:"06:40",cat:"salud",corto:"Despertar",txt:"Despertar sin snooze — celular fuera del cuarto"},
     {id:"wd-app-am",dias:[1,2,3,4,5],hora:"06:43",cat:"aprender",corto:"💻 Construir esta app",txt:"💻 Construir esta aplicación — 10 min antes de arrancar el día"},
-    {id:"wd-am-lav",dias:[1,4],hora:"06:53",cat:"salud",corto:"🚿 Rutina de la mañana",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"wd02a",sec:"Ducha y cabello",txt:"Champú: <b>Pilexil Anticaída 300 ml</b> — masajea el cuero cabelludo 2 min y enjuaga. NO lo frotes en el largo: su trabajo es la raíz."},{id:"wd02b",txt:"Acondicionador: <b>L'Oréal Elvive Reparación Total 5</b> — solo de medios a puntas, nunca en la raíz."},{id:"wd02d",txt:"Deja secar al aire. Si tienes prisa y usas secadora, aire tibio y a 20 cm — nunca caliente ni pegado."},{id:"wd02e",txt:"⚠️ Si HOY hay caspa o descamación, usas <b>Darrow Doctar (alquitrán)</b> en lugar del Pilexil. Nunca los dos el mismo día."},{id:"wd03a",sec:"Piel y minoxidil",txt:"Limpiador suave: CeraVe Limpiador Espumoso (verde) — quita grasa y sudor de la noche sin resecar"},{id:"wd03b",txt:"Sérum de niacinamida 10%: The Ordinary Niacinamida 10% + Zinc 1% — controla grasa y afina los poros"},{id:"wd03c",txt:"Protector solar: <b>La Roche-Posay Anthelios Oil Free SPF50</b> — <b>dos dedos completos</b> para cara y cuello. Con menos, un SPF50 protege como un SPF15"},{id:"wd04",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — estimula el folículo, dosis de la mañana"},{id:"wd04av",txt:"<b>Avodart (dutasterida 0,5 mg)</b> — una cápsula con el desayuno, siempre a la misma hora. Actúa por dentro bloqueando la DHT: no sustituye al minoxidil, se suman"},{id:"wdSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"wdSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"wdSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
-    {id:"wd-am-co",dias:[2,3,5],hora:"06:53",cat:"salud",corto:"🚿 Rutina de la mañana",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"wd02ca",sec:"Ducha y cabello",txt:"Hoy <b>no lleva champú</b>: mojas, y aplicas <b>L'Oréal Elvive Reparación Total 5</b> solo de medios a puntas. Lavar a diario con champú es lo que termina de secar el pelo."},{id:"wd02cc",txt:"Ya seco, si lo notas áspero: 2 gotas de <b>Moroccanoil Treatment Light</b> solo en las puntas."},{id:"wd03a",sec:"Piel y minoxidil",txt:"Limpiador suave: CeraVe Limpiador Espumoso (verde) — quita grasa y sudor de la noche sin resecar"},{id:"wd03b",txt:"Sérum de niacinamida 10%: The Ordinary Niacinamida 10% + Zinc 1% — controla grasa y afina los poros"},{id:"wd03c",txt:"Protector solar: <b>La Roche-Posay Anthelios Oil Free SPF50</b> — <b>dos dedos completos</b> para cara y cuello. Con menos, un SPF50 protege como un SPF15"},{id:"wd04",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — estimula el folículo, dosis de la mañana"},{id:"wd04av",txt:"<b>Avodart (dutasterida 0,5 mg)</b> — una cápsula con el desayuno, siempre a la misma hora. Actúa por dentro bloqueando la DHT: no sustituye al minoxidil, se suman"},{id:"wdSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"wdSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"wdSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
-    {id:"sa-am",dias:[6],hora:"09:05",cat:"salud",corto:"🚿 Rutina de la mañana",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"sa05a",sec:"Ducha y cabello",txt:"Champú: <b>CeraVe Champú Hidratante sin sulfatos</b>. Hoy es día de reparación, no de tratamiento."},{id:"sa05b",txt:"<b>Mascarilla L'Oréal Elvive Total Repair 5</b> — es un acondicionador concentrado, viene en TARRO (no en botella). Va de medios a puntas y se deja actuar <b>5-10 min</b> mientras terminas de bañarte. Es el paso que más repara de toda tu semana: si te saltas uno, que no sea este."},{id:"sa05c",txt:"Hoy <b>NO</b> uses acondicionador: la mascarilla ya hizo ese trabajo, y ponerle los dos apelmaza el cabello fino."},{id:"sa05d",txt:"Ya seco: 2 gotas de <b>Moroccanoil Treatment Light</b> en puntas."},{id:"sa05e",txt:"Revisa las puntas: si ves pelos abiertos en forma de Y, ya toca corte. Cada 8-12 semanas, 1-2 cm — solo puntas."},{id:"sa02",sec:"Piel y minoxidil",txt:"Skincare AM — limpiador + niacinamida + hidratante con SPF 50 (mismos productos que entre semana)"},{id:"sa02b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la mañana"},{id:"sa02bav",txt:"<b>Avodart (dutasterida 0,5 mg)</b> — una cápsula con el desayuno, siempre a la misma hora. Actúa por dentro bloqueando la DHT: no sustituye al minoxidil, se suman"},{id:"saSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"saSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"saSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"saSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
-    {id:"do-am",dias:[0],hora:"08:35",cat:"salud",corto:"🚿 Rutina de la mañana",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"do045a",sec:"Ducha y cabello",txt:"Hoy <b>no lleva champú</b>: <b>L'Oréal Elvive Reparación Total 5</b> de medios a puntas y enjuaga."},{id:"do045c",txt:"Antes de dormir, <b>funda de almohada de satín</b>. Pasas 7 horas frotando el pelo contra la almohada: el algodón lo rompe y le roba humedad, el satín no."},{id:"do02",sec:"Piel y minoxidil",txt:"Skincare AM — limpiador + niacinamida + hidratante con SPF 50 (mismos productos que entre semana)"},{id:"do02b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la mañana"},{id:"do02bav",txt:"<b>Avodart (dutasterida 0,5 mg)</b> — una cápsula con el desayuno, siempre a la misma hora. Actúa por dentro bloqueando la DHT: no sustituye al minoxidil, se suman"},{id:"doSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"doSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"doSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"doSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
+    {id:"wd-am-lav",dias:[1,4],hora:"06:53",cat:"salud",corto:"🚿 Rutina de la mañana",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"wd02a",sec:"Ducha y cabello",txt:"Champú: <b>Pilexil Anticaída 300 ml</b> — masajea el cuero cabelludo 2 min y enjuaga. NO lo frotes en el largo: su trabajo es la raíz."},{id:"wd02d",txt:"Deja secar al aire. Si tienes prisa y usas secadora, aire tibio y a 20 cm — nunca caliente ni pegado."},{id:"wd02e",txt:"⚠️ Si HOY hay caspa o descamación, usas <b>Darrow Doctar (alquitrán)</b> en lugar del Pilexil. Nunca los dos el mismo día."},{id:"wd03a",sec:"Piel y minoxidil",txt:"Limpiador suave: CeraVe Limpiador Espumoso (verde) — quita grasa y sudor de la noche sin resecar"},{id:"wd03b",txt:"Sérum de niacinamida 10%: The Ordinary Niacinamida 10% + Zinc 1% — controla grasa y afina los poros"},{id:"wd04",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — estimula el folículo, dosis de la mañana"},{id:"wd04av",dias:[1,3,5],txt:"<b>Avodart (dutasterida 0,5 mg)</b> — una cápsula con el desayuno, siempre a la misma hora. Actúa por dentro bloqueando la DHT: no sustituye al minoxidil, se suman"},{id:"wdSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"wdSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"}]},
+    {id:"wd-am-co",dias:[2,3,5],hora:"06:53",cat:"salud",corto:"🚿 Rutina de la mañana",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"wd02ca",sec:"Ducha y cabello",txt:"Hoy <b>no lleva champú</b>: solo agua tibia. Lavar a diario con champú es lo que termina de secar el pelo."},{id:"wd03a",sec:"Piel y minoxidil",txt:"Limpiador suave: CeraVe Limpiador Espumoso (verde) — quita grasa y sudor de la noche sin resecar"},{id:"wd03b",txt:"Sérum de niacinamida 10%: The Ordinary Niacinamida 10% + Zinc 1% — controla grasa y afina los poros"},{id:"wd04",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — estimula el folículo, dosis de la mañana"},{id:"wd04av",dias:[1,3,5],txt:"<b>Avodart (dutasterida 0,5 mg)</b> — una cápsula con el desayuno, siempre a la misma hora. Actúa por dentro bloqueando la DHT: no sustituye al minoxidil, se suman"},{id:"wdSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"wdSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"}]},
+    {id:"sa-am",dias:[6],hora:"09:05",cat:"salud",corto:"🚿 Rutina de la mañana",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"sa05a",sec:"Ducha y cabello",txt:"Champú: <b>CeraVe Champú Hidratante sin sulfatos</b>. Hoy es lavado suave, no de tratamiento."},{id:"sa05e",txt:"Revisa las puntas: si ves pelos abiertos en forma de Y, ya toca corte. Cada 8-12 semanas, 1-2 cm — solo puntas."},{id:"sa02",sec:"Piel y minoxidil",txt:"Skincare AM — limpiador + niacinamida (mismos productos que entre semana)"},{id:"sa02b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la mañana"},{id:"saSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"saSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"saSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"}]},
+    {id:"do-am",dias:[0],hora:"08:35",cat:"salud",corto:"🚿 Rutina de la mañana",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"do045a",sec:"Ducha y cabello",txt:"Hoy <b>no lleva champú</b>: solo agua tibia."},{id:"do045c",txt:"Antes de dormir, <b>funda de almohada de satín</b>. Pasas 7 horas frotando el pelo contra la almohada: el algodón lo rompe y le roba humedad, el satín no."},{id:"do02",sec:"Piel y minoxidil",txt:"Skincare AM — limpiador + niacinamida (mismos productos que entre semana)"},{id:"do02b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la mañana"},{id:"doSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"doSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"doSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"}]},
     {id:"wd05",dias:[1,2,3,4,5],hora:"07:33",cat:"descanso",corto:"Vestirte",txt:"Vestirte y alistarte"},
     {id:"wd06",dias:[1,2,3,4,5],hora:"07:40",cat:"admin",corto:"🚗 Didi rumbo a ALTEN",txt:"🚗 Didi con direccionamiento — camino a ALTEN (~50 min: el traslado normal + el desvío del pasajero)"},
     {id:"wd07",dias:[1,2,3,4,5],hora:"08:30",dur:270,cat:"trabajo",corto:"🏢 ALTEN",txt:"🏢 ALTEN — jornada laboral (HIL/SIL Ford) — entras 08:30, sales 16:40",fijo:true},
@@ -529,9 +529,9 @@ window.CIFRAS = (function () {
     {id:"wd-didi2",dias:[1,2,3,4,5],hora:"20:20",dur:60,cat:"admin",corto:"🚗 Didi",txt:"🚗 Didi — una hora de la noche (hasta ~21:20)"},
     {id:"wd11",dias:[1,2,3,4,5],hora:"21:20",dur:30,cat:"profundo",corto:"🎯 Plan Maestro",txt:"🎯 Plan Maestro — 30 min en la tarea de la fase que te toca"},
     {id:"wd14",dias:[1,2,3,4,5],hora:"21:50",cat:"salud",corto:"🍽️ Cena y comida de mañana",txt:"🍽️ Cena + preparar la comida de mañana",subtareas:[{id:"wd14a",txt:"Cocina un solo platillo para cenar hoy y llevar de comida mañana a ALTEN — ahorra tiempo, sin carbohidratos refinados en la cena",link:{href:"../CuidadoPersonal/comida.html?s=cenas",label:"🍳 Ver cenas"}},{id:"wd14b",txt:"Deja todo empacado y listo junto a la puerta para salir rápido mañana",link:{href:"../CuidadoPersonal/comida.html?s=desayunos",label:"🍳 Ver desayunos"}}]},
-    {id:"wd-pm",dias:[1,2,3,4,5],hora:"23:05",dur:15,cat:"salud",corto:"🌙 Rutina de la noche",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos, en 15 min",producto:true,subtareas:[{id:"wd17a",sec:"Piel y minoxidil",txt:"Limpiador: CeraVe Limpiador Espumoso (verde) — una sola pasada de 60 segundos: quita el protector y el sudor del día"},{id:"wd17b",txt:"Retinoide, con la cara bien seca: Differin Adapaleno 0.1% Gel — un chícharo para toda la cara; si te arde o se pela, noche sí y noche no hasta que se calme"},{id:"wd17c",txt:"Hidratante, encima y sin esperar: CeraVe Loción Hidratante Facial PM — sin perfume ni aceite: calma el adapaleno sin tapar poros"},{id:"wd18",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la noche: espera 30 minutos antes de acostarte, para que no se quede en la almohada"},{id:"wdSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)"}]},
-    {id:"sa-pm",dias:[6],hora:"22:20",dur:15,cat:"salud",corto:"🌙 Rutina de la noche",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos, en 15 min",producto:true,subtareas:[{id:"sa13",sec:"Piel y minoxidil",txt:"Skincare PM — limpiador + retinoide + hidratante nocturno"},{id:"sa13b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la noche: espera 30 minutos antes de acostarte, para que no se quede en la almohada"},{id:"saSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"saSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)"}]},
-    {id:"do-pm",dias:[0],hora:"22:05",dur:15,cat:"salud",corto:"🌙 Rutina de la noche",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos, en 15 min",producto:true,subtareas:[{id:"do10",sec:"Piel y minoxidil",txt:"Skincare PM — limpiador + retinoide + hidratante nocturno"},{id:"do10b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la noche: espera 30 minutos antes de acostarte, para que no se quede en la almohada"},{id:"doSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"doSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)"}]},
+    {id:"wd-pm",dias:[1,2,3,4,5],hora:"23:05",dur:15,cat:"salud",corto:"🌙 Rutina de la noche",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos, en 15 min",producto:true,subtareas:[{id:"wd17a",sec:"Piel y minoxidil",txt:"Limpiador: CeraVe Limpiador Espumoso (verde) — una sola pasada de 60 segundos: quita la grasa y el sudor del día"},{id:"wd17b",txt:"Retinoide, con la cara bien seca: Differin Adapaleno 0.1% Gel — un chícharo para toda la cara; si te arde o se pela, noche sí y noche no hasta que se calme"},{id:"wd17c",txt:"Hidratante, encima y sin esperar: CeraVe Loción Hidratante Facial PM — sin perfume ni aceite: calma el adapaleno sin tapar poros"},{id:"wd18",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la noche: espera 30 minutos antes de acostarte, para que no se quede en la almohada"},{id:"wdSupPm2",sec:"Suplementos",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}}]},
+    {id:"sa-pm",dias:[6],hora:"22:20",dur:15,cat:"salud",corto:"🌙 Rutina de la noche",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos, en 15 min",producto:true,subtareas:[{id:"sa13",sec:"Piel y minoxidil",txt:"Skincare PM — limpiador + retinoide + hidratante nocturno"},{id:"sa13b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la noche: espera 30 minutos antes de acostarte, para que no se quede en la almohada"},{id:"saSupPm2",sec:"Suplementos",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}}]},
+    {id:"do-pm",dias:[0],hora:"22:05",dur:15,cat:"salud",corto:"🌙 Rutina de la noche",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos, en 15 min",producto:true,subtareas:[{id:"do10",sec:"Piel y minoxidil",txt:"Skincare PM — limpiador + retinoide + hidratante nocturno"},{id:"do10b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 5 atomizaciones (1 ml) en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la noche: espera 30 minutos antes de acostarte, para que no se quede en la almohada"},{id:"doSupPm2",sec:"Suplementos",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}}]},
     {id:"wd-app-pm",dias:[1,3,5],hora:"22:35",cat:"aprender",corto:"💻 Construir esta app",txt:"💻 Construir esta aplicación — media hora, y es la última pantalla del día: lo que no cupo se parte para mañana"},
     {id:"wd21",dias:[1,2,3,4,5],hora:"23:40",cat:"salud",corto:"Dormir",txt:"Luz fuera y celular fuera del cuarto: sin pantallas desde que cerraste la app"},
     {id:"lu-gbm",dias:[1],hora:"09:00",dur:20,cat:"admin",corto:"💰 Bolsa GBM",txt:"💰 Bolsa GBM (20 min): compra rápida — revisa qué toca hoy y ejecuta. Solo lunes."},
@@ -565,7 +565,22 @@ window.CIFRAS = (function () {
     {id:"do09",dias:[0],hora:"21:45",cat:"descanso",corto:"📓 Diario de la semana",txt:"📓 Diario de cierre de semana (10 min)",subtareas:[{id:"do09a",txt:"Qué avanzó esta semana en el Plan Maestro"},{id:"do09b",txt:"Qué NO avanzó y por qué"},{id:"do09c",txt:"1 ajuste concreto para la semana que entra"}]},
     {id:"do12",dias:[0],hora:"22:45",cat:"salud",corto:"Dormir",txt:"Apagar pantallas. Dormir — el lunes te levantas a las 06:40"},
     ];
+  // `dias` en una subtarea: solo toca esos días de la semana (el Avodart); su bloque se divide en dos.
+  RUTINA_TASKS.splice.apply(RUTINA_TASKS, [0, RUTINA_TASKS.length].concat(partirPorDia(RUTINA_TASKS)));
 
+  function partirPorDia(lista) {
+    const out = [];
+    lista.forEach(function (t) {
+      if (!(t.subtareas || []).some(function (s) { return s.dias; })) { out.push(t); return; }
+      const grupos = {}, toca = function (s, d) { return !s.dias || s.dias.indexOf(d) !== -1; };
+      t.dias.forEach(function (d) { const k = t.subtareas.map(function (s) { return toca(s, d); }).join(); (grupos[k] = grupos[k] || []).push(d); });
+      Object.keys(grupos).forEach(function (k, i) {
+        const dias = grupos[k];
+        out.push(Object.assign({}, t, { id: i ? t.id + '-' + dias.join('') : t.id, dias: dias, subtareas: t.subtareas.filter(function (s) { return toca(s, dias[0]); }).map(function (s) { const c = Object.assign({}, s); delete c.dias; return c; }) }));
+      });
+    });
+    return out;
+  }
   /* Devuelve la rutina con los href resueltos para quien la pide. Copia profunda: si una app
      modificara la lista en el sitio, contaminaría a la otra dentro de la misma página. */
   function rutina(base) {
@@ -1367,7 +1382,7 @@ window.CIFRAS = (function () {
       const items = g[2].map(function (p) {
         const mes = R.costoMes(p);
         let rec = null;
-        if (p.recorte && !p.noSeCompra) {
+        if (p.recorte) {
           const r = p.recorte, nuevo = r.quitar ? 0 : R.costoMes(Object.assign({}, p, r));
           rec = { n: r.n || '', quitar: !!r.quitar, medico: !!r.medico, txt: r.txt, fuente: r.fuente, mes: nuevo, ahorro: mes - nuevo };
           ahorro += mes - nuevo;
@@ -5691,11 +5706,8 @@ window.CIFRAS = (function () {
      Vive aquí para que exista UN sitio donde editarlo, y para que el día que esas apps expongan
      sus catálogos se pueda derivar en vez de mantener a mano. */
   // ── LA RUTINA DE LA PIEL ─────────────────────────────────────────────────
-  // Los 5 productos que Adán usa de verdad en la cara. Estaban escritos a mano en dos sitios que
-  // NO coincidían: `RUTINA_TASKS` decía La Roche-Posay Anthelios y la guía de Skincare
-  // recomendaba Isdin; `RUTINA_TASKS` aplica el Differin las 7 noches y la guía mandaba
-  // alternarlo con un BHA que él no usa en ninguna parte. Aquí hay una sola versión, y el
-  // control 12 de verificar-sincronia.js comprueba que cada nombre siga apareciendo en
+  // Los 4 productos que Adán usa de verdad en la cara. Aquí hay una sola versión, y el
+  // control 11 de verificar-sincronia.js comprueba que cada nombre siga apareciendo en
   // `RUTINA_TASKS`, que es donde se ejecuta la rutina.
   //
   // Un producto por necesidad, sin alternativas — la misma regla que ya tenía `cabello`
@@ -5703,9 +5715,7 @@ window.CIFRAS = (function () {
   //
   // `contenido` y `dosisDia` van en la MISMA unidad. De ahí salen SOLOS los días que dura un
   // bote y el costo mensual: no se escriben a mano. Los `precio` son de REFERENCIA (farmacia y
-  // Amazon MX, septiembre 2026) y las dosis son las correctas, no las que se usan por costumbre
-  // — por eso el protector solar sale caro: dos dedos diarios vacían un bote de 50 ml en 40
-  // días. Poner menos es lo que convierte un SPF50 en un SPF15.
+  // Amazon MX, septiembre 2026) y las dosis son las correctas, no las que se usan por costumbre.
   // Cada producto trae una `ficha`: lo que es y lo que hace. Hasta el 2026-09-02
   // eso no estaba escrito en ninguna parte — la rutina solo decía CÓMO aplicarlo,
   // nunca QUÉ era ni POR QUÉ servía. El "cómo se aplica" sigue viviendo en
@@ -5720,8 +5730,6 @@ window.CIFRAS = (function () {
   //   marca   los dos colores del envase real
   //   foto    SOLO si existe foto del producto EXACTO con licencia libre. Cuatro de
   //           los seis no la tienen en ninguna base abierta: esos se dibujan.
-  // `noSeCompra`: Adán dijo que ya no lo compra (24-nov-2026): cuesta $0 y sale de la lista de la compra; sus pasos siguen
-  // en la rutina mientras le quede. `cadaMeses`: cada cuántos meses lo compra; manda sobre lo que duraría con su dosis.
   const RUTINA_PIEL = {
     productos: [
       { id:'limpiador', cat:'Limpiador', n:'CeraVe Limpiador Espumoso (verde)',
@@ -5732,15 +5740,15 @@ window.CIFRAS = (function () {
         ficha:{
           activo:'Ceramidas + \u00e1cido hialur\u00f3nico, con tensioactivos suaves',
           que:'El gel limpiador de diario. La versi\u00f3n verde es la de piel grasa; la azul es para piel seca y no es la tuya.',
-          hace:'Arrastra grasa, sudor y protector solar sin quitarle a la piel su propia barrera. Las ceramidas son el cemento que mantiene unidas las c\u00e9lulas de la superficie: casi todos los jabones se lo llevan, y \u00e9ste lo repone mientras limpia.',
-          sirve:'Es el primer paso de las dos rutinas. Todo lo dem\u00e1s \u2014 s\u00e9rum, retinoide, hidratante \u2014 entra mejor en una piel limpia, y ninguno funciona sobre una capa de protector solar del d\u00eda anterior.',
+          hace:'Arrastra grasa y sudor sin quitarle a la piel su propia barrera. Las ceramidas son el cemento que mantiene unidas las c\u00e9lulas de la superficie: casi todos los jabones se lo llevan, y \u00e9ste lo repone mientras limpia.',
+          sirve:'Es el primer paso de las dos rutinas. Todo lo dem\u00e1s \u2014 s\u00e9rum, retinoide, hidratante \u2014 entra mejor en una piel limpia, y ninguno funciona sobre la grasa y el sudor del d\u00eda anterior.',
           tarda:'Desde el primer d\u00eda: la diferencia es que la cara no queda jalada al secarse.',
           ojo:'Agua tibia, nunca caliente. El agua caliente disuelve los l\u00edpidos que este limpiador acaba de reponer.'
         },
         am:{ orden:1, min:1, uso:'Masajea sobre piel húmeda 30-60 seg y enjuaga con agua tibia, nunca caliente. Quita la grasa y el sudor de la noche sin dejar la piel jalada.' },
         pm:{ orden:1, min:1, esperaDespues:20,
              esperaTxt:'Sécate del todo y espera',
-             uso:'<b>Una sola pasada de 60 segundos</b>, masajeando sobre piel húmeda con agua tibia: alcanza para quitar el protector solar y el sudor del día. Dos pasadas seguidas de un limpiador espumoso resecan y, con el adapaleno encima, irritan.' } },
+             uso:'<b>Una sola pasada de 60 segundos</b>, masajeando sobre piel húmeda con agua tibia: alcanza para quitar la grasa y el sudor del día. Dos pasadas seguidas de un limpiador espumoso resecan y, con el adapaleno encima, irritan.' } },
 
       { id:'niacinamida', cat:'Sérum', n:'The Ordinary Niacinamida 10% + Zinc 1%',
         contenido:30, unidad:'ml', dosisDia:0.15, precio:230, tono:'teal',
@@ -5750,28 +5758,12 @@ window.CIFRAS = (function () {
           activo:'Niacinamida (vitamina B3) al 10% + zinc PCA al 1%',
           que:'Un s\u00e9rum acuoso, de los m\u00e1s baratos que existen con evidencia real detr\u00e1s.',
           hace:'La niacinamida le baja el ritmo a las gl\u00e1ndulas que producen grasa y frena el paso del pigmento a la superficie de la piel. El zinc acompa\u00f1a calmando. El resultado es menos brillo a media tarde, poro menos abierto y marcas viejas que se van aclarando.',
-          sirve:'Es tu producto para las marcas que deja el acn\u00e9 \u2014 esas manchas caf\u00e9s que quedan despu\u00e9s, no el grano. Y le quita a la cara el brillo del mediod\u00eda, que en piel grasa se nota a las pocas horas del protector.',
+          sirve:'Es tu producto para las marcas que deja el acn\u00e9 \u2014 esas manchas caf\u00e9s que quedan despu\u00e9s, no el grano. Y le quita a la cara el brillo del mediod\u00eda, que en piel grasa se nota a las pocas horas.',
           tarda:'El brillo, en 2 semanas. Las manchas, entre 8 y 12 semanas.',
           ojo:'Es de los pocos activos que se lleva bien con todo, retinoide incluido. No hace falta separarlo de nada ni dejar d\u00edas de por medio.'
         },
         am:{ orden:2, min:1,
-             uso:'2-3 gotas sobre piel seca, antes del protector. Controla la grasa del día, afina poros y ayuda a desvanecer marcas — y es compatible con todo lo demás, incluido el retinoide.' } },
-
-      { id:'spf', noSeCompra:true, cat:'Protector solar', n:'La Roche-Posay Anthelios Oil Free SPF50',
-        contenido:50, unidad:'ml', dosisDia:1.25, precio:520, tono:'am',
-        recorte:{ n:'Neutrogena Ultra Sheer FPS 50+ (88 ml)', precio:295, contenido:88, fuente:'Amazon MX, oct 2026', txt:'El mismo FPS 50 de amplio espectro, con acabado seco. El protector no se deja: se cambia de marca.' },
-        ayuda:['manchas','arrugas'], clave:true,
-        frasco:'tubo', marca:{a:'#ffffff', b:'#0f5fa6'},
-        ficha:{
-          activo:'Filtros UVA/UVB de amplio espectro, base oil free',
-          que:'El protector solar diario, en textura fluida y sin aceites \u2014 la que no deja la cara grasosa ni tapa el poro.',
-          hace:'Intercepta la radiaci\u00f3n antes de que llegue a da\u00f1ar las c\u00e9lulas. El UVB es el que quema; el UVA atraviesa nubes y ventanas y es el que envejece la piel y oscurece las manchas.',
-          sirve:'Es el \u00fanico producto de la lista que <b>previene</b> en vez de reparar. Sin \u00e9l, la niacinamida est\u00e1 aclarando manchas que el sol vuelve a oscurecer cada ma\u00f1ana, y el retinoide trabaja sobre una piel a la que se le sigue haciendo da\u00f1o.',
-          tarda:'No se ve nada a corto plazo. Se ve a los 10 a\u00f1os, comparando con quien no lo us\u00f3.',
-          ojo:'Es el producto m\u00e1s caro por mes de todos, y es el que m\u00e1s se justifica. Si el presupuesto aprieta, se recorta cualquier otro antes que \u00e9ste.'
-        },
-        am:{ orden:3, min:2,
-             uso:'<b>Dos dedos completos</b> para cara y cuello. Casi todo el mundo se pone un tercio de lo que debe, y eso convierte un SPF50 en un SPF15 — es el error más caro de la rutina. Todos los días, nublado incluido.' } },
+             uso:'2-3 gotas sobre piel seca. Controla la grasa del día, afina poros y ayuda a desvanecer marcas — y es compatible con todo lo demás, incluido el retinoide.' } },
 
       { id:'retinoide', cat:'Retinoide', n:'Differin Adapaleno 0.1% Gel',
         foto:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Adapalene_Gel_%28Differin%29_in_China.jpg/960px-Adapalene_Gel_%28Differin%29_in_China.jpg',
@@ -5784,7 +5776,7 @@ window.CIFRAS = (function () {
           hace:'Acelera la renovaci\u00f3n de la piel y evita que las c\u00e9lulas muertas se queden pegadas tapando el poro \u2014 que es como empieza un grano, antes de que se vea. Al mismo tiempo estimula col\u00e1geno, que es lo que sostiene la piel por debajo.',
           sirve:'Es el \u00fanico de la lista que ataca las tres cosas a la vez: acn\u00e9, arrugas y manchas. Si tuvieras que quedarte con un solo activo, es \u00e9ste.',
           tarda:'Las primeras 4 semanas la piel empeora \u2014 se llama purga y es normal, est\u00e1 sacando lo que ya estaba abajo. La mejora se ve entre la semana 8 y la 12. Casi todo el mundo lo abandona en la semana 3, justo antes de que empiece a servir.',
-          ojo:'Piel completamente seca y un ch\u00edcharo para toda la cara. M\u00e1s cantidad no acelera nada: solo irrita, y una piel irritada obliga a suspenderlo.'
+          ojo:'Piel completamente seca y un ch\u00edcharo para toda la cara. M\u00e1s cantidad no acelera nada: solo irrita, y una piel irritada obliga a suspenderlo. Adem\u00e1s deja la piel m\u00e1s sensible al sol: sin protector, gorra y sombra.'
         },
         pm:{ orden:2, min:1,
              uso:'Un <b>chícharo</b> para toda la cara, sobre piel <b>completamente seca</b>. Con la piel húmeda penetra de más y ahí empieza la irritación. Deja un dedo de margen alrededor del ojo: es la piel más delgada del cuerpo. Es el activo de mostrador con más evidencia — trata acné, previene arrugas y ayuda con manchas, los tres a la vez. Si te arde o se te pela, ponlo <b>noche sí y noche no</b> hasta que se calme, sin dejarlo, y luego vuelve a diario.' } },
@@ -5852,7 +5844,7 @@ window.CIFRAS = (function () {
     // Cuánto dura un bote con la dosis correcta, y lo que sale al mes. Derivados: si cambia el
     // precio o el tamaño, el botíquin y el total se enteran solos.
     duracionDias: function (p) { return Math.round(p.contenido / p.dosisDia); },
-    costoMes: function (p) { return p.noSeCompra ? 0 : Math.round(p.cadaMeses ? p.precio / p.cadaMeses : p.precio / (p.contenido / p.dosisDia) * 30); },
+    costoMes: function (p) { return Math.round(p.precio / (p.contenido / p.dosisDia) * 30); },
     get costoMesTotal() {
       var t = this;
       return this.productos.filter(function (p) { return !p.opcional; })
@@ -5866,11 +5858,9 @@ window.CIFRAS = (function () {
 
   // ── LA RUTINA DEL CABELLO ──────────────────────────────────────────────
   // Lo mismo que `RUTINA_PIEL`, para el pelo. Antes vivía en un `HAIR_DB` dentro de
-  // cuidadopersonal.html que filtraba por grosor y presupuesto y que aún ofrecía
-  // ALTERNATIVAS (Pantene, Kérastase, Elvive Aceite Extraordinario) pese a la petición del
-  // 2026-08-18: "no me des alternativas, por que si no al final no comprare nada". Hoy no
-  // salían porque Elvive gana el orden, pero bastaba tocar el perfil para que la lista de la
-  // compra nombrara una marca y la rutina diaria otra.
+  // cuidadopersonal.html que filtraba por grosor y presupuesto y ofrecía ALTERNATIVAS, pese a la
+  // petición del 2026-08-18: "no me des alternativas, por que si no al final no comprare nada".
+  // `cadaMeses`: cada cuántos meses lo compra; manda sobre lo que dura con su dosis.
   //
   // `dias` es 0=domingo…6=sábado, y ES la fuente de la semana de lavado: la vista de Cabello
   // no escribe "lunes y jueves" en ningún sitio, lo lee de aquí.
@@ -5901,17 +5891,17 @@ window.CIFRAS = (function () {
         frasco:'caja', marca:{a:'#f7f8fa', b:'#b02a37'},
         ficha:{
           activo:'Dutasterida 0,5 mg, un inhibidor de la 5-alfa-reductasa',
-          que:'Una c\u00e1psula diaria. Es el escal\u00f3n m\u00e1s fuerte del tratamiento por dentro: bloquea las dos enzimas que fabrican DHT, mientras que la finasterida s\u00f3lo bloquea una.',
+          que:'Una c\u00e1psula un d\u00eda s\u00ed y otro no: lunes, mi\u00e9rcoles y viernes. Es el escal\u00f3n m\u00e1s fuerte del tratamiento por dentro: bloquea las dos enzimas que fabrican DHT, mientras que la finasterida s\u00f3lo bloquea una.',
           hace:'Corta la producci\u00f3n de DHT hasta en un 90%. La DHT es la hormona que va encogiendo el fol\u00edculo generaci\u00f3n tras generaci\u00f3n hasta que ya no produce pelo visible. Sin ella, el proceso se frena.',
           sirve:'Es lo \u00fanico de tu rutina que ataca la CAUSA. El minoxidil, el Pilexil y todo lo dem\u00e1s sostienen lo que hay; esto detiene lo que lo est\u00e1 destruyendo.',
           tarda:'Frena la ca\u00edda en 3-4 meses. La recuperaci\u00f3n visible, entre 6 y 12. Un a\u00f1o antes de juzgarlo.',
           ojo:'Es un tratamiento de a\u00f1os, no de meses. Dejarlo un trimestre y retomar no reanuda donde ibas: lo que el fol\u00edculo pierde en la pausa no se recupera despu\u00e9s. Lo m\u00e9dico \u2014receta, PSA, efectos\u2014 est\u00e1 abajo, en Antes de empezar.'
         },
-        contenido:30, unidad:'cáps', porUso:1, vecesDia:1, dias:[0,1,2,3,4,5,6], precio:1560,
+        contenido:30, unidad:'cáps', porUso:1, vecesDia:1, dias:[1,3,5], precio:1560,
         recorte:{ n:'Zivata (dutasterida 0.5 mg, genérico)', precio:703, contenido:30, medico:true, fuente:'Benavides, oct 2026', txt:'La misma molécula y la misma dosis. El cambio lo autoriza tu dermatólogo.' },
         tono:'warn', clave:true, momento:'oral', receta:true,
-        uso:'<b>Una cápsula al día</b>, con o sin comida, siempre a la misma hora. Actúa <b>por dentro</b> bloqueando la DHT, que es la hormona que encoge el folículo: no sustituye al minoxidil \u2014 uno frena la caída y el otro empuja el crecimiento. Tarda <b>3 a 6 meses</b> en verse, igual que el minoxidil.',
-        aviso:'Es <b>medicamento de receta</b> y para la caída se usa fuera de indicación. Dos cosas que tienes que saber: <b>parte tu PSA a la mitad</b> \u2014 mídelo y dile a quien lo interprete que la tomas \u2014 y si aparecen efectos sexuales o bulto/dolor en el pecho, es motivo de consulta, no de aguantarse. Llévala con un médico, no en solitario.' },
+        uso:'<b>Una cápsula los lunes, miércoles y viernes</b>, con o sin comida, siempre a la misma hora. Actúa <b>por dentro</b> bloqueando la DHT, que es la hormona que encoge el folículo: no sustituye al minoxidil \u2014 uno frena la caída y el otro empuja el crecimiento. Tarda <b>3 a 6 meses</b> en verse, igual que el minoxidil.',
+        aviso:'Es <b>medicamento de receta</b> y para la caída se usa fuera de indicación. La caja está pensada para una cápsula diaria: <b>confirma con tu dermatólogo</b> que tomarla un día sí y otro no es tu dosis. Dos cosas que tienes que saber: <b>parte tu PSA a la mitad</b> \u2014 mídelo y dile a quien lo interprete que la tomas \u2014 y si aparecen efectos sexuales o bulto/dolor en el pecho, es motivo de consulta, no de aguantarse. Llévala con un médico, no en solitario.' },
 
       { id:'pilexil', cadaMeses:3, cat:'Champú anticaída', n:'Pilexil Anticaída 300 ml',
         foto:'https://images.openbeautyfacts.org/images/products/847/000/174/8768/front_es.6.full.jpg',
@@ -5932,9 +5922,9 @@ window.CIFRAS = (function () {
         frasco:'botella', marca:{a:'#f2f4f6', b:'#0d6ebf'},
         ficha:{
           activo:'Tensioactivos suaves, sin sulfatos, con ceramidas',
-          que:'Tu champú suave: el del sábado, el día de reparación. Los otros dos —Pilexil y Darrow— son tratamiento y van sólo sus días.',
+          que:'Tu champú suave: el del sábado. Los otros dos —Pilexil y Darrow— son tratamiento y van sólo sus días.',
           hace:'Limpia sin sulfatos, que son los detergentes agresivos que dejan el cuero cabelludo tirante y disparan el rebote de grasa. Menos irritaci\u00f3n abajo es mejor terreno para el fol\u00edculo.',
-          sirve:'Es lo que usas los d\u00edas que no tocan medicados. Sin \u00e9l acabar\u00edas lav\u00e1ndote con champ\u00fa de tratamiento a diario, que reseca, o no lav\u00e1ndote, que tapa el poro.',
+          sirve:'Es tu lavado del s\u00e1bado. Sin \u00e9l acabar\u00edas lav\u00e1ndote con champ\u00fa de tratamiento a diario, que reseca, o no lav\u00e1ndote, que tapa el poro.',
           tarda:'Desde el primer lavado: el cuero cabelludo deja de picar y de engrasarse tan r\u00e1pido.',
           ojo:'Es limpieza, no tratamiento. No aporta nada contra la ca\u00edda y no pretende hacerlo.'
         },
@@ -5955,56 +5945,6 @@ window.CIFRAS = (function () {
         contenido:200, unidad:'ml', porUso:12, dias:[], usosSemana:0, precio:350, tono:'warn',
         champu:true, soloSi:'caspa activa',
         uso:'Masajea el cuero 2-3 minutos y deja actuar antes de enjuagar. <b>Sustituye</b> al Pilexil ese día, nunca se suma.' },
-
-      { id:'acondicionador', noSeCompra:true, cat:'Acondicionador', n:"L'Oréal Elvive Reparación Total 5",
-        frasco:'botella', marca:{a:'#f4f6f8', b:'#8b1a3a'},
-        ficha:{
-          activo:'Ceramidas y siliconas de aclarado',
-          que:'El acondicionador de diario, para el largo del pelo. No tiene nada que ver con la ca\u00edda: esto es cosm\u00e9tica del tallo.',
-          hace:'Cierra la cut\u00edcula, que son las escamas que recubren el pelo y que el lavado levanta. Cerradas, el pelo refleja la luz y no se engancha consigo mismo.',
-          sirve:'Para que el pelo que conservas se vea y se sienta mejor. El tratamiento se ocupa de que haya pelo; esto, de que el que hay luzca.',
-          tarda:'Desde el primer uso: se nota al peinar.',
-          ojo:'Nunca en la ra\u00edz. Tu pelo es fino y graso: en la ra\u00edz aplana el volumen y adelanta el momento en que se ve sucio.'
-        },
-        contenido:680, unidad:'ml', porUso:15, dias:[0,1,2,3,4,5], precio:120, tono:'ok',
-        momento:'ducha',
-        uso:'<b>Solo de medios a puntas</b>, nunca en la raíz: en cabello fino y graso, la raíz se aplana y se engrasa antes. Espera 1-2 minutos y enjuaga con agua fresca — ese minuto es lo que hace que sirva de algo.' },
-
-      { id:'mascarilla', noSeCompra:true, cat:'Mascarilla', n:"Mascarilla L'Oréal Elvive Total Repair 5",
-        frasco:'tarro', marca:{a:'#f6f7f9', b:'#8b1a3a'},
-        ficha:{
-          activo:'Ceramidas en concentraci\u00f3n alta, base m\u00e1s densa que el acondicionador',
-          que:'El acondicionador en versi\u00f3n concentrada. Viene en tarro, no en botella, porque la textura es mucho m\u00e1s espesa.',
-          hace:'Lo mismo que el acondicionador pero con m\u00e1s carga y m\u00e1s tiempo de contacto, as\u00ed que llega m\u00e1s adentro del tallo en vez de quedarse s\u00f3lo en la superficie.',
-          sirve:'Para el d\u00eda de la semana en que el pelo lo necesita m\u00e1s: despu\u00e9s del champ\u00fa medicado, o cuando lo notas seco de puntas.',
-          tarda:'Ese mismo d\u00eda, y el efecto dura 2-3 lavados.',
-          ojo:'Sustituye al acondicionador ese d\u00eda, no se pone encima. Los dos juntos apelmazan el cabello fino y lo dejan sin cuerpo.'
-        },
-        contenido:300, unidad:'ml', porUso:20, dias:[6], precio:130, tono:'oro', momento:'ducha',
-        uso:'De medios a puntas, <b>5 minutos</b> mientras terminas de bañarte. Ese día <b>sustituye al acondicionador</b>: ponerle los dos apelmaza el cabello fino. Viene en TARRO, no en botella — es un acondicionador mucho más concentrado.' },
-
-      // 2026-09-02: fuera la crema sin enjuague (L'Oréal Elvive Total Repair 5, 200 ml, id
-      // 'sinEnjuague'). Adán: "de lista de compras quita: Crema sin enjuague L'Oréal Elvive
-      // Total Repair 5, 200 ml (todos los días)" y, preguntado si la seguía usando, "fuera de
-      // todo: ya no la uso". De la compra salió por derivación — `LISTA_COMPRAS.cabello` es un
-      // getter sobre esta lista — y con ella se fueron sus 5 menciones en RUTINA_TASKS (wd02c,
-      // wd02cb y do045b, que eran solo suyas; sa05d y wd09c, que compartía con otro producto).
-      // Era el único con momento:'humedo', así que ese paso de la rutina de Cuidado Personal
-      // queda con toalla, peine y secado — el render ya filtraba nulos, no hubo que tocarlo.
-
-      { id:'aceite', noSeCompra:true, cat:'Aceite de puntas', n:'Moroccanoil Treatment Light',
-        frasco:'gotero', marca:{a:'#f5f0e3', b:'#0e4f4f'},
-        ficha:{
-          activo:'Aceite de arg\u00e1n con siliconas ligeras',
-          que:'Un aceite de acabado, para las puntas. La versi\u00f3n Light es la que corresponde a cabello fino; la normal pesar\u00eda demasiado.',
-          hace:'Sella la punta del pelo, que es la parte m\u00e1s vieja y m\u00e1s da\u00f1ada: por ah\u00ed se abre y se rompe. El aceite tapa esa apertura y devuelve brillo.',
-          sirve:'Para el d\u00eda que lo notes rasposo o encrespado. Es un extra de acabado, no forma parte del tratamiento.',
-          tarda:'Inmediato, y s\u00f3lo mientras est\u00e9 puesto. No cambia el pelo, cambia c\u00f3mo se ve hoy.',
-          ojo:'Dos gotas y s\u00f3lo en puntas. Es el producto m\u00e1s f\u00e1cil de pasarse: con tres el pelo fino queda grasoso todo el d\u00eda y no se arregla sin lavarlo.'
-        },
-        contenido:100, unidad:'ml', porUso:0.5, dias:[], usosSemana:2, precio:900, tono:'gris',
-        momento:'seco',
-        uso:'<b>2 gotas solo en las puntas</b>, con el pelo ya seco. No es diario: es para el día que lo notes rasposo. En raíz no va nunca y de más engrasa.' },
 
       { id:'funda', cat:'Funda de almohada', n:'Funda de almohada de satín',
         frasco:'tela', marca:{a:'#eef1f6', b:'#7a5ea8'},
@@ -6027,7 +5967,6 @@ window.CIFRAS = (function () {
       const D = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
       if (p.soloSi) return 'solo si hay ' + p.soloSi + ', nunca junto al Pilexil';
       if (p.noConsumible) return null;
-      if (!p.dias.length) return 'cuando lo notes áspero, solo puntas';
       if (p.dias.length === 7) return 'todos los días' + (p.vecesDia > 1 ? ', ' + p.vecesDia + ' veces' : '');
       const n = p.dias.map(function (d) { return D[d]; });
       return n.slice(0, -1).join(', ') + (n.length > 1 ? ' y ' : '') + n[n.length - 1];
@@ -6052,7 +5991,7 @@ window.CIFRAS = (function () {
     },
     costoMes: function (p) {
       const d = this.duracionDias(p);
-      return p.noSeCompra ? 0 : p.cadaMeses ? Math.round(p.precio / p.cadaMeses) : d ? Math.round(p.precio / d * 30) : 0;
+      return p.cadaMeses ? Math.round(p.precio / p.cadaMeses) : d ? Math.round(p.precio / d * 30) : 0;
     },
     get costoMesTotal() {
       var t = this;
@@ -6068,8 +6007,6 @@ window.CIFRAS = (function () {
         champu: champu,
         condicional: cond,
         nota: champu && champu.notaDia ? (champu.notaDia[dow] || '') : '',
-        mascarilla: this.productos.some(function (p) { return p.id === 'mascarilla' && p.dias.indexOf(dow) !== -1; }),
-        acondicionador: this.productos.some(function (p) { return p.id === 'acondicionador' && p.dias.indexOf(dow) !== -1; }),
         dosisMinoxidil: (this.productos.find(function (p) { return p.id === 'minoxidil'; }) || {}).vecesDia || 0,
       };
     },
@@ -6082,7 +6019,7 @@ window.CIFRAS = (function () {
   };
 
   // ── LOS SUPLEMENTOS ──────────────────────────────────────────────────────
-  // Los 6 que Adán toma de verdad. Estaban escritos a mano en TRES sitios: las subtareas de
+  // Los 4 que Adán toma de verdad. Estaban escritos a mano en TRES sitios: las subtareas de
   // `RUTINA_TASKS`, la lista de `LISTA_COMPRAS.suplementos` y el catálogo de `salud.html`.
   // Coincidían de casualidad, y además salud.html arrancaba con "Mi lista: 0" y pedía darlos
   // de alta a mano — datos que el proyecto ya tenía.
@@ -6132,33 +6069,6 @@ window.CIFRAS = (function () {
         porQue:'Antiinflamatorio, apoya la recuperación muscular y la salud cardiovascular.',
         ojo:'Si tienes reflujo, tómalo con una comida grande para evitar el "repique" de sabor a pescado.' },
 
-      { id:'creatina', noSeCompra:true, n:'Creatina monohidratada', dosis:'5 g', momento:'am', cuando:'también sin entrenar',
-        foto:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Creatine_monohydrate_powder.jpg/960px-Creatine_monohydrate_powder.jpg',
-        frasco:'polvo', marca:{a:'#f2f4f6', b:'#e8590c'},
-        ficha:{
-          activo:'Creatina monohidratada \u2014 la forma barata, y la \u00fanica con evidencia s\u00f3lida',
-          que:'Un polvo sin sabor que se disuelve en agua. Es el suplemento deportivo m\u00e1s estudiado que existe.',
-          hace:'Rellena el dep\u00f3sito de fosfocreatina del m\u00fasculo, que es el combustible de los primeros segundos de esfuerzo m\u00e1ximo. Con el dep\u00f3sito lleno sacas una o dos repeticiones m\u00e1s por serie, y esas repeticiones extra son las que construyen m\u00fasculo con el tiempo.',
-          tarda:'El m\u00fasculo se satura en 3-4 semanas tom\u00e1ndola a diario. El primer par de kilos que subas es agua dentro del m\u00fasculo, no grasa.'
-        },
-        envase:300, unidad:'g', porDia:5, precio:400, tono:'am', clave:true,
-        recorte:{ n:'Creatina monohidratada B Life, bolsa de 1 kg', precio:717, envase:1000, fuente:'Amazon MX, oct 2026', txt:'La creatina monohidratada es la misma en cualquier marca seria: el ahorro está en el tamaño.' },
-        porQue:'El suplemento con más evidencia para fuerza y ganancia de masa muscular.',
-        ojo:'No necesita fase de carga, y va <b>todos los días</b>: el efecto es por acumulación. Sube la creatinina en sangre <b>sin daño renal</b> — avisa antes de un perfil renal.' },
-
-      { id:'magnesio', noSeCompra:true, n:'Magnesio (glicinato o citrato)', dosis:'200-400 mg', momento:'pm', cuando:'30-60 min antes de dormir',
-        frasco:'pastillas', marca:{a:'#ffffff', b:'#5f3dc4'},
-        ficha:{
-          activo:'Magnesio quelado \u2014 glicinato o citrato, nunca \u00f3xido',
-          que:'C\u00e1psulas para la noche. La forma importa m\u00e1s que la dosis: el \u00f3xido es barato porque casi no se absorbe.',
-          hace:'Interviene en cientos de reacciones, y entre ellas relaja la musculatura y ayuda a bajar el sistema nervioso a modo de reposo. Por eso va de noche y no por la ma\u00f1ana.',
-          tarda:'El sue\u00f1o suele mejorar en la primera semana. Los calambres tardan algo m\u00e1s.'
-        },
-        envase:120, unidad:'cápsulas', porDia:2, precio:400, tono:'pm',
-        recorte:{ n:'Bisglicinato de magnesio B Life (180 cápsulas)', precio:399, envase:180, fuente:'Amazon MX, oct 2026', txt:'La misma forma, glicinato, en un envase más grande.' },
-        porQue:'Mejora la calidad del sueño y reduce calambres — complementa lo de Postura y Salud Mental.',
-        ojo:'Va de noche por una razón: tomarlo por la mañana desperdicia la mitad de para lo que lo compraste. El glicinato es el mejor tolerado; evita el óxido si tienes estómago sensible.' },
-
       { id:'whey', n:'Proteína Whey (suero de leche)', dosis:'25-30 g', momento:'pm', cuando:'solo si faltan gramos',
         foto:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Orgain_organic_protein_powder.jpg/960px-Orgain_organic_protein_powder.jpg',
         frasco:'polvo', marca:{a:'#f2f4f6', b:'#c92a2a'},
@@ -6191,7 +6101,7 @@ window.CIFRAS = (function () {
     },
     costoMes: function (p) {
       const d = this.duracionDias(p);
-      return p.noSeCompra ? 0 : p.cadaMeses ? Math.round(p.precio / p.cadaMeses) : d ? Math.round(p.precio / d * 30) : 0;
+      return d ? Math.round(p.precio / d * 30) : 0;
     },
     get costoMesTotal() {
       var t = this;
@@ -6205,9 +6115,8 @@ window.CIFRAS = (function () {
   // proponía ninguno: guardaba resultados pero no decía cuáles pedir.
   //
   // Varios entran por algo que ya está en el proyecto: la vitamina D porque toma D3 a diario,
-  // la creatinina porque toma creatina, el tiroideo porque la caída de cabello lo pide
-  // descartar, y el PSA porque el dutasteride tópico de la lista de Cabello parte su valor a
-  // la mitad. `mesesVigencia` es cada cuánto se repite; `desdeEdad` lo desactiva hasta esa edad.
+  // el tiroideo porque la caída de cabello lo pide descartar, y el PSA porque la dutasterida
+  // parte su valor a la mitad. `mesesVigencia` es cada cuánto se repite; `desdeEdad` lo desactiva hasta esa edad.
   const CHEQUEO = {
     examenes: [
       { id:'lipidico', n:'Perfil lipídico', mesesVigencia:12, ayuno:'9-12 h',
@@ -6217,9 +6126,9 @@ window.CIFRAS = (function () {
       { id:'vitd', n:'Vitamina D (25-OH)', mesesVigencia:12, prioritario:true,
         t:'<b>Tomas D3 a diario sin saber tu nivel.</b> Es el que más falta te hace: define si 2000 UI te sobran o te faltan.' },
       { id:'hepatico', n:'Perfil hepático (ALT / AST)', mesesVigencia:12, ayuno:'8 h',
-        t:'Con 6 suplementos diarios vale tener una línea base. No porque sean peligrosos, sino para poder comparar si algo cambia.' },
+        t:'Con suplementos diarios vale tener una línea base. No porque sean peligrosos, sino para poder comparar si algo cambia.' },
       { id:'renal', n:'Creatinina y función renal', mesesVigencia:12, ayuno:'8 h',
-        t:'<b>Aviso:</b> la creatina sube la creatinina en sangre <b>sin daño renal</b>. Si sale alta, dilo antes de que te asusten: se repite midiendo cistatina C.' },
+        t:'Dice cómo filtran tus riñones. El valor solo significa algo comparado con el del año anterior.' },
       { id:'tiroides', n:'Perfil tiroideo (TSH)', mesesVigencia:12,
         t:'Entra por la caída de cabello: el hipotiroidismo es una de las causas que tu propia pestaña de Cabello te dice que descartes.' },
       { id:'biometria', n:'Biometría hemática', mesesVigencia:12,
@@ -6693,7 +6602,7 @@ window.CIFRAS = (function () {
             activo:'100 ml exactos \u2014 el l\u00edmite de cabina',
             que:'Cuatro botes peque\u00f1os rellenables. Son los que convierten tus productos de casa en productos de viaje sin comprarlos otra vez.',
             hace:'Cien mililitros es el m\u00e1ximo que deja pasar el control de un aeropuerto, y se mide por la capacidad impresa en el bote, no por lo que lleve dentro. Un bote de 200 ml medio vac\u00edo te lo quitan igual.',
-            sirve:'Te ahorran comprar versiones de viaje de todo. Tu champ\u00fa, tu acondicionador y tu gel viajan contigo en vez de usar lo que haya en el hotel.',
+            sirve:'Te ahorran comprar versiones de viaje de todo. Tu champ\u00fa, tu limpiador y tu gel viajan contigo en vez de usar lo que haya en el hotel.',
             tarda:'Inmediato.',
             ojo:'El minoxidil NO va aqu\u00ed. Se degrada fuera de su envase original, y eso s\u00ed arruina el tratamiento.'
           } },
@@ -6817,7 +6726,7 @@ window.CIFRAS = (function () {
         { id:'balsamo', n:'B\u00e1lsamo after-shave sin alcohol',
           foto:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Pitralon_Polar_1.jpg/960px-Pitralon_Polar_1.jpg',
           frasco:'tubo', marca:{a:'#ffffff', b:'#0ca678'},
-          uso:'Justo despu\u00e9s de secarte, con la cara todav\u00eda algo h\u00fameda. Si te afeitas por la ma\u00f1ana, va antes del protector solar.',
+          uso:'Justo despu\u00e9s de secarte, con la cara todav\u00eda algo h\u00fameda.',
           ficha:{
             activo:'Calmantes como alanto\u00edna o pantenol, sin alcohol',
             que:'Lo que se pone despu\u00e9s. El de toda la vida llevaba alcohol y ard\u00eda; ese ardor no es que est\u00e9 funcionando, es que te est\u00e1 resecando.',
@@ -7028,8 +6937,8 @@ window.CIFRAS = (function () {
           uso:'Dos dedos para cara y cuello, y repite cada 2 horas si est\u00e1s al aire libre.',
           ficha:{
             activo:'Filtros UVA/UVB de amplio espectro',
-            que:'El mismo protector que ya usas, en formato peque\u00f1o. No es un producto nuevo: es tu SPF de siempre en un tama\u00f1o que pasa el control.',
-            hace:'Lo mismo que tu Anthelios de diario: intercepta la radiaci\u00f3n antes de que da\u00f1e la c\u00e9lula.',
+            que:'Un protector en formato peque\u00f1o, que pasa el control del aeropuerto.',
+            hace:'Intercepta la radiaci\u00f3n antes de que da\u00f1e la c\u00e9lula.',
             sirve:'En viaje sueles estar m\u00e1s horas fuera que un d\u00eda normal, justo cuando es m\u00e1s f\u00e1cil salt\u00e1rselo. Va en el botiqu\u00edn para que no dependa de que te acuerdes.',
             tarda:'No se ve a corto plazo. Se ve a los 10 a\u00f1os.',
             ojo:'Es el paso que m\u00e1s se salta la gente en vacaciones, que es cuando m\u00e1s radiaci\u00f3n recibe. Que viva en el neceser y no en casa.'
@@ -7048,21 +6957,21 @@ window.CIFRAS = (function () {
           } },
       ] },
       { n: 'Los que ya tienes \u2014 solo c\u00e1mbialos a tama\u00f1o viaje', items: [
-        { id:'champuViaje', n:'Champ\u00fa y acondicionador en envase de 100 ml (los tuyos, rellenados)',
+        { id:'champuViaje', n:'Champ\u00fa en envase de 100 ml (el tuyo, rellenado)',
           foto:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Care_seven_herbs_shampoo_%282019%29_03.jpg/960px-Care_seven_herbs_shampoo_%282019%29_03.jpg',
           frasco:'botella', marca:{a:'#f2f4f6', b:'#0d6ebf'},
-          uso:'Rellena los tuyos la noche antes. Etiqu\u00e9talos, que los dos son botes blancos iguales.',
+          uso:'Rell\u00e9nalo la noche antes y ponle etiqueta.',
           ficha:{
-            activo:'Los mismos que usas en casa',
-            que:'No es una compra: es rellenar los botes de viaje con tu CeraVe y tu Elvive.',
+            activo:'El mismo que usas en casa',
+            que:'No es una compra: es rellenar el bote de viaje con tu CeraVe.',
             hace:'Mantiene tu rutina igual fuera de casa. El champ\u00fa del hotel suele llevar sulfatos, y en dos d\u00edas de viaje te deshace lo que llevas meses cuidando.',
             sirve:'Para no volver de cada viaje con el cuero cabelludo irritado y el pelo \u00e1spero.',
             tarda:'Se nota en el primer viaje de m\u00e1s de dos d\u00edas.',
             ojo:'El Pilexil y el Darrow son tratamiento y llevan su d\u00eda en la semana: si el viaje cae en lunes o jueves, \u00e9se es el que hay que llevar, no s\u00f3lo el suave.'
           } },
-        { id:'skincareViaje', n:'Skincare AM/PM en botellas peque\u00f1as (limpiador, s\u00e9rum, hidratante con SPF, retinoide)',
+        { id:'skincareViaje', n:'Skincare AM/PM en botellas peque\u00f1as (limpiador, s\u00e9rum, hidratante, retinoide)',
           frasco:'bomba', marca:{a:'#f2f4f6', b:'#00a94f'},
-          uso:'Los cuatro pasos completos. Si algo se cae de la maleta por espacio, que no sea el protector solar.',
+          uso:'Los cuatro productos, completos.',
           ficha:{
             activo:'Los mismos activos de tu rutina de casa',
             que:'Tu rutina entera, en peque\u00f1o. Cuatro botes de 100 ml, no cuatro productos nuevos.',
@@ -7085,14 +6994,14 @@ window.CIFRAS = (function () {
         { id:'pastillero', n:'Suplementos en pastillero por d\u00edas',
           foto:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Pill_box_with_pills.JPG/960px-Pill_box_with_pills.JPG',
           frasco:'caja', marca:{a:'#f7f8fa', b:'#7048e8'},
-          uso:'C\u00e1rgalo el domingo para toda la semana. Con dos compartimentos por d\u00eda, ma\u00f1ana y noche, porque el magnesio va de noche.',
+          uso:'C\u00e1rgalo el domingo para toda la semana, con el Avodart en sus tres d\u00edas.',
           ficha:{
             activo:'Los compartimentos por d\u00eda \u2014 que es lo que evita la duda',
             que:'Una caja con divisiones. Resuelve un problema que no es de salud sino de memoria.',
             hace:'Te dice de un vistazo si ya tomaste lo de hoy. Sin \u00e9l, la duda de \u00ab\u00bfme lo tom\u00e9?\u00bb acaba siempre en salt\u00e1rselo o en repetir.',
-            sirve:'Llevas seis suplementos en dos momentos distintos del d\u00eda. Fuera de casa, sin la rutina que los ancla, es donde se pierden.',
+            sirve:'Tus suplementos van por la ma\u00f1ana y el Avodart solo tres d\u00edas. Fuera de casa, sin la rutina que los ancla, es donde se pierden.',
             tarda:'Desde la primera semana.',
-            ojo:'Que tenga DOS compartimentos por d\u00eda. Con uno solo acabas tomando el magnesio por la ma\u00f1ana, que es tirar la mitad de para lo que lo compras.'
+            ojo:'Que cada d\u00eda tenga su propia tapa: as\u00ed ves de un vistazo el que qued\u00f3 sin tomar.'
           } },
       ] },
     ],
@@ -7978,13 +7887,13 @@ window.CIFRAS = (function () {
     // una marca distinta a la que dice la rutina, que es justo lo que pasaba hasta el
     // 2026-09-01 (aquí Isdin, en la rutina La Roche-Posay).
     get skincare() {
-      return RUTINA_PIEL.productos.filter(function (p) { return !p.noSeCompra; }).map(function (p) { return RUTINA_PIEL.textoCompra(p); });
+      return RUTINA_PIEL.productos.map(function (p) { return RUTINA_PIEL.textoCompra(p); });
     },
     // Sale de RUTINA_PELO, incluidos los días: así no puede decir aquí una marca (o un día)
     // y otra en la rutina, que es lo que pasó con skincare. Los 2 de receta van al final
     // porque NO son de mostrador y no forman parte de la rutina diaria.
     get cabello() {
-      return RUTINA_PELO.productos.filter(function (p) { return !p.noSeCompra; }).map(function (p) { return RUTINA_PELO.textoCompra(p); })
+      return RUTINA_PELO.productos.map(function (p) { return RUTINA_PELO.textoCompra(p); })
         .concat([
         // 2026-09-02: este ítem tenía el formato invertido del resto — el nombre DELANTE del
         // guión y la nota detrás — y `lcAmazonQuery()` del Dashboard, que se queda con lo de
@@ -8000,7 +7909,7 @@ window.CIFRAS = (function () {
     },
     // Sale de SUPLEMENTOS: el nombre y el tamaño del envase se escriben una sola vez.
     get suplementos() {
-      return SUPLEMENTOS.lista.filter(function (p) { return !p.noSeCompra; }).map(function (p) { return SUPLEMENTOS.textoCompra(p); });
+      return SUPLEMENTOS.lista.map(function (p) { return SUPLEMENTOS.textoCompra(p); });
     },
     // ── KIT DE HIGIENE (2026-08-15, pedido: "en alguna parte debes poner un kit de higiene super
     // completo, ya sea para viajes o persona, con imagenes y productos que comprar") ────────────

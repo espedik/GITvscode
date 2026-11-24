@@ -5862,7 +5862,7 @@ function rpImgProd(cat, p){
   return p.frasco && typeof pfEnvaseSvg === 'function' ? pfEnvaseSvg(p.frasco, m.a || '#f4f2ee', m.b || '#8a5a2b') : '';
 }
 // Lo que hay que saber de un producto en ese paso, en una línea: lo que la frase dice antes del nombre, hasta
-// los dos puntos («Hoy no lleva champú», «Ya seco», «Protector solar») o, si empieza por el nombre, lo que va
+// los dos puntos («Hoy no lleva champú», «Champú») o, si empieza por el nombre, lo que va
 // justo después —la dosis o el cómo—: «1 ml con el gotero…», «2000-4000 UI, con algo de grasa…».
 function rpMeta(plano, prod){
   const k = plano.indexOf(prod.n);
@@ -6099,7 +6099,7 @@ function pesoLabel(info){
 //      CuidadoPersonal/cuidadopersonal.html → SKIN_DB/HAIR_DB, agrupadas por paso de la rutina
 //      (no es la selección personalizada de skPick()/haPick() — esto es el catálogo completo
 //      de cada paso para que Adán elija según lo que encuentre, "o" separa alternativas).
-//    - suplementos: los 6 de CuidadoPersonal/salud.html → SUPP_CATALOG, tal cual.
+//    - suplementos: los de CuidadoPersonal/salud.html → SUPP_CATALOG, tal cual.
 // Lista de compras — vive en datos-maestros.js (fuente única, ver DATOS-MAESTROS.md).
 const LISTA_COMPRAS = window.CIFRAS ? CIFRAS.LISTA_COMPRAS : {};
 // Los precios del súper viven en el maestro (CIFRAS.PRECIOS_SUPER, con la explicación de cada campo): de
@@ -6134,13 +6134,8 @@ const LISTA_COMPRAS_PRECIOS_OTROS={
   // al renombrar los de cabello el 18-ago sus claves dejaron de coincidir y el precio se
   // perdió en silencio. Los otros 10 se buscaron en tiendas mexicanas (ago-2026).
   'Champú Darrow Doctar alcatrão (solo si hay caspa activa, nunca junto al Pilexil)':{amazon:520,ml:450},
-  'Mascarilla L\'Oréal Elvive Total Repair 5 (sábados)':{amazon:180,ml:155},
-  'Aceite Moroccanoil Treatment Light (sobre el pelo ya seco, solo puntas)':{amazon:990,ml:850},
   'Minoxidil 5% en ESPUMA Kirkland (la espuma no lleva propilenglicol)':{amazon:750,ml:620},
   'Pilexil Anticaída 300 ml (lunes y jueves)':{amazon:715,ml:572},
-  // La 'Crema sin enjuague L'Oréal Elvive Total Repair 5' (amazon 95 / ml 73) salió de aquí el
-  // 2026-09-02 con el producto: Adán dejó de usarla, así que ya no está en RUTINA_PELO ni en la
-  // lista de la compra, y esta clave no la habría encontrado nadie.
   'Funda de almohada de satín':{amazon:249,ml:219},
   'Suplemento de Luteína + Zeaxantina 10 mg / 2 mg':{amazon:299,ml:260},
   'Lentes de sol polarizados con UV400':{amazon:259,ml:210},
@@ -6154,24 +6149,16 @@ const LISTA_COMPRAS_PRECIOS_OTROS={
   'Exfoliante (BHA/AHA) — The Ordinary Ácido Salicílico 2% o Neutrogena Rapid Clear o The Ordinary Ácido Láctico 5%':{amazon:320,ml:270},
   'Sérum AM — The Ordinary Niacinamida 10% + Zinc 1% o La Roche-Posay Pure Vitamin C10':{amazon:230,ml:190},
   'Hidratante AM — Eucerin Hyaluron-Filler + Epigenetic Día SPF15':{amazon:690,ml:640},
-  'Protector solar — Isdin Fusion Water Oil-Free SPF50 o La Roche-Posay Anthelios Oil Free SPF50 o Neutrogena Ultra Sheer SPF50':{amazon:560,ml:495},
   'Tratamiento PM (retinoide) — Differin Adapaleno 0.1% Gel o The Ordinary Retinol 0.2% en Escualano':{amazon:390,ml:340},
   'Mascarilla semanal — Aztec Secret Indian Healing Clay o The Ordinary Salicylic Acid 2% Masque':{amazon:380,ml:330},
   // ── cabello ──
   'Champú — Darrow Doctar (alcatrão/coal tar, anticaspa)':{amazon:520,ml:450},
-  // 680 ml. ml:150 es el precio real de Mercado Libre (ago-2026); amazon:167 sale del de
-  // Soriana, porque no hay listado directo de esta presentación en Amazon MX.
-  'Acondicionador L\'Oréal Elvive Reparación Total 5, 680 ml (todos los días, solo medios y puntas)':{amazon:167,ml:150},
-  'Mascarilla — L\'Oréal Elvive Total Repair 5 o Moroccanoil Hydrating Mask':{amazon:180,ml:155},
   'Minoxidil 5% Solución/Espuma (Kirkland Signature o genérico)':{amazon:750,ml:620},
-  'Aceite de puntas — Moroccanoil Treatment Light o L\'Oréal Elvive Aceite Extraordinario':{amazon:990,ml:850},
   // ── suplementos ──
   'Proteína Whey (suero de leche)':{amazon:900,ml:820},
-  'Creatina monohidratada':{amazon:520,ml:450},
   'Vitamina D3':{amazon:290,ml:250},
   'Omega 3 (aceite de pescado)':{amazon:420,ml:370},
   'Multivitamínico':{amazon:350,ml:300},
-  'Magnesio (glicinato o citrato)':{amazon:390,ml:340},
 };
 // Precio típico de un libro por categoría — los 45 libros de la lista son casi todos de no
 // ficción en pasta blanda, con un rango de precio estrecho y muy parecido entre sí; en vez de

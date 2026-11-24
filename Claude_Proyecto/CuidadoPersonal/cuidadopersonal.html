@@ -1099,7 +1099,7 @@ body::before{content:'';position:fixed;inset:0 0 auto 0;height:280px;pointer-eve
         <div class="ts" style="display:block;margin-top:5px;font-size:10.5px">De aquí sale en qué semana vas y si ya te toca subir la frecuencia. Si no lo recuerdas, déjalo vacío.</div>
       </div>
     </div>
-    <div class="fg"><label>Notas (reacciones, productos que ya probaste, lo que sea útil recordar)</label><textarea id="sk-pf-notas" rows="2" placeholder="Ej. me irrita el ácido glicólico, uso protector solar de tal marca y me gusta..."></textarea></div>
+    <div class="fg"><label>Notas (reacciones, productos que ya probaste, lo que sea útil recordar)</label><textarea id="sk-pf-notas" rows="2" placeholder="Ej. me irrita el ácido glicólico, uso un gel de tal marca y me gusta..."></textarea></div>
     <button class="btn btn-g" onclick="skSavePerfil()">Guardar perfil</button>
   </div>
 
@@ -1891,7 +1891,7 @@ function mainTab(tab){
 //   retinoideDesde  — cuándo empezó el adapaleno; de ahí salen la semana y el peldaño
 //   hechos          — {'2026-09-01': {am:['limpiador',…], pm:[…]}} los pasos ya marcados
 //   abierto         — {idProducto: 'YYYY-MM-DD'} cuándo abrió cada bote
-// De `hechos` sale la racha de protector solar; de `abierto`, los días que le quedan de cada
+// De `hechos` sale la racha de la noche; de `abierto`, los días que le quedan de cada
 // producto. Nada de eso se inventa: sin datos, la vista lo dice y ofrece ponerlos.
 const SK_KEY='skincare_v1';
 function skDefault(){return{
@@ -1961,13 +1961,13 @@ function plAgenda(mom){
   });
 }
 
-// Racha de protector solar: días seguidos con el paso `spf` marcado. Si hoy aún no está
+// Racha de la noche: días seguidos con el paso `retinoide` marcado. Si hoy aún no está
 // hecho no cuenta como roto — puede ser que todavía no sea la hora.
 function plRacha(){
   const d=new Date();
-  if(!plMarcado(plIso(d),'am','spf')) d.setDate(d.getDate()-1);
+  if(!plMarcado(plIso(d),'pm','retinoide')) d.setDate(d.getDate()-1);
   let n=0;
-  while(plMarcado(plIso(d),'am','spf')){n++;d.setDate(d.getDate()-1);}
+  while(plMarcado(plIso(d),'pm','retinoide')){n++;d.setDate(d.getDate()-1);}
   return n;
 }
 
@@ -2035,7 +2035,7 @@ function plPintarCabecera(){
   document.getElementById('pl-fecha').textContent=PL_DIAS[d.getDay()]+' '+d.getDate()+' de '+PL_MESES[d.getMonth()];
   const racha=plRacha(), sem=plSemRetinoide();
   const k=[
-    '<div class="pl-kpi a" title="D\u00edas seguidos marcando el protector solar. Es el paso que no se recupera: sin \u00e9l, el trabajo del retinoide contra las manchas se desperdicia."><div class="pl-kpi-v">'+racha+'</div><div class="pl-kpi-k">Racha SPF</div></div>',
+    '<div class="pl-kpi a" title="Noches seguidas marcando el adapaleno: es tu activo principal y solo funciona con constancia."><div class="pl-kpi-v">'+racha+'</div><div class="pl-kpi-k">Racha noche</div></div>',
     '<div class="pl-kpi b link" onclick="skToggleForm()" title="'+(sem===null?'Pon en tu perfil desde cu\u00e1ndo lo usas y se lleva la cuenta sola':'Semanas desde que empezaste el adapaleno')+'"><div class="pl-kpi-v">'+(sem===null?'\u2014':'Sem '+sem)+'</div><div class="pl-kpi-k">Retinoide</div></div>',
   ];
   if(RP) k.push('<div class="pl-kpi c" title="Lo que cuesta la rutina al mes con la dosis correcta de cada producto. Sale de RUTINA_PIEL, no est\u00e1 escrito a mano."><div class="pl-kpi-v">$'+RP.costoMesTotal+'</div><div class="pl-kpi-k">Al mes</div></div>');
@@ -2046,7 +2046,7 @@ function plPintarCabecera(){
 // Sustituye a "la línea del día" (2026-09-07). La pista horizontal repartía los 6 pasos a
 // intervalos iguales y, con tres de ellos dentro de la misma franja de 3 minutos, no decía
 // nada que la rutina de abajo no dijera mejor. La tira de 7 días sí dice algo: en la piel
-// NO hay rotación — el retinoide va las 7 noches y el protector las 7 mañanas. Es la misma
+// NO hay rotación — el retinoide va las 7 noches. Es la misma
 // pieza que abre Cabello y, como aquella, es navegable: tocar un día enseña su rutina.
 let plDiaVisto=null;
 function plDow(){ return plDiaVisto===null?new Date().getDay():plDiaVisto; }
@@ -2139,7 +2139,7 @@ function plRutinaHtml(mom){
   const pasos=agenda.map(function(p,i){
     const ok=esHoy&&plMarcado(iso,mom,p.id);
     const tags=[];
-    if(p.clave) tags.push('<span class="pl-tg k">'+(p.id==='spf'?'El paso que nunca se salta':'Tu activo principal')+'</span>');
+    if(p.clave) tags.push('<span class="pl-tg k">Tu activo principal</span>');
     (p.ayuda||[]).forEach(function(k){const m=SK_CONCERN_META[k];if(m)tags.push('<span class="pl-tg">'+m.label+'</span>');});
     const fila='<div class="pl-p'+(ok?' on':'')+(esHoy?'':' solo-lectura')+'"'+
       (esHoy?' onclick="plToggle(\''+mom+'\',\''+p.id+'\')" title="Marca este paso como hecho"':'')+'>'+
@@ -2176,24 +2176,21 @@ function plBotiquinHtml(){
       '<div class="pl-med-b" style="background:'+(PL_TONO[p.tono]||'var(--pl-tx3)')+'"></div>'+
       '<div><div class="pl-med-n">'+plEsc(p.n)+(p.opcional?' <span style="font-weight:600;color:var(--pl-tx3)">(opcional)</span>':'')+'</div>'+
       '<div class="pl-med-s">'+p.contenido+' '+p.unidad+' \u00b7 dura ~'+dur+' d\u00edas</div></div>'+
-      '<div class="pl-med-r">'+der+'<div class="pl-med-p">'+(p.noSeCompra?'ya no lo compras':'$'+RP.costoMes(p)+'/mes'+(p.cadaMeses?', cada '+p.cadaMeses+' meses':''))+'</div></div></div>';
+      '<div class="pl-med-r">'+der+'<div class="pl-med-p">$'+RP.costoMes(p)+'/mes</div></div></div>';
   }).join('');
-  const spf=RP.productos.find(p=>p.id==='spf');
-  const pc=spf?Math.round(RP.costoMes(spf)/RP.costoMesTotal*100):0;
   return '<div class="pl-card"><div class="pl-card-h"><div class="pl-card-t"><span class="b"></span>Tu botiqu\u00edn</div>'+
     '<div class="pl-card-x">se te acaba en\u2026</div></div>'+filas+
     '<div class="pl-med-tot"><div class="pl-med-tot-l">Costo mensual de tu rutina</div><div class="pl-med-tot-v">$'+RP.costoMesTotal+'</div></div>'+
-    '<div class="pl-nota">Los d\u00edas salen de la dosis correcta, no de la que se usa por costumbre'+(pc>0?': por eso el protector es <b>el '+pc+
-    '% del gasto</b> \u2014 dos dedos diarios vac\u00edan un bote de 50 ml en '+RP.duracionDias(spf)+' d\u00edas. ':'. ')+
+    '<div class="pl-nota">Los d\u00edas salen de la dosis correcta, no de la que se usa por costumbre. '+
     'Toca los d\u00edas para decir que abriste uno; los precios son de referencia y se editan en <b>datos-maestros.js</b>.</div></div>';
 }
 
 function plMatrizHtml(){
   const f=[
-    ['Niacinamida',   'si','si','si','si'],
-    ['Retinoide',     'si','si','no','oj:solo PM'],
-    ['BHA / exfoliante','si','no','si','si'],
-    ['Rasurado',      'si','oj:separa','oj:separa','si'],
+    ['Niacinamida',   'si','si','si'],
+    ['Retinoide',     'si','si','no'],
+    ['BHA / exfoliante','si','no','si'],
+    ['Rasurado',      'si','oj:separa','oj:separa'],
   ];
   const filas=f.map(function(r){
     const tds=r.slice(1).map(function(v){
@@ -2205,7 +2202,7 @@ function plMatrizHtml(){
     return '<tr><td class="l">'+r[0]+'</td>'+tds+'</tr>';
   }).join('');
   return '<div class="pl-card"><div class="pl-card-h"><div class="pl-card-t"><span class="b"></span>Qu\u00e9 puede ir con qu\u00e9</div></div>'+
-    '<table class="pl-mx"><tr><th class="l"></th><th>Niacin.</th><th>Retin.</th><th>BHA</th><th>SPF</th></tr>'+filas+'</table>'+
+    '<table class="pl-mx"><tr><th class="l"></th><th>Niacin.</th><th>Retin.</th><th>BHA</th></tr>'+filas+'</table>'+
     '<div class="pl-leg"><span><i style="background:var(--pl-ok)"></i>Sin problema</span>'+
     '<span><i style="background:var(--pl-am)"></i>Con cuidado</span>'+
     '<span><i style="background:var(--pl-warn)"></i>Nunca juntos</span></div>'+
@@ -2215,7 +2212,7 @@ function plMatrizHtml(){
 function plReglasHtml(){
   const p=SK.perfil, c=p.preocupaciones||[];
   const r=[
-    {i:'\u2600\ufe0f',t:'<b>Dos dedos de protector solar</b>, cara y cuello. Casi todo el mundo se pone un tercio de lo que debe, y eso convierte un SPF50 en un SPF15.'},
+    {i:'\u2600\ufe0f',t:'<b>Cuida el sol.</b> El adapaleno deja la piel m\u00e1s sensible y tu rutina no lleva protector: gorra y sombra de 11 a 16 h. Si se te pone roja o salen manchas, dilo en consulta.'},
     {i:'\u26d4',t:'<b>No revientes granos.</b> Es la causa n\u00famero 1 de que un brote se vuelva mancha permanente \u2014 y t\u00fa ya est\u00e1s tratando manchas.'},
     {i:'\u25cb',t:'<b>M\u00e1ximo 2 lavadas al d\u00eda.</b> Lavar de m\u00e1s hace que la piel grasa produzca m\u00e1s grasa por rebote.'},
     {i:'\u25b3',t:'<b>Un producto nuevo cada vez</b>, con 1-2 semanas entre uno y otro. Si metes tres a la vez y algo irrita, no sabes cu\u00e1l fue.'},
@@ -2416,13 +2413,11 @@ function pePintarSemana(){
     const tag=x.champu
       ? (x.condicional
           ? '<div class="pe-d-tag pe-t-cer">+ '+plEsc(peCorto(x.champu))+' AL NADAR</div>'
-          : '<div class="pe-d-tag '+(x.champu.id==='pilexil'?'pe-t-pil':'pe-t-cer')+'">'+(x.mascarilla?'EL D\u00cdA QUE M\u00c1S REPARA':'CON CHAMP\u00da')+'</div>')
+          : '<div class="pe-d-tag '+(x.champu.id==='pilexil'?'pe-t-pil':'pe-t-cer')+'">CON CHAMP\u00da</div>')
       : '<div class="pe-d-tag pe-t-agua">SIN CHAMP\u00da</div>';
     const sub=x.nota
       ? '<b style="color:var(--pe-agua)">'+plEsc(x.nota.split('.')[0])+'.</b>'
-      : (x.mascarilla ? '+ mascarilla 5 min, <b>sin</b> acondicionador'
-                      : (x.champu ? 'Solo cuero cabelludo, 2 min con las yemas'
-                                  : 'Mojas y acondicionador de medios a puntas'));
+      : (x.champu ? 'Solo cuero cabelludo, 2 min con las yemas' : 'Solo agua tibia, sin frotar');
     const visto=dow===peDow();
     return '<div class="pe-d'+(esHoy?' hoy':'')+(visto&&!esHoy?' visto':'')+'"'+
       ' onclick="peVerDia('+dow+')" title="Ver qu\u00e9 toca el '+PL_LARGO[dow].toLowerCase()+'">'+
@@ -2438,7 +2433,7 @@ function pePintarSemana(){
     (pil?pil.dias.length+' con '+peCorto(pil):'')+(cer?', '+cer.dias.filter(d=>(cer.diasCondicionales||[]).indexOf(d)===-1).length+' con '+peCorto(cer):'')+
     ', '+(7-conChampu)+' solo agua</b></div></div>'+
     '<div class="pe-wk-grid">'+celdas+'</div>'+
-    '<div class="pe-wk-note">Los d\u00edas sin champ\u00fa <b>no son d\u00edas sucios</b>: son descanso para el cuero cabelludo, y lavar a diario es lo que termina de resecar un pelo que ya est\u00e1 seco. Lo que s\u00ed va <b>los 7 d\u00edas</b>: acondicionador de medios a puntas y las '+nDosis+' dosis de minoxidil.</div>';
+    '<div class="pe-wk-note">Los d\u00edas sin champ\u00fa <b>no son d\u00edas sucios</b>: son descanso para el cuero cabelludo, y lavar a diario es lo que termina de resecar un pelo que ya est\u00e1 seco. Lo que s\u00ed va <b>los 7 d\u00edas</b>: las '+nDosis+' dosis de minoxidil.</div>';
 }
 // El nombre corto de un producto, para los sitios donde no cabe el completo.
 function peCorto(p){return p.n.split(' Champ')[0].split(' (')[0].split(' Antica')[0];}
@@ -2487,16 +2482,11 @@ function pePasosDelDia(){
       t:'<em>Hoy no lleva champú por la mañana.</em> '+plEsc(x.nota)+' Entonces sí usas el <b>'+plEsc(peCorto(x.champu))+'</b>.'});
   }else{
     ducha.push({id:'champu',n:'Hoy sin champú',cat:'Descanso',
-      t:'<em>Directo al acondicionador.</em> Los días sin champú no son días sucios: son descanso para el cuero cabelludo, y lavar a diario es lo que termina de resecar un pelo que ya está seco.'});
+      t:'<em>Solo agua tibia.</em> Los días sin champú no son días sucios: son descanso para el cuero cabelludo, y lavar a diario es lo que termina de resecar un pelo que ya está seco.'});
   }
-  const masc=prod('mascarilla'), aco=prod('acondicionador');
-  if(x.mascarilla&&masc) ducha.push({id:'mascarilla',n:masc.n,cat:masc.cat,t:masc.uso,ayuda:['resequedad']});
-  else if(x.acondicionador&&aco) ducha.push({id:'acond',n:aco.n,cat:aco.cat,t:aco.uso,ayuda:['resequedad']});
   G.push({m:peMomento('ducha'),pasos:ducha});
 
-  // Aquí iba la crema sin enjuague (prod('sinEnjuague')). Salió del maestro el 2026-09-02
-  // — Adán dejó de usarla — y con ella el único producto de este momento: lo que queda es
-  // técnica de secado, que es justo lo que más protege el pelo mojado.
+  // En el pelo húmedo no va ningún producto: es técnica de secado, que es lo que más lo protege.
   G.push({m:peMomento('humedo'),pasos:[
     {id:'toalla',n:'Secado a toques',cat:'Técnica',
      t:'<b>Seca a toques con la toalla</b>, sin frotar. El pelo mojado se rompe mucho más fácil que el seco.'},
@@ -2506,19 +2496,17 @@ function pePasosDelDia(){
      t:'Deja secar al aire. Si usas secadora: <b>aire tibio, a 20 cm</b>, nunca caliente ni pegado.'},
   ]});
 
-  const mnx=prod('minoxidil'), ace=prod('aceite');
+  const mnx=prod('minoxidil');
   const seco=[];
   if(mnx) seco.push({id:'minoxAM',dosis:0,n:mnx.n,cat:'Dosis 1 de '+mnx.vecesDia,t:mnx.uso,
     clave:'La mitad de fuera del tratamiento',ayuda:['caida'],
     espera:PE_ESPERA_MIN,esperaTxt:'No te mojes la cabeza durante'});
-  if(ace&&(CA.perfil.preocupaciones||[]).indexOf('resequedad')!==-1)
-    seco.push({id:'aceite',n:ace.n,cat:ace.cat,t:ace.uso,ayuda:['resequedad']});
   if(seco.length) G.push({m:peMomento('seco'),pasos:seco});
 
   // La pastilla va en su propio momento: es lo unico de esta rutina que no se
   // aplica en el pelo, y mezclarla con el minoxidil confundia las dos cosas.
   const avo=prod('avodart');
-  if(avo) G.push({m:peMomento('oral'),pasos:[
+  if(avo&&avo.dias.indexOf(dow)!==-1) G.push({m:peMomento('oral'),pasos:[
     {id:'avodart',n:avo.n,cat:avo.cat,t:avo.uso,clave:'Lo único que ataca la causa',ayuda:['caida']},
     {id:'avodartAviso',t:avo.aviso,aviso:true},
   ]});
@@ -2606,7 +2594,7 @@ function peBotiquinHtml(){
       :(p.noConsumible?'una sola vez'
       :(!p.dias.length?'cuando haga falta'
       :(p.dias.length===7?'todos los d\u00edas'+(p.vecesDia>1?', '+p.vecesDia+' veces':'')
-      :p.dias.map(x=>D[x]).join(' y '))));
+      :p.dias.map(x=>D[x]).join(', ').replace(/, ([^,]*)$/,' y $1'))));
     const der=dur===null
       ? '<div class="pe-med-d" style="color:var(--pe-tx3)">\u2014</div>'
       : (d===null
@@ -2617,7 +2605,7 @@ function peBotiquinHtml(){
       '<div class="pe-med-b" style="background:'+(PE_TONO[p.tono]||'var(--pe-tx3)')+'"></div>'+
       '<div style="min-width:0"><div class="pe-med-n">'+plEsc(p.n)+'</div>'+
       '<div class="pe-med-s">'+p.contenido+' '+p.unidad+' \u00b7 '+cuando+(dur?' \u00b7 dura ~'+dur+' d\u00edas':'')+'</div></div>'+
-      '<div class="pe-med-r">'+der+'<div class="pe-med-p">'+(p.noSeCompra?'ya no lo compras':RP.costoMes(p)?'$'+RP.costoMes(p)+'/mes'+(p.cadaMeses?', cada '+p.cadaMeses+' meses':''):'\u2014')+'</div></div></div>';
+      '<div class="pe-med-r">'+der+'<div class="pe-med-p">'+(RP.costoMes(p)?'$'+RP.costoMes(p)+'/mes'+(p.cadaMeses?', cada '+p.cadaMeses+' meses':''):'\u2014')+'</div></div></div>';
   }).join('');
   const mnx=RP.productos.find(p=>p.id==='minoxidil');
   const pc=mnx?Math.round(RP.costoMes(mnx)/RP.costoMesTotal*100):0;
@@ -2644,7 +2632,6 @@ function peErroresHtml(){
   e.push({t:'<b>Minoxidil sobre el pelo mojado.</b> Se reparte irregular y se diluye. Cuero seco al tacto, siempre.'});
   e.push({t:'<b>Una sola dosis al día.</b> Son dos, y saltarse días es lo que hace concluir "no me funcionó". Si lo dejas, lo ganado se revierte en 3-4 meses.'});
   e.push({t:'<b>Abandonarlo en el mes 2-4 porque se cae más pelo.</b> Eso es el <b>shedding</b>: el folículo empuja fuera el pelo viejo para sacar el nuevo. Es la señal de que está funcionando, y es justo donde casi todos lo dejan.'});
-  if(p.cuero==='graso') e.push({t:'<b>Acondicionador o mascarilla en la raíz.</b> Con cuero graso solo aplanas el pelo y aceleras que se vea grasoso otra vez.'});
   e.push({t:'<b>Cepillo en mojado.</b> Peine de dientes anchos, de puntas hacia arriba: el pelo mojado se rompe mucho más fácil.'});
   if(c.indexOf('resequedad')!==-1) e.push({t:'<b>Secadora o plancha sin protector térmico.</b> El calor directo debilita el tallo con el tiempo, y el tuyo ya viene seco.'});
   return '<div class="pe-card"><div class="pe-card-h"><div class="pe-card-t"><span class="b"></span>Lo que arruina el resultado</div>'+
@@ -2657,10 +2644,9 @@ function peErroresHtml(){
 // medicados el mismo día. Es donde acabó la ventana de las 4 horas que tenía tarjeta propia.
 function peMatrizHtml(){
   const f=[
-    ['Champú suave',    'si','oj:otro día','oj:otro día','si'],
-    ['Mascarilla',      'si','si','si','no'],
-    ['Aceite de puntas','si','si','si','si'],
-    ['Mojarte el pelo', 'no','si','si','si'],
+    ['Champú suave',    'si','oj:otro día','oj:otro día'],
+    ['Avodart',         'si','si','si'],
+    ['Mojarte el pelo', 'no','si','si'],
   ];
   const filas=f.map(function(r){
     const tds=r.slice(1).map(function(v){
@@ -2672,11 +2658,11 @@ function peMatrizHtml(){
     return '<tr><td class="l">'+r[0]+'</td>'+tds+'</tr>';
   }).join('');
   return '<div class="pe-card"><div class="pe-card-h"><div class="pe-card-t"><span class="b"></span>Qué puede ir con qué</div></div>'+
-    '<table class="pe-mx"><tr><th class="l"></th><th>Minox.</th><th>Pilexil</th><th>Darrow</th><th>Acond.</th></tr>'+filas+'</table>'+
+    '<table class="pe-mx"><tr><th class="l"></th><th>Minox.</th><th>Pilexil</th><th>Darrow</th></tr>'+filas+'</table>'+
     '<div class="pe-leg"><span><i style="background:var(--pe-ok)"></i>Sin problema</span>'+
     '<span><i style="background:var(--pe-am)"></i>Con cuidado</span>'+
     '<span><i style="background:var(--pe-warn)"></i>Nunca juntos</span></div>'+
-    '<div class="pe-nota">La única incompatibilidad de horario de tu rutina son las <b>4 horas después del minoxidil</b>: mojarte antes lo arrastra y esa dosis no cuenta — por eso va después de la ducha y nunca antes. La mascarilla <b>sustituye</b> al acondicionador el día que toca, no se pone encima.</div></div>';
+    '<div class="pe-nota">La única incompatibilidad de horario de tu rutina son las <b>4 horas después del minoxidil</b>: mojarte antes lo arrastra y esa dosis no cuenta — por eso va después de la ducha y nunca antes.</div></div>';
 }
 
 // ─── Pintar todo ────────────────────────────────────────────────────────

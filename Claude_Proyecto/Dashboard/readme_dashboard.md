@@ -625,11 +625,11 @@ maestro—, **con su foto** o, si no la tiene o no carga, **su envase dibujado**
 su ficha; las fotos van en chico, de 200 o 120 px), y el botón **ⓘ Qué es** —el mismo `.lc-info` de la
 lista de la compra, abriendo con `pfAbrirId`—. Debajo, en gris, solo lo que hay que saber en ese
 momento (`rpMeta()`): lo que la frase dice antes del nombre, hasta los dos puntos (*Hoy no lleva
-champú*, *Ya seco*, *Protector solar*) o, si empieza por el nombre, la dosis o el cómo (*1 ml con el
+champú*, *Champú*, *Retinoide*) o, si empieza por el nombre, la dosis o el cómo (*1 ml con el
 gotero en cuero cabelludo seco*, *2000-4000 UI, con algo de grasa en la comida*); la frase entera, al
 pasar el ratón. El cómo se aplica y para qué sirve están en la ficha. No hay enlace de compra: comprar
 tiene su pantalla. Lo que no es un producto va como **nota**, con su icono en gris, o como **aviso**, en
-ámbar, si empieza con ⚠️ o manda un NO: *Hoy NO uses acondicionador…* y *Si hoy hay caspa, Darrow en
+ámbar, si empieza con ⚠️ o manda un NO: *Si hoy hay caspa, Darrow en
 lugar del Pilexil*, que es una condición y no un paso (su *Qué es* abre la ficha de Darrow). *Skincare
 AM* y *Skincare PM* juntan los productos de piel de ese momento (`am` / `pm` de `RUTINA_PIEL`).
 

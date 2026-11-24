@@ -555,13 +555,7 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
 })();
 
 /* ── 11. La rutina de la piel: RUTINA_PIEL contra RUTINA_TASKS ──────────────────────
-   Hasta el 2026-09-01 los productos de la cara vivían escritos a mano en dos sitios y no
-   coincidían: `RUTINA_TASKS` aplicaba La Roche-Posay Anthelios y la guía de Skincare
-   recomendaba Isdin; `RUTINA_TASKS` ponía el Differin las 7 noches y la guía mandaba
-   alternarlo con un BHA que Adán no usa. Nadie lo vio porque ningún control miraba texto de
-   productos.
-
-   Ahora `RUTINA_PIEL` es la fuente y este control comprueba lo único que puede volver a
+   `RUTINA_PIEL` es la fuente y este control comprueba lo único que puede volver a
    separarse: que cada producto de la rutina siga NOMBRADO en las tareas que la ejecutan. Si
    alguien cambia de marca en un sitio y no en el otro, sale aquí. */
 (function pielCoherente() {
@@ -584,9 +578,6 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   const am = RP.pasos('am'), pm = RP.pasos('pm');
   if (!am.length) malos.push('     RUTINA_PIEL no tiene ning\u00fan paso de ma\u00f1ana');
   if (!pm.length) malos.push('     RUTINA_PIEL no tiene ning\u00fan paso de noche');
-  if (!RP.productos.some(function (p) { return p.id === 'spf'; }))
-    malos.push('     RUTINA_PIEL sin protector solar \u2014 es el paso que nunca se salta');
-
   if (malos.length) problemas.push('La rutina de la piel no coincide con las tareas que la ejecutan:\n' + malos.join('\n'));
   else ok.push('RUTINA_PIEL coincide con RUTINA_TASKS (' + RP.productos.filter(function (p) { return !p.opcional; }).length +
     ' productos, AM ' + am.length + ' pasos / PM ' + pm.length + ', $' + RP.costoMesTotal + ' al mes)');
@@ -608,18 +599,17 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   const todo = JSON.stringify(tareas);
   const malos = [];
 
-  // Sin distinguir mayúsculas: "crema sin enjuague X" y "Crema sin enjuague X" son el mismo
-  // producto, y exigir la caja exacta solo genera ruido.
+  // Sin distinguir mayúsculas: exigir la caja exacta solo genera ruido.
   const bajo = todo.toLowerCase();
   RP.productos.forEach(function (p) {
     if (bajo.indexOf(p.n.toLowerCase()) === -1)
       malos.push('     ' + p.cat + ": RUTINA_PELO dice '" + p.n + "' y ese nombre no aparece en RUTINA_TASKS");
   });
 
-  // Los días de cada champú, contra las tareas de la MAÑANA que lo nombran. Los
+  // Los días de cada champú y de lo que no va a diario (el Avodart), contra las tareas de la MAÑANA que lo nombran. Los
   // `diasCondicionales` quedan fuera: son los días en que el champú depende de algo y va en
   // otra tarea, no en la ducha de la mañana.
-  RP.productos.filter(function (p) { return p.champu && p.dias.length; }).forEach(function (p) {
+  RP.productos.filter(function (p) { return p.dias.length && (p.champu || p.dias.length < 7); }).forEach(function (p) {
     const corto = p.n.toLowerCase();
     const dias = {};
     tareas.forEach(function (t) {
@@ -631,7 +621,7 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
     const cond = p.diasCondicionales || [];
     const esperado = p.dias.filter(function (d) { return cond.indexOf(d) === -1; })
       .sort(function (a, b) { return a - b; });
-    if (enTareas.length && enTareas.join(',') !== esperado.join(','))
+    if (enTareas.join(',') !== esperado.join(','))
       malos.push('     ' + p.n + ': RUTINA_PELO lo pone los días [' + esperado.join(',') +
         '] y la rutina de la mañana lo nombra los [' + enTareas.join(',') + ']  (0=domingo)');
   });
@@ -645,11 +635,11 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
 })();
 
 /* ── 13. Los suplementos: SUPLEMENTOS contra RUTINA_TASKS ────────────────────────
-   Los 6 estaban escritos a mano en tres sitios: las subtareas de `RUTINA_TASKS`, la lista de
+   Estaban escritos a mano en tres sitios: las subtareas de `RUTINA_TASKS`, la lista de
    `LISTA_COMPRAS.suplementos` y el catálogo de `salud.html`. Coincidían de casualidad.
 
    Además del nombre comprueba **el momento**: los de la mañana tienen que aparecer en una
-   subtarea de la rutina de la mañana y los de la noche en una de la noche. Cambiar el magnesio
+   subtarea de la rutina de la mañana y los de la noche en una de la noche. Cambiar la whey
    a la mañana en un sitio y no en el otro no mueve ninguna cifra, y de otro modo nadie lo veía. */
 (function suplementosCoherentes() {
   if (!global.window || !global.window.CIFRAS) return;

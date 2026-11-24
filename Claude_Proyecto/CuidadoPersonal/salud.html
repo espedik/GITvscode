@@ -868,7 +868,7 @@ function sdBloqueHtml(momento){
     : '<div class="sd-blq-i" style="background:var(--p-l);border:1px solid rgba(176,110,255,.32)">🌙</div>';
   let pie='';
   if(momento==='am'){
-    pie='<div class="sd-mini">La creatina va <b>todos los d\u00edas</b>, entrenes o no: el efecto es por acumulaci\u00f3n, no por la dosis del d\u00eda.</div>';
+    pie='<div class="sd-mini">La vitamina D y el omega 3 se absorben mejor <b>con algo de grasa</b>: t\u00f3malos con el desayuno.</div>';
   }else{
     const prot=sdProteinaHoy(), meta2=sdMetaProteina();
     pie=prot===null
@@ -894,7 +894,7 @@ function sdAguaHtml(){
     '<div class="sd-agua">'+v+'<span> / '+meta+' vasos</span></div>'+
     '<div class="sd-vasos">'+vasos+'</div>'+
     '<div class="sd-pausa">'+pz+'</div>'+
-    '<div class="sd-mini">Pausas de postura: <b>'+p+' de '+META_PAUSAS+'</b>. Con creatina el agua importa m\u00e1s: retiene agua dentro del m\u00fasculo, y por eso los calambres del principio casi siempre son <b>falta de agua</b>, no del suplemento.</div></div>';
+    '<div class="sd-mini">Pausas de postura: <b>'+p+' de '+META_PAUSAS+'</b>.</div></div>';
 }
 
 // El chequeo del año. Se usa en el Dashboard y en la pestaña de Exámenes.
@@ -938,7 +938,7 @@ function sdBotiquinHtml(){
     return '<div class="sd-med"><div class="sd-med-b" style="background:'+(SD_TONO[p.tono]||'var(--text3)')+'"></div>'+
       '<div style="min-width:0"><div class="sd-med-n">'+sdEsc(p.n)+'</div>'+
       '<div class="sd-med-s">'+p.envase+' '+p.unidad+' \u00b7 '+sdEsc(p.dosis)+' \u00b7 dura ~'+dur+' d\u00edas</div></div>'+
-      '<div class="sd-med-r">'+der+'<div class="sd-med-p">'+(p.noSeCompra?'ya no lo compras':'$'+M.costoMes(p)+'/mes')+'</div></div></div>';
+      '<div class="sd-med-r">'+der+'<div class="sd-med-p">$'+M.costoMes(p)+'/mes</div></div></div>';
   }).join('');
   const sinAbrir=M.lista.filter(p=>!S.suplementos.abierto[p.id]).length;
   const btn=sinAbrir
@@ -1019,10 +1019,8 @@ function sdPesoHtml(){
 
 const SD_REGLAS=[
   '<b>Hazte la Vitamina D antes de seguir tomando D3.</b> Es el \u00fanico suplemento de tu lista cuyo efecto depende de un n\u00famero que no conoces: con nivel normal, 4000 UI diarias sobran.',
-  '<b>La creatina no necesita fase de carga.</b> 5 g al d\u00eda y ya; la carga solo adelanta el efecto una semana y suele caer mal al est\u00f3mago.',
   '<b>P\u00e9sate el mismo d\u00eda, a la misma hora, en ayuno.</b> El peso oscila 1-2 kg dentro del mismo d\u00eda: comparar pesajes a horas distintas es medir agua, no progreso.',
   '<b>Un an\u00e1lisis sin fecha no sirve.</b> El valor solo significa algo comparado con el anterior. Por eso esta pantalla guarda la fecha antes que el n\u00famero.',
-  '<b>El magnesio va de noche por una raz\u00f3n.</b> Mejora la calidad del sue\u00f1o y reduce calambres; tomarlo por la ma\u00f1ana desperdicia la mitad de para lo que lo compraste.',
 ];
 function sdReglasHtml(){
   return '<div class="card"><div class="flex jb aic" style="margin-bottom:12px">'+
@@ -2261,7 +2259,7 @@ const MOMENTO_LABELS = {am:'🌅 Mañana',pre:'🏋️ Pre-entreno',post:'💪 P
 // El catálogo sale de `CIFRAS.SUPLEMENTOS`, la misma fuente que la rutina diaria y que la
 // lista de la compra. Antes eran 6 fichas escritas a mano aquí, con la dosis repetida por
 // tercera vez en el proyecto y la meta de proteína escrita como "186g/día" en texto plano.
-const SUPP_ICO={d3:'☀️',multi:'💊',omega3:'🐟',creatina:'⚡',magnesio:'🧂',whey:'🥤'};
+const SUPP_ICO={d3:'☀️',multi:'💊',omega3:'🐟',whey:'🥤'};
 function suppCatalog(){
   const M=sdMaestro(); if(!M) return [];
   return M.lista.map(function(p){
@@ -2398,7 +2396,7 @@ function init() {
   // para el cálculo de calorías) — si nunca se registró un pesaje real, "Peso actual" se ve vacío
   // aunque el perfil ya tenga peso. Se sembra un primer registro con el peso real conocido para
   // que el Dashboard muestre algo desde ya; a partir de ahí, registrar pesajes reales lo reemplaza.
-  // Los 6 suplementos salen de los datos maestros — la misma fuente que la rutina diaria. Antes
+  // Los suplementos salen de los datos maestros — la misma fuente que la rutina diaria. Antes
   // la lista arrancaba vacía y pedía darlos de alta a mano, datos que el proyecto ya tenía.
   // Bandera de una sola vez: si Adán borra uno, no vuelve solo.
   if(!S.seedSupl && window.CIFRAS && CIFRAS.SUPLEMENTOS){
@@ -2408,6 +2406,11 @@ function init() {
       S.suplementos.lista.push({id:p.id,nombre:p.n,dosis:p.dosis,momento:p.momento,notas:p.cuando});
     });
     S.seedSupl=true; _needSave=true;
+  }
+  // La creatina y el magnesio salieron de su rutina: se quitan una vez de la lista ya sembrada. Si los da de alta, se quedan.
+  if(!S.bajaSupl20261124){
+    S.suplementos.lista=S.suplementos.lista.filter(x=>x.id!=='creatina'&&x.id!=='magnesio');
+    S.bajaSupl20261124=true; _needSave=true;
   }
   // El histórico de pesajes vive en el maestro (CIFRAS.PESO.registros), no aquí — pedido de
   // Adán el 2026-09-02: "no quiero que esos registros se pierdan, entonces los anotas en
