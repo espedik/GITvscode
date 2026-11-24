@@ -111,7 +111,7 @@ el módulo; el Dashboard le pasa el suyo (`patrimonioNeto()`, `patrimonioLiquido
 
 **Tus cifras** (Adán, 18-nov-2026: *"revisa qué cifras puedes ponerlas manualmente como editar o agregar, esto para ya
 no depender de Claude… si modificamos una, en general las demás se deben actualizar forzosamente"*). Cada una es una
-línea de `EDITABLES`: grupo, dónde vive (`renta`, `SUPUESTOS.loDemas`, `SALIDA.vuelo`, `meta:ef-001`), unidad y nota.
+línea de `EDITABLES`: grupo, dónde vive (`renta`, `SUPUESTOS.loDemas`, `SALIDA.vuelo`, `meta:g001`), unidad y nota.
 `ajAplicar` las pone **al cargar el maestro, justo después de `PROYECTO`, `SALIDA` y `SUPUESTOS`**, antes de que nada
 las lea: los getters, las cuentas de `CLAVES`, el calendario y la proyección salen ya con el valor tuyo, en las once
 páginas que cargan el maestro. Las tablas de este archivo dicen **el valor del plan**; el tuyo lo dice Mis cifras.
@@ -330,7 +330,7 @@ pero el nombre de la variable se queda corto.
 
 | Marcador | Valor hoy | Origen |
 |---|---|---|
-| `{{fondo}}` `{{fondoMeta}}` | $6,000 de $10,000 — son los CETES | vivo |
+| `{{fondo}}` `{{fondoMeta}}` `{{fondoMeses}}` | $6,000 de $69,000 — son los CETES; la meta son 3 meses (`PROYECTO.fondoMeses`, editable en Mis cifras) de lo indispensable del mes que sigue, hacia arriba a miles (`fondoMeta(ym)`): sin renta baja sola. `target` de ef-001 es su copia, la pone `fondoMetaGuardar` al cargar | vivo · derivada |
 | `{{salidaTotal}}` | $397,878 — lo que cuesta irse a Alemania, completo (`SALIDA.costos`) | derivada; se mueve con `PROYECTO.eurMxn` |
 | `{{salidaJunio}}` | $254,478 — lo que tiene que estar en la cuenta en junio de 2027: la cuenta bloqueada y la visa | derivada |
 | `{{sperrkonto}}` | $249,984 — la cuenta bloqueada, €11,904 al euro del plan | derivada |
@@ -374,7 +374,7 @@ emergencia (CETES)"); ya no hay una inversión CETES aparte en `investments`, po
 las dos cosas en patrimonio y en el fondo de la maestría. **Ya no recibe aporte**: el ahorro de cada
 quincena va a GBM (`{{cetesDia15}}` en $0). Lo que Adán le mete o le saca se anota como aportación o retiro
 —en el panel del Fondo de emergencia del Dashboard o en el bloque del fondo de Finanzas— con `fondoMovimiento`, que
-mueve `emergencyFund` y `ef-001` y guarda el movimiento en `efAportes`. Hasta la salida, el colchón del plan son los CETES más GBM: lo que le falta a `ef-001` lo cubre la primera quincena que llega a GBM.
+mueve `emergencyFund` y `ef-001` y guarda el movimiento en `efAportes`. Lo invertido en GBM no cuenta para su meta.
 
 ### La salida a Alemania y la proyección
 

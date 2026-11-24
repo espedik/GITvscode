@@ -90,7 +90,7 @@ window.CIFRAS = (function () {
     { g: 'Tu gasto', k: 'SUPUESTOS.loDemasEnCasa', t: 'peso', txt: 'Lo demás al mes, en casa' },
     { g: 'Invertir', k: 'especulacionMes', t: 'peso', txt: 'Riesgo súper alto, al mes', nota: 'La pestaña de Qué invertir hoy.' },
     { g: 'Invertir', k: 'especulacionBtcPct', t: 'porc', max: 100, txt: 'De eso, a Bitcoin' },
-    { g: 'Metas', k: 'meta:ef-001', t: 'peso', txt: 'Fondo de emergencia, la meta', nota: 'Vive en Finanzas: se cambia donde está Finanzas, en tu PC.' },
+    { g: 'Metas', k: 'fondoMeses', t: 'num', u: 'meses', max: 24, txt: 'Fondo de emergencia, los meses que cubre', nota: 'La meta es lo indispensable de un mes por este número, a miles.' },
     { g: 'Metas', k: 'meta:g001', t: 'peso', txt: 'Dinero para la maestría, la meta', nota: 'Vive en Finanzas: se cambia donde está Finanzas, en tu PC.' },
     { g: 'Tipo de cambio', k: 'eurMxn', t: 'tc', txt: 'Euro para planear', nota: 'Un poco arriba del de hoy, para que una subida normal no tumbe la cuenta bloqueada.' },
     { g: 'Tipo de cambio', k: 'usdMxn', t: 'tc', txt: 'Dólar para planear', nota: 'Un poco abajo del de hoy, para no inflar lo que se cobra en dólares.' },
@@ -237,6 +237,9 @@ window.CIFRAS = (function () {
     // se irá a gbm, lo invertiré todo"). Queda en 0 porque Finanzas y Qué invertir hoy lo leen; los
     // CETES que ya tiene siguen siendo su fondo de emergencia.
     cetesDia15:        0,
+    // La meta del fondo de emergencia: cubrir estos meses de lo indispensable (Adán, 24-nov-2026: "la meta de fondo de
+    // ahorro debe cubrir mis gastos mínimo 3 meses"). Los pesos los da `fondoMeta()`, con tus gastos de ese momento.
+    fondoMeses:        3,
     // Págate primero (Plan Maestro, Fases 1 y 2): lo que sale a GBM el día que entra cada quincena.
     // Cada quincena se sostiene sola (Adán, 5-oct-2026: "eso debe ser cada quincena y deja dinero
     // sobrante para la quincena"): su sueldo menos los fijos que caen en sus días, la comida de sus
@@ -634,7 +637,7 @@ window.CIFRAS = (function () {
      anterior — el control 9 de `verificar-sincronia.js` lo comprueba. La fecha del millón es el
      cierre de la última fase: el marcador `{{metaMillon}}`. */
   const PHASES = [
-    {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"Cerró el 30 sep 2026. ✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep y quedó otra vez en $0 el 30 sep) y ✅ BBVA de $39,000 a $900 el 19 sep 2026 con la venta del Bitcoin. Lo que no cerró pasó a la Fase 1 con otro orden: la BBVA volvió a subir en diez días y ahora se paga quincena a quincena, y el fondo de emergencia son los CETES ({{fondo}}) más lo que entre a GBM: pasa de {{fondoMeta}} con la primera quincena que llegue ahí.",
+    {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"Cerró el 30 sep 2026. ✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep y quedó otra vez en $0 el 30 sep) y ✅ BBVA de $39,000 a $900 el 19 sep 2026 con la venta del Bitcoin. Lo que no cerró pasó a la Fase 1 con otro orden: la BBVA volvió a subir en diez días y ahora se paga quincena a quincena, y el fondo de emergencia son los CETES ({{fondo}}): desde el 24 nov 2026 su meta son {{fondoMeses}} meses de lo indispensable, {{fondoMeta}}.",
      razones:[
       {tipo:"lema",d:"Fase 0 fue el arranque del plan: cerrar la fuga de dinero y sentar las bases."},
       {tipo:"logro",t:"Cumplió lo grande",foto:"fase-tarjeta-cortada",cifras:[{v:"$0",l:"Banamex, otra vez en cero el 30 sep 2026"},{v:"$900",l:"la BBVA el 19 sep 2026, desde $39,000"}],d:"Banamex quedó en $0 el 30 sep 2026 y la BBVA bajó de $39,000 a $900 el 19 sep, con la venta del Bitcoin."},
@@ -643,7 +646,7 @@ window.CIFRAS = (function () {
       {tipo:"regla",t:"Dos decisiones, cerradas el 3 oct 2026",foto:"meta-esslingen",cifras:[{v:"Sep 2027",l:"la salida: terminó la pausa de la maestría"},{v:"1 negocio",l:"el de tu papá, en piloto automático"}],d:"la pausa de la maestría terminó —la salida es en septiembre de 2027— y la plantilla para comunidades de GBM salió del plan: hasta la Fase 4, el único negocio es el de tu papá, en piloto automático."},
      ],
      semanas:[
-      {id:"s0-9",mes:"2026-08",txt:"Prioridad 1 — Fondo de emergencia a {{fondoMeta}}. Se quedó en los CETES ({{fondo}}): desde el 5 oct 2026 ya no recibe aporte aparte, y lo que le falta lo pone la primera quincena que llegue a GBM, después del {{bbvaCero}}."},
+      {id:"s0-9",mes:"2026-08",txt:"Prioridad 1 — Fondo de emergencia a $10,000, la meta de entonces. Se quedó en los CETES ({{fondo}}): desde el 5 oct 2026 ya no recibe aporte aparte. Desde el 24 nov 2026 la meta son {{fondoMeses}} meses de lo indispensable: {{fondoMeta}}."},
       {id:"s0-10",mes:"2026-08",txt:"Prioridad 2 — Liquidar las dos tarjetas. Banamex quedó en $0 el 30 sep 2026; la BBVA bajó a $900 el 19 sep con la venta del Bitcoin y volvió a subir: la Fase 1 la paga quincena a quincena, sin intereses."},
       {id:"s0-4",mes:"2026-08",txt:"Sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad). Salió del plan el 1 nov 2026: no vendes nada de lo tuyo, usado vale mucho menos de lo que te costó."},
       {id:"s0-3",mes:"2026-08",txt:"Plantilla Finanzas.html para venderla en comunidades de GBM (Opción 1). Salió del plan el 3 oct 2026: hasta la Fase 4 no se abren frentes de negocio nuevos."},
@@ -1748,9 +1751,9 @@ window.CIFRAS = (function () {
           r: [
             { t: 'libro', id: 'cerdo', nota: 'deuda y CAT explicados con productos mexicanos' },
           ] },
-        { n: 'El colchón dentro de la cuenta', corto: 'Guarda un mes de tus gastos fijos en CETES como colchón, solo para emergencias de verdad.',
+        { n: 'El colchón dentro de la cuenta', corto: 'Guarda {{fondoMeses}} meses de lo indispensable en CETES como colchón, solo para emergencias de verdad.',
           q: 'Todo tu ahorro va a GBM, pero no todo se puede gastar en la salida: una parte es el colchón que evita volver a la tarjeta ante un imprevisto.',
-          c: 'Dentro de la cuenta, un mes de tus fijos ({{fijosTotal}}) no se toca para nada que no sea una emergencia de verdad: el auto, la salud, un gasto que no podías prever. Guárdalo en CETES de 28 días: se saca en 24 a 48 horas y no vale menos el día que lo necesites.',
+          c: 'Tu colchón son {{fondoMeses}} meses de lo indispensable ({{fondoMeta}}): la renta, los servicios, el auto y la comida. No se toca para nada que no sea una emergencia de verdad: el auto, la salud, un gasto que no podías prever. Guárdalo en CETES de 28 días: se saca en 24 a 48 horas y no vale menos el día que lo necesites.',
           r: [
             { t: 'libro', id: 'simplePath' },
           ] },
@@ -2816,8 +2819,8 @@ window.CIFRAS = (function () {
         "pie": "Un colchón que no se toca: es lo que evita que un imprevisto regrese a la tarjeta.",
         "cifras": [
           [
-            "1 mes",
-            "de tus fijos: {{fijosTotal}}"
+            "{{fondoMeses}} meses",
+            "de lo indispensable: {{fondoMeta}}"
           ],
           [
             "28 días",
@@ -2829,7 +2832,7 @@ window.CIFRAS = (function () {
           ]
         ],
         "list": [
-          "<b>Cuánto:</b> un mes de tus fijos; es lo que evita volver a la tarjeta cuando algo se rompe.",
+          "<b>Cuánto:</b> {{fondoMeses}} meses de lo indispensable; es lo que evita volver a la tarjeta cuando algo se rompe.",
           "<b>Dónde:</b> CETES a 28 días en cetesdirecto; rinde, no tiene comisión y se saca en uno o dos días hábiles.",
           "<b>Qué es emergencia:</b> la salud, el auto, un gasto que no podías prever; un viaje o una oferta no lo son.",
           "Tu caso: el fondo de emergencia es el primer paso de la ruta del dinero, antes de invertir; Qué invertir hoy lo cuenta con tu saldo real.",
@@ -4236,12 +4239,12 @@ window.CIFRAS = (function () {
           "Orden de pago (avalancha): el mínimo a todas y todo lo extra a la de CAT más alto.",
           "Antes de un MSI: mensualidad ÷ tu excedente del mes = __ % comprometido por __ meses."] } },
       "El colchón dentro de la cuenta": {
-        sesion: [[10, "Calcula tu colchón: un mes de fijos, {{fijosTotal}}."],
+        sesion: [[10, "Calcula tu colchón: {{fondoMeses}} meses de lo indispensable, {{fondoMeta}}."],
                  [10, "Compáralo con lo que tienes hoy en CETES: lo ves en Finanzas o en Qué invertir hoy."],
                  [10, "Escribe la regla de abajo y decide de qué quincena sale lo que falta."]],
         sale: "El colchón vive en CETES, aparte de la cuenta del día a día, y tiene su regla escrita.",
         copia: { t: "La regla del colchón", l: [
-          "Cuánto: un mes de fijos = {{fijosTotal}}.",
+          "Cuánto: {{fondoMeses}} meses de lo indispensable = {{fondoMeta}}.",
           "Dónde: CETES a 28 días en cetesdirecto; se sacan en 24 a 48 horas.",
           "Sí es emergencia: la salud, el {{auto}}, una reparación o un gasto que no podía prever.",
           "No es emergencia: un viaje, una oferta, un regalo, «me lo merezco».",
@@ -8667,7 +8670,9 @@ window.CIFRAS = (function () {
     deudaMsi:      { dep: ['*deudas'], v: () => sum(deudas().filter(d => d.type === 'other' && +d.balance > 0)) },
     // ── Ahorro y metas ──
     fondo:         { v: () => (fin && fin.emergencyFund != null ? +fin.emergencyFund : null) },
-    fondoMeta:     { v: () => { const g = meta('ef-001'); return g ? +g.target : null; } },
+    fondoMeses:    { v: () => PROYECTO.fondoMeses, fmt: 'num' },
+    // La meta del fondo no se guarda: son `fondoMeses` meses de lo indispensable (`fondoMeta()`, abajo).
+    fondoMeta:     { dep: ['fondoMeses','renta','luzAgua','internet','gas','celular','aporteCasa','autoPago'], v: () => fondoMeta() },
     // El dinero de la maestría NO es un campo guardado: es `fondoMaestria()`, la misma cuenta que
     // enseñan Mis Metas, los indicadores de Finanzas y Coach. Sin datos de Finanzas, null.
     maestria:      { v: () => (fin ? fondoMaestria(fin).total : null) },
@@ -8846,7 +8851,7 @@ window.CIFRAS = (function () {
     didiAhorroMas: 'Lo que Didi aparta al mes, manejando más', especulacionMes: 'Riesgo súper alto, al mes',
     especulacionBtcPct: 'De eso, a Bitcoin', proteinaMeta: 'Proteína al día', kcalMeta: 'Calorías al día',
     kapitelAleman: 'Kapitel en curso', cetesDia15: 'A CETES el día 15', autoMeses: 'Meses que le quedan al auto',
-    autoAPagar: 'Lo que acabas pagando del auto', autoInteres: 'Intereses del auto', fondoMeta: 'Fondo de emergencia, la meta',
+    autoAPagar: 'Lo que acabas pagando del auto', autoInteres: 'Intereses del auto', fondoMeta: 'Fondo de emergencia, la meta', fondoMeses: 'Meses que cubre el fondo',
     maestriaMeta: 'Dinero para la maestría, la meta', heliCosto: 'La licencia de helicóptero, en Alemania',
     heliUsa: 'La licencia de helicóptero, en Texas', heliUsaReal: 'La licencia de helicóptero en EE. UU., con 60 horas', visaUsa: 'La visa de Estados Unidos',
   };
@@ -9413,7 +9418,7 @@ window.CIFRAS = (function () {
   function fondoSigno(m) { return m && m.tipo === 'retiro' ? -(+m.amount || 0) : (+m.amount || 0); }
   function fondoAplicar(F, delta) {
     F.emergencyFund = Math.max(0, Math.round(((+F.emergencyFund || 0) + delta) * 100) / 100);
-    (F.goals || []).forEach(function (g) { if (g.id === 'ef-001') g.current = F.emergencyFund; });
+    (F.goals || []).forEach(function (g) { if (g.id === 'ef-001') { g.current = F.emergencyFund; g.target = fondoMeta(); } });
   }
   function fondoMovimiento(F, datos, id) {
     if (!F) return { error: 'Sin datos de Finanzas' };
@@ -9462,6 +9467,19 @@ window.CIFRAS = (function () {
     });
     const suma = function (a) { return partes.reduce(function (s, p) { return s + (p.apaga === a ? p.v : 0); }, 0); };
     return { mes: mes, partes: partes, minimo: suma(false), recorte: suma(true), normal: suma(false) + suma(true) };
+  }
+  /* La meta del fondo: `PROYECTO.fondoMeses` meses de lo indispensable del mes que sigue, hacia arriba a miles. Es una
+     cuenta, no un número guardado: sin renta gastas menos y la meta baja sola. `target` de ef-001 la copia al cargar
+     (`fondoMetaGuardar`) para lo que todavía lo lee de ahí, como las fotos del mes de Finanzas. */
+  function fondoMeta(ym) {
+    return Math.ceil(PROYECTO.fondoMeses * gastoEmergencia(mesSiguiente(ym || fechaLocal().slice(0, 7))).minimo / 1000) * 1000;
+  }
+  function fondoMetaGuardar() {
+    try {
+      const r = localStorage.getItem(KEY), f = r ? JSON.parse(r) : null, g = f && Array.isArray(f.goals) ? f.goals.filter(function (x) { return x.id === 'ef-001'; })[0] : null;
+      const m = fondoMeta();
+      if (g && m > 0 && +g.target !== m) { g.target = m; localStorage.setItem(KEY, JSON.stringify(f)); leer(); }
+    } catch (e) { /* sin almacenamiento, la meta se calcula igual */ }
   }
   /* Día por día, desde mañana y sin que entre un peso: los pagos del calendario (`agendaDia`) el día que caen y la comida
      —más rutinas y lo demás si `minimo` es falso— repartida entre los días del mes. `cubre` son los días que `dinero`
@@ -10104,6 +10122,7 @@ window.CIFRAS = (function () {
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   }
 
+  fondoMetaGuardar();
   return {
     n: n, v: v, texto: texto, aplicarDOM: aplicarDOM, refrescar: refrescar, tabla: tabla, fechaLocal: fechaLocal,
     // El balance mensual y sus piezas, para que Dashboard y Finanzas pinten LO MISMO.
@@ -10123,7 +10142,7 @@ window.CIFRAS = (function () {
     patrimonio: patrimonio,
     fondoMaestria: fondoMaestria,
     fondoMovimiento: fondoMovimiento, fondoBorrar: fondoBorrar, fondoSigno: fondoSigno, fondoLista: fondoLista,
-    gastoEmergencia: gastoEmergencia, recorridoFondo: recorridoFondo,
+    gastoEmergencia: gastoEmergencia, recorridoFondo: recorridoFondo, fondoMeta: fondoMeta,
     btcCompra: btcCompra, btcBorrar: btcBorrar, btcEsInversion: btcEsInversion, btcDeInversiones: btcDeInversiones,
     prestamoSimular: prestamoSimular, prestamoHechos: prestamoHechos, prestamoResumen: prestamoResumen, prestamoTabla: prestamoTabla,
     prestamoAbono: prestamoAbono, prestamoAbonoBorrar: prestamoAbonoBorrar, prestamoDatos: prestamoDatos,

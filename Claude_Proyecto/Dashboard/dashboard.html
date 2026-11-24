@@ -5511,12 +5511,11 @@ function fixTasaTCIfNeeded(){
    los renders posteriores ya salen con el número puesto.
    Recursiva y EN EL SITIO (no devuelve copia) para no romper las referencias que otras partes
    del código ya guardan a estos mismos objetos. */
-/* Constantes del proyecto y metas: del maestro, nunca a mano. `_metaFondo` prefiere el dato
-   vivo de Finanzas y solo cae al maestro si todavía no hay nada guardado. */
+/* Constantes del proyecto y metas: del maestro, nunca a mano. La meta del fondo es una cuenta
+   (CIFRAS.fondoMeta): los meses de lo indispensable que debe cubrir. */
 function _PG(){ return (window.CIFRAS && CIFRAS.PROYECTO) || {}; }
 function _metaFondo(){
-  const g = ((D.fin && D.fin.goals) || []).find(x => x.id === 'ef-001');
-  return (g && +g.target) || (window.CIFRAS && CIFRAS.n('fondoMeta')) || 10000;
+  return (window.CIFRAS && CIFRAS.fondoMeta()) || 0;
 }
 function cifrarLiterales(o){
   if(Array.isArray(o)){
@@ -9484,7 +9483,7 @@ function comoDecideHtml(){
   const pi = pasoInversionHoy();
   filas.push({ k: 'Qué invertir hoy · tu dinero hoy', c: 'var(--cy)', foto: apFoto(pi.foto), hoy: pi.titulo,
     regla: [['1 · La BBVA', 'Quincena a quincena y sin intereses, hasta dejarla en cero.'],
-      ['2 · GBM', 'Después, todo para Alemania; los primeros pesos completan el fondo de emergencia.'],
+      ['2 · GBM', 'Después, todo para Alemania. El fondo de emergencia va aparte, en CETES.'],
       ['El auto', 'No se adelanta: se paga con su mensualidad.'],
       ['Qué comprar', 'Lo dice tu reparto, en el panel de Qué invertir hoy.'],
       ['De dónde sale', 'Del orden de tu Plan Maestro con tus saldos de Finanzas; nunca del azar ni del mercado.']] });
@@ -12170,13 +12169,12 @@ function renderCalendario(){
     if(fi===fiHoy&&r&&r.dias>0){
       if(r.falta>0){
         h+='<div class="cal-med" style="border-color:rgba(var(--cy-rgb),.28);background:linear-gradient(140deg,rgba(var(--cy-rgb),.1),transparent 75%)">'+
-          '<div class="cal-med-k" style="color:var(--cy)">Ritmo requerido</div>'+
-          '<div class="cal-ritmo-n"><b>'+money(r.porDia)+'</b><span>/ día</span></div>'+
-          '<div class="cal-med-s">Faltan <b>'+money(r.falta)+'</b> para cerrar el fondo de emergencia y quedan <b>'+r.dias+' días</b> de fase.</div>'+
+          '<div class="cal-med-k" style="color:var(--cy)">Fondo de emergencia</div>'+
+          '<div class="cal-ritmo-n"><b>'+money(r.ef)+'</b><span>de '+money(r.meta)+'</span></div>'+
+          '<div class="cal-med-s">Faltan <b>'+money(r.falta)+'</b> para cubrir '+CIFRAS.n('fondoMeses')+' meses de lo indispensable.'+(CIFRAS.n('cetesDia15')>0?'':' El plan no le mete dinero: todo va a GBM.')+'</div>'+
           '<div class="cal-barra"><i style="width:'+r.pct+'%;background:linear-gradient(90deg,var(--g),var(--cy))"></i>'+
-            '<em style="left:'+r.esperado+'%"></em></div>'+
-          '<div class="cal-barra-l"><span style="color:var(--cy)">'+money(r.ef)+' · '+r.pct+'%</span>'+
-            '<span>ritmo esperado '+r.esperado+'%</span></div></div>';
+            '</div>'+
+          '<div class="cal-barra-l"><span style="color:var(--cy)">'+r.pct+'%</span></div></div>';
       }else{
         h+='<div class="cal-med" style="border-color:rgba(var(--g-rgb),.28);background:linear-gradient(140deg,rgba(var(--g-rgb),.1),transparent 75%)">'+
           '<div class="cal-med-k" style="color:var(--g)">Fondo de emergencia cerrado</div>'+
@@ -12372,8 +12370,8 @@ function pasoInversionHoy(){
   const mon = n => money(n);
 
   // El orden del plan (Adán, 5-oct-2026, y el prompt del Plan Maestro): la BBVA quincena a quincena
-  // hasta cero; después todo a GBM, y los primeros pesos que lleguen completan el colchón —el fondo
-  // ya no recibe aporte, lo que le falta lo cubre GBM—. El BYD se paga con su mensualidad: no se
+  // hasta cero; después todo a GBM. El fondo de emergencia va aparte, en CETES, y el plan no le mete
+  // dinero: aquí solo se dice cuánto lleva de su meta. El BYD se paga con su mensualidad: no se
   // adelanta. Antes la regla ponía el fondo primero y, completo el fondo, mandaba «no a GBM» por el
   // BYD hasta 2031.
   const tc = (F.debts||[]).find(d=>d.id==='d001'), bbvaSaldo = tc ? (+tc.balance||0) : 0;
@@ -12404,10 +12402,10 @@ function pasoInversionHoy(){
     color = 'var(--g)'; foto = 'inv-bolsa';
     que = 'Tu plan para juntar el dinero de Alemania: ya sin deuda de tarjeta, todo lo que ahorras se invierte.';
     titulo = 'Hoy sí inviertes: todo va a GBM';
-    porque = 'Lo que te sobra de cada quincena y lo que apartas de Didi va a tu cuenta de inversiones en GBM.'+(faltaEf>0?' Los primeros <b>'+mon(faltaEf)+'</b> completan tu fondo para emergencias.':'');
+    porque = 'Lo que te sobra de cada quincena y lo que apartas de Didi va a tu cuenta de inversiones en GBM.';
     hoy = 'Sigue tu reparto, <b>sin pensarlo dos veces</b>.';
     notaIco = 'meta'; nota = 'El auto no se adelanta: se paga con su mensualidad normal.';
-    fondo = faltaEf>0 ? '' : 'Tu fondo para emergencias está completo: <b>'+mon(ef)+'</b> en CETES.';
+    fondo = faltaEf>0 ? 'Tu fondo para emergencias lleva <b>'+mon(ef)+'</b> de <b>'+mon(metaEf)+'</b>, en CETES.' : 'Tu fondo para emergencias está completo: <b>'+mon(ef)+'</b> en CETES.';
   }
   // La tarjeta de Mi Día, en simple: la acción en grande, un detalle que dice de qué se trata el plan y el pie.
   const corto = bbvaSaldo > 0 ? (deHoy.length ? 'Paga '+mon(sumHoy)+' a tu tarjeta BBVA' : 'Hoy no toca pagar la tarjeta') : 'Hoy sí inviertes en GBM';

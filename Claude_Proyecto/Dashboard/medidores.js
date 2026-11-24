@@ -143,7 +143,14 @@
     ef.F = F; ef.dia = null;
     const x = dinero(F), k = hoyLocal(), meta = _metaFondo(), falta = Math.max(0, meta - x.ef), p = pct(x.ef, meta), editable = tiEditable(), alPlan = +C().n('cetesDia15') || 0;
     const prox = mas(k.slice(0, 7), 1), E = C().gastoEmergencia, G = E(prox), P = C().PROYECCION.meses, mano = x.ef + x.liqV, sig = contraPlan(F).sig;
-    const chip = v => { const n = Math.ceil(falta / v), d = new Date(); d.setDate(d.getDate() + Math.round(n * 15.2)); return boton('<b>' + money(v) + '</b> por quincena: ' + MES[d.getMonth()] + ' ' + d.getFullYear(), 'MEDIDORES.apartar(' + v + ')', 1); };
+    // Quincena por quincena (el 1 y el 15), contra la meta de cada mes: sin renta baja.
+    const llegas = v => {
+      let s = x.ef;
+      for (let i = 0; i < 24; i++) { const ym = mas(k.slice(0, 7), Math.floor((i + (+k.slice(8) < 15 ? 1 : 2)) / 2)); s += v; if (s >= C().fondoMeta(ym)) return ym <= C().PROYECTO.ultimoMesMexico ? mesTxt(ym) : ''; }
+      return '';
+    };
+    const chip = v => { const m = llegas(v); return boton('<b>' + money(v) + '</b> por quincena: ' + (m || 'no llega antes de irte'), 'MEDIDORES.apartar(' + v + ')', 1); };
+    const meses = C().PROYECTO.fondoMeses, cambia = P.filter(q => q.mes > k.slice(0, 7) && q.mes <= C().PROYECTO.ultimoMesMexico && C().fondoMeta(q.mes) < meta * .8)[0];
 
     // Los niveles: lo del fondo y, encima, la cuenta y el efectivo. Lo invertido no cuenta (Adán: «solo va efectivo, cetes y cuenta bbva»).
     const nivel = (t, v) => {
@@ -151,7 +158,7 @@
       return '<section class="kv-c kf-niv' + (x.ef >= v ? ' listo' : '') + '"><div><b>' + t + '</b><strong>' + money(v) + '</strong></div><div class="kf-cel">' + celdas(20, i => i < a ? 'on' : i < b ? 'inv' : '') + '</div>' +
         '<p>' + (x.ef >= v ? 'Ya lo cubre tu fondo.' : 'Le faltan <b>' + money(v - x.ef) + '</b>' + (mano >= v ? '; con tu cuenta y efectivo, ya llegas.' : mano > x.ef ? '; con tu cuenta y efectivo, <b>' + money(v - mano) + '</b>.' : '.')) + '</p></section>';
     };
-    const niveles = [['Tu meta', meta], ['Un mes de lo indispensable', G.minimo], ['Un mes como vives hoy', G.normal], ['Tres meses de lo indispensable', G.minimo * 3]]
+    const niveles = [['Un mes de lo indispensable', G.minimo], ['Dos meses de lo indispensable', G.minimo * 2], ['Tu meta: ' + plural(meses, 'mes', 'meses'), meta], [plural(meses, 'mes', 'meses') + ' como vives hoy', G.normal * meses]]
       .filter(n => n[1] > 0).sort((a, b) => a[1] - b[1]).map(n => nivel(n[0], n[1])).join('');
 
     // A la mano, en el orden en que se usa. El saldo de la cuenta lleva su fecha: si es viejo, se dice.
@@ -177,10 +184,10 @@
 
     return { kv: 'var(--w)', titulo: 'Fondo de emergencia', sub: 'Tu colchón en CETES: hasta qué día aguantas si dejas de ganar, y qué le falta.', listo: oyeRuta, html:
       '<div class="kf"><div class="kf-a"><section class="kv-c kf-hero"><div class="kf-an" role="img" aria-label="' + Math.round(p) + '% de tu meta">' + anillo(p) + '<div><strong>' + money(x.ef) + '</strong><span>de ' + money(meta) + '</span></div></div>' +
-        '<div class="kf-pc"><strong>' + Math.round(p) + '%</strong><span>' + (falta > 0 ? 'Te faltan <b>' + money(falta) + '</b> para tu meta.' : 'Meta completa. Lo que sobre va a GBM.') + '</span></div></section>' +
+        '<div class="kf-pc"><strong>' + Math.round(p) + '%</strong><span>' + (falta > 0 ? 'Te faltan <b>' + money(falta) + '</b> para cubrir ' + plural(meses, 'mes', 'meses') + ' de lo indispensable.' : 'Meta completa. Lo que sobre va a GBM.') + '</span></div></section>' +
       '<section class="kv-c kf-ruta" id="kfRuta" tabindex="0" aria-label="Los próximos 30 días sin ingresos">' + ruta(F) + '</section></div>' +
       (falta > 0 ? hoy('Hoy', alPlan > 0 ? 'Tu plan le mete <b>' + money(alPlan) + '</b> el día 15.' : 'Tu plan no le mete dinero: todo tu ahorro va a GBM' + (sig ? ' (el siguiente envío, ' + sigTxt(sig) + ')' : '') + '.',
-        alPlan > 0 ? '' : editable ? 'Si quieres llenarlo aparte, esto es lo que tardas:' : '', editable && !(alPlan > 0) ? [500, 1000, 2000].map(chip).join('') : '')
+        alPlan > 0 ? '' : editable ? 'Si quieres llenarlo aparte, esto es lo que tardas' + (cambia ? '; en ' + MESL[+cambia.mes.slice(5) - 1] + ' la meta baja a <b>' + money(C().fondoMeta(cambia.mes)) + '</b>, porque desde ' + MESL[+mas(cambia.mes, 1).slice(5) - 1] + ' gastas menos' : '') + ':' : '', editable && !(alPlan > 0) ? [2000, 4000, 6000].map(chip).join('') : '')
         : hoy('Listo', 'Tu fondo ya está completo: no le metas más.', 'El ahorro sigue yendo a GBM.')) +
       '<div class="kf-nivs">' + niveles + '</div>' + leyenda([['tu fondo en CETES', 'var(--ac)'], ['tu cuenta y tu efectivo', 'var(--kf-inv)']]) +
       '<div class="kf-d">' +

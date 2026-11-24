@@ -1930,7 +1930,7 @@
       <div class="hero-kpis">
         <div class="stat-badge"><span class="num neg">-$308,830</span><span>Patrimonio líquido al iniciar</span></div>
         <div class="stat-badge"><span class="num neg">$366,137</span><span>Deuda total al iniciar</span></div>
-        <div class="stat-badge"><span class="num">$0 / {{fondoMeta}}</span><span>Fondo emergencia al iniciar</span></div>
+        <div class="stat-badge"><span class="num">$0 / $10,000</span><span>Fondo emergencia al iniciar</span></div>
         <div class="stat-badge"><span class="num" id="kpiDiasMeta">—</span><span id="kpiDiasMetaLbl">Días hasta el millón</span></div>
       </div>
       <p class="p-quote">"Mi mayor miedo no es fracasar. Es no explotar mi potencial y quedarme estancado y pobre." Este perfil existe para que eso nunca pase.</p>
@@ -2765,8 +2765,8 @@
       <h3 class="fw-700 mb-12">Supuestos del plan — para que nada quede abierto</h3>
       <div class="concepto-item"><strong>Tiempo</strong>Fuera de {{empleador}} tu semana ya está llena: Didi de mañana y de noche, la clase de alemán de lunes a viernes, el gym y una hora y cuarto diaria para el Plan Maestro (20:00–21:15). La Fase 1 no te pide horas nuevas: ese bloque es para la solicitud, el ISTQB y tu palanca de ingreso, y el negocio de tu papá va en piloto automático, sin horas. Si en la práctica tienes menos, se corre lo que no tiene fecha dura, nunca la solicitud (31 mar) ni el ISTQB.</div>
       <div class="concepto-item">
-        <strong>El fondo de emergencia son los CETES más GBM</strong>
-        Hasta irte, tu colchón son los CETES ({{fondo}}) más lo que juntes en GBM: con la primera quincena que llegue ahí, después del {{bbvaCero}}, pasa de <strong class="text-gold">{{fondoMeta}}</strong>. Se toca solo ante un imprevisto —nunca para un gasto— y lo que salga se repone con la quincena siguiente. No hay "fondo semilla" para un negocio: hasta la Fase 4 no hace falta.
+        <strong>El fondo de emergencia son tus CETES</strong>
+        Llevas {{fondo}} de <strong class="text-gold">{{fondoMeta}}</strong>; la meta es cubrir {{fondoMeses}} meses de lo indispensable. El plan no le mete dinero —todo tu ahorro va a GBM—; lo que le sumes lo decides tú, en su ventana del Plan Maestro. Se toca solo ante un imprevisto —nunca para un gasto— y lo que salga se repone con la quincena siguiente. No hay "fondo semilla" para un negocio: hasta la Fase 4 no hace falta.
       </div>
       <div class="concepto-item" style="border:none;"><strong>Régimen fiscal — ya resuelto</strong>Si tu palanca de ingreso es freelance, necesitas régimen fiscal activo para facturar. Ya diste de alta el trámite en el SAT, así que este punto queda cerrado: factura desde el primer cobro, y tu declaración anual de abril la revisa un contador.</div>
     </div>
@@ -2811,7 +2811,7 @@
       <div class="fase-item" id="fase0">
         <span class="fase-tag">Fase 0 · 1 ago – 30 sep 2026 (~9 semanas)</span><span class="fase-status" id="faseStatus0">—</span>
         <h4>Cerrar la fuga y arrancar ingreso, no solo pensar</h4>
-        <div class="fase-meta"><span>🎯</span><span>Cerró el 30 sep 2026. <span class="text-green">✅ Banamex liquidada el 13 ago 2026</span> (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep y quedó otra vez en $0 el 30 sep) y <span class="text-green">✅ BBVA de $39,000 a $900 el 19 sep 2026</span> con la venta del Bitcoin. Lo que no cerró pasó a la Fase 1 con otro orden: la BBVA volvió a subir en diez días y ahora se paga <strong>quincena a quincena</strong>, y el fondo de emergencia son los CETES ({{fondo}}) más lo que entre a GBM: <strong>pasa de {{fondoMeta}} con la primera quincena que llegue ahí</strong>.</span></div>
+        <div class="fase-meta"><span>🎯</span><span>Cerró el 30 sep 2026. <span class="text-green">✅ Banamex liquidada el 13 ago 2026</span> (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep y quedó otra vez en $0 el 30 sep) y <span class="text-green">✅ BBVA de $39,000 a $900 el 19 sep 2026</span> con la venta del Bitcoin. Lo que no cerró pasó a la Fase 1 con otro orden: la BBVA volvió a subir en diez días y ahora se paga <strong>quincena a quincena</strong>, y el fondo de emergencia son los CETES ({{fondo}}): <strong>desde el 24 nov 2026 su meta son {{fondoMeses}} meses de lo indispensable, {{fondoMeta}}</strong>.</span></div>
         <div class="fase-checklist">
           <!-- El bloque "📅 Julio 2026" desapareció el 2026-08-12 al mover el arranque de la fase
                a agosto: sus 3 tareas (s0-1, s0-2, s0-6) se movieron aquí arriba, conservando sus
@@ -2825,7 +2825,7 @@
           <details class="fase-month" data-month="2026-08">
             <summary><span>📅 Agosto 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
             <div class="fase-month-body">
-              <div class="check-item"><input type="checkbox" id="s0-9"><label for="s0-9"><strong>Prioridad 1 — Fondo de emergencia a {{fondoMeta}}.</strong> Se quedó en los CETES ({{fondo}}): desde el 5 oct 2026 ya no recibe aporte aparte, y lo que le falta lo pone la primera quincena que llegue a GBM, después del {{bbvaCero}}.</label></div>
+              <div class="check-item"><input type="checkbox" id="s0-9"><label for="s0-9"><strong>Prioridad 1 — Fondo de emergencia a $10,000, la meta de entonces.</strong> Se quedó en los CETES ({{fondo}}): desde el 5 oct 2026 ya no recibe aporte aparte. Desde el 24 nov 2026 la meta son {{fondoMeses}} meses de lo indispensable: {{fondoMeta}}.</label></div>
               <div class="check-item"><input type="checkbox" id="s0-10"><label for="s0-10"><strong>Prioridad 2 — Liquidar las dos tarjetas.</strong> <span class="text-green">Banamex quedó en $0 el 30 sep 2026</span>; la BBVA bajó a $900 el 19 sep con la venta del Bitcoin y volvió a subir: la Fase 1 la paga quincena a quincena, sin intereses.</label></div>
               <div class="check-item"><input type="checkbox" id="s0-4"><label for="s0-4">Sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad). <span class="text-muted">Salió del plan el 1 nov 2026: no vendes nada de lo tuyo, usado vale mucho menos de lo que te costó.</span></label></div>
               <div class="check-item"><input type="checkbox" id="s0-3"><label for="s0-3">Plantilla Finanzas.html para venderla en comunidades de GBM (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Opción 1</a>). <span class="text-muted">Salió del plan el 3 oct 2026: hasta la Fase 4 no se abren frentes de negocio nuevos.</span></label></div>
@@ -2914,7 +2914,7 @@
           <div class="check-item"><input type="checkbox" id="mtc3"><label for="mtc3">Liquidar la deuda de Banamex <span class="text-green">(✅ 13 ago 2026 — pagaste los $9,000 completos, 5 meses antes de la meta de ene 2027)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc6"><label for="mtc6">Cancelar la tarjeta Banamex <span class="text-muted">(era la segunda mitad de la meta anterior — sigue pendiente; desde el 30 sep 2026 ya está en $0 y se puede cancelar)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc4"><label for="mtc4">Liquidar la TC de BBVA <span class="text-muted">(quincena a quincena: en cero el {{bbvaCero}} — ya en tu Plan Maestro)</span></label></div>
-          <div class="check-item"><input type="checkbox" id="mtc5"><label for="mtc5">Fondo de emergencia completo a {{fondoMeta}} <span class="text-muted">(los CETES, {{fondo}}, más lo que entre a GBM: pasa de la meta con la primera quincena que llegue ahí, después del {{bbvaCero}})</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mtc5"><label for="mtc5">Fondo de emergencia completo a {{fondoMeta}} <span class="text-muted">({{fondoMeses}} meses de lo indispensable; hoy llevas {{fondo}} en CETES)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc10"><label for="mtc10">Aprobar el ISTQB CT-GenAI <span class="text-muted">(enero de 2027 — detalle en Dashboard → Mis Metas)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc11"><label for="mtc11">Subir tu ingreso {{extraSalida}} al mes <span class="text-muted">(desde noviembre: es lo que decide si te vas en septiembre de 2027 o en 2028 — se mide el 31 de marzo)</span></label></div>
         </div>

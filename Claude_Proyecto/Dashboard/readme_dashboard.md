@@ -698,8 +698,8 @@ ver `DATOS-MAESTROS.md` → *Las clases de dato*): la página solo pinta y guard
   cargar, como en cualquier app. Tras recargar, un aviso dice qué cambió (*✓ Guardado: Renta del depa $11,250 →
   $12,000; El día 1, con depa $2,050 → $1,300*). **Volver al plan** es otro cambio con su vista previa: regresa la
   cifra y sube el ahorro que había bajado con ella.
-- **Las metas** (`meta:ef-001`, `meta:g001`) se guardan en `finanzasmx_v2`: solo donde está Finanzas; en el iPad
-  dicen *se cambia en tu PC*.
+- **La meta de la maestría** (`meta:g001`) se guarda en `finanzasmx_v2`: solo donde está Finanzas; en el iPad
+  dice *se cambia en tu PC*.
 - **Abajo, tres cajas**: *Se calculan solas* (`#derivadas`: cada derivada con nombre y de qué sale), *Se cambian en su
   app* (deudas, fondo, inversiones, Bitcoin, movimientos, hábitos) y *Todavía con Claude* (las fechas del plan, los
   precios del súper y un ingreso o gasto nuevo, con el porqué).
@@ -1171,8 +1171,10 @@ futurista y más clara de info"*; el lienzo está en `diseno-fondo/`). De arriba
   indispensable / Como vives hoy** (`modoFondo`) cambia el gasto. El renglón de abajo (`#kfLee`) dice cuánto falta para pasar
   cada pago, y el de cualquier día al pasar el ratón, el dedo o las flechas. La cuenta es de `CIFRAS.recorridoFondo`.
 - **Lo de hoy**: el siguiente envío a GBM y en cuánto lo llenarías apartando de cada quincena (`apartar` llena el formulario).
-- **Los niveles** (`.kf-niv`): la meta, un mes de lo indispensable, uno como vives hoy y tres de lo indispensable
-  (`CIFRAS.gastoEmergencia` del mes que sigue). Lo del fondo en amarillo y la cuenta y el efectivo apagados encima.
+- **Los niveles** (`.kf-niv`): uno y dos meses de lo indispensable, la meta y esos meses como vives hoy
+  (`CIFRAS.gastoEmergencia` del mes que sigue). **La meta** es `CIFRAS.fondoMeta()`: `PROYECTO.fondoMeses` (3) meses de lo
+  indispensable, hacia arriba a miles (Adán: *"la meta de fondo de ahorro debe cubrir mis gastos mínimo 3 meses"*); sin renta
+  baja sola, y los botones de *Hoy* ya lo cuentan. Los meses se cambian en Mis cifras. Lo del fondo en amarillo y la cuenta y el efectivo apagados encima.
 - **A la mano**: solo cuenta, efectivo y CETES —ni Bitcoin ni lo invertido cuentan en esta ventana (Adán: *"aquí solo va
   efectivo, cetes, y cuenta bbva, no va bitcoin"*)—, con aviso si el saldo dicho tiene más de 7 días; **Un mes sin sueldo**, lo
   que se paga, lo que se apaga y cuánto baja sin renta; y **Meter o sacar dinero**. No lleva las preguntas de emergencia ni

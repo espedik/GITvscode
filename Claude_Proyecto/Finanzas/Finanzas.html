@@ -1009,15 +1009,16 @@ const KEY = 'finanzasmx_v2';
 /* Datos del proyecto: viven en ../Dashboard/datos-maestros.js, no aquí. Estaban escritos a mano
    en CINCO sitios de este archivo, y el gym llegó a tener dos valores a la vez —$650 en
    renderGBM() y $1,500 en los otros cuatro— desde el cambio de gimnasio del 18-ago-2026.
-   `_PG()` da las constantes; `_autoMin()` y `_metaFondo()` prefieren el dato VIVO de S y solo
-   caen al maestro si todavía no hay nada guardado. */
+   `_PG()` da las constantes; `_autoMin()` prefiere el dato VIVO de S y solo
+   cae al maestro si todavía no hay nada guardado. */
 const _PG = () => (window.CIFRAS && window.CIFRAS.PROYECTO) || {};
 const _autoMin = () => { const d=(S.debts||[]).find(x=>x.id==='d003'); return (d&&+d.min)||_PG().autoPago||0; };
 // El dinero de la maestría: una sola cuenta, la del maestro (CIFRAS.fondoMaestria). Aquí había
 // cinco copias de la misma suma; Mis Metas y Coach leen la misma función.
 const _maeHoy = f => (window.CIFRAS && CIFRAS.fondoMaestria) ? CIFRAS.fondoMaestria(f || S).total : 0;
 const _metaMaestria = () => { const g=(S.goals||[]).find(x=>x.id==='g001'); return (g&&+g.target)||(window.CIFRAS&&CIFRAS.n('maestriaMeta'))||500000; };
-const _metaFondo = () => { const g=(S.goals||[]).find(x=>x.id==='ef-001'); return (g&&+g.target)||10000; };
+// La meta del fondo es una cuenta del maestro: los meses de lo indispensable que debe cubrir (CIFRAS.fondoMeta).
+const _metaFondo = () => (window.CIFRAS && CIFRAS.fondoMeta()) || 0;
 let S = { transactions:[], budgets:[], debts:[], goals:[], investments:[], activos:[], btcHistory:[], btcPriceHist:[], currentBtcPrice:0, usdMxn:19.5, btcLastFetch:'', btcHistFetch:'', weeklyLeftover:0, emergencyFund:0, efAportes:[], didiMonthly:0, gbmMonth:'', indicatorHistory:[] };
 let editId = null, confCb = null, payDebtId = null;
 let btcEditId = null, activoEditId = null;
@@ -5541,7 +5542,7 @@ function init() {
   if(!S.goals.find(g=>g.id==='ef-001')) {
     S.goals.unshift({
       id:'ef-001', name:'Fondo de emergencia (CETES)', icon:'🛡️',
-      target:10000, current:S.emergencyFund||0, date:''
+      target:_metaFondo(), current:S.emergencyFund||0, date:''
     });
     save();
   }

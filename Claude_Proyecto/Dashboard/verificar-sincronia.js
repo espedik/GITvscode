@@ -337,7 +337,8 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
     P[k] = orig;                                      // restaurar
     const declarado = C.impacto(k);
     movidas.forEach(m => { if (declarado.indexOf(m) === -1) faltan.push(k + ' → ' + m); });
-    declarado.forEach(d => { if (movidas.indexOf(d) === -1) sobran.push(k + ' → ' + d); });
+    // La meta del fondo va redondeada a miles y con los gastos del mes que sigue (con renta o sin ella): +7 no la mueve.
+    declarado.forEach(d => { if (movidas.indexOf(d) === -1 && d !== 'fondoMeta') sobran.push(k + ' → ' + d); });
   });
 
   if (faltan.length)
@@ -3362,7 +3363,7 @@ function promptsDeLoTocado() {
   const raiz = k => k.indexOf('SUPUESTOS.') === 0 ? C.PROYECCION.supuestos : k.indexOf('PESO.') === 0 ? C.PESO : C.PROYECTO;
   const L = A.lista();
   L.forEach(function (e) {
-    if (e.k.indexOf('meta:') === 0) { if (['ef-001', 'g001'].indexOf(e.k.slice(5)) < 0) malos.push(e.k + ': no es una meta conocida'); return; }
+    if (e.k.indexOf('meta:') === 0) { if (e.k !== 'meta:g001') malos.push(e.k + ': no es una meta conocida'); return; }
     if (typeof e.valor !== 'number') { malos.push(e.k + ': no existe en el maestro o no es un número'); return; }
     if (['peso', 'eur', 'tc', 'porc', 'tasa', 'num'].indexOf(e.t) < 0) malos.push(e.k + ': tipo desconocido ' + e.t);
     if (e.k.indexOf('SALIDA.') === 0) {
@@ -3609,6 +3610,12 @@ function promptsDeLoTocado() {
     if (todo.corte || todo.cubre !== 30 || todo.falta > 0.01) malos.push('con el total de los 30 días, recorridoFondo no llega al final');
     if (Math.abs(poco.falta - (poco.total - 6000)) > 0.01) malos.push('lo que falta para los 30 días no cuadra');
   }
+  // La meta: los meses de lo indispensable, una cuenta del maestro que las dos apps llaman, nunca un número guardado.
+  if (C && typeof C.fondoMeta === 'function') {
+    const mt = C.fondoMeta('2026-11'), de = C.PROYECTO.fondoMeses * C.gastoEmergencia('2026-12').minimo;
+    if (C.PROYECTO.fondoMeses < 3 || mt < de || mt - de >= 1000) malos.push('la meta del fondo (' + mt + ') no cubre ' + C.PROYECTO.fondoMeses + ' meses de lo indispensable (' + de + '), con 3 como mínimo');
+  } else malos.push('el maestro ya no exporta fondoMeta');
+  ['Dashboard/dashboard.html', 'Finanzas/Finanzas.html'].forEach(r => { const t = leer(r), i = t.indexOf('_metaFondo'), k = t.slice(i).search(/function _metaFondo|const _metaFondo/); if (t.slice(i + k, i + k + 140).indexOf('CIFRAS.fondoMeta()') < 0) malos.push('_metaFondo de ' + r + ' ya no llama a CIFRAS.fondoMeta'); });
   const m = leer('Dashboard/medidores.js'), f = m.slice(m.indexOf('// ══ Fondo de emergencia'), m.indexOf('// ══ Fondo Maestría'));
   if (f.indexOf('.recorridoFondo(') < 0 || f.indexOf('.gastoEmergencia') < 0) malos.push('la ventana del fondo ya no usa recorridoFondo / gastoEmergencia');
   if (/kpiGastoMensual|fijosTotal/.test(f)) malos.push('la ventana del fondo volvió a medir con el promedio de movimientos o con los fijos solos');
