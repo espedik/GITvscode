@@ -1105,7 +1105,9 @@ arriba abajo:
   proyección en cian—, el plan y lo que se necesita punteados, las cuatro fechas con lo que piden y la línea de lo que falta,
   lo que ya pasó sombreado, y la venta de Bitcoin dicha en su mes. El globo da las cuatro cifras de cada mes.
 - **El flujo, debajo de la gráfica y alineado con cada mes** (`.km-f`): lo que entra, lo que sale, lo que te queda, lo que pagas
-  de la salida, lo que llevas o tendrías, tu plan y lo que se necesita (Adán: *"te faltan las cifras que se ingresan cada mes… todo el cashflow"*).
+  de la salida, lo que llevas o tendrías, tu plan y lo que se necesita. *Entra*, *Sale*, *Te queda* y *Llevas* se abren y se contraen (`MEDIDORES.flujo`): de dónde
+  viene, en qué se va, a qué activo entra y en qué está, con cifras que suman exacto (Adán: *"desglósame… para que se contraiga
+  esa sección"* y *"te faltan las cifras que se ingresan cada mes… todo el cashflow"*).
 - **Todo lo que tienes** —bolsa, CETES, Bitcoin, cuenta, efectivo y depósito— y **lo que cuesta irte**, mes por mes
   (`SALIDA.costos`).
 - **Qué hacer** (`.km-paso`): ponerte al corriente o seguir así, el ingreso nuevo, recortar rutinas y decidir; cambia con tu
@@ -1282,7 +1284,7 @@ así que el desglose suma exactamente lo que dice la cifra. *Sale* va por secci�
 con su barra y cada concepto con sus días, sin la de ahorro a GBM; *Entra*, quincena por quincena; *Te queda*, la cuenta
 —entra, sale y lo de tus quincenas a GBM—; *A la BBVA*, abono por
 abono de `planBbva` con su origen (`ABONO_DE`) y el día en que el plan la liquida; *A GBM*, lo de tus quincenas y lo de Didi
-lunes por lunes (`didiGbmLunes`); *Didi trae*, a dónde va: a la BBVA, a GBM y lo que te queda para la carga y lo tuyo —si lo que apartas pasa de lo que trae (desde febrero de 2027, $10,000 contra los $6,000 que trae en promedio), lo dice en rojo en vez de dar un saldo negativo—.
+lunes por lunes (`didiGbmLunes`); *Didi trae*, a dónde va: a la BBVA, a GBM y lo que te queda para la carga y lo tuyo —si lo que apartas pasa de lo que trae (desde febrero de 2027, $10,000 contra los $7,000 que trae), lo dice en rojo en vez de dar un saldo negativo—.
 
 ### La quincena, una sola cuenta (`ctTramo`)
 

@@ -59,7 +59,7 @@ Dos reglas que costaron una vuelta cada una:
   `yaContado` cazaba `Quincena ALTEN` pero se le escapaban `Sueldo` o `Nómina`, y cada uno
   sumaba $20,500 de más.
 - **Los tres mensuales llevan su propia comprobación**, porque `yaContado` compara importes y
-  un cobro de Didi de $2,800 no se parece a los $6,000 del mes. Si el mes trae algo anotado
+  un cobro de Didi de $2,800 no se parece a los $7,000 del mes. Si el mes trae algo anotado
   que caiga en sus palabras o su categoría, **manda lo anotado**.
 
 Lo que cuesta comer se **deriva de la lista de compras**, cuyos precios viven en
@@ -154,11 +154,11 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 |---|---|---|
 | `{{sueldo}}` | $41,000 | Bruto mensual ALTEN, quincenal a BBVA |
 | `{{sueldoQuinc}}` | $20,500 | Derivada: la mitad de `sueldo` |
-| `{{didiMes}}` | $6,000 | Lo que trae Didi al mes en promedio, dicho por Adán el 3-nov-2026 (antes se suponían $11,200, ~$400/día × 28) |
-| `{{didiAhorro}}` | $5,000 | Lo que Didi aparta al mes, en promedio —cada lunes lo mismo, 12 entre 52 (`didiSemana`: $1,153.85), así que un mes con cinco lunes junta más—: a la BBVA mientras tenga saldo, después a GBM; los lunes de la quincena después de liquidarla, para vivir (`lunesDidiTuyos`). De octubre de 2026 a enero de 2027 (dicho por Adán) |
+| `{{didiMes}}` | $7,000 | Lo que trae Didi al mes, como mínimo (Adán, 24-nov-2026) |
+| `{{didiAhorro}}` | $7,000 | Lo que Didi aparta al mes, en promedio —cada lunes lo mismo, 12 entre 52 (`didiSemana`: $1,615.38), así que un mes con cinco lunes junta más—: a la BBVA mientras tenga saldo, después a GBM; los lunes de la quincena después de liquidarla, para vivir (`lunesDidiTuyos`). De octubre de 2026 a enero de 2027 (dicho por Adán) |
 | `{{didiAhorroMas}}` | $10,000 | Lo mismo desde `PROYECTO.didiMasDesde` (febrero de 2027), cuando trabaja más horas. El último mes en México va la mitad (`didiAlAhorro`) |
 | `{{siVale}}` | $940 | Vale de despensa |
-| `{{ingresoTotal}}` | $47,940 | Derivada: sueldo + Didi + Si Vale |
+| `{{ingresoTotal}}` | $48,940 | Derivada: sueldo + Didi + Si Vale |
 | `{{renta}}` | $11,250 | Día 1 · hasta enero de 2027 (`PROYECTO.rentaHasta`): el depa se entrega a fin de mes y desde febrero la renta es ahorro |
 | `{{aporteCasa}}` | $3,000 | Día 1, a su familia, de `PROYECTO.enCasaDesde` (el mes siguiente a `rentaHasta`) a `PROYECTO.ultimoMesMexico`. En casa come ahí y solo paga su desayuno |
 | `{{gym}}` `{{gymNombre}}` | $650 · Total Pass | Día 17 |
@@ -337,19 +337,19 @@ pero el nombre de la variable se queda corto.
 | `{{sperrkonto}}` | $249,984 — la cuenta bloqueada, €11,904 al euro del plan | derivada |
 | `{{sperrkontoEur}}` `{{colegiaturaEur}}` `{{werkstudentEur}}` | €11,904 · €1,900 · €1,100 — en euros, como los pide Alemania: la cuenta bloqueada (`SALIDA.costos`), la colegiatura de cada semestre y lo que deja el Werkstudent al mes, neto (`SUPUESTOS.alemania`) (`fmt: 'txt'`) | constantes |
 | `{{bydRenta}}` | $7,500 — lo que deja el BYD rentado al mes, neto (`SUPUESTOS.byd.rentaNeta`) | constante |
-| `{{ahorroMesDepa}}` | $14,000 — lo que llega a GBM en un mes con depa: lo del 1, lo del 15 y Didi | derivada (`mesTipo(false)`) |
+| `{{ahorroMesDepa}}` | $16,000 — lo que llega a GBM en un mes con depa: lo del 1, lo del 15 y Didi | derivada (`mesTipo(false)`) |
 | `{{ahorroMesCasa}}` | $31,000 — lo mismo en casa de su familia: lo del 1, lo del 15 y Didi | derivada (`mesTipo(true)`) |
 | `{{gastoPersonalDepa}}` | $8,022 — lo que queda del sueldo con depa tras los fijos, la comida y el ahorro: su gasto personal, con sus rutinas dentro; lo que pague con tarjeta, saldado en la misma quincena | derivada |
 | `{{gastoPersonalCasa}}` | $7,255 — lo mismo en casa | derivada |
 | `{{cuidadoMes}}` | $4,624 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`) | derivada |
 | `{{recorteRutinas}}` | $1,880 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $857 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
-| `{{alemaniaMarzo}}` | $109,362 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
+| `{{alemaniaMarzo}}` | $114,438 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
 | `{{salidaAgosto}}` | $324,284 — lo que pide la salida completa en agosto de 2027: la cuenta bloqueada, la reserva del BYD, el colchón y la colegiatura del primer semestre (`cortes.salida.pide`) | derivada; se mueve con `PROYECTO.eurMxn` |
-| `{{extraSalida}}` | $13,252 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
-| `{{marzoParaSalida}}` | $175,620 — lo que tendría GBM al cerrar la Fase 1 con ese ingreso nuevo: el punto de control del 31 de marzo | derivada |
-| `{{mayoParaSalida}}` | $253,292 — lo mismo el día de decidir (`PROYECTO.maestriaDecision`) | derivada |
+| `{{extraSalida}}` | $12,744 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
+| `{{marzoParaSalida}}` | $178,158 — lo que tendría GBM al cerrar la Fase 1 con ese ingreso nuevo: el punto de control del 31 de marzo | derivada |
+| `{{mayoParaSalida}}` | $254,815 — lo mismo el día de decidir (`PROYECTO.maestriaDecision`) | derivada |
 | `{{salida2028}}` | «sobran …» o «faltan …»: la salida completa si se mueve a septiembre de 2028 (`desfase: 12`, `fmt: 'txt'`) | derivada |
-| `{{alemaniaJunio}}` | $186,268 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
+| `{{alemaniaJunio}}` | $191,344 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
 | `{{bbvaCero}}` | 15 nov 2026 — el día que la BBVA queda en cero con `planBbva` (`fmt: 'fecha'`) | derivada |
 | `{{bbvaIntereses}}` | $0 — lo que costaría en intereses llegar a cero; en 0 con `PROYECTO.bbvaSinIntereses` | derivada |
 | `{{bbvaRuta}}` | «el domingo 15 nov, $2,300 de la quincena»: los abonos que le quedan a la BBVA, desde hoy (`bbvaRutaTxt`, `fmt: 'txt'`) | derivada de `planBbva` |

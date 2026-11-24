@@ -3623,6 +3623,11 @@ function promptsDeLoTocado() {
     if (fin(a).plan !== P(C.PROYECCION.cortes.salida.mes) || a.meses.some(x => x.tipo === 'proy' && !(x.entra > 0))) malos.push('el plan de la salida no es el de la proyección, o un mes que falta no dice lo que entra');
     const g = C.ritmoMaestria(Object.assign(F(justo.slice(0, 2)), { activos: [{ type: 'liquido', value: 20500 }] }), { real: P('2026-12') + 11250 + 20500, hoy: k });
     if (Math.abs(g.ritmo - a.ritmo) > 0.01) malos.push('la quincena recién depositada cuenta como ahorro en el ritmo');
+    const sO = o => Object.keys(o).reduce((s, k) => s + o[k], 0);
+    a.meses.forEach(x => {
+      if (Math.abs(sO(x.entraDe) - x.entra) > 0.01 || (x.saleDe && Math.abs(sO(x.saleDe) - x.sale) > 0.01)) malos.push(x.mes + ': el desglose de lo que entra o sale no suma su total');
+      const t = x.tipo === 'proy' ? x.proy : x.real; if (x.activos && Math.abs(sO(x.activos) - t) > 0.01) malos.push(x.mes + ': los activos no suman lo que llevas');
+    });
     const sin = C.ritmoMaestria(F([]), { real: 5000, hoy: '2026-12-10' }); if (sin.ritmo !== 1) malos.push('sin cierres el ritmo no es el del plan');
   }
   const m = leer('Dashboard/medidores.js'); if (m.indexOf('.ritmoMaestria(') < 0 || m.indexOf("trayecto('salida'") < 0) malos.push('la ventana del Fondo Maestría ya no usa ritmoMaestria');

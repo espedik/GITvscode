@@ -168,6 +168,11 @@
   // ══ Fondo Maestría ══
   // Lo que llevabas en cada cierre (los de Finanzas · Indicadores), lo de hoy y a dónde llegas si sigues juntando al ritmo
   // de tus últimos meses. La cuenta es del maestro (CIFRAS.ritmoMaestria): cada cierre nuevo la mueve.
+  const abiertoF = {};   // qué renglones del flujo están abiertos; se recuerda mientras la página viva
+  M.flujo = function (id, b) {
+    abiertoF[id] = !abiertoF[id]; const g = b.closest('.km-f'); if (!g) return;
+    g.classList.toggle('ab-' + id, abiertoF[id]); b.setAttribute('aria-expanded', abiertoF[id]); graficas.slice().forEach(q => q[1](q[0], q[2]));
+  };
   M.maestria = function (F) {
     const R = contraPlan(F), x = R.x, fm = fondoMaestria(), T = C().ritmoMaestria(F, { real: fm.total }), L = T.meses, cor = cortesSalidaDash().map(c => ({ mes: c.mes, pide: c.pide, t: c.t }));
     const sal = cor[cor.length - 1], fin = L[L.length - 1], falta = sal ? sal.pide - fin.proy : 0, pctR = Math.round(T.ritmo * 100), ok = falta <= 0, dif = T.hoy - T.planHoy;
@@ -196,16 +201,28 @@
     pasos.push(['Decide el ' + diaTxt(dec), plural(diasDec, 'día', 'días'), 'Con la admisión y <b>' + money(mayo) + '</b> te vas. Con menos, irte en septiembre de 2028 te deja ' + (c28.falta > 0 ? 'con ' + money(c28.falta) + ' por juntar.' : '<b>' + money(-c28.falta) + '</b> de sobra.')]);
 
     // El flujo de cada mes, debajo de la gráfica y alineado con ella.
-    const cel = (h, cls) => '<span class="' + (cls || '') + '">' + h + '</span>', fl = (t, g, cls) => '<b>' + t + '</b>' + L.map(m => cel(g(m), cls)).join(''), num = n => n == null ? '' : money(n), sg = n => n == null ? '' : '<em class="' + (n >= 0 ? 'ok' : 'mal') + '">' + signo(n) + '</em>';
-    const flujo = '<div class="km-tw"><div class="km-f" style="--n:' + L.length + '"><b></b>' + L.map(m => cel(MES[+m.mes.slice(5) - 1] + (m.mes.slice(5) === '01' ? ' ' + m.mes.slice(2, 4) : '') + '<i>' + (m.tipo === 'cierre' ? 'cierre' : m.tipo === 'hoy' ? 'hoy' : '') + '</i>', 'h' + (m.tipo === 'hoy' ? ' hoy' : ''))).join('') +
-      fl('Entra', m => num(m.entra)) + fl('Sale', m => m.sale == null ? '' : '−' + money(m.sale)) + fl('Te queda', m => sg(m.queda)) + fl('Pagas de la salida', m => m.salida < -1 ? '−' + money(-m.salida) : '') + fl('Llevas o tendrías', m => num(m.tipo === 'proy' ? m.proy : m.real), 'tot') + fl('Tu plan', m => num(m.plan)) + fl('Se necesita', m => num(m.nec)) + '</div></div>';
+    const cel = (h, cls) => '<span class="' + (cls || '') + '">' + h + '</span>', num = n => n == null ? '' : money(n), sg = n => n == null ? '' : '<em class="' + (n >= 0 ? 'ok' : 'mal') + '">' + signo(n) + '</em>', men = n => n == null || Math.abs(n) < 1 ? '' : (n > 0 ? '−' + money(n) : '+' + money(-n));
+    const fl = (t, g, cls) => '<b' + (cls ? ' class="' + cls + '"' : '') + '>' + t + '</b>' + L.map(m => cel(g(m), cls)).join('');
+    // Un renglón que se abre: su total y, al tocarlo, de qué está hecho. Un renglón de detalle vacío en todos los meses no sale.
+    const abre = (id, t, g, det, cls) => '<b' + (cls ? ' class="' + cls + '"' : '') + '><button type="button" class="km-mas" aria-expanded="' + !!abiertoF[id] + '" onclick="MEDIDORES.flujo(\'' + id + '\',this)">' + t + '</button></b>' + L.map(m => cel(g(m), cls)).join('') +
+      det.filter(q => L.some(m => q[1](m) !== '')).map(q => fl(q[0], q[1], 'sub s-' + id)).join('');
+    const de = (o, k) => o ? o[k] : null, posi = n => n == null || Math.abs(n) < 1 ? '' : money(n), NOM = Object.assign({}, EF_NOM, { suscripciones: 'Suscripciones', cuidado: 'Rutinas', depa: 'Servicios', familia: 'A tu familia', tarjeta: 'Tarjetas', resto: 'Lo demás' });
+    const ACT = [['bolsa', 'Bolsa (GBM)'], ['cetes', 'CETES'], ['btc', 'Bitcoin'], ['liq', 'Cuenta y efectivo'], ['dep', 'Depósito']];
+    // A qué activo entró cada mes: lo que cambió cada uno. En los meses que faltan, lo que juntas va a GBM.
+    const cambio = (k, m) => { const i = L.indexOf(m), a = i > 0 ? L[i - 1].activos : null; if (m.tipo === 'proy') return k === 'bolsa' ? m.queda : null; return a && m.activos && m.queda != null ? m.activos[k] - a[k] : null; };
+    const flujo = '<div class="km-tw"><div class="km-f' + Object.keys(abiertoF).filter(k => abiertoF[k]).map(k => ' ab-' + k).join('') + '" style="--n:' + L.length + '"><b></b>' + L.map(m => cel(MES[+m.mes.slice(5) - 1] + (m.mes.slice(5) === '01' ? ' ' + m.mes.slice(2, 4) : '') + '<i>' + (m.tipo === 'cierre' ? 'cierre' : m.tipo === 'hoy' ? 'hoy' : '') + '</i>', 'h' + (m.tipo === 'hoy' ? ' hoy' : ''))).join('') +
+      abre('entra', 'Entra', m => num(m.entra), [['Sueldo', 'sueldo'], ['Didi', 'didi'], ['Vale', 'vale'], ['Otros', 'otros']].map(q => [q[0], m => posi(de(m.entraDe, q[1]))])) +
+      abre('sale', 'Sale en gastos', m => m.sale == null ? '' : men(m.sale), ['renta', 'depa', 'celular', 'suscripciones', 'familia', 'auto', 'iphone', 'comida', 'cuidado', 'tarjeta', 'resto'].map(k => [NOM[k], m => men(de(m.saleDe, k))])) +
+      abre('queda', 'Entra a tus activos', m => sg(m.queda), ACT.map(q => [q[1], m => { const n = cambio(q[0], m); return n == null || Math.abs(n) < 1 ? '' : sg(n); }])) +
+      fl('Pagas de la salida', m => m.salida < -1 ? '−' + money(-m.salida) : '') +
+      abre('llevas', 'Llevas o tendrías', m => num(m.tipo === 'proy' ? m.proy : m.real), ACT.map(q => [q[1], m => posi(de(m.activos, q[0]))]), 'tot') + fl('Tu plan', m => num(m.plan)) + fl('Se necesita', m => num(m.nec)) + '</div></div>';
 
     return { kv: 'var(--cy)', titulo: 'Fondo Maestría', sub: 'Tu dinero para irte a Esslingen en septiembre de 2027.', html:
       '<div class="km"><div class="km-a"><section class="kv-c km-hero"><span>A tu ritmo, en ' + MESL[+fin.mes.slice(5) - 1] + ' tendrías</span><div><strong>' + money(fin.proy) + '</strong><em>de ' + money(sal.pide) + '</em></div>' + med(pct(fin.proy, sal.pide)) +
           '<p class="' + (ok ? 'si' : 'no') + '">' + (ok ? 'Sí llegas: te sobran ' + money(-falta) + '.' : 'Todavía no llegas: te faltan ' + money(falta) + '.') + '</p></section>' +
         '<div class="kv-tiles">' + [['Llevas en todo', money(T.hoy), dif < -1 ? 'Tu plan pedía ' + money(T.planHoy) + '. <em class="mal">Vas ' + money(-dif) + ' abajo</em>' : 'Tu plan pedía ' + money(T.planHoy) + '. <em class="ok">Vas ' + money(dif) + ' arriba</em>'],
           ['Te entra cada mes', money((+C().n('sueldo') || 0) + (+C().n('didiMes') || 0) + (+C().n('siVale') || 0)), 'sueldo ' + money(+C().n('sueldo') || 0) + ', Didi ' + money(+C().n('didiMes') || 0) + ' y vale ' + money(+C().n('siVale') || 0)],
-          ['Guardaste de lo que tocaba', pctR + '%', (T.medidos.length ? T.medidos.map(q => mesTxt(q.mes).slice(0, 3) + ': ' + money(Math.round(q.gano)) + ' de ' + money(Math.round(q.toca))).join('; ') : 'se mide con tu primer cierre') + (T.tope ? '. La proyección usa ' + pctR + '% como máximo' : '')],
+          ['Guardas de tu quincena', pctR + '%', (T.medidos.length ? T.medidos.map(q => mesTxt(q.mes).slice(0, 3) + ': ' + money(Math.round(q.gano)) + ' de ' + money(Math.round(q.toca))).join('; ') : 'se mide con tu primer cierre') + '. Didi va aparte: ' + money(T.didi * T.didiCumple) + ' al mes' + (T.tope ? '. La proyección usa ' + pctR + '% como máximo' : '')],
           ['Necesitas guardar', money(alMes), 'al mes, desde ' + (queda[0] ? MESL[+queda[0].mes.slice(5) - 1] : 'ya') + '. Para ir en tu plan, cierra ' + MESL[+este.mes.slice(5) - 1] + ' con ' + money(este.plan)]]
           .map(q => '<div class="kv-tile"><span>' + q[0] + '</span><b>' + q[1] + '</b><i>' + q[2] + '</i></div>').join('') + '</div></div>' +
       '<div class="km-b"><section class="kv-c km-g"><div class="km-cab"><div><h3>Tu camino a la salida</h3><p>Todo tu dinero: tus cierres de Finanzas y lo que tendrías cada mes si sigues igual. Cada cierre mueve la línea.</p></div>' +
@@ -219,7 +236,7 @@
   // se necesita punteados, y las cuatro fechas con lo que piden.
   function trayecto(id, o) {
     const g = base(id, { aria: 'Lo que llevabas en cada cierre, lo que llevas hoy y lo que tendrías cada mes hasta la salida, contra tu plan y lo que se necesita' }); if (!g) return; guarda(id, trayecto, o);
-    const L = o.L, n = L.length, chico = g.w < 760; g.l = chico ? 52 : 118; g.r = chico ? 16 : 0; g.t = 30; g.b = chico ? 44 : 10;
+    const L = o.L, n = L.length, chico = g.w < 760; g.l = chico ? 52 : 148; g.r = chico ? 16 : 0; g.t = 30; g.b = chico ? 44 : 10;
     const alto = Math.max(...L.map(m => Math.max(m.real || 0, m.proy || 0, m.plan || 0, m.nec || 0)), ...o.cor.map(c => c.pide)), Y = ejes(g, 0, alto * 1.05), X = i => chico ? g.l + 26 + i / (n - 1) * (g.w - g.r - g.l - 52) : g.l + (i + .5) * (g.w - g.l) / n, y0 = Y(0);
     const H = L.findIndex(m => m.tipo === 'hoy'), xh = X(H), en = mes => L.findIndex(m => m.mes === mes), P = (f, desde) => L.map((m, i) => i < (desde || 0) || f(m) == null ? null : [X(i), Y(f(m))]).filter(Boolean);
     const d = p => p.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join(''), linea = (p, at) => p.length > 1 && nodo(g.svg, 'path', Object.assign({ d: d(p), fill: 'none', 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, at));
@@ -239,7 +256,7 @@
       nodo(g.svg, 'line', { x1: x, x2: x, y1: y, y2: Y(L[i].proy), class: 'km-gap' }); nodo(g.svg, 'circle', { cx: x, cy: y, r: 7, fill: 'var(--kv-2)', stroke: 'var(--kv-caja)', 'stroke-width': 2 });
       const junto = Math.abs(y - Y(L[i].proy)) < 44;
       if (!chico && c.pide > L[i].proy && !junto) { const ult = i === n - 1; txt(x + (ult ? -9 : 9), y + (Y(L[i].proy) - y) * (ult ? .58 : der ? .72 : .5) + 4, 'faltan ' + money(c.pide - L[i].proy), { 'text-anchor': ult ? 'end' : 'start', class: 'km-x o' }); }
-      if (!chico) { const bajo = L[i].proy >= c.pide, fin = i === n - 1, a = { 'text-anchor': (der || bajo) && !fin ? 'start' : 'end' }, tx = x + (a['text-anchor'] === 'start' ? 13 : -13), dy = bajo ? 17 : junto ? -22 : 0; txt(tx, y - 3 + dy, money(c.pide), Object.assign({ class: 'km-x f' }, a)); txt(tx, y + 14 + dy, c.t, a); }
+      if (!chico) { const bajo = L[i].proy >= c.pide, fin = i === n - 1, a = { 'text-anchor': (der || bajo) && !fin ? 'start' : 'end' }, tx = x + (a['text-anchor'] === 'start' ? 13 : -13), dy = bajo ? 17 : junto ? -22 : der && g.h > 260 ? -15 : 0; txt(tx, y - 3 + dy, money(c.pide), Object.assign({ class: 'km-x f' }, a)); if (!der || g.h > 260) txt(tx, y + 14 + dy, c.t, a); }
     });
     // Un punto y su cifra por mes.
     L.forEach((m, i) => {

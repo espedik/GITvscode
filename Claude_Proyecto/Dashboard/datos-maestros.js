@@ -178,13 +178,13 @@ window.CIFRAS = (function () {
     // ── Ingresos ── (el sueldo, 17 veces en 2 apps; Didi, 92 en 4)
     sueldo:        41000,     // bruto mensual en ALTEN, quincenal a BBVA
     get sueldoQuinc() { return this.sueldo / 2; },   // la quincena es la mitad: cambiar el sueldo la mueve
-    didiMes:        6000,     // lo que de verdad trae Didi al mes, en promedio (Adán, 3-nov-2026: "promedio he sacado 6,000 al mes"; antes se suponían $11,200, ~$400/día × 28)
+    didiMes:        7000,     // lo que de verdad trae Didi al mes, como mínimo (Adán, 24-nov-2026: "mínimo al mes estoy juntando 7,000 al mes"; el 3-nov eran 6,000 en promedio)
     // Lo que Didi pone en GBM, no lo que factura (Adán, 3-oct-2026): "de octubre
     // a febrero puedo juntar de Didi 5000 al mes" y "desde febrero empezaré a trabajar más de Didi
     // y puedo sacar 10,000 cada mes y eso meterlo a ahorro". Lo demás de Didi paga la carga del
     // auto y lo suyo; el plan no lo cuenta. El último mes en México va la mitad: la segunda
     // quincena es de empacar y entregar el auto (`didiAlAhorro`).
-    didiAhorro:     5000,     // al mes, de octubre de 2026 a enero de 2027
+    didiAhorro:     7000,     // al mes, hasta enero de 2027 (Adán, 24-nov-2026: "mínimo al mes estoy juntando 7,000"; antes 5,000)
     didiAhorroMas: 10000,     // al mes, desde didiMasDesde
     didiMasDesde: '2027-02',
     siVale:          940,     // vale de despensa
@@ -9543,10 +9543,14 @@ window.CIFRAS = (function () {
      Finanzas · Indicadores al corte de la salida, con TODO el dinero (lo de `fondoMaestria`, en los cierres y hoy): `real`,
      `plan` (PROYECCION) y `nec` (el plan más el ingreso que cierra la salida) con el depósito dentro mientras es suyo, `proy`
      (lo que tendrías a tu ritmo), `entra` (sueldo, Didi y vale, sin ventas de inversiones) y `queda` (lo que creció tu dinero).
-     `ritmo` es lo que te quedó entre lo que tocaba juntar en tus últimos tres meses medibles, con el mes en curso hasta hoy
-     (`medidos`); sin ninguno, 1, y no pasa de 1.5 (`tope`). El mes en curso se mide por lo que guardaste —CETES, inversiones y
+     `ritmo` es lo que guardaste de la quincena entre lo que tocaba en tus últimos tres meses medibles, con el mes en curso hasta
+     hoy (`medidos`); sin ninguno, 1, y no pasa de 1.5 (`tope`). Didi va aparte y completo, `didiMes` cada mes (Adán, 24-nov-2026:
+     "no estás contemplando lo de didi, mínimo al mes estoy juntando 7,000") por `didiCumple`: lo que los meses ya cerrados dejan
+     ver de él. En un mes cerrado, lo que creció paga primero Didi y el resto es de la quincena. El mes en curso se mide por lo que guardaste —CETES, inversiones y
      Bitcoin—: en la cuenta sube el sueldo y baja lo que vives, y eso no es ahorrar. Cada mes que falta suma lo que toca por
-     ese ritmo (`ahorra`) más lo que se paga de la salida (`salida`); lo demás que entra se gasta (`sale`). */
+     ese ritmo (`ahorra`) más lo que se paga de la salida (`salida`); lo demás que entra se gasta (`sale`). Cada
+     mes trae su desglose, que suma exacto: `entraDe` (sueldo, Didi, vale y otros), `saleDe` (lo fijo del mes, lo que bajaron
+     las tarjetas y `resto`, lo demás y lo no anotado) y `activos` (bolsa, CETES, Bitcoin, cuenta y efectivo, depósito). */
   function ritmoMaestria(f, o) {
     const F = f || fin || {}, O = o || {}, k = O.hoy || fechaLocal(), ym = k.slice(0, 7), P = PROYECCION.meses, sal = PROYECCION.cortes.salida.mes;
     const N = proyectar({ extraMes: salidaConIngreso().mes }), de = function (l, m) { return l.filter(function (x) { return x.mes === m; })[0] || null; };
@@ -9563,34 +9567,65 @@ window.CIFRAS = (function () {
     const plan = function (m) { const p = de(P, m); return p ? p.alemania + dep(m) : null; };
     const bruto = function (m) { const p = de(P, m); return p ? +p.desglose.ahorro || 0 : 0; };
     const fijo = function (m) { const a = plan(mesMas(m, -1)), b = plan(m); return a != null && b != null ? b - a - bruto(m) : 0; };
+    const didiDe = function (m) { return m === PROYECTO.ultimoMesMexico ? PROYECTO.didiMes / 2 : PROYECTO.didiMes; };
+    const didiPlan = function (m) { const p = de(P, m); return p ? +p.desglose.didi || 0 : 0; }, brutoQ = function (m) { return bruto(m) - didiPlan(m); };
+    const tarj = function (x) { return suma(x.debts, function (d) { return d.id === 'd001' || d.id === 'd002' ? +d.balance || 0 : 0; }); };
+    const piezas = function (x, btc) {
+      const inv = function (c) { return suma(x.investments, function (i) { return c(i) ? +i.value || +i.invested || 0 : 0; }); };
+      return { bolsa: inv(function (i) { return i.id !== 'i004' && i.type !== 'cetes'; }), cetes: (+x.emergencyFund || 0) + inv(function (i) { return i.id !== 'i004' && i.type === 'cetes'; }), btc: btc, liq: liqDe(x), dep: inv(function (i) { return i.id === 'i004'; }) };
+    };
+    const act = {}, tarjs = {};
+    (F.indicatorHistory || []).forEach(function (h) { if (h && h.month < ym) { act[h.month] = piezas(h, +h.btcValue || 0); tarjs[h.month] = tarj(h); } });
+    act[ym] = piezas(F, fondoMaestria(F).btc); tarjs[ym] = tarj(F);
+    act[ym].btc += hoy - (act[ym].bolsa + act[ym].cetes + act[ym].btc + act[ym].liq + act[ym].dep);   // el precio con que midió quien llama
+    // La quincena que llegó antes: su sueldo y lo fijo de ese día cuentan el mes en que la cobró.
+    const ade = PROYECTO.quincenaAdelantada, cobro = PROYECTO.bbvaLiquida, mA = ade && cobro && ade.slice(0, 7) !== cobro.slice(0, 7) ? ade.slice(0, 7) : '', mC = mA ? cobro.slice(0, 7) : '', adeG = {};
+    if (mA) agendaDia(+ade.slice(8), mA, F.debts || []).forEach(function (c) { if (!c.entra && !c.ahorro && !c.tarjeta) { const g = c.grupo === 'deudas' ? 'iphone' : c.grupo; adeG[g] = (adeG[g] || 0) + (+c.monto || 0); } });
     const entra = function (m) {
       const p = de(P, m);
-      if (m > ym && p) return p.desglose.g.sueldo + Math.max(PROYECTO.didiMes, p.desglose.didi) + PROYECTO.siVale;
-      const b = balanceMeses(m, 1, { tx: F.transactions || [], debts: F.debts || [] })[0];
-      // La quincena que llegó antes entró el mes en que la cobró.
-      const ade = PROYECTO.quincenaAdelantada, cobro = PROYECTO.bbvaLiquida, mueve = ade && cobro && ade.slice(0, 7) !== cobro.slice(0, 7) ? (m === cobro.slice(0, 7) ? 1 : m === ade.slice(0, 7) ? -1 : 0) * PROYECTO.sueldoQuinc : 0;
-      return b ? mueve + Object.keys(b.cosas).reduce(function (s, c) { return s + (b.cosas[c].cat === 'Inversiones' ? 0 : b.cosas[c].inc); }, 0) : null;
+      if (m > ym && p) return { sueldo: p.desglose.g.sueldo, didi: didiDe(m), vale: PROYECTO.siVale, otros: 0 };
+      const b = balanceMeses(m, 1, { tx: F.transactions || [], debts: F.debts || [] })[0], o = { sueldo: (m === mC ? 1 : m === mA ? -1 : 0) * PROYECTO.sueldoQuinc, didi: 0, vale: 0, otros: 0 };
+      if (b) Object.keys(b.cosas).forEach(function (c) { const x = b.cosas[c]; if (x.inc > 0 && x.cat !== 'Inversiones') o[c === 'Quincena' ? 'sueldo' : c === 'Didi' ? 'didi' : /vale/i.test(c) ? 'vale' : 'otros'] += x.inc; });
+      return o;
     };
-    const toca = suma(gbmMes(ym).semanas, function (w) { return suma(w.gbm, function (x) { return ym + '-' + String(x.dia).padStart(2, '0') <= k ? x.mxn : 0; }); });
-    const medidos = Object.keys(cierres).filter(function (m) { return cierres[mesMas(m, -1)] != null && bruto(m) > 0 && plan(mesMas(m, -1)) != null; })
-      .map(function (m) { return { mes: m, gano: cierres[m] - cierres[mesMas(m, -1)] - fijo(m), toca: bruto(m) }; });
-    if (toca > 0 && cierres[mesMas(ym, -1)] != null) medidos.push({ mes: ym, gano: (hoy - liqHoy) - (cierres[mesMas(ym, -1)] - liqs[mesMas(ym, -1)]), toca: toca });
+    const sumaO = function (o) { return Object.keys(o).reduce(function (s, c) { return s + o[c]; }, 0); };
+    const saleDe = function (m, tipo, sale) {
+      const g = tipo === 'proy' ? de(P, m).desglose.g : desgloseMes(m).g, o = {};
+      ['renta', 'depa', 'celular', 'suscripciones', 'familia', 'auto', 'iphone', 'comida', 'cuidado'].forEach(function (c) { o[c] = (+g[c] || 0) + (m === mC ? 1 : m === mA ? -1 : 0) * (adeG[c] || 0); });
+      o.tarjeta = tipo === 'proy' ? +g.tarjeta || 0 : tarjs[mesMas(m, -1)] != null ? Math.max(0, tarjs[mesMas(m, -1)] - tarjs[m]) : 0;
+      o.resto = sale - sumaO(o);
+      return o;
+    };
+    const tocaDe = function (que) { return suma(gbmMes(ym).semanas, function (w) { return suma(w.gbm, function (x) { return (!que || x.de === que) && ym + '-' + String(x.dia).padStart(2, '0') <= k ? x.mxn : 0; }); }); };
+    const toca = tocaDe(), tocaQ = tocaDe('quincena');
+    const medidos = Object.keys(cierres).filter(function (m) { return cierres[mesMas(m, -1)] != null && brutoQ(m) > 0 && plan(mesMas(m, -1)) != null; }).map(function (m) {
+      const g = cierres[m] - cierres[mesMas(m, -1)] - fijo(m), d = Math.min(PROYECTO.didiMes, didiPlan(m));
+      return { mes: m, gano: Math.max(0, g - d), toca: brutoQ(m), didi: d, didiGano: Math.max(0, Math.min(d, g)) };
+    });
+    if (tocaQ > 0 && cierres[mesMas(ym, -1)] != null) medidos.push({ mes: ym, gano: Math.max(0, (hoy - liqHoy) - (cierres[mesMas(ym, -1)] - liqs[mesMas(ym, -1)])), toca: tocaQ, didi: 0, didiGano: 0 });
     medidos.sort(function (a, b) { return a.mes < b.mes ? -1 : 1; });
-    const ult = medidos.slice(-3);
-    ult.forEach(function (x) { x.ritmo = Math.max(0, x.gano / x.toca); });
+    const ult = medidos.slice(-3), tD = suma(ult, function (x) { return x.didi; }), didiCumple = tD > 0 ? suma(ult, function (x) { return x.didiGano; }) / tD : 1;
+    ult.forEach(function (x) { x.ritmo = x.gano / x.toca; });
     const crudo = ult.length ? suma(ult, function (x) { return x.gano; }) / suma(ult, function (x) { return x.toca; }) : 1, ritmo = Math.max(0, Math.min(1.5, crudo));   // un mes muy bueno no se repite entero
+    const ahorra = function (m) { return brutoQ(m) * ritmo + didiDe(m) * didiCumple; };
+    // Lo que falta por juntar va a GBM y la salida se paga de ahí; el depósito deja de ser depósito cuando regresa.
+    const activos = function (m, tipo, v) {
+      if (tipo !== 'proy') return act[m] || null;
+      const a = act[ym], d = dep(m) > 0 ? a.dep : 0;
+      return { bolsa: v - a.cetes - a.btc - a.liq - d, cetes: a.cetes, btc: a.btc, liq: a.liq, dep: d };
+    };
     const primero = Object.keys(cierres).sort()[0] || ym, meses = [];
     for (let m = primero, v = null; m <= sal; m = mesMas(m, 1)) {
       const nc = de(N, m), tipo = m < ym ? 'cierre' : m === ym ? 'hoy' : 'proy', ant = cierres[mesMas(m, -1)];
-      if (tipo === 'hoy') v = hoy + Math.max(0, bruto(m) - toca) * ritmo;
-      else if (tipo === 'proy') v += bruto(m) * ritmo + fijo(m);
+      if (tipo === 'hoy') v = hoy + Math.max(0, brutoQ(m) - tocaQ) * ritmo + Math.max(0, didiPlan(m) - (toca - tocaQ)) * didiCumple;
+      else if (tipo === 'proy') v += ahorra(m) + fijo(m);
       const real = tipo === 'cierre' ? (cierres[m] != null ? cierres[m] : null) : tipo === 'hoy' ? hoy : null;
-      const en = entra(m), queda = tipo === 'proy' ? bruto(m) * ritmo : real != null && ant != null ? real - ant : null;
+      const enDe = entra(m), en = sumaO(enDe), queda = tipo === 'proy' ? ahorra(m) : real != null && ant != null ? real - ant : null;
       meses.push({ mes: m, tipo: tipo, real: real, plan: plan(m), nec: nc && m >= SUPUESTOS.extraDesde ? nc.alemania + dep(m) : null, proy: v,
-        entra: en, queda: queda, sale: en != null && queda != null ? en - queda : null, salida: tipo === 'proy' ? fijo(m) : 0, toca: bruto(m), fijo: fijo(m), vendio: vendio[m] || 0 });
+        entra: en, queda: queda, sale: queda != null ? en - queda : null, entraDe: enDe, saleDe: queda != null ? saleDe(m, tipo, en - queda) : null, activos: activos(m, tipo, v), salida: tipo === 'proy' ? fijo(m) : 0, toca: bruto(m), fijo: fijo(m), vendio: vendio[m] || 0 });
     }
     const fp = plan(sal), pa = plan(mesMas(ym, -1));
-    return { ritmo: ritmo, tope: crudo > ritmo, medidos: ult, meses: meses, finPlan: fp || 0, hoy: hoy, planHoy: pa != null ? pa + toca : plan(ym), toca: toca };
+    return { ritmo: ritmo, tope: crudo > ritmo, didi: PROYECTO.didiMes, didiCumple: didiCumple, medidos: ult, meses: meses, finPlan: fp || 0, hoy: hoy, planHoy: pa != null ? pa + toca : plan(ym), toca: toca };
   }
   /* ── EL BITCOIN, UNA SOLA LIBRETA ───────────────────────────────────────────────────────────
      Adán, 2026-11-18: "agrego bitcoin manualmente, pero también debe actualizarse en la gráfica… de Finanzas en plan
