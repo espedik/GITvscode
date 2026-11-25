@@ -1110,8 +1110,14 @@ arriba abajo:
 - **Cuatro datos**: lo que llevas en todo contra lo que pedía el plan, el mes en que el BYD quedará en cero, lo que te queda cada mes y lo que
   rinden tus inversiones.
 - **La gráfica** (`trayecto`): lo que tienes en blanco, lo que tendrías en cian y lo que debes del BYD en naranja, mes por mes hasta irte;
-  punteado, mandando solo lo del calendario (la PROYECCION con los trámites sumados), y la línea de lo que pide la salida. Los hitos: el
-  colchón, el día en que el BYD queda en cero y el día de decidir.
+  punteado, mandando solo lo del calendario (la PROYECCION con los trámites sumados), y la línea de lo que pide la salida, rotulada con su
+  monto. Adán, 25-nov-2026: *"la gráfica no es clara con las fechas y faltan muchos indicativos"*. **Las fechas llevan su año** (*feb
+  2027*): si la tabla de abajo cabe entera, cada mes queda justo arriba de su columna —se mide en pantalla, con una guía punteada por
+  columna—; si la tabla se desliza de lado, la gráfica lleva su propio eje cada tres meses. **Los hitos van en una franja arriba**, con
+  nombre, fecha y una guía hasta su punto: *Colchón completo*, *BYD en cero*, *Juntas lo de la salida* (el primer mes en que lo que
+  tendrías pasa lo que pide) y *Decides*; si dos chocan, el segundo baja de renglón (dos renglones, tres en una gráfica angosta). Hoy
+  dice lo que tienes y lo que debes; el final, lo que tendrías y lo de solo el calendario, debajo de su línea para no cruzar la cian
+  (en el teléfono, solo en el globo). Mide 330 px de alto (380 en el teléfono).
 - **El camino en ocho columnas, debajo de la gráfica y alineado con sus meses** (`.km-f`): hoy y el cierre de cada tres meses, con lo que te
   queda, lo que debes del BYD, lo que han rendido tus inversiones y lo que tienes. Al tocar una se abre **su desglose** (`.km-det`,
   `MEDIDORES.mesMae`), que se contrae y con las flechas pasa por todos los meses: lo que entra, en qué sale —los servicios, las

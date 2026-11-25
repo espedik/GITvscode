@@ -293,7 +293,7 @@
 .km-cab p{font-size:13.5px;line-height:1.5;color:var(--kv-t2);margin:2px 0 0}
 .km-cab .kv-ley{margin:3px 0 0;justify-content:flex-end}
 .kv-ley i.d{width:18px;height:0;border-radius:0;background:none!important;border-top:2px dashed var(--kv-gris)}
-.km-g .kv-g{min-height:214px;margin-top:4px}
+.km-g .kv-g{min-height:330px;margin-top:4px}
 .kv-g text.km-x{font-size:13px;fill:var(--kv-t2);paint-order:stroke;stroke:var(--kv-caja);stroke-width:3.5px;stroke-linejoin:round}
 .kv-g text.km-x.f{fill:var(--text);font-weight:700;font-variant-numeric:tabular-nums}
 .kv-g text.km-x.o{fill:var(--o);font-weight:600}
@@ -302,6 +302,9 @@
 .km-area{fill:var(--ac);opacity:.1}
 .km-hoy{stroke:var(--text);stroke-width:1;stroke-dasharray:3 4;opacity:.5}
 .km-gap{stroke:var(--kv-2);stroke-width:1.5;stroke-dasharray:3 5;opacity:.75}
+/* Las guías de la gráfica del Fondo Maestría: una por mes de la tabla y una por hito, de su nombre a su punto. */
+.km-col{stroke:var(--kv-linea);stroke-width:1;stroke-dasharray:2 5}
+.km-guia{stroke:var(--kv-t2);stroke-width:1;stroke-dasharray:2 3;opacity:.6}
 .km-nec{padding:14px 20px}
 .km-tot{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .km-tot strong{font-size:22px;font-weight:700;letter-spacing:-.02em}
@@ -412,7 +415,7 @@ button.km-li[aria-expanded="true"]>b::after{transform:rotate(-135deg);margin-bot
   .km-pasos{grid-template-columns:minmax(0,1fr)}
   .km-hero strong{font-size:40px}
   .km-g{padding:14px 10px 6px}
-  .km-g .kv-g{min-height:300px}
+  .km-g .kv-g{min-height:380px}   /* la franja de hitos lleva tres renglones aquí */
 }
 
 /* El camino al millón: la ruta con sus paradas, sobre las piezas de la maestría. */

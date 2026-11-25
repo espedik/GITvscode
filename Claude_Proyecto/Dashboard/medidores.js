@@ -266,45 +266,87 @@
       listo: () => trayecto('salida', { L, cor: cor.slice(-1), T, dec: dec.slice(0, 7), cols: cols.map(m => m.mes) }) };
   };
   // La gráfica de la maestría: lo que tienes, lo que tendrías y lo que debes del BYD, mes por mes hasta irte; punteado, mandando
-  // solo lo del calendario; y los hitos del plan: el colchón, el BYD en cero, el día de decidir y la salida.
+  // solo lo del calendario; la meta de la salida, y los hitos del plan con su nombre y su fecha (Adán, 25-nov-2026: "la gráfica no es
+  // clara con las fechas y faltan muchos indicativos"). Si la tabla de abajo cabe entera, cada mes queda justo arriba de su columna
+  // —medido en pantalla—; si se desliza de lado, la gráfica lleva su propio eje. Las fechas, siempre con su año: «feb 2027».
   function trayecto(id, o) {
     const g = base(id, { aria: 'Lo que tienes, lo que tendrías y lo que debes del BYD cada mes hasta agosto de 2028' }); if (!g) return; guarda(id, trayecto, o);
-    const L = o.L, n = L.length, chico = g.w < 760; g.l = chico ? 56 : 72; g.r = chico ? 14 : 0; g.t = 30; g.b = chico ? 30 : 8;
-    const alto = Math.max(...L.map(m => Math.max(m.real || 0, m.proy || 0, m.plan || 0, m.auto || 0)), ...o.cor.map(c => c.pide)), Y = ejes(g, 0, alto * 1.04), y0 = Y(0), H = L.findIndex(m => m.tipo === 'hoy'), en = mes => L.findIndex(m => m.mes === mes);
-    // En la pantalla grande cada columna de la tabla queda debajo de su mes; lo de antes de hoy, a la izquierda.
-    const K = o.cols.map(en), cw = (g.w - 150) / K.length, ck = k => 150 + (k + .5) * cw, pas = H > 0 ? Math.min(cw / 3, (ck(0) - g.l - 12) / H) : 0;
-    const X = i => { if (chico) return g.l + 12 + i / (n - 1) * (g.w - g.r - g.l - 24); if (i <= K[0]) return ck(0) - (K[0] - i) * pas; let k = 1; while (k < K.length - 1 && i > K[k]) k++; return ck(k - 1) + (i - K[k - 1]) / (K[k] - K[k - 1]) * cw; };
+    const L = o.L, n = L.length, H = Math.max(0, L.findIndex(m => m.tipo === 'hoy')), en = mes => L.findIndex(m => m.mes === mes), T = o.T;
+    const tw = g.el.parentNode.querySelector('.km-tw'), hs = tw ? [...tw.querySelectorAll('.km-f .h')] : [], sr = g.el.getBoundingClientRect();
+    const alinea = hs.length === o.cols.length && hs.length > 1 && tw.scrollWidth <= tw.clientWidth + 1;
+    const cx = alinea ? hs.map(h => { const r = h.getBoundingClientRect(); return r.left + r.width / 2 - sr.left; }) : null;
+    const nF = g.w < 560 ? 3 : 2;   // renglones de la franja de hitos: en una gráfica angosta caben menos por renglón
+    g.l = g.w < 560 ? 52 : 64; g.r = 14; g.t = 10 + nF * 32; g.b = alinea ? 10 : 30;
+    const alto = Math.max(...L.map(m => Math.max(m.real || 0, m.proy || 0, m.plan || 0, m.auto || 0)), ...o.cor.map(c => c.pide)), Y = ejes(g, 0, alto * 1.16), y0 = Y(0);   // aire arriba: la etiqueta del final no choca con los hitos
+    const K = o.cols.map(en);
+    const X = i => {
+      if (!alinea) return g.l + 14 + i / (n - 1) * (g.w - g.r - g.l - 28);
+      const cw = cx.length > 1 ? cx[1] - cx[0] : 80, pas = H > 0 ? Math.min(cw / 3, (cx[0] - g.l - 12) / H) : 0;
+      if (i <= K[0]) return cx[0] - (K[0] - i) * pas;
+      let k = 1; while (k < K.length - 1 && i > K[k]) k++;
+      return cx[k - 1] + (i - K[k - 1]) / (K[k] - K[k - 1]) * (cx[k] - cx[k - 1]);
+    };
     const xh = X(H), P = (f, desde) => L.map((m, i) => i < (desde || 0) || f(m) == null ? null : [X(i), Y(f(m))]).filter(Boolean);
     const d = p => p.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join(''), linea = (p, at) => p.length > 1 && nodo(g.svg, 'path', Object.assign({ d: d(p), fill: 'none', 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, at));
     const txt = (x, y, t, at) => nodo(g.svg, 'text', Object.assign({ x, y, 'text-anchor': 'middle', class: 'km-x' }, at), t), punto = (x, y, c, r) => nodo(g.svg, 'circle', { cx: x, cy: y, r: r || 6, fill: c, stroke: 'var(--kv-caja)', 'stroke-width': 2 });
-    nodo(g.svg, 'line', { x1: xh, x2: xh, y1: g.t - 10, y2: y0, class: 'km-hoy' });
-    // Lo que pide la salida, como línea de meta.
-    o.cor.forEach(c => { nodo(g.svg, 'line', { x1: g.l, x2: g.w - g.r, y1: Y(c.pide), y2: Y(c.pide), class: 'km-gap' }); if (!chico) txt(X(n - 1) - 6, Y(c.pide) - 8, 'La salida pide ' + money(c.pide), { 'text-anchor': 'end', class: 'km-x o' }); });
+    const fecha = mes => MES[+mes.slice(5, 7) - 1] + ' ' + mes.slice(0, 4);
+    // Las guías de los meses: debajo de cada columna de la tabla, o de cada etiqueta del eje.
+    const marcas = alinea ? K.map((k, j) => [X(k), j]) : L.map((m, i) => i).filter(i => i === H || (i > H && /-(02|05|08|11)$/.test(L[i].mes))).map(i => [X(i), i]);
+    let ult = -1e9;
+    marcas.forEach(q => {
+      nodo(g.svg, 'line', { x1: q[0], x2: q[0], y1: g.t - 4, y2: y0, class: 'km-col' });
+      if (alinea) return;
+      const i = q[1], t = i === H ? 'hoy' : fecha(L[i].mes);
+      if (q[0] - ult < 70 || q[0] > g.w - 30) return; ult = q[0];
+      txt(q[0], g.h - 9, t, { class: 'km-x' + (i === H ? ' f' : '') });
+    });
+    nodo(g.svg, 'line', { x1: xh, x2: xh, y1: g.t - 4, y2: y0, class: 'km-hoy' });
+    // La meta: lo que pide la salida, rotulada a la izquierda, donde no hay líneas encima.
+    o.cor.forEach(c => { nodo(g.svg, 'line', { x1: g.l, x2: g.w - g.r, y1: Y(c.pide), y2: Y(c.pide), class: 'km-gap' }); txt(g.l + 6, Y(c.pide) - 8, 'La salida pide ' + money(c.pide), { 'text-anchor': 'start', class: 'km-x o' }); });
     linea(P(m => m.auto), { stroke: 'var(--kv-2)', 'stroke-width': 3 });
     linea(P(m => m.plan, H), { stroke: 'var(--kv-gris)', 'stroke-width': 2, 'stroke-dasharray': '7 6' });
     const pr = P(m => m.proy, H); if (pr.length > 1) nodo(g.svg, 'path', { d: d(pr) + 'L' + pr[pr.length - 1][0] + ' ' + y0 + 'L' + pr[0][0] + ' ' + y0 + 'Z', class: 'km-area' });
     linea(pr, { stroke: 'var(--ac)', 'stroke-width': 3.5 });
     linea(P(m => m.tipo === 'proy' ? null : m.real), { stroke: 'var(--text)', 'stroke-width': 3 });
-    // Los hitos: el colchón, el BYD en cero, el día de decidir. El valor final, al lado de su línea.
-    const hito = (mes, t, v, c, arriba) => { const i = en(mes); if (i < 0) return; const x = X(i), y = Y(v(L[i])); punto(x, y, c); if (!chico) txt(x, arriba ? y - 14 : y + 24, t, { class: 'km-x f' }); };
-    if (o.T.lleno && en(o.T.lleno) > H) hito(o.T.lleno, 'colchón completo', m => m.proy, 'var(--w)', 1);
-    if (o.T.cero && en(o.T.cero) > H) { const i = en(o.T.cero); punto(X(i), y0, 'var(--kv-2)', 7); if (!chico) { nodo(g.svg, 'line', { x1: X(i), x2: X(i), y1: y0 - 52, y2: y0 - 8, class: 'km-gap' }); txt(X(i), y0 - 76, 'BYD en cero', { class: 'km-x f' }); txt(X(i), y0 - 59, mesTxt(o.T.cero), {}); } }
-    hito(o.dec, 'decides', m => m.proy, 'var(--ac)', 1);
-    const u = L[n - 1]; punto(X(n - 1), Y(u.proy), 'var(--ac)', 7); punto(xh, Y(L[H].real || 0), 'var(--text)', 6);
-    if (L[H].auto > 1) { punto(xh, Y(L[H].auto), 'var(--kv-2)', 6); if (!chico) txt(xh + 11, Y(L[H].auto) - 10, 'debes ' + money(L[H].auto), { class: 'km-x f', 'text-anchor': 'start' }); }
-    if (!chico) { txt(xh - 11, Y(L[H].real || 0) - 12, money(L[H].real || 0), { class: 'km-x f', 'text-anchor': 'end' }); txt(X(n - 1) + 12, Y(u.proy) + 5, money(u.proy), { class: 'km-x f', 'text-anchor': 'start' }); if (u.plan != null && Math.abs(Y(u.plan) - Y(u.proy)) > 18) txt(X(n - 1) + 12, Y(u.plan) + 5, money(u.plan), { 'text-anchor': 'start' }); }
-    else txt(X(n - 1), Y(u.proy) - 12, money(u.proy), { class: 'km-x f', 'text-anchor': 'end' });
-    // El eje: cada tres meses, con el año en enero o al cambiar; hoy, marcado.
-    L.forEach((m, i) => {
-      if (!chico) return;   // en la grande, los meses los dice la tabla de abajo
-      if (i === H) return txt(X(i), g.h - 8, 'hoy', { class: 'km-x f' });
-      if (!/-(02|05|08|11)$/.test(m.mes) || X(i) - xh < 44 && i > H || i < H || !/-(02|08)$/.test(m.mes)) return;
-      txt(X(i), g.h - 8, MES[+m.mes.slice(5) - 1] + ' ' + m.mes.slice(2, 4), {});
+    // Los hitos, de izquierda a derecha, en la franja de arriba: nombre y fecha, con una guía hasta su punto. Si dos chocan, el segundo
+    // baja un renglón.
+    const pide = o.cor.length ? o.cor[o.cor.length - 1].pide : T.pide, iMeta = L.findIndex((m, i) => i > H && m.proy != null && m.proy >= pide);
+    const hitos = [];
+    if (T.lleno && en(T.lleno) > H) hitos.push({ i: en(T.lleno), t: 'Colchón completo', y: m => Y(m.proy), c: 'var(--w)' });
+    if (T.cero && en(T.cero) > H) hitos.push({ i: en(T.cero), t: 'BYD en cero', y: () => y0, c: 'var(--kv-2)', r: 7 });
+    if (iMeta > H) hitos.push({ i: iMeta, t: 'Juntas lo de la salida', y: () => Y(pide), c: 'var(--o)' });
+    if (o.dec && en(o.dec) > H) hitos.push({ i: en(o.dec), t: 'Decides', y: m => Y(m.proy), c: 'var(--ac)' });
+    hitos.sort((a, b) => a.i - b.i);
+    const filas = Array(nF).fill(-1e9);
+    hitos.forEach(h => {
+      const x = X(h.i), y = h.y(L[h.i]), grupo = nodo(g.svg, 'g', {});
+      const a = nodo(grupo, 'text', { x: 0, y: 0, 'text-anchor': 'middle', class: 'km-x f' }, h.t), b = nodo(grupo, 'text', { x: 0, y: 15, 'text-anchor': 'middle', class: 'km-x' }, fecha(L[h.i].mes));
+      const ancho = Math.max(a.getComputedTextLength(), b.getComputedTextLength()) + 10, lx = Math.min(Math.max(x, g.l + ancho / 2), g.w - ancho / 2);
+      // El primer renglón donde cabe; si en ninguno, el que se libera antes.
+      let f = filas.findIndex(z => lx - ancho / 2 >= z + 6); if (f < 0) f = filas.indexOf(Math.min(...filas)); filas[f] = lx + ancho / 2;
+      const ty = 14 + f * 32; [a, b].forEach(e => e.setAttribute('x', lx)); grupo.setAttribute('transform', 'translate(0,' + ty + ')');
+      nodo(g.svg, 'line', { x1: x, x2: x, y1: ty + 20, y2: y - 8, class: 'km-guia' });
+      punto(x, y, h.c, h.r);
     });
+    // Hoy: lo que tienes y lo que debes. Al final: lo que tendrías y lo de solo el calendario, a la izquierda de su punto para no salirse.
+    const hoy = L[H], u = L[n - 1];
+    // Una etiqueta a la izquierda de hoy no pasa del eje: en una gráfica angosta se montaba sobre las cifras del eje.
+    const tope = e => { const w = e.getComputedTextLength(), x = +e.getAttribute('x'); if (x - w < g.l + 2) e.setAttribute('x', g.l + 2 + w); };
+    punto(xh, Y(hoy.real || 0), 'var(--text)', 6); tope(txt(xh - 8, Y(hoy.real || 0) - 30, 'tienes ' + money(hoy.real || 0), { 'text-anchor': 'end', class: 'km-x f' }));
+    // Lo que debes, a la izquierda de hoy y debajo de su línea: a la derecha la línea baja y lo cruzaba.
+    if (hoy.auto > 1) { punto(xh, Y(hoy.auto), 'var(--kv-2)', 6); tope(txt(xh - 10, Y(hoy.auto) + 22, 'debes ' + money(hoy.auto), { 'text-anchor': 'end', class: 'km-x f' })); }
+    const xe = X(n - 1); punto(xe, Y(u.proy), 'var(--ac)', 7);
+    txt(xe - 12, Y(u.proy) - 12, 'tendrías ' + money(u.proy), { 'text-anchor': 'end', class: 'km-x f' });
+    // Lo de solo el calendario, debajo de su línea y pegado a la derecha: a la izquierda la línea cian baja y lo cruzaba.
+    if (u.plan != null && Math.abs(Y(u.plan) - Y(u.proy)) > 22 && g.w >= 480) {
+      const e = txt(xe, 0, 'solo el calendario ' + money(u.plan), { 'text-anchor': 'end', class: 'km-x' }), xi = xe - e.getComputedTextLength();
+      const pl = P(m => m.plan, H), baja = pl.filter(q => q[0] >= xi - 4).reduce((z, q) => Math.max(z, q[1]), Y(u.plan));
+      e.setAttribute('y', Math.min(y0 - 6, baja + 20));
+    }
     const cruz = nodo(g.svg, 'line', { y1: g.t, y2: y0, stroke: 'var(--kv-gris)', 'stroke-width': 1, opacity: 0 });
     raton(g, n, X, i => {
       const m = L[i]; cruz.setAttribute('x1', X(i)); cruz.setAttribute('x2', X(i)); cruz.setAttribute('opacity', .8);
-      globo(g, X(i), mesTxt(m.mes) + (m.tipo === 'cierre' ? ', cierre' : m.tipo === 'hoy' ? ', hoy' : ''), [m.real != null && { c: 'var(--text)', v: money(m.real), n: m.tipo === 'hoy' ? 'tienes' : 'tenías' }, m.tipo === 'proy' && { c: 'var(--ac)', v: money(m.proy), n: 'tendrías' }, m.auto != null && { c: 'var(--kv-2)', v: m.auto < 1 ? 'nada' : money(m.auto), n: 'debes del BYD' },
+      globo(g, X(i), fecha(m.mes) + (m.tipo === 'cierre' ? ', cierre' : m.tipo === 'hoy' ? ', hoy' : ''), [m.real != null && { c: 'var(--text)', v: money(m.real), n: m.tipo === 'hoy' ? 'tienes' : 'tenías' }, m.tipo === 'proy' && { c: 'var(--ac)', v: money(m.proy), n: 'tendrías' }, m.auto != null && { c: 'var(--kv-2)', v: m.auto < 1 ? 'nada' : money(m.auto), n: 'debes del BYD' },
         m.plan != null && { c: 'var(--kv-gris)', v: money(m.plan), n: 'solo el calendario' }, m.rindeAcum >= 1 && { c: 'var(--g)', v: '+' + money(m.rindeAcum), n: 'han rendido' }, m.queda != null && { c: 'var(--kv-1)', v: signo(m.queda), n: 'te queda' }, m.vendio > 0 && { c: 'var(--o)', v: money(m.vendio), n: 'vendiste de Bitcoin' }].filter(Boolean));
     }, () => cruz.setAttribute('opacity', 0));
   }
