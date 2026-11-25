@@ -1,7 +1,7 @@
 /* Las noticias de inversión de Qué invertir hoy, de Google Noticias. Las escribe el hook de pre-commit
    (Dashboard/noticias-actualizar.js): no se edita a mano. */
 window.NOTICIAS_INVERSION = {
- "generado": "2026-11-25T16:38:05.401Z",
+ "generado": "2026-11-25T17:47:27.231Z",
  "temas": [
   {
    "id": "recomendaciones",
@@ -210,6 +210,24 @@ window.NOTICIAS_INVERSION = {
    "rec": true
   },
   {
+   "t": "¿Cómo comprar acciones de Anthropic desde México?",
+   "u": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQV05TSWlkUjdhWEJ3UUNuQm9pWTROSUwtbVFEaGlUMUxyZ2o0MGNWMExTdzZWc3RHdlpWZkpYQmtuQlZKcU9vZ2hwbDJTRHlrY0Y5a19BUUFkRzZWUU5PYUJSZmNWTUlKR0JqNnN1eTlfaTZacGJVdGR1aFVGdEt2dHhZVnc2ekc0Y1dqMEhjcTlqd0w4bFNhUXM2Nk11NktDbXQzY01TYnDSAa4BQVVfeXFMTk9ZOHpJN2hBWlQzQW5kSHdaVmR2Zk5xd2U5cEN4VmV1TkxMdnhXbHphTktQVGs3Y0dwYUktWk8yeF95d3JkMGtIbXp4emI2Nm9uRlpLOVNoVkFSc1UtRjVYRnR4MFNmVzFjaXRjQUExRXlhM09Eb3dfNFBma3NXcXVIb2x6RFpaMnNNSXQwQ2dMcERUX2RkRGpHS0o5eElpcXhFT3BPT3dFa2VtMTlR?oc=5",
+   "f": "2026-11-25T17:00:00.000Z",
+   "fuente": "El Economista",
+   "dominio": "eleconomista.com.mx",
+   "tema": "bolsa",
+   "rec": false
+  },
+  {
+   "t": "Comprar acciones con ChatGPT y Claude: trii se suma a la carrera por llevar la IA a las inversiones",
+   "u": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxNZ1owMkg2N0dDX1BzenF3QXlnemRNbDd5YmZILXE2Nk0tUmxvdGNfYllKU1lmWmE0aXJNNHE0Y2pFMW5IV2pOb3ZVR0s1eHlZdHU5MTRNY3lyZ3VQQlVzNXEzM2t6VVJGTXA2QjBkeTRuNG8yeHBFcmNLVGJQaUhKTWhYVDRhd2hrRkZvcGxMZ0hXQUxPcTJWU1YwQVVWWFVFNmZIS19OdUFhVTE3N2hka0NzVkFGSVVwRTh6eHJTR0cxektCRnFXa1RVUzg1Ny1IOUtmNDNR0gHqAUFVX3lxTE9Rc2FnRWNIbXFMUzZ0eWI3QUMtNktRTk9HMmhoWVZYSnBKNkwtbm9OTUlyTC13R2l6Q1Fxc0Mxb3Q1WkdZbUhIbV9xR3BUdTB2MlVPY1FYX0NjSlctUDNoNFpYYk9nR0NRN2pxUjZUa3JKTDd0WFdnOFROUDJEYzI3Q0VxbGtkNDU1QWdPaDdTYzEyRHNnTlh1TEMzWUllN21obDY4YWsyMTZPR3JfbDV0alBXWndBdDhYLVpWNzFoV1FFeXlhd3BnQmdmNGpNc3c5Z01LQ1pGNWtXUkNzdXlXZHFGUXFEQVZaZw?oc=5",
+   "f": "2026-11-25T16:58:38.000Z",
+   "fuente": "Bloomberg Línea",
+   "dominio": "bloomberglinea.com",
+   "tema": "bolsa",
+   "rec": false
+  },
+  {
    "t": "El S&P 500 se enfila a registrar su peor noviembre desde la crisis financiera de 2008",
    "u": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPV0tfbFktcmVIWnNwOUxZMFFlQjlxcGpmMWhONi1MM1JaaEk5QXc4Q1l5T0FjUzBhdDFoRGRNUjU3SW5malpxMDBVTC1ydTJicks4MHFhZ0tzb2RjVDlxcFFsN1lROUhZc3dDQzdEdURYanM0X3FELWREV3FjM0pUcjdCWlExc2VsTlhEa1Y2bnppTmZmbXlB0gGkAUFVX3lxTE5Eb0hWckNsZ0xNMGEyXzNQV2NtRVpseUw0cWQ3cUQydjJVbUZCVjRLTVVuMmlEYXYzUnByZmpPbW1mY1JPQUlPVXMwOVRHRHZWWV85YzdpUURPS19rQzRRUkl2X0RQYVIxR0xDWmRHdDAydnprY3ZIZTF1eFZhcXktLTl3aTI2c3pGX1lUcjdha2J3TjN6a0JJQzJ4N3NUSUgtOW1h?oc=5",
    "f": "2026-11-25T16:13:00.000Z",
@@ -264,29 +282,29 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "¿Es momento de invertir en acciones de inteligencia artificial tras el rally de Nvidia?",
-   "u": "https://news.google.com/rss/articles/CBMixAFBVV95cUxONnFOeFBBcm1fbjFhck0teDN1S09SNkpPbEUwYlY4b3QxY2g0amNBcjZ5N0ppekVTRDlob0dHR1lLSEZJYlR6UU1PMmNRdllWZG9lNU84ODA4WW9UU1h6V1BlaXdxV290THhOeDdpMnFvektnT3EtOHNEdjlfSHdXbjQ4RUFiTEs5bGhYcGFNdWlOQmJjY1JhcU1ndklPRXlpVTNtTzhlZVFwd3NSczJ5cWs4LUxweGZqYVpPYXVhb2ZISmMz0gHYAUFVX3lxTE9nYklVSzVZcjlUaEZpZDZHUUtpMG9RVlBpX21YalVtbXhRSVJSU2JnX3JnNlBRTDZENUFNYVhxRjN6aG5TRVBJUEZFTm1zU2lvSDdQUXZrSUUwRzc3eDBoTmgxUjl5NHdzcXplemp4SWxBMUJoaUpIdTAwV19GcXd5RFFpTjN3eGFWRkN5dFVKWkZyNm1iei14cFFxUlRETWFpYkg2NXpfN28tdGNzcC1IOWlodFJuOW5HZjdmM3JUcTYxTDkzVk9zSkJHVGRMLVVJNk9OREdKZQ?oc=5",
-   "f": "2026-11-24T16:18:12.000Z",
-   "fuente": "Bloomberg Línea",
-   "dominio": "bloomberglinea.com",
-   "tema": "bolsa",
+   "t": "Reservas de Bitcoin en exchanges se reducen a 42.000 BTC, pero persiste la presión vendedora",
+   "u": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxObXJjU1NmZmVtUkJObEFuMnFlUDJwNTlJTUpYdW9wTVRTd1BhNHl0NWU4Rk1fSGl2eXp6MFRmd1RfZHZyQTRMNmhLSVA1NmkzMUxSLUVJSS13c25XU1M0OFJrcDVLazBsemRjVG5rXzZGc0h5dEhtQVJSdldOZW1xOWZ4dXJSMVJvbmdiNDNvMndJLUpDbUZmOWgwRDhjcm5KTmVSQ0o5a0ktUlhYOXJmSUVOVFBBYWU0LWJJaHJDbW1fLUlSbEJDTnlhMWZPNFhnUTBj?oc=5",
+   "f": "2026-11-25T17:39:07.000Z",
+   "fuente": "DiarioBitcoin",
+   "dominio": "diariobitcoin.com",
+   "tema": "cripto",
    "rec": false
   },
   {
-   "t": "Bolsas mexicanas rompen racha de seis sesiones a la baja",
-   "u": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQSWpJbGlLOWZzOWxhVkxPMGpwYzY0bUkxUHYtd043SEdZMzBkMXRxX3k3SmJkamlyalFNNl8yVHc0VHVQSDFvcFd3QWRMdC1BTlgyckFfTnRyWHRKY18yQXB5WDdWODFXVFFSR0VBMGVDY2dsS0hmdGpLdk1fajk4cnpuaGQ3S3liUUE2UmhZMlVZMHJHaWhhS1ByN25iVXEyekgyRjE1OFlhTG9PUHNWUVhlQ0LSAbQBQVVfeXFMUElqSWxpSzlmczlsYVZMTzBqcGM2NG1JMVB2LXdON0hHWTMwZDF0cV95N0piZGppcmpRTTZfMlR3NFR1UEgxb3BXd0FkTHQtQU5YMnJBX050clh0SmNfMkFweVg3VjgxV1RRUkdFQTBlQ2NnbEtIZnRqS3ZNX2o5OHJ6bmhkN0t5YlFBNlJoWTJVWTByR2loYUtQcjduYlVxMnpIMkYxNThZYUxvT1BzVlFYZUNC?oc=5",
-   "f": "2026-11-24T03:03:07.000Z",
-   "fuente": "El Economista",
-   "dominio": "eleconomista.com.mx",
-   "tema": "bolsa",
+   "t": "La gran capitulación del bitcoin: el éxodo de los ETF hunde la criptomoneda",
+   "u": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNbUl6S2ZxTlVxNE9FVmdvck9GeVlCbjJOUEhWYW1CbTdZdDhTVlpSTHFsajloSEtoS215YWhSaC1VM0xmMEc5dDJjMnNqYUw1ck1zSHpHQkM3clE0elFJUzlqVEVZRDBhbHd1RnN0dGU1OUdsXzdsMzlzY3pscE53UE80S3l4NGszNHZyWm4tYjNfam5QY2FpRFlWQjBXRmMwanc3aWhTOXpwSjJ6dHB6YmR2T3ZVeTZfRkQtMGJqZjB0ZTZmVV82TjU0S1dzUdIB4gFBVV95cUxPOXZ5enBxLWJqS2RFMEpaWkNFMThWSGw3RkQtYnp5Sm1Tb0RtamRYQVpTTW1PWmhnd09BREtYbnEyRW9Zdm9fZTdyVGhMV0o1a0Fwc2RsSU9HUHB2QzZDUFhicG5SbXBzYkhwTkNUYlR2MWxKZHRGMWtsaGE2NEFmdl8zN25KRThWeFl0UTJfaV9Vc3RmazlFSDYzOVJNYUpkZU9mTXBzd0RicHBCeXJHYlQ3WEtfY0V2dGdwbEk5M2NvZnJRRExPMGFvanlLcHgyM05BN3FrQ3g2eVBEZjlZRXJB?oc=5",
+   "f": "2026-11-25T17:15:16.000Z",
+   "fuente": "Cinco Días",
+   "dominio": "cincodias.elpais.com",
+   "tema": "cripto",
    "rec": false
   },
   {
-   "t": "Mercados mundiales pierden billones por caída de bitcoin, oro y Wall Street",
-   "u": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPdzYtREJQc19pZUdZdEV3TnZsekRFeXFYNENNYUVRRm1CaS1aUkFfTE9XODM0OXptb0hzQ2ZjLXp6aThsUldVNFNjcUxyX1cxaW9uV1R6REpLZ0JLZnBaM1FhbEZfc3hjQ1EteGhNMHpUdlNoMlFXMFc5M3IzTnRBZjhMUUxhUXhkOTctd2htYVlycnA3YVBhLThOZUp2ZnZnZElBWUdnTXFrdjJQRzlhMXFWUjRpLW5XVVE?oc=5",
-   "f": "2026-11-25T16:26:22.000Z",
-   "fuente": "Bitcoin News",
-   "dominio": "news.bitcoin.com",
+   "t": "Bitcoin en miedo extremo: ¿oportunidad o trampa? \"No ha cambiado absolutamente nada\"",
+   "u": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNcmpCbUdNR3JVQzZ4V0JtQ3NzcjJyaV8wbGJLQklvMnVwWU4tMWI0TnA0aFNJS0hvd2pTckowWlNIMHJaMTBvSHhFa3Bzd3B2Nkc0QkxicDlGTkM5cF9qcEhrVDZGR3NsaUtkTHNkNVVjWTBfbHRRbUNxRHJHcm9EVE9rMGNmd0NadWI2dFhvUFdGaVViM0M5NmlFUVdveFZJNGxrMXp3Y2x2SncwdTNtYzFNLUFoZ0dad0poNnlVU3lMRVBNVVJQWTN6LTFUZw?oc=5",
+   "f": "2026-11-25T17:02:00.000Z",
+   "fuente": "Finect",
+   "dominio": "finect.com",
    "tema": "cripto",
    "rec": false
   },
@@ -300,11 +318,20 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "Análisis técnico bitcoin: bajo US$60.000, ¿hasta dónde?",
-   "u": "https://news.google.com/rss/articles/CBMigwFBVV95cUxOY1dKcHdwbTB0dUNFY1BuMUE1UmZZdjNMLUFPdTB4Ujk1WmlSNG45Q0JKU0FwWGo3eVBjZ05FSjhYWUtBVWN6WXJmdnlKSHc2N1lZeTRUWE9jT0pKVVVJR25GdkFZbndVMVQ5ZmpNb2NHRE53S0p1UU9jWjJKd2hnWHFDOA?oc=5",
-   "f": "2026-11-25T15:08:00.000Z",
-   "fuente": "Criptoinforme",
-   "dominio": "criptoinforme.com",
+   "t": "Bitcoin sigue a las acciones a la baja. ¿Qué dicen los gráficos a los traders ahora?",
+   "u": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxOUUM5YmJyVDUxUnRsdS1jOFUxbTlxV2ZXQ0JZZWs2M29hTDFnUUMxVlJxbEFnSEVsYTl2ZXo1dzNtRmhXWlJfc2Q2Znk4SzRnVXozQW9FUEVuNURsTnN3djJEQ0l5b3NreDNZLVVma3M5UGRNUDFOYXIyNHF3YVRIaTJCWWdodldVejFEUEhsanhmYWFxbUNrdGZ1UDRpa0VKMWpHSEk2Nmo5WFhoYnA5YWU2YlpHMFQ0cUtHVjlSR2dBdw?oc=5",
+   "f": "2026-11-25T14:58:57.000Z",
+   "fuente": "investingLive",
+   "dominio": "investinglive.com",
+   "tema": "cripto",
+   "rec": false
+  },
+  {
+   "t": "Quién es Martti Malmi: el desarrollador de Bitcoin conocido como Sirius",
+   "u": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE1MdE1yc2poT1R2RV9GSHJ5VnBadkt1NGZiRm13blNGTkhXZmFvTS1ad0FtNnNTWlVpa1JhczNZcUZuVVVkY3JaTUdDbmw2NlVOZkhuVl9SeUFLUG1lWGc?oc=5",
+   "f": "2026-11-25T14:33:14.000Z",
+   "fuente": "Phemex",
+   "dominio": "phemex.com",
    "tema": "cripto",
    "rec": false
   },
@@ -345,47 +372,20 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "Operadores de bitcoin no eran tan pesimistas desde los 20 000 dólares",
-   "u": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQdFFCQS1PUXRpdHM0ZHN3ZGozUk9rMksxOFdkaDAzX2I3RlZWNlRhdkd0SVQzSl9LZkZLOUg1RTlrVElNMm56UTRYMGloaDV4UGpRWlYxZWY0VE5PZWJEdFZvTTJXd2p0bFBvX1lJMF8yc3V6aDBhTnYzYzRTR2xjalN5YWpPTmswTnVvMy1tRHhKaUM3SDNQdXZuQkNmQjVzSzltNlBLVnI4SVNmWHNUSHE3emlFQQ?oc=5",
-   "f": "2026-11-25T11:41:21.000Z",
-   "fuente": "Bitcoin News",
-   "dominio": "news.bitcoin.com",
+   "t": "Bitcoin se mantiene mejor que ether mientras las acciones caen, las salidas de fondos de ETF alcanzan su sexto día",
+   "u": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOYnE1aGhDTEtncVlMQVhVSFlnS1V5ckVlY1VYU2o0QmhzMGE4LTMtM21wUGttQjlqWUp1MG5Mcld0OTBhdTZJV0pLVXlCRjlUVmNpeUVFaTNuR2owSGF4RmZRVHJ5UWpIQ0ExWUhLZkhvMmp0QnVjQXNPNXA5SlZycHdzSlI5eDlGLXZwczFEMExDSGUwY3N0aGpJUlREY2VtLTI1X3VNNzZoOTRoWnI1ZmswVnIzUQ?oc=5",
+   "f": "2026-11-25T11:57:50.000Z",
+   "fuente": "CoinDesk",
+   "dominio": "coindesk.com",
    "tema": "cripto",
    "rec": false
   },
   {
-   "t": "¿Cómo funciona el mercado de criptomonedas y cuál es su valor este miércoles 25 de noviembre?",
-   "u": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQcmNnaWNFaE14blRQRlQ1cHN2Z1dXOHk0cjl0UHMxNENyQWVPS2d1UXNKZVJYcDNJYURqQVFlVTlQRkVUUksydm5Wb1NlNnd4WFAzM19mcVEyNjdWMU1pVmdQUTM2OENKXzZxY2NzTFN4SVdic0VlYXhEc3paVUxQQ3o1QXRhX0JicnBaQktVbTBYOXNVck9CVUcwZXhva3o4eDgybWJpZFBBOWM3QWRNTTlKWjZpSVpSZDJ6al9HSHlaNjU1STMzYm9wMUxfQdIB6AFBVV95cUxQRllfTFd3QWNjcWJJa0FOYTlkbnhtTjgwcUU1MUlPMnQxel9kOGtMWVNFV0lvMHpQcUI3cjZJcW54dW5PSU1lQU5SMnlpVTloV2dMeFkzOTQ2UTNFTUJfMXQzMmo0NUgzMFpDazhlZ0hiZDBQcDdMcU9YUExtRzJmUThYSzhMdmNBTVFBMzBIdGRaNTV3MTUxc2szOUpUeHVTOXJRazFmandiR1pOTWxQaFktOXRfZzRTZVhYTFExT0dOSm9WOXdyazlYVmhkNTFtdUZ1YkZCWDB2X0pVOGRMVTdaSl9OdHlM?oc=5",
-   "f": "2026-11-25T11:31:00.000Z",
-   "fuente": "Infobae",
-   "dominio": "infobae.com",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "El precio de Bitcoin podría caer por debajo de los 53.000 dólares si se repite la historia del mercado bajista",
-   "u": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1sSV9STXlMVDZPU29heWUtMnFjVzFSZjlYaDVsRnR0MEFqUTB4Ymh4LTgxT01fdV9LUVRtdS1TblBKV08wS211S0FURFQ2S0hDYUFCRTdjZkVjUE5TTUE4ZmtTd3dScmh5V28wVU14OA?oc=5",
-   "f": "2026-11-25T11:09:38.000Z",
-   "fuente": "TradingView",
-   "dominio": "es.tradingview.com",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "El precio de Bitcoin retrocede 1,48% en medio de la cautela institucional y la presión de las tasas",
-   "u": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxOLWFkUXlaaDNqZ0ZBQVJpNGVlSEh4eEYxbG5wMFRlbldBRVI4eUpBUld5YW9xUVdfQ3ZxNzc5YnlwWTFZMDk5aDJWNEFOSUhQTk9PX29xaHUxOXdLZmlDNFJpdFg3VXlLRXppLUxUcDdjeF9lMlhPakZUNGlDU0FmVnFlUzJRNzZHcEZpYnFNZXV6a1RBOU1icllTSUppeVM0MFgzY3gxUnp3dU1xb0szdnpCNDE0WGRMOEE2X2wwcEtQNTJ2Q3piTTV2V0VNU3pDRHNEUlVHczh1NnVRY0E?oc=5",
-   "f": "2026-11-25T11:07:10.000Z",
-   "fuente": "Cripto247",
-   "dominio": "cripto247.com",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "Bitcoin hoy: cotización y precio del BTC este miércoles 25 de noviembre de 2026",
-   "u": "https://news.google.com/rss/articles/CBMixwFBVV95cUxNSlhOYVNoeTEwQmFDYTdyc1lnRDdFbE9EWUxwWWtvUkxZVjhiTlMxbkotRDdlT1EtaVNiN2xoSS1XV0RSYmIzUmhpMDRaNjBvSzEwY0YzYUlaLUI2bTZkaFlTNmpmRVVBbVgxZXJkV0F0aXFqQlZySXJBbXBrSXRfcC1iMkNGQkU4REgxaU83aG1nMzZDQzFkYVliaTRJMU9rd0pZTl9EbUZCMGt0QzZhNVBkblk1ZkZXS0R3cDV2YVd2bE5YMWZV0gHMAUFVX3lxTE96LXdPRXpzZWtjdHN3OGNkMVRHcVptLXhsRmVrd3pCOWF0M01lYUU5SW1RMXpnSE12Zmc3X09ZZmZUUnotXzVNWGgtUlJPb3paeVoybUV2Y1NCMlhWY0JEdjRtVTlHaF9ZVm9XTmNBOGlXRFN2QjluaFBwTVdNcmllMmticEdRMm1QWDhNY2NTSlc2MjJUWFZrQ3ZabWRzUkhPRDl6UE1oR1MzYkxRNHlQcjNqVjRQSEUzaGFuaDNINjRRdEhYMzFNNWwxSA?oc=5",
-   "f": "2026-11-25T10:22:03.000Z",
-   "fuente": "Clarin.com",
-   "dominio": "clarin.com",
+   "t": "UniCredit de Italia lanza un certificado de bitcoin a seis años con ganancias limitadas al 65%",
+   "u": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxQVG5hcW1Ib25pY1FZTHl0MWRMb2tHWUlmd3Zjb2FjTzVMdGUxSnZYRW5FOXVGaGtHd0xMRVlxLWlZYzJZby1ETVJmbnZhZldYRkZRUFVWeWc5Sm14MjdIMDVJMl9STmZhUC1UdE9kMmFuUDBFVzJGSkFJdGRkOUJyRGVJX3JvQUJaV3dKeXljR0p6VUhKcUhfSnVpVTBHQk4wUzlBdlBCMGdfT3BPSnl6a1lIaFJieG9wUUhkcXZhQUtCX0dHQXdOOHVEZjdzVF9FTElmdUh1TQ?oc=5",
+   "f": "2026-11-25T11:51:54.000Z",
+   "fuente": "CoinDesk",
+   "dominio": "coindesk.com",
    "tema": "cripto",
    "rec": false
   }

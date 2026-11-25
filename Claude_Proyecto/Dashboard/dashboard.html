@@ -1554,26 +1554,6 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 /* «Hay más abajo»: ver marcarDesborde(). */
 .hay-mas{-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 46px),transparent);
   mask-image:linear-gradient(to bottom,#000 calc(100% - 46px),transparent)}
-/* Comida: columna flexible para que «Con esta lista cocinas» tome el alto que sobra bajo los pasillos. */
-.lc-flex{display:flex;flex-direction:column}
-.lc-flex>*{flex-shrink:0}
-.lc-flex>.lc-cocinas{flex:1 1 auto;min-height:0}
-.lc-cocinas{display:flex;flex-direction:column;gap:10px;margin-top:4px;padding-top:14px;border-top:1px solid rgba(var(--ov),.09)}
-.lc-cocinas-hd{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-.lc-cocinas-t{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--text2)}
-.lc-cocinas-s{font-size:11.5px;color:var(--text3)}
-.lc-cocinas-a{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--ac1);text-decoration:none}
-.lc-cocinas-g{flex:1;min-height:0;overflow:hidden;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
-  grid-auto-rows:176px;gap:12px}
-.lc-cocinas-g.lc-libre{flex:none;overflow:visible}
-.lc-receta{display:flex;flex-direction:column;min-width:0;border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;
-  background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.08);transition:border-color .2s,transform .2s}
-.lc-receta:hover{border-color:var(--ac1);transform:translateY(-2px)}
-.lc-receta-f{flex:1;min-height:0;background-size:cover;background-position:center}
-.lc-receta-b{display:flex;flex-direction:column;gap:2px;padding:8px 10px 9px}
-.lc-receta-b b{font-size:12.5px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lc-receta-b small{font-size:10.5px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lc-receta-ok{font-style:normal;font-size:10.5px;font-weight:700;color:var(--g)}
 .lc-aisles .lc-aisle{break-inside:avoid;margin:0 0 18px}
 /* El Kit de Higiene, igual (Adán: "igual en kit de higiene"), pero sus nombres son frases
    —"Botellas de viaje rellenables 100 ml (set de 4, aptas para equipaje de mano)"— y su renglón
@@ -6578,8 +6558,6 @@ function actualizarLcTotal(){
   const hud=document.getElementById('lcHud');
   if(hud) hud.outerHTML=(listaCatSel==='comida'?lcHudComidaHtml():lcHudCatHtml(listaCatSel));
   if(listaCatSel!=='comida') return;
-  // Las recetas se reordenan con lo que marcaste.
-  const ck=document.getElementById('lcCocinas'); if(ck){ ck.outerHTML=lcCocinasHtml(); lcAjustarCocinas(); }
   // Los subtotales y el "x/y" de cada pasillo se refrescan aquí y no en el render completo:
   // cambiar una cantidad solo repinta su renglón, así que el encabezado se quedaría con la cifra
   // vieja si no se actualiza aparte.
@@ -6645,10 +6623,8 @@ function renderListaCompras(){
       }).join('');
   const cols=!Array.isArray(data)&&LC_COLUMNAS[listaCatSel];
   const body=document.getElementById('listaCompraBody');
-  body.classList.toggle('lc-flex', esComida);
-  body.innerHTML=hud+leyenda+(cols?'<div class="lc-aisles'+(cols.ancho?' lc-ancho':'')+'">'+html+'</div>':html)+(esComida?lcCocinasHtml():'');
-  if(esComida) requestAnimationFrame(lcAjustarCocinas);
-  else requestAnimationFrame(()=>lcAlinearTiendas(body));
+  body.innerHTML=hud+leyenda+(cols?'<div class="lc-aisles'+(cols.ancho?' lc-ancho':'')+'">'+html+'</div>':html);
+  if(!esComida) requestAnimationFrame(()=>lcAlinearTiendas(body));
 }
 // El ancho de la tienda más larga de la categoría, para todas (ver `.lc-tienda`). Sin la pestaña a la vista no hay qué
 // medir: se alinea al volver a pintarla. Cuando cargan las fuentes, otra vez, que el ancho cambia.
@@ -6660,42 +6636,6 @@ function lcAlinearTiendas(caja){
 }
 if(document.fonts) document.fonts.ready.then(()=>{ if(listaCatSel!=='comida') lcAlinearTiendas(document.getElementById('listaCompraBody')); });
 function verListaCat(cat){ listaCatSel=cat; renderListaCompras(); }
-// ── Con esta lista cocinas ── La lista sale del menú (prompt de Lista de Compras): bajo los pasillos
-// de Comida, las recetas del recetario del maestro (CIFRAS.RECETARIO, con su foto de Comida),
-// primero las que ya tienen marcados sus ingredientes y, a igualdad, las más baratas. Llena el alto
-// que quedaba vacío y dice para qué es lo que vas a comprar.
-function lcCocinasHtml(){
-  const R=window.CIFRAS&&CIFRAS.RECETARIO; if(!R||!R.todas) return '';
-  const marcado=txt=>!!lcQty(lcItemId('comida',txt));
-  const recs=R.todas.map(r=>{ const ing=r.ingredientes||[], n=ing.filter(i=>marcado(i.n)).length;
-    return {r, n, tot:ing.length||1, costo:+CIFRAS.costoReceta(r)||0}; })
-    .sort((a,b)=>(b.n/b.tot)-(a.n/a.tot)||a.costo-b.costo);
-  const hay=recs.some(x=>x.n);
-  return '<div class="lc-cocinas" id="lcCocinas">'+
-    '<div class="lc-cocinas-hd"><span class="lc-cocinas-t">Con esta lista cocinas</span>'+
-      '<span class="lc-cocinas-s">'+(hay?'primero las que ya tienen sus ingredientes marcados':'las más baratas del recetario — marca sus ingredientes y suben')+'</span>'+
-      '<a class="lc-cocinas-a" href="../CuidadoPersonal/comida.html">El recetario →</a></div>'+
-    '<div class="lc-cocinas-g">'+recs.map(x=>{
-      const r=x.r, des=/^d/.test(r.id), prot=(r.macros&&r.macros.prot)||0;
-      return '<a class="lc-receta" href="../CuidadoPersonal/comida.html?s='+(des?'desayunos':'cenas')+'" title="'+esc(r.nombre)+(r.fotoCredito?' · foto: '+esc(r.fotoCredito):'')+'">'+
-        '<span class="lc-receta-f" style="background-image:url(\'../CuidadoPersonal/'+r.foto+'\')"></span>'+
-        '<span class="lc-receta-b"><b>'+esc(r.nombre)+'</b>'+
-          '<small>'+(des?'Desayuno':'Cena')+' · '+esc(r.tiempo||'')+' · '+lcM(x.costo)+' · '+prot+' g de proteína</small>'+
-          (x.n?'<i class="lc-receta-ok">tienes '+x.n+' de '+x.tot+' ingredientes</i>':'')+'</span></a>';
-    }).join('')+'</div></div>';
-}
-// Solo filas completas: las tarjetas que no caben enteras se ocultan (nunca a media tarjeta). Sin alto
-// propio —el teléfono, donde la lista se desplaza— van las seis primeras.
-function lcAjustarCocinas(){
-  const g=document.querySelector('#lcCocinas .lc-cocinas-g'); if(!g) return;
-  const cards=[...g.children]; cards.forEach(c=>{ c.style.display=''; });
-  const libre=innerWidth<=640||g.clientHeight<150;
-  g.classList.toggle('lc-libre', libre);
-  if(libre){ cards.forEach((c,i)=>{ if(i>=6) c.style.display='none'; }); return; }
-  const fin=g.getBoundingClientRect().bottom+1;
-  cards.forEach(c=>{ if(c.getBoundingClientRect().bottom>fin) c.style.display='none'; });
-}
-window.addEventListener('resize',()=>{ if(listaCatSel==='comida') lcAjustarCocinas(); });
 // El checkbox pone la cantidad de UNA SEMANA (`base`), no 1: en el súper no llevas un plátano,
 // llevas los de la semana, y ajustar de 1 en 1 desde cero era el trabajo que pidió quitarse.
 // Al desmarcar vuelve a 0. En los productos con contador se re-pinta el renglón para que el

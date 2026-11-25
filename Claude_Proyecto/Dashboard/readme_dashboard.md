@@ -2151,12 +2151,6 @@ Siete categorías (`LISTA_CAT_META`), una activa a la vez. **Comida** es la úni
 contador; el resto son checklists con dos precios de plataforma. Links de tienda en
 todas: Comida con Walmart Súper + Amazon, el resto Amazon + Mercado Libre.
 
-**Con esta lista cocinas** (`lcCocinasHtml()`): bajo los pasillos de Comida, las recetas del recetario
-del maestro con su foto de Comida —primero las que ya tienen marcados sus ingredientes, a igualdad
-las más baratas—, con tiempo, costo y proteína; cada una abre Comida en desayunos o cenas. Toma el
-alto que sobra (`.lc-flex`) y `lcAjustarCocinas()` deja solo las filas que caben enteras; en el
-teléfono, seis. Se reordena al marcar.
-
 **El contador cuenta piezas.** Los precios viven en el maestro (`CIFRAS.PRECIOS_SUPER`; aquí se leen como
 `LISTA_COMPRAS_PRECIOS`). Cada producto declara un `paso` —lo que
 suma un `+`— con `monto` y `g`; `base` dice cuántos `paso` son una semana y es lo que mete el
