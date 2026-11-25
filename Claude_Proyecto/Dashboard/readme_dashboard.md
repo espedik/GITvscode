@@ -919,16 +919,24 @@ redundante"*): cambiar de fase, de mes y auditar ocurre en su lugar.
   *🧾 Auditado el 1 de noviembre · 92 mes cumplido* con **Ver la auditoría** y **Reabrir**. Un mes que cerró sin
   auditar lo dice su aviso, con su botón. Todos la abren **en el lugar del mes** (ver *Los meses de cada fase y su
   auditoría*).
-- **La información general** (`pmGenHtml`), en las mismas tres columnas que el mes (`.pm-gen`): la meta de la fase y
-  lo que dejas de hacer, en fichas con solo su cabeza y el porqué en su `title`; el checkpoint con sus dos salidas y
+- **La información general** (`pmGenHtml`), en las mismas tres columnas que el mes (`.pm-gen`): la meta de la fase; el
+  checkpoint —su fecha en su renglón, la prueba y sus dos salidas— y
   **cómo va la fase** (`fzvVaHTML`, `fzvAvance`: meses auditados, tareas cumplidas hasta hoy, la calificación de los
   meses y lo que sigue —*Auditar septiembre*, que abre esa auditoría aquí, o la fecha de la próxima—), solo si la
   fase ya empezó: en una que viene diría *aún no cierra ninguno* y su fecha, que ya están en la ruta; y **lo que ya
   hiciste en esta fase** (`pmHechoFase`; Adán, 3-nov-2026: *"en las demás fases también"*; ahí iba tu dinero en la
   fase): lo palomeado de cada mes —o lo cumplido, si se auditó—, sin repetir una tarea que pasó de un mes a otro, con
-  el mes en que quedó hecha (*salida · oct*), en solo lectura: se marca y se desmarca en su mes. Seis y *Y N más*.
+  el mes en que quedó hecha (*salida · oct*), en solo lectura: se marca y se desmarca en su mes. **Contraído**: *Ver lo
+  que ya hiciste* con su número, y la lista se despliega en su lugar. Debajo, **lo que dejas de hacer**, una por renglón
+  con su ✕ y el porqué en su `title` (ahí equilibra las columnas: en la primera alargaba la meta).
+- **Sin recuadros** (Adán, 25-nov-2026: *"no me gustan esos recuadros grandes, porque me comen mucho espacio… estoy en
+  iPad y todo se ve reducido y amontonado… debe verse excelente y muy clara visualmente"*): el checkpoint, cómo va la
+  fase, lo que dejas de hacer, las etiquetas del mes (*noviembre*, *salida*), el aviso de un mes sin auditar, la
+  auditoría y el mes cumplido van como líneas con un filete fino, sin marco ni fondo. Solo dentro de `.pm-mes`: la
+  auditoría abierta no cambia. Medido a 1327 px: la información general de la Fase 1 baja de 363 a 321 px y el mes
+  cumplido, de 232 a 184.
 - **Compacto** (Adán, 25-oct-2026: *"haz las cosas más pequeñas y la letra también, no debemos acaparar mucho
-  visualmente, solo lo importante"*): el título a 17 px, las tareas y los textos a 12, las etiquetas a 9.5, las
+  visualmente, solo lo importante"*): el título a 17 px, las tareas y los textos a 13, las etiquetas a 10.5, las
   pestañas a 11 y los rellenos cortos.
 - **Cada tarea, con su nombre corto** (`pmCorto`; Adán, 25-oct-2026: *"reduce más los nombres de la lista de las
   cosas que tengo que hacer"*): la idea principal —lo que va antes del primer «: », « —», «; » o de la segunda
