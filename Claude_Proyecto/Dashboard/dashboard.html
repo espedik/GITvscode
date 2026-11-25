@@ -1438,6 +1438,16 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .pm-aud .ce-btn{padding:5px 11px;font-size:11.5px}
 .pm-mas:hover{color:var(--text)}
 .pm-mas b{font-family:var(--mono);color:var(--text)}
+/* El mes con todo hecho: una franja en vez de tres columnas vacías; lo hecho y lo que sostienes se despliegan debajo. */
+.pm-listo{display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap;padding:12px 16px;margin-bottom:10px;border-radius:12px;
+  background:rgba(var(--g-rgb),.08);border:1px solid rgba(var(--g-rgb),.28)}
+.pm-listo-ok{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:rgba(var(--g-rgb),.18);color:var(--g);font-weight:800;flex-shrink:0}
+.pm-listo-t{flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:1px}
+.pm-listo-t b{font-size:14.5px}
+.pm-listo-t span{font-size:12px;color:var(--text3)}
+.pm-listo-ac{display:flex;gap:8px;flex-wrap:wrap}
+.pm-listo-ac .pm-mas{padding:6px 12px;border-radius:999px;border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.04);gap:8px}
+.pm-listo-ac .pm-mas:hover{border-color:rgba(var(--ov),.28)}
 @media(max-width:1180px){.pm-mes-3,.pm-mes-3.pm-c2{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.pm-mes-3>:nth-child(3){grid-column:1/-1}
   .pm-mes-3.pm-c1{grid-template-columns:minmax(0,1fr)}.pm-c2>:first-child .pm-filas{grid-template-columns:minmax(0,1fr)}
   .pm-ruta .fz-est{display:flex}.pm-ruta .fz-est-f{font-size:11px}}
@@ -11115,13 +11125,25 @@ function pmMesVistaHtml(i, ym, tabs){
     '<div class="pm-filas">'+(!deFase.length ? '<div class="fzc-vacio">Este mes no trae tareas propias.</div>'
       : faltaFase.length ? (_pmTodo.fase ? faltaFase : faltaFase.slice(0, VER)).map(fila).join('') : '<div class="fzc-vacio">✓ Todo lo de este mes ya quedó hecho.</div>')+'</div>'+
     (faltaFase.length > VER ? mas('fase', '→', 'Y '+(faltaFase.length - VER)+' más') : '');
+  // Lo hecho, contraído (Adán, 25-nov-2026: "ya cuando haya realizado las tareas, debes contraer las ya hechas, para evitar
+  // todo el ruido visual"): su número, y la lista se despliega en su lugar (`_pmTodo.hechas`).
+  const listaHechas = hechos.length ? mas('hechas', hechos.length+' ✓', 'Ver lo que ya hiciste')+(_pmTodo.hechas ? hechos.map(fila).join('') : '') : '';
   const col3 = '<div class="fzc-g"><span>Lo que ya hiciste</span><span>'+hechos.length+'</span></div>'+
-    (hechos.length ? (_pmTodo.hecho ? hechos : hechos.slice(0, VER)).map(fila).join('')
-      : '<div class="fzc-vacio">'+(e === 'fut' ? 'Este mes todavía no empieza.' : 'Todavía nada marcado este mes.')+'</div>')+
-    (hechos.length > VER ? mas('hecho', '→', 'Y '+(hechos.length - VER)+' más') : '')+aud;
-  return '<div class="pm-mes-cab"><div class="fzm-cab-t">'+fzmNombre(ym)+chip+'<span class="fzm-cab-s">'+
-      f.tag+' · del 1 al '+fin.getDate()+' de '+fzmMesMin(ym)+' · '+estado+'</span>'+pmVolverBtn()+'</div>'+tabs+'</div>'+
-    aviso+pmColumnas([col1, col2, col3]);
+    (hechos.length ? listaHechas : '<div class="fzc-vacio">'+(e === 'fut' ? 'Este mes todavía no empieza.' : 'Todavía nada marcado este mes.')+'</div>')+aud;
+  const cab = '<div class="pm-mes-cab"><div class="fzm-cab-t">'+fzmNombre(ym)+chip+'<span class="fzm-cab-s">'+
+      f.tag+' · del 1 al '+fin.getDate()+' de '+fzmMesMin(ym)+' · '+estado+'</span>'+pmVolverBtn()+'</div>'+tabs+'</div>';
+  // Todo hecho —lo de la fase y lo de la salida—: en vez de tres columnas que solo dicen «ya quedó hecho», una franja con lo
+  // cumplido, lo que sostienes y lo hecho para desplegar en su lugar, y la auditoría.
+  if(hechos.length && !faltaFase.length && !faltaSal.length){
+    const partes = [deFase.length ? deFase.length+' de la fase' : '', deSalida.length ? deSalida.length+' de la salida' : ''].filter(Boolean).join(' y ');
+    const abre = [_pmTodo.hechas ? '<div class="fzc-g"><span>Lo que ya hiciste</span><span>'+hechos.length+'</span></div><div class="pm-filas">'+hechos.map(fila).join('')+'</div>' : '',
+      _pmTodo.sost && F.habitos.length ? '<div class="fzc-g"><span>Lo que sostienes todo el mes</span><span>'+sost+' de '+F.habitos.length+'</span></div>'+F.habitos.map(filaH).join('') : ''];
+    return cab+aviso+'<div class="pm-listo"><span class="pm-listo-ok">✓</span><div class="pm-listo-t"><b>Todo lo de '+fzmMesMin(ym)+' ya quedó hecho</b>'+
+        '<span>'+partes+(auditado ? '' : ' · se puede desmarcar desde aquí')+'</span></div><div class="pm-listo-ac">'+
+        mas('hechas', hechos.length+' ✓', 'Lo que hiciste')+(F.habitos.length ? mas('sost', sost+' de '+F.habitos.length, 'Lo que sostienes') : '')+'</div></div>'+
+      (abre.some(Boolean) ? pmColumnas(abre) : '')+aud;
+  }
+  return cab+aviso+pmColumnas([col1, col2, col3]);
 }
 // La información general de la fase en la pantalla: la meta y lo que se deja, el checkpoint y cómo va, y lo que ya hiciste.
 function pmGenHtml(i, tabs){

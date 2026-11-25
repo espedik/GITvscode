@@ -901,7 +901,11 @@ redundante"*): cambiar de fase, de mes y auditar ocurre en su lugar.
   pasaron del mes anterior y las correcciones de su auditoría; hasta cinco y, en el mes de hoy, la primera con *Te
   toca*—; **para la salida a Alemania** —tres de las que faltan— y *lo que sostienes todo el mes*; y **lo que ya
   hiciste**: lo palomeado del mes, de la fase y de la salida (con la etiqueta *salida*), con la misma casilla para
-  desmarcarlo —auditado, con su ✅— y la auditoría al pie. Ahí iba tu dinero del mes (Adán, 3-nov-2026: *"quita esta
+  desmarcarlo —auditado, con su ✅— y la auditoría al pie. **Lo hecho va contraído** (Adán, 25-nov-2026: *"ya cuando haya
+  realizado las tareas, debes contraer las ya hechas, para evitar todo el ruido visual"*): *Ver lo que ya hiciste* con su número,
+  y la lista se despliega en su lugar (`_pmTodo.hechas`). **Con todo hecho** —lo de la fase y lo de la salida—, las tres columnas se
+  vuelven una franja verde (`.pm-listo`): *Todo lo de noviembre ya quedó hecho*, cuántas de la fase y de la salida, y dos botones que
+  despliegan debajo *Lo que hiciste* (en dos columnas, con su casilla para desmarcar) y *Lo que sostienes*; la auditoría, al pie. Ahí iba tu dinero del mes (Adán, 3-nov-2026: *"quita esta
   sección y pon solo las cosas que ya hemos hecho ahí mismo donde quitaste lo de la imagen"*). Los encabezados cuentan
   lo hecho de lo total (*3 de 8*); cuando no falta nada, *✓ Todo lo de este mes ya quedó hecho*.
 - **Ni el mes ni la información general llevan tarjetas de dinero contra el plan** (Adán, 3-nov-2026): las cifras
