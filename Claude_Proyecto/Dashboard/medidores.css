@@ -707,3 +707,12 @@ button.km-li[aria-expanded="true"]>b::after{transform:rotate(-135deg);margin-bot
   #kpiOverlay.kv-on .kv-hero .n{font-size:32px}
   #kpiOverlay.kv-on .gbm-head{padding-left:54px}
 }
+/* La gráfica del Fondo Maestría, alta (Adán, 25-nov-2026: "la gráfica de fondo de maestría, hazla más grande a lo alto para
+   que se vea mejor"): 460 px con la franja de hitos, unos 330 de dibujo; la del camino al millón conserva sus 344. La regla
+   compacta de arriba (190 px) es para las gráficas chicas: estas dos son el centro de su ventana. */
+#kpiOverlay.kv-on .km-g .kv-g{min-height:460px}
+#kpiOverlay.kv-on .kp .km-g .kv-g{min-height:344px}
+@media(max-width:640px){
+  #kpiOverlay.kv-on .km-g .kv-g{min-height:480px}
+  #kpiOverlay.kv-on .kp .km-g .kv-g{min-height:400px}
+}

@@ -1116,8 +1116,9 @@ acomodos: **de 1281 a 1520 px** la cifra toma 5 columnas y los cuatro datos van 
 total— pone la gráfica arriba y el simulador y las deudas lado a lado, como bajo 1280. Una tabla de meses que se desliza de
 lado (`.km-tw`) lleva una sombra en el borde mientras queda más.
 
-Medido con los datos de Finanzas: a 2048×1040 y a 1600×1000 ninguna se desplaza más de 37 px; a 1327 (el iPad) caben
-enteras el fondo, los intereses y Total invertido, y las demás se desplazan menos de 300 px; a 1194, el iPad vertical y
+Medido con los datos de Finanzas: a 2048×1040 y a 1600×1000 ninguna se desplaza más de 37 px salvo el Fondo Maestría (235 y 292); a 1327 (el iPad) caben
+enteras el fondo, los intereses y Total invertido; Patrimonio y Deuda total se desplazan menos de 300 px y el Fondo Maestría,
+por su gráfica alta, 561; a 1194, el iPad vertical y
 390 px se desplazan enteras, sin textos partidos ni desbordes. Probado: los controles dan la cifra del maestro; anotar, corregir
 y borrar un abono, aportar al fondo y registrar una compra mueven Finanzas; sin datos no se rompen; en el iPad van sin
 formularios. El **control 57** prueba la cuenta del crédito y el **59**, estas ventanas.
@@ -1140,7 +1141,8 @@ arriba abajo:
   nombre, fecha y una guía hasta su punto: *Colchón completo*, *BYD en cero*, *Juntas lo de la salida* (el primer mes en que lo que
   tendrías pasa lo que pide) y *Decides*; si dos chocan, el segundo baja de renglón (dos renglones, tres en una gráfica angosta). Hoy
   dice lo que tienes y lo que debes; el final, lo que tendrías y lo de solo el calendario, debajo de su línea para no cruzar la cian
-  (en el teléfono, solo en el globo). Mide 330 px de alto (380 en el teléfono).
+  (en el teléfono, solo en el globo). **Alta** (Adán, 25-nov-2026: *"hazla más grande a lo alto para que se vea mejor"*): 460 px con
+  la franja de hitos, unos 330 de dibujo entre $0 y la cima (480 en el teléfono); la regla compacta de las ventanas (190 px) no la toca.
 - **El camino en ocho columnas, debajo de la gráfica y alineado con sus meses** (`.km-f`): hoy y el cierre de cada tres meses, con lo que te
   queda, lo que debes del BYD, lo que han rendido tus inversiones y lo que tienes. Al tocar una se abre **su desglose** (`.km-det`,
   `MEDIDORES.mesMae`), que se contrae y con las flechas pasa por todos los meses: lo que entra, en qué sale —los servicios, las
