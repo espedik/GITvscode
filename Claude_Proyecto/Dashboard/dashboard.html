@@ -4542,10 +4542,10 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
 .slide.theme-coach .slide-inner{width:100%}
 .coach-tablero{max-width:100%}
 .slide.theme-coach .slide-inner{justify-content:flex-start}
-/* Las tres columnas llenan lo que queda; el calendario, chico (Adán, 3-nov-2026: "en elige tu día, el calendario hazlo
-   mucho más pequeño"; antes, 21-oct-2026: "hazlo la mitad de la altura"): su columna mide 0.62 de las otras —421 px a
-   2048 en vez de 700, nunca menos de 280— y lleva al pie a dónde va el dinero ese mes. */
-.coach-tablero{display:grid;grid-template-columns:minmax(280px,.62fr) minmax(0,1fr) minmax(0,1fr);
+/* Las tres columnas llenan lo que queda. El calendario es bajo (Adán, 21-oct-2026: "hazlo la mitad de la altura") y
+   ancho (Adán, 25-nov-2026: "el calendario hazlo más ancho a la derecha"): su columna mide 1.6 de las otras —535 px a
+   1327, el iPad, y 855 a 2048; nunca menos de 280— y lleva al pie a dónde va el dinero ese mes. */
+.coach-tablero{display:grid;grid-template-columns:minmax(280px,1.6fr) minmax(0,1fr) minmax(0,1fr);
   gap:12px;align-items:stretch;flex:1;min-height:376px}
 /* Las cifras del mes, bajo las fechas: dos renglones de tres —el dinero del mes y a dónde va—, cada cifra con su nombre a
    la izquierda y el importe a la derecha, alineados en columnas. En el teléfono, el nombre arriba del importe, en las
@@ -4616,7 +4616,7 @@ body:has(#comoDecideOverlay.open) .pp-btn{visibility:hidden}
    cifras del mes quepan sin desplazar la columna. */
 @container (max-width:300px){.ct-cal .ct-h{flex-wrap:wrap;row-gap:8px;flex-shrink:0}.ct-cal .ct-nav{width:100%;justify-content:flex-end}.ct-celdas{grid-auto-rows:24px}}
 @container (max-width:640px){.ct-dl u{display:none}}
-@container (max-width:480px){.ct-d .ct-dm{display:none}}
+@container (max-width:430px){.ct-d .ct-dm{display:none}}
 @container (max-width:380px){.ct-dc{display:none}}
 .ct-cat{display:flex;flex-direction:column;gap:3px}
 /* El concepto que cae un dia concreto lleva a ese dia. Los tiempos de comida no:
