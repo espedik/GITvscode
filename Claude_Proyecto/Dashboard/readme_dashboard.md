@@ -80,7 +80,7 @@ forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
 y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases) y `plan_auditoria_sinc` (cuándo se tocó cada mes aquí, para traer la de la PC), `fin_resumen_v1` (lo que queda en la quincena, para `finanzas-sync.js`), `maestro_ajustes_v1` (tus cifras de Mis cifras; la lee el maestro en todas las apps) y `cifras_guardado` (en `sessionStorage`: lo que acabas de guardar en Mis cifras, para decirlo tras recargar), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta), `dash_libromes_v1` (el libro del mes: el de ahora, los leídos y el que sigue si lo cambiaste),
-`habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-istqb-lado` (*Cómo vas* abierto o cerrado en la ventana del ISTQB, en ese dispositivo), `dash-aleman-resumen` (el resumen de la lección de *Alemán de hoy* abierto o cerrado, en ese dispositivo), `dash-noticias-v1` y `dash-precios-v1` (las últimas noticias y los últimos precios de *Qué invertir hoy* que llegaron de
+`habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-istqb-lado` (*Cómo vas* abierto o cerrado en la ventana del ISTQB, en ese dispositivo), `dash-mae-tienes` (*Todo lo que tienes* abierto o cerrado en la ventana del Fondo Maestría, en ese dispositivo), `dash-aleman-resumen` (el resumen de la lección de *Alemán de hoy* abierto o cerrado, en ese dispositivo), `dash-noticias-v1` y `dash-precios-v1` (las últimas noticias y los últimos precios de *Qué invertir hoy* que llegaron de
 GitHub). Tu reparto no es clave propia: vive en Finanzas (`finanzasmx_v2.reparto`).
 
 ---
@@ -1123,7 +1123,10 @@ arriba abajo:
   `MEDIDORES.mesMae`), que se contrae y con las flechas pasa por todos los meses: lo que entra, en qué sale —los servicios, las
   suscripciones y las rutinas se abren producto por producto—, a dónde va lo que te queda (el colchón, el BYD, la bolsa, cripto) y lo que
   tendrías. Solo va lo documentado: nada de «lo demás».
-- **Todo lo que tienes** —bolsa, CETES, Bitcoin, cuenta, efectivo y depósito— y **lo que pide la salida**. Los pagos de la
+- **Todo lo que tienes** —bolsa, CETES, Bitcoin, cuenta, efectivo y depósito— y **lo que pide la salida**, **plegables** (`.km-pl`,
+  `MEDIDORES.maeLado`; Adán, 25-nov-2026: *"para que se vea mejor la gráfica, la sección de Todo lo que tienes hazla contraíble"*):
+  cerrada es una barra con tu total y lo que pide la salida, y la gráfica toma todo el ancho y se vuelve a dibujar —a 1327 px pasa
+  de 697 a 1,109—. Empieza cerrada y recuerda en ese dispositivo cómo la dejaste (`dash-mae-tienes`). Los pagos de la
   salida (apostillas, vuelo, primera renta…) no van en este presupuesto (Adán: *"eso no lo voy a contemplar"*): se dice cuánto
   suman.
 - **Qué hacer** (`.km-paso`): el paso del plan en que vas con su siguiente envío, anotar lo que no aparece o recortar rutinas, qué pasa si

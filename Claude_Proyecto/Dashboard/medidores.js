@@ -208,6 +208,15 @@
     const d = document.getElementById('kmDet'); if (!d) return; d.innerHTML = desgloseMae(); d.classList.toggle('abre', mae.abre);
     document.querySelectorAll('.km-f [data-m]').forEach(c => c.classList.toggle('sel', mae.abre && c.dataset.m === mae.mes));
   }
+  // «Todo lo que tienes», plegable (Adán, 25-nov-2026: "para que se vea mejor la gráfica, la sección de Todo lo que tienes hazla
+  // contraíble"): cerrada, la gráfica toma todo el ancho y se vuelve a dibujar. Empieza cerrada y recuerda, en ese dispositivo,
+  // cómo la dejaste.
+  const MAE_LADO = 'dash-mae-tienes';
+  const maeLado = () => { try { return localStorage.getItem(MAE_LADO) === 'abierto'; } catch (e) { return false; } };
+  M.maeLado = function (d) {
+    try { localStorage.setItem(MAE_LADO, d.open ? 'abierto' : 'cerrado'); } catch (e) { /* sin almacenamiento: no se recuerda */ }
+    requestAnimationFrame(() => graficas.filter(q => q[0] === 'salida').forEach(q => q[1](q[0], q[2])));
+  };
   M.mesMae = function (mes) { mae.abre = !(mae.abre && mae.mes === mes && document.activeElement && document.activeElement.closest('.km-f')); mae.mes = mes; pintaMae(); const d = document.getElementById('kmDet'); if (mae.abre && d) d.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); };
   M.abreMae = function () { mae.abre = !mae.abre; pintaMae(); const b = document.querySelector('.km-dt'); if (b) b.focus({ preventScroll: true }); };
   M.gastoMae = function (k) { mae.gasto = mae.gasto === k ? '' : k; pintaMae(); const b = document.querySelector('.km-li[data-g="' + k + '"]'), q = document.querySelector('.km-pn'); if (b) b.focus({ preventScroll: true }); if (q) q.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); };
@@ -258,8 +267,8 @@
           .map(q => '<div class="kv-tile"><span>' + q[0] + '</span><b>' + q[1] + '</b><i>' + q[2] + '</i></div>').join('') + '</div></div>' +
       '<div class="km-b"><section class="kv-c km-g"><div class="km-cab"><div><h3>Tu camino a septiembre de 2028</h3></div>' +
           leyenda([['Lo que tienes', 'var(--text)', 'l'], ['Lo que tendrías', 'var(--ac)', 'l'], ['Lo que debes del BYD', 'var(--kv-2)', 'l'], ['Solo lo del calendario', 'var(--kv-gris)', 'd']]) + '</div>' + grafica('salida') + flujo + '</section>' +
-        '<section class="kv-c km-nec"><div class="km-tot"><h3>Todo lo que tienes</h3><strong>' + money(T.hoy) + '</strong></div>' + listaPiezas + (tiEditable() ? '<div class="km-ed">' + boton('Editar saldos', 'abrirKpi(\'fondo\');MEDIDORES.editarMano(true)', 1) + boton('Anotar un abono', 'abrirKpi(\'deudatotal\')', 1) + '</div>' : '') + '<div class="km-tot dos"><h3>Lo que pide la salida</h3><strong>' + money(T.pide) + '</strong></div><div class="km-lista">' + listaCostos + '</div>' +
-          '<div class="kv-pie">Mandando solo lo del calendario llegas con <b>' + money(planFin) + '</b>. Los ' + money(T.fuera) + ' de trámites, vuelo y primera renta no van en este presupuesto. Con ALTEN no piden cuenta bloqueada ni colegiatura.</div></section></div>' +
+        '<details class="kv-c km-nec km-pl"' + (maeLado() ? ' open' : '') + ' ontoggle="MEDIDORES.maeLado(this)"><summary class="km-tot"><h3>Todo lo que tienes</h3><strong>' + money(T.hoy) + '</strong><em>la salida pide ' + money(T.pide) + '</em></summary><div class="km-pl-c">' + listaPiezas + (tiEditable() ? '<div class="km-ed">' + boton('Editar saldos', 'abrirKpi(\'fondo\');MEDIDORES.editarMano(true)', 1) + boton('Anotar un abono', 'abrirKpi(\'deudatotal\')', 1) + '</div>' : '') + '<div class="km-tot dos"><h3>Lo que pide la salida</h3><strong>' + money(T.pide) + '</strong></div><div class="km-lista">' + listaCostos + '</div>' +
+          '<div class="kv-pie">Mandando solo lo del calendario llegas con <b>' + money(planFin) + '</b>. Los ' + money(T.fuera) + ' de trámites, vuelo y primera renta no van en este presupuesto. Con ALTEN no piden cuenta bloqueada ni colegiatura.</div></div></details></div>' +
       '<section class="kv-c km-det' + (mae.abre ? ' abre' : '') + '" id="kmDet">' + desgloseMae() + '</section>' +
       '<div class="km-pasos" style="--n:' + pasos.length + '">' + pasos.map((q, i) => '<section class="kv-c km-paso' + (i ? '' : ' uno') + '"><b class="n">' + (i + 1) + '</b><div><div class="t"><h3>' + q[0] + '</h3><strong>' + q[1] + '</strong></div><p>' + q[2] + '</p>' + (q[3] ? '<div class="ac">' + q[3] + '</div>' : '') + '</div></section>').join('') + '</div>' +
       '</div>',
@@ -341,7 +350,8 @@
     if (u.plan != null && Math.abs(Y(u.plan) - Y(u.proy)) > 22 && g.w >= 480) {
       const e = txt(xe, 0, 'solo el calendario ' + money(u.plan), { 'text-anchor': 'end', class: 'km-x' }), xi = xe - e.getComputedTextLength();
       const pl = P(m => m.plan, H), baja = pl.filter(q => q[0] >= xi - 4).reduce((z, q) => Math.max(z, q[1]), Y(u.plan));
-      e.setAttribute('y', Math.min(y0 - 6, baja + 20));
+      let ye = Math.min(y0 - 6, baja + 20); if (o.cor.some(c => Math.abs(Y(c.pide) - (ye - 4)) < 12)) ye += 16;   // no encima de la meta
+      e.setAttribute('y', Math.min(y0 - 6, ye));
     }
     const cruz = nodo(g.svg, 'line', { y1: g.t, y2: y0, stroke: 'var(--kv-gris)', 'stroke-width': 1, opacity: 0 });
     raton(g, n, X, i => {

@@ -306,6 +306,18 @@
 .km-col{stroke:var(--kv-linea);stroke-width:1;stroke-dasharray:2 5}
 .km-guia{stroke:var(--kv-t2);stroke-width:1;stroke-dasharray:2 3;opacity:.6}
 .km-nec{padding:14px 20px}
+/* «Todo lo que tienes», plegable: cerrada es una barra con tu total y lo que pide la salida, y la gráfica toma todo el ancho. */
+.km-b:has(>.km-pl:not([open])){grid-template-columns:minmax(0,1fr)}
+.km-pl{display:block;align-self:start}
+.km-pl>summary{cursor:pointer;list-style:none;align-items:center}
+.km-pl>summary::-webkit-details-marker{display:none}
+.km-pl>summary strong{margin-left:auto}
+.km-pl>summary em{font-style:normal;font-size:13.5px;font-weight:600;color:var(--kv-t2)}
+.km-pl[open]>summary em{display:none}
+.km-pl>summary::after{content:'';width:8px;height:8px;border-right:2px solid var(--kv-gris);border-bottom:2px solid var(--kv-gris);transform:rotate(45deg) translateY(-2px);flex-shrink:0}
+.km-pl[open]>summary::after{transform:rotate(-135deg) translateY(-2px)}
+.km-pl:not([open]){padding:12px 20px}
+.km-pl-c{margin-top:8px}
 .km-tot{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .km-tot strong{font-size:22px;font-weight:700;letter-spacing:-.02em}
 .km-lista{display:flex;flex-direction:column;flex:0 0 auto;justify-content:space-between;margin-top:8px}
