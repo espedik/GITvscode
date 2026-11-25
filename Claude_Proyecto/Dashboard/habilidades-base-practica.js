@@ -429,7 +429,7 @@ const HB_PRACTICA = {
       sale: "Titular y resumen están en inglés, con las palabras clave de tu mercado, y hay una publicación agendada.",
       copia: { t: "Titular, resumen y publicación", l: [
         "Titular: Test & Validation Engineer · ADAS / HIL · Test automation (Python) · ISTQB · AI for testing · German (__)",
-        "About: I make sure driver-assistance software works before it hits the road. __ years validating ______ at {{empleador}}. Currently: AI applied to testing and German (__). Open to ______ in Germany from 2027.",
+        "About: I make sure driver-assistance software works before it hits the road. __ years validating ______ at {{empleador}}. Currently: AI applied to testing and German (__). Open to ______ in Germany from 2028.",
         "Publicación: Lo que aprendí esta semana probando ______: 1) ______ 2) ______ 3) ______"] },
       subtemas: [
         { t: "Cómo busca un reclutador", d: "Los reclutadores filtran en LinkedIn Recruiter por palabras clave, ubicación e idioma. Si tu perfil no trae los términos exactos —ADAS, HIL, Python, ISTQB, test automation— no apareces, aunque seas perfecto para el puesto.", l: [
@@ -2665,7 +2665,7 @@ const HB_PRACTICA = {
           "Tramita tu carta de antecedentes no penales en el sitio oficial.",
           "Tu constancia laboral sirve como modo honesto de vivir.",
           "Guarda copias digitales de todo."] },
-        { t: "Antes de decidir comprar", d: "Tener un arma implica costo de compra, trámites, caja fuerte, munición, membresía y práctica constante. Además, cuando te mudes a Alemania en 2027, no podrás llevarla fácilmente: allá las armas requieren permisos (Waffenbesitzkarte) muy estrictos.", l: [
+        { t: "Antes de decidir comprar", d: "Tener un arma implica costo de compra, trámites, caja fuerte, munición, membresía y práctica constante. Además, cuando te mudes a Alemania en 2028, no podrás llevarla fácilmente: allá las armas requieren permisos (Waffenbesitzkarte) muy estrictos.", l: [
           "Suma el costo anual real, no solo el arma.",
           "Piensa qué harías con ella al mudarte.",
           "Practicar en el club sin comprar es perfectamente válido."] }] },
@@ -3529,7 +3529,7 @@ const HB_PRACTICA = {
           "Compara la tasa de tu deuda con rendimientos esperados.",
           "Si la deuda cuesta más, págala primero.",
           "Las deudas baratas pueden convivir con invertir."] },
-        { t: "El perfil de riesgo", d: "Antes de invertir, define tu horizonte (cuándo necesitarás el dinero) y tu tolerancia a pérdidas temporales. El dinero para Alemania en 2027 tiene horizonte corto y no debe ir a renta variable volátil.", l: [
+        { t: "El perfil de riesgo", d: "Antes de invertir, define tu horizonte (cuándo necesitarás el dinero) y tu tolerancia a pérdidas temporales. El dinero de la cuenta bloqueada para Alemania tiene fecha, junio de 2028: desde febrero de ese año pasa de bolsa y cripto a algo que no baje.", l: [
           "Menos de 2 años: instrumentos de deuda.",
           "Más de 5 años: puede incluir renta variable.",
           "Cada meta, su propio horizonte."] },

@@ -362,7 +362,7 @@ const HB_VISUAL = {
         cifras: [['$100', 'para empezar en cetesdirecto, sin comisión'], ['28 días', 'el plazo más corto de los CETES'], ['3', 'datos de cada instrumento: plazo, riesgo e impuestos']],
         graf: { tipo: 'tabla', k: 'Los instrumentos', t: 'Plazo, riesgo y para qué sirve cada uno', dest: 3,
           cols: ['Instrumento', 'Plazo', 'Riesgo', 'Para qué te sirve'],
-          filas: [['CETES', '28 a 364 días', 'Muy bajo', 'Tu fondo de emergencia'], ['Udibonos', 'Años', 'Bajo; se ajusta con la inflación', 'Que el ahorro no pierda poder de compra'], ['ETF indexado (GBM)', 'Más de 5 años', 'Alto a corto plazo', 'El crecimiento de largo plazo'], ['Afore', 'Hasta tu retiro', 'Según su SIEFORE', 'Tu retiro: revisa su comisión'], ['Bitcoin', 'Ninguno', 'Muy alto', 'Una parte pequeña que puedas ver caer 60 %']],
+          filas: [['CETES', '28 a 364 días', 'Muy bajo', 'Parte de tu colchón'], ['Udibonos', 'Años', 'Bajo; se ajusta con la inflación', 'Que el ahorro no pierda poder de compra'], ['ETF indexado (GBM)', 'Más de 5 años', 'Alto a corto plazo', 'El crecimiento de largo plazo'], ['Afore', 'Hasta tu retiro', 'Según su SIEFORE', 'Tu retiro: revisa su comisión'], ['Bitcoin', 'Ninguno', 'Muy alto', 'Una parte pequeña que puedas ver caer 60 %']],
           fuente: 'Banxico, Educación Financiera; cetesdirecto.com. Los impuestos de cada uno, con tu contador.' } },
       'Impuestos: lo que casi nadie te dice': { foto: 'dinero-13.jpg', cred: 'JEDIKNIGHT1970 · Wikimedia Commons · CC BY-SA 2.5',
         pie: 'Las oficinas centrales del SAT. Lo que facturas por tu cuenta llega completo, y apartar el impuesto el mismo día es tu trabajo.',

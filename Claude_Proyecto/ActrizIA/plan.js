@@ -46,12 +46,12 @@ window.ACTRIZ = {
 
   // Cómo encaja con el plan: el choque, dicho, y las condiciones para que no le quite a lo demás.
   encaje: {
-    choque: 'Tu Fase 1 dice que no se abren frentes de negocio nuevos hasta la Fase 4, y esto es uno. Entra en paralelo, como lo decidiste, pero con condiciones: es un experimento de tu palanca de ingreso —el plan pide {{extraSalida}} más al mes desde noviembre para irte en septiembre de 2027— con tope de horas, tope de gasto y fecha de corte.',
+    choque: 'Tu Fase 1 dice que no se abren frentes de negocio nuevos hasta la Fase 4, y esto es uno. Entra en paralelo, como lo decidiste, pero con condiciones: es un experimento de tu palanca de ingreso —cada peso nuevo va al BYD, que tu plan deja en cero el {{autoCero}}, y adelanta esa fecha— con tope de horas, tope de gasto y fecha de corte.',
     reglas: [
       'No toca el CT-GenAI, el alemán, el gym, la media hora del Plan Maestro ni tus 7 horas de sueño: si una semana no da, se publica menos, no se duerme menos.',
       'El domingo es de Didi: nada de este proyecto en domingo.',
       'Negociar tu ingreso de los martes sigue primero: un aumento en {{empleador}} paga más y antes que cualquier cuenta.',
-      'Lo que cobre va a GBM el día que entra, como cualquier ingreso nuevo, y se anota en Finanzas.',
+      'Lo que cobre va al BYD el día que entra —a invertir cuando quede en cero—, como cualquier ingreso nuevo, y se anota en Finanzas.',
       'Ella no promociona alcohol ni apuestas, ni sale tomando: tu meta de cero alcohol también es la suya.',
     ],
     sinergia: [

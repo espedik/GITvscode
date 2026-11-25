@@ -295,7 +295,7 @@ traigan su frase de qué trata.
 |---|---|---|---|---|---|
 | **Alemán de hoy** | *Para mudarte a Alemania · hoy, 10 palabras y una lección* | El tema de las diez palabras: *Trámites* | De qué trata: *Los papeles al llegar: empadronarte, extranjería, llenar formularios y conseguir cita* | Los tramos de la lección y *Lección: Practicar el pasado · 0 de 10* | Su ventana (`abrirAleman()`); arriba, *Practicar* o *✓ practicaste* y ↻ |
 | **Qué escuchar mientras manejas** | *Audiolibro y podcast · de Thomas Stanley* | El libro, con su título en español (busca en Spotify) | De qué trata | *El libro, a las 07:40; hoy también, un video de IA* | La foto y *Qué escuchar*: su panel (`abrirDidi()`); ↻, el siguiente libro |
-| **Qué invertir hoy** | *Tu dinero hoy, según tu plan para irte a Alemania* | La acción en su color: *Paga … a tu tarjeta BBVA* (rojo), *Hoy no toca pagar la tarjeta* o *Hoy sí inviertes en GBM* (verde) | De qué se trata el plan y tus cifras: *Primero liquidas la tarjeta y después inviertes: debes $8,900 y queda en cero el 15 nov* | *Mientras tengas deuda, no compres inversiones* o el siguiente pago | El panel *Qué invertir hoy* (`abrirGBM()`). Sale de `pasoInversionHoy()` (`corto`, `det`, `pie`), la regla del panel; todo por `money()` |
+| **Qué invertir hoy** | *Tu dinero hoy: el colchón, el BYD y a invertir, en ese orden* | La acción en el color de su paso: *Manda $2,050 al colchón* (cian), *Todo al BYD, a capital* (naranja) o *Hoy inviertes …* (verde); con saldo en la BBVA, *Paga … a tu tarjeta* (rojo) | En qué paso vas y tus cifras: *Llevas … de $35,000; se llena el 15 ene 2027 y después todo va al BYD* | El siguiente envío con su día y su destino | El panel *Qué invertir hoy* (`abrirGBM()`). Sale de `pasoInversionHoy()` (`corto`, `det`, `pie`), la regla del panel; todo por `money()` |
 | **Examen ISTQB CT-GenAI** | *La pregunta del día · lo presentas en ene 2027 · vale 2 puntos* | El tema de la pregunta, corto: *Cómo pedirle cosas a la IA* | De qué trata el capítulo (`IQ_CAP_TRATA`); contestada, el resultado va arriba (*✓ correcta*) | Tu marcador de la semana | Su ventana, con la pregunta completa (`abrirIstqb()`) |
 | **Coach · Habilidades** —la habilidad del plan (`aprendeFoco()`)— | *Ejercicio de mentalidad · libro del mes: Atomic Habits*; la foto es la portada del libro del mes | El nombre del paso: *Lo alto no se mantiene solo* | Su instrucción corta (`corto`) | Los tramos y *Paso 1 de 6* y, a la derecha, la página del libro: *Hoy, hasta la pág. 12* (*El lunes…* si hoy no lees); en la última semana del mes, *En diciembre: Why We Sleep*, y *Terminado · sigue…* si ya lo acabaste; arriba, «‹» / «Siguiente ›» | Su ruta (`abrirSkillDetalle()`) |
 | **Habilidades Base** | *Habilidades para la vida · guía paso a paso* | El nombre de la guía | La idea del paso que toca | Los tramos y *Paso 1 de 20*; arriba, «‹» / «Siguiente ›» | La guía completa (`abrirHabilidadDetalle()`) |
@@ -350,7 +350,7 @@ sigue: nada sale al azar.
 |---|---|---|
 | **Alemán** | **La lección**: la del Kapitel que ve en clase (`ALEMAN_LECCIONES.kapitel()`, con `kapitelAleman` del maestro), con la regla del inicio de Alemán —la que dejó a medias y practicó por última vez; si no, la primera sin terminar en el orden en que conviene estudiar el Kapitel; con todo hecho, el minitest de K10·03—. No cambia cada día: sigue a lo que practicas, y «Siguiente», en su ventana, recorre el Kapitel, luego el A2 y el A1. **El vocabulario**: diez palabras al día (`AL_VOC_DIA`), en este orden: el nivel de la etapa —A2, el que pide Esslingen, hasta que empieza la Fase 2; desde ahí, B1— y, dentro, lo que vas a necesitar primero al llegar (`AL_COACH_TEMAS`: trámites, piso, dinero, salud, teléfono, ciudad, súper), luego la casa, la escuela y el trabajo; lo demás, al final. **Cada día, un solo tema** (`alemanTanda()`; Adán: *"quiero que las tarjetas de vocabulario sean de un tema en específico y no diferentes"*): el de la primera palabra de ese orden que no ha salido; salen las suyas, primero las del nivel y, si no llegan a diez, las de los otros niveles del mismo tema —si después de las diez le quedarían menos de cinco, salen todas, hasta 14—. Simulado en 14 días seguidos desde cero: Trámites, Buscar piso, Dinero y banco, Salud (dos días), Teléfono y correos, Ciudad (tres), En el súper (dos) y Casa, siempre uno por día. Y su repaso espaciado: vuelven al día siguiente y, si te las sabes, a los 3, 7, 14 y 30 días | `ALEMAN_LECCIONES.queToca()`, `alemanVocabHoy()`, `alemanTanda()`, `aprendeOrdenAleman()`, `aprendeEtapaAleman()`, `alemanRepasoHoy()` |
 | **Audiolibro y podcast** | El foco de Hoy aprendes (`aprendeFoco()`: el del plan o el que eligió con «Siguiente» en el paso de la semana), luego el siguiente foco del plan y las demás por retorno; lo que está en pausa no entra. Si el foco tiene menos de dos opciones, se completa con lo que sigue. El audiolibro es de la semana: se decide el primer día que lo ves y se queda hasta el lunes aunque el orden cambie a media semana —el del paso de la semana si su libro está en el catálogo o, si no, el primero del orden que todavía no te haya tocado—; ↻ pasa al siguiente y también vale la semana. El podcast, el siguiente cada día | `didiHoy()`, `didiGruposOrden()`, `didiLibroSemana()` |
-| **Tu dinero hoy** | No es un orden de estudio: es el paso del Plan Maestro para tu dinero de hoy, la misma regla que su panel (`pasoInversionHoy()`): la BBVA quincena a quincena hasta dejarla sin saldo —hoy no compras nada más— y después todo a GBM, con los primeros pesos al fondo de emergencia. El BYD se paga con su mensualidad. Lo que abonas hoy y los abonos que siguen salen de la misma ruta que el Plan Maestro (`CIFRAS.planBbva`) | `pasoInversionHoy()`, `invertirHoyHtml()` |
+| **Tu dinero hoy** | No es un orden de estudio: es el paso del Plan Maestro para tu dinero de hoy, la misma regla que su panel (`pasoInversionHoy()`): con la BBVA en cero, el colchón, el BYD hasta cero y a invertir (`CIFRAS.pasoAhorro`). Lo que mandas hoy y los envíos que siguen salen de `CIFRAS.planAhorro` (`ahDia`, `ahSig`, `ahTxt`) | `pasoInversionHoy()`, `invertirHoyHtml()` |
 | **Examen de certificación** (ISTQB) | El capítulo con más puntos en juego —lo que vale en el examen (`EXAMEN_GENAI.blueprint`: el 2 vale 16 de 46) por lo que falta de acierto ahí; con menos de tres respuestas cuenta la mitad— y, dentro, las de 2 puntos. Las contestadas no vuelven | `aprendeOrdenIstqb()`, `istqbEnJuego()` |
 | **Ejercicio de habilidad** (el paso de la semana) | El foco del plan para hoy (`habRecomendada()`), paso a paso. **El libro va aparte, uno por mes** (abajo, *El libro del mes*) | `aprendeFoco()`, `libroMes()` |
 | **Habilidades para la vida** (Habilidades Base) | `HB_PLAN`: lo que pide la Fase 1 (Networking por las cartas de recomendación, Persuadir por la palanca de ingreso, Dinero), lo de antes de irte, lo de Alemania y lo demás; vino, coctelería y citas esperan mientras dure la meta de alcohol. El grupo se mueve con la fase (`hbRango()`) y, a igual grupo, va primero la ya empezada | `hbEnCurso()` |
@@ -393,9 +393,9 @@ orden —tus metas con fecha (`CD_METAS`: ids de tareas de la Fase 1, con su mes
 retorno, sin la IA—; abajo, tarjeta por tarjeta con su foto, en tres partes con su etiqueta: **hoy**, **lo que sigue** y **cómo
 se decide** (Adán, 26-oct-2026: *"lo que me interesa es saber qué seguirá después y además cómo decides qué va"*). **Cómo se decide** va como lista (*"dale mucho mejor formato, se ve muy mal"*): una regla
 por renglón, su nombre corto a la izquierda en el color de la tarjeta —*La lección*, *Las palabras*, *El repaso*,
-*1 · La BBVA*, *2 · GBM*…— y una frase a la derecha (`.cd-rs`; en el teléfono, uno debajo del otro). Lo que sigue (`cdSigue`) sale de las mismas funciones que
+*1 · Tu colchón*, *2 · El BYD*…— y una frase a la derecha (`.cd-rs`; en el teléfono, uno debajo del otro). Lo que sigue (`cdSigue`) sale de las mismas funciones que
 eligen: las lecciones que quedan del Kapitel y los temas de las palabras con los días que les quedan; los audiolibros de
-las semanas que vienen; los próximos abonos a la BBVA, la fecha en que el plan termina de pagarla y lo que va a GBM después; los
+las semanas que vienen; los próximos envíos con su destino, el día en que se llena el colchón y el día en que el BYD queda en cero; los
 capítulos del CT-GenAI por leer con su fecha; el libro del mes que sigue, los pasos que siguen de la ruta y, si la elegiste tú, cuál es la de Coach;
 los pasos que siguen de la guía y las guías de después. Debajo de la del examen, la tabla de capítulos por puntos en
 juego. Todo **en la misma rejilla que Hoy aprendes en Mi Día** (Adán, 25-oct-2026: *"ordénalos de la
@@ -407,7 +407,7 @@ la brújula del prompt se oculta; se cierra con ✕, clic fuera o Escape.
 Medido con la fecha simulada, 40 días seguidos desde el 10 de octubre de 2026 sin estudiar ni contestar
 nada: las palabras, diez al día sin repetirse (ver *La ventana del alemán*); el ISTQB, del capítulo 2 y
 nunca la pregunta de la víspera; el podcast, nunca el del día anterior, y el audiolibro cambia los
-lunes. El 2 de abril de 2027 (Fase 2) el vocabulario pasa al B1 y el foco a Código.
+lunes. El vocabulario pasa al B1 en marzo de 2027, el mes de la tarea `a1-35` (tu plan a B1).
 
 ### La pregunta del ISTQB del día
 
@@ -806,16 +806,16 @@ entera.
 
 | Zona | Qué pinta | De dónde |
 |---|---|---|
-| **Este mes a GBM, según tu plan** (`qiMesHtml`) | Lo que el plan manda a GBM en el mes, lo que va a la BBVA si aún le toca, y cada envío con su día y de dónde sale (*15 nov · $4,650 · Ahorro → GBM*); los que pasaron, apagados, y el que sigue, en cian | `CIFRAS.gbmMes(mes)`, el mismo calendario del Plan de Inversiones de Finanzas |
-| **Qué comprar con eso** (`qiRepartoHtml`) | Una barra con el reparto y un renglón por cosa: qué, dónde se compra, por qué, su porcentaje y sus pesos de este mes. Dice si es *tu reparto* o *el reparto de base del plan: escribe el tuyo* | `finanzasmx_v2.reparto`, o `CIFRAS.REPARTO_BASE` mientras no exista |
+| **Este mes apartas** (`qiMesHtml`) | Lo que apartas en el mes —o en el que sigue, si ya no quedan envíos— partido en a dónde va, cada envío con su día, de dónde sale y su destino; los que pasaron, apagados, y el que sigue, en cian. Debajo, los tres pasos del plan con el de hoy marcado (`.qi-ruta`): el colchón, el BYD hasta cero y a invertir | `CIFRAS.gbmMes(mes)`, el mismo calendario del Plan de Inversiones de Finanzas; `CIFRAS.pasoAhorro()` |
+| **Qué comprar con eso** (`qiRepartoHtml`) | Una barra con el reparto y un renglón por cosa: qué, dónde se compra, por qué, su porcentaje y sus pesos de este mes; mientras el BYD deba, con lo que vas a invertir al mes desde que quede en cero (`{{invertirMes}}`). Dice si es *tu reparto* o *el reparto de base del plan: escribe el tuyo* | `finanzasmx_v2.reparto`, o `CIFRAS.REPARTO_BASE` mientras no exista |
 | **Cambiar mi reparto** (`qiEditar` → `qiEditorHtml`) | En su lugar, un renglón por cosa con qué, dónde y %, ✕ para quitarlo, *+ Otro renglón* y la suma en vivo (`qiCampo`: escribir no repinta, para no perder el foco); **Guardar** solo se activa cuando suman 100 % (`qiGuardar`). Solo donde Finanzas es propia (`tiEditable`): en el iPad, una nota dice que se cambia en la PC | escribe `finanzasmx_v2.reparto` |
 | **Noticias para invertir** (`qiNoticiasHtml`) | Una pestaña por tema con cuántas trae (`qiTemaVer`) y sus titulares: primero los que recomiendan algo, con la etiqueta *Recomienda*, cada uno con su medio y *hace 2 h*, y abre la nota en otra pestaña. Debajo, *Ver más de «tema» en Google Noticias ↗* con la misma búsqueda (`qiGoogle`). Si tienen más de un día, la cabecera lo dice en naranja; sin noticias, cómo llegan y la búsqueda directa | la rama `datos-noticias` o `noticias-inversion.js`, la más nueva |
-| Columna de al lado (`qiLadoHtml`) | **Precios ahora** (`qiPreciosHtml`, ver abajo): la tarjeta del que eliges, con su gráfica, y la lista de todos; *Lo que llevas invertido*, con **Registrar una compra →**, que abre Total invertido (ver *Total invertido, compra por compra*); *Dónde comprar* (`GBM_LINKS`: GBM+, sus fondos, Cetesdirecto y el FIX de Banxico), y *La regla*: comprar el día que llega el dinero; las noticias informan y el reparto decide | la rama `datos-precios`, CoinGecko y open.er-api; `finanzasmx_v2.investments` |
+| Columna de al lado (`qiLadoHtml`) | **Precios ahora** (`qiPreciosHtml`, ver abajo): la tarjeta del que eliges, con su gráfica, y la lista de todos; *Lo que llevas invertido*, con **Registrar una compra →**, que abre Total invertido (ver *Total invertido, compra por compra*); *Dónde comprar* (`GBM_LINKS`: GBM+, sus fondos, Cetesdirecto y el FIX de Banxico), y *La regla*: nada se compra antes de que el BYD quede en cero y, desde ahí, el día que llega el dinero; las noticias informan y el reparto decide | la rama `datos-precios`, CoinGecko y open.er-api; `finanzasmx_v2.investments` |
 
 **Tu reparto vive en Finanzas** (`finanzasmx_v2.reparto = [{n, donde, pct, porque}]`): el *En qué va* del Plan de
 Inversiones de Finanzas lee el mismo, y la copia que sube cada commit (`habitos-exportar.js`) lo lleva al iPad. El de
-base (`CIFRAS.REPARTO_BASE`, en el maestro) es GBMF2, el fondo de liquidez diaria de GBM, al 100 %: el dinero de la
-salida a Alemania se usa en meses y va donde se saca al día y con riesgo bajo.
+base (`CIFRAS.REPARTO_BASE`, en el maestro) es un índice de bolsa (VOO) `PROYECTO.bolsaPct` % y Bitcoin el resto. Desde
+febrero de 2028 (`LIQUIDO_DESDE`) lo de la cuenta bloqueada pasa a algo que no baje.
 
 **Las noticias llegan por dos lados, y el panel usa las más nuevas** (`qiNoticias`). Una **tarea de GitHub**
 (`.github/workflows/noticias-inversion.yml`, Adán: *"eso de cada 4 hrs estaría bien"*) corre `noticias-actualizar.js`
@@ -947,8 +947,8 @@ claro y en oscuro.
 (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las
 cantidades"*). Sin la ruta de deuda, el riel de la quincena ni *Te toca esta semana*.
 
-Un mes de cada etapa renglón por renglón —lo que entra, lo que sale y lo que llega a GBM— lo enseña Coach en cada fase
-(*💰 Tu ahorro en esta fase*), y GBM contra cada corte de la salida, la ventana de la **Maestría** (`MEDIDORES.maestria`).
+Un mes de cada etapa renglón por renglón —lo que entra, lo que sale y lo que apartas— lo enseña Coach en cada fase
+(*💰 Tu ahorro en esta fase*), y el plan hasta septiembre de 2028, la ventana de la **Maestría** (`MEDIDORES.maestria`).
 
 Medido a 2048×1040: la ruta mide 69 px, el mes en curso 260, los medidores 44 y el tablero 467, con las tres columnas
 sin desplazarse. El tablero no baja de 376 px: en una pantalla más baja (1366×768) la página baja en vez de
@@ -993,7 +993,7 @@ la auditoría* (`pmAuditar(i, mes, 1)`).
 
 1. **Verifica tus datos**: antes de calificar, que lo anotado sea verdad. Una casilla por cada control, con
    lo que hoy dice Finanzas al lado (`fzaDatos`): los movimientos anotados del mes, el saldo de la cuenta,
-   lo que se debe de la BBVA y lo de CETES, GBM e inversiones. Si algo no cuadra, se corrige en Finanzas.
+   lo que se debe de la BBVA y del BYD y lo de CETES e inversiones. Si algo no cuadra, se corrige en Finanzas.
 2. **Cada tarea**: *✅ Cumplida*, *◐ A medias* o *❌ No*; si no, **¿por qué?** (*sin tiempo*, *sin dinero*,
    *dependía de alguien*, *se me olvidó*, *ya no aplica*) y **¿y ahora?** (*pasa al mes siguiente* o *no
    va*). Lo que trae su casilla marcada entra como cumplida; en una fase que ya cerró, lo no cumplido de
@@ -1064,11 +1064,11 @@ con su botón** (`.kv-hoy`; naranja si algo pide revisarse), **una gráfica** (`
 | Ventana | Lo que responde |
 |---|---|
 | **Fondo** | Para cuántos días te alcanza si te quedas sin trabajo, cuánto falta para cada mes de tu meta, qué tienes a la mano y qué pagarías en un mes sin sueldo (ver *Fondo de emergencia, aportación por aportación*). No lleva la parte de hoy |
-| **Maestría** | Cómo vas hoy contra el plan (`contraPlan`: la proyección al cierre del mes anterior más los envíos a GBM que ya tocaron, contra el fondo, las inversiones y el Bitcoin, sin el depósito), a dónde llegas a tu ritmo (`CIFRAS.ritmoMaestria`), la gráfica con un punto por mes, lo que cuesta irte (`SALIDA.costos`) y qué hacer (ver *El Fondo Maestría*) |
+| **Maestría** | Cuánto tendrías en agosto de 2028 guardando lo que te queda y si alcanza, cuándo queda en cero el BYD, cuánto rinde lo invertido, la gráfica hasta irte, lo que pide la salida y qué hacer (ver *El Fondo Maestría*) |
 | **Patrimonio** | Cuándo llegas al millón guardando lo que te queda, la ruta con sus paradas, qué pasa hasta cada una y qué te acerca (ver *El camino al millón*) |
-| **Intereses** | Lo que se va en interés este mes y cada día, un cuadro por pago hasta acabar, y cuánto se ahorra pagando más (ver *Los intereses, un cuadro por pago*) |
-| **Total invertido** | Lo que trabaja aparte de lo guardado en el depósito, cuánto ganas o pierdes, lo que el plan mandaba este mes contra lo que registraste, *Tu estrategia de hoy*, los envíos que tocan, las compras con su formulario, *Tu Bitcoin hoy* (el último mes contra tu promedio y cuánto tendría que subir) y en qué ponerlo |
-| **Deuda total** | Cuánto debes mes a mes (`caminoDeuda`, todas juntas) con **dos controles** —abono hoy y extra cada mes— que redibujan la gráfica y dicen cuándo acabas y cuánto ahorras (`simula`, con `prestamoResumen().ahorro`); **Anotar el abono de hoy** lo lleva al formulario. Cada deuda con su siguiente pago y su fin; el abono, los datos del crédito y el contrato, plegados |
+| **Intereses** | Lo que se va en interés este mes y cada día, un cuadro por pago hasta acabar, y tu plan contra pagar solo la mensualidad o un poco más (ver *Los intereses, un cuadro por pago*) |
+| **Total invertido** | Lo que trabaja aparte de lo guardado en el depósito, cuánto ganas o pierdes, cuándo toca invertir, lo siguiente con su destino, lo que tendrías en bolsa y cripto al irte (con su gráfica hasta agosto de 2028), *Tu estrategia de hoy*, lo que apartas y a dónde va, las compras con su formulario, en qué ponerlo y *Tu Bitcoin hoy* (el último mes contra tu promedio y cuánto tendría que subir) |
+| **Deuda total** | Cuánto debes mes a mes (`caminoDeuda`, todas juntas): con tu plan y pagando solo la mensualidad, la fecha en que el BYD quedará en cero y lo que te ahorras de interés. **Dos controles** —abono hoy y extra cada mes, encima del plan— redibujan la gráfica y dicen cuándo acabas y cuánto ahorras (`simula`, con `CIFRAS.prestamoTabla` y `abonosPlan`); **Anotar el abono de hoy** lo lleva al formulario. Cada deuda con su siguiente pago y su fin; el abono, los datos del crédito y el contrato, plegados |
 
 **Gráficas** (`lineas`): SVG al tamaño real de su caja, un solo eje, globo con el mes y cada serie al pasar el
 ratón, el dedo o las flechas del teclado, y sus números también fuera de ella. Azul, naranja y verde (`--kv-1` a `--kv-3`)
@@ -1098,24 +1098,26 @@ proyección debe variar… abajo dame consejos… futurista y muy entendible"* y
 indicadores financieros, ahí llevamos el registro histórico… pero de cada mes en la gráfica"*. `MEDIDORES.maestria` (`.km`), de
 arriba abajo:
 
-- **La respuesta** (`.km-hero`): lo que tendrías en agosto guardando lo que te queda, contra lo que pide la salida, y si llegas.
-- **Cuatro datos**: lo que llevas en todo, lo que entra cada mes, lo que te queda y lo que de verdad guardaste este mes contra lo
-  que te quedaba.
-- **La gráfica** (`trayecto`): un punto con su cifra por mes —los cierres de Finanzas · Indicadores y hoy en blanco, lo que
-  tendrías en cian—, el plan y lo que se necesita punteados, las cuatro fechas con lo que piden y lo que falta, lo que ya pasó
-  sombreado y la venta de Bitcoin dicha en su mes.
-- **El flujo, debajo de la gráfica y alineado con cada mes** (`.km-f`): cuatro renglones —entra, sale, te queda, llevas o
-  tendrías—. Al tocar un mes se abre **su desglose** (`.km-det`, `MEDIDORES.mesMae`), que se contrae y pasa al mes de junto:
-  lo que entra, en qué sale —los servicios, las suscripciones y las rutinas se abren producto por producto— y a qué activo va
-  (Adán: *"desglósame… para que se contraiga esa sección"* y, de la tabla con todo junto, *"se ve muy amontonado"*). Solo va lo
-  documentado: nada de «lo demás».
-- **Todo lo que tienes** —bolsa, CETES, Bitcoin, cuenta, efectivo y depósito— y **lo que debes tener en agosto**. Los pagos de la
+- **La respuesta** (`.km-hero`): lo que tendrías en agosto de 2028 guardando lo que te queda, contra lo que pide la salida, y si llegas.
+- **Cuatro datos**: lo que llevas en todo contra lo que pedía el plan, el mes en que el BYD quedará en cero, lo que te queda cada mes y lo que
+  rinden tus inversiones.
+- **La gráfica** (`trayecto`): lo que tienes en blanco, lo que tendrías en cian y lo que debes del BYD en naranja, mes por mes hasta irte;
+  punteado, mandando solo lo del calendario (la PROYECCION con los trámites sumados), y la línea de lo que pide la salida. Los hitos: el
+  colchón, el día en que el BYD queda en cero y el día de decidir.
+- **El camino en ocho columnas, debajo de la gráfica y alineado con sus meses** (`.km-f`): hoy y el cierre de cada tres meses, con lo que te
+  queda, lo que debes del BYD, lo que han rendido tus inversiones y lo que tienes. Al tocar una se abre **su desglose** (`.km-det`,
+  `MEDIDORES.mesMae`), que se contrae y con las flechas pasa por todos los meses: lo que entra, en qué sale —los servicios, las
+  suscripciones y las rutinas se abren producto por producto—, a dónde va lo que te queda (el colchón, el BYD, la bolsa, cripto) y lo que
+  tendrías. Solo va lo documentado: nada de «lo demás».
+- **Todo lo que tienes** —bolsa, CETES, Bitcoin, cuenta, efectivo y depósito— y **lo que pide la salida**. Los pagos de la
   salida (apostillas, vuelo, primera renta…) no van en este presupuesto (Adán: *"eso no lo voy a contemplar"*): se dice cuánto
   suman.
-- **Qué hacer** (`.km-paso`): anotar lo que no aparece o seguir así, el ingreso nuevo, recortar rutinas y decidir.
+- **Qué hacer** (`.km-paso`): el paso del plan en que vas con su siguiente envío, anotar lo que no aparece o recortar rutinas, qué pasa si
+  guardas 3 de cada 4 pesos y el día de decidir.
 
-**La cuenta** (`CIFRAS.ritmoMaestria`): un mes que falta crece lo que entra menos lo documentado; el mes en curso va hasta hoy y
-cada cierre corre el punto de partida, así que la línea cambia sola. Didi entra con `didiEn(mes)`. El **control 63** la prueba.
+**La cuenta** (`CIFRAS.ritmoMaestria`): un mes que falta reparte lo que entra menos lo documentado en el orden del plan —el colchón, el BYD
+y, en cero, la bolsa y cripto, que rinden—; el mes en curso va hasta hoy y cada cierre corre el punto de partida, así que la línea cambia
+sola. `{parte}` guarda solo una parte de lo que queda. Didi entra con `didiEn(mes)`. El **control 63** la prueba.
 
 ### Los intereses, un cuadro por pago
 
@@ -1123,14 +1125,15 @@ Adán, 24-nov-2026: *"dame opciones para mejorar esta pantalla"* y *"me gusta la
 `MEDIDORES.intereses` (`.kn`), con el crédito de mayor saldo que cobra interés:
 
 - **La dona**: cuánto de tu próximo pago es interés, en pesos y en porcentaje, y cuánto es al día.
-- **¿Y si pagas más cada mes?** (`MEDIDORES.pagoMas`): cinco opciones con lo que ahorras en cada una.
+- **Tu plan contra otros pagos** (`MEDIDORES.pagoMas`): tu plan (`CIFRAS.abonosPlan`), solo la mensualidad y tres montos de más al mes, con lo
+  que ahorras en cada uno.
 - **Los pagos** (`pagosHtml`): una fila por año y un cuadro por mes. Lo naranja es interés, lo gris IVA y seguros (si los hay) y lo azul
-  baja tu deuda; los ya pagados van apagados. Pagando más, los que te ahorras se vuelven verdes con borde punteado. Tocar uno
+  baja tu deuda, con los abonos del plan; los ya pagados van apagados. Los que te ahorras se vuelven verdes con borde punteado. Tocar uno
   (`MEDIDORES.pagoVe`) dice sus números abajo. Arriba, cuántos faltan, cuándo acabas, el interés que falta y lo que te ahorras.
 - **Abajo**: si el contrato y los datos no acaban el mismo mes (`chocaC`), lo dice y cuánto sería el interés con los `cargos` que harían que
   cuadre. Si algo más cobra interés (una tarjeta), va en su lista.
 
-Las cuentas son `CIFRAS.prestamoTabla` y `prestamoResumen().ahorro`, las mismas de Deuda total.
+Las cuentas son `CIFRAS.prestamoTabla` y `abonosPlan`, las mismas de Deuda total.
 
 ### El camino al millón
 
@@ -1144,7 +1147,7 @@ Adán, 24-nov-2026: *"dame opciones, claras, entendibles y futuristas"* y *"me g
   marcadas. Debajo, alineada, una columna por parada de calendario —hoy, los diciembres y el millón—; tocar una (`MEDIDORES.patMes`)
   cambia el panel de la derecha: **hoy**, qué cambió desde el último cierre; las demás, cuánto crece tu dinero, cuánto baja tu
   deuda y qué pasa en ese tramo.
-- **Qué hacer**: este mes, la deuda más grande, cuánto adelanta guardar más y cómo vas contra el plan completo.
+- **Qué hacer**: este mes, la deuda más grande, cuánto adelanta guardar más y cómo vas contra mandar solo lo del calendario.
 
 **La cuenta** (`CIFRAS.caminoMillon`): hasta la salida es el dinero del Fondo Maestría, para que las dos ventanas digan lo mismo;
 después cambia lo que cambia `PROYECCION`, y los pagos de la salida, que allá no van, se descuentan al empezar la maestría. Las
@@ -1274,7 +1277,7 @@ septiembre; en el presupuesto mensual entra por la mitad, `gasMensual`). El veri
 que **todo gasto fijo de `PROYECTO` con importe caiga algún día de `CALENDARIO.cobros`**: un
 servicio nuevo sin día ya no sale de la cuenta sin que ninguna pantalla lo vea.
 
-Desde octubre de 2026 el calendario trae también **el plan**: el ahorro de cada quincena a GBM (en verde, `ahorro: true`) y, desde febrero de 2027, el aporte a tu familia del día 1. Salen de la quincena como cualquier cobro, así que lo que te queda (*Para gastar*) ya es tu gasto personal. **Mientras la BBVA tenga saldo**, lo que sobra de la quincena va a ella: el día 1 y el 15 sale *Tarjeta BBVA — lo que sobra de la quincena* y el envío a GBM de ese día baja en lo mismo; el día de pago, *el pago del 11, con lo de Didi* —lo que pide el estado de cuenta para no generar intereses—. Un día con el pago anotado dice lo que se mandó: *lo que mandaste de la quincena*, o *un abono de más*. El día que la liquida de un golpe (`PROYECTO.bbvaLiquida`) sale *Tarjeta BBVA — liquidarla, con todo lo que tienes*, por todo el saldo, y la quincena que le llegó antes para pagarla (`PROYECTO.quincenaAdelantada`), *lo que quedó de esta quincena, pagado el 31 de octubre*. Ya no se pinta el total de la tarjeta el día 11 (Adán: *"me estás diciendo de pagar mi tarjeta pero ni tengo dinero… eso debe ser cada quincena"*).
+Desde octubre de 2026 el calendario trae también **el plan**: lo que apartas de cada quincena con su destino (*Ahorro → tu colchón*, *Abono al BYD*, *Ahorro → invertir*; en verde, `ahorro: true`) y, desde febrero de 2027, el aporte a tu familia del día 1. Salen de la quincena como cualquier cobro, así que lo que te queda (*Para gastar*) ya es tu gasto personal. **Mientras la BBVA tenga saldo**, lo que sobra de la quincena va a ella: el día 1 y el 15 sale *Tarjeta BBVA — lo que sobra de la quincena* y lo que apartas ese día baja en lo mismo; el día de pago, *el pago del 11, con lo de Didi* —lo que pide el estado de cuenta para no generar intereses—. Un día con el pago anotado dice lo que se mandó: *lo que mandaste de la quincena*, o *un abono de más*. El día que la liquida de un golpe (`PROYECTO.bbvaLiquida`) sale *Tarjeta BBVA — liquidarla, con todo lo que tienes*, por todo el saldo, y la quincena que le llegó antes para pagarla (`PROYECTO.quincenaAdelantada`), *lo que quedó de esta quincena, pagado el 31 de octubre*. Ya no se pinta el total de la tarjeta el día 11 (Adán: *"me estás diciendo de pagar mi tarjeta pero ni tengo dinero… eso debe ser cada quincena"*).
 
 ### El mes
 
@@ -1298,25 +1301,21 @@ movimiento**.
 son cifras del mes, no de la semana y además ordénalas mejor"*), en dos renglones de tres, cada cifra con su nombre a la
 izquierda y el importe a la derecha (`ctTotCel`; en el teléfono, el nombre arriba). **El dinero del mes**: *Entra* —tus
 quincenas—, *Sale* —lo que pagas y gastas: lo programado, lo anotado de contado y comer, lo que suman las barras de
-los días (`saleDe`) menos lo que mandas a GBM, que no es gasto (Adán: *"no quiero que lo de GBM salga en lo que sale"*)—
-y *Te queda*: lo que entra menos lo que sale y lo que mandas a GBM de tus quincenas. **A dónde va**, mientras dure el plan en México: *A la BBVA* —todo lo que le toca ese mes: de las
-quincenas, de Didi y el mínimo (`planBbva`); no sale el mes que ya no le toca nada—, *A GBM* —los cobros con `ahorro`
-del calendario más lo que Didi aparta, de `desgloseMes`; solo existe desde que el plan liquida la BBVA (Adán: *"eso es después de
-liquidar BBVA"*), así que no sale mientras el mes no mande nada— y *Didi trae* (`didiMes`), la misma cuenta que la
-proyección de Coach. Sin título: el mes lo dice el del calendario. En octubre de 2026: entra $41,000, sale $32,579 y te
-quedan $8,421. En noviembre: entra $41,000 y sale $34,110 —$7,971 son lo que quedó de la quincena del 1, que pagó la
-BBVA el 31 de octubre, y $2,300 lo que le queda a la tarjeta, el 15—; van a GBM $7,342 —$4,650 de la quincena del 15
-y $2,692 de Didi— y te quedan $2,240. En un mes de seis semanas (noviembre de 2026) la columna desplaza 18 px por dentro a 1600 y 1366.
+los días (`saleDe`) menos lo que apartas, que no es gasto (Adán: *"no quiero que lo de GBM salga en lo que sale"*)—
+y *Te queda*: lo que entra menos lo que sale y lo que apartas de tus quincenas. **A dónde va**, mientras dure el plan en México: *A la BBVA* —todo lo que le toca ese mes: de las
+quincenas, de Didi y el mínimo (`planBbva`); no sale el mes que ya no le toca nada—, *Apartas* —lo de las quincenas, lo de Didi y lo que se libera,
+de `gbmMes`; no sale mientras el mes no aparte nada— y *Didi trae* (`didiMes`), la misma cuenta que la proyección de Coach. Sin título: el
+mes lo dice el del calendario. En un mes de seis semanas (noviembre de 2026) la columna desplaza 18 px por dentro a 1600 y 1366.
 
 **Cada cifra se toca y abre su desglose** (Adán: *"en lo que sale, cuando haga click, desglósame las cantidades, al
 igual que las demás"*), en la ventana de los medidores: cada celda es un botón `.ct-tot-c` que llama
 `abrirKpi('mes-<cifra>')`, y `kpiDetalle` lo manda a `ctMesDetalle`. Lee lo que el tablero acaba de pintar, que
 `renderCoachTablero` deja en `CT_MES` —cada concepto del mes con su sección de `CT_SECC` y sus días, y las quincenas—,
 así que el desglose suma exactamente lo que dice la cifra. *Sale* va por sección, de la que más pesa a la que menos,
-con su barra y cada concepto con sus días, sin la de ahorro a GBM; *Entra*, quincena por quincena; *Te queda*, la cuenta
-—entra, sale y lo de tus quincenas a GBM—; *A la BBVA*, abono por
-abono de `planBbva` con su origen (`ABONO_DE`) y el día en que el plan la liquida; *A GBM*, lo de tus quincenas y lo de Didi
-lunes por lunes (`didiGbmLunes`); *Didi trae*, a dónde va: a la BBVA, a GBM y lo que te queda para la carga y lo tuyo —si lo que apartas pasa de lo que trae (desde febrero de 2027, $10,000 contra los $10,000 que trae), lo dice en rojo en vez de dar un saldo negativo—.
+con su barra y cada concepto con sus días, sin lo que apartas; *Entra*, quincena por quincena; *Te queda*, la cuenta
+—entra, sale y lo que apartas de tus quincenas—; *A la BBVA*, abono por
+abono de `planBbva` con su origen (`ABONO_DE`) y el día en que el plan la liquida; *Apartas*, por destino —el colchón, el
+BYD, a invertir— y cada envío con su día (`gbmMes`); *Didi trae*, a dónde va: al colchón, al BYD, a invertir y lo que te queda para la carga y lo tuyo —si lo que apartas pasa de lo que trae (desde febrero de 2027, $10,000 contra los $10,000 que trae), lo dice en rojo en vez de dar un saldo negativo—.
 
 ### La quincena, una sola cuenta (`ctTramo`)
 
@@ -1395,11 +1394,8 @@ que nadie más llame a `cifrasHoy`.
 
 **El plan y tu dinero un día dan la misma cifra.** Lo que pide la fase y lo que da tu ritmo salen del plan
 (`PROYECCION`, desde la foto del 1 oct): la meta y el checkpoint de la fase, Mis Metas y el panel de
-la Maestría dicen *$109,362 el 31 de marzo*, GBM con los CETES. `estadoDia` —tu dinero un día, que usa Finanzas—
-proyecta desde lo de hoy y da lo mismo: GBM con el depósito, $103,362, y los CETES, $6,000. La foto ya no cuenta como
-ahorro la cuenta y el efectivo del 1 oct, que eran para gastar. Mes a mes los dos suben igual —lo que llega a GBM, el
-depósito y lo que cuesta la salida— y lo vigila el control 43: `estadoDia` no restaba los costos de la salida y el 31
-de marzo traía $6,000 de más (las apostillas de diciembre).
+la Maestría dicen la misma cifra. `estadoDia` —tu dinero un día, que usa Finanzas— proyecta desde lo de hoy y se mueve igual: lo que va al
+colchón, al BYD y a invertir, lo que rinde y lo que cuesta la salida. Lo vigila el control 43.
 
 ### Tu estrategia de hoy
 
@@ -1424,10 +1420,10 @@ el saldo y el plan salen de `CIFRAS.bbvaEstado()`, y la quincena, de `ctTramo`:
   hoy a la BBVA (*súmalo al próximo abono*) y, si entró dinero que no es nómina, cuánto apartar: el porcentaje que el
   plan guarda de Didi (`didiAlAhorro` entre `didiMes`).
 - **En cero** (verde): *Cancélala* —en la app o en sucursal, con su carta de no adeudo— y **Ya la
-  cancelé** (`bbvaCancelar`, pone `cancelada` en `d001`); y lo que desde ya va a GBM, con los lunes en que lo de Didi es
+  cancelé** (`bbvaCancelar`, pone `cancelada` en `d001`); y lo que desde ya apartas según el plan, con los lunes en que lo de Didi es
   para vivir (`lunesDidiTuyos`: la quincena después de liquidarla con todo lo que tenías).
-- **Cancelada**: lo que va a GBM este mes (`desgloseMes`), el envío de hoy —el día 1 y el 15 lo de
-  la quincena, el lunes lo de Didi— y *Qué invertir hoy* (`abrirGBM`).
+- **Cancelada**: lo que te falta apartar este mes, el envío de hoy o el siguiente con su destino (`ahDia`, `ahSig`), el paso del plan en que
+  vas y *Ver el plan* (`abrirGBM`).
 
 Lo que se anota aquí es lo mismo que deja «Pagar» en Finanzas: una transacción en `Deudas` y el
 saldo de `d001` que baja, con `tarjeta`, `origen` y `anotado` (ver *La tarjeta se mueve con lo que se
@@ -1464,7 +1460,7 @@ no pise un saldo más nuevo que ella.
 
 **La columna dice solo en qué se va la semana, por sección** (Adán, 28-oct-2026: *"hazlo igual de pequeño que en las
 cifras de ese día, pero aquí solo dame los totales de gastos de la semana separado en secciones"*), con las filas
-compactas de *Ese día* (`.ct-ev`): **Deudas**, **Casa y servicios**, **Comida**, **Suscripciones**, **Ahorro a GBM**,
+compactas de *Ese día* (`.ct-ev`): **Deudas**, **Casa y servicios**, **Comida**, **Suscripciones**, **Lo que apartas**,
 **Tu familia** y **Lo que anotaste**, de mayor a menor, cada una con su total y lo que lleva en corto (*Deudas · BBVA,
 Auto −$13,650*); el desglose, concepto por concepto y con su día, va en su título. La sección sale del `grupo` de
 cada cobro (`CT_GRUPO_SECC`; los anotados de contado van a *Lo que anotaste* y comer, a *Comida*), y las secciones
@@ -1689,7 +1685,7 @@ de 1 px, texto en tinta y cada valor también fuera del tooltip):
 |---|---|---|
 | ISTQB CT-GenAI | Cada simulacro en columnas contra el corte y tu meta, y las preguntas de Hoy aprendes de 14 días, una celda por día | `examen_genai_v1.intentos`, `habSimulacro()`, `istqbRespuestas()` |
 | SpaceX | Solo California: tu probabilidad de ver al menos uno en 4, 7 y 10 días con el ritmo de los últimos 100, y los próximos con su hora de Long Beach, qué tan firme es, si cae de viernes a lunes y cómo se vería desde la playa | `LANZAMIENTOS` (`lanzamientos.js`) |
-| Maestría | El GBM que proyecta el plan al cerrar cada mes hasta irte contra lo que pide cada corte —el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la salida completa—, con lo que falta o sobra en cada uno —los mismos cortes y cifras que el panel de la Maestría—; tu dinero hoy contra lo que el plan pide al cerrar el mes, con la definición de la banda, y el alemán (la lección y el vocabulario del nivel) | `CIFRAS.PROYECCION`, `cortesSalidaDash()`, `ctCifrasHoy()` |
+| Maestría | Lo que el plan junta y lo que se debe del BYD al cerrar cada mes hasta irte (`.mpg-c i.debe`), contra lo que pide cada corte —el día de decidir, la cuenta bloqueada y la salida completa—; el día en que se llena el colchón y en que el BYD queda en cero, lo que tienes al irte y lo que sobra o falta; tu dinero hoy contra lo que el plan pide al cerrar el mes, y el alemán (la lección y el vocabulario del nivel) | `CIFRAS.PROYECCION`, `cortesSalidaDash()`, `ctCifrasHoy()` |
 | Helicóptero | Lo que cuesta con 20, 30 y 35 de las 40 horas en vuelo, en qué se va el paquete (vuelo, simulador, teoría, trámites), lo que pide cada mes apartar, qué parte es de lo que la proyección junta ahí y cuántos meses le mueve al millón | `{{heliCosto}}`, `{{heliCosto30}}`, `{{heliCosto35}}`, `CIFRAS.PROYECCION` |
 | Las de largo plazo | Tu patrimonio líquido contra la trayectoria del millón hasta la fecha de la meta, con hoy y la meta marcados: es lo que las habilita | `CIFRAS.PROYECCION.meses`, `patrimonioLiquido()` |
 
@@ -1750,8 +1746,6 @@ a 1366 y en el teléfono desplaza por dentro, y en el teléfono se oculta la lí
 
 **El dinero real** de la Maestría es una barra continua en `--ac2`, distinta de las marcas de
 paso, con la cifra (`$2,500 ahorrado`): `METAS_MONEYBAR.maestria.short`; `.lbl` va en el `title`.
-
-**El panel de la Maestría** (`kpiDetalle`, `maestria`) enseña la pausa solo mientras siga vigente (`goal.pausadaHasta`); si no, el ritmo que pide la salida —lo que falta entre los meses que quedan hasta `goal.date`—, lo que el plan junta al mes con depa y en casa, el ingreso nuevo que cierra el hueco (`extraSalida`) y el día de decidir con lo que pide la salida completa (`mayoParaSalida`, `salidaVeredicto`); la proyección y la lista de la salida están en Coach.
 
 ### Próximos viajes
 
@@ -2063,13 +2057,13 @@ cuentan como hechos. **El paso de la semana es el primero sin dominar** (`habSin
 
 **El foco lo pone el plan** (prompt de la página: *una habilidad en foco a la vez; las demás, en
 mantenimiento*). `CIFRAS.HAB_FOCO` es una lista de tramos —IA de oct 2026 a ene 2027 (el CT-GenAI, que se presenta en
-enero), Inglés de feb a mar 2027 (la solicitud a Esslingen, que cierra el 31 de marzo), Código de abr a may 2027 (el proyecto
-para el Werkstudent) y Networking de jun a ago 2027— con horas, el paso de la semana, el
+enero), Código de feb a may 2027 (el repositorio que enseñas en ALTEN y en Alemania), Inversión de jun a ago 2027 (tu política, antes del
+primer envío), Inglés de sep 2027 a ene 2028 (la solicitud a Esslingen) y Networking de feb a ago 2028 (el traslado en ALTEN y tu red)— con horas, el paso de la semana, el
 entregable y cuándo cambia. `habPlanHoy()` da el tramo de hoy y el siguiente; `habCandidatas()`
 son esos dos (si el plan ya terminó, manda el retorno), **sin las que llevan `porExamen`**: la IA se sube con el
 examen ISTQB CT-GenAI —la pregunta del día y los capítulos del syllabus—, no con su ruta de ejercicios (Adán,
 26-oct-2026: *"esa habilidad no me interesa subirla, de momento la abarcaremos con las preguntas diarias de
-GenAI"*). Por eso, de octubre a enero, la de Coach es la del tramo siguiente, Inglés; tampoco entra en «Siguiente»
+GenAI"*). Por eso, de octubre a enero, la de Coach es la del tramo siguiente, Código; tampoco entra en «Siguiente»
 (`habConRuta`) ni en las de más retorno, y su ruta dice *Se sube con el examen ISTQB CT-GenAI*. Mi Día va con el foco del plan (`aprendeFoco()`) o
 con la que eligió ahí con «Siguiente». Los `{{marcadores}}` de las rutas se resuelven al cargar
 (`cifrarLiterales(APRENDIZAJE)`).

@@ -24,8 +24,8 @@ ingresos de creadores. Gobierna cada cambio de esta página (`CLAUDE.md` → Reg
 | `fotos/` | Las fotos de cine a 900 px, de Wikimedia Commons con su crédito; las de hardware y video se leen de `../Laptop/fotos/` y la del taller de `../Heliescala/fotos/` |
 | `../Dashboard/graficas-svg.js` | Las gráficas (`GSVG`), compartidas con Laptop |
 
-Carga `../Dashboard/datos-maestros.js` para lo que viene del plan: el ingreso nuevo que pide la salida
-(`{{extraSalida}}`, con `CIFRAS.n`), el dólar (`PROYECTO.usdMxn`) y el empleador (`{{empleador}}`); los textos de
+Carga `../Dashboard/datos-maestros.js` para lo que viene del plan: la meta
+(la mensualidad del BYD, `{{autoPago}}`, con `CIFRAS.n`), el dólar (`PROYECTO.usdMxn`) y el empleador (`{{empleador}}`); los textos de
 `plan.js` pasan por `CIFRAS.texto`. Sin el maestro la página sigue en pie, sin meta ni dólares.
 
 ## La página, de arriba abajo

@@ -2397,7 +2397,7 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .mpt-v.tarde b{color:var(--r)}
 .mpt-v.ok{border-color:rgba(var(--g-rgb),.35);background:rgba(var(--g-rgb),.06)}
 .mpt-v.medio{border-color:rgba(var(--w-rgb),.4);background:rgba(var(--w-rgb),.06)}
-/* Las columnas del avance real (simulacros, sesiones, el GBM de la salida): 2 px de aire, líneas de referencia
+/* Las columnas del avance real (simulacros, sesiones, el plan hasta irte): 2 px de aire, líneas de referencia
    de 1 px con su nombre y el valor encima de cada columna. */
 .mpg{position:relative;height:118px;margin-top:16px;border-bottom:1px solid rgba(var(--ov),.22)}
 .mpg-cols{position:absolute;inset:0;display:flex;gap:2px}
@@ -2407,6 +2407,7 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .mpg-c i.medio{background:var(--w)}
 .mpg-c i.bajo{background:var(--r)}
 .mpg-c i.actual{opacity:.55}
+.mpg-c i.debe{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(22px,86%);background:rgba(var(--r-rgb),.16);border-top:2px solid rgba(var(--r-rgb),.8);border-radius:2px 2px 0 0}
 .mpg-c i b{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:2px;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text)}
 .mpg-ref{position:absolute;left:0;right:0;height:0;border-top:1px solid;z-index:1;pointer-events:none}
 .mpg-ref em{position:absolute;left:0;bottom:2px;font-style:normal;font-family:var(--mono);font-size:9.5px;font-weight:700}
@@ -2420,6 +2421,7 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .mpg-ley{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:10.5px;color:var(--text3)}
 .mpg-ley i{display:inline-block;width:10px;height:6px;margin-right:5px;border-radius:1px;background:rgba(var(--cy-rgb),.72)}
 .mpg-ley i.pide{height:0;border-top:2px solid var(--r);vertical-align:3px}
+.mpg-ley i.debe{background:rgba(var(--r-rgb),.16);border-top:2px solid rgba(var(--r-rgb),.8)}
 .mpq{display:flex;gap:3px}
 .mpq i{flex:1 1 0;height:14px;border-radius:2px;background:rgba(var(--ov),.1)}
 .mpq i.ok{background:var(--g)}
@@ -4571,7 +4573,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .ct-dia .ct-cat-b{height:3px}
 .ct-vacio{font-size:11px;color:var(--text3);padding:6px 0}
 /* Tu estrategia de hoy (arriba del panel de Total invertido): la BBVA con su saldo vivo, lo que toca mandarle,
-   lo previsto sin anotar y el tope de gasto; con la tarjeta en cero, cancelarla y todo a GBM. */
+   lo previsto sin anotar y el tope de gasto; con la tarjeta en cero, cancelarla y lo que el plan aparta hoy. */
 .ce-caja{display:flex;flex-direction:column;gap:7px;padding:11px 12px;border-radius:12px;
   background:rgba(var(--w-rgb),.05);border:1px solid rgba(var(--w-rgb),.24)}
 .ce-caja.verde{background:rgba(var(--g-rgb),.05);border-color:rgba(var(--g-rgb),.26)}
@@ -4837,7 +4839,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   .gbm-links{grid-template-columns:1fr}
 }
 /* ─── «QUÉ INVERTIR HOY», SIN IA ────────────────────────────────────────────────────────────────────────────
-   renderGBMPanel(): a la izquierda el mes a GBM con sus envíos, tu reparto en pesos y las noticias por tema; a la
+   renderGBMPanel(): a la izquierda lo que apartas este mes con su destino y los tres pasos del plan, tu reparto en pesos y las noticias por tema; a la
    derecha los precios en vivo, lo que llevas invertido, dónde comprar y la regla. Casi toda la pantalla (Adán: "haz la
    ventana mucho más grande"): 97 % por 97 %. Las clases .gbm-* las comparte el panel de los medidores (#kpiOverlay). */
 #gbmOverlay{padding:1.5vh 1.5vw}
@@ -4856,7 +4858,15 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .qi-sec-s.viejo{color:var(--o)}
 .qi-nota,.qi-vacio{margin:0;font-size:12.5px;line-height:1.5;color:var(--text3)}
 .qi-vacio a{color:var(--cy)}
-/* Este mes a GBM y sus envíos: el que sigue en cian, los que pasaron apagados. */
+/* Los tres pasos del plan, con el de hoy marcado. */
+.qi-ruta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.qi-ruta span{display:flex;flex-direction:column;gap:2px;padding:9px 12px;border-radius:11px;border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.04);min-width:0}
+.qi-ruta span.on{border-color:rgba(var(--cy-rgb),.55);background:rgba(var(--cy-rgb),.09)}
+.qi-ruta b{font-size:12px;font-weight:600;color:var(--text2)}
+.qi-ruta i{font-style:normal;font-family:var(--mono);font-size:16px;font-weight:700;color:var(--text)}
+.qi-ruta em{font-style:normal;font-size:11.5px;color:var(--text3)}
+@media (max-width:700px){.qi-ruta{grid-template-columns:1fr}}
+/* Lo que apartas este mes y sus envíos: el que sigue en cian, los que pasaron apagados. */
 .qi-hoy{display:flex;flex-direction:column;gap:3px;padding:12px 16px;border-radius:14px;border-left:4px solid var(--c);background:color-mix(in srgb,var(--c) 8%,transparent)}
 .qi-hoy b{font-size:16px;color:var(--text)}
 .qi-hoy span{font-size:12.5px;line-height:1.45;color:var(--text2)}
@@ -5350,14 +5360,14 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 </div>
 
 <!-- ─── PANEL DE INVERSIÓN DEL LUNES (2026-08-18) — se abre desde el bloque de GBM ─── -->
-<!-- ─── QUÉ INVERTIR HOY — sin IA: el mes a GBM, tu reparto y las noticias del día (renderGBMPanel) ─── -->
+<!-- ─── QUÉ INVERTIR HOY — sin IA: lo que apartas este mes, tu reparto y las noticias del día (renderGBMPanel) ─── -->
 <div class="gbm-overlay" id="gbmOverlay" onclick="if(event.target===this) cerrarGBM()">
   <div class="gbm-card inv-card">
     <div class="gbm-head inv-head">
       <button class="gbm-close" onclick="cerrarGBM()" aria-label="Cerrar">✕</button>
       <div class="inv-head-txt">
         <h2>📈 Qué invertir hoy</h2>
-        <p>Sin IA: lo que tu plan manda a GBM este mes, en qué va según tu reparto, las noticias para invertir de medios de México y los precios con su gráfica.</p>
+        <p>Sin IA: a dónde va lo que apartas este mes —tu colchón, el BYD o invertir—, qué comprar según tu reparto, las noticias para invertir de medios de México y los precios con su gráfica.</p>
       </div>
     </div>
     <div class="gbm-body inv-body" id="gbmBody"></div>
@@ -6718,6 +6728,7 @@ function alemanPalabraHoy(){ return alemanVocabHoy()[0] || null; }
 
 /* Las frases con `si` dependen de una deuda viva: entran al sorteo solo mientras sea verdad. */
 const FRASE_SI={
+  byd: ()=>{ const d=((D.fin&&D.fin.debts)||[]).find(x=>x.id==='d003'); return !!d&&+d.balance>0; },
   bbva: ()=>(window.CIFRAS?+CIFRAS.n('tcBbva')||0:0)>0,
   deudaCara: ()=>(window.CIFRAS?+CIFRAS.n('deudaCara')||0:0)>0,
 };
@@ -6777,8 +6788,8 @@ const FRASES_MOTIVACION=[
   'Los números rojos de hoy no son la excusa — son la exigencia. Lo que hagas la próxima semana con ellos es lo único que importa.',
   'Ganar más es la palanca de esta fase, pero no tapa una fuga: cierra primero el gasto que se va sin que lo decidas.',
   'El primer millón líquido no perdona decisiones chiquitas mal tomadas. Cada una cuenta, y no puedes fallar la mayoría.',
-  'El BYD se paga con su mensualidad, ni un peso más: cada peso extra va a GBM, que es lo que te lleva a Alemania.',
-  'Dudar todo el lunes sin revisar GBM no es cautela, es evasión. Revísala en la mañana y ya.',
+  {t:'Cada peso de más que le mandas al BYD, a capital, deja de pagar {{autoTasa}} al año. Antojo o fecha: hoy eliges cuál.', si:'byd'},
+  'Dejar para mañana lo que apartaste de Didi no es cautela, es evasión. El lunes en la mañana, a su destino, y ya.',
   'Prometerte ahorrar mañana es la excusa más vieja del libro. Revisa tus gastos con honestidad hoy, no mañana.',
   'Cada MSI que aceptas por comodidad hoy es una deuda que te vas a exigir pagar después. No la crees.',
   'Cada gasto innecesario de hoy es dinero que le quitas al millón. Piénsalo antes de sacar la tarjeta.',
@@ -6912,12 +6923,25 @@ function taItems(ei){
       sig: sa ? 'Abona '+money(sa.monto)+' el '+mpFechaTxt(mpFecha(sa.fecha), true) : '', sigF: '', listo: false,
       img: apFoto('fase-tarjeta'), abrir: "abrirKpi('deudatotal')" });
   }
+  // El plan 2028: tu colchón completo y el BYD en cero, con lo que llevas (CIFRAS.planAhorro).
+  const PA = window.CIFRAS && CIFRAS.planAhorro ? CIFRAS.planAhorro() : null;
+  if(PA){
+    const hk = hoyLocal(), F = D.fin || {}, car = (F.debts || []).find(d => d.id === 'd003'), ef = CIFRAS.fondoHoy(F), tope = CIFRAS.n('colchonPlan') || 0;
+    const sigE = q => { const e = PA.envios.find(z => z.fecha >= hk && z[q] >= 1); return e ? 'Manda '+money(e[q])+' el '+mpFechaTxt(mpFecha(e.fecha), true) : ''; };
+    const l = PA.lleno && PA.lleno >= hk ? mpFecha(PA.lleno) : null, z = PA.cero && PA.cero >= hk && car && +car.balance > 0.5 ? mpFecha(PA.cero) : null;
+    if(l && dentro(l.d)) out.push({ tipo: 'hito', k: 'Ahorro', t: 'Tu colchón, completo', d: l.d, fTxt: mpFechaTxt(l, true), falta: mpFalta(l),
+      pct: tope ? Math.min(100, ef/tope*100) : 0, cifras: [[money(ef), 'llevas'], [money(tope), 'la meta']],
+      sig: sigE('colchon'), sigF: '', listo: false, img: apFoto('fase-alcancia'), abrir: "abrirKpi('fondo')" });
+    if(z && dentro(z.d)) out.push({ tipo: 'hito', k: 'Deuda', t: 'El BYD en cero', d: z.d, fTxt: mpFechaTxt(z, true), falta: mpFalta(z),
+      pct: +car.total > 0 ? Math.max(0, Math.min(100, (1 - car.balance/car.total)*100)) : null, cifras: [[money(+car.balance || 0), 'por pagar'], [money(CIFRAS.n('autoAhorra') || 0), 'te ahorras de interés']],
+      sig: sigE('auto') || 'Empieza cuando se llene el colchón', sigF: '', listo: false, img: apFoto('fase-auto'), abrir: "abrirKpi('deudatotal')" });
+  }
   ((window.CIFRAS && CIFRAS.CALENDARIO && CIFRAS.CALENDARIO.hitos) || []).forEach(function(h){
     const x = mpFecha(h.fecha); if(!x || !dentro(x.d)) return;
     const ym = h.fecha.slice(0,7), c = cortesSalidaDash().find(z => z.mes === ym);
     const pm = CIFRAS.PROYECCION && CIFRAS.PROYECCION.meses.find(z => z.mes === ym);
     out.push({ tipo: 'hito', k: 'Decisión', t: h.txt, d: x.d, fTxt: mpFechaTxt(x, true), falta: mpFalta(x),
-      cifras: c ? [[money(c.pide), 'pide en GBM'], [pm ? money(pm.alemania) : '—', 'da tu ritmo']] : null,
+      cifras: c ? [[money(c.pide), 'pide la maestría'], [pm ? money(pm.alemania) : '—', 'da tu plan']] : null,
       sig: limpio(h.sub), sigF: '', listo: x.d <= hoy, img: apFoto('meta-esslingen'), abrir: "abrirKpi('maestria')" });
   });
   return out.sort((a, b) => a.d - b.d);
@@ -8184,15 +8208,15 @@ function aprendeFoco(){
   const s = id ? SK.find(x => x.id === id && !x.porExamen && habPasos(x.id).length) : null;
   return s || habRecomendada() || (typeof habFocoActual === 'function' ? habFocoActual() : null);
 }
-// Alemán, en el orden de Coach. La meta: el A2 que pide Esslingen —hasta que empieza la Fase 2 del Plan
-// Maestro— y después el B1 de la maestría y del trabajo. Primero las palabras del nivel de la etapa y,
+// Alemán, en el orden de Coach. La meta: el B1, que certificas en abril de 2028; primero las palabras del A2 —hasta el mes
+// en que la Fase 1 arma tu plan a B1 (la tarea `a1-35`)— y después las del B1 de la maestría y del trabajo. Primero las palabras del nivel de la etapa y,
 // dentro, lo que vas a necesitar primero al llegar —trámites, piso, dinero, salud, teléfono, ciudad,
 // súper—, luego la casa, la escuela y el trabajo; lo demás, al final y en el orden de la app.
 const AL_COACH_TEMAS = ['tramites', 'piso', 'dinero', 'salud', 'telefono', 'ciudad', 'super', 'casa', 'escuela', 'trabajo', 'oficina',
   'mostrador', 'comida', 'compras', 'tienda', 'restaurante', 'servicios', 'coche'];
 function aprendeEtapaAleman(){
-  const f2 = PHASES.find(f => f.tag === 'Fase 2'), b1 = !!f2 && new Date() >= f2.start;
-  return { nivel: b1 ? 'B1' : 'A2', orden: b1 ? ['B1', 'A2', 'A1'] : ['A2', 'A1', 'B1'], hasta: f2 ? f2.start : null };
+  const x = cdTarea('a1-35'), p = x && x.s.mes ? x.s.mes.split('-').map(Number) : null, desde = p ? new Date(p[0], p[1] - 1, 1) : null, b1 = !!desde && new Date() >= desde;
+  return { nivel: b1 ? 'B1' : 'A2', orden: b1 ? ['B1', 'A2', 'A1'] : ['A2', 'A1', 'B1'], hasta: desde };
 }
 let _alOrden = null;
 function aprendeOrdenAleman(){
@@ -9009,8 +9033,8 @@ function invertirHoyHtml(vistos){
   const estado = vistos.invertir ? '<span class="ap-estado ok">✓ revisado</span>'
     : `<button type="button" class="ap-estado ir" onclick="aprendeAbrir('invertir')">Ver el plan</button>`;
   return apTarjeta({ c: 'var(--cy)', mat: 'Qué invertir hoy', estado, foto: apFoto(p.foto),
-    abrir: "aprendeAbrir('invertir')", titulo: 'Abrir Qué invertir hoy: lo que va a GBM este mes, qué comprar según tu reparto y las noticias del día',
-    txt: apCuerpo({ sub: 'Tu dinero hoy, según tu plan para irte a Alemania', big: p.corto, color: p.color, det: p.det,
+    abrir: "aprendeAbrir('invertir')", titulo: 'Abrir Qué invertir hoy: a dónde va lo que apartas este mes, qué comprar según tu reparto y las noticias del día',
+    txt: apCuerpo({ sub: 'Tu dinero hoy: el colchón, el BYD y a invertir, en ese orden', big: p.corto, color: p.color, det: p.det,
       pie: `${AP_ICO[p.notaIco]}<span>${p.pie}</span>` }) });
 }
 
@@ -9402,9 +9426,10 @@ function istqbTecla(e){
 const CD_METAS = [
   { id: 'a1-7',  t: 'Aprobar el ISTQB CT-GenAI',        para: 'el examen de certificación, el ejercicio de habilidad y el audiolibro' },
   { id: 'a1-4',  t: 'Las dos cartas de recomendación',  para: 'la ficha de Networking' },
-  { id: 'a1-18', t: 'Subir tu ingreso desde noviembre', para: 'la ficha de Persuadir' },
-  { id: 'a1-10', t: 'Mandar la solicitud a Esslingen',  para: 'el foco de Inglés, después del ISTQB' },
-  { id: 'a1-14', t: 'Alemán A2, el que pide Esslingen', para: 'el vocabulario de hoy y la lección' }
+  { id: 'a1-18', t: 'Subir tu ingreso',                 para: 'la ficha de Persuadir' },
+  { id: 'a1-41', t: 'Dejar el BYD en cero',             para: 'la ficha de Dinero y Qué invertir hoy' },
+  { id: 'a2-20', t: 'Mandar la solicitud a Esslingen',  para: 'el foco de Inglés' },
+  { id: 'a1-14', t: 'Alemán a B1',                      para: 'el vocabulario de hoy y la lección' }
 ];
 function cdMes(ym){
   const p = String(ym || '').split('-').map(Number);
@@ -9418,12 +9443,12 @@ function comoDecideHtml(){
   const skN = id => (SK.find(s => s.id === id) || {}).name || id;
   const li = (txt, cuando, ok, foto) => `<div class="cd-li${ok ? ' ok' : ''}">${apImg(foto, 'cd-mini')}<span class="cd-li-t">${txt}</span>${cuando ? `<span class="cd-cuando">${cuando}</span>` : ''}</div>`;
   const hb = id => HABILIDADES_BASE.find(h => h.id === id);
-  const FOTO_META = { 'a1-7': apFoto('istqb-1'), 'a1-4': apFotoHb(hb('networking')), 'a1-18': apFotoHb(hb('persuadir')), 'a1-10': apFoto('meta-esslingen'), 'a1-14': apFoto('de-f-basico') };
+  const FOTO_META = { 'a1-7': apFoto('istqb-1'), 'a1-4': apFotoHb(hb('networking')), 'a1-18': apFotoHb(hb('persuadir')), 'a1-5': apFoto('meta-esslingen'), 'a1-29': apFoto('fase-alcancia'), 'a1-41': apFoto('fase-auto'), 'a1-14': apFoto('de-f-basico') };
 
   // 1 · Tus metas con fecha: lo que estudias sirve a estas tareas de la fase en curso.
   const metas = CD_METAS.map(m => {
     const x = cdTarea(m.id); if(!x) return '';
-    const cuando = x.s.mes ? cdMes(x.s.mes) : (m.id === 'a1-14' && etapa.hasta ? 'hasta ' + cdFecha(etapa.hasta) : x.f.tag);
+    const cuando = x.s.mes ? cdMes(x.s.mes) : (m.id === 'a1-14' ? 'B1 en ' + (cdTarea('a2-2') ? cdMes(cdTarea('a2-2').s.mes) : 'abril de 2028') : x.f.tag);
     return li(`<b>${m.t}</b> → ${m.para}`, cuando, !!checks[m.id], FOTO_META[m.id]);
   }).join('') + li('<b>Salida a Alemania</b> → lo que vas a necesitar al llegar', esc(CIFRAS.texto('{{maestriaInicio}}')), false, apFoto('meta-salida'));
 
@@ -9451,7 +9476,7 @@ function comoDecideHtml(){
            ['«Siguiente»', 'En su ventana recorre el Kapitel, luego el A2 y el A1.']];
     const rp = !vh.length ? [] : [
       ['Las palabras', `<b>${AL_VOC_DIA} al día, de un solo tema</b>: el primero del orden al que le quedan palabras sin salir.`],
-      ['El nivel', `Primero el <b>${etapa.nivel}</b>${etapa.nivel === 'A2' ? `, el que pide Esslingen, hasta la Fase 2 (${cdFecha(etapa.hasta)})` : ', el de la maestría y el trabajo'}: van <b>${van} de ${delNivel.length}</b>.`],
+      ['El nivel', `Primero el <b>${etapa.nivel}</b>${etapa.nivel === 'A2' ? `, hasta que arranca tu plan a B1 (${cdFecha(etapa.hasta)})` : ', el de la maestría y el trabajo'}: van <b>${van} de ${delNivel.length}</b>.`],
       ['Los temas', `Lo que necesitas al llegar —${esc(temas)}—; luego la casa, la escuela y el trabajo.`],
       ['El repaso', `Cada palabra vuelve al día siguiente y, si te la sabes, a los 3, 7, 14 y 30 días. Hoy tocan <b>${rh.length}</b>.`]];
     filas.push({ k: 'Alemán de hoy', c: 'var(--g)', foto: tl ? apFotoLeccion(tl.l) : apFotoAleman(vh[0]),
@@ -9472,9 +9497,9 @@ function comoDecideHtml(){
   }
   const pi = pasoInversionHoy();
   filas.push({ k: 'Qué invertir hoy · tu dinero hoy', c: 'var(--cy)', foto: apFoto(pi.foto), hoy: pi.titulo,
-    regla: [['1 · La BBVA', 'Quincena a quincena y sin intereses, hasta dejarla en cero.'],
-      ['2 · GBM', 'Después, todo para Alemania. El fondo de emergencia va aparte, en CETES.'],
-      ['El auto', 'No se adelanta: se paga con su mensualidad.'],
+    regla: [['1 · Tu colchón', `Hasta ${money(CIFRAS.n('colchonPlan') || 0)}; tu plan lo llena el ${CIFRAS.v('colchonFecha')}.`],
+      ['2 · El BYD', `Todo a capital hasta dejarlo en cero: el ${CIFRAS.v('autoCero')}.`],
+      ['3 · A invertir', `Desde ahí, todo: ${CIFRAS.v('bolsaPct')} % a la bolsa y ${CIFRAS.v('criptoPct')} % a cripto, hasta irte en septiembre de 2028.`],
       ['Qué comprar', 'Lo dice tu reparto, en el panel de Qué invertir hoy.'],
       ['De dónde sale', 'Del orden de tu Plan Maestro con tus saldos de Finanzas; nunca del azar ni del mercado.']] });
   const q = istqbPreguntaHoy();
@@ -9531,7 +9556,7 @@ function comoDecideHtml(){
 /* Lo que sigue en cada tarjeta, en el orden de Coach (Adán, 26-oct-2026: "lo que me interesa es saber qué seguirá
    después y además cómo decides qué va"). Sale de las mismas funciones que eligen lo de hoy: las lecciones que quedan
    del Kapitel y los temas de las palabras con los días que les quedan; los audiolibros de las semanas que vienen; los
-   próximos abonos a la BBVA, el día en que queda en cero y lo que va a GBM después; los capítulos por leer; los pasos
+   próximos envíos con su destino, el día en que se llena el colchón y el día en que el BYD queda en cero; los capítulos por leer; los pasos
    que siguen de la ruta y la habilidad de después; los pasos que siguen de la guía y las guías de después. */
 function cdSigue(k){
   const out = [], hk = hoyLocal(), nDias = n => n + (n === 1 ? ' día' : ' días');
@@ -9555,8 +9580,12 @@ function cdSigue(k){
       if(B){ (B.abonos || []).filter(a => !a.hecho && a.fecha >= hk).slice(0, 3)
           .forEach(a => out.push({ t: money(a.monto) + ' a la BBVA' + (CE_DE[a.de] ? ': ' + esc(CE_DE[a.de]) : ''), c: mpFechaTxt(mpFecha(a.fecha), true) }));
         out.push({ t: 'La BBVA queda en cero', c: mpFechaTxt({ d: B.fin, mes: false }, true) });
-        const fm = new Date(B.fin.getFullYear(), B.fin.getMonth() + 1, 1), G = CIFRAS.desgloseMes(fzmYM(fm));
-        if(G) out.push({ t: 'Todo a GBM: ' + money(G.dia1) + ' el 1 y ' + money(G.dia15) + ' el 15', c: 'desde ' + MP_MES[fm.getMonth()] }); }
+      } else {
+        const PA = CIFRAS.planAhorro(), dias = [...new Set(PA.envios.filter(e => e.fecha > hk).map(e => e.fecha))].slice(0, 2);
+        dias.forEach(x => out.push({ t: ahTxt(ahDia(x), money), c: mpFechaTxt(mpFecha(x), true) }));
+        if(PA.lleno && PA.lleno > hk) out.push({ t: 'Tu colchón, completo', c: mpFechaTxt(mpFecha(PA.lleno), true) });
+        if(PA.cero && PA.cero > hk) out.push({ t: 'El BYD en cero; desde ahí, todo a invertir', c: mpFechaTxt(mpFecha(PA.cero), true) });
+      }
     } else if(/^Examen/.test(k)){
       iqLectura().filter(x => !x.hecho).slice(0, 3).forEach(x => out.push({ t: 'Leer el capítulo ' + x.c + ': ' + esc(IQ_CAP_LLANO[x.c] || x.nom),
         c: (x.est === 'tarde' ? 'era para el ' : 'antes del ') + x.fTxt }));
@@ -9718,7 +9747,7 @@ const ctIngr  = arr => (arr||[]).filter(t=>t.type!=='expense').reduce((s,t)=>s+(
 const CT_GRUPO_SECC = { deudas:'deudas', renta:'casa', depa:'casa', celular:'casa', suscripciones:'suscripciones',
                         ahorro:'ahorro', familia:'familia' };
 const CT_SECC = { deudas:'Deudas', casa:'Casa y servicios', comida:'Comida', suscripciones:'Suscripciones',
-                  ahorro:'Ahorro a GBM', familia:'Tu familia', anotado:'Lo que anotaste', otros:'Otros' };
+                  ahorro:'Lo que apartas', familia:'Tu familia', anotado:'Lo que anotaste', otros:'Otros' };
 // Lo del mes que se ve en el calendario, para el desglose de sus cifras: lo deja renderCoachTablero().
 let CT_MES = null;
 /* El desglose de cada cifra de bajo el calendario (Adán, 28-oct-2026: "en lo que sale, cuando haga click, desglósame
@@ -9735,10 +9764,10 @@ function ctMesDetalle(k){
   const bbva = (C.planBbva ? C.planBbva().abonos : []).filter(a => a.fecha.slice(0,7) === X.ym);
   if(k === 'sale'){
     const secc = {};
-    // Lo que mandas a GBM no es gasto: va en «A GBM».
+    // Lo que apartas no es gasto: va en «Apartas».
     Object.keys(X.conc).forEach(t => { const c = X.conc[t]; if(c.s === 'ahorro') return; (secc[c.s] = secc[c.s] || { v:0, cs:[] }).v += c.v; secc[c.s].cs.push(c); });
     const orden = Object.keys(secc).sort((a,b) => secc[b].v - secc[a].v);
-    return { titulo:'Lo que sale en '+X.mes, sub:'Lo que pagas y gastas: lo programado, lo anotado de contado y comer. Lo que mandas a GBM no es gasto: va en «A GBM».',
+    return { titulo:'Lo que sale en '+X.mes, sub:'Lo que pagas y gastas: lo programado, lo anotado de contado y comer. Lo que apartas no es gasto: va en «Apartas».',
       html:'<div class="kpi-cifra" style="color:'+R+'">−'+money(Math.round(X.sale))+'</div>'+
         '<div class="kpi-cifra-sub">de '+money(Math.round(X.ent))+' que entran · '+orden.length+' secciones</div>'+
         orden.map(s => kpiSec(CT_SECC[s]+' · '+money(Math.round(secc[s].v)))+
@@ -9748,42 +9777,45 @@ function ctMesDetalle(k){
   if(k === 'entra') return { titulo:'Lo que entra en '+X.mes, sub:'Tus quincenas. Didi va aparte: lo que trae se ve en «Didi trae».',
     html:'<div class="kpi-cifra" style="color:'+V+'">+'+money(Math.round(X.ent))+'</div>'+
       kpiSec('Quincena por quincena')+X.entradas.map(e => fila(esc(e.t)+' · '+fecha(X.ym+'-'+String(e.d).padStart(2,'0')), e.v)).join('')+tot('En el mes', X.ent) };
-  if(k === 'queda') return { titulo:'Lo que te queda en '+X.mes, sub:'Lo que entra menos lo que sale y lo que mandas a GBM de tus quincenas: lo que tienes para lo que no está en el plan.',
+  if(k === 'queda') return { titulo:'Lo que te queda en '+X.mes, sub:'Lo que entra menos lo que sale y lo que apartas de tus quincenas: lo que tienes para lo que no está en el plan.',
     html:'<div class="kpi-cifra" style="color:'+(X.queda >= 0 ? P : R)+'">'+cifra(X.queda)+'</div>'+
       kpiSec('La cuenta')+fila('Entra', X.ent, ' style="color:'+V+'"')+fila('Sale', -X.sale, ' style="color:'+R+'"')+
-      (X.gbmQ >= 1 ? fila('A GBM, de tus quincenas', -X.gbmQ, ' style="color:'+V+'"') : '')+tot('Te queda', X.queda)+
-      kpiNota('«Sale» incluye lo que el plan manda a la BBVA de cada quincena. Lo de Didi no pasa por aquí: lo que aparta va a la BBVA o a GBM.') };
+      (X.gbmQ >= 1 ? fila('Lo que apartas de tus quincenas', -X.gbmQ, ' style="color:'+V+'"') : '')+tot('Te queda', X.queda)+
+      kpiNota('«Sale» incluye la mensualidad del BYD. Lo que apartas de Didi no pasa por aquí: va a tu colchón, al BYD o a invertir, según tu plan.') };
   if(k === 'bbva'){
     const fin = C.planBbva().fin;
     return { titulo:'A la BBVA en '+X.mes, sub:'Abono por abono, del plan para dejarla en cero sin intereses.',
       html:'<div class="kpi-cifra" style="color:'+W+'">'+money(Math.round(X.bbva))+'</div>'+
-        (fin ? '<div class="kpi-cifra-sub">queda en cero el <b>'+C.v('bbvaCero')+'</b>; desde ahí, lo que iba a ella va a GBM</div>' : '')+
+        (fin ? '<div class="kpi-cifra-sub">queda en cero el <b>'+C.v('bbvaCero')+'</b>; desde ahí, lo que iba a ella sigue tu plan</div>' : '')+
         kpiSec('Abono por abono')+bbva.map(a => fila((C.ABONO_DE && C.ABONO_DE[a.de] ? C.ABONO_DE[a.de].charAt(0).toUpperCase()+C.ABONO_DE[a.de].slice(1) : 'Abono')+' · '+fecha(a.fecha)+(a.hecho ? ' · ✓ hecho' : ''), a.monto)).join('')+
         tot('En el mes', X.bbva) };
   }
   if(k === 'gbm'){
-    const q = []; Object.keys(X.conc).forEach(t => { const c = X.conc[t]; if(c.s === 'ahorro') q.push(c); });
-    const di = C.didiGbmLunes ? C.didiGbmLunes(X.ym) : {};
-    return { titulo:'A GBM en '+X.mes, sub:'Empieza cuando liquides la BBVA: lo que sobra de cada quincena y lo que apartas de Didi cada lunes.',
-      html:'<div class="kpi-cifra" style="color:'+V+'">'+money(Math.round(X.gbm))+'</div>'+
-        (q.length ? kpiSec('De tus quincenas')+q.map(c => fila(esc(c.t)+'<small style="color:var(--text3)">'+dias(c.dias)+'</small>', c.v)).join('') : '')+
-        (Object.keys(di).length ? kpiSec('De Didi')+Object.keys(di).sort().map(f => fila('Lo que apartas de Didi · lunes '+(+f.slice(8)), di[f])).join('') : '')+
-        tot('En el mes', X.gbm) };
+    // A dónde va cada peso que apartas este mes, por destino y en su orden (CIFRAS.gbmMes).
+    const G = C.gbmMes(X.ym), Q = [['colchon','aColchon','Al colchón'],['auto','aAuto','Al BYD, a capital'],['gbm','aGbm','A invertir']].filter(q => G[q[1]] >= 1);
+    const tot1 = G.total || X.gbm;
+    return { titulo:'Lo que apartas en '+X.mes, sub:'De cada quincena y de Didi, en el orden de tu plan: el colchón, el BYD y a invertir.',
+      html:'<div class="kpi-cifra" style="color:'+V+'">'+money(Math.round(tot1))+'</div>'+
+        Q.map(q => kpiSec(q[2]+' · '+money(Math.round(G[q[1]])))+
+          G.semanas.flatMap(w => w[q[0]]).map(e => fila(esc(e.t)+' · '+fecha(X.ym+'-'+String(e.dia).padStart(2,'0')), e.mxn)).join('')).join('')+
+        tot('En el mes', tot1)+
+        kpiNota(G.autoCero ? 'Tu plan llena el colchón el <b>'+C.v('colchonFecha')+'</b> y deja el BYD en cero el <b>'+C.v('autoCero')+'</b>; desde ahí, todo se invierte.' : '') };
   }
   if(k === 'didi'){
     const mes = +C.n('didiMes') || 0, aparta = C.didiAlAhorro ? C.didiAlAhorro(X.ym) : 0;
     const aBbva = bbva.filter(a => a.de === 'didi' || a.de === 'minimo').reduce((s,a) => s + a.monto, 0);
-    const aGbm = Object.values(C.didiGbmLunes ? C.didiGbmLunes(X.ym) : {}).reduce((s,v) => s + v, 0);
+    const DE = { colchon:0, auto:0, gbm:0 }; C.gbmMes(X.ym).semanas.forEach(w => ['colchon','auto','gbm'].forEach(q => w[q].forEach(e => { if(e.de === 'didi') DE[q] += e.mxn; })));
+    const aGbm = DE.colchon + DE.auto + DE.gbm;
     // La quincena en que vives de Didi, después de liquidar la BBVA con todo lo que tenías (lunesDidiTuyos).
     const tuyos = C.lunesDidiTuyos ? C.lunesDidiTuyos(X.ym) : [], aVivir = tuyos.length * aparta * 12 / 52;
-    return { titulo:'Lo que trae Didi en '+X.mes, sub:'Aparte de tu sueldo. Lo que apartas va a la BBVA mientras tenga saldo y, después, a GBM; el resto paga la carga del auto y lo tuyo.',
+    return { titulo:'Lo que trae Didi en '+X.mes, sub:'Aparte de tu sueldo. Lo que apartas cada lunes va a tu colchón, al BYD o a invertir, en ese orden; el resto paga la carga del auto y lo tuyo.',
       html:'<div class="kpi-cifra">'+money(mes)+'</div>'+
-        kpiSec('A dónde va')+(aBbva >= 1 ? fila('A la BBVA, los lunes y el pago del corte', aBbva) : '')+(aGbm >= 1 ? fila('A GBM, los lunes desde que liquides la BBVA', aGbm) : '')+
+        kpiSec('A dónde va')+(aBbva >= 1 ? fila('A la BBVA, los lunes y el pago del corte', aBbva) : '')+['colchon','auto','gbm'].map(q => DE[q] >= 1 ? fila({colchon:'Al colchón',auto:'Al BYD, a capital',gbm:'A invertir'}[q]+', los lunes', DE[q]) : '').join('')+
         (aVivir >= 1 ? fila('Para vivir la quincena después de liquidarla · lunes '+tuyos.map(f => +f.slice(8)).join(' y '), aVivir) : '')+
         (mes - aBbva - aGbm - aVivir >= 0 ? fila('Lo que te queda para la carga del auto y lo tuyo', mes - aBbva - aGbm - aVivir)
           : fila('<span style="color:var(--r)">Lo que apartas pasa de lo que trae</span>', mes - aBbva - aGbm - aVivir))+tot('Lo que trae al mes', mes)+
         kpiNota('Apartas <b>'+money(C.didiSemana ? C.didiSemana(X.ym) : aparta*12/52)+'</b> cada lunes, '+money(aparta)+' al mes en promedio: un mes con cinco lunes junta más.'+
-          (aVivir >= 1 ? ' La liquidaste con todo lo que tenías, así que lo de esos lunes es para vivir; desde el siguiente, a GBM.' : '')+
+          (aVivir >= 1 ? ' La liquidaste con todo lo que tenías, así que lo de esos lunes es para vivir; desde el siguiente, sigue tu plan.' : '')+
           (mes - aBbva - aGbm - aVivir < 0 ? ' <b>Con lo que trae Didi en promedio no alcanza</b> para lo que el plan aparta: o trabajas más horas, o el plan aparta menos.' : '')) };
   }
   return null;
@@ -9882,10 +9914,11 @@ function ctVerDia(k){ ctSel = k; renderCoachTablero(); }
 // que entrar a la pantalla, el mes y el día de hoy.
 function ctVerHoy(){ ctYM = null; ctSel = null; renderCoachTablero(); }
 // El nombre de un pago en la celda del mes: «Tarjeta BBVA — lo que sobra de la quincena» → BBVA, «Crédito Automotriz» →
-// Auto, «Ahorro → GBM» → GBM. El nombre completo va en el título de la celda y en la columna del día.
+// Auto, «Abono al BYD» → Al BYD, «Ahorro → tu colchón» → Colchón. El nombre completo va en el título de la celda y en la columna del día.
 function ctCorto(t){
   const s = String(t||'');
-  if(/^Ahorro\b/i.test(s) && /GBM/.test(s)) return 'GBM';
+  if(/^Abono al BYD/i.test(s)) return 'Al BYD';
+  if(/^Ahorro\b/i.test(s)) return /colchón/i.test(s) ? 'Colchón' : /invertir/i.test(s) ? 'Invertir' : 'GBM';
   let c = s.split(/ — | \(| →/)[0].trim();
   const sin = c.replace(/^(Tarjeta|Crédito|Plan de|Aporte a tu|Pago:?)\s+/i, '');
   if(sin !== c) c = sin.charAt(0).toUpperCase()+sin.slice(1);
@@ -9901,7 +9934,7 @@ function ctColor(t){
   if(/\bcena\b/i.test(t)) return '#f97316';
   if(/comer|comida/i.test(t)) return '#ef4444';
   if(/renta|familia/i.test(t)) return '#eab308';
-  if(/cetes|ahorro/i.test(t)) return '#10b981';
+  if(/cetes|ahorro|abono al byd/i.test(t)) return '#10b981';
   if(/gym|total pass/i.test(t)) return '#22c55e';
   if(/iphone|apple|icloud|claude/i.test(t)) return '#14b8a6';
   if(/tarjeta|autom|msi|zap|merpago|mercado/i.test(t)) return '#64748b';
@@ -10072,14 +10105,22 @@ function ctCifrasHoy(){
    Va arriba del panel de Total invertido (kpiDetalle, ctEstrategiaHoyHtml; Adán, 21-oct-2026: "esta info va en las
    cifras que están arriba cuando das click, ahí se desglosan las cantidades"): qué mandar
    hoy a la BBVA —el plan ya lo restó solo (CIFRAS.aplicarPlanBbva), y aquí se corrige si no fue
-   así—, cuánto se puede gastar sin romper la quincena y, con la tarjeta en cero, cancelarla y pasar
-   todo a GBM. El saldo y el plan salen de CIFRAS.bbvaEstado —el saldo vivo de Finanzas, que se mueve
+   así—, cuánto se puede gastar sin romper la quincena y, con la tarjeta en cero, cancelarla y mandar
+   lo que apartas a donde diga el plan (CIFRAS.planAhorro): el colchón, el BYD o a invertir. El saldo y el plan salen de CIFRAS.bbvaEstado —el saldo vivo de Finanzas, que se mueve
    solo con los abonos del plan, con cada compra «TC BBVA» y con cada pago—; la quincena, de su serie
    (T, `ctTramo`). Ningún importe va escrito aquí. Adán, 17-oct-2026: "no se actualiza conforme a los días". */
+// Lo que el plan aparta un día, sumado por destino (null si ese día no toca), el siguiente envío y cómo se dice:
+// «$2,050 al colchón», «$796 al colchón y $6,154 al BYD». Lo usan la estrategia, Qué invertir hoy y Cómo lo decide Coach.
+function ahDia(k){
+  const L = window.CIFRAS && CIFRAS.ahorroDia ? CIFRAS.ahorroDia(k) : [];
+  return L.length ? L.reduce((s, e) => ({ colchon: s.colchon + e.colchon, auto: s.auto + e.auto, gbm: s.gbm + e.gbm, monto: s.monto + e.monto }), { colchon: 0, auto: 0, gbm: 0, monto: 0 }) : null;
+}
+function ahSig(k){ const e = window.CIFRAS && CIFRAS.planAhorro ? CIFRAS.planAhorro().envios.find(x => x.fecha > k) : null; return e ? Object.assign({ fecha: e.fecha }, ahDia(e.fecha)) : null; }
+function ahTxt(e, num){ return !e ? '' : ['colchon', 'auto', 'gbm'].filter(q => e[q] >= 1).map(q => num(e[q])+' '+CIFRAS.DESTINO[q].a).join(' y '); }
 const CE_DE = (window.CIFRAS && CIFRAS.ABONO_DE) || {};
 const CE_DOW = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
 /* La quincena de hoy para la estrategia, de la misma serie (ctTramo): lo que falta si no cierra, y lo que Didi trae
-   de aquí al cierre al ritmo de su promedio —menos lo que ya aparta para GBM— más el mínimo de la BBVA del plan que cae
+   de aquí al cierre al ritmo de su promedio —menos lo que ya aparta— más el mínimo de la BBVA del plan que cae
    en el tramo, porque la serie ya lo resta. */
 function ctQuincenaPlan(T, ym, nSel, nDias){
   const didiLibre = window.CIFRAS ? Math.max(0, (CIFRAS.n('didiMes') || 0) - (CIFRAS.didiAlAhorro ? CIFRAS.didiAlAhorro(ym) : 0)) : 0;
@@ -10120,9 +10161,9 @@ function ctEstrategiaHtml(T, H, faltaR, mv, didiR, hastaR){
   const ext = (H && H.extras) || [];
   const cHoy = ext.filter(t => t.credito && (ctTarjetaDe(t)||{}).id === 'd001').reduce((s,t) => s + (+t.amount||0), 0);
   const iHoy = (mv||[]).filter(t => t.type === 'income' && !CIFRAS.esNomina(t)).reduce((s,t) => s + (+t.amount||0), 0);
-  // Nunca más del 100 %: desde febrero de 2027 el plan aparta $10,000 de Didi y Didi trae $6,000 en promedio (3-nov-2026).
+  // Nunca más del 100 %, aunque el plan aparte más de lo que Didi trae en promedio.
   const didiMes = CIFRAS.n('didiMes') || 0, pctDidi = didiMes > 0 ? Math.min(1, CIFRAS.didiAlAhorro(ym) / didiMes) : 0;
-  const destino = E.saldo > 0 ? 'para la BBVA' : 'para GBM';
+  const destino = E.saldo > 0 ? 'para la BBVA' : 'para '+({ colchon: 'tu colchón', auto: 'el BYD', gbm: 'invertir' })[CIFRAS.pasoAhorro(hoyK)];
   const nHoy = +hoyK.slice(8);
   const quincena = T.cierre < 0
     ? 'Hoy nada fuera de lo fijo: a la quincena le faltan '+num(faltaR)+' para llegar '+(hastaR || 'al cierre')+
@@ -10135,14 +10176,17 @@ function ctEstrategiaHtml(T, H, faltaR, mv, didiR, hastaR){
     (iHoy > 0 && pctDidi > 0 ? ' Entraron '+num(iHoy)+' de más: aparta '+num(iHoy*pctDidi)+' '+destino+
       ' (el '+Math.round(pctDidi*100)+' %, lo que el plan guarda de Didi).' : '');
 
-  // Lo que la quincena y Didi mandan a GBM sin tarjeta que pagar: el mes que entra, ya sin abonos.
+  // Lo que la quincena y Didi apartan, y a dónde va: el mes que entra, ya sin abonos a la tarjeta.
   const pM = ym.split('-').map(Number), sig = new Date(pM[0], pM[1], 1);
   const ymSig = sig.getFullYear()+'-'+String(sig.getMonth()+1).padStart(2,'0');
-  const G = CIFRAS.desgloseMes(ymSig);
-  // La quincena en que vives de Didi después de liquidarla (lunesDidiTuyos): esos lunes no va nada a GBM.
+  const G = CIFRAS.desgloseMes(ymSig), PA = CIFRAS.planAhorro(), paso = CIFRAS.pasoAhorro(hoyK);
+  // La quincena en que vives de Didi después de liquidarla (lunesDidiTuyos): esos lunes no se aparta nada.
   const tuyos = CIFRAS.lunesDidiTuyos ? CIFRAS.lunesDidiTuyos(ym).concat(CIFRAS.lunesDidiTuyos(ymSig)).filter(k => k >= hoyLocal()) : [];
   const aGbm = num(G.dia1)+' el 1 y '+num(G.dia15)+' el 15, más '+num(CIFRAS.didiAlAhorro(ymSig))+' de Didi al mes'+
     (tuyos.length ? '; los lunes '+tuyos.map(k => +k.slice(8)).join(' y ')+', lo de Didi es para vivir' : '');
+  const enPaso = paso === 'colchon' ? 'Vas en tu colchón'+(PA.lleno ? ': se llena el <b>'+CIFRAS.v('colchonFecha')+'</b>' : '')+'; después, todo al BYD.'
+    : paso === 'auto' ? 'Vas en el BYD: queda en cero el <b>'+CIFRAS.v('autoCero')+'</b>; después, todo a invertir.'
+    : 'El BYD ya está en cero: todo se invierte, hasta irte.';
 
   // Lo que el plan restó solo hoy y los dos días de antes, con «Corregir» y «No lo mandé». Si con el
   // abono completo la quincena no cierra, sugiere lo que la deja en cero, no en rojo.
@@ -10190,25 +10234,23 @@ function ctEstrategiaHtml(T, H, faltaR, mv, didiR, hastaR){
     if(nota) h += fila('', nota);
     return '<div class="ce-caja">'+h+'</div>';
   }
-  // ── En cero: cancelarla, y lo que iba a ella va a GBM ──
+  // ── En cero: cancelarla, y lo que iba a ella sigue el plan ──
   if(!E.cancelada){
     return '<div class="ce-caja verde">'+cab('Tu estrategia de hoy', 'var(--g)', 'BBVA '+num(0))+recientes+
       fila('ya', '🎉 La BBVA está en cero'+(E.fin ? ' desde el '+corta(E.fin) : '')+'. Cancélala: en la app o en sucursal, '+
         'pide la cancelación y tu carta de no adeudo.', boton('Ya la cancelé', 'bbvaCancelar()'))+
-      fila('', 'Desde ya, lo que iba a la tarjeta va a GBM: '+aGbm+'.', boton('Qué invertir →', 'abrirGBM()', 1))+
+      fila('', 'Desde ya, lo que iba a la tarjeta sigue tu plan: '+aGbm+'. '+enPaso, boton('Ver el plan →', 'abrirGBM()', 1))+
       (gasto ? fila('', gasto) : '')+'</div>';
   }
-  // ── Cancelada: cada peso que iba a la tarjeta, a GBM ──
-  const envio = ctAgenda(+hoyK.slice(8), ym).filter(a => a.ahorro).reduce((s,a) => s + (+a.monto||0), 0);
-  // El lunes aparta lo de Didi, salvo que ese mismo día ya se haya ido a la tarjeta.
-  const lunes = new Date(hoyK+'T12:00:00').getDay() === 1 && !(E.pagadoHoy > 0), toca = envio > 0 || lunes;
-  const hoyGbm = envio > 0 ? 'Hoy manda '+num(envio)+' a GBM: lo que sobra de la quincena.'
-    : lunes ? 'Hoy aparta '+num(CIFRAS.didiAlAhorro(ym) * 12 / 52)+' de Didi para GBM.'
-    : 'Hoy no toca envío a GBM: el siguiente es el '+(+hoyK.slice(8) < 15 ? '15' : '1')+'.';
+  // ── Cancelada: cada peso que se aparta, a donde diga el plan ──
+  const hd = ahDia(hoyK), sg = ahSig(hoyK), toca = !!hd && hd.monto >= 1 && !(E.pagadoHoy > 0);
+  const hoyGbm = toca ? 'Hoy manda '+ahTxt(hd, num)+'.' : 'Hoy no toca apartar'+(sg ? ': el siguiente es el '+dia(sg.fecha)+', '+ahTxt(sg, num)+'.' : '.');
   const fc = E.cancelada.split('-').map(Number);
-  return '<div class="ce-caja verde">'+cab('Tu estrategia de hoy', 'var(--g)', 'este mes a GBM '+num(CIFRAS.desgloseMes(ym).ahorro))+
-    '<span class="ce-pie">BBVA cancelada el '+corta(new Date(fc[0], fc[1]-1, fc[2]))+'. Sin tarjeta, a GBM van '+aGbm+'.</span>'+
-    fila(toca ? 'toca' : '', hoyGbm, boton('Qué invertir hoy →', 'abrirGBM()', !toca))+
+  const resta = PA.envios.filter(e => e.fecha >= hoyK && e.fecha.slice(0,7) === ym).reduce((s, e) => s + e.monto, 0);
+  return '<div class="ce-caja verde">'+cab('Tu estrategia de hoy', 'var(--g)', resta >= 1 ? 'este mes te falta apartar '+num(resta) : 'en '+MES_LABEL_FULL[sig.getMonth()].toLowerCase()+' apartas '+num(CIFRAS.gbmMes(ymSig).total))+
+    '<span class="ce-pie">BBVA cancelada el '+corta(new Date(fc[0], fc[1]-1, fc[2]))+'. Sin tarjeta, apartas '+aGbm+'.</span>'+
+    fila(toca ? 'toca' : '', hoyGbm, boton('Ver el plan →', 'abrirGBM()', !toca))+
+    fila('', enPaso)+
     (gasto ? fila('', gasto) : '')+'</div>';
 }
 /* «Ya lo mandé»: el abono se anota en Finanzas tal como lo deja «Pagar» allá —una transacción en
@@ -10578,7 +10620,7 @@ function bbvaCancelar(){
   const F = rawGet('finanzasmx_v2', null);
   const d = F && (F.debts || []).find(x => x.id === 'd001');
   if(!d || +d.balance > 0) return;
-  if(!confirm('¿Ya cancelaste la BBVA en el banco? Desde hoy, lo que iba a la tarjeta va a GBM.')) return;
+  if(!confirm('¿Ya cancelaste la BBVA en el banco? Desde hoy, lo que iba a la tarjeta sigue tu plan.')) return;
   d.cancelada = hoyLocal();
   ceGuardar(F);
 }
@@ -10650,7 +10692,7 @@ function renderCoachTablero(){
                   col: cosas.length ? ctColor(cosas[0].t) : '#ef4444', cosas:cosas };
     if(sal > topeDia) topeDia = sal;
   }
-  // Lo que el plan manda este mes a GBM —los cobros de ahorro del calendario y lo que aparta Didi—
+  // Lo que el plan aparta este mes —lo de las quincenas y lo que aparta Didi—
   // y, mientras la BBVA tenga saldo, lo que va a ella (CIFRAS.planBbva: de la quincena, de Didi y el
   // mínimo). Es la misma cuenta que la proyección de Coach; fuera del plan (antes de octubre de 2026
   // o ya en Alemania) no se dice nada.
@@ -10659,15 +10701,16 @@ function renderCoachTablero(){
   const enPlan = !!(window.CIFRAS && CIFRAS.PROYECCION && ctYM >= CIFRAS.PROYECCION.supuestos.desde && ctYM <= CIFRAS.PROYECTO.ultimoMesMexico);
   const didiAh = enPlan && CIFRAS.desgloseMes ? Math.max(0, CIFRAS.desgloseMes(ctYM).didi) : 0;
   const bbvaMes = enPlan && CIFRAS.planBbva ? CIFRAS.planBbva().abonos.filter(a=>a.fecha.slice(0,7)===ctYM).reduce((s,a)=>s+a.monto,0) : 0;
-  // El dinero del mes, de la misma cuenta que las barras de cada día (saleDe): lo que entra y lo que sale. Lo que mandas a GBM
-  // sale de tu cuenta, pero no es gasto (Adán, 28-oct-2026: "no quiero que lo de GBM salga en lo que sale"): va en «A GBM»
+  const apartaMes = enPlan && CIFRAS.gbmMes && ctYM >= CIFRAS.PROYECTO.planDesde.slice(0,7) ? CIFRAS.gbmMes(ctYM).total : ahorroMes + didiAh;
+  // El dinero del mes, de la misma cuenta que las barras de cada día (saleDe): lo que entra y lo que sale. Lo que apartas
+  // sale de tu cuenta, pero no es gasto (Adán, 28-oct-2026: "no quiero que lo de GBM salga en lo que sale"): va en «Apartas»
   // y se resta en «Te queda», que sigue siendo lo que entra menos todo lo que se va.
   let entMes = 0, movMes = 0;
   for(let d=1; d<=nDias; d++){ entMes += saleDe[d].ent; movMes += saleDe[d].sale; }
   const saleMes = movMes - ahorroMes, quedaMes = entMes - movMes;
   if(comeDia > 0) mesConc['Comer'] = { t:'Comer · '+nDias+' días', s:'comida', v:comeDia*nDias, dias:[] };
   CT_MES = { ym:ctYM, nombre:MESN[M-1]+' '+Y, mes:MESN[M-1].toLowerCase(), ent:entMes, sale:saleMes, gbmQ:ahorroMes, queda:quedaMes,
-             conc:mesConc, entradas:mesEnt, enPlan:enPlan, bbva:bbvaMes, gbm:ahorroMes + didiAh };
+             conc:mesConc, entradas:mesEnt, enPlan:enPlan, bbva:bbvaMes, gbm:apartaMes };
   // Cada cifra se toca y abre su desglose, como los medidores (abrirKpi → kpiDetalle → ctMesDetalle).
   const ctTotCel = (lbl, v, signo, col, tit, k) => '<button type="button" class="ct-tot-c" onclick="abrirKpi(\'mes-'+k+'\')" title="'+esc(tit)+' · tócala para ver el desglose">'+
     '<i>'+lbl+'</i><b class="ct-num'+(privado?' fin-hidden':'')+'"'+
@@ -10713,17 +10756,17 @@ function renderCoachTablero(){
     // Bajo las fechas, solo las cifras del mes (Adán, 28-oct-2026: "lo de abajo del calendario solo son cifras del mes, no
     // de la semana y además ordénalas mejor"), en dos renglones de tres: el dinero del mes —lo que entra, lo que sale, de
     // la misma cuenta que las barras de los días, y lo que te queda— y, mientras dure el plan en México, a dónde va: a la
-    // BBVA (de las quincenas, de Didi y el mínimo, CIFRAS.planBbva), a GBM (los cobros con `ahorro` y lo que aparta Didi)
+    // BBVA (de las quincenas, de Didi y el mínimo, CIFRAS.planBbva), lo que apartas (las quincenas, Didi y lo que se libera)
     // y lo que trae Didi.
     // El mes ya lo dice el título del calendario: el pie no lo repite.
     '<div class="ct-tot"><div class="ct-tot-g">'+
       ctTotCel('Entra', entMes, '+', 'var(--g)', 'Tus quincenas del mes', 'entra')+
-      ctTotCel('Sale', saleMes, '−', 'var(--r)', 'Lo que pagas y gastas: lo programado, lo anotado de contado y comer; lo que mandas a GBM va aparte', 'sale')+
-      ctTotCel('Te queda', quedaMes, '', quedaMes >= 0 ? 'var(--p)' : 'var(--r)', 'Lo que entra menos lo que sale y lo que mandas a GBM de tus quincenas', 'queda')+
-      // A GBM no va nada mientras la BBVA tenga saldo (Adán, 28-oct-2026: "eso es después de liquidar BBVA"): la cifra
-      // sale el mes en que algo llega de verdad, y la de la BBVA, mientras le toque algo.
+      ctTotCel('Sale', saleMes, '−', 'var(--r)', 'Lo que pagas y gastas: lo programado, lo anotado de contado y comer; lo que apartas va aparte', 'sale')+
+      ctTotCel('Te queda', quedaMes, '', quedaMes >= 0 ? 'var(--p)' : 'var(--r)', 'Lo que entra menos lo que sale y lo que apartas de tus quincenas', 'queda')+
+      // No se aparta nada mientras la BBVA tenga saldo (Adán, 28-oct-2026: "eso es después de liquidar BBVA"): la cifra
+      // sale el mes en que algo se aparta de verdad, y la de la BBVA, mientras le toque algo.
       (enPlan ? (bbvaMes > 0 ? ctTotCel('A la BBVA', bbvaMes, '', 'var(--w)', 'Lo que sobra de cada quincena, lo de Didi y el mínimo, hasta dejarla en cero', 'bbva') : '')+
-        (ahorroMes + didiAh >= 1 ? ctTotCel('A GBM', ahorroMes + didiAh, '', 'var(--g)', 'Los envíos de las quincenas y lo que aparta Didi, desde que liquides la BBVA', 'gbm') : '')+
+        (apartaMes >= 1 ? ctTotCel('Apartas', apartaMes, '', 'var(--g)', 'Lo de las quincenas y lo de Didi, en su orden: el colchón, el BYD y a invertir', 'gbm') : '')+
         ctTotCel('Didi trae', CIFRAS.n('didiMes') || 0, '', '', 'Lo que trae Didi al mes, aparte de tu sueldo', 'didi') : '')+
     '</div></div>';
 
@@ -11250,7 +11293,7 @@ const DIDI_AUDIO=[
     {tipo:'audio', lib:'neverEatAlone', n:'Never Eat Alone — Keith Ferrazzi', trata:'«Nunca comas solo»: cómo construir tu red de contactos antes de necesitarla, ayudando primero.', d:'El método para tener la red antes de necesitarla: tu lista, a quién llamar y cuándo. 11 h 11 min.', q:'Never Eat Alone Keith Ferrazzi'},
     {tipo:'audio', lib:'giveAndTake', n:'Give and Take — Adam Grant', trata:'«Dar y recibir»: por qué a quien ayuda sin pedir nada a cambio le va mejor en el trabajo.', d:'Por qué los que dan primero terminan con mejores redes: la idea detrás de reactivar sin pedir nada. 11 h 50 min; en español es «Dar y recibir».', q:'Give and Take Adam Grant'},
   ]},
-  {sk:'ventas', why:'Tu habilidad más baja, y la que más rinde este año: negociar tu ingreso decide si te vas en septiembre de 2027. Una hora escuchando ventas rinde más que una hora en cualquier otra de las 12 — y es escuchar, no vender: no rompe la regla de no contactar prospectos sin oferta lista.', items:[
+  {sk:'ventas', why:'Tu habilidad más baja, y la que más rinde este año: negociar tu ingreso adelanta el día en que el BYD queda en cero y lo que llevas a Alemania. Una hora escuchando ventas rinde más que una hora en cualquier otra de las 12 — y es escuchar, no vender: no rompe la regla de no contactar prospectos sin oferta lista.', items:[
     {tipo:'audio', lib:'influence', n:'Influence — Robert Cialdini', trata:'«Influencia»: los seis principios que hacen que la gente diga que sí, contados con historias.', d:'Los 6 principios de persuasión. El más citado del tema y el más fácil de seguir manejando: son historias, no teoría.', q:'Influence Robert Cialdini'},
     {tipo:'audio', lib:'offers100m', n:'$100M Offers — Alex Hormozi', trata:'Cómo armar una oferta tan buena que cueste decirle que no; sirve para pedir un aumento.', d:'Cómo armar una oferta que sea difícil de rechazar: tu caso para el aumento es una oferta, y el negocio de la Fase 4 también.', q:'100M Offers Alex Hormozi'},
     {tipo:'audio', lib:'neverSplit', n:'Never Split the Difference — Chris Voss', trata:'«Rompe la barrera del no»: técnicas de un exnegociador del FBI para negociar tu sueldo.', d:'Negociación por un ex-negociador de rehenes del FBI: el libro para pedir el aumento o el puesto mejor pagado de este año, y después tu sueldo en euros.', q:'Never Split the Difference Chris Voss'},
@@ -11267,7 +11310,7 @@ const DIDI_AUDIO=[
     {tipo:'audio', lib:'leads100m', n:'$100M Leads — Alex Hormozi', trata:'Cómo hacer que gente que no te conoce se interese en lo que vendes.', d:'Cómo conseguir que gente desconocida se interese. La secuela de $100M Offers, ya estaba en tus recursos.', q:'100M Leads Alex Hormozi'},
     {tipo:'pod', n:'Marketing School — Neil Patel & Eric Siu', trata:'Episodios de 10 minutos, cada uno con una idea práctica de marketing.', d:'Episodios de ~10 min. Perfecto para el tramo del gym cuando no quieres empezar algo largo.', q:'Marketing School Neil Patel'},
   ]},
-  {sk:'inversion', why:'Ya invertiste en CETES, BTC y GBM — lo que falta es criterio para no decidir cada lunes desde cero. Estos tres te dan el marco.', items:[
+  {sk:'inversion', why:'Ya invertiste en CETES, BTC y GBM — lo que falta es criterio antes de empezar a invertir cada mes, cuando el BYD quede en cero. Estos tres te dan el marco.', items:[
     {tipo:'audio', lib:'littleBook', n:'The Little Book of Common Sense Investing — John Bogle', trata:'«El pequeño libro para invertir con sentido común»: por qué los fondos de índice baratos, como VOO, le ganan a casi todo.', d:'EMPIEZA POR ESTE: es corto (~5h), y su tesis —índices de bajo costo— es exactamente tu VOO de los lunes.', q:'Little Book of Common Sense Investing John Bogle'},
     {tipo:'audio', lib:'randomWalk', n:'A Random Walk Down Wall Street — Burton Malkiel', trata:'«Un paseo aleatorio por Wall Street»: por qué casi nadie le gana al mercado y conviene invertir siempre igual.', d:'Por qué casi nadie le gana al mercado de forma sostenida. Refuerza la disciplina de la asignación fija.', q:'A Random Walk Down Wall Street Malkiel'},
     {tipo:'audio', lib:'oneUp', n:'One Up On Wall Street — Peter Lynch', trata:'«Un paso por delante de Wall Street»: cómo encontrar buenas empresas en lo que ves todos los días.', d:'El más entretenido de los tres, lleno de anécdotas. Buen premio después de los otros dos.', q:'One Up On Wall Street Peter Lynch'},
@@ -11292,7 +11335,7 @@ const DIDI_ESPANOL=[
   {tipo:'pod', n:'Libros para Emprendedores — Luis Ramos', d:'Resúmenes de un libro de negocios por episodio. La forma más rápida de cubrir mucho terreno mientras manejas.', q:'Libros para Emprendedores Luis Ramos'},
   {tipo:'pod', largo:true, n:'Cracks Podcast — Oso Trava', d:'Entrevistas largas con emprendedores mexicanos y gente que destaca en su campo: cómo piensan y cómo trabajan.', q:'Cracks Podcast Oso Trava'},
   {tipo:'pod', largo:true, n:'Dementes — Diego Barrazas', d:'Historias de fundadores mexicanos contadas largo, de una hora o más.', q:'Dementes podcast Diego Barrazas'},
-  {tipo:'pod', n:'Tengo un Plan — Sergio Beguería y Juan Domínguez', d:'Finanzas personales e inversión en español, sin jerga. El complemento natural de tu bloque de GBM de los lunes.', q:'Tengo un Plan podcast finanzas'},
+  {tipo:'pod', n:'Tengo un Plan — Sergio Beguería y Juan Domínguez', d:'Finanzas personales e inversión en español, sin jerga. El complemento natural de los lunes, cuando mandas tu ahorro.', q:'Tengo un Plan podcast finanzas'},
   {tipo:'pod', n:'Whitepaper — Jorge Combe', d:'Negocios y tecnología en México. Útil para Marketing e IA sin cambiar de idioma.', q:'Whitepaper podcast Jorge Combe'},
 ];
 
@@ -11320,7 +11363,7 @@ const DIDI_INGLES=[
 // tercero o cuarto sube un paso (B1); lo demás es A2. Los títulos se comprobaron en noviembre de 2026; los enlaces
 // buscan el título exacto, para que no caduquen.
 const DIDI_LISTA=[
-  {id:'de', t:'Alemán', sub:'De A2 a B1, rumbo a tu Goethe A2', items:[
+  {id:'de', t:'Alemán', sub:'De A2 a B1, rumbo a tu certificado B1', items:[
     {id:'dl09',  serie:'Das Deutschlandlabor · DW', nivel:'A2', tipo:'yt',  n:'Folge 9: Auto', d:'Los alemanes y el auto, en alemán para A2: el tema de tu carrera.', q:'Das Deutschlandlabor Folge 9 Auto'},
     {id:'seg304', serie:'Super Easy German 304', nivel:'A2', tipo:'yt', n:'Wohnungsbesichtigung in Slow German', d:'Cómo es ir a ver un departamento en Alemania, en alemán despacio: lo que vas a hacer en Esslingen.', q:'Wohnungsbesichtigung in Slow German Super Easy German 304'},
     {id:'dl12',  serie:'Das Deutschlandlabor · DW', nivel:'A2', tipo:'yt',  n:'Folge 12: Geld', d:'Los alemanes y el dinero, en alemán para A2: el tema de tu plan.', q:'Das Deutschlandlabor Folge 12 Geld'},
@@ -12163,14 +12206,14 @@ function renderCalendario(){
         h+='<div class="cal-med" style="border-color:rgba(var(--cy-rgb),.28);background:linear-gradient(140deg,rgba(var(--cy-rgb),.1),transparent 75%)">'+
           '<div class="cal-med-k" style="color:var(--cy)">Fondo de emergencia</div>'+
           '<div class="cal-ritmo-n"><b>'+money(r.ef)+'</b><span>de '+money(r.meta)+'</span></div>'+
-          '<div class="cal-med-s">Faltan <b>'+money(r.falta)+'</b> para cubrir '+CIFRAS.n('fondoMeses')+' meses de lo indispensable.'+(CIFRAS.n('cetesDia15')>0?'':' El plan no le mete dinero: todo va a GBM.')+'</div>'+
+          '<div class="cal-med-s">Faltan <b>'+money(r.falta)+'</b> para cubrir '+CIFRAS.n('fondoMeses')+' meses de lo indispensable.'+' Tu plan llena primero '+money(CIFRAS.n('colchonPlan'))+', el <b>'+CIFRAS.v('colchonFecha')+'</b>, y después todo va al BYD.</div>'+
           '<div class="cal-barra"><i style="width:'+r.pct+'%;background:linear-gradient(90deg,var(--g),var(--cy))"></i>'+
             '</div>'+
           '<div class="cal-barra-l"><span style="color:var(--cy)">'+r.pct+'%</span></div></div>';
       }else{
         h+='<div class="cal-med" style="border-color:rgba(var(--g-rgb),.28);background:linear-gradient(140deg,rgba(var(--g-rgb),.1),transparent 75%)">'+
           '<div class="cal-med-k" style="color:var(--g)">Fondo de emergencia cerrado</div>'+
-          '<div class="cal-med-s" style="margin-top:8px">Llegaste a '+money(r.meta)+'. Desde aquí todo excedente va a la deuda cara, sin excepciones.</div></div>';
+          '<div class="cal-med-s" style="margin-top:8px">Llegaste a '+money(r.meta)+'. Desde aquí, todo lo que apartas va al BYD hasta dejarlo en cero y, después, a invertir.</div></div>';
       }
 
       // El objetivo 2 de la fase. Se pinta con el fondo abierto o cerrado: con el
@@ -12183,7 +12226,7 @@ function renderCalendario(){
         h+='<div class="cal-med" style="border-color:rgba(var(--o-rgb),.28);background:linear-gradient(140deg,rgba(var(--o-rgb),.1),transparent 75%)">'+
           '<div class="cal-med-h"><span class="cal-med-k" style="color:var(--o)">Quincena a quincena · '+esc(t.nombre)+'</span>'+
             '<span class="cal-med-d" style="color:var(--o)">'+money(t.saldo)+'</span></div>'+
-          '<div class="cal-med-s">Queda en cero el <b>'+t.fin.toLocaleDateString('es-MX',{day:'numeric',month:'long'})+'</b>'+(t.intereses>=1?', con <b>'+money(t.intereses)+'</b> de intereses':', sin intereses')+': lo que sobra de cada quincena y lo de Didi de cada lunes van a ella antes que a GBM, y el día '+t.dia+' pagas lo que pide el estado de cuenta para no generarlos (el plan cuenta <b>'+money(t.min)+'</b>).'+
+          '<div class="cal-med-s">Queda en cero el <b>'+t.fin.toLocaleDateString('es-MX',{day:'numeric',month:'long'})+'</b>'+(t.intereses>=1?', con <b>'+money(t.intereses)+'</b> de intereses':', sin intereses')+': lo que sobra de cada quincena y lo de Didi de cada lunes van primero a ella, y el día '+t.dia+' pagas lo que pide el estado de cuenta para no generarlos (el plan cuenta <b>'+money(t.min)+'</b>).'+
             (prox.length?' Lo que sigue: '+prox.map(x=>dCorto(x.fecha)+' <b>'+money(x.monto)+'</b>').join(' · ')+'.':'')+'</div></div>';
       }else if(t&&t.totalero){
         h+='<div class="cal-med" style="border-color:rgba(var(--g-rgb),.28);background:linear-gradient(140deg,rgba(var(--g-rgb),.1),transparent 75%)">'+
@@ -12266,8 +12309,7 @@ function renderCalendario(){
 }
 
 // ─── PANEL DE INVERSIÓN DEL LUNES (2026-08-18) ───────────────────────────────
-// Se abre tocando el bloque "Bolsa GBM" en Mi Día. Solo existe los lunes, que es el
-// único día que ese bloque aparece en la rutina.
+// Se abre tocando su tarjeta en Mi Día o «Ver el plan» en Tu estrategia de hoy.
 //
 // Qué es REAL y qué no, para no vender humo:
 //  · BTC en vivo → api.coingecko.com, la misma que ya usa Finanzas.
@@ -12361,11 +12403,9 @@ function pasoInversionHoy(){
   const deudaCara = window.CIFRAS ? CIFRAS.deudasConInteres(F).reduce((s,d)=>s+(+d.balance||0),0) : 0;
   const mon = n => money(n);
 
-  // El orden del plan (Adán, 5-oct-2026, y el prompt del Plan Maestro): la BBVA quincena a quincena
-  // hasta cero; después todo a GBM. El fondo de emergencia va aparte, en CETES, y el plan no le mete
-  // dinero: aquí solo se dice cuánto lleva de su meta. El BYD se paga con su mensualidad: no se
-  // adelanta. Antes la regla ponía el fondo primero y, completo el fondo, mandaba «no a GBM» por el
-  // BYD hasta 2031.
+  // El orden del plan (Adán, 24-nov-2026: "quiero pagar mi carro primero y después ahorrar"): la BBVA si tiene saldo; después
+  // el colchón hasta `PROYECTO.colchon`, el BYD a capital hasta cero y, desde ahí, a invertir. El paso, los montos y las fechas
+  // los dice el plan del maestro (`pasoAhorro`, `ahorroDia`, `planAhorro`).
   const tc = (F.debts||[]).find(d=>d.id==='d001'), bbvaSaldo = tc ? (+tc.balance||0) : 0;
   const B = bbvaPlan(), bbvaFin = B ? B.fin.toLocaleDateString('es-MX',{day:'numeric',month:'short'}) : '';
   // Los abonos que faltan, de la misma ruta que el Plan Maestro (`CIFRAS.planBbva`): el de hoy es la acción del día
@@ -12379,33 +12419,54 @@ function pasoInversionHoy(){
   const sumHoy = deHoy.reduce((t,a)=>t+a.monto,0);
   const abonos = (deHoy.length ? resto : resto.slice(1)).slice(0, 3).map(a=>'<b>'+diaCorto(a.fecha)+'</b> · '+mon(a.monto)+' ('+(DE[a.de]||'')+')');
   const faltaEf = Math.max(0, metaEf-ef);
-  let color, que, titulo, origen = '', porque, hoy, nota, notaIco, fondo, foto;
+  let color, que, titulo, origen = '', porque, hoy, nota, notaIco, fondo, foto, corto, det, pie;
   if(bbvaSaldo > 0){
     color = 'var(--r)'; foto = 'inv-crece';
-    que = 'Tu plan para juntar el dinero de Alemania: primero liquidas la tarjeta de crédito y después inviertes.';
+    que = 'Tu plan para irte a Alemania sin deudas: primero liquidas la tarjeta de crédito.';
     titulo = deHoy.length ? 'Hoy: paga '+mon(sumHoy)+' a tu tarjeta BBVA' : 'Hoy no te toca pagar la tarjeta';
     origen = deHoy.length ? (ORIGEN[deHoy[0].de]||'') : (resto[0] ? 'Tu siguiente pago es el <b>'+diaCorto(resto[0].fecha)+'</b>: '+mon(resto[0].monto)+'.' : '');
     porque = 'Debes <b>'+mon(bbvaSaldo)+'</b>'+(deHoy.length?'; con este pago te quedan <b>'+mon(Math.max(0, bbvaSaldo-sumHoy))+'</b>':'')+'.'
       +(bbvaFin?' Si sigues el plan, terminas de pagarla el <b>'+bbvaFin+'</b>, sin pagar intereses.':'');
     hoy = '<b>Mientras tengas esta deuda, no compres inversiones.</b>';
-    notaIco = 'sigue'; nota = 'Después: invertir cada quincena en GBM, tu cuenta de inversiones.';
+    notaIco = 'sigue'; nota = 'Después: tu colchón, el BYD y a invertir, en ese orden.';
     fondo = 'Tus CETES se quedan como están: <b>'+mon(cetes)+'</b>, para emergencias.';
   }else{
-    color = 'var(--g)'; foto = 'inv-bolsa';
-    que = 'Tu plan para juntar el dinero de Alemania: ya sin deuda de tarjeta, todo lo que ahorras se invierte.';
-    titulo = 'Hoy sí inviertes: todo va a GBM';
-    porque = 'Lo que te sobra de cada quincena y lo que apartas de Didi va a tu cuenta de inversiones en GBM.';
-    hoy = 'Sigue tu reparto, <b>sin pensarlo dos veces</b>.';
-    notaIco = 'meta'; nota = 'El auto no se adelanta: se paga con su mensualidad normal.';
+    const paso = CIFRAS.pasoAhorro(hoyK), hd = ahDia(hoyK), sg = ahSig(hoyK), car = (F.debts||[]).find(d=>d.id==='d003'), debe = car ? +car.balance||0 : 0;
+    const tope = CIFRAS.n('colchonPlan')||0, sigTxt = sg ? 'Siguiente: <b>'+diaCorto(sg.fecha)+'</b>, '+ahTxt(sg, mon) : '';
+    que = 'Tu plan para irte a Alemania en septiembre de 2028 sin deudas: el colchón, el BYD y a invertir.';
+    titulo = hd && hd.monto >= 1 ? 'Hoy manda '+ahTxt(hd, mon) : 'Hoy no te toca apartar';
+    origen = sigTxt; notaIco = 'sigue';
+    if(paso === 'colchon'){
+      color = 'var(--cy)'; foto = 'fase-alcancia';
+      porque = 'Vas en el paso 1 de 3: tu colchón lleva <b>'+mon(ef)+'</b> de <b>'+mon(tope)+'</b>'+(CIFRAS.planAhorro().lleno ? ' y se llena el <b>'+CIFRAS.v('colchonFecha')+'</b>' : '')+'.';
+      hoy = '<b>Todavía no compres bolsa ni cripto:</b> siguen el BYD y, después, la inversión.';
+      nota = 'Después: todo al BYD, hasta dejarlo en cero.';
+      corto = hd && hd.monto >= 1 ? 'Manda '+ahTxt(hd, mon) : 'Primero, tu colchón';
+      det = 'Llevas <b>'+mon(ef)+'</b> de <b>'+mon(tope)+'</b>; se llena el <b>'+CIFRAS.v('colchonFecha')+'</b> y después todo va al BYD.';
+    }else if(paso === 'auto'){
+      color = 'var(--o)'; foto = 'fase-auto';
+      porque = 'Vas en el paso 2 de 3: del BYD debes <b>'+mon(debe)+'</b> y, si sigues el plan, queda en cero el <b>'+CIFRAS.v('autoCero')+'</b>.';
+      hoy = '<b>Todavía no compres bolsa ni cripto:</b> cada peso al BYD deja de pagar '+CIFRAS.v('autoTasa')+' al año.';
+      nota = 'Después: todo a invertir, hasta irte.';
+      corto = hd && hd.monto >= 1 ? 'Manda '+ahTxt(hd, mon) : 'Todo al BYD, a capital';
+      det = 'Debes <b>'+mon(debe)+'</b>; con tu plan queda en cero el <b>'+CIFRAS.v('autoCero')+'</b> y te ahorras <b>'+mon(CIFRAS.n('autoAhorra')||0)+'</b> de interés.';
+    }else{
+      color = 'var(--g)'; foto = 'inv-bolsa';
+      porque = 'Vas en el paso 3 de 3: el BYD ya está en cero y todo lo que apartas se invierte, <b>'+CIFRAS.v('bolsaPct')+' %</b> en la bolsa y <b>'+CIFRAS.v('criptoPct')+' %</b> en cripto.';
+      hoy = 'Sigue tu reparto, <b>sin pensarlo dos veces</b>.';
+      nota = hoyK.slice(0,7) >= CIFRAS.LIQUIDO_DESDE ? 'La cuenta bloqueada ya se está pasando a algo que no baje.' : 'Desde febrero de 2028, la cuenta bloqueada pasa a algo que no baje.';
+      corto = hd && hd.gbm >= 1 ? 'Hoy inviertes '+mon(hd.gbm) : 'Todo a invertir';
+      det = 'El BYD ya está en cero: inviertes <b>'+mon(CIFRAS.n('invertirMes')||0)+'</b> al mes, '+CIFRAS.v('bolsaPct')+' % en bolsa y '+CIFRAS.v('criptoPct')+' % en cripto.';
+    }
+    pie = sigTxt || nota;
     fondo = faltaEf>0 ? 'Tu fondo para emergencias lleva <b>'+mon(ef)+'</b> de <b>'+mon(metaEf)+'</b>, entre cuenta, efectivo y CETES.' : 'Tu fondo para emergencias está completo: <b>'+mon(ef)+'</b> entre cuenta, efectivo y CETES.';
   }
   // La tarjeta de Mi Día, en simple: la acción en grande, un detalle que dice de qué se trata el plan y el pie.
-  const corto = bbvaSaldo > 0 ? (deHoy.length ? 'Paga '+mon(sumHoy)+' a tu tarjeta BBVA' : 'Hoy no toca pagar la tarjeta') : 'Hoy sí inviertes en GBM';
-  const det = bbvaSaldo > 0
-    ? 'Primero liquidas la tarjeta y después inviertes: '+(deHoy.length ? 'con este pago te quedarán <b>'+mon(Math.max(0, bbvaSaldo-sumHoy))+'</b>' : 'debes <b>'+mon(bbvaSaldo)+'</b>')+(bbvaFin ? ' y queda en cero el <b>'+bbvaFin+'</b>.' : '.')
-    : 'Ya sin deuda de tarjeta, lo que te sobra de la quincena y de Didi va a tu cuenta de inversiones.';
-  const pie = bbvaSaldo > 0 ? (deHoy.length || !resto[0] ? 'Mientras tengas deuda, no compres inversiones' : 'Siguiente pago: <b>'+diaCorto(resto[0].fecha)+'</b>, '+mon(resto[0].monto))
-    : 'Sigue tu reparto, sin pensarlo dos veces';
+  if(bbvaSaldo > 0){
+    corto = deHoy.length ? 'Paga '+mon(sumHoy)+' a tu tarjeta BBVA' : 'Hoy no toca pagar la tarjeta';
+    det = 'Primero liquidas la tarjeta: '+(deHoy.length ? 'con este pago te quedarán <b>'+mon(Math.max(0, bbvaSaldo-sumHoy))+'</b>' : 'debes <b>'+mon(bbvaSaldo)+'</b>')+(bbvaFin ? ' y queda en cero el <b>'+bbvaFin+'</b>.' : '.');
+    pie = deHoy.length || !resto[0] ? 'Mientras tengas deuda, no compres inversiones' : 'Siguiente pago: <b>'+diaCorto(resto[0].fecha)+'</b>, '+mon(resto[0].monto);
+  }
   return {F, inv, ef, metaEf, totalInv, cetes, deudaCara, mon, color, que, titulo, origen, porque, hoy, nota, notaIco, fondo, foto, corto, det, pie, abonos: bbvaSaldo > 0 ? abonos : []};
 }
 
@@ -12413,7 +12474,7 @@ function pasoInversionHoy(){
 // Adán, 17-nov-2026: "en qué invertir hoy también depende de la IA y eso ya no lo quiero, redesign esa sección…
 // ponle la habilidad de que me muestre noticias concretas de recomendaciones en qué invertir, ya no quiero depender
 // de mi suscripción a Claude". Nada de este panel lo escribe una IA:
-//   · El dinero de este mes a GBM y sus envíos salen del plan (CIFRAS.gbmMes), el mismo calendario de Finanzas.
+//   · Lo que se aparta este mes, con su destino, sale del plan (CIFRAS.gbmMes), el mismo calendario de Finanzas.
 //   · Qué comprar lo decide tu reparto (`finanzasmx_v2.reparto`, o CIFRAS.REPARTO_BASE mientras no escribas el tuyo):
 //     cada renglón con su porcentaje se vuelve pesos de este mes. Se edita aquí donde Finanzas es propia (la PC) y
 //     viaja al iPad con la copia de Finanzas.
@@ -12612,23 +12673,30 @@ function qiHace(iso){
 }
 function qiGoogle(q, dias){ return 'https://news.google.com/search?q=' + encodeURIComponent(q + (dias ? ' when:' + dias + 'd' : '')) + '&hl=es-419&gl=MX&ceid=MX:es-419'; }
 
-// Este mes a GBM: lo que manda el plan y cada envío con su día; el de hoy, marcado.
+// Este mes: lo que apartas, partido en a dónde va —el colchón, el BYD y a invertir— y cada envío con su día; el de hoy, marcado.
 function qiMesHtml(){
   const C = window.CIFRAS; if(!C || !C.gbmMes) return '';
-  const k = hoyLocal(), ym = k.slice(0, 7), hoyN = +k.slice(8), G = C.gbmMes(ym);
-  const MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'], mes = MC[+ym.slice(5) - 1];
-  const envios = G.semanas.flatMap(w => w.gbm || []).filter(e => +e.mxn > 0).sort((a, b) => a.dia - b.dia);
-  const sig = envios.find(e => e.dia >= hoyN);
-  return '<div class="qi-mes"><div class="qi-mes-cab"><span class="qi-lbl">Este mes a GBM, según tu plan</span>'+
-      '<b class="qi-mes-n">'+money(G.aGbm)+'</b>'+
-      (G.aBbva > 0 ? '<span class="qi-mes-s">y '+money(G.aBbva)+' a la BBVA</span>' : '')+'</div>'+
-    '<div class="qi-envios">'+envios.map(e => '<span class="qi-env'+(e.dia < hoyN ? ' paso' : e === sig ? ' sig' : '')+'">'+
-      '<i>'+(e.dia === hoyN ? 'hoy' : e.dia+' '+mes)+'</i><b>'+money(e.mxn)+'</b><em>'+esc(e.t)+'</em></span>').join('')+'</div></div>';
+  const k = hoyLocal(), ym = k.slice(0, 7), hoyN = +k.slice(8), p = ym.split('-').map(Number), n = new Date(p[0], p[1], 0).getDate();
+  // El mes que ya no tiene envíos enseña el que sigue.
+  const de = m => { const G = C.gbmMes(m), L = G.semanas.flatMap(w => w.todo.filter(e => m+'-'+String(e.dia).padStart(2,'0') >= C.PROYECTO.planDesde)), s = q => L.reduce((z, e) => z + (e.destino === q ? e.mxn : 0), 0); return { mes: m, todo: L, aColchon: s('colchon'), aAuto: s('auto'), aGbm: s('gbm'), aBbva: G.aBbva, total: L.reduce((z, e) => z + e.mxn, 0) }; }, sigM = new Date(p[0], p[1], 1), ymS = sigM.getFullYear()+'-'+String(sigM.getMonth()+1).padStart(2,'0');
+  const G0 = de(ym), G = G0.todo.some(e => e.dia >= hoyN) ? G0 : de(ymS), es = G.mes === ym;
+  const MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'], mes = MC[+G.mes.slice(5) - 1];
+  const envios = G.todo.filter(e => +e.mxn > 0).sort((a, b) => a.dia - b.dia);
+  const sig = envios.find(e => !es || e.dia >= hoyN), T = { colchon: 'al colchón', auto: 'al BYD', gbm: 'a invertir' };
+  const part = [['aColchon','colchon'],['aAuto','auto'],['aGbm','gbm']].filter(q => G[q[0]] >= 1).map(q => money(G[q[0]])+' '+T[q[1]]);
+  return '<div class="qi-mes"><div class="qi-mes-cab"><span class="qi-lbl">'+(es ? 'Este mes apartas' : 'En '+MES_LABEL_FULL[+G.mes.slice(5)-1].toLowerCase()+' apartas')+'</span>'+
+      '<b class="qi-mes-n">'+money(G.total)+'</b>'+
+      '<span class="qi-mes-s">'+part.join(' · ')+(G.aBbva > 0 && ((D.fin && D.fin.debts) || []).some(d => d.id === 'd001' && +d.balance > 0.5) ? ' · y '+money(G.aBbva)+' a la BBVA' : '')+'</span></div>'+
+    '<div class="qi-envios">'+envios.map(e => '<span class="qi-env'+(es && e.dia < hoyN ? ' paso' : e === sig ? ' sig' : '')+'">'+
+      '<i>'+(es && e.dia === hoyN ? 'hoy' : e.dia+' '+mes)+'</i><b>'+money(e.mxn)+'</b><em>'+esc(e.t)+', '+T[e.destino]+'</em></span>').join('')+'</div></div>'+
+    '<div class="qi-ruta">'+[['colchon','1 · El colchón',C.v('colchonPlan'),'se llena el '+C.v('colchonFecha')],['auto','2 · El BYD en cero',C.v('autoAhorra'),'de interés que te ahorras; el '+C.v('autoCero')],
+      ['gbm','3 · A invertir',C.v('invertirMes'),'al mes, hasta irte en septiembre de 2028']].map(x => '<span class="'+(x[0] === C.pasoAhorro(k) ? 'on' : '')+'"><b>'+x[1]+'</b><i>'+(privado ? money(1) : x[2])+'</i><em>'+x[3]+'</em></span>').join('')+'</div>';
 }
 
 // En qué va: tu reparto, cada renglón en pesos de este mes. Con «Cambiar mi reparto», el editor en su lugar.
 function qiRepartoHtml(){
-  const C = window.CIFRAS, ym = hoyLocal().slice(0, 7), monto = C && C.gbmMes ? C.gbmMes(ym).aGbm : 0;
+  // Mientras el BYD deba, el reparto se enseña con lo que vas a invertir al mes desde que quede en cero.
+  const C = window.CIFRAS, ym = hoyLocal().slice(0, 7), hoyInv = C && C.pasoAhorro && C.pasoAhorro() === 'gbm' ? C.gbmMes(ym).aGbm : 0, luego = !(hoyInv >= 1), monto = luego && C ? C.n('invertirMes') || 0 : hoyInv;
   const editable = tiEditable();
   if(_qiBorrador && editable) return qiEditorHtml();
   const R = qiReparto(), tot = R.reduce((s, x) => s + (+x.pct || 0), 0) || 100;
@@ -12637,8 +12705,8 @@ function qiRepartoHtml(){
     return '<div class="qi-r"><span class="qi-r-c" style="background:'+QI_COL[i % QI_COL.length]+'"></span>'+
       '<span class="qi-r-n"><b>'+esc(x.n)+'</b><i>'+esc([x.donde, x.porque].filter(Boolean).join(' · '))+'</i></span>'+
       '<span class="qi-r-p">'+(Math.round(pct * 10) / 10).toLocaleString('es-MX')+' %</span><b class="qi-r-m">'+money(monto * pct / 100)+'</b></div>'; }).join('');
-  return '<div class="qi-sec"><div class="qi-sec-cab"><span class="qi-lbl">Qué comprar con eso</span>'+
-      '<span class="qi-sec-s">'+(qiRepartoEsTuyo() ? 'tu reparto' : 'el reparto de base del plan: escribe el tuyo')+'</span>'+
+  return '<div class="qi-sec"><div class="qi-sec-cab"><span class="qi-lbl">'+(luego ? 'Qué vas a comprar, desde que el BYD quede en cero' : 'Qué comprar con eso')+'</span>'+
+      '<span class="qi-sec-s">'+(qiRepartoEsTuyo() ? 'tu reparto' : 'el reparto de base del plan: escribe el tuyo')+(luego ? ', con lo que inviertes al mes' : '')+'</span>'+
       (editable ? '<button type="button" class="ce-btn sec" onclick="qiEditar()">Cambiar mi reparto</button>' : '')+'</div>'+
     barra+'<div class="qi-rs">'+filas+'</div>'+
     (editable ? '' : '<p class="qi-nota">Tu reparto se cambia en tu PC y llega aquí con el siguiente commit.</p>')+'</div>';
@@ -12713,14 +12781,14 @@ function qiLadoHtml(){
       '<button type="button" class="ce-btn" onclick="cerrarGBM();abrirKpi(\'invertido\')">Registrar una compra →</button></div>'+
     '<div class="qi-sec"><span class="qi-lbl">Dónde comprar</span><div class="qi-links">'+GBM_LINKS.map(l =>
       '<a href="'+l.u+'" target="_blank" rel="noopener"><b>'+l.t+' ↗</b><span>'+l.d+'</span></a>').join('')+'</div></div>'+
-    '<p class="qi-regla"><b>La regla:</b> compra el día que llega el dinero, sin esperar el momento perfecto. Las noticias te informan; '+
+    '<p class="qi-regla"><b>La regla:</b> nada se compra antes de que el BYD quede en cero; desde ahí, el día que llega el dinero, sin esperar el momento perfecto. Las noticias te informan; '+
       'tu reparto decide. Cámbialo solo si cambia tu plan, no por un titular.</p>';
 }
 
 function renderGBMPanel(){
   const b = document.getElementById('gbmBody');
   if(!b) return;
-  // Lo de hoy con la misma regla que la tarjeta de Mi Día (pasoInversionHoy): si toca pagar la tarjeta o invertir.
+  // Lo de hoy con la misma regla que la tarjeta de Mi Día (pasoInversionHoy): el colchón, el BYD o invertir.
   const P = pasoInversionHoy();
   const hoy = '<div class="qi-hoy" style="--c:'+P.color+'"><b>'+P.titulo+'</b><span>'+P.porque+'</span></div>';
   b.innerHTML = '<div class="qi"><div class="qi-main">'+hoy+qiMesHtml()+'<div id="qiReparto">'+qiRepartoHtml()+'</div>'+
@@ -13351,7 +13419,7 @@ const META_DETALLE={
         "<b>La inspección técnica (HU, la del TÜV)</b> se hace cada dos años; un auto nuevo, la primera a los tres.",
         "El seguro depende de tu historial sin siniestros (<i>Schadenfreiheitsklasse</i>). Pide a tu aseguradora en México una carta de tu historial: algunas aseguradoras alemanas la reconocen.",
         "En Alemania se usa mucho el <b>leasing</b>. Haz la cuenta completa antes: al final del contrato no te quedas con el coche."]},
-      {t:"Redirige el pago del BYD",d:"Cuando el BYD esté liquidado, ese mismo monto —ya estás acostumbrado a vivir sin él— va a un fondo aparte para el Cupra. Es la forma más fácil de ahorrar: no cambias nada de tu vida."},
+      {t:"Con sueldo de ingeniero, un fondo aparte",d:"El BYD queda en cero en {{autoCeroMes}} y, hasta irte, su mensualidad de {{autoPago}} se invierte. Cuando tengas sueldo de ingeniero, ese mismo monto —ya estás acostumbrado a vivir sin él— va a un fondo aparte para el Cupra."},
       {t:"Revisa el precio real",d:"Cada 6 meses, el número exacto en la página oficial de CUPRA o en la agencia: el precio, la versión y lo que cuesta asegurarlo. Una meta con número se cumple; una con idea vaga, no.",foto:"fotos-aprende/fase-cupra.jpg",list:[
         "Haz una prueba de manejo antes de decidir la versión: el e-HYBRID y el de gasolina se sienten distintos.",
         "Compara contra dos rivales de su segmento. Si el Cupra sigue ganando con números en la mano, es tu coche."]},
@@ -13402,7 +13470,7 @@ const META_DETALLE={
         "Los bancos quieren que esos gastos y una parte del precio los pongas tú (<i>Eigenkapital</i>).",
         "La <b>SCHUFA</b> es tu buró de crédito allá. Al llegar no tienes historial: una cuenta, un contrato de celular y pagos a tiempo lo empiezan a construir.",
         "Portales para ver precios reales: ImmoScout24 e Immowelt."]},
-      {t:"Base del enganche",d:"El fondo de emergencia a {{fondoMeta}} más las inversiones (GBM, CETES): entre más patrimonio acumules, menos hipoteca necesitas. Cuando la deuda cara esté en $0, aparta un porcentaje fijo del ingreso solo para el enganche.",foto:"fotos-aprende/fase-alcancia.jpg"},
+      {t:"Base del enganche",d:"El fondo de emergencia a {{fondoMeta}} más tus inversiones: entre más patrimonio acumules, menos hipoteca necesitas. Con sueldo de ingeniero y el millón en su trayectoria, aparta un porcentaje fijo del ingreso solo para el enganche.",foto:"fotos-aprende/fase-alcancia.jpg"},
       {t:"Elige la zona como un inversionista",d:"La zona decide cuánto vale tu depa en 10 años más que los acabados.",foto:"fotos-aprende/fase-depa.jpg",list:[
         "Transporte a menos de 10 minutos caminando, servicios cerca y obras públicas planeadas: eso sube el valor.",
         "Visítala de noche y en fin de semana: ruido, seguridad y estacionamiento cambian mucho.",
@@ -13439,7 +13507,7 @@ const META_DETALLE={
         "Gane o pierda, el día que te subes al ring la meta está cumplida."]},
       {t:"💸 Lo que cuesta, con números reales",d:"Cotizado el 17-ago-2026. <b>Vuelo redondo CDMX → Bangkok: $16,500-$27,500 MXN</b> en octubre, y <b>abril es el mes más barato (~$11,300)</b>. No hay vuelos directos y el trayecto son ~27 horas con escalas. Presupuesto para <b>1 mes de campamento</b>: vuelo ~$22,000 · Santai (entrenamiento 2 veces al día + alojamiento, ~$665 USD) ~$12,500 · comida ~$5,600 · vuelo interno a Chiang Mai o Phuket ~$1,500 · seguro de viaje ~$1,500 · margen ~$5,000. <b>Total: ~$48,000 MXN.</b> Vuelve a cotizar cuando tengas fecha.",foto:"fotos-aprende/fase-tailandia.jpg"},
       {t:"📅 Cuánto ahorrar al mes",d:"Sobre los ~$48,000: <b>a 24 meses son $2,000 al mes</b>, <b>a 18 meses $2,670</b>, <b>a 12 meses $4,000</b>. Guárdalo en una cuenta aparte de tu fondo de emergencia: si vive en la misma cuenta, se gasta. La condición no es la fecha, es que tu deuda cara esté resuelta: pagar 40 % de interés mientras ahorras para un viaje es perder dinero dos veces."},
-      {t:"🗓️ La ventana que conviene",d:"<b>Apunta a abril.</b> Es el mes más barato para volar y cae en temporada seca, antes de las lluvias de mayo. Evita julio a octubre: es temporada de monzón y entrenar con esa humedad es otro deporte. Con el Plan Maestro, la ventana es <b>abril de 2030</b>, en la Fase 4: ya con sueldo en Alemania, el vuelo es más corto y un contrato típico allá da de 25 a 30 días de vacaciones."},
+      {t:"🗓️ La ventana que conviene",d:"<b>Apunta a abril.</b> Es el mes más barato para volar y cae en temporada seca, antes de las lluvias de mayo. Evita julio a octubre: es temporada de monzón y entrenar con esa humedad es otro deporte. Con el Plan Maestro, la ventana es <b>abril de 2031</b>, en la Fase 4: ya con sueldo en Alemania, el vuelo es más corto y un contrato típico allá da de 25 a 30 días de vacaciones."},
       {t:"📋 Trámites antes de comprar el boleto",d:"Con pasaporte mexicano <b>no necesitas visa para turismo</b> hasta 60 días (verifícalo en la embajada antes de viajar: esto cambia). Tu pasaporte debe tener <b>6 meses de vigencia</b> desde la fecha de entrada.",list:[
         "Contrata un seguro de viaje <b>que cubra deportes de contacto</b>: el normal excluye el Muay Thai, y ahí está justo el riesgo.",
         "Hazte un chequeo médico antes: los campamentos serios te lo van a pedir para dejarte pelear."]},
@@ -13536,7 +13604,7 @@ const META_DETALLE={
         "Si puedes elegir entre dos lanzamientos, el que regresa vale el doble."]},
       {t:"Tu visa: ya la tienes, cuídala",d:"Con tu visa de turista entras a California y a Puerto Rico. Lo que falta es que cubra tus fechas.",foto:"fotos-aprende/fase-visa.jpg",fotoLado:1,cifras:[["1 sola","para California y Puerto Rico"],["US$185","renovarla, si vence pronto ({{visaUsa}})"],["4.5 meses","tardaba la cita en CDMX en octubre de 2026"]],list:[
         "<b>Revisa esta semana</b> hasta cuándo valen la visa y el pasaporte.",
-        "<b>Si vence antes de 2029,</b> renuévala desde México y antes de irte a Alemania.",
+        "<b>Si vence antes de 2030,</b> renuévala desde México y antes de irte a Alemania.",
         "<b>Si renovaste pasaporte,</b> viaja con los dos: la visa vigente sirve aunque esté en el anterior.",
         "<b>Al entrar</b> te preguntan a qué vas, cuántos días y dónde te quedas. Di la verdad: visitar a tu familia; ten a la mano su dirección y tu regreso.",
         "<b>Dos viajes seguidos a Estados Unidos</b> (California y Puerto Rico) son normales si cada uno tiene su regreso y sigues trabajando en México."],href:"https://ais.usvisa-info.com/es-mx/niv",label:"Renovar la visa · sitio oficial"},
@@ -13651,10 +13719,10 @@ const META_DETALLE={
         "<b>Si la dejas vencer,</b> recuperarla pide horas: 3 si pasan menos de seis meses y hasta 20 con los años, más teoría.",
         "<b>Si te mudas a Alemania,</b> la mexicana no vale directo: pasarla a la europea pide 100 horas en helicóptero y exámenes (así lo exigen Suiza y Suecia).",
         "<b>La regla que te cuida:</b> si no puedes pagar esa hora al mes, todavía no es momento de empezar."]},
-      {t:"Cuándo hacerla: las tres ventanas",d:"Solo en CDMX significa hacerla <b>cuando vivas aquí o vengas a propósito</b>. Son tres opciones, y la salida se decide el {{decisionMaestria}}.",foto:"fotos-aprende/fase-calendario.jpg",fotoLado:1,cifras:[["No cabe","antes de irte en 2027"],["Una parte","si la salida pasa a 2028"],["Dic 2030","en tus vacaciones: la de tu plan"]],list:[
-        "<b>Antes de septiembre de 2027:</b> no. Cuesta más que todo lo que te falta para la salida, y la escuela dura siete meses.",
-        "<b>Si te vas en 2028:</b> al salir, con tu ritmo, {{salida2028}}. La teoría ({{heliTeoria}}) se podría tomar aquí en 2027-2028 y dejar el vuelo para después: el permiso de formación dura dos años.",
-        "<b>Ya con sueldo de ingeniero:</b> apartas desde marzo de 2029, tomas la teoría en línea si la escuela la da, y vuelas cinco o seis semanas en Toluca, en noviembre y diciembre de 2030, con tus vacaciones de un contrato alemán.",
+      {t:"Cuándo hacerla: las tres ventanas",d:"Solo en CDMX significa hacerla <b>cuando vivas aquí o vengas a propósito</b>. Son tres opciones; tu plan trae la tercera.",foto:"fotos-aprende/fase-calendario.jpg",fotoLado:1,cifras:[["No cabe","volar antes de irte"],["Solo la teoría","en 2027-2028, si cabe en tu semana"],["Dic 2031","en tus vacaciones: la de tu plan"]],list:[
+        "<b>Volar antes de irte:</b> no. Cuesta {{heliCosto35}}: más de lo que tu plan lleva a Alemania, {{dineroSalida}}.",
+        "<b>La teoría sola, en 2027-2028:</b> son {{heliTeoria}} y unas 30 horas a la semana; con ALTEN y Didi solo cabe si la dan en línea o en sábado. El permiso de formación dura dos años: si la tomas muy pronto, se vence antes de volar.",
+        "<b>Ya con sueldo de ingeniero:</b> apartas desde marzo de 2030, tomas la teoría en línea si la escuela la da, y vuelas cinco o seis semanas en Toluca, en noviembre y diciembre de 2031, con tus vacaciones de un contrato alemán.",
         "Tu caso: el plan trae la tercera. Si la escuela te dice que la teoría no puede ser en línea, se mueve a cuando regreses a vivir a México."]},
       {t:"✅ Ya lo dominas cuando…",d:"Cinco señales que se pueden comprobar:",foto:"fotos-viajes/heli-bell206.jpg",fotoLado:1,ancha:1,pie:"Un Bell 206, el modelo con el que enseñan en Toluca y en Temixco.",cred:"ClearFrost · CC BY-SA 2.0 · Flickr",list:[
         "<b>(1)</b> Tienes cuatro cotizaciones por escrito, con los mismos doce datos.",
@@ -13668,21 +13736,29 @@ const META_DETALLE={
         "<b>Cyclic &amp; Collective</b> · Shawn Coyle — lo que un piloto de pruebas quisiera que supieras.",
         "<b>Chickenhawk</b> · Robert Mason — memorias de un piloto en Vietnam: la mejor descripción escrita de aprender a volar un helicóptero."]},
     ]},
-  maestria:{titulo:"Maestría en Alemania",frase:"La maestría tiene fecha y condición: septiembre de 2027 si el dinero llega; si no, 2028, con todo pagado. Y del otro lado te espera la región automotriz más importante de Europa.",pasos:[
-      {t:"La fecha y su condición",d:"Te vas en septiembre de 2027 ({{maestriaInicio}}) si el dinero llega: la pausa terminó, todo el ahorro va a GBM y, con tu ritmo, faltan {{extraSalida}} al mes de ingreso nuevo desde noviembre. Lo que hay que reunir —{{salidaTotal}}— y la lista completa de papeles, salud, ropa y el auto están en Coach → Plan Maestro; el avance de hoy, en el medidor 🎓 Fondo Maestría de esta pantalla.",foto:"fotos-aprende/meta-esslingen.jpg"},
+  maestria:{titulo:"Maestría en Alemania",frase:"Te vas en septiembre de 2028 sin deber nada: el colchón, el BYD en cero y todo a invertir. Y del otro lado te espera la región automotriz más importante de Europa.",pasos:[
+      {t:"La fecha y el orden",d:"Te vas en septiembre de 2028 ({{maestriaInicio}}) y el orden no se salta: primero tu colchón, después el BYD y, con el BYD en cero, a invertir hasta irte. Reunir lo que cuesta irte —{{salidaTotal}}— y la lista completa de papeles, salud, ropa y el auto están en Coach → Plan Maestro; el avance de hoy, en el medidor 🎓 Fondo Maestría de esta pantalla.",foto:"fotos-aprende/meta-esslingen.jpg",cifras:[["{{colchonPlan}}","tu colchón, el {{colchonFecha}}"],["{{autoCero}}","el BYD en cero"],["{{dineroSalida}}","al irte, con los trámites pagados"]],list:[
+        "<b>Por qué el carro va primero:</b> abonar te ahorra {{autoAhorra}} de interés, seguro; y te vas sin deuda.",
+        "<b>Desde que quede en cero</b> inviertes {{invertirMes}} al mes, {{bolsaPct}} % en la bolsa y {{criptoPct}} % en cripto: hasta agosto de 2028 rinden {{rindeSalida}} si se cumple el supuesto del plan.",
+        "<b>Lo que pide la salida</b> es {{salidaAgosto}}; con tu plan, {{salidaVeredicto}}."]},
+      {t:"La otra puerta: irte con ALTEN",d:"Para septiembre de 2028 cumples dos años en {{empleador}}. Si te mueven a Alemania con contrato, te vas con sueldo de ingeniero desde el primer mes, sin cuenta bloqueada ni colegiatura.",foto:"fotos-aprende/sk-datos.jpg",cifras:[["€50,700","al año pedía la Blue Card en 2026"],["€45,934","en las áreas con escasez"],["B1","el alemán que más pesa"]],list:[
+        "<b>Febrero de 2027:</b> pregunta por escrito qué piden, a qué ciudad, con qué sueldo y con qué visa.",
+        "<b>Junio de 2027:</b> pide una meta escrita —qué certificado, qué proyecto, qué fecha— y quién la firma.",
+        "<b>Febrero de 2028:</b> el traslado formal, con tus resultados, el CT-GenAI, tu repositorio y tu alemán.",
+        "<b>Antes de firmar:</b> el sueldo contra el mínimo de la Blue Card de 2028 —cambia cada enero— y quién paga la visa y la mudanza."],href:"https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",label:"EU Blue Card · Make it in Germany"},
       {t:"Por qué Esslingen y por qué Stuttgart",d:"Esslingen está a unos 15 km de <b>Stuttgart</b>, el corazón automotriz de Alemania: ahí tienen su sede <b>Mercedes-Benz</b> y <b>Porsche</b>, y <b>Bosch</b> la tiene en Gerlingen, a las afueras. Vas a estudiar donde se diseñan los autos que hoy pruebas.",foto:"https://commons.wikimedia.org/wiki/Special:FilePath/Esslingen_a.N._-_Altstadt_-_Innere_Br%C3%BCcke_und_Maille_-_Ansicht_vom_S%C3%BCdturm_St._Dionys.jpg?width=1280",pie:"El centro histórico de Esslingen y el río Neckar, desde la torre de St. Dionys.",list:[
         "Su <b>Industry Advisory Board</b> incluye a Mercedes-Benz, Bosch y Porsche, y tienen la beca «BMW SpeedUp» solo para sus estudiantes.",
         "Tu caso: tu experiencia en Bosch y Continental con ALTEN ya habla el idioma de esas empresas."]},
-      {t:"Esslingen · Automotive Systems",d:"Maestría en inglés, 3 semestres, para ingenieros automotrices, mecánicos, mecatrónicos o eléctricos: prueba de inglés, CV y dos cartas de recomendación. Solicitud del 4 nov al 31 mar en el portal de la Graduate School; respuesta antes de fin de mayo; inicio en septiembre.",cifras:[["3","semestres"],["{{colegiaturaEur}}","por semestre, con cuotas"],["31 mar","cierra la solicitud"]],list:[
+      {t:"Esslingen · Automotive Systems",d:"Maestría en inglés, 3 semestres, para ingenieros automotrices, mecánicos, mecatrónicos o eléctricos: prueba de inglés, CV y dos cartas de recomendación. Solicitud del 2 nov al 31 mar en el portal de la Graduate School; respuesta antes de fin de mayo; inicio en septiembre.",cifras:[["3","semestres"],["{{colegiaturaEur}}","por semestre, con cuotas"],["31 mar","cierra la solicitud"]],list:[
         "La colegiatura para quien viene de fuera de la UE es de €1,500 por semestre; con las cuotas de la universidad, {{colegiaturaEur}}.",
         "Las dos cartas de recomendación son lo que más tarda: pídelas con tiempo y con un borrador de lo que necesitas que digan."],href:"https://www.hs-esslingen.de/en/international/coming-to-esslingen-uas/international-masters-programmes-graduate-school/master-degree-programmes/automotive-systems-meng",label:"Automotive Systems M.Eng. — Esslingen"},
-      {t:"Sigue con tu alemán",d:"La maestría es en inglés, pero la vida es en alemán. Esslingen pide A2 antes de terminar el 2º semestre: preséntalo en México (Goethe o telc) antes de irte y llegas con el requisito cumplido.",foto:"fotos-aprende/de-f-basico.jpg",list:[
+      {t:"Sigue con tu alemán",d:"La maestría es en inglés, pero la vida es en alemán. Esslingen pide A2 antes de terminar el 2º semestre y ALTEN te mueve mejor con B1: presenta el B1 en México (Goethe o telc) en abril de 2028 y llegas con los dos cumplidos.",foto:"fotos-aprende/de-f-basico.jpg",list:[
         "Con alemán, el Werkstudent y el primer trabajo abren muchas más puertas: muchas ofertas lo piden aunque el equipo hable inglés.",
         "Tu caso: ya estás en {{escuelaAleman}} y tienes el alemán del día en tu rutina."]},
       {t:"La visa de estudiante",d:"Con pasaporte mexicano no puedes entrar como turista y arreglarlo allá: la <b>visa nacional de estudios</b> se pide en México, en la embajada de Alemania, antes de viajar.",foto:"fotos-aprende/fase-visa.jpg",list:[
         "Te piden la <b>carta de admisión</b>, la <b>cuenta bloqueada</b> con {{sperrkontoEur}} para el año, un seguro médico y tu pasaporte vigente.",
         "Pide la cita en cuanto llegue la admisión: las fechas se llenan en verano, justo cuando todos los admitidos la buscan.",
-        "Tu caso: Tu plan junta en junio la cuenta bloqueada y la visa: {{salidaJunio}}."]},
+        "Tu caso: en junio de 2028 la cuenta bloqueada y la visa piden {{salidaJunio}}; desde febrero de 2028 ese dinero sale poco a poco de bolsa y cripto a algo que no baje."]},
       {t:"Tu seguro médico: el detalle de la edad",d:"El seguro público con tarifa de estudiante es para quien empieza a estudiar <b>antes de los 30</b>. Si empiezas con 30 o más y nunca tuviste seguro público en Alemania, lo normal es contratar un <b>seguro privado para estudiantes</b>.",foto:"fotos-aprende/de-salud.jpg",list:[
         "Los planes privados para estudiantes mayores de 30 cuestan entre unos €80 y €150 al mes, según la cobertura (fuentes de 2026). Cotiza antes: entra en tu presupuesto mensual.",
         "Confirma tu caso con la oficina internacional de Esslingen: hay excepciones y te dicen qué aseguradora aceptan para la inscripción.",
@@ -13699,7 +13775,7 @@ const META_DETALLE={
         "<b>Mercedes-Benz · Inspire</b>: programa graduate rotacional internacional; pide maestría y máximo 3 años de experiencia. <a href=\"https://group.mercedes-benz.com/careers/graduates/inspire-journey/\" target=\"_blank\" rel=\"noopener\">Ver Inspire</a>.",
         "<b>BMW · Masterprogramm Fastlane</b>: para quien le quedan 18 meses o más de maestría y tiene buen desempeño; solicitud reportada del 1 al 31 de mayo. <a href=\"https://www.bmwgroup.jobs/de/de/studierende/einstiegs-und-foerderprogramme/masterprogramm-fastlane.html\" target=\"_blank\" rel=\"noopener\">Ver Fastlane</a>."]},
       {t:"HTW Berlin · alternativa",d:"Maestría «Future Automotive Technology» en alemán, C1 mínimo, 4 semestres. La fecha límite reportada ronda mediados de junio: no confirmada al 100 %, verifícala directo.",href:"https://future-automotive-technology.htw-berlin.de/",label:"Future Automotive Technology — HTW Berlin"},
-      {t:"La decisión: {{decisionMaestria}}",d:"Con dos datos: la admisión de Esslingen (llega antes de fin de mayo) y {{mayoParaSalida}} en GBM, lo que llena la cuenta bloqueada en junio y paga la salida completa en agosto. Antes, el 31 de marzo, GBM contra {{marzoParaSalida}} dice si vas en camino. Si están los dos, te vas el {{maestriaInicio}}; si falta uno, se reaplica para septiembre de 2028 y el ahorro sigue, sin deuda.",foto:"https://commons.wikimedia.org/wiki/Special:FilePath/Mercedes_Benz_Museum,_Stuttgart,_Germany.jpg?width=1280",pie:"El Museo Mercedes-Benz en Stuttgart, a media hora de Esslingen."},
+      {t:"La decisión: {{decisionMaestria}}",d:"Con tres cosas sobre la mesa y en este orden: una oferta firmada de {{empleador}} en Alemania que cumpla la visa; la admisión de Esslingen, que llega antes de fin de mayo; y el dinero de la cuenta bloqueada. Con la oferta, te vas con ALTEN; sin ella, con la admisión y el dinero, te vas a la maestría el {{maestriaInicio}}; si falta el dinero o no llegó ninguna, la salida se mueve un año y sigues invirtiendo. Nunca con deuda.",foto:"https://commons.wikimedia.org/wiki/Special:FilePath/Mercedes_Benz_Museum,_Stuttgart,_Germany.jpg?width=1280",pie:"El Museo Mercedes-Benz en Stuttgart, a media hora de Esslingen."},
     ]},
   ipn11k:{titulo:"11K de la Carrera IPN — ya corridos",frase:"La meta no era terminar — era terminar bien, y 1:10:00 lo confirma.",pasos:[
       {t:"Meta cumplida",d:"Corriste los 11K de la Carrera del Politécnico (IPN) en 1 hora 10 minutos. Este registro queda como evidencia de que ya pasó, no como algo pendiente."},
@@ -13747,14 +13823,14 @@ const META_PLAN={
       {tarea:'a1-7'}
     ],
     vas:'El examen de muestra A del 17 de octubre es tu línea de partida. Vas bien si cada simulacro sube y los dos de enero pasan de 34 de 46; en el día a día, si aciertas 7 de cada 10 preguntas de Hoy aprendes.',
-    si:'Si el 16 de enero sigues bajo 30, pide a Brightest cambiar la fecha antes de presentarlo a ciegas: mejor febrero aprobado que enero reprobado. No más tarde: la solicitud de Esslingen de febrero lo quiere en tu CV.'
+    si:'Si el 16 de enero sigues bajo 30, pide a Brightest cambiar la fecha antes de presentarlo a ciegas: mejor febrero aprobado que enero reprobado. No más tarde: es tu argumento para el ingreso y para el traslado en ALTEN.'
   },
   spacex:{
     meta:'Ver despegar en vivo un cohete de SpaceX desde California, durmiendo con tu familia en Long Beach',
     fecha:'2027-03',
     sistema:[
       {c:'Vie · descanso de ALTEN',q:'Cinco minutos: mira los próximos de California en esta ficha y anota los que caen de viernes a lunes con fecha firme.'},
-      {c:'Cada quincena',q:'Lo que cueste sale de tu gasto personal: ni del ahorro a GBM ni a meses sin intereses.'}
+      {c:'Cada quincena',q:'Lo que cueste sale de tu gasto personal: ni de lo que apartas ni a meses sin intereses.'}
     ],
     pasos:[
       {viaje:['pr','visa']},
@@ -13767,11 +13843,11 @@ const META_PLAN={
       {f:'2027-03',t:'El lanzamiento: la noche anterior revisa la hora y la neblina. De día vas a Lompoc; al atardecer, lo ves desde Long Beach.'}
     ],
     vas:'El 12 de diciembre ya tienes fines de semana acordados y, en enero, un lanzamiento con fecha firme dentro de uno de ellos.',
-    si:'Si llega abril sin verlo, no se compra otro vuelo: la Fase 2 no lleva viajes. Se mueve a tu siguiente visita a tu familia, de contado. El dinero de la salida no se toca por un cohete.'
+    si:'Si llega abril sin verlo, no se compra otro vuelo. Se mueve a tu siguiente visita a tu familia, de contado. Lo que va al BYD no se toca por un cohete.'
   },
   helicoptero:{
     meta:'Tu licencia de piloto privado de helicóptero, con una escuela de CDMX y pagada sin deuda',
-    fecha:'2030-12',
+    fecha:'2031-12',
     sistema:[
       {c:'Lun a vie · descanso de ALTEN',q:'15 minutos del Helicopter Flying Handbook, después de comprar tu comida: es gratis, está en inglés y es media teoría.'},
       {c:'Último viernes del mes',q:'Explica un capítulo en voz alta, sin verlo. Si no te sale, todavía no lo sabes.'}
@@ -13783,28 +13859,28 @@ const META_PLAN={
       {f:'2027-02-20',t:'Visita Aeroanahuac en Toluca, que abre los sábados: el helicóptero, el simulador y su programa autorizado.'},
       {f:'2027-03-27',t:'Terminas los capítulos de mandos y de maniobras: explicas la autorrotación sin ver notas.'},
       {f:'2027-05',t:'En tu cita del oftalmólogo, pide la prueba de visión de colores: es el primer filtro del médico.'},
-      {f:'2027-06',t:'Con la salida decidida: si se mueve a 2028, pregunta por el siguiente grupo de teoría; si te vas en 2027, queda para 2030.'},
-      {f:'2029-03',t:'Con tu primer sueldo de ingeniero, abre el apartado de la licencia. Nada a crédito.'},
-      {f:'2029-11',t:'Vuelve a cotizar en las cuatro con los mismos doce datos y pregunta si la teoría ya puede ser en línea.'},
-      {f:'2030-03',t:'Médico clase 2, inscripción y permiso de formación, en un mismo viaje a México.'},
-      {f:'2030-09',t:'La teoría terminada y el examen teórico de la AFAC aprobado.'},
-      {f:'2030-11',t:'Empieza tu bloque de vuelo en Toluca: de lunes a sábado, temprano, hasta tu primer vuelo solo.'},
-      {f:'2030-12',t:'La travesía de 180 km, el examen práctico y la licencia en la mano.'}
+      {f:'2027-06',t:'Pregunta en Aeroanahuac si la teoría se da en línea o en sábado, y cuánto dura el permiso: decide si la tomas antes de irte.'},
+      {f:'2030-03',t:'Con tu primer sueldo de ingeniero, abre el apartado de la licencia. Nada a crédito.'},
+      {f:'2030-11',t:'Vuelve a cotizar en las cuatro con los mismos doce datos y pregunta si la teoría ya puede ser en línea.'},
+      {f:'2031-03',t:'Médico clase 2, inscripción y permiso de formación, en un mismo viaje a México.'},
+      {f:'2031-09',t:'La teoría terminada y el examen teórico de la AFAC aprobado.'},
+      {f:'2031-11',t:'Empieza tu bloque de vuelo en Toluca: de lunes a sábado, temprano, hasta tu primer vuelo solo.'},
+      {f:'2031-12',t:'La travesía de 180 km, el examen práctico y la licencia en la mano.'}
     ],
     vas:'Antes de irte: un capítulo al mes, cuatro cotizaciones por escrito y una visita a Toluca. Volando: cinco o seis horas a la semana y el primer vuelo solo antes de la hora 25.',
-    si:'Si el apartado no llega completo en octubre de 2030, no se empieza a medias: con horas salteadas se paga doble. Se espera a noviembre de 2031 y el dinero se queda en GBM.'
+    si:'Si el apartado no llega completo en octubre de 2031, no se empieza a medias: con horas salteadas se paga doble. Se espera a noviembre de 2032 y el dinero se queda invertido.'
   },
   maestria:{
-    meta:'Empezar el M.Eng. Automotive Systems en Esslingen con la salida pagada completa',
+    meta:'Irte a Alemania en septiembre de 2028 con el BYD pagado: al M.Eng. de Esslingen o con ALTEN',
     fecha:{clave:'maestriaInicio'},
     sistema:[
-      {c:'Lun a vie · 17:00–18:00',q:'Alemán en el CENLEX: Esslingen pide el A2.'},
-      {c:'Lun a vie · {{horaPlanMaestro}}',q:'El bloque del Plan Maestro: media hora en la tarea de la fase que te toca.'},
-      {c:'Día 1 y día 15',q:'El ahorro a GBM el día que entra el sueldo, antes de gastar.'}
+      {c:'Día 1, día 15 y cada lunes',q:'Lo que apartas, el día que entra: al colchón, al BYD y, con el BYD en cero, a invertir.'},
+      {c:'Lun a vie · 17:00–18:00',q:'Alemán en el CENLEX, rumbo al B1: es lo que más pesa para que ALTEN te mueva.'},
+      {c:'Lun a vie · {{horaPlanMaestro}}',q:'El bloque del Plan Maestro: media hora en la tarea de la fase que te toca.'}
     ],
-    pasos:[{tarea:'a1-4'},{tarea:'a1-5'},{tarea:'a1-10'},{tarea:'a1-12'},{tarea:'a2-2'},{tarea:'a2-4'},{tarea:'a2-5'},{tarea:'a2-6'},{tarea:'a2-9'},{tarea:'a3-1'}],
-    vas:'El 31 de marzo, GBM contra {{marzoParaSalida}}; el {{decisionMaestria}}, la admisión en la mano y {{mayoParaSalida}} en GBM.',
-    si:'Si el dinero no llega, la fecha que tu ahorro sí paga es septiembre de 2028, con todo pagado.'
+    pasos:[{tarea:'a1-29'},{tarea:'a1-31'},{tarea:'a1-33'},{tarea:'a1-41'},{tarea:'a2-16'},{tarea:'a2-18'},{tarea:'a2-20'},{tarea:'a2-21'},{tarea:'a2-22'},{tarea:'a2-2'},{tarea:'a2-4'},{tarea:'a2-24'},{tarea:'a2-5'},{tarea:'a2-6'},{tarea:'a2-9'},{tarea:'a3-1'}],
+    vas:'El colchón completo el {{colchonFecha}} y el BYD en cero el {{autoCero}}; el {{decisionMaestria}}, la oferta de ALTEN o la admisión de Esslingen en la mano.',
+    si:'Si un mes no mandas completo, la fecha del BYD se mueve: ese mismo mes decides qué recortas o qué ingreso sumas. Si el {{decisionMaestria}} falta el dinero, la salida pasa a 2029 y sigues invirtiendo, nunca con deuda.'
   },
   empresa:{
     meta:'Tu empresa facturando: un cliente al mes, recurrente',
@@ -13812,9 +13888,9 @@ const META_PLAN={
     pausa:true, desde:{fase:'Fase 4',inicio:true},
     sistema:[{c:'Hasta la Fase 4',q:'Ninguno: no se abren frentes de negocio nuevos. El negocio de tu papá sigue en piloto automático.'}],
     pasos:[
-      {f:'2027-08',t:'Antes de irte, el dossier y los posts del negocio de tu papá, en sus manos.'},
+      {f:'2028-08',t:'Antes de irte, el dossier y los posts del negocio de tu papá, en sus manos.'},
       {f:{fase:'Fase 4',inicio:true},t:'Da de alta tu RFC con actividad empresarial y entra a RESICO.'},
-      {f:'2029-06',t:'Tu primer cliente, facturado con CFDI.'}
+      {f:'2030-06',t:'Tu primer cliente, facturado con CFDI.'}
     ],
     vas:'En la Fase 4: un cliente al mes, cada mes.',
     si:'Si no llega, doblas la apuesta en lo que ya mostró ingreso, con capital propio y nunca con tarjeta.'
@@ -13826,6 +13902,7 @@ const META_PLAN={
     sistema:[{c:'Hasta el millón',q:'Lo único que le toca hoy: pagar todo a tiempo. Tu historial es lo que el banco revisa.'}],
     pasos:[
       {tarea:'a1-1'},
+      {tarea:'a1-41'},
       {f:'2031-06',t:'Investiga dos o tres zonas reales: el precio por metro cuadrado anotado, no una idea.'},
       {tarea:'a4-7'}
     ],
@@ -13835,38 +13912,39 @@ const META_PLAN={
   tailandia:{
     meta:'Pelear una pelea amistosa de Muay Thai en un campamento de Tailandia',
     fecha:{tarea:'a4-4'},
-    pausa:true, desde:'2030-01-01',
-    sistema:[{c:'Hasta enero de 2030',q:'Tu condición la construye hoy el gym. Las 12 semanas de Muay Thai empiezan en enero de 2030.'}],
+    pausa:true, desde:'2031-01-01',
+    sistema:[{c:'Hasta enero de 2031',q:'Tu condición la construye hoy el gym. Las 12 semanas de Muay Thai empiezan en enero de 2031.'}],
     pasos:[
       {tarea:'a4-3'},
-      {f:'2030-01',t:'Compra el vuelo de abril, el mes más barato, y reserva el campamento: Santai, en Chiang Mai, con alojamiento.'},
-      {f:'2030-01',t:'Empiezan las 12 semanas antes del viaje: tres clases de Muay Thai a la semana.'},
+      {f:'2031-01',t:'Compra el vuelo de abril, el mes más barato, y reserva el campamento: Santai, en Chiang Mai, con alojamiento.'},
+      {f:'2031-01',t:'Empiezan las 12 semanas antes del viaje: tres clases de Muay Thai a la semana.'},
       {tarea:'a4-4'}
     ],
-    vas:'El corte de diciembre de 2029 va en la proyección del millón: el viaje se paga de contado.',
+    vas:'El corte de diciembre de 2030 va en la proyección del millón: el viaje se paga de contado.',
     si:'Si el corte va abajo, el viaje se mueve un año. A crédito, nunca.'
   },
   hongkong:{
     meta:'Ver el skyline de Hong Kong desde Victoria Peak y desde el Sky100',
-    fecha:'2031-11',
-    pausa:true, desde:'2031-01-01',
-    sistema:[{c:'Hasta 2031',q:'Nada: es un viaje de la Fase 4, de contado. Octubre a diciembre es la temporada de cielo despejado.'}],
+    fecha:'2032-11',
+    pausa:true, desde:'2032-01-01',
+    sistema:[{c:'Hasta 2032',q:'Nada: es un viaje de después del millón, de contado. Octubre a diciembre es la temporada de cielo despejado.'}],
     pasos:[
       {tarea:'a4-5'},
-      {f:'2031-08',t:'Compra el vuelo para noviembre y, en línea, el Peak Tram con el Sky Terrace y la entrada al Sky100.'},
-      {f:'2031-11',t:'Hong Kong.'}
+      {f:'2032-08',t:'Compra el vuelo para noviembre y, en línea, el Peak Tram con el Sky Terrace y la entrada al Sky100.'},
+      {f:'2032-11',t:'Hong Kong.'}
     ],
-    vas:'El corte de diciembre de 2030 va en la proyección.',
+    vas:'El corte de diciembre de 2031 va en la proyección.',
     si:'Si no va, se mueve un año, de contado.'
   },
   cupra:{
     meta:'El Cupra Formentor, de contado o con un enganche grande',
     fecha:{tarea:'a4-7'},
-    pausa:true, desde:{tarea:'a4-6'},
-    sistema:[{c:'Hasta que termine el BYD',q:'Ni meses sin intereses ni crédito nuevo. Cuando el BYD quede pagado, su mensualidad va al fondo del Cupra.'}],
+    pausa:true, desde:{tarea:'a4-3'},
+    sistema:[{c:'Hasta tener sueldo de ingeniero',q:'Ni meses sin intereses ni crédito nuevo. Desde el corte de diciembre de 2030, un fondo aparte con lo que antes era la mensualidad del BYD.'}],
     pasos:[
-      {tarea:'a4-6'},
-      {f:'2031-07',t:'La mensualidad del BYD, el mismo monto, a un fondo aparte para el Cupra.'},
+      {tarea:'a1-41'},
+      {tarea:'a4-3'},
+      {f:'2031-01',t:'Abre el fondo del Cupra: el mismo monto que pagabas del BYD, cada mes.'},
       {tarea:'a4-7'}
     ],
     vas:'El millón líquido en su fecha: el Cupra va después, no antes.',
@@ -14132,7 +14210,7 @@ function mdCopiar(btn){
 //   · la ruta (`mpRutaHtml`): los pasos del plan sobre el tiempo, con hoy y la meta marcados;
 //   · el ritmo (`mpRitmoHtml`): la cuenta regresiva y el tiempo que ya pasó contra los pasos hechos;
 //   · el avance real (`mpRealHtml`): los simulacros y las preguntas del CT-GenAI, los próximos lanzamientos de
-//     SpaceX, el GBM que proyecta el plan contra lo que pide cada corte de la salida para la maestría, lo que
+//     SpaceX, lo que el plan junta y lo que se debe del BYD contra lo que pide cada corte de la salida para la maestría, lo que
 //     cuesta la licencia de helicóptero y lo que le mueve a tu millón, y, en las de largo plazo, tu
 //     patrimonio contra la trayectoria del millón que las habilita (`CIFRAS.PROYECCION`).
 // Las gráficas siguen la guía de visualización: marcas delgadas, rejilla de 1 px, texto en tinta y cada valor
@@ -14233,18 +14311,16 @@ function mpRealIstqb(){
     '<div class="mpr-nota">'+(n?'<b>'+ok+' de '+n+'</b> bien ('+Math.round(ok/n*100)+' %). La meta es 7 de cada 10.':'Ninguna en 14 días: la de hoy está en Hoy aprendes.')+'</div>';
   return h;
 }
-// La maestría: el GBM que proyecta el plan al cerrar cada mes hasta irte, contra lo que pide cada corte de la
-// salida (`marzoParaSalida`, `mayoParaSalida` y los dos de `PROYECCION.cortes`), con lo que falta en cada uno;
-// lo que tienes hoy contra lo que el plan espera este mes, y el alemán que pide Esslingen.
-// Los cortes de la salida con lo que pide cada uno: el cierre de la Fase 1, el día de decidir, la cuenta bloqueada y la
-// salida completa. Los usan el dinero de la salida de Mis Metas y el checkpoint de la banda del Plan Maestro.
+// La maestría: lo que el plan junta al cerrar cada mes hasta irte y lo que se debe del BYD, contra lo que pide cada corte de la
+// salida; lo que tienes hoy contra lo que el plan espera este mes, y el alemán que pide Esslingen.
+// Los cortes de la salida con lo que pide cada uno: el día de decidir y la cuenta bloqueada (los de `PROYECCION.cortes.junio`) y
+// la salida completa. Los usan el dinero de la salida de Mis Metas, la ventana del Fondo Maestría y el año.
 function cortesSalidaDash(){
   if(!window.CIFRAS||!CIFRAS.PROYECCION) return [];
-  const C=CIFRAS.PROYECCION.cortes||{}, F1=PHASES.find(p=>p.tag==='Fase 1'), dec=String(CIFRAS.n('decisionMaestria')||'').slice(0,7);
+  const C=CIFRAS.PROYECCION.cortes||{}, dec=String(CIFRAS.n('decisionMaestria')||CIFRAS.PROYECTO.maestriaDecision||'').slice(0,7);
   return [
-    {mes:F1?mpYM(F1.end):'',pide:+CIFRAS.n('marzoParaSalida')||0,t:'Cierre de la Fase 1',p:'para irte completo en septiembre'},
-    {mes:dec,pide:+CIFRAS.n('mayoParaSalida')||0,t:'El día de decidir',p:'el día de decidir'},
-    C.junio?{mes:C.junio.mes,pide:C.junio.pide,t:'La cuenta bloqueada',p:'la cuenta bloqueada'}:null,
+    C.junio?{mes:dec,pide:C.junio.pide,t:'El día de decidir',p:'la cuenta bloqueada y la visa'}:null,
+    C.junio?{mes:C.junio.mes,pide:C.junio.pide,t:'La cuenta bloqueada',p:'la cuenta bloqueada y la visa'}:null,
     C.salida?{mes:C.salida.mes,pide:C.salida.pide,t:'La salida completa',p:'la salida completa'}:null
   ].filter(c=>c&&c.mes&&c.pide>0);
 }
@@ -14254,33 +14330,36 @@ function mpRealSalida(){
   const meses=P.meses.filter(m=>m.mes>=hoyYM&&m.mes<=ult);
   if(!meses.length) return '';
   const cortes=cortesSalidaDash().filter(c=>meses.some(m=>m.mes===c.mes));
-  const max=Math.max.apply(null,meses.map(m=>m.alemania).concat(cortes.map(c=>c.pide)))*1.06;
+  const max=Math.max.apply(null,meses.map(m=>Math.max(m.alemania,m.auto||0)).concat(cortes.map(c=>c.pide)))*1.06;
   const h=v=>Math.max(0,Math.min(100,v/max*100)).toFixed(1)+'%', nom=ym=>MP_MES[+ym.slice(5,7)-1];
   const cols=meses.map(m=>{
     const c=cortes.filter(x=>x.mes===m.mes)[0], corto=c&&m.alemania<c.pide;
-    return '<div class="mpg-c" title="'+esc('Al cerrar '+nom(m.mes)+' '+m.mes.slice(0,4)+': '+money(m.alemania)+(c?' · '+c.t+' pide '+money(c.pide):''))+'">'+
+    return '<div class="mpg-c" title="'+esc('Al cerrar '+nom(m.mes)+' '+m.mes.slice(0,4)+': tienes '+money(m.alemania)+(m.auto>0.5?' y debes '+money(m.auto)+' del BYD':' y el BYD ya está en cero')+(c?' · '+c.t+' pide '+money(c.pide):''))+'">'+
+      (m.auto>0.5?'<i class="debe" style="height:'+h(m.auto)+'"></i>':'')+
       (c?'<span class="mpg-pide" style="bottom:'+h(c.pide)+'"></span>':'')+'<i class="'+(corto?'bajo':c?'ok':'')+'" style="height:'+h(m.alemania)+'"></i></div>';
   }).join('');
   // Hoy contra el plan con la misma definición que la banda del Plan Maestro: tu dinero —con el depósito del depa y lo que
-  // tienes para gastar— contra lo que el plan pide al cerrar el mes (su GBM más el depósito).
-  const real=ctCifrasHoy().dinero||0, plan=meses[0].alemania+(meses[0].deposito||0);
-  let x='<div class="md-hair"></div><div class="md-rec-hd"><span class="md-lbl">El dinero de la salida</span><small>GBM al cerrar cada mes</small></div>'+
-    '<div class="mpg" role="img" aria-label="'+esc('GBM proyectado contra lo que pide cada corte de la salida')+'"><div class="mpg-cols">'+cols+'</div></div>'+
-    '<div class="mpg-x">'+meses.map(m=>'<span>'+nom(m.mes)+'</span>').join('')+'</div>'+
-    '<div class="mpg-ley"><span><i class="bar"></i>lo que el plan junta</span><span><i class="pide"></i>lo que pide el corte</span></div>'+
-    '<div class="mps">'+cortes.map(c=>{
+  // tienes para gastar— contra lo que el plan pide al cerrar el mes.
+  const real=ctCifrasHoy().dinero||0, plan=meses[0].alemania+(meses[0].deposito||0), u=meses[meses.length-1], X=i=>(i+.5)/meses.length*100;
+  let x='<div class="md-hair"></div><div class="md-rec-hd"><span class="md-lbl">Tu plan hasta irte</span><small>al cerrar cada mes</small></div>'+
+    '<div class="mpg" role="img" aria-label="'+esc('Lo que el plan junta cada mes hasta agosto de 2028 y lo que se debe del BYD, contra lo que pide la salida')+'"><div class="mpg-cols">'+cols+'</div></div>'+
+    '<div class="mpg-x mpm-x"><span>hoy</span>'+meses.map((m,i)=>i===meses.length-1?'<span style="left:auto;right:0;transform:none">'+nom(m.mes)+' '+m.mes.slice(2,4)+'</span>':i>1&&/-(02|05|08|11)$/.test(m.mes)?'<span style="left:'+X(i).toFixed(2)+'%">'+nom(m.mes)+(m.mes.slice(5)==='02'?' '+m.mes.slice(2,4):'')+'</span>':'').join('')+'</div>'+
+    '<div class="mpg-ley"><span><i class="bar"></i>lo que tienes</span><span><i class="debe"></i>lo que debes del BYD</span><span><i class="pide"></i>lo que pide el corte</span></div>'+
+    '<div class="mps"><div class="mps-f"><span>Tu colchón, completo<small>'+money(CIFRAS.n('colchonPlan')||0)+'</small></span><b class="ok">'+CIFRAS.v('colchonFecha')+'</b></div>'+
+    '<div class="mps-f"><span>El BYD en cero<small>te ahorras '+money(CIFRAS.n('autoAhorra')||0)+' de interés</small></span><b class="ok">'+CIFRAS.v('autoCero')+'</b></div>'+
+    '<div class="mps-f"><span>Al irte<small>con los trámites ya pagados</small></span><b class="ok">'+money(u.alemania)+'</b></div>'+
+    cortes.filter(c=>c.mes!==cortes[0].mes||cortes.length===1).map(c=>{
       const tiene=(meses.filter(m=>m.mes===c.mes)[0]||{}).alemania||0, d=tiene-c.pide;
       return '<div class="mps-f"><span>'+esc(c.t)+'<small>'+nom(c.mes)+' '+c.mes.slice(0,4)+' · pide '+money(c.pide)+'</small></span>'+
         '<b class="'+(d<0?'mal':'ok')+'">'+(d<0?'faltan ':'sobran ')+money(Math.abs(d))+'</b></div>';
     }).join('')+'</div>'+
-    '<div class="mpr-nota">Tu dinero hoy, con el depósito y lo que tienes para gastar: <b>'+money(real)+'</b>; el plan pide '+money(plan)+' al cerrar '+nom(meses[0].mes)+'.'+
-      (cortes.some(c=>((meses.filter(m=>m.mes===c.mes)[0]||{}).alemania||0)<c.pide)?' Lo que cierra la diferencia: '+esc(CIFRAS.texto('{{extraSalida}}'))+' más al mes de ingreso nuevo.':'')+'</div>';
+    '<div class="mpr-nota">Tu dinero hoy, con el depósito y lo que tienes para gastar: <b>'+money(real)+'</b>; el plan pide '+money(plan)+' al cerrar '+nom(meses[0].mes)+'.</div>';
   // El alemán que pide Esslingen: la lección del Kapitel y el vocabulario del nivel de la etapa.
   const t=typeof alemanLeccionHoy==='function'?alemanLeccionHoy():null;
   if(t&&t.l){
     const etapa=aprendeEtapaAleman(), salio=new Set((((rawGet(APRENDE_KEY,{})||{}).salio||{}).de)||[]);
     const del=alemanPalabras().filter(w=>w.niv===etapa.nivel), van=del.filter(w=>salio.has(w.de)).length;
-    x+='<div class="md-rec-hd"><span class="md-lbl">El alemán</span><small>Esslingen pide el A2</small></div>'+
+    x+='<div class="md-rec-hd"><span class="md-lbl">El alemán</span><small>la meta es el B1, en abril de 2028</small></div>'+
       '<div class="mpa"><span>Lección: <b>'+esc(String(t.l.es).split(':')[0])+'</b>'+(t.avance?' · '+t.avance.hechos+' de '+t.avance.total:'')+'</span>'+
       '<span>Vocabulario '+esc(etapa.nivel)+': <b>'+van+' de '+del.length+'</b> palabras</span>'+
       '<div class="mpt-b p"><i style="width:'+(del.length?van/del.length*100:0).toFixed(1)+'%"></i></div></div>';
@@ -14294,12 +14373,12 @@ function mpRealSpacex(){
   return LANZAMIENTOS.panel();
 }
 // La licencia de helicóptero: lo que cuesta según cuántas de las 40 horas son de vuelo, en qué se va, y lo que le mueve al
-// millón con la proyección del plan (con 35 de vuelo, lo que suma el artículo 58). El apartado va de marzo de 2029 a la meta;
+// millón con la proyección del plan (con 35 de vuelo, lo que suma el artículo 58). El apartado va de marzo de 2030 a la meta;
 // desde ahí, el patrimonio va abajo por lo que costó.
 function mpRealHelicoptero(mp){
   if(!window.CIFRAS||!CIFRAS.PROYECCION||!mp.fecha) return '';
   const n=k=>+CIFRAS.n(k)||0, c20=n('heliCosto'), c30=n('heliCosto30'), cA=n('heliCosto35'); if(!cA) return '';
-  const ms=CIFRAS.PROYECCION.meses, en=ym=>ms.findIndex(m=>m.mes===ym), kIni=en('2029-03'), kFin=en(mpYM(mp.fecha.d));
+  const ms=CIFRAS.PROYECCION.meses, en=ym=>ms.findIndex(m=>m.mes===ym), kIni=en('2030-03'), kFin=en(mpYM(mp.fecha.d));
   const nMeses=kIni>0&&kFin>kIni?kFin-kIni+1:0, junta=nMeses?ms[kFin].liquido-ms[kIni-1].liquido:0;
   const ult=ms[ms.length-1], a12=ms[ms.length-13], paso=a12?(ult.liquido-a12.liquido)/12:0;
   const llega=meta=>{ const k=ms.findIndex(m=>m.liquido>=meta); return k>=0?k:(paso>0?ms.length-1+Math.ceil((meta-ult.liquido)/paso):null); };
@@ -14313,10 +14392,10 @@ function mpRealHelicoptero(mp){
     '<div class="md-hair"></div><div class="md-rec-hd"><span class="md-lbl">En qué se va el paquete</span></div><div class="mps">'+
       parte('20 horas de R44',n('heliVuelo'))+parte('20 de simulador',n('heliSimulador'))+parte('Teoría',n('heliTeoria'))+parte('Trámites y médico',n('heliTramites'))+'</div>'+
     (junta>0?'<div class="md-hair"></div><div class="md-rec-hd"><span class="md-lbl">Lo que le mueve a tu plan</span></div>'+
-      '<div class="mps"><div class="mps-f"><span>Cada mes, apartando<small>de mar 2029 a '+esc(mesDe(kFin))+': '+nMeses+' meses</small></span><b>'+money(Math.round(cA/nMeses))+'</b></div>'+
+      '<div class="mps"><div class="mps-f"><span>Cada mes, apartando<small>de mar 2030 a '+esc(mesDe(kFin))+': '+nMeses+' meses</small></span><b>'+money(Math.round(cA/nMeses))+'</b></div>'+
       '<div class="mps-f"><span>De lo que juntarías ahí<small>tu plan suma '+money(Math.round(junta))+'</small></span><b class="'+(cA/junta>.6?'mal':'ok')+'">'+Math.round(cA/junta*100)+' %</b></div>'+
       (k0!=null&&k1!=null?'<div class="mps-f"><span>Tu millón líquido<small>de '+esc(mesDe(k0))+' a '+esc(mesDe(k1))+'</small></span><b class="mal">+'+(k1-k0)+' meses</b></div>':'')+'</div>'+
-      '<div class="mpr-nota">Se decide en 2029, con el sueldo firmado. Falta sumar el vuelo a México y dónde dormir en Toluca.</div>':'');
+      '<div class="mpr-nota">Se decide en 2030, con el sueldo firmado. Falta sumar el vuelo a México y dónde dormir en Toluca.</div>':'');
 }
 // Las de largo plazo: tu patrimonio líquido contra la trayectoria del millón (`PROYECCION.meses`), hasta la fecha
 // de la meta. Es lo que las habilita: cada una espera su corte de diciembre en la proyección.
@@ -14956,6 +15035,8 @@ function fzaDatos(ym){
   if(cta) out.push({ k:'cuenta', t:'El saldo de tu cuenta en Finanzas es el que dice el banco.', ev: esc(cta.name || 'Cuenta')+': '+fzmNum(+cta.value || 0)+(cta.fecha ? ' al '+fzmDia(cta.fecha) : '') });
   const tc = (F.debts || []).find(d => d.id === 'd001');
   if(tc && !tc.cancelada) out.push({ k:'bbva', t:'Lo que debes de la BBVA en Finanzas es lo que dice su app.', ev: 'BBVA: '+fzmNum(+tc.balance || 0) });
+  const car = (F.debts || []).find(d => d.id === 'd003');
+  if(car && +car.balance > 0.5) out.push({ k:'auto', t:'Lo que debes del BYD en Finanzas es lo que dice el banco.', ev: 'BYD: '+fzmNum(+car.balance || 0) });
   out.push({ k:'inv', t:'Lo de CETES, GBM y tus inversiones en Finanzas es lo real.', ev: fzmNum(C.fondoMaestria(F).total-C.fondoMaestria(F).liq)+' entre CETES, inversiones y Bitcoin' });
   return out;
 }
@@ -16719,8 +16800,8 @@ function hbAvance(id){
 // como lo de antes de irte, y desde la Fase 2 lo de Alemania sube con él.
 const HB_PLAN = {
   networking:   { cuando: 'ahora',    para: 'Las dos cartas de recomendación que pide la maestría saldrán de tu red de contactos.' },
-  persuadir:    { cuando: 'ahora',    para: 'Te sirve para pedir un aumento con argumentos: tu ingreso decide si te vas en 2027.' },
-  dinero:       { cuando: 'ahora',    para: 'Manejar bien tu dinero decide si juntas lo necesario para irte a Alemania en 2027.' },
+  persuadir:    { cuando: 'ahora',    para: 'Te sirve para pedir un aumento con argumentos: cada peso de más adelanta el día en que el BYD queda en cero.' },
+  dinero:       { cuando: 'ahora',    para: 'Manejar bien tu dinero decide cuándo pagas el BYD y con cuánto te vas a Alemania.' },
   manejar:      { cuando: 'antes',    para: 'Tu auto es tu ingreso en Didi, y en Alemania casi todos los autos son estándar.' },
   recuperar:    { cuando: 'antes',    para: 'Dormir bien te sostiene para estudiar, entrenar y cumplir tus metas.' },
   decirno:      { cuando: 'antes',    para: 'Cada «sí» de más te cuesta ahorro u horas de estudio: decir que no protege tu plan.' },

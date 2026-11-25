@@ -219,7 +219,7 @@ Estructura vigente, sin las horas exactas (esas están en el maestro, que es don
   → cena y preparar la comida de mañana → cierre del día en 15 minutos (lectura, diario y plan de mañana) →
   segundo bloque de la aplicación (el martes, Negociar tu ingreso; el jueves, Finanzas) → skincare y minoxidil
   PM, en 15 minutos → dormir.
-- **Lunes**, además: revisión de la Bolsa GBM por la mañana. Solo invierte al inicio de semana.
+- **Lunes**, además: mandar lo que apartó de Didi, a donde diga el plan (el colchón, el BYD o a invertir).
 - **Sábado y domingo**: días de ingreso, con dos turnos largos de Didi (mañana y tarde-noche). El
   domingo cierra la semana con finanzas, checkpoint del Plan Maestro y diario, comprimidos al final.
 
@@ -250,7 +250,7 @@ repetirla no cuesta nada. La línea de tiempo de la Rutina se pinta en `DOMConte
 Los marcadores están en toda la prosa del plan: los hallazgos, el calendario de la deuda, la decisión
 de Alemania, los supuestos, las contingencias, las metas y los checklists de fase. Incluyen derivadas
 que antes se escribían a mano y se quedaban congeladas, como lo que cuesta el auto en interés
-(`{{autoInteres}}`) o el ingreso nuevo que pide la salida (`{{extraSalida}}`).
+(`{{autoInteres}}`) o el día en que el BYD queda en cero (`{{autoCero}}`).
 
 **Esta app no tenía migraciones** y por eso podía mostrar saldos viejos si era la primera pantalla
 del día. Ahora las hereda del módulo, que corre antes que su JS.
@@ -304,7 +304,7 @@ habría creado dos verdades en la misma pantalla.
 
 - **"N meses en cerrar el hueco de la salida a Alemania"** — contra lo que le falta a la salida
   completa de agosto (`PROYECCION.cortes`) al ingreso medio de esa opción. Convierte la lista en una
-  decisión: no "cuánto deja", sino "si paga septiembre de 2027".
+  decisión: no "cuánto deja", sino "en cuántos meses pagaría lo que se debe del BYD".
 - **La Opción 6 (dejar DiDi) no genera ingreso: convierte horas.** Su ficha calcula lo que valen
   esas mismas 60 horas al mes a su propia tarifa de freelance en vez de repetir el argumento
   cualitativo que ya estaba en la prosa.
@@ -372,16 +372,16 @@ otro.
 
 | Pieza | De dónde sale |
 |---|---|
-| `#planStepper` | Un paso por fase, con sus meses y años completos (`oct 2026 – mar 2027`) |
+| `#planStepper` | Un paso por fase, con sus meses y años completos (`oct 2026 – ago 2027`) |
 | `#fasesPlan` | Cada fase desde la 1: su etiqueta, el título y **las fechas en grande** (`.fase-fechas`: Empieza, Termina, Dura y *quedan 179 días* / *empieza en 6 meses* / *cerrada*), la meta numerada (`metaLista`), el patrimonio que espera la trayectoria (`liquido`), **lo que se deja** (`deja`), la explicación, el checklist por mes y el **checkpoint**. La fase en curso enseña su checklist; las demás van plegadas. Las fases que pasan en México llevan **💰 Tu ahorro en esta fase** (`ahorroFase`): un mes de cada etapa renglón por renglón (`CIFRAS.mesTipo`, `GRUPOS_SUELDO`), **tus rutinas producto por producto con dónde recortar en verde** (`CIFRAS.rutinasDesglose`) y GBM mes a mes con los cortes de la salida (`PROYECCION.cortes`) y, en los meses del plan de la BBVA (`CIFRAS.planBbva`), la nota de lo que se lleva y del día que queda en cero; abierto en la fase en curso |
 | Estado de cada fase | `COMPLETADA` / `EN CURSO` / `PENDIENTE` por fecha, también la Fase 0 |
 | Días hasta el millón | Del arranque de la primera fase al cierre de la última (`#planDiasRestantes`, `#kpiDiasMeta`) |
 | `#trayectoriaFases` | Una fila por fase con su `liquido`, bajo el punto de partida fijo del 18 jul 2026 |
 | `#diagNeto` `#diagLiquido` `#diagBienes` | Las dos versiones del patrimonio del diagnóstico —neto con el auto y los gadgets, y líquido— y lo que suman los bienes, de hoy y con la misma cuenta que Finanzas (`CIFRAS.patrimonio()`); las llena `pintarFasesPlan` |
-| `#brechaMillon` | Lo que falta para el millón desde el patrimonio líquido de hoy (`CIFRAS.patrimonio()`), los meses que quedan y las dos palancas del plan: el ahorro de cada quincena (`ahorroMesDepa`, `ahorroMesCasa`) y el ingreso (`extraSalida`), con el mes del millón (`mesMillon`) |
+| `#brechaMillon` | Lo que falta para el millón desde el patrimonio líquido de hoy (`CIFRAS.patrimonio()`), los meses que quedan y las dos palancas del plan: el ahorro de cada quincena (`ahorroMesDepa`, `ahorroMesCasa`) y el ingreso, con el día en que el BYD queda en cero (`autoCero`) y el mes del millón (`mesMillon`) |
 | `#contextoFase` (Rutina) | La fase en curso con su meta |
-| `#proyeccionPlan` | La proyección de `CIFRAS.PROYECCION`, completa y con detalle (Adán: *"le falta mucha más información, detallada"*): **las cifras que deciden** (este mes en el plan contra el patrimonio de Finanzas, lo que juntas hasta la salida —y con el ingreso nuevo—, lo que pide la salida, lo que pone el rendimiento hasta el millón y el mes del millón); **la gráfica** de GBM y del patrimonio líquido hasta el millón, con las fases de fondo, la meta, hoy, la salida, los cortes y tu dato real (SVG al ancho de la caja, se rehace al cambiar el tamaño); **las fechas que mueven tu dinero** (la BBVA, el depa, los dos puntos de control, la cuenta bloqueada, la salida, el Werkstudent, las colegiaturas, el primer sueldo, el fin del crédito del auto y el millón, cada una con GBM y patrimonio); **fase por fase** (entra, sale, ahorro, rendimiento, cómo cierra y lo más bajo de GBM); **todos los meses** de octubre de 2026 al cierre del plan, por año (`<details>`, abiertos el año en curso y el de la salida), con su total y, al tocar un mes, su detalle renglón por renglón (`partes`, `aparte`): lo que entra, lo que sale, lo que se aparta sin dejar de ser tuyo y cómo queda el patrimonio; los seis escenarios de `CIFRAS.proyectar()` y `CIFRAS.cortesSalida()` —el plan, con el ingreso nuevo, gastar $1,500 menos al mes, septiembre de 2028, sin Werkstudent y el euro a $23—, y **los supuestos** con su valor y su porqué (`SUPUESTOS.porque`). Un mes se abre desde su fila, desde la gráfica o desde su fecha (`pintarProyeccion()`) |
-| Decisión tomada — Alemania | Tarjeta estática con marcadores: la salida (`maestriaInicio`), lo que pide en agosto (`salidaAgosto`), el ingreso nuevo que falta (`extraSalida`), el día que la BBVA queda en cero (`bbvaCero`), el ahorro del mes con depa y en casa, los veredictos de junio y de la salida, lo que tendría GBM con el ingreso nuevo el 31 de marzo (`marzoParaSalida`) y el día de decidir (`mayoParaSalida`, `decisionMaestria`), y septiembre de 2028 como la fecha que el ahorro sí paga (`salida2028`) |
+| `#proyeccionPlan` | La proyección de `CIFRAS.PROYECCION`, completa y con detalle (Adán: *"le falta mucha más información, detallada"*): **las cifras que deciden** (este mes en el plan contra el patrimonio de Finanzas, el día en que el BYD queda en cero y lo que se ahorra, lo que se tiene al irte, lo que se tendría guardando todo o 3 de cada 4 pesos, lo que rinde lo invertido y el mes del millón); **la gráfica de hoy a septiembre de 2028** (`graficaPlan`, `#prPlan`): lo que tienes con lo del calendario, lo que debes del BYD y lo que tendrías guardando todo o 3 de cada 4 pesos (`CIFRAS.ritmoMaestria`), todo antes de los trámites, contra lo que cuesta irte; **la del millón** (`grafica`), con las fases de fondo, la meta, hoy, la salida, los cortes y tu dato real (SVG al ancho de la caja, se rehacen al cambiar el tamaño); **las fechas que mueven tu dinero** (la BBVA, el colchón, el día en que el BYD queda en cero, el depa, los puntos de control, el paso a liquidez, la cuenta bloqueada, la salida, el Werkstudent, las colegiaturas, el título, el sueldo y el millón); **fase por fase**; **todos los meses**, por año y con su detalle renglón por renglón —lo que entra, lo que sale, a dónde va lo que apartas (`aColchon`, `abonoAuto`, `aInvertir`) y cómo queda—; **los escenarios** con la misma proyección (guardar todo o menos, más ingreso, mandar menos, que caigan la bolsa y el cripto, irte con ALTEN, esperar a 2029, sin Werkstudent, otro euro) y **los supuestos** con su porqué |
+| Decisión tomada — el carro primero y Alemania | Tarjeta estática con marcadores: el día en que el BYD queda en cero (`autoCero`) y lo que se ahorra (`autoAhorra`), lo que se tiene al irte (`dineroSalida`, `rindeSalida`) y lo que pide la salida (`salidaAgosto`, `salidaVeredicto`), los tres pasos del plan (`colchonPlan`, `colchonFecha`, `ahorroMesDepa`, `ahorroMesCasa`, `invertirMes`, `bolsaPct`, `criptoPct`) y el día de decidir (`decisionMaestria`): ALTEN, la maestría o un año más |
 | `#salidaAlemania` | La lista de `CIFRAS.SALIDA` por tema, en `.salida-bloque` (clase propia: `updateFaseMonthBadges()` trataría cada tema como un mes), con el avance, lo de este mes y lo atrasado en rojo (`actualizarSalida()`), y la tabla de lo que cuesta irse |
 
 Corre **antes** del bucle que restaura `coach_checks_v1`, así que las casillas generadas (`a1-1`, `sa-adm-1`…)

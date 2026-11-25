@@ -9,7 +9,7 @@
 
   Herramienta de Adán: qué puede hacer con su laptop (3D, render, video, IA y código), cuánto deja
   cada proyecto al mes con su cuenta a la vista, por dónde empezar y qué no le conviene. Los
-  proyectos viven en proyectos.js; lo que viene del plan (el ingreso nuevo que pide la salida, el
+  proyectos viven en proyectos.js; lo que viene del plan (la mensualidad del BYD, el
   dólar) sale del maestro. Aquí solo hay molde, CSS y comportamiento. El mapa: readme_laptop.md.
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -413,9 +413,10 @@ figcaption{position:absolute;left:0;right:0;bottom:0;padding:16px 10px 5px;font-
 <script src="proyectos.js"></script>
 <script>
 const L = window.LAPTOP, CF = window.CIFRAS;
-// El dólar del plan (maestro) y el ingreso nuevo que pide la salida. Sin el maestro, la página sigue en dólares.
+// El dólar del plan (maestro) y la meta: la mensualidad del BYD, que un proyecto puede pagar mientras lo que se aparta baja la
+// deuda. Sin el maestro, la página sigue en dólares.
 const FX = CF && CF.PROYECTO && CF.PROYECTO.usdMxn || 0;
-const META = CF ? (+CF.n('extraSalida') || 0) : 0;
+const META = CF ? (+CF.n('autoPago') || 0) : 0;
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
 const pesos = n => '$' + Math.round(n).toLocaleString('es-MX');
@@ -457,7 +458,7 @@ function pintarEquipo(){
 function pintarMeta(){
   $('metaN').textContent = META ? pesos(META) + ' al mes' : '—';
   $('metaTxt').innerHTML = META
-    ? 'Es el <b>ingreso nuevo</b> que tu plan pide cada mes, hasta que te vayas, para pagar la salida completa del <b>' + CF.v('maestriaInicio') + '</b>. Cada proyecto de aquí es una forma de juntarlo: elige uno y mueve tus horas.'
+    ? 'Es la <b>mensualidad del BYD</b>. Un proyecto que la pague deja libre ese dinero de tu sueldo para bajar la deuda: tu plan la deja en cero el <b>' + CF.v('autoCero') + '</b> y cada peso nuevo adelanta esa fecha. Elige un proyecto y mueve tus horas.'
     : 'Abre esta página junto al Dashboard para ver la meta de tu plan.';
   const opciones = L.proyectos.filter(p => !p.pasivo && cuenta(p)).sort((a, b) => cuenta(b).porHora - cuenta(a).porHora);
   $('calcProy').innerHTML = opciones.map(p => '<option value="' + p.id + '">' + esc(p.t) + ' · ' + pesos(cuenta(p).porHora) + '/h</option>').join('');
@@ -474,7 +475,7 @@ function calcular(){
   $('calcBarra').style.width = pct + '%';
   $('calcBarra').style.background = pct >= 100 ? 'var(--ok)' : 'var(--warn)';
   $('calcNota').innerHTML = META
-    ? (mes >= META ? '✓ Cubre el ingreso nuevo que pide el plan' : 'Cubre el ' + Math.round(pct) + ' % de lo que pide el plan; faltan ' + pesos(cien(META - mes)) + ' al mes') +
+    ? (mes >= META ? '✓ Paga la mensualidad del BYD' : 'Paga el ' + Math.round(pct) + ' % de la mensualidad del BYD; faltan ' + pesos(cien(META - mes)) + ' al mes') +
       ' · a ' + pesos(c.porHora) + ' la hora, con el precio de en medio.' +
       (tope ? ' Pasadas ' + Math.round(c.hMax) + ' h al mes no suma más: es lo que el mercado te compra a este ritmo; sube la tarifa o suma otro proyecto.' : ' Cada hora que le quitas a Didi para esto rinde más si la tarifa es más alta.')
     : 'A ' + pesos(c.porHora) + ' la hora, con el precio de en medio.';
@@ -573,7 +574,7 @@ function pintarMapa(){
   $('equipoFoto').innerHTML = foto('equipo');
   const conCifra = L.proyectos.filter(p => cuenta(p)).sort((a, b) => cuenta(b).max - cuenta(a).max);
   $('leyCats').innerHTML = Object.keys(L.cats).filter(k => conCifra.some(p => p.cat === k)).map(k => '<span><i style="background:var(--s' + CAT_S[k] + ')"></i>' + esc(L.cats[k].t) + '</span>').join('') +
-    (META ? '<span><i style="background:var(--text2);width:2px;height:12px"></i>lo que pide tu plan</span>' : '');
+    (META ? '<span><i style="background:var(--text2);width:2px;height:12px"></i>la mensualidad del BYD</span>' : '');
   G.rangos($('gRangos'), { filas: conCifra.map(p => ({ k: p.t.length > 38 ? p.t.slice(0, 36) + '…' : p.t, min: cuenta(p).min, max: cuenta(p).max, s: CAT_S[p.cat] || 1 })),
     fmt: v => '$' + (v >= 1000 ? (v / 1000).toLocaleString('es-MX', { maximumFractionDigits: 1 }) + 'k' : Math.round(v)), meta: META || null, izq: 250, titulo: 'Pesos al mes por proyecto' });
   const activos = conCifra.filter(p => !p.pasivo), top = L.top.map(t => t.id);
@@ -610,7 +611,7 @@ function pintarTiktok(){
   // Tres momentos de la cuenta: pagos de TikTok, afiliados y patrocinio, en pesos al mes.
   const E = TK.escenarios, vid = 12;
   const tt = E.map(e => FX ? Math.round(e.vistas * vid / 1000 * e.usdMil * FX) : 0), af = E.map(e => e.afiliados), pa = E.map(e => FX ? Math.round(e.patrocinios * TK.patrocinioUsd * FX) : 0);
-  if (G) G.columnas($('gEsc'), { cats: E.map(e => e.k), fmt: v => '$' + Math.round(v).toLocaleString('es-MX'), meta: META || null, metaTxt: META ? 'tu meta: ' + pesos(META) : '', alto: 250,
+  if (G) G.columnas($('gEsc'), { cats: E.map(e => e.k), fmt: v => '$' + Math.round(v).toLocaleString('es-MX'), meta: META || null, metaTxt: META ? 'la mensualidad del BYD: ' + pesos(META) : '', alto: 250,
     series: [{ k: 'Pagos de TikTok', s: 1, datos: tt }, { k: 'Afiliados', s: 2, datos: af }, { k: 'Patrocinio', s: 3, datos: pa }], titulo: 'Lo que puede pagar al mes' });
   $('tkEscCuenta').textContent = 'TikTok: 12 videos × vistas por video × US$' + E[1].usdMil.toFixed(2) + ' por mil × $' + (FX ? FX.toFixed(2) : '—') +
     ' · patrocinio: US$' + TK.patrocinioUsd + ' por video, el centro del rango de US$200 a 800 · afiliados: tarifa sugerida.';

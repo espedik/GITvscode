@@ -11,7 +11,7 @@
   cómo encaja con el plan sin comerle horas, la ficha del personaje (que arma la biblia para Claude), las
   herramientas y su costo, la ruta de 90 días con casillas, la semana y el episodio, cómo vender comerciales, su
   bitácora y los cortes del día 30, 60 y 90. El contenido vive en plan.js; las fotos en fotos/; las gráficas las
-  dibuja ../Dashboard/graficas-svg.js; lo que viene del plan (el ingreso nuevo que pide la salida, el dólar, el
+  dibuja ../Dashboard/graficas-svg.js; lo que viene del plan (la mensualidad del BYD, el dólar, el
   empleador) sale del maestro. Lo suyo se guarda en localStorage['actriz_v1']. El mapa: readme_actriz.md.
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -392,9 +392,10 @@ footer li{margin:3px 0}
 <script src="plan.js"></script>
 <script>
 const A = window.ACTRIZ, CF = window.CIFRAS, G = window.GSVG;
-// Lo que viene del plan: el ingreso nuevo que pide la salida y el dólar. Sin el maestro, la página sigue sin ellos.
+// Lo que viene del plan: la meta —la mensualidad del BYD, que un ingreso nuevo puede pagar— y el dólar. Sin el maestro, la página
+// sigue sin ellos.
 const FX = CF && CF.PROYECTO && CF.PROYECTO.usdMxn || 0;
-const META = CF ? (+CF.n('extraSalida') || 0) : 0;
+const META = CF ? (+CF.n('autoPago') || 0) : 0;
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
 const T = s => CF && CF.texto ? CF.texto(String(s)) : String(s).replace(/\{\{\w+\}\}/g, '—');
@@ -427,7 +428,7 @@ function pintarPortada(){
   $('collage').innerHTML = foto('set') + foto('celular') + foto('ringlight');
   const lim = k => A.limites.find(x => x.k === k) || {};
   $('stats').innerHTML = [
-    ['meta', 'Lo que pide tu plan', META ? pesos(META) : '—', 'al mes, desde noviembre', 'Más de lo que ya ganas, para irte a Esslingen en septiembre de 2027 con la salida pagada. El aumento de sueldo sigue siendo el camino más grande.'],
+    ['meta', 'La mensualidad del BYD', META ? pesos(META) : '—', 'al mes', T('Si este proyecto la paga, ese dinero de tu sueldo baja la deuda: tu plan deja el BYD en cero el {{autoCero}} y te vas a Alemania en septiembre de 2028 sin deber nada. El aumento de sueldo sigue siendo el camino más grande.')],
     ['', 'Tope de horas', lim('horas').v, lim('horas').t, T(lim('horas').d)],
     ['', 'Tope de gasto', lim('gasto').v, lim('gasto').t, T(lim('gasto').d)],
     ['', 'Corte', lim('corte').v, lim('corte').t, T(lim('corte').d)],
@@ -491,7 +492,7 @@ function pintarModelo(){
   ].map(x => '<div class="card"><span class="k">' + esc(x[0]) + '</span><div class="v">' + esc(x[1]) + '</div><p>' + esc(x[2]) + '</p></div>').join('');
   $('gDinero').textContent = ''; $('gSeg').textContent = '';
   [...document.querySelectorAll('#gDinero ~ div, #gSeg ~ div')].forEach(n => { if (!n.id) n.remove(); });
-  G.columnas($('gDinero'), { cats: X, fmt: pesosK, meta: META || null, metaTxt: META ? 'tu meta: ' + pesos(META) : '', alto: 260, titulo: 'Lo que cobra cada mes',
+  G.columnas($('gDinero'), { cats: X, fmt: pesosK, meta: META || null, metaTxt: META ? 'la mensualidad del BYD: ' + pesos(META) : '', alto: 260, titulo: 'Lo que cobra cada mes',
     series: [{ k: 'Comerciales', s: 1, datos: R.com }, { k: 'Colaboraciones', s: 2, datos: R.col }, { k: 'Pagos de TikTok', s: 3, datos: R.tt }] });
   const pc = supV('primerCliente'), rit = supV('ritmo');
   $('cuentaDinero').textContent = 'Comerciales: desde el mes ' + pc + ', uno más cada mes hasta ' + rit + ' × ' + pesos(supV('precio')) +

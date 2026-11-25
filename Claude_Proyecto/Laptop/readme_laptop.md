@@ -22,8 +22,8 @@ esta página (`CLAUDE.md` → Regla 6).
 | `fotos/` | Las fotos de la página a 900 px, de Wikimedia Commons con su crédito; la de 3D y render es una réplica real de Heliescala (`../Heliescala/fotos/`). Actriz IA usa también las de hardware y video |
 | `../Dashboard/graficas-svg.js` | Las gráficas (`GSVG`), compartidas con Actriz IA |
 
-Carga `../Dashboard/datos-maestros.js` para dos datos del plan: el ingreso nuevo que pide la salida
-(`{{extraSalida}}`, con `CIFRAS.n`) y el dólar para planear (`PROYECTO.usdMxn`). Sin el maestro la página
+Carga `../Dashboard/datos-maestros.js` para dos datos del plan: la meta
+(la mensualidad del BYD, `{{autoPago}}`, con `CIFRAS.n`) y el dólar para planear (`PROYECTO.usdMxn`). Sin el maestro la página
 sigue en pie, pero sin pesos ni meta.
 
 ## La página, de arriba abajo

@@ -36,7 +36,7 @@
         { id: 'kolors', f: '2026-11-26', t: s => 'Compra el Kolors del ' + (s === 'lun' ? 'lunes 7' : 'domingo 6') + ' a las 23:30, ya con el lunes confirmado por escrito: no se reembolsa.' },
         { id: 'hotel', f: '2026-11-27', t: 'Reserva hospedaje entre Expo Guadalajara y Plaza del Sol, con cancelación gratis: ahí están la Feria y el Kolors.' },
         { id: 'fil', f: '2026-11-28', t: 'Compra tu entrada a la Feria, una por día, en Boletomóvil: $40 cada una.' },
-        { id: 'didi', f: '2026-11-30', t: () => 'Decide cómo repones el Didi de ese fin de semana: cada lunes el plan manda ' + money(didiSem()) + ' a GBM.' },
+        { id: 'didi', f: '2026-11-30', t: () => 'Decide cómo repones el Didi de ese fin de semana: cada lunes el plan aparta ' + money(didiSem()) + ' para el colchón y el BYD.' },
         { id: 'checkin', f: '2026-12-03', t: 'Haz tu check-in y guarda el pase de abordar en el celular.' },
         { id: 'mochila', f: '2026-12-03', t: 'Mochila lista, con tu INE original: Kolors no acepta copias ni fotos.' }
       ],
@@ -123,7 +123,7 @@
         p: 'Viernes más 7 días da otro viernes; para volver en lunes son 10 noches. La bahía se ve mejor sin luna: nueva el 6 de febrero y el 8 de marzo. Del 19 al 28 de marzo, no: luna llena y Semana Santa.',
         L: [
           { id: 'm5', t: '5 al 15 de marzo', ini: '2027-03-05', fin: '2027-03-15', b: '10 noches', d: 'De 5 a 6 días de vacaciones.', si: ['El lunes 15 es feriado en México: no lo pides', 'Luna nueva el 8: la bahía en su mejor noche', 'Marzo es el mes más seco y todavía hay ballenas'], no: ['Temporada alta: precios más altos'] },
-          { id: 'f26', t: '26 feb al 8 de marzo', ini: '2027-02-26', fin: '2027-03-08', b: '10 noches', d: 'De 6 a 7 días de vacaciones.', si: ['La luna ya sale de madrugada: noches oscuras', 'Regresas tres semanas antes de la fecha de Esslingen'], no: ['El lunes 8 no es feriado: un día más de vacaciones'] },
+          { id: 'f26', t: '26 feb al 8 de marzo', ini: '2027-02-26', fin: '2027-03-08', b: '10 noches', d: 'De 6 a 7 días de vacaciones.', si: ['La luna ya sale de madrugada: noches oscuras', 'Regresas antes del corte del carro de marzo'], no: ['El lunes 8 no es feriado: un día más de vacaciones'] },
           { id: 'f5', t: '5 al 15 de febrero', ini: '2027-02-05', fin: '2027-02-15', b: '10 noches', d: 'De 6 a 7 días de vacaciones.', si: ['Luna nueva el 6', 'El mes con más ballenas en Rincón'], no: ['Cinco días después de entregar el depa', 'El vuelo se compra en diciembre, junto con Guadalajara'] },
           { id: 's7', t: '5 al 12 de marzo', ini: '2027-03-05', fin: '2027-03-12', b: '7 noches', d: 'Viernes a viernes: 7 días exactos.', si: ['Unos $8,700 menos que las 10 noches', 'Un solo domingo de Didi'], no: ['Regresas en viernes, no en lunes', 'Se quedan fuera Ponce, Cabo Rojo y Rincón'] }
         ]
@@ -217,7 +217,7 @@
         { t: 'Antes de decidir', L: [
           ['Tu dinero', 'dinero'],
           ['Tu domingo', 'didi'],
-          ['Tu calendario', 'El 31 de marzo cierra la solicitud de Esslingen y ese día se mide tu GBM: el viaje no puede comerse ninguna de las dos.'],
+          ['Tu calendario', 'En marzo tu plan abona al BYD y mides tu primer corte del carro: el viaje no puede comerse ese abono.'],
           ['Cómo bajarlo', 'Cama en dormitorio (US$31) en lugar de cuarto: unos $5,200 menos. Cocinar la mitad de los días: unos $1,900. Las 7 noches exactas: unos $8,700.']] },
         { t: 'La bahía que brilla', L: [
           ['Mosquito, Vieques', 'La más brillante del mundo. En kayak y con operador con licencia, de US$60 a US$67; no se nada y hay que dormir en la isla.', 'https://www.puertorico.com/mosquito-bay'],
@@ -258,7 +258,7 @@
   const K = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   const val = (x, op, n) => typeof x === 'function' ? x(op, n) : x;
   const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'], MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-  // Lo que el plan manda a GBM por semana de Didi en ese mes ('2027-03'): desde que maneja más, cuenta lo de más.
+  // Lo que el plan aparta por semana de Didi en ese mes ('2027-03'): desde que maneja más, cuenta lo de más.
   const didiSem = ym => { if (!window.CIFRAS) return 0; const d = (CIFRAS.PROYECTO || {}).didiMasDesde; return Math.round((+CIFRAS.n(ym && d && ym >= d ? 'didiAhorroMas' : 'didiAhorro') || 0) * 12 / 52); };
   const noches = v => v && v.di && v.df ? Math.round((v.df - v.di) / 864e5) : 0;
   // Puerto Rico: sin fecha se calcula con 10 noches; los días de auto y el título de cada ficha salen de ahí.
@@ -376,21 +376,20 @@
   function dineroTxt(v) {
     if (!window.CIFRAS || !v.total) return '';
     const gp = +CIFRAS.n('gastoPersonalDepa') || 0, out = [];
-    if (gp) out.push('Sale de tu gasto personal (' + money(gp) + ' al mes): es el <b>' + Math.round(v.total / gp * 100) + ' %</b> de un mes. Nunca del ahorro a GBM ni de meses sin intereses.');
+    if (gp) out.push('Sale de tu gasto personal (' + money(gp) + ' al mes): es el <b>' + Math.round(v.total / gp * 100) + ' %</b> de un mes. Nunca de lo que apartas ni de meses sin intereses.');
     return out.map(x => '<p class="kv-p vj-nota">' + x + '</p>').join('');
   }
-  // Lo que el viaje le cuesta a la salida a Alemania, con las cifras del plan.
+  // Lo que el viaje le cuesta al plan, si saliera de lo que apartas: los días que atrasa el BYD en cero.
   function salidaTxt(v) {
-    const c = window.CIFRAS && CIFRAS.PROYECCION && CIFRAS.PROYECCION.cortes && CIFRAS.PROYECCION.cortes.salida;
-    if (!c || !(c.falta > 0)) return 'Cuesta unos ' + money(v.total) + '.';
-    return 'Cuesta unos ' + money(v.total) + '. Para irte en septiembre te faltan ' + money(Math.round(c.falta)) + ' con tu ritmo de hoy: este viaje es el ' + Math.round(v.total / c.falta * 100) + ' % de eso.';
+    const al = window.CIFRAS && CIFRAS.n ? +CIFRAS.n('ahorroMesCasa') || 0 : 0;
+    return 'Cuesta unos ' + money(v.total) + '.' + (al > 0 ? ' Si saliera de lo que apartas, el BYD quedaría en cero ' + Math.max(1, Math.round(v.total / al * 30.4)) + ' días después del ' + CIFRAS.v('autoCero') + '.' : '');
   }
-  // Los domingos de Didi que cruza el viaje y lo que dejan de mandar a GBM.
+  // Los domingos de Didi que cruza el viaje y lo que dejan de apartar.
   function didiTxt(v) {
     const ym = v.di ? K(v.di).slice(0, 7) : '2027-03', s = didiSem(ym);
-    if (!v.di) return 'Un viaje de viernes a lunes de la otra semana cruza dos domingos: ' + money(2 * s) + ' que el plan manda a GBM. Repónlos con horas de otros días o acepta el hueco.';
+    if (!v.di) return 'Un viaje de viernes a lunes de la otra semana cruza dos domingos: ' + money(2 * s) + ' que el plan aparta para el BYD. Repónlos con horas de otros días o acepta el hueco.';
     let k = 0; for (let d = new Date(v.di); d <= v.df; d.setDate(d.getDate() + 1)) if (d.getDay() === 0) k++;
-    return k ? 'Cruza ' + (k === 1 ? 'un domingo' : k + ' domingos') + ' de Didi: ' + money(k * s) + ' que el plan manda a GBM. Repónlos con horas de otros días o acepta el hueco.' : 'No cruza ningún domingo de Didi.';
+    return k ? 'Cruza ' + (k === 1 ? 'un domingo' : k + ' domingos') + ' de Didi: ' + money(k * s) + ' que el plan aparta para el BYD. Repónlos con horas de otros días o acepta el hueco.' : 'No cruza ningún domingo de Didi.';
   }
   function bloqueHtml(v, b) {
     return '<div class="vj-b">' + b.L.map(x => {
@@ -423,7 +422,7 @@
       '<label>Cómo vas<input name="ida" maxlength="40" value="' + esc(p.ida || '') + '" placeholder="Ej. avión"></label><label>Cómo regresas<input name="reg" maxlength="40" value="' + esc(p.reg || '') + '" placeholder="Ej. autobús"></label>' +
       '<label class="ancho">Para qué vas<input name="nota" maxlength="140" value="' + esc(p.nota || '') + '"></label><div class="vj-form-b"><button type="submit" class="kv-b">' + (p.id ? 'Guardar cambios' : 'Agregar viaje') + '</button><span id="vjErr" role="alert"></span></div></form></section>' +
       '<section class="kv-c s5"><h3>Antes de agregarlo</h3><div class="vj-b"><div><b>El dinero</b><span>Sale de tu gasto personal' + (window.CIFRAS ? ' (' + money(+CIFRAS.n('gastoPersonalDepa') || 0) + ' al mes)' : '') + ', no del ahorro ni de meses sin intereses.</span></div>' +
-      '<div><b>El domingo</b><span>Es de Didi: cada fin de semana fuera son ' + money(didiSem()) + ' que no llegan a GBM.</span></div><div><b>La Fase 2</b><span>De abril a agosto de 2027 no lleva viajes fuera de la lista de salida.</span></div><div><b>Las fechas</b><span>Este proyecto es público en GitHub: quien lo abra puede ver cuándo estás fuera. Lo del vuelo y del hotel no se sube.</span></div></div></section></div>';
+      '<div><b>El domingo</b><span>Es de Didi: cada fin de semana fuera son ' + money(didiSem()) + ' que no llegan al BYD.</span></div><div><b>Tu plan</b><span>Hasta que el BYD quede en cero (' + (window.CIFRAS ? CIFRAS.v('autoCero') : '') + '), un viaje sale solo de tu gasto personal.</span></div><div><b>Las fechas</b><span>Este proyecto es público en GitHub: quien lo abra puede ver cuándo estás fuera. Lo del vuelo y del hotel no se sube.</span></div></div></section></div>';
   }
   function ventana(id) {
     if (id === 'nuevo' || id.indexOf('editar-') === 0) { const p = id === 'nuevo' ? null : S().propios.find(x => 'editar-' + x.id === id); nuevo = p ? p.id : null; return { titulo: p ? 'Editar ' + p.ciudad : 'Agregar viaje', sub: 'Próximos viajes', kv: '#8d7be8', html: formHtml(p) }; }

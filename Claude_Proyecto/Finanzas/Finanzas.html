@@ -612,7 +612,7 @@ select option{background:var(--surface-solid);color:var(--text)}
 .msc-como{font-size:11px;font-weight:600;color:var(--primary);line-height:1.5;padding:7px 10px;border-radius:6px;
   background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.14)}
 .msc-pie{font-size:10px;color:var(--text3);margin-top:14px}
-/* ── Tu quincena (tablero, mes actual): próximos pagos, la BBVA hasta cero y lo que va a GBM ── */
+/* ── Tu quincena (tablero, mes actual): próximos pagos, el BYD hasta cero (o la BBVA si debe) y lo que se aparta ── */
 .qn-cab{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-bottom:14px}
 .qn-cab h3{margin:0;font-size:15px;font-weight:800;color:var(--text)}
 .qn-cab p{margin:0;font-size:12px;color:var(--text2);flex:1 1 320px}
@@ -1574,7 +1574,7 @@ function delInv(id){S.investments=S.investments.filter(i=>i.id!==id);save();if(d
 // Qué comprar no se decide aquí: lo dice tu reparto (S.reparto, que se edita en Qué invertir hoy del Dashboard; sin él,
 // CIFRAS.REPARTO_BASE). Nada de este plan lo escribe una IA.
 function renderGBM() {
-  // Lo que va a GBM no se estima aquí: lo dice el plan del maestro (CIFRAS.gbmMes, abajo).
+  // Lo que apartas, y a dónde va —el colchón, el BYD o a invertir—, no se estima aquí: lo dice el plan del maestro (CIFRAS.gbmMes, abajo).
 
   const CETES_DIA15 = _PG().cetesDia15; // ahorro recurrente fijo día 15
 
@@ -1587,9 +1587,14 @@ function renderGBM() {
   const nowD = new Date(selY_, selMN_-1, 1); // primer día del mes seleccionado
   const isCurrentM = selM === nowYM();
 
-  // ── El mes, según tu plan (CIFRAS.gbmMes): lo de cada quincena, lo de Didi, las ventas y el depósito; y la BBVA.
-  //    Es el mismo calendario del Dashboard y de Coach: la BBVA va primero mientras tenga saldo.
-  const C=window.CIFRAS, G=(C&&C.gbmMes)?C.gbmMes(selM):{semanas:[],aGbm:0,aBbva:0,bbvaCero:null};
+  // ── El mes, según tu plan (CIFRAS.gbmMes): lo de cada quincena, lo de Didi y el depósito, con a dónde va cada peso; y la BBVA.
+  //    Es el mismo calendario del Dashboard y de Coach: la BBVA va primero mientras tenga saldo; después, el colchón, el BYD y a invertir.
+  const C=window.CIFRAS, G=(C&&C.gbmMes)?C.gbmMes(selM,{plan:true}):{semanas:[],aGbm:0,aAuto:0,aColchon:0,total:0,aBbva:0,bbvaCero:null};
+  const DE_Q={colchon:'al colchón',auto:'al BYD',gbm:'a invertir'}, partesDe=q=>[['aColchon','colchon'],['aAuto','auto'],['aGbm','gbm']].filter(k=>q[k[0]]>=1).map(k=>fmt(q[k[0]])+' '+DE_Q[k[1]]).join(' · ');
+  const PA=C&&C.planAhorro?C.planAhorro():{}, fechaP=k=>{ if(!k) return '—'; const p=k.split('-').map(Number); return p[2]+' '+['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][p[1]-1]+' '+p[0]; };
+  const byd=(S.debts||[]).find(d=>d.id==='d003'), bydHoy=byd?+byd.balance||0:0;
+  // La BBVA se dice solo mientras deba: ya en cero, este mes es del plan.
+  const bbvaHoy=(S.debts||[]).find(d=>d.id==='d001'), bbvaVive=G.aBbva>0&&(!isCurrentM||!!(bbvaHoy&&+bbvaHoy.balance>0.5));
   const monthGBM=Math.round(G.aGbm*100)/100;
   const hoyN=realNow.getDate(), semHoy=isCurrentM?(hoyN<=7?1:hoyN<=14?2:hoyN<=21?3:4):0;
   const SH=G.semanas.find(w=>w.n===semHoy)||null;
@@ -1602,8 +1607,8 @@ function renderGBM() {
   const REP=(repTuyo?S.reparto:((C&&C.REPARTO_BASE)||[])).filter(x=>x&&x.n&&+x.pct>0);
   const repTot=REP.reduce((s,x)=>s+(+x.pct||0),0)||100;
   const escR=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  // Si sigues el plan: GBM y los CETES al cerrar la fase y al irte (CIFRAS.estadoDia). Las dos juntas, como la proyección
-  // del Plan Maestro y como «Lo que dice tu plan» del inicio: el 31 de marzo es una sola cifra en las tres pantallas.
+  // Si sigues el plan: el colchón y lo invertido al cerrar la fase y al irte (CIFRAS.estadoDia), como la proyección del Plan
+  // Maestro y como «Lo que dice tu plan» del inicio: una sola cifra en las tres pantallas.
   const fase=C&&C.PHASES?C.PHASES.find(f=>realNow>=f.start&&realNow<=f.end):null;
   const EF=fase&&C.estadoDia?C.estadoDia(C.fechaLocal(fase.end)):null;
   const ultM=C&&C.PROYECTO&&C.PROYECTO.ultimoMesMexico, ultD=ultM?new Date(+ultM.slice(0,4),+ultM.slice(5,7),0):null;
@@ -1710,42 +1715,45 @@ function renderGBM() {
       <div class="flex jb aic" style="flex-wrap:wrap;gap:8px;margin-bottom:14px">
         <div>
           <div style="font-size:19px;font-weight:900;color:var(--text);letter-spacing:-.3px">${mesActual} — a dónde va tu ahorro</div>
-          <div class="ts tm" style="margin-top:3px">Del Plan Maestro, el mismo calendario del Dashboard y de Coach: lo de cada quincena se manda el día que entra el sueldo; lo de Didi, el lunes.</div>
+          <div class="ts tm" style="margin-top:3px">Del Plan Maestro, el mismo calendario del Dashboard y de Coach: lo de cada quincena se manda el día que entra el sueldo; lo de Didi, el lunes. El orden: el colchón, el BYD y a invertir.</div>
         </div>
-        <span class="badge ${G.aBbva>0?'b-ex':'b-in'}" style="font-size:11px">${G.aBbva>0?'Primero la BBVA':'Todo a GBM'}</span>
+        <span class="badge ${bbvaVive?'b-ex':'b-in'}" style="font-size:11px">${bbvaVive?'Primero la BBVA':G.aAuto>=1?'Al BYD':G.aColchon>=1?'Al colchón':'A invertir'}</span>
       </div>
       <div class="g3" style="gap:10px;margin-bottom:12px">
         <div style="background:rgba(0,212,255,.07);border-radius:10px;padding:12px 14px;border:1px solid rgba(0,212,255,.18)">
-          <div class="ts tm" style="text-transform:uppercase;letter-spacing:.06em;font-size:10px">A GBM este mes</div>
-          <div style="font-size:24px;font-weight:900;color:var(--primary);margin-top:3px">${fmt(monthGBM)}</div>
-          <div class="ts tm">de la quincena y de Didi${G.semanas.some(w=>w.gbm.some(x=>x.de==='venta'))?', más las ventas':''}${G.semanas.some(w=>w.gbm.some(x=>x.de==='deposito'))?' y el depósito del depa':''}</div>
+          <div class="ts tm" style="text-transform:uppercase;letter-spacing:.06em;font-size:10px">Apartas este mes</div>
+          <div style="font-size:24px;font-weight:900;color:var(--primary);margin-top:3px">${fmt(G.total)}</div>
+          <div class="ts tm">${partesDe(G)||'nada este mes'}${G.semanas.some(w=>w.todo&&w.todo.some(x=>x.de==='deposito'))?', con el depósito del depa':''}</div>
         </div>
         <div style="background:rgba(255,217,61,.07);border-radius:10px;padding:12px 14px;border:1px solid rgba(255,217,61,.18)">
-          <div class="ts tm" style="text-transform:uppercase;letter-spacing:.06em;font-size:10px">A la BBVA este mes</div>
+          ${bbvaVive?`<div class="ts tm" style="text-transform:uppercase;letter-spacing:.06em;font-size:10px">A la BBVA este mes</div>
           <div style="font-size:24px;font-weight:900;color:var(--warning);margin-top:3px">${fmt(G.aBbva)}</div>
-          <div class="ts tm">${cero?(cero<new Date(+selM.slice(0,4),+selM.slice(5,7)-1,1)?'ya en cero desde el '+ceroTxt:'queda en cero el '+ceroTxt):'sin saldo'}</div>
+          <div class="ts tm">${cero?(cero<new Date(+selM.slice(0,4),+selM.slice(5,7)-1,1)?'ya en cero desde el '+ceroTxt:'queda en cero el '+ceroTxt):'sin saldo'}</div>`
+          :`<div class="ts tm" style="text-transform:uppercase;letter-spacing:.06em;font-size:10px">El BYD, hoy</div>
+          <div style="font-size:24px;font-weight:900;color:var(--warning);margin-top:3px">${bydHoy>0.5?fmt(bydHoy):'en cero'}</div>
+          <div class="ts tm">${bydHoy>0.5?'con tu plan queda en cero el '+fechaP(PA.cero):'todo lo que apartas se invierte'}</div>`}
         </div>
         <div style="background:rgba(var(--ov),.04);border-radius:10px;padding:12px 14px;border:1px solid rgba(var(--ov),.09)">
           <div class="ts tm" style="text-transform:uppercase;letter-spacing:.06em;font-size:10px">${SH?'Esta semana · días '+SH.ini+' al '+SH.fin:'Si sigues el plan'}</div>
-          ${SH?`<div style="font-size:24px;font-weight:900;color:var(--text);margin-top:3px">${fmt(SH.aGbm)}</div>
-          <div class="ts tm">a GBM${SH.aBbva>0?' · '+fmt(SH.aBbva)+' a la BBVA':''}</div>`
-          :`<div style="font-size:24px;font-weight:900;color:var(--text);margin-top:3px">${EF?fmt(Math.round(EF.gbm)):'—'}</div>
-          <div class="ts tm">en GBM al cerrar la fase</div>`}
+          ${SH?`<div style="font-size:24px;font-weight:900;color:var(--text);margin-top:3px">${fmt(SH.total)}</div>
+          <div class="ts tm">${partesDe(SH)||'nada por apartar'}${SH.aBbva>0?' · '+fmt(SH.aBbva)+' a la BBVA':''}</div>`
+          :`<div style="font-size:24px;font-weight:900;color:var(--text);margin-top:3px">${EF?fmt(Math.round(EF.gbm+EF.cetes)):'—'}</div>
+          <div class="ts tm">tendrías al cerrar la fase, entre el colchón y lo invertido</div>`}
         </div>
       </div>
-      ${G.aBbva>0&&isCurrentM?`<div class="alert a-warn" style="margin:0 0 12px;font-size:12px">${G.semanas.some(w=>w.vivir&&w.vivir.length)
-        ?`La liquidaste con todo lo que tenías: lo que le queda lo paga la quincena${ceroTxt?' del '+ceroTxt:''}, y hasta entonces lo de Didi es para vivir. A la bolsa empieza a ir dinero cuando quede en cero.`
-        :`Mientras la BBVA tenga saldo, lo que sobra de cada quincena y lo de Didi van a ella: a la bolsa empieza a ir dinero cuando quede en cero${ceroTxt?', el '+ceroTxt:''}.`} Ninguna inversión le gana a una tarjeta al 55.7 % anual.</div>`:''}
+      ${bbvaVive&&isCurrentM?`<div class="alert a-warn" style="margin:0 0 12px;font-size:12px">${G.semanas.some(w=>w.vivir&&w.vivir.length)
+        ?`La liquidaste con todo lo que tenías: lo que le queda lo paga la quincena${ceroTxt?' del '+ceroTxt:''}, y hasta entonces lo de Didi es para vivir. Tu plan sigue cuando quede en cero.`
+        :`Mientras la BBVA tenga saldo, lo que sobra de cada quincena y lo de Didi van a ella: tu plan sigue cuando quede en cero${ceroTxt?', el '+ceroTxt:''}.`} Ninguna inversión le gana a una tarjeta al 55.7 % anual.</div>`:''}
       <div class="g4" style="gap:8px">
         ${G.semanas.map(w=>{
-          const items=w.gbm.map(x=>({...x,k:'gbm'})).concat(w.bbva.map(x=>({...x,k:'bbva'})),(w.vivir||[]).map(x=>({...x,k:'vivir'}))).sort((a,b)=>a.dia-b.dia);
+          const items=(w.todo||w.gbm).map(x=>({...x,k:'gbm'})).concat(w.bbva.map(x=>({...x,k:'bbva'})),(w.vivir||[]).map(x=>({...x,k:'vivir'}))).sort((a,b)=>a.dia-b.dia);
           return `<div style="border-radius:10px;padding:11px 12px;background:${w.n===semHoy?'rgba(0,212,255,.07)':'rgba(var(--ov),.03)'};border:1px solid ${w.n===semHoy?'rgba(0,212,255,.3)':'rgba(var(--ov),.08)'}">
             <div class="flex jb aic" style="margin-bottom:6px"><span style="font-size:11px;font-weight:800;color:var(--text)">Semana ${w.n}</span>
               <span class="ts tm">${w.n===semHoy?'<b style="color:var(--primary)">HOY</b> · ':''}días ${w.ini} al ${w.fin}</span></div>
-            <div style="font-size:17px;font-weight:900;color:${w.aGbm>0?'var(--primary)':'var(--text3)'}">${fmt(w.aGbm)} <span class="ts tm" style="font-weight:600">a GBM</span></div>
+            <div style="font-size:17px;font-weight:900;color:${w.total>0?'var(--primary)':'var(--text3)'}">${fmt(w.total||0)} <span class="ts tm" style="font-weight:600">${[['aColchon','colchon'],['aAuto','auto'],['aGbm','gbm']].filter(q=>w[q[0]]>=1).map(q=>DE_Q[q[1]]).join(' y ')||'por apartar'}</span></div>
             ${w.aBbva>0?`<div style="font-size:12px;font-weight:700;color:var(--warning);margin-top:2px">${fmt(w.aBbva)} <span class="ts tm" style="font-weight:600">a la BBVA</span></div>`:''}
             <div style="display:flex;flex-direction:column;gap:3px;margin-top:7px">
-              ${items.length?items.map(x=>`<div class="flex jb" style="gap:8px;font-size:11px;color:${x.k==='vivir'?'var(--text3)':'var(--text2)'}"><span>día ${x.dia} · ${x.k==='bbva'?'BBVA, ':''}${x.t}</span><b style="white-space:nowrap;color:${x.k==='bbva'?'var(--warning)':x.k==='vivir'?'var(--text3)':'var(--text)'}">${fmt(x.mxn)}</b></div>`).join('')
+              ${items.length?items.map(x=>`<div class="flex jb" style="gap:8px;font-size:11px;color:${x.k==='vivir'?'var(--text3)':'var(--text2)'}"><span>día ${x.dia} · ${x.k==='bbva'?'BBVA, ':''}${x.t}${x.destino?', '+DE_Q[x.destino]:''}</span><b style="white-space:nowrap;color:${x.k==='bbva'?'var(--warning)':x.k==='vivir'?'var(--text3)':'var(--text)'}">${fmt(x.mxn)}</b></div>`).join('')
                 :'<div class="ts tm">Nada esta semana: lo que entra se va en lo fijo y en tu gasto.</div>'}
             </div>
           </div>`;}).join('')}
@@ -1758,18 +1766,27 @@ function renderGBM() {
         <div style="font-size:15px;font-weight:800;color:var(--text)">🛡️ En qué va: ${repTuyo?'tu reparto':'el reparto de base del plan'}</div>
         <a href="../Dashboard/dashboard.html#invertir" class="btn btn-o btn-sm" style="text-decoration:none">${repTuyo?'Cambiarlo':'Escribir el tuyo'} en Qué invertir hoy →</a>
       </div>
-      <div class="ts tm" style="margin-bottom:12px">El dinero de Alemania se usa en meses: va donde se saca al día y con riesgo bajo, no en acciones (Plan Maestro, Fase 1).</div>
+      <div class="ts tm" style="margin-bottom:12px">${bydHoy>0.5?`Nada se compra antes de que el BYD quede en cero (${fechaP(PA.cero)}). Desde ahí, ${fmt(C&&C.n?C.n('invertirMes')||0:0)} al mes, el mismo día que entra.`:'Todo lo que apartas, el mismo día que entra. Desde febrero de 2028, lo de la cuenta bloqueada pasa a algo que no baje.'}</div>
       <div class="g2" style="gap:10px">
         ${REP.map(a=>{
-          const pct=(+a.pct||0)/repTot*100, base=SH&&SH.aGbm>0?SH.aGbm:monthGBM, monto=Math.round(base*pct/100);
+          const pct=(+a.pct||0)/repTot*100, luego=!(monthGBM>=1), base=SH&&SH.aGbm>0?SH.aGbm:luego&&C&&C.n?C.n('invertirMes')||0:monthGBM, monto=Math.round(base*pct/100);
           return `<div style="border-radius:10px;padding:12px 14px;background:rgba(0,232,122,.05);border:1px solid rgba(0,232,122,.16)">
             <div class="flex jb aic" style="gap:8px"><span style="font-size:13px;font-weight:800;color:var(--text)">${escR(a.n)}</span>
               <span style="font-size:13px;font-weight:900;color:var(--success)">${Math.round(pct*10)/10}%</span></div>
-            <div class="ts tm" style="margin:2px 0 6px">${a.donde?'en '+escR(a.donde):''}${monto>0?(a.donde?' · ':'')+fmt(monto)+(SH&&SH.aGbm>0?' de esta semana':' del mes'):''}</div>
+            <div class="ts tm" style="margin:2px 0 6px">${a.donde?'en '+escR(a.donde):''}${monto>0?(a.donde?' · ':'')+fmt(monto)+(SH&&SH.aGbm>0?' de esta semana':luego?' al mes, desde que el BYD quede en cero':' del mes'):''}</div>
             ${a.porque?`<div style="font-size:12px;line-height:1.5;color:var(--text2)">${escR(a.porque)}</div>`:''}
           </div>`;}).join('')}
       </div>
     </div>`:''}
+
+    <!-- TU PLAN HASTA SEPTIEMBRE DE 2028 — CIFRAS.ritmoMaestria: la misma cuenta del Fondo Maestría del Dashboard y de Coach -->
+    <div class="card" style="margin-bottom:20px;padding:18px 20px">
+      <div class="flex jb aic" style="flex-wrap:wrap;gap:8px;margin-bottom:4px">
+        <div style="font-size:15px;font-weight:800;color:var(--text)">🛫 Tu plan hasta septiembre de 2028</div>
+        <div class="ts tm" id="gbm-plan-fin"></div>
+      </div>
+      <div style="height:280px;position:relative"><canvas id="gbm-ch-plan"></canvas></div>
+    </div>
 
     <!-- PORTAFOLIO ACTUAL -->
     <div class="sh" style="margin-bottom:16px">
@@ -1887,7 +1904,7 @@ function renderGBM() {
 
         <!-- Proyección -->
         <div class="card" style="padding:14px;border-color:rgba(0,212,255,.2)">
-          <div style="font-size:9px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">📈 GBM y tus CETES, si sigues el plan</div>
+          <div style="font-size:9px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">📈 Tu colchón y lo invertido, si sigues el plan</div>
           <div style="display:flex;flex-direction:column;gap:8px">
             <div style="background:rgba(0,212,255,.06);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center">
               <div style="font-size:11px;color:var(--text3)">Al cerrar la ${fase?fase.tag:'fase'}${fase?' · '+fase.end.getDate()+' '+MC3[fase.end.getMonth()]:''}</div>
@@ -1902,9 +1919,9 @@ function renderGBM() {
 
         <!-- DCA -->
         <div class="card" style="padding:14px;border-color:rgba(176,110,255,.2)">
-          <div style="font-size:9px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">💸 ${SH?'Esta semana a GBM':'Este mes a GBM'}</div>
-          <div style="font-size:22px;font-weight:900;color:var(--purple)">${fmt(SH?SH.aGbm:monthGBM)}</div>
-          <div style="font-size:10px;color:var(--text3);margin-top:4px">${fmt(monthGBM)} en el mes, del plan · sin rendimiento: la parte conservadora</div>
+          <div style="font-size:9px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">💸 ${SH?'Esta semana apartas':'Este mes apartas'}</div>
+          <div style="font-size:22px;font-weight:900;color:var(--purple)">${fmt(SH?SH.total:G.total)}</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">${partesDe(SH||G)||'nada por apartar'} · ${fmt(G.total)} en el mes, del plan</div>
         </div>
 
       </div>
@@ -1981,7 +1998,7 @@ function renderGBM() {
     </div>`:`
     <div class="card" style="margin-bottom:20px;border-color:rgba(0,232,122,.2);background:rgba(0,232,122,.03)">
       <div class="card-title" style="color:var(--success);margin-bottom:8px">🏛️ CETES — tu fondo de emergencia</div>
-      <div style="font-size:12px;color:var(--text2);line-height:1.7">Hoy <strong>${fmt(S.emergencyFund||0)}</strong> en CETES; con tu cuenta y efectivo llevas <strong>${fmt(_fondoHoy())}</strong> de ${fmt(_metaFondo())}. Ya no recibe aporte: desde el 5 oct de 2026 lo que sobra de cada quincena va primero a la BBVA y, en cuanto quede en cero, a GBM (Plan Maestro). Solo se vende ante un imprevisto.</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.7">Hoy <strong>${fmt(S.emergencyFund||0)}</strong> en CETES; con tu cuenta y efectivo llevas <strong>${fmt(_fondoHoy())}</strong> de ${fmt(_metaFondo())}. Es el paso 1 de tu plan: lo que apartas lo lleva a ${C&&C.v?C.v('colchonPlan'):''} el ${fechaP(PA.lleno)}; después, todo va al BYD. Solo se toca ante un imprevisto.</div>
     </div>`}
     `;
 
@@ -2001,8 +2018,29 @@ function renderGBM() {
     });
   }
 
+  renderPlan28();
+
   // Historial BTC
   renderBtcHistory();
+}
+
+// La gráfica del plan 2028: lo que tendrías guardando todo lo que te queda o mandando lo del calendario, y lo que se debe del BYD, mes por
+// mes hasta irte. Toda la cuenta es del maestro (CIFRAS.ritmoMaestria).
+let chPlan28 = null;
+function renderPlan28() {
+  const el = document.getElementById('gbm-ch-plan'), C = window.CIFRAS;
+  if (!el || !C || !C.ritmoMaestria || typeof Chart === 'undefined') return;
+  const R = C.ritmoMaestria(S), ms = R.meses.filter(m => m.tipo !== 'cierre'), MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const pie = document.getElementById('gbm-plan-fin');
+  if (pie) pie.innerHTML = 'Guardando todo lo que te queda: <b style="color:var(--success)">' + fmt(Math.round(R.fin)) + '</b> y el BYD en cero en ' + (R.cero ? MC[+R.cero.slice(5) - 1] + ' ' + R.cero.slice(0, 4) : '—') + ' · mandando lo del calendario: <b style="color:var(--primary)">' + fmt(Math.round(R.finPlan)) + '</b>';
+  const linea = (label, data, col, o) => Object.assign({ label, data, borderColor: col, backgroundColor: 'transparent', borderWidth: 2.5, pointRadius: 0, pointHitRadius: 12, tension: 0 }, o || {});
+  chPlan28 = killChart(chPlan28);
+  chPlan28 = new Chart(el, { type: 'line',
+    data: { labels: ms.map((m, i) => i ? MC[+m.mes.slice(5) - 1] + ' ' + m.mes.slice(2, 4) : 'hoy'),
+      datasets: [linea('Guardando todo lo que te queda', ms.map(m => m.tipo === 'hoy' ? m.real : m.proy), cssVar('--success')), linea('Mandando lo del calendario', ms.map(m => m.plan), cssVar('--primary'), { borderDash: [6, 5], borderWidth: 2 }), linea('Lo que debes del BYD', ms.map(m => m.auto), cssVar('--danger'))] },
+    options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 14, color: cssVar('--text2') } }, tooltip: { callbacks: { label: x => ' ' + x.dataset.label + ': ' + fmt(Math.round(x.parsed.y)) } } },
+      scales: { x: { ticks: { color: cssVar('--text3'), maxRotation: 0, autoSkip: true, maxTicksLimit: 12 }, grid: { display: false } }, y: { beginAtZero: true, ticks: { color: cssVar('--text3'), callback: v => '$' + Math.round(v / 1000).toLocaleString('es-MX') + ' mil' }, grid: { color: 'rgba(128,128,128,.14)' } } } } });
 }
 
 function setDidiMonthly(val) {
@@ -2590,10 +2628,10 @@ function mesAMesHTML(activo) {
    que ahí tienes los datos muy concretos"; y luego: "mejora la presentación… ponlo más entendible y presentable".
    Con las mismas fórmulas del score (`puntuarIndicadores`) se prueba, para cada palanca, el monto más chico que sube de
    escalón algún rubro: liquidar una deuda (de la más chica a la más grande), meter dinero al fondo de emergencia (CETES)
-   o sumar ahorro nuevo a GBM. Cada jugada mueve el mismo estado (`JUGAR`: activos, deuda, fondo, dinero a la mano y
+   o sumar ahorro nuevo a tus inversiones. Cada jugada mueve el mismo estado (`JUGAR`: activos, deuda, fondo, dinero a la mano y
    mínimos), así se pueden sumar: la barra enseña la letra de hoy y hasta dónde llegas con las jugadas de tu plan.
-   Primero va lo que el plan ya pide y, dentro de eso, más puntos por cada peso; liquidar una deuda que no es la BBVA
-   choca con la salida y se dice. El mes contra el anterior va arriba, en las cifras del mes (`cifrasMesHTML`). */
+   Primero va lo que el plan ya pide y, dentro de eso, más puntos por cada peso; liquidar el BYD o la
+   BBVA es del plan; el iPhone, sin intereses, sigue con su mensualidad y se dice. El mes contra el anterior va arriba, en las cifras del mes (`cifrasMesHTML`). */
 function mejoraScoreHTML(src) {
   const M = medirIndicadores(src), now = new Date();
   const gasto = M.avgExp2, meta = M.efGoal2;
@@ -2622,28 +2660,27 @@ function mejoraScoreHTML(src) {
   });
   for (const d of (M.srcDebts || []).filter(d => d.balance > 0 && d.min > 0).sort((a, b) => a.balance - b.balance))
     if (puntos(JUGAR.deuda(est0, d)).score > ahora) { mejor.deuda = d; break; }
-  const esBbva = d => d && (d.id === 'd001' || /bbva/i.test(d.name || ''));
-  // Lo que el plan manda a GBM cada quincena (PROYECTO.ahorroDia1/15, o los de casa de tu familia desde enCasaDesde).
+  const esBbva = d => d && (d.id === 'd001' || /bbva/i.test(d.name || '')), esByd = d => d && d.id === 'd003', paso28 = window.CIFRAS && CIFRAS.pasoAhorro ? CIFRAS.pasoAhorro() : '';
+  // Lo que el plan aparta cada quincena (PROYECTO.ahorroDia1/15, o los de casa de tu familia desde enCasaDesde).
   const PG = _PG(), enCasa = PG.enCasaDesde && _ymDe(now) >= PG.enCasaDesde;
   const q1 = (enCasa ? PG.ahorroDia1Casa : PG.ahorroDia1) || 0, q15 = (enCasa ? PG.ahorroDia15Casa : PG.ahorroDia15) || 0;
   const meses = x => { const n = q1 + q15 > 0 ? Math.ceil(x / (q1 + q15)) : 0; return n ? `${n} ${n === 1 ? 'mes' : 'meses'}` : ''; };
   const jugada = (k, v, o) => { const p = puntos(JUGAR[k](est0, v)); return Object.assign({ k, v, score: p.score, sc: p.sc, x: k === 'deuda' ? v.balance : v }, o); };
   const ops = [];
   if (mejor.deuda) { const d = mejor.deuda, bb = esBbva(d);
-    ops.push(jugada('deuda', d, { plan: bb, t: `Liquida ${d.name}`, u: 'lo que queda',
+    ops.push(jugada('deuda', d, { plan: bb || esByd(d), t: `Liquida ${d.name}`, u: 'lo que queda',
       por: `Tus pagos mínimos bajan del ${Math.round(m0.dti)} % al ${Math.round(medir(JUGAR.deuda(est0, d)).dti)} % de tu sueldo: ${pesos(d.min)} menos cada mes.`,
-      como: bb ? 'Ya va en tu plan: la próxima quincena la paga antes de mandar nada a GBM.'
-               : 'Cada peso extra va a la salida a Alemania: hazlo solo si te sobra después de lo demás.' })); }
+      como: bb ? 'Ya va en tu plan: la próxima quincena la paga antes de apartar nada.' : esByd(d) ? 'Ya va en tu plan: en cuanto se llene el colchón, todo lo que apartas va a capital.'
+               : 'No cobra intereses: sigue con su mensualidad; cada peso extra va al colchón y al BYD.' })); }
   if (mejor.fondo) { const x = mejor.fondo;
     ops.push(jugada('fondo', x, { plan: true, t: 'Completa tu fondo de emergencia', u: 'más a CETES',
       por: `Tu fondo pasa de ${pesos(EF)} a ${pesos(EF + x)}: el ${Math.round(Math.min(1, (EF + x) / meta) * 100)} % de tu meta de ${pesos(meta)}.`,
-      como: q15 >= x ? `De los ${pesos(q15)} que mandas a GBM el 15, pon ${pesos(x)} en CETES y no en acciones.`
-                     : 'Pon esa parte del ahorro de tu quincena en CETES y no en acciones.' })); }
+      como: paso28 === 'colchon' ? 'Es el paso 1 de tu plan: lo que apartas cada quincena y cada lunes va al colchón hasta completarlo.' : 'Tu colchón del plan ya está completo; de más, va al BYD o a invertir.' })); }
   if (mejor.ahorro) { const x = mejor.ahorro, n = meses(x);
-    ops.push(jugada('ahorro', x, { plan: true, t: 'Suma ahorro a tus inversiones', u: 'nuevos en GBM',
+    ops.push(jugada('ahorro', x, { plan: paso28 === 'gbm', t: 'Suma ahorro a tus inversiones', u: 'nuevos',
       por: `Lo que debes pasa del ${Math.round(m0.d2a)} % al ${Math.round(medir(JUGAR.ahorro(est0, x)).d2a)} % de lo que tienes.`,
-      como: n ? `Es lo que tu plan ya manda a GBM (${q1 ? pesos(q1) + ' el 1 y ' : ''}${pesos(q15)} el 15): llegas en unos ${n} si no lo sacas.`
-              : 'Ahorro nuevo que entre a GBM y se quede ahí.' })); }
+      como: paso28 !== 'gbm' ? 'Tu plan lo empieza cuando el BYD quede en cero: antes, cada peso abonado te rinde más.' : n ? `Es lo que tu plan ya invierte (${q1 ? pesos(q1) + ' el 1 y ' : ''}${pesos(q15)} el 15): llegas en unos ${n} si no lo sacas.`
+              : 'Ahorro nuevo que se invierta y se quede ahí.' })); }
   // Primero lo que el plan ya pide; dentro de eso, más puntos por cada peso.
   ops.sort((a, b) => (b.plan - a.plan) || ((b.score - ahora) / b.x - (a.score - ahora) / a.x));
   // Las jugadas del plan, juntas: hasta dónde llega la barra.
@@ -3238,7 +3275,7 @@ function loadRecurringForMonth(month) {
 // nada. En el mes actual, esta tarjeta enseña lo que sí usa, todo del maestro —lo mismo que pinta
 // el calendario del Dashboard—: los pagos de los próximos 15 días (`agendaDia`, más lo que Didi
 // aparta para la BBVA, que no pasa por el calendario), la BBVA hasta quedar en cero (`planBbva`)
-// y lo que llega a GBM (`desgloseMes`). Cuánto te queda de la quincena día a día lo dice el riel
+// y lo que apartas, con a dónde va (`gbmMes`, `planAhorro`). Cuánto te queda de la quincena día a día lo dice el riel
 // del Dashboard; aquí no se calcula otra vez.
 function renderQuincena(m){
   const C=window.CIFRAS;
@@ -3288,25 +3325,32 @@ function renderQuincena(m){
       <div class="pbar" style="height:6px;margin:10px 0 8px;background:rgba(var(--ov),.09)"><div class="pfill" style="width:${AB?Math.round(AB.pct):0}%;background:#f59e0b"></div></div>
       ${sig.map(a=>`<div class="qn-fila"><span>${a.fecha===hoyIso?'hoy':corto(fIso(a.fecha))} · ${DE[a.de]||a.de}</span><b>${fmt(a.monto)}</b></div>`).join('')}
       <div class="qn-sub" style="margin-top:8px">¿El banco dice otra cifra? Ese saldo manda: repórtalo y el plan se recalcula.</div>`
-    :`<div class="qn-cifra" style="color:var(--success)">En cero</div>
-      <div class="qn-sub">Lo que pagues con ella, págalo en la misma quincena: así no genera intereses.</div>`;
+    :bydBlq();
+  // Con la BBVA en cero, el bloque es del BYD: lo que debe, cuánto lleva pagado, cuándo queda en cero y los abonos que siguen (CIFRAS.planAhorro).
+  function bydBlq(){
+    const car=(S.debts||[]).find(d=>d.id==='d003'), bal=car?+car.balance||0:0, PA=C.planAhorro?C.planAhorro():{envios:[]};
+    if(!(bal>0.5)) return `<div class="qn-cifra" style="color:var(--success)">En cero</div><div class="qn-sub">Ya no debes el BYD: todo lo que apartas se invierte.</div>`;
+    const ab=PA.envios.filter(e=>e.fecha>=hoyIso&&e.auto>=1).slice(0,4), pct=+car.total>0?Math.max(0,Math.min(100,(1-bal/car.total)*100)):0, DEE={quincena:'de tu quincena',didi:'de Didi',deposito:'el depósito del depa',libre:'lo que pagabas de mensualidad',extra:'ingreso nuevo'};
+    return `<div class="qn-cifra" style="color:#f59e0b">${fmt(bal)}</div>
+      <div class="qn-sub">debes hoy · con tu plan, <b>en cero el ${C.v('autoCero')}</b> · te ahorras ${fmt(C.n('autoAhorra')||0)} de interés</div>
+      <div class="pbar" style="height:6px;margin:10px 0 8px;background:rgba(var(--ov),.09)"><div class="pfill" style="width:${Math.round(pct)}%;background:#f59e0b"></div></div>
+      <div class="qn-sub" style="margin-bottom:2px">Los abonos a capital que siguen</div>
+      ${ab.map(e=>`<div class="qn-fila"><span>${corto(fIso(e.fecha))} · ${DEE[e.de]||e.de}</span><b>${fmt(e.auto)}</b></div>`).join('')}
+      <div class="qn-tot"><span>La mensualidad, el ${+car.day||15}</span><span><b>${fmt(+car.min||0)}</b>, se anota sola</span></div>`;
+  }
 
-  // 3. A GBM: este mes, el siguiente y el primero sin BBVA
+  // 3. Lo que apartas: este mes, el siguiente y el que sigue, con a dónde va; y el paso del plan en que vas.
   const sigYM=x=>{ const p=x.split('-').map(Number); const d=new Date(p[0],p[1],1); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); };
   const nombreMes=x=>['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'][+x.slice(5)-1];
-  const filasGbm=[[m,C.desgloseMes(m)]];
-  let x=sigYM(m); filasGbm.push([x,C.desgloseMes(x)]);
-  const conBbva=f=>!!(f[1].g&&f[1].g.tarjeta>0);
-  if(conBbva(filasGbm[1])) for(let i=0;i<14;i++){ x=sigYM(x); const d=C.desgloseMes(x); if(!(d.g&&d.g.tarjeta>0)){ filasGbm.push([x,d]); break; } }
-  // El primero sin BBVA, en promedio (el mes tipo de su etapa): lo de Didi va cada lunes y un mes con cinco junta más que
-  // uno con cuatro, así que la cifra «al mes» es la del Plan Maestro y Coach ({{ahorroMesDepa}}), no la de ese mes.
-  const ult=filasGbm[filasGbm.length-1], crucero=C.desgloseMes(ult[0],undefined,{promedio:true});
-  const Mayus=t=>t[0].toUpperCase()+t.slice(1);
+  const Mayus=t=>t[0].toUpperCase()+t.slice(1), m2=sigYM(m), m3=sigYM(m2), G3=[m,m2,m3].map(x=>[x,C.gbmMes(x,{plan:true})]);
+  const van=g=>[['aColchon','al colchón'],['aAuto','al BYD'],['aGbm','a invertir']].filter(q=>g[q[0]]>=1).map(q=>q[1]).join(' y ');
+  const paso=C.pasoAhorro?C.pasoAhorro():'', PASO={colchon:['Paso 1 de 3','El colchón','se llena el '+C.v('colchonFecha')+'; después, todo al BYD'],auto:['Paso 2 de 3','El BYD','queda en cero el '+C.v('autoCero')+'; después, todo a invertir'],gbm:['Paso 3 de 3','A invertir','hasta irte en septiembre de 2028']}[paso]||['','',''];
+  const crucero=C.desgloseMes(m2,undefined,{promedio:true});
   const gbm=`
       <div class="qn-cifra" style="color:var(--purple)">${fmt(crucero.ahorro||0)}<span style="font-size:12px;font-weight:700;color:var(--text3)"> al mes</span></div>
-      <div class="qn-sub">en promedio desde ${nombreMes(ult[0])}${conBbva(filasGbm[0])?', ya sin la BBVA':''}: el día 1 ${fmt(crucero.dia1||0)}, el 15 ${fmt(crucero.dia15||0)} y Didi ${fmt(crucero.didi||0)}${C.didiSemana?' —'+fmt(C.didiSemana(ult[0]))+' cada lunes—':''}</div>
-      ${filasGbm.map(f=>`<div class="qn-fila"><span>${f[0]===m?'Este mes':Mayus(nombreMes(f[0]))}${conBbva(f)?' · lo demás va a la BBVA':''}</span><b>${fmt(f[1].ahorro||0)}</b></div>`).join('')}
-      ${C.n?`<div class="qn-tot"><span>Junio de 2027, a este ritmo</span><span><b>${fmt(+C.n('alemaniaJunio')||0)}</b> de los ${fmt(+C.n('sperrkonto')||0)} de la cuenta bloqueada · <b style="color:var(--warning)">${C.n('junioCorto')}</b></span></div>`:''}`;
+      <div class="qn-sub"><b>${PASO[0]}: ${PASO[1]}</b>, ${PASO[2]}. El día 1 ${fmt(crucero.dia1||0)}, el 15 ${fmt(crucero.dia15||0)} y Didi ${fmt(crucero.didi||0)}${C.didiSemana?' —'+fmt(C.didiSemana(m2))+' cada lunes—':''}</div>
+      ${G3.map(q=>`<div class="qn-fila"><span>${q[0]===m?'Este mes':Mayus(nombreMes(q[0]))}${van(q[1])?' · '+van(q[1]):''}</span><b>${fmt(q[1].total||0)}</b></div>`).join('')}
+      ${C.n?`<div class="qn-tot"><span>Al irte, agosto de 2028</span><span><b>${fmt(+C.n('dineroSalida')||0)}</b> con los trámites pagados · ${C.v('salidaVeredicto')}</span></div>`:''}`;
 
   document.getElementById('d-income').innerHTML=`
     <div class="card" style="padding:16px 20px">
@@ -3317,8 +3361,8 @@ function renderQuincena(m){
       </div>
       <div class="qn-grid">
         <div class="qn-blq"><div class="qn-t">Próximos pagos · 15 días</div>${lista}${pagos.length>MAX?`<div class="qn-mas">y ${pagos.length-MAX} más en el calendario del Dashboard</div>`:''}<div class="qn-tot"><span>En 15 días</span><span>entran <b style="color:var(--success)">${fmt(entran)}</b> · salen <b style="color:var(--danger)">${fmt(salen)}</b></span></div></div>
-        <div class="qn-blq"><div class="qn-t">La BBVA, quincena a quincena</div>${bbva}</div>
-        <div class="qn-blq"><div class="qn-t">A GBM, para Alemania</div>${gbm}</div>
+        <div class="qn-blq"><div class="qn-t">${resta>0&&!(BE&&BE.cancelada)?'La BBVA, quincena a quincena':'El BYD, hasta dejarlo en cero'}</div>${bbva}</div>
+        <div class="qn-blq"><div class="qn-t">Lo que apartas, y a dónde va</div>${gbm}</div>
       </div>
     </div>`;
   return true;
@@ -3551,9 +3595,8 @@ function renderInsights(inc, exp) {
 }
 
 // La maestría con la proyección del Plan Maestro —la misma de Coach y del Dashboard (CIFRAS.PROYECCION)—, no con
-// un modelo propio: lo que piden junio (la cuenta bloqueada y la visa) y agosto (la salida completa), lo que habrá
-// con el ritmo de hoy, lo que GBM y los CETES tendrán al cerrar la fase si sigues el plan (CIFRAS.estadoDia), el
-// ingreso nuevo que cierra el hueco y la fecha que el ahorro sí paga. Sin rendimiento en México: es la parte conservadora.
+// un modelo propio: el colchón, el BYD en cero, lo que piden junio (la cuenta bloqueada) y agosto de 2028 (la salida
+// completa), lo que habrá al cerrar la fase si sigues el plan (CIFRAS.estadoDia) y al irte, con lo que rinde lo invertido.
 function maePlanHTML(){
   const C=window.CIFRAS; if(!C||!C.texto) return '';
   const T=k=>C.texto('{{'+k+'}}'), mal=v=>/^faltan/.test(v);
@@ -3564,26 +3607,26 @@ function maePlanHTML(){
   const hoy=new Date(), ph=(C.PHASES||[]).find(f=>hoy>=f.start&&hoy<=f.end);
   const E=ph&&C.estadoDia?C.estadoDia(C.fechaLocal(ph.end)):null;
   const ini=C.PROYECTO&&C.PROYECTO.maestriaInicio?new Date(C.PROYECTO.maestriaInicio+'T12:00:00'):null;
-  const tarde=ini?MC[ini.getMonth()]+' '+(ini.getFullYear()+1):'';
   return `<div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;margin:6px 0 2px">📅 Lo que dice tu plan</div>
-    ${fila('Junio de 2027 · la cuenta bloqueada pide', T('sperrkonto'), 'a fin de junio tendrías '+T('alemaniaJunio')+', ya pagada la visa: '+T('junioVeredicto'), mal(T('junioCorto'))?'#f97316':'var(--success)')}
-    ${fila('Agosto de 2027 · la salida completa pide', T('salidaAgosto'), 'con la colegiatura, la reserva del BYD y el colchón; con tu ritmo, '+T('salidaVeredicto'), mal(T('salidaVeredicto'))?'#f97316':'var(--success)')}
-    ${E?fila('Al cerrar la '+ph.tag+' · '+ph.end.getDate()+' '+MC[ph.end.getMonth()], fmt(Math.round(E.gbm+E.cetes)), 'GBM y tus CETES si sigues el plan; el checkpoint pide '+T('marzoParaSalida')):''}
-    ${fila('Lo que cierra el hueco', '+'+T('extraSalida')+'/mes', 'de ingreso nuevo hasta que te vas: un aumento, un puesto mejor pagado o freelance de pruebas en lugar de horas de Didi')}
-    ${tarde?fila('Si no llega', tarde, 'la fecha que tu ahorro sí paga: a la salida '+T('salida2028')):''}
-    <div class="ts tm" style="margin-top:9px">Es la misma proyección de Coach y del Plan Maestro, sin rendimiento en México (la parte conservadora): si cambia un supuesto, cambia en las tres.</div>`;
+    ${fila('El colchón de '+T('colchonPlan'), T('colchonFecha'), 'el paso 1: lo que apartas va ahí hasta completarlo')}
+    ${fila('El BYD en cero', T('autoCero'), 'el paso 2: te ahorras '+T('autoAhorra')+' de interés', 'var(--success)')}
+    ${E?fila('Al cerrar la '+ph.tag+' · '+ph.end.getDate()+' '+MC[ph.end.getMonth()], fmt(Math.round(E.gbm+E.cetes)), 'el colchón y lo invertido si sigues el plan'+(E.auto>0.5?'; del BYD deberías '+fmt(Math.round(E.auto)):'; el BYD, en cero')):''}
+    ${fila('Al irte · agosto de '+(ini?ini.getFullYear():''), T('dineroSalida'), 'con los trámites ya pagados; de eso, '+T('rindeSalida')+' es lo que rinden tus inversiones', 'var(--success)')}
+    ${fila('Junio de '+(ini?ini.getFullYear():'')+' · la cuenta bloqueada pide', T('sperrkonto'), 'a fin de junio tendrías '+T('alemaniaJunio')+', ya pagada la visa: '+T('junioVeredicto'), mal(T('junioCorto'))?'#f97316':'var(--success)')}
+    ${fila('Agosto de '+(ini?ini.getFullYear():'')+' · la salida completa pide', T('salidaAgosto'), 'la cuenta bloqueada, la colegiatura y el colchón de llegada: '+T('salidaVeredicto'), mal(T('salidaVeredicto'))?'#f97316':'var(--success)')}
+    <div class="ts tm" style="margin-top:9px">Es la misma proyección de Coach y del Plan Maestro; lo que rinde lo invertido es un supuesto (${T('bolsaPct')}% bolsa y ${T('criptoPct')}% cripto): si cambia, cambia en las tres.</div>`;
 }
 function renderSpecials(freeMonth, refDate=new Date()) {
   // ── Análisis Maestría ──
   const maestria=(S.goals||[]).find(g=>g.id==='g001')||(S.goals||[]).find(g=>g.icon==='🎓'||g.name.toLowerCase().includes('maestr')||g.name.toLowerCase().includes('alemania'));
-  const targetDate=maestria?.date?new Date(maestria.date):new Date(2027,9,1);
+  const targetDate=maestria?.date?new Date(maestria.date):new Date(2028,8,1);
   // Coach.html → #perfil documenta la decisión real (jul 2026): pausar aportaciones
   // nuevas a esta meta por 1 año, sin tocar lo ya ahorrado. Mientras dure la pausa, no
   // tiene sentido mostrar "faltan $X/mes" como si debiera seguir aportando activamente.
   const maestriaPausada = !!(maestria?.pausadaHasta && new Date() < new Date(maestria.pausadaHasta));
   // 'T12:00:00' evita que `new Date('YYYY-MM-DD')` (medianoche UTC) se muestre como el día
   // anterior en zonas horarias negativas (México, UTC-6) al formatear con toLocaleDateString.
-  const targetLabel = new Date((maestria?.date||'2027-10-01')+'T12:00:00').toLocaleDateString('es-MX',{month:'short',year:'numeric'});
+  const targetLabel = new Date((maestria?.date||'2028-09-01')+'T12:00:00').toLocaleDateString('es-MX',{month:'short',year:'numeric'});
   const now=refDate;
   const monthsLeft=Math.max(1,Math.round((targetDate-now)/2592000000));
   const realToday=new Date();
@@ -4085,7 +4128,7 @@ function importData(input) {
 }
 
 // ─── SEED DATA ───────────────────────────────────────────────────────────────
-const SEED_VER = '23'; // incrementar cada vez que cambie el seed — v23: meta Maestría refleja la pausa de 1 año decidida en Coach (date 2028-10-01, pausadaHasta 2027-07-18)
+const SEED_VER = '23'; // incrementar cada vez que cambie el seed — v23: la meta de la Maestría
 function seedData() {
   // El seed de deudas vive en el módulo común; si no cargó, hay que verlo, no adivinarlo.
   if(!window.CIFRAS) console.error('[Finanzas] No cargó ../Dashboard/datos-maestros.js: el seed se sembrará SIN deudas. Revisa la ruta del <script src> en el <head>.');
@@ -4289,9 +4332,9 @@ function seedData() {
     // consola en vez de dejarlo pasar en silencio.
     debts: (window.CIFRAS && window.CIFRAS.DEUDAS_SEED) || [],
     goals: [
-      // Salida a Alemania en sep 2027 (Coach → Plan Maestro): sin pausa, y la meta es lo que cuesta irse —el
-      // total de SALIDA en el maestro, redondeado—. Las migraciones _alemania20261003 y _ahorroReal20261003 hacen lo mismo con los datos guardados.
-      {id:'g001',name:'Maestría en Alemania', target:398000, date:'2027-09-01',icon:'🎓'},
+      // Salida a Alemania en sep 2028 (Coach → Plan Maestro), con el BYD pagado: la meta es lo que cuesta irse —el total de
+      // SALIDA en el maestro, redondeado—. La migración _plan2028_20261124 hace lo mismo con los datos guardados.
+      {id:'g001',name:'Maestría en Alemania', target:385000, date:'2028-09-01',icon:'🎓'},
     ],
     investments: [
       // CETES no va aquí desde el 20-sep-2026: es el fondo de emergencia (`emergencyFund`, meta

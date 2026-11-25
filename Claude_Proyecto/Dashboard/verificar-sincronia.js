@@ -878,7 +878,7 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
   Object.keys(Q.peor).forEach(function (k) {
     const x = Q.peor[k], nom = (x.casa ? 'en casa' : 'con depa') + ', el día ' + x.dia;
     if (x.sobra >= 100) avisos.push('Cada quincena ' + nom + ' cabe mandar $' + Math.floor(x.sobra / 100) * 100 +
-      ' más a GBM sin quitarle a su gasto (en el peor mes de su etapa le sobran $' + Math.round(x.sobra) + ').');
+      ' más sin quitarle a su gasto (en el peor mes de su etapa le sobran $' + Math.round(x.sobra) + ').');
   });
   if (malos.length) problemas.push('La salida a Alemania o la proyección dejaron de cuadrar:\n' + malos.join('\n'));
   else ok.push('Salida a Alemania: ' + ids.length + ' pendientes en ' + S.bloques.length + ' temas y ' + S.costos.length +
@@ -1699,7 +1699,9 @@ function impactoDelCambio() {
      adónde vas, no dónde estás. Sin esto el control marcaría medio Plan Maestro. */
   const FUTURO = new RegExp('(en cuanto|cuando |hasta que|llegue|llegar|meta |objetivo|proyec' +
     '|se adelanta|una vez |ni una sola vez|apunta a|liquidar |bajar |no negocies|ninguno|nada de' +
-    '|antes de|estará|quedará|será|falta[rn]?|pendiente)', 'i');
+    '|antes de|estará|quedará|será|falta[rn]?|pendiente' +
+    // El plan del BYD: una fecha del maestro (autoCero), un «quede», «el día en que» o un punto de control dicen adónde vas.
+    '|autoCero|quede |el día en que|punto de control|al cerrar la fase|con el byd en cero|m[.]auto)', 'i');
   const ESPACIOS = new RegExp('[' + BS + 's]+', 'g');
   const SCRIPTS = new RegExp('<script[^]*?</script>', 'gi');
   // Cadenas largas de varias palabras: la prosa que vive dentro del código.
@@ -2819,10 +2821,10 @@ function promptsDeLoTocado() {
 
 /* ── 43. Tu dinero un día sube como el plan ──────────────────────────────────────────────────────────────
    `estadoDia` (tu dinero un día, desde lo de hoy) y la `PROYECCION` (el plan desde la foto del 1 oct) arrancan de sitios
-   distintos, pero mes a mes tienen que moverse igual: lo que llega a GBM, las ventas, el depósito y lo que la salida
-   cuesta. Adán, 21-oct-2026: "todo cuadre". `estadoDia` no restaba los costos de la salida y el 31 de marzo traía $6,000
-   de más (las apostillas de diciembre). Del segundo mes en adelante hasta el último en México, lo que sube GBM + CETES +
-   el depósito al cerrar cada mes contra lo que sube el plan (su GBM más el depósito). */
+   distintos, pero mes a mes tienen que moverse igual: lo que va al colchón, al BYD y a invertir, lo que rinde y lo que la
+   salida cuesta. Adán, 21-oct-2026: "todo cuadre". `estadoDia` no restaba los costos de la salida y el 31 de marzo traía $6,000
+   de más (las apostillas de diciembre). Del segundo mes en adelante hasta el último en México, lo que sube el colchón y lo
+   invertido al cerrar cada mes, y lo que se le abona al BYD, contra lo del plan. */
 (function () {
   const C = global.window && global.window.CIFRAS;
   if (!C || !C.estadoDia || !C.PROYECCION || !C.fechaLocal) { problemas.push('No se pudo comparar estadoDia con la PROYECCION'); return; }
@@ -2831,16 +2833,17 @@ function promptsDeLoTocado() {
   let ant = null, n = 0;
   C.PROYECCION.meses.filter(function (m) { return m.mes > hoyYM && m.mes <= ult; }).forEach(function (m) {
     const e = C.estadoDia(finDe(m.mes)); if (!e) return;
-    const v = e.gbm + e.cetes + e.deposito, p = m.alemania + (m.deposito || 0);
+    const v = e.gbm + e.cetes, p = m.alemania;
     if (ant) {
       n++;
       const de = v - ant.v, dp = p - ant.p;
+      if (Math.abs(e.aAuto - ant.a - (m.abonoAuto || 0)) > 2) mal.push(m.mes + ': tu dinero un día abona al BYD ' + Math.round(e.aAuto - ant.a) + ' y el plan ' + Math.round(m.abonoAuto || 0));
       if (Math.abs(de - dp) > 2) mal.push(m.mes + ': tu dinero un día sube ' + Math.round(de).toLocaleString('es-MX') + ' y el plan ' + Math.round(dp).toLocaleString('es-MX'));
     }
-    ant = { v: v, p: p };
+    ant = { v: v, p: p, a: e.aAuto };
   });
   if (mal.length) problemas.push('Tu dinero un día (estadoDia) no se mueve como el plan:\n     ' + mal.join('\n     '));
-  else ok.push('Tu dinero un día: ' + n + ' meses suben igual que el plan (GBM, ventas, el depósito y lo que cuesta la salida)');
+  else ok.push('Tu dinero un día: ' + n + ' meses se mueven igual que el plan (el colchón, el BYD, lo invertido, lo que rinde y lo que cuesta la salida)');
 })();
 
 /* ── 44. El modo oscuro de Alemán sigue a sus hojas ──────────────────────────────────────────────────────
@@ -3538,7 +3541,8 @@ function promptsDeLoTocado() {
   if (!/#kpiOverlay \.gbm-card\.kpi-card,#kpiOverlay \.gbm-head\{background:var\(--kv-sup\)\}/.test(c)) malos.push('el fondo de las ventanas ya no es opaco');
   if (/\.usdIn\b/.test(m) || m.indexOf('tiBtcAbiertas(F)') < 0) malos.push('lo metido en Bitcoin ya no sale de las compras vivas (tiBtcAbiertas)');
   if (/\$\d{2,}/.test(m.replace(/\/\*[\s\S]*?\*\//g, ''))) malos.push('hay una cifra en pesos escrita a mano en medidores.js');
-  if (/C\(\)\.v\('(?!decisionMaestria')/.test(m)) malos.push('una cifra del plan sale sin pasar por money(): se vería en modo privado');
+  // Las fechas del plan (no son dinero) sí se escriben tal cual.
+  if (/C\(\)\.v\('(?!(?:decisionMaestria|colchonFecha|autoCero)')/.test(m)) malos.push('una cifra del plan sale sin pasar por money(): se vería en modo privado');
   if (malos.length) { problemas.push('Las ventanas de los medidores:\n     ' + malos.join('\n     ')); return; }
   ok.push('Las ventanas de los ' + ids.length + ' medidores: cada una con su contenido en medidores.js, fondo opaco y sin cifras a mano');
 })();
@@ -3618,32 +3622,83 @@ function promptsDeLoTocado() {
 
 /* ── 63. El fondo de la maestría, mes por mes ─────────────────────────────────────────────────────────────────────────
    Adán, 24-nov-2026: "datos reales de cuánto llevo… la proyección debe variar… esas cifras no están documentadas, deberías
-   quitarlas, y no contemples lo que pagas a la salida". Con unos cierres de juguete: cada desglose suma su total, un mes que
-   falta crece lo que entra menos lo documentado, un buen cierre sube la proyección, el corte pide lo mismo que el plan y la
-   ventana usa esta cuenta. */
+   quitarlas, y no contemples lo que pagas a la salida". Y del plan 2028, el mismo día: "quiero pagar mi carro primero y después
+   ahorrar". Con unos cierres de juguete: cada desglose suma su total; un mes que falta reparte lo que te queda entre el colchón,
+   el BYD, la bolsa y cripto, y crece lo que no se fue al BYD más lo que rinde; el BYD baja lo que se abona; un buen cierre sube la
+   proyección; guardar menos la baja; y la ventana usa esta cuenta. */
 (function () {
   const malos = [], C = global.window && global.window.CIFRAS;
   if (!C || typeof C.ritmoMaestria !== 'function' || typeof C.didiEn !== 'function') malos.push('el maestro ya no exporta ritmoMaestria / didiEn');
   else {
     const h = (m, v) => ({ month: m, emergencyFund: v, btcValue: 0, investments: [{ id: 'i004', value: 11250 }], activos: [], debts: [] });
-    const F = { indicatorHistory: [h('2026-10', 6000), h('2026-11', 12000)], btcHistory: [], investments: [], emergencyFund: 0, transactions: [], debts: [] };
-    const corre = real => C.ritmoMaestria(F, { real: real, hoy: '2026-12-31' }), a = corre(30000), b = corre(36000), fin = x => x.meses[x.meses.length - 1], sO = o => Object.keys(o).reduce((s, k) => s + o[k], 0);
-    if (Math.abs(fin(b).proy - fin(a).proy - 6000) > 0.01) malos.push('un buen cierre no sube la proyección lo mismo');
+    const F = { indicatorHistory: [h('2026-10', 6000), h('2026-11', 12000)], btcHistory: [], investments: [{ id: 'i004', value: 11250 }], emergencyFund: 18750, transactions: [], debts: [{ id: 'd003', balance: 100000, rate: 12.99, min: 6700, day: 15 }] };
+    const corre = (real, o) => C.ritmoMaestria(F, Object.assign({ real: real, hoy: '2026-12-31' }, o || {})), a = corre(30000), b = corre(36000), fin = x => x.meses[x.meses.length - 1], sO = o => Object.keys(o).reduce((s, k) => s + o[k], 0);
+    const sube = fin(b).proy - fin(a).proy;
+    if (!(sube > 0)) malos.push('un buen cierre no sube la proyección');
+    if (!(fin(corre(30000, { parte: .5 })).proy < fin(a).proy)) malos.push('guardar menos no baja la proyección');
+    if (!(fin(corre(30000, { bolsa: 0, cripto: 0 })).proy < fin(a).proy) || !(a.rinde > 0)) malos.push('lo invertido no rinde en la proyección');
+    if (!a.lleno || !a.cero || a.lleno > a.cero) malos.push('el BYD queda en cero antes de que se llene el colchón');
     if (a.meses[0].mes !== '2026-10' || a.meses.filter(x => x.tipo === 'cierre').length !== 2 || fin(a).mes !== C.PROYECCION.cortes.salida.mes) malos.push('los meses de la gráfica no van del primer cierre al corte de la salida');
     if (a.meses[0].real !== 17250) malos.push('un cierre no suma todo lo que tenías');
     a.meses.forEach((x, i) => {
       if (Math.abs(sO(x.entraDe) - x.entra) > 0.01 || Math.abs(sO(x.saleDe) - x.sale) > 0.01 || Math.abs(x.entra - x.sale - x.queda) > 0.01) malos.push(x.mes + ': el desglose no suma su total');
       ['suscripciones', 'cuidado', 'depa'].forEach(g => { if (x.saleDe[g] && Math.abs(sO(x.items[g] || {}) - x.saleDe[g]) > 0.01) malos.push(x.mes + ': el detalle de ' + g + ' no suma'); });
       const t = x.tipo === 'proy' ? x.proy : x.real; if (x.activos && Math.abs(sO(x.activos) - t) > 0.01) malos.push(x.mes + ': los activos no suman lo que llevas');
-      if (x.tipo === 'proy' && Math.abs(x.proy - a.meses[i - 1].proy - x.queda) > 0.01) malos.push(x.mes + ': no crece lo que entra menos lo que sale');
+      if (x.tipo === 'proy') {
+        const p = a.meses[i - 1], dep = p.activos.dep - x.activos.dep;
+        if (Math.abs(x.proy - p.proy - (x.queda + x.rinde - x.va.aAuto)) > 0.01) malos.push(x.mes + ': no crece lo que te queda y lo que rinde menos lo que se abona al BYD');
+        if (Math.abs(x.va.aColchon + x.va.aAuto + x.va.aBolsa + x.va.aCripto - x.queda - dep) > 0.01) malos.push(x.mes + ': lo que te queda no va completo al colchón, al BYD, a la bolsa y a cripto');
+        if (x.va.aBolsa + x.va.aCripto > 0.01 && x.auto > 0.5) malos.push(x.mes + ': se invierte con el BYD todavía debiendo');
+        if (x.auto > 0.5 && Math.abs(p.auto + x.va.interes - x.saleDe.auto - x.va.aAuto - x.auto) > 0.01) malos.push(x.mes + ': el BYD no baja lo que se le paga');
+      }
       if ('resto' in x.saleDe) malos.push(x.mes + ': volvió un gasto no documentado');
     });
-    if (Math.abs(fin(a).nec - Math.max(a.pide, a.finPlan)) > 0.01) malos.push('lo que se necesita al irte no es lo que pide el corte');
+    if (a.pide !== C.PROYECCION.cortes.salida.pide) malos.push('lo que se necesita al irte no es lo que pide el corte');
     if (C.didiEn('2026-10') === C.PROYECTO.didiMes || C.didiEn('2027-03') !== C.PROYECTO.didiMes) malos.push('Didi de los meses pasados cambió con el de hoy');
   }
   const m = leer('Dashboard/medidores.js'); if (m.indexOf('.ritmoMaestria(') < 0 || m.indexOf("trayecto('salida'") < 0) malos.push('la ventana del Fondo Maestría ya no usa ritmoMaestria');
   if (malos.length) { problemas.push('El fondo de la maestría:\n     ' + malos.slice(0, 8).join('\n     ')); return; }
-  ok.push('Fondo Maestría: la proyección sale de los cierres, lo que entra y lo documentado que sale, y se mueve con cada mes');
+  ok.push('Fondo Maestría: la proyección sale de los cierres, lo que entra y lo documentado que sale, en el orden del plan: el colchón, el BYD y a invertir');
+})();
+
+/* ── 65. El plan 2028: el carro primero ───────────────────────────────────────────────────────────────────────────────
+   Adán, 24-nov-2026: "ok, tomaré ese camino, entonces en todas mis páginas… cambia ese plan… ese es mi plan desde ahora". El
+   colchón, después el BYD hasta cero y después a invertir; la salida, el 1 de septiembre de 2028 (o con ALTEN). Aquí: que los
+   envíos respeten ese orden y no se pierda un peso, que las fases vayan con él, que el interés con el plan sea menor, que quien
+   no manda atrase la fecha, que un mes invertido rinda, que irse con ALTEN no pague la cuenta bloqueada y que ninguna página
+   siga diciendo que la salida es en 2027. */
+(function () {
+  const malos = [], C = global.window && global.window.CIFRAS;
+  if (!C || typeof C.planAhorro !== 'function' || typeof C.abonosPlan !== 'function') { problemas.push('El plan 2028: el maestro ya no exporta planAhorro / abonosPlan'); return; }
+  const P = C.PROYECTO, A = C.planAhorro(), F = C.PHASES || [];
+  if (P.maestriaInicio !== '2028-09-01' || P.ultimoMesMexico !== '2028-08') malos.push('la salida no es el 1 de septiembre de 2028');
+  if (!A.lleno || !A.cero || A.lleno > A.cero || A.cero >= P.maestriaInicio) malos.push('el colchón y el BYD no quedan en su orden antes de irte: ' + A.lleno + ' / ' + A.cero);
+  A.envios.forEach(function (e) {
+    if (Math.abs(e.colchon + e.auto + e.gbm - e.monto) > 0.02) malos.push(e.fecha + ': el envío no suma sus partes');
+    if (e.auto > 0.02 && e.fecha < A.lleno) malos.push(e.fecha + ': se abona al BYD antes de llenar el colchón');
+    if (e.gbm > 0.02 && e.fecha < A.cero) malos.push(e.fecha + ': se invierte antes de que el BYD quede en cero');
+  });
+  const fase = function (k) { return F.filter(function (p) { return k >= C.fechaLocal(p.start) && k <= C.fechaLocal(p.end); })[0] || {}; };
+  if (fase(A.cero).tag !== 'Fase 1') malos.push('el BYD queda en cero fuera de la Fase 1 (' + fase(A.cero).tag + ')');
+  if (fase(P.maestriaInicio).tag !== 'Fase 3' || C.fechaLocal(fase(P.maestriaInicio).start) !== P.maestriaInicio) malos.push('la Fase 3 no arranca el día de la salida');
+  const I = C.autoIntereses();
+  if (!(I.plan < I.solo) || Math.abs(I.solo - I.plan - I.ahorra) > 0.02) malos.push('abonar al BYD no ahorra interés');
+  const menos = C.proyectar({ menosAhorro: 4000 }).ahorro, base = C.PROYECCION.meses;
+  if (!(menos.cero > A.cero)) malos.push('mandar menos no atrasa el día en que el BYD queda en cero');
+  const fila = base.filter(function (m) { return m.mes === '2028-03'; })[0] || {};
+  if (!(fila.rendimiento > 0) || !(fila.aInvertir > 0) || fila.auto > 0.5) malos.push('en marzo de 2028 no se invierte o no rinde');
+  const al = C.proyectar({ alten: true }).filter(function (m) { return m.mes === '2028-09'; })[0] || {}, es = base.filter(function (m) { return m.mes === '2028-09'; })[0] || {};
+  if (!(al.entra > es.entra)) malos.push('irse con ALTEN no da sueldo desde el primer mes');
+  const viejo = /(salida|salir|te vas|irte|irse|Esslingen|Alemania|maestr[ií]a)[^.<>\n]{0,60}(septiembre|sept?\.?) (de |del )?2027|(septiembre|sept?\.?) (de |del )?2027[^.<>\n]{0,40}(salida|Esslingen|Alemania|maestr[ií]a)/i;
+  ['Dashboard/datos-maestros.js', 'Dashboard/dashboard.html', 'Dashboard/medidores.js', 'Dashboard/viajes.js', 'Dashboard/prompts-paginas.js', 'Dashboard/habilidades-base-practica.js', 'Coach/Coach.html', 'Finanzas/Finanzas.html', 'ActrizIA/actriz.html', 'ActrizIA/plan.js', 'Laptop/laptop.html'].forEach(function (p) {
+    const t = leer(p); if (!t) return;
+    t.split('\n').forEach(function (l, i) {
+      if (/^\s*(\/\/|\*|\/\*)/.test(l) || /Fase 0|2026-10-03|3 oct 2026/.test(l)) return;
+      const m = l.match(viejo); if (m) malos.push(p + ':' + (i + 1) + ' sigue con la salida en 2027: «' + m[0].slice(0, 90) + '»');
+    });
+  });
+  if (malos.length) { problemas.push('El plan 2028:\n     ' + malos.slice(0, 14).join('\n     ')); return; }
+  ok.push('El plan 2028: el colchón, el BYD en cero el ' + A.cero + ' y a invertir; la salida, el ' + P.maestriaInicio + '; fases, interés y escenarios van con él');
 })();
 
 /* ── 62. A la mano, editable ────────────────────────────────────────────────────────────────────────────────────────

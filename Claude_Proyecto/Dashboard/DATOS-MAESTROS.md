@@ -155,7 +155,7 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{sueldo}}` | $41,000 | Bruto mensual ALTEN, quincenal a BBVA |
 | `{{sueldoQuinc}}` | $20,500 | Derivada: la mitad de `sueldo` |
 | `{{didiMes}}` | $10,000 | Lo que trae Didi al mes (Adán, 24-nov-2026); los meses de antes conservan lo que dijo entonces (`didiAntes`, `didiEn(mes)`) |
-| `{{didiAhorro}}` | $10,000 | Lo que Didi aparta al mes, en promedio —cada lunes lo mismo, 12 entre 52 (`didiSemana`: $2,307.69), así que un mes con cinco lunes junta más—: a la BBVA mientras tenga saldo, después a GBM; los lunes de la quincena después de liquidarla, para vivir (`lunesDidiTuyos`). De octubre de 2026 a enero de 2027 (dicho por Adán) |
+| `{{didiAhorro}}` | $10,000 | Lo que Didi aparta al mes, en promedio —cada lunes lo mismo, 12 entre 52 (`didiSemana`: $2,307.69), así que un mes con cinco lunes junta más—: a la BBVA mientras tenga saldo y, después, en el orden de `planAhorro` (el colchón, el BYD, a invertir); los lunes de la quincena después de liquidarla, para vivir (`lunesDidiTuyos`). De octubre de 2026 a enero de 2027 (dicho por Adán) |
 | `{{didiAhorroMas}}` | $10,000 | Lo mismo desde `PROYECTO.didiMasDesde` (febrero de 2027), cuando trabaja más horas. El último mes en México va la mitad (`didiAlAhorro`) |
 | `{{siVale}}` | $940 | Vale de despensa |
 | `{{ingresoTotal}}` | $51,940 | Derivada: sueldo + Didi + Si Vale |
@@ -165,10 +165,10 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{celular}}` `{{celularPlan}}` | $650 · Plan de datos AT&T | Día 1 |
 | `{{servicios}}` | $1,075 | Plan AT&T + internet + gas (la mitad: es bimestral) + luz/agua |
 | `{{suscripciones}}` | $1,080 | Gym + Claude Code + iCloud |
-| `{{cetesDia15}}` | $0 | El aporte a CETES del día 15. En 0: el ahorro va todo a GBM (Adán, 5-oct-2026: *"el ahorro no se irá a cetes, se irá a gbm, lo invertiré todo"*). Los CETES que ya tiene siguen siendo su fondo de emergencia |
-| `{{ahorroDia1}}` | $2,050 | Págate primero, con depa: lo que va a GBM el día 1, desde diciembre de 2026 (la quincena del 1 de noviembre pagó la BBVA) |
+| `{{cetesDia15}}` | $0 | El aporte a CETES del día 15. En 0: lo que se invierte va a la bolsa y a cripto (Adán, 24-nov-2026: *"el ahorro no lo pondría en cetes"*). Los CETES que ya tiene son parte de su colchón |
+| `{{ahorroDia1}}` | $2,050 | Págate primero, con depa: lo que se aparta el día 1, desde diciembre de 2026; a dónde va lo dice `planAhorro` (la quincena del 1 de noviembre pagó la BBVA) |
 | `{{ahorroDia15}}` | $6,950 | Lo mismo el día 15, con depa |
-| `{{ahorroDia1Casa}}` | $12,100 | En casa de su familia: lo que va a GBM el día 1 |
+| `{{ahorroDia1Casa}}` | $12,100 | En casa de su familia: lo que se aparta el día 1 |
 | `{{ahorroDia15Casa}}` | $8,900 | En casa: lo que va el día 15. Cada quincena se sostiene sola (Adán: *"eso debe ser cada quincena y deja dinero sobrante para la quincena"*): su sueldo menos los fijos de sus días, la comida de sus días y su parte del gasto personal —sus rutinas y el tope de lo demás (`SUPUESTOS.loDemas`, `loDemasEnCasa`) repartidos por día—, redondeado a cientos hacia abajo con el peor mes de cada etapa. Mientras la BBVA tenga saldo, los cuatro van primero a ella (`planBbva`) |
 | `{{especulacionMes}}` `{{especulacionBtcPct}}` | $20,000 · 10 | La pestaña *Riesgo súper alto* de Qué invertir hoy: al mes, `{{cetesDia15}}` a CETES (hoy nada), ese % a Bitcoin y todo el resto a una sola empresa a la baja que investiga Claude |
 | `{{fijosTotal}}` | $13,405 | Derivada: renta + servicios + suscripciones |
@@ -234,7 +234,7 @@ envío del 1 arranca en diciembre). Todo lo de ese día lleva `pagado` —la qui
 la luz y el iPhone ya se pagaron—: Finanzas no lo pone en sus próximos pagos. `{{bbvaRuta}}` dice esos abonos
 en una frase, desde hoy (`bbvaRutaTxt`): la prosa del Plan Maestro y de Coach lo usa en vez de
 escribir las fechas. En cero se cancela (Adán, 15-oct-2026: *"después que la liquide la cancelo y de ahí nos
-vamos a incrementar números en inversiones"*) y lo que iba a ella va a GBM.
+vamos a incrementar números en inversiones"*) y lo que iba a ella sigue el plan (`planAhorro`).
 
 **Con Finanzas en el navegador, el plan sigue al saldo vivo** (Adán, 15-oct-2026: *"debe
 actualizarse lo de tarjeta de bbva solito, en base a cuánto gasto y cuánto gano cada día"*): arranca
@@ -332,37 +332,37 @@ pero el nombre de la variable se queda corto.
 |---|---|---|
 | `{{fondoHoy}}` | $7,000 — lo que llevas del fondo de emergencia: la cuenta, el efectivo y los CETES (`fondoHoy(F)`). Contra la meta se compara siempre este | vivo |
 | `{{fondo}}` `{{fondoMeta}}` `{{fondoMeses}}` | $6,000 de $69,000 — `fondo` son solo los CETES; la meta son 3 meses (`PROYECTO.fondoMeses`, editable en Mis cifras) de lo indispensable del mes que sigue, hacia arriba a miles (`fondoMeta(ym)`): sin renta baja sola. `target` de ef-001 es su copia, la pone `fondoMetaGuardar` al cargar | vivo · derivada |
-| `{{salidaTotal}}` | $397,878 — lo que cuesta irse a Alemania, completo (`SALIDA.costos`) | derivada; se mueve con `PROYECTO.eurMxn` |
-| `{{salidaJunio}}` | $254,478 — lo que tiene que estar en la cuenta en junio de 2027: la cuenta bloqueada y la visa | derivada |
+| `{{salidaTotal}}` | $384,878 — lo que cuesta irse a Alemania, completo (`SALIDA.costos`) | derivada; se mueve con `PROYECTO.eurMxn` |
+| `{{salidaJunio}}` | $254,478 — lo que tiene que estar en la cuenta en junio de 2028: la cuenta bloqueada y la visa | derivada |
 | `{{sperrkonto}}` | $249,984 — la cuenta bloqueada, €11,904 al euro del plan | derivada |
 | `{{sperrkontoEur}}` `{{colegiaturaEur}}` `{{werkstudentEur}}` | €11,904 · €1,900 · €1,100 — en euros, como los pide Alemania: la cuenta bloqueada (`SALIDA.costos`), la colegiatura de cada semestre y lo que deja el Werkstudent al mes, neto (`SUPUESTOS.alemania`) (`fmt: 'txt'`) | constantes |
 | `{{bydRenta}}` | $7,500 — lo que deja el BYD rentado al mes, neto (`SUPUESTOS.byd.rentaNeta`) | constante |
-| `{{ahorroMesDepa}}` | $19,000 — lo que llega a GBM en un mes con depa: lo del 1, lo del 15 y Didi | derivada (`mesTipo(false)`) |
+| `{{ahorroMesDepa}}` | $19,000 — lo que aparta en un mes con depa: lo del 1, lo del 15 y Didi | derivada (`mesTipo(false)`) |
 | `{{ahorroMesCasa}}` | $31,000 — lo mismo en casa de su familia: lo del 1, lo del 15 y Didi | derivada (`mesTipo(true)`) |
 | `{{gastoPersonalDepa}}` | $8,022 — lo que queda del sueldo con depa tras los fijos, la comida y el ahorro: su gasto personal, con sus rutinas dentro; lo que pague con tarjeta, saldado en la misma quincena | derivada |
 | `{{gastoPersonalCasa}}` | $7,255 — lo mismo en casa | derivada |
 | `{{cuidadoMes}}` | $2,907 — lo que cuestan al mes sus rutinas de piel, cabello y suplementos (`RUTINA_PIEL`, `RUTINA_PELO`, `SUPLEMENTOS`); uno del cabello con `cadaMeses` se compra con esa frecuencia | derivada |
 | `{{recorteRutinas}}` | $1,028 — lo que se ahorraría al mes con todos los `recorte` de sus rutinas; $428 de eso los decide su dermatólogo | derivada (`rutinasDesglose()`) |
-| `{{alemaniaMarzo}}` | $122,054 — lo que la proyección espera en GBM al cerrar la Fase 1, con el ritmo de hoy | derivada de la PROYECCION |
-| `{{salidaAgosto}}` | $324,284 — lo que pide la salida completa en agosto de 2027: la cuenta bloqueada, la reserva del BYD, el colchón y la colegiatura del primer semestre (`cortes.salida.pide`) | derivada; se mueve con `PROYECTO.eurMxn` |
-| `{{extraSalida}}` | $11,982 — el ingreso nuevo al mes, de `SUPUESTOS.extraDesde` al último mes en México, que paga esa salida completa (`salidaConIngreso()`) | derivada |
-| `{{marzoParaSalida}}` | $181,966 — lo que tendría GBM al cerrar la Fase 1 con ese ingreso nuevo: el punto de control del 31 de marzo | derivada |
-| `{{mayoParaSalida}}` | $257,100 — lo mismo el día de decidir (`PROYECTO.maestriaDecision`) | derivada |
-| `{{salida2028}}` | «sobran …» o «faltan …»: la salida completa si se mueve a septiembre de 2028 (`desfase: 12`, `fmt: 'txt'`) | derivada |
-| `{{alemaniaJunio}}` | $198,960 — la cuenta a fin de junio de 2027, con el ritmo de hoy | derivada de `PROYECCION.cortes` |
+| `{{colchonPlan}}` `{{colchonFecha}}` | $35,000 · 15 ene 2027 — el colchón del plan (`PROYECTO.colchon`, editable en Mis cifras): tres meses de lo indispensable ya sin renta; y el día en que se llena (`planAhorro().lleno`, `fmt: 'fecha'`) | constante · derivada |
+| `{{autoCero}}` `{{autoCeroMes}}` | 15 ago 2027 · ago 2027 — el día en que el plan deja el BYD en cero (`planAhorro().cero`) | derivada |
+| `{{autoInteres}}` `{{autoInteresPlan}}` `{{autoAhorra}}` | el interés que falta del BYD pagando solo la mensualidad, el que se paga con los abonos del plan y lo que se ahorra (`autoIntereses()`): se mueven con el saldo vivo | derivadas |
+| `{{invertirMes}}` `{{bolsaPct}}` `{{criptoPct}}` | $37,700 · 80 · 20 — lo que se invierte al mes desde que el BYD queda en cero (lo de casa y la mensualidad que ya no se paga) y su reparto: `PROYECTO.bolsaPct`, editable | derivada · constante |
+| `{{dineroSalida}}` `{{rindeSalida}}` | $448,454 · $25,322 — lo que el plan tiene al cerrar agosto de 2028, ya pagados los trámites, y lo que de eso es rendimiento (bolsa 10 % al año, cripto 20 %: `PROYECTO.bolsaAnual`, `criptoAnual`, editables) | derivada de la PROYECCION |
+| `{{salidaAgosto}}` | $310,884 — lo que pide la salida completa en agosto de 2028: la cuenta bloqueada, el colchón de llegada y la colegiatura del primer semestre (`cortes.salida.pide`) | derivada; se mueve con `PROYECTO.eurMxn` |
+| `{{alemaniaJunio}}` | $420,884 — lo que el plan tiene a fin de junio de 2028 | derivada de `PROYECCION.cortes` |
 | `{{bbvaCero}}` | 15 nov 2026 — el día que la BBVA queda en cero con `planBbva` (`fmt: 'fecha'`) | derivada |
 | `{{bbvaIntereses}}` | $0 — lo que costaría en intereses llegar a cero; en 0 con `PROYECTO.bbvaSinIntereses` | derivada |
 | `{{bbvaRuta}}` | «el domingo 15 nov, $2,300 de la quincena»: los abonos que le quedan a la BBVA, desde hoy (`bbvaRutaTxt`, `fmt: 'txt'`) | derivada de `planBbva` |
 | `{{junioVeredicto}}` | «faltan … para la cuenta bloqueada» o «alcanza, con … de margen» (`fmt: 'txt'`) | derivada |
 | `{{junioCorto}}` | «faltan …» o «sobran …»: lo mismo en corto, para la cifra grande de las tarjetas de las fases (`fmt: 'txt'`) | derivada |
-| `{{salidaVeredicto}}` | «faltan …» o «sobran …»: lo que pide la salida —cuenta bloqueada, reserva del BYD, colchón y la colegiatura del primer semestre— contra la cuenta a fin de agosto (`fmt: 'txt'`) | derivada |
-| `{{mesMillon}}` | sep 2031 — el mes en que la proyección cruza el millón (`fmt: 'mes'`) | derivada de la PROYECCION |
+| `{{salidaVeredicto}}` | «faltan …» o «sobran …»: lo que pide la salida —cuenta bloqueada, colchón de llegada y la colegiatura del primer semestre— contra lo que se tiene a fin de agosto (`fmt: 'txt'`) | derivada |
+| `{{mesMillon}}` | abr 2031 — el mes en que la proyección cruza el millón (`fmt: 'mes'`) | derivada de la PROYECCION |
 | `PROYECTO.eurMxn` | 21.0 — el euro para planear; el 2-oct-2026 estaba en $20.46 | constante |
 | `PROYECTO.usdMxn` | 17.5 — el dólar para planear lo que se cobra en dólares (los proyectos de `Laptop/`) o se paga en dólares (los viajes); el 8-abr-2026 estaba en $17.76, se planea un poco abajo para no inflar lo que entra | constante |
 | `{{cetes}}` | $6,000 — el mismo número que `{{fondo}}` | derivada de `fondo` |
-| `{{maestria}}` `{{maestriaMeta}}` | $17,250 de $398,000 — el dinero es `CIFRAS.fondoMaestria()`: todo lo que tienes guardado —CETES, inversiones de Finanzas (hoy el depósito de la renta), Bitcoin, cuenta y efectivo—; la meta es lo que cuesta irse (migraciones `_alemania20261003` y `_ahorroReal20261003`) | derivada de lo vivo |
+| `{{maestria}}` `{{maestriaMeta}}` | $17,250 de $385,000 — el dinero es `CIFRAS.fondoMaestria()`: todo lo que tienes guardado —CETES, inversiones de Finanzas (hoy el depósito de la renta), Bitcoin, cuenta y efectivo—; la meta es lo que cuesta irse (migración `_plan2028_20261124`) | derivada de lo vivo |
 | `{{maestriaEscuela}}` | Esslingen — Automotive Systems M.Eng. | constante |
-| `{{maestriaInicio}}` `{{decisionMaestria}}` | 1 sep 2027 · 31 may 2027, la decisión (`PROYECTO.maestriaInicio`, `maestriaDecision`) | constantes, con `fmt: 'fecha'` |
+| `{{maestriaInicio}}` `{{decisionMaestria}}` | 1 sep 2028 · 31 may 2028, la decisión (`PROYECTO.maestriaInicio`, `maestriaDecision`) | constantes, con `fmt: 'fecha'` |
 | `{{heliTeoria}}` `{{heliHora}}` `{{heliHoraSim}}` `{{heliTramites}}` | $36,000 · $14,800 · $7,600 · $22,050 — la licencia de piloto privado de helicóptero en Aeroanahuac, Toluca (folleto de octubre de 2025): la teoría con su inscripción, la hora de Robinson 44, la de simulador, y los trámites con el examen y el médico | constantes |
 | `{{heliVuelo}}` `{{heliSimulador}}` `{{heliAnual}}` | $296,000 · $152,000 · $177,600 — las 20 horas de vuelo, las 20 de simulador y volar una hora al mes durante un año | derivadas de `heliHora` y `heliHoraSim` |
 | `{{heliCosto}}` `{{heliCosto30}}` `{{heliCosto35}}` | $506,050 · $578,050 · $614,050 — el total con el paquete, y con 30 o 35 horas de helicóptero en lugar de simulador, que es lo que suma el artículo 58. Los leen Mis Metas y Coach | derivadas |
@@ -373,30 +373,42 @@ pero el nombre de la variable se queda corto.
 cetes, de ahí tendré mi fondo de emergencia y cualquier cosa los vendo"*). Es **un solo número**,
 `emergencyFund` en `finanzasmx_v2` (y `current` de la meta `ef-001`, que se llama "Fondo de
 emergencia (CETES)"); ya no hay una inversión CETES aparte en `investments`, porque las apps sumaban
-las dos cosas en patrimonio y en el fondo de la maestría. **Ya no recibe aporte**: el ahorro de cada
-quincena va a GBM (`{{cetesDia15}}` en $0). Lo que Adán le mete o le saca se anota como aportación o retiro
+las dos cosas en patrimonio y en el fondo de la maestría. Es el
+**paso 1 del plan**: lo que se aparta lo lleva hasta `PROYECTO.colchon`. Lo que Adán le mete o le saca se anota como aportación o retiro
 —en el panel del Fondo de emergencia del Dashboard o en el bloque del fondo de Finanzas— con `fondoMovimiento`, que
-mueve `emergencyFund` y `ef-001` y guarda el movimiento en `efAportes`. Lo invertido en GBM no cuenta para su meta.
+mueve `emergencyFund` y `ef-001` y guarda el movimiento en `efAportes`. Lo invertido no cuenta para su meta.
 
 ### La salida a Alemania y la proyección
 
-Adán se va a la maestría de Esslingen en **septiembre de 2027** (`maestriaInicio`) y el BYD se queda: se renta a un conductor de plataforma mientras está fuera. Dos estructuras lo sostienen:
+Adán se va a Alemania en **septiembre de 2028** (`maestriaInicio`) con el BYD pagado —a la maestría de Esslingen o con ALTEN, según haya
+oferta firmada el día de decidir (`maestriaDecision`)— y el BYD se queda: se renta a un conductor de plataforma mientras está fuera. Tres
+estructuras lo sostienen:
 
+- **`planAhorro()`**: a dónde va cada peso que se aparta (Adán, 24-nov-2026: *"quiero pagar mi carro primero y después ahorrar… ese es mi
+  plan desde ahora"*). Desde `PROYECTO.planDesde`, lo de cada quincena, lo de Didi de los lunes y el depósito del depa van en orden: al
+  colchón hasta `PROYECTO.colchon`, al BYD a capital hasta cero y, desde ahí —con la mensualidad que ya no se paga—, a invertir.
+  `caminarAhorro(ini, o)` camina día por día desde lo que hay y devuelve `envios` ({fecha, de, monto, colchon, auto, gbm}), `lleno`,
+  `cero` y, por mes, a dónde fue todo, la mensualidad, el interés, lo que rinde lo invertido (`PROYECTO.rendInvertido`: `bolsaPct` a
+  `bolsaAnual` y el resto a `criptoAnual`) y lo que cuesta la salida. `planAhorro()` lo corre desde lo que hoy dice Finanzas y
+  `proyectar()` desde `SUPUESTOS.ancla` (lo que había el 24-nov-2026). Lo leen `agendaDia` (con su `destino`), `gbmMes`, `estadoDia`,
+  `desgloseMes`, la proyección y los medidores. `ahorroDia(kd)` da lo de un día, `pasoAhorro(kd)` el paso en que va y `abonosPlan()` los
+  abonos al BYD por mes, partidos en antes y después de la mensualidad: con ellos `prestamoTabla` acaba el mismo mes que el plan.
+  Desde `LIQUIDO_DESDE` (febrero de 2028) lo de la cuenta bloqueada se pasa a algo que no baje. Control 65.
 - **`SALIDA`**: lo que cuesta irse (`costos`, cada uno en su mes, en pesos o en euros al
   `PROYECTO.eurMxn`; `gasta:false` es dinero que se mueve pero sigue siendo suyo: la cuenta
-  bloqueada, la reserva del BYD y el colchón) y la lista exhaustiva de lo que hay que reunir
-  (`bloques`: admisión, visa, dinero, el BYD, salud física y mental, ropa, tecnología, vivienda,
+  bloqueada y el colchón) y la lista exhaustiva de lo que hay que reunir
+  (`bloques`: admisión, irse con ALTEN, visa, dinero, el BYD, salud física y mental, ropa, tecnología, vivienda,
   trabajo y lo que se queda en México), cada pendiente con su mes. Coach la pinta.
 - **`PROYECCION`**: el plan mes a mes desde la foto de Finanzas del 1 oct 2026 hasta el millón —lo
-  que entra, lo que sale, GBM con los CETES y el patrimonio líquido—, y
+  que entra, lo que sale, a dónde va lo que se aparta (`aColchon`, `abonoAuto`, `aInvertir`), lo que se tiene y el patrimonio líquido—, y
   `cortes`: lo que piden junio (la cuenta bloqueada) y el último mes en México (la cuenta
-  bloqueada, la reserva del BYD, el colchón y la colegiatura del primer semestre) contra lo que
+  bloqueada, el colchón y la colegiatura del primer semestre) contra lo que
   hay. `CIFRAS.proyectar(cambios)` corre escenarios —`menosAhorro`, `extraMes` (un ingreso nuevo al mes desde `extraDesde`), `desfase: 12` para irse en
-  septiembre de 2028, otro euro, sin Werkstudent— y `CIFRAS.cortesSalida(filas, cambios)` los
+  septiembre de 2029, `alten: true`, `rendMx` (lo que rinde lo invertido), otro euro, sin Werkstudent— y `CIFRAS.cortesSalida(filas, cambios)` los
   mide. De aquí salen el `liquido` de cada fase y los marcadores de la salida.
   Cada mes guarda además su detalle: `partes` —los renglones que forman `entra` (positivos) y
   `sale` (negativos), y suman exacto—, `aparte` —lo que se mueve sin dejar de ser suyo: la cuenta
-  bloqueada, la reserva del BYD, el colchón y el depósito del depa—, `rendimiento`, y lo que
+  bloqueada, el colchón y el depósito del depa—, `rendimiento`, y lo que
   queda de cada deuda (`auto`, `iphone`, `bbva`) y del depósito. `SUPUESTOS.porque` dice de dónde
   sale cada supuesto, en una frase con su fuente. Coach los enseña mes por mes.
 
@@ -410,17 +422,14 @@ cualquier app junto a `aplicarPlanBbva`, y el Dashboard la vuelve a llamar al ca
 hoy. `cuotas(d)` da cuántas van, cuántas faltan (con interés, `mesesRestantes`) y la fecha de la siguiente
 y de la última: una sola cuenta para Finanzas.
 
-**Lo que va a GBM cada semana: `gbmMes(ym)`**: el envío de cada quincena (los cobros `ahorro` de
-`agendaDia`), lo de Didi de los lunes —`didiGbmLunes(ym)`: lo de su semana (`didiSemana`, lo mismo cada lunes) en
-cada lunes de `lunesDidiGbm(ym)`: los que caen después del día en que el plan liquida la BBVA (`planBbva().fin`), no
-llevan abono de Didi a la tarjeta ni son de la quincena en que vive de Didi (`lunesDidiTuyos`), la misma regla de
-`estadoDia`. Mientras la BBVA tenga saldo no va nada de Didi a GBM (Adán: *"eso es después de liquidar BBVA"*)—, un
-ingreso aparte de `SUPUESTOS.extras` si lo hubiera (hoy ninguno: no vende nada de lo suyo), el depósito que regresa y
-los abonos de la BBVA desde el último saldo dicho. Los lunes en que lo de Didi es para vivir van aparte en cada
-semana (`vivir`): no suman a GBM, pero se dice a dónde fue. Lo pintan el plan de inversiones de
-Finanzas y *Qué invertir hoy* del Dashboard. **En qué va: `REPARTO_BASE`**: el reparto de base —GBMF2, el fondo de
-liquidez diaria de GBM, al 100 %: el dinero de la salida se usa en meses—, que Qué invertir hoy y Finanzas usan
-mientras Adán no escribe el suyo (`finanzasmx_v2.reparto`, que se edita en Qué invertir hoy). Nada de esto lo escribe
+**Lo que se aparta cada semana: `gbmMes(ym)`**: los envíos de `planAhorro` de ese mes por semana, en tres listas según a dónde van
+(`colchon`, `auto`, `gbm`) y juntos en `todo`, con sus totales (`aColchon`, `aAuto`, `aGbm`, `total`); antes de `planDesde`, lo que iba a
+GBM. Lo de Didi es lo de su semana (`didiSemana`, lo mismo cada lunes) en cada lunes de `lunesDidiGbm(ym)`: los que caen después de que la BBVA
+quedó en cero (`planBbva().fin`), no llevan abono de Didi a la tarjeta ni son de la quincena en que vive de Didi
+(`lunesDidiTuyos`). Los lunes en que lo de Didi es para vivir van aparte en cada semana (`vivir`): no suman, pero se dice a dónde fue.
+También los abonos de la BBVA desde el último saldo dicho. Lo pintan el plan de inversiones de Finanzas, *Qué invertir hoy* y las ventanas
+de los medidores. **En qué se invierte: `REPARTO_BASE`**: VOO `PROYECTO.bolsaPct` % y Bitcoin el resto, que Qué invertir hoy y Finanzas
+usan mientras Adán no escribe el suyo (`finanzasmx_v2.reparto`, que se edita en Qué invertir hoy). Nada de esto lo escribe
 una IA (Adán, 17-nov-2026: *"ya no quiero depender de mi suscripción a Claude"*). **`presupuestoFijo(cat, ym)`**: el límite de una categoría de Finanzas que el plan conoce
 (renta y aporte, servicios, suscripciones, comida, rutinas y deudas), de `desgloseMes`.
 
@@ -429,24 +438,20 @@ seleccione otro día, debes proyectar todo todo hasta mis inversiones… ya tene
 completo de mis finanzas y actualiza todo día a día"*). La `PROYECCION` es el plan desde la foto del 1
 oct; esto arranca de lo que hoy dice Finanzas —la BBVA viva, lo invertido, los CETES, el depósito del
 depa, el auto, el iPhone y el Bitcoin— y camina día por día con el mismo plan que el calendario: los
-abonos de `planBbva`, lo que cada quincena manda a GBM (los cobros `ahorro` de `agendaDia`, ya sin la
-parte de la tarjeta), lo que Didi aparta cada lunes cuando ya no va a la tarjeta, un ingreso aparte de
+abonos de `planBbva`, lo que se aparta cada día con su destino (`ahorroDia`: el colchón suma a `cetes`, el BYD baja y lo demás se
+invierte), lo que rinde lo invertido el último día del mes, un ingreso aparte de
 `SUPUESTOS.extras` si lo hubiera (el último día de su mes), lo que cuesta la salida ese mes (`SALIDA.costos` con
-`gasta`, de GBM y también el último día: `aSalida`), el depósito que regresa el mes después de `rentaHasta` y
+`gasta`, de lo invertido y también el último día: `aSalida`), el depósito que regresa el mes después de `rentaHasta` y
 lo que bajan el auto (su día, con su interés) y el iPhone. Devuelve el estado de ese día (`bbva`, `gbm`,
-`cetes`, `deposito`, `btc`, `auto`, `iphone`, `otras`), lo que se mandó para llegar ahí (`aBbva`, `aGbm`,
-`aSalida`, `movs`) y, para hoy, lo que el plan pide hoy (`pendiente`). Hoy es lo real; un día que viene ya cuenta
+`cetes`, `deposito`, `btc`, `auto`, `iphone`, `otras`), lo que se mandó para llegar ahí (`aBbva`, `aColchon`, `aAuto`, `aGbm`,
+`aSalida`, `rinde`, `movs`) y, para hoy, lo que el plan pide hoy (`pendiente`). Hoy es lo real; un día que viene ya cuenta
 lo de hoy, porque proyectar es seguir el plan. El dinero para gastar —la cuenta y el efectivo— no va
 aquí: lo lleva la cuenta de la quincena del Plan Maestro (`ctTramo`), con la comida y lo anotado. Un día que ya pasó, o después de
-`ultimoMesMexico`, devuelve null. Desde los saldos del 31-oct-2026, la proyección pone GBM en $8,112 el
-30 de noviembre —la BBVA se termina de pagar el 15—, en $15,727 el 31 de diciembre, ya pagadas las apostillas, y
-en $103,362 el 31 de marzo, con el depósito ya dentro. Lo usa Finanzas: GBM y los CETES al cerrar la fase y al irte,
-si sigues el plan. **Sube mes a mes lo mismo que la `PROYECCION`** (control 43) y, con los saldos de hoy, da lo mismo:
-GBM, los CETES y el depósito al cerrar marzo suman los `{{alemaniaMarzo}}` del plan. La foto ya no cuenta como ahorro
-la cuenta y el efectivo del 1 oct, que eran para gastar en la quincena: contados, la proyección daba $1,990 más en
-cada corte y el cierre de la fase salía con tres cifras distintas en Finanzas, el Plan Maestro y Coach.
+`ultimoMesMexico`, devuelve null. Lo usa Finanzas: el colchón y lo invertido al cerrar la fase y al irte, si sigues el plan. **Se mueve
+mes a mes lo mismo que la `PROYECCION`** (control 43). La foto del 1 de octubre no cuenta como ahorro la cuenta y el efectivo, que eran
+para gastar en la quincena.
 
-**El ahorro sale de lo que se manda, no de una resta.** En México, del sueldo solo llega a GBM lo
+**El ahorro sale de lo que se manda, no de una resta.** En México, del sueldo solo cuenta como ahorro lo
 que se aparta el día que entra cada quincena —`ahorroDia1`, `ahorroDia15`, `ahorroDia1Casa` y
 `ahorroDia15Casa`, que son cobros del calendario, menos lo que se lleva la BBVA mientras tenga
 saldo— y de Didi lo que Adán dijo
@@ -458,13 +463,10 @@ de las fases. Así el calendario del Dashboard y la proyección no pueden decir 
 el verificador lo comprueba mes a mes. El aguinaldo paga el seguro del BYD y ALTEN no da
 finiquito: no entran.
 
-**La salida se mide completa.** Los dos puntos de control del plan —el cierre de la Fase 1
-(`{{marzoParaSalida}}`) y el día de decidir (`{{mayoParaSalida}}`)— comparan GBM contra lo que pide
-agosto, no solo contra la cuenta bloqueada de junio: con un ritmo que alcance junio y no agosto, la
-salida se haría a medias. Lo que falta se dice como ingreso nuevo al mes (`{{extraSalida}}`), porque
-los recortes de las rutinas (`{{recorteRutinas}}`) no llegan y no hay nada que vender —Adán no vende lo suyo—; sin ese
-ingreso, la fecha que el ahorro sí paga es septiembre de 2028 (`{{salida2028}}`). `salidaConIngreso()`
-reparte el hueco de agosto entre los meses que quedan en México y corre la proyección con él.
+**La salida se mide completa.** El día de decidir (`maestriaDecision`) se compara lo que se tiene contra lo que pide la cuenta bloqueada, y
+agosto contra la salida completa (`cortes.salida`). El ritmo de verdad —guardar todo lo que queda cada mes, o una parte— lo da
+`ritmoMaestria(F, {parte, bolsa, cripto})`, con lo que entra y lo documentado que sale: la ventana del Fondo Maestría, la gráfica de
+Coach y la de Finanzas usan esa cuenta, y la del calendario es la PROYECCION con los trámites sumados.
 Para cambiar un supuesto (el tope de lo demás, la comida de la lista, lo que cuesta la vida allá, el Werkstudent,
 la renta del auto) se edita `SUPUESTOS`; para un costo, `SALIDA.costos`; para lo que se manda cada
 quincena, `PROYECTO.ahorroDia…`. Las fases, los marcadores y Coach se recalculan solos.
@@ -475,7 +477,7 @@ final no compraré nada"*), con su precio y envase (`contenido` o `envase`, con 
 `quitar: true`, y `medico: true` cuando el cambio lo decide su dermatólogo. `rutinasDesglose()`
 calcula cada producto al mes con la fórmula de su rutina y lo que costaría el recorte con la misma
 dosis; Coach lo pinta en cada fase en México, debajo de la tabla, en verde. Lo que recorte va a
-GBM.
+lo que se aparta.
 
 ### Estudios de alemán · constantes
 
@@ -837,8 +839,8 @@ CIFRAS.CALENDARIO.hitos    // [{fecha, txt, sub}] — fechas duras que no salen 
 
 | | Qué trae | De dónde sale el número |
 |---|---|---|
-| `cobros` | Renta día 1, plan AT&T día 1, quincena días 1 y 15, gym día 17. Renta, luz y agua, internet y gas llevan `hasta` (`rentaHasta`): son del depa y terminan con él. Y el plan: el ahorro a GBM el 1 y el 15 (con depa, el del 1 desde diciembre: la quincena del 1 de noviembre pagó la BBVA), con `ahorro: true`, y el aporte a su familia el día 1 desde `enCasaDesde`. `grupo` dice a qué renglón del desglose del sueldo va cada uno | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí como dato, no como comentario al lado de la cifra: las apps lo leen. |
-| `hitos` | Decisión Maestría (31 may 2027) y Salida a Alemania (1 sep 2027) | `PROYECTO.maestriaDecision` y `PROYECTO.maestriaInicio`. |
+| `cobros` | Renta día 1, plan AT&T día 1, quincena días 1 y 15, gym día 17. Renta, luz y agua, internet y gas llevan `hasta` (`rentaHasta`): son del depa y terminan con él. Y el plan: lo que se aparta el 1 y el 15 (con depa, el del 1 desde diciembre: la quincena del 1 de noviembre pagó la BBVA), con `ahorro: true` —a dónde va lo dice `planAhorro`—, y el aporte a su familia el día 1 desde `enCasaDesde`. `grupo` dice a qué renglón del desglose del sueldo va cada uno | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí como dato, no como comentario al lado de la cifra: las apps lo leen. |
+| `hitos` | El día de decidir (31 may 2028) y la salida a Alemania (1 sep 2028) | `PROYECTO.maestriaDecision` y `PROYECTO.maestriaInicio`. |
 
 **Regla al agregar: si una fecha se puede derivar de un dato que ya existe, NO va aquí.** Por eso
 esta lista es corta. El Dashboard calcula en vivo, y no están escritos en ningún lado:
@@ -864,7 +866,7 @@ Es lo que evita que el calendario se congele como se congeló la vieja barra de 
 | `CuidadoPersonal/cuidadopersonal.html` | `<script src="../Dashboard/datos-maestros.js">` | Skincare y Cabello: `CIFRAS.RUTINA_PIEL`, `CIFRAS.RUTINA_PELO` y las horas desde `CIFRAS.rutina()` |
 | `CuidadoPersonal/salud.html` | `<script src="../Dashboard/datos-maestros.js">` | `CIFRAS.SUPLEMENTOS` (siembra la lista y el botiquín) y `CIFRAS.CHEQUEO` |
 | `Aleman/index.html` | `<script src="../Dashboard/datos-maestros.js">` | `{{escuelaAleman}}` en el encabezado del Kapitel 10 (`aplicarDOM`) |
-| `Laptop/laptop.html` | `<script src="../Dashboard/datos-maestros.js">` | La meta de la calculadora (`{{extraSalida}}`), la fecha de la salida y el dólar (`PROYECTO.usdMxn`) |
+| `Laptop/laptop.html` | `<script src="../Dashboard/datos-maestros.js">` | La meta de la calculadora (la mensualidad del BYD, `{{autoPago}}`), la fecha en que queda en cero y el dólar (`PROYECTO.usdMxn`) |
 | `Dashboard/cifras.html` | `<script src="datos-maestros.js">` | Mis cifras: `CIFRAS.ajustes` (lista, vista previa, cuadrar y guardar) y `CIFRAS.quincenas()` |
 
 Toda página que carga el maestro carga antes `ajustes-sync.js` (con `onerror="this.remove()"`): sin él no vería lo
