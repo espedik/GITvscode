@@ -1097,6 +1097,17 @@ mensualidad automática, la simulación y la proyección. Si con los datos no ac
 sugiere los `cargos` que harían que cuadre (`cargosSugeridos`, `prCargosUsar`): es un cálculo, no el dato del banco. Los
 intereses ya pagados salen solo si cuadran con lo prestado; si no, el mínimo posible (`interesMin`).
 
+**Diseño futurista y compacto** (Adán, 25-nov-2026: *"haz los iconos más chicos para que todo se vea en la pantalla, igual
+la letra… y utiliza diseño futurista, así con todas esas ventanas de mis cifras"*). Un bloque al final de `medidores.css`,
+todo bajo `#kpiOverlay.kv-on`, le pone a las seis un tablero tipo HUD: en oscuro, fondo con retícula de 28 px y dos halos,
+filete y resplandor en cian (`--kv-neon`); el título en versalitas con un punto de luz y un filete degradado debajo; cada
+caja con una escuadra de neón arriba a la izquierda (`::before`; la de la cifra, en el color de la ventana); los rótulos de
+sección y de los datos en versalitas espaciadas, y las cifras en monoespaciada con un brillo de su color. En claro van la
+misma forma, sin retícula ni brillos. **Todo un punto más chico**: la cifra de 54 a 40 px, los datos de 27 a 21, los textos
+a 12.5–14, rellenos y separaciones de 16 a 12; los íconos también —la dona de los intereses de 250 a 158 px (136 a 1194), el
+anillo del fondo de 236 a 180 y sus barras de 72 a 44 de alto—. En el teléfono el anillo baja a 128 y el título deja libre la
+brújula.
+
 **En el iPad** (Adán, 25-nov-2026: *"ajústalas para que se vean bien en mi iPad"*). Cada ventana se abre arriba: las seis
 comparten `#kpiBody` y heredaban el scroll de la anterior; `abrirKpi` lo pone en 0 si se abre una nueva o una distinta, no al
 repintar la misma tras guardar algo. Con el zoom de Safari abajo de 100 % el iPad Pro 11 dibuja a ~1327 px, entre los dos
@@ -1105,8 +1116,9 @@ acomodos: **de 1281 a 1520 px** la cifra toma 5 columnas y los cuatro datos van 
 total— pone la gráfica arriba y el simulador y las deudas lado a lado, como bajo 1280. Una tabla de meses que se desliza de
 lado (`.km-tw`) lleva una sombra en el borde mientras queda más.
 
-Medido con los datos de Finanzas: a 2048×1040 ninguna se desplaza, en oscuro y en claro; a 1600×1000, entre 0 y 85 px;
-en el iPad (1194, 1327 y vertical) y a 390 px se desplazan enteras, sin textos partidos ni desbordes. Probado: los controles dan la cifra del maestro; anotar, corregir
+Medido con los datos de Finanzas: a 2048×1040 y a 1600×1000 ninguna se desplaza más de 37 px; a 1327 (el iPad) caben
+enteras el fondo, los intereses y Total invertido, y las demás se desplazan menos de 300 px; a 1194, el iPad vertical y
+390 px se desplazan enteras, sin textos partidos ni desbordes. Probado: los controles dan la cifra del maestro; anotar, corregir
 y borrar un abono, aportar al fondo y registrar una compra mueven Finanzas; sin datos no se rompen; en el iPad van sin
 formularios. El **control 57** prueba la cuenta del crédito y el **59**, estas ventanas.
 
@@ -1163,7 +1175,10 @@ Adán, 24-nov-2026: *"dame opciones para mejorar esta pantalla"* y *"me gusta la
   *$6.7k*, *$48k*; en un cuadro de 44 px o menos se va el $), y cada año dice su interés y **cuánto pagas** en él. Tocar un cuadro
   (`MEDIDORES.pagoVe`) dice sus números abajo, empezando por el total. Arriba, **el pago que tocaste** con su monto, cuántos faltan,
   cuándo acabas, el interés que falta y lo que te ahorras.
-- Medido con los datos de la PC: sin texto cortado ni fuera de la ventana a 1600, 1366, en el iPad Pro 11 y a 390 px.
+- **Cabe en una pantalla del iPad**: las opciones van en dos renglones apretados y cada año en una fila de al menos 40 px que
+  crece con su texto; de 1100 a 1280 px las dos columnas se quedan (415 px la de la izquierda) en vez de apilarse. Medido:
+  sin desplazar a 1327×927 (733 de 733 px) ni a 1194×834 (666 de 666); sin texto cortado ni fuera de la ventana a 2048, 1600,
+  en el iPad vertical y a 390 px.
 - **Abajo**: si el contrato y los datos no acaban el mismo mes (`chocaC`), lo dice y cuánto sería el interés con los `cargos` que harían que
   cuadre. Si algo más cobra interés (una tarjeta), va en su lista.
 

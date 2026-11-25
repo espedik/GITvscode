@@ -565,3 +565,145 @@ button.km-li[aria-expanded="true"]>b::after{transform:rotate(-135deg);margin-bot
 .kv-rep b{font-family:var(--mono);font-size:15px}
 .kv-rep i{font-style:normal;font-size:12.5px;color:var(--kv-t2)}
 #kvg-inv,#kvg-btc{min-height:184px}
+
+/* Diseño futurista y compacto en las seis ventanas (Adán, 25-nov-2026: "haz los iconos más chicos para que todo se vea en
+   la pantalla, igual la letra, para que se vea bien en mi iPad y utiliza diseño futurista, así con todas esas ventanas de
+   mis cifras"). Un tablero tipo HUD: fondo con retícula, filete de neón, esquinas marcadas en cada caja, rótulos en
+   versalitas espaciadas y las cifras en monoespaciada con un brillo de su color. Va al final para ganarle a lo de arriba;
+   el brillo y la retícula solo en oscuro. */
+#kpiOverlay.kv-on{--kv-neon:#22d3ee;--kv-neon2:#a78bfa}
+:root[data-theme="light"] #kpiOverlay.kv-on{--kv-neon:#0891b2;--kv-neon2:#7c3aed}
+#kpiOverlay.kv-on .gbm-card.kpi-card{border:1px solid color-mix(in srgb,var(--kv-neon) 32%,transparent);border-radius:18px}
+:root:not([data-theme="light"]) #kpiOverlay.kv-on .gbm-card.kpi-card{background:
+  radial-gradient(900px 420px at 12% -8%,rgba(34,211,238,.09),transparent 62%),
+  radial-gradient(700px 380px at 100% 110%,rgba(167,139,250,.07),transparent 60%),
+  linear-gradient(rgba(34,211,238,.035) 1px,transparent 1px) 0 0/28px 28px,
+  linear-gradient(90deg,rgba(34,211,238,.035) 1px,transparent 1px) 0 0/28px 28px,#080b12;
+  box-shadow:0 0 0 1px rgba(34,211,238,.06),0 0 70px rgba(34,211,238,.13),0 30px 80px rgba(0,0,0,.6)}
+:root:not([data-theme="light"]) #kpiOverlay.kv-on .gbm-head{background:transparent}
+#kpiOverlay.kv-on .gbm-head{padding:13px 26px 11px;border-bottom:1px solid transparent;
+  border-image:linear-gradient(90deg,var(--kv-neon),color-mix(in srgb,var(--kv-neon2) 60%,transparent) 45%,transparent) 1}
+#kpiOverlay.kv-on .gbm-head h2{font-size:17px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+#kpiOverlay.kv-on .gbm-head h2::before{content:'';display:inline-block;width:7px;height:7px;margin:0 10px 2px 0;border-radius:50%;
+  background:var(--kv-neon);box-shadow:0 0 10px var(--kv-neon)}
+#kpiOverlay.kv-on .gbm-head p{font-size:12.5px;margin-top:2px}
+#kpiOverlay.kv-on .gbm-close{top:11px;right:18px;width:32px;height:32px}
+#kpiOverlay.kv-on .kpi-card .gbm-body{padding:14px 26px 18px}
+
+/* Las cajas: vidrio oscuro, filete fino y una escuadra de neón arriba a la izquierda. */
+#kpiOverlay.kv-on .kv,#kpiOverlay.kv-on .kv-col{gap:12px}
+#kpiOverlay.kv-on .kv-fila,#kpiOverlay.kv-on .kv-tiles{gap:12px}
+#kpiOverlay.kv-on .kv-c,#kpiOverlay.kv-on .kv-tile{position:relative;border-radius:12px;padding:13px 16px;
+  border-color:color-mix(in srgb,var(--kv-neon) 16%,var(--kv-linea))}
+:root:not([data-theme="light"]) #kpiOverlay.kv-on .kv-c,:root:not([data-theme="light"]) #kpiOverlay.kv-on .kv-tile{
+  background-color:rgba(13,19,31,.78);box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+#kpiOverlay.kv-on .kv-c::before,#kpiOverlay.kv-on .kv-tile::before{content:'';position:absolute;left:-1px;top:-1px;width:16px;height:16px;
+  border-left:2px solid var(--kv-neon);border-top:2px solid var(--kv-neon);border-top-left-radius:12px;opacity:.75;pointer-events:none}
+#kpiOverlay.kv-on .kv-hero{border-left:1px solid color-mix(in srgb,var(--ac) 55%,transparent)}
+#kpiOverlay.kv-on .kv-hero::before{border-color:var(--ac);width:22px;height:22px}
+
+/* Rótulos en versalitas; textos un punto más chicos. */
+#kpiOverlay.kv-on .kv-c>h3,#kpiOverlay.kv-on .kv-rep h3{font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:color-mix(in srgb,var(--kv-neon) 70%,var(--text))}
+#kpiOverlay.kv-on .kv-c>h3+p,#kpiOverlay.kv-on .kv-p{font-size:12.5px;line-height:1.45}
+#kpiOverlay.kv-on .kv-pie{font-size:12px;padding-top:9px}
+#kpiOverlay.kv-on .kv-tile span{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+#kpiOverlay.kv-on .kv-tile b{font-size:21px;margin:4px 0 3px}
+#kpiOverlay.kv-on .kv-tile i{font-size:12px;line-height:1.4}
+#kpiOverlay.kv-on .kv-hero{gap:6px}
+#kpiOverlay.kv-on .kv-hero .n{font-size:40px}
+#kpiOverlay.kv-on .kv-hero .n small{font-size:14px}
+#kpiOverlay.kv-on .kv-hero .q{font-size:13.5px}
+#kpiOverlay.kv-on .kv-hoy{padding:10px 16px;border-radius:12px;gap:12px}
+#kpiOverlay.kv-on .kv-hoy .et{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px}
+#kpiOverlay.kv-on .kv-hoy .tx{font-size:14px}
+#kpiOverlay.kv-on .kv-hoy .tx small{font-size:12.5px}
+#kpiOverlay.kv-on .kv-b{padding:7px 13px;font-size:13px;border-radius:8px}
+#kpiOverlay.kv-on .kv-g{min-height:190px}
+
+/* Las cifras: monoespaciada y, en oscuro, un brillo de su propio color. */
+#kpiOverlay.kv-on .kv-hero .n,#kpiOverlay.kv-on .kv-tile b,#kpiOverlay.kv-on .kn-d strong,#kpiOverlay.kv-on .kn-c .m strong{
+  font-family:var(--mono);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+:root:not([data-theme="light"]) #kpiOverlay.kv-on :is(.kv-hero .n,.kv-tile b,.kn-d strong,.kn-c .m strong){
+  text-shadow:0 0 18px color-mix(in srgb,currentColor 38%,transparent)}
+:root:not([data-theme="light"]) #kpiOverlay.kv-on .kn-dona text.n{filter:drop-shadow(0 0 10px rgba(255,255,255,.18))}
+
+/* Los íconos, más chicos: el anillo del fondo y la dona de los intereses. */
+#kpiOverlay.kv-on .kf-an{width:180px}
+#kpiOverlay.kv-on .kn-dona{padding:12px 18px 14px;gap:6px}
+#kpiOverlay.kv-on .kn-dona svg{width:158px;height:158px}
+#kpiOverlay.kv-on .kn-dona p{font-size:12.5px}
+
+/* Intereses en una sola pantalla del iPad: opciones en dos renglones apretados, los años en filas bajas. */
+#kpiOverlay.kv-on .kn-mas{padding:12px 14px;gap:8px}
+#kpiOverlay.kv-on #knChips{gap:6px}
+#kpiOverlay.kv-on .kn-c{min-height:0;padding:6px 12px;gap:1px 12px;border-radius:9px;font-size:13px}
+#kpiOverlay.kv-on .kn-c .m{font-size:11px}
+#kpiOverlay.kv-on .kn-c .m strong{font-size:15px}
+#kpiOverlay.kv-on .kn-c .d{font-size:11.5px;line-height:1.35}
+#kpiOverlay.kv-on .kn-c.sel{box-shadow:0 0 0 1px var(--kv-2),0 0 18px color-mix(in srgb,var(--kv-2) 30%,transparent)}
+#kpiOverlay.kv-on .kn-mas .kv-p{font-size:11.5px}
+#kpiOverlay.kv-on .kn-p{padding:12px 18px;gap:8px}
+#kpiOverlay.kv-on .kn-d{gap:12px;padding-bottom:8px}
+#kpiOverlay.kv-on .kn-d span{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+#kpiOverlay.kv-on .kn-d strong{font-size:20px;white-space:nowrap}
+#kpiOverlay.kv-on .kn-g{gap:5px}
+#kpiOverlay.kv-on .kn-a{gap:5px;min-height:40px;grid-template-columns:44px repeat(12,minmax(0,1fr)) 92px}
+#kpiOverlay.kv-on .kn-a>b{font-size:13px;font-family:var(--mono)}
+#kpiOverlay.kv-on .kn-a .t strong{font-size:13.5px}
+#kpiOverlay.kv-on .kn-a .t span{font-size:11px}
+#kpiOverlay.kv-on .kn-a .t em{font-size:11px}
+#kpiOverlay.kv-on .kn-a>button,#kpiOverlay.kv-on .kn-a>i{padding-top:3px;border-radius:6px;font-size:11px}
+#kpiOverlay.kv-on .kn-a .libre{border-width:1px;box-shadow:inset 0 0 10px color-mix(in srgb,var(--g) 22%,transparent)}
+#kpiOverlay.kv-on .kn-a .vivo.sel{box-shadow:0 0 0 1px var(--text),0 0 14px color-mix(in srgb,var(--kv-1) 55%,transparent)}
+#kpiOverlay.kv-on .kn-pie{padding-top:7px}
+#kpiOverlay.kv-on .kn-pie p{font-size:13.5px}
+#kpiOverlay.kv-on .kn-r{padding:9px 16px}
+#kpiOverlay.kv-on .kn-r p{font-size:12.5px}
+@media(max-width:820px){#kpiOverlay.kv-on .kn-a{grid-template-columns:repeat(6,minmax(0,1fr))}
+  #kpiOverlay.kv-on .kn-a>button,#kpiOverlay.kv-on .kn-a>i{min-height:40px}}
+/* La dona chica: su letra sube dentro del dibujo para leerse a ~10 px y ~29 px en pantalla. */
+#kpiOverlay.kv-on .kn-dona text{font-size:16px}
+#kpiOverlay.kv-on .kn-dona text.n{font-size:52px}
+
+/* Las cifras grandes propias de cada ventana bajan en la misma proporción, y sus títulos toman el rótulo de las demás. */
+#kpiOverlay.kv-on .kf-tit{font-size:42px}
+#kpiOverlay.kv-on .kf-pc strong{font-size:34px}
+#kpiOverlay.kv-on .kf-pc span,#kpiOverlay.kv-on .kf-ruta p{font-size:13.5px}
+#kpiOverlay.kv-on .kf-an strong{font-size:24px}
+#kpiOverlay.kv-on .kf-an span{font-size:12.5px}
+#kpiOverlay.kv-on .kf-bat{height:44px;border-radius:10px}
+#kpiOverlay.kv-on .kf-bat i{border-radius:10px}
+#kpiOverlay.kv-on .kf-mt b,#kpiOverlay.kv-on .kf-mt span{font-size:14px}
+#kpiOverlay.kv-on .kf-mes em{font-size:12px}
+#kpiOverlay.kv-on .kf-cab p{font-size:12.5px}
+#kpiOverlay.kv-on :is(.kf-ruta h3,.kf-cab h3,.km-cab h3,.km-tot h3){font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:color-mix(in srgb,var(--kv-neon) 70%,var(--text))}
+#kpiOverlay.kv-on .km-hero strong{font-size:34px}
+#kpiOverlay.kv-on .kp .km-hero strong{font-size:32px}
+#kpiOverlay.kv-on .km-dg h4 strong{font-size:19px}
+#kpiOverlay.kv-on .kv-deu b.n{font-size:20px}
+#kpiOverlay.kv-on :is(.kf-tit,.kf-pc strong,.kf-an strong,.km-hero strong,.km-dg h4 strong,.kv-deu b.n){font-family:var(--mono);letter-spacing:-.03em}
+:root:not([data-theme="light"]) #kpiOverlay.kv-on :is(.kf-tit,.kf-pc strong,.km-hero strong){text-shadow:0 0 18px color-mix(in srgb,currentColor 38%,transparent)}
+#kpiOverlay.kv-on .km-paso h3{font-size:14px}
+#kpiOverlay.kv-on .kp-tit h3{font-size:18px}
+/* En el iPad sin zoom (1194 px) también caben las dos columnas: la dona y las opciones a la izquierda, los pagos a la derecha. */
+@media(min-width:1100px) and (max-width:1280px){
+  #kpiOverlay.kv-on .kn-b{grid-template-columns:minmax(0,415px) minmax(0,1fr)}
+  #kpiOverlay.kv-on .kn-c .d{font-size:11px}
+  #kpiOverlay.kv-on .kn-c{padding:5px 11px}
+  #kpiOverlay.kv-on .kn-dona svg{width:136px;height:136px}
+  #kpiOverlay.kv-on .kn-i{display:flex}
+  #kpiOverlay.kv-on .kn-a{grid-template-columns:40px repeat(12,minmax(0,1fr)) 84px;gap:4px}
+  #kpiOverlay.kv-on .kn-d{gap:8px}
+  #kpiOverlay.kv-on .kn-d strong{font-size:17px}
+}
+/* En el teléfono: el anillo y las cifras del fondo, un punto más chicos que en el iPad; el título deja libre la brújula. */
+@media(max-width:640px){
+  #kpiOverlay.kv-on .kf-an{width:128px}
+  #kpiOverlay.kv-on .kf-an strong{font-size:19px}
+  #kpiOverlay.kv-on .kf-pc strong{font-size:28px}
+  #kpiOverlay.kv-on .kf-tit{font-size:32px}
+  #kpiOverlay.kv-on .kv-hero .n{font-size:32px}
+  #kpiOverlay.kv-on .gbm-head{padding-left:54px}
+}
