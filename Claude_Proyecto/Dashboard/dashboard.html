@@ -1467,6 +1467,61 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 /* El mes con todo hecho: una línea en vez de tres columnas vacías; lo hecho y lo que sostienes se despliegan debajo. */
 .pm-listo{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;padding:2px 0 6px}
 .pm-deja{margin-top:14px}
+/* La ventana de la fase: casi toda la pantalla, con el color de la fase arriba; adentro, el mismo bloque del mes sin su
+   marco, con más aire y letra más grande. */
+.fz-ov .gbm-card.fz-card{width:min(1500px,96vw);max-height:94vh;display:flex;flex-direction:column;overflow:hidden;border-top:3px solid var(--fc,var(--ac1))}
+.fz-card .gbm-head{flex-shrink:0;padding:18px 60px 14px 28px}
+.fz-card .gbm-head h2{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:22px}
+.fz-card .gbm-head p{margin:4px 0 0;font-size:13.5px;color:var(--text3)}
+.fz-ov-tag{font-family:var(--mono);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--fc,var(--ac1))}
+.fz-card .gbm-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:18px 28px 32px}
+.fz-card .pm-mes{background:none;border:0;padding:0;margin:0;gap:12px}
+.fz-card .pm-mes .fzm-cab-t{font-size:20px}
+.fz-card .pm-mes .fzm-cab-s{font-size:13px}
+.fz-card .pm-mes-cab.gen .fzm-cab-s{display:none}   /* el nombre y las fechas ya van en la cabecera de la ventana */
+.fz-card .pm-mes .fzm-tab{padding:4px 11px;font-size:12.5px}
+.fz-card .pm-mes .fzc-tx{font-size:14px;line-height:1.45}
+.fz-card .pm-mes .fzc-g,.fz-card .pm-mes .gbm-sec{font-size:11px;margin-bottom:4px}
+.fz-card .pm-mes .fzc-item{padding:6px 2px}
+.fz-card .pm-mes .fzc-item>input{width:15px;height:15px}
+.fz-card .pm-gen .fz-ol{font-size:14px;gap:6px}
+.fz-card .pm-mes .fzk-prueba{font-size:15px}
+.fz-card .pm-mes .fzk-r,.fz-card .pm-gen .fzd-i span{font-size:13px}
+.fz-card .pm-gen .fzd-i b{font-size:14px;font-weight:600}
+.fz-card .pm-mes-3{gap:28px}
+/* El porqué de la fase. */
+.fzr{margin-top:22px;padding-top:6px}
+.fzr-lema{margin:6px 0 14px;font-family:var(--font-title);font-size:20px;line-height:1.35;color:var(--text)}
+.fzr-ruta{margin:8px 0 18px}
+.fzr-ruta h4{margin:0 0 4px;font-size:16px}
+.fzr-ruta>p{margin:0 0 12px;font-size:14px;line-height:1.5;color:var(--text2)}
+.fzr-hitos{display:flex;align-items:stretch;gap:10px}
+.fzr-une{align-self:center;font-family:var(--mono);font-size:20px;font-weight:800;color:var(--fc,var(--ac1))}
+.fzr-hito{flex:1 1 0;min-width:0;display:flex;gap:12px;align-items:center;padding:10px;border-radius:14px;background:rgba(var(--ov),.035)}
+.fzr-hito img{width:76px;height:76px;border-radius:10px;object-fit:cover;flex-shrink:0}
+.fzr-hito>div{display:flex;flex-direction:column;gap:1px;min-width:0}
+.fzr-f{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--fc,var(--ac1))}
+.fzr-hito b{font-size:15px}
+.fzr-hito strong{font-family:var(--mono);font-size:18px}
+.fzr-hito small{font-size:12px;color:var(--text3);line-height:1.35}
+.fzr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:12px}
+.fzr-b{display:flex;gap:14px;padding:12px;border-radius:14px;background:rgba(var(--ov),.035)}
+.fzr-ft img{width:92px;height:92px;border-radius:10px;object-fit:cover}
+.fzr-tx{min-width:0;display:flex;flex-direction:column;gap:4px}
+.fzr-k{font-family:var(--mono);font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)}
+.fzr-b.riesgo .fzr-k{color:var(--r)}.fzr-b.palanca .fzr-k,.fzr-b.logro .fzr-k{color:var(--g)}.fzr-b.paso .fzr-k{color:var(--fc,var(--ac1))}
+.fzr-tx h5{margin:0;font-size:15px;line-height:1.35}
+.fzr-tx p{margin:0;font-size:13.5px;line-height:1.5;color:var(--text2)}
+.fzr-cif{display:flex;gap:6px 18px;flex-wrap:wrap}
+.fzr-cif>div{display:flex;flex-direction:column}
+.fzr-cif b{font-family:var(--mono);font-size:18px}
+.fzr-cif span{font-size:11.5px;color:var(--text3)}
+@media(max-width:900px){
+  .fzr-hitos{flex-direction:column}.fzr-une{transform:rotate(90deg)}
+  .fzr-grid{grid-template-columns:minmax(0,1fr)}
+  .fz-card .gbm-body{padding:14px 16px 26px}
+  .fz-card .gbm-head{padding:14px 54px 12px 16px}
+}
 .pm-listo-ok{color:var(--g);font-weight:800;font-size:16px;flex-shrink:0}
 .pm-listo-t{flex:1 1 260px;min-width:0;display:flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap}
 .pm-listo-t b{font-size:14px}
@@ -5093,7 +5148,6 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
            y no en la barra de apps, que a 1600 px y desde 1806 px ya no tiene sitio para otra píldora. -->
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Plan Maestro<a class="pm-cifras" id="pmCifras" href="cifras.html" title="Cambia tu sueldo, tus fijos, el ahorro de cada quincena, lo que cuesta irte y tus metas: todo el plan se mueve con ellas">🎚️ Mis cifras</a></div>
       <div class="pm-ruta reveal d1" id="coachFaseBand"></div>
-      <div class="pm-mes reveal d1" id="pmMes"></div>
       <div class="grid g4 reveal d2" id="pmMedidores"></div>
       <div class="coach-tablero reveal d3">
         <div class="ct-col ct-cal" id="ctCal"></div>
@@ -5309,6 +5363,19 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   </div>
 </div>
 <!-- ─── DETALLE DE UN MEDIDOR (2026-08-19) — se abre tocando cualquiera de los 8 de Mis Metas ─── -->
+<!-- La ventana de una fase (Adán, 25-nov-2026: "cuando haga click en cada fase, se abrirá una ventana en grande y ahí me
+     muestras toda la info"): su información general con el porqué, sus meses y la auditoría, con los textos completos.
+     El bloque #pmMes vive aquí; la pantalla del Plan Maestro solo lleva la ruta, los medidores y el tablero. -->
+<div class="gbm-overlay fz-ov" id="faseOverlay" onclick="if(event.target===this) cerrarFase()">
+  <div class="gbm-card fz-card" role="dialog" aria-modal="true" aria-labelledby="faseTitulo">
+    <div class="gbm-head">
+      <button class="gbm-close" onclick="cerrarFase()" aria-label="Cerrar">✕</button>
+      <h2 id="faseTitulo">—</h2>
+      <p id="faseSub"></p>
+    </div>
+    <div class="gbm-body" id="faseBody"><div class="pm-mes" id="pmMes"></div></div>
+  </div>
+</div>
 <div class="gbm-overlay" id="kpiOverlay" onclick="if(event.target===this) cerrarKpi()">
   <div class="gbm-card kpi-card">
     <div class="gbm-head">
@@ -10947,7 +11014,18 @@ function cfbFase(i){
   const iHoy = fzmFaseDe(fzmYM(new Date()));
   _pmFase = i === iHoy ? null : i;
   _pmVista = i === iHoy ? null : 'gen'; _pmTodo = {};
-  pmPintar();
+  pmPintar(); faseAbrir();
+}
+// La ventana de la fase: la abre tocar una fase de la ruta o auditar un mes; al cerrarla, la ruta vuelve a marcar la de hoy.
+function faseAbrir(){
+  const ov = document.getElementById('faseOverlay'); if(!ov) return;
+  const b = document.getElementById('faseBody'); if(b && !ov.classList.contains('open')) b.scrollTop = 0;
+  ov.classList.add('open'); clearInterval(timer);
+}
+function cerrarFase(){
+  const ov = document.getElementById('faseOverlay'); if(!ov) return;
+  ov.classList.remove('open'); _pmFase = null; _pmVista = null; _pmTodo = {};
+  const r = document.getElementById('coachFaseBand'); if(r) r.innerHTML = fzRutaHtml();
 }
 function pmVolverHoy(){ _pmFase = null; _pmVista = null; _pmTodo = {}; pmPintar(); }
 // La ruta —para marcar la fase que se ve— y el bloque de esa fase, en su color.
@@ -10955,7 +11033,13 @@ function pmPintar(){
   const r = document.getElementById('coachFaseBand'); if(r) r.innerHTML = fzRutaHtml();
   const el = document.getElementById('pmMes'); if(!el) return;
   el.innerHTML = pmMesHtml();
-  const i = pmFaseVista(); if(i >= 0) el.style.setProperty('--fc', CAL_FASE_COLOR[i]);
+  const i = pmFaseVista(); if(i < 0) return;
+  const f = PHASES[i], c = document.querySelector('#faseOverlay .fz-card'), MC = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const dC = x => x.getDate()+' '+MC[x.getMonth()]+' '+x.getFullYear();
+  if(c) c.style.setProperty('--fc', CAL_FASE_COLOR[i]); el.style.setProperty('--fc', CAL_FASE_COLOR[i]);
+  const t = document.getElementById('faseTitulo'), s = document.getElementById('faseSub');
+  if(t) t.innerHTML = '<span class="fz-ov-tag">'+f.tag+'</span>'+esc(String(f.title).replace(/<[^>]*>/g, ''));
+  if(s) s.textContent = dC(f.start)+' → '+dC(f.end);
 }
 // Con otra fase a la vista, el botón que vuelve al mes de hoy.
 function pmVolverBtn(){ return _pmFase != null ? '<button type="button" class="pm-hoy" onclick="pmVolverHoy()">← Volver a hoy</button>' : ''; }
@@ -11002,6 +11086,8 @@ function pmMesHtml(){
 // sostienes, la meta y el checkpoint de cada fase, y los títulos de la ruta.
 // El texto completo va en el título de la fila y en la auditoría del mes. En las 146 tareas de las cinco fases la
 // mediana baja de 68 a 35 caracteres y la más larga, de 189 a 56.
+// En la ventana de la fase, el texto completo: ahí hay espacio (pmCorto sigue en la ruta de la pantalla).
+function pmLargo(html){ return String(html || '').trim().replace(/[;\s]+$/, ''); }
 function pmCorto(html){
   const MAX = 48;
   let s = String(html || '').replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<')
@@ -11046,7 +11132,7 @@ function pmMesVistaHtml(i, ym, tabs){
     const de = t.grupo === 'pasa' && t.de ? 'de '+fzmMesMin(t.de) : t.grupo === 'correccion' && t.de ? 'de la auditoría de '+fzmMesMin(t.de)
       : t.grupo === 'salida' && hecha(t) ? 'salida' : '';
     const sub = t.pasosMeta ? '<span class="fzc-sub">'+t.pasosMeta.map(x => (x.hecho ? '✓ ' : '')+esc(String(x.t).split(' — ')[0].replace(/\.$/, ''))+' · '+esc(x.fTxt)).join('<br>')+'</span>' : '';
-    const tx = '<span class="fzc-tx"><b>'+(t.ico ? t.ico+' ' : '')+pmCorto(p.t)+'</b>'+sub+'</span>'+(de ? '<em class="fzc-tag">'+de+'</em>' : '');
+    const tx = '<span class="fzc-tx"><b>'+(t.ico ? t.ico+' ' : '')+pmLargo(p.t)+'</b>'+sub+'</span>'+(de ? '<em class="fzc-tag">'+de+'</em>' : '');
     if(auditado){   // ya auditado: lo que quedó, sin casilla
       const x = fzaResTarea(a, t, checks);
       return '<div class="fzc-item'+(x.r === 'ok' ? ' ok' : '')+'" title="'+esc(plano)+'"><span class="fzc-ico">'+(x.r === 'ok' ? '✅' : x.r === 'medias' ? '◐' : '❌')+'</span>'+tx+'</div>';
@@ -11059,11 +11145,11 @@ function pmMesVistaHtml(i, ym, tabs){
   const filaH = function(h){
     if(auditado){
       const n = fzaNivel(a, h);
-      return '<div class="fzc-item'+(n === 'siempre' || n === 'casi' ? ' ok' : '')+'" title="'+esc(String(h.t).replace(/<[^>]*>/g, ''))+'"><span class="fzc-ico">'+(n === 'nunca' ? '❌' : n === 'aveces' ? '◐' : '✅')+'</span><span class="fzc-tx"><b>'+pmCorto(h.t)+'</b>'+fzmMedidaHTML(fzmMedida(h, ym))+'</span></div>';
+      return '<div class="fzc-item'+(n === 'siempre' || n === 'casi' ? ' ok' : '')+'" title="'+esc(String(h.t).replace(/<[^>]*>/g, ''))+'"><span class="fzc-ico">'+(n === 'nunca' ? '❌' : n === 'aveces' ? '◐' : '✅')+'</span><span class="fzc-tx"><b>'+pmLargo(h.t)+'</b>'+fzmMedidaHTML(fzmMedida(h, ym))+'</span></div>';
     }
     const ok = !!(a.siempre || {})[h.id], empezo = ym <= fzmYM(hoyD);
     return '<label class="fzc-item'+(ok ? ' ok' : '')+'" title="'+esc(String(h.t).replace(/<[^>]*>/g, ''))+'"><input type="checkbox"'+(ok ? ' checked' : '')+(empezo ? '' : ' disabled title="Se marca cuando empiece el mes"')+
-      ' onchange="pmSostuve(\''+ym+'\',\''+h.id+'\',this.checked,'+i+')"><span class="fzc-tx"><b>'+pmCorto(h.t)+'</b>'+fzmMedidaHTML(fzmMedida(h, ym))+'</span></label>';
+      ' onchange="pmSostuve(\''+ym+'\',\''+h.id+'\',this.checked,'+i+')"><span class="fzc-tx"><b>'+pmLargo(h.t)+'</b>'+fzmMedidaHTML(fzmMedida(h, ym))+'</span></label>';
   };
   const mas = (k, n, txt) => '<button type="button" class="pm-mas" onclick="pmDespliega(\''+k+'\')"><span>'+(_pmTodo[k] ? 'Ver menos' : txt)+'</span><b>'+(_pmTodo[k] ? '↑' : n)+'</b></button>';
   const VER = 5, SAL = 3;
@@ -11120,10 +11206,30 @@ function pmGenHtml(i, tabs){
   // Cómo va, solo si la fase ya empezó: en una que viene diría «aún no cierra ninguno» y su fecha, que ya están en la ruta.
   const empezo = new Date() >= f.start;
   const col2 = (f.checkpoint ? pmCheckHTML(f.checkpoint) : '')+(empezo ? fzvVaHTML(i, av, ym => 'pmAuditar('+i+',\''+ym+'\')') : '');
-  const col3 = pmHechoFase(i, av)+(f.deja ? '<div class="pm-deja">'+faseDejaHTML(f.deja, true)+'</div>' : '');
-  return '<div class="pm-mes-cab"><div class="fzm-cab-t">'+f.tag+' <em class="fz-chip">INFORMACIÓN GENERAL</em><span class="fzm-cab-s">'+
+  const col3 = pmHechoFase(i, av)+(f.deja ? '<div class="pm-deja">'+faseDejaHTML(f.deja, false)+'</div>' : '');
+  return '<div class="pm-mes-cab gen"><div class="fzm-cab-t">'+f.tag+' <em class="fz-chip">INFORMACIÓN GENERAL</em><span class="fzm-cab-s">'+
       esc(f.title)+' · '+dC(f.start)+' → '+dC(f.end)+'</span>'+pmVolverBtn()+'</div>'+tabs+'</div>'+
-    pmColumnas([col1, col2, col3], 'pm-gen');
+    pmColumnas([col1, col2, col3], 'pm-gen')+faseRazonesHtml(f);
+}
+/* El porqué de la fase, en la ventana (sus `razones` del maestro, que en la pantalla solo vivían en el título de la ruta):
+   la ruta con sus hitos —fecha, cifra y foto, en orden → o como condiciones +—, el lema, y los pasos, riesgos, palancas,
+   planes B, reglas y logros, cada uno con su foto, sus cifras grandes y su frase. Los marcadores {{…}} salen del maestro. */
+function faseRazonesHtml(f){
+  const R = f && f.razones; if(!R || !R.length) return '';
+  const T = x => CIFRAS.texto(String(x == null ? '' : x)), foto = k => { const q = k && apFoto(k); return q ? '<img src="'+q.u+'" alt="" loading="lazy" title="'+habAttr(q.c)+'">' : ''; };
+  const NOM = { paso: 'Paso', riesgo: 'Riesgo', palanca: 'Palanca', planb: 'Plan B', regla: 'Regla', logro: 'Logro' };
+  const cifras = c => c && c.length ? '<div class="fzr-cif">'+c.map(q => '<div><b>'+T(q.v)+'</b><span>'+T(q.l)+'</span></div>').join('')+'</div>' : '';
+  let html = '';
+  R.forEach(b => {
+    if(b.tipo === 'lema') html += '<p class="fzr-lema">'+T(b.d || b.t)+'</p>';
+    else if(b.tipo === 'ruta') html += '<section class="fzr-ruta"><h4>'+T(b.t)+'</h4>'+(b.d ? '<p>'+fzCap(T(b.d))+'</p>' : '')+
+      '<div class="fzr-hitos">'+(b.hitos || []).map((h, k) => (k ? '<span class="fzr-une">'+(b.une || '→')+'</span>' : '')+
+        '<div class="fzr-hito">'+foto(h.foto)+'<div><span class="fzr-f">'+T(h.f)+'</span><b>'+T(h.t)+'</b>'+(h.v ? '<strong>'+T(h.v)+'</strong>' : '')+(h.s ? '<small>'+T(h.s)+'</small>' : '')+'</div></div>').join('')+'</div></section>';
+  });
+  const resto = R.filter(b => NOM[b.tipo]);
+  if(resto.length) html += '<div class="fzr-grid">'+resto.map(b => '<section class="fzr-b '+b.tipo+'">'+(b.foto ? '<div class="fzr-ft">'+foto(b.foto)+'</div>' : '')+
+    '<div class="fzr-tx"><span class="fzr-k">'+NOM[b.tipo]+'</span><h5>'+T(b.t)+'</h5>'+cifras(b.cifras)+(b.d ? '<p>'+fzCap(T(b.d))+'</p>' : '')+'</div></section>').join('')+'</div>';
+  return '<div class="fzr"><div class="fzc-g"><span>Por qué esta fase</span><span>'+R.length+'</span></div>'+html+'</div>';
 }
 // Las columnas del bloque: solo las que traen algo, en partes iguales (Adán, 25-oct-2026: "arregla con el mismo formato
 // la fase 0 y las demás fases"). La Fase 0 no tiene checkpoint ni cosas de la salida y dejaba huecos en medio.
@@ -11139,7 +11245,7 @@ function pmMetaHTML(meta){
   const items = partes.length >= 3 ? partes.slice(1)
     : m.replace(/\s+y\s+(?=✅)/g, '. ').split(/(?<=\.)\s+(?=[A-ZÁÉÍÓÚÑ¿¡]|✅)/u);
   return '<ol class="fz-ol">'+items.map(x => x.replace(/[;.\s]+$/, '')).filter(Boolean).map(x =>
-    '<li title="'+esc(x.replace(/<[^>]*>/g, ''))+'">'+pmCorto(x)+'</li>').join('')+'</ol>';
+    '<li title="'+esc(x.replace(/<[^>]*>/g, ''))+'">'+pmLargo(x)+'</li>').join('')+'</ol>';
 }
 // El checkpoint en la pantalla: cuándo, la prueba y sus dos salidas, cada una con nombre corto y el texto entero en su título.
 function pmCheckHTML(t){
@@ -11149,8 +11255,8 @@ function pmCheckHTML(t){
   const rama = x => /^(Si no\b|Sin )/.test(x) ? ' mal' : /^Si /.test(x) ? ' ok' : '';
   const tt = x => ' title="'+esc(String(x).replace(/<[^>]*>/g, ''))+'"';
   return kpiSec('🚩 Checkpoint')+'<div class="fzk"><div class="fzk-cab">'+(cuando ? '<div class="fzk-cuando">'+cuando+'</div>' : '')+
-    '<div class="fzk-prueba"'+tt(prueba)+'>'+fzCap(pmCorto(prueba))+'</div></div>'+
-    (fr.length ? '<div class="fzk-ramas">'+fr.map(x => '<div class="fzk-r'+rama(x)+'"'+tt(x)+'>'+pmCorto(x)+'</div>').join('')+'</div>' : '')+'</div>';
+    '<div class="fzk-prueba"'+tt(prueba)+'>'+fzCap(pmLargo(prueba))+'</div></div>'+
+    (fr.length ? '<div class="fzk-ramas">'+fr.map(x => '<div class="fzk-r'+rama(x)+'"'+tt(x)+'>'+pmLargo(x)+'</div>').join('')+'</div>' : '')+'</div>';
 }
 // Lo que sostienes, palomeado desde la pantalla: lo guarda fzmSostuve, por mes, y se repinta aquí.
 function pmSostuve(ym, id, on, i){
@@ -11170,8 +11276,8 @@ function pmAuditar(i, ym, ver){
   _pmFase = i === iHoy ? null : i; _pmVista = ym; _pmTodo = {};
   FZA_ABIERTA[ym] = ver ? 'ver' : 'si';
   if(!ver){ const z = fzaZ(ym); fzmGuardaAud(z.A); }
-  pmPintar();
-  const el = document.getElementById('pmMes'); if(el && el.scrollIntoView) el.scrollIntoView({ block:'start' });
+  pmPintar(); faseAbrir();
+  const b = document.getElementById('faseBody'); if(b) b.scrollTop = 0;
 }
 // Bajo el mes, su auditoría: por hacer o a medias, con el botón que la abre; hecha, su calificación, verla y reabrirla.
 // Un mes que cerró sin auditar ya lo dice su aviso, con su botón.
@@ -14968,7 +15074,7 @@ function pmHechoFase(i, av){
   const fila = function(x){
     const p = fzmPartir(x.t.txt), plano = String(p.t).replace(/<[^>]*>/g, '');
     return '<div class="fzc-item ok" title="'+esc(plano)+'"><span class="fzc-ico">✅</span><span class="fzc-tx"><b>'+(x.t.ico ? x.t.ico+' ' : '')+
-      pmCorto(p.t)+'</b></span><em class="fzc-tag">'+(x.t.grupo === 'salida' ? 'salida · ' : '')+fzmMesMin(x.k)+'</em></div>';
+      pmLargo(p.t)+'</b></span><em class="fzc-tag">'+(x.t.grupo === 'salida' ? 'salida · ' : '')+fzmMesMin(x.k)+'</em></div>';
   };
   // Contraído, como en cada mes (Adán, 25-nov-2026: "no me gustan esos recuadros grandes, porque me comen mucho espacio"):
   // su número, y la lista se despliega en su lugar.
@@ -17124,6 +17230,7 @@ document.addEventListener('fullscreenchange',()=>{
 document.addEventListener('keydown',e=>{
   // Escape dentro de un campo de una ventana lo suelta (y guarda lo escrito); el siguiente Escape la cierra.
   if(e.key==='Escape'&&e.target.tagName==='INPUT'&&e.target.closest('#kpiOverlay')){ e.target.blur(); return; }
+  if(e.key==='Escape'&&document.getElementById('faseOverlay').classList.contains('open')){ cerrarFase(); return; }
   if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT') return;
   if(e.key==='Escape'&&document.getElementById('metaDetailOverlay').classList.contains('open')){ cerrarMetaDetalle(); return; }
   if(e.key==='Escape'&&document.getElementById('ejFichaOverlay').classList.contains('open')){ cerrarFichaEjercicio(); return; }

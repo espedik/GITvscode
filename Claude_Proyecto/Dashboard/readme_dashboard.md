@@ -874,18 +874,21 @@ La pantalla 2, de arriba abajo: su rótulo pequeño, *Coach · Plan Maestro*, co
 tiene sitio para otra píldora); **la ruta de las cinco fases**; **el mes en
 curso**; **los seis medidores** del dinero, y tres columnas: **el mes, el día que toques y la semana a la que
 pertenece**. Diseño: Main de `diseno-planmaestro/` (Adán, 22-oct-2026: *"el diseño de las fases del dashboard no me
-gusta porque no me muestra info útil… arregla todo el diseño, deja el calendario y lo de las cifras"*). **Todo lo de
-las fases se ve y se hace aquí, sin ventana aparte** (Adán, 1-nov-2026: una ventana con lo mismo *"es muy
-redundante"*): cambiar de fase, de mes y auditar ocurre en su lugar.
+gusta porque no me muestra info útil… arregla todo el diseño, deja el calendario y lo de las cifras"*). **El detalle de
+cada fase vive en su ventana, no en la pantalla** (Adán, 25-nov-2026: *"cuando haga click en cada fase, se abrirá una
+ventana en grande y ahí me muestras toda la info y ya puedes extenderte más y no limitarte"*): en la pantalla quedan la
+ruta, los medidores y el calendario; la ventana no repite nada de eso.
 
 - **La ruta** (`#coachFaseBand`, `fzRutaHtml()`): una tarjeta por fase con su color, su nombre y sus fechas en un
   renglón, su título y cómo va: *2 meses · ✓ cerrada*, *día 21 de 182 · quedan 161 días* con su barra en la fase en
-  curso, *empieza en 5 meses*—; el porqué de la fase (`explica`) va en su `title`. **Tocar una la enseña debajo,
-  aquí mismo** (`cfbFase`; Adán, 25-oct-2026: *"en las fases ya no abras una ventana, ahí mismo cuando des click en
-  alguna fase ahí mismo muéstrame la información"*): la marcada en la ruta es la que se ve (`_pmFase`, null mientras
-  sea la de hoy). Bajo 1180 px se desplaza de lado.
-- **El mes en curso, o la fase que tocaste** (`#pmMes`, `pmMesHtml()`, pintado con la ruta por `pmPintar()` en el
-  color de la fase que se ve). La fase de hoy abre en el mes de hoy; otra fase, en su *Información general*, con
+  curso, *empieza en 5 meses*—; el porqué de la fase (`explica`) va en su `title`. **Tocar una abre su ventana**
+  (`cfbFase`). Bajo 1180 px se desplaza de lado.
+- **La ventana de la fase** (`#faseOverlay`, `.fz-card`; `faseAbrir()` y `cerrarFase()`): hasta 1500 px de ancho y el
+  94 % del alto, con un filete arriba en el color de la fase (`--fc`). En la cabecera, la etiqueta (*FASE 1*), el título y
+  sus fechas (`#faseTitulo`, `#faseSub`); debajo, con su propio desplazamiento (`#faseBody`), el bloque de la fase
+  (`#pmMes`, `pmMesHtml()`, pintado con la ruta por `pmPintar()`). Se cierra con ✕, Escape o tocando fuera; al cerrar, la
+  ruta vuelve a marcar la fase de hoy (`_pmFase` en null). Mientras está abierta, Mi Día no rota.
+- **El bloque de la fase**: la fase de hoy abre en el mes de hoy; otra fase, en su *Información general*, con
   **← Volver a hoy** (`pmVolverHoy`) junto al título. Arriba el nombre y el estado (*ESTE MES*, *AUDITADO · 92*,
   *SIN AUDITAR*), la fase, sus días y cuándo se audita (*se audita desde el 25 · en 4 días*), y las pestañas
   (`.fzm-tabs`): *Información general* y los meses de la fase agrupados por año, cada uno con el punto de su
@@ -917,7 +920,7 @@ redundante"*): cambiar de fase, de mes y auditar ocurre en su lugar.
   cuándo—; desde siete días antes de que acabe el mes, *Ya se puede auditar: cinco pasos, todos con opciones* con
   **Auditar noviembre**, o *Tu auditoría de noviembre va a medias* con **Seguir con la auditoría**; auditado,
   *🧾 Auditado el 1 de noviembre · 92 mes cumplido* con **Ver la auditoría** y **Reabrir**. Un mes que cerró sin
-  auditar lo dice su aviso, con su botón. Todos la abren **en el lugar del mes** (ver *Los meses de cada fase y su
+  auditar lo dice su aviso, con su botón. Todos la abren **en el lugar del mes**, dentro de la ventana (ver *Los meses de cada fase y su
   auditoría*).
 - **La información general** (`pmGenHtml`), en las mismas tres columnas que el mes (`.pm-gen`): la meta de la fase; el
   checkpoint —su fecha en su renglón, la prueba y sus dos salidas— y
@@ -928,32 +931,28 @@ redundante"*): cambiar de fase, de mes y auditar ocurre en su lugar.
   fase): lo palomeado de cada mes —o lo cumplido, si se auditó—, sin repetir una tarea que pasó de un mes a otro, con
   el mes en que quedó hecha (*salida · oct*), en solo lectura: se marca y se desmarca en su mes. **Contraído**: *Ver lo
   que ya hiciste* con su número, y la lista se despliega en su lugar. Debajo, **lo que dejas de hacer**, una por renglón
-  con su ✕ y el porqué en su `title` (ahí equilibra las columnas: en la primera alargaba la meta).
+  con su ✕ y su porqué debajo (`faseDejaHTML(t, false)`).
+- **Por qué esta fase** (`faseRazonesHtml(f)`), al pie de la información general, con lo que antes no cabía: el lema
+  de la fase; su ruta en tarjetas con foto, fecha, cifra y qué deja, unidas por flechas; y cada razón (`PHASES[i].razones`:
+  el paso, el riesgo, la palanca, el plan B, la regla, el logro) en una rejilla de bloques con su foto, su tipo, su
+  título, sus cifras y el texto entero (`.fzr-b`). Bajo 900 px va en una columna.
 - **Sin recuadros** (Adán, 25-nov-2026: *"no me gustan esos recuadros grandes, porque me comen mucho espacio… estoy en
   iPad y todo se ve reducido y amontonado… debe verse excelente y muy clara visualmente"*): el checkpoint, cómo va la
   fase, lo que dejas de hacer, las etiquetas del mes (*noviembre*, *salida*), el aviso de un mes sin auditar, la
   auditoría y el mes cumplido van como líneas con un filete fino, sin marco ni fondo. Solo dentro de `.pm-mes`: la
-  auditoría abierta no cambia. Medido a 1327 px: la información general de la Fase 1 baja de 363 a 321 px y el mes
-  cumplido, de 232 a 184.
-- **Compacto** (Adán, 25-oct-2026: *"haz las cosas más pequeñas y la letra también, no debemos acaparar mucho
-  visualmente, solo lo importante"*): el título a 17 px, las tareas y los textos a 13, las etiquetas a 10.5, las
-  pestañas a 11 y los rellenos cortos.
-- **Cada tarea, con su nombre corto** (`pmCorto`; Adán, 25-oct-2026: *"reduce más los nombres de la lista de las
-  cosas que tengo que hacer"*): la idea principal —lo que va antes del primer «: », « —», «; » o de la segunda
-  oración, sin paréntesis— y, si aún pasa de 48 caracteres, hasta la primera coma (o «y») o antes de una
-  preposición. Es una frase completa, nunca con «…» (Adán: *"no quiero que se corte texto"*), y el texto entero va
-  en el `title` de la fila y en la auditoría: *Lee los requisitos exactos en el portal de la Esslingen Graduate
-  School (Automotive Systems): idioma, documentos y formato* queda en *Lee los requisitos exactos en el portal*. En
-  las 146 tareas de las cinco fases la mediana baja de 68 a 35 caracteres y la más larga, de 189 a 56: cada una cabe
-  en un renglón.
+  auditoría abierta no cambia.
+- **Letra de ventana, no de tarjeta**: dentro de la ventana el título del mes va a 20 px, las tareas a 14, la prueba del checkpoint a 15 y las etiquetas a 11.
+- **Cada tarea, con su texto entero** (`pmLargo`: solo le quita el «;» final): la ventana tiene sitio. El nombre corto
+  (`pmCorto`) queda para los títulos de la ruta: la idea principal —lo que va antes del primer «: », « —», «; » o de
+  la segunda oración, sin paréntesis— y, si aún pasa de 48 caracteres, hasta la primera coma (o «y») o antes de una
+  preposición; una frase completa, nunca con «…» (Adán: *"no quiero que se corte texto"*).
 - **Con el mismo formato en las cinco fases** (Adán: *"arregla con el mismo formato la fase 0 y las demás fases"*):
   lo que sostienes, la meta (`pmMetaHTML`: una frase por punto; la de la Fase 0, que es un párrafo, partida en sus
-  oraciones y en cada ✅), el checkpoint (`pmCheckHTML`: la prueba y sus dos salidas), lo que dejas de hacer
-  (`faseDejaHTML(t, true)`) y los títulos de la ruta, todos con su nombre corto y el texto entero en el `title`.
+  oraciones y en cada ✅), el checkpoint (`pmCheckHTML`: la prueba y sus dos salidas) y lo que dejas de hacer.
 
-Medido a 1600×1000, en los 65 meses de las cinco fases: la ruta mide 69 px, un mes de 144 a 260 px y la información
-general de 163 a 273; de 390 a 2048 px ningún texto de la ruta ni del mes queda con «…» y no hay desborde lateral, en
-claro y en oscuro.
+Medido a 1327, 834 y 1600 px: la ventana abre la Fase 1 en noviembre y la Fase 2 en su información general, con los 9
+bloques de *Por qué esta fase* y todas sus fotos cargadas, sin marcadores sin resolver ni desborde lateral; la
+auditoría se abre dentro de ella y Escape la cierra.
 
 *Tu estrategia de hoy* va arriba del panel de **Total invertido** y tu dinero, cuenta por cuenta, en el de **Patrimonio**
 (Adán, 21-oct-2026: *"esta info va en las cifras que están arriba cuando das click, ahí se desglosan las
@@ -996,8 +995,8 @@ un mes que ya se estaba auditando. El control 48 vigila que la meta tenga pasos 
 hábito exista.
 
 **La auditoría se abre en el lugar del mes** (`pmAuditar(i, mes)`, `FZA_ABIERTA`): desde el aviso de un mes que cerró
-sin auditar, desde su renglón al pie del mes (`pmAudHtml`) o desde *cómo va la fase*; si el mes es de otra fase, la
-pantalla pasa a esa fase. Arriba lleva **← Volver a octubre** (`fzaVolver`), el título y el marcador de la
+sin auditar, desde su renglón al pie del mes (`pmAudHtml`) o desde *cómo va la fase*, siempre dentro de la ventana de la
+fase (si estaba cerrada, se abre); si el mes es de otra fase, la ventana pasa a esa fase. Arriba lleva **← Volver a octubre** (`fzaVolver`), el título y el marcador de la
 calificación, y cada respuesta repinta solo su caja (`fzmPintar`). Un mes auditado se abre en solo lectura con *Ver
 la auditoría* (`pmAuditar(i, mes, 1)`).
 
