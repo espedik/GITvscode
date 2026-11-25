@@ -15201,7 +15201,11 @@ function abrirKpi(id){
   document.getElementById('kpiSubtitulo').textContent=info.sub||'';
   // Los seis medidores (medidores.js) traen su diseño completo; los demás paneles se reparten en columnas.
   const body=document.getElementById('kpiBody');
+  // Una ventana que se abre empieza arriba: las seis comparten #kpiBody y heredaban el scroll de la anterior (Adán,
+  // 25-nov-2026: "ajústalas para que se vean bien en mi iPad"). Repintar la misma, tras guardar algo en ella, no la mueve.
+  const nueva=!ov.classList.contains('open')||ov.dataset.kpi!==id;
   body.innerHTML=info.kv?MEDIDORES.pinta(info):info.html;
+  if(nueva) body.scrollTop=0;
   if(!info.kv) kpiAcomodar(body);
   ov.classList.toggle('kv-on', !!info.kv);
   ov.dataset.kpi=id;

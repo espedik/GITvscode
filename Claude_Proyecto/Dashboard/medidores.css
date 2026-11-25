@@ -149,6 +149,17 @@
   .kv-tres .ti-form{grid-template-columns:repeat(3,minmax(0,1fr))}
   .kv-tres .ti-form label.ancho{grid-column:auto}
 }
+/* El iPad con el zoom de Safari abajo de 100 % cae aquí (a 90 %, 1327 px): la cifra y sus cuatro datos en una sola fila dejaban
+   cada dato en ~140 px y partían sus fechas y notas en cinco renglones. La cifra toma 5 columnas y los datos van de dos en dos. */
+@media(min-width:1281px) and (max-width:1520px){
+  .kv-fila>.kv-hero.s4{grid-column:span 5}
+  .kv-fila>.kv-tiles.s8{grid-column:span 7;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .km-a .kv-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* Una fila de 6 + 3 + 3 (Deuda total: la gráfica, el simulador y las deudas) dejaba el simulador en 270 px: como bajo 1280,
+     la gráfica arriba y las de 3 lado a lado. */
+  .kv-fila:has(>.s6):has(>.s3)>.s6{grid-column:1/-1}
+  .kv-fila:has(>.s6):has(>.s3)>.s3{grid-column:span 6}
+}
 @media(max-width:1280px){
   .kv .s3{grid-column:span 6}.kv .s4,.kv .s5,.kv .s6,.kv .s7,.kv .s8{grid-column:1/-1}
   .kv-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -311,6 +322,12 @@
 .km-paso .ac{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 .km-paso .kv-b{padding:7px 12px;font-size:13.5px}
 .km-tw{overflow-x:auto}
+/* Cuando la tabla de meses no cabe y se desliza de lado, una sombra en el borde dice que hay más; se va al llegar al final
+   (fondos «local» que tapan la sombra «scroll»). */
+.km-tw{background:linear-gradient(to right,var(--kv-caja) 30%,transparent) left center/40px 100% no-repeat local,
+  linear-gradient(to left,var(--kv-caja) 30%,transparent) right center/40px 100% no-repeat local,
+  radial-gradient(farthest-side at 0 50%,color-mix(in srgb,var(--text) 26%,transparent),transparent) left center/16px 100% no-repeat scroll,
+  radial-gradient(farthest-side at 100% 50%,color-mix(in srgb,var(--text) 26%,transparent),transparent) right center/16px 100% no-repeat scroll}
 .km-f{display:grid;grid-template-columns:150px repeat(var(--n),minmax(0,1fr));font-size:14px;font-variant-numeric:tabular-nums}
 .km-f>*{display:flex;align-items:center;justify-content:center;min-height:30px;white-space:nowrap}
 .km-f>b{justify-content:flex-start;font-size:14px;font-weight:600;color:var(--kv-t2)}
@@ -486,8 +503,9 @@ button.km-li[aria-expanded="true"]>b::after{transform:rotate(-135deg);margin-bot
 /* Cada cuadro dice cuánto pagas ese mes, en una pastilla que se lee sobre cualquier color. */
 .kn-a .vivo{flex-direction:column;align-items:center;justify-content:space-between;gap:4px;padding-bottom:5px;container-type:inline-size}
 .kn-a .vivo em i{font-style:normal}
-@container (max-width:44px){.kn-a .vivo em{font-size:10px;padding:3px 1px;letter-spacing:-.04em;max-width:100%}.kn-a .vivo em i{display:none}}
 .kn-a .vivo em{font-style:normal;font-family:var(--mono);font-size:11.5px;font-weight:700;line-height:1;padding:3px 4px;border-radius:5px;background:rgba(0,0,0,.55);color:#fff;white-space:nowrap;max-width:calc(100% - 4px);overflow:hidden;text-overflow:clip}
+/* Va después de la regla de arriba, que si no le gana: en un cuadro angosto (28 px a 1327 y en el iPad vertical) se va el $ y baja la letra. */
+@container (max-width:44px){.kn-a .vivo em{font-size:10.5px;padding:3px 1px;letter-spacing:-.05em;max-width:100%}.kn-a .vivo em i{display:none}}
 .kn-a .vivo{cursor:pointer;background:linear-gradient(to top,var(--kv-2) var(--p),var(--kv-gris) var(--p),var(--kv-gris) var(--q),color-mix(in srgb,var(--kv-1) 45%,var(--kv-caja)) var(--q)) border-box}
 .kn-a .vivo:hover{filter:brightness(1.12)}
 .kn-a .vivo.sel{border-color:var(--text)}

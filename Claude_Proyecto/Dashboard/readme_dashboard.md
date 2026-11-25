@@ -1086,8 +1086,16 @@ mensualidad automática, la simulación y la proyección. Si con los datos no ac
 sugiere los `cargos` que harían que cuadre (`cargosSugeridos`, `prCargosUsar`): es un cálculo, no el dato del banco. Los
 intereses ya pagados salen solo si cuadran con lo prestado; si no, el mínimo posible (`interesMin`).
 
+**En el iPad** (Adán, 25-nov-2026: *"ajústalas para que se vean bien en mi iPad"*). Cada ventana se abre arriba: las seis
+comparten `#kpiBody` y heredaban el scroll de la anterior; `abrirKpi` lo pone en 0 si se abre una nueva o una distinta, no al
+repintar la misma tras guardar algo. Con el zoom de Safari abajo de 100 % el iPad Pro 11 dibuja a ~1327 px, entre los dos
+acomodos: **de 1281 a 1520 px** la cifra toma 5 columnas y los cuatro datos van de dos en dos (en una fila de cuatro medían
+~140 px y partían fechas y notas en cinco renglones; en el Fondo Maestría, igual), y una fila de 6 + 3 + 3 —la de Deuda
+total— pone la gráfica arriba y el simulador y las deudas lado a lado, como bajo 1280. Una tabla de meses que se desliza de
+lado (`.km-tw`) lleva una sombra en el borde mientras queda más.
+
 Medido con los datos de Finanzas: a 2048×1040 ninguna se desplaza, en oscuro y en claro; a 1600×1000, entre 0 y 85 px;
-en el iPad y a 390 px se desplazan enteras, sin desbordes. Probado: los controles dan la cifra del maestro; anotar, corregir
+en el iPad (1194, 1327 y vertical) y a 390 px se desplazan enteras, sin textos partidos ni desbordes. Probado: los controles dan la cifra del maestro; anotar, corregir
 y borrar un abono, aportar al fondo y registrar una compra mueven Finanzas; sin datos no se rompen; en el iPad van sin
 formularios. El **control 57** prueba la cuenta del crédito y el **59**, estas ventanas.
 
