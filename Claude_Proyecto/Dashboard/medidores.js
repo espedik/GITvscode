@@ -426,30 +426,42 @@
   // `e`: 'plan' (los abonos de tu plan, CIFRAS.abonosPlan) o lo que pagarías de más cada mes.
   const pagos = { p: null, e: 'plan', k: 0 };
   const PAGO_MAS = ['plan', 0, 1000, 2000, 5000], opPago = e => e === 'plan' ? { abonos: C().abonosPlan() } : { extraMes: e }, sumaInt = T => T.reduce((z, q) => z + q.interes, 0), mesDe = f => C().fechaLocal(f).slice(0, 7), parteP = (v, t) => t > 0 ? v / t * 100 : 0;
+  // Lo que sale de tu bolsa en cada pago (Adán, 25-nov-2026: "no está claro cuánto se paga cada mes, según los diferentes planes"):
+  // interés, IVA y seguros, lo que baja la deuda y el abono del plan. `alMes`: lo que pagas al mes, sin el último pago, que es el resto.
+  const pagoDe = q => q.interes + q.cargos + q.capital + (q.abono || 0);
+  // En el cuadro cabe poco: los miles con una k y un decimal bajo diez mil, tapado en modo privado como money(); en un cuadro angosto
+  // el signo de pesos se va (CSS).
+  const milK = v => privado ? '••' : '<i>$</i>' + (v < 9950 ? (v / 1000).toFixed(1) : Math.round(v / 1000)) + 'k';
+  const alMes = T => { const v = (T.length > 1 ? T.slice(0, -1) : T).map(pagoDe), a = Math.min.apply(null, v), b = Math.max.apply(null, v);
+    return Math.round(b) - Math.round(a) < 1 ? money(a) : money(a) + ' a ' + money(b); };
   function pagosHtml() {
     const d = pagos.p.d, R = pagos.p.R, base = R.tabla, T = C().prestamoTabla(d, opPago(pagos.e)), n = T.length, ahorra = Math.max(0, sumaInt(base) - sumaInt(T)), k = Math.min(pagos.k, n - 1), x = T[k], ab = x.abono || 0, hechos = R.hechos || 0;
     const suma = L => L.reduce((z, q) => z + q.interes, 0), ym0 = mesDe(base[0].fecha), ini = mas(ym0, -hechos), fin = mesDe(base[base.length - 1].fecha), en = {}, viejo = {};
     T.forEach((q, i) => { en[mesDe(q.fecha)] = i; }); base.forEach((q, i) => { viejo[mesDe(q.fecha)] = i; });
     let filas = '';
     for (let a = +ini.slice(0, 4); a <= +fin.slice(0, 4); a++) {
-      let cel = '', tot = 0;
+      let cel = '', tot = 0, paga = 0;
       for (let m = 1; m <= 12; m++) {
         const ym = a + '-' + String(m).padStart(2, '0'), i = en[ym], q = T[i], nom = MESL[m - 1] + ' de ' + a;
-        if (i != null) { const p = q.interes + q.cargos + q.capital + (q.abono || 0); tot += q.interes; cel += '<button type="button" class="vivo' + (i === k ? ' sel' : '') + '" data-i="' + i + '" style="--p:' + parteP(q.interes, p).toFixed(1) + '%;--q:' + parteP(q.interes + q.cargos, p).toFixed(1) + '%" aria-pressed="' + (i === k) + '" aria-label="Pago de ' + nom + '"><span>' + MES[m - 1] + '</span></button>'; }
+        if (i != null) { const p = pagoDe(q); tot += q.interes; paga += p; cel += '<button type="button" class="vivo' + (i === k ? ' sel' : '') + '" data-i="' + i + '" style="--p:' + parteP(q.interes, p).toFixed(1) + '%;--q:' + parteP(q.interes + q.cargos, p).toFixed(1) + '%" aria-pressed="' + (i === k) + '" aria-label="Pago de ' + nom + ': ' + money(p) + '"><span>' + MES[m - 1] + '</span><em>' + milK(p) + '</em></button>'; }
         else if (viejo[ym] != null) cel += '<i class="libre" title="' + nom + ': te lo ahorras"><span>' + MES[m - 1] + '</span></i>';
         else if (ym >= ini && ym < ym0) cel += '<i class="hecho" title="' + nom + ': pagado"><span>' + MES[m - 1] + '</span></i>';
         else cel += '<i class="nada"></i>';
       }
       const libre = !tot && base.some(q => q.fecha.getFullYear() === a);
-      filas += '<div class="kn-a"><b>' + a + '</b>' + cel + '<div class="t"><strong' + (libre ? ' class="ok"' : '') + '>' + (tot ? money(tot) : libre ? 'nada' : '—') + '</strong><span>de interés</span></div></div>';
+      filas += '<div class="kn-a"><b>' + a + '</b>' + cel + '<div class="t"><strong' + (libre ? ' class="ok"' : '') + '>' + (tot ? money(tot) : libre ? 'nada' : '—') + '</strong><span>de interés</span>' + (paga ? '<em>pagas ' + money(paga) + '</em>' : '') + '</div></div>';
     }
     const dato = (t, v, cls) => '<div><span>' + t + '</span><strong' + (cls ? ' class="' + cls + '"' : '') + '>' + v + '</strong></div>';
-    return '<div class="kn-d">' + dato('Te faltan', plural(n, 'pago', 'pagos')) + dato('Acabas en', mesTxt(mesDe(T[n - 1].fecha))) + dato('Interés que falta', money(suma(T)), 'mal') + dato('Te ahorras', money(ahorra), ahorra >= 1 ? 'ok' : '') + '</div>' +
+    return '<div class="kn-d">' + dato('Pago de ' + mesTxt(mesDe(x.fecha)), money(pagoDe(x)), 'az') + dato('Te faltan', plural(n, 'pago', 'pagos')) + dato('Acabas en', mesTxt(mesDe(T[n - 1].fecha))) + dato('Interés que falta', money(suma(T)), 'mal') + dato('Te ahorras', money(ahorra), ahorra >= 1 ? 'ok' : '') + '</div>' +
       '<div class="kn-g" onclick="const c=event.target.closest(\'[data-i]\');if(c)MEDIDORES.pagoVe(+c.dataset.i)">' + filas + '</div>' +
-      '<div class="kn-pie"><p>El pago de <b>' + MESL[x.fecha.getMonth()] + ' de ' + x.fecha.getFullYear() + '</b>: <b class="mal">' + money(x.interes) + '</b> de interés' + (x.cargos > 0 ? ', ' + money(x.cargos) + ' de IVA y seguros' : '') + ' y <b class="az">' + money(x.capital + ab) + '</b> bajan tu deuda' + (ab >= 1 ? ', ' + money(ab) + ' de ellos abonados por tu plan' : '') + '. ' + (x.saldo < 1 ? 'Con ese pago ya no debes nada.' : 'Después debes <b>' + money(x.saldo) + '</b>.') + '</p>' +
+      '<div class="kn-pie"><p>El pago de <b>' + MESL[x.fecha.getMonth()] + ' de ' + x.fecha.getFullYear() + '</b> es de <b>' + money(pagoDe(x)) + '</b>: <b class="mal">' + money(x.interes) + '</b> de interés' + (x.cargos > 0 ? ', ' + money(x.cargos) + ' de IVA y seguros' : '') + ' y <b class="az">' + money(x.capital + ab) + '</b> bajan tu deuda' + (ab >= 1 ? ', ' + money(ab) + ' de ellos abonados por tu plan' : '') + '. ' + (x.saldo < 1 ? 'Con ese pago ya no debes nada.' : 'Después debes <b>' + money(x.saldo) + '</b>.') + '</p>' +
         leyenda([['Interés', V.b]].concat(x.cargos > 0 ? [['IVA y seguros', V.g]] : [], [['Baja tu deuda', 'color-mix(in srgb,var(--kv-1) 45%,var(--kv-caja))']], hechos ? [['Pagado', 'rgba(var(--ov),.14)']] : [], ahorra >= 1 ? [['Te lo ahorras', 'var(--g)']] : [])) + '</div>';
   }
-  const pagosChips = () => { const base = sumaInt(pagos.p.R.tabla); return PAGO_MAS.map(v => { const i = sumaInt(C().prestamoTabla(pagos.p.d, opPago(v))); return '<button type="button" class="kn-c' + (pagos.e === v ? ' sel' : '') + '" aria-pressed="' + (pagos.e === v) + '" onclick="MEDIDORES.pagoMas(' + (v === 'plan' ? '\'plan\'' : v) + ')"><span>' + (v === 'plan' ? 'Tu plan' : v ? '+' + money(v) + ' al mes' : 'Solo la mensualidad') + '</span><b>' + (v ? 'ahorras ' + money(base - i) : money(i) + ' de interés') + '</b></button>'; }).join(''); };
+  const pagosChips = () => { const base = sumaInt(pagos.p.R.tabla); return PAGO_MAS.map(v => { const T = C().prestamoTabla(pagos.p.d, opPago(v)), i = sumaInt(T), n = T.length, todo = T.reduce((z, q) => z + pagoDe(q), 0);
+    return '<button type="button" class="kn-c' + (pagos.e === v ? ' sel' : '') + '" aria-pressed="' + (pagos.e === v) + '" onclick="MEDIDORES.pagoMas(' + (v === 'plan' ? '\'plan\'' : v) + ')">' +
+      '<span class="n">' + (v === 'plan' ? 'Tu plan' : v ? 'Mensualidad +' + money(v) : 'Solo la mensualidad') + '</span>' +
+      '<span class="m"><strong>' + (n ? alMes(T) : '—') + '</strong> al mes</span>' +
+      '<span class="d">' + (n ? plural(n, 'pago', 'pagos') + ' · acabas ' + mesTxt(mesDe(T[n - 1].fecha)) + ' · ' : '') + '<b>' + (v ? 'ahorras ' + money(base - i) : money(i) + ' de interés') + '</b> · ' + money(todo) + ' en total</span></button>'; }).join(''); };
   function pintaPagos() {
     const a = document.getElementById('knPagos'), b = document.getElementById('knChips'); if (a) a.innerHTML = pagosHtml(); if (b) b.innerHTML = pagosChips();
   }

@@ -1125,11 +1125,17 @@ Adán, 24-nov-2026: *"dame opciones para mejorar esta pantalla"* y *"me gusta la
 `MEDIDORES.intereses` (`.kn`), con el crédito de mayor saldo que cobra interés:
 
 - **La dona**: cuánto de tu próximo pago es interés, en pesos y en porcentaje, y cuánto es al día.
-- **Tu plan contra otros pagos** (`MEDIDORES.pagoMas`): tu plan (`CIFRAS.abonosPlan`), solo la mensualidad y tres montos de más al mes, con lo
-  que ahorras en cada uno.
+- **Tu plan contra otros pagos** (`MEDIDORES.pagoMas`): tu plan (`CIFRAS.abonosPlan`), solo la mensualidad y la mensualidad con tres
+  montos de más. Cada opción dice, grande, **cuánto pagas al mes** (`alMes`: un monto, o *de … a …* si cambia, como tu plan, que va de
+  $6,700 a $48,181) y abajo cuántos pagos, cuándo acabas, lo que ahorras —o el interés, en la mensualidad sola— y cuánto pagas en total
+  (Adán, 25-nov-2026: *"no está claro cuánto se paga cada mes, según los diferentes planes"*).
 - **Los pagos** (`pagosHtml`): una fila por año y un cuadro por mes. Lo naranja es interés, lo gris IVA y seguros (si los hay) y lo azul
-  baja tu deuda, con los abonos del plan; los ya pagados van apagados. Los que te ahorras se vuelven verdes con borde punteado. Tocar uno
-  (`MEDIDORES.pagoVe`) dice sus números abajo. Arriba, cuántos faltan, cuándo acabas, el interés que falta y lo que te ahorras.
+  baja tu deuda, con los abonos del plan; los ya pagados van apagados. Los que te ahorras se vuelven verdes con borde punteado. **Cada
+  cuadro lleva lo que pagas ese mes** (`pagoDe`: interés, IVA y seguros, capital y abono) en una pastilla oscura, en miles (`milK`:
+  *$6.7k*, *$48k*; en un cuadro de 44 px o menos se va el $), y cada año dice su interés y **cuánto pagas** en él. Tocar un cuadro
+  (`MEDIDORES.pagoVe`) dice sus números abajo, empezando por el total. Arriba, **el pago que tocaste** con su monto, cuántos faltan,
+  cuándo acabas, el interés que falta y lo que te ahorras.
+- Medido con los datos de la PC: sin texto cortado ni fuera de la ventana a 1600, 1366, en el iPad Pro 11 y a 390 px.
 - **Abajo**: si el contrato y los datos no acaban el mismo mes (`chocaC`), lo dice y cuánto sería el interés con los `cargos` que harían que
   cuadre. Si algo más cobra interés (una tarjeta), va en su lista.
 

@@ -461,13 +461,18 @@ button.km-li[aria-expanded="true"]>b::after{transform:rotate(-135deg);margin-bot
 .kn-dona p b{color:var(--text)}
 .kn-mas{flex:1;gap:10px;padding:16px 20px}
 #knChips{display:flex;flex-direction:column;gap:8px}
-.kn-c{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:0 16px;border:1px solid var(--kv-linea);border-radius:12px;background:var(--kv-sup);color:var(--text);font:inherit;font-size:14.5px;font-weight:600;cursor:pointer}
-.kn-c b{font-family:var(--mono);font-size:14.5px;font-weight:700;color:var(--kv-t2)}
+.kn-c{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"n m" "d d";align-items:baseline;gap:3px 14px;min-height:44px;padding:8px 16px;text-align:left;border:1px solid var(--kv-linea);border-radius:12px;background:var(--kv-sup);color:var(--text);font:inherit;font-size:14.5px;font-weight:600;cursor:pointer}
+.kn-c .n{grid-area:n}
+/* Cuánto pagas al mes con cada opción: la cifra grande de la fila, a la derecha del nombre. Abajo, en chico, lo demás. */
+.kn-c .m{grid-area:m;text-align:right;white-space:nowrap;font-size:12.5px;font-weight:500;color:var(--kv-t2)}
+.kn-c .m strong{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--text)}
+.kn-c .d{grid-area:d;font-size:12.5px;font-weight:500;line-height:1.45;color:var(--kv-t2)}
+.kn-c .d b{font-family:var(--mono);font-weight:700;color:var(--text)}
 .kn-c.sel{border-color:var(--kv-2);background:color-mix(in srgb,var(--kv-2) 16%,var(--kv-sup))}
-.kn-c.sel b{color:var(--text)}
+.kn-c.sel .d b{color:var(--g)}
 .kn-mas .kv-p{margin-top:auto}
 .kn-p{gap:12px;padding:18px 26px}
-.kn-d{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;padding-bottom:12px;border-bottom:1px solid var(--kv-linea)}
+.kn-d{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:20px;padding-bottom:12px;border-bottom:1px solid var(--kv-linea)}
 .kn-d span{display:block;font-size:14px;color:var(--kv-t2)}
 .kn-d strong{font-size:29px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
 .kn-g{display:flex;flex-direction:column;gap:8px;flex:1}
@@ -476,7 +481,13 @@ button.km-li[aria-expanded="true"]>b::after{transform:rotate(-135deg);margin-bot
 .kn-a .t{align-self:center;text-align:right}
 .kn-a .t strong{display:block;font-size:16px}
 .kn-a .t span{font-size:13px;color:var(--kv-t2)}
+.kn-a .t em{display:block;font-style:normal;font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--text);margin-top:2px}
 .kn-a>button,.kn-a>i{display:flex;align-items:flex-start;justify-content:center;min-width:0;padding:5px 0 0;border:2px solid transparent;border-radius:9px;font:inherit;font-style:normal;font-size:13px;font-weight:600;color:var(--text)}
+/* Cada cuadro dice cuánto pagas ese mes, en una pastilla que se lee sobre cualquier color. */
+.kn-a .vivo{flex-direction:column;align-items:center;justify-content:space-between;gap:4px;padding-bottom:5px;container-type:inline-size}
+.kn-a .vivo em i{font-style:normal}
+@container (max-width:44px){.kn-a .vivo em{font-size:10px;padding:3px 1px;letter-spacing:-.04em;max-width:100%}.kn-a .vivo em i{display:none}}
+.kn-a .vivo em{font-style:normal;font-family:var(--mono);font-size:11.5px;font-weight:700;line-height:1;padding:3px 4px;border-radius:5px;background:rgba(0,0,0,.55);color:#fff;white-space:nowrap;max-width:calc(100% - 4px);overflow:hidden;text-overflow:clip}
 .kn-a .vivo{cursor:pointer;background:linear-gradient(to top,var(--kv-2) var(--p),var(--kv-gris) var(--p),var(--kv-gris) var(--q),color-mix(in srgb,var(--kv-1) 45%,var(--kv-caja)) var(--q)) border-box}
 .kn-a .vivo:hover{filter:brightness(1.12)}
 .kn-a .vivo.sel{border-color:var(--text)}
@@ -493,6 +504,8 @@ button.km-li[aria-expanded="true"]>b::after{transform:rotate(-135deg);margin-bot
 .kn-r p{margin:0;font-size:14.5px;line-height:1.5;color:var(--kv-t2)}
 .kn-r p b{color:var(--text)}
 .kn-r .ac{display:flex;gap:8px;flex-shrink:0}
+/* Con las dos columnas y poco ancho, los cinco datos de arriba bajan de tamaño para no partirse en dos renglones. */
+@media(min-width:1281px) and (max-width:1520px){.kn-d{gap:14px}.kn-d strong{font-size:22px;white-space:nowrap}}
 @media(max-width:1280px){
   .kn-b{grid-template-columns:minmax(0,1fr)}
   .kn-i{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -501,6 +514,7 @@ button.km-li[aria-expanded="true"]>b::after{transform:rotate(-135deg);margin-bot
   .kn-i{grid-template-columns:minmax(0,1fr)}
   .kn-p{padding:16px}
   .kn-d{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .kn-d>div:first-child{grid-column:1/-1}
   .kn-d strong{font-size:24px}
   .kn-a{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;padding-bottom:6px}
   .kn-a>b{grid-column:1/3}
