@@ -391,35 +391,61 @@
     graficas.filter(q => q[0] === 'millon').forEach(q => q[1](q[0], q[2]));
   };
   // La gráfica: tu dinero menos tus deudas, de tu primer cierre al millón. Lo real en blanco, lo que tendrías en verde.
-  const KP = { l: 132, a: 34, b: 66 };
+  // Adán, 25-nov-2026: "la gráfica hacia 1 M no es muy clara, mejórala". Como la del Fondo Maestría: si la tabla de abajo cabe
+  // entera, la gráfica se acomoda sobre sus columnas —medidas en pantalla—; los años van marcados abajo; las paradas, en una franja
+  // arriba con nombre, fecha y una guía hasta su punto; la maestría, con sus fechas; el millón, rotulado.
   function rutaMillon(id, o) {
     const g = base(id, { aria: 'Tu dinero menos tus deudas, de tu primer cierre al millón' }); if (!g) return; guarda(id, rutaMillon, o);
-    const L = o.L, n = L.length, chico = g.w < 760; g.l = chico ? 58 : KP.l; g.r = 0; g.t = 30; g.b = chico ? 30 : 12;
-    const v = L.map(m => m.queda), Y = ejes(g, Math.min(0, ...v), Math.max(1e6, ...v) * 1.04), ini = chico ? g.l + 8 : g.l + KP.a, fin = g.w - (chico ? 16 : KP.b), X = i => ini + i / Math.max(1, n - 1) * (fin - ini), y0 = Y(0), H = Math.max(0, L.findIndex(m => m.tipo === 'hoy')), en = ym => L.findIndex(m => m.mes === ym);
+    const L = o.L, n = L.length, H = Math.max(0, L.findIndex(m => m.tipo === 'hoy')), en = ym => L.findIndex(m => m.mes === ym);
+    const nF = g.w < 560 ? 3 : 2; g.l = g.w < 560 ? 52 : 64; g.r = 16; g.t = 10 + nF * 32 + 6; g.b = 28;
+    const v = L.map(m => m.queda), Y = ejes(g, Math.min(0, ...v), Math.max(1e6, ...v) * 1.06), y0 = Y(0);
+    // ¿La tabla de abajo cabe? Entonces cada mes queda arriba de su columna: una recta por la primera y la última, medidas.
+    const tw = g.el.parentNode.querySelector('.km-tw'), bs = tw ? [...tw.querySelectorAll('.kp-t button')] : [], sr = g.el.getBoundingClientRect();
+    let X = i => g.l + 14 + i / Math.max(1, n - 1) * (g.w - g.r - g.l - 28);
+    if (bs.length > 1 && tw.scrollWidth <= tw.clientWidth + 1 && pat.st.length === bs.length) {
+      const c = b => { const r = b.getBoundingClientRect(); return r.left + r.width / 2 - sr.left; }, i0 = en(pat.st[0].mes), i1 = en(pat.st[bs.length - 1].mes), x0 = c(bs[0]), x1 = c(bs[bs.length - 1]);
+      if (i0 >= 0 && i1 > i0 && x0 > g.l) X = i => x0 + (i - i0) / (i1 - i0) * (x1 - x0);
+    }
     const txt = (x, y, t, at) => nodo(g.svg, 'text', Object.assign({ x, y, class: 'km-x' }, at), t), pts = L.map((m, i) => [X(i), Y(m.queda)]), d = p => p.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join('');
-    const m0 = en(o.K.maestria[0]), m1 = en(o.K.maestria[1]); if (m0 > 0 && m1 > m0) { nodo(g.svg, 'rect', { x: X(m0), y: g.t - 22, width: X(m1) - X(m0), height: g.h - g.b - g.t + 22, class: 'kp-mae' }); txt((X(m0) + X(m1)) / 2, g.t - 4, chico ? 'Maestría' : 'Maestría en Alemania', { 'text-anchor': 'middle', class: 'km-x f' }); }
-    nodo(g.svg, 'line', { x1: g.l, x2: g.w, y1: Y(1e6), y2: Y(1e6), class: 'kp-mil' }); if (!chico) txt(g.l + 10, Y(1e6) - 9, 'El millón', { 'text-anchor': 'start', class: 'km-x o' });
+    const fecha = ym => MES[+ym.slice(5, 7) - 1] + ' ' + ym.slice(0, 4), sg = q => (q < 0 ? '−' : '') + money(Math.abs(q));
+    const tope = e => { const w = e.getComputedTextLength(), x = +e.getAttribute('x'); if (x - w < g.l + 2) e.setAttribute('x', g.l + 2 + w); return e; };
+    // Los años: una guía en cada enero y el año abajo.
+    let ult = -1e9;
+    L.forEach((m, i) => { if (!/-01$/.test(m.mes)) return; const x = X(i); nodo(g.svg, 'line', { x1: x, x2: x, y1: g.t - 4, y2: g.h - g.b, class: 'km-col' }); if (x - ult > 44 && x < g.w - 20) { txt(x, g.h - 9, m.mes.slice(0, 4), { 'text-anchor': 'middle' }); ult = x; } });
+    // La maestría: su banda, con nombre y fechas.
+    const m0 = en(o.K.maestria[0]), m1 = en(o.K.maestria[1]);
+    if (m0 > 0 && m1 > m0) {
+      nodo(g.svg, 'rect', { x: X(m0), y: g.t - 4, width: X(m1) - X(m0), height: g.h - g.b - g.t + 4, class: 'kp-mae' });
+      // Al pie de la banda: arriba pasa la línea del millón y la tapaba.
+      const cx = (X(m0) + X(m1)) / 2, ab = g.h - g.b - 10, dos = X(m1) - X(m0) > 110;
+      txt(cx, dos ? ab - 16 : ab, 'Maestría', { 'text-anchor': 'middle', class: 'km-x f' });
+      if (dos) txt(cx, ab, fecha(o.K.maestria[0]) + ' a ' + fecha(o.K.maestria[1]), { 'text-anchor': 'middle' });
+    }
+    // El millón: la meta, rotulada a la izquierda.
+    nodo(g.svg, 'line', { x1: g.l, x2: g.w - g.r, y1: Y(1e6), y2: Y(1e6), class: 'kp-mil' }); txt(g.l + 8, Y(1e6) - 8, 'La meta: ' + (g.w < 560 ? corto(1e6) : money(1e6)), { 'text-anchor': 'start', class: 'km-x o' });
     // El área, de cero a la línea: naranja abajo, verde arriba.
     [['var(--kv-2)', Math.max], ['var(--ac)', Math.min]].forEach(q => nodo(g.svg, 'path', { d: 'M' + X(H) + ' ' + y0 + pts.slice(H).map(p => 'L' + p[0].toFixed(1) + ' ' + q[1](p[1], y0).toFixed(1)).join('') + 'L' + X(n - 1) + ' ' + y0 + 'Z', fill: q[0], opacity: .13 }));
-    const sx = X(Math.max(0, en(pat.st[pat.s] ? pat.st[pat.s].mes : ''))); nodo(g.svg, 'line', { x1: sx, x2: sx, y1: g.t - 10, y2: g.h - g.b, class: 'km-hoy' });
+    const sx = X(Math.max(0, en(pat.st[pat.s] ? pat.st[pat.s].mes : ''))); nodo(g.svg, 'line', { x1: sx, x2: sx, y1: g.t - 4, y2: g.h - g.b, class: 'km-hoy' });
     [[pts.slice(H), 'var(--ac)', 4], [pts.slice(0, H + 1), 'var(--text)', 3]].forEach(q => q[0].length > 1 && nodo(g.svg, 'path', { d: d(q[0]), fill: 'none', stroke: q[1], 'stroke-width': q[2], 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
     L.slice(0, H).forEach((m, i) => nodo(g.svg, 'circle', { cx: X(i), cy: Y(m.queda), r: 4, fill: 'var(--text)', stroke: 'var(--kv-caja)', 'stroke-width': 2 }));
     pat.st.forEach((q, k) => { const i = en(q.mes); if (i >= 0) nodo(g.svg, 'circle', { cx: X(i), cy: Y(L[i].queda), r: k === pat.s ? 8 : 5, fill: q.tipo === 'hoy' ? 'var(--text)' : 'var(--ac)', stroke: 'var(--kv-caja)', 'stroke-width': 2 }); });
-    const NOM = { cero: 'pasas de cero', medio: 'medio millón', millon: 'el millón', auto: 'el BYD en cero' };
-    if (!chico) { const at = { 'text-anchor': 'end' }; txt(X(H) - 12, Y(L[H].queda) - 30, (L[H].queda < 0 ? '−' : '') + money(Math.abs(L[H].queda)), Object.assign({}, at, { class: 'km-x f' })); txt(X(H) - 12, Y(L[H].queda) - 13, 'hoy', at); }
-    o.K.paradas.forEach(p => {
-      const tp = p.auto ? 'auto' : p.tipo, i = en(p.mes); if (!NOM[tp] || i < 0) return; const x = X(i), y = Y(L[i].queda);
+    // Hoy: lo que te queda, arriba a la izquierda de su punto.
+    tope(txt(X(H) - 10, Y(L[H].queda) - 26, 'hoy ' + sg(L[H].queda), { 'text-anchor': 'end', class: 'km-x f' }));
+    // Las paradas, de izquierda a derecha, en la franja de arriba; si dos chocan, la segunda baja de renglón.
+    const NOM = { cero: 'Pasas de cero', medio: 'Medio millón', millon: 'El millón', auto: 'El BYD es tuyo' }, filas = Array(nF).fill(-1e9);
+    o.K.paradas.map(p => ({ p, tp: p.auto ? 'auto' : p.tipo, i: en(p.mes) })).filter(q => NOM[q.tp] && q.i >= 0).sort((a, b) => a.i - b.i).forEach(q => {
+      const x = X(q.i), y = Y(L[q.i].queda), grupo = nodo(g.svg, 'g', {});
+      const a = nodo(grupo, 'text', { x: 0, y: 0, 'text-anchor': 'middle', class: 'km-x f' }, NOM[q.tp]), b = nodo(grupo, 'text', { x: 0, y: 15, 'text-anchor': 'middle', class: 'km-x' }, fecha(q.p.mes));
+      const ancho = Math.max(a.getComputedTextLength(), b.getComputedTextLength()) + 10, lx = Math.min(Math.max(x, g.l + ancho / 2), g.w - ancho / 2);
+      let f = filas.findIndex(z => lx - ancho / 2 >= z + 6); if (f < 0) f = filas.indexOf(Math.min(...filas)); filas[f] = lx + ancho / 2;
+      const ty = 14 + f * 32; [a, b].forEach(e => e.setAttribute('x', lx)); grupo.setAttribute('transform', 'translate(0,' + ty + ')');
+      nodo(g.svg, 'line', { x1: x, x2: x, y1: ty + 20, y2: y - 9, class: 'km-guia' });
       nodo(g.svg, 'circle', { cx: x, cy: y, r: 7, fill: 'var(--kv-2)', stroke: 'var(--kv-caja)', 'stroke-width': 2 });
-      if (chico && p.tipo !== 'millon') return;
-      if (tp === 'auto') { txt(x + 14, y + 20, mesL(p.mes), { 'text-anchor': 'start', class: 'km-x f' }); txt(x + 14, y + 37, NOM[tp], { 'text-anchor': 'start' }); return; }
-      txt(x - 14, y - 26, mesL(p.mes), { 'text-anchor': 'end', class: 'km-x f' }); txt(x - 14, y - 9, NOM[tp], { 'text-anchor': 'end' });
     });
-    if (chico) { txt(X(H), g.h - 8, 'hoy', { 'text-anchor': 'middle', class: 'km-x f' }); txt(X(n - 1), g.h - 8, mesTxt(L[n - 1].mes), { 'text-anchor': 'end' }); }
     const cruz = nodo(g.svg, 'line', { y1: g.t, y2: g.h - g.b, stroke: 'var(--kv-gris)', 'stroke-width': 1, opacity: 0 });
     raton(g, n, X, i => {
       const m = L[i], p = o.K.plan[m.mes]; cruz.setAttribute('x1', X(i)); cruz.setAttribute('x2', X(i)); cruz.setAttribute('opacity', .8);
-      const sg = q => (q < 0 ? '−' : '') + money(Math.abs(q));
-      globo(g, X(i), mesTxt(m.mes) + (m.tipo === 'cierre' ? ', cierre' : m.tipo === 'hoy' ? ', hoy' : ''), [{ c: 'var(--ac)', v: sg(m.queda), n: 'te queda' }, { c: V.a, v: money(m.dinero), n: 'tu dinero' }, { c: V.b, v: money(m.debe), n: 'debes' }, p && m.tipo === 'proy' && { c: 'var(--kv-gris)', v: sg(p.liquido), n: 'solo el calendario' }].filter(Boolean));
+      globo(g, X(i), fecha(m.mes) + (m.tipo === 'cierre' ? ', cierre' : m.tipo === 'hoy' ? ', hoy' : ''), [{ c: 'var(--ac)', v: sg(m.queda), n: 'te queda' }, { c: V.a, v: money(m.dinero), n: 'tu dinero' }, { c: V.b, v: money(m.debe), n: 'debes' }, p && m.tipo === 'proy' && { c: 'var(--kv-gris)', v: sg(p.liquido), n: 'solo el calendario' }].filter(Boolean));
     }, () => cruz.setAttribute('opacity', 0));
   }
   M.patrimonio = function (F) {

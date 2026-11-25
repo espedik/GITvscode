@@ -430,6 +430,7 @@ button.km-li[aria-expanded="true"]>b::after{transform:rotate(-135deg);margin-bot
 .kp button:focus-visible{outline:2px solid var(--kv-1);outline-offset:-2px}
 #kpLista:empty{display:none}
 .kp .km-g .kv-g{min-height:344px}
+@media(max-width:640px){.kp .km-g .kv-g{min-height:400px}}   /* en el teléfono la franja de paradas lleva tres renglones */
 .kp-lista{columns:3;column-gap:44px;padding:10px 24px 12px;border:1px solid var(--kv-linea);border-radius:16px;background:var(--kv-caja)}
 .kp-lista .km-li{break-inside:avoid}
 .kp-lista .km-li>b u{white-space:normal}

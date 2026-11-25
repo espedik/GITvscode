@@ -1163,10 +1163,14 @@ Adán, 24-nov-2026: *"dame opciones, claras, entendibles y futuristas"* y *"me g
 - **La respuesta**: el mes del millón, cuántos faltan, en cuánto vas y cuándo pasas de cero.
 - **Cuatro datos**: tu dinero, lo que debes, tus cosas y, con todo, tu patrimonio. Los tres primeros se abren (`MEDIDORES.patVe`) con
   su lista. Avisa si el bien más caro está a precio de compra.
-- **La gráfica** (`rutaMillon`): tu dinero menos tus deudas, de tu primer cierre al millón, con la maestría sombreada y las paradas
-  marcadas. Debajo, alineada, una columna por parada de calendario —hoy, los diciembres y el millón—; tocar una (`MEDIDORES.patMes`)
-  cambia el panel de la derecha: **hoy**, qué cambió desde el último cierre; las demás, cuánto crece tu dinero, cuánto baja tu
-  deuda y qué pasa en ese tramo.
+- **La gráfica** (`rutaMillon`): tu dinero menos tus deudas, de tu primer cierre al millón. Adán, 25-nov-2026: *"la gráfica hacia 1 M
+  no es muy clara, mejórala"*. **Los años van abajo**, con una guía en cada enero; **las paradas, en una franja arriba** con nombre,
+  fecha y una guía hasta su punto —*Pasas de cero*, *El BYD es tuyo*, *Medio millón*, *El millón*—, bajando de renglón si chocan (tres
+  renglones en el teléfono); **la maestría**, sombreada, con sus fechas al pie de la banda; **la meta** rotulada (*La meta:
+  $1,000,000*) y hoy con lo que te queda. Debajo, una columna por parada de calendario —hoy, los diciembres y el millón—: si la tabla
+  cabe entera, la gráfica se acomoda sobre sus columnas, medidas en pantalla; si se desliza de lado, va con su propio eje. Tocar una
+  (`MEDIDORES.patMes`) cambia el panel de la derecha: **hoy**, qué cambió desde el último cierre; las demás, cuánto crece tu dinero,
+  cuánto baja tu deuda y qué pasa en ese tramo.
 - **Qué hacer**: este mes, la deuda más grande, cuánto adelanta guardar más y cómo vas contra mandar solo lo del calendario.
 
 **La cuenta** (`CIFRAS.caminoMillon`): hasta la salida es el dinero del Fondo Maestría, para que las dos ventanas digan lo mismo;
