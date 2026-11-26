@@ -2091,7 +2091,7 @@ function promptsDeLoTocado() {
 }
 
 /* ── 25. Las lecciones de Alemán: el catálogo contra sus páginas, y el inicio y Mi Día lo leen ──
-   Las 41 lecciones viven en `Aleman/lecciones-datos.js`: de ahí pinta sus tarjetas el inicio de Alemán y
+   Las lecciones viven en `Aleman/lecciones-datos.js`: de ahí pinta sus tarjetas el inicio de Alemán y
    de ahí saca Mi Día la lección que toca, con la misma regla (`queToca`). Desde file:// ninguna página puede
    abrir otra para contar sus ejercicios, así que cada lección del Kapitel lleva la lista en `bloques`: si una
    lección gana un ejercicio y la lista no, sale «Completa» con uno sin hacer; si lo pierde, no llega nunca al
@@ -2206,7 +2206,7 @@ function promptsDeLoTocado() {
 })();
 
 /* ── 27. Las lecciones de Alemán con su plantilla ────────────────────────────────────────────
-   Las 41 lecciones, Principiantes y Gramática llevan la barra del inicio, en el encabezado la foto
+   Las lecciones, Principiantes y Gramática llevan la barra del inicio, en el encabezado la foto
    de su lección (la misma del inicio, con su crédito) y, las que tienen práctica, el panel
    .lec-practica con leccion.js después de k10-interactivo.js: «Tu avance» le pregunta a este qué
    ejercicios hay. Una lección hecha a mano sin alguna de esas piezas sale aquí. */

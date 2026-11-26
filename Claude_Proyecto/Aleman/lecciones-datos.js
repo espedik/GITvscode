@@ -1,4 +1,4 @@
-/* ══ lecciones-datos.js — las 41 lecciones de la app de Alemán, en un solo sitio ══════════════════
+/* ══ lecciones-datos.js — todas las lecciones de la app de Alemán, en un solo sitio ══════════════
 
    Lo leen el inicio (`index.html`), que pinta con esto sus tarjetas del Kapitel 10, A2 y A1, y Mi Día
    del Dashboard, que enseña en «Hoy aprendes» la lección que toca y la abre en su ventana. Desde
@@ -64,7 +64,7 @@ const ALEMAN_LECCIONES = {
       foto: 'k10-05.jpg', alt: 'Desayuno con café y cruasanes', credito: 'JESHOOTS.com · Stocksnap · CC0 1.0',
       bloques: ['mt-ej', 'mt-ord', 'hueco-tag', 'dic-tag', 'ej-hora', 'em-frec', 'ej-sep'] },
 
-    // A2 · el nivel que pide Esslingen: 12 de gramática y 8 de temas
+    // A2 · el nivel que pide Esslingen; `parte` las reparte en las dos listas del inicio: Gramática y Temas
     { id: 'a2-01', href: 'a2-01-modalverben.html', num: 'A2 · 01', de: 'Modalverben', es: 'Verbos modales',
       tags: 'können · müssen · wollen', parte: 'Gramática',
       foto: 'a2-01.jpg', alt: 'Una mujer toca la guitarra', credito: 'Negative Space · Stocksnap · CC0 1.0' },
@@ -125,6 +125,48 @@ const ALEMAN_LECCIONES = {
     { id: 'a2-20', href: 'a2-20-medien.html', num: 'A2 · 20', de: 'Medien & Technologie', es: 'Medios y tecnología',
       tags: 'Internet · Handy · Nachrichten', parte: 'Temas',
       foto: 'a2-20.jpg', alt: 'Una mano con un celular y un café', credito: 'JESHOOTS.com · Stocksnap · CC0 1.0' },
+    { id: 'a2-21', href: 'a2-21-konjunktiv.html', num: 'A2 · 21', de: 'Konjunktiv II', es: 'Cortesía, deseos y consejos',
+      tags: 'würde · hätte · wäre · könnte', parte: 'Gramática',
+      foto: 'a2-21.jpg', alt: 'La vitrina de una cafetería con clientes en la barra', credito: 'Ryan Plomp · Stocksnap · CC0 1.0' },
+    { id: 'a2-22', href: 'a2-22-temporalsaetze.html', num: 'A2 · 22', de: 'Temporale Nebensätze', es: 'Cuándo pasa algo: als, wenn, bevor, nachdem',
+      tags: 'als · wenn · bevor · nachdem · während', parte: 'Gramática',
+      foto: 'a2-22.jpg', alt: 'Un reloj despertador antiguo', credito: 'Ales Krivec · Stocksnap · CC0 1.0' },
+    { id: 'a2-23', href: 'a2-23-indirekte-fragen.html', num: 'A2 · 23', de: 'Indirekte Fragen', es: 'Preguntar con cortesía: ob y las W-Fragen',
+      tags: 'ob · Können Sie mir sagen, wo…? · Ich weiß nicht, ob…', parte: 'Gramática',
+      foto: 'a2-23.jpg', alt: 'Una nota con un signo de interrogación junto a un café y una tableta', credito: 'Top Down Tech · Stocksnap · CC0 1.0' },
+    { id: 'a2-24', href: 'a2-24-relativsaetze.html', num: 'A2 · 24', de: 'Relativsätze', es: 'Oraciones de relativo: el que, la que, donde',
+      tags: 'der/die/das · den · dem · denen · wo', parte: 'Gramática',
+      foto: 'a2-24.jpg', alt: 'Tres colegas trabajan juntos en sus laptops', credito: 'Burst · Stocksnap · CC0 1.0' },
+    { id: 'a2-25', href: 'a2-25-passiv.html', num: 'A2 · 25', de: 'Passiv', es: 'La voz pasiva: se hace, se hizo',
+      tags: 'wird gemacht · wurde gebaut · muss repariert werden', parte: 'Gramática',
+      foto: 'a2-25.jpg', alt: 'Un mecánico trabaja debajo de un vocho', credito: 'Ryan McGuire · Stocksnap · CC0 1.0' },
+    { id: 'a2-26', href: 'a2-26-verben-praepositionen.html', num: 'A2 · 26', de: 'Verben mit Präpositionen', es: 'Verbos con preposición fija',
+      tags: 'warten auf · sich freuen auf · denken an · wo-/da-', parte: 'Gramática',
+      foto: 'a2-26.jpg', alt: 'Una mujer con el celular en la mano espera junto a un taxi', credito: 'JESHOOTS.com · Stocksnap · CC0 1.0' },
+    { id: 'a2-27', href: 'a2-27-futur.html', num: 'A2 · 27', de: 'Futur & Pläne', es: 'Hablar del futuro y de tus planes',
+      tags: 'werden + Infinitiv · morgen fahre ich · wahrscheinlich', parte: 'Gramática',
+      foto: 'a2-27.jpg', alt: 'Letreros de senderos con distancias y tiempos', credito: 'Travel Adventures · Stocksnap · CC0 1.0' },
+    { id: 'a2-28', href: 'a2-28-behoerden.html', num: 'A2 · 28', de: 'Behörden & Anmeldung', es: 'Trámites al llegar a Alemania',
+      tags: 'Bürgeramt · Termin · Formular · Aufenthaltstitel', parte: 'Temas',
+      foto: 'a2-28.jpg', alt: 'Dos pasaportes sobre una mesa de madera', credito: 'Kristin Hardwick · Stocksnap · CC0 1.0' },
+    { id: 'a2-29', href: 'a2-29-emails.html', num: 'A2 · 29', de: 'E-Mails & Briefe', es: 'Escribir correos formales e informales',
+      tags: 'Sehr geehrte · Mit freundlichen Grüßen · Liebe/r', parte: 'Temas',
+      foto: 'a2-29.jpg', alt: 'Una persona escribe en una laptop', credito: 'Kristin Hardwick · Stocksnap · CC0 1.0' },
+    { id: 'a2-30', href: 'a2-30-telefonieren.html', num: 'A2 · 30', de: 'Telefonieren & Termine', es: 'Hablar por teléfono y hacer citas',
+      tags: 'Hier spricht … · zurückrufen · einen Termin vereinbaren', parte: 'Temas',
+      foto: 'a2-30.jpg', alt: 'Un hombre de traje habla por celular en la calle', credito: 'Burst · Stocksnap · CC0 1.0' },
+    { id: 'a2-31', href: 'a2-31-bank.html', num: 'A2 · 31', de: 'Bank & Geld', es: 'Banco, pagos y dinero',
+      tags: 'Konto eröffnen · Überweisung · Miete · bar oder mit Karte', parte: 'Temas',
+      foto: 'a2-31.jpg', alt: 'Una alcancía de cerdito junto a una calculadora y monedas', credito: 'Artsy Crafty · Stocksnap · CC0 1.0' },
+    { id: 'a2-32', href: 'a2-32-bewerbung.html', num: 'A2 · 32', de: 'Bewerbung & Vorstellungsgespräch', es: 'Solicitar empleo y la entrevista',
+      tags: 'Lebenslauf · Anschreiben · Stärken · Werkstudent', parte: 'Temas',
+      foto: 'a2-32.jpg', alt: 'Dos personas se dan la mano sobre un escritorio', credito: 'Kristin Hardwick · Stocksnap · CC0 1.0' },
+    { id: 'a2-33', href: 'a2-33-studium.html', num: 'A2 · 33', de: 'Studium & Uni', es: 'Estudiar en una universidad alemana',
+      tags: 'Semester · Vorlesung · Klausur · Hochschule', parte: 'Temas',
+      foto: 'a2-33.jpg', alt: 'Una biblioteca antigua con libreros hasta el techo', credito: 'Gabriel Ghnassia · Stocksnap · CC0 1.0' },
+    { id: 'a2-34', href: 'a2-34-wetter.html', num: 'A2 · 34', de: 'Wetter & Kleidung', es: 'El clima y qué ponerte',
+      tags: 'Es regnet · minus fünf Grad · die Jacke · anziehen', parte: 'Temas',
+      foto: 'a2-34.jpg', alt: 'Un paraguas rojo bajo la lluvia de noche', credito: 'Gabriel Santiago · Stocksnap · CC0 1.0' },
 
     // A1 · la base, para repasar cuando algo no sale
     { id: 'a1-01', href: 'a1-01-saludos.html', num: 'A1 · 01', de: 'Begrüßungen', es: 'Saludos y despedidas',

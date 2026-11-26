@@ -1,4 +1,4 @@
-/* ══ lecciones-resumen.js — el resumen de cada una de las 41 lecciones ══════════════════════════════
+/* ══ lecciones-resumen.js — el resumen de cada una de las lecciones ═════════════════════════════════
 
    Adán, 18-nov-2026, sobre la ventana «Alemán de hoy» de Mi Día: "necesito mucha más información en cada
    sección" — y eligió, para la lección, «un resumen arriba: qué vas a aprender, la regla clave con ejemplos
@@ -365,6 +365,216 @@ const ALEMAN_LECCIONES_RESUMEN = {
     errores: [
       'der Handy ✗ → das Handy.',
       'Ich habe das heruntergeladet ✗ → Ich habe das heruntergeladen.',
+    ],
+  },
+
+  'a2-21': {
+    aprendes: 'Pedir con cortesía, expresar deseos, dar consejos e imaginar lo que no es real.',
+    regla: [
+      'würde + infinitivo al final, para casi todos los verbos. → Ich würde gern in Berlin wohnen.',
+      'sein, haben y los modales tienen forma propia: wäre, hätte, könnte, müsste, sollte. → Ich hätte gern einen Kaffee.',
+      'El consejo: du solltest + infinitivo. → Du solltest mehr schlafen.',
+      'Lo que no es real: Wenn + Konjunktiv II con el verbo al final, y después la otra parte. → Wenn ich Zeit hätte, würde ich kommen.',
+    ],
+    errores: [
+      'Ich würde haben ✗ → Ich hätte: haben, sein y los modales no llevan würde.',
+      'Ich will einen Kaffee ✗ → Ich hätte gern einen Kaffee: al pedir, will suena brusco.',
+      'Wenn ich hätte Zeit ✗ → Wenn ich Zeit hätte: con wenn, el verbo va al final.',
+    ],
+  },
+
+  'a2-22': {
+    aprendes: 'Decir cuándo pasa algo —cuando, antes, después, mientras, desde, hasta— con el verbo en su lugar.',
+    regla: [
+      'Conector de tiempo + … + verbo al final. → Ich lese, während ich Kaffee trinke.',
+      'als: una sola vez en el pasado; wenn: presente, futuro o cada vez que. → Als ich klein war, … / Wenn ich Zeit habe, …',
+      'Si la subordinada va primero, el verbo principal va justo después de la coma. → Bevor ich schlafe, lese ich.',
+      'nachdem lleva lo de antes en un tiempo más pasado. → Nachdem ich gegessen habe, gehe ich spazieren.',
+    ],
+    errores: [
+      'Wenn ich ein Kind war ✗ → Als ich ein Kind war: una sola vez en el pasado es als.',
+      'Bevor ich schlafe, ich lese ✗ → Bevor ich schlafe, lese ich: el verbo va justo después de la coma.',
+      'Seit ich wohne in Berlin ✗ → Seit ich in Berlin wohne: en la subordinada, el verbo va al final.',
+    ],
+  },
+
+  'a2-23': {
+    aprendes: 'Hacer preguntas amables —¿me puede decir…?, ¿sabe si…?— y decir lo que no sabes.',
+    regla: [
+      'Frase de entrada + W-Wort + … + verbo al final. → Können Sie mir sagen, wo der Bahnhof ist?',
+      'Pregunta de sí o no: ob. → Wissen Sie, ob der Bus pünktlich kommt?',
+      'El verbo separable se junta al final. → Wissen Sie, wann der Zug ankommt?',
+      'ob es el «si» de la duda; wenn, el de la condición. → Ich weiß nicht, ob er kommt.',
+    ],
+    errores: [
+      'Können Sie mir sagen, wo ist der Bahnhof? ✗ → …, wo der Bahnhof ist?: el verbo va al final.',
+      'Ich weiß nicht, wenn er kommt ✗ → Ich weiß nicht, ob er kommt: la duda es ob.',
+      'Wissen Sie, wann kommt der Zug an? ✗ → Wissen Sie, wann der Zug ankommt?: el separable se junta al final.',
+    ],
+  },
+
+  'a2-24': {
+    aprendes: 'Describir personas y cosas en una sola frase: el colega que…, la ciudad donde…',
+    regla: [
+      'El pronombre toma el género de la palabra y el caso de lo que hace en su oración. → der Kollege, den ich kenne.',
+      'Las formas son las del artículo, salvo el Dativ plural: denen. → die Leute, denen ich helfe.',
+      'La preposición va delante del pronombre. → die Stadt, in der ich wohne.',
+      'El verbo va al final y la oración va entre comas. → Der Bus, der hier hält, fährt zur Uni.',
+    ],
+    errores: [
+      'der Mann, der ich sehe ✗ → der Mann, den ich sehe: es el objeto, Akkusativ.',
+      'die Leute, die ich helfe ✗ → die Leute, denen ich helfe: helfen pide Dativ.',
+      'das Buch, das ich habe gelesen ✗ → das Buch, das ich gelesen habe: el verbo conjugado va al final.',
+    ],
+  },
+
+  'a2-25': {
+    aprendes: 'Decir lo que se hace sin decir quién: instrucciones, procesos, noticias y letreros.',
+    regla: [
+      'werden + Partizip II al final. → Das Auto wird repariert.',
+      'En pasado: wurde + Partizip II. → Das Haus wurde 1990 gebaut.',
+      'Con modal: modal + Partizip II + werden. → Das Formular muss unterschrieben werden.',
+      'Quién lo hace, si importa: von + Dativ. → Das Auto wird vom Mechaniker repariert.',
+    ],
+    errores: [
+      'Das Auto ist repariert ✗ → Das Auto wird repariert: para decir que lo están reparando; ist + Partizip es el resultado.',
+      'Das Haus wurde gebaut 1990 ✗ → Das Haus wurde 1990 gebaut: el Partizip va al final.',
+      'Das muss werden unterschrieben ✗ → Das muss unterschrieben werden.',
+    ],
+  },
+
+  'a2-26': {
+    aprendes: 'Usar los verbos con su preposición fija y preguntar con wo- y da-.',
+    regla: [
+      'Verbo + preposición + caso se aprenden juntos. → warten auf + Akkusativ: Ich warte auf den Bus.',
+      'freuen auf es lo que viene; freuen über, lo que ya pasó. → Ich freue mich auf den Urlaub.',
+      'Pregunta por una cosa: wo(r) + preposición; por una persona: preposición + wen / wem. → Worauf wartest du? / Auf wen wartest du?',
+      'Respuesta con una cosa: da(r) + preposición. → Ich denke daran.',
+    ],
+    errores: [
+      'Ich warte für den Bus ✗ → Ich warte auf den Bus.',
+      'Ich denke in dich ✗ → Ich denke an dich.',
+      'Ich interessiere mich in Autos ✗ → Ich interessiere mich für Autos.',
+    ],
+  },
+
+  'a2-27': {
+    aprendes: 'Hablar de tus planes, prometer, predecir y suponer.',
+    regla: [
+      'Lo más común: presente + expresión de tiempo. → Nächstes Jahr ziehe ich nach Deutschland um.',
+      'Futur I: werden + infinitivo al final. → Ich werde jeden Tag lernen.',
+      'Para suponer algo de ahora: werden + wohl. → Er wird wohl krank sein.',
+      'werden: ich werde, du wirst, er wird. → Morgen wird es regnen.',
+    ],
+    errores: [
+      'Ich werde gehen morgen ✗ → Ich werde morgen gehen: el infinitivo va al final.',
+      'Morgen ich fahre nach Berlin ✗ → Morgen fahre ich nach Berlin: el verbo va en segundo lugar.',
+      'Ich will dich anrufen ✗ → Ich werde dich anrufen: para «te voy a llamar»; will es «quiero».',
+    ],
+  },
+
+  'a2-28': {
+    aprendes: 'Hacer los trámites al llegar: sacar cita, empadronarte, llenar formularios y pedir lo que te falta.',
+    regla: [
+      'Primero, la cita: einen Termin vereinbaren. → Ich möchte einen Termin vereinbaren.',
+      'Empadronarte (sich anmelden) en el Bürgeramt, en las dos semanas después de mudarte. → Ich möchte mich anmelden.',
+      'Llevas el pasaporte y la Wohnungsgeberbestätigung que te da el casero. → Hier ist mein Pass.',
+      'Preguntas lo que falta: Unterlagen son los documentos. → Welche Unterlagen muss ich mitbringen?',
+    ],
+    errores: [
+      'das Termin ✗ → der Termin: es masculino (einen Termin).',
+      'Wo muss ich unterschrieben? ✗ → Wo muss ich unterschreiben?: con modal va el infinitivo.',
+      'Ich möchte mich anmelden machen ✗ → Ich möchte mich anmelden: anmelden ya es el verbo.',
+    ],
+  },
+
+  'a2-29': {
+    aprendes: 'Escribir correos formales e informales: saludar, pedir, adjuntar y despedirte bien.',
+    regla: [
+      'El saludo formal es Sehr geehrte a una mujer y Sehr geehrter a un hombre. → Sehr geehrte Frau Weber,',
+      'Después del saludo, el texto empieza con minúscula. → Sehr geehrte Frau Weber, ich schreibe Ihnen, weil …',
+      'Sie, Ihnen e Ihr van siempre con mayúscula. → Vielen Dank für Ihre Antwort.',
+      'La despedida formal va sin coma. → Mit freundlichen Grüßen / Carlos García',
+    ],
+    errores: [
+      'Sehr geehrte Herr Müller ✗ → Sehr geehrter Herr Müller: a un hombre, geehrter.',
+      'Liebe Jonas ✗ → Lieber Jonas: a un hombre, Lieber.',
+      'Hallo Herr Müller ✗ → Guten Tag Herr Müller: a quien no conoces, Hallo suena demasiado casual.',
+    ],
+  },
+
+  'a2-30': {
+    aprendes: 'Contestar el teléfono, pedir y cambiar citas, dejar recado y deletrear tu nombre.',
+    regla: [
+      'Al presentarte, di tu nombre completo con Hier spricht. → Guten Tag, hier spricht Carlos García.',
+      'Para pedir a alguien, usa Könnte ich bitte mit … sprechen. → Könnte ich bitte mit Herrn Weber sprechen?',
+      'Las citas: vereinbaren (hacer), verschieben (cambiar), absagen (cancelar). → Ich muss den Termin absagen.',
+      'Al colgar se dice Auf Wiederhören, no Auf Wiedersehen. → Vielen Dank, auf Wiederhören!',
+    ],
+    errores: [
+      'Ich bin Carlos ✗ → Hier spricht Carlos García: así te presentas al teléfono.',
+      'Ich rufe zurück dich ✗ → Ich rufe dich zurück: el prefijo va al final.',
+      'mit Herr Weber ✗ → mit Herrn Weber: Herr lleva -n en Akkusativ y Dativ.',
+    ],
+  },
+
+  'a2-31': {
+    aprendes: 'Abrir una cuenta, pagar la renta, pagar en efectivo o con tarjeta y leer las cifras.',
+    regla: [
+      'Abrir una cuenta es ein Konto eröffnen. → Ich möchte ein Girokonto eröffnen.',
+      'Transferir es überweisen; la que sale sola cada mes, der Dauerauftrag. → Ich überweise die Miete.',
+      'Warmmiete es la renta con servicios; Kaltmiete, sin ellos. → Die Warmmiete beträgt 650 Euro.',
+      'La coma es el punto decimal y el punto separa los miles. → 12,50 € = zwölf Euro fünfzig.',
+    ],
+    errores: [
+      'ein Konto öffnen ✗ → ein Konto eröffnen: así se dice en el banco.',
+      'Ich möchte Geld nehmen ✗ → Ich möchte Geld abheben: sacar dinero del cajero.',
+      'zwölf Komma fünfzig Euro ✗ → zwölf Euro fünfzig: con dinero no se dice la coma.',
+    ],
+  },
+
+  'a2-32': {
+    aprendes: 'Armar tu solicitud y responder las preguntas típicas de una entrevista en alemán.',
+    regla: [
+      'La solicitud lleva Lebenslauf (en tabla, máximo dos páginas) y Anschreiben. → Anbei sende ich Ihnen meinen Lebenslauf.',
+      'sich bewerben um es el puesto; bei, la empresa. → Ich bewerbe mich bei Ihnen um die Stelle.',
+      'Lo que sigue haciendo va con seit y en presente. → Ich arbeite seit drei Jahren als Ingenieur.',
+      'En la entrevista, siempre Sie. → Was sind Ihre Stärken?',
+    ],
+    errores: [
+      'Ich bin ein Ingenieur ✗ → Ich bin Ingenieur: la profesión va sin artículo.',
+      'Ich bewerbe mich für die Stelle ✗ → Ich bewerbe mich um die Stelle.',
+      'Ich habe drei Jahre als Ingenieur gearbeitet ✗ → Ich arbeite seit drei Jahren als Ingenieur: si todavía trabajas ahí, presente con seit.',
+    ],
+  },
+
+  'a2-33': {
+    aprendes: 'Moverte en la universidad: clases, exámenes, créditos, inscripción y la vida del campus.',
+    regla: [
+      'studieren es estudiar una carrera; lernen, estudiar para algo o aprender. → Ich studiere Informatik. Ich lerne für die Prüfung.',
+      'Vorlesung (clase magistral), Seminar y Klausur (examen escrito). → Die Klausur dauert zwei Stunden.',
+      'Las notas van al revés: 1,0 es la mejor y con 4,0 apruebas. → Ich habe mit 1,7 bestanden.',
+      'A los exámenes hay que registrarse antes. → Bis wann muss ich mich für die Prüfungen anmelden?',
+    ],
+    errores: [
+      'Ich studiere für die Prüfung ✗ → Ich lerne für die Prüfung.',
+      'Ich habe die Prüfung passiert ✗ → Ich habe die Prüfung bestanden.',
+      'Ich bin in der dritte Semester ✗ → Ich bin im dritten Semester: das Semester, en Dativ.',
+    ],
+  },
+
+  'a2-34': {
+    aprendes: 'Hablar del clima, entender el pronóstico y decir qué ropa llevar.',
+    regla: [
+      'El clima va con es: Es regnet, es schneit, es ist kalt. → Heute ist es sonnig.',
+      'La temperatura: Es sind … Grad. → Es sind minus fünf Grad.',
+      'Ponerse es anziehen, y es separable. → Ich ziehe eine Jacke an.',
+      'Las estaciones son masculinas: im Sommer, im Winter. → Im Winter schneit es oft.',
+    ],
+    errores: [
+      'Es macht kalt ✗ → Es ist kalt.',
+      'Ich bin kalt ✗ → Mir ist kalt: el frío que sientes va en Dativ.',
+      'Ich trage an eine Jacke ✗ → Ich ziehe eine Jacke an (ponerse) / Ich trage eine Jacke (llevarla puesta).',
     ],
   },
 

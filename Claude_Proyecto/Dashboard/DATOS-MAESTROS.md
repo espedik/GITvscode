@@ -873,7 +873,7 @@ Toda página que carga el maestro carga antes `ajustes-sync.js` (con `onerror="t
 que cambiaste en Mis cifras de la PC. Lo exige el control 55.
 
 El Dashboard es donde vive el archivo porque es el centro del proyecto. El alemán vive en su app: el vocabulario en `Aleman/vocab-datos.js`, junto
-con su diseño (`vocab.css`) y su motor (`vocab.js`), y las 41 lecciones en `Aleman/lecciones-datos.js`
+con su diseño (`vocab.css`) y su motor (`vocab.js`), y el catálogo de las lecciones en `Aleman/lecciones-datos.js`
 —su catálogo, con la regla de qué lección toca (`queToca`)—. Los pintan `vocabulario.html` y el inicio de
 Alemán, y el Dashboard —que no tiene pantalla de alemán— solo lee los dos para la ventana del alemán de
 Mi Día; la lección se ve en su propia página. En `vocab-datos.js` viven también las **siete familias** en
@@ -911,7 +911,7 @@ que añade un registro lo hace **por id y solo si falta**: así el navegador que
 | `Finanzas/` | `Finanzas.html` | Finanzas reales, GBM, BTC, deudas | `finanzasmx_v2` |
 | `CuidadoPersonal/` | `cuidadopersonal.html` + `salud`/`ejercicio`/`comida` | Shell de 8 áreas (Skincare, Cabello, Dentista, Ojos nativas; Salud, Ejercicio, Comida, Vestimenta en iframe) | `skincare_v1`, `cabello_v1`, `dentista_v1`, `misalud_v1`, `mirutina_v1`, `comida_v1` |
 | `Vestimenta/` | `vestimenta.html` | Guardarropa y compras | `vestimenta_v1` |
-| `Aleman/` | `index.html` (el inicio) + 41 lecciones + `vocabulario.html` | Estudio A1/A2/Kapitel 10. Aloja el vocabulario entero (`vocab-datos.js` + `vocab.css` + `vocab.js`) y el catálogo de las lecciones (`lecciones-datos.js`); Mi Día solo lee los datos y abre la lección en su ventana | `aleman_k10_v1`, `voc_estado_v1`, `aleman_leccion_v1`, `aleman_repaso_v1` (el repaso del vocabulario, que escribe la ventana del alemán) |
+| `Aleman/` | `index.html` (el inicio) + las lecciones + `vocabulario.html` | Estudio A1/A2/Kapitel 10. Aloja el vocabulario entero (`vocab-datos.js` + `vocab.css` + `vocab.js`) y el catálogo de las lecciones (`lecciones-datos.js`); Mi Día solo lee los datos y abre la lección en su ventana | `aleman_k10_v1`, `voc_estado_v1`, `aleman_leccion_v1`, `aleman_repaso_v1` (el repaso del vocabulario, que escribe la ventana del alemán) |
 | `Entrevistas/` | `entrevistas.html` + `js/data-*.js` | Prep. técnica automotriz, 229 temas; los 41 de Python abren con su explicación en llano (`js/data-python-intro.js`) | `theme`, `sidebar-collapsed`, `study-done-v2` |
 | `Aeroresinas/`, `Heliescala/` | `aeroresinas.html`, `heliescala.html` + `dossier.html` | Las dos webs públicas del negocio del papá de Adán | solo tema e idioma |
 | `Posts/` | `posts.html` + `plantillas.js` | Plantillas de LinkedIn para las dos empresas, armadas con los `datos.js` de sus webs (no con el maestro) | `posts-*`, `coach-theme` |

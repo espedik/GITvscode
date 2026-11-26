@@ -1,6 +1,6 @@
 # Aleman/ — referencia
 
-41 lecciones de alemán en HTML, sin backend ni build, más el vocabulario y el tema de Partizip.
+Las lecciones de alemán en HTML (Kapitel 10, A2 y A1), sin backend ni build, más el vocabulario y el tema de Partizip.
 Se abren con `file://`. **El Dashboard no tiene pantalla de alemán** (Adán no quiere la
 información repetida): el alemán se estudia aquí. Mi Día solo lee de esta carpeta dos archivos de
 datos —diez palabras al día de `vocab-datos.js` y la lección que toca de `lecciones-datos.js`— y los abre en
@@ -20,13 +20,13 @@ la ventana del Dashboard*).
 |---|---|---|
 | **Kapitel 10** | `k10-01`…`k10-06` | Lo que Adán cursa en Cenlex Santo Tomás desde el 25-ago-2026 |
 | A1 | `a1-01`…`a1-15` | Base: saludos, números, artículos, hora, profesiones… |
-| A2 | `a2-01`…`a2-20` | Gramática y vocabulario temático |
+| A2 | `a2-01`…`a2-34` | Gramática (de los modales y el Perfekt al Konjunktiv II, el Passiv y las oraciones de relativo) y los temas de vivir en Alemania: trámites, correos, teléfono, banco, entrevista, universidad, clima |
 | Apoyo | `index.html`, `principiantes.html`, `gramatica.html`, `casos.html`, `vocabulario.html` | El inicio (ver abajo), lo básico para principiantes, la referencia transversal y los casos a fondo (ver abajo). La barra de apps del Dashboard enlaza al inicio, principiantes, la gramática y el vocabulario |
 | **Gramática a fondo** | `preposiciones.html`, `verbos.html`, `adjetivos.html`, `frase.html`, `temas.js`, `temas.css`, `temas-tablas.js` | Un tema por página, con su contenido en `window.TEMA`; `temas.js` y `temas.css` los pintan igual, y `temas-tablas.js` trae la tabla de consulta de cada uno para la ventana del Dashboard (ver abajo) |
 | Fotos | `fotos/` | Una por lección y por caja de consulta del inicio, con su crédito; la misma va en el encabezado de su lección |
 | Compartido | `styles.css`, `leccion.js`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js`, `oscuro.js` | La plantilla de las lecciones (ver abajo), estilos y motores; `oscuro.js`, el modo oscuro dentro del Dashboard (lleva calculadas las capas de `styles.css`, `k10.css`, `partizip.css` y `temas.css`) |
-| **Lecciones** | `lecciones-datos.js` | El catálogo de las 41: título, foto con su crédito, ejercicios del Kapitel y la regla de qué lección toca. Lo leen el inicio y Mi Día — ver abajo |
-| **Resumen de las lecciones** | `lecciones-resumen.js` | `ALEMAN_LECCIONES_RESUMEN`, por id de lección: `aprendes` (una frase), `regla` (la regla en pasos; el ejemplo en alemán va tras `. → `) y `errores` (`mal ✗ → bien: por qué`). Lo pinta *Alemán de hoy* del Dashboard encima de la lección. Las 41 lo traen, con al menos 2 reglas y 2 errores: lo exige el control 54 |
+| **Lecciones** | `lecciones-datos.js` | El catálogo de todas: título, foto con su crédito, ejercicios del Kapitel y la regla de qué lección toca. Lo leen el inicio y Mi Día — ver abajo |
+| **Resumen de las lecciones** | `lecciones-resumen.js` | `ALEMAN_LECCIONES_RESUMEN`, por id de lección: `aprendes` (una frase), `regla` (la regla en pasos; el ejemplo en alemán va tras `. → `) y `errores` (`mal ✗ → bien: por qué`). Lo pinta *Alemán de hoy* del Dashboard encima de la lección. Todas lo traen, con al menos 2 reglas y 2 errores: lo exige el control 54 |
 | **Lo de más de cada palabra** | `vocab-mas.js` | `ALEMAN_VOCAB_MAS`, por la palabra (`de`, exacta como en `vocab-datos.js`): `ej` (2 frases [alemán, español], distintas del ejemplo de la tarjeta), `col` (con qué se combina), `fam` (su familia) y `gram` (una nota). Hoy cubre Trámites, Piso, Dinero y Salud, los temas que salen primero en el orden de Coach. El control 54 comprueba que cada clave exista en el vocabulario |
 | **Vocabulario** | `vocab-datos.js`, `vocab.css`, `vocab.js` | Los datos, el diseño y el motor de `vocabulario.html`. Mi Día lee los datos — ver abajo |
 | **Íconos de las palabras** | `vocab-iconos.js`, `iconos/` | Un ícono por palabra para las tarjetas de *Alemán de hoy* del Dashboard (Adán, 26-oct-2026: *"pon imágenes de muy alta calidad en cada tarjeta, en tamaño pequeño"*): los Fluent Emoji en 3D de Microsoft (licencia MIT), 694 archivos WebP de 128 px, 2.7 MB en total. `ALEMAN_ICONOS` va por tema: el de cada palabra (`pal`, por su `de`), el de cada subtema (`subs`) y el del tema (`_`), que cubren a una palabra nueva mientras no tenga el suyo. Una palabra nueva llega con su ícono: el control 46 del verificador lo exige, igual que el archivo en `iconos/` |
@@ -49,7 +49,7 @@ y en español, sus temas, su foto con el crédito y, si es del Kapitel, la lista
 (`bloques`), porque desde `file://` el inicio no puede abrir las otras páginas para contarlos; un
 `k10Conjugar` guarda una entrada por verbo y va como `id:n`. Una lección se añade o se corrige ahí, no en
 el HTML. El control 25 de `../Dashboard/verificar-sincronia.js` compara cada lista con su página, la foto y
-el crédito con los del encabezado de la lección, y comprueba que estén las 41 y que ni el inicio ni el
+el crédito con los del encabezado de la lección, y comprueba que estén todas y que ni el inicio ni el
 Dashboard lleven una lección escrita a mano.
 
 **El progreso es real.** Sale de `aleman_k10_v1`, que escribe `k10-interactivo.js`: un ejercicio cuenta
@@ -69,7 +69,7 @@ rojo: es el indicador del prompt (*sin huecos de más de dos días*). Solo cuent
 Kapitel 10, que son lo único que guarda su fecha.
 
 **Nada va escrito a mano.** Las cifras del vocabulario (palabras, secciones, subsecciones y cada
-familia) se cuentan de `vocab-datos.js`; las de A2 y A1 (*20 lecciones: 12 de gramática y 8 de temas*),
+familia) se cuentan de `vocab-datos.js`; las de A2 y A1 (*34 lecciones: 19 de gramática y 15 de temas*),
 de `lecciones-datos.js`; el nombre de la escuela es `{{escuelaAleman}}`, del maestro, y el número de
 lecciones del pie se cuenta en la página.
 
@@ -86,7 +86,7 @@ secciones de principiantes llevan id).
 
 ## La plantilla de las lecciones
 
-Las 41 lecciones, Principiantes y Gramática comparten una plantilla, hecha para la pantalla de Adán
+Las lecciones, Principiantes y Gramática comparten una plantilla, hecha para la pantalla de Adán
 (2048 px), que usan a todo el ancho: ninguna deja media pantalla vacía.
 
 - **La barra** es la del inicio (`nav.nav.ini-barra`): la marca, Hoy, Kapitel 10, A2, A1,
@@ -150,7 +150,7 @@ abrirla (2–7 ms), y lo que la página pinta después también (`MutationObserv
 `oscuro.js`. **Al tocar una de esas tres hojas se corre `node Aleman/oscuro.js`**; el control 44 del
 verificador avisa si alguna capa se quedó atrás.
 
-Medido en las 41 lecciones y las seis pestañas de los casos (13,645 textos): por debajo del mínimo de
+Medido en 41 lecciones y las seis pestañas de los casos (13,645 textos): por debajo del mínimo de
 contraste (4.5:1, o 3:1 en letra grande) quedan 903 en oscuro contra 1,886 en claro, y ninguno que pasara en
 claro queda por debajo en oscuro.
 
@@ -614,6 +614,8 @@ Deutsch).
    `.vocab-table`, `.rule-box`, `.example`.
 2. Su foto en `fotos/`, con el nombre de la lección (a1-16.jpg para la A1·16), y su entrada en
    `lecciones-datos.js` con esa misma foto y su crédito —y, si es del Kapitel, sus `bloques`—, en su lugar
-   de la lista: el inicio pinta su tarjeta y Mi Día la cuenta en su orden.
+   de la lista: el inicio pinta su tarjeta y Mi Día la cuenta en su orden. Y su resumen en
+   `lecciones-resumen.js` (qué aprendes, la regla con su ejemplo tras `. → ` y los errores `mal ✗ → bien`), que
+   *Alemán de hoy* pinta encima de la lección: lo exige el control 54.
 3. Comprobar en el navegador a 2048, 1600 y 390 px que no hay scroll horizontal, y correr el
    verificador.

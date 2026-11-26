@@ -45,7 +45,7 @@ en una página.
 El alemán **no vive aquí**: el Dashboard no tiene pantalla de alemán (Adán: *"elimina la sección de
 alemán todo todo, porque está repetida la info de alemán"*); se estudia en la app de Alemán. Mi Día
 solo lee dos de sus archivos de datos: `../Aleman/vocab-datos.js` —el de su pantalla de vocabulario— para la
-palabra del día y `../Aleman/lecciones-datos.js` —el catálogo de sus 41 lecciones— para la lección que toca,
+palabra del día y `../Aleman/lecciones-datos.js` —el catálogo de sus lecciones— para la lección que toca,
 que se ve en su propia página dentro de la ventana del alemán. Se abre con `file://`, sin servidor ni build; los `<script src="…">` clásicos
 cargan con normalidad (los módulos ES no), y es lo que permite compartir archivos entre carpetas.
 
@@ -554,7 +554,7 @@ hoy en la barra de Hoy aprendes, y la tarjeta dice *✓ practicaste*.
 `aleman_k10_v1`, donde lo leen el inicio de Alemán, la lección y esta ventana, que lo cuenta al momento por el
 evento `storage`. Encima va su encabezado (`alemanLecCabHtml()`): por qué toca (*Sigue donde te quedaste*,
 *Empieza el Kapitel 10*, *Elegida por ti*…), un tramo por ejercicio, cuántos llevas y tu último ejercicio, en
-ámbar pasados dos días, y **«Todas las lecciones · 41»** (`.alv-todas-b`; Adán: *"es necesario poner un botón para
+ámbar pasados dos días, y **«Todas las lecciones»**, con cuántas son (`.alv-todas-b`; Adán: *"es necesario poner un botón para
 que te de todas las lecciones disponibles"*). Ese botón cambia la lección por la lista (`#alemanTodas`,
 `alemanTodasHtml()`): Kapitel 10, A2 y A1, cada lección con su número, título, de qué trata, sus tramos de avance y
 cuál está *Abierta* y cuál es *La del plan*. Tocar una la abre y la deja elegida (`alemanElegirLeccion()`), igual que

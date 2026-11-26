@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>A2 · 31 — Bank & Geld | Deutsch</title><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap"></noscript>
+<link rel="stylesheet" href="styles.css">
+<style>
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
+
+/* Tablas y bloques anchos en celular (2026-08-17) — una tabla que no cabe hacía zoom-out de
+   toda la página (medido: innerWidth 516 en una pantalla de 390). Ahora scrollean dentro de
+   su propia caja y el documento nunca se sale a lo ancho. */
+@media(max-width:820px){
+  table{display:block;width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table thead,table tbody{width:max-content;min-width:100%}
+  pre,code{max-width:100%;overflow-x:auto}
+  img,video,canvas{max-width:100%;height:auto}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2" class="on" aria-current="page">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a2-31.jpg" alt="Una alcancía de cerdito junto a una calculadora y monedas" title="Foto: Artsy Crafty · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Artsy Crafty · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
+  <div class="topic-hero-tag">A2 · Vocabulario · Tema 31</div>
+  <h1>Bank & <em>Geld</em></h1>
+  <p class="topic-hero-desc">Abrir una cuenta, transferir la renta, pagar en efectivo o con tarjeta y entender las cifras. En Alemania todavía se usa mucho el efectivo, y la renta y los servicios se pagan por transferencia o domiciliación.</p>
+  <div class="topic-hero-meta"><span class="meta-pill">Banco</span><span class="meta-pill">Pagos</span><span class="meta-pill">~40 min</span></div>
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#en-el-banco"><span>En el banco</span></a></li>
+        <li><a href="#el-dinero-de-cada-mes"><span>El dinero de cada mes</span></a></li>
+        <li><a href="#frases-comunes-con-dinero"><span>Frases comunes con dinero</span></a></li>
+        <li><a href="#las-cifras-del-dinero"><span>Las cifras del dinero</span></a></li>
+        <li><a href="#efectivo-o-tarjeta"><span>¿Efectivo o tarjeta?</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 4 bloques →</a>
+    </nav>
+  </div>
+</div>
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
+
+  <div class="content-full">
+    <div class="card">
+      <h3 id="en-el-banco">En el banco</h3>
+      <table class="vocab-table">
+        <thead><tr><th>Alemán</th><th>Español</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td class="vocab-de">das Girokonto</td><td class="vocab-es">la cuenta corriente</td><td class="vocab-ex">Ich möchte ein Girokonto eröffnen.</td></tr>
+          <tr><td class="vocab-de">ein Konto eröffnen / kündigen</td><td class="vocab-es">abrir / cancelar una cuenta</td><td class="vocab-ex">Wie kann ich mein Konto kündigen?</td></tr>
+          <tr><td class="vocab-de">die IBAN</td><td class="vocab-es">el número de cuenta internacional (como tu CLABE)</td><td class="vocab-ex">Meine IBAN beginnt mit DE.</td></tr>
+          <tr><td class="vocab-de">die Überweisung / überweisen</td><td class="vocab-es">la transferencia / transferir</td><td class="vocab-ex">Ich überweise die Miete am Monatsanfang.</td></tr>
+          <tr><td class="vocab-de">der Dauerauftrag</td><td class="vocab-es">la transferencia automática cada mes</td><td class="vocab-ex">Für die Miete richte ich einen Dauerauftrag ein.</td></tr>
+          <tr><td class="vocab-de">die Lastschrift</td><td class="vocab-es">el cargo domiciliado</td><td class="vocab-ex">Die Krankenkasse bucht per Lastschrift ab.</td></tr>
+          <tr><td class="vocab-de">der Kontoauszug</td><td class="vocab-es">el estado de cuenta</td><td class="vocab-ex">Den Kontoauszug sehe ich in der App.</td></tr>
+          <tr><td class="vocab-de">die Girocard</td><td class="vocab-es">la tarjeta de débito</td><td class="vocab-ex">Kann ich mit Girocard zahlen?</td></tr>
+          <tr><td class="vocab-de">die Kreditkarte</td><td class="vocab-es">la tarjeta de crédito</td><td class="vocab-ex">Nicht überall wird die Kreditkarte akzeptiert.</td></tr>
+          <tr><td class="vocab-de">der Geldautomat</td><td class="vocab-es">el cajero automático</td><td class="vocab-ex">Wo ist der nächste Geldautomat?</td></tr>
+          <tr><td class="vocab-de">Geld abheben / einzahlen</td><td class="vocab-es">sacar / depositar dinero</td><td class="vocab-ex">Ich hebe 50 Euro ab.</td></tr>
+          <tr><td class="vocab-de">die Gebühr</td><td class="vocab-es">la comisión</td><td class="vocab-ex">Das Konto hat keine Gebühren.</td></tr>
+          <tr><td class="vocab-de">das Sperrkonto</td><td class="vocab-es">la cuenta bloqueada (para la visa de estudiante)</td><td class="vocab-ex">Für das Visum brauche ich ein Sperrkonto.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="content-full">
+    <div class="card card-gold">
+      <h3 id="el-dinero-de-cada-mes">El dinero de cada mes</h3>
+      <table class="vocab-table">
+        <thead><tr><th>Alemán</th><th>Español</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td class="vocab-de">die Kaltmiete</td><td class="vocab-es">la renta sin servicios</td><td class="vocab-ex">Die Kaltmiete beträgt 500 Euro.</td></tr>
+          <tr><td class="vocab-de">die Warmmiete</td><td class="vocab-es">la renta con servicios</td><td class="vocab-ex">Die Warmmiete beträgt 650 Euro.</td></tr>
+          <tr><td class="vocab-de">die Nebenkosten</td><td class="vocab-es">los gastos de servicios</td><td class="vocab-ex">Die Nebenkosten sind 150 Euro.</td></tr>
+          <tr><td class="vocab-de">die Kaution</td><td class="vocab-es">el depósito</td><td class="vocab-ex">Die Kaution beträgt drei Monatsmieten.</td></tr>
+          <tr><td class="vocab-de">der Rundfunkbeitrag</td><td class="vocab-es">la cuota de radio y televisión</td><td class="vocab-ex">Den Rundfunkbeitrag zahlt jede Wohnung.</td></tr>
+          <tr><td class="vocab-de">das Gehalt</td><td class="vocab-es">el sueldo</td><td class="vocab-ex">Das Gehalt kommt am Monatsende.</td></tr>
+          <tr><td class="vocab-de">die Rechnung</td><td class="vocab-es">la factura / la cuenta</td><td class="vocab-ex">Ich muss noch die Stromrechnung bezahlen.</td></tr>
+          <tr><td class="vocab-de">sparen</td><td class="vocab-es">ahorrar</td><td class="vocab-ex">Ich spare jeden Monat 200 Euro.</td></tr>
+          <tr><td class="vocab-de">ausgeben</td><td class="vocab-es">gastar</td><td class="vocab-ex">Wie viel gibst du für Essen aus?</td></tr>
+          <tr><td class="vocab-de">bar / mit Karte zahlen</td><td class="vocab-es">pagar en efectivo / con tarjeta</td><td class="vocab-ex">Zahlen Sie bar oder mit Karte?</td></tr>
+          <tr><td class="vocab-de">das Kleingeld</td><td class="vocab-es">las monedas, el cambio</td><td class="vocab-ex">Haben Sie Kleingeld?</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="content-full">
+    <div class="card card-gold">
+      <h3 id="frases-comunes-con-dinero">Frases comunes con dinero</h3>
+      <div class="phrase-grid">
+        <div class="phrase-item"><span class="phrase-situation">Abriendo cuenta</span><span class="phrase-de">Ich möchte ein Konto eröffnen. Was brauche ich dafür?</span><span class="phrase-es">Quisiera abrir una cuenta. ¿Qué necesito?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Pagando la renta</span><span class="phrase-de">Ich überweise die Miete immer am Ersten.</span><span class="phrase-es">Siempre transfiero la renta el primero de mes.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">En la caja</span><span class="phrase-de">Kann ich mit Karte zahlen?</span><span class="phrase-es">¿Puedo pagar con tarjeta?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">En el café</span><span class="phrase-de">Zusammen oder getrennt? — Getrennt, bitte.</span><span class="phrase-es">¿Junto o separado? — Separado, por favor.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Dejando propina</span><span class="phrase-de">Stimmt so! / Machen Sie 20 Euro.</span><span class="phrase-es">¡Quédese con el cambio! / Que sean 20 euros.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Con un problema</span><span class="phrase-de">Meine Karte wurde gesperrt.</span><span class="phrase-es">Me bloquearon la tarjeta.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Si la pierdes</span><span class="phrase-de">Ich habe meine Karte verloren. Ich muss sie sperren lassen.</span><span class="phrase-es">Perdí mi tarjeta. Tengo que bloquearla.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Preguntando costos</span><span class="phrase-de">Fallen Gebühren an?</span><span class="phrase-es">¿Hay comisiones?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">En el cajero</span><span class="phrase-de">Der Automat hat meine Karte eingezogen.</span><span class="phrase-es">El cajero se tragó mi tarjeta.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Revisando</span><span class="phrase-de">Die Überweisung ist noch nicht angekommen.</span><span class="phrase-es">La transferencia todavía no ha llegado.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="card">
+      <h3 id="las-cifras-del-dinero">Las cifras del dinero</h3>
+      <div class="example"><div class="example-de">12,50 € — zwölf Euro fünfzig</div><div class="example-es">12.50 €: la coma es el punto decimal</div></div>
+      <div class="example"><div class="example-de">1.200 € — tausendzweihundert Euro</div><div class="example-es">1,200 €: el punto separa los miles</div></div>
+      <div class="example"><div class="example-de">Das macht 8,40 Euro.</div><div class="example-es">Son 8.40 euros.</div></div>
+    </div>
+    <div class="card">
+      <h3 id="efectivo-o-tarjeta">¿Efectivo o tarjeta?</h3>
+      <div class="rule-box">En Alemania todavía se paga mucho en <strong>efectivo</strong> (bar): lleva siempre algo.<br><br>La tarjeta de débito alemana es la <strong>Girocard</strong>; la de crédito no se acepta en todas partes.<br><br>Pregunta antes: <strong>Kann ich mit Karte zahlen?</strong></div>
+    </div>
+  </div>
+
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a><a href="#practica-notas">Notas</a></nav></div>
+
+  <div id="practica-tarjetas" class="content-full">
+    <div class="card">
+      <h3>Repasa con tarjetas</h3>
+      <div id="fc-a2-31" class="flashcards"></div>
+    </div>
+  </div>
+
+  <div id="practica-dialogo" class="content-full">
+    <div class="card">
+      <h3>Diálogo de práctica — En el banco</h3>
+      <div class="dialog-box">
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Guten Tag, ich möchte ein Girokonto eröffnen.</div><div class="dialog-es">Buenos días, quisiera abrir una cuenta corriente.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Gern. Haben Sie Ihren Pass und Ihre Meldebescheinigung dabei?</div><div class="dialog-es">Con gusto. ¿Trae su pasaporte y su comprobante de empadronamiento?</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Ja, hier. Kostet das Konto etwas?</div><div class="dialog-es">Sí, aquí están. ¿La cuenta cuesta algo?</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Für Studierende ist es kostenlos. Sie bekommen auch eine Girocard.</div><div class="dialog-es">Para estudiantes es gratis. También recibe una tarjeta de débito.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Super. Kann ich damit auch online bezahlen?</div><div class="dialog-es">Genial. ¿Puedo pagar en línea con ella?</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ja. Die PIN bekommen Sie in ein paar Tagen per Post.</div><div class="dialog-es">Sí. El NIP le llega en unos días por correo.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="practica-ejercicios" class="content-full mt32">
+    <div class="card card-red">
+      <h3>Ejercicios</h3>
+      <div class="exercise"><div class="exercise-num">Ejercicio 1 — Vocabulario</div><div class="exercise-q">Ich möchte ein Konto ________. (abrir)</div><div class="exercise-hint">eröffnen</div></div>
+      <div class="exercise"><div class="exercise-num">Ejercicio 2 — Vocabulario</div><div class="exercise-q">Die Miete zahle ich per ________. (transferencia)</div><div class="exercise-hint">Überweisung</div></div>
+      <div class="exercise"><div class="exercise-num">Ejercicio 3 — Cifras</div><div class="exercise-q">Lee en alemán: 7,90 €</div><div class="exercise-hint">sieben Euro neunzig</div></div>
+      <div class="exercise"><div class="exercise-num">Ejercicio 4 — Traduce</div><div class="exercise-q">"¿Puedo pagar con tarjeta?"</div><div class="exercise-hint">Kann ich mit Karte zahlen?</div></div>
+      <div class="exercise"><div class="exercise-num">Ejercicio 5 — Tu mes</div><div class="placeholder" style="margin-top:8px">Escribe en alemán tus gastos fijos de un mes en Alemania: Miete, Nebenkosten, Krankenkasse, Handy…</div></div>
+    </div>
+  </div>
+
+  <div id="practica-notas" class="content-full"><div class="card"><h3>Mis notas</h3><div class="placeholder">Tu presupuesto del mes en Alemania, en alemán</div></div></div>
+</aside>
+</div></div>
+<div class="page-nav">
+  <a href="a2-30-telefonieren.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a2-30.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Telefonieren & Termine</div></div></a>
+  <a href="a2-32-bewerbung.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Bewerbung & Vorstellungsgespräch</div></div><img class="pn-foto" src="fotos/a2-32.jpg" alt="" loading="lazy"></a>
+</div>
+<footer class="footer"><p>A2 · 31 — Bank & Geld</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
+<!-- Fuera de la PC (el iPad), tus datos son los de la PC: datos-pc.js aplica todo lo demás antes que la página. -->
+<script src="../Dashboard/datos-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-pc.js"></script>
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a2-31', [
+  {art:'das', de:'Girokonto', es:'la cuenta corriente', ex:'Ich möchte ein Girokonto eröffnen.'},
+  {art:'-', de:'ein Konto eröffnen', es:'abrir una cuenta'},
+  {art:'die', de:'Überweisung', es:'la transferencia', ex:'Ich überweise die Miete.'},
+  {art:'der', de:'Dauerauftrag', es:'la transferencia automática cada mes'},
+  {art:'die', de:'Lastschrift', es:'el cargo domiciliado'},
+  {art:'der', de:'Kontoauszug', es:'el estado de cuenta'},
+  {art:'der', de:'Geldautomat', es:'el cajero automático'},
+  {art:'-', de:'Geld abheben', es:'sacar dinero', ex:'Ich hebe 50 Euro ab.'},
+  {art:'die', de:'Kaltmiete', es:'la renta sin servicios'},
+  {art:'die', de:'Warmmiete', es:'la renta con servicios'},
+  {art:'die', de:'Nebenkosten', es:'los gastos de servicios (plural)'},
+  {art:'die', de:'Kaution', es:'el depósito'},
+  {art:'-', de:'bar oder mit Karte', es:'en efectivo o con tarjeta'},
+  {art:'-', de:'Stimmt so!', es:'¡Quédese con el cambio!'}
+]);
+</script>
+<script src="leccion.js"></script>
+<script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
+</body></html>
