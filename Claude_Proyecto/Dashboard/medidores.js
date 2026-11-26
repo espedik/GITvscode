@@ -565,38 +565,145 @@
   };
 
   // ══ Total invertido ══
+  // A pantalla completa (Adán, 26-nov-2026: "lo de total invertido mejora el diseño y que abarque toda la página y que sea
+  // entendible en mi iPad… buena presentación con buenos colores que combinen"; de las tres opciones de
+  // Dashboard/diseno-invertido/ eligió la A, "pero mucho más bonita la gráfica y más indicadores"). Arriba lo que tienes y
+  // cuatro indicadores; en medio tu plan paso a paso, la gráfica hasta irte y tus compras; abajo lo que apartas, el
+  // formulario, el reparto y el Bitcoin del último mes. Los colores dicen lo mismo en toda la ventana: azul la bolsa,
+  // naranja la cripto, gris el depósito y verde lo demás.
+  const KI_COL = { dep: V.g, bolsa: V.a, cripto: V.b, otro: V.c };
+  const kiCat = i => i.id === 'i004' ? 'dep' : i.type === 'acciones' || i.type === 'fondos' ? 'bolsa' : i.type === 'crypto' ? 'cripto' : 'otro';
+  const kiTile = (et, n, sub, extra, cls) => '<section class="kv-c ki-t' + (cls ? ' ' + cls : '') + '"><span class="et">' + et + '</span><b class="n">' + n + '</b>' +
+    (sub ? '<i>' + sub + '</i>' : '') + (extra || '') + '</section>';
+  const kiDias = k => Math.round((new Date(k + 'T12:00:00') - new Date(hoyLocal() + 'T12:00:00')) / 864e5);
+  const kiFlecha = v => '<em class="' + (v >= 0 ? 'ok' : 'mal') + '">' + (v >= 0 ? '▲ ' : '▼ ') + Math.abs(v).toFixed(1) + '%</em>';
+  const KI_OK = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  // La línea del precio de los últimos 30 días, sin ejes: solo dice si sube o baja.
+  function chispa(v, c) {
+    if (v.length < 2) return '';
+    const lo = Math.min(...v), hi = Math.max(...v), W = 120, H = 34, X = i => i / (v.length - 1) * W, Y = q => H - 3 - (q - lo) / ((hi - lo) || 1) * (H - 6);
+    return '<svg class="ki-chispa" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true"><path d="' + v.map((q, i) => (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(q).toFixed(1)).join('') +
+      '" fill="none" stroke="' + c + '" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>';
+  }
+  // Tu plan, paso a paso: el colchón y el BYD con su avance de verdad, la inversión con su reparto, la decisión y la salida.
+  // El paso en curso es el primero que falta.
+  function kiPasos(F, R, ini, uM, rep, totF, total) {
+    const P = C().PROYECTO, PA = C().planAhorro(), hay = C().fondoHoy(F), meta = PA.colchon || P.colchon;
+    const au = prestamos(F).sort((a, b) => b.d.balance - a.d.balance)[0], d = au && au.d, nacio = d ? +d.total || +d.balance : 0;
+    const prim = PA.envios.filter(e => e.gbm >= 1)[0], invierte = R.inv.length > 0 || !!(prim && prim.fecha <= hoyLocal());
+    const hecho = [hay >= meta - 1, !d, false, hoyLocal() >= P.maestriaDecision, false], ahora = hecho.indexOf(false);
+    const paso = (i, t, sub, mas) => '<li class="ki-paso ' + (hecho[i] ? 'hecho' : i === ahora ? 'ahora' : 'luego') + '"><span class="ki-pn">' + (hecho[i] ? KI_OK : i + 1) + '</span><div><b>' + t +
+      (i === ahora ? '<em>ahora</em>' : '') + '</b><span>' + sub + '</span>' + (mas || '') + '</div></li>';
+    const color = r => /bitcoin|btc|cripto|ether/i.test(r.n || '') ? V.b : V.a;
+    return '<ol class="ki-pasos">' +
+      paso(0, 'Llenar tu colchón', money(meta) + (hecho[0] ? ': completo' : ', completo el ' + C().v('colchonFecha')),
+        hecho[0] ? '' : med(pct(hay, meta), 'var(--kv-neon)') + '<small>Vas en <b>' + money(hay) + '</b> (' + Math.round(pct(hay, meta)) + '%)</small>') +
+      paso(1, 'Dejar el BYD en cero', d ? 'el ' + C().v('autoCero') + '; debes ' + money(+d.balance) : 'ya no debes nada',
+        d && nacio > 0 ? med(pct(nacio - d.balance, nacio), V.c) + '<small>Llevas pagado <b>' + Math.round(pct(nacio - d.balance, nacio)) + '%</b></small>' : '') +
+      paso(2, 'Invertir ' + money(C().n('invertirMes') || 0) + ' al mes', (prim ? (invierte ? 'desde el ' : 'empiezas el ') + tiFecha(prim.fecha) : 'después del colchón y del BYD') + (uM ? ', hasta ' + mesL(uM.mes) : ''),
+        rep.length ? '<div class="ki-rep">' + rep.map(r => '<span><i style="background:' + color(r) + '"></i><b>' + r.pct + '%</b> ' + esc(r.n) + '</span>').join('') + '</div>' : '') +
+      paso(3, 'Decidir', 'el ' + tiFecha(P.maestriaDecision) + ': ¿con ' + esc(C().v('empleador')) + ', a la maestría o un año más?') +
+      paso(4, 'Irte a Alemania', mesL(P.maestriaInicio.slice(0, 7)) + (totF ? ', con ' + money(totF) + ' invertidos' : '')) + '</ol>' + kiCamino(P, total, totF);
+  }
+  // Al pie del plan: los días que faltan para irte y cuánto llevas de lo que tendrías ese día.
+  function kiCamino(P, total, totF) {
+    const faltan = Math.max(0, kiDias(P.maestriaInicio)), p = pct(total, totF);
+    return '<div class="ki-camino"><div><span class="et">Faltan para irte</span><b>' + plural(faltan, 'día', 'días') + '</b></div>' + (totF > 0 ? med(p, 'var(--kv-neon)') +
+      '<small>Llevas <b>' + money(total) + '</b> de los <b>' + money(totF) + '</b> que tendrías el ' + tiFecha(P.maestriaInicio) + ': el ' + (p < 10 ? p.toFixed(1) : Math.round(p)) + '%.</small>'
+      : '<small>Hasta el ' + tiFecha(P.maestriaInicio) + '.</small>') + '</div>';
+  }
+  M.irForm = function () {
+    const f = document.getElementById('kiForm'); if (!f) return;
+    f.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const q = f.querySelector('input,select'); if (q) setTimeout(() => q.focus({ preventScroll: true }), 400);
+  };
   M.invertido = function (F) {
     const R = contraPlan(F), x = R.x, editable = tiEditable(), total = x.otrasV + x.deposito + x.btcV, trabaja = x.otrasV + x.btcV, metido = x.otrasMet + x.btcMet, dif = trabaja - metido, pB = x.b.price * x.b.fx;
     const tipo = t => (TI_TIPOS.find(q => q[0] === t) || [0, 'Otro'])[1];
-    const filas = x.inv.map(i => ({ date: i.date, key: i.id, n: i.name || 'Inversión', s: tipo(i.type) + tiSigueTxt(i), met: +i.invested || 0, v: +i.value || +i.invested || 0, dep: i.id === 'i004' }));
-    x.BA.ops.forEach(h => { const q = Math.abs(+h.btc || 0), m = x.pes(h), ve = x.venta(h); filas.push({ date: h.date, key: ve || h.id === 'total' ? null : 'btc:' + h.id, n: ve ? 'Bitcoin, venta' : 'Bitcoin', s: tiCantTxt(q, { tipo: 'cripto', tk: 'BTC' }), met: m, v: ve ? null : pB > 0 ? q * pB : m }); });
+    const filas = x.inv.map(i => ({ date: i.date, key: i.id, n: i.name || 'Inversión', s: tipo(i.type) + tiSigueTxt(i), met: +i.invested || 0, v: +i.value || +i.invested || 0, dep: i.id === 'i004', cat: kiCat(i) }));
+    x.BA.ops.forEach(h => { const q = Math.abs(+h.btc || 0), m = x.pes(h), ve = x.venta(h); filas.push({ date: h.date, key: ve || h.id === 'total' ? null : 'btc:' + h.id, n: ve ? 'Bitcoin, venta' : 'Bitcoin', s: tiCantTxt(q, { tipo: 'cripto', tk: 'BTC' }), met: m, v: ve ? null : pB > 0 ? q * pB : m, cat: 'cripto' }); });
     filas.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
     const delMes = filas.filter(f => String(f.date || '').slice(0, 7) === R.ym && f.v != null && !f.dep).reduce((s, f) => s + f.met, 0), toca = R.inv.filter(e => e.k <= R.k).reduce((s, e) => s + e.v, 0), falta = toca - delMes, SIG = R.E.filter(e => e.k >= R.k && e.k >= C().PROYECTO.planDesde).concat(envios(mas(R.ym, 1))), partes = ['colchon', 'auto', 'gbm'].map(q => [q, SIG.reduce((s, e) => s + (e.a === q ? e.v : 0), 0)]).filter(q => q[1] >= 1).map(q => money(q[1]) + ' ' + A_DONDE[q[0]]).join(' y ');
     const T = C().ritmoMaestria(F, { real: fondoMaestria().total }), PR = T.meses.filter(m => m.tipo !== 'cierre' && m.activos), uM = PR[PR.length - 1], ini = PR.filter(m => m.va && m.va.aBolsa + m.va.aCripto >= 1)[0];
-    const por = {}; filas.forEach(f => { if (f.v != null) por[f.n] = (por[f.n] || 0) + f.v; });
-    if (x.BA.resto > 0 && pB > 0) por.Bitcoin = (por.Bitcoin || 0) + x.BA.resto * pB;
-    const cols = [V.a, V.b, V.c, V.g], part = Object.keys(por).sort((a, b) => por[b] - por[a]).map((n, i) => [n, por[n], cols[Math.min(i, 3)]]);
     const rep = (F.reparto && F.reparto.length ? F.reparto : C().REPARTO_BASE) || [], sig = R.E.filter(e => e.k >= C().PROYECTO.planDesde).concat(envios(mas(R.ym, 1))).filter(e => e.k >= R.k);
     // Tu Bitcoin hoy: el precio del último mes contra lo que pagaste en promedio, en dólares.
     const ab = x.BA.ops.filter(h => !x.venta(h)), bq = ab.reduce((z, h) => z + (+h.btc || 0), 0), prom = bq > 0 ? ab.reduce((z, h) => z + (+h.usd || 0), 0) / bq : 0;
     const act = qiActivos().filter(q => q.s === 'BTC-USD')[0], hace = new Date(); hace.setDate(hace.getDate() - 30);
-    const serie = act && act.d1 ? act.d1.filter(q => q[0] >= C().fechaLocal(hace)) : [], falta2 = trabaja > 0 && x.btcV > 0 && x.btcMet > x.btcV ? (x.btcMet / x.btcV - 1) * 100 : 0;
-    const btcHtml = x.btcV > 0 ? '<section class="kv-c"><h3>Tu Bitcoin hoy</h3><p>Vale <b>' + money(x.btcV) + '</b>. ' + (falta2 > 0 ? 'Para recuperar lo que metiste tendría que subir <b>' + falta2.toFixed(1) + '%</b>.' : 'Ya vale más de lo que metiste.') + '</p>' + (serie.length > 1 ? '<p class="kv-p">El precio del último mes, en dólares.</p>' + grafica('btc') : '') + '</section>' : '';
+    const serie = act && act.d1 ? act.d1.filter(q => q[0] >= C().fechaLocal(hace)) : [], sv = serie.map(q => q[1]), falta2 = trabaja > 0 && x.btcV > 0 && x.btcMet > x.btcV ? (x.btcMet / x.btcV - 1) * 100 : 0;
+    const de = e => /Didi/.test(e.t) ? 'de Didi' : esc(e.t).replace(/^De /, 'de ');
+
+    // ── Lo que tienes, por clase ──
+    const cat = { dep: x.deposito, bolsa: 0, cripto: x.btcV, otro: 0 };
+    x.otras.forEach(i => { cat[kiCat(i)] += +i.value || +i.invested || 0; });
+    const NOM = { dep: 'Depósito de la renta', bolsa: 'Bolsa', cripto: x.otras.some(i => kiCat(i) === 'cripto') ? 'Cripto' : 'Bitcoin', otro: 'Otros' };
+    const clases = ['bolsa', 'cripto', 'otro', 'dep'].filter(k => cat[k] >= 1);
+    const heroHtml = '<section class="kv-c kv-hero ki-hero"><span class="et">Hoy tienes</span><div class="n">' + money(total) + '</div>' +
+      (total > 0 ? '<div class="ki-barra" aria-hidden="true">' + clases.map(k => '<i style="flex:' + cat[k] + ';background:' + KI_COL[k] + '"></i>').join('') + '</div>' : '') +
+      '<div class="ki-ley">' + clases.map(k => '<i style="background:' + KI_COL[k] + '"></i><span' + (k === 'dep' ? ' title="No rinde: te lo regresan al irte"' : '') + '>' + NOM[k] + (k === 'dep' ? ' <small>· no rinde</small>' : '') +
+        '</span><b>' + money(cat[k]) + '</b><small class="p">' + Math.round(pct(cat[k], total)) + '%</small>').join('') + '</div></section>';
+
+    // ── Cuatro indicadores ──
+    const top = Math.max(metido, trabaja);
+    const gananTile = kiTile('¿Vas ganando?', metido > 0 ? '<span class="' + (dif >= 0 ? 'ok' : 'mal') + '">' + signo(dif) + '</span>' : money(0),
+      metido > 0 ? 'Metiste <b>' + money(metido) + '</b> y hoy vale <b>' + money(trabaja) + '</b>: ' + Math.abs(dif / metido * 100).toFixed(1) + '% ' + (dif >= 0 ? 'más' : 'menos') + '.' : 'Todavía no hay compras.',
+      metido > 0 ? '<div class="ki-vs"><span>Metiste</span><i style="width:' + pct(metido, top) + '%"></i><span>Vale hoy</span><i class="' + (dif >= 0 ? 'ok' : 'mal') + '" style="width:' + pct(trabaja, top) + '%"></i></div>' : '');
+    const s1 = sig[0], s2 = sig[1];
+    const proxTile = kiTile('Lo próximo', s1 ? money(s1.v) : '—', s1 ? (s1.k === R.k ? '<b>Hoy</b>' : 'El <b>' + diaTxt(s1.k) + '</b>') + ', ' + de(s1) + ', ' + A_DONDE[s1.a] + '.' : 'Sin envíos próximos.',
+      s2 ? '<small class="ki-desp">Después: <b>' + diaTxt(s2.k) + '</b>, ' + money(s2.v) + ' ' + A_DONDE[s2.a] + '</small>' : '');
+    const prim = C().planAhorro().envios.filter(e => e.gbm >= 1)[0];
+    const invTile = R.inv.length
+      ? kiTile('Este mes toca invertir', money(R.inv.reduce((s, e) => s + e.v, 0)), 'Registraste <b>' + money(delMes) + '</b>' + (falta > 1 ? '; te faltan <b>' + money(falta) + '</b> a la fecha.' : ': vas al día.'))
+      : kiTile('Empiezas a invertir', prim ? mesTxt(prim.fecha.slice(0, 7)) : ini ? mesTxt(ini.mes) : '—',
+        prim ? 'El <b>' + tiFecha(prim.fecha) + '</b>, en ' + plural(Math.max(0, kiDias(prim.fecha)), 'día', 'días') + '. Luego, <b>' + money(C().n('invertirMes') || 0) + '</b> al mes.' : 'Primero el colchón y el BYD.');
+    const cambio = sv.length > 1 ? (sv[sv.length - 1] / sv[0] - 1) * 100 : null, vsProm = prom > 0 && x.b.price > 0 ? (x.b.price / prom - 1) * 100 : null;
+    const btcTile = kiTile('Bitcoin hoy', pB > 0 ? corto(pB) : '—', (cambio != null ? kiFlecha(cambio) + ' en 30 días' : 'El cambio del mes llega con los precios.') + (vsProm != null ? '<br>' + kiFlecha(vsProm) + ' contra lo que pagaste' : ''), chispa(sv, V.b), 'ki-btc');
+
+    // ── La gráfica hasta irte: lo que vale, lo que metes (la distancia es lo que rinde) y lo que pide la salida ──
+    const t0 = PR.length ? PR[0].activos.bolsa + PR[0].activos.btc : 0; let acum = t0;
+    const metes = PR.map((m, i) => { if (i && m.va) acum += m.va.aBolsa + m.va.aCripto; return acum; });
+    const totF = uM ? uM.activos.bolsa + uM.activos.btc : 0, cubre = PR.filter(m => m.activos.bolsa + m.activos.btc >= T.pide)[0], PA = C().planAhorro();
+    const idx = ym => PR.findIndex(m => m.mes === ym);
+    const hitos = [[PA.lleno, 'Colchón lleno'], [PA.cero, 'BYD en cero'], [prim && prim.fecha, 'Empiezas a invertir'], [C().PROYECTO.maestriaDecision, 'Decides']]
+      .map(h => ({ i: h[0] ? idx(String(h[0]).slice(0, 7)) : -1, t: h[1] })).filter(h => h.i > 0);
+    const chip = (c, n, v) => '<span class="ki-chip">' + (c ? '<i style="background:' + c + '"></i>' : '') + n + ' <b>' + v + '</b></span>';
+    const grafHtml = uM ? '<section class="kv-c ki-g"><h3>Lo que tendrías al irte</h3><div class="cab"><strong>' + money(totF) + '</strong><span>en ' + mesL(uM.mes) + ', en bolsa y cripto, guardando lo que te queda y con lo que tu plan supone que rinden</span></div>' +
+      '<div class="ki-chips">' + chip(V.a, 'Bolsa', money(uM.activos.bolsa)) + chip(V.b, 'Cripto', money(uM.activos.btc)) + chip('', 'Lo que metes', money(metes[metes.length - 1])) + chip('', 'Rendimiento', money(T.rinde)) +
+        chip(V.c, cubre ? 'Cubres la salida desde' : 'La salida pide', cubre ? mesTxt(cubre.mes) : money(T.pide)) + '</div>' + grafica('inv') +
+      leyenda([['Bolsa', V.a], ['Cripto', V.b], ['Lo que metes', 'var(--text)', 'l'], ['Lo que pide la salida', V.c, 'l']]) + '</section>'
+      : '<section class="kv-c ki-g"><h3>Lo que tendrías al irte</h3><p>La proyección sale cuando Finanzas tenga tus datos en este navegador.</p></section>';
+
+    // ── Tus compras ──
+    const filaC = f => {
+      const d = f.v != null ? f.v - f.met : 0;
+      return '<div class="ki-c' + (f.key && _tiEdit === f.key ? ' edita' : '') + '"><i style="background:' + KI_COL[f.cat] + '"></i><div class="nm"><b>' + esc(f.n) + '</b><span>' + tiFecha(f.date) + ' · ' +
+        (f.dep ? 'no rinde' : f.v == null ? 'te dieron ' + money(f.met) : 'metiste ' + money(f.met)) + '</span></div><div class="v"><b>' + money(f.v == null ? f.met : f.v) + '</b>' +
+        (f.dep || f.v == null ? '<em>' + (f.dep ? 'igual' : 'venta') + '</em>' : Math.abs(d) >= 1 ? '<em class="' + (d >= 0 ? 'ok' : 'mal') + '">' + (d >= 0 ? '▲ ' : '▼ ') + signo(d) + '</em>' : '<em>igual</em>') + '</div>' +
+        (editable && f.key ? '<div class="acc"><button type="button" class="ce-btn sec" onclick="tiEditar(\'' + f.key + '\')">Editar</button><button type="button" class="ce-btn sec" onclick="tiBorrar(\'' + f.key + '\')">Borrar</button></div>' : '') + '</div>';
+    };
+    const comprasHtml = '<section class="kv-c ki-co"><h3>Tus compras</h3><p>' + plural(filas.length, 'compra', 'compras') + ', de la más nueva a la más vieja. El Bitcoin y las acciones se valúan solos.</p>' +
+      '<div class="ki-lista">' + (filas.map(filaC).join('') || '<p class="kv-p">Todavía no hay compras.</p>') + '</div>' +
+      (x.BA.resto * pB >= 1 ? '<div class="kv-pie">Tu Bitcoin incluye ' + money(x.BA.resto * pB) + ' que te quedaron de antes.</div>' : '') +
+      (editable ? '<button type="button" class="kv-b ki-nueva" onclick="MEDIDORES.irForm()">+ Registrar una compra</button>' : copia('Se agregan')) + '</section>';
+
+    // ── Abajo: lo que apartas, el formulario, el reparto y el Bitcoin del último mes ──
     const envT = '<table class="kv-t kv-mini" style="margin-top:8px"><tbody>' + sig.map(e => '<tr' + (e.k < R.k ? ' class="pasado"' : '') + '><td><b>' + diaTxt(e.k) + '</b></td><td>' + (/Didi/.test(e.t) ? 'De Didi' : esc(e.t)) + '</td><td>' + A_DONDE[e.a] + (e.k === R.k ? ' <span class="chip">hoy</span>' : '') + '</td><td><b>' + money(e.v) + '</b></td></tr>').join('') + '</tbody></table>';
-    const filaH = f => { const d = f.v != null ? f.v - f.met : 0; return '<div class="ti-fila' + (f.key && _tiEdit === f.key ? ' edita' : '') + '"><span class="ti-f">' + tiFecha(f.date) + '</span><span class="ti-n"><b>' + esc(f.n) + '</b><i>' + f.s + (f.dep ? ' · no rinde, lo regresan' : '') + '</i></span><span class="ti-m">' + (f.v == null ? 'te dieron <b>' + money(f.met) + '</b>' : 'metiste <b>' + money(f.met) + '</b><br>vale <b>' + money(f.v) + '</b>' + (Math.abs(d) >= 1 ? ' ' + gana(d) : '')) + '</span>' +
-      (editable && f.key ? '<span class="ti-acc"><button type="button" class="ce-btn sec" onclick="tiEditar(\'' + f.key + '\')">Editar</button><button type="button" class="ce-btn sec" onclick="tiBorrar(\'' + f.key + '\')">Borrar</button></span>' : '') + '</div>'; };
-    return { kv: 'var(--cy)', titulo: 'Total invertido', sub: 'Lo que tienes, cuánto va ganando y cuándo toca comprar.', html:
-      '<div class="kv-fila">' + hero(money(total), '', 'Trabajando: <b>' + money(trabaja) + '</b>. Guardado en el depósito de la renta: <b>' + money(x.deposito) + '</b>.', null) +
-      tiles([['Ganas o pierdes', metido > 0 ? signo(dif) : money(0), metido > 0 ? 'metiste ' + money(metido) + ' y vale ' + money(trabaja) + ' (' + (dif >= 0 ? '+' : '−') + Math.abs(dif / metido * 100).toFixed(1) + '%)' : 'todavía no hay compras'],
-        ['Cuándo toca invertir', R.inv.length ? money(R.inv.reduce((s, e) => s + e.v, 0)) : ini ? mesTxt(ini.mes) : '—', R.inv.length ? 'este mes; registraste ' + money(delMes) + (falta > 1 ? ', te faltan ' + money(falta) : '') : 'primero el colchón y el BYD; después, ' + money(C().n('invertirMes') || 0) + ' al mes'],
-        ['Lo siguiente', R.sig ? money(R.sig.v) : '—', R.sig ? (R.sig.k === R.k ? 'hoy, ' : 'el ' + diaTxt(R.sig.k) + ', ') + A_DONDE[R.sig.a] : 'sin envíos próximos'],
-        ['En ' + mesTxt(uM ? uM.mes : R.ym) + ' tendrías', uM ? money(uM.activos.bolsa + uM.activos.btc) : '—', uM ? 'en bolsa y cripto; de eso, ' + money(T.rinde) + ' son rendimiento' : '']]) + '</div>' +
-      '<div class="kv-fila crece"><div class="kv-col s4">' + ctEstrategiaHoyHtml() + '<section class="kv-c"><h3>Lo que apartas, y a dónde va</h3><p>De hoy al cierre del mes que sigue: ' + (partes || 'según tu plan') + '.</p>' + envT + '</section></div>' +
-      '<div class="kv-col s5"><section class="kv-c"><h3>Tus compras</h3><p>De la más nueva a la más vieja. El Bitcoin y las acciones se valúan solos.</p>' + (part.length ? '<div class="kv-fin">' + part.map(q => '<i style="flex:' + q[1] + ';background:' + q[2] + '"></i>').join('') + '</div>' + leyenda(part.map(q => [esc(q[0]) + ' ' + Math.round(pct(q[1], total)) + '%', q[2]])) : '') +
-        '<div class="ti-lista" style="margin-top:14px">' + (filas.map(filaH).join('') || '<p class="kv-p" style="padding:14px">Todavía no hay compras.</p>') + '</div>' + (x.BA.resto * pB >= 1 ? '<div class="kv-pie">Tu Bitcoin incluye ' + money(x.BA.resto * pB) + ' que te quedaron de antes.</div>' : '') + '</section>' +
-      '<section class="kv-c kv-tres">' + (editable ? tiFormHtml(tiEditObj(F, _tiEdit)) : '<h3>Tus compras se anotan en tu PC</h3>' + copia('Se agregan')) + '<div class="kv-rep"><h3>En qué ponerlo' + (ini && !R.inv.length ? ', desde ' + mesL(ini.mes) : '') + '</h3>' + rep.map(r => '<span><b>' + r.pct + '%</b>' + esc(r.n) + '<i>' + esc(r.donde || '') + '</i></span>').join('') + boton(F.reparto && F.reparto.length ? 'Cambiar mi reparto' : 'Escribir mi reparto', 'cerrarKpi();abrirGBM()', 1) + '</div></section></div>' +
-      '<div class="kv-col s3 arriba">' + (uM ? '<section class="kv-c"><h3>Tus inversiones hasta irte</h3><p>Guardando lo que te queda y con lo que tu plan supone que rinden.</p>' + grafica('inv') + leyenda([['Bolsa', V.a, 'l'], ['Cripto', V.b, 'l']]) + '</section>' : '') + btcHtml + '</div></div>',
-      listo: () => { if (uM) lineas('inv', { et: PR.map((m, i) => i && !/-(02|08)$/.test(m.mes) ? '' : i ? MES[+m.mes.slice(5) - 1] + ' ' + m.mes.slice(2, 4) : 'hoy'), largo: PR.map(m => mesTxt(m.mes)), desde: 0, aria: 'Lo que tendrías en bolsa y en cripto cada mes hasta agosto de 2028', series: [{ n: 'Bolsa', c: V.a, v: PR.map(m => m.activos.bolsa), area: 1, fin: 1 }, { n: 'Cripto', c: V.b, v: PR.map(m => m.activos.btc) }] }); if (serie.length > 1) lineas('btc', { et: serie.map(q => diaTxt(q[0])), largo: serie.map(q => tiFecha(q[0])), ref: prom > 0 ? { v: prom, t: 'Tu promedio' } : null, aria: 'Precio del Bitcoin en dólares, último mes', series: [{ n: 'Bitcoin, en dólares', c: V.a, v: serie.map(q => q[1]) }] }); } };
+    const btcHtml = x.btcV > 0 || serie.length > 1 ? '<section class="kv-c"><h3>Tu Bitcoin, el último mes</h3><p>' + (x.btcV > 0 ? 'Vale <b>' + money(x.btcV) + '</b>. ' + (falta2 > 0 ? 'Para recuperar lo que metiste tendría que subir <b>' + falta2.toFixed(1) + '%</b>.' : 'Ya vale más de lo que metiste.') : 'Todavía no tienes Bitcoin.') +
+      ' El precio, en dólares' + (prom > 0 ? ', contra lo que pagaste en promedio' : '') + '.</p>' + (serie.length > 1 ? grafica('btc') : '') + '</section>' : '';
+    const est = ctEstrategiaHoyHtml();
+    return { kv: 'var(--cy)', titulo: 'Total invertido', sub: 'Lo que tienes, cuánto vas ganando, tu plan y lo que tendrías al irte.', html:
+      '<div class="ki"><div class="ki-uno">' + (est ? '<div class="ki-est">' + est + '</div>' : '') +
+      '<div class="ki-top">' + heroHtml + gananTile + proxTile + invTile + btcTile + '</div>' +
+      '<div class="ki-mid"><section class="kv-c ki-plan"><h3>Tu plan, paso a paso</h3>' + kiPasos(F, R, ini, uM, rep, totF, total) + '</section>' + grafHtml + comprasHtml + '</div></div>' +
+      '<div class="ki-bajo' + (editable ? '' : ' sin-form') + '"><section class="kv-c"><h3>Lo que apartas, y a dónde va</h3><p>De hoy al cierre del mes que sigue: ' + (partes || 'según tu plan') + '.</p>' + envT + '</section>' +
+      (editable ? '<section class="kv-c kv-tres" id="kiForm">' + tiFormHtml(tiEditObj(F, _tiEdit)) + '</section>' : '') +
+      '<div class="kv-col"><section class="kv-c"><div class="kv-rep ki-rep2"><h3>En qué ponerlo' + (prim && !R.inv.length ? ', desde ' + mesL(prim.fecha.slice(0, 7)) : '') + '</h3>' + rep.map(r => '<span><b>' + r.pct + '%</b>' + esc(r.n) + '<i>' + esc(r.donde || '') + '</i></span>').join('') +
+        boton(F.reparto && F.reparto.length ? 'Cambiar mi reparto' : 'Escribir mi reparto', 'cerrarKpi();abrirGBM()', 1) + '</div></section>' + btcHtml + '</div></div></div>',
+      listo: () => {
+        if (uM) apilada('inv', { et: PR.map((m, i) => i && !/-(02|08)$/.test(m.mes) ? '' : i ? MES[+m.mes.slice(5) - 1] + ' ' + m.mes.slice(2, 4) : 'hoy'), largo: PR.map(m => mesTxt(m.mes)),
+          aria: 'Lo que tendrías en bolsa y en cripto cada mes hasta ' + mesL(uM.mes) + ', lo que metes y lo que pide la salida', bolsa: PR.map(m => m.activos.bolsa), cripto: PR.map(m => m.activos.btc),
+          metes, pide: T.pide, pideT: 'La salida pide ' + money(T.pide), hitos, cB: V.a, cC: V.b, cP: V.c });
+        if (serie.length > 1) lineas('btc', { et: serie.map(q => diaTxt(q[0])), largo: serie.map(q => tiFecha(q[0])), ref: prom > 0 ? { v: prom, t: 'Tu promedio' } : null, aria: 'Precio del Bitcoin en dólares, último mes', series: [{ n: 'Bitcoin, en dólares', c: V.b, v: sv, area: 1 }] });
+      } };
   };
 
   // ══ Deuda total ══
@@ -695,6 +802,70 @@
     });
     const cruz = nodo(g.svg, 'line', { y1: g.t, y2: g.h - g.b, stroke: 'var(--kv-gris)', 'stroke-width': 1, opacity: 0 });
     raton(g, n, X, i => { cruz.setAttribute('x1', X(i)); cruz.setAttribute('x2', X(i)); cruz.setAttribute('opacity', .8); globo(g, X(i), o.largo[i], o.series.filter(s => s.v[i] != null).map(s => ({ c: s.c, v: money(s.v[i]), n: s.n }))); }, () => cruz.setAttribute('opacity', 0));
+  }
+  // Curva suave que pasa por cada punto sin pasarse de ellos (cúbica monótona): la gráfica no inventa subidas ni bajadas.
+  function suave(p) {
+    const n = p.length, f = q => q.toFixed(1);
+    if (n < 3) return p.map((q, i) => (i ? 'L' : 'M') + f(q[0]) + ' ' + f(q[1])).join('');
+    const dx = [], m = [], t = [];
+    for (let i = 0; i < n - 1; i++) { dx[i] = p[i + 1][0] - p[i][0]; m[i] = dx[i] ? (p[i + 1][1] - p[i][1]) / dx[i] : 0; }
+    t[0] = m[0]; t[n - 1] = m[n - 2];
+    for (let i = 1; i < n - 1; i++) t[i] = m[i - 1] * m[i] <= 0 ? 0 : (m[i - 1] + m[i]) / 2;
+    for (let i = 0; i < n - 1; i++) {
+      if (!m[i]) { t[i] = 0; t[i + 1] = 0; continue; }
+      const a = t[i] / m[i], b = t[i + 1] / m[i], s = a * a + b * b;
+      if (s > 9) { const k = 3 / Math.sqrt(s); t[i] = k * a * m[i]; t[i + 1] = k * b * m[i]; }
+    }
+    let d = 'M' + f(p[0][0]) + ' ' + f(p[0][1]);
+    for (let i = 0; i < n - 1; i++) { const h = dx[i] / 3; d += 'C' + f(p[i][0] + h) + ' ' + f(p[i][1] + t[i] * h) + ' ' + f(p[i + 1][0] - h) + ' ' + f(p[i + 1][1] - t[i + 1] * h) + ' ' + f(p[i + 1][0]) + ' ' + f(p[i + 1][1]); }
+    return d;
+  }
+  // Total invertido hasta irte: la bolsa y la cripto apiladas, cada una con su degradado; lo que metes en punteado (la
+  // distancia hasta lo apilado es lo que rinde); la línea de lo que pide la salida, y los hitos del plan con su nombre
+  // arriba, en dos renglones si quedan cerca. El globo dice el mes, cada parte, el total y lo que llevas metido.
+  function apilada(id, o) {
+    const g = base(id, o); if (!g) return; guarda(id, apilada, o);
+    g.t = 46;
+    const n = o.et.length, tot = o.bolsa.map((b, i) => b + o.cripto[i]);
+    const Y = ejes(g, 0, Math.max(...tot, o.pide || 0, ...(o.metes || [0])) * 1.05), X = i => n < 2 ? (g.l + g.w - g.r) / 2 : g.l + 8 + i / (n - 1) * (g.w - g.r - g.l - 16), y0 = Y(0);
+    let ult = -99; o.et.forEach((t, i) => { if (!t || X(i) - ult < 52) return; ult = X(i); nodo(g.svg, 'text', { x: X(i), y: g.h - 7, 'text-anchor': i === n - 1 ? 'end' : 'middle' }, t); });
+    const defs = nodo(g.svg, 'defs', {}), grad = (k, c) => {
+      const gr = nodo(defs, 'linearGradient', { id: 'kig-' + id + k, x1: 0, y1: 0, x2: 0, y2: 1 });
+      nodo(gr, 'stop', { offset: '0%', style: 'stop-color:' + c + ';stop-opacity:.62' }); nodo(gr, 'stop', { offset: '100%', style: 'stop-color:' + c + ';stop-opacity:.08' });
+      return 'url(#kig-' + id + k + ')';
+    };
+    const pB = o.bolsa.map((v, i) => [X(i), Y(v)]), pT = tot.map((v, i) => [X(i), Y(v)]), dB = suave(pB), dT = suave(pT);
+    nodo(g.svg, 'path', { d: dB + 'L' + X(n - 1) + ' ' + y0 + 'L' + X(0) + ' ' + y0 + 'Z', fill: grad('a', o.cB) });
+    nodo(g.svg, 'path', { d: dT + suave(pB.slice().reverse()).replace(/^M/, 'L') + 'Z', fill: grad('b', o.cC) });
+    if (o.pide) {
+      const y = Y(o.pide); nodo(g.svg, 'line', { class: 'ki-pide', x1: g.l, x2: g.w - g.r, y1: y, y2: y, style: 'stroke:' + o.cP });
+      nodo(g.svg, 'text', { class: 'ki-pide-t', x: g.l + 10, y: y - 8 }, o.pideT);
+    }
+    nodo(g.svg, 'path', { d: dB, fill: 'none', stroke: o.cB, 'stroke-width': 2.5, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' });
+    nodo(g.svg, 'path', { d: dT, fill: 'none', stroke: o.cC, 'stroke-width': 2.5, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' });
+    if (o.metes) nodo(g.svg, 'path', { class: 'ki-met', d: suave(o.metes.map((v, i) => [X(i), Y(v)])) });
+    // Los hitos: una guía punteada y su nombre arriba; si dos quedan a menos de 130 px, el segundo baja un renglón.
+    let prev = -999, fila = 0;
+    (o.hitos || []).slice().sort((a, b) => a.i - b.i).forEach(h => {
+      const x = X(h.i); fila = x - prev < 130 ? 1 - fila : 0; prev = x;
+      const yT = 14 + fila * 16, gg = nodo(g.svg, 'g', { class: 'ki-hito' });
+      nodo(gg, 'line', { x1: x, x2: x, y1: yT + 5, y2: y0 });
+      nodo(gg, 'circle', { cx: x, cy: Y(tot[h.i]), r: 4 });
+      nodo(gg, 'text', { x: x, y: yT, 'text-anchor': x < g.l + 70 ? 'start' : x > g.w - g.r - 70 ? 'end' : 'middle' }, h.t);
+    });
+    // Hoy y el final, con su cifra.
+    nodo(g.svg, 'circle', { cx: X(0), cy: Y(tot[0]), r: 5, class: 'ki-hoy' });
+    const xe = X(n - 1), ye = Y(tot[n - 1]);
+    nodo(g.svg, 'circle', { cx: xe, cy: ye, r: 6, fill: o.cC, stroke: 'var(--kv-caja)', 'stroke-width': 2.5 });
+    nodo(g.svg, 'text', { class: 'f ki-fin', x: xe - 10, y: ye - 12, 'text-anchor': 'end' }, money(tot[n - 1]));
+    const cruz = nodo(g.svg, 'line', { y1: g.t, y2: y0, stroke: 'var(--kv-gris)', 'stroke-width': 1, opacity: 0 });
+    const pto = nodo(g.svg, 'circle', { r: 5, fill: o.cC, stroke: 'var(--kv-caja)', 'stroke-width': 2, opacity: 0 });
+    raton(g, n, X, i => {
+      cruz.setAttribute('x1', X(i)); cruz.setAttribute('x2', X(i)); cruz.setAttribute('opacity', .8);
+      pto.setAttribute('cx', X(i)); pto.setAttribute('cy', Y(tot[i])); pto.setAttribute('opacity', 1);
+      globo(g, X(i), o.largo[i], [{ c: o.cB, v: money(o.bolsa[i]), n: 'Bolsa' }, { c: o.cC, v: money(o.cripto[i]), n: 'Cripto' }, { c: 'var(--text)', v: money(tot[i]), n: 'Total' }]
+        .concat(o.metes ? [{ c: 'var(--kv-gris)', v: money(o.metes[i]), n: 'Lo que metiste' }, { c: o.cP, v: signo(tot[i] - o.metes[i]), n: 'Rinde' }] : []));
+    }, () => { cruz.setAttribute('opacity', 0); pto.setAttribute('opacity', 0); });
   }
   function guarda(id, f, o) { graficas = graficas.filter(q => q[0] !== id); graficas.push([id, f, o]); }
   let t = 0;

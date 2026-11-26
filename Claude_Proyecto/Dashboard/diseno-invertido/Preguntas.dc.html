@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Total invertido · Una pregunta a la vez</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+.ti{--bg:#0A1020;--sf:#111A2E;--sf2:#18233C;--ln:rgba(148,163,184,.16);--tx:#E8EEF8;--tx2:#AEB9CC;--tx3:#8A97AD;--bol:#4F8CFF;--btc:#F5A524;--dep:#64748B;--ok:#34D399;--mal:#F87171;--ac:#22D3EE;--btn:#22D3EE;--btntx:#04121A}
+.ti[data-tema="claro"]{--bg:#F3F5F9;--sf:#FFFFFF;--sf2:#EEF2F7;--ln:rgba(15,23,42,.10);--tx:#0F172A;--tx2:#475569;--tx3:#5B6B80;--bol:#2563EB;--btc:#C2410C;--dep:#94A3B8;--ok:#047857;--mal:#B91C1C;--ac:#0E7490;--btn:#0E7490;--btntx:#FFFFFF}
+a{color:var(--ac)}a:hover{color:var(--tx)}
+</style>
+</helmet>
+<div class="ti" data-tema="{{tema}}" style="width: 1194px; height: 834px; box-sizing: border-box; background: var(--bg); color: var(--tx); font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden">
+
+  <header style="height: 68px; flex: none; display: flex; align-items: center; gap: 14px; padding: 0 24px; border-bottom: 1px solid var(--ln)">
+    <span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: var(--ac)"></span>
+    <div style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0">
+      <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.01em">Total invertido</h1>
+      <p style="margin: 0; font-size: 13px; color: var(--tx2)">Toca una pregunta y te responde con una frase</p>
+    </div>
+    <span style="font-size: 12px; color: var(--tx3); border: 1px solid var(--ln); border-radius: 999px; padding: 6px 12px">Cifras de ejemplo</span>
+    <button type="button" aria-label="Cerrar" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--ln); background: var(--sf); color: var(--tx); display: flex; align-items: center; justify-content: center; cursor: pointer">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </button>
+  </header>
+
+  <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 20px; padding: 20px 24px">
+
+    <nav aria-label="Preguntas" style="display: flex; flex-direction: column; gap: 12px">
+      <sc-for list="{{ qs }}" as="q" hint-placeholder-count="5">
+        <button type="button" onClick="{{ q.pick }}" style="flex: 1; min-height: 96px; display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 4px 14px; align-items: center; text-align: left; padding: 14px 18px; border-radius: 18px; cursor: pointer; font-family: inherit; background: {{ q.bg }}; color: {{ q.fg }}; border: 1px solid {{ q.bd }}">
+          <span style="grid-row: span 2; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; background: {{ q.nb }}; color: {{ q.nf }}">{{ q.n }}</span>
+          <span style="font-size: 18px; font-weight: 700">{{ q.t }}</span>
+          <span style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; color: {{ q.pc }}">{{ q.p }}</span>
+        </button>
+      </sc-for>
+    </nav>
+
+    <section style="min-width: 0; background: var(--sf); border: 1px solid var(--ln); border-radius: 22px; padding: 30px 34px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
+
+      <sc-if value="{{ q1 }}" hint-placeholder-val="{{ true }}">
+        <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ac)">1 · ¿Cuánto tengo?</div>
+        <p style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 54px; font-weight: 700; line-height: 1.05; letter-spacing: -0.02em">Tienes $18,400.</p>
+        <p style="margin: 0; font-size: 19px; line-height: 1.55; color: var(--tx2); max-width: 680px">De eso, <b style="color: var(--tx)">$11,500</b> son el depósito de tu renta: no rinde y te lo regresan al irte. Los otros <b style="color: var(--tx)">$6,900</b> trabajan: $2,500 en bolsa y $4,400 en Bitcoin.</p>
+        <div style="display: flex; gap: 10px; height: 190px; margin-top: auto">
+          <div style="flex: 11500; border-radius: 16px; background: var(--dep); color: #FFFFFF; padding: 18px; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px">
+            <span style="font-size: 14px; font-weight: 600">Depósito de la renta</span><b style="font-family: 'Space Grotesk', sans-serif; font-size: 30px">$11,500</b><span style="font-size: 13px">no rinde · te lo regresan</span>
+          </div>
+          <div style="flex: 2500; min-width: 150px; border-radius: 16px; background: var(--bol); color: #FFFFFF; padding: 18px; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px">
+            <span style="font-size: 14px; font-weight: 600">Bolsa</span><b style="font-family: 'Space Grotesk', sans-serif; font-size: 30px">$2,500</b><span style="font-size: 13px">VOO</span>
+          </div>
+          <div style="flex: 4400; min-width: 170px; border-radius: 16px; background: var(--btc); color: #1A1204; padding: 18px; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px">
+            <span style="font-size: 14px; font-weight: 600">Bitcoin</span><b style="font-family: 'Space Grotesk', sans-serif; font-size: 30px">$4,400</b><span style="font-size: 13px">0.0036 BTC</span>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ q2 }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ac)">2 · ¿Voy ganando?</div>
+        <p style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 54px; font-weight: 700; line-height: 1.05; letter-spacing: -0.02em">Sí: <span style="color: var(--ok)">+$100</span>.</p>
+        <p style="margin: 0; font-size: 19px; line-height: 1.55; color: var(--tx2); max-width: 680px">Metiste <b style="color: var(--tx)">$6,800</b> en bolsa y Bitcoin, y hoy vale <b style="color: var(--tx)">$6,900</b>: un 1.5% más. El depósito no cuenta aquí porque no rinde.</p>
+        <div style="margin-top: auto; display: flex; flex-direction: column; gap: 14px">
+          <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tx3)">Compra por compra</div>
+          <div style="display: grid; grid-template-columns: 170px minmax(0, 1fr) 90px; gap: 10px 14px; align-items: center; font-size: 16px">
+            <span><b>VOO</b> <span style="color: var(--tx3); font-size: 13px">3 oct</span></span>
+            <div style="display: flex; height: 26px"><div style="flex: 1; border-right: 2px solid var(--ln)"></div><div style="flex: 1; display: flex"><i style="width: 90%; background: var(--ok); border-radius: 0 6px 6px 0"></i></div></div>
+            <b style="color: var(--ok); text-align: right">+$100</b>
+            <span><b>Bitcoin</b> <span style="color: var(--tx3); font-size: 13px">17 nov</span></span>
+            <div style="display: flex; height: 26px"><div style="flex: 1; border-right: 2px solid var(--ln)"></div><div style="flex: 1; display: flex"><i style="width: 9%; background: var(--ok); border-radius: 0 6px 6px 0"></i></div></div>
+            <b style="color: var(--ok); text-align: right">+$10</b>
+            <span><b>Bitcoin</b> <span style="color: var(--tx3); font-size: 13px">18 nov</span></span>
+            <div style="display: flex; height: 26px"><div style="flex: 1; display: flex; justify-content: flex-end; border-right: 2px solid var(--ln)"><i style="width: 9%; background: var(--mal); border-radius: 6px 0 0 6px"></i></div><div style="flex: 1"></div></div>
+            <b style="color: var(--mal); text-align: right">−$10</b>
+          </div>
+          <p style="margin: 0; font-size: 14px; color: var(--tx3)">A la derecha de la línea, lo que va ganando; a la izquierda, lo que va perdiendo.</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ q3 }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ac)">3 · ¿Cuándo invierto?</div>
+        <p style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 54px; font-weight: 700; line-height: 1.05; letter-spacing: -0.02em">En septiembre de 2027.</p>
+        <p style="margin: 0; font-size: 19px; line-height: 1.55; color: var(--tx2); max-width: 680px">Antes van dos pasos: llenar tu colchón de <b style="color: var(--tx)">$35,000</b> y dejar el BYD en cero. Desde ahí, <b style="color: var(--tx)">$37,700 cada mes</b> hasta irte.</p>
+        <div style="margin-top: auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+          <div style="border-radius: 16px; padding: 16px; background: var(--sf2); border: 2px solid var(--ac); display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 12px; font-weight: 800; letter-spacing: 0.1em; color: var(--ac)">AHORA</span><b style="font-size: 17px">Tu colchón</b><span style="font-size: 14px; color: var(--tx2)">$35,000 · ene 2027</span>
+            <div aria-hidden="true" style="height: 8px; border-radius: 4px; background: var(--ln); overflow: hidden"><i style="display: block; height: 100%; width: 62%; background: var(--ac)"></i></div><span style="font-size: 12px; color: var(--tx3)">vas en 62%</span>
+          </div>
+          <div style="border-radius: 16px; padding: 16px; background: var(--sf2); display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 12px; font-weight: 800; letter-spacing: 0.1em; color: var(--tx3)">DESPUÉS</span><b style="font-size: 17px">BYD en cero</b><span style="font-size: 14px; color: var(--tx2)">ago 2027</span>
+          </div>
+          <div style="border-radius: 16px; padding: 16px; background: var(--sf2); display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 12px; font-weight: 800; letter-spacing: 0.1em; color: var(--tx3)">DESDE SEP 2027</span><b style="font-size: 17px">$37,700 al mes</b>
+            <span style="font-size: 14px; font-weight: 700; color: var(--bol)">80% bolsa · VOO</span><span style="font-size: 14px; font-weight: 700; color: var(--btc)">20% Bitcoin</span>
+          </div>
+          <div style="border-radius: 16px; padding: 16px; background: var(--sf2); display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 12px; font-weight: 800; letter-spacing: 0.1em; color: var(--tx3)">LA META</span><b style="font-size: 17px">Alemania</b><span style="font-size: 14px; color: var(--tx2)">sep 2028</span>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--tx2); border-top: 1px solid var(--ln); padding-top: 14px">
+          <b style="color: var(--tx)">Lo próximo:</b> 30 nov, $2,300 de Didi a tu colchón · 1 dic, $2,050 de tu quincena
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ q4 }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ac)">4 · ¿Cuánto tendré al irme?</div>
+        <p style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 54px; font-weight: 700; line-height: 1.05; letter-spacing: -0.02em">$600,000 en agosto de 2028.</p>
+        <p style="margin: 0; font-size: 19px; line-height: 1.55; color: var(--tx2); max-width: 700px">Invirtiendo $37,700 al mes desde septiembre de 2027. De eso, <b style="color: var(--tx)">$36,000</b> serían rendimiento.</p>
+        <svg viewBox="0 0 480 300" style="width: 100%; flex: 1; min-height: 0" role="img" aria-label="Lo que tendrías en bolsa y en Bitcoin cada mes, de hoy a agosto de 2028">
+          <line x1="44" x2="470" y1="270" y2="270" style="stroke: var(--ln)"></line>
+          <line x1="44" x2="470" y1="186.7" y2="186.7" style="stroke: var(--ln)" stroke-dasharray="3 5"></line>
+          <line x1="44" x2="470" y1="103.3" y2="103.3" style="stroke: var(--ln)" stroke-dasharray="3 5"></line>
+          <line x1="44" x2="470" y1="20" y2="20" style="stroke: var(--ln)" stroke-dasharray="3 5"></line>
+          <text x="38" y="274" text-anchor="end" style="fill: var(--tx3); font-size: 10px">$0</text>
+          <text x="38" y="191" text-anchor="end" style="fill: var(--tx3); font-size: 10px">$200 mil</text>
+          <text x="38" y="107" text-anchor="end" style="fill: var(--tx3); font-size: 10px">$400 mil</text>
+          <text x="38" y="24" text-anchor="end" style="fill: var(--tx3); font-size: 10px">$600 mil</text>
+          <path d="M44 270 L214.4 270 L235.7 257.3 L257 242.8 L278.3 227.4 L299.6 211.6 L320.9 195.3 L342.2 178.6 L363.5 161.7 L384.8 144.6 L406.1 127.3 L427.4 109.7 L448.7 92 L470 74.2 L470 270 Z" style="fill: var(--bol)" opacity="0.85"></path>
+          <path d="M214.4 270 L235.7 254.6 L257 236.5 L278.3 217.1 L299.6 197.1 L320.9 176.3 L342.2 155 L363.5 133.4 L384.8 111.3 L406.1 89 L427.4 66.2 L448.7 43.2 L470 20 L470 74.2 L448.7 92 L427.4 109.7 L406.1 127.3 L384.8 144.6 L363.5 161.7 L342.2 178.6 L320.9 195.3 L299.6 211.6 L278.3 227.4 L257 242.8 L235.7 257.3 Z" style="fill: var(--btc)" opacity="0.9"></path>
+          <line x1="225" x2="225" y1="20" y2="270" style="stroke: var(--tx3)" stroke-dasharray="4 4"></line>
+          <text x="219" y="36" text-anchor="end" style="fill: var(--tx2); font-size: 10px; font-weight: 600">empiezas a invertir</text>
+          <text x="44" y="292" style="fill: var(--tx3); font-size: 10px">hoy</text>
+          <text x="214" y="292" text-anchor="middle" style="fill: var(--tx3); font-size: 10px">ago 27</text>
+          <text x="342" y="292" text-anchor="middle" style="fill: var(--tx3); font-size: 10px">feb 28</text>
+          <text x="470" y="292" text-anchor="end" style="fill: var(--tx3); font-size: 10px">ago 28</text>
+        </svg>
+        <div style="display: flex; gap: 20px; font-size: 15px; color: var(--tx2)">
+          <span style="display: flex; align-items: center; gap: 8px"><i style="width: 13px; height: 13px; border-radius: 4px; background: var(--bol)"></i>Bolsa · $470,000</span>
+          <span style="display: flex; align-items: center; gap: 8px"><i style="width: 13px; height: 13px; border-radius: 4px; background: var(--btc)"></i>Bitcoin · $130,000</span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ q5 }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ac)">5 · ¿Qué compré?</div>
+        <p style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 54px; font-weight: 700; line-height: 1.05; letter-spacing: -0.02em">4 compras.</p>
+        <p style="margin: 0; font-size: 19px; line-height: 1.55; color: var(--tx2)">De la más nueva a la más vieja. El Bitcoin y las acciones se valúan solos.</p>
+        <table style="width: 100%; border-collapse: collapse; font-size: 16px">
+          <thead><tr style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tx3); text-align: left"><th style="padding: 8px 6px">Cuándo</th><th style="padding: 8px 6px">Qué</th><th style="padding: 8px 6px; text-align: right">Metiste</th><th style="padding: 8px 6px; text-align: right">Vale hoy</th><th style="padding: 8px 6px; text-align: right">Diferencia</th></tr></thead>
+          <tbody>
+            <tr style="border-top: 1px solid var(--ln)"><td style="padding: 12px 6px; color: var(--tx2)">18 nov 2026</td><td style="padding: 12px 6px"><b>Bitcoin</b></td><td style="padding: 12px 6px; text-align: right">$1,500</td><td style="padding: 12px 6px; text-align: right"><b>$1,490</b></td><td style="padding: 12px 6px; text-align: right; color: var(--mal); font-weight: 700">−$10</td></tr>
+            <tr style="border-top: 1px solid var(--ln)"><td style="padding: 12px 6px; color: var(--tx2)">17 nov 2026</td><td style="padding: 12px 6px"><b>Bitcoin</b></td><td style="padding: 12px 6px; text-align: right">$2,900</td><td style="padding: 12px 6px; text-align: right"><b>$2,910</b></td><td style="padding: 12px 6px; text-align: right; color: var(--ok); font-weight: 700">+$10</td></tr>
+            <tr style="border-top: 1px solid var(--ln)"><td style="padding: 12px 6px; color: var(--tx2)">3 oct 2026</td><td style="padding: 12px 6px"><b>VOO</b></td><td style="padding: 12px 6px; text-align: right">$2,400</td><td style="padding: 12px 6px; text-align: right"><b>$2,500</b></td><td style="padding: 12px 6px; text-align: right; color: var(--ok); font-weight: 700">+$100</td></tr>
+            <tr style="border-top: 1px solid var(--ln)"><td style="padding: 12px 6px; color: var(--tx2)">1 ene 2024</td><td style="padding: 12px 6px"><b>Depósito de renta</b></td><td style="padding: 12px 6px; text-align: right">$11,500</td><td style="padding: 12px 6px; text-align: right"><b>$11,500</b></td><td style="padding: 12px 6px; text-align: right; color: var(--tx3)">no rinde</td></tr>
+          </tbody>
+        </table>
+        <a href="#" style="margin-top: auto; align-self: flex-start; height: 50px; padding: 0 22px; border-radius: 12px; background: var(--btn); color: var(--btntx); display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 16px; text-decoration: none">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Registrar una compra
+        </a>
+      </sc-if>
+
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"tema":{"editor":"enum","options":["claro","oscuro"],"default":"claro"},"$preview":{"width":1194,"height":834}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const sel = (this.state && this.state.sel) || 1;
+    const Q = [[1, '¿Cuánto tengo?', '$18,400'], [2, '¿Voy ganando?', '+$100'], [3, '¿Cuándo invierto?', 'sep 2027'], [4, '¿Cuánto tendré al irme?', '$600,000'], [5, '¿Qué compré?', '4 compras']];
+    const qs = Q.map((q) => {
+      const on = q[0] === sel;
+      return {
+        n: q[0], t: q[1], p: q[2],
+        pick: () => this.setState({ sel: q[0] }),
+        bg: on ? 'var(--ac)' : 'var(--sf)', fg: on ? 'var(--btntx)' : 'var(--tx)', bd: on ? 'var(--ac)' : 'var(--ln)',
+        nb: on ? 'var(--btntx)' : 'var(--sf2)', nf: on ? 'var(--ac)' : 'var(--tx2)', pc: on ? 'var(--btntx)' : 'var(--ac)'
+      };
+    });
+    return { tema: this.props.tema ?? 'claro', qs, q1: sel === 1, q2: sel === 2, q3: sel === 3, q4: sel === 4, q5: sel === 5 };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Total invertido · Mínima</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+.ti{--bg:#0A1020;--sf:#111A2E;--sf2:#18233C;--ln:rgba(148,163,184,.16);--tx:#E8EEF8;--tx2:#AEB9CC;--tx3:#8A97AD;--bol:#4F8CFF;--btc:#F5A524;--dep:#64748B;--ok:#34D399;--mal:#F87171;--ac:#22D3EE;--btn:#22D3EE;--btntx:#04121A}
+.ti[data-tema="claro"]{--bg:#F3F5F9;--sf:#FFFFFF;--sf2:#EEF2F7;--ln:rgba(15,23,42,.10);--tx:#0F172A;--tx2:#475569;--tx3:#5B6B80;--bol:#2563EB;--btc:#C2410C;--dep:#94A3B8;--ok:#047857;--mal:#B91C1C;--ac:#0E7490;--btn:#0E7490;--btntx:#FFFFFF}
+a{color:var(--ac)}a:hover{color:var(--tx)}
+</style>
+</helmet>
+<div class="ti" data-tema="{{tema}}" style="width: 1194px; height: 834px; box-sizing: border-box; background: var(--bg); color: var(--tx); font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden">
+
+  <header style="height: 68px; flex: none; display: flex; align-items: center; gap: 14px; padding: 0 28px">
+    <span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: var(--ac)"></span>
+    <h1 style="margin: 0; flex: 1; font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.01em">Total invertido</h1>
+    <span style="font-size: 12px; color: var(--tx3); border: 1px solid var(--ln); border-radius: 999px; padding: 6px 12px">Cifras de ejemplo</span>
+    <button type="button" aria-label="Cerrar" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--ln); background: var(--sf); color: var(--tx); display: flex; align-items: center; justify-content: center; cursor: pointer">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </button>
+  </header>
+
+  <main style="flex: 1; min-height: 0; padding: 6px 28px 24px; display: flex; flex-direction: column; gap: 18px">
+
+    <div style="display: flex; align-items: flex-end; gap: 24px">
+      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tx3)">Hoy tienes</span>
+        <b style="font-family: 'Space Grotesk', sans-serif; font-size: 76px; font-weight: 700; line-height: 0.95; letter-spacing: -0.03em">$18,400</b>
+        <p style="margin: 0; font-size: 18px; line-height: 1.5; color: var(--tx2)"><b style="color: var(--tx)">$6,900</b> trabajan y van ganando <b style="color: var(--ok)">+$100</b>. Los otros <b style="color: var(--tx)">$11,500</b> son el depósito de tu renta.</p>
+      </div>
+      <div style="display: flex; gap: 10px; flex: none">
+        <a href="#" style="height: 50px; padding: 0 20px; border-radius: 12px; border: 1px solid var(--ln); background: var(--sf); color: var(--tx); display: flex; align-items: center; font-weight: 700; font-size: 15px; text-decoration: none">Mis compras (4)</a>
+        <a href="#" style="height: 50px; padding: 0 20px; border-radius: 12px; background: var(--btn); color: var(--btntx); display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 15px; text-decoration: none">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Registrar una compra
+        </a>
+      </div>
+    </div>
+
+    <section style="flex: 1; min-height: 0; background: var(--sf); border: 1px solid var(--ln); border-radius: 20px; padding: 20px 24px; display: flex; flex-direction: column; gap: 6px">
+      <div style="display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap">
+        <span style="font-size: 16px; color: var(--tx2)">Al irte, en agosto de 2028:</span>
+        <b style="font-family: 'Space Grotesk', sans-serif; font-size: 34px; line-height: 1">$600,000</b>
+        <span style="display: flex; gap: 16px; margin-left: auto; font-size: 14px; color: var(--tx2)">
+          <span style="display: flex; align-items: center; gap: 7px"><i style="width: 12px; height: 12px; border-radius: 4px; background: var(--bol)"></i>Bolsa</span>
+          <span style="display: flex; align-items: center; gap: 7px"><i style="width: 12px; height: 12px; border-radius: 4px; background: var(--btc)"></i>Bitcoin</span>
+        </span>
+      </div>
+      <svg viewBox="0 0 1000 300" style="width: 100%; flex: 1; min-height: 0" role="img" aria-label="Lo que tendrías en bolsa y en Bitcoin cada mes, de hoy a agosto de 2028: nada hasta agosto de 2027 y luego sube hasta 600 mil pesos">
+        <line x1="70" x2="990" y1="270" y2="270" style="stroke: var(--ln)"></line>
+        <line x1="70" x2="990" y1="186.7" y2="186.7" style="stroke: var(--ln)" stroke-dasharray="3 6"></line>
+        <line x1="70" x2="990" y1="103.3" y2="103.3" style="stroke: var(--ln)" stroke-dasharray="3 6"></line>
+        <line x1="70" x2="990" y1="20" y2="20" style="stroke: var(--ln)" stroke-dasharray="3 6"></line>
+        <text x="62" y="274" text-anchor="end" style="fill: var(--tx3); font-size: 12px">$0</text>
+        <text x="62" y="191" text-anchor="end" style="fill: var(--tx3); font-size: 12px">$200 mil</text>
+        <text x="62" y="107" text-anchor="end" style="fill: var(--tx3); font-size: 12px">$400 mil</text>
+        <text x="62" y="24" text-anchor="end" style="fill: var(--tx3); font-size: 12px">$600 mil</text>
+        <path d="M70 270 L438 270 L484 257.3 L530 242.8 L576 227.4 L622 211.6 L668 195.3 L714 178.6 L760 161.7 L806 144.6 L852 127.3 L898 109.7 L944 92 L990 74.2 L990 270 Z" style="fill: var(--bol)" opacity="0.85"></path>
+        <path d="M438 270 L484 254.6 L530 236.5 L576 217.1 L622 197.1 L668 176.3 L714 155 L760 133.4 L806 111.3 L852 89 L898 66.2 L944 43.2 L990 20 L990 74.2 L944 92 L898 109.7 L852 127.3 L806 144.6 L760 161.7 L714 178.6 L668 195.3 L622 211.6 L576 227.4 L530 242.8 L484 257.3 Z" style="fill: var(--btc)" opacity="0.9"></path>
+        <line x1="461" x2="461" y1="20" y2="270" style="stroke: var(--tx3)" stroke-dasharray="4 4"></line>
+        <text x="453" y="40" text-anchor="end" style="fill: var(--tx2); font-size: 13px; font-weight: 600">aquí empiezas a invertir</text>
+        <circle cx="70" cy="270" r="6" style="fill: var(--ac); stroke: var(--sf)" stroke-width="2"></circle>
+        <text x="70" y="294" style="fill: var(--tx3); font-size: 12px">hoy</text>
+        <text x="438" y="294" text-anchor="middle" style="fill: var(--tx3); font-size: 12px">ago 2027</text>
+        <text x="714" y="294" text-anchor="middle" style="fill: var(--tx3); font-size: 12px">feb 2028</text>
+        <text x="990" y="294" text-anchor="end" style="fill: var(--tx3); font-size: 12px">ago 2028</text>
+      </svg>
+    </section>
+
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+      <div style="background: var(--sf); border: 1px solid var(--ln); border-radius: 18px; padding: 16px 20px; display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tx3)">Lo próximo</span>
+        <b style="font-family: 'Space Grotesk', sans-serif; font-size: 26px">30 nov · $2,300</b>
+        <span style="font-size: 14px; color: var(--tx2)">de Didi, a tu colchón</span>
+      </div>
+      <div style="background: var(--sf); border: 1px solid var(--ln); border-radius: 18px; padding: 16px 20px; display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tx3)">Empiezas a invertir</span>
+        <b style="font-family: 'Space Grotesk', sans-serif; font-size: 26px">sep 2027</b>
+        <span style="font-size: 14px; color: var(--tx2)">$37,700 al mes, tras el colchón y el BYD</span>
+      </div>
+      <div style="background: var(--sf); border: 1px solid var(--ln); border-radius: 18px; padding: 16px 20px; display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tx3)">Tu reparto</span>
+        <div aria-hidden="true" style="display: flex; height: 12px; border-radius: 6px; overflow: hidden; gap: 3px"><i style="flex: 80; background: var(--bol)"></i><i style="flex: 20; background: var(--btc)"></i></div>
+        <span style="font-size: 15px; display: flex; justify-content: space-between"><b style="color: var(--bol)">80% bolsa · VOO</b><b style="color: var(--btc)">20% Bitcoin</b></span>
+      </div>
+    </div>
+
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"tema":{"editor":"enum","options":["oscuro","claro"],"default":"oscuro"},"$preview":{"width":1194,"height":834}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { tema: this.props.tema ?? 'oscuro' };
+  }
+}
+</script>
+</body>
+</html>

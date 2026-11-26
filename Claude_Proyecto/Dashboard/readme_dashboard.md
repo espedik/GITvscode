@@ -1097,7 +1097,7 @@ con su botón** (`.kv-hoy`; naranja si algo pide revisarse), **una gráfica** (`
 | **Maestría** | Cuánto tendrías en agosto de 2028 guardando lo que te queda y si alcanza, cuándo queda en cero el BYD, cuánto rinde lo invertido, la gráfica hasta irte, lo que pide la salida y qué hacer (ver *El Fondo Maestría*) |
 | **Patrimonio** | Cuándo llegas al millón guardando lo que te queda, la ruta con sus paradas, qué pasa hasta cada una y qué te acerca (ver *El camino al millón*) |
 | **Intereses** | Lo que se va en interés este mes y cada día, un cuadro por pago hasta acabar, y tu plan contra pagar solo la mensualidad o un poco más (ver *Los intereses, un cuadro por pago*) |
-| **Total invertido** | Lo que trabaja aparte de lo guardado en el depósito, cuánto ganas o pierdes, cuándo toca invertir, lo siguiente con su destino, lo que tendrías en bolsa y cripto al irte (con su gráfica hasta agosto de 2028), *Tu estrategia de hoy*, lo que apartas y a dónde va, las compras con su formulario, en qué ponerlo y *Tu Bitcoin hoy* (el último mes contra tu promedio y cuánto tendría que subir) |
+| **Total invertido** | A pantalla completa y con su propio acomodo (ver *Total invertido a pantalla completa*): lo que tienes por clase, si vas ganando, lo próximo, cuándo empiezas a invertir y el Bitcoin de hoy; tu plan paso a paso, la gráfica hasta irte y tus compras; abajo lo que apartas, el formulario, el reparto y el Bitcoin del último mes |
 | **Deuda total** | Cuánto debes mes a mes (`caminoDeuda`, todas juntas): con tu plan y pagando solo la mensualidad, la fecha en que el BYD quedará en cero y lo que te ahorras de interés. **Dos controles** —abono hoy y extra cada mes, encima del plan— redibujan la gráfica y dicen cuándo acabas y cuánto ahorras (`simula`, con `CIFRAS.prestamoTabla` y `abonosPlan`); **Anotar el abono de hoy** lo lleva al formulario. Cada deuda con su siguiente pago y su fin; el abono, los datos del crédito y el contrato, plegados |
 
 **Gráficas** (`lineas`): SVG al tamaño real de su caja, un solo eje, globo con el mes y cada serie al pasar el
@@ -1136,7 +1136,7 @@ total— pone la gráfica arriba y el simulador y las deudas lado a lado, como b
 lado (`.km-tw`) lleva una sombra en el borde mientras queda más.
 
 Medido con los datos de Finanzas: a 2048×1040 y a 1600×1000 ninguna se desplaza más de 37 px salvo el Fondo Maestría (235 y 292); a 1327 (el iPad) caben
-enteras el fondo, los intereses y Total invertido; Patrimonio y Deuda total se desplazan menos de 300 px y el Fondo Maestría,
+enteras el fondo y los intereses (Total invertido va a pantalla completa: ver abajo); Patrimonio y Deuda total se desplazan menos de 300 px y el Fondo Maestría,
 por su gráfica alta, 561; a 1194, el iPad vertical y
 390 px se desplazan enteras, sin textos partidos ni desbordes. Probado: los controles dan la cifra del maestro; anotar, corregir
 y borrar un abono, aportar al fondo y registrar una compra mueven Finanzas; sin datos no se rompen; en el iPad van sin
@@ -1233,13 +1233,44 @@ cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle 
 marcan "sin intereses". La BBVA tampoco paga intereses mientras Adán cubre lo que pide el estado de cuenta
 (`CIFRAS.PROYECTO.bbvaSinIntereses`), y Deuda total dice cuándo quedará en cero (`bbvaPlanTxt()`).
 
+### Total invertido a pantalla completa
+
+Adán, 26-nov-2026: *"lo de total invertido mejora el diseño y que abarque toda la página y que sea entendible en mi iPad…
+buena presentación con buenos colores que combinen"*; de las tres opciones del lienzo (`diseno-invertido/`: A · Tablero,
+B · Una pregunta a la vez, C · Mínima) eligió la A, *"pero mucho más bonita la gráfica y más indicadores"*. Es la única de
+las seis ventanas que ocupa toda la pantalla, sin margen ni esquinas, y su primera vista (`.ki-uno`) llena justo el alto
+de la ventana (`#kpiBody` es su contenedor); lo demás queda abajo. Los colores dicen lo mismo en toda ella (`KI_COL`):
+azul la bolsa, naranja la cripto, gris el depósito y verde lo demás.
+
+- **Arriba** (`.ki-top`): *Hoy tienes*, con la barra por clase y cada una con su monto y su parte, y cuatro indicadores
+  (`kiTile`): *¿Vas ganando?* (lo metido contra lo que vale, en barras), *Lo próximo* (el siguiente envío y el de después),
+  *Empiezas a invertir* (la fecha, los días que faltan y lo de cada mes; cuando ya toca, lo de este mes contra lo
+  registrado) y *Bitcoin hoy* (su precio, el cambio de 30 días, contra lo que pagaste y la línea del mes). *Tu estrategia
+  de hoy* va encima, dentro de la primera vista, cuando hay saldo de la BBVA que seguir.
+- **En medio** (`.ki-mid`): *Tu plan, paso a paso* (`kiPasos`): el colchón y el BYD con su avance real, invertir con su
+  reparto, la decisión y la salida, con el paso de ahora encendido; al pie, los días que faltan para irte y cuánto llevas
+  de lo que tendrías ese día (`kiCamino`). *Lo que tendrías al irte*, con fichas —bolsa, cripto, lo que metes, el
+  rendimiento (el mismo de las demás ventanas) y desde cuándo cubres la salida— y la gráfica `apilada()`: bolsa y cripto
+  apiladas, cada una con su degradado y en curva suave que no se pasa de los puntos (`suave()`), lo que metes en
+  punteado, la línea de lo que pide la salida y los hitos del plan con su nombre; el globo da cada parte, el total, lo
+  metido y lo que rinde ese mes. *Tus compras* (`.ki-c`), que se deslizan dentro, y **+ Registrar una compra**.
+- **Abajo** (`.ki-bajo`): lo que apartas y a dónde va, el formulario (`#kiForm`; solo donde Finanzas es propia: en el iPad
+  no sale y la nota de la copia va en las compras), en qué ponerlo y el Bitcoin del último mes contra tu promedio.
+
+Todas las fechas salen del calendario del plan (`planAhorro`: el día en que se llena el colchón, el día en que el BYD
+quede en cero y el primer envío a invertir), las mismas de los marcadores; la proyección mes a mes (`ritmoMaestria`) da los montos. Bajo 1100 px los
+indicadores van de dos en dos y la gráfica arriba, a todo lo ancho; bajo 640, una columna. Medido: la primera vista
+termina en 820 de 834 px en el iPad de 1194×834 y en 820 de 820 en el de 1180×820, y en 988 de 1040 a 2048 —también con
+la estrategia de hoy—, con la gráfica de 952×568; a 1024, 834 y 390 px, sin desbordes ni nombres cortados. Agregar y
+borrar una compra mueve *Hoy tienes*, su barra y la lista; sin errores, en claro y en oscuro.
+
 ### Total invertido, compra por compra
 
 Adán, 17-nov-2026: *"en total invertido yo lo actualizaré esa cifra y añadiré mis inversiones en GBM, cuándo, cuánto
 y qué compré… ya no debe depender nada de esto de mi suscripción de Claude, debe ser lo más autónomo posible,
 editar, eliminar… todas estas cifras deben estar entrelazadas con la info de HTML finanzas"*. En la ventana
-(`MEDIDORES.invertido`), **Tus compras** van de la más nueva a la más vieja (`.ti-fila`: cuándo, qué, cuánto metiste, cuánto
-vale hoy y la diferencia, con **Editar** y **Borrar**), y debajo **Agregar una compra** (`tiFormHtml`: cuándo, qué precio
+(`MEDIDORES.invertido`), **Tus compras** van de la más nueva a la más vieja (`.ki-c`: cuándo, qué, cuánto metiste, cuánto
+vale hoy y la diferencia, con **Editar** y **Borrar**), y **+ Registrar una compra** baja a **Agregar una compra** (`tiFormHtml`: cuándo, qué precio
 sigue, qué compraste, tipo, cuánto metiste y cuánto vale hoy —o, si sigue un precio, cuánto compraste—; vacío, vale lo que
 metiste), que con **Editar** se llena con esa compra y pasa a **Guardar cambios** / **Cancelar**. **Lo invertido son tus inversiones más tu Bitcoin**: la cifra del panel y el medidor (`totalInvKpi`) suman las
 dos cosas.
@@ -1252,7 +1283,7 @@ abierto también, salvo mientras se escribe en su formulario—. Borrar pide con
 en Finanzas. **Solo se edita donde Finanzas es propia** (`tiEditable`): en el iPad, que usa la copia de la PC
 (`FIN_REPO`), las compras se ven sin botones y una nota dice que se editan en la PC y llegan con el siguiente commit.
 Medido con los datos de Finanzas: agregar, corregir y borrar una compra cambia el medidor, el panel y lo que lee
-Finanzas; el panel mide 629 px a 1600×1000 sin desplazarse, y a 390 px no se sale nada de la pantalla.
+Finanzas, y a 390 px no se sale nada de la pantalla.
 
 **Una compra que sigue su precio vale lo de hoy sola** (Adán, 18-nov-2026: *"puse bitcoin cuánto compré en pesos
 mexicanos, pero puedes saber de acuerdo al día cuánto vale actualmente… esta info sale en qué invertir hoy en las

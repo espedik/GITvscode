@@ -3544,8 +3544,8 @@ function promptsDeLoTocado() {
   if (!/#kpiOverlay \.gbm-card\.kpi-card,#kpiOverlay \.gbm-head\{background:var\(--kv-sup\)\}/.test(c)) malos.push('el fondo de las ventanas ya no es opaco');
   if (/\.usdIn\b/.test(m) || m.indexOf('tiBtcAbiertas(F)') < 0) malos.push('lo metido en Bitcoin ya no sale de las compras vivas (tiBtcAbiertas)');
   if (/\$\d{2,}/.test(m.replace(/\/\*[\s\S]*?\*\//g, ''))) malos.push('hay una cifra en pesos escrita a mano en medidores.js');
-  // Las fechas del plan (no son dinero) sí se escriben tal cual.
-  if (/C\(\)\.v\('(?!(?:decisionMaestria|colchonFecha|autoCero)')/.test(m)) malos.push('una cifra del plan sale sin pasar por money(): se vería en modo privado');
+  // Las fechas del plan y el nombre de la empresa (no son dinero) sí se escriben tal cual.
+  if (/C\(\)\.v\('(?!(?:decisionMaestria|colchonFecha|autoCero|empleador)')/.test(m)) malos.push('una cifra del plan sale sin pasar por money(): se vería en modo privado');
   if (malos.length) { problemas.push('Las ventanas de los medidores:\n     ' + malos.join('\n     ')); return; }
   ok.push('Las ventanas de los ' + ids.length + ' medidores: cada una con su contenido en medidores.js, fondo opaco y sin cifras a mano');
 })();

@@ -1,0 +1,79 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-26T18:30:00Z"
+  },
+  "title": "Total invertido — rediseño",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1194,
+      "h": 834,
+      "title": "A · Tablero: todo a la vista (la elegida)",
+      "radius": 18
+    },
+    "Preguntas.dc.html": {
+      "x": 1274,
+      "y": 0,
+      "w": 1194,
+      "h": 834,
+      "title": "B · Una pregunta a la vez",
+      "radius": 18,
+      "is_interactive": true
+    },
+    "Minima.dc.html": {
+      "x": 2548,
+      "y": 0,
+      "w": 1194,
+      "h": 834,
+      "title": "C · Mínima: una cifra y una gráfica",
+      "radius": 18
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Preguntas.dc.html",
+    "Minima.dc.html"
+  ],
+  "notes": {
+    "titulo": {
+      "x": 0,
+      "y": -300,
+      "text": "Total invertido en el iPad — tres opciones",
+      "kind": "title1",
+      "maxW": 3742
+    },
+    "nA": {
+      "x": 0,
+      "y": 940,
+      "w": 560,
+      "size": "m",
+      "fill": "teal",
+      "text": "A · Tablero. Toda la ventana en una sola pantalla del iPad, sin desplazarte: arriba lo que tienes, si vas ganando y lo próximo; abajo tu plan paso a paso, la gráfica hasta irte y tus compras con su botón. Azul = bolsa, naranja = Bitcoin, gris = depósito: los mismos colores en todo."
+    },
+    "nB": {
+      "x": 1274,
+      "y": 940,
+      "w": 560,
+      "size": "m",
+      "fill": "blue",
+      "text": "B · Una pregunta a la vez. A la izquierda cinco preguntas grandes (¿Cuánto tengo? ¿Voy ganando? ¿Cuándo invierto? ¿Cuánto tendré al irme? ¿Qué compré?) y a la derecha la respuesta en una frase enorme con su dibujo. Tócalas: funciona. La más fácil de entender, pero ves una cosa a la vez."
+    },
+    "nC": {
+      "x": 2548,
+      "y": 940,
+      "w": 560,
+      "size": "m",
+      "fill": "orange",
+      "text": "C · Mínima. Una cifra, una frase, una gráfica grande y tres datos. Lo demás (la lista de compras, el formulario) se abre con un botón. La más limpia; la que menos dice de un vistazo."
+    }
+  },
+  "designSystems": [],
+  "artifact": "https://claude.ai/artifact/5KqwV7MvtHU7sKTtfyB2dg"
+}
