@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los adjetivos — terminaciones, comparar y usos especiales | Deutsch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap"></noscript>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="temas.css">
+</head>
+<body>
+
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="casos.html">Casos</a>
+    <a href="preposiciones.html">Preposiciones</a>
+    <a href="verbos.html">Verbos</a>
+    <a href="adjetivos.html" class="on" aria-current="page">Adjetivos</a>
+    <a href="frase.html">La frase</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
+
+<header class="cs-hero" id="csHero"></header>
+<div class="cs-tabs"><div class="cs-in" id="csTabs" role="tablist" aria-label="Temas"></div></div>
+<main class="cs-main" id="csMain"></main>
+
+<footer class="footer" style="margin-top:0">
+  <p>Los adjetivos del alemán — las tres tablas de terminaciones, comparar, usos especiales y los más usados · A1–B1</p>
+  <div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div>
+</footer>
+
+<script src="../Dashboard/datos-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-pc.js"></script>
+<script>
+/* ── Los adjetivos: todo el contenido. Lo pinta temas.js. ────────────────────────────────────────────────────
+   En las tablas, la terminación va entre [corchetes] y sale subrayada (neu[e] → neue). Todo alemán revisado. */
+var DEF = '#2563eb', IND = '#d97706', SIN = '#7c3aed';
+window.TEMA = {
+  clave: 'aleman_adj_v1', ronda: 12,
+  hero: {
+    k: 'Gramática · A2–B1 · la terminación que delata',
+    h1: 'Los <em>adjetivos</em>: la terminación correcta',
+    lead: 'Detrás de **ist** el adjetivo no cambia (Das Auto ist **neu**). Delante del sustantivo lleva terminación, y esta depende del **artículo**, del **caso** y del **género**. Aquí están las tres tablas, el truco para no memorizarlas, cómo **comparar**, los usos especiales y los **más usados**.',
+    frase: ['Ich suche eine klein[e] Wohnung mit groß[em] Balkon in einer ruhig[en] Straße.', 'Busco un depa chico con balcón grande en una calle tranquila.']
+  },
+  tabs: [
+    { k: 'mapa', t: 'Cómo elegir', sub: 'el truco', c: '#CC0000', alias: ['inicio'],
+      h2: 'Cómo elegir la terminación', p: 'Una regla de oro: **alguien tiene que mostrar el género y el caso**. Si el artículo ya lo muestra (der, dem, des), el adjetivo pone solo **-e** o **-en**. Si no lo muestra (ein, o nada), el adjetivo lo muestra él: **-er**, **-es**, **-em**.',
+      grupos: [
+        { t: 'Después de der, die, das', c: DEF, p: 'El artículo ya lo dice todo: el adjetivo solo pone **-e** o **-en**.', chips: [['der neue Kollege', 'Nominativ'], ['den neuen Kollegen', 'Akkusativ'], ['mit dem neuen Kollegen', 'Dativ']] },
+        { t: 'Después de ein, kein, mein', c: IND, p: 'Donde ein no lleva terminación (ein, mein, kein), el adjetivo la pone: **-er** o **-es**.', chips: [['ein neuer Kollege', 'masculino'], ['ein neues Auto', 'neutro'], ['mit einem neuen Kollegen', 'Dativ: -en']] },
+        { t: 'Sin artículo', c: SIN, p: 'El adjetivo hace el papel del artículo: **-er, -e, -es, -em**…', chips: [['frischer Kaffee', 'masculino'], ['kalte Milch', 'femenino'], ['mit heißem Wasser', 'Dativ']] }
+      ],
+      pasos: [
+        ['¿Va antes del sustantivo?', 'Detrás de **sein**, **werden** o **bleiben** no lleva terminación: Die Wohnung ist **klein**. Solo se declina el que va delante: die **kleine** Wohnung.'],
+        ['¿Qué hay antes?', 'der, dieser, jeder → tabla **der**. ein, kein, mein, dein… → tabla **ein**. Nada, un número, viele o einige → tabla **sin artículo**.'],
+        ['¿Qué caso y qué género?', 'El caso lo decide el verbo o la preposición (mit → Dativ); el género, el sustantivo (der Balkon, die Straße, das Auto).'],
+        ['¿Ya se ve el género?', 'Si el artículo ya lleva la marca (der, den, dem, des), el adjetivo pone **-e/-en**. Si no, lleva la marca del artículo: der → **-er**, das → **-es**, dem → **-em**.']
+      ],
+      ficha: [
+        { lbl: 'El atajo', preg: ['-en', 'En **Dativ**, en **Genitiv** y en **todo plural con artículo**: siempre -en. Solo hay que pensar en Nominativ y Akkusativ singular.'] },
+        { lbl: 'Quién va con cada tabla', tabla: { cab: ['tabla', 'palabras'], de: [1], filas: [['der', 'der, die, das, dieser, jeder, welcher, alle, beide'], ['ein', 'ein, kein, mein, dein, sein, ihr, unser, euer, Ihr'], ['sin artículo', 'nada, números, viele, einige, wenige, mehrere']] } }
+      ],
+      reglas: [
+        { t: 'Detrás del verbo, sin terminación', d: 'Con sein, werden y bleiben el adjetivo se queda como en el diccionario. Usado como adverbio, tampoco cambia.', ej: [['Die Wohnung ist [klein], aber [hell].', 'El depa es chico, pero luminoso.'], ['Das Wetter wird [besser].', 'El clima se está componiendo.'], ['Er fährt sehr [schnell].', 'Maneja muy rápido.']] },
+        { t: 'Delante del sustantivo, siempre con terminación', ej: [['die klein[e] Wohnung', 'el depa chico'], ['eine klein[e] Wohnung', 'un depa chico'], ['klein[e] Wohnungen', 'depas chicos']] },
+        { t: 'Varios adjetivos, la misma terminación', d: 'Todos los adjetivos seguidos llevan la misma.', ej: [['ein groß[es], hell[es] Zimmer', 'un cuarto grande y luminoso'], ['mit frisch[em], kalt[em] Wasser', 'con agua fresca y fría']] }
+      ]
+    },
+    { k: 'der', t: 'Con der, die, das', sub: '-e o -en', c: DEF, alias: ['definido'],
+      h2: 'Después de der, die, das (y dieser, jeder, welcher)', p: 'Solo dos terminaciones: **-e** en cinco casillas y **-en** en todas las demás.',
+      ficha: [
+        { lbl: 'Para recordarla', preg: ['5 × -e', 'Nominativ singular (los tres géneros) y Akkusativ femenino y neutro. Lo demás: **-en**.'] },
+        { lbl: 'Los que van igual que der', chips: [['dieser', 'este'], ['jener', 'aquel'], ['jeder', 'cada'], ['welcher', 'cuál'], ['mancher', 'alguno'], ['alle', 'todos'], ['beide', 'ambos']] }
+      ],
+      tablas: [
+        { lbl: 'La tabla completa', cab: ['', 'masculino', 'femenino', 'neutro', 'plural'], de: [1, 2, 3, 4], filas: [
+          ['Nominativ', 'der neu[e] Chef', 'die neu[e] Stelle', 'das neu[e] Auto', 'die neu[en] Kollegen'],
+          ['Akkusativ', 'den neu[en] Chef', 'die neu[e] Stelle', 'das neu[e] Auto', 'die neu[en] Kollegen'],
+          ['Dativ', 'dem neu[en] Chef', 'der neu[en] Stelle', 'dem neu[en] Auto', 'den neu[en] Kollegen'],
+          ['Genitiv', 'des neu[en] Chefs', 'der neu[en] Stelle', 'des neu[en] Autos', 'der neu[en] Kollegen']],
+          nota: 'Las cinco **-e**: Nominativ singular y Akkusativ femenino y neutro. Todo lo demás, **-en**.' }
+      ],
+      reglas: [
+        { t: 'Nominativ: el sujeto', ej: [['Der neu[e] Kollege kommt aus Spanien.', 'El colega nuevo es de España.'], ['Die klein[e] Bäckerei ist sehr gut.', 'La panadería chiquita está muy buena.'], ['Das alt[e] Auto ist kaputt.', 'El coche viejo está descompuesto.']] },
+        { t: 'Akkusativ: solo cambia el masculino', ej: [['Ich kenne den neu[en] Kollegen nicht.', 'No conozco al colega nuevo.'], ['Ich nehme die blau[e] Jacke.', 'Me llevo la chamarra azul.'], ['Siehst du das rot[e] Auto?', '¿Ves el coche rojo?']] },
+        { t: 'Dativ y Genitiv: siempre -en', ej: [['Ich spreche mit dem neu[en] Kollegen.', 'Hablo con el colega nuevo.'], ['Wir wohnen in der klein[en] Wohnung.', 'Vivimos en el depa chico.'], ['Das ist das Büro des neu[en] Chefs.', 'Es la oficina del jefe nuevo.']] },
+        { t: 'Plural: siempre -en', ej: [['Die neu[en] Kollegen sind sehr nett.', 'Los colegas nuevos son muy amables.'], ['Ich mag alle deutsch[en] Städte.', 'Me gustan todas las ciudades alemanas.']] }
+      ],
+      ojo: [['der neuer Chef', 'der neue Chef', 'Después de der: **-e** (el artículo ya marca el masculino).'], ['mit dem neuem Auto', 'mit dem neuen Auto', 'Dativ con artículo: **-en**.'],
+            ['die neue Kollegen', 'die neuen Kollegen', 'Plural con artículo: **-en**.'], ['Ich kenne den neue Chef.', 'Ich kenne den neuen Chef.', 'Akkusativ masculino: **-en**.']]
+    },
+    { k: 'ein', t: 'Con ein, kein, mein', sub: '-er · -es · -en', c: IND, alias: ['indefinido'],
+      h2: 'Después de ein, kein, mein (y dein, sein, unser…)', p: 'Igual que con der, salvo tres casillas donde **ein** no muestra el género: ahí el adjetivo pone **-er** (masculino) o **-es** (neutro).',
+      ficha: [
+        { lbl: 'Las tres que cambian', preg: ['ein …er · ein …es', 'Nominativ masculino **-er**; Nominativ y Akkusativ neutro **-es**. Las demás, igual que con der.'] },
+        { lbl: 'Los que van igual que ein', chips: [['kein', 'ningún'], ['mein', 'mi'], ['dein', 'tu'], ['sein', 'su, de él'], ['ihr', 'su, de ella o de ellos'], ['unser', 'nuestro'], ['euer', 'su, de ustedes'], ['Ihr', 'su, de usted']] }
+      ],
+      tablas: [
+        { lbl: 'La tabla completa', cab: ['', 'masculino', 'femenino', 'neutro', 'plural'], de: [1, 2, 3, 4], filas: [
+          ['Nominativ', 'ein neu[er] Chef', 'eine neu[e] Stelle', 'ein neu[es] Auto', 'keine neu[en] Kollegen'],
+          ['Akkusativ', 'einen neu[en] Chef', 'eine neu[e] Stelle', 'ein neu[es] Auto', 'keine neu[en] Kollegen'],
+          ['Dativ', 'einem neu[en] Chef', 'einer neu[en] Stelle', 'einem neu[en] Auto', 'keinen neu[en] Kollegen'],
+          ['Genitiv', 'eines neu[en] Chefs', 'einer neu[en] Stelle', 'eines neu[en] Autos', 'keiner neu[en] Kollegen']],
+          nota: '**ein** no tiene plural: en el plural se usa **kein** o un posesivo (meine neuen Kollegen). Sin nada delante, es la tabla **sin artículo**.' }
+      ],
+      reglas: [
+        { t: 'Nominativ', ej: [['Das ist ein gut[er] Plan.', 'Es un buen plan.'], ['Sie ist eine gut[e] Ingenieurin.', 'Es una buena ingeniera.'], ['Das ist ein gut[es] Angebot.', 'Es una buena oferta.']] },
+        { t: 'Akkusativ', ej: [['Ich suche einen neu[en] Job.', 'Busco un trabajo nuevo.'], ['Ich habe eine klein[e] Wohnung.', 'Tengo un depa chico.'], ['Ich brauche ein neu[es] Handy.', 'Necesito un celular nuevo.']] },
+        { t: 'Dativ y Genitiv: -en', ej: [['Ich wohne in einer klein[en] Wohnung.', 'Vivo en un depa chico.'], ['Ich arbeite mit einem deutsch[en] Kollegen.', 'Trabajo con un colega alemán.'], ['Trotz eines gut[en] Gehalts hat er gekündigt.', 'A pesar de tener buen sueldo, renunció.']] },
+        { t: 'Con posesivos y kein, igual', ej: [['Mein neu[er] Laptop ist sehr schnell.', 'Mi laptop nueva es muy rápida.'], ['Ich habe keine deutsch[en] Freunde.', 'No tengo amigos alemanes.'], ['Wie findest du meine neu[en] Schuhe?', '¿Qué te parecen mis zapatos nuevos?']] }
+      ],
+      ojo: [['ein neue Chef', 'ein neuer Chef', 'ein no muestra el masculino: el adjetivo pone **-er**.'], ['ein neue Auto', 'ein neues Auto', 'Neutro: **-es**.'],
+            ['mit einem neues Auto', 'mit einem neuen Auto', 'Dativ: **-en**.'], ['Ich habe einen neuer Job.', 'Ich habe einen neuen Job.', 'Akkusativ masculino: einen …**en**.']]
+    },
+    { k: 'sin', t: 'Sin artículo', sub: 'el adjetivo manda', c: SIN, alias: ['sinarticulo'],
+      h2: 'Sin artículo (y con números, viele, einige)', p: 'Si no hay artículo, el adjetivo toma la terminación que tendría el artículo: der → **-er**, die → **-e**, das → **-es**, dem → **-em**… La única excepción: el Genitiv masculino y neutro, **-en**.',
+      ficha: [
+        { lbl: 'El truco', preg: ['= el artículo', 'Pon en el adjetivo la última letra del artículo: de**r** → -er, di**e** → -e, da**s** → -es, de**m** → -em.'] },
+        { lbl: 'Dónde aparece', chips: [['zwei neue Kollegen', 'números'], ['viele gute Ideen', 'viele'], ['einige alte Freunde', 'einige'], ['wenige freie Tage', 'wenige'], ['mehrere große Firmen', 'mehrere']] }
+      ],
+      tablas: [
+        { lbl: 'La tabla completa', cab: ['', 'masculino', 'femenino', 'neutro', 'plural'], de: [1, 2, 3, 4], filas: [
+          ['Nominativ', 'frisch[er] Kaffee', 'kalt[e] Milch', 'kalt[es] Wasser', 'neu[e] Kollegen'],
+          ['Akkusativ', 'frisch[en] Kaffee', 'kalt[e] Milch', 'kalt[es] Wasser', 'neu[e] Kollegen'],
+          ['Dativ', 'mit frisch[em] Kaffee', 'mit kalt[er] Milch', 'mit kalt[em] Wasser', 'mit neu[en] Kollegen'],
+          ['Genitiv', 'frisch[en] Kaffees', 'kalt[er] Milch', 'kalt[en] Wassers', 'neu[er] Kollegen']],
+          nota: 'Compara con el artículo: der/-**er**, die/-**e**, das/-**es**, den/-**en**, dem/-**em**. Es la misma terminación.' }
+      ],
+      reglas: [
+        { t: 'Comida, bebida y materiales', ej: [['Ich trinke gern kalt[en] Kaffee.', 'Me gusta el café frío.'], ['Frisch[es] Brot schmeckt am besten.', 'El pan recién hecho es el mejor.'], ['Ein Tisch aus hell[em] Holz', 'Una mesa de madera clara']] },
+        { t: 'Plural sin artículo', ej: [['Deutsch[e] Autos sind teuer.', 'Los coches alemanes son caros.'], ['Ich habe viele neu[e] Ideen.', 'Tengo muchas ideas nuevas.'], ['Wir suchen erfahren[e] Ingenieure.', 'Buscamos ingenieros con experiencia.']] },
+        { t: 'Saludos y deseos', d: 'Son Akkusativ: «(te deseo) un buen día».', ej: [['Gut[en] Morgen! Gut[en] Tag! Gut[en] Abend!', '¡Buenos días! ¡Buenas tardes! ¡Buenas noches!'], ['Gut[e] Nacht!', '¡Buenas noches! (al dormir)'], ['Schön[es] Wochenende! Froh[e] Weihnachten!', '¡Buen fin de semana! ¡Feliz Navidad!'], ['Mit freundlich[en] Grüßen', 'Atentamente (cierre de correo)'], ['Herzlich[en] Glückwunsch!', '¡Felicidades!']] },
+        { t: 'Anuncios de trabajo y de depas', ej: [['Wir bieten flexibl[e] Arbeitszeiten und gut[es] Gehalt.', 'Ofrecemos horario flexible y buen sueldo.'], ['Hell[e] Zweizimmerwohnung mit groß[em] Balkon', 'Depa luminoso de dos cuartos con balcón grande']] }
+      ],
+      ojo: [['Ich trinke kalte Kaffee.', 'Ich trinke kalten Kaffee.', 'Akkusativ masculino sin artículo: **-en** (como den).'], ['mit kaltem Milch', 'mit kalter Milch', 'die Milch → Dativ der → **-er**.'],
+            ['Guter Morgen!', 'Guten Morgen!', 'Es Akkusativ (ich wünsche dir einen guten Morgen): **-en**.'], ['Mit freundliche Grüße', 'Mit freundlichen Grüßen', '**mit** pide Dativ; plural: -en, y Grüße**n**.']]
+    },
+    { k: 'comparar', t: 'Comparar', sub: 'größer als · am größten', c: '#059669', alias: ['komparativ', 'superlativ'],
+      h2: 'El comparativo y el superlativo', p: 'Más que: adjetivo + **-er** + **als**. Igual de: **so … wie**. El más: **am** + adjetivo + **-sten**, o con artículo **der, die, das …ste**.',
+      ficha: [
+        { lbl: 'Las tres formas', tabla: { cab: ['', 'más', 'el más'], de: [0, 1, 2], filas: [
+          ['schnell', 'schneller', 'am schnellsten'], ['billig', 'billiger', 'am billigsten'], ['alt', 'älter', 'am ältesten'], ['groß', 'größer', 'am größten'],
+          ['jung', 'jünger', 'am jüngsten'], ['warm', 'wärmer', 'am wärmsten'], ['teuer', 'teurer', 'am teuersten'], ['dunkel', 'dunkler', 'am dunkelsten']] } },
+        { lbl: 'Los irregulares', tabla: { cab: ['', 'más', 'el más'], de: [0, 1, 2], filas: [
+          ['gut', 'besser', 'am besten'], ['viel', 'mehr', 'am meisten'], ['gern', 'lieber', 'am liebsten'], ['hoch', 'höher', 'am höchsten'], ['nah', 'näher', 'am nächsten'], ['bald', 'eher', 'am ehesten']] } }
+      ],
+      reglas: [
+        { t: 'Más … que: -er + als', ej: [['Stuttgart ist [kleiner als] Mexiko-Stadt.', 'Stuttgart es más chico que la Ciudad de México.'], ['Mein neues Handy war [billiger als] das alte.', 'Mi celular nuevo fue más barato que el viejo.'], ['Ich spreche [besser] Englisch [als] Deutsch.', 'Hablo mejor inglés que alemán.']] },
+        { t: 'Igual de … que: so … wie', d: 'Para negar: **nicht so … wie**.', ej: [['Esslingen ist nicht [so groß wie] Stuttgart.', 'Esslingen no es tan grande como Stuttgart.'], ['Ich bin [genauso alt wie] du.', 'Tengo la misma edad que tú.']] },
+        { t: 'El más: am …sten', d: 'Detrás del verbo. Si la raíz termina en -d, -t, -s, -ß o -z: **-esten** (am ältesten, am heißesten).', ej: [['Im August ist es [am heißesten].', 'En agosto es cuando más calor hace.'], ['Ich fahre [am liebsten] mit dem Zug.', 'Lo que más me gusta es ir en tren.'], ['Wer arbeitet hier [am längsten]?', '¿Quién lleva más tiempo trabajando aquí?']] },
+        { t: 'Delante del sustantivo, con su terminación', d: 'El comparativo y el superlativo se declinan como cualquier adjetivo.', ej: [['Ich suche eine größer[e] Wohnung.', 'Busco un depa más grande.'], ['Das ist der best[e] Döner in der Stadt.', 'Es el mejor döner de la ciudad.'], ['Stuttgart ist eine der teuerst[en] Städte Deutschlands.', 'Stuttgart es una de las ciudades más caras de Alemania.']] },
+        { t: 'a, o, u se vuelven ä, ö, ü', d: 'En casi todos los adjetivos cortos: alt → älter, groß → größer, jung → jünger, kurz → kürzer, lang → länger, warm → wärmer, kalt → kälter, arm → ärmer, stark → stärker. Sin diéresis: klar, toll, voll, froh, laut, bunt.', ej: [['Im Winter ist es [kälter] als im Herbst.', 'En invierno hace más frío que en otoño.']] },
+        { t: 'Cuanto más …, más …: je … desto', d: 'Con **je** el verbo va al final; con **desto**, el verbo va justo después del comparativo.', ej: [['[Je] mehr ich übe, [desto] besser spreche ich.', 'Cuanto más practico, mejor hablo.'], ['[Je] früher, [desto] besser.', 'Cuanto antes, mejor.']] }
+      ],
+      ojo: [['Er ist größer wie ich.', 'Er ist größer als ich.', 'Comparativo: **als**. «wie» es para igual (so groß wie).'], ['Das ist mehr groß.', 'Das ist größer.', 'Se añade **-er**; nunca «mehr» + adjetivo.'],
+            ['Das ist am besten Döner.', 'Das ist der beste Döner.', 'Delante del sustantivo: **der beste**.'], ['gut, guter, am gutesten', 'gut, besser, am besten', 'Irregular.'],
+            ['Ich trinke lieber Tee wie Kaffee.', 'Ich trinke lieber Tee als Kaffee.', 'lieber … **als**.']]
+    },
+    { k: 'especiales', t: 'Usos especiales', sub: 'etwas Neues · der Deutsche', c: '#0e7490', alias: ['nominalisierung'],
+      h2: 'Usos especiales del adjetivo', p: 'El adjetivo convertido en sustantivo, después de etwas y nichts, los participios como adjetivo y las formas que cambian al declinarse.',
+      dos: true,
+      reglas: [
+        { t: 'etwas, nichts, viel, wenig + mayúscula y -es', d: 'Después de **alles**, en cambio, **-e**: alles Gute.', ej: [['Gibt es [etwas Neues]?', '¿Hay algo nuevo?'], ['Ich habe [nichts Besonderes] gemacht.', 'No hice nada especial.'], ['Ich wünsche dir [alles Gute]!', '¡Te deseo lo mejor!']] },
+        { t: 'El adjetivo como sustantivo', d: 'Se escribe con mayúscula y **se declina como adjetivo**: der Deutsch**e**, ein Deutsch**er**, die Erwachsen**en**.', ej: [['Mein Kollege ist [ein Deutscher], seine Frau ist [eine Deutsche].', 'Mi colega es alemán; su esposa es alemana.'], ['Die [Erwachsenen] zahlen 10 Euro.', 'Los adultos pagan 10 euros.'], ['Er ist [ein Bekannter] von mir.', 'Es un conocido mío.']],
+          nota: 'Así también: der/die Angestellte (empleado), der/die Verwandte (pariente), der/die Kranke, der/die Arbeitslose, der/die Jugendliche.' },
+        { t: 'Participios como adjetivo', d: 'El participio presente (infinitivo + **d**) y el pasado se declinan como adjetivos.', ej: [['das kochend[e] Wasser', 'el agua hirviendo'], ['der laufend[e] Monat', 'el mes en curso'], ['ein gebraucht[es] Auto', 'un coche usado'], ['die geschlossen[e] Tür', 'la puerta cerrada']] },
+        { t: 'Formas que cambian al declinarse', d: '**hoch** pierde la c: hohe. Los terminados en **-el** y **-er** pierden la e: dunkel → dunkle, teuer → teure.', ej: [['Der Berg ist hoch. → ein [hoher] Berg', 'La montaña es alta. → una montaña alta'], ['eine [dunkle] Farbe', 'un color oscuro'], ['ein [teures] Restaurant', 'un restaurante caro']] },
+        { t: 'Los que no cambian nunca', d: 'Colores prestados (**lila**, **rosa**, **orange**, **beige**) y los de ciudades con **-er**: Stuttgarter, Berliner, Frankfurter (con mayúscula).', ej: [['ein [lila] Kleid', 'un vestido morado'], ['der [Stuttgarter] Hauptbahnhof', 'la estación central de Stuttgart'], ['die [Berliner] Mauer', 'el Muro de Berlín']] },
+        { t: 'Nacionalidades e idiomas', d: 'El idioma va con mayúscula (**Deutsch**); el adjetivo, con minúscula (**deutsch**).', ej: [['Ich lerne [Deutsch].', 'Estudio alemán.'], ['Ich mag die [deutsche] Küche.', 'Me gusta la comida alemana.'], ['Wie heißt das auf [Deutsch]?', '¿Cómo se dice en alemán?']] }
+      ],
+      ojo: [['etwas neues', 'etwas Neues', 'Después de etwas o nichts: **mayúscula y -es**.'], ['Er ist ein Deutsche.', 'Er ist ein Deutscher.', 'Sustantivado: se declina como adjetivo (ein …er).'],
+            ['ein hocher Berg', 'ein hoher Berg', '**hoch** pierde la c al declinarse.'], ['ein teuerer Laptop', 'ein teurer Laptop', '-er final: pierde la e.'], ['Ich lerne deutsch.', 'Ich lerne Deutsch.', 'El idioma, con mayúscula.']]
+    },
+    { k: 'lista', t: 'Los más usados', sub: 'con su contrario', c: '#be185d', alias: ['vocabulario'],
+      h2: 'Los adjetivos más usados, con su contrario', p: 'Los que vas a necesitar en el trabajo, en la calle y buscando depa. Búscalos en alemán o en español.',
+      tablas: [
+        { lbl: 'Pares de contrarios', buscar: true, cab: ['Adjetivo', 'En español', 'Contrario', 'En español'], de: [0, 2], filas: [
+          ['groß', 'grande', 'klein', 'chico'], ['neu', 'nuevo', 'alt', 'viejo'], ['jung', 'joven', 'alt', 'mayor, viejo'], ['gut', 'bueno', 'schlecht', 'malo'],
+          ['lang', 'largo', 'kurz', 'corto'], ['hoch', 'alto (cosa)', 'niedrig', 'bajo'], ['schnell', 'rápido', 'langsam', 'lento'], ['teuer', 'caro', 'billig, günstig', 'barato'],
+          ['schwer', 'pesado; difícil', 'leicht', 'ligero; fácil'], ['einfach', 'sencillo', 'kompliziert', 'complicado'], ['warm', 'cálido', 'kalt', 'frío'], ['heiß', 'muy caliente', 'kühl', 'fresco'],
+          ['hell', 'claro, luminoso', 'dunkel', 'oscuro'], ['laut', 'ruidoso', 'leise', 'silencioso'], ['ruhig', 'tranquilo', 'hektisch', 'agitado'], ['voll', 'lleno', 'leer', 'vacío'],
+          ['offen', 'abierto', 'geschlossen', 'cerrado'], ['früh', 'temprano', 'spät', 'tarde'], ['richtig', 'correcto', 'falsch', 'incorrecto'], ['wichtig', 'importante', 'unwichtig', 'sin importancia'],
+          ['interessant', 'interesante', 'langweilig', 'aburrido'], ['schön', 'bonito', 'hässlich', 'feo'], ['sauber', 'limpio', 'schmutzig', 'sucio'], ['gesund', 'sano', 'krank', 'enfermo'],
+          ['stark', 'fuerte', 'schwach', 'débil'], ['dick', 'gordo, grueso', 'dünn', 'delgado'], ['reich', 'rico', 'arm', 'pobre'], ['glücklich', 'feliz', 'unglücklich', 'infeliz'],
+          ['froh', 'contento', 'traurig', 'triste'], ['müde', 'cansado', 'wach', 'despierto'], ['freundlich', 'amable', 'unfreundlich', 'antipático'], ['höflich', 'cortés', 'unhöflich', 'descortés'],
+          ['fleißig', 'trabajador', 'faul', 'flojo'], ['pünktlich', 'puntual', 'unpünktlich', 'impuntual'], ['zufrieden', 'satisfecho', 'unzufrieden', 'insatisfecho'], ['sicher', 'seguro', 'unsicher', 'inseguro'],
+          ['möglich', 'posible', 'unmöglich', 'imposible'], ['nah', 'cerca', 'weit', 'lejos'], ['breit', 'ancho', 'schmal', 'angosto'], ['trocken', 'seco', 'nass', 'mojado'],
+          ['bekannt', 'conocido', 'unbekannt', 'desconocido'], ['frei', 'libre', 'besetzt', 'ocupado'], ['erfahren', 'con experiencia', 'unerfahren', 'sin experiencia'], ['zuverlässig', 'confiable', 'unzuverlässig', 'poco confiable'],
+          ['selbstständig', 'independiente', 'abhängig', 'dependiente'], ['flexibel', 'flexible', 'starr', 'rígido'], ['nett', 'simpático', 'gemein', 'mala onda'], ['lustig', 'divertido', 'ernst', 'serio'],
+          ['modern', 'moderno', 'altmodisch', 'anticuado'], ['gemütlich', 'acogedor', 'ungemütlich', 'incómodo'], ['praktisch', 'práctico', 'unpraktisch', 'poco práctico'], ['ledig', 'soltero', 'verheiratet', 'casado'],
+          ['süß', 'dulce', 'salzig', 'salado'], ['scharf', 'picante', 'mild', 'suave']],
+          nota: 'Muchos contrarios se forman con **un-**: möglich → unmöglich, freundlich → unfreundlich. Los que llevan preposición (stolz auf, zufrieden mit) están en **Preposiciones**.' }
+      ]
+    }
+  ],
+  practica: [
+    ['Der ___ Kollege kommt aus Spanien.', ['neue', 'neuer', 'neuen'], 'Después de der, Nominativ: **-e**.', 'El colega nuevo es de España.'],
+    ['Ich kenne den ___ Chef noch nicht.', ['neuen', 'neue', 'neuer'], 'Akkusativ masculino con den: **-en**.', 'Todavía no conozco al jefe nuevo.'],
+    ['Ich spreche mit der ___ Kollegin.', ['neuen', 'neue', 'neuer'], 'Dativ con artículo: **-en**.', 'Hablo con la colega nueva.'],
+    ['Das ___ Auto ist kaputt.', ['alte', 'altes', 'alten'], 'Después de das, Nominativ: **-e**.', 'El coche viejo está descompuesto.'],
+    ['Die ___ Kollegen sind sehr nett.', ['neuen', 'neue', 'neuer'], 'Plural con artículo: **-en**.', 'Los colegas nuevos son muy amables.'],
+    ['Das ist ein ___ Plan.', ['guter', 'gute', 'guten'], 'ein no muestra el masculino: **-er**.', 'Es un buen plan.'],
+    ['Ich brauche ein ___ Handy.', ['neues', 'neue', 'neuen'], 'ein + neutro en Akkusativ: **-es**.', 'Necesito un celular nuevo.'],
+    ['Ich suche einen ___ Job.', ['neuen', 'neuer', 'neues'], 'einen: Akkusativ masculino, **-en**.', 'Busco un trabajo nuevo.'],
+    ['Sie ist eine ___ Ingenieurin.', ['gute', 'guter', 'guten'], 'eine + femenino Nominativ: **-e**.', 'Es una buena ingeniera.'],
+    ['Ich wohne in einer ___ Wohnung.', ['kleinen', 'kleine', 'kleiner'], 'Dativ: **-en**.', 'Vivo en un depa chico.'],
+    ['Mein ___ Laptop ist sehr schnell.', ['neuer', 'neue', 'neuen'], 'mein va como ein: masculino Nominativ **-er**.', 'Mi laptop nueva es muy rápida.'],
+    ['Ich habe keine ___ Freunde.', ['deutschen', 'deutsche', 'deutscher'], 'Plural después de kein: **-en**.', 'No tengo amigos alemanes.'],
+    ['Ich trinke gern ___ Kaffee.', ['kalten', 'kalter', 'kalte'], 'Sin artículo, Akkusativ masculino: **-en** (como den).', 'Me gusta el café frío.'],
+    ['___ Brot schmeckt am besten.', ['Frisches', 'Frische', 'Frischer'], 'Sin artículo, neutro: **-es** (como das).', 'El pan recién hecho es el mejor.'],
+    ['Ich trinke Tee mit ___ Milch.', ['warmer', 'warme', 'warmen'], 'Sin artículo, Dativ femenino: **-er** (como der).', 'Tomo té con leche caliente.'],
+    ['Mit ___ Grüßen', ['freundlichen', 'freundliche', 'freundlicher'], 'mit + Dativ plural sin artículo: **-en**.', 'Atentamente'],
+    ['___ Morgen!', ['Guten', 'Guter', 'Gute'], 'Akkusativ masculino (te deseo un…): **-en**.', '¡Buenos días!'],
+    ['Wir suchen ___ Ingenieure.', ['erfahrene', 'erfahrenen', 'erfahrener'], 'Plural sin artículo, Akkusativ: **-e**.', 'Buscamos ingenieros con experiencia.'],
+    ['Die Wohnung ist sehr ___.', ['hell', 'helle', 'hellen'], 'Detrás de sein: **sin terminación**.', 'El depa es muy luminoso.'],
+    ['Stuttgart ist ___ als Esslingen.', ['größer', 'großer', 'mehr groß'], 'Comparativo: **-er** y diéresis.', 'Stuttgart es más grande que Esslingen.'],
+    ['Er ist älter ___ ich.', ['als', 'wie', 'dann'], 'Comparativo + **als**.', 'Es mayor que yo.'],
+    ['Esslingen ist nicht so groß ___ Stuttgart.', ['wie', 'als', 'dass'], 'so … **wie**.', 'Esslingen no es tan grande como Stuttgart.'],
+    ['Ich spreche ___ Englisch als Deutsch.', ['besser', 'guter', 'mehr gut'], 'gut → **besser**.', 'Hablo mejor inglés que alemán.'],
+    ['Ich trinke ___ Tee als Kaffee.', ['lieber', 'gerner', 'mehr gern'], 'gern → **lieber**.', 'Prefiero el té al café.'],
+    ['Im August ist es am ___.', ['heißesten', 'heißsten', 'heißeste'], 'Raíz en -ß: **am …esten**.', 'En agosto es cuando más calor hace.'],
+    ['Das ist der ___ Döner in der Stadt.', ['beste', 'besten', 'bester'], 'Superlativo con der, Nominativ: **der beste**.', 'Es el mejor döner de la ciudad.'],
+    ['Ich suche eine ___ Wohnung.', ['größere', 'größer', 'größeren'], 'El comparativo delante del sustantivo lleva terminación: eine …**e**.', 'Busco un depa más grande.'],
+    ['Gibt es etwas ___?', ['Neues', 'neues', 'Neue'], 'etwas + adjetivo: **mayúscula y -es**.', '¿Hay algo nuevo?'],
+    ['Ich wünsche dir alles ___!', ['Gute', 'Gutes', 'gute'], 'alles + adjetivo: mayúscula y **-e**.', '¡Te deseo lo mejor!'],
+    ['Mein Kollege ist ein ___.', ['Deutscher', 'Deutsche', 'Deutsch'], 'Sustantivado: ein + masculino **-er**.', 'Mi colega es alemán.'],
+    ['Das ist ein sehr ___ Berg.', ['hoher', 'hocher', 'hoch'], '**hoch** pierde la c: hoher.', 'Es una montaña muy alta.'],
+    ['Das ist ein ___ Restaurant.', ['teures', 'teueres', 'teuer'], '-er final pierde la e: teures.', 'Es un restaurante caro.'],
+    ['Je mehr ich übe, ___ besser spreche ich.', ['desto', 'als', 'so'], 'je … **desto**.', 'Cuanto más practico, mejor hablo.'],
+    ['Ich mag die ___ Küche.', ['deutsche', 'deutschen', 'Deutsche'], 'die + femenino en Akkusativ: **-e**; el adjetivo, con minúscula.', 'Me gusta la comida alemana.'],
+    ['Das ist das Büro des ___ Chefs.', ['neuen', 'neue', 'neues'], 'Genitiv: **-en**.', 'Es la oficina del jefe nuevo.'],
+    ['Wir bieten ein ___ Gehalt.', ['gutes', 'guter', 'gute'], 'ein + neutro en Akkusativ: **-es**.', 'Ofrecemos un buen sueldo.'],
+    ['Ich habe ___ neue Ideen.', ['viele', 'vielen', 'vieler'], 'viele en plural, Akkusativ sin artículo: **-e**.', 'Tengo muchas ideas nuevas.'],
+    ['Siehst du das ___ Auto?', ['rote', 'rotes', 'roten'], 'Después de das: **-e**.', '¿Ves el coche rojo?'],
+    ['Er fährt ein ___ Auto.', ['gebrauchtes', 'gebrauchte', 'gebraucht'], 'Participio como adjetivo; ein + neutro: **-es**.', 'Maneja un coche usado.'],
+    ['Sie trägt ein ___ Kleid.', ['lila', 'lilas', 'lilanes'], '**lila** no cambia nunca.', 'Lleva un vestido morado.']
+  ]
+};
+</script>
+<script src="temas.js"></script>
+<script src="leccion.js"></script>
+<script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
+</body>
+</html>

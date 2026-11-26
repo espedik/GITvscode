@@ -3894,11 +3894,12 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   .iqv-caso p{font-size:12.5px}
   .iqv-op{gap:10px;padding:9px 11px;font-size:12.5px}
 }
-/* El alemán de hoy (#alemanOverlay, `abrirAleman()`): dos pestañas a todo lo ancho. Vocabulario: las palabras
+/* El alemán de hoy (#alemanOverlay, `abrirAleman()`): pestañas a todo lo ancho. Vocabulario: las palabras
    de hoy en tarjetas —el artículo en el color de su género, los de la app de Alemán—, «Practicar» y el repaso.
    Lección: la que toca, en su propia página dentro de un iframe (leccion.js la pone en modo ventana). Ancha y
    alta para que la lección quepa en sus dos columnas, que salen desde 1280 px dentro del iframe; en el
-   teléfono, a pantalla completa. */
+   teléfono, a pantalla completa. Casos y los temas a fondo (preposiciones, verbos, adjetivos, la frase): cada uno su
+   página de gramática de la app de Alemán, en su iframe. */
 #alemanOverlay{--c:var(--g)}
 #alemanOverlay .der{--gen:#3b82f6}
 #alemanOverlay .die{--gen:#ec4899}
@@ -3908,17 +3909,27 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 /* Opaca, no de vidrio: es para leer, y con el vidrio se veían las fotos de Mi Día detrás de cada tarjeta. */
 .gbm-card.alv-card{background:linear-gradient(rgba(var(--ov),.035),rgba(var(--ov),.035)),var(--bg)}
 .alv-card .gbm-head{flex:none;padding-bottom:0}
-.alv-tabs{display:flex;gap:4px;margin-top:12px}
-.alv-tabs button{position:relative;display:flex;align-items:baseline;gap:9px;padding:9px 16px 12px;border:0;border-radius:10px 10px 0 0;
+/* Siete pestañas: si no caben, se desplazan de lado en vez de partirse en dos filas. */
+.alv-tabs{display:flex;gap:4px;margin-top:12px;overflow-x:auto;scrollbar-width:none}
+.alv-tabs::-webkit-scrollbar{display:none}
+.alv-tabs button{position:relative;flex:none;white-space:nowrap;display:flex;align-items:baseline;gap:9px;padding:9px 16px 12px;border:0;border-radius:10px 10px 0 0;
   background:transparent;color:var(--text2);font:inherit;font-size:14.5px;font-weight:800;cursor:pointer}
 .alv-tabs button span{font-size:12px;font-weight:600;color:var(--text3)}
 .alv-tabs button:hover{color:var(--text)}
 .alv-tabs button.on{color:var(--text);background:rgba(var(--ov),.05)}
 .alv-tabs button.on::after{content:'';position:absolute;left:12px;right:12px;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--c)}
+/* Las siete con su detalle caben desde ~1860 px (a 2048, su pantalla). Más angosto, las de gramática se quedan con su
+   nombre; bajo 1400 también Casos, y bajo 1200 (el iPad) todas. */
+@media(max-width:1860px){.alv-tabs button:is([data-alv-tab="prep"],[data-alv-tab="verbos"],[data-alv-tab="adj"],[data-alv-tab="frase"]) span{display:none}}
+@media(max-width:1400px){.alv-tabs button[data-alv-tab="casos"] span{display:none}}
+@media(max-width:1200px){.alv-tabs button span{display:none}}
 .alv-body{flex:1;min-height:0;display:flex}
-.alv-voc,.alv-lec,.alv-cas{flex:1;min-width:0;min-height:0}
-.alv-body[data-tab="vocab"] .alv-lec,.alv-body[data-tab="leccion"] .alv-voc,
-.alv-body:not([data-tab="casos"]) .alv-cas,.alv-body[data-tab="casos"] .alv-voc,.alv-body[data-tab="casos"] .alv-lec{display:none}
+.alv-voc,.alv-lec,.alv-cas,.alv-tem{flex:1;min-width:0;min-height:0}
+.alv-body:not([data-tab="vocab"]) .alv-voc,.alv-body:not([data-tab="leccion"]) .alv-lec,.alv-body:not([data-tab="casos"]) .alv-cas{display:none}
+/* Los temas a fondo: la página de la app de Alemán a todo lo ancho; su ficha de consulta ya va dentro. */
+.alv-tem{display:none;padding:14px 22px 18px}
+.alv-body[data-tab="prep"] .alv-tem[data-tem="prep"],.alv-body[data-tab="verbos"] .alv-tem[data-tem="verbos"],
+.alv-body[data-tab="adj"] .alv-tem[data-tem="adj"],.alv-body[data-tab="frase"] .alv-tem[data-tem="frase"]{display:flex}
 /* Los casos: la página de la app de Alemán (casos.html) a todo el alto, en modo ventana. */
 .alv-cas{display:flex;flex-direction:row;gap:16px;padding:14px 22px 18px}
 .alv-cas>.alv-lec-marco{flex:1;min-width:0}
@@ -4163,7 +4174,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   .alv-t-es{font-size:22px}
   .alv-t-de{font-size:32px}
   .alv-pr-cols{grid-template-columns:minmax(0,1fr)}
-  .alv-lec,.alv-cas{padding:10px 10px 12px}
+  .alv-lec,.alv-cas,.alv-tem{padding:10px 10px 12px}
   .alv-res-g{grid-template-columns:minmax(0,1fr);max-height:42vh}
   .alv-tl{grid-template-columns:minmax(0,1fr)}
   .alv-lec-cab{flex-wrap:wrap;gap:10px}
@@ -5410,6 +5421,10 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
         <button type="button" role="tab" data-alv-tab="vocab" onclick="alemanTab('vocab')">Vocabulario</button>
         <button type="button" role="tab" data-alv-tab="leccion" onclick="alemanTab('leccion')">Lección</button>
         <button type="button" role="tab" data-alv-tab="casos" onclick="alemanTab('casos')">Casos</button>
+        <button type="button" role="tab" data-alv-tab="prep" onclick="alemanTab('prep')">Preposiciones</button>
+        <button type="button" role="tab" data-alv-tab="verbos" onclick="alemanTab('verbos')">Verbos</button>
+        <button type="button" role="tab" data-alv-tab="adj" onclick="alemanTab('adj')">Adjetivos</button>
+        <button type="button" role="tab" data-alv-tab="frase" onclick="alemanTab('frase')">La frase</button>
       </div>
     </div>
     <div class="alv-body" id="alemanBody" data-tab="vocab">
@@ -5423,6 +5438,18 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
       <section class="alv-cas" aria-label="Los casos: Nominativ, Akkusativ, Dativ y Genitiv">
         <aside class="alv-tab" id="alemanCasosTabla" aria-label="La tabla de los casos"></aside>
         <div class="alv-lec-marco" id="alemanCasosMarco"><iframe id="alemanCasos" title="Los casos, de la app de Alemán" onload="if(this.dataset.src)this.parentNode.classList.add('lista')"></iframe><span class="alv-lec-carga">Abriendo los casos…</span></div>
+      </section>
+      <section class="alv-tem" data-tem="prep" aria-label="Las preposiciones">
+        <div class="alv-lec-marco"><iframe id="alemanTemPrep" title="Las preposiciones, de la app de Alemán" onload="if(this.dataset.src)this.parentNode.classList.add('lista')"></iframe><span class="alv-lec-carga">Abriendo las preposiciones…</span></div>
+      </section>
+      <section class="alv-tem" data-tem="verbos" aria-label="Los verbos">
+        <div class="alv-lec-marco"><iframe id="alemanTemVerbos" title="Los verbos, de la app de Alemán" onload="if(this.dataset.src)this.parentNode.classList.add('lista')"></iframe><span class="alv-lec-carga">Abriendo los verbos…</span></div>
+      </section>
+      <section class="alv-tem" data-tem="adj" aria-label="Los adjetivos">
+        <div class="alv-lec-marco"><iframe id="alemanTemAdj" title="Los adjetivos, de la app de Alemán" onload="if(this.dataset.src)this.parentNode.classList.add('lista')"></iframe><span class="alv-lec-carga">Abriendo los adjetivos…</span></div>
+      </section>
+      <section class="alv-tem" data-tem="frase" aria-label="La frase y los conectores">
+        <div class="alv-lec-marco"><iframe id="alemanTemFrase" title="La frase y los conectores, de la app de Alemán" onload="if(this.dataset.src)this.parentNode.classList.add('lista')"></iframe><span class="alv-lec-carga">Abriendo la frase…</span></div>
       </section>
     </div>
   </div>
@@ -8597,11 +8624,15 @@ function cerrarAleman(){
   renderHeroAprender();
 }
 function alemanAbierta(){ const ov = document.getElementById('alemanOverlay'); return !!ov && ov.classList.contains('open'); }
+// Las pestañas de gramática: cada una es una página de la app de Alemán que se carga la primera vez que se abre.
+const AL_TEMAS = { casos: ['alemanCasos', 'casos.html'], prep: ['alemanTemPrep', 'preposiciones.html'], verbos: ['alemanTemVerbos', 'verbos.html'],
+  adj: ['alemanTemAdj', 'adjetivos.html'], frase: ['alemanTemFrase', 'frase.html'] };
 function alemanTab(t){
-  _alTab = t === 'leccion' || t === 'casos' ? t : 'vocab';
-  if(_alTab === 'casos'){
-    const f = document.getElementById('alemanCasos');
-    if(f && !f.dataset.src){ f.dataset.src = '../Aleman/casos.html'; f.src = f.dataset.src; }
+  _alTab = t === 'leccion' || AL_TEMAS[t] ? t : 'vocab';
+  const tm = AL_TEMAS[_alTab];
+  if(tm){
+    const f = document.getElementById(tm[0]);
+    if(f && !f.dataset.src){ f.dataset.src = '../Aleman/' + tm[1]; f.src = f.dataset.src; }
   }
   const b = document.getElementById('alemanBody'); if(b) b.dataset.tab = _alTab;
   document.querySelectorAll('#alemanOverlay [data-alv-tab]').forEach(x => {
@@ -8618,6 +8649,12 @@ function alemanTabsTxt(){
   // Los casos: su tema y, si ya practicaste, tu mejor ronda (`aleman_casos_v1`, lo guarda casos.html).
   const bc = document.querySelector('#alemanOverlay [data-alv-tab="casos"]'), cs = rawGet('aleman_casos_v1', {}) || {};
   if(bc) bc.innerHTML = `Casos <span>Nominativ · Akkusativ · Dativ${cs.rondas ? ` · tu mejor: ${cs.mejor} de ${cs.de || 12}` : ''}</span>`;
+  // Los temas a fondo: de qué van y, si ya practicaste, tu mejor ronda (cada página guarda la suya).
+  [['prep', 'Preposiciones', 'aleman_prep_v1', 'mit · für · in…'], ['verbos', 'Verbos', 'aleman_verbos_v1', 'Perfekt · Modalverben'],
+   ['adj', 'Adjetivos', 'aleman_adj_v1', 'der neue · ein neuer'], ['frase', 'La frase', 'aleman_frase_v1', 'weil · dass · deshalb']].forEach(([k, n, clave, de]) => {
+    const b = document.querySelector(`#alemanOverlay [data-alv-tab="${k}"]`), d = rawGet(clave, {}) || {};
+    if(b) b.innerHTML = `${n} <span>${d.rondas ? `tu mejor: ${+d.mejor || 0} de ${+d.de || 12}` : de}</span>`;
+  });
 }
 // Pinta el vocabulario y el encabezado de la lección y, si la lección cambió, la carga en el iframe (`src` manda
 // cuando se abre otra página desde la lección, con su ancla).
@@ -8784,8 +8821,9 @@ function alemanPliega(y){
 // La lección, dentro de la ventana, pide lo que no puede hacer sola (leccion.js): abrir otra página —otra lección
 // se abre aquí y queda elegida; lo demás (el vocabulario, la gramática), aparte— o cerrar la ventana con Escape.
 window.addEventListener('message', e => {
-  const f = document.getElementById('alemanFrame'), fc = document.getElementById('alemanCasos'), m = e.data;
-  if(!f || !m || m.aleman !== 1 || (e.source !== f.contentWindow && !(fc && e.source === fc.contentWindow))) return;
+  const f = document.getElementById('alemanFrame'), m = e.data;
+  const fuentes = [...document.querySelectorAll('#alemanOverlay iframe')].map(x => x.contentWindow);
+  if(!f || !m || m.aleman !== 1 || !fuentes.includes(e.source)) return;
   if(m.tipo === 'scroll'){ if(e.source === f.contentWindow) alemanPliega(m.y); return; }
   if(m.tipo === 'cerrar'){ cerrarAleman(); return; }
   if(m.tipo === 'abrir' && typeof m.href === 'string'){
@@ -8794,9 +8832,10 @@ window.addEventListener('message', e => {
     else window.open('../Aleman/' + m.href, '_blank', 'noopener');
   }
 });
-// Lo que practicas en la lección se guarda en `aleman_k10_v1`; el encabezado lo cuenta al momento.
+// Lo que practicas en la lección se guarda en `aleman_k10_v1` (y en casos y los temas, en su clave); el encabezado y las
+// pestañas lo cuentan al momento.
 window.addEventListener('storage', e => {
-  if(alemanAbierta() && (e.key === 'aleman_k10_v1' || e.key === 'aleman_casos_v1' || e.key === null)) alemanPintarCab();
+  if(alemanAbierta() && (e.key === null || /^aleman_(k10|casos|prep|verbos|adj|frase)_v1$/.test(e.key))) alemanPintarCab();
 });
 
 // El vocabulario: su encabezado —la foto de su tema, de qué va, cuántas y cómo estudiarlas, «Practicar», ↻—, las

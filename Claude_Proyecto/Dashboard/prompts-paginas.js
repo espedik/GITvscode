@@ -446,7 +446,7 @@ Las lecciones, el vocabulario y la gramática existen para que Adán entienda y 
 ## Con quién trabajas
 - Qué escuchar convierte las horas de Didi en audio del Kapitel actual.
 - Hábitos lleva la Clase de alemán; Mis Metas, la maestría.
-- Mi Día toma de aquí diez palabras al día, todas de un mismo tema (trámites, buscar piso, salud…), la lección que toca, en el orden de Coach, y los casos a fondo (casos.html), y las abre en su ventana: las palabras con su repaso espaciado, la lección y los casos, que son estas mismas páginas; lo que se practica ahí cuenta aquí.
+- Mi Día toma de aquí diez palabras al día, todas de un mismo tema (trámites, buscar piso, salud…), la lección que toca, en el orden de Coach, y la gramática a fondo —los casos, las preposiciones, los verbos, los adjetivos y la frase—, y las abre en su ventana: son estas mismas páginas, y lo que se practica ahí cuenta aquí.
 - Entrevistas y Coach te piden alemán técnico cuando la maestría o un puesto en Alemania se acerquen.
 
 ## Cómo sabes que funciona
@@ -458,6 +458,7 @@ Las lecciones, el vocabulario y la gramática existen para que Adán entienda y 
 - El vocabulario vive en vocab-datos.js y toda sección nueva necesita su familia.
 - Las lecciones, en lecciones-datos.js: una lección nueva es su página y su entrada ahí, con su foto y, si es del Kapitel, sus ejercicios.
 - Cada palabra del vocabulario lleva su ícono en vocab-iconos.js: uno que ancle el significado —la imagen y la palabra juntas se recuerdan mejor que la palabra sola—, nunca un adorno; una palabra nueva llega con el suyo.
+- Los temas de gramática a fondo (preposiciones, verbos, adjetivos, la frase) son su contenido en una página y temas.js los pinta igual: regla, ejemplo traducido, el error típico y práctica. Un tema nuevo llega con su pestaña en la ventana de Mi Día.
 - Todo alemán que se publique va revisado: un artículo o una terminación mal enseñados se aprenden mal.
 - Prioridad al Kapitel actual.`
     },

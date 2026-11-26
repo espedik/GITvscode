@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los verbos — tiempos, irregulares, modales, separables y más | Deutsch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap"></noscript>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="temas.css">
+</head>
+<body>
+
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="casos.html">Casos</a>
+    <a href="preposiciones.html">Preposiciones</a>
+    <a href="verbos.html" class="on" aria-current="page">Verbos</a>
+    <a href="adjetivos.html">Adjetivos</a>
+    <a href="frase.html">La frase</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
+
+<header class="cs-hero" id="csHero"></header>
+<div class="cs-tabs"><div class="cs-in" id="csTabs" role="tablist" aria-label="Temas"></div></div>
+<main class="cs-main" id="csMain"></main>
+
+<footer class="footer" style="margin-top:0">
+  <p>Los verbos del alemán — presente, pasados, irregulares, modales, separables, reflexivos, imperativo, Konjunktiv II y pasiva · A1–B1</p>
+  <div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div>
+</footer>
+
+<script src="../Dashboard/datos-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-pc.js"></script>
+<script>
+/* ── Los verbos: todo el contenido. Lo pinta temas.js. ───────────────────────────────────────────────────────
+   Adán, 26-nov-2026: "también de otros temas que sean genéricos como este tipo, en otras subtabs". En los ejemplos,
+   lo que va entre [corchetes] es la parte del verbo que enseña la regla: sale subrayada. Todo alemán revisado. */
+window.TEMA = {
+  clave: 'aleman_verbos_v1', ronda: 12,
+  hero: {
+    k: 'Gramática · A1–B1 · el centro de cada frase',
+    h1: 'Los <em>verbos</em>: cómo se conjugan y dónde van',
+    lead: 'El verbo decide la frase: su **terminación** depende de quién hace la acción, va **segundo** y lo demás se va **al final**. Aquí está todo: el **presente**, los dos **pasados**, los **irregulares** en una tabla, los **modales**, los **separables**, los **reflexivos**, el **imperativo**, el **Konjunktiv II** y **werden** con la pasiva.',
+    frase: ['Ich [habe] gestern mit meinem Chef [gesprochen] und [muss] morgen früher [anfangen].', 'Ayer hablé con mi jefe y mañana tengo que empezar más temprano.']
+  },
+  tabs: [
+    { k: 'mapa', t: 'Cómo funciona', sub: 'el mapa', c: '#CC0000', alias: ['inicio'],
+      h2: 'Cómo funciona el verbo', p: 'El verbo se conjuga según la persona, va **siempre en la posición 2** de la frase principal y lo que lo completa (el participio, el infinitivo, el prefijo) se va **al final**. Con eso y cuatro tiempos dices casi todo.',
+      grupos: [
+        { t: 'Präsens', c: '#2563eb', p: 'Hoy, siempre y también el futuro cercano.', chips: [['ich lerne', 'estudio'], ['ich lerne morgen', 'estudio mañana'], ['seit einem Jahr', 'desde hace un año']] },
+        { t: 'Perfekt', c: '#059669', p: 'El pasado al hablar: haben o sein + participio al final.', chips: [['ich habe gelernt', 'estudié'], ['ich bin gefahren', 'fui (en vehículo)']] },
+        { t: 'Präteritum', c: '#b45309', p: 'El pasado escrito; al hablar, sein, haben y los modales.', chips: [['ich war', 'estaba, fui'], ['ich hatte', 'tenía'], ['ich konnte', 'podía']] },
+        { t: 'Futur y Konjunktiv II', c: '#7c3aed', p: 'werden para planes y promesas; würde para lo hipotético y lo cortés.', chips: [['ich werde lernen', 'estudiaré'], ['ich würde gern', 'me gustaría'], ['Könnten Sie …?', '¿podría…?']] }
+      ],
+      pasos: [
+        ['Busca el sujeto', 'ich, du, er, wir… o un sustantivo. Él decide la terminación: ich lern**e**, du lern**st**, er lern**t**.'],
+        ['El conjugado, en la posición 2', 'Lo primero puede ser el sujeto, una hora o un lugar; el verbo va **segundo** siempre: Heute **lerne** ich Deutsch.'],
+        ['Lo demás del verbo, al final', 'Participio, infinitivo o prefijo cierran la frase: Ich **habe** Deutsch **gelernt**. Ich **muss** **lernen**. Ich **rufe** dich **an**.'],
+        ['En la subordinada, todo al final', 'Con dass, weil, wenn…, el conjugado va al último: …, weil ich heute lernen **muss**.']
+      ],
+      ficha: [
+        { lbl: 'Las terminaciones del presente', tabla: { cab: ['', 'lernen', 'arbeiten', 'sein', 'haben'], de: [1, 2, 3, 4], filas: [
+          ['ich', 'lerne', 'arbeite', 'bin', 'habe'], ['du', 'lernst', 'arbeitest', 'bist', 'hast'], ['er/sie/es', 'lernt', 'arbeitet', 'ist', 'hat'],
+          ['wir', 'lernen', 'arbeiten', 'sind', 'haben'], ['ihr', 'lernt', 'arbeitet', 'seid', 'habt'], ['sie/Sie', 'lernen', 'arbeiten', 'sind', 'haben']] },
+          nota: 'Si la raíz termina en **-t** o **-d** (arbeit-, find-), se mete una **e**: du arbeit**e**st, er find**e**t.' },
+        { lbl: 'El corchete del verbo', de: 'Ich [habe] gestern mit meinem Chef über das Projekt [gesprochen].', txt: 'Lo conjugado en la posición 2 y lo demás al final; en medio va todo lo demás.' }
+      ],
+      reglas: [
+        { t: 'Una forma por persona', d: '**Sie** con mayúscula (usted) se conjuga igual que **sie** plural (ellos).', ej: [['Wir [arbeiten] bei ALTEN. Er [arbeitet] auch dort.', 'Trabajamos en ALTEN. Él también trabaja ahí.'], ['[Sprechen] Sie Deutsch?', '¿Habla usted alemán?']] },
+        { t: 'En la pregunta de sí o no, el verbo va primero', d: 'Sin palabra interrogativa: **verbo en la posición 1**. Con palabra interrogativa (wo, wann, warum…), esta va primero y el verbo segundo.', ej: [['[Kommst] du morgen?', '¿Vienes mañana?'], ['Wann [kommst] du?', '¿Cuándo vienes?']] },
+        { t: 'El presente también es futuro', d: 'Con una palabra de tiempo (morgen, nächste Woche, im September) el presente basta. **werden** es para promesas, predicciones o cuando no hay palabra de tiempo.', ej: [['Nächstes Jahr [fliege] ich nach Deutschland.', 'El próximo año vuelo a Alemania.'], ['Ich [werde] dich nie [vergessen].', 'Nunca te olvidaré.']] }
+      ]
+    },
+    { k: 'praesens', t: 'Presente', sub: 'Präsens', c: '#2563eb', alias: ['presente'],
+      h2: 'El presente (Präsens)', p: 'Raíz del verbo + terminación. La mayoría son regulares; los fuertes cambian la vocal **solo con du y er/sie/es**.',
+      ficha: [
+        { lbl: 'Las terminaciones', tabla: { cab: ['', 'terminación', 'machen'], de: [2], filas: [['ich', '-e', 'mache'], ['du', '-st', 'machst'], ['er/sie/es', '-t', 'macht'], ['wir', '-en', 'machen'], ['ihr', '-t', 'macht'], ['sie/Sie', '-en', 'machen']] } },
+        { lbl: 'Los cambios de vocal (solo du y er)', tabla: { cab: ['cambio', 'infinitivo', 'du', 'er'], de: [1, 2, 3], filas: [
+          ['e → i', 'sprechen', 'sprichst', 'spricht'], ['e → i', 'geben', 'gibst', 'gibt'], ['e → ie', 'sehen', 'siehst', 'sieht'], ['e → ie', 'lesen', 'liest', 'liest'],
+          ['a → ä', 'fahren', 'fährst', 'fährt'], ['a → ä', 'schlafen', 'schläfst', 'schläft'], ['au → äu', 'laufen', 'läufst', 'läuft']] },
+          nota: 'ich y wir nunca cambian: ich spreche, wir sprechen.' }
+      ],
+      reglas: [
+        { t: 'Raíz en -t o -d: una e de más', d: 'Para poder pronunciarlo, du, er e ihr llevan una **e** antes de la terminación. También con raíz en -chn, -ffn, -gn (rechnen, öffnen, regnen).', ej: [['Du [arbeitest] viel. Er [arbeitet] bei ALTEN.', 'Trabajas mucho. Él trabaja en ALTEN.'], ['Wie [findest] du Esslingen?', '¿Qué te parece Esslingen?'], ['Es [regnet] schon wieder.', 'Ya está lloviendo otra vez.'], ['Er [öffnet] die Tür.', 'Abre la puerta.']] },
+        { t: 'Raíz en -s, -ß, -z, -x: du solo añade -t', ej: [['Wie [heißt] du?', '¿Cómo te llamas?'], ['Du [tanzt] gut.', 'Bailas bien.'], ['Was [liest] du gerade?', '¿Qué estás leyendo?']] },
+        { t: 'Los fuertes cambian la vocal con du y er/sie/es', d: 'Se aprenden con el verbo. Los más usados: essen, fahren, geben, helfen, lesen, nehmen, schlafen, sehen, sprechen, tragen, treffen, vergessen, waschen.', ej: [['[Isst] du Fleisch? Er [isst] kein Fleisch.', '¿Comes carne? Él no come carne.'], ['Sie [nimmt] den Bus, ich nehme das Fahrrad.', 'Ella toma el camión; yo, la bici.'], ['Er [trägt] immer einen Anzug.', 'Siempre lleva traje.'], ['[Hilfst] du mir?', '¿Me ayudas?']],
+          nota: '**nehmen** cambia también la consonante: du ni**mmst**, er ni**mmt**. **wissen** es especial: ich **weiß**, du **weißt**, er **weiß**, wir wissen.' },
+        { t: 'Lo que dice el presente', d: 'Lo que pasa ahora (en alemán no hay «estoy haciendo»), lo habitual, el futuro con palabra de tiempo y lo que empezó y sigue (con seit).', ej: [['Ich [lerne] gerade Vokabeln.', 'Estoy estudiando vocabulario ahorita.'], ['Sonntags [fahre] ich für Didi.', 'Los domingos manejo para Didi.'], ['Ich [wohne] seit 2020 hier.', 'Vivo aquí desde 2020.']] }
+      ],
+      tablas: [
+        { lbl: 'sein, haben, werden y wissen: irregulares del todo', cab: ['', 'sein', 'haben', 'werden', 'wissen'], de: [1, 2, 3, 4], filas: [
+          ['ich', 'bin', 'habe', 'werde', 'weiß'], ['du', 'bist', 'hast', 'wirst', 'weißt'], ['er/sie/es', 'ist', 'hat', 'wird', 'weiß'],
+          ['wir', 'sind', 'haben', 'werden', 'wissen'], ['ihr', 'seid', 'habt', 'werdet', 'wisst'], ['sie/Sie', 'sind', 'haben', 'werden', 'wissen']] }
+      ],
+      ojo: [['Er sprecht Deutsch.', 'Er spricht Deutsch.', '**sprechen** cambia e → i con er.'], ['Du arbeitst.', 'Du arbeitest.', 'Raíz en -t: se mete una e.'],
+            ['Ich bin lernen.', 'Ich lerne gerade.', 'No hay «estar + gerundio»: el presente solo, con gerade si quieres.'], ['Du heißst Adán.', 'Du heißt Adán.', 'Raíz en -ß: du solo añade -t.'],
+            ['Wir fährt nach Berlin.', 'Wir fahren nach Berlin.', 'El cambio de vocal es solo con du y er/sie/es.']]
+    },
+    { k: 'perfekt', t: 'Perfekt', sub: 'el pasado al hablar', c: '#059669',
+      h2: 'El pasado al hablar (Perfekt)', p: '**haben** o **sein** conjugado en la posición 2 + el **participio** (Partizip II) al final. Es el pasado de la conversación, de los correos informales y de la entrevista.',
+      ficha: [
+        { lbl: 'La fórmula', preg: ['haben / sein + Partizip II', 'el auxiliar va segundo; el participio, al final'] },
+        { lbl: 'Cómo se forma el participio', tabla: { cab: ['tipo', 'regla', 'ejemplo'], de: [2], filas: [
+          ['regulares', 'ge- + raíz + -t', 'machen → gemacht, arbeiten → gearbeitet'],
+          ['irregulares', 'ge- + raíz (a veces otra vocal) + -en', 'fahren → gefahren, schreiben → geschrieben'],
+          ['mixtos', 'ge- + otra vocal + -t', 'bringen → gebracht, denken → gedacht'],
+          ['separables', 'prefijo + ge + verbo', 'einkaufen → eingekauft, anrufen → angerufen'],
+          ['be-, ver-, er-, ent-, emp-, ge-, zer-, miss-', 'sin ge-', 'besuchen → besucht, verstehen → verstanden'],
+          ['-ieren', 'sin ge-, raíz + -t', 'studieren → studiert, telefonieren → telefoniert']] } },
+        { lbl: '¿haben o sein?', txt: 'Con **sein**: moverse de un lugar a otro (gehen, fahren, fliegen, kommen, laufen, reisen, umziehen), cambiar de estado (aufstehen, einschlafen, aufwachen, werden, sterben, wachsen) y además **sein**, **bleiben**, **passieren**. Todos los demás, con **haben**.' }
+      ],
+      reglas: [
+        { t: 'haben: la gran mayoría', d: 'Los verbos con complemento directo, los reflexivos, los modales y casi todos los demás.', ej: [['Ich [habe] gestern lange [gearbeitet].', 'Ayer trabajé mucho tiempo.'], ['Wir [haben] eine Wohnung in Esslingen [gefunden].', 'Encontramos un depa en Esslingen.'], ['[Hast] du schon [gegessen]?', '¿Ya comiste?']] },
+        { t: 'sein: moverse de un sitio a otro o cambiar de estado', ej: [['Ich [bin] nach Guadalajara [geflogen].', 'Volé a Guadalajara.'], ['Wann [bist] du [aufgestanden]?', '¿A qué hora te levantaste?'], ['Er [ist] Ingenieur [geworden].', 'Se hizo ingeniero.'], ['Wir [sind] zu Hause [geblieben].', 'Nos quedamos en casa.'], ['Was [ist] [passiert]?', '¿Qué pasó?']],
+          nota: '**fahren** con complemento directo va con haben: Ich **habe** das Auto in die Werkstatt **gefahren**. Sin él, con sein: Ich **bin** nach Hause **gefahren**.' },
+        { t: 'Separables: el ge va en medio', ej: [['Ich [habe] dich gestern [angerufen].', 'Te llamé ayer.'], ['Wir [haben] am Samstag [eingekauft].', 'El sábado hicimos las compras.'], ['Der Zug [ist] pünktlich [angekommen].', 'El tren llegó puntual.']] },
+        { t: 'Inseparables y -ieren: sin ge-', ej: [['Ich [habe] das nicht [verstanden].', 'No lo entendí.'], ['Er [hat] mir alles [erklärt].', 'Me explicó todo.'], ['Sie [hat] Informatik [studiert].', 'Ella estudió informática.'], ['Wir [haben] meine Oma [besucht].', 'Visitamos a mi abuela.']] },
+        { t: 'Con un modal: mejor en Präteritum', d: 'Con un modal y otro verbo, el Perfekt pone dos infinitivos al final (Ich habe arbeiten müssen). Es correcto pero pesado: al hablar se usa el **Präteritum** del modal.', ej: [['Ich [musste] gestern länger arbeiten.', 'Ayer tuve que trabajar más.'], ['Ich [habe] gestern länger arbeiten [müssen].', 'Lo mismo, en Perfekt.']] },
+        { t: 'En la subordinada, el auxiliar al final', ej: [['Ich weiß, dass du gestern [angerufen hast].', 'Sé que llamaste ayer.'], ['…, weil ich zu spät [aufgestanden bin].', '…, porque me levanté tarde.']] }
+      ],
+      ojo: [['Ich habe nach Berlin gefahren.', 'Ich bin nach Berlin gefahren.', 'Movimiento a un lugar: **sein**.'], ['Ich habe gestudiert.', 'Ich habe studiert.', 'Verbos en **-ieren**: sin ge-.'],
+            ['Ich habe geverstanden.', 'Ich habe verstanden.', 'Prefijo inseparable (ver-): sin ge-.'], ['Ich habe angeruft.', 'Ich habe angerufen.', '**rufen** es irregular: gerufen → angerufen.'],
+            ['Ich habe gestern gearbeitet viel.', 'Ich habe gestern viel gearbeitet.', 'El participio va **al final** de la frase.']]
+    },
+    { k: 'praeteritum', t: 'Präteritum', sub: 'war · hatte · konnte', c: '#b45309', alias: ['prateritum'],
+      h2: 'El pasado escrito (Präteritum)', p: 'En lo escrito (noticias, cuentos, informes) es el pasado normal. Al hablar se usa sobre todo con **sein**, **haben**, los **modales** y unos pocos más (es gab, ich wusste, ich dachte).',
+      ficha: [
+        { lbl: 'Los que sí se dicen al hablar', tabla: { cab: ['', 'sein', 'haben', 'können', 'müssen'], de: [1, 2, 3, 4], filas: [
+          ['ich', 'war', 'hatte', 'konnte', 'musste'], ['du', 'warst', 'hattest', 'konntest', 'musstest'], ['er/sie/es', 'war', 'hatte', 'konnte', 'musste'],
+          ['wir', 'waren', 'hatten', 'konnten', 'mussten'], ['ihr', 'wart', 'hattet', 'konntet', 'musstet'], ['sie/Sie', 'waren', 'hatten', 'konnten', 'mussten']] },
+          nota: 'En Präteritum, **ich** y **er/sie/es** son iguales: ich war, er war.' },
+        { lbl: 'Los modales en pasado', chips: [['konnte', 'podía'], ['musste', 'tenía que'], ['durfte', 'me dejaban'], ['sollte', 'debía'], ['wollte', 'quería'], ['mochte', 'me gustaba']],
+          nota: 'Sin diéresis en pasado: können → konnte, müssen → musste. **möchte** no tiene pasado propio: se usa **wollte**.' }
+      ],
+      reglas: [
+        { t: 'Regulares: raíz + -te + terminación', d: 'ich mach**te**, du mach**test**, er mach**te**, wir mach**ten**, ihr mach**tet**, sie mach**ten**. Raíz en -t o -d: arbeit**ete**.', ej: [['Als Kind [spielte] ich jeden Tag Fußball.', 'De niño jugaba futbol todos los días.'], ['Sie [arbeitete] zehn Jahre bei Bosch.', 'Ella trabajó diez años en Bosch.']] },
+        { t: 'Irregulares: otra vocal y sin -te', d: 'ich y er sin terminación: ich **ging**, er **ging**, wir **gingen**. Se aprenden con el verbo (pestaña «Los irregulares»).', ej: [['Gestern [ging] ich früh ins Bett.', 'Ayer me fui temprano a dormir.'], ['Der Zug [kam] zu spät.', 'El tren llegó tarde.'], ['Es [gab] keine Tickets mehr.', 'Ya no había boletos.']] },
+        { t: 'Mixtos: otra vocal y -te', ej: [['Ich [dachte], du kommst heute.', 'Pensé que venías hoy.'], ['Das [wusste] ich nicht.', 'Eso no lo sabía.'], ['Er [brachte] Kuchen mit.', 'Trajo pastel.']],
+          nota: 'Los mixtos: bringen → brachte, denken → dachte, wissen → wusste, kennen → kannte, nennen → nannte, rennen → rannte, brennen → brannte.' },
+        { t: '¿Präteritum o Perfekt?', d: 'Hablando: Perfekt, salvo sein, haben, los modales y es gab. Escribiendo un texto o contando una historia: Präteritum. En el sur de Alemania (Stuttgart) se habla casi solo en Perfekt.', ej: [['Ich [war] gestern beim Arzt und [habe] ein Rezept [bekommen].', 'Ayer fui al doctor y me dieron una receta.'], ['Als ich klein [war], [hatte] ich einen Hund.', 'Cuando era chico tenía un perro.']] }
+      ],
+      ojo: [['Ich habe gewesen.', 'Ich war. / Ich bin gewesen.', '**sein** hace el Perfekt con sein; al hablar, mejor **war**.'], ['Ich konntete.', 'Ich konnte.', 'Modales: raíz + -te, una sola vez.'],
+            ['Ich müsste gestern arbeiten.', 'Ich musste gestern arbeiten.', '**musste** (pasado) sin diéresis; **müsste** es Konjunktiv II («tendría que»).'], ['Er gingt.', 'Er ging.', 'Irregulares: er sin terminación.']]
+    },
+    { k: 'irregulares', t: 'Los irregulares', sub: 'la tabla', c: '#be185d', alias: ['unregelmassig'],
+      h2: 'Los verbos irregulares, por familias', p: 'Agrupados por cómo cambia la vocal: si sabes **schreiben – schrieb – geschrieben**, ya sabes bleiben, steigen y entscheiden. **ist** = el Perfekt va con sein. Busca en alemán o en español.',
+      tablas: [
+        { lbl: 'Infinitivo · presente · Präteritum · Perfekt', buscar: true, cab: ['Infinitivo', 'Presente (er)', 'Präteritum', 'Perfekt', 'En español'], de: [0, 1, 2, 3], filas: [
+          '— los imprescindibles —',
+          ['sein', 'ist', 'war', 'ist gewesen', 'ser, estar'], ['haben', 'hat', 'hatte', 'hat gehabt', 'tener'], ['werden', 'wird', 'wurde', 'ist geworden', 'volverse, llegar a ser'],
+          ['gehen', 'geht', 'ging', 'ist gegangen', 'ir (a pie)'], ['kommen', 'kommt', 'kam', 'ist gekommen', 'venir, llegar'], ['tun', 'tut', 'tat', 'hat getan', 'hacer'],
+          ['stehen', 'steht', 'stand', 'hat gestanden', 'estar de pie'], ['verstehen', 'versteht', 'verstand', 'hat verstanden', 'entender'],
+          ['liegen', 'liegt', 'lag', 'hat gelegen', 'estar acostado'], ['sitzen', 'sitzt', 'saß', 'hat gesessen', 'estar sentado'], ['bitten', 'bittet', 'bat', 'hat gebeten', 'pedir'],
+          '— ei → ie → ie (como schreiben) —',
+          ['bleiben', 'bleibt', 'blieb', 'ist geblieben', 'quedarse'], ['schreiben', 'schreibt', 'schrieb', 'hat geschrieben', 'escribir'], ['steigen', 'steigt', 'stieg', 'ist gestiegen', 'subir'],
+          ['entscheiden', 'entscheidet', 'entschied', 'hat entschieden', 'decidir'], ['scheinen', 'scheint', 'schien', 'hat geschienen', 'brillar; parecer'], ['leihen', 'leiht', 'lieh', 'hat geliehen', 'prestar'],
+          ['schreien', 'schreit', 'schrie', 'hat geschrien', 'gritar'], ['schweigen', 'schweigt', 'schwieg', 'hat geschwiegen', 'callar'], ['verzeihen', 'verzeiht', 'verzieh', 'hat verziehen', 'perdonar'],
+          '— ei → i → i (como schneiden) —',
+          ['schneiden', 'schneidet', 'schnitt', 'hat geschnitten', 'cortar'], ['leiden', 'leidet', 'litt', 'hat gelitten', 'sufrir'], ['streiten', 'streitet', 'stritt', 'hat gestritten', 'pelear'],
+          ['beißen', 'beißt', 'biss', 'hat gebissen', 'morder'], ['vergleichen', 'vergleicht', 'verglich', 'hat verglichen', 'comparar'], ['reiten', 'reitet', 'ritt', 'ist geritten', 'montar a caballo'],
+          '— ie → o → o (como fliegen) —',
+          ['fliegen', 'fliegt', 'flog', 'ist geflogen', 'volar'], ['verlieren', 'verliert', 'verlor', 'hat verloren', 'perder'], ['bieten', 'bietet', 'bot', 'hat geboten', 'ofrecer'],
+          ['schließen', 'schließt', 'schloss', 'hat geschlossen', 'cerrar'], ['riechen', 'riecht', 'roch', 'hat gerochen', 'oler'], ['ziehen', 'zieht', 'zog', 'hat gezogen', 'jalar (umziehen: ist umgezogen)'],
+          ['genießen', 'genießt', 'genoss', 'hat genossen', 'disfrutar'], ['fließen', 'fließt', 'floss', 'ist geflossen', 'fluir'], ['frieren', 'friert', 'fror', 'hat gefroren', 'tener frío'],
+          ['schieben', 'schiebt', 'schob', 'hat geschoben', 'empujar'], ['lügen', 'lügt', 'log', 'hat gelogen', 'mentir'],
+          '— i → a → u (como finden) —',
+          ['finden', 'findet', 'fand', 'hat gefunden', 'encontrar'], ['trinken', 'trinkt', 'trank', 'hat getrunken', 'beber'], ['singen', 'singt', 'sang', 'hat gesungen', 'cantar'],
+          ['springen', 'springt', 'sprang', 'ist gesprungen', 'saltar'], ['verschwinden', 'verschwindet', 'verschwand', 'ist verschwunden', 'desaparecer'],
+          '— i → a → o (como beginnen) —',
+          ['beginnen', 'beginnt', 'begann', 'hat begonnen', 'empezar'], ['gewinnen', 'gewinnt', 'gewann', 'hat gewonnen', 'ganar'], ['schwimmen', 'schwimmt', 'schwamm', 'ist geschwommen', 'nadar'],
+          '— e → a → e (como geben) —',
+          ['geben', 'gibt', 'gab', 'hat gegeben', 'dar'], ['essen', 'isst', 'aß', 'hat gegessen', 'comer'], ['lesen', 'liest', 'las', 'hat gelesen', 'leer'],
+          ['sehen', 'sieht', 'sah', 'hat gesehen', 'ver'], ['vergessen', 'vergisst', 'vergaß', 'hat vergessen', 'olvidar'],
+          '— e → a → o (como sprechen) —',
+          ['sprechen', 'spricht', 'sprach', 'hat gesprochen', 'hablar'], ['helfen', 'hilft', 'half', 'hat geholfen', 'ayudar'], ['nehmen', 'nimmt', 'nahm', 'hat genommen', 'tomar'],
+          ['treffen', 'trifft', 'traf', 'hat getroffen', 'encontrarse con'], ['werfen', 'wirft', 'warf', 'hat geworfen', 'lanzar, tirar'], ['brechen', 'bricht', 'brach', 'hat gebrochen', 'romper'],
+          ['empfehlen', 'empfiehlt', 'empfahl', 'hat empfohlen', 'recomendar'], ['stehlen', 'stiehlt', 'stahl', 'hat gestohlen', 'robar'], ['sterben', 'stirbt', 'starb', 'ist gestorben', 'morir'],
+          '— a → ie → a (como schlafen) —',
+          ['schlafen', 'schläft', 'schlief', 'hat geschlafen', 'dormir'], ['fallen', 'fällt', 'fiel', 'ist gefallen', 'caer'], ['gefallen', 'gefällt', 'gefiel', 'hat gefallen', 'gustar'],
+          ['halten', 'hält', 'hielt', 'hat gehalten', 'sostener; detenerse'], ['lassen', 'lässt', 'ließ', 'hat gelassen', 'dejar'], ['anfangen', 'fängt an', 'fing an', 'hat angefangen', 'empezar'],
+          ['laufen', 'läuft', 'lief', 'ist gelaufen', 'correr, caminar'], ['heißen', 'heißt', 'hieß', 'hat geheißen', 'llamarse'], ['rufen', 'ruft', 'rief', 'hat gerufen', 'llamar'],
+          ['hängen', 'hängt', 'hing', 'hat gehangen', 'estar colgado'],
+          '— a → u → a (como fahren) —',
+          ['fahren', 'fährt', 'fuhr', 'ist gefahren', 'ir (en vehículo), manejar'], ['tragen', 'trägt', 'trug', 'hat getragen', 'llevar puesto, cargar'], ['waschen', 'wäscht', 'wusch', 'hat gewaschen', 'lavar'],
+          ['schlagen', 'schlägt', 'schlug', 'hat geschlagen', 'golpear'], ['einladen', 'lädt ein', 'lud ein', 'hat eingeladen', 'invitar'], ['wachsen', 'wächst', 'wuchs', 'ist gewachsen', 'crecer'],
+          '— mixtos: otra vocal y -te —',
+          ['bringen', 'bringt', 'brachte', 'hat gebracht', 'traer, llevar'], ['denken', 'denkt', 'dachte', 'hat gedacht', 'pensar'], ['wissen', 'weiß', 'wusste', 'hat gewusst', 'saber'],
+          ['kennen', 'kennt', 'kannte', 'hat gekannt', 'conocer'], ['nennen', 'nennt', 'nannte', 'hat genannt', 'nombrar'], ['rennen', 'rennt', 'rannte', 'ist gerannt', 'correr (rápido)'], ['brennen', 'brennt', 'brannte', 'hat gebrannt', 'arder'],
+          '— los modales —',
+          ['können', 'kann', 'konnte', 'hat gekonnt', 'poder, saber hacer'], ['müssen', 'muss', 'musste', 'hat gemusst', 'tener que'], ['dürfen', 'darf', 'durfte', 'hat gedurft', 'tener permiso'],
+          ['sollen', 'soll', 'sollte', 'hat gesollt', 'deber'], ['wollen', 'will', 'wollte', 'hat gewollt', 'querer'], ['mögen', 'mag', 'mochte', 'hat gemocht', 'gustar']],
+          nota: 'Con prefijo, igual que el verbo base: an**kommen** → kam an → ist an**ge**kommen; **ver**stehen → verstand → hat verstanden (sin ge-). Los modales con otro verbo usan el infinitivo en Perfekt: Ich habe arbeiten **müssen**.' }
+      ]
+    },
+    { k: 'modal', t: 'Modales', sub: 'können · müssen · dürfen…', c: '#7c3aed', alias: ['modalverben'],
+      h2: 'Los verbos modales', p: 'können, müssen, dürfen, sollen, wollen, mögen y möchten: el modal va conjugado en la posición 2 y el otro verbo, en **infinitivo, al final** y sin zu.',
+      ficha: [
+        { lbl: 'La frase con modal', de: 'Ich [muss] morgen früh [aufstehen].', txt: 'El modal, segundo; el infinitivo, al final y sin zu.' },
+        { lbl: 'mögen y möchten', tabla: { cab: ['', 'mögen', 'möchten'], de: [1, 2], filas: [['ich', 'mag', 'möchte'], ['du', 'magst', 'möchtest'], ['er/sie/es', 'mag', 'möchte'], ['wir', 'mögen', 'möchten'], ['ihr', 'mögt', 'möchtet'], ['sie/Sie', 'mögen', 'möchten']] },
+          nota: '**mögen** = que te guste algo (Ich mag Kaffee). **möchten** = quisiera (Ich möchte einen Kaffee).' }
+      ],
+      tablas: [
+        { lbl: 'Su conjugación', cab: ['', 'können', 'müssen', 'dürfen', 'sollen', 'wollen'], de: [1, 2, 3, 4, 5], filas: [
+          ['ich', 'kann', 'muss', 'darf', 'soll', 'will'], ['du', 'kannst', 'musst', 'darfst', 'sollst', 'willst'], ['er/sie/es', 'kann', 'muss', 'darf', 'soll', 'will'],
+          ['wir', 'können', 'müssen', 'dürfen', 'sollen', 'wollen'], ['ihr', 'könnt', 'müsst', 'dürft', 'sollt', 'wollt'], ['sie/Sie', 'können', 'müssen', 'dürfen', 'sollen', 'wollen']],
+          nota: '**ich** y **er/sie/es**: iguales y sin terminación (ich kann, er kann). En singular cambian la vocal; en plural, no.' }
+      ],
+      dos: true,
+      reglas: [
+        { de: 'können', t: '— poder, saber hacer', d: 'Capacidad, posibilidad, permiso informal y saber algo.', ej: [['Ich [kann] gut Englisch.', 'Hablo bien inglés.'], ['[Kannst] du mir helfen?', '¿Me puedes ayudar?'], ['Hier [kann] man parken.', 'Aquí se puede estacionar.']] },
+        { de: 'müssen', t: '— tener que', d: 'Obligación o necesidad.', ej: [['Ich [muss] heute bis 18 Uhr arbeiten.', 'Hoy tengo que trabajar hasta las 18.'], ['Du [musst] das nicht machen.', 'No tienes que hacerlo (no hace falta).']],
+          nota: '**nicht müssen** = no hace falta. «No debes» es **nicht dürfen**.' },
+        { de: 'dürfen', t: '— tener permiso', d: 'Lo permitido; con nicht, lo prohibido.', ej: [['[Darf] ich hier rauchen? — Nein, hier [darf] man nicht rauchen.', '¿Puedo fumar aquí? — No, aquí está prohibido.'], ['Sie [dürfen] gern Fragen stellen.', 'Con gusto puede hacer preguntas.']] },
+        { de: 'sollen', t: '— deber (lo que otro dice o espera)', d: 'Un encargo, un consejo de otro o una oferta.', ej: [['Der Arzt sagt, ich [soll] mehr schlafen.', 'El doctor dice que debo dormir más.'], ['[Soll] ich das Fenster aufmachen?', '¿Abro la ventana?']] },
+        { de: 'wollen', t: '— querer (firme)', d: 'Una intención clara.', ej: [['Ich [will] 2028 in Deutschland arbeiten.', 'Quiero trabajar en Alemania en 2028.'], ['Was [willst] du später machen?', '¿Qué quieres hacer después?']], nota: 'Para pedir algo, **möchte** suena más cortés que will.' },
+        { de: 'mögen · möchten', t: '— gustar · quisiera', ej: [['Ich [mag] Tacos.', 'Me gustan los tacos.'], ['Ich [möchte] einen Termin machen.', 'Quisiera hacer una cita.'], ['[Möchten] Sie etwas trinken?', '¿Quiere tomar algo?']] },
+        { t: 'Sin el otro verbo, si se entiende', d: 'Con un lugar o un objeto, el infinitivo puede faltar.', ej: [['Ich [muss] jetzt nach Hause.', 'Ya me tengo que ir a casa.'], ['[Kannst] du Deutsch?', '¿Sabes alemán?'], ['Ich [will] das nicht.', 'No quiero eso.']] },
+        { t: 'En la subordinada, el modal al final', ej: [['Ich lerne Deutsch, weil ich in Deutschland arbeiten [will].', 'Estudio alemán porque quiero trabajar en Alemania.'], ['Weißt du, ob man hier parken [darf]?', '¿Sabes si aquí se puede estacionar?']] }
+      ],
+      ojo: [['Ich kann zu schwimmen.', 'Ich kann schwimmen.', 'Con modal, infinitivo **sin zu**.'], ['Er kannt Deutsch.', 'Er kann Deutsch.', 'er = ich: sin terminación.'],
+            ['Du musst hier nicht rauchen.', 'Du darfst hier nicht rauchen.', 'Prohibido = **nicht dürfen**; nicht müssen = no hace falta.'], ['Ich möchte gestern ins Kino.', 'Ich wollte gestern ins Kino.', 'möchte no tiene pasado: **wollte**.'],
+            ['Ich muss arbeiten heute.', 'Ich muss heute arbeiten.', 'El infinitivo, **al final**.']]
+    },
+    { k: 'trennbar', t: 'Separables', sub: 'anrufen · aufstehen…', c: '#0e7490', alias: ['trennbare', 'separables'],
+      h2: 'Los verbos separables', p: 'Muchos verbos llevan un prefijo que **se separa** y se va al final de la frase: anrufen → Ich **rufe** dich morgen **an**. Otros prefijos nunca se separan.',
+      grupos: [
+        { t: 'Se separan (llevan el acento)', c: '#0e7490', p: 'El acento cae en el prefijo: **AN**rufen.', chips: [['ab', 'abfahren'], ['an', 'anrufen'], ['auf', 'aufstehen'], ['aus', 'aussteigen'], ['ein', 'einkaufen'], ['mit', 'mitkommen'], ['nach', 'nachdenken'], ['vor', 'vorstellen'], ['weg', 'weggehen'], ['zu', 'zumachen'], ['zurück', 'zurückkommen'], ['fern', 'fernsehen'], ['los', 'losfahren'], ['statt', 'stattfinden'], ['teil', 'teilnehmen']] },
+        { t: 'Nunca se separan (sin acento)', c: '#475569', p: 'El acento va en el verbo: ver**STE**hen. Su participio no lleva ge-.', chips: [['be-', 'besuchen'], ['emp-', 'empfehlen'], ['ent-', 'entscheiden'], ['er-', 'erklären'], ['ge-', 'gefallen'], ['miss-', 'missverstehen'], ['ver-', 'verstehen'], ['zer-', 'zerstören']] },
+        { t: 'Depende del significado', c: '#b45309', p: 'durch, über, um, unter y wieder: separables si es literal, inseparables si es figurado.', chips: [['umziehen', 'mudarse: separable'], ['übersetzen', 'traducir: inseparable'], ['wiederholen', 'repetir: inseparable'], ['unterschreiben', 'firmar: inseparable']] }
+      ],
+      ficha: [
+        { lbl: 'Dónde va el prefijo', tabla: { cab: ['', 'anrufen'], de: [1], filas: [
+          ['presente', 'Ich rufe dich an.'], ['pregunta', 'Rufst du mich an?'], ['imperativo', 'Ruf mich an!'], ['Perfekt', 'Ich habe dich angerufen.'],
+          ['con modal', 'Ich muss dich anrufen.'], ['subordinada', '…, dass ich dich anrufe.'], ['con zu', 'Ich vergesse nie, dich anzurufen.']] },
+          nota: 'En infinitivo y en la subordinada va **junto**; en el participio, el ge en medio (an**ge**rufen); con zu, también en medio (an**zu**rufen).' }
+      ],
+      reglas: [
+        { t: 'Presente y Präteritum: el prefijo al final', ej: [['Ich [stehe] jeden Tag um 6 Uhr [auf].', 'Me levanto todos los días a las 6.'], ['Der Zug [fährt] um 8:15 Uhr [ab].', 'El tren sale a las 8:15.'], ['Am Samstag [kaufe] ich [ein].', 'El sábado hago las compras.'], ['Er [kam] erst um Mitternacht [zurück].', 'Volvió hasta la medianoche.']] },
+        { t: 'Con modal o en la subordinada: todo junto, al final', ej: [['Ich [muss] morgen früh [aufstehen].', 'Mañana me tengo que levantar temprano.'], ['Ruf mich an, wenn du [ankommst].', 'Llámame cuando llegues.']] },
+        { t: 'Inseparables: como un verbo normal', ej: [['Ich [verstehe] das nicht.', 'No entiendo eso.'], ['Ich [besuche] morgen meine Oma.', 'Mañana visito a mi abuela.'], ['Er hat mir das Restaurant [empfohlen].', 'Me recomendó el restaurante.']] }
+      ],
+      tablas: [
+        { lbl: 'Los separables más útiles', buscar: true, cab: ['Verbo', 'En español', 'Ejemplo'], de: [0, 2], filas: [
+          ['abfahren', 'salir (un transporte)', 'Der Bus fährt um 7 Uhr ab.'], ['abholen', 'recoger', 'Ich hole dich am Flughafen ab.'], ['absagen', 'cancelar', 'Ich muss den Termin absagen.'],
+          ['anfangen', 'empezar', 'Der Kurs fängt um 18 Uhr an.'], ['ankommen', 'llegar', 'Wann kommst du in Stuttgart an?'], ['sich anmelden', 'registrarse, inscribirse', 'Ich melde mich beim Bürgeramt an.'],
+          ['anrufen', 'llamar por teléfono', 'Ich rufe dich später an.'], ['sich anziehen', 'vestirse', 'Ich ziehe mich schnell an.'], ['aufhören', 'dejar de, terminar', 'Hör auf!'],
+          ['aufmachen', 'abrir', 'Machst du bitte das Fenster auf?'], ['aufräumen', 'ordenar', 'Am Samstag räume ich die Wohnung auf.'], ['aufstehen', 'levantarse', 'Ich stehe um 6 Uhr auf.'],
+          ['ausfüllen', 'llenar (un formulario)', 'Bitte füllen Sie das Formular aus.'], ['ausgehen', 'salir (de noche)', 'Gehen wir heute Abend aus?'], ['ausgeben', 'gastar', 'Ich gebe zu viel für Essen aus.'],
+          ['aussehen', 'verse, parecer', 'Du siehst müde aus.'], ['aussteigen', 'bajarse', 'Wir steigen am Hauptbahnhof aus.'], ['ausziehen', 'mudarse (de un lugar)', 'Ich ziehe Ende des Monats aus.'],
+          ['einkaufen', 'hacer las compras', 'Ich kaufe nach der Arbeit ein.'], ['einladen', 'invitar', 'Ich lade dich zum Essen ein.'], ['einschlafen', 'quedarse dormido', 'Ich schlafe oft vor dem Fernseher ein.'],
+          ['einsteigen', 'subirse', 'Steig schnell ein!'], ['einziehen', 'mudarse (a un lugar)', 'Wir ziehen im September ein.'], ['fernsehen', 'ver la tele', 'Abends sehe ich selten fern.'],
+          ['kennenlernen', 'conocer (a alguien)', 'Wo hast du ihn kennengelernt?'], ['mitbringen', 'traer', 'Bringst du etwas zu trinken mit?'], ['mitkommen', 'venir con alguien', 'Kommst du mit ins Kino?'],
+          ['nachdenken', 'reflexionar', 'Ich denke darüber nach.'], ['stattfinden', 'tener lugar', 'Das Meeting findet online statt.'], ['teilnehmen', 'participar', 'Ich nehme an dem Kurs teil.'],
+          ['umsteigen', 'transbordar', 'In Stuttgart muss ich umsteigen.'], ['umziehen', 'mudarse', 'Ich ziehe nach Esslingen um.'], ['sich vorbereiten', 'prepararse', 'Ich bereite mich auf das Interview vor.'],
+          ['sich vorstellen', 'presentarse', 'Darf ich mich kurz vorstellen?'], ['weitermachen', 'seguir', 'Mach weiter so!'], ['zuhören', 'escuchar (a alguien)', 'Hör mir bitte zu.'],
+          ['zumachen', 'cerrar', 'Mach die Tür zu!'], ['zurückrufen', 'devolver la llamada', 'Ich rufe Sie morgen zurück.']] }
+      ],
+      ojo: [['Ich anrufe dich.', 'Ich rufe dich an.', 'El prefijo separable va **al final**.'], ['Ich habe gerufen an.', 'Ich habe angerufen.', 'Participio: prefijo + ge + verbo, junto.'],
+            ['Ich habe verstehen.', 'Ich habe verstanden.', 'Inseparable: sin ge-, pero irregular: verstanden.'], ['Ich muss rufe an.', 'Ich muss anrufen.', 'Con modal, el infinitivo junto, al final.'],
+            ['…, weil ich um 6 Uhr stehe auf.', '…, weil ich um 6 Uhr aufstehe.', 'En la subordinada, el verbo junto al final.']]
+    },
+    { k: 'reflexiv', t: 'Reflexivos', sub: 'sich freuen · sich waschen', c: '#4338ca', alias: ['reflexivos'],
+      h2: 'Los verbos reflexivos', p: 'Llevan **sich** (se): la acción vuelve al sujeto. El pronombre va en **Akkusativ**, salvo que la frase ya tenga otro complemento directo: entonces va en **Dativ**.',
+      ficha: [
+        { lbl: 'Los pronombres reflexivos', tabla: { cab: ['', 'Akk', 'Dat'], de: [1, 2], filas: [['ich', 'mich', 'mir'], ['du', 'dich', 'dir'], ['er/sie/es', 'sich', 'sich'], ['wir', 'uns', 'uns'], ['ihr', 'euch', 'euch'], ['sie/Sie', 'sich', 'sich']] },
+          nota: 'Solo **ich** y **du** cambian entre Akkusativ y Dativ.' },
+        { lbl: 'Akkusativ o Dativ', de: 'Ich wasche [mich]. → Ich wasche [mir] die Hände.', txt: 'Si hay otro objeto (die Hände), el reflexivo pasa a Dativ.' }
+      ],
+      reglas: [
+        { t: 'Dónde va sich', d: 'Justo después del verbo conjugado; si el sujeto va detrás del verbo, después del sujeto.', ej: [['Ich freue [mich] auf den Urlaub.', 'Tengo ganas de las vacaciones.'], ['Morgen treffe ich [mich] mit Freunden.', 'Mañana me veo con amigos.'], ['Ich habe [mich] schon angemeldet.', 'Ya me inscribí.']] },
+        { t: 'Con Akkusativ: el reflexivo es el objeto', ej: [['Ich ziehe [mich] an.', 'Me visto.'], ['Setz [dich] bitte!', '¡Siéntate, por favor!'], ['Wo habt ihr [euch] kennengelernt?', '¿Dónde se conocieron?']] },
+        { t: 'Con Dativ: cuando hay otro objeto', ej: [['Ich putze [mir] die Zähne.', 'Me lavo los dientes.'], ['Ich kaufe [mir] ein neues Handy.', 'Me compro un celular nuevo.'], ['Ich wünsche [mir] mehr Zeit.', 'Me gustaría tener más tiempo.'], ['Merk [dir] das!', '¡Acuérdate de eso!']] },
+        { t: 'Reflexivo en alemán, no en español (y al revés)', d: 'sich beeilen (darse prisa) o sich erkälten (resfriarse) coinciden; pero **bleiben** (quedarse), **aufstehen** (levantarse), **einschlafen** (dormirse) y **gehen** (irse) no llevan sich.', ej: [['Ich [stehe] um 6 Uhr [auf].', 'Me levanto a las 6 (sin sich).'], ['Ich [bleibe] zu Hause.', 'Me quedo en casa (sin sich).']] }
+      ],
+      tablas: [
+        { lbl: 'Los reflexivos más usados', buscar: true, cab: ['Verbo', 'Caso', 'En español', 'Ejemplo'], de: [0, 3], filas: [
+          '— con Akkusativ (mich, dich) —',
+          ['sich anmelden', 'Akk', 'inscribirse, registrarse', 'Ich melde mich für den Kurs an.'], ['sich anziehen / umziehen', 'Akk', 'vestirse / cambiarse', 'Ich ziehe mich schnell um.'],
+          ['sich ärgern (über)', 'Akk', 'enojarse', 'Ärgere dich nicht!'], ['sich ausruhen', 'Akk', 'descansar', 'Nach der Arbeit ruhe ich mich aus.'], ['sich bedanken (für)', 'Akk', 'dar las gracias', 'Ich bedanke mich für die Einladung.'],
+          ['sich beeilen', 'Akk', 'darse prisa', 'Beeil dich, der Bus kommt!'], ['sich bewerben (bei, um)', 'Akk', 'postularse', 'Ich bewerbe mich bei einer Firma in Stuttgart.'], ['sich entscheiden (für)', 'Akk', 'decidirse', 'Ich habe mich entschieden.'],
+          ['sich entschuldigen', 'Akk', 'disculparse', 'Ich entschuldige mich für die Verspätung.'], ['sich erholen', 'Akk', 'recuperarse, descansar', 'Ich habe mich im Urlaub gut erholt.'], ['sich erinnern (an)', 'Akk', 'acordarse', 'Ich erinnere mich nicht.'],
+          ['sich erkälten', 'Akk', 'resfriarse', 'Ich habe mich erkältet.'], ['sich freuen (auf, über)', 'Akk', 'alegrarse; tener ganas', 'Ich freue mich!'], ['sich fühlen', 'Akk', 'sentirse', 'Ich fühle mich heute nicht gut.'],
+          ['sich gewöhnen (an)', 'Akk', 'acostumbrarse', 'Ich gewöhne mich an die Kälte.'], ['sich interessieren (für)', 'Akk', 'interesarse', 'Ich interessiere mich für Robotik.'], ['sich konzentrieren', 'Akk', 'concentrarse', 'Ich kann mich nicht konzentrieren.'],
+          ['sich kümmern (um)', 'Akk', 'ocuparse de', 'Ich kümmere mich darum.'], ['sich setzen', 'Akk', 'sentarse', 'Setzen Sie sich bitte.'], ['sich streiten', 'Akk', 'pelearse', 'Sie streiten sich oft.'],
+          ['sich treffen', 'Akk', 'verse, quedar', 'Wir treffen uns um acht.'], ['sich unterhalten', 'Akk', 'platicar', 'Wir haben uns lange unterhalten.'], ['sich verabschieden', 'Akk', 'despedirse', 'Ich verabschiede mich.'],
+          ['sich verlieben', 'Akk', 'enamorarse', 'Er hat sich verliebt.'], ['sich verspäten', 'Akk', 'retrasarse', 'Der Zug verspätet sich.'], ['sich vorbereiten (auf)', 'Akk', 'prepararse', 'Ich bereite mich auf die Prüfung vor.'],
+          ['sich vorstellen', 'Akk', 'presentarse', 'Ich stelle mich kurz vor.'],
+          '— con Dativ (mir, dir), porque hay otro objeto —',
+          ['sich etwas vorstellen', 'Dat', 'imaginarse algo', 'Ich kann mir das gut vorstellen.'], ['sich etwas merken', 'Dat', 'recordar, memorizar', 'Ich kann mir keine Namen merken.'], ['sich etwas überlegen', 'Dat', 'pensarse algo', 'Ich überlege es mir.'],
+          ['sich etwas wünschen', 'Dat', 'desear algo', 'Was wünschst du dir zum Geburtstag?'], ['sich etwas ansehen', 'Dat', 'ver algo con calma', 'Ich sehe mir die Wohnung morgen an.'], ['sich etwas leisten', 'Dat', 'darse el lujo', 'Das kann ich mir nicht leisten.'],
+          ['sich etwas kaufen', 'Dat', 'comprarse algo', 'Ich kaufe mir ein Fahrrad.'], ['sich die Hände waschen', 'Dat', 'lavarse las manos', 'Ich wasche mir die Hände.'], ['sich die Zähne putzen', 'Dat', 'lavarse los dientes', 'Ich putze mir die Zähne.'],
+          ['sich etwas brechen', 'Dat', 'romperse algo', 'Er hat sich das Bein gebrochen.']],
+          nota: '**sich vorstellen** con Akkusativ = presentarse; con Dativ y un objeto = imaginarse algo.' }
+      ],
+      ojo: [['Ich wasche mich die Hände.', 'Ich wasche mir die Hände.', 'Hay otro objeto (die Hände): **Dativ**.'], ['Ich bleibe mich zu Hause.', 'Ich bleibe zu Hause.', '**bleiben** no es reflexivo.'],
+            ['Ich freue auf den Urlaub.', 'Ich freue mich auf den Urlaub.', '**sich freuen** necesita el pronombre.'], ['Ich kann mich das vorstellen.', 'Ich kann mir das vorstellen.', 'Imaginarse algo: **Dativ**.'],
+            ['Er erinnert ihn nicht.', 'Er erinnert sich nicht.', 'Tercera persona: siempre **sich**.']]
+    },
+    { k: 'imperativ', t: 'Imperativo', sub: 'Komm! · Kommen Sie!', c: '#dc2626', alias: ['imperativo'],
+      h2: 'El imperativo', p: 'Para pedir, aconsejar o dar instrucciones. Tres formas: **du**, **ihr** y **Sie**; con **bitte** suena amable.',
+      ficha: [
+        { lbl: 'Las tres formas', tabla: { cab: ['', 'du', 'ihr', 'Sie'], de: [1, 2, 3], filas: [
+          ['machen', 'Mach!', 'Macht!', 'Machen Sie!'], ['kommen', 'Komm!', 'Kommt!', 'Kommen Sie!'], ['warten', 'Warte!', 'Wartet!', 'Warten Sie!'], ['nehmen', 'Nimm!', 'Nehmt!', 'Nehmen Sie!'],
+          ['fahren', 'Fahr!', 'Fahrt!', 'Fahren Sie!'], ['anrufen', 'Ruf an!', 'Ruft an!', 'Rufen Sie an!'], ['sein', 'Sei!', 'Seid!', 'Seien Sie!'], ['haben', 'Hab!', 'Habt!', 'Haben Sie!']] },
+          nota: 'Los separables mandan el prefijo al final: **Ruf** mich morgen **an**!' },
+        { lbl: 'Con wir: propuestas', de: '[Gehen wir]! [Lass uns] gehen!', txt: '«¡Vamos!»: el verbo primero con wir, o lass uns + infinitivo.' }
+      ],
+      reglas: [
+        { t: 'du: la forma de du sin -st y sin du', d: 'du kommst → **Komm!** La -e final es opcional (Komm! o Komme!) y se queda si la raíz termina en -t, -d o -ig (Warte! Entschuldige!).', ej: [['[Komm] bitte pünktlich!', 'Llega puntual, por favor.'], ['[Warte] kurz!', '¡Espera tantito!'], ['[Entschuldige] bitte!', '¡Perdón! (de tú)']] },
+        { t: 'e → i se queda; a → ä se va', d: 'Los que cambian e → i(e) lo conservan: du nimmst → **Nimm!**, du liest → **Lies!** Los que cambian a → ä lo pierden: du fährst → **Fahr!**', ej: [['[Nimm] den Regenschirm mit!', '¡Llévate el paraguas!'], ['[Lies] den Text noch einmal!', '¡Lee el texto otra vez!'], ['[Gib] mir bitte das Salz!', 'Pásame la sal, por favor.'], ['[Fahr] vorsichtig!', '¡Maneja con cuidado!'], ['[Schlaf] gut!', '¡Que duermas bien!']] },
+        { t: 'ihr: igual que el presente, sin ihr', ej: [['Kinder, [seid] bitte leise!', 'Niños, guarden silencio, por favor.'], ['[Kommt] doch mit!', '¡Vénganse!']] },
+        { t: 'Sie: verbo + Sie, siempre', d: 'Es la forma de la oficina, el doctor y el examen. Más cortés aún: Konjunktiv II (Könnten Sie…?).', ej: [['[Nehmen Sie] bitte Platz.', 'Tome asiento, por favor.'], ['[Füllen Sie] bitte das Formular [aus].', 'Llene el formulario, por favor.'], ['[Könnten Sie] das bitte wiederholen?', '¿Podría repetirlo, por favor?']] },
+        { t: 'Palabras que suavizan', d: '**mal** (informal, «tantito»), **doch** (anima o insiste), **bitte** (amable).', ej: [['Schau [mal]!', '¡Mira!'], ['Komm [doch] mit!', '¡Anda, ven!'], ['Ruf mich [bitte] zurück.', 'Devuélveme la llamada, por favor.']] }
+      ],
+      ojo: [['Kommst!', 'Komm!', 'du: sin -st.'], ['Nehm das!', 'Nimm das!', 'e → i se conserva.'], ['Fährst vorsichtig!', 'Fahr vorsichtig!', 'a → ä se pierde y sin -st.'],
+            ['Bist ruhig!', 'Sei ruhig!', '**sein**: Sei! Seid! Seien Sie!'], ['Nehmen bitte Platz!', 'Nehmen Sie bitte Platz!', 'La forma de Sie lleva siempre **Sie**.']]
+    },
+    { k: 'konjunktiv', t: 'Konjunktiv II', sub: 'würde · hätte · wäre', c: '#0f766e', alias: ['konjunktiv2', 'wurde'],
+      h2: 'El Konjunktiv II: würde, hätte, wäre, könnte', p: 'Para lo **cortés** (Könnten Sie…?), lo **hipotético** (Wenn ich Zeit hätte…), los **deseos** y los **consejos**. Es la forma que más se usa en el trabajo y en la entrevista.',
+      ficha: [
+        { lbl: 'Las formas que más se usan', tabla: { cab: ['', 'sein', 'haben', 'können', 'werden'], de: [1, 2, 3, 4], filas: [
+          ['ich', 'wäre', 'hätte', 'könnte', 'würde'], ['du', 'wärst', 'hättest', 'könntest', 'würdest'], ['er/sie/es', 'wäre', 'hätte', 'könnte', 'würde'],
+          ['wir', 'wären', 'hätten', 'könnten', 'würden'], ['ihr', 'wärt', 'hättet', 'könntet', 'würdet'], ['sie/Sie', 'wären', 'hätten', 'könnten', 'würden']] },
+          nota: 'También **müsste** (tendría que), **sollte** (debería), **dürfte**. Los demás verbos van con **würde + infinitivo**.' },
+        { lbl: 'Para pedir con cortesía', chips: [['Könnten Sie …?', '¿podría…?'], ['Würden Sie …?', '¿sería tan amable de…?'], ['Hätten Sie Zeit?', '¿tendría tiempo?'], ['Ich hätte gern …', 'quisiera…'], ['Wäre es möglich, …?', '¿sería posible…?']] }
+      ],
+      reglas: [
+        { t: 'Cortesía', ej: [['[Könnten] Sie mir bitte helfen?', '¿Me podría ayudar, por favor?'], ['Ich [hätte] gern einen Kaffee.', 'Quisiera un café.'], ['[Wäre] es möglich, den Termin zu verschieben?', '¿Sería posible cambiar la cita?'], ['[Würden] Sie mir die Unterlagen schicken?', '¿Me enviaría los documentos?']] },
+        { t: 'Deseos', d: 'Con **gern**, o con **wenn … nur** para lo que no es.', ej: [['Ich [würde] gern in Esslingen wohnen.', 'Me gustaría vivir en Esslingen.'], ['Ich [hätte] gern mehr Zeit.', 'Me gustaría tener más tiempo.'], ['Wenn ich nur besser Deutsch sprechen [könnte]!', '¡Si tan solo hablara mejor alemán!']] },
+        { t: 'Consejos', ej: [['Du [solltest] mehr schlafen.', 'Deberías dormir más.'], ['An deiner Stelle [würde] ich das Angebot annehmen.', 'Yo que tú aceptaría la oferta.'], ['Du [könntest] mal mit deinem Chef sprechen.', 'Podrías hablar con tu jefe.']] },
+        { t: 'Lo hipotético: wenn + Konjunktiv II', d: 'Las dos partes en Konjunktiv II; en la parte con wenn el verbo va al final.', ej: [['Wenn ich mehr Geld [hätte], [würde] ich mehr reisen.', 'Si tuviera más dinero, viajaría más.'], ['Wenn das Wetter besser [wäre], [könnten] wir grillen.', 'Si hiciera mejor clima, podríamos hacer carne asada.']],
+          nota: 'Algunos irregulares tienen forma propia (käme, ginge, wüsste, gäbe), pero al hablar basta **würde + infinitivo**: Ich würde mitkommen.' },
+        { t: 'El pasado: hätte o wäre + participio', d: 'Para lo que pudo ser y no fue.', ej: [['Wenn ich das gewusst [hätte], [wäre] ich früher [gekommen].', 'Si lo hubiera sabido, habría llegado antes.'], ['Das [hätte] ich nicht sagen sollen.', 'No debí decir eso.']] }
+      ],
+      ojo: [['Wenn ich hätte Zeit, …', 'Wenn ich Zeit hätte, …', 'Con wenn, el verbo **al final**.'], ['Ich würde haben mehr Geld.', 'Ich hätte mehr Geld.', 'Con haben y sein, la forma propia: **hätte, wäre**.'],
+            ['Ich würde gehen gern.', 'Ich würde gern gehen.', 'El infinitivo, **al final**.'], ['Du sollst mehr schlafen.', 'Du solltest mehr schlafen.', 'Un consejo tuyo es **solltest** (deberías); **sollst** es lo que otro manda.']]
+    },
+    { k: 'werden', t: 'werden y la pasiva', sub: 'futuro · volverse · pasiva', c: '#475569', alias: ['passiv', 'futur'],
+      h2: 'werden: futuro, «volverse» y la pasiva', p: 'Un solo verbo, tres trabajos: con un sustantivo o adjetivo es **volverse**; con infinitivo, el **futuro**; con participio, la **pasiva**.',
+      ficha: [
+        { lbl: 'werden en sus tiempos', tabla: { cab: ['', 'presente', 'Präteritum', 'Perfekt'], de: [1, 2, 3], filas: [
+          ['ich', 'werde', 'wurde', 'bin geworden'], ['du', 'wirst', 'wurdest', 'bist geworden'], ['er/sie/es', 'wird', 'wurde', 'ist geworden'],
+          ['wir', 'werden', 'wurden', 'sind geworden'], ['ihr', 'werdet', 'wurdet', 'seid geworden'], ['sie/Sie', 'werden', 'wurden', 'sind geworden']] },
+          nota: 'En la pasiva, el Perfekt pierde el ge-: Das Auto **ist repariert worden**.' },
+        { lbl: 'Los tres usos de un vistazo', tabla: { cab: ['werden +', 'sentido', 'ejemplo'], de: [2], filas: [['sustantivo o adjetivo', 'volverse, llegar a ser', 'Es wird kalt.'], ['infinitivo', 'futuro', 'Ich werde dich anrufen.'], ['participio', 'pasiva', 'Das Auto wird repariert.']] } }
+      ],
+      reglas: [
+        { t: 'Volverse, llegar a ser', ej: [['Im Winter [wird] es früh dunkel.', 'En invierno oscurece temprano.'], ['Sie [wird] nächstes Jahr Mutter.', 'Va a ser mamá el próximo año.'], ['Er [ist] krank [geworden].', 'Se enfermó.'], ['Was willst du [werden]?', '¿Qué quieres ser?']] },
+        { t: 'El futuro: werden + infinitivo al final', d: 'Para promesas, predicciones y suposiciones. Si hay palabra de tiempo, el presente basta.', ej: [['Ich [werde] dich morgen [anrufen].', 'Te llamaré mañana.'], ['Es [wird] bestimmt [regnen].', 'Seguro va a llover.'], ['Er [wird] wohl im Stau [stehen].', 'Ha de estar en el tráfico.']] },
+        { t: 'La pasiva: lo que se hace, sin decir quién', d: 'werden conjugado + participio al final. Para decir quién: **von** + Dativ (una persona); el medio: **durch** + Akkusativ.', ej: [['Hier [wird] Deutsch [gesprochen].', 'Aquí se habla alemán.'], ['Das Auto [wird] gerade [repariert].', 'Están reparando el coche.'], ['Die Software [wird] von unserem Team [getestet].', 'Nuestro equipo prueba el software.']] },
+        { t: 'La pasiva en pasado', d: 'Präteritum: **wurde** + participio. Perfekt: **ist** + participio + **worden**.', ej: [['Das Haus [wurde] 1920 [gebaut].', 'La casa se construyó en 1920.'], ['Die Stelle [ist] schon [vergeben worden].', 'El puesto ya se asignó.']] },
+        { t: 'La pasiva con modal', d: 'Modal + participio + **werden** al final.', ej: [['Das Formular [muss] bis Freitag [ausgefüllt werden].', 'El formulario tiene que llenarse antes del viernes.'], ['Das [kann] nicht [geändert werden].', 'Eso no se puede cambiar.']] },
+        { t: 'El resultado: sein + participio', d: 'La pasiva con werden es la acción; con sein, cómo quedó.', ej: [['Die Tür [wird] geschlossen. → Die Tür [ist] geschlossen.', 'Están cerrando la puerta. → La puerta está cerrada.']] }
+      ],
+      ojo: [['Ich werde morgen rufe dich an.', 'Ich werde dich morgen anrufen.', 'Con werden, el infinitivo **al final**.'], ['Das Auto ist repariert geworden.', 'Das Auto ist repariert worden.', 'En la pasiva: **worden**, sin ge-.'],
+            ['Das Buch wurde bei Goethe geschrieben.', 'Das Buch wurde von Goethe geschrieben.', 'Quién lo hace: **von** + Dativ.'], ['Er hat krank geworden.', 'Er ist krank geworden.', '**werden** hace el Perfekt con **sein**.']]
+    }
+  ],
+  practica: [
+    ['Er ___ sehr gut Deutsch.', ['spricht', 'sprecht', 'sprichst'], '**sprechen**: e → i con er.', 'Él habla muy bien alemán.'],
+    ['Du ___ zu viel.', ['arbeitest', 'arbeitst', 'arbeitet'], 'Raíz en -t: se mete una e.', 'Trabajas demasiado.'],
+    ['Wie ___ du?', ['heißt', 'heißst', 'heiße'], 'Raíz en -ß: du solo añade -t.', '¿Cómo te llamas?'],
+    ['___ du mir bitte?', ['Hilfst', 'Helfst', 'Hilft'], '**helfen**: e → i con du.', '¿Me ayudas, por favor?'],
+    ['Sie ___ jeden Tag mit dem Fahrrad.', ['fährt', 'fahrt', 'fährst'], '**fahren**: a → ä con er/sie.', 'Ella va diario en bici.'],
+    ['Ich ___ das nicht.', ['weiß', 'weiße', 'wisse'], '**wissen**: ich weiß, sin terminación.', 'No lo sé.'],
+    ['Ich ___ letzte Woche nach Guadalajara geflogen.', ['bin', 'habe', 'war'], 'Movimiento a un lugar: Perfekt con **sein**.', 'La semana pasada volé a Guadalajara.'],
+    ['Wir ___ den ganzen Tag gearbeitet.', ['haben', 'sind', 'werden'], '**arbeiten** va con haben.', 'Trabajamos todo el día.'],
+    ['Was ist ___?', ['passiert', 'gepassiert', 'passieren'], '**passieren** termina en -ieren: sin ge-.', '¿Qué pasó?'],
+    ['Er hat Maschinenbau ___.', ['studiert', 'gestudiert', 'studieren'], '-ieren: sin ge-.', 'Él estudió ingeniería mecánica.'],
+    ['Ich habe dich gestern ___.', ['angerufen', 'angeruft', 'geanrufen'], 'Separable e irregular: an + ge + rufen.', 'Te llamé ayer.'],
+    ['Das habe ich nicht ___.', ['verstanden', 'geverstanden', 'verstehen'], 'Prefijo **ver-**: sin ge-; irregular.', 'Eso no lo entendí.'],
+    ['Er ist um 7 Uhr ___.', ['aufgestanden', 'aufgestehen', 'geaufstanden'], 'Separable: auf + ge + standen, con sein.', 'Se levantó a las 7.'],
+    ['Gestern ___ ich krank.', ['war', 'bin', 'wäre'], 'Pasado de **sein** al hablar: war.', 'Ayer estaba enfermo.'],
+    ['Als Kind ___ ich einen Hund.', ['hatte', 'habte', 'hätte'], 'Pasado de **haben**: hatte.', 'De niño tenía un perro.'],
+    ['Ich ___ gestern länger arbeiten.', ['musste', 'müsste', 'muss'], 'Pasado de müssen: **musste**, sin diéresis.', 'Ayer tuve que trabajar más.'],
+    ['Hier ___ man nicht rauchen.', ['darf', 'muss', 'will'], 'Prohibido = **nicht dürfen**.', 'Aquí no se puede fumar.'],
+    ['Ich ___ gut schwimmen.', ['kann', 'kenne', 'weiß'], 'Saber hacer algo: **können**.', 'Sé nadar bien.'],
+    ['Ich ___ einen Kaffee, bitte.', ['möchte', 'mag', 'will'], 'Pedir con cortesía: **möchte**.', 'Quisiera un café, por favor.'],
+    ['Du ___ das nicht machen, es ist nicht nötig.', ['musst', 'darfst', 'sollst'], 'No hace falta = **nicht müssen**.', 'No tienes que hacerlo, no es necesario.'],
+    ['Der Arzt sagt, ich ___ mehr schlafen.', ['soll', 'will', 'darf'], 'Lo que otro dice: **sollen**.', 'El doctor dice que debo dormir más.'],
+    ['Ich ___ jeden Tag um 6 Uhr auf.', ['stehe', 'aufstehe', 'steht'], 'Separable: el prefijo va al final.', 'Me levanto diario a las 6.'],
+    ['Ich muss morgen früh ___.', ['aufstehen', 'stehe auf', 'aufgestanden'], 'Con modal: infinitivo junto, al final.', 'Mañana me tengo que levantar temprano.'],
+    ['Ruf mich an, wenn du ___.', ['ankommst', 'kommst an', 'ankommen'], 'Subordinada: el verbo junto al final.', 'Llámame cuando llegues.'],
+    ['Ich freue ___ auf das Wochenende.', ['mich', 'mir', 'sich'], '**sich freuen**: con ich, mich.', 'Tengo ganas del fin de semana.'],
+    ['Ich wasche ___ die Hände.', ['mir', 'mich', 'sich'], 'Hay otro objeto (die Hände): Dativ, mir.', 'Me lavo las manos.'],
+    ['Kannst du ___ das vorstellen?', ['dir', 'dich', 'sich'], 'Imaginarse algo: Dativ, dir.', '¿Te lo puedes imaginar?'],
+    ['Wir treffen ___ um acht.', ['uns', 'sich', 'euch'], 'wir → uns.', 'Nos vemos a las ocho.'],
+    ['___ bitte das Fenster zu!', ['Mach', 'Machst', 'Machen'], 'Imperativo de du: sin -st y sin du.', '¡Cierra la ventana, por favor!'],
+    ['___ den Regenschirm mit!', ['Nimm', 'Nehm', 'Nimmst'], 'e → i se conserva en el imperativo.', '¡Llévate el paraguas!'],
+    ['___ vorsichtig!', ['Fahr', 'Fähr', 'Fährst'], 'a → ä se pierde en el imperativo.', '¡Maneja con cuidado!'],
+    ['Kinder, ___ bitte leise!', ['seid', 'sind', 'seiet'], 'Imperativo de ihr con sein: seid.', 'Niños, guarden silencio, por favor.'],
+    ['Nehmen ___ bitte Platz.', ['Sie', 'du', 'ihr'], 'La forma formal lleva siempre **Sie**.', 'Tome asiento, por favor.'],
+    ['___ Sie mir bitte helfen?', ['Könnten', 'Konnten', 'Kannten'], 'Pedir con cortesía: Konjunktiv II, **könnten**.', '¿Me podría ayudar, por favor?'],
+    ['Wenn ich mehr Zeit ___, würde ich mehr lesen.', ['hätte', 'hatte', 'habe'], 'Hipotético: Konjunktiv II, hätte.', 'Si tuviera más tiempo, leería más.'],
+    ['Du ___ mehr Wasser trinken.', ['solltest', 'solltet', 'sollte'], 'Consejo a du: **solltest** (deberías).', 'Deberías tomar más agua.'],
+    ['Ich ___ dich morgen anrufen.', ['werde', 'wird', 'werden'], 'Futuro: ich werde + infinitivo.', 'Te llamaré mañana.'],
+    ['Im Winter ___ es früh dunkel.', ['wird', 'wirst', 'werde'], '«Volverse»: es **wird**.', 'En invierno oscurece temprano.'],
+    ['Hier wird Deutsch ___.', ['gesprochen', 'gesprecht', 'sprechen'], 'Pasiva: werden + participio.', 'Aquí se habla alemán.'],
+    ['Das Auto ist schon repariert ___.', ['worden', 'geworden', 'werden'], 'Perfekt de la pasiva: **worden**, sin ge-.', 'El coche ya fue reparado.'],
+    ['Er ist krank ___.', ['geworden', 'worden', 'gewerden'], '«Volverse» en Perfekt: **geworden**.', 'Se enfermó.'],
+    ['Gestern ___ ich früh ins Bett.', ['ging', 'gang', 'gingte'], 'Präteritum de gehen: **ging**.', 'Ayer me fui temprano a dormir.'],
+    ['Das ___ ich nicht.', ['wusste', 'wisste', 'weißte'], 'Mixto: wissen → **wusste**.', 'Eso no lo sabía.']
+  ]
+};
+</script>
+<script src="temas.js"></script>
+<script src="leccion.js"></script>
+<script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
+</body>
+</html>

@@ -498,9 +498,12 @@ Adán, 14-oct-2026: *"cuando haga click aquí, debes mostrarme una ventana… ah
 también agrega lecciones de alemán"*, y el 15: *"no me das suficiente vocabulario, mejora el diseño de la
 ventana"*. Tocar la tarjeta abre `#alemanOverlay` (`abrirAleman()`) en el vocabulario, y tocar la lección de la
 tarjeta, en la lección. Es ancha y alta —hasta 1900 px, el 96 % del ancho y el 92 % del alto—, opaca (es para
-leer: con vidrio se veían las fotos de Mi Día detrás de cada tarjeta) y con **tres pestañas a todo lo ancho** que
+leer: con vidrio se veían las fotos de Mi Día detrás de cada tarjeta) y con **siete pestañas a todo lo ancho** que
 dicen lo que hay en cada una: *Vocabulario · Trámites · 10 nuevas · 5 de repaso*, *Lección · K10 · 06 · Partizip I & II ·
-0 de 5* y *Casos · Nominativ · Akkusativ · Dativ · tu mejor: 9 de 12* (`alemanTabsTxt()`).
+0 de 5*, *Casos · Nominativ · Akkusativ · Dativ · tu mejor: 9 de 12* y las cuatro de gramática a fondo, *Preposiciones*,
+*Verbos*, *Adjetivos* y *La frase*, con de qué van o tu mejor ronda (`alemanTabsTxt()`). Las siete con su detalle caben
+desde unos 1860 px (a 2048, su pantalla); más angosto, las de gramática se quedan con su nombre, bajo 1400 también Casos y
+bajo 1200 todas; si aun así no caben, la fila se desliza de lado.
 
 **El vocabulario de hoy** son diez palabras, no una (`AL_VOC_DIA`, `alemanVocabHoy()`), **todas de un mismo tema**:
 las siguientes del orden de Coach que no han salido, por tema (`alemanTanda()`, ver *Lo decide Coach*), fijas en el día
@@ -579,6 +582,17 @@ responde cada caso, el artículo definido y el indefinido en los cuatro casos co
 pronombres en Akkusativ y Dativ y las preposiciones de cada caso, para consultarla mientras se practica. Mide 400 px
 de ancho y se desplaza sola; bajo 1100 px sube encima de la página, con un 40 % del alto como máximo, y se contrae.
 Medido: a 1600×1000 la tabla mide 400×776; a 390, 368×338, sin desplazamiento horizontal.
+
+**Los temas a fondo** (Adán, 26-nov-2026: *"en alemán de hoy añade las preposiciones en otro subtab, todas y toda la info
+completísima, también de otros temas que sean genéricos como este tipo, en otras subtabs, así como el subtab de casos"*):
+*Preposiciones*, *Verbos*, *Adjetivos* y *La frase* son `preposiciones.html`, `verbos.html`, `adjetivos.html` y `frase.html`
+de la app de Alemán, cada una en su iframe a todo lo ancho (`.alv-tem[data-tem]`: `#alemanTemPrep`, `#alemanTemVerbos`,
+`#alemanTemAdj`, `#alemanTemFrase`), sin tabla al lado: su ficha de consulta ya va dentro de cada pestaña de la página.
+Igual que los casos, se cargan la primera vez que se abre su pestaña (`AL_TEMAS` en `alemanTab()`), `leccion.js` las pone
+en modo ventana y en el tema del Dashboard, y su práctica se guarda en `aleman_prep_v1`, `aleman_verbos_v1`, `aleman_adj_v1`
+y `aleman_frase_v1`, que la pestaña cuenta al momento. Los mensajes de cualquiera de los iframes de la ventana (Escape,
+abrir otra página) los atiende el mismo receptor. Medido: a 2048×1040 cada tema mide 1836×811 y sus pestañas internas van
+en una fila; a 1600×1000, 1424×774 en una o dos filas; a 390, 366×703, sin desplazamiento horizontal.
 
 **Qué lección toca** lo dice `ALEMAN_LECCIONES.queToca()`, de `../Aleman/lecciones-datos.js`: la misma regla
 que el inicio de Alemán (ver *Lo decide Coach*). **«‹» / «Siguiente ›»** recorren el orden de Coach

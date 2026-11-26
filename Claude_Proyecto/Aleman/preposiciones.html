@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Las preposiciones — todas, con su caso, sus usos y ejemplos | Deutsch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap"></noscript>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="temas.css">
+</head>
+<body>
+
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="casos.html">Casos</a>
+    <a href="preposiciones.html" class="on" aria-current="page">Preposiciones</a>
+    <a href="verbos.html">Verbos</a>
+    <a href="adjetivos.html">Adjetivos</a>
+    <a href="frase.html">La frase</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
+
+<header class="cs-hero" id="csHero"></header>
+<div class="cs-tabs"><div class="cs-in" id="csTabs" role="tablist" aria-label="Temas"></div></div>
+<main class="cs-main" id="csMain"></main>
+
+<footer class="footer" style="margin-top:0">
+  <p>Las preposiciones del alemán — todas, con su caso, sus usos, ejemplos y práctica · A1–B1</p>
+  <div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div>
+</footer>
+
+<script src="../Dashboard/datos-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-pc.js"></script>
+<script>
+/* ── Las preposiciones: todo el contenido. Lo pinta temas.js. ───────────────────────────────────────────────
+   Adán, 26-nov-2026: "añade las preposiciones en otro subtab, todas y toda la info completísima". En los ejemplos,
+   lo que va entre [corchetes] es la preposición con su artículo: sale subrayada. Todo alemán revisado (prompt de Alemán:
+   "un artículo o una terminación mal enseñados se aprenden mal"). */
+var AKK = '#dc2626', DAT = '#059669', WEC = '#b45309', GEN = '#7c3aed', LUG = '#0e7490', TIE = '#4338ca', CON = '#475569', VER = '#be185d', ADJ = '#0f766e';
+window.TEMA = {
+  clave: 'aleman_prep_v1', ronda: 12,
+  hero: {
+    k: 'Gramática · A1–B1 · la pieza que más se equivoca',
+    h1: 'Las <em>preposiciones</em>: todas, con su caso',
+    lead: 'Cada preposición pide un caso, y eso decide el artículo que va después. Aquí están todas las que vas a usar: las de **Akkusativ**, las de **Dativ**, las nueve **de dos casos**, las de **Genitiv**, cómo decir **dónde y adónde**, el **tiempo**, las **contracciones** y los **verbos y adjetivos** que llevan una fija.',
+    frase: ['Ich fahre [mit dem] Zug [nach] Stuttgart und warte dort [auf den] Bus [zur] Uni.', 'Voy en tren a Stuttgart y ahí espero el camión a la universidad.']
+  },
+  tabs: [
+    { k: 'mapa', t: 'Cómo elegir', sub: 'el mapa', c: '#CC0000', alias: ['inicio', 'elegir'],
+      h2: 'Cómo elegir', p: 'Cada preposición pide un caso fijo, salvo nueve que cambian según haya movimiento o no. Apréndelas en sus cuatro grupos y el artículo sale solo.',
+      grupos: [
+        { t: 'Siempre Akkusativ', c: AKK, p: 'Truco: **DOGFUB** — durch, ohne, gegen, für, um, bis.', chips: [['durch', 'a través de'], ['für', 'para'], ['gegen', 'contra'], ['ohne', 'sin'], ['um', 'alrededor, a las'], ['bis', 'hasta'], ['entlang', 'a lo largo de'], ['wider', 'contra (formal)']] },
+        { t: 'Siempre Dativ', c: DAT, p: 'Se cantan: «aus, bei, mit, nach, seit, von, zu».', chips: [['aus', 'de, desde'], ['bei', 'en casa de, en'], ['mit', 'con'], ['nach', 'a, después de'], ['seit', 'desde (hace)'], ['von', 'de, desde'], ['zu', 'a, hacia'], ['ab', 'a partir de'], ['außer', 'excepto'], ['gegenüber', 'enfrente de'], ['entgegen', 'contrario a'], ['gemäß', 'según (formal)']] },
+        { t: 'De dos casos', c: WEC, p: '¿Wo? (dónde está) → Dativ. ¿Wohin? (adónde va) → Akkusativ.', chips: [['an', 'en, junto a'], ['auf', 'sobre'], ['hinter', 'detrás de'], ['in', 'en, dentro de'], ['neben', 'al lado de'], ['über', 'encima de'], ['unter', 'debajo de'], ['vor', 'delante de'], ['zwischen', 'entre']] },
+        { t: 'Genitiv', c: GEN, p: 'Más de lo escrito; al hablar, muchas van con Dativ.', chips: [['während', 'durante'], ['wegen', 'por, a causa de'], ['trotz', 'a pesar de'], ['statt', 'en lugar de'], ['innerhalb', 'dentro de'], ['außerhalb', 'fuera de'], ['aufgrund', 'debido a'], ['laut', 'según'], ['dank', 'gracias a'], ['bezüglich', 'respecto a']] }
+      ],
+      pasos: [
+        ['¿Es de las fijas?', 'Si es de Akkusativ, de Dativ o de Genitiv, manda ella: **für** siempre Akkusativ, **mit** siempre Dativ, **wegen** Genitiv, sin pensar más.'],
+        ['¿Es de las nueve de dos casos?', 'Pregunta al verbo: ¿**dónde** está algo (wo?) → Dativ; ¿**adónde** va o lo pones (wohin?) → Akkusativ. Si dice tiempo, casi siempre Dativ (am Montag, vor einer Woche).'],
+        ['¿Va con un verbo o adjetivo fijo?', 'warten **auf** + Akkusativ, Angst **vor** + Dativ, stolz **auf** + Akkusativ: con verbos y adjetivos se aprenden en bloque, con su caso.'],
+        ['Pon el artículo y contrae', 'mit + dem = mit dem; zu + dem = **zum**, zu + der = **zur**, in + dem = **im**, in + das = **ins**, an + dem = **am**, bei + dem = **beim**, von + dem = **vom**.']
+      ],
+      ficha: [
+        { lbl: 'Los artículos después de la preposición', tabla: { cab: ['', 'masc.', 'fem.', 'neutro', 'plural'], de: [1, 2, 3, 4], filas: [
+          ['Akkusativ', 'den · einen', 'die · eine', 'das · ein', 'die · —'],
+          ['Dativ', 'dem · einem', 'der · einer', 'dem · einem', 'den …n'],
+          ['Genitiv', 'des …s', 'der · einer', 'des …s', 'der']] },
+          nota: 'En Dativ plural el sustantivo añade **-n** (mit den Kindern). En Genitiv, el masculino y el neutro añaden **-s** o **-es** (wegen des Wetters).' },
+        { lbl: 'Los pronombres después de la preposición', tabla: { cab: ['', 'Akk', 'Dat'], de: [1, 2], filas: [
+          ['yo', 'für mich', 'mit mir'], ['tú', 'für dich', 'mit dir'], ['él', 'für ihn', 'mit ihm'], ['ella', 'für sie', 'mit ihr'],
+          ['nosotros', 'für uns', 'mit uns'], ['ustedes', 'für euch', 'mit euch'], ['ellos', 'für sie', 'mit ihnen'], ['usted', 'für Sie', 'mit Ihnen']] } }
+      ],
+      reglas: [
+        { t: 'La preposición va antes del artículo y el sustantivo', d: 'Lo que viene después de la preposición —artículo, adjetivo y sustantivo— va en su caso. El verbo no cambia nada.', ej: [['Ich gehe [mit meinem] Kollegen [in die] Kantine.', 'Voy con mi colega al comedor.'], ['[Nach der] Arbeit gehe ich [ins] Fitnessstudio.', 'Después del trabajo voy al gimnasio.']] },
+        { t: 'Unas pocas van después del sustantivo', d: '**entlang** (con Akkusativ), **gegenüber**, **entgegen** y a veces **nach** (con el sentido de «según») pueden ir detrás.', ej: [['Wir gehen [die Straße entlang].', 'Caminamos a lo largo de la calle.'], ['[Meiner Meinung nach] ist das richtig.', 'En mi opinión, eso es correcto.'], ['Er sitzt [mir gegenüber].', 'Está sentado frente a mí.']] },
+        { t: 'Una preposición, varios significados', d: 'No traduzcas palabra por palabra: «a» puede ser **nach**, **zu**, **in** o **an**; «en» puede ser **in**, **an**, **auf** o **bei**. Aprende la preposición con su ejemplo.', ej: [['Ich fliege [nach] Berlin. / Ich gehe [zum] Arzt. / Ich gehe [ins] Kino.', 'Vuelo a Berlín. / Voy al doctor. / Voy al cine.'], ['Ich bin [in der] Stadt, [am] Bahnhof, [auf der] Post, [bei] Bosch.', 'Estoy en la ciudad, en la estación, en el correo, en Bosch.']] }
+      ]
+    },
+    { k: 'akk', t: 'Akkusativ', sub: 'durch · für · gegen…', c: AKK, alias: ['akkusativ'],
+      h2: 'Las preposiciones con Akkusativ', p: 'Siempre Akkusativ, haya movimiento o no. Recuerda: en Akkusativ solo cambia el masculino (den, einen, keinen, meinen).',
+      ficha: [
+        { lbl: 'Truco para recordarlas', de: 'durch · ohne · gegen · für · um · bis', txt: '«DOGFUB». Y dos más: entlang (detrás del sustantivo) y wider (solo en frases hechas).' },
+        { lbl: 'Contracciones de Akkusativ', chips: [['durchs', 'durch das'], ['fürs', 'für das'], ['ums', 'um das'], ['ins', 'in das (dos casos)'], ['ans', 'an das (dos casos)'], ['aufs', 'auf das (dos casos)']], nota: 'durchs, fürs y ums son del habla; en lo escrito formal mejor completas.' }
+      ],
+      reglas: [
+        { de: 'durch', t: '— a través de, por, gracias a', d: 'Atravesar un espacio de lado a lado; el medio con el que logras algo; en la pasiva, la causa.',
+          ej: [['Wir fahren [durch den] Tunnel.', 'Pasamos por el túnel.'], ['Ich gehe gern [durch die] Altstadt.', 'Me gusta caminar por el centro histórico.'], ['Ich habe die Stelle [durch einen] Freund gefunden.', 'Encontré el puesto gracias a un amigo.'], ['Das Haus wurde [durch ein] Feuer zerstört.', 'La casa fue destruida por un incendio.']] },
+        { de: 'für', t: '— para, por', d: 'Para quién o para qué es algo; a cambio de un precio; un tiempo que planeas; estar a favor.',
+          ej: [['Das Geschenk ist [für dich].', 'El regalo es para ti.'], ['Ich habe das Fahrrad [für] 200 Euro gekauft.', 'Compré la bici por 200 euros.'], ['Ich fliege [für] zwei Wochen nach Deutschland.', 'Vuelo a Alemania por dos semanas.'], ['Ich bin [für den] Vorschlag.', 'Estoy a favor de la propuesta.']],
+          nota: '**für** + tiempo es un plan que todavía no empieza o ya terminó. Si sigue pasando, es **seit**: Ich wohne seit drei Jahren hier (no «für drei Jahre»).' },
+        { de: 'gegen', t: '— contra, hacia, a eso de', d: 'En contra de; chocar con algo; una hora aproximada; un remedio para algo.',
+          ej: [['Mexiko spielt heute [gegen] Deutschland.', 'México juega hoy contra Alemania.'], ['Er ist [gegen die] Tür gelaufen.', 'Se dio contra la puerta.'], ['Ich komme [gegen] acht Uhr.', 'Llego a eso de las ocho.'], ['Hast du etwas [gegen] Kopfschmerzen?', '¿Tienes algo para el dolor de cabeza?']] },
+        { de: 'ohne', t: '— sin', d: 'Casi siempre sin artículo cuando es algo en general. Con artículo, Akkusativ.',
+          ej: [['Ich trinke Kaffee [ohne] Zucker.', 'Tomo el café sin azúcar.'], ['Ich gehe nie [ohne mein] Handy aus dem Haus.', 'Nunca salgo de casa sin mi celular.'], ['[Ohne dich] schaffe ich das nicht.', 'Sin ti no lo logro.']],
+          nota: 'Con una acción: **ohne … zu** + infinitivo — Er ist gegangen, ohne etwas zu sagen (se fue sin decir nada).' },
+        { de: 'um', t: '— alrededor de, a las, por', d: 'Rodear algo; la hora exacta; una cantidad en que algo sube o baja; con verbos como bitten um.',
+          ej: [['Wir sitzen [um den] Tisch.', 'Estamos sentados alrededor de la mesa.'], ['Der Kurs beginnt [um] 17 Uhr.', 'El curso empieza a las 17 horas.'], ['Die Bäckerei ist gleich [um die] Ecke.', 'La panadería está a la vuelta de la esquina.'], ['Die Miete ist [um] 50 Euro gestiegen.', 'La renta subió 50 euros.']],
+          nota: '**um … herum** = más o menos: um 1900 herum. **um … zu** + infinitivo es «para»: Ich lerne Deutsch, um in Deutschland zu studieren.' },
+        { de: 'bis', t: '— hasta', d: 'Solo, sin artículo, con horas, días, nombres de lugar. Con artículo se usa **bis zu** + Dativ.',
+          ej: [['Ich arbeite [bis] 18 Uhr.', 'Trabajo hasta las 18 horas.'], ['[Bis] morgen! [Bis] Montag!', '¡Hasta mañana! ¡Hasta el lunes!'], ['Der Zug fährt nur [bis] München.', 'El tren solo va hasta Múnich.'], ['Geh [bis zur] Ampel und dann links.', 'Ve hasta el semáforo y luego a la izquierda (bis zu + der = bis zur).']] },
+        { de: 'entlang', t: '— a lo largo de', d: 'Va **después** del sustantivo y pide Akkusativ. (Antes del sustantivo pide Genitiv o Dativ, más formal.)',
+          ej: [['Wir laufen [den Fluss entlang].', 'Corremos a lo largo del río.'], ['Fahren Sie [die Hauptstraße entlang].', 'Siga por la calle principal.']] },
+        { de: 'wider', t: '— contra (formal)', d: 'Solo en frases hechas; se entiende, casi no se dice.', ej: [['Er hat es [wider] Willen gemacht.', 'Lo hizo a su pesar.']] }
+      ],
+      ojo: [['Das ist für mir.', 'Das ist für mich.', '**für** siempre con Akkusativ: mich, dich, ihn.'],
+            ['Ich gehe durch dem Park.', 'Ich gehe durch den Park.', '**durch** pide Akkusativ: der Park → den Park.'],
+            ['ohne meinem Handy', 'ohne mein Handy', '**ohne** pide Akkusativ; das Handy no cambia: mein Handy.'],
+            ['Ich wohne für drei Jahre hier.', 'Ich wohne seit drei Jahren hier.', 'Si sigue pasando, es **seit** + Dativ.'],
+            ['bis der Bahnhof', 'bis zum Bahnhof', 'Con artículo, **bis zu** + Dativ.']]
+    },
+    { k: 'dat', t: 'Dativ', sub: 'aus · bei · mit · nach…', c: DAT, alias: ['dativ'],
+      h2: 'Las preposiciones con Dativ', p: 'Siempre Dativ, aunque haya movimiento (zu, nach, aus). Cambian todos los artículos: dem, der, dem, den…n.',
+      ficha: [
+        { lbl: 'Para recordarlas', de: 'aus · bei · mit · nach · seit · von · zu', txt: 'Cántalas con la música de «Danubio azul»; luego ab, außer, gegenüber, entgegen y gemäß.' },
+        { lbl: 'Contracciones de Dativ', chips: [['zum', 'zu dem'], ['zur', 'zu der'], ['beim', 'bei dem'], ['vom', 'von dem'], ['im', 'in dem (dos casos)'], ['am', 'an dem (dos casos)']] },
+        { lbl: '«a» no siempre es lo mismo', tabla: { cab: ['', 'adónde'], de: [1], filas: [['a un país o ciudad', 'nach Mexiko, nach Berlin'], ['a una persona o un sitio', 'zu meiner Mutter, zum Bahnhof'], ['a casa', 'nach Hause'], ['a un edificio (entrar)', 'ins Büro, in den Supermarkt']] } }
+      ],
+      reglas: [
+        { de: 'aus', t: '— de, desde dentro de, de (material), por (motivo)', d: 'De dónde eres o de dónde sales (de un espacio cerrado); de qué está hecho; por qué motivo.',
+          ej: [['Ich komme [aus] Mexiko, meine Kollegin kommt [aus der] Türkei.', 'Soy de México; mi colega es de Turquía.'], ['Er kommt gerade [aus dem] Büro.', 'Ahorita sale de la oficina.'], ['Der Tisch ist [aus] Holz.', 'La mesa es de madera.'], ['Ich habe das [aus] Liebe gemacht.', 'Lo hice por amor.']] },
+        { de: 'bei', t: '— en casa de, con, en (una empresa), cerca de, durante', d: 'Estar con alguien o en su casa o consultorio; la empresa donde trabajas; un lugar cerca de otro; mientras haces algo.',
+          ej: [['Ich wohne [bei meinen] Eltern.', 'Vivo con mis papás.'], ['Ich arbeite [bei] ALTEN.', 'Trabajo en ALTEN.'], ['Ich bin [beim] Arzt.', 'Estoy en el doctor.'], ['Esslingen liegt [bei] Stuttgart.', 'Esslingen está cerca de Stuttgart.'], ['[Beim] Essen sehe ich nicht fern.', 'Mientras como no veo la tele.']] },
+        { de: 'mit', t: '— con, en (transporte), a los (edad)', d: 'Compañía e instrumento; el medio de transporte; la edad.',
+          ej: [['Ich lerne [mit meinem] Bruder.', 'Estudio con mi hermano.'], ['Ich fahre [mit dem] Bus zur Arbeit.', 'Voy en camión al trabajo.'], ['Ich schreibe [mit dem] Kuli.', 'Escribo con la pluma.'], ['[Mit] 18 Jahren habe ich angefangen zu arbeiten.', 'A los 18 años empecé a trabajar.']],
+          nota: 'A pie no lleva mit: **zu Fuß**. En coche: **mit dem Auto** (con artículo).' },
+        { de: 'nach', t: '— a (países y ciudades), a casa, después de, según', d: 'A un país o ciudad **sin artículo** y a los puntos cardinales; a casa; después de algo; según (a veces detrás).',
+          ej: [['Im September fliege ich [nach] Deutschland.', 'En septiembre vuelo a Alemania.'], ['Ich gehe jetzt [nach] Hause.', 'Ya me voy a casa.'], ['[Nach dem] Kurs gehe ich einkaufen.', 'Después del curso voy de compras.'], ['Es ist zehn [nach] acht.', 'Son las ocho y diez.'], ['[Meiner Meinung nach] ist das zu teuer.', 'En mi opinión eso es demasiado caro.']],
+          nota: 'País **con** artículo no lleva nach, sino **in** + Akkusativ: in die Schweiz, in die USA, in die Türkei.' },
+        { de: 'seit', t: '— desde, desde hace', d: 'Algo que empezó en el pasado y **sigue**. Va con el verbo en **presente**, no en pasado.',
+          ej: [['Ich lerne [seit einem] Jahr Deutsch.', 'Estudio alemán desde hace un año.'], ['Ich wohne [seit] 2020 in Mexiko-Stadt.', 'Vivo en la Ciudad de México desde 2020.'], ['[Seit wann] arbeitest du bei ALTEN?', '¿Desde cuándo trabajas en ALTEN?'], ['[Seit der] Pandemie arbeite ich zweimal pro Woche von zu Hause.', 'Desde la pandemia trabajo dos veces por semana desde casa.']] },
+        { de: 'von', t: '— de, desde, por (pasiva)', d: 'Desde un punto o una persona; de quién es (al hablar); de … a …; quién hace la acción en la pasiva; de qué se habla.',
+          ej: [['Ich komme gerade [vom] Arzt.', 'Vengo del doctor.'], ['Das ist das Auto [von meinem] Vater.', 'Es el coche de mi papá.'], ['Ich arbeite [von] Montag [bis] Freitag, [von] 8 [bis] 17 Uhr.', 'Trabajo de lunes a viernes, de 8 a 17 horas.'], ['Das Buch wurde [von] Goethe geschrieben.', 'El libro lo escribió Goethe.'], ['Erzähl mir [von deiner] Reise!', '¡Cuéntame de tu viaje!']] },
+        { de: 'zu', t: '— a (personas y sitios), para (ocasiones)', d: 'Ir con una persona, a un sitio o a un evento; la ocasión o el fin; frases fijas.',
+          ej: [['Ich gehe [zu meiner] Mutter.', 'Voy con mi mamá (a su casa).'], ['Wie komme ich [zum] Bahnhof?', '¿Cómo llego a la estación?'], ['Ich gehe [zur] Bank und dann [zur] Post.', 'Voy al banco y luego al correo.'], ['[Zum] Geburtstag schenke ich ihr Blumen.', 'Para su cumpleaños le regalo flores.'], ['Ich bin [zu] Hause. Ich gehe [zu] Fuß.', 'Estoy en casa. Voy a pie.']] },
+        { de: 'ab', t: '— a partir de, desde (salida)', d: 'Desde un momento en adelante; desde dónde sale un transporte.',
+          ej: [['[Ab] Montag habe ich Urlaub.', 'A partir del lunes tengo vacaciones.'], ['Der Film ist [ab] 16 Jahren.', 'La película es para mayores de 16.'], ['Der Zug fährt [ab] Stuttgart Hauptbahnhof.', 'El tren sale de la estación central de Stuttgart.']] },
+        { de: 'außer', t: '— excepto, salvo, además de', d: 'Lo que queda fuera.',
+          ej: [['Alle [außer mir] waren da.', 'Todos menos yo estaban.'], ['[Außer] Deutsch spreche ich Englisch.', 'Además del alemán hablo inglés.'], ['Das Büro ist täglich [außer] sonntags geöffnet.', 'La oficina abre diario excepto los domingos.']] },
+        { de: 'gegenüber', t: '— enfrente de, con / hacia (una persona)', d: 'Puede ir antes o después del sustantivo; con pronombre siempre **después**.',
+          ej: [['Die Apotheke ist [gegenüber dem] Bahnhof.', 'La farmacia está enfrente de la estación.'], ['Sie wohnt [mir gegenüber].', 'Vive enfrente de mí.'], ['Er ist [mir gegenüber] immer sehr freundlich.', 'Conmigo siempre es muy amable.']] },
+        { de: 'entgegen', t: '— contrario a, al encuentro de', d: 'Formal; casi siempre después del sustantivo o en verbos (entgegenkommen).', ej: [['[Entgegen meinem] Rat hat er das Auto gekauft.', 'En contra de mi consejo, compró el coche.'], ['Sie kam [mir entgegen].', 'Vino a mi encuentro.']] },
+        { de: 'gemäß', t: '— según, conforme a (formal)', d: 'En contratos y documentos; al hablar se dice **laut** o **nach**.', ej: [['[Gemäß dem] Vertrag zahlen Sie am Monatsanfang.', 'Según el contrato, paga al inicio del mes.']] }
+      ],
+      ojo: [['Ich fahre mit meinen Bruder.', 'Ich fahre mit meinem Bruder.', '**mit** pide Dativ: der Bruder → meinem Bruder.'],
+            ['Ich fahre mit Auto.', 'Ich fahre mit dem Auto.', 'El transporte lleva artículo: mit dem Auto, mit dem Zug.'],
+            ['Ich gehe zu Hause.', 'Ich gehe nach Hause.', '**nach Hause** = a casa (movimiento); **zu Hause** = en casa.'],
+            ['Ich arbeite in Bosch.', 'Ich arbeite bei Bosch.', 'La empresa donde trabajas va con **bei**.'],
+            ['seit drei Jahre', 'seit drei Jahren', 'Dativ plural: el sustantivo añade -n.'],
+            ['Ich fliege nach der Schweiz.', 'Ich fliege in die Schweiz.', 'Países con artículo: **in** + Akkusativ.'],
+            ['Ich lerne Deutsch seit ein Jahr.', 'Ich lerne Deutsch seit einem Jahr.', '**seit** pide Dativ: das Jahr → einem Jahr.']]
+    },
+    { k: 'wechsel', t: 'De dos casos', sub: '¿wo? o ¿wohin?', c: WEC, alias: ['wechselprapositionen', 'dos'],
+      h2: 'Las nueve de dos casos (Wechselpräpositionen)', p: 'an, auf, hinter, in, neben, über, unter, vor y zwischen piden **Dativ** si dicen dónde está algo (¿wo?) y **Akkusativ** si dicen adónde va o adónde lo pones (¿wohin?).',
+      ficha: [
+        { lbl: 'La pregunta que decide', preg: ['Wo? · Wohin?', '¿Dónde está? → Dativ · ¿Adónde va? → Akkusativ'] },
+        { lbl: 'Los pares de verbos: poner y estar', tabla: { cab: ['Poner: ¿wohin? + Akk', 'Estar: ¿wo? + Dat', 'Qué significan'], de: [0, 1], filas: [
+          ['legen', 'liegen', 'acostar / estar acostado: el libro, el celular'],
+          ['stellen', 'stehen', 'poner parado / estar parado: la botella, el coche'],
+          ['(sich) setzen', 'sitzen', 'sentar(se) / estar sentado'],
+          ['hängen (hängte)', 'hängen (hing)', 'colgar / estar colgado'],
+          ['stecken (steckte)', 'stecken (steckte)', 'meter / estar metido: la llave en la bolsa']] },
+          nota: 'Los de la izquierda son regulares (legte, gelegt); los de la derecha, irregulares (lag, gelegen; stand, gestanden; saß, gesessen).' },
+        { lbl: 'Verbos de movimiento y de estar', txt: '**Akkusativ**: gehen, fahren, kommen, fliegen, laufen, bringen, legen, stellen, setzen, hängen. **Dativ**: sein, bleiben, wohnen, arbeiten, liegen, stehen, sitzen, hängen (estar), warten, treffen. **Ojo**: ankommen (llegar) va con Dativ: Ich komme in Berlin an / am Bahnhof an.' }
+      ],
+      dos: true,
+      reglas: [
+        { de: 'an', t: '— en, junto a (al borde, en vertical)', d: 'Contacto lateral (la pared, la puerta), junto al agua, en un borde. En el tiempo, **am** + día o fecha (Dativ).',
+          ej: [['Das Bild hängt [an der] Wand. → Ich hänge das Bild [an die] Wand.', 'El cuadro está en la pared. → Cuelgo el cuadro en la pared.'], ['Wir sind [am] Meer. → Wir fahren [ans] Meer.', 'Estamos en el mar. → Vamos al mar.'], ['Er steht [an der] Tür.', 'Está parado en la puerta.'], ['[Am] Montag, [am] 5. Mai, [am] Abend', 'el lunes, el 5 de mayo, en la noche']] },
+        { de: 'auf', t: '— sobre, encima (con contacto)', d: 'Una superficie horizontal en la que algo se apoya. También a eventos y oficinas (auf eine Party, auf die Post) y «en un idioma».',
+          ej: [['Das Handy liegt [auf dem] Tisch. → Ich lege das Handy [auf den] Tisch.', 'El celular está sobre la mesa. → Pongo el celular sobre la mesa.'], ['Wir sind [auf einer] Party. → Wir gehen [auf eine] Party.', 'Estamos en una fiesta. → Vamos a una fiesta.'], ['Sag das bitte [auf] Deutsch.', 'Dilo en alemán, por favor.']] },
+        { de: 'hinter', t: '— detrás de', d: 'Atrás de algo.',
+          ej: [['Das Auto steht [hinter dem] Haus. → Ich fahre das Auto [hinter das] Haus.', 'El coche está detrás de la casa. → Meto el coche detrás de la casa.']] },
+        { de: 'in', t: '— en, dentro de', d: 'Dentro de un espacio: cuartos, edificios, ciudades, países con artículo. En el tiempo: **im** + mes o estación, **in** + plazo (dentro de).',
+          ej: [['Ich bin [im] Büro. → Ich gehe [ins] Büro.', 'Estoy en la oficina. → Voy a la oficina.'], ['Er wohnt [in der] Schweiz. → Er zieht [in die] Schweiz.', 'Vive en Suiza. → Se muda a Suiza.'], ['[Im] Mai, [im] Winter, [in der] Nacht', 'en mayo, en invierno, en la noche'], ['[In zwei] Wochen bin ich in Deutschland.', 'Dentro de dos semanas estoy en Alemania.']] },
+        { de: 'neben', t: '— al lado de, además de', d: 'Junto a algo; también «además de».',
+          ej: [['Die Lampe steht [neben dem] Bett. → Ich stelle die Lampe [neben das] Bett.', 'La lámpara está junto a la cama. → Pongo la lámpara junto a la cama.'], ['[Neben der] Arbeit fahre ich noch Didi.', 'Además del trabajo, manejo Didi.']] },
+        { de: 'über', t: '— encima de (sin tocar), por encima de, sobre (un tema), más de', d: 'Arriba sin contacto; cruzar algo (Akk); un tema: **über** + Akkusativ; una cantidad mayor.',
+          ej: [['Die Lampe hängt [über dem] Tisch. → Ich hänge die Lampe [über den] Tisch.', 'La lámpara cuelga sobre la mesa. → Cuelgo la lámpara sobre la mesa.'], ['Geh [über die] Straße und dann rechts.', 'Cruza la calle y luego a la derecha.'], ['Wir sprechen [über das] Projekt.', 'Hablamos del proyecto.'], ['Der Flug dauert [über] zehn Stunden.', 'El vuelo dura más de diez horas.']] },
+        { de: 'unter', t: '— debajo de, entre (personas), menos de', d: 'Debajo; entre un grupo; una cantidad menor.',
+          ej: [['Die Katze liegt [unter dem] Sofa. → Die Katze läuft [unter das] Sofa.', 'El gato está bajo el sillón. → El gato se mete bajo el sillón.'], ['[Unter] Freunden sagt man du.', 'Entre amigos se dice «du».'], ['Für Kinder [unter] 6 Jahren ist der Eintritt frei.', 'Para niños menores de 6 años la entrada es gratis.']] },
+        { de: 'vor', t: '— delante de, hace, antes de', d: 'Enfrente. En el tiempo, **siempre Dativ**: **vor** + tiempo = hace; vor + evento = antes de.',
+          ej: [['Ich warte [vor dem] Kino. → Ich stelle das Fahrrad [vor das] Kino.', 'Espero frente al cine. → Dejo la bici frente al cine.'], ['[Vor zwei] Jahren habe ich bei Bosch gearbeitet.', 'Hace dos años trabajé en Bosch.'], ['[Vor dem] Essen wasche ich mir die Hände.', 'Antes de comer me lavo las manos.']] },
+        { de: 'zwischen', t: '— entre (dos o más cosas)', d: 'En medio de dos cosas; en el tiempo, entre dos momentos (Dativ).',
+          ej: [['Die Bank ist [zwischen der] Post und [dem] Supermarkt.', 'El banco está entre el correo y el súper.'], ['Ich stelle das Buch [zwischen die] anderen Bücher.', 'Pongo el libro entre los otros libros.'], ['Ruf mich [zwischen] 8 und 9 Uhr an.', 'Llámame entre las 8 y las 9.']] }
+      ],
+      ojo: [['Ich lege das Buch auf dem Tisch.', 'Ich lege das Buch auf den Tisch.', 'legen = poner (¿adónde?) → Akkusativ.'],
+            ['Das Buch liegt auf den Tisch.', 'Das Buch liegt auf dem Tisch.', 'liegen = estar (¿dónde?) → Dativ.'],
+            ['Ich bin in die Stadt.', 'Ich bin in der Stadt.', 'Con **sein** no hay movimiento: Dativ.'],
+            ['Ich komme in den Bahnhof an.', 'Ich komme am Bahnhof an.', '**ankommen** dice dónde terminas: Dativ.'],
+            ['vor zwei Jahre', 'vor zwei Jahren', 'En el tiempo, vor es Dativ, y el plural lleva -n.'],
+            ['Ich spreche von das Projekt.', 'Ich spreche über das Projekt.', 'Hablar **sobre** un tema: über + Akkusativ.']]
+    },
+    { k: 'gen', t: 'Genitiv', sub: 'wegen · trotz · während…', c: GEN, alias: ['genitiv'],
+      h2: 'Las preposiciones con Genitiv', p: 'Son de lo escrito: correos, documentos, exámenes. Al hablar, wegen, trotz, während y statt se oyen mucho con Dativ; en lo que escribas, Genitiv.',
+      ficha: [
+        { lbl: 'El Genitiv en una línea', tabla: { cab: ['masc.', 'fem.', 'neutro', 'plural'], de: [0, 1, 2, 3], filas: [['des Kurses', 'der Woche', 'des Wetters', 'der Ferien'], ['eines Tages', 'einer Woche', 'eines Jahres', '—']] },
+          nota: 'Masculino y neutro: **des** y el sustantivo con **-s** (palabras largas) o **-es** (una sílaba: des Tages, des Jahres).' },
+        { lbl: 'Frases que se dicen tal cual', chips: [['deswegen', 'por eso'], ['meinetwegen', 'por mí, como quieras'], ['stattdessen', 'en su lugar'], ['trotzdem', 'aun así'], ['währenddessen', 'mientras tanto']] }
+      ],
+      reglas: [
+        { de: 'während', t: '— durante', d: 'Mientras dura algo.', ej: [['[Während des] Semesters arbeite ich 20 Stunden pro Woche.', 'Durante el semestre trabajo 20 horas a la semana.'], ['[Während der] Fahrt höre ich Podcasts.', 'Durante el viaje escucho podcasts.']], nota: '**während** también es conector: Während ich fahre, höre ich Podcasts (verbo al final).' },
+        { de: 'wegen', t: '— por, a causa de', d: 'La causa. Hablado se oye con Dativ (wegen dem Wetter); escrito, Genitiv.', ej: [['[Wegen des] Staus komme ich später.', 'Por el tráfico llego más tarde.'], ['[Wegen der] Prüfung kann ich heute nicht.', 'Por el examen hoy no puedo.']] },
+        { de: 'trotz', t: '— a pesar de', d: 'Algo que pasa aunque haya un obstáculo.', ej: [['[Trotz des] Regens gehe ich joggen.', 'A pesar de la lluvia salgo a correr.'], ['[Trotz der] vielen Arbeit lerne ich jeden Tag Deutsch.', 'A pesar de tanto trabajo estudio alemán diario.']] },
+        { de: '(an)statt', t: '— en lugar de', d: 'Una cosa en vez de otra. Con una acción: statt … zu + infinitivo.', ej: [['[Statt eines] Autos kaufe ich ein Fahrrad.', 'En lugar de un coche compro una bici.'], ['[Statt] fernzusehen, lerne ich Vokabeln.', 'En lugar de ver la tele, estudio vocabulario.']] },
+        { de: 'innerhalb', t: '— dentro de (un plazo o un lugar)', d: 'Un plazo o un espacio. Sin artículo, **innerhalb von** + Dativ.', ej: [['Bitte antworten Sie [innerhalb einer] Woche.', 'Por favor responda dentro de una semana.'], ['[Innerhalb der] Stadt fahre ich mit dem Rad.', 'Dentro de la ciudad voy en bici.'], ['[Innerhalb von] zwei Tagen ist das Paket da.', 'En dos días llega el paquete.']] },
+        { de: 'außerhalb', t: '— fuera de', d: 'Fuera de un lugar o de un horario.', ej: [['Wir wohnen [außerhalb der] Stadt.', 'Vivimos fuera de la ciudad.'], ['[Außerhalb der] Arbeitszeit bin ich nicht erreichbar.', 'Fuera del horario de trabajo no estoy localizable.']] },
+        { de: 'aufgrund', t: '— debido a', d: 'Formal, para dar razones en documentos.', ej: [['[Aufgrund des] Streiks fährt heute keine S-Bahn.', 'Debido a la huelga hoy no pasa el tren suburbano.']] },
+        { de: 'laut', t: '— según', d: 'Con Dativ o Genitiv; sin artículo, solo.', ej: [['[Laut dem] Wetterbericht regnet es morgen.', 'Según el pronóstico, mañana llueve.'], ['[Laut] Vertrag habe ich 30 Tage Urlaub.', 'Según el contrato tengo 30 días de vacaciones.']] },
+        { de: 'dank', t: '— gracias a', d: 'Con Genitiv o Dativ.', ej: [['[Dank deiner] Hilfe habe ich die Prüfung bestanden.', 'Gracias a tu ayuda aprobé el examen.']] },
+        { de: 'bezüglich', t: '— respecto a, en relación con', d: 'Muy de correos formales: úsala en el asunto o la primera línea.', ej: [['[Bezüglich Ihrer] Anfrage schicke ich Ihnen die Unterlagen.', 'En relación con su solicitud le mando los documentos.']] },
+        { de: 'oberhalb · unterhalb', t: '— por encima de · por debajo de', d: 'Posición, sobre todo en geografía.', ej: [['Das Dorf liegt [oberhalb des] Sees.', 'El pueblo está arriba del lago.']] }
+      ],
+      ojo: [['wegen das Wetter', 'wegen des Wetters', 'Escrito: Genitiv, y el neutro añade -s.'],
+            ['trotz dem Regen', 'trotz des Regens', 'Se oye con Dativ; en un examen o un correo, Genitiv.'],
+            ['innerhalb zwei Tagen', 'innerhalb von zwei Tagen', 'Sin artículo: **innerhalb von** + Dativ.']]
+    },
+    { k: 'lugar', t: 'Dónde y adónde', sub: 'in · nach · zu · bei · aus · von', c: LUG, alias: ['lugar', 'wo'],
+      h2: '¿Dónde? ¿Adónde? ¿De dónde?', p: 'El lugar decide la preposición. Lee la tabla por fila: el mismo sitio cambia de preposición según estés ahí, vayas o vengas de ahí.',
+      tablas: [
+        { lbl: 'Las tres preguntas, sitio por sitio', cab: ['El sitio', '¿Wo? — dónde estás', '¿Wohin? — adónde vas', '¿Woher? — de dónde vienes'], de: [1, 2, 3], filas: [
+          ['Ciudades y países sin artículo', 'in Berlin, in Mexiko', 'nach Berlin, nach Mexiko', 'aus Berlin, aus Mexiko'],
+          ['Países con artículo', 'in der Schweiz, in den USA', 'in die Schweiz, in die USA', 'aus der Schweiz, aus den USA'],
+          ['Edificios y cuartos (dentro)', 'im Büro, in der Küche', 'ins Büro, in die Küche', 'aus dem Büro, aus der Küche'],
+          ['Personas y sus consultorios', 'bei meiner Mutter, beim Arzt', 'zu meiner Mutter, zum Arzt', 'von meiner Mutter, vom Arzt'],
+          ['Tu casa', 'zu Hause', 'nach Hause', 'von zu Hause'],
+          ['Sitios a los que vas (sin entrar)', 'am Bahnhof, an der Haltestelle', 'zum Bahnhof, zur Haltestelle', 'vom Bahnhof, von der Haltestelle'],
+          ['Agua: mar, lago, playa', 'am Meer, am See, am Strand', 'ans Meer, an den See, an den Strand', 'vom Meer, vom See, vom Strand'],
+          ['Eventos, oficinas, superficies', 'auf der Party, auf der Post', 'auf die Party, auf die Post', 'von der Party, von der Post'],
+          ['Islas', 'auf Mallorca', 'nach Mallorca', 'von Mallorca'],
+          ['Montañas', 'auf dem Berg', 'auf den Berg', 'vom Berg'],
+          ['El campo', 'auf dem Land', 'aufs Land', 'vom Land'],
+          ['Regiones y puntos cardinales', 'im Norden, im Süden', 'nach Norden, in den Süden', 'aus dem Norden'],
+          ['La empresa donde trabajas', 'bei ALTEN, bei Bosch', 'zu ALTEN wechseln', 'von ALTEN kommen']],
+          nota: '«In die Arbeit» no existe: **zur Arbeit** (adónde), **bei der Arbeit** o **auf der Arbeit** (dónde, hablado), **von der Arbeit** (de dónde).' }
+      ],
+      reglas: [
+        { t: 'nach, solo con lo que no lleva artículo', d: 'Ciudades, la mayoría de los países, continentes, islas, puntos cardinales y **nach Hause**. Si el país lleva artículo (die Schweiz, die Türkei, die USA, der Iran), es **in** + Akkusativ.', ej: [['Ich fliege [nach] Frankfurt und fahre dann [nach] Esslingen.', 'Vuelo a Fráncfort y luego voy a Esslingen.'], ['Meine Kollegin fliegt [in die] USA.', 'Mi colega vuela a Estados Unidos.']] },
+        { t: 'zu, para personas y sitios a los que vas', d: 'A una persona (o su consultorio), a un sitio sin entrar en él o cuando importa la actividad: zum Arzt, zur Bank, zum Training.', ej: [['Ich gehe [zum] Zahnarzt.', 'Voy al dentista.'], ['Fährt dieser Bus [zum] Flughafen?', '¿Este camión va al aeropuerto?']] },
+        { t: 'in, cuando entras', d: 'Si el sitio es un espacio que se entra (el cine, la oficina, el súper), **in** + Akkusativ para ir e **in** + Dativ para estar.', ej: [['Ich gehe [ins] Kino. Ich bin [im] Kino.', 'Voy al cine. Estoy en el cine.'], ['Ich gehe [in den] Supermarkt.', 'Entro al súper.']] },
+        { t: 'bei, en casa de alguien o en una empresa', d: 'Estar con una persona, en su casa o consultorio, o en la empresa donde trabajas.', ej: [['Heute schlafe ich [bei meinem] Bruder.', 'Hoy duermo en casa de mi hermano.'], ['Ich habe ein Praktikum [bei] Mercedes-Benz gemacht.', 'Hice prácticas en Mercedes-Benz.']] },
+        { t: 'aus o von: de dónde vienes', d: '**aus** cuando sales de dentro de algo o hablas de tu origen; **von** cuando vienes de una persona, de un punto o de un evento.', ej: [['Ich komme [aus dem] Büro.', 'Vengo de la oficina (salgo de dentro).'], ['Ich komme [von der] Arbeit / [vom] Training.', 'Vengo del trabajo / del entrenamiento.']] }
+      ],
+      ojo: [['Ich fliege in Deutschland.', 'Ich fliege nach Deutschland.', 'País sin artículo: **nach**.'],
+            ['Ich gehe nach dem Arzt.', 'Ich gehe zum Arzt.', 'A una persona o su consultorio: **zu**.'],
+            ['Ich bin bei dem Supermarkt.', 'Ich bin im Supermarkt.', 'Dentro de un edificio: **in** + Dativ.'],
+            ['Ich gehe in die Arbeit.', 'Ich gehe zur Arbeit.', 'Al trabajo: **zur Arbeit**.'],
+            ['Ich komme von Mexiko.', 'Ich komme aus Mexiko.', 'Tu origen: **aus**.']]
+    },
+    { k: 'tiempo', t: 'El tiempo', sub: 'um · am · im · seit · vor…', c: TIE, alias: ['zeit'],
+      h2: 'Las preposiciones de tiempo', p: 'Hora, día, mes, plazo: cada uno tiene su preposición. Las de dos casos, en el tiempo, van con **Dativ**.',
+      tablas: [
+        { lbl: 'Cuándo, cuánto y desde cuándo', cab: ['Preposición', 'Para qué', 'Ejemplo', 'En español'], de: [0, 2], filas: [
+          ['um', 'la hora exacta', 'um 8 Uhr, um Mitternacht', 'a las 8, a medianoche'],
+          ['gegen', 'la hora aproximada', 'gegen 8 Uhr', 'a eso de las 8'],
+          ['am (an + dem)', 'días, fechas, partes del día, el fin de semana', 'am Montag, am 1. Mai, am Morgen, am Abend, am Wochenende', 'el lunes, el 1 de mayo, en la mañana, en la noche, el fin de semana'],
+          ['in der', 'la noche', 'in der Nacht (o: nachts)', 'en la noche (de madrugada)'],
+          ['im (in + dem)', 'meses, estaciones, años con «Jahr»', 'im Mai, im Winter, im Jahr 2028', 'en mayo, en invierno, en el año 2028'],
+          ['—', 'el año solo, sin preposición', '2028 fliege ich nach Deutschland.', 'En 2028 vuelo a Alemania.'],
+          ['in + Dat', 'dentro de (en el futuro)', 'in zwei Wochen, in einem Monat', 'dentro de dos semanas, dentro de un mes'],
+          ['vor + Dat', 'hace (pasado); antes de', 'vor drei Jahren; vor dem Essen', 'hace tres años; antes de comer'],
+          ['nach + Dat', 'después de', 'nach der Arbeit, nach zwei Stunden', 'después del trabajo, a las dos horas'],
+          ['seit + Dat', 'desde, desde hace (y sigue)', 'seit 2020, seit einem Monat', 'desde 2020, desde hace un mes'],
+          ['ab + Dat', 'a partir de', 'ab Montag, ab nächster Woche', 'a partir del lunes, de la próxima semana'],
+          ['bis', 'hasta', 'bis Freitag, bis 18 Uhr, bis zum 30. Juni', 'hasta el viernes, hasta las 18, hasta el 30 de junio'],
+          ['von … bis', 'de … a', 'von 9 bis 17 Uhr, vom 1. bis zum 5. Mai', 'de 9 a 17, del 1 al 5 de mayo'],
+          ['von … an', 'desde (en adelante)', 'von Anfang an, von heute an', 'desde el principio, desde hoy'],
+          ['für + Akk', 'por, durante (un tiempo planeado)', 'für zwei Wochen', 'por dos semanas'],
+          ['über + Akk', 'más de; durante (el fin de semana)', 'über eine Stunde; über das Wochenende', 'más de una hora; durante el fin de semana'],
+          ['während + Gen', 'durante', 'während des Urlaubs', 'durante las vacaciones'],
+          ['innerhalb + Gen', 'dentro de (un plazo)', 'innerhalb einer Woche', 'en el plazo de una semana'],
+          ['zwischen + Dat', 'entre', 'zwischen Weihnachten und Neujahr', 'entre Navidad y Año Nuevo'],
+          ['zu', 'fiestas y ocasiones', 'zu Weihnachten, zu Ostern, zum Geburtstag', 'en Navidad, en Pascua, para el cumpleaños'],
+          ['— (Akkusativ)', 'sin preposición: cada, próximo, pasado', 'jeden Tag, nächste Woche, letzten Monat, den ganzen Tag', 'cada día, la próxima semana, el mes pasado, todo el día']],
+          nota: 'Fechas: **am** 1. Mai (cuándo); Heute ist **der** 1. Mai (qué día es: Nominativ). Días repetidos, sin preposición: montags, abends (los lunes, en las noches).' }
+      ],
+      reglas: [
+        { t: 'seit o vor: ¿sigue o ya pasó?', d: '**seit** + presente: empezó y sigue. **vor**: pasó y terminó, con el verbo en pasado.', ej: [['Ich lerne [seit] zwei Jahren Deutsch.', 'Estudio alemán desde hace dos años (y sigo).'], ['Ich habe [vor] zwei Jahren angefangen.', 'Empecé hace dos años.']] },
+        { t: 'in, vor y nach: futuro, pasado y después', d: '**in** + tiempo mira al futuro (dentro de); **vor** + tiempo, al pasado (hace); **nach** + evento, a lo que sigue.', ej: [['[In] einem Jahr bin ich in Esslingen.', 'Dentro de un año estoy en Esslingen.'], ['[Vor] einem Jahr war ich in Guadalajara.', 'Hace un año estaba en Guadalajara.'], ['[Nach dem] Studium suche ich eine Stelle.', 'Después de la maestría busco trabajo.']] }
+      ],
+      ojo: [['in Montag', 'am Montag', 'Días: **am**.'], ['am Mai', 'im Mai', 'Meses: **im**.'], ['in 2028', '2028 / im Jahr 2028', 'El año solo, sin preposición; o «im Jahr».'],
+            ['um Morgen', 'am Morgen', 'Partes del día: **am** (salvo in der Nacht).'], ['vor drei Jahre', 'vor drei Jahren', '**vor** es Dativ: plural con -n.'], ['Ich arbeite hier für drei Jahre.', 'Ich arbeite hier seit drei Jahren.', 'Si sigue, **seit**.']]
+    },
+    { k: 'contracciones', t: 'Contracciones', sub: 'im · am · zum · zur…', c: CON, alias: ['kontraktion'],
+      h2: 'Las contracciones', p: 'Preposición y artículo se juntan cuando el artículo no lleva énfasis. Las de la primera tabla son obligatorias en el uso normal; las de la segunda, del habla.',
+      tablas: [
+        { lbl: 'Las que siempre se usan', cab: ['Forma', 'Viene de', 'Caso', 'Ejemplo'], de: [0, 1, 3], filas: [
+          ['am', 'an dem', 'Dativ', 'am Montag, am Bahnhof'], ['ans', 'an das', 'Akkusativ', 'ans Meer, ans Fenster'], ['beim', 'bei dem', 'Dativ', 'beim Arzt, beim Essen'],
+          ['im', 'in dem', 'Dativ', 'im Büro, im Mai'], ['ins', 'in das', 'Akkusativ', 'ins Kino, ins Bett'], ['vom', 'von dem', 'Dativ', 'vom Arzt, vom Bahnhof'],
+          ['zum', 'zu dem', 'Dativ', 'zum Bahnhof, zum Geburtstag'], ['zur', 'zu der', 'Dativ', 'zur Arbeit, zur Bank']] },
+        { lbl: 'Las del habla', cab: ['Forma', 'Viene de', 'Ejemplo'], de: [0, 1, 2], filas: [
+          ['aufs', 'auf das', 'aufs Land'], ['durchs', 'durch das', 'durchs Fenster'], ['fürs', 'für das', 'fürs Wochenende'], ['ums', 'um das', 'ums Haus'], ['übers', 'über das', 'übers Wochenende'], ['unters', 'unter das', 'unters Bett'], ['vors', 'vor das', 'vors Haus'], ['hinters', 'hinter das', 'hinters Haus']] }
+      ],
+      reglas: [
+        { t: 'Cuándo no se contrae', d: 'Si el artículo señala uno en concreto («ese»), si viene una oración de relativo o con un artículo indefinido.', ej: [['Ich wohne in dem Haus, in dem auch mein Chef wohnt.', 'Vivo en la casa en la que también vive mi jefe.'], ['Ich gehe zu einem Arzt in der Nähe.', 'Voy a un doctor cerca (con «ein» nunca hay contracción).'], ['Nicht in [dem] Café, in [dem] anderen!', '¡No en ese café, en el otro!']] }
+      ]
+    },
+    { k: 'verbos', t: 'Verbos con preposición', sub: 'warten auf · denken an…', c: VER, alias: ['verben'],
+      h2: 'Los verbos con preposición fija', p: 'Muchos verbos llevan siempre la misma preposición, con su caso, y casi nunca es la del español: se aprenden en bloque, como una sola palabra. **A** = Akkusativ, **D** = Dativ.',
+      ficha: [
+        { lbl: 'Preguntar y responder: wo(r)- y da(r)-', tabla: { cab: ['', 'Pregunta', 'Respuesta'], de: [1, 2], filas: [
+          ['cosas', 'Worauf wartest du?', 'Auf den Bus. — Darauf warte ich auch.'], ['personas', 'Auf wen wartest du?', 'Auf meine Freundin. — Auf sie warte ich.'],
+          ['cosas', 'Woran denkst du?', 'An den Urlaub. — Daran denke ich oft.'], ['personas', 'An wen denkst du?', 'An meine Mutter. — An sie.']] },
+          nota: 'Con cosas: **wo-** + preposición y **da-** + preposición; si la preposición empieza con vocal, se mete una **r**: wor-auf, dar-an, wor-über. Con personas: preposición + wen/wem y el pronombre.' },
+        { lbl: 'Para anunciar una frase entera', de: 'Ich freue mich [darauf], dass du kommst. Ich freue mich [darauf], dich zu sehen.', txt: 'El **da(r)-** anuncia la oración que sigue con dass o con zu + infinitivo.' }
+      ],
+      tablas: [
+        { lbl: 'Los verbos con preposición, por preposición', buscar: true, cab: ['Verbo', 'Prep. + caso', 'En español', 'Ejemplo'], de: [0, 1, 3], filas: [
+          '— an —',
+          ['denken an', 'an + A', 'pensar en', 'Ich denke oft an meine Familie.'],
+          ['sich erinnern an', 'an + A', 'acordarse de', 'Erinnerst du dich an unseren Urlaub?'],
+          ['glauben an', 'an + A', 'creer en', 'Ich glaube an dich.'],
+          ['sich gewöhnen an', 'an + A', 'acostumbrarse a', 'Ich gewöhne mich langsam an das Wetter.'],
+          ['sich wenden an', 'an + A', 'dirigirse a', 'Wenden Sie sich bitte an die Rezeption.'],
+          ['schreiben an', 'an + A', 'escribir a', 'Ich schreibe eine E-Mail an den Chef.'],
+          ['teilnehmen an', 'an + D', 'participar en', 'Ich nehme an dem Kurs teil.'],
+          ['arbeiten an', 'an + D', 'trabajar en (algo)', 'Ich arbeite an einem neuen Projekt.'],
+          ['zweifeln an', 'an + D', 'dudar de', 'Ich zweifle nicht an deiner Ehrlichkeit.'],
+          ['leiden an', 'an + D', 'padecer (una enfermedad)', 'Er leidet an Diabetes.'],
+          ['erkennen an', 'an + D', 'reconocer por', 'Ich erkenne dich an der Stimme.'],
+          '— auf —',
+          ['warten auf', 'auf + A', 'esperar (a)', 'Ich warte auf den Bus.'],
+          ['sich freuen auf', 'auf + A', 'tener ganas de (algo que viene)', 'Ich freue mich auf den Urlaub.'],
+          ['sich vorbereiten auf', 'auf + A', 'prepararse para', 'Ich bereite mich auf die Prüfung vor.'],
+          ['achten auf', 'auf + A', 'fijarse en, cuidar', 'Achte auf den Verkehr!'],
+          ['aufpassen auf', 'auf + A', 'cuidar a, vigilar', 'Ich passe auf die Kinder auf.'],
+          ['antworten auf', 'auf + A', 'responder a (algo)', 'Ich antworte morgen auf die E-Mail.'],
+          ['sich konzentrieren auf', 'auf + A', 'concentrarse en', 'Ich konzentriere mich auf die Arbeit.'],
+          ['sich verlassen auf', 'auf + A', 'confiar en, contar con', 'Du kannst dich auf mich verlassen.'],
+          ['hoffen auf', 'auf + A', 'tener esperanza de', 'Wir hoffen auf gutes Wetter.'],
+          ['sich beziehen auf', 'auf + A', 'referirse a', 'Ich beziehe mich auf Ihre E-Mail vom 3. Mai.'],
+          ['reagieren auf', 'auf + A', 'reaccionar a', 'Wie hat er auf die Nachricht reagiert?'],
+          ['verzichten auf', 'auf + A', 'renunciar a', 'Ich verzichte auf Alkohol.'],
+          ['sich bewerben auf', 'auf + A', 'postularse a (un anuncio)', 'Ich bewerbe mich auf die Stelle.'],
+          ['bestehen auf', 'auf + D', 'insistir en', 'Er besteht auf einer Antwort.'],
+          '— aus —',
+          ['bestehen aus', 'aus + D', 'consistir en, componerse de', 'Das Team besteht aus fünf Personen.'],
+          '— bei —',
+          ['sich bedanken bei', 'bei + D', 'darle las gracias a', 'Ich bedanke mich bei dir für die Hilfe.'],
+          ['sich entschuldigen bei', 'bei + D', 'disculparse con', 'Ich entschuldige mich bei meinem Kollegen.'],
+          ['sich beschweren bei', 'bei + D', 'quejarse con', 'Ich beschwere mich beim Vermieter.'],
+          ['sich bewerben bei', 'bei + D', 'postularse en (una empresa)', 'Ich bewerbe mich bei Bosch.'],
+          ['helfen bei', 'bei + D', 'ayudar con', 'Hilfst du mir beim Umzug?'],
+          '— für —',
+          ['sich interessieren für', 'für + A', 'interesarse por', 'Ich interessiere mich für Autos.'],
+          ['danken für', 'für + A', 'agradecer (algo)', 'Danke für die Einladung!'],
+          ['sich entschuldigen für', 'für + A', 'disculparse por', 'Ich entschuldige mich für die Verspätung.'],
+          ['sich entscheiden für', 'für + A', 'decidirse por', 'Ich habe mich für Esslingen entschieden.'],
+          ['sorgen für', 'für + A', 'encargarse de, procurar', 'Ich sorge für das Essen.'],
+          ['ausgeben für', 'für + A', 'gastar en', 'Ich gebe zu viel Geld für Kaffee aus.'],
+          ['halten für', 'für + A', 'considerar (algo como)', 'Ich halte das für eine gute Idee.'],
+          '— gegen —',
+          ['sich entscheiden gegen', 'gegen + A', 'decidirse en contra de', 'Ich habe mich gegen das Angebot entschieden.'],
+          ['protestieren gegen', 'gegen + A', 'protestar contra', 'Sie protestieren gegen die hohen Mieten.'],
+          '— in —',
+          ['sich verlieben in', 'in + A', 'enamorarse de', 'Er hat sich in sie verliebt.'],
+          ['übersetzen in', 'in + A', 'traducir a', 'Ich übersetze den Text ins Deutsche.'],
+          '— mit —',
+          ['anfangen / beginnen mit', 'mit + D', 'empezar (con algo)', 'Ich fange mit der Arbeit an.'],
+          ['aufhören mit', 'mit + D', 'dejar de', 'Ich habe mit dem Rauchen aufgehört.'],
+          ['sprechen / reden mit', 'mit + D', 'hablar con', 'Ich spreche morgen mit meinem Chef.'],
+          ['telefonieren mit', 'mit + D', 'hablar por teléfono con', 'Ich telefoniere jeden Sonntag mit meiner Mutter.'],
+          ['sich treffen mit', 'mit + D', 'verse con', 'Ich treffe mich mit Freunden.'],
+          ['sich beschäftigen mit', 'mit + D', 'ocuparse de, dedicarse a', 'Ich beschäftige mich mit Python.'],
+          ['rechnen mit', 'mit + D', 'contar con, esperar', 'Wir rechnen mit einer Verspätung.'],
+          ['vergleichen mit', 'mit + D', 'comparar con', 'Vergleich das nicht mit Mexiko!'],
+          ['sich streiten mit', 'mit + D', 'pelearse con', 'Ich streite mich nie mit ihm.'],
+          ['sich verabreden mit', 'mit + D', 'quedar con', 'Ich habe mich mit ihr verabredet.'],
+          '— nach —',
+          ['fragen nach', 'nach + D', 'preguntar por', 'Er fragt nach dem Weg.'],
+          ['suchen nach', 'nach + D', 'buscar', 'Ich suche nach einer Wohnung.'],
+          ['riechen / schmecken nach', 'nach + D', 'oler / saber a', 'Hier riecht es nach Kaffee.'],
+          ['sich erkundigen nach', 'nach + D', 'informarse sobre', 'Ich erkundige mich nach dem Preis.'],
+          ['sich sehnen nach', 'nach + D', 'añorar', 'Ich sehne mich nach der Sonne.'],
+          '— über —',
+          ['sprechen / reden über', 'über + A', 'hablar de, sobre', 'Wir sprechen über die Arbeit.'],
+          ['sich freuen über', 'über + A', 'alegrarse por (algo que ya pasó)', 'Ich freue mich über dein Geschenk.'],
+          ['sich ärgern über', 'über + A', 'enojarse por', 'Ich ärgere mich über den Stau.'],
+          ['nachdenken über', 'über + A', 'pensar, reflexionar sobre', 'Ich denke über dein Angebot nach.'],
+          ['sich informieren über', 'über + A', 'informarse sobre', 'Ich informiere mich über das Studium.'],
+          ['sich beschweren über', 'über + A', 'quejarse de', 'Die Nachbarn beschweren sich über den Lärm.'],
+          ['lachen über', 'über + A', 'reírse de', 'Wir lachen über den Witz.'],
+          ['sich unterhalten über', 'über + A', 'platicar sobre', 'Wir unterhalten uns über Fußball.'],
+          ['diskutieren über', 'über + A', 'discutir sobre', 'Wir diskutieren über das Budget.'],
+          ['sich wundern über', 'über + A', 'sorprenderse de', 'Ich wundere mich über den Preis.'],
+          '— um —',
+          ['bitten um', 'um + A', 'pedir (algo)', 'Ich bitte dich um einen Gefallen.'],
+          ['sich kümmern um', 'um + A', 'ocuparse de, cuidar', 'Ich kümmere mich um die Unterlagen.'],
+          ['sich bewerben um', 'um + A', 'postularse para', 'Ich bewerbe mich um ein Stipendium.'],
+          ['sich Sorgen machen um', 'um + A', 'preocuparse por', 'Ich mache mir Sorgen um dich.'],
+          ['es geht um', 'um + A', 'se trata de', 'Es geht um Geld.'],
+          '— unter —',
+          ['leiden unter', 'unter + D', 'sufrir por', 'Ich leide unter dem Stress.'],
+          '— von —',
+          ['träumen von', 'von + D', 'soñar con', 'Ich träume von einem Haus am Meer.'],
+          ['erzählen von', 'von + D', 'contar de', 'Erzähl mir von deiner Reise!'],
+          ['abhängen von', 'von + D', 'depender de', 'Das hängt vom Wetter ab.'],
+          ['sich erholen von', 'von + D', 'recuperarse de', 'Ich erhole mich von der Grippe.'],
+          ['sich verabschieden von', 'von + D', 'despedirse de', 'Ich verabschiede mich von meinen Kollegen.'],
+          ['halten von', 'von + D', 'opinar de', 'Was hältst du von dem Plan?'],
+          ['überzeugen von', 'von + D', 'convencer de', 'Er hat mich von seiner Idee überzeugt.'],
+          ['profitieren von', 'von + D', 'beneficiarse de', 'Ich profitiere von meiner Erfahrung.'],
+          '— vor —',
+          ['Angst haben vor', 'vor + D', 'tener miedo de', 'Ich habe Angst vor der Prüfung.'],
+          ['warnen vor', 'vor + D', 'advertir de', 'Der Arzt warnt vor zu viel Zucker.'],
+          ['schützen vor', 'vor + D', 'proteger de', 'Die Creme schützt vor der Sonne.'],
+          '— zu —',
+          ['gehören zu', 'zu + D', 'formar parte de', 'Er gehört zu unserem Team.'],
+          ['passen zu', 'zu + D', 'combinar con, quedar con', 'Die Schuhe passen zur Hose.'],
+          ['gratulieren zu', 'zu + D', 'felicitar por', 'Ich gratuliere dir zum Geburtstag.'],
+          ['einladen zu', 'zu + D', 'invitar a', 'Ich lade dich zum Essen ein.'],
+          ['führen zu', 'zu + D', 'llevar a, causar', 'Der Stress führt zu Problemen.'],
+          ['beitragen zu', 'zu + D', 'contribuir a', 'Jeder trägt zum Erfolg bei.'],
+          '— zwischen —',
+          ['wählen zwischen', 'zwischen + D', 'elegir entre', 'Ich muss zwischen zwei Angeboten wählen.'],
+          ['unterscheiden zwischen', 'zwischen + D', 'distinguir entre', 'Du musst zwischen «seit» und «vor» unterscheiden.']],
+          nota: '**sich freuen auf** (lo que viene) y **sich freuen über** (lo que ya tienes) son los dos más confundidos. **gehören + Dativ** = ser de alguien (Das gehört mir); **gehören zu** = formar parte de.' }
+      ],
+      ojo: [['Ich warte für den Bus.', 'Ich warte auf den Bus.', 'esperar = **warten auf** + Akkusativ.'],
+            ['Ich denke über dich.', 'Ich denke an dich.', 'pensar en alguien = **denken an**; über es reflexionar sobre un tema.'],
+            ['Ich interessiere mich in Autos.', 'Ich interessiere mich für Autos.', '**sich interessieren für**.'],
+            ['Ich frage für den Weg.', 'Ich frage nach dem Weg.', 'preguntar por = **fragen nach** + Dativ.'],
+            ['Das hängt von das Wetter ab.', 'Das hängt vom Wetter ab.', '**von** pide Dativ: von dem = vom.'],
+            ['Ich träume über dich.', 'Ich träume von dir.', 'soñar con = **träumen von**.'],
+            ['Auf was wartest du?', 'Worauf wartest du?', 'Con cosas, **wo(r)-** + preposición (auf was es coloquial).']]
+    },
+    { k: 'adjetivos', t: 'Adjetivos y sustantivos', sub: 'stolz auf · Angst vor…', c: ADJ, alias: ['adjektive'],
+      h2: 'Adjetivos y sustantivos con preposición', p: 'Igual que los verbos: el adjetivo o el sustantivo trae su preposición y su caso. **A** = Akkusativ, **D** = Dativ.',
+      tablas: [
+        { lbl: 'Adjetivos con preposición', buscar: true, cab: ['Adjetivo', 'Prep. + caso', 'En español', 'Ejemplo'], de: [0, 1, 3], filas: [
+          ['stolz auf', 'auf + A', 'orgulloso de', 'Ich bin stolz auf dich.'], ['böse / sauer auf', 'auf + A', 'enojado con', 'Bist du sauer auf mich?'],
+          ['neugierig / gespannt auf', 'auf + A', 'con curiosidad, con ganas de', 'Ich bin gespannt auf das Ergebnis.'], ['eifersüchtig auf', 'auf + A', 'celoso de', 'Er ist eifersüchtig auf seinen Bruder.'],
+          ['angewiesen auf', 'auf + A', 'que depende de', 'Ich bin auf das Auto angewiesen.'],
+          ['zufrieden mit', 'mit + D', 'satisfecho con', 'Ich bin mit dem Ergebnis zufrieden.'], ['einverstanden mit', 'mit + D', 'de acuerdo con', 'Bist du mit dem Plan einverstanden?'],
+          ['fertig mit', 'mit + D', 'que ya terminó', 'Ich bin fertig mit der Arbeit.'], ['verheiratet / befreundet / verwandt mit', 'mit + D', 'casado / amigo / pariente de', 'Ich bin mit ihm befreundet.'],
+          ['interessiert an', 'an + D', 'interesado en', 'Ich bin an der Stelle interessiert.'], ['reich an', 'an + D', 'rico en', 'Obst ist reich an Vitaminen.'], ['beteiligt an', 'an + D', 'que participa en', 'Ich war an dem Projekt beteiligt.'],
+          ['verantwortlich für', 'für + A', 'responsable de', 'Ich bin für die Tests verantwortlich.'], ['bekannt für', 'für + A', 'conocido por', 'Stuttgart ist bekannt für Autos.'],
+          ['typisch / wichtig / nützlich für', 'für + A', 'típico / importante / útil para', 'Das ist wichtig für meine Bewerbung.'], ['dankbar für', 'für + A', 'agradecido por', 'Ich bin dir dankbar für alles.'], ['geeignet für', 'für + A', 'adecuado para', 'Die Wohnung ist für Studenten geeignet.'],
+          ['abhängig von', 'von + D', 'dependiente de', 'Das ist abhängig vom Preis.'], ['begeistert von', 'von + D', 'entusiasmado con', 'Ich bin begeistert von Esslingen.'], ['enttäuscht von', 'von + D', 'decepcionado de', 'Ich bin enttäuscht von dem Service.'], ['überzeugt von', 'von + D', 'convencido de', 'Ich bin von der Idee überzeugt.'],
+          ['froh / glücklich über', 'über + A', 'contento / feliz por', 'Ich bin froh über die Nachricht.'], ['traurig über', 'über + A', 'triste por', 'Sie ist traurig über den Abschied.'], ['überrascht über', 'über + A', 'sorprendido por', 'Ich bin überrascht über den Preis.'],
+          ['bereit zu', 'zu + D', 'dispuesto a', 'Ich bin bereit zum Umzug.'], ['freundlich / nett zu', 'zu + D', 'amable con', 'Sie ist immer nett zu mir.'],
+          ['gut / schlecht in', 'in + D', 'bueno / malo en (una materia)', 'Er ist gut in Mathe.'], ['erfahren in', 'in + D', 'con experiencia en', 'Ich bin erfahren in Testautomatisierung.']] },
+        { lbl: 'Sustantivos con preposición', buscar: true, cab: ['Sustantivo', 'Prep. + caso', 'En español', 'Ejemplo'], de: [0, 1, 3], filas: [
+          ['die Angst vor', 'vor + D', 'el miedo a', 'Ich habe keine Angst vor dem Umzug.'], ['der Respekt vor', 'vor + D', 'el respeto a', 'Ich habe Respekt vor der Prüfung.'],
+          ['das Interesse an', 'an + D', 'el interés en', 'Ich habe großes Interesse an der Stelle.'], ['die Freude an', 'an + D', 'el gusto por', 'Er hat Freude an der Arbeit.'], ['die Kritik an', 'an + D', 'la crítica a', 'Es gibt viel Kritik an dem Plan.'], ['der Zweifel an', 'an + D', 'la duda sobre', 'Ich habe keine Zweifel an dir.'],
+          ['die Lust auf', 'auf + A', 'las ganas de', 'Ich habe Lust auf Tacos.'], ['die Antwort auf', 'auf + A', 'la respuesta a', 'Ich warte auf eine Antwort auf meine Bewerbung.'], ['die Hoffnung auf', 'auf + A', 'la esperanza de', 'Ich habe Hoffnung auf eine Zusage.'],
+          ['die Frage nach', 'nach + D', 'la pregunta por', 'Die Frage nach dem Preis kommt immer zuerst.'], ['die Suche nach', 'nach + D', 'la búsqueda de', 'Die Suche nach einer Wohnung ist schwer.'],
+          ['die Bitte um', 'um + A', 'la petición de', 'Danke für Ihre Bitte um einen Termin.'],
+          ['der Grund für', 'für + A', 'el motivo de', 'Was ist der Grund für die Verspätung?'],
+          ['die Einladung zu', 'zu + D', 'la invitación a', 'Danke für die Einladung zum Essen!'], ['die Liebe zu', 'zu + D', 'el amor a', 'Seine Liebe zu Autos ist groß.'],
+          ['das Gespräch über', 'über + A', 'la plática sobre', 'Wir hatten ein Gespräch über das Gehalt.'], ['die Information über', 'über + A', 'la información sobre', 'Ich brauche Informationen über das Visum.'],
+          ['die Erfahrung mit / in', 'mit / in + D', 'la experiencia con / en', 'Ich habe viel Erfahrung mit HIL-Tests.'], ['der Unterschied zwischen', 'zwischen + D', 'la diferencia entre', 'Was ist der Unterschied zwischen «wenn» und «als»?']] }
+      ],
+      ojo: [['Ich bin stolz von dir.', 'Ich bin stolz auf dich.', 'orgulloso de = **stolz auf** + Akkusativ.'],
+            ['Ich bin interessiert für die Stelle.', 'Ich bin an der Stelle interessiert.', 'el adjetivo: **interessiert an** + Dativ (el verbo: sich interessieren für).'],
+            ['Ich habe Angst von Hunden.', 'Ich habe Angst vor Hunden.', 'miedo a = **Angst vor** + Dativ.'],
+            ['Ich bin zufrieden von dem Ergebnis.', 'Ich bin zufrieden mit dem Ergebnis.', '**zufrieden mit** + Dativ.']]
+    }
+  ],
+  practica: [
+    ['Das Geschenk ist für ___ Mutter.', ['meine', 'meiner', 'meinen'], '**für** pide Akkusativ; die Mutter → meine.', 'El regalo es para mi mamá.'],
+    ['Ich fahre mit ___ Zug nach Stuttgart.', ['dem', 'den', 'der'], '**mit** pide Dativ; der Zug → dem Zug.', 'Voy en tren a Stuttgart.'],
+    ['Im September fliege ich ___ Deutschland.', ['nach', 'zu', 'in'], 'País sin artículo: **nach**.', 'En septiembre vuelo a Alemania.'],
+    ['Ich gehe morgen ___ Arzt.', ['zum', 'zur', 'nach'], 'A una persona o su consultorio: **zu** + dem = zum.', 'Mañana voy al doctor.'],
+    ['Ich arbeite ___ ALTEN.', ['bei', 'in', 'zu'], 'La empresa donde trabajas: **bei**.', 'Trabajo en ALTEN.'],
+    ['Ich lerne seit ___ Jahr Deutsch.', ['einem', 'einen', 'ein'], '**seit** pide Dativ: das Jahr → einem Jahr.', 'Estudio alemán desde hace un año.'],
+    ['Das Handy liegt auf ___ Tisch.', ['dem', 'den', 'der'], '¿Dónde está? Dativ: auf dem Tisch.', 'El celular está sobre la mesa.'],
+    ['Ich lege das Handy auf ___ Tisch.', ['den', 'dem', 'der'], '¿Adónde lo pones? Akkusativ: auf den Tisch.', 'Pongo el celular sobre la mesa.'],
+    ['Wir gehen heute Abend ___ Kino.', ['ins', 'im', 'zum'], 'Entras al cine: **in** + Akkusativ, in das = ins.', 'Hoy en la noche vamos al cine.'],
+    ['Ich bin gerade ___ Büro.', ['im', 'ins', 'zum'], 'Dónde estás, dentro: **in** + Dativ, in dem = im.', 'Ahorita estoy en la oficina.'],
+    ['___ Montag habe ich frei.', ['Am', 'Im', 'Um'], 'Días de la semana: **am**.', 'El lunes tengo libre.'],
+    ['Der Kurs beginnt ___ 17 Uhr.', ['um', 'am', 'im'], 'La hora exacta: **um**.', 'El curso empieza a las 17 horas.'],
+    ['___ Mai fliege ich nach Guadalajara.', ['Im', 'Am', 'Um'], 'Meses: **im**.', 'En mayo vuelo a Guadalajara.'],
+    ['Ich habe ___ zwei Jahren bei Bosch gearbeitet.', ['vor', 'seit', 'für'], 'Ya pasó y terminó: **vor** = hace.', 'Hace dos años trabajé en Bosch.'],
+    ['Ich wohne ___ drei Jahren in dieser Wohnung.', ['seit', 'vor', 'für'], 'Empezó y sigue, con presente: **seit**.', 'Vivo en este depa desde hace tres años.'],
+    ['Nach der Arbeit gehe ich ___ Hause.', ['nach', 'zu', 'in'], 'A casa: **nach Hause**.', 'Después del trabajo me voy a casa.'],
+    ['Heute bleibe ich ___ Hause.', ['zu', 'nach', 'bei'], 'En casa: **zu Hause**.', 'Hoy me quedo en casa.'],
+    ['Wir fahren am Wochenende ___ Meer.', ['ans', 'am', 'zum'], 'Hacia el mar: **an** + Akkusativ, an das = ans.', 'El fin de semana vamos al mar.'],
+    ['Ich warte ___ den Bus.', ['auf', 'für', 'an'], 'esperar = **warten auf** + Akkusativ.', 'Espero el camión.'],
+    ['Ich denke oft ___ meine Familie.', ['an', 'über', 'von'], 'pensar en = **denken an** + Akkusativ.', 'Pienso seguido en mi familia.'],
+    ['Ich interessiere mich ___ Elektroautos.', ['für', 'an', 'in'], '**sich interessieren für** + Akkusativ.', 'Me interesan los coches eléctricos.'],
+    ['Ich freue mich ___ den Urlaub im Dezember.', ['auf', 'über', 'für'], 'Algo que viene: **sich freuen auf**.', 'Tengo ganas de las vacaciones de diciembre.'],
+    ['Ich freue mich ___ dein Geschenk.', ['über', 'auf', 'für'], 'Algo que ya tienes: **sich freuen über**.', 'Me alegra tu regalo.'],
+    ['Das hängt ___ Wetter ab.', ['vom', 'von', 'am'], '**abhängen von** + Dativ: von dem = vom.', 'Eso depende del clima.'],
+    ['Er fragt ___ dem Weg zum Bahnhof.', ['nach', 'für', 'über'], 'preguntar por = **fragen nach** + Dativ.', 'Pregunta por el camino a la estación.'],
+    ['Ich habe Angst ___ der Prüfung.', ['vor', 'von', 'für'], 'miedo a = **Angst vor** + Dativ.', 'Tengo miedo al examen.'],
+    ['Ich bin stolz ___ meinen Bruder.', ['auf', 'von', 'über'], 'orgulloso de = **stolz auf** + Akkusativ.', 'Estoy orgulloso de mi hermano.'],
+    ['Ich bin mit ___ Ergebnis zufrieden.', ['dem', 'das', 'den'], '**mit** pide Dativ: das Ergebnis → dem Ergebnis.', 'Estoy satisfecho con el resultado.'],
+    ['Ich gehe ohne ___ Regenschirm aus dem Haus.', ['meinen', 'meinem', 'mein'], '**ohne** pide Akkusativ; der Regenschirm → meinen.', 'Salgo de casa sin mi paraguas.'],
+    ['Wegen ___ Staus komme ich später.', ['des', 'dem', 'den'], 'Escrito: **wegen** + Genitiv; der Stau → des Staus.', 'Por el tráfico llego más tarde.'],
+    ['Während ___ Semesters arbeite ich als Werkstudent.', ['des', 'dem', 'das'], '**während** + Genitiv; das Semester → des Semesters.', 'Durante el semestre trabajo como Werkstudent.'],
+    ['Die Lampe hängt über ___ Tisch.', ['dem', 'den', 'der'], '¿Dónde cuelga? Dativ: über dem Tisch.', 'La lámpara cuelga sobre la mesa.'],
+    ['Ich hänge das Bild an ___ Wand.', ['die', 'der', 'den'], '¿Adónde lo cuelgas? Akkusativ: die Wand → die.', 'Cuelgo el cuadro en la pared.'],
+    ['Wir sprechen ___ das Projekt.', ['über', 'von', 'an'], 'Hablar sobre un tema: **über** + Akkusativ.', 'Hablamos del proyecto.'],
+    ['Ich komme ___ Mexiko.', ['aus', 'von', 'nach'], 'Tu origen: **aus**.', 'Soy de México.'],
+    ['Ich komme gerade ___ der Arbeit.', ['von', 'aus', 'nach'], 'Vienes de un sitio o una actividad: **von**.', 'Vengo del trabajo.'],
+    ['Ich wohne ___ meinen Eltern.', ['bei', 'mit', 'zu'], 'En casa de alguien: **bei**.', 'Vivo con mis papás.'],
+    ['Wir gehen durch ___ Park.', ['den', 'dem', 'der'], '**durch** pide Akkusativ; der Park → den.', 'Caminamos por el parque.'],
+    ['Ich gehe ___ Bank und dann zur Post.', ['zur', 'zum', 'in'], 'zu + der = **zur** (die Bank).', 'Voy al banco y luego al correo.'],
+    ['Auf wen wartest du? — ___ meine Freundin.', ['Auf', 'Für', 'An'], '**warten auf** + Akkusativ: auf meine Freundin.', '¿A quién esperas? — A mi novia.'],
+    ['___ denkst du? — An den Urlaub.', ['Woran', 'Worüber', 'Wofür'], 'Cosas: **wo(r)-** + la preposición del verbo: denken an → woran.', '¿En qué piensas? — En las vacaciones.'],
+    ['Ich bin ___ die Tests verantwortlich.', ['für', 'von', 'an'], '**verantwortlich für** + Akkusativ.', 'Soy responsable de las pruebas.']
+  ]
+};
+</script>
+<script src="temas.js"></script>
+<script src="leccion.js"></script>
+<script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
+</body>
+</html>

@@ -22,8 +22,9 @@ la ventana del Dashboard*).
 | A1 | `a1-01`…`a1-15` | Base: saludos, números, artículos, hora, profesiones… |
 | A2 | `a2-01`…`a2-20` | Gramática y vocabulario temático |
 | Apoyo | `index.html`, `principiantes.html`, `gramatica.html`, `casos.html`, `vocabulario.html` | El inicio (ver abajo), lo básico para principiantes, la referencia transversal y los casos a fondo (ver abajo). La barra de apps del Dashboard enlaza al inicio, principiantes, la gramática y el vocabulario |
+| **Gramática a fondo** | `preposiciones.html`, `verbos.html`, `adjetivos.html`, `frase.html`, `temas.js`, `temas.css` | Un tema por página, con su contenido en `window.TEMA`; `temas.js` y `temas.css` los pintan igual (ver abajo) |
 | Fotos | `fotos/` | Una por lección y por caja de consulta del inicio, con su crédito; la misma va en el encabezado de su lección |
-| Compartido | `styles.css`, `leccion.js`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js`, `oscuro.js` | La plantilla de las lecciones (ver abajo), estilos y motores; `oscuro.js`, el modo oscuro dentro del Dashboard |
+| Compartido | `styles.css`, `leccion.js`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js`, `oscuro.js` | La plantilla de las lecciones (ver abajo), estilos y motores; `oscuro.js`, el modo oscuro dentro del Dashboard (lleva calculadas las capas de `styles.css`, `k10.css`, `partizip.css` y `temas.css`) |
 | **Lecciones** | `lecciones-datos.js` | El catálogo de las 41: título, foto con su crédito, ejercicios del Kapitel y la regla de qué lección toca. Lo leen el inicio y Mi Día — ver abajo |
 | **Resumen de las lecciones** | `lecciones-resumen.js` | `ALEMAN_LECCIONES_RESUMEN`, por id de lección: `aprendes` (una frase), `regla` (la regla en pasos; el ejemplo en alemán va tras `. → `) y `errores` (`mal ✗ → bien: por qué`). Lo pinta *Alemán de hoy* del Dashboard encima de la lección. Las 41 lo traen, con al menos 2 reglas y 2 errores: lo exige el control 54 |
 | **Lo de más de cada palabra** | `vocab-mas.js` | `ALEMAN_VOCAB_MAS`, por la palabra (`de`, exacta como en `vocab-datos.js`): `ej` (2 frases [alemán, español], distintas del ejemplo de la tarjeta), `col` (con qué se combina), `fam` (su familia) y `gram` (una nota). Hoy cubre Trámites, Piso, Dinero y Salud, los temas que salen primero en el orden de Coach. El control 54 comprueba que cada clave exista en el vocabulario |
@@ -175,7 +176,41 @@ entre corchetes es la palabra que lleva el caso. Cubre lo que pide el A2: es gib
 (im, zum, zur…), el plural del Dativ con -n, el orden de dos objetos, las preposiciones fijas y las de dos casos, el
 tiempo (jeden Tag, am Montag, seit, vor) y el Genitiv frente a von + Dativ. El color de cada caso es el de
 `gramatica.html`, que manda aquí desde la introducción de sus casos; el inicio la enlaza en la caja de Gramática.
-Medido a 1600 y 390 px: sin desplazamiento horizontal ni errores.
+Medido a 1600 y 390 px: sin desplazamiento horizontal ni errores. Su barra es la de la familia de gramática: Hoy,
+Vocabulario, Gramática, Casos y los cuatro temas a fondo.
+
+---
+
+## Los temas a fondo — preposiciones, verbos, adjetivos y la frase
+
+Adán, 26-nov-2026: *"en alemán de hoy añade las preposiciones en otro subtab, todas y toda la info completísima,
+también de otros temas que sean genéricos como este tipo, en otras subtabs, así como el subtab de casos"*. Cuatro páginas
+con el diseño de `casos.html` que también se abren en su pestaña de la ventana «Alemán de hoy» del Dashboard (con
+`leccion.js`, en modo ventana y en el tema del Dashboard). Cada una es solo su contenido, `window.TEMA`; `temas.js` arma
+el encabezado, las pestañas (una a la vez; el ancla abre la suya: `verbos.html#modal`), cada panel y la práctica, con el
+diseño de `temas.css`:
+
+| Página | Pestañas | Trae |
+|---|---|---|
+| `preposiciones.html` | Cómo elegir · Akkusativ · Dativ · De dos casos · Genitiv · Dónde y adónde · El tiempo · Contracciones · Verbos con preposición · Adjetivos y sustantivos | Las 41 preposiciones con su caso, cada una con sus usos y ejemplos; ¿wo? / ¿wohin? con los pares legen/liegen; la tabla de dónde, adónde y de dónde sitio por sitio; las del tiempo; 92 verbos y 47 adjetivos y sustantivos con su preposición, con buscador, y wo(r)- / da(r)- |
+| `verbos.html` | Cómo funciona · Presente · Perfekt · Präteritum · Los irregulares · Modales · Separables · Reflexivos · Imperativo · Konjunktiv II · werden y la pasiva | 88 irregulares por familias de vocal (infinitivo, presente, Präteritum y Perfekt con su auxiliar), 38 separables y 37 reflexivos con buscador; haben o sein; würde, hätte, wäre para cortesía, deseos y lo hipotético |
+| `adjetivos.html` | Cómo elegir · Con der, die, das · Con ein, kein, mein · Sin artículo · Comparar · Usos especiales · Los más usados | Las tres tablas de terminaciones con el truco para no memorizarlas, el comparativo y el superlativo con sus irregulares, etwas Neues, der Deutsche, los participios como adjetivo y 54 pares de contrarios |
+| `frase.html` | Las tres reglas · El orden en medio · Sin cambiar el orden · El verbo justo después · El verbo al final · De dos partes · Relativas · zu + infinitivo · nicht y kein · Preguntar | Dónde va el verbo, TeKaMoLo y dónde va nicht; cada conector con lo que le hace al verbo (22 subordinantes con buscador); los relativos con denen, dessen y deren; zu + infinitivo; doch; las palabras interrogativas |
+
+Cada pestaña lleva, según el tema, un mapa de grupos, los pasos para decidir, la ficha de consulta a la izquierda
+(fija al bajar), las reglas con ejemplos traducidos —lo que va entre corchetes sale subrayado en el color de la
+pestaña—, tablas grandes (con buscador sin acentos, que deja los separadores de los grupos que tienen resultado) y
+*Los errores típicos* (✗ / ✓ y el porqué). En total: 452 ejemplos y 145 errores típicos. **Practica** es la última
+pestaña de cada página: 12 frases al azar de 40 a 43, igual que la de los casos, y guarda la última y la mejor ronda en
+`aleman_prep_v1`, `aleman_verbos_v1`, `aleman_adj_v1` y `aleman_frase_v1`, que la pestaña del Dashboard enseña.
+
+Un tema nuevo es una página con su `TEMA` (la forma está al principio de `temas.js`), su pestaña en la ventana de Mi Día
+(`AL_TEMAS` y `alemanTabsTxt()` del Dashboard) y su enlace en la barra de la familia. En oscuro, `temas.css` tiene su capa
+en `oscuro.js`: al cambiar la hoja se recalcula con `node Aleman/oscuro.js` (el control 44 lo avisa y exige `leccion.js`
+en toda página con `temas.js`). Las sub-pestañas van en una fila dentro de la ventana a 2048 px y en dos a 1600; en el
+teléfono, una fila que se desliza. Medido a 2048, 1600 y 390 px, en claro y en oscuro: sin desplazamiento horizontal
+ni errores. El inicio las enlaza en la caja de Gramática y `gramatica.html`, desde sus secciones de preposiciones,
+verbos, comparativo y orden de palabras.
 
 ## `vocabulario.html` — donde se trabaja el vocabulario
 

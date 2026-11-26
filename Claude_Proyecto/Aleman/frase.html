@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La frase — el orden, los conectores, las relativas y la negación | Deutsch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap"></noscript>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="temas.css">
+</head>
+<body>
+
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="casos.html">Casos</a>
+    <a href="preposiciones.html">Preposiciones</a>
+    <a href="verbos.html">Verbos</a>
+    <a href="adjetivos.html">Adjetivos</a>
+    <a href="frase.html" class="on" aria-current="page">La frase</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
+
+<header class="cs-hero" id="csHero"></header>
+<div class="cs-tabs"><div class="cs-in" id="csTabs" role="tablist" aria-label="Temas"></div></div>
+<main class="cs-main" id="csMain"></main>
+
+<footer class="footer" style="margin-top:0">
+  <p>La frase alemana — el lugar del verbo, los conectores, las relativas, zu + infinitivo, la negación y las preguntas · A1–B1</p>
+  <div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div>
+</footer>
+
+<script src="../Dashboard/datos-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-pc.js"></script>
+<script>
+/* ── La frase y los conectores: todo el contenido. Lo pinta temas.js. ────────────────────────────────────────
+   En los ejemplos, lo que va entre [corchetes] es el conector o el verbo que se mueve: sale subrayado. Todo alemán revisado. */
+window.TEMA = {
+  clave: 'aleman_frase_v1', ronda: 12,
+  hero: {
+    k: 'Gramática · A1–B1 · el orden de las palabras',
+    h1: 'La <em>frase</em>: el orden y los conectores',
+    lead: 'En alemán el lugar del verbo lo dice todo: **segundo** en la frase principal, **primero** en la pregunta de sí o no y **al final** en la subordinada. Aquí están las tres reglas, cada conector con lo que le hace al verbo, las **relativas**, **zu + infinitivo**, **nicht y kein** y cómo **preguntar**.',
+    frase: ['Ich lerne Deutsch, [weil] ich 2028 in Deutschland arbeiten [will]. [Deshalb übe] ich jeden Tag.', 'Estudio alemán porque quiero trabajar en Alemania en 2028. Por eso practico todos los días.']
+  },
+  tabs: [
+    { k: 'mapa', t: 'Las tres reglas', sub: 'el verbo manda', c: '#CC0000', alias: ['inicio'],
+      h2: 'Las tres posiciones del verbo', p: 'Cada frase alemana tiene el verbo conjugado en uno de tres lugares. Reconoce cuál es y lo demás se acomoda solo.',
+      grupos: [
+        { t: 'Verbo segundo', c: '#2563eb', p: 'Frase normal y preguntas con palabra interrogativa.', chips: [['Ich arbeite heute.', 'hoy trabajo'], ['Heute arbeite ich.', 'hoy trabajo'], ['Wann arbeitest du?', '¿cuándo trabajas?']] },
+        { t: 'Verbo primero', c: '#d97706', p: 'Preguntas de sí o no e imperativo.', chips: [['Arbeitest du heute?', '¿trabajas hoy?'], ['Komm bitte mit!', 'ven, por favor'], ['Gehen wir!', '¡vamos!']] },
+        { t: 'Verbo al final', c: '#7c3aed', p: 'Subordinadas: después de weil, dass, wenn, ob y en las relativas.', chips: [['…, weil ich heute arbeite.', 'porque hoy trabajo'], ['…, dass er kommt.', 'que viene'], ['…, ob sie Zeit hat.', 'si tiene tiempo']] }
+      ],
+      pasos: [
+        ['Encuentra el verbo conjugado', 'Es el que cambia con la persona: **arbeite**, **habe**, **muss**, **werde**.'],
+        ['¿Qué tipo de frase es?', 'Afirmación o pregunta con palabra interrogativa → **posición 2**. Sí o no, o imperativo → **posición 1**. Subordinada → **al final**.'],
+        ['Lo demás del verbo, al final', 'Participio, infinitivo y prefijo separable cierran la frase principal: Ich **habe** heute lange **gearbeitet**.'],
+        ['Une con el conector correcto', 'Unos no tocan el orden (und, aber), otros ocupan la posición 1 (deshalb) y otros mandan el verbo al final (weil).']
+      ],
+      ficha: [
+        { lbl: 'El corchete del verbo', de: 'Ich [muss] morgen um 7 Uhr im Büro [sein].', txt: 'Lo conjugado y lo demás del verbo encierran la información de en medio.' },
+        { lbl: 'Las tres clases de conectores', tabla: { cab: ['clase', 'el verbo', 'ejemplos'], de: [2], filas: [['no cambian nada', 'igual', 'und, aber, oder, denn, sondern'], ['ocupan la posición 1', 'justo después', 'deshalb, trotzdem, dann, außerdem'], ['subordinantes', 'al final', 'weil, dass, wenn, obwohl, als']] } }
+      ],
+      reglas: [
+        { t: 'Frase principal: verbo segundo, aunque empiece otra cosa', d: 'Si empiezas con la hora, el lugar o un complemento, el sujeto pasa detrás del verbo.', ej: [['Ich [fliege] im September nach Deutschland.', 'Vuelo a Alemania en septiembre.'], ['Im September [fliege] ich nach Deutschland.', 'En septiembre vuelo a Alemania.'], ['Nach Deutschland [fliege] ich im September.', 'A Alemania vuelo en septiembre.']] },
+        { t: 'Subordinada primero: verbo, coma, verbo', d: 'Si la subordinada abre la frase, ocupa la posición 1: el verbo principal va justo después de la coma.', ej: [['Ich bleibe zu Hause, weil ich krank [bin].', 'Me quedo en casa porque estoy enfermo.'], ['Weil ich krank [bin], [bleibe] ich zu Hause.', 'Como estoy enfermo, me quedo en casa.']] },
+        { t: 'La coma no es opcional', d: 'Antes de cada subordinada va **coma**: antes de weil, dass, wenn, ob y de los relativos der, die, das.', ej: [['Ich weiß, [dass] du recht hast.', 'Sé que tienes razón.'], ['Das ist der Kollege, [der] mir geholfen hat.', 'Es el colega que me ayudó.']] }
+      ]
+    },
+    { k: 'orden', t: 'El orden en medio', sub: 'nicht · Dativ · TeKaMoLo', c: '#2563eb', alias: ['mittelfeld'],
+      h2: 'El orden de lo que va en medio', p: 'Entre el verbo conjugado y el final también hay un orden: los **pronombres** primero, luego **cuándo, por qué, cómo y dónde** (TeKaMoLo), y **nicht** antes de lo que niega.',
+      ficha: [
+        { lbl: 'TeKaMoLo', tabla: { cab: ['', 'pregunta', 'ejemplo'], de: [2], filas: [['Temporal', '¿cuándo?', 'morgen'], ['Kausal', '¿por qué?', 'wegen des Staus'], ['Modal', '¿cómo?', 'mit dem Bus'], ['Lokal', '¿dónde?', 'zur Arbeit']] },
+          nota: 'Ich fahre **morgen wegen des Staus mit dem Bus zur Arbeit**.' },
+        { lbl: 'Dos objetos', tabla: { cab: ['', 'orden', 'ejemplo'], de: [2], filas: [['dos sustantivos', 'Dativ → Akkusativ', 'Ich gebe dem Kollegen den Bericht.'], ['dos pronombres', 'Akkusativ → Dativ', 'Ich gebe ihn ihm.'], ['pronombre y sustantivo', 'el pronombre primero', 'Ich gebe ihm den Bericht.']] } }
+      ],
+      reglas: [
+        { t: 'Los pronombres, justo después del verbo', ej: [['Morgen rufe ich [dich] an.', 'Mañana te llamo.'], ['Kannst du [es mir] erklären?', '¿Me lo puedes explicar?']] },
+        { t: 'Cuándo, por qué, cómo, dónde', ej: [['Ich fahre [morgen] [mit dem Zug] [nach Stuttgart].', 'Mañana voy en tren a Stuttgart.'], ['Wir treffen uns [heute Abend] [im Café].', 'Nos vemos hoy en la noche en el café.']] },
+        { t: 'Dónde va nicht', d: 'Para negar toda la frase: **al final**, pero antes de la segunda parte del verbo. Para negar una parte: **justo antes** de ella. También va antes de adjetivos, lugares y complementos con preposición.', ej: [['Ich komme heute [nicht].', 'Hoy no vengo.'], ['Ich habe das [nicht] gewusst.', 'No lo sabía.'], ['Ich wohne [nicht] in Stuttgart, sondern in Esslingen.', 'No vivo en Stuttgart, sino en Esslingen.'], ['Das Essen ist [nicht] teuer.', 'La comida no es cara.']] },
+        { t: 'Lo nuevo o importante, hacia el final', d: 'En medio puedes mover lo que quieres resaltar: lo más importante va más al final.', ej: [['Ich habe gestern [das Paket] bekommen.', 'Ayer recibí el paquete.'], ['Ich habe das Paket [gestern] bekommen.', 'El paquete lo recibí ayer.']] }
+      ],
+      ojo: [['Morgen ich fahre nach Stuttgart.', 'Morgen fahre ich nach Stuttgart.', 'El verbo, **segundo**: si empiezas con morgen, el sujeto va detrás.'], ['Ich fahre nach Stuttgart morgen.', 'Ich fahre morgen nach Stuttgart.', 'Tiempo antes que lugar (TeKaMoLo).'],
+            ['Ich nicht komme.', 'Ich komme nicht.', '**nicht** va detrás del verbo conjugado.'], ['Ich gebe ihm ihn.', 'Ich gebe ihn ihm.', 'Dos pronombres: Akkusativ primero.']]
+    },
+    { k: 'aduso', t: 'Sin cambiar el orden', sub: 'und · aber · oder · denn', c: '#059669', alias: ['konjunktionen'],
+      h2: 'Los conectores que no cambian nada', p: 'Van en la «posición 0»: unen dos frases sin ocupar lugar, y después vienen sujeto y verbo como siempre. Truco: **ADUSO** — aber, denn, und, sondern, oder.',
+      ficha: [
+        { lbl: 'ADUSO', chips: [['aber', 'pero'], ['denn', 'porque, pues'], ['und', 'y'], ['sondern', 'sino'], ['oder', 'o']],
+          nota: 'Antes de **aber**, **denn** y **sondern** va coma; antes de und y oder, normalmente no.' }
+      ],
+      reglas: [
+        { de: 'und', t: '— y', ej: [['Ich arbeite bei ALTEN [und] ich lerne Deutsch.', 'Trabajo en ALTEN y estudio alemán.'], ['Ich arbeite bei ALTEN [und] lerne Deutsch.', 'Igual, sin repetir el sujeto.']] },
+        { de: 'aber', t: '— pero', ej: [['Die Wohnung ist klein, [aber] sie ist billig.', 'El depa es chico, pero es barato.'], ['Ich möchte mitkommen, [aber] ich habe keine Zeit.', 'Quisiera ir, pero no tengo tiempo.']], nota: '**aber** también puede ir en medio: Ich habe **aber** keine Zeit.' },
+        { de: 'oder', t: '— o', ej: [['Kommst du mit [oder] bleibst du zu Hause?', '¿Vienes o te quedas en casa?']] },
+        { de: 'denn', t: '— porque, pues', d: 'Igual que weil, pero **sin mandar el verbo al final**. Nunca abre la frase.', ej: [['Ich bleibe zu Hause, [denn] ich bin krank.', 'Me quedo en casa, pues estoy enfermo.']] },
+        { de: 'sondern', t: '— sino', d: 'Solo después de una negación (nicht, kein), para corregir.', ej: [['Ich komme nicht aus Spanien, [sondern] aus Mexiko.', 'No soy de España, sino de México.'], ['Das ist kein Problem, [sondern] eine Chance.', 'No es un problema, sino una oportunidad.']] }
+      ],
+      ojo: [['Ich bleibe zu Hause, denn ich krank bin.', 'Ich bleibe zu Hause, denn ich bin krank.', '**denn** no mueve el verbo.'], ['Ich bin nicht müde, aber hungrig.', 'Ich bin nicht müde, sondern hungrig.', 'Después de una negación, para corregir: **sondern**.'],
+            ['…, und lerne ich Deutsch.', '…, und ich lerne Deutsch.', 'Después de und: sujeto y verbo en su orden normal.']]
+    },
+    { k: 'deshalb', t: 'El verbo justo después', sub: 'deshalb · trotzdem · dann', c: '#d97706', alias: ['adverbios'],
+      h2: 'Los conectores que ocupan la posición 1', p: 'Son adverbios: si abren la frase, ocupan la posición 1, así que el **verbo va inmediatamente después** y luego el sujeto.',
+      ficha: [
+        { lbl: 'La fórmula', preg: ['deshalb + verbo + sujeto', 'Deshalb **lerne ich** Deutsch.'] }
+      ],
+      tablas: [
+        { lbl: 'Los más útiles', cab: ['Conector', 'Para qué', 'Ejemplo', 'En español'], de: [0, 2], filas: [
+          ['deshalb, deswegen, darum, daher', 'consecuencia: por eso', 'Ich will in Deutschland arbeiten, deshalb lerne ich Deutsch.', 'Quiero trabajar en Alemania, por eso estudio alemán.'],
+          ['also', 'conclusión: entonces', 'Es regnet, also nehme ich den Bus.', 'Llueve, entonces tomo el camión.'],
+          ['trotzdem', 'aun así', 'Ich bin müde, trotzdem gehe ich ins Fitnessstudio.', 'Estoy cansado; aun así voy al gimnasio.'],
+          ['dennoch', 'aun así (más formal)', 'Das Gehalt ist niedrig. Dennoch nehme ich die Stelle an.', 'El sueldo es bajo. Aun así acepto el puesto.'],
+          ['außerdem', 'además', 'Die Wohnung ist zentral. Außerdem ist sie billig.', 'El depa es céntrico. Además, es barato.'],
+          ['sonst', 'si no', 'Beeil dich, sonst verpassen wir den Zug.', 'Apúrate, si no perdemos el tren.'],
+          ['dann, danach', 'después, luego', 'Zuerst frühstücke ich, dann fahre ich zur Arbeit.', 'Primero desayuno y luego me voy al trabajo.'],
+          ['zuerst … dann … zum Schluss', 'para ordenar pasos', 'Zuerst lese ich den Text, dann mache ich die Übungen.', 'Primero leo el texto y luego hago los ejercicios.'],
+          ['stattdessen', 'en lugar de eso', 'Ich fahre nicht mit dem Auto. Stattdessen nehme ich die S-Bahn.', 'No voy en coche. En lugar de eso tomo el tren.'],
+          ['dagegen', 'en cambio', 'Meine Familie wohnt in Mexiko, ich dagegen in Deutschland.', 'Mi familia vive en México; yo, en cambio, en Alemania.'],
+          ['endlich', 'por fin', 'Endlich habe ich die Zusage bekommen!', '¡Por fin me llegó la aceptación!'],
+          ['zum Beispiel', 'por ejemplo', 'Ich mache viel Sport. Zum Beispiel gehe ich dreimal pro Woche ins Fitnessstudio.', 'Hago mucho deporte. Por ejemplo, voy tres veces por semana al gimnasio.'],
+          ['nämlich', 'es que (explica; nunca al principio)', 'Ich kann nicht kommen. Ich habe nämlich einen Termin.', 'No puedo ir. Es que tengo una cita.']] }
+      ],
+      reglas: [
+        { t: 'También pueden ir en medio', d: 'Si no abren la frase, van después del verbo y del sujeto.', ej: [['Ich lerne [deshalb] jeden Tag Deutsch.', 'Por eso estudio alemán diario.'], ['Ich bin müde, aber ich gehe [trotzdem] ins Fitnessstudio.', 'Estoy cansado, pero aun así voy al gimnasio.']] },
+        { t: 'weil o deshalb: la misma idea, otro orden', d: '**weil** da la causa (verbo al final); **deshalb**, la consecuencia (verbo justo después).', ej: [['Ich lerne Deutsch, [weil] ich in Deutschland arbeiten [will].', 'Estudio alemán porque quiero trabajar en Alemania.'], ['Ich will in Deutschland arbeiten, [deshalb lerne] ich Deutsch.', 'Quiero trabajar en Alemania, por eso estudio alemán.']] }
+      ],
+      ojo: [['Deshalb ich lerne Deutsch.', 'Deshalb lerne ich Deutsch.', 'Después del conector, **el verbo**.'], ['Trotzdem ich gehe.', 'Trotzdem gehe ich.', 'Igual: verbo, luego sujeto.'],
+            ['Nämlich ich habe keine Zeit.', 'Ich habe nämlich keine Zeit.', '**nämlich** nunca va primero.']]
+    },
+    { k: 'nebensatz', t: 'El verbo al final', sub: 'weil · dass · wenn · als…', c: '#7c3aed', alias: ['subordinadas', 'weil'],
+      h2: 'Las subordinadas: el verbo al final', p: 'Después de estos conectores el **verbo conjugado se va al final** de su frase, y la frase lleva coma. Si hay participio o infinitivo, el conjugado va detrás de ellos.',
+      ficha: [
+        { lbl: 'La fórmula', preg: ['…, weil ich … + verbo.', 'El conjugado, al último: …, weil ich heute arbeiten **muss**.'] },
+        { lbl: 'Separables, modales y Perfekt', tabla: { cab: ['principal', 'subordinada'], de: [0, 1], filas: [['Ich stehe früh auf.', '…, weil ich früh aufstehe.'], ['Ich muss arbeiten.', '…, weil ich arbeiten muss.'], ['Ich habe gearbeitet.', '…, weil ich gearbeitet habe.'], ['Ich bin gekommen.', '…, weil ich gekommen bin.']] } }
+      ],
+      tablas: [
+        { lbl: 'Todos los conectores subordinantes', buscar: true, cab: ['Conector', 'Para qué', 'Ejemplo', 'En español'], de: [0, 2], filas: [
+          '— causa y finalidad —',
+          ['weil', 'porque', 'Ich bleibe zu Hause, weil ich krank bin.', 'Me quedo en casa porque estoy enfermo.'],
+          ['da', 'como, ya que (suele ir primero)', 'Da ich kein Auto habe, fahre ich mit dem Bus.', 'Como no tengo coche, voy en camión.'],
+          ['damit', 'para que (otro sujeto)', 'Ich spreche langsam, damit du mich verstehst.', 'Hablo despacio para que me entiendas.'],
+          ['sodass', 'de modo que', 'Es hat stark geregnet, sodass das Spiel abgesagt wurde.', 'Llovió tanto que se canceló el partido.'],
+          '— condición y contraste —',
+          ['wenn', 'si (condición)', 'Wenn ich Zeit habe, rufe ich dich an.', 'Si tengo tiempo, te llamo.'],
+          ['falls', 'en caso de que', 'Falls es regnet, bleiben wir zu Hause.', 'En caso de que llueva, nos quedamos en casa.'],
+          ['obwohl', 'aunque', 'Obwohl ich müde bin, gehe ich joggen.', 'Aunque estoy cansado, salgo a correr.'],
+          ['während', 'mientras que (contraste)', 'Ich trinke Kaffee, während mein Kollege lieber Tee trinkt.', 'Yo tomo café, mientras que mi colega prefiere té.'],
+          ['indem', 'haciendo (el modo)', 'Ich lerne Vokabeln, indem ich sie laut wiederhole.', 'Aprendo vocabulario repitiéndolo en voz alta.'],
+          ['ohne dass', 'sin que', 'Er ist gegangen, ohne dass ich es gemerkt habe.', 'Se fue sin que me diera cuenta.'],
+          '— tiempo —',
+          ['als', 'cuando (una vez, en el pasado)', 'Als ich in Guadalajara war, habe ich Tortas ahogadas gegessen.', 'Cuando estuve en Guadalajara, comí tortas ahogadas.'],
+          ['wenn', 'cuando (presente, futuro o cada vez)', 'Wenn ich nach Hause komme, koche ich.', 'Cuando llego a casa, cocino.'],
+          ['während', 'mientras', 'Während ich fahre, höre ich Podcasts.', 'Mientras manejo, escucho podcasts.'],
+          ['bevor', 'antes de que', 'Bevor ich zur Arbeit fahre, frühstücke ich.', 'Antes de irme al trabajo, desayuno.'],
+          ['nachdem', 'después de que (un tiempo más atrás)', 'Nachdem ich gegessen hatte, ging ich spazieren.', 'Después de comer, salí a caminar.'],
+          ['seit, seitdem', 'desde que', 'Seit ich in Deutschland wohne, spreche ich besser.', 'Desde que vivo en Alemania, hablo mejor.'],
+          ['bis', 'hasta que', 'Warte hier, bis ich zurückkomme.', 'Espera aquí hasta que regrese.'],
+          ['sobald', 'en cuanto', 'Sobald ich die Zusage habe, sage ich dir Bescheid.', 'En cuanto tenga la aceptación, te aviso.'],
+          ['solange', 'mientras (dure)', 'Solange du lernst, bin ich leise.', 'Mientras estudies, no hago ruido.'],
+          '— lo que se dice o se pregunta —',
+          ['dass', 'que', 'Ich glaube, dass er recht hat.', 'Creo que tiene razón.'],
+          ['ob', 'si (pregunta de sí o no)', 'Weißt du, ob der Zug pünktlich ist?', '¿Sabes si el tren llega a tiempo?'],
+          ['wer, was, wo, wann, wie, warum…', 'pregunta indirecta', 'Kannst du mir sagen, wo der Bahnhof ist?', '¿Me puedes decir dónde está la estación?']],
+          nota: '**nachdem** pide un tiempo más atrás que la otra frase: presente → Perfekt (Nachdem ich gegessen habe, gehe ich…); pasado → Plusquamperfekt (hatte gegessen).' }
+      ],
+      reglas: [
+        { t: 'als o wenn: los dos son «cuando»', d: '**als**: una sola vez en el pasado, o un periodo (als ich Kind war). **wenn**: presente, futuro, o cada vez que pasaba algo (immer wenn).', ej: [['[Als] ich 18 war, habe ich angefangen zu arbeiten.', 'Cuando tenía 18, empecé a trabajar.'], ['Immer [wenn] ich in Guadalajara war, habe ich Tortas ahogadas gegessen.', 'Cada vez que estaba en Guadalajara comía tortas ahogadas.'], ['[Wenn] ich in Deutschland bin, rufe ich dich an.', 'Cuando esté en Alemania, te llamo.']] },
+        { t: 'wenn u ob: los dos son «si»', d: '**wenn** = si (condición). **ob** = si (pregunta indirecta de sí o no).', ej: [['[Wenn] du Zeit hast, komm vorbei.', 'Si tienes tiempo, pasa.'], ['Ich weiß nicht, [ob] ich Zeit habe.', 'No sé si tengo tiempo.']] },
+        { t: 'damit o um … zu: «para»', d: 'Mismo sujeto: **um … zu** + infinitivo. Otro sujeto: **damit**.', ej: [['Ich lerne Deutsch, [um] in Deutschland [zu] arbeiten.', 'Estudio alemán para trabajar en Alemania.'], ['Ich erkläre es dir, [damit] du es [verstehst].', 'Te lo explico para que lo entiendas.']] },
+        { t: 'dass a veces se omite', d: 'Después de verbos de decir o pensar puedes quitar dass: entonces el orden vuelve a ser normal.', ej: [['Ich glaube, [dass] er recht [hat].', 'Creo que tiene razón.'], ['Ich glaube, er [hat] recht.', 'Creo que tiene razón (sin dass).']] }
+      ],
+      ojo: [['…, weil ich bin krank.', '…, weil ich krank bin.', 'Después de weil: verbo **al final**.'], ['Als ich nach Hause komme, koche ich.', 'Wenn ich nach Hause komme, koche ich.', 'Presente o cada vez: **wenn**.'],
+            ['Wenn ich ein Kind war, …', 'Als ich ein Kind war, …', 'Una vez o un periodo en el pasado: **als**.'], ['Ich weiß nicht, wenn er Zeit hat.', 'Ich weiß nicht, ob er Zeit hat.', '«si» de pregunta indirecta: **ob**.'],
+            ['Wenn ich Zeit habe, ich komme mit.', 'Wenn ich Zeit habe, komme ich mit.', 'Después de la subordinada, **el verbo**.'], ['…, weil ich muss arbeiten.', '…, weil ich arbeiten muss.', 'El conjugado, al último.']]
+    },
+    { k: 'dos', t: 'De dos partes', sub: 'entweder … oder…', c: '#0e7490', alias: ['zweiteilig'],
+      h2: 'Los conectores de dos partes', p: 'Unen dos ideas con dos piezas. Sirven mucho para sonar más claro en una entrevista o un correo.',
+      dos: true,
+      reglas: [
+        { de: 'entweder … oder', t: '— o … o', ej: [['[Entweder] ich nehme den Bus [oder] ich fahre mit dem Rad.', 'O tomo el camión o voy en bici.'], ['Wir treffen uns [entweder] heute [oder] morgen.', 'Nos vemos o hoy o mañana.']] },
+        { de: 'weder … noch', t: '— ni … ni', ej: [['Ich trinke [weder] Alkohol [noch] Kaffee.', 'No tomo ni alcohol ni café.'], ['Er hat [weder] angerufen [noch] geschrieben.', 'Ni llamó ni escribió.']], nota: 'Ya es negación: **sin nicht** ni kein.' },
+        { de: 'sowohl … als auch', t: '— tanto … como', ej: [['Ich spreche [sowohl] Englisch [als auch] Deutsch.', 'Hablo tanto inglés como alemán.']] },
+        { de: 'nicht nur … sondern auch', t: '— no solo … sino también', ej: [['Die Stelle ist [nicht nur] interessant, [sondern auch] gut bezahlt.', 'El puesto no solo es interesante, sino también bien pagado.']] },
+        { de: 'zwar … aber', t: '— sí … pero', ej: [['Die Wohnung ist [zwar] klein, [aber] sehr hell.', 'El depa es chico, sí, pero muy luminoso.']] },
+        { de: 'je … desto', t: '— cuanto más … más', d: 'Con **je** el verbo al final; con **desto**, el verbo justo después del comparativo.', ej: [['[Je] mehr ich lese, [desto] mehr Wörter lerne ich.', 'Cuanto más leo, más palabras aprendo.']] },
+        { de: 'einerseits … andererseits', t: '— por un lado … por otro', ej: [['[Einerseits] verdiene ich in Deutschland mehr, [andererseits] ist alles teurer.', 'Por un lado gano más en Alemania; por otro, todo es más caro.']] },
+        { de: 'mal … mal', t: '— a ratos … a ratos', ej: [['[Mal] regnet es, [mal] scheint die Sonne.', 'A ratos llueve, a ratos sale el sol.']] }
+      ],
+      ojo: [['Ich trinke weder Alkohol noch nicht Kaffee.', 'Ich trinke weder Alkohol noch Kaffee.', '**weder … noch** ya niega.'], ['sowohl Englisch als Deutsch', 'sowohl Englisch als auch Deutsch', 'Completo: **als auch**.'],
+            ['nicht nur interessant, aber auch gut bezahlt', 'nicht nur interessant, sondern auch gut bezahlt', '**nicht nur … sondern auch**.']]
+    },
+    { k: 'relativ', t: 'Relativas', sub: 'der · den · dem · denen', c: '#be185d', alias: ['relativsatz'],
+      h2: 'Las oraciones de relativo', p: 'Describen un sustantivo: «el colega **que** trabaja conmigo». El pronombre toma el **género y número** del sustantivo y el **caso** de su papel dentro de la relativa. El verbo, al final.',
+      ficha: [
+        { lbl: 'Los pronombres relativos', tabla: { cab: ['', 'masc.', 'fem.', 'neutro', 'plural'], de: [1, 2, 3, 4], filas: [['Nom', 'der', 'die', 'das', 'die'], ['Akk', 'den', 'die', 'das', 'die'], ['Dat', 'dem', 'der', 'dem', 'denen'], ['Gen', 'dessen', 'deren', 'dessen', 'deren']] },
+          nota: 'Igual que el artículo, salvo **denen** (Dativ plural) y el Genitiv **dessen, deren**.' },
+        { lbl: 'Cómo elegirlo', txt: '**1.** ¿A qué sustantivo se refiere? → género y número (der Kollege → masculino). **2.** ¿Qué papel tiene dentro de la relativa? → caso (…, den ich kenne: ich es el sujeto, así que el pronombre es Akkusativ).' }
+      ],
+      reglas: [
+        { t: 'Nominativ: el pronombre es el sujeto', ej: [['Der Kollege, [der] neben mir sitzt, kommt aus Spanien.', 'El colega que se sienta junto a mí es de España.'], ['Ich suche eine Wohnung, [die] nicht so teuer ist.', 'Busco un depa que no sea tan caro.']] },
+        { t: 'Akkusativ: el pronombre es el objeto', ej: [['Der Kollege, [den] ich gestern kennengelernt habe, ist sehr nett.', 'El colega que conocí ayer es muy amable.'], ['Das Buch, [das] du mir empfohlen hast, ist super.', 'El libro que me recomendaste está buenísimo.']] },
+        { t: 'Dativ: con verbos o preposiciones de Dativ', ej: [['Die Kollegin, [der] ich geholfen habe, hat sich bedankt.', 'La colega a la que ayudé me dio las gracias.'], ['Das sind die Leute, [mit denen] ich arbeite.', 'Esa es la gente con la que trabajo.'], ['Die Firma, [bei der] ich arbeite, heißt ALTEN.', 'La empresa en la que trabajo se llama ALTEN.']] },
+        { t: 'Con preposición: la preposición va delante', d: 'La preposición decide el caso: mit **dem**, für **den**, auf **die**.', ej: [['Das ist der Kurs, [für den] ich mich angemeldet habe.', 'Es el curso al que me inscribí.'], ['Das ist die Prüfung, [auf die] ich mich vorbereite.', 'Es el examen para el que me preparo.']] },
+        { t: 'Genitiv: dessen y deren (cuyo)', ej: [['Das ist der Kollege, [dessen] Frau aus Mexiko kommt.', 'Es el colega cuya esposa es de México.'], ['Die Firma, [deren] Büro in Esslingen ist, sucht Ingenieure.', 'La empresa cuya oficina está en Esslingen busca ingenieros.']] },
+        { t: 'was y wo', d: '**was** después de alles, etwas, nichts, das y de una frase entera. **wo** para lugares (en vez de in dem).', ej: [['Das ist alles, [was] ich weiß.', 'Es todo lo que sé.'], ['Er hat die Prüfung bestanden, [was] mich sehr freut.', 'Aprobó el examen, lo que me alegra mucho.'], ['Esslingen ist die Stadt, [wo] ich wohnen möchte.', 'Esslingen es la ciudad donde quiero vivir.']] }
+      ],
+      ojo: [['Der Kollege, der ich kenne, …', 'Der Kollege, den ich kenne, …', 'ich es el sujeto: el pronombre es **Akkusativ**.'], ['die Leute, mit dem ich arbeite', 'die Leute, mit denen ich arbeite', 'Dativ plural: **denen**.'],
+            ['Das ist alles, das ich weiß.', 'Das ist alles, was ich weiß.', 'Después de alles: **was**.'], ['Der Kollege, der sitzt neben mir, …', 'Der Kollege, der neben mir sitzt, …', 'Verbo **al final** de la relativa.'],
+            ['die Firma, die ich arbeite bei', 'die Firma, bei der ich arbeite', 'La preposición va **delante** del pronombre.']]
+    },
+    { k: 'zu', t: 'zu + infinitivo', sub: 'um … zu · ohne … zu', c: '#4338ca', alias: ['infinitiv'],
+      h2: 'El infinitivo con zu', p: 'Muchos verbos, adjetivos y sustantivos van seguidos de **zu + infinitivo**, al final de la frase y con coma. Los modales, en cambio, nunca llevan zu.',
+      ficha: [
+        { lbl: 'Dónde va el zu', tabla: { cab: ['verbo', 'con zu'], de: [0, 1], filas: [['arbeiten', 'zu arbeiten'], ['anrufen', 'anzurufen'], ['einkaufen', 'einzukaufen'], ['verstehen', 'zu verstehen'], ['arbeiten können', 'arbeiten zu können']] },
+          nota: 'Separables: el zu **en medio** y todo junto (an**zu**rufen).' },
+        { lbl: 'Sin zu', chips: [['können, müssen…', 'los modales'], ['werden', 'futuro'], ['lassen', 'dejar, mandar'], ['gehen + infinitivo', 'Ich gehe einkaufen.'], ['sehen, hören', 'Ich höre ihn kommen.']] }
+      ],
+      reglas: [
+        { t: 'Después de muchos verbos', d: 'anfangen, aufhören, versuchen, vergessen, vorhaben, planen, hoffen, beschließen, sich freuen, Lust haben, Zeit haben, empfehlen, bitten, erlauben…', ej: [['Ich versuche, jeden Tag Deutsch [zu lernen].', 'Intento estudiar alemán todos los días.'], ['Ich habe vergessen, dich [anzurufen].', 'Olvidé llamarte.'], ['Ich habe vor, 2028 nach Deutschland [zu ziehen].', 'Tengo planeado mudarme a Alemania en 2028.'], ['Hast du Lust, ins Kino [zu gehen]?', '¿Tienes ganas de ir al cine?']] },
+        { t: 'Después de es ist + adjetivo', ej: [['Es ist wichtig, pünktlich [zu sein].', 'Es importante ser puntual.'], ['Es ist nicht leicht, eine Wohnung [zu finden].', 'No es fácil encontrar depa.'], ['Es macht Spaß, mit dir [zu arbeiten].', 'Es divertido trabajar contigo.']] },
+        { t: 'um … zu: para', d: 'Mismo sujeto en las dos partes. Si cambia, **damit**.', ej: [['Ich spare, [um] nach Deutschland [zu] gehen.', 'Ahorro para irme a Alemania.'], ['Ich lerne Deutsch, [um] in Deutschland [zu] arbeiten.', 'Estudio alemán para trabajar en Alemania.']] },
+        { t: 'ohne … zu y statt … zu', ej: [['Er ist gegangen, [ohne] etwas [zu sagen].', 'Se fue sin decir nada.'], ['[Statt fernzusehen], lese ich ein Buch.', 'En lugar de ver la tele, leo un libro.']] },
+        { t: 'nicht brauchen … zu: no hace falta', d: 'Lo mismo que nicht müssen.', ej: [['Sie [brauchen] nicht [zu warten].', 'No necesita esperar.']] }
+      ],
+      ojo: [['Ich kann zu schwimmen.', 'Ich kann schwimmen.', 'Modales: **sin zu**.'], ['Ich habe vergessen, zu anrufen.', 'Ich habe vergessen, anzurufen.', 'Separable: el zu **en medio**.'],
+            ['Ich lerne Deutsch, für in Deutschland zu arbeiten.', 'Ich lerne Deutsch, um in Deutschland zu arbeiten.', '«Para» + infinitivo: **um … zu**.'], ['Es ist wichtig zu pünktlich sein.', 'Es ist wichtig, pünktlich zu sein.', 'zu + infinitivo, **al final**.']]
+    },
+    { k: 'negar', t: 'nicht y kein', sub: 'y doch', c: '#475569', alias: ['negacion', 'nicht'],
+      h2: 'Negar: nicht, kein y doch', p: '**kein** niega un sustantivo sin artículo o con **ein**. **nicht** niega todo lo demás: verbos, adjetivos, nombres y sustantivos con der, die, das o un posesivo.',
+      ficha: [
+        { lbl: 'kein se declina como ein', tabla: { cab: ['', 'masc.', 'fem.', 'neutro', 'plural'], de: [1, 2, 3, 4], filas: [['Nom', 'kein', 'keine', 'kein', 'keine'], ['Akk', 'keinen', 'keine', 'kein', 'keine'], ['Dat', 'keinem', 'keiner', 'keinem', 'keinen']] } },
+        { lbl: 'Contestar a una pregunta negativa', tabla: { cab: ['pregunta', 'sí', 'no'], de: [0, 1, 2], filas: [['Hast du Zeit?', 'Ja.', 'Nein.'], ['Hast du keine Zeit?', 'Doch!', 'Nein.']] },
+          nota: '**doch** = «sí» cuando la pregunta es negativa. También contradice: Das stimmt nicht! — **Doch**!' }
+      ],
+      reglas: [
+        { t: 'kein: sin artículo o con ein', ej: [['Ich habe [kein] Auto.', 'No tengo coche.'], ['Ich habe [keine] Zeit.', 'No tengo tiempo.'], ['Das ist [kein] Problem.', 'No es problema.'], ['Ich trinke [keinen] Alkohol.', 'No tomo alcohol.']] },
+        { t: 'nicht: todo lo demás', ej: [['Ich arbeite heute [nicht].', 'Hoy no trabajo.'], ['Das Essen ist [nicht] scharf.', 'La comida no pica.'], ['Das ist [nicht] mein Handy.', 'Ese no es mi celular.'], ['Ich finde den Schlüssel [nicht].', 'No encuentro la llave.']] },
+        { t: 'Dónde va nicht', d: 'Al final si niega la frase entera, pero **antes** de la segunda parte del verbo, de los adjetivos, de los complementos con preposición y de lo que niegas en concreto.', ej: [['Ich habe ihn [nicht] gesehen.', 'No lo vi.'], ['Ich fahre [nicht] mit dem Auto, sondern mit dem Zug.', 'No voy en coche, sino en tren.'], ['Ich kann heute [nicht] kommen.', 'Hoy no puedo ir.']] },
+        { t: 'Las demás negaciones', d: '**nie** (nunca), **nichts** (nada), **niemand** (nadie), **nirgends** (en ningún lado), **noch nicht** (todavía no), **nicht mehr** (ya no), **kein … mehr** (ya no … ninguno).', ej: [['Ich habe [noch nicht] gegessen.', 'Todavía no he comido.'], ['Ich rauche [nicht mehr].', 'Ya no fumo.'], ['Ich habe [keine] Zeit [mehr].', 'Ya no tengo tiempo.'], ['Hier ist [niemand].', 'Aquí no hay nadie.']] },
+        { t: 'Una sola negación', d: 'En alemán no hay doble negación: «no dije nada» es Ich habe **nichts** gesagt, sin nicht.', ej: [['Ich habe [nichts] gesagt.', 'No dije nada.'], ['Ich habe [niemanden] gesehen.', 'No vi a nadie.']] }
+      ],
+      ojo: [['Ich habe nicht Auto.', 'Ich habe kein Auto.', 'Sustantivo sin artículo: **kein**.'], ['Ich habe nicht nichts gesagt.', 'Ich habe nichts gesagt.', 'Una sola negación.'],
+            ['Hast du keine Zeit? — Ja!', 'Hast du keine Zeit? — Doch!', '«Sí» a una pregunta negativa: **doch**.'], ['Ich nicht arbeite heute.', 'Ich arbeite heute nicht.', '**nicht** después del verbo conjugado.'],
+            ['Ich habe keinen Zeit.', 'Ich habe keine Zeit.', 'die Zeit: femenino, **keine**.']]
+    },
+    { k: 'preguntar', t: 'Preguntar', sub: 'wer · wen · wem · wo…', c: '#0f766e', alias: ['fragen'],
+      h2: 'Cómo preguntar', p: 'Sí o no: **verbo primero**. Con palabra interrogativa: la palabra primero y **el verbo segundo**. Dentro de otra frase: **verbo al final**.',
+      ficha: [
+        { lbl: 'Los tres tipos', tabla: { cab: ['tipo', 'el verbo', 'ejemplo'], de: [2], filas: [['sí o no', 'primero', 'Kommst du morgen?'], ['con palabra interrogativa', 'segundo', 'Wann kommst du?'], ['indirecta', 'al final', 'Weißt du, wann er kommt?']] } },
+        { lbl: 'Preguntas más amables', chips: [['Können Sie mir sagen, …?', '¿me puede decir…?'], ['Wissen Sie, ob …?', '¿sabe si…?'], ['Ich möchte wissen, …', 'quisiera saber…'], ['Darf ich fragen, …?', '¿puedo preguntar…?']] }
+      ],
+      tablas: [
+        { lbl: 'Las palabras interrogativas', cab: ['Palabra', 'En español', 'Ejemplo', 'En español'], de: [0, 2], filas: [
+          ['wer', 'quién (sujeto)', 'Wer ist das?', '¿Quién es?'], ['wen', 'a quién (Akkusativ)', 'Wen hast du angerufen?', '¿A quién llamaste?'],
+          ['wem', 'a quién (Dativ)', 'Wem gehört das Handy?', '¿De quién es el celular?'], ['wessen', 'de quién (Genitiv)', 'Wessen Jacke ist das?', '¿De quién es esta chamarra?'],
+          ['was', 'qué', 'Was machst du am Wochenende?', '¿Qué haces el fin de semana?'], ['wo', 'dónde', 'Wo wohnst du?', '¿Dónde vives?'],
+          ['wohin', 'adónde', 'Wohin fährst du im Urlaub?', '¿Adónde vas de vacaciones?'], ['woher', 'de dónde', 'Woher kommst du?', '¿De dónde eres?'],
+          ['wann', 'cuándo', 'Wann beginnt der Kurs?', '¿Cuándo empieza el curso?'], ['seit wann', 'desde cuándo', 'Seit wann lernst du Deutsch?', '¿Desde cuándo estudias alemán?'],
+          ['bis wann', 'hasta cuándo', 'Bis wann musst du arbeiten?', '¿Hasta qué hora tienes que trabajar?'], ['warum, wieso, weshalb', 'por qué', 'Warum willst du nach Deutschland?', '¿Por qué quieres irte a Alemania?'],
+          ['wie', 'cómo', 'Wie geht es dir?', '¿Cómo estás?'], ['wie viel', 'cuánto', 'Wie viel kostet das?', '¿Cuánto cuesta?'],
+          ['wie viele', 'cuántos', 'Wie viele Leute arbeiten hier?', '¿Cuántas personas trabajan aquí?'], ['wie lange', 'cuánto tiempo', 'Wie lange dauert die Fahrt?', '¿Cuánto dura el viaje?'],
+          ['wie oft', 'cada cuánto', 'Wie oft gehst du ins Fitnessstudio?', '¿Cada cuánto vas al gimnasio?'], ['wie spät', 'qué hora', 'Wie spät ist es?', '¿Qué hora es?'],
+          ['welcher, welche, welches', 'cuál (se declina como der)', 'Welchen Bus nimmst du?', '¿Qué camión tomas?'], ['was für ein', 'qué tipo de', 'Was für ein Auto hast du?', '¿Qué tipo de coche tienes?'],
+          ['wo(r) + preposición', 'por cosas, con verbos de preposición', 'Worauf wartest du?', '¿Qué estás esperando?']] }
+      ],
+      reglas: [
+        { t: 'Pregunta indirecta: más cortés', d: 'Empieza con una frase amable y manda el verbo al final. Si no hay palabra interrogativa, usa **ob**.', ej: [['Können Sie mir sagen, wo der Bahnhof [ist]?', '¿Me puede decir dónde está la estación?'], ['Wissen Sie, [ob] der Zug Verspätung [hat]?', '¿Sabe si el tren trae retraso?'], ['Ich möchte wissen, wie viel die Miete [kostet].', 'Quisiera saber cuánto cuesta la renta.']] },
+        { t: 'wer, wen, wem: el caso también pregunta', ej: [['[Wer] hat angerufen? — Dein Chef.', '¿Quién llamó? — Tu jefe.'], ['[Wen] suchst du? — Den Chef.', '¿A quién buscas? — Al jefe.'], ['[Wem] hilfst du? — Dem Chef.', '¿A quién ayudas? — Al jefe.']] },
+        { t: 'Con preposición: personas y cosas', d: 'Personas: preposición + wen o wem (Mit wem…?). Cosas: **wo(r)- + preposición** (Womit…? Worüber…?).', ej: [['[Mit wem] sprichst du?', '¿Con quién hablas?'], ['[Worüber] sprecht ihr?', '¿De qué hablan?'], ['[Auf wen] wartest du?', '¿A quién esperas?']] }
+      ],
+      ojo: [['Wo du wohnst?', 'Wo wohnst du?', 'Con palabra interrogativa: el verbo **segundo**.'], ['Du kommst morgen?', 'Kommst du morgen?', 'Pregunta de sí o no: el verbo **primero**.'],
+            ['Weißt du, wo ist der Bahnhof?', 'Weißt du, wo der Bahnhof ist?', 'Indirecta: verbo **al final**.'], ['Wer hast du angerufen?', 'Wen hast du angerufen?', 'Objeto directo: **wen**.'],
+            ['Wie viel Leute?', 'Wie viele Leute?', 'Contable en plural: **wie viele**.']]
+    }
+  ],
+  practica: [
+    ['Ich bleibe zu Hause, ___ ich krank bin.', ['weil', 'denn', 'deshalb'], 'El verbo va al final (bin): **weil**.', 'Me quedo en casa porque estoy enfermo.'],
+    ['Ich bleibe zu Hause, ___ ich bin krank.', ['denn', 'weil', 'obwohl'], 'Orden normal (ich bin): **denn**.', 'Me quedo en casa, pues estoy enfermo.'],
+    ['Ich bin krank, ___ bleibe ich zu Hause.', ['deshalb', 'weil', 'denn'], 'El verbo justo después (bleibe ich): **deshalb**.', 'Estoy enfermo, por eso me quedo en casa.'],
+    ['___ ich müde bin, gehe ich joggen.', ['Obwohl', 'Trotzdem', 'Aber'], 'Verbo al final y contraste: **obwohl**.', 'Aunque estoy cansado, salgo a correr.'],
+    ['Ich bin müde, ___ gehe ich joggen.', ['trotzdem', 'obwohl', 'aber'], 'El verbo justo después: **trotzdem**.', 'Estoy cansado; aun así salgo a correr.'],
+    ['___ ich 18 war, habe ich angefangen zu arbeiten.', ['Als', 'Wenn', 'Wann'], 'Una vez en el pasado: **als**.', 'Cuando tenía 18, empecé a trabajar.'],
+    ['___ ich nach Hause komme, koche ich.', ['Wenn', 'Als', 'Wann'], 'Presente o cada vez: **wenn**.', 'Cuando llego a casa, cocino.'],
+    ['Ich weiß nicht, ___ ich morgen Zeit habe.', ['ob', 'wenn', 'dass'], 'Pregunta indirecta de sí o no: **ob**.', 'No sé si mañana tengo tiempo.'],
+    ['Ich glaube, ___ er recht hat.', ['dass', 'das', 'ob'], 'La conjunción «que»: **dass**, con doble s.', 'Creo que tiene razón.'],
+    ['Ich lerne Deutsch, ___ in Deutschland zu arbeiten.', ['um', 'damit', 'für'], 'Mismo sujeto + zu: **um … zu**.', 'Estudio alemán para trabajar en Alemania.'],
+    ['Ich spreche langsam, ___ du mich verstehst.', ['damit', 'um', 'dass'], 'Otro sujeto (du): **damit**.', 'Hablo despacio para que me entiendas.'],
+    ['Ich komme nicht aus Spanien, ___ aus Mexiko.', ['sondern', 'aber', 'oder'], 'Para corregir después de una negación: **sondern**.', 'No soy de España, sino de México.'],
+    ['Ich trinke ___ Alkohol noch Kaffee.', ['weder', 'nicht', 'kein'], 'ni … ni: **weder … noch**.', 'No tomo ni alcohol ni café.'],
+    ['Ich spreche sowohl Englisch ___ Deutsch.', ['als auch', 'als', 'und auch'], '**sowohl … als auch**.', 'Hablo tanto inglés como alemán.'],
+    ['Die Wohnung ist zwar klein, ___ sehr hell.', ['aber', 'sondern', 'oder'], '**zwar … aber**.', 'El depa es chico, sí, pero muy luminoso.'],
+    ['Je mehr ich lese, ___ mehr lerne ich.', ['desto', 'als', 'so'], '**je … desto**.', 'Cuanto más leo, más aprendo.'],
+    ['Der Kollege, ___ neben mir sitzt, kommt aus Spanien.', ['der', 'den', 'dem'], 'Es el sujeto de la relativa: **der**.', 'El colega que se sienta junto a mí es de España.'],
+    ['Der Kollege, ___ ich gestern kennengelernt habe, ist nett.', ['den', 'der', 'dem'], 'ich es el sujeto; el pronombre es el objeto: **den**.', 'El colega que conocí ayer es amable.'],
+    ['Das sind die Leute, mit ___ ich arbeite.', ['denen', 'den', 'dem'], 'Dativ plural del relativo: **denen**.', 'Esa es la gente con la que trabajo.'],
+    ['Die Firma, bei ___ ich arbeite, heißt ALTEN.', ['der', 'die', 'dem'], 'bei + Dativ femenino: **der**.', 'La empresa en la que trabajo se llama ALTEN.'],
+    ['Das ist alles, ___ ich weiß.', ['was', 'das', 'dass'], 'Después de alles: **was**.', 'Es todo lo que sé.'],
+    ['Das ist der Kollege, ___ Frau aus Mexiko kommt.', ['dessen', 'deren', 'der'], '«cuyo», masculino: **dessen**.', 'Es el colega cuya esposa es de México.'],
+    ['Ich habe vergessen, dich ___.', ['anzurufen', 'zu anrufen', 'anrufen'], 'Separable: el zu en medio, **anzurufen**.', 'Olvidé llamarte.'],
+    ['Es ist wichtig, pünktlich ___.', ['zu sein', 'sein', 'zu ist'], 'es ist + adjetivo, … **zu + infinitivo**.', 'Es importante ser puntual.'],
+    ['Ich kann gut ___.', ['schwimmen', 'zu schwimmen', 'schwimme'], 'Con modal: infinitivo **sin zu**.', 'Sé nadar bien.'],
+    ['Er ist gegangen, ohne etwas ___.', ['zu sagen', 'sagen', 'gesagt'], '**ohne … zu** + infinitivo.', 'Se fue sin decir nada.'],
+    ['Ich habe ___ Auto.', ['kein', 'nicht', 'keinen'], 'Sustantivo neutro sin artículo: **kein**.', 'No tengo coche.'],
+    ['Ich habe ___ Zeit.', ['keine', 'kein', 'nicht'], 'die Zeit: **keine**.', 'No tengo tiempo.'],
+    ['Das ist ___ mein Handy.', ['nicht', 'kein', 'keine'], 'Con posesivo: **nicht**.', 'Ese no es mi celular.'],
+    ['Hast du keinen Hunger? — ___, ich habe großen Hunger!', ['Doch', 'Ja', 'Nein'], '«Sí» a una pregunta negativa: **doch**.', '¿No tienes hambre? — ¡Sí, tengo mucha hambre!'],
+    ['Ich habe ___ gegessen.', ['noch nicht', 'nicht noch', 'kein noch'], 'Todavía no: **noch nicht**.', 'Todavía no he comido.'],
+    ['___ hast du angerufen? — Meinen Chef.', ['Wen', 'Wer', 'Wem'], 'Objeto directo: **wen**.', '¿A quién llamaste? — A mi jefe.'],
+    ['___ gehört das Handy? — Mir.', ['Wem', 'Wen', 'Wer'], '**gehören** pide Dativ: wem.', '¿De quién es el celular? — Mío.'],
+    ['___ kommst du? — Aus Mexiko.', ['Woher', 'Wohin', 'Wo'], 'De dónde: **woher**.', '¿De dónde eres? — De México.'],
+    ['___ fährst du im Urlaub? — Nach Spanien.', ['Wohin', 'Wo', 'Woher'], 'Adónde: **wohin**.', '¿Adónde vas de vacaciones? — A España.'],
+    ['Weißt du, wo ___?', ['der Bahnhof ist', 'ist der Bahnhof', 'der Bahnhof sein'], 'Pregunta indirecta: verbo **al final**.', '¿Sabes dónde está la estación?'],
+    ['Wenn ich Zeit habe, ___ mit.', ['komme ich', 'ich komme', 'ich mitkomme'], 'Después de la subordinada: **verbo, luego sujeto**.', 'Si tengo tiempo, voy contigo.'],
+    ['Ich bleibe zu Hause, weil ich arbeiten ___.', ['muss', 'müssen', 'zu müssen'], 'En la subordinada, el conjugado **al último**.', 'Me quedo en casa porque tengo que trabajar.'],
+    ['Ruf mich an, sobald du ___.', ['ankommst', 'kommst an', 'ankommen'], 'Subordinada: el separable **junto, al final**.', 'Llámame en cuanto llegues.'],
+    ['Ich fahre ___ nach Stuttgart.', ['morgen mit dem Zug', 'mit dem Zug morgen'], 'TeKaMoLo: **cuándo** antes de **cómo**.', 'Mañana voy en tren a Stuttgart.'],
+    ['Ich gebe ___ den Bericht.', ['ihm', 'ihn', 'er'], 'A quién se lo das: Dativ, **ihm**.', 'Le doy el informe.'],
+    ['Nachdem ich gegessen ___, ging ich spazieren.', ['hatte', 'habe', 'hätte'], '**nachdem**: un tiempo más atrás (Plusquamperfekt).', 'Después de comer, salí a caminar.']
+  ]
+};
+</script>
+<script src="temas.js"></script>
+<script src="leccion.js"></script>
+<script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
+</body>
+</html>
