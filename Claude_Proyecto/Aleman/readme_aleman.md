@@ -22,7 +22,7 @@ la ventana del Dashboard*).
 | A1 | `a1-01`…`a1-15` | Base: saludos, números, artículos, hora, profesiones… |
 | A2 | `a2-01`…`a2-20` | Gramática y vocabulario temático |
 | Apoyo | `index.html`, `principiantes.html`, `gramatica.html`, `casos.html`, `vocabulario.html` | El inicio (ver abajo), lo básico para principiantes, la referencia transversal y los casos a fondo (ver abajo). La barra de apps del Dashboard enlaza al inicio, principiantes, la gramática y el vocabulario |
-| **Gramática a fondo** | `preposiciones.html`, `verbos.html`, `adjetivos.html`, `frase.html`, `temas.js`, `temas.css` | Un tema por página, con su contenido en `window.TEMA`; `temas.js` y `temas.css` los pintan igual (ver abajo) |
+| **Gramática a fondo** | `preposiciones.html`, `verbos.html`, `adjetivos.html`, `frase.html`, `temas.js`, `temas.css`, `temas-tablas.js` | Un tema por página, con su contenido en `window.TEMA`; `temas.js` y `temas.css` los pintan igual, y `temas-tablas.js` trae la tabla de consulta de cada uno para la ventana del Dashboard (ver abajo) |
 | Fotos | `fotos/` | Una por lección y por caja de consulta del inicio, con su crédito; la misma va en el encabezado de su lección |
 | Compartido | `styles.css`, `leccion.js`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js`, `oscuro.js` | La plantilla de las lecciones (ver abajo), estilos y motores; `oscuro.js`, el modo oscuro dentro del Dashboard (lleva calculadas las capas de `styles.css`, `k10.css`, `partizip.css` y `temas.css`) |
 | **Lecciones** | `lecciones-datos.js` | El catálogo de las 41: título, foto con su crédito, ejercicios del Kapitel y la regla de qué lección toca. Lo leen el inicio y Mi Día — ver abajo |
@@ -197,20 +197,33 @@ diseño de `temas.css`:
 | `adjetivos.html` | Cómo elegir · Con der, die, das · Con ein, kein, mein · Sin artículo · Comparar · Usos especiales · Los más usados | Las tres tablas de terminaciones con el truco para no memorizarlas, el comparativo y el superlativo con sus irregulares, etwas Neues, der Deutsche, los participios como adjetivo y 54 pares de contrarios |
 | `frase.html` | Las tres reglas · El orden en medio · Sin cambiar el orden · El verbo justo después · El verbo al final · De dos partes · Relativas · zu + infinitivo · nicht y kein · Preguntar | Dónde va el verbo, TeKaMoLo y dónde va nicht; cada conector con lo que le hace al verbo (22 subordinantes con buscador); los relativos con denen, dessen y deren; zu + infinitivo; doch; las palabras interrogativas |
 
-Cada pestaña lleva, según el tema, un mapa de grupos, los pasos para decidir, la ficha de consulta a la izquierda
-(fija al bajar), las reglas con ejemplos traducidos —lo que va entre corchetes sale subrayado en el color de la
-pestaña—, tablas grandes (con buscador sin acentos, que deja los separadores de los grupos que tienen resultado) y
-*Los errores típicos* (✗ / ✓ y el porqué). En total: 452 ejemplos y 145 errores típicos. **Practica** es la última
+Cada pestaña lleva, según el tema, un mapa de grupos, los pasos para decidir y las tarjetas de consulta arriba, lado a
+lado. Después, **todo en tablas** (Adán: *"lo quiero de mejor formato en forma de tabla, así como lo hiciste en el subtab
+de casos"*): las reglas en una sola tabla —la palabra o la regla (*Preposición*, *Verbo*, *Conector*…) y su para qué a
+la izquierda, abarcando una fila por ejemplo con su traducción; lo que va entre corchetes sale subrayado en el color de
+la pestaña y cada regla es su bloque—, las tablas grandes (con buscador sin acentos, que deja los separadores de los
+grupos que tienen resultado; las de artículos y terminaciones, con el color de cada género) y *Los errores típicos*,
+también en tabla: así no · así sí · por qué. En el teléfono, cada celda baja a su renglón. En total: 452 ejemplos y
+145 errores típicos. **Practica** es la última
 pestaña de cada página: 12 frases al azar de 40 a 43, igual que la de los casos, y guarda la última y la mejor ronda en
 `aleman_prep_v1`, `aleman_verbos_v1`, `aleman_adj_v1` y `aleman_frase_v1`, que la pestaña del Dashboard enseña.
 
 Un tema nuevo es una página con su `TEMA` (la forma está al principio de `temas.js`), su pestaña en la ventana de Mi Día
 (`AL_TEMAS` y `alemanTabsTxt()` del Dashboard) y su enlace en la barra de la familia. En oscuro, `temas.css` tiene su capa
 en `oscuro.js`: al cambiar la hoja se recalcula con `node Aleman/oscuro.js` (el control 44 lo avisa y exige `leccion.js`
-en toda página con `temas.js`). Las sub-pestañas van en una fila dentro de la ventana a 2048 px y en dos a 1600; en el
+en toda página con `temas.js`). Las sub-pestañas van en una o dos filas dentro de la ventana; en el
 teléfono, una fila que se desliza. Medido a 2048, 1600 y 390 px, en claro y en oscuro: sin desplazamiento horizontal
 ni errores. El inicio las enlaza en la caja de Gramática y `gramatica.html`, desde sus secciones de preposiciones,
 verbos, comparativo y orden de palabras.
+
+**La tabla de consulta** de cada tema —la que la ventana del Dashboard pone a su izquierda, como la de los casos— vive en
+`temas-tablas.js` (`ALEMAN_TABLAS`, por la clave de su pestaña: `prep`, `verbos`, `adj`, `frase`): bloques con su título y
+una tabla, una lista o un párrafo. Preposiciones: el caso de cada una, ¿wo?/¿wohin?, el artículo, dónde/adónde/de dónde, el
+tiempo, las contracciones y los verbos con preposición; Verbos: el presente, los tiempos, el participio, haben o sein, los
+modales, los irregulares que más se usan, Konjunktiv II e imperativo; Adjetivos: las tres tablas de terminaciones con el
+color del género, el truco, comparar y los usos especiales; La frase: el lugar del verbo, los conectores, «cuando» y «si»,
+los relativos, el orden en medio, nicht o kein, zu + infinitivo y las palabras para preguntar. Un tema nuevo llega con su
+entrada ahí.
 
 ## `vocabulario.html` — donde se trabaja el vocabulario
 

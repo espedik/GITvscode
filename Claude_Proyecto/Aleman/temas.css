@@ -43,14 +43,10 @@ html.embebida .cs-tabs{top:0}
 .cs-cab{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 14px;margin-bottom:16px}
 .cs-cab h2{font-family:'Playfair Display',serif;font-size:30px;font-weight:900;color:var(--c)}
 .cs-cab p{font-size:15px;color:var(--text2);max-width:980px}
-.cs-grid{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:22px;align-items:start}
-@media(max-width:1100px){.cs-grid{grid-template-columns:minmax(0,1fr)}}
-.cs-col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.cs-col{display:flex;flex-direction:column;gap:14px;min-width:0}
 
-/* La ficha: lo que se consulta de un vistazo, fija al lado de las reglas. */
-.cs-ficha{display:flex;flex-direction:column;gap:14px;position:sticky;top:130px}
-html.embebida .cs-ficha{top:66px}
-@media(max-width:1100px){.cs-ficha{position:static}}
+/* La ficha: lo que se consulta de un vistazo, en tarjetas lado a lado sobre las tablas, que así tienen todo el ancho. */
+.tm-fichas{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px;align-items:start;margin-bottom:14px}
 .cs-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
 .cs-lbl{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
 .cs-preg{display:flex;align-items:center;gap:12px}
@@ -67,22 +63,30 @@ html.embebida .cs-ficha{top:66px}
 .cs-chip{display:inline-flex;flex-direction:column;padding:5px 10px;border-radius:9px;background:rgba(0,0,0,.035);border:1px solid var(--border);font-size:13.5px;font-weight:800;line-height:1.25}
 .cs-chip small{font-size:11px;font-weight:500;color:var(--text3)}
 
-/* Las reglas: una tarjeta por regla —o por preposición, por tiempo verbal…—, con sus ejemplos traducidos. */
-.cs-reglas{display:flex;flex-direction:column;gap:12px}
-.cs-reglas.dos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
-@media(max-width:1300px){.cs-reglas.dos{grid-template-columns:minmax(0,1fr)}}
-.cs-regla{background:#fff;border:1px solid var(--border);border-left:4px solid var(--c);border-radius:14px;padding:14px 18px;box-shadow:var(--shadow)}
-.cs-regla h3{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;font-size:16.5px;font-weight:800;margin-bottom:4px}
-.cs-regla h3 em{font-style:normal;font-family:'Playfair Display',serif;font-size:15px;color:var(--c);min-width:22px}
-.cs-regla h3 b{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--c)}
-.cs-regla h3 small{font-size:13px;font-weight:700;color:var(--text3)}
-.cs-regla>p{font-size:14px;color:var(--text2);margin-bottom:8px}
-.cs-regla>p b{color:var(--text)}
-.cs-ej{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2px 18px;padding:7px 0;border-top:1px dashed var(--border);font-size:15px}
-.cs-ej .de{font-weight:600}
-.cs-ej .es{color:var(--text2);font-size:14px}
-@media(max-width:640px){.cs-ej{grid-template-columns:minmax(0,1fr)}}
-.cs-regla .cs-nota{margin-top:6px;padding-top:6px;border-top:1px dashed var(--border)}
+/* Las reglas, en tabla: la palabra o la regla y su para qué abarcan sus ejemplos; cada regla, su bloque. */
+.tm-rt td.tm-rk{width:16%;background:rgba(0,0,0,.025);border-right:1px solid var(--border)}
+.tm-rt td.tm-rd{width:27%;font-size:13.5px;color:var(--text2);line-height:1.5;border-right:1px solid var(--border)}
+.tm-rt td.tm-rd b{color:var(--text)}
+.tm-rt td.de{width:31%;font-weight:600;font-size:14.5px}
+.tm-rt td.es{color:var(--text2);font-size:13.5px}
+.tm-rt.sin-d td.tm-rk{width:22%}.tm-rt.sin-d td.de{width:42%}
+.tm-rt tbody{border-top:2px solid var(--c)}
+.tm-rt thead+tbody{border-top:0}
+.tm-rt tbody tr:last-child td{border-bottom:0}
+.tm-rk b{display:block;font-family:'Playfair Display',serif;font-size:22px;font-weight:900;line-height:1.1;color:var(--c)}
+.tm-rk small{display:block;margin-top:4px;font-size:12.5px;font-weight:700;color:var(--text);line-height:1.35}
+.tm-rk em{display:block;font-style:normal;font-family:'Playfair Display',serif;font-size:18px;color:var(--c);line-height:1}
+.tm-rk span{display:block;margin-top:4px;font-size:13.5px;font-weight:800;line-height:1.35}
+.tm-rd .cs-nota{margin-top:6px;padding-top:6px;border-top:1px dashed var(--border)}
+@media(max-width:760px){
+  .tm-rt thead{display:none}
+  .tm-rt,.tm-rt tbody,.tm-rt tr,.tm-rt td{display:block;width:auto!important}
+  .tm-rt td{border:0!important;padding:3px 2px}
+  .tm-rt td.tm-rk{background:none;padding-top:12px}
+  .tm-rt td.tm-rk b,.tm-rt td.tm-rk small,.tm-rt td.tm-rk em,.tm-rt td.tm-rk span{display:inline;margin-right:8px}
+  .tm-rt td.es{padding-bottom:8px;border-bottom:1px dashed var(--border)!important}
+  .tm-rt tbody{padding-bottom:6px}
+}
 mark{background:none;color:var(--c,var(--tm));font-weight:800;border-bottom:2px solid currentColor;padding:0 1px}
 
 /* Los grupos: un mapa de un vistazo —las preposiciones por caso, los conectores por el lugar del verbo—. */
@@ -119,14 +123,17 @@ mark{background:none;color:var(--c,var(--tm));font-weight:800;border-bottom:2px 
 .tm-vacio{padding:12px 4px;font-size:14px;color:var(--text3)}
 .tm-tabla .cs-nota{margin-top:10px}
 
-/* Los errores típicos de un hispanohablante: lo que se dice mal y cómo va. */
+/* Los errores típicos de un hispanohablante, en tabla: así no · así sí · por qué. */
 .cs-ojo{background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.28);border-left:4px solid #d97706;border-radius:14px;padding:14px 18px}
-.cs-ojo h3{font-size:16px;font-weight:800;color:#b45309;margin-bottom:8px}
-.cs-mal{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.4fr);gap:4px 16px;padding:7px 0;border-top:1px dashed rgba(217,119,6,.3);font-size:14.5px;align-items:baseline}
-.cs-mal .x{color:#b91c1c;text-decoration:line-through;text-decoration-thickness:1.5px}
-.cs-mal .ok{color:#047857;font-weight:700}
-.cs-mal .por{font-size:13px;color:var(--text2)}
-@media(max-width:760px){.cs-mal{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.cs-mal .por{grid-column:1/-1}}
+.cs-ojo h3{font-size:16px;font-weight:800;color:#b45309;margin-bottom:6px}
+.tm-ojo{width:100%;border-collapse:collapse;font-size:14.5px}
+.tm-ojo th{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#b45309;text-align:left;padding:5px 8px}
+.tm-ojo td{padding:7px 8px;border-top:1px dashed rgba(217,119,6,.3);vertical-align:top}
+.tm-ojo td.x{width:30%;color:#b91c1c;text-decoration:line-through;text-decoration-thickness:1.5px}
+.tm-ojo td.ok{width:30%;color:#047857;font-weight:700}
+.tm-ojo td.por{font-size:13px;color:var(--text2)}
+@media(max-width:760px){.tm-ojo thead{display:none}.tm-ojo tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px dashed rgba(217,119,6,.3)}
+  .tm-ojo td{border:0;width:auto!important}.tm-ojo td.por{grid-column:1/-1;padding-top:0}}
 
 /* La práctica: una frase a la vez. */
 .cs-pr{max-width:860px;margin:0 auto}

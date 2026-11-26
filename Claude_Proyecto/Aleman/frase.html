@@ -90,7 +90,7 @@ window.TEMA = {
       ojo: [['Morgen ich fahre nach Stuttgart.', 'Morgen fahre ich nach Stuttgart.', 'El verbo, **segundo**: si empiezas con morgen, el sujeto va detrás.'], ['Ich fahre nach Stuttgart morgen.', 'Ich fahre morgen nach Stuttgart.', 'Tiempo antes que lugar (TeKaMoLo).'],
             ['Ich nicht komme.', 'Ich komme nicht.', '**nicht** va detrás del verbo conjugado.'], ['Ich gebe ihm ihn.', 'Ich gebe ihn ihm.', 'Dos pronombres: Akkusativ primero.']]
     },
-    { k: 'aduso', t: 'Sin cambiar el orden', sub: 'und · aber · oder · denn', c: '#059669', alias: ['konjunktionen'],
+    { k: 'aduso', t: 'Sin cambiar el orden', sub: 'und · aber · oder · denn', c: '#059669', alias: ['konjunktionen'], col: 'Conector',
       h2: 'Los conectores que no cambian nada', p: 'Van en la «posición 0»: unen dos frases sin ocupar lugar, y después vienen sujeto y verbo como siempre. Truco: **ADUSO** — aber, denn, und, sondern, oder.',
       ficha: [
         { lbl: 'ADUSO', chips: [['aber', 'pero'], ['denn', 'porque, pues'], ['und', 'y'], ['sondern', 'sino'], ['oder', 'o']],
@@ -180,9 +180,8 @@ window.TEMA = {
             ['Wenn ich ein Kind war, …', 'Als ich ein Kind war, …', 'Una vez o un periodo en el pasado: **als**.'], ['Ich weiß nicht, wenn er Zeit hat.', 'Ich weiß nicht, ob er Zeit hat.', '«si» de pregunta indirecta: **ob**.'],
             ['Wenn ich Zeit habe, ich komme mit.', 'Wenn ich Zeit habe, komme ich mit.', 'Después de la subordinada, **el verbo**.'], ['…, weil ich muss arbeiten.', '…, weil ich arbeiten muss.', 'El conjugado, al último.']]
     },
-    { k: 'dos', t: 'De dos partes', sub: 'entweder … oder…', c: '#0e7490', alias: ['zweiteilig'],
+    { k: 'dos', t: 'De dos partes', sub: 'entweder … oder…', c: '#0e7490', alias: ['zweiteilig'], col: 'Conector',
       h2: 'Los conectores de dos partes', p: 'Unen dos ideas con dos piezas. Sirven mucho para sonar más claro en una entrevista o un correo.',
-      dos: true,
       reglas: [
         { de: 'entweder … oder', t: '— o … o', ej: [['[Entweder] ich nehme den Bus [oder] ich fahre mit dem Rad.', 'O tomo el camión o voy en bici.'], ['Wir treffen uns [entweder] heute [oder] morgen.', 'Nos vemos o hoy o mañana.']] },
         { de: 'weder … noch', t: '— ni … ni', ej: [['Ich trinke [weder] Alkohol [noch] Kaffee.', 'No tomo ni alcohol ni café.'], ['Er hat [weder] angerufen [noch] geschrieben.', 'Ni llamó ni escribió.']], nota: 'Ya es negación: **sin nicht** ni kein.' },
@@ -199,7 +198,7 @@ window.TEMA = {
     { k: 'relativ', t: 'Relativas', sub: 'der · den · dem · denen', c: '#be185d', alias: ['relativsatz'],
       h2: 'Las oraciones de relativo', p: 'Describen un sustantivo: «el colega **que** trabaja conmigo». El pronombre toma el **género y número** del sustantivo y el **caso** de su papel dentro de la relativa. El verbo, al final.',
       ficha: [
-        { lbl: 'Los pronombres relativos', tabla: { cab: ['', 'masc.', 'fem.', 'neutro', 'plural'], de: [1, 2, 3, 4], filas: [['Nom', 'der', 'die', 'das', 'die'], ['Akk', 'den', 'die', 'das', 'die'], ['Dat', 'dem', 'der', 'dem', 'denen'], ['Gen', 'dessen', 'deren', 'dessen', 'deren']] },
+        { lbl: 'Los pronombres relativos', tabla: { cab: ['', 'masc.', 'fem.', 'neutro', 'plural'], de: [1, 2, 3, 4], colores: ['', '#3b82f6', '#ec4899', '#10b981', '#f97316'], filas: [['Nom', 'der', 'die', 'das', 'die'], ['Akk', 'den', 'die', 'das', 'die'], ['Dat', 'dem', 'der', 'dem', 'denen'], ['Gen', 'dessen', 'deren', 'dessen', 'deren']] },
           nota: 'Igual que el artículo, salvo **denen** (Dativ plural) y el Genitiv **dessen, deren**.' },
         { lbl: 'Cómo elegirlo', txt: '**1.** ¿A qué sustantivo se refiere? → género y número (der Kollege → masculino). **2.** ¿Qué papel tiene dentro de la relativa? → caso (…, den ich kenne: ich es el sujeto, así que el pronombre es Akkusativ).' }
       ],
@@ -235,7 +234,7 @@ window.TEMA = {
     { k: 'negar', t: 'nicht y kein', sub: 'y doch', c: '#475569', alias: ['negacion', 'nicht'],
       h2: 'Negar: nicht, kein y doch', p: '**kein** niega un sustantivo sin artículo o con **ein**. **nicht** niega todo lo demás: verbos, adjetivos, nombres y sustantivos con der, die, das o un posesivo.',
       ficha: [
-        { lbl: 'kein se declina como ein', tabla: { cab: ['', 'masc.', 'fem.', 'neutro', 'plural'], de: [1, 2, 3, 4], filas: [['Nom', 'kein', 'keine', 'kein', 'keine'], ['Akk', 'keinen', 'keine', 'kein', 'keine'], ['Dat', 'keinem', 'keiner', 'keinem', 'keinen']] } },
+        { lbl: 'kein se declina como ein', tabla: { cab: ['', 'masc.', 'fem.', 'neutro', 'plural'], de: [1, 2, 3, 4], colores: ['', '#3b82f6', '#ec4899', '#10b981', '#f97316'], filas: [['Nom', 'kein', 'keine', 'kein', 'keine'], ['Akk', 'keinen', 'keine', 'kein', 'keine'], ['Dat', 'keinem', 'keiner', 'keinem', 'keinen']] } },
         { lbl: 'Contestar a una pregunta negativa', tabla: { cab: ['pregunta', 'sí', 'no'], de: [0, 1, 2], filas: [['Hast du Zeit?', 'Ja.', 'Nein.'], ['Hast du keine Zeit?', 'Doch!', 'Nein.']] },
           nota: '**doch** = «sí» cuando la pregunta es negativa. También contradice: Das stimmt nicht! — **Doch**!' }
       ],

@@ -69,7 +69,7 @@ window.TEMA = {
         ['Pon el artículo y contrae', 'mit + dem = mit dem; zu + dem = **zum**, zu + der = **zur**, in + dem = **im**, in + das = **ins**, an + dem = **am**, bei + dem = **beim**, von + dem = **vom**.']
       ],
       ficha: [
-        { lbl: 'Los artículos después de la preposición', tabla: { cab: ['', 'masc.', 'fem.', 'neutro', 'plural'], de: [1, 2, 3, 4], filas: [
+        { lbl: 'Los artículos después de la preposición', tabla: { cab: ['', 'masc.', 'fem.', 'neutro', 'plural'], de: [1, 2, 3, 4], colores: ['', '#3b82f6', '#ec4899', '#10b981', '#f97316'], filas: [
           ['Akkusativ', 'den · einen', 'die · eine', 'das · ein', 'die · —'],
           ['Dativ', 'dem · einem', 'der · einer', 'dem · einem', 'den …n'],
           ['Genitiv', 'des …s', 'der · einer', 'des …s', 'der']] },
@@ -84,7 +84,7 @@ window.TEMA = {
         { t: 'Una preposición, varios significados', d: 'No traduzcas palabra por palabra: «a» puede ser **nach**, **zu**, **in** o **an**; «en» puede ser **in**, **an**, **auf** o **bei**. Aprende la preposición con su ejemplo.', ej: [['Ich fliege [nach] Berlin. / Ich gehe [zum] Arzt. / Ich gehe [ins] Kino.', 'Vuelo a Berlín. / Voy al doctor. / Voy al cine.'], ['Ich bin [in der] Stadt, [am] Bahnhof, [auf der] Post, [bei] Bosch.', 'Estoy en la ciudad, en la estación, en el correo, en Bosch.']] }
       ]
     },
-    { k: 'akk', t: 'Akkusativ', sub: 'durch · für · gegen…', c: AKK, alias: ['akkusativ'],
+    { k: 'akk', t: 'Akkusativ', sub: 'durch · für · gegen…', c: AKK, alias: ['akkusativ'], col: 'Preposición',
       h2: 'Las preposiciones con Akkusativ', p: 'Siempre Akkusativ, haya movimiento o no. Recuerda: en Akkusativ solo cambia el masculino (den, einen, keinen, meinen).',
       ficha: [
         { lbl: 'Truco para recordarlas', de: 'durch · ohne · gegen · für · um · bis', txt: '«DOGFUB». Y dos más: entlang (detrás del sustantivo) y wider (solo en frases hechas).' },
@@ -116,7 +116,7 @@ window.TEMA = {
             ['Ich wohne für drei Jahre hier.', 'Ich wohne seit drei Jahren hier.', 'Si sigue pasando, es **seit** + Dativ.'],
             ['bis der Bahnhof', 'bis zum Bahnhof', 'Con artículo, **bis zu** + Dativ.']]
     },
-    { k: 'dat', t: 'Dativ', sub: 'aus · bei · mit · nach…', c: DAT, alias: ['dativ'],
+    { k: 'dat', t: 'Dativ', sub: 'aus · bei · mit · nach…', c: DAT, alias: ['dativ'], col: 'Preposición',
       h2: 'Las preposiciones con Dativ', p: 'Siempre Dativ, aunque haya movimiento (zu, nach, aus). Cambian todos los artículos: dem, der, dem, den…n.',
       ficha: [
         { lbl: 'Para recordarlas', de: 'aus · bei · mit · nach · seit · von · zu', txt: 'Cántalas con la música de «Danubio azul»; luego ab, außer, gegenüber, entgegen y gemäß.' },
@@ -157,7 +157,7 @@ window.TEMA = {
             ['Ich fliege nach der Schweiz.', 'Ich fliege in die Schweiz.', 'Países con artículo: **in** + Akkusativ.'],
             ['Ich lerne Deutsch seit ein Jahr.', 'Ich lerne Deutsch seit einem Jahr.', '**seit** pide Dativ: das Jahr → einem Jahr.']]
     },
-    { k: 'wechsel', t: 'De dos casos', sub: '¿wo? o ¿wohin?', c: WEC, alias: ['wechselprapositionen', 'dos'],
+    { k: 'wechsel', t: 'De dos casos', sub: '¿wo? o ¿wohin?', c: WEC, alias: ['wechselprapositionen', 'dos'], col: 'Preposición',
       h2: 'Las nueve de dos casos (Wechselpräpositionen)', p: 'an, auf, hinter, in, neben, über, unter, vor y zwischen piden **Dativ** si dicen dónde está algo (¿wo?) y **Akkusativ** si dicen adónde va o adónde lo pones (¿wohin?).',
       ficha: [
         { lbl: 'La pregunta que decide', preg: ['Wo? · Wohin?', '¿Dónde está? → Dativ · ¿Adónde va? → Akkusativ'] },
@@ -170,7 +170,6 @@ window.TEMA = {
           nota: 'Los de la izquierda son regulares (legte, gelegt); los de la derecha, irregulares (lag, gelegen; stand, gestanden; saß, gesessen).' },
         { lbl: 'Verbos de movimiento y de estar', txt: '**Akkusativ**: gehen, fahren, kommen, fliegen, laufen, bringen, legen, stellen, setzen, hängen. **Dativ**: sein, bleiben, wohnen, arbeiten, liegen, stehen, sitzen, hängen (estar), warten, treffen. **Ojo**: ankommen (llegar) va con Dativ: Ich komme in Berlin an / am Bahnhof an.' }
       ],
-      dos: true,
       reglas: [
         { de: 'an', t: '— en, junto a (al borde, en vertical)', d: 'Contacto lateral (la pared, la puerta), junto al agua, en un borde. En el tiempo, **am** + día o fecha (Dativ).',
           ej: [['Das Bild hängt [an der] Wand. → Ich hänge das Bild [an die] Wand.', 'El cuadro está en la pared. → Cuelgo el cuadro en la pared.'], ['Wir sind [am] Meer. → Wir fahren [ans] Meer.', 'Estamos en el mar. → Vamos al mar.'], ['Er steht [an der] Tür.', 'Está parado en la puerta.'], ['[Am] Montag, [am] 5. Mai, [am] Abend', 'el lunes, el 5 de mayo, en la noche']] },
@@ -198,10 +197,10 @@ window.TEMA = {
             ['vor zwei Jahre', 'vor zwei Jahren', 'En el tiempo, vor es Dativ, y el plural lleva -n.'],
             ['Ich spreche von das Projekt.', 'Ich spreche über das Projekt.', 'Hablar **sobre** un tema: über + Akkusativ.']]
     },
-    { k: 'gen', t: 'Genitiv', sub: 'wegen · trotz · während…', c: GEN, alias: ['genitiv'],
+    { k: 'gen', t: 'Genitiv', sub: 'wegen · trotz · während…', c: GEN, alias: ['genitiv'], col: 'Preposición',
       h2: 'Las preposiciones con Genitiv', p: 'Son de lo escrito: correos, documentos, exámenes. Al hablar, wegen, trotz, während y statt se oyen mucho con Dativ; en lo que escribas, Genitiv.',
       ficha: [
-        { lbl: 'El Genitiv en una línea', tabla: { cab: ['masc.', 'fem.', 'neutro', 'plural'], de: [0, 1, 2, 3], filas: [['des Kurses', 'der Woche', 'des Wetters', 'der Ferien'], ['eines Tages', 'einer Woche', 'eines Jahres', '—']] },
+        { lbl: 'El Genitiv en una línea', tabla: { cab: ['masc.', 'fem.', 'neutro', 'plural'], de: [0, 1, 2, 3], colores: ['#3b82f6', '#ec4899', '#10b981', '#f97316'], filas: [['des Kurses', 'der Woche', 'des Wetters', 'der Ferien'], ['eines Tages', 'einer Woche', 'eines Jahres', '—']] },
           nota: 'Masculino y neutro: **des** y el sustantivo con **-s** (palabras largas) o **-es** (una sílaba: des Tages, des Jahres).' },
         { lbl: 'Frases que se dicen tal cual', chips: [['deswegen', 'por eso'], ['meinetwegen', 'por mí, como quieras'], ['stattdessen', 'en su lugar'], ['trotzdem', 'aun así'], ['währenddessen', 'mientras tanto']] }
       ],

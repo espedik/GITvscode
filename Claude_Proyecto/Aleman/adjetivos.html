@@ -82,7 +82,7 @@ window.TEMA = {
         { lbl: 'Los que van igual que der', chips: [['dieser', 'este'], ['jener', 'aquel'], ['jeder', 'cada'], ['welcher', 'cuál'], ['mancher', 'alguno'], ['alle', 'todos'], ['beide', 'ambos']] }
       ],
       tablas: [
-        { lbl: 'La tabla completa', cab: ['', 'masculino', 'femenino', 'neutro', 'plural'], de: [1, 2, 3, 4], filas: [
+        { lbl: 'La tabla completa', cab: ['', 'masculino', 'femenino', 'neutro', 'plural'], de: [1, 2, 3, 4], colores: ['', '#3b82f6', '#ec4899', '#10b981', '#f97316'], filas: [
           ['Nominativ', 'der neu[e] Chef', 'die neu[e] Stelle', 'das neu[e] Auto', 'die neu[en] Kollegen'],
           ['Akkusativ', 'den neu[en] Chef', 'die neu[e] Stelle', 'das neu[e] Auto', 'die neu[en] Kollegen'],
           ['Dativ', 'dem neu[en] Chef', 'der neu[en] Stelle', 'dem neu[en] Auto', 'den neu[en] Kollegen'],
@@ -105,7 +105,7 @@ window.TEMA = {
         { lbl: 'Los que van igual que ein', chips: [['kein', 'ningún'], ['mein', 'mi'], ['dein', 'tu'], ['sein', 'su, de él'], ['ihr', 'su, de ella o de ellos'], ['unser', 'nuestro'], ['euer', 'su, de ustedes'], ['Ihr', 'su, de usted']] }
       ],
       tablas: [
-        { lbl: 'La tabla completa', cab: ['', 'masculino', 'femenino', 'neutro', 'plural'], de: [1, 2, 3, 4], filas: [
+        { lbl: 'La tabla completa', cab: ['', 'masculino', 'femenino', 'neutro', 'plural'], de: [1, 2, 3, 4], colores: ['', '#3b82f6', '#ec4899', '#10b981', '#f97316'], filas: [
           ['Nominativ', 'ein neu[er] Chef', 'eine neu[e] Stelle', 'ein neu[es] Auto', 'keine neu[en] Kollegen'],
           ['Akkusativ', 'einen neu[en] Chef', 'eine neu[e] Stelle', 'ein neu[es] Auto', 'keine neu[en] Kollegen'],
           ['Dativ', 'einem neu[en] Chef', 'einer neu[en] Stelle', 'einem neu[en] Auto', 'keinen neu[en] Kollegen'],
@@ -128,7 +128,7 @@ window.TEMA = {
         { lbl: 'Dónde aparece', chips: [['zwei neue Kollegen', 'números'], ['viele gute Ideen', 'viele'], ['einige alte Freunde', 'einige'], ['wenige freie Tage', 'wenige'], ['mehrere große Firmen', 'mehrere']] }
       ],
       tablas: [
-        { lbl: 'La tabla completa', cab: ['', 'masculino', 'femenino', 'neutro', 'plural'], de: [1, 2, 3, 4], filas: [
+        { lbl: 'La tabla completa', cab: ['', 'masculino', 'femenino', 'neutro', 'plural'], de: [1, 2, 3, 4], colores: ['', '#3b82f6', '#ec4899', '#10b981', '#f97316'], filas: [
           ['Nominativ', 'frisch[er] Kaffee', 'kalt[e] Milch', 'kalt[es] Wasser', 'neu[e] Kollegen'],
           ['Akkusativ', 'frisch[en] Kaffee', 'kalt[e] Milch', 'kalt[es] Wasser', 'neu[e] Kollegen'],
           ['Dativ', 'mit frisch[em] Kaffee', 'mit kalt[er] Milch', 'mit kalt[em] Wasser', 'mit neu[en] Kollegen'],
@@ -167,7 +167,6 @@ window.TEMA = {
     },
     { k: 'especiales', t: 'Usos especiales', sub: 'etwas Neues · der Deutsche', c: '#0e7490', alias: ['nominalisierung'],
       h2: 'Usos especiales del adjetivo', p: 'El adjetivo convertido en sustantivo, después de etwas y nichts, los participios como adjetivo y las formas que cambian al declinarse.',
-      dos: true,
       reglas: [
         { t: 'etwas, nichts, viel, wenig + mayúscula y -es', d: 'Después de **alles**, en cambio, **-e**: alles Gute.', ej: [['Gibt es [etwas Neues]?', '¿Hay algo nuevo?'], ['Ich habe [nichts Besonderes] gemacht.', 'No hice nada especial.'], ['Ich wünsche dir [alles Gute]!', '¡Te deseo lo mejor!']] },
         { t: 'El adjetivo como sustantivo', d: 'Se escribe con mayúscula y **se declina como adjetivo**: der Deutsch**e**, ein Deutsch**er**, die Erwachsen**en**.', ej: [['Mein Kollege ist [ein Deutscher], seine Frau ist [eine Deutsche].', 'Mi colega es alemán; su esposa es alemana.'], ['Die [Erwachsenen] zahlen 10 Euro.', 'Los adultos pagan 10 euros.'], ['Er ist [ein Bekannter] von mir.', 'Es un conocido mío.']],

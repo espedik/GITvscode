@@ -70,6 +70,7 @@
 <script src="../Aleman/lecciones-datos.js"></script>
 <script src="../Aleman/lecciones-resumen.js"></script>
 <script src="../Aleman/vocab-mas.js"></script>
+<script src="../Aleman/temas-tablas.js"></script>
 <!-- La biblioteca de ejercicios (EJ_DB), la misma de CuidadoPersonal/ejercicio.html: nombre,
      imagen, técnica paso a paso y error de cada uno. La ficha que se abre al tocar un ejercicio
      en Mi Día (verFichaEjercicio) sale de aquí. -->
@@ -3926,8 +3927,10 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .alv-body{flex:1;min-height:0;display:flex}
 .alv-voc,.alv-lec,.alv-cas,.alv-tem{flex:1;min-width:0;min-height:0}
 .alv-body:not([data-tab="vocab"]) .alv-voc,.alv-body:not([data-tab="leccion"]) .alv-lec,.alv-body:not([data-tab="casos"]) .alv-cas{display:none}
-/* Los temas a fondo: la página de la app de Alemán a todo lo ancho; su ficha de consulta ya va dentro. */
-.alv-tem{display:none;padding:14px 22px 18px}
+/* Los temas a fondo: como los casos, su tabla de consulta a la izquierda (`alemanTemaTablaHtml()`) y su página de la app
+   de Alemán al lado. */
+.alv-tem{display:none;flex-direction:row;gap:16px;padding:14px 22px 18px}
+.alv-tem>.alv-lec-marco{flex:1;min-width:0}
 .alv-body[data-tab="prep"] .alv-tem[data-tem="prep"],.alv-body[data-tab="verbos"] .alv-tem[data-tem="verbos"],
 .alv-body[data-tab="adj"] .alv-tem[data-tem="adj"],.alv-body[data-tab="frase"] .alv-tem[data-tem="frase"]{display:flex}
 /* Los casos: la página de la app de Alemán (casos.html) a todo el alto, en modo ventana. */
@@ -3956,7 +3959,7 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .alv-tab ul{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:3px}
 .alv-tab b{color:var(--text)}
 .alv-tab i{font-style:italic;color:var(--text)}
-@media(max-width:1100px){.alv-cas{flex-direction:column;gap:10px}.alv-tab{width:auto;max-height:40vh}.alv-cas>.alv-lec-marco{min-height:60vh}}
+@media(max-width:1100px){.alv-cas,.alv-tem{flex-direction:column;gap:10px}.alv-tab{width:auto;max-height:40vh}.alv-cas>.alv-lec-marco,.alv-tem>.alv-lec-marco{min-height:60vh}}
 /* El vocabulario: su encabezado, las tarjetas y el repaso. */
 .alv-voc{overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:18px;padding:20px 24px 28px}
 .alv-voc-cab{display:flex;align-items:center;gap:18px}
@@ -5440,15 +5443,19 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
         <div class="alv-lec-marco" id="alemanCasosMarco"><iframe id="alemanCasos" title="Los casos, de la app de Alemán" onload="if(this.dataset.src)this.parentNode.classList.add('lista')"></iframe><span class="alv-lec-carga">Abriendo los casos…</span></div>
       </section>
       <section class="alv-tem" data-tem="prep" aria-label="Las preposiciones">
+        <aside class="alv-tab" id="alemanTabla-prep" aria-label="La tabla de consulta"></aside>
         <div class="alv-lec-marco"><iframe id="alemanTemPrep" title="Las preposiciones, de la app de Alemán" onload="if(this.dataset.src)this.parentNode.classList.add('lista')"></iframe><span class="alv-lec-carga">Abriendo las preposiciones…</span></div>
       </section>
       <section class="alv-tem" data-tem="verbos" aria-label="Los verbos">
+        <aside class="alv-tab" id="alemanTabla-verbos" aria-label="La tabla de consulta"></aside>
         <div class="alv-lec-marco"><iframe id="alemanTemVerbos" title="Los verbos, de la app de Alemán" onload="if(this.dataset.src)this.parentNode.classList.add('lista')"></iframe><span class="alv-lec-carga">Abriendo los verbos…</span></div>
       </section>
       <section class="alv-tem" data-tem="adj" aria-label="Los adjetivos">
+        <aside class="alv-tab" id="alemanTabla-adj" aria-label="La tabla de consulta"></aside>
         <div class="alv-lec-marco"><iframe id="alemanTemAdj" title="Los adjetivos, de la app de Alemán" onload="if(this.dataset.src)this.parentNode.classList.add('lista')"></iframe><span class="alv-lec-carga">Abriendo los adjetivos…</span></div>
       </section>
       <section class="alv-tem" data-tem="frase" aria-label="La frase y los conectores">
+        <aside class="alv-tab" id="alemanTabla-frase" aria-label="La tabla de consulta"></aside>
         <div class="alv-lec-marco"><iframe id="alemanTemFrase" title="La frase y los conectores, de la app de Alemán" onload="if(this.dataset.src)this.parentNode.classList.add('lista')"></iframe><span class="alv-lec-carga">Abriendo la frase…</span></div>
       </section>
     </div>
@@ -8633,6 +8640,7 @@ function alemanTab(t){
   if(tm){
     const f = document.getElementById(tm[0]);
     if(f && !f.dataset.src){ f.dataset.src = '../Aleman/' + tm[1]; f.src = f.dataset.src; }
+    const a = document.getElementById('alemanTabla-' + _alTab); if(a && !a.innerHTML) a.innerHTML = alemanTemaTablaHtml(_alTab);
   }
   const b = document.getElementById('alemanBody'); if(b) b.dataset.tab = _alTab;
   document.querySelectorAll('#alemanOverlay [data-alv-tab]').forEach(x => {
@@ -8791,6 +8799,19 @@ function alemanCasosTablaHtml(){
       <li>Algunos masculinos toman -n en todos los casos menos el Nominativ: <i lang="de">der Kollege → den/dem Kollegen</i>.</li>
       <li>Después de <span lang="de">sein</span> va Nominativ: <i lang="de">Er ist ein guter Ingenieur.</i></li></ul>
   </details>`;
+}
+// La tabla de consulta de cada tema a fondo, siempre a la vista como la de los casos (Adán, 26-nov-2026: "lo quiero de
+// mejor formato en forma de tabla, así como lo hiciste en el subtab de casos"). El contenido vive en la app de Alemán
+// (`ALEMAN_TABLAS`, ../Aleman/temas-tablas.js); aquí solo se pinta. En los textos, **negrita** y [alemán] en cursiva.
+function alemanTemaTablaHtml(k){
+  const T = (window.ALEMAN_TABLAS || {})[k]; if(!T) return '';
+  const neg = s => esc(s).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+  const txt = s => neg(s).replace(/\[([^\]]+)\]/g, '<i lang="de">$1</i>');
+  const tabla = t => `<table>${t.cab ? `<tr>${t.cab.map((c, j) => `<th${t.colores && t.colores[j] ? ` style="color:${t.colores[j]}"` : ''}>${esc(c)}</th>`).join('')}</tr>` : ''}${
+    t.filas.map((f, i) => `<tr>${f.map((x, j) => { const c = (t.colores && t.colores[j]) || (!j && t.filaColor && t.filaColor[i]);
+      return `<td${(t.de || []).includes(j) ? ' lang="de"' : ''}${c ? ` style="color:${c}"` : ''}>${neg(x)}</td>`; }).join('')}</tr>`).join('')}</table>`;
+  return `<details open><summary><span class="alv-k c">${esc(T.titulo)}</span></summary>${T.bloques.map(b => `<h5>${esc(b.h)}</h5>` +
+    (b.tabla ? tabla(b.tabla) : '') + (b.lista ? `<ul>${b.lista.map(x => `<li>${txt(x)}</li>`).join('')}</ul>` : '') + (b.p ? `<p>${txt(b.p)}</p>` : '')).join('')}</details>`;
 }
 // «‹» (d = −1), «Siguiente ›» (d = 1) y «↺» (d = 0): otra lección en el orden de Coach —el Kapitel en curso,
 // luego el A2 y el A1—; llegar a la del plan, o volver a ella, borra la elección.

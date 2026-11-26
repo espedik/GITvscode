@@ -11,10 +11,13 @@
      tabs: [{ k, t, sub, c, alias:[], h2, p,         la pestaña: su clave, nombre, detalle (al pasar el cursor), color y otros nombres del ancla
               grupos: [{ t, p, c, chips: [[de, es]] }], un mapa de un vistazo
               pasos: [[título, texto]],               los pasos para decidir
-              ficha: [{ lbl, preg:[grande, chico] | chips:[[de, es]] | tabla:{ cab:[], filas:[[]], de:[cols] } | de:'texto' | txt:'texto', nota }],
-              reglas: [{ t, de, sub, d, ej: [[de, es]], nota }], dos: true para dos columnas,
-              tablas: [{ lbl, cab:[], filas:[[]] o ['— separador —'], de:[cols], buscar:true, nota }],
-              ojo: [[mal, bien, porqué]] }],
+              ficha: [{ lbl, preg:[grande, chico] | chips:[[de, es]] | tabla:{ cab:[], filas:[[]], de:[cols], colores:[] } | de:'texto' | txt:'texto', nota }],
+                                                      tarjetas de consulta, arriba y lado a lado
+              reglas: [{ t, de, d, ej: [[de, es]], nota }], col, lblReglas,
+                                                      una tabla: la palabra (de) o la regla (t), para qué (d, nota), y una fila
+                                                      por ejemplo; `col` nombra la primera columna (Preposición, Verbo…)
+              tablas: [{ lbl, cab:[], filas:[[]] o ['— separador —'], de:[cols], colores:[], buscar:true, nota }],
+              ojo: [[mal, bien, porqué]] }],             los errores típicos, en tabla: así no · así sí · por qué
      practica: [[frase con ___, [opciones; la primera es la correcta], porqué, español]]
    }
    En cualquier texto en alemán, lo que va entre [corchetes] sale subrayado en el color de su pestaña. */
@@ -27,16 +30,22 @@
   function marca(s) { return esc(s).replace(/\[([^\]]+)\]/g, '<mark>$1</mark>'); }
   // El texto en español admite negritas con **…**. Una terminación (-en, -er, -es) no se parte al final del renglón.
   function txt(s) { return esc(s).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>').replace(/(^|[\s(«/>])(-[a-zäöüß]+)/gi, '$1<span class="nw">$2</span>'); }
-  function ejHtml(e) { return '<div class="cs-ej"><span class="de" lang="de">' + marca(e[0]) + '</span><span class="es">' + txt(e[1]) + '</span></div>'; }
   function leer() { try { return JSON.parse(localStorage.getItem(T.clave) || '{}') || {}; } catch (e) { return {}; } }
   function guardar(o) { try { localStorage.setItem(T.clave, JSON.stringify(o)); } catch (e) { /* sin almacenamiento, sin récord */ } }
   function sinAcento(s) { return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ß/g, 'ss'); }
 
   /* ── Las piezas de un panel ── */
-  function celdas(f, de) { return f.map(function (x, j) { var d = de && de.indexOf(j) >= 0; return '<td' + (d ? ' class="de" lang="de"' : '') + '>' + (d ? marca(x) : txt(x)) + '</td>'; }).join(''); }
+  // `colores`: un color por columna (el del género, como en la tabla de los casos): tiñe su encabezado y lo subrayado.
+  function celdas(f, de, col) {
+    return f.map(function (x, j) {
+      var d = de && de.indexOf(j) >= 0, c = col && col[j];
+      return '<td' + (d ? ' class="de" lang="de"' : '') + (c ? ' style="--c:' + c + '"' : '') + '>' + (d ? marca(x) : txt(x)) + '</td>';
+    }).join('');
+  }
+  function cabecera(cab, col) { return '<thead><tr>' + cab.map(function (c, j) { return '<th' + (col && col[j] ? ' style="color:' + col[j] + '"' : '') + '>' + esc(c) + '</th>'; }).join('') + '</tr></thead>'; }
   function tablaChica(t) {
-    return '<table class="cs-t">' + (t.cab ? '<thead><tr>' + t.cab.map(function (c) { return '<th>' + esc(c) + '</th>'; }).join('') + '</tr></thead>' : '') +
-      '<tbody>' + t.filas.map(function (f) { return '<tr>' + celdas(f, t.de) + '</tr>'; }).join('') + '</tbody></table>';
+    return '<table class="cs-t">' + (t.cab ? cabecera(t.cab, t.colores) : '') +
+      '<tbody>' + t.filas.map(function (f) { return '<tr>' + celdas(f, t.de, t.colores) + '</tr>'; }).join('') + '</tbody></table>';
   }
   function chips(L) { return '<div class="cs-chips">' + L.map(function (p) { return '<span class="cs-chip"><span lang="de">' + esc(p[0]) + '</span>' + (p[1] ? '<small>' + esc(p[1]) + '</small>' : '') + '</span>'; }).join('') + '</div>'; }
   function tarjeta(c) {
@@ -46,18 +55,33 @@
       (c.de ? '<div class="cs-txt" lang="de">' + marca(c.de) + '</div>' : '') + (c.txt ? '<div class="cs-nota" style="margin-top:0">' + txt(c.txt) + '</div>' : '') +
       (c.nota ? '<div class="cs-nota">' + txt(c.nota) + '</div>' : '') + '</div>';
   }
-  function regla(r, i) {
-    return '<article class="cs-regla"' + (r.c ? ' style="--c:' + r.c + '"' : '') + '><h3>' + (r.de ? '<b lang="de">' + esc(r.de) + '</b>' + (r.t ? ' ' + esc(r.t) : '') : '<em>' + (i + 1) + '</em>' + esc(r.t)) +
-      (r.sub ? ' <small>' + esc(r.sub) + '</small>' : '') + '</h3>' + (r.d ? '<p>' + txt(r.d) + '</p>' : '') + (r.ej || []).map(ejHtml).join('') +
-      (r.nota ? '<div class="cs-nota">' + txt(r.nota) + '</div>' : '') + '</article>';
+  /* Las reglas, en una tabla (Adán, 26-nov-2026: "lo quiero de mejor formato en forma de tabla, así como en el subtab de
+     casos"): una fila por ejemplo y, a la izquierda, la palabra o la regla con su explicación, que abarcan sus ejemplos.
+     Cada regla es su propio <tbody>, separado del siguiente. En el teléfono, cada celda baja a su renglón. */
+  function reglasTabla(P) {
+    var R = P.reglas, conDe = R.every(function (r) { return r.de; }), conD = R.some(function (r) { return r.d || r.nota; });
+    var cab = [P.col || (conDe ? 'Palabra' : 'La regla')].concat(conD ? ['Para qué'] : [], ['Ejemplo', 'En español']);
+    var cuerpo = R.map(function (r, i) {
+      var ej = r.ej && r.ej.length ? r.ej : [['', '']], n = ej.length;
+      var k = r.de ? '<b lang="de">' + esc(r.de) + '</b>' + (r.t ? '<small>' + esc(r.t.replace(/^—\s*/, '')) + '</small>' : '')
+        : '<em>' + (i + 1) + '</em><span>' + esc(r.t) + '</span>';
+      var d = (r.d ? txt(r.d) : '') + (r.nota ? '<div class="cs-nota">' + txt(r.nota) + '</div>' : '');
+      return '<tbody' + (r.c ? ' style="--c:' + r.c + '"' : '') + '>' + ej.map(function (e, j) {
+        return '<tr>' + (j ? '' : '<td class="tm-rk" rowspan="' + n + '">' + k + '</td>' + (conD ? '<td class="tm-rd" rowspan="' + n + '">' + d + '</td>' : '')) +
+          '<td class="de" lang="de">' + marca(e[0]) + '</td><td class="es">' + txt(e[1]) + '</td></tr>';
+      }).join('') + '</tbody>';
+    }).join('');
+    return '<div class="tm-tabla tm-reglas"><div class="tm-tabla-cab"><div class="cs-lbl">' + esc(P.lblReglas || (conDe ? 'Una por una, con sus usos y ejemplos' : 'Las reglas, con ejemplos')) + '</div></div>' +
+      '<div class="tm-wrap"><table class="tm-t tm-rt' + (conD ? '' : ' sin-d') + '"><thead><tr>' + cab.map(function (c) { return '<th>' + esc(c) + '</th>'; }).join('') + '</tr></thead>' +
+      cuerpo + '</table></div></div>';
   }
   var nTabla = 0;
   function tablaGrande(t) {
     var id = 'tmT' + (++nTabla);
     return '<div class="tm-tabla"><div class="tm-tabla-cab"><div class="cs-lbl">' + esc(t.lbl || '') + '</div>' +
       (t.buscar ? '<input class="tm-buscar" type="search" placeholder="Buscar en alemán o en español…" aria-label="Buscar" oninput="TEMA_buscar(\'' + id + '\',this.value)">' : '') + '</div>' +
-      '<div class="tm-wrap"><table class="tm-t" id="' + id + '"><thead><tr>' + t.cab.map(function (c) { return '<th>' + esc(c) + '</th>'; }).join('') + '</tr></thead><tbody>' +
-      t.filas.map(function (f) { return typeof f === 'string' ? '<tr class="sep"><td colspan="' + t.cab.length + '">' + esc(f) + '</td></tr>' : '<tr>' + celdas(f, t.de) + '</tr>'; }).join('') +
+      '<div class="tm-wrap"><table class="tm-t" id="' + id + '">' + cabecera(t.cab, t.colores) + '<tbody>' +
+      t.filas.map(function (f) { return typeof f === 'string' ? '<tr class="sep"><td colspan="' + t.cab.length + '">' + esc(f) + '</td></tr>' : '<tr>' + celdas(f, t.de, t.colores) + '</tr>'; }).join('') +
       '</tbody></table><div class="tm-vacio" hidden>Nada con eso. Prueba con menos letras.</div></div>' + (t.nota ? '<div class="cs-nota">' + txt(t.nota) + '</div>' : '') + '</div>';
   }
   window.TEMA_buscar = function (id, q) {
@@ -71,18 +95,18 @@
     t.parentNode.querySelector('.tm-vacio').hidden = vistos > 0;
   };
   function ojo(L) {
-    return '<section class="cs-ojo"><h3>⚠️ Los errores típicos</h3>' + L.map(function (o) {
-      return '<div class="cs-mal"><span class="x" lang="de">' + esc(o[0]) + '</span><span class="ok" lang="de">' + esc(o[1]) + '</span><span class="por">' + txt(o[2]) + '</span></div>';
-    }).join('') + '</section>';
+    return '<section class="cs-ojo"><h3>⚠️ Los errores típicos</h3><table class="tm-ojo"><thead><tr><th>Así no</th><th>Así sí</th><th>Por qué</th></tr></thead><tbody>' + L.map(function (o) {
+      return '<tr><td class="x" lang="de">' + esc(o[0]) + '</td><td class="ok" lang="de">' + esc(o[1]) + '</td><td class="por">' + txt(o[2]) + '</td></tr>';
+    }).join('') + '</tbody></table></section>';
   }
   function panel(P) {
     var arriba = (P.pasos ? '<div class="cs-pasos" style="--n:' + Math.min(4, P.pasos.length) + '">' + P.pasos.map(function (p, i) { return '<div class="cs-paso"><b>' + (i + 1) + '</b><h3>' + esc(p[0]) + '</h3><p>' + txt(p[1]) + '</p></div>'; }).join('') + '</div>' : '') +
       (P.grupos ? '<div class="tm-grupos" style="--n:' + Math.min(4, P.grupos.length) + '">' + P.grupos.map(function (g) {
         return '<div class="tm-grupo" style="--g:' + g.c + '"><h3>' + esc(g.t) + '</h3>' + (g.p ? '<p>' + txt(g.p) + '</p>' : '') + chips(g.chips) + '</div>'; }).join('') + '</div>' : '');
-    var cuerpo = (P.reglas ? '<div class="cs-reglas' + (P.dos ? ' dos' : '') + '">' + P.reglas.map(regla).join('') + '</div>' : '') +
-      (P.tablas || []).map(tablaGrande).join('') + (P.ojo ? ojo(P.ojo) : '');
-    var todo = P.ficha ? '<div class="cs-grid"><aside class="cs-ficha">' + P.ficha.map(tarjeta).join('') + '</aside><div class="cs-col">' + cuerpo + '</div></div>'
-      : '<div class="cs-col">' + cuerpo + '</div>';
+    var cuerpo = (P.reglas ? reglasTabla(P) : '') + (P.tablas || []).map(tablaGrande).join('') + (P.ojo ? ojo(P.ojo) : '');
+    // La ficha va arriba, en tarjetas lado a lado, para que las tablas tengan todo el ancho (dentro del Dashboard la
+    // tabla de consulta fija va a la izquierda de la página).
+    var todo = (P.ficha ? '<div class="tm-fichas">' + P.ficha.map(tarjeta).join('') + '</div>' : '') + '<div class="cs-col">' + cuerpo + '</div>';
     return '<section class="cs-panel" data-tab="' + P.k + '" style="--c:' + P.c + '"><div class="cs-cab"><h2>' + esc(P.h2 || P.t) + '</h2>' + (P.p ? '<p>' + txt(P.p) + '</p>' : '') + '</div>' + arriba + todo + '</section>';
   }
 

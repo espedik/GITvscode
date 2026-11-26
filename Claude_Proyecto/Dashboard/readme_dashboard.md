@@ -586,13 +586,18 @@ Medido: a 1600×1000 la tabla mide 400×776; a 390, 368×338, sin desplazamiento
 **Los temas a fondo** (Adán, 26-nov-2026: *"en alemán de hoy añade las preposiciones en otro subtab, todas y toda la info
 completísima, también de otros temas que sean genéricos como este tipo, en otras subtabs, así como el subtab de casos"*):
 *Preposiciones*, *Verbos*, *Adjetivos* y *La frase* son `preposiciones.html`, `verbos.html`, `adjetivos.html` y `frase.html`
-de la app de Alemán, cada una en su iframe a todo lo ancho (`.alv-tem[data-tem]`: `#alemanTemPrep`, `#alemanTemVerbos`,
-`#alemanTemAdj`, `#alemanTemFrase`), sin tabla al lado: su ficha de consulta ya va dentro de cada pestaña de la página.
+de la app de Alemán, cada una en su iframe (`.alv-tem[data-tem]`: `#alemanTemPrep`, `#alemanTemVerbos`, `#alemanTemAdj`,
+`#alemanTemFrase`) y, como en Casos, **con su tabla de consulta siempre a la vista** a la izquierda (`#alemanTabla-prep`…,
+`alemanTemaTablaHtml()`; Adán: *"lo quiero de mejor formato en forma de tabla, así como lo hiciste en el subtab de
+casos"*): el contenido lo trae `ALEMAN_TABLAS`, de `../Aleman/temas-tablas.js`, y aquí solo se pinta, con el mismo
+diseño (`.alv-tab`), los mismos 400 px y el mismo comportamiento bajo 1100 px que la de los casos. Dentro, las páginas
+llevan sus reglas y sus errores típicos en tablas.
 Igual que los casos, se cargan la primera vez que se abre su pestaña (`AL_TEMAS` en `alemanTab()`), `leccion.js` las pone
 en modo ventana y en el tema del Dashboard, y su práctica se guarda en `aleman_prep_v1`, `aleman_verbos_v1`, `aleman_adj_v1`
 y `aleman_frase_v1`, que la pestaña cuenta al momento. Los mensajes de cualquiera de los iframes de la ventana (Escape,
-abrir otra página) los atiende el mismo receptor. Medido: a 2048×1040 cada tema mide 1836×811 y sus pestañas internas van
-en una fila; a 1600×1000, 1424×774 en una o dos filas; a 390, 366×703, sin desplazamiento horizontal.
+abrir otra página) los atiende el mismo receptor. Medido: a 2048×1040 la tabla mide 400×813 y la página 1422×813; a
+1600×1000, 400×776 y 1010×776; a 390, la tabla 368×338 encima de la página, 368×506 —las mismas medidas que Casos—, sin
+desplazamiento horizontal ni tablas que se salgan de su panel.
 
 **Qué lección toca** lo dice `ALEMAN_LECCIONES.queToca()`, de `../Aleman/lecciones-datos.js`: la misma regla
 que el inicio de Alemán (ver *Lo decide Coach*). **«‹» / «Siguiente ›»** recorren el orden de Coach
