@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Deuda total · Mínima</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+.dt{--bg:#0A1020;--sf:#111A2E;--sf2:#18233C;--ln:rgba(148,163,184,.16);--tx:#E8EEF8;--tx2:#AEB9CC;--tx3:#8A97AD;--deu:#F87171;--deu2:#5B2333;--pag:#2DD4BF;--plan:#4F8CFF;--gris:#7C879C;--int:#F59E0B;--ok:#34D399;--ac:#22D3EE;--btn:#22D3EE;--btntx:#04121A}
+.dt[data-tema="claro"]{--bg:#F3F5F9;--sf:#FFFFFF;--sf2:#EEF2F7;--ln:rgba(15,23,42,.10);--tx:#0F172A;--tx2:#475569;--tx3:#5B6B80;--deu:#BE123C;--deu2:#FBD5DC;--pag:#0F766E;--plan:#2563EB;--gris:#94A3B8;--int:#C2410C;--ok:#047857;--ac:#0E7490;--btn:#0E7490;--btntx:#FFFFFF}
+a{color:var(--ac)}a:hover{color:var(--tx)}
+</style>
+</helmet>
+<div class="dt" data-tema="{{tema}}" style="width: 1194px; height: 834px; box-sizing: border-box; background: var(--bg); color: var(--tx); font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden">
+
+  <header style="height: 68px; flex: none; display: flex; align-items: center; gap: 14px; padding: 0 28px">
+    <span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: var(--deu)"></span>
+    <h1 style="margin: 0; flex: 1; font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700">Deuda total</h1>
+    <span style="font-size: 12px; color: var(--tx3); border: 1px solid var(--ln); border-radius: 999px; padding: 6px 12px">Cifras de ejemplo</span>
+    <button type="button" aria-label="Cerrar" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--ln); background: var(--sf); color: var(--tx); display: flex; align-items: center; justify-content: center; cursor: pointer">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </button>
+  </header>
+
+  <main style="flex: 1; min-height: 0; padding: 6px 28px 24px; display: flex; flex-direction: column; gap: 18px">
+    <div style="display: flex; align-items: flex-end; gap: 24px">
+      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tx3)">Hoy debes</span>
+        <b style="font-family: 'Space Grotesk', sans-serif; font-size: 76px; font-weight: 700; line-height: 0.95; letter-spacing: -0.03em">$285,000</b>
+        <p style="margin: 0; font-size: 18px; line-height: 1.5; color: var(--tx2)">Con tu plan, el BYD queda en cero el <b style="color: var(--tx)">15 ago 2027</b>: <b style="color: var(--tx)">46 meses antes</b> y <b style="color: var(--ok)">$78,600</b> menos de interés.</p>
+      </div>
+      <div style="display: flex; gap: 10px; flex: none">
+        <a href="#" style="height: 50px; padding: 0 20px; border-radius: 12px; border: 1px solid var(--ln); background: var(--sf); color: var(--tx); display: flex; align-items: center; font-weight: 700; font-size: 15px; text-decoration: none">Simular un abono</a>
+        <a href="#" style="height: 50px; padding: 0 20px; border-radius: 12px; background: var(--btn); color: var(--btntx); display: flex; align-items: center; font-weight: 800; font-size: 15px; text-decoration: none">Anotar un abono</a>
+      </div>
+    </div>
+
+    <section style="flex: 1; min-height: 0; background: var(--sf); border: 1px solid var(--ln); border-radius: 20px; padding: 20px 24px; display: flex; flex-direction: column; gap: 6px">
+      <div style="display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap">
+        <span style="font-size: 16px; color: var(--tx2)">Lo que debes, mes a mes</span>
+        <span style="display: flex; gap: 16px; margin-left: auto; font-size: 14px; color: var(--tx2)">
+          <span style="display: flex; align-items: center; gap: 7px"><i style="width: 16px; height: 3px; border-radius: 2px; background: var(--plan)"></i>Tu plan</span>
+          <span style="display: flex; align-items: center; gap: 7px"><i style="width: 16px; height: 3px; border-radius: 2px; background: var(--gris)"></i>Solo la mensualidad</span>
+        </span>
+      </div>
+      <svg viewBox="0 0 1000 300" style="width: 100%; flex: 1; min-height: 0" role="img" aria-label="Lo que debes cada mes: con tu plan llega a cero en junio de 2028; pagando solo la mensualidad, en junio de 2031">
+        <line x1="70" x2="990" y1="270" y2="270" style="stroke: var(--ln)"></line>
+        <line x1="70" x2="990" y1="186.7" y2="186.7" style="stroke: var(--ln)" stroke-dasharray="3 6"></line>
+        <line x1="70" x2="990" y1="103.3" y2="103.3" style="stroke: var(--ln)" stroke-dasharray="3 6"></line>
+        <line x1="70" x2="990" y1="20" y2="20" style="stroke: var(--ln)" stroke-dasharray="3 6"></line>
+        <text x="62" y="274" text-anchor="end" style="fill: var(--tx3); font-size: 12px">$0</text>
+        <text x="62" y="191" text-anchor="end" style="fill: var(--tx3); font-size: 12px">$100 mil</text>
+        <text x="62" y="107" text-anchor="end" style="fill: var(--tx3); font-size: 12px">$200 mil</text>
+        <text x="62" y="24" text-anchor="end" style="fill: var(--tx3); font-size: 12px">$300 mil</text>
+        <path d="M70 32.5 L170.4 51.7 L270.7 71.7 L371.1 92.5 L471.5 115 L571.8 138.3 L672.2 163.3 L772.5 189.2 L872.9 216.7 L939.8 236.7 L990 270 L371.1 270 L270.7 264.6 L203.8 262.5 L187.1 183.3 L170.4 155.8 L153.6 128.3 L136.9 100.8 L120.2 73.3 L103.5 46.7 L86.7 34.2 Z" style="fill: var(--pag)" opacity="0.15"></path>
+        <path d="M70 32.5 L170.4 51.7 L270.7 71.7 L371.1 92.5 L471.5 115 L571.8 138.3 L672.2 163.3 L772.5 189.2 L872.9 216.7 L939.8 236.7 L990 270" fill="none" style="stroke: var(--gris)" stroke-width="2.5" stroke-dasharray="7 6" stroke-linejoin="round"></path>
+        <path d="M70 32.5 L86.7 34.2 L103.5 46.7 L120.2 73.3 L136.9 100.8 L153.6 128.3 L170.4 155.8 L187.1 183.3 L203.8 262.5 L270.7 264.6 L371.1 270" fill="none" style="stroke: var(--plan)" stroke-width="3.5" stroke-linejoin="round"></path>
+        <circle cx="203.8" cy="262.5" r="6" style="fill: var(--pag); stroke: var(--sf)" stroke-width="2.5"></circle>
+        <text x="214" y="248" style="fill: var(--tx); font-size: 14px; font-weight: 700">BYD en cero · 15 ago 2027</text>
+        <circle cx="990" cy="270" r="6" style="fill: var(--gris); stroke: var(--sf)" stroke-width="2.5"></circle>
+        <text x="984" y="252" text-anchor="end" style="fill: var(--tx2); font-size: 13px">solo la mensualidad · jun 2031</text>
+        <text x="560" y="200" text-anchor="middle" style="fill: var(--pag); font-size: 16px; font-weight: 700">46 meses antes</text>
+        <text x="86.7" y="294" text-anchor="middle" style="fill: var(--tx3); font-size: 12px">2027</text>
+        <text x="287.5" y="294" text-anchor="middle" style="fill: var(--tx3); font-size: 12px">2028</text>
+        <text x="488.2" y="294" text-anchor="middle" style="fill: var(--tx3); font-size: 12px">2029</text>
+        <text x="689" y="294" text-anchor="middle" style="fill: var(--tx3); font-size: 12px">2030</text>
+        <text x="889.6" y="294" text-anchor="middle" style="fill: var(--tx3); font-size: 12px">2031</text>
+      </svg>
+    </section>
+
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+      <div style="background: var(--sf); border: 1px solid var(--ln); border-radius: 18px; padding: 16px 20px; display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tx3)">Próximo pago</span>
+        <b style="font-family: 'Space Grotesk', sans-serif; font-size: 26px">1 dic · $494</b>
+        <span style="font-size: 14px; color: var(--tx2)">iPhone 15; el 15 dic, $6,700 del BYD</span>
+      </div>
+      <div style="background: var(--sf); border: 1px solid var(--ln); border-radius: 18px; padding: 16px 20px; display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tx3)">Tu pago del BYD</span>
+        <div aria-hidden="true" style="display: flex; height: 12px; border-radius: 6px; overflow: hidden; gap: 3px"><i style="flex: 3000; background: var(--int)"></i><i style="flex: 3700; background: var(--plan)"></i></div>
+        <span style="font-size: 14px; color: var(--tx2)"><b style="color: var(--tx)">$3,000</b> de interés y <b style="color: var(--tx)">$3,700</b> bajan tu deuda</span>
+      </div>
+      <div style="background: var(--sf); border: 1px solid var(--ln); border-radius: 18px; padding: 16px 20px; display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tx3)">Sin ninguna deuda</span>
+        <b style="font-family: 'Space Grotesk', sans-serif; font-size: 26px">jun 2028</b>
+        <span style="font-size: 14px; color: var(--tx2)">cuando acabas el iPhone, sin intereses</span>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"tema":{"editor":"enum","options":["oscuro","claro"],"default":"oscuro"},"$preview":{"width":1194,"height":834}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { tema: this.props.tema ?? 'oscuro' };
+  }
+}
+</script>
+</body>
+</html>

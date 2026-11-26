@@ -719,12 +719,13 @@ button.km-li[aria-expanded="true"]>b::after{transform:rotate(-135deg);margin-bot
 /* ══ Total invertido a pantalla completa (Adán, 26-nov-2026: "que abarque toda la página y que sea entendible en mi iPad";
    de Dashboard/diseno-invertido/ eligió la opción A, "pero mucho más bonita la gráfica y más indicadores"). La ventana
    ocupa toda la pantalla; arriba lo que tienes y cuatro indicadores, en medio el plan, la gráfica y las compras, que
-   juntos llenan la primera pantalla, y abajo lo demás. Azul la bolsa, naranja la cripto, gris el depósito, verde lo demás. */
-#kpiOverlay[data-kpi="invertido"]{padding:0}
-#kpiOverlay[data-kpi="invertido"] .gbm-card.kpi-card{width:100vw;max-width:none;height:100vh;height:100dvh;max-height:none;min-height:0;border-radius:0;border:0}
-#kpiOverlay[data-kpi="invertido"] .gbm-head{padding-left:64px}
-#kpiOverlay[data-kpi="invertido"] .gbm-close{width:40px;height:40px}
-#kpiOverlay[data-kpi="invertido"] #kpiBody{container-type:size}
+   juntos llenan la primera pantalla, y abajo lo demás. Azul la bolsa, naranja la cripto, gris el depósito, verde lo demás.
+   Deuda total comparte la pantalla completa (ver abajo). */
+#kpiOverlay:is([data-kpi="invertido"],[data-kpi="deudatotal"]){padding:0}
+#kpiOverlay:is([data-kpi="invertido"],[data-kpi="deudatotal"]) .gbm-card.kpi-card{width:100vw;max-width:none;height:100vh;height:100dvh;max-height:none;min-height:0;border-radius:0;border:0}
+#kpiOverlay:is([data-kpi="invertido"],[data-kpi="deudatotal"]) .gbm-head{padding-left:64px}
+#kpiOverlay:is([data-kpi="invertido"],[data-kpi="deudatotal"]) .gbm-close{width:40px;height:40px}
+#kpiOverlay:is([data-kpi="invertido"],[data-kpi="deudatotal"]) #kpiBody{container-type:size}
 .ki{display:flex;flex-direction:column;gap:12px}
 .ki-uno{display:flex;flex-direction:column;gap:12px}
 @media(min-width:1101px){.ki-uno{min-height:calc(100cqh - 34px)}}
@@ -838,4 +839,99 @@ button.km-li[aria-expanded="true"]>b::after{transform:rotate(-135deg);margin-bot
   .ki-t .n{font-size:20px}
   .ki-g .cab strong{font-size:26px}
   #kpiOverlay.kv-on .ki-mid>.ki-g .kv-g{min-height:300px}
+}
+/* ══ Deuda total a pantalla completa: la carrera a cero (Adán, 26-nov-2026: "mejora el diseño de deuda total, con los mismos
+   requerimientos que la otra ventana"; de Dashboard/diseno-deuda/ eligió la opción B). Arriba el titular de la opción elegida
+   y lo que debes; la carrera, con una barra por deuda que termina el día que queda en cero y la del BYD pagando solo la
+   mensualidad de fantasma; abajo a dónde va tu pago, «¿Y si abono…?» y lo que debes; los formularios, debajo. ══ */
+.kd{display:flex;flex-direction:column;gap:12px}
+.kd-uno{display:flex;flex-direction:column;gap:12px}
+@media(min-width:1101px){.kd-uno{min-height:calc(100cqh - 34px)}}
+.kd .et{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:color-mix(in srgb,var(--kv-neon) 70%,var(--text))}
+.kd .ok{color:var(--g)}
+
+/* El titular y lo que debes. */
+.kd-cab{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,330px);gap:12px;align-items:stretch}
+.kd-tit{display:flex;flex-direction:column;justify-content:flex-end;gap:5px;padding:2px 4px}
+.kd-h{margin:0;font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.kd-h em{font-style:normal;font-family:var(--mono);color:var(--kv-neon)}
+:root:not([data-theme="light"]) .kd-h em{text-shadow:0 0 18px color-mix(in srgb,var(--kv-neon) 40%,transparent)}
+.kd-s{margin:0;font-size:15px;line-height:1.5;color:var(--kv-t2)}
+.kd-s b{color:var(--text)}.kd-s b.ok{color:var(--g)}
+#kpiOverlay.kv-on .kd-debes{gap:4px;justify-content:center}
+.kd-debes .n{font-family:var(--mono);font-size:32px;font-weight:800;letter-spacing:-.03em;line-height:1.1;font-variant-numeric:tabular-nums}
+.kd-debes .kv-med{height:9px;margin:5px 0 3px}
+.kd-debes .q{font-size:12.5px;color:var(--kv-t2)}.kd-debes .q b{color:var(--text)}
+
+/* La carrera: el nombre a la izquierda y la pista con su barra; la rejilla de años y la línea de hoy, detrás. */
+.kd-car{--kdn:190px}
+.kd-eje,.kd-filas,.kd-marcas{display:grid;grid-template-columns:var(--kdn) minmax(0,1fr);column-gap:16px}
+.kd-eje{align-items:end;margin-bottom:10px}
+.kd-eje h3{margin:0}
+.kd-anios{position:relative;height:16px;font-size:12px;color:var(--kv-t2)}
+.kd-anios span{position:absolute;bottom:0;transform:translateX(-50%)}.kd-anios span:first-child{transform:none;color:var(--kv-neon);font-weight:700}
+.kd-filas{position:relative;row-gap:10px;align-items:center}
+.kd-rejilla{position:absolute;top:-6px;bottom:-6px;left:calc(var(--kdn) + 16px);right:0;pointer-events:none}
+.kd-rejilla i{position:absolute;top:0;bottom:0;width:1px;background:var(--kv-linea)}
+.kd-rejilla i.hoy{width:2px;background:var(--kv-neon);opacity:.75}
+.kd-n{min-width:0}
+.kd-n b{display:block;font-size:14px;line-height:1.25}
+.kd-n span{display:block;font-size:11.5px;color:var(--kv-t2)}
+.kd-pista{position:relative;height:34px;border-radius:9px;background:color-mix(in srgb,var(--kv-linea) 55%,transparent)}
+.kd-barra{position:absolute;left:0;top:0;bottom:0;border-radius:9px;transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.kd-barra.plan{background:linear-gradient(90deg,color-mix(in srgb,var(--kv-1) 65%,transparent),var(--kv-1))}
+:root:not([data-theme="light"]) .kd-barra.plan{box-shadow:0 0 16px color-mix(in srgb,var(--kv-1) 45%,transparent)}
+.kd-barra.fantasma{box-sizing:border-box;border:1.5px dashed var(--kv-gris);background:repeating-linear-gradient(135deg,transparent 0 6px,color-mix(in srgb,var(--kv-gris) 38%,transparent) 6px 12px)}
+.kd-barra.otra{background:color-mix(in srgb,var(--kv-3) 80%,transparent)}
+.kd-fin{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:13px;font-weight:800;white-space:nowrap;transition:left .45s cubic-bezier(.2,.8,.2,1)}
+.kd-fin.dentro{padding:2px 8px;border-radius:6px;background:var(--kv-caja)}
+.kd-marcas{margin-top:8px}.kd-marcas>div{position:relative;height:18px}
+.kd-marca{position:absolute;padding-left:7px;border-left:2px solid var(--kv-neon);font-size:11.5px;color:var(--kv-t2);white-space:nowrap}
+.kd-marca b{color:var(--text)}
+
+/* A dónde va tu pago, «¿Y si abono…?» y lo que debes. */
+.kd-tres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;flex:1;min-height:0}
+.kd-pago .n{font-family:var(--mono);font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 0 8px}
+.kd-partes{display:flex;height:34px;border-radius:9px;overflow:hidden;gap:3px}
+.kd-partes i{display:block;min-width:4px}
+.kd-ley{display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:6px 9px;align-items:center;font-size:13.5px;margin:10px 0 6px}
+.kd-ley>i{width:12px;height:12px;border-radius:3px}
+.kd-ley b{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.kd-pago .kv-p{margin-top:auto}
+.kd-ops{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px}
+.kd-op{min-height:52px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:2px;padding:7px 12px;border-radius:11px;border:1px solid var(--kv-linea);
+  background:color-mix(in srgb,var(--kv-sup) 60%,transparent);color:var(--text);font:inherit;text-align:left;cursor:pointer;transition:background .15s,border-color .15s}
+.kd-op b{font-size:14px}
+.kd-op span{font-size:11.5px;color:var(--kv-t2)}
+.kd-op.on{background:var(--kv-1);border-color:var(--kv-1);color:#fff}
+:root:not([data-theme="light"]) .kd-op.on{box-shadow:0 0 16px color-mix(in srgb,var(--kv-1) 40%,transparent)}
+.kd-op.on span{color:rgba(255,255,255,.9)}
+.kd-op:focus-visible{outline:2px solid var(--kv-neon);outline-offset:2px}
+.kd-acc{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:10px}
+.kd-otra{flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:2px 2px 2px 10px;border-radius:11px;border:1px solid transparent;font-size:12.5px;color:var(--kv-t2)}
+.kd-otra.on{border-color:var(--kv-1)}
+.kd-otra input{width:110px;min-height:40px;box-sizing:border-box;padding:6px 10px;border-radius:10px;border:1px solid var(--kv-linea);background:var(--kv-sup);color:var(--text);font:inherit;font-family:var(--mono);font-size:15px}
+#kpiOverlay.kv-on .kd-sim .kv-b{flex:none;min-height:44px;font-size:14px;font-weight:800}
+.kd-d{display:flex;flex-direction:column;gap:5px;padding:10px 0;border-bottom:1px solid var(--kv-linea)}
+.kd-d>div{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.kd-d b{font-size:14px}
+.kd-d strong{font-family:var(--mono);font-size:17px;font-variant-numeric:tabular-nums}
+.kd-d .kv-med{height:7px}
+.kd-d>span{font-size:12px;color:var(--kv-t2)}
+.kd-mes{display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;font-size:13px;color:var(--kv-t2)}
+.kd-mes b{font-family:var(--mono);font-size:18px;color:var(--text)}
+.kd-bajo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:start}
+@media(max-width:1100px){
+  .kd-cab{grid-template-columns:minmax(0,1fr)}
+  .kd-tres,.kd-bajo{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kd-tres>.kd-lo,.kd-bajo>[data-kv="de-abono"]{grid-column:1/-1}
+}
+@media(max-width:640px){
+  .kd-tres,.kd-bajo{grid-template-columns:minmax(0,1fr)}
+  .kd-h{font-size:26px}
+  .kd-car{--kdn:104px}
+  .kd-eje,.kd-filas,.kd-marcas{column-gap:10px}
+  .kd-n b{font-size:12.5px}.kd-n span{display:none}
+  .kd-fin{font-size:11.5px}
+  .kd-marcas>div{height:auto}.kd-marca{position:static;display:block;white-space:normal}
 }

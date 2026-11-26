@@ -7,7 +7,7 @@
    kpiDetalle (dashboard.html) devuelve MEDIDORES[id](F); `listo` dibuja las gráficas cuando la ventana ya tiene tamaño. */
 (function () {
   'use strict';
-  const M = {}, abiertos = {}, sim = { extra: 0, mes: 0 };
+  const M = {}, abiertos = {};
   let graficas = [];
   const MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
   const mesTxt = ym => MES[+ym.slice(5, 7) - 1] + ' ' + ym.slice(0, 4);
@@ -707,49 +707,117 @@
   };
 
   // ══ Deuda total ══
-  // Lo que se debe mes a mes, sumando todas: las de plazo con su tabla, las demás con su pago; `o` es el abono simulado.
+  // A pantalla completa, como Total invertido (Adán, 26-nov-2026: "ahora mejora el diseño de deuda total, con los mismos
+  // requerimientos que la otra ventana"; de las tres opciones de Dashboard/diseno-deuda/ eligió la B, «La carrera a cero»).
+  // Cada deuda es una barra que termina el día que queda en cero; la del BYD pagando solo la mensualidad va de fantasma, para
+  // ver lo que te adelantas. «¿Y si abono…?» son botones —y otra cantidad— que acortan la barra al momento. El ahorro es uno
+  // solo: el de tu plan es el del maestro (autoAhorra, el de las demás pantallas) y cada opción le suma lo que ahorra de más,
+  // con la misma tabla del crédito. «Sin ninguna deuda» sale de todas las deudas juntas (deudaCamino).
   const caminoDeuda = (F, o) => C().deudaCamino(F, o);
-  function simular() {
-    const F = D.fin || {}, p = prestamos(F).sort((a, b) => b.d.rate - a.d.rate)[0]; if (!p) return;
-    const q = id => document.getElementById(id), d = p.d, plan = C().abonosPlan(), T = C().prestamoTabla(d, { abonos: plan, extra: sim.extra, extraMes: sim.mes }), solo = p.R.tabla, u = T[T.length - 1], us = solo[solo.length - 1];
-    const antes = u && us ? solo.length - T.length : 0;
-    if (q('kvs-e')) q('kvs-e').textContent = money(sim.extra); if (q('kvs-m')) q('kvs-m').textContent = money(sim.mes);
-    if (q('kvs-r')) q('kvs-r').innerHTML = [['Acabas', u ? prMes(u.fecha) : '—'], ['Antes', antes > 0 ? prMeses(antes) : 'igual'], ['Te ahorras en intereses', money(Math.max(0, sumaInt(solo) - sumaInt(T)))]].map(z => '<div><span>' + z[0] + '</span><b>' + z[1] + '</b></div>').join('');
-    const a = caminoDeuda(F, {}), b = caminoDeuda(F, { plan: true }), c = caminoDeuda(F, { plan: true, extra: sim.extra, extraMes: sim.mes }), igual = !sim.extra && !sim.mes, corta = z => a.v.map((_, i) => i < z.v.length && (i === 0 || z.v[i - 1] > 0) ? z.v[i] : null);
-    lineas('deuda', { et: a.et.map(m => m.slice(5) === '01' ? m.slice(0, 4) : ''), largo: a.et.map(mesTxt), desde: 0, aria: 'Lo que debes mes a mes, pagando solo la mensualidad, con tu plan y con tus abonos',
-      series: [{ n: 'Solo la mensualidad', c: V.g, v: a.v }, { n: 'Tu plan', c: V.a, v: corta(b), area: igual ? 1 : 0 }].concat(igual ? [] : [{ n: 'Tu plan y tus abonos', c: V.b, v: corta(c), area: 1 }]) });
+  const DT = { sel: 0, otra: 0, ops: [], otraOp: null };
+  const DT_OPS = [[0, 0], [20000, 0], [50000, 0], [0, 2000]];   // montos de ejemplo de los botones: abono hoy, extra cada mes
+  function dtCalc(F, p, extra, mes) {
+    const L = C().prestamoTabla(p.d, { abonos: C().abonosPlan(), extra: extra, extraMes: mes }), u = L[L.length - 1];
+    const todas = caminoDeuda(F, { plan: true, extra: extra, extraMes: mes }), k = todas.v.findIndex((v, i) => i > 0 && v < 1);
+    return { L, fin: u ? C().fechaLocal(u.fecha) : null, int: sumaInt(L), libre: k > 0 ? todas.et[k] : null };
   }
-  M.simula = function (campo, v) { sim[campo] = +v || 0; simular(); };
-  M.llevarAbono = function () { const d = document.querySelector('[data-kv="de-abono"]'); if (d) d.open = true; const f = document.querySelector('#kpiBody form[data-pr="abono"]'); if (f) { f.pa_m.value = sim.extra; prPrevia(f.pa_m, (prestamos(D.fin || {})[0] || { d: {} }).d.id); f.scrollIntoView({ block: 'center' }); f.pa_m.focus(); } };
+  // Pinta la opción elegida: la barra del plan, su fecha, el titular y el botón encendido.
+  function dtPintar() {
+    const o = DT.sel === 4 ? DT.otraOp : DT.ops[DT.sel], q = id => document.getElementById(id); if (!o || !DT.pos) return;
+    const w = DT.pos(o.fin), b = q('dtBarra'), t = q('dtBarraT');
+    if (b) b.style.width = w + '%';
+    if (t) { t.textContent = tiFecha(o.fin); t.classList.toggle('dentro', w > 78); t.style.left = w > 78 ? '' : 'calc(' + w + '% + 10px)'; t.style.right = w > 78 ? 'calc(' + (100 - w) + '% + 10px)' : ''; }
+    if (q('dtEt')) q('dtEt').textContent = DT.sel ? 'Con tu plan y ' + o.t.replace(/^\+ /, '') : 'Con tu plan';
+    if (q('dtH')) q('dtH').innerHTML = 'El BYD queda en cero el <em>' + tiFecha(o.fin) + '</em>';
+    if (q('dtS')) q('dtS').innerHTML = (o.antes > 0 ? '<b>' + prMeses(o.antes) + ' antes</b> que pagando solo la mensualidad, y te' : 'Te') + ' ahorras <b class="ok">' + money(o.ahorro) + '</b> de interés.' +
+      (o.libre ? ' Sin ninguna deuda en <b>' + mesL(o.libre) + '</b>.' : '');
+    document.querySelectorAll('#kpiBody .kd-op').forEach(x => { const on = +x.dataset.i === DT.sel; x.classList.toggle('on', on); x.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    const ot = document.querySelector('#kpiBody .kd-otra'); if (ot) ot.classList.toggle('on', DT.sel === 4);
+  }
+  M.dtOp = function (i) { DT.sel = i; DT.otra = 0; DT.otraOp = null; const q = document.querySelector('#kpiBody .kd-otra input'); if (q) q.value = ''; dtPintar(); };
+  M.dtOtra = function (v) {
+    DT.otra = Math.max(0, +v || 0);
+    DT.otraOp = DT.otra > 0 && DT.mk ? DT.mk(DT.otra, 0) : null; DT.sel = DT.otraOp ? 4 : 0; dtPintar();
+  };
+  M.llevarAbono = function () {
+    const f = document.querySelector('#kpiBody form[data-pr="abono"]'), o = DT.sel === 4 ? DT.otraOp : DT.ops[DT.sel];
+    if (!f) return;
+    f.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (o && o.extra) { f.pa_m.value = o.extra; prPrevia(f.pa_m, (prestamos(D.fin || {})[0] || { d: {} }).d.id); }
+    setTimeout(() => f.pa_m.focus({ preventScroll: true }), 400);
+  };
   M.deudatotal = function (F) {
     const ds = (F.debts || []).filter(d => +d.balance > 0).sort((a, b) => b.balance - a.balance), debe = ds.reduce((s, d) => s + +d.balance, 0), editable = tiEditable(), L = prestamos(F).sort((a, b) => b.d.rate - a.d.rate), p = L[0], R = p && p.R;
     if (!ds.length) return { kv: 'var(--g)', titulo: 'Deuda total', sub: '', html: '<div class="kv-fila">' + hero(money(0), '', 'No debes nada.', null) + '</div>' };
     const nacio = (F.debts || []).reduce((s, d) => s + (+d.total || +d.balance || 0), 0), pagos = ds.map(d => ({ d, q: C().cuotas(d) })).filter(z => z.q.siguiente).sort((a, b) => a.q.siguiente - b.q.siguiente), s1 = pagos[0];
-    const fin = pagos.map(z => z.q.ultima).filter(Boolean).sort((a, b) => b - a)[0], mensual = ds.reduce((s, d) => s + (+d.min || 0), 0), mesInt = L.reduce((s, z) => s + z.R.interesSig, 0);
-    const K = R && R.contrato, choca = chocaC(R);
-    const PA = C().planAhorro(), sa = PA.envios.filter(e => e.fecha >= hoyLocal() && e.auto >= 1)[0];
+    const mensual = ds.reduce((s, d) => s + (+d.min || 0), 0), K = R && R.contrato, choca = chocaC(R), PA = C().planAhorro(), sa = PA.envios.filter(e => e.fecha >= hoyLocal() && e.auto >= 1)[0];
+    // Las opciones de «¿Y si abono…?», con la misma tabla del crédito; el ahorro del plan es el del maestro.
+    if (p) {
+      const base = dtCalc(F, p, 0, 0), ah0 = C().n('autoAhorra') || Math.max(0, sumaInt(R.tabla) - base.int);
+      DT.mk = (extra, mes) => { const c = extra || mes ? dtCalc(F, p, Math.min(extra, +p.d.balance), mes) : base;
+        return Object.assign({}, c, { t: extra ? '+ ' + money(extra) + ' hoy' : mes ? '+ ' + money(mes) + ' cada mes' : 'Solo tu plan', extra, mes, antes: R.tabla.length - c.L.length, ahorro: ah0 + (base.int - c.int) }); };
+      DT.ops = DT_OPS.map(o => DT.mk(o[0], o[1]));
+      DT.otraOp = DT.otra > 0 ? DT.mk(DT.otra, 0) : null; if (DT.sel === 4 && !DT.otraOp) DT.sel = 0;
+    } else DT.ops = [];
+    // La línea de tiempo: de hoy al último pago, pagando solo la mensualidad.
+    const fines = ds.map(d => { const pr = L.filter(z => z.d === d)[0]; return pr ? C().fechaLocal(pr.R.fin) : C().cuotas(d).ultima ? C().fechaLocal(C().cuotas(d).ultima) : null; }).filter(Boolean);
+    const maxK = fines.sort().pop(), total = Math.max(1, kiDias(maxK));
+    DT.pos = k => k ? Math.max(1.5, Math.min(100, kiDias(k) / total * 100)) : 0;
+    const anios = []; for (let y = +hoyLocal().slice(0, 4) + 1; y <= +maxK.slice(0, 4); y++) anios.push(y);
+    const o0 = DT.sel === 4 ? DT.otraOp : DT.ops[DT.sel];
+    const carril = (n, sub, barra) => '<div class="kd-n"><b>' + n + '</b><span>' + sub + '</span></div><div class="kd-pista">' + barra + '</div>';
+    const etiqueta = (k, id) => { const w = DT.pos(k); return '<span class="kd-fin' + (w > 78 ? ' dentro' : '') + '"' + (id ? ' id="' + id + '"' : '') + ' style="' + (w > 78 ? 'right:calc(' + (100 - w) + '% + 10px)' : 'left:calc(' + w + '% + 10px)') + '">' + tiFecha(k) + '</span>'; };
+    const filas = ds.map(d => {
+      const pr = L.filter(z => z.d === d)[0], tasa = d.rate > 0 && tasaQueCorre(d) > 0 ? d.rate + '% al año' : 'sin intereses';
+      if (pr && pr === p && o0) return carril(esc(d.name) + ', con tu plan', 'abonas lo que apartas', '<i class="kd-barra plan" id="dtBarra" style="width:' + DT.pos(o0.fin) + '%"></i>' + etiqueta(o0.fin, 'dtBarraT')) +
+        carril(esc(d.name) + ', solo la mensualidad', 'para comparar', '<i class="kd-barra fantasma" style="width:' + DT.pos(C().fechaLocal(pr.R.fin)) + '%"></i>' + etiqueta(C().fechaLocal(pr.R.fin)));
+      const fin = pr ? C().fechaLocal(pr.R.fin) : C().cuotas(d).ultima ? C().fechaLocal(C().cuotas(d).ultima) : null;
+      return carril(esc(d.name), tasa, fin ? '<i class="kd-barra otra" style="width:' + DT.pos(fin) + '%"></i>' + etiqueta(fin) : '<span class="kd-fin" style="left:10px">sin fecha de fin</span>');
+    }).join('');
+    const marcas = (PA.lleno && PA.lleno > hoyLocal() && p ? '<span class="kd-marca" style="left:' + DT.pos(PA.lleno) + '%"><b>' + diaTxt(PA.lleno) + ' ' + PA.lleno.slice(0, 4) + '</b>: colchón lleno, empiezas a abonar</span>' : '');
+    const carrera = '<section class="kv-c kd-car"><div class="kd-eje"><h3>La carrera a cero</h3><div class="kd-anios"><span style="left:0">hoy</span>' +
+      anios.filter(y => DT.pos(y + '-01-01') >= 6).map(y => '<span style="left:' + DT.pos(y + '-01-01') + '%">' + y + '</span>').join('') + '</div></div>' +
+      '<div class="kd-filas"><div class="kd-rejilla" aria-hidden="true"><i class="hoy" style="left:0"></i>' + anios.map(y => '<i style="left:' + DT.pos(y + '-01-01') + '%"></i>').join('') + '</div>' + filas + '</div>' +
+      (marcas ? '<div class="kd-marcas"><span></span><div>' + marcas + '</div></div>' : '') + '</section>';
+
+    // Arriba: el titular de la opción elegida y lo que debes.
+    const cab = '<div class="kd-cab"><div class="kd-tit"><span class="et" id="dtEt">Con tu plan</span><p class="kd-h" id="dtH"></p><p class="kd-s" id="dtS"></p></div>' +
+      '<section class="kv-c kd-debes"><span class="et">Hoy debes</span><b class="n">' + money(debe) + '</b>' + med(pct(nacio - debe, nacio), 'var(--kv-3)') +
+      '<span class="q">Ya pagaste <b>' + Math.round(pct(nacio - debe, nacio)) + '%</b> de todo lo que has debido</span></section></div>';
+    // A dónde va tu pago: interés, IVA y seguros, y lo que baja la deuda.
+    const pago = R ? (() => {
+      const it = R.interesSig, cg = Math.max(0, R.cargos || 0), cap = Math.max(0, R.pago - it - cg), pt = [[it, V.b, 'Interés, se va'], [cg, V.g, 'IVA y seguros'], [cap, V.a, 'Baja tu deuda']].filter(z => z[0] >= 1);
+      return '<section class="kv-c kd-pago"><h3>A dónde va tu pago del ' + prDia(R.siguiente) + '</h3><b class="n">' + money(R.pago) + '</b><div class="kd-partes" aria-hidden="true">' + pt.map(z => '<i style="flex:' + z[0] + ';background:' + z[1] + '"></i>').join('') + '</div>' +
+        '<div class="kd-ley">' + pt.map(z => '<i style="background:' + z[1] + '"></i><span>' + z[2] + '</span><b>' + money(z[0]) + '</b>').join('') + '</div>' +
+        '<p class="kv-p">Hoy pagas unos <b>' + money(it / 30) + ' de interés al día</b>. La mensualidad se anota sola; cada abono baja el interés desde el día siguiente.</p></section>';
+    })() : '';
+    // ¿Y si abono…?: los botones, otra cantidad y el abono que tu plan ya tiene en el calendario.
+    const opciones = p ? '<section class="kv-c kd-sim"><h3>¿Y si abono…?</h3><p>Encima de tu plan, en ' + esc(p.d.name) + ', que cobra ' + p.d.rate + '% al año.</p><div class="kd-ops">' +
+      DT.ops.map((o, i) => '<button type="button" class="kd-op' + (i === DT.sel ? ' on' : '') + '" data-i="' + i + '" aria-pressed="' + (i === DT.sel) + '" onclick="MEDIDORES.dtOp(' + i + ')"><b>' + o.t + '</b><span>' + prMes(new Date(o.fin + 'T12:00:00')) +
+        (i ? ' · ' + signo(o.ahorro - DT.ops[0].ahorro) + ' de ahorro' : ' · tu plan') + '</span></button>').join('') +
+      '</div><div class="kd-acc"><label class="kd-otra' + (DT.sel === 4 ? ' on' : '') + '"><span>Otra cantidad hoy</span><input type="number" inputmode="numeric" min="0" step="1000" placeholder="0" value="' + (DT.otra || '') + '" oninput="MEDIDORES.dtOtra(this.value)"></label>' +
+      (editable ? boton('Anotar un abono', 'MEDIDORES.llevarAbono()') : '') + '</div></section>' : '';
+    // Lo que debes, deuda por deuda.
+    const lo = '<section class="kv-c kd-lo"><h3>Lo que debes</h3>' + ds.map(d => {
+      const q = C().cuotas(d), pr = L.filter(z => z.d === d)[0], pg = pct((+d.total || 0) - d.balance, +d.total || 0);
+      return '<div class="kd-d"><div><b>' + esc(d.name) + '</b><strong>' + money(+d.balance) + '</strong></div>' + med(pg, 'var(--kv-3)') +
+        '<span>' + Math.round(pg) + '% pagado' + (d.rate > 0 && tasaQueCorre(d) > 0 ? ' · ' + d.rate + '% al año' : ' · sin intereses') + (q.siguiente ? ' · próximo pago ' + prDia(q.siguiente) + ', ' + money(+d.min) : '') + '</span></div>';
+    }).join('') + '<div class="kd-mes"><span>Pagas cada mes</span><b>' + money(mensual) + '</b></div>' +
+      (s1 ? '<p class="kv-p">Lo siguiente: el <b>' + prDia(s1.q.siguiente) + '</b>, ' + money(+s1.d.min) + ' de ' + esc(s1.d.name) + '.</p>' : '') + '</section>';
+    // Abajo: anotar un abono, los datos del crédito y el contrato, a la vista.
     const abonos = R ? R.abonos.map(t => '<div class="ti-fila' + (_prEdit === t.id ? ' edita' : '') + '"><span class="ti-f">' + tiFecha(t.date) + '</span><span class="ti-n"><b>Abono</b><i>' + esc(t.nota || '') + '</i></span><span class="ti-m"><b>' + money(+t.amount || 0) + '</b></span>' +
       (editable ? '<span class="ti-acc"><button type="button" class="ce-btn sec" onclick="prAbonoEditar(\'' + t.id + '\')">Editar</button><button type="button" class="ce-btn sec" onclick="prAbonoBorrar(\'' + t.id + '\')">Borrar</button></span>' : '') + '</div>').join('') : '';
-    return { kv: 'var(--r)', titulo: 'Deuda total', sub: 'Lo que debes, cuándo acabas y cómo acabar antes.', html:
-      '<div class="kv-fila">' + hero(money(debe), '', 'Ya pagaste <b>' + Math.round(pct(nacio - debe, nacio)) + '%</b> de todo lo que has debido.', pct(nacio - debe, nacio)) +
-      tiles([['Pagas cada mes', money(mensual), plural(ds.length, 'deuda viva', 'deudas vivas')], ['Próximo pago', s1 ? money(+s1.d.min) : '—', s1 ? 'el ' + prDia(s1.q.siguiente) + ', ' + esc(s1.d.name) : ''],
-        ['El BYD en cero', PA.cero ? C().v('autoCero') : '—', 'con tu plan' + (R && R.fin ? '; pagando solo la mensualidad, ' + prMes(R.fin) : '')], ['Te ahorras de interés', money(C().n('autoAhorra') || 0), 'pagarías ' + money(C().n('autoInteresPlan') || 0) + ' en vez de ' + money(C().n('autoInteres') || 0)]]) + '</div>' +
-      (choca ? hoy('Revisa', 'Tu contrato acaba en <b>' + prMes(K.ultima) + '</b>, pero con estos datos acabarías en <b>' + prMes(R.fin) + '</b>.', K.cargosSugeridos ? 'Para que cuadre, unos ' + money(K.cargosSugeridos) + ' de cada mensualidad serían IVA y seguros. Es un cálculo: el dato real viene en tu estado de cuenta.' : 'Compara el saldo y la tasa con tu estado de cuenta.',
-          editable ? (K.cargosSugeridos ? boton('Usar ' + money(K.cargosSugeridos), 'prCargosUsar(\'' + p.d.id + '\',' + K.cargosSugeridos + ')') : '') + boton('Corregir mis datos', 'MEDIDORES.abre(\'de-datos\')', 1) : '', 'alto')
-        : s1 ? hoy('Sigue', 'El <b>' + prDia(s1.q.siguiente) + '</b> pagas <b>' + money(+s1.d.min) + '</b> de ' + esc(s1.d.name) + '.', 'La mensualidad se anota sola.' + (sa ? ' Tu plan abona ' + money(sa.auto) + ' a capital el ' + diaTxt(sa.fecha) + ' de ' + sa.fecha.slice(0, 4) + ': ese abono lo anotas tú.' : ''), '') : '') +
-      '<div class="kv-fila crece">' + (p ? '<section class="kv-c s6"><h3>Cuánto debes, mes a mes</h3><p>Todas tus deudas juntas: con tu plan y pagando solo la mensualidad. Mueve los controles para ver qué cambia un abono de más.</p>' + grafica('deuda') + leyenda([['Solo la mensualidad', V.g, 'l'], ['Tu plan', V.a, 'l'], ['Tu plan y tus abonos', V.b, 'l']]) + '</section>' +
-        '<section class="kv-c s3"><h3>¿Y si abono de más?</h3><p>Encima de tu plan, en ' + esc(p.d.name) + ', la que cobra más: ' + p.d.rate + '% al año.</p>' +
-          '<div class="kv-sl"><label for="kvs-ie">Abono hoy</label><output id="kvs-e"></output><input id="kvs-ie" type="range" min="0" max="' + Math.min(100000, Math.floor(p.d.balance / 1000) * 1000) + '" step="1000" value="' + sim.extra + '" oninput="MEDIDORES.simula(\'extra\',this.value)"></div>' +
-          '<div class="kv-sl"><label for="kvs-im">Extra cada mes</label><output id="kvs-m"></output><input id="kvs-im" type="range" min="0" max="5000" step="250" value="' + sim.mes + '" oninput="MEDIDORES.simula(\'mes\',this.value)"></div>' +
-          '<div class="kv-res uno" id="kvs-r"></div>' + (editable ? boton('Anotar el abono de hoy', 'MEDIDORES.llevarAbono()') : '') +
-          '<div class="kv-pie">Lo abonado ya no se puede sacar: tu plan empieza cuando el colchón está completo, el ' + C().v('colchonFecha') + '.</div></section>' : '') + '<div class="kv-col ' + (p ? 's3' : 's12') + '">' + ds.map(d => { const q = C().cuotas(d), pr = L.filter(z => z.d === d)[0], pg = pct((+d.total || 0) - d.balance, +d.total || 0);
-        return caja('kv-deu', esc(d.name), d.rate > 0 && tasaQueCorre(d) > 0 ? d.rate + '% al año' : 'Sin intereses', '<b class="n">' + money(+d.balance) + '</b>' + med(pg, V.a) +
-          '<p class="kv-p" style="margin-top:9px"><b>' + Math.round(pg) + '%</b> pagado' + (+d.total ? ' de ' + money(+d.total) : '') + '</p>', (q.siguiente ? 'Próximo pago: <b>' + prDia(q.siguiente) + ', ' + money(+d.min) + '</b>' + (pr ? ' (' + money(pr.R.interesSig) + ' de interés)' : '') + '.' : '') + (pr && d.id === 'd003' && PA.cero ? ' Con tu plan queda en cero el <b>' + C().v('autoCero') + '</b>.' : q.ultima ? ' Acabas en <b>' + prMes(q.ultima) + '</b>, ' + plural(q.restantes, 'pago más', 'pagos más') + '.' : '')); }).join('') + '</div></div>' +
-      (p ? '<div class="kv-fila">' + plega('de-abono', 'Anotar un abono', R.abonado > 0 ? money(R.abonado) + ' abonados' : 'ninguno todavía', (editable ? prAbonoForm(p.d, R) : copia('Se anotan')) + (abonos ? '<div class="ti-lista" style="margin-top:12px">' + abonos + '</div>' : ''), 's4', !!_prEdit) +
-        plega('de-datos', 'Los datos de tu crédito', p.d.rate + '% · ' + (K ? K.plazo + ' mensualidades' : ''), editable ? prDatosForm(p.d, R) : copia('Se corrigen'), 's4') +
-        plega('de-contrato', 'Lo que dice tu contrato', K ? 'última en ' + prMes(K.ultima) : '', K ? lista(fila('En total pagas', money(K.total), K.plazo + ' × ' + money(R.pago), '') + (K.interes != null ? fila('De eso, intereses y cargos', money(K.interes), 'si te prestaron ' + money(+p.d.total), '') : '') + fila('Te falta pagar', money(K.faltaPagar), plural(K.faltan, 'mensualidad', 'mensualidades'), '') +
-          (R.cuadra ? fila('Intereses que ya pagaste', money(R.interesPagado), 'aproximado', '') : R.interesMin != null ? fila('Intereses que ya pagaste', 'más de ' + money(R.interesMin), 'el exacto sale si pones lo que te prestaron', '') : '')) : '<p class="kv-p">Pon el plazo en los datos de tu crédito.</p>', 's4') + '</div>' : ''),
-      listo: simular };
+    const bajo = p ? '<div class="kd-bajo">' +
+      '<section class="kv-c" data-kv="de-abono"><h3>Anotar un abono</h3><p>' + (R.abonado > 0 ? money(R.abonado) + ' abonados a capital.' : 'Ninguno todavía.') + ' Va todo a capital y sale igual en Finanzas.' +
+        (sa ? ' Tu plan abona <b>' + money(sa.auto) + '</b> el <b>' + diaTxt(sa.fecha) + ' de ' + sa.fecha.slice(0, 4) + '</b>: ese abono lo anotas tú.' : '') + ' Lo abonado ya no se puede sacar: tu plan empieza cuando el colchón está completo, el ' + C().v('colchonFecha') + '.</p>' + (editable ? prAbonoForm(p.d, R) : copia('Se anotan')) + (abonos ? '<div class="ti-lista" style="margin-top:12px">' + abonos + '</div>' : '') + '</section>' +
+      '<section class="kv-c" data-kv="de-datos"><h3>Los datos de tu crédito</h3><p>' + p.d.rate + '% al año' + (K ? ' · ' + K.plazo + ' mensualidades' : '') + '. Se corrigen con tu estado de cuenta.</p>' + (editable ? prDatosForm(p.d, R) : copia('Se corrigen')) + '</section>' +
+      '<section class="kv-c" data-kv="de-contrato"><h3>Lo que dice tu contrato</h3><p>' + (K ? 'La última mensualidad, en ' + prMes(K.ultima) + '.' : '') + '</p>' + (K ? lista(fila('En total pagas', money(K.total), K.plazo + ' × ' + money(R.pago), '') + (K.interes != null ? fila('De eso, intereses y cargos', money(K.interes), 'si te prestaron ' + money(+p.d.total), '') : '') + fila('Te falta pagar', money(K.faltaPagar), plural(K.faltan, 'mensualidad', 'mensualidades'), '') +
+        (R.cuadra ? fila('Intereses que ya pagaste', money(R.interesPagado), 'aproximado', '') : R.interesMin != null ? fila('Intereses que ya pagaste', 'más de ' + money(R.interesMin), 'el exacto sale si pones lo que te prestaron', '') : '')) : '<p class="kv-p">Pon el plazo en los datos de tu crédito.</p>') + '</section></div>' : '';
+    const revisa = choca ? hoy('Revisa', 'Tu contrato acaba en <b>' + prMes(K.ultima) + '</b>, pero con estos datos acabarías en <b>' + prMes(R.fin) + '</b>.', K.cargosSugeridos ? 'Para que cuadre, unos ' + money(K.cargosSugeridos) + ' de cada mensualidad serían IVA y seguros. Es un cálculo: el dato real viene en tu estado de cuenta.' : 'Compara el saldo y la tasa con tu estado de cuenta.',
+      editable ? (K.cargosSugeridos ? boton('Usar ' + money(K.cargosSugeridos), 'prCargosUsar(\'' + p.d.id + '\',' + K.cargosSugeridos + ')') : '') + boton('Corregir mis datos', 'MEDIDORES.abre(\'de-datos\')', 1) : '', 'alto') : '';
+    return { kv: 'var(--r)', titulo: 'Deuda total', sub: 'Cada deuda es una barra que termina el día que queda en cero; tu plan contra pagar solo la mensualidad.', html:
+      '<div class="kd"><div class="kd-uno">' + revisa + cab + carrera + '<div class="kd-tres">' + pago + opciones + lo + '</div></div>' + bajo + '</div>',
+      listo: dtPintar };
   };
   M.abre = function (id) { const d = document.querySelector('[data-kv="' + id + '"]'); if (d) { d.open = true; d.scrollIntoView({ block: 'center', behavior: 'smooth' }); } };
   M.plegado = function (d) { abiertos[d.dataset.kv] = d.open; };

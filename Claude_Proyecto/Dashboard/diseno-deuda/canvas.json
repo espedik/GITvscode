@@ -1,0 +1,80 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-26T20:10:00Z"
+  },
+  "title": "Deuda total — rediseño",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1194,
+      "h": 834,
+      "title": "A · Tablero, como Total invertido",
+      "radius": 18,
+      "is_interactive": true
+    },
+    "Carrera.dc.html": {
+      "x": 1274,
+      "y": 0,
+      "w": 1194,
+      "h": 834,
+      "title": "B · La carrera a cero (la elegida)",
+      "radius": 18,
+      "is_interactive": true
+    },
+    "Minima.dc.html": {
+      "x": 2548,
+      "y": 0,
+      "w": 1194,
+      "h": 834,
+      "title": "C · Mínima: una cifra y una gráfica",
+      "radius": 18
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Carrera.dc.html",
+    "Minima.dc.html"
+  ],
+  "notes": {
+    "titulo": {
+      "x": 0,
+      "y": -300,
+      "text": "Deuda total en el iPad — tres opciones",
+      "kind": "title1",
+      "maxW": 3742
+    },
+    "nA": {
+      "x": 0,
+      "y": 940,
+      "w": 560,
+      "size": "m",
+      "fill": "teal",
+      "text": "A · Tablero, hermana de Total invertido. Arriba cinco indicadores (lo que debes por deuda, lo que pagas al mes, el próximo pago, el día sin BYD y lo que te ahorras); en medio tus deudas, la gráfica de lo que debes mes a mes —con lo que te adelantas sombreado— y el simulador de abonos, que funciona. Todo en una pantalla."
+    },
+    "nB": {
+      "x": 1274,
+      "y": 940,
+      "w": 560,
+      "size": "m",
+      "fill": "blue",
+      "text": "B · La carrera a cero. Una línea de tiempo: cada deuda es una barra que termina el día que queda en cero, y la del BYD pagando solo la mensualidad aparece como fantasma hasta 2031. Abajo, a dónde va tu pago de este mes (interés contra lo que baja) y tres botones de «¿y si abono…?» en vez de deslizadores. Tócalos: funciona."
+    },
+    "nC": {
+      "x": 2548,
+      "y": 940,
+      "w": 560,
+      "size": "m",
+      "fill": "orange",
+      "text": "C · Mínima. Lo que debes, una frase con el día en que acabas y lo que te ahorras, la gráfica grande y tres datos. Simular y anotar un abono se abren con sus botones. La más limpia; la que menos dice de un vistazo."
+    }
+  },
+  "designSystems": [],
+  "artifact": "https://claude.ai/artifact/AdSv47cSbBBkDtQHoRMT3Y"
+}

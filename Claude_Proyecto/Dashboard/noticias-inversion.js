@@ -1,7 +1,7 @@
 /* Las noticias de inversión de Qué invertir hoy, de Google Noticias. Las escribe el hook de pre-commit
    (Dashboard/noticias-actualizar.js): no se edita a mano. */
 window.NOTICIAS_INVERSION = {
- "generado": "2026-11-26T20:33:13.021Z",
+ "generado": "2026-11-26T21:36:56.592Z",
  "temas": [
   {
    "id": "recomendaciones",
@@ -75,6 +75,15 @@ window.NOTICIAS_INVERSION = {
    "rec": true
   },
   {
+   "t": "Maneja 232,000 millones y solo pide 100 pesos para entrar, Cetesdirecto cumple 16 años de inversiones sin intermediarios",
+   "u": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNeUpRYmVOXzFHSEFwbzFtLVA4eEx6QTZtLWxydkt2RFZZVzV5RnprUnNDZGhPUFBYMnlORE1jWFpLNXpFdlBGYlhKdkRNNm9sUnZwU3NyQnlnOE5ZbzkwQ3BCUFVVY18zV2txdFd5ajdhSTVOVjFERUx6N2NZejlnMGhqRnlwak0tM0xSbzNDY3pmWm8wYTRHX3M1cllNRnNMeEpSSlh30gGzAUFVX3lxTE5yOVFzZVNmTjZEUk0wYmdNZXBiSVRoOWNPQzdCNk8yQ2V1YlNIZjR0UmlKNHBZTk5ySWJEOFZFLWVzS0UydWlWWC1WdGFyQnd5Mm5NajFENWhkblJmaWdEb1RHY1p6b2N6bHhaSG14VlZIN1oxQzF6X1p0ZC1pakxiNWtLbFhoRjdoSHhRanloWnhNVENIUVloS0FWbWJ2NVhWYnlwTjkxZ0xnSW01M3hPRzhJ?oc=5",
+   "f": "2026-11-26T21:07:00.000Z",
+   "fuente": "Expansión",
+   "dominio": "expansion.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
    "t": "Franquicias rinden hasta cuatro veces más que la renta fija ante la caída de tasas: Feher Consulting",
    "u": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQNHprRVpLWDNXdVlmTW5QSFpIRVFWUmY5V2VtNE5PVXo3RHhOX0o0TmhSbGFmaXpueldtaXBoS2tUQV85NWZHUnloZmU5SGhNdDMzR1dVMzVnZkRkUlNMU2hPUF9rRm0wU1NjMkQxTUl4c3FBdTNUaTFSWTRoLTEwTlRaRXVlT1VoY2FWZmZjRW56c1RjYTQ5UWZVSQ?oc=5",
    "f": "2026-11-24T21:27:13.000Z",
@@ -89,6 +98,15 @@ window.NOTICIAS_INVERSION = {
    "f": "2026-11-24T20:01:48.000Z",
    "fuente": "Mundo Ejecutivo",
    "dominio": "mundoejecutivo.com.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "¿Cómo invertir en CETES? 7 pasos para abrir tu cuenta en línea",
+   "u": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOb21zbkZKeTVMbFF6bXVVakVKVjVva04ybzF2V0N0VzItTjNMMmZlSXEyS2liY2FoLS1jMHpsMllLZzVNSnU0WmRZRUF1VE10UkJZNm4tVkNDZDN5aXYtSGlQOWVhbmRJS2o2XzhzZ01Ydm1CSWtqM0w2TldVdTZXUmlDZzJVYlBBRnJKZHl0RlpTT0pONlBVT3RjRXpBTTVqaE0wTWhXXzY4LWVpMWVVTlZfa3I3dkQzMkpDQlNvTkpJSVk0aUE?oc=5",
+   "f": "2026-11-24T16:23:31.000Z",
+   "fuente": "Heraldo Binario",
+   "dominio": "heraldobinario.com.mx",
    "tema": "cetes",
    "rec": false
   },
@@ -116,15 +134,6 @@ window.NOTICIAS_INVERSION = {
    "f": "2026-11-20T12:15:44.000Z",
    "fuente": "DeDinero",
    "dominio": "dedinero.com.mx",
-   "tema": "cetes",
-   "rec": false
-  },
-  {
-   "t": "El dólar rompe los 19 pesos y cierra en 19.12",
-   "u": "https://news.google.com/rss/articles/CBMiggFBVV95cUxQOWN3bmxqSklPQTZBTWtSWXloOUlTSElvSzE1aFZubC1YXzNQc0ZtbUw3Zm9BbkxscV9XbzJKYndDa0JRZjdhYnBoOUNoTGdRRW83SGNsaDRsVGFZdmlHQ2Vtbld5b3FMMGJzeVI3TEJ5WHlsUzd2OXB2c3oydnN0WnZR0gGHAUFVX3lxTE50bVZYZXh3THlqZmo3Z0YzeUpsaFFLZ0pqUVNfVURya2hyNDZzTjFmalNpVGpGTXNPcUNZMG1XajRDX2ZzMEFuNEFoaXRreUpqcHFlQlpIWENiLVJGeHVRXzVQbUZEQzF5TC1wbHFoalBsTnAwalJRb0dlZjJJX0hUVlRJdTNpaw?oc=5",
-   "f": "2026-11-20T01:08:00.000Z",
-   "fuente": "Pulso Diario San Luis",
-   "dominio": "pulsoslp.com.mx",
    "tema": "cetes",
    "rec": false
   },
@@ -237,6 +246,24 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
+   "t": "JPMorgan detecta una señal récord de Bitcoin a través de Strategy",
+   "u": "https://news.google.com/rss/articles/CBMieEFVX3lxTFBwNk9hMHg3bzcySkV3NEJMMkZNYXgxSlpKVVZGMlVnOFc2U1lSTk83VlNVcU42ZkpVLVJtWkw3b2ZLQjVrcGcxS3FQYXpWMEcyRWQ1TXZuTDhBdVJ1OUJsa2IyWGxfZWxPLVlzSmQ4S1NSdHVpT292RA?oc=5",
+   "f": "2026-11-26T21:01:07.000Z",
+   "fuente": "BeInCrypto",
+   "dominio": "es.beincrypto.com",
+   "tema": "cripto",
+   "rec": false
+  },
+  {
+   "t": "RealReal Precio de las acciones: REAL Gráfico de acciones, capitalización de mercado y noticias de hoy",
+   "u": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE56Y0hIbHpDVDdGQXJmNnloY1U2bEdjWWxZbHFzY2kxSV9QaEM5MWJMVlJoVHRhU0hlcWVCd3Ftb0tCbUNnRV9LLXMwX2JBYkppaTlFOUpnOA?oc=5",
+   "f": "2026-11-26T20:40:48.000Z",
+   "fuente": "Coingecko",
+   "dominio": "coingecko.com",
+   "tema": "cripto",
+   "rec": false
+  },
+  {
    "t": "JPMorgan ve señales de capitulación en Bitcoin tras el mínimo histórico del mNAV de Strategy",
    "u": "https://news.google.com/rss/articles/CBMiywFBVV95cUxQRDczWjNWOUIxVUwzNkFtMXU0Vld2RjNnR2xtd1EwUnMzWG9GeTBtN1hELW9RY3ZfM2VVdlZaVExTSDVuTUtKSFVpdGlNS0RINTNpbzFGbklTb25IQURjdmtodUZWVk5TQ2oxclUxeHFIUllEMTJZMGZzenVXRk1KTUwxYmJGb2gwQjFyQmZGcWJZazRxclRQY2tBLVdWaDAyQ2dITFhNdE1lVXJmb19RejMyVnQ0d1hWNVBzT1lacUk0SVVxS2s0TVVnZw?oc=5",
    "f": "2026-11-26T19:19:18.000Z",
@@ -291,15 +318,6 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "Precio de Bitcoin (BTC) hoy: Una ballena vendiendo cerca de los 60 dólares se suma a la advertencia de Glassnode para Wall Street.",
-   "u": "https://news.google.com/rss/articles/CBMiigJBVV95cUxQV3h4ZWJYX0NPR2pvaFp1ekhrd21JV2Vnb2RPLUV0czd6SVZzbFBOTjFUbFZ5TV93MEFQX3dDZHpQZ0tzOVFFSjdaaWhtbTRNd2JRbXdneU56WlJ0M0JCeEEtSzVDWFBYV2tHdzg5ZDRHVUxQMUMxbzBUaDRfbjVKOE9zQ2JwTmxFb3p5ZGotNllWbDJHdXg2RUNRaW5XMkI1V0R6akxTZzUwaGY5Y2NCcHZxRlk3UFdNNlNXdW5XNG1LcEYwc2tLNHU2UUh0VzlOTDZKcXFCelQ3ZEFiZFJIOVE1M2EyaXpGOFBJRmtSVGVMclhrand2MS1aX2xacmRWbi1tTFAyc3R3UQ?oc=5",
-   "f": "2026-11-26T17:39:07.000Z",
-   "fuente": "Brave New Coin",
-   "dominio": "bravenewcoin.com",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
    "t": "Bitcoin, cobre y oro: 5 señales de alerta tipo 2008",
    "u": "https://news.google.com/rss/articles/CBMihwFBVV95cUxQWVlrWFFrRllLNnppWDRuY21yOXE0ZXVxYjZnWmI3WGdUMWpaYktlakw5alU3Q3ltYzVqRUdudXJaZW5KQ0tzRjZVMFdkcTRxUDJSRUM1dk1LdW9fd3dNc2ZJcmYxb0RTd0E4cnp3NmhfUFl0M05wQjU2bnQ5T0pJclY2QWNCakU?oc=5",
    "f": "2026-11-26T17:21:38.000Z",
@@ -332,15 +350,6 @@ window.NOTICIAS_INVERSION = {
    "f": "2026-11-26T16:20:00.000Z",
    "fuente": "IDNFinancials",
    "dominio": "idnfinancials.com",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "Cardano sube un 9 %: el ADA es una de las cuatro criptomonedas de los Volksbanken alemanes",
-   "u": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOUUxpTVNZVzA1Q1lhUWx3aElFVUxjSF9zNjBUVjViV2JvRXZmdUdSWlR4M0pmX1pBckxsd2ZVWlRFMW9zZGNUbGYxaEt4R1AydjZrZVhkbHhzckNzQ25JUWZjNUV0V24tTWpNMmFsMlg3TlpHUHVTZHlWY3JIRHFnR21HOHhwVGFPUVAzaQ?oc=5",
-   "f": "2026-11-26T15:24:02.000Z",
-   "fuente": "CryptoTicker.io",
-   "dominio": "cryptoticker.io",
    "tema": "cripto",
    "rec": false
   }

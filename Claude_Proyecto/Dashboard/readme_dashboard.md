@@ -1098,7 +1098,7 @@ con su botón** (`.kv-hoy`; naranja si algo pide revisarse), **una gráfica** (`
 | **Patrimonio** | Cuándo llegas al millón guardando lo que te queda, la ruta con sus paradas, qué pasa hasta cada una y qué te acerca (ver *El camino al millón*) |
 | **Intereses** | Lo que se va en interés este mes y cada día, un cuadro por pago hasta acabar, y tu plan contra pagar solo la mensualidad o un poco más (ver *Los intereses, un cuadro por pago*) |
 | **Total invertido** | A pantalla completa y con su propio acomodo (ver *Total invertido a pantalla completa*): lo que tienes por clase, si vas ganando, lo próximo, cuándo empiezas a invertir y el Bitcoin de hoy; tu plan paso a paso, la gráfica hasta irte y tus compras; abajo lo que apartas, el formulario, el reparto y el Bitcoin del último mes |
-| **Deuda total** | Cuánto debes mes a mes (`caminoDeuda`, todas juntas): con tu plan y pagando solo la mensualidad, la fecha en que el BYD quedará en cero y lo que te ahorras de interés. **Dos controles** —abono hoy y extra cada mes, encima del plan— redibujan la gráfica y dicen cuándo acabas y cuánto ahorras (`simula`, con `CIFRAS.prestamoTabla` y `abonosPlan`); **Anotar el abono de hoy** lo lleva al formulario. Cada deuda con su siguiente pago y su fin; el abono, los datos del crédito y el contrato, plegados |
+| **Deuda total** | A pantalla completa, como la carrera a cero (ver *Deuda total, la carrera a cero*): cuándo queda en cero el BYD con tu plan, cuánto antes y cuánto te ahorras; una barra por deuda; a dónde va tu pago; «¿Y si abono…?» con botones; lo que debes, y abajo anotar un abono, los datos del crédito y el contrato |
 
 **Gráficas** (`lineas`): SVG al tamaño real de su caja, un solo eje, globo con el mes y cada serie al pasar el
 ratón, el dedo o las flechas del teclado, y sus números también fuera de ella. Azul, naranja y verde (`--kv-1` a `--kv-3`)
@@ -1136,7 +1136,7 @@ total— pone la gráfica arriba y el simulador y las deudas lado a lado, como b
 lado (`.km-tw`) lleva una sombra en el borde mientras queda más.
 
 Medido con los datos de Finanzas: a 2048×1040 y a 1600×1000 ninguna se desplaza más de 37 px salvo el Fondo Maestría (235 y 292); a 1327 (el iPad) caben
-enteras el fondo y los intereses (Total invertido va a pantalla completa: ver abajo); Patrimonio y Deuda total se desplazan menos de 300 px y el Fondo Maestría,
+enteras el fondo y los intereses (Total invertido va a pantalla completa: ver abajo); Patrimonio se desplaza menos de 300 px (Deuda total también va a pantalla completa) y el Fondo Maestría,
 por su gráfica alta, 561; a 1194, el iPad vertical y
 390 px se desplazan enteras, sin textos partidos ni desbordes. Probado: los controles dan la cifra del maestro; anotar, corregir
 y borrar un abono, aportar al fondo y registrar una compra mueven Finanzas; sin datos no se rompen; en el iPad van sin
@@ -1232,6 +1232,34 @@ Coach son las del plan completo, y la ventana dice en qué mes llega ese plan.
 cada mes) cuenta con tasa 0 en el medidor **Intereses este mes**, en su detalle y en el desglose de Patrimonio, que la
 marcan "sin intereses". La BBVA tampoco paga intereses mientras Adán cubre lo que pide el estado de cuenta
 (`CIFRAS.PROYECTO.bbvaSinIntereses`), y Deuda total dice cuándo quedará en cero (`bbvaPlanTxt()`).
+
+### Deuda total, la carrera a cero
+
+Adán, 26-nov-2026: *"ahora mejora el diseño de deuda total, con los mismos requerimientos que la otra ventana"*; de las tres
+opciones del lienzo (`diseno-deuda/`: A · Tablero, B · La carrera a cero, C · Mínima) eligió la B. Comparte la pantalla
+completa de Total invertido y su primera vista (`.kd-uno`) llena el alto de la ventana: arriba, cuando el contrato y los
+datos no cuadran, el aviso de *Revisa* con sus botones; el titular de la opción elegida —el día en que el BYD quede en
+cero, cuántos meses antes que pagando solo la mensualidad, lo que te ahorras de interés y desde cuándo no debes nada— y
+*Hoy debes*, con lo que llevas pagado.
+
+- **La carrera a cero** (`.kd-car`): una barra por deuda, de hoy al día en que queda en cero, sobre la rejilla de los años y
+  la línea de hoy. El crédito que cobra más va dos veces: con tu plan (azul) y pagando solo la mensualidad, de fantasma
+  rayado, para ver lo que te adelantas; abajo, el día en que se llena el colchón y empiezas a abonar.
+- **A dónde va tu pago** de la siguiente mensualidad: interés, IVA y seguros, y lo que baja la deuda, en una barra partida, y
+  el interés de cada día.
+- **¿Y si abono…?** (`.kd-op`, `MEDIDORES.dtOp`): cuatro botones —tu plan, dos abonos hoy y un extra cada mes— y *Otra
+  cantidad hoy* (`MEDIDORES.dtOtra`). Al tocarlos, la barra del plan se acorta y el titular cambia ahí mismo (`dtPintar()`);
+  cada uno dice su mes y lo que ahorra de más. **Anotar un abono** baja al formulario con el monto elegido.
+- **Lo que debes**, deuda por deuda, con lo pagado, su tasa y su próximo pago, y lo que pagas cada mes.
+- **Abajo**, a la vista: anotar un abono (con lo que tu plan abona y cuándo), los datos del crédito y lo que dice el
+  contrato (`data-kv` *de-abono*, *de-datos* y *de-contrato*, que el aviso de *Revisa* abre).
+
+**El ahorro es una sola cifra**: el de tu plan es el del maestro (`autoAhorra`, el de las demás pantallas) y cada opción le
+suma lo que ahorra de más con la misma tabla del crédito (`dtCalc()`, `CIFRAS.prestamoTabla` con `abonosPlan`); *Sin ninguna
+deuda* sale de todas juntas (`CIFRAS.deudaCamino`). Bajo 1100 px el titular y lo que debes se apilan y las tarjetas van de
+dos en dos; bajo 640, una columna. Medido: la primera vista termina en 817 de 834 px en el iPad de 1194×834 y en 817 de 820
+en el de 1180, y en 988 de 1040 a 2048 con los formularios de la PC; a 1024, 834 y 390 px, sin desbordes; sin errores en
+claro ni en oscuro.
 
 ### Total invertido a pantalla completa
 
