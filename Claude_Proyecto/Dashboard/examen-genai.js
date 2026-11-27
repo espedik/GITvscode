@@ -902,6 +902,10 @@ body.xg-abierto{overflow:hidden}
   background:rgba(var(--ov),.05);color:var(--text2);font-size:14px;cursor:pointer;font-family:inherit}
 .xg-x:hover{background:rgba(var(--ov),.11);color:var(--text)}
 .xg-cuerpo{flex:1;min-height:0;overflow-y:auto}
+/* En el Safari del iPad: desplazamiento táctil explícito y sin pasar el gesto al Dashboard de abajo; la capa mide lo que
+   de verdad se ve (dvh) y no la pantalla sin la barra de Safari. */
+.xg-overlay{height:100vh;height:100dvh}
+.xg-cuerpo,.xg-panel,.xg-lateral{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 
 /* ── Piezas comunes ── */
 .xg-eyebrow{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--g)}

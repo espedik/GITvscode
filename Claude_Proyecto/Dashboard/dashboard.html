@@ -3686,6 +3686,14 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
    leer— y en dos columnas que desplazan cada una por dentro: la pregunta, en una hoja centrada de 820 px, y cómo vas,
    de 420. Bajo 1100 px, una columna con cómo vas debajo; bajo 640 px, a pantalla completa. */
 #istqbOverlay{--c:var(--p)}
+/* Que el dedo desplace en el Safari del iPad (Adán, 27-nov-2026: "en examen istqb no puedo hacer scroll down"). Tres
+   cosas que Chrome perdona y Safari no: el alto en vh —en el iPad cuenta la pantalla sin la barra de Safari, y el pie de
+   la ventana quedaba debajo de ella—, la tarjeta abierta con transform —una capa más entre el dedo y la columna que
+   desplaza— y el desplazamiento táctil sin pedirlo. Con dvh el alto es el que de verdad se ve. */
+.gbm-card.iqv-card{height:92dvh}
+@media(min-width:641px){#istqbOverlay{padding-top:3dvh;padding-bottom:3dvh}}
+#istqbOverlay.open .gbm-card{transform:none}
+.iqv-col,.iqv-body{-webkit-overflow-scrolling:touch}
 .gbm-card.iqv-card{width:min(1900px,96vw);height:92vh;display:flex;flex-direction:column;overflow:hidden;
   background:linear-gradient(rgba(var(--ov),.035),rgba(var(--ov),.035)),var(--bg)}
 .iqv-card .gbm-head{flex:none;padding:16px 64px 14px 26px}

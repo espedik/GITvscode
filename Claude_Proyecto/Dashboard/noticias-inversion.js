@@ -1,7 +1,7 @@
 /* Las noticias de inversión de Qué invertir hoy, de Google Noticias. Las escribe el hook de pre-commit
    (Dashboard/noticias-actualizar.js): no se edita a mano. */
 window.NOTICIAS_INVERSION = {
- "generado": "2026-11-27T15:09:32.863Z",
+ "generado": "2026-11-27T16:24:32.136Z",
  "temas": [
   {
    "id": "recomendaciones",
@@ -66,6 +66,114 @@ window.NOTICIAS_INVERSION = {
    "rec": true
   },
   {
+   "t": "Cetesdirecto cumple 16 años con 3 millones de clientes y una cartera récord",
+   "u": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPTmdVS2hvQUZFNzF6NXhWdHQ3OGdqTm02MlZWaHBXVW1HMUhPbF8tR085OHQ5NVhUSjZMcUJRQzVpUURVeDJ2SXBmSkQ2cWtlVzJIMFF0bWs2aE9pWlktZXBsbl9rUnpxS21scWptVC1oNS1RSVVGXy1EWW1rWmp1Ums4QkpMR05VaVB3cVNRZkxRTDBBRXBBOGdGeEpmNkxvWF9nbXI3c1l2Y1FMLWhEUUNiMHd6alBo?oc=5",
+   "f": "2026-11-26T22:57:41.000Z",
+   "fuente": "Revista Fortuna",
+   "dominio": "revistafortuna.com.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "Cetesdirecto cumple 16 años, con 3 millones de clientes y más de 232 mil mdp administrados",
+   "u": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNalY4Y01HM0lHZXhJQjc4RVUyd0NXODJJZS0zSXFFWXJ0cHotLWJ6blJta1BjakdfTzJqbWdGLWlBSmFvQ1pTMFdOSWlhd2F3Mk55clVwOF9lUW9HM0E1T09KTlFkejQ1c1hZUTFiUVZWd3hTV2d3ZTFrSFlmZTI4Smg4aGxidUI1cmNj0gGLAUFVX3lxTE1qVjhjTUczSUdleElCNzhFVTJ3Q1c4MkllLTNJcUVZcnRwei0tYnpuUm1rUGNqR19PMmptZ0YtaUFKYW9DWlMwV05JaWF3YXcyTnlyVXA4X2VRb0czQTVPT0pOUWR6NDVzWFlRMWJRVlZ3eFNXZ3dlMWtIWWZlMjhKaDhobGJ1QjVyY2M?oc=5",
+   "f": "2026-11-26T22:38:29.000Z",
+   "fuente": "MILENIO",
+   "dominio": "amp.milenio.com",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "Maneja 232,000 millones y solo pide 100 pesos para entrar, Cetesdirecto cumple 16 años de inversiones sin intermediarios",
+   "u": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNeUpRYmVOXzFHSEFwbzFtLVA4eEx6QTZtLWxydkt2RFZZVzV5RnprUnNDZGhPUFBYMnlORE1jWFpLNXpFdlBGYlhKdkRNNm9sUnZwU3NyQnlnOE5ZbzkwQ3BCUFVVY18zV2txdFd5ajdhSTVOVjFERUx6N2NZejlnMGhqRnlwak0tM0xSbzNDY3pmWm8wYTRHX3M1cllNRnNMeEpSSlh30gGzAUFVX3lxTE5yOVFzZVNmTjZEUk0wYmdNZXBiSVRoOWNPQzdCNk8yQ2V1YlNIZjR0UmlKNHBZTk5ySWJEOFZFLWVzS0UydWlWWC1WdGFyQnd5Mm5NajFENWhkblJmaWdEb1RHY1p6b2N6bHhaSG14VlZIN1oxQzF6X1p0ZC1pakxiNWtLbFhoRjdoSHhRanloWnhNVENIUVloS0FWbWJ2NVhWYnlwTjkxZ0xnSW01M3hPRzhJ?oc=5",
+   "f": "2026-11-26T21:07:00.000Z",
+   "fuente": "Expansión",
+   "dominio": "expansion.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "Tasa de Cetes a un año, baja a 6.88% en la última semana de noviembre de 2026",
+   "u": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPUGU4bk9MTFNfY1Uyd3JhNlB5QnJSOXRoRmpBNHRENEc0NW0tWFVwRmRzTEgzakxTOXBRdHljeDFrYjluRWlmaHI2djBLQUwwRmxKcUw5NU9nRXJSMnUxQi1FZGJ4LThsZUJSbEtaYS14bS1mUmZOTGU5OV9nc3lyaTdkSUhSelJ3R09SblVkYW1CUkVMSi1UNUJEY3JRMVR3bFpZS0VZOGVWWl9VZG5NaVp0T21MZw?oc=5",
+   "f": "2026-11-24T20:01:48.000Z",
+   "fuente": "Mundo Ejecutivo",
+   "dominio": "mundoejecutivo.com.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "Cetes: Así quedaron las tasas en la semana del 24 de noviembre al 1 de diciembre de 2026",
+   "u": "https://news.google.com/rss/articles/CBMingFBVV95cUxNM2xxaUNvZzFaNmcwQ180UHdzYVFpcEZOd2o5cW05NzV0S1pfQzJjczRCSjV1ZDB6RXo2d3pKc21LT2JJSGZiQV9zUFdCNHdfb1JpTFc3UmxXZlVxcWhmR1A3V2ItdDFCLXJXSl9pOU9oaW1keFRxTlJVTGlYUnAtcll1a2pwSk9ZUTZ1aTIySXhfVXI4eG51by1uc2ZFZ9IBowFBVV95cUxNY2ZCODRlTEVybGVNVWlLV0hzSUxzTTBfc2xfM1lvdnVzWmJTZnVBRVJXVHR4c09hWHVSMTNvemlZQllMWDJzbldDWkt5ZnB6VmltWkN2akFnei1ORkgzXzhpYWtfbHkxZzJuTXc4d25BWW81M1RDdGlBNHZVN09JSWNucHBLT0ctRGwzcEcydGVsMDRCcWxFMWFUQzYtZ2VMUXZV?oc=5",
+   "f": "2026-11-24T19:13:21.000Z",
+   "fuente": "Imagen Radio",
+   "dominio": "imagenradio.com.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "¿Cómo invertir en CETES? 7 pasos para abrir tu cuenta en línea",
+   "u": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOb21zbkZKeTVMbFF6bXVVakVKVjVva04ybzF2V0N0VzItTjNMMmZlSXEyS2liY2FoLS1jMHpsMllLZzVNSnU0WmRZRUF1VE10UkJZNm4tVkNDZDN5aXYtSGlQOWVhbmRJS2o2XzhzZ01Ydm1CSWtqM0w2TldVdTZXUmlDZzJVYlBBRnJKZHl0RlpTT0pONlBVT3RjRXpBTTVqaE0wTWhXXzY4LWVpMWVVTlZfa3I3dkQzMkpDQlNvTkpJSVk0aUE?oc=5",
+   "f": "2026-11-24T16:23:31.000Z",
+   "fuente": "Heraldo Binario",
+   "dominio": "heraldobinario.com.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "Se publica la inflación de la primera quincena de noviembre",
+   "u": "https://news.google.com/rss/articles/CBMidkFVX3lxTE50cE8tS2s5Zkkwd040cFdnR2Q3TnNFT3hsakpqUkpSZnlzRHdnclFPR1dTTUl2WFJCWkV3Nm5HdmdfRWxxY0N2U0c5TEUyX0Zoc0kteE9BX25KeXZIRC1aSllWVDRtckFValdXU29yOTFZOFlnelE?oc=5",
+   "f": "2026-11-24T16:19:00.000Z",
+   "fuente": "Jointly News",
+   "dominio": "news.jointly.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "¿Cuánto ganas con $5,000 pesos en Cetes? Así aumenta tu dinero con la reinversión automática",
+   "u": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxNYUtyR2dkWFpuRW5PbGsyVUw3TDJkRVVNMG9idEhNN2w4VFZyY0wwaE5NeEdITFdZUHpITnU5V09RWnVuMnliRG9jQlZKTU9ENUk0QUUtOFBHdlJCT1R5eDBRY2E1UnQ5b0NyQVlrUmtOc3lWNURvNEVDRnlCa25DOXZKQzFoOFIxc3IycTl4UHgyYktXRFlPR2pFcXhGR2lUR3FBVW9EUG9ZU2RoTkF2NXFXYkZ4NERZWm15SzkwZk5pcDYtQjRvQS15eXRrUmZhcFHSAeYBQVVfeXFMUEZ1SHRkbkVSWkRqelZrcDEyV1MyM1ZWeW81aVBoelREVEl4S2hmTlJkYUtSSEMxd21NVFlZYUtudC1NdjNRQkI2NF9pU3RyZ3EtcnJtR2VaQ0VKX0FZWUFlWGpfZ0pLS1pTc1gzQTdqcUlBTktSeHZ5bmliNDhnOXdnS0lQVWI4VDJ1eW5vel9KVkE2RHl0QTE4Q2k4V2R3cjZMMEVxaDBQYlBCWjFSd1BrQS1icmE0QWxsdnRWMGxFQXVIMGpTODJpMUZ0VUV4aHppOFI3WU1LNXlhWU9yS3U0bzJwTFE?oc=5",
+   "f": "2026-11-23T20:05:45.000Z",
+   "fuente": "DeDinero",
+   "dominio": "dedinero.com.mx",
+   "tema": "cetes",
+   "rec": false
+  },
+  {
+   "t": "Previo a las fiestas decembrinas , autoridades recomiendan medidas contra la extorsión telefónica",
+   "u": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQTHRmVnlwUGxCQXdGeVNPcnFLWjMtM1BoVU1HUjV2SWRFZm1hdUViQTJJNFFCTnZaSlU4S2lxMTVXOW5VS2dZakh1V1did2xWUlRpRkhXRmJkOFpVdVlFTVY2QS0zWnZ0d0ZBY19WRmhYTFhLTUFtaHRhTGlGZEtEcDNEY0RJS3IwQ3pWNWd6c1NPeTcweVg4dUlQbWZsTS1LTDBvdUpydVhteDhaTzJHVUh3T3Z6YnE1eFBMMER30gG-AUFVX3lxTFBMdGZWeXBQbEJBd0Z5U09ycUtaMy0zUGhVTUdSNXZJZEVmbWF1RWJBMkk0UUJOdlpKVThLaXExNVc5blVLZ1lqSHVXV2J3bFZSVGlGSFdGYmQ4WlV1WUVNVjZBLTNadnR3RkFjX1ZGaFhMWEtNQW1odGFMaUZkS0RwM0RjRElLcjBDelY1Z3pzU095NzB5WDh1SVBtZmxNLUtMMG91SnJ1WG14OFpPMkdVSHdPdnpicTV4UEwwRHc?oc=5",
+   "f": "2026-11-24T23:37:00.000Z",
+   "fuente": "Xataka México",
+   "dominio": "xataka.com.mx",
+   "tema": "bolsa",
+   "rec": true
+  },
+  {
+   "t": "¿Por qué esperar puede ser una estrategia más prudente que comprar por FOMO tras la OPI de Anthropic",
+   "u": "https://news.google.com/rss/articles/CBMixAFBVV95cUxNS0RDSHgtc0p2bVFISklMejIwLWdtbUE5YnRCeEU2Z2U1RkctazZtRlJFRGVfY2dRSXA4M2hwanFwTUVPa3RfU25QWXYyV1dCNmxkMDJzZEpnTnVYeng1UGxmQWxHT0MxSjdSYlNiZ2ZrOWhjVEpRTUtaNmlTQzNpTXVNM1VPWDNFaEkxMGtGMmlVNUlxdDNCRnVRdkd1VVNfOVdPTmU4SFdrSFJVcHd0YmJuME0tUHRVN2N4Y01UR0hydWl10gHKAUFVX3lxTE1xbndEaWJ3RHVpN2pKZ0JQTi1KcXZhWDAza2VCQ0NZUFREOHUteUIwR21YeGIwUGN4OGxxUlA5dzRtRFZNOE5CR1hNUHNUOWpSeFpXckV5ZDcyZnkydFdDeXB0SWtYdFM2djF4alBfLV9LaHhBek10UmlXWmotT1otNkxyRjdhbkpXUDhSbnFyM2IwRDBpR1dmQmNXZzctekRGRG1Xd05KX1kxN0c3S3lVOUE3QW1CYVFFVFRUZlpDLWQ2YnFoR1V4Q3c?oc=5",
+   "f": "2026-11-22T17:00:00.000Z",
+   "fuente": "El Economista",
+   "dominio": "eleconomista.com.mx",
+   "tema": "bolsa",
+   "rec": true
+  },
+  {
+   "t": "La IA gana terreno: 8 de cada 10 mexicanos aceptan su ayuda al comprar",
+   "u": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQQlZWMXJBR2pHZVhEQ3dWNnhpek5rQnZLT0JTaE1YZ09hM05UdTItaVBDWS1oVDItWG9KQzlnOGRfTWoxcjE5STJFcmVib0lBQnhTT2lBYlRZUjZRR21lMEhhRkJxWkJGckIybWxhc2s1OVZUVTc3SG5GNHJWS204U0xmUTlJMkxaRGFVSXVKRVdkWEhVNk9wcXBiNnNYaTBGSUs2a1Q5LXBtM2laRUJfVll3?oc=5",
+   "f": "2026-11-27T16:20:08.000Z",
+   "fuente": "ContactForum Portal",
+   "dominio": "contactforum.com.mx",
+   "tema": "bolsa",
+   "rec": false
+  },
+  {
+   "t": "Anthropic ya está en la BMV, cómo invertir desde México en la empresa detrás de Claude y qué debes saber antes",
+   "u": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPLXczT3pmUE1ONzY1UUVSVllTXzB2OGRGWTRKV21mRjV2RUViX2xid1UxVHdUY0NkQ2JsTGFIMHlLbWJ2V01sa1JKMWNaVWhCM3FBaGNidGtPYnQ5UFRDYUN1Wm11WDNaZUpDYk9yWkZMYm9OOXRsbDJpeU95OGZXa05SOWEybnpodmJVZTRSQTFEbExrajk1ZtIBpgFBVV95cUxNNGVVYzVidmhYRkZFdFROeWRGTmNVek5YRGxuXzdsMU5aTEs4ZkVjZFRIa1VBWWItOEVEUnN0aG5iTjUzN3B1TUpTTU14bVYybHh3UkdKaU4xb09WMi14ZE9zRFk3cFY5RDFfMVBReVdrTjk0eE1FUm53WHA4ZHlmdWlRcWJpRlQwNmI1T0pyYjZNMjFDRmk3SE5VRXlXX25iSm5sVi1n?oc=5",
+   "f": "2026-11-27T16:06:00.000Z",
+   "fuente": "Expansión",
+   "dominio": "expansion.mx",
+   "tema": "bolsa",
+   "rec": false
+  },
+  {
    "t": "FEMSA se 'dispara' 33.5% en bolsa en el primer año de José Antonio Fernández Garza-Lagüera",
    "u": "https://news.google.com/rss/articles/CBMingFBVV95cUxPRk5qWnlVcFRsVzlPSUdFYWo4UnpPejdnYXZvR3N4bHFIcnFETGtnYkM3dXRtdVp5SHdTLTlkb1IyZ094QmFJeXlnWE1uNW1OWXZpRzRZQjlqS0pCRjhHbXEwXy1Kc3B3YXhWVjlCbGVldVdFQVdjcDROajI5ZVdzTkw2Nl9fSENhNVFWQVJXX0lOVTVtUkQ5YmJiOHRvZw?oc=5",
    "f": "2026-11-27T14:03:36.000Z",
@@ -93,18 +201,18 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "Anthropic llega a la BMV: inversionistas mexicanos podrán comprar sus acciones",
-   "u": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNNm0xM2RCYnVjUGl0MDRBZWNrb2V6X3d2cUVYY29sYTBLUVZIUTk5dS1ScHB2U1FSQlN1TlR3SUs2NkJSc0R1N3BnaWM5ajc1bm1aNHBkTHUxcmVvNzI3aXpzZFdHLUI1bXBTendqRUc1aEx3LUZFajR2cGpKbVZYMUNZejhIem9fZl9WamRaQ0JDcHY0eW9mRVNHXzkwTzBQWFRFZ3RXNkY?oc=5",
-   "f": "2026-11-27T01:03:25.000Z",
-   "fuente": "EL CEO",
-   "dominio": "elceo.com",
+   "t": "Bolsas mexicanas pierden 1.4% en jornada de feriado en EU",
+   "u": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQcHNRNGFVeExOMzI2TTkyeXJiMjNxNTZrQUdNVlEzdFZHSzRVTTdjb3hkNTNVQUlxQUlWMWhYNEhsa1ZhVUNPMHRSV3YxUVRBeGxYalAzQ2xhQlYyQ2lRYXJBbFlWTVVkSmhKazlrVzRpWkx1OVZyLXM4UXhDYUF2V3A4bjJyMGs2YzlYdktadmRQSUxPS3NjNEh3VGxhUVZ5dXdtLWFSeVZHemxCWWhpREdIQdIBswFBVV95cUxQcHNRNGFVeExOMzI2TTkyeXJiMjNxNTZrQUdNVlEzdFZHSzRVTTdjb3hkNTNVQUlxQUlWMWhYNEhsa1ZhVUNPMHRSV3YxUVRBeGxYalAzQ2xhQlYyQ2lRYXJBbFlWTVVkSmhKazlrVzRpWkx1OVZyLXM4UXhDYUF2V3A4bjJyMGs2YzlYdktadmRQSUxPS3NjNEh3VGxhUVZ5dXdtLWFSeVZHemxCWWhpREdIQQ?oc=5",
+   "f": "2026-11-27T02:43:44.000Z",
+   "fuente": "El Economista",
+   "dominio": "eleconomista.com.mx",
    "tema": "bolsa",
    "rec": false
   },
   {
-   "t": "Telcel, Bait y AT&T tendrán un nuevo competidor: CFE obtiene concesión comercial",
-   "u": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOQy1mdEw0eXpmeVVGRFNtRE9qVnE4aEp4NWpESHladnduc1J2YzZsV2dIakRtS3lIRm0xWk14QWljRDg2ZTZON0NPcmJtelpsTDJZYlNqbFVXUHMwaGQwOE5YbFBxTnNtYjBVUFktVjFLa0ozbjRTamtTbTZ1UUMySXI0a2NkaHBvRFBhV1lpS3ktSF9YMTZqWFRMcDItelk5MVYySlFqMUU?oc=5",
-   "f": "2026-11-27T00:26:30.000Z",
+   "t": "Anthropic llega a la BMV: inversionistas mexicanos podrán comprar sus acciones",
+   "u": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNNm0xM2RCYnVjUGl0MDRBZWNrb2V6X3d2cUVYY29sYTBLUVZIUTk5dS1ScHB2U1FSQlN1TlR3SUs2NkJSc0R1N3BnaWM5ajc1bm1aNHBkTHUxcmVvNzI3aXpzZFdHLUI1bXBTendqRUc1aEx3LUZFajR2cGpKbVZYMUNZejhIem9fZl9WamRaQ0JDcHY0eW9mRVNHXzkwTzBQWFRFZ3RXNkY?oc=5",
+   "f": "2026-11-27T01:03:25.000Z",
    "fuente": "EL CEO",
    "dominio": "elceo.com",
    "tema": "bolsa",
@@ -129,15 +237,6 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "Peso mexicano cerca de 20 por dólar: Acciones BMV más expuestas a la depreciación",
-   "u": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxOOGJhQkFUNWZXd3E5LWlFOFpTcjRDTzRIMEhhdi1Kc0kycS04R0lzbDhrdGRwY1ZyWFBEaUhoamhUMElNYmdseXNXN0pLRzd6VTRSWUZKZWpxVThjdVFhNlc1Ql93a3otUzZ1clJ3azA3dGdtVWtoSGt1a1NMSm9pMUZKZHR5dlR4aXVzUjNfY2JYbXBCbUNvU0tOazFuNkJFU21WenAwYlVpaGpBOVAycmI1d19DSUFWbUdjTnB5a21DVms5UEtyb3ZsaFhzU0tIOXc?oc=5",
-   "f": "2026-11-26T22:22:14.000Z",
-   "fuente": "Investing.com México - Finanzas, Bolsa y Forex",
-   "dominio": "mx.investing.com",
-   "tema": "bolsa",
-   "rec": false
-  },
-  {
    "t": "Precio del dólar hoy 26 de noviembre de 2026: peso mexicano cotiza en su peor nivel desde abril de 2025",
    "u": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNUWRxQ1dIVTlpTTJwSHY4LU1Va2ZqaktoNzZ5eGJCc3NfOUd6eVp4M01NSWRWN3JxdkNYX2dzeWNsMHQxcWE1Z1pCNklGejQyMHBHY2hUOE15MVU4cEJKSDBtS1NTQ0xNYk9sdEtJczhNbElWNUN3dkdqNWdmSENNbkZZZlhZcl91MjBZ?oc=5",
    "f": "2026-11-26T21:35:08.000Z",
@@ -147,30 +246,30 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "Fuga de capitales: México registra su quinta mayor salida trimestral de inversión de cartera",
-   "u": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOcnNkVF9SNGF3Rm9DWW5wc3M3UHZhMnZXbmFxZ3JlaW42TXVWRDRIblRXMm5Vbk80amxLRVhQUzJTNzFXRnpmcC1HTWthbmx1eTkwSy1sSmF4cHF0WlR1cWI5dFk2cWsxdjFOaThiOXJURnFfQTJxcFFaSVNxQ2wyZExad2R4R3hyZTV0Ull2QU1TMGJ0SWphUVZjMEgxNFJsQlZaeW95NmVoZXdMX1lRbTJaQ2bSAcIBQVVfeXFMTUd0N2JLblZldlNxckVMcmh3aDRLSzZrM1g3b2NiSTUteFl6dmlJQ3pXLU5YRVZsM21lRy01TFRIY3RqWlFoa28yZjFSWlpXUUlSSzdtOGlvVi1DNUYxa014NzNzZHdhSmJkc28yT3J0MDc5UTdta2p0TnhSWGVkVDVZZ1lrOGU5T1FVNkF4RkI2VF8zMk5Bc2h2S3JEUEE3MG9YalZsX19uOHlUbEpHekx6UnFjVFlCOE1RVHR4MWJHTGc?oc=5",
-   "f": "2026-11-26T21:25:00.000Z",
-   "fuente": "Expansión",
-   "dominio": "expansion.mx",
-   "tema": "bolsa",
+   "t": "El analista Benjamin Cowen cree que la recuperación duradera del Bitcoin se producirá en 2027",
+   "u": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE90UzZDdDJfVlk0eXZHbzFuQlZhVGRFbGZTWXZDWElGXzlySkRQUHdualhsRktOSnN4bnR4RjFzX1BDeVlNNmJ2Q0RCX0tnRFJrdjRaazRDbEN3ajN6?oc=5",
+   "f": "2026-11-27T16:04:19.000Z",
+   "fuente": "Cryptonews.net",
+   "dominio": "cryptonews.net",
+   "tema": "cripto",
    "rec": false
   },
   {
-   "t": "Musk regalará acciones de SpaceX a cada niño de EU, pero... ¿cuánto cuesta cada acción y se pueden comprar?",
-   "u": "https://news.google.com/rss/articles/CBMi4wFBVV95cUxNWGM4STloTkN4MmU5M3lFRm9Gd3cxQ3FFenFpRHFoYzNkZWhkR3lfM0o4YnFjaHlJemhtX1dUbzNoQjhnb0taWHNhUF9wMVhxZjY0VHhNR3FQMk5WM1hnOVFlejNBZk1zLU4tZTNnalFFNEY0M3ZUbWh6T2hGV3FCQnBRQjJ4c3lzRFlFc1RVeXlTS2Y2UW1lLXRfUGRLbG5iMExEM0puUU5lb3FBZmlBcGZaRDZWVFh6djdKNlpuenM0UmttZHZNUkRITy12OWtCeHkzcWpVd2lYcmNsOVFoNU5Qaw?oc=5",
-   "f": "2026-11-26T19:04:44.000Z",
-   "fuente": "La Crónica de Hoy",
-   "dominio": "cronica.com.mx",
-   "tema": "bolsa",
+   "t": "Malasia prepara el debut de su primer ETF de Bitcoin compatible con la Shariah",
+   "u": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNaHpYWVFRTUI0aFZ2R2lrSlVtN25yS2tqSFJ2azNWeGU3NFd6RlVZZW5fVnNNYnR6YVpMb1pUd3BlMHlCRzJZSTFBWHFkZVBhMGd5MTJLSlY5UGpHc1VfV01ucm9LNE9SSC1CMUtPMjdXZHV6WFptcEdaVHNhcVh5ZXRvdS1NOHoycU9yNUFJdmdNXzRwYXBMS0ItaGhYYlNMRFBYQURqRDBfeXFLanB3aEE4dERpYU92R210Rw?oc=5",
+   "f": "2026-11-27T15:39:26.000Z",
+   "fuente": "DiarioBitcoin",
+   "dominio": "diariobitcoin.com",
+   "tema": "cripto",
    "rec": false
   },
   {
-   "t": "Elon Musk regalará acciones de SpaceX a los niños de EU, pero su apuesta va más lejos: “un millón de veces” más valor",
-   "u": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQMXZuUEI2M2p5MlJtSXdMdXNCdWNzdkJ6RkpndDNLaTN6eFFPXzlUTjFzU00teWYyT0IxYmR6Y1pxdlRCX0h4ajl4YzhKZXpVUzhIV1BwOXRvaTUycUZLZ1lOa0NtdXhUcXQ2MmYyOEJVUkM4Rml5UHZqX1Myd2p1Tnc0OFU4dllsQzNnOXpXRXR1UWtnUTdsV2xxd9IBqAFBVV95cUxPa1FpbEx5UWd3R0ZMOU5IX21ReHlaQmg3N3c5d1AwbXFzODRuaEhrcVoyOEJjNTZoQ0FwRkZROEowTHo0Wk1XNjV0dGFEZDdGUDdGbm9FSEZRbFJkQW4wLTA4M2dEUHVUWHJaU0VpYXFaMXVkRDEyWXl1TVJSanJCSjVaUUVZOXNsVVlmbXZDUmY4Y2tEaUt6SXJfSF91VzE2SUxPLTBBRko?oc=5",
-   "f": "2026-11-26T14:22:00.000Z",
-   "fuente": "Expansión",
-   "dominio": "expansion.mx",
-   "tema": "bolsa",
+   "t": "El suministro dormido de Bitcoin subió a 68,5% mientras el precio sigue bajo presión",
+   "u": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQUWoyT3JYQmpZanVRN3RscThDQUxaVTlLT0wyTC1DNDRfNVRsNW1fejdGb0Y3YjAwOGpaSEx0YVR3bVV2TkpVSHJlTDdkOC1pQWUxU2E2SjN2Sks5UVNVcDJONlVmWURucW9felQ5R200Zm5NWG4wR2ZBSG8zeFIwUndaMGFhaFJQRl9UX1QzR0d5MVRobU9YLWcxNTgwT2VEVVNtVWhvaXliY3Nzc1dQQWt5azRuV29XSENCa0MwczZ6N251anc?oc=5",
+   "f": "2026-11-27T15:34:26.000Z",
+   "fuente": "DiarioBitcoin",
+   "dominio": "diariobitcoin.com",
+   "tema": "cripto",
    "rec": false
   },
   {
@@ -192,20 +291,29 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
+   "t": "Suiza estrena BBIT, su primer ETF de Bitcoin al contado",
+   "u": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE5ZRjRfRHFQRkRRa2JDWmgyTl9tTnVnazdHeFkyNG5ZOFFyLWlaMnV5T01GNDNLT0lRNTU0Uzg0bzZRRC0wTm8xVFZJVlI0TXQ2TGhNTHE0cUI5dk1VNW1lRQ?oc=5",
+   "f": "2026-11-27T14:00:00.000Z",
+   "fuente": "Bit2Me News",
+   "dominio": "news.bit2me.com",
+   "tema": "cripto",
+   "rec": false
+  },
+  {
+   "t": "Bitcoin vuelve a los US$61.000 tras un vencimiento de opciones por US$7.000 millones",
+   "u": "https://news.google.com/rss/articles/CBMixwFBVV95cUxNYU5SaEFianpYX0ZNVElmVFRESDJNME9rdFlwWFotUFdmeUlZZEtfTWFsVE56cDNHUUxsMzVzYzktMUkyVFdYdG5selIwTVhkU3RqbmhaXzJFcE5nbWFlYVFQN2pFWkszd3JTM2RmRGlzSEdBR29CbUV0ZXlldDZVbU1wQkhJN1BhcF9faDhPLXFZTXZsRUxuQzdCeGFCQnllbnloTHFnS2F1amVELVdtellBWUhNUjltUUZHWFNZeXJFSnpmMUpj?oc=5",
+   "f": "2026-11-27T13:58:18.000Z",
+   "fuente": "Dolarhoy.com",
+   "dominio": "dolarhoy.com",
+   "tema": "cripto",
+   "rec": false
+  },
+  {
    "t": "Precio de bitcoin tras vencer opciones por 6.800 millones",
    "u": "https://news.google.com/rss/articles/CBMigwFBVV95cUxOOUllLWdwbGFsTTJwZTBmOHdsNjUzWjFEZXk0TzJub1dCdFBjUzhPXzhYMG9MdEYtck8tRmNNM05tWWJuU2UyOFowSVhtV2FwbUtsVXRaR001eHdCTjhEdFlrZ0NsYXhZU2lGQzFNbW9HRFJSR0NvT1czUzFTMWtfMmkydw?oc=5",
    "f": "2026-11-27T13:21:34.000Z",
    "fuente": "CryptoTicker.io",
    "dominio": "cryptoticker.io",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "¿A cuánto está el dólar HOY? Precio del billete verde en México este viernes 27 de noviembre; así cotizan Bitcoin y petróleo",
-   "u": "https://news.google.com/rss/articles/CBMi9AFBVV95cUxPRFNsU0p5eFlmYTN5cmExSzRnYzJRNmJQOWhnWnZLSEtEVW5mNDlFa2FUM2RKc3FOLWVfZDRvdXA1TmE3UXliTV9XaVNNcTVkaUNzRmJrOWlKSjZWRGkyVnpjWERfSkxxaC1qRUpoT1FqRmd6b0xVUHlJT2Fjbm4wRWVLUVZSMEJLalVENUtqRzJVV3JHdFB1RFBic0xJd0lVSXk1b0xJMWs5a2EteVNjYk00T1dlZ21CVmYtM3B4WXBacXN5ZGVCR1F5R21YcTJmZWg2WFBGZW8xRUNmVE1SSWtnUnFYYkJ1T2Q0Y2V3QlJPSkFJ?oc=5",
-   "f": "2026-11-27T13:10:32.000Z",
-   "fuente": "TV Azteca",
-   "dominio": "tvazteca.com",
    "tema": "cripto",
    "rec": false
   },
@@ -242,42 +350,6 @@ window.NOTICIAS_INVERSION = {
    "f": "2026-11-27T12:28:03.000Z",
    "fuente": "CoinDesk",
    "dominio": "coindesk.com",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "Datos clave: BTCUSD registra su séptima caída semanal; los ETF de Bitcoin anotan salidas récord en noviembre",
-   "u": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1wTXl1a2xGb1A2V0tPaTJjMHpNQzJQUnZqUUJuZ3lWOVh4T0Y3dDZDbjJWV2dOWUs1NXc1ZVJQZ1JFVWlBa2xhVFhYU0c3V2hmalk0WnhwRTBtLTlkbElYc3QzemZNcGstSUY1SA?oc=5",
-   "f": "2026-11-27T12:00:00.000Z",
-   "fuente": "TradingView",
-   "dominio": "es.tradingview.com",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "Quién es el influencer “CriptoNorber” y por qué se lo acusa de provocar pérdidas por USD 13 millones a sus seguidores",
-   "u": "https://news.google.com/rss/articles/CBMi8gFBVV95cUxPeUpTQWl2U2ZXUnktNzRETWJkUnBTZzBGVGZaZzVTQUZsRUZ4djNINHhjdVZkNXczZEZRUlk4VEdydkZKVWFiVXVrQy1odEtVTHpMbVdXWUVnUWVObkNYN2dXNFFzMVI4QUpPYVdJSWVNdU5EV1pvd3Mtc3dTbVBKbnMwaXQxblJfSHJwdnlIa2ZkaUdTUWtfdmdiWHJIUkgzREs4U1ZmY3RYaUxRRGZwVVVDYVR1QlNsWi1FNHJLTWdzMjNjMjR2QS1CSXlGRkNQRUdhQVk3QlM4bk1iRTlrRWJ6RUh5SVVHaFRvYWZwVTlod9IBjAJBVV95cUxPd0tmdHZNTm1BU0pidkVkdi0xNzlFRzJoSU9RN3NzY25CbXNpemV4VnZ4MnZobjRkMEYxZ09lc0FpLXZ1SWw3REhDWm1fVFhQTlRjbkZ0dzVIVFptV1pZUWRZM0hSdTg4TUszNHctREVvUGM1TF9qelFPN1VVNHphT3BrZldrRXp6UHlzY0EwVHZMM0NLU0c3SDdYSTJuMV83LWxiSVV1QXJ5cExCTFA0QUZTS1E2c3ZBMmxpTVRSbGlsdHlaWWVRWEREZWVzWUNnMHZ4NjJzS0JBWDZQbTJRWnlibVFDbmNsNVM5aGZHZmg3UkNDLUVjUEcwZ0ZJa3d1bWJucXE3TGkyU1hF?oc=5",
-   "f": "2026-11-27T11:59:00.000Z",
-   "fuente": "Infobae",
-   "dominio": "infobae.com",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "¿El precio de Bitcoin tiene una señal oculta en el oro y la plata? Esto dice Benjamin Cowen",
-   "u": "https://news.google.com/rss/articles/CBMifEFVX3lxTE1JbURaa043UVB2bERUWWkwZXlhWkFhUVNvY2dWaDRFakFmcEZoS3liTlF4ZGtNQXVnNnU2QXlWekMwWDNtN25aWjhPUWpuQU9Tc3ZWX2cwcVp4QkM5cnhHVW1Lc3g1UnJLcFg5RTVqWFUzQ0o5V0FyY3lxZTg?oc=5",
-   "f": "2026-11-27T11:38:00.000Z",
-   "fuente": "BeInCrypto",
-   "dominio": "es.beincrypto.com",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "Acción de Gracias encuentra a Bitcoin rondando los USD $61.000, un 33% más barato que en 2025",
-   "u": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1wR2VkeTUwR0lRbnV0OHMtb3FlWk1BNlU0SmxuUm5jYlFYMUZQb0RqdHItWTNJZGtaVTQ2VTBOMGs2WUY0eWZNcEFncWFFVHNHSFhqTUN3SjE4OE1C?oc=5",
-   "f": "2026-11-27T11:31:08.000Z",
-   "fuente": "Cryptonews.net",
-   "dominio": "cryptonews.net",
    "tema": "cripto",
    "rec": false
   }

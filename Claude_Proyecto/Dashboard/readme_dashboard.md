@@ -416,8 +416,12 @@ de Mis Metas), la primera del orden de Coach que no hayas contestado (*Lo decide
 líneas con *Responder*, o el resultado cuando ya la contestaste, y lo contestado en los últimos 7 días con el último
 simulacro (`istqbMarcador()`).
 
-Tocarla abre su ventana, `#istqbOverlay` (`abrirIstqb()`): tan ancha y alta como la del alemán —hasta 1900 px, el
-96 % del ancho y el 92 % del alto— y opaca. Adán, 22-oct-2026: *"está muy saturada de información, quita la más
+Tocarla abre su ventana, `#istqbOverlay` (`abrirIstqb()`): hasta 1900 px, el 96 % del ancho y el 92 % del alto **que de
+verdad se ve** (`92dvh`), y opaca. **Para que el dedo desplace en el Safari del iPad** (Adán, 27-nov-2026: *"en examen
+istqb no puedo hacer scroll down"*): el alto va en `dvh` —con `vh` Safari cuenta la pantalla sin su barra y el pie de la
+ventana queda debajo de ella—, la tarjeta abierta va sin `transform` y las columnas piden el desplazamiento táctil
+(`-webkit-overflow-scrolling`); el simulacro (`#xg-overlay`) lleva lo mismo, más `overscroll-behavior: contain` para no
+pasarle el gesto al Dashboard de abajo. En Chrome, con gestos táctiles, ya desplazaba: el fallo es solo de Safari. Adán, 22-oct-2026: *"está muy saturada de información, quita la más
 innecesaria, las preguntas hazlas más pequeñas pero dale un mejor formato de texto"*. Por eso lleva **dos columnas**
 (`istqbPintar()`) bajo una franja a todo lo ancho, y bajo el título una sola línea con por qué Coach la eligió
 (`iqPorQue`): los puntos en juego de su capítulo y si es el que más tiene.
