@@ -110,6 +110,14 @@ Las lecciones, Principiantes y Gramática comparten una plantilla, hecha para la
   secciones van en dos columnas, con los capítulos, la introducción y la tabla maestra a todo el
   ancho, y a la derecha del título, el color de cada caso con su artículo.
 
+**Cada lección tiene dos partes** (Adán, 27-nov-2026: *"a todas las lecciones les falta muchísimo más
+contenido, quiero el doble de lo que tienen actualmente"*). La primera es la explicación de siempre. La segunda empieza en la
+explicación, marcada con el comentario `<!-- Segunda parte -->`, y lleva más tablas y reglas, frases por
+situación, *Errores típicos* (lo correcto, por qué y lo que no se dice) y una lectura corta (*Lee y
+entiende*); en la práctica, un *Diálogo de práctica 2* y *Más ejercicios*, y al final de su lista, más
+tarjetas. Cada apartado nuevo tiene su entrada en el índice de la lección. Medido como texto visible de
+la lección, sin los scripts: las 68 tienen al menos el doble de lo que tenía su primera parte.
+
 **`leccion.js`** hace tres cosas que el CSS no puede. Un enlace a algo que está en el panel —los
 chips, *Práctica · N bloques* o un enlace directo como `k10-03-perfekt-uben.html#minitest`— mueve el
 panel hasta el título de ese bloque, y la página solo lo necesario para que el panel quede completo
@@ -612,6 +620,8 @@ Deutsch).
    el destino del índice); las tarjetas, diálogos de práctica, ejercicios y notas, en
    `.lec-practica`, cada bloque con su `id` y su chip en `.lec-chips`. Dentro: `.card`,
    `.vocab-table`, `.rule-box`, `.example`.
+   Una lección nueva trae ya sus dos partes (ver *La plantilla de las lecciones*): explicación,
+   errores típicos, lectura, dos diálogos y sus ejercicios.
 2. Su foto en `fotos/`, con el nombre de la lección (a1-16.jpg para la A1·16), y su entrada en
    `lecciones-datos.js` con esa misma foto y su crédito —y, si es del Kapitel, sus `bloques`—, en su lugar
    de la lista: el inicio pinta su tarjeta y Mi Día la cuenta en su orden. Y su resumen en

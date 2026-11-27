@@ -1,7 +1,7 @@
 /* Las noticias de inversión de Qué invertir hoy, de Google Noticias. Las escribe el hook de pre-commit
    (Dashboard/noticias-actualizar.js): no se edita a mano. */
 window.NOTICIAS_INVERSION = {
- "generado": "2026-11-27T13:52:08.796Z",
+ "generado": "2026-11-27T15:09:32.863Z",
  "temas": [
   {
    "id": "recomendaciones",
@@ -66,75 +66,12 @@ window.NOTICIAS_INVERSION = {
    "rec": true
   },
   {
-   "t": "Cetesdirecto cumple 16 años con 3 millones de clientes y una cartera récord",
-   "u": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPTmdVS2hvQUZFNzF6NXhWdHQ3OGdqTm02MlZWaHBXVW1HMUhPbF8tR085OHQ5NVhUSjZMcUJRQzVpUURVeDJ2SXBmSkQ2cWtlVzJIMFF0bWs2aE9pWlktZXBsbl9rUnpxS21scWptVC1oNS1RSVVGXy1EWW1rWmp1Ums4QkpMR05VaVB3cVNRZkxRTDBBRXBBOGdGeEpmNkxvWF9nbXI3c1l2Y1FMLWhEUUNiMHd6alBo?oc=5",
-   "f": "2026-11-26T22:57:41.000Z",
-   "fuente": "Revista Fortuna",
-   "dominio": "revistafortuna.com.mx",
-   "tema": "cetes",
-   "rec": false
-  },
-  {
-   "t": "Cetesdirecto cumple 16 años, con 3 millones de clientes y más de 232 mil mdp administrados",
-   "u": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNalY4Y01HM0lHZXhJQjc4RVUyd0NXODJJZS0zSXFFWXJ0cHotLWJ6blJta1BjakdfTzJqbWdGLWlBSmFvQ1pTMFdOSWlhd2F3Mk55clVwOF9lUW9HM0E1T09KTlFkejQ1c1hZUTFiUVZWd3hTV2d3ZTFrSFlmZTI4Smg4aGxidUI1cmNj0gGLAUFVX3lxTE1qVjhjTUczSUdleElCNzhFVTJ3Q1c4MkllLTNJcUVZcnRwei0tYnpuUm1rUGNqR19PMmptZ0YtaUFKYW9DWlMwV05JaWF3YXcyTnlyVXA4X2VRb0czQTVPT0pOUWR6NDVzWFlRMWJRVlZ3eFNXZ3dlMWtIWWZlMjhKaDhobGJ1QjVyY2M?oc=5",
-   "f": "2026-11-26T22:38:29.000Z",
-   "fuente": "MILENIO",
-   "dominio": "amp.milenio.com",
-   "tema": "cetes",
-   "rec": false
-  },
-  {
-   "t": "Maneja 232,000 millones y solo pide 100 pesos para entrar, Cetesdirecto cumple 16 años de inversiones sin intermediarios",
-   "u": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNeUpRYmVOXzFHSEFwbzFtLVA4eEx6QTZtLWxydkt2RFZZVzV5RnprUnNDZGhPUFBYMnlORE1jWFpLNXpFdlBGYlhKdkRNNm9sUnZwU3NyQnlnOE5ZbzkwQ3BCUFVVY18zV2txdFd5ajdhSTVOVjFERUx6N2NZejlnMGhqRnlwak0tM0xSbzNDY3pmWm8wYTRHX3M1cllNRnNMeEpSSlh30gGzAUFVX3lxTE5yOVFzZVNmTjZEUk0wYmdNZXBiSVRoOWNPQzdCNk8yQ2V1YlNIZjR0UmlKNHBZTk5ySWJEOFZFLWVzS0UydWlWWC1WdGFyQnd5Mm5NajFENWhkblJmaWdEb1RHY1p6b2N6bHhaSG14VlZIN1oxQzF6X1p0ZC1pakxiNWtLbFhoRjdoSHhRanloWnhNVENIUVloS0FWbWJ2NVhWYnlwTjkxZ0xnSW01M3hPRzhJ?oc=5",
-   "f": "2026-11-26T21:07:00.000Z",
-   "fuente": "Expansión",
-   "dominio": "expansion.mx",
-   "tema": "cetes",
-   "rec": false
-  },
-  {
-   "t": "Tasa de Cetes a un año, baja a 6.88% en la última semana de noviembre de 2026",
-   "u": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPUGU4bk9MTFNfY1Uyd3JhNlB5QnJSOXRoRmpBNHRENEc0NW0tWFVwRmRzTEgzakxTOXBRdHljeDFrYjluRWlmaHI2djBLQUwwRmxKcUw5NU9nRXJSMnUxQi1FZGJ4LThsZUJSbEtaYS14bS1mUmZOTGU5OV9nc3lyaTdkSUhSelJ3R09SblVkYW1CUkVMSi1UNUJEY3JRMVR3bFpZS0VZOGVWWl9VZG5NaVp0T21MZw?oc=5",
-   "f": "2026-11-24T20:01:48.000Z",
-   "fuente": "Mundo Ejecutivo",
-   "dominio": "mundoejecutivo.com.mx",
-   "tema": "cetes",
-   "rec": false
-  },
-  {
-   "t": "Cetes: Así quedaron las tasas en la semana del 24 de noviembre al 1 de diciembre de 2026",
-   "u": "https://news.google.com/rss/articles/CBMingFBVV95cUxNM2xxaUNvZzFaNmcwQ180UHdzYVFpcEZOd2o5cW05NzV0S1pfQzJjczRCSjV1ZDB6RXo2d3pKc21LT2JJSGZiQV9zUFdCNHdfb1JpTFc3UmxXZlVxcWhmR1A3V2ItdDFCLXJXSl9pOU9oaW1keFRxTlJVTGlYUnAtcll1a2pwSk9ZUTZ1aTIySXhfVXI4eG51by1uc2ZFZ9IBowFBVV95cUxNY2ZCODRlTEVybGVNVWlLV0hzSUxzTTBfc2xfM1lvdnVzWmJTZnVBRVJXVHR4c09hWHVSMTNvemlZQllMWDJzbldDWkt5ZnB6VmltWkN2akFnei1ORkgzXzhpYWtfbHkxZzJuTXc4d25BWW81M1RDdGlBNHZVN09JSWNucHBLT0ctRGwzcEcydGVsMDRCcWxFMWFUQzYtZ2VMUXZV?oc=5",
-   "f": "2026-11-24T19:13:21.000Z",
-   "fuente": "Imagen Radio",
-   "dominio": "imagenradio.com.mx",
-   "tema": "cetes",
-   "rec": false
-  },
-  {
-   "t": "¿Cómo invertir en CETES? 7 pasos para abrir tu cuenta en línea",
-   "u": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOb21zbkZKeTVMbFF6bXVVakVKVjVva04ybzF2V0N0VzItTjNMMmZlSXEyS2liY2FoLS1jMHpsMllLZzVNSnU0WmRZRUF1VE10UkJZNm4tVkNDZDN5aXYtSGlQOWVhbmRJS2o2XzhzZ01Ydm1CSWtqM0w2TldVdTZXUmlDZzJVYlBBRnJKZHl0RlpTT0pONlBVT3RjRXpBTTVqaE0wTWhXXzY4LWVpMWVVTlZfa3I3dkQzMkpDQlNvTkpJSVk0aUE?oc=5",
-   "f": "2026-11-24T16:23:31.000Z",
-   "fuente": "Heraldo Binario",
-   "dominio": "heraldobinario.com.mx",
-   "tema": "cetes",
-   "rec": false
-  },
-  {
-   "t": "Se publica la inflación de la primera quincena de noviembre",
-   "u": "https://news.google.com/rss/articles/CBMidkFVX3lxTE50cE8tS2s5Zkkwd040cFdnR2Q3TnNFT3hsakpqUkpSZnlzRHdnclFPR1dTTUl2WFJCWkV3Nm5HdmdfRWxxY0N2U0c5TEUyX0Zoc0kteE9BX25KeXZIRC1aSllWVDRtckFValdXU29yOTFZOFlnelE?oc=5",
-   "f": "2026-11-24T16:19:00.000Z",
-   "fuente": "Jointly News",
-   "dominio": "news.jointly.mx",
-   "tema": "cetes",
-   "rec": false
-  },
-  {
-   "t": "¿Cuánto ganas con $5,000 pesos en Cetes? Así aumenta tu dinero con la reinversión automática",
-   "u": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxNYUtyR2dkWFpuRW5PbGsyVUw3TDJkRVVNMG9idEhNN2w4VFZyY0wwaE5NeEdITFdZUHpITnU5V09RWnVuMnliRG9jQlZKTU9ENUk0QUUtOFBHdlJCT1R5eDBRY2E1UnQ5b0NyQVlrUmtOc3lWNURvNEVDRnlCa25DOXZKQzFoOFIxc3IycTl4UHgyYktXRFlPR2pFcXhGR2lUR3FBVW9EUG9ZU2RoTkF2NXFXYkZ4NERZWm15SzkwZk5pcDYtQjRvQS15eXRrUmZhcFHSAeYBQVVfeXFMUEZ1SHRkbkVSWkRqelZrcDEyV1MyM1ZWeW81aVBoelREVEl4S2hmTlJkYUtSSEMxd21NVFlZYUtudC1NdjNRQkI2NF9pU3RyZ3EtcnJtR2VaQ0VKX0FZWUFlWGpfZ0pLS1pTc1gzQTdqcUlBTktSeHZ5bmliNDhnOXdnS0lQVWI4VDJ1eW5vel9KVkE2RHl0QTE4Q2k4V2R3cjZMMEVxaDBQYlBCWjFSd1BrQS1icmE0QWxsdnRWMGxFQXVIMGpTODJpMUZ0VUV4aHppOFI3WU1LNXlhWU9yS3U0bzJwTFE?oc=5",
-   "f": "2026-11-23T20:05:45.000Z",
-   "fuente": "DeDinero",
-   "dominio": "dedinero.com.mx",
-   "tema": "cetes",
+   "t": "FEMSA se 'dispara' 33.5% en bolsa en el primer año de José Antonio Fernández Garza-Lagüera",
+   "u": "https://news.google.com/rss/articles/CBMingFBVV95cUxPRk5qWnlVcFRsVzlPSUdFYWo4UnpPejdnYXZvR3N4bHFIcnFETGtnYkM3dXRtdVp5SHdTLTlkb1IyZ094QmFJeXlnWE1uNW1OWXZpRzRZQjlqS0pCRjhHbXEwXy1Kc3B3YXhWVjlCbGVldVdFQVdjcDROajI5ZVdzTkw2Nl9fSENhNVFWQVJXX0lOVTVtUkQ5YmJiOHRvZw?oc=5",
+   "f": "2026-11-27T14:03:36.000Z",
+   "fuente": "EL CEO",
+   "dominio": "elceo.com",
+   "tema": "bolsa",
    "rec": false
   },
   {
@@ -237,12 +174,21 @@ window.NOTICIAS_INVERSION = {
    "rec": false
   },
   {
-   "t": "Precio del dólar hoy 26 de noviembre de 2026: peso mexicano cae a su peor nivel desde mayo de 2025",
-   "u": "https://news.google.com/rss/articles/CBMifEFVX3lxTE9Qak91Y2FDVjlmVThmME9ZNDdEVWhYVHV1cThzSS05LTZJcmx3a05YZEJwX2xrendzU2pBbzllYWNRRWM4d2ZELUtUMm9zLXhvTlVzQjRQMkNtQlFtcFpydmtYbTM4Y1MwekZlMk1DNUF1bW95ajRXcDVHZjU?oc=5",
-   "f": "2026-11-26T14:01:54.000Z",
-   "fuente": "EL CEO",
-   "dominio": "elceo.com",
-   "tema": "bolsa",
+   "t": "Mercado bajista: Galaxy retira su tesis de que bitcoin tocó fondo en junio y fija 58.525 dólares como línea roja",
+   "u": "https://news.google.com/rss/articles/CBMifEFVX3lxTE9pTUp0TTUtMEE2S19KOWZfblR3WWFlbjJ2VmhRUVRKd2dqeE9oc2hvbHF6bUJJbEhTYmp4OEtibGdINGpuTmFvZnVIQlpSamhIb3p0V1BQeEkzT0hvSnBUMGtHcnEwbHlJVEhGaGNOckhDT1gzaXdmTHA4bXo?oc=5",
+   "f": "2026-11-27T15:01:27.000Z",
+   "fuente": "Criptotendencias",
+   "dominio": "criptotendencias.com",
+   "tema": "cripto",
+   "rec": false
+  },
+  {
+   "t": "Vencimiento de opciones de Bitcoin por $6.800M hoy: ¿qué significa para BTC?",
+   "u": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPX0ZEeEhLeXM3bnJucFFJZm9oVVBQQTNfSDFIdUlZQS0zQzhxeGlhUEY3aUx1S1JId2FsdnRWNURrWmU2WmpFYW5UaG52bXFmbmpMNHBaSWZUZllmRjhMSXJwZTZpUkp6VHZBQVFOLXNIMV9DZF9id3JQUTBtTHVCRnlJSVdkcDc4d1N2SjEtZkY5M1hKU0NCNF93dkEtb1NVcEpJ?oc=5",
+   "f": "2026-11-27T14:05:00.000Z",
+   "fuente": "CryptoPotato",
+   "dominio": "cryptopotato.com",
+   "tema": "cripto",
    "rec": false
   },
   {
@@ -251,6 +197,15 @@ window.NOTICIAS_INVERSION = {
    "f": "2026-11-27T13:21:34.000Z",
    "fuente": "CryptoTicker.io",
    "dominio": "cryptoticker.io",
+   "tema": "cripto",
+   "rec": false
+  },
+  {
+   "t": "¿A cuánto está el dólar HOY? Precio del billete verde en México este viernes 27 de noviembre; así cotizan Bitcoin y petróleo",
+   "u": "https://news.google.com/rss/articles/CBMi9AFBVV95cUxPRFNsU0p5eFlmYTN5cmExSzRnYzJRNmJQOWhnWnZLSEtEVW5mNDlFa2FUM2RKc3FOLWVfZDRvdXA1TmE3UXliTV9XaVNNcTVkaUNzRmJrOWlKSjZWRGkyVnpjWERfSkxxaC1qRUpoT1FqRmd6b0xVUHlJT2Fjbm4wRWVLUVZSMEJLalVENUtqRzJVV3JHdFB1RFBic0xJd0lVSXk1b0xJMWs5a2EteVNjYk00T1dlZ21CVmYtM3B4WXBacXN5ZGVCR1F5R21YcTJmZWg2WFBGZW8xRUNmVE1SSWtnUnFYYkJ1T2Q0Y2V3QlJPSkFJ?oc=5",
+   "f": "2026-11-27T13:10:32.000Z",
+   "fuente": "TV Azteca",
+   "dominio": "tvazteca.com",
    "tema": "cripto",
    "rec": false
   },
@@ -269,6 +224,33 @@ window.NOTICIAS_INVERSION = {
    "f": "2026-11-27T12:35:53.000Z",
    "fuente": "Cripto247",
    "dominio": "cripto247.com",
+   "tema": "cripto",
+   "rec": false
+  },
+  {
+   "t": "JPMorgan ve señales de capitulación en Bitcoin tras el mínimo histórico del mNAV de Strategy",
+   "u": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5oRFhuem93TktpcWZQdkdfY0E4NUJuMUNDVzdBVjdEOEk4UXQ1b0JaMlRoc290Ri1INGNlS0xDSUFuMkZ4VVAxZkRlTFFiSUlzbnVjSkd4VlRrM0xi?oc=5",
+   "f": "2026-11-27T12:31:15.000Z",
+   "fuente": "Cryptonews.net",
+   "dominio": "cryptonews.net",
+   "tema": "cripto",
+   "rec": false
+  },
+  {
+   "t": "Se acerca una 'cruz de la muerte' en el precio del bitcoin (BTC): Crypto Daily",
+   "u": "https://news.google.com/rss/articles/CBMiugFBVV95cUxONm9LT2NSYUZEd2JzTlhtaU5aX01Sa0VtSGs3OG1BWTc5NkVVdXMxaDU0SWYxMVl4SmgtZWh6b2xUWDYtd2hFaVlTUXBZdUVSQ2U3Ylg1UkliX1JIRjBxbEtMTjBYM21fNkZVSWxTQ0JXOUpCS1h4QnhtcFRUQjdNT1pTYzdXNWpNTVJuU3R1U09VYUs1aGdCZWtJZmU3bHJ3MDNqRmJ3bnlrLXdvc04xX0ROcWxrUnZWY3c?oc=5",
+   "f": "2026-11-27T12:28:03.000Z",
+   "fuente": "CoinDesk",
+   "dominio": "coindesk.com",
+   "tema": "cripto",
+   "rec": false
+  },
+  {
+   "t": "Datos clave: BTCUSD registra su séptima caída semanal; los ETF de Bitcoin anotan salidas récord en noviembre",
+   "u": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1wTXl1a2xGb1A2V0tPaTJjMHpNQzJQUnZqUUJuZ3lWOVh4T0Y3dDZDbjJWV2dOWUs1NXc1ZVJQZ1JFVWlBa2xhVFhYU0c3V2hmalk0WnhwRTBtLTlkbElYc3QzemZNcGstSUY1SA?oc=5",
+   "f": "2026-11-27T12:00:00.000Z",
+   "fuente": "TradingView",
+   "dominio": "es.tradingview.com",
    "tema": "cripto",
    "rec": false
   },
@@ -296,60 +278,6 @@ window.NOTICIAS_INVERSION = {
    "f": "2026-11-27T11:31:08.000Z",
    "fuente": "Cryptonews.net",
    "dominio": "cryptonews.net",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "Tudor Investment casi duplicó su apuesta en el ETF Bitcoin de BlackRock",
-   "u": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9RN3dmV0VCbktOSlFIaWFYS1pzNFFqVWhfQVZUcTVENjRrNlBObTZGNnFQdUhVbXBTRkNMbnozZmVxb0o2TWJaZ2NPWm5rSVdyVklteUxIV1lsdjdy?oc=5",
-   "f": "2026-11-27T11:31:07.000Z",
-   "fuente": "Cryptonews.net",
-   "dominio": "cryptonews.net",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "Precio de ethereum, bitcoin y otras principales criptomonedas para este viernes 27 de noviembre",
-   "u": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxQQ01OY1NwazlPNXhSUXMtSWZ6T002VzV0WXJxbGdQY0NNUWN3MWdCdlZNamxnbGVnaDRTVmdjNHdxeGJ6S0ZBSTJnZDctMlVYT1IweVZfZXZhdGY0dGtaaEZQVzNNbWhyaHhBVWhJMDRsU2ptd1VtRWhhSVpnMGtWM1BlVHRUR3E4Q0loMjZCQzVMVzZfOVZRSXlMQzBqdlJHMm5vUlNLOGVjN3Z5VVpGUlR6d3EtUlA1VXd4OUFVb2F3dURzTlF0Y2pSTWd0aVdXNHfSAewBQVVfeXFMUHM4UUswb1dTcnFqOHREdmsyWTVSQ3dSX0JkbHozRklob1hud1k5SHcydHozQjBoaTQ2WTk0ZzU5V3JHQnlyTjFwVmZBcVBLOXFybGZZRHRRUDNwalhXMTlGTG1xelU1ZjRUQktHLVphVzlMcmlGZHpsbGtHeENSZTExVm0zN2NkRGVvSTNKbmZPR1VjZ0s5UHd3dm5jYUk3Q0cxLTBqUllVak81QVBMMjVIMUpTcEo3Z01YOHUtZzZiajJ0RGtGMEZoRXJocEc5MDllcXU0REpLUTRKMzE5bjlpa21hZGNZUno5NW0?oc=5",
-   "f": "2026-11-27T11:31:00.000Z",
-   "fuente": "Infobae",
-   "dominio": "infobae.com",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "Precio de Solana: SOL en 73 dólares, financiación positiva",
-   "u": "https://news.google.com/rss/articles/CBMiigFBVV95cUxQQ3Jsc1F1b1JCaHJYNTNoenZyWFJPeTFWWEl3QnRQSUFWYjlOdmpWWVhaN05nZ2trQUV1NGtXaVI2M1haYVNKemZvb3JVdGt6d0FIOVpMZlloNzNvcFY5MzZmOWFGcnZrcFZkLXQ3RWdPSWhMWlRuUUZrQ3p4U25SZW03SEpMOGtOYkE?oc=5",
-   "f": "2026-11-27T11:20:36.000Z",
-   "fuente": "CryptoTicker.io",
-   "dominio": "cryptoticker.io",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "JPMorgan anunció que percibe una señal de capitulación en Bitcoin",
-   "u": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBTb0lEeTM5eGd6bUJnQjRtN0hXeFFjcHZ3TkZTanpCaWYzQ0huanJtbF9OVy03Y3ZPUUZfMnlISzd5QmpNSHNKQ0NVdEszVC1RdWxMS1Jzb0ptNlNi?oc=5",
-   "f": "2026-11-27T10:23:26.000Z",
-   "fuente": "Cryptonews.net",
-   "dominio": "cryptonews.net",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "Bitcoin hoy: cotización y precio del BTC este viernes 27 de noviembre de 2026",
-   "u": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPN0tpNGVXZW1JeUprbzZMeE40OEk3OFZBY0tjdjJ3WjhjUnV6TEtZa1hBRkRGaE5SYk5LYTdCNUFKVE8xMW5GczI1UWF6SWl3dFFkWHRoYXZfMElEUjhJMWVQRGtiM3d3WGVRTUlxV3k0S29GcjlLODdtY0pWOGNkTVhOdnMtWklubTVQMWpUbDM5MzZVZVNHTnlLRlJETGRNalJGaU1MR1FMdkJjNUpwZHl6SDZ4b1h6MDJIcVBDVUhkVW9Y0gHKAUFVX3lxTE5LSEVnRFMxVDhFUWRqaWFpQWZpSXRnblhNTERiaHVuc2hwbk5GUGM4SjI0YmJRSHd6YVhJVU9lbk1jaEFCS2ZXN29LeVRDV2tUNF8zUVBUMFYzbUNKWnpKOEY3QmZkWmcyWjJtS2wxTFAybjUzT0dXR3NlSWxWbmFJSUFNb1h4UF9fdXBEWVFRU05VNFRiYUpOczM4MENvTGl2Z2t0RDNXMXhZMTlrOS1UaHBXZTZGOExTdW53dkZFRGppVzY1ZmJXLXc?oc=5",
-   "f": "2026-11-27T10:22:02.000Z",
-   "fuente": "Clarin.com",
-   "dominio": "clarin.com",
-   "tema": "cripto",
-   "rec": false
-  },
-  {
-   "t": "El precio del Bitcoin hoy, 27 de noviembre: el Bitcoin asciende de los 62.000 dólares",
-   "u": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOV2lqU1hiWHp0eVFkZ0ctVTcwVGc5clpxSHlPM2doaFNZTFNoSi12N2NpMEdjR0c0azhvdmlTZmM4RDY1Y2UzVDNXMlM1MzFkMjdtZzZQX1BxLXNPUW9ZNkFoc21iVnNyckNMX2RyOGgxLXpmbXRzQVpYWFVnRHpkZ0oxMEZCNnRpV212S0RYUFJzX1hDOTk5bDU5MVBPZnFPMklHbmY3VTZmOTc5QWcwS3dHdWpMdmJHVEx4RTVwONIBvwFBVV95cUxOV2lqU1hiWHp0eVFkZ0ctVTcwVGc5clpxSHlPM2doaFNZTFNoSi12N2NpMEdjR0c0azhvdmlTZmM4RDY1Y2UzVDNXMlM1MzFkMjdtZzZQX1BxLXNPUW9ZNkFoc21iVnNyckNMX2RyOGgxLXpmbXRzQVpYWFVnRHpkZ0oxMEZCNnRpV212S0RYUFJzX1hDOTk5bDU5MVBPZnFPMklHbmY3VTZmOTc5QWcwS3dHdWpMdmJHVEx4RTVwOA?oc=5",
-   "f": "2026-11-27T10:03:15.000Z",
-   "fuente": "Expansión",
-   "dominio": "amp.expansion.com",
    "tema": "cripto",
    "rec": false
   }
