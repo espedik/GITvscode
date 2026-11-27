@@ -3733,6 +3733,16 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
   background:rgba(var(--ov),.05);font-size:11px;font-weight:600;line-height:1.4;color:var(--text2)}
 .iqv-chip b{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--c);white-space:nowrap}
 .iqv-chip.cap{color:var(--text)}
+/* De qué capítulo van las preguntas (istqbElegirCap): Coach elige, todos o uno, los dos últimos al azar. */
+.iqv-capsel{display:flex;flex-direction:column;gap:6px;padding-bottom:12px;border-bottom:1px solid rgba(var(--ov),.08)}
+.iqv-capsel-b{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.iqv-capsel-b>span{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-right:4px}
+.iqv-capsel-b button{min-height:34px;padding:5px 13px;border-radius:999px;border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.04);
+  color:var(--text2);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap}
+.iqv-capsel-b button:hover{color:var(--text);border-color:rgba(var(--ov),.28)}
+.iqv-capsel-b button.on{background:var(--c);border-color:var(--c);color:var(--bg)}
+.iqv-capsel p{margin:0;font-size:12px;line-height:1.5;color:var(--text3)}
+.iqv-capsel p b{color:var(--text)}
 .iqv-caso{display:flex;flex-direction:column;gap:5px;padding:11px 15px 12px;border-left:3px solid var(--c);border-radius:0 12px 12px 0;
   background:color-mix(in srgb,var(--c) 7%,transparent)}
 .iqv-caso p{margin:0;font-size:13px;line-height:1.6;color:var(--text2)}
@@ -8413,7 +8423,22 @@ function istqbAciertoCap(){
   return a;
 }
 function istqbEnJuego(c, pts, ac){ const a = ac[c]; return (pts[c] || 0) * (1 - (a && a.n >= 3 ? a.ok / a.n : 0.5)); }
+// El capítulo que practicas (Adán, 27-nov-2026: "solo me muestras preguntas de un capítulo en específico, debes poner un
+// botón para que seleccione qué capítulo quiero que me hagas preguntas y recuerda que deben ser aleatorias"). Vive en
+// `dash-aprende-v1.istqbCap`: sin valor, Coach elige por puntos en juego; 0, los cinco capítulos; 1 a 5, ese capítulo.
+// En esos dos casos el orden se baraja cada vez, así que cada pregunta nueva sale al azar entre las que no has
+// contestado (las contestadas y las que salieron en la semana esperan, como en el orden de Coach).
+function istqbCapElegido(){ const c = (rawGet(APRENDE_KEY, {}) || {}).istqbCap; return c === 0 || (c >= 1 && c <= 5) ? c : null; }
+function iqBarajar(a){ for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function istqbElegirCap(c){
+  const st = rawGet(APRENDE_KEY, {}) || {};
+  if(c == null) delete st.istqbCap; else st.istqbCap = c;
+  rawSet(APRENDE_KEY, st);
+  aprendeOtra('istqb');
+}
 function aprendeOrdenIstqb(){
+  const cap = istqbCapElegido();
+  if(cap != null) return iqBarajar(istqbBanco().filter(q => !cap || +q.cap === cap));
   const pts = istqbPuntosCap(), ac = istqbAciertoCap();
   return istqbBanco().map((q, i) => ({ q, i, j: istqbEnJuego(+q.cap, pts, ac) }))
     .sort((a, b) => b.j - a.j || (b.q.pts || 1) - (a.q.pts || 1) || a.i - b.i).map(x => x.q);
@@ -9273,6 +9298,12 @@ function istqbHistorial(){
 }
 // Por qué es esta, en una línea bajo el título: sus puntos en juego, como lo ordena Coach.
 function iqPorQue(q){
+  const cap = istqbCapElegido();
+  if(cap != null){
+    const ya = istqbYaContestadas(), del = istqbBanco().filter(x => !cap || +x.cap === cap), sin = del.filter(x => !ya.has(x.id)).length;
+    return `${cap ? `Practicas el capítulo <b>${cap}</b>` : 'Practicas <b>los cinco capítulos</b>'}, al azar: ` +
+      `${sin ? `quedan <b>${sin} de ${del.length}</b> sin contestar` : `ya contestaste las ${del.length}; vuelven al azar`}.`;
+  }
   const pts = istqbPuntosCap(), ac = istqbAciertoCap();
   const top = Object.keys(pts).map(Number).sort((x, y) => istqbEnJuego(y, pts, ac) - istqbEnJuego(x, pts, ac))[0];
   return `Coach la eligió por puntos en juego: el capítulo ${esc(q.cap)} tiene <b>${istqbEnJuego(+q.cap, pts, ac).toFixed(1)}</b>` +
@@ -9303,7 +9334,7 @@ function iqPreguntaHtml(q, hecha){
   const exp = !hecha ? '' : '<div class="iqv-exp">' +
     (q.why ? `<div class="iqv-why"><span class="iqv-et">Por qué</span><div>${q.why}</div></div>` : '') +
     (window.ctGenaiFuente ? `<div class="iqv-fuente">${ctGenaiFuente(q)}</div>` : '') + '</div>';
-  return `<section class="iqv-col iqv-preg" aria-label="La pregunta"><div class="iqv-hoja">
+  return `<section class="iqv-col iqv-preg" aria-label="La pregunta"><div class="iqv-hoja">${iqCapSelHtml()}
     <div class="iqv-chips"><span class="iqv-chip cap"><b>Cap. ${esc(q.cap)}</b>${esc((X.capitulos || {})[q.cap] || '')}</span>` +
       `<span class="iqv-chip" title="${habAttr(kTit)}"><b>${esc(q.k)}</b>${K ? K[0] : ''}</span><span class="iqv-chip">${vale}</span></div>
     ${p.caso ? `<div class="iqv-caso"><span class="iqv-et">El caso</span><p>${T.marca(p.caso)}</p></div>` : ''}
@@ -9311,6 +9342,20 @@ function iqPreguntaHtml(q, hecha){
     <div class="iqv-ops">${ops}</div>
     ${pie}${T.html}${exp}
   </div></section>`;
+}
+// Los botones de qué capítulo practicar, arriba de la pregunta: Coach elige, todos o uno; debajo, de qué trata el elegido
+// y cuántas quedan sin contestar.
+function iqCapSelHtml(){
+  const cap = istqbCapElegido(), X = window.EXAMEN_GENAI || {}, ya = istqbYaContestadas(), B = istqbBanco();
+  const sin = c => B.filter(x => (!c || +x.cap === c) && !ya.has(x.id)).length;
+  const b = (c, t, tit) => `<button type="button" class="${cap === c ? 'on' : ''}" aria-pressed="${cap === c}" title="${habAttr(tit)}" onclick="istqbElegirCap(${c})">${t}</button>`;
+  const caps = [1, 2, 3, 4, 5].map(c => b(c, 'Cap. ' + c, IQ_CAP_LLANO[c] + ' · ' + ((X.capitulos || {})[c] || '') + ' · ' + sin(c) + ' sin contestar')).join('');
+  const dice = cap == null ? 'Coach elige el capítulo con más puntos en juego.'
+    : cap ? `<b>${esc(IQ_CAP_LLANO[cap])}</b> · ${esc((X.capitulos || {})[cap] || '')} · ${sin(cap)} sin contestar, al azar.`
+    : `Los cinco capítulos, al azar · ${sin(0)} sin contestar.`;
+  return `<div class="iqv-capsel"><div class="iqv-capsel-b" role="group" aria-label="De qué capítulo son las preguntas"><span>Preguntas de</span>` +
+    b(null, 'Coach elige', 'El capítulo con más puntos en juego, como hasta ahora') + b(0, 'Todos, al azar', 'Cualquiera de los cinco capítulos') + caps +
+    `</div><p>${dice}</p></div>`;
 }
 /* Los capítulos del syllabus que lees, todos, en el orden del plan del CT-GenAI (META_PLAN.istqbgenai, sus pasos
    «Capítulo N leído» con su fecha): el primero sin leer es el que toca y va resaltado (Adán, 26-oct-2026: "ponme los

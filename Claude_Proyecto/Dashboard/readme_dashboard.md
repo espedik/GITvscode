@@ -412,7 +412,8 @@ lunes. El vocabulario pasa al B1 en marzo de 2027, el mes de la tarea `a1-35` (t
 ### La pregunta del ISTQB del día
 
 Una de las 156 preguntas de los dos bancos del simulacro (`EXAMEN_GENAI` y `EXAMEN_GENAI_B`, los mismos
-de Mis Metas), la primera del orden de Coach que no hayas contestado (*Lo decide Coach*). En la columna va en dos
+de Mis Metas), la primera del orden de Coach que no hayas contestado (*Lo decide Coach*), **o la del capítulo que
+elijas, al azar** (ver *De qué capítulo*, en su ventana). En la columna va en dos
 líneas con *Responder*, o el resultado cuando ya la contestaste, y lo contestado en los últimos 7 días con el último
 simulacro (`istqbMarcador()`).
 
@@ -434,6 +435,15 @@ innecesaria, las preguntas hazlas más pequeñas pero dale un mejor formato de t
   (`istqbReloj`). **Tocar un juego empieza el examen** ahí mismo (`istqbSimulacro` → `XGenAI.iniciar`, con lo que dice
   `XGenAI.estado()`). Si hay uno a medias va primero *Reanudar*, a todo lo ancho, con lo que llevas y el tiempo que queda
   (`istqbAlSimulacro()`), y empezar otro pide confirmar, porque ese se pierde.
+- **De qué capítulo** (`iqCapSelHtml`, `istqbElegirCap`; Adán, 27-nov-2026: *"solo me muestras preguntas de un capítulo
+  en específico, debes poner un botón para que seleccione qué capítulo quiero que me hagas preguntas y recuerda que deben
+  ser aleatorias"*): arriba de la pregunta, *Preguntas de* con siete botones —**Coach elige** (el capítulo con más puntos
+  en juego, el orden de siempre), **Todos, al azar** y **Cap. 1** a **Cap. 5**, cada uno con su tema y cuántas le quedan
+  sin contestar en el `title`— y debajo, de qué trata el elegido y cuántas quedan. Tocar uno trae al momento una pregunta
+  de ese capítulo. Con un capítulo o con todos, `aprendeOrdenIstqb()` baraja el banco cada vez (`iqBarajar`), así que cada
+  pregunta nueva sale al azar entre las que no has contestado y no salieron en la semana; contestadas todas, vuelven al
+  azar. La elección vive en `dash-aprende-v1.istqbCap` (`istqbCapElegido()`: sin valor, Coach; 0, todos; 1 a 5, ese
+  capítulo), y la línea bajo el título lo dice: *Practicas el capítulo 3, al azar: quedan 33 de 39 sin contestar*.
 - **La pregunta** (`iqPreguntaHtml`), en una hoja centrada de 820 px (`.iqv-hoja`). Arriba, en etiquetas, su capítulo
   con el nombre oficial, su nivel K —el `title` dice qué pide ese nivel y cuántos puntos trae el examen de él (`IQ_K`,
   `iqKExamen`)— y lo que vale. Si trae caso, **el caso va aparte**, en su recuadro, y **la pregunta debajo, en
