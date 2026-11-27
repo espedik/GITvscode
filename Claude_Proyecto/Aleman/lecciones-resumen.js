@@ -578,6 +578,201 @@ const ALEMAN_LECCIONES_RESUMEN = {
     ],
   },
 
+  'a2-35': {
+    aprendes: 'Usar los pronombres en Akkusativ y Dativ y ponerlos en orden: te lo doy, me ayuda, le escribo.',
+    regla: [
+      'El caso lo pide el verbo: sehen pide Akkusativ; helfen, Dativ. → Ich sehe dich. Ich helfe dir.',
+      'Con persona y cosa, la persona va en Dativ y la cosa en Akkusativ. → Ich gebe dir das Buch.',
+      'El pronombre va antes que el sustantivo. → Ich gebe ihm den Bericht.',
+      'Con dos pronombres, primero el Akkusativ. → Ich gebe es dir.',
+    ],
+    errores: [
+      'Ich helfe dich ✗ → Ich helfe dir: helfen pide Dativ.',
+      'Ich gefalle das ✗ → Das gefällt mir: lo que gusta es el sujeto.',
+      'Ich gebe dir es ✗ → Ich gebe es dir: con dos pronombres, primero el Akkusativ.',
+    ],
+  },
+
+  'a2-36': {
+    aprendes: 'Unir ideas con por eso, aun así, además y sino, con el verbo en su lugar.',
+    regla: [
+      'deshalb, trotzdem, außerdem y dann ocupan el primer lugar: el verbo va justo después. → Es regnet, deshalb nehme ich den Bus.',
+      'und, aber, oder, denn y sondern no cambian el orden. → Ich bleibe zu Hause, denn ich bin krank.',
+      'sondern corrige algo negado con nicht o kein. → Nicht heute, sondern morgen.',
+      'deshalb da la consecuencia; weil, la causa, con el verbo al final. → Ich komme, weil ich Zeit habe.',
+    ],
+    errores: [
+      'Es regnet, deshalb ich nehme den Bus ✗ → Es regnet, deshalb nehme ich den Bus: después de deshalb va el verbo.',
+      'Ich komme nicht aus Spanien, aber aus Mexiko ✗ → …, sondern aus Mexiko: tras algo negado, sondern.',
+      'Ich bleibe, denn ich krank bin ✗ → Ich bleibe, denn ich bin krank: denn no manda el verbo al final.',
+    ],
+  },
+
+  'a2-37': {
+    aprendes: 'Decir que mandas hacer algo, que alguien te deja, y usar verbos con otro infinitivo sin zu.',
+    regla: [
+      'lassen + infinitivo al final: otro lo hace por ti. → Ich lasse mein Auto reparieren.',
+      'lassen también es permitir y dejar. → Meine Chefin lässt mich von zu Hause arbeiten.',
+      'Con du y er, la a cambia a ä: du lässt, er lässt. → Lässt du dir die Haare schneiden?',
+      'gehen, fahren, kommen, lernen y bleiben llevan infinitivo sin zu. → Wir gehen heute essen.',
+    ],
+    errores: [
+      'Ich schneide mir die Haare ✗ → Ich lasse mir die Haare schneiden: si lo hace el peluquero.',
+      'Ich habe das Auto reparieren gelassen ✗ → Ich habe das Auto reparieren lassen: con otro verbo, dos infinitivos.',
+      'Wir gehen zu essen ✗ → Wir gehen essen: gehen + infinitivo va sin zu.',
+    ],
+  },
+
+  'a2-38': {
+    aprendes: 'Hablar de alguien, nadie, algo o nada, usar man y preguntar ¿cuál? y ¿qué tipo de?',
+    regla: [
+      'jemand es alguien; niemand, nadie; etwas, algo; nichts, nada. → Hat jemand Zeit?',
+      'man va con el verbo en tercera persona del singular. → Wie sagt man das auf Deutsch?',
+      'welcher termina como el artículo: welchen, welchem. → Welchen Film möchtest du sehen?',
+      'was für ein pregunta el tipo, no cuál. → Was für ein Auto hast du?',
+    ],
+    errores: [
+      'Ich habe nicht nichts verstanden ✗ → Ich habe nichts verstanden: en alemán no hay doble negación.',
+      'Man sagen ✗ → Man sagt: man va con -t, como er.',
+      'Welche Bus? ✗ → Welcher Bus?: der Bus es masculino.',
+    ],
+  },
+
+  'a2-39': {
+    aprendes: 'Decir cuándo con precisión: fechas, horarios, plazos y desde cuándo.',
+    regla: [
+      'am para días y fechas, um para la hora, im para meses y estaciones. → Am Montag um 8 Uhr. Im Mai.',
+      'vor es hace; seit, desde hace (y sigue); in, dentro de. → Ich lerne seit einem Jahr Deutsch.',
+      'vor, seit, in y nach llevan Dativ. → vor einem Jahr, in einer Woche.',
+      'La fecha se dice con ordinal. → Ich habe am 14. Februar (vierzehnten) Geburtstag.',
+    ],
+    errores: [
+      'Ich lerne für ein Jahr Deutsch ✗ → Ich lerne seit einem Jahr Deutsch: si sigues estudiando, va con seit.',
+      'vor zwei Jahre ✗ → vor zwei Jahren: Dativ plural, con -n.',
+      'in Montag ✗ → am Montag: los días van con am.',
+    ],
+  },
+
+  'a2-40': {
+    aprendes: 'Entender palabras largas por sus piezas y acertar el artículo por la terminación.',
+    regla: [
+      'En un compuesto, la última pieza da el significado y el artículo. → die Hand + der Schuh = der Handschuh.',
+      '-ung, -heit, -keit, -schaft e -ion son siempre die. → die Wohnung, die Möglichkeit.',
+      '-chen y -lein son siempre das. → das Brötchen.',
+      'un- da lo contrario; -los, sin; -bar, que se puede. → unmöglich, kostenlos, machbar.',
+    ],
+    errores: [
+      'das Handschuh ✗ → der Handschuh: manda la última pieza, der Schuh.',
+      'der Zeitung ✗ → die Zeitung: -ung es siempre die.',
+      'Arbeitplatz ✗ → Arbeitsplatz: entre Arbeit y Platz va una -s-.',
+    ],
+  },
+
+  'a2-41': {
+    aprendes: 'Preguntar y entender cómo llegar, y moverte en autobús, tranvía y tren.',
+    regla: [
+      'Para preguntar el camino: Wie komme ich zu…? (zum / zur). → Wie komme ich zum Bahnhof?',
+      'Las direcciones: geradeaus, links, rechts, abbiegen. → Biegen Sie an der Ampel links ab.',
+      'En el transporte: einsteigen, aussteigen, umsteigen. → In Stuttgart müssen Sie umsteigen.',
+      'Verspätung es retraso; fällt aus, que se cancela. → Der Zug hat 15 Minuten Verspätung.',
+    ],
+    errores: [
+      'Wie komme ich nach dem Bahnhof? ✗ → Wie komme ich zum Bahnhof?: a un lugar de la ciudad, zu.',
+      'Ich muss den Zug wechseln ✗ → Ich muss umsteigen: así se dice transbordar.',
+      'Ich steige aus an der Haltestelle ✗ → Ich steige an der Haltestelle aus: el prefijo va al final.',
+    ],
+  },
+
+  'a2-42': {
+    aprendes: 'Invitar, aceptar o rechazar con cortesía, felicitar y conocer las fiestas alemanas.',
+    regla: [
+      'Para felicitar: Herzlichen Glückwunsch zum… o Alles Gute. → Herzlichen Glückwunsch zum Geburtstag!',
+      'Invitar es einladen, con zu + Dativ. → Ich lade dich zu meiner Feier ein.',
+      'Se rechaza con leider y una razón. → Leider kann ich nicht kommen, weil ich arbeiten muss.',
+      'Los regalos de Navidad se dan el 24 en la noche, Heiligabend. → Was macht ihr an Heiligabend?',
+    ],
+    errores: [
+      'Glücklichen Geburtstag ✗ → Alles Gute zum Geburtstag: así se felicita en alemán.',
+      'Ich lade dich zu meine Party ein ✗ → Ich lade dich zu meiner Party ein: zu pide Dativ.',
+      'Frohes Weihnachten ✗ → Frohe Weihnachten: se dice en plural.',
+    ],
+  },
+
+  'a2-43': {
+    aprendes: 'Dar tu opinión con razones, estar de acuerdo o no, y decir cómo te sientes.',
+    regla: [
+      'Ich finde, dass… manda el verbo al final. → Ich finde, dass Deutsch schön klingt.',
+      'Meiner Meinung nach ocupa el primer lugar: el verbo va justo después. → Meiner Meinung nach ist das zu teuer.',
+      'Para no estar de acuerdo con cortesía: Das sehe ich anders. → Das sehe ich ein bisschen anders.',
+      'Los sentimientos van con sein o con verbos reflexivos. → Ich bin nervös. Ich freue mich.',
+    ],
+    errores: [
+      'Ich denke, dass es ist gut ✗ → Ich denke, dass es gut ist: con dass, el verbo al final.',
+      'Meiner Meinung nach das ist teuer ✗ → Meiner Meinung nach ist das teuer: el verbo va justo después.',
+      'Ich habe recht mit dir ✗ → Du hast recht / Ich bin deiner Meinung.',
+    ],
+  },
+
+  'a2-44': {
+    aprendes: 'Explicar qué falla y pedir un cambio, una reparación o tu dinero, en la tienda, por teléfono y por correo.',
+    regla: [
+      'El problema: kaputt, funktioniert nicht, passt nicht. → Der Wasserkocher ist kaputt.',
+      'umtauschen es cambiar por otro; zurückgeben, devolver. → Kann ich die Jacke umtauschen?',
+      'Lleva siempre el ticket: der Kassenbon. → Hier ist der Kassenbon.',
+      'Para pedir con cortesía, Konjunktiv II. → Ich hätte gern mein Geld zurück.',
+    ],
+    errores: [
+      'Ich möchte die Jacke ändern ✗ → Ich möchte die Jacke umtauschen: ändern es modificarla.',
+      'Die Hose passt nicht mich ✗ → Die Hose passt mir nicht: passen pide Dativ.',
+      'Ich will meinen Geld zurück ✗ → Ich hätte gern mein Geld zurück: es das Geld, y con cortesía.',
+    ],
+  },
+
+  'a2-45': {
+    aprendes: 'Separar la basura como en Alemania, devolver envases con Pfand y hablar del medio ambiente.',
+    regla: [
+      'Papel al azul, envases al amarillo, comida al orgánico y lo demás al Restmüll. → Papier kommt in die blaue Tonne.',
+      'Pfand es el depósito: lo recuperas en el Pfandautomat del súper. → Die Flasche hat 25 Cent Pfand.',
+      'Para preguntar dónde va algo, usa In welche Tonne kommt das. → In welche Tonne kommt der Joghurtbecher?',
+      'man sirve para las reglas generales. → In Deutschland trennt man den Müll.',
+    ],
+    errores: [
+      'der Müll trennen ✗ → den Müll trennen: es el objeto, Akkusativ.',
+      'Das kommt in der Gelbe Sack ✗ → Das kommt in den Gelben Sack: es dirección, Akkusativ.',
+      'die Pfand ✗ → das Pfand: es neutro.',
+    ],
+  },
+
+  'a2-46': {
+    aprendes: 'Pedir ayuda, llamar al 112 o al 110, explicar un accidente o un robo y saber qué hacer después.',
+    regla: [
+      '112 para ambulancia y bomberos; 110 para la policía. → Rufen Sie bitte einen Krankenwagen!',
+      'Al llamar contestas dónde, qué, cuántos heridos y qué lesiones. → Ein Mann ist verletzt.',
+      'Lo que pasó se cuenta en Perfekt. → Ich bin gestürzt.',
+      'Un robo se denuncia: Anzeige erstatten. → Ich möchte Anzeige erstatten.',
+    ],
+    errores: [
+      'Ich habe gestürzt ✗ → Ich bin gestürzt: es movimiento, con sein.',
+      'Mein Handy hat gestohlen ✗ → Mein Handy wurde gestohlen: es pasiva.',
+      'Rufen Sie eine Ambulanz ✗ → Rufen Sie einen Krankenwagen: así se dice en Alemania.',
+    ],
+  },
+
+  'a2-47': {
+    aprendes: 'Saber cómo es el examen A2, cuánto necesitas y qué decir en cada parte.',
+    regla: [
+      'Son cuatro partes: Lesen, Hören, Schreiben y Sprechen; la oral dura 15 minutos y es en pareja. → Sprechen: 15 Minuten, zu zweit.',
+      'Apruebas con 60 de 100, con al menos 45 en lo escrito y 15 en lo oral. → Bestanden ab 60 von 100 Punkten.',
+      'En Schreiben contestas los tres puntos de la tarea. → Hallo Jonas, leider kann ich heute nicht kommen.',
+      'En Sprechen Teil 3 propones, aceptas y rechazas. → Wie wäre es mit Dienstag?',
+    ],
+    errores: [
+      'Ich nicht verstehe ✗ → Ich verstehe das nicht: el verbo va en segundo lugar.',
+      'Ich habe 20 Jahre ✗ → Ich bin 20 Jahre alt: la edad va con sein.',
+      'Wie ist es mit Dienstag? ✗ → Wie wäre es mit Dienstag?: para proponer, Konjunktiv II.',
+    ],
+  },
+
   // ── A1 ──────────────────────────────────────────────────────────────────────────────────────────
   'a1-01': {
     aprendes: 'Saludar y despedirte según la hora y lo formal que sea la situación.',

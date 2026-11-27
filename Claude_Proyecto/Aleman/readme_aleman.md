@@ -20,7 +20,7 @@ la ventana del Dashboard*).
 |---|---|---|
 | **Kapitel 10** | `k10-01`…`k10-06` | Lo que Adán cursa en Cenlex Santo Tomás desde el 25-ago-2026 |
 | A1 | `a1-01`…`a1-15` | Base: saludos, números, artículos, hora, profesiones… |
-| A2 | `a2-01`…`a2-34` | Gramática (de los modales y el Perfekt al Konjunktiv II, el Passiv y las oraciones de relativo) y los temas de vivir en Alemania: trámites, correos, teléfono, banco, entrevista, universidad, clima |
+| A2 | `a2-01`…`a2-47` | Gramática (de los modales y el Perfekt al Konjunktiv II, el Passiv, las oraciones de relativo, los pronombres, los conectores y lassen) y los temas de vivir en Alemania: trámites, correos, teléfono, banco, entrevista, universidad, clima, la ciudad, fiestas, opinar, reclamar, la basura y las emergencias; cierra con el examen A2 (`a2-47`) |
 | Apoyo | `index.html`, `principiantes.html`, `gramatica.html`, `casos.html`, `vocabulario.html` | El inicio (ver abajo), lo básico para principiantes, la referencia transversal y los casos a fondo (ver abajo). La barra de apps del Dashboard enlaza al inicio, principiantes, la gramática y el vocabulario |
 | **Gramática a fondo** | `preposiciones.html`, `verbos.html`, `adjetivos.html`, `frase.html`, `temas.js`, `temas.css`, `temas-tablas.js` | Un tema por página, con su contenido en `window.TEMA`; `temas.js` y `temas.css` los pintan igual, y `temas-tablas.js` trae la tabla de consulta de cada uno para la ventana del Dashboard (ver abajo) |
 | Fotos | `fotos/` | Una por lección y por caja de consulta del inicio, con su crédito; la misma va en el encabezado de su lección |
@@ -69,7 +69,7 @@ rojo: es el indicador del prompt (*sin huecos de más de dos días*). Solo cuent
 Kapitel 10, que son lo único que guarda su fecha.
 
 **Nada va escrito a mano.** Las cifras del vocabulario (palabras, secciones, subsecciones y cada
-familia) se cuentan de `vocab-datos.js`; las de A2 y A1 (*34 lecciones: 19 de gramática y 15 de temas*),
+familia) se cuentan de `vocab-datos.js`; las de A2 y A1 (*47 lecciones: 25 de gramática y 22 de temas*),
 de `lecciones-datos.js`; el nombre de la escuela es `{{escuelaAleman}}`, del maestro, y el número de
 lecciones del pie se cuenta en la página.
 

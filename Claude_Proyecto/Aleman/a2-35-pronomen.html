@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>A2 · 35 — Personalpronomen: Dativ & Akkusativ | Deutsch</title><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap"></noscript>
+<link rel="stylesheet" href="styles.css">
+<style>
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
+
+/* Tablas y bloques anchos en celular (2026-08-17) — una tabla que no cabe hacía zoom-out de
+   toda la página (medido: innerWidth 516 en una pantalla de 390). Ahora scrollean dentro de
+   su propia caja y el documento nunca se sale a lo ancho. */
+@media(max-width:820px){
+  table{display:block;width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table thead,table tbody{width:max-content;min-width:100%}
+  pre,code{max-width:100%;overflow-x:auto}
+  img,video,canvas{max-width:100%;height:auto}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav ini-barra" aria-label="Alemán">
+  <a href="index.html" class="ini-marca" aria-label="Deutsch, inicio"><span class="ini-bandera" aria-hidden="true"><i></i><i></i><i></i></span>Deutsch</a>
+  <div class="ini-nav">
+    <a href="index.html#hoy">Hoy</a>
+    <a href="index.html#k10">Kapitel 10</a>
+    <a href="index.html#a2" class="on" aria-current="page">A2</a>
+    <a href="index.html#a1">A1</a>
+    <a href="vocabulario.html">Vocabulario</a>
+    <a href="gramatica.html">Gramática</a>
+    <a href="principiantes.html">Principiantes</a>
+  </div>
+  <a href="../Dashboard/dashboard.html" class="ini-dash" id="btnVolverDash" title="Volver al Dashboard">Dashboard</a>
+</nav>
+<div class="topic-hero lec-hero">
+  <div class="container lec-hero-in">
+    <figure class="lec-foto"><img src="fotos/a2-35.jpg" alt="Un regalo envuelto en rojo con un moño plateado" title="Foto: Pexels · Stocksnap · CC0 1.0" width="360" height="240"><figcaption>Foto: Pexels · Stocksnap · CC0 1.0</figcaption></figure>
+    <div class="lec-hero-txt">
+  <div class="topic-hero-tag">A2 · Gramática · Tema 35</div>
+  <h1>Personal<em>pronomen</em></h1>
+  <p class="topic-hero-desc">Para no repetir los nombres: «se lo doy», «te llamo», «me ayuda». En alemán el pronombre cambia según el caso —mich o mir, ihn o ihm— y, cuando hay dos, el orden tiene regla.</p>
+  <div class="topic-hero-meta"><span class="meta-pill">mich · mir</span><span class="meta-pill">El orden</span><span class="meta-pill">~40 min</span></div>
+    </div>
+    <nav class="lec-indice" aria-label="En esta lección">
+      <div class="lec-indice-t">En esta lección</div>
+      <ol>
+        <li><a href="#akkusativ-o-dativ"><span>¿Akkusativ o Dativ?</span></a></li>
+        <li><a href="#los-pronombres-en-los-tres-casos"><span>Los pronombres en los tres casos</span></a></li>
+        <li><a href="#verbos-que-piden-dativ"><span>Verbos que piden Dativ</span></a></li>
+        <li><a href="#verbos-con-persona-y-cosa"><span>Verbos con persona y cosa</span></a></li>
+        <li><a href="#el-orden-con-dos-objetos"><span>El orden con dos objetos</span></a></li>
+        <li><a href="#frases-comunes-con-pronombres"><span>Frases comunes con pronombres</span></a></li>
+        <li><a href="#ejemplos-cotidianos"><span>Ejemplos cotidianos</span></a></li>
+        <li><a href="#mir-ist-lo-que-sientes"><span>Mir ist…: lo que sientes</span></a></li>
+      </ol>
+      <a class="lec-indice-p" href="#practica">Práctica · 4 bloques →</a>
+    </nav>
+  </div>
+</div>
+<div class="topic-content"><div class="container lec">
+<div class="lec-explica">
+
+  <div class="content-full">
+    <div class="card card-gold">
+      <h3 id="akkusativ-o-dativ">¿Akkusativ o Dativ?</h3>
+      <div class="rule-box">El caso lo decide el <strong>verbo</strong> (o la preposición):<br><br>Ich sehe <strong>dich</strong>. Ich rufe <strong>ihn</strong> an.<br><em style="color:var(--text3)">Te veo. Lo llamo. (sehen, anrufen → Akkusativ)</em><br><br>Ich helfe <strong>dir</strong>. Das gefällt <strong>mir</strong>.<br><em style="color:var(--text3)">Te ayudo. Me gusta. (helfen, gefallen → Dativ)</em><br><br>Con persona y cosa, la persona va en <strong>Dativ</strong> y la cosa en <strong>Akkusativ</strong>:<br><br>Ich gebe <strong>dir</strong> das Buch.<br><em style="color:var(--text3)">Te doy el libro.</em></div>
+    </div>
+  </div>
+
+  <div class="content-full">
+    <div class="card card-gold">
+      <h3 id="los-pronombres-en-los-tres-casos">Los pronombres en los tres casos</h3>
+      <table class="vocab-table">
+        <thead><tr><th>Nominativ</th><th>Akkusativ</th><th>Dativ</th></tr></thead>
+        <tbody>
+          <tr><td class="vocab-de">ich</td><td class="vocab-es">mich</td><td class="vocab-ex">mir</td></tr>
+          <tr><td class="vocab-de">du</td><td class="vocab-es">dich</td><td class="vocab-ex">dir</td></tr>
+          <tr><td class="vocab-de">er</td><td class="vocab-es">ihn</td><td class="vocab-ex">ihm</td></tr>
+          <tr><td class="vocab-de">sie</td><td class="vocab-es">sie</td><td class="vocab-ex">ihr</td></tr>
+          <tr><td class="vocab-de">es</td><td class="vocab-es">es</td><td class="vocab-ex">ihm</td></tr>
+          <tr><td class="vocab-de">wir</td><td class="vocab-es">uns</td><td class="vocab-ex">uns</td></tr>
+          <tr><td class="vocab-de">ihr</td><td class="vocab-es">euch</td><td class="vocab-ex">euch</td></tr>
+          <tr><td class="vocab-de">sie / Sie</td><td class="vocab-es">sie / Sie</td><td class="vocab-ex">ihnen / Ihnen</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="content-full">
+    <div class="card">
+      <h3 id="verbos-que-piden-dativ">Verbos que piden Dativ</h3>
+      <table class="vocab-table">
+        <thead><tr><th>Verbo</th><th>Español</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td class="vocab-de">helfen</td><td class="vocab-es">ayudar</td><td class="vocab-ex">Kannst du mir helfen?</td></tr>
+          <tr><td class="vocab-de">danken</td><td class="vocab-es">agradecer</td><td class="vocab-ex">Ich danke Ihnen.</td></tr>
+          <tr><td class="vocab-de">gefallen</td><td class="vocab-es">gustar</td><td class="vocab-ex">Die Wohnung gefällt mir.</td></tr>
+          <tr><td class="vocab-de">gehören</td><td class="vocab-es">ser de alguien</td><td class="vocab-ex">Gehört das Handy dir?</td></tr>
+          <tr><td class="vocab-de">passen</td><td class="vocab-es">quedar bien</td><td class="vocab-ex">Passt dir Montag?</td></tr>
+          <tr><td class="vocab-de">schmecken</td><td class="vocab-es">saber (la comida)</td><td class="vocab-ex">Schmeckt dir das Essen?</td></tr>
+          <tr><td class="vocab-de">antworten</td><td class="vocab-es">contestar</td><td class="vocab-ex">Er antwortet mir nicht.</td></tr>
+          <tr><td class="vocab-de">gratulieren</td><td class="vocab-es">felicitar</td><td class="vocab-ex">Ich gratuliere dir!</td></tr>
+          <tr><td class="vocab-de">fehlen</td><td class="vocab-es">hacer falta, extrañar</td><td class="vocab-ex">Du fehlst mir.</td></tr>
+          <tr><td class="vocab-de">wehtun</td><td class="vocab-es">doler</td><td class="vocab-ex">Mir tut der Kopf weh.</td></tr>
+          <tr><td class="vocab-de">glauben</td><td class="vocab-es">creerle a alguien</td><td class="vocab-ex">Ich glaube dir.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="content-full">
+    <div class="card">
+      <h3 id="verbos-con-persona-y-cosa">Verbos con persona y cosa</h3>
+      <table class="vocab-table">
+        <thead><tr><th>Verbo</th><th>Español</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td class="vocab-de">geben</td><td class="vocab-es">dar</td><td class="vocab-ex">Ich gebe dir den Schlüssel.</td></tr>
+          <tr><td class="vocab-de">schenken</td><td class="vocab-es">regalar</td><td class="vocab-ex">Wir schenken ihm ein Buch.</td></tr>
+          <tr><td class="vocab-de">zeigen</td><td class="vocab-es">mostrar</td><td class="vocab-ex">Kannst du mir den Weg zeigen?</td></tr>
+          <tr><td class="vocab-de">schicken</td><td class="vocab-es">mandar</td><td class="vocab-ex">Ich schicke Ihnen die Unterlagen.</td></tr>
+          <tr><td class="vocab-de">erklären</td><td class="vocab-es">explicar</td><td class="vocab-ex">Erklärst du mir die Aufgabe?</td></tr>
+          <tr><td class="vocab-de">bringen</td><td class="vocab-es">traer</td><td class="vocab-ex">Bringen Sie mir bitte die Rechnung.</td></tr>
+          <tr><td class="vocab-de">leihen</td><td class="vocab-es">prestar</td><td class="vocab-ex">Kannst du mir dein Fahrrad leihen?</td></tr>
+          <tr><td class="vocab-de">empfehlen</td><td class="vocab-es">recomendar</td><td class="vocab-ex">Ich empfehle dir das Restaurant.</td></tr>
+          <tr><td class="vocab-de">kaufen</td><td class="vocab-es">comprar</td><td class="vocab-ex">Ich kaufe meiner Mutter Blumen.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="content-full">
+    <div class="card card-gold">
+      <h3 id="el-orden-con-dos-objetos">El orden con dos objetos</h3>
+      <table class="vocab-table">
+        <thead><tr><th>Caso</th><th>Regla</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td class="vocab-de">Dos sustantivos</td><td class="vocab-es">primero la persona (Dativ)</td><td class="vocab-ex">Ich gebe dem Kollegen den Bericht.</td></tr>
+          <tr><td class="vocab-de">Pronombre y sustantivo</td><td class="vocab-es">primero el pronombre</td><td class="vocab-ex">Ich gebe ihm den Bericht.</td></tr>
+          <tr><td class="vocab-de">Pronombre y sustantivo</td><td class="vocab-es">primero el pronombre, aunque sea Akkusativ</td><td class="vocab-ex">Ich gebe ihn dem Kollegen.</td></tr>
+          <tr><td class="vocab-de">Dos pronombres</td><td class="vocab-es">primero el Akkusativ</td><td class="vocab-ex">Ich gebe ihn ihm.</td></tr>
+          <tr><td class="vocab-de">Con es</td><td class="vocab-es">es va antes</td><td class="vocab-ex">Ich gebe es dir morgen.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="content-full">
+    <div class="card card-gold">
+      <h3 id="frases-comunes-con-pronombres">Frases comunes con pronombres</h3>
+      <div class="phrase-grid">
+        <div class="phrase-item"><span class="phrase-situation">Pidiendo ayuda</span><span class="phrase-de">Kannst du mir bitte helfen?</span><span class="phrase-es">¿Me puedes ayudar, por favor?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">En la tienda</span><span class="phrase-de">Können Sie es mir einpacken?</span><span class="phrase-es">¿Me lo puede envolver?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">En el restaurante</span><span class="phrase-de">Das Essen schmeckt mir sehr gut.</span><span class="phrase-es">La comida me sabe muy rica.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Con un compañero</span><span class="phrase-de">Ich schicke es dir heute Abend.</span><span class="phrase-es">Te lo mando hoy en la noche.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Agradeciendo</span><span class="phrase-de">Vielen Dank, das ist sehr nett von Ihnen.</span><span class="phrase-es">Muchas gracias, es muy amable de su parte.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Extrañando</span><span class="phrase-de">Meine Familie fehlt mir.</span><span class="phrase-es">Extraño a mi familia.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">En el médico</span><span class="phrase-de">Mir tut der Rücken weh.</span><span class="phrase-es">Me duele la espalda.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Prestando algo</span><span class="phrase-de">Ich leihe dir mein Buch, aber gib es mir bitte zurück.</span><span class="phrase-es">Te presto mi libro, pero devuélvemelo, por favor.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Saludando</span><span class="phrase-de">Wie geht es Ihnen?</span><span class="phrase-es">¿Cómo está usted?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Felicitando</span><span class="phrase-de">Ich gratuliere dir zum Geburtstag!</span><span class="phrase-es">¡Te felicito por tu cumpleaños!</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="card">
+      <h3 id="ejemplos-cotidianos">Ejemplos cotidianos</h3>
+      <div class="example"><div class="example-de">Ich rufe dich morgen an.</div><div class="example-es">Te llamo mañana.</div></div>
+      <div class="example"><div class="example-de">Das gefällt mir nicht.</div><div class="example-es">No me gusta.</div></div>
+      <div class="example"><div class="example-de">Zeig es mir!</div><div class="example-es">¡Enséñamelo!</div></div>
+    </div>
+    <div class="card">
+      <h3 id="mir-ist-lo-que-sientes">Mir ist…: lo que sientes</h3>
+      <div class="rule-box">Con algunas frases, quien siente va en <strong>Dativ</strong>:<br><br>Mir ist kalt. — Tengo frío.<br>Mir ist schlecht. — Me siento mal.<br>Mir ist langweilig. — Me aburro.<br>Wie geht es dir? — ¿Cómo estás?</div>
+    </div>
+  </div>
+
+</div>
+
+<aside class="lec-practica" id="practica" aria-label="Práctica">
+  <div class="lec-practica-cab"><h2>Práctica</h2><nav class="lec-chips" aria-label="Bloques de práctica"><a href="#practica-tarjetas">Tarjetas</a><a href="#practica-dialogo">Diálogo</a><a href="#practica-ejercicios">Ejercicios</a><a href="#practica-notas">Notas</a></nav></div>
+
+  <div id="practica-tarjetas" class="content-full">
+    <div class="card">
+      <h3>Repasa con tarjetas</h3>
+      <div id="fc-a2-35" class="flashcards"></div>
+    </div>
+  </div>
+
+  <div id="practica-dialogo" class="content-full">
+    <div class="card">
+      <h3>Diálogo de práctica — Una mudanza</h3>
+      <div class="dialog-box">
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Kannst du mir am Samstag beim Umzug helfen?</div><div class="dialog-es">¿Me puedes ayudar el sábado con la mudanza?</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Klar, ich helfe dir gern. Brauchst du mein Auto?</div><div class="dialog-es">Claro, con gusto te ayudo. ¿Necesitas mi coche?</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Ja, kannst du es mir leihen?</div><div class="dialog-es">Sí, ¿me lo puedes prestar?</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Natürlich. Ich bringe es dir um neun.</div><div class="dialog-es">Claro. Te lo llevo a las nueve.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Super, danke! Danach lade ich dich zum Essen ein.</div><div class="dialog-es">¡Genial, gracias! Después te invito a comer.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Das gefällt mir! Bis Samstag.</div><div class="dialog-es">¡Eso me gusta! Hasta el sábado.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="practica-ejercicios" class="content-full mt32">
+    <div class="card card-red">
+      <h3>Ejercicios</h3>
+      <div class="exercise"><div class="exercise-num">Ejercicio 1 — Akkusativ</div><div class="exercise-q">Ich sehe ____ morgen. (a ti)</div><div class="exercise-hint">Pista: dich</div></div>
+      <div class="exercise"><div class="exercise-num">Ejercicio 2 — Dativ</div><div class="exercise-q">Kannst du ____ helfen? (a mí)</div><div class="exercise-hint">Pista: mir</div></div>
+      <div class="exercise"><div class="exercise-num">Ejercicio 3 — El orden</div><div class="exercise-q">Ich gebe ____ ____. (el libro → es; a él)</div><div class="exercise-hint">Ich gebe es ihm.</div></div>
+      <div class="exercise"><div class="exercise-num">Ejercicio 4 — Traduce</div><div class="exercise-q">"¿Te gusta la película?"</div><div class="exercise-hint">Gefällt dir der Film?</div></div>
+      <div class="exercise"><div class="exercise-num">Ejercicio 5 — Tus frases</div><div class="placeholder" style="margin-top:8px">Escribe 4 frases con helfen, gefallen, schenken y schicken, usando pronombres.</div></div>
+    </div>
+  </div>
+
+  <div id="practica-notas" class="content-full"><div class="card"><h3>Mis notas</h3><div class="placeholder">Los verbos con Dativ que más usas</div></div></div>
+</aside>
+</div></div>
+<div class="page-nav">
+  <a href="a2-34-wetter.html" class="page-nav-btn"><img class="pn-foto" src="fotos/a2-34.jpg" alt="" loading="lazy"><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Wetter & Kleidung</div></div></a>
+  <a href="a2-36-konnektoren.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Konnektoren: deshalb & trotzdem</div></div><img class="pn-foto" src="fotos/a2-36.jpg" alt="" loading="lazy"></a>
+</div>
+<footer class="footer"><p>A2 · 35 — Personalpronomen: Dativ & Akkusativ</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
+<!-- Fuera de la PC (el iPad), tus datos son los de la PC: datos-pc.js aplica todo lo demás antes que la página. -->
+<script src="../Dashboard/datos-sync.js" onerror="this.remove()"></script>
+<script src="../Dashboard/datos-pc.js"></script>
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a2-35', [
+  {art:'-', de:'mich / mir', es:'me (Akkusativ / Dativ)'},
+  {art:'-', de:'dich / dir', es:'te (Akkusativ / Dativ)'},
+  {art:'-', de:'ihn / ihm', es:'lo / le (masculino)'},
+  {art:'-', de:'sie / ihr', es:'la / le (femenino)'},
+  {art:'-', de:'uns / euch', es:'nos / los a ustedes'},
+  {art:'-', de:'Ihnen', es:'le, a usted (Dativ)'},
+  {art:'-', de:'helfen + Dativ', es:'ayudar', ex:'Ich helfe dir.'},
+  {art:'-', de:'gefallen + Dativ', es:'gustar', ex:'Das gefällt mir.'},
+  {art:'-', de:'gehören + Dativ', es:'ser de alguien', ex:'Gehört das dir?'},
+  {art:'-', de:'Ich gebe es dir.', es:'Te lo doy.'},
+  {art:'-', de:'Ich gebe ihm den Bericht.', es:'Le doy el informe.'},
+  {art:'-', de:'Mir ist kalt.', es:'Tengo frío.'},
+  {art:'-', de:'Du fehlst mir.', es:'Te extraño.'}
+]);
+</script>
+<script src="leccion.js"></script>
+<script src="../Dashboard/prompt-pagina.js" data-pagina="aleman" data-host="nav.nav"></script>
+</body></html>
