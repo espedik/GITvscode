@@ -497,7 +497,8 @@ Las respuestas viven en `dash-aprende-v1` → `istqb`, una lista por fecha local
 Adán, 14-oct-2026: *"cuando haga click aquí, debes mostrarme una ventana… ahí mismo quiero la información…
 también agrega lecciones de alemán"*, y el 15: *"no me das suficiente vocabulario, mejora el diseño de la
 ventana"*. Tocar la tarjeta abre `#alemanOverlay` (`abrirAleman()`) en el vocabulario, y tocar la lección de la
-tarjeta, en la lección. Es ancha y alta —hasta 1900 px, el 96 % del ancho y el 92 % del alto—, opaca (es para
+tarjeta, en la lección. Ocupa **toda la pantalla menos 8 px de orilla**, en cualquier ancho (Adán, 27-nov-2026: *"quiero que
+esa ventana ocupe el mayor posible tamaño cuando se abra"*), con la brújula escondida mientras está abierta; opaca (es para
 leer: con vidrio se veían las fotos de Mi Día detrás de cada tarjeta) y con **siete pestañas a todo lo ancho** que
 dicen lo que hay en cada una: *Vocabulario · Trámites · 10 nuevas · 5 de repaso*, *Lección · K10 · 06 · Partizip I & II ·
 0 de 5*, *Casos · Nominativ · Akkusativ · Dativ · tu mejor: 9 de 12* y las cuatro de gramática a fondo, *Preposiciones*,
@@ -562,11 +563,13 @@ cuál está *Abierta* y cuál es *La del plan*. Tocar una la abre y la deja eleg
 `ALEMAN_LECCIONES_RESUMEN` en `../Aleman/lecciones-resumen.js`): *Qué aprendes* con tus ejercicios hechos, *La regla*
 con su ejemplo en alemán tras la flecha y *Errores típicos*, tachado lo mal dicho y en verde lo bien dicho. Se
 contrae; abierto o cerrado se recuerda en ese dispositivo (`dash-aleman-resumen`). **Al bajar por la lección, el
-encabezado y el resumen se pliegan** (`.plegada`, `alemanPliega()`; Adán: *"me quita mucho campo visual, cuando haga
-scroll down quiero que también se mueva"*): la lección avisa cuánto bajó, 40 px abajo los pliega y 40 px arriba —o
-volver al principio— los regresa. Lo que llega en el medio segundo siguiente a un cambio no cuenta: al fondo de la
-página, plegar agranda el marco y el navegador mueve el desplazamiento solo. Medido: el marco de la lección pasa
-de 426 a 776 px de alto a 1600×1000, de 235 a 623 en el iPad Pro 11 horizontal y de 183 a 705 a 390. Hasta que carga se ve
+encabezado, el resumen y el título de la ventana se pliegan** (`.plegada`, `alemanPliega()`; Adán: *"me quita mucho
+campo visual, cuando haga scroll down quiero que también se mueva"* y *"me sigue apareciendo el título de la lección y
+pierdo espacio visual"*): la lección avisa cuánto bajó y 40 px abajo los pliega; quedan las pestañas en una línea y la
+lección casi sin orilla. **Solo vuelven al regresar al principio** de la lección: subir un poco al leer, o el rebote del
+dedo en el iPad, ya no los pone. Lo que llega en el medio segundo siguiente a un cambio no cuenta: al fondo de la
+página, plegar agranda el marco y el navegador mueve el desplazamiento solo. Medido, el marco de la lección plegada:
+757 px de alto en el iPad 1194×834 (antes 623) y 850 a 1327×927 (antes 709). Hasta que carga se ve
 *Abriendo la lección…*. **Con el Dashboard en oscuro, la lección
 y los casos también**: `leccion.js` lee `coach-theme` y la pinta con `../Aleman/oscuro.js`, que deriva cada color del
 tema claro (ver `../Aleman/readme_aleman.md` → *En oscuro*). El marco (`.alv-lec-marco`) lleva el papel de la página

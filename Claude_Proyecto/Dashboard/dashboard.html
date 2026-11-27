@@ -3907,6 +3907,11 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 #alemanOverlay .das{--gen:#10b981}
 #alemanOverlay .pl{--gen:#f97316}
 .gbm-card.alv-card{width:min(1900px,96vw);height:92vh;display:flex;flex-direction:column;overflow:hidden}
+/* Lo más grande posible (Adán, 27-nov-2026: "quiero que esa ventana ocupe el mayor posible tamaño cuando se abra"): toda
+   la pantalla menos 8 px de orilla, en cualquier ancho. La brújula se esconde mientras está abierta: tapaba el título. */
+#alemanOverlay{padding:8px}
+.gbm-card.alv-card{width:100%;height:100%;max-height:none;border-radius:14px}
+body:has(#alemanOverlay.open) .pp-btn{visibility:hidden}
 /* Opaca, no de vidrio: es para leer, y con el vidrio se veían las fotos de Mi Día detrás de cada tarjeta. */
 .gbm-card.alv-card{background:linear-gradient(rgba(var(--ov),.035),rgba(var(--ov),.035)),var(--bg)}
 .alv-card .gbm-head{flex:none;padding-bottom:0}
@@ -4091,6 +4096,13 @@ button.ap-estado.ir:hover{background:color-mix(in srgb,var(--c) 26%,transparent)
 .alv-res{flex:none}
 /* Al bajar por la lección, su encabezado y el resumen se pliegan para dejarle el alto; al subir, vuelven (alemanPliega). */
 .alv-lec.plegada>.alv-lec-cab,.alv-lec.plegada>.alv-res{display:none}
+/* Y con ellos el título de la ventana y su subtítulo (Adán, 27-nov-2026: "me sigue apareciendo el título de la lección y pierdo
+   espacio visual"): quedan las pestañas, en una línea, y la lección casi sin orilla. */
+.alv-card:has(.alv-body[data-tab="leccion"] .alv-lec.plegada) .gbm-head{padding-top:6px}
+.alv-card:has(.alv-body[data-tab="leccion"] .alv-lec.plegada) .gbm-head :is(h2,p){display:none}
+.alv-card:has(.alv-body[data-tab="leccion"] .alv-lec.plegada) .gbm-close{top:6px}
+.alv-card:has(.alv-body[data-tab="leccion"] .alv-lec.plegada) .alv-tabs{margin-top:0;padding-right:44px}
+.alv-lec.plegada{padding:6px 8px 8px}
 .alv-lec.desplegando>.alv-lec-cab,.alv-lec.desplegando>.alv-res{animation:alvBaja .22s ease-out}
 @keyframes alvBaja{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.alv-lec.desplegando>.alv-lec-cab,.alv-lec.desplegando>.alv-res{animation:none}}
@@ -8823,7 +8835,8 @@ function alemanLeccionOtra(d){
 }
 // Adán, 18-nov-2026, sobre el encabezado y el resumen de la lección: "me quita mucho campo visual, cuando haga scroll
 // down quiero que también se mueva". La lección avisa de su desplazamiento (leccion.js, tipo 'scroll'): bajar 40 px
-// pliega los dos; subir 40 px, o volver arriba, los regresa. El punto de referencia sigue al desplazamiento en la
+// pliega los dos y el título de la ventana; solo volver arriba los regresa (Adán, 27-nov-2026: "me sigue apareciendo el
+// título de la lección": en el iPad, subir un poco al leer —o el rebote del dedo— los volvía a poner). El punto de referencia sigue al desplazamiento en la
 // dirección en que se va, para que no parpadee. Plegar agranda el marco y, al fondo de la página, el navegador sube el
 // desplazamiento solo: lo que llega en el medio segundo siguiente a un cambio no cuenta. null = desplegar y reiniciar.
 let _alPlY = 0, _alPlT = 0;
@@ -8837,7 +8850,6 @@ function alemanPliega(y){
   if(y < 24){ pon(false); _alPlY = y; return; }
   _alPlY = pleg ? Math.max(_alPlY, y) : Math.min(_alPlY, y);
   if(!pleg && y > _alPlY + 40){ pon(true); _alPlY = y; }
-  else if(pleg && y < _alPlY - 40){ pon(false); _alPlY = y; }
 }
 // La lección, dentro de la ventana, pide lo que no puede hacer sola (leccion.js): abrir otra página —otra lección
 // se abre aquí y queda elegida; lo demás (el vocabulario, la gramática), aparte— o cerrar la ventana con Escape.
