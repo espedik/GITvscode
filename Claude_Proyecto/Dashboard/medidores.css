@@ -935,3 +935,78 @@ button.km-li[aria-expanded="true"]>b::after{transform:rotate(-135deg);margin-bot
   .kd-fin{font-size:11.5px}
   .kd-marcas>div{height:auto}.kd-marca{position:static;display:block;white-space:normal}
 }
+/* Tu dinero hoy, al principio de Fondo Maestría: una barra por pieza, de la más grande a la más chica, y se corrige aquí. */
+.kmd{gap:14px}
+.kmd-cab{display:flex;align-items:flex-start;gap:22px}
+.kmd-cab>div:first-child{flex:1;min-width:0}
+.kmd-cab h3{font-size:18px;font-weight:750;letter-spacing:-.01em;margin:0}
+.kmd-cab p{margin:3px 0 0;font-size:13.5px;line-height:1.5;color:var(--kv-t2)}
+.kmd-tot{display:flex;flex-direction:column;align-items:flex-end;flex:none}
+.kmd-tot span{font-size:12.5px;font-weight:600;color:var(--kv-t2)}
+.kmd-tot strong{font-family:var(--mono);font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.kmd-cab .kv-b{flex:none;align-self:center}
+.kmd-l{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(400px,100%),1fr));gap:12px 30px}
+.kmd-r{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"n v" "b p";gap:5px 12px;align-items:center;min-width:0}
+.kmd-r b{grid-area:n;display:flex;align-items:baseline;gap:8px;min-width:0;font-size:14.5px;font-weight:650}
+.kmd-r b i{flex:none;width:11px;height:11px;border-radius:3px;align-self:center}
+.kmd-r b u{text-decoration:none;font-size:12.5px;font-weight:400;color:var(--kv-t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kmd-r strong{grid-area:v;font-family:var(--mono);font-size:18px;font-weight:750;font-variant-numeric:tabular-nums}
+.kmd-b{grid-area:b;height:12px;border-radius:6px;background:rgba(var(--ov),.07);overflow:hidden}
+.kmd-b i{display:block;height:100%;border-radius:6px}
+.kmd-r em{grid-area:p;min-width:38px;font-style:normal;font-family:var(--mono);font-size:12.5px;text-align:right;color:var(--kv-t2)}
+.kmd-r.cero{opacity:.55}
+.kmd-ok{margin:0;font-size:13.5px;font-weight:600;line-height:1.5;color:var(--g)}
+.kmd-f{display:flex;flex-direction:column;gap:8px}
+.kmd-e{display:grid;grid-template-columns:11px minmax(0,460px) 230px 96px;justify-content:start;gap:10px;align-items:center}
+.kmd-e.nueva{grid-template-columns:200px minmax(0,249px) 230px 96px}
+.kmd-e>i{width:11px;height:11px;border-radius:3px}
+.kmd-e input,.kmd-e select{width:100%;box-sizing:border-box;padding:8px 10px;border-radius:9px;border:1px solid rgba(var(--ov),.18);background:var(--kv-sup);color:var(--text);font:inherit;font-size:14px}
+.kmd-fn{padding:0 2px;font-size:14px;font-weight:650}
+.kmd-v{display:flex;align-items:center;gap:6px;color:var(--kv-t2)}
+.kmd-v input{font-family:var(--mono);text-align:right}
+.kmd-e .ce-btn{width:100%}
+.kmd-e.quita{opacity:.5}
+.kmd-e.quita input,.kmd-e.quita .kmd-fn{text-decoration:line-through}
+.kmd-pie{display:flex;align-items:center;gap:14px;margin-top:4px;padding-top:12px;border-top:1px solid var(--kv-linea)}
+.kmd-st{margin-left:auto;font-size:13.5px;color:var(--kv-t2)}
+.kmd-st strong{margin-left:6px;font-family:var(--mono);font-size:18px;color:var(--text)}
+.kmd-pie .ti-form-acc,.kby-f .ti-form-acc{display:flex;gap:8px}
+.kmd .ef-error,.kby .ef-error{display:block}
+
+/* Lo que debes del BYD, al principio de Intereses: la cifra grande, la línea de lo pagado y lo que falta, y se corrige aquí. */
+.kby{gap:12px;border-left:4px solid var(--o)}
+.kby-cab{display:flex;align-items:flex-end;gap:16px 34px;flex-wrap:wrap}
+.kby-n .et{font-size:13.5px;font-weight:650;color:var(--kv-t2)}
+.kby-n .n{display:block;font-family:var(--mono);font-size:50px;font-weight:800;letter-spacing:-.03em;line-height:1.05}
+.kby-d{display:flex;flex:1;flex-wrap:wrap;gap:10px 30px;padding-bottom:6px}
+.kby-d span{display:block;font-size:12.5px;font-weight:600;color:var(--kv-t2)}
+.kby-d strong{font-family:var(--mono);font-size:20px;font-weight:750}
+.kby-d .mal{color:var(--o)}
+.kby-cab .kv-b{align-self:center}
+.kby-l{display:flex;height:18px;border-radius:9px;overflow:hidden;background:rgba(var(--ov),.07)}
+.kby-l .pag{background:var(--kv-3)}
+.kby-l .deb{background:color-mix(in srgb,var(--o) 72%,var(--kv-caja))}
+.kby-ley{display:flex;flex-wrap:wrap;gap:6px 24px;font-size:13.5px;color:var(--kv-t2)}
+.kby-ley i{display:inline-block;width:10px;height:10px;margin-right:6px;border-radius:3px;vertical-align:-1px}
+.kby-ley i.pag{background:var(--kv-3)}
+.kby-ley i.deb{background:color-mix(in srgb,var(--o) 72%,var(--kv-caja))}
+.kby-ley b{color:var(--text)}
+.kby-f{display:grid;grid-template-columns:minmax(0,380px) auto;gap:10px 14px;align-items:end;padding:12px 14px;border-radius:12px;background:rgba(var(--ov),.04)}
+.kby-f label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;color:var(--text3)}
+.kby-f input{box-sizing:border-box;width:100%;padding:8px 10px;border-radius:9px;border:1px solid rgba(var(--ov),.18);background:var(--kv-sup);color:var(--text);font-family:var(--mono);font-size:18px}
+.kby-f p{grid-column:1/-1;margin:0}
+@media(max-width:640px){
+  .kmd-cab{flex-wrap:wrap}
+  .kmd-cab>div:first-child{flex-basis:100%}
+  .kby-cab{flex-direction:column;align-items:stretch}
+  .kby-d{gap:10px 18px}
+  .kby-d>div{flex:1 1 40%}
+  .kby-cab .kv-b{align-self:flex-start}
+  .kmd-tot{align-items:flex-start}
+  .kmd-e,.kmd-e.nueva{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .kmd-e>i{display:none}
+  .kmd-e .ce-btn{grid-column:1/-1}
+  .kmd-pie{flex-wrap:wrap}
+  .kby-n .n{font-size:40px}
+  .kby-f{grid-template-columns:minmax(0,1fr)}
+}

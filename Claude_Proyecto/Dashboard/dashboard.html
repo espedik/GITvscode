@@ -4013,6 +4013,22 @@ body:has(#alemanOverlay.open) .pp-btn{visibility:hidden}
 .alv-btn.alv-otro:hover{filter:none;background:color-mix(in srgb,var(--c) 12%,transparent)}
 .alv-otro svg{flex:none;width:19px;height:19px;color:var(--c)}
 .alv-otro b{font-weight:800;color:var(--c)}
+/* Elegir tema: los temas por familia, con su foto y cuántas palabras te quedan; el de hoy, marcado. */
+.alv-temas{display:flex;flex-direction:column;gap:14px;padding:16px 18px 18px;border-radius:16px;background:rgba(var(--ov),.035);border:1px solid color-mix(in srgb,var(--c) 30%,transparent)}
+.alv-temas-cab{display:flex;align-items:flex-start;gap:16px}
+.alv-temas-cab>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.alv-temas-cab b{font-family:var(--font-title);font-size:22px;font-weight:700;color:var(--text)}
+.alv-temas-cab span{font-size:13.5px;line-height:1.5;color:var(--text2)}
+.alv-tf{display:flex;flex-direction:column;gap:7px}
+.alv-tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.alv-tc{display:flex;align-items:center;gap:10px;min-width:0;padding:7px 10px 7px 7px;border-radius:12px;border:1px solid rgba(var(--ov),.1);background:rgba(var(--ov),.03);color:var(--text);font:inherit;text-align:left;cursor:pointer}
+.alv-tc:hover{border-color:color-mix(in srgb,var(--c) 55%,transparent);background:color-mix(in srgb,var(--c) 8%,transparent)}
+.alv-tc.sel{border-color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent)}
+.alv-tc-f{flex:none;width:52px;height:52px;border-radius:9px;object-fit:cover;background:rgba(var(--ov),.06)}
+.alv-tc span{display:flex;flex-direction:column;gap:2px;min-width:0}
+.alv-tc b{font-size:14.5px;font-weight:700;line-height:1.25}
+.alv-tc i{font-style:normal;font-size:12px;line-height:1.3;color:var(--text3)}
+.alv-tc.sel i{color:var(--c)}
 .alv-btn kbd{font-family:var(--mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;background:rgba(0,0,0,.18)}
 .alv-btn.mal kbd{background:rgba(var(--ov),.1)}
 .alv-ir{font-size:12px;font-weight:700}
@@ -8633,6 +8649,47 @@ function alemanVocOtra(){
   aprendeGuarda(st, h);
   alRepasoEntran(ws);
 }
+// Elegir tema (Adán, 27-nov-2026: "ponme un botón para ver qué tipo de vocabulario quiero ver, porque solo hay botón de
+// siguiente y no puedo decidir"): las diez siguientes de ese tema que no han salido, en el orden de Coach dentro de él —primero
+// las del nivel de la etapa—; si ya salieron todas, el tema vuelve a empezar. Quedan como las de hoy y entran al repaso, igual que
+// «Otro tema»; mañana se sigue con el orden de Coach.
+let _alTemas = false;
+function alemanVocTema(cat){
+  const o = aprendeOrdenDe('de'); if(!o || !o.orden.length) return;
+  const { st, h } = aprendeHoy(), del = o.orden.filter(w => w.cat === cat); if(!del.length) return;
+  st.salio = st.salio || {};
+  let s = st.salio.de = st.salio.de || [], libres = del.filter(w => !s.includes(w.de));
+  if(!libres.length){ const ya = new Set(del.map(w => w.de)); s = st.salio.de = s.filter(d => !ya.has(d)); libres = del; }
+  const ws = libres.length - AL_VOC_DIA < 5 ? libres : libres.slice(0, AL_VOC_DIA);
+  ws.forEach(w => { const k = s.indexOf(w.de); if(k >= 0) s.splice(k, 1); s.push(w.de); });
+  h.fijo = Object.assign({}, h.fijo, { voc: ws.map(w => w.de) });
+  aprendeGuarda(st, h);
+  alRepasoEntran(ws);
+  _alTemas = false;
+  renderHeroAprender();
+  if(alemanAbierta()) alemanPintarVocab();
+}
+function alemanTemasVer(si){
+  _alTemas = si == null ? !_alTemas : !!si;
+  if(!alemanAbierta()) return;
+  alemanPintarVocab();
+  const t = document.querySelector('#alemanVocab .alv-temas'); if(t) t.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+// Los temas, por familia, con cuántas palabras te quedan de cada uno; el de hoy, marcado.
+function alemanTemasHtml(ws){
+  const V = alVocab(); if(!V) return '';
+  const salio = new Set(((aprendeHoy().st.salio || {}).de) || []), hoy = ws.length ? ws[0].cat : '', ps = alemanPalabras();
+  const fam = (V.familias || []).map(f => {
+    const chips = (f.cats || []).filter(c => V.cats[c]).map(c => {
+      const del = ps.filter(w => w.cat === c), quedan = del.filter(w => !salio.has(w.de)).length;
+      return `<button type="button" class="alv-tc${c === hoy ? ' sel' : ''}" onclick="alemanVocTema('${c}')" aria-pressed="${c === hoy}">` +
+        `${(del[0] && alemanFotoHtml(del[0], 'alv-tc-f')) || apImg(apFotoAleman({ cat: c }), 'alv-tc-f')}<span><b>${esc(V.cats[c].label || c)}</b><i>${c === hoy ? 'el de hoy · ' : ''}${quedan ? 'te quedan ' + quedan + ' de ' + del.length : 'ya las viste todas · vuelve a empezar'}</i></span></button>`;
+    }).join('');
+    return chips ? `<div class="alv-tf"><span class="alv-k">${esc(f.label)}</span><div class="alv-tg">${chips}</div></div>` : '';
+  }).join('');
+  return `<section class="alv-temas"><div class="alv-temas-cab"><div><b>¿Qué vocabulario quieres ver?</b><span>Te salen ${AL_VOC_DIA} palabras del tema que elijas que todavía no has visto, y entran a tu repaso. Mañana sigues con el orden de Coach.</span></div>` +
+    `<button type="button" class="alv-btn alv-otro" onclick="alemanTemasVer(false)">Cerrar</button></div>${fam}</section>`;
+}
 // Lo que toca repasar hoy: lo que ya venció, sin las de hoy, primero lo más atrasado y hasta AL_REPASO_MAX
 // (`todo`: sin tope, para contar lo que queda atrasado).
 function alemanRepasoHoy(todo){
@@ -8912,7 +8969,7 @@ function alemanPintarVocab(){
   el.classList.toggle('practica', !!_alPr);
   if(_alPr){ el.innerHTML = alemanPracticaHtml(); alemanTabsTxt(); return; }
   const ws = alemanVocabHoy(), rep = alemanRepasoHoy();
-  el.innerHTML = ws.length ? alemanVocabCabHtml(ws, rep) + `<div class="alv-grid">${ws.map(alemanTarjetaHtml).join('')}</div>` + alemanRepasoHtml(rep)
+  el.innerHTML = ws.length ? alemanVocabCabHtml(ws, rep) + (_alTemas ? alemanTemasHtml(ws) : '') + `<div class="alv-grid">${ws.map(alemanTarjetaHtml).join('')}</div>` + alemanRepasoHtml(rep)
     : '<div class="alv-vacio">El vocabulario no cargó: revisa Aleman/vocab-datos.js.</div>';
   el.scrollTop = 0;
   alemanTabsTxt();
@@ -8942,6 +8999,7 @@ function alemanVocabCabHtml(ws, rep){
       <div class="alv-voc-acc">
         <button type="button" class="alv-btn" onclick="alemanPracticar()">Practicar · ${ws.length + rep.length} tarjetas</button>
         <button type="button" class="alv-btn alv-otro" onclick="aprendeOtra('de')" title="Las ${AL_VOC_DIA} siguientes, en el orden de Coach">${AP_OTRA}<span>${otroTxt}</span></button>
+        <button type="button" class="alv-btn alv-otro alv-elegir" onclick="alemanTemasVer()" aria-expanded="${_alTemas}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Elegir tema</span></button>
         <a href="javascript:void(0)" class="hp-link alv-ir" onclick="hoyAlAleman('${a.cat}','${a.sub || ''}')">Ver «${esc(sub || cat.label || '')}» en Vocabulario →</a>
       </div>
     </div>`;

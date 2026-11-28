@@ -80,7 +80,7 @@ forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-aprende-v1` (lo fijado cada día en Hoy aprendes, lo que ya salió y las respuestas del ISTQB), `dash-lista-compras`
 y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `plan_auditoria_v1` (la auditoría de cada mes de las fases) y `plan_auditoria_sinc` (cuándo se tocó cada mes aquí, para traer la de la PC), `fin_resumen_v1` (lo que queda en la quincena, para `finanzas-sync.js`), `maestro_ajustes_v1` (tus cifras de Mis cifras; la lee el maestro en todas las apps) y `cifras_guardado` (en `sessionStorage`: lo que acabas de guardar en Mis cifras, para decirlo tras recargar), `dash-rail-abierto`, `dash-agenda-oculta` (la agenda de Mi Día plegada), `dash-avance-v1` (la ficha y el paso que eligió con «Siguiente» en *Hoy aprendes*), `dash_habfoco_v1` (la habilidad que eligió con «Siguiente» en *Hoy aprendes* y el paso de la semana de cada una), `dash_habpasos_v1` (los pasos dominados de cada ruta), `dash_libromes_v1` (el libro del mes: el de ahora, los leídos y el que sigue si lo cambiaste),
-`habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-istqb-lado` (*Cómo vas* abierto o cerrado en la ventana del ISTQB, en ese dispositivo), `dash-mae-tienes` (*Todo lo que tienes* abierto o cerrado en la ventana del Fondo Maestría, en ese dispositivo), `dash-aleman-resumen` (el resumen de la lección de *Alemán de hoy* abierto o cerrado, en ese dispositivo), `dash-noticias-v1` y `dash-precios-v1` (las últimas noticias y los últimos precios de *Qué invertir hoy* que llegaron de
+`habilidades_checklist_v1`, `hb_practica_v1` (las sesiones anotadas, los criterios de dominio palomeados y el mejor «Ponte a prueba» de cada ficha de Habilidades Base), `metas_plan_v1` (los pasos palomeados del plan de cada meta), `examen_genai_v1`, `dash-istqb-lado` (*Cómo vas* abierto o cerrado en la ventana del ISTQB, en ese dispositivo), `dash-mae-tienes` (*Lo que pide la salida* abierto o cerrado en la ventana del Fondo Maestría, en ese dispositivo), `dash-aleman-resumen` (el resumen de la lección de *Alemán de hoy* abierto o cerrado, en ese dispositivo), `dash-noticias-v1` y `dash-precios-v1` (las últimas noticias y los últimos precios de *Qué invertir hoy* que llegaron de
 GitHub). Tu reparto no es clave propia: vive en Finanzas (`finanzasmx_v2.reparto`).
 
 ---
@@ -525,7 +525,11 @@ las siguientes del orden de Coach que no han salido, por tema (`alemanTanda()`, 
 (`hoy.fijo.voc` en `dash-aprende-v1`); un día fijado con temas mezclados y sin practicar se vuelve a tomar. **«Otro
 tema»** (`.alv-otro`, bajo «Practicar», del mismo tamaño y en contorno; Adán: *"el botón de nuevo tema… hazlo mucho
 más grande"*) trae las diez siguientes y dice qué trae: *Otro tema · Buscar piso* o, si al de hoy le quedan palabras,
-*10 palabras más de Trámites*. Arriba, su encabezado: la foto del tema, *Vocabulario de hoy · 10 palabras nuevas y 5 de repaso* y,
+*10 palabras más de Trámites*. **«Elegir tema»** (`.alv-elegir`, `alemanTemasVer`; Adán, 27-nov-2026: *"ponme un botón para ver qué
+tipo de vocabulario quiero ver, porque solo hay botón de siguiente y no puedo decidir"*), debajo, abre los 37 temas por familia
+(`alemanTemasHtml`), cada uno con la foto de su primera palabra y cuántas te quedan; el de hoy va marcado. Tocar uno
+(`alemanVocTema`) trae las diez siguientes de ese tema que no han salido —si ya salieron todas, el tema vuelve a empezar—, que quedan
+como las de hoy y entran al repaso; mañana se sigue con el orden de Coach. Arriba, su encabezado: la foto del tema, *Vocabulario de hoy · 10 palabras nuevas y 5 de repaso* y,
 **como título, el tema del día** (*Trámites*, en Fraunces, sin emoji) y debajo **Hoy estudias**, sus subtemas en
 fichas, en el orden de las tarjetas (*Formularios · Conseguir cita · Documentos · Empadronarse*; Adán: *"debe haber
 un título claro que abarque el tema de las tarjetas y saber qué se estudiará ese día"*); después, cómo estudiarlas, cuánto va del nivel, el tema de mañana y **«Practicar»**. Debajo, una tarjeta por palabra
@@ -1167,6 +1171,16 @@ proyección debe variar… abajo dame consejos… futurista y muy entendible"* y
 indicadores financieros, ahí llevamos el registro histórico… pero de cada mes en la gráfica"*. `MEDIDORES.maestria` (`.km`), de
 arriba abajo:
 
+- **Tu dinero hoy** (`.kmd`, `dineroHtml`; Adán, 27-nov-2026: *"debes darme las cifras de mi dinero actualmente, al principio… en forma
+  de barras para ver cuánto tengo y recuerda, si modifico algo aquí, es decir elimino o añado o edito, debe verse reflejado en todas
+  las cifras de todas las apps"*): una barra por pieza —cada cuenta y el efectivo con la fecha de su saldo, los CETES, cada inversión
+  (el depósito de la renta dice cuándo regresa), el Bitcoin en ₿ y a precio de hoy—, de la más grande a la más chica, con su
+  porcentaje y el total. Las piezas son `CIFRAS.dineroLista` y suman lo mismo que `fondoMaestria`. **«Corregir»** (`MEDIDORES.dinEditar`)
+  vuelve cada renglón editable: la cantidad, el nombre, **Quitar** y **+ Añadir** (una cuenta o efectivo, bolsa, un fondo, CETES, otra
+  cripto u otra inversión). Al guardar, `CIFRAS.dineroPoner` lo escribe en Finanzas —la cuenta y el efectivo con la fecha de hoy, los
+  CETES como aportación o retiro, una inversión cambia lo que vale y conserva lo que metiste, el Bitcoin se ajusta con una compra o una
+  venta al precio de hoy para no descuadrar lo aportado— y `ceGuardar` repinta todo con el plan recalculado. La cuenta BBVA y el
+  efectivo no se quitan: van en 0. El **control 66** lo prueba.
 - **La respuesta** (`.km-hero`): lo que tendrías en agosto de 2028 guardando lo que te queda, contra lo que pide la salida, y si llegas.
 - **Cuatro datos**: lo que llevas en todo contra lo que pedía el plan, el mes en que el BYD quedará en cero, lo que te queda cada mes y lo que
   rinden tus inversiones.
@@ -1185,9 +1199,9 @@ arriba abajo:
   `MEDIDORES.mesMae`), que se contrae y con las flechas pasa por todos los meses: lo que entra, en qué sale —los servicios, las
   suscripciones y las rutinas se abren producto por producto—, a dónde va lo que te queda (el colchón, el BYD, la bolsa, cripto) y lo que
   tendrías. Solo va lo documentado: nada de «lo demás».
-- **Todo lo que tienes** —bolsa, CETES, Bitcoin, cuenta, efectivo y depósito— y **lo que pide la salida**, **plegables** (`.km-pl`,
-  `MEDIDORES.maeLado`; Adán, 25-nov-2026: *"para que se vea mejor la gráfica, la sección de Todo lo que tienes hazla contraíble"*):
-  cerrada es una barra con tu total y lo que pide la salida, y la gráfica toma todo el ancho y se vuelve a dibujar —a 1327 px pasa
+- **Lo que pide la salida**, **plegable** (`.km-pl`, `MEDIDORES.maeLado`; Adán, 25-nov-2026: *"para que se vea mejor la gráfica, la
+  sección de Todo lo que tienes hazla contraíble"*; lo que tienes, pieza por pieza, está arriba en *Tu dinero hoy*): cerrada es una
+  barra con lo que pide la salida y lo que tienes, y la gráfica toma todo el ancho y se vuelve a dibujar —a 1327 px pasa
   de 697 a 1,109—. Empieza cerrada y recuerda en ese dispositivo cómo la dejaste (`dash-mae-tienes`). Los pagos de la
   salida (apostillas, vuelo, primera renta…) no van en este presupuesto (Adán: *"eso no lo voy a contemplar"*): se dice cuánto
   suman.
@@ -1203,6 +1217,13 @@ sola. `{parte}` guarda solo una parte de lo que queda. Didi entra con `didiEn(me
 Adán, 24-nov-2026: *"dame opciones para mejorar esta pantalla"* y *"me gusta la opción B"* (lienzo `diseno-intereses/`).
 `MEDIDORES.intereses` (`.kn`), con el crédito de mayor saldo que cobra interés:
 
+- **Lo que debes del BYD, arriba de todo** (`.kby`, `bydHtml`; Adán, 27-nov-2026: *"no me estás mostrando la deuda total de mi BYD, esa
+  cifra debe ser principal, en forma de línea de barra y además debes dejarme editar esa cantidad y eso se refleje en todas las demás
+  apps"*): el saldo en grande, cuándo queda en cero con tu plan y pagando solo la mensualidad, el interés que falta, y una línea con lo
+  que ya pagaste (verde) y lo que te falta (naranja) de lo que te prestaron. **«Corregir»** (`MEDIDORES.bydEditar`) pide el saldo de tu
+  estado de cuenta y lo guarda con `CIFRAS.prestamoDatos`, el mismo de *Los datos de tu crédito* en Deuda total: manda desde hoy, las
+  mensualidades se siguen anotando solas, y tu plan y las otras formas de pagar se recalculan al guardar (cambia también en Deuda total,
+  en Finanzas y en el Fondo Maestría).
 - **La dona**: cuánto de tu próximo pago es interés, en pesos y en porcentaje, y cuánto es al día.
 - **Tu plan contra otros pagos** (`MEDIDORES.pagoMas`): tu plan (`CIFRAS.abonosPlan`), solo la mensualidad y la mensualidad con tres
   montos de más. Cada opción dice, grande, **cuánto pagas al mes** (`alMes`: un monto, o *de … a …* si cambia, como tu plan, que va de
@@ -1215,9 +1236,9 @@ Adán, 24-nov-2026: *"dame opciones para mejorar esta pantalla"* y *"me gusta la
   (`MEDIDORES.pagoVe`) dice sus números abajo, empezando por el total. Arriba, **el pago que tocaste** con su monto, cuántos faltan,
   cuándo acabas, el interés que falta y lo que te ahorras.
 - **Cabe en una pantalla del iPad**: las opciones van en dos renglones apretados y cada año en una fila de al menos 40 px que
-  crece con su texto; de 1100 a 1280 px las dos columnas se quedan (415 px la de la izquierda) en vez de apilarse. Medido:
-  sin desplazar a 1327×927 (733 de 733 px) ni a 1194×834 (666 de 666); sin texto cortado ni fuera de la ventana a 2048, 1600,
-  en el iPad vertical y a 390 px.
+  crece con su texto; de 1100 a 1280 px las dos columnas se quedan (415 px la de la izquierda) en vez de apilarse. Con lo que
+  debes del BYD arriba, a 2048×1040 cabe sin desplazar (896 de 896 px) y en el iPad se desplaza unos 100 (903 de 804 a 1327×927,
+  837 de 716 a 1194×834); sin texto cortado ni fuera de la ventana a 2048, en el iPad y a 390 px.
 - **Abajo**: si el contrato y los datos no acaban el mismo mes (`chocaC`), lo dice y cuánto sería el interés con los `cargos` que harían que
   cuadre. Si algo más cobra interés (una tarjeta), va en su lista.
 

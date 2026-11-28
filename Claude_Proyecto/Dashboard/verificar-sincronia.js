@@ -3707,6 +3707,41 @@ function promptsDeLoTocado() {
   ok.push('El plan 2028: el colchón, el BYD en cero el ' + A.cero + ' y a invertir; la salida, el ' + P.maestriaInicio + '; fases, interés y escenarios van con él');
 })();
 
+/* ── 66. Tu dinero y lo que debes del BYD, editables en sus ventanas ─────────────────────────────────────────────────
+   Adán, 27-nov-2026: "si modifico algo aquí, es decir elimino o añado o edito, debe verse reflejado en todas las cifras de todas
+   las apps"; y del BYD: "debes dejarme editar esa cantidad y eso se refleje en todas las demás apps". Con datos de juguete:
+   las barras de «Tu dinero hoy» (dineroLista) suman lo mismo que fondoMaestria —la cifra de la maestría en todas las apps—,
+   dineroPoner corrige, quita y añade y la suma se mueve lo mismo, el Bitcoin cambia por compra o venta sin tocar lo aportado
+   en Finanzas, y un renglón sin cantidad o sin nombre no se guarda. Las ventanas usan esas funciones y prestamoDatos. */
+(function () {
+  const malos = [], C = global.window && global.window.CIFRAS;
+  if (!C || typeof C.dineroLista !== 'function' || typeof C.dineroPoner !== 'function') malos.push('el maestro ya no exporta dineroLista y dineroPoner');
+  else {
+    const F = { emergencyFund: 6000, goals: [{ id: 'ef-001', current: 6000 }], efAportes: [], debts: [],
+      activos: [{ id: 'ac013', name: 'Cuenta BBVA', type: 'liquido', value: 1300 }, { id: 'ac014', name: 'Efectivo', type: 'liquido', value: 600 }, { id: 'b1', name: 'Bien', type: 'bien', value: 9 }],
+      investments: [{ id: 'i004', name: 'Depósito', type: 'otro', invested: 11250, value: 11250 }],
+      btcHistory: [{ id: 'h1', date: '2026-01-01', btc: 0.01, usd: 900, fx: 18, tipo: 'compra' }], currentBtcPrice: 90000, usdMxn: 18 };
+    const suma = () => C.dineroLista(F).reduce((s, q) => s + q.v, 0), cuadra = () => Math.abs(suma() - C.fondoMaestria(F).total) < 0.01;
+    if (!cuadra()) malos.push('las barras de Tu dinero hoy no suman lo mismo que fondoMaestria');
+    const antes = suma(), aportado = F.btcHistory.filter(h => +h.btc > 0).reduce((s, h) => s + h.usd, 0);
+    const r = C.dineroPoner(F, { poner: { 'liq:ac013': { v: 2300 }, 'inv:i004': { v: 11000 }, btc: { v: 10000 } }, quitar: [], nuevas: [{ n: 'Nu', clase: 'liq', v: 500 }, { n: 'GBM', clase: 'inv', tipo: 'acciones', v: 3000 }] }, '2026-11-27');
+    if (r.error || !cuadra()) malos.push('dineroPoner deja las barras distintas de fondoMaestria');
+    if (Math.round(suma() - antes) !== 1000 - 250 + (10000 - 16200) + 3500) malos.push('lo que corriges no mueve el total lo mismo');
+    if (!F.btcHistory.some(h => h.tipo === 'venta' && +h.btc < 0) || F.btcHistory.filter(h => +h.btc > 0).reduce((s, h) => s + h.usd, 0) !== aportado) malos.push('el Bitcoin no se ajusta con una venta, o cambia lo aportado');
+    const nu = C.dineroLista(F).filter(q => q.n === 'Nu')[0];
+    C.dineroPoner(F, { quitar: [nu ? nu.id : 'x'] });
+    if (C.dineroLista(F).some(q => q.n === 'Nu') || !cuadra()) malos.push('quitar una pieza no la quita de todas las cifras');
+    if (C.dineroLista(F).some(q => q.id === 'liq:ac013' && q.quita)) malos.push('la cuenta BBVA se puede quitar: va en 0');
+    const copia = JSON.stringify(F);
+    if (!C.dineroPoner(F, { poner: { 'liq:ac013': { v: '' } } }).error || !C.dineroPoner(F, { nuevas: [{ n: '', v: 5 }] }).error || JSON.stringify(F) !== copia) malos.push('un renglón vacío o sin nombre se guarda');
+  }
+  const m = leer('Dashboard/medidores.js');
+  if (m.indexOf('C().dineroPoner(') < 0 || m.indexOf('C().dineroLista(') < 0 || m.indexOf("dineroHtml(F)") < 0) malos.push('Fondo Maestría ya no pinta ni corrige Tu dinero hoy con el maestro');
+  if (m.indexOf('C().prestamoDatos(') < 0 || m.indexOf('bydHtml(F, p)') < 0) malos.push('Intereses ya no enseña ni corrige lo que debes del BYD con prestamoDatos');
+  if (malos.length) { problemas.push('Tu dinero y el BYD, editables:\n     ' + malos.join('\n     ')); return; }
+  ok.push('Tu dinero hoy y lo que debes del BYD: se corrigen en sus ventanas con una sola cuenta del maestro y cuadran con fondoMaestria');
+})();
+
 /* ── 62. A la mano, editable ────────────────────────────────────────────────────────────────────────────────────────
    Adán, 24-nov-2026: "dame la habilidad de editar lo de la sección a la mano… y actualicen esas cifras globalmente en mi app…
    ya no debemos depender de Claude". Con unos datos de juguete: saldosPoner pone los saldos con su día, mueve CETES con un

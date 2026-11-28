@@ -124,6 +124,128 @@
     ctCifrasHoy();   // deja anotado lo que queda para gastar, que viaja con el commit a los otros dispositivos
   };
 
+  // ══ Tu dinero hoy, al principio de Fondo Maestría ══
+  // Adán, 27-nov-2026: "en la ventana de fondo de maestría debes darme las cifras de mi dinero actualmente, al principio, dinero en
+  // efectivo, cuenta de débito, bitcoin, inversiones, depósito de renta, etc., en forma de barras para ver cuánto tengo… si modifico
+  // algo aquí, es decir elimino o añado o edito, debe verse reflejado en todas las cifras de todas las apps". Una barra por pieza
+  // (CIFRAS.dineroLista), de la más grande a la más chica; se corrige, se quita o se añade aquí y lo guarda CIFRAS.dineroPoner en
+  // Finanzas, que es lo que leen todas las apps; ceGuardar repinta la pantalla y la ventana con el plan ya recalculado.
+  const din = { edita: false, aviso: '' };
+  const DIN_COL = { liq: V.c, cetes: 'var(--w)', inv: V.a, dep: V.g, btc: V.b };
+  const DIN_TIPOS = [['liq', 'Cuenta o efectivo'], ['acciones', 'Bolsa: acciones o ETF'], ['fondos', 'Fondo de inversión'], ['cetes', 'CETES'], ['crypto', 'Otra cripto'], ['otro', 'Otra inversión']];
+  const DIN_TIPO_N = { acciones: 'acciones o ETF', fondos: 'fondo de inversión', cetes: 'CETES', deuda: 'deuda o bonos', crypto: 'cripto', inmuebles: 'inmueble', otro: 'inversión' };
+  function dineroNota(q) {
+    const k = hoyLocal(), P0 = C().PROYECTO;
+    if (q.clase === 'liq') return !q.fecha ? '' : q.fecha === k ? 'de hoy' : 'del ' + diaTxt(q.fecha);
+    if (q.clase === 'cetes') return 'tu fondo de emergencia';
+    if (q.clase === 'dep') return P0.rentaHasta ? 'regresa en ' + MESL[+mas(P0.rentaHasta, 1).slice(5) - 1] : '';
+    if (q.clase === 'btc') return (+q.btc || 0).toFixed(5) + ' ₿ a precio de hoy';
+    return DIN_TIPO_N[q.tipo] || '';
+  }
+  function dineroHtml(F) {
+    const ov = document.getElementById('kpiOverlay');
+    if (!ov || !ov.classList.contains('open') || ov.dataset.kpi !== 'maestria') { din.edita = false; din.aviso = ''; }
+    const L = C().dineroLista(F).sort((a, b) => b.v - a.v), tot = L.reduce((s, q) => s + Math.max(0, q.v), 0), max = Math.max(1, ...L.map(q => q.v)), ed = tiEditable();
+    const cab = '<div class="kmd-cab"><div><h3>Tu dinero hoy</h3><p>' + (din.edita ? 'Corrige cada cantidad como está hoy, quita lo que ya no tienes o añade algo nuevo. Al guardar cambia en Finanzas, en el Plan Maestro y en todas tus pantallas.' : 'Todo lo que tienes, pieza por pieza. Lo que corrijas aquí cambia en todas tus apps.') + '</p></div>' +
+      '<div class="kmd-tot"><span>En total</span><strong>' + money(tot) + '</strong></div>' + (ed && !din.edita ? boton('Corregir', 'MEDIDORES.dinEditar(true)') : '') + '</div>';
+    if (din.edita && ed) return '<section class="kv-c kmd edita">' + cab + dineroForm(L) + '</section>';
+    const filas = L.map(q => { const c = DIN_COL[q.clase] || V.g, n = dineroNota(q);
+      return '<div class="kmd-r' + (q.v < 1 ? ' cero' : '') + '"><b><i style="background:' + c + '"></i>' + esc(q.n) + (n ? ' <u>' + n + '</u>' : '') + '</b><strong>' + money(q.v) + '</strong>' +
+        '<span class="kmd-b"><i style="width:' + (q.v > 0 ? Math.max(1.2, q.v / max * 100) : 0) + '%;background:' + c + '"></i></span><em>' + (tot > 0 ? Math.round(q.v / tot * 100) : 0) + '%</em></div>'; }).join('');
+    return '<section class="kv-c kmd">' + cab + '<div class="kmd-l">' + filas + '</div>' + (din.aviso ? '<p class="kmd-ok">' + din.aviso + '</p>' : '') + (ed ? '' : copia('Se corrige')) + '</section>';
+  }
+  function dineroForm(L) {
+    const fila = q => { const c = DIN_COL[q.clase] || V.g, fijo = q.clase === 'cetes' || q.clase === 'btc';
+      return '<div class="kmd-e" data-id="' + esc(q.id) + '"><i style="background:' + c + '"></i>' +
+        (fijo ? '<span class="kmd-fn">' + esc(q.n) + '</span>' : '<input class="kmd-n" type="text" maxlength="40" value="' + esc(q.n) + '" aria-label="Nombre">') +
+        '<label class="kmd-v"><span>$</span><input type="number" min="0" step="0.01" inputmode="decimal" value="' + Math.round(q.v * 100) / 100 + '" aria-label="Cuánto hay en ' + esc(q.n) + '"></label>' +
+        (q.quita ? '<button type="button" class="ce-btn sec" onclick="MEDIDORES.dinQuitar(this)">Quitar</button>' : '<span class="kmd-q"></span>') + '</div>'; };
+    return '<form class="kmd-f" onsubmit="MEDIDORES.dinGuardar(event)" oninput="MEDIDORES.dinSuma(this)">' + L.map(fila).join('') + '<div class="kmd-nuevas"></div>' +
+      '<div class="kmd-pie"><button type="button" class="ce-btn sec" onclick="MEDIDORES.dinNueva(this)">+ Añadir</button><span class="kmd-st">Total <strong>' + money(L.reduce((s, q) => s + q.v, 0)) + '</strong></span>' +
+      '<span class="ti-form-acc"><button type="button" class="ce-btn sec" onclick="MEDIDORES.dinEditar(false)">Cancelar</button><button type="submit" class="ce-btn">Guardar</button></span></div></form>';
+  }
+  M.dinEditar = function (si) {
+    din.edita = si; din.aviso = '';
+    const ov = document.getElementById('kpiOverlay'), body = ov && ov.querySelector('.gbm-body'), y = body ? body.scrollTop : 0;
+    abrirKpi('maestria'); if (body) body.scrollTop = si ? 0 : y;
+    const q = document.querySelector('.kmd-f .kmd-v input'); if (si && q) { q.focus(); q.select(); }
+  };
+  M.dinSuma = function (f) {
+    const e = f.querySelector('.kmd-st strong'); if (!e) return;
+    e.textContent = money([...f.querySelectorAll('.kmd-e:not(.quita) .kmd-v input')].reduce((s, i) => s + (+i.value || 0), 0));
+  };
+  M.dinQuitar = function (b) {
+    const r = b.closest('.kmd-e'); if (!r) return;
+    if (r.classList.contains('nueva')) r.remove(); else { r.classList.toggle('quita'); b.textContent = r.classList.contains('quita') ? 'Deshacer' : 'Quitar'; }
+    M.dinSuma(b.form || document.querySelector('.kmd-f'));
+  };
+  M.dinNueva = function (b) {
+    const f = b.form, box = f && f.querySelector('.kmd-nuevas'); if (!box) return;
+    const r = document.createElement('div'); r.className = 'kmd-e nueva';
+    r.innerHTML = '<select class="kmd-t" aria-label="Qué es">' + DIN_TIPOS.map(t => '<option value="' + t[0] + '">' + t[1] + '</option>').join('') + '</select>' +
+      '<input class="kmd-n" type="text" maxlength="40" placeholder="Nombre: Nu, GBM, la alcancía…" aria-label="Nombre">' +
+      '<label class="kmd-v"><span>$</span><input type="number" min="0" step="0.01" inputmode="decimal" placeholder="0" aria-label="Cuánto hay"></label>' +
+      '<button type="button" class="ce-btn sec" onclick="MEDIDORES.dinQuitar(this)">Quitar</button>';
+    box.appendChild(r); r.querySelector('.kmd-n').focus();
+  };
+  M.dinGuardar = function (ev) {
+    ev.preventDefault();
+    const f = ev.target, F = rawGet('finanzasmx_v2', null); if (!F || !tiEditable()) return;
+    const c = { poner: {}, quitar: [], nuevas: [] };
+    f.querySelectorAll('.kmd-e').forEach(r => {
+      const n = r.querySelector('.kmd-n'), v = r.querySelector('.kmd-v input');
+      if (r.classList.contains('nueva')) { const t = r.querySelector('.kmd-t').value; c.nuevas.push({ n: n.value, v: v.value, clase: t === 'liq' ? 'liq' : 'inv', tipo: t === 'liq' ? '' : t }); return; }
+      if (r.classList.contains('quita')) { c.quitar.push(r.dataset.id); return; }
+      c.poner[r.dataset.id] = n ? { n: n.value, v: v.value } : { v: v.value };
+    });
+    const res = C().dineroPoner(F, c);
+    if (res.error) {
+      let e = f.querySelector('.ef-error'); if (!e) { e = document.createElement('span'); e.className = 'ef-error'; f.insertBefore(e, f.querySelector('.kmd-pie')); }
+      e.textContent = res.error; return;
+    }
+    din.edita = false;
+    din.aviso = res.cambios.length ? 'Guardado: ya cambió en Finanzas, en el Plan Maestro y en todas tus pantallas, y tu camino a 2028 se recalculó. Llega a tus otros dispositivos con tu siguiente commit.' : 'No cambió nada.';
+    ceGuardar(F);
+    ctCifrasHoy();
+  };
+
+  // ══ Lo que debes del BYD, al principio de Intereses ══
+  // Adán, 27-nov-2026: "no me estás mostrando la deuda total de mi BYD, esa cifra debe ser principal, en forma de línea de barra y
+  // además debes dejarme editar esa cantidad y eso se refleje en todas las demás apps… repercutirá en estos posibles planes pero de
+  // forma automática". La cifra es el saldo del crédito en Finanzas (`d003`); se corrige con CIFRAS.prestamoDatos —el mismo de «Los
+  // datos de tu crédito» en Deuda total—, manda desde hoy y las mensualidades siguen anotándose solas. Tu plan, «Solo la
+  // mensualidad» y los demás pagos salen de ese saldo, así que se recalculan al guardar.
+  const byd = { edita: false, aviso: '' };
+  function bydHtml(F, p) {
+    const ov = document.getElementById('kpiOverlay');
+    if (!ov || !ov.classList.contains('open') || ov.dataset.kpi !== 'intereses') { byd.edita = false; byd.aviso = ''; }
+    const d = p.d, R = p.R, debe = +d.balance || 0, total = +d.total || 0, pagado = Math.max(0, total - debe), pc = total > 0 ? pct(pagado, total) : 0, ed = tiEditable();
+    const fin = R.tabla.length ? R.tabla[R.tabla.length - 1].fecha : null;
+    const barra = '<div class="kby-l" role="img" aria-label="Pagado ' + Math.round(pc) + '% de lo que te prestaron"><i class="pag" style="width:' + pc + '%"></i><i class="deb" style="width:' + (100 - pc) + '%"></i></div>' +
+      (total > 0 ? '<div class="kby-ley"><span><i class="pag"></i>Ya pagaste <b>' + money(pagado) + '</b> · ' + Math.round(pc) + '%</span><span><i class="deb"></i>Te falta <b>' + money(debe) + '</b></span><span>Te prestaron <b>' + money(total) + '</b></span></div>' : '');
+    const form = '<form class="kby-f" onsubmit="MEDIDORES.bydGuardar(event,\'' + esc(d.id) + '\')"><label><span>Lo que debes hoy, como dice tu estado de cuenta</span><input type="number" name="s" min="0" step="0.01" inputmode="decimal" value="' + debe.toFixed(2) + '" required></label>' +
+      '<span class="ti-form-acc"><button type="button" class="ce-btn sec" onclick="MEDIDORES.bydEditar(false)">Cancelar</button><button type="submit" class="ce-btn">Guardar</button></span>' +
+      '<p class="kv-p">Se anota con la fecha de hoy y las mensualidades se siguen anotando solas. Tu plan y las otras formas de pagar se recalculan solas; cambia también en Deuda total, en Finanzas y en tu camino a 2028.</p></form>';
+    return '<section class="kv-c kby' + (byd.edita ? ' edita' : '') + '"><div class="kby-cab"><div class="kby-n"><span class="et">Debes ' + (d.id === 'd003' ? 'del BYD' : 'de ' + esc(d.name)) + ' hoy</span><b class="n">' + money(debe) + '</b></div>' +
+      '<div class="kby-d"><div><span>Con tu plan, en cero</span><strong>' + C().v('autoCero') + '</strong></div><div><span>Pagando solo la mensualidad</span><strong>' + (fin ? mesTxt(mesDe(fin)) : '—') + '</strong></div><div><span>Interés que falta, solo la mensualidad</span><strong class="mal">' + money(sumaInt(R.tabla)) + '</strong></div></div>' +
+      (ed && !byd.edita ? boton('Corregir', 'MEDIDORES.bydEditar(true)') : '') + '</div>' + barra + (byd.edita && ed ? form : '') + (byd.aviso ? '<p class="kmd-ok">' + byd.aviso + '</p>' : '') + (ed ? '' : copia('Se corrige')) + '</section>';
+  }
+  M.bydEditar = function (si) {
+    byd.edita = si; byd.aviso = ''; abrirKpi('intereses');
+    const q = document.querySelector('.kby-f input'); if (si && q) { q.focus(); q.select(); }
+  };
+  M.bydGuardar = function (ev, id) {
+    ev.preventDefault();
+    const f = ev.target, F = rawGet('finanzasmx_v2', null); if (!F || !tiEditable()) return;
+    const v = f.s.value, x = parseFloat(v);
+    if (!(isFinite(x) && x >= 0)) { let e = f.querySelector('.ef-error'); if (!e) { e = document.createElement('span'); e.className = 'ef-error'; f.insertBefore(e, f.querySelector('.ti-form-acc')); } e.textContent = 'Escribe cuánto debes; si ya no debes nada, 0'; return; }
+    const antes = +((F.debts || []).find(d => d.id === id) || {}).balance || 0, r = C().prestamoDatos(F, id, { saldo: v });
+    if (r.error) { alert(r.error); return; }
+    byd.edita = false;
+    byd.aviso = Math.abs(x - antes) < 0.01 ? 'Sin cambios: ya tenías ese saldo.' : 'Guardado: ahora debes ' + money(x) + ' (' + (x < antes ? 'bajó ' + money(antes - x) : 'subió ' + money(x - antes)) + '). Tus planes ya se recalcularon y cambia en todas tus apps.';
+    ceGuardar(F);
+  };
+
   // Cómo se llama cada renglón del mes en la ventana.
   const EF_NOM = { renta: 'Renta', depa: 'Luz, agua, internet y gas', celular: 'Plan de datos', familia: 'Aporte a tu familia', auto: 'El BYD', iphone: 'El iPhone', comida: 'Comida', suscripciones: 'suscripciones', cuidado: 'rutinas de cuidado', personal: 'ropa, salidas y compras' };
   M.fondo = function (F) {
@@ -231,19 +353,13 @@
     const CORTO = { bloqueada: 'Cuenta bloqueada', colegiatura: 'Colegiatura', colchon: 'Colchón de llegada' };
     const costos = ((C().SALIDA && C().SALIDA.costos) || []).filter(c => !c.gasta || c.mes > fin.mes), v = c => C().costoSalida(c);
     const listaCostos = costos.map(c => '<div class="km-cos"><span>' + mesTxt(c.mes) + '</span><b>' + (CORTO[c.id] || esc(c.txt)) + '</b><strong>' + money(v(c)) + '</strong></div>').join('');
-    // Todo lo que tienes guardado, pieza por pieza: la bolsa sale aunque esté en cero, para que se vea que falta anotarla.
-    const M2 = C().fondoMaestria(F), bolsa = M2.inversiones.filter(i => i.id !== 'i004' && i.tipo !== 'cetes').reduce((s, i) => s + i.v, 0), cetes = M2.ef + M2.inversiones.filter(i => i.id !== 'i004' && i.tipo === 'cetes').reduce((s, i) => s + i.v, 0);
-    const piezas = [['Bolsa y fondos', bolsa, V.a, bolsa > 0 ? '' : 'todavía no toca'], ['CETES', cetes, 'var(--w)'], ['Bitcoin', M2.btc, V.b]].concat(M2.liquidos.map((a, i) => [esc(a.n), a.v, i ? V.c : 'var(--ac)']), x.deposito > 0 ? [['Depósito de la renta', x.deposito, V.g, 'regresa en ' + MESL[+mas(P0.rentaHasta, 1).slice(5) - 1]]] : []);
-    const listaPiezas = '<div class="kf-bar">' + piezas.filter(q => q[1] > 0).map(q => '<i style="flex:' + Math.max(1, Math.round(q[1])) + ';background:' + q[2] + '"></i>').join('') + '</div>' +
-      piezas.map(q => '<div class="km-pz"><i style="background:' + q[2] + '"></i><b>' + q[0] + (q[3] ? ' <u>' + q[3] + '</u>' : '') + '</b><strong>' + money(q[1]) + '</strong></div>').join('');
-
     // Los consejos, de lo que toca ya a lo que más mueve; cambian con tu ritmo y con el paso del plan.
     const pasos = [], bt = boton('Ver el plan de este mes', 'cerrarKpi();abrirGBM()');
     const A = { colchon: 'a tu colchón', auto: 'al BYD', gbm: 'a invertir' }, sigue = R.sig ? (R.sig.k === R.k ? 'Hoy mandas <b>' + money(R.sig.v) + '</b> ' : 'El <b>' + diaTxt(R.sig.k) + '</b> mandas <b>' + money(R.sig.v) + '</b> ') + A[R.sig.a] + '.' : '';
     if (paso === 'colchon') pasos.push(['Paso 1 de 3: el colchón', R.sig ? money(R.sig.v) : 'sigue', sigue + ' ' + (PA.lleno ? 'Con tu plan se llena el <b>' + C().v('colchonFecha') + '</b>.' : ''), bt]);
     else if (paso === 'auto') pasos.push(['Paso 2 de 3: el BYD', R.sig ? money(R.sig.v) : 'sigue', sigue + ' Debes <b>' + money(debe) + '</b>.', bt]);
     else pasos.push(['Paso 3 de 3: a invertir', R.sig ? money(R.sig.v) : 'sigue', sigue + ' Según tu reparto, el mismo día.', bt]);
-    if (sinAnotar > 500) pasos.push(['Anota lo que no aparece', money(sinAnotar), 'En ' + nm + ' te quedaban <b>' + money(este.queda) + '</b> y tu dinero creció <b>' + money(Math.max(0, este.crecio)) + '</b>. Cada peso sin anotar atrasa el BYD.', boton('Editar saldos', 'abrirKpi(\'fondo\');MEDIDORES.editarMano(true)', 1)]);
+    if (sinAnotar > 500) pasos.push(['Anota lo que no aparece', money(sinAnotar), 'En ' + nm + ' te quedaban <b>' + money(este.queda) + '</b> y tu dinero creció <b>' + money(Math.max(0, este.crecio)) + '</b>. Cada peso sin anotar atrasa el BYD.', boton('Corregir tu dinero', 'MEDIDORES.dinEditar(true)', 1)]);
     else if (D.ahorro > 0) pasos.push(['Recorta tus rutinas', '+' + money(D.ahorro) + ' al mes', 'En piel, cabello y suplementos: en total, <b>' + money(D.ahorro * queda.length) + '</b> de aquí a irte. De eso, ' + money(D.medico) + ' al mes los decide tu dermatólogo.']);
     pasos.push(['Si guardas 3 de cada 4 pesos', money(T3.fin), 'El BYD queda en cero en <b>' + (T3.cero ? mesL(T3.cero) : '—') + '</b> y llegas con esto en vez de ' + money(fin.proy) + '. ' + (T3.fin >= T.pide ? 'También alcanza.' : 'No alcanza: faltarían ' + money(T.pide - T3.fin) + '.')]);
     pasos.push(['Decide el ' + diaTxt(dec) + ' de ' + dec.slice(0, 4), plural(diasDec, 'día', 'días'), 'Con oferta firmada de ALTEN en Alemania, te vas con ellos; si no, con la admisión y el dinero, a Esslingen. Nunca con deuda.']);
@@ -258,7 +374,7 @@
       reng('Te queda ese mes', m => sg(m.queda)) + reng('Debes del BYD', m => m.auto == null ? '—' : m.auto < 1 ? '<em class="ok">nada</em>' : money(m.auto)) + reng('Han rendido', m => m.rindeAcum >= 1 ? '<em class="ok">+' + money(m.rindeAcum) + '</em>' : money(0)) + reng('Tienes', m => money(m.tipo === 'proy' ? m.proy : m.real || 0), 'tot') + '</div></div>';
 
     return { kv: 'var(--cy)', titulo: 'Fondo Maestría', sub: 'Tu dinero para irte a Alemania en septiembre de 2028: el colchón, el BYD en cero y a invertir.', html:
-      '<div class="km kp8"><div class="km-a"><section class="kv-c km-hero"><span>Guardando lo que te queda, en ' + mesL(fin.mes) + ' tendrías</span><div><strong>' + money(fin.proy) + '</strong><em>la salida pide ' + money(T.pide) + '</em></div>' + med(pct(fin.proy, T.pide)) +
+      '<div class="km kp8">' + dineroHtml(F) + '<div class="km-a"><section class="kv-c km-hero"><span>Guardando lo que te queda, en ' + mesL(fin.mes) + ' tendrías</span><div><strong>' + money(fin.proy) + '</strong><em>la salida pide ' + money(T.pide) + '</em></div>' + med(pct(fin.proy, T.pide)) +
           '<p class="' + (ok ? 'si' : 'no') + '">' + (ok ? 'Sí llegas: te sobran ' + money(-falta) + ' y sin deber el BYD.' : 'Todavía no llegas: te faltan ' + money(falta) + '.') + '</p></section>' +
         '<div class="kv-tiles">' + [['Llevas en todo', money(T.hoy), 'Tu plan pedía ' + money(T.planHoy) + '. ' + (dif < -1 ? '<em class="mal">Vas ' + money(-dif) + ' abajo</em>' : dif > 1 ? '<em class="ok">Vas ' + money(dif) + ' arriba</em>' : '<em class="ok">Vas al día</em>')],
           ['El BYD en cero', T.cero ? mesTxt(T.cero) : '—', 'debes ' + money(debe) + '; mandando lo del calendario, el ' + C().v('autoCero')],
@@ -267,7 +383,7 @@
           .map(q => '<div class="kv-tile"><span>' + q[0] + '</span><b>' + q[1] + '</b><i>' + q[2] + '</i></div>').join('') + '</div></div>' +
       '<div class="km-b"><section class="kv-c km-g"><div class="km-cab"><div><h3>Tu camino a septiembre de 2028</h3></div>' +
           leyenda([['Lo que tienes', 'var(--text)', 'l'], ['Lo que tendrías', 'var(--ac)', 'l'], ['Lo que debes del BYD', 'var(--kv-2)', 'l'], ['Solo lo del calendario', 'var(--kv-gris)', 'd']]) + '</div>' + grafica('salida') + flujo + '</section>' +
-        '<details class="kv-c km-nec km-pl"' + (maeLado() ? ' open' : '') + ' ontoggle="MEDIDORES.maeLado(this)"><summary class="km-tot"><h3>Todo lo que tienes</h3><strong>' + money(T.hoy) + '</strong><em>la salida pide ' + money(T.pide) + '</em></summary><div class="km-pl-c">' + listaPiezas + (tiEditable() ? '<div class="km-ed">' + boton('Editar saldos', 'abrirKpi(\'fondo\');MEDIDORES.editarMano(true)', 1) + boton('Anotar un abono', 'abrirKpi(\'deudatotal\')', 1) + '</div>' : '') + '<div class="km-tot dos"><h3>Lo que pide la salida</h3><strong>' + money(T.pide) + '</strong></div><div class="km-lista">' + listaCostos + '</div>' +
+        '<details class="kv-c km-nec km-pl"' + (maeLado() ? ' open' : '') + ' ontoggle="MEDIDORES.maeLado(this)"><summary class="km-tot"><h3>Lo que pide la salida</h3><strong>' + money(T.pide) + '</strong><em>tienes ' + money(T.hoy) + '</em></summary><div class="km-pl-c"><div class="km-lista">' + listaCostos + '</div>' +
           '<div class="kv-pie">Mandando solo lo del calendario llegas con <b>' + money(planFin) + '</b>. Los ' + money(T.fuera) + ' de trámites, vuelo y primera renta no van en este presupuesto. Con ALTEN no piden cuenta bloqueada ni colegiatura.</div></div></details></div>' +
       '<section class="kv-c km-det' + (mae.abre ? ' abre' : '') + '" id="kmDet">' + desgloseMae() + '</section>' +
       '<div class="km-pasos" style="--n:' + pasos.length + '">' + pasos.map((q, i) => '<section class="kv-c km-paso' + (i ? '' : ' uno') + '"><b class="n">' + (i + 1) + '</b><div><div class="t"><h3>' + q[0] + '</h3><strong>' + q[1] + '</strong></div><p>' + q[2] + '</p>' + (q[3] ? '<div class="ac">' + q[3] + '</div>' : '') + '</div></section>').join('') + '</div>' +
@@ -556,7 +672,7 @@
     const pie = chocaC(R) ? '<b>Revisa tus datos:</b> tu contrato acaba en ' + prMes(K.ultima) + ' y con estos datos acabarías en ' + prMes(R.fin) + '.' + (K.cargosSugeridos ? ' Cuadra si unos ' + money(K.cargosSugeridos) + ' de cada pago son IVA y seguros; entonces el interés que falta sería ' + money(C().prestamoSimular(Object.assign({}, p.d, { cargos: K.cargosSugeridos }), {}).interes) + '. Lo dice tu estado de cuenta.' : ' Compara el saldo y la tasa con tu estado de cuenta.')
       : '<b>La mensualidad se anota sola.</b> Un abono va todo a tu deuda: pruébalo antes de pagarlo.';
     return { kv: 'var(--o)', titulo: 'Intereses este mes', sub: 'Cada cuadro es un pago de ' + esc(p.d.name) + ' con tu plan. Lo naranja es interés: no baja tu deuda.', html:
-      '<div class="km kn"><div class="kn-b"><div class="kn-i"><section class="kv-c kn-dona"><svg viewBox="0 0 280 280" role="img" aria-label="De tu próximo pago, cuánto es interés"><circle cx="140" cy="140" r="112" fill="none" stroke="var(--kv-1)" stroke-width="26"></circle>' + arco(t.interes, 0, 'var(--kv-2)') + arco(t.cargos, t.interes, 'var(--kv-gris)') +
+      '<div class="km kn">' + bydHtml(F, p) + '<div class="kn-b"><div class="kn-i"><section class="kv-c kn-dona"><svg viewBox="0 0 280 280" role="img" aria-label="De tu próximo pago, cuánto es interés"><circle cx="140" cy="140" r="112" fill="none" stroke="var(--kv-1)" stroke-width="26"></circle>' + arco(t.interes, 0, 'var(--kv-2)') + arco(t.cargos, t.interes, 'var(--kv-gris)') +
           '<text x="140" y="112" class="s">Este mes, de interés</text><text x="140" y="158" class="n">' + money(t.interes) + '</text><text x="140" y="188" class="s">' + Math.round(t.interes / pago * 100) + '% de tu pago</text></svg>' +
           '<p><b>' + money(t.interes / 30) + ' al día.</b> El ' + prDia(t.fecha) + ' pagas ' + money(pago) + ': ' + money(t.capital) + ' bajan tu deuda' + (t.cargos > 0 ? ' y ' + money(t.cargos) + ' son IVA y seguros' : '') + '.</p></section>' +
         '<section class="kv-c kn-mas"><h3>Tu plan contra otros pagos</h3><div id="knChips">' + pagosChips() + '</div><p class="kv-p">Tu plan manda al BYD todo lo que apartas desde que se llene el colchón: queda en cero el <b>' + C().v('autoCero') + '</b>. Cada ' + money(1000) + ' que abones hoy te ahorra ' + money(R.porMil.ahorra) + '.</p></section></div>' +

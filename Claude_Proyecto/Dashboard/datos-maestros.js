@@ -9616,6 +9616,97 @@ window.CIFRAS = (function () {
     }
     return { cambios: cambios, fecha: dia };
   }
+  /* Tu dinero, pieza por pieza: lo que tienes a la mano (cada cuenta y el efectivo), los CETES, cada inversión de Finanzas
+     —el depósito de la renta entre ellas— y el Bitcoin a precio de hoy (Adán, 27-nov-2026: "debes darme las cifras de mi
+     dinero actualmente… dinero en efectivo, cuenta de débito, bitcoin, inversiones, depósito de renta… y si modifico algo
+     aquí, es decir elimino o añado o edito, debe verse reflejado en todas las cifras de todas las apps"). Son las mismas
+     piezas que suma `fondoMaestria()`, también las que están en cero, para poder corregirlas. `id` dice de dónde sale:
+     'liq:<id del activo>', 'cetes', 'inv:<id de la inversión>' o 'btc'. */
+  function dineroLista(f) {
+    const F = f || fin || {}, out = [];
+    (F.activos || []).filter(function (a) { return a.type === 'liquido'; }).forEach(function (a) {
+      out.push({ id: 'liq:' + a.id, clase: 'liq', n: a.name || 'Cuenta', v: +a.value || 0, fecha: a.fecha || '', quita: !A_LA_MANO.some(function (p) { return p[0] === a.id; }) });
+    });
+    A_LA_MANO.forEach(function (p) {
+      if (!out.some(function (x) { return x.id === 'liq:' + p[0]; })) out.push({ id: 'liq:' + p[0], clase: 'liq', n: p[1], v: 0, fecha: '', quita: false });
+    });
+    out.push({ id: 'cetes', clase: 'cetes', n: 'CETES', v: +F.emergencyFund || 0, quita: false });
+    (F.investments || []).forEach(function (i) {
+      out.push({ id: 'inv:' + i.id, clase: i.id === 'i004' ? 'dep' : 'inv', tipo: i.type || '', n: i.name || 'Inversión', v: +i.value || +i.invested || 0, quita: true });
+    });
+    const m = fondoMaestria(F);
+    if (m.btcHeld > 0 || (F.btcHistory || []).length) out.push({ id: 'btc', clase: 'btc', n: 'Bitcoin', v: m.btc, btc: m.btcHeld, quita: true });
+    return out;
+  }
+  /* Lo que cambias de tu dinero, en un solo lugar: `c = {poner: {id: {n, v}}, quitar: [id], nuevas: [{n, clase: 'liq'|'inv',
+     tipo, v}]}`, con los `id` de `dineroLista`. La cuenta BBVA y el efectivo no se quitan: se ponen en 0. Una cuenta o el efectivo quedan con la fecha de hoy (un saldo es de un día);
+     los CETES no se escriben encima: la diferencia es una aportación o un retiro (`fondoMovimiento`); una inversión cambia lo
+     que vale hoy y conserva lo que metiste; el Bitcoin, como nadie lo tiene a mano en ₿, se dice en pesos: lo de más es una
+     compra a precio de hoy y lo de menos una venta, así Finanzas no descuadra lo aportado. Quitar el Bitcoin lo vende todo.
+     Lo nuevo nace como cuenta (líquido) o como inversión. Quien llama guarda. Devuelve `{cambios}` o `{error}`. */
+  function dineroPoner(F, c, k) {
+    if (!F || !c) return { error: 'Sin datos de Finanzas' };
+    const dia = k || fechaLocal(), red = function (x) { return Math.round(x * 100) / 100; }, cambios = [];
+    const cant = function (x) { const v = typeof x === 'number' ? x : String(x == null ? '' : x).trim() === '' ? NaN : Number(x); return isFinite(v) && v >= 0 ? red(v) : null; };
+    const nombre = function (x) { return String(x == null ? '' : x).replace(/\s+/g, ' ').trim().slice(0, 40); };
+    const poner = c.poner || {}, quitar = c.quitar || [], nuevas = (c.nuevas || []).filter(function (x) { return x && (nombre(x.n) || String(x.v == null ? '' : x.v).trim() !== ''); });
+    for (const id in poner) {
+      if (poner[id].v != null && cant(poner[id].v) == null) return { error: 'Escribe una cantidad en cada renglón; si no hay nada, 0' };
+      if (poner[id].n != null && !nombre(poner[id].n)) return { error: 'Cada renglón necesita su nombre' };
+    }
+    for (let j = 0; j < nuevas.length; j++) {
+      if (!nombre(nuevas[j].n)) return { error: 'Ponle nombre a lo que añades' };
+      if (cant(nuevas[j].v) == null) return { error: 'Escribe cuánto hay en «' + nombre(nuevas[j].n) + '»' };
+    }
+    F.activos = Array.isArray(F.activos) ? F.activos : [];
+    F.investments = Array.isArray(F.investments) ? F.investments : [];
+    const liq = function (id) { let a = F.activos.filter(function (x) { return x.id === id; })[0];
+      if (!a) { const p = A_LA_MANO.filter(function (q) { return q[0] === id; })[0]; if (!p) return null; a = { id: id, name: p[1], type: 'liquido', value: 0, notes: '' }; F.activos.push(a); }
+      return a; };
+    // Lo que se quita
+    quitar.forEach(function (id) {
+      if (id.indexOf('liq:') === 0) { const x = id.slice(4); if (F.activos.some(function (a) { return a.id === x; })) { F.activos = F.activos.filter(function (a) { return a.id !== x; }); cambios.push({ id: id, quitado: true }); } }
+      else if (id.indexOf('inv:') === 0) { const x = id.slice(4); if (F.investments.some(function (i) { return i.id === x; })) { F.investments = F.investments.filter(function (i) { return i.id !== x; }); cambios.push({ id: id, quitado: true }); } }
+      else if (id === 'btc') poner.btc = { v: 0 };
+    });
+    // Lo que se corrige
+    for (const id in poner) {
+      if (quitar.indexOf(id) >= 0 && id !== 'btc') continue;
+      const q = poner[id], v = q.v != null ? cant(q.v) : null, n = q.n != null ? nombre(q.n) : null;
+      if (id.indexOf('liq:') === 0) {
+        const a = liq(id.slice(4)); if (!a) continue;
+        if (n && n !== a.name) { a.name = n; cambios.push({ id: id, nombre: n }); }
+        if (v != null) { const d = red(v - (+a.value || 0)); a.value = v; a.fecha = dia; if (d) cambios.push({ id: id, delta: d }); }
+      } else if (id.indexOf('inv:') === 0) {
+        const i = F.investments.filter(function (x) { return x.id === id.slice(4); })[0]; if (!i) continue;
+        if (n && n !== i.name) { i.name = n; cambios.push({ id: id, nombre: n }); }
+        if (v != null) { const d = red(v - (+i.value || +i.invested || 0)); i.value = v; if (!(+i.invested > 0)) i.invested = v; if (d) cambios.push({ id: id, delta: d }); }
+      } else if (id === 'cetes' && v != null) {
+        const d = red(v - (+F.emergencyFund || 0));
+        if (d) { const r = fondoMovimiento(F, { date: dia, tipo: d < 0 ? 'retiro' : 'aporte', amount: Math.abs(d), nota: 'Ajuste al saldo de CETES' }); if (r.error) return r; cambios.push({ id: id, delta: d }); }
+      } else if (id === 'btc' && v != null) {
+        const m = fondoMaestria(F), precio = +F.currentBtcPrice || 0, fx = +F.usdMxn || 19.5, d = red(v - m.btc);
+        if (Math.abs(d) < 1) continue;
+        if (!(precio > 0)) return { error: 'Todavía no tengo el precio del Bitcoin para convertir tus pesos: corrígelo en Finanzas' };
+        if (d > 0) { const r = btcCompra(F, { date: dia, mxn: d, notes: 'Ajuste de saldo' }); if (r.error) return r; }
+        else {
+          const btc = Math.min(m.btcHeld, -d / fx / precio), usd = btc * precio;
+          F.btcHistory = Array.isArray(F.btcHistory) ? F.btcHistory : [];
+          F.btcHistory.push({ id: 'btc' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), date: dia, usd: Math.round(usd * 10000) / 10000,
+            btcPrice: Math.round(precio * 100) / 100, btc: -(+btc.toFixed(8)), fx: Math.round(fx * 10000) / 10000, tipo: 'venta', notes: 'Ajuste de saldo' });
+        }
+        cambios.push({ id: id, delta: d });
+      }
+    }
+    // Lo que se añade
+    nuevas.forEach(function (x, j) {
+      const id = Date.now().toString(36) + j + Math.random().toString(36).slice(2, 5), v = cant(x.v);
+      if (x.clase === 'inv') F.investments.push({ id: 'i' + id, name: nombre(x.n), type: x.tipo || 'otro', invested: v, value: v, date: dia, rate: 0 });
+      else F.activos.push({ id: 'ac' + id, name: nombre(x.n), type: 'liquido', value: v, notes: '', fecha: dia });
+      cambios.push({ id: 'nuevo', n: nombre(x.n), delta: v });
+    });
+    return { cambios: cambios, fecha: dia };
+  }
   /* Lo que cuesta vivir sin sueldo. `gastoEmergencia(ym)` parte el mes del plan (`desgloseMes`) en lo que se paga aunque no
      entre sueldo —`minimo`: renta, servicios, celular, la familia, el BYD, el iPhone y la comida— y lo que se apaga
      —`recorte`: suscripciones, rutinas y lo demás—; `normal` es la suma. No entran el ahorro ni los abonos a la tarjeta.
@@ -10460,7 +10551,7 @@ window.CIFRAS = (function () {
     patrimonio: patrimonio,
     fondoMaestria: fondoMaestria,
     fondoMovimiento: fondoMovimiento, fondoBorrar: fondoBorrar, fondoSigno: fondoSigno, fondoLista: fondoLista,
-    ritmoMaestria: ritmoMaestria, caminoMillon: caminoMillon, deudaCamino: deudaCamino, planAhorro: planAhorro, caminarAhorro: caminarAhorro, ahorroDia: ahorroDia, pasoAhorro: pasoAhorro, DESTINO: DESTINO, abonosPlan: abonosPlan, autoIntereses: autoIntereses, ingresoQueFalta: ingresoQueFalta, LIQUIDO_DESDE: LIQUIDO_DESDE, didiEn: didiEn, saldosPoner: saldosPoner, A_LA_MANO: A_LA_MANO, fondoHoy: fondoHoy, gastoEmergencia: gastoEmergencia, fondoMeta: fondoMeta,
+    ritmoMaestria: ritmoMaestria, caminoMillon: caminoMillon, deudaCamino: deudaCamino, planAhorro: planAhorro, caminarAhorro: caminarAhorro, ahorroDia: ahorroDia, pasoAhorro: pasoAhorro, DESTINO: DESTINO, abonosPlan: abonosPlan, autoIntereses: autoIntereses, ingresoQueFalta: ingresoQueFalta, LIQUIDO_DESDE: LIQUIDO_DESDE, didiEn: didiEn, saldosPoner: saldosPoner, dineroLista: dineroLista, dineroPoner: dineroPoner, A_LA_MANO: A_LA_MANO, fondoHoy: fondoHoy, gastoEmergencia: gastoEmergencia, fondoMeta: fondoMeta,
     btcCompra: btcCompra, btcBorrar: btcBorrar, btcEsInversion: btcEsInversion, btcDeInversiones: btcDeInversiones,
     prestamoSimular: prestamoSimular, prestamoHechos: prestamoHechos, prestamoResumen: prestamoResumen, prestamoTabla: prestamoTabla,
     prestamoAbono: prestamoAbono, prestamoAbonoBorrar: prestamoAbonoBorrar, prestamoDatos: prestamoDatos,
