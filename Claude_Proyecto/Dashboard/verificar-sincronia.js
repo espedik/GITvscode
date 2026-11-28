@@ -2917,34 +2917,37 @@ function promptsDeLoTocado() {
   else ok.push('Las rutas de Coach · Habilidades: los ' + n + ' pasos con su foto, su crédito, tres cifras, «En detalle», su sesión, lo que se copia y tres subtemas');
 })();
 
-/* ── 46. Cada palabra de Alemán de hoy con su ícono ─────────────────────────────────────────────────────────
-   Adán, 26-oct-2026: "pon imágenes de muy alta calidad en cada tarjeta, en tamaño pequeño". Cada palabra de
-   ALEMAN_VOCAB tiene su ícono en ALEMAN_ICONOS (Aleman/vocab-iconos.js), por su tema y su `de`, y cada subtema el
-   suyo, que cubre a una palabra mientras no tenga el propio; cada archivo está en Aleman/iconos/ y no sobra ninguno.
-   Una palabra nueva sin ícono, un archivo que falta o uno que nadie usa salen aquí. */
+/* ── 46. Cada palabra de Alemán de hoy con su foto ──────────────────────────────────────────────────────────
+   Adán, 27-nov-2026: "pusiste emojis en las palabras, eso no lo quiero, quiero fotos en hd aunque las pongas en pequeño
+   pero para todas". Cada palabra de ALEMAN_VOCAB tiene su foto real en ALEMAN_FOTOS (Aleman/vocab-fotos.js), por su tema
+   y su `de`, con su crédito (autor, fuente, licencia y página) y una licencia que deja recortarla; cada archivo está en
+   Aleman/fotos-vocab/ y no sobra ninguno. Una palabra nueva sin foto, una foto sin fuente o con licencia NC/ND, un
+   archivo que falta, uno que nadie usa o la vuelta de los íconos 3D salen aquí. */
 (function () {
-  let V, I;
-  try { V = require('../Aleman/vocab-datos.js'); I = require('../Aleman/vocab-iconos.js'); }
-  catch (e) { problemas.push('No se pueden leer los íconos de Alemán: ' + e.message); return; }
-  const dir = path.join(RAIZ, 'Aleman', 'iconos'), usados = {}, malos = [];
-  const usa = function (s, quien) { if (!s) return; usados[s + '.webp'] = 1; if (!fs.existsSync(path.join(dir, s + '.webp'))) malos.push(quien + ' usa ' + s + '.webp, que no está en Aleman/iconos/'); };
-  Object.keys(V.cats || {}).forEach(function (c) {
-    const C = I[c];
-    if (!C) { malos.push('el tema ' + c + ' no tiene íconos'); return; }
-    usa(C._, c);
-    Object.keys((V.cats[c] || {}).subs || {}).forEach(function (s) { if (!(C.subs || {})[s]) malos.push(c + '/' + s + ' sin ícono de subtema'); });
-    Object.keys(C.subs || {}).forEach(function (s) { usa(C.subs[s], c + '/' + s); });
-    Object.keys(C.pal || {}).forEach(function (w) {
-      usa(C.pal[w], c + ' · ' + w);
-      if (!(V.voc || []).some(function (x) { return x.cat === c && x.de === w; })) malos.push(c + ' · «' + w + '» tiene ícono pero ya no es una palabra del tema');
+  let V, F;
+  try { V = require('../Aleman/vocab-datos.js'); F = require('../Aleman/vocab-fotos.js'); }
+  catch (e) { problemas.push('No se pueden leer las fotos de Alemán: ' + e.message); return; }
+  const dir = path.join(RAIZ, 'Aleman', 'fotos-vocab'), usados = {}, malos = [];
+  Object.keys(F).forEach(function (c) {
+    Object.keys(F[c] || {}).forEach(function (w) {
+      const x = F[c][w], quien = c + ' · ' + w;
+      if (!Array.isArray(x) || !x[0]) { malos.push(quien + ' sin archivo'); return; }
+      if (usados[x[0] + '.webp']) malos.push(quien + ' repite ' + x[0] + '.webp');
+      usados[x[0] + '.webp'] = 1;
+      if (!fs.existsSync(path.join(dir, x[0] + '.webp'))) malos.push(quien + ' usa ' + x[0] + '.webp, que no está en Aleman/fotos-vocab/');
+      if (!x[2] || !x[3]) malos.push(quien + ' sin su fuente o su licencia');
+      if (/\b(NC|ND)\b/.test(x[3] || '')) malos.push(quien + ': licencia ' + x[3] + ', que no deja usarla o recortarla');
+      if (!(V.voc || []).some(function (v) { return v.cat === c && v.de === w; })) malos.push(quien + ' tiene foto pero ya no es una palabra del tema');
     });
   });
-  const sinPropio = (V.voc || []).filter(function (w) { return !((I[w.cat] || {}).pal || {})[w.de]; });
-  if (sinPropio.length) malos.push(sinPropio.length + ' palabras sin su ícono: ' + sinPropio.slice(0, 5).map(function (w) { return w.cat + ' · ' + w.de; }).join(', '));
+  const sin = (V.voc || []).filter(function (w) { return !(F[w.cat] || {})[w.de]; });
+  if (sin.length) malos.push(sin.length + ' palabras sin su foto: ' + sin.slice(0, 5).map(function (w) { return w.cat + ' · ' + w.de; }).join(', '));
   const sobran = fs.existsSync(dir) ? fs.readdirSync(dir).filter(function (f) { return !usados[f]; }) : [];
-  if (sobran.length) malos.push('archivos en Aleman/iconos/ que nadie usa: ' + sobran.slice(0, 8).join(', '));
-  if (malos.length) problemas.push('Los íconos de Alemán de hoy (' + malos.length + '): ' + malos.slice(0, 6).join('; '));
-  else ok.push('Alemán de hoy: las ' + (V.voc || []).length + ' palabras con su ícono, ' + Object.keys(usados).length + ' archivos en Aleman/iconos/');
+  if (sobran.length) malos.push('archivos en Aleman/fotos-vocab/ que nadie usa: ' + sobran.slice(0, 8).join(', '));
+  if (fs.existsSync(path.join(RAIZ, 'Aleman', 'iconos')) || fs.existsSync(path.join(RAIZ, 'Aleman', 'vocab-iconos.js')))
+    malos.push('volvieron los íconos 3D (Aleman/iconos/ o vocab-iconos.js): las palabras van con foto real');
+  if (malos.length) problemas.push('Las fotos de Alemán de hoy (' + malos.length + '): ' + malos.slice(0, 6).join('; '));
+  else ok.push('Alemán de hoy: las ' + (V.voc || []).length + ' palabras con su foto y su crédito, ' + Object.keys(usados).length + ' archivos en Aleman/fotos-vocab/');
 })();
 
 /* ── 47. Habilidades Base: la práctica de cada paso, y lo que se ve y se toca ────────────────────────────────

@@ -526,24 +526,25 @@ las siguientes del orden de Coach que no han salido, por tema (`alemanTanda()`, 
 tema»** (`.alv-otro`, bajo «Practicar», del mismo tamaño y en contorno; Adán: *"el botón de nuevo tema… hazlo mucho
 más grande"*) trae las diez siguientes y dice qué trae: *Otro tema · Buscar piso* o, si al de hoy le quedan palabras,
 *10 palabras más de Trámites*. Arriba, su encabezado: la foto del tema, *Vocabulario de hoy · 10 palabras nuevas y 5 de repaso* y,
-**como título, el tema del día** con su emoji (*📋 Trámites*, en Fraunces) y debajo **Hoy estudias**, sus subtemas en
+**como título, el tema del día** (*Trámites*, en Fraunces, sin emoji) y debajo **Hoy estudias**, sus subtemas en
 fichas, en el orden de las tarjetas (*Formularios · Conseguir cita · Documentos · Empadronarse*; Adán: *"debe haber
 un título claro que abarque el tema de las tarjetas y saber qué se estudiará ese día"*); después, cómo estudiarlas, cuánto va del nivel, el tema de mañana y **«Practicar»**. Debajo, una tarjeta por palabra
 (`alemanTarjetaHtml()`): el color de su género a la izquierda —los de la app de Alemán: der azul, die rosa, das
 verde, plural naranja—, su subtema (en el color de la ventana), qué es y su nivel, la palabra con su artículo, la
-traducción y, a su derecha, **su ícono** a 56 px (`alemanIcono()`, de `../Aleman/vocab-iconos.js`; Adán, 26-oct-2026:
-*"pon imágenes de muy alta calidad en cada tarjeta, en tamaño pequeño"*): un Fluent Emoji en 3D elegido para esa
-palabra —el formulario con su lápiz, la firma, el sello de la cita—, que ancla el significado sin traducir. Las
-1,516 palabras tienen el suyo; ver `../Aleman/readme_aleman.md` → *Estructura*. Una palabra compuesta de 14 letras o
-más baja a 21 px y de 20 o más a 17 (`alemanLargo()`), para caber entera junto al ícono: a 2048, 1600, 1366 y 390 px
-ninguna se parte a media palabra. Sigue su gramática (el plural, o
+traducción y, a su derecha, **su foto** a 76 px (`alemanFoto()`, de `../Aleman/vocab-fotos.js`; Adán, 27-nov-2026:
+*"pusiste emojis en las palabras, eso no lo quiero, quiero fotos en hd aunque las pongas en pequeño pero para todas"*):
+una foto real elegida para esa palabra —quien rellena un formulario, la firma, la fila de espera—, que ancla el
+significado sin traducir. Va recortada en cuadrado de 320 px, nítida también en pantallas de doble densidad, y al pasar
+el ratón dice su crédito. Las 1,516 palabras tienen la suya; ver `../Aleman/readme_aleman.md` → *Estructura*. Una
+palabra compuesta de 14 letras o más baja a 21 px y de 20 o más a 17 (`alemanLargo()`), para caber entera junto a su
+foto: a 2048, 1600, 1366 y 390 px ninguna se parte a media palabra. Sigue su gramática (el plural, o
 las tres formas del verbo con su auxiliar, el régimen, el comparativo, lo raro), el ejemplo traducido y, si lo
 tiene, el uso o fallo típico (*Ojo*). Debajo, **lo de más de la palabra** (`alemanMasHtml()`, de `ALEMAN_VOCAB_MAS` en
 `../Aleman/vocab-mas.js`; Adán, 18-nov-2026: *"necesito mucha más información en cada sección"*): dos ejemplos más
 con su audio, *Se dice así* (con qué se combina), *Familia* (palabras de su raíz, sinónimos o contrarios) y
 *Gramática*, una nota de una línea. Lo traen hoy las 132 palabras de Trámites, Piso, Dinero y Salud, los temas que
-salen primero; una palabra sin entrada se ve como antes. Las tarjetas toman el alto que sobra: a 2048×1040 van cinco por fila y
-caben las diez sin desplazar. Al pie, **el repaso de hoy**: lo que ya salió y toca, con el español a la vista
+salen primero; una palabra sin entrada se ve como antes. Las tarjetas toman el alto que sobra: a 2048×1040 van seis por fila y,
+con lo de más de cada palabra, la lista se desplaza. Al pie, **el repaso de hoy**: lo que ya salió y toca, con el español a la vista
 —tocar una enseña el alemán—.
 
 **El repaso es espaciado** (`aleman_repaso_v1`; el prompt de Alemán pide repetición espaciada y recuperación
@@ -557,7 +558,7 @@ que sus Tarjetas puedan usar el mismo repaso.
 
 **«Practicar»** (`alemanPracticar()`): las de hoy y los repasos, una tarjeta a la vez, grande y centrada. Ves el
 español —con su pista: *con su artículo y su plural*, *con su Perfekt*—, dices el alemán y la volteas (Espacio):
-sale con su artículo, su gramática, el ejemplo y su audio. La tarjeta de la práctica lleva el mismo ícono, a 72 px, sobre el español. Te calificas con «Otra vez» (1), que la devuelve al
+sale con su artículo, su gramática, el ejemplo y su audio. La tarjeta de la práctica lleva la misma foto, a 150 px (116 en el celular), sobre el español. Te calificas con «Otra vez» (1), que la devuelve al
 final de la práctica —dos veces como mucho— y mañana al repaso, o «La sabía» (2); solo cuenta la primera
 respuesta. Debajo, el mazo en español: cuál va, cuáles sabías y cuáles no. Al terminar, *Sabías N de M a la
 primera* y dos listas, ya con su alemán: las que vuelven mañana y las que sabías. Practicar cuenta como lo hecho
